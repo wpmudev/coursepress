@@ -12,7 +12,6 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 
 	/** Class constructor */
 	public function __construct() {
-
 		// $post_format = CoursePress_Data_Course::get_format();
 		parent::__construct( array(
 			'singular' => __( 'Student', 'CP_TD' ),
@@ -107,17 +106,17 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 		$hidden = $this->get_hidden_columns();
 		$sortable = $this->get_sortable_columns();
 
-		$perPage = 20;
-		$currentPage = $this->get_pagenum();
+		$per_page = 20;
+		$current_page = $this->get_pagenum();
 
-		$offset = ( $currentPage - 1 ) * $perPage;
+		$offset = ( $current_page - 1 ) * $per_page;
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
 		// $post_args = array(
 		// 'post_type' => $this->post_type,
 		// 'post_status' => $post_status,
-		// 'posts_per_page' => $perPage,
+		// 'posts_per_page' => $per_page,
 		// 'offset' => $offset,
 		// 's' => isset( $_GET['s'] ) && ! empty( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : ''
 		// );
@@ -128,20 +127,24 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 		}
 
 		// Could use the Course Model methods here, but lets try stick to one query
-		$users = new WP_User_Query( array(
-			'meta_key' => $course_meta_key,
-			'meta_compare' => 'EXISTS',
-			'number' => $perPage,
-			'offset' => $offset,
-		) );
+		$users = new WP_User_Query(
+			array(
+				'meta_key' => $course_meta_key,
+				'meta_compare' => 'EXISTS',
+				'number' => $per_page,
+				'offset' => $offset,
+			)
+		);
 
 		$this->items = $users->get_results();
 
-		$totalItems = $users->get_total();
-		$this->set_pagination_args( array(
-			'total_items' => $totalItems,
-			'per_page' => $perPage,
-		) );
+		$total_items = $users->get_total();
+		$this->set_pagination_args(
+			array(
+				'total_items' => $total_items,
+				'per_page' => $per_page,
+			)
+		);
 
 	}
 
@@ -156,12 +159,16 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 			$name = 'student-add';
 			$id = 'student-add';
 			if ( apply_filters( 'coursepress_use_default_student_selector', true ) ) {
-				$user_selector = CoursePress_Helper_UI::get_user_dropdown( $id, $name, array(
+				$user_selector = CoursePress_Helper_UI::get_user_dropdown(
+					$id,
+					$name,
+					array(
 						'placeholder' => __( 'Choose student...', 'CP_TD' ),
 						'class' => 'chosen-select narrow',
 						'exclude' => $this->students,
 						'context' => 'students',
-				) );
+					)
+				);
 			} else {
 				$user_selector = '<input type="text" id="' . $id .'" name="' . $name . '" placeholder="' . esc_attr__( 'Enter user ID', 'CP_TD' ) . '" />';
 			}

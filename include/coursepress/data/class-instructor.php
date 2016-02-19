@@ -33,7 +33,7 @@ class CoursePress_Data_Instructor {
 	public static function filter_course_meta_array( $var ) {
 		global $wpdb;
 		if ( preg_match( '/^course\_/', $var ) || preg_match( '/^' . $wpdb->prefix . 'course\_/', $var ) ||
-			 ( is_multisite() && ( defined( 'BLOG_ID_CURRENT_SITE' ) && BLOG_ID_CURRENT_SITE == get_current_blog_id() ) && preg_match( '/^' . $wpdb->base_prefix . 'course\_/', $var ) )
+			( is_multisite() && ( defined( 'BLOG_ID_CURRENT_SITE' ) && BLOG_ID_CURRENT_SITE == get_current_blog_id() ) && preg_match( '/^' . $wpdb->base_prefix . 'course\_/', $var ) )
 		) {
 			return $var;
 		}
@@ -67,7 +67,7 @@ class CoursePress_Data_Instructor {
 			$course_id = (int) str_replace( 'course_', '', $course_id );
 
 			if ( ! empty( $course_id ) ) {
-				if ( $status !== 'all' ) {
+				if ( 'all' != $status ) {
 					if ( get_post_status( $course_id ) == $status ) {
 						$assigned_courses[] = $course_id;
 					}

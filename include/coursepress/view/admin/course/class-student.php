@@ -2,23 +2,20 @@
 
 class CoursePress_View_Admin_Course_Student {
 
-
-
 	public static function render() {
-
 		/**
 		 * Student List
 		 */
-		$courseListTable = new CoursePress_Helper_Table_CourseStudent();
+		$list_course = new CoursePress_Helper_Table_CourseStudent();
 
-		$courseListTable->set_course( (int) $_GET['id'] );
-		$courseListTable->set_add_new( true );
-		$courseListTable->prepare_items();
+		$list_course->set_course( (int) $_GET['id'] );
+		$list_course->set_add_new( true );
+		$list_course->prepare_items();
 
 		$content = '<div class="coursepress_Course_Student_wrapper">';
 
 		ob_start();
-		$courseListTable->display();
+		$list_course->display();
 		$content .= ob_get_clean();
 
 		$content .= '</div>';

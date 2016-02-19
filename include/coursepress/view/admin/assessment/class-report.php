@@ -7,7 +7,6 @@ class CoursePress_View_Admin_Assessment_Report {
 	private static $menu_title = '';
 
 	public static function init() {
-
 		self::$title = __( 'Reports/CoursePress', 'CP_TD' );
 		self::$menu_title = __( 'Reports', 'CP_TD' );
 
@@ -15,7 +14,6 @@ class CoursePress_View_Admin_Assessment_Report {
 		add_filter( 'coursepress_admin_pages', array( __CLASS__, 'add_page' ) );
 		add_action( 'coursepress_settings_page_pre_render_' . self::$slug, array( __CLASS__, 'process_form' ) );
 		add_action( 'coursepress_admin_' . self::$slug, array( __CLASS__, 'render_page' ) );
-
 	}
 
 	public static function add_valid( $valid_pages ) {
@@ -33,17 +31,13 @@ class CoursePress_View_Admin_Assessment_Report {
 		return $pages;
 	}
 
-
 	public static function process_form() {
-
 		if ( isset( $_REQUEST['action'] ) && 'coursepress_report' === $_REQUEST['action'] ) {
-
 			$course_id = isset( $_POST['course_id'] ) ? (int) $_POST['course_id'] : false;
 			$unit_id = isset( $_POST['bulk-report-unit'] ) ? (int) $_POST['bulk-report-unit'] : 'all';
 			$students = array();
 
 			if ( isset( $_POST['bulk-report-submit'] ) ) {
-
 				if ( isset( $_POST['bulk-actions'] ) ) {
 					$students = (array) $_POST['bulk-actions'];
 				}
@@ -61,7 +55,6 @@ class CoursePress_View_Admin_Assessment_Report {
 	}
 
 	public static function report_content( $students, $course_id, $unit_id = 'all' ) {
-
 		$pdf_args = array(
 			'format' => 'F',
 			'force_download' => true, // Use force_download with
@@ -74,20 +67,21 @@ class CoursePress_View_Admin_Assessment_Report {
 			'title' => $course_title,
 		);
 
-		$colors = apply_filters( 'coursepress_report_colors', array(
-
-			'title_bg' => '#0091CD',
-			'title' => '#ffffff',
-			'unit_bg' => '#F5F5F5',
-			'unit' => '#000000',
-			'no_items' => '#858585',
-			'item_bg' => '#ffffff',
-			'item' => '#000000',
-			'item_line' => '#f5f5f5',
-			'footer_bg' => '#0091CD',
-			'footer' => '#ffffff',
-
-		) );
+		$colors = apply_filters(
+			'coursepress_report_colors',
+			array(
+				'title_bg' => '#0091CD',
+				'title' => '#ffffff',
+				'unit_bg' => '#F5F5F5',
+				'unit' => '#000000',
+				'no_items' => '#858585',
+				'item_bg' => '#ffffff',
+				'item' => '#000000',
+				'item_line' => '#f5f5f5',
+				'footer_bg' => '#0091CD',
+				'footer' => '#ffffff',
+			)
+		);
 
 		$html = '';
 
@@ -103,8 +97,8 @@ class CoursePress_View_Admin_Assessment_Report {
 		}
 
 		$last_student = false;
-		foreach ( $students as $student_id ) {
 
+		foreach ( $students as $student_id ) {
 			$student_name = CoursePress_Helper_Utility::get_user_name( $student_id );
 			$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
 
@@ -192,9 +186,9 @@ class CoursePress_View_Admin_Assessment_Report {
 			}
 
 			$average = $course_answered > 0 ? (int) ( $course_total / $course_answered ) : 0;
-			$average_display = $course_answered === 0 && $assessable_modules === 0 ? '' : sprintf( __( 'Average response grade: %d%%', 'CP_TD' ), $average );
+			$average_display = ! $course_answered && ! $assessable_modules ? '' : sprintf( __( 'Average response grade: %d%%', 'CP_TD' ), $average );
 			$course_average = $assessable_modules > 0 ? (int) ( $course_total / $course_assessable_modules ) : 0;
-			$course_average_display = $assessable_modules === 0 ? __( 'No assessable items in this course.', 'CP_TD' ) : sprintf( __( 'Total Average: %d%%', 'CP_TD' ), $course_average );
+			$course_average_display = ! $assessable_modules ? __( 'No assessable items in this course.', 'CP_TD' ) : sprintf( __( 'Total Average: %d%%', 'CP_TD' ), $course_average );
 
 			$html .= '
 					<tfoot>
@@ -226,19 +220,16 @@ class CoursePress_View_Admin_Assessment_Report {
 	}
 
 	public static function render_page() {
-
 		$content = '<div class="coursepress_settings_wrapper reports">' .
-				   '<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
-					<hr />';
+				'<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
+				<hr />';
 		$content .= self::render_report_list();
-
 		$content .= '</div>';
 
 		echo $content;
 	}
 
 	public static function render_report_list() {
-
 		$content = '';
 		$courses = CoursePress_Data_Instructor::get_accessable_courses( wp_get_current_user(), true );
 
@@ -265,14 +256,14 @@ class CoursePress_View_Admin_Assessment_Report {
 		/**
 		 * Student List
 		 */
-		$courseListTable = new CoursePress_Helper_Table_ReportStudent();
+		$list_course = new CoursePress_Helper_Table_ReportStudent();
 
-		$courseListTable->set_course( $selected_course );
-		$courseListTable->prepare_items();
+		$list_course->set_course( $selected_course );
+		$list_course->prepare_items();
 
 		// The list table output
 		ob_start();
-		$courseListTable->display();
+		$list_course->display();
 		$content .= ob_get_clean();
 
 		$tooltip = '<span class="help-tooltip">' . esc_html__( 'Select entire course for selected students, or just a unit for selected students.', 'CP_TD' ) . '</span>';

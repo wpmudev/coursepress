@@ -2,11 +2,9 @@
 
 class CoursePress_Helper_Integration {
 
-
 	private static $plugins = array();
 
 	public static function init() {
-
 		self::$plugins[] = 'MarketPress';
 
 		// Bring in other integrations that hook 'coursepress_extensions_plugins'.
@@ -27,5 +25,4 @@ class CoursePress_Helper_Integration {
 	private static function get_plugins() {
 		return apply_filters( 'coursepress_extensions_plugins', self::$plugins );
 	}
-
 }

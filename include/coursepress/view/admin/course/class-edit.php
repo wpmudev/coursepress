@@ -102,10 +102,10 @@ class CoursePress_View_Admin_Course_Edit {
 		$publish_toggle = ! empty( $course_id ) ? CoursePress_Helper_UI::toggle_switch( 'publish-course-toggle', 'publish-course-toggle', $ui ) : '';
 
 		$content = '<div class="coursepress_settings_wrapper">' .
-				   '<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
-					<hr />' .
-				   CoursePress_Helper_Tabs::render_tabs( $tabs, $content, $hidden_args, self::$slug, $tab, false, 'horizontal', $publish_toggle ) .
-				   '</div>';
+			'<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
+			<hr />' .
+			CoursePress_Helper_Tabs::render_tabs( $tabs, $content, $hidden_args, self::$slug, $tab, false, 'horizontal', $publish_toggle ) .
+			'</div>';
 
 		echo $content;
 	}
@@ -474,7 +474,7 @@ class CoursePress_View_Admin_Course_Edit {
 
 			// Fix broken pages
 			// $page_titles = get_post_meta( $unit->ID, 'page_title', true );
-			// if( empty( $page_titles ) ) {
+			// if ( empty( $page_titles ) ) {
 			// $page_titles = array();
 			// $page_visible = array();
 			// foreach ( $unit['pages'] as $key => $page ) {
@@ -537,9 +537,9 @@ class CoursePress_View_Admin_Course_Edit {
 						<p class="description">' . esc_html__( 'Select one or more instructor to facilitate this course', 'CP_TD' ) . '</p>
 						</label>
 						' . CoursePress_Helper_UI::get_user_dropdown( 'instructors', 'instructors', array(
-				'placeholder' => __( 'Choose a Course Instructor...', 'CP_TD' ),
-				'class' => 'chosen-select medium',
-				'context' => 'instructors',
+			'placeholder' => __( 'Choose a Course Instructor...', 'CP_TD' ),
+			'class' => 'chosen-select medium',
+			'context' => 'instructors',
 		) ) . '
 						<input type="button" class="button button-primary instructor-assign" value="' . esc_attr__( 'Assign', 'CP_TD' ) . '" />
 				</div>
@@ -548,8 +548,8 @@ class CoursePress_View_Admin_Course_Edit {
 				';
 
 		if ( 0 >= CoursePress_Helper_UI::course_instructors_avatars( $course_id, array(
-				'remove_buttons' => true,
-				'count' => true,
+			'remove_buttons' => true,
+			'count' => true,
 		) )
 		) {
 			$content .= '

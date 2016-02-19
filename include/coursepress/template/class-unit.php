@@ -130,8 +130,9 @@ class CoursePress_Template_Unit {
 				}
 			}
 		} else {
-			$next_page = $total_pages === $page || $total_pages === 1 ? '' : $page + 1;
+			$next_page = $total_pages == $page || 1 == $total_pages ? '' : $page + 1;
 		}
+
 		if ( ! empty( $next_page ) ) {
 			$unit_url = $url_path . $next_page;
 			$content .= '<span class="next-button page page-' . $i .'"><a href="' . esc_url_raw( $unit_url ) . '"><button>' . esc_html( 'Next', 'CP_TD' ) . '</button></a></span> ';

@@ -88,7 +88,6 @@ class CoursePress_Helper_Table_ReportStudent extends WP_List_Table {
 	}
 
 	public function column_responses( $item ) {
-
 		$this->last_student_progress = CoursePress_Data_Student::get_completion_data( $item->ID, $this->course_id );
 		$responses = (int) CoursePress_Data_Student::count_course_responses( $item->ID, $this->course_id, $this->last_student_progress );
 
@@ -119,17 +118,17 @@ class CoursePress_Helper_Table_ReportStudent extends WP_List_Table {
 		$hidden = $this->get_hidden_columns();
 		$sortable = $this->get_sortable_columns();
 
-		$perPage = 20;
-		$currentPage = $this->get_pagenum();
+		$per_page = 20;
+		$current_page = $this->get_pagenum();
 
-		$offset = ( $currentPage - 1 ) * $perPage;
+		$offset = ( $current_page - 1 ) * $per_page;
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
 		// $post_args = array(
 		// 'post_type' => $this->post_type,
 		// 'post_status' => $post_status,
-		// 'posts_per_page' => $perPage,
+		// 'posts_per_page' => $per_page,
 		// 'offset' => $offset,
 		// 's' => isset( $_GET['s'] ) && ! empty( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : ''
 		// );
@@ -143,18 +142,19 @@ class CoursePress_Helper_Table_ReportStudent extends WP_List_Table {
 		$users = new WP_User_Query( array(
 			'meta_key' => $course_meta_key,
 			'meta_compare' => 'EXISTS',
-			'number' => $perPage,
+			'number' => $per_page,
 			'offset' => $offset,
 		) );
 
 		$this->items = $users->get_results();
 
-		$totalItems = $users->get_total();
-		$this->set_pagination_args( array(
-			'total_items' => $totalItems,
-			'per_page' => $perPage,
-		) );
-
+		$total_items = $users->get_total();
+		$this->set_pagination_args(
+			array(
+				'total_items' => $total_items,
+				'per_page' => $per_page,
+			)
+		);
 	}
 
 	public function extra_tablenav( $which ) {

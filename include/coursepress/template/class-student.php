@@ -74,17 +74,15 @@ class CoursePress_Template_Student {
 			$content .= '
 				</div>
 			';
-
 			return $content;
-		} else {
 
+		} else {
 			// Might need to add url to signup slug
 			if ( ! CP_IS_WPMUDEV && ! CP_IS_CAMPUS ) {
-				 wp_redirect( CoursePress_Core::get_setting( 'general/use_custom_login' ) ? CoursePress_Core::get_slug( 'signup', true ) : wp_login_url() );
-				 exit;
+				wp_redirect( CoursePress_Core::get_setting( 'general/use_custom_login' ) ? CoursePress_Core::get_slug( 'signup', true ) : wp_login_url() );
+				exit;
 			}
 		}
-
 	}
 
 	public static function student_settings() {
@@ -108,7 +106,7 @@ class CoursePress_Template_Student {
 
 					do_action( 'coursepress_before_settings_validation' );
 
-					if ( $_POST['password'] != '' ) {
+					if ( $_POST['password'] ) {
 						if ( $_POST['password'] == $_POST['password_confirmation'] ) {
 							$student_data['user_pass'] = $_POST['password'];
 						} else {
@@ -128,7 +126,7 @@ class CoursePress_Template_Student {
 						$form_errors ++;
 					}
 
-					if ( $form_errors == 0 ) {
+					if ( ! $form_errors ) {
 						if ( CoursePress_Data_Student::update_student_data( $student_id, $student_data ) ) {
 							$form_message = __( 'Profile has been updated successfully.', 'CP_TD' );
 							$form_message_class = 'regular';

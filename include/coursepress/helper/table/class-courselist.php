@@ -12,7 +12,6 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 
 	/** Class constructor */
 	public function __construct() {
-
 		$post_format = CoursePress_Data_Course::get_format();
 
 		parent::__construct( array(
@@ -23,15 +22,12 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 
 		$this->post_type = CoursePress_Data_Course::get_post_type_name();
 		$this->count = wp_count_posts( $this->post_type );
-
 	}
-
 
 	/** No items */
 	public function no_items() {
 		_e( 'No courses found.', 'CP_TD' );
 	}
-
 
 	public function get_columns() {
 		$columns = array(
@@ -178,19 +174,19 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		$hidden = $this->get_hidden_columns();
 		$sortable = $this->get_sortable_columns();
 
-		$perPage = 10;
-		$currentPage = $this->get_pagenum();
+		$per_page = 10;
+		$current_page = $this->get_pagenum();
 
 		// Debug
-		$perPage = 10;
+		$per_page = 10;
 
-		$offset = ( $currentPage - 1 ) * $perPage;
+		$offset = ( $current_page - 1 ) * $per_page;
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 		$post_args = array(
 			'post_type' => $this->post_type,
 			'post_status' => $post_status,
-			'posts_per_page' => $perPage,
+			'posts_per_page' => $per_page,
 			'offset' => $offset,
 			's' => isset( $_GET['s'] ) && ! empty( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '',
 		);
@@ -211,17 +207,17 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 
 		$this->items = $query->posts;
 
-		$totalItems = $query->found_posts;
-		$this->set_pagination_args( array(
-			'total_items' => $totalItems,
-			'per_page' => $perPage,
-		) );
-
+		$total_items = $query->found_posts;
+		$this->set_pagination_args(
+			array(
+				'total_items' => $total_items,
+				'per_page' => $per_page,
+			)
+		);
 	}
 
 
 	protected function course_filter( $which = '' ) {
-
 		if ( 'top' !== $which ) {
 			return;
 		}
@@ -235,7 +231,8 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		}
 
 		if ( empty( $this->_categories ) ) {
-			return; }
+			return;
+		}
 
 		$page = get_query_var( 'page', 'coursepress' );
 		$tab = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : '';
@@ -282,15 +279,13 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		echo '<input type="hidden" name="category" value="' . $category . '" />';
 
 		?>
-
 		<p class="search-box">
 			<label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
 			<input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" />
 			<?php submit_button( $text, 'button', '', false, array( 'id' => 'search-submit' ) ); ?>
 		</p>
-	<?php
+		<?php
 	}
-
 
 	protected function display_tablenav( $which ) {
 		if ( 'top' == $which ) {
@@ -318,7 +313,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 					<input type="hidden" name="tab" value="<?php esc_attr( $tab ) ?>"/>
 					<?php $this->search_box( __( 'Search Courses', 'CP_TD' ), 'search_id' ); ?>
 				</form>
-			<?php
+				<?php
 			} else {
 				$this->pagination( $which );
 			}

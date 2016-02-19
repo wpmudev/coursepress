@@ -40,7 +40,7 @@ class CoursePress_Data_Shortcode_Template {
 		), $a, 'course_archive' );
 
 		$category = sanitize_text_field( $a['category'] );
-		$perPage = (int) $a['posts_per_page'];
+		$per_page = (int) $a['posts_per_page'];
 		$show_pager = cp_is_true( $a['show_pager'] );
 		$echo = cp_is_true( $a['echo'] );
 
@@ -50,7 +50,7 @@ class CoursePress_Data_Shortcode_Template {
 		$post_args = array(
 			'post_type' => CoursePress_Data_Course::get_post_type_name(),
 			'post_status' => 'publish',
-			'posts_per_page' => $perPage,
+			'posts_per_page' => $per_page,
 			'offset' => $offset,
 			'paged' => $paged,
 		);
@@ -476,21 +476,36 @@ class CoursePress_Data_Shortcode_Template {
 				$goto_section = false;
 				$goto_next_section = false;
 
-				$next_module = CoursePress_Data_Course::next_accessible( $course_id, $unit_id, $preview, $item_id, $page );
+				$next_module = CoursePress_Data_Course::next_accessible(
+					$course_id,
+					$unit_id,
+					$preview,
+					$item_id,
+					$page
+				);
+				$previous_module = CoursePress_Data_Course::previous_accessible(
+					$course_id,
+					$unit_id,
+					$preview,
+					$item_id,
+					$page
+				);
+
 				if ( true === $next_module ) {
-					$next_module = $module_index !== ( count( $modules ) - 1 ) ? $module_index + 1 : false;
+					$last_module = count( $modules ) - 1;
+					$next_module = ($last_module != $module_index ? $module_index + 1 : false);
 					$next_module = false !== $next_module ? $modules[ $next_module ] : $next_module;
 				}
-				$previous_module = CoursePress_Data_Course::previous_accessible( $course_id, $unit_id, $preview, $item_id, $page );
+
 				if ( true === $previous_module ) {
-					$previous_module = $module_index !== 0 ? $module_index - 1 : false;
+					$previous_module = (0 != $module_index ? $module_index - 1 : false);
 					$previous_module = false !== $previous_module ? $modules[ $previous_module ] : $previous_module;
 				}
 
 				$breadcrumb_trail .= '<span class="breadcrumb-leaf">' . $bcs . '<span class="breadcrumb-course-unit-section-module crumb end">' . esc_html( get_post_field( 'post_title', $modules[ $module_index ] ) ) . '</span></span>';
 
-				// Show section if we're at the first module
-				if ( $previous_module === false ) {
+				// Show section if we're at the first module.
+				if ( false === $previous_module ) {
 					if ( CoursePress_Data_Course::get_setting( $course_id, 'focus_hide_section', true ) ) {
 						if ( (int) $page > 1 ) {
 							$modules = CoursePress_Data_Course::get_unit_modules( $unit_id, array( 'publish' ), true, false, array( 'page' => ( $page - 1 ) ) );
@@ -502,7 +517,7 @@ class CoursePress_Data_Shortcode_Template {
 				}
 
 				// Show the next section if this is the last module
-				if ( $next_module === false ) {
+				if ( false === $next_module ) {
 					$goto_next_section = true;
 				}
 
@@ -551,21 +566,21 @@ class CoursePress_Data_Shortcode_Template {
 
 				$content .= '<div class="focus-nav">';
 				// Previous Navigation
-				if ( $goto_section || $previous_module !== false ) {
+				if ( $goto_section || false !== $previous_module ) {
 					$content .= $goto_section ? '
-							<div class="focus-nav-prev" data-id="' . $page . '" data-type="section"><a href="#section-' . esc_attr( $page ) . '">' . $pre_text . '</a></div>
-						' : '
-							<div class="focus-nav-prev" data-id="' . $previous_module . '" data-type="module"><a href="#module-' . esc_attr( $previous_module ) . '">' . $pre_text . '</a></div>
-						';
+						<div class="focus-nav-prev" data-id="' . $page . '" data-type="section"><a href="#section-' . esc_attr( $page ) . '">' . $pre_text . '</a></div>
+					' : '
+						<div class="focus-nav-prev" data-id="' . $previous_module . '" data-type="module"><a href="#module-' . esc_attr( $previous_module ) . '">' . $pre_text . '</a></div>
+					';
 				}
 
 				// Next Navigation
-				if ( ( $goto_next_section && $page_count >= ( $page + 1 ) ) || $next_module !== false ) {
+				if ( ( $goto_next_section && $page_count >= ( $page + 1 ) ) || false !== $next_module ) {
 					$content .= $goto_next_section ? '
-							<div class="focus-nav-next ' . $next_module_class . ' next-section" data-id="' . ( $page + 1 ) . '" data-type="section"><a href="#section-' . esc_attr( ( $page + 1 ) ) . '">' . $next_section_text . '</a></div>
-						' : '
-							<div class="focus-nav-next ' . $next_module_class . '" data-id="' . $next_module . '" data-type="module"><a href="#module-' . esc_attr( $next_module ) . '">' . $next_text . '</a></div>
-						';
+						<div class="focus-nav-next ' . $next_module_class . ' next-section" data-id="' . ( $page + 1 ) . '" data-type="section"><a href="#section-' . esc_attr( ( $page + 1 ) ) . '">' . $next_section_text . '</a></div>
+					' : '
+						<div class="focus-nav-next ' . $next_module_class . '" data-id="' . $next_module . '" data-type="module"><a href="#module-' . esc_attr( $next_module ) . '">' . $next_text . '</a></div>
+					';
 				}
 				$content .= '</div>'; // .focus-nav
 				$content .= '</div>'; // .focus-wrapper
@@ -586,7 +601,6 @@ class CoursePress_Data_Shortcode_Template {
 
 				$template = apply_filters( 'coursepress_no_access_message', $content, $course_id, $unit_id );
 				break;
-
 		}
 
 		$content = $progress_spinner . do_shortcode( $template );

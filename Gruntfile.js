@@ -292,7 +292,7 @@ module.exports = function(grunt) {
 				files: [
 					conf.css_folder + 'src/**/*.scss'
 				],
-				tasks: ['sass', 'autoprefixer'],
+				tasks: ['clear', 'sass', 'autoprefixer'],
 				options: {
 					debounceDelay: 500
 				}
@@ -302,7 +302,7 @@ module.exports = function(grunt) {
 				files: [
 					conf.js_folder + 'src/**/*.js'
 				],
-				tasks: ['jshint', 'concat'],
+				tasks: ['clear', 'jshint', 'concat'],
 				options: {
 					debounceDelay: 500
 				}
@@ -354,7 +354,7 @@ module.exports = function(grunt) {
 				src: conf.php_files,
 				options: {
 					bin: 'vendor/bin/phpcs',
-					standard: 'WordPress'
+					standard: 'WordPress-Core'
 				}
 			}
 		},
@@ -493,8 +493,6 @@ module.exports = function(grunt) {
 			build = ['pro', 'free', 'campus'];
 		}
 
-		grunt.log.subhead( 'Prepare the dev branch...' );
-
 		// Run the default tasks (js/css/php validation)
 		grunt.task.run( 'default' );
 
@@ -523,6 +521,8 @@ module.exports = function(grunt) {
 	grunt.registerTask( 'test', 'Test if grunt is working', function() {
 		grunt.log.subhead( 'Looks like grunt is installed!' );
 	});
+
+	grunt.task.run( 'clear' );
 
 	// Define default tasks.
 	grunt.registerTask( 'js', ['jsvalidate', 'jshint', 'concat', 'uglify'] );

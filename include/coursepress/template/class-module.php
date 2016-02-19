@@ -24,7 +24,7 @@ class CoursePress_Template_Module {
 			$content .= '<h4 class="module-title">' . $module->post_title . '</h4>';
 		}
 
-		if ( $mandatory && $attributes['module_type'] != 'input-quiz' ) {
+		if ( $mandatory && 'input-quiz' != $attributes['module_type'] ) {
 			$content .= '<div class="is-mandatory">' . esc_html__( 'Mandatory', 'CP_TD' ) . '</div>';
 		}
 
@@ -41,7 +41,6 @@ class CoursePress_Template_Module {
 	}
 
 	private static function do_caption_media( $data ) {
-
 		if ( empty( $data['image_url'] ) && empty( $data['video_url'] ) ) {
 			return '';
 		}
@@ -90,8 +89,8 @@ class CoursePress_Template_Module {
 				$media_width = get_option( 'large_size_w' );
 			}
 
-					// Get the custom caption text
-					$the_caption = isset( $data['caption_custom_text'] ) ? CoursePress_Helper_Utility::filter_content( $data['caption_custom_text'] ) : '';
+			// Get the custom caption text
+			$the_caption = isset( $data['caption_custom_text'] ) ? CoursePress_Helper_Utility::filter_content( $data['caption_custom_text'] ) : '';
 		}
 
 		$html = '';
@@ -105,15 +104,12 @@ class CoursePress_Template_Module {
 		}
 
 		if ( 'image' === $type ) {
-
 			if ( $show_caption ) {
-
 				$html .= '<div class="image_holder">';
 				$img = '<img src="' . esc_url( $url ) . '" alt="' . esc_attr( $alt_text ) . '" />';
 				$html .= do_shortcode( '[caption width="' . $media_width . '"' . $attachment_id . ']' . $img . ' ' . $the_caption . '[/caption]' );
 				$html .= '</div>';
 			} else {
-
 				$html .= '<div class="image_holder">';
 				$html .= '<img src="' . esc_url( $url ) . '" alt="' . esc_attr( $alt_text ) . '" />';
 				$html .= '</div>';
@@ -121,7 +117,6 @@ class CoursePress_Template_Module {
 		}
 
 		if ( 'video' === $type ) {
-
 			$video_extension = pathinfo( $url, PATHINFO_EXTENSION );
 			$hide_related = isset( $data['hide_related_media'] ) ? cp_is_true( $data['hide_related_media'] ) : false;
 
@@ -145,7 +140,6 @@ class CoursePress_Template_Module {
 			}
 
 			if ( $show_caption ) {
-
 				$html .= '<div class="video_holder">';
 				$html .= '<figure ' . $attachment_id . ' class="wp-caption" style="width: ' . $media_width . 'px;">';
 				$html .= '<div class="video_player">';
@@ -156,9 +150,7 @@ class CoursePress_Template_Module {
 				}
 				$html .= '</figure>';
 				$html .= '</div>';
-
 			} else {
-
 				$html .= '<div class="video_player">';
 				$html .= $video;
 				$html .= '</div>';
@@ -320,10 +312,18 @@ class CoursePress_Template_Module {
 				<div class="comment-content"><?php comment_text(); ?></div>
 
 				<div class="reply">
-					<?php comment_reply_link( array_merge( $args, array(
-						'depth' => $depth,
-																		 'max_depth' => $args['max_depth'],
-					) ), $comment ); ?>
+					<?php
+					comment_reply_link(
+						array_merge(
+							$args,
+							array(
+								'depth' => $depth,
+								'max_depth' => $args['max_depth'],
+							)
+						),
+						$comment
+					);
+					?>
 				</div>
 			</article>
 		</li>
@@ -534,8 +534,8 @@ class CoursePress_Template_Module {
 
 				$content .= '<ul>';
 				foreach ( $attributes['answers'] as $key => $answer ) {
-					$the_answer = (int) $attributes['answers_selected'] === (int) $key;
-					$student_answer = (int) $last_response === (int) $key;
+					$the_answer = $attributes['answers_selected'] == $key;
+					$student_answer = $last_response == $key;
 
 					$class = '';
 					if ( $student_answer && $the_answer ) {
@@ -547,10 +547,9 @@ class CoursePress_Template_Module {
 					}
 
 					$content .= '<li class="' . $class . '">' . $answer . '</li>';
-
 				}
-				$content .= '</ul>';
 
+				$content .= '</ul>';
 				$content .= '</div>';
 
 				// Render Response and Feedback
@@ -568,7 +567,7 @@ class CoursePress_Template_Module {
 			}
 		}
 
-		$content .= '</div>'; // module_footer
+		$content .= '</div>'; // module_footer.
 		return str_replace( array( "\n", "\r" ), '', $content );
 	}
 
@@ -581,7 +580,7 @@ class CoursePress_Template_Module {
 
 		$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id );
 
-		// Content
+		// Content.
 		$content .= '<div class="module-content">' . do_shortcode( $module->post_content ) . '</div>';
 
 		if ( ! empty( $attributes['answers'] ) ) {
@@ -590,21 +589,21 @@ class CoursePress_Template_Module {
 
 			$element_class = ! empty( $responses ) ? 'hide' : '';
 			$response_count = ! empty( $responses ) ? count( $responses ) : 0;
-			// $attributes['retry_attempts'] = 3; // DEBUG
+
 			$disabled = ! $attributes['allow_retries'] && $response_count > 0;
 			$disabled = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
 
-			// RESUBMIT LOGIC
+			// RESUBMIT LOGIC.
 			$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit Answer', 'CP_TD' ) . '</a></div>' : '';
 
 			$disabled_attr = $disabled ? 'disabled="disabled"' : '';
 			$content .= '<div class="module-elements ' . $element_class . '">';
 
 			$content .= '
-						<input type="hidden" name="course_id" value="' . $course_id . '" />
-						<input type="hidden" name="unit_id" value="' . $unit_id . '" />
-						<input type="hidden" name="module_id" value="' . $module_id . '" />
-						<input type="hidden" name="student_id" value="' . get_current_user_id() . '" />';
+				<input type="hidden" name="course_id" value="' . $course_id . '" />
+				<input type="hidden" name="unit_id" value="' . $unit_id . '" />
+				<input type="hidden" name="module_id" value="' . $module_id . '" />
+				<input type="hidden" name="student_id" value="' . get_current_user_id() . '" />';
 
 			$content .= '<select class="wide" name="module-' . $module->ID . '" ' . $disabled_attr . '>';
 
@@ -615,9 +614,7 @@ class CoursePress_Template_Module {
 			}
 
 			$content .= '</select>';
-
 			$content .= $action;
-
 			$content .= '</div>';
 
 			if ( ! empty( $responses ) ) {
@@ -630,8 +627,8 @@ class CoursePress_Template_Module {
 
 				$content .= '<ul>';
 				foreach ( $attributes['answers'] as $key => $answer ) {
-					$the_answer = (int) $attributes['answers_selected'] === (int) $key;
-					$student_answer = (int) $last_response === (int) $key;
+					$the_answer = $attributes['answers_selected'] == $key;
+					$student_answer = $last_response == $key;
 
 					$class = '';
 					if ( $student_answer && $the_answer ) {
@@ -646,6 +643,7 @@ class CoursePress_Template_Module {
 						$content .= '<li class="' . $class . '">' . $answer . '</li>';
 					}
 				}
+
 				$content .= '</ul>';
 				// $meh = '<p><span class="label">' . esc_html__( 'Response: ', 'CP_TD' ) . '</span>
 				// ' . $attributes['answers'][ (int) $last_response ] . '
@@ -912,7 +910,7 @@ class CoursePress_Template_Module {
 			// Has the user already answered?
 			$element_class = ! empty( $responses ) && $disabled ? 'hide' : '';
 
-			$unlimited = 0 === (int) $attributes['retry_attempts'];
+			$unlimited = empty( $attributes['retry_attempts'] );
 			$remaining = ! $unlimited ? (int) $attributes['retry_attempts'] - ( $response_count - 1 ) : 0;
 			$remaining_message = ! $unlimited ? sprintf( __( 'You have %d attempts left.', 'CP_TD' ), $remaining ) : '';
 			$content .= ! empty( $responses ) && ! $already_passed ? '<div class="not-passed-message">' . sprintf( esc_html__( 'Your last attempt was unsuccessful. Try again. %s', 'CP_TD' ), $remaining_message ) . '</div>' : '';

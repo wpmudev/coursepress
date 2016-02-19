@@ -223,11 +223,9 @@ class CoursePress_Data_Module {
 		}
 
 		return $attributes;
-
 	}
 
 	public static function discussion_module_link( $link, $comment, $args ) {
-
 		$post_type = get_post_type( $comment->comment_post_ID );
 
 		if ( 'module' === $post_type ) {
@@ -241,10 +239,9 @@ class CoursePress_Data_Module {
 	}
 
 	public static function discussions_comments_open( $open, $post_id ) {
-
 		$type = get_post_meta( $post_id, 'module_type', true );
 
-		if ( $type === 'discussion' ) {
+		if ( 'discussion' == $type ) {
 			return true;
 		}
 
@@ -252,7 +249,6 @@ class CoursePress_Data_Module {
 	}
 
 	public static function discussion_post_link( $link, $post, $args ) {
-
 		$post_type = get_post_type( $post );
 
 		if ( 'module' === $post_type ) {
@@ -266,7 +262,6 @@ class CoursePress_Data_Module {
 	}
 
 	public static function discussion_edit_redirect( $location, $comment_id ) {
-
 		$comment = get_comment( $comment_id );
 
 		$post_type = get_post_type( $comment->comment_post_ID );
@@ -286,7 +281,7 @@ class CoursePress_Data_Module {
 		// $comment = get_comment( $comment_id );
 		// $post_type = get_post_type( $comment->comment_post_ID );
 		//
-		// if( 'module' === $post_type ) {
+		// if ( 'module' === $post_type ) {
 		// $unit_id = get_post_field( 'post_parent', $comment->comment_post_ID );
 		// $course_id = get_post_field( 'post_parent', $unit_id );
 		// $course_link = get_permalink( $course_id );

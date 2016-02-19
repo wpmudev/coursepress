@@ -218,34 +218,47 @@ class CoursePress_Data_Student {
 				}
 
 				$grade = (int) ( $correct / $total * 100 );
-
 				break;
+
 			case 'input-select':
 			case 'input-radio':
-				if ( (int) $response === (int) $attributes['answers_selected'] ) {
+				if ( $response == $attributes['answers_selected'] ) {
 					$grade = 100;
 				} else {
 					$grade = 0;
 				}
 				break;
+
 			case 'input-quiz':
-				$result = CoursePress_Data_Module::get_quiz_results( $student_id, $course_id, $unit_id, $module_id, $response, $data );
+				$result = CoursePress_Data_Module::get_quiz_results(
+					$student_id,
+					$course_id,
+					$unit_id,
+					$module_id,
+					$response,
+					$data
+				);
 				$grade = $result['grade'];
 				break;
-
 		}
-		$grade = apply_filters( 'coursepress_autograde_module_response', $grade, $module_id, $student_id );
+
+		$grade = apply_filters(
+			'coursepress_autograde_module_response',
+			$grade,
+			$module_id,
+			$student_id
+		);
 
 		$grade_data = array(
-			'graded_by' => $grade === - 1 ? '' : 'auto',
+			'graded_by' => (-1 == $grade ? '' : 'auto'),
 			'grade' => $grade,
-			'date' => $grade === - 1 ? '' : current_time( 'mysql' ),
+			'date' => (-1 == $grade ? '' : current_time( 'mysql' ) ),
 		);
 
 		$response_data = array(
 			'response' => $response,
 			'date' => current_time( 'mysql' ),
-			'grades' => $grade === - 1 ? array() : array( $grade_data ),
+			'grades' => (-1 == $grade ? array() : array( $grade_data ) ),
 			'feedback' => array(),
 		);
 
@@ -285,31 +298,57 @@ class CoursePress_Data_Student {
 
 	}
 
-	public static function get_grade( $student_id, $course_id, $unit_id, $module_id, $response_index = false, $grade_index = false, &$data = false ) {
+	public static function get_grade(
+		$student_id, $course_id, $unit_id, $module_id, $response_index = false, $grade_index = false, &$data = false
+	) {
+		$grade = false;
 
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
 
-		$response = self::get_response( $student_id, $course_id, $unit_id, $module_id, $response_index, $data );
-		$grades = isset( $response['grades'] ) ? $response['grades'] : array();
+		$response = self::get_response(
+			$student_id,
+			$course_id,
+			$unit_id,
+			$module_id,
+			$response_index,
+			$data
+		);
 
-		// Get last grade
-		if ( ! $grade_index ) {
-			$grade_index = ( count( $grades ) - 1 );
+		if ( ! isset( $response['grades'] ) ) {
+			$response['grades'] = array();
 		}
 
-		return ! empty( $grades ) && isset( $grades[ $grade_index ] ) ? $grades[ $grade_index ] : false;
+		// Get last grade.
+		$last_grade = ( count( $response['grades'] ) - 1 );
+		if ( ! $grade_index || $grade_index > $last_grade ) {
+			$grade_index = $last_grade;
+		}
 
+		if ( isset( $response['grades'][ $grade_index ] ) ) {
+			$grade = $response['grades'][ $grade_index ];
+
+			if ( empty( $grade['grade'] ) && 0 != $grade['grade'] ) {
+				$grade['grade'] = -1;
+			}
+			$grade['grade'] = (int) $grade['grade'];
+		}
+
+		return $grade;
 	}
 
-	public static function record_grade( $student_id, $course_id, $unit_id, $module_id, $grade, $response_index = false, &$data = false ) {
-
+	public static function record_grade(
+		$student_id, $course_id, $unit_id, $module_id, $grade, $response_index = false, &$data = false
+	) {
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
 
-		$responses = CoursePress_Helper_Utility::get_array_val( $data, 'units/' . $unit_id . '/responses/' . $module_id );
+		$responses = CoursePress_Helper_Utility::get_array_val(
+			$data,
+			'units/' . $unit_id . '/responses/' . $module_id
+		);
 
 		// Get last grade
 		if ( ! $response_index ) {
@@ -322,7 +361,11 @@ class CoursePress_Data_Student {
 			'date' => current_time( 'mysql' ),
 		);
 
-		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/responses/' . $module_id . '/' . $response_index . '/grades/', $grade_data );
+		CoursePress_Helper_Utility::set_array_val(
+			$data,
+			'units/' . $unit_id . '/responses/' . $module_id . '/' . $response_index . '/grades/',
+			$grade_data
+		);
 
 		self::update_completion_data( $student_id, $course_id, $data );
 
@@ -330,16 +373,19 @@ class CoursePress_Data_Student {
 		self::calculate_completion( $student_id, $course_id );
 
 		return $data;
-
 	}
 
-	public static function get_response( $student_id, $course_id, $unit_id, $module_id, $response_index = false, &$data = false ) {
-
+	public static function get_response(
+		$student_id, $course_id, $unit_id, $module_id, $response_index = false, &$data = false
+	) {
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
 
-		$responses = CoursePress_Helper_Utility::get_array_val( $data, 'units/' . $unit_id . '/responses/' . $module_id );
+		$responses = CoursePress_Helper_Utility::get_array_val(
+			$data,
+			'units/' . $unit_id . '/responses/' . $module_id
+		);
 
 		// Get last grade
 		if ( ! $response_index ) {
@@ -347,16 +393,23 @@ class CoursePress_Data_Student {
 		}
 
 		return ! empty( $responses ) && isset( $responses[ $response_index ] ) ? $responses[ $response_index ] : false;
-
 	}
 
-	public static function get_feedback( $student_id, $course_id, $unit_id, $module_id, $response_index = false, $feedback_index = false, &$data = false ) {
-
+	public static function get_feedback(
+		$student_id, $course_id, $unit_id, $module_id, $response_index = false, $feedback_index = false, &$data = false
+	) {
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
 
-		$response = self::get_response( $student_id, $course_id, $unit_id, $module_id, $response_index, $data );
+		$response = self::get_response(
+			$student_id,
+			$course_id,
+			$unit_id,
+			$module_id,
+			$response_index,
+			$data
+		);
 		$feedback = isset( $response['feedback'] ) ? $response['feedback'] : array();
 
 		// Get last grade
@@ -365,16 +418,19 @@ class CoursePress_Data_Student {
 		}
 
 		return ! empty( $feedback ) && isset( $feedback[ $feedback_index ] ) ? $feedback[ $feedback_index ] : false;
-
 	}
 
-	public static function record_feedback( $student_id, $course_id, $unit_id, $module_id, $feedback_new, $response_index = false, &$data = false ) {
-
+	public static function record_feedback(
+		$student_id, $course_id, $unit_id, $module_id, $feedback_new, $response_index = false, &$data = false
+	) {
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
 
-		$responses = CoursePress_Helper_Utility::get_array_val( $data, 'units/' . $unit_id . '/responses/' . $module_id );
+		$responses = CoursePress_Helper_Utility::get_array_val(
+			$data,
+			'units/' . $unit_id . '/responses/' . $module_id
+		);
 
 		// Get last grade
 		if ( ! $response_index ) {
@@ -387,17 +443,19 @@ class CoursePress_Data_Student {
 			'date' => current_time( 'mysql' ),
 		);
 
-		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/responses/' . $module_id . '/' . $response_index . '/feedback/', $feedback_data );
+		CoursePress_Helper_Utility::set_array_val(
+			$data,
+			'units/' . $unit_id . '/responses/' . $module_id . '/' . $response_index . '/feedback/',
+			$feedback_data
+		);
 
 		self::update_completion_data( $student_id, $course_id, $data );
 
 		return $data;
-
 	}
 
 
 	public static function calculate_completion( $student_id, $course_id ) {
-
 		if ( empty( $student_id ) ) {
 			return;
 		}
@@ -411,9 +469,9 @@ class CoursePress_Data_Student {
 
 		$total_units = count( $units );
 		$total_completion = 0;
-		foreach ( $units as $unit_id => $unit ) {
 
-			// Don't bother calculating completion if the student hasn't even started the unit
+		foreach ( $units as $unit_id => $unit ) {
+			// Don't bother calculating completion if the student hasn't even started the unit.
 			if ( ! in_array( $unit_id, $student_units ) ) {
 				continue;
 			}
@@ -421,20 +479,35 @@ class CoursePress_Data_Student {
 			$required_steps = 0;
 			$completed_steps = 0;
 
-			// PAGES
+			// PAGES.
 			$total_pages = count( $unit['pages'] );
 			$required_steps += $total_pages;
-			$visited_pages = CoursePress_Helper_Utility::get_array_val( $student_progress, 'units/' . $unit_id . '/visited_pages' );
+			$visited_pages = CoursePress_Helper_Utility::get_array_val(
+				$student_progress,
+				'units/' . $unit_id . '/visited_pages'
+			);
 			$total_visited_pages = count( $visited_pages );
 			$completed_steps += $total_visited_pages;
 
 			if ( $total_pages === $total_visited_pages ) {
-				CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/all_pages', true );
+				CoursePress_Helper_Utility::set_array_val(
+					$student_progress,
+					'completion/' . $unit_id . '/all_pages',
+					true
+				);
 			}
 
 			// First milestone
-			CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/required_steps', $required_steps );
-			CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/completed_steps', $completed_steps );
+			CoursePress_Helper_Utility::set_array_val(
+				$student_progress,
+				'completion/' . $unit_id . '/required_steps',
+				$required_steps
+			);
+			CoursePress_Helper_Utility::set_array_val(
+				$student_progress,
+				'completion/' . $unit_id . '/completed_steps',
+				$completed_steps
+			);
 
 			// MODULES
 			$assessable_mandatory = 0;

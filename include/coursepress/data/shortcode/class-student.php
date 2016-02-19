@@ -108,7 +108,10 @@ class CoursePress_Data_Shortcode_Student {
 				'show_page' => false,
 				'show_course_progress' => true,
 			)
-			, $args, 'student_workbook_table' );
+			,
+			$args,
+			'student_workbook_table'
+		);
 
 		$course_id = (int) $args['course_id'];
 		$unit_id = (int) $args['unit_id'];
@@ -266,7 +269,7 @@ class CoursePress_Data_Shortcode_Student {
 
 						$response_date = ! isset( $response['date'] ) ? '' : date_i18n( get_option( 'date_format' ), strtotime( $response['date'] ) );
 
-						$grade = (int) $grade === - 1 ? __( 'Ungraded', 'CP_TD' ) : $grade;
+						$grade = (-1 == $grade ? __( 'Ungraded', 'CP_TD' ) : $grade );
 
 						$mandatory = cp_is_true( $attributes['mandatory'] ) ? '<span class="dashicons dashicons-star-filled mandatory"></span>' : '';
 						$non_assessable = cp_is_true( $attributes['assessable'] ) ? '' : '<span class="dashicons dashicons-star-filled non-assessable"></span>';

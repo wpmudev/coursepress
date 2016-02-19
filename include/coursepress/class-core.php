@@ -93,20 +93,36 @@ class CoursePress_Core {
 		CoursePress_Upgrade::init();
 	}
 
+	/**
+	 * Return global setting in WP multisites. For single-sites it returns the
+	 * same as get_setting()
+	 *
+	 * @since  2.0.0
+	 * @param  string $key Setting key.
+	 * @param  mixed  $default Optional. Default value.
+	 * @return mixed Setting value.
+	 */
 	public static function get_network_setting( $key, $default = null ) {
 		return self::get_setting( $key, $default, is_multisite() );
 	}
 
-
+	/**
+	 * Return a single CoursePress setting.
+	 *
+	 * @since  2.0.0
+	 * @param  string $key Setting key.
+	 * @param  mixed  $default Optional. Default value.
+	 * @param  bool   $network Optional. Return network-wide setting (MS only).
+	 * @return mixed Setting value
+	 */
 	public static function get_setting( $key, $default = null, $network = false ) {
-
-		if ( false === $network ) {
+		if ( ! $network ) {
 			$settings = get_option( 'coursepress_settings' );
 		} else {
 			$settings = get_site_option( 'coursepress_settings' );
 		}
 
-		// Return all settings
+		// Return all settings.
 		if ( empty( $key ) ) {
 			return $settings;
 		}
@@ -153,86 +169,88 @@ class CoursePress_Core {
 	}
 
 	public static function get_slug_array() {
-		return apply_filters( 'coursepress_slug_array', array(
-
-			'course' => array(
-				'default' => 'courses',
-				'option' => 'slugs/course',
-			),
-			'category' => array(
-				'default' => 'course_category',
-				'option' => 'slugs/category',
-			),
-			'module' => array(
-				'default' => 'module',
-				'option' => 'slugs/module',
-			),
-			'unit' => array(
-				'default' => 'units',
-				'option' => 'slugs/units',
-			),
-			'notification' => array(
-				'default' => 'notifications',
-				'option' => 'slugs/notifications',
-			),
-			'discussion' => array(
-				'default' => 'discussion',
-				'option' => 'slugs/discussions',
-			),
-			'discussion_new' => array(
-				'default' => 'add_new_discussion',
-				'option' => 'slugs/discussion_new',
-			),
-			'grade' => array(
-				'default' => 'grades',
-				'option' => 'slugs/grades',
-			),
-			'workbook' => array(
-				'default' => 'workbook',
-				'option' => 'slugs/workbook',
-			),
-			'enrollment' => array(
-				'default' => 'enrollment_process',
-				'option' => 'slugs/enrollment',
-				'page_option' => 'pages/enrollment',
-			),
-			'login' => array(
-				'default' => 'student-login',
-				'option' => 'slugs/login',
-				'page_option' => 'pages/login',
-			),
-			'signup' => array(
-				'default' => 'courses-signup',
-				'option' => 'slugs/signup',
-				'page_option' => 'pages/signup',
-			),
-			'student_dashboard' => array(
-				'default' => 'courses-dashboard',
-				'option' => 'slugs/student_dashboard',
-				'page_option' => 'pages/student_dashboard',
-			),
-			'student_settings' => array(
-				'default' => 'student-settings',
-				'option' => 'slugs/student_settings',
-				'page_option' => 'pages/student_settings',
-			),
-			'instructor' => array(
-				'default' => 'instructor',
-				'option' => 'slugs/instructor_profile',
-			),
-			'inbox' => array(
-				'default' => 'student-inbox',
-				'option' => 'slugs/inbox',
-			),
-			'messages_sent' => array(
-				'default' => 'student-sent-messages',
-				'option' => 'slugs/sent_messages',
-			),
-			'messages_new' => array(
-				'default' => 'student-new-message',
-				'option' => 'slugs/new_messages',
-			),
-		) );
+		return apply_filters(
+			'coursepress_slug_array',
+			array(
+				'course' => array(
+					'default' => 'courses',
+					'option' => 'slugs/course',
+				),
+				'category' => array(
+					'default' => 'course_category',
+					'option' => 'slugs/category',
+				),
+				'module' => array(
+					'default' => 'module',
+					'option' => 'slugs/module',
+				),
+				'unit' => array(
+					'default' => 'units',
+					'option' => 'slugs/units',
+				),
+				'notification' => array(
+					'default' => 'notifications',
+					'option' => 'slugs/notifications',
+				),
+				'discussion' => array(
+					'default' => 'discussion',
+					'option' => 'slugs/discussions',
+				),
+				'discussion_new' => array(
+					'default' => 'add_new_discussion',
+					'option' => 'slugs/discussion_new',
+				),
+				'grade' => array(
+					'default' => 'grades',
+					'option' => 'slugs/grades',
+				),
+				'workbook' => array(
+					'default' => 'workbook',
+					'option' => 'slugs/workbook',
+				),
+				'enrollment' => array(
+					'default' => 'enrollment_process',
+					'option' => 'slugs/enrollment',
+					'page_option' => 'pages/enrollment',
+				),
+				'login' => array(
+					'default' => 'student-login',
+					'option' => 'slugs/login',
+					'page_option' => 'pages/login',
+				),
+				'signup' => array(
+					'default' => 'courses-signup',
+					'option' => 'slugs/signup',
+					'page_option' => 'pages/signup',
+				),
+				'student_dashboard' => array(
+					'default' => 'courses-dashboard',
+					'option' => 'slugs/student_dashboard',
+					'page_option' => 'pages/student_dashboard',
+				),
+				'student_settings' => array(
+					'default' => 'student-settings',
+					'option' => 'slugs/student_settings',
+					'page_option' => 'pages/student_settings',
+				),
+				'instructor' => array(
+					'default' => 'instructor',
+					'option' => 'slugs/instructor_profile',
+				),
+				'inbox' => array(
+					'default' => 'student-inbox',
+					'option' => 'slugs/inbox',
+				),
+				'messages_sent' => array(
+					'default' => 'student-sent-messages',
+					'option' => 'slugs/sent_messages',
+				),
+				'messages_new' => array(
+					'default' => 'student-new-message',
+					'option' => 'slugs/new_messages',
+				),
+			)
+		);
 	}
 
 	public static function get_slug( $context, $url = false ) {

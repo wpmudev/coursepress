@@ -3,7 +3,6 @@
 class CoursePress_View_Front_General {
 
 	public static function init() {
-
 		// CoursePress Menus
 		if ( cp_is_true( CoursePress_Core::get_setting( 'general/show_coursepress_menu', 1 ) ) ) {
 
@@ -14,17 +13,15 @@ class CoursePress_View_Front_General {
 			 */
 			add_filter( 'wp_nav_menu_objects', array( __CLASS__, 'main_navigation_links' ), 10, 2 );
 		}
-
 	}
 
 	public static function main_navigation_links( $sorted_menu_items, $args ) {
-
 		$current_url = 'http';
-		if ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] == 'on' ) {
+		if ( isset( $_SERVER['HTTPS'] ) && 'on' == $_SERVER['HTTPS'] ) {
 			$current_url .= 's';
 		}
 		$current_url .= '://';
-		if ( isset( $_SERVER['SERVER_PORT'] ) && $_SERVER['SERVER_PORT'] != '80' ) {
+		if ( isset( $_SERVER['SERVER_PORT'] ) && '80' != $_SERVER['SERVER_PORT'] ) {
 			$current_url .= $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $_SERVER['REQUEST_URI'];
 		} else {
 			$current_url .= $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
@@ -39,7 +36,8 @@ class CoursePress_View_Front_General {
 			}
 		}
 
-		if ( $args->theme_location == $theme_location ) {// put extra menu items only in primary ( most likely header ) menu
+		if ( $args->theme_location == $theme_location ) {
+			// Put extra menu items only in primary ( most likely header ) menu
 			$is_in = is_user_logged_in();
 
 			$courses = new stdClass;
@@ -146,7 +144,5 @@ class CoursePress_View_Front_General {
 		}
 
 		return $sorted_menu_items;
-
 	}
 }
-

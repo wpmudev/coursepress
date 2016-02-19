@@ -19,6 +19,8 @@
  * MA 02110-1301 USA
  */
 
+// @codingStandardsIgnoreFile This file uses functions from external libraries
+//                            that do not adhere to WP Coding Standards.
 
 /**
  * Class to Extend TCPF.

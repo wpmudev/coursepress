@@ -6,9 +6,7 @@ class CoursePress_Upgrade {
 		'2.0' => '_2p0',
 	);
 
-
 	public static function init() {
-
 		// If this setting does not exist, then default to last 1.0 release
 		$last_version = CoursePress_Core::get_network_setting( 'general/version', '1.2.5.8' );
 		$last_version = '1.2.5.8';
@@ -18,12 +16,10 @@ class CoursePress_Upgrade {
 				call_user_func( __CLASS__ . '::' . $f );
 			}
 		}
-
 	}
 
 
 	private static function _2p0() {
-
 		// $settings = get_option( 'coursepress_settings', array() );
 		// error_log( print_r( CoursePress_Core::get_network_setting('general/version'), true ) );
 		return false;

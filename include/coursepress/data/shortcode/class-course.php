@@ -336,7 +336,7 @@ class CoursePress_Data_Shortcode_Course {
 		$content = '<div class="course-summary course-summary-' . $course_id . ' ' . $class . '">';
 
 		if ( is_numeric( $length ) ) {
-			$content .= CoursePress_Helper_Utility::truncateHtml( do_shortcode( $course->post_excerpt ), $length );
+			$content .= CoursePress_Helper_Utility::truncate_html( do_shortcode( $course->post_excerpt ), $length );
 		} else {
 			$content .= do_shortcode( $course->post_excerpt );
 		}

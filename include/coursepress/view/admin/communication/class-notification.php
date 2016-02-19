@@ -7,7 +7,6 @@ class CoursePress_View_Admin_Communication_Notification {
 	private static $menu_title = '';
 
 	public static function init() {
-
 		self::$title = __( 'Notifications', 'CP_TD' );
 		self::$menu_title = __( 'Notifications', 'CP_TD' );
 
@@ -38,7 +37,7 @@ class CoursePress_View_Admin_Communication_Notification {
 	public static function process_form() {
 
 		//
-		// if( isset( $_GET['action'] ) && isset( $_GET['id'] ) && 'edit' === $_GET['action'] && 'new' === $_GET['id'] ) {
+		// if ( isset( $_GET['action'] ) && isset( $_GET['id'] ) && 'edit' === $_GET['action'] && 'new' === $_GET['id'] ) {
 		// }
 		if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'edit_notification' ) ) {
 
@@ -79,27 +78,25 @@ class CoursePress_View_Admin_Communication_Notification {
 
 		$action = isset( $_GET['action'] ) && in_array( $_GET['action'], $allowed_actions ) ? sanitize_text_field( $_GET['action'] ) : '';
 
-		$notificationListTable = new CoursePress_Helper_Table_NotificationList();
-		$notificationListTable->prepare_items();
+		$list_notification = new CoursePress_Helper_Table_NotificationList();
+		$list_notification->prepare_items();
 
 		$url = admin_url( 'admin.php?page=' . self::$slug . '&action=edit&id=new' );
 
 		$content = '<div class="coursepress_communications_wrapper notifications wrap">' .
-				   '<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '
-					<a class="add-new-h2" href="' . esc_url_raw( $url ) . '">' . esc_html__( 'New Notification', 'CP_TD' ) . '</a>
-					</h3>
-					<hr />';
+			'<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '
+			<a class="add-new-h2" href="' . esc_url_raw( $url ) . '">' . esc_html__( 'New Notification', 'CP_TD' ) . '</a>
+			</h3>
+			<hr />';
 
 		if ( empty( $action ) ) {
 
 			$bulk_nonce = wp_create_nonce( 'bulk_action_nonce' );
 			$content .= '<div class="nonce-holder" data-nonce="' . $bulk_nonce . '"></div>';
 			ob_start();
-			$notificationListTable->display();
+			$list_notification->display();
 			$content .= ob_get_clean();
-
 		} else {
-
 			switch ( $action ) {
 				case 'edit':
 					$content .= self::render_edit_page();
@@ -113,7 +110,6 @@ class CoursePress_View_Admin_Communication_Notification {
 	}
 
 	public static function render_edit_page() {
-
 		$the_id = isset( $_GET['id'] ) ? $_GET['id'] : false;
 		$the_id = 'new' === $the_id ? $the_id : (int) $the_id;
 

@@ -2,21 +2,17 @@
 
 class CoursePress_Helper_Setting {
 
-
 	private static $page_refs = array();
 	private static $valid_pages = array();
 	private static $pages = array();
 
 	public static function init() {
-
 		add_action( 'plugins_loaded', array( __CLASS__, 'admin_plugins_loaded' ) );
 		add_action( 'admin_menu', array( __CLASS__, 'admin_menu' ) );
 		add_action( 'admin_init', array( __CLASS__, 'admin_init' ) );
-
 	}
 
 	public static function admin_menu() {
-
 		$parent_handle = 'coursepress';
 		self::$page_refs[ $parent_handle ] = add_menu_page( CoursePress::$name, CoursePress::$name, 'coursepress_dashboard_cap', $parent_handle, array(
 			__CLASS__,
@@ -26,7 +22,6 @@ class CoursePress_Helper_Setting {
 		$pages = self::_get_pages();
 
 		foreach ( $pages as $handle => $page ) {
-
 			// Use default callback if not defined
 			$callback = empty( $page['callback'] ) ? array(
 				__CLASS__,

@@ -234,15 +234,13 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 		$output = '<span class="displaying-num">' . sprintf( _n( '1 item', '%s items', $total_items ), number_format_i18n( $total_items ) ) . '</span>';
 
 		$current = $this->get_pagenum();
-
 		$current_url = set_url_scheme( 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
-
 		$current_url = remove_query_arg( array( 'hotkeys_highlight_last', 'hotkeys_highlight_first' ), $current_url );
-
 		$page_links = array();
 
 		$disable_first = $disable_last = '';
-		if ( $current == 1 ) {
+
+		if ( 1 == $current ) {
 			$disable_first = ' disabled';
 		}
 		if ( $current == $total_pages ) {
@@ -316,16 +314,20 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 
 		if ( isset( $_GET['orderby'] ) ) {
 			$current_orderby = $_GET['orderby'];
-		} else { 			$current_orderby = ''; }
+		} else {
+			$current_orderby = '';
+		}
 
 		if ( isset( $_GET['order'] ) && 'desc' == $_GET['order'] ) {
 			$current_order = 'desc';
-		} else { 			$current_order = 'asc'; }
+		} else {
+			$current_order = 'asc';
+		}
 
 		if ( ! empty( $columns['cb'] ) ) {
 			static $cb_counter = 1;
 			$columns['cb'] = '<label class="screen-reader-text" for="cb-select-all-' . $cb_counter . '">' . __( 'Select All' ) . '</label>'
-							 . '<input id="cb-select-all-' . $cb_counter . '" type="checkbox" />';
+				. '<input id="cb-select-all-' . $cb_counter . '" type="checkbox" />';
 			$cb_counter++;
 		}
 
@@ -335,36 +337,39 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 
 			$style = '';
 			if ( in_array( $column_key, $hidden ) ) {
-				$style = 'display:none;'; }
+				$style = 'display:none;';
+			}
 
 			$style = ' style="' . $style . '"';
 
 			if ( 'cb' == $column_key ) {
-				$class[] = 'check-column'; } elseif ( in_array( $column_key, array( 'posts', 'comments', 'links' ) ) ) {
-				$class[] = 'num'; }
+				$class[] = 'check-column';
+			} elseif ( in_array( $column_key, array( 'posts', 'comments', 'links' ) ) ) {
+				$class[] = 'num';
+			}
 
-				if ( isset( $sortable[ $column_key ] ) ) {
-					list( $orderby, $desc_first ) = $sortable[ $column_key ];
+			if ( isset( $sortable[ $column_key ] ) ) {
+				list( $orderby, $desc_first ) = $sortable[ $column_key ];
 
-					if ( $current_orderby == $orderby ) {
-						$order = 'asc' == $current_order ? 'desc' : 'asc';
-						$class[] = 'sorted';
-						$class[] = $current_order;
-					} else {
-						$order = $desc_first ? 'desc' : 'asc';
-						$class[] = 'sortable';
-						$class[] = $desc_first ? 'asc' : 'desc';
-					}
-
-					$column_display_name = '<a href="' . esc_url( add_query_arg( compact( 'orderby', 'order' ), $current_url ) ) . '"><span>' . $column_display_name . '</span><span class="sorting-indicator"></span></a>';
+				if ( $current_orderby == $orderby ) {
+					$order = 'asc' == $current_order ? 'desc' : 'asc';
+					$class[] = 'sorted';
+					$class[] = $current_order;
+				} else {
+					$order = $desc_first ? 'desc' : 'asc';
+					$class[] = 'sortable';
+					$class[] = $desc_first ? 'asc' : 'desc';
 				}
 
-				$id = $with_id ? "id='$column_key'" : '';
+				$column_display_name = '<a href="' . esc_url( add_query_arg( compact( 'orderby', 'order' ), $current_url ) ) . '"><span>' . $column_display_name . '</span><span class="sorting-indicator"></span></a>';
+			}
 
-				if ( ! empty( $class ) ) {
-					$class = "class='" . join( ' ', $class ) . "'"; }
+			$id = $with_id ? "id='$column_key'" : '';
 
-				$content .= "<th scope='col' $id $class $style>$column_display_name</th>";
+			if ( ! empty( $class ) ) {
+				$class = "class='" . join( ' ', $class ) . "'"; }
+
+			$content .= "<th scope='col' $id $class $style>$column_display_name</th>";
 		}
 		return $content;
 	}

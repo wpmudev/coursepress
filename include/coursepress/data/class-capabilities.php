@@ -442,7 +442,7 @@ class CoursePress_Data_Capabilities {
 		if ( empty( $unit_id ) ) {
 			return false;
 		} else {
-			return $user_id == get_post_field( 'post_author', $unit_id ) ? true : false;
+			return get_post_field( 'post_author', $unit_id ) == $user_id;
 		}
 	}
 
@@ -461,7 +461,7 @@ class CoursePress_Data_Capabilities {
 		if ( empty( $course_id ) ) {
 			return false;
 		} else {
-			return $user_id == get_post_field( 'post_author', $course_id );
+			return get_post_field( 'post_author', $course_id ) == $user_id;
 		}
 	}
 

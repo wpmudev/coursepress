@@ -35,7 +35,7 @@ class CoursePress_Data_VirtualPage {
 		$this->comment_status = isset( $args['comment_status'] ) ? $args['comment_status'] : 'closed';
 		$this->post_type = 'public';
 
-		add_filter( 'the_posts', array( &$this, 'virtualPage' ) );
+		add_filter( 'the_posts', array( &$this, 'virtual_page' ) );
 		add_filter( 'the_title', array( &$this, 'hide_title' ), 10, 2 );
 		remove_action( 'wp_head', 'start_post_rel_link', 10, 0 );
 		remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0 );
@@ -43,7 +43,7 @@ class CoursePress_Data_VirtualPage {
 	}
 
 	// filter to create virtual page content
-	function virtualPage( $posts ) {
+	function virtual_page( $posts ) {
 		global $wp, $wp_query, $comment, $withcomments;
 		$withcomments = false;
 
@@ -55,7 +55,7 @@ class CoursePress_Data_VirtualPage {
 		$virtual_post = '';
 
 		// Try a real post first and then override it with args
-		// if( ! empty( $this->ID ) ) {
+		// if ( ! empty( $this->ID ) ) {
 		// CoursePress_Data_VirtualPage::$the_post_id = $this->ID;
 		// $virtual_post = get_post( $this->ID );
 		// $virtual_post->post_content = $this->content;

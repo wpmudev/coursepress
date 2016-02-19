@@ -7,7 +7,6 @@ class CoursePress_View_Admin_Communication_Discussion {
 	private static $menu_title = '';
 
 	public static function init() {
-
 		self::$title = __( 'Discussions', 'CP_TD' );
 		self::$menu_title = __( 'Discussions', 'CP_TD' );
 
@@ -36,9 +35,8 @@ class CoursePress_View_Admin_Communication_Discussion {
 	}
 
 	public static function process_form() {
-
 		//
-		// if( isset( $_GET['action'] ) && isset( $_GET['id'] ) && 'edit' === $_GET['action'] && 'new' === $_GET['id'] ) {
+		// if ( isset( $_GET['action'] ) && isset( $_GET['id'] ) && 'edit' === $_GET['action'] && 'new' === $_GET['id'] ) {
 		// }
 		if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'edit_discussion' ) ) {
 
@@ -70,38 +68,32 @@ class CoursePress_View_Admin_Communication_Discussion {
 			$url = admin_url( 'admin.php?page=' . self::$slug );
 			wp_redirect( esc_url_raw( $url ) );
 			exit;
-
 		}
-
 	}
 
 	public static function render_page() {
-
 		$allowed_actions = array( 'edit' );
 
 		$action = isset( $_GET['action'] ) && in_array( $_GET['action'], $allowed_actions ) ? sanitize_text_field( $_GET['action'] ) : '';
 
-		$discussionListTable = new CoursePress_Helper_Table_DiscussionList();
-		$discussionListTable->prepare_items();
+		$list_discussion = new CoursePress_Helper_Table_DiscussionList();
+		$list_discussion->prepare_items();
 
 		$url = admin_url( 'admin.php?page=' . self::$slug . '&action=edit&id=new' );
 
 		$content = '<div class="coursepress_communications_wrapper discussions wrap">' .
-				   '<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '
-					<a class="add-new-h2" href="' . esc_url_raw( $url ) . '">' . esc_html__( 'New Discussion', 'CP_TD' ) . '</a>
-					</h3>
-					<hr />';
+			'<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '
+			<a class="add-new-h2" href="' . esc_url_raw( $url ) . '">' . esc_html__( 'New Discussion', 'CP_TD' ) . '</a>
+			</h3>
+			<hr />';
 
 		if ( empty( $action ) ) {
-
 			$bulk_nonce = wp_create_nonce( 'bulk_action_nonce' );
 			$content .= '<div class="nonce-holder" data-nonce="' . $bulk_nonce . '"></div>';
 			ob_start();
-			$discussionListTable->display();
+			$list_discussion->display();
 			$content .= ob_get_clean();
-
 		} else {
-
 			switch ( $action ) {
 				case 'edit':
 					$content .= self::render_edit_page();
@@ -115,7 +107,6 @@ class CoursePress_View_Admin_Communication_Discussion {
 	}
 
 	public static function render_edit_page() {
-
 		$the_id = isset( $_GET['id'] ) ? $_GET['id'] : false;
 		$the_id = 'new' === $the_id ? $the_id : (int) $the_id;
 

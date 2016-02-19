@@ -2,11 +2,9 @@
 
 class CoursePress_Helper_Extension {
 
-
 	private static $plugins = array();
 
 	public static function init() {
-
 		$plugins = array( 'MarketPress', 'TCPDF' );
 		foreach ( $plugins as $plugin ) {
 			if ( method_exists( 'CoursePress_Helper_Extension_' . $plugin, 'init' ) ) {
@@ -15,7 +13,6 @@ class CoursePress_Helper_Extension {
 		}
 
 		self::$plugins = self::get_plugins();
-
 	}
 
 	private static function get_plugins() {
@@ -42,7 +39,6 @@ class CoursePress_Helper_Extension {
 			<tbody>';
 
 		foreach ( self::$plugins as $plugin ) {
-
 			$plugin_dir = WP_PLUGIN_DIR . '/' . $plugin['base_path'];
 			$plugin_mu_dir = WP_CONTENT_DIR . '/mu-plugins/' . $plugin['base_path'];
 			$location = file_exists( $plugin_dir ) ? trailingslashit( WP_PLUGIN_DIR ) : ( file_exists( $plugin_mu_dir ) ?  WP_CONTENT_DIR . '/mu-plugins/' : '' ) ;

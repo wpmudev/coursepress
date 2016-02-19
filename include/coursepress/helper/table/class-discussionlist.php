@@ -1,10 +1,9 @@
 <?php
 
 if ( ! class_exists( 'WP_List_Table' ) ) {
-	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
-// class CoursePress_Helper_Table_DiscussionList extends CoursePress_Helper_UI_ListTable {
 class CoursePress_Helper_Table_DiscussionList extends WP_List_Table {
 
 	private $count = array();
@@ -32,7 +31,6 @@ class CoursePress_Helper_Table_DiscussionList extends WP_List_Table {
 	public function no_items() {
 		echo __( 'No discussions found.', 'CP_TD' );
 	}
-
 
 	public function get_columns() {
 		$columns = array(
@@ -65,7 +63,7 @@ class CoursePress_Helper_Table_DiscussionList extends WP_List_Table {
 		// create a nonce
 		// $duplicate_nonce = wp_create_nonce( 'duplicate_course' );
 		$title = '<strong>' . $item->post_title . '</strong>';
-		$excerpt = CoursePress_Helper_Utility::truncateHtml( $item->post_content );
+		$excerpt = CoursePress_Helper_Utility::truncate_html( $item->post_content );
 
 		$edit_page = CoursePress_View_Admin_Communication_Discussion::$slug;
 
@@ -86,7 +84,6 @@ class CoursePress_Helper_Table_DiscussionList extends WP_List_Table {
 	}
 
 	public function column_course( $item ) {
-
 		$attributes = CoursePress_Data_Discussion::attributes( $item->ID );
 
 		$output = sprintf( '<div data-course="%s">%s (%s)</div>',
@@ -98,7 +95,6 @@ class CoursePress_Helper_Table_DiscussionList extends WP_List_Table {
 	}
 
 	public function column_status( $item ) {
-
 		// Publish Course Toggle
 		$d_id = $item->ID;
 		$status = get_post_status( $d_id );
@@ -127,7 +123,6 @@ class CoursePress_Helper_Table_DiscussionList extends WP_List_Table {
 	}
 
 	public function column_default( $item, $column_name ) {
-
 		if ( isset( $item->{$column_name} ) ) {
 			return $item->{$column_name};
 		} else {
@@ -137,23 +132,22 @@ class CoursePress_Helper_Table_DiscussionList extends WP_List_Table {
 	}
 
 	public function prepare_items() {
-
 		$post_status = 'all';
 
 		$columns = $this->get_columns();
 		$hidden = $this->get_hidden_columns();
 		$sortable = $this->get_sortable_columns();
 
-		$perPage = 10;
-		$currentPage = $this->get_pagenum();
+		$per_page = 10;
+		$current_page = $this->get_pagenum();
 
-		$offset = ( $currentPage - 1 ) * $perPage;
+		$offset = ( $current_page - 1 ) * $per_page;
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 		$post_args = array(
 			'post_type' => $this->post_type,
 			'post_status' => $post_status,
-			'posts_per_page' => $perPage,
+			'posts_per_page' => $per_page,
 			'offset' => $offset,
 			's' => isset( $_GET['s'] ) && ! empty( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '',
 		);
@@ -161,14 +155,12 @@ class CoursePress_Helper_Table_DiscussionList extends WP_List_Table {
 		$course_id = isset( $_GET['course_id'] ) ? sanitize_text_field( $_GET['course_id'] ) : '';
 
 		if ( ! empty( $course_id ) && 'all' !== $course_id ) {
-
 			$post_args['meta_query'] = array(
 				array(
 					'key' => 'course_id',
 					'value' => (int) $course_id,
 				),
 			);
-
 		}
 
 		// @todo: Add permissions
@@ -176,12 +168,13 @@ class CoursePress_Helper_Table_DiscussionList extends WP_List_Table {
 
 		$this->items = $query->posts;
 
-		$totalItems = $query->found_posts;
-		$this->set_pagination_args( array(
-			'total_items' => $totalItems,
-			'per_page' => $perPage,
-		) );
-
+		$total_items = $query->found_posts;
+		$this->set_pagination_args(
+			array(
+				'total_items' => $total_items,
+				'per_page' => $per_page,
+			)
+		);
 	}
 
 	public function search_box( $text, $input_id ) {

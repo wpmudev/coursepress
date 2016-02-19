@@ -74,27 +74,38 @@ class CoursePress_View_Admin_Assessment_List {
 			$old_feedback = CoursePress_Data_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
 			$old_feedback = $old_feedback['feedback'];
 
-			if ( $new_grade !== false && (int) $new_grade !== (int) $old_grade ) {
-
+			if ( $new_grade && $new_grade != $old_grade ) {
 				// Record new grade and get the progress back
-				$student_progress = CoursePress_Data_Student::record_grade( $student_id, $course_id, $unit_id, $module_id, $new_grade, false, $student_progress );
-
+				$student_progress = CoursePress_Data_Student::record_grade(
+					$student_id,
+					$course_id,
+					$unit_id,
+					$module_id,
+					$new_grade,
+					false,
+					$student_progress
+				);
 			}
 
-			if ( $new_feedback !== false && trim( $new_feedback ) !== trim( $old_feedback ) ) {
-
+			if ( $new_feedback && trim( $new_feedback ) != trim( $old_feedback ) ) {
 				// Record new feedback
-				$student_progress = CoursePress_Data_Student::record_feedback( $student_id, $course_id, $unit_id, $module_id, $new_feedback, false, $student_progress );
+				$student_progress = CoursePress_Data_Student::record_feedback(
+					$student_id,
+					$course_id,
+					$unit_id,
+					$module_id,
+					$new_feedback,
+					false,
+					$student_progress
+				);
 			}
 		}
-
 	}
 
 	public static function render_page() {
-
 		$content = '<div class="coursepress_settings_wrapper assessment">' .
-				   '<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
-					<hr />';
+			'<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
+			<hr />';
 
 		if ( isset( $_REQUEST['view_answer'] ) && ! self::$force_grid ) {
 			$content .= self::view_grade_answer();
@@ -109,7 +120,6 @@ class CoursePress_View_Admin_Assessment_List {
 	}
 
 	public static function view_grade_answer() {
-
 		$course_id = isset( $_REQUEST['course_id'] ) ? (int) $_REQUEST['course_id'] : 0;
 		$unit_id = isset( $_REQUEST['unit_id'] ) ? (int) $_REQUEST['unit_id'] : 0;
 		$module_id = isset( $_REQUEST['module_id'] ) ? (int) $_REQUEST['module_id'] : 0;
@@ -337,8 +347,9 @@ class CoursePress_View_Admin_Assessment_List {
 
 			$url = admin_url( 'admin.php?page=coursepress_assessments' );
 			$tab_string = '';
+
 			foreach ( $tabs as $key => $tab ) {
-				if ( $selected_unit === ( $tab['unit_id'] ) ) {
+				if ( $selected_unit == $tab['unit_id'] ) {
 					$tab['class'] .= ' active';
 				}
 				$tab_url = $url . '&unit_id=' . $tab['unit_id'];
@@ -379,53 +390,86 @@ class CoursePress_View_Admin_Assessment_List {
 
 			$count = 0;
 			$hierarchy = 0;
+
 			foreach ( $students as $student ) {
 				$hierarchy += 1;
 				$course_id = $selected_course;
 				$unit_id = $selected_unit;
 				$student_id = $student->ID;
-				$student_label = CoursePress_Helper_Utility::get_user_name( $student_id, true );
 
-				$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
+				$student_label = CoursePress_Helper_Utility::get_user_name(
+					$student_id,
+					true
+				);
+
+				$student_progress = CoursePress_Data_Student::get_completion_data(
+					$student_id,
+					$course_id
+				);
 
 				$odd = 'odd' === $odd ? 'even' : 'odd';
 				$alt = ! empty( $alt ) ? '' : 'alt';
 
 				$content .= '<tbody id="' . $student_id . '" class="' . $odd . ' ' . $alt . '">';
 				$content .= '<tr class="student-name treegrid-' . $hierarchy . '">' .
-							'<td colspan="6">' . $student_label . '</td>' .
-							'</tr>';
+					'<td colspan="6">' . $student_label . '</td>' .
+					'</tr>';
 
 				$hierarchy_parent = $hierarchy;
+
 				foreach ( $units[ $unit_id ]['pages'] as $page ) {
 					$modules = $page['modules'];
-					foreach ( $modules as $module_id => $module ) {
 
+					foreach ( $modules as $module_id => $module ) {
 						$attributes = CoursePress_Data_Module::attributes( $module_id );
-						if ( 'output' === $attributes['mode'] ) {
-							continue;
-						}
+
+						if ( 'output' == $attributes['mode'] ) { continue; }
 
 						$count += 1;
 
 						$title = empty( $module->post_title ) ? $module->post_content : $module->post_title;
-						$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
-						$grade = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
-						$feedback = CoursePress_Data_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
+						$response = CoursePress_Data_Student::get_response(
+							$student_id,
+							$course_id,
+							$unit_id,
+							$module_id,
+							false,
+							$student_progress
+						);
+						$grade = CoursePress_Data_Student::get_grade(
+							$student_id,
+							$course_id,
+							$unit_id,
+							$module_id,
+							false,
+							false,
+							$student_progress
+						);
+						$feedback = CoursePress_Data_Student::get_feedback(
+							$student_id,
+							$course_id,
+							$unit_id,
+							$module_id,
+							false,
+							false,
+							$student_progress
+						);
 
 						$response_display = '';
+
 						if ( $response ) {
 							$qv = 'course_id=' . $course_id . '&unit_id=' . $unit_id . '&module_id=' . $module_id . '&student_id=' . $student_id . '&view_answer';
 							$url = admin_url( 'admin.php?page=coursepress_assessments' . '&' . $qv );
 							$response_display = '<a href="' . esc_url_raw( $url ) . '">' . esc_html__( 'View', 'CP_TD' ) . '</a>';
 						}
+
 						// $response_display = $response['response'];
-						// switch( $attributes['module_type'] ) {
+						// switch ( $attributes['module_type'] ) {
 						//
 						// case 'input-checkbox':
 						// $response_display = '';
-						// if( ! empty( $response['response'] ) && is_array( $response['response'] ) ) {
-						// foreach( $response['response'] as $r ) {
+						// if ( ! empty( $response['response'] ) && is_array( $response['response'] ) ) {
+						// foreach ( $response['response'] as $r ) {
 						// $response_display .= '<p class="answer list">' . $attributes['answers'][(int) $r] . '</p>';
 						// }
 						// }
@@ -435,14 +479,14 @@ class CoursePress_View_Admin_Assessment_List {
 						// case 'input-radio':
 						// case 'input-select':
 						// $response_display = '';
-						// if( isset( $response['response'] ) ) {
+						// if ( isset( $response['response'] ) ) {
 						// $response_display = '<p class="answer">' . $attributes['answers'][(int) $response['response']] . '</p>';
 						// }
 						//
 						// break;
 						// case 'input-upload':
 						//
-						// if( $response ) {
+						// if ( $response ) {
 						// $url = $response['response']['url'];
 						//
 						// $file_size = isset( $response['response']['size'] ) ? $response['response']['size'] : false;
@@ -462,11 +506,12 @@ class CoursePress_View_Admin_Assessment_List {
 						//
 						// break;
 						// }
+
 						$response_date = ! isset( $response['date'] ) ? '' : date_i18n( get_option( 'date_format' ), strtotime( $response['date'] ) );
-						$grade_display = (int) $grade['grade'] === - 1 ? __( '--', 'CP_TD' ) : $grade['grade'];
+						$grade_display = (-1 == $grade['grade'] ? __( '--', 'CP_TD' ) : $grade['grade'] );
 
 						$class = empty( $response_date ) ? 'not-submitted' : 'submitted';
-						$class = (int) $grade['grade'] === - 1 || ( empty( $grade['grade'] ) && 0 !== $grade['grade'] ) ? $class . ' ungraded' : $class . ' graded';
+						$class = (-1 == $grade['grade'] ) ? $class . ' ungraded' : $class . ' graded';
 
 						$first_last = CoursePress_Helper_Utility::get_user_name( (int) $feedback['feedback_by'] );
 
@@ -475,13 +520,13 @@ class CoursePress_View_Admin_Assessment_List {
 						$hierarchy += 1;
 						$student_label = '';
 						$content .= '<tr class="' . $class . ' treegrid-' . $hierarchy . ' treegrid-parent-' . $hierarchy_parent . '">' .
-									'<td class="student-name">' . $student_label . '</td>' .
-									'<td class="student-activity">' . $title . '</td>' .
-									'<td class="student-submission">' . $response_date . '</td>' .
-									'<td class="student-answer">' . $response_display . '</td>' .
-									'<td class="student-grade">' . $grade_display . '</td>' .
-									'<td class="instructor-feedback">' . $feedback_display . '</td>' .
-									'</tr>';
+							'<td class="student-name">' . $student_label . '</td>' .
+							'<td class="student-activity">' . $title . '</td>' .
+							'<td class="student-submission">' . $response_date . '</td>' .
+							'<td class="student-answer">' . $response_display . '</td>' .
+							'<td class="student-grade">' . $grade_display . '</td>' .
+							'<td class="instructor-feedback">' . $feedback_display . '</td>' .
+							'</tr>';
 					}
 				}
 

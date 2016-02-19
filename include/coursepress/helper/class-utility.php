@@ -4,22 +4,20 @@ class CoursePress_Helper_Utility {
 
 	// Used by the array uasort() callbacks
 	private static $sort_key;
-	private static $image_url; // used to get attachment ID
+	private static $image_url; // used to get attachment ID.
 	public static $is_singular;
 	public static $post_page = 1;
 	public static $embed_args = array();
 
 	public static function init() {
-
 		add_action( 'wp_ajax_attachment_model', array( __CLASS__, 'attachment_model_ajax' ) );
 		add_action( 'init', array( __CLASS__, 'force_download_file_request' ), 1 );
 		add_action( 'init', array( __CLASS__, 'open_course_zip_object' ), 1 );
 		//add_action( 'admin_init', array( __CLASS__, 'course_admin_filters' ), 1 );
-		add_filter('upload_mimes', array( __CLASS__, 'enable_extended_upload') );
+		add_filter( 'upload_mimes', array( __CLASS__, 'enable_extended_upload' ) );
 	}
 
-	public static function enable_extended_upload ( $mime_types =array() ) {
-
+	public static function enable_extended_upload( $mime_types = array() ) {
 		$add_the_filter = false;
 
 		$valid_pages = array( 'coursepress_settings', 'coursepress_course', 'coursepress' );
@@ -29,17 +27,16 @@ class CoursePress_Helper_Utility {
 			$add_the_filter = false;
 		}
 
-		preg_match('/(page=)(\w*)/', wp_get_referer(), $matches );
-		if( isset( $matches ) && isset( $matches[2] ) ) {
+		preg_match( '/(page=)(\w*)/', wp_get_referer(), $matches );
+		if ( isset( $matches ) && isset( $matches[2] ) ) {
 			$page_ref = $matches[2];
 
-			if( in_array( $page_ref, $valid_pages ) ) {
+			if ( in_array( $page_ref, $valid_pages ) ) {
 				$add_the_filter = true;
 			}
-
 		}
 
-		if( ! $add_the_filter ) {
+		if ( ! $add_the_filter ) {
 			return $mime_types;
 		}
 
@@ -55,7 +52,7 @@ class CoursePress_Helper_Utility {
 	public static function sort_on_key( $array, $sort_key, $sort_asc = true ) {
 		self::$sort_key = $sort_key;
 
-		if ( $sort_asc === false ) {
+		if ( ! $sort_asc ) {
 			uasort( $array, array( __CLASS__, 'sort_desc' ) );
 		} else {
 			uasort( $array, array( __CLASS__, 'sort_asc' ) );
@@ -64,7 +61,7 @@ class CoursePress_Helper_Utility {
 		return $array;
 	}
 
-	// uasort callback to sort ascending
+	// uasort callback to sort ascending.
 	public static function sort_asc( $x, $y ) {
 		if ( $x[ self::$sort_key ] == $y[ self::$sort_key ] ) {
 			return 0;
@@ -75,7 +72,7 @@ class CoursePress_Helper_Utility {
 		}
 	}
 
-	// uasort callback to sort descending
+	// uasort callback to sort descending.
 	public static function sort_desc( $x, $y ) {
 		if ( $x[ self::$sort_key ] == $y[ self::$sort_key ] ) {
 			return 0;
@@ -90,7 +87,7 @@ class CoursePress_Helper_Utility {
 	public static function sort_on_object_key( $array, $sort_key, $sort_asc = true ) {
 		self::$sort_key = $sort_key;
 
-		if ( $sort_asc === false ) {
+		if ( ! $sort_asc ) {
 			uasort( $array, array( __CLASS__, 'sort_obj_desc' ) );
 		} else {
 			uasort( $array, array( __CLASS__, 'sort_obj_asc' ) );
@@ -99,7 +96,7 @@ class CoursePress_Helper_Utility {
 		return $array;
 	}
 
-	// uasort callback to sort ascending
+	// uasort callback to sort ascending.
 	public static function sort_obj_asc( $x, $y ) {
 		if ( $x->{self::$sort_key} == $y->{self::$sort_key} ) {
 			return 0;
@@ -110,7 +107,7 @@ class CoursePress_Helper_Utility {
 		}
 	}
 
-	// uasort callback to sort descending
+	// uasort callback to sort descending.
 	public static function sort_obj_desc( $x, $y ) {
 		if ( $x->{self::$sort_key} == $y->{self::$sort_key} ) {
 			return 0;
@@ -122,7 +119,7 @@ class CoursePress_Helper_Utility {
 	}
 
 
-	// set array value based on path
+	// set array value based on path.
 	public static function set_array_val( &$a, $path, $value ) {
 		if ( ! is_array( $path ) ) {
 			$path = explode( '/', $path );
@@ -138,7 +135,7 @@ class CoursePress_Helper_Utility {
 		$a[ $key ? $key : count( $a ) ] = $value;
 	}
 
-	// get array value based on path
+	// get array value based on path.
 	public static function get_array_val( $a, $path ) {
 		if ( ! is_array( $path ) ) {
 			$path = explode( '/', $path );
@@ -191,12 +188,12 @@ class CoursePress_Helper_Utility {
 	}
 
 
-	// Does a recursive array merge without creating 'mini' arrays as array_merge_recursive() does
+	// Does a recursive array merge without creating 'mini' arrays as array_merge_recursive() does.
 	public static function merge_distinct( array &$array1, array &$array2 ) {
 		$merged = $array1;
 
 		foreach ( $array2 as $key => &$value ) {
-			if ( is_array( $value ) && isset ( $merged [ $key ] ) && is_array( $merged [ $key ] ) ) {
+			if ( is_array( $value ) && isset( $merged [ $key ] ) && is_array( $merged [ $key ] ) ) {
 				$merged [ $key ] = self::merge_distinct( $merged [ $key ], $value );
 			} else {
 				$merged [ $key ] = $value;
@@ -251,11 +248,10 @@ class CoursePress_Helper_Utility {
 	// Deals with legacy 'on' / 'off' values for checkboxes
 	public static function checked( $value, $compare = true, $echo = false ) {
 		$checked = false;
-		if ( $compare === true ) {
+		if ( true === $compare ) {
 			$checked = ( ! empty( $value ) && 'off' !== $value ) || ( ! empty( $value ) && 'on' === $value ) ? 'checked="checked"' : '';
 		} else {
 			$checked = $compare === $value ? 'checked="checked"' : '';
-
 		}
 
 		if ( $echo ) {
@@ -268,7 +264,7 @@ class CoursePress_Helper_Utility {
 	// Get appropriate AJAX URL
 	public static function get_ajax_url() {
 		$scheme = ( is_ssl() || force_ssl_admin() ? 'https' : 'http' );
-		return admin_url( "admin-ajax.php", $scheme );
+		return admin_url( 'admin-ajax.php', $scheme );
 	}
 
 	// Allowed image extensions
@@ -282,11 +278,11 @@ class CoursePress_Helper_Utility {
 			'bmp',
 			'tif',
 			'tiff',
-			'ico'
+			'ico',
 		) );
 	}
 
-	// Filter HTML
+	// Filter HTML.
 	public static function filter_content( $content, $none_allowed = false ) {
 		if ( $none_allowed ) {
 			if ( is_array( $content ) ) {
@@ -313,7 +309,7 @@ class CoursePress_Helper_Utility {
 		return $content;
 	}
 
-	// Allowed tags
+	// Allowed tags.
 	public static function filter_content_rules() {
 		$allowed_tags = wp_kses_allowed_html( 'post' );
 
@@ -321,18 +317,15 @@ class CoursePress_Helper_Utility {
 	}
 
 	public static function send_email( $args ) {
-
 		if ( ! isset( $args['email_type'] ) ) {
 			return;
 		}
 
 		// Filtered fields
 		$email = apply_filters( 'coursepress_email_fields', array(
-
 			'email' => apply_filters( 'coursepress_email_to_address', sanitize_email( $args['email'] ), $args ),
 			'subject' => apply_filters( 'coursepress_email_subject', sanitize_text_field( $args['subject'] ) , $args ),
 			'message' => apply_filters( 'coursepress_email_message', $args['message'], $args ),
-
 		), $args );
 
 		// Good one to hook if you want to hook WP specific filters (e.g. changing from address)
@@ -373,25 +366,23 @@ class CoursePress_Helper_Utility {
 	}
 
 	public static function send_bb_json( $response ) {
-		@header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
-		echo json_encode( $response );
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-			wp_die();
-		} else {
-			die;
+		if ( ! headers_sent() ) {
+			header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
 		}
+
+		echo json_encode( $response );
+		exit;
 	}
 
 	public static function attachment_model_ajax() {
 		$json_data = array();
 
 		switch ( $_REQUEST['task'] ) {
-
 			case 'get':
-				$json_data[] = self::attachment_from_url( sanitize_text_field( $_REQUEST['url'] ) );
-
+				$json_data[] = self::attachment_from_url(
+					sanitize_text_field( $_REQUEST['url'] )
+				);
 				break;
-
 		}
 
 		if ( ! empty( $json_data ) ) {
@@ -408,7 +399,7 @@ class CoursePress_Helper_Utility {
 
 		$args = array(
 			'post_status' => 'any',
-			'post_type' => 'attachment'
+			'post_type' => 'attachment',
 		);
 		$query = new WP_Query( $args );
 
@@ -486,17 +477,17 @@ class CoursePress_Helper_Utility {
 	public static function get_file_size( $url, $human = true ) {
 		$bytes = 0;
 		// If its not a path... its probably a URL
-		if ( !preg_match( '/^\//', $url ) ) {
+		if ( ! preg_match( '/^\//', $url ) ) {
 			$header = wp_remote_head( $url );
-			if ( !is_wp_error( $header ) ) {
-				$bytes = $header[ 'headers' ][ 'content-length' ];
+			if ( ! is_wp_error( $header ) ) {
+				$bytes = $header['headers']['content-length'];
 			} else {
 				$bytes = 0;
 			}
 		} else {
 			try {
 				$bytes = filesize( $url );
-				$bytes = !empty( $bytes ) ? $bytes : 0;
+				$bytes = ! empty( $bytes ) ? $bytes : 0;
 			} catch ( Exception $e ) {
 				$bytes = 0;
 			}
@@ -519,7 +510,7 @@ class CoursePress_Helper_Utility {
 			$bytes = number_format( $bytes / 1024, 2 ) . ' KB';
 		} elseif ( $bytes > 1 ) {
 			$bytes = $bytes . ' bytes';
-		} elseif ( $bytes == 1 ) {
+		} elseif ( 1 == $bytes ) {
 			$bytes = $bytes . ' byte';
 		} else {
 			$bytes = '0 bytes';
@@ -529,16 +520,13 @@ class CoursePress_Helper_Utility {
 	}
 
 	public static function force_download_file_request() {
-
-		if ( isset( $_GET[ 'fdcpf' ] ) ) {
-			$requested_file = self::decode( $_GET[ 'fdcpf' ] );
+		if ( isset( $_GET['fdcpf'] ) ) {
+			$requested_file = self::decode( $_GET['fdcpf'] );
 			self::download_file_request( $requested_file );
 		}
-
 	}
 
 	public static function download_file_request( $requested_file ) {
-
 		ob_start();
 
 		$requested_file_obj = wp_check_filetype( $requested_file );
@@ -546,7 +534,7 @@ class CoursePress_Helper_Utility {
 		header( 'Expires: 0' );
 		header( 'Cache-Control: must-revalidate, post-check = 0, pre-check = 0' );
 		header( 'Cache-Control: private', false );
-		header( 'Content-Type: ' . $requested_file_obj[ "type" ] );
+		header( 'Content-Type: ' . $requested_file_obj['type'] );
 		header( 'Content-Disposition: attachment; filename ="' . basename( $requested_file ) . '"' );
 		header( 'Content-Transfer-Encoding: binary' );
 		header( 'Connection: close' );
@@ -556,7 +544,7 @@ class CoursePress_Helper_Utility {
 		 */
 		$force_download_parameters = apply_filters( 'coursepress_force_download_parameters', array(
 			'timeout' => 60,
-			'user-agent' => CoursePress::$name . ' / ' . CoursePress::$version . ';'
+			'user-agent' => CoursePress::$name . ' / ' . CoursePress::$version . ';',
 		) );
 		echo wp_remote_retrieve_body( wp_remote_get( $requested_file ), $force_download_parameters );
 		exit();
@@ -564,13 +552,12 @@ class CoursePress_Helper_Utility {
 	}
 
 	public static function open_course_zip_object() {
-
-		if ( isset( $_GET[ 'oacpf' ] ) ) {
+		if ( isset( $_GET['oacpf'] ) ) {
 			ob_start();
 
-			$requested_file = self::decode( $_GET[ 'oacpf' ] );
+			$requested_file = self::decode( $_GET['oacpf'] );
 
-			$module_id = isset( $_GET[ 'module' ] ) ? (int) $_GET['module'] : false;
+			$module_id = isset( $_GET['module'] ) ? (int) $_GET['module'] : false;
 			$append_url = ! empty( $module_id ) ? '#module-' . $module_id : '';
 
 			// Unzipping the magic
@@ -580,12 +567,12 @@ class CoursePress_Helper_Utility {
 			$extension = array_pop( $path );
 			$path = implode( '.', $path );
 
-			if( 'zip' !== strtolower( $extension ) ) {
+			if ( 'zip' !== strtolower( $extension ) ) {
 				exit();
 			}
 
 			// Get access to zip functions
-			require_once(ABSPATH .'/wp-admin/includes/file.php'); //the cheat
+			require_once ABSPATH .'/wp-admin/includes/file.php'; //the cheat
 			WP_Filesystem();
 
 			$subdir = str_replace( $upload_dir['baseurl'], '', $path );
@@ -601,7 +588,7 @@ class CoursePress_Helper_Utility {
 			$file_url = $file_url_base . $file;
 
 			// Presume that its not unzipped yet.
-			if( ! file_exists( $object_dir ) || ! file_exists( $file_path ) ) {
+			if ( ! file_exists( $object_dir ) || ! file_exists( $file_path ) ) {
 				// Unzip it
 				$unzipfile = unzip_file( $src_path, $object_dir );
 			}
@@ -610,65 +597,69 @@ class CoursePress_Helper_Utility {
 			echo '<iframe style="margin:0; padding:0; border:none; width: 100%; height: 100vh;" src="' .$file_url . '"></iframe>';
 			exit();
 		}
-
 	}
 
-	public static function truncateHtml( $text, $length = 100, $ending = '...', $exact = false, $considerHtml = true ) {
-		if ( $considerHtml ) {
+	public static function truncate_html(
+		$text, $length = 100, $ending = '...', $exact = false, $consider_html = true
+	) {
+		if ( $consider_html ) {
 			// if the plain text is shorter than the maximum length, return the whole text
 			if ( strlen( preg_replace( '/<.*?>/', '', $text ) ) <= $length ) {
 				return $text;
 			}
-			// splits all html-tags to scanable lines
+
+			// splits all html-tags to scanable lines.
 			preg_match_all( '/(<.+?>)?([^<>]*)/s', $text, $lines, PREG_SET_ORDER );
 			$total_length = strlen( $ending );
 			$open_tags = array();
 			$truncate = '';
+
 			foreach ( $lines as $line_matchings ) {
 				// if there is any html-tag in this line, handle it and add it (uncounted) to the output
-				if ( !empty( $line_matchings[ 1 ] ) ) {
+				if ( ! empty( $line_matchings[1] ) ) {
 					// if it's an "empty element" with or without xhtml-conform closing slash
-					if ( preg_match( '/^<(\s*.+?\/\s*|\s*(img|br|input|hr|area|base|basefont|col|frame|isindex|link|meta|param)(\s.+?)?)>$/is', $line_matchings[ 1 ] ) ) {
+					if ( preg_match( '/^<(\s*.+?\/\s*|\s*(img|br|input|hr|area|base|basefont|col|frame|isindex|link|meta|param)(\s.+?)?)>$/is', $line_matchings[1] ) ) {
 						// do nothing
 						// if tag is a closing tag
-					} else if ( preg_match( '/^<\s*\/([^\s]+?)\s*>$/s', $line_matchings[ 1 ], $tag_matchings ) ) {
+					} else if ( preg_match( '/^<\s*\/([^\s]+?)\s*>$/s', $line_matchings[1], $tag_matchings ) ) {
 						// delete tag from $open_tags list
-						$pos = array_search( $tag_matchings[ 1 ], $open_tags );
-						if ( $pos !== false ) {
+						$pos = array_search( $tag_matchings[1], $open_tags );
+						if ( false !== $pos ) {
 							unset( $open_tags[ $pos ] );
 						}
 						// if tag is an opening tag
-					} else if ( preg_match( '/^<\s*([^\s>!]+).*?>$/s', $line_matchings[ 1 ], $tag_matchings ) ) {
+					} else if ( preg_match( '/^<\s*([^\s>!]+).*?>$/s', $line_matchings[1], $tag_matchings ) ) {
 						// add tag to the beginning of $open_tags list
-						array_unshift( $open_tags, strtolower( $tag_matchings[ 1 ] ) );
+						array_unshift( $open_tags, strtolower( $tag_matchings[1] ) );
 					}
 					// add html-tag to $truncate'd text
-					$truncate .= $line_matchings[ 1 ];
+					$truncate .= $line_matchings[1];
 				}
 				// calculate the length of the plain text part of the line; handle entities as one character
-				$content_length = strlen( preg_replace( '/&[0-9a-z]{2,8};|&#[0-9]{1,7};|[0-9a-f]{1,6};/i', ' ', $line_matchings[ 2 ] ) );
+				$content_length = strlen( preg_replace( '/&[0-9a-z]{2,8};|&#[0-9]{1,7};|[0-9a-f]{1,6};/i', ' ', $line_matchings[2] ) );
+
 				if ( $total_length + $content_length > $length ) {
 					// the number of characters which are left
 					$left = $length - $total_length;
 					$entities_length = 0;
 					// search for html entities
-					if ( preg_match_all( '/&[0-9a-z]{2,8};|&#[0-9]{1,7};|[0-9a-f]{1,6};/i', $line_matchings[ 2 ], $entities, PREG_OFFSET_CAPTURE ) ) {
+					if ( preg_match_all( '/&[0-9a-z]{2,8};|&#[0-9]{1,7};|[0-9a-f]{1,6};/i', $line_matchings[2], $entities, PREG_OFFSET_CAPTURE ) ) {
 						// calculate the real length of all entities in the legal range
-						foreach ( $entities[ 0 ] as $entity ) {
-							if ( $entity[ 1 ] + 1 - $entities_length <= $left ) {
+						foreach ( $entities[0] as $entity ) {
+							if ( $entity[1] + 1 - $entities_length <= $left ) {
 								$left --;
-								$entities_length += strlen( $entity[ 0 ] );
+								$entities_length += strlen( $entity[0] );
 							} else {
 								// no more characters left
 								break;
 							}
 						}
 					}
-					$truncate .= substr( $line_matchings[ 2 ], 0, $left + $entities_length );
+					$truncate .= substr( $line_matchings[2], 0, $left + $entities_length );
 					// maximum lenght is reached, so get off the loop
 					break;
 				} else {
-					$truncate .= $line_matchings[ 2 ];
+					$truncate .= $line_matchings[2];
 					$total_length += $content_length;
 				}
 				// if the maximum length is reached, get off the loop
@@ -684,7 +675,7 @@ class CoursePress_Helper_Utility {
 			}
 		}
 		// if the words shouldn't be cut in the middle...
-		if ( !$exact ) {
+		if ( ! $exact ) {
 			// ...search the last occurance of a space...
 			$spacepos = strrpos( $truncate, ' ' );
 			if ( isset( $spacepos ) ) {
@@ -694,7 +685,7 @@ class CoursePress_Helper_Utility {
 		}
 		// add the defined ending to the text
 		$truncate .= ' ' . $ending;
-		if ( $considerHtml ) {
+		if ( $consider_html ) {
 			// close all unclosed html-tags
 			foreach ( $open_tags as $tag ) {
 				$truncate .= '</' . $tag . '>';
@@ -706,11 +697,11 @@ class CoursePress_Helper_Utility {
 
 	public static function author_description_excerpt( $user = false, $length = 100 ) {
 
-		if( ! $user ) {
+		if ( ! $user ) {
 			$user = get_current_user();
 		}
 
-		if( ! is_object( $user ) && 0 < (int) $user ) {
+		if ( ! is_object( $user ) && 0 < (int) $user ) {
 			$user = get_userdata( $user );
 		}
 
@@ -738,7 +729,7 @@ class CoursePress_Helper_Utility {
 
 		$id = CoursePress_Data_VirtualPage::$the_post_id;
 
-		if( $id_only ) {
+		if ( $id_only ) {
 			return $id;
 		} else {
 			return get_post( $id );
@@ -755,11 +746,11 @@ class CoursePress_Helper_Utility {
 		//$id = in_the_loop() ? get_the_ID() : CoursePress_Data_Course::last_course_id();
 		$id = CoursePress_Data_Course::last_course_id();
 
-		if( empty( $id ) ) {
+		if ( empty( $id ) ) {
 			return '';
 		}
 
-		if( $id_only ) {
+		if ( $id_only ) {
 			return $id;
 		} else {
 			return get_post( $id );
@@ -777,7 +768,7 @@ class CoursePress_Helper_Utility {
 
 	public static function set_the_post( $post ) {
 
-		if( is_object( $post ) ) {
+		if ( is_object( $post ) ) {
 			CoursePress_Data_VirtualPage::$the_post_id = (int) $post->ID;
 		} else {
 			CoursePress_Data_VirtualPage::$the_post_id = (int) $post;
@@ -791,7 +782,7 @@ class CoursePress_Helper_Utility {
 
 	public static function set_the_course( $post ) {
 
-		if( is_object( $post ) ) {
+		if ( is_object( $post ) ) {
 			CoursePress_Data_Course::set_last_course_id( (int) $post->ID );
 		} else {
 			CoursePress_Data_Course::set_last_course_id( (int) $post );
@@ -815,7 +806,7 @@ class CoursePress_Helper_Utility {
 	//		return;
 	//	}
 	//
-	//	add_filter('upload_mimes', array( __CLASS__, 'add_zip_mimes') );
+	//	add_filter( 'upload_mimes', array( __CLASS__, 'add_zip_mimes') );
 	//
 	//}
 	//
@@ -830,17 +821,16 @@ class CoursePress_Helper_Utility {
 		return apply_filters( 'coursepress_allowed_student_mimes', array(
 			'txt' => 'text/plain',
 			'pdf' => 'application/pdf',
-			'zip' => 'application/zip'
+			'zip' => 'application/zip',
 		) );
 	}
 
 
-	public static function remove_youtube_controls($code){
-		if(strpos($code, 'youtu.be') !== false || strpos($code, 'youtube.com') !== false){
-
+	public static function remove_youtube_controls( $code ) {
+		if ( false !== strpos( $code, 'youtu.be' ) || false !== strpos( $code, 'youtube.com' ) ) {
 			$parameters = http_build_query( self::$embed_args );
 
-			$return = preg_replace("@src=(['\"])?([^'\">s]*)@", "src=$1$2&" . $parameters, $code);
+			$return = preg_replace( "@src=(['\"])?([^'\">s]*)@", 'src=$1$2&' . $parameters, $code );
 			error_log( $return );
 			return $return;
 		}
@@ -848,7 +838,6 @@ class CoursePress_Helper_Utility {
 	}
 
 	public static function remove_related_videos( $html, $url, $args ) {
-
 		self::$embed_args = $args;
 		self::$embed_args['color'] = 'white';
 		self::$embed_args['rel'] = 0;
@@ -857,12 +846,12 @@ class CoursePress_Helper_Utility {
 
 		self::$embed_args = apply_filters( 'coursepress_video_embed_args', self::$embed_args, $html, $url, $args );
 
-		// build the query url
+		// build the query url.
 		$parameters = http_build_query( self::$embed_args );
 
-		// Another attempt to remove Youtube features
-		add_filter('embed_handler_html', array( __CLASS__, 'remove_youtube_controls' ) );
-		add_filter('embed_oembed_html', array( __CLASS__, 'remove_youtube_controls' ) );
+		// Another attempt to remove Youtube features.
+		add_filter( 'embed_handler_html', array( __CLASS__, 'remove_youtube_controls' ) );
+		add_filter( 'embed_oembed_html', array( __CLASS__, 'remove_youtube_controls' ) );
 
 		// YouTube
 		$html = str_replace( 'feature=oembed', 'feature=oembed&' . $parameters, $html );
@@ -870,11 +859,18 @@ class CoursePress_Helper_Utility {
 		return $html;
 	}
 
-	public static function has_connection( $test_domain = "www.google.com" ) {
-		$cn = @fsockopen( $test_domain, 80, $err_num, $err, 5);
-		$connected = (bool) $cn;
-		if( $connected ) { fclose( $cn ); }
-		return $connected;
+	public static function has_connection( $test_domain = 'www.google.com' ) {
+		static $_connected = null;
+
+		if ( null === $_connected ) {
+			$cn = fsockopen( $test_domain, 80, $err_num, $err, 5 );
+			$_connected = (bool) $cn;
+			if ( $_connected ) {
+				fclose( $cn );
+			}
+		}
+
+		return $_connected;
 	}
 
 	public static function get_user_name( $user_id, $last_first = false, $username = true ) {
@@ -885,18 +881,18 @@ class CoursePress_Helper_Utility {
 		$first = get_user_option( 'first_name', $user_id );
 		$first = ! empty( $first ) ? $first : '';
 		$return_name = '';
-		if( ! $last_first ) {
+		if ( ! $last_first ) {
 			$return_name = ! empty( $first ) ? $first : '';
 			$return_name = ! empty( $last ) ? $return_name . ' ' . $last : $return_name;
-			if( $username ) {
+			if ( $username ) {
 				$return_name = ! empty( $return_name ) ? $return_name . ' (' . $display_name . ')' : $display_name;
 			}
 			$return_name = ! empty( $return_name ) ? $return_name : $display_name;
 		} else {
 			$return_name = ! empty( $last ) ? $last : '';
 			$return_name = ! empty( $first ) && ! empty( $last ) ? $last . ', ' . $first : $return_name;
-			$return_name = empty( $return_name ) && ! empty ( $first ) && empty( $last ) ? $first : $return_name;
-			if( $username ) {
+			$return_name = empty( $return_name ) && ! empty( $first ) && empty( $last ) ? $first : $return_name;
+			if ( $username ) {
 				$return_name = ! empty( $return_name ) ? $return_name . ' (' . $display_name . ')' : $display_name;
 			}
 			$return_name = ! empty( $return_name ) ? $return_name : $display_name;
@@ -906,20 +902,19 @@ class CoursePress_Helper_Utility {
 	}
 
 	public static function duration_to_seconds( $duration ) {
-
 		$seconds = 0;
 
 		$parts = explode( ':', $duration );
 
-		if( ! empty( $parts ) ) {
+		if ( ! empty( $parts ) ) {
 			$seconds = (int) array_pop( $parts );
 		}
 
-		if( ! empty( $parts ) ) {
+		if ( ! empty( $parts ) ) {
 			$seconds += 60 * ( (int) array_pop( $parts ) );
 		}
 
-		if( ! empty( $parts ) ) {
+		if ( ! empty( $parts ) ) {
 			$seconds += 60 * 60 * ( (int) array_pop( $parts ) );
 		}
 
@@ -927,21 +922,20 @@ class CoursePress_Helper_Utility {
 	}
 
 	public static function seconds_to_duration( $seconds ) {
-
 		$hours = (int) ( $seconds / 60 / 60 );
 		$minutes = (int) ( ( $seconds - ( $hours * 60 * 60 ) ) / 60 );
 		$seconds = $seconds - ( $hours * 60 * 60 ) - ( $minutes * 60 );
 
-		return sprintf("%02d:%02d:%02d", $hours, $minutes, $seconds );
+		return sprintf( '%02d:%02d:%02d', $hours, $minutes, $seconds );
 	}
 
 	public static function hashcode( $string ) {
 		$hash = 0;
-		if ( strlen( $string ) == 0) return $hash;
-		for ($i = 0; $i < strlen( $string ); $i++) {
+		if ( ! strlen( $string ) ) { return $hash; }
+		for ( $i = 0; $i < strlen( $string ); $i++ ) {
 			$char = substr( $string, $i, 1 );
-			$hash = ( ( $hash<<5 ) - $hash ) + ord( $char );
-			$hash = $hash & $hash; // Convert to 32bit integer
+			$hash = ( ( $hash << 5 ) - $hash ) + ord( $char );
+			$hash = $hash & $hash; // Convert to 32bit integer.
 		}
 		return $hash;
 	}

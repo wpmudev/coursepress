@@ -121,17 +121,20 @@ class CoursePress_Helper_Query_Student extends WP_User_Query {
 	}
 
 	function page_links() {
-		$pagination = new CoursePress_Pagination();
-		$pagination->Items( $this->get_total() );
+		$cur_page = isset( $_GET['page'] ) ? $_GET['page'] : 'students';
+		$target_url = 'admin.php?page=' . $cur_page;
+		if ( ! empty( $this->additional_url_args ) ) {
+			$target_url .= '&' . http_build_query( $this->additional_url_args );
+		}
+		$pagination = new CoursePress_Helper_Pagination();
+
+		$pagination->items( $this->get_total() );
 		$pagination->limit( $this->users_per_page );
-		$pagination->parameterName = 'page_num';
-		$pagination->nextT = __( 'Next', 'CP_TD' );
-		$pagination->prevT = __( 'Previous', 'CP_TD' );
-		$pagination->target( esc_url( 'admin.php?page=' . ( isset( $_GET['page'] ) ? $_GET['page'] : 'students' ) . '&' . http_build_query( $this->additional_url_args ) ) );
-		$pagination->currentPage( $this->page_num );
-		$pagination->nextIcon( '&#9658;' );
-		$pagination->prevIcon( '&#9668;' );
-		$pagination->items_title = __( 'students', 'CP_TD' );
+		$pagination->target_url( $target_url );
+		$pagination->parameter_name( 'page_num' );
+		$pagination->current_page( $this->page_num );
+		$pagination->title( __( 'student', 'CP_TD' ), __( 'students', 'CP_TD' ) );
+
 		$pagination->show();
 	}
 

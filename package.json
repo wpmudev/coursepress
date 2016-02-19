@@ -21,6 +21,7 @@
 	"devDependencies": {
 		"grunt": "^0.4.5",
 		"time-grunt": "~0.2.3",
+		"grunt-clear": "^0.2.1",
 		"load-grunt-tasks": "~0.2.0",
 		"grunt-git": "^0.3.5",
 		"grunt-contrib-clean": "^0.6.0",
