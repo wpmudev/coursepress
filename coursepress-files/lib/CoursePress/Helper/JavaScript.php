@@ -49,26 +49,26 @@ class CoursePress_Helper_JavaScript {
 		// Create a dummy editor to by used by the CoursePress JS object
 		ob_start();
 		wp_editor( 'dummy_editor_content', 'dummy_editor_id', array(
-			'wpautop'       => true,
+			'wpautop' => true,
 		                                                             'textarea_name' => 'dummy_editor_name',
 		) );
 		$dummy_editor = ob_get_clean();
 
 		$localize_array = array(
-			'_ajax_url'                 => CoursePress_Helper_Utility::get_ajax_url(),
-			'_dummy_editor'             => $dummy_editor,
-			'allowed_video_extensions'  => wp_get_video_extensions(),
-			'allowed_audio_extensions'  => wp_get_audio_extensions(),
-			'allowed_image_extensions'  => CoursePress_Helper_Utility::get_image_extensions(),
-			'allowed_extensions'        => apply_filters( 'coursepress_custom_allowed_extensions', false ),
-			'date_format'               => get_option( 'date_format' ),
-			'editor_visual'             => __( 'Visual', CoursePress::TD ),
-			'editor_text'               => _x( 'Text', 'Name for the Text editor tab (formerly HTML)', CoursePress::TD ),
+			'_ajax_url' => CoursePress_Helper_Utility::get_ajax_url(),
+			'_dummy_editor' => $dummy_editor,
+			'allowed_video_extensions' => wp_get_video_extensions(),
+			'allowed_audio_extensions' => wp_get_audio_extensions(),
+			'allowed_image_extensions' => CoursePress_Helper_Utility::get_image_extensions(),
+			'allowed_extensions' => apply_filters( 'coursepress_custom_allowed_extensions', false ),
+			'date_format' => get_option( 'date_format' ),
+			'editor_visual' => __( 'Visual', CoursePress::TD ),
+			'editor_text' => _x( 'Text', 'Name for the Text editor tab (formerly HTML)', CoursePress::TD ),
 			'invalid_extension_message' => __( 'Extension of the file is not valid. Please use one of the following:', CoursePress::TD ),
-			'assessment_grid_url'       => admin_url( 'admin.php?page=coursepress_assessments' ),
-			'assessment_report_url'       => admin_url( 'admin.php?page=coursepress_reports' ),
-			'is_wpmudev'                => CoursePress_Data_Capabilities::is_wpmudev(),
-			'is_campus'                 => CoursePress_Data_Capabilities::is_campus(),
+			'assessment_grid_url' => admin_url( 'admin.php?page=coursepress_assessments' ),
+			'assessment_report_url' => admin_url( 'admin.php?page=coursepress_reports' ),
+			'is_wpmudev' => CoursePress_Data_Capabilities::is_wpmudev(),
+			'is_campus' => CoursePress_Data_Capabilities::is_campus(),
 		);
 
 		// Models
@@ -91,15 +91,15 @@ class CoursePress_Helper_JavaScript {
 				'jquery'
 			), CoursePress::$version );
 
-			$localize_array['instructor_role_defined']          = defined( 'COURSEPRESS_INSTRUCTOR_ROLE' );
-			$localize_array['instructor_avatars']               = CoursePress_Helper_UI::get_user_avatar_array();
-			$localize_array['instructor_delete_confirm']        = __( 'Please confirm that you want to remove the instructor from this course.', CoursePress::TD );
+			$localize_array['instructor_role_defined'] = defined( 'COURSEPRESS_INSTRUCTOR_ROLE' );
+			$localize_array['instructor_avatars'] = CoursePress_Helper_UI::get_user_avatar_array();
+			$localize_array['instructor_delete_confirm'] = __( 'Please confirm that you want to remove the instructor from this course.', CoursePress::TD );
 			$localize_array['instructor_delete_invite_confirm'] = __( 'Please confirm that you want to remove the instructor invitation from this course.', CoursePress::TD );
-			$localize_array['instructor_empty_message']         = __( 'Please Assign Instructor', CoursePress::TD );
-			$localize_array['instructor_pednding_status']       = __( 'Pending', CoursePress::TD );
-			$localize_array['email_validation_pattern']         = __( '.+@.+', CoursePress::TD );
-			$localize_array['student_delete_confirm']        = __( 'Please confirm that you want to remove the student from this course.', CoursePress::TD );
-			$localize_array['student_delete_all_confirm']        = __( 'Please confirm that you want to remove ALL students from this course. Warning: This can not be undone. Please make sure this is what you want to do.', CoursePress::TD );
+			$localize_array['instructor_empty_message'] = __( 'Please Assign Instructor', CoursePress::TD );
+			$localize_array['instructor_pednding_status'] = __( 'Pending', CoursePress::TD );
+			$localize_array['email_validation_pattern'] = __( '.+@.+', CoursePress::TD );
+			$localize_array['student_delete_confirm'] = __( 'Please confirm that you want to remove the student from this course.', CoursePress::TD );
+			$localize_array['student_delete_all_confirm'] = __( 'Please confirm that you want to remove ALL students from this course. Warning: This can not be undone. Please make sure this is what you want to do.', CoursePress::TD );
 
 			// Discussion / Notification
 			$localize_array['notification_bulk_delete'] = __( 'Please confirm that you want to delete ALL selected notifications. Warning: This cannot be undone. Please make sure this is what you want to do.', CoursePress::TD );
@@ -122,8 +122,8 @@ class CoursePress_Helper_JavaScript {
 				'coursepress_course',
 			), CoursePress::$version );
 
-			$localize_array['unit_builder_templates']     = CoursePress_Helper_UI_Module::get_template( true );
-			$localize_array['unit_builder_module_types']  = CoursePress_Helper_UI_Module::get_types();
+			$localize_array['unit_builder_templates'] = CoursePress_Helper_UI_Module::get_template( true );
+			$localize_array['unit_builder_module_types'] = CoursePress_Helper_UI_Module::get_types();
 			$localize_array['unit_builder_module_labels'] = CoursePress_Helper_UI_Module::get_labels();
 			$localize_array['unit_builder_delete_module_confirm'] = __( 'Please confirm that you want to remove this module and possible student responses.', CoursePress::TD );
 			$localize_array['unit_builder_delete_page_confirm'] = __( 'Please confirm that you want to remove this page. All modules will be moved to the first available page (or you can drop them on other pages first before deleting this page).', CoursePress::TD );
@@ -193,25 +193,25 @@ class CoursePress_Helper_JavaScript {
 			$script = CoursePress_Core::$plugin_lib_url . 'assets/js/CoursePressFront.js';
 
 			$localize_array = array(
-				'_ajax_url'                  => CoursePress_Helper_Utility::get_ajax_url(),
-				'allowed_video_extensions'   => wp_get_video_extensions(),
-				'allowed_audio_extensions'   => wp_get_audio_extensions(),
-				'allowed_image_extensions'   => CoursePress_Helper_Utility::get_image_extensions(),
-				'allowed_extensions'         => apply_filters( 'coursepress_custom_allowed_extensions', false ),
+				'_ajax_url' => CoursePress_Helper_Utility::get_ajax_url(),
+				'allowed_video_extensions' => wp_get_video_extensions(),
+				'allowed_audio_extensions' => wp_get_audio_extensions(),
+				'allowed_image_extensions' => CoursePress_Helper_Utility::get_image_extensions(),
+				'allowed_extensions' => apply_filters( 'coursepress_custom_allowed_extensions', false ),
 				'allowed_student_extensions' => CoursePress_Helper_Utility::allowed_student_mimes(),
-				'no_browser_upload'          => __( 'Please try a different browser to upload your file.', CoursePress::TD ),
-				'invalid_upload_message'     => __( 'Please only upload any of the following files: ', CoursePress::TD ),
-				'file_uploaded_message'      => __( 'Your file has been submitted successfully.', CoursePress::TD ),
-				'file_upload_fail_message'   => __( 'There was a problem processing your file.', CoursePress::TD ),
-				'response_saved_message'     => __( 'Your response was recorded successfully.', CoursePress::TD ),
-				'response_fail_message'      => __( 'There was a problem saving your response. Please reload this page and try again.', CoursePress::TD ),
-				'current_course'             => CoursePress_Helper_Utility::the_course( true ),
-				'course_url'                 => get_permalink( CoursePress_Helper_Utility::the_course( true ) ),
-				'home_url'                   => home_url(),
-				'current_student'            => get_current_user_id(),
-				'workbook_view_answer'       => __( 'View', CoursePress::TD ),
-				'labels'                     => CoursePress_Helper_UI_Module::get_labels(),
-				'signup_errors'              => array(
+				'no_browser_upload' => __( 'Please try a different browser to upload your file.', CoursePress::TD ),
+				'invalid_upload_message' => __( 'Please only upload any of the following files: ', CoursePress::TD ),
+				'file_uploaded_message' => __( 'Your file has been submitted successfully.', CoursePress::TD ),
+				'file_upload_fail_message' => __( 'There was a problem processing your file.', CoursePress::TD ),
+				'response_saved_message' => __( 'Your response was recorded successfully.', CoursePress::TD ),
+				'response_fail_message' => __( 'There was a problem saving your response. Please reload this page and try again.', CoursePress::TD ),
+				'current_course' => CoursePress_Helper_Utility::the_course( true ),
+				'course_url' => get_permalink( CoursePress_Helper_Utility::the_course( true ) ),
+				'home_url' => home_url(),
+				'current_student' => get_current_user_id(),
+				'workbook_view_answer' => __( 'View', CoursePress::TD ),
+				'labels' => CoursePress_Helper_UI_Module::get_labels(),
+				'signup_errors' => array(
 					'all_fields' => __( 'All fields required.', CoursePress::TD ),
 					'email_invalid' => __( 'Invalid e-mail address.', CoursePress::TD ),
 					'email_exists' => __( 'That e-mail address is already taken.', CoursePress::TD ),
@@ -246,7 +246,7 @@ class CoursePress_Helper_JavaScript {
 				'password-strength-meter',
 			), CoursePress::$version );
 
-			$fontawesome  = CoursePress_Core::$plugin_lib_url . 'assets/css/font-awesome.min.css';
+			$fontawesome = CoursePress_Core::$plugin_lib_url . 'assets/css/font-awesome.min.css';
 			wp_enqueue_style( 'fontawesome', $fontawesome, array(), CoursePress::$version );
 
 		}

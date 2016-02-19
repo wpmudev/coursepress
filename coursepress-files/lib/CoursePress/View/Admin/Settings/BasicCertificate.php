@@ -63,14 +63,14 @@ class CoursePress_View_Admin_Settings_BasicCertificate{
 								<td colspan="2">';
 
 		ob_start();
-		$editor_name    = "coursepress_settings[basic_certificate][content]";
-		$editor_id      = "coursepress_settings_basic_certificate_content";
+		$editor_name = "coursepress_settings[basic_certificate][content]";
+		$editor_id = "coursepress_settings_basic_certificate_content";
 		$editor_content = CoursePress_Core::get_setting('basic_certificate/content', self::default_certificate_content() );
 		$args = array(
 			"textarea_name" => $editor_name,
 			"textarea_rows" => 10,
-			'wpautop'       => true,
-			'quicktags'     => true
+			'wpautop' => true,
+			'quicktags' => true
 		);
 		wp_editor( $editor_content, $editor_id, $args );
 		$content .= ob_get_clean();
@@ -172,7 +172,7 @@ class CoursePress_View_Admin_Settings_BasicCertificate{
 
 		if ( isset( $_POST['action'] ) && 'updateoptions' === $_POST['action'] && 'basic_certificate' === $tab && wp_verify_nonce( $_POST['_wpnonce'], 'update-coursepress-options' ) ) {
 
-			$settings      = CoursePress_Core::get_setting( false ); // false returns all settings
+			$settings = CoursePress_Core::get_setting( false ); // false returns all settings
 			$post_settings = (array) $_POST['coursepress_settings'];
 
 			// Now is a good time to make changes to $post_settings, especially to fix up unchecked checkboxes

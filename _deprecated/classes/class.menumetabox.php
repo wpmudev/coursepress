@@ -31,7 +31,7 @@ if ( ! class_exists( 'CoursePress_Menu_Metabox' ) ) {
 
 			$_nav_menu_placeholder = 0 > $_nav_menu_placeholder ? $_nav_menu_placeholder - 1 : - 1;
 
-			$current_tab    = 'cp-published';
+			$current_tab = 'cp-published';
 			$post_type_name = 'course';
 
 			$removed_args = array(
@@ -71,11 +71,11 @@ if ( ! class_exists( 'CoursePress_Menu_Metabox' ) ) {
 						<?php
 
 						$args = array(
-							'order'          => 'ASC',
-							'post_type'      => 'course',
+							'order' => 'ASC',
+							'post_type' => 'course',
 							'post_mime_type' => '',
-							'post_parent'    => '',
-							'post_status'    => 'publish',
+							'post_parent' => '',
+							'post_status' => 'publish',
 						);
 
 						$courses = get_posts( $args );
@@ -165,7 +165,7 @@ if ( ! class_exists( 'CoursePress_Menu_Metabox' ) ) {
 						echo esc_url( add_query_arg(
 							array(
 								$post_type_name . '-tab' => 'cp-published',
-								'selectall'              => 1,
+								'selectall' => 1,
 							),
 							remove_query_arg( $removed_args )
 						) );

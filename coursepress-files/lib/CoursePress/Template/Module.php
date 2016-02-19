@@ -18,7 +18,7 @@ class CoursePress_Template_Module {
 		$content = '<div class="module-container module ' . $attributes['module_type'] . ' module-' . $module->ID . ' ' . $attributes['mode'] . '" data-type="' . $attributes['module_type'] . '" data-module="' . $module->ID . '">';
 
 		$show_title = isset( $attributes['show_title'] ) ? $attributes['show_title'] : false;
-		$mandatory  = isset( $attributes['mandatory'] ) ? $attributes['mandatory'] : false;
+		$mandatory = isset( $attributes['mandatory'] ) ? $attributes['mandatory'] : false;
 
 		if ( $show_title ) {
 			$content .= '<h4 class="module-title">' . $module->post_title . '</h4>';
@@ -47,7 +47,7 @@ class CoursePress_Template_Module {
 		}
 
 		$the_caption = '';
-		$alt_text    = '';
+		$alt_text = '';
 		$media_width = '';
 
 		$type = $data['module_type'];
@@ -59,7 +59,7 @@ class CoursePress_Template_Module {
 		}
 
 		$caption_source = isset( $data['caption_field'] ) ? $data['caption_field'] : 'media';
-		$attachment     = CoursePress_Helper_Utility::attachment_from_url( $url );
+		$attachment = CoursePress_Helper_Utility::attachment_from_url( $url );
 
 		if ( 'media' === $caption_source ) {
 
@@ -70,14 +70,14 @@ class CoursePress_Template_Module {
 					$alt_text = isset( $data['caption_custom_text'] ) ? CoursePress_Helper_Utility::filter_content( $data['caption_custom_text'] ) : '';
 				}
 
-				$meta        = wp_get_attachment_metadata( $attachment->ID );
+				$meta = wp_get_attachment_metadata( $attachment->ID );
 				$media_width = $meta['width'];
 
 				$the_caption = $attachment->post_excerpt;
 
 			} else {
 				$the_caption = '';
-				$alt_text    = isset( $data['caption_custom_text'] ) ? CoursePress_Helper_Utility::filter_content( $data['caption_custom_text'] ) : '';
+				$alt_text = isset( $data['caption_custom_text'] ) ? CoursePress_Helper_Utility::filter_content( $data['caption_custom_text'] ) : '';
 			}
 		} else {
 
@@ -123,7 +123,7 @@ class CoursePress_Template_Module {
 		if ( 'video' === $type ) {
 
 			$video_extension = pathinfo( $url, PATHINFO_EXTENSION );
-			$hide_related    = isset( $data['hide_related_media'] ) ? CoursePress_Helper_Utility::fix_bool( $data['hide_related_media'] ) : false;
+			$hide_related = isset( $data['hide_related_media'] ) ? CoursePress_Helper_Utility::fix_bool( $data['hide_related_media'] ) : false;
 
 			if ( $hide_related ) {
 				add_filter( 'oembed_result', array( 'CoursePress_Helper_Utility', 'remove_related_videos' ), 10, 3 );
@@ -131,7 +131,7 @@ class CoursePress_Template_Module {
 
 			$video = '';
 			if ( ! empty( $video_extension ) ) {// it's file, most likely on the server
-				$attr  = array(
+				$attr = array(
 					'src' => $url,
 				);
 				$video = wp_video_shortcode( $attr );
@@ -181,11 +181,11 @@ class CoursePress_Template_Module {
 		$content = self::render_module_head( $module, $attributes );
 
 		if ( isset( $attributes['audio_url'] ) ) {
-			$loop     = isset( $attributes['loop'] ) ? CoursePress_Helper_Utility::fix_bool( $attributes['loop'] ) : false;
+			$loop = isset( $attributes['loop'] ) ? CoursePress_Helper_Utility::fix_bool( $attributes['loop'] ) : false;
 			$autoplay = isset( $attributes['autoplay'] ) ? CoursePress_Helper_Utility::fix_bool( $attributes['autoplay'] ) : false;
-			$attr     = array(
-				'src'      => $attributes['audio_url'],
-				'loop'     => $loop,
+			$attr = array(
+				'src' => $attributes['audio_url'],
+				'loop' => $loop,
 				'autoplay' => $autoplay,
 			);
 			$content .= '<div class="module-content">
@@ -284,16 +284,16 @@ class CoursePress_Template_Module {
 
 		$comments = get_comments( array(
 			'post_id' => $module->ID,
-			'status'  => 'all',// Change this to the type of comments to be displayed
+			'status' => 'all',// Change this to the type of comments to be displayed
 		) );
 
 		// Display the list of comments
 		$content .= '<ul class="comments-list">';
 		$content .= wp_list_comments( array(
-			'per_page'          => 10, // Allow comment pagination
+			'per_page' => 10, // Allow comment pagination
 			'reverse_top_level' => false, // Show the latest comments at the top of the list
-			'echo'              => false,
-			'style'             => 'ul',
+			'echo' => false,
+			'style' => 'ul',
 			'callback' => 'wpmudev_list_comments',
 		), $comments );
 		$content .= '</ul>';
@@ -321,7 +321,7 @@ class CoursePress_Template_Module {
 
 				<div class="reply">
 					<?php comment_reply_link( array_merge( $args, array(
-						'depth'     => $depth,
+						'depth' => $depth,
 					                                                     'max_depth' => $args['max_depth'],
 					) ), $comment ); ?>
 				</div>
@@ -335,9 +335,9 @@ class CoursePress_Template_Module {
 	public static function render_input_checkbox( $module, $attributes = false ) {
 		$content = self::render_module_head( $module, $attributes );
 
-		$course_id        = CoursePress_Helper_Utility::the_course( true );
-		$unit_id          = $module->post_parent;
-		$module_id        = $module->ID;
+		$course_id = CoursePress_Helper_Utility::the_course( true );
+		$unit_id = $module->post_parent;
+		$module_id = $module->ID;
 		$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id );
 
 		// Content
@@ -346,7 +346,7 @@ class CoursePress_Template_Module {
 		if ( ! empty( $attributes['answers'] ) ) {
 			$responses = CoursePress_Data_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
 
-			$element_class  = ! empty( $responses ) ? 'hide' : '';
+			$element_class = ! empty( $responses ) ? 'hide' : '';
 			$response_count = ! empty( $responses ) ? count( $responses ) : 0;
 			// $attributes['retry_attempts'] = 3; // DEBUG
 			$disabled = ! $attributes['allow_retries'] && $response_count > 0;
@@ -367,13 +367,13 @@ class CoursePress_Template_Module {
 			$content .= '<ul style="list-style: none;">';
 
 			$oddeven = 'odd';
-			$alt     = '';
+			$alt = '';
 			foreach ( $attributes['answers'] as $key => $answer ) {
 				$content .= '<li class="' . $oddeven . ' ' . $alt . '">' .
 				            '<input type="checkbox" value="' . esc_attr( $key ) . '" name="module-' . $module->ID . '" ' . $disabled_attr . ' /> ' . esc_html( $answer ) .
 				            '</li>';
 				$oddeven = 'odd' === $oddeven ? 'even' : 'odd';
-				$alt     = empty( $alt ) ? 'alt' : '';
+				$alt = empty( $alt ) ? 'alt' : '';
 			}
 
 			$content .= '</ul>';
@@ -385,14 +385,14 @@ class CoursePress_Template_Module {
 			if ( ! empty( $responses ) ) {
 
 				$last_response = (array) $responses[ $response_count - 1 ];
-				$response_key  = array_keys( $responses );
-				$response_key  = array_pop( $response_key );
+				$response_key = array_keys( $responses );
+				$response_key = array_pop( $response_key );
 
 				$content .= '<div class="module-response">';
 
 				$content .= '<ul>';
 				foreach ( $attributes['answers'] as $key => $answer ) {
-					$the_answer     = in_array( $key, $attributes['answers_selected'] );
+					$the_answer = in_array( $key, $attributes['answers_selected'] );
 					$student_answer = in_array( $key, $last_response );
 
 					$class = '';
@@ -413,13 +413,13 @@ class CoursePress_Template_Module {
 
 				// Render Response and Feedback
 				$args = array(
-					'course_id'    => $course_id,
-					'unit_id'      => $unit_id,
-					'module_id'    => $module_id,
-					'student_id'   => get_current_user_id(),
+					'course_id' => $course_id,
+					'unit_id' => $unit_id,
+					'module_id' => $module_id,
+					'student_id' => get_current_user_id(),
 					'student_data' => $student_progress,
 					'response_key' => $response_key,
-					'disabled'     => $disabled,
+					'disabled' => $disabled,
 				);
 				$content .= self::render_module_result( $module, $attributes, $args );
 
@@ -432,18 +432,18 @@ class CoursePress_Template_Module {
 
 	private static function render_module_result( $module, $attributes, $args ) {
 
-		$course_id        = $args['course_id'];
-		$unit_id          = $args['unit_id'];
-		$module_id        = $args['module_id'];
-		$student_id       = $args['student_id'];
+		$course_id = $args['course_id'];
+		$unit_id = $args['unit_id'];
+		$module_id = $args['module_id'];
+		$student_id = $args['student_id'];
 		$student_progress = $args['student_data'];
-		$response_key     = $args['response_key'];
-		$disabled         = $args['disabled'];
+		$response_key = $args['response_key'];
+		$disabled = $args['disabled'];
 
 		$content = '';
 
-		$grade    = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, $response_key, false, $student_progress );
-		$grade    = $grade['grade'];
+		$grade = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, $response_key, false, $student_progress );
+		$grade = $grade['grade'];
 		$feedback = CoursePress_Data_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, $response_key, false, $student_progress );
 		$feedback = $feedback['feedback'];
 
@@ -473,9 +473,9 @@ class CoursePress_Template_Module {
 	public static function render_input_radio( $module, $attributes = false ) {
 		$content = self::render_module_head( $module, $attributes );
 
-		$course_id        = CoursePress_Helper_Utility::the_course( true );
-		$unit_id          = $module->post_parent;
-		$module_id        = $module->ID;
+		$course_id = CoursePress_Helper_Utility::the_course( true );
+		$unit_id = $module->post_parent;
+		$module_id = $module->ID;
 		$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id );
 
 		// Content
@@ -484,7 +484,7 @@ class CoursePress_Template_Module {
 		if ( ! empty( $attributes['answers'] ) ) {
 			$responses = CoursePress_Data_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
 
-			$element_class  = ! empty( $responses ) ? 'hide' : '';
+			$element_class = ! empty( $responses ) ? 'hide' : '';
 			$response_count = ! empty( $responses ) ? count( $responses ) : 0;
 			// $attributes['retry_attempts'] = 3; // DEBUG
 			$disabled = ! $attributes['allow_retries'] && $response_count > 0;
@@ -508,14 +508,14 @@ class CoursePress_Template_Module {
 			$action = '<a class="module-submit-action">' . esc_html__( 'Submit Answer', CoursePress::TD ) . '</a>';
 
 			$oddeven = 'odd';
-			$alt     = '';
+			$alt = '';
 			foreach ( $attributes['answers'] as $key => $answer ) {
 				$content .= '<li class="' . $oddeven . ' ' . $alt . '">' .
 				            '<input type="radio" value="' . esc_attr( $key ) . '" name="module-' . $module->ID . '" ' . $disabled_attr . ' /> ' . esc_html( $answer ) .
 				            '</li>';
 
 				$oddeven = 'odd' === $oddeven ? 'even' : 'odd';
-				$alt     = empty( $alt ) ? 'alt' : '';
+				$alt = empty( $alt ) ? 'alt' : '';
 			}
 
 			$content .= '</ul>';
@@ -527,14 +527,14 @@ class CoursePress_Template_Module {
 			if ( ! empty( $responses ) ) {
 
 				$last_response = $responses[ $response_count - 1 ];
-				$response_key  = array_keys( $responses );
-				$response_key  = array_pop( $response_key );
+				$response_key = array_keys( $responses );
+				$response_key = array_pop( $response_key );
 
 				$content .= '<div class="module-response">';
 
 				$content .= '<ul>';
 				foreach ( $attributes['answers'] as $key => $answer ) {
-					$the_answer     = (int) $attributes['answers_selected'] === (int) $key;
+					$the_answer = (int) $attributes['answers_selected'] === (int) $key;
 					$student_answer = (int) $last_response === (int) $key;
 
 					$class = '';
@@ -555,13 +555,13 @@ class CoursePress_Template_Module {
 
 				// Render Response and Feedback
 				$args = array(
-					'course_id'    => $course_id,
-					'unit_id'      => $unit_id,
-					'module_id'    => $module_id,
-					'student_id'   => get_current_user_id(),
+					'course_id' => $course_id,
+					'unit_id' => $unit_id,
+					'module_id' => $module_id,
+					'student_id' => get_current_user_id(),
 					'student_data' => $student_progress,
 					'response_key' => $response_key,
-					'disabled'     => $disabled,
+					'disabled' => $disabled,
 				);
 				$content .= self::render_module_result( $module, $attributes, $args );
 
@@ -576,7 +576,7 @@ class CoursePress_Template_Module {
 		$content = self::render_module_head( $module, $attributes );
 
 		$course_id = CoursePress_Helper_Utility::the_course( true );
-		$unit_id   = $module->post_parent;
+		$unit_id = $module->post_parent;
 		$module_id = $module->ID;
 
 		$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id );
@@ -588,7 +588,7 @@ class CoursePress_Template_Module {
 
 			$responses = CoursePress_Data_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
 
-			$element_class  = ! empty( $responses ) ? 'hide' : '';
+			$element_class = ! empty( $responses ) ? 'hide' : '';
 			$response_count = ! empty( $responses ) ? count( $responses ) : 0;
 			// $attributes['retry_attempts'] = 3; // DEBUG
 			$disabled = ! $attributes['allow_retries'] && $response_count > 0;
@@ -623,14 +623,14 @@ class CoursePress_Template_Module {
 			if ( ! empty( $responses ) ) {
 
 				$last_response = $responses[ $response_count - 1 ];
-				$response_key  = array_keys( $responses );
-				$response_key  = array_pop( $response_key );
+				$response_key = array_keys( $responses );
+				$response_key = array_pop( $response_key );
 
 				$content .= '<div class="module-response">';
 
 				$content .= '<ul>';
 				foreach ( $attributes['answers'] as $key => $answer ) {
-					$the_answer     = (int) $attributes['answers_selected'] === (int) $key;
+					$the_answer = (int) $attributes['answers_selected'] === (int) $key;
 					$student_answer = (int) $last_response === (int) $key;
 
 					$class = '';
@@ -654,13 +654,13 @@ class CoursePress_Template_Module {
 
 				// Render Response and Feedback
 				$args = array(
-					'course_id'    => $course_id,
-					'unit_id'      => $unit_id,
-					'module_id'    => $module_id,
-					'student_id'   => get_current_user_id(),
+					'course_id' => $course_id,
+					'unit_id' => $unit_id,
+					'module_id' => $module_id,
+					'student_id' => get_current_user_id(),
 					'student_data' => $student_progress,
 					'response_key' => $response_key,
-					'disabled'     => $disabled,
+					'disabled' => $disabled,
 				);
 				$content .= self::render_module_result( $module, $attributes, $args );
 
@@ -674,9 +674,9 @@ class CoursePress_Template_Module {
 	public static function render_input_text( $module, $attributes = false ) {
 		$content = self::render_module_head( $module, $attributes );
 
-		$course_id        = CoursePress_Helper_Utility::the_course( true );
-		$unit_id          = $module->post_parent;
-		$module_id        = $module->ID;
+		$course_id = CoursePress_Helper_Utility::the_course( true );
+		$unit_id = $module->post_parent;
+		$module_id = $module->ID;
 		$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id );
 
 		// Content
@@ -684,7 +684,7 @@ class CoursePress_Template_Module {
 
 		$responses = CoursePress_Data_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
 
-		$element_class  = ! empty( $responses ) ? 'hide' : '';
+		$element_class = ! empty( $responses ) ? 'hide' : '';
 		$response_count = ! empty( $responses ) ? count( $responses ) : 0;
 		// $attributes['retry_attempts'] = 3; // DEBUG
 		$disabled = ! $attributes['allow_retries'] && $response_count > 0;
@@ -695,7 +695,7 @@ class CoursePress_Template_Module {
 
 		$placeholder_text = get_post_meta( $module_id, 'placeholder_text', true );
 		$placeholder_text = ! empty( $placeholder_text ) ? $placeholder_text : '';
-		$disabled_attr    = $disabled ? 'disabled="disabled"' : '';
+		$disabled_attr = $disabled ? 'disabled="disabled"' : '';
 		$content .= '<div class="module-elements ' . $element_class . '">
 						<input type="hidden" name="course_id" value="' . $course_id . '" />
 						<input type="hidden" name="unit_id" value="' . $unit_id . '" />
@@ -708,8 +708,8 @@ class CoursePress_Template_Module {
 		if ( ! empty( $responses ) ) {
 
 			$last_response = $responses[ $response_count - 1 ];
-			$response_key  = array_keys( $responses );
-			$response_key  = array_pop( $response_key );
+			$response_key = array_keys( $responses );
+			$response_key = array_pop( $response_key );
 
 			$content .= '<div class="module-response">
 				<p><span class="label">' . esc_html__( 'Response: ', CoursePress::TD ) . '</span>
@@ -719,13 +719,13 @@ class CoursePress_Template_Module {
 
 			// Render Response and Feedback
 			$args = array(
-				'course_id'    => $course_id,
-				'unit_id'      => $unit_id,
-				'module_id'    => $module_id,
-				'student_id'   => get_current_user_id(),
+				'course_id' => $course_id,
+				'unit_id' => $unit_id,
+				'module_id' => $module_id,
+				'student_id' => get_current_user_id(),
 				'student_data' => $student_progress,
 				'response_key' => $response_key,
-				'disabled'     => $disabled,
+				'disabled' => $disabled,
 			);
 			$content .= self::render_module_result( $module, $attributes, $args );
 
@@ -738,9 +738,9 @@ class CoursePress_Template_Module {
 	public static function render_input_textarea( $module, $attributes = false ) {
 		$content = self::render_module_head( $module, $attributes );
 
-		$course_id        = CoursePress_Helper_Utility::the_course( true );
-		$unit_id          = $module->post_parent;
-		$module_id        = $module->ID;
+		$course_id = CoursePress_Helper_Utility::the_course( true );
+		$unit_id = $module->post_parent;
+		$module_id = $module->ID;
 		$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id );
 
 		// Content
@@ -748,7 +748,7 @@ class CoursePress_Template_Module {
 
 		$responses = CoursePress_Data_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
 
-		$element_class  = ! empty( $responses ) ? 'hide' : '';
+		$element_class = ! empty( $responses ) ? 'hide' : '';
 		$response_count = ! empty( $responses ) ? count( $responses ) : 0;
 		// $attributes['retry_attempts'] = 3; // DEBUG
 		$disabled = ! $attributes['allow_retries'] && $response_count > 0;
@@ -772,8 +772,8 @@ class CoursePress_Template_Module {
 		if ( ! empty( $responses ) ) {
 
 			$last_response = $responses[ $response_count - 1 ];
-			$response_key  = array_keys( $responses );
-			$response_key  = array_pop( $response_key );
+			$response_key = array_keys( $responses );
+			$response_key = array_pop( $response_key );
 
 			$content .= '<div class="module-response">
 				<p><span class="label">' . esc_html__( 'Response: ', CoursePress::TD ) . '</span>
@@ -783,13 +783,13 @@ class CoursePress_Template_Module {
 
 			// Render Response and Feedback
 			$args = array(
-				'course_id'    => $course_id,
-				'unit_id'      => $unit_id,
-				'module_id'    => $module_id,
-				'student_id'   => get_current_user_id(),
+				'course_id' => $course_id,
+				'unit_id' => $unit_id,
+				'module_id' => $module_id,
+				'student_id' => get_current_user_id(),
 				'student_data' => $student_progress,
 				'response_key' => $response_key,
-				'disabled'     => $disabled,
+				'disabled' => $disabled,
 			);
 			$content .= self::render_module_result( $module, $attributes, $args );
 
@@ -800,9 +800,9 @@ class CoursePress_Template_Module {
 	}
 
 	public static function render_input_upload( $module, $attributes = false ) {
-		$course_id        = CoursePress_Helper_Utility::the_course( true );
-		$unit_id          = $module->post_parent;
-		$module_id        = $module->ID;
+		$course_id = CoursePress_Helper_Utility::the_course( true );
+		$unit_id = $module->post_parent;
+		$module_id = $module->ID;
 		$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id );
 
 		$content = self::render_module_head( $module, $attributes );
@@ -812,7 +812,7 @@ class CoursePress_Template_Module {
 
 		$responses = CoursePress_Data_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
 
-		$element_class  = ! empty( $responses ) ? 'hide' : '';
+		$element_class = ! empty( $responses ) ? 'hide' : '';
 		$response_count = ! empty( $responses ) ? count( $responses ) : 0;
 		// $attributes['retry_attempts'] = 3; // DEBUG
 		$disabled = ! $attributes['allow_retries'] && $response_count > 0;
@@ -837,8 +837,8 @@ class CoursePress_Template_Module {
 		if ( ! empty( $responses ) ) {
 
 			$last_response = $responses[ $response_count - 1 ];
-			$response_key  = array_keys( $responses );
-			$response_key  = array_pop( $response_key );
+			$response_key = array_keys( $responses );
+			$response_key = array_pop( $response_key );
 
 			if ( isset( $last_response['url'] ) ) {
 
@@ -867,13 +867,13 @@ class CoursePress_Template_Module {
 
 			// Render Response and Feedback
 			$args = array(
-				'course_id'    => $course_id,
-				'unit_id'      => $unit_id,
-				'module_id'    => $module_id,
-				'student_id'   => get_current_user_id(),
+				'course_id' => $course_id,
+				'unit_id' => $unit_id,
+				'module_id' => $module_id,
+				'student_id' => get_current_user_id(),
 				'student_data' => $student_progress,
 				'response_key' => $response_key,
-				'disabled'     => $disabled,
+				'disabled' => $disabled,
 			);
 			$content .= self::render_module_result( $module, $attributes, $args );
 
@@ -887,18 +887,18 @@ class CoursePress_Template_Module {
 	public static function render_input_quiz( $module, $attributes = false ) {
 		$content = self::render_module_head( $module, $attributes );
 
-		$course_id        = CoursePress_Helper_Utility::the_course( true );
-		$unit_id          = $module->post_parent;
-		$module_id        = $module->ID;
+		$course_id = CoursePress_Helper_Utility::the_course( true );
+		$unit_id = $module->post_parent;
+		$module_id = $module->ID;
 		$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id );
-		$responses        = CoursePress_Data_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
-		$response_count   = count( $responses );
-		$use_timer        = CoursePress_Helper_Utility::fix_bool( $attributes['use_timer'] );
+		$responses = CoursePress_Data_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
+		$response_count = count( $responses );
+		$use_timer = CoursePress_Helper_Utility::fix_bool( $attributes['use_timer'] );
 
 		$quiz_result = CoursePress_Data_Module::get_quiz_results( get_current_user_id(), $course_id, $unit_id, $module_id, false, $student_progress );
 
 		// Is the quiz already passed?
-		$already_passed      = ! empty( $quiz_result ) && ! empty( $quiz_result['passed'] );
+		$already_passed = ! empty( $quiz_result ) && ! empty( $quiz_result['passed'] );
 		$quiz_result_content = ! empty( $quiz_result ) ? do_shortcode( '[coursepress_quiz_result course_id="' . $course_id . '" unit_id="' . $unit_id . '" module_id="' . $module_id . '" student_id="' . get_current_user_id() . '"]' ) : '';
 
 		$disabled = ! $attributes['allow_retries'] && $response_count > 0;
@@ -912,8 +912,8 @@ class CoursePress_Template_Module {
 			// Has the user already answered?
 			$element_class = ! empty( $responses ) && $disabled ? 'hide' : '';
 
-			$unlimited         = 0 === (int) $attributes['retry_attempts'];
-			$remaining         = ! $unlimited ? (int) $attributes['retry_attempts'] - ( $response_count - 1 ) : 0;
+			$unlimited = 0 === (int) $attributes['retry_attempts'];
+			$remaining = ! $unlimited ? (int) $attributes['retry_attempts'] - ( $response_count - 1 ) : 0;
 			$remaining_message = ! $unlimited ? sprintf( __( 'You have %d attempts left.', CoursePress::TD ), $remaining ) : '';
 			$content .= ! empty( $responses ) && ! $already_passed ? '<div class="not-passed-message">' . sprintf( esc_html__( 'Your last attempt was unsuccessful. Try again. %s', CoursePress::TD ), $remaining_message ) . '</div>' : '';
 

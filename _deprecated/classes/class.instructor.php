@@ -19,8 +19,8 @@ if ( ! class_exists( 'Instructor' ) ) {
 
 			/* Set meta vars */
 
-			$this->first_name     = get_user_meta( $ID, 'first_name', true );
-			$this->last_name      = get_user_meta( $ID, 'last_name', true );
+			$this->first_name = get_user_meta( $ID, 'first_name', true );
+			$this->last_name = get_user_meta( $ID, 'last_name', true );
 			$this->courses_number = Instructor::get_courses_number( $ID );
 		}
 
@@ -86,12 +86,12 @@ if ( ! class_exists( 'Instructor' ) ) {
 
 			foreach( $courses as $course ) {
 
-				$can_update				 = CoursePress_Capabilities::can_update_course( $course->ID, $this->ID );
-				$can_delete				 = CoursePress_Capabilities::can_delete_course( $course->ID, $this->ID );
-				$can_publish			 = CoursePress_Capabilities::can_change_course_status( $course->ID, $this->ID );
-				$can_view_unit			 = CoursePress_Capabilities::can_view_course_units( $course->ID, $this->ID );
-				$my_course				 = CoursePress_Capabilities::is_course_instructor( $course->ID, $this->ID );
-				$creator				 = CoursePress_Capabilities::is_course_creator( $course->ID, $this->ID );
+				$can_update = CoursePress_Capabilities::can_update_course( $course->ID, $this->ID );
+				$can_delete = CoursePress_Capabilities::can_delete_course( $course->ID, $this->ID );
+				$can_publish = CoursePress_Capabilities::can_change_course_status( $course->ID, $this->ID );
+				$can_view_unit = CoursePress_Capabilities::can_view_course_units( $course->ID, $this->ID );
+				$my_course = CoursePress_Capabilities::is_course_instructor( $course->ID, $this->ID );
+				$creator = CoursePress_Capabilities::is_course_creator( $course->ID, $this->ID );
 
 				if ( !$my_course && !$creator && !$can_update && !$can_delete && !$can_publish && !$can_view_unit ) {
 					continue;
@@ -161,7 +161,7 @@ if ( ! class_exists( 'Instructor' ) ) {
 
 		public static function instructor_by_hash( $hash ) {
 			global $wpdb;
-			$sql     = $wpdb->prepare( "SELECT user_id FROM " . $wpdb->prefix . "usermeta WHERE meta_key = %s", $hash );
+			$sql = $wpdb->prepare( "SELECT user_id FROM " . $wpdb->prefix . "usermeta WHERE meta_key = %s", $hash );
 			$user_id = $wpdb->get_var( $sql );
 
 			if ( ! empty( $user_id ) ) {
@@ -182,8 +182,8 @@ if ( ! class_exists( 'Instructor' ) ) {
 		}
 
 		public static function create_hash( $user_id ) {
-			$user          = get_user_by( 'id', $user_id );
-			$hash          = md5( $user->user_login );
+			$user = get_user_by( 'id', $user_id );
+			$hash = md5( $user->user_login );
 			$global_option = ! is_multisite();
 			/*
 			 * Just in case someone is actually using this hash for something,

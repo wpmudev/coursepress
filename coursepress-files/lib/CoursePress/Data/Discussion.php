@@ -10,28 +10,28 @@ class CoursePress_Data_Discussion {
 		return array(
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
-				'labels'             => array(
-					'name'               => __( 'Discussions', CoursePress::TD ),
-					'singular_name'      => __( 'Discussion', CoursePress::TD ),
-					'add_new'            => __( 'Create New', CoursePress::TD ),
-					'add_new_item'       => __( 'Create New Discussion', CoursePress::TD ),
-					'edit_item'          => __( 'Edit Discussion', CoursePress::TD ),
-					'edit'               => __( 'Edit', CoursePress::TD ),
-					'new_item'           => __( 'New Discussion', CoursePress::TD ),
-					'view_item'          => __( 'View Discussion', CoursePress::TD ),
-					'search_items'       => __( 'Search Discussions', CoursePress::TD ),
-					'not_found'          => __( 'No Discussions Found', CoursePress::TD ),
+				'labels' => array(
+					'name' => __( 'Discussions', CoursePress::TD ),
+					'singular_name' => __( 'Discussion', CoursePress::TD ),
+					'add_new' => __( 'Create New', CoursePress::TD ),
+					'add_new_item' => __( 'Create New Discussion', CoursePress::TD ),
+					'edit_item' => __( 'Edit Discussion', CoursePress::TD ),
+					'edit' => __( 'Edit', CoursePress::TD ),
+					'new_item' => __( 'New Discussion', CoursePress::TD ),
+					'view_item' => __( 'View Discussion', CoursePress::TD ),
+					'search_items' => __( 'Search Discussions', CoursePress::TD ),
+					'not_found' => __( 'No Discussions Found', CoursePress::TD ),
 					'not_found_in_trash' => __( 'No Discussions found in Trash', CoursePress::TD ),
-					'view'               => __( 'View Discussion', CoursePress::TD ),
+					'view' => __( 'View Discussion', CoursePress::TD ),
 				),
-				'public'             => false,
-				'show_ui'            => true,
+				'public' => false,
+				'show_ui' => true,
 				'publicly_queryable' => false,
-				'capability_type'    => 'discussion',
-				'map_meta_cap'       => true,
-				'query_var'          => true,
-				// 'rewrite'            => array(
-				// 'slug'  => trailingslashit( CoursePress_Core::get_slug( 'course' ) ) . '%course%/' . CoursePress_Core::get_slug( 'discussion' )
+				'capability_type' => 'discussion',
+				'map_meta_cap' => true,
+				'query_var' => true,
+				// 'rewrite' => array(
+				// 'slug' => trailingslashit( CoursePress_Core::get_slug( 'course' ) ) . '%course%/' . CoursePress_Core::get_slug( 'discussion' )
 				// )
 			),
 		);
@@ -83,8 +83,8 @@ class CoursePress_Data_Discussion {
 			'post_type' => self::get_post_type_name(),
 			'meta_query' => array(
 				array(
-					'key'     => 'course_id',
-					'value'   => $course,
+					'key' => 'course_id',
+					'value' => $course,
 					'compare' => 'IN',
 				),
 			),

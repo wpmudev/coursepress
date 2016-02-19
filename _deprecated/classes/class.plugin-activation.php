@@ -97,22 +97,22 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 
 
 			//Menu where plugin could be installed
-			$this->tab  = 'cp-marketpress';
+			$this->tab = 'cp-marketpress';
 			$this->menu = $screen_base . '_settings&tab=' . $this->tab;
 
 			if ( CoursePress_Capabilities::is_pro() ) {
 				$this->plugin = array(
 					array(
-						'name'           => 'MarketPress',
+						'name' => 'MarketPress',
 						// The plugin name.
-						'slug'           => 'marketpress',
+						'slug' => 'marketpress',
 						// The plugin slug (typically the folder name).
-						'base_path'      => 'marketpress/marketpress.php',
-						//'source'         => CoursePress::instance()->plugin_dir . 'includes/plugins/' . CoursePress::instance()->mp_file,
-						'source'         => is_object( $coursepress ) ? $coursepress->plugin_dir . 'includes/plugins/' . $coursepress->mp_file : '',
+						'base_path' => 'marketpress/marketpress.php',
+						//'source' => CoursePress::instance()->plugin_dir . 'includes/plugins/' . CoursePress::instance()->mp_file,
+						'source' => is_object( $coursepress ) ? $coursepress->plugin_dir . 'includes/plugins/' . $coursepress->mp_file : '',
 						// The plugin source.
 						'source_message' => __( 'Included in the CoursePress Plugin', 'cp' ),
-						'external_url'   => '',
+						'external_url' => '',
 						// http://premium.wpmudev.org/project/e-commerce/
 					),
 				);
@@ -120,15 +120,15 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 			if ( ! CoursePress_Capabilities::is_pro() ) {
 				$this->plugin = array(
 					array(
-						'name'           => 'MarketPress - WordPress eCommerce',
+						'name' => 'MarketPress - WordPress eCommerce',
 						// The plugin name.
-						'slug'           => 'wordpress-ecommerce',
+						'slug' => 'wordpress-ecommerce',
 						// The plugin slug (typically the folder name).
-						'base_path'      => 'wordpress-ecommerce/marketpress.php',
-						'source'         => 'downloads.wordpress.org/plugin/wordpress-ecommerce.zip',
+						'base_path' => 'wordpress-ecommerce/marketpress.php',
+						'source' => 'downloads.wordpress.org/plugin/wordpress-ecommerce.zip',
 						//without protocol (i.e. https://) because it may be killed by mod_security
 						'source_message' => __( 'WordPress.org Repository', 'cp' ),
-						'external_url'   => '',
+						'external_url' => '',
 						// https://wordpress.org/plugins/wordpress-ecommerce/
 					),
 				);
@@ -138,27 +138,27 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 
 			$this->config = array(
 				'default_path' => '', // Default absolute path to pre-packaged plugins.
-				'menu'         => $screen_base . '_settings&tab=' . $this->tab, // Menu slug.
-				'has_notices'  => true, // Show admin notices or not.
-				'dismissable'  => true, // If false, a user cannot dismiss the nag message.
-				'dismiss_msg'  => '', // If 'dismissable' is false, this message will be output at top of nag.
-				'message'      => '', // Message to output right before the plugins table.
+				'menu' => $screen_base . '_settings&tab=' . $this->tab, // Menu slug.
+				'has_notices' => true, // Show admin notices or not.
+				'dismissable' => true, // If false, a user cannot dismiss the nag message.
+				'dismiss_msg' => '', // If 'dismissable' is false, this message will be output at top of nag.
+				'message' => '', // Message to output right before the plugins table.
 			);
 
 			$this->strings = array(
-				'page_title'                      => __( 'Install Plugin', 'cp' ),
-				'installing'                      => sprintf( __( 'Installing Plugin: %s', 'cp' ), $this->plugin['name'] ),
-				'oops'                            => __( 'Something went wrong with the plugin API.', 'cp' ),
-				'notice_can_install_recommended'  => sprintf( __( 'Install %1$s plugin in order to sell courses.', 'cp' ), $this->plugin['name'] ),
+				'page_title' => __( 'Install Plugin', 'cp' ),
+				'installing' => sprintf( __( 'Installing Plugin: %s', 'cp' ), $this->plugin['name'] ),
+				'oops' => __( 'Something went wrong with the plugin API.', 'cp' ),
+				'notice_can_install_recommended' => sprintf( __( 'Install %1$s plugin in order to sell courses.', 'cp' ), $this->plugin['name'] ),
 				'notice_can_activate_recommended' => '',
-				'install_link'                    => sprintf( __( 'Install %1$s', 'cp' ), $this->plugin['name'] ),
-				'activate_link'                   => sprintf( __( 'Activate %1$s plugin in order to sell courses', 'cp' ), $this->plugin['name'] ),
-				'return'                          => __( 'Return to MarketPress Installer', 'cp' ),
-				'dashboard'                       => __( 'Return to the dashboard', 'cp' ),
-				'plugin_activated'                => __( 'Plugin activated successfully.', 'cp' ),
-				'activated_successfully'          => __( 'The following plugin was activated successfully:', 'cp' ),
-				'complete'                        => __( 'Installed and activated successfully.', 'cp' ),
-				'dismiss'                         => __( 'Dismiss this notice', 'cp' ),
+				'install_link' => sprintf( __( 'Install %1$s', 'cp' ), $this->plugin['name'] ),
+				'activate_link' => sprintf( __( 'Activate %1$s plugin in order to sell courses', 'cp' ), $this->plugin['name'] ),
+				'return' => __( 'Return to MarketPress Installer', 'cp' ),
+				'dashboard' => __( 'Return to the dashboard', 'cp' ),
+				'plugin_activated' => __( 'Plugin activated successfully.', 'cp' ),
+				'activated_successfully' => __( 'The following plugin was activated successfully:', 'cp' ),
+				'complete' => __( 'Installed and activated successfully.', 'cp' ),
+				'dismiss' => __( 'Dismiss this notice', 'cp' ),
 			);
 
 			self::$instance = $this;
@@ -308,10 +308,10 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 						'<a href="%1$s" title="' . __( 'Install', 'cp' ) . ' %2$s">' . __( 'Install', 'cp' ) . '</a>', wp_nonce_url(
 						esc_url_raw( add_query_arg(
 							array(
-								'page'              => CP_Plugin_Activation::$instance->menu,
-								'plugin'            => $this->plugin['slug'],
-								'plugin_name'       => $this->plugin['name'],
-								'plugin_source'     => $this->plugin['source'],
+								'page' => CP_Plugin_Activation::$instance->menu,
+								'plugin' => $this->plugin['slug'],
+								'plugin_name' => $this->plugin['name'],
+								'plugin_source' => $this->plugin['source'],
 								'cp-plugin-install' => 'install-plugin',
 							), admin_url( 'admin.php' )
 						) ), 'cp-plugin-install'
@@ -324,11 +324,11 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 					'activate' => sprintf(
 						'<a href="%1$s" title="' . __( 'Activate', 'cp' ) . ' %2$s">' . __( 'Activate', 'cp' ) . '</a>', esc_url( add_query_arg(
 						array(
-							'page'                     => CP_Plugin_Activation::$instance->menu,
-							'plugin'                   => $this->plugin['slug'],
-							'plugin_name'              => $this->plugin['name'],
-							'plugin_source'            => $this->plugin['source'],
-							'cp-activate-plugin'       => 'activate-plugin',
+							'page' => CP_Plugin_Activation::$instance->menu,
+							'plugin' => $this->plugin['slug'],
+							'plugin_name' => $this->plugin['name'],
+							'plugin_source' => $this->plugin['source'],
+							'cp-activate-plugin' => 'activate-plugin',
 							'cp-activate-plugin-nonce' => wp_create_nonce( 'cp-activate-plugin' ),
 						), admin_url( 'admin.php' )
 					) ), $this->plugin['name']
@@ -434,17 +434,17 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 			if ( isset( $_GET['plugin'] ) && ( isset( $_GET['cp-plugin-install'] ) && 'install-plugin' == $_GET['cp-plugin-install'] ) ) {
 				check_admin_referer( 'cp-plugin-install' );
 
-				$plugin['name']   = $_GET['plugin_name']; // Plugin name.
-				$plugin['slug']   = $_GET['plugin']; // Plugin slug.
+				$plugin['name'] = $_GET['plugin_name']; // Plugin name.
+				$plugin['slug'] = $_GET['plugin']; // Plugin slug.
 				$plugin['source'] = $_GET['plugin_source']; // Plugin source.
 				// Pass all necessary information via URL if WP_Filesystem is needed.
 				$url = wp_nonce_url(
 					esc_url( add_query_arg(
 						array(
-							'page'              => $this->menu,
-							'plugin'            => $plugin['slug'],
-							'plugin_name'       => $plugin['name'],
-							'plugin_source'     => $plugin['source'],
+							'page' => $this->menu,
+							'plugin' => $plugin['slug'],
+							'plugin_name' => $plugin['name'],
+							'plugin_source' => $plugin['source'],
 							'cp-plugin-install' => 'install-plugin',
 						), admin_url( 'admin.php' )
 					) ), 'cp-plugin-install'
@@ -466,7 +466,7 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 				require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php'; // Need for upgrade classes.
 				// Prep variables for Plugin_Installer_Skin class.
 				$title = sprintf( $this->strings['installing'], $plugin['name'] );
-				$url   = add_query_arg( array(
+				$url = add_query_arg( array(
 					'action' => 'install-plugin',
 					'plugin' => $plugin['slug']
 				), 'update.php' );
@@ -520,14 +520,14 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 				check_admin_referer( 'cp-activate-plugin', 'cp-activate-plugin-nonce' );
 
 				// Populate $plugin array with necessary information.
-				$plugin['name']   = $_GET['plugin_name'];
-				$plugin['slug']   = $_GET['plugin'];
+				$plugin['name'] = $_GET['plugin_name'];
+				$plugin['slug'] = $_GET['plugin'];
 				$plugin['source'] = $_GET['plugin_source'];
 
-				$plugin_data        = get_plugins( '/' . $plugin['slug'] ); // Retrieve all plugins.
-				$plugin_file        = array_keys( $plugin_data ); // Retrieve all plugin files from installed plugins.
+				$plugin_data = get_plugins( '/' . $plugin['slug'] ); // Retrieve all plugins.
+				$plugin_file = array_keys( $plugin_data ); // Retrieve all plugin files from installed plugins.
 				$plugin_to_activate = $plugin['slug'] . '/' . $plugin_file[0]; // Match plugin slug with appropriate plugin file.
-				$activate           = activate_plugin( $plugin_to_activate ); // Activate the plugin.
+				$activate = activate_plugin( $plugin_to_activate ); // Activate the plugin.
 
 				if ( is_wp_error( $activate ) ) {
 					echo '<div id="message" class="error"><p>' . $activate->get_error_message() . '</p></div>';
@@ -569,10 +569,10 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 
 				$installed_plugins = get_plugins(); // Retrieve a list of all the plugins
 
-				$message             = array(); // Store the messages in an array to be outputted after plugins have looped through.
-				$install_link        = false;   // Set to false, change to true in loop if conditions exist, used for action link 'install'.
-				$install_link_count  = 0; // Used to determine plurality of install action link text.
-				$activate_link       = false;   // Set to false, change to true in loop if conditions exist, used for action link 'activate'.
+				$message = array(); // Store the messages in an array to be outputted after plugins have looped through.
+				$install_link = false;   // Set to false, change to true in loop if conditions exist, used for action link 'install'.
+				$install_link_count = 0; // Used to determine plurality of install action link text.
+				$activate_link = false;   // Set to false, change to true in loop if conditions exist, used for action link 'activate'.
 				$activate_link_count = 0; // Used to determine plurality of activate action link text.
 
 				$plugin = $this->plugin;
@@ -612,16 +612,16 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 						$count = count( $plugin_groups );
 
 						$external_url = $this->plugin['external_url'];
-						$source       = $this->plugin['source'];
+						$source = $this->plugin['source'];
 
 						$last_plugin = array_pop( $plugin_groups );
-						$imploded    = empty( $plugin_groups ) ? '<em>' . $last_plugin . '</em>' : '<em>' . ( implode( ', ', $plugin_groups ) . '</em> and <em>' . $last_plugin . '</em>' );
+						$imploded = empty( $plugin_groups ) ? '<em>' . $last_plugin . '</em>' : '<em>' . ( implode( ', ', $plugin_groups ) . '</em> and <em>' . $last_plugin . '</em>' );
 
 						$rendered .= '<p>' . isset( $this->strings[ $type ] ) ? $this->strings[ $type ] : '' . '</p>';
 					}
 
 					// Setup variables to determine if action links are needed.
-					$show_install_link  = $install_link ? '<a href="' . add_query_arg( 'page', $this->menu, admin_url( 'admin.php' ) ) . '">' . $this->strings['install_link'] . '</a>' : '';
+					$show_install_link = $install_link ? '<a href="' . add_query_arg( 'page', $this->menu, admin_url( 'admin.php' ) ) . '">' . $this->strings['install_link'] . '</a>' : '';
 					$show_activate_link = $activate_link ? '<a href="' . add_query_arg( 'page', $this->menu, admin_url( 'admin.php' ) ) . '">' . $this->strings['activate_link'] . '</a>' : '';
 					$show_install_link = esc_url( $show_install_link );
 					$show_activate_link = esc_url( $show_activate_link );
@@ -629,9 +629,9 @@ if ( ! class_exists( 'CP_Plugin_Activation' ) ) {
 					// Define all of the action links.
 					$action_links = apply_filters(
 						'cp_notice_action_links', array(
-							'install'  => ( current_user_can( 'install_plugins' ) ) ? $show_install_link : '',
+							'install' => ( current_user_can( 'install_plugins' ) ) ? $show_install_link : '',
 							'activate' => ( current_user_can( 'activate_plugins' ) ) ? $show_activate_link : '',
-							'dismiss'  => $this->dismissable ? '<a class="dismiss-notice" href="' . esc_url( add_query_arg( 'cp-dismiss', 'dismiss_admin_notices' ) ) . '" target="_parent">' . $this->strings['dismiss'] . '</a>' : '',
+							'dismiss' => $this->dismissable ? '<a class="dismiss-notice" href="' . esc_url( add_query_arg( 'cp-dismiss', 'dismiss_admin_notices' ) ) . '" target="_parent">' . $this->strings['dismiss'] . '</a>' : '',
 						)
 					);
 

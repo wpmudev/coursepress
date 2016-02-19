@@ -45,8 +45,8 @@ class CoursePress_Helper_Utility {
 
 		// The MIME types listed here will be allowed in the media library.
 		// You can add as many MIME types as you want.
-		$mime_types['gz']  = 'application/x-gzip';
-		$mime_types['zip']  = 'application/zip';
+		$mime_types['gz'] = 'application/x-gzip';
+		$mime_types['zip'] = 'application/zip';
 
 		return $mime_types;
 	}
@@ -329,7 +329,7 @@ class CoursePress_Helper_Utility {
 		// Filtered fields
 		$email = apply_filters( 'coursepress_email_fields', array(
 
-			'email'   => apply_filters( 'coursepress_email_to_address', sanitize_email( $args['email'] ), $args ),
+			'email' => apply_filters( 'coursepress_email_to_address', sanitize_email( $args['email'] ), $args ),
 			'subject' => apply_filters( 'coursepress_email_subject', sanitize_text_field( $args['subject'] ) , $args ),
 			'message' => apply_filters( 'coursepress_email_message', $args['message'], $args ),
 
@@ -406,9 +406,9 @@ class CoursePress_Helper_Utility {
 
 		self::$image_url = preg_replace( '/http:\/\/(\w|\.)*\//', '', $url );
 
-		$args  = array(
+		$args = array(
 			'post_status' => 'any',
-			'post_type'   => 'attachment'
+			'post_type' => 'attachment'
 		);
 		$query = new WP_Query( $args );
 
@@ -466,9 +466,9 @@ class CoursePress_Helper_Utility {
 				return false;
 			}
 
-			$text      = $value;
-			$iv_size   = mcrypt_get_iv_size( MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB );
-			$iv        = mcrypt_create_iv( $iv_size, MCRYPT_RAND );
+			$text = $value;
+			$iv_size = mcrypt_get_iv_size( MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB );
+			$iv = mcrypt_create_iv( $iv_size, MCRYPT_RAND );
 			$crypttext = mcrypt_encrypt( MCRYPT_RIJNDAEL_256, mb_substr( $security_key, 0, 24 ), $text, MCRYPT_MODE_ECB, $iv );
 
 			return trim( self::safe_b64encode( $crypttext ) );
@@ -484,9 +484,9 @@ class CoursePress_Helper_Utility {
 				return false;
 			}
 
-			$crypttext   = self::safe_b64decode( $value );
-			$iv_size     = mcrypt_get_iv_size( MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB );
-			$iv          = mcrypt_create_iv( $iv_size, MCRYPT_RAND );
+			$crypttext = self::safe_b64decode( $value );
+			$iv_size = mcrypt_get_iv_size( MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB );
+			$iv = mcrypt_create_iv( $iv_size, MCRYPT_RAND );
 			$decrypttext = mcrypt_decrypt( MCRYPT_RIJNDAEL_256, mb_substr( $security_key, 0, 24 ), $crypttext, MCRYPT_MODE_ECB, $iv );
 
 			return trim( $decrypttext );
@@ -507,8 +507,8 @@ class CoursePress_Helper_Utility {
 			}
 		} else {
 			try {
-				$bytes	 = filesize( $url );
-				$bytes	 = !empty( $bytes ) ? $bytes : 0;
+				$bytes = filesize( $url );
+				$bytes = !empty( $bytes ) ? $bytes : 0;
 			} catch ( Exception $e ) {
 				$bytes = 0;
 			}
@@ -543,7 +543,7 @@ class CoursePress_Helper_Utility {
 	public static function force_download_file_request() {
 
 		if ( isset( $_GET[ 'fdcpf' ] ) ) {
-			$requested_file	 = self::decode( $_GET[ 'fdcpf' ] );
+			$requested_file = self::decode( $_GET[ 'fdcpf' ] );
 			self::download_file_request( $requested_file );
 		}
 
@@ -567,7 +567,7 @@ class CoursePress_Helper_Utility {
 		 * Filter used to alter header params. E.g. removing 'timeout'.
 		 */
 		$force_download_parameters = apply_filters( 'coursepress_force_download_parameters', array(
-			'timeout'	 => 60,
+			'timeout' => 60,
 			'user-agent' => CoursePress::$name . ' / ' . CoursePress::$version . ';'
 		) );
 		echo wp_remote_retrieve_body( wp_remote_get( $requested_file ), $force_download_parameters );
@@ -580,7 +580,7 @@ class CoursePress_Helper_Utility {
 		if ( isset( $_GET[ 'oacpf' ] ) ) {
 			ob_start();
 
-			$requested_file	 = self::decode( $_GET[ 'oacpf' ] );
+			$requested_file = self::decode( $_GET[ 'oacpf' ] );
 
 			$module_id = isset( $_GET[ 'module' ] ) ? (int) $_GET['module'] : false;
 			$append_url = ! empty( $module_id ) ? '#module-' . $module_id : '';
@@ -633,9 +633,9 @@ class CoursePress_Helper_Utility {
 			}
 			// splits all html-tags to scanable lines
 			preg_match_all( '/(<.+?>)?([^<>]*)/s', $text, $lines, PREG_SET_ORDER );
-			$total_length	 = strlen( $ending );
-			$open_tags		 = array();
-			$truncate		 = '';
+			$total_length = strlen( $ending );
+			$open_tags = array();
+			$truncate = '';
 			foreach ( $lines as $line_matchings ) {
 				// if there is any html-tag in this line, handle it and add it (uncounted) to the output
 				if ( !empty( $line_matchings[ 1 ] ) ) {
@@ -661,7 +661,7 @@ class CoursePress_Helper_Utility {
 				$content_length = strlen( preg_replace( '/&[0-9a-z]{2,8};|&#[0-9]{1,7};|[0-9a-f]{1,6};/i', ' ', $line_matchings[ 2 ] ) );
 				if ( $total_length + $content_length > $length ) {
 					// the number of characters which are left
-					$left			 = $length - $total_length;
+					$left = $length - $total_length;
 					$entities_length = 0;
 					// search for html entities
 					if ( preg_match_all( '/&[0-9a-z]{2,8};|&#[0-9]{1,7};|[0-9a-f]{1,6};/i', $line_matchings[ 2 ], $entities, PREG_OFFSET_CAPTURE ) ) {
@@ -728,11 +728,11 @@ class CoursePress_Helper_Utility {
 
 		$excerpt = get_user_option( 'description', $user->ID );
 
-		$excerpt        = strip_shortcodes( $excerpt );
-		$excerpt        = str_replace( ']]>', ']]&gt;', $excerpt );
-		$excerpt        = strip_tags( $excerpt );
+		$excerpt = strip_shortcodes( $excerpt );
+		$excerpt = str_replace( ']]>', ']]&gt;', $excerpt );
+		$excerpt = strip_tags( $excerpt );
 		$excerpt_length = apply_filters( 'excerpt_length', $length );
-		$excerpt_more   = ' ' . '...';
+		$excerpt_more = ' ' . '...';
 
 		$words = preg_split( "/[\n\r\t ]+/", $excerpt, $excerpt_length + 1, PREG_SPLIT_NO_EMPTY );
 		if ( count( $words ) > $excerpt_length ) {
@@ -861,11 +861,11 @@ class CoursePress_Helper_Utility {
 
 	public static function remove_related_videos( $html, $url, $args ) {
 
-		self::$embed_args                   = $args;
-		self::$embed_args['color']          = 'white';
-		self::$embed_args['rel']            = 0;
+		self::$embed_args = $args;
+		self::$embed_args['color'] = 'white';
+		self::$embed_args['rel'] = 0;
 		self::$embed_args['modestbranding'] = 1;
-		self::$embed_args['showinfo']       = 0;
+		self::$embed_args['showinfo'] = 0;
 
 		self::$embed_args = apply_filters( 'coursepress_video_embed_args', self::$embed_args, $html, $url, $args );
 
@@ -892,11 +892,11 @@ class CoursePress_Helper_Utility {
 	public static function get_user_name( $user_id, $last_first = false, $username = true ) {
 		$user_id = (int) $user_id;
 		$display_name = get_user_option( 'display_name', $user_id );
-		$last         = get_user_option( 'last_name', $user_id );
-		$last         = ! empty( $last ) ? $last : '';
-		$first        = get_user_option( 'first_name', $user_id );
-		$first        = ! empty( $first ) ? $first : '';
-		$return_name  = '';
+		$last = get_user_option( 'last_name', $user_id );
+		$last = ! empty( $last ) ? $last : '';
+		$first = get_user_option( 'first_name', $user_id );
+		$first = ! empty( $first ) ? $first : '';
+		$return_name = '';
 		if( ! $last_first ) {
 			$return_name = ! empty( $first ) ? $first : '';
 			$return_name = ! empty( $last ) ? $return_name . ' ' . $last : $return_name;
@@ -968,8 +968,8 @@ function cp_messaging_get_unread_messages_count() {
 }
 
 function cp_unit_uses_new_pagination( $unit_id = false ) {
-	$unit_pagination_meta	 = get_post_meta( $unit_id, 'unit_pagination', true );
-	$unit_pagination		 = isset( $unit_pagination_meta ) && !empty( $unit_pagination_meta ) && $unit_pagination_meta !== false ? true : false;
+	$unit_pagination_meta = get_post_meta( $unit_id, 'unit_pagination', true );
+	$unit_pagination = isset( $unit_pagination_meta ) && !empty( $unit_pagination_meta ) && $unit_pagination_meta !== false ? true : false;
 
 	return $unit_pagination;
 }
@@ -999,17 +999,17 @@ function coursepress_unit_pages( $unit_id, $unit_pagination = false ) {
 	if ( $unit_pagination ) {
 
 		$args = array(
-			'post_type'		 => 'module',
-			'post_status'	 => 'publish',
+			'post_type' => 'module',
+			'post_status' => 'publish',
 			'posts_per_page' => 1,
-			'post_parent'	 => $unit_id,
-			'meta_key'		 => 'module_page',
-			'orderby'		 => 'meta_value_num',
-			'order'			 => 'DESC'
+			'post_parent' => $unit_id,
+			'meta_key' => 'module_page',
+			'orderby' => 'meta_value_num',
+			'order' => 'DESC'
 		);
 
-		$modules	 = get_posts( $args );
-		$module_id	 = isset( $modules[ 0 ] ) ? $modules[ 0 ]->ID : 0;
+		$modules = get_posts( $args );
+		$module_id = isset( $modules[ 0 ] ) ? $modules[ 0 ]->ID : 0;
 
 		if ( $module_id > 0 ) {
 			$pages_num = count( get_post_meta( $unit_id, 'page_title', true ) );
@@ -1034,13 +1034,13 @@ function coursepress_unit_pages( $unit_id, $unit_pagination = false ) {
 
 function cp_get_number_of_days_between_dates( $start_date, $end_date ) {
 
-	$startTimeStamp	 = strtotime( $start_date );
-	$endTimeStamp	 = strtotime( $end_date );
+	$startTimeStamp = strtotime( $start_date );
+	$endTimeStamp = strtotime( $end_date );
 
 	$timeDiff = abs( $endTimeStamp - $startTimeStamp );
 
-	$numberDays	 = $timeDiff / 86400;  // 86400 seconds in one day
-	$numberDays	 = intval( $numberDays );
+	$numberDays = $timeDiff / 86400;  // 86400 seconds in one day
+	$numberDays = intval( $numberDays );
 
 	return $numberDays;
 }

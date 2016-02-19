@@ -9,27 +9,27 @@ class CoursePress_Data_Unit {
 		return array(
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
-				'labels'             => array(
-					'name'               => __( 'Units', CoursePress::TD ),
-					'singular_name'      => __( 'Unit', CoursePress::TD ),
-					'add_new'            => __( 'Create New', CoursePress::TD ),
-					'add_new_item'       => __( 'Create New Unit', CoursePress::TD ),
-					'edit_item'          => __( 'Edit Unit', CoursePress::TD ),
-					'edit'               => __( 'Edit', CoursePress::TD ),
-					'new_item'           => __( 'New Unit', CoursePress::TD ),
-					'view_item'          => __( 'View Unit', CoursePress::TD ),
-					'search_items'       => __( 'Search Units', CoursePress::TD ),
-					'not_found'          => __( 'No Units Found', CoursePress::TD ),
+				'labels' => array(
+					'name' => __( 'Units', CoursePress::TD ),
+					'singular_name' => __( 'Unit', CoursePress::TD ),
+					'add_new' => __( 'Create New', CoursePress::TD ),
+					'add_new_item' => __( 'Create New Unit', CoursePress::TD ),
+					'edit_item' => __( 'Edit Unit', CoursePress::TD ),
+					'edit' => __( 'Edit', CoursePress::TD ),
+					'new_item' => __( 'New Unit', CoursePress::TD ),
+					'view_item' => __( 'View Unit', CoursePress::TD ),
+					'search_items' => __( 'Search Units', CoursePress::TD ),
+					'not_found' => __( 'No Units Found', CoursePress::TD ),
 					'not_found_in_trash' => __( 'No Units found in Trash', CoursePress::TD ),
-					'view'               => __( 'View Unit', CoursePress::TD ),
+					'view' => __( 'View Unit', CoursePress::TD ),
 				),
-				'public'             => false,
-				'show_ui'            => false,
+				'public' => false,
+				'show_ui' => false,
 				'publicly_queryable' => false,
-				'capability_type'    => 'unit',
-				'map_meta_cap'       => true,
-				'query_var'          => true,
-				'rewrite'            => false,
+				'capability_type' => 'unit',
+				'map_meta_cap' => true,
+				'query_var' => true,
+				'rewrite' => false,
 			),
 		);
 
@@ -50,7 +50,7 @@ class CoursePress_Data_Unit {
 
 		$estimations = array();
 
-		$unit_hours   = 0;
+		$unit_hours = 0;
 		$unit_minutes = 0;
 		$unit_seconds = 0;
 
@@ -59,14 +59,14 @@ class CoursePress_Data_Unit {
 		}
 		foreach ( $data[ $unit_id ]['pages'] as $page_id => $page ) {
 
-			$page_hours   = 0;
+			$page_hours = 0;
 			$page_minutes = 0;
 			$page_seconds = 0;
 
 			foreach ( $page['modules'] as $module_id => $module ) {
 				$duration = CoursePress_Data_Module::get_time_estimation( $module_id, $default );
 
-				$parts   = explode( ':', $duration );
+				$parts = explode( ':', $duration );
 				$seconds = (int) array_pop( $parts );
 				$minutes = (int) array_pop( $parts );
 				if ( ! empty( $parts ) ) {
@@ -87,10 +87,10 @@ class CoursePress_Data_Unit {
 
 			$total_seconds = $page_seconds + ( $page_minutes * 60 ) + ( $page_hours * 3600 );
 
-			$page_hours    = floor( $total_seconds / 3600 );
+			$page_hours = floor( $total_seconds / 3600 );
 			$total_seconds = $total_seconds % 3600;
-			$page_minutes  = floor( $total_seconds / 60 );
-			$page_seconds  = $total_seconds % 60;
+			$page_minutes = floor( $total_seconds / 60 );
+			$page_seconds = $total_seconds % 60;
 
 			$unit_hours += $page_hours;
 			$unit_minutes += $page_minutes;
@@ -100,10 +100,10 @@ class CoursePress_Data_Unit {
 
 		$total_seconds = $unit_seconds + ( $unit_minutes * 60 ) + ( $unit_hours * 3600 );
 
-		$unit_hours    = floor( $total_seconds / 3600 );
+		$unit_hours = floor( $total_seconds / 3600 );
 		$total_seconds = $total_seconds % 3600;
-		$unit_minutes  = floor( $total_seconds / 60 );
-		$unit_seconds  = $total_seconds % 60;
+		$unit_minutes = floor( $total_seconds / 60 );
+		$unit_seconds = $total_seconds % 60;
 
 		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/estimation', sprintf( '%02d:%02d:%02d', $unit_hours, $unit_minutes, $unit_seconds ) );
 		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/components/hours', $unit_hours );
@@ -116,9 +116,9 @@ class CoursePress_Data_Unit {
 	static function by_name( $slug, $id_only, $post_parent = '' ) {
 
 		$args = array(
-			'name'           => $slug,
-			'post_type'      => self::get_post_type_name( true ),
-			'post_status'    => 'any',
+			'name' => $slug,
+			'post_type' => self::get_post_type_name( true ),
+			'post_status' => 'any',
 			'posts_per_page' => 1,
 		);
 
@@ -188,7 +188,7 @@ class CoursePress_Data_Unit {
 
 		$course_id = is_object( $course ) ? $course->ID : (int) $course;
 
-		$unit_id          = $unit->ID;
+		$unit_id = $unit->ID;
 		$previous_unit_id = false;
 		if ( ! empty( $previous_unit ) ) {
 			$previous_unit_id = is_object( $previous_unit ) ? $previous_unit->ID : (int) $previous_unit ;
@@ -200,7 +200,7 @@ class CoursePress_Data_Unit {
 		$current_date = ( date( 'Y-m-d', current_time( 'timestamp', 0 ) ) );
 
 		/* Check if previous has conditions */
-		$force_current_unit_completion            = ! empty( $previous_unit_id ) ? get_post_meta( $previous_unit_id, 'force_current_unit_completion', true ) : false;
+		$force_current_unit_completion = ! empty( $previous_unit_id ) ? get_post_meta( $previous_unit_id, 'force_current_unit_completion', true ) : false;
 		$force_current_unit_successful_completion = ! empty( $previous_unit_id ) ? get_post_meta( $previous_unit_id, 'force_current_unit_successful_completion', true ) : false;
 		$force_current_unit_completion = CoursePress_Helper_Utility::fix_bool( $force_current_unit_completion );
 		$force_current_unit_successful_completion = CoursePress_Helper_Utility::fix_bool( $force_current_unit_successful_completion );

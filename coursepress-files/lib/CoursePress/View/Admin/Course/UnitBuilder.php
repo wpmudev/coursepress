@@ -24,7 +24,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 	public static function view_templates( $template = false ) {
 		$templates = array(
 
-			'unit_builder'                     => '
+			'unit_builder' => '
 				<script type="text/template" id="unit-builder-template">
 				  <div class="tab-container vertical unit-builder-container">
 				  	<div class="tab-tabs unit-builder-tabs">
@@ -40,12 +40,12 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 				  </div>
 				</script>
 			',
-			'unit_builder_tab'                 => '
+			'unit_builder_tab' => '
 				<script type="text/template" id="unit-builder-tab-template">
 				  <li class="coursepress-ub-tab <%= unit_live_class %> <%= unit_active_class %>" data-tab="<%= unit_id %>" data-order="<%= unit_order %>" data-cid="<%= unit_cid %>"><span><%= unit_title %></span></li>
 				</script>
 			',
-			'unit_builder_header'              => '
+			'unit_builder_header' => '
 				<script type="text/template" id="unit-builder-header-template">
 				<div class="unit-detail" data-cid="<%- unit_cid %>">
 					<h3><i class="fa fa-cog"></i>' . esc_html__( 'Unit Settings', 'cp' ) . '<div class="unit-state">' .
@@ -63,8 +63,8 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 				'unit_feature_image',
 				array(
 							'placeholder' => __( 'Add Image URL or Browse for Image', 'cp' ),
-							'title'       => __( 'Unit Feature Image', 'cp' ),
-							'value'       => '<%= unit_feature_image %>', // Add _s template
+							'title' => __( 'Unit Feature Image', 'cp' ),
+							'value' => '<%= unit_feature_image %>', // Add _s template
 						)
 			) . '
 					</div>
@@ -111,7 +111,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 				</div>
 				</script>
 			',
-			'unit_builder_content'             => '
+			'unit_builder_content' => '
 				<script type="text/template" id="unit-builder-content-template">
 					<div class="section unit-builder-pager"></div>
 					<div class="section unit-builder-pager-info"></div>
@@ -120,7 +120,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					<div class="section unit-builder-footer"></div>
 				</script>
 			',
-			'unit_builder_content_pager'       => '
+			'unit_builder_content_pager' => '
 				<script type="text/template" id="unit-builder-pager-template">
 					<label>' . esc_html__( 'Unit Sections', 'cp' ) . '</label>
 					<ul>
@@ -133,7 +133,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 			        </ul>
 				</script>
 			',
-			'unit_builder_content_pager_info'  => '
+			'unit_builder_content_pager_info' => '
 				<script type="text/template" id="unit-builder-pager-info-template">
 					<div class="page-info-holder">
 					<div class="unit-buttons"><div class="button unit-delete-page-button hidden"><i class="fa fa-trash-o"></i> ' . esc_html__( 'Delete Section', 'cp' ) . '</div></div>
@@ -147,20 +147,20 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 				'page_feature_image',
 				array(
 								'placeholder' => __( 'Add Image URL or Browse for Image', 'cp' ),
-								'title'       => __( 'Section Image', 'cp' ),
-								'value'       => '<%= page_feature_image %>', // Add _s template
+								'title' => __( 'Section Image', 'cp' ),
+								'value' => '<%= page_feature_image %>', // Add _s template
 							)
 			) . '
 					<label><input type="checkbox" value="on" name="show_page_title" <%= page_label_checked %> /><span>' . esc_html__( 'Show section header as part of unit', 'cp' ) . '</span></label>
 					</div>
 				</script>
 			',
-			'unit_builder_modules'                 => '
+			'unit_builder_modules' => '
 				<script type="text/template" id="unit-builder-modules-template">
 				  '. __( 'Modules! This template wont be used... its just here for testing.', 'cp' ) . '
 				</script>
 			',
-			'unit_builder_footer'              => '
+			'unit_builder_footer' => '
 				<script type="text/template" id="unit-builder-footer-template">
 				<div class="button unit-save-button">' . __( 'Save', 'cp' ) . '</div>' .
 				  CoursePress_Helper_UI::toggle_switch( 'unit-live-toggle-2', 'unit-live-toggle-2', array(
@@ -170,7 +170,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 				  . '</script>',
 		);
 
-		$templates['unit_builder_content_components']  = '
+		$templates['unit_builder_content_components'] = '
 				<script type="text/template" id="unit-builder-components-template">
 					<label class="bigger">' . esc_html__( 'Modules', 'cp' ) . '</label>
 					<p class="description">' . esc_html__( 'Click to add module elements to the unit', 'cp' ) . '</p>';
@@ -217,7 +217,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 				$units = CoursePress_Data_Course::get_units( $_REQUEST['course_id'], 'any' );
 
 				foreach ( $units as $unit ) {
-					$meta  = get_post_meta( $unit->ID );
+					$meta = get_post_meta( $unit->ID );
 					foreach ( $meta as $key => $value ) {
 						$meta[ $key ] = is_array( $value )  ? maybe_unserialize( $value[0] ) : $value;
 					}
@@ -254,7 +254,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 				$modules = CoursePress_Helper_Utility::sort_on_key( CoursePress_Helper_Utility::object_to_array( $modules ), 'module_order' );
 
 				foreach ( $modules as $module ) {
-					$json_data[]  = $module;
+					$json_data[] = $module;
 				}
 
 				$skip_empty = empty( $modules ) ? true : false;
@@ -362,7 +362,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 						$update = isset( $module['flag'] ) && 'dirty' === $module['flag'];
 						unset( $module['flag'] );
 
-						$module['post_type']   = CoursePress_Data_Module::get_post_type_name();
+						$module['post_type'] = CoursePress_Data_Module::get_post_type_name();
 						$module['post_parent'] = $unit_id;
 						$module['post_status'] = 'publish';
 
@@ -375,7 +375,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 							$meta = ! empty( $module['meta'] ) ? $module['meta'] : array();
 							unset( $module['meta'] );
 
-							$id        = wp_insert_post( $module );
+							$id = wp_insert_post( $module );
 							$modules[] = $id;
 							foreach ( $meta as $key => $value ) {
 								update_post_meta( $id, $key, $value );
@@ -407,7 +407,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 
 			// case 'unit_update':
 			//
-			// $data      = json_decode( file_get_contents( 'php://input' ) );
+			// $data = json_decode( file_get_contents( 'php://input' ) );
 			// $data = CoursePress_Helper_Utility::object_to_array( $data );
 			//
 			//
@@ -441,7 +441,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					$data = CoursePress_Helper_Utility::object_to_array( $data );
 
 					$new_module = false;
-					$meta       = ! empty( $data['meta'] ) ? $data['meta'] : array();
+					$meta = ! empty( $data['meta'] ) ? $data['meta'] : array();
 					unset( $data['meta'] );
 
 					if ( (int) $data['ID'] === 0 ) {
@@ -449,11 +449,11 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 						unset( $data['ID'] );
 					}
 
-					$data['ping_status']    = 'closed';
+					$data['ping_status'] = 'closed';
 					$data['comment_status'] = 'closed';
-					$data['post_parent']    = (int) $_REQUEST['unit_id'];
-					$data['post_type']      = CoursePress_Data_Module::get_post_type_name();
-					$data['post_status']    = 'publish';
+					$data['post_parent'] = (int) $_REQUEST['unit_id'];
+					$data['post_type'] = CoursePress_Data_Module::get_post_type_name();
+					$data['post_status'] = 'publish';
 
 					$id = wp_insert_post( $data );
 

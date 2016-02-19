@@ -18,12 +18,12 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 
 		parent::__construct( array(
 			'singular' => $post_format['post_args']['labels']['singular_name'],
-			'plural'   => $post_format['post_args']['labels']['name'],
-			'ajax'     => false,// should this table support ajax?
+			'plural' => $post_format['post_args']['labels']['name'],
+			'ajax' => false,// should this table support ajax?
 		) );
 
 		$this->post_type = CoursePress_Data_Notification::get_post_type_name();
-		$this->count     = wp_count_posts( CoursePress_Data_Notification::get_post_type_name() );
+		$this->count = wp_count_posts( CoursePress_Data_Notification::get_post_type_name() );
 
 	}
 
@@ -36,11 +36,11 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 
 	public function get_columns() {
 		$columns = array(
-			'cb'         => '<input type="checkbox" />',
+			'cb' => '<input type="checkbox" />',
 			'notification' => __( 'Notification', CoursePress::TD ),
-			'course'      => __( 'Course', CoursePress::TD ),
-			'status'     => __( 'Status', CoursePress::TD ),
-			'actions'    => __( 'Actions', CoursePress::TD ),
+			'course' => __( 'Course', CoursePress::TD ),
+			'status' => __( 'Status', CoursePress::TD ),
+			'actions' => __( 'Actions', CoursePress::TD ),
 		);
 
 		return $columns;
@@ -78,9 +78,9 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 
 	function get_bulk_actions() {
 		$actions = array(
-			'publish'    => __( 'Visible', CoursePress::TD ),
-			'unpublish'    => __( 'Private', CoursePress::TD ),
-			'delete'    => __( 'Delete', CoursePress::TD ),
+			'publish' => __( 'Visible', CoursePress::TD ),
+			'unpublish' => __( 'Private', CoursePress::TD ),
+			'delete' => __( 'Delete', CoursePress::TD ),
 		);
 		return $actions;
 	}
@@ -140,22 +140,22 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 
 		$post_status = 'all';
 
-		$columns  = $this->get_columns();
-		$hidden   = $this->get_hidden_columns();
+		$columns = $this->get_columns();
+		$hidden = $this->get_hidden_columns();
 		$sortable = $this->get_sortable_columns();
 
-		$perPage     = 10;
+		$perPage = 10;
 		$currentPage = $this->get_pagenum();
 
 		$offset = ( $currentPage - 1 ) * $perPage;
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		$post_args             = array(
-			'post_type'      => $this->post_type,
-			'post_status'    => $post_status,
+		$post_args = array(
+			'post_type' => $this->post_type,
+			'post_status' => $post_status,
 			'posts_per_page' => $perPage,
-			'offset'         => $offset,
-			's'              => isset( $_GET['s'] ) && ! empty( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '',
+			'offset' => $offset,
+			's' => isset( $_GET['s'] ) && ! empty( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '',
 		);
 
 		$course_id = isset( $_GET['course_id'] ) ? sanitize_text_field( $_GET['course_id'] ) : '';
@@ -164,8 +164,8 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 
 			$post_args['meta_query'] = array(
 				array(
-					'key'     => 'course_id',
-					'value'   => (int) $course_id,
+					'key' => 'course_id',
+					'value' => (int) $course_id,
 				),
 			);
 
@@ -179,7 +179,7 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 		$totalItems = $query->found_posts;
 		$this->set_pagination_args( array(
 			'total_items' => $totalItems,
-			'per_page'    => $perPage,
+			'per_page' => $perPage,
 		) );
 
 	}
@@ -231,7 +231,7 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 
 		$page = get_query_var( 'page', 'coursepress_notifications' );
 
-		$s  = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '';
+		$s = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '';
 		$course_id = isset( $_GET['course_id'] ) ? sanitize_text_field( $_GET['course_id'] ) : '';
 
 		echo '<form method="GET">';

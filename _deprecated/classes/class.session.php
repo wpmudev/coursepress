@@ -33,7 +33,7 @@ if ( ! class_exists( 'CoursePress_Session' ) ) {
 			if ( class_exists( 'WP_Session_Tokens' ) && is_user_logged_in() && ( ! $force_session || ( $force_session && $token_update ) ) ) {
 				$user_id = get_current_user_id();
 
-				$session     = WP_Session_Tokens::get_instance( $user_id );
+				$session = WP_Session_Tokens::get_instance( $user_id );
 				$token_parts = explode( '_', self::$token );
 				$token_parts = (int) array_pop( $token_parts );
 				self::$token = empty( $token_parts ) ? self::$token . $user_id : self::$token;

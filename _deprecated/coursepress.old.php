@@ -152,20 +152,20 @@ if ( !class_exists( 'CoursePress' ) ) {
 			if ( !session_id() ) {
 				session_start();
 			}
-			$_SESSION[ 'coursepress_student' ]			 = array();
-			$_SESSION[ 'coursepress_unit_completion' ]	 = array();
+			$_SESSION[ 'coursepress_student' ] = array();
+			$_SESSION[ 'coursepress_unit_completion' ] = array();
 
 			// Register Globals
-			$GLOBALS[ 'plugin_dir' ]				 = $this->plugin_dir;
-			$GLOBALS[ 'coursepress_url' ]			 = $this->plugin_url;
-			$GLOBALS[ 'coursepress_version' ]		 = $this->version;
-			$GLOBALS[ 'course_slug' ]				 = $this->get_course_slug();
-			$GLOBALS[ 'units_slug' ]				 = $this->get_units_slug();
-			$GLOBALS[ 'notifications_slug' ]		 = $this->get_notifications_slug();
-			$GLOBALS[ 'module_slug' ]				 = $this->get_module_slug();
-			$GLOBALS[ 'instructor_profile_slug' ]	 = $this->get_instructor_profile_slug();
-			$GLOBALS[ 'enrollment_process_url' ]	 = $this->get_enrollment_process_slug( true );
-			$GLOBALS[ 'signup_url' ]				 = $this->get_signup_slug( true );
+			$GLOBALS[ 'plugin_dir' ] = $this->plugin_dir;
+			$GLOBALS[ 'coursepress_url' ] = $this->plugin_url;
+			$GLOBALS[ 'coursepress_version' ] = $this->version;
+			$GLOBALS[ 'course_slug' ] = $this->get_course_slug();
+			$GLOBALS[ 'units_slug' ] = $this->get_units_slug();
+			$GLOBALS[ 'notifications_slug' ] = $this->get_notifications_slug();
+			$GLOBALS[ 'module_slug' ] = $this->get_module_slug();
+			$GLOBALS[ 'instructor_profile_slug' ] = $this->get_instructor_profile_slug();
+			$GLOBALS[ 'enrollment_process_url' ] = $this->get_enrollment_process_slug( true );
+			$GLOBALS[ 'signup_url' ] = $this->get_signup_slug( true );
 
 			/**
 			 * CoursePress Sessions
@@ -199,9 +199,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 				global $wpmudev_notices;
 
 				$wpmudev_notices[] = array(
-					'id'		 => 913071,
-					'name'		 => $this->name,
-					'screens'	 => array(
+					'id' => 913071,
+					'name' => $this->name,
+					'screens' => array(
 						'toplevel_page_courses',
 						$this->screen_base . '_page_course_details',
 						$this->screen_base . '_page_instructors',
@@ -1255,9 +1255,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 					$post_types = get_post_types( array( 'public' => true ), 'objects' );
 
-					$searchable_types				 = array();
+					$searchable_types = array();
 					// Add available post types
-					$remove_mp_products_from_search	 = apply_filters( 'coursepress_remove_mp_products_from_search', true );
+					$remove_mp_products_from_search = apply_filters( 'coursepress_remove_mp_products_from_search', true );
 					if ( $post_types ) {
 						foreach ( $post_types as $type ) {
 							//if ( $remove_mp_products_from_search ) {
@@ -1305,11 +1305,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$ajax_response[ 'mp_lite_activated' ] = true;
 			}
 
-			$response	 = array(
-				'what'	 => 'cp_activate_mp_lite',
+			$response = array(
+				'what' => 'cp_activate_mp_lite',
 				'action' => 'cp_activate_mp_lite',
-				'id'	 => 1, // success status
-				'data'	 => json_encode( $ajax_response ),
+				'id' => 1, // success status
+				'data' => json_encode( $ajax_response ),
 			);
 			ob_end_clean();
 			ob_start();
@@ -1321,16 +1321,16 @@ if ( !class_exists( 'CoursePress' ) ) {
 		function update_course_meta_on_unit_creation( $post_id, $course_id ) {
 
 			if ( !$course_id ) {
-				$post		 = get_post( $post_id );
-				$course_id	 = $post->post_parent;
+				$post = get_post( $post_id );
+				$course_id = $post->post_parent;
 			}
 
 			// Update course structure
-			$structure_option	 = get_post_meta( $course_id, 'course_structure_options', true );
-			$structure_option	 = !empty( $structure_option ) && 'on' == $structure_option ? 'on' : 'off';
+			$structure_option = get_post_meta( $course_id, 'course_structure_options', true );
+			$structure_option = !empty( $structure_option ) && 'on' == $structure_option ? 'on' : 'off';
 
 			$show_unit_boxes = get_post_meta( $course_id, 'show_unit_boxes', true );
-			$keys			 = array_keys( $show_unit_boxes );
+			$keys = array_keys( $show_unit_boxes );
 
 			// We only want to do this once to prevent accidental override.
 			if ( !in_array( $post_id, $keys ) ) {
@@ -1340,7 +1340,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 			update_post_meta( $course_id, 'show_unit_boxes', $show_unit_boxes );
 
 			$show_page_boxes = get_post_meta( $course_id, 'show_page_boxes', true );
-			$keys			 = array_keys( $show_page_boxes );
+			$keys = array_keys( $show_page_boxes );
 
 			$page_count = Unit::get_page_count( $post_id );
 			for ( $i = 1; $i <= $page_count; $i++ ) {
@@ -1354,10 +1354,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		function course_checkout_success_msg( $setting, $default ) {
-			$init_message	 = $setting;
+			$init_message = $setting;
 			// cp_write_log( 'MP Success Setting: ' . $setting );
-			$cookie_id		 = 'cp_checkout_keys_' . COOKIEHASH;
-			$cookie			 = '';
+			$cookie_id = 'cp_checkout_keys_' . COOKIEHASH;
+			$cookie = '';
 
 			if ( !is_admin() ) {
 				if ( isset( $_COOKIE[ $cookie_id ] ) ) {
@@ -1391,14 +1391,14 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		/* function enroll_on_payment_confirmation( $cart, $session ) {
 		  if ( count( $cart ) > 0 ) {
-		  $product_id	 = array_keys( $cart );
-		  $product_id	 = end( $product_id );
+		  $product_id = array_keys( $cart );
+		  $product_id = end( $product_id );
 
 		  $course_id = get_post_meta( $product_id, 'cp_course_id', true );
 
 		  if ( !empty( $course_id ) ) {
-		  $student			 = new Student( get_current_user_id() );
-		  $existing_student	 = $student->has_access_to_course( $course_id );
+		  $student = new Student( get_current_user_id() );
+		  $existing_student = $student->has_access_to_course( $course_id );
 		  if ( !$existing_student ) {
 		  $student->enroll_in_course( $course_id );
 		  }
@@ -1411,18 +1411,18 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		/* function enroll_on_payment_confirmation_new( $order_id ) {
 		  global $mp;
-		  $order	 = $mp->get_order( $order_id );
-		  $cart	 = $order->mp_cart_info;
+		  $order = $mp->get_order( $order_id );
+		  $cart = $order->mp_cart_info;
 
 		  if ( count( $cart ) > 0 ) {
-		  $product_id	 = array_keys( $cart );
-		  $product_id	 = end( $product_id );
+		  $product_id = array_keys( $cart );
+		  $product_id = end( $product_id );
 
 		  $course_id = get_post_meta( $product_id, 'cp_course_id', true );
 
 		  if ( !empty( $course_id ) ) {
-		  $student			 = new Student( get_current_user_id() );
-		  $existing_student	 = $student->has_access_to_course( $course_id );
+		  $student = new Student( get_current_user_id() );
+		  $existing_student = $student->has_access_to_course( $course_id );
 		  if ( !$existing_student ) {
 		  $student->enroll_in_course( $course_id );
 		  }
@@ -1443,17 +1443,17 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		function change_mp_shipping_to_email( $translated_text, $text, $domain ) {
 			if ( defined( 'COOKIEHASH' ) ) {
-				$cookie_id	 = 'mp_globalcart_' . COOKIEHASH;
-				$cookie		 = '';
+				$cookie_id = 'mp_globalcart_' . COOKIEHASH;
+				$cookie = '';
 
 				if ( isset( $_COOKIE[ $cookie_id ] ) ) {
 					$cookie = unserialize( $_COOKIE[ $cookie_id ] );
 					// Get product ID
 					if ( count( $cookie ) > 0 ) {
 
-						$product_id	 = end( $cookie );  // Get first cookie that match
-						$product_id	 = array_keys( $product_id ); // Get the first product ( will be an array )
-						$product_id	 = end( $product_id ); // Get the actual product id
+						$product_id = end( $cookie );  // Get first cookie that match
+						$product_id = array_keys( $product_id ); // Get the first product ( will be an array )
+						$product_id = end( $product_id ); // Get the actual product id
 
 						if ( $product_id == 0 ) {
 							// If we're on the success message.
@@ -1479,23 +1479,23 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		function create_unit_element_draft() {
-			$unit_id				 = $_POST[ 'unit_id' ];
-			$temp_unit_id			 = $_POST[ 'temp_unit_id' ];
-			$data[ 'temp_unit_id' ]	 = $temp_unit_id;
+			$unit_id = $_POST[ 'unit_id' ];
+			$temp_unit_id = $_POST[ 'temp_unit_id' ];
+			$data[ 'temp_unit_id' ] = $temp_unit_id;
 			//$data['temp_unit_id'] = $temp_unit_id;
-			$unit_id				 = Unit_Module::create_auto_draft( $unit_id );
+			$unit_id = Unit_Module::create_auto_draft( $unit_id );
 			echo $unit_id;
 			exit;
 		}
 
 		function get_last_inserted_id() {
-			$post	 = get_posts( array(
-				'post_type'		 => array( 'unit' ),
-				'orderby'		 => 'ID',
-				'order'			 => 'DESC',
-				'numberposts'	 => '1'
+			$post = get_posts( array(
+				'post_type' => array( 'unit' ),
+				'orderby' => 'ID',
+				'order' => 'DESC',
+				'numberposts' => '1'
 			) );
-			$post	 = array_pop( $post );
+			$post = array_pop( $post );
 
 			return $post->ID;
 		}
@@ -1503,8 +1503,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 		function get_next_unit_url() {
 			global $wpdb;
 
-			$course_id		 = (int) $_POST[ 'course_id' ];
-			$next_unit_id	 = $this->get_last_inserted_id();
+			$course_id = (int) $_POST[ 'course_id' ];
+			$next_unit_id = $this->get_last_inserted_id();
 			echo admin_url( 'admin.php?page = course_details&tab = units&course_id =' . $course_id . '&unit_id =' . $next_unit_id . '&action = edit' );
 			exit;
 		}
@@ -1512,17 +1512,17 @@ if ( !class_exists( 'CoursePress' ) ) {
 		function setup_gateway_array() {
 
 			$array = array(
-				'paypal-express'	 => array(
-					'class'		 => 'MP_Gateway_Paypal_Express',
-					'friendly'	 => __( 'Pay with PayPal', 'cp' ),
+				'paypal-express' => array(
+					'class' => 'MP_Gateway_Paypal_Express',
+					'friendly' => __( 'Pay with PayPal', 'cp' ),
 				),
-				'manual-payments'	 => array(
-					'class'		 => 'MP_Gateway_ManualPayments',
-					'friendly'	 => __( 'Bank Transfer', 'cp' ),
+				'manual-payments' => array(
+					'class' => 'MP_Gateway_ManualPayments',
+					'friendly' => __( 'Bank Transfer', 'cp' ),
 				),
-				'simplify'			 => array(
-					'class'		 => 'MP_Gateway_Simplify',
-					'friendly'	 => __( 'Pay by Credit Card', 'cp' ),
+				'simplify' => array(
+					'class' => 'MP_Gateway_Simplify',
+					'friendly' => __( 'Pay by Credit Card', 'cp' ),
 				),
 			);
 
@@ -1531,10 +1531,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		function cp_popup_login_user() {
 
-			$creds						 = array();
-			$creds[ 'user_login' ]		 = $_POST[ 'username' ];
-			$creds[ 'user_password' ]	 = $_POST[ 'password' ];
-			$creds[ 'remember' ]		 = true;
+			$creds = array();
+			$creds[ 'user_login' ] = $_POST[ 'username' ];
+			$creds[ 'user_password' ] = $_POST[ 'password' ];
+			$creds[ 'remember' ] = true;
 
 			$user = wp_signon( $creds, false );
 
@@ -1570,8 +1570,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		function cp_valid_passcode() {
 			if ( isset( $_POST[ 'passcode' ] ) ) {
-				$course_id		 = $_POST[ 'course_id' ];
-				$course			 = new Course( $course_id );
+				$course_id = $_POST[ 'course_id' ];
+				$course = new Course( $course_id );
 				$course_passcode = $course->details->passcode;
 
 				if ( $course_passcode == $_POST[ 'passcode' ] ) {
@@ -1604,70 +1604,70 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			// cp_write_log( $_POST );
 			$signup_steps = apply_filters( 'coursepress_signup_steps', array(
-				'login'				 => array(
-					'action'	 => 'template',
-					'template'	 => $this->plugin_dir . 'includes/templates/popup-window-login.php',
+				'login' => array(
+					'action' => 'template',
+					'template' => $this->plugin_dir . 'includes/templates/popup-window-login.php',
 					'on_success' => 'process_login',
 				),
-				'process_login'		 => array(
-					'action'	 => 'callback',
-					'callback'	 => array( &$this, 'signup_login_user' ),
+				'process_login' => array(
+					'action' => 'callback',
+					'callback' => array( &$this, 'signup_login_user' ),
 					'on_success' => 'enrollment',
-					'on_fail'	 => 'login',
+					'on_fail' => 'login',
 				),
-				'signup'			 => array(
-					'action'	 => 'template',
-					'template'	 => $this->plugin_dir . 'includes/templates/popup-window-signup.php',
+				'signup' => array(
+					'action' => 'template',
+					'template' => $this->plugin_dir . 'includes/templates/popup-window-signup.php',
 					'on_success' => 'process_signup',
 				),
-				'process_signup'	 => array(
-					'action'	 => 'callback',
-					'callback'	 => array( &$this, 'signup_create_user' ),
+				'process_signup' => array(
+					'action' => 'callback',
+					'callback' => array( &$this, 'signup_create_user' ),
 					'on_success' => 'enrollment',
 				),
-				'enrollment'		 => array(
-					'action'	 => 'callback',
-					'callback'	 => array( &$this, 'signup_enroll_student', $args ),
+				'enrollment' => array(
+					'action' => 'callback',
+					'callback' => array( &$this, 'signup_enroll_student', $args ),
 					'on_success' => 'success-enrollment',
 				),
 				'redirect_to_course' => array(
 					'action' => 'redirect',
-					'url'	 => trailingslashit( get_permalink( $course_id ) ) . trailingslashit( $this->get_units_slug() ),
+					'url' => trailingslashit( get_permalink( $course_id ) ) . trailingslashit( $this->get_units_slug() ),
 				),
 			) );
 
 			global $mp;
 
-			$course		 = new Course( $course_id );
-			$product_id	 = $course->mp_product_id();
+			$course = new Course( $course_id );
+			$product_id = $course->mp_product_id();
 
 			if ( cp_use_woo() ) {
 				global $woocommerce;
 				if ( !empty( $product_id ) ) {
 					$signup_steps = array_merge( $signup_steps, array(
-						'payment_checkout'	 => array(
+						'payment_checkout' => array(
 							// WooCommerce integration
 							// 'action' => 'template',
 							// 'template' => $this->plugin_dir . 'includes/templates/popup-window-payment.php',
-							'data'		 => $this->woo_signup_pre_redirect_to_cart( $args ),
-							'action'	 => 'redirect',
-							'url'		 => $woocommerce->cart->get_cart_url(),
+							'data' => $this->woo_signup_pre_redirect_to_cart( $args ),
+							'action' => 'redirect',
+							'url' => $woocommerce->cart->get_cart_url(),
 							'on_success' => 'process_payment',
 						),
-						'process_payment'	 => array(
+						'process_payment' => array(
 							// MP3 integration
 							// 'action' => 'callback',
 							// 'action' => 'render',
 							// 'callback' => array( &$this, 'signup_payment_processing' ),
-							'data'	 => $this->signup_payment_processing( $args ),
+							'data' => $this->signup_payment_processing( $args ),
 							'action' => 'redirect',
-							'url'	 => $woocommerce->cart->get_cart_url(), //home_url(),//home_url( $mp->get_setting( 'slugs->store' ) . '/' . $mp->get_setting( 'slugs->cart' ) . '/confirm-checkout' ),
+							'url' => $woocommerce->cart->get_cart_url(), //home_url(),//home_url( $mp->get_setting( 'slugs->store' ) . '/' . $mp->get_setting( 'slugs->cart' ) . '/confirm-checkout' ),
 						// 'on_success' => 'payment_confirmed',
 						),
-						'payment_confirmed'	 => array(
+						'payment_confirmed' => array(
 							'template' => '',
 						),
-						'payment_pending'	 => array(
+						'payment_pending' => array(
 							'template' => '',
 						),
 					) );
@@ -1675,29 +1675,29 @@ if ( !class_exists( 'CoursePress' ) ) {
 			} else {
 				if ( $mp && !empty( $product_id ) ) {
 					$signup_steps = array_merge( $signup_steps, array(
-						'payment_checkout'	 => array(
+						'payment_checkout' => array(
 							// MP3 integration
 							// 'action' => 'template',
 							// 'template' => $this->plugin_dir . 'includes/templates/popup-window-payment.php',
-							'data'		 => $this->signup_pre_redirect_to_cart( $args ),
-							'action'	 => 'redirect',
-							'url'		 => home_url( $mp->get_setting( 'slugs->store' ) . '/' . $mp->get_setting( 'slugs->cart' ) . '/' ),
+							'data' => $this->signup_pre_redirect_to_cart( $args ),
+							'action' => 'redirect',
+							'url' => home_url( $mp->get_setting( 'slugs->store' ) . '/' . $mp->get_setting( 'slugs->cart' ) . '/' ),
 							'on_success' => 'process_payment',
 						),
-						'process_payment'	 => array(
+						'process_payment' => array(
 							// MP3 integration
 							// 'action' => 'callback',
 							// 'action' => 'render',
 							// 'callback' => array( &$this, 'signup_payment_processing' ),
-							'data'	 => $this->signup_payment_processing( $args ),
+							'data' => $this->signup_payment_processing( $args ),
 							'action' => 'redirect',
-							'url'	 => home_url( $mp->get_setting( 'slugs->store' ) . '/' . $mp->get_setting( 'slugs->cart' ) . '/confirm-checkout' ),
+							'url' => home_url( $mp->get_setting( 'slugs->store' ) . '/' . $mp->get_setting( 'slugs->cart' ) . '/confirm-checkout' ),
 						// 'on_success' => 'payment_confirmed',
 						),
-						'payment_confirmed'	 => array(
+						'payment_confirmed' => array(
 							'template' => '',
 						),
-						'payment_pending'	 => array(
+						'payment_pending' => array(
 							'template' => '',
 						),
 					) );
@@ -1706,8 +1706,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			$signup_steps = array_merge( $signup_steps, array(
 				'success-enrollment' => array(
-					'action'	 => 'template',
-					'template'	 => $this->plugin_dir . 'includes/templates/popup-window-success-enrollment.php',
+					'action' => 'template',
+					'template' => $this->plugin_dir . 'includes/templates/popup-window-success-enrollment.php',
 					'on_success' => 'done',
 				),
 			) );
@@ -1716,11 +1716,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 				if ( 'template' == $signup_steps[ $step ][ 'action' ] ) {
 					ob_start();
 					include( $signup_steps[ $step ][ 'template' ] );
-					$html					 = ob_get_clean();
+					$html = ob_get_clean();
 					$ajax_response[ 'html' ] = $html;
 				} elseif ( 'callback' == $signup_steps[ $step ][ 'action' ] ) {
-					$classname	 = get_class( $signup_steps[ $step ][ 'callback' ][ 0 ] );
-					$method		 = $signup_steps[ $step ][ 'callback' ][ 1 ];
+					$classname = get_class( $signup_steps[ $step ][ 'callback' ][ 0 ] );
+					$method = $signup_steps[ $step ][ 'callback' ][ 1 ];
 
 					if ( isset( $signup_steps[ $step ][ 'callback' ][ 2 ] ) ) {//args
 						// call_user_func( $classname . '::' . $method, $signup_steps[$step]['callback'][2] );
@@ -1730,22 +1730,22 @@ if ( !class_exists( 'CoursePress' ) ) {
 						call_user_func( array( &$this, $method ) );
 					}
 				} elseif ( 'render' == $signup_steps[ $step ][ 'action' ] ) {
-					$data						 = $signup_steps[ $step ][ 'data' ];
-					$ajax_response[ 'html' ]	 = $data[ 'html' ];
-					$ajax_response[ 'gateway' ]	 = $data[ 'gateway' ];
+					$data = $signup_steps[ $step ][ 'data' ];
+					$ajax_response[ 'html' ] = $data[ 'html' ];
+					$ajax_response[ 'gateway' ] = $data[ 'gateway' ];
 				} elseif ( 'redirect' == $signup_steps[ $step ][ 'action' ] ) {
 					$ajax_response[ 'redirect_url' ] = $signup_steps[ $step ][ 'url' ];
 				}
 
 				$ajax_response[ 'current_step' ] = $step;
-				$ajax_response[ 'next_step' ]	 = $signup_steps[ $step ][ 'on_success' ];
-				$ajax_response[ 'all_steps' ]	 = array_keys( $signup_steps );
+				$ajax_response[ 'next_step' ] = $signup_steps[ $step ][ 'on_success' ];
+				$ajax_response[ 'all_steps' ] = array_keys( $signup_steps );
 
-				$response	 = array(
-					'what'	 => 'instructor_invite',
+				$response = array(
+					'what' => 'instructor_invite',
 					'action' => 'instructor_invite',
-					'id'	 => 1, // success status
-					'data'	 => json_encode( $ajax_response ),
+					'id' => 1, // success status
+					'data' => json_encode( $ajax_response ),
 				);
 				ob_end_clean();
 				ob_start();
@@ -1770,39 +1770,39 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			if ( wp_verify_nonce( $posted_data[ 'submit_signup_data' ], 'popup_signup_nonce' ) ) {
 
-				$student		 = new Student( 0 );
-				$student_data	 = array();
+				$student = new Student( 0 );
+				$student_data = array();
 
-				$student_data[ 'role' ]			 = get_option( 'default_role', 'subscriber' );
-				$student_data[ 'user_login' ]	 = $posted_data[ 'username' ];
-				$student_data[ 'user_pass' ]	 = $posted_data[ 'cp_popup_password' ];
-				$student_data[ 'user_email' ]	 = $posted_data[ 'email' ];
-				$student_data[ 'first_name' ]	 = $posted_data[ 'student_first_name' ];
-				$student_data[ 'last_name' ]	 = $posted_data[ 'student_last_name' ];
+				$student_data[ 'role' ] = get_option( 'default_role', 'subscriber' );
+				$student_data[ 'user_login' ] = $posted_data[ 'username' ];
+				$student_data[ 'user_pass' ] = $posted_data[ 'cp_popup_password' ];
+				$student_data[ 'user_email' ] = $posted_data[ 'email' ];
+				$student_data[ 'first_name' ] = $posted_data[ 'student_first_name' ];
+				$student_data[ 'last_name' ] = $posted_data[ 'student_last_name' ];
 
 				$student_id = $student->add_student( $student_data );
 
 				if ( $student_id !== 0 ) {
 
-					$email_args[ 'email_type' ]			 = 'student_registration';
-					$email_args[ 'student_id' ]			 = $student_id;
-					$email_args[ 'student_email' ]		 = $student_data[ 'user_email' ];
-					$email_args[ 'student_first_name' ]	 = $student_data[ 'first_name' ];
-					$email_args[ 'student_last_name' ]	 = $student_data[ 'last_name' ];
-					$email_args[ 'student_username' ]	 = $student_data[ 'user_login' ];
-					$email_args[ 'student_password' ]	 = $student_data[ 'user_pass' ];
+					$email_args[ 'email_type' ] = 'student_registration';
+					$email_args[ 'student_id' ] = $student_id;
+					$email_args[ 'student_email' ] = $student_data[ 'user_email' ];
+					$email_args[ 'student_first_name' ] = $student_data[ 'first_name' ];
+					$email_args[ 'student_last_name' ] = $student_data[ 'last_name' ];
+					$email_args[ 'student_username' ] = $student_data[ 'user_login' ];
+					$email_args[ 'student_password' ] = $student_data[ 'user_pass' ];
 
 					coursepress_send_email( $email_args );
 
-					$creds						 = array();
-					$creds[ 'user_login' ]		 = $student_data[ 'user_login' ];
-					$creds[ 'user_password' ]	 = $student_data[ 'user_pass' ];
-					$creds[ 'remember' ]		 = true;
+					$creds = array();
+					$creds[ 'user_login' ] = $student_data[ 'user_login' ];
+					$creds[ 'user_password' ] = $student_data[ 'user_pass' ];
+					$creds[ 'remember' ] = true;
 
 					$user = wp_signon( $creds, false );
 
-					$args[ 'student_id' ]	 = $student_id;
-					$args[ 'course_id' ]	 = $posted_data[ 'course_id' ];
+					$args[ 'student_id' ] = $student_id;
+					$args[ 'course_id' ] = $posted_data[ 'course_id' ];
 
 					$this->popup_signup( 'enrollment', $args );
 					exit;
@@ -1813,9 +1813,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 		function signup_enroll_student( $args = array() ) {
 			// cp_write_log( 'enrolling user ( or passing them on to payment )....' );
 			// Handle enrollment stuff
-			$student_id	 = get_current_user_id();
-			$student_id	 = $student_id > 0 ? $student_id : $args[ 'student_id' ];
-			$course_id	 = false;
+			$student_id = get_current_user_id();
+			$student_id = $student_id > 0 ? $student_id : $args[ 'student_id' ];
+			$course_id = false;
 
 			if ( !empty( $args ) ) {
 				$course_id = isset( $args[ 'course_id' ] ) ? $args[ 'course_id' ] : false;
@@ -1828,8 +1828,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$is_paid = get_post_meta( $course_id, 'paid_course', true );
 				$is_paid = $is_paid && 'on' == $is_paid ? true : false;
 
-				$student			 = new Student( $student_id );
-				$existing_student	 = $student->has_access_to_course( $course_id );
+				$student = new Student( $student_id );
+				$existing_student = $student->has_access_to_course( $course_id );
 
 				// If it is a paid course we have a different path.
 				if ( $is_paid && !$existing_student ) {
@@ -1865,8 +1865,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$course_id = !empty( $_POST[ 'course_id' ] ) ? (int) $_POST[ 'course_id' ] : false;
 			}
 
-			$course		 = new Course( $course_id );
-			$product_id	 = $course->mp_product_id();
+			$course = new Course( $course_id );
+			$product_id = $course->mp_product_id();
 
 			CP_WooCommerce_Integration::add_product_to_cart( $product_id );
 		}
@@ -1886,24 +1886,24 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$course_id = !empty( $_POST[ 'course_id' ] ) ? (int) $_POST[ 'course_id' ] : false;
 			}
 
-			$course		 = new Course( $course_id );
-			$product_id	 = $course->mp_product_id();
+			$course = new Course( $course_id );
+			$product_id = $course->mp_product_id();
 
 			// Set ID's to be used in final step of checkout
-			$cookie_id				 = 'cp_checkout_keys_' . COOKIEHASH;
-			$post_keys				 = array( (int) $product_id, (int) $course_id );
-			$expire					 = time() + 2592000; //1 month expire
+			$cookie_id = 'cp_checkout_keys_' . COOKIEHASH;
+			$post_keys = array( (int) $product_id, (int) $course_id );
+			$expire = time() + 2592000; //1 month expire
 			setcookie( $cookie_id, serialize( $post_keys ), $expire, COOKIEPATH, COOKIE_DOMAIN );
-			$_COOKIE[ $cookie_id ]	 = serialize( $post_keys );
+			$_COOKIE[ $cookie_id ] = serialize( $post_keys );
 
 			// Add course to cart
-			$product	 = get_post( $product_id );
-			$quantity	 = 1;
-			$variation	 = 0;
+			$product = get_post( $product_id );
+			$quantity = 1;
+			$variation = 0;
 
 			// $cart = $mp->get_cart_cookie();
-			$cart								 = array(); // remove all cart items
-			$cart[ $product_id ][ $variation ]	 = $quantity;
+			$cart = array(); // remove all cart items
+			$cart[ $product_id ][ $variation ] = $quantity;
 
 			$mp->set_cart_cookie( $cart );
 		}
@@ -1993,7 +1993,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		function install_and_activate_plugin( $plugin ) {
 			$current = get_option( 'active_plugins' );
-			$plugin	 = plugin_basename( trim( $plugin ) );
+			$plugin = plugin_basename( trim( $plugin ) );
 
 			if ( !in_array( $plugin, $current ) ) {
 				$current[] = $plugin;
@@ -2067,15 +2067,15 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		function element_content_img_filter( $content ) {
-			$rule	 = '#(<img\s[^>]*src )="([^"]+)"#';
-			$rule	 = str_replace( ' ', '', $rule );
+			$rule = '#(<img\s[^>]*src )="([^"]+)"#';
+			$rule = str_replace( ' ', '', $rule );
 
 			return preg_replace_callback( $rule, "cp_callback_img", $content );
 		}
 
 		function element_content_link_filter( $content ) {
-			$rule	 = '#(<a\s[^>]*href )="([^"]+)".*<img#';
-			$rule	 = str_replace( ' ', '', $rule );
+			$rule = '#(<a\s[^>]*href )="([^"]+)".*<img#';
+			$rule = str_replace( ' ', '', $rule );
 
 			return preg_replace_callback( $rule, "cp_callback_link", $content );
 		}
@@ -2084,8 +2084,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 			global $wp, $wpquery;
 			if ( isset( $_GET[ 'try' ] ) ) {
 
-				$unit	 = new Unit( $unit_id );
-				$course	 = new Course( $unit->details->post_parent );
+				$unit = new Unit( $unit_id );
+				$course = new Course( $unit->details->post_parent );
 
 				if ( $page_num ) {
 					$paged = $page_num;
@@ -2093,8 +2093,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 					$paged = !empty( $wp->query_vars[ 'paged' ] ) ? absint( $wp->query_vars[ 'paged' ] ) : 1;
 				}
 
-				$preview_unit	 = $course->details->preview_unit_boxes;
-				$preview_page	 = $course->details->preview_page_boxes;
+				$preview_unit = $course->details->preview_unit_boxes;
+				$preview_page = $course->details->preview_page_boxes;
 
 				if ( isset( $preview_unit[ $unit_id ] ) && $preview_unit[ $unit_id ] == 'on' ) {
 					return true;
@@ -2119,9 +2119,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 			if ( $this->is_preview( $unit_id ) ) {
 				//have access
 			} else {
-				$student	 = new Student( get_current_user_id() );
-				$instructor	 = new Instructor( get_current_user_id() );
-				$has_access	 = false;
+				$student = new Student( get_current_user_id() );
+				$instructor = new Instructor( get_current_user_id() );
+				$has_access = false;
 
 				if ( current_user_can( 'manage_options' ) || $student->has_access_to_course( $course_id ) || $instructor->is_assigned_to_course( $course_id, get_current_user_id() ) ) {
 					$has_access = true;
@@ -2154,7 +2154,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		function add_custom_image_sizes() {
 			// if( defined( 'DOING_AJAX' ) && DOING_AJAX ) { cp_write_log( 'doing ajax' ); }
 			if ( function_exists( 'add_image_size' ) ) {
-				$course_image_width	 = get_option( 'course_image_width', 235 );
+				$course_image_width = get_option( 'course_image_width', 235 );
 				$course_image_height = get_option( 'course_image_height', 225 );
 				add_image_size( 'course_thumb', $course_image_width, $course_image_height, true );
 			}
@@ -2171,8 +2171,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 		function parent_file_correction( $parent_file ) {
 			global $current_screen;
 
-			$taxonomy	 = $current_screen->taxonomy;
-			$post_type	 = $current_screen->post_type;
+			$taxonomy = $current_screen->taxonomy;
+			$post_type = $current_screen->post_type;
 
 			if ( $taxonomy == 'course_category' ) {
 				$parent_file = 'courses';
@@ -2215,7 +2215,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				//delete_user_meta( $user_id, 'course_' . $course_id );
 
 				$m_enrolled_course_class = get_user_meta( $user_id, 'enrolled_course_class_' . $course_id, true );
-				$m_enrolled_course_date	 = get_user_meta( $user_id, 'enrolled_course_date_' . $course_id, true );
+				$m_enrolled_course_date = get_user_meta( $user_id, 'enrolled_course_date_' . $course_id, true );
 				$m_enrolled_course_group = get_user_meta( $user_id, 'enrolled_course_group_' . $course_id, true );
 
 				update_user_option( $user_id, 'enrolled_course_class_' . $course_id, $m_enrolled_course_class, $global_option );
@@ -2255,8 +2255,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 		function upgrade_instructor_meta() {
 			global $wpdb;
 
-			$user_id			 = get_current_user_id();
-			$original_blog_id	 = get_current_blog_id();
+			$user_id = get_current_user_id();
+			$original_blog_id = get_current_blog_id();
 			// If they are not an instructor, don't do it
 			if ( get_user_meta( $user_id, 'role_ins' ) ) {
 
@@ -2275,8 +2275,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 					$matches = '';
 					if ( preg_match( $pattern, $meta_key, $matches ) ) {
-						$blog_id	 = (int) $matches[ 1 ] != 0 ? $matches[ 1 ] : '';
-						$course_id	 = $matches[ 2 ];
+						$blog_id = (int) $matches[ 1 ] != 0 ? $matches[ 1 ] : '';
+						$course_id = $matches[ 2 ];
 
 						// Use update_user_meta for some extra control
 						if ( !empty( $blog_id ) ) {
@@ -2316,8 +2316,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 				ob_start();
 
 				require_once( $this->plugin_dir . 'includes/classes/class.encryption.php' );
-				$encryption		 = new CP_Encryption();
-				$requested_file	 = $encryption->decode( $_GET[ 'fdcpf' ] );
+				$encryption = new CP_Encryption();
+				$requested_file = $encryption->decode( $_GET[ 'fdcpf' ] );
 
 				$requested_file_obj = wp_check_filetype( $requested_file );
 				header( 'Pragma: public' );
@@ -2333,7 +2333,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				 * Filter used to alter header params. E.g. removing 'timeout'.
 				 */
 				$force_download_parameters = apply_filters( 'coursepress_force_download_parameters', array(
-					'timeout'	 => 60,
+					'timeout' => 60,
 					'user-agent' => $this->name . ' / ' . $this->version . ';'
 				) );
 				echo wp_remote_retrieve_body( wp_remote_get( $requested_file ), $force_download_parameters );
@@ -2343,19 +2343,19 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		function course_archive( $query ) {
 			if ( is_post_type_archive( CoursePress_Data_Course::get_post_type_name() ) ) {
-				$selected_course_order_by_type	 = get_option( 'course_order_by_type', 'DESC' );
-				$selected_course_order_by		 = get_option( 'course_order_by', 'post_date' );
+				$selected_course_order_by_type = get_option( 'course_order_by_type', 'DESC' );
+				$selected_course_order_by = get_option( 'course_order_by', 'post_date' );
 
 				if ( $selected_course_order_by == 'course_order' ) {
 					set_query_var( 'meta_query', array(
 						'relation' => 'OR',
 						array(
-							'key'		 => 'course_order',
-							'compare'	 => 'NOT EXISTS',
+							'key' => 'course_order',
+							'compare' => 'NOT EXISTS',
 						),
 						array(
-							'key'		 => 'course_order',
-							'compare'	 => 'EXISTS',
+							'key' => 'course_order',
+							'compare' => 'EXISTS',
 						)
 					)
 					);
@@ -2411,8 +2411,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 			}
 
 			//stop canonical problems with virtual pages redirecting
-			$page	 = get_query_var( 'pagename' );
-			$course	 = get_query_var( CoursePress_Data_Course::get_post_type_name() );
+			$page = get_query_var( 'pagename' );
+			$course = get_query_var( CoursePress_Data_Course::get_post_type_name() );
 
 			if ( $page == 'dashboard' or $course !== '' ) {
 				remove_action( 'template_redirect', 'redirect_canonical' );
@@ -2457,8 +2457,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 			/* Show Discussion single template */
 			if ( array_key_exists( 'discussion_name', $wp->query_vars ) ) {
 				$this->remove_pre_next_post();
-				$vars[ 'discussion_name' ]	 = $wp->query_vars[ 'discussion_name' ];
-				$vars[ 'course_id' ]		 = Course::get_course_id_by_name( $wp->query_vars[ 'coursename' ] );
+				$vars[ 'discussion_name' ] = $wp->query_vars[ 'discussion_name' ];
+				$vars[ 'course_id' ] = Course::get_course_id_by_name( $wp->query_vars[ 'coursename' ] );
 			}
 
 			/* Add New Discussion template */
@@ -2476,22 +2476,22 @@ if ( !class_exists( 'CoursePress' ) ) {
 						require_once( $theme_file );
 						exit;
 					} else {
-						$args	 = array(
-							'slug'			 => $wp->request,
-							'title'			 => __( 'Add New Discussion', 'cp' ),
-							'content'		 => $this->get_template_details( $this->plugin_dir . 'includes/templates/page-add-new-discussion.php', $vars ),
-							'type'			 => 'discussion',
-							'is_page'		 => true,
-							'is_singular'	 => true,
-							'is_archive'	 => false
+						$args = array(
+							'slug' => $wp->request,
+							'title' => __( 'Add New Discussion', 'cp' ),
+							'content' => $this->get_template_details( $this->plugin_dir . 'includes/templates/page-add-new-discussion.php', $vars ),
+							'type' => 'discussion',
+							'is_page' => true,
+							'is_singular' => true,
+							'is_archive' => false
 						);
-						$pg		 = new CoursePress_Virtual_Page( $args );
+						$pg = new CoursePress_Virtual_Page( $args );
 					}
 				} else {
 
 					/* Archive Discussion template */
 					$this->units_archive_subpage = 'discussions';
-					$theme_file					 = locate_template( array( 'archive-discussions.php' ) );
+					$theme_file = locate_template( array( 'archive-discussions.php' ) );
 
 					if ( $theme_file != '' ) {
 						//do_shortcode( '[course_notifications_loop]' );
@@ -2502,16 +2502,16 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 						// DISCUSSIONS
 
-						$args	 = array(
-							'slug'			 => $wp->request,
-							'title'			 => get_the_title( $course_id ),
-							'content'		 => $this->get_template_details( $this->plugin_dir . 'includes/templates/course-discussion-archive.php', $vars ),
-							'type'			 => 'discussions',
-							'is_page'		 => true,
-							'is_singular'	 => true,
-							'is_archive'	 => false
+						$args = array(
+							'slug' => $wp->request,
+							'title' => get_the_title( $course_id ),
+							'content' => $this->get_template_details( $this->plugin_dir . 'includes/templates/course-discussion-archive.php', $vars ),
+							'type' => 'discussions',
+							'is_page' => true,
+							'is_singular' => true,
+							'is_archive' => false
 						);
-						$pg		 = new CoursePress_Virtual_Page( $args );
+						$pg = new CoursePress_Virtual_Page( $args );
 						do_shortcode( '[course_discussion_loop]' );
 					}
 				}
@@ -2520,15 +2520,15 @@ if ( !class_exists( 'CoursePress' ) ) {
 			/* Show Instructor single template only if the user is an instructor of at least 1 course */
 			if ( array_key_exists( 'instructor_username', $wp->query_vars ) ) {//&& 0 < Instructor::get_courses_number( cp_get_userdatabynicename( $wp->query_vars[ 'instructor_username' ] )->ID )
 				$this->remove_pre_next_post();
-				$vars							 = array();
-				$vars[ 'instructor_username' ]	 = $wp->query_vars[ 'instructor_username' ];
+				$vars = array();
+				$vars[ 'instructor_username' ] = $wp->query_vars[ 'instructor_username' ];
 
 				$user = wp_cache_get( $wp->query_vars[ 'instructor_username' ], 'cp_instructor_hash' );
 
 				if ( false === $user ) {
 					if ( get_option( 'show_instructor_username', 1 ) == 1 ) {
-						$username	 = str_replace( '%20', ' ', $wp->query_vars[ 'instructor_username' ] ); //support for usernames with spaces
-						$user		 = Instructor::instructor_by_login( $username );
+						$username = str_replace( '%20', ' ', $wp->query_vars[ 'instructor_username' ] ); //support for usernames with spaces
+						$user = Instructor::instructor_by_login( $username );
 					} else {
 						$user = Instructor::instructor_by_hash( $wp->query_vars[ 'instructor_username' ] );
 						wp_cache_set( $wp->query_vars[ 'instructor_username' ], $user, 'cp_instructor_hash' );
@@ -2550,10 +2550,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 				} else {
 
 					$args = array(
-						'slug'		 => $wp->request,
-						'title'		 => __( $vars[ 'user' ]->display_name, 'cp' ),
-						'content'	 => $this->get_template_details( $this->plugin_dir . 'includes/templates/instructor-single.php', $vars ),
-						'type'		 => 'virtual_page'
+						'slug' => $wp->request,
+						'title' => __( $vars[ 'user' ]->display_name, 'cp' ),
+						'content' => $this->get_template_details( $this->plugin_dir . 'includes/templates/instructor-single.php', $vars ),
+						'type' => 'virtual_page'
 					);
 
 					$pg = new CoursePress_Virtual_Page( $args );
@@ -2564,9 +2564,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			$url = trim( parse_url( $_SERVER[ 'REQUEST_URI' ], PHP_URL_PATH ), '/' );
 
-			$inbox_page			 = false;
-			$new_message_page	 = false;
-			$sent_messages_page	 = false;
+			$inbox_page = false;
+			$new_message_page = false;
+			$sent_messages_page = false;
 
 			if ( preg_match( '/' . $this->get_inbox_slug() . '/', $url ) ) {
 				$inbox_page = true;
@@ -2590,16 +2590,16 @@ if ( !class_exists( 'CoursePress' ) ) {
 					require_once( $theme_file );
 					exit;
 				} else {
-					$args	 = array(
-						'slug'			 => $wp->request,
-						'title'			 => __( 'Inbox', 'cp' ),
-						'content'		 => $this->get_template_details( $this->plugin_dir . 'includes/templates/page-inbox.php', array(), true ),
-						'type'			 => 'page',
-						'is_page'		 => true,
-						'is_singular'	 => true,
-						'is_archive'	 => false
+					$args = array(
+						'slug' => $wp->request,
+						'title' => __( 'Inbox', 'cp' ),
+						'content' => $this->get_template_details( $this->plugin_dir . 'includes/templates/page-inbox.php', array(), true ),
+						'type' => 'page',
+						'is_page' => true,
+						'is_singular' => true,
+						'is_archive' => false
 					);
-					$pg		 = new CoursePress_Virtual_Page( $args );
+					$pg = new CoursePress_Virtual_Page( $args );
 				}
 			}
 
@@ -2614,16 +2614,16 @@ if ( !class_exists( 'CoursePress' ) ) {
 					require_once( $theme_file );
 					exit;
 				} else {
-					$args	 = array(
-						'slug'			 => $wp->request,
-						'title'			 => __( 'Sent Message', 'cp' ),
-						'content'		 => $this->get_template_details( $this->plugin_dir . 'includes/templates/page-sent-messages.php', array(), true ),
-						'type'			 => 'page',
-						'is_page'		 => true,
-						'is_singular'	 => true,
-						'is_archive'	 => false
+					$args = array(
+						'slug' => $wp->request,
+						'title' => __( 'Sent Message', 'cp' ),
+						'content' => $this->get_template_details( $this->plugin_dir . 'includes/templates/page-sent-messages.php', array(), true ),
+						'type' => 'page',
+						'is_page' => true,
+						'is_singular' => true,
+						'is_archive' => false
 					);
-					$pg		 = new CoursePress_Virtual_Page( $args );
+					$pg = new CoursePress_Virtual_Page( $args );
 				}
 			}
 
@@ -2638,26 +2638,26 @@ if ( !class_exists( 'CoursePress' ) ) {
 					require_once( $theme_file );
 					exit;
 				} else {
-					$args	 = array(
-						'slug'			 => $wp->request,
-						'title'			 => __( 'New Message', 'cp' ),
-						'content'		 => $this->get_template_details( $this->plugin_dir . 'includes/templates/page-new-message.php', array(), true ),
-						'type'			 => 'page',
-						'is_page'		 => true,
-						'is_singular'	 => true,
-						'is_archive'	 => false
+					$args = array(
+						'slug' => $wp->request,
+						'title' => __( 'New Message', 'cp' ),
+						'content' => $this->get_template_details( $this->plugin_dir . 'includes/templates/page-new-message.php', array(), true ),
+						'type' => 'page',
+						'is_page' => true,
+						'is_singular' => true,
+						'is_archive' => false
 					);
-					$pg		 = new CoursePress_Virtual_Page( $args );
+					$pg = new CoursePress_Virtual_Page( $args );
 				}
 			}
 
 			/* Show Units archive template */
 			if ( array_key_exists( 'coursename', $wp->query_vars ) && !array_key_exists( 'unitname', $wp->query_vars ) ) {
 				$this->remove_pre_next_post();
-				$units_archive_page			 = false;
-				$units_archive_grades_page	 = false;
-				$notifications_archive_page	 = false;
-				$units_workbook_page		 = false;
+				$units_archive_page = false;
+				$units_archive_grades_page = false;
+				$notifications_archive_page = false;
+				$units_workbook_page = false;
 
 				$url = trim( parse_url( $_SERVER[ 'REQUEST_URI' ], PHP_URL_PATH ), '/' );
 
@@ -2677,7 +2677,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 					$notifications_archive_page = true;
 				}
 
-				$vars				 = array();
+				$vars = array();
 				$vars[ 'course_id' ] = Course::get_course_id_by_name( $wp->query_vars[ 'coursename' ] );
 
 				if ( $notifications_archive_page ) {
@@ -2695,13 +2695,13 @@ if ( !class_exists( 'CoursePress' ) ) {
 						// NOTIFICATIONS
 
 						$args = array(
-							'slug'			 => $wp->request,
-							'title'			 => get_the_title( $course_id ),
-							'content'		 => $this->get_template_details( $this->plugin_dir . 'includes/templates/course-notifications-archive.php', $vars ),
-							'type'			 => 'notifications',
-							'is_page'		 => true,
-							'is_singular'	 => true,
-							'is_archive'	 => false
+							'slug' => $wp->request,
+							'title' => get_the_title( $course_id ),
+							'content' => $this->get_template_details( $this->plugin_dir . 'includes/templates/course-notifications-archive.php', $vars ),
+							'type' => 'notifications',
+							'is_page' => true,
+							'is_singular' => true,
+							'is_archive' => false
 						);
 
 						$pg = new CoursePress_Virtual_Page( $args );
@@ -2723,17 +2723,17 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 						// COURSE UNITS
 
-						$args	 = array(
-							'slug'			 => $wp->request,
+						$args = array(
+							'slug' => $wp->request,
 							// 'title' => __( 'Course Units', 'cp' ),
-							'title'			 => get_the_title( $course_id ),
-							'content'		 => $this->get_template_details( $this->plugin_dir . 'includes/templates/course-units-archive.php', $vars ),
-							'type'			 => 'unit',
-							'is_page'		 => true,
-							'is_singular'	 => true,
-							'is_archive'	 => false
+							'title' => get_the_title( $course_id ),
+							'content' => $this->get_template_details( $this->plugin_dir . 'includes/templates/course-units-archive.php', $vars ),
+							'type' => 'unit',
+							'is_page' => true,
+							'is_singular' => true,
+							'is_archive' => false
 						);
-						$pg		 = new CoursePress_Virtual_Page( $args );
+						$pg = new CoursePress_Virtual_Page( $args );
 						do_shortcode( '[course_units_loop]' );
 					}
 
@@ -2757,16 +2757,16 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 						// COURSE GRADES
 
-						$args	 = array(
-							'slug'			 => $wp->request,
-							'title'			 => get_the_title( $course_id ),
-							'content'		 => $this->get_template_details( $this->plugin_dir . 'includes/templates/course-units-archive-grades.php', $vars ),
-							'type'			 => 'unit',
-							'is_page'		 => true,
-							'is_singular'	 => true,
-							'is_archive'	 => false
+						$args = array(
+							'slug' => $wp->request,
+							'title' => get_the_title( $course_id ),
+							'content' => $this->get_template_details( $this->plugin_dir . 'includes/templates/course-units-archive-grades.php', $vars ),
+							'type' => 'unit',
+							'is_page' => true,
+							'is_singular' => true,
+							'is_archive' => false
 						);
-						$pg		 = new CoursePress_Virtual_Page( $args );
+						$pg = new CoursePress_Virtual_Page( $args );
 						do_shortcode( '[course_units_loop]' );
 					}
 					$this->set_latest_activity( get_current_user_id() );
@@ -2788,16 +2788,16 @@ if ( !class_exists( 'CoursePress' ) ) {
 						// WORKBOOK
 
 						do_shortcode( '[course_units_loop]' );
-						$args	 = array(
-							'slug'			 => $wp->request,
-							'title'			 => get_the_title( $course_id ),
-							'content'		 => $this->get_template_details( $this->plugin_dir . 'includes/templates/archive-unit-workbook.php', $vars ),
-							'type'			 => 'unit',
-							'is_page'		 => true,
-							'is_singular'	 => true,
-							'is_archive'	 => false
+						$args = array(
+							'slug' => $wp->request,
+							'title' => get_the_title( $course_id ),
+							'content' => $this->get_template_details( $this->plugin_dir . 'includes/templates/archive-unit-workbook.php', $vars ),
+							'type' => 'unit',
+							'is_page' => true,
+							'is_singular' => true,
+							'is_archive' => false
 						);
-						$pg		 = new CoursePress_Virtual_Page( $args );
+						$pg = new CoursePress_Virtual_Page( $args );
 						do_shortcode( '[course_units_loop]' );
 					}
 					$this->set_latest_activity( get_current_user_id() );
@@ -2808,11 +2808,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 			/* Show Unit single template */
 			if ( array_key_exists( 'coursename', $wp->query_vars ) && array_key_exists( 'unitname', $wp->query_vars ) ) {
 				$this->remove_pre_next_post();
-				$vars	 = array();
-				$unit	 = new Unit();
+				$vars = array();
+				$unit = new Unit();
 
 				$vars[ 'course_id' ] = Course::get_course_id_by_name( $wp->query_vars[ 'coursename' ] );
-				$vars[ 'unit_id' ]	 = $unit->get_unit_id_by_name( $wp->query_vars[ 'unitname' ], $vars[ 'course_id' ] );
+				$vars[ 'unit_id' ] = $unit->get_unit_id_by_name( $wp->query_vars[ 'unitname' ], $vars[ 'course_id' ] );
 
 				//$this->set_course_visited( get_current_user_id(), Course::get_course_id_by_name( $wp->query_vars['coursename'] ) );
 
@@ -2831,13 +2831,13 @@ if ( !class_exists( 'CoursePress' ) ) {
 						exit;
 					} else {
 						$args = array(
-							'slug'			 => $wp->request,
-							'title'			 => $unit->details->post_title,
-							'content'		 => __( 'This Unit is not available at the moment. Please check back later.', 'cp' ),
-							'type'			 => 'page',
-							'is_page'		 => true,
-							'is_singular'	 => false,
-							'is_archive'	 => false
+							'slug' => $wp->request,
+							'title' => $unit->details->post_title,
+							'content' => __( 'This Unit is not available at the moment. Please check back later.', 'cp' ),
+							'type' => 'page',
+							'is_page' => true,
+							'is_singular' => false,
+							'is_archive' => false
 						);
 
 						$pg = new CoursePress_Virtual_Page( $args );
@@ -2852,14 +2852,14 @@ if ( !class_exists( 'CoursePress' ) ) {
 						exit;
 					} else {
 						$args = array(
-							'slug'			 => $wp->request,
+							'slug' => $wp->request,
 							// 'title' => $unit->details->post_title,
-							'title'			 => get_the_title( $unit->details->post_parent ),
-							'content'		 => $this->get_template_details( $this->plugin_dir . 'includes/templates/course-units-single.php', $vars ),
-							'type'			 => 'unit',
-							'is_page'		 => true,
-							'is_singular'	 => true,
-							'is_archive'	 => false
+							'title' => get_the_title( $unit->details->post_parent ),
+							'content' => $this->get_template_details( $this->plugin_dir . 'includes/templates/course-units-single.php', $vars ),
+							'type' => 'unit',
+							'is_page' => true,
+							'is_singular' => true,
+							'is_archive' => false
 						);
 
 						$pg = new CoursePress_Virtual_Page( $args );
@@ -2881,9 +2881,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 		/* Set that student read unit */
 
 		function set_unit_visited( $user_ID, $unit_ID ) {
-			$global_option	 = !is_multisite();
-			$get_old_values	 = get_user_option( 'visited_units' );
-			$get_new_values	 = explode( '|', $get_old_values );
+			$global_option = !is_multisite();
+			$get_old_values = get_user_option( 'visited_units' );
+			$get_new_values = explode( '|', $get_old_values );
 
 			if ( !cp_in_array_r( $unit_ID, $get_new_values ) ) {
 				$get_old_values = $get_old_values . '|' . $unit_ID;
@@ -2892,20 +2892,20 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		function filter_query_vars( $query_vars ) {
-			$query_vars[]	 = 'coursename';
-			$query_vars[]	 = 'course_category';
-			$query_vars[]	 = 'unitname';
-			$query_vars[]	 = 'instructor_username';
-			$query_vars[]	 = 'discussion_name';
-			$query_vars[]	 = 'discussion_archive';
-			$query_vars[]	 = 'notifications_archive';
-			$query_vars[]	 = 'grades_archive';
-			$query_vars[]	 = 'workbook';
-			$query_vars[]	 = 'discussion_action';
-			$query_vars[]	 = 'inbox';
-			$query_vars[]	 = 'new_message';
-			$query_vars[]	 = 'sent_messages';
-			$query_vars[]	 = 'paged';
+			$query_vars[] = 'coursename';
+			$query_vars[] = 'course_category';
+			$query_vars[] = 'unitname';
+			$query_vars[] = 'instructor_username';
+			$query_vars[] = 'discussion_name';
+			$query_vars[] = 'discussion_archive';
+			$query_vars[] = 'notifications_archive';
+			$query_vars[] = 'grades_archive';
+			$query_vars[] = 'workbook';
+			$query_vars[] = 'discussion_action';
+			$query_vars[] = 'inbox';
+			$query_vars[] = 'new_message';
+			$query_vars[] = 'sent_messages';
+			$query_vars[] = 'paged';
 
 			return $query_vars;
 		}
@@ -2913,22 +2913,22 @@ if ( !class_exists( 'CoursePress' ) ) {
 		function add_rewrite_rules( $rules ) {
 			$new_rules = array();
 
-			$new_rules[ '^' . $this->get_course_slug() . '/' . $this->get_course_category_slug() . '/([^/]*)/page/([^/]*)/?' ]	 = 'index.php?page_id=-1&course_category=$matches[1]&paged=$matches[2]';
-			$new_rules[ '^' . $this->get_course_slug() . '/' . $this->get_course_category_slug() . '/([^/]*)/?' ]				 = 'index.php?page_id=-1&course_category=$matches[1]';
+			$new_rules[ '^' . $this->get_course_slug() . '/' . $this->get_course_category_slug() . '/([^/]*)/page/([^/]*)/?' ] = 'index.php?page_id=-1&course_category=$matches[1]&paged=$matches[2]';
+			$new_rules[ '^' . $this->get_course_slug() . '/' . $this->get_course_category_slug() . '/([^/]*)/?' ] = 'index.php?page_id=-1&course_category=$matches[1]';
 
-			$new_rules[ '^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_discussion_slug() . '/page/([^/]*)/?' ]	 = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive&paged=$matches[2]'; ///page/?( [0-9]{1,} )/?$
-			$new_rules[ '^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_discussion_slug() . '/([^/]*)/?' ]		 = 'index.php?page_id=-1&coursename=$matches[1]&discussion_name=$matches[2]';
-			$new_rules[ '^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_discussion_slug() ]						 = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive';
+			$new_rules[ '^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_discussion_slug() . '/page/([^/]*)/?' ] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive&paged=$matches[2]'; ///page/?( [0-9]{1,} )/?$
+			$new_rules[ '^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_discussion_slug() . '/([^/]*)/?' ] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_name=$matches[2]';
+			$new_rules[ '^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_discussion_slug() ] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive';
 
-			$new_rules[ '^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_grades_slug() ]	 = 'index.php?page_id=-1&coursename=$matches[1]&grades_archive';
-			$new_rules[ '^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_workbook_slug() ]	 = 'index.php?page_id=-1&coursename=$matches[1]&workbook';
+			$new_rules[ '^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_grades_slug() ] = 'index.php?page_id=-1&coursename=$matches[1]&grades_archive';
+			$new_rules[ '^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_workbook_slug() ] = 'index.php?page_id=-1&coursename=$matches[1]&workbook';
 
 			$new_rules[ '^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug() . '/([^/]*)/page/([^/]*)/?' ] = 'index.php?page_id=-1&coursename=$matches[1]&unitname=$matches[2]&paged=$matches[3]'; ///page/?( [0-9]{1,} )/?$
-			$new_rules[ '^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug() . '/([^/]*)/?' ]				 = 'index.php?page_id=-1&coursename=$matches[1]&unitname=$matches[2]';
-			$new_rules[ '^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug() ]							 = 'index.php?page_id=-1&coursename=$matches[1]';
+			$new_rules[ '^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug() . '/([^/]*)/?' ] = 'index.php?page_id=-1&coursename=$matches[1]&unitname=$matches[2]';
+			$new_rules[ '^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_units_slug() ] = 'index.php?page_id=-1&coursename=$matches[1]';
 
 			$new_rules[ '^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_notifications_slug() . '/page/([^/]*)/?' ] = 'index.php?page_id=-1&coursename=$matches[1]&notifications_archive&paged=$matches[2]'; ///page/?( [0-9]{1,} )/?$
-			$new_rules[ '^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_notifications_slug() ]					 = 'index.php?page_id=-1&coursename=$matches[1]&notifications_archive';
+			$new_rules[ '^' . $this->get_course_slug() . '/([^/]*)/' . $this->get_notifications_slug() ] = 'index.php?page_id=-1&coursename=$matches[1]&notifications_archive';
 
 
 			$new_rules[ '^' . $this->get_instructor_profile_slug() . '/([^/]*)/?' ] = 'index.php?page_id=-1&instructor_username=$matches[1]';
@@ -2937,15 +2937,15 @@ if ( !class_exists( 'CoursePress' ) ) {
 			  unset( $rules['( [^/]+ )( /[0-9]+ )?/?$'] );
 			  } */
 
-			$new_rules[ '^' . $this->get_inbox_slug() . '/?' ]			 = 'index.php?page_id=-1&inbox';
-			$new_rules[ '^' . $this->get_new_message_slug() . '/?' ]	 = 'index.php?page_id=-1&new_message';
-			$new_rules[ '^' . $this->get_sent_messages_slug() . '/?' ]	 = 'index.php?page_id=-1&sent_messages';
+			$new_rules[ '^' . $this->get_inbox_slug() . '/?' ] = 'index.php?page_id=-1&inbox';
+			$new_rules[ '^' . $this->get_new_message_slug() . '/?' ] = 'index.php?page_id=-1&new_message';
+			$new_rules[ '^' . $this->get_sent_messages_slug() . '/?' ] = 'index.php?page_id=-1&sent_messages';
 
 			/* Resolve possible issue with rule formating and avoid 404s */
 			foreach ( $new_rules as $new_rule => $value ) {
-				$newer_rule					 = str_replace( ' ', '', $new_rule );
+				$newer_rule = str_replace( ' ', '', $new_rule );
 				unset( $new_rules[ $new_rule ] );
-				$new_rules[ $newer_rule ]	 = $value;
+				$new_rules[ $newer_rule ] = $value;
 			}
 
 			return array_merge( $new_rules, $rules );
@@ -2967,7 +2967,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 							//if ( get_post_type( $wpdb->last_result[ 0 ]->post_id ) == 'course' ) {
 							if ( get_post_type() == CoursePress_Data_Course::get_post_type_name() ) {
 								$prepend_content = $this->get_template_details( $this->plugin_dir . 'includes/templates/single-course-before-details.php' );
-								$content		 = do_shortcode( $prepend_content . $content );
+								$content = do_shortcode( $prepend_content . $content );
 							} else {
 								return $content;
 							}
@@ -2990,7 +2990,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 					//just output the content
 				} else {
 					$prepend_content = $this->get_template_details( $this->plugin_dir . 'includes/templates/single-discussion-before-details.php' );
-					$content		 = do_shortcode( $prepend_content . $content );
+					$content = do_shortcode( $prepend_content . $content );
 				}
 			}
 
@@ -3053,9 +3053,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 		function update_units_positions() {
 			global $wpdb;
 
-			$positions	 = explode( ",", $_REQUEST[ 'positions' ] );
-			$response	 = '';
-			$i			 = 1;
+			$positions = explode( ",", $_REQUEST[ 'positions' ] );
+			$response = '';
+			$i = 1;
 			foreach ( $positions as $position ) {
 				$response .= 'Position #' . $i . ': ' . $position . '<br />';
 				update_post_meta( $position, 'unit_order', $i );
@@ -3068,14 +3068,14 @@ if ( !class_exists( 'CoursePress' ) ) {
 		function update_course_positions() {
 			global $wpdb;
 
-			$course_page_number	 = $_REQUEST[ 'course_page_number' ] * 999;
-			$positions			 = explode( ",", $_REQUEST[ 'positions' ] );
-			$response			 = '';
-			$i					 = 1;
+			$course_page_number = $_REQUEST[ 'course_page_number' ] * 999;
+			$positions = explode( ",", $_REQUEST[ 'positions' ] );
+			$response = '';
+			$i = 1;
 			foreach ( $positions as $position ) {
 				$response .= 'Position #' . $i . ': ' . $position . '<br />';
 				update_post_meta( $position, 'course_order', (int) $course_page_number + (int) $i );
-				/* $post = array( 'ID'		 => $position,
+				/* $post = array( 'ID' => $position,
 				  'menu_order' => $i ); */
 				wp_update_post( $post );
 				$i ++;
@@ -3243,23 +3243,23 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		function get_enrollment_process_slug( $url = false ) {
-			$default_slug_value	 = 'enrollment-process';
-			$option				 = 'enrollment_process_slug';
-			$page_option		 = 'coursepress_enrollment_process_page';
+			$default_slug_value = 'enrollment-process';
+			$option = 'enrollment_process_slug';
+			$page_option = 'coursepress_enrollment_process_page';
 			return $this->get_slug_variant( $option, $page_option, $default_slug_value, $url );
 		}
 
 		function get_student_dashboard_slug( $url = false ) {
-			$default_slug_value	 = 'courses-dashboard';
-			$option				 = 'student_dashboard_slug';
-			$page_option		 = 'coursepress_student_dashboard_page';
+			$default_slug_value = 'courses-dashboard';
+			$option = 'student_dashboard_slug';
+			$page_option = 'coursepress_student_dashboard_page';
 			return $this->get_slug_variant( $option, $page_option, $default_slug_value, $url );
 		}
 
 		function get_student_settings_slug( $url = false ) {
-			$default_slug_value	 = 'settings';
-			$option				 = 'student_settings_slug';
-			$page_option		 = 'coursepress_student_settings_page';
+			$default_slug_value = 'settings';
+			$option = 'student_settings_slug';
+			$page_option = 'coursepress_student_settings_page';
 			return $this->get_slug_variant( $option, $page_option, $default_slug_value, $url );
 		}
 
@@ -3270,16 +3270,16 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		function get_login_slug( $url = false ) {
-			$default_slug_value	 = 'student-login';
-			$option				 = 'login_slug';
-			$page_option		 = 'coursepress_login_page';
+			$default_slug_value = 'student-login';
+			$option = 'login_slug';
+			$page_option = 'coursepress_login_page';
 			return $this->get_slug_variant( $option, $page_option, $default_slug_value, $url );
 		}
 
 		function get_signup_slug( $url = false ) {
-			$default_slug_value	 = 'courses-signup';
-			$option				 = 'signup_slug';
-			$page_option		 = 'coursepress_signup_page';
+			$default_slug_value = 'courses-signup';
+			$option = 'signup_slug';
+			$page_option = 'coursepress_signup_page';
 			return $this->get_slug_variant( $option, $page_option, $default_slug_value, $url );
 		}
 
@@ -3316,23 +3316,23 @@ if ( !class_exists( 'CoursePress' ) ) {
 		function init_vars() {
 			//setup proper directories
 			if ( defined( 'WP_PLUGIN_URL' ) && defined( 'WP_PLUGIN_DIR' ) && file_exists( WP_PLUGIN_DIR . '/' . $this->dir_name . '/' . basename( __FILE__ ) ) ) {
-				$this->location		 = 'subfolder-plugins';
-				$this->plugin_dir	 = WP_PLUGIN_DIR . '/' . $this->dir_name . '/';
-				$this->plugin_url	 = plugins_url( '/', __FILE__ );
+				$this->location = 'subfolder-plugins';
+				$this->plugin_dir = WP_PLUGIN_DIR . '/' . $this->dir_name . '/';
+				$this->plugin_url = plugins_url( '/', __FILE__ );
 			} else if ( defined( 'WP_PLUGIN_URL' ) && defined( 'WP_PLUGIN_DIR' ) && file_exists( WP_PLUGIN_DIR . '/' . basename( __FILE__ ) ) ) {
-				$this->location		 = 'plugins';
-				$this->plugin_dir	 = WP_PLUGIN_DIR . '/';
-				$this->plugin_url	 = plugins_url( '/', __FILE__ );
+				$this->location = 'plugins';
+				$this->plugin_dir = WP_PLUGIN_DIR . '/';
+				$this->plugin_url = plugins_url( '/', __FILE__ );
 			} else if ( is_multisite() && defined( 'WPMU_PLUGIN_URL' ) && defined( 'WPMU_PLUGIN_DIR' ) && file_exists( WPMU_PLUGIN_DIR . '/' . basename( __FILE__ ) ) ) {
-				$this->location		 = 'mu-plugins';
-				$this->plugin_dir	 = WPMU_PLUGIN_DIR;
-				$this->plugin_url	 = WPMU_PLUGIN_URL;
+				$this->location = 'mu-plugins';
+				$this->plugin_dir = WPMU_PLUGIN_DIR;
+				$this->plugin_url = WPMU_PLUGIN_URL;
 			} else {
 				wp_die( sprintf( __( 'There was an issue determining where %s is installed. Please reinstall it.', 'cp' ), $this->name ) );
 			}
 
-			$this->screen_base			 = str_replace( ' ', '-', strtolower( $this->name ) );
-			$GLOBALS[ 'screen_base' ]	 = $this->screen_base;
+			$this->screen_base = str_replace( ' ', '-', strtolower( $this->name ) );
+			$GLOBALS[ 'screen_base' ] = $this->screen_base;
 		}
 
 		//Load unit elements / modules / building blocks and other add-ons and plugins
@@ -3517,235 +3517,235 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			//Register Courses post type
 			$args = array(
-				'labels'				 => array(
-					'name'				 => __( 'Courses', 'cp' ),
-					'singular_name'		 => __( 'Course', 'cp' ),
-					'add_new'			 => __( 'Create New', 'cp' ),
-					'add_new_item'		 => __( 'Create New Course', 'cp' ),
-					'edit_item'			 => __( 'Edit Course', 'cp' ),
-					'edit'				 => __( 'Edit', 'cp' ),
-					'new_item'			 => __( 'New Course', 'cp' ),
-					'view_item'			 => __( 'View Course', 'cp' ),
-					'search_items'		 => __( 'Search Courses', 'cp' ),
-					'not_found'			 => __( 'No Courses Found', 'cp' ),
+				'labels' => array(
+					'name' => __( 'Courses', 'cp' ),
+					'singular_name' => __( 'Course', 'cp' ),
+					'add_new' => __( 'Create New', 'cp' ),
+					'add_new_item' => __( 'Create New Course', 'cp' ),
+					'edit_item' => __( 'Edit Course', 'cp' ),
+					'edit' => __( 'Edit', 'cp' ),
+					'new_item' => __( 'New Course', 'cp' ),
+					'view_item' => __( 'View Course', 'cp' ),
+					'search_items' => __( 'Search Courses', 'cp' ),
+					'not_found' => __( 'No Courses Found', 'cp' ),
 					'not_found_in_trash' => __( 'No Courses found in Trash', 'cp' ),
-					'view'				 => __( 'View Course', 'cp' )
+					'view' => __( 'View Course', 'cp' )
 				),
-				'public'				 => false,
-				'exclude_from_search'	 => false,
-				'has_archive'			 => true,
-				'show_ui'				 => false,
-				'publicly_queryable'	 => true,
-				'capability_type'		 => 'course',
-				'map_meta_cap'			 => true,
-				'query_var'				 => true,
-				'rewrite'				 => array(
-					'slug'		 => $this->get_course_slug(),
+				'public' => false,
+				'exclude_from_search' => false,
+				'has_archive' => true,
+				'show_ui' => false,
+				'publicly_queryable' => true,
+				'capability_type' => 'course',
+				'map_meta_cap' => true,
+				'query_var' => true,
+				'rewrite' => array(
+					'slug' => $this->get_course_slug(),
 					'with_front' => false
 				),
-				'supports'				 => array( 'thumbnail' ),
-				'taxonomies'			 => array( 'course_category' ),
+				'supports' => array( 'thumbnail' ),
+				'taxonomies' => array( 'course_category' ),
 			//coursepress_course_categories_cap
 			);
 
 			register_post_type( 'course', $args );
 			// Register custom taxonomy
 			/* register_taxonomy( 'course_category', 'course', apply_filters( 'coursepress_register_course_category', array(
-			  "hierarchical"	 => true,
-			  'label'			 => __( 'Course Categories', 'cp' ),
+			  "hierarchical" => true,
+			  'label' => __( 'Course Categories', 'cp' ),
 			  'singular_label' => __( 'Course Category', 'cp' ),
-			  'rewrite'		 => array(
+			  'rewrite' => array(
 			  'slug' => $this->get_course_category_slug()
 			  ),
-			  'capabilities'	 => array(
-			  'manage_terms'	 => 'coursepress_course_categories_manage_terms_cap',
-			  'edit_terms'	 => 'coursepress_course_categories_edit_terms_cap',
-			  'delete_terms'	 => 'coursepress_course_categories_delete_terms_cap',
-			  'assign_terms'	 => 'coursepress_courses_cap'
+			  'capabilities' => array(
+			  'manage_terms' => 'coursepress_course_categories_manage_terms_cap',
+			  'edit_terms' => 'coursepress_course_categories_edit_terms_cap',
+			  'delete_terms' => 'coursepress_course_categories_delete_terms_cap',
+			  'assign_terms' => 'coursepress_courses_cap'
 			  ),
 			  ) )
 			  ); */
 
 			register_taxonomy( 'course_category', 'course', apply_filters( 'coursepress_register_course_category', array(
-				'labels'			 => array(
-					'name'			 => __( 'Course Categories', 'cp' ),
-					'singular_name'	 => __( 'Course Category', 'cp' ),
-					'search_items'	 => __( 'Search Course Categories', 'cp' ),
-					'all_items'		 => __( 'All Course Categories', 'cp' ),
-					'edit_item'		 => __( 'Edit Course Categories', 'cp' ),
-					'update_item'	 => __( 'Update Course Category', 'cp' ),
-					'add_new_item'	 => __( 'Add New Course Category', 'cp' ),
-					'new_item_name'	 => __( 'New Course Category Name', 'cp' ),
-					'menu_name'		 => __( 'Course Category', 'cp' ),
+				'labels' => array(
+					'name' => __( 'Course Categories', 'cp' ),
+					'singular_name' => __( 'Course Category', 'cp' ),
+					'search_items' => __( 'Search Course Categories', 'cp' ),
+					'all_items' => __( 'All Course Categories', 'cp' ),
+					'edit_item' => __( 'Edit Course Categories', 'cp' ),
+					'update_item' => __( 'Update Course Category', 'cp' ),
+					'add_new_item' => __( 'Add New Course Category', 'cp' ),
+					'new_item_name' => __( 'New Course Category Name', 'cp' ),
+					'menu_name' => __( 'Course Category', 'cp' ),
 				),
-				'hierarchical'		 => true,
-				'sort'				 => true,
-				'args'				 => array( 'orderby' => 'term_order' ),
-				'rewrite'			 => array( 'slug' => $this->get_course_category_slug() ),
-				'show_admin_column'	 => true,
-				'capabilities'		 => array(
-					'manage_terms'	 => 'coursepress_course_categories_manage_terms_cap',
-					'edit_terms'	 => 'coursepress_course_categories_edit_terms_cap',
-					'delete_terms'	 => 'coursepress_course_categories_delete_terms_cap',
-					'assign_terms'	 => 'coursepress_courses_cap'
+				'hierarchical' => true,
+				'sort' => true,
+				'args' => array( 'orderby' => 'term_order' ),
+				'rewrite' => array( 'slug' => $this->get_course_category_slug() ),
+				'show_admin_column' => true,
+				'capabilities' => array(
+					'manage_terms' => 'coursepress_course_categories_manage_terms_cap',
+					'edit_terms' => 'coursepress_course_categories_edit_terms_cap',
+					'delete_terms' => 'coursepress_course_categories_delete_terms_cap',
+					'assign_terms' => 'coursepress_courses_cap'
 				),
 			)
 			) );
 			//add_theme_support( 'post-thumbnails' );
 			//Register Units post type
 			$args = array(
-				'labels'			 => array(
-					'name'				 => __( 'Units', 'cp' ),
-					'singular_name'		 => __( 'Unit', 'cp' ),
-					'add_new'			 => __( 'Create New', 'cp' ),
-					'add_new_item'		 => __( 'Create New Unit', 'cp' ),
-					'edit_item'			 => __( 'Edit Unit', 'cp' ),
-					'edit'				 => __( 'Edit', 'cp' ),
-					'new_item'			 => __( 'New Unit', 'cp' ),
-					'view_item'			 => __( 'View Unit', 'cp' ),
-					'search_items'		 => __( 'Search Units', 'cp' ),
-					'not_found'			 => __( 'No Units Found', 'cp' ),
+				'labels' => array(
+					'name' => __( 'Units', 'cp' ),
+					'singular_name' => __( 'Unit', 'cp' ),
+					'add_new' => __( 'Create New', 'cp' ),
+					'add_new_item' => __( 'Create New Unit', 'cp' ),
+					'edit_item' => __( 'Edit Unit', 'cp' ),
+					'edit' => __( 'Edit', 'cp' ),
+					'new_item' => __( 'New Unit', 'cp' ),
+					'view_item' => __( 'View Unit', 'cp' ),
+					'search_items' => __( 'Search Units', 'cp' ),
+					'not_found' => __( 'No Units Found', 'cp' ),
 					'not_found_in_trash' => __( 'No Units found in Trash', 'cp' ),
-					'view'				 => __( 'View Unit', 'cp' )
+					'view' => __( 'View Unit', 'cp' )
 				),
-				'public'			 => false,
-				'show_ui'			 => false,
+				'public' => false,
+				'show_ui' => false,
 				'publicly_queryable' => false,
-				'capability_type'	 => 'unit',
-				'map_meta_cap'		 => true,
-				'query_var'			 => true
+				'capability_type' => 'unit',
+				'map_meta_cap' => true,
+				'query_var' => true
 			);
 
 			register_post_type( 'unit', $args );
 
 			//Register Modules ( Unit Module ) post type
 			$args = array(
-				'labels'			 => array(
-					'name'				 => __( 'Modules', 'cp' ),
-					'singular_name'		 => __( 'Module', 'cp' ),
-					'add_new'			 => __( 'Create New', 'cp' ),
-					'add_new_item'		 => __( 'Create New Module', 'cp' ),
-					'edit_item'			 => __( 'Edit Module', 'cp' ),
-					'edit'				 => __( 'Edit', 'cp' ),
-					'new_item'			 => __( 'New Module', 'cp' ),
-					'view_item'			 => __( 'View Module', 'cp' ),
-					'search_items'		 => __( 'Search Modules', 'cp' ),
-					'not_found'			 => __( 'No Modules Found', 'cp' ),
+				'labels' => array(
+					'name' => __( 'Modules', 'cp' ),
+					'singular_name' => __( 'Module', 'cp' ),
+					'add_new' => __( 'Create New', 'cp' ),
+					'add_new_item' => __( 'Create New Module', 'cp' ),
+					'edit_item' => __( 'Edit Module', 'cp' ),
+					'edit' => __( 'Edit', 'cp' ),
+					'new_item' => __( 'New Module', 'cp' ),
+					'view_item' => __( 'View Module', 'cp' ),
+					'search_items' => __( 'Search Modules', 'cp' ),
+					'not_found' => __( 'No Modules Found', 'cp' ),
 					'not_found_in_trash' => __( 'No Modules found in Trash', 'cp' ),
-					'view'				 => __( 'View Module', 'cp' )
+					'view' => __( 'View Module', 'cp' )
 				),
-				'public'			 => false,
-				'show_ui'			 => false,
+				'public' => false,
+				'show_ui' => false,
 				'publicly_queryable' => false,
-				'capability_type'	 => 'module',
-				'map_meta_cap'		 => true,
-				'query_var'			 => true
+				'capability_type' => 'module',
+				'map_meta_cap' => true,
+				'query_var' => true
 			);
 
 			register_post_type( 'module', $args );
 
 			//Register Certificate Templates
 			$args = array(
-				'labels'			 => array(
-					'name'				 => __( 'Certificate Templates', 'cp' ),
-					'singular_name'		 => __( 'Certificate Template', 'cp' ),
-					'add_new'			 => __( 'Create New', 'cp' ),
-					'add_new_item'		 => __( 'Create New Template', 'cp' ),
-					'edit_item'			 => __( 'Edit Template', 'cp' ),
-					'edit'				 => __( 'Edit', 'cp' ),
-					'new_item'			 => __( 'New Template', 'cp' ),
-					'view_item'			 => __( 'View Template', 'cp' ),
-					'search_items'		 => __( 'Search Templates', 'cp' ),
-					'not_found'			 => __( 'No Templates Found', 'cp' ),
+				'labels' => array(
+					'name' => __( 'Certificate Templates', 'cp' ),
+					'singular_name' => __( 'Certificate Template', 'cp' ),
+					'add_new' => __( 'Create New', 'cp' ),
+					'add_new_item' => __( 'Create New Template', 'cp' ),
+					'edit_item' => __( 'Edit Template', 'cp' ),
+					'edit' => __( 'Edit', 'cp' ),
+					'new_item' => __( 'New Template', 'cp' ),
+					'view_item' => __( 'View Template', 'cp' ),
+					'search_items' => __( 'Search Templates', 'cp' ),
+					'not_found' => __( 'No Templates Found', 'cp' ),
 					'not_found_in_trash' => __( 'No Templates found in Trash', 'cp' ),
-					'view'				 => __( 'View Template', 'cp' )
+					'view' => __( 'View Template', 'cp' )
 				),
-				'public'			 => false,
-				'show_ui'			 => false,
+				'public' => false,
+				'show_ui' => false,
 				'publicly_queryable' => false,
-				'capability_type'	 => 'certificates',
-				'map_meta_cap'		 => true,
-				'query_var'			 => true
+				'capability_type' => 'certificates',
+				'map_meta_cap' => true,
+				'query_var' => true
 			);
 
 			register_post_type( 'certificates', $args );
 
 			//Register Modules Responses ( Unit Module Responses ) post type
 			$args = array(
-				'labels'			 => array(
-					'name'				 => __( 'Module Responses', 'cp' ),
-					'singular_name'		 => __( 'Module Response', 'cp' ),
-					'add_new'			 => __( 'Create New', 'cp' ),
-					'add_new_item'		 => __( 'Create New Response', 'cp' ),
-					'edit_item'			 => __( 'Edit Response', 'cp' ),
-					'edit'				 => __( 'Edit', 'cp' ),
-					'new_item'			 => __( 'New Response', 'cp' ),
-					'view_item'			 => __( 'View Response', 'cp' ),
-					'search_items'		 => __( 'Search Responses', 'cp' ),
-					'not_found'			 => __( 'No Module Responses Found', 'cp' ),
+				'labels' => array(
+					'name' => __( 'Module Responses', 'cp' ),
+					'singular_name' => __( 'Module Response', 'cp' ),
+					'add_new' => __( 'Create New', 'cp' ),
+					'add_new_item' => __( 'Create New Response', 'cp' ),
+					'edit_item' => __( 'Edit Response', 'cp' ),
+					'edit' => __( 'Edit', 'cp' ),
+					'new_item' => __( 'New Response', 'cp' ),
+					'view_item' => __( 'View Response', 'cp' ),
+					'search_items' => __( 'Search Responses', 'cp' ),
+					'not_found' => __( 'No Module Responses Found', 'cp' ),
 					'not_found_in_trash' => __( 'No Responses found in Trash', 'cp' ),
-					'view'				 => __( 'View Response', 'cp' )
+					'view' => __( 'View Response', 'cp' )
 				),
-				'public'			 => false,
-				'show_ui'			 => false,
+				'public' => false,
+				'show_ui' => false,
 				'publicly_queryable' => false,
-				'capability_type'	 => 'module_response',
-				'map_meta_cap'		 => true,
-				'query_var'			 => true
+				'capability_type' => 'module_response',
+				'map_meta_cap' => true,
+				'query_var' => true
 			);
 
 			register_post_type( 'module_response', $args );
 
 			//Register Notifications post type
 			$args = array(
-				'labels'			 => array(
-					'name'				 => __( 'Notifications', 'cp' ),
-					'singular_name'		 => __( 'Notification', 'cp' ),
-					'add_new'			 => __( 'Create New', 'cp' ),
-					'add_new_item'		 => __( 'Create New Notification', 'cp' ),
-					'edit_item'			 => __( 'Edit Notification', 'cp' ),
-					'edit'				 => __( 'Edit', 'cp' ),
-					'new_item'			 => __( 'New Notification', 'cp' ),
-					'view_item'			 => __( 'View Notification', 'cp' ),
-					'search_items'		 => __( 'Search Notifications', 'cp' ),
-					'not_found'			 => __( 'No Notifications Found', 'cp' ),
+				'labels' => array(
+					'name' => __( 'Notifications', 'cp' ),
+					'singular_name' => __( 'Notification', 'cp' ),
+					'add_new' => __( 'Create New', 'cp' ),
+					'add_new_item' => __( 'Create New Notification', 'cp' ),
+					'edit_item' => __( 'Edit Notification', 'cp' ),
+					'edit' => __( 'Edit', 'cp' ),
+					'new_item' => __( 'New Notification', 'cp' ),
+					'view_item' => __( 'View Notification', 'cp' ),
+					'search_items' => __( 'Search Notifications', 'cp' ),
+					'not_found' => __( 'No Notifications Found', 'cp' ),
 					'not_found_in_trash' => __( 'No Notifications found in Trash', 'cp' ),
-					'view'				 => __( 'View Notification', 'cp' )
+					'view' => __( 'View Notification', 'cp' )
 				),
-				'public'			 => false,
-				'show_ui'			 => false,
+				'public' => false,
+				'show_ui' => false,
 				'publicly_queryable' => false,
-				'capability_type'	 => 'notification',
-				'map_meta_cap'		 => true,
-				'query_var'			 => true,
-				'rewrite'			 => array( 'slug' => trailingslashit( $this->get_course_slug() ) . '%course%/' . $this->get_notifications_slug() )
+				'capability_type' => 'notification',
+				'map_meta_cap' => true,
+				'query_var' => true,
+				'rewrite' => array( 'slug' => trailingslashit( $this->get_course_slug() ) . '%course%/' . $this->get_notifications_slug() )
 			);
 
 			register_post_type( 'notifications', $args );
 
 			//Register Discussion post type
 			$args = array(
-				'labels'			 => array(
-					'name'				 => __( 'Discussions', 'cp' ),
-					'singular_name'		 => __( 'Discussions', 'cp' ),
-					'add_new'			 => __( 'Create New', 'cp' ),
-					'add_new_item'		 => __( 'Create New Discussion', 'cp' ),
-					'edit_item'			 => __( 'Edit Discussion', 'cp' ),
-					'edit'				 => __( 'Edit', 'cp' ),
-					'new_item'			 => __( 'New Discussion', 'cp' ),
-					'view_item'			 => __( 'View Discussion', 'cp' ),
-					'search_items'		 => __( 'Search Discussions', 'cp' ),
-					'not_found'			 => __( 'No Discussions Found', 'cp' ),
+				'labels' => array(
+					'name' => __( 'Discussions', 'cp' ),
+					'singular_name' => __( 'Discussions', 'cp' ),
+					'add_new' => __( 'Create New', 'cp' ),
+					'add_new_item' => __( 'Create New Discussion', 'cp' ),
+					'edit_item' => __( 'Edit Discussion', 'cp' ),
+					'edit' => __( 'Edit', 'cp' ),
+					'new_item' => __( 'New Discussion', 'cp' ),
+					'view_item' => __( 'View Discussion', 'cp' ),
+					'search_items' => __( 'Search Discussions', 'cp' ),
+					'not_found' => __( 'No Discussions Found', 'cp' ),
 					'not_found_in_trash' => __( 'No Discussions found in Trash', 'cp' ),
-					'view'				 => __( 'View Discussion', 'cp' )
+					'view' => __( 'View Discussion', 'cp' )
 				),
-				'public'			 => false,
+				'public' => false,
 				//'has_archive' => true,
-				'show_ui'			 => false,
+				'show_ui' => false,
 				'publicly_queryable' => true,
-				'capability_type'	 => 'post',
-				'map_meta_cap'		 => true,
-				'query_var'			 => true,
+				'capability_type' => 'post',
+				'map_meta_cap' => true,
+				'query_var' => true,
 			//'rewrite' => array( 'slug' => trailingslashit( $this->get_course_slug() ) . '%course%/' . $this->get_discussion_slug() )
 			);
 
@@ -3761,14 +3761,14 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$gateways = !empty( $gateways[ 'gateways' ][ 'allowed' ] ) ? true : false;
 			}
 
-			$ajax_response	 = array( 'has_gateway' => $gateways );
-			$ajax_status	 = 1;
+			$ajax_response = array( 'has_gateway' => $gateways );
+			$ajax_status = 1;
 
-			$response	 = array(
-				'what'	 => 'instructor_invite',
+			$response = array(
+				'what' => 'instructor_invite',
 				'action' => 'instructor_invite',
-				'id'	 => $ajax_status,
-				'data'	 => json_encode( $ajax_response ),
+				'id' => $ajax_status,
+				'data' => json_encode( $ajax_response ),
 			);
 			ob_end_clean();
 			ob_start();
@@ -3782,12 +3782,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 		 */
 		function autoupdate_course_settings() {
 
-			$user_id		 = (int) $_POST[ 'user_id' ];
-			$course_id		 = (int) $_POST[ 'course_id' ];
-			$nonce_check	 = wp_verify_nonce( $_POST[ 'course_nonce' ], 'auto-update-' . $course_id );
-			$cap			 = 0 == $course_id ? CoursePress_Capabilities::can_create_course( $user_id ) : CoursePress_Capabilities::can_update_course( $course_id, $user_id );
-			$doing_ajax		 = defined( 'DOING_AJAX' ) && DOING_AJAX ? true : false;
-			$ajax_response	 = array();
+			$user_id = (int) $_POST[ 'user_id' ];
+			$course_id = (int) $_POST[ 'course_id' ];
+			$nonce_check = wp_verify_nonce( $_POST[ 'course_nonce' ], 'auto-update-' . $course_id );
+			$cap = 0 == $course_id ? CoursePress_Capabilities::can_create_course( $user_id ) : CoursePress_Capabilities::can_update_course( $course_id, $user_id );
+			$doing_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX ? true : false;
+			$ajax_response = array();
 
 			if ( $nonce_check && $cap && $doing_ajax ) {
 
@@ -3822,17 +3822,17 @@ if ( !class_exists( 'CoursePress' ) ) {
 				}
 
 				if ( !empty( $user_id ) && 0 == $course_id ) {
-					$course->data[ 'uid' ]			 = $user_id;
-					$ajax_response[ 'instructor' ]	 = $user_id;
+					$course->data[ 'uid' ] = $user_id;
+					$ajax_response[ 'instructor' ] = $user_id;
 				}
 
-				$course_id		 = $course->update_course();
-				$mp_product_id	 = $course->mp_product_id();
+				$course_id = $course->update_course();
+				$mp_product_id = $course->mp_product_id();
 
-				$ajax_response[ 'success' ]			 = true;
-				$ajax_response[ 'course_id' ]		 = $course_id;
-				$ajax_response[ 'mp_product_id' ]	 = $mp_product_id;
-				$ajax_response[ 'nonce' ]			 = wp_create_nonce( 'auto-update-' . $course_id );
+				$ajax_response[ 'success' ] = true;
+				$ajax_response[ 'course_id' ] = $course_id;
+				$ajax_response[ 'mp_product_id' ] = $mp_product_id;
+				$ajax_response[ 'nonce' ] = wp_create_nonce( 'auto-update-' . $course_id );
 
 				if ( !empty( $_POST[ 'meta_course_setup_marker' ] ) && 'step-6' == $_POST[ 'meta_course_setup_marker' ] ) {
 					update_post_meta( $course_id, 'course_setup_complete', 'yes' );
@@ -3848,15 +3848,15 @@ if ( !class_exists( 'CoursePress' ) ) {
 				 */
 				do_action( 'coursepress_course_autoupdate_complete', $course_id, $user_id );
 			} else {
-				$ajax_response[ 'success' ]	 = false;
-				$ajax_response[ 'reason' ]	 = __( 'Invalid request. Security check failed.', 'cp' );
+				$ajax_response[ 'success' ] = false;
+				$ajax_response[ 'reason' ] = __( 'Invalid request. Security check failed.', 'cp' );
 			}
 
-			$response	 = array(
-				'what'	 => 'instructor_invite',
+			$response = array(
+				'what' => 'instructor_invite',
 				'action' => 'instructor_invite',
-				'id'	 => 1, // success status
-				'data'	 => json_encode( $ajax_response ),
+				'id' => 1, // success status
+				'data' => json_encode( $ajax_response ),
 			);
 			ob_end_clean();
 			ob_start();
@@ -3867,18 +3867,18 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		function change_course_state() {
 
-			$user_id		 = empty( $_POST[ 'user_id' ] ) ? get_current_user_id() : (int) $_POST[ 'user_id' ];
-			$course_id		 = (int) $_POST[ 'course_id' ];
-			$nonce_check	 = wp_verify_nonce( $_POST[ 'course_nonce' ], 'toggle-' . $course_id );
-			$cap			 = CoursePress_Capabilities::can_change_course_status( $course_id, $user_id );
-			$doing_ajax		 = defined( 'DOING_AJAX' ) && DOING_AJAX ? true : false;
-			$ajax_response	 = array();
+			$user_id = empty( $_POST[ 'user_id' ] ) ? get_current_user_id() : (int) $_POST[ 'user_id' ];
+			$course_id = (int) $_POST[ 'course_id' ];
+			$nonce_check = wp_verify_nonce( $_POST[ 'course_nonce' ], 'toggle-' . $course_id );
+			$cap = CoursePress_Capabilities::can_change_course_status( $course_id, $user_id );
+			$doing_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX ? true : false;
+			$ajax_response = array();
 
 			if ( $nonce_check && $cap && $doing_ajax ) {
-				$course						 = new Course( $course_id );
+				$course = new Course( $course_id );
 				$course->change_status( $_POST[ 'course_state' ] );
-				$ajax_response[ 'toggle' ]	 = true;
-				$ajax_response[ 'nonce' ]	 = wp_create_nonce( 'toggle-' . $course_id );
+				$ajax_response[ 'toggle' ] = true;
+				$ajax_response[ 'nonce' ] = wp_create_nonce( 'toggle-' . $course_id );
 
 				/**
 				 * Course status toggled.
@@ -3890,8 +3890,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 				 */
 				do_action( 'coursepress_course_status_changed', $course_id, $user_id );
 			} else {
-				$ajax_response[ 'toggle' ]	 = false;
-				$ajax_response[ 'reason' ]	 = __( 'Invalid request. Security check failed.', 'cp' );
+				$ajax_response[ 'toggle' ] = false;
+				$ajax_response[ 'reason' ] = __( 'Invalid request. Security check failed.', 'cp' );
 
 				/**
 				 * Course status not changed.
@@ -3904,11 +3904,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 				do_action( 'coursepress_course_status_change_fail', $course_id, $user_id );
 			}
 
-			$response	 = array(
-				'what'	 => 'instructor_invite',
+			$response = array(
+				'what' => 'instructor_invite',
 				'action' => 'instructor_invite',
-				'id'	 => 1, // success status
-				'data'	 => json_encode( $ajax_response ),
+				'id' => 1, // success status
+				'data' => json_encode( $ajax_response ),
 			);
 			ob_end_clean();
 			ob_start();
@@ -3919,20 +3919,20 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		function change_unit_state() {
 
-			$user_id		 = empty( $_POST[ 'user_id' ] ) ? get_current_user_id() : (int) $_POST[ 'user_id' ];
-			$course_id		 = (int) $_POST[ 'course_id' ];
-			$unit_id		 = (int) $_POST[ 'unit_id' ];
-			$nonce_check	 = wp_verify_nonce( $_POST[ 'unit_nonce' ], 'toggle-' . $unit_id );
-			$cap			 = CoursePress_Capabilities::can_change_course_unit_status( $course_id, $unit_id, $user_id );
-			$doing_ajax		 = defined( 'DOING_AJAX' ) && DOING_AJAX ? true : false;
-			$ajax_response	 = array();
+			$user_id = empty( $_POST[ 'user_id' ] ) ? get_current_user_id() : (int) $_POST[ 'user_id' ];
+			$course_id = (int) $_POST[ 'course_id' ];
+			$unit_id = (int) $_POST[ 'unit_id' ];
+			$nonce_check = wp_verify_nonce( $_POST[ 'unit_nonce' ], 'toggle-' . $unit_id );
+			$cap = CoursePress_Capabilities::can_change_course_unit_status( $course_id, $unit_id, $user_id );
+			$doing_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX ? true : false;
+			$ajax_response = array();
 
 			if ( $nonce_check && $cap && $doing_ajax ) {
 				$unit = new Unit( $unit_id );
 				$unit->change_status( $_POST[ 'unit_state' ] );
 
-				$ajax_response[ 'toggle' ]	 = true;
-				$ajax_response[ 'nonce' ]	 = wp_create_nonce( 'toggle-' . $unit_id );
+				$ajax_response[ 'toggle' ] = true;
+				$ajax_response[ 'nonce' ] = wp_create_nonce( 'toggle-' . $unit_id );
 
 				/**
 				 * Unit status toggled.
@@ -3945,8 +3945,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 				 */
 				do_action( 'coursepress_course_status_changed', $course_id, $unit_id, $user_id );
 			} else {
-				$ajax_response[ 'toggle' ]	 = false;
-				$ajax_response[ 'reason' ]	 = __( 'Invalid request. Security check failed.', 'cp' );
+				$ajax_response[ 'toggle' ] = false;
+				$ajax_response[ 'reason' ] = __( 'Invalid request. Security check failed.', 'cp' );
 
 				/**
 				 * Unit status toggled.
@@ -3960,11 +3960,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 				do_action( 'coursepress_course_status_change_fail', $course_id, $unit_id, $user_id );
 			}
 
-			$response	 = array(
-				'what'	 => 'instructor_invite',
+			$response = array(
+				'what' => 'instructor_invite',
 				'action' => 'instructor_invite',
-				'id'	 => 1, // success status
-				'data'	 => json_encode( $ajax_response ),
+				'id' => 1, // success status
+				'data' => json_encode( $ajax_response ),
 			);
 			ob_end_clean();
 			ob_start();
@@ -3975,14 +3975,14 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		function add_course_instructor() {
 
-			$instructor_id	 = (int) $_POST[ 'instructor_id' ];
-			$user_id		 = (int) $_POST[ 'user_id' ];
-			$course_id		 = (int) $_POST[ 'course_id' ];
-			$nonce_check	 = wp_verify_nonce( $_POST[ 'instructor_nonce' ], 'manage-instructors-' . $user_id );
+			$instructor_id = (int) $_POST[ 'instructor_id' ];
+			$user_id = (int) $_POST[ 'user_id' ];
+			$course_id = (int) $_POST[ 'course_id' ];
+			$nonce_check = wp_verify_nonce( $_POST[ 'instructor_nonce' ], 'manage-instructors-' . $user_id );
 			// Course creator should be able to assign self as instructor (or many other things will break)
-			$cap			 = CoursePress_Capabilities::can_assign_course_instructor( $course_id, $user_id ) ? true : $instructor_id == $user_id ? true : false;
-			$doing_ajax		 = defined( 'DOING_AJAX' ) && DOING_AJAX ? true : false;
-			$ajax_response	 = array();
+			$cap = CoursePress_Capabilities::can_assign_course_instructor( $course_id, $user_id ) ? true : $instructor_id == $user_id ? true : false;
+			$doing_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX ? true : false;
+			$ajax_response = array();
 
 			if ( $nonce_check && $cap && $doing_ajax ) {
 
@@ -4012,13 +4012,13 @@ if ( !class_exists( 'CoursePress' ) ) {
 					update_post_meta( $course_id, 'instructors', $instructors );
 					update_user_option( $instructor_id, 'course_' . $course_id, $course_id, $global_option );
 
-					$ajax_response[ 'instructors' ]		 = json_encode( $instructors );
+					$ajax_response[ 'instructors' ] = json_encode( $instructors );
 					$ajax_response[ 'instructor_added' ] = true;
 
 					$user_info = get_userdata( $instructor_id );
 
-					$ajax_response[ 'instructor_gravatar' ]	 = get_avatar( $instructor_id, 80, "", $user_info->display_name );
-					$ajax_response[ 'instructor_name' ]		 = $user_info->display_name;
+					$ajax_response[ 'instructor_gravatar' ] = get_avatar( $instructor_id, 80, "", $user_info->display_name );
+					$ajax_response[ 'instructor_name' ] = $user_info->display_name;
 
 					/**
 					 * Instructor added successfully to course.
@@ -4032,7 +4032,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 					do_action( 'coursepress_course_instructor_added', $course_id, $instructor_id );
 				} else {
 					$ajax_response[ 'instructor_added' ] = false;
-					$ajax_response[ 'reason' ]			 = __( 'Instructor already added.', 'cp' );
+					$ajax_response[ 'reason' ] = __( 'Instructor already added.', 'cp' );
 
 					/**
 					 * Instructor already exists in the course.
@@ -4049,7 +4049,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				// Nonce failed, User doesn't have the capability
 			} else {
 				$ajax_response[ 'instructor_added' ] = false;
-				$ajax_response[ 'reason' ]			 = __( 'Invalid request. Security check failed.', 'cp' );
+				$ajax_response[ 'reason' ] = __( 'Invalid request. Security check failed.', 'cp' );
 
 				/**
 				 * Failed to add an instructor to the course.
@@ -4063,11 +4063,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 				do_action( 'coursepress_course_instructor_not_added', $course_id, $instructor_id );
 			}
 
-			$response	 = array(
-				'what'	 => 'instructor_invite',
+			$response = array(
+				'what' => 'instructor_invite',
 				'action' => 'instructor_invite',
-				'id'	 => 1, // success status
-				'data'	 => json_encode( $ajax_response ),
+				'id' => 1, // success status
+				'data' => json_encode( $ajax_response ),
 			);
 			ob_end_clean();
 			ob_start();
@@ -4078,13 +4078,13 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		function remove_course_instructor() {
 
-			$instructor_id	 = (int) $_POST[ 'instructor_id' ];
-			$user_id		 = (int) $_POST[ 'user_id' ];
-			$course_id		 = (int) $_POST[ 'course_id' ];
-			$nonce_check	 = wp_verify_nonce( $_POST[ 'instructor_nonce' ], 'manage-instructors-' . $user_id );
-			$cap			 = CoursePress_Capabilities::can_assign_course_instructor( $course_id, $user_id );  // same capability as adding
-			$doing_ajax		 = defined( 'DOING_AJAX' ) && DOING_AJAX ? true : false;
-			$ajax_response	 = array();
+			$instructor_id = (int) $_POST[ 'instructor_id' ];
+			$user_id = (int) $_POST[ 'user_id' ];
+			$course_id = (int) $_POST[ 'course_id' ];
+			$nonce_check = wp_verify_nonce( $_POST[ 'instructor_nonce' ], 'manage-instructors-' . $user_id );
+			$cap = CoursePress_Capabilities::can_assign_course_instructor( $course_id, $user_id );  // same capability as adding
+			$doing_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX ? true : false;
+			$ajax_response = array();
 
 			if ( $nonce_check && $cap && $doing_ajax ) {
 
@@ -4133,8 +4133,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 				// Nonce failed, User doesn't have the capability
 			} else {
-				$ajax_response[ 'instructor_removed' ]	 = false;
-				$ajax_response[ 'reason' ]				 = __( 'Invalid request. Security check failed.', 'cp' );
+				$ajax_response[ 'instructor_removed' ] = false;
+				$ajax_response[ 'reason' ] = __( 'Invalid request. Security check failed.', 'cp' );
 
 				/**
 				 * Instructor has NOT been removed from course.
@@ -4149,10 +4149,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 			}
 
 			$response = array(
-				'what'	 => 'instructor_invite',
+				'what' => 'instructor_invite',
 				'action' => 'instructor_invite',
-				'id'	 => 1, // success status
-				'data'	 => json_encode( $ajax_response ),
+				'id' => 1, // success status
+				'data' => json_encode( $ajax_response ),
 			);
 
 			ob_end_clean();
@@ -4169,20 +4169,20 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 		function send_instructor_invite() {
 
-			$user_id		 = (int) $_POST[ 'user_id' ];
-			$course_id		 = (int) $_POST[ 'course_id' ];
-			$email			 = sanitize_email( $_POST[ 'email' ] );
-			$nonce_check	 = wp_verify_nonce( $_POST[ 'instructor_nonce' ], 'manage-instructors-' . $user_id );
-			$cap			 = CoursePress_Capabilities::can_assign_course_instructor( $course_id, $user_id );  // same capability as adding
-			$doing_ajax		 = defined( 'DOING_AJAX' ) && DOING_AJAX ? true : false;
-			$ajax_response	 = array();
+			$user_id = (int) $_POST[ 'user_id' ];
+			$course_id = (int) $_POST[ 'course_id' ];
+			$email = sanitize_email( $_POST[ 'email' ] );
+			$nonce_check = wp_verify_nonce( $_POST[ 'instructor_nonce' ], 'manage-instructors-' . $user_id );
+			$cap = CoursePress_Capabilities::can_assign_course_instructor( $course_id, $user_id );  // same capability as adding
+			$doing_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX ? true : false;
+			$ajax_response = array();
 
 			if ( $nonce_check && $cap && $doing_ajax ) {
 
-				$email_args[ 'email_type' ]			 = 'instructor_invitation';
-				$email_args[ 'first_name' ]			 = sanitize_text_field( $_POST[ 'first_name' ] );
-				$email_args[ 'last_name' ]			 = sanitize_text_field( $_POST[ 'last_name' ] );
-				$email_args[ 'instructor_email' ]	 = $email;
+				$email_args[ 'email_type' ] = 'instructor_invitation';
+				$email_args[ 'first_name' ] = sanitize_text_field( $_POST[ 'first_name' ] );
+				$email_args[ 'last_name' ] = sanitize_text_field( $_POST[ 'last_name' ] );
+				$email_args[ 'instructor_email' ] = $email;
 
 				$user = get_user_by( 'email', $email_args[ 'instructor_email' ] );
 				if ( $user ) {
@@ -4191,10 +4191,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 				$email_args[ 'course_id' ] = $course_id;
 
-				$ajax_status		 = 1; //success
+				$ajax_status = 1; //success
 				// Get the invite meta for this course and add the new invite
-				$invite_exists		 = false;
-				if ( $instructor_invites	 = get_post_meta( $email_args[ 'course_id' ], 'instructor_invites', true ) ) {
+				$invite_exists = false;
+				if ( $instructor_invites = get_post_meta( $email_args[ 'course_id' ], 'instructor_invites', true ) ) {
 					foreach ( $instructor_invites as $i ) {
 						$invite_exists = array_search( $email_args[ 'instructor_email' ], $i );
 					}
@@ -4205,7 +4205,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 				if ( !$invite_exists ) {
 
 					// Generate invite code.
-					$characters	 = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+					$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 					$invite_code = '';
 					for ( $i = 0; $i < 20; $i ++ ) {
 						$invite_code .= $characters[ rand( 0, strlen( $characters ) - 1 ) ];
@@ -4213,7 +4213,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 					// Save the invite in the course meta. Hash will be used for user authentication.
 					$email_args[ 'invite_code' ] = $invite_code;
-					$invite_hash				 = sha1( $email_args[ 'instructor_email' ] . $email_args[ 'invite_code' ] );
+					$invite_hash = sha1( $email_args[ 'instructor_email' ] . $email_args[ 'invite_code' ] );
 
 					$email_args[ 'invite_hash' ] = $invite_hash;
 
@@ -4221,10 +4221,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 						$invite = array(
 							'first_name' => $email_args[ 'first_name' ],
-							'last_name'	 => $email_args[ 'last_name' ],
-							'email'		 => $email_args[ 'instructor_email' ],
-							'code'		 => $email_args[ 'invite_code' ],
-							'hash'		 => $email_args[ 'invite_hash' ],
+							'last_name' => $email_args[ 'last_name' ],
+							'email' => $email_args[ 'instructor_email' ],
+							'code' => $email_args[ 'invite_code' ],
+							'hash' => $email_args[ 'invite_hash' ],
 						);
 
 						$instructor_invites[ $email_args[ 'invite_code' ] ] = $invite;
@@ -4239,8 +4239,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 							$ajax_response[ 'capability' ] = false;
 						}
 
-						$ajax_response[ 'data' ]	 = $invite;
-						$ajax_response[ 'content' ]	 = '<i class ="fa fa-check status status-success"></i> ' . __( 'Invitation successfully sent.', 'cp' );
+						$ajax_response[ 'data' ] = $invite;
+						$ajax_response[ 'content' ] = '<i class ="fa fa-check status status-success"></i> ' . __( 'Invitation successfully sent.', 'cp' );
 
 						/**
 						 * Instructor has been invited.
@@ -4253,8 +4253,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 						 */
 						do_action( 'coursepress_instructor_invite_sent', $course_id, $email );
 					} else {
-						$ajax_status				 = new WP_Error( 'mail_fail', __( 'Email failed to send.', 'cp' ) );
-						$ajax_response[ 'content' ]	 = '<i class ="fa fa-exclamation status status-fail"></i> ' . __( 'Email failed to send.', 'cp' );
+						$ajax_status = new WP_Error( 'mail_fail', __( 'Email failed to send.', 'cp' ) );
+						$ajax_response[ 'content' ] = '<i class ="fa fa-exclamation status status-fail"></i> ' . __( 'Email failed to send.', 'cp' );
 
 						/**
 						 * Instructor invite not sent.
@@ -4281,15 +4281,15 @@ if ( !class_exists( 'CoursePress' ) ) {
 					do_action( 'coursepress_instructor_invite_exists', $course_id, $email );
 				}
 			} else {
-				$ajax_status				 = new WP_Error( 'nonce_fail', __( 'Invalid request. Security check failed.', 'cp' ) );
-				$ajax_response[ 'content' ]	 = '<i class ="fa fa-exclamation status status-fail"></i> ' . __( 'Invalid request. Security check failed.', 'cp' );
+				$ajax_status = new WP_Error( 'nonce_fail', __( 'Invalid request. Security check failed.', 'cp' ) );
+				$ajax_response[ 'content' ] = '<i class ="fa fa-exclamation status status-fail"></i> ' . __( 'Invalid request. Security check failed.', 'cp' );
 			}
 
 			$response = array(
-				'what'	 => 'instructor_invite',
+				'what' => 'instructor_invite',
 				'action' => 'instructor_invite',
-				'id'	 => $ajax_status,
-				'data'	 => json_encode( $ajax_response ),
+				'id' => $ajax_status,
+				'data' => json_encode( $ajax_response ),
 			);
 
 			ob_end_clean();
@@ -4300,14 +4300,14 @@ if ( !class_exists( 'CoursePress' ) ) {
 		}
 
 		function remove_instructor_invite() {
-			$user_id		 = (int) $_POST[ 'user_id' ];
-			$course_id		 = (int) $_POST[ 'course_id' ];
-			$invite_code	 = sanitize_text_field( $_POST[ 'invite_code' ] );
-			$nonce_check	 = wp_verify_nonce( $_POST[ 'instructor_nonce' ], 'manage-instructors-' . $user_id );
-			$cap			 = CoursePress_Capabilities::can_assign_course_instructor( $course_id, $user_id );  // same capability as adding
-			$doing_ajax		 = defined( 'DOING_AJAX' ) && DOING_AJAX ? true : false;
-			$ajax_response	 = array();
-			$ajax_status	 = 1; //success
+			$user_id = (int) $_POST[ 'user_id' ];
+			$course_id = (int) $_POST[ 'course_id' ];
+			$invite_code = sanitize_text_field( $_POST[ 'invite_code' ] );
+			$nonce_check = wp_verify_nonce( $_POST[ 'instructor_nonce' ], 'manage-instructors-' . $user_id );
+			$cap = CoursePress_Capabilities::can_assign_course_instructor( $course_id, $user_id );  // same capability as adding
+			$doing_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX ? true : false;
+			$ajax_response = array();
+			$ajax_status = 1; //success
 
 			if ( $nonce_check && $cap && $doing_ajax ) {
 
@@ -4317,8 +4317,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 				update_post_meta( $course_id, 'instructor_invites', $instructor_invites );
 
-				$ajax_response[ 'invite_removed' ]	 = true;
-				$ajax_response[ 'content' ]			 = __( 'Instructor invitation cancelled.', 'cp' );
+				$ajax_response[ 'invite_removed' ] = true;
+				$ajax_response[ 'content' ] = __( 'Instructor invitation cancelled.', 'cp' );
 
 				/**
 				 * Instructor invite has been cancelled.
@@ -4331,8 +4331,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 				 */
 				do_action( 'coursepress_instructor_invite_cancelled', $course_id, $invite_code );
 			} else {
-				$ajax_response[ 'invite_removed' ]	 = false;
-				$ajax_response[ 'reason' ]			 = __( 'Invalid request. Security check failed.', 'cp' );
+				$ajax_response[ 'invite_removed' ] = false;
+				$ajax_response[ 'reason' ] = __( 'Invalid request. Security check failed.', 'cp' );
 				/**
 				 * Instructor invite has NOT been cancelled.
 				 *
@@ -4346,10 +4346,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 			}
 
 			$response = array(
-				'what'	 => 'remove_instructor_invite',
+				'what' => 'remove_instructor_invite',
 				'action' => 'remove_instructor_invite',
-				'id'	 => $ajax_status,
-				'data'	 => json_encode( $ajax_response ),
+				'id' => $ajax_status,
+				'data' => json_encode( $ajax_response ),
 			);
 
 			ob_end_clean();
@@ -4365,18 +4365,18 @@ if ( !class_exists( 'CoursePress' ) ) {
 			if ( ( isset( $_GET[ 'action' ] ) && 'course_invite' == $_GET[ 'action' ] ) ) {
 				$this->remove_pre_next_post();
 				// get_header();
-				$content	 = '';
-				$title		 = '';
-				$course_id	 = (int) $_GET[ 'course_id' ];
-				$user_id	 = get_current_user_id();
-				$invites	 = get_post_meta( $_GET[ 'course_id' ], 'instructor_invites', true );
+				$content = '';
+				$title = '';
+				$course_id = (int) $_GET[ 'course_id' ];
+				$user_id = get_current_user_id();
+				$invites = get_post_meta( $_GET[ 'course_id' ], 'instructor_invites', true );
 				$invite_keys = array_keys( $invites );
-				$valid_code	 = in_array( $_GET[ 'c' ], $invite_keys ) ? true : false;
+				$valid_code = in_array( $_GET[ 'c' ], $invite_keys ) ? true : false;
 
 				if ( is_user_logged_in() && $valid_code ) {
 
-					$current_user	 = wp_get_current_user();
-					$hash			 = sha1( $current_user->user_email . $_GET[ 'c' ] );
+					$current_user = wp_get_current_user();
+					$hash = sha1( $current_user->user_email . $_GET[ 'c' ] );
 
 					if ( $hash == $_GET[ 'h' ] ) {
 
@@ -4410,7 +4410,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 									$course_link = '<a href ="' . admin_url( 'admin.php?page = course_details&course_id =' . $course_id ) . '">' . get_the_title( $course_id ) . '</a>';
 
-									$title	 = __( '<h3>Invitation activated.</h3>', 'cp' );
+									$title = __( '<h3>Invitation activated.</h3>', 'cp' );
 									$content = do_shortcode( sprintf( __( '<p>Congratulations. You are now an instructor in the following course:</p>
 										<p>%s</p>
 									', 'cp' ), $course_link ) );
@@ -4430,7 +4430,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 							}
 						}
 					} else {
-						$title	 = __( '<h3>Invalid Invitation</h3>', 'cp' );
+						$title = __( '<h3>Invalid Invitation</h3>', 'cp' );
 						$content = do_shortcode( __( '
 							<p>This invitation link is not associated with your email address.</p>
 							<p>Please contact your course administator and ask them to send a new invitation to the email address that you have associated with your account.</p>
@@ -4451,7 +4451,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 					}
 				} else {
 					if ( !$valid_code ) {
-						$title	 = __( '<h3>Invitation not found.</h3>', 'cp' );
+						$title = __( '<h3>Invitation not found.</h3>', 'cp' );
 						$content = do_shortcode( __( '
 							<p>This invitation could not be found or is no longer available.</p>
 							<p>Please contact us if you believe this to be an error.</p>
@@ -4470,7 +4470,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 						 */
 						do_action( 'coursepress_instructor_invite_not_found', $course_id, $user_id );
 					} else {
-						$title	 = __( '<h3>Login Required</h3>', 'cp' );
+						$title = __( '<h3>Login Required</h3>', 'cp' );
 						$content = do_shortcode( __( '
 							<p>To accept your invitation request you will need to be logged in.</p>
 							<p>Please login with the account associated with this email.</p>
@@ -4483,35 +4483,35 @@ if ( !class_exists( 'CoursePress' ) ) {
 				}
 				// get_sidebar();
 				//                 get_footer();
-				$args	 = array(
-					'slug'			 => 'instructor_invite',
-					'title'			 => $title,
-					'content'		 => $content,
-					'type'			 => 'virtual_page',
-					'is_page'		 => true,
-					'is_singular'	 => true,
-					'is_archive'	 => false
+				$args = array(
+					'slug' => 'instructor_invite',
+					'title' => $title,
+					'content' => $content,
+					'type' => 'virtual_page',
+					'is_page' => true,
+					'is_singular' => true,
+					'is_archive' => false
 				);
-				$pg		 = new CoursePress_Virtual_Page( $args );
+				$pg = new CoursePress_Virtual_Page( $args );
 			}
 
 			return $pg;
 		}
 
 		function refresh_course_calendar() {
-			$ajax_response	 = array();
-			$ajax_status	 = 1; //success
+			$ajax_response = array();
+			$ajax_status = 1; //success
 
 			if ( !empty( $_POST[ 'date' ] ) && !empty( $_POST[ 'course_id' ] ) ) {
 
-				$date	 = getdate( strtotime( str_replace( '-', '/', $_POST[ 'date' ] ) ) );
-				$pre	 = !empty( $_POST[ 'pre_text' ] ) ? $_POST[ 'pre_text' ] : false;
-				$next	 = !empty( $_POST[ 'next_text' ] ) ? $_POST[ 'next_text' ] : false;
+				$date = getdate( strtotime( str_replace( '-', '/', $_POST[ 'date' ] ) ) );
+				$pre = !empty( $_POST[ 'pre_text' ] ) ? $_POST[ 'pre_text' ] : false;
+				$next = !empty( $_POST[ 'next_text' ] ) ? $_POST[ 'next_text' ] : false;
 
 				$calendar = new Course_Calendar( array(
-					'course_id'	 => $_POST[ 'course_id' ],
-					'month'		 => $date[ 'mon' ],
-					'year'		 => $date[ 'year' ]
+					'course_id' => $_POST[ 'course_id' ],
+					'month' => $date[ 'mon' ],
+					'year' => $date[ 'year' ]
 				) );
 
 				$html = '';
@@ -4524,11 +4524,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 				$ajax_response[ 'calendar' ] = $html;
 			}
 
-			$response	 = array(
-				'what'	 => 'refresh_course_calendar',
+			$response = array(
+				'what' => 'refresh_course_calendar',
 				'action' => 'refresh_course_calendar',
-				'id'	 => $ajax_status,
-				'data'	 => json_encode( $ajax_response ),
+				'id' => $ajax_status,
+				'data' => json_encode( $ajax_response ),
 			);
 			ob_end_clean();
 			ob_start();
@@ -4696,19 +4696,19 @@ if ( !class_exists( 'CoursePress' ) ) {
 			wp_enqueue_style( 'font_awesome', $this->plugin_url . 'css/font-awesome.css' );
 			wp_enqueue_script( 'enrollment_process', $this->plugin_url . 'js/front-enrollment-process.js', array( 'jquery' ), $this->version );
 			wp_localize_script( 'enrollment_process', 'cp_vars', array(
-				'admin_ajax_url'					 => cp_admin_ajax_url(),
-				'message_all_fields_are_required'	 => __( 'All fields are required.', 'cp' ),
-				'message_username_minimum_length'	 => __( 'Username must be at least 4 characters in length', 'cp' ),
-				'message_username_exists'			 => __( 'Username already exists or invalid. Please choose another one.', 'cp' ),
-				'message_email_exists'				 => __( 'E-mail already exists or invalid. Please choose another one.', 'cp' ),
-				'message_emails_dont_match'			 => __( "E-mails mismatch.", 'cp' ),
-				'message_passwords_dont_match'		 => __( "Passwords mismatch.", 'cp' ),
-				'message_password_minimum_length'	 => sprintf( __( 'Password must be at least %d characters in length.', 'cp' ), apply_filters( 'coursepress_min_password_length', 6 ) ),
-				'minimum_password_lenght'			 => apply_filters( 'coursepress_min_password_length', 6 ),
-				'message_login_error'				 => __( 'Username and/or password is not valid.', 'cp' ),
-				'message_passcode_invalid'			 => __( 'Passcode is not valid.', 'cp' ),
-				'message_tos_invalid'				 => __( 'You must agree to the Terms of Service in order to signup.', 'cp' ),
-				'debug'								 => 0, // Set to 1 for debugging enrollment scripts
+				'admin_ajax_url' => cp_admin_ajax_url(),
+				'message_all_fields_are_required' => __( 'All fields are required.', 'cp' ),
+				'message_username_minimum_length' => __( 'Username must be at least 4 characters in length', 'cp' ),
+				'message_username_exists' => __( 'Username already exists or invalid. Please choose another one.', 'cp' ),
+				'message_email_exists' => __( 'E-mail already exists or invalid. Please choose another one.', 'cp' ),
+				'message_emails_dont_match' => __( "E-mails mismatch.", 'cp' ),
+				'message_passwords_dont_match' => __( "Passwords mismatch.", 'cp' ),
+				'message_password_minimum_length' => sprintf( __( 'Password must be at least %d characters in length.', 'cp' ), apply_filters( 'coursepress_min_password_length', 6 ) ),
+				'minimum_password_lenght' => apply_filters( 'coursepress_min_password_length', 6 ),
+				'message_login_error' => __( 'Username and/or password is not valid.', 'cp' ),
+				'message_passcode_invalid' => __( 'Passcode is not valid.', 'cp' ),
+				'message_tos_invalid' => __( 'You must agree to the Terms of Service in order to signup.', 'cp' ),
+				'debug' => 0, // Set to 1 for debugging enrollment scripts
 			) );
 
 			wp_enqueue_script( 'coursepress_front', $this->plugin_url . 'js/coursepress-front.js', array( 'jquery' ), $this->version );
@@ -4717,12 +4717,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 			if ( $post && !$this->is_preview( $post->ID ) && !isset( $_GET[ 'try' ] ) ) {
 				wp_enqueue_script( 'coursepress_front_elements', $this->plugin_url . 'js/coursepress-front-elements.js', array( 'jquery' ), $this->version );
 			}
-			$course_id			 = do_shortcode( '[get_parent_course_id]' );
-			$units_archive_url	 = is_numeric( $course_id ) ? get_permalink( $course_id ) . trailingslashit( $this->get_units_slug() ) : '';
+			$course_id = do_shortcode( '[get_parent_course_id]' );
+			$units_archive_url = is_numeric( $course_id ) ? get_permalink( $course_id ) . trailingslashit( $this->get_units_slug() ) : '';
 
 			wp_localize_script( 'coursepress_front', 'front_vars', array(
-				'withdraw_alert'	 => __( 'Please confirm that you want to withdraw from the course. If you withdraw, you will no longer be able to see your records for this course.', 'cp' ),
-				'units_archive_url'	 => $units_archive_url
+				'withdraw_alert' => __( 'Please confirm that you want to withdraw from the course. If you withdraw, you will no longer be able to see your records for this course.', 'cp' ),
+				'units_archive_url' => $units_archive_url
 			) );
 
 			if ( !is_admin() ) {
@@ -4887,31 +4887,31 @@ if ( !class_exists( 'CoursePress' ) ) {
 				wp_enqueue_script( 'wplink' );
 
 				wp_localize_script( 'courses_bulk', 'coursepress', array(
-					'delete_instructor_alert'				 => __( 'Please confirm that you want to remove the instructor from this course?', 'cp' ),
-					'delete_pending_instructor_alert'		 => __( 'Please confirm that you want to cancel the invite. Instuctor will receive a warning when trying to activate.', 'cp' ),
-					'delete_course_alert'					 => __( 'Please confirm that you want to permanently delete the course, its units, unit elements and responses?', 'cp' ),
-					'delete_student_response_alert'			 => __( 'Please confirm that you want to permanently delete this student answer / reponse?', 'cp' ),
-					'delete_notification_alert'				 => __( 'Please confirm that you want to permanently delete the notification?', 'cp' ),
-					'delete_discussion_alert'				 => __( 'Please confirm that you want to permanently delete the discussion?', 'cp' ),
-					'withdraw_student_alert'				 => __( 'Please confirm that you want to withdraw student from this course. If you withdraw, you will no longer be able to see student\'s records for this course.', 'cp' ),
-					'delete_unit_alert'						 => __( 'Please confirm that you want to permanently delete the unit, its elements and responses?', 'cp' ),
-					'active_student_tab'					 => ( isset( $_REQUEST[ 'active_student_tab' ] ) ? $_REQUEST[ 'active_student_tab' ] : 0 ),
-					'delete_module_alert'					 => __( 'Please confirm that you want to permanently delete selected element and its responses?', 'cp' ),
-					'delete_unit_page_and_elements_alert'	 => __( 'Please confirm that you want to permanently delete this unit page, all its elements and student responses?', 'cp' ),
-					'remove_unit_page_and_elements_alert'	 => __( 'Please confirm that you want to remove this unit page and all its elements?', 'cp' ),
-					'remove_module_alert'					 => __( 'Please confirm that you want to remove selected element?', 'cp' ),
-					'delete_unit_page_label'				 => __( 'Delete unit page and all elements', 'cp' ),
-					'remove_row'							 => __( 'Remove', 'cp' ),
-					'empty_class_name'						 => __( 'Class name cannot be empty', 'cp' ),
-					'duplicated_class_name'					 => __( 'Class name already exists', 'cp' ),
-					'course_taxonomy_screen'				 => ( isset( $_GET[ 'taxonomy' ] ) && $_GET[ 'taxonomy' ] == 'course_category' ? true : false ),
-					'unit_page_num'							 => ( isset( $_GET[ 'unit_page_num' ] ) && $_GET[ 'unit_page_num' ] !== '' ? $_GET[ 'unit_page_num' ] : 1 ),
-					'allowed_video_extensions'				 => wp_get_video_extensions(),
-					'allowed_audio_extensions'				 => wp_get_audio_extensions(),
-					'allowed_image_extensions'				 => cp_wp_get_image_extensions(),
-					'start_of_week'							 => get_option( 'start_of_week', 0 ),
-					'unit_pagination'						 => $unit_pagination ? 1 : 0,
-					'admin_ajax_url'						 => cp_admin_ajax_url(),
+					'delete_instructor_alert' => __( 'Please confirm that you want to remove the instructor from this course?', 'cp' ),
+					'delete_pending_instructor_alert' => __( 'Please confirm that you want to cancel the invite. Instuctor will receive a warning when trying to activate.', 'cp' ),
+					'delete_course_alert' => __( 'Please confirm that you want to permanently delete the course, its units, unit elements and responses?', 'cp' ),
+					'delete_student_response_alert' => __( 'Please confirm that you want to permanently delete this student answer / reponse?', 'cp' ),
+					'delete_notification_alert' => __( 'Please confirm that you want to permanently delete the notification?', 'cp' ),
+					'delete_discussion_alert' => __( 'Please confirm that you want to permanently delete the discussion?', 'cp' ),
+					'withdraw_student_alert' => __( 'Please confirm that you want to withdraw student from this course. If you withdraw, you will no longer be able to see student\'s records for this course.', 'cp' ),
+					'delete_unit_alert' => __( 'Please confirm that you want to permanently delete the unit, its elements and responses?', 'cp' ),
+					'active_student_tab' => ( isset( $_REQUEST[ 'active_student_tab' ] ) ? $_REQUEST[ 'active_student_tab' ] : 0 ),
+					'delete_module_alert' => __( 'Please confirm that you want to permanently delete selected element and its responses?', 'cp' ),
+					'delete_unit_page_and_elements_alert' => __( 'Please confirm that you want to permanently delete this unit page, all its elements and student responses?', 'cp' ),
+					'remove_unit_page_and_elements_alert' => __( 'Please confirm that you want to remove this unit page and all its elements?', 'cp' ),
+					'remove_module_alert' => __( 'Please confirm that you want to remove selected element?', 'cp' ),
+					'delete_unit_page_label' => __( 'Delete unit page and all elements', 'cp' ),
+					'remove_row' => __( 'Remove', 'cp' ),
+					'empty_class_name' => __( 'Class name cannot be empty', 'cp' ),
+					'duplicated_class_name' => __( 'Class name already exists', 'cp' ),
+					'course_taxonomy_screen' => ( isset( $_GET[ 'taxonomy' ] ) && $_GET[ 'taxonomy' ] == 'course_category' ? true : false ),
+					'unit_page_num' => ( isset( $_GET[ 'unit_page_num' ] ) && $_GET[ 'unit_page_num' ] !== '' ? $_GET[ 'unit_page_num' ] : 1 ),
+					'allowed_video_extensions' => wp_get_video_extensions(),
+					'allowed_audio_extensions' => wp_get_audio_extensions(),
+					'allowed_image_extensions' => cp_wp_get_image_extensions(),
+					'start_of_week' => get_option( 'start_of_week', 0 ),
+					'unit_pagination' => $unit_pagination ? 1 : 0,
+					'admin_ajax_url' => cp_admin_ajax_url(),
 				) );
 
 				do_action( 'coursepress_editor_options' );
@@ -4928,27 +4928,27 @@ if ( !class_exists( 'CoursePress' ) ) {
 			}
 
 			wp_localize_script( 'courses-units', 'coursepress_units', array(
-				'withdraw_class_alert'			 => __( 'Please confirm that you want to withdraw all students from this class?', 'cp' ),
-				'delete_class'					 => __( 'Please confirm that you want to permanently delete the class? All students form this class will be moved to the Default class automatically.', 'cp' ),
-				'setup_gateway'					 => __( "You have selected 'This is a Paid Course'.\n In order to continue you must first setup a payment gateway by clicking on 'Setup Payment Gateways'", 'cp' ),
-				'unit_setup_prompt'				 => __( '<div>You have successfully completed your Basic Course Setup.</div><div>This can be changed anytime by clicking on "Course Overview".</div><div>Add and create <strong>Units</strong> for your course and add <strong>Students</strong>.</div><div>You must have at least <strong>one</strong> unit created to publish the course.</div>', 'cp' ),
-				'mp_activated_prompt'			 => __( '<div>Marketpress has been activated successfully.</div>', 'cp' ),
-				'required_course_name'			 => __( '<strong>Course Name</strong> is a required field.', 'cp' ),
-				'required_course_excerpt'		 => __( '<strong>Course Excerpt</strong> is a required field.', 'cp' ),
-				'required_course_description'	 => __( '<strong>Course Description</strong> is a required field.', 'cp' ),
-				'required_course_start'			 => __( '<strong>Course Start Date</strong> is a required field.', 'cp' ),
-				'required_course_end'			 => __( '<strong>Course Start Date</strong> is a required field when "This course has no end date" is <strong>not</strong> selected.', 'cp' ),
-				'required_enrollment_start'		 => __( '<strong>Enrollment Start Date</strong> is a required field when "Users can enroll anytime" is <strong>not</strong> selected.', 'cp' ),
-				'required_enrollment_end'		 => __( '<strong>Enrollment End Date</strong> is a required field when "Users can enroll anytime" is <strong>not</strong> selected.', 'cp' ),
-				'required_course_class_size'	 => __( 'Value can not be 0 if "Limit class size" is selected.', 'cp' ),
-				'required_course_passcode'		 => __( '<strong>Pass Code</strong> required when "Anyone with a pass code" is selected', 'cp' ),
-				'required_gateway'				 => __( '<strong>Payment Gateway</strong> needs to be setup before you can sell this course.', 'cp' ),
-				'required_price'				 => __( '<strong>Price</strong> is a required field when "This is a Paid Course" is selected.', 'cp' ),
-				'required_sale_price'			 => __( '<strong>Sale Price</strong> is a required field when "Enable Sale Price" is selected.', 'cp' ),
-				'section_error'					 => __( 'There is some information missing or incorrect. Please check your input and try again.', 'cp' ),
-				'cp_editor_style'				 => $this->plugin_url . 'css/editor_style_fix.css',
-				'unit_pagination'				 => $unit_pagination ? 1 : 0,
-				'admin_ajax_url'				 => cp_admin_ajax_url(),
+				'withdraw_class_alert' => __( 'Please confirm that you want to withdraw all students from this class?', 'cp' ),
+				'delete_class' => __( 'Please confirm that you want to permanently delete the class? All students form this class will be moved to the Default class automatically.', 'cp' ),
+				'setup_gateway' => __( "You have selected 'This is a Paid Course'.\n In order to continue you must first setup a payment gateway by clicking on 'Setup Payment Gateways'", 'cp' ),
+				'unit_setup_prompt' => __( '<div>You have successfully completed your Basic Course Setup.</div><div>This can be changed anytime by clicking on "Course Overview".</div><div>Add and create <strong>Units</strong> for your course and add <strong>Students</strong>.</div><div>You must have at least <strong>one</strong> unit created to publish the course.</div>', 'cp' ),
+				'mp_activated_prompt' => __( '<div>Marketpress has been activated successfully.</div>', 'cp' ),
+				'required_course_name' => __( '<strong>Course Name</strong> is a required field.', 'cp' ),
+				'required_course_excerpt' => __( '<strong>Course Excerpt</strong> is a required field.', 'cp' ),
+				'required_course_description' => __( '<strong>Course Description</strong> is a required field.', 'cp' ),
+				'required_course_start' => __( '<strong>Course Start Date</strong> is a required field.', 'cp' ),
+				'required_course_end' => __( '<strong>Course Start Date</strong> is a required field when "This course has no end date" is <strong>not</strong> selected.', 'cp' ),
+				'required_enrollment_start' => __( '<strong>Enrollment Start Date</strong> is a required field when "Users can enroll anytime" is <strong>not</strong> selected.', 'cp' ),
+				'required_enrollment_end' => __( '<strong>Enrollment End Date</strong> is a required field when "Users can enroll anytime" is <strong>not</strong> selected.', 'cp' ),
+				'required_course_class_size' => __( 'Value can not be 0 if "Limit class size" is selected.', 'cp' ),
+				'required_course_passcode' => __( '<strong>Pass Code</strong> required when "Anyone with a pass code" is selected', 'cp' ),
+				'required_gateway' => __( '<strong>Payment Gateway</strong> needs to be setup before you can sell this course.', 'cp' ),
+				'required_price' => __( '<strong>Price</strong> is a required field when "This is a Paid Course" is selected.', 'cp' ),
+				'required_sale_price' => __( '<strong>Sale Price</strong> is a required field when "Enable Sale Price" is selected.', 'cp' ),
+				'section_error' => __( 'There is some information missing or incorrect. Please check your input and try again.', 'cp' ),
+				'cp_editor_style' => $this->plugin_url . 'css/editor_style_fix.css',
+				'unit_pagination' => $unit_pagination ? 1 : 0,
+				'admin_ajax_url' => cp_admin_ajax_url(),
 			) );
 
 			wp_enqueue_style( 'jquery-ui-admin', $this->plugin_url . 'css/jquery-ui.css' );
@@ -4959,7 +4959,7 @@ if ( !class_exists( 'CoursePress' ) ) {
 		function admin_coursepress_page_settings() {
 			wp_enqueue_script( 'settings_groups', $this->plugin_url . 'js/admin-settings-groups.js', array(), $this->version );
 			wp_localize_script( 'settings_groups', 'group_settings', array(
-				'remove_string'		 => __( 'Remove', 'cp' ),
+				'remove_string' => __( 'Remove', 'cp' ),
 				'delete_group_alert' => __( 'Please confirm that you want to permanently delete the group?', 'cp' )
 			) );
 		}
@@ -5056,18 +5056,18 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			$multisite = false;
 			if ( is_multisite() && !is_subdomain_install() ) {
-				$blog_details	 = get_blog_details( get_current_blog_id() );
-				$multisite		 = true;
-				$site_uri		 = ltrim( $blog_details->path, '/' );
-				$match_uri		 = str_replace( $site_uri, '', $uri );
+				$blog_details = get_blog_details( get_current_blog_id() );
+				$multisite = true;
+				$site_uri = ltrim( $blog_details->path, '/' );
+				$match_uri = str_replace( $site_uri, '', $uri );
 			}
 
 
 			$args = array(
-				'name'			 => $uri,
-				'post_type'		 => 'page',
-				'post_status'	 => 'publish',
-				'numberposts'	 => 1
+				'name' => $uri,
+				'post_type' => 'page',
+				'post_status' => 'publish',
+				'numberposts' => 1
 			);
 
 			$last_redirect = get_transient( 'coursepress_last_redirect_' . get_current_blog_id() );
@@ -5091,10 +5091,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 				} else {
 
 					$args = array(
-						'slug'		 => $this->get_enrollment_process_slug(),
-						'title'		 => __( 'Enrollment', 'cp' ),
-						'content'	 => $this->get_template_details( $this->plugin_dir . 'includes/templates/enrollment-process.php' ),
-						'type'		 => 'virtual_page'
+						'slug' => $this->get_enrollment_process_slug(),
+						'title' => __( 'Enrollment', 'cp' ),
+						'content' => $this->get_template_details( $this->plugin_dir . 'includes/templates/enrollment-process.php' ),
+						'type' => 'virtual_page'
 					);
 
 					$pg = new CoursePress_Virtual_Page( $args );
@@ -5119,14 +5119,14 @@ if ( !class_exists( 'CoursePress' ) ) {
 					exit;
 				} else {
 
-					$args	 = array(
-						'slug'		 => $this->get_login_slug(),
-						'title'		 => __( 'Login', 'cp' ),
-						'content'	 => $this->get_template_details( $this->plugin_dir . 'includes/templates/student-login.php' ),
-						'type'		 => 'virtual_page',
-						'is_page'	 => true,
+					$args = array(
+						'slug' => $this->get_login_slug(),
+						'title' => __( 'Login', 'cp' ),
+						'content' => $this->get_template_details( $this->plugin_dir . 'includes/templates/student-login.php' ),
+						'type' => 'virtual_page',
+						'is_page' => true,
 					);
-					$pg		 = new CoursePress_Virtual_Page( $args );
+					$pg = new CoursePress_Virtual_Page( $args );
 				}
 				$this->set_latest_activity( get_current_user_id() );
 			}
@@ -5147,14 +5147,14 @@ if ( !class_exists( 'CoursePress' ) ) {
 					exit;
 				} else {
 
-					$args	 = array(
-						'slug'		 => $this->get_signup_slug(),
-						'title'		 => __( 'Sign Up', 'cp' ),
-						'content'	 => $this->get_template_details( $this->plugin_dir . 'includes/templates/student-signup.php' ),
-						'type'		 => 'virtual_page',
-						'is_page'	 => true,
+					$args = array(
+						'slug' => $this->get_signup_slug(),
+						'title' => __( 'Sign Up', 'cp' ),
+						'content' => $this->get_template_details( $this->plugin_dir . 'includes/templates/student-signup.php' ),
+						'type' => 'virtual_page',
+						'is_page' => true,
 					);
-					$pg		 = new CoursePress_Virtual_Page( $args );
+					$pg = new CoursePress_Virtual_Page( $args );
 				}
 				$this->set_latest_activity( get_current_user_id() );
 			}
@@ -5175,13 +5175,13 @@ if ( !class_exists( 'CoursePress' ) ) {
 					exit;
 				} else {
 
-					$args	 = array(
-						'slug'		 => $this->get_student_dashboard_slug(),
-						'title'		 => __( 'Dashboard - Courses', 'cp' ),
-						'content'	 => $this->get_template_details( $this->plugin_dir . 'includes/templates/student-dashboard.php' ),
-						'type'		 => 'virtual_page'
+					$args = array(
+						'slug' => $this->get_student_dashboard_slug(),
+						'title' => __( 'Dashboard - Courses', 'cp' ),
+						'content' => $this->get_template_details( $this->plugin_dir . 'includes/templates/student-dashboard.php' ),
+						'type' => 'virtual_page'
 					);
-					$pg		 = new CoursePress_Virtual_Page( $args );
+					$pg = new CoursePress_Virtual_Page( $args );
 				}
 				$this->set_latest_activity( get_current_user_id() );
 			}
@@ -5202,10 +5202,10 @@ if ( !class_exists( 'CoursePress' ) ) {
 				} else {
 
 					$args = array(
-						'slug'		 => $this->get_student_settings_slug(),
-						'title'		 => __( 'Dashboard - My Profile', 'cp' ),
-						'content'	 => $this->get_template_details( $this->plugin_dir . 'includes/templates/student-settings.php' ),
-						'type'		 => 'virtual_page'
+						'slug' => $this->get_student_settings_slug(),
+						'title' => __( 'Dashboard - My Profile', 'cp' ),
+						'content' => $this->get_template_details( $this->plugin_dir . 'includes/templates/student-settings.php' ),
+						'type' => 'virtual_page'
 					);
 
 					$pg = new CoursePress_Virtual_Page( $args );
@@ -5244,8 +5244,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 		function admin_nopermalink_warning() {
 			if ( current_user_can( 'manage_options' ) && !get_option( 'permalink_structure' ) ) {
 				// toplevel_page_courses
-				$screen			 = get_current_screen();
-				$show_warning	 = true;
+				$screen = get_current_screen();
+				$show_warning = true;
 
 				if ( 'toplevel_page_courses' == $screen->id && isset( $_GET[ 'quick_setup' ] ) ) {
 					$show_warning = false;
@@ -5265,9 +5265,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 			foreach ( $sorted_menu_items as $menu_item ) {
 				// LOGIN / LOGOUT
 				if ( CoursePress::instance()->get_login_slug( true ) == $menu_item->url && $is_in ) {
-					$menu_item->post_title	 = __( 'Log Out', 'cp' );
-					$menu_item->title		 = $menu_item->post_title;
-					$menu_item->url			 = wp_logout_url();
+					$menu_item->post_title = __( 'Log Out', 'cp' );
+					$menu_item->title = $menu_item->post_title;
+					$menu_item->url = wp_logout_url();
 				}
 
 				// Remove personalised items
@@ -5302,12 +5302,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 					$courses = new stdClass;
 
-					$courses->title				 = __( 'Courses', 'cp' );
-					$courses->description		 = '';
-					$courses->menu_item_parent	 = 0;
-					$courses->ID				 = 'cp-courses';
-					$courses->db_id				 = '';
-					$courses->url				 = $this->get_course_slug( true );
+					$courses->title = __( 'Courses', 'cp' );
+					$courses->description = '';
+					$courses->menu_item_parent = 0;
+					$courses->ID = 'cp-courses';
+					$courses->db_id = '';
+					$courses->url = $this->get_course_slug( true );
 					if ( cp_curPageURL() == $courses->url ) {
 						$courses->classes[] = 'current_page_item';
 					}
@@ -5318,29 +5318,29 @@ if ( !class_exists( 'CoursePress' ) ) {
 					if ( $is_in ) {
 						$dashboard = new stdClass;
 
-						$dashboard->title			 = __( 'Dashboard', 'cp' );
-						$dashboard->description		 = '';
+						$dashboard->title = __( 'Dashboard', 'cp' );
+						$dashboard->description = '';
 						$dashboard->menu_item_parent = 0;
-						$dashboard->ID				 = 'cp-dashboard';
-						$dashboard->db_id			 = - 9998;
-						$dashboard->url				 = $this->get_student_dashboard_slug( true );
-						$dashboard->classes[]		 = 'dropdown';
+						$dashboard->ID = 'cp-dashboard';
+						$dashboard->db_id = - 9998;
+						$dashboard->url = $this->get_student_dashboard_slug( true );
+						$dashboard->classes[] = 'dropdown';
 						/* if ( cp_curPageURL() == $dashboard->url ) {
 						  $dashboard->classes[] = 'current_page_item';
 						  } */
-						$sorted_menu_items[]		 = $dashboard;
+						$sorted_menu_items[] = $dashboard;
 
 
 						/* Student Dashboard > Courses page */
 
 						$dashboard_courses = new stdClass;
 
-						$dashboard_courses->title			 = __( 'My Courses', 'cp' );
-						$dashboard_courses->description		 = '';
+						$dashboard_courses->title = __( 'My Courses', 'cp' );
+						$dashboard_courses->description = '';
 						$dashboard_courses->menu_item_parent = - 9998;
-						$dashboard_courses->ID				 = 'cp-dashboard-courses';
-						$dashboard_courses->db_id			 = '';
-						$dashboard_courses->url				 = $this->get_student_dashboard_slug( true );
+						$dashboard_courses->ID = 'cp-dashboard-courses';
+						$dashboard_courses->db_id = '';
+						$dashboard_courses->url = $this->get_student_dashboard_slug( true );
 						if ( cp_curPageURL() == $dashboard_courses->url ) {
 							$dashboard_courses->classes[] = 'current_page_item';
 						}
@@ -5350,12 +5350,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 						$settings_profile = new stdClass;
 
-						$settings_profile->title			 = __( 'My Profile', 'cp' );
-						$settings_profile->description		 = '';
-						$settings_profile->menu_item_parent	 = - 9998;
-						$settings_profile->ID				 = 'cp-dashboard-settings';
-						$settings_profile->db_id			 = '';
-						$settings_profile->url				 = $this->get_student_settings_slug( true );
+						$settings_profile->title = __( 'My Profile', 'cp' );
+						$settings_profile->description = '';
+						$settings_profile->menu_item_parent = - 9998;
+						$settings_profile->ID = 'cp-dashboard-settings';
+						$settings_profile->db_id = '';
+						$settings_profile->url = $this->get_student_settings_slug( true );
 						if ( cp_curPageURL() == $settings_profile->url ) {
 							$settings_profile->classes[] = 'current_page_item';
 						}
@@ -5371,12 +5371,12 @@ if ( !class_exists( 'CoursePress' ) ) {
 							}
 							$settings_inbox = new stdClass;
 
-							$settings_inbox->title				 = __( 'Inbox', 'cp' ) . $unread_count;
-							$settings_inbox->description		 = '';
-							$settings_inbox->menu_item_parent	 = - 9998;
-							$settings_inbox->ID					 = 'cp-dashboard-inbox';
-							$settings_inbox->db_id				 = '';
-							$settings_inbox->url				 = $this->get_inbox_slug( true );
+							$settings_inbox->title = __( 'Inbox', 'cp' ) . $unread_count;
+							$settings_inbox->description = '';
+							$settings_inbox->menu_item_parent = - 9998;
+							$settings_inbox->ID = 'cp-dashboard-inbox';
+							$settings_inbox->db_id = '';
+							$settings_inbox->url = $this->get_inbox_slug( true );
 							if ( cp_curPageURL() == $settings_inbox->url ) {
 								$settings_profile->classes[] = 'current_page_item';
 							}
@@ -5405,11 +5405,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 					} else {
 						$login->title = __( 'Log In', 'cp' );
 					}
-					$login->description		 = '';
+					$login->description = '';
 					$login->menu_item_parent = 0;
-					$login->ID				 = 'cp-logout';
-					$login->db_id			 = '';
-					$login->url				 = $is_in ? wp_logout_url() : ( get_option( 'use_custom_login_form', 1 ) ? $this->get_login_slug( true ) : wp_login_url() );
+					$login->ID = 'cp-logout';
+					$login->db_id = '';
+					$login->url = $is_in ? wp_logout_url() : ( get_option( 'use_custom_login_form', 1 ) ? $this->get_login_slug( true ) : wp_login_url() );
 
 					$sorted_menu_items[] = $login;
 				}
@@ -5425,11 +5425,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 				$courses = new stdClass;
 
-				$courses->title				 = __( 'Courses', 'cp' );
-				$courses->menu_item_parent	 = 0;
-				$courses->ID				 = 'cp-courses';
-				$courses->db_id				 = '';
-				$courses->url				 = $this->get_course_slug( true );
+				$courses->title = __( 'Courses', 'cp' );
+				$courses->menu_item_parent = 0;
+				$courses->ID = 'cp-courses';
+				$courses->db_id = '';
+				$courses->url = $this->get_course_slug( true );
 				if ( cp_curPageURL() == $courses->url ) {
 					$courses->classes[] = 'current_page_item';
 				}
@@ -5440,24 +5440,24 @@ if ( !class_exists( 'CoursePress' ) ) {
 				if ( $is_in ) {
 					$dashboard = new stdClass;
 
-					$dashboard->title			 = __( 'Dashboard', 'cp' );
+					$dashboard->title = __( 'Dashboard', 'cp' );
 					$dashboard->menu_item_parent = 0;
-					$dashboard->ID				 = 'cp-dashboard';
-					$dashboard->db_id			 = - 9998;
-					$dashboard->url				 = $this->get_student_dashboard_slug( true );
+					$dashboard->ID = 'cp-dashboard';
+					$dashboard->db_id = - 9998;
+					$dashboard->url = $this->get_student_dashboard_slug( true );
 					/* if ( cp_curPageURL() == $dashboard->url ) {
 					  $dashboard->classes[] = 'current_page_item';
 					  } */
-					$main_sorted_menu_items[]	 = $dashboard;
+					$main_sorted_menu_items[] = $dashboard;
 
 					/* Student Dashboard > Courses page */
 
-					$dashboard_courses					 = new stdClass;
-					$dashboard_courses->title			 = __( 'My Courses', 'cp' );
+					$dashboard_courses = new stdClass;
+					$dashboard_courses->title = __( 'My Courses', 'cp' );
 					$dashboard_courses->menu_item_parent = - 9998;
-					$dashboard_courses->ID				 = 'cp-dashboard-courses';
-					$dashboard_courses->db_id			 = '';
-					$dashboard_courses->url				 = $this->get_student_dashboard_slug( true );
+					$dashboard_courses->ID = 'cp-dashboard-courses';
+					$dashboard_courses->db_id = '';
+					$dashboard_courses->url = $this->get_student_dashboard_slug( true );
 					if ( cp_curPageURL() == $dashboard_courses->url ) {
 						$dashboard_courses->classes[] = 'current_page_item';
 					}
@@ -5468,11 +5468,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 					$settings_profile = new stdClass;
 
-					$settings_profile->title			 = __( 'My Profile', 'cp' );
-					$settings_profile->menu_item_parent	 = - 9998;
-					$settings_profile->ID				 = 'cp-dashboard-settings';
-					$settings_profile->db_id			 = '';
-					$settings_profile->url				 = $this->get_student_settings_slug( true );
+					$settings_profile->title = __( 'My Profile', 'cp' );
+					$settings_profile->menu_item_parent = - 9998;
+					$settings_profile->ID = 'cp-dashboard-settings';
+					$settings_profile->db_id = '';
+					$settings_profile->url = $this->get_student_settings_slug( true );
 					if ( cp_curPageURL() == $settings_profile->url ) {
 						$settings_profile->classes[] = 'current_page_item';
 					}
@@ -5489,11 +5489,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 						$settings_inbox = new stdClass;
 
-						$settings_inbox->title				 = __( 'Inbox', 'cp' ) . $unread_count;
-						$settings_inbox->menu_item_parent	 = - 9998;
-						$settings_inbox->ID					 = 'cp-dashboard-inbox';
-						$settings_inbox->db_id				 = '';
-						$settings_inbox->url				 = $this->get_inbox_slug( true );
+						$settings_inbox->title = __( 'Inbox', 'cp' ) . $unread_count;
+						$settings_inbox->menu_item_parent = - 9998;
+						$settings_inbox->ID = 'cp-dashboard-inbox';
+						$settings_inbox->db_id = '';
+						$settings_inbox->url = $this->get_inbox_slug( true );
 						if ( cp_curPageURL() == $settings_inbox->url ) {
 							$settings_profile->classes[] = 'current_page_item';
 						}
@@ -5524,9 +5524,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 				}
 
 				$login->menu_item_parent = 0;
-				$login->ID				 = 'cp-logout';
-				$login->db_id			 = '';
-				$login->url				 = $is_in ? wp_logout_url() : ( get_option( 'use_custom_login_form', 1 ) ? $this->get_login_slug( true ) : wp_login_url() );
+				$login->ID = 'cp-logout';
+				$login->db_id = '';
+				$login->url = $is_in ? wp_logout_url() : ( get_option( 'use_custom_login_form', 1 ) ? $this->get_login_slug( true ) : wp_login_url() );
 
 				$main_sorted_menu_items[] = $login;
 				?>
@@ -5566,11 +5566,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 				$courses = new stdClass;
 
-				$courses->title				 = __( 'Courses', 'cp' );
-				$courses->menu_item_parent	 = 0;
-				$courses->ID				 = 'cp-courses-mobile';
-				$courses->db_id				 = '';
-				$courses->url				 = $this->get_course_slug( true );
+				$courses->title = __( 'Courses', 'cp' );
+				$courses->menu_item_parent = 0;
+				$courses->ID = 'cp-courses-mobile';
+				$courses->db_id = '';
+				$courses->url = $this->get_course_slug( true );
 				if ( cp_curPageURL() == $courses->url ) {
 					$courses->classes[] = 'current_page_item';
 				}
@@ -5581,22 +5581,22 @@ if ( !class_exists( 'CoursePress' ) ) {
 				if ( $is_in ) {
 					$dashboard = new stdClass;
 
-					$dashboard->title			 = __( 'Dashboard', 'cp' );
+					$dashboard->title = __( 'Dashboard', 'cp' );
 					$dashboard->menu_item_parent = 0;
-					$dashboard->ID				 = 'cp-dashboard-mobile';
-					$dashboard->db_id			 = - 9998;
-					$dashboard->url				 = $this->get_student_dashboard_slug( true );
+					$dashboard->ID = 'cp-dashboard-mobile';
+					$dashboard->db_id = - 9998;
+					$dashboard->url = $this->get_student_dashboard_slug( true );
 
 					$main_sorted_menu_items[] = $dashboard;
 
 					/* Student Dashboard > Courses page */
 
-					$dashboard_courses					 = new stdClass;
-					$dashboard_courses->title			 = __( 'My Courses', 'cp' );
+					$dashboard_courses = new stdClass;
+					$dashboard_courses->title = __( 'My Courses', 'cp' );
 					$dashboard_courses->menu_item_parent = - 9998;
-					$dashboard_courses->ID				 = 'cp-dashboard-courses-mobile';
-					$dashboard_courses->db_id			 = '';
-					$dashboard_courses->url				 = $this->get_student_dashboard_slug( true );
+					$dashboard_courses->ID = 'cp-dashboard-courses-mobile';
+					$dashboard_courses->db_id = '';
+					$dashboard_courses->url = $this->get_student_dashboard_slug( true );
 					if ( cp_curPageURL() == $dashboard_courses->url ) {
 						$dashboard_courses->classes[] = 'current_page_item';
 					}
@@ -5606,11 +5606,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 					$settings_profile = new stdClass;
 
-					$settings_profile->title			 = __( 'My Profile', 'cp' );
-					$settings_profile->menu_item_parent	 = - 9998;
-					$settings_profile->ID				 = 'cp-dashboard-settings-mobile';
-					$settings_profile->db_id			 = '';
-					$settings_profile->url				 = $this->get_student_settings_slug( true );
+					$settings_profile->title = __( 'My Profile', 'cp' );
+					$settings_profile->menu_item_parent = - 9998;
+					$settings_profile->ID = 'cp-dashboard-settings-mobile';
+					$settings_profile->db_id = '';
+					$settings_profile->url = $this->get_student_settings_slug( true );
 					if ( cp_curPageURL() == $settings_profile->url ) {
 						$settings_profile->classes[] = 'current_page_item';
 					}
@@ -5627,9 +5627,9 @@ if ( !class_exists( 'CoursePress' ) ) {
 				}
 
 				$login->menu_item_parent = 0;
-				$login->ID				 = 'cp-logout-mobile';
-				$login->db_id			 = '';
-				$login->url				 = $is_in ? wp_logout_url() : ( get_option( 'use_custom_login_form', 1 ) ? $this->get_login_slug( true ) : wp_login_url() );
+				$login->ID = 'cp-logout-mobile';
+				$login->db_id = '';
+				$login->url = $is_in ? wp_logout_url() : ( get_option( 'use_custom_login_form', 1 ) ? $this->get_login_slug( true ) : wp_login_url() );
 
 				$main_sorted_menu_items[] = $login;
 				?>
@@ -5671,8 +5671,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 					if ( current_user_can( 'manage_options' ) ) {
 						return admin_url();
 					} else {
-						$role_s	 = get_user_option( 'role', $user->ID );
-						$role_i	 = get_user_option( 'role_ins', $user->ID );
+						$role_s = get_user_option( 'role', $user->ID );
+						$role_i = get_user_option( 'role_ins', $user->ID );
 
 						if ( $role_i == 'instructor' ) {
 							return admin_url();
@@ -5712,8 +5712,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 			if ( get_post_type( $post->ID ) == 'discussions' ) {
 				$course_id = get_post_meta( $post->ID, 'course_id', true );
 				if ( !empty( $course_id ) ) {
-					$course_obj	 = new Course( $course_id );
-					$course		 = $course_obj->get_course();
+					$course_obj = new Course( $course_id );
+					$course = $course_obj->get_course();
 
 					return str_replace( '%course%', $course->post_name, $permalink );
 				} else {
@@ -5722,8 +5722,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 			} else if ( get_post_type( $post->ID ) == 'notifications' ) {
 				$course_id = get_post_meta( $post->ID, 'course_id', true );
 				if ( !empty( $course_id ) ) {
-					$course_obj	 = new Course( $course_id );
-					$course		 = $course_obj->get_course();
+					$course_obj = new Course( $course_id );
+					$course = $course_obj->get_course();
 
 					return str_replace( '%course%', $course->post_name, $permalink );
 				} else {
@@ -5747,8 +5747,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 			if ( empty( $user_id ) ) {
 				exit;
 			}
-			$latest_user_activity	 = get_user_meta( $user_id, 'latest_activity', true );
-			$current_time			 = current_time( 'timestamp' );
+			$latest_user_activity = get_user_meta( $user_id, 'latest_activity', true );
+			$current_time = current_time( 'timestamp' );
 
 			$minutes_ago = round( abs( $current_time - $latest_user_activity ) / 60, 2 );
 
@@ -5876,8 +5876,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 		/* Listen for WooCommerce purchase status changes */
 
 		function woo_listen_for_paid_status_for_courses( $order_id ) {
-			$wc_order	 = wc_get_order( $order_id );
-			$items		 = $wc_order->get_items();
+			$wc_order = wc_get_order( $order_id );
+			$items = $wc_order->get_items();
 
 			$post_customer_id = get_post_meta( $order_id, '_customer_user', true );
 
@@ -5898,8 +5898,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 
 			if ( in_array( $order->post_status, $allowed_mp_statuses ) ) {
 
-				$products	 = array_keys( $order->mp_cart_info );
-				$student	 = new Student( $order->post_author );
+				$products = array_keys( $order->mp_cart_info );
+				$student = new Student( $order->post_author );
 
 				foreach ( $products as $product_id ) {
 					$course_id = Course::get_course_id_by_marketpress_product_id( $product_id );
@@ -5913,8 +5913,8 @@ if ( !class_exists( 'CoursePress' ) ) {
 		function listen_for_paid_status_changes_for_courses( $order ) {
 			global $mp;
 
-			$products	 = array_keys( $order->mp_cart_info );
-			$student	 = new Student( $order->post_author );
+			$products = array_keys( $order->mp_cart_info );
+			$student = new Student( $order->post_author );
 
 			foreach ( $products as $product_id ) {
 				$course_id = Course::get_course_id_by_marketpress_product_id( $product_id );
@@ -5962,11 +5962,11 @@ if ( !class_exists( 'CoursePress' ) ) {
 			//			$pdf->setLanguageArray( $l );
 			// ---------------------------------------------------------
 			// set font
-			$reports_font	 = get_option( 'reports_font', 'helvetica' );
+			$reports_font = get_option( 'reports_font', 'helvetica' );
 			$pdf->SetFont( $reports_font, '', apply_filters( 'cp_report_font_size', 12 ) );
 			// add a page
 			$pdf->AddPage();
-			$html			 = '';
+			$html = '';
 			$html .= make_clickable( wpautop( $report ) );
 			// output the HTML content
 			$pdf->writeHTML( $html, true, false, true, false, '' );

@@ -18,34 +18,34 @@ class CoursePress_Data_Course {
 		return array(
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
-				'labels'              => array(
-					'name'               => __( 'Courses', CoursePress::TD ),
-					'singular_name'      => __( 'Course', CoursePress::TD ),
-					'add_new'            => __( 'Create New', CoursePress::TD ),
-					'add_new_item'       => __( 'Create New Course', CoursePress::TD ),
-					'edit_item'          => __( 'Edit Course', CoursePress::TD ),
-					'edit'               => __( 'Edit', CoursePress::TD ),
-					'new_item'           => __( 'New Course', CoursePress::TD ),
-					'view_item'          => __( 'View Course', CoursePress::TD ),
-					'search_items'       => __( 'Search Courses', CoursePress::TD ),
-					'not_found'          => __( 'No Courses Found', CoursePress::TD ),
+				'labels' => array(
+					'name' => __( 'Courses', CoursePress::TD ),
+					'singular_name' => __( 'Course', CoursePress::TD ),
+					'add_new' => __( 'Create New', CoursePress::TD ),
+					'add_new_item' => __( 'Create New Course', CoursePress::TD ),
+					'edit_item' => __( 'Edit Course', CoursePress::TD ),
+					'edit' => __( 'Edit', CoursePress::TD ),
+					'new_item' => __( 'New Course', CoursePress::TD ),
+					'view_item' => __( 'View Course', CoursePress::TD ),
+					'search_items' => __( 'Search Courses', CoursePress::TD ),
+					'not_found' => __( 'No Courses Found', CoursePress::TD ),
 					'not_found_in_trash' => __( 'No Courses found in Trash', CoursePress::TD ),
-					'view'               => __( 'View Course', CoursePress::TD ),
+					'view' => __( 'View Course', CoursePress::TD ),
 				),
-				'public'              => false,
+				'public' => false,
 				'exclude_from_search' => false,
-				'has_archive'         => true,
-				'show_ui'             => false,
-				'publicly_queryable'  => true,
-				'capability_type'     => 'course',
-				'map_meta_cap'        => true,
-				'query_var'           => true,
-				'rewrite'             => array(
-					'slug'       => CoursePress_Core::get_slug( 'course' ),
+				'has_archive' => true,
+				'show_ui' => false,
+				'publicly_queryable' => true,
+				'capability_type' => 'course',
+				'map_meta_cap' => true,
+				'query_var' => true,
+				'rewrite' => array(
+					'slug' => CoursePress_Core::get_slug( 'course' ),
 					'with_front' => false,
 				),
-				'supports'            => array( 'thumbnail' ),
-				'taxonomies'          => array( 'course_category' ),
+				'supports' => array( 'thumbnail' ),
+				'taxonomies' => array( 'course_category' ),
 			),
 		);
 
@@ -57,27 +57,27 @@ class CoursePress_Data_Course {
 
 		return array(
 			'taxonomy_type' => self::$post_taxonomy,
-			'post_type'     => $prefix . self::$post_type,
+			'post_type' => $prefix . self::$post_type,
 			'taxonomy_args' => apply_filters( 'coursepress_register_course_category', array(
-					'labels'            => array(
-						'name'          => __( 'Course Categories', CoursePress::TD ),
+					'labels' => array(
+						'name' => __( 'Course Categories', CoursePress::TD ),
 						'singular_name' => __( 'Course Category', CoursePress::TD ),
-						'search_items'  => __( 'Search Course Categories', CoursePress::TD ),
-						'all_items'     => __( 'All Course Categories', CoursePress::TD ),
-						'edit_item'     => __( 'Edit Course Categories', CoursePress::TD ),
-						'update_item'   => __( 'Update Course Category', CoursePress::TD ),
-						'add_new_item'  => __( 'Add New Course Category', CoursePress::TD ),
+						'search_items' => __( 'Search Course Categories', CoursePress::TD ),
+						'all_items' => __( 'All Course Categories', CoursePress::TD ),
+						'edit_item' => __( 'Edit Course Categories', CoursePress::TD ),
+						'update_item' => __( 'Update Course Category', CoursePress::TD ),
+						'add_new_item' => __( 'Add New Course Category', CoursePress::TD ),
 						'new_item_name' => __( 'New Course Category Name', CoursePress::TD ),
-						'menu_name'     => __( 'Course Category', CoursePress::TD ),
+						'menu_name' => __( 'Course Category', CoursePress::TD ),
 					),
-					'hierarchical'      => true,
-					'sort'              => true,
-					'args'              => array( 'orderby' => 'term_order' ),
-					'rewrite'           => array( 'slug' => CoursePress_Core::get_setting( 'slugs/category', 'course_category' ) ),
+					'hierarchical' => true,
+					'sort' => true,
+					'args' => array( 'orderby' => 'term_order' ),
+					'rewrite' => array( 'slug' => CoursePress_Core::get_setting( 'slugs/category', 'course_category' ) ),
 					'show_admin_column' => true,
-					'capabilities'      => array(
+					'capabilities' => array(
 						'manage_terms' => 'coursepress_course_categories_manage_terms_cap',
-						'edit_terms'   => 'coursepress_course_categories_edit_terms_cap',
+						'edit_terms' => 'coursepress_course_categories_edit_terms_cap',
 						'delete_terms' => 'coursepress_course_categories_delete_terms_cap',
 						'assign_terms' => 'coursepress_courses_cap',
 					),
@@ -100,19 +100,19 @@ class CoursePress_Data_Course {
 
 	public static function get_default_messages( $key = '' ) {
 		return apply_filters( 'coursepress_course_messages', array(
-			'ca'  => __( 'New Course added successfully!', CoursePress::TD ),
-			'cu'  => __( 'Course updated successfully.', CoursePress::TD ),
+			'ca' => __( 'New Course added successfully!', CoursePress::TD ),
+			'cu' => __( 'Course updated successfully.', CoursePress::TD ),
 			'usc' => __( 'Unit status changed successfully', CoursePress::TD ),
-			'ud'  => __( 'Unit deleted successfully', CoursePress::TD ),
-			'ua'  => __( 'New Unit added successfully!', CoursePress::TD ),
-			'uu'  => __( 'Unit updated successfully.', CoursePress::TD ),
-			'as'  => __( 'Student added to the class successfully.', CoursePress::TD ),
-			'ac'  => __( 'New class has been added successfully.', CoursePress::TD ),
-			'dc'  => __( 'Selected class has been deleted successfully.', CoursePress::TD ),
-			'us'  => __( 'Selected student has been withdrawed successfully from the course.', CoursePress::TD ),
+			'ud' => __( 'Unit deleted successfully', CoursePress::TD ),
+			'ua' => __( 'New Unit added successfully!', CoursePress::TD ),
+			'uu' => __( 'Unit updated successfully.', CoursePress::TD ),
+			'as' => __( 'Student added to the class successfully.', CoursePress::TD ),
+			'ac' => __( 'New class has been added successfully.', CoursePress::TD ),
+			'dc' => __( 'Selected class has been deleted successfully.', CoursePress::TD ),
+			'us' => __( 'Selected student has been withdrawed successfully from the course.', CoursePress::TD ),
 			'usl' => __( 'Selected students has been withdrawed successfully from the course.', CoursePress::TD ),
-			'is'  => __( 'Invitation sent sucessfully.', CoursePress::TD ),
-			'ia'  => __( 'Successfully added as instructor.', CoursePress::TD ),
+			'is' => __( 'Invitation sent sucessfully.', CoursePress::TD ),
+			'ia' => __( 'Successfully added as instructor.', CoursePress::TD ),
 		), $key );
 	}
 
@@ -131,14 +131,14 @@ class CoursePress_Data_Course {
 		$post = array(
 			'post_author' => $course ? $course->post_author : $user_id,
 			'post_status' => $course ? $course->post_status : 'private',
-			'post_type'   => self::get_post_type_name( true ),
+			'post_type' => self::get_post_type_name( true ),
 		);
 
 		// Make sure we get existing settings if not all data is being submitted
 		if ( ! $new_course ) {
 			$post['post_excerpt'] = $course && isset( $data->course_excerpt ) ? CoursePress_Helper_Utility::filter_content( $data->course_excerpt ) : $course->post_excerpt;
 			$post['post_content'] = $course && isset( $data->course_description ) ? CoursePress_Helper_Utility::filter_content( $data->course_description ) : $course->post_content;
-			$post['post_title']   = $course && isset( $data->course_name ) ? CoursePress_Helper_Utility::filter_content( $data->course_name ) : $course->post_title;
+			$post['post_title'] = $course && isset( $data->course_name ) ? CoursePress_Helper_Utility::filter_content( $data->course_name ) : $course->post_title;
 			if ( ! empty( $data->course_name ) ) {
 				$post['post_name'] = wp_unique_post_slug( sanitize_title( $post['post_title'] ), $course_id, 'publish', 'course', 0 );
 			}
@@ -148,7 +148,7 @@ class CoursePress_Data_Course {
 				$post['post_content'] = CoursePress_Helper_Utility::filter_content( $data->course_description );
 			}
 			$post['post_title'] = CoursePress_Helper_Utility::filter_content( $data->course_name );
-			$post['post_name']  = wp_unique_post_slug( sanitize_title( $post['post_title'] ), 0, 'publish', 'course', 0 );
+			$post['post_name'] = wp_unique_post_slug( sanitize_title( $post['post_title'] ), 0, 'publish', 'course', 0 );
 		}
 
 		// Set the ID to trigger update and not insert
@@ -214,7 +214,7 @@ class CoursePress_Data_Course {
 				if ( 'meta_listing_image' == $key ) {
 
 					// Legacy, breaks theme support
-					// $course_image_width  = CoursePress_Core::get_setting( 'course/image_width', 235 );
+					// $course_image_width = CoursePress_Core::get_setting( 'course/image_width', 235 );
 					// $course_image_height = CoursePress_Core::get_setting( 'course/image_height', 225 );
 					//
 					// $upload_dir_info = wp_upload_dir();
@@ -231,7 +231,7 @@ class CoursePress_Data_Course {
 					// legacy
 					// update_post_meta( $course_id, '_thumbnail_id', CoursePress_Helper_Utility::filter_content( $value ) );
 					// } else {
-					// $ext           = pathinfo( $fl, PATHINFO_EXTENSION );
+					// $ext = pathinfo( $fl, PATHINFO_EXTENSION );
 					// $new_file_name = str_replace( '.' . $ext, '-' . $course_image_width . 'x' . $course_image_height . '.' . $ext, basename( $value ) );
 					// $new_file_path = str_replace( basename( $value ), $new_file_name, $value );
 					// legacy
@@ -387,9 +387,9 @@ class CoursePress_Data_Course {
 	public static function allow_pages( $course_id ) {
 
 		$pages = array(
-			'course_discussion'	 => CoursePress_Helper_Utility::fix_bool( self::get_setting( $course_id, 'allow_discussion', true ) ),
-			'workbook'			 => CoursePress_Helper_Utility::fix_bool( self::get_setting( $course_id, 'allow_workbook', true ) ),
-			'grades'			 => CoursePress_Helper_Utility::fix_bool( self::get_setting( $course_id, 'allow_grades', true ) ),
+			'course_discussion' => CoursePress_Helper_Utility::fix_bool( self::get_setting( $course_id, 'allow_discussion', true ) ),
+			'workbook' => CoursePress_Helper_Utility::fix_bool( self::get_setting( $course_id, 'allow_workbook', true ) ),
+			'grades' => CoursePress_Helper_Utility::fix_bool( self::get_setting( $course_id, 'allow_grades', true ) ),
 		);
 
 		return $pages;
@@ -400,36 +400,36 @@ class CoursePress_Data_Course {
 		$settings = array();
 
 		$map = array(
-			'allow_discussion'        => array( 'key' => 'allow_course_discussion', 'default' => '' ),
-			'allow_grades'            => array( 'key' => 'allow_grades_page', 'default' => '' ),
-			'allow_workbook'          => array( 'key' => 'allow_workbook_page', 'default' => true ),
-			'course_category'         => array( 'key' => 'course_category', 'default' => '' ),
-			'class_size'              => array( 'key' => 'class_size', 'default' => 0 ),
-			'class_limited'           => array( 'key' => 'limit_class_size', 'default' => '' ),
-			'course_open_ended'       => array( 'key' => 'open_ended_course', 'default' => true ),
-			'course_start_date'       => array( 'key' => 'course_start_date', 'default' => '' ),
-			'course_end_date'         => array( 'key' => 'course_end_date', 'default' => '' ),
-			'course_order'            => array( 'key' => 'course_order', 'default' => 0 ),
-			'enrollment_open_ended'   => array( 'key' => 'open_ended_enrollment', 'default' => true ),
-			'enrollment_start_date'   => array( 'key' => 'enrollment_start_date', 'default' => '' ),
-			'enrollment_end_date'     => array( 'key' => 'enrollment_end_date', 'default' => '' ),
-			'enrollment_type'         => array( 'key' => 'enroll_type', 'default' => 'manually' ),
+			'allow_discussion' => array( 'key' => 'allow_course_discussion', 'default' => '' ),
+			'allow_grades' => array( 'key' => 'allow_grades_page', 'default' => '' ),
+			'allow_workbook' => array( 'key' => 'allow_workbook_page', 'default' => true ),
+			'course_category' => array( 'key' => 'course_category', 'default' => '' ),
+			'class_size' => array( 'key' => 'class_size', 'default' => 0 ),
+			'class_limited' => array( 'key' => 'limit_class_size', 'default' => '' ),
+			'course_open_ended' => array( 'key' => 'open_ended_course', 'default' => true ),
+			'course_start_date' => array( 'key' => 'course_start_date', 'default' => '' ),
+			'course_end_date' => array( 'key' => 'course_end_date', 'default' => '' ),
+			'course_order' => array( 'key' => 'course_order', 'default' => 0 ),
+			'enrollment_open_ended' => array( 'key' => 'open_ended_enrollment', 'default' => true ),
+			'enrollment_start_date' => array( 'key' => 'enrollment_start_date', 'default' => '' ),
+			'enrollment_end_date' => array( 'key' => 'enrollment_end_date', 'default' => '' ),
+			'enrollment_type' => array( 'key' => 'enroll_type', 'default' => 'manually' ),
 			'enrollment_prerequisite' => array( 'key' => 'prerequisite', 'default' => '' ),
-			'enrollment_passcode'     => array( 'key' => 'passcode', 'default' => '' ),
-			'listing_image'           => array( 'key' => 'featured_url', 'default' => '' ),
-			'instructors'             => array( 'key' => 'instructors', 'default' => '' ),
-			'course_language'         => array( 'key' => 'course_language', 'default' => '' ),
-			'payment_paid_course'     => array( 'key' => 'paid_course', 'default' => '' ),
-			'payment_auto_sku'        => array( 'key' => 'auto_sku', 'default' => '' ),
-			'payment_product_id'      => array( 'key' => 'mp_product_id', 'default' => array() ),
-			'setup_complete'          => array( 'key' => 'course_setup_complete', 'default' => '' ),
-			'structure_visible'       => array( 'key' => 'course_structure_options', 'default' => '' ),
+			'enrollment_passcode' => array( 'key' => 'passcode', 'default' => '' ),
+			'listing_image' => array( 'key' => 'featured_url', 'default' => '' ),
+			'instructors' => array( 'key' => 'instructors', 'default' => '' ),
+			'course_language' => array( 'key' => 'course_language', 'default' => '' ),
+			'payment_paid_course' => array( 'key' => 'paid_course', 'default' => '' ),
+			'payment_auto_sku' => array( 'key' => 'auto_sku', 'default' => '' ),
+			'payment_product_id' => array( 'key' => 'mp_product_id', 'default' => array() ),
+			'setup_complete' => array( 'key' => 'course_setup_complete', 'default' => '' ),
+			'structure_visible' => array( 'key' => 'course_structure_options', 'default' => '' ),
 			'structure_show_duration' => array( 'key' => 'course_structure_time_display', 'default' => '' ),
 			'structure_visible_units' => array( 'key' => 'show_unit_boxes', 'default' => '' ),
 			'structure_preview_units' => array( 'key' => 'preview_unit_boxes', 'default' => '' ),
 			'structure_visible_pages' => array( 'key' => 'show_page_boxes', 'default' => '' ),
 			'structure_preview_pages' => array( 'key' => 'preview_page_boxes', 'default' => '' ),
-			'featured_video'          => array( 'key' => 'course_video_url', 'default' => '' ),
+			'featured_video' => array( 'key' => 'course_video_url', 'default' => '' ),
 		);
 
 		$meta = get_post_meta( $course_id );
@@ -480,15 +480,15 @@ class CoursePress_Data_Course {
 	}
 
 	public static function get_terms() {
-		$prefix   = defined( 'COURSEPRESS_CPT_PREFIX' ) ? COURSEPRESS_CPT_PREFIX : '';
-		$prefix   = empty( $prefix ) ? '' : sanitize_text_field( $prefix ) . '_';
+		$prefix = defined( 'COURSEPRESS_CPT_PREFIX' ) ? COURSEPRESS_CPT_PREFIX : '';
+		$prefix = empty( $prefix ) ? '' : sanitize_text_field( $prefix ) . '_';
 		$category = $prefix . self::get_post_category_name();
 
 		$args = array(
-			'orderby'      => 'name',
-			'order'        => 'ASC',
-			'hide_empty'   => false,
-			'fields'       => 'all',
+			'orderby' => 'name',
+			'order' => 'ASC',
+			'hide_empty' => false,
+			'fields' => 'all',
 			'hierarchical' => true,
 		);
 
@@ -496,8 +496,8 @@ class CoursePress_Data_Course {
 	}
 
 	public static function get_course_terms( $course_id, $array = false ) {
-		$prefix   = defined( 'COURSEPRESS_CPT_PREFIX' ) ? COURSEPRESS_CPT_PREFIX : '';
-		$prefix   = empty( $prefix ) ? '' : sanitize_text_field( $prefix ) . '_';
+		$prefix = defined( 'COURSEPRESS_CPT_PREFIX' ) ? COURSEPRESS_CPT_PREFIX : '';
+		$prefix = empty( $prefix ) ? '' : sanitize_text_field( $prefix ) . '_';
 		$category = $prefix . self::get_post_category_name();
 
 		$course_terms = wp_get_object_terms( (int) $course_id, array( $category ) );
@@ -516,7 +516,7 @@ class CoursePress_Data_Course {
 	}
 
 	public static function get_course_categories( $course_id = false ) {
-		$terms      = self::get_terms();
+		$terms = self::get_terms();
 		$categories = array();
 
 		if ( ! $course_id ) {
@@ -538,13 +538,13 @@ class CoursePress_Data_Course {
 	public static function get_units( $course_id, $status = array( 'publish' ), $ids_only = false, $include_count = false ) {
 
 		$post_args = array(
-			'post_type'     => CoursePress_Data_Unit::get_post_type_name(),
-			'post_parent'   => $course_id,
-			'post_status'   => $status,
+			'post_type' => CoursePress_Data_Unit::get_post_type_name(),
+			'post_parent' => $course_id,
+			'post_status' => $status,
 			'posts_per_page' => - 1,
-			'order'         => 'ASC',
-			'orderby'       => 'meta_value_num',
-			'meta_key'      => 'unit_order',
+			'order' => 'ASC',
+			'orderby' => 'meta_value_num',
+			'meta_key' => 'unit_order',
 		);
 
 		if ( $ids_only ) {
@@ -594,11 +594,11 @@ class CoursePress_Data_Course {
 		add_filter( 'posts_where', array( __CLASS__, 'filter_unit_module_where' ) );
 
 		$post_args = array(
-			'post_type'     => array( CoursePress_Data_Unit::get_post_type_name(), CoursePress_Data_Module::get_post_type_name() ),
-			'post_parent'   => $course_id,
+			'post_type' => array( CoursePress_Data_Unit::get_post_type_name(), CoursePress_Data_Module::get_post_type_name() ),
+			'post_parent' => $course_id,
 			'posts_per_page' => -1,
-			'order'         => 'ASC',
-			'orderby'       => 'menu_order',
+			'order' => 'ASC',
+			'orderby' => 'menu_order',
 		);
 
 		$query = new WP_Query( $post_args );
@@ -680,13 +680,13 @@ class CoursePress_Data_Course {
 	public static function get_unit_modules( $unit_id, $status = array( 'publish' ), $ids_only = false, $include_count = false, $args = array() ) {
 
 		$post_args = array(
-			'post_type'     => CoursePress_Data_Module::get_post_type_name(),
-			'post_parent'   => $unit_id,
-			'post_status'   => $status,
+			'post_type' => CoursePress_Data_Module::get_post_type_name(),
+			'post_parent' => $unit_id,
+			'post_status' => $status,
 			'posts_per_page' => -1,
-			'order'         => 'ASC',
-			'orderby'       => 'meta_value_num',
-			'meta_key'      => 'module_order',
+			'order' => 'ASC',
+			'orderby' => 'meta_value_num',
+			'meta_key' => 'module_order',
 		);
 
 		if ( $ids_only ) {
@@ -697,8 +697,8 @@ class CoursePress_Data_Course {
 		if ( isset( $args['page'] ) && (int) $args['page'] ) {
 			$post_args['meta_query'] = array(
 				array(
-					'key'     => 'module_page',
-					'value'   => (int) $args['page'],
+					'key' => 'module_page',
+					'value' => (int) $args['page'],
 					'compare' => '=',
 				),
 			);
@@ -757,7 +757,7 @@ class CoursePress_Data_Course {
 			'orderby' => 'meta_value',
 			'meta_query' => array(
 				array(
-					'key'     => $course_meta_key,
+					'key' => $course_meta_key,
 					'compare' => 'EXISTS',
 				),
 			),
@@ -787,7 +787,7 @@ class CoursePress_Data_Course {
 			'orderby' => 'meta_value',
 			'meta_query' => array(
 			array(
-					'key'     => $course_meta_key,
+					'key' => $course_meta_key,
 					'compare' => 'EXISTS',
 				),
 			),
@@ -1165,8 +1165,8 @@ class CoursePress_Data_Course {
 	public static function structure_visibility( $course_id ) {
 
 		if ( empty( self::$structure_visibility ) ) {
-			$units   = array_filter( CoursePress_Data_Course::get_setting( $course_id, 'structure_visible_units', array() ) );
-			$pages   = array_filter( CoursePress_Data_Course::get_setting( $course_id, 'structure_visible_pages', array() ) );
+			$units = array_filter( CoursePress_Data_Course::get_setting( $course_id, 'structure_visible_units', array() ) );
+			$pages = array_filter( CoursePress_Data_Course::get_setting( $course_id, 'structure_visible_pages', array() ) );
 			$modules = array_filter( CoursePress_Data_Course::get_setting( $course_id, 'structure_visible_modules', array() ) );
 
 			$visibility = array();
@@ -1201,8 +1201,8 @@ class CoursePress_Data_Course {
 
 		if ( empty( self::$previewability ) ) {
 
-			$units  = array_filter( CoursePress_Data_Course::get_setting( $course_id, 'structure_preview_units', array() ) );
-			$pages  = array_filter( CoursePress_Data_Course::get_setting( $course_id, 'structure_preview_pages', array() ) );
+			$units = array_filter( CoursePress_Data_Course::get_setting( $course_id, 'structure_preview_units', array() ) );
+			$pages = array_filter( CoursePress_Data_Course::get_setting( $course_id, 'structure_preview_pages', array() ) );
 			$modules = array_filter( CoursePress_Data_Course::get_setting( $course_id, 'structure_preview_modules', array() ) );
 
 			$preview_structure = array();
@@ -1421,9 +1421,9 @@ class CoursePress_Data_Course {
 	public static function by_name( $slug, $id_only ) {
 
 		$args = array(
-			'name'			 => $slug,
-			'post_type'		 => self::get_post_type_name( true ),
-			'post_status'	 => 'any',
+			'name' => $slug,
+			'post_type' => self::get_post_type_name( true ),
+			'post_status' => 'any',
 			'posts_per_page' => 1,
 		);
 

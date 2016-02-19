@@ -17,24 +17,24 @@ if ( ! class_exists( 'CP_Certificate_Templates_Search' ) ) {
 		function __construct( $search_term = '', $page_num = '' ) {
 
 			$this->search_term = $search_term;
-			$this->raw_page    = ( '' == $page_num ) ? false : (int) $page_num;
-			$this->page_num    = (int) ( '' == $page_num ) ? 1 : $page_num;
+			$this->raw_page = ( '' == $page_num ) ? false : (int) $page_num;
+			$this->page_num = (int) ( '' == $page_num ) ? 1 : $page_num;
 
 			$args = array(
-				's'              => $this->search_term,
+				's' => $this->search_term,
 				'posts_per_page' => $this->per_page,
-				'offset'         => ( $this->page_num - 1 ) * $this->per_page,
-				'category'       => '',
-				'orderby'        => 'post_date',
-				'order'          => 'DESC',
-				'include'        => '',
-				'exclude'        => '',
-				'meta_key'       => '',
-				'meta_value'     => '',
-				'post_type'      => $this->post_type,
+				'offset' => ( $this->page_num - 1 ) * $this->per_page,
+				'category' => '',
+				'orderby' => 'post_date',
+				'order' => 'DESC',
+				'include' => '',
+				'exclude' => '',
+				'meta_key' => '',
+				'meta_value' => '',
+				'post_type' => $this->post_type,
 				'post_mime_type' => '',
-				'post_parent'    => '',
-				'post_status'    => 'any'
+				'post_parent' => '',
+				'post_status' => 'any'
 			);
 
 			$this->args = $args;
@@ -54,19 +54,19 @@ if ( ! class_exists( 'CP_Certificate_Templates_Search' ) ) {
 
 		function get_count_of_all() {
 			$args = array(
-				's'              => $this->search_term,
+				's' => $this->search_term,
 				'posts_per_page' => - 1,
-				'category'       => '',
-				'orderby'        => 'post_date',
-				'order'          => 'DESC',
-				'include'        => '',
-				'exclude'        => '',
-				'meta_key'       => '',
-				'meta_value'     => '',
-				'post_type'      => $this->post_type,
+				'category' => '',
+				'orderby' => 'post_date',
+				'order' => 'DESC',
+				'include' => '',
+				'exclude' => '',
+				'meta_key' => '',
+				'meta_value' => '',
+				'post_type' => $this->post_type,
 				'post_mime_type' => '',
-				'post_parent'    => '',
-				'post_status'    => 'any'
+				'post_parent' => '',
+				'post_status' => 'any'
 			);
 
 			return count( get_posts( $args ) );

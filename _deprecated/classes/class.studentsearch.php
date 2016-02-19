@@ -30,8 +30,8 @@ if ( ! class_exists( 'Student_Search' ) ) {
 			}
 
 			$this->search_term = $search_term;
-			$this->raw_page    = ( '' == $page_num ) ? false : (int) $page_num;
-			$this->page_num    = (int) ( '' == $page_num ) ? 1 : $page_num;
+			$this->raw_page = ( '' == $page_num ) ? false : (int) $page_num;
+			$this->page_num = (int) ( '' == $page_num ) ? 1 : $page_num;
 
 			$args = array(
 				'search' => $this->search_term,
@@ -40,13 +40,13 @@ if ( ! class_exists( 'Student_Search' ) ) {
 				/* 'fields' => 'all_with_meta' */
 			);
 
-			$search_args['meta_key']   = 'role'; //( isset( $search_args['meta_key'] ) ? $search_args['meta_key'] : '' );
+			$search_args['meta_key'] = 'role'; //( isset( $search_args['meta_key'] ) ? $search_args['meta_key'] : '' );
 			$search_args['meta_value'] = 'student'; //( isset( $search_args['meta_value'] ) ? $search_args['meta_value'] : '' );
 
 			if ( ! empty( $meta_args ) ) {
 				$meta_args['number'] = $this->users_per_page;
 				$meta_args['offset'] = ( $this->page_num - 1 ) * $this->users_per_page;
-				$args                = $meta_args;
+				$args = $meta_args;
 			}
 
 			if ( is_multisite() ) {
@@ -57,19 +57,19 @@ if ( ! class_exists( 'Student_Search' ) ) {
 
 			$this->query_vars = wp_parse_args( $args, array(
 				//'role' => 'student',
-				'meta_value'     => $search_args['meta_value'],
-				'meta_compare'   => '',
-				'include'        => array(),
-				'exclude'        => array(),
-				'search'         => '',
+				'meta_value' => $search_args['meta_value'],
+				'meta_compare' => '',
+				'include' => array(),
+				'exclude' => array(),
+				'search' => '',
 				'search_columns' => array(),
-				'orderby'        => 'ID',
-				'order'          => 'ASC',
-				'offset'         => ( $this->page_num - 1 ) * $this->users_per_page,
-				'number'         => '',
-				'count_total'    => true,
-				'fields'         => 'all_with_meta',
-				'who'            => ''
+				'orderby' => 'ID',
+				'order' => 'ASC',
+				'offset' => ( $this->page_num - 1 ) * $this->users_per_page,
+				'number' => '',
+				'count_total' => true,
+				'fields' => 'all_with_meta',
+				'who' => ''
 			) );
 
 
@@ -94,10 +94,10 @@ if ( ! class_exists( 'Student_Search' ) ) {
 				}
 
 				$this->paging_text = paginate_links( array(
-					'total'    => ceil( $this->total_users_for_query / $this->users_per_page ),
-					'current'  => $this->page_num,
-					'base'     => 'admin.php?page=students&%_%',
-					'format'   => 'userspage=%#%',
+					'total' => ceil( $this->total_users_for_query / $this->users_per_page ),
+					'current' => $this->page_num,
+					'base' => 'admin.php?page=students&%_%',
+					'format' => 'userspage=%#%',
 					'add_args' => isset( $args ) ? $args : ''
 				) );
 
@@ -113,8 +113,8 @@ if ( ! class_exists( 'Student_Search' ) ) {
 			$pagination->Items( $this->get_total() );
 			$pagination->limit( $this->users_per_page );
 			$pagination->parameterName = 'page_num';
-			$pagination->nextT         = __( 'Next', 'cp' );
-			$pagination->prevT         = __( 'Previous', 'cp' );
+			$pagination->nextT = __( 'Next', 'cp' );
+			$pagination->prevT = __( 'Previous', 'cp' );
 			$pagination->target( esc_url( "admin.php?page=" . ( isset( $_GET['page'] ) ? $_GET['page'] : 'students' ) . '&' . http_build_query( $this->additional_url_args ) ) );
 			$pagination->currentPage( $this->page_num );
 			$pagination->nextIcon( '&#9658;' );

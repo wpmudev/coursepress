@@ -3,7 +3,7 @@
 class CP_Latest_Courses extends WP_Widget {
 
 	function CP_Latest_Courses() {
-		$widget_ops = array( 'classname'   => 'cp_latest_courses_widget',
+		$widget_ops = array( 'classname' => 'cp_latest_courses_widget',
 		                     'description' => __( 'Displays latest courses', 'cp' )
 		);
 		$this->WP_Widget( 'CP_Latest_Courses', __( 'Latest Courses', 'cp' ), $widget_ops );
@@ -12,8 +12,8 @@ class CP_Latest_Courses extends WP_Widget {
 	function form( $instance ) {
 		$instance = wp_parse_args( ( array ) $instance, array( 'title' => '' ) );
 
-		$title        = $instance['title'];
-		$limit        = $instance['limit'];
+		$title = $instance['title'];
+		$limit = $instance['limit'];
 		$button_title = $instance['button_title'];
 		?>
 		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'cp' ); ?>:
@@ -43,10 +43,10 @@ class CP_Latest_Courses extends WP_Widget {
 		$instance = $old_instance;
 		// Admin on single sites, Super admin on network
 		if ( current_user_can( 'unfiltered_html' ) ) {
-			$instance['title']        = $new_instance['title'];
+			$instance['title'] = $new_instance['title'];
 			$instance['button_title'] = $new_instance['button_title'];
 		} else {
-			$instance['title']        = strip_tags( $new_instance['title'] );
+			$instance['title'] = strip_tags( $new_instance['title'] );
 			$instance['button_title'] = strip_tags( $new_instance['button_title'] );
 		}
 		$instance['limit'] = $new_instance['limit'];

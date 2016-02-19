@@ -21,7 +21,7 @@ class CoursePress_View_Admin_Assessment_List {
 
 		self::$action = isset( $_GET['action'] ) && in_array( $_GET['action'], self::$allowed_actions ) ? sanitize_text_field( $_GET['action'] ) : 'new';
 
-		self::$title      = __( 'Assessments/CoursePress', CoursePress::TD );
+		self::$title = __( 'Assessments/CoursePress', CoursePress::TD );
 		self::$menu_title = __( 'Assessments', CoursePress::TD );
 
 		add_filter( 'coursepress_admin_valid_pages', array( __CLASS__, 'add_valid' ) );
@@ -43,7 +43,7 @@ class CoursePress_View_Admin_Assessment_List {
 
 	public static function add_page( $pages ) {
 		$pages[ self::$slug ] = array(
-			'title'      => self::$title,
+			'title' => self::$title,
 			'menu_title' => self::$menu_title,
 		);
 
@@ -110,9 +110,9 @@ class CoursePress_View_Admin_Assessment_List {
 
 	public static function view_grade_answer() {
 
-		$course_id  = isset( $_REQUEST['course_id'] ) ? (int) $_REQUEST['course_id'] : 0;
-		$unit_id    = isset( $_REQUEST['unit_id'] ) ? (int) $_REQUEST['unit_id'] : 0;
-		$module_id  = isset( $_REQUEST['module_id'] ) ? (int) $_REQUEST['module_id'] : 0;
+		$course_id = isset( $_REQUEST['course_id'] ) ? (int) $_REQUEST['course_id'] : 0;
+		$unit_id = isset( $_REQUEST['unit_id'] ) ? (int) $_REQUEST['unit_id'] : 0;
+		$module_id = isset( $_REQUEST['module_id'] ) ? (int) $_REQUEST['module_id'] : 0;
 		$student_id = isset( $_REQUEST['student_id'] ) ? (int) $_REQUEST['student_id'] : 0;
 
 		if ( empty( $course_id ) || empty( $unit_id ) || empty( $module_id ) || empty( $student_id ) ) {
@@ -120,24 +120,24 @@ class CoursePress_View_Admin_Assessment_List {
 			return self::render_assessment();
 		}
 
-		$student          = get_userdata( $student_id );
+		$student = get_userdata( $student_id );
 		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
-		$attributes       = CoursePress_Data_Module::attributes( $module_id );
-		$module           = get_post( $module_id );
-		$course           = get_post( $course_id );
-		$unit             = get_post( $unit_id );
+		$attributes = CoursePress_Data_Module::attributes( $module_id );
+		$module = get_post( $module_id );
+		$course = get_post( $course_id );
+		$unit = get_post( $unit_id );
 
-		$title       = $module->post_title;
+		$title = $module->post_title;
 		$description = $module->post_content;
-		$response    = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
-		$grade       = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
-		$feedback    = CoursePress_Data_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
+		$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
+		$grade = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
+		$feedback = CoursePress_Data_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
 
 		$first_last = CoursePress_Helper_Utility::get_user_name( $student_id );
 
-		$url        = admin_url( 'admin.php?page=coursepress_assessments' );
+		$url = admin_url( 'admin.php?page=coursepress_assessments' );
 		$url_course = admin_url( 'admin.php?page=coursepress_assessments&course_id=' . $course_id );
-		$url_unit   = admin_url( 'admin.php?page=coursepress_assessments&course_id=' . $course_id . '&unit_id=' . $unit_id );
+		$url_unit = admin_url( 'admin.php?page=coursepress_assessments&course_id=' . $course_id . '&unit_id=' . $unit_id );
 
 		$content = '<div class="module-answer-wrapper"><form method="POST" action="' . esc_url_raw( $url_unit ) . '">';
 
@@ -226,15 +226,15 @@ class CoursePress_View_Admin_Assessment_List {
 		$content .= '<p class="instructor-feedback-label"><strong>' . esc_html__( 'Instructor Feedback', CoursePress::TD ) . '</strong></p>' .
 					'<div class="feedback">';
 
-		$editor_name    = 'feedback-content';
-		$editor_id      = 'feedbackContent';
+		$editor_name = 'feedback-content';
+		$editor_id = 'feedbackContent';
 		$editor_content = $feedback['feedback'];
 
 		$args = array(
 			'textarea_name' => $editor_name,
 			'media_buttons' => false,
 			'textarea_rows' => 3,
-			'editor_class'  => 'instructor-feedback',
+			'editor_class' => 'instructor-feedback',
 		);
 
 		ob_start();
@@ -320,7 +320,7 @@ class CoursePress_View_Admin_Assessment_List {
 		$keys = array();
 		if ( ! empty( $units ) ) {
 			$units = CoursePress_Helper_Utility::sort_on_key( $units, 'order' );
-			$keys  = array_keys( $units );
+			$keys = array_keys( $units );
 
 			$selected_unit = isset( $_GET['unit_id'] ) ? (int) $_GET['unit_id'] : $units[ $keys[0] ]['unit']->ID;
 			;
@@ -330,12 +330,12 @@ class CoursePress_View_Admin_Assessment_List {
 			foreach ( $units as $unit_id => $unit ) {
 				$tabs[] = array(
 					'unit_title' => $unit['unit']->post_title,
-					'class'      => $unit['unit']->post_status,
-					'unit_id'    => $unit_id,
+					'class' => $unit['unit']->post_status,
+					'unit_id' => $unit_id,
 				);
 			}
 
-			$url        = admin_url( 'admin.php?page=coursepress_assessments' );
+			$url = admin_url( 'admin.php?page=coursepress_assessments' );
 			$tab_string = '';
 			foreach ( $tabs as $key => $tab ) {
 				if ( $selected_unit === ( $tab['unit_id'] ) ) {
@@ -377,13 +377,13 @@ class CoursePress_View_Admin_Assessment_List {
 			$odd = '';
 			$alt = 'alt';
 
-			$count     = 0;
+			$count = 0;
 			$hierarchy = 0;
 			foreach ( $students as $student ) {
 				$hierarchy += 1;
-				$course_id     = $selected_course;
-				$unit_id       = $selected_unit;
-				$student_id    = $student->ID;
+				$course_id = $selected_course;
+				$unit_id = $selected_unit;
+				$student_id = $student->ID;
 				$student_label = CoursePress_Helper_Utility::get_user_name( $student_id, true );
 
 				$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
@@ -408,15 +408,15 @@ class CoursePress_View_Admin_Assessment_List {
 
 						$count += 1;
 
-						$title    = empty( $module->post_title ) ? $module->post_content : $module->post_title;
+						$title = empty( $module->post_title ) ? $module->post_content : $module->post_title;
 						$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
-						$grade    = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
+						$grade = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
 						$feedback = CoursePress_Data_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
 
 						$response_display = '';
 						if ( $response ) {
-							$qv               = 'course_id=' . $course_id . '&unit_id=' . $unit_id . '&module_id=' . $module_id . '&student_id=' . $student_id . '&view_answer';
-							$url              = admin_url( 'admin.php?page=coursepress_assessments' . '&' . $qv );
+							$qv = 'course_id=' . $course_id . '&unit_id=' . $unit_id . '&module_id=' . $module_id . '&student_id=' . $student_id . '&view_answer';
+							$url = admin_url( 'admin.php?page=coursepress_assessments' . '&' . $qv );
 							$response_display = '<a href="' . esc_url_raw( $url ) . '">' . esc_html__( 'View', CoursePress::TD ) . '</a>';
 						}
 						// $response_display = $response['response'];

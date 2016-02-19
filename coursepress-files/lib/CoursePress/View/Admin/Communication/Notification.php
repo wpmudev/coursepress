@@ -22,7 +22,7 @@ class CoursePress_View_Admin_Communication_Notification {
 
 	public static function add_page( $pages ) {
 		$pages[ self::$slug ] = array(
-			'title'      => self::$title,
+			'title' => self::$title,
 			'menu_title' => self::$menu_title,
 		);
 
@@ -65,7 +65,7 @@ class CoursePress_View_Admin_Communication_Notification {
 
 			update_post_meta( $id, 'course_id', $course_id );
 
-			$url        = admin_url( 'admin.php?page=' . self::$slug );
+			$url = admin_url( 'admin.php?page=' . self::$slug );
 			wp_redirect( esc_url_raw( $url ) );
 			exit;
 
@@ -82,7 +82,7 @@ class CoursePress_View_Admin_Communication_Notification {
 		$notificationListTable = new CoursePress_Helper_Table_NotificationList();
 		$notificationListTable->prepare_items();
 
-		$url        = admin_url( 'admin.php?page=' . self::$slug . '&action=edit&id=new' );
+		$url = admin_url( 'admin.php?page=' . self::$slug . '&action=edit&id=new' );
 
 		$content = '<div class="coursepress_communications_wrapper notifications wrap">' .
 		           '<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '
@@ -159,7 +159,7 @@ class CoursePress_View_Admin_Communication_Notification {
 		$editor_id = 'postContent';
 		$args = array(
 			'textarea_name' => $editor_name,
-			'editor_class'  => 'cp-editor',
+			'editor_class' => 'cp-editor',
 			'textarea_rows' => 10,
 		);
 
@@ -187,9 +187,9 @@ class CoursePress_View_Admin_Communication_Notification {
 
 	public static function update_notification() {
 
-		$data      = json_decode( file_get_contents( 'php://input' ) );
+		$data = json_decode( file_get_contents( 'php://input' ) );
 		$json_data = array();
-		$success   = false;
+		$success = false;
 
 		$action = isset( $data->action ) ? $data->action : '';
 		$json_data['action'] = $action;
@@ -210,8 +210,8 @@ class CoursePress_View_Admin_Communication_Notification {
 					wp_delete_post( $notification_id );
 
 					$json_data['notification_id'] = $notification_id;
-					$json_data['nonce']     = wp_create_nonce( 'delete-notification' );
-					$success                = true;
+					$json_data['nonce'] = wp_create_nonce( 'delete-notification' );
+					$success = true;
 				}
 
 				break;
@@ -223,17 +223,17 @@ class CoursePress_View_Admin_Communication_Notification {
 				if ( wp_verify_nonce( $data->data->nonce, 'publish-notification' ) ) {
 
 					wp_update_post( array(
-						'ID'          => $notification_id,
+						'ID' => $notification_id,
 						'post_status' => $data->data->status,
 					) );
 
 					$json_data['nonce'] = wp_create_nonce( 'publish-notification' );
-					$success            = true;
+					$success = true;
 
 				}
 
 				$json_data['notification_id'] = $notification_id;
-				$json_data['state']     = $data->data->state;
+				$json_data['state'] = $data->data->state;
 
 				break;
 
@@ -249,14 +249,14 @@ class CoursePress_View_Admin_Communication_Notification {
 
 						if ( 'bulk_unpublish' === $action ) {
 							wp_update_post( array(
-								'ID'          => $id,
+								'ID' => $id,
 								'post_status' => 'draft',
 							) );
 						}
 
 						if ( 'bulk_publish' === $action ) {
 							wp_update_post( array(
-								'ID'          => $id,
+								'ID' => $id,
 								'post_status' => 'publish',
 							) );
 						}

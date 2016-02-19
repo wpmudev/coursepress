@@ -117,15 +117,15 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 									<td>
 										<?php
 
-										$editor_name    = "cert_field_certificate_content";
-										$editor_id      = "cert_field_certificate_content";
+										$editor_name = "cert_field_certificate_content";
+										$editor_id = "cert_field_certificate_content";
 										$editor_content = stripslashes( self::certificate_content() );
 
 										$args = array(
 											"textarea_name" => $editor_name,
 											"textarea_rows" => 10,
-											'wpautop'       => true,
-											'quicktags'     => true
+											'wpautop' => true,
+											'quicktags' => true
 										);
 										// Filter $args before showing editor
 										//$args = apply_filters( 'coursepress_element_editor_args', $args, $editor_name, $editor_id );
@@ -264,8 +264,8 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 							<td>
 								<p class="description"><?php _e( 'These codes will be replaced with actual data: FIRST_NAME, LAST_NAME, COMPLETION_DATE, CERTIFICATE_NUMBER, UNIT_LIST, COURSE_NAME, COURSE_EXCERPT, COURSE_ADDRESS, WEBSITE_ADDRESS, WEBSITE_NAME', 'cp' ); ?></p>
 								<?php
-								$editor_name    = "cert_field_email_content";
-								$editor_id      = "cert_field_email_content";
+								$editor_name = "cert_field_email_content";
+								$editor_id = "cert_field_email_content";
 								$editor_content = stripslashes( self::option( 'email_content' ) );
 
 								$args = array( "textarea_name" => $editor_name, "textarea_rows" => 10, 'wpautop' => true );

@@ -1,7 +1,7 @@
 <?php
 
-//$course_id			 = do_shortcode( '[get_parent_course_id]' );
-//$course_id			 = (int) $course_id;
+//$course_id = do_shortcode( '[get_parent_course_id]' );
+//$course_id = (int) $course_id;
 $progress = do_shortcode( '[course_progress course_id="' . $course_id . '"]' );
 do_shortcode( '[course_units_loop]' ); //required for getting unit results
 
@@ -22,13 +22,13 @@ if ( 100 == (int) $progress ) {
 		<?php if ( have_posts() ) { ?>
 			<?php
 			while ( have_posts() ) : the_post();
-				$additional_class    = '';
+				$additional_class = '';
 				$additional_li_class = '';
-				$unit_id             = get_the_ID();
+				$unit_id = get_the_ID();
 
 				$additional_content = '';
 				if ( ! Unit::is_unit_available( $unit_id ) ) {
-					$additional_class    = 'locked-unit';
+					$additional_class = 'locked-unit';
 					$additional_li_class = 'li-locked-unit';
 					$additional_content = '<div class="' . esc_attr( $additional_class ) . '"></div>';
 				}

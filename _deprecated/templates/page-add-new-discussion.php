@@ -10,7 +10,7 @@ $course_id = (int) $course_id;
 $coursepress->check_access( $course_id );
 
 $form_message_class = '';
-$form_message       = '';
+$form_message = '';
 
 if ( isset( $_POST['new_question_submit'] ) ) {
 	check_admin_referer( 'new_question' );
@@ -23,11 +23,11 @@ if ( isset( $_POST['new_question_submit'] ) ) {
 			wp_redirect( trailingslashit( get_permalink( $course_id ) ) . $coursepress->get_discussion_slug() );
 			exit;
 		} else {
-			$form_message       = __( 'Question description is required.', 'cp' );
+			$form_message = __( 'Question description is required.', 'cp' );
 			$form_message_class = 'red';
 		}
 	} else {
-		$form_message       = __( 'Question title is required.', 'cp' );
+		$form_message = __( 'Question title is required.', 'cp' );
 		$form_message_class = 'red';
 	}
 }

@@ -72,8 +72,8 @@ class CoursePress_View_Admin_Settings_Email{
 								<p class="description">' . esc_html( $section['content_help_text'] ) . '</p>';
 
 			ob_start();
-			$editor_name    = 'coursepress_settings[email][' . $key . '][content]';
-			$editor_id      = 'coursepress_settings_email_' . $key . '_content';
+			$editor_name = 'coursepress_settings[email][' . $key . '][content]';
+			$editor_id = 'coursepress_settings_email_' . $key . '_content';
 			$editor_content = stripslashes( CoursePress_Core::get_setting( 'email/' . $key . '/content', $default_settings[ $key ]['content'] ) );
 
 			$args = array( 'textarea_name' => $editor_name, 'textarea_rows' => 10, 'wpautop' => true );
@@ -101,7 +101,7 @@ class CoursePress_View_Admin_Settings_Email{
 
 		if ( isset( $_POST['action'] ) && 'updateoptions' === $_POST['action'] && 'email' === $tab && wp_verify_nonce( $_POST['_wpnonce'], 'update-coursepress-options' ) ) {
 
-			$settings      = CoursePress_Core::get_setting( false ); // false returns all settings
+			$settings = CoursePress_Core::get_setting( false ); // false returns all settings
 			$post_settings = (array) $_POST['coursepress_settings'];
 
 			$post_settings = CoursePress_Helper_Utility::sanitize_recursive( $post_settings );

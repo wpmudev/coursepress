@@ -84,8 +84,8 @@ function cp_get_user_option( $option, $user_id = false ) {
 }
 
 function cp_unit_uses_new_pagination( $unit_id = false ) {
-	$unit_pagination_meta	 = get_post_meta( $unit_id, 'unit_pagination', true );
-	$unit_pagination		 = isset( $unit_pagination_meta ) && !empty( $unit_pagination_meta ) && $unit_pagination_meta !== false ? true : false;
+	$unit_pagination_meta = get_post_meta( $unit_id, 'unit_pagination', true );
+	$unit_pagination = isset( $unit_pagination_meta ) && !empty( $unit_pagination_meta ) && $unit_pagination_meta !== false ? true : false;
 
 	return $unit_pagination;
 }
@@ -172,7 +172,7 @@ function cp_set_visited_course( $unit_id, $student_id = false ) {
 		$student_id = get_current_user_ID();
 	}
 
-	$course_id		 = wp_get_post_parent_id( $unit_id );
+	$course_id = wp_get_post_parent_id( $unit_id );
 	$visited_courses = get_user_option( 'visited_course_units_' . $course_id, $student_id );
 
 	if ( $visited_courses === false ) {
@@ -280,12 +280,12 @@ function cp_get_last_visited_unit_page( $unit_id, $student_id = false ) {
 
 function cp_get_order_course_id( $order_id ) {
 	global $mp;
-	$cart_info		 = $mp->get_order( $order_id )->mp_cart_info;
+	$cart_info = $mp->get_order( $order_id )->mp_cart_info;
 	if( ! is_array( $cart_info ) ) {
 		return false;
 	}
-	$mp_product_id	 = key( $cart_info );
-	$post_parent	 = get_post_ancestors( $mp_product_id );
+	$mp_product_id = key( $cart_info );
+	$post_parent = get_post_ancestors( $mp_product_id );
 	if ( is_array( $post_parent ) ) {
 		return $post_parent[ 0 ];
 	} else {
@@ -307,12 +307,12 @@ add_filter( 'mp_order_notification_body', 'cp_mp_order_notification_body', 10, 2
 
 function cp_mp_order_notification_body( $content, $order ) {
 	if ( cp_get_order_course_id( $order->ID ) ) {
-		$course_id	 = cp_get_order_course_id( $order->ID );
-		$course		 = new Course( $course_id );
+		$course_id = cp_get_order_course_id( $order->ID );
+		$course = new Course( $course_id );
 
 		$tracking_url = apply_filters( 'wpml_marketpress_tracking_url', mp_orderstatus_link( false, true ) . $order->post_title . '/' );
 
-		$tags			 = array(
+		$tags = array(
 			'CUSTOMER_NAME',
 			'BLOG_NAME',
 			'LOGIN_ADDRESS',
@@ -322,7 +322,7 @@ function cp_mp_order_notification_body( $content, $order ) {
 			'ORDER_ID',
 			'ORDER_STATUS_URL'
 		);
-		$tags_replaces	 = array(
+		$tags_replaces = array(
 			$order->mp_shipping_info[ 'name' ],
 			get_bloginfo(),
 			cp_student_login_address(),
@@ -366,13 +366,13 @@ function cp_mp_order_notification_body( $content, $order ) {
 /* End MarketPress customizations */
 
 function cp_url_origin( $s, $use_forwarded_host = false ) {
-	$ssl		 = (!empty( $s[ 'HTTPS' ] ) && $s[ 'HTTPS' ] == 'on' ) ? true : false;
-	$sp			 = strtolower( $s[ 'SERVER_PROTOCOL' ] );
-	$protocol	 = substr( $sp, 0, strpos( $sp, '/' ) ) . ( ( $ssl ) ? 's' : '' );
-	$port		 = $s[ 'SERVER_PORT' ];
-	$port		 = ( (!$ssl && $port == '80' ) || ( $ssl && $port == '443' ) ) ? '' : ':' . $port;
-	$host		 = ( $use_forwarded_host && isset( $s[ 'HTTP_X_FORWARDED_HOST' ] ) ) ? $s[ 'HTTP_X_FORWARDED_HOST' ] : ( isset( $s[ 'HTTP_HOST' ] ) ? $s[ 'HTTP_HOST' ] : null );
-	$host		 = isset( $host ) ? $host : $s[ 'SERVER_NAME' ] . $port;
+	$ssl = (!empty( $s[ 'HTTPS' ] ) && $s[ 'HTTPS' ] == 'on' ) ? true : false;
+	$sp = strtolower( $s[ 'SERVER_PROTOCOL' ] );
+	$protocol = substr( $sp, 0, strpos( $sp, '/' ) ) . ( ( $ssl ) ? 's' : '' );
+	$port = $s[ 'SERVER_PORT' ];
+	$port = ( (!$ssl && $port == '80' ) || ( $ssl && $port == '443' ) ) ? '' : ':' . $port;
+	$host = ( $use_forwarded_host && isset( $s[ 'HTTP_X_FORWARDED_HOST' ] ) ) ? $s[ 'HTTP_X_FORWARDED_HOST' ] : ( isset( $s[ 'HTTP_HOST' ] ) ? $s[ 'HTTP_HOST' ] : null );
+	$host = isset( $host ) ? $host : $s[ 'SERVER_NAME' ] . $port;
 
 	return $protocol . '://' . $host;
 }
@@ -388,7 +388,7 @@ function cp_preg_array_key_exists( $pattern, $array ) {
 }
 
 function cp_get_fragment() {
-	
+
 }
 
 function cp_is_chat_plugin_active() {
@@ -550,17 +550,17 @@ function coursepress_unit_pages( $unit_id, $unit_pagination = false ) {
 	if ( $unit_pagination ) {
 
 		$args = array(
-			'post_type'		 => 'module',
-			'post_status'	 => 'publish',
+			'post_type' => 'module',
+			'post_status' => 'publish',
 			'posts_per_page' => 1,
-			'post_parent'	 => $unit_id,
-			'meta_key'		 => 'module_page',
-			'orderby'		 => 'meta_value_num',
-			'order'			 => 'DESC'
+			'post_parent' => $unit_id,
+			'meta_key' => 'module_page',
+			'orderby' => 'meta_value_num',
+			'order' => 'DESC'
 		);
 
-		$modules	 = get_posts( $args );
-		$module_id	 = isset( $modules[ 0 ] ) ? $modules[ 0 ]->ID : 0;
+		$modules = get_posts( $args );
+		$module_id = isset( $modules[ 0 ] ) ? $modules[ 0 ]->ID : 0;
 
 		if ( $module_id > 0 ) {
 			$pages_num = count( get_post_meta( $unit_id, 'page_title', true ) );
@@ -589,11 +589,11 @@ function coursepress_send_email( $email_args = array() ) {
 
 	if ( $email_args[ 'email_type' ] == 'student_registration' ) {
 		global $course_slug;
-		$email_address	 = $email_args[ 'student_email' ];
-		$subject		 = coursepress_get_registration_email_subject();
+		$email_address = $email_args[ 'student_email' ];
+		$subject = coursepress_get_registration_email_subject();
 		$courses_address = trailingslashit( home_url() ) . trailingslashit( $course_slug );
 
-		$tags			 = array(
+		$tags = array(
 			'STUDENT_FIRST_NAME',
 			'STUDENT_LAST_NAME',
 			'STUDENT_USERNAME',
@@ -603,7 +603,7 @@ function coursepress_send_email( $email_args = array() ) {
 			'COURSES_ADDRESS',
 			'WEBSITE_ADDRESS'
 		);
-		$tags_replaces	 = array(
+		$tags_replaces = array(
 			$email_args[ 'student_first_name' ],
 			$email_args[ 'student_last_name' ],
 			$email_args[ 'student_username' ],
@@ -641,13 +641,13 @@ function coursepress_send_email( $email_args = array() ) {
 
 	if ( $email_args[ 'email_type' ] == 'enrollment_confirmation' ) {
 		global $course_slug;
-		$email_address		 = $email_args[ 'student_email' ];
-		$dashboard_address	 = $email_args[ 'dashboard_address' ];
-		$subject			 = coursepress_get_enrollment_email_subject();
-		$courses_address	 = trailingslashit( home_url() ) . trailingslashit( $course_slug );
-		$course				 = new Course( $email_args[ 'course_id' ] );
+		$email_address = $email_args[ 'student_email' ];
+		$dashboard_address = $email_args[ 'dashboard_address' ];
+		$subject = coursepress_get_enrollment_email_subject();
+		$courses_address = trailingslashit( home_url() ) . trailingslashit( $course_slug );
+		$course = new Course( $email_args[ 'course_id' ] );
 
-		$tags			 = array(
+		$tags = array(
 			'STUDENT_FIRST_NAME',
 			'STUDENT_LAST_NAME',
 			'BLOG_NAME',
@@ -658,7 +658,7 @@ function coursepress_send_email( $email_args = array() ) {
 			'COURSE_TITLE',
 			'STUDENT_DASHBOARD'
 		);
-		$tags_replaces	 = array(
+		$tags_replaces = array(
 			$email_args[ 'student_first_name' ],
 			$email_args[ 'student_last_name' ],
 			get_bloginfo(),
@@ -704,7 +704,7 @@ function coursepress_send_email( $email_args = array() ) {
 			$course = new Course( $email_args[ 'course_id' ] );
 		}
 
-		$tags			 = array(
+		$tags = array(
 			'STUDENT_FIRST_NAME',
 			'STUDENT_LAST_NAME',
 			'COURSE_NAME',
@@ -713,7 +713,7 @@ function coursepress_send_email( $email_args = array() ) {
 			'WEBSITE_ADDRESS',
 			'PASSCODE'
 		);
-		$tags_replaces	 = array(
+		$tags_replaces = array(
 			$email_args[ 'student_first_name' ],
 			$email_args[ 'student_last_name' ],
 			$course->details->post_title,
@@ -757,17 +757,17 @@ function coursepress_send_email( $email_args = array() ) {
 	if ( 'instructor_invitation' == $email_args[ 'email_type' ] ) {
 		global $course_slug;
 
-		$course			 = '';
-		$course_summary	 = '';
-		$course_name	 = '';
+		$course = '';
+		$course_summary = '';
+		$course_name = '';
 		$courses_address = trailingslashit( home_url() ) . trailingslashit( $course_slug );
-		$bugfix			 = false;
+		$bugfix = false;
 
 		if ( isset( $email_args[ 'course_id' ] ) ) {
 			$course = new Course( $email_args[ 'course_id' ] );
 
-			$course_name	 = $course->details->post_title;
-			$course_summary	 = $course->details->post_excerpt;
+			$course_name = $course->details->post_title;
+			$course_summary = $course->details->post_excerpt;
 
 			// For unpublished courses.
 			$permalink = '';
@@ -782,8 +782,8 @@ function coursepress_send_email( $email_args = array() ) {
 
 		$confirm_link = $course_address . '?action=course_invite&course_id=' . $email_args[ 'course_id' ] . '&c=' . $email_args[ 'invite_code' ] . '&h=' . $email_args[ 'invite_hash' ];
 
-		$email_address	 = $email_args[ 'instructor_email' ];
-		$subject		 = cp_get_instructor_invitation_email_subject();
+		$email_address = $email_args[ 'instructor_email' ];
+		$subject = cp_get_instructor_invitation_email_subject();
 
 		$tags = array(
 			'INSTRUCTOR_FIRST_NAME',
@@ -879,7 +879,7 @@ we would like to invite you to participate in the course: "%2$s"
 
 Since the course is only for selected ones, it is passcode protected. Here is the passcode for you: %6$s
 
-What is all about: 
+What is all about:
 %3$s
 
 Check this page for more info on the course: %4$s
@@ -911,7 +911,7 @@ function coursepress_get_invitation_content_email() {
 
 we would like to invite you to participate in the course: "%2$s"
 
-What is all about: 
+What is all about:
 %3$s
 
 Check this page for more info on the course: %4$s
@@ -968,7 +968,7 @@ function coursepress_get_mp_order_email_subject() {
 function coursepress_get_mp_order_content_email() {
 	$default_mp_order_content_email = sprintf( __( 'Thank you for your order %1$s,
 
-Your order for course "%2$s" has been received! 
+Your order for course "%2$s" has been received!
 
 Please refer to your Order ID (ORDER_ID) whenever contacting us.
 
@@ -997,7 +997,7 @@ function coursepress_get_enrollment_email_subject() {
 function coursepress_get_enrollment_content_email() {
 	$default_enrollment_content_email = sprintf( __( 'Hi %1$s,
 
-Congratulations! You have enrolled in course "%2$s" successfully! 
+Congratulations! You have enrolled in course "%2$s" successfully!
 
 You may check all courses you are enrolled in here: %3$s.
 
@@ -1054,9 +1054,9 @@ function cp_get_number_of_instructors() {
 
 	$args = array(
 		//'role' => 'instructor',
-		'count_total'	 => false,
-		'fields'		 => array( 'display_name', 'ID' ),
-		'who'			 => ''
+		'count_total' => false,
+		'fields' => array( 'display_name', 'ID' ),
+		'who' => ''
 	);
 
 	if ( is_multisite() ) {
@@ -1077,25 +1077,25 @@ function cp_instructors_avatars( $course_id, $remove_buttons = true, $just_count
 
 	$args = array(
 		//'role' => 'instructor',
-		'meta_key'		 => 'course_' . $course_id,
-		'meta_value'	 => $course_id,
-		'meta_compare'	 => '',
-		'meta_query'	 => array(),
-		'include'		 => array(),
-		'exclude'		 => array(),
-		'orderby'		 => 'display_name',
-		'order'			 => 'ASC',
-		'offset'		 => '',
-		'search'		 => '',
-		'number'		 => '',
-		'count_total'	 => false,
-		'fields'		 => array( 'display_name', 'ID' ),
-		'who'			 => ''
+		'meta_key' => 'course_' . $course_id,
+		'meta_value' => $course_id,
+		'meta_compare' => '',
+		'meta_query' => array(),
+		'include' => array(),
+		'exclude' => array(),
+		'orderby' => 'display_name',
+		'order' => 'ASC',
+		'offset' => '',
+		'search' => '',
+		'number' => '',
+		'count_total' => false,
+		'fields' => array( 'display_name', 'ID' ),
+		'who' => ''
 	);
 
 	if ( is_multisite() ) {
-		$args[ 'blog_id' ]	 = get_current_blog_id();
-		$args[ 'meta_key' ]	 = $wpdb->prefix . 'course_' . $course_id;
+		$args[ 'blog_id' ] = get_current_blog_id();
+		$args[ 'meta_key' ] = $wpdb->prefix . 'course_' . $course_id;
 	}
 
 	$instructors = get_users( $args );
@@ -1118,25 +1118,25 @@ function cp_instructors_avatars( $course_id, $remove_buttons = true, $just_count
 
 function cp_instructors_avatars_array( $args = array() ) {
 
-	$content = '<script type="text/javascript" language="JavaScript">        
+	$content = '<script type="text/javascript" language="JavaScript">
     var instructor_avatars = new Array();';
 
 	$args = array(
 		//'role' => 'instructor',
-		'meta_key'		 => ( isset( $args[ 'meta_key' ] ) ? $args[ 'meta_key' ] : '' ),
-		'meta_value'	 => ( isset( $args[ 'meta_value' ] ) ? $args[ 'meta_value' ] : '' ),
-		'meta_compare'	 => '',
-		'meta_query'	 => array(),
-		'include'		 => array(),
-		'exclude'		 => array(),
-		'orderby'		 => 'display_name',
-		'order'			 => 'ASC',
-		'offset'		 => '',
-		'search'		 => '',
-		'number'		 => '',
-		'count_total'	 => false,
-		'fields'		 => array( 'display_name', 'ID' ),
-		'who'			 => ''
+		'meta_key' => ( isset( $args[ 'meta_key' ] ) ? $args[ 'meta_key' ] : '' ),
+		'meta_value' => ( isset( $args[ 'meta_value' ] ) ? $args[ 'meta_value' ] : '' ),
+		'meta_compare' => '',
+		'meta_query' => array(),
+		'include' => array(),
+		'exclude' => array(),
+		'orderby' => 'display_name',
+		'order' => 'ASC',
+		'offset' => '',
+		'search' => '',
+		'number' => '',
+		'count_total' => false,
+		'fields' => array( 'display_name', 'ID' ),
+		'who' => ''
 	);
 
 	if ( is_multisite() ) {
@@ -1154,8 +1154,8 @@ function cp_instructors_avatars_array( $args = array() ) {
 }
 
 function cp_instructors_pending( $course_id, $has_capability ) {
-	$content			 = '';
-	$instructor_invites	 = get_post_meta( $course_id, 'instructor_invites', true );
+	$content = '';
+	$instructor_invites = get_post_meta( $course_id, 'instructor_invites', true );
 
 	if ( empty( $instructor_invites ) ) {
 		return;
@@ -1182,21 +1182,21 @@ function cp_students_drop_down() {
 	$content .= '<select name="students" data-placeholder="' . __( 'Choose a Student...', 'cp' ) . '" class="chosen-select">';
 
 	$args = array(
-		'role'			 => '',
-		'meta_key'		 => '',
-		'meta_value'	 => '',
-		'meta_compare'	 => '',
-		'meta_query'	 => array(),
-		'include'		 => array(),
-		'exclude'		 => array(),
-		'orderby'		 => 'display_name',
-		'order'			 => 'ASC',
-		'offset'		 => '',
-		'search'		 => '',
-		'number'		 => '',
-		'count_total'	 => false,
-		'fields'		 => array( 'display_name', 'ID' ),
-		'who'			 => ''
+		'role' => '',
+		'meta_key' => '',
+		'meta_value' => '',
+		'meta_compare' => '',
+		'meta_query' => array(),
+		'include' => array(),
+		'exclude' => array(),
+		'orderby' => 'display_name',
+		'order' => 'ASC',
+		'offset' => '',
+		'search' => '',
+		'number' => '',
+		'count_total' => false,
+		'fields' => array( 'display_name', 'ID' ),
+		'who' => ''
 	);
 
 	if ( is_multisite() ) {
@@ -1225,21 +1225,21 @@ function cp_instructors_drop_down( $class = '' ) {
 
 	$args = array(
 		//'role' => 'instructor',
-		'meta_key'		 => '',
-		'meta_value'	 => '',
-		'meta_compare'	 => '',
-		'meta_query'	 => array(),
-		'include'		 => array(),
-		'exclude'		 => array(),
-		'orderby'		 => 'display_name',
-		'order'			 => 'ASC',
-		'offset'		 => '',
-		'search'		 => '',
-		'class'			 => $class,
-		'number'		 => '',
-		'count_total'	 => false,
-		'fields'		 => array( 'display_name', 'ID' ),
-		'who'			 => ''
+		'meta_key' => '',
+		'meta_value' => '',
+		'meta_compare' => '',
+		'meta_query' => array(),
+		'include' => array(),
+		'exclude' => array(),
+		'orderby' => 'display_name',
+		'order' => 'ASC',
+		'offset' => '',
+		'search' => '',
+		'class' => $class,
+		'number' => '',
+		'count_total' => false,
+		'fields' => array( 'display_name', 'ID' ),
+		'who' => ''
 	);
 
 	if ( is_multisite() ) {
@@ -1289,13 +1289,13 @@ function cp_cp_get_the_course_excerpt( $id = false, $length = 55 ) {
 	}
 
 	if ( !$excerpt = trim( $post->post_excerpt ) ) {
-		$excerpt		 = $post->post_content;
-		$excerpt		 = strip_shortcodes( $excerpt );
-		$excerpt		 = apply_filters( 'the_content', $excerpt );
-		$excerpt		 = str_replace( ']]>', ']]&gt;', $excerpt );
-		$excerpt		 = strip_tags( $excerpt );
-		$excerpt_length	 = apply_filters( 'excerpt_length', $length );
-		$excerpt_more	 = apply_filters( 'excerpt_more', ' ' . '[...]' );
+		$excerpt = $post->post_content;
+		$excerpt = strip_shortcodes( $excerpt );
+		$excerpt = apply_filters( 'the_content', $excerpt );
+		$excerpt = str_replace( ']]>', ']]&gt;', $excerpt );
+		$excerpt = strip_tags( $excerpt );
+		$excerpt_length = apply_filters( 'excerpt_length', $length );
+		$excerpt_more = apply_filters( 'excerpt_more', ' ' . '[...]' );
 
 		$words = preg_split( "/[\n\r\t ]+/", $excerpt, $excerpt_length + 1, PREG_SPLIT_NO_EMPTY );
 		if ( count( $words ) > $excerpt_length ) {
@@ -1314,10 +1314,10 @@ function cp_get_the_course_excerpt( $id = false, $length = 55 ) {
 	global $post;
 
 	if ( empty( $post ) ) {
-		$post				 = new StdClass;
-		$post->ID			 = 0;
-		$post->post_excerpt	 = '';
-		$post->post_content	 = '';
+		$post = new StdClass;
+		$post->ID = 0;
+		$post->post_excerpt = '';
+		$post->post_content = '';
 	}
 
 	$old_post = $post;
@@ -1332,12 +1332,12 @@ function cp_get_the_course_excerpt( $id = false, $length = 55 ) {
 		$excerpt = $post->post_content;
 	}
 
-	$excerpt		 = strip_shortcodes( $excerpt );
+	$excerpt = strip_shortcodes( $excerpt );
 	//$excerpt = apply_filters( 'the_content', $excerpt );
-	$excerpt		 = str_replace( ']]>', ']]&gt;', $excerpt );
-	$excerpt		 = strip_tags( $excerpt );
-	$excerpt_length	 = apply_filters( 'excerpt_length', $length );
-	$excerpt_more	 = apply_filters( 'excerpt_more', ' ' . '[...]' );
+	$excerpt = str_replace( ']]>', ']]&gt;', $excerpt );
+	$excerpt = strip_tags( $excerpt );
+	$excerpt_length = apply_filters( 'excerpt_length', $length );
+	$excerpt_more = apply_filters( 'excerpt_more', ' ' . '[...]' );
 
 	$words = preg_split( "/[\n\r\t ]+/", $excerpt, $excerpt_length + 1, PREG_SPLIT_NO_EMPTY );
 	if ( count( $words ) > $excerpt_length ) {
@@ -1356,13 +1356,13 @@ function cp_get_the_course_excerpt( $id = false, $length = 55 ) {
 
 function cp_get_number_of_days_between_dates( $start_date, $end_date ) {
 
-	$startTimeStamp	 = strtotime( $start_date );
-	$endTimeStamp	 = strtotime( $end_date );
+	$startTimeStamp = strtotime( $start_date );
+	$endTimeStamp = strtotime( $end_date );
 
 	$timeDiff = abs( $endTimeStamp - $startTimeStamp );
 
-	$numberDays	 = $timeDiff / 86400;  // 86400 seconds in one day
-	$numberDays	 = intval( $numberDays );
+	$numberDays = $timeDiff / 86400;  // 86400 seconds in one day
+	$numberDays = intval( $numberDays );
 
 	return $numberDays;
 }
@@ -1380,9 +1380,9 @@ function cp_object_encode( $object ) {
 }
 
 function cp_object_decode( $string, $class = 'stdClass' ) {
-	$object	 = str_replace( '&quot;', '"', $string );
-	$object	 = str_replace( '&apos;', "'", $object );
-	$object	 = json_decode( $object );
+	$object = str_replace( '&quot;', '"', $string );
+	$object = str_replace( '&apos;', "'", $object );
+	$object = json_decode( $object );
 
 	// Convert to correct Class
 	return unserialize( sprintf(
@@ -1405,13 +1405,13 @@ if ( !function_exists( 'cp_get_userdatabynicename' ) ) :
 		}
 
 		$args = array(
-			'search'		 => $user_nicename,
+			'search' => $user_nicename,
 			'search_columns' => array( 'user_nicename' ),
-			'number'		 => '1',
-			'fields'		 => array( 'id' ),
+			'number' => '1',
+			'fields' => array( 'id' ),
 		);
 
-		$users	 = new WP_User_Query( $args );
+		$users = new WP_User_Query( $args );
 		$user_id = !empty( $users->results ) ? array_pop( $users->results ) : false;
 
 		$user = !empty( $user_id ) ? new WP_User( $user_id->id ) : false;
@@ -1425,9 +1425,9 @@ if ( !function_exists( 'cp_get_userdatabynicename' ) ) :
 		if ( $metavalues ) {
 			foreach ( $metavalues as $key => $meta ) {
 
-				$value			 = array_pop( $meta );
-				$value			 = maybe_unserialize( $value );
-				$user->{$key}	 = $value;
+				$value = array_pop( $meta );
+				$value = maybe_unserialize( $value );
+				$user->{$key} = $value;
 
 				// We need to set user_level from meta, not row
 				if ( $wpdb->prefix . 'user_level' == $key ) {
@@ -1436,7 +1436,7 @@ if ( !function_exists( 'cp_get_userdatabynicename' ) ) :
 			}
 		}
 
-		// For backwards compat. 
+		// For backwards compat.
 		if ( isset( $user->first_name ) ) {
 			$user->user_firstname = $user->first_name;
 		}
@@ -1505,11 +1505,11 @@ if ( !function_exists( 'cp_register_module' ) ) {
 		}
 
 		if ( class_exists( $class_name ) ) {
-			$class														 = new $class_name();
-			$coursepress_modules_labels[ $module_name ]					 = $class->label;
-			$coursepress_modules_descriptions[ $module_name ]			 = $class->description;
-			$coursepress_modules[ $section ][ $module_name ]			 = $class_name;
-			$coursepress_modules_ordered[ $section ][ $class->order ]	 = $class_name;
+			$class = new $class_name();
+			$coursepress_modules_labels[ $module_name ] = $class->label;
+			$coursepress_modules_descriptions[ $module_name ] = $class->description;
+			$coursepress_modules[ $section ][ $module_name ] = $class_name;
+			$coursepress_modules_ordered[ $section ][ $class->order ] = $class_name;
 			ksort( $coursepress_modules_ordered[ $section ] );
 		} else {
 			return false;
@@ -1528,10 +1528,10 @@ if ( !function_exists( 'cp_register_front_page_module' ) ) {
 		}
 
 		if ( class_exists( $class_name ) ) {
-			$class																 = new $class_name();
-			$coursepress_front_page_modules_labels[ $module_name ]				 = $class->label;
-			$coursepress_front_page_modules_descriptions[ $module_name ]		 = $class->description;
-			$coursepress_front_page_modules[ $section ][ $module_name ]			 = $class_name;
+			$class = new $class_name();
+			$coursepress_front_page_modules_labels[ $module_name ] = $class->label;
+			$coursepress_front_page_modules_descriptions[ $module_name ] = $class->description;
+			$coursepress_front_page_modules[ $section ][ $module_name ] = $class_name;
 			$coursepress_front_page_modules_ordered[ $section ][ $class->order ] = $class_name;
 		} else {
 			return false;
@@ -1544,12 +1544,12 @@ if ( !function_exists( 'cp_register_front_page_module' ) ) {
 if ( !function_exists( 'cp_write_log' ) ) {
 
 	function cp_write_log( $message, $echo_file = false ) {
-		$trace		 = defined( 'DEBUG_BACKTRACE_IGNORE_ARGS' ) ? debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ) : debug_backtrace( false );
-		$exception	 = new Exception();
-		$debug		 = array_shift( $trace );
-		$caller		 = array_shift( $trace );
-		$exception	 = $exception->getTrace();
-		$callee		 = array_shift( $exception );
+		$trace = defined( 'DEBUG_BACKTRACE_IGNORE_ARGS' ) ? debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS ) : debug_backtrace( false );
+		$exception = new Exception();
+		$debug = array_shift( $trace );
+		$caller = array_shift( $trace );
+		$exception = $exception->getTrace();
+		$callee = array_shift( $exception );
 
 		if ( true === WP_DEBUG ) {
 			if ( is_array( $message ) || is_object( $message ) ) {
@@ -1592,13 +1592,13 @@ if ( !function_exists( 'cp_is_plugin_network_active' ) ) {
 
 function cp_get_terms_dropdown( $taxonomies, $args ) {
 	$myterms = get_terms( $taxonomies, $args );
-	$output	 = "<select>";
+	$output = "<select>";
 	foreach ( $myterms as $term ) {
-		$root_url		 = get_bloginfo( 'url' );
-		$term_taxonomy	 = $term->taxonomy;
-		$term_slug		 = $term->slug;
-		$term_name		 = $term->name;
-		$link			 = $root_url . '/' . $term_taxonomy . '/' . $term_slug;
+		$root_url = get_bloginfo( 'url' );
+		$term_taxonomy = $term->taxonomy;
+		$term_slug = $term->slug;
+		$term_name = $term->name;
+		$link = $root_url . '/' . $term_taxonomy . '/' . $term_slug;
 		$output .= "<option value='" . $link . "'>" . $term_name . "</option>";
 	}
 	$output .= "</select>";
@@ -1762,8 +1762,8 @@ if ( !function_exists( 'cp_numeric_posts_nav' ) ) {
 }
 
 function cp_default_args( $pairs, $atts, $shortcode = '' ) {
-	$atts	 = (array) $atts;
-	$out	 = array();
+	$atts = (array) $atts;
+	$out = array();
 	foreach ( $pairs as $name => $default ) {
 		if ( array_key_exists( $name, $atts ) ) {
 			$out[ $name ] = $atts[ $name ];
@@ -1778,16 +1778,16 @@ function cp_default_args( $pairs, $atts, $shortcode = '' ) {
 if ( !function_exists( 'cp_length' ) ) {
 
 	function cp_length( $text, $excerpt_length ) {
-		/* $text			 = strip_shortcodes( $text );
+		/* $text = strip_shortcodes( $text );
 		  //$text = apply_filters( 'the_content', $text );
-		  $excerpt_more	 = '...';
-		  $text			 = str_replace( ']]>', ']]&gt;', $text );
-		  $text			 = strip_tags( $text );
-		  $words			 = preg_split( "/[\n\r\t ]+/", $text, $excerpt_length + 1, PREG_SPLIT_NO_EMPTY );
+		  $excerpt_more = '...';
+		  $text = str_replace( ']]>', ']]&gt;', $text );
+		  $text = strip_tags( $text );
+		  $words = preg_split( "/[\n\r\t ]+/", $text, $excerpt_length + 1, PREG_SPLIT_NO_EMPTY );
 		  if ( count( $words ) > $excerpt_length ) {
 		  array_pop( $words );
-		  $text	 = implode( ' ', $words );
-		  $text	 = $text . $excerpt_more;
+		  $text = implode( ' ', $words );
+		  $text = $text . $excerpt_more;
 		  } else {
 		  $text = implode( ' ', $words );
 		  } */
@@ -1806,9 +1806,9 @@ function truncateHtml( $text, $length = 100, $ending = '...', $exact = false, $c
 		}
 		// splits all html-tags to scanable lines
 		preg_match_all( '/(<.+?>)?([^<>]*)/s', $text, $lines, PREG_SET_ORDER );
-		$total_length	 = strlen( $ending );
-		$open_tags		 = array();
-		$truncate		 = '';
+		$total_length = strlen( $ending );
+		$open_tags = array();
+		$truncate = '';
 		foreach ( $lines as $line_matchings ) {
 			// if there is any html-tag in this line, handle it and add it (uncounted) to the output
 			if ( !empty( $line_matchings[ 1 ] ) ) {
@@ -1834,7 +1834,7 @@ function truncateHtml( $text, $length = 100, $ending = '...', $exact = false, $c
 			$content_length = strlen( preg_replace( '/&[0-9a-z]{2,8};|&#[0-9]{1,7};|[0-9a-f]{1,6};/i', ' ', $line_matchings[ 2 ] ) );
 			if ( $total_length + $content_length > $length ) {
 				// the number of characters which are left
-				$left			 = $length - $total_length;
+				$left = $length - $total_length;
 				$entities_length = 0;
 				// search for html entities
 				if ( preg_match_all( '/&[0-9a-z]{2,8};|&#[0-9]{1,7};|[0-9a-f]{1,6};/i', $line_matchings[ 2 ], $entities, PREG_OFFSET_CAPTURE ) ) {
@@ -1897,8 +1897,8 @@ function cp_do_attachment_caption( $data ) {
 		return '';
 	}
 
-	$media_data		 = array();
-	$caption_source	 = ( isset( $data->caption_field ) ? $data->caption_field : 'media' );
+	$media_data = array();
+	$caption_source = ( isset( $data->caption_field ) ? $data->caption_field : 'media' );
 
 	if ( !empty( $data->image_url ) ) {
 		$media_data[ 'id' ] = $data->attachment_id;
@@ -1918,8 +1918,8 @@ function cp_do_attachment_caption( $data ) {
 		}
 
 		// Width - used for caption shortcode
-		$attachment			 = get_post( $media_data[ 'id' ] );
-		$meta				 = wp_get_attachment_metadata( $media_data[ 'id' ] );
+		$attachment = get_post( $media_data[ 'id' ] );
+		$meta = wp_get_attachment_metadata( $media_data[ 'id' ] );
 		$media_data[ 'width' ] = $meta[ 'width' ];
 
 		if ( 'media' == $caption_source ) {
@@ -1984,12 +1984,12 @@ function cp_do_attachment_caption( $data ) {
 
 		$video = '';
 		if ( !empty( $video_extension ) ) {//it's file, most likely on the server
-			$attr	 = array(
+			$attr = array(
 				'src' => $data->video_url,
 			//'width' => $data->player_width,
 			//'height' => 550//$data->player_height,
 			);
-			$video	 = wp_video_shortcode( $attr );
+			$video = wp_video_shortcode( $attr );
 		} else {
 			$embed_args = array(
 			//'width' => $data->player_width,
@@ -2044,7 +2044,7 @@ function cp_remove_related_videos( $html, $url, $args ) {
 }
 
 function cp_minify_output( $buffer ) {
-	$search	 = array(
+	$search = array(
 		'/\>[^\S ]+/s', //strip whitespaces after tags, except space
 		'/[^\S ]+\</s', //strip whitespaces before tags, except space
 		'/(\s)+/s'  // shorten multiple whitespace sequences
@@ -2054,7 +2054,7 @@ function cp_minify_output( $buffer ) {
 		'<',
 		'\\1'
 	);
-	$buffer	 = preg_replace( $search, $replace, $buffer );
+	$buffer = preg_replace( $search, $replace, $buffer );
 
 	return $buffer;
 }
@@ -2071,8 +2071,8 @@ function cp_get_file_size( $url, $human = true ) {
 		}
 	} else {
 		try {
-			$bytes	 = filesize( $url );
-			$bytes	 = !empty( $bytes ) ? $bytes : 0;
+			$bytes = filesize( $url );
+			$bytes = !empty( $bytes ) ? $bytes : 0;
 		} catch ( Exception $e ) {
 			$bytes = 0;
 		}

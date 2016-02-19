@@ -7,7 +7,7 @@
 global $coursepress;
 $course_id = do_shortcode( '[get_parent_course_id]' );
 $course_id = (int) $course_id;
-$progress  = do_shortcode( '[course_progress course_id="' . $course_id . '"]' );
+$progress = do_shortcode( '[course_progress course_id="' . $course_id . '"]' );
 
 //redirect to the parent course page if not enrolled
 $coursepress->check_access( $course_id );
@@ -18,10 +18,10 @@ add_thickbox();
 <?php
 
 if ( 100 == ( int ) $progress ) {
-	$complete_message         = '<span class="unit-archive-course-complete cp-wrap"><i class="fa fa-check-circle"></i> ' . __( 'Course Complete', 'cp' ) . '</span>';
+	$complete_message = '<span class="unit-archive-course-complete cp-wrap"><i class="fa fa-check-circle"></i> ' . __( 'Course Complete', 'cp' ) . '</span>';
 	$workbook_course_progress = '';
 } else {
-	$complete_message         = '';
+	$complete_message = '';
 	$workbook_course_progress = '<span class="workbook-course-progress">' . __( 'Course progress: ', 'cp' ) . esc_html( $progress ) . '%' . '</span>';
 }
 
@@ -41,9 +41,9 @@ if ( 100 == ( int ) $progress ) {
 if ( have_posts() ) {
 	while ( have_posts() ) {
 		the_post();
-		$criteria           = Unit::get_module_completion_data( get_the_ID() );
+		$criteria = Unit::get_module_completion_data( get_the_ID() );
 		$input_module_count = count( $criteria['all_input_ids'] );
-		$has_assessable     = $input_module_count > 0 ? true : false;
+		$has_assessable = $input_module_count > 0 ? true : false;
 		?>
 		<div class="workbook_units cp-wrap">
 			<div class="unit_title">

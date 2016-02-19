@@ -38,8 +38,8 @@ class CoursePress_Helper_Email {
 
 	public static function get_email_fields( $context ) {
 		return apply_filters( 'coursepress_get_email_fields_' . $context, array(
-			'name'    => self::from_name( $context ),
-			'email'   => self::from_email( $context ),
+			'name' => self::from_name( $context ),
+			'email' => self::from_email( $context ),
 			'subject' => self::subject( $context ),
 			'content' => self::content( $context ),
 		) );

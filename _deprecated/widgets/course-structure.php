@@ -3,21 +3,21 @@
 class CP_Course_Structure extends WP_Widget {
 
 	function CP_Course_Structure() {
-		$widget_ops = array( 'classname'   => 'cp_course_strucutre_widget',
+		$widget_ops = array( 'classname' => 'cp_course_strucutre_widget',
 		                     'description' => __( 'Displays a selected course structure', 'cp' )
 		);
 		$this->WP_Widget( 'CP_Course_Structure', __( 'Course Structure', 'cp' ), $widget_ops );
 	}
 
 	function form( $instance ) {
-		$instance        = wp_parse_args( ( array ) $instance, array( 'title' => '' ) );
-		$title           = $instance['title'];
+		$instance = wp_parse_args( ( array ) $instance, array( 'title' => '' ) );
+		$title = $instance['title'];
 		$selected_course = $instance['course'];
 
 		$args = array(
 			'posts_per_page' => - 1,
-			'post_type'      => 'course',
-			'post_status'    => 'publish'
+			'post_type' => 'course',
+			'post_status' => 'publish'
 		);
 
 		$courses = get_posts( $args );

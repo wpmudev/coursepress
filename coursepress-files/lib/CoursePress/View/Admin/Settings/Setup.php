@@ -40,7 +40,7 @@ class CoursePress_View_Admin_Settings_Setup{
 		if ( empty( $show_setup_guide ) ) {
 			$return_url = add_query_arg( array(
 				'page' => $_GET['page'],
-				'tab'  => 'general',
+				'tab' => 'general',
 			), admin_url( 'admin.php' ) );
 			$content .= '<p><a href="' . $return_url . '">' . esc_html__( 'Return to CoursePress settings.', CoursePress::TD ) . '</a></p>';
 		}

@@ -18,7 +18,7 @@ class CoursePress_View_Admin_Settings {
 
 	public static function init() {
 
-		self::$title      = __( 'Settings/CoursePress', CoursePress::TD );
+		self::$title = __( 'Settings/CoursePress', CoursePress::TD );
 		self::$menu_title = __( 'Settings', CoursePress::TD );
 
 		add_filter( 'coursepress_admin_valid_pages', array( __CLASS__, 'add_valid' ) );
@@ -45,7 +45,7 @@ class CoursePress_View_Admin_Settings {
 
 	public static function add_page( $pages ) {
 		$pages[ self::$slug ] = array(
-			'title'      => self::$title,
+			'title' => self::$title,
 			'menu_title' => self::$menu_title,
 		);
 
@@ -59,9 +59,9 @@ class CoursePress_View_Admin_Settings {
 		// Make sure that we have all the fields we need
 		foreach ( $tabs as $key => $tab ) {
 			$tabs[ $key ]['buttons'] = isset( $tab['buttons'] ) ? $tab['buttons'] : 'both';
-			$tabs[ $key ]['class']   = isset( $tab['class'] ) ? $tab['class'] : '';
+			$tabs[ $key ]['class'] = isset( $tab['class'] ) ? $tab['class'] : '';
 			$tabs[ $key ]['is_form'] = isset( $tab['is_form'] ) ? $tab['is_form'] : true;
-			$tabs[ $key ]['order']   = isset( $tab['order'] ) ? $tab['order'] : 999; // Set default order to 999... bottom of the list
+			$tabs[ $key ]['order'] = isset( $tab['order'] ) ? $tab['order'] : 999; // Set default order to 999... bottom of the list
 		}
 
 		// Order the tabs

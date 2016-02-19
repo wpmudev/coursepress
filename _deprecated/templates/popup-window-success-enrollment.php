@@ -2,10 +2,10 @@
 	<div class="cp_popup_title cp_popup_congratulations_title"><?php _e( 'Congratulations', 'cp' ); ?></div>
 	<?php
 	global $coursepress;
-	$course_id      = (int) $args['course_id'];
-	$course         = new Course( $course_id );
+	$course_id = (int) $args['course_id'];
+	$course = new Course( $course_id );
 	$dashboard_link = '<a href="' . esc_url( $coursepress->get_student_dashboard_slug( true ) ) . '">' . __( 'Dashboard', 'cp' ) . '</a>';
-	$course_link    = '<a href="' . esc_url( get_permalink( $course_id ) ) . '">' . $course->details->post_title . '</a>';
+	$course_link = '<a href="' . esc_url( get_permalink( $course_id ) ) . '">' . $course->details->post_title . '</a>';
 	?>
 	<div class="cp_popup_success_message">
 		<div class="congratulations-image">

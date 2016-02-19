@@ -14,8 +14,8 @@ if ( ! class_exists( 'Discussion' ) ) {
 		var $details;
 
 		function __construct( $id = '', $output = 'OBJECT' ) {
-			$this->id      = $id;
-			$this->output  = $output;
+			$this->id = $id;
+			$this->output = $output;
 			$this->details = get_post( $this->id, $this->output );
 		}
 
@@ -39,7 +39,7 @@ if ( ! class_exists( 'Discussion' ) ) {
 				return __( 'General', 'cp' );
 			} else {
 				$unit_obj = new Unit( $this->details->unit_id );
-				$unit     = $unit_obj->get_unit();
+				$unit = $unit_obj->get_unit();
 
 				return $unit->post_title;
 			}
@@ -48,9 +48,9 @@ if ( ! class_exists( 'Discussion' ) ) {
 		function get_discussion_id_by_name( $slug ) {
 
 			$args = array(
-				'name'           => $slug,
-				'post_type'      => 'discussion',
-				'post_status'    => 'any',
+				'name' => $slug,
+				'post_type' => 'discussion',
+				'post_status' => 'any',
 				'posts_per_page' => 1
 			);
 
@@ -71,11 +71,11 @@ if ( ! class_exists( 'Discussion' ) ) {
 			$post_status = 'publish';
 
 			$post = array(
-				'post_author'  => $user_id,
+				'post_author' => $user_id,
 				'post_content' => cp_filter_content( $discussion_description == '' ? $_POST['discussion_description'] : $discussion_description ),
-				'post_status'  => $post_status,
-				'post_title'   => cp_filter_content( ( $discussion_title == '' ? $_POST['discussion_name'] : $discussion_title ), true ),
-				'post_type'    => 'discussions',
+				'post_status' => $post_status,
+				'post_title' => cp_filter_content( ( $discussion_title == '' ? $_POST['discussion_name'] : $discussion_title ), true ),
+				'post_type' => 'discussions',
 			);
 
 			if ( isset( $_POST['discussion_id'] ) ) {
@@ -116,9 +116,9 @@ if ( ! class_exists( 'Discussion' ) ) {
 			$wpdb;
 			if ( $parent_course_id ) {//delete all discussion with parent course id
 				$args = array(
-					'meta_key'   => 'course_id',
+					'meta_key' => 'course_id',
 					'meta_value' => $parent_course_id,
-					'post_type'  => 'discussions',
+					'post_type' => 'discussions',
 				);
 
 				$discussions_to_delete = get_posts( $args );
@@ -137,7 +137,7 @@ if ( ! class_exists( 'Discussion' ) ) {
 
 		function change_status( $post_status ) {
 			$post = array(
-				'ID'          => $this->id,
+				'ID' => $this->id,
 				'post_status' => $post_status,
 			);
 

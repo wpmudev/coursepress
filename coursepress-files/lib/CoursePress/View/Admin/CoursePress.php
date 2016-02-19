@@ -14,7 +14,7 @@ class CoursePress_View_Admin_CoursePress {
 
 	public static function init() {
 
-		self::$title      = __( 'Courses/CoursePress', CoursePress::TD );
+		self::$title = __( 'Courses/CoursePress', CoursePress::TD );
 		self::$menu_title = __( 'Courses', CoursePress::TD );
 
 		add_filter( 'coursepress_admin_valid_pages', array( __CLASS__, 'add_valid' ) );
@@ -45,17 +45,17 @@ class CoursePress_View_Admin_CoursePress {
 
 	public static function add_page( $pages ) {
 		$pages[ self::$slug ] = array(
-			'title'      => self::$title,
+			'title' => self::$title,
 			'menu_title' => self::$menu_title,
 		);
 
-		$category                   = CoursePress_Data_Course::get_post_category_name();
-		$cpt                        = CoursePress_Data_Course::get_post_type_name();
+		$category = CoursePress_Data_Course::get_post_category_name();
+		$cpt = CoursePress_Data_Course::get_post_type_name();
 		$pages['course_categories'] = array(
-			'title'      => __( 'Edit Course Categories', CoursePress::TD ),
+			'title' => __( 'Edit Course Categories', CoursePress::TD ),
 			'menu_title' => __( 'Course Categories', CoursePress::TD ),
-			'handle'     => 'edit-tags.php?taxonomy=' . $category . '&post_type=' . $cpt,
-			'callback'   => 'none',
+			'handle' => 'edit-tags.php?taxonomy=' . $category . '&post_type=' . $cpt,
+			'callback' => 'none',
 		);
 
 		return $pages;
@@ -97,9 +97,9 @@ class CoursePress_View_Admin_CoursePress {
 		$page = get_current_screen()->id;
 
 		if ( in_array( $page, $detect_pages ) ) {
-			// $initArray['height']              = '360px';
-			$initArray['relative_urls']       = false;
-			$initArray['url_converter']       = false;
+			// $initArray['height'] = '360px';
+			$initArray['relative_urls'] = false;
+			$initArray['url_converter'] = false;
 			$initArray['url_converter_scope'] = false;
 
 			$initArray['setup'] = 'function( ed ) {

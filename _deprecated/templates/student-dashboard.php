@@ -2,7 +2,7 @@
 	<?php
 
 	global $coursepress;
-	$student         = new Student( get_current_user_id() );
+	$student = new Student( get_current_user_id() );
 	$student_courses = $student->get_enrolled_courses_ids();
 	?>
 	<div class="student-dashboard-wrapper">
@@ -50,7 +50,7 @@
 		}
 
 		// Completed courses
-		$show        = 'dates,class_size';
+		$show = 'dates,class_size';
 		$course_list = do_shortcode( '[course_list student="' . $student->ID . '" student_msg="" course_status="completed" list_wrapper_before="" title_link="no" title_tag="h1" title_class="h1-title" show_divider="yes" left_class="enroll-box-left" right_class="enroll-box-right"]' );
 
 		if ( ! empty( $course_list ) ) {

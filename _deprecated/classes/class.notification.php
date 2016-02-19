@@ -14,8 +14,8 @@ if ( ! class_exists( 'Notification' ) ) {
 		var $details;
 
 		function __construct( $id = '', $output = 'OBJECT' ) {
-			$this->id      = $id;
-			$this->output  = $output;
+			$this->id = $id;
+			$this->output = $output;
 			$this->details = get_post( $this->id, $this->output );
 		}
 
@@ -42,9 +42,9 @@ if ( ! class_exists( 'Notification' ) ) {
 		function get_notification_id_by_name( $slug ) {
 
 			$args = array(
-				'name'           => $slug,
-				'post_type'      => 'notifications',
-				'post_status'    => 'any',
+				'name' => $slug,
+				'post_type' => 'notifications',
+				'post_status' => 'any',
 				'posts_per_page' => 1
 			);
 
@@ -63,11 +63,11 @@ if ( ! class_exists( 'Notification' ) ) {
 			$course = get_post( $this->id, $this->output );
 
 			$post = array(
-				'post_author'  => $user_id,
+				'post_author' => $user_id,
 				'post_content' => cp_filter_content( $_POST['notification_description'] ),
-				'post_status'  => 'publish',
-				'post_title'   => cp_filter_content( $_POST['notification_name'], true ),
-				'post_type'    => 'notifications',
+				'post_status' => 'publish',
+				'post_title' => cp_filter_content( $_POST['notification_name'], true ),
+				'post_type' => 'notifications',
 			);
 
 			if ( isset( $_POST['notification_id'] ) ) {
@@ -92,9 +92,9 @@ if ( ! class_exists( 'Notification' ) ) {
 			$wpdb;
 			if ( $parent_course_id ) {//delete all discussion with parent course id
 				$args = array(
-					'meta_key'   => 'course_id',
+					'meta_key' => 'course_id',
 					'meta_value' => $parent_course_id,
-					'post_type'  => 'notifications',
+					'post_type' => 'notifications',
 				);
 
 				$notifications_to_delete = get_posts( $args );
@@ -113,7 +113,7 @@ if ( ! class_exists( 'Notification' ) ) {
 
 		function change_status( $post_status ) {
 			$post = array(
-				'ID'          => $this->id,
+				'ID' => $this->id,
 				'post_status' => $post_status,
 			);
 

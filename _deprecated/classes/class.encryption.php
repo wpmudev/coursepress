@@ -27,9 +27,9 @@ class CP_Encryption {
 				return false;
 			}
 
-			$text      = $value;
-			$iv_size   = mcrypt_get_iv_size( MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB );
-			$iv        = mcrypt_create_iv( $iv_size, MCRYPT_RAND );
+			$text = $value;
+			$iv_size = mcrypt_get_iv_size( MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB );
+			$iv = mcrypt_create_iv( $iv_size, MCRYPT_RAND );
 			$crypttext = mcrypt_encrypt( MCRYPT_RIJNDAEL_256, mb_substr( $this->security_key, 0, 24 ), $text, MCRYPT_MODE_ECB, $iv );
 
 			return trim( $this->safe_b64encode( $crypttext ) );
@@ -44,9 +44,9 @@ class CP_Encryption {
 				return false;
 			}
 
-			$crypttext   = $this->safe_b64decode( $value );
-			$iv_size     = mcrypt_get_iv_size( MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB );
-			$iv          = mcrypt_create_iv( $iv_size, MCRYPT_RAND );
+			$crypttext = $this->safe_b64decode( $value );
+			$iv_size = mcrypt_get_iv_size( MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB );
+			$iv = mcrypt_create_iv( $iv_size, MCRYPT_RAND );
 			$decrypttext = mcrypt_decrypt( MCRYPT_RIJNDAEL_256, mb_substr( $this->security_key, 0, 24 ), $crypttext, MCRYPT_MODE_ECB, $iv );
 
 			return trim( $decrypttext );

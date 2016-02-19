@@ -9,28 +9,28 @@ class CoursePress_Data_Notification {
 		return array(
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
-				'labels'             => array(
-					'name'               => __( 'Notifications', CoursePress::TD ),
-					'singular_name'      => __( 'Notification', CoursePress::TD ),
-					'add_new'            => __( 'Create New', CoursePress::TD ),
-					'add_new_item'       => __( 'Create New Notification', CoursePress::TD ),
-					'edit_item'          => __( 'Edit Notification', CoursePress::TD ),
-					'edit'               => __( 'Edit', CoursePress::TD ),
-					'new_item'           => __( 'New Notification', CoursePress::TD ),
-					'view_item'          => __( 'View Notification', CoursePress::TD ),
-					'search_items'       => __( 'Search Notifications', CoursePress::TD ),
-					'not_found'          => __( 'No Notifications Found', CoursePress::TD ),
+				'labels' => array(
+					'name' => __( 'Notifications', CoursePress::TD ),
+					'singular_name' => __( 'Notification', CoursePress::TD ),
+					'add_new' => __( 'Create New', CoursePress::TD ),
+					'add_new_item' => __( 'Create New Notification', CoursePress::TD ),
+					'edit_item' => __( 'Edit Notification', CoursePress::TD ),
+					'edit' => __( 'Edit', CoursePress::TD ),
+					'new_item' => __( 'New Notification', CoursePress::TD ),
+					'view_item' => __( 'View Notification', CoursePress::TD ),
+					'search_items' => __( 'Search Notifications', CoursePress::TD ),
+					'not_found' => __( 'No Notifications Found', CoursePress::TD ),
 					'not_found_in_trash' => __( 'No Notifications found in Trash', CoursePress::TD ),
-					'view'               => __( 'View Notification', CoursePress::TD ),
+					'view' => __( 'View Notification', CoursePress::TD ),
 				),
-				'public'             => false,
-				'show_ui'            => true,
+				'public' => false,
+				'show_ui' => true,
 				'publicly_queryable' => false,
-				'capability_type'    => 'notification',
-				'map_meta_cap'       => true,
-				'query_var'          => true,
-				'rewrite'            => array(
-					'slug'  => trailingslashit( CoursePress_Core::get_slug( 'course' ) ) . '%course%/' . CoursePress_Core::get_slug( 'notification' ),
+				'capability_type' => 'notification',
+				'map_meta_cap' => true,
+				'query_var' => true,
+				'rewrite' => array(
+					'slug' => trailingslashit( CoursePress_Core::get_slug( 'course' ) ) . '%course%/' . CoursePress_Core::get_slug( 'notification' ),
 				),
 			),
 		);
@@ -75,8 +75,8 @@ class CoursePress_Data_Notification {
 			'post_type' => self::get_post_type_name(),
 			'meta_query' => array(
 				array(
-					'key'     => 'course_id',
-					'value'   => $course,
+					'key' => 'course_id',
+					'value' => $course,
 					'compare' => 'IN',
 				),
 			),

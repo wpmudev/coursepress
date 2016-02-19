@@ -10,8 +10,8 @@ if ( is_user_logged_in() ) {
 
 		check_admin_referer( 'enrollment_process' );
 
-		$course_id   = (int) $_POST['course_id'];
-		$course      = new Course( $course_id );
+		$course_id = (int) $_POST['course_id'];
+		$course = new Course( $course_id );
 		$pass_errors = 0;
 
 		global $coursepress;

@@ -5,31 +5,31 @@ class CP_Course_Calendar extends WP_Widget {
 	private $date_indicator = array();
 
 	function CP_Course_Calendar() {
-		$widget_ops = array( 'classname'   => 'cp_course_calendar_widget',
+		$widget_ops = array( 'classname' => 'cp_course_calendar_widget',
 		                     'description' => __( 'Displays the course calendar.', 'cp' )
 		);
 		$this->WP_Widget( 'CP_Course_Calendar', __( 'Course Calendar', 'cp' ), $widget_ops );
 		$this->date_indicator = array(
 			'indicator_light_block' => __( 'Light theme - Block', 'cp' ),
-			'indicator_light_line'  => __( 'Light theme - Line', 'cp' ),
-			'indicator_dark_block'  => __( 'Dark theme - Block', 'cp' ),
-			'indicator_dark_line'   => __( 'Dark theme - Line', 'cp' ),
-			'indicator_none'        => __( 'Theme/Custom CSS', 'cp' ),
+			'indicator_light_line' => __( 'Light theme - Line', 'cp' ),
+			'indicator_dark_block' => __( 'Dark theme - Block', 'cp' ),
+			'indicator_dark_line' => __( 'Dark theme - Line', 'cp' ),
+			'indicator_none' => __( 'Theme/Custom CSS', 'cp' ),
 		);
 	}
 
 	function form( $instance ) {
-		$instance           = wp_parse_args( ( array ) $instance, array( 'title' => '' ) );
-		$title              = $instance['title'];
-		$pre_text           = ! empty( $instance['pre_text'] ) ? $instance['pre_text'] : null;
-		$next_text          = ! empty( $instance['next_text'] ) ? $instance['next_text'] : null;
-		$selected_course    = ! empty( $instance['course'] ) ? $instance['course'] : "false";
+		$instance = wp_parse_args( ( array ) $instance, array( 'title' => '' ) );
+		$title = $instance['title'];
+		$pre_text = ! empty( $instance['pre_text'] ) ? $instance['pre_text'] : null;
+		$next_text = ! empty( $instance['next_text'] ) ? $instance['next_text'] : null;
+		$selected_course = ! empty( $instance['course'] ) ? $instance['course'] : "false";
 		$selected_indicator = ! empty( $instance['indicator'] ) ? $instance['indicator'] : "indicator_light_block";
 
 		$args = array(
 			'posts_per_page' => - 1,
-			'post_type'      => 'course',
-			'post_status'    => 'publish'
+			'post_type' => 'course',
+			'post_status' => 'publish'
 		);
 
 		$courses = get_posts( $args );
@@ -79,17 +79,17 @@ class CP_Course_Calendar extends WP_Widget {
 		$instance = $old_instance;
 		// Admin on single sites, Super admin on network
 		if ( current_user_can( 'unfiltered_html' ) ) {
-			$instance['title']     = $new_instance['title'];
-			$instance['pre_text']  = $new_instance['pre_text'];
+			$instance['title'] = $new_instance['title'];
+			$instance['pre_text'] = $new_instance['pre_text'];
 			$instance['next_text'] = $new_instance['next_text'];
 		} else {
-			$instance['title']     = strip_tags( $new_instance['title'] );
-			$instance['pre_text']  = strip_tags( $new_instance['pre_text'] );
+			$instance['title'] = strip_tags( $new_instance['title'] );
+			$instance['pre_text'] = strip_tags( $new_instance['pre_text'] );
 			$instance['next_text'] = strip_tags( $new_instance['next_text'] );
 		}
 
 		$instance['indicator'] = $new_instance['indicator'];
-		$instance['course']    = $new_instance['course'];
+		$instance['course'] = $new_instance['course'];
 
 		return $instance;
 	}
@@ -97,7 +97,7 @@ class CP_Course_Calendar extends WP_Widget {
 	function widget( $args, $instance ) {
 		global $post;
 		extract( $args, EXTR_SKIP );
-		
+
 		$course_id = $instance['course'];
 
 		if ( ( $post && ( 'course' == $post->post_type || 'unit' == $post->post_type ) && ! is_post_type_archive( 'course' ) ) || 'false' != $instance['course'] ) {

@@ -60,12 +60,12 @@ class CoursePress_View_Front_Login {
 			$content = '';
 			$page_title = __( 'Student Login', CoursePress::TD );
 
-			$args       = array(
-				'slug'    => CoursePress_Core::get_slug( 'login' ),
-				'title'   => esc_html( $page_title ),
-				// 'show_title'  => false,
+			$args = array(
+				'slug' => CoursePress_Core::get_slug( 'login' ),
+				'title' => esc_html( $page_title ),
+				// 'show_title' => false,
 				'content' => ! empty( $content ) ? esc_html( $content ) : self::render_login_page(),
-				'type'    => 'coursepress_student_login',
+				'type' => 'coursepress_student_login',
 			);
 
 			$pg = new CoursePress_Data_VirtualPage( $args );
@@ -87,12 +87,12 @@ class CoursePress_View_Front_Login {
 			$content = '';
 			$page_title = __( 'New Signup', CoursePress::TD );
 
-			$args       = array(
-				'slug'    => CoursePress_Core::get_slug( 'signup' ),
-				'title'   => esc_html( $page_title ),
-				// 'show_title'  => false,
+			$args = array(
+				'slug' => CoursePress_Core::get_slug( 'signup' ),
+				'title' => esc_html( $page_title ),
+				// 'show_title' => false,
 				'content' => ! empty( $content ) ? esc_html( $content ) : self::render_signup_page(),
-				'type'    => 'coursepress_student_signup',
+				'type' => 'coursepress_student_signup',
 			);
 
 			$pg = new CoursePress_Data_VirtualPage( $args );

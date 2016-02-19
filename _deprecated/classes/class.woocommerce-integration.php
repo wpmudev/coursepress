@@ -2,7 +2,7 @@
 /*
  * Integration with WooCommerce plugin
  * https://wordpress.org/plugins/woocommerce/
- * 
+ *
  */
 
 if ( !defined( 'ABSPATH' ) ) {
@@ -50,9 +50,9 @@ if ( !class_exists( 'CP_WooCommerce_Integration' ) ) {
 				global $coursepress;
 
 
-				$order_details		 = new WC_Order( $order->id );
-				$order_items		 = $order_details->get_items();
-				$purchased_course	 = false;
+				$order_details = new WC_Order( $order->id );
+				$order_items = $order_details->get_items();
+				$purchased_course = false;
 
 				foreach ( $order_items as $order_item ) {
 					$course_id = wp_get_post_parent_id( $order_item[ 'product_id' ] );
@@ -86,8 +86,8 @@ if ( !class_exists( 'CP_WooCommerce_Integration' ) ) {
 			}
 
 			function change_cp_order_item_name( $name, $item ) {
-				$product_id	 = isset( $item[ 'item_meta' ][ '_product_id' ] ) ? $item[ 'item_meta' ][ '_product_id' ] : '';
-				$product_id	 = $product_id[ 0 ];
+				$product_id = isset( $item[ 'item_meta' ][ '_product_id' ] ) ? $item[ 'item_meta' ][ '_product_id' ] : '';
+				$product_id = $product_id[ 0 ];
 				if ( is_numeric( $product_id ) ) {
 					$course_id = wp_get_post_parent_id( $product_id );
 					if ( $course_id && get_post_type( $course_id ) == 'course' ) {
@@ -162,10 +162,10 @@ if ( !class_exists( 'CP_WooCommerce_Integration' ) ) {
 			public static function woo_product_id( $course_id = false ) {
 				$args = array(
 					'posts_per_page' => 1,
-					'post_type'		 => 'product',
-					'post_parent'	 => $course_id,
-					'post_status'	 => 'publish',
-					'fields'		 => 'ids',
+					'post_type' => 'product',
+					'post_parent' => $course_id,
+					'post_status' => 'publish',
+					'fields' => 'ids',
 				);
 
 				$products = get_posts( $args );
@@ -184,9 +184,9 @@ if ( !class_exists( 'CP_WooCommerce_Integration' ) ) {
 				//check if product already in cart
 				if ( sizeof( $woocommerce->cart->get_cart() ) > 0 ) {
 					foreach ( $woocommerce->cart->get_cart() as $cart_item_key => $values ) {
-						$_product	 = $values[ 'data' ];
+						$_product = $values[ 'data' ];
 						if ( $_product->id == $product_id )
-							$found		 = true;
+							$found = true;
 					}
 					// if product not found, add it
 					if ( !$found )

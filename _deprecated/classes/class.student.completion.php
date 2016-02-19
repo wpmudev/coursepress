@@ -69,7 +69,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 
 		public static function get_remaining_pages( $student_id, $course_id, $unit_id ) {
 			$visited = count( self::get_visited_pages( $student_id, $course_id, $unit_id ) );
-			$total   = Unit::get_page_count( $unit_id );
+			$total = Unit::get_page_count( $unit_id );
 			$remaining = $total - $visited;
 
 			if( 0 == $remaining ) {
@@ -107,7 +107,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 
 		public static function get_gradable_modules_passed( $student_id, $course_id, $unit_id ) {
 			$criteria = Unit::get_module_completion_data( $unit_id );
-			$answers  = self::get_gradable_module_answered( $student_id, $course_id, $unit_id );
+			$answers = self::get_gradable_module_answered( $student_id, $course_id, $unit_id );
 
 			if ( empty( $criteria ) || empty( $answers ) ) {
 				return array();
@@ -118,7 +118,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 			foreach ( $criteria['gradable_modules'] as $module_id ) {
 
 				$required = (int) $criteria['minimum_grades'][ $module_id ];
-				$passed   = false;
+				$passed = false;
 
 				if ( ! isset( $answers[ $module_id ] ) ) {
 					continue;
@@ -130,10 +130,10 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 						do_action( 'coursepress_set_gradable_question_passed', $student_id, $course_id, $unit_id, $module_id );
 					} else {
 						// Could not find a result in completion, but lets check the module for an answer and record it.
-						$module          = get_post_meta( $module_id, 'module_type', true );
-						$response        = call_user_func( $module . '::get_response', $student_id, $module_id );
+						$module = get_post_meta( $module_id, 'module_type', true );
+						$response = call_user_func( $module . '::get_response', $student_id, $module_id );
 						$response_result = Unit_Module::get_response_grade( $response->ID );
-						$grade           = (int) $response_result['grade'];
+						$grade = (int) $response_result['grade'];
 
 						if( 0 < $grade ) { // Avoid repeated recording of 0 values
 							self::record_gradable_result( $student_id, $course_id, $unit_id, $module_id, $grade );
@@ -157,7 +157,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 			if ( empty( $criteria ) ) {
 				return false;
 			}
-			$mandatory  = $criteria['mandatory_modules'];
+			$mandatory = $criteria['mandatory_modules'];
 			$all_passed = self::get_gradable_modules_passed( $student_id, $course_id, $unit_id );
 
 			// Forget about the ones that are not mandatory
@@ -176,8 +176,8 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 
 			// Deal with mandatory gradable answers. A mandatory question is not considered done if it is gradable and not passed.
 			$mandatory_gradable = $criteria['mandatory_gradable_modules'];
-			$mandatory_passed   = self::get_mandatory_gradable_modules_passed( $student_id, $course_id, $unit_id );
-			$mandatory_remove   = array_diff( $mandatory_gradable, $mandatory_passed );
+			$mandatory_passed = self::get_mandatory_gradable_modules_passed( $student_id, $course_id, $unit_id );
+			$mandatory_remove = array_diff( $mandatory_gradable, $mandatory_passed );
 
 			// Some mandatory gradable answers are not yet passed
 			if ( ! empty( $mandatory_remove ) ) {
@@ -193,7 +193,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 				return false;
 			}
 			$gradable_required = $criteria['gradable_modules'];
-			$gradable_passed   = self::get_gradable_modules_passed( $student_id, $course_id, $unit_id );
+			$gradable_passed = self::get_gradable_modules_passed( $student_id, $course_id, $unit_id );
 
 			return array_diff( $gradable_required, $gradable_passed );
 		}
@@ -203,7 +203,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 			if ( empty( $criteria ) ) {
 				return false;
 			}
-			$mandatory           = count( $criteria['mandatory_modules'] );
+			$mandatory = count( $criteria['mandatory_modules'] );
 			$mandatory_remaining = count( self::get_remaining_mandatory_answers( $student_id, $course_id, $unit_id ) );
 
 			return $mandatory - $mandatory_remaining;
@@ -272,7 +272,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 				self::_check_unit( $data, $unit_id );
 			}
 
-			$total     = self::_total_steps_required( $unit_id );
+			$total = self::_total_steps_required( $unit_id );
 			$completed = $total - self::get_remaining_steps( $student_id, $course_id, $unit_id );
 
 			$progress = $completed / $total * 100.0;
@@ -296,8 +296,8 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 				return false;
 			}
 
-			$data        = self::get_completion_data( $student_id, $course_id );
-			$course      = new Course( $course_id );
+			$data = self::get_completion_data( $student_id, $course_id );
+			$course = new Course( $course_id );
 			$total_units = $course->get_units( $course_id, 'publish', true );
 
 			// No units or no units published
@@ -314,7 +314,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 					}
 				}
 
-				$progress                = $progress / $total_units;
+				$progress = $progress / $total_units;
 				$data['course_progress'] = $progress;
 			}
 
@@ -435,7 +435,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 				return false;
 			}
 			$total_answers = count( $criteria['mandatory_modules'] );
-			$total_pages   = Unit::get_page_count( $unit_id );
+			$total_pages = Unit::get_page_count( $unit_id );
 
 			return $total_answers + $total_pages;
 		}
@@ -493,7 +493,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 					}
 
 					// Get modules
-					$modules       = Unit_Module::get_modules( $unit_id, 0, true );
+					$modules = Unit_Module::get_modules( $unit_id, 0, true );
 					$input_modules = Unit_Module::get_input_module_types();
 
 					if ( ! empty( $modules ) ) {
@@ -501,7 +501,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 						// Traverse modules
 						foreach ( $modules as $module_id ) {
 
-							$module_type     = Unit_Module::get_module_type( $module_id );
+							$module_type = Unit_Module::get_module_type( $module_id );
 							$module_is_input = in_array( $module_type, $input_modules );
 
 							// Only for input modules

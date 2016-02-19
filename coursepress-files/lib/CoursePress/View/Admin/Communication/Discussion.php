@@ -22,7 +22,7 @@ class CoursePress_View_Admin_Communication_Discussion {
 
 	public static function add_page( $pages ) {
 		$pages[ self::$slug ] = array(
-			'title'      => self::$title,
+			'title' => self::$title,
 			'menu_title' => self::$menu_title,
 		);
 
@@ -67,7 +67,7 @@ class CoursePress_View_Admin_Communication_Discussion {
 			update_post_meta( $id, 'course_id', $course_id );
 			update_post_meta( $id, 'unit_id', $unit_id );
 
-			$url        = admin_url( 'admin.php?page=' . self::$slug );
+			$url = admin_url( 'admin.php?page=' . self::$slug );
 			wp_redirect( esc_url_raw( $url ) );
 			exit;
 
@@ -84,7 +84,7 @@ class CoursePress_View_Admin_Communication_Discussion {
 		$discussionListTable = new CoursePress_Helper_Table_DiscussionList();
 		$discussionListTable->prepare_items();
 
-		$url        = admin_url( 'admin.php?page=' . self::$slug . '&action=edit&id=new' );
+		$url = admin_url( 'admin.php?page=' . self::$slug . '&action=edit&id=new' );
 
 		$content = '<div class="coursepress_communications_wrapper discussions wrap">' .
 		           '<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '
@@ -170,7 +170,7 @@ class CoursePress_View_Admin_Communication_Discussion {
 		$editor_id = 'postContent';
 		$args = array(
 			'textarea_name' => $editor_name,
-			'editor_class'  => 'cp-editor',
+			'editor_class' => 'cp-editor',
 			'textarea_rows' => 10,
 		);
 
@@ -201,9 +201,9 @@ class CoursePress_View_Admin_Communication_Discussion {
 
 	public static function update_discussion() {
 
-		$data      = json_decode( file_get_contents( 'php://input' ) );
+		$data = json_decode( file_get_contents( 'php://input' ) );
 		$json_data = array();
-		$success   = false;
+		$success = false;
 
 		$action = isset( $data->action ) ? $data->action : '';
 		$json_data['action'] = $action;
@@ -224,8 +224,8 @@ class CoursePress_View_Admin_Communication_Discussion {
 					wp_delete_post( $discussion_id );
 
 					$json_data['discussion_id'] = $discussion_id;
-					$json_data['nonce']     = wp_create_nonce( 'delete-discussion' );
-					$success                = true;
+					$json_data['nonce'] = wp_create_nonce( 'delete-discussion' );
+					$success = true;
 				}
 
 				break;
@@ -237,17 +237,17 @@ class CoursePress_View_Admin_Communication_Discussion {
 				if ( wp_verify_nonce( $data->data->nonce, 'publish-discussion' ) ) {
 
 					wp_update_post( array(
-						'ID'          => $discussion_id,
+						'ID' => $discussion_id,
 						'post_status' => $data->data->status,
 					) );
 
 					$json_data['nonce'] = wp_create_nonce( 'publish-discussion' );
-					$success            = true;
+					$success = true;
 
 				}
 
 				$json_data['discussion_id'] = $discussion_id;
-				$json_data['state']     = $data->data->state;
+				$json_data['state'] = $data->data->state;
 
 				break;
 
@@ -263,14 +263,14 @@ class CoursePress_View_Admin_Communication_Discussion {
 
 						if ( 'bulk_unpublish' === $action ) {
 							wp_update_post( array(
-								'ID'          => $id,
+								'ID' => $id,
 								'post_status' => 'draft',
 							) );
 						}
 
 						if ( 'bulk_publish' === $action ) {
 							wp_update_post( array(
-								'ID'          => $id,
+								'ID' => $id,
 								'post_status' => 'publish',
 							) );
 						}

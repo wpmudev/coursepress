@@ -20,8 +20,8 @@ if ( ! class_exists( 'Instructor_Search' ) ) {
 			global $wpdb;
 
 			$this->search_term = $search_term;
-			$this->raw_page    = ( '' == $page_num ) ? false : (int) $page_num;
-			$this->page_num    = (int) ( '' == $page_num ) ? 1 : $page_num;
+			$this->raw_page = ( '' == $page_num ) ? false : (int) $page_num;
+			$this->page_num = (int) ( '' == $page_num ) ? 1 : $page_num;
 
 			$args = array(
 				'search' => $this->search_term,
@@ -42,20 +42,20 @@ if ( ! class_exists( 'Instructor_Search' ) ) {
 
 			$this->query_vars = wp_parse_args( $args, array(
 				//'role' => 'instructor',
-				'meta_value'     => 'instructor',
-				'meta_compare'   => '',
-				'include'        => array(),
-				'exclude'        => array(),
-				'search'         => '',
+				'meta_value' => 'instructor',
+				'meta_compare' => '',
+				'include' => array(),
+				'exclude' => array(),
+				'search' => '',
 				'search_columns' => '',
-				'counter'        => '',
-				'orderby'        => 'login',
-				'order'          => 'ASC',
-				'offset'         => ( $this->page_num - 1 ) * $this->users_per_page,
-				'number'         => $this->users_per_page,
-				'count_total'    => true,
-				'fields'         => 'all',
-				'who'            => ''
+				'counter' => '',
+				'orderby' => 'login',
+				'order' => 'ASC',
+				'offset' => ( $this->page_num - 1 ) * $this->users_per_page,
+				'number' => $this->users_per_page,
+				'count_total' => true,
+				'fields' => 'all',
+				'who' => ''
 			) );
 
 			$this->query_vars = $args;
@@ -82,10 +82,10 @@ if ( ! class_exists( 'Instructor_Search' ) ) {
 				}
 
 				$this->paging_text = paginate_links( array(
-					'total'    => ceil( $this->total_users_for_query / $this->users_per_page ),
-					'current'  => $this->page_num,
-					'base'     => 'admin.php?page=students&%_%',
-					'format'   => 'userspage=%#%',
+					'total' => ceil( $this->total_users_for_query / $this->users_per_page ),
+					'current' => $this->page_num,
+					'base' => 'admin.php?page=students&%_%',
+					'format' => 'userspage=%#%',
 					'add_args' => $args
 				) );
 				if ( $this->paging_text ) {
@@ -100,8 +100,8 @@ if ( ! class_exists( 'Instructor_Search' ) ) {
 			$pagination->Items( $this->get_total() );
 			$pagination->limit( $this->users_per_page );
 			$pagination->parameterName = 'page_num';
-			$pagination->nextT         = __( 'Next', 'cp' );
-			$pagination->prevT         = __( 'Previous', 'cp' );
+			$pagination->nextT = __( 'Next', 'cp' );
+			$pagination->prevT = __( 'Previous', 'cp' );
 			$pagination->target( "admin.php?page=instructors" );
 			$pagination->currentPage( $this->page_num );
 			$pagination->nextIcon( '&#9658;' );

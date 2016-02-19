@@ -57,19 +57,19 @@ class CoursePress_Helper_PDF extends TCPDF {
 		$line_width = (0.85 / $this->k);
 
 		// $this->SetLineStyle(array('width' => $line_width, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => $this->footer_line_color));
-		$pageWidth    = $this->getPageWidth();   // Get total page width, without margins
-		$pageMargins  = $this->getMargins();     // Get all margins as array
+		$pageWidth = $this->getPageWidth();   // Get total page width, without margins
+		$pageMargins = $this->getMargins();     // Get all margins as array
 		$headerMargin = $pageMargins['footer']; // Get the header margin
-		$px2          = $pageWidth - $headerMargin; // Compute x value for second point of line
-		$p1x          = $headerMargin;
+		$px2 = $pageWidth - $headerMargin; // Compute x value for second point of line
+		$p1x = $headerMargin;
 
 		$px2 = $pageWidth - $pageMargins['right'];
 		$p1x = $pageMargins['left'];
 
-		// $p1x   = $this->getX();
-		$p1y   = $this->getY();
-		$p2x   = $px2;
-		$p2y   = $p1y;  // Use same y for a straight line
+		// $p1x = $this->getX();
+		$p1y = $this->getY();
+		$p2x = $px2;
+		$p2y = $p1y;  // Use same y for a straight line
 		$style = array( 'width' => $line_width, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => $this->footer_line_color );
 		$style = array();
 		$this->Line( $p1x, $p1y, $p2x, $p2y, $style );
@@ -180,7 +180,7 @@ class CoursePress_Helper_PDF extends TCPDF {
 	}
 
 	public static function get_format_in_mm( $format ) {
-		$dimension    = TCPDF_STATIC::getPageSizeFromFormat( $format );
+		$dimension = TCPDF_STATIC::getPageSizeFromFormat( $format );
 		$dimension[0] = round( $dimension[0] / 72 * 25.5 );
 		$dimension[1] = round( $dimension[1] / 72 * 25.5 );
 
@@ -188,8 +188,8 @@ class CoursePress_Helper_PDF extends TCPDF {
 	}
 
 	public static function get_format_in_px( $format, $dpi = 300 ) {
-		$ppm           = $dpi * 0.03937008;
-		$dimensions    = self::get_format_in_mm( $format );
+		$ppm = $dpi * 0.03937008;
+		$dimensions = self::get_format_in_mm( $format );
 		$dimensions[0] = $dimensions[0] / $ppm;
 		$dimensions[1] = $dimensions[1] / $ppm;
 
@@ -226,7 +226,7 @@ class CoursePress_Helper_PDF extends TCPDF {
 
 		// If filtering, please make sure both path and url refer to the same location
 		$cache_path = apply_filters( 'coursepress_pdf_cache_path', trailingslashit( CoursePress_Core::$plugin_lib_path ) . 'pdf-cache/' );
-		$furl_path  = apply_filters( 'coursepress_pdf_cache_url', trailingslashit( CoursePress_Core::$plugin_lib_url ) . 'pdf-cache/' );
+		$furl_path = apply_filters( 'coursepress_pdf_cache_url', trailingslashit( CoursePress_Core::$plugin_lib_url ) . 'pdf-cache/' );
 
 		$page_orientation = isset( $args['orientation'] ) ? $args['orientation'] : PDF_PAGE_ORIENTATION;
 
@@ -253,7 +253,7 @@ class CoursePress_Helper_PDF extends TCPDF {
 		// $dimension = $this->get_format_in_mm( PDF_PAGE_FORMAT );
 		$dimension = self::get_format_in_px( PDF_PAGE_FORMAT );
 		if ( 'P' == $page_orientation ) {
-			$temp         = $dimension[0];
+			$temp = $dimension[0];
 			$dimension[0] = $dimension[1];
 			$dimension[1] = $temp;
 		}
@@ -268,7 +268,7 @@ class CoursePress_Helper_PDF extends TCPDF {
 
 		if ( isset( $args['header'] ) && is_array( $args['header'] ) ) {
 
-			$title    = isset( $args['header']['title'] ) ? $args['header']['title'] : '';
+			$title = isset( $args['header']['title'] ) ? $args['header']['title'] : '';
 			$subtitle = isset( $args['header']['subtitle'] ) ? $args['header']['subtitle'] : '';
 
 			if ( empty( $subtitle ) ) {

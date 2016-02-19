@@ -1,7 +1,7 @@
 <?php if ( is_user_logged_in() ) { ?>
 	<?php
 	$form_message_class = '';
-	$form_message       = '';
+	$form_message = '';
 
 	if ( isset( $_POST['student-settings-submit'] ) ) {
 
@@ -9,9 +9,9 @@
 		) {
 			_e( "Changed can't be saved because nonce didn't verify.", 'cp' );
 		} else {
-			$student_data       = array();
+			$student_data = array();
 			$student_data['ID'] = get_current_user_id();
-			$form_errors        = 0;
+			$form_errors = 0;
 
 			do_action( 'coursepress_before_settings_validation' );
 
@@ -19,7 +19,7 @@
 				if ( $_POST['password'] == $_POST['password_confirmation'] ) {
 					$student_data['user_pass'] = $_POST['password'];
 				} else {
-					$form_message       = __( "Passwords don't match", 'cp' );
+					$form_message = __( "Passwords don't match", 'cp' );
 					$form_message_class = 'red';
 					$form_errors ++;
 				}
@@ -27,10 +27,10 @@
 
 			$student_data['user_email'] = $_POST['email'];
 			$student_data['first_name'] = $_POST['first_name'];
-			$student_data['last_name']  = $_POST['last_name'];
+			$student_data['last_name'] = $_POST['last_name'];
 
 			if ( ! is_email( $_POST['email'] ) ) {
-				$form_message       = __( 'E-mail address is not valid.', 'cp' );
+				$form_message = __( 'E-mail address is not valid.', 'cp' );
 				$form_message_class = 'red';
 				$form_errors ++;
 			}
@@ -38,10 +38,10 @@
 			if ( $form_errors == 0 ) {
 				$student = new Student( get_current_user_id() );
 				if ( $student->update_student_data( $student_data ) ) {
-					$form_message       = __( 'Profile has been updated successfully.', 'cp' );
+					$form_message = __( 'Profile has been updated successfully.', 'cp' );
 					$form_message_class = 'regular';
 				} else {
-					$form_message       = __( 'An error occured while updating. Please check the form and try again.', 'cp' );
+					$form_message = __( 'An error occured while updating. Please check the form and try again.', 'cp' );
 					$form_message_class = 'red';
 				}
 			}

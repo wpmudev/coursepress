@@ -8,7 +8,7 @@ class CoursePress_View_Admin_Assessment_Report {
 
 	public static function init() {
 
-		self::$title      = __( 'Reports/CoursePress', CoursePress::TD );
+		self::$title = __( 'Reports/CoursePress', CoursePress::TD );
 		self::$menu_title = __( 'Reports', CoursePress::TD );
 
 		add_filter( 'coursepress_admin_valid_pages', array( __CLASS__, 'add_valid' ) );
@@ -26,7 +26,7 @@ class CoursePress_View_Admin_Assessment_Report {
 
 	public static function add_page( $pages ) {
 		$pages[ self::$slug ] = array(
-			'title'      => self::$title,
+			'title' => self::$title,
 			'menu_title' => self::$menu_title,
 		);
 
@@ -39,8 +39,8 @@ class CoursePress_View_Admin_Assessment_Report {
 		if ( isset( $_REQUEST['action'] ) && 'coursepress_report' === $_REQUEST['action'] ) {
 
 			$course_id = isset( $_POST['course_id'] ) ? (int) $_POST['course_id'] : false;
-			$unit_id   = isset( $_POST['bulk-report-unit'] ) ? (int) $_POST['bulk-report-unit'] : 'all';
-			$students  = array();
+			$unit_id = isset( $_POST['bulk-report-unit'] ) ? (int) $_POST['bulk-report-unit'] : 'all';
+			$students = array();
 
 			if ( isset( $_POST['bulk-report-submit'] ) ) {
 
@@ -48,7 +48,7 @@ class CoursePress_View_Admin_Assessment_Report {
 					$students = (array) $_POST['bulk-actions'];
 				}
 			} else {
-				$students  = isset( $_POST['students'] ) ? (array) $_POST['students'] : false;
+				$students = isset( $_POST['students'] ) ? (array) $_POST['students'] : false;
 			}
 
 			if ( ! $course_id && empty( $students ) ) {
@@ -63,29 +63,29 @@ class CoursePress_View_Admin_Assessment_Report {
 	public static function report_content( $students, $course_id, $unit_id = 'all' ) {
 
 		$pdf_args = array(
-			'format'         => 'F',
+			'format' => 'F',
 			'force_download' => true, // Use force_download with
-			'url'            => true, // url to hide path to file
-			'orientation'    => 'L',
+			'url' => true, // url to hide path to file
+			'orientation' => 'L',
 		);
 
-		$course_title       = get_the_title( $course_id );
+		$course_title = get_the_title( $course_id );
 		$pdf_args['header'] = array(
 			'title' => $course_title,
 		);
 
 		$colors = apply_filters( 'coursepress_report_colors', array(
 
-			'title_bg'  => '#0091CD',
-			'title'     => '#ffffff',
-			'unit_bg'   => '#F5F5F5',
-			'unit'      => '#000000',
-			'no_items'  => '#858585',
-			'item_bg'   => '#ffffff',
-			'item'      => '#000000',
+			'title_bg' => '#0091CD',
+			'title' => '#ffffff',
+			'unit_bg' => '#F5F5F5',
+			'unit' => '#000000',
+			'no_items' => '#858585',
+			'item_bg' => '#ffffff',
+			'item' => '#000000',
 			'item_line' => '#f5f5f5',
 			'footer_bg' => '#0091CD',
-			'footer'    => '#ffffff',
+			'footer' => '#ffffff',
 
 		) );
 
@@ -105,7 +105,7 @@ class CoursePress_View_Admin_Assessment_Report {
 		$last_student = false;
 		foreach ( $students as $student_id ) {
 
-			$student_name     = CoursePress_Helper_Utility::get_user_name( $student_id );
+			$student_name = CoursePress_Helper_Utility::get_user_name( $student_id );
 			$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
 
 			$html .= '
@@ -118,8 +118,8 @@ class CoursePress_View_Admin_Assessment_Report {
 			';
 
 			$course_assessable_modules = 0;
-			$course_answered           = 0;
-			$course_total              = 0;
+			$course_answered = 0;
+			$course_total = 0;
 
 			foreach ( $units as $unit_id => $unit_obj ) {
 
@@ -137,8 +137,8 @@ class CoursePress_View_Admin_Assessment_Report {
 				';
 
 				$assessable_modules = 0;
-				$answered           = 0;
-				$total              = 0;
+				$answered = 0;
+				$total = 0;
 				foreach ( $unit_obj['pages'] as $page ) {
 
 					// $html .= '
@@ -159,8 +159,8 @@ class CoursePress_View_Admin_Assessment_Report {
 						$grade = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
 						$total += false !== $grade && isset( $grade['grade'] ) ? (int) $grade['grade'] : 0;
 						$grade_display = false !== $grade && isset( $grade['grade'] ) ? (int) $grade['grade'] . '%' : '--';
-						$response      = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
-						$date_display  = false !== $response && isset( $response['date'] ) ? $response['date'] : __( 'Not yet submitted', CoursePress::TD );
+						$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
+						$date_display = false !== $response && isset( $response['date'] ) ? $response['date'] : __( 'Not yet submitted', CoursePress::TD );
 						$answered += false !== $response && isset( $response['date'] ) ? 1 : 0;
 
 						$html .= '
@@ -191,9 +191,9 @@ class CoursePress_View_Admin_Assessment_Report {
 				$course_total += $total;
 			}
 
-			$average                = $course_answered > 0 ? (int) ( $course_total / $course_answered ) : 0;
-			$average_display        = $course_answered === 0 && $assessable_modules === 0 ? '' : sprintf( __( 'Average response grade: %d%%', CoursePress::TD ), $average );
-			$course_average         = $assessable_modules > 0 ? (int) ( $course_total / $course_assessable_modules ) : 0;
+			$average = $course_answered > 0 ? (int) ( $course_total / $course_answered ) : 0;
+			$average_display = $course_answered === 0 && $assessable_modules === 0 ? '' : sprintf( __( 'Average response grade: %d%%', CoursePress::TD ), $average );
+			$course_average = $assessable_modules > 0 ? (int) ( $course_total / $course_assessable_modules ) : 0;
 			$course_average_display = $assessable_modules === 0 ? __( 'No assessable items in this course.', CoursePress::TD ) : sprintf( __( 'Total Average: %d%%', CoursePress::TD ), $course_average );
 
 			$html .= '
@@ -212,7 +212,7 @@ class CoursePress_View_Admin_Assessment_Report {
 		}
 
 		if ( count( $students ) === 1 ) {
-			$student_name         = CoursePress_Helper_Utility::get_user_name( $last_student );
+			$student_name = CoursePress_Helper_Utility::get_user_name( $last_student );
 			$pdf_args['filename'] = $course_title . '_' . $unit_file_part . '_' . $student_name . '.pdf';
 
 		} elseif ( count( $students > 1 ) ) {

@@ -13,9 +13,9 @@ class CoursePress_View_Admin_Settings_General {
 	public static function add_tabs( $tabs ) {
 
 		$tabs['general'] = array(
-			'title'       => __( 'General Settings', CoursePress::TD ),
+			'title' => __( 'General Settings', CoursePress::TD ),
 			'description' => __( 'Configure the general settings for CoursePress.', CoursePress::TD ),
-			'order'       => 0,// first tab
+			'order' => 0,// first tab
 		);
 
 		return $tabs;
@@ -27,12 +27,12 @@ class CoursePress_View_Admin_Settings_General {
 		$my_course_prefix = sanitize_text_field( CoursePress_Core::get_setting( 'slugs/course', 'courses' ) ) . '/'. $my_course_prefix;
 		$page_dropdowns = array();
 
-		$pages_args     = array(
-			'selected'          => CoursePress_Core::get_setting( 'pages/enrollment', 0 ),
-			'echo'              => 0,
-			'show_option_none'  => __( 'Use virtual page', CoursePress::TD ),
+		$pages_args = array(
+			'selected' => CoursePress_Core::get_setting( 'pages/enrollment', 0 ),
+			'echo' => 0,
+			'show_option_none' => __( 'Use virtual page', CoursePress::TD ),
 			'option_none_value' => 0,
-			'name'              => 'coursepress_settings[pages][enrollment]',
+			'name' => 'coursepress_settings[pages][enrollment]',
 		);
 		$page_dropdowns['enrollment'] = wp_dropdown_pages( $pages_args );
 
@@ -250,7 +250,7 @@ class CoursePress_View_Admin_Settings_General {
 
 		if ( current_user_can( 'manage_options' ) ) {
 			$menu_error = true;
-			$locations  = get_theme_mod( 'nav_menu_locations' );
+			$locations = get_theme_mod( 'nav_menu_locations' );
 			if ( is_array( $locations ) ) {
 				foreach ( $locations as $location => $value ) {
 					if ( $value > 0 ) {
@@ -581,7 +581,7 @@ class CoursePress_View_Admin_Settings_General {
 
 		if ( isset( $_POST['action'] ) && 'updateoptions' === $_POST['action'] && 'general' === $tab && wp_verify_nonce( $_POST['_wpnonce'], 'update-coursepress-options' ) ) {
 
-			$settings      = CoursePress_Core::get_setting( false ); // false returns all settings
+			$settings = CoursePress_Core::get_setting( false ); // false returns all settings
 			$post_settings = (array) $_POST['coursepress_settings'];
 
 			// Now is a good time to make changes to $post_settings, especially to fix up unchecked checkboxes

@@ -37,7 +37,7 @@ if ( ! class_exists( 'CoursePress_Compatibility' ) ) {
 
 		function __construct() {
 			$this->plugin_url = $GLOBALS['coursepress_url'];
-			$this->version    = $GLOBALS['coursepress_version'];
+			$this->version = $GLOBALS['coursepress_version'];
 
 			$this->editor_options = array(
 				'quicktags' => false,
@@ -107,7 +107,7 @@ if ( ! class_exists( 'CoursePress_Compatibility' ) ) {
 			if ( isset( $_GET['page'] ) && 'course_details' == $_GET['page'] && isset( $_GET['tab'] ) && 'units' == $_GET['tab'] ) {
 				/*
 				 * Multiple editors on the same page is causing conflicts with Visual/Text tab selection
-				 * so we need to disabled it.  
+				 * so we need to disabled it.
 				 */
 				if ( $this->is_3_9_up() ) {
 					$this->editor_options['quicktags'] = false;
@@ -135,7 +135,7 @@ if ( ! class_exists( 'CoursePress_Compatibility' ) ) {
 					add_action( 'coursepress_editor_options', array( &$this, 'prepare_coursepress_editor_39plus' ) );
 					break;
 
-				// Do 3.8 specific hooks for the editor				
+				// Do 3.8 specific hooks for the editor
 				case 3.8:
 					// $this->editor_options['quicktags'] = true;
 					add_filter( 'coursepress_element_editor_args', array(
@@ -220,13 +220,13 @@ if ( ! class_exists( 'CoursePress_Compatibility' ) ) {
 				);
 
 				$page = get_current_screen()->id;
-				$tab  = empty( $_GET['tab'] ) ? '' : $_GET['tab'];
+				$tab = empty( $_GET['tab'] ) ? '' : $_GET['tab'];
 
 				if ( in_array( $page, $detect_pages ) ) {
 
-					$initArray['height']              = '360px';
-					$initArray['relative_urls']       = false;
-					$initArray['url_converter']       = false;
+					$initArray['height'] = '360px';
+					$initArray['relative_urls'] = false;
+					$initArray['url_converter'] = false;
 					$initArray['url_converter_scope'] = false;
 
 					if ( 3.8 < $this->min_version ) {
@@ -258,7 +258,7 @@ if ( ! class_exists( 'CoursePress_Compatibility' ) ) {
 			);
 
 			$page = get_current_screen()->id;
-			$tab  = empty( $_GET['tab'] ) ? '' : $_GET['tab'];
+			$tab = empty( $_GET['tab'] ) ? '' : $_GET['tab'];
 
 			if ( in_array( $page, $detect_pages ) ) {
 
@@ -282,15 +282,15 @@ if ( ! class_exists( 'CoursePress_Compatibility' ) ) {
 
 		function dynamic_wp_editor() {
 
-			$editor_name    = ( isset( $_GET['module_name'] ) ? $_GET['module_name'] : '' ) . "_content[]";
-			$editor_id      = ( ( isset( $_GET['rand_id'] ) ? $_GET['rand_id'] : rand( 1, 9999 ) ) );
+			$editor_name = ( isset( $_GET['module_name'] ) ? $_GET['module_name'] : '' ) . "_content[]";
+			$editor_id = ( ( isset( $_GET['rand_id'] ) ? $_GET['rand_id'] : rand( 1, 9999 ) ) );
 			$editor_content = htmlspecialchars_decode( ( isset( $_GET['editor_content'] ) ? $_GET['editor_content'] : '' ) );
 
 			$args = array(
 				"textarea_name" => $editor_name,
 				"textarea_rows" => 4,
-				"teeny"         => true,
-				"editor_class"  => 'cp-editor cp-dynamic-editor',
+				"teeny" => true,
+				"editor_class" => 'cp-editor cp-dynamic-editor',
 			);
 
 			if ( $this->editor_options['quicktags'] ) {
@@ -309,8 +309,8 @@ if ( ! class_exists( 'CoursePress_Compatibility' ) ) {
 			$plugins = apply_filters( 'coursepress_format_tinymce_plugins', $this->get_plugins() );
 			$plugins = implode( ',', $plugins );
 
-			$in['menubar']  = false;
-			$in['plugins']  = $plugins;
+			$in['menubar'] = false;
+			$in['plugins'] = $plugins;
 			$in['toolbar1'] = implode( ',', $this->get_buttons() );
 			$in['toolbar2'] = '';
 			$in['toolbar3'] = '';
@@ -329,10 +329,10 @@ if ( ! class_exists( 'CoursePress_Compatibility' ) ) {
 		function prepare_coursepress_editor_39plus() {
 			//array( 'inlinepopups', 'tabfocus', 'paste', 'media', 'fullscreen', 'wordpress', 'wpeditimage', 'wpgallery', 'wplink', 'wpdialogs', 'textcolor', 'hr' )
 			wp_localize_script( 'courses_bulk', 'coursepress_editor', array(
-				'plugins'   => apply_filters( 'coursepress_format_tinymce_plugins', $this->get_plugins() ),
-				'toolbar'   => $this->get_buttons(),
-				'theme'     => apply_filters( 'coursepress_editor_theme', 'modern' ), // filter it for themers
-				'skin'      => apply_filters( 'coursepress_editor_skin', 'wp_theme' ), // filter it for themers
+				'plugins' => apply_filters( 'coursepress_format_tinymce_plugins', $this->get_plugins() ),
+				'toolbar' => $this->get_buttons(),
+				'theme' => apply_filters( 'coursepress_editor_theme', 'modern' ), // filter it for themers
+				'skin' => apply_filters( 'coursepress_editor_skin', 'wp_theme' ), // filter it for themers
 				'quicktags' => $this->editor_options['quicktags'], // are we using quicktags?
 			) );
 		}
@@ -347,10 +347,10 @@ if ( ! class_exists( 'CoursePress_Compatibility' ) ) {
 
 		function prepare_coursepress_editor_38() {
 			wp_localize_script( 'courses_bulk', 'coursepress_editor', array(
-				'plugins'   => apply_filters( 'coursepress_format_tinymce_plugins', $this->get_plugins() ),
-				'toolbar'   => $this->get_buttons(),
-				'theme'     => apply_filters( 'coursepress_editor_theme', 'advanced' ), // filter it for themers
-				'skin'      => apply_filters( 'coursepress_editor_skin', 'wp_theme' ), // filter it for themers
+				'plugins' => apply_filters( 'coursepress_format_tinymce_plugins', $this->get_plugins() ),
+				'toolbar' => $this->get_buttons(),
+				'theme' => apply_filters( 'coursepress_editor_theme', 'advanced' ), // filter it for themers
+				'skin' => apply_filters( 'coursepress_editor_skin', 'wp_theme' ), // filter it for themers
 				'quicktags' => false, // Always false for WP 3.8 dynamic editor
 			) );
 		}
@@ -359,7 +359,7 @@ if ( ! class_exists( 'CoursePress_Compatibility' ) ) {
 			// WP default plugins
 			// array( 'inlinepopups', 'tabfocus', 'paste', 'media', 'fullscreen', 'wordpress', 'wpeditimage', 'wpgallery', 'wplink', 'wpdialogs' );
 			// WP teeny plugins
-			// array('inlinepopups', 'fullscreen', 'wordpress', 'wplink', 'wpdialogs' )			
+			// array('inlinepopups', 'fullscreen', 'wordpress', 'wplink', 'wpdialogs' )
 			$plugins = array(
 				// 'inlinepopups',
 				// 'tabfocus',

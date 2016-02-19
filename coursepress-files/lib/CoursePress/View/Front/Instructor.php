@@ -33,7 +33,7 @@ class CoursePress_View_Front_Instructor {
 
 		if ( array_key_exists( 'instructor_username', $wp->query_vars ) ) {
 
-			$username   = sanitize_text_field( $wp->query_vars['instructor_username'] );
+			$username = sanitize_text_field( $wp->query_vars['instructor_username'] );
 			$instructor = CoursePress_Data_Instructor::instructor_by_login( $username );
 			if ( empty( $instructor ) ) {
 				$instructor = CoursePress_Data_Instructor::instructor_by_hash( $username );
@@ -46,12 +46,12 @@ class CoursePress_View_Front_Instructor {
 			self::$last_instructor = empty( $instructor ) ? 0 : $instructor->ID;
 
 			$page_title = ! empty( self::$last_instructor ) ? CoursePress_Helper_Utility::get_user_name( self::$last_instructor, false, false ) : __( 'Instructor not found.', CoursePress::TD );
-			$args       = array(
-				'slug'    => 'instructor_' . self::$last_instructor,
-				'title'   => $page_title,
-				// 'show_title'  => false,
+			$args = array(
+				'slug' => 'instructor_' . self::$last_instructor,
+				'title' => $page_title,
+				// 'show_title' => false,
 				'content' => ! empty( $content ) ? esc_html( $content ) : self::render_instructor_page(),
-				'type'    => 'coursepress_instructor',
+				'type' => 'coursepress_instructor',
 			);
 
 			$pg = new CoursePress_Data_VirtualPage( $args );

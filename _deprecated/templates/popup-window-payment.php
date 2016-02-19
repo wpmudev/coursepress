@@ -10,20 +10,20 @@ if ( ! empty( $args ) ) {
 	}
 }
 
-$course     = new Course( $course_id );
+$course = new Course( $course_id );
 $product_id = $course->mp_product_id();
 
-$mp_settings   = get_option( 'mp_settings' );
-$gateways      = ! empty( $mp_settings['gateways']['allowed'] ) ? $mp_settings['gateways']['allowed'] : false;
+$mp_settings = get_option( 'mp_settings' );
+$gateways = ! empty( $mp_settings['gateways']['allowed'] ) ? $mp_settings['gateways']['allowed'] : false;
 $gateway_count = $gateways ? count( $gateways ) : 0;
 
 // Add course to cart
-$product   = get_post( $product_id );
-$quantity  = 1;
+$product = get_post( $product_id );
+$quantity = 1;
 $variation = 0;
 
 // $cart = $mp->get_cart_cookie();
-$cart                              = array(); // remove all cart items
+$cart = array(); // remove all cart items
 $cart[ $product_id ][ $variation ] = $quantity;
 $mp->set_cart_cookie( $cart );
 ?>

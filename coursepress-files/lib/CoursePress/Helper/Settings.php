@@ -17,7 +17,7 @@ class CoursePress_Helper_Settings {
 
 	public static function admin_menu() {
 
-		$parent_handle                     = 'coursepress';
+		$parent_handle = 'coursepress';
 		self::$page_refs[ $parent_handle ] = add_menu_page( CoursePress::$name, CoursePress::$name, 'coursepress_dashboard_cap', $parent_handle, array(
 			__CLASS__,
 			'menu_handler',
@@ -98,12 +98,12 @@ class CoursePress_Helper_Settings {
 
 	public static function admin_style() {
 
-		$style        = CoursePress_Core::$plugin_lib_url . 'assets/css/admin-general.css';
+		$style = CoursePress_Core::$plugin_lib_url . 'assets/css/admin-general.css';
 		$style_global = CoursePress_Core::$plugin_lib_url . 'assets/css/admin-global.css';
-		$script       = CoursePress_Core::$plugin_lib_url . 'assets/js/admin-general.js';
-		$sticky       = CoursePress_Core::$plugin_lib_url . 'assets/js/external/sticky.min.js';
+		$script = CoursePress_Core::$plugin_lib_url . 'assets/js/admin-general.js';
+		$sticky = CoursePress_Core::$plugin_lib_url . 'assets/js/external/sticky.min.js';
 		$editor_style = CoursePress_Core::$plugin_lib_url . 'assets/css/editor.css';
-		$fontawesome  = CoursePress_Core::$plugin_lib_url . 'assets/css/external/font-awesome.min.css';
+		$fontawesome = CoursePress_Core::$plugin_lib_url . 'assets/css/external/font-awesome.min.css';
 
 		$page = isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
 

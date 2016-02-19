@@ -3,24 +3,24 @@
 class CP_Featured_Course extends WP_Widget {
 
 	function CP_Featured_Course() {
-		$widget_ops = array( 'classname'   => 'cp_featured_widget',
+		$widget_ops = array( 'classname' => 'cp_featured_widget',
 		                     'description' => __( 'Displays a selected course as featured', 'cp' )
 		);
 		$this->WP_Widget( 'CP_Featured_Course', __( 'Featured Course', 'cp' ), $widget_ops );
 	}
 
 	function form( $instance ) {
-		$instance          = wp_parse_args( ( array ) $instance, array( 'title' => '' ) );
-		$title             = $instance['title'];
-		$button_title      = $instance['button_title'];
-		$selected_course   = $instance['course'];
-		$selected_type     = $instance['type'];
+		$instance = wp_parse_args( ( array ) $instance, array( 'title' => '' ) );
+		$title = $instance['title'];
+		$button_title = $instance['button_title'];
+		$selected_course = $instance['course'];
+		$selected_type = $instance['type'];
 		$selected_priority = $instance['priority'];
 
 		$args = array(
 			'posts_per_page' => - 1,
-			'post_type'      => 'course',
-			'post_status'    => 'publish'
+			'post_type' => 'course',
+			'post_status' => 'publish'
 		);
 
 		$courses = get_posts( $args );
@@ -73,14 +73,14 @@ class CP_Featured_Course extends WP_Widget {
 
 		// Admin on single sites, Super admin on network
 		if ( current_user_can( 'unfiltered_html' ) ) {
-			$instance['title']        = $new_instance['title'];
+			$instance['title'] = $new_instance['title'];
 			$instance['button_title'] = $new_instance['button_title'];
 		} else {
-			$instance['title']        = strip_tags( $new_instance['title'] );
+			$instance['title'] = strip_tags( $new_instance['title'] );
 			$instance['button_title'] = strip_tags( $new_instance['button_title'] );
 		}
-		$instance['course']   = $new_instance['course'];
-		$instance['type']     = $new_instance['type'];
+		$instance['course'] = $new_instance['course'];
+		$instance['type'] = $new_instance['type'];
 		$instance['priority'] = $new_instance['priority'];
 
 		return $instance;
@@ -91,9 +91,9 @@ class CP_Featured_Course extends WP_Widget {
 
 		echo $before_widget;
 
-		$course_id         = $instance['course'];
-		$course            = new Course( $course_id );
-		$selected_type     = isset( $instance['type'] ) ? $instance['type'] : 'image';
+		$course_id = $instance['course'];
+		$course = new Course( $course_id );
+		$selected_type = isset( $instance['type'] ) ? $instance['type'] : 'image';
 		$selected_priority = isset( $instance['priority'] ) ? $instance['priority'] : 'image';
 
 		$title = empty( $instance['title'] ) ? ' ' : apply_filters( 'widget_title', $instance['title'] );

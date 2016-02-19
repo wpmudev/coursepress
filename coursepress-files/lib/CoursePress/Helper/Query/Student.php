@@ -32,8 +32,8 @@ class CoursePress_Helper_Query_Student extends WP_User_Query {
 		}
 
 		$this->search_term = $search_term;
-		$this->raw_page    = ( '' == $page_num ) ? false : (int) $page_num;
-		$this->page_num    = (int) ( '' == $page_num ) ? 1 : $page_num;
+		$this->raw_page = ( '' == $page_num ) ? false : (int) $page_num;
+		$this->page_num = (int) ( '' == $page_num ) ? 1 : $page_num;
 
 		$args = array(
 			'search' => $this->search_term,
@@ -42,14 +42,14 @@ class CoursePress_Helper_Query_Student extends WP_User_Query {
 			/* 'fields' => 'all_with_meta' */
 		);
 
-		$search_args['meta_key']   = 'role'; // ( isset( $search_args['meta_key'] ) ? $search_args['meta_key'] : '' );
+		$search_args['meta_key'] = 'role'; // ( isset( $search_args['meta_key'] ) ? $search_args['meta_key'] : '' );
 		$search_args['meta_value'] = 'student'; // ( isset( $search_args['meta_value'] ) ? $search_args['meta_value'] : '' );
 
 		if ( ! $override ) {
 			if ( ! empty( $meta_args ) ) {
 				$meta_args['number'] = $this->users_per_page;
 				$meta_args['offset'] = ( $this->page_num - 1 ) * $this->users_per_page;
-				$args                = $meta_args;
+				$args = $meta_args;
 			}
 
 			if ( is_multisite() ) {
@@ -61,16 +61,16 @@ class CoursePress_Helper_Query_Student extends WP_User_Query {
 
 		$this->query_vars = wp_parse_args( $args, array(
 			// 'role' => 'student',
-			'include'        => array(),
-			'exclude'        => array(),
-			'search'         => '',
+			'include' => array(),
+			'exclude' => array(),
+			'search' => '',
 			'search_columns' => array(),
-			'orderby'        => 'ID',
-			'order'          => 'ASC',
-			'offset'         => ( $this->page_num - 1 ) * $this->users_per_page,
-			'number'         => '',
-			// 'fields'         => 'all_with_meta',
-			'who'            => '',
+			'orderby' => 'ID',
+			'order' => 'ASC',
+			'offset' => ( $this->page_num - 1 ) * $this->users_per_page,
+			'number' => '',
+			// 'fields' => 'all_with_meta',
+			'who' => '',
 		) );
 
 		if ( ! $override ) {
@@ -84,7 +84,7 @@ class CoursePress_Helper_Query_Student extends WP_User_Query {
 
 		if ( $override ) {
 			$this->query_from = "FROM {$wpdb->users}, {$wpdb->usermeta}";
-			$this->query_fields         = "{$wpdb->users}.*, {$wpdb->usermeta}.*";
+			$this->query_fields = "{$wpdb->users}.*, {$wpdb->usermeta}.*";
 			$this->query_vars['fields'] = 'all';
 		}
 
@@ -106,10 +106,10 @@ class CoursePress_Helper_Query_Student extends WP_User_Query {
 			}
 
 			$this->paging_text = paginate_links( array(
-				'total'    => ceil( $this->total_users_for_query / $this->users_per_page ),
-				'current'  => $this->page_num,
-				'base'     => 'admin.php?page=students&%_%',
-				'format'   => 'userspage=%#%',
+				'total' => ceil( $this->total_users_for_query / $this->users_per_page ),
+				'current' => $this->page_num,
+				'base' => 'admin.php?page=students&%_%',
+				'format' => 'userspage=%#%',
 				'add_args' => isset( $args ) ? $args : '',
 			) );
 
@@ -125,8 +125,8 @@ class CoursePress_Helper_Query_Student extends WP_User_Query {
 		$pagination->Items( $this->get_total() );
 		$pagination->limit( $this->users_per_page );
 		$pagination->parameterName = 'page_num';
-		$pagination->nextT         = __( 'Next', CoursePress::TD );
-		$pagination->prevT         = __( 'Previous', CoursePress::TD );
+		$pagination->nextT = __( 'Next', CoursePress::TD );
+		$pagination->prevT = __( 'Previous', CoursePress::TD );
 		$pagination->target( esc_url( 'admin.php?page=' . ( isset( $_GET['page'] ) ? $_GET['page'] : 'students' ) . '&' . http_build_query( $this->additional_url_args ) ) );
 		$pagination->currentPage( $this->page_num );
 		$pagination->nextIcon( '&#9658;' );

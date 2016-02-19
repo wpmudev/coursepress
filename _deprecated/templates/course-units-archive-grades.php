@@ -13,7 +13,7 @@ echo do_shortcode( '[course_unit_archive_submenu]' );
 		<?php if ( have_posts() ) { ?>
 			<?php
 			$grades = 0;
-			$units  = 0;
+			$units = 0;
 			while ( have_posts() ) : the_post();
 				$grades = $grades + do_shortcode( '[course_unit_details field="student_unit_grade" unit_id="' . get_the_ID() . '"]' );
 				?>

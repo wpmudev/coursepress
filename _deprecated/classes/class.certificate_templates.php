@@ -33,8 +33,8 @@ if ( ! class_exists( 'CP_Certificate_Templates' ) ) {
 				$metas = get_post_meta( $post_id ); //cp_get_post_meta_all
 			}
 
-			$margin_left  = $metas['document_template_left_margin'];
-			$margin_top   = $metas['document_template_top_margin'];
+			$margin_left = $metas['document_template_left_margin'];
+			$margin_top = $metas['document_template_top_margin'];
 			$margin_right = $metas['document_template_right_margin'];
 
 			// create new PDF document
@@ -56,27 +56,27 @@ if ( ! class_exists( 'CP_Certificate_Templates' ) ) {
 
 			$pdf->AddPage();
 
-			error_reporting( 0 ); //Don't show errors in the PDF 
-			ob_clean(); //Clear any previous output 
-			ob_start(); //Start new output buffer 
+			error_reporting( 0 ); //Don't show errors in the PDF
+			ob_clean(); //Clear any previous output
+			ob_start(); //Start new output buffer
 
 			if ( isset( $metas['document_template_background_image'] ) && $metas['document_template_background_image'] !== '' ) {
 				$pdf->Image( $metas['document_template_background_image'], 0, 0, '', '', '', '', '', false, 300, '', false, false, 0 );
 			}
 
-			$col_1       = 'width: 100%;';
+			$col_1 = 'width: 100%;';
 			$col_1_width = '100%';
-			$col_2       = 'width: 49.2%; margin-right: 1%;';
+			$col_2 = 'width: 49.2%; margin-right: 1%;';
 			$col_2_width = '49.2%';
-			$col_3       = 'width: 32.5%; margin-right: 1%;';
+			$col_3 = 'width: 32.5%; margin-right: 1%;';
 			$col_3_width = '32.5%';
-			$col_4       = 'width: 24%; margin-right: 1%;';
-			$col_5       = 'width: 19%; margin-right: 1%;';
-			$col_6       = 'width: 15.66%; margin-right: 1%;';
-			$col_7       = 'width: 13.25%; margin-right: 1%;';
-			$col_8       = 'width: 11.43%; margin-right: 1%;';
-			$col_9       = 'width: 10%; margin-right: 1%;';
-			$col_10      = 'width: 8.94%; margin-right: 1%;';
+			$col_4 = 'width: 24%; margin-right: 1%;';
+			$col_5 = 'width: 19%; margin-right: 1%;';
+			$col_6 = 'width: 15.66%; margin-right: 1%;';
+			$col_7 = 'width: 13.25%; margin-right: 1%;';
+			$col_8 = 'width: 11.43%; margin-right: 1%;';
+			$col_9 = 'width: 10%; margin-right: 1%;';
+			$col_10 = 'width: 8.94%; margin-right: 1%;';
 
 			$rows = '<table>';
 
@@ -88,7 +88,7 @@ if ( ! class_exists( 'CP_Certificate_Templates' ) ) {
 				if ( isset( $rows_elements ) && $rows_elements !== '' ) {
 
 					$element_class_names = explode( ',', $rows_elements );
-					$rows_count          = count( $element_class_names );
+					$rows_count = count( $element_class_names );
 
 					foreach ( $element_class_names as $element_class_name ) {
 
@@ -135,9 +135,9 @@ if ( ! class_exists( 'CP_Certificate_Templates' ) ) {
 
 				$post = array(
 					'post_content' => '',
-					'post_status'  => 'publish',
-					'post_title'   => $_POST['template_title'],
-					'post_type'    => 'certificates',
+					'post_status' => 'publish',
+					'post_title' => $_POST['template_title'],
+					'post_type' => 'certificates',
 				);
 
 				$post = apply_filters( 'coursepress_certificate_template_post', $post );
@@ -166,20 +166,20 @@ if ( ! class_exists( 'CP_Certificate_Templates' ) ) {
 
 			$default_fields = array(
 				array(
-					'field_name'        => 'post_title',
-					'field_title'       => __( 'Template Name', 'cp' ),
-					'field_type'        => 'text',
+					'field_name' => 'post_title',
+					'field_title' => __( 'Template Name', 'cp' ),
+					'field_type' => 'text',
 					'field_description' => '',
-					'post_field_type'   => 'post_title',
-					'table_visibility'  => true,
+					'post_field_type' => 'post_title',
+					'table_visibility' => true,
 				),
 				array(
-					'field_name'        => 'post_date',
-					'field_title'       => __( 'Date', 'cp' ),
-					'field_type'        => 'text',
+					'field_name' => 'post_date',
+					'field_title' => __( 'Date', 'cp' ),
+					'field_type' => 'text',
 					'field_description' => '',
-					'post_field_type'   => 'post_date',
-					'table_visibility'  => true,
+					'post_field_type' => 'post_date',
+					'table_visibility' => true,
 				),
 			);
 
@@ -187,7 +187,7 @@ if ( ! class_exists( 'CP_Certificate_Templates' ) ) {
 		}
 
 		function get_columns() {
-			$fields  = $this->get_template_col_fields();
+			$fields = $this->get_template_col_fields();
 			$results = cp_search_array( $fields, 'table_visibility', true );
 
 			$columns = array();
@@ -198,7 +198,7 @@ if ( ! class_exists( 'CP_Certificate_Templates' ) ) {
 				$columns[ $result['field_name'] ] = $result['field_title'];
 			}
 
-			$columns['edit']   = __( 'Edit', 'cp' );
+			$columns['edit'] = __( 'Edit', 'cp' );
 			$columns['delete'] = __( 'Delete', 'cp' );
 
 			return $columns;

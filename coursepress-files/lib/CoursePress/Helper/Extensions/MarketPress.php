@@ -26,27 +26,27 @@ class CoursePress_Helper_Extensions_MarketPress {
 		if ( CoursePress_Data_Capabilities::is_pro() ) {
 
 			$plugins[] = array(
-				'name'           => 'MarketPress',
-				'slug'           => 'marketpress',
-				'base_path'      => self::$base_path['pro'],
-				'source'         => CoursePress_Core::$plugin_lib_path . 'assets/files/marketpress-pro.zip',
+				'name' => 'MarketPress',
+				'slug' => 'marketpress',
+				'base_path' => self::$base_path['pro'],
+				'source' => CoursePress_Core::$plugin_lib_path . 'assets/files/marketpress-pro.zip',
 				'source_message' => __( 'Included in the CoursePress Plugin', CoursePress::TD ),
-				'external_url'   => '', /* http://premium.wpmudev.org/project/e-commerce/ */
-				'external'       => 'no',
-				'protocol'       => '',
+				'external_url' => '', /* http://premium.wpmudev.org/project/e-commerce/ */
+				'external' => 'no',
+				'protocol' => '',
 			);
 
 		} else {
 
 			$plugins[] = array(
-				'name'           => 'MarketPress - WordPress eCommerce',
-				'slug'           => 'wordpress-ecommerce',
-				'base_path'      => self::$base_path['free'],
-				'source'         => 'downloads.wordpress.org/plugin/wordpress-ecommerce.zip',
+				'name' => 'MarketPress - WordPress eCommerce',
+				'slug' => 'wordpress-ecommerce',
+				'base_path' => self::$base_path['free'],
+				'source' => 'downloads.wordpress.org/plugin/wordpress-ecommerce.zip',
 				'source_message' => __( 'WordPress.org Repository', CoursePress::TD ),
-				'external_url'   => '', /* https://wordpress.org/plugins/wordpress-ecommerce/ */
-				'external'       => 'yes',
-				'protocol'       => 'https',
+				'external_url' => '', /* https://wordpress.org/plugins/wordpress-ecommerce/ */
+				'external' => 'yes',
+				'protocol' => 'https',
 			);
 
 		}

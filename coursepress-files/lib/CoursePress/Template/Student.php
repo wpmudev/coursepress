@@ -94,7 +94,7 @@ class CoursePress_Template_Student {
 			$student_id = get_current_user_id();
 
 			$form_message_class = '';
-			$form_message       = '';
+			$form_message = '';
 
 			if ( isset( $_POST['student-settings-submit'] ) ) {
 
@@ -102,9 +102,9 @@ class CoursePress_Template_Student {
 				) {
 					_e( "Changes can't be saved because nonce didn't verify.", CoursePress::TD );
 				} else {
-					$student_data       = array();
+					$student_data = array();
 					$student_data['ID'] = get_current_user_id();
-					$form_errors        = 0;
+					$form_errors = 0;
 
 					do_action( 'coursepress_before_settings_validation' );
 
@@ -112,7 +112,7 @@ class CoursePress_Template_Student {
 						if ( $_POST['password'] == $_POST['password_confirmation'] ) {
 							$student_data['user_pass'] = $_POST['password'];
 						} else {
-							$form_message       = __( "Passwords don't match", CoursePress::TD );
+							$form_message = __( "Passwords don't match", CoursePress::TD );
 							$form_message_class = 'red';
 							$form_errors ++;
 						}
@@ -120,20 +120,20 @@ class CoursePress_Template_Student {
 
 					$student_data['user_email'] = $_POST['email'];
 					$student_data['first_name'] = $_POST['first_name'];
-					$student_data['last_name']  = $_POST['last_name'];
+					$student_data['last_name'] = $_POST['last_name'];
 
 					if ( ! is_email( $_POST['email'] ) ) {
-						$form_message       = __( 'E-mail address is not valid.', CoursePress::TD );
+						$form_message = __( 'E-mail address is not valid.', CoursePress::TD );
 						$form_message_class = 'red';
 						$form_errors ++;
 					}
 
 					if ( $form_errors == 0 ) {
 						if ( CoursePress_Data_Student::update_student_data( $student_id, $student_data ) ) {
-							$form_message       = __( 'Profile has been updated successfully.', CoursePress::TD );
+							$form_message = __( 'Profile has been updated successfully.', CoursePress::TD );
 							$form_message_class = 'regular';
 						} else {
-							$form_message       = __( 'An error occured while updating. Please check the form and try again.', CoursePress::TD );
+							$form_message = __( 'An error occured while updating. Please check the form and try again.', CoursePress::TD );
 							$form_message_class = 'red';
 						}
 					}

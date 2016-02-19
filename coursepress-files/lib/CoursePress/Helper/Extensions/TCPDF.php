@@ -15,14 +15,14 @@ class CoursePress_Helper_Extensions_TCPDF {
 	public static function add_to_extensions_list( $plugins ) {
 
 		$plugins[] = array(
-			'name'           => 'TCPDF Library',
-			'slug'           => 'tcpdf',
-			'base_path'      => self::$base_path['free'],
-			'source'         => 'downloads.wordpress.org/plugin/tcpdf.zip',
+			'name' => 'TCPDF Library',
+			'slug' => 'tcpdf',
+			'base_path' => self::$base_path['free'],
+			'source' => 'downloads.wordpress.org/plugin/tcpdf.zip',
 			'source_message' => __( 'Complete TCPDF Library with additional fonts (WordPress.org)', CoursePress::TD ),
-			'external_url'   => 'https://wordpress.org/plugins/tcpdf/',
-			'external'       => 'yes',
-			'protocol'       => 'https',
+			'external_url' => 'https://wordpress.org/plugins/tcpdf/',
+			'external' => 'yes',
+			'protocol' => 'https',
 		);
 
 		return $plugins;

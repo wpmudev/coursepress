@@ -6,7 +6,7 @@
 class CP_Widget_Categories extends WP_Widget {
 
 	function __construct() {
-		$widget_ops = array( 'classname'   => 'cp_course_categories',
+		$widget_ops = array( 'classname' => 'cp_course_categories',
 		                     'description' => __( "A list or dropdown of course categories.", 'cp' )
 		);
 		//parent::__construct( 'categories', __( 'Course Categories' ), $widget_ops );
@@ -17,7 +17,7 @@ class CP_Widget_Categories extends WP_Widget {
 		extract( $args );
 
 		$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Course Categories' ) : $instance['title'], $instance, $this->id_base );
-		$c     = ! empty( $instance['count'] ) ? '1' : '0';
+		$c = ! empty( $instance['count'] ) ? '1' : '0';
 
 		echo $before_widget;
 		if ( $title ) {
@@ -31,11 +31,11 @@ class CP_Widget_Categories extends WP_Widget {
 				'course_category',
 			);
 
-			$args  = array(
-				'orderby'      => 'name',
-				'order'        => 'ASC',
-				'hide_empty'   => true,
-				'fields'       => 'all',
+			$args = array(
+				'orderby' => 'name',
+				'order' => 'ASC',
+				'hide_empty' => true,
+				'fields' => 'all',
 				'hierarchical' => true,
 			);
 			$terms = get_terms( $taxonomies, apply_filters( 'cp_course_categories_args', $args ) );
@@ -53,7 +53,7 @@ class CP_Widget_Categories extends WP_Widget {
 	}
 
 	function update( $new_instance, $old_instance ) {
-		$instance          = $old_instance;
+		$instance = $old_instance;
 		$instance['title'] = strip_tags( $new_instance['title'] );
 		$instance['count'] = ! empty( $new_instance['count'] ) ? 1 : 0;
 
@@ -63,8 +63,8 @@ class CP_Widget_Categories extends WP_Widget {
 	function form( $instance ) {
 		//Defaults
 		$instance = wp_parse_args( (array) $instance, array( 'title' => '' ) );
-		$title    = esc_attr( $instance['title'] );
-		$count    = isset( $instance['count'] ) ? (bool) $instance['count'] : false;
+		$title = esc_attr( $instance['title'] );
+		$count = isset( $instance['count'] ) ? (bool) $instance['count'] : false;
 		?>
 		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>"/>

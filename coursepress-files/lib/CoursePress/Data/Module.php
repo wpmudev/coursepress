@@ -20,27 +20,27 @@ class CoursePress_Data_Module {
 		return array(
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
-				'labels'			 => array(
-					'name'				 => __( 'Modules', CoursePress::TD ),
-					'singular_name'		 => __( 'Module', CoursePress::TD ),
-					'add_new'			 => __( 'Create New', CoursePress::TD ),
-					'add_new_item'		 => __( 'Create New Module', CoursePress::TD ),
-					'edit_item'			 => __( 'Edit Module', CoursePress::TD ),
-					'edit'				 => __( 'Edit', CoursePress::TD ),
-					'new_item'			 => __( 'New Module', CoursePress::TD ),
-					'view_item'			 => __( 'View Module', CoursePress::TD ),
-					'search_items'		 => __( 'Search Modules', CoursePress::TD ),
-					'not_found'			 => __( 'No Modules Found', CoursePress::TD ),
+				'labels' => array(
+					'name' => __( 'Modules', CoursePress::TD ),
+					'singular_name' => __( 'Module', CoursePress::TD ),
+					'add_new' => __( 'Create New', CoursePress::TD ),
+					'add_new_item' => __( 'Create New Module', CoursePress::TD ),
+					'edit_item' => __( 'Edit Module', CoursePress::TD ),
+					'edit' => __( 'Edit', CoursePress::TD ),
+					'new_item' => __( 'New Module', CoursePress::TD ),
+					'view_item' => __( 'View Module', CoursePress::TD ),
+					'search_items' => __( 'Search Modules', CoursePress::TD ),
+					'not_found' => __( 'No Modules Found', CoursePress::TD ),
 					'not_found_in_trash' => __( 'No Modules found in Trash', CoursePress::TD ),
-					'view'				 => __( 'View Module', CoursePress::TD ),
+					'view' => __( 'View Module', CoursePress::TD ),
 				),
 				// 'supports' => array( 'title', 'excerpt', 'comments' ),
-				'public'			 => false,
-				'show_ui'			 => false,
+				'public' => false,
+				'show_ui' => false,
 				'publicly_queryable' => false,
-				'capability_type'	 => 'module',
-				'map_meta_cap'		 => true,
-				'query_var'			 => true,
+				'capability_type' => 'module',
+				'map_meta_cap' => true,
+				'query_var' => true,
 			),
 		);
 
@@ -81,20 +81,20 @@ class CoursePress_Data_Module {
 
 	public static function legacy_map() {
 		return array(
-			'audio_module'          => 'audio',
-			'chat_module'           => 'chat',
+			'audio_module' => 'audio',
+			'chat_module' => 'chat',
 			'checkbox_input_module' => 'input-checkbox',
-			'file_module'           => 'download',
-			'file_input_module'     => 'input-upload',
-			'image_module'          => 'image',
-			'page_break_module'     => 'legacy',
-			'radio_input_module'    => 'input-radio',
-			'page_break_module'     => 'section',
-			'section_break_module'  => 'section',
-			'text_module'           => 'text',
-			'text_input_module'     => 'input-text',
+			'file_module' => 'download',
+			'file_input_module' => 'input-upload',
+			'image_module' => 'image',
+			'page_break_module' => 'legacy',
+			'radio_input_module' => 'input-radio',
+			'page_break_module' => 'section',
+			'section_break_module' => 'section',
+			'text_module' => 'text',
+			'text_input_module' => 'input-text',
 			'textarea_input_module' => 'input-textarea',
-			'video_module'          => 'video',
+			'video_module' => 'video',
 		);
 	}
 
@@ -206,13 +206,13 @@ class CoursePress_Data_Module {
 
 		if ( 'section' != $module_type ) {
 			$attributes = array_merge( $attributes, array(
-				'duration'       => isset( $meta['duration'] ) ? $meta['duration'][0] : '0:00',
-				'show_title'     => CoursePress_Helper_Utility::fix_bool( $meta['show_title'][0] ),
-				'allow_retries'  => isset( $meta['allow_retries'] ) ? CoursePress_Helper_Utility::fix_bool( $meta['allow_retries'][0] ) : true,
+				'duration' => isset( $meta['duration'] ) ? $meta['duration'][0] : '0:00',
+				'show_title' => CoursePress_Helper_Utility::fix_bool( $meta['show_title'][0] ),
+				'allow_retries' => isset( $meta['allow_retries'] ) ? CoursePress_Helper_Utility::fix_bool( $meta['allow_retries'][0] ) : true,
 				'retry_attempts' => isset( $meta['retry_attempts'] ) ? (int) $meta['retry_attempts'][0] : 0,
-				'minimum_grade'  => isset( $meta['minimum_grade'][0] ) ? floatval( $meta['minimum_grade'][0] ) : floatval( 100 ),
-				'assessable'     => isset( $meta['assessable'] ) ? CoursePress_Helper_Utility::fix_bool( $meta['assessable'][0] ) : false,
-				'mandatory'      => isset( $meta['mandatory'] ) ? CoursePress_Helper_Utility::fix_bool( $meta['mandatory'][0] ) : false,
+				'minimum_grade' => isset( $meta['minimum_grade'][0] ) ? floatval( $meta['minimum_grade'][0] ) : floatval( 100 ),
+				'assessable' => isset( $meta['assessable'] ) ? CoursePress_Helper_Utility::fix_bool( $meta['assessable'][0] ) : false,
+				'mandatory' => isset( $meta['mandatory'] ) ? CoursePress_Helper_Utility::fix_bool( $meta['mandatory'][0] ) : false,
 			) );
 		}
 
@@ -300,10 +300,10 @@ class CoursePress_Data_Module {
 				);
 			} else {
 
-				$unit_id     = $post->post_parent;
-				$course_id   = get_post_field( 'post_parent', $unit_id );
+				$unit_id = $post->post_parent;
+				$course_id = get_post_field( 'post_parent', $unit_id );
 				$course_link = get_permalink( $course_id );
-				$location    = $course_link . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . get_post_field( 'post_name', $unit_id );
+				$location = $course_link . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . get_post_field( 'post_name', $unit_id );
 				$location .= '&replytocom=' . $comment->comment_ID;
 				$location .= '&module=' . $post->ID;
 				// $location .= '#module-' . $post->ID;

@@ -86,9 +86,9 @@ if ( ! class_exists( 'CP_Certificate_Template_Elements' ) ) {
 		}
 
 		function get_document_margins( $top = 10, $right = 10, $left = 10 ) {
-			$top_margin   = isset( $this->template_metas['document_template_top_margin'][0] ) ? $this->template_metas['document_template_top_margin'][0] : $top;
+			$top_margin = isset( $this->template_metas['document_template_top_margin'][0] ) ? $this->template_metas['document_template_top_margin'][0] : $top;
 			$right_margin = isset( $this->template_metas['document_template_right_margin'][0] ) ? $this->template_metas['document_template_right_margin'][0] : $right;
-			$left_margin  = isset( $this->template_metas['document_template_left_margin'][0] ) ? $this->template_metas['document_template_left_margin'][0] : $left;
+			$left_margin = isset( $this->template_metas['document_template_left_margin'][0] ) ? $this->template_metas['document_template_left_margin'][0] : $left;
 			?>
 			<label><?php _e( 'Document Margins', 'cp' ); ?></label>
 			<?php _e( 'Top', 'cp' ); ?> <input class="template_margin" type="text" name="document_template_top_margin_post_meta" value="<?php echo esc_attr( $top_margin ); ?>" />
@@ -120,7 +120,7 @@ if ( ! class_exists( 'CP_Certificate_Template_Elements' ) ) {
 		}
 
 		function get_element_margins() {
-			$top_padding    = isset( $this->template_metas[ $this->element_name . '_top_padding' ][0] ) ? $this->template_metas[ $this->element_name . '_top_padding' ][0] : '0';
+			$top_padding = isset( $this->template_metas[ $this->element_name . '_top_padding' ][0] ) ? $this->template_metas[ $this->element_name . '_top_padding' ][0] : '0';
 			$bottom_padding = isset( $this->template_metas[ $this->element_name . '_bottom_padding' ][0] ) ? $this->template_metas[ $this->element_name . '_bottom_padding' ][0] : '0';
 			?>
 			<label><?php _e( 'Element Break Lines', 'cp' ); ?></label>

@@ -17,12 +17,12 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 
 		parent::__construct( array(
 			'singular' => $post_format['post_args']['labels']['singular_name'],
-			'plural'   => $post_format['post_args']['labels']['name'],
-			'ajax'     => false,// should this table support ajax?
+			'plural' => $post_format['post_args']['labels']['name'],
+			'ajax' => false,// should this table support ajax?
 		) );
 
 		$this->post_type = CoursePress_Data_Course::get_post_type_name();
-		$this->count     = wp_count_posts( $this->post_type );
+		$this->count = wp_count_posts( $this->post_type );
 
 	}
 
@@ -35,13 +35,13 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 
 	public function get_columns() {
 		$columns = array(
-			'cb'         => '<input type="checkbox" />',
-			'ID'         => __( 'ID', CoursePress::TD ),
+			'cb' => '<input type="checkbox" />',
+			'ID' => __( 'ID', CoursePress::TD ),
 			'post_title' => __( 'Title', CoursePress::TD ),
-			'units'      => __( 'Units', CoursePress::TD ),
-			'students'   => __( 'Students', CoursePress::TD ),
-			'status'     => __( 'Status', CoursePress::TD ),
-			'actions'    => __( 'Actions', CoursePress::TD ),
+			'units' => __( 'Units', CoursePress::TD ),
+			'students' => __( 'Students', CoursePress::TD ),
+			'status' => __( 'Status', CoursePress::TD ),
+			'actions' => __( 'Actions', CoursePress::TD ),
 		);
 
 		return $columns;
@@ -84,9 +84,9 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 
 	function get_bulk_actions() {
 		$actions = array(
-			'publish'    => __( 'Publish', CoursePress::TD ),
-			'unpublish'    => __( 'Unpublish', CoursePress::TD ),
-			'delete'    => __( 'Delete', CoursePress::TD ),
+			'publish' => __( 'Publish', CoursePress::TD ),
+			'unpublish' => __( 'Unpublish', CoursePress::TD ),
+			'delete' => __( 'Delete', CoursePress::TD ),
 		);
 		return $actions;
 	}
@@ -94,12 +94,12 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 	public function column_units( $item ) {
 
 		$post_args = array(
-			'post_type'   => CoursePress_Data_Unit::get_post_type_name(),
+			'post_type' => CoursePress_Data_Unit::get_post_type_name(),
 			'post_parent' => $item->ID,
 			'post_status' => array( 'publish', 'private', 'draft' ),
 		);
 
-		$query     = new WP_Query( $post_args );
+		$query = new WP_Query( $post_args );
 		$published = 0;
 		foreach ( $query->posts as $post ) {
 			if ( 'publish' === $post->post_status ) {
@@ -164,21 +164,21 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 	public function prepare_items() {
 
 		$accepted_tabs = array( 'publish', 'private', 'all' );
-		$tab           = isset( $_GET['tab'] ) && in_array( $_GET['tab'], $accepted_tabs ) ? sanitize_text_field( $_GET['tab'] ) : 'publish';
+		$tab = isset( $_GET['tab'] ) && in_array( $_GET['tab'], $accepted_tabs ) ? sanitize_text_field( $_GET['tab'] ) : 'publish';
 		$valid_categories = CoursePress_Data_Course::get_course_categories();
 		$valid_categories = array_keys( $valid_categories );
-		$category      = isset( $_GET['category'] ) && in_array( $_GET['category'], $valid_categories ) ? sanitize_text_field( $_GET['category'] ) : false;
+		$category = isset( $_GET['category'] ) && in_array( $_GET['category'], $valid_categories ) ? sanitize_text_field( $_GET['category'] ) : false;
 
 		$post_status = 'all' == $tab ? array( 'publish', 'private' ) : $tab;
 
 		// Debug
 		$post_status = 'all';
 
-		$columns  = $this->get_columns();
-		$hidden   = $this->get_hidden_columns();
+		$columns = $this->get_columns();
+		$hidden = $this->get_hidden_columns();
 		$sortable = $this->get_sortable_columns();
 
-		$perPage     = 10;
+		$perPage = 10;
 		$currentPage = $this->get_pagenum();
 
 		// Debug
@@ -187,12 +187,12 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		$offset = ( $currentPage - 1 ) * $perPage;
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		$post_args             = array(
-			'post_type'      => $this->post_type,
-			'post_status'    => $post_status,
+		$post_args = array(
+			'post_type' => $this->post_type,
+			'post_status' => $post_status,
 			'posts_per_page' => $perPage,
-			'offset'         => $offset,
-			's'              => isset( $_GET['s'] ) && ! empty( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '',
+			'offset' => $offset,
+			's' => isset( $_GET['s'] ) && ! empty( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '',
 		);
 
 		// @todo: Add permissions
@@ -201,8 +201,8 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			$post_args['tax_query'] = array(
 				array(
 					'taxonomy' => 'course_category',
-					'field'    => 'term_id',
-					'terms'    => array( $category ),
+					'field' => 'term_id',
+					'terms' => array( $category ),
 				),
 			);
 		}
@@ -214,7 +214,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		$totalItems = $query->found_posts;
 		$this->set_pagination_args( array(
 			'total_items' => $totalItems,
-			'per_page'    => $perPage,
+			'per_page' => $perPage,
 		) );
 
 	}
@@ -238,8 +238,8 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			return; }
 
 		$page = get_query_var( 'page', 'coursepress' );
-		$tab  = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : '';
-		$s  = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '';
+		$tab = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : '';
+		$s = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '';
 		$selected = isset( $_GET['category'] ) ? sanitize_text_field( $_GET['category'] ) : '';
 
 		echo '<form method="GET">';
@@ -309,7 +309,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			$this->extra_tablenav( $which );
 
 			$accepted_tabs = array( 'publish', 'private', 'all' );
-			$tab           = isset( $_GET['tab'] ) && in_array( $_GET['tab'], $accepted_tabs ) ? sanitize_text_field( $_GET['tab'] ) : 'publish';
+			$tab = isset( $_GET['tab'] ) && in_array( $_GET['tab'], $accepted_tabs ) ? sanitize_text_field( $_GET['tab'] ) : 'publish';
 
 			if ( 'top' == $which ) {
 				?>

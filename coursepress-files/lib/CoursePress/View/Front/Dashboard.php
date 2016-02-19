@@ -37,7 +37,7 @@ class CoursePress_View_Front_Dashboard {
 				exit;
 			}
 
-			// $username   = sanitize_text_field( $wp->query_vars['instructor_username'] );
+			// $username = sanitize_text_field( $wp->query_vars['instructor_username'] );
 			// $instructor = CoursePress_Data_Instructor::instructor_by_login( $username );
 			// if ( empty( $instructor ) ) {
 			// $instructor = CoursePress_Data_Instructor::instructor_by_hash( $username );
@@ -51,12 +51,12 @@ class CoursePress_View_Front_Dashboard {
 			// $page_title = ! empty( self::$last_instructor ) ? CoursePress_Helper_Utility::get_user_name( self::$last_instructor, false, false ) : __( 'Instructor not found.', CoursePress::TD );
 			$page_title = __( 'My Courses', CoursePress::TD );
 
-			$args       = array(
-				'slug'    => CoursePress_Core::get_slug( 'student_dashboard' ),
-				'title'   => esc_html( $page_title ),
-				// 'show_title'  => false,
+			$args = array(
+				'slug' => CoursePress_Core::get_slug( 'student_dashboard' ),
+				'title' => esc_html( $page_title ),
+				// 'show_title' => false,
 				'content' => ! empty( $content ) ? esc_html( $content ) : self::render_dashboard_page(),
-				'type'    => 'coursepress_student_dashboard',
+				'type' => 'coursepress_student_dashboard',
 			);
 
 			$pg = new CoursePress_Data_VirtualPage( $args );

@@ -51,13 +51,13 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 			global $user_id, $wpdb; //$last_inserted_module_id
 
 			$post = array(
-				'post_author'  => $user_id,
-				'post_parent'  => $data->unit_id,
+				'post_author' => $user_id,
+				'post_parent' => $data->unit_id,
 				'post_excerpt' => cp_filter_content( isset( $data->excerpt ) ? $data->excerpt : '' ),
 				'post_content' => cp_filter_content( isset( $data->content ) ? $data->content : '' ),
-				'post_status'  => 'publish',
-				'post_title'   => cp_filter_content( ( isset( $data->title ) ? $data->title : '' ), true ),
-				'post_type'    => ( isset( $data->post_type ) ? $data->post_type : 'module' ),
+				'post_status' => 'publish',
+				'post_title' => cp_filter_content( ( isset( $data->title ) ? $data->title : '' ), true ),
+				'post_type' => ( isset( $data->post_type ) ? $data->post_type : 'module' ),
 			);
 
 			$new_module = true;
@@ -87,17 +87,17 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 			// Set input module meta
 			if ( isset( $data->metas ) ) {
 				$input_module_types = self::get_input_module_types();
-				$module_type        = self::get_module_type( $post_id );
+				$module_type = self::get_module_type( $post_id );
 				if ( in_array( $module_type, $input_module_types ) ) {
 
-					$unit_id     = $data->unit_id;
-					$module_id   = $post_id;
+					$unit_id = $data->unit_id;
+					$module_id = $post_id;
 					$module_meta = array(
-						'mandatory_answer'       => isset( $data->metas['mandatory_answer'] ) ? $data->metas['mandatory_answer'] : false,
-						'gradable_answer'        => isset( $data->metas['gradable_answer'] ) ? $data->metas['gradable_answer'] : false,
+						'mandatory_answer' => isset( $data->metas['mandatory_answer'] ) ? $data->metas['mandatory_answer'] : false,
+						'gradable_answer' => isset( $data->metas['gradable_answer'] ) ? $data->metas['gradable_answer'] : false,
 						'minimum_grade_required' => isset( $data->metas['minimum_grade_required'] ) ? $data->metas['minimum_grade_required'] : false,
-						'limit_attempts'         => isset( $data->metas['limit_attempts'] ) ? $data->metas['limit_attempts'] : false,
-						'limit_attempts_value'   => isset( $data->metas['limit_attempts_value'] ) ? $data->metas['limit_attempts_value'] : false,
+						'limit_attempts' => isset( $data->metas['limit_attempts'] ) ? $data->metas['limit_attempts'] : false,
+						'limit_attempts_value' => isset( $data->metas['limit_attempts_value'] ) ? $data->metas['limit_attempts_value'] : false,
 					);
 
 					Unit::update_input_module_meta( $unit_id, $module_id, $module_meta );
@@ -159,9 +159,9 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 
 			$args = array(
 				'posts_per_page' => - 1,
-				'post_parent'    => $id,
-				'post_type'      => array( 'module_response' ),
-				'post_status'    => 'any',
+				'post_parent' => $id,
+				'post_type' => array( 'module_response' ),
+				'post_status' => 'any',
 			);
 
 			$units_module_responses = get_posts( $args );
@@ -204,11 +204,11 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 			//Check if response already exists ( from the user. Only one response is allowed per response request / module per user )
 			$already_respond_posts_args = array(
 				'posts_per_page' => 1,
-				'meta_key'       => 'user_ID',
-				'meta_value'     => $student_id,
-				'post_type'      => array( 'module_response' ),
-				'post_parent'    => $unit_module_id,
-				'post_status'    => array( 'publish', 'inherit' )
+				'meta_key' => 'user_ID',
+				'meta_value' => $student_id,
+				'post_type' => array( 'module_response' ),
+				'post_parent' => $unit_module_id,
+				'post_status' => array( 'publish', 'inherit' )
 			);
 
 			$already_respond_posts = get_posts( $already_respond_posts_args );
@@ -231,17 +231,17 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 		function update_module_response( $data ) {
 			global $user_id, $wpdb, $coursepress;
 
-			$unit_id   = get_post_ancestors( $data->response_id );
+			$unit_id = get_post_ancestors( $data->response_id );
 			$course_id = get_post_meta( $unit_id[0], 'course_id', true );
 
 			$post = array(
-				'post_author'  => $user_id,
-				'post_parent'  => $data->response_id,
+				'post_author' => $user_id,
+				'post_parent' => $data->response_id,
 				'post_excerpt' => ( isset( $data->excerpt ) ? $data->excerpt : '' ),
 				'post_content' => ( isset( $data->content ) ? $data->content : '' ),
-				'post_status'  => 'publish',
-				'post_title'   => ( isset( $data->title ) ? $data->title : '' ),
-				'post_type'    => ( isset( $data->post_type ) ? $data->post_type : 'module_response' ),
+				'post_status' => 'publish',
+				'post_title' => ( isset( $data->title ) ? $data->title : '' ),
+				'post_type' => ( isset( $data->post_type ) ? $data->post_type : 'module_response' ),
 			);
 
 			if ( isset( $data->ID ) && $data->ID != '' && $data->ID != 0 ) {
@@ -251,11 +251,11 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 			//Check if response already exists ( from the user. Only one response is allowed per persponse request / module per user )
 			$already_respond_posts_args = array(
 				'posts_per_page' => 1,
-				'meta_key'       => 'user_ID',
-				'meta_value'     => get_current_user_id(),
-				'post_type'      => ( isset( $data->post_type ) ? $data->post_type : 'module_response' ),
-				'post_parent'    => $data->response_id,
-				'post_status'    => 'publish'
+				'meta_key' => 'user_ID',
+				'meta_value' => get_current_user_id(),
+				'post_type' => ( isset( $data->post_type ) ? $data->post_type : 'module_response' ),
+				'post_parent' => $data->response_id,
+				'post_status' => 'publish'
 			);
 
 			$already_respond_posts = get_posts( $already_respond_posts_args );
@@ -315,7 +315,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 		public static function get_module_unit_id( $module_id ) {
 			global $post;
 			$parents = get_post_ancestors( $module_id );
-			$id      = ( $parents ) ? $parents[0] : $post->ID;
+			$id = ( $parents ) ? $parents[0] : $post->ID;
 
 			return $id;
 		}
@@ -324,7 +324,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 			$ordered_modules = array();
 
 			foreach ( $modules as $module ) {
-				$order                     = get_post_meta( $module->ID, 'module_order', true );
+				$order = get_post_meta( $module->ID, 'module_order', true );
 				$ordered_modules[ $order ] = $module;
 			}
 
@@ -349,31 +349,31 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 				if ( $unit_pagination && $unit_page > 0 ) {
 
 					$args = array(
-						'post_type'      => 'module',
-						'post_status'    => 'any',
+						'post_type' => 'module',
+						'post_status' => 'any',
 						'posts_per_page' => - 1,
-						'post_parent'    => $unit_id,
-						'meta_query'     => array(
+						'post_parent' => $unit_id,
+						'meta_query' => array(
 							array(
-								'key'   => 'module_page',
+								'key' => 'module_page',
 								'value' => $unit_page,
 							)
 						),
-						//'meta_key'		 => 'module_page',
-						//'meta_value'	 => $unit_page,
-						'meta_key'       => 'module_order',
-						'orderby'        => 'meta_value_num',
-						'order'          => 'ASC',
+						//'meta_key' => 'module_page',
+						//'meta_value' => $unit_page,
+						'meta_key' => 'module_order',
+						'orderby' => 'meta_value_num',
+						'order' => 'ASC',
 					);
 				} else {
 					$args = array(
-						'post_type'      => 'module',
-						'post_status'    => 'any',
+						'post_type' => 'module',
+						'post_status' => 'any',
 						'posts_per_page' => - 1,
-						'post_parent'    => $unit_id,
-						'meta_key'       => 'module_order',
-						'orderby'        => 'meta_value_num',
-						'order'          => 'ASC',
+						'post_parent' => $unit_id,
+						'meta_key' => 'module_order',
+						'orderby' => 'meta_value_num',
+						'order' => 'ASC',
 					);
 				}
 
@@ -413,14 +413,14 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 
 			if ( isset( $_GET['resubmit_nonce'] ) || ( isset( $_GET['resubmit_nonce'] ) && wp_verify_nonce( $_GET['resubmit_nonce'], 'resubmit_answer' ) ) ) {
 				if ( isset( $_GET['resubmit_answer'] ) ) {
-					$user_id   = get_current_user_id();
+					$user_id = get_current_user_id();
 					$course_id = (int) $_GET['c'];
-					$unit_id   = (int) $_GET['u'];
+					$unit_id = (int) $_GET['u'];
 					$module_id = (int) $_GET['m'];
-					$response  = get_post( (int) $_GET['resubmit_answer'] );
+					$response = get_post( (int) $_GET['resubmit_answer'] );
 					if ( isset( $response ) && isset( $response->post_author ) && $response->post_author == get_current_user_ID() ) {
 						$resubmitted_response = array(
-							'ID'          => $response->ID,
+							'ID' => $response->ID,
 							'post_status' => 'private'
 						);
 						wp_update_post( $resubmitted_response );
@@ -432,14 +432,14 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 			}
 
 
-			$front_save    = false;
-			$responses     = 0;
+			$front_save = false;
+			$responses = 0;
 			$input_modules = 0;
 
 			$paged = isset( $wp->query_vars['paged'] ) ? absint( $wp->query_vars['paged'] ) : 1;
 
 			$unit_pagination = cp_unit_uses_new_pagination( (int) $unit_id );
-			$modules         = self::get_modules( $unit_id, $paged );
+			$modules = self::get_modules( $unit_id, $paged );
 
 			$course_id = do_shortcode( '[get_parent_course_id]' );
 
@@ -596,8 +596,8 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 		public static function get_module_response_comment_form( $post_id ) {
 			$post = get_post( $post_id );
 
-			$editor_name    = "response_comment";
-			$editor_id      = "response_comment";
+			$editor_name = "response_comment";
+			$editor_id = "response_comment";
 			$editor_content = $post->response_comment;
 
 
@@ -605,7 +605,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 				'textarea_name' => $editor_name,
 				'media_buttons' => false,
 				'textarea_rows' => 2,
-				'editor_class'  => 'response_comment'
+				'editor_class' => 'response_comment'
 			);
 			?>
 			<label><?php _e( 'Comment', 'cp' ); ?></label>
@@ -635,17 +635,17 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 			if ( ( isset( $_POST['response_id'] ) || $response_id !== '' ) && ( isset( $_POST['response_grade'] ) || $response_grade !== '' ) ) {
 
 				$grade_data = array(
-					'grade'      => ( $response_grade !== '' && is_numeric( $response_grade ) ? $response_grade : $_POST['response_grade'] ),
+					'grade' => ( $response_grade !== '' && is_numeric( $response_grade ) ? $response_grade : $_POST['response_grade'] ),
 					'instructor' => get_current_user_ID(),
-					'time'       => current_time( 'timestamp' )
+					'time' => current_time( 'timestamp' )
 				);
 
 				update_post_meta( ( $response_id !== '' && is_numeric( $response_id ) ? $response_id : $_POST['response_id'] ), 'response_grade', $grade_data );
 
 				if ( ! $user_id ) {
-					$user_id   = isset( $_POST['student_id'] ) ? (int) $_POST['student_id'] : false;
+					$user_id = isset( $_POST['student_id'] ) ? (int) $_POST['student_id'] : false;
 					$course_id = isset( $_POST['course_id'] ) ? (int) $_POST['course_id'] : false;
-					$unit_id   = isset( $_POST['unit_id'] ) ? (int) $_POST['unit_id'] : false;
+					$unit_id = isset( $_POST['unit_id'] ) ? (int) $_POST['unit_id'] : false;
 					$module_id = isset( $_POST['module_id'] ) ? (int) $_POST['module_id'] : false;
 				}
 
@@ -676,8 +676,8 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 				$grade = $grade_data[0]['grade'];
 				$response = get_post( $response_id );
 				$student_id = $response->post_author;
-				$unit_id   = get_post_ancestors( $module_id );
-				$unit_id   = $unit_id[0];
+				$unit_id = get_post_ancestors( $module_id );
+				$unit_id = $unit_id[0];
 				$course_id = get_post_meta( $unit_id, 'course_id', true );
 
 				// Multiple or single correct answer?
@@ -726,7 +726,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 							$grade_cnt = count( $right_answers );
 						}
 
-						$grade   = round( ( $grade / $grade_cnt ), 0 );
+						$grade = round( ( $grade / $grade_cnt ), 0 );
 					}
 
 				}
@@ -750,17 +750,17 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 			if ( $course_id == '' ) {
 
 				$args = array(
-					'post_type'      => array( 'module_response', 'attachment' ),
-					'post_status'    => array( 'publish', 'inherit' ),
+					'post_type' => array( 'module_response', 'attachment' ),
+					'post_status' => array( 'publish', 'inherit' ),
 					'posts_per_page' => - 1,
-					'meta_key'       => 'course_id',
-					'meta_value'     => $course_id,
-					'meta_query'     => array(
+					'meta_key' => 'course_id',
+					'meta_value' => $course_id,
+					'meta_query' => array(
 						'relation' => 'AND',
 						array(
-							'key'     => 'response_grade',
+							'key' => 'response_grade',
 							'compare' => 'NOT EXISTS',
-							'value'   => ''
+							'value' => ''
 						)
 					)
 				);
@@ -794,18 +794,18 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 			} else {
 
 				$args = array(
-					'post_type'      => array( 'module_response', 'attachment' ),
-					'post_status'    => array( 'publish', 'inherit' ),
+					'post_type' => array( 'module_response', 'attachment' ),
+					'post_status' => array( 'publish', 'inherit' ),
 					'posts_per_page' => - 1,
-					'meta_query'     => array(
+					'meta_query' => array(
 						'relation' => 'AND',
 						array(
-							'key'     => 'response_grade',
+							'key' => 'response_grade',
 							'compare' => 'NOT EXISTS',
-							'value'   => ''
+							'value' => ''
 						),
 						array(
-							'key'   => 'course_id',
+							'key' => 'course_id',
 							'value' => $course_id
 						)
 					)
@@ -927,9 +927,9 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 		) {
 			$number_of_answers = (int) count( $responses ) + (int) count( $last_public_response );
 
-			$limit_attempts       = $data->limit_attempts; //yes or no
+			$limit_attempts = $data->limit_attempts; //yes or no
 			$limit_attempts_value = $data->limit_attempts_value;
-			$attempts_remaining   = $limit_attempts_value - $number_of_answers;
+			$attempts_remaining = $limit_attempts_value - $number_of_answers;
 
 			if ( isset( $limit_attempts ) && $limit_attempts == 'yes' && 'yes' == $data->gradable_answer ) {
 				$limit_attempts_value = $limit_attempts_value;
@@ -950,12 +950,12 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 							if ( ( $number_of_answers < $limit_attempts_value ) || $limit_attempts_value == - 1 ) {
 								global $wp;
 //								$class_name = get_class( $this );
-//								$response     = call_user_func( $class_name.'::get_response', get_current_user_id(), $data->ID );
-								$unit_id      = wp_get_post_parent_id( $data->ID );
-								$course_id    = get_post_meta( $unit_id, 'course_id', true );
-								$module_id    = $data->ID;
-								$paged        = isset( $wp->query_vars['paged'] ) ? absint( $wp->query_vars['paged'] ) : 1;
-								$permalink    = trailingslashit( trailingslashit( get_permalink( $unit_id ) ) . 'page/' . trailingslashit( $paged ) );
+//								$response = call_user_func( $class_name.'::get_response', get_current_user_id(), $data->ID );
+								$unit_id = wp_get_post_parent_id( $data->ID );
+								$course_id = get_post_meta( $unit_id, 'course_id', true );
+								$module_id = $data->ID;
+								$paged = isset( $wp->query_vars['paged'] ) ? absint( $wp->query_vars['paged'] ) : 1;
+								$permalink = trailingslashit( trailingslashit( get_permalink( $unit_id ) ) . 'page/' . trailingslashit( $paged ) );
 								$resubmit_url = $permalink . '?resubmit_answer=' . $last_public_response->ID . '&resubmit_redirect_to=' . $permalink . '&m=' . $module_id . '&c=' . $course_id . '&u=' . $unit_id;
 								?>
 								<a href="<?php echo wp_nonce_url( $resubmit_url, 'resubmit_answer', 'resubmit_nonce' ); ?>" class="resubmit_response"><?php _e( 'Submit different answer', 'cp' ); ?></a>
@@ -1036,11 +1036,11 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 			global $user_id;
 
 			$post = array(
-				'post_author'  => $user_id,
+				'post_author' => $user_id,
 				'post_content' => '',
-				'post_status'  => 'auto-draft',
-				'post_type'    => 'module',
-				'post_parent'  => $unit_id
+				'post_status' => 'auto-draft',
+				'post_type' => 'module',
+				'post_parent' => $unit_id
 			);
 
 			$post_id = wp_insert_post( $post );
@@ -1060,7 +1060,7 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 
 			/* Duplicate course and change some data */
 
-			$new_module    = Unit_Module::get_module( $module_id );
+			$new_module = Unit_Module::get_module( $module_id );
 			$old_module_id = $new_module->ID;
 
 			unset( $new_module->ID );
@@ -1089,16 +1089,16 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 			// Set input module meta
 			if ( isset( $post_metas ) ) {
 				$input_module_types = self::get_input_module_types();
-				$module_type        = $post_metas['module_type'];
+				$module_type = $post_metas['module_type'];
 				if ( in_array( $module_type, $input_module_types ) ) {
 
-					$module_id   = $new_module_id;
+					$module_id = $new_module_id;
 					$module_meta = array(
-						'mandatory_answer'       => isset( $post_metas['mandatory_answer'] ) ? $post_metas['mandatory_answer'] : false,
-						'gradable_answer'        => isset( $post_metas['gradable_answer'] ) ? $post_metas['gradable_answer'] : false,
+						'mandatory_answer' => isset( $post_metas['mandatory_answer'] ) ? $post_metas['mandatory_answer'] : false,
+						'gradable_answer' => isset( $post_metas['gradable_answer'] ) ? $post_metas['gradable_answer'] : false,
 						'minimum_grade_required' => isset( $post_metas['minimum_grade_required'] ) ? $post_metas['minimum_grade_required'] : false,
-						'limit_attempts'         => isset( $post_metas['limit_attempts'] ) ? $post_metas['limit_attempts'] : false,
-						'limit_attempts_value'   => isset( $post_metas['limit_attempts_value'] ) ? $post_metas['limit_attempts_value'] : false,
+						'limit_attempts' => isset( $post_metas['limit_attempts'] ) ? $post_metas['limit_attempts'] : false,
+						'limit_attempts_value' => isset( $post_metas['limit_attempts_value'] ) ? $post_metas['limit_attempts_value'] : false,
 					);
 
 					Unit::update_input_module_meta( $unit_id, $module_id, $module_meta );
@@ -1145,32 +1145,32 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 
 		function add_oembeds( $html ) {
 
-			$matches     = array();
+			$matches = array();
 			$new_content = '';
-			$pre_half    = '';
-			$post_half   = '';
-			$p_offset    = 0;
-			$p_length    = 0;
-			$o_length    = 0;
+			$pre_half = '';
+			$post_half = '';
+			$p_offset = 0;
+			$p_length = 0;
+			$o_length = 0;
 
 			$content = str_replace( '</p>', '</p> ', $html );
 			preg_match_all( "/(?<!href|src='|\")(https?:\/\/\S*)/i", $content, $matches, PREG_OFFSET_CAPTURE );
 
 			if ( ! empty( $matches[0] ) ) {
 				foreach ( $matches[0] as $match ) {
-					$url    = str_replace( '</p>', '', $match[0] );
+					$url = str_replace( '</p>', '', $match[0] );
 					$offset = $match[1];
 					$length = strlen( $url );
 
 					$embed = wp_oembed_get( $url );
 					if ( ! empty( $embed ) ) {
 						$new_offset = ( $offset - ( $p_offset + $o_length ) ) + ( $p_offset + $p_length );
-						$pre_half   = substr( $content, 0, $new_offset );
-						$post_half  = substr( $content, $new_offset + $length, strlen( $content ) - ( $new_offset + $length ) );
-						$content    = $pre_half . $embed . $post_half;
-						$p_offset   = $offset;
-						$o_length   = $length;
-						$p_length   = strlen( $embed );
+						$pre_half = substr( $content, 0, $new_offset );
+						$post_half = substr( $content, $new_offset + $length, strlen( $content ) - ( $new_offset + $length ) );
+						$content = $pre_half . $embed . $post_half;
+						$p_offset = $offset;
+						$o_length = $length;
+						$p_length = strlen( $embed );
 					}
 				}
 			}
@@ -1185,25 +1185,25 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 		public static function get_module_meta( $module_id ) {
 
 			$input_modules = self::get_input_module_types();
-			$module_type   = self::get_module_type( $module_id );
+			$module_type = self::get_module_type( $module_id );
 
 			// If not an input module, return something else. False in this case.
 			if ( ! in_array( $module_type, $input_modules ) ) {
 				return false;
 			}
 
-			$mandatory_answer       = get_post_meta( $module_id, 'mandatory_answer', true );
-			$gradable_answer        = get_post_meta( $module_id, 'gradable_answer', true );
+			$mandatory_answer = get_post_meta( $module_id, 'mandatory_answer', true );
+			$gradable_answer = get_post_meta( $module_id, 'gradable_answer', true );
 			$minimum_grade_required = get_post_meta( $module_id, 'minimum_grade_required', true );
-			$limit_attempts         = get_post_meta( $module_id, 'limit_attempts', true );
-			$limit_attempts_value   = get_post_meta( $module_id, 'limit_attempts_value', true );
+			$limit_attempts = get_post_meta( $module_id, 'limit_attempts', true );
+			$limit_attempts_value = get_post_meta( $module_id, 'limit_attempts_value', true );
 
 			$module_meta = array(
-				'mandatory_answer'       => ! empty( $mandatory_answer ) ? is_array( $mandatory_answer ) ? $mandatory_answer[0] : $mandatory_answer : array(),
-				'gradable_answer'        => ! empty( $gradable_answer ) ? is_array( $gradable_answer ) ? $gradable_answer[0] : $gradable_answer : array(),
+				'mandatory_answer' => ! empty( $mandatory_answer ) ? is_array( $mandatory_answer ) ? $mandatory_answer[0] : $mandatory_answer : array(),
+				'gradable_answer' => ! empty( $gradable_answer ) ? is_array( $gradable_answer ) ? $gradable_answer[0] : $gradable_answer : array(),
 				'minimum_grade_required' => ! empty( $minimum_grade_required ) ? is_array( $minimum_grade_required ) ? $minimum_grade_required[0] : $minimum_grade_required : false,
-				'limit_attempts'         => ! empty( $limit_attempts ) ? is_array( $limit_attempts ) ? $limit_attempts[0] : $limit_attempts : false,
-				'limit_attempts_value'   => ! empty( $limit_attempts_value ) ? is_array( $limit_attempts_value ) ? $limit_attempts_value[0] : $limit_attempts_value : false,
+				'limit_attempts' => ! empty( $limit_attempts ) ? is_array( $limit_attempts ) ? $limit_attempts[0] : $limit_attempts : false,
+				'limit_attempts_value' => ! empty( $limit_attempts_value ) ? is_array( $limit_attempts_value ) ? $limit_attempts_value[0] : $limit_attempts_value : false,
 			);
 
 			return $module_meta;

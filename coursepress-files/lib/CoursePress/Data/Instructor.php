@@ -82,19 +82,19 @@ class CoursePress_Data_Instructor {
 
 	public static function get_accessable_courses( $user, $include_posts = false ) {
 
-		$user_id          = self::_get_id( $user );
-		$courses          = self::get_assigned_courses_ids( $user_id );
+		$user_id = self::_get_id( $user );
+		$courses = self::get_assigned_courses_ids( $user_id );
 		$course_array = array();
 
 		foreach ( $courses as $course ) {
 
 			// @todo ADD CAPABILITIES CLASS
-			// $can_update    = CoursePress_Capabilities::can_update_course( $course, $user_id );
-			// $can_delete    = CoursePress_Capabilities::can_delete_course( $course, $user_id );
-			// $can_publish   = CoursePress_Capabilities::can_change_course_status( $course, $user_id );
+			// $can_update = CoursePress_Capabilities::can_update_course( $course, $user_id );
+			// $can_delete = CoursePress_Capabilities::can_delete_course( $course, $user_id );
+			// $can_publish = CoursePress_Capabilities::can_change_course_status( $course, $user_id );
 			// $can_view_unit = CoursePress_Capabilities::can_view_course_units( $course, $user_id );
-			// $my_course     = CoursePress_Capabilities::is_course_instructor( $course, $user_id );
-			// $creator       = CoursePress_Capabilities::is_course_creator( $course, $user_id );
+			// $my_course = CoursePress_Capabilities::is_course_instructor( $course, $user_id );
+			// $creator = CoursePress_Capabilities::is_course_creator( $course, $user_id );
 			$my_course = true;
 
 			if ( ! $my_course && ! $creator && ! $can_update && ! $can_delete && ! $can_publish && ! $can_view_unit ) {
@@ -115,7 +115,7 @@ class CoursePress_Data_Instructor {
 	}
 
 	public static function unassign_from_course( $user, $course_id = 0 ) {
-		$user_id       = self::_get_id( $user );
+		$user_id = self::_get_id( $user );
 		$global_option = ! is_multisite();
 		delete_user_option( $user_id, 'course_' . $course_id, $global_option );
 		delete_user_option( $user_id, 'enrolled_course_date_' . $course_id, $global_option );
@@ -152,7 +152,7 @@ class CoursePress_Data_Instructor {
 	}
 
 	public static function remove_instructor_status( $user ) {
-		$user_id       = self::_get_id( $user );
+		$user_id = self::_get_id( $user );
 		$global_option = ! is_multisite();
 		delete_user_option( $user_id, 'role_ins', 'instructor', $global_option );
 
@@ -178,7 +178,7 @@ class CoursePress_Data_Instructor {
 
 		// Not in cache, so retrieve
 		if ( empty( $user_id ) ) {
-			$sql     = $wpdb->prepare( 'SELECT user_id FROM ' . $wpdb->prefix . 'usermeta WHERE meta_key = %s', $hash );
+			$sql = $wpdb->prepare( 'SELECT user_id FROM ' . $wpdb->prefix . 'usermeta WHERE meta_key = %s', $hash );
 			$user_id = $wpdb->get_var( $sql );
 			wp_cache_add( $hash, $user_id, 'coursepress_userhash' );
 		}
@@ -200,9 +200,9 @@ class CoursePress_Data_Instructor {
 	}
 
 	public static function create_hash( $user ) {
-		$user_id       = self::_get_id( $user );
-		$user          = get_userdata( $user_id );
-		$hash          = md5( $user->user_login );
+		$user_id = self::_get_id( $user );
+		$user = get_userdata( $user_id );
+		$hash = md5( $user->user_login );
 		$global_option = ! is_multisite();
 		/*
 		 * Just in case someone is actually using this hash for something,
@@ -216,9 +216,9 @@ class CoursePress_Data_Instructor {
 	}
 
 	public static function get_hash( $user ) {
-		$user_id       = self::_get_id( $user );
-		$user          = get_userdata( $user_id );
-		$hash          = md5( $user->user_login );
+		$user_id = self::_get_id( $user );
+		$user = get_userdata( $user_id );
+		$hash = md5( $user->user_login );
 		$global_option = ! is_multisite();
 
 		$option = get_user_option( $hash, $user_id );
@@ -312,10 +312,10 @@ class CoursePress_Data_Instructor {
 				// Add the new invite
 				$invite = array(
 					'first_name' => $email_args['first_name'],
-					'last_name'	 => $email_args['last_name'],
-					'email'		 => $email_args['email'],
-					'code'		 => $email_args['invite_code'],
-					'hash'		 => $email_args['invite_hash'],
+					'last_name' => $email_args['last_name'],
+					'email' => $email_args['email'],
+					'code' => $email_args['invite_code'],
+					'hash' => $email_args['invite_hash'],
 				);
 
 				$instructor_invites[ $email_args['invite_code'] ] = $invite;
@@ -350,7 +350,7 @@ class CoursePress_Data_Instructor {
 	private static function _create_invite_code_hash( $args ) {
 
 		// Generate invite code.
-		$characters	 = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		$invite_code = '';
 		for ( $i = 0; $i < 20; $i ++ ) {
 			$invite_code .= $characters[ rand( 0, strlen( $characters ) - 1 ) ];

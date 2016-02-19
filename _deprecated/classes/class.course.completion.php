@@ -62,7 +62,7 @@ if ( ! class_exists( 'Course_Completion' ) ) {
 				$unit->page_count = $this->get_unit_pages( $unit );
 
 				// Used to determine mandatory modules
-				$unit->input_module_ids     = $this->get_input_modules( $unit->modules );
+				$unit->input_module_ids = $this->get_input_modules( $unit->modules );
 				$unit->mandatory_module_ids = $this->get_mandatory_modules( $unit->modules, $unit->input_module_ids );
 
 				// Uses only mandatory modules
@@ -103,14 +103,14 @@ if ( ! class_exists( 'Course_Completion' ) ) {
 		}
 
 		function get_input_modules( $modules ) {
-			$inputs        = array();
+			$inputs = array();
 			$input_modules = array(
 				'checkbox_input_module',
 				'file_input_module',
 				'radio_input_module',
 				'text_input_module'
 			);
-			$count         = 0;
+			$count = 0;
 			foreach ( $modules as $mod ) {
 				$class_name = $mod->module_type;
 				if ( in_array( $class_name, $input_modules ) ) {
@@ -181,7 +181,7 @@ if ( ! class_exists( 'Course_Completion' ) ) {
 					$module = new $module->module_type( $module->ID );
 
 					$class_name = Unit_Module::get_module_type( $module->ID );
-					$response   = call_user_func( $class_name . '::get_response', $student_id, $unit->modules[ $mod_id ]->ID );
+					$response = call_user_func( $class_name . '::get_response', $student_id, $unit->modules[ $mod_id ]->ID );
 
 					if ( ! empty( $response ) ) {
 						$unit->mandatory_answered[ $key ] = true;
@@ -218,13 +218,13 @@ if ( ! class_exists( 'Course_Completion' ) ) {
 					$module = new $module->module_type( $module->ID );
 
 					$class_name = Unit_Module::get_module_type( $module->ID );
-					$response   = call_user_func( $class_name . '::get_response', $student_id, $unit->modules[ $mod_id ]->ID );
+					$response = call_user_func( $class_name . '::get_response', $student_id, $unit->modules[ $mod_id ]->ID );
 
 					$minimum_grade = get_post_meta( $unit->modules[ $mod_id ]->ID, 'minimum_grade_required', true );
-					$grade         = false;
-					$success       = false;
+					$grade = false;
+					$success = false;
 					if ( ! empty( $response ) ) {
-						$grade   = Unit_Module::get_response_grade( $response->ID );
+						$grade = Unit_Module::get_response_grade( $response->ID );
 						$success = $grade['grade'] >= $minimum_grade ? true : false;
 						if ( $success ) {
 							do_action( 'coursepress_set_gradable_question_passed', $this->student_id, $this->id, $unit->ID, $mod_id );
@@ -239,11 +239,11 @@ if ( ! class_exists( 'Course_Completion' ) ) {
 		function check_gradable_modules_passed( $student_id = 0 ) {
 
 			foreach ( $this->units as $unit ) {
-				$unit_passed                 = true;
+				$unit_passed = true;
 				$unit->gradable_passed_count = 0;
-				$unit->total_gradable        = count( $unit->gradable_module_ids );
+				$unit->total_gradable = count( $unit->gradable_module_ids );
 				foreach ( $unit->gradable_module_ids as $key => $mod_id ) {
-					$module  = $unit->modules[ $mod_id ];
+					$module = $unit->modules[ $mod_id ];
 					$success = false;
 					if ( ! empty( $unit->gradable_passed[ $key ] ) && $unit->gradable_passed[ $key ] ) {
 						$success = true;
@@ -263,7 +263,7 @@ if ( ! class_exists( 'Course_Completion' ) ) {
 
 					$answered = $unit->mandatory_answered[ $module_id ];
 					$gradable = in_array( $module_id, array_keys( $unit->gradable_module_ids ) );
-					$passed   = $gradable ? $unit->gradable_passed[ $module_id ] : false;
+					$passed = $gradable ? $unit->gradable_passed[ $module_id ] : false;
 
 					if ( $answered && ( ( $gradable && $passed ) || ! $gradable ) ) {
 						$remaining -= 1;

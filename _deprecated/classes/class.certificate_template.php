@@ -14,12 +14,12 @@ if ( ! class_exists( 'CP_Certificate_Template' ) ) {
 		var $details;
 
 		function __construct( $id = '', $output = 'OBJECT' ) {
-			$this->id      = $id;
-			$this->output  = $output;
+			$this->id = $id;
+			$this->output = $output;
 			$this->details = get_post( $this->id, $this->output );
 
 			$templates = new CP_Certificate_Templates();
-			$fields    = $templates->get_template_col_fields();
+			$fields = $templates->get_template_col_fields();
 
 			foreach ( $fields as $field ) {
 				if ( ! isset( $this->details->{$field['field_name']} ) ) {
@@ -52,9 +52,9 @@ if ( ! class_exists( 'CP_Certificate_Template' ) ) {
 
 		function get_template_id_by_name( $slug ) {
 			$args = array(
-				'name'           => $slug,
-				'post_type'      => 'certificates',
-				'post_status'    => 'any',
+				'name' => $slug,
+				'post_type' => 'certificates',
+				'post_status' => 'any',
 				'posts_per_page' => 1
 			);
 

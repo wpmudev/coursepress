@@ -117,7 +117,7 @@ if ( ! class_exists( 'CoursePress_Integration' ) ) {
 
 			if ( 'og:description' == $name ) {
 				$value = $this->data['current_course']->details->post_excerpt;
-				$meta  = '<meta content="' . wp_strip_all_tags( $value ) . '" property="og:description">';
+				$meta = '<meta content="' . wp_strip_all_tags( $value ) . '" property="og:description">';
 			}
 
 			return $meta;

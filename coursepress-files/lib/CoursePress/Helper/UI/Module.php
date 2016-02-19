@@ -28,24 +28,24 @@ class CoursePress_Helper_UI_Module {
 
 	public static function render_test( $data = 'TODO' ) {
 
-		$types  = self::get_types();
+		$types = self::get_types();
 		$labels = self::get_labels();
 
 		$data = array(
 
-			'id'             => 12345,
-			'title'          => 'This is the title',
-			'type'           => self::INPUT_SHORT_TEXT,
-			'duration'       => '1:00',
-			'show_title'     => 1,
-			'mandatory'      => 1,
-			'assessable'     => 1,
-			'minimum_grade'  => 100,
-			'allow_retries'  => 1,
+			'id' => 12345,
+			'title' => 'This is the title',
+			'type' => self::INPUT_SHORT_TEXT,
+			'duration' => '1:00',
+			'show_title' => 1,
+			'mandatory' => 1,
+			'assessable' => 1,
+			'minimum_grade' => 100,
+			'allow_retries' => 1,
 			'retry_attempts' => 10,
-			'content'        => 'Explain the meaning of life, the universe and everything else.',
-			'order'          => 0,
-			'components'     => array(
+			'content' => 'Explain the meaning of life, the universe and everything else.',
+			'order' => 0,
+			'components' => array(
 				// array(
 				// 'id' => '12345_1',
 				// 'order' => 0,
@@ -68,15 +68,15 @@ class CoursePress_Helper_UI_Module {
 					'order' => 0,
 					'items' => array(
 						array(
-							'text'             => 'this is for later',
-							'selected'         => 0,
+							'text' => 'this is for later',
+							'selected' => 0,
 							'item_placeholder' => 'not always needed',
-							'placeholder'      => 'this goes on UI side',
-							'button_primary'   => 'Button 1',
+							'placeholder' => 'this goes on UI side',
+							'button_primary' => 'Button 1',
 							'button_secondary' => 'Button 2',
-							'button_other'     => 'Button 3',
-							'answer'           => 'Not always used',
-							'keywords'         => 'this, could, be, useful',
+							'button_other' => 'Button 3',
+							'answer' => 'Not always used',
+							'keywords' => 'this, could, be, useful',
 						), // item
 					),// items
 				),
@@ -200,7 +200,7 @@ class CoursePress_Helper_UI_Module {
 
 	public static function get_types() {
 
-		$input_types  = self::get_input_types();
+		$input_types = self::get_input_types();
 		$output_types = self::get_output_types();
 
 		return apply_filters( 'coursepress_module_types', CoursePress_Helper_Utility::merge_distinct( $input_types, $output_types ) );
@@ -212,43 +212,43 @@ class CoursePress_Helper_UI_Module {
 		$types = array(
 			self::INPUT_MULTIPLE_CHOICE => array(
 				'title' => __( 'Multiple Choice', CoursePress::TD ),
-				'mode'  => 'input',
-				'icon'  => 'default',
+				'mode' => 'input',
+				'icon' => 'default',
 			),
-			self::INPUT_SINGLE_CHOICE   => array(
+			self::INPUT_SINGLE_CHOICE => array(
 				'title' => __( 'Single Choice', CoursePress::TD ),
-				'mode'  => 'input',
-				'icon'  => 'default',
+				'mode' => 'input',
+				'icon' => 'default',
 			),
-			self::INPUT_SELECT_CHOICE   => array(
+			self::INPUT_SELECT_CHOICE => array(
 				'title' => __( 'Selectable', CoursePress::TD ),
-				'mode'  => 'input',
-				'icon'  => 'default',
+				'mode' => 'input',
+				'icon' => 'default',
 			),
-			self::INPUT_SHORT_TEXT      => array(
+			self::INPUT_SHORT_TEXT => array(
 				'title' => __( 'Short Answer', CoursePress::TD ),
-				'mode'  => 'input',
-				'icon'  => 'default',
+				'mode' => 'input',
+				'icon' => 'default',
 			),
-			self::INPUT_LONG_TEXT       => array(
+			self::INPUT_LONG_TEXT => array(
 				'title' => __( 'Long Answer', CoursePress::TD ),
-				'mode'  => 'input',
-				'icon'  => 'default',
+				'mode' => 'input',
+				'icon' => 'default',
 			),
-			self::INPUT_UPLOAD          => array(
+			self::INPUT_UPLOAD => array(
 				'title' => __( 'File Upload', CoursePress::TD ),
-				'mode'  => 'input',
-				'icon'  => 'default',
+				'mode' => 'input',
+				'icon' => 'default',
 			),
-			self::INPUT_QUIZ            => array(
+			self::INPUT_QUIZ => array(
 				'title' => __( 'Quiz', CoursePress::TD ),
-				'mode'  => 'input',
-				'icon'  => 'default',
+				'mode' => 'input',
+				'icon' => 'default',
 			),
-			// self::INPUT_ADVANCED        => array(
+			// self::INPUT_ADVANCED => array(
 			// 'title' => __( 'Advanced Action', CoursePress::TD ),
-			// 'mode'  => 'input',
-			// 'icon'  => 'default',
+			// 'mode' => 'input',
+			// 'icon' => 'default',
 			// ),
 		);
 
@@ -258,52 +258,52 @@ class CoursePress_Helper_UI_Module {
 	public static function get_output_types() {
 
 		$types = array(
-			self::OUTPUT_TEXT          => array(
+			self::OUTPUT_TEXT => array(
 				'title' => __( 'Text', CoursePress::TD ),
-				'mode'  => 'output',
-				'icon'  => 'default',
+				'mode' => 'output',
+				'icon' => 'default',
 			),
-			self::OUTPUT_IMAGE         => array(
-				'title'   => __( 'Image', CoursePress::TD ),
-				'mode'    => 'output',
+			self::OUTPUT_IMAGE => array(
+				'title' => __( 'Image', CoursePress::TD ),
+				'mode' => 'output',
 				'excerpt' => 'hidden',
-				'icon'    => 'default',
+				'icon' => 'default',
 			),
-			self::OUTPUT_VIDEO         => array(
-				'title'   => __( 'Video', CoursePress::TD ),
-				'mode'    => 'output',
+			self::OUTPUT_VIDEO => array(
+				'title' => __( 'Video', CoursePress::TD ),
+				'mode' => 'output',
 				'excerpt' => 'hidden',
-				'icon'    => 'default',
+				'icon' => 'default',
 			),
-			self::OUTPUT_AUDIO         => array(
-				'title'   => __( 'Audio', CoursePress::TD ),
-				'mode'    => 'output',
+			self::OUTPUT_AUDIO => array(
+				'title' => __( 'Audio', CoursePress::TD ),
+				'mode' => 'output',
 				'excerpt' => 'hidden',
-				'icon'    => 'default',
+				'icon' => 'default',
 			),
-			self::OUTPUT_DOWNLOAD      => array(
-				'title'   => __( 'File Download', CoursePress::TD ),
-				'mode'    => 'output',
+			self::OUTPUT_DOWNLOAD => array(
+				'title' => __( 'File Download', CoursePress::TD ),
+				'mode' => 'output',
 			// 'excerpt' => 'hidden',
-				'icon'    => 'default',
+				'icon' => 'default',
 			),
 			self::OUTPUT_ZIPPED_OBJECT => array(
-				'title'   => __( 'Zipped Object', CoursePress::TD ),
-				'mode'    => 'output',
+				'title' => __( 'Zipped Object', CoursePress::TD ),
+				'mode' => 'output',
 			// 'excerpt' => 'hidden',
-				'icon'    => 'default',
+				'icon' => 'default',
 			),
-			// self::OUTPUT_SECTION       => array(
-			// 'title'   => __( 'Section Break', CoursePress::TD ),
-			// 'mode'    => 'output',
+			// self::OUTPUT_SECTION => array(
+			// 'title' => __( 'Section Break', CoursePress::TD ),
+			// 'mode' => 'output',
 			// 'excerpt' => 'hidden',
-			// 'body'    => 'hidden',
-			// 'icon'    => 'default',
+			// 'body' => 'hidden',
+			// 'icon' => 'default',
 			// ),
-			self::OUTPUT_DISCUSSION    => array(
+			self::OUTPUT_DISCUSSION => array(
 				'title' => __( 'Discussion', CoursePress::TD ),
-				'mode'  => 'output',
-				'icon'  => 'default',
+				'mode' => 'output',
+				'icon' => 'default',
 			),
 		);
 
@@ -313,31 +313,31 @@ class CoursePress_Helper_UI_Module {
 	public static function get_labels() {
 
 		return apply_filters( 'coursepress_module_labels', array(
-			'module_title'              => __( 'Title', CoursePress::TD ),
-			'module_title_desc'         => __( 'The title is used to identify this module element and is useful for assessment.', CoursePress::TD ),
-			'module_duration'           => __( 'Duration ([hh:]mm:ss)', CoursePress::TD ),
-			'module_show_title'         => __( 'Show Title', CoursePress::TD ),
-			'module_show_title_desc'    => __( 'Show title in unit view', CoursePress::TD ),
-			'module_mandatory'          => __( 'Mandatory', CoursePress::TD ),
-			'module_mandatory_desc'     => __( 'A response is required', CoursePress::TD ),
-			'module_assessable'         => __( 'Assessable', CoursePress::TD ),
-			'module_assessable_desc'    => __( 'This is a gradable item', CoursePress::TD ),
-			'module_minimum_grade'      => __( 'Minimum', CoursePress::TD ),
+			'module_title' => __( 'Title', CoursePress::TD ),
+			'module_title_desc' => __( 'The title is used to identify this module element and is useful for assessment.', CoursePress::TD ),
+			'module_duration' => __( 'Duration ([hh:]mm:ss)', CoursePress::TD ),
+			'module_show_title' => __( 'Show Title', CoursePress::TD ),
+			'module_show_title_desc' => __( 'Show title in unit view', CoursePress::TD ),
+			'module_mandatory' => __( 'Mandatory', CoursePress::TD ),
+			'module_mandatory_desc' => __( 'A response is required', CoursePress::TD ),
+			'module_assessable' => __( 'Assessable', CoursePress::TD ),
+			'module_assessable_desc' => __( 'This is a gradable item', CoursePress::TD ),
+			'module_minimum_grade' => __( 'Minimum', CoursePress::TD ),
 			'module_minimum_grade_desc' => __( 'Minimum grade (%) required to pass', CoursePress::TD ),
-			'module_minimum_grade'      => __( 'Minimum Grade', CoursePress::TD ),
-			'module_allow_retries'      => __( 'Allow Retries', CoursePress::TD ),
+			'module_minimum_grade' => __( 'Minimum Grade', CoursePress::TD ),
+			'module_allow_retries' => __( 'Allow Retries', CoursePress::TD ),
 			'module_allow_retries_desc' => __( 'Allow and set amount of retries (0 unlimited)', CoursePress::TD ),
-			'module_use_timer'          => __( 'Use Timer', CoursePress::TD ),
-			'module_use_timer_desc'     => __( 'Use duration as time restriction', CoursePress::TD ),
-			'module_question'           => __( 'Question/Task', CoursePress::TD ),
-			'module_question_desc'      => __( 'The question or instructions to complete this task.', CoursePress::TD ),
-			'module_content'            => __( 'Content', CoursePress::TD ),
-			'module_content_desc'       => __( 'Content that will display on the unit page.', CoursePress::TD ),
-			'module_answer'             => __( 'Answer', CoursePress::TD ),
-			'module_answer_desc'        => __( 'Set the correct answer', CoursePress::TD ),
-			'module_answer_add_new'     => __( 'Add', CoursePress::TD ),
-			'module_delete'             => __( 'Delete Module', CoursePress::TD ),
-			'module_start_quiz'         => __( 'Start Quiz', CoursePress::TD ),
+			'module_use_timer' => __( 'Use Timer', CoursePress::TD ),
+			'module_use_timer_desc' => __( 'Use duration as time restriction', CoursePress::TD ),
+			'module_question' => __( 'Question/Task', CoursePress::TD ),
+			'module_question_desc' => __( 'The question or instructions to complete this task.', CoursePress::TD ),
+			'module_content' => __( 'Content', CoursePress::TD ),
+			'module_content_desc' => __( 'Content that will display on the unit page.', CoursePress::TD ),
+			'module_answer' => __( 'Answer', CoursePress::TD ),
+			'module_answer_desc' => __( 'Set the correct answer', CoursePress::TD ),
+			'module_answer_add_new' => __( 'Add', CoursePress::TD ),
+			'module_delete' => __( 'Delete Module', CoursePress::TD ),
+			'module_start_quiz' => __( 'Start Quiz', CoursePress::TD ),
 		) );
 
 	}
@@ -346,7 +346,7 @@ class CoursePress_Helper_UI_Module {
 	public static function get_template( $component = false ) {
 
 		$components = array(
-			self::OUTPUT_TEXT           => '
+			self::OUTPUT_TEXT => '
 				{
 					"id": "0",
 					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
@@ -364,7 +364,7 @@ class CoursePress_Helper_UI_Module {
 					"components": []
 				}
 			',
-			self::OUTPUT_IMAGE          => '
+			self::OUTPUT_IMAGE => '
 				{
 					"id": "0",
 					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
@@ -423,7 +423,7 @@ class CoursePress_Helper_UI_Module {
 					]
 				}
 			',
-			self::OUTPUT_VIDEO          => '
+			self::OUTPUT_VIDEO => '
 				{
 					"id": "0",
 					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
@@ -494,7 +494,7 @@ class CoursePress_Helper_UI_Module {
 					]
 				}
 			',
-			self::OUTPUT_AUDIO          => '
+			self::OUTPUT_AUDIO => '
 				{
 					"id": "0",
 					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
@@ -545,7 +545,7 @@ class CoursePress_Helper_UI_Module {
 					]
 				}
 			',
-			self::OUTPUT_DOWNLOAD       => '
+			self::OUTPUT_DOWNLOAD => '
 				{
 					"id": "0",
 					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
@@ -590,7 +590,7 @@ class CoursePress_Helper_UI_Module {
 					]
 				}
 			',
-			self::OUTPUT_ZIPPED_OBJECT  => '
+			self::OUTPUT_ZIPPED_OBJECT => '
 				{
 					"id": "0",
 					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
@@ -650,7 +650,7 @@ class CoursePress_Helper_UI_Module {
 					]
 				}
 			',
-			self::OUTPUT_SECTION        => '
+			self::OUTPUT_SECTION => '
 			{
 				"id": "0",
 				"title": "' . __( 'Untitled', CoursePress::TD ) . '",
@@ -668,7 +668,7 @@ class CoursePress_Helper_UI_Module {
 				"components": []
 			}
 			',
-			self::OUTPUT_DISCUSSION     => '
+			self::OUTPUT_DISCUSSION => '
 				{
 					"id": "0",
 					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
@@ -724,7 +724,7 @@ class CoursePress_Helper_UI_Module {
 					]
 				}
 			',
-			self::INPUT_SINGLE_CHOICE   => '
+			self::INPUT_SINGLE_CHOICE => '
 				{
 					"id": "0",
 					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
@@ -760,7 +760,7 @@ class CoursePress_Helper_UI_Module {
 					]
 				}
 			',
-			self::INPUT_SELECT_CHOICE   => '
+			self::INPUT_SELECT_CHOICE => '
 						{
 					"id": "0",
 					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
@@ -796,7 +796,7 @@ class CoursePress_Helper_UI_Module {
 					]
 				}
 			',
-			self::INPUT_SHORT_TEXT      => '
+			self::INPUT_SHORT_TEXT => '
 				{
 					"id": "0",
 					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
@@ -827,7 +827,7 @@ class CoursePress_Helper_UI_Module {
 					]
 				}
 			',
-			self::INPUT_LONG_TEXT       => '
+			self::INPUT_LONG_TEXT => '
 				{
 					"id": "0",
 					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
@@ -858,7 +858,7 @@ class CoursePress_Helper_UI_Module {
 					]
 				}
 			',
-			self::INPUT_UPLOAD          => '
+			self::INPUT_UPLOAD => '
 				{
 					"id": "0",
 					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
@@ -876,7 +876,7 @@ class CoursePress_Helper_UI_Module {
 					"components": []
 				}
 			',
-			self::INPUT_QUIZ            => '
+			self::INPUT_QUIZ => '
 				{
 					"id": "0",
 					"title": "' . __( 'Untitled', CoursePress::TD ) . '",
@@ -920,7 +920,7 @@ class CoursePress_Helper_UI_Module {
 					]
 				}
 			',
-			self::INPUT_ADVANCED        => '
+			self::INPUT_ADVANCED => '
 
 			',
 		);
@@ -935,7 +935,7 @@ class CoursePress_Helper_UI_Module {
 
 	private static function render_components( $data ) {
 
-		$types  = self::get_types();
+		$types = self::get_types();
 		$labels = self::get_labels();
 
 		$content = '';
