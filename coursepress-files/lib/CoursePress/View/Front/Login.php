@@ -58,7 +58,7 @@ class CoursePress_View_Front_Login {
 			}
 
 			$content = '';
-			$page_title = __( 'Student Login', CoursePress::TD );
+			$page_title = __( 'Student Login', 'CP_TD' );
 
 			$args = array(
 				'slug' => CoursePress_Core::get_slug( 'login' ),
@@ -85,7 +85,7 @@ class CoursePress_View_Front_Login {
 			}
 
 			$content = '';
-			$page_title = __( 'New Signup', CoursePress::TD );
+			$page_title = __( 'New Signup', 'CP_TD' );
 
 			$args = array(
 				'slug' => CoursePress_Core::get_slug( 'signup' ),

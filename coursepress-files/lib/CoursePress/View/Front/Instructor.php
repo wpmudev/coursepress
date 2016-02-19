@@ -40,12 +40,12 @@ class CoursePress_View_Front_Instructor {
 			}
 			$content = '';
 			if ( empty( $instructor ) ) {
-				$content = __( 'The requested instuctor does not exists', CoursePress::TD );
+				$content = __( 'The requested instuctor does not exists', 'CP_TD' );
 			}
 
 			self::$last_instructor = empty( $instructor ) ? 0 : $instructor->ID;
 
-			$page_title = ! empty( self::$last_instructor ) ? CoursePress_Helper_Utility::get_user_name( self::$last_instructor, false, false ) : __( 'Instructor not found.', CoursePress::TD );
+			$page_title = ! empty( self::$last_instructor ) ? CoursePress_Helper_Utility::get_user_name( self::$last_instructor, false, false ) : __( 'Instructor not found.', 'CP_TD' );
 			$args = array(
 				'slug' => 'instructor_' . self::$last_instructor,
 				'title' => $page_title,

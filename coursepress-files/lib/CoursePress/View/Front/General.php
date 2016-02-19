@@ -44,7 +44,7 @@ class CoursePress_View_Front_General {
 
 			$courses = new stdClass;
 
-			$courses->title = __( 'Courses', CoursePress::TD );
+			$courses->title = __( 'Courses', 'CP_TD' );
 			$courses->description = '';
 			$courses->menu_item_parent = 0;
 			$courses->ID = 'cp-courses';
@@ -60,7 +60,7 @@ class CoursePress_View_Front_General {
 			if ( $is_in ) {
 				$dashboard = new stdClass;
 
-				$dashboard->title = __( 'Dashboard', CoursePress::TD );
+				$dashboard->title = __( 'Dashboard', 'CP_TD' );
 				$dashboard->description = '';
 				$dashboard->menu_item_parent = 0;
 				$dashboard->ID = 'cp-dashboard';
@@ -78,7 +78,7 @@ class CoursePress_View_Front_General {
 
 				$dashboard_courses = new stdClass;
 
-				$dashboard_courses->title = __( 'My Courses', CoursePress::TD );
+				$dashboard_courses->title = __( 'My Courses', 'CP_TD' );
 				$dashboard_courses->description = '';
 				$dashboard_courses->menu_item_parent = - 9998;
 				$dashboard_courses->ID = 'cp-dashboard-courses';
@@ -93,7 +93,7 @@ class CoursePress_View_Front_General {
 
 				$settings_profile = new stdClass;
 
-				$settings_profile->title = __( 'My Profile', CoursePress::TD );
+				$settings_profile->title = __( 'My Profile', 'CP_TD' );
 				$settings_profile->description = '';
 				$settings_profile->menu_item_parent = - 9998;
 				$settings_profile->ID = 'cp-dashboard-settings';
@@ -115,7 +115,7 @@ class CoursePress_View_Front_General {
 				// }
 				// $settings_inbox = new stdClass;
 				//
-				// $settings_inbox->title = __( 'Inbox', CoursePress::TD ) . $unread_count;
+				// $settings_inbox->title = __( 'Inbox', 'CP_TD' ) . $unread_count;
 				// $settings_inbox->description = '';
 				// $settings_inbox->menu_item_parent = - 9998;
 				// $settings_inbox->ID = 'cp-dashboard-inbox';
@@ -131,9 +131,9 @@ class CoursePress_View_Front_General {
 			/* Log in / Log out links */
 			$login = new stdClass;
 			if ( $is_in ) {
-				$login->title = __( 'Log Out', CoursePress::TD );
+				$login->title = __( 'Log Out', 'CP_TD' );
 			} else {
-				$login->title = __( 'Log In', CoursePress::TD );
+				$login->title = __( 'Log In', 'CP_TD' );
 			}
 			$login->description = '';
 			$login->menu_item_parent = 0;

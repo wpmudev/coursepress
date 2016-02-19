@@ -21,8 +21,8 @@ class CoursePress_View_Admin_Assessment_List {
 
 		self::$action = isset( $_GET['action'] ) && in_array( $_GET['action'], self::$allowed_actions ) ? sanitize_text_field( $_GET['action'] ) : 'new';
 
-		self::$title = __( 'Assessments/CoursePress', CoursePress::TD );
-		self::$menu_title = __( 'Assessments', CoursePress::TD );
+		self::$title = __( 'Assessments/CoursePress', 'CP_TD' );
+		self::$menu_title = __( 'Assessments', 'CP_TD' );
 
 		add_filter( 'coursepress_admin_valid_pages', array( __CLASS__, 'add_valid' ) );
 		add_filter( 'coursepress_admin_pages', array( __CLASS__, 'add_page' ) );
@@ -93,8 +93,8 @@ class CoursePress_View_Admin_Assessment_List {
 	public static function render_page() {
 
 		$content = '<div class="coursepress_settings_wrapper assessment">' .
-		           '<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
-		            <hr />';
+				   '<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
+					<hr />';
 
 		if ( isset( $_REQUEST['view_answer'] ) && ! self::$force_grid ) {
 			$content .= self::view_grade_answer();
@@ -149,15 +149,15 @@ class CoursePress_View_Admin_Assessment_List {
 		';
 
 		$content .= '<h3 class="student-name">' . $first_last . '</h3>' .
-		            '<p class="course-name"><strong>' . esc_html__( 'Course', CoursePress::TD ) . '</strong> : <a href="' . esc_url_raw( $url_course ) . '">' . $course->post_title . '</a></p>' .
-		            '<p class="unit-name"><strong>' . esc_html__( 'Unit', CoursePress::TD ) . '</strong> : <a href="' . esc_url_raw( $url_unit ) . '">' . $unit->post_title . '</a></p>' .
-		            '<hr>';
+					'<p class="course-name"><strong>' . esc_html__( 'Course', 'CP_TD' ) . '</strong> : <a href="' . esc_url_raw( $url_course ) . '">' . $course->post_title . '</a></p>' .
+					'<p class="unit-name"><strong>' . esc_html__( 'Unit', 'CP_TD' ) . '</strong> : <a href="' . esc_url_raw( $url_unit ) . '">' . $unit->post_title . '</a></p>' .
+					'<hr>';
 
-		$content .= '<h3 class="module-title">' . esc_html__( 'Activity: ', CoursePress::TD ) . '<span class="module-name">' . esc_html( $module->post_title ) . '</span></h3>' .
-		            '<div class="activity-wrapper">' .
-		            '<p class="description">' . $module->post_content . '</p>' .
-		            '<p><strong>' . esc_html__( 'Student Response', CoursePress::TD ) . '</strong></p>' .
-		            '<div class="response">';
+		$content .= '<h3 class="module-title">' . esc_html__( 'Activity: ', 'CP_TD' ) . '<span class="module-name">' . esc_html( $module->post_title ) . '</span></h3>' .
+					'<div class="activity-wrapper">' .
+					'<p class="description">' . $module->post_content . '</p>' .
+					'<p><strong>' . esc_html__( 'Student Response', 'CP_TD' ) . '</strong></p>' .
+					'<div class="response">';
 
 		$response_display = $response['response'];
 		switch ( $attributes['module_type'] ) {
@@ -221,9 +221,9 @@ class CoursePress_View_Admin_Assessment_List {
 		$content .= '</div>'; // .response
 
 		$response_date = ! isset( $response['date'] ) ? '' : date_i18n( get_option( 'date_format' ), strtotime( $response['date'] ) );
-		$content .= '<div><em>' . sprintf( __( 'Submitted on: %s', CoursePress::TD ), $response_date ) . '</em></div>';
+		$content .= '<div><em>' . sprintf( __( 'Submitted on: %s', 'CP_TD' ), $response_date ) . '</em></div>';
 
-		$content .= '<p class="instructor-feedback-label"><strong>' . esc_html__( 'Instructor Feedback', CoursePress::TD ) . '</strong></p>' .
+		$content .= '<p class="instructor-feedback-label"><strong>' . esc_html__( 'Instructor Feedback', 'CP_TD' ) . '</strong></p>' .
 					'<div class="feedback">';
 
 		$editor_name = 'feedback-content';
@@ -243,33 +243,33 @@ class CoursePress_View_Admin_Assessment_List {
 
 		$feedback_display = CoursePress_Helper_Utility::get_user_name( (int) $feedback['feedback_by'] );
 
-		$content .= '<div><em>' . sprintf( __( 'Last feedback by: %s', CoursePress::TD ), $feedback_display ) . '</em></div>';
+		$content .= '<div><em>' . sprintf( __( 'Last feedback by: %s', 'CP_TD' ), $feedback_display ) . '</em></div>';
 		$content .= '</div>'; // .feedback
 
 		if ( ! empty( $grade['graded_by'] ) ) {
 			if ( 'auto' != $grade['graded_by'] ) {
 				$first_last = CoursePress_Helper_Utility::get_user_name( (int) $feedback['graded_by'] );
 			} else {
-				$first_last = __( 'Calculated', CoursePress::TD );
+				$first_last = __( 'Calculated', 'CP_TD' );
 			}
 		} else {
 			$first_last = '';
 		}
 
 		$grade_date = ! isset( $grade['date'] ) ? '' : date_i18n( get_option( 'date_format' ), strtotime( $grade['date'] ) );
-		$grade_date_display = empty( $grade_date ) ? '' : sprintf( __( 'on %s', CoursePress::TD ), $grade_date );
-		$graded_by = 'auto' != $grade['graded_by'] ? sprintf( __( 'Graded by %s', CoursePress::TD ), $first_last ) : $first_last;
+		$grade_date_display = empty( $grade_date ) ? '' : sprintf( __( 'on %s', 'CP_TD' ), $grade_date );
+		$graded_by = 'auto' != $grade['graded_by'] ? sprintf( __( 'Graded by %s', 'CP_TD' ), $first_last ) : $first_last;
 
-		$content .= '<p class="grading-label"><strong>' . esc_html__( 'Grade', CoursePress::TD ) . '</strong></p>' .
-		            '<div class="grading">' .
-		            '<div class="grading-by">' .
-		            $graded_by . ' ' .
-		            $grade_date_display .
-		            '</div>' .
-		            '<div class="grading-change">';
+		$content .= '<p class="grading-label"><strong>' . esc_html__( 'Grade', 'CP_TD' ) . '</strong></p>' .
+					'<div class="grading">' .
+					'<div class="grading-by">' .
+					$graded_by . ' ' .
+					$grade_date_display .
+					'</div>' .
+					'<div class="grading-change">';
 
 		$content .= '<select name="student-grade">';
-		$content .= '<option value="-1" ' . selected( (int) $grade['grade'], -1, false ) . '>' . esc_html__( 'Ungraded', CoursePress::TD ) . '</option>';
+		$content .= '<option value="-1" ' . selected( (int) $grade['grade'], -1, false ) . '>' . esc_html__( 'Ungraded', 'CP_TD' ) . '</option>';
 		for ( $i = 0; $i <= 100; $i++ ) {
 			$content .= '<option value="' . $i . '" ' . selected( (int) $grade['grade'], $i, false ) . '>' . $i . '%</option>';
 		}
@@ -281,8 +281,8 @@ class CoursePress_View_Admin_Assessment_List {
 
 		// Save
 		$content .= '<div class="save-button">' .
-		            '<input type="submit" class="button button-primary" value="' . esc_attr__( 'Save Changes', CoursePress::TD ) . '" .>' .
-		            '</div>';
+					'<input type="submit" class="button button-primary" value="' . esc_attr__( 'Save Changes', 'CP_TD' ) . '" .>' .
+					'</div>';
 
 		$content .= '</div>'; // .activity-wrapper
 
@@ -303,17 +303,17 @@ class CoursePress_View_Admin_Assessment_List {
 		$courses = CoursePress_Data_Instructor::get_accessable_courses( wp_get_current_user(), true );
 
 		if ( empty( $courses ) ) {
-			return esc_html__( 'You do not currently have any courses assigned.', CoursePress::TD );
+			return esc_html__( 'You do not currently have any courses assigned.', 'CP_TD' );
 		}
 
 		$selected_course = isset( $_GET['course_id'] ) ? (int) $_GET['course_id'] : $courses[0]->ID;
 
-		$content .= '<div><strong>' . esc_html__( 'Select Course', CoursePress::TD ) . '</strong><br />';
+		$content .= '<div><strong>' . esc_html__( 'Select Course', 'CP_TD' ) . '</strong><br />';
 		$content .= CoursePress_Helper_UI::get_course_dropdown( 'course-list', 'course-list', $courses, array( 'class' => 'medium', 'value' => $selected_course ) );
-		$content .= ' <label class="ungraded-elements"><input type="checkbox" value="0" /><span>' . esc_html__( 'Ungraded elements only.', CoursePress::TD ) . '</span></label>';
-		$content .= ' <label class="submitted-elements"><input type="checkbox" value="0" /><span>' . esc_html__( 'Submitted elements only.', CoursePress::TD ) . '</span></label>';
-		$content .= ' <label class="expand-all-students"><a>' . esc_html__( 'Expand List', CoursePress::TD ) . '</a></label>';
-		$content .= ' <label class="collapse-all-students"><a>' . esc_html__( 'Collapse List', CoursePress::TD ) . '</a></label>';
+		$content .= ' <label class="ungraded-elements"><input type="checkbox" value="0" /><span>' . esc_html__( 'Ungraded elements only.', 'CP_TD' ) . '</span></label>';
+		$content .= ' <label class="submitted-elements"><input type="checkbox" value="0" /><span>' . esc_html__( 'Submitted elements only.', 'CP_TD' ) . '</span></label>';
+		$content .= ' <label class="expand-all-students"><a>' . esc_html__( 'Expand List', 'CP_TD' ) . '</a></label>';
+		$content .= ' <label class="collapse-all-students"><a>' . esc_html__( 'Collapse List', 'CP_TD' ) . '</a></label>';
 		$content .= '</div>';
 
 		$units = CoursePress_Data_Course::get_units_with_modules( $selected_course, array( 'publish', 'draft' ) );
@@ -345,7 +345,7 @@ class CoursePress_View_Admin_Assessment_List {
 				$tab_string .= '<a href="' . $tab_url . '" class="unit-tab ' . $tab['class'] . '" data-unit="' . (int) $tab['unit_id'] . '" data-title="' . esc_attr( $tab['unit_title'] ) . '">' . ( $key + 1 ) . '</a>';
 			}
 
-			$content .= '<div class="unit-tabs-container"><span>' . esc_html__( 'Select Unit:', CoursePress::TD ) . '</span><div class="unit-tabs">' . $tab_string . '</div></div>';
+			$content .= '<div class="unit-tabs-container"><span>' . esc_html__( 'Select Unit:', 'CP_TD' ) . '</span><div class="unit-tabs">' . $tab_string . '</div></div>';
 
 			$content .= '<hr />';
 
@@ -364,12 +364,12 @@ class CoursePress_View_Admin_Assessment_List {
 			<table cellspacing="0">
 				<thead>
 					<tr>
-						<th class="student">' . esc_html__( 'Student', CoursePress::TD ) . '</th>
-						<th class="activity">' . esc_html__( 'Activity', CoursePress::TD ) . '</th>
-						<th class="submission">' . esc_html__( 'Submission', CoursePress::TD ) . '</th>
-						<th class="response">' . esc_html__( 'Response', CoursePress::TD ) . '</th>
-						<th class="grade">' . esc_html__( 'Grade', CoursePress::TD ) . '</th>
-						<th class="feedback">' . esc_html__( 'Feedback', CoursePress::TD ) . '</th>
+						<th class="student">' . esc_html__( 'Student', 'CP_TD' ) . '</th>
+						<th class="activity">' . esc_html__( 'Activity', 'CP_TD' ) . '</th>
+						<th class="submission">' . esc_html__( 'Submission', 'CP_TD' ) . '</th>
+						<th class="response">' . esc_html__( 'Response', 'CP_TD' ) . '</th>
+						<th class="grade">' . esc_html__( 'Grade', 'CP_TD' ) . '</th>
+						<th class="feedback">' . esc_html__( 'Feedback', 'CP_TD' ) . '</th>
 					</tr>
 				</thead>
 			';
@@ -393,8 +393,8 @@ class CoursePress_View_Admin_Assessment_List {
 
 				$content .= '<tbody id="' . $student_id . '" class="' . $odd . ' ' . $alt . '">';
 				$content .= '<tr class="student-name treegrid-' . $hierarchy . '">' .
-				            '<td colspan="6">' . $student_label . '</td>' .
-				            '</tr>';
+							'<td colspan="6">' . $student_label . '</td>' .
+							'</tr>';
 
 				$hierarchy_parent = $hierarchy;
 				foreach ( $units[ $unit_id ]['pages'] as $page ) {
@@ -417,7 +417,7 @@ class CoursePress_View_Admin_Assessment_List {
 						if ( $response ) {
 							$qv = 'course_id=' . $course_id . '&unit_id=' . $unit_id . '&module_id=' . $module_id . '&student_id=' . $student_id . '&view_answer';
 							$url = admin_url( 'admin.php?page=coursepress_assessments' . '&' . $qv );
-							$response_display = '<a href="' . esc_url_raw( $url ) . '">' . esc_html__( 'View', CoursePress::TD ) . '</a>';
+							$response_display = '<a href="' . esc_url_raw( $url ) . '">' . esc_html__( 'View', 'CP_TD' ) . '</a>';
 						}
 						// $response_display = $response['response'];
 						// switch( $attributes['module_type'] ) {
@@ -463,7 +463,7 @@ class CoursePress_View_Admin_Assessment_List {
 						// break;
 						// }
 						$response_date = ! isset( $response['date'] ) ? '' : date_i18n( get_option( 'date_format' ), strtotime( $response['date'] ) );
-						$grade_display = (int) $grade['grade'] === - 1 ? __( '--', CoursePress::TD ) : $grade['grade'];
+						$grade_display = (int) $grade['grade'] === - 1 ? __( '--', 'CP_TD' ) : $grade['grade'];
 
 						$class = empty( $response_date ) ? 'not-submitted' : 'submitted';
 						$class = (int) $grade['grade'] === - 1 || ( empty( $grade['grade'] ) && 0 !== $grade['grade'] ) ? $class . ' ungraded' : $class . ' graded';
@@ -475,13 +475,13 @@ class CoursePress_View_Admin_Assessment_List {
 						$hierarchy += 1;
 						$student_label = '';
 						$content .= '<tr class="' . $class . ' treegrid-' . $hierarchy . ' treegrid-parent-' . $hierarchy_parent . '">' .
-						            '<td class="student-name">' . $student_label . '</td>' .
-						            '<td class="student-activity">' . $title . '</td>' .
-						            '<td class="student-submission">' . $response_date . '</td>' .
-						            '<td class="student-answer">' . $response_display . '</td>' .
-						            '<td class="student-grade">' . $grade_display . '</td>' .
-						            '<td class="instructor-feedback">' . $feedback_display . '</td>' .
-						            '</tr>';
+									'<td class="student-name">' . $student_label . '</td>' .
+									'<td class="student-activity">' . $title . '</td>' .
+									'<td class="student-submission">' . $response_date . '</td>' .
+									'<td class="student-answer">' . $response_display . '</td>' .
+									'<td class="student-grade">' . $grade_display . '</td>' .
+									'<td class="instructor-feedback">' . $feedback_display . '</td>' .
+									'</tr>';
 					}
 				}
 
@@ -490,17 +490,17 @@ class CoursePress_View_Admin_Assessment_List {
 			}
 
 			if ( empty( $count ) ) {
-				$content .= '<tbody class="empty"><tr><td colspan="6">' . esc_html__( 'No activities found for this unit.', CoursePress::TD ) . '</td></tr></tbody>';
+				$content .= '<tbody class="empty"><tr><td colspan="6">' . esc_html__( 'No activities found for this unit.', 'CP_TD' ) . '</td></tr></tbody>';
 			}
 
 			$content .= '
 				<tfoot>
-					<tr><td colspan="6">' . sprintf( __( '%d students', CoursePress::TD ), count( $students ) ) . '</td></tr>
+					<tr><td colspan="6">' . sprintf( __( '%d students', 'CP_TD' ), count( $students ) ) . '</td></tr>
 				</tfoot>
 			</table>
 			';
 		} else {
-			$content .= '<div class="no-units">' . esc_html__( 'No units found for this course.', CoursePress::TD ) . '</div>';
+			$content .= '<div class="no-units">' . esc_html__( 'No units found for this course.', 'CP_TD' ) . '</div>';
 		}
 
 		return $content;

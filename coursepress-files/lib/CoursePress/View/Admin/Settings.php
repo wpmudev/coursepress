@@ -18,8 +18,8 @@ class CoursePress_View_Admin_Settings {
 
 	public static function init() {
 
-		self::$title = __( 'Settings/CoursePress', CoursePress::TD );
-		self::$menu_title = __( 'Settings', CoursePress::TD );
+		self::$title = __( 'Settings/CoursePress', 'CP_TD' );
+		self::$menu_title = __( 'Settings', 'CP_TD' );
 
 		add_filter( 'coursepress_admin_valid_pages', array( __CLASS__, 'add_valid' ) );
 		add_filter( 'coursepress_admin_pages', array( __CLASS__, 'add_page' ) );

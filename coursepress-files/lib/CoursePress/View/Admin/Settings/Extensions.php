@@ -14,8 +14,8 @@ class CoursePress_View_Admin_Settings_Extensions{
 	public static function add_tabs( $tabs ) {
 
 		$tabs['extensions'] = array(
-			'title' => __( 'Extensions', CoursePress::TD ),
-			'description' => __( 'Extensions and plugins to enhance CoursePress.', CoursePress::TD ),
+			'title' => __( 'Extensions', 'CP_TD' ),
+			'description' => __( 'Extensions and plugins to enhance CoursePress.', 'CP_TD' ),
 			'order' => 60,
 			'is_form' => false,
 			'buttons' => 'none',
@@ -50,8 +50,8 @@ class CoursePress_View_Admin_Settings_Extensions{
 		if ( isset( $_POST['action'] ) && 'install-plugin' === $_POST['action'] && 'extensions' === $tab && wp_verify_nonce( $_POST['_wp_nonce'], 'install-plugin' ) ) {
 
 			echo '<div class="coursepress_settings_wrapper">' .
-			     '<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html__( 'Installing plugin...', CoursePress::TD ) . '</h3>
-		            <hr />';
+				 '<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html__( 'Installing plugin...', 'CP_TD' ) . '</h3>
+					<hr />';
 			echo '</div>';
 			echo '<h3>' . esc_html( $_POST['plugin_name'] ) . '</h3>';
 
@@ -94,7 +94,7 @@ class CoursePress_View_Admin_Settings_Extensions{
 
 	public static function return_content_plugin_install( $content ) {
 		$return_url = add_query_arg( array( 'page' => $_GET['page'], 'tab' => $_GET['tab'] ),  admin_url( 'admin.php' ) );
-		return '<a href="' . $return_url . '">' . esc_html__( 'Return to CoursePress settings.', CoursePress::TD ) . '</a>';
+		return '<a href="' . $return_url . '">' . esc_html__( 'Return to CoursePress settings.', 'CP_TD' ) . '</a>';
 	}
 
 	public static function remove_dashboard_notification() {

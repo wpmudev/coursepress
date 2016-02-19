@@ -85,23 +85,23 @@ class CoursePress_Data_Shortcodes_Student {
 			array(
 				'course_id' => CoursePress_Helper_Utility::the_course( true ),
 				'unit_id' => false,
-				'module_column_title' => __( 'Element', CoursePress::TD ),
-				'title_column_title' => __( 'Title', CoursePress::TD ),
-				'submission_date_column_title' => __( 'Submitted', CoursePress::TD ),
-				'response_column_title' => __( 'Answer', CoursePress::TD ),
-				'grade_column_title' => __( 'Grade', CoursePress::TD ),
-				'comment_column_title' => __( 'Feedback', CoursePress::TD ),
-				'module_response_description_label' => __( 'Description', CoursePress::TD ),
-				'comment_label' => __( 'Comment', CoursePress::TD ),
-				'view_link_label' => __( 'View', CoursePress::TD ),
+				'module_column_title' => __( 'Element', 'CP_TD' ),
+				'title_column_title' => __( 'Title', 'CP_TD' ),
+				'submission_date_column_title' => __( 'Submitted', 'CP_TD' ),
+				'response_column_title' => __( 'Answer', 'CP_TD' ),
+				'grade_column_title' => __( 'Grade', 'CP_TD' ),
+				'comment_column_title' => __( 'Feedback', 'CP_TD' ),
+				'module_response_description_label' => __( 'Description', 'CP_TD' ),
+				'comment_label' => __( 'Comment', 'CP_TD' ),
+				'view_link_label' => __( 'View', 'CP_TD' ),
 				'view_link_class' => 'assessment-view-response-link button button-units',
 				'comment_link_class' => 'assessment-view-response-link button button-units',
-				'pending_grade_label' => __( 'Pending', CoursePress::TD ),
-				'unit_unread_label' => __( 'Unit Unread', CoursePress::TD ),
-				'unit_read_label' => __( 'Unit Read', CoursePress::TD ),
-				'single_correct_label' => __( 'Correct', CoursePress::TD ),
-				'single_incorrect_label' => __( 'Incorrect', CoursePress::TD ),
-				'no_content_label' => __( 'This unit has no activities.', CoursePress::TD ),
+				'pending_grade_label' => __( 'Pending', 'CP_TD' ),
+				'unit_unread_label' => __( 'Unit Unread', 'CP_TD' ),
+				'unit_read_label' => __( 'Unit Read', 'CP_TD' ),
+				'single_correct_label' => __( 'Correct', 'CP_TD' ),
+				'single_incorrect_label' => __( 'Incorrect', 'CP_TD' ),
+				'no_content_label' => __( 'This unit has no activities.', 'CP_TD' ),
 				'non_assessable_label' => __( '**' ),
 				'table_class' => 'widefat shadow-table assessment-archive-table workbook-table',
 				'table_labels_th_class' => 'manage-column',
@@ -168,7 +168,7 @@ class CoursePress_Data_Shortcodes_Student {
 		}
 
 		if ( $show_course_progress && empty( $unit_id ) ) {
-			$content .= '<h3 class="course-completion-progress">' . esc_html__( 'Course completion: ', CoursePress::TD ) . '<small>' . CoursePress_Data_Student::get_course_progress( $student_id, $course_id, $student_progress ) . '%</small>' . '</h3>';
+			$content .= '<h3 class="course-completion-progress">' . esc_html__( 'Course completion: ', 'CP_TD' ) . '<small>' . CoursePress_Data_Student::get_course_progress( $student_id, $course_id, $student_progress ) . '%</small>' . '</h3>';
 		}
 
 		foreach ( $unit_list as $unit_id => $unit ) {
@@ -180,7 +180,7 @@ class CoursePress_Data_Shortcodes_Student {
 			$content .= '<h3 class="unit-title">' . esc_html( $unit['unit']->post_title ) . '</h3>';
 
 			$progress = CoursePress_Data_Student::get_unit_progress( $student_id, $course_id, $unit_id, $student_progress );
-			$content .= '<div class="unit-progress">' . sprintf( __( 'Unit Progress: %s%%', CoursePress::TD ), $progress ) . '</div>';
+			$content .= '<div class="unit-progress">' . sprintf( __( 'Unit Progress: %s%%', 'CP_TD' ), $progress ) . '</div>';
 
 			$content .= '
 			<table cellspacing="0" class="' . $table_class . '">
@@ -266,7 +266,7 @@ class CoursePress_Data_Shortcodes_Student {
 
 						$response_date = ! isset( $response['date'] ) ? '' : date_i18n( get_option( 'date_format' ), strtotime( $response['date'] ) );
 
-						$grade = (int) $grade === - 1 ? __( 'Ungraded', CoursePress::TD ) : $grade;
+						$grade = (int) $grade === - 1 ? __( 'Ungraded', 'CP_TD' ) : $grade;
 
 						$mandatory = cp_is_true( $attributes['mandatory'] ) ? '<span class="dashicons dashicons-star-filled mandatory"></span>' : '';
 						$non_assessable = cp_is_true( $attributes['assessable'] ) ? '' : '<span class="dashicons dashicons-star-filled non-assessable"></span>';
@@ -296,7 +296,7 @@ class CoursePress_Data_Shortcodes_Student {
 
 			$content .= '
 				</tbody>
-				<tfoot><tr class="footer-key"><td colspan="5"><span class="dashicons dashicons-star-filled mandatory"></span>' . esc_html__( 'Mandatory answers', CoursePress::TD ) . '&nbsp;&nbsp;<span class="dashicons dashicons-star-filled non-assessable"></span>' . esc_html__( 'Non-assessable elements.', CoursePress::TD ) . '</td></tr></tfoot>
+				<tfoot><tr class="footer-key"><td colspan="5"><span class="dashicons dashicons-star-filled mandatory"></span>' . esc_html__( 'Mandatory answers', 'CP_TD' ) . '&nbsp;&nbsp;<span class="dashicons dashicons-star-filled non-assessable"></span>' . esc_html__( 'Non-assessable elements.', 'CP_TD' ) . '</td></tr></tfoot>
 			';
 
 			$content .= '
@@ -332,7 +332,7 @@ class CoursePress_Data_Shortcodes_Student {
 					<script type="text/template" id="modal-view1-template" data-type="modal-step" data-modal-action="signup">
 						<div class="bbm-modal-nonce signup" data-nonce="' . wp_create_nonce( 'coursepress_enrollment_action_signup' ) . '"></div>
 						<div class="bbm-modal__topbar">
-							<h3 class="bbm-modal__title">' . esc_html__( 'Create new account', CoursePress::TD ) . '</h3>
+							<h3 class="bbm-modal__title">' . esc_html__( 'Create new account', 'CP_TD' ) . '</h3>
 						</div>
 						<div class="bbm-modal__section">
 							<div class="modal-nav-link">
@@ -340,8 +340,8 @@ class CoursePress_Data_Shortcodes_Student {
 							</div>
 						</div>
 						<div class="bbm-modal__bottombar">
-						<input type="submit" class="bbm-button done signup button cta-button" value="' . esc_attr__( 'Create an account', CoursePress::TD ) . '" />
-						<a href="#" class="cancel-link">' . __( 'Cancel', CoursePress::TD ) . '</a>
+						<input type="submit" class="bbm-button done signup button cta-button" value="' . esc_attr__( 'Create an account', 'CP_TD' ) . '" />
+						<a href="#" class="cancel-link">' . __( 'Cancel', 'CP_TD' ) . '</a>
 						</div>
 					</script>
 				' ),
@@ -349,7 +349,7 @@ class CoursePress_Data_Shortcodes_Student {
 					<script type="text/template" id="modal-view2-template" data-type="modal-step" data-modal-action="login">
 						<div class="bbm-modal-nonce login" data-nonce="' . wp_create_nonce( 'coursepress_enrollment_action_login' ) . '"></div>
 						<div class="bbm-modal__topbar">
-							<h3 class="bbm-modal__title">' . esc_html__( 'Login to your account', CoursePress::TD ) . '</h3>
+							<h3 class="bbm-modal__title">' . esc_html__( 'Login to your account', 'CP_TD' ) . '</h3>
 						</div>
 						<div class="bbm-modal__section">
 							<div class="modal-nav-link">
@@ -357,38 +357,40 @@ class CoursePress_Data_Shortcodes_Student {
 							</div>
 						</div>
 						<div class="bbm-modal__bottombar">
-						<input type="submit" class="bbm-button done button cta-button" value="' . esc_attr__( 'Log in', CoursePress::TD ) . '" />
-						<a href="#" class="cancel-link">' . __( 'Cancel', CoursePress::TD ) . '</a>
+						<input type="submit" class="bbm-button done button cta-button" value="' . esc_attr__( 'Log in', 'CP_TD' ) . '" />
+						<a href="#" class="cancel-link">' . __( 'Cancel', 'CP_TD' ) . '</a>
 						</div>
 					</script>
 				' ),
 			'step_3' => '
 					<script type="text/template" id="modal-view3-template" data-type="modal-step" data-modal-action="enrolled">
 						<div class="bbm-modal__topbar">
-							<h3 class="bbm-modal__title">' . esc_html__( 'Successfully enrolled.', CoursePress::TD ) . '</h3>
+							<h3 class="bbm-modal__title">' . esc_html__( 'Successfully enrolled.', 'CP_TD' ) . '</h3>
 						</div>
 						<div class="bbm-modal__section">
-							<p>' . __( 'Congratulations! You have successfully enrolled. Click below to get started.', CoursePress::TD ) . '</p>
+							<p>' . __( 'Congratulations! You have successfully enrolled. Click below to get started.', 'CP_TD' ) . '</p>
 							<a href="' . get_permalink( CoursePress_Helper_Utility::the_course( true ) ) . CoursePress_Core::get_slug( 'units' ) . '">Start Learning</a>
 						</div>
 						<div class="bbm-modal__bottombar">
 						</div>
 					</script>
 				',
-//				'step_4' => '
-//					<script type="text/template" id="modal-view4-template" data-type="modal-step" data-modal-action="login">
-//						<div class="bbm-modal__topbar">
-//							<h3 class="bbm-modal__title">Wizard example - step 4</h3>
-//						</div>
-//						<div class="bbm-modal__section">
-//							<p>STEP 4</p>
-//						</div>
-//						<div class="bbm-modal__bottombar">
-//						<a href="#" class="bbm-button previous inactive">Previous</a>
-//						<a href="#" class="bbm-button done">Done</a>
-//						</div>
-//					</script>
-//				',
+				/*
+				'step_4' => '
+					<script type="text/template" id="modal-view4-template" data-type="modal-step" data-modal-action="login">
+						<div class="bbm-modal__topbar">
+							<h3 class="bbm-modal__title">Wizard example - step 4</h3>
+						</div>
+						<div class="bbm-modal__section">
+							<p>STEP 4</p>
+						</div>
+						<div class="bbm-modal__bottombar">
+						<a href="#" class="bbm-button previous inactive">Previous</a>
+						<a href="#" class="bbm-button done">Done</a>
+						</div>
+					</script>
+				',
+				*/
 
 		), $course_id );
 
@@ -468,7 +470,7 @@ class CoursePress_Data_Shortcodes_Student {
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
 			'unit_id' => CoursePress_Helper_Utility::the_post( true ),
-			'message' => __( '%d of %d mandatory elements completed.', CoursePress::TD ),
+			'message' => __( '%d of %d mandatory elements completed.', 'CP_TD' ),
 		), $atts, 'course_mandatory_message' ) );
 
 		$course_id = (int) $course_id;
@@ -503,7 +505,7 @@ class CoursePress_Data_Shortcodes_Student {
 			'unit_id' => CoursePress_Helper_Utility::the_post( true ),
 			'format' => false,
 			'style' => 'flat',
-			'tooltip_alt' => __( 'Percent of the unit completion', CoursePress::TD ),
+			'tooltip_alt' => __( 'Percent of the unit completion', 'CP_TD' ),
 			'knob_fg_color' => '#24bde6',
 			'knob_bg_color' => '#e0e6eb',
 			'knob_data_thickness' => '0.18',

@@ -16,8 +16,8 @@ class CoursePress_Helper_Table_ReportStudents extends WP_List_Table {
 
 		// $post_format = CoursePress_Data_Course::get_format();
 		parent::__construct( array(
-			'singular' => __( 'Student', CoursePress::TD ),
-			'plural' => __( 'Students', CoursePress::TD ),
+			'singular' => __( 'Student', 'CP_TD' ),
+			'plural' => __( 'Students', 'CP_TD' ),
 			'ajax' => false,// should this table support ajax?
 		) );
 
@@ -36,13 +36,13 @@ class CoursePress_Helper_Table_ReportStudents extends WP_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
-			'ID' => __( 'ID', CoursePress::TD ),
-			'display_name' => __( 'Username', CoursePress::TD ),
-			'first_name' => __( 'First Name', CoursePress::TD ),
-			'last_name' => __( 'Last Name', CoursePress::TD ),
-			'responses' => __( 'Responses', CoursePress::TD ) . '<span style="display:inline-block;" class="help-tooltip">' . __( 'Assessable items only.', CoursePress::TD ) . '</span>',
-			'average' => __( 'Average', CoursePress::TD ),
-			'report' => __( 'Report', CoursePress::TD ),
+			'ID' => __( 'ID', 'CP_TD' ),
+			'display_name' => __( 'Username', 'CP_TD' ),
+			'first_name' => __( 'First Name', 'CP_TD' ),
+			'last_name' => __( 'Last Name', 'CP_TD' ),
+			'responses' => __( 'Responses', 'CP_TD' ) . '<span style="display:inline-block;" class="help-tooltip">' . __( 'Assessable items only.', 'CP_TD' ) . '</span>',
+			'average' => __( 'Average', 'CP_TD' ),
+			'report' => __( 'Report', 'CP_TD' ),
 		);
 
 		return $columns;
@@ -161,6 +161,6 @@ class CoursePress_Helper_Table_ReportStudents extends WP_List_Table {
 	}
 
 	public function no_items() {
-		_e( 'There are no students enrolled in this course.', CoursePress::TD );
+		_e( 'There are no students enrolled in this course.', 'CP_TD' );
 	}
 }

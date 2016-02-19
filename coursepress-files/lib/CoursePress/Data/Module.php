@@ -21,18 +21,18 @@ class CoursePress_Data_Module {
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
 				'labels' => array(
-					'name' => __( 'Modules', CoursePress::TD ),
-					'singular_name' => __( 'Module', CoursePress::TD ),
-					'add_new' => __( 'Create New', CoursePress::TD ),
-					'add_new_item' => __( 'Create New Module', CoursePress::TD ),
-					'edit_item' => __( 'Edit Module', CoursePress::TD ),
-					'edit' => __( 'Edit', CoursePress::TD ),
-					'new_item' => __( 'New Module', CoursePress::TD ),
-					'view_item' => __( 'View Module', CoursePress::TD ),
-					'search_items' => __( 'Search Modules', CoursePress::TD ),
-					'not_found' => __( 'No Modules Found', CoursePress::TD ),
-					'not_found_in_trash' => __( 'No Modules found in Trash', CoursePress::TD ),
-					'view' => __( 'View Module', CoursePress::TD ),
+					'name' => __( 'Modules', 'CP_TD' ),
+					'singular_name' => __( 'Module', 'CP_TD' ),
+					'add_new' => __( 'Create New', 'CP_TD' ),
+					'add_new_item' => __( 'Create New Module', 'CP_TD' ),
+					'edit_item' => __( 'Edit Module', 'CP_TD' ),
+					'edit' => __( 'Edit', 'CP_TD' ),
+					'new_item' => __( 'New Module', 'CP_TD' ),
+					'view_item' => __( 'View Module', 'CP_TD' ),
+					'search_items' => __( 'Search Modules', 'CP_TD' ),
+					'not_found' => __( 'No Modules Found', 'CP_TD' ),
+					'not_found_in_trash' => __( 'No Modules found in Trash', 'CP_TD' ),
+					'view' => __( 'View Module', 'CP_TD' ),
 				),
 				// 'supports' => array( 'title', 'excerpt', 'comments' ),
 				'public' => false,
@@ -443,8 +443,8 @@ class CoursePress_Data_Module {
 		}
 
 		$passed_class = ! empty( $quiz_result['passed'] ) ? 'passed' : 'not-passed';
-		$passed_heading = ! empty( $quiz_result['passed'] ) ? __( 'Success!', CoursePress::TD ) : __( 'Quiz not passed.', CoursePress::TD );
-		$passed_message = ! empty( $quiz_result['passed'] ) ? __( 'You have successfully passed the quiz. Here are your results.', CoursePress::TD ) : __( 'You did not pass the quiz this time. Here are your results.', CoursePress::TD );
+		$passed_heading = ! empty( $quiz_result['passed'] ) ? __( 'Success!', 'CP_TD' ) : __( 'Quiz not passed.', 'CP_TD' );
+		$passed_message = ! empty( $quiz_result['passed'] ) ? __( 'You have successfully passed the quiz. Here are your results.', 'CP_TD' ) : __( 'You did not pass the quiz this time. Here are your results.', 'CP_TD' );
 
 		$template = '<div class="coursepress-quiz-results ' . esc_attr( $passed_class ) . '">
 			<div class="quiz-message">
@@ -453,10 +453,10 @@ class CoursePress_Data_Module {
 			</div>
 			<div class="quiz-results">
 				<table>
-					<tr><th>' . esc_html__( 'Total Questions', CoursePress::TD ) . '</th><td>' . esc_html( $quiz_result['total_questions'] ) . '</td></tr>
-					<tr><th>' . esc_html__( 'Correct', CoursePress::TD ) . '</th><td>' . esc_html( $quiz_result['correct'] ) . '</td></tr>
-					<tr><th>' . esc_html__( 'Incorrect', CoursePress::TD ) . '</th><td>' . esc_html( $quiz_result['wrong'] ) . '</td></tr>
-					<tr><th>' . esc_html__( 'Grade', CoursePress::TD ) . '</th><td>' . esc_html( $quiz_result['grade'] ) . '%</td></tr>
+					<tr><th>' . esc_html__( 'Total Questions', 'CP_TD' ) . '</th><td>' . esc_html( $quiz_result['total_questions'] ) . '</td></tr>
+					<tr><th>' . esc_html__( 'Correct', 'CP_TD' ) . '</th><td>' . esc_html( $quiz_result['correct'] ) . '</td></tr>
+					<tr><th>' . esc_html__( 'Incorrect', 'CP_TD' ) . '</th><td>' . esc_html( $quiz_result['wrong'] ) . '</td></tr>
+					<tr><th>' . esc_html__( 'Grade', 'CP_TD' ) . '</th><td>' . esc_html( $quiz_result['grade'] ) . '%</td></tr>
 				</table>
 			</div>
 		</div>

@@ -140,7 +140,7 @@ class CoursePress_Data_Shortcodes_Template {
 		$a = shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
 			'clickable' => false,
-			'clickable_label' => __( 'Course Details', CoursePress::TD ),
+			'clickable_label' => __( 'Course Details', 'CP_TD' ),
 			'override_button_text' => '',
 			'override_button_link' => '',
 			'echo' => false,
@@ -216,7 +216,7 @@ class CoursePress_Data_Shortcodes_Template {
 			[course_social_links course_id="' . $course_id . '"]
 			[course_enroll_box course_id="' . $course_id . '"]
 			[course_instructors course_id="' . $course_id . '" avatar_position="top" summary_length="50" link_all="yes" link_text=""]
-			[course_description label="' . __( 'About this course', CoursePress::TD ) . '" course_id="' . $course_id . '"]
+			[course_description label="' . __( 'About this course', 'CP_TD' ) . '" course_id="' . $course_id . '"]
 			[course_structure course_id="' . $course_id . '"]
 		</div>
 		';
@@ -246,7 +246,7 @@ class CoursePress_Data_Shortcodes_Template {
 		$template = '<div class="instructor-wrapper">
 			[course_instructor_avatar instructor_id="' . $instructor_id . '" force_display="true" thumb_size="200"]
 			<div class="instructor-bio">' . CoursePress_Helper_Utility::filter_content( get_user_meta( $instructor_id, 'description', true ) ) . '</div>
-			<h3 class="courses-title">' . esc_html__( 'Courses', CoursePress::TD ) . '</h3>
+			<h3 class="courses-title">' . esc_html__( 'Courses', 'CP_TD' ) . '</h3>
 			[course_list instructor="' . $instructor_id . '" class="course" left_class="enroll-box-left" right_class="enroll-box-right" course_class="enroll-box" title_link="yes" show_media="yes"]
 		</div>
 		';
@@ -297,9 +297,9 @@ class CoursePress_Data_Shortcodes_Template {
 			'unit' => '',
 			'type' => '',
 			'item_id' => 0,
-			'pre_text' => __( '&laquo; Previous', CoursePress::TD ),
-			'next_text' => __( 'Next &raquo;', CoursePress::TD ),
-			'next_section_text' => __( 'Next Section', CoursePress::TD ),
+			'pre_text' => __( '&laquo; Previous', 'CP_TD' ),
+			'next_text' => __( 'Next &raquo;', 'CP_TD' ),
+			'next_section_text' => __( 'Next Section', 'CP_TD' ),
 			'echo' => false,
 		), $a, 'coursepress_focus_item' );
 
@@ -365,7 +365,7 @@ class CoursePress_Data_Shortcodes_Template {
 			$u_link = trailingslashit( $a_link . get_post_field( 'post_name', $unit_id ) );
 
 			$c_link = '<a href="' . esc_url( $c_link ) . '" class="breadcrumb-course crumb">' . get_post_field( 'post_title', $course_id ) . '</a>';
-			$a_link = '<a href="' . esc_url( $a_link ) . '" class="breadcrumb-course-units crumb">' . esc_html__( 'Units', CoursePress::TD ) . '</a>';
+			$a_link = '<a href="' . esc_url( $a_link ) . '" class="breadcrumb-course-units crumb">' . esc_html__( 'Units', 'CP_TD' ) . '</a>';
 			$u_link_url = $u_link;
 			$u_link = '<a href="' . esc_url( $u_link ) . '#section-1" class="breadcrumb-course-unit crumb" data-id="1">' . get_post_field( 'post_title', $unit_id ) . '</a>';
 
@@ -578,7 +578,7 @@ class CoursePress_Data_Shortcodes_Template {
 				$content .= '<div class="focus-wrapper">';
 				$content .= '<div class="focus-main section">';
 
-				$content .= '<div class="no-access-message">' . __( 'You do not currently have access to this part of the course. Signup now to get full access to the course.', CoursePress::TD ) . '</div>';
+				$content .= '<div class="no-access-message">' . __( 'You do not currently have access to this part of the course. Signup now to get full access to the course.', 'CP_TD' ) . '</div>';
 				$content .= do_shortcode( '[course_join_button course_id="' . $course_id . '"]' );
 
 				$content .= '</div>'; // .focus-main

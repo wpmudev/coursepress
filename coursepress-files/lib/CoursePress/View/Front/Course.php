@@ -128,13 +128,13 @@ class CoursePress_View_Front_Course {
 			$disabled = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
 
 			if ( $disabled ) {
-				$json_data['response'] = __( 'Maximum allowed retries exceeded.', CoursePress::TD );
+				$json_data['response'] = __( 'Maximum allowed retries exceeded.', 'CP_TD' );
 				$json_data['success'] = false;
 				$skip_processing = true;
 			}
 
 			if ( ! $course_id && ! $unit_id && ! $module_id ) {
-				$json_data['response'] = __( 'Invalid data submitted', CoursePress::TD );
+				$json_data['response'] = __( 'Invalid data submitted', 'CP_TD' );
 				$json_data['success'] = false;
 				$skip_processing = true;
 			}
@@ -185,7 +185,7 @@ class CoursePress_View_Front_Course {
 
 					}
 				} else {
-					$json_data['response'] = __( 'No files uploaded.', CoursePress::TD );
+					$json_data['response'] = __( 'No files uploaded.', 'CP_TD' );
 					$json_data['success'] = false;
 				}
 			}
@@ -518,7 +518,7 @@ class CoursePress_View_Front_Course {
 				// self::archive_redirect();
 			}
 
-			$title = sprintf( '%s | %s', __( 'Course', CoursePress::TD ), get_post_field( 'post_title', $course_id ) );
+			$title = sprintf( '%s | %s', __( 'Course', 'CP_TD' ), get_post_field( 'post_title', $course_id ) );
 
 			CoursePress_Helper_Utility::set_the_course( $course_id );
 			CoursePress_Helper_Utility::set_the_course_subpage( '' );
@@ -557,8 +557,8 @@ class CoursePress_View_Front_Course {
 			$course_taxonomy = CoursePress_Data_Course::get_taxonomy();
 			$tax = get_term_by( 'slug', $category, $course_taxonomy['taxonomy_type'] );
 			$tax = ! empty( $tax ) ? $tax->name : '';
-			$title = ! empty( $tax ) ? sprintf( '%s %s', __( 'Courses in', CoursePress::TD ), $tax ) : '';
-			$title = empty( $title ) && 'all' === $category ? __( 'All Courses', CoursePress::TD ) : $title;
+			$title = ! empty( $tax ) ? sprintf( '%s %s', __( 'Courses in', 'CP_TD' ), $tax ) : '';
+			$title = empty( $title ) && 'all' === $category ? __( 'All Courses', 'CP_TD' ) : $title;
 
 			// Redirect...
 			if ( empty( $title ) ) {
@@ -614,7 +614,7 @@ class CoursePress_View_Front_Course {
 					self::no_access_redirect( $post_parent );
 				}
 
-				$title = sprintf( '%s | %s', __( 'Discussions', CoursePress::TD ), get_post_field( 'post_title', $post_parent ) );
+				$title = sprintf( '%s | %s', __( 'Discussions', 'CP_TD' ), get_post_field( 'post_title', $post_parent ) );
 
 				// Are we adding a new discussion?
 				if ( CoursePress_Core::get_slug( 'discussion_new' ) === $wp->query_vars['discussion_name'] ) {
@@ -655,7 +655,7 @@ class CoursePress_View_Front_Course {
 				}
 				CoursePress_Helper_Utility::set_the_course_subpage( 'discussions' );
 
-				$title = sprintf( '%s | %s', __( 'Discussions', CoursePress::TD ), get_post_field( 'post_title', $post_parent ) );
+				$title = sprintf( '%s | %s', __( 'Discussions', 'CP_TD' ), get_post_field( 'post_title', $post_parent ) );
 
 				$args = array(
 					'slug' => 'discussion_archive_' . $post_parent,
@@ -680,7 +680,7 @@ class CoursePress_View_Front_Course {
 
 				CoursePress_Helper_Utility::set_the_course_subpage( 'grades' );
 
-				$title = sprintf( '%s | %s', __( 'Grades', CoursePress::TD ), get_post_field( 'post_title', $post_parent ) );
+				$title = sprintf( '%s | %s', __( 'Grades', 'CP_TD' ), get_post_field( 'post_title', $post_parent ) );
 
 				$args = array(
 					'slug' => 'grades_archive_' . $post_parent,
@@ -705,7 +705,7 @@ class CoursePress_View_Front_Course {
 
 				CoursePress_Helper_Utility::set_the_course_subpage( 'workbook' );
 
-				$title = sprintf( '%s | %s', __( 'Workbook', CoursePress::TD ), get_post_field( 'post_title', $post_parent ) );
+				$title = sprintf( '%s | %s', __( 'Workbook', 'CP_TD' ), get_post_field( 'post_title', $post_parent ) );
 
 				$args = array(
 					'slug' => 'workbook_' . $post_parent,
@@ -730,7 +730,7 @@ class CoursePress_View_Front_Course {
 
 				CoursePress_Helper_Utility::set_the_course_subpage( 'notifications' );
 
-				$title = sprintf( '%s | %s', __( 'Notifications', CoursePress::TD ), get_post_field( 'post_title', $post_parent ) );
+				$title = sprintf( '%s | %s', __( 'Notifications', 'CP_TD' ), get_post_field( 'post_title', $post_parent ) );
 
 				$args = array(
 					'slug' => 'notifications_archive_' . $post_parent,
@@ -751,7 +751,7 @@ class CoursePress_View_Front_Course {
 			// Units Archive
 			CoursePress_Helper_Utility::set_the_course_subpage( 'units' );
 
-			$title = sprintf( '%s | %s', __( 'Units', CoursePress::TD ), get_post_field( 'post_title', $post_parent ) );
+			$title = sprintf( '%s | %s', __( 'Units', 'CP_TD' ), get_post_field( 'post_title', $post_parent ) );
 
 			$args = array(
 				'slug' => 'unit_archive_' . $post_parent,
@@ -819,7 +819,7 @@ class CoursePress_View_Front_Course {
 		// All other conditions have failed, so if post type is course, it must be the archive
 		if ( isset( $wp->query_vars['post_type'] ) && CoursePress_Data_Course::get_post_type_name() === $wp->query_vars['post_type'] && CoursePress_Core::get_slug( 'courses' ) === $wp->request ) {
 
-			$title = sprintf( '%s | %s', __( 'Courses', CoursePress::TD ), __( 'All Courses', CoursePress::TD ) );
+			$title = sprintf( '%s | %s', __( 'Courses', 'CP_TD' ), __( 'All Courses', 'CP_TD' ) );
 
 			$args = array(
 				'slug' => 'course_archive',
@@ -902,7 +902,7 @@ class CoursePress_View_Front_Course {
 		$success = false;
 
 		if ( empty( $data->action ) ) {
-			$json_data['message'] = __( 'Course Update: No action.', CoursePress::TD );
+			$json_data['message'] = __( 'Course Update: No action.', 'CP_TD' );
 			wp_send_json_error( $json_data );
 		}
 

@@ -48,33 +48,33 @@ class CoursePress_Helper_Integration_MarketPress {
 		$mp_content = '
 			<div class="wide">
 				<label>' .
-					esc_html__( 'MarketPress Product Settings', CoursePress::TD ) .
+					esc_html__( 'MarketPress Product Settings', 'CP_TD' ) .
 					'</label>
-				<p class="description">' . esc_html__( 'Your course will be a new product in MarketPress. Enter your course\'s payment settings below.', CoursePress::TD ) . '</p>
+				<p class="description">' . esc_html__( 'Your course will be a new product in MarketPress. Enter your course\'s payment settings below.', 'CP_TD' ) . '</p>
 
 				<label class="normal required">
-					' . esc_html__( 'Full Price', CoursePress::TD ) . '
+					' . esc_html__( 'Full Price', 'CP_TD' ) . '
 				</label>
 				<input type="text" name="meta_mp_product_price" value="' . CoursePress_Model_Course::get_setting( $course_id, 'mp_product_price', '' ) . '" />
 
 
 				<label class="normal">
-					' . esc_html__( 'Sale Price', CoursePress::TD ) . '
+					' . esc_html__( 'Sale Price', 'CP_TD' ) . '
 				</label>
 				<input type="text" name="meta_mp_product_sale_price" value="' . CoursePress_Model_Course::get_setting( $course_id, 'mp_product_sale_price', '' ) . '" /><br >
 
 				<label class="checkbox narrow">
 					<input type="checkbox" name="meta_mp_sale_price_enabled" ' . CoursePress_Helper_Utility::checked( CoursePress_Model_Course::get_setting( $course_id, 'mp_sale_price_enabled', false ) ) . ' />
-					<span>' . esc_html__( 'Enable Sale Price', CoursePress::TD ) . '</span>
+					<span>' . esc_html__( 'Enable Sale Price', 'CP_TD' ) . '</span>
 				</label>
 
 				<label class="normal">
-					<span> ' . esc_html__( 'Course SKU:', CoursePress::TD ) . '</span>
+					<span> ' . esc_html__( 'Course SKU:', 'CP_TD' ) . '</span>
 				</label>
-				<input type="text" name="meta_mp_sku" placeholder="' . sprintf( __( 'e.g. %s0001', CoursePress::TD ), apply_filters( 'coursepress_course_sku_prefix', 'CP-' ) ) . '" value="' . CoursePress_Model_Course::get_setting( $course_id, 'mp_sku', '' ) . '" /><br >
+				<input type="text" name="meta_mp_sku" placeholder="' . sprintf( __( 'e.g. %s0001', 'CP_TD' ), apply_filters( 'coursepress_course_sku_prefix', 'CP-' ) ) . '" value="' . CoursePress_Model_Course::get_setting( $course_id, 'mp_sku', '' ) . '" /><br >
 				<label class="checkbox narrow">
 					<input type="checkbox" name="meta_mp_auto_sku" ' . CoursePress_Helper_Utility::checked( CoursePress_Model_Course::get_setting( $course_id, 'mp_auto_sku', false ) ) . ' />
-					<span>' . esc_html__( 'Automatically generate Stock Keeping Units (SKUs)', CoursePress::TD ) . '</span>
+					<span>' . esc_html__( 'Automatically generate Stock Keeping Units (SKUs)', 'CP_TD' ) . '</span>
 				</label>';
 
 		$product_id = CoursePress_Data_Course::get_setting( $course_id, 'mp_product_id', false );
@@ -82,7 +82,7 @@ class CoursePress_Helper_Integration_MarketPress {
 		if ( false !== $product_id ) {
 			// Add MP product ID as indication
 			$mp_content .= '
-				<label class="description">' . sprintf( __( 'MarketPress Product ID: %d', CoursePress::TD ), $product_id ) . '</label>
+				<label class="description">' . sprintf( __( 'MarketPress Product ID: %d', 'CP_TD' ), $product_id ) . '</label>
 			';
 		}
 

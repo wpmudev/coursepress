@@ -29,19 +29,19 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 
 	/** No items */
 	public function no_items() {
-		_e( 'No courses found.', CoursePress::TD );
+		_e( 'No courses found.', 'CP_TD' );
 	}
 
 
 	public function get_columns() {
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
-			'ID' => __( 'ID', CoursePress::TD ),
-			'post_title' => __( 'Title', CoursePress::TD ),
-			'units' => __( 'Units', CoursePress::TD ),
-			'students' => __( 'Students', CoursePress::TD ),
-			'status' => __( 'Status', CoursePress::TD ),
-			'actions' => __( 'Actions', CoursePress::TD ),
+			'ID' => __( 'ID', 'CP_TD' ),
+			'post_title' => __( 'Title', 'CP_TD' ),
+			'units' => __( 'Units', 'CP_TD' ),
+			'students' => __( 'Students', 'CP_TD' ),
+			'status' => __( 'Status', 'CP_TD' ),
+			'actions' => __( 'Actions', 'CP_TD' ),
 		);
 
 		return $columns;
@@ -71,12 +71,12 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		$edit_page = CoursePress_View_Admin_Course_Edit::$slug;
 
 		$actions = array(
-			'edit' => sprintf( '<a href="?page=%s&action=%s&id=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), __( 'Edit', CoursePress::TD ) ),
-			'units' => sprintf( '<a href="?page=%s&action=%s&id=%s&tab=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), 'units', __( 'Units', CoursePress::TD ) ),
-			'students' => sprintf( '<a href="?page=%s&action=%s&id=%s&tab=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), 'students',  __( 'Students', CoursePress::TD ) ),
-			'view_course' => sprintf( '<a href="%s">%s</a>', get_permalink( $item->ID ), __( 'View Course', CoursePress::TD ) ),
-			// 'view_units' => sprintf( '<a href="?page=%s&action=%s&id=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'view_units', absint( $item->ID ), __( 'View Units', CoursePress::TD ) ),
-			'duplicate' => sprintf( '<a data-nonce="%s" data-id="%s" class="duplicate-course-link">%s</a>', $duplicate_nonce, $item->ID, __( 'Duplicate Course', CoursePress::TD ) ),
+			'edit' => sprintf( '<a href="?page=%s&action=%s&id=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), __( 'Edit', 'CP_TD' ) ),
+			'units' => sprintf( '<a href="?page=%s&action=%s&id=%s&tab=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), 'units', __( 'Units', 'CP_TD' ) ),
+			'students' => sprintf( '<a href="?page=%s&action=%s&id=%s&tab=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), 'students',  __( 'Students', 'CP_TD' ) ),
+			'view_course' => sprintf( '<a href="%s">%s</a>', get_permalink( $item->ID ), __( 'View Course', 'CP_TD' ) ),
+			// 'view_units' => sprintf( '<a href="?page=%s&action=%s&id=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'view_units', absint( $item->ID ), __( 'View Units', 'CP_TD' ) ),
+			'duplicate' => sprintf( '<a data-nonce="%s" data-id="%s" class="duplicate-course-link">%s</a>', $duplicate_nonce, $item->ID, __( 'Duplicate Course', 'CP_TD' ) ),
 		);
 
 		return $title . $this->row_actions( $actions );
@@ -84,9 +84,9 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 
 	function get_bulk_actions() {
 		$actions = array(
-			'publish' => __( 'Publish', CoursePress::TD ),
-			'unpublish' => __( 'Unpublish', CoursePress::TD ),
-			'delete' => __( 'Delete', CoursePress::TD ),
+			'publish' => __( 'Publish', 'CP_TD' ),
+			'unpublish' => __( 'Unpublish', 'CP_TD' ),
+			'delete' => __( 'Delete', 'CP_TD' ),
 		);
 		return $actions;
 	}
@@ -108,9 +108,9 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		}
 		$output = sprintf( '<div><p>%d %s<br />%d %s</p>',
 			$query->found_posts,
-			__( 'Units', CoursePress::TD ),
+			__( 'Units', 'CP_TD' ),
 			$published,
-			__( 'Published', CoursePress::TD )
+			__( 'Published', 'CP_TD' )
 		);
 
 		return $output;
@@ -246,7 +246,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		echo '<input type="hidden" name="page" value="' . $page . '" />';
 		echo '<input type="hidden" name="tab" value="' . $tab . '" />';
 		echo '<input type="hidden" name="s" value="' . $s . '" />';
-		echo "<label for='course-category-selector-" . esc_attr( $which ) . "' class='screen-reader-text'>" . __( 'Select course category', CoursePress::TD ) . '</label>';
+		echo "<label for='course-category-selector-" . esc_attr( $which ) . "' class='screen-reader-text'>" . __( 'Select course category', 'CP_TD' ) . '</label>';
 		echo "<select name='category$two' id='course-category-selector-" . esc_attr( $which ) . "'>\n";
 		echo "<option value='-1' " . selected( $selected, -1, false ) . '>' . __( 'All Course Categories' ) . "</option>\n";
 
@@ -258,7 +258,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 
 		echo "</select>\n";
 
-		submit_button( __( 'Filter', CoursePress::TD ), 'category-filter', '', false, array( 'id' => "filter-courses$two" ) );
+		submit_button( __( 'Filter', 'CP_TD' ), 'category-filter', '', false, array( 'id' => "filter-courses$two" ) );
 		echo '</form>';
 		echo "\n";
 	}
@@ -314,9 +314,9 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			if ( 'top' == $which ) {
 				?>
 				<form method="get">
-				    <input type="hidden" name="page" value="coursepress"/>
+					<input type="hidden" name="page" value="coursepress"/>
 					<input type="hidden" name="tab" value="<?php esc_attr( $tab ) ?>"/>
-					<?php $this->search_box( __( 'Search Courses', CoursePress::TD ), 'search_id' ); ?>
+					<?php $this->search_box( __( 'Search Courses', 'CP_TD' ), 'search_id' ); ?>
 				</form>
 			<?php
 			} else {

@@ -21,7 +21,7 @@ class CoursePress_Template_Unit {
 		$can_preview_page = isset( $preview['has_previews'] ) && isset( $preview['structure'][ $unit_id ] ) && isset( $preview['structure'][ $unit_id ][ $page ] ) && ! empty( $preview['structure'][ $unit_id ][ $page ] );
 		$can_preview_page = ! $can_preview_page && isset( $preview['structure'][ $unit_id ] ) && true === $preview['structure'][ $unit_id ] ? true : $can_preview_page;
 		if ( ! $enrolled && ! $can_preview_page && ! $is_instructor ) {
-			return __( 'Sorry. You are not permitted to view this part of the course.', CoursePress::TD );
+			return __( 'Sorry. You are not permitted to view this part of the course.', 'CP_TD' );
 		}
 
 		// Student Tracking:
@@ -53,7 +53,7 @@ class CoursePress_Template_Unit {
 		$can_preview_page = isset( $preview['has_previews'] ) && isset( $preview['structure'][ $unit->ID ] ) && isset( $preview['structure'][ $unit->ID ][ $page ] ) && ! empty( $preview['structure'][ $unit->ID ][ $page ] );
 		$can_preview_page = ! $can_preview_page && isset( $preview['structure'][ $unit->ID ] ) && true === $preview['structure'][ $unit->ID ] ? true : $can_preview_page;
 		if ( ! $enrolled && ! $can_preview_page && ! $is_instructor ) {
-			return __( 'Sorry. You are not permitted to view this part of the course.', CoursePress::TD );
+			return __( 'Sorry. You are not permitted to view this part of the course.', 'CP_TD' );
 		}
 
 		$view_mode = CoursePress_Data_Course::get_setting( $course_id, 'course_view', 'normal' );
@@ -112,7 +112,7 @@ class CoursePress_Template_Unit {
 		$preview_pages = isset( $preview['structure'][ $unit->ID ] ) ? array_keys( $preview['structure'][ $unit->ID ] ) : array();
 
 		$url_path = trailingslashit( CoursePress_Core::get_slug( 'course', true ) ) . trailingslashit( $course->post_name ) .
-		            trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . trailingslashit( $unit->post_name ) . 'page/';
+					trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . trailingslashit( $unit->post_name ) . 'page/';
 		$content .= '<div class="pager unit-pager">';
 		for ( $i = 1; $i <= $total_pages; $i++ ) {
 			$unit_url = $url_path . $i;
@@ -134,7 +134,7 @@ class CoursePress_Template_Unit {
 		}
 		if ( ! empty( $next_page ) ) {
 			$unit_url = $url_path . $next_page;
-			$content .= '<span class="next-button page page-' . $i .'"><a href="' . esc_url_raw( $unit_url ) . '"><button>' . esc_html( 'Next', CoursePress::TD ) . '</button></a></span> ';
+			$content .= '<span class="next-button page page-' . $i .'"><a href="' . esc_url_raw( $unit_url ) . '"><button>' . esc_html( 'Next', 'CP_TD' ) . '</button></a></span> ';
 		}
 
 		// Next unit
@@ -155,8 +155,8 @@ class CoursePress_Template_Unit {
 		}
 		if ( ! empty( $next_unit ) && empty( $next_page ) ) {
 			$unit_url = trailingslashit( CoursePress_Core::get_slug( 'course', true ) ) . trailingslashit( $course->post_name ) .
-			            trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . trailingslashit( get_post_field( 'post_name', $next_unit ) );
-			$content .= '<span class="next-button unit unit-' . $next_unit .'"><a href="' . esc_url_raw( $unit_url ) . '"><button>' . esc_html( 'Next Unit', CoursePress::TD ) . '</button></a></span> ';
+						trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . trailingslashit( get_post_field( 'post_name', $next_unit ) );
+			$content .= '<span class="next-button unit unit-' . $next_unit .'"><a href="' . esc_url_raw( $unit_url ) . '"><button>' . esc_html( 'Next Unit', 'CP_TD' ) . '</button></a></span> ';
 		}
 
 		$content .= '</div>'; // .pager
@@ -186,7 +186,7 @@ class CoursePress_Template_Unit {
 
 		// COMPLETION LOGIC
 		// if ( 100 == (int) $progress ) {
-		// echo sprintf( '<div class="unit-archive-course-complete">%s %s</div>', '<i class="fa fa-check-circle"></i>', __( 'Course Complete', CoursePress::TD ) );
+		// echo sprintf( '<div class="unit-archive-course-complete">%s %s</div>', '<i class="fa fa-check-circle"></i>', __( 'Course Complete', 'CP_TD' ) );
 		// }
 		$content .= do_shortcode( '[unit_archive_list]' );
 

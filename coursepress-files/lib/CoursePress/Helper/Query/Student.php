@@ -114,7 +114,7 @@ class CoursePress_Helper_Query_Student extends WP_User_Query {
 			) );
 
 			if ( $this->paging_text ) {
-				$this->paging_text = sprintf( '<span class="displaying-num">' . __( 'Displaying %s&#8211;%s of %s', CoursePress::TD ) . '</span>%s', number_format_i18n( ( $this->page_num - 1 ) * $this->users_per_page + 1 ), number_format_i18n( min( $this->page_num * $this->users_per_page, $this->total_users_for_query ) ), number_format_i18n( $this->total_users_for_query ), $this->paging_text
+				$this->paging_text = sprintf( '<span class="displaying-num">' . __( 'Displaying %s&#8211;%s of %s', 'CP_TD' ) . '</span>%s', number_format_i18n( ( $this->page_num - 1 ) * $this->users_per_page + 1 ), number_format_i18n( min( $this->page_num * $this->users_per_page, $this->total_users_for_query ) ), number_format_i18n( $this->total_users_for_query ), $this->paging_text
 				);
 			}
 		}
@@ -125,13 +125,13 @@ class CoursePress_Helper_Query_Student extends WP_User_Query {
 		$pagination->Items( $this->get_total() );
 		$pagination->limit( $this->users_per_page );
 		$pagination->parameterName = 'page_num';
-		$pagination->nextT = __( 'Next', CoursePress::TD );
-		$pagination->prevT = __( 'Previous', CoursePress::TD );
+		$pagination->nextT = __( 'Next', 'CP_TD' );
+		$pagination->prevT = __( 'Previous', 'CP_TD' );
 		$pagination->target( esc_url( 'admin.php?page=' . ( isset( $_GET['page'] ) ? $_GET['page'] : 'students' ) . '&' . http_build_query( $this->additional_url_args ) ) );
 		$pagination->currentPage( $this->page_num );
 		$pagination->nextIcon( '&#9658;' );
 		$pagination->prevIcon( '&#9668;' );
-		$pagination->items_title = __( 'students', CoursePress::TD );
+		$pagination->items_title = __( 'students', 'CP_TD' );
 		$pagination->show();
 	}
 
@@ -144,9 +144,9 @@ class CoursePress_Helper_Query_Student extends WP_User_Query {
 			$search = preg_replace( '/\*$/', '', $search );
 
 			$user_search->query_from .= " INNER JOIN {$wpdb->usermeta} m1 ON " .
-			                            "{$wpdb->users}.ID=m1.user_id AND (m1.meta_key='first_name')";
+										"{$wpdb->users}.ID=m1.user_id AND (m1.meta_key='first_name')";
 			$user_search->query_from .= " INNER JOIN {$wpdb->usermeta} m2 ON " .
-			                            "{$wpdb->users}.ID=m2.user_id AND (m2.meta_key='last_name')";
+										"{$wpdb->users}.ID=m2.user_id AND (m2.meta_key='last_name')";
 
 			$names_where = $wpdb->prepare( "m1.meta_value LIKE '%s' OR m2.meta_value LIKE '%s'", "%{$search}%", "%{$search}%" );
 

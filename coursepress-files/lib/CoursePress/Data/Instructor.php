@@ -33,7 +33,7 @@ class CoursePress_Data_Instructor {
 	public static function filter_course_meta_array( $var ) {
 		global $wpdb;
 		if ( preg_match( '/^course\_/', $var ) || preg_match( '/^' . $wpdb->prefix . 'course\_/', $var ) ||
-		     ( is_multisite() && ( defined( 'BLOG_ID_CURRENT_SITE' ) && BLOG_ID_CURRENT_SITE == get_current_blog_id() ) && preg_match( '/^' . $wpdb->base_prefix . 'course\_/', $var ) )
+			 ( is_multisite() && ( defined( 'BLOG_ID_CURRENT_SITE' ) && BLOG_ID_CURRENT_SITE == get_current_blog_id() ) && preg_match( '/^' . $wpdb->base_prefix . 'course\_/', $var ) )
 		) {
 			return $var;
 		}
@@ -325,21 +325,21 @@ class CoursePress_Data_Instructor {
 				// Invite sent and added
 				$return_data['success'] = true;
 				$return_data['invite_code'] = $email_args['invite_code'];
-				CoursePress_Helper_Utility::set_array_val( $return_data, 'message/sent', __( 'Invitation successfully sent.', CoursePress::TD ) );
+				CoursePress_Helper_Utility::set_array_val( $return_data, 'message/sent', __( 'Invitation successfully sent.', 'CP_TD' ) );
 
 			} else {
 
 				// Invite already exists
 				$return_data['success'] = true;
 				$return_data['invite_code'] = $email_args['invite_code'];
-				CoursePress_Helper_Utility::set_array_val( $return_data, 'message/exists', __( 'Invitation already exists. Invitation was re-sent.', CoursePress::TD ) );
+				CoursePress_Helper_Utility::set_array_val( $return_data, 'message/exists', __( 'Invitation already exists. Invitation was re-sent.', 'CP_TD' ) );
 
 			}
 		} else {
 
 			// Email not sent
 			$return_data['success'] = false;
-			CoursePress_Helper_Utility::set_array_val( $return_data, 'message/send_error', __( 'Email failed to send.', CoursePress::TD ) );
+			CoursePress_Helper_Utility::set_array_val( $return_data, 'message/send_error', __( 'Email failed to send.', 'CP_TD' ) );
 
 		};
 

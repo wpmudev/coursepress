@@ -30,17 +30,17 @@ class CoursePress_Helper_Table_DiscussionList extends WP_List_Table {
 
 	/** No items */
 	public function no_items() {
-		echo __( 'No discussions found.', CoursePress::TD );
+		echo __( 'No discussions found.', 'CP_TD' );
 	}
 
 
 	public function get_columns() {
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
-			'discussion' => __( 'Discussion', CoursePress::TD ),
-			'course' => __( 'Course', CoursePress::TD ),
-			'status' => __( 'Status', CoursePress::TD ),
-			'actions' => __( 'Actions', CoursePress::TD ),
+			'discussion' => __( 'Discussion', 'CP_TD' ),
+			'course' => __( 'Course', 'CP_TD' ),
+			'status' => __( 'Status', 'CP_TD' ),
+			'actions' => __( 'Actions', 'CP_TD' ),
 		);
 
 		return $columns;
@@ -70,7 +70,7 @@ class CoursePress_Helper_Table_DiscussionList extends WP_List_Table {
 		$edit_page = CoursePress_View_Admin_Communication_Discussion::$slug;
 
 		$actions = array(
-			'edit' => sprintf( '<a href="?page=%s&action=%s&id=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), __( 'Edit', CoursePress::TD ) ),
+			'edit' => sprintf( '<a href="?page=%s&action=%s&id=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), __( 'Edit', 'CP_TD' ) ),
 		);
 
 		return $title . '<br />' . $excerpt . $this->row_actions( $actions );
@@ -78,9 +78,9 @@ class CoursePress_Helper_Table_DiscussionList extends WP_List_Table {
 
 	function get_bulk_actions() {
 		$actions = array(
-			'publish' => __( 'Visible', CoursePress::TD ),
-			'unpublish' => __( 'Private', CoursePress::TD ),
-			'delete' => __( 'Delete', CoursePress::TD ),
+			'publish' => __( 'Visible', 'CP_TD' ),
+			'unpublish' => __( 'Private', 'CP_TD' ),
+			'delete' => __( 'Delete', 'CP_TD' ),
 		);
 		return $actions;
 	}
@@ -237,18 +237,18 @@ class CoursePress_Helper_Table_DiscussionList extends WP_List_Table {
 		echo '<form method="GET">';
 		echo '<input type="hidden" name="page" value="' . $page . '" />';
 		echo '<input type="hidden" name="s" value="' . $s . '" />';
-		echo "<label for='course-category-selector-" . esc_attr( $which ) . "' class='screen-reader-text'>" . __( 'Select course category', CoursePress::TD ) . '</label>';
+		echo "<label for='course-category-selector-" . esc_attr( $which ) . "' class='screen-reader-text'>" . __( 'Select course category', 'CP_TD' ) . '</label>';
 
 		$options = array();
 		$options['value'] = $course_id;
 		$options['first_option'] = array(
-			'text' => __( 'All courses', CoursePress::TD ),
+			'text' => __( 'All courses', 'CP_TD' ),
 			'value' => 'all',
 		);
 
 		echo CoursePress_Helper_UI::get_course_dropdown( 'course_id' . $two, 'course_id' . $two, false, $options );
 
-		submit_button( __( 'Filter', CoursePress::TD ), 'category-filter', '', false, array( 'id' => "filter-courses$two" ) );
+		submit_button( __( 'Filter', 'CP_TD' ), 'category-filter', '', false, array( 'id' => "filter-courses$two" ) );
 		echo '</form>';
 		echo "\n";
 	}
@@ -272,8 +272,8 @@ class CoursePress_Helper_Table_DiscussionList extends WP_List_Table {
 			if ( 'top' == $which ) {
 				?>
 				<form method="get">
-				    <input type="hidden" name="page" value="coursepress_discussions"/>
-					<?php $this->search_box( __( 'Search Discussions', CoursePress::TD ), 'search_discussions' ); ?>
+					<input type="hidden" name="page" value="coursepress_discussions"/>
+					<?php $this->search_box( __( 'Search Discussions', 'CP_TD' ), 'search_discussions' ); ?>
 				</form>
 			<?php
 			} else {

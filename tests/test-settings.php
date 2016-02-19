@@ -122,8 +122,8 @@ class CoursePress_Settings_Tests extends WP_UnitTestCase {
 		// Add test tabs.
 		$test_tabs = array(
 			'test_tab' => array(
-				'title' => __( 'Test Tabs', CoursePress::TD ),
-				'description' => __( 'This is the description of what you can do on this page.', CoursePress::TD ),
+				'title' => __( 'Test Tabs', 'CP_TD' ),
+				'description' => __( 'This is the description of what you can do on this page.', 'CP_TD' ),
 			),
 			'tab1' => array(
 				'title' => 'Test Tab 1',

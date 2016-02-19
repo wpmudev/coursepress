@@ -11,18 +11,18 @@ class CoursePress_Data_Discussion {
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
 				'labels' => array(
-					'name' => __( 'Discussions', CoursePress::TD ),
-					'singular_name' => __( 'Discussion', CoursePress::TD ),
-					'add_new' => __( 'Create New', CoursePress::TD ),
-					'add_new_item' => __( 'Create New Discussion', CoursePress::TD ),
-					'edit_item' => __( 'Edit Discussion', CoursePress::TD ),
-					'edit' => __( 'Edit', CoursePress::TD ),
-					'new_item' => __( 'New Discussion', CoursePress::TD ),
-					'view_item' => __( 'View Discussion', CoursePress::TD ),
-					'search_items' => __( 'Search Discussions', CoursePress::TD ),
-					'not_found' => __( 'No Discussions Found', CoursePress::TD ),
-					'not_found_in_trash' => __( 'No Discussions found in Trash', CoursePress::TD ),
-					'view' => __( 'View Discussion', CoursePress::TD ),
+					'name' => __( 'Discussions', 'CP_TD' ),
+					'singular_name' => __( 'Discussion', 'CP_TD' ),
+					'add_new' => __( 'Create New', 'CP_TD' ),
+					'add_new_item' => __( 'Create New Discussion', 'CP_TD' ),
+					'edit_item' => __( 'Edit Discussion', 'CP_TD' ),
+					'edit' => __( 'Edit', 'CP_TD' ),
+					'new_item' => __( 'New Discussion', 'CP_TD' ),
+					'view_item' => __( 'View Discussion', 'CP_TD' ),
+					'search_items' => __( 'Search Discussions', 'CP_TD' ),
+					'not_found' => __( 'No Discussions Found', 'CP_TD' ),
+					'not_found_in_trash' => __( 'No Discussions found in Trash', 'CP_TD' ),
+					'view' => __( 'View Discussion', 'CP_TD' ),
 				),
 				'public' => false,
 				'show_ui' => true,
@@ -58,11 +58,11 @@ class CoursePress_Data_Discussion {
 		}
 
 		$course_id = (int) get_post_meta( $n_id, 'course_id', true );
-		$course_title = ! empty( $course_id ) ? get_the_title( $course_id ) : __( 'All courses', CoursePress::TD );
+		$course_title = ! empty( $course_id ) ? get_the_title( $course_id ) : __( 'All courses', 'CP_TD' );
 		$course_id = ! empty( $course_id ) ? $course_id : 'all';
 
 		$unit_id = (int) get_post_meta( $n_id, 'unit_id', true );
-		$unit_title = ! empty( $unit_id ) ? get_the_title( $unit_id ) : __( 'All units', CoursePress::TD );
+		$unit_title = ! empty( $unit_id ) ? get_the_title( $unit_id ) : __( 'All units', 'CP_TD' );
 		$unit_id = ! empty( $unit_id ) ? $unit_id : 'course';
 		$unit_id = 'all' === $course_id ? 'course' : $unit_id;
 

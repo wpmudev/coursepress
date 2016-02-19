@@ -10,18 +10,18 @@ class CoursePress_Data_Notification {
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
 				'labels' => array(
-					'name' => __( 'Notifications', CoursePress::TD ),
-					'singular_name' => __( 'Notification', CoursePress::TD ),
-					'add_new' => __( 'Create New', CoursePress::TD ),
-					'add_new_item' => __( 'Create New Notification', CoursePress::TD ),
-					'edit_item' => __( 'Edit Notification', CoursePress::TD ),
-					'edit' => __( 'Edit', CoursePress::TD ),
-					'new_item' => __( 'New Notification', CoursePress::TD ),
-					'view_item' => __( 'View Notification', CoursePress::TD ),
-					'search_items' => __( 'Search Notifications', CoursePress::TD ),
-					'not_found' => __( 'No Notifications Found', CoursePress::TD ),
-					'not_found_in_trash' => __( 'No Notifications found in Trash', CoursePress::TD ),
-					'view' => __( 'View Notification', CoursePress::TD ),
+					'name' => __( 'Notifications', 'CP_TD' ),
+					'singular_name' => __( 'Notification', 'CP_TD' ),
+					'add_new' => __( 'Create New', 'CP_TD' ),
+					'add_new_item' => __( 'Create New Notification', 'CP_TD' ),
+					'edit_item' => __( 'Edit Notification', 'CP_TD' ),
+					'edit' => __( 'Edit', 'CP_TD' ),
+					'new_item' => __( 'New Notification', 'CP_TD' ),
+					'view_item' => __( 'View Notification', 'CP_TD' ),
+					'search_items' => __( 'Search Notifications', 'CP_TD' ),
+					'not_found' => __( 'No Notifications Found', 'CP_TD' ),
+					'not_found_in_trash' => __( 'No Notifications found in Trash', 'CP_TD' ),
+					'view' => __( 'View Notification', 'CP_TD' ),
 				),
 				'public' => false,
 				'show_ui' => true,
@@ -57,7 +57,7 @@ class CoursePress_Data_Notification {
 		}
 
 		$course_id = (int) get_post_meta( $n_id, 'course_id', true );
-		$course_title = ! empty( $course_id ) ? get_the_title( $course_id ) : __( 'All courses', CoursePress::TD );
+		$course_title = ! empty( $course_id ) ? get_the_title( $course_id ) : __( 'All courses', 'CP_TD' );
 		$course_id = ! empty( $course_id ) ? $course_id : 'all';
 
 		return array(

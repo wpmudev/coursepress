@@ -14,8 +14,8 @@ class CoursePress_View_Admin_CoursePress {
 
 	public static function init() {
 
-		self::$title = __( 'Courses/CoursePress', CoursePress::TD );
-		self::$menu_title = __( 'Courses', CoursePress::TD );
+		self::$title = __( 'Courses/CoursePress', 'CP_TD' );
+		self::$menu_title = __( 'Courses', 'CP_TD' );
 
 		add_filter( 'coursepress_admin_valid_pages', array( __CLASS__, 'add_valid' ) );
 		add_filter( 'coursepress_admin_pages', array( __CLASS__, 'add_page' ) );
@@ -52,8 +52,8 @@ class CoursePress_View_Admin_CoursePress {
 		$category = CoursePress_Data_Course::get_post_category_name();
 		$cpt = CoursePress_Data_Course::get_post_type_name();
 		$pages['course_categories'] = array(
-			'title' => __( 'Edit Course Categories', CoursePress::TD ),
-			'menu_title' => __( 'Course Categories', CoursePress::TD ),
+			'title' => __( 'Edit Course Categories', 'CP_TD' ),
+			'menu_title' => __( 'Course Categories', 'CP_TD' ),
 			'handle' => 'edit-tags.php?taxonomy=' . $category . '&post_type=' . $cpt,
 			'callback' => 'none',
 		);
@@ -71,7 +71,7 @@ class CoursePress_View_Admin_CoursePress {
 
 		$content = '<div class="coursepress_settings_wrapper wrap">' .
 			'<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '
-			<a class="add-new-h2" href="' . esc_url_raw( $url ) . '">' . esc_html__( 'New Course', CoursePress::TD ) . '</a>
+			<a class="add-new-h2" href="' . esc_url_raw( $url ) . '">' . esc_html__( 'New Course', 'CP_TD' ) . '</a>
 			</h3>
 			<hr />';
 

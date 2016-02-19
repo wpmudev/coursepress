@@ -8,8 +8,8 @@ class CoursePress_View_Admin_Communication_Notification {
 
 	public static function init() {
 
-		self::$title = __( 'Notifications', CoursePress::TD );
-		self::$menu_title = __( 'Notifications', CoursePress::TD );
+		self::$title = __( 'Notifications', 'CP_TD' );
+		self::$menu_title = __( 'Notifications', 'CP_TD' );
 
 		add_action( 'coursepress_admin_' . self::$slug, array( __CLASS__, 'render_page' ) );
 		add_filter( 'coursepress_admin_valid_pages', array( __CLASS__, 'add_valid' ) );
@@ -85,10 +85,10 @@ class CoursePress_View_Admin_Communication_Notification {
 		$url = admin_url( 'admin.php?page=' . self::$slug . '&action=edit&id=new' );
 
 		$content = '<div class="coursepress_communications_wrapper notifications wrap">' .
-		           '<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '
-		            <a class="add-new-h2" href="' . esc_url_raw( $url ) . '">' . esc_html__( 'New Notification', CoursePress::TD ) . '</a>
-		            </h3>
-		            <hr />';
+				   '<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '
+					<a class="add-new-h2" href="' . esc_url_raw( $url ) . '">' . esc_html__( 'New Notification', 'CP_TD' ) . '</a>
+					</h3>
+					<hr />';
 
 		if ( empty( $action ) ) {
 
@@ -139,7 +139,7 @@ class CoursePress_View_Admin_Communication_Notification {
 		$options['value'] = $course_id;
 		$options['class'] = 'medium';
 		$options['first_option'] = array(
-			'text' => __( 'All courses', CoursePress::TD ),
+			'text' => __( 'All courses', 'CP_TD' ),
 			'value' => 'all',
 		);
 
@@ -150,10 +150,10 @@ class CoursePress_View_Admin_Communication_Notification {
 		$content .= '
 			<input type="hidden" name="post_status" value="' . esc_attr( $post_status ) . '" />
 			' . wp_nonce_field( 'edit_notification', '_wpnonce', true, false ) . '
-			<label><strong>' . esc_html__( 'Notification Title', CoursePress::TD ). '</strong><br />
+			<label><strong>' . esc_html__( 'Notification Title', 'CP_TD' ). '</strong><br />
 			<input type="text" class="wide" name="post_title" value="' . esc_attr( $post_title ) . '" /></label>
 
-			<label><strong>' . esc_html__( 'Notification Content', CoursePress::TD ). '</strong><br />';
+			<label><strong>' . esc_html__( 'Notification Content', 'CP_TD' ). '</strong><br />';
 
 		$editor_name = 'post_content';
 		$editor_id = 'postContent';
@@ -172,11 +172,11 @@ class CoursePress_View_Admin_Communication_Notification {
 		$content .= '</label>';
 
 		$content .= '
-			<label><strong>' . esc_html__( 'Related Course', CoursePress::TD ) . '</strong><br />
+			<label><strong>' . esc_html__( 'Related Course', 'CP_TD' ) . '</strong><br />
 			' . CoursePress_Helper_UI::get_course_dropdown( 'course_id', 'meta_course_id', false, $options ) . '
 			</label>
 			<label class="right">
-				<input type="submit" class="button button-primary" value="' . esc_attr__( 'Save Notification', CoursePress::TD ) . '" />
+				<input type="submit" class="button button-primary" value="' . esc_attr__( 'Save Notification', 'CP_TD' ) . '" />
 			</label>
 		';
 
@@ -195,7 +195,7 @@ class CoursePress_View_Admin_Communication_Notification {
 		$json_data['action'] = $action;
 
 		if ( empty( $data->action ) ) {
-			$json_data['message'] = __( 'Notification Update: No action.', CoursePress::TD );
+			$json_data['message'] = __( 'Notification Update: No action.', 'CP_TD' );
 			wp_send_json_error( $json_data );
 		}
 

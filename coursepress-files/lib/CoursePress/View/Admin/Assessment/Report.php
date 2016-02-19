@@ -8,8 +8,8 @@ class CoursePress_View_Admin_Assessment_Report {
 
 	public static function init() {
 
-		self::$title = __( 'Reports/CoursePress', CoursePress::TD );
-		self::$menu_title = __( 'Reports', CoursePress::TD );
+		self::$title = __( 'Reports/CoursePress', 'CP_TD' );
+		self::$menu_title = __( 'Reports', 'CP_TD' );
 
 		add_filter( 'coursepress_admin_valid_pages', array( __CLASS__, 'add_valid' ) );
 		add_filter( 'coursepress_admin_pages', array( __CLASS__, 'add_page' ) );
@@ -160,7 +160,7 @@ class CoursePress_View_Admin_Assessment_Report {
 						$total += false !== $grade && isset( $grade['grade'] ) ? (int) $grade['grade'] : 0;
 						$grade_display = false !== $grade && isset( $grade['grade'] ) ? (int) $grade['grade'] . '%' : '--';
 						$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
-						$date_display = false !== $response && isset( $response['date'] ) ? $response['date'] : __( 'Not yet submitted', CoursePress::TD );
+						$date_display = false !== $response && isset( $response['date'] ) ? $response['date'] : __( 'Not yet submitted', 'CP_TD' );
 						$answered += false !== $response && isset( $response['date'] ) ? 1 : 0;
 
 						$html .= '
@@ -177,7 +177,7 @@ class CoursePress_View_Admin_Assessment_Report {
 				if ( empty( $assessable_modules ) ) {
 					$html .= '
 							<tr style="font-style:oblique; font-size: 4mm; background-color: ' . esc_attr( $colors['item_bg'] ) . '; color: ' . esc_attr( $colors['no_items'] ) . ';">
-								<td colspan="3"><em>' . esc_html__( 'No assessable items.', CoursePress::TD ) . '</em></td>
+								<td colspan="3"><em>' . esc_html__( 'No assessable items.', 'CP_TD' ) . '</em></td>
 							</tr>
 						';
 				}
@@ -192,9 +192,9 @@ class CoursePress_View_Admin_Assessment_Report {
 			}
 
 			$average = $course_answered > 0 ? (int) ( $course_total / $course_answered ) : 0;
-			$average_display = $course_answered === 0 && $assessable_modules === 0 ? '' : sprintf( __( 'Average response grade: %d%%', CoursePress::TD ), $average );
+			$average_display = $course_answered === 0 && $assessable_modules === 0 ? '' : sprintf( __( 'Average response grade: %d%%', 'CP_TD' ), $average );
 			$course_average = $assessable_modules > 0 ? (int) ( $course_total / $course_assessable_modules ) : 0;
-			$course_average_display = $assessable_modules === 0 ? __( 'No assessable items in this course.', CoursePress::TD ) : sprintf( __( 'Total Average: %d%%', CoursePress::TD ), $course_average );
+			$course_average_display = $assessable_modules === 0 ? __( 'No assessable items in this course.', 'CP_TD' ) : sprintf( __( 'Total Average: %d%%', 'CP_TD' ), $course_average );
 
 			$html .= '
 					<tfoot>
@@ -219,7 +219,7 @@ class CoursePress_View_Admin_Assessment_Report {
 			$pdf_args['filename'] = $course_title . '_' . $unit_file_part . '_bulk.pdf';
 		}
 
-		$pdf_args['footer'] = __( 'Course Report', CoursePress::TD );
+		$pdf_args['footer'] = __( 'Course Report', 'CP_TD' );
 
 		CoursePress_Helper_PDF::make_pdf( $html, $pdf_args );
 
@@ -228,8 +228,8 @@ class CoursePress_View_Admin_Assessment_Report {
 	public static function render_page() {
 
 		$content = '<div class="coursepress_settings_wrapper reports">' .
-		           '<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
-		            <hr />';
+				   '<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
+					<hr />';
 		$content .= self::render_report_list();
 
 		$content .= '</div>';
@@ -243,12 +243,12 @@ class CoursePress_View_Admin_Assessment_Report {
 		$courses = CoursePress_Data_Instructor::get_accessable_courses( wp_get_current_user(), true );
 
 		if ( empty( $courses ) ) {
-			return esc_html__( 'You do not currently have any courses assigned.', CoursePress::TD );
+			return esc_html__( 'You do not currently have any courses assigned.', 'CP_TD' );
 		}
 
 		$selected_course = isset( $_GET['course_id'] ) ? (int) $_GET['course_id'] : $courses[0]->ID;
 
-		$content .= '<div><strong>' . esc_html__( 'Select Course', CoursePress::TD ) . '</strong><br />';
+		$content .= '<div><strong>' . esc_html__( 'Select Course', 'CP_TD' ) . '</strong><br />';
 		$content .= CoursePress_Helper_UI::get_course_dropdown( 'course-list', 'course-list', $courses, array(
 			'class' => 'medium',
 			'value' => $selected_course,
@@ -275,14 +275,14 @@ class CoursePress_View_Admin_Assessment_Report {
 		$courseListTable->display();
 		$content .= ob_get_clean();
 
-		$tooltip = '<span class="help-tooltip">' . esc_html__( 'Select entire course for selected students, or just a unit for selected students.', CoursePress::TD ) . '</span>';
-		$content .= '<div><strong>' . esc_html__( 'Bulk Reporting', CoursePress::TD ) . '</strong>' . $tooltip . '<br />';
+		$tooltip = '<span class="help-tooltip">' . esc_html__( 'Select entire course for selected students, or just a unit for selected students.', 'CP_TD' ) . '</span>';
+		$content .= '<div><strong>' . esc_html__( 'Bulk Reporting', 'CP_TD' ) . '</strong>' . $tooltip . '<br />';
 
 		$units = CoursePress_Data_Course::get_units( $selected_course );
 
 		$content .= '
 			<select name="bulk-report-unit" class="narrow">
-				<option value="all">' . esc_html__( 'All units', CoursePress::TD ) . '</option>
+				<option value="all">' . esc_html__( 'All units', 'CP_TD' ) . '</option>
 		';
 
 		foreach ( $units as $unit ) {
@@ -293,7 +293,7 @@ class CoursePress_View_Admin_Assessment_Report {
 
 		$content .= '
 			</select>
-			<input type="submit" class="button button-primary" value="' . esc_attr__( 'Generate Report', CoursePress::TD ) . '" name="bulk-report-submit" />
+			<input type="submit" class="button button-primary" value="' . esc_attr__( 'Generate Report', 'CP_TD' ) . '" name="bulk-report-submit" />
 		';
 
 		$content .= '

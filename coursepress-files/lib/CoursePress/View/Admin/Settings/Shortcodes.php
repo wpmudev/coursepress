@@ -13,8 +13,8 @@ class CoursePress_View_Admin_Settings_Shortcodes{
 	public static function add_tabs( $tabs ) {
 
 		$tabs['shortcodes'] = array(
-			'title' => __( 'Shortcodes', CoursePress::TD ),
-			'description' => __( 'This is the description of what you can do on this page.', CoursePress::TD ),
+			'title' => __( 'Shortcodes', 'CP_TD' ),
+			'description' => __( 'This is the description of what you can do on this page.', 'CP_TD' ),
 			'order' => 50,
 		);
 

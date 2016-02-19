@@ -20,8 +20,8 @@ class CoursePress_View_Admin_Settings_Setup{
 	public static function add_tabs( $tabs ) {
 
 		$tabs['setup'] = array(
-			'title' => __( 'Setup Guide', CoursePress::TD ),
-			'description' => __( 'This is the description of what you can do on this page.', CoursePress::TD ),
+			'title' => __( 'Setup Guide', 'CP_TD' ),
+			'description' => __( 'This is the description of what you can do on this page.', 'CP_TD' ),
 			'order' => 70,
 			'class' => 'setup_tab',
 		);
@@ -42,7 +42,7 @@ class CoursePress_View_Admin_Settings_Setup{
 				'page' => $_GET['page'],
 				'tab' => 'general',
 			), admin_url( 'admin.php' ) );
-			$content .= '<p><a href="' . $return_url . '">' . esc_html__( 'Return to CoursePress settings.', CoursePress::TD ) . '</a></p>';
+			$content .= '<p><a href="' . $return_url . '">' . esc_html__( 'Return to CoursePress settings.', 'CP_TD' ) . '</a></p>';
 		}
 
 		return $content;

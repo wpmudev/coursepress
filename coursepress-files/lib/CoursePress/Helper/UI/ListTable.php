@@ -14,7 +14,7 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 	 * Message to be displayed when there are no items
 	 */
 	public function no_items() {
-		return __( 'No items found.', CoursePress::TD );
+		return __( 'No items found.', 'CP_TD' );
 	}
 
 	/**
@@ -94,9 +94,9 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 
 		$content = '';
 
-		$content .= "<label for='bulk-action-selector-" . esc_attr( $which ) . "' class='screen-reader-text'>" . __( 'Select bulk action', CoursePress::TD ) . '</label>';
+		$content .= "<label for='bulk-action-selector-" . esc_attr( $which ) . "' class='screen-reader-text'>" . __( 'Select bulk action', 'CP_TD' ) . '</label>';
 		$content .= "<select name='action$two' id='bulk-action-selector-" . esc_attr( $which ) . "'>";
-		$content .= "<option value='-1' selected='selected'>" . __( 'Bulk Actions', CoursePress::TD ) . '</option>';
+		$content .= "<option value='-1' selected='selected'>" . __( 'Bulk Actions', 'CP_TD' ) . '</option>';
 
 		foreach ( $this->_actions as $name => $title ) {
 			$class = 'edit' == $name ? ' class="hide-if-no-js"' : '';
@@ -106,7 +106,7 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 
 		$content .= '</select>';
 
-		$content .= get_submit_button( __( 'Apply', CoursePress::TD ), 'action', '', false, array( 'id' => "doaction$two" ) );
+		$content .= get_submit_button( __( 'Apply', 'CP_TD' ), 'action', '', false, array( 'id' => "doaction$two" ) );
 
 		return $content;
 	}
@@ -138,10 +138,10 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 		$m = isset( $_GET['m'] ) ? (int) $_GET['m'] : 0;
 
 		$content = '
-			<label for="filter-by-date" class="screen-reader-text">' . esc_html__( 'Filter by date', CoursePress::TD ) . '</label>
+			<label for="filter-by-date" class="screen-reader-text">' . esc_html__( 'Filter by date', 'CP_TD' ) . '</label>
 			<select name="m" id="filter-by-date">
-			<option ' . selected( $m, 0, false ) . ' value="0">'. esc_html__( 'All dates', CoursePress::TD ) . '</option>
-        ';
+			<option ' . selected( $m, 0, false ) . ' value="0">'. esc_html__( 'All dates', 'CP_TD' ) . '</option>
+		';
 
 		foreach ( $months as $arc_row ) {
 			if ( 0 == $arc_row->year ) {
@@ -154,7 +154,7 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 				selected( $m, $year . $month, false ),
 				esc_attr( $arc_row->year . $month ),
 				/* translators: 1: month name, 2: 4-digit year */
-				sprintf( __( '%1$s %2$d', CoursePress::TD ), $wp_locale->get_month( $month ), $year )
+				sprintf( __( '%1$s %2$d', 'CP_TD' ), $wp_locale->get_month( $month ), $year )
 			);
 		}
 
@@ -325,7 +325,7 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 		if ( ! empty( $columns['cb'] ) ) {
 			static $cb_counter = 1;
 			$columns['cb'] = '<label class="screen-reader-text" for="cb-select-all-' . $cb_counter . '">' . __( 'Select All' ) . '</label>'
-			                 . '<input id="cb-select-all-' . $cb_counter . '" type="checkbox" />';
+							 . '<input id="cb-select-all-' . $cb_counter . '" type="checkbox" />';
 			$cb_counter++;
 		}
 
