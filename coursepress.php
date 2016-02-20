@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: CoursePress Pro
+ * Plugin Name: CoursePress Base
  * Version:     2.0.0
- * Description: CoursePress Pro turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also assess student work, sell your courses and much much more.
+ * Description: CoursePress Base turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also assess student work, sell your courses and much much more.
  * Author:      WPMU DEV
  * Author URI:  http://premium.wpmudev.org
  * Plugin URI:  http://premium.wpmudev.org/project/coursepress/
@@ -10,7 +10,7 @@
  * License:     GPL2
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * TextDomain:  cp
- * Domain Path: /languages/
+ * Domain Path: /language/
  * WDP ID:      913071
  *
  * @package CoursePress
@@ -41,9 +41,7 @@
  * MA 02110-1301 USA
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-} // Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 // Launch CoursePress.
 CoursePress::init();
@@ -55,31 +53,57 @@ class CoursePress {
 
 	/**
 	 * Current plugin version, must match the version in the header comment.
+	 *
 	 * @var string
 	 */
 	public static $version = '2.0.0';
 
 	/**
 	 * Plugin name, this reflects the Pro/Standard version.
+	 *
 	 * @var string
 	 */
-	public static $name = 'CoursePress';
+	public static $name = 'CoursePress Base'; // Translated by grunt.
+
+	/**
+	 * Absolut path to this file (main plugin file).
+	 *
+	 * @var string
+	 */
+	public static $file = '';
+
+	/**
+	 * File-root of the premium files.
+	 *
+	 * @var string
+	 */
+	public static $path = '';
+
+	/**
+	 * Dir-name of this plugin (relative to wp-content/plugins).
+	 *
+	 * @var string
+	 */
+	public static $dir = '';
+
+	/**
+	 * Absolute URL to plugin folder.
+	 *
+	 * @var string
+	 */
+	public static $url = '';
 
 	/**
 	 * Folder that contains all plugin files.
+	 *
 	 * @deprecated This makes stuff _VERY_ confusing, this dir should not exist.
 	 * @var  string
 	 */
 	public static $plugin_lib = 'coursepress-files';
 
 	/**
-	 * Textdomain.
-	 * @deprecated We should use plain string for textdomain, no variables!
-	 */
-	const TD = 'cp';
-
-	/**
 	 * Initialize the plugin!
+	 *
 	 * @since  2.0.0
 	 */
 	public static function init() {
@@ -87,43 +111,21 @@ class CoursePress {
 		spl_autoload_register( array( __CLASS__, 'class_loader' ) );
 
 		// Prepare CoursePress Core parameters.
-		CoursePress_Core::$name            = self::$name;
-		CoursePress_Core::$version         = self::$version;
-		CoursePress_Core::$plugin_lib      = self::$plugin_lib;
-		CoursePress_Core::$plugin_file     = __FILE__;
-		CoursePress_Core::$plugin_path     = trailingslashit( plugin_dir_path( __FILE__ ) );
-		CoursePress_Core::$plugin_url      = trailingslashit( plugin_dir_url( __FILE__ ) );
-		CoursePress_Core::$plugin_lib_path = trailingslashit( CoursePress_Core::$plugin_path . self::$plugin_lib );
-		CoursePress_Core::$plugin_lib_url  = trailingslashit( CoursePress_Core::$plugin_url . self::$plugin_lib );
-		CoursePress_Core::$DEBUG           = false;  // @todo check if this should be a define( '' ) option...
+		self::$file = __FILE__;
+		self::$path = plugin_dir_path( __FILE__ );
+		self::$dir = dirname( self::$path );
+		self::$url = plugin_dir_url( __FILE__ );
 
-		CoursePress_Core::init();
+		// Allow WP to load other plugins before we continue!
+		add_action( 'plugins_loaded', array( 'CoursePress_Core', 'init' ), 10 );
 
-		$screen_base = str_replace( ' ', '-', strtolower( CoursePress_Core::$name ) );
-		$page_base = $screen_base . '_page_';
+		// Load additional features if available.
+		if ( file_exists( self::$path . '/premium/init.php' ) ) {
+			include_once self::$path . '/premium/init.php';
+		}
 
-		/**
-		 * Include WPMUDev Dashboard.
-		 */
-		$dash_notifications_file = CoursePress_Core::$plugin_path .
-			'includes/external/dashboard/wpmudev-dash-notification.php';
-
-		if ( file_exists( $dash_notifications_file ) ) {
-			global $wpmudev_notices;
-
-			$wpmudev_notices[] = array(
-				'id' => 913071,
-				'name' => CoursePress_Core::$name,
-				'screens' => array(
-					'coursepress_settings',
-					'toplevel_page_courses',
-					'toplevel_page_coursepress',
-					$page_base . 'coursepress_settings',
-					$page_base . 'coursepress_course',
-				),
-			);
-
-			include_once $dash_notifications_file;
+		if ( file_exists( self::$path . '/campus/init.php' ) ) {
+			include_once self::$path . '/campus/init.php';
 		}
 	}
 
@@ -131,72 +133,59 @@ class CoursePress {
 	 * Handler for spl_autoload_register (autoload classes on demand).
 	 *
 	 * Note how the folder structure is build:
-	 *   plugin_lib + namespace + 'lib' + classpath
+	 *   'core' + namespace + classpath
 	 *   classpath = class name, while each _ is actually a subfolder separator.
-	 *
-	 *   @todo  simplify this! should be simply <'lib' + classpath>
-	 *          (reason: classpath is already prefixed with namespace!)
 	 *
 	 * @since  2.0.0
 	 * @param  string $class Class name.
 	 * @return bool True if the class-file was found and loaded.
 	 */
 	private static function class_loader( $class ) {
-		$namespaces = apply_filters(
-			'coursepress_class_loader_namespaces',
-			array(
-				'CoursePress' => array(),
-			)
+		$namespaces = array(
+			'CoursePressPro' => array(
+				'namespace_folder' => 'premium/include', // Base folder for classes.
+				'filename_prefix' => 'class-',           // Prefix filenames.
+			),
+			'CoursePressCampus' => array(
+				'namespace_folder' => 'campus/include', // Base folder for classes.
+				'filename_prefix' => 'class-',          // Prefix filenames.
+			),
+			'CoursePress' => array(
+				'namespace_folder' => 'include/coursepress', // Base folder for classes.
+				'filename_prefix' => 'class-',               // Prefix filenames.
+			),
+			'TCPDF' => array(
+				'namespace_folder' => 'include/tcpdf', // Base folder for classes.
+				'filename_prefix' => false,            // No prefix for filenames.
+			),
 		);
 
 		$class = trim( $class );
 
 		foreach ( $namespaces as $namespace => $options ) {
 			// Continue if the class name is prefixed with <namespace>.
-			if ( substr( $namespace, 0, strlen( $class ) ) === $namespace ) {
+			if ( substr( $class, 0, strlen( $namespace ) ) === $namespace ) {
 
-				$namespace_folder = 'lib';
-				$overrides = array();
-
-				if ( ! empty( $options['namespace_folder'] ) ) {
-					/**
-					 * Search for class file in a subfolder?
-					 *
-					 * Note: When using this, note that folder name must match
-					 * upper/lowecase of namespace name!
-					 *
-					 * @todo  Find out if/where this is used. Drop this is possible!
-					 *
-					 * @param namespace_folder
-					 * @var   bool
-					 */
-					$namespace_folder .= DIRECTORY_SEPARATOR . $namespace;
+				if ( empty( $options['namespace_folder'] ) ) {
+					continue;
+				} else {
+					$namespace_folder = $options['namespace_folder'];
 				}
 
-				if ( ! empty( $options['overrides'] ) ) {
-					/**
-					 * Define custom class file paths for special classes.
-					 *
-					 * @param overrides
-					 * @var   array. Key is class name, value is file name.
-					 */
-					$overrides = (array) $options['overrides'];
+				// Get the class-filename.
+				$class_path = explode( '_', $class );
+				$class_file = strtolower( array_pop( $class_path ) ) . '.php';
+
+				if ( ! empty( $options['filename_prefix'] ) ) {
+					$class_file = $options['filename_prefix'] . $class_file;
 				}
 
-				$class_folder = join(
-					DIRECTORY_SEPARATOR,
-					array(
-						dirname( __FILE__ ),
-						self::$plugin_lib,
-						$namespace_folder,
-					)
+				// Build the path to the class file.
+				array_shift( $class_path ); // Remove the first element (namespace-string).
+				array_unshift( $class_path, $namespace_folder );
+				$class_folder = strtolower(
+					self::$path . implode( DIRECTORY_SEPARATOR, $class_path )
 				);
-				$class_file = str_replace( '_', DIRECTORY_SEPARATOR, $class ) . '.php';
-
-				// Override filename via array.
-				if ( isset( $overrides[ $class_file ] ) ) {
-					$class_file = $overrides[ $class_file ];
-				}
 
 				$filename = $class_folder . DIRECTORY_SEPARATOR . $class_file;
 

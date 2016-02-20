@@ -1,0 +1,5889 @@
+# Copyright (C) 2016 WPMU DEV
+# This file is distributed under the GPL2.
+msgid ""
+msgstr ""
+"Project-Id-Version: CoursePress Base 2.0.0\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/coursepress\n"
+"POT-Creation-Date: 2016-02-19 18:53:13+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2016-MO-DA HO:MI+ZONE\n"
+"Last-Translator: WPMU Dev <support@wpmudev.org>\n"
+"Language-Team: WPMU Dev <support@wpmudev.org>\n"
+"X-Generator: grunt-wp-i18n\n"
+"X-Poedit-KeywordsList: "
+"__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
+"attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Country: United States\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-Bookmarks: \n"
+"X-Textdomain-Support: yes\n"
+
+#: _deprecated/classes/class.automessage-integration.php:30
+msgid "Student Enrolled - Instructor(s) Notification"
+msgstr ""
+
+#: _deprecated/classes/class.automessage-integration.php:33
+msgid "Student Enrolled - Student Notification"
+msgstr ""
+
+#: _deprecated/classes/class.automessage-integration.php:36
+msgid "Student Submitted Answer - Instructor(s) Notification"
+msgstr ""
+
+#: _deprecated/classes/class.automessage-integration.php:39
+msgid "Student Submitted Answer (automatically graded) - Instructor(s) Notification"
+msgstr ""
+
+#: _deprecated/classes/class.automessage-integration.php:42
+msgid "Student Withdraw from a Course - Instructor(s) Notification"
+msgstr ""
+
+#: _deprecated/classes/class.automessage-integration.php:45
+msgid "Student Withdraw from a Course - Student Notification"
+msgstr ""
+
+#: _deprecated/classes/class.automessage-integration.php:48
+msgid "New Discussion Added to a Course - Instructor(s) Notification"
+msgstr ""
+
+#: _deprecated/classes/class.automessage-integration.php:51
+msgid "New Discussion Added to a Course - Student(s) Notification"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:45
+#: _deprecated/classes/class.basic.certificate.php:53
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:22
+msgid "Basic Certificate"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:76
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:42
+msgid "Certificate Options"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:82
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:47
+msgid "Enable Basic Certificate"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:88
+msgid "Adds a \"Certificate\" link to completed courses on the student dashboard."
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:109
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:56
+msgid "Certificate Layout"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:112
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:57
+msgid "Use the editor below to create the layout of your certificate."
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:113
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:58
+msgid ""
+"These codes will be replaced with actual data: FIRST_NAME, LAST_NAME, "
+"COURSE_NAME, COMPLETION_DATE, CERTIFICATE_NUMBER, UNIT_LIST"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:139
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:85
+msgid "Background Image"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:145
+msgid ""
+"The image will be resized to fit the full page. For best results use 1:1414 "
+"as the ratio for image dimensions.<br /><br /><strong>Examples:</strong><br "
+"/>595x842px (Portrait 72dpi)<br />1754x1240px (Landscape 150dpi)<br "
+"/>2480x3508px (Portrait 300dpi)."
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:154
+#: include/coursepress/view/admin/course/class-edit.php:216
+#: include/coursepress/view/admin/course/class-unitbuilder.php:65
+#: include/coursepress/view/admin/course/class-unitbuilder.php:144
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:89
+msgid "Add Image URL or Browse for Image"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:155
+#: _deprecated/classes/class.certificate_template_elements.php:106
+#: include/coursepress/helper/class-ui.php:18
+#: include/coursepress/helper/ui/class-module.php:394
+#: include/coursepress/helper/ui/class-module.php:453
+#: include/coursepress/helper/ui/class-module.php:524
+#: include/coursepress/helper/ui/class-module.php:574
+#: include/coursepress/helper/ui/class-module.php:620
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:90
+msgid "Browse"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:156
+#: include/coursepress/helper/class-ui.php:46
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:91
+msgid "Extension of the file is not valid. Please use one of the following: %s"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:163
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:99
+msgid "Content Padding"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:164
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:106
+msgid "Can be any CSS units. E.g. \"0.2em\""
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:167
+#: _deprecated/classes/class.certificate_template_elements.php:94
+#: _deprecated/classes/class.certificate_template_elements.php:127
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:102
+msgid "Top"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:168
+#: _deprecated/classes/class.certificate_template_elements.php:128
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:103
+msgid "Bottom"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:169
+#: _deprecated/classes/class.certificate_template_elements.php:96
+#: _deprecated/classes/class.certificate_template_elements.php:115
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:104
+msgid "Left"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:170
+#: _deprecated/classes/class.certificate_template_elements.php:95
+#: _deprecated/classes/class.certificate_template_elements.php:116
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:105
+msgid "Right"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:175
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:112
+msgid "Page Orientation"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:178
+#: _deprecated/classes/class.certificate_template_elements.php:83
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:116
+msgid "Landscape"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:179
+#: _deprecated/classes/class.certificate_template_elements.php:82
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:117
+msgid "Portrait"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:195
+#: _deprecated/templates/student-settings.php:99
+#: include/coursepress/template/class-student.php:185
+#: include/coursepress/view/admin/assessment/class-list.php:284
+msgid "Save Changes"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:207
+msgid "CSS"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:209
+msgid ""
+"You can specify individual CSS rules for each of the certificate fields.<br "
+"/>The follow CSS classes are available: .first_name, .last_name, "
+".course_name, .completion_date, .certificate_number, .unit_list.<br />They "
+"are all wrapped in the .basic_certificate DIV tag."
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:235
+#: include/coursepress/helper/setting/class-email.php:66
+msgid "Basic Certificate E-mail"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:238
+msgid "E-mail to send certificate to student upon course completion. (if enabled)"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:242
+#: include/coursepress/view/admin/setting/class-email.php:51
+msgid "From Name"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:249
+msgid "From E-mail"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:256
+msgid "E-mail Subject"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:263
+msgid "E-mail Content"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:265
+msgid ""
+"These codes will be replaced with actual data: FIRST_NAME, LAST_NAME, "
+"COMPLETION_DATE, CERTIFICATE_NUMBER, UNIT_LIST, COURSE_NAME, "
+"COURSE_EXCERPT, COURSE_ADDRESS, WEBSITE_ADDRESS, WEBSITE_NAME"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:360
+msgid "Certificate %s"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:440
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:143
+msgid ""
+"%1$s %2$s\n"
+"\t\t\t\thas successfully completed the course\n"
+"\n"
+"\t\t\t\t%3$s\n"
+"\n"
+"\t\t\t\tDate: %4$s\n"
+"\t\t\t\tCertificate no.: %5$s"
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:451
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:154
+msgid "[%s] Congratulations. You passed your course."
+msgstr ""
+
+#: _deprecated/classes/class.basic.certificate.php:456
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:159
+msgid ""
+"Hi %1$s,\n"
+"\n"
+"\t\t\t\tCongratulations! You have completed the course: %2$s\n"
+"\n"
+"\t\t\t\tPlease find attached your certificate of completion."
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:65
+msgid "Certificate Paper Size"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:67
+msgid "A4 (210 × 297)"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:68
+msgid "A5 (148 × 210)"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:69
+msgid "A6 (105 × 148)"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:70
+msgid "A7 (74 × 105)"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:71
+msgid "A8 (52 × 74)"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:80
+msgid "Orientation"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:93
+msgid "Document Margins"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:104
+msgid "Certificate Background Image"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:113
+msgid "Cell Alignment"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:117
+msgid "Center"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:126
+msgid "Element Break Lines"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:135
+msgid "Font Style"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:141
+msgid "Regular"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:142
+msgid "Bold"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:143
+msgid "Bold + Italic"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:144
+msgid "Bold + Underline"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:145
+msgid "Bold + Underline + Italic"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:146
+msgid "Italic"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:147
+msgid "Italic + Underline"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:148
+msgid "Underline"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:170
+#: include/coursepress/view/admin/setting/class-general.php:547
+msgid "Font"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:175
+#: include/coursepress/helper/class-pdf.php:109
+msgid "Al Arabiya"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:176
+#: include/coursepress/helper/class-pdf.php:110
+msgid "Furat"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:177
+#: include/coursepress/helper/class-pdf.php:83
+msgid "Arial Unicode MS (Simplified Chinese)"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:178
+#: include/coursepress/helper/class-pdf.php:85
+msgid "Arial Unicode MS (Japanese)"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:179
+#: include/coursepress/helper/class-pdf.php:86
+msgid "Arial Unicode MS (Korean)"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:180
+#: include/coursepress/helper/class-pdf.php:87
+msgid "Courier"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:181
+#: include/coursepress/helper/class-pdf.php:111
+msgid "DejaVu Sans"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:182
+#: include/coursepress/helper/class-pdf.php:114
+msgid "DejaVu Sans Condensed"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:183
+#: include/coursepress/helper/class-pdf.php:118
+msgid "DejaVu Sans ExtraLight"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:184
+#: include/coursepress/helper/class-pdf.php:120
+msgid "DejaVu Sans Mono"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:185
+#: include/coursepress/helper/class-pdf.php:124
+msgid "DejaVu Serif"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:186
+#: include/coursepress/helper/class-pdf.php:127
+msgid "DejaVu Serif Condensed"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:187
+msgid "FreeMono"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:188
+msgid "FreeSans"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:189
+msgid "FreeSerif"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:190
+#: include/coursepress/helper/class-pdf.php:91
+msgid "Helvetica"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:191
+#: include/coursepress/helper/class-pdf.php:144
+msgid "MyungJo Medium (Korean)"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:192
+#: include/coursepress/helper/class-pdf.php:145
+msgid "Kozuka Gothic Pro (Japanese Sans-Serif)"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:193
+#: include/coursepress/helper/class-pdf.php:146
+msgid "Kozuka Mincho Pro (Japanese Serif)"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:194
+#: include/coursepress/helper/class-pdf.php:147
+msgid "MSung Light (Traditional Chinese)"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:195
+#: include/coursepress/helper/class-pdf.php:148
+msgid "PDFA Courier"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:196
+#: include/coursepress/helper/class-pdf.php:152
+msgid "PDFA Helvetica"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:197
+#: include/coursepress/helper/class-pdf.php:156
+msgid "PDFA Symbol"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:198
+#: include/coursepress/helper/class-pdf.php:157
+msgid "PDFA Times"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:199
+msgid "PDFA Zapfdingbats"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:200
+#: include/coursepress/helper/class-pdf.php:162
+msgid "STSong Light (Simplified Chinese)"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:201
+#: include/coursepress/helper/class-pdf.php:95
+msgid "Symbol"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:202
+#: include/coursepress/helper/class-pdf.php:96
+msgid "Times-Roman"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:203
+#: include/coursepress/helper/class-pdf.php:104
+msgid "ZapfDingbats"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:216
+msgid "Font Size"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_template_elements.php:223
+msgid "pt"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_templates.php:127
+#: _deprecated/classes/class.shortcodes.php:1897
+#: _deprecated/classes/class.shortcodes.php:2729
+msgid "Certificate"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_templates.php:170
+msgid "Template Name"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_templates.php:178
+msgid "Date"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_templates.php:195
+#: include/coursepress/helper/table/class-courselist.php:39
+#: include/coursepress/helper/table/class-coursestudent.php:38
+#: include/coursepress/helper/table/class-reportstudents.php:39
+msgid "ID"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_templates.php:201
+#: _deprecated/coursepress.old.php:3526 _deprecated/coursepress.old.php:3603
+#: _deprecated/coursepress.old.php:3629 _deprecated/coursepress.old.php:3655
+#: _deprecated/coursepress.old.php:3681 _deprecated/coursepress.old.php:3707
+#: _deprecated/coursepress.old.php:3734
+#: include/coursepress/data/class-course.php:27
+#: include/coursepress/data/class-discussion.php:19
+#: include/coursepress/data/class-module.php:29
+#: include/coursepress/data/class-notification.php:18
+#: include/coursepress/data/class-unit.php:18
+#: include/coursepress/helper/table/class-courselist.php:74
+#: include/coursepress/helper/table/class-discussionlist.php:73
+#: include/coursepress/helper/table/class-notificationlist.php:73
+#: include/coursepress/template/class-communication.php:145
+msgid "Edit"
+msgstr ""
+
+#: _deprecated/classes/class.certificate_templates.php:202
+#: _deprecated/classes/class.course.unit.module.php:1112
+#: include/coursepress/helper/table/class-courselist.php:89
+#: include/coursepress/helper/table/class-discussionlist.php:83
+#: include/coursepress/helper/table/class-notificationlist.php:83
+msgid "Delete"
+msgstr ""
+
+#: _deprecated/classes/class.course.php:106
+#: _deprecated/classes/class.course.php:458
+#: _deprecated/classes/class.course.unit.php:57
+#: _deprecated/classes/class.course.unit.php:325
+#: _deprecated/classes/class.course.unit.php:404
+#: _deprecated/classes/class.notification.php:33
+#: include/coursepress/data/class-shortcode.php:760
+#: include/coursepress/data/class-shortcode.php:764
+#: include/coursepress/helper/ui/class-module.php:352
+#: include/coursepress/helper/ui/class-module.php:370
+#: include/coursepress/helper/ui/class-module.php:429
+#: include/coursepress/helper/ui/class-module.php:500
+#: include/coursepress/helper/ui/class-module.php:551
+#: include/coursepress/helper/ui/class-module.php:596
+#: include/coursepress/helper/ui/class-module.php:656
+#: include/coursepress/helper/ui/class-module.php:674
+#: include/coursepress/helper/ui/class-module.php:692
+#: include/coursepress/helper/ui/class-module.php:730
+#: include/coursepress/helper/ui/class-module.php:766
+#: include/coursepress/helper/ui/class-module.php:802
+#: include/coursepress/helper/ui/class-module.php:833
+#: include/coursepress/helper/ui/class-module.php:864
+#: include/coursepress/helper/ui/class-module.php:882
+msgid "Untitled"
+msgstr ""
+
+#: _deprecated/classes/class.course.php:183
+#: _deprecated/classes/class.course.php:217
+msgid "Try Now"
+msgstr ""
+
+#: _deprecated/classes/class.course.php:206
+#: _deprecated/classes/class.shortcodes.php:1643
+#: _deprecated/classes/class.shortcodes.php:1646
+msgid "Untitled Page"
+msgstr ""
+
+#: _deprecated/classes/class.course.settings.php:37
+msgid "Anyone "
+msgstr ""
+
+#: _deprecated/classes/class.course.settings.php:38
+#: include/coursepress/view/admin/course/class-edit.php:815
+msgid "Anyone with a pass code"
+msgstr ""
+
+#: _deprecated/classes/class.course.settings.php:39
+msgid "Anyone who completed the prerequisite course"
+msgstr ""
+
+#: _deprecated/classes/class.course.settings.php:41
+msgid "Registered User"
+msgstr ""
+
+#: _deprecated/classes/class.course.settings.php:42
+msgid "Registered user with a pass code"
+msgstr ""
+
+#: _deprecated/classes/class.course.settings.php:43
+msgid "Registered user who completed the prerequisite course"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:559
+msgid "All questions marked with \"* Mandatory\" require your input."
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:565
+msgid "The module data has been submitted successfully."
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:570
+#: _deprecated/classes/class.course.unit.module.php:574
+#: _deprecated/classes/class.course.unit.module.php:579
+msgid "Done"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:570
+#: _deprecated/classes/class.course.unit.module.php:574
+#: _deprecated/classes/class.course.unit.module.php:579
+#: _deprecated/classes/class.coursesearch.php:146
+#: _deprecated/classes/class.discussionsearch.php:74
+#: _deprecated/classes/class.instructorsearch.php:103
+#: _deprecated/classes/class.notificationsearch.php:74
+#: _deprecated/classes/class.studentsearch.php:116
+#: include/coursepress/helper/query/class-student.php:128
+#: include/coursepress/view/admin/course/class-edit.php:269
+#: include/coursepress/view/admin/course/class-edit.php:508
+#: include/coursepress/view/admin/course/class-edit.php:604
+#: include/coursepress/view/admin/course/class-edit.php:697
+#: include/coursepress/view/admin/course/class-edit.php:775
+msgid "Next"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:588
+msgid "Save Progress & Exit"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:611
+#: _deprecated/classes/class.shortcodes.php:4353
+#: _deprecated/classes/class.shortcodes.php:4355
+#: include/coursepress/data/shortcode/class-student.php:95
+msgid "Comment"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:839
+#: include/coursepress/helper/ui/class-module.php:317
+msgid ""
+"The title is used to identify this module element and is useful for "
+"assessment."
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:848
+msgid "Mandatory Answer"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:849
+msgid "A response is required to continue"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:859
+#: include/coursepress/helper/ui/class-module.php:323
+msgid "Assessable"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:860
+msgid "The answer will be graded"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:868
+#: include/coursepress/helper/ui/class-module.php:816
+#: include/coursepress/helper/ui/class-module.php:847
+msgid "Placeholder Text"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:869
+msgid "Additional instructions visible in the input field as a placeholder"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:881
+#: include/coursepress/helper/ui/class-module.php:319
+msgid "Show Title"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:882
+msgid "The title is displayed as a heading"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:890
+msgid "Minimum grade required"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:892
+msgid "Set the minimum grade (%) required to pass the task"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:902
+msgid "Limit Attempts"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:904
+msgid "Limit attempts of this task"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:912
+#: _deprecated/classes/class.course.unit.module.php:914
+msgid "* Mandatory"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:961
+msgid "Submit different answer"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:965
+msgid "(1 attempt remaining)"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:967
+msgid "(%d attempts remaining)"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:977
+msgid "Graded: "
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:981
+msgid "Passed"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:986
+msgid "Not yet passed"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:990
+msgid "Not Passed"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:999
+msgid "%d of %d correct"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:1013
+msgid "Grade Pending."
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.module.php:1023
+msgid "Time Estimation (mins)"
+msgstr ""
+
+#: _deprecated/classes/class.course.unit.php:283
+#: _deprecated/classes/class.course.unit.php:314
+#: _deprecated/classes/class.shortcodes.php:2876
+msgid "N/A"
+msgstr ""
+
+#: _deprecated/classes/class.coursepress-pdf.php:154
+#: include/coursepress/helper/class-pdf.php:222
+msgid "CoursePress Report"
+msgstr ""
+
+#: _deprecated/classes/class.coursesearch.php:147
+#: _deprecated/classes/class.discussionsearch.php:75
+#: _deprecated/classes/class.instructorsearch.php:104
+#: _deprecated/classes/class.notificationsearch.php:75
+#: _deprecated/classes/class.studentsearch.php:117
+#: include/coursepress/helper/query/class-student.php:129
+#: include/coursepress/view/admin/course/class-edit.php:507
+#: include/coursepress/view/admin/course/class-edit.php:603
+#: include/coursepress/view/admin/course/class-edit.php:696
+#: include/coursepress/view/admin/course/class-edit.php:774
+#: include/coursepress/view/admin/course/class-edit.php:975
+msgid "Previous"
+msgstr ""
+
+#: _deprecated/classes/class.coursesearch.php:156
+msgid "courses"
+msgstr ""
+
+#: _deprecated/classes/class.discussion.php:39
+#: include/coursepress/view/admin/setting/class-capabilities.php:73
+msgid "General"
+msgstr ""
+
+#: _deprecated/classes/class.discussionsearch.php:84
+msgid "discussion"
+msgstr ""
+
+#: _deprecated/classes/class.instructorsearch.php:92
+#: _deprecated/classes/class.studentsearch.php:105
+#: include/coursepress/helper/query/class-student.php:117
+msgid "Displaying %s&#8211;%s of %s"
+msgstr ""
+
+#: _deprecated/classes/class.instructorsearch.php:109
+msgid "instructors"
+msgstr ""
+
+#: _deprecated/classes/class.menumetabox.php:21
+msgid "CoursePress"
+msgstr ""
+
+#: _deprecated/classes/class.menumetabox.php:54
+#: _deprecated/classes/class.menumetabox.php:113
+#: _deprecated/classes/class.shortcodes.php:3714
+#: _deprecated/classes/class.shortcodes.php:3718
+#: _deprecated/coursepress.old.php:3429 _deprecated/coursepress.old.php:3521
+#: _deprecated/coursepress.old.php:5305 _deprecated/coursepress.old.php:5428
+#: _deprecated/coursepress.old.php:5569
+#: _deprecated/templates/instructor-single.php:8
+#: include/coursepress/data/class-course.php:22
+#: include/coursepress/data/class-shortcode.php:2288
+#: include/coursepress/data/class-shortcode.php:2292
+#: include/coursepress/data/shortcode/class-template.php:249
+#: include/coursepress/view/admin/class-coursepress.php:18
+#: include/coursepress/view/admin/setting/class-capabilities.php:74
+#: include/coursepress/view/front/class-course.php:822
+#: include/coursepress/view/front/class-general.php:47
+msgid "Courses"
+msgstr ""
+
+#: _deprecated/classes/class.menumetabox.php:61
+#: _deprecated/classes/class.pagination.php:201
+msgid "Pages"
+msgstr ""
+
+#: _deprecated/classes/class.menumetabox.php:110
+msgid "Course List"
+msgstr ""
+
+#: _deprecated/classes/class.menumetabox.php:120
+#: _deprecated/classes/class.menumetabox.php:123
+#: _deprecated/coursepress.old.php:5338 _deprecated/coursepress.old.php:5456
+#: _deprecated/coursepress.old.php:5595
+#: include/coursepress/view/front/class-dashboard.php:52
+#: include/coursepress/view/front/class-general.php:81
+msgid "My Courses"
+msgstr ""
+
+#: _deprecated/classes/class.menumetabox.php:130
+#: _deprecated/classes/class.menumetabox.php:133
+#: _deprecated/coursepress.old.php:5353 _deprecated/coursepress.old.php:5471
+#: _deprecated/coursepress.old.php:5609
+#: include/coursepress/view/front/class-general.php:96
+msgid "My Profile"
+msgstr ""
+
+#: _deprecated/classes/class.menumetabox.php:140
+msgid "CoursePress Login"
+msgstr ""
+
+#: _deprecated/classes/class.menumetabox.php:143
+#: _deprecated/classes/class.shortcodes.php:3905
+#: _deprecated/coursepress.old.php:5124
+#: _deprecated/templates/popup-window-login.php:2
+#: _deprecated/templates/popup-window-login.php:39
+#: include/coursepress/data/class-shortcode.php:2451
+msgid "Login"
+msgstr ""
+
+#: _deprecated/classes/class.menumetabox.php:150
+msgid "CoursePress Signup"
+msgstr ""
+
+#: _deprecated/classes/class.menumetabox.php:153
+#: _deprecated/classes/class.shortcodes.php:2959
+#: _deprecated/classes/class.shortcodes.php:3903
+#: include/coursepress/data/class-shortcode.php:2449
+msgid "Signup"
+msgstr ""
+
+#: _deprecated/classes/class.menumetabox.php:172
+#: include/coursepress/helper/ui/class-listtable.php:327
+msgid "Select All"
+msgstr ""
+
+#: _deprecated/classes/class.menumetabox.php:175
+msgid "Add to Menu"
+msgstr ""
+
+#: _deprecated/classes/class.notificationsearch.php:84
+msgid "notifications"
+msgstr ""
+
+#: _deprecated/classes/class.pagination.php:192
+#: _deprecated/templates/course-units-archive-grades.php:23
+msgid "of"
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:114
+#: include/coursepress/helper/extension/class-marketpress.php:33
+msgid "Included in the CoursePress Plugin"
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:130
+#: include/coursepress/helper/extension/class-marketpress.php:46
+msgid "WordPress.org Repository"
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:149
+msgid "Install Plugin"
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:150
+msgid "Installing Plugin: %s"
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:151
+msgid "Something went wrong with the plugin API."
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:152
+msgid "Install %1$s plugin in order to sell courses."
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:154
+msgid "Install %1$s"
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:155
+msgid "Activate %1$s plugin in order to sell courses"
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:156
+msgid "Return to MarketPress Installer"
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:157
+msgid "Return to the dashboard"
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:158
+msgid "Plugin activated successfully."
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:159
+msgid "The following plugin was activated successfully:"
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:160
+msgid "Installed and activated successfully."
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:161
+msgid "Dismiss this notice"
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:255
+msgid "Installed"
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:257
+msgid "Not Installed"
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:263
+msgid "Active"
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:265
+msgid "Inactive"
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:283
+msgid "Activate "
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:285
+msgid "Install & Activate "
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:308
+#: include/coursepress/helper/class-extension.php:101
+msgid "Install"
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:325
+#: include/coursepress/helper/class-extension.php:82
+msgid "Activate"
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:368
+#: include/coursepress/helper/class-extension.php:36
+msgid "Plugin"
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:369
+#: include/coursepress/helper/class-extension.php:37
+msgid "Source"
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:370
+#: include/coursepress/helper/class-extension.php:38
+#: include/coursepress/helper/table/class-courselist.php:43
+#: include/coursepress/helper/table/class-discussionlist.php:42
+#: include/coursepress/helper/table/class-notificationlist.php:42
+msgid "Status"
+msgstr ""
+
+#: _deprecated/classes/class.plugin-activation.php:513
+msgid "Return to the Dashboard"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:378
+#: include/coursepress/data/shortcode/class-course.php:391
+msgid "Course Start Date: "
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:421
+#: include/coursepress/data/shortcode/class-course.php:480
+msgid "Course End Date: "
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:424
+#: _deprecated/classes/class.shortcodes.php:470
+#: include/coursepress/data/shortcode/class-course.php:483
+#: include/coursepress/data/shortcode/class-course.php:527
+msgid "No End Date"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:467
+#: include/coursepress/data/shortcode/class-course.php:524
+msgid "Course Dates: "
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:471
+#: _deprecated/classes/class.shortcodes.php:625
+#: _deprecated/classes/class.shortcodes.php:2873
+#: include/coursepress/data/shortcode/class-course.php:528
+#: include/coursepress/data/shortcode/class-course.php:692
+msgid "Open-ended"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:518
+#: include/coursepress/data/shortcode/class-course.php:584
+msgid "Enrollment Start Date: "
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:521
+#: _deprecated/classes/class.shortcodes.php:624
+#: include/coursepress/data/shortcode/class-course.php:587
+#: include/coursepress/data/shortcode/class-course.php:691
+msgid "Enroll Anytime"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:566
+#: include/coursepress/data/shortcode/class-course.php:633
+msgid "Enrollment End Date: "
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:569
+msgid "Enroll Anytime: "
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:619
+#: include/coursepress/data/shortcode/class-course.php:686
+msgid "Enrollment Dates: "
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:620
+#: include/coursepress/data/shortcode/class-course.php:687
+msgid "You Enrolled on: "
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:705
+#: include/coursepress/data/shortcode/class-course.php:846
+msgid "Class Size: "
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:708
+#: include/coursepress/data/shortcode/class-course.php:849
+msgid "Unlimited"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:709
+#: include/coursepress/data/shortcode/class-course.php:850
+msgid "(%d places left)"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:771
+#: include/coursepress/data/shortcode/class-course.php:913
+msgid "Price:&nbsp;"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:774
+#: _deprecated/classes/class.shortcodes.php:2891
+#: include/coursepress/data/shortcode/class-course.php:916
+msgid "FREE"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:848
+#: include/coursepress/data/shortcode/class-course.php:1001
+msgid "Course Language: "
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:890
+#: include/coursepress/data/shortcode/class-course.php:1042
+msgid "Course Category: "
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:893
+#: include/coursepress/data/shortcode/class-course.php:1045
+msgid "None"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:946
+#: include/coursepress/data/shortcode/class-course.php:1472
+msgid "Estimated Duration:&nbsp;"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:994
+#: include/coursepress/data/shortcode/class-course.php:761
+msgid "Who can Enroll: "
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:997
+#: include/coursepress/data/shortcode/class-course.php:764
+msgid "Students are added by instructors."
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:998
+#: include/coursepress/data/shortcode/class-course.php:765
+msgid "Students need to complete \"%s\" first."
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:999
+#: include/coursepress/data/shortcode/class-course.php:766
+msgid "A passcode is required to enroll."
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:1000
+#: _deprecated/classes/class.shortcodes.php:2861
+#: include/coursepress/data/shortcode/class-course.php:767
+#: include/coursepress/view/admin/course/class-edit.php:814
+msgid "Anyone"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:1001
+#: include/coursepress/data/shortcode/class-course.php:768
+#: include/coursepress/view/admin/course/class-edit.php:820
+msgid "Registered users"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:1181
+#: include/coursepress/data/class-shortcode.php:79
+msgid "Course Full"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:1182
+#: _deprecated/classes/class.shortcodes.php:2916
+#: _deprecated/classes/class.shortcodes.php:2918
+#: _deprecated/classes/class.shortcodes.php:2942
+#: _deprecated/classes/class.shortcodes.php:2952
+#: _deprecated/classes/class.shortcodes.php:2957
+#: include/coursepress/data/class-shortcode.php:80
+msgid "Not available"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:1183
+#: include/coursepress/data/class-shortcode.php:81
+msgid "Enrollments Finished"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:1184
+#: include/coursepress/data/class-shortcode.php:82
+msgid "Enrollments Closed"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:1185
+#: include/coursepress/data/class-shortcode.php:83
+msgid "Enroll now"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:1186
+#: include/coursepress/data/class-shortcode.php:84
+msgid "Signup!"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:1187
+#: include/coursepress/data/class-shortcode.php:85
+msgid "Details"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:1188
+#: include/coursepress/data/class-shortcode.php:86
+msgid "Pre-requisite Required"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:1189
+#: include/coursepress/data/class-shortcode.php:87
+msgid "Passcode Required"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:1190
+#: include/coursepress/data/class-shortcode.php:88
+msgid "Not Available"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:1191
+#: include/coursepress/data/class-shortcode.php:89
+msgid "Start Learning"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:1192
+#: include/coursepress/data/class-shortcode.php:90
+msgid "Continue Learning"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:1521
+msgid "Free"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:1528
+#: _deprecated/widgets/course-structure.php:9
+#: include/coursepress/data/class-shortcode.php:428
+#: include/coursepress/view/admin/course/class-edit.php:356
+#: include/coursepress/view/admin/course/class-edit.php:374
+#: include/coursepress/view/admin/course/class-edit.php:384
+msgid "Course Structure"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:1709
+#: _deprecated/widgets/featured-course.php:9
+#: include/coursepress/data/class-shortcode.php:840
+msgid "Featured Course"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:1710
+#: include/coursepress/data/class-shortcode.php:841
+msgid "Find out more."
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:1891
+#: _deprecated/classes/class.shortcodes.php:2828
+#: include/coursepress/data/shortcode/class-course.php:1373
+#: include/coursepress/helper/table/class-coursestudent.php:43
+msgid "Withdraw"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:1893
+#: _deprecated/classes/class.shortcodes.php:2719
+#: _deprecated/classes/class.shortcodes.php:2830
+#: include/coursepress/data/class-shortcode.php:1463
+#: include/coursepress/data/shortcode/class-course.php:1375
+#: include/coursepress/data/shortcode/class-template.php:143
+msgid "Course Details"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:1979
+#: include/coursepress/data/class-shortcode.php:896
+msgid "Â« Previous"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:1980
+#: include/coursepress/data/class-shortcode.php:897
+msgid "Next Â»"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2029
+#: include/coursepress/data/class-shortcode.php:948
+#: include/coursepress/data/class-shortcode.php:1124
+msgid "The Instructor does not have any courses assigned yet."
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2031
+#: include/coursepress/data/class-shortcode.php:1126
+msgid "You have not yet enrolled in a course. Browse courses %s"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2052
+#: include/coursepress/data/class-shortcode.php:1067
+#: include/coursepress/data/class-shortcode.php:1147
+msgid "Manage Course"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2053
+#: _deprecated/coursepress.old.php:3528 _deprecated/coursepress.old.php:3532
+#: include/coursepress/data/class-course.php:29
+#: include/coursepress/data/class-course.php:33
+#: include/coursepress/data/class-shortcode.php:1148
+#: include/coursepress/helper/table/class-courselist.php:77
+msgid "View Course"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2254
+#: include/coursepress/data/class-shortcode.php:1340
+msgid "here"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2326
+#: _deprecated/classes/class.shortcodes.php:4269
+#: include/coursepress/data/class-shortcode.php:3115
+#: include/coursepress/data/shortcode/class-student.php:472
+msgid "%d of %d mandatory elements completed."
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2358
+#: _deprecated/classes/class.shortcodes.php:3271
+#: include/coursepress/data/class-shortcode.php:1832
+#: include/coursepress/data/shortcode/class-student.php:507
+msgid "Percent of the unit completion"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2425
+#: include/coursepress/data/shortcode/class-instructor.php:67
+msgid "Instructor"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2426
+#: _deprecated/coursepress.old.php:3452
+#: include/coursepress/data/shortcode/class-instructor.php:68
+#: include/coursepress/view/admin/setting/class-capabilities.php:77
+msgid "Instructors"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2432
+#: include/coursepress/data/shortcode/class-instructor.php:74
+msgid "View Full Profile"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2657
+#: _deprecated/coursepress.old.php:2595 _deprecated/coursepress.old.php:5374
+#: _deprecated/coursepress.old.php:5492
+#: include/coursepress/data/class-shortcode.php:1384
+msgid "Inbox"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2660
+#: include/coursepress/data/class-shortcode.php:1388
+msgid "Sent"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2661
+#: _deprecated/coursepress.old.php:2643
+#: include/coursepress/data/class-shortcode.php:1391
+msgid "New Message"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2700
+#: _deprecated/classes/class.shortcodes.php:3718
+#: _deprecated/coursepress.old.php:3598
+#: include/coursepress/data/class-shortcode.php:1439
+#: include/coursepress/data/class-shortcode.php:2292
+#: include/coursepress/data/class-unit.php:13
+#: include/coursepress/data/shortcode/class-template.php:368
+#: include/coursepress/helper/table/class-courselist.php:41
+#: include/coursepress/helper/table/class-courselist.php:75
+#: include/coursepress/helper/table/class-courselist.php:111
+#: include/coursepress/view/admin/setting/class-capabilities.php:76
+#: include/coursepress/view/front/class-course.php:754
+msgid "Units"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2701
+#: _deprecated/coursepress.old.php:3486 _deprecated/coursepress.old.php:3702
+#: _deprecated/templates/course-notifications-archive.php:17
+#: include/coursepress/data/class-notification.php:13
+#: include/coursepress/data/class-shortcode.php:1449
+#: include/coursepress/view/admin/communication/class-notification.php:11
+#: include/coursepress/view/admin/communication/class-notification.php:12
+#: include/coursepress/view/admin/setting/class-capabilities.php:80
+#: include/coursepress/view/admin/setting/class-capabilities.php:95
+#: include/coursepress/view/front/class-course.php:733
+msgid "Notifications"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2707
+#: _deprecated/coursepress.old.php:3492 _deprecated/coursepress.old.php:3729
+#: _deprecated/coursepress.old.php:3730
+#: _deprecated/templates/course-discussion-archive.php:17
+#: include/coursepress/data/class-discussion.php:14
+#: include/coursepress/data/class-shortcode.php:1456
+#: include/coursepress/view/admin/communication/class-discussion.php:11
+#: include/coursepress/view/admin/communication/class-discussion.php:12
+#: include/coursepress/view/admin/setting/class-capabilities.php:81
+#: include/coursepress/view/admin/setting/class-capabilities.php:96
+#: include/coursepress/view/front/class-course.php:617
+#: include/coursepress/view/front/class-course.php:658
+msgid "Discussions"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2717
+#: _deprecated/templates/archive-unit-workbook.php:33
+#: include/coursepress/data/class-shortcode.php:1460
+#: include/coursepress/view/front/class-course.php:708
+msgid "Workbook"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2779
+#: include/coursepress/data/class-shortcode.php:1531
+msgid "-- General --"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2835
+msgid "Infinite"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2838
+msgid "( %d left )"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2848
+msgid "Anyone with a Passcode"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2854
+msgid "Anyone who attanded to the %1s"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2854
+msgid "prerequisite course"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2866
+msgid "Public enrollments are disabled"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2905
+#: _deprecated/classes/class.shortcodes.php:2938
+#: _deprecated/classes/class.shortcodes.php:2950
+msgid "Finished"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2909
+msgid "Enroll Now"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2912
+msgid "Prerequisite Required"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2926
+#: _deprecated/classes/class.shortcodes.php:2963
+msgid "Populated"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2931
+msgid "Go to Class"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2935
+msgid "You are enrolled"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:2975
+msgid "Passcode: "
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:3248
+#: include/coursepress/data/class-shortcode.php:1810
+msgid "0 course units prepared yet. Please check back later."
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:3281
+#: include/coursepress/data/class-shortcode.php:1842
+msgid "Course: "
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:3741
+#: include/coursepress/data/class-shortcode.php:2315
+msgid "Send"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:3743
+#: include/coursepress/data/class-shortcode.php:2317
+msgid "Write a Reply or Comment"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:3782
+#: include/coursepress/data/class-shortcode.php:2356
+msgid "Reply"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:3886
+#: include/coursepress/data/class-shortcode.php:2432
+msgid "Page cannot be found"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:3899
+#: include/coursepress/data/class-shortcode.php:2445
+msgid "Invalid login."
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4006
+#: include/coursepress/data/class-shortcode.php:2538
+msgid ""
+"Your password must be at least %d characters long and have at least one "
+"letter and one number in it."
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4014
+#: _deprecated/classes/class.shortcodes.php:4020
+#: _deprecated/templates/student-settings.php:22
+#: include/coursepress/data/class-shortcode.php:2546
+#: include/coursepress/data/class-shortcode.php:2552
+#: include/coursepress/template/class-student.php:115
+msgid "Passwords don't match"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4032
+#: _deprecated/templates/student-settings.php:33
+#: include/coursepress/data/class-shortcode.php:2564
+#: include/coursepress/template/class-student.php:126
+msgid "E-mail address is not valid."
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4039
+#: _deprecated/coursepress.old.php:4710
+#: include/coursepress/data/class-shortcode.php:2571
+msgid "You must agree to the Terms of Service in order to signup."
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4083
+#: include/coursepress/data/class-shortcode.php:2618
+msgid ""
+"An error occurred while creating the account. Please check the form and try "
+"again."
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4088
+#: include/coursepress/data/class-shortcode.php:2623
+msgid "Sorry, that email address is already used!"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4092
+#: include/coursepress/data/class-shortcode.php:2627
+msgid "Username already exists. Please choose another one."
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4096
+#: _deprecated/classes/class.shortcodes.php:4100
+#: _deprecated/coursepress.old.php:4700
+#: include/coursepress/data/class-shortcode.php:2631
+#: include/coursepress/data/class-shortcode.php:2635
+msgid "All fields are required."
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4122
+#: _deprecated/templates/popup-window-signup.php:10
+#: _deprecated/templates/student-settings.php:57
+#: include/coursepress/data/class-shortcode.php:2663
+#: include/coursepress/data/class-shortcode.php:2928
+#: include/coursepress/helper/table/class-coursestudent.php:40
+#: include/coursepress/helper/table/class-reportstudents.php:41
+#: include/coursepress/template/class-student.php:155
+#: include/coursepress/view/admin/course/class-edit.php:577
+#: include/coursepress/view/admin/course/class-edit.php:578
+#: include/coursepress/view/admin/course/class-student.php:32
+msgid "First Name"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4129
+#: _deprecated/templates/popup-window-signup.php:14
+#: _deprecated/templates/student-settings.php:64
+#: include/coursepress/data/class-shortcode.php:2674
+#: include/coursepress/data/class-shortcode.php:2939
+#: include/coursepress/helper/table/class-coursestudent.php:41
+#: include/coursepress/helper/table/class-reportstudents.php:42
+#: include/coursepress/template/class-student.php:160
+#: include/coursepress/view/admin/course/class-edit.php:579
+#: include/coursepress/view/admin/course/class-edit.php:580
+#: include/coursepress/view/admin/course/class-student.php:33
+msgid "Last Name"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4136
+#: _deprecated/classes/class.shortcodes.php:4221
+#: _deprecated/templates/popup-window-login.php:9
+#: _deprecated/templates/popup-window-signup.php:18
+#: _deprecated/templates/student-settings.php:78
+#: include/coursepress/data/class-shortcode.php:2685
+#: include/coursepress/data/class-shortcode.php:2796
+#: include/coursepress/data/class-shortcode.php:2950
+#: include/coursepress/data/class-shortcode.php:3055
+#: include/coursepress/helper/table/class-coursestudent.php:39
+#: include/coursepress/helper/table/class-reportstudents.php:40
+#: include/coursepress/template/class-student.php:170
+msgid "Username"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4143
+#: _deprecated/templates/popup-window-signup.php:22
+#: _deprecated/templates/student-settings.php:71
+#: include/coursepress/data/class-shortcode.php:2696
+#: include/coursepress/data/class-shortcode.php:2961
+#: include/coursepress/template/class-student.php:165
+#: include/coursepress/view/admin/course/class-student.php:34
+msgid "E-mail"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4150
+#: _deprecated/classes/class.shortcodes.php:4226
+#: _deprecated/templates/popup-window-login.php:13
+#: _deprecated/templates/popup-window-signup.php:30
+#: _deprecated/templates/student-settings.php:85
+#: include/coursepress/data/class-shortcode.php:2707
+#: include/coursepress/data/class-shortcode.php:2800
+#: include/coursepress/data/class-shortcode.php:2972
+#: include/coursepress/data/class-shortcode.php:3059
+#: include/coursepress/template/class-student.php:175
+msgid "Password"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4157
+#: _deprecated/templates/student-settings.php:92
+#: include/coursepress/data/class-shortcode.php:2718
+#: include/coursepress/data/class-shortcode.php:2983
+#: include/coursepress/template/class-student.php:180
+msgid "Confirm Password"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4175
+#: include/coursepress/data/class-shortcode.php:2739
+msgid "Already have an account? %s%s%s!"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4175
+#: include/coursepress/data/class-shortcode.php:2739
+#: include/coursepress/data/shortcode/class-student.php:351
+msgid "Login to your account"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4179
+#: _deprecated/classes/class.shortcodes.php:4235
+#: _deprecated/templates/popup-window-login.php:35
+#: include/coursepress/data/class-shortcode.php:2742
+#: include/coursepress/data/class-shortcode.php:2812
+msgid "Create an Account"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4194
+#: _deprecated/templates/popup-window-signup.php:57
+#: include/coursepress/data/class-shortcode.php:2761
+#: include/coursepress/data/class-shortcode.php:3035
+msgid "Registrations are not allowed."
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4235
+#: include/coursepress/data/class-shortcode.php:2812
+msgid "Don't have an account? %s%s%s now!"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4241
+#: include/coursepress/data/class-shortcode.php:2815
+#: include/coursepress/data/class-shortcode.php:2856
+#: include/coursepress/data/class-shortcode.php:3075
+msgid "Forgot Password?"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4244
+#: _deprecated/coursepress.old.php:5406 _deprecated/coursepress.old.php:5523
+#: _deprecated/coursepress.old.php:5626
+#: include/coursepress/data/class-shortcode.php:2818
+#: include/coursepress/view/front/class-general.php:136
+msgid "Log In"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4314
+#: _deprecated/classes/class.shortcodes.php:4329
+#: include/coursepress/data/class-shortcode.php:3140
+msgid "All mandatory answers are required in previous unit."
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4316
+#: _deprecated/classes/class.shortcodes.php:4331
+#: include/coursepress/data/class-shortcode.php:3142
+msgid "Previous unit must be completed successfully."
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4319
+#: _deprecated/classes/class.shortcodes.php:4334
+#: include/coursepress/data/class-shortcode.php:3146
+msgid "Available"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4348
+#: include/coursepress/data/shortcode/class-student.php:88
+msgid "Element"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4349
+#: _deprecated/widgets/course-calendar.php:37
+#: _deprecated/widgets/course-structure.php:25
+#: _deprecated/widgets/featured-course.php:28
+#: _deprecated/widgets/latest-courses.php:19
+#: include/coursepress/data/shortcode/class-student.php:89
+#: include/coursepress/helper/table/class-courselist.php:40
+#: include/coursepress/helper/ui/class-module.php:316
+msgid "Title"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4350
+#: include/coursepress/data/shortcode/class-student.php:90
+msgid "Submitted"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4351
+#: include/coursepress/data/shortcode/class-student.php:91
+#: include/coursepress/helper/ui/class-module.php:336
+#: include/coursepress/helper/ui/class-module.php:706
+#: include/coursepress/helper/ui/class-module.php:744
+#: include/coursepress/helper/ui/class-module.php:780
+msgid "Answer"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4352
+#: include/coursepress/data/class-module.php:459
+#: include/coursepress/data/shortcode/class-student.php:92
+#: include/coursepress/view/admin/assessment/class-list.php:263
+#: include/coursepress/view/admin/assessment/class-list.php:371
+msgid "Grade"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4354
+#: include/coursepress/data/shortcode/class-student.php:94
+msgid "Description"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4356
+#: include/coursepress/data/shortcode/class-student.php:96
+#: include/coursepress/helper/class-javascript.php:209
+#: include/coursepress/view/admin/assessment/class-list.php:420
+msgid "View"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4359
+#: include/coursepress/data/shortcode/class-student.php:99
+#: include/coursepress/helper/class-javascript.php:96
+#: include/coursepress/helper/class-ui.php:331
+#: include/coursepress/helper/class-ui.php:333
+msgid "Pending"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4360
+#: include/coursepress/data/shortcode/class-student.php:100
+msgid "Unit Unread"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4361
+#: include/coursepress/data/shortcode/class-student.php:101
+msgid "Unit Read"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4362
+#: include/coursepress/data/class-module.php:457
+#: include/coursepress/data/shortcode/class-student.php:102
+msgid "Correct"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4363
+#: include/coursepress/data/class-module.php:458
+#: include/coursepress/data/shortcode/class-student.php:103
+msgid "Incorrect"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4364
+#: include/coursepress/data/shortcode/class-student.php:105
+msgid "**"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4482
+msgid "Not submitted"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4588
+msgid "0 input elements in the selected unit."
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:4603
+#: include/coursepress/data/shortcode/class-student.php:299
+msgid "Non-assessable elements."
+msgstr ""
+
+#: _deprecated/classes/class.studentsearch.php:122
+#: include/coursepress/helper/query/class-student.php:134
+msgid "students"
+msgstr ""
+
+#: _deprecated/classes/class.woocommerce-integration.php:28
+msgid "Parent Course"
+msgstr ""
+
+#: _deprecated/classes/class.woocommerce-integration.php:66
+#: _deprecated/coursepress.old.php:3437 _deprecated/coursepress.old.php:3522
+#: _deprecated/templates/popup-window-payment.php:36
+#: _deprecated/widgets/course-calendar.php:41
+#: _deprecated/widgets/course-structure.php:29
+#: _deprecated/widgets/featured-course.php:32
+#: include/coursepress/data/class-course.php:23
+#: include/coursepress/helper/table/class-discussionlist.php:41
+#: include/coursepress/helper/table/class-notificationlist.php:41
+#: include/coursepress/template/class-communication.php:192
+#: include/coursepress/view/admin/assessment/class-list.php:152
+#: include/coursepress/view/front/class-course.php:521
+msgid "Course"
+msgstr ""
+
+#: _deprecated/classes/class.woocommerce-integration.php:67
+msgid "Thank you for signing up for the course. We hope you enjoy your experience."
+msgstr ""
+
+#: _deprecated/classes/class.woocommerce-integration.php:72
+msgid "You can find the course in your <a href=\"%s\">Dashboard</a>"
+msgstr ""
+
+#: _deprecated/classes/class.woocommerce-integration.php:103
+msgid "WooCommerce Integration"
+msgstr ""
+
+#: _deprecated/classes/class.woocommerce-integration.php:109
+msgid "Use WooCommerce to sell courses"
+msgstr ""
+
+#: _deprecated/classes/class.woocommerce-integration.php:117
+msgid ""
+"If checked, WooCommerce will be use instead of the MarketPress for selling "
+"courses"
+msgstr ""
+
+#: _deprecated/classes/class.woocommerce-integration.php:125
+msgid "Redirect WooCommerce product post to a parent course post"
+msgstr ""
+
+#: _deprecated/classes/class.woocommerce-integration.php:133
+msgid ""
+"If checked, visitors who try to access WooCommerce single post will be "
+"automatically redirected to a parent course single post."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:1369
+msgid ""
+"<p>Thank you for signing up for <a href =\"%s\">%s</a>. We hope you enjoy "
+"your experience.</p>"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:1384
+msgid "You may track the status of this order here:<br />%s"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:1470
+#: include/coursepress/view/admin/course/class-edit.php:581
+msgid "E-Mail"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:1517
+msgid "Pay with PayPal"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:1521
+msgid "Bank Transfer"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:1525
+msgid "Pay by Credit Card"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:1955
+#: include/coursepress/view/admin/setting/class-capabilities.php:16
+msgid "Instructor Capabilities"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:1960
+msgid ""
+"Can't assign instructor capabilities. User has no assigned role on this "
+"blog. See 'Role' above."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:1971
+msgid "Capabilities"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:1974
+msgid "Granted Instructor Capabilities"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:1976
+msgid "Revoked Instructor Capabilities"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:2164
+msgid "Course Image"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:2481
+msgid "Add New Discussion"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:2619
+msgid "Sent Message"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:2836
+msgid "This Unit is not available at the moment. Please check back later."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3038
+#: include/coursepress/view/front/class-course.php:561
+#: include/coursepress/view/front/class-course.php:822
+msgid "All Courses"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3331
+msgid "There was an issue determining where %s is installed. Please reinstall it."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3439 _deprecated/coursepress.old.php:3527
+#: include/coursepress/data/class-course.php:28
+#: include/coursepress/view/admin/class-coursepress.php:74
+#: include/coursepress/view/admin/course/class-edit.php:24
+msgid "New Course"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3449 _deprecated/coursepress.old.php:3571
+#: _deprecated/widgets/course-categories.php:13
+#: _deprecated/widgets/course-categories.php:19
+#: include/coursepress/data/class-course.php:63
+#: include/coursepress/view/admin/class-coursepress.php:56
+#: include/coursepress/view/admin/setting/class-capabilities.php:75
+msgid "Course Categories"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3458
+#: include/coursepress/helper/table/class-courselist.php:42
+#: include/coursepress/helper/table/class-courselist.php:76
+#: include/coursepress/helper/table/class-coursestudent.php:19
+#: include/coursepress/helper/table/class-reportstudents.php:20
+#: include/coursepress/view/admin/setting/class-capabilities.php:79
+msgid "Students"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3473
+#: include/coursepress/view/admin/setting/class-capabilities.php:93
+msgid "Assessment"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3480
+#: include/coursepress/view/admin/assessment/class-report.php:12
+#: include/coursepress/view/admin/setting/class-capabilities.php:94
+#: include/coursepress/view/admin/setting/class-general.php:540
+msgid "Reports"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3500
+msgid "Certificates"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3507
+#: include/coursepress/view/admin/class-setting.php:22
+msgid "Settings"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3523 _deprecated/coursepress.old.php:3600
+#: _deprecated/coursepress.old.php:3626 _deprecated/coursepress.old.php:3652
+#: _deprecated/coursepress.old.php:3678 _deprecated/coursepress.old.php:3704
+#: _deprecated/coursepress.old.php:3731
+#: include/coursepress/data/class-course.php:24
+#: include/coursepress/data/class-discussion.php:16
+#: include/coursepress/data/class-module.php:26
+#: include/coursepress/data/class-notification.php:15
+#: include/coursepress/data/class-unit.php:15
+msgid "Create New"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3524
+#: include/coursepress/data/class-course.php:25
+msgid "Create New Course"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3525
+#: include/coursepress/data/class-course.php:26
+#: include/coursepress/view/admin/course/class-edit.php:30
+msgid "Edit Course"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3529
+#: include/coursepress/data/class-course.php:30
+#: include/coursepress/helper/table/class-courselist.php:319
+msgid "Search Courses"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3530
+#: include/coursepress/data/class-course.php:31
+msgid "No Courses Found"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3531
+#: include/coursepress/data/class-course.php:32
+msgid "No Courses found in Trash"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3572 _deprecated/coursepress.old.php:3579
+#: include/coursepress/data/class-course.php:64
+#: include/coursepress/data/class-course.php:71
+#: include/coursepress/view/admin/course/class-edit.php:235
+msgid "Course Category"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3573
+#: include/coursepress/data/class-course.php:65
+msgid "Search Course Categories"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3574
+#: include/coursepress/data/class-course.php:66
+#: include/coursepress/helper/table/class-courselist.php:251
+msgid "All Course Categories"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3575
+#: include/coursepress/data/class-course.php:67
+#: include/coursepress/view/admin/class-coursepress.php:55
+msgid "Edit Course Categories"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3576
+#: include/coursepress/data/class-course.php:68
+msgid "Update Course Category"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3577
+#: include/coursepress/data/class-course.php:69
+msgid "Add New Course Category"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3578
+#: include/coursepress/data/class-course.php:70
+msgid "New Course Category Name"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3599
+#: _deprecated/templates/page-add-new-discussion.php:41
+#: include/coursepress/data/class-unit.php:14
+#: include/coursepress/view/admin/assessment/class-list.php:153
+msgid "Unit"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3601
+#: include/coursepress/data/class-unit.php:16
+msgid "Create New Unit"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3602
+#: include/coursepress/data/class-unit.php:17
+msgid "Edit Unit"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3604
+#: include/coursepress/data/class-unit.php:19
+msgid "New Unit"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3605 _deprecated/coursepress.old.php:3609
+#: include/coursepress/data/class-unit.php:20
+#: include/coursepress/data/class-unit.php:24
+msgid "View Unit"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3606
+#: include/coursepress/data/class-unit.php:21
+msgid "Search Units"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3607
+#: include/coursepress/data/class-unit.php:22
+msgid "No Units Found"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3608
+#: include/coursepress/data/class-unit.php:23
+msgid "No Units found in Trash"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3624
+#: include/coursepress/data/class-module.php:24
+#: include/coursepress/view/admin/course/class-unitbuilder.php:170
+msgid "Modules"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3625
+#: include/coursepress/data/class-module.php:25
+msgid "Module"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3627
+#: include/coursepress/data/class-module.php:27
+msgid "Create New Module"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3628
+#: include/coursepress/data/class-module.php:28
+msgid "Edit Module"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3630
+#: include/coursepress/data/class-module.php:30
+msgid "New Module"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3631 _deprecated/coursepress.old.php:3635
+#: include/coursepress/data/class-module.php:31
+#: include/coursepress/data/class-module.php:35
+msgid "View Module"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3632
+#: include/coursepress/data/class-module.php:32
+msgid "Search Modules"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3633
+#: include/coursepress/data/class-module.php:33
+msgid "No Modules Found"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3634
+#: include/coursepress/data/class-module.php:34
+msgid "No Modules found in Trash"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3650
+msgid "Certificate Templates"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3651
+msgid "Certificate Template"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3653
+msgid "Create New Template"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3654
+msgid "Edit Template"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3656
+msgid "New Template"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3657 _deprecated/coursepress.old.php:3661
+msgid "View Template"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3658
+msgid "Search Templates"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3659
+msgid "No Templates Found"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3660
+msgid "No Templates found in Trash"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3676
+msgid "Module Responses"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3677
+msgid "Module Response"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3679
+msgid "Create New Response"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3680
+msgid "Edit Response"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3682
+msgid "New Response"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3683 _deprecated/coursepress.old.php:3687
+msgid "View Response"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3684
+msgid "Search Responses"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3685
+msgid "No Module Responses Found"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3686
+msgid "No Responses found in Trash"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3703
+#: include/coursepress/data/class-notification.php:14
+#: include/coursepress/helper/table/class-notificationlist.php:40
+msgid "Notification"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3705
+#: include/coursepress/data/class-notification.php:16
+msgid "Create New Notification"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3706
+#: include/coursepress/data/class-notification.php:17
+msgid "Edit Notification"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3708
+#: include/coursepress/data/class-notification.php:19
+#: include/coursepress/view/admin/communication/class-notification.php:89
+msgid "New Notification"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3709 _deprecated/coursepress.old.php:3713
+#: include/coursepress/data/class-notification.php:20
+#: include/coursepress/data/class-notification.php:24
+msgid "View Notification"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3710
+#: include/coursepress/data/class-notification.php:21
+#: include/coursepress/helper/table/class-notificationlist.php:276
+msgid "Search Notifications"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3711
+#: include/coursepress/data/class-notification.php:22
+msgid "No Notifications Found"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3712
+#: include/coursepress/data/class-notification.php:23
+msgid "No Notifications found in Trash"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3732
+#: include/coursepress/data/class-discussion.php:17
+msgid "Create New Discussion"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3733
+#: include/coursepress/data/class-discussion.php:18
+msgid "Edit Discussion"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3735
+#: include/coursepress/data/class-discussion.php:20
+#: include/coursepress/template/class-communication.php:168
+#: include/coursepress/view/admin/communication/class-discussion.php:91
+msgid "New Discussion"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3736 _deprecated/coursepress.old.php:3740
+#: include/coursepress/data/class-discussion.php:21
+#: include/coursepress/data/class-discussion.php:25
+msgid "View Discussion"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3737
+#: include/coursepress/data/class-discussion.php:22
+#: include/coursepress/helper/table/class-discussionlist.php:276
+msgid "Search Discussions"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3738
+#: include/coursepress/data/class-discussion.php:23
+msgid "No Discussions Found"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3739
+#: include/coursepress/data/class-discussion.php:24
+msgid "No Discussions found in Trash"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:3852 _deprecated/coursepress.old.php:3894
+#: _deprecated/coursepress.old.php:3949 _deprecated/coursepress.old.php:4052
+#: _deprecated/coursepress.old.php:4137 _deprecated/coursepress.old.php:4284
+#: _deprecated/coursepress.old.php:4285 _deprecated/coursepress.old.php:4335
+msgid "Invalid request. Security check failed."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4035
+msgid "Instructor already added."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4243
+#: include/coursepress/data/class-instructor.php:328
+msgid "Invitation successfully sent."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4256 _deprecated/coursepress.old.php:4257
+#: include/coursepress/data/class-instructor.php:342
+msgid "Email failed to send."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4271
+msgid "Invitation already exists."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4321
+msgid "Instructor invitation cancelled."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4413
+msgid "<h3>Invitation activated.</h3>"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4414
+msgid ""
+"<p>Congratulations. You are now an instructor in the following course:</p>\n"
+"\t\t\t\t\t\t\t\t\t\t<p>%s</p>\n"
+"\t\t\t\t\t\t\t\t\t"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4433
+msgid "<h3>Invalid Invitation</h3>"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4434
+msgid ""
+"\n"
+"\t\t\t\t\t\t\t<p>This invitation link is not associated with your email "
+"address.</p>\n"
+"\t\t\t\t\t\t\t<p>Please contact your course administator and ask them to "
+"send a new invitation to the email address that you have associated with "
+"your account.</p>\n"
+"\t\t\t\t\t\t"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4454
+msgid "<h3>Invitation not found.</h3>"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4455
+msgid ""
+"\n"
+"\t\t\t\t\t\t\t<p>This invitation could not be found or is no longer "
+"available.</p>\n"
+"\t\t\t\t\t\t\t<p>Please contact us if you believe this to be an error.</p>\n"
+"\t\t\t\t\t\t"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4473
+msgid "<h3>Login Required</h3>"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4474
+msgid ""
+"\n"
+"\t\t\t\t\t\t\t<p>To accept your invitation request you will need to be "
+"logged in.</p>\n"
+"\t\t\t\t\t\t\t<p>Please login with the account associated with this "
+"email.</p>\n"
+"\t\t\t\t\t\t"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4701
+msgid "Username must be at least 4 characters in length"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4702
+msgid "Username already exists or invalid. Please choose another one."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4703
+msgid "E-mail already exists or invalid. Please choose another one."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4704
+msgid "E-mails mismatch."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4705
+msgid "Passwords mismatch."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4706
+msgid "Password must be at least %d characters in length."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4708
+msgid "Username and/or password is not valid."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4709
+msgid "Passcode is not valid."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4724
+msgid ""
+"Please confirm that you want to withdraw from the course. If you withdraw, "
+"you will no longer be able to see your records for this course."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4765
+msgid "The data has been saved successfully."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4772
+msgid "Your progress has been saved successfully."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4890
+msgid "Please confirm that you want to remove the instructor from this course?"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4891
+msgid ""
+"Please confirm that you want to cancel the invite. Instuctor will receive a "
+"warning when trying to activate."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4892
+msgid ""
+"Please confirm that you want to permanently delete the course, its units, "
+"unit elements and responses?"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4893
+msgid ""
+"Please confirm that you want to permanently delete this student answer / "
+"reponse?"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4894
+msgid "Please confirm that you want to permanently delete the notification?"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4895
+msgid "Please confirm that you want to permanently delete the discussion?"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4896
+msgid ""
+"Please confirm that you want to withdraw student from this course. If you "
+"withdraw, you will no longer be able to see student's records for this "
+"course."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4897
+msgid ""
+"Please confirm that you want to permanently delete the unit, its elements "
+"and responses?"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4899
+msgid ""
+"Please confirm that you want to permanently delete selected element and its "
+"responses?"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4900
+msgid ""
+"Please confirm that you want to permanently delete this unit page, all its "
+"elements and student responses?"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4901
+msgid "Please confirm that you want to remove this unit page and all its elements?"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4902
+msgid "Please confirm that you want to remove selected element?"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4903
+msgid "Delete unit page and all elements"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4904 _deprecated/coursepress.old.php:4962
+msgid "Remove"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4905
+msgid "Class name cannot be empty"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4906
+msgid "Class name already exists"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4931
+msgid "Please confirm that you want to withdraw all students from this class?"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4932
+msgid ""
+"Please confirm that you want to permanently delete the class? All students "
+"form this class will be moved to the Default class automatically."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4933
+msgid ""
+"You have selected 'This is a Paid Course'.\n"
+" In order to continue you must first setup a payment gateway by clicking on "
+"'Setup Payment Gateways'"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4934
+msgid ""
+"<div>You have successfully completed your Basic Course "
+"Setup.</div><div>This can be changed anytime by clicking on \"Course "
+"Overview\".</div><div>Add and create <strong>Units</strong> for your course "
+"and add <strong>Students</strong>.</div><div>You must have at least "
+"<strong>one</strong> unit created to publish the course.</div>"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4935
+msgid "<div>Marketpress has been activated successfully.</div>"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4936
+msgid "<strong>Course Name</strong> is a required field."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4937
+msgid "<strong>Course Excerpt</strong> is a required field."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4938
+msgid "<strong>Course Description</strong> is a required field."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4939
+msgid "<strong>Course Start Date</strong> is a required field."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4940
+msgid ""
+"<strong>Course Start Date</strong> is a required field when \"This course "
+"has no end date\" is <strong>not</strong> selected."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4941
+msgid ""
+"<strong>Enrollment Start Date</strong> is a required field when \"Users can "
+"enroll anytime\" is <strong>not</strong> selected."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4942
+msgid ""
+"<strong>Enrollment End Date</strong> is a required field when \"Users can "
+"enroll anytime\" is <strong>not</strong> selected."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4943
+msgid "Value can not be 0 if \"Limit class size\" is selected."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4944
+msgid ""
+"<strong>Pass Code</strong> required when \"Anyone with a pass code\" is "
+"selected"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4945
+msgid ""
+"<strong>Payment Gateway</strong> needs to be setup before you can sell this "
+"course."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4946
+msgid ""
+"<strong>Price</strong> is a required field when \"This is a Paid Course\" "
+"is selected."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4947
+msgid ""
+"<strong>Sale Price</strong> is a required field when \"Enable Sale Price\" "
+"is selected."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4948
+msgid ""
+"There is some information missing or incorrect. Please check your input and "
+"try again."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:4963
+msgid "Please confirm that you want to permanently delete the group?"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:5020
+msgid "Maximum of 4 certificate elements are allowed per row."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:5032
+msgid ""
+"Please confirm that you want to remove the student and the all associated "
+"records?"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:5041
+msgid ""
+"Please confirm that you want to remove the instructor and the all "
+"associated records?"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:5095
+msgid "Enrollment"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:5152
+#: _deprecated/templates/popup-window-signup.php:2
+msgid "Sign Up"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:5180
+msgid "Dashboard - Courses"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:5206
+msgid "Dashboard - My Profile"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:5255
+msgid ""
+"<strong>%s is almost ready</strong>. You must <a href "
+"=\"options-permalink.php\">update your permalink structure</a> to something "
+"other than the default for it to work."
+msgstr ""
+
+#: _deprecated/coursepress.old.php:5268 _deprecated/coursepress.old.php:5404
+#: _deprecated/coursepress.old.php:5521 _deprecated/coursepress.old.php:5624
+#: include/coursepress/view/front/class-general.php:134
+msgid "Log Out"
+msgstr ""
+
+#: _deprecated/coursepress.old.php:5321 _deprecated/coursepress.old.php:5443
+#: _deprecated/coursepress.old.php:5584
+#: _deprecated/templates/enrollment-process.php:37
+#: _deprecated/templates/enrollment-process.php:46
+#: _deprecated/templates/popup-window-success-enrollment.php:7
+#: include/coursepress/helper/class-templatetag.php:778
+#: include/coursepress/helper/class-templatetag.php:823
+#: include/coursepress/helper/setting/class-email.php:137
+#: include/coursepress/helper/setting/class-email.php:208
+#: include/coursepress/view/front/class-general.php:63
+msgid "Dashboard"
+msgstr ""
+
+#: _deprecated/templates/archive-unit-workbook.php:21
+#: _deprecated/templates/course-units-archive.php:14
+msgid "Course Complete"
+msgstr ""
+
+#: _deprecated/templates/archive-unit-workbook.php:25
+msgid "Course progress: "
+msgstr ""
+
+#: _deprecated/templates/archive-unit-workbook.php:51
+msgid "Unit progress: "
+msgstr ""
+
+#: _deprecated/templates/archive-unit-workbook.php:63
+msgid "There are no activities to complete in this unit."
+msgstr ""
+
+#: _deprecated/templates/archive-unit-workbook.php:71
+msgid "0 Units in the course"
+msgstr ""
+
+#: _deprecated/templates/course-discussion-archive.php:21
+msgid "Ask a Question"
+msgstr ""
+
+#: _deprecated/templates/course-discussion-archive.php:45
+#: _deprecated/templates/course-discussion-archive.php:61
+msgid "Comments"
+msgstr ""
+
+#: _deprecated/templates/course-discussion-archive.php:71
+msgid "0 discussions. Start one, ask a question."
+msgstr ""
+
+#: _deprecated/templates/course-notifications-archive.php:52
+msgid "0 notifications. Please check back later."
+msgstr ""
+
+#: _deprecated/templates/course-units-archive-grades.php:9
+msgid "Course Grades"
+msgstr ""
+
+#: _deprecated/templates/course-units-archive-grades.php:23
+msgid "elements completed"
+msgstr ""
+
+#: _deprecated/templates/course-units-archive-grades.php:25
+msgid "Read-only"
+msgstr ""
+
+#: _deprecated/templates/course-units-archive-grades.php:33
+#: _deprecated/templates/course-units-archive.php:48
+#: include/coursepress/data/class-shortcode.php:822
+msgid "0 units in the course currently. Please check back later."
+msgstr ""
+
+#: _deprecated/templates/course-units-archive-grades.php:39
+msgid "TOTAL:"
+msgstr ""
+
+#: _deprecated/templates/course-units-archive.php:18
+msgid "Course Units"
+msgstr ""
+
+#: _deprecated/templates/course-units-archive.php:41
+#: include/coursepress/data/class-shortcode.php:735
+msgid " [DRAFT]"
+msgstr ""
+
+#: _deprecated/templates/enrollment-process.php:37
+#: _deprecated/templates/enrollment-process.php:46
+msgid ""
+"Congratulations, you have successfully enrolled in \"%s\" course! Check "
+"your %s for more info."
+msgstr ""
+
+#: _deprecated/templates/enrollment-process.php:40
+#: _deprecated/templates/enrollment-process.php:48
+msgid "Something went wrong during the enrollment process. Please try again later."
+msgstr ""
+
+#: _deprecated/templates/enrollment-process.php:55
+msgid "Passcode is not valid. Please %s and try again."
+msgstr ""
+
+#: _deprecated/templates/enrollment-process.php:55
+msgid "go back"
+msgstr ""
+
+#: _deprecated/templates/enrollment-process.php:65
+msgid "Please select a course first you want to enroll in."
+msgstr ""
+
+#: _deprecated/templates/enrollment-process.php:68
+msgid "You must be logged in in order to complete the action"
+msgstr ""
+
+#: _deprecated/templates/page-add-new-discussion.php:26
+msgid "Question description is required."
+msgstr ""
+
+#: _deprecated/templates/page-add-new-discussion.php:30
+msgid "Question title is required."
+msgstr ""
+
+#: _deprecated/templates/page-add-new-discussion.php:42
+msgid "Course General"
+msgstr ""
+
+#: _deprecated/templates/page-add-new-discussion.php:44
+msgid "Question"
+msgstr ""
+
+#: _deprecated/templates/page-add-new-discussion.php:45
+msgid "Title of your question"
+msgstr ""
+
+#: _deprecated/templates/page-add-new-discussion.php:46
+msgid "Question description..."
+msgstr ""
+
+#: _deprecated/templates/page-add-new-discussion.php:48
+msgid "Ask this Question"
+msgstr ""
+
+#: _deprecated/templates/page-add-new-discussion.php:50
+#: include/coursepress/data/shortcode/class-student.php:343
+#: include/coursepress/data/shortcode/class-student.php:360
+#: include/coursepress/template/class-communication.php:216
+msgid "Cancel"
+msgstr ""
+
+#: _deprecated/templates/page-inbox.php:11
+#: _deprecated/templates/page-new-message.php:14
+#: _deprecated/templates/page-sent-messages.php:11
+msgid "Messaging plugin is not active."
+msgstr ""
+
+#: _deprecated/templates/page-inbox.php:14
+#: _deprecated/templates/page-new-message.php:17
+#: _deprecated/templates/page-sent-messages.php:14
+msgid "Messaging is not allowed."
+msgstr ""
+
+#: _deprecated/templates/popup-window-login.php:6
+msgid "Login with your existing username and password"
+msgstr ""
+
+#: _deprecated/templates/popup-window-login.php:22
+#: _deprecated/templates/popup-window-signup.php:51
+#: include/coursepress/view/admin/course/class-edit.php:882
+msgid "Course Passcode"
+msgstr ""
+
+#: _deprecated/templates/popup-window-payment.php:32
+msgid "Payment"
+msgstr ""
+
+#: _deprecated/templates/popup-window-payment.php:32
+msgid "Payment Options"
+msgstr ""
+
+#: _deprecated/templates/popup-window-payment.php:37
+msgid "Price"
+msgstr ""
+
+#: _deprecated/templates/popup-window-signup.php:7
+msgid "All fields are required"
+msgstr ""
+
+#: _deprecated/templates/popup-window-signup.php:26
+msgid "E-mail Confirmation"
+msgstr ""
+
+#: _deprecated/templates/popup-window-signup.php:34
+msgid "Password Confirmation"
+msgstr ""
+
+#: _deprecated/templates/popup-window-signup.php:65
+msgid "Already have an Account?"
+msgstr ""
+
+#: _deprecated/templates/popup-window-signup.php:74
+msgid "Create Account"
+msgstr ""
+
+#: _deprecated/templates/popup-window-success-enrollment.php:2
+msgid "Congratulations"
+msgstr ""
+
+#: _deprecated/templates/popup-window-success-enrollment.php:12
+msgid "Congratulations image"
+msgstr ""
+
+#: _deprecated/templates/popup-window-success-enrollment.php:14
+msgid "You have successfully enrolled in %s"
+msgstr ""
+
+#: _deprecated/templates/popup-window-success-enrollment.php:16
+msgid "You will receive an e-mail confirmation shortly."
+msgstr ""
+
+#: _deprecated/templates/popup-window-success-enrollment.php:19
+msgid "You course will be available at any time in your %s"
+msgstr ""
+
+#: _deprecated/templates/popup-window-success-enrollment.php:27
+msgid "Start Learning Now"
+msgstr ""
+
+#: _deprecated/templates/student-dashboard.php:21
+#: include/coursepress/template/class-student.php:22
+msgid "Courses you manage:"
+msgstr ""
+
+#: _deprecated/templates/student-dashboard.php:36
+#: include/coursepress/template/class-student.php:39
+msgid "You are not enrolled in any courses."
+msgstr ""
+
+#: _deprecated/templates/student-dashboard.php:37
+#: include/coursepress/template/class-student.php:40
+msgid "Here are a few to help you get started:"
+msgstr ""
+
+#: _deprecated/templates/student-dashboard.php:44
+#: include/coursepress/template/class-student.php:49
+msgid "Your current courses:"
+msgstr ""
+
+#: _deprecated/templates/student-dashboard.php:59
+#: include/coursepress/template/class-student.php:65
+msgid "Completed courses:"
+msgstr ""
+
+#: _deprecated/templates/student-settings.php:10
+msgid "Changed can't be saved because nonce didn't verify."
+msgstr ""
+
+#: _deprecated/templates/student-settings.php:41
+#: include/coursepress/template/class-student.php:133
+msgid "Profile has been updated successfully."
+msgstr ""
+
+#: _deprecated/templates/student-settings.php:44
+#: include/coursepress/template/class-student.php:136
+msgid "An error occured while updating. Please check the form and try again."
+msgstr ""
+
+#: _deprecated/templates/student-settings.php:86
+#: include/coursepress/template/class-student.php:176
+msgid "Won't change if empty."
+msgstr ""
+
+#: _deprecated/widgets/course-calendar.php:9
+msgid "Displays the course calendar."
+msgstr ""
+
+#: _deprecated/widgets/course-calendar.php:11
+msgid "Course Calendar"
+msgstr ""
+
+#: _deprecated/widgets/course-calendar.php:13
+msgid "Light theme - Block"
+msgstr ""
+
+#: _deprecated/widgets/course-calendar.php:14
+msgid "Light theme - Line"
+msgstr ""
+
+#: _deprecated/widgets/course-calendar.php:15
+msgid "Dark theme - Block"
+msgstr ""
+
+#: _deprecated/widgets/course-calendar.php:16
+msgid "Dark theme - Line"
+msgstr ""
+
+#: _deprecated/widgets/course-calendar.php:17
+msgid "Theme/Custom CSS"
+msgstr ""
+
+#: _deprecated/widgets/course-calendar.php:43
+#: _deprecated/widgets/course-structure.php:31
+msgid "- current -"
+msgstr ""
+
+#: _deprecated/widgets/course-calendar.php:55
+msgid "Previous Month Text:"
+msgstr ""
+
+#: _deprecated/widgets/course-calendar.php:56
+msgid "« Previous"
+msgstr ""
+
+#: _deprecated/widgets/course-calendar.php:58
+msgid "Next Month Text:"
+msgstr ""
+
+#: _deprecated/widgets/course-calendar.php:59
+msgid "Next »"
+msgstr ""
+
+#: _deprecated/widgets/course-calendar.php:62
+msgid "Dates indicators"
+msgstr ""
+
+#: _deprecated/widgets/course-categories.php:10
+msgid "A list or dropdown of course categories."
+msgstr ""
+
+#: _deprecated/widgets/course-categories.php:69
+msgid "Title:"
+msgstr ""
+
+#: _deprecated/widgets/course-categories.php:74
+msgid "Show course counts"
+msgstr ""
+
+#: _deprecated/widgets/course-structure.php:7
+msgid "Displays a selected course structure"
+msgstr ""
+
+#: _deprecated/widgets/featured-course.php:7
+msgid "Displays a selected course as featured"
+msgstr ""
+
+#: _deprecated/widgets/featured-course.php:45
+msgid "Featured Media"
+msgstr ""
+
+#: _deprecated/widgets/featured-course.php:47
+#: include/coursepress/view/admin/setting/class-general.php:387
+#: include/coursepress/view/admin/setting/class-general.php:442
+msgid "Priority Mode (default)"
+msgstr ""
+
+#: _deprecated/widgets/featured-course.php:48
+#: include/coursepress/view/admin/course/class-edit.php:301
+#: include/coursepress/view/admin/setting/class-general.php:388
+#: include/coursepress/view/admin/setting/class-general.php:443
+msgid "Featured Video"
+msgstr ""
+
+#: _deprecated/widgets/featured-course.php:49
+#: include/coursepress/view/admin/setting/class-general.php:389
+#: include/coursepress/view/admin/setting/class-general.php:444
+msgid "List Image"
+msgstr ""
+
+#: _deprecated/widgets/featured-course.php:55
+msgid "Priority Media"
+msgstr ""
+
+#: _deprecated/widgets/featured-course.php:56
+msgid "Priority needs to be set above."
+msgstr ""
+
+#: _deprecated/widgets/featured-course.php:58
+#: include/coursepress/view/admin/setting/class-general.php:410
+#: include/coursepress/view/admin/setting/class-general.php:465
+msgid "Featured Video (image fallback)"
+msgstr ""
+
+#: _deprecated/widgets/featured-course.php:59
+#: include/coursepress/view/admin/setting/class-general.php:411
+#: include/coursepress/view/admin/setting/class-general.php:466
+msgid "List Image (video fallback)"
+msgstr ""
+
+#: _deprecated/widgets/featured-course.php:65
+#: _deprecated/widgets/latest-courses.php:36
+msgid "Button Title"
+msgstr ""
+
+#: _deprecated/widgets/featured-course.php:66
+msgid "Find out more"
+msgstr ""
+
+#: _deprecated/widgets/latest-courses.php:7
+msgid "Displays latest courses"
+msgstr ""
+
+#: _deprecated/widgets/latest-courses.php:9
+msgid "Latest Courses"
+msgstr ""
+
+#: _deprecated/widgets/latest-courses.php:23
+msgid "Number of Courses"
+msgstr ""
+
+#: _deprecated/widgets/latest-courses.php:37
+msgid "See All Courses"
+msgstr ""
+
+#: include/coursepress/data/class-course.php:103
+msgid "New Course added successfully!"
+msgstr ""
+
+#: include/coursepress/data/class-course.php:104
+msgid "Course updated successfully."
+msgstr ""
+
+#: include/coursepress/data/class-course.php:105
+msgid "Unit status changed successfully"
+msgstr ""
+
+#: include/coursepress/data/class-course.php:106
+msgid "Unit deleted successfully"
+msgstr ""
+
+#: include/coursepress/data/class-course.php:107
+msgid "New Unit added successfully!"
+msgstr ""
+
+#: include/coursepress/data/class-course.php:108
+msgid "Unit updated successfully."
+msgstr ""
+
+#: include/coursepress/data/class-course.php:109
+msgid "Student added to the class successfully."
+msgstr ""
+
+#: include/coursepress/data/class-course.php:110
+msgid "New class has been added successfully."
+msgstr ""
+
+#: include/coursepress/data/class-course.php:111
+msgid "Selected class has been deleted successfully."
+msgstr ""
+
+#: include/coursepress/data/class-course.php:112
+msgid "Selected student has been withdrawed successfully from the course."
+msgstr ""
+
+#: include/coursepress/data/class-course.php:113
+msgid "Selected students has been withdrawed successfully from the course."
+msgstr ""
+
+#: include/coursepress/data/class-course.php:114
+msgid "Invitation sent sucessfully."
+msgstr ""
+
+#: include/coursepress/data/class-course.php:115
+msgid "Successfully added as instructor."
+msgstr ""
+
+#: include/coursepress/data/class-discussion.php:15
+#: include/coursepress/helper/table/class-discussionlist.php:40
+#: include/coursepress/helper/ui/class-module.php:304
+#: include/coursepress/template/class-communication.php:140
+msgid "Discussion"
+msgstr ""
+
+#: include/coursepress/data/class-discussion.php:61
+#: include/coursepress/data/class-notification.php:60
+#: include/coursepress/helper/table/class-discussionlist.php:245
+#: include/coursepress/helper/table/class-notificationlist.php:245
+#: include/coursepress/view/admin/communication/class-notification.php:142
+msgid "All courses"
+msgstr ""
+
+#: include/coursepress/data/class-discussion.php:65
+#: include/coursepress/view/admin/assessment/class-report.php:285
+#: include/coursepress/view/admin/communication/class-discussion.php:153
+msgid "All units"
+msgstr ""
+
+#: include/coursepress/data/class-instructor.php:335
+msgid "Invitation already exists. Invitation was re-sent."
+msgstr ""
+
+#: include/coursepress/data/class-module.php:343
+msgid "Click here to cancel reply."
+msgstr ""
+
+#: include/coursepress/data/class-module.php:446
+msgid "Success!"
+msgstr ""
+
+#: include/coursepress/data/class-module.php:446
+msgid "Quiz not passed."
+msgstr ""
+
+#: include/coursepress/data/class-module.php:447
+msgid "You have successfully passed the quiz. Here are your results."
+msgstr ""
+
+#: include/coursepress/data/class-module.php:447
+msgid "You did not pass the quiz this time. Here are your results."
+msgstr ""
+
+#: include/coursepress/data/class-module.php:456
+msgid "Total Questions"
+msgstr ""
+
+#: include/coursepress/data/class-shortcode.php:91
+msgid "Access Course"
+msgstr ""
+
+#: include/coursepress/data/class-shortcode.php:419
+msgid "Preview"
+msgstr ""
+
+#: include/coursepress/data/class-shortcode.php:530
+msgid "Untitled Page %s"
+msgstr ""
+
+#: include/coursepress/data/class-shortcode.php:794
+msgid "Mod"
+msgstr ""
+
+#: include/coursepress/data/class-shortcode.php:950
+msgid ""
+"You are not enrolled in any courses. <a href=\"%s\">See available "
+"courses.</a>"
+msgstr ""
+
+#: include/coursepress/data/class-shortcode.php:955
+msgid "Courses you manage"
+msgstr ""
+
+#: include/coursepress/data/class-shortcode.php:956
+msgid "Current courses"
+msgstr ""
+
+#: include/coursepress/data/class-shortcode.php:957
+msgid "Completed courses"
+msgstr ""
+
+#: include/coursepress/data/class-shortcode.php:958
+msgid "Suggested courses"
+msgstr ""
+
+#: include/coursepress/data/class-shortcode.php:959
+msgid ""
+"You are not enrolled in any courses.<br />Here are a few you might like, or "
+"<a href=\"%s\">see all available courses.</a>"
+msgstr ""
+
+#: include/coursepress/data/class-shortcode.php:1051
+#: include/coursepress/data/class-shortcode.php:1058
+msgid "Go to Course"
+msgstr ""
+
+#: include/coursepress/data/class-shortcode.php:2851
+msgid ""
+"Already have an account? <a href=\"%s\" class=\"%s\" id=\"%s\">Login to "
+"your account</a>!"
+msgstr ""
+
+#: include/coursepress/data/class-shortcode.php:2855
+msgid ""
+"Don’t have an account? <a href=\"%s\" class=\"%s\" id=\"%s\">Create an "
+"Account</a> now!"
+msgstr ""
+
+#: include/coursepress/data/class-shortcode.php:3159
+msgid "Share"
+msgstr ""
+
+#: include/coursepress/data/shortcode/class-course.php:430
+msgid "Course Length: "
+msgstr ""
+
+#: include/coursepress/data/shortcode/class-course.php:636
+msgid "Enroll Anytime "
+msgstr ""
+
+#: include/coursepress/data/shortcode/class-student.php:93
+#: include/coursepress/view/admin/assessment/class-list.php:372
+msgid "Feedback"
+msgstr ""
+
+#: include/coursepress/data/shortcode/class-student.php:104
+msgid "This unit has no activities."
+msgstr ""
+
+#: include/coursepress/data/shortcode/class-student.php:171
+msgid "Course completion: "
+msgstr ""
+
+#: include/coursepress/data/shortcode/class-student.php:183
+msgid "Unit Progress: %s%%"
+msgstr ""
+
+#: include/coursepress/data/shortcode/class-student.php:269
+#: include/coursepress/template/class-module.php:456
+#: include/coursepress/view/admin/assessment/class-list.php:272
+msgid "Ungraded"
+msgstr ""
+
+#: include/coursepress/data/shortcode/class-student.php:299
+msgid "Mandatory answers"
+msgstr ""
+
+#: include/coursepress/data/shortcode/class-student.php:334
+msgid "Create new account"
+msgstr ""
+
+#: include/coursepress/data/shortcode/class-student.php:342
+msgid "Create an account"
+msgstr ""
+
+#: include/coursepress/data/shortcode/class-student.php:359
+msgid "Log in"
+msgstr ""
+
+#: include/coursepress/data/shortcode/class-student.php:367
+msgid "Successfully enrolled."
+msgstr ""
+
+#: include/coursepress/data/shortcode/class-student.php:370
+msgid "Congratulations! You have successfully enrolled. Click below to get started."
+msgstr ""
+
+#: include/coursepress/data/shortcode/class-template.php:219
+msgid "About this course"
+msgstr ""
+
+#: include/coursepress/data/shortcode/class-template.php:300
+msgid "&laquo; Previous"
+msgstr ""
+
+#: include/coursepress/data/shortcode/class-template.php:301
+msgid "Next &raquo;"
+msgstr ""
+
+#: include/coursepress/data/shortcode/class-template.php:302
+msgid "Next Section"
+msgstr ""
+
+#: include/coursepress/data/shortcode/class-template.php:581
+msgid ""
+"You do not currently have access to this part of the course. Signup now to "
+"get full access to the course."
+msgstr ""
+
+#: include/coursepress/helper/class-extension.php:32
+msgid "Plugins"
+msgstr ""
+
+#: include/coursepress/helper/class-extension.php:39
+msgid "Action"
+msgstr ""
+
+#: include/coursepress/helper/class-extension.php:65
+msgid "De-Activate"
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:62
+msgid "Visual"
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:64
+msgid "Extension of the file is not valid. Please use one of the following:"
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:93
+msgid "Please confirm that you want to remove the instructor from this course."
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:94
+msgid ""
+"Please confirm that you want to remove the instructor invitation from this "
+"course."
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:95
+#: include/coursepress/view/admin/course/class-edit.php:557
+msgid "Please Assign Instructor"
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:97
+msgid ".+@.+"
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:98
+msgid "Please confirm that you want to remove the student from this course."
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:99
+msgid ""
+"Please confirm that you want to remove ALL students from this course. "
+"Warning: This can not be undone. Please make sure this is what you want to "
+"do."
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:102
+msgid ""
+"Please confirm that you want to delete ALL selected notifications. Warning: "
+"This cannot be undone. Please make sure this is what you want to do."
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:103
+msgid ""
+"Please confirm that you want to delete this notification. Warning: This "
+"cannot be undone."
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:105
+msgid ""
+"Please confirm that you want to delete ALL selected discussions. Warning: "
+"This cannot be undone. Please make sure this is what you want to do."
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:106
+msgid ""
+"Please confirm that you want to delete this discussion. Warning: This "
+"cannot be undone."
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:125
+msgid ""
+"Please confirm that you want to remove this module and possible student "
+"responses."
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:126
+msgid ""
+"Please confirm that you want to remove this page. All modules will be moved "
+"to the first available page (or you can drop them on other pages first "
+"before deleting this page)."
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:127
+msgid ""
+"Please confirm that you want to remove this unit and all its modules and "
+"student responses."
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:128
+msgid "Untitled Unit"
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:129
+msgid "Add Answer"
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:146
+msgid ""
+"Please confirm that you want to delete ALL selected courses. Warning: This "
+"cannot be undone. Please make sure this is what you want to do."
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:147
+msgid ""
+"Please confirm that you want to delete this courses. Warning: This cannot "
+"be undone."
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:148
+msgid "Are you sure you want to create a duplicate copy of this course?"
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:199
+msgid "Please try a different browser to upload your file."
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:200
+msgid "Please only upload any of the following files: "
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:201
+msgid "Your file has been submitted successfully."
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:202
+msgid "There was a problem processing your file."
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:203
+msgid "Your response was recorded successfully."
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:204
+msgid ""
+"There was a problem saving your response. Please reload this page and try "
+"again."
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:212
+msgid "All fields required."
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:213
+msgid "Invalid e-mail address."
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:214
+msgid "That e-mail address is already taken."
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:215
+msgid "That usernam is already taken."
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:216
+msgid "Weak passwords not allowed."
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:217
+msgid "Passwords do not match."
+msgstr ""
+
+#: include/coursepress/helper/class-pdf.php:84
+msgid "Arial Unicode MS (Chinese Traditional)"
+msgstr ""
+
+#: include/coursepress/helper/class-pdf.php:100
+msgid "Adobe-CNS1-5"
+msgstr ""
+
+#: include/coursepress/helper/class-pdf.php:101
+msgid "Adobe-GB1-5"
+msgstr ""
+
+#: include/coursepress/helper/class-pdf.php:102
+msgid "Adobe-Japan1-6"
+msgstr ""
+
+#: include/coursepress/helper/class-pdf.php:103
+msgid "Adobe-Korea1-2"
+msgstr ""
+
+#: include/coursepress/helper/class-pdf.php:132
+msgid "Free Mono"
+msgstr ""
+
+#: include/coursepress/helper/class-pdf.php:136
+msgid "Free Sans"
+msgstr ""
+
+#: include/coursepress/helper/class-pdf.php:140
+msgid "Free Serif"
+msgstr ""
+
+#: include/coursepress/helper/class-pdf.php:161
+msgid "PDFA ZapfDingbats"
+msgstr ""
+
+#: include/coursepress/helper/class-tabs.php:74
+#: include/coursepress/helper/class-tabs.php:95
+msgid "Save Settings"
+msgstr ""
+
+#: include/coursepress/helper/class-templatetag.php:620
+#: include/coursepress/helper/setting/class-email.php:37
+msgid "Invitation to a Course ( Psss...for selected ones only )"
+msgstr ""
+
+#: include/coursepress/helper/class-templatetag.php:628
+msgid ""
+"Hi %1$s,\n"
+"\n"
+"\t\t\twe would like to invite you to participate in the course: \"%2$s\"\n"
+"\n"
+"\t\t\tSince the course is only for selected ones, it is passcode protected. "
+"Here is the passcode for you: %6$s\n"
+"\n"
+"\t\t\tWhat is all about:\n"
+"\t\t\t%3$s\n"
+"\n"
+"\t\t\tCheck this page for more info on the course: %4$s\n"
+"\n"
+"\t\t\tIf you have any question feel free to contact us.\n"
+"\n"
+"\t\t\t\tYours sincerely,\n"
+"\t\t\t\t%5$s Team"
+msgstr ""
+
+#: include/coursepress/helper/class-templatetag.php:670
+#: include/coursepress/helper/setting/class-email.php:31
+msgid "Invitation to a Course"
+msgstr ""
+
+#: include/coursepress/helper/class-templatetag.php:678
+msgid ""
+"Hi %1$s,\n"
+"\n"
+"\t\t\twe would like to invite you to participate in the course: \"%2$s\"\n"
+"\n"
+"\t\t\tWhat is all about:\n"
+"\t\t\t%3$s\n"
+"\n"
+"\t\t\tCheck this page for more info on the course: %4$s\n"
+"\n"
+"\t\t\tIf you have any question feel free to contact us.\n"
+"\n"
+"\t\t\t\tYours sincerely,\n"
+"\t\t\t\t%5$s Team"
+msgstr ""
+
+#: include/coursepress/helper/class-templatetag.php:718
+#: include/coursepress/helper/setting/class-email.php:19
+msgid "Registration Status"
+msgstr ""
+
+#: include/coursepress/helper/class-templatetag.php:726
+msgid ""
+"Hi %1$s,\n"
+"\n"
+"\t\t\tCongratulations! You have registered account with %2$s successfully! "
+"You may log into your account here: %3$s.\n"
+"\n"
+"\t\t\tGet started by exploring our courses here: %4$s\n"
+"\n"
+"\t\t\tYours sincerely,\n"
+"\t\t\t%5$s Team"
+msgstr ""
+
+#: include/coursepress/helper/class-templatetag.php:761
+#: include/coursepress/helper/setting/class-email.php:49
+msgid "Order Confirmation"
+msgstr ""
+
+#: include/coursepress/helper/class-templatetag.php:769
+msgid ""
+"Thank you for your order %1$s,\n"
+"\n"
+"\t\t\tYour order for course \"%2$s\" has been received!\n"
+"\n"
+"\t\t\tPlease refer to your Order ID (ORDER_ID) whenever contacting us.\n"
+"\n"
+"\t\t\tYou can track the latest status of your order here: ORDER_STATUS_URL\n"
+"\n"
+"\t\t\tYours sincerely,\n"
+"\t\t\t%5$s Team"
+msgstr ""
+
+#: include/coursepress/helper/class-templatetag.php:806
+#: include/coursepress/helper/setting/class-email.php:25
+msgid "Enrollment Confirmation"
+msgstr ""
+
+#: include/coursepress/helper/class-templatetag.php:814
+msgid ""
+"Hi %1$s,\n"
+"\n"
+"\t\t\tCongratulations! You have enrolled in course \"%2$s\" successfully!\n"
+"\n"
+"\t\t\tYou may check all courses you are enrolled in here: %3$s.\n"
+"\n"
+"\t\t\tOr you can explore other courses in your %4$s\n"
+"\n"
+"\t\t\tYours sincerely,\n"
+"\t\t\t%5$s Team"
+msgstr ""
+
+#: include/coursepress/helper/class-templatetag.php:851
+#: include/coursepress/helper/setting/class-email.php:43
+msgid "Invitation to be an instructor at %s"
+msgstr ""
+
+#: include/coursepress/helper/class-templatetag.php:860
+msgid ""
+"Hi %1$s,\n"
+"\n"
+"\t\t\tCongratulations! You have been invited to become an instructor for "
+"the course: %2$s\n"
+"\n"
+"\t\t\tClick on the link below to confirm:\n"
+"\n"
+"\t\t\t%3$s\n"
+"\n"
+"\t\t\tIf you haven't yet got a username you will need to create one.\n"
+"\n"
+"\t\t\t\t%4$s\n"
+"\t\t\t\t"
+msgstr ""
+
+#: include/coursepress/helper/class-templatetag.php:1038
+msgid "Choose a Student..."
+msgstr ""
+
+#: include/coursepress/helper/class-templatetag.php:1084
+#: include/coursepress/view/admin/course/class-edit.php:540
+msgid "Choose a Course Instructor..."
+msgstr ""
+
+#: include/coursepress/helper/class-ui.php:17
+#: include/coursepress/helper/ui/class-module.php:395
+#: include/coursepress/helper/ui/class-module.php:454
+#: include/coursepress/helper/ui/class-module.php:525
+msgid "Add Media URL or Browse for Media"
+msgstr ""
+
+#: include/coursepress/helper/class-utility.php:609
+msgid "Back to Course"
+msgstr ""
+
+#: include/coursepress/helper/extension/class-tcpdf.php:22
+msgid "Complete TCPDF Library with additional fonts (WordPress.org)"
+msgstr ""
+
+#: include/coursepress/helper/integration/class-marketpress.php:51
+msgid "MarketPress Product Settings"
+msgstr ""
+
+#: include/coursepress/helper/integration/class-marketpress.php:53
+msgid ""
+"Your course will be a new product in MarketPress. Enter your course's "
+"payment settings below."
+msgstr ""
+
+#: include/coursepress/helper/integration/class-marketpress.php:56
+msgid "Full Price"
+msgstr ""
+
+#: include/coursepress/helper/integration/class-marketpress.php:62
+msgid "Sale Price"
+msgstr ""
+
+#: include/coursepress/helper/integration/class-marketpress.php:68
+msgid "Enable Sale Price"
+msgstr ""
+
+#: include/coursepress/helper/integration/class-marketpress.php:72
+msgid "Course SKU:"
+msgstr ""
+
+#: include/coursepress/helper/integration/class-marketpress.php:74
+msgid "e.g. %s0001"
+msgstr ""
+
+#: include/coursepress/helper/integration/class-marketpress.php:77
+msgid "Automatically generate Stock Keeping Units (SKUs)"
+msgstr ""
+
+#: include/coursepress/helper/integration/class-marketpress.php:85
+msgid "MarketPress Product ID: %d"
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:67
+msgid ""
+"Settings for emails when using basic certificate functionality (when course "
+"completed)."
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:68
+msgid ""
+"These codes will be replaced with actual data: BLOG_NAME, LOGIN_ADDRESS, "
+"COURSES_ADDRESS, WEBSITE_ADDRESS, COURSE_ADDRESS, FIRST_NAME, LAST_NAME, "
+"COURSE_NAME, COMPLETION_DATE, CERTIFICATE_NUMBER, UNIT_LIST"
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:72
+msgid "User Registration E-mail"
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:73
+msgid "Settings for an e-mail student get upon account registration."
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:74
+msgid ""
+"These codes will be replaced with actual data: STUDENT_FIRST_NAME, "
+"STUDENT_LAST_NAME, STUDENT_USERNAME, STUDENT_PASSWORD, BLOG_NAME, "
+"LOGIN_ADDRESS, COURSES_ADDRESS, WEBSITE_ADDRESS"
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:78
+msgid "Course Enrollment Confirmation E-mail"
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:79
+msgid "Settings for an e-mail student get upon enrollment."
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:80
+msgid ""
+"These codes will be replaced with actual data: STUDENT_FIRST_NAME, "
+"STUDENT_LAST_NAME, BLOG_NAME, LOGIN_ADDRESS, COURSES_ADDRESS, "
+"WEBSITE_ADDRESS, COURSE_ADDRESS"
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:84
+msgid "Student Invitation to a Course E-mail"
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:85
+msgid "Settings for an e-mail student get upon receiving an invitation to a course."
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:86
+msgid ""
+"These codes will be replaced with actual data: STUDENT_FIRST_NAME, "
+"STUDENT_LAST_NAME, COURSE_NAME, COURSE_EXCERPT, COURSE_ADDRESS, "
+"WEBSITE_ADDRESS"
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:90
+msgid "Student Invitation to a Course E-mail (with passcode)"
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:91
+msgid ""
+"Settings for an e-mail student get upon receiving an invitation (with "
+"passcode) to a course."
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:92
+msgid ""
+"These codes will be replaced with actual data: STUDENT_FIRST_NAME, "
+"STUDENT_LAST_NAME, COURSE_NAME, COURSE_EXCERPT, COURSE_ADDRESS, "
+"WEBSITE_ADDRESS, PASSCODE"
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:96
+msgid "Instructor Invitation Email"
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:97
+msgid "Settings for an e-mail an instructor will get upon receiving an invitation."
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:98
+msgid ""
+"These codes will be replaced with actual data: INSTRUCTOR_FIRST_NAME, "
+"INSTRUCTOR_LAST_NAME, INSTRUCTOR_EMAIL, CONFIRMATION_LINK, COURSE_NAME, "
+"COURSE_EXCERPT, COURSE_ADDRESS, WEBSITE_ADDRESS, WEBSITE_NAME"
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:102
+msgid "New Order E-mail"
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:103
+msgid "Settings for an e-mail student get upon placing an order."
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:104
+msgid ""
+"These codes will be replaced with actual data: CUSTOMER_NAME, BLOG_NAME, "
+"LOGIN_ADDRESS, COURSES_ADDRESS, WEBSITE_ADDRESS, COURSE_ADDRESS, ORDER_ID, "
+"ORDER_STATUS_URL"
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:115
+msgid ""
+"Hi %1$s %2$s,\n"
+"\n"
+"Congratulations! You have registered account with %3$s successfully! You "
+"may log into your account here: %4$s.\n"
+"\n"
+"Get started by exploring our courses here: %5$s\n"
+"\n"
+"Yours sincerely,\n"
+"%6$s Team"
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:128
+msgid ""
+"Hi %1$s %2$s,\n"
+"\n"
+"Congratulations! You have enrolled in course \"%3$s\" successfully!\n"
+"\n"
+"You may check all courses you are enrolled in here: %4$s.\n"
+"\n"
+"Or you can explore other courses in your %5$s\n"
+"\n"
+"Yours sincerely,\n"
+"%6$s Team"
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:143
+msgid ""
+"Hi %1$s %2$s,\n"
+"\n"
+"we would like to invite you to participate in the course: \"%3$s\"\n"
+"\n"
+"What its all about:\n"
+"%4$s\n"
+"\n"
+"Check this page for more info on the course: %5$s\n"
+"\n"
+"If you have any question feel free to contact us.\n"
+"\n"
+"Yours sincerely,\n"
+"%6$s Team"
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:161
+msgid ""
+"Hi %1$s %2$s,\n"
+"\n"
+"we would like to invite you to participate in the course: \"%3$s\"\n"
+"\n"
+"Since the course is only for selected ones, it is passcode protected. Here "
+"is the passcode for you: %7$s\n"
+"\n"
+"What its all about:\n"
+"%4$s\n"
+"\n"
+"Check this page for more info on the course: %5$s\n"
+"\n"
+"If you have any question feel free to contact us.\n"
+"\n"
+"Yours sincerely,\n"
+"%6$s Team"
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:181
+msgid ""
+"Hi %1$s %2$s,\n"
+"\n"
+"Congratulations! You have been invited to become an instructor for the "
+"course: %3$s\n"
+"\n"
+"Click on the link below to confirm:\n"
+"\n"
+"%4$s\n"
+"\n"
+"If you haven't yet got a username you will need to create one.\n"
+"\n"
+"%5$s\n"
+"\t"
+msgstr ""
+
+#: include/coursepress/helper/setting/class-email.php:199
+msgid ""
+"Thank you for your order %1$s,\n"
+"\n"
+"Your order for course \"%2$s\" has been received!\n"
+"\n"
+"Please refer to your Order ID (ORDER_ID) whenever contacting us.\n"
+"\n"
+"You can track the latest status of your order here: ORDER_STATUS_URL\n"
+"\n"
+"Yours sincerely,\n"
+"%5$s Team"
+msgstr ""
+
+#: include/coursepress/helper/table/class-courselist.php:32
+msgid "No courses found."
+msgstr ""
+
+#: include/coursepress/helper/table/class-courselist.php:44
+#: include/coursepress/helper/table/class-discussionlist.php:43
+#: include/coursepress/helper/table/class-notificationlist.php:43
+msgid "Actions"
+msgstr ""
+
+#: include/coursepress/helper/table/class-courselist.php:79
+msgid "Duplicate Course"
+msgstr ""
+
+#: include/coursepress/helper/table/class-courselist.php:87
+msgid "Publish"
+msgstr ""
+
+#: include/coursepress/helper/table/class-courselist.php:88
+msgid "Unpublish"
+msgstr ""
+
+#: include/coursepress/helper/table/class-courselist.php:113
+msgid "Published"
+msgstr ""
+
+#: include/coursepress/helper/table/class-courselist.php:249
+#: include/coursepress/helper/table/class-discussionlist.php:240
+#: include/coursepress/helper/table/class-notificationlist.php:240
+msgid "Select course category"
+msgstr ""
+
+#: include/coursepress/helper/table/class-courselist.php:261
+#: include/coursepress/helper/table/class-discussionlist.php:251
+#: include/coursepress/helper/table/class-notificationlist.php:251
+msgid "Filter"
+msgstr ""
+
+#: include/coursepress/helper/table/class-coursestudent.php:18
+#: include/coursepress/helper/table/class-reportstudents.php:19
+#: include/coursepress/view/admin/assessment/class-list.php:367
+msgid "Student"
+msgstr ""
+
+#: include/coursepress/helper/table/class-coursestudent.php:160
+msgid "Choose student..."
+msgstr ""
+
+#: include/coursepress/helper/table/class-coursestudent.php:166
+msgid "Enter user ID"
+msgstr ""
+
+#: include/coursepress/helper/table/class-coursestudent.php:176
+msgid "Add Student"
+msgstr ""
+
+#: include/coursepress/helper/table/class-coursestudent.php:177
+msgid "Withdraw all students"
+msgstr ""
+
+#: include/coursepress/helper/table/class-coursestudent.php:186
+msgid "There are no students enrolled in this course. Add them below."
+msgstr ""
+
+#: include/coursepress/helper/table/class-discussionlist.php:33
+msgid "No discussions found."
+msgstr ""
+
+#: include/coursepress/helper/table/class-discussionlist.php:81
+#: include/coursepress/helper/table/class-notificationlist.php:81
+msgid "Visible"
+msgstr ""
+
+#: include/coursepress/helper/table/class-discussionlist.php:82
+#: include/coursepress/helper/table/class-notificationlist.php:82
+msgid "Private"
+msgstr ""
+
+#: include/coursepress/helper/table/class-notificationlist.php:33
+msgid "No notifications found."
+msgstr ""
+
+#: include/coursepress/helper/table/class-reportstudents.php:43
+msgid "Responses"
+msgstr ""
+
+#: include/coursepress/helper/table/class-reportstudents.php:43
+msgid "Assessable items only."
+msgstr ""
+
+#: include/coursepress/helper/table/class-reportstudents.php:44
+msgid "Average"
+msgstr ""
+
+#: include/coursepress/helper/table/class-reportstudents.php:45
+msgid "Report"
+msgstr ""
+
+#: include/coursepress/helper/table/class-reportstudents.php:164
+msgid "There are no students enrolled in this course."
+msgstr ""
+
+#: include/coursepress/helper/ui/class-listtable.php:17
+msgid "No items found."
+msgstr ""
+
+#: include/coursepress/helper/ui/class-listtable.php:97
+msgid "Select bulk action"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-listtable.php:99
+msgid "Bulk Actions"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-listtable.php:109
+msgid "Apply"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-listtable.php:141
+msgid "Filter by date"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-listtable.php:143
+msgid "All dates"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-listtable.php:157
+#. translators: 1: month name, 2: 4-digit year
+msgid "%1$s %2$d"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-listtable.php:203
+msgid "%s pending"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-listtable.php:234
+#: include/coursepress/helper/ui/class-listtable.php:529
+msgid "1 item"
+msgid_plural "%s items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: include/coursepress/helper/ui/class-listtable.php:253
+msgid "Go to the first page"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-listtable.php:260
+msgid "Go to the previous page"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-listtable.php:269
+msgid "Select Page"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-listtable.php:270
+msgid "Current page"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-listtable.php:280
+msgid "Go to the next page"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-listtable.php:287
+msgid "Go to the last page"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:214
+msgid "Multiple Choice"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:219
+msgid "Single Choice"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:224
+msgid "Selectable"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:229
+msgid "Short Answer"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:234
+msgid "Long Answer"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:239
+msgid "File Upload"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:244
+msgid "Quiz"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:262
+msgid "Text"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:267
+msgid "Image"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:273
+msgid "Video"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:279
+msgid "Audio"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:285
+msgid "File Download"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:291
+msgid "Zipped Object"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:318
+msgid "Duration ([hh:]mm:ss)"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:320
+msgid "Show title in unit view"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:321
+#: include/coursepress/template/class-module.php:28
+msgid "Mandatory"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:322
+msgid "A response is required"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:324
+msgid "This is a gradable item"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:325
+msgid "Minimum"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:326
+msgid "Minimum grade (%) required to pass"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:327
+msgid "Minimum Grade"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:328
+msgid "Allow Retries"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:329
+msgid "Allow and set amount of retries (0 unlimited)"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:330
+msgid "Use Timer"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:331
+msgid "Use duration as time restriction"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:332
+msgid "Question/Task"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:333
+msgid "The question or instructions to complete this task."
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:334
+msgid "Content"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:335
+msgid "Content that will display on the unit page."
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:337
+msgid "Set the correct answer"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:338
+msgid "Add"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:339
+msgid "Delete Module"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:340
+msgid "Start Quiz"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:384
+msgid "Image Source"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:385
+msgid "Enter a URL or Browse for an image"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:400
+msgid "Image Caption"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:401
+msgid "Hide, show and customise the image caption."
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:407
+#: include/coursepress/helper/ui/class-module.php:466
+msgid "Show Caption"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:412
+#: include/coursepress/helper/ui/class-module.php:471
+msgid "Media has no caption"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:415
+#: include/coursepress/helper/ui/class-module.php:474
+msgid "Media Caption"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:416
+#: include/coursepress/helper/ui/class-module.php:475
+msgid "Custom Caption"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:419
+#: include/coursepress/helper/ui/class-module.php:478
+msgid "Please enter a custom caption here."
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:443
+msgid "Video Source"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:444
+msgid ""
+"You can enter a Youtube or Vimeo link (oEmbed support is required). "
+"Alternatively you can Browse for a file - supported video extensions (mp4, "
+"m4v, webm, ogv, wmv, flv)"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:459
+msgid "Video Caption"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:460
+msgid "Hide, show and customise the video caption."
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:483
+msgid "Related Videos"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:484
+msgid ""
+"Hide related videos for some video services (e.g. YouTube). Services like "
+"Vimeo sets this per video."
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:489
+msgid "Hide related videos"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:514
+msgid "Audio Source"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:515
+msgid ""
+"Enter a URL or Browse for an audio file. Supported audio extensions (mp3, "
+"ogg, wma, m4a, wav)"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:530
+msgid "Audio Playback"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:535
+msgid "Loop audio"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:540
+msgid "Autoplay audio"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:565
+msgid "Download Source"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:575
+msgid "Add File URL or Browse for File to download"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:580
+#: include/coursepress/helper/ui/class-module.php:639
+msgid "Link Text"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:610
+msgid "Object Source"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:611
+msgid "Browse for the zip file that contains your resources."
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:621
+msgid "Browse for zipped file"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:626
+msgid "Primary File"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:627
+msgid "This is the file of the object that will be loaded first."
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:634
+msgid "e.g. index.html"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:640
+msgid "This is the text of the link that will open your primary file."
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:707
+msgid "Add checkboxes next to the correct answers"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:715
+#: include/coursepress/helper/ui/class-module.php:753
+#: include/coursepress/helper/ui/class-module.php:789
+msgid "Answer A"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:716
+#: include/coursepress/helper/ui/class-module.php:754
+#: include/coursepress/helper/ui/class-module.php:790
+msgid "Answer B"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:745
+#: include/coursepress/helper/ui/class-module.php:781
+msgid "Select the correct answer"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:817
+#: include/coursepress/helper/ui/class-module.php:848
+msgid "Placeholder text to put inside the textbox (additional information)"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:897
+msgid "Questions"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-module.php:898
+msgid "Add all the questions for your quiz here"
+msgstr ""
+
+#: include/coursepress/template/class-communication.php:30
+msgid "by <span>%s</span>"
+msgstr ""
+
+#: include/coursepress/template/class-communication.php:99
+msgid "Applies to:"
+msgstr ""
+
+#: include/coursepress/template/class-communication.php:131
+msgid "Unknown Discussion"
+msgstr ""
+
+#: include/coursepress/template/class-communication.php:132
+msgid "The discussion you were looking for could not be found."
+msgstr ""
+
+#: include/coursepress/template/class-communication.php:210
+msgid "Update discussion"
+msgstr ""
+
+#: include/coursepress/template/class-communication.php:210
+msgid "Add discussion"
+msgstr ""
+
+#: include/coursepress/template/class-communication.php:213
+msgid "Title of the discussion"
+msgstr ""
+
+#: include/coursepress/template/class-communication.php:214
+msgid "Type your discussion or question here…"
+msgstr ""
+
+#: include/coursepress/template/class-module.php:277
+#. translators: %s: post title
+msgid "One response to %s"
+msgstr ""
+
+#: include/coursepress/template/class-module.php:280
+#. translators: 1: number of comments, 2: post title
+msgid "%1$s response to %2$s"
+msgid_plural "%1$s responses to %2$s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: include/coursepress/template/class-module.php:356
+#: include/coursepress/template/class-module.php:494
+#: include/coursepress/template/class-module.php:508
+#: include/coursepress/template/class-module.php:598
+#: include/coursepress/template/class-module.php:694
+#: include/coursepress/template/class-module.php:758
+#: include/coursepress/template/class-module.php:921
+msgid "Submit Answer"
+msgstr ""
+
+#: include/coursepress/template/class-module.php:454
+msgid "Grade:"
+msgstr ""
+
+#: include/coursepress/template/class-module.php:459
+msgid "Not assessable"
+msgstr ""
+
+#: include/coursepress/template/class-module.php:462
+msgid "Resubmit"
+msgstr ""
+
+#: include/coursepress/template/class-module.php:465
+msgid "Feedback:"
+msgstr ""
+
+#: include/coursepress/template/class-module.php:715
+#: include/coursepress/template/class-module.php:779
+msgid "Response: "
+msgstr ""
+
+#: include/coursepress/template/class-module.php:822
+msgid "Submit File"
+msgstr ""
+
+#: include/coursepress/template/class-module.php:862
+msgid "Uploaded file: "
+msgstr ""
+
+#: include/coursepress/template/class-module.php:917
+msgid "You have %d attempts left."
+msgstr ""
+
+#: include/coursepress/template/class-module.php:918
+msgid "Your last attempt was unsuccessful. Try again. %s"
+msgstr ""
+
+#: include/coursepress/template/class-module.php:965
+msgid "Submit Quiz Answers"
+msgstr ""
+
+#: include/coursepress/template/class-student.php:103
+msgid "Changes can't be saved because nonce didn't verify."
+msgstr ""
+
+#: include/coursepress/template/class-unit.php:24
+#: include/coursepress/template/class-unit.php:56
+msgid "Sorry. You are not permitted to view this part of the course."
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-list.php:24
+msgid "Assessments/CoursePress"
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-list.php:25
+msgid "Assessments"
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-list.php:156
+msgid "Activity: "
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-list.php:159
+msgid "Student Response"
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-list.php:224
+msgid "Submitted on: %s"
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-list.php:226
+msgid "Instructor Feedback"
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-list.php:246
+msgid "Last feedback by: %s"
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-list.php:253
+msgid "Calculated"
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-list.php:260
+msgid "on %s"
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-list.php:261
+msgid "Graded by %s"
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-list.php:306
+#: include/coursepress/view/admin/assessment/class-report.php:246
+msgid "You do not currently have any courses assigned."
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-list.php:311
+#: include/coursepress/view/admin/assessment/class-report.php:251
+msgid "Select Course"
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-list.php:313
+msgid "Ungraded elements only."
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-list.php:314
+msgid "Submitted elements only."
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-list.php:315
+msgid "Expand List"
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-list.php:316
+msgid "Collapse List"
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-list.php:348
+msgid "Select Unit:"
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-list.php:368
+msgid "Activity"
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-list.php:369
+msgid "Submission"
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-list.php:370
+msgid "Response"
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-list.php:466
+msgid "--"
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-list.php:493
+msgid "No activities found for this unit."
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-list.php:498
+msgid "%d students"
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-list.php:503
+msgid "No units found for this course."
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-report.php:11
+msgid "Reports/CoursePress"
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-report.php:163
+msgid "Not yet submitted"
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-report.php:180
+msgid "No assessable items."
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-report.php:195
+msgid "Average response grade: %d%%"
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-report.php:197
+msgid "No assessable items in this course."
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-report.php:197
+msgid "Total Average: %d%%"
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-report.php:222
+msgid "Course Report"
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-report.php:278
+msgid ""
+"Select entire course for selected students, or just a unit for selected "
+"students."
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-report.php:279
+msgid "Bulk Reporting"
+msgstr ""
+
+#: include/coursepress/view/admin/assessment/class-report.php:296
+msgid "Generate Report"
+msgstr ""
+
+#: include/coursepress/view/admin/class-coursepress.php:17
+msgid "Courses/CoursePress"
+msgstr ""
+
+#: include/coursepress/view/admin/class-setting.php:21
+msgid "Settings/CoursePress"
+msgstr ""
+
+#: include/coursepress/view/admin/communication/class-discussion.php:164
+msgid "Discussion Title"
+msgstr ""
+
+#: include/coursepress/view/admin/communication/class-discussion.php:167
+msgid "Discussion Content"
+msgstr ""
+
+#: include/coursepress/view/admin/communication/class-discussion.php:186
+#: include/coursepress/view/admin/communication/class-notification.php:175
+msgid "Related Course"
+msgstr ""
+
+#: include/coursepress/view/admin/communication/class-discussion.php:189
+msgid "Related Unit"
+msgstr ""
+
+#: include/coursepress/view/admin/communication/class-discussion.php:193
+msgid "Save Discussion"
+msgstr ""
+
+#: include/coursepress/view/admin/communication/class-discussion.php:212
+msgid "Discussion Update: No action."
+msgstr ""
+
+#: include/coursepress/view/admin/communication/class-notification.php:153
+msgid "Notification Title"
+msgstr ""
+
+#: include/coursepress/view/admin/communication/class-notification.php:156
+msgid "Notification Content"
+msgstr ""
+
+#: include/coursepress/view/admin/communication/class-notification.php:179
+msgid "Save Notification"
+msgstr ""
+
+#: include/coursepress/view/admin/communication/class-notification.php:198
+msgid "Notification Update: No action."
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:20
+msgid "Edit Course/CoursePress"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:158
+msgid "Step 1 – Course Overview"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:173
+msgid "Course Name"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:204
+msgid "Course Excerpt / Short Overview"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:217
+msgid "Listing Image"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:236
+#: include/coursepress/view/admin/setting/class-capabilities.php:118
+msgid "Manage Categories"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:254
+msgid "Course Language"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:270
+#: include/coursepress/view/admin/course/class-edit.php:509
+#: include/coursepress/view/admin/course/class-edit.php:605
+#: include/coursepress/view/admin/course/class-edit.php:698
+#: include/coursepress/view/admin/course/class-edit.php:776
+#: include/coursepress/view/admin/course/class-edit.php:977
+msgid "Update"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:286
+msgid "Step 2 – Course Details"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:295
+msgid "Add URL or Browse ( %s )"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:304
+msgid ""
+"This is used on the Course Overview page and will be displayed with the "
+"course description."
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:330
+msgid "Course Description"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:338
+msgid "Course View Mode"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:341
+msgid "Normal: Show full unit pages"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:342
+msgid "Focus: Focus on one item at a time"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:343
+msgid "Don't render section titles in focus mode."
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:344
+msgid ""
+"Choose if your course will show in \"normal\" mode or step by step "
+"\"focus\" mode."
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:347
+msgid "Unit list only"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:348
+msgid "Expanded unit list"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:349
+msgid "Choose if course Unit page shows units only or in expanded view."
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:357
+msgid ""
+"This gives you the option to show/hide Course Units, Lessons, Estimated "
+"Time and Free Preview options on the Course Overview page"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:363
+msgid "Show the Course Overview structure and Preview Options"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:367
+msgid "Display Time Estimates for Units and Lessons"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:374
+msgid ""
+"Units and Pages with Modules selected will automatically be visible (only "
+"selected Modules accessible)."
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:375
+#: include/coursepress/view/admin/course/class-edit.php:385
+msgid "Show"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:376
+#: include/coursepress/view/admin/course/class-edit.php:386
+msgid "Free Preview"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:377
+#: include/coursepress/view/admin/course/class-edit.php:387
+msgid "Time"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:407
+msgid "[DRAFT] "
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:429
+msgid "Page %s"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:452
+msgid "Untitled Module"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:525
+msgid "Step 3 – Instructors"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:536
+msgid "Course Instructor(s)"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:537
+msgid "Select one or more instructor to facilitate this course"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:544
+msgid "Assign"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:547
+msgid "Assigned Instructors:"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:573
+msgid "Invite New Instructor"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:574
+msgid ""
+"If the instructor can not be found in the list above, you will need to "
+"invite them via email."
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:582
+msgid "instructor@email.com"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:585
+msgid "Send Invite"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:621
+msgid "Step 4 – Course Dates"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:633
+msgid "Course Availability"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:635
+msgid "These are the dates that the course will be available to students"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:638
+msgid "This course has no end date"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:642
+#: include/coursepress/view/admin/course/class-edit.php:671
+msgid "Start Date"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:649
+#: include/coursepress/view/admin/course/class-edit.php:678
+msgid "End Date"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:662
+msgid "Course Enrollment Dates"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:664
+msgid "These are the dates that students will be able to enroll in a course."
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:667
+msgid "Students can enroll at any time"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:714
+msgid "Step 5 – Classes, Discussion & Workbook"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:726
+msgid "Class Size"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:728
+msgid ""
+"Use this setting to set a limit for all classes. Uncheck for unlimited "
+"class size(s)."
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:731
+msgid "Limit class size"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:735
+msgid "Number of students"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:743
+msgid "Course Discussion"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:745
+msgid ""
+"If checked, students can post questions and receive answers at a course "
+"level. A 'Discusssion' menu item is added for the student to see ALL "
+"discussions occuring from all class members and instructors."
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:748
+msgid "Allow course discussion"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:755
+msgid "Student Workbook"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:757
+msgid "If checked, students can see their progress and grades."
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:760
+msgid "Show student workbook"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:797
+msgid " & Course Cost"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:800
+msgid "Step 6 – Enrollment%s"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:810
+msgid "Manually added only"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:816
+msgid "Anyone who completed the prerequisite course(s)"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:821
+msgid "Registered users with a pass code"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:822
+msgid "Registered users who completed the prerequisite course(s)"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:830
+msgid "Enrollment Restrictions"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:832
+msgid "Select the limitations on accessing and enrolling in this course."
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:850
+msgid "Prerequisite Courses"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:852
+msgid ""
+"Select the courses a student needs to complete before enrolling in this "
+"course"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:884
+msgid "Enter the passcode required to access this course"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:900
+msgid "Course Payment"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:902
+msgid ""
+"Payment options for your course. Additional plugins are required and "
+"settings vary depending on the plugin."
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:905
+msgid "This is a paid course"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:918
+msgid ""
+"<p>To start selling your course, please install and activate MarketPress "
+"here:</p>\n"
+"\t\t\t\t\t\t\t\t<a href=\"%s\">Activate MarketPress</a>"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:921
+msgid ""
+"<p>Please contact your administrator to enable MarketPress for your "
+"site.</p>"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:925
+msgid ""
+"<p>The full version of MarketPress has been bundled with CoursePress "
+"Pro.</p>"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:927
+msgid ""
+"<p>You can use the free or premium version of MarketPress to sell your "
+"courses.</p>"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:935
+msgid ""
+"\n"
+"\t\t\t\t<div class=\"payment-message %s\">\n"
+"\t\t\t\t\t<h3>Sell your courses online with MarketPress.</h3>\n"
+"\t\t\t\t\t%s\n"
+"\t\t\t\t\t%s\n"
+"\t\t\t\t\t<p>Other supported plugins:  WooCommerce</p>\n"
+"\t\t\t\t</div>\n"
+"\t\t\t"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:976
+msgid "Finish"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:1004
+msgid "Course Setup"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:1005
+#: include/coursepress/view/admin/course/class-edit.php:1017
+#: include/coursepress/view/admin/course/class-edit.php:1024
+msgid "Edit your course specific settings below."
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:1016
+msgid "Units (%s)"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:1023
+msgid "Students (%s)"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:1053
+#: include/coursepress/view/front/class-course.php:905
+msgid "Course Update: No action."
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-edit.php:1273
+#: include/coursepress/view/front/class-enrollmentpopup.php:258
+msgid "Copy"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-student.php:31
+msgid "Invite Student"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-student.php:35
+msgid "Invite"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:18
+msgid "Unit Builder is loading..."
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:33
+msgid "Add New Unit"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:51
+msgid "Unit Settings"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:53
+#: include/coursepress/view/admin/course/class-unitbuilder.php:162
+msgid "Draft"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:54
+#: include/coursepress/view/admin/course/class-unitbuilder.php:163
+msgid "Live"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:59
+msgid "Unit Description"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:66
+msgid "Unit Feature Image"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:72
+msgid "Unit Availability"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:74
+msgid "Instantly available"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:75
+msgid "Available on"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:76
+msgid "Available after"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:82
+msgid "seconds"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:82
+msgid "Day(s)"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:86
+msgid "Progress to next unit"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:88
+msgid "User needs to"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:89
+msgid "answer"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:90
+msgid ""
+"all mandatory assessments and view all pages in order to access the next "
+"unit"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:93
+msgid "User also needs to"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:94
+msgid "pass"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:95
+msgid "all mandatory assessments"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:99
+#: include/coursepress/view/admin/course/class-unitbuilder.php:160
+msgid "Save"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:99
+msgid "Delete Unit"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:105
+msgid "Loading modules..."
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:120
+msgid "Unit Sections"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:134
+msgid "Delete Section"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:135
+msgid "Section Title"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:136
+msgid "The label will be displayed on the Course Overview and Unit page"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:138
+msgid "Section Description"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:145
+msgid "Section Image"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:149
+msgid "Show section header as part of unit"
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:155
+msgid "Modules! This template wont be used... its just here for testing."
+msgstr ""
+
+#: include/coursepress/view/admin/course/class-unitbuilder.php:171
+msgid "Click to add module elements to the unit"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:23
+msgid "Setup the settings for the certificates issued upon course completion."
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:93
+msgid ""
+"The image will be resized to fit the full page. For best results use 1:1414 "
+"as the ratio for image dimensions.<br /><strong>Examples Sizes:</strong><br "
+"/>595x842px (Portrait 72dpi)<br />1754x1240px (Landscape 150dpi)<br "
+"/>2480x3508px (Portrait 300dpi)."
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:17
+msgid "Setup the capabilities of instructors within CoursePress."
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:82
+msgid "Posts and Pages"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:89
+msgid "Access to plugin menu"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:90
+msgid "Access to the Courses menu item"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:91
+msgid "Access to the Intructors menu item"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:92
+msgid "Access to the Students menu item"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:97
+msgid "Access to the Settings menu item"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:103
+msgid "Create new courses"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:104
+msgid "Update any assigned course"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:105
+msgid "Update courses made by the instructor only"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:107
+msgid "Delete any assigned course"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:108
+msgid "Delete courses made by the instructor only"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:110
+msgid "Change status of any assigned course"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:111
+msgid "Change status of courses made by the instructor only"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:119
+msgid "Edit Categories"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:120
+msgid "Delete Categories"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:126
+msgid "Create new course units"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:127
+msgid "View units in every course ( can view from other Instructors as well )"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:128
+msgid "Update any unit (within assigned courses)"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:129
+msgid "Update units made by the instructor only"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:131
+msgid "Delete any unit (within assigned courses)"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:132
+msgid "Delete course units made by the instructor only"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:134
+msgid "Change status of any unit (within assigned courses)"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:135
+msgid "Change statuses of course units made by the instructor only"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:142
+msgid "Assign instructors to any course"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:143
+msgid "Assign instructors to courses made by the instructor only"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:149
+msgid "Add new course classes to any course"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:150
+msgid "Add new course classes to courses made by the instructor only"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:151
+msgid "Delete any course class"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:152
+msgid "Delete course classes from courses made by the instructor only"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:158
+msgid "Invite students to any course"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:159
+msgid "Invite students to courses made by the instructor only"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:160
+msgid "Withdraw students from any course"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:161
+msgid "Withdraw students from courses made by the instructor only"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:162
+msgid "Add students to any course"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:163
+msgid "Add students to courses made by the instructor only"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:164
+msgid "Add students to courses assigned to the instructor only"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:167
+msgid "Add new users with Student role to the blog"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:168
+msgid "Send bulk e-mail to students"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:169
+msgid "Send bulk e-mail to students within a course made by the instructor only"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:170
+msgid "Delete Students (deletes ALL associated course records)"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:176
+msgid "View Groups tab within the Settings page"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:183
+msgid "Create new notifications"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:184
+msgid "Create new notifications for courses created by the instructor only"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:185
+msgid "Create new notifications for courses assigned to the instructor only"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:186
+msgid "Update every notification"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:187
+msgid "Update notifications made by the instructor only"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:188
+msgid "Delete every notification"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:189
+msgid "Delete notifications made by the instructor only"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:190
+msgid "Change status of every notification"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:191
+msgid "Change statuses of notifications made by the instructor only"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:197
+msgid "Create new discussions"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:198
+msgid "Create new discussions for courses created by the instructor only"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:199
+msgid "Create new discussions for courses assigned to the instructor only"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:200
+msgid "Update every discussions"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:201
+msgid "Update discussions made by the instructor only"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:202
+msgid "Delete every discussions"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:203
+msgid "Delete discussions made by the instructor only"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:209
+msgid "Edit Pages (required for MarketPress)"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:210
+msgid "Edit Published Pages"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:211
+msgid "Edit Posts"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:212
+msgid "Publish Pages"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-capabilities.php:213
+msgid "Publish Posts"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-course.php:16
+#: include/coursepress/view/admin/setting/class-setup.php:23
+msgid "Setup Guide"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-course.php:17
+#: include/coursepress/view/admin/setting/class-setup.php:24
+#: include/coursepress/view/admin/setting/class-shortcodes.php:17
+msgid "This is the description of what you can do on this page."
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-email.php:17
+msgid "E-mail Settings"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-email.php:18
+msgid "Setup the e-mail templates to be sent to users."
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-email.php:57
+msgid "From Email"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-email.php:63
+msgid "Subject"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-email.php:70
+msgid "Email Body"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-extensions.php:17
+msgid "Extensions"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-extensions.php:18
+msgid "Extensions and plugins to enhance CoursePress."
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-extensions.php:53
+msgid "Installing plugin..."
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-extensions.php:97
+#: include/coursepress/view/admin/setting/class-setup.php:45
+msgid "Return to CoursePress settings."
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:16
+msgid "General Settings"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:17
+msgid "Configure the general settings for CoursePress."
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:26
+msgid "my-course"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:33
+msgid "Use virtual page"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:61
+msgid "Slugs"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:62
+msgid ""
+"A slug is a few words that describe a post or a page. Slugs are usually a "
+"URL friendly version of the post title ( which has been automatically "
+"generated by WordPress ), but a slug can be anything you like. Slugs are "
+"meant to be used with %s as they help describe what the content at the URL "
+"is. Post slug substitutes the %s placeholder in a custom permalink "
+"structure."
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:68
+msgid "Courses Slug"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:75
+msgid "Course Category Slug"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:78
+msgid "Your course category URL will look like: "
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:78
+msgid "/your-category/"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:82
+msgid "Units Slug"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:88
+msgid "Course Notifications Slug"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:94
+msgid "Course Discussions Slug"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:100
+msgid "Course New Discussion Slug"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:106
+msgid "Course Grades Slug"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:112
+msgid "Course Workbook Slug"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:119
+msgid "Enrollment Process Slug"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:125
+msgid "Enrollment Process Page"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:128
+#: include/coursepress/view/admin/setting/class-general.php:142
+#: include/coursepress/view/admin/setting/class-general.php:156
+#: include/coursepress/view/admin/setting/class-general.php:170
+#: include/coursepress/view/admin/setting/class-general.php:184
+msgid ""
+"Select page where you have %s shortcode or any other set of %s. Please note "
+"that slug for the page set above will not be used if \"Use virtual page\" "
+"is not selected."
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:128
+#: include/coursepress/view/admin/setting/class-general.php:142
+#: include/coursepress/view/admin/setting/class-general.php:156
+#: include/coursepress/view/admin/setting/class-general.php:170
+#: include/coursepress/view/admin/setting/class-general.php:184
+msgid "shortcodes"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:133
+msgid "Login Slug"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:139
+msgid "Login Page"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:147
+msgid "Signup Slug"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:153
+msgid "Signup Page"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:161
+#: include/coursepress/view/admin/setting/class-general.php:175
+msgid "Student Dashboard Slug"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:167
+#: include/coursepress/view/admin/setting/class-general.php:181
+msgid "Student Dashboard Page"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:189
+msgid "Instructor Profile Slug"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:199
+msgid "Messaging: Inbox Slug"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:205
+msgid "Sent Messages Slug"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:211
+msgid "New Messages Slug"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:228
+msgid "Theme Menu Items"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:234
+msgid "Display Menu Items"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:240
+msgid ""
+"<div>Attach default CoursePress menu items ( Courses, Student Dashboard, "
+"Log Out ) to the <strong>Primary Menu</strong>.</div><div>Items can also be "
+"added from Appearance > Menus and the CoursePress panel.</div>"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:265
+msgid ""
+"Please add at least one menu and select its theme location in order to show "
+"CoursePress menu items automatically."
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:281
+msgid "Login Form"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:287
+msgid "Use Custom Login Form"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:293
+msgid "Uses a custom Login Form to keep students on the front-end of your site."
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:309
+msgid "WordPress Login Redirect"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:315
+msgid "Redirect After Login"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:321
+msgid "Redirect students to their Dashboard upon login via wp-login form."
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:337
+msgid "Privacy"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:343
+msgid "Show Instructor Username in URL"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:349
+msgid ""
+"If checked, instructors username will be shown in the url. Otherwise, "
+"hashed (MD5) version will be shown."
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:365
+msgid "Course Details Page"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:366
+msgid "Media to use when viewing course details."
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:372
+#: include/coursepress/view/admin/setting/class-general.php:427
+msgid "Media Type"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:378
+#: include/coursepress/view/admin/setting/class-general.php:433
+msgid "\"Priority\" - Use the media type below, with the other type as a fallback."
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:395
+#: include/coursepress/view/admin/setting/class-general.php:450
+msgid "Priority"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:401
+#: include/coursepress/view/admin/setting/class-general.php:456
+msgid ""
+"Example: Using \"video\", the featured video will be used if available. The "
+"listing image is a fallback."
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:420
+msgid "Course Listings"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:421
+msgid ""
+"Media to use when viewing course listings (e.g. Courses page or Instructor "
+"page)."
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:476
+msgid "Course Images"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:477
+msgid "Size for (newly uploaded) course images."
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:483
+msgid "Image Width"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:491
+msgid "Image Height"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:502
+msgid "Course Order"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:503
+msgid ""
+"Order of courses in admin and on front. If you choose \"Post Order "
+"Number\", you will have option to reorder courses from within the Courses "
+"admin page."
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:509
+msgid "Order by"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:516
+msgid "Post Date"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:517
+msgid "Post Order Number"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:523
+msgid "Direction"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:530
+msgid "Descending"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:531
+msgid "Ascending"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:541
+msgid "Select font which will be used in the PDF reports."
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-shortcodes.php:16
+msgid "Shortcodes"
+msgstr ""
+
+#: include/coursepress/view/front/class-course.php:131
+msgid "Maximum allowed retries exceeded."
+msgstr ""
+
+#: include/coursepress/view/front/class-course.php:137
+msgid "Invalid data submitted"
+msgstr ""
+
+#: include/coursepress/view/front/class-course.php:188
+msgid "No files uploaded."
+msgstr ""
+
+#: include/coursepress/view/front/class-course.php:560
+msgid "Courses in"
+msgstr ""
+
+#: include/coursepress/view/front/class-course.php:683
+msgid "Grades"
+msgstr ""
+
+#: include/coursepress/view/front/class-enrollmentpopup.php:38
+msgid "Enrolment: No action."
+msgstr ""
+
+#: include/coursepress/view/front/class-enrollmentpopup.php:354
+msgid "Enrolment: Invalid request. Please try reloading the page."
+msgstr ""
+
+#: include/coursepress/view/front/class-enrollmentpopup.php:379
+msgid "Username already taken."
+msgstr ""
+
+#: include/coursepress/view/front/class-enrollmentpopup.php:383
+msgid "E-mail address already used."
+msgstr ""
+
+#: include/coursepress/view/front/class-enrollmentpopup.php:451
+msgid "Could not enroll at this time."
+msgstr ""
+
+#: include/coursepress/view/front/class-instructor.php:43
+msgid "The requested instuctor does not exists"
+msgstr ""
+
+#: include/coursepress/view/front/class-instructor.php:48
+msgid "Instructor not found."
+msgstr ""
+
+#: include/coursepress/view/front/class-login.php:61
+msgid "Student Login"
+msgstr ""
+
+#: include/coursepress/view/front/class-login.php:88
+msgid "New Signup"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "CoursePress Base"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://premium.wpmudev.org/project/coursepress/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"CoursePress Base turns WordPress into a powerful online learning platform. "
+"Set up online courses by creating learning units with quiz elements, video, "
+"audio etc. You can also assess student work, sell your courses and much "
+"much more."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "WPMU DEV"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://premium.wpmudev.org"
+msgstr ""
+
+#: _deprecated/classes/class.shortcodes.php:3747
+#: _deprecated/classes/class.shortcodes.php:3815
+#: include/coursepress/data/class-shortcode.php:2321
+#: include/coursepress/data/class-shortcode.php:2387
+msgctxt "noun"
+msgid "Comment"
+msgstr ""
+
+#: include/coursepress/helper/class-javascript.php:63
+msgctxt "Name for the Text editor tab (formerly HTML)"
+msgid "Text"
+msgstr ""
+
+#: include/coursepress/helper/ui/class-listtable.php:276
+msgctxt "paging"
+msgid "%1$s of %2$s"
+msgstr ""
