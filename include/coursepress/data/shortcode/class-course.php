@@ -2,7 +2,7 @@
 /**
  * Shortcode handlers.
  *
- * @package  CoursePress
+ * @package CoursePress
  */
 
 /**
@@ -22,7 +22,16 @@ class CoursePress_Data_Shortcode_Course {
 			'course',
 			array( __CLASS__, 'course' )
 		);
+		// Almost identical to [course] but returns a single value only.
+		add_shortcode(
+			'course_details',
+			array( __CLASS__, 'course_details' )
+		);
 
+		add_shortcode(
+			'courses_urls',
+			array( __CLASS__, 'courses_urls' )
+		);
 		add_shortcode(
 			'course_title',
 			array( __CLASS__, 'course_title' )
@@ -112,8 +121,12 @@ class CoursePress_Data_Shortcode_Course {
 			array( __CLASS__, 'course_time_estimation' )
 		);
 		add_shortcode(
-			'course_details',
-			array( __CLASS__, 'course_details' )
+			'course_random',
+			array( __CLASS__, 'course_random' )
+		);
+		add_shortcode(
+			'get_parent_course_id',
+			array( __CLASS__, 'get_parent_course_id' )
 		);
 	}
 
@@ -127,14 +140,20 @@ class CoursePress_Data_Shortcode_Course {
 	 * @return string Shortcode output.
 	 */
 	public static function course( $atts ) {
-		extract( shortcode_atts( array(
-			'course_id' => CoursePress_Helper_Utility::the_course( true ),
-			'show' => 'summary',
-			'date_format' => get_option( 'date_format' ),
-			'label_tag' => 'strong',
-			'label_delimeter' => ':',
-			'show_title' => 'no',
-		), $atts, 'course' ) );
+		extract(
+			shortcode_atts(
+				array(
+					'course_id' => CoursePress_Helper_Utility::the_course( true ),
+					'show' => 'summary',
+					'date_format' => get_option( 'date_format' ),
+					'label_tag' => 'strong',
+					'label_delimeter' => ':',
+					'show_title' => 'no',
+				),
+				$atts,
+				'course'
+			)
+		);
 
 		$course_id = (int) $course_id;
 		if ( empty( $course_id ) ) { return ''; }
@@ -250,6 +269,77 @@ class CoursePress_Data_Shortcode_Course {
 		}
 
 		return $content;
+	}
+
+	/**
+	 * Alias for the course shortcode. However, this shortcode has less options
+	 * as it only takes an course-ID and a single field name as input.
+	 *
+	 * @since  2.0.0
+	 * @param  array $atts Shortcode attributes.
+	 * @return string Requested course detail.
+	 */
+	public static function course_details( $atts ) {
+		global $wp_query;
+
+		extract(
+			shortcode_atts(
+				array(
+					'course_id' => ( isset( $wp_query->post->ID ) ? $wp_query->post->ID : 0 ),
+					'field' => 'course_start_date',
+				),
+				$atts
+			)
+		);
+
+		$course_id = (int) $course_id;
+		if ( empty( $course_id ) ) { return ''; }
+
+		$action = sanitize_html_class( $field );
+
+		// Specify alias values for certain actions.
+		$translate_action = array(
+			'enroll_type' => 'enrollment_type',
+			'course_start_date' => 'start',
+			'course_end_date' => 'end',
+			'enrollment_start_date' => 'enrollment_start',
+			'enrollment_end_date' => 'enrollment_end',
+			'price' => 'cost',
+		);
+
+		// Check if user specified an alias.
+		if ( in_array( $action, $translate_action ) ) {
+			$action = $translate_action[ $action ];
+		}
+
+		$args = array(
+			'course_id' => $course_id,
+			'show' => $action,
+		);
+		$content = self::course( $args );
+
+		return $content;
+	}
+
+	public static function courses_urls( $atts ) {
+		global $enrollment_process_url, $signup_url;
+
+		shortcode_atts(
+			array(
+				'url' => '',
+			),
+			$atts
+		);
+
+		switch ( $atts['url'] ) {
+			case 'enrollment-process':
+				return $enrollment_process_url;
+
+			case 'signup':
+				return $signup_url;
+		}
+
+		return '';
 	}
 
 	/**
@@ -1501,35 +1591,24 @@ class CoursePress_Data_Shortcode_Course {
 		return $content;
 	}
 
-	public static function course_details( $atts ) {
-		global $wp_query, $signup_url, $coursepress;
+	/**
+	 * Return the course-ID of the parent course.
+	 * i.e. the course of the unit/module.
+	 *
+	 * @since  2.0.0
+	 * @param  array $atts Shortcode attributes. No options here.
+	 * @return int The course ID or 0 if not called inside a course/unit/module.
+	 */
+	public static function get_parent_course_id( $atts ) {
+		global $wp;
 
-		$student_id = get_current_user_id();
+		if ( empty( $wp->query_vars ) ) { return 0; }
+		if ( ! is_array( $wp->query_vars ) ) { return 0; }
+		if ( empty( $wp->query_vars['coursename'] ) ) { return 0; }
 
-		extract( shortcode_atts( array(
-			'course_id' => ( isset( $wp_query->post->ID ) ? $wp_query->post->ID : 0 ),
-			'field' => 'course_start_date',
-		), $atts ) );
+		$coursename = $wp->query_vars['coursename'];
+		$course_id = Course::get_course_id_by_name( $coursename );
 
-		$course_id = (int) $course_id;
-		if ( empty( $course_id ) ) { return ''; }
-
-		$field = sanitize_html_class( $field );
-
-		$map = array(
-			'action_links' => 'action_links',
-			'class_size' => 'class_size',
-			'enroll_type' => 'enrollment_type',
-			'course_start_date' => 'start',
-			'course_end_date' => 'end',
-			'enrollment_start_date' => 'enrollment_start',
-			'enrollment_end_date' => 'enrollment_end',
-			'price' => 'cost',
-			'button' => 'button',
-		);
-
-		$action = in_array( $field, $map ) ? $map[ $field ] : $field;
-
-		return do_shortcode( '[course course_id="' . $course_id . '" show="' . $action . '"]' );
+		return (int) $course_id;
 	}
 }
