@@ -225,31 +225,25 @@ class CoursePress_Helper_Utility {
 		}
 	}
 
-	public static function sanitize_recursive( $array ) {
-
-		if ( ! is_array( $array ) ) {
-			if ( is_string( $array ) ) {
-				return self::filter_content( $array );
-			} else {
-				// Lets not mess with booleans
-				return $array;
+	public static function sanitize_recursive( $mixed ) {
+		if ( is_array( $mixed ) ) {
+			foreach ( $mixed as $key => $value ) {
+				$mixed[ $key ] = self::sanitize_recursive( $value );
 			}
 		} else {
-
-			foreach ( $array as $key => $value ) {
-				$array[ $key ] = self::sanitize_recursive( $value );
+			if ( is_string( $mixed ) ) {
+				return self::filter_content( $mixed );
 			}
-
-			return $array;
 		}
 
+		return $mixed;
 	}
 
 	// Deals with legacy 'on' / 'off' values for checkboxes
 	public static function checked( $value, $compare = true, $echo = false ) {
 		$checked = false;
 		if ( true === $compare ) {
-			$checked = ( ! empty( $value ) && 'off' !== $value ) || ( ! empty( $value ) && 'on' === $value ) ? 'checked="checked"' : '';
+			$checked = cp_is_true( $value ) ? 'checked="checked"' : '';
 		} else {
 			$checked = $compare === $value ? 'checked="checked"' : '';
 		}
@@ -269,21 +263,29 @@ class CoursePress_Helper_Utility {
 
 	// Allowed image extensions
 	public static function get_image_extensions() {
-		return apply_filters( 'coursepress_allowed_image_extensions', array(
-			'jpg',
-			'jpeg',
-			'jpe',
-			'gif',
-			'png',
-			'bmp',
-			'tif',
-			'tiff',
-			'ico',
-		) );
+		return apply_filters(
+			'coursepress_allowed_image_extensions',
+			array(
+				'jpg',
+				'jpeg',
+				'jpe',
+				'gif',
+				'png',
+				'bmp',
+				'tif',
+				'tiff',
+				'ico',
+			)
+		);
 	}
 
 	// Filter HTML.
 	public static function filter_content( $content, $none_allowed = false ) {
+		$kses_rules = apply_filters(
+			'coursepress_allowed_post_tags',
+			wp_kses_allowed_html( 'post' )
+		);
+
 		if ( $none_allowed ) {
 			if ( is_array( $content ) ) {
 				foreach ( $content as $content_key => $content_value ) {
@@ -298,10 +300,10 @@ class CoursePress_Helper_Utility {
 			} else {
 				if ( is_array( $content ) ) {
 					foreach ( $content as $content_key => $content_value ) {
-						$content[ $content_key ] = wp_kses( $content_value, self::filter_content_rules() );
+						$content[ $content_key ] = wp_kses( $content_value,  $kses_rules );
 					}
 				} else {
-					$content = wp_kses( $content, self::filter_content_rules() );
+					$content = wp_kses( $content, $kses_rules );
 				}
 			}
 		}
@@ -309,24 +311,38 @@ class CoursePress_Helper_Utility {
 		return $content;
 	}
 
-	// Allowed tags.
-	public static function filter_content_rules() {
-		$allowed_tags = wp_kses_allowed_html( 'post' );
-
-		return apply_filters( 'coursepress_allowed_post_tags', $allowed_tags );
-	}
-
+	/**
+	 * Send a CoursePress email template to a single user.
+	 *
+	 * @since  1.0.0
+	 * @param  array $args Email args.
+	 * @return bool True if the email was processed correctly.
+	 */
 	public static function send_email( $args ) {
-		if ( ! isset( $args['email_type'] ) ) {
-			return;
-		}
+		if ( ! isset( $args['email_type'] ) ) { return; }
 
-		// Filtered fields
-		$email = apply_filters( 'coursepress_email_fields', array(
-			'email' => apply_filters( 'coursepress_email_to_address', sanitize_email( $args['email'] ), $args ),
-			'subject' => apply_filters( 'coursepress_email_subject', sanitize_text_field( $args['subject'] ) , $args ),
-			'message' => apply_filters( 'coursepress_email_message', $args['message'], $args ),
-		), $args );
+		// Filtered fields.
+		$email = apply_filters(
+			'coursepress_email_fields',
+			array(
+				'email' => apply_filters(
+					'coursepress_email_to_address',
+					sanitize_email( $args['email'] ),
+					$args
+				),
+				'subject' => apply_filters(
+					'coursepress_email_subject',
+					sanitize_text_field( $args['subject'] ) ,
+					$args
+				),
+				'message' => apply_filters(
+					'coursepress_email_message',
+					$args['message'],
+					$args
+				),
+			),
+			$args
+		);
 
 		// Good one to hook if you want to hook WP specific filters (e.g. changing from address)
 		do_action( 'coursepress_email_pre_send', $args );
@@ -336,20 +352,29 @@ class CoursePress_Helper_Utility {
 			$email['message'] = stripslashes( nl2br( $email['message'] ) );
 		}
 
-		$headers = apply_filters( 'coursepress_email_headers', array(
-			'Content-type' => 'text/html',
-		), $args );
+		$headers = apply_filters(
+			'coursepress_email_headers',
+			array(
+				'Content-type' => 'text/html',
+			),
+			$args
+		);
 
 		$header_string = '';
 		foreach ( $headers as $key => $value ) {
 			$header_string .= $key . ': ' . $value . "\r\n";
 		}
 
-		$result = wp_mail( $email['email'], $email['subject'], CoursePress_Helper_Utility::filter_content( $email['message'] ), $header_string );
+		$result = wp_mail(
+			$email['email'],
+			$email['subject'],
+			CoursePress_Helper_Utility::filter_content( $email['message'] ),
+			$header_string
+		);
 
 		do_action( 'coursepress_email_post_send', $args, $result );
 
-		return apply_filters( 'coursepress_email_send_result', $result, $args );
+		return $result;
 	}
 
 	public static function users_can_register() {
@@ -361,8 +386,13 @@ class CoursePress_Helper_Utility {
 	}
 
 	public static function is_payment_supported() {
-		// Hook for payment plugins to turn to 'true'.  Attempt to give Course ID to allow per course filtering.
-		return apply_filters( 'coursepress_payment_supported', false, CoursePress_Data_Course::last_course_id() );
+		// Hook for payment plugins to turn to 'true'.
+		// Attempt to give Course ID to allow per course filtering.
+		return apply_filters(
+			'coursepress_payment_supported',
+			false,
+			CoursePress_Data_Course::last_course_id()
+		);
 	}
 
 	public static function send_bb_json( $response ) {
@@ -393,7 +423,11 @@ class CoursePress_Helper_Utility {
 	public static function attachment_from_url( $url ) {
 		$attachment = false;
 
-		add_filter( 'posts_where', array( __CLASS__, 'where_attachment_guid' ) );
+		// TODO: Use a custom SQL instead of this filter-workaround...
+		add_filter(
+			'posts_where',
+			array( __CLASS__, 'where_attachment_guid' )
+		);
 
 		self::$image_url = preg_replace( '/http:\/\/(\w|\.)*\//', '', $url );
 
@@ -408,14 +442,15 @@ class CoursePress_Helper_Utility {
 			$attachment = ! empty( $attachment ) ? $attachment[0] : false;
 		}
 
-		remove_filter( 'posts_where', array( __CLASS__, 'where_attachment_guid' ) );
+		remove_filter(
+			'posts_where',
+			array( __CLASS__, 'where_attachment_guid' )
+		);
 
 		return $attachment;
 	}
 
 	public static function where_attachment_guid( $sql ) {
-		global $wpdb;
-
 		$sql = ' AND guid LIKE "%' . self::$image_url . '"';
 
 		return $sql;
@@ -439,43 +474,50 @@ class CoursePress_Helper_Utility {
 	}
 
 	public static function encode( $value ) {
+		if ( ! $value ) { return false; }
+		if ( ! extension_loaded( 'mcrypt' ) ) { return $value; }
+		if ( ! function_exists( 'mcrypt_module_open' ) ) { return $value; }
+
 		$security_key = NONCE_KEY;
-		if ( extension_loaded( 'mcrypt' ) && function_exists( 'mcrypt_module_open' ) ) {
-			if ( ! $value ) {
-				return false;
-			}
+		$iv_size = mcrypt_get_iv_size( MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB );
+		$iv = mcrypt_create_iv( $iv_size, MCRYPT_RAND );
+		$crypttext = mcrypt_encrypt(
+			MCRYPT_RIJNDAEL_256,
+			mb_substr( $security_key, 0, 24 ),
+			$value,
+			MCRYPT_MODE_ECB,
+			$iv
+		);
 
-			$text = $value;
-			$iv_size = mcrypt_get_iv_size( MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB );
-			$iv = mcrypt_create_iv( $iv_size, MCRYPT_RAND );
-			$crypttext = mcrypt_encrypt( MCRYPT_RIJNDAEL_256, mb_substr( $security_key, 0, 24 ), $text, MCRYPT_MODE_ECB, $iv );
-
-			return trim( self::safe_b64encode( $crypttext ) );
-		} else {
-			return $value;
-		}
+		return trim( self::safe_b64encode( $crypttext ) );
 	}
 
 	public static function decode( $value ) {
+		if ( ! $value ) { return false; }
+		if ( ! extension_loaded( 'mcrypt' ) ) { return $value; }
+		if ( ! function_exists( 'mcrypt_module_open' ) ) { return $value; }
+
 		$security_key = NONCE_KEY;
-		if ( extension_loaded( 'mcrypt' ) && function_exists( 'mcrypt_module_open' ) ) {
-			if ( ! $value ) {
-				return false;
-			}
+		$crypttext = self::safe_b64decode( $value );
 
-			$crypttext = self::safe_b64decode( $value );
-			$iv_size = mcrypt_get_iv_size( MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB );
-			$iv = mcrypt_create_iv( $iv_size, MCRYPT_RAND );
-			$decrypttext = mcrypt_decrypt( MCRYPT_RIJNDAEL_256, mb_substr( $security_key, 0, 24 ), $crypttext, MCRYPT_MODE_ECB, $iv );
+		if ( ! $crypttext ) { return false; }
 
-			return trim( $decrypttext );
-		} else {
-			return $value;
-		}
+		$iv_size = mcrypt_get_iv_size( MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB );
+		$iv = mcrypt_create_iv( $iv_size, MCRYPT_RAND );
+		$decrypttext = mcrypt_decrypt(
+			MCRYPT_RIJNDAEL_256,
+			mb_substr( $security_key, 0, 24 ),
+			$crypttext,
+			MCRYPT_MODE_ECB,
+			$iv
+		);
+
+		return trim( $decrypttext );
 	}
 
 	public static function get_file_size( $url, $human = true ) {
 		$bytes = 0;
+
 		// If its not a path... its probably a URL
 		if ( ! preg_match( '/^\//', $url ) ) {
 			$header = wp_remote_head( $url );
@@ -502,6 +544,7 @@ class CoursePress_Helper_Utility {
 
 	public static function format_file_size( $bytes ) {
 		$bytes = (int) $bytes;
+
 		if ( $bytes >= 1073741824 ) {
 			$bytes = number_format( $bytes / 1073741824, 2 ) . ' GB';
 		} elseif ( $bytes >= 1048576 ) {
@@ -530,25 +573,30 @@ class CoursePress_Helper_Utility {
 		ob_start();
 
 		$requested_file_obj = wp_check_filetype( $requested_file );
+		$filename = basename( $requested_file );
+
 		header( 'Pragma: public' );
 		header( 'Expires: 0' );
-		header( 'Cache-Control: must-revalidate, post-check = 0, pre-check = 0' );
+		header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
 		header( 'Cache-Control: private', false );
 		header( 'Content-Type: ' . $requested_file_obj['type'] );
-		header( 'Content-Disposition: attachment; filename ="' . basename( $requested_file ) . '"' );
+		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
 		header( 'Content-Transfer-Encoding: binary' );
 		header( 'Connection: close' );
 
 		/**
 		 * Filter used to alter header params. E.g. removing 'timeout'.
 		 */
-		$force_download_parameters = apply_filters( 'coursepress_force_download_parameters', array(
-			'timeout' => 60,
-			'user-agent' => CoursePress::$name . ' / ' . CoursePress::$version . ';',
-		) );
+		$force_download_parameters = apply_filters(
+			'coursepress_force_download_parameters',
+			array(
+				'timeout' => 60,
+				'user-agent' => CoursePress::$name . ' / ' . CoursePress::$version . ';',
+			)
+		);
+
 		echo wp_remote_retrieve_body( wp_remote_get( $requested_file ), $force_download_parameters );
 		exit();
-
 	}
 
 	public static function open_course_zip_object() {
@@ -674,6 +722,7 @@ class CoursePress_Helper_Utility {
 				$truncate = substr( $text, 0, $length - strlen( $ending ) );
 			}
 		}
+
 		// if the words shouldn't be cut in the middle...
 		if ( ! $exact ) {
 			// ...search the last occurance of a space...
@@ -683,6 +732,7 @@ class CoursePress_Helper_Utility {
 				$truncate = substr( $truncate, 0, $spacepos );
 			}
 		}
+
 		// add the defined ending to the text
 		$truncate .= ' ' . $ending;
 		if ( $consider_html ) {
@@ -696,7 +746,6 @@ class CoursePress_Helper_Utility {
 	}
 
 	public static function author_description_excerpt( $user = false, $length = 100 ) {
-
 		if ( ! $user ) {
 			$user = get_current_user();
 		}
@@ -726,7 +775,6 @@ class CoursePress_Helper_Utility {
 	}
 
 	public static function the_post( $id_only = false ) {
-
 		$id = CoursePress_Data_VirtualPage::$the_post_id;
 
 		if ( $id_only ) {
@@ -734,7 +782,6 @@ class CoursePress_Helper_Utility {
 		} else {
 			return get_post( $id );
 		}
-
 	}
 
 	public static function the_post_page() {
@@ -742,20 +789,15 @@ class CoursePress_Helper_Utility {
 	}
 
 	public static function the_course( $id_only = false ) {
-
-		//$id = in_the_loop() ? get_the_ID() : CoursePress_Data_Course::last_course_id();
 		$id = CoursePress_Data_Course::last_course_id();
 
-		if ( empty( $id ) ) {
-			return '';
-		}
+		if ( empty( $id ) ) { return ''; }
 
 		if ( $id_only ) {
 			return $id;
 		} else {
 			return get_post( $id );
 		}
-
 	}
 
 	public static function the_course_category() {
@@ -767,13 +809,11 @@ class CoursePress_Helper_Utility {
 	}
 
 	public static function set_the_post( $post ) {
-
 		if ( is_object( $post ) ) {
 			CoursePress_Data_VirtualPage::$the_post_id = (int) $post->ID;
 		} else {
 			CoursePress_Data_VirtualPage::$the_post_id = (int) $post;
 		}
-
 	}
 
 	public static function set_the_post_page( $page ) {
@@ -781,13 +821,11 @@ class CoursePress_Helper_Utility {
 	}
 
 	public static function set_the_course( $post ) {
-
 		if ( is_object( $post ) ) {
 			CoursePress_Data_Course::set_last_course_id( (int) $post->ID );
 		} else {
 			CoursePress_Data_Course::set_last_course_id( (int) $post );
 		}
-
 	}
 
 	public static function set_the_course_category( $category ) {
@@ -818,22 +856,27 @@ class CoursePress_Helper_Utility {
 	//}
 
 	public static function allowed_student_mimes() {
-		return apply_filters( 'coursepress_allowed_student_mimes', array(
-			'txt' => 'text/plain',
-			'pdf' => 'application/pdf',
-			'zip' => 'application/zip',
-		) );
+		return apply_filters(
+			'coursepress_allowed_student_mimes',
+			array(
+				'txt' => 'text/plain',
+				'pdf' => 'application/pdf',
+				'zip' => 'application/zip',
+			)
+		);
 	}
-
 
 	public static function remove_youtube_controls( $code ) {
 		if ( false !== strpos( $code, 'youtu.be' ) || false !== strpos( $code, 'youtube.com' ) ) {
 			$parameters = http_build_query( self::$embed_args );
 
-			$return = preg_replace( "@src=(['\"])?([^'\">s]*)@", 'src=$1$2&' . $parameters, $code );
-			error_log( $return );
-			return $return;
+			$code = preg_replace(
+				"@src=(['\"])?([^'\">s]*)@",
+				'src=$1$2&' . $parameters,
+				$code
+			);
 		}
+
 		return $code;
 	}
 
@@ -844,21 +887,46 @@ class CoursePress_Helper_Utility {
 		self::$embed_args['modestbranding'] = 1;
 		self::$embed_args['showinfo'] = 0;
 
-		self::$embed_args = apply_filters( 'coursepress_video_embed_args', self::$embed_args, $html, $url, $args );
+		self::$embed_args = apply_filters(
+			'coursepress_video_embed_args',
+			self::$embed_args,
+			$html,
+			$url,
+			$args
+		);
 
 		// build the query url.
 		$parameters = http_build_query( self::$embed_args );
 
 		// Another attempt to remove Youtube features.
-		add_filter( 'embed_handler_html', array( __CLASS__, 'remove_youtube_controls' ) );
-		add_filter( 'embed_oembed_html', array( __CLASS__, 'remove_youtube_controls' ) );
+		add_filter(
+			'embed_handler_html',
+			array( __CLASS__, 'remove_youtube_controls' )
+		);
+		add_filter(
+			'embed_oembed_html',
+			array( __CLASS__, 'remove_youtube_controls' )
+		);
 
 		// YouTube
-		$html = str_replace( 'feature=oembed', 'feature=oembed&' . $parameters, $html );
+		$html = str_replace(
+			'feature=oembed',
+			'feature=oembed&' . $parameters,
+			$html
+		);
 
 		return $html;
 	}
 
+	/**
+	 * Check if the website has access to a certain website.
+	 * This function is used to check if the public internet is accessible by
+	 * the current WP installation.
+	 *
+	 * @since  1.0.0
+	 * @param  string $test_domain Website to check. Default is google.com.
+	 * @return bool True if the website can be reached
+	 */
 	public static function has_connection( $test_domain = 'www.google.com' ) {
 		static $_connected = null;
 
@@ -873,34 +941,55 @@ class CoursePress_Helper_Utility {
 		return $_connected;
 	}
 
-	public static function get_user_name( $user_id, $last_first = false, $username = true ) {
+	/**
+	 * Returns the full name of the specified user.
+	 *
+	 * Depending on param $last_first the result will be either of those
+	 * "First Last (displayname)"
+	 * "Last, First (displayname)"
+	 *
+	 * @since  1.0.0
+	 * @param  int  $user_id The user ID.
+	 * @param  bool $last_first Which format to use. Default: "First Last"
+	 * @param  bool $show_username Append displayname in brackets. Default: yes.
+	 * @return string Full name of the user.
+	 */
+	public static function get_user_name( $user_id, $last_first = false, $show_username = true ) {
 		$user_id = (int) $user_id;
-		$display_name = get_user_option( 'display_name', $user_id );
-		$last = get_user_option( 'last_name', $user_id );
-		$last = ! empty( $last ) ? $last : '';
-		$first = get_user_option( 'first_name', $user_id );
-		$first = ! empty( $first ) ? $first : '';
-		$return_name = '';
-		if ( ! $last_first ) {
-			$return_name = ! empty( $first ) ? $first : '';
-			$return_name = ! empty( $last ) ? $return_name . ' ' . $last : $return_name;
-			if ( $username ) {
-				$return_name = ! empty( $return_name ) ? $return_name . ' (' . $display_name . ')' : $display_name;
-			}
-			$return_name = ! empty( $return_name ) ? $return_name : $display_name;
+		$display_name = (string) get_user_option( 'display_name', $user_id );
+		$last = (string) get_user_option( 'last_name', $user_id );
+		$first = (string) get_user_option( 'first_name', $user_id );
+		$result = '';
+
+		if ( $last_first ) {
+			if ( $last ) { $result .= $last; }
+			if ( $first && $result ) { $result .= ', '; }
+			if ( $first ) { $result .= $first; }
 		} else {
-			$return_name = ! empty( $last ) ? $last : '';
-			$return_name = ! empty( $first ) && ! empty( $last ) ? $last . ', ' . $first : $return_name;
-			$return_name = empty( $return_name ) && ! empty( $first ) && empty( $last ) ? $first : $return_name;
-			if ( $username ) {
-				$return_name = ! empty( $return_name ) ? $return_name . ' (' . $display_name . ')' : $display_name;
-			}
-			$return_name = ! empty( $return_name ) ? $return_name : $display_name;
+			if ( $first ) { $result .= $first; }
+			if ( $last && $result ) { $result .= ' '; }
+			if ( $last ) { $result .= $last; }
 		}
 
-		return $return_name;
+		if ( $display_name ) {
+			if ( $result && $show_username ) {
+				$result .= ' (' . $display_name . ')';
+			} elseif ( ! $result ) {
+				$result = $display_name;
+			}
+		}
+
+		return $result;
 	}
 
+	/**
+	 * Convert a duration string in extended ISO 8601 format "HH:MM:SS" into a
+	 * second value (integer).
+	 *
+	 * @since  1.0.0
+	 * @param  string $duration Duration in ISO format HH:MM:SS.
+	 * @return int Duration in seconds
+	 */
 	public static function duration_to_seconds( $duration ) {
 		$seconds = 0;
 
@@ -915,28 +1004,37 @@ class CoursePress_Helper_Utility {
 		}
 
 		if ( ! empty( $parts ) ) {
-			$seconds += 60 * 60 * ( (int) array_pop( $parts ) );
+			$seconds += 3600 * ( (int) array_pop( $parts ) );
 		}
 
 		return $seconds;
 	}
 
+	/**
+	 * Converts a time value (in seconds) into extended ISO 8601 format string.
+	 *
+	 * @since  1.0.0
+	 * @param  int $seconds Duration in seconds.
+	 * @return string Duration in ISO format HH:MM:SS.
+	 */
 	public static function seconds_to_duration( $seconds ) {
-		$hours = (int) ( $seconds / 60 / 60 );
-		$minutes = (int) ( ( $seconds - ( $hours * 60 * 60 ) ) / 60 );
-		$seconds = $seconds - ( $hours * 60 * 60 ) - ( $minutes * 60 );
+		$hh = (int) ( $seconds / 3600 );
+		$mm = (int) ( ( $seconds - ( $hh * 3600 ) ) / 60 );
+		$ss = $seconds - ( $hh * 3600 ) - ( $mm * 60 );
 
-		return sprintf( '%02d:%02d:%02d', $hours, $minutes, $seconds );
+		return sprintf( '%02d:%02d:%02d', $hh, $mm, $ss );
 	}
 
 	public static function hashcode( $string ) {
 		$hash = 0;
 		if ( ! strlen( $string ) ) { return $hash; }
+
 		for ( $i = 0; $i < strlen( $string ); $i++ ) {
 			$char = substr( $string, $i, 1 );
 			$hash = ( ( $hash << 5 ) - $hash ) + ord( $char );
 			$hash = $hash & $hash; // Convert to 32bit integer.
 		}
+
 		return $hash;
 	}
 }
