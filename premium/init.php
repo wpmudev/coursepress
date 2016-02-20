@@ -62,6 +62,20 @@ class CoursePressPro {
 		self::$dir = dirname( self::$path );
 		self::$url = plugin_dir_url( __FILE__ );
 
+		// Here comes the actual premium code! Yay :)
+		add_action(
+			'plugins_loaded',
+			array( 'CoursePressPro_Core', 'init' ),
+			11
+		);
+
+		// This class should be moved to a different plugin (i.e. wp-academy)!
+		add_action(
+			'plugins_loaded',
+			array( 'CoursePressPro_Wpmudev', 'init' ),
+			11
+		);
+
 		// Include WPMUDev Dashboard.
 		$dash_notifications_file = self::$path . 'external/dashboard/wpmudev-dash-notification.php';
 

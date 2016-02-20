@@ -61,5 +61,12 @@ class CoursePressCampus {
 		self::$path = plugin_dir_path( __FILE__ );
 		self::$dir = dirname( self::$path );
 		self::$url = plugin_dir_url( __FILE__ );
+
+		// And here comes the actual CampusPress code! Yay :)
+		add_action(
+			'plugins_loaded',
+			array( 'CoursePressCampus_Core', 'init' ),
+			11
+		);
 	}
 }

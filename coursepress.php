@@ -117,7 +117,7 @@ class CoursePress {
 		self::$url = plugin_dir_url( __FILE__ );
 
 		// Allow WP to load other plugins before we continue!
-		add_action( 'plugins_loaded', array( 'CoursePress_Core', 'init' ) );
+		add_action( 'plugins_loaded', array( 'CoursePress_Core', 'init' ), 10 );
 
 		// Load additional features if available.
 		if ( file_exists( self::$path . '/premium/init.php' ) ) {
