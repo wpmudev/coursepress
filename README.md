@@ -51,7 +51,7 @@ As mentioned, we will only update the super branch with all changes, even if tho
 
 The prefered way to implement different code is to move pro/campus code into the subfolders `/campus` and `/premium`. Code in the other directories is supposed to be core-plugin code (i.e. free plugin).
 
-Any images/js/css code that is not core/free plugin should also be moved into the product directory.
+Any images/js/css code that is not for free plugin should also be moved into the product directory (e.g. pro-only jS goes to `premium/assets/js/src`).
 
 ### Product conditions
 
@@ -118,8 +118,10 @@ Plugin code:
 
 * `asset/` .. contains all images, js, css (scss) and font files.
 > *Special folders inside assets:*
->  `assets/js/src/` .. source js-files
->   `assets/css/src/` .. source scss-files
+>  `assets/js/src/` (source js-files)
+>  `assets/css/src/` (source scss-files)
+>  
+>  *Do not edit the .css and .js files in root of `assets/js` and `assets/css`, they are overwritten by grunt!*
 * `include/` .. All php code of the core (free version) goes here.
 * `premium/` .. All Premium-Only code belongs here!
 * `campus/` .. All CampusPress-Only code belongs here!
