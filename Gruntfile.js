@@ -518,8 +518,9 @@ module.exports = function(grunt) {
 	});
 
 	// Test task.
-	grunt.registerTask( 'test', 'Test if grunt is working', function() {
-		grunt.log.subhead( 'Looks like grunt is installed!' );
+	grunt.registerTask( 'hello', 'Test if grunt is working', function() {
+		grunt.log.subhead( 'Hi there :)' );
+		grunt.log.writeln( 'Looks like grunt is installed!' );
 	});
 
 	grunt.task.run( 'clear' );
