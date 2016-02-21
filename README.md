@@ -100,31 +100,42 @@ No steps required here as CoursePress Standard now fetches MarketPress Lite dire
 * Download MarketPress from WPMU DEV Premium.  
 * Save the zip file as `/assets/files/marketpress-pro.zip` (replace existing file).  
 
-# RELEASING #
+# AUTOMATION #
 
-See notes below on how to correctly set up grunt. *This has changed since 1.x!*
+See notes below on how to correctly set up and use grunt. *This has changed since 1.x!*
+
+Many tasks as well as basic quality control are done via grunt. Below is a list of supported tasks.
+
+**Important**: Before making a pull-request to the super branch (2.0-dev) always run the tasks `grunt php` followed by `grunt` - this ensures that all .php, .js and .css files are validated and existing unit tests pass. If one of those tasks reports problems then fix those problems before submitting the pull request.
 
 #### Grunt Task Runner  
 
 **ALWAYS** use Grunt to build CoursePress production branches. Use the following commands:  
 
-* `grunt watch` .. watch js and scss files, auto process them when changed.
-* `grunt watch:js` .. only watch js files.
-* `grunt watch:css` .. only watch css files.
+CSS and JS | Automatic monitoring
+---------- | --------------------
+`grunt watch` | Watch js and scss files, auto process them when changed.
+`grunt watch:js` | Only watch js files.
+`grunt watch:css` | Only watch css files.
 
-* `grunt js` .. validate and minify js files.
-* `grunt css` .. validate and compile scss files to css.
-* `grunt lang` .. update the translations pot file.
+CSS and JS | Manually compile all files
+---------- | --------------------------
+`grunt js` | Validate and minify js files.
+`grunt css` | Validate and compile scss files to css.
+`grunt lang` | Update the translations pot file.
 
-* `grunt test` .. runs the unit tests.
-* `grunt php` .. validate WP Coding Standards in php files.
-* `grunt php-fix` .. tries to auto-fix incorrect code formatting.
-* `grunt` .. run tasks: php, test, js, css
+PHP | Validate and test
+--- | -----------------
+`grunt test` | Runs the unit tests.
+`grunt php` | Validate WP Coding Standards in php files.
 
-* `grunt build` .. runs all tasks (php, test, js, css, lang) and builds all production versions.
-* `grunt build:pro` .. same as build, but only build the pro plugin version.
-* `grunt build:free` .. same as build, but only build the free plugin version.
-* `grunt build:campus` .. same as build, but only build the campus plugin version.
+Deployment | Generate product code
+---------- | ---------------------
+`grunt` | Run all default tasks: php, test, js, css
+`grunt build` | Runs all default tasks + lang, builds all production versions.
+`grunt build:pro` | Same as build, but only build the pro plugin version.
+`grunt build:free` | Same as build, but only build the free plugin version.
+`grunt build:campus` | Same as build, but only build the campus plugin version.
 
 
 #### Set up grunt
@@ -133,60 +144,75 @@ See notes below on how to correctly set up grunt. *This has changed since 1.x!*
 
 First install node.js from: <http://nodejs.org/>  
 
-    # Test it:
-    $ npm -v
-    
-    # Install it system wide:
-    $ npm install -g npm
+```
+#!bash 
+# Test it:
+$ npm -v
+
+# Install it system wide (optional but recommended):
+$ npm install -g npm
+```
 
 ##### 2. grunt
 
 Install grunt by running this command in command line:
 
-    # Install grunt:
-    $ npm install -g grunt-cli
+```
+#!bash 
+# Install grunt:
+$ npm install -g grunt-cli
+```
 
 ##### 3. Setup project
 
 In command line switch to the `coursepress` plugin folder. Run this command to set up grunt for the coursepress plugin:
 
-    # Install automation tools for coursepress:
-    $ npm install
-    
-    # Test it:
-    $ grunt test
+```
+#!bash 
+# Install automation tools for coursepress:
+$ npm install
+
+# Test it:
+$ grunt test
+```
 
 ##### 4. Install required tools
 
 Same as 3: Run commands in the `coursepress` plugin folder:
 
-    # Install composer:
-    $ php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php
-    $ php composer-setup.php --filename=composer
-    $ php -r "unlink('composer-setup.php');"
-    
-    # Install PHP Unit
-    $ composer require --dev "phpunit/phpunit=4.8.*"
-    
-    # Install PHP Code Sniffer:
-    $ php composer require --dev "squizlabs/php_codesniffer:2.*"
-    
-    # Install WP Coding Standards:
-    $ git clone -b master https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git vendor/wpcs
-    $ vendor/bin/phpcs --config-set installed_paths ../../wpcs
-    
-    # Config git with your Name/Email
-    $ git config user.email "<your email>"
-    $ git config user.name "<your name>"
+```
+#!bash 
+# Install composer:
+$ php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php
+$ php composer-setup.php --filename=composer
+$ php -r "unlink('composer-setup.php');"
+
+# Install PHP Unit
+$ composer require --dev "phpunit/phpunit=4.8.*"
+
+# Install PHP Code Sniffer:
+$ php composer require --dev "squizlabs/php_codesniffer:2.*"
+
+# Install WP Coding Standards:
+$ git clone -b master https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git vendor/wpcs
+$ vendor/bin/phpcs --config-set installed_paths ../../wpcs
+
+# Config git with your Name/Email
+$ git config user.email "<your email>"
+$ git config user.name "<your name>"
+```
 
 
 #### Specifying i18 tools location  
 
 If `makepot` is not available in your system path you can set your i18 tools path in a private config.json file (excluded by .gitignore). Create config.json and add the following to it:  
 
-    {
-       "i18nToolsPath": "/path/to/i18n-tools/"
-    }
+```
+#!text 
+{
+   "i18nToolsPath": "/path/to/i18n-tools/"
+}
+```
 
 
 #### Set up wordpress-develop for unit tests
@@ -201,11 +227,19 @@ The repository must exist at one of those directories:
 
 (See: tests/bootstrap.php line 12-21 for logic)
 
-    $ mkdir /srv/www/wordpress-develop
-    $ cd /srv/www/wordpress-develop
-    $ svn co http://develop.svn.wordpress.org/trunk/
-    $ cd trunk
-    $ svn up
+```
+#!bash 
+# Create the directory at correct place:
+$ mkdir /srv/www/wordpress-develop
+
+# Download the WP-developer repository:
+$ cd /srv/www/wordpress-develop
+$ svn co http://develop.svn.wordpress.org/trunk/
+
+# Run this to download latest WP updates:
+$ cd /srv/www/wordpress-develop/trunk
+$ svn up
+```
 
 
 #### Unit testing notes
