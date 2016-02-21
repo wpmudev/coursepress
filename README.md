@@ -251,19 +251,6 @@ $ git config user.email "<your email>"
 $ git config user.name "<your name>"
 ```
 
-
-### Specifying i18 tools location  
-
-If `makepot` is not available in your system path you can set your i18 tools path in a private config.json file (excluded by .gitignore). Create config.json and add the following to it:  
-
-```
-#!text 
-{
-   "i18nToolsPath": "/path/to/i18n-tools/"
-}
-```
-
-
 ### Set up wordpress-develop for unit tests
 
 If the command `grunt test` fails you possibly need to follow these steps and install the wordpress-develop repository to your server.
