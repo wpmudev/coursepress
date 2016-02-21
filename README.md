@@ -106,7 +106,7 @@ See notes below on how to correctly set up and use grunt. *This has changed sinc
 
 Many tasks as well as basic quality control are done via grunt. Below is a list of supported tasks.
 
-**Important**: Before making a pull-request to the super branch (2.0-dev) always run the tasks `grunt php` followed by `grunt` - this ensures that all .php, .js and .css files are validated and existing unit tests pass. If one of those tasks reports problems then fix those problems before submitting the pull request.
+**Important**: Before making a pull-request to the super branch (2.0-dev) always run the task `grunt` - this ensures that all .php, .js and .css files are validated and existing unit tests pass. If an problems are reported then fix those problems before submitting the pull request.
 
 #### Grunt Task Runner  
 
@@ -115,12 +115,12 @@ Many tasks as well as basic quality control are done via grunt. Below is a list 
 Category | Command | Action
 ---------| ------- | ------
 Edit | `grunt watch` | Watch js and scss files, auto process them when changed. Same as running `grunt js` and `grunt css` after each js/css change.
-Edit | `grunt js` | Manually validate and minify js files.
-Edit | `grunt css` | Manually validate and compile scss files to css.
+Edit | `grunt js` | Manually validate and minify js files. Do this after you merge changes or switch to a different branch.
+Edit | `grunt css` | Manually validate and compile scss files to css. Same as js: After merge/switch branch.
 Test | `grunt test` | Runs the unit tests.
 Test | `grunt php` | Validate WP Coding Standards in php files.
+**Build** | `grunt` | Run all default tasks: php, test, js, css. *Run this task before submitting a pull-request*.
 Build | `grunt lang` | Update the translations pot file.
-Build | `grunt` | Run all default tasks: php, test, js, css
 Build | `grunt build` | Runs all default tasks + lang, builds all production versions.
 Build | `grunt build:pro` | Same as build, but only build the pro plugin version.
 Build | `grunt build:free` | Same as build, but only build the free plugin version.
@@ -162,7 +162,7 @@ In command line switch to the `coursepress` plugin folder. Run this command to s
 $ npm install
 
 # Test it:
-$ grunt test
+$ grunt hello
 ```
 
 ##### 4. Install required tools
