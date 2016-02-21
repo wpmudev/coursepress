@@ -112,30 +112,19 @@ Many tasks as well as basic quality control are done via grunt. Below is a list 
 
 **ALWAYS** use Grunt to build CoursePress production branches. Use the following commands:  
 
-CSS and JS | Automatic monitoring
----------- | --------------------
-`grunt watch` | Watch js and scss files, auto process them when changed.
-`grunt watch:js` | Only watch js files.
-`grunt watch:css` | Only watch css files.
-
-CSS and JS | Manually compile all files
----------- | --------------------------
-`grunt js` | Validate and minify js files.
-`grunt css` | Validate and compile scss files to css.
-`grunt lang` | Update the translations pot file.
-
-PHP | Validate and test
---- | -----------------
-`grunt test` | Runs the unit tests.
-`grunt php` | Validate WP Coding Standards in php files.
-
-Deployment | Generate product code
----------- | ---------------------
-`grunt` | Run all default tasks: php, test, js, css
-`grunt build` | Runs all default tasks + lang, builds all production versions.
-`grunt build:pro` | Same as build, but only build the pro plugin version.
-`grunt build:free` | Same as build, but only build the free plugin version.
-`grunt build:campus` | Same as build, but only build the campus plugin version.
+Category | Command | Action
+---------| ------- | ------
+Edit | `grunt watch` | Watch js and scss files, auto process them when changed. Same as running `grunt js` and `grunt css` after each js/css change.
+Edit | `grunt js` | Manually validate and minify js files.
+Edit | `grunt css` | Manually validate and compile scss files to css.
+Test | `grunt test` | Runs the unit tests.
+Test | `grunt php` | Validate WP Coding Standards in php files.
+Build | `grunt lang` | Update the translations pot file.
+Build | `grunt` | Run all default tasks: php, test, js, css
+Build | `grunt build` | Runs all default tasks + lang, builds all production versions.
+Build | `grunt build:pro` | Same as build, but only build the pro plugin version.
+Build | `grunt build:free` | Same as build, but only build the free plugin version.
+Build | `grunt build:campus` | Same as build, but only build the campus plugin version.
 
 
 #### Set up grunt
