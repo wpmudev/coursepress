@@ -1707,9 +1707,13 @@ var CoursePress = CoursePress || {};
 			//'change [name=page_feature_image-button]': 'featureImageChange'
 		},
 		render: function() {
-			var template = _.template( $( '#unit-builder-header-template' ).html(), this.template_variables );
+			var values = this.template_variables;
+			if ( 0 === parseInt( values.unit_delay_days ) ) {
+				values.unit_delay_days = '';
+			}
+			var template = _.template( $( '#unit-builder-header-template' ).html(), values );
 			this.$el.html( template );
-			$( '#unit_feature_image' ).val( this.template_variables.unit_feature_image );
+			$( '#unit_feature_image' ).val( values.unit_feature_image );
 
 			this.updateUnitHeader();
 			return this;
