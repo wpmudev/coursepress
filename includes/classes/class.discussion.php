@@ -49,7 +49,7 @@ if ( ! class_exists( 'Discussion' ) ) {
 
 			$args = array(
 				'name'           => $slug,
-				'post_type'      => 'discussion',
+				'post_type'      => 'discussions',
 				'post_status'    => 'any',
 				'posts_per_page' => 1
 			);

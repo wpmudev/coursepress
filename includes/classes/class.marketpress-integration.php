@@ -485,7 +485,8 @@ if ( ! class_exists( 'CoursePress_MarketPress3_Integration' ) ) {
 			$course      = new Course( (int) $course_id );
 			$paid_course = ( CoursePress_MarketPress_Integration::is_active() || cp_use_woo() ) ? $course->details->paid_course : false;
 
-			$auto_sku    = $course->details->auto_sku;
+			// Add condition to remove php warnings
+			$auto_sku    = isset( $course->details->auto_sku ) ? $course->details->auto_sku : '';
 			$mp_settings = get_option( 'mp_settings' );
 			$gateways    = 0;
 

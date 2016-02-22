@@ -289,21 +289,23 @@ if ( isset( $_GET['response_id'] ) ) {
 
 					<ul class="sidebar-name">
 						<?php
-						for ( $i = 1; $i <= count( $course_units ); $i ++ ) {
-							$current_unit = $course_units[ $i - 1 ];
+						$i = 1;
+						foreach( $course_units as $the_unit ) {
+							$current_unit = $the_unit['post'];
 							?>
 							<li>
 								<a href="#tabs-<?php echo $i; ?>" alt="<?php echo $current_unit->post_title; ?>" title="<?php echo $current_unit->post_title; ?>"><?php echo $i; ?></a>
 							</li>
-						<?php } ?>
+						<?php
+							$i++;
+						} ?>
 					</ul>
 
 					<?php
-					for ( $i = 1; $i <= count( $course_units ); $i ++ ) {
-						$current_unit = $course_units[ $i - 1 ];
-						?>
+					$i = 1;
+					foreach( $course_units as $the_unit ) {
+						$current_unit = $the_unit['post'];
 
-						<?php
 						//search for students
 						if ( isset( $_GET['classes'] ) ) {
 							$classes = $_GET['classes'];
@@ -381,7 +383,7 @@ if ( isset( $_GET['response_id'] ) ) {
 									$style       = ( isset( $style ) && 'alternate' == $style ) ? '' : ' alternate';
 									$user_object = new Student( $user->ID );
 
-									$modules = Unit_Module::get_modules( $current_unit->ID );
+									$modules = $the_unit['modules'];
 
 									$input_modules_count = 0;
 
@@ -444,10 +446,10 @@ if ( isset( $_GET['response_id'] ) ) {
 													?>
 													<?php
 													if ( $general_col_visibility ) {
+														$the_class = new $class_name;
 														?>
 														<td class="column-module <?php echo $style . ' ' . $visibility_class; ?>">
-															<?php echo $mod->label;
-															?>
+															<?php echo esc_html( $the_class->label ); ?>
 														</td>
 
 														<td class="column-title <?php echo $style . ' ' . $visibility_class; ?>">
@@ -549,7 +551,9 @@ if ( isset( $_GET['response_id'] ) ) {
 							<!--/tablenav-->
 
 						</div><!--a tab-->
-					<?php } ?>
+					<?php
+						$i++;
+						} ?>
 				</div>
 				<!--tabs-->
 			</div><!--assessment-->

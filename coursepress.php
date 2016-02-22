@@ -4589,7 +4589,8 @@ if ( ! class_exists( 'CoursePress' ) ) {
 									unset( $invites[ $key ] );
 									update_post_meta( $course_id, 'instructor_invites', $invites );
 
-									$course_link = '<a href ="' . admin_url( 'admin.php?page = course_details&course_id =' . $course_id ) . '">' . get_the_title( $course_id ) . '</a>';
+									// Don't add space between =
+									$course_link = '<a href ="' . admin_url( 'admin.php?page=course_details&course_id=' . $course_id ) . '">' . get_the_title( $course_id ) . '</a>';
 
 									$title   = __( '<h3>Invitation activated.</h3>', 'coursepress_base_td' );
 									$content = do_shortcode( sprintf( __( '<p>Congratulations. You are now an instructor in the following course:</p>
@@ -5001,6 +5002,11 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 		function admin_header_actions() {
 			global $pagenow;
+			
+			/** Bail when in category page. **/
+			if( $pagenow == 'edit-tags.php' ) {
+				return;
+			}
 
 			if ( is_admin() && ! CoursePress_Capabilities::is_campus() ) {
 				if ( ( isset( $_GET['cp_admin_ref'] ) && $_GET['cp_admin_ref'] == 'cp_course_creation_page' ) || ( isset( $_POST['cp_admin_ref'] ) && $_POST['cp_admin_ref'] == 'cp_course_creation_page' ) ) {

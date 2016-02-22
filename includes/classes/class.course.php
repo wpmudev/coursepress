@@ -863,6 +863,7 @@ if ( ! class_exists( 'Course' ) ) {
 
 		static function get_course_students_ids( $course_id = false ) {
 			global $wpdb;
+
 			if ( ! $course_id ) {
 				return false;
 			}
