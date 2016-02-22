@@ -1,13 +1,26 @@
 <?php
+/**
+ * Helper functions.
+ * Integrate other plugins with CoursePress.
+ *
+ * @package  CoursePress
+ */
 
+/**
+ * Integrates MarketPress with CoursePress.
+ */
 class CoursePress_Helper_Integration_MarketPress {
 
 	private static $updated = false;
 	private static $course_id = 0;
 
+	/**
+	 * Initialize the Integration.
+	 *
+	 * @since  2.0.0
+	 */
 	public static function init() {
-
-		// If MarketPress is not activated, just exit
+		// If MarketPress is not activated just exit.
 		if ( ! CoursePress_Helper_Extension_MarketPress::activated() ) {
 			return false;
 		}
@@ -30,9 +43,17 @@ class CoursePress_Helper_Integration_MarketPress {
 
 		add_filter( 'coursepress_shortcode_course_cost', array( __CLASS__, 'shortcode_cost' ), 10, 2 );
 
-		add_filter( 'mp_order_notification_subject', 'cp_mp_order_notification_subject', 10, 2 );
+		add_filter(
+			'mp_order_notification_subject',
+			'cp_mp_order_notification_subject',
+			10, 2
+		);
 
-		add_filter( 'mp_order_notification_body', 'cp_mp_order_notification_body', 10, 2 );
+		add_filter(
+			'mp_order_notification_body',
+			'cp_mp_order_notification_body',
+			10, 2
+		);
 	}
 
 
@@ -265,25 +286,49 @@ class CoursePress_Helper_Integration_MarketPress {
 	}
 }
 
+// --- Legacy functions --------------------------------------------------------
 
 if ( ! function_exists( 'cp_get_order_course_id' ) ) {
+
+	/**
+	 * Return the course-ID that is linked with the specified MarketPress order.
+	 * If the order is not related to CoursePress then return is false.
+	 *
+	 * @since  1.0.0
+	 * @param  int $order_id MarketPress order-ID.
+	 * @return int Course-ID or false.
+	 */
 	function cp_get_order_course_id( $order_id ) {
 		global $mp;
+
+		if ( empty( $mp ) ) { return false; }
 		$cart_info = $mp->get_order( $order_id )->mp_cart_info;
-		if ( ! is_array( $cart_info ) ) {
-			return false;
-		}
+		if ( ! is_array( $cart_info ) ) { return false; }
+
 		$mp_product_id = key( $cart_info );
 		$post_parent = get_post_ancestors( $mp_product_id );
+
 		if ( is_array( $post_parent ) ) {
-			return $post_parent[0];
+			return (int) $post_parent[0];
 		} else {
 			return false;
 		}
 	}
 }
 
+// --- Email functions ---------------------------------------------------------
+
 if ( ! function_exists( 'cp_mp_order_notification_subject' ) ) {
+
+	/**
+	 * Subject for the order-confirmation email, when user purchased access
+	 * to a Course.
+	 *
+	 * @since  1.0.0
+	 * @param  string $subject Default subject.
+	 * @param  object $order MarketPress order.
+	 * @return string Email subject.
+	 */
 	function cp_mp_order_notification_subject( $subject, $order ) {
 		if ( cp_get_order_course_id( $order->ID ) ) {
 			return coursepress_get_mp_order_email_subject();
@@ -294,13 +339,26 @@ if ( ! function_exists( 'cp_mp_order_notification_subject' ) ) {
 }
 
 if ( ! function_exists( 'cp_mp_order_notification_body' ) ) {
+
+	/**
+	 * Email body for the order-confirmation email, when user purchased access
+	 * to a Course.
+	 *
+	 * @since  1.0.0
+	 * @param  string $content Default email body.
+	 * @param  object $order MarketPress order.
+	 * @return string Email body.
+	 */
 	function cp_mp_order_notification_body( $content, $order ) {
 		if ( cp_get_order_course_id( $order->ID ) ) {
 			$course_id = cp_get_order_course_id( $order->ID );
 			$course = get_post( $course_id );
 			$course_name = $course->post_title;
 
-			$tracking_url = apply_filters( 'wpml_marketpress_tracking_url', mp_orderstatus_link( false, true ) . $order->post_title . '/' );
+			$tracking_url = apply_filters(
+				'wpml_marketpress_tracking_url',
+				mp_orderstatus_link( false, true ) . $order->post_title . '/'
+			);
 
 			$tags = array(
 				'CUSTOMER_NAME',
@@ -326,21 +384,16 @@ if ( ! function_exists( 'cp_mp_order_notification_body' ) ) {
 			$message = coursepress_get_mp_order_content_email();
 			$message = str_replace( $tags, $tags_replaces, $message );
 
-			add_filter( 'wp_mail_from', 'my_mail_from_function', 99 );
-
-			if ( ! function_exists( 'my_mail_from_function' ) ) {
-				function my_mail_from_function( $email ) {
-					return coursepress_get_mp_order_from_email();
-				}
-			}
-
-			add_filter( 'wp_mail_from_name', 'my_mail_from_name_function', 99 );
-
-			if ( ! function_exists( 'my_mail_from_name_function' ) ) {
-				function my_mail_from_name_function( $name ) {
-					return coursepress_get_mp_order_from_name();
-				}
-			}
+			add_filter(
+				'wp_mail_from',
+				'cp_mp_order_email_from',
+				99
+			);
+			add_filter(
+				'wp_mail_from_name',
+				'cp_mp_order_email_from_name',
+				99
+			);
 
 			return $message;
 		} else {
@@ -348,3 +401,35 @@ if ( ! function_exists( 'cp_mp_order_notification_body' ) ) {
 		}
 	}
 }
+
+if ( ! function_exists( 'cp_mp_order_email_from' ) ) {
+
+	/**
+	 * Custom sender email-address for order-confirmation emails that belong
+	 * to a purchased course.
+	 *
+	 * @since  1.0.0
+	 * @param  string $email Default sender email address.
+	 * @return string Sender email address.
+	 */
+	function cp_mp_order_email_from( $email ) {
+		return coursepress_get_mp_order_from_email();
+	}
+}
+
+if ( ! function_exists( 'cp_mp_order_email_from_name' ) ) {
+
+	/**
+	 * Custom sender name for order-confirmation emails that belong
+	 * to a purchased course.
+	 *
+	 * @since  1.0.0
+	 * @param  string $name Default sender name.
+	 * @return string Sender name.
+	 */
+	function cp_mp_order_email_from_name( $name ) {
+		return coursepress_get_mp_order_from_name();
+	}
+}
+
+// -----------------------------------------------------------------------------
