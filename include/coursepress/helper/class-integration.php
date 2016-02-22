@@ -50,7 +50,7 @@ class CoursePress_Helper_Integration {
 			);
 
 			$use_woo = CoursePress_Core::get_setting( 'woocommerce/use' );
-			if ( cp_is_true( $use_woo ) ) {
+			if ( $use_woo ) {
 				self::$plugins['woo'] = array(
 					'class' => 'CoursePress_Helper_Integration_WooCommerce',
 					'method' => 'init',
