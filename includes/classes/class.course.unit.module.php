@@ -180,6 +180,17 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 			// Remove input module meta
 			Unit::delete_input_module_meta( $unit_id, $id );
 
+			// Reset student's session data.
+			$unit_object = new Unit( $unit_id );
+			$unit = $unit_object->get_unit();
+			$course_id = $unit->post_parent;
+			$students = Course::get_course_students_ids( $course_id );
+
+			foreach( $students as $idx => $student_id){
+				$student_session = WP_Session_Tokens::get_instance( $student_id );
+				$student_session->destroy('coursepress_'.$student_id);
+			}
+
 			/**
 			 * Perform actions after a Unit Module is deleted.
 			 *
