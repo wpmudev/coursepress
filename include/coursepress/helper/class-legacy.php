@@ -74,7 +74,7 @@ if ( ! function_exists( 'cp_can_see_unit_draft' ) ) {
 if ( ! function_exists( 'cp_set_last_visited_unit_page' ) ) {
 
 	/**
-	 * Save the given page-ID as "last visited unit-page" of the spcified user.
+	 * Save the given page-ID as "last visited unit-page" of the specified user.
 	 *
 	 * @todo  Migrate and use deprecated class.student.completion.php!
 	 *        This function/logic is already in that file...
@@ -167,7 +167,7 @@ if ( ! function_exists( 'cp_get_number_of_unit_pages_visited' ) ) {
 if ( ! function_exists( 'cp_set_visited_course' ) ) {
 
 	/**
-	 * Mark the given course as "visited" for the specieid user.
+	 * Mark the given course as "visited" for the specified user.
 	 *
 	 * @todo  Migrate and use deprecated class.student.completion.php!
 	 *        This function/logic is already in that file...

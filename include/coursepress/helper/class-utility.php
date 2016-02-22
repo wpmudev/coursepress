@@ -281,11 +281,11 @@ class CoursePress_Helper_Utility {
 
 	/**
 	 * Filter HTML string and remove forbidden tags and attributes.
-	 * This function uses the wp_kses() function to sanitze the content.
+	 * This function uses the wp_kses() function to sanitize the content.
 	 *
 	 * @since  2.0.0
 	 * @param  string $content Raw HTML code.
-	 * @param  bool   $no_html Return sanitzed HTML (false) or plain text (true)?
+	 * @param  bool   $no_html Return sanitized HTML (false) or plain text (true)?
 	 * @return string Sanitized content.
 	 */
 	public static function filter_content( $content, $no_html = false ) {
