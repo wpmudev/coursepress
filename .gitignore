@@ -8,7 +8,7 @@
 *.exe
 *.o
 *.so
- 
+
 # Development Libraries #
 #########################
 node_modules/
@@ -26,13 +26,13 @@ config.json
 #*.rar
 #*.tar
 #*.zip
- 
+
 # Logs and databases #
 ######################
 *.log
 *.sql
 *.sqlite
- 
+
 # OS generated files #
 ######################
 .DS_Store
@@ -61,3 +61,8 @@ dist/
 nbdist/
 nbactions.xml
 nb-configuration.xml
+
+composer
+composer.lock
+composer.json
+/vendor
