@@ -80,10 +80,10 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 							<option value="after_delay"<%= unit_availability == "after_delay" ? " selected=\"selected\"" : "" %>>'. __( 'Available after', 'CP_TD' ) . '</option>
 						</select>
 						<div id="div-on_date" class="div-inline ua-div" style="display:none;">
-							<div class="date"><input id="dpinputavailability" class="dateinput" type="text" value="<%= unit_date_availability %>" name="meta_unit_date_availability" spellcheck="true" /></div>
+							<div class="date"><input id="dpinputavailability" class="dateinput" type="text" value="<%= unit_date_availability %>" name="meta_unit_date_availability" placeholder="'. __( 'instantly', 'CP_TD' ) . '" spellcheck="true" /></div>
 						</div>
 						<div id="div-after_delay" class="div-inline ua-div" style="display:none;">
-							<input type="number" min="0" max="9999" name="meta_unit_delay_days" value="<%=unit_delay_days%>" placeholder="'. __( 'seconds', 'CP_TD' ) . '" /> <span>'. __( 'Day(s)', 'CP_TD' ) . '</span>
+							<input type="number" min="0" max="9999" name="meta_unit_delay_days" value="<%=unit_delay_days%>" placeholder="'. __( 'e.g. 7', 'CP_TD' ) . '" /> <span>'. __( 'Day(s)', 'CP_TD' ) . '</span>
 						</div>
 					</div>
 					<div class="progress-next-unit">
