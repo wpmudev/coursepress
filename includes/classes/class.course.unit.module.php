@@ -130,6 +130,8 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 		}
 
 		public static function delete_module( $id, $force_delete = true ) {
+			global $wpdb;
+			
 			$unit_id = self::get_module_unit_id( $id );
 
 			/**
