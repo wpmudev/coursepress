@@ -1174,18 +1174,7 @@ class CoursePress_Data_Shortcode_Template {
 											$student_data = CoursePress_Helper_Utility::sanitize_recursive( $student_data );
 											$student_id = wp_insert_user( $student_data );
 											if ( ! empty( $student_id ) ) {
-												// $form_message = __( 'Account created successfully! You may now <a href="' . ( get_option( 'use_custom_login_form', 1 ) ? trailingslashit( site_url() . '/' . $this->get_login_slug() ) : wp_login_url() ) . '">log into your account</a>.', 'CP_TD' );
-												// $form_message_class = 'regular';
-												$email_args['email_type'] = CoursePress_Helper_Email::REGISTRATION;
-												$email_args['email'] = $student_data['user_email'];
-												$email_args['first_name'] = $student_data['first_name'];
-												$email_args['last_name'] = $student_data['last_name'];
-												$email_args['fields'] = array();
-												$email_args['fields']['student_id'] = $student_id;
-												$email_args['fields']['student_username'] = $student_data['user_login'];
-												$email_args['fields']['student_password'] = $student_data['user_pass'];
-
-												CoursePress_Helper_Email::send_email( $email_args );
+												CoursePress_Data_Student::send_registration( $student_id );
 
 												$creds = array();
 												$creds['user_login'] = $student_data['user_login'];

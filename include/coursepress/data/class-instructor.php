@@ -269,7 +269,6 @@ class CoursePress_Data_Instructor {
 		// Return data: Can be used by caller to get extra information
 		$return_data = array();
 
-		$email_args['email_type'] = 'invite_instructor';
 		$email_args['course_id'] = $email_data['course_id'];
 		$email_args['email'] = sanitize_email( $email_data['email'] );
 
@@ -304,9 +303,13 @@ class CoursePress_Data_Instructor {
 			$instructor_invites = array();
 		}
 
-		// Fire off the email, data altered in the hooks below
-		if ( CoursePress_Helper_Utility::send_email( $email_args ) ) {
+		// Fire off the email, data altered in the hooks below.
+		$sent = CoursePress_Helper_Email::send_email(
+			CoursePress_Helper_Email::INSTRUCTOR_INVITATION,
+			$email_args
+		);
 
+		if ( $sent ) {
 			if ( ! $invite_exists ) {
 
 				// Add the new invite

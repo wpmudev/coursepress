@@ -910,7 +910,6 @@ class CoursePress_Data_Course {
 		self::$email_type = CoursePress_Helper_Email::ENROLLMENT_CONFIRM;
 
 		$email_args = array();
-		$email_args['email_type'] = self::$email_type;
 		$email_args['course_id'] = $course_id;
 		$email_args['email'] = sanitize_email( $student->user_email );
 		$email_args['first_name'] = $student->user_firstname;
@@ -919,7 +918,12 @@ class CoursePress_Data_Course {
 		$email_args = apply_filters( 'coursepress_student_enrollment_email_args', $email_args );
 
 		if ( is_email( $email_args['email'] ) ) {
-			if ( CoursePress_Helper_Utility::send_email( $email_args ) ) {
+			$sent = CoursePress_Helper_Email::send_email(
+				self::$email_type,
+				$email_args
+			);
+
+			if ( $sent ) {
 				// Could add something on successful email
 			} else {
 				// Could add something if email fails
@@ -1101,13 +1105,9 @@ class CoursePress_Data_Course {
 			$email_args['last_name'] = sanitize_text_field( $email_data['last_name'] );
 		}
 
-		if ( CoursePress_Helper_Utility::send_email( $email_args ) ) {
-			// successful
-			return true;
-		} else {
-			// failed
-			return false;
-		}
+		$sent = CoursePress_Helper_Email::send_email( self::$type, $email_args );
+
+		return $sent;
 	}
 
 	private static function _add_invitation_email_hooks() {

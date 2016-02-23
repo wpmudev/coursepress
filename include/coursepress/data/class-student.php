@@ -765,4 +765,32 @@ class CoursePress_Data_Student {
 
 		return $response_count > 0 ? (int) ( $results / $response_count ) : 0;
 	}
+
+	/**
+	 * Send email about successful account creation.
+	 * The email contains several links but no login name or password.
+	 *
+	 * @since  1.0.0
+	 * @param  int $student_id The newly created WP User ID.
+	 * @return bool True on success.
+	 */
+	public static function send_registration( $student_id ) {
+		$student_data = get_userdata( $student_id );
+
+		$email_args = array();
+		$email_args['email'] = $student_data['user_email'];
+		$email_args['first_name'] = $student_data['first_name'];
+		$email_args['last_name'] = $student_data['last_name'];
+		$email_args['fields'] = array();
+		$email_args['fields']['student_id'] = $student_id;
+		$email_args['fields']['student_username'] = $student_data['user_login'];
+		$email_args['fields']['student_password'] = $student_data['user_pass'];
+
+		$sent = CoursePress_Helper_Email::send_email(
+			CoursePress_Helper_Email::REGISTRATION,
+			$email_args
+		);
+
+		return $sent;
+	}
 }

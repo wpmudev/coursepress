@@ -10,7 +10,6 @@ class CoursePress_Helper_Email {
 	const INSTRUCTOR_INVITATION = 'instructor_invitation';
 	const NEW_ORDER = 'new_order';
 
-	private static $last_args;
 
 	public static function from_name( $context ) {
 		$fields = CoursePress_Helper_Setting_Email::get_defaults( $context );
@@ -35,6 +34,7 @@ class CoursePress_Helper_Email {
 
 		return CoursePress_Core::get_setting( 'email/' . $context . '/content', $fields['content'] );
 	}
+	protected static $current_type = '';
 
 	public static function get_email_fields( $context ) {
 		return apply_filters( 'coursepress_get_email_fields_' . $context, array(
@@ -63,9 +63,9 @@ class CoursePress_Helper_Email {
 	 */
 	public static function send_email( $args ) {
 
-		self::$last_args = $args;
 
 		if ( isset( $args['email_type'] ) && ! empty( $args['email_type'] ) ) {
+		self::$current_type = $type;
 
 			add_filter( 'wp_mail_from', array( __CLASS__, 'email_from' ) );
 			add_filter( 'wp_mail_from_name', array( __CLASS__, 'email_from_name' ) );
@@ -101,7 +101,95 @@ class CoursePress_Helper_Email {
 			}
 		}
 
-		return CoursePress_Helper_Utility::send_email( $args );
+		return self::process_and_send( $args );
+	}
+
+	/**
+	 * Send a CoursePress email template to a single user.
+	 *
+	 * @since  1.0.0
+	 * @param  array $args Email args.
+	 * @return bool True if the email was processed correctly.
+	 */
+	protected static function process_and_send( $type, $args ) {
+		// Legacy support for args['email']. Remove this in future!
+		if ( ! empty( $args['email'] ) && empty( $args['to'] ) ) {
+			$args['to'] = $args['email'];
+		}
+
+		if ( empty( $args['to'] ) ) {
+			throw new Exception( 'Error: No email recipient!' );
+		}
+		if ( empty( $args['message'] ) ) {
+			throw new Exception( 'Error: Empty email body!' );
+		}
+		if ( empty( $args['subject'] ) ) {
+			throw new Exception( 'Error: Empty email subject!' );
+		}
+
+		// Prepare email content.
+		$email = array(
+			'to' => apply_filters(
+				'coursepress_email_to_address',
+				sanitize_email( $args['to'] ),
+				$args
+			),
+			'subject' => apply_filters(
+				'coursepress_email_subject',
+				sanitize_text_field( $args['subject'] ) ,
+				$args
+			),
+			'message' => apply_filters(
+				'coursepress_email_message',
+				$args['message'],
+				$args
+			),
+			'headers' => apply_filters(
+				'coursepress_email_headers',
+				array(
+					'Content-type' => 'text/html',
+				)
+			),
+		);
+
+		$email = apply_filters(
+			'coursepress_email_fields',
+			$email,
+			$args,
+			$type
+		);
+		$email = apply_filters(
+			'coursepress_email_fields-' . $type,
+			$email,
+			$args
+		);
+
+		// Good one to hook if you want to hook WP specific filters (e.g. changing from address)
+		do_action( 'coursepress_email_pre_send', $args, $type );
+		do_action( 'coursepress_email_pre_send-' . $type, $args );
+
+		if ( apply_filters( 'coursepress_email_strip_slashed', true, $args, $type ) ) {
+			$email['subject'] = stripslashes( $email['subject'] );
+			$email['message'] = stripslashes( nl2br( $email['message'] ) );
+		}
+
+		$header_string = '';
+		foreach ( $email['headers'] as $key => $value ) {
+			$header_string .= $key . ': ' . $value . "\r\n";
+		}
+
+		$result = wp_mail(
+			$email['to'],
+			$email['subject'],
+			CoursePress_Helper_Utility::filter_content( $email['message'] ),
+			$header_string
+		);
+
+		do_action( 'coursepress_email_sent', $args, $type, $result );
+		do_action( 'coursepress_email_sent-' . $type, $args, $result );
+
+		return $result;
+	}
 
 	}
 
