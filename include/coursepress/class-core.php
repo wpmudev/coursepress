@@ -59,6 +59,9 @@ class CoursePress_Core {
 		// Initialize Legacy Object Helper.
 		CoursePress_Helper_Legacy::init();
 
+		// Init shortcodes.
+		CoursePress_Data_Shortcode::init();
+
 		if ( is_admin() ) {
 			// Initialize Admin Settings.
 			CoursePress_Helper_Setting::init();
@@ -70,11 +73,7 @@ class CoursePress_Core {
 
 			// Admin AJAX.
 			CoursePress_View_Front_Course::init_ajax();
-
 		} else {
-			// Init shortcodes.
-			CoursePress_Data_Shortcode::init();
-
 			// Now we're in the front.
 			CoursePress_View_Front_General::init();
 			CoursePress_View_Front_Course::init();
