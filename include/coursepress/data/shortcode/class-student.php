@@ -483,22 +483,32 @@ class CoursePress_Data_Shortcode_Student {
 		);
 
 		$course_id = (int) $course_id;
+		if ( empty( $course_id ) ) { return ''; }
+
 		$unit_id = (int) $unit_id;
-		$message = sanitize_text_field( $message );
+		if ( empty( $unit_id ) ) { return ''; }
 
 		$student_id = get_current_user_id();
-		$mandatory = CoursePress_Data_Student::get_mandatory_completion( $student_id, $course_id, $unit_id );
+		if ( empty( $student_id ) ) { return ''; }
 
-		if ( empty( $student_id ) || empty( $course_id ) || empty( $unit_id ) || empty( $mandatory['required'] ) ) {
-			return '';
-		}
+		$mandatory = CoursePress_Data_Student::get_mandatory_completion(
+			$student_id,
+			$course_id,
+			$unit_id
+		);
+		if ( empty( $mandatory['required'] ) ) { return ''; }
 
+		$message = sanitize_text_field( $message );
 		$mandatory_required = (int) $mandatory['required'];
 		if ( empty( $mandatory_required ) ) {
 			return '';
 		}
 
-		return sprintf( $message, (int) $mandatory['completed'], $mandatory_required );
+		return sprintf(
+			$message,
+			(int) $mandatory['completed'],
+			$mandatory_required
+		);
 	}
 
 	/**

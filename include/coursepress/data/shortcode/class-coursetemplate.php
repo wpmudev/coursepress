@@ -1230,67 +1230,65 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 	public static function course_discussion( $atts ) {
 		$course_id = CoursePress_Data_Course::get_current_course_id();
 
-
-
-			$comments_args = array(
-				// Change the title of send button.
-				'label_submit' => __( 'Send', 'CP_TD' ),
-				// Change the title of the reply section.
-				'title_reply' => __( 'Write a Reply or Comment', 'CP_TD' ),
-				// Remove "Text or HTML to be displayed after the set of comment fields".
-				'comment_notes_after' => '',
-				// Redefine your own textarea (the comment body).
-				'comment_field' => '<p class="comment-form-comment"><label for="comment">' . _x( 'Comment', 'noun' ) . '</label><br /><textarea id="comment" name="comment" aria-required="true"></textarea></p>',
-			);
 		$allow_discussion = CoursePress_Data_Course::get_setting( $course_id, 'allow_discussion', false );
 
 		if ( ! cp_is_true( $allow_discussion ) ) { return false; }
 
-			$defaults = array(
-				'author_email' => '',
-				'ID' => '',
-				'karma' => '',
-				'number' => '',
-				'offset' => '',
-				'orderby' => '',
-				'order' => 'DESC',
-				'parent' => '',
-				'post_id' => $course_id,
-				'post_author' => '',
-				'post_name' => '',
-				'post_parent' => '',
-				'post_status' => '',
-				'post_type' => '',
-				'status' => '',
-				'type' => '',
-				'user_id' => '',
-				'search' => '',
-				'count' => false,
-				'meta_key' => '',
-				'meta_value' => '',
-				'meta_query' => '',
-			);
+		$comments_args = array(
+			// Change the title of send button.
+			'label_submit' => __( 'Send', 'CP_TD' ),
+			// Change the title of the reply section.
+			'title_reply' => __( 'Write a Reply or Comment', 'CP_TD' ),
+			// Remove "Text or HTML to be displayed after the set of comment fields".
+			'comment_notes_after' => '',
+			// Redefine your own textarea (the comment body).
+			'comment_field' => '<p class="comment-form-comment"><label for="comment">' . _x( 'Comment', 'noun' ) . '</label><br /><textarea id="comment" name="comment" aria-required="true"></textarea></p>',
+		);
 
-			$wp_list_comments_args = array(
-				'walker' => null,
-				'max_depth' => '',
-				'style' => 'ul',
-				'callback' => null,
-				'end-callback' => null,
-				'type' => 'all',
-				'reply_text' => __( 'Reply', 'CP_TD' ),
-				'page' => '',
-				'per_page' => '',
-				'avatar_size' => 32,
-				'reverse_top_level' => null,
-				'reverse_children' => '',
-				'format' => 'xhtml', // Or html5.
-				'short_ping' => false,
-			);
+		$defaults = array(
+			'author_email' => '',
+			'ID' => '',
+			'karma' => '',
+			'number' => '',
+			'offset' => '',
+			'orderby' => '',
+			'order' => 'DESC',
+			'parent' => '',
+			'post_id' => $course_id,
+			'post_author' => '',
+			'post_name' => '',
+			'post_parent' => '',
+			'post_status' => '',
+			'post_type' => '',
+			'status' => '',
+			'type' => '',
+			'user_id' => '',
+			'search' => '',
+			'count' => false,
+			'meta_key' => '',
+			'meta_value' => '',
+			'meta_query' => '',
+		);
 
-			comment_form( $comments_args = array(), $course_id );
-			wp_list_comments( $wp_list_comments_args, get_comments( $defaults ) );
-		}
+		$wp_list_comments_args = array(
+			'walker' => null,
+			'max_depth' => '',
+			'style' => 'ul',
+			'callback' => null,
+			'end-callback' => null,
+			'type' => 'all',
+			'reply_text' => __( 'Reply', 'CP_TD' ),
+			'page' => '',
+			'per_page' => '',
+			'avatar_size' => 32,
+			'reverse_top_level' => null,
+			'reverse_children' => '',
+			'format' => 'xhtml', // Or html5.
+			'short_ping' => false,
+		);
+
+		comment_form( $comments_args = array(), $course_id );
+		wp_list_comments( $wp_list_comments_args, get_comments( $defaults ) );
 	}
 
 	public static function units_dropdown( $atts ) {
@@ -1317,7 +1315,11 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			$dropdown .= '<option value="">' . esc_html( $general_title ) . '</option>';
 		}
 		foreach ( $units as $unit ) {
-			$dropdown .= '<option value="' . esc_attr( $unit->ID ) . '">' . esc_html( $unit->post_title ) . '</option>';
+			$dropdown .= sprinf(
+				'<option value="%s">%s</option>',
+				esc_attr( $unit->ID ),
+				esc_html( $unit->post_title )
+			);
 		}
 		$dropdown .= '</select></div>';
 
@@ -1329,12 +1331,11 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 		$content = '';
 
-		extract( shortcode_atts( array( 'course_id' => $course_id ), $atts ) );
+		extract(
+			shortcode_atts( array( 'course_id' => 0 ), $atts )
+		);
 
-		if ( ! empty( $course_id ) ) {
-			$course_id = (int) $course_id;
-		}
-
+		$course_id = (int) $course_id;
 		if ( empty( $course_id ) ) {
 			$course_id = CoursePress_Data_Course::get_current_course_id();
 		}
@@ -1372,8 +1373,13 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$last_unit_url = '';
 
 		foreach ( $units as $unit ) {
-			$content .= '<li><a href="' . Unit::get_permalink( $unit->ID, $course_id ) . '">' . $unit->post_title . '</a></li>';
-			$last_unit_url = Unit::get_permalink( $unit->ID, $course_id );
+			$unit_url = CoursePress_Data_Unit::get_url( $unit->ID );
+			$content .= sprintf(
+				'<li><a href="%s">%s</a></li>',
+				esc_url( $unit_url ),
+				esc_html( $unit->post_title )
+			);
+			$last_unit_url = $unit_url;
 		}
 
 		$content .= '</ol>';
@@ -1387,7 +1393,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		}
 
 		if ( 1 == count( $units ) ) {
-			wp_redirect( $last_unit_url );
+			wp_safe_redirect( $last_unit_url );
 			exit;
 		}
 

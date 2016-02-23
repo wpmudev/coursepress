@@ -5,7 +5,6 @@ class CoursePress_Data_Unit {
 	private static $post_type = 'unit';
 
 	public static function get_format() {
-
 		return array(
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
@@ -32,7 +31,6 @@ class CoursePress_Data_Unit {
 				'rewrite' => false,
 			),
 		);
-
 	}
 
 	public static function get_post_type_name( $with_prefix = true ) {
@@ -47,7 +45,6 @@ class CoursePress_Data_Unit {
 	}
 
 	public static function get_time_estimation( $unit_id, $data, $default = '1:00' ) {
-
 		$estimations = array();
 
 		$unit_hours = 0;
@@ -143,7 +140,6 @@ class CoursePress_Data_Unit {
 	}
 
 	public static function is_unit_available( $course, $unit, $previous_unit, $status = false ) {
-
 		if ( ! $status ) {
 			$status = self::get_unit_availability_status( $course, $unit, $previous_unit );
 		}
@@ -152,7 +148,6 @@ class CoursePress_Data_Unit {
 	}
 
 	public static function get_page_meta( $unit_id, $item_id ) {
-
 		if ( empty( $item_id ) ) {
 			return array(
 				'title' => '',
@@ -176,11 +171,9 @@ class CoursePress_Data_Unit {
 			'feature_image' => isset( $images[ 'page_' . $item_id ] ) ? $images[ 'page_' . $item_id ] : '',
 			'visible' => $visibilities[ ( $item_id - 1 ) ],
 		);
-
 	}
 
 	public static function get_unit_availability_status( $course, $unit, $previous_unit ) {
-
 		if ( ! is_object( $unit ) ) {
 			$unit = get_post( $unit );
 		}
