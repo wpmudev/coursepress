@@ -565,7 +565,7 @@ class CoursePress_Data_Shortcode_Unit {
 
 		if ( is_user_logged_in() && $show_link ) {
 			// COMPLETION LOGIC.
-			// if ( Student_Completion::is_course_complete( get_current_user_id(), $course_id ) ) {
+			// if ( Student_Completion::is_course_complete( get_current_user_id(), $course_id ) ) {  // @check
 			// $certificate = CP_Basic_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'CP_TD' ) );
 
 			// $content .= '<li class="submenu-item submenu-certificate ' . ( $subpage == 'certificate' ? 'submenu-active' : '') . '">' . $certificate . '</li>';

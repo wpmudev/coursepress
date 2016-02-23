@@ -419,7 +419,10 @@ class CoursePress_Data_Shortcode_Student {
 		$decimal_places = sanitize_text_field( $decimal_places );
 
 		return number_format_i18n(
-			Student_Completion::calculate_course_completion( get_current_user_id(), $course_id ),
+			Student_Completion::calculate_course_completion(  // @check
+				get_current_user_id(),
+				$course_id
+			),
 			$decimal_places
 		);
 	}

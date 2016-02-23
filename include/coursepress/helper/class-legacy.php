@@ -1207,7 +1207,7 @@ if ( ! function_exists( 'cp_set_visited_unit_page' ) ) {
 
 		$course_id = wp_get_post_parent_id( (int) $unit_id );
 		// This is not migrated!
-		// Student_Completion::record_visited_page( $student_id, $course_id, $unit_id, $page_num );
+		// Student_Completion::record_visited_page( $student_id, $course_id, $unit_id, $page_num );  // @check
 
 		// Legacy but still needed.
 
