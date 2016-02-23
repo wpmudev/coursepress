@@ -1,13 +1,26 @@
 <?php
+/**
+ * Helper functions.
+ * Integrate other plugins with CoursePress.
+ *
+ * @package  CoursePress
+ */
 
+/**
+ * Integrates MarketPress with CoursePress.
+ */
 class CoursePress_Helper_Integration_MarketPress {
 
 	private static $updated = false;
 	private static $course_id = 0;
 
+	/**
+	 * Initialize the Integration.
+	 *
+	 * @since  2.0.0
+	 */
 	public static function init() {
-
-		// If MarketPress is not activated, just exit
+		// If MarketPress is not activated just exit.
 		if ( ! CoursePress_Helper_Extension_MarketPress::activated() ) {
 			return false;
 		}
@@ -30,9 +43,17 @@ class CoursePress_Helper_Integration_MarketPress {
 
 		add_filter( 'coursepress_shortcode_course_cost', array( __CLASS__, 'shortcode_cost' ), 10, 2 );
 
-		add_filter( 'mp_order_notification_subject', 'cp_mp_order_notification_subject', 10, 2 );
+		add_filter(
+			'mp_order_notification_subject',
+			'cp_mp_order_notification_subject',
+			10, 2
+		);
 
-		add_filter( 'mp_order_notification_body', 'cp_mp_order_notification_body', 10, 2 );
+		add_filter(
+			'mp_order_notification_body',
+			'cp_mp_order_notification_body',
+			10, 2
+		);
 	}
 
 
@@ -55,25 +76,25 @@ class CoursePress_Helper_Integration_MarketPress {
 				<label class="normal required">
 					' . esc_html__( 'Full Price', 'CP_TD' ) . '
 				</label>
-				<input type="text" name="meta_mp_product_price" value="' . CoursePress_Model_Course::get_setting( $course_id, 'mp_product_price', '' ) . '" />
+				<input type="text" name="meta_mp_product_price" value="' . CoursePress_Data_Course::get_setting( $course_id, 'mp_product_price', '' ) . '" />
 
 
 				<label class="normal">
 					' . esc_html__( 'Sale Price', 'CP_TD' ) . '
 				</label>
-				<input type="text" name="meta_mp_product_sale_price" value="' . CoursePress_Model_Course::get_setting( $course_id, 'mp_product_sale_price', '' ) . '" /><br >
+				<input type="text" name="meta_mp_product_sale_price" value="' . CoursePress_Data_Course::get_setting( $course_id, 'mp_product_sale_price', '' ) . '" /><br >
 
 				<label class="checkbox narrow">
-					<input type="checkbox" name="meta_mp_sale_price_enabled" ' . CoursePress_Helper_Utility::checked( CoursePress_Model_Course::get_setting( $course_id, 'mp_sale_price_enabled', false ) ) . ' />
+					<input type="checkbox" name="meta_mp_sale_price_enabled" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'mp_sale_price_enabled', false ) ) . ' />
 					<span>' . esc_html__( 'Enable Sale Price', 'CP_TD' ) . '</span>
 				</label>
 
 				<label class="normal">
 					<span> ' . esc_html__( 'Course SKU:', 'CP_TD' ) . '</span>
 				</label>
-				<input type="text" name="meta_mp_sku" placeholder="' . sprintf( __( 'e.g. %s0001', 'CP_TD' ), apply_filters( 'coursepress_course_sku_prefix', 'CP-' ) ) . '" value="' . CoursePress_Model_Course::get_setting( $course_id, 'mp_sku', '' ) . '" /><br >
+				<input type="text" name="meta_mp_sku" placeholder="' . sprintf( __( 'e.g. %s0001', 'CP_TD' ), apply_filters( 'coursepress_course_sku_prefix', 'CP-' ) ) . '" value="' . CoursePress_Data_Course::get_setting( $course_id, 'mp_sku', '' ) . '" /><br >
 				<label class="checkbox narrow">
-					<input type="checkbox" name="meta_mp_auto_sku" ' . CoursePress_Helper_Utility::checked( CoursePress_Model_Course::get_setting( $course_id, 'mp_auto_sku', false ) ) . ' />
+					<input type="checkbox" name="meta_mp_auto_sku" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'mp_auto_sku', false ) ) . ' />
 					<span>' . esc_html__( 'Automatically generate Stock Keeping Units (SKUs)', 'CP_TD' ) . '</span>
 				</label>';
 
@@ -265,240 +286,49 @@ class CoursePress_Helper_Integration_MarketPress {
 	}
 }
 
-
-if ( ! function_exists( 'cp_use_woo' ) ) {
-	function cp_use_woo() {
-		if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
-			$use_woo = get_option( 'use_woo', 0 );
-			if ( ! $use_woo ) {
-				return false;
-			} else {
-				return true;
-			}
-		}
-	}
-}
-
-if ( ! function_exists( 'cp_redirect_woo_to_course' ) ) {
-	function cp_redirect_woo_to_course() {
-		$redirect_woo_to_course = get_option( 'redirect_woo_to_course', 0 );
-		if ( ! $redirect_woo_to_course ) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-}
-
-if ( ! function_exists( 'cp_student_login_address' ) ) {
-	function cp_student_login_address() {
-		global $coursepress;
-		$student_login_address = get_option( 'use_custom_login_form', 1 ) ? trailingslashit( home_url() . '/' . get_option( 'login_slug', 'student-login' ) ) : wp_login_url();
-
-		return $student_login_address;
-	}
-
-	/* get_user_option() fix */
-}
-
-if ( ! function_exists( 'is_mac' ) ) {
-	function is_mac() {
-		$user_agent = getenv( 'HTTP_USER_AGENT' );
-		return ( false !== strpos( $user_agent, 'Mac' ) );
-	}
-}
-
-if ( ! function_exists( 'cp_admin_ajax_url' ) ) {
-	function cp_admin_ajax_url() {
-		$scheme = ( is_ssl() || force_ssl_admin() ? 'https' : 'http' );
-
-		return admin_url( 'admin-ajax.php', $scheme );
-	}
-}
-
-if ( ! function_exists( 'cp_get_user_option' ) ) {
-	function cp_get_user_option( $option, $user_id = false ) {
-		global $wpdb;
-
-		$blog_id = get_current_blog_id();
-
-		if ( empty( $user_id ) ) {
-			$user_id = get_current_user_id();
-		}
-
-		if ( is_multisite() ) {
-
-			if ( defined( 'BLOG_ID_CURRENT_SITE' ) && BLOG_ID_CURRENT_SITE == $blog_id ) {
-				return get_user_meta( $user_id, $wpdb->base_prefix . $option, true );
-			}
-
-			return get_user_meta( $user_id, $wpdb->prefix . $option, true );
-		} else {
-			return get_user_option( $option, $user_id );
-		}
-	}
-}
-
-if ( ! function_exists( 'cp_unit_uses_new_pagination' ) ) {
-	function cp_unit_uses_new_pagination( $unit_id = false ) {
-		$unit_pagination_meta = get_post_meta( $unit_id, 'unit_pagination', true );
-
-		if ( empty( $unit_pagination_meta ) ) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-}
-
-if ( ! function_exists( 'cp_get_id_by_post_name' ) ) {
-	function cp_get_id_by_post_name( $post_name, $post_parent = 0, $type = 'unit' ) {
-		global $wpdb;
-
-		$sql = "
-		SELECT ID
-		FROM {$wpdb->posts}
-		WHERE post_name = '%s' AND post_type='%s' AND post_parent=%d
-		";
-		$id = $wpdb->get_var(
-			$wpdb->prepare( $sql, $post_name, $type, $post_parent )
-		);
-
-		return $id;
-	}
-}
-
-if ( ! function_exists( 'cp_can_see_unit_draft' ) ) {
-	function cp_can_see_unit_draft() {
-		if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_create_course_unit_cap' ) ) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-}
-
-if ( ! function_exists( 'cp_user_can_register' ) ) {
-	function cp_user_can_register() {
-		if ( is_multisite() ) {
-			return users_can_register_signup_filter();
-		} else {
-			return get_option( 'users_can_register' );
-		}
-	}
-}
-
-if ( ! function_exists( 'cp_filter_content' ) ) {
-	function cp_filter_content( $content, $none_allowed = false ) {
-		if ( $none_allowed ) {
-			if ( is_array( $content ) ) {
-				foreach ( $content as $content_key => $content_value ) {
-					$content[ $content_key ] = wp_filter_nohtml_kses( $content_value );
-				}
-			} else {
-				$content = wp_filter_nohtml_kses( $content );
-			}
-		} else {
-			if ( current_user_can( 'unfiltered_html' ) ) {
-				$content = $content;
-			} else {
-				if ( is_array( $content ) ) {
-					foreach ( $content as $content_key => $content_value ) {
-						$content[ $content_key ] = wp_kses( $content_value, cp_allowed_post_tags() );
-					}
-				} else {
-					$content = wp_kses( $content, cp_allowed_post_tags() );
-				}
-			}
-		}
-
-		return $content;
-	}
-}
-
-if ( ! function_exists( 'cp_allowed_post_tags' ) ) {
-	function cp_allowed_post_tags() {
-		$allowed_tags = wp_kses_allowed_html( 'post' );
-
-		return apply_filters( 'coursepress_allowed_post_tags', $allowed_tags );
-	}
-}
-
-if ( ! function_exists( 'cp_is_course_visited' ) ) {
-	function cp_is_course_visited( $course_id, $student_id = false ) {
-		if ( ! $student_id ) {
-			$student_id = get_current_user_ID();
-		}
-
-		$visited_courses = get_user_option( 'visited_course_units_' . $course_id, $student_id );
-
-		if ( $visited_courses ) {
-			$visited_courses = ( explode( ',', $visited_courses ) );
-			if ( is_array( $visited_courses ) ) {
-				if ( in_array( $course_id, $visited_courses ) ) {
-					return true;
-				} else {
-					return false;
-				}
-			} else {
-				if ( $visited_courses == $course_id ) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-		} else {
-			return false;
-		}
-	}
-}
-
-if ( ! function_exists( 'cp_get_number_of_unit_pages_visited' ) ) {
-	function cp_get_number_of_unit_pages_visited( $unit_id = false, $student_id = false ) {
-		if ( ! $student_id ) {
-			$student_id = get_current_user_ID();
-		}
-		$visited_pages = get_user_option( 'visited_unit_pages_' . $unit_id . '_page', $student_id );
-		if ( $visited_pages ) {
-			return count( explode( ',', $visited_pages ) ) - 1;
-		} else {
-			return 0;
-		}
-	}
-}
-
-if ( ! function_exists( 'cp_get_last_visited_unit_page' ) ) {
-	function cp_get_last_visited_unit_page( $unit_id, $student_id = false ) {
-		if ( ! $student_id ) {
-			$student_id = get_current_user_ID();
-		}
-		$last_visited_unit_page = get_user_option( 'last_visited_unit_' . $unit_id . '_page', $student_id );
-		if ( $last_visited_unit_page ) {
-			return $last_visited_unit_page;
-		} else {
-			return 1;
-		}
-	}
-}
+// --- Legacy functions --------------------------------------------------------
 
 if ( ! function_exists( 'cp_get_order_course_id' ) ) {
+
+	/**
+	 * Return the course-ID that is linked with the specified MarketPress order.
+	 * If the order is not related to CoursePress then return is false.
+	 *
+	 * @since  1.0.0
+	 * @param  int $order_id MarketPress order-ID.
+	 * @return int Course-ID or false.
+	 */
 	function cp_get_order_course_id( $order_id ) {
 		global $mp;
+
+		if ( empty( $mp ) ) { return false; }
 		$cart_info = $mp->get_order( $order_id )->mp_cart_info;
-		if ( ! is_array( $cart_info ) ) {
-			return false;
-		}
+		if ( ! is_array( $cart_info ) ) { return false; }
+
 		$mp_product_id = key( $cart_info );
 		$post_parent = get_post_ancestors( $mp_product_id );
+
 		if ( is_array( $post_parent ) ) {
-			return $post_parent[0];
+			return (int) $post_parent[0];
 		} else {
 			return false;
 		}
 	}
 }
 
+// --- Email functions ---------------------------------------------------------
+
 if ( ! function_exists( 'cp_mp_order_notification_subject' ) ) {
+
+	/**
+	 * Subject for the order-confirmation email, when user purchased access
+	 * to a Course.
+	 *
+	 * @since  1.0.0
+	 * @param  string $subject Default subject.
+	 * @param  object $order MarketPress order.
+	 * @return string Email subject.
+	 */
 	function cp_mp_order_notification_subject( $subject, $order ) {
 		if ( cp_get_order_course_id( $order->ID ) ) {
 			return coursepress_get_mp_order_email_subject();
@@ -509,12 +339,26 @@ if ( ! function_exists( 'cp_mp_order_notification_subject' ) ) {
 }
 
 if ( ! function_exists( 'cp_mp_order_notification_body' ) ) {
+
+	/**
+	 * Email body for the order-confirmation email, when user purchased access
+	 * to a Course.
+	 *
+	 * @since  1.0.0
+	 * @param  string $content Default email body.
+	 * @param  object $order MarketPress order.
+	 * @return string Email body.
+	 */
 	function cp_mp_order_notification_body( $content, $order ) {
 		if ( cp_get_order_course_id( $order->ID ) ) {
 			$course_id = cp_get_order_course_id( $order->ID );
-			$course = new Course( $course_id );
+			$course = get_post( $course_id );
+			$course_name = $course->post_title;
 
-			$tracking_url = apply_filters( 'wpml_marketpress_tracking_url', mp_orderstatus_link( false, true ) . $order->post_title . '/' );
+			$tracking_url = apply_filters(
+				'wpml_marketpress_tracking_url',
+				mp_orderstatus_link( false, true ) . $order->post_title . '/'
+			);
 
 			$tags = array(
 				'CUSTOMER_NAME',
@@ -531,8 +375,8 @@ if ( ! function_exists( 'cp_mp_order_notification_body' ) ) {
 				get_bloginfo(),
 				cp_student_login_address(),
 				home_url(),
-				$course->get_permalink(),
-				$course->details->post_title,
+				get_permalink( $course_id ),
+				$course_name,
 				$order->ID,
 				$tracking_url,
 			);
@@ -540,21 +384,16 @@ if ( ! function_exists( 'cp_mp_order_notification_body' ) ) {
 			$message = coursepress_get_mp_order_content_email();
 			$message = str_replace( $tags, $tags_replaces, $message );
 
-			add_filter( 'wp_mail_from', 'my_mail_from_function', 99 );
-
-			if ( ! function_exists( 'my_mail_from_function' ) ) {
-				function my_mail_from_function( $email ) {
-					return coursepress_get_mp_order_from_email();
-				}
-			}
-
-			add_filter( 'wp_mail_from_name', 'my_mail_from_name_function', 99 );
-
-			if ( ! function_exists( 'my_mail_from_name_function' ) ) {
-				function my_mail_from_name_function( $name ) {
-					return coursepress_get_mp_order_from_name();
-				}
-			}
+			add_filter(
+				'wp_mail_from',
+				'cp_mp_order_email_from',
+				99
+			);
+			add_filter(
+				'wp_mail_from_name',
+				'cp_mp_order_email_from_name',
+				99
+			);
 
 			return $message;
 		} else {
@@ -562,3 +401,35 @@ if ( ! function_exists( 'cp_mp_order_notification_body' ) ) {
 		}
 	}
 }
+
+if ( ! function_exists( 'cp_mp_order_email_from' ) ) {
+
+	/**
+	 * Custom sender email-address for order-confirmation emails that belong
+	 * to a purchased course.
+	 *
+	 * @since  1.0.0
+	 * @param  string $email Default sender email address.
+	 * @return string Sender email address.
+	 */
+	function cp_mp_order_email_from( $email ) {
+		return coursepress_get_mp_order_from_email();
+	}
+}
+
+if ( ! function_exists( 'cp_mp_order_email_from_name' ) ) {
+
+	/**
+	 * Custom sender name for order-confirmation emails that belong
+	 * to a purchased course.
+	 *
+	 * @since  1.0.0
+	 * @param  string $name Default sender name.
+	 * @return string Sender name.
+	 */
+	function cp_mp_order_email_from_name( $name ) {
+		return coursepress_get_mp_order_from_name();
+	}
+}
+
+// -----------------------------------------------------------------------------

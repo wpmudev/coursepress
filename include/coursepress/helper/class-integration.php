@@ -1,28 +1,75 @@
 <?php
+/**
+ * Helper functions.
+ * Integrate other plugins with CoursePress.
+ *
+ * @package  CoursePress
+ */
 
+/**
+ * Initialize all available integrations.
+ */
 class CoursePress_Helper_Integration {
 
-	private static $plugins = array();
+	/**
+	 * Internal list of available Integrations.
+	 *
+	 * @var array
+	 */
+	private static $plugins = null;
 
+	/**
+	 * Initialize all registered Integrations.
+	 *
+	 * @since  2.0.0
+	 */
 	public static function init() {
-		self::$plugins[] = 'MarketPress';
+		$plugins = self::get_plugins();
 
-		// Bring in other integrations that hook 'coursepress_extensions_plugins'.
-		self::$plugins = self::get_plugins();
+		foreach ( $plugins as $data ) {
+			$class = $data['class'];
+			$method = $data['method'];
 
-		foreach ( self::$plugins as $plugin ) {
-
-			// Hooks for other devs to add their own integrations.
-			$plugin_class = apply_filters( 'coursepress_integration_plugin_class', 'CoursePress_Helper_Integration_' . $plugin, $plugin );
-			$plugin_init = apply_filters( 'coursepress_integration_plugin_init', 'init', $plugin );
-
-			if ( method_exists( $plugin_class, $plugin_init ) ) {
-				call_user_func( $plugin_class . '::' . $plugin_init );
+			if ( method_exists( $class, $method ) ) {
+				call_user_func( $class . '::' . $method );
 			}
 		}
 	}
 
-	private static function get_plugins() {
-		return apply_filters( 'coursepress_extensions_plugins', self::$plugins );
+	/**
+	 * Returns a list of all known integrations.
+	 * @since  1.0.0
+	 * @return [type] [description]
+	 */
+	public static function get_plugins() {
+		if ( null === self::$plugins ) {
+			self::$plugins = array();
+			self::$plugins['marketpress'] = array(
+				'class' => 'CoursePress_Helper_Integration_MarketPress',
+				'method' => 'init',
+			);
+
+			$use_woo = CoursePress_Core::get_setting( 'woocommerce/use' );
+			if ( $use_woo ) {
+				self::$plugins['woo'] = array(
+					'class' => 'CoursePress_Helper_Integration_WooCommerce',
+					'method' => 'init',
+				);
+			}
+
+			/**
+			 * This filter can be used to register or replace default plugin
+			 * integrations.
+			 *
+			 * @since 2.0.0
+			 * @var array $plugins. Must have value for 'class' and 'method'.
+			 */
+			self::$plugins = apply_filters(
+				'coursepress_extensions_plugins',
+				self::$plugins
+			);
+		}
+
+		return self::$plugins;
 	}
 }
