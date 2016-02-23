@@ -1193,8 +1193,8 @@ class CoursePress_Data_Shortcode_Template {
 												}
 
 												if ( isset( $_POST['course_id'] ) && is_numeric( $_POST['course_id'] ) ) {
-													$course = new Course( $_POST['course_id'] ); // @check
-													wp_redirect( $course->get_permalink() );
+													$url = get_permalink( (int) $_POST['course_id'] );
+													wp_safe_redirect( $url );
 												} else {
 													if ( ! empty( $redirect_url ) ) {
 														wp_redirect( esc_url_raw( apply_filters( 'coursepress_redirect_after_signup_redirect_url', $redirect_url ) ) );

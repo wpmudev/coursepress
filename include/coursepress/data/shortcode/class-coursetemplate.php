@@ -1228,17 +1228,9 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 	}
 
 	public static function course_discussion( $atts ) {
-		global $wp;
+		$course_id = CoursePress_Data_Course::get_current_course_id();
 
-		if ( array_key_exists( 'coursename', $wp->query_vars ) ) {
-			$course_id = Course::get_course_id_by_name( $wp->query_vars['coursename'] );
-		} else {
-			$course_id = 0;
-		}
 
-		$course = new Course( $course_id ); // @check
-
-		if ( 'on' == $course->details->allow_course_discussion ) {
 
 			$comments_args = array(
 				// Change the title of send button.
@@ -1250,6 +1242,9 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				// Redefine your own textarea (the comment body).
 				'comment_field' => '<p class="comment-form-comment"><label for="comment">' . _x( 'Comment', 'noun' ) . '</label><br /><textarea id="comment" name="comment" aria-required="true"></textarea></p>',
 			);
+		$allow_discussion = CoursePress_Data_Course::get_setting( $course_id, 'allow_discussion', false );
+
+		if ( ! cp_is_true( $allow_discussion ) ) { return false; }
 
 			$defaults = array(
 				'author_email' => '',
@@ -1311,8 +1306,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$include_general = 'true' == $include_general ? true : false;
 		$general_title = sanitize_text_field( $general_title );
 
-		$course_obj = new Course( $course_id ); // @check
-		$units = $course_obj->get_units();
+		$units = CoursePress_Data_Course::get_units( $course_id );
 
 		$dropdown = '<div class="units_dropdown_holder"><select name="units_dropdown" class="units_dropdown">';
 		if ( $include_general ) {
@@ -1331,7 +1325,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 	}
 
 	public static function course_units( $atts ) {
-		global $wp, $coursepress;
+		global $coursepress;
 
 		$content = '';
 
@@ -1342,18 +1336,12 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		}
 
 		if ( empty( $course_id ) ) {
-			if ( array_key_exists( 'coursename', $wp->query_vars ) ) {
-				$course_id = Course::get_course_id_by_name( $wp->query_vars['coursename'] );
-			} else {
-				$course_id = 0;
-			}
+			$course_id = CoursePress_Data_Course::get_current_course_id();
 		}
 
-		$course = new Course( $course_id ); // @check
-		$units = $course->get_units( $course_id, 'publish' );
+		$units = CoursePress_Data_Course::get_units( $course_id, 'publish' );
 
 		$user_id = get_current_user_id();
-		$student = new Student( $user_id ); // @check
 
 		// Redirect to the parent course page if not enrolled.
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -1369,9 +1357,8 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					 * the course, maybe has a capability given by the admin.
 					 * If it's not an instructor who made the course, check if
 					 * he is enrolled to course.
-					 * Added 3rd parameter to deal with legacy meta data.
 					 */
-					if ( ! $student->user_enrolled_in_course( $course_id, $user_id, 'update_meta' ) ) {
+					if ( ! CoursePress_Data_Student::is_enrolled_in_course( $user_id, $course_id ) ) {
 						// If not, redirect him to the course page so he may
 						// enroll it if the enrollment is available.
 						wp_redirect( get_permalink( $course_id ) );
@@ -1408,7 +1395,8 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 	}
 
 	public static function course_breadcrumbs( $atts ) {
-		global $course_slug, $units_slug, $units_breadcrumbs, $wp;
+		// Also check why we modify global $units_breadcrumbs here??
+		global $course_slug, $units_slug, $units_breadcrumbs; // @check
 
 		extract(
 			shortcode_atts(
@@ -1424,14 +1412,12 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$type = sanitize_html_class( $type );
 
 		if ( empty( $course_id ) ) {
-			if ( array_key_exists( 'coursename', $wp->query_vars ) ) {
-				$course_id = Course::get_course_id_by_name( $wp->query_vars['coursename'] );
-			} else {
-				$course_id = 0;
-			}
+			$course_id = CoursePress_Data_Course::get_current_course_id();
 		}
 
-		$course = new Course( $course_id ); // @check
+		$post = get_post( $course_id );
+		$course_name = $post->post_title;
+		$course_url = get_permalink( $course_id );
 
 		switch ( $type ) {
 			case 'unit_archive':
@@ -1439,8 +1425,8 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					'<div class="units-breadcrumbs"><a href="%s">%s</a> » <a href="%s">%s</a></div>',
 					esc_url( home_url( $course_slug . '/' ) ),
 					esc_html__( 'Courses', 'CP_TD' ),
-					esc_url( $course->get_permalink() ),
-					esc_html( $course->details->post_title )
+					esc_url( $course_url ),
+					esc_html( $course_name )
 				);
 				break;
 
@@ -1449,9 +1435,9 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					'<div class="units-breadcrumbs"><a href="%s">%s</a> » <a href="%s">%s</a> » <a href="%s">%s</a></div>',
 					esc_url( home_url( $course_slug . '/' ) ),
 					esc_html__( 'Courses', 'CP_TD' ),
-					esc_url( $course->get_permalink() ),
-					esc_html( $course->details->post_title ),
-					esc_url( $course->get_permalink() . $units_slug ),
+					esc_url( $course_url ),
+					esc_html( $course_name ),
+					esc_url( $course_url . $units_slug ),
 					esc_html__( 'Units', 'CP_TD' )
 				);
 				break;

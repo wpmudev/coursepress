@@ -1600,15 +1600,6 @@ class CoursePress_Data_Shortcode_Course {
 	 * @return int The course ID or 0 if not called inside a course/unit/module.
 	 */
 	public static function get_parent_course_id( $atts ) {
-		global $wp;
-
-		if ( empty( $wp->query_vars ) ) { return 0; }
-		if ( ! is_array( $wp->query_vars ) ) { return 0; }
-		if ( empty( $wp->query_vars['coursename'] ) ) { return 0; }
-
-		$coursename = $wp->query_vars['coursename'];
-		$course_id = Course::get_course_id_by_name( $coursename );
-
-		return (int) $course_id;
+		return CoursePress_Data_Course::get_current_course_id();
 	}
 }
