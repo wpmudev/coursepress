@@ -12,15 +12,25 @@ class CoursePress_Data_Student {
 	 * @return array|mixed
 	 */
 	public static function get_course_enrollment_meta( $user_id ) {
+		$course_ids = array();
 		$meta = get_user_meta( $user_id );
+
 		if ( $meta ) {
-			// Get only the enrolled courses
-			$meta = array_filter( array_keys( $meta ), array( __CLASS__, 'filter_course_meta_array' ) );
-			// Map only the course IDs back to the array
-			$meta = array_map( array( __CLASS__, 'course_id_from_meta' ), $meta );
+
+			// We only want to parse/return the meta-key; we ignore values.
+			$meta_keys = array_filter(
+				array_keys( $meta ),
+				array( __CLASS__, 'filter_course_meta_array' )
+			);
+
+			// Convert the meta-key to a numeric course_id.
+			$course_ids = array_map(
+				array( __CLASS__, 'course_id_from_meta' ),
+				$meta_keys
+			);
 		}
 
-		return $meta;
+		return $course_ids;
 	}
 
 	/**
@@ -98,10 +108,24 @@ class CoursePress_Data_Student {
 	 * Get the IDs of enrolled courses.
 	 *
 	 * @uses Student::get_course_enrollment_meta()
+	 * @param  int $student_id WP User ID.
 	 * @return array Contains enrolled course IDs.
 	 */
 	public static function get_enrolled_courses_ids( $student_id ) {
 		return self::get_course_enrollment_meta( $student_id );
+	}
+
+	/**
+	 * Get the IDs of enrolled courses.
+	 *
+	 * @uses Student::get_course_enrollment_meta()
+	 * @param  int $student_id WP User ID.
+	 * @param  int $course_id The course ID to check.
+	 * @return bool
+	 */
+	public static function is_enrolled_in_course( $student_id, $course_id ) {
+		$enrolled = self::get_enrolled_courses_ids( $student_id );
+		return in_array( $course_id, $enrolled );
 	}
 
 	/**

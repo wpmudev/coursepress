@@ -250,4 +250,30 @@ class CoursePress_Data_Unit {
 
 		return $status;
 	}
+
+	/**
+	 * Returns the permalink to the specific unit.
+	 *
+	 * @since  2.0.0
+	 * @param  int    $unit_id Unit ID.
+	 * @param  string $page Optional. Page-key inside the unit.
+	 * @return string The URL.
+	 */
+	public static function get_url( $unit_id, $page = false ) {
+		$unit = get_post( $unit_id );
+		$course_id = wp_get_post_parent_id( $unit_id );
+
+		$unit_url = sprintf(
+			'%s%s%s',
+			get_permalink( $course_id ),
+			CoursePress_Core::get_slug( 'unit' ),
+			$unit->post_name
+		);
+
+		if ( $page ) {
+			$unit_url .= '/page/' . $page;
+		}
+
+		return trailingslashit( $unit_url );
+	}
 }

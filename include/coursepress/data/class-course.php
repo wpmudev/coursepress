@@ -1556,6 +1556,27 @@ class CoursePress_Data_Course {
 		return $prev;
 	}
 
+	/**
+	 * Return the course that is associated with current page.
+	 * i.e. this function returns the course ID that is currently displayed on
+	 * front end.
+	 *
+	 * @since  2.0.0
+	 * @return int The course ID or 0 if not called inside a course/unit/module.
+	 */
+	public static function get_current_course_id() {
+		global $wp;
+
+		if ( empty( $wp->query_vars ) ) { return 0; }
+		if ( ! is_array( $wp->query_vars ) ) { return 0; }
+		if ( empty( $wp->query_vars['coursename'] ) ) { return 0; }
+
+		$coursename = $wp->query_vars['coursename'];
+		$course_id = CoursePress_Data_Course::by_name( $coursename, true );
+
+		return (int) $course_id;
+	}
+
 	public static function by_name( $slug, $id_only ) {
 		$args = array(
 			'name' => $slug,
