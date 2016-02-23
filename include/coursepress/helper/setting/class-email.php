@@ -2,7 +2,6 @@
 
 class CoursePress_Helper_Setting_Email {
 
-
 	public static function get_defaults( $context = false ) {
 		$defaults = apply_filters(
 			'coursepress_default_email_settings',
@@ -58,7 +57,6 @@ class CoursePress_Helper_Setting_Email {
 		} else {
 			return $defaults;
 		}
-
 	}
 
 	public static function get_settings_sections() {

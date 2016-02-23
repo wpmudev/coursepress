@@ -114,7 +114,6 @@ class CoursePress_Data_Unit {
 	}
 
 	static function by_name( $slug, $id_only, $post_parent = '' ) {
-
 		$args = array(
 			'name' => $slug,
 			'post_type' => self::get_post_type_name( true ),

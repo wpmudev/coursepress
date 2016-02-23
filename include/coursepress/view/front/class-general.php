@@ -16,16 +16,7 @@ class CoursePress_View_Front_General {
 	}
 
 	public static function main_navigation_links( $sorted_menu_items, $args ) {
-		$current_url = 'http';
-		if ( isset( $_SERVER['HTTPS'] ) && 'on' == $_SERVER['HTTPS'] ) {
-			$current_url .= 's';
-		}
-		$current_url .= '://';
-		if ( isset( $_SERVER['SERVER_PORT'] ) && '80' != $_SERVER['SERVER_PORT'] ) {
-			$current_url .= $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $_SERVER['REQUEST_URI'];
-		} else {
-			$current_url .= $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
-		}
+		$current_url = CoursePress_Helper_Utility::get_current_url();
 
 		$theme_location = 'primary';
 		if ( ! has_nav_menu( $theme_location ) ) {

@@ -258,7 +258,6 @@ class CoursePress_Data_Instructor {
 				unset( $instructor_invites[ $invite_code ] );
 			}
 		}
-		update_post_meta( $course_id, 'instructor_invites', $instructor_invites );
 
 		update_post_meta(
 			$course_id,
@@ -325,7 +324,6 @@ class CoursePress_Data_Instructor {
 
 		if ( $sent ) {
 			if ( ! $invite_exists ) {
-
 				// Add the new invite
 				$invite = array(
 					'first_name' => $email_args['first_name'],
@@ -353,7 +351,6 @@ class CoursePress_Data_Instructor {
 				);
 
 			} else {
-
 				// Invite already exists.
 				$return_data['success'] = true;
 				$return_data['invite_code'] = $email_args['invite_code'];
@@ -364,7 +361,6 @@ class CoursePress_Data_Instructor {
 				);
 			}
 		} else {
-
 			// Email not sent.
 			$return_data['success'] = false;
 			CoursePress_Helper_Utility::set_array_val(
@@ -375,11 +371,9 @@ class CoursePress_Data_Instructor {
 		};
 
 		return $return_data;
-
 	}
 
 	private static function _create_invite_code_hash( $args ) {
-
 		// Generate invite code.
 		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		$invite_code = '';
@@ -391,15 +385,12 @@ class CoursePress_Data_Instructor {
 			'code' => $invite_code,
 			'hash' => sha1( sanitize_email( $args['email'] ) . $invite_code ),
 		);
-
 	}
 
 	private static function _add_email_hooks() {
-
 		add_filter( 'coursepress_email_fields', array( __CLASS__, 'email_fields' ), 10, 2 );
 		add_filter( 'wp_mail_from', array( __CLASS__, 'email_from' ) );
 		add_filter( 'wp_mail_from_name', array( __CLASS__, 'email_from_name' ) );
-
 	}
 
 	public static function email_fields( $fields, $args ) {

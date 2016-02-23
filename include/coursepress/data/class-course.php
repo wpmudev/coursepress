@@ -906,7 +906,6 @@ class CoursePress_Data_Course {
 		update_user_option( $student_id, 'role', 'student', $global_option ); // alternative to roles used.
 
 		self::_add_enrollment_email_hooks();
-
 		self::$email_type = CoursePress_Helper_Email::ENROLLMENT_CONFIRM;
 
 		$email_args = array();
@@ -914,8 +913,6 @@ class CoursePress_Data_Course {
 		$email_args['email'] = sanitize_email( $student->user_email );
 		$email_args['first_name'] = $student->user_firstname;
 		$email_args['last_name'] = $student->user_lastname;
-
-		$email_args = apply_filters( 'coursepress_student_enrollment_email_args', $email_args );
 
 		if ( is_email( $email_args['email'] ) ) {
 			$sent = CoursePress_Helper_Email::send_email(
@@ -1086,10 +1083,8 @@ class CoursePress_Data_Course {
 		$type = self::get_setting( $course_id, 'enrollment_type', 'manually' );
 
 		if ( 'passcode' === $type ) {
-			$email_args['email_type'] = CoursePress_Helper_Email::COURSE_INVITATION_PASSWORD;
 			$type = CoursePress_Helper_Email::COURSE_INVITATION_PASSWORD;
 		} else {
-			$email_args['email_type'] = CoursePress_Helper_Email::COURSE_INVITATION;
 			$type = CoursePress_Helper_Email::COURSE_INVITATION;
 		}
 

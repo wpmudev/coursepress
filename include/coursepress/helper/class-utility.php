@@ -261,6 +261,36 @@ class CoursePress_Helper_Utility {
 		return admin_url( 'admin-ajax.php', $scheme );
 	}
 
+	/**
+	 * Return the URL of current request.
+	 *
+	 * @since  2.0.0
+	 * @param  bool $host_only If set to true only protocol + host is returned.
+	 * @return string URL.
+	 */
+	public static function get_current_url( $host_only = false ) {
+		static $_cur_url = null;
+
+		if ( null === $_cur_url ) {
+			$_cur_url = 'http';
+			if ( isset( $_SERVER['HTTPS'] ) && 'on' == $_SERVER['HTTPS'] ) {
+				$_cur_url .= 's';
+			}
+			$_cur_url .= '://';
+			if ( isset( $_SERVER['SERVER_PORT'] ) && '80' != $_SERVER['SERVER_PORT'] ) {
+				$_cur_url .= $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'];
+			} else {
+				$_cur_url .= $_SERVER['SERVER_NAME'];
+			}
+		}
+
+		if ( $host_only ) {
+			return $_cur_url;
+		} else {
+			return $_cur_url . $_SERVER['REQUEST_URI'];
+		}
+	}
+
 	// Allowed image extensions
 	public static function get_image_extensions() {
 		return apply_filters(

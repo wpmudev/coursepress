@@ -104,7 +104,6 @@ class CoursePress_Data_Student {
 		return self::get_course_enrollment_meta( $student_id );
 	}
 
-
 	/**
 	 * Updates a student's data.
 	 *
