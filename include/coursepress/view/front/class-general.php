@@ -37,10 +37,10 @@ class CoursePress_View_Front_General {
 		}
 
 		if ( $args->theme_location == $theme_location ) {
-			// Put extra menu items only in primary ( most likely header ) menu
+			// Put extra menu items only in primary (most likely header) menu.
 			$is_in = is_user_logged_in();
 
-			$courses = new stdClass;
+			$courses = new stdClass();
 
 			$courses->title = __( 'Courses', 'CP_TD' );
 			$courses->description = '';
@@ -56,7 +56,7 @@ class CoursePress_View_Front_General {
 			/* Student Dashboard page */
 
 			if ( $is_in ) {
-				$dashboard = new stdClass;
+				$dashboard = new stdClass();
 
 				$dashboard->title = __( 'Dashboard', 'CP_TD' );
 				$dashboard->description = '';
@@ -74,7 +74,7 @@ class CoursePress_View_Front_General {
 
 				/* Student Dashboard > Courses page */
 
-				$dashboard_courses = new stdClass;
+				$dashboard_courses = new stdClass();
 
 				$dashboard_courses->title = __( 'My Courses', 'CP_TD' );
 				$dashboard_courses->description = '';
@@ -89,7 +89,7 @@ class CoursePress_View_Front_General {
 
 				/* Student Dashboard > Settings page */
 
-				$settings_profile = new stdClass;
+				$settings_profile = new stdClass();
 
 				$settings_profile->title = __( 'My Profile', 'CP_TD' );
 				$settings_profile->description = '';
@@ -127,7 +127,7 @@ class CoursePress_View_Front_General {
 			}
 
 			/* Log in / Log out links */
-			$login = new stdClass;
+			$login = new stdClass();
 			if ( $is_in ) {
 				$login->title = __( 'Log Out', 'CP_TD' );
 			} else {

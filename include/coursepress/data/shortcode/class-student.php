@@ -417,10 +417,7 @@ class CoursePress_Data_Shortcode_Student {
 		}
 
 		$decimal_places = sanitize_text_field( $decimal_places );
-		// $completion = new Course_Completion( $course_id );
-		// $completion->init_student_status();
-		// return $completion->course_progress();
-		//
+
 		return number_format_i18n(
 			Student_Completion::calculate_course_completion( get_current_user_id(), $course_id ),
 			$decimal_places
@@ -448,13 +445,14 @@ class CoursePress_Data_Shortcode_Student {
 
 		$decimal_places = sanitize_text_field( $decimal_places );
 
-		/*
-		$completion = new Course_Completion( $course_id );
-		$completion->init_student_status();
-		return $completion->unit_progress( $unit_id );
-		*/
-
-		$progress = number_format_i18n( Student_Completion::calculate_unit_completion( get_current_user_id(), $course_id, $unit_id ), $decimal_places );
+		$progress = number_format_i18n(
+			Student_Completion::calculate_unit_completion( // @check
+				get_current_user_id(),
+				$course_id,
+				$unit_id
+			),
+			$decimal_places
+		);
 
 		return $progress;
 	}
@@ -469,11 +467,17 @@ class CoursePress_Data_Shortcode_Student {
 	 * @return string Shortcode output.
 	 */
 	public static function course_mandatory_message( $atts ) {
-		extract( shortcode_atts( array(
-			'course_id' => CoursePress_Helper_Utility::the_course( true ),
-			'unit_id' => CoursePress_Helper_Utility::the_post( true ),
-			'message' => __( '%d of %d mandatory elements completed.', 'CP_TD' ),
-		), $atts, 'course_mandatory_message' ) );
+		extract(
+			shortcode_atts(
+				array(
+					'course_id' => CoursePress_Helper_Utility::the_course( true ),
+					'unit_id' => CoursePress_Helper_Utility::the_post( true ),
+					'message' => __( '%d of %d mandatory elements completed.', 'CP_TD' ),
+				),
+				$atts,
+				'course_mandatory_message'
+			)
+		);
 
 		$course_id = (int) $course_id;
 		$unit_id = (int) $unit_id;

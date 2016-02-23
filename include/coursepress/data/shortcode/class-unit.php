@@ -112,9 +112,9 @@ class CoursePress_Data_Shortcode_Unit {
 			$unit_id = get_the_ID();
 		}
 
-		$unit = new Unit( $unit_id );
+		$unit = new Unit( $unit_id ); // @check
 
-		$student = new Student( get_current_user_id() );
+		$student = new Student( get_current_user_id() ); // @check
 		$class = sanitize_html_class( $class );
 
 		if ( 'is_unit_available' == $field ) {
@@ -144,7 +144,7 @@ class CoursePress_Data_Shortcode_Unit {
 		}
 
 		if ( 'parent_course' == $field ) {
-			$course = new Course( $unit->course_id );
+			$course = new Course( $unit->course_id ); // @check
 			$unit->details->$field = $parent_course_preceding_content . '<a href="' . $course->get_permalink() . '" class="' . $class . '">' . $course->details->post_title . '</a>';
 		}
 
@@ -244,7 +244,7 @@ class CoursePress_Data_Shortcode_Unit {
 					$percent_value = '<span class="' . $format_class . '">' . $percent_value . '</span>';
 				}
 			} else {
-				$student = new Student( $student_id );
+				$student = new Student( $student_id ); // @check
 
 				if ( $student->is_unit_visited( $unit_id, $student_id ) ) {
 					$percent_value = 100;
@@ -268,12 +268,15 @@ class CoursePress_Data_Shortcode_Unit {
 		}
 
 		if ( 'percent' == $field ) {
-			// $completion = new Course_Completion( $unit->course_id );
-			// $completion->init_student_status();
-			// $percent_value = $completion->unit_progress( $unit_id );
-			$percent_value = Student_Completion::calculate_unit_completion( $student_id, $unit->course_id, $unit_id );
+			$percent_value = Student_Completion::calculate_unit_completion(  // @check
+				$student_id,
+				$unit->course_id,
+				$unit_id
+			);
 
-			$assessable_input_modules_count = do_shortcode( '[course_unit_details field="assessable_input_modules_count"]' );
+			$assessable_input_modules_count = do_shortcode(
+				'[course_unit_details field="assessable_input_modules_count"]'
+			);
 
 			if ( 'flat' == $style ) {
 				$unit->details->$field = '<span class="percentage">' . ( $format ? $percent_value . '%' : $percent_value ) . '</span>';
@@ -440,7 +443,7 @@ class CoursePress_Data_Shortcode_Unit {
 
 				$unit->details->$field = ( $format ? ( $responses == $graded && $responses == $front_save_count ? '<span class="grade-active">' : '<span class="grade-inactive">' ) . ( $grade > 0 ? round( ( $grade / $assessable_answers ), 0 ) : 0 ) . '%</span>' : ( $grade > 0 ? round( ( $grade / $assessable_answers ), 0 ) : 0 ) );
 			} else {
-				$student = new Student( $student_id );
+				$student = new Student( $student_id ); // @check
 				if ( $student->is_unit_visited( $unit_id, $student_id ) ) {
 					$grade = 100;
 					$unit->details->$field = ( $format ? '<span class="grade-active">' . $grade . '%</span>' : $grade );
@@ -630,7 +633,7 @@ class CoursePress_Data_Shortcode_Unit {
 	public static function unit_discussion( $atts ) {
 		global $wp;
 		if ( array_key_exists( 'unitname', $wp->query_vars ) ) {
-			$unit = new Unit();
+			$unit = new Unit(); // @check
 			$unit_id = $unit->get_unit_id_by_name( $wp->query_vars['unitname'] );
 		} else {
 			$unit_id = 0;

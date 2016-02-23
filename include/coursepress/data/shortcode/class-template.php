@@ -846,7 +846,7 @@ class CoursePress_Data_Shortcode_Template {
 		if ( empty( $atts['unit_id'] ) ) {
 			if ( array_key_exists( 'unitname', $wp->query_vars ) ) {
 				$unit_name = $wp->query_vars['unitname'];
-				$unit = new Unit();
+				$unit = new Unit(); // @check
 				$atts['unit_id'] = $unit->get_unit_id_by_name( $unit_name );
 			}
 		}
@@ -1199,7 +1199,7 @@ class CoursePress_Data_Shortcode_Template {
 												}
 
 												if ( isset( $_POST['course_id'] ) && is_numeric( $_POST['course_id'] ) ) {
-													$course = new Course( $_POST['course_id'] );
+													$course = new Course( $_POST['course_id'] ); // @check
 													wp_redirect( $course->get_permalink() );
 												} else {
 													if ( ! empty( $redirect_url ) ) {

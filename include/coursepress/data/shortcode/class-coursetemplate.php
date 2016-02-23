@@ -965,7 +965,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		}
 
 		$args['date_indicator'] = $date_indicator;
-		$cal = new Course_Calendar( $args );
+		$cal = new Course_Calendar( $args ); // @check
 
 		return $cal->create_calendar( $pre, $next );
 	}
@@ -1236,7 +1236,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			$course_id = 0;
 		}
 
-		$course = new Course( $course_id );
+		$course = new Course( $course_id ); // @check
 
 		if ( 'on' == $course->details->allow_course_discussion ) {
 
@@ -1311,7 +1311,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$include_general = 'true' == $include_general ? true : false;
 		$general_title = sanitize_text_field( $general_title );
 
-		$course_obj = new Course( $course_id );
+		$course_obj = new Course( $course_id ); // @check
 		$units = $course_obj->get_units();
 
 		$dropdown = '<div class="units_dropdown_holder"><select name="units_dropdown" class="units_dropdown">';
@@ -1349,11 +1349,11 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			}
 		}
 
-		$course = new Course( $course_id );
+		$course = new Course( $course_id ); // @check
 		$units = $course->get_units( $course_id, 'publish' );
 
 		$user_id = get_current_user_id();
-		$student = new Student( $user_id );
+		$student = new Student( $user_id ); // @check
 
 		// Redirect to the parent course page if not enrolled.
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -1385,7 +1385,6 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$last_unit_url = '';
 
 		foreach ( $units as $unit ) {
-			// $unit_details = new Unit( $unit->ID );
 			$content .= '<li><a href="' . Unit::get_permalink( $unit->ID, $course_id ) . '">' . $unit->post_title . '</a></li>';
 			$last_unit_url = Unit::get_permalink( $unit->ID, $course_id );
 		}
@@ -1432,7 +1431,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			}
 		}
 
-		$course = new Course( $course_id );
+		$course = new Course( $course_id ); // @check
 
 		switch ( $type ) {
 			case 'unit_archive':
