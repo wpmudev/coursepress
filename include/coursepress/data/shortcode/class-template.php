@@ -1025,23 +1025,25 @@ class CoursePress_Data_Shortcode_Template {
 	public static function course_signup( $atts ) {
 		$allowed = array( 'signup', 'login' );
 
-		extract( shortcode_atts(
-			array(
-				'page' => isset( $_REQUEST['page'] ) ? $_REQUEST['page'] : '',
-				'failed_login_text' => __( 'Invalid login.', 'CP_TD' ),
-				'failed_login_class' => 'red',
-				'logout_url' => '',
-				'signup_tag' => 'h3',
-				'signup_title' => __( 'Signup', 'CP_TD' ),
-				'login_tag' => 'h3',
-				'login_title' => __( 'Login', 'CP_TD' ),
-				'signup_url' => '',
-				'login_url' => '',
-				'redirect_url' => '', // Redirect on successful login or signup.
-			),
-			$atts,
-			'course_signup'
-		) );
+		extract(
+			shortcode_atts(
+				array(
+					'page' => isset( $_REQUEST['page'] ) ? $_REQUEST['page'] : '',
+					'failed_login_text' => __( 'Invalid login.', 'CP_TD' ),
+					'failed_login_class' => 'red',
+					'logout_url' => '',
+					'signup_tag' => 'h3',
+					'signup_title' => __( 'Signup', 'CP_TD' ),
+					'login_tag' => 'h3',
+					'login_title' => __( 'Login', 'CP_TD' ),
+					'signup_url' => '',
+					'login_url' => '',
+					'redirect_url' => '', // Redirect on successful login or signup.
+				),
+				$atts,
+				'course_signup'
+			)
+		);
 
 		$failed_login_text = sanitize_text_field( $failed_login_text );
 		$failed_login_class = sanitize_html_class( $failed_login_class );
@@ -1171,8 +1173,11 @@ class CoursePress_Data_Shortcode_Template {
 
 										if ( ! $form_errors ) {
 
-											$student_data = CoursePress_Helper_Utility::sanitize_recursive( $student_data );
+											$student_data = CoursePress_Helper_Utility::sanitize_recursive(
+												$student_data
+											);
 											$student_id = wp_insert_user( $student_data );
+
 											if ( ! empty( $student_id ) ) {
 												CoursePress_Data_Student::send_registration( $student_id );
 
