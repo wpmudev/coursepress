@@ -51,7 +51,7 @@ As mentioned, we will only update the super branch with all changes, even if tho
 
 The prefered way to implement different code is to move pro/campus code into the subfolders `/campus` and `/premium`. Code in the other directories is supposed to be core-plugin code (i.e. free plugin).
 
-Any images/js/css code that is not for free plugin should also be moved into the product directory (e.g. pro-only jS goes to `premium/assets/js/src`).
+Any images/js/css code that is not for free plugin should also be moved into the product directory (e.g. pro-only jS goes to `premium/asset/js/src`).
 
 ### Product conditions
 
@@ -104,10 +104,10 @@ Every bug fix/change must be made in a separate branch. Create a branch with nam
 
 Only edit/create javascript and css files inside the `/src` folders:
 
-* `scripts/src/*` for javascript.
-* `styles/src/*` for css. Use .scss extension (SASS)!
+* `asset/js/src/*` for javascript.
+* `asset/css/src/*` for css. Use .scss extension (SASS)!
 
-Important: Those folders are scanned and processed when running grunt. Files in base of `scripts/` and `styles/` are overwritten by grunt.
+Important: Those folders are scanned and processed when running grunt. Files in base of `asset/js/` and `asset/css/` are overwritten by grunt.
 
 *Note:*
 There is a hardcoded list of js and scss files that are monitored and compiled by grunt. If you add a new js or scss file then you need to edit `Gruntfile.js` and add the new file to the file list in `js_files_concat` or `css_files_compile`.
@@ -117,11 +117,11 @@ There is a hardcoded list of js and scss files that are monitored and compiled b
 Plugin code:
 
 * `asset/` .. contains all images, js, css (scss) and font files.
-> *Special folders inside assets:*
->  `assets/js/src/` (source js-files)
->  `assets/css/src/` (source scss-files)
+> *Special folders inside asset:*
+>  `asset/js/src/` (source js-files)
+>  `asset/css/src/` (source scss-files)
 >  
->  *Do not edit the .css and .js files in root of `assets/js` and `assets/css`, they are overwritten by grunt!*
+>  *Do not edit the .css and .js files in root of `asset/js` and `asset/css`, they are overwritten by grunt!*
 * `include/` .. All php code of the core (free version) goes here.
 * `premium/` .. All Premium-Only code belongs here!
 * `campus/` .. All CampusPress-Only code belongs here!
@@ -134,13 +134,13 @@ Files in these folders should not be modified directly:
 * `node_modules/` .. files needed by grunt (see "Set up grunt" below).
 * `vendor/` .. files needed by grunt (see "Set up grunt" below).
 
-Product folders `premium` and `campus` also contain the same subfolders as the core plugin: `assets` for js/css/images and `include` for php files.
+Product folders `premium` and `campus` also contain the same subfolders as the core plugin: `asset` for js/css/images and `include` for php files.
 
 **Naming convention for files/folders:**
 
 * Prefix files that contian a php class with term "class-".
 * Use lower-case only
-> Example: *"class-templatetags.php" not "class-templateTags.php"*
+> Example: *"class-templatetag.php" not "class-templateTag.php"*
 * Use hyphen "-" instead of underscore "_"
 > Example: *"class-core.php" not "class_core.php"*
 * Try to keep all folder and file names in singular 
@@ -155,7 +155,7 @@ No steps required here as CoursePress Standard now fetches MarketPress Lite dire
 #### Preparing MarketPress for CoursePress Pro
 
 * Download MarketPress from WPMU DEV Premium.  
-* Save the zip file as `/assets/files/marketpress-pro.zip` (replace existing file).
+* Save the zip file as `/asset/file/marketpress-pro.zip` (replace existing file).
 
 
 -----
@@ -219,6 +219,7 @@ In command line switch to the `coursepress` plugin folder. Run this command to s
 ```
 #!bash 
 # Install automation tools for coursepress:
+$ cd <path-to-wordpress>/wp-content/plugins/coursepress
 $ npm install
 
 # Test it:
@@ -231,13 +232,15 @@ Same as 3: Run commands in the `coursepress` plugin folder:
 
 ```
 #!bash 
+$ cd <path-to-wordpress>/wp-content/plugins/coursepress
+
 # Install composer:
 $ php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php
 $ php composer-setup.php --filename=composer
 $ php -r "unlink('composer-setup.php');"
 
 # Install PHP Unit
-$ composer require --dev "phpunit/phpunit=4.8.*"
+$ php composer require --dev "phpunit/phpunit=4.8.*"
 
 # Install PHP Code Sniffer:
 $ php composer require --dev "squizlabs/php_codesniffer:2.*"

@@ -73,7 +73,7 @@ class CoursePress {
 	public static $file = '';
 
 	/**
-	 * File-root of the premium files.
+	 * Absolut path to the plugin files base-dir.
 	 *
 	 * @var string
 	 */
@@ -92,14 +92,6 @@ class CoursePress {
 	 * @var string
 	 */
 	public static $url = '';
-
-	/**
-	 * Folder that contains all plugin files.
-	 *
-	 * @deprecated This makes stuff _VERY_ confusing, this dir should not exist.
-	 * @var  string
-	 */
-	public static $plugin_lib = 'coursepress-files';
 
 	/**
 	 * Initialize the plugin!
