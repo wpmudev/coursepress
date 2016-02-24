@@ -1650,6 +1650,8 @@ var CoursePress = CoursePress || {};
 		var meta = unit.get( 'meta' );
 
 		self.headerView.template_variables.unit_availability = meta.unit_availability;
+		self.headerView.template_variables.unit_date_availability = meta.unit_date_availability ? meta.unit_date_availability : '';
+		self.headerView.template_variables.unit_delay_days = meta.unit_delay_days ? meta.unit_delay_days : 0;
 		self.headerView.template_variables.unit_feature_image = meta.unit_feature_image;
 
 		var checked = meta.force_current_unit_completion;
@@ -1661,6 +1663,7 @@ var CoursePress = CoursePress || {};
 		self.headerView.template_variables.unit_force_successful_completion_checked = checked;
 
 		self.headerView.render();
+		self.headerView.$el.find( '#unit_availability' ).trigger( 'change' );
 
 		self.contentView.initial = true;
 		self.contentView.render();
@@ -1702,7 +1705,8 @@ var CoursePress = CoursePress || {};
 			'change #unit_feature_image': 'unitFeatureImageChange',
 			'change [name=unit_feature_image-button]': 'unitFeatureImageChange',
 			'change [name=meta_unit_availability]': 'toggleAvailability',
-			'focus [name=meta_unit_date_availability]' : 'setDate'
+			'focus [name=meta_unit_date_availability]' : 'setDate',
+			'change select': 'fieldChanged'
 			//'change #page_feature_image': 'featureImageChange',
 			//'change [name=page_feature_image-button]': 'featureImageChange'
 		},

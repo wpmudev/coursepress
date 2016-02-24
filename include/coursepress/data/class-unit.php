@@ -194,7 +194,31 @@ class CoursePress_Data_Unit {
 			$previous_unit_id = is_object( $previous_unit ) ? $previous_unit->ID : (int) $previous_unit ;
 		}
 
-		$unit_available_date = get_post_meta( $unit_id, 'unit_availability', true );
+		$unit_available = get_post_meta( $unit_id, 'unit_availability', true );
+		$now = strtotime( 'now' );		
+		$available = true;
+		$student_id = get_current_user_id();
+	
+		if( $unit_available === 'on_date' ) {
+			$unit_date_availability = get_post_meta( $unit_id, 'unit_date_availability', true );
+			
+			if( ! empty( $unit_date_availability ) ) {
+				$unit_date_availability = strtotime( $unit_date_availability );
+				$available = ( $unit_date_availability - $now ) <= 0;
+			}
+		}
+		elseif( $unit_available === 'after_delay' ) {
+			$delay_days = get_post_meta( $unit_id, 'unit_delay_days', true );
+			$date_enrolled = CoursePress_Data_Course::student_enrolled( $student_id, $course_id );
+			
+			if( (int) $delay_days > 0 ) {
+				$date_enrolled = strtotime( $date_enrolled );
+				$delay_date = $date_enrolled + ( (int) $delay_days * 86400 );
+				$since_published = $now - $delay_date;
+				
+				$available = $since_published >= 0;				
+			}
+		}
 
 		/* Not filtering date format as it could cause conflicts.  Only filter date on display. */
 		$current_date = ( date( 'Y-m-d', current_time( 'timestamp', 0 ) ) );
@@ -207,9 +231,6 @@ class CoursePress_Data_Unit {
 
 		$status = array();
 
-		$available = true;
-
-		$student_id = get_current_user_id();
 		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
 		$mandatory_done = CoursePress_Data_Student::is_mandatory_done( $student_id, $course_id, $unit_id, $student_progress );
 		$unit_completed = CoursePress_Data_Student::is_unit_complete( $student_id, $course_id, $unit_id, $student_progress );
@@ -220,15 +241,9 @@ class CoursePress_Data_Unit {
 		CoursePress_Helper_Utility::set_array_val( $status, 'completion_required/enabled', $force_current_unit_successful_completion );
 		CoursePress_Helper_Utility::set_array_val( $status, 'completion_required/result', $unit_completed );
 
-		$available = $status['mandatory_required']['enabled'] ? $status['mandatory_required']['result'] : $available;
-		$available = $status['completion_required']['enabled'] ? $status['completion_required']['result'] : $available;
-
-		CoursePress_Helper_Utility::set_array_val( $status, 'date_restriction/result', ( $current_date >= $unit_available_date ) );
-
-		if ( ! $status['date_restriction']['result'] || ! $available ) {
-			$available = false;
-		} else {
-			$available = true;
+		if( $available ) { 
+			$available = $status['mandatory_required']['enabled'] ? $status['mandatory_required']['result'] : $available;
+			$available = $status['completion_required']['enabled'] ? $status['completion_required']['result'] : $available;
 		}
 
 		/**
