@@ -195,10 +195,9 @@ class CoursePress_Data_Unit {
 		}
 
 		$unit_available = get_post_meta( $unit_id, 'unit_availability', true );
-		$course_object = is_object( $course ) ? $course : get_post( $course );
-		$date_published = strtotime( $course_object->post_date_gmt );
 		$now = strtotime( 'now' );		
 		$available = true;
+		$student_id = get_current_user_id();
 	
 		if( $unit_available === 'on_date' ) {
 			$unit_date_availability = get_post_meta( $unit_id, 'unit_date_availability', true );
@@ -210,9 +209,11 @@ class CoursePress_Data_Unit {
 		}
 		elseif( $unit_available === 'after_delay' ) {
 			$delay_days = get_post_meta( $unit_id, 'unit_delay_days', true );
+			$date_enrolled = CoursePress_Data_Course::student_enrolled( $student_id, $course_id );
 			
 			if( (int) $delay_days > 0 ) {
-				$delay_date = $date_published + ( (int) $delay_days * 86400 );
+				$date_enrolled = strtotime( $date_enrolled );
+				$delay_date = $date_enrolled + ( (int) $delay_days * 86400 );
 				$since_published = $now - $delay_date;
 				
 				$available = $since_published >= 0;				
@@ -230,7 +231,6 @@ class CoursePress_Data_Unit {
 
 		$status = array();
 
-		$student_id = get_current_user_id();
 		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
 		$mandatory_done = CoursePress_Data_Student::is_mandatory_done( $student_id, $course_id, $unit_id, $student_progress );
 		$unit_completed = CoursePress_Data_Student::is_unit_complete( $student_id, $course_id, $unit_id, $student_progress );
