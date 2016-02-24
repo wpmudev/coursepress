@@ -868,7 +868,6 @@ if ( ! class_exists( 'Course' ) ) {
 				return false;
 			}
 
-			$meta_key = '';
 			if ( is_multisite() ) {
 				$meta_key = $wpdb->prefix . 'enrolled_course_class_' . $course_id;
 			} else {
@@ -883,6 +882,7 @@ if ( ! class_exists( 'Course' ) ) {
 			$wp_user_search = new WP_User_Query( $args );
 
 			$student_id_i = 0;
+			$students = array();
 			if ( isset( $wp_user_search ) ) {
 				foreach ( $wp_user_search->results as $student ) {
 					$students[ $student_id_i ] = (int) $student->ID; //make sure all are numeric values (it wasn't always the case, like for '1')
