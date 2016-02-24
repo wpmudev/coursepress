@@ -117,21 +117,34 @@ class CoursePress_Core {
 	 */
 	public static function get_setting( $key, $default = null, $network = false ) {
 		if ( ! $network ) {
-			$settings = get_option( 'coursepress_settings' );
+			$cp_settings = get_option( 'coursepress_settings' );
 		} else {
-			$settings = get_site_option( 'coursepress_settings' );
+			$cp_settings = get_site_option( 'coursepress_settings' );
 		}
 
 		// Return all settings.
 		if ( empty( $key ) ) {
-			return $settings;
+			$setting = $cp_settings;
+		} else {
+			$setting = CoursePress_Helper_Utility::get_array_val(
+				$cp_settings,
+				$key
+			);
+
+			// Basic sanitazion.
+			if ( is_null( $setting ) ) {
+				$setting = $default;
+			} elseif ( is_string( $setting ) ) {
+				$setting = trim( $setting );
+			}
 		}
 
-		$setting = CoursePress_Helper_Utility::get_array_val( $settings, $key );
-		$setting = is_null( $setting ) ? $default : $setting;
-		$setting = ! is_array( $setting ) ? trim( $setting ) : $setting;
-
-		return $setting;
+		return apply_filters(
+			'coursepress_get_setting',
+			$setting,
+			$key,
+			$cp_settings
+		);
 	}
 
 	public static function merge_settings( $settings_old, $settings_new ) {

@@ -279,14 +279,22 @@ class CoursePress_Helper_Utility {
 		);
 	}
 
-	// Filter HTML.
-	public static function filter_content( $content, $none_allowed = false ) {
+	/**
+	 * Filter HTML string and remove forbidden tags and attributes.
+	 * This function uses the wp_kses() function to sanitize the content.
+	 *
+	 * @since  2.0.0
+	 * @param  string $content Raw HTML code.
+	 * @param  bool   $no_html Return sanitized HTML (false) or plain text (true)?
+	 * @return string Sanitized content.
+	 */
+	public static function filter_content( $content, $no_html = false ) {
 		$kses_rules = apply_filters(
 			'coursepress_allowed_post_tags',
 			wp_kses_allowed_html( 'post' )
 		);
 
-		if ( $none_allowed ) {
+		if ( $no_html ) {
 			if ( is_array( $content ) ) {
 				foreach ( $content as $content_key => $content_value ) {
 					$content[ $content_key ] = wp_filter_nohtml_kses( $content_value );
@@ -377,12 +385,36 @@ class CoursePress_Helper_Utility {
 		return $result;
 	}
 
+	/**
+	 * Returns true if the WP installation allows user registration.
+	 *
+	 * @since  1.0.0
+	 * @return bool If CoursePress allows user signup.
+	 */
 	public static function users_can_register() {
-		if ( is_multisite() ) {
-			return users_can_register_signup_filter();
-		} else {
-			return get_option( 'users_can_register' );
+		static $_allow_register = null;
+
+		if ( null === $_allow_register ) {
+			if ( is_multisite() ) {
+				$_allow_register = users_can_register_signup_filter();
+			} else {
+				$_allow_register = get_option( 'users_can_register' );
+			}
+
+			/**
+			 * Filter the return value to allow users to manually enable
+			 * CoursePress registration only.
+			 *
+			 * @since 2.0.0
+			 * @var bool $_allow_register
+			 */
+			$_allow_register = apply_filters(
+				'coursepress_users_can_register',
+				$_allow_register
+			);
 		}
+
+		return $_allow_register;
 	}
 
 	public static function is_payment_supported() {

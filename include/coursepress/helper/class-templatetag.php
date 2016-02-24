@@ -5,6 +5,50 @@ class CoursePress_Helper_TemplateTag {
 	}
 }
 
+if ( ! function_exists( 'is_mac' ) ) {
+	function is_mac() {
+		$user_agent = getenv( 'HTTP_USER_AGENT' );
+		return ( false !== strpos( $user_agent, 'Mac' ) );
+	}
+}
+
+if ( ! function_exists( 'cp_admin_ajax_url' ) ) {
+	function cp_admin_ajax_url() {
+		$scheme = ( is_ssl() || force_ssl_admin() ? 'https' : 'http' );
+
+		return admin_url( 'admin-ajax.php', $scheme );
+	}
+}
+
+if ( ! function_exists( 'cp_unit_uses_new_pagination' ) ) {
+	function cp_unit_uses_new_pagination( $unit_id = false ) {
+		$unit_pagination_meta = get_post_meta( $unit_id, 'unit_pagination', true );
+
+		if ( empty( $unit_pagination_meta ) ) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+}
+
+if ( ! function_exists( 'cp_get_id_by_post_name' ) ) {
+	function cp_get_id_by_post_name( $post_name, $post_parent = 0, $type = 'unit' ) {
+		global $wpdb;
+
+		$sql = "
+		SELECT ID
+		FROM {$wpdb->posts}
+		WHERE post_name = '%s' AND post_type='%s' AND post_parent=%d
+		";
+		$id = $wpdb->get_var(
+			$wpdb->prepare( $sql, $post_name, $type, $post_parent )
+		);
+
+		return $id;
+	}
+}
+
 if ( ! function_exists( 'cp_is_chat_plugin_active' ) ) {
 	function cp_is_chat_plugin_active() {
 		$plugins = get_option( 'active_plugins' );
@@ -30,6 +74,18 @@ if ( ! function_exists( 'cp_is_plugin_network_active' ) ) {
 		if ( is_multisite() ) {
 			return ( array_key_exists( $plugin_file, maybe_unserialize( get_site_option( 'active_sitewide_plugins' ) ) ) );
 		}
+	}
+}
+
+if ( ! function_exists( 'cp_student_login_address' ) ) {
+	function cp_student_login_address() {
+		if ( get_option( 'use_custom_login_form', 1 ) ) {
+			$student_login_address = trailingslashit( home_url() . '/' . get_option( 'login_slug', 'student-login' ) );
+		} else {
+			$student_login_address =  wp_login_url();
+		}
+
+		return $student_login_address;
 	}
 }
 
