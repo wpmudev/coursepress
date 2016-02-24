@@ -232,11 +232,14 @@ class radio_input_module extends Unit_Module {
 						<td class="label" colspan="2"><?php _e( 'Set the correct answer', 'coursepress_base_td' ); ?></td>
 					</tr>
 
+					<tr><td><div class="validator-error-message"></div></td></tr>
 		<?php
 		$i = 1;
 		?>
 
 		<?php
+		$answer_field_message = __( 'Answer field can\'t be empty.', 'coursepress_base_td' );
+
 		if ( isset( $data->ID ) ) {
 			$answer_cnt = 0;
 
@@ -249,7 +252,7 @@ class radio_input_module extends Unit_Module {
 							echo 'checked';
 						}
 						?> />
-						<input class="radio_answer" type="text" name="<?php echo $this->name . '_radio_answers[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . '][]'; ?>" value='<?php echo esc_attr( ( isset( $answer ) ? $answer : '' ) ); ?>'/>
+						<input class="radio_answer" type="text" id="<?php echo $this->name . '_radio_answers[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . '][' . $answer_cnt . ']'; ?>" name="<?php echo $this->name . '_radio_answers[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . '][' . $answer_cnt . ']'; ?>" value='<?php echo esc_attr( ( isset( $answer ) ? $answer : '' ) ); ?>' required data-msg-required="<?php echo $answer_field_message; ?>" data-unique-id="<?php echo $answer_cnt; ?>"/>
 
 					</td>
 					<?php if ( $answer_cnt >= 2 ) { ?>
@@ -268,7 +271,7 @@ class radio_input_module extends Unit_Module {
 			<tr>
 				<td width="96%">
 					<input class="radio_answer_check" type="radio" name="<?php echo $this->name . '_radio_check[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . '][]'; ?>" checked/>
-					<input class="radio_answer" type="text" name="<?php echo $this->name . '_radio_answers[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . '][]'; ?>"/>
+					<input class="radio_answer" type="text" id="<?php echo $this->name . '_radio_answers[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . '][0]'; ?>" name="<?php echo $this->name . '_radio_answers[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . '][0]'; ?>" required data-msg-required="<?php echo $answer_field_message; ?>" data-unique-id="0"/>
 				</td>
 				<td width="3%">&nbsp;</td>
 			</tr>
@@ -276,7 +279,7 @@ class radio_input_module extends Unit_Module {
 			<tr>
 				<td width="96%">
 					<input class="radio_answer_check" type="radio" name="<?php echo $this->name . '_radio_check[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . '][]'; ?>"/>
-					<input class="radio_answer" type="text" name="<?php echo $this->name . '_radio_answers[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . '][]'; ?>"/>
+					<input class="radio_answer" type="text" id="<?php echo $this->name . '_radio_answers[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . '][1]'; ?>" name="<?php echo $this->name . '_radio_answers[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . '][1]'; ?>"  required data-msg-required="<?php echo $answer_field_message; ?>" data-unique-id="1"/>
 				</td>
 				<td width="3%">&nbsp;</td>
 			</tr>
