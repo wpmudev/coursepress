@@ -2,116 +2,290 @@
 
 class CoursePress_Helper_Email {
 
+	/**
+	 * Email type.
+	 * (not used anywhere yet)
+	 */
 	const BASIC_CERTIFICATE = 'basic_certificate';
-	const REGISTRATION = 'registration';
-	const ENROLLMENT_CONFIRM = 'enrollment_confirm';
-	const COURSE_INVITATION = 'course_invitation';
-	const COURSE_INVITATION_PASSWORD = 'course_invitation_password';
-	const INSTRUCTOR_INVITATION = 'instructor_invitation';
-	const NEW_ORDER = 'new_order';
-
-	private static $last_args;
-
-	public static function from_name( $context ) {
-		$fields = CoursePress_Helper_Setting_Email::get_defaults( $context );
-
-		return CoursePress_Core::get_setting( 'email/' . $context . '/from_name', $fields['from_name'] );
-	}
-
-	public static function from_email( $context ) {
-		$fields = CoursePress_Helper_Setting_Email::get_defaults( $context );
-
-		return CoursePress_Core::get_setting( 'email/' . $context . '/from_email', $fields['from_email'] );
-	}
-
-	public static function subject( $context ) {
-		$fields = CoursePress_Helper_Setting_Email::get_defaults( $context );
-
-		return CoursePress_Core::get_setting( 'email/' . $context . '/subject', $fields['subject'] );
-	}
-
-	public static function content( $context ) {
-		$fields = CoursePress_Helper_Setting_Email::get_defaults( $context );
-
-		return CoursePress_Core::get_setting( 'email/' . $context . '/content', $fields['content'] );
-	}
-
-	public static function get_email_fields( $context ) {
-		return apply_filters( 'coursepress_get_email_fields_' . $context, array(
-			'name' => self::from_name( $context ),
-			'email' => self::from_email( $context ),
-			'subject' => self::subject( $context ),
-			'content' => self::content( $context ),
-		) );
-	}
-
 
 	/**
-	 * Send an email
+	 * Email type.
+	 * Used by CoursePress_Data_Student::send_registration().
+	 */
+	const REGISTRATION = 'registration';
+
+	/**
+	 * Email type.
+	 * Used by CoursePress_Data_Course::enroll_student().
+	 */
+	const ENROLLMENT_CONFIRM = 'enrollment_confirm';
+
+	/**
+	 * Email type.
+	 * Used by CoursePress_Data_Course::send_invitation().
+	 */
+	const COURSE_INVITATION = 'course_invitation';
+
+	/**
+	 * Email type.
+	 * Used by CoursePress_Data_Course::send_invitation().
+	 */
+	const COURSE_INVITATION_PASSWORD = 'course_invitation_password';
+
+	/**
+	 * Email type.
+	 * Used by CoursePress_Data_Instructor::send_invitation().
+	 */
+	const INSTRUCTOR_INVITATION = 'instructor_invitation';
+
+	/**
+	 * Email type.
+	 * (not used anywhere yet)
+	 */
+	const NEW_ORDER = 'new_order';
+
+	/**
+	 * Stores the current email-template-type for usage in filter-callbacks.
 	 *
-	 * @param $args array()
+	 * @var string
+	 */
+	protected static $current_type = '';
+
+	/**
+	 * Return default content for email, by email-type.
 	 *
-	 * 'email_type' => // One of the constants defined in this class or empty if specifying the 'subject' and 'message'
-	 * 'email',
-	 * 'first_name',
-	 * 'last_name',
-	 * 'subject', (optional if specifying type)
-	 * 'message', (optional if specifying type)
-	 * 'fields' => array() of key-value pairs to pass to the email for replacement
+	 * @since  1.0.0
+	 * @param  string $email_type Email-template-type.
+	 * @return array Email specifications.
+	 */
+	public static function get_email_fields( $email_type ) {
+		return apply_filters(
+			'coursepress_get_email_fields-' . $email_type,
+			array(
+				'name' => self::from_name( $email_type ),
+				'email' => self::from_email( $email_type ),
+				'subject' => self::subject( $email_type ),
+				'content' => self::content( $email_type ),
+			)
+		);
+	}
+
+	/**
+	 * Send an email.
 	 *
+	 * @param string $type One of the constants defined in this class or empty
+	 *               if specifying the 'subject' and 'message'.
+	 * @param array  $args Variables and email content.
+	 *               email .. recipient.
+	 *               message .. optional if specifying type.
+	 *               subject .. optional if specifying type.
+	 *               first_name
+	 *               last_name
+	 *               fields .. content variables, array of key-value pairs.
 	 * @return mixed
 	 */
-	public static function send_email( $args ) {
+	public static function send_email( $type, $args ) {
+		self::$current_type = $type;
 
-		self::$last_args = $args;
-
-		if ( isset( $args['email_type'] ) && ! empty( $args['email_type'] ) ) {
-
+		if ( ! empty( $type ) ) {
 			add_filter( 'wp_mail_from', array( __CLASS__, 'email_from' ) );
 			add_filter( 'wp_mail_from_name', array( __CLASS__, 'email_from_name' ) );
 
-			$email_settings = self::get_email_fields( $args['email_type'] );
+			$email_settings = self::get_email_fields( $type );
 
 			$args['subject'] = $email_settings['subject'];
 
-			switch ( $args['email_type'] ) {
-
+			switch ( $type ) {
 				case self::BASIC_CERTIFICATE:
-					$args['message'] = self::basic_certificate_message( $args, $email_settings );
-					break;
-				case self::REGISTRATION:
-					$args['message'] = self::registration_message( $args, $email_settings );
-					break;
-				case self::ENROLLMENT_CONFIRM:
-					$args['message'] = self::enrollment_confirm_message( $args, $email_settings );
-					break;
-				case self::COURSE_INVITATION:
-					$args['message'] = self::course_invitation_message( $args, $email_settings );
-					break;
-				case self::COURSE_INVITATION_PASSWORD:
-					$args['message'] = self::course_invitation_password_message( $args, $email_settings );
-					break;
-				case self::INSTRUCTOR_INVITATION:
-					$args['message'] = self::instructor_invitation_message( $args, $email_settings );
-					break;
-				case self::NEW_ORDER:
-					$args['message'] = self::new_order_message( $args, $email_settings );
+					$args['message'] = self::basic_certificate_message(
+						$args,
+						$email_settings
+					);
 					break;
 
+				case self::REGISTRATION:
+					$args['message'] = self::registration_message(
+						$args,
+						$email_settings
+					);
+					break;
+
+				case self::ENROLLMENT_CONFIRM:
+					$args['message'] = self::enrollment_confirm_message(
+						$args,
+						$email_settings
+					);
+					break;
+
+				case self::COURSE_INVITATION:
+					$args['message'] = self::course_invitation_message(
+						$args,
+						$email_settings
+					);
+					break;
+
+				case self::COURSE_INVITATION_PASSWORD:
+					$args['message'] = self::course_invitation_password_message(
+						$args,
+						$email_settings
+					);
+					break;
+
+				case self::INSTRUCTOR_INVITATION:
+					$args['message'] = self::instructor_invitation_message(
+						$args,
+						$email_settings
+					);
+					break;
+
+				case self::NEW_ORDER:
+					$args['message'] = self::new_order_message(
+						$args,
+						$email_settings
+					);
+					break;
 			}
 		}
 
-		return CoursePress_Helper_Utility::send_email( $args );
-
+		return self::process_and_send( $args );
 	}
 
-	public static function basic_certificate_message( $args, $email_settings ) {
+	/**
+	 * Send a CoursePress email template to a single user.
+	 *
+	 * @since  1.0.0
+	 * @param  array $args Email args.
+	 * @return bool True if the email was processed correctly.
+	 */
+	protected static function process_and_send( $type, $args ) {
+		// Legacy support for args['email']. Remove this in future!
+		if ( ! empty( $args['email'] ) && empty( $args['to'] ) ) {
+			$args['to'] = $args['email'];
+		}
+
+		if ( empty( $args['to'] ) ) {
+			throw new Exception( 'Error: No email recipient!' );
+		}
+		if ( empty( $args['message'] ) ) {
+			throw new Exception( 'Error: Empty email body!' );
+		}
+		if ( empty( $args['subject'] ) ) {
+			throw new Exception( 'Error: Empty email subject!' );
+		}
+
+		// Prepare email content.
+		$email = array(
+			'to' => apply_filters(
+				'coursepress_email_to_address',
+				sanitize_email( $args['to'] ),
+				$args
+			),
+			'subject' => apply_filters(
+				'coursepress_email_subject',
+				sanitize_text_field( $args['subject'] ) ,
+				$args
+			),
+			'message' => apply_filters(
+				'coursepress_email_message',
+				$args['message'],
+				$args
+			),
+			'headers' => apply_filters(
+				'coursepress_email_headers',
+				array(
+					'Content-type' => 'text/html',
+				)
+			),
+		);
+
+		$email = apply_filters(
+			'coursepress_email_fields',
+			$email,
+			$args,
+			$type
+		);
+		$email = apply_filters(
+			'coursepress_email_fields-' . $type,
+			$email,
+			$args
+		);
+
+		// Good one to hook if you want to hook WP specific filters (e.g. changing from address)
+		do_action( 'coursepress_email_pre_send', $args, $type );
+		do_action( 'coursepress_email_pre_send-' . $type, $args );
+
+		if ( apply_filters( 'coursepress_email_strip_slashed', true, $args, $type ) ) {
+			$email['subject'] = stripslashes( $email['subject'] );
+			$email['message'] = stripslashes( nl2br( $email['message'] ) );
+		}
+
+		$header_string = '';
+		foreach ( $email['headers'] as $key => $value ) {
+			$header_string .= $key . ': ' . $value . "\r\n";
+		}
+
+		$result = wp_mail(
+			$email['to'],
+			$email['subject'],
+			CoursePress_Helper_Utility::filter_content( $email['message'] ),
+			$header_string
+		);
+
+		do_action( 'coursepress_email_sent', $args, $type, $result );
+		do_action( 'coursepress_email_sent-' . $type, $args, $result );
+
+		return $result;
+	}
+
+	/*
+	 ***************************************************************************
+	 * Premare default email contents.
+	 ***************************************************************************
+	 */
+
+	protected static function from_name( $email_type ) {
+		$fields = CoursePress_Helper_Setting_Email::get_defaults( $email_type );
+
+		return CoursePress_Core::get_setting(
+			'email/' . $email_type . '/from_name',
+			$fields['from_name']
+		);
+	}
+
+	protected static function from_email( $email_type ) {
+		$fields = CoursePress_Helper_Setting_Email::get_defaults( $email_type );
+
+		return CoursePress_Core::get_setting(
+			'email/' . $email_type . '/from_email',
+			$fields['from_email']
+		);
+	}
+
+	protected static function subject( $email_type ) {
+		$fields = CoursePress_Helper_Setting_Email::get_defaults( $email_type );
+
+		return CoursePress_Core::get_setting(
+			'email/' . $email_type . '/subject',
+			$fields['subject']
+		);
+	}
+
+	protected static function content( $email_type ) {
+		$fields = CoursePress_Helper_Setting_Email::get_defaults( $email_type );
+
+		return CoursePress_Core::get_setting(
+			'email/' . $email_type . '/content',
+			$fields['content']
+		);
+	}
+
+	protected static function basic_certificate_message( $args, $email_settings ) {
 		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
 
 		return '';
 	}
 
-	public static function registration_message( $args, $email_settings ) {
+	protected static function registration_message( $args, $email_settings ) {
 		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
 
 		// Email Content
@@ -137,31 +311,31 @@ class CoursePress_Helper_Email {
 
 	}
 
-	public static function enrollment_confirm_message( $args, $email_settings ) {
+	protected static function enrollment_confirm_message( $args, $email_settings ) {
 		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
 		// Currently hooked elsewhere
 		return '';
 	}
 
-	public static function course_invitation_message( $args, $email_settings ) {
+	protected static function course_invitation_message( $args, $email_settings ) {
 		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
 		// Currently hooked elsewhere
 		return '';
 	}
 
-	public static function course_invitation_password_message( $args, $email_settings ) {
+	protected static function course_invitation_password_message( $args, $email_settings ) {
 		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
 		// Currently hooked elsewhere
 		return '';
 	}
 
-	public static function instructor_invitation_message( $args, $email_settings ) {
+	protected static function instructor_invitation_message( $args, $email_settings ) {
 		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
 		// Currently hooked elsewhere
 		return '';
 	}
 
-	public static function new_order_message( $args, $email_settings ) {
+	protected static function new_order_message( $args, $email_settings ) {
 		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
 		// Currently hooked elsewhere
 		return '';
@@ -169,8 +343,9 @@ class CoursePress_Helper_Email {
 
 
 	public static function email_from( $from ) {
-
-		$email_settings = CoursePress_Helper_Email::get_email_fields( self::$last_args['email_type'] );
+		$email_settings = CoursePress_Helper_Email::get_email_fields(
+			self::$current_type
+		);
 
 		$from = $email_settings['email'];
 
@@ -178,8 +353,9 @@ class CoursePress_Helper_Email {
 	}
 
 	public static function email_from_name( $from_name ) {
-
-		$email_settings = CoursePress_Helper_Email::get_email_fields( self::$last_args['email_type'] );
+		$email_settings = CoursePress_Helper_Email::get_email_fields(
+			self::$current_type
+		);
 
 		$from = $email_settings['name'];
 

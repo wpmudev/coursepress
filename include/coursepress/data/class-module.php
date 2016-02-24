@@ -99,7 +99,6 @@ class CoursePress_Data_Module {
 	}
 
 	public static function fix_legacy_meta( $module_id, $meta ) {
-
 		$module_type = $meta['module_type'][0];
 		$legacy = self::legacy_map();
 
@@ -171,11 +170,9 @@ class CoursePress_Data_Module {
 
 		// Update Type
 		update_post_meta( $module_id, 'module_type', $module_type );
-
 	}
 
 	public static function attributes( $module, $meta = false ) {
-
 		if ( is_object( $module ) ) {
 			$module_id = $module->ID;
 		} else {

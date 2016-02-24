@@ -93,11 +93,11 @@ class CoursePress_Data_Shortcode_Unit {
 			// COMPLETION_LOGIC.
 			// if ( $last_visited ) {
 			//  $last_visited_page = cp_get_last_visited_unit_page( $unit_id );
-			//  $unit->details->$field = Unit::get_permalink( $unit_id, $unit->course_id ) . 'page/' . trailingslashit( $last_visited_page );
+			//  $unit->details->$field = CoursePress_Data_Unit::get_url( $unit_id, $last_visited_page );
 			// } else {
 			$unit = get_post( $unit_id );
 			$content = get_permalink( $course_id ) . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . $unit->post_name;
-			// $unit->details->$field = Unit::get_permalink( $unit_id, $unit->course_id );
+			// $unit->details->$field = CoursePress_Data_Unit::get_url( $unit_id );
 			// }
 		}
 		return $content;
@@ -112,13 +112,11 @@ class CoursePress_Data_Shortcode_Unit {
 			$unit_id = get_the_ID();
 		}
 
-		$unit = new Unit( $unit_id );
-
-		$student = new Student( get_current_user_id() );
+		$unit = new Unit( $unit_id ); // @check
 		$class = sanitize_html_class( $class );
 
 		if ( 'is_unit_available' == $field ) {
-			$unit->details->$field = Unit::is_unit_available( $unit_id );
+			$unit->details->$field = Unit::is_unit_available( $unit_id ); // @check
 		}
 
 		if ( 'unit_page_title' == $field ) {
@@ -144,8 +142,11 @@ class CoursePress_Data_Shortcode_Unit {
 		}
 
 		if ( 'parent_course' == $field ) {
-			$course = new Course( $unit->course_id );
-			$unit->details->$field = $parent_course_preceding_content . '<a href="' . $course->get_permalink() . '" class="' . $class . '">' . $course->details->post_title . '</a>';
+			$course = get_post( $unit->course_id );
+			$course_url = get_permalink( $unit->course_id );
+			$course_name = $course->post_title;
+
+			$unit->details->$field = $parent_course_preceding_content . '<a href="' . esc_url( $course_url ) . '" class="' . esc_attr( $class ) . '">' . esc_html( $course_name ) . '</a>';
 		}
 
 		/* ------------ */
@@ -244,7 +245,7 @@ class CoursePress_Data_Shortcode_Unit {
 					$percent_value = '<span class="' . $format_class . '">' . $percent_value . '</span>';
 				}
 			} else {
-				$student = new Student( $student_id );
+				$student = new Student( $student_id ); // @check
 
 				if ( $student->is_unit_visited( $unit_id, $student_id ) ) {
 					$percent_value = 100;
@@ -268,12 +269,15 @@ class CoursePress_Data_Shortcode_Unit {
 		}
 
 		if ( 'percent' == $field ) {
-			// $completion = new Course_Completion( $unit->course_id );
-			// $completion->init_student_status();
-			// $percent_value = $completion->unit_progress( $unit_id );
-			$percent_value = Student_Completion::calculate_unit_completion( $student_id, $unit->course_id, $unit_id );
+			$percent_value = Student_Completion::calculate_unit_completion(  // @check
+				$student_id,
+				$unit->course_id,
+				$unit_id
+			);
 
-			$assessable_input_modules_count = do_shortcode( '[course_unit_details field="assessable_input_modules_count"]' );
+			$assessable_input_modules_count = do_shortcode(
+				'[course_unit_details field="assessable_input_modules_count"]'
+			);
 
 			if ( 'flat' == $style ) {
 				$unit->details->$field = '<span class="percentage">' . ( $format ? $percent_value . '%' : $percent_value ) . '</span>';
@@ -287,9 +291,9 @@ class CoursePress_Data_Shortcode_Unit {
 		if ( 'permalink' == $field ) {
 			if ( $last_visited ) {
 				$last_visited_page = cp_get_last_visited_unit_page( $unit_id );
-				$unit->details->$field = Unit::get_permalink( $unit_id, $unit->course_id ) . 'page/' . trailingslashit( $last_visited_page );
+				$unit->details->$field = CoursePress_Data_Unit::get_url( $unit_id, $last_visited_page );
 			} else {
-				$unit->details->$field = Unit::get_permalink( $unit_id, $unit->course_id );
+				$unit->details->$field = CoursePress_Data_Unit::get_url( $unit_id );
 			}
 		}
 
@@ -440,7 +444,7 @@ class CoursePress_Data_Shortcode_Unit {
 
 				$unit->details->$field = ( $format ? ( $responses == $graded && $responses == $front_save_count ? '<span class="grade-active">' : '<span class="grade-inactive">' ) . ( $grade > 0 ? round( ( $grade / $assessable_answers ), 0 ) : 0 ) . '%</span>' : ( $grade > 0 ? round( ( $grade / $assessable_answers ), 0 ) : 0 ) );
 			} else {
-				$student = new Student( $student_id );
+				$student = new Student( $student_id ); // @check
 				if ( $student->is_unit_visited( $unit_id, $student_id ) ) {
 					$grade = 100;
 					$unit->details->$field = ( $format ? '<span class="grade-active">' . $grade . '%</span>' : $grade );
@@ -562,7 +566,7 @@ class CoursePress_Data_Shortcode_Unit {
 
 		if ( is_user_logged_in() && $show_link ) {
 			// COMPLETION LOGIC.
-			// if ( Student_Completion::is_course_complete( get_current_user_id(), $course_id ) ) {
+			// if ( Student_Completion::is_course_complete( get_current_user_id(), $course_id ) ) {  // @check
 			// $certificate = CP_Basic_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'CP_TD' ) );
 
 			// $content .= '<li class="submenu-item submenu-certificate ' . ( $subpage == 'certificate' ? 'submenu-active' : '') . '">' . $certificate . '</li>';
@@ -629,12 +633,13 @@ class CoursePress_Data_Shortcode_Unit {
 
 	public static function unit_discussion( $atts ) {
 		global $wp;
+
 		if ( array_key_exists( 'unitname', $wp->query_vars ) ) {
-			$unit = new Unit();
-			$unit_id = $unit->get_unit_id_by_name( $wp->query_vars['unitname'] );
+			$unit_id = CoursePress_Data_Unit::by_name( $wp->query_vars['unitname'] );
 		} else {
 			$unit_id = 0;
 		}
+
 		$comments_args = array(
 			// Change the title of send button.
 			'label_submit' => 'Send',

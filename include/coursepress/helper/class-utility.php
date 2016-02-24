@@ -261,6 +261,36 @@ class CoursePress_Helper_Utility {
 		return admin_url( 'admin-ajax.php', $scheme );
 	}
 
+	/**
+	 * Return the URL of current request.
+	 *
+	 * @since  2.0.0
+	 * @param  bool $host_only If set to true only protocol + host is returned.
+	 * @return string URL.
+	 */
+	public static function get_current_url( $host_only = false ) {
+		static $_cur_url = null;
+
+		if ( null === $_cur_url ) {
+			$_cur_url = 'http';
+			if ( isset( $_SERVER['HTTPS'] ) && 'on' == $_SERVER['HTTPS'] ) {
+				$_cur_url .= 's';
+			}
+			$_cur_url .= '://';
+			if ( isset( $_SERVER['SERVER_PORT'] ) && '80' != $_SERVER['SERVER_PORT'] ) {
+				$_cur_url .= $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'];
+			} else {
+				$_cur_url .= $_SERVER['SERVER_NAME'];
+			}
+		}
+
+		if ( $host_only ) {
+			return $_cur_url;
+		} else {
+			return $_cur_url . $_SERVER['REQUEST_URI'];
+		}
+	}
+
 	// Allowed image extensions
 	public static function get_image_extensions() {
 		return apply_filters(
@@ -317,72 +347,6 @@ class CoursePress_Helper_Utility {
 		}
 
 		return $content;
-	}
-
-	/**
-	 * Send a CoursePress email template to a single user.
-	 *
-	 * @since  1.0.0
-	 * @param  array $args Email args.
-	 * @return bool True if the email was processed correctly.
-	 */
-	public static function send_email( $args ) {
-		if ( ! isset( $args['email_type'] ) ) { return; }
-
-		// Filtered fields.
-		$email = apply_filters(
-			'coursepress_email_fields',
-			array(
-				'email' => apply_filters(
-					'coursepress_email_to_address',
-					sanitize_email( $args['email'] ),
-					$args
-				),
-				'subject' => apply_filters(
-					'coursepress_email_subject',
-					sanitize_text_field( $args['subject'] ) ,
-					$args
-				),
-				'message' => apply_filters(
-					'coursepress_email_message',
-					$args['message'],
-					$args
-				),
-			),
-			$args
-		);
-
-		// Good one to hook if you want to hook WP specific filters (e.g. changing from address)
-		do_action( 'coursepress_email_pre_send', $args );
-
-		if ( apply_filters( 'coursepress_email_strip_slashed', true, $args ) ) {
-			$email['subject'] = stripslashes( $email['subject'] );
-			$email['message'] = stripslashes( nl2br( $email['message'] ) );
-		}
-
-		$headers = apply_filters(
-			'coursepress_email_headers',
-			array(
-				'Content-type' => 'text/html',
-			),
-			$args
-		);
-
-		$header_string = '';
-		foreach ( $headers as $key => $value ) {
-			$header_string .= $key . ': ' . $value . "\r\n";
-		}
-
-		$result = wp_mail(
-			$email['email'],
-			$email['subject'],
-			CoursePress_Helper_Utility::filter_content( $email['message'] ),
-			$header_string
-		);
-
-		do_action( 'coursepress_email_post_send', $args, $result );
-
-		return $result;
 	}
 
 	/**

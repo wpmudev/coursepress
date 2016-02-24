@@ -337,7 +337,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			// For already enrolled students.
 
 			// COMPLETION LOGIX.
-			//$progress = Student_Completion::calculate_course_completion( get_current_user_id(), $course_id, false );
+			//$progress = Student_Completion::calculate_course_completion( get_current_user_id(), $course_id, false );  // @check
 			$progress = 0;
 
 			if ( $course->course_expired && ! $course->open_ended_course ) {
@@ -965,7 +965,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		}
 
 		$args['date_indicator'] = $date_indicator;
-		$cal = new Course_Calendar( $args );
+		$cal = new Course_Calendar( $args ); // @check
 
 		return $cal->create_calendar( $pre, $next );
 	}
@@ -1228,74 +1228,67 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 	}
 
 	public static function course_discussion( $atts ) {
-		global $wp;
+		$course_id = CoursePress_Data_Course::get_current_course_id();
 
-		if ( array_key_exists( 'coursename', $wp->query_vars ) ) {
-			$course_id = Course::get_course_id_by_name( $wp->query_vars['coursename'] );
-		} else {
-			$course_id = 0;
-		}
+		$allow_discussion = CoursePress_Data_Course::get_setting( $course_id, 'allow_discussion', false );
 
-		$course = new Course( $course_id );
+		if ( ! cp_is_true( $allow_discussion ) ) { return false; }
 
-		if ( 'on' == $course->details->allow_course_discussion ) {
+		$comments_args = array(
+			// Change the title of send button.
+			'label_submit' => __( 'Send', 'CP_TD' ),
+			// Change the title of the reply section.
+			'title_reply' => __( 'Write a Reply or Comment', 'CP_TD' ),
+			// Remove "Text or HTML to be displayed after the set of comment fields".
+			'comment_notes_after' => '',
+			// Redefine your own textarea (the comment body).
+			'comment_field' => '<p class="comment-form-comment"><label for="comment">' . _x( 'Comment', 'noun' ) . '</label><br /><textarea id="comment" name="comment" aria-required="true"></textarea></p>',
+		);
 
-			$comments_args = array(
-				// Change the title of send button.
-				'label_submit' => __( 'Send', 'CP_TD' ),
-				// Change the title of the reply section.
-				'title_reply' => __( 'Write a Reply or Comment', 'CP_TD' ),
-				// Remove "Text or HTML to be displayed after the set of comment fields".
-				'comment_notes_after' => '',
-				// Redefine your own textarea (the comment body).
-				'comment_field' => '<p class="comment-form-comment"><label for="comment">' . _x( 'Comment', 'noun' ) . '</label><br /><textarea id="comment" name="comment" aria-required="true"></textarea></p>',
-			);
+		$defaults = array(
+			'author_email' => '',
+			'ID' => '',
+			'karma' => '',
+			'number' => '',
+			'offset' => '',
+			'orderby' => '',
+			'order' => 'DESC',
+			'parent' => '',
+			'post_id' => $course_id,
+			'post_author' => '',
+			'post_name' => '',
+			'post_parent' => '',
+			'post_status' => '',
+			'post_type' => '',
+			'status' => '',
+			'type' => '',
+			'user_id' => '',
+			'search' => '',
+			'count' => false,
+			'meta_key' => '',
+			'meta_value' => '',
+			'meta_query' => '',
+		);
 
-			$defaults = array(
-				'author_email' => '',
-				'ID' => '',
-				'karma' => '',
-				'number' => '',
-				'offset' => '',
-				'orderby' => '',
-				'order' => 'DESC',
-				'parent' => '',
-				'post_id' => $course_id,
-				'post_author' => '',
-				'post_name' => '',
-				'post_parent' => '',
-				'post_status' => '',
-				'post_type' => '',
-				'status' => '',
-				'type' => '',
-				'user_id' => '',
-				'search' => '',
-				'count' => false,
-				'meta_key' => '',
-				'meta_value' => '',
-				'meta_query' => '',
-			);
+		$wp_list_comments_args = array(
+			'walker' => null,
+			'max_depth' => '',
+			'style' => 'ul',
+			'callback' => null,
+			'end-callback' => null,
+			'type' => 'all',
+			'reply_text' => __( 'Reply', 'CP_TD' ),
+			'page' => '',
+			'per_page' => '',
+			'avatar_size' => 32,
+			'reverse_top_level' => null,
+			'reverse_children' => '',
+			'format' => 'xhtml', // Or html5.
+			'short_ping' => false,
+		);
 
-			$wp_list_comments_args = array(
-				'walker' => null,
-				'max_depth' => '',
-				'style' => 'ul',
-				'callback' => null,
-				'end-callback' => null,
-				'type' => 'all',
-				'reply_text' => __( 'Reply', 'CP_TD' ),
-				'page' => '',
-				'per_page' => '',
-				'avatar_size' => 32,
-				'reverse_top_level' => null,
-				'reverse_children' => '',
-				'format' => 'xhtml', // Or html5.
-				'short_ping' => false,
-			);
-
-			comment_form( $comments_args = array(), $course_id );
-			wp_list_comments( $wp_list_comments_args, get_comments( $defaults ) );
-		}
+		comment_form( $comments_args = array(), $course_id );
+		wp_list_comments( $wp_list_comments_args, get_comments( $defaults ) );
 	}
 
 	public static function units_dropdown( $atts ) {
@@ -1311,8 +1304,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$include_general = 'true' == $include_general ? true : false;
 		$general_title = sanitize_text_field( $general_title );
 
-		$course_obj = new Course( $course_id );
-		$units = $course_obj->get_units();
+		$units = CoursePress_Data_Course::get_units( $course_id );
 
 		$dropdown = '<div class="units_dropdown_holder"><select name="units_dropdown" class="units_dropdown">';
 		if ( $include_general ) {
@@ -1323,7 +1315,11 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			$dropdown .= '<option value="">' . esc_html( $general_title ) . '</option>';
 		}
 		foreach ( $units as $unit ) {
-			$dropdown .= '<option value="' . esc_attr( $unit->ID ) . '">' . esc_html( $unit->post_title ) . '</option>';
+			$dropdown .= sprinf(
+				'<option value="%s">%s</option>',
+				esc_attr( $unit->ID ),
+				esc_html( $unit->post_title )
+			);
 		}
 		$dropdown .= '</select></div>';
 
@@ -1331,29 +1327,22 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 	}
 
 	public static function course_units( $atts ) {
-		global $wp, $coursepress;
+		global $coursepress;
 
 		$content = '';
 
-		extract( shortcode_atts( array( 'course_id' => $course_id ), $atts ) );
+		extract(
+			shortcode_atts( array( 'course_id' => 0 ), $atts )
+		);
 
-		if ( ! empty( $course_id ) ) {
-			$course_id = (int) $course_id;
-		}
-
+		$course_id = (int) $course_id;
 		if ( empty( $course_id ) ) {
-			if ( array_key_exists( 'coursename', $wp->query_vars ) ) {
-				$course_id = Course::get_course_id_by_name( $wp->query_vars['coursename'] );
-			} else {
-				$course_id = 0;
-			}
+			$course_id = CoursePress_Data_Course::get_current_course_id();
 		}
 
-		$course = new Course( $course_id );
-		$units = $course->get_units( $course_id, 'publish' );
+		$units = CoursePress_Data_Course::get_units( $course_id, 'publish' );
 
 		$user_id = get_current_user_id();
-		$student = new Student( $user_id );
 
 		// Redirect to the parent course page if not enrolled.
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -1369,9 +1358,8 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					 * the course, maybe has a capability given by the admin.
 					 * If it's not an instructor who made the course, check if
 					 * he is enrolled to course.
-					 * Added 3rd parameter to deal with legacy meta data.
 					 */
-					if ( ! $student->user_enrolled_in_course( $course_id, $user_id, 'update_meta' ) ) {
+					if ( ! CoursePress_Data_Student::is_enrolled_in_course( $user_id, $course_id ) ) {
 						// If not, redirect him to the course page so he may
 						// enroll it if the enrollment is available.
 						wp_redirect( get_permalink( $course_id ) );
@@ -1385,9 +1373,13 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$last_unit_url = '';
 
 		foreach ( $units as $unit ) {
-			// $unit_details = new Unit( $unit->ID );
-			$content .= '<li><a href="' . Unit::get_permalink( $unit->ID, $course_id ) . '">' . $unit->post_title . '</a></li>';
-			$last_unit_url = Unit::get_permalink( $unit->ID, $course_id );
+			$unit_url = CoursePress_Data_Unit::get_url( $unit->ID );
+			$content .= sprintf(
+				'<li><a href="%s">%s</a></li>',
+				esc_url( $unit_url ),
+				esc_html( $unit->post_title )
+			);
+			$last_unit_url = $unit_url;
 		}
 
 		$content .= '</ol>';
@@ -1401,7 +1393,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		}
 
 		if ( 1 == count( $units ) ) {
-			wp_redirect( $last_unit_url );
+			wp_safe_redirect( $last_unit_url );
 			exit;
 		}
 
@@ -1409,7 +1401,8 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 	}
 
 	public static function course_breadcrumbs( $atts ) {
-		global $course_slug, $units_slug, $units_breadcrumbs, $wp;
+		// Also check why we modify global $units_breadcrumbs here??
+		global $course_slug, $units_slug, $units_breadcrumbs; // @check
 
 		extract(
 			shortcode_atts(
@@ -1425,14 +1418,12 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$type = sanitize_html_class( $type );
 
 		if ( empty( $course_id ) ) {
-			if ( array_key_exists( 'coursename', $wp->query_vars ) ) {
-				$course_id = Course::get_course_id_by_name( $wp->query_vars['coursename'] );
-			} else {
-				$course_id = 0;
-			}
+			$course_id = CoursePress_Data_Course::get_current_course_id();
 		}
 
-		$course = new Course( $course_id );
+		$post = get_post( $course_id );
+		$course_name = $post->post_title;
+		$course_url = get_permalink( $course_id );
 
 		switch ( $type ) {
 			case 'unit_archive':
@@ -1440,8 +1431,8 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					'<div class="units-breadcrumbs"><a href="%s">%s</a> » <a href="%s">%s</a></div>',
 					esc_url( home_url( $course_slug . '/' ) ),
 					esc_html__( 'Courses', 'CP_TD' ),
-					esc_url( $course->get_permalink() ),
-					esc_html( $course->details->post_title )
+					esc_url( $course_url ),
+					esc_html( $course_name )
 				);
 				break;
 
@@ -1450,9 +1441,9 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					'<div class="units-breadcrumbs"><a href="%s">%s</a> » <a href="%s">%s</a> » <a href="%s">%s</a></div>',
 					esc_url( home_url( $course_slug . '/' ) ),
 					esc_html__( 'Courses', 'CP_TD' ),
-					esc_url( $course->get_permalink() ),
-					esc_html( $course->details->post_title ),
-					esc_url( $course->get_permalink() . $units_slug ),
+					esc_url( $course_url ),
+					esc_html( $course_name ),
+					esc_url( $course_url . $units_slug ),
 					esc_html__( 'Units', 'CP_TD' )
 				);
 				break;
