@@ -478,9 +478,9 @@ class CoursePress_Data_Shortcode_Course {
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
 			'date_format' => get_option( 'date_format' ),
-			'label' => __( 'Course Start Date: ', 'CP_TD' ),
+			'label' => __( 'Course Start Date', 'CP_TD' ),
 			'label_tag' => 'strong',
-			'label_delimeter' => ':',
+			'label_delimeter' => ': ',
 			'class' => '',
 		), $atts, 'course_start' ) );
 
