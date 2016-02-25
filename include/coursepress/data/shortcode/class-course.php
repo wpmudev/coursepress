@@ -517,9 +517,9 @@ class CoursePress_Data_Shortcode_Course {
 	public static function course_length( $atts ) {
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
-			'label' => __( 'Course Length: ', 'CP_TD' ),
+			'label' => __( 'Course Length', 'CP_TD' ),
 			'label_tag' => 'strong',
-			'label_delimeter' => ':',
+			'label_delimeter' => ': ',
 			'class' => '',
 			'suffix' => ' Weeks',
 		), $atts, 'course_start' ) );
