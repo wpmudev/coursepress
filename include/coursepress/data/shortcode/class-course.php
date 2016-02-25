@@ -308,7 +308,7 @@ class CoursePress_Data_Shortcode_Course {
 		);
 
 		// Check if user specified an alias.
-		if ( in_array( $action, $translate_action ) ) {
+		if ( array_key_exists( $action, $translate_action ) ) {
 			$action = $translate_action[ $action ];
 		}
 
