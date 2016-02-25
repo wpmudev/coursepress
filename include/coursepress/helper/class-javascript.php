@@ -226,6 +226,11 @@ class CoursePress_Helper_JavaScript {
 			), CoursePress::$version );
 
 			wp_localize_script( 'coursepress_object', '_coursepress', $localize_array );
+			
+			$calendar = CoursePress::$url . 'asset/js/coursepress-calendar.js';
+			wp_enqueue_script( 'coursepress_calendar', $calendar, array(
+				'jquery'
+			), CoursePress::$version );
 
 			// $script = CoursePress::$url . 'asset/js/external/jquery.knob.js';
 			//
