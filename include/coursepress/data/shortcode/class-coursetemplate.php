@@ -336,7 +336,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		} else {
 			// For already enrolled students.
 
-			$progress = CoursePress_Student_Data::get_course_progress( get_current_user_id(), $course_id );
+			$progress = CoursePress_Data_Student::get_course_progress( get_current_user_id(), $course_id );
 
 			if ( $course->course_expired && ! $course->open_ended_course ) {
 				// COURSE EXPIRED
