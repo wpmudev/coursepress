@@ -56,7 +56,10 @@ if ( ! class_exists( 'CP_Certificate_Templates' ) ) {
 
 			$pdf->AddPage();
 
-			error_reporting( 0 ); //Don't show errors in the PDF 
+			if ( ! CoursePress_Capabilities::is_campus() ) {
+				error_reporting( 0 ); //Don't show errors in the PDF
+			}
+
 			ob_clean(); //Clear any previous output 
 			ob_start(); //Start new output buffer 
 

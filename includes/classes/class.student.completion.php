@@ -504,7 +504,6 @@ if ( ! class_exists( 'Student_Completion' ) ) {
             // make sure session data is also up to date
             $session_data[ $student_id ]['course_completion'][ $course_id ] = $data;
             CoursePress_Session::session( 'coursepress_student', $session_data );
-			$_SESSION['coursepress_student'][ $student_id ]['course_completion'][ $course_id ] = $data;
 			CoursePress_Cache::cp_cache_purge();
 		}
 
@@ -718,7 +717,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 
 			// Remove CoursePress transients
 			global $wpdb;
-			$table = $wpdb->prefix . 'options';
+			$table = $wpdb->options;
 			$sql = $wpdb->prepare( "DELETE FROM {$table} WHERE `option_name` LIKE %s OR `option_name` LIKE %s", '%_transient_coursepress_course%', '%_transient_coursepress_unit%' );
 			$wpdb->query( $sql );
 

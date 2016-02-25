@@ -104,7 +104,7 @@ jQuery( document ).ready( function ( $ ) {
         } );
 
         jQuery( "input[name*='radio_answers']" ).each( function ( i, obj ) {
-            jQuery( this ).attr( "name", "radio_input_module_radio_answers[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
+            jQuery( this ).attr( "name", "radio_input_module_radio_answers[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][' + jQuery(this).data('uniqueId') + ']' );
         } );
 
 

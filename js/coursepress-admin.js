@@ -453,6 +453,11 @@ jQuery( document ).ready( function () {
     jQuery( document.body ).on( 'input', '.checkbox_answer', function () {
         jQuery( this ).closest( 'td' ).find( ".checkbox_answer_check" ).val( jQuery( this ).val() );
     } );
+    jQuery('#unit-add').validate(
+        {
+            errorLabelContainer: '.validator-error-message'
+        }
+    );
 } );
 
 jQuery( document ).ready( function () {
@@ -512,13 +517,13 @@ function update_sortable_module_indexes_page_sort( page_id, page_num ) {
     } );
 
     jQuery( "input[name*='radio_answers']" ).each( function ( i, obj ) {
-        jQuery( this ).attr( "name", "radio_input_module_radio_answers[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
+        jQuery( this ).attr( "name", "radio_input_module_radio_answers[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][' + jQuery(this).data('uniqueId') + ']' );
     } );
     jQuery( "input[name*='radio_check']" ).each( function ( i, obj ) {
         jQuery( this ).attr( "name", "radio_input_module_radio_check[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
     } );
     jQuery( "input[name*='checkbox_answers']" ).each( function ( i, obj ) {
-        jQuery( this ).attr( "name", "checkbox_input_module_checkbox_answers[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
+        jQuery( this ).attr( "name", "checkbox_input_module_checkbox_answers[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][' + jQuery(this).data('uniqueId') + ']' );
     } );
     jQuery( "input[name*='checkbox_check']" ).each( function ( i, obj ) {
         jQuery( this ).attr( "name", "checkbox_input_module_checkbox_check[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
@@ -787,7 +792,7 @@ function coursepress_modules_ready() {
         } );
 
         jQuery( "input[name*='radio_answers']" ).each( function( i, obj ) {
-            jQuery( this ).attr( "name", "radio_input_module_radio_answers[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
+            jQuery( this ).attr( "name", "radio_input_module_radio_answers[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][' + jQuery(this).data('uniqueId') + ']' );
         } );
 
         jQuery( "input[name*='radio_check']" ).each( function( i, obj ) {
@@ -795,7 +800,7 @@ function coursepress_modules_ready() {
         } );
 
         jQuery( "input[name*='checkbox_answers']" ).each( function( i, obj ) {
-            jQuery( this ).attr( "name", "checkbox_input_module_checkbox_answers[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
+            jQuery( this ).attr( "name", "checkbox_input_module_checkbox_answers[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][' + jQuery(this).data('uniqueId') + ']' );
         } );
 
         jQuery( "input[name*='checkbox_check']" ).each( function( i, obj ) {
@@ -943,13 +948,13 @@ function update_sortable_module_indexes() {
     } );
 
     jQuery( "input[name*='radio_answers']" ).each( function ( i, obj ) {
-        jQuery( this ).attr( "name", "radio_input_module_radio_answers[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
+        jQuery( this ).attr( "name", "radio_input_module_radio_answers[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][' + jQuery(this).data('uniqueId') + ']' );
     } );
     jQuery( "input[name*='radio_check']" ).each( function ( i, obj ) {
         jQuery( this ).attr( "name", "radio_input_module_radio_check[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
     } );
     jQuery( "input[name*='checkbox_answers']" ).each( function ( i, obj ) {
-        jQuery( this ).attr( "name", "checkbox_input_module_checkbox_answers[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
+        jQuery( this ).attr( "name", "checkbox_input_module_checkbox_answers[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][' + jQuery(this).data('uniqueId') + ']' );
     } );
     jQuery( "input[name*='checkbox_check']" ).each( function ( i, obj ) {
         jQuery( this ).attr( "name", "checkbox_input_module_checkbox_check[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
@@ -1253,40 +1258,33 @@ jQuery( document ).ready( function ( $ ) {
     jQuery( document.body ).on( 'click', 'a.radio_new_link', function () {
 
         var unique_group_id = jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val();
-
-        var r = '<tr><td><input class="radio_answer_check" type="radio" name="radio_input_module_radio_check_' + unique_group_id + '[]"><input class="radio_answer" type="text" name="radio_input_module_radio_answers_' + unique_group_id + '[]"></td><td><a class="radio_remove" onclick="jQuery( this ).parent().parent().remove();"><i class="fa fa-trash-o"></i></a></td></tr>';
+        var radio_input_html = jQuery( this ).closest( ".module-content" ).find( ".radio_answer_check:last").parent().html();
+        radio_input_html = radio_input_html.replace(/\[([\d])\]\[([\d])\]/g, function( full, capture1, capture2) {
+            return "[" + capture1 + "][" + (Number(capture2) + 1) + "]";
+        });
+        radio_input_html = radio_input_html.replace(/data-unique-id=\"([\d])\"/g, function( full, capture1) {
+            return 'data-unique-id="' + (Number(capture1) + 1) + '"';
+        });
+        radio_input_html = radio_input_html.replace(/value=\"[\w]+\"/g, 'value=""');
+        var r = '<tr><td>' + radio_input_html + '</td><td><a class="radio_remove" onclick="jQuery( this ).parent().parent().remove();"><i class="fa fa-trash-o"></i></a></td></tr>';
 
         jQuery( this ).parent().find( ".ri_items" ).append( r );
-        //jQuery( this ).parent().parent().parent().append( r );
 
-        jQuery( "input[name*='audio_module_loop']" ).each( function ( i, obj ) {
-            jQuery( this ).attr( "name", "audio_module_loop[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + ']' );
-        } );
-
-        jQuery( "input[name*='audio_module_autoplay']" ).each( function ( i, obj ) {
-            jQuery( this ).attr( "name", "audio_module_autoplay[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + ']' );
-        } );
-
-        jQuery( "input[name*='radio_answers']" ).each( function ( i, obj ) {
-            jQuery( this ).attr( "name", "radio_input_module_radio_answers[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
-        } );
-
-        jQuery( "input[name*='radio_check']" ).each( function ( i, obj ) {
-            jQuery( this ).attr( "name", "radio_input_module_radio_check[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
-        } );
     } );
+
     jQuery( document.body ).on( 'click', 'a.checkbox_new_link', function () {
         var unique_group_id = jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val();
-        var r = '<tr><td><input class="checkbox_answer_check" type="checkbox" name="checkbox_input_module_checkbox_check_' + unique_group_id + '[]"><input class="checkbox_answer" type="text" name="checkbox_input_module_checkbox_answers_' + unique_group_id + '[]"></td><td><a class="checkbox_remove" onclick="jQuery( this ).parent().parent().remove();"><i class="fa fa-trash-o"></i></a></td></tr>';
-        //jQuery( this ).parent().parent().parent().append( r );
+        var checkbox_html = jQuery( this ).closest( ".module-content" ).find( ".checkbox_answer_check:last").parent().html();
+        checkbox_html = checkbox_html.replace(/\[([\d])\]\[([\d])\]/g, function( full, capture1, capture2) {
+            return "[" + capture1 + "][" + (Number(capture2) + 1) + "]";
+        });
+        checkbox_html = checkbox_html.replace(/data-unique-id=\"([\d])\"/g, function( full, capture1) {
+            return 'data-unique-id="' + (Number(capture1) + 1) + '"';
+        });
+        checkbox_html = checkbox_html.replace(/value=\"[\w]+\"/g, 'value=""');
+        var r = '<tr><td>' + checkbox_html + '</td><td><a class="checkbox_remove" onclick="jQuery( this ).parent().parent().remove();"><i class="fa fa-trash-o"></i></a></td></tr>';
 
         jQuery( this ).parent().find( ".ci_items" ).append( r );
-        jQuery( "input[name*='checkbox_answers']" ).each( function ( i, obj ) {
-            jQuery( this ).attr( "name", "checkbox_input_module_checkbox_answers[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
-        } );
-        jQuery( "input[name*='checkbox_check']" ).each( function ( i, obj ) {
-            jQuery( this ).attr( "name", "checkbox_input_module_checkbox_check[" + jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val() + '][]' );
-        } );
     } );
 
     jQuery( "#students_accordion" ).accordion( {

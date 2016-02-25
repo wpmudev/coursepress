@@ -6,6 +6,14 @@ if ( ! class_exists( 'CoursePress_Session' ) ) {
 		private static $token = 'coursepress_';
 		private static $add_time = '+1 hour';
 
+
+		public static function session_start() {
+			// Initiate sessions
+			if ( ! session_id() ) {
+				session_start();
+			}
+		}
+
 		/**
 		 * IMPORTANT: Only works for logged in users.
 		 *
@@ -33,6 +41,7 @@ if ( ! class_exists( 'CoursePress_Session' ) ) {
 			if ( class_exists( 'WP_Session_Tokens' ) && is_user_logged_in() && ( ! $force_session || ( $force_session && $token_update ) ) ) {
 				$user_id = get_current_user_id();
 
+				/** @var WP_Session_Tokens $session */
 				$session     = WP_Session_Tokens::get_instance( $user_id );
 				$token_parts = explode( '_', self::$token );
 				$token_parts = (int) array_pop( $token_parts );

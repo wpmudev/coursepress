@@ -161,10 +161,15 @@ if ( ! class_exists( 'Instructor' ) ) {
 
 		public static function instructor_by_hash( $hash ) {
 			global $wpdb;
-			$sql     = $wpdb->prepare( "SELECT user_id FROM " . $wpdb->prefix . "usermeta WHERE meta_key = %s", $hash );
-			$user_id = $wpdb->get_var( $sql );
+			$users = get_users(
+				array(
+					'meta_key' => $hash,
+					'fields' => 'ID'
+				)
+			);
 
-			if ( ! empty( $user_id ) ) {
+			if ( ! empty( $users ) ) {
+				$user_id = $users[0];
 				return ( new Instructor( $user_id ) );
 			} else {
 				return false;

@@ -310,11 +310,7 @@ if ( ! class_exists( 'Unit' ) ) {
 
 		function delete_all_unit_auto_drafts( $course_id = false ) {
 			global $wpdb;
-
-			if ( ! $unit_id ) {
-				$unit_id = $this->course_id;
-			}
-
+			
 			$course_id = (int) $course_id;
 
 			$drafts = get_posts( array(
