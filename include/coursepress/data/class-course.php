@@ -906,20 +906,21 @@ class CoursePress_Data_Course {
 		update_user_option( $student_id, 'role', 'student', $global_option ); // alternative to roles used.
 
 		self::_add_enrollment_email_hooks();
-
 		self::$email_type = CoursePress_Helper_Email::ENROLLMENT_CONFIRM;
 
 		$email_args = array();
-		$email_args['email_type'] = self::$email_type;
 		$email_args['course_id'] = $course_id;
 		$email_args['email'] = sanitize_email( $student->user_email );
 		$email_args['first_name'] = $student->user_firstname;
 		$email_args['last_name'] = $student->user_lastname;
 
-		$email_args = apply_filters( 'coursepress_student_enrollment_email_args', $email_args );
-
 		if ( is_email( $email_args['email'] ) ) {
-			if ( CoursePress_Helper_Utility::send_email( $email_args ) ) {
+			$sent = CoursePress_Helper_Email::send_email(
+				self::$email_type,
+				$email_args
+			);
+
+			if ( $sent ) {
 				// Could add something on successful email
 			} else {
 				// Could add something if email fails
@@ -1082,10 +1083,8 @@ class CoursePress_Data_Course {
 		$type = self::get_setting( $course_id, 'enrollment_type', 'manually' );
 
 		if ( 'passcode' === $type ) {
-			$email_args['email_type'] = CoursePress_Helper_Email::COURSE_INVITATION_PASSWORD;
 			$type = CoursePress_Helper_Email::COURSE_INVITATION_PASSWORD;
 		} else {
-			$email_args['email_type'] = CoursePress_Helper_Email::COURSE_INVITATION;
 			$type = CoursePress_Helper_Email::COURSE_INVITATION;
 		}
 
@@ -1101,13 +1100,9 @@ class CoursePress_Data_Course {
 			$email_args['last_name'] = sanitize_text_field( $email_data['last_name'] );
 		}
 
-		if ( CoursePress_Helper_Utility::send_email( $email_args ) ) {
-			// successful
-			return true;
-		} else {
-			// failed
-			return false;
-		}
+		$sent = CoursePress_Helper_Email::send_email( self::$type, $email_args );
+
+		return $sent;
 	}
 
 	private static function _add_invitation_email_hooks() {
@@ -1559,6 +1554,27 @@ class CoursePress_Data_Course {
 		}
 
 		return $prev;
+	}
+
+	/**
+	 * Return the course that is associated with current page.
+	 * i.e. this function returns the course ID that is currently displayed on
+	 * front end.
+	 *
+	 * @since  2.0.0
+	 * @return int The course ID or 0 if not called inside a course/unit/module.
+	 */
+	public static function get_current_course_id() {
+		global $wp;
+
+		if ( empty( $wp->query_vars ) ) { return 0; }
+		if ( ! is_array( $wp->query_vars ) ) { return 0; }
+		if ( empty( $wp->query_vars['coursename'] ) ) { return 0; }
+
+		$coursename = $wp->query_vars['coursename'];
+		$course_id = CoursePress_Data_Course::by_name( $coursename, true );
+
+		return (int) $course_id;
 	}
 
 	public static function by_name( $slug, $id_only ) {

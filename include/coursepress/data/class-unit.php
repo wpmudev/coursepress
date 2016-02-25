@@ -5,7 +5,6 @@ class CoursePress_Data_Unit {
 	private static $post_type = 'unit';
 
 	public static function get_format() {
-
 		return array(
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
@@ -32,7 +31,6 @@ class CoursePress_Data_Unit {
 				'rewrite' => false,
 			),
 		);
-
 	}
 
 	public static function get_post_type_name( $with_prefix = true ) {
@@ -47,7 +45,6 @@ class CoursePress_Data_Unit {
 	}
 
 	public static function get_time_estimation( $unit_id, $data, $default = '1:00' ) {
-
 		$estimations = array();
 
 		$unit_hours = 0;
@@ -114,7 +111,6 @@ class CoursePress_Data_Unit {
 	}
 
 	static function by_name( $slug, $id_only, $post_parent = '' ) {
-
 		$args = array(
 			'name' => $slug,
 			'post_type' => self::get_post_type_name( true ),
@@ -144,7 +140,6 @@ class CoursePress_Data_Unit {
 	}
 
 	public static function is_unit_available( $course, $unit, $previous_unit, $status = false ) {
-
 		if ( ! $status ) {
 			$status = self::get_unit_availability_status( $course, $unit, $previous_unit );
 		}
@@ -153,7 +148,6 @@ class CoursePress_Data_Unit {
 	}
 
 	public static function get_page_meta( $unit_id, $item_id ) {
-
 		if ( empty( $item_id ) ) {
 			return array(
 				'title' => '',
@@ -177,11 +171,9 @@ class CoursePress_Data_Unit {
 			'feature_image' => isset( $images[ 'page_' . $item_id ] ) ? $images[ 'page_' . $item_id ] : '',
 			'visible' => $visibilities[ ( $item_id - 1 ) ],
 		);
-
 	}
 
 	public static function get_unit_availability_status( $course, $unit, $previous_unit ) {
-
 		if ( ! is_object( $unit ) ) {
 			$unit = get_post( $unit );
 		}
@@ -194,7 +186,31 @@ class CoursePress_Data_Unit {
 			$previous_unit_id = is_object( $previous_unit ) ? $previous_unit->ID : (int) $previous_unit ;
 		}
 
-		$unit_available_date = get_post_meta( $unit_id, 'unit_availability', true );
+		$unit_available = get_post_meta( $unit_id, 'unit_availability', true );
+		$now = strtotime( 'now' );		
+		$available = true;
+		$student_id = get_current_user_id();
+	
+		if( $unit_available === 'on_date' ) {
+			$unit_date_availability = get_post_meta( $unit_id, 'unit_date_availability', true );
+			
+			if( ! empty( $unit_date_availability ) ) {
+				$unit_date_availability = strtotime( $unit_date_availability );
+				$available = ( $unit_date_availability - $now ) <= 0;
+			}
+		}
+		elseif( $unit_available === 'after_delay' ) {
+			$delay_days = get_post_meta( $unit_id, 'unit_delay_days', true );
+			$date_enrolled = CoursePress_Data_Course::student_enrolled( $student_id, $course_id );
+			
+			if( (int) $delay_days > 0 ) {
+				$date_enrolled = strtotime( $date_enrolled );
+				$delay_date = $date_enrolled + ( (int) $delay_days * 86400 );
+				$since_published = $now - $delay_date;
+				
+				$available = $since_published >= 0;				
+			}
+		}
 
 		/* Not filtering date format as it could cause conflicts.  Only filter date on display. */
 		$current_date = ( date( 'Y-m-d', current_time( 'timestamp', 0 ) ) );
@@ -207,9 +223,6 @@ class CoursePress_Data_Unit {
 
 		$status = array();
 
-		$available = true;
-
-		$student_id = get_current_user_id();
 		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
 		$mandatory_done = CoursePress_Data_Student::is_mandatory_done( $student_id, $course_id, $unit_id, $student_progress );
 		$unit_completed = CoursePress_Data_Student::is_unit_complete( $student_id, $course_id, $unit_id, $student_progress );
@@ -220,15 +233,9 @@ class CoursePress_Data_Unit {
 		CoursePress_Helper_Utility::set_array_val( $status, 'completion_required/enabled', $force_current_unit_successful_completion );
 		CoursePress_Helper_Utility::set_array_val( $status, 'completion_required/result', $unit_completed );
 
-		$available = $status['mandatory_required']['enabled'] ? $status['mandatory_required']['result'] : $available;
-		$available = $status['completion_required']['enabled'] ? $status['completion_required']['result'] : $available;
-
-		CoursePress_Helper_Utility::set_array_val( $status, 'date_restriction/result', ( $current_date >= $unit_available_date ) );
-
-		if ( ! $status['date_restriction']['result'] || ! $available ) {
-			$available = false;
-		} else {
-			$available = true;
+		if( $available ) { 
+			$available = $status['mandatory_required']['enabled'] ? $status['mandatory_required']['result'] : $available;
+			$available = $status['completion_required']['enabled'] ? $status['completion_required']['result'] : $available;
 		}
 
 		/**
@@ -250,5 +257,31 @@ class CoursePress_Data_Unit {
 		$status['available'] = $available;
 
 		return $status;
+	}
+
+	/**
+	 * Returns the permalink to the specific unit.
+	 *
+	 * @since  2.0.0
+	 * @param  int    $unit_id Unit ID.
+	 * @param  string $page Optional. Page-key inside the unit.
+	 * @return string The URL.
+	 */
+	public static function get_url( $unit_id, $page = false ) {
+		$unit = get_post( $unit_id );
+		$course_id = wp_get_post_parent_id( $unit_id );
+
+		$unit_url = sprintf(
+			'%s%s%s',
+			get_permalink( $course_id ),
+			CoursePress_Core::get_slug( 'unit' ),
+			$unit->post_name
+		);
+
+		if ( $page ) {
+			$unit_url .= '/page/' . $page;
+		}
+
+		return trailingslashit( $unit_url );
 	}
 }

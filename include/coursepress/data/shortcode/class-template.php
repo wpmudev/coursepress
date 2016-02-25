@@ -71,27 +71,6 @@ class CoursePress_Data_Shortcode_Template {
 			'messaging_submenu',
 			array( __CLASS__, 'messaging_submenu' )
 		);
-
-		add_shortcode(
-			'course_unit_single',
-			array( __CLASS__, 'course_unit_single' )
-		);
-		add_shortcode(
-			'course_units_loop',
-			array( __CLASS__, 'course_units_loop' )
-		);
-		add_shortcode(
-			'course_notifications_loop',
-			array( __CLASS__, 'course_notifications_loop' )
-		);
-		add_shortcode(
-			'courses_loop',
-			array( __CLASS__, 'courses_loop' )
-		);
-		add_shortcode(
-			'course_discussion_loop',
-			array( __CLASS__, 'course_discussion_loop' )
-		);
 	}
 
 	public static function course_archive( $a ) {
@@ -830,218 +809,28 @@ class CoursePress_Data_Shortcode_Template {
 		return $content;
 	}
 
-	/**
-	 * @todo: THIS FUNCTION DOES NOT RETURN A VALUE!!
-	 */
-	public static function course_unit_single( $atts ) {
-		global $wp;
-
-		shortcode_atts(
-			array( 'unit_id' => 0 ),
-			$atts
-		);
-
-		$atts['unit_id'] = (int) $atts['unit_id'];
-
-		if ( empty( $atts['unit_id'] ) ) {
-			if ( array_key_exists( 'unitname', $wp->query_vars ) ) {
-				$unit_name = $wp->query_vars['unitname'];
-				$unit = new Unit();
-				$atts['unit_id'] = $unit->get_unit_id_by_name( $unit_name );
-			}
-		}
-
-		if ( empty( $atts['unit_id'] ) ) { return ''; }
-
-		$args = array(
-			'post_type' => CoursePress_Data_Unit::get_post_type_name(),
-			'post__in' => array( $atts['unit_id'] ),
-			'post_status' => cp_can_see_unit_draft() ? 'any' : 'publish',
-		);
-
-		ob_start();
-		query_posts( $args );
-		ob_clean();
-	}
-
-	/**
-	 * @todo: THIS FUNCTION DOES NOT RETURN A VALUE!!
-	 */
-	public static function course_units_loop( $atts ) {
-		global $wp;
-
-		extract( shortcode_atts( array( 'course_id' => 0 ), $atts ) );
-
-		$course_id = (int) $course_id;
-
-		if ( empty( $course_id ) ) {
-			if ( array_key_exists( 'coursename', $wp->query_vars ) ) {
-				$course_id = Course::get_course_id_by_name( $wp->query_vars['coursename'] );
-			} else {
-				$course_id = 0;
-			}
-		}
-
-		$current_date = date_i18n( 'Y-m-d', current_time( 'timestamp', 0 ) );
-
-		$args = array(
-			'order' => 'ASC',
-			'post_type' => CoursePress_Data_Unit::get_post_type_name(),
-			'post_status' => ( cp_can_see_unit_draft() ? 'any' : 'publish' ),
-			'meta_key' => 'unit_order',
-			'orderby' => 'meta_value_num',
-			'posts_per_page' => '-1',
-			'meta_query' => array(
-				'relation' => 'AND',
-				array(
-					'key' => 'course_id',
-					'value' => $course_id,
-				),
-			),
-		);
-
-		query_posts( $args );
-	}
-
-	/**
-	 * @todo: THIS FUNCTION DOES NOT RETURN A VALUE!!
-	 */
-	public static function courses_loop( $atts ) {
-		global $wp;
-
-		if ( array_key_exists( 'course_category', $wp->query_vars ) ) {
-			$page = ( isset( $wp->query_vars['paged'] ) ) ? $wp->query_vars['paged'] : 1;
-			$query_args = array(
-				'post_type' => CoursePress_Data_Course::get_post_type_name(),
-				'post_status' => 'publish',
-				'paged' => $page,
-				'tax_query' => array(
-					array(
-						'taxonomy' => 'course_category',
-						'field' => 'slug',
-						'terms' => array( $wp->query_vars['course_category'] ),
-					),
-				),
-			);
-
-			$selected_course_order_by_type = get_option( 'course_order_by_type', 'DESC' );
-			$selected_course_order_by = get_option( 'course_order_by', 'post_date' );
-
-			if (  'course_order' == $selected_course_order_by ) {
-				$query_args['meta_key'] = 'course_order';
-				$query_args['meta_query'] = array(
-					'relation' => 'OR',
-					array(
-						'key' => 'course_order',
-						'compare' => 'NOT EXISTS',
-					),
-				);
-				$query_args['orderby'] = 'meta_value';
-				$query_args['order'] = $selected_course_order_by_type;
-			} else {
-				$query_args['orderby'] = $selected_course_order_by;
-				$query_args['order'] = $selected_course_order_by_type;
-			}
-
-			query_posts( $query_args );
-		}
-	}
-
-	/**
-	 * @todo: THIS FUNCTION DOES NOT RETURN A VALUE!!
-	 */
-	public static function course_notifications_loop( $atts ) {
-		global $wp;
-
-		extract( shortcode_atts( array( 'course_id' => 0 ), $atts ) );
-
-		$course_id = (int) $course_id;
-
-		if ( empty( $course_id ) ) {
-			if ( array_key_exists( 'coursename', $wp->query_vars ) ) {
-				$course_id = Course::get_course_id_by_name( $wp->query_vars['coursename'] );
-			} else {
-				$course_id = 0;
-			}
-		}
-
-		$args = array(
-			'category' => '',
-			'order' => 'ASC',
-			'post_type' => 'notifications',
-			'post_mime_type' => '',
-			'post_parent' => '',
-			'post_status' => 'publish',
-			'orderby' => 'meta_value_num',
-			'posts_per_page' => '-1',
-			'meta_query' => array(
-				'relation' => 'OR',
-				array(
-					'key' => 'course_id',
-					'value' => $course_id,
-				),
-				array(
-					'key' => 'course_id',
-					'value' => '',
-				),
-			),
-		);
-
-		query_posts( $args );
-	}
-
-	/**
-	 * @todo: THIS FUNCTION DOES NOT RETURN A VALUE!!
-	 */
-	public static function course_discussion_loop( $atts ) {
-		global $wp;
-
-		extract( shortcode_atts( array( 'course_id' => 0 ), $atts ) );
-
-		$course_id = (int) $course_id;
-
-		if ( empty( $course_id ) ) {
-			if ( array_key_exists( 'coursename', $wp->query_vars ) ) {
-				$course_id = Course::get_course_id_by_name( $wp->query_vars['coursename'] );
-			} else {
-				$course_id = 0;
-			}
-		}
-
-		$args = array(
-			'order' => 'DESC',
-			'post_type' => 'discussions',
-			'post_mime_type' => '',
-			'post_parent' => '',
-			'post_status' => 'publish',
-			'posts_per_page' => '-1',
-			'meta_key' => 'course_id',
-			'meta_value' => $course_id,
-		);
-
-		query_posts( $args );
-	}
-
 	public static function course_signup( $atts ) {
 		$allowed = array( 'signup', 'login' );
 
-		extract( shortcode_atts(
-			array(
-				'page' => isset( $_REQUEST['page'] ) ? $_REQUEST['page'] : '',
-				'failed_login_text' => __( 'Invalid login.', 'CP_TD' ),
-				'failed_login_class' => 'red',
-				'logout_url' => '',
-				'signup_tag' => 'h3',
-				'signup_title' => __( 'Signup', 'CP_TD' ),
-				'login_tag' => 'h3',
-				'login_title' => __( 'Login', 'CP_TD' ),
-				'signup_url' => '',
-				'login_url' => '',
-				'redirect_url' => '', // Redirect on successful login or signup.
-			),
-			$atts,
-			'course_signup'
-		) );
+		extract(
+			shortcode_atts(
+				array(
+					'page' => isset( $_REQUEST['page'] ) ? $_REQUEST['page'] : '',
+					'failed_login_text' => __( 'Invalid login.', 'CP_TD' ),
+					'failed_login_class' => 'red',
+					'logout_url' => '',
+					'signup_tag' => 'h3',
+					'signup_title' => __( 'Signup', 'CP_TD' ),
+					'login_tag' => 'h3',
+					'login_title' => __( 'Login', 'CP_TD' ),
+					'signup_url' => '',
+					'login_url' => '',
+					'redirect_url' => '', // Redirect on successful login or signup.
+				),
+				$atts,
+				'course_signup'
+			)
+		);
 
 		$failed_login_text = sanitize_text_field( $failed_login_text );
 		$failed_login_class = sanitize_html_class( $failed_login_class );
@@ -1171,21 +960,13 @@ class CoursePress_Data_Shortcode_Template {
 
 										if ( ! $form_errors ) {
 
-											$student_data = CoursePress_Helper_Utility::sanitize_recursive( $student_data );
+											$student_data = CoursePress_Helper_Utility::sanitize_recursive(
+												$student_data
+											);
 											$student_id = wp_insert_user( $student_data );
-											if ( ! empty( $student_id ) ) {
-												// $form_message = __( 'Account created successfully! You may now <a href="' . ( get_option( 'use_custom_login_form', 1 ) ? trailingslashit( site_url() . '/' . $this->get_login_slug() ) : wp_login_url() ) . '">log into your account</a>.', 'CP_TD' );
-												// $form_message_class = 'regular';
-												$email_args['email_type'] = CoursePress_Helper_Email::REGISTRATION;
-												$email_args['email'] = $student_data['user_email'];
-												$email_args['first_name'] = $student_data['first_name'];
-												$email_args['last_name'] = $student_data['last_name'];
-												$email_args['fields'] = array();
-												$email_args['fields']['student_id'] = $student_id;
-												$email_args['fields']['student_username'] = $student_data['user_login'];
-												$email_args['fields']['student_password'] = $student_data['user_pass'];
 
-												CoursePress_Helper_Email::send_email( $email_args );
+											if ( ! empty( $student_id ) ) {
+												CoursePress_Data_Student::send_registration( $student_id );
 
 												$creds = array();
 												$creds['user_login'] = $student_data['user_login'];
@@ -1199,13 +980,13 @@ class CoursePress_Data_Shortcode_Template {
 												}
 
 												if ( isset( $_POST['course_id'] ) && is_numeric( $_POST['course_id'] ) ) {
-													$course = new Course( $_POST['course_id'] );
-													wp_redirect( $course->get_permalink() );
+													$url = get_permalink( (int) $_POST['course_id'] );
+													wp_safe_redirect( $url );
 												} else {
 													if ( ! empty( $redirect_url ) ) {
-														wp_redirect( esc_url_raw( apply_filters( 'coursepress_redirect_after_signup_redirect_url', $redirect_url ) ) );
+														wp_safe_redirect( esc_url_raw( apply_filters( 'coursepress_redirect_after_signup_redirect_url', $redirect_url ) ) );
 													} else {
-														wp_redirect( esc_url_raw( apply_filters( 'coursepress_redirect_after_signup_url', CoursePress_Core::get_slug( 'student_dashboard', true ) ) ) );
+														wp_safe_redirect( esc_url_raw( apply_filters( 'coursepress_redirect_after_signup_url', CoursePress_Core::get_slug( 'student_dashboard', true ) ) ) );
 													}
 												}
 												exit;

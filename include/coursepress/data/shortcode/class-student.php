@@ -417,12 +417,12 @@ class CoursePress_Data_Shortcode_Student {
 		}
 
 		$decimal_places = sanitize_text_field( $decimal_places );
-		// $completion = new Course_Completion( $course_id );
-		// $completion->init_student_status();
-		// return $completion->course_progress();
-		//
+
 		return number_format_i18n(
-			Student_Completion::calculate_course_completion( get_current_user_id(), $course_id ),
+			Student_Completion::calculate_course_completion(  // @check
+				get_current_user_id(),
+				$course_id
+			),
 			$decimal_places
 		);
 	}
@@ -448,13 +448,14 @@ class CoursePress_Data_Shortcode_Student {
 
 		$decimal_places = sanitize_text_field( $decimal_places );
 
-		/*
-		$completion = new Course_Completion( $course_id );
-		$completion->init_student_status();
-		return $completion->unit_progress( $unit_id );
-		*/
-
-		$progress = number_format_i18n( Student_Completion::calculate_unit_completion( get_current_user_id(), $course_id, $unit_id ), $decimal_places );
+		$progress = number_format_i18n(
+			Student_Completion::calculate_unit_completion( // @check
+				get_current_user_id(),
+				$course_id,
+				$unit_id
+			),
+			$decimal_places
+		);
 
 		return $progress;
 	}
@@ -469,29 +470,45 @@ class CoursePress_Data_Shortcode_Student {
 	 * @return string Shortcode output.
 	 */
 	public static function course_mandatory_message( $atts ) {
-		extract( shortcode_atts( array(
-			'course_id' => CoursePress_Helper_Utility::the_course( true ),
-			'unit_id' => CoursePress_Helper_Utility::the_post( true ),
-			'message' => __( '%d of %d mandatory elements completed.', 'CP_TD' ),
-		), $atts, 'course_mandatory_message' ) );
+		extract(
+			shortcode_atts(
+				array(
+					'course_id' => CoursePress_Helper_Utility::the_course( true ),
+					'unit_id' => CoursePress_Helper_Utility::the_post( true ),
+					'message' => __( '%d of %d mandatory elements completed.', 'CP_TD' ),
+				),
+				$atts,
+				'course_mandatory_message'
+			)
+		);
 
 		$course_id = (int) $course_id;
+		if ( empty( $course_id ) ) { return ''; }
+
 		$unit_id = (int) $unit_id;
-		$message = sanitize_text_field( $message );
+		if ( empty( $unit_id ) ) { return ''; }
 
 		$student_id = get_current_user_id();
-		$mandatory = CoursePress_Data_Student::get_mandatory_completion( $student_id, $course_id, $unit_id );
+		if ( empty( $student_id ) ) { return ''; }
 
-		if ( empty( $student_id ) || empty( $course_id ) || empty( $unit_id ) || empty( $mandatory['required'] ) ) {
-			return '';
-		}
+		$mandatory = CoursePress_Data_Student::get_mandatory_completion(
+			$student_id,
+			$course_id,
+			$unit_id
+		);
+		if ( empty( $mandatory['required'] ) ) { return ''; }
 
+		$message = sanitize_text_field( $message );
 		$mandatory_required = (int) $mandatory['required'];
 		if ( empty( $mandatory_required ) ) {
 			return '';
 		}
 
-		return sprintf( $message, (int) $mandatory['completed'], $mandatory_required );
+		return sprintf(
+			$message,
+			(int) $mandatory['completed'],
+			$mandatory_required
+		);
 	}
 
 	/**

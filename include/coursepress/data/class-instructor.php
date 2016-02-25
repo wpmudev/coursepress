@@ -246,22 +246,31 @@ class CoursePress_Data_Instructor {
 	}
 
 	public static function delete_invitation( $course_id, $invite_code ) {
+		$instructor_invites = get_post_meta(
+			$course_id,
+			'instructor_invites',
+			true
+		);
 
-		$instructor_invites = get_post_meta( $course_id, 'instructor_invites', true );
 		if ( $instructor_invites ) {
 			$keys = array_keys( $instructor_invites );
 			if ( in_array( $invite_code, $keys ) ) {
 				unset( $instructor_invites[ $invite_code ] );
 			}
 		}
-		update_post_meta( $course_id, 'instructor_invites', $instructor_invites );
 
+		update_post_meta(
+			$course_id,
+			'instructor_invites',
+			$instructor_invites
+		);
 	}
 
 	public static function send_invitation( $email_data ) {
+		$email_data['course_id'] = (int) $email_data['course_id'];
 
-		// So that we can use it later
-		CoursePress_Data_Course::set_last_course_id( (int) $email_data['course_id'] );
+		// So that we can use it later.
+		CoursePress_Data_Course::set_last_course_id( $email_data['course_id'] );
 
 		// We need to hook the email fields for the Utility method.
 		self::_add_email_hooks();
@@ -269,7 +278,6 @@ class CoursePress_Data_Instructor {
 		// Return data: Can be used by caller to get extra information
 		$return_data = array();
 
-		$email_args['email_type'] = 'invite_instructor';
 		$email_args['course_id'] = $email_data['course_id'];
 		$email_args['email'] = sanitize_email( $email_data['email'] );
 
@@ -286,7 +294,11 @@ class CoursePress_Data_Instructor {
 		$email_args['invite_hash'] = $invite_data['hash'];
 
 		// Get invites
-		$instructor_invites = get_post_meta( (int) $email_data['course_id'], 'instructor_invites', true );
+		$instructor_invites = get_post_meta(
+			$email_data['course_id'],
+			'instructor_invites',
+			true
+		);
 
 		// Create Course invites if they don't exist, and check to see if this invite is already there.
 		$invite_exists = false;
@@ -304,11 +316,14 @@ class CoursePress_Data_Instructor {
 			$instructor_invites = array();
 		}
 
-		// Fire off the email, data altered in the hooks below
-		if ( CoursePress_Helper_Utility::send_email( $email_args ) ) {
+		// Fire off the email, data altered in the hooks below.
+		$sent = CoursePress_Helper_Email::send_email(
+			CoursePress_Helper_Email::INSTRUCTOR_INVITATION,
+			$email_args
+		);
 
+		if ( $sent ) {
 			if ( ! $invite_exists ) {
-
 				// Add the new invite
 				$invite = array(
 					'first_name' => $email_args['first_name'],
@@ -320,35 +335,45 @@ class CoursePress_Data_Instructor {
 
 				$instructor_invites[ $email_args['invite_code'] ] = $invite;
 
-				update_post_meta( (int) $email_data['course_id'], 'instructor_invites', $instructor_invites );
+				update_post_meta(
+					$email_data['course_id'],
+					'instructor_invites',
+					$instructor_invites
+				);
 
-				// Invite sent and added
+				// Invite sent and added.
 				$return_data['success'] = true;
 				$return_data['invite_code'] = $email_args['invite_code'];
-				CoursePress_Helper_Utility::set_array_val( $return_data, 'message/sent', __( 'Invitation successfully sent.', 'CP_TD' ) );
+				CoursePress_Helper_Utility::set_array_val(
+					$return_data,
+					'message/sent',
+					__( 'Invitation successfully sent.', 'CP_TD' )
+				);
 
 			} else {
-
-				// Invite already exists
+				// Invite already exists.
 				$return_data['success'] = true;
 				$return_data['invite_code'] = $email_args['invite_code'];
-				CoursePress_Helper_Utility::set_array_val( $return_data, 'message/exists', __( 'Invitation already exists. Invitation was re-sent.', 'CP_TD' ) );
-
+				CoursePress_Helper_Utility::set_array_val(
+					$return_data,
+					'message/exists',
+					__( 'Invitation already exists. Invitation was re-sent.', 'CP_TD' )
+				);
 			}
 		} else {
-
-			// Email not sent
+			// Email not sent.
 			$return_data['success'] = false;
-			CoursePress_Helper_Utility::set_array_val( $return_data, 'message/send_error', __( 'Email failed to send.', 'CP_TD' ) );
-
+			CoursePress_Helper_Utility::set_array_val(
+				$return_data,
+				'message/send_error',
+				__( 'Email failed to send.', 'CP_TD' )
+			);
 		};
 
 		return $return_data;
-
 	}
 
 	private static function _create_invite_code_hash( $args ) {
-
 		// Generate invite code.
 		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		$invite_code = '';
@@ -360,20 +385,18 @@ class CoursePress_Data_Instructor {
 			'code' => $invite_code,
 			'hash' => sha1( sanitize_email( $args['email'] ) . $invite_code ),
 		);
-
 	}
 
 	private static function _add_email_hooks() {
-
 		add_filter( 'coursepress_email_fields', array( __CLASS__, 'email_fields' ), 10, 2 );
 		add_filter( 'wp_mail_from', array( __CLASS__, 'email_from' ) );
 		add_filter( 'wp_mail_from_name', array( __CLASS__, 'email_from_name' ) );
-
 	}
 
 	public static function email_fields( $fields, $args ) {
-
-		$email_settings = CoursePress_Helper_Email::get_email_fields( CoursePress_Helper_Email::INSTRUCTOR_INVITATION );
+		$email_settings = CoursePress_Helper_Email::get_email_fields(
+			CoursePress_Helper_Email::INSTRUCTOR_INVITATION
+		);
 
 		$course_id = (int) $args['course_id'];
 
@@ -423,14 +446,19 @@ class CoursePress_Data_Instructor {
 			get_bloginfo(),
 		);
 
-		$fields['message'] = str_replace( $tags, $tags_replaces, $email_settings['content'] );
+		$fields['message'] = str_replace(
+			$tags,
+			$tags_replaces,
+			$email_settings['content']
+		);
 
 		return $fields;
 	}
 
 	public static function email_from( $from ) {
-
-		$email_settings = CoursePress_Helper_Email::get_email_fields( CoursePress_Helper_Email::INSTRUCTOR_INVITATION );
+		$email_settings = CoursePress_Helper_Email::get_email_fields(
+			CoursePress_Helper_Email::INSTRUCTOR_INVITATION
+		);
 
 		$from = $email_settings['email'];
 
@@ -438,8 +466,9 @@ class CoursePress_Data_Instructor {
 	}
 
 	public static function email_from_name( $from_name ) {
-
-		$email_settings = CoursePress_Helper_Email::get_email_fields( CoursePress_Helper_Email::INSTRUCTOR_INVITATION );
+		$email_settings = CoursePress_Helper_Email::get_email_fields(
+			CoursePress_Helper_Email::INSTRUCTOR_INVITATION
+		);
 
 		$from = $email_settings['name'];
 
@@ -447,11 +476,11 @@ class CoursePress_Data_Instructor {
 	}
 
 	public static function verify_invitation_code( $course_id, $code, $invitation_data ) {
-
+		// Not done yet.
 	}
 
 
 	public static function add_from_invitation( $course_id, $instructor_data ) {
-
+		// Not done yet.
 	}
 }

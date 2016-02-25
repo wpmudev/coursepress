@@ -12,15 +12,25 @@ class CoursePress_Data_Student {
 	 * @return array|mixed
 	 */
 	public static function get_course_enrollment_meta( $user_id ) {
+		$course_ids = array();
 		$meta = get_user_meta( $user_id );
+
 		if ( $meta ) {
-			// Get only the enrolled courses
-			$meta = array_filter( array_keys( $meta ), array( __CLASS__, 'filter_course_meta_array' ) );
-			// Map only the course IDs back to the array
-			$meta = array_map( array( __CLASS__, 'course_id_from_meta' ), $meta );
+
+			// We only want to parse/return the meta-key; we ignore values.
+			$meta_keys = array_filter(
+				array_keys( $meta ),
+				array( __CLASS__, 'filter_course_meta_array' )
+			);
+
+			// Convert the meta-key to a numeric course_id.
+			$course_ids = array_map(
+				array( __CLASS__, 'course_id_from_meta' ),
+				$meta_keys
+			);
 		}
 
-		return $meta;
+		return $course_ids;
 	}
 
 	/**
@@ -98,12 +108,25 @@ class CoursePress_Data_Student {
 	 * Get the IDs of enrolled courses.
 	 *
 	 * @uses Student::get_course_enrollment_meta()
+	 * @param  int $student_id WP User ID.
 	 * @return array Contains enrolled course IDs.
 	 */
 	public static function get_enrolled_courses_ids( $student_id ) {
 		return self::get_course_enrollment_meta( $student_id );
 	}
 
+	/**
+	 * Get the IDs of enrolled courses.
+	 *
+	 * @uses Student::get_course_enrollment_meta()
+	 * @param  int $student_id WP User ID.
+	 * @param  int $course_id The course ID to check.
+	 * @return bool
+	 */
+	public static function is_enrolled_in_course( $student_id, $course_id ) {
+		$enrolled = self::get_enrolled_courses_ids( $student_id );
+		return in_array( $course_id, $enrolled );
+	}
 
 	/**
 	 * Updates a student's data.
@@ -764,5 +787,33 @@ class CoursePress_Data_Student {
 		}
 
 		return $response_count > 0 ? (int) ( $results / $response_count ) : 0;
+	}
+
+	/**
+	 * Send email about successful account creation.
+	 * The email contains several links but no login name or password.
+	 *
+	 * @since  1.0.0
+	 * @param  int $student_id The newly created WP User ID.
+	 * @return bool True on success.
+	 */
+	public static function send_registration( $student_id ) {
+		$student_data = get_userdata( $student_id );
+
+		$email_args = array();
+		$email_args['email'] = $student_data['user_email'];
+		$email_args['first_name'] = $student_data['first_name'];
+		$email_args['last_name'] = $student_data['last_name'];
+		$email_args['fields'] = array();
+		$email_args['fields']['student_id'] = $student_id;
+		$email_args['fields']['student_username'] = $student_data['user_login'];
+		$email_args['fields']['student_password'] = $student_data['user_pass'];
+
+		$sent = CoursePress_Helper_Email::send_email(
+			CoursePress_Helper_Email::REGISTRATION,
+			$email_args
+		);
+
+		return $sent;
 	}
 }
