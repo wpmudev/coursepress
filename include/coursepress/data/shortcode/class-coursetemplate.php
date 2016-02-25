@@ -965,7 +965,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		}
 
 		$args['date_indicator'] = $date_indicator;
-		$cal = new Course_Calendar( $args ); // @check
+		$cal = new CoursePress_Template_Calendar( $args ); // @check
 
 		return $cal->create_calendar( $pre, $next );
 	}
