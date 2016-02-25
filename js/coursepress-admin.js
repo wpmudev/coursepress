@@ -453,11 +453,14 @@ jQuery( document ).ready( function () {
     jQuery( document.body ).on( 'input', '.checkbox_answer', function () {
         jQuery( this ).closest( 'td' ).find( ".checkbox_answer_check" ).val( jQuery( this ).val() );
     } );
-    jQuery('#unit-add').validate(
-        {
-            errorLabelContainer: '.validator-error-message'
-        }
-    );
+    
+    if ( jQuery.fn.validate ) { 
+        jQuery('#unit-add').validate(
+            {
+                errorLabelContainer: '.validator-error-message'
+            }
+        );
+    }
 } );
 
 jQuery( document ).ready( function () {
