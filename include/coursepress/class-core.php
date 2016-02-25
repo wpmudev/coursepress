@@ -90,6 +90,10 @@ class CoursePress_Core {
 
 		// Upgrade CoursePress if needed.
 		CoursePress_Upgrade::init();
+		
+		// Initialize Calendar actions
+		CoursePress_View_Front_Calendar::init();
+		
 	}
 
 	/**
