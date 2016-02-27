@@ -14,7 +14,11 @@
   } */
 
 function cp_use_woo() {
-	if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+	}
+
+	if ( is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
 		$use_woo = get_option( 'use_woo', 0 );
 		if ( $use_woo == 0 ) {
 			return false;
