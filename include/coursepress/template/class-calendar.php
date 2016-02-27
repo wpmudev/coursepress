@@ -183,7 +183,7 @@ class CoursePress_Template_Calendar {
 		$calendar .= '<script type="text/javascript">var wpajaxurl = "' . CoursePress_Helper_Utility::get_ajax_url() . '";</script>';
 
 		/**
-		 * Add course-calendar.js script to make sure it work when use outside of coursepress pages
+		 * Add course-calendar.js script and front.css to ensure it works when use outside of coursepress pages
 		 * but use the same slug to avoid multiple inclusion.
 		 **/
 		add_action( 'wp_footer', array( __CLASS__, 'enqueue_calendar_script' ) );
@@ -199,7 +199,8 @@ class CoursePress_Template_Calendar {
 			'jquery'
 		), CoursePress::$version );
 		
-		wp_enqueue_style( 'cpstyle', CoursePress::$url . 'asset/css/coursepress_front.css' );
+		$style = CoursePress::$url . 'asset/css/coursepress_front.css';
+		wp_enqueue_style( 'coursepress_general', $style, array( 'dashicons' ), CoursePress::$version );
 	}
     
     function first_day_of_month( $month, $year ) {

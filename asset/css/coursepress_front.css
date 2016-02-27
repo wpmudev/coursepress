@@ -914,6 +914,48 @@ ul.notification-archive-list {
   overflow: hidden;
 }
 
+.course-calendar {
+    position: relative;
+}
+
+.course-calendar-body {
+    width: 100%;
+}
+
+.course-calendar-body caption {
+    min-height: 10px;
+    padding-bottom: 10px;
+    vertical-align: top;
+}
+
+.course-calendar .pre-month {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    font-size: 0.8em;
+    cursor: pointer;
+}
+.course-calendar .next-month {
+    position: absolute;
+    bottom: -20px;
+    right: 0;
+    font-size: 0.8em;	
+    cursor: pointer;	
+}
+
+.course-calendar .day,
+.course-calendar .week-days {
+    line-height: 1.2em;
+    min-width: 14%;
+}
+
+.course-calendar .day {
+}
+
+.course-calendar .today {
+    font-weight: bold;
+}
+
 /** Calendar Date Indicators */
 
 /* -- Light Theme: Block -- */
