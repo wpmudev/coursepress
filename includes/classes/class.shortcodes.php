@@ -4338,7 +4338,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			$input_modules_count            = count( $criteria['all_input_ids'] );
 			$assessable_input_modules_count = count( $criteria['gradable_modules'] );
 			$mandatory_input_elements       = count( $criteria['mandatory_modules'] );
-			$mandatory_responses            = Student_Completion::get_mandatory_steps_completed( get_current_user_id(), $course_id, $unit_id );
+			$mandatory_responses            = Student_Completion::get_mandatory_modules_answered( get_current_user_id(), $course_id, $unit_id ); 
 			//			$all_responses					 = do_shortcode( '[course_unit_details field="student_module_responses"]' );
 			// $is_unit_available				 = do_shortcode( '[course_unit_details field="is_unit_available"]' );
 			//			$input_modules_count			 = do_shortcode( '[course_unit_details field="input_modules_count"]' );
@@ -4355,7 +4355,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 				<span class="unit-archive-single-module-status"><?php
 					if ( $unit_available ) {
 						if ( $mandatory_input_elements > 0 ) {
-							echo sprintf( $message, $mandatory_responses, $mandatory_input_elements );
+							echo sprintf( $message, count( $mandatory_responses ), $mandatory_input_elements );
 						}
 					} else {
 						if ( isset( $unit->status ) && $unit->status['mandatory_required']['enabled'] && ! $unit->status['mandatory_required']['result'] && ! $unit->status['completion_required']['enabled'] ) {
