@@ -194,10 +194,12 @@ class CoursePress_Template_Calendar {
 	
 	public function enqueue_calendar_script() {
 		
-		$calendar = CoursePress::$url . 'asset/js/coursepress-calendar.js';
-		wp_enqueue_script( 'coursepress-calendar', $calendar, array(
+		$calendar_js = CoursePress::$url . 'asset/js/coursepress-calendar.js';
+		wp_enqueue_script( 'coursepress-calendar', $calendar_js, array(
 			'jquery'
 		), CoursePress::$version );
+		
+		wp_enqueue_style( 'cpstyle', CoursePress::$url . 'asset/css/coursepress_front.css' );
 	}
     
     function first_day_of_month( $month, $year ) {
