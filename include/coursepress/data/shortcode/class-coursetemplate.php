@@ -930,8 +930,8 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			'course_id' => in_the_loop() ? get_the_ID() : false,
 			'month' => false,
 			'year' => false,
-			'pre' => __( 'Â« Previous', 'CP_TD' ),
-			'next' => __( 'Next Â»', 'CP_TD' ),
+			'pre' => __( '&laquo; Previous', 'CP_TD' ),
+			'next' => __( 'Next &raquo;', 'CP_TD' ),
 			'date_indicator' => 'indicator_light_block',
 		), $atts, 'course_calendar' ) );
 
@@ -964,10 +964,14 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			$args = array( 'course_id' => $course_id );
 		}
 
-		$args['date_indicator'] = $date_indicator;
-		$cal = new Course_Calendar( $args ); // @check
+        $args['date_indicator'] = $date_indicator;
 
-		return $cal->create_calendar( $pre, $next );
+
+        return CoursePress_Data_Calendar::get_calendar( $args, $pre, $next );
+
+//		$cal = new Course_Calendar( $args ); // @check
+
+//		return $cal->create_calendar( $pre, $next );
 	}
 
 	/**

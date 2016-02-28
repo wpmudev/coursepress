@@ -62,6 +62,9 @@ class CoursePress_Core {
 		// Init shortcodes.
 		CoursePress_Data_Shortcode::init();
 
+		// Init calendar.
+		CoursePress_Data_Calendar::init();
+
 		if ( is_admin() ) {
 			// Initialize Admin Settings.
 			CoursePress_Helper_Setting::init();
