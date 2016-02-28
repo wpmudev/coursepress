@@ -1132,7 +1132,7 @@ class CoursePress_Data_Shortcode_Course {
 			'label' => __( 'Course Category: ', 'CP_TD' ),
 			'label_tag' => 'strong',
 			'label_delimeter' => ':',
-			'no_category_test' => __( 'None', 'CP_TD' ),
+			'no_category_text' => __( 'None', 'CP_TD' ),
 			'class' => '',
 		), $atts, 'course_category' ) );
 
@@ -1142,7 +1142,7 @@ class CoursePress_Data_Shortcode_Course {
 		$label = sanitize_text_field( $label );
 		$label_tag = sanitize_html_class( $label_tag );
 		$label_delimeter = sanitize_html_class( $label_delimeter );
-		$no_category_test = sanitize_text_field( $no_category_test );
+		$no_category_text = sanitize_text_field( $no_category_text );
 		$class = sanitize_html_class( $class );
 
 		$content = '';
