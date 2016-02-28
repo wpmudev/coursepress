@@ -1319,7 +1319,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			$dropdown .= '<option value="">' . esc_html( $general_title ) . '</option>';
 		}
 		foreach ( $units as $unit ) {
-			$dropdown .= sprinf(
+			$dropdown .= sprintf(
 				'<option value="%s">%s</option>',
 				esc_attr( $unit->ID ),
 				esc_html( $unit->post_title )
