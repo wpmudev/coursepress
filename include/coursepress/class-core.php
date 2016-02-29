@@ -296,6 +296,8 @@ class CoursePress_Core {
 		$option_key = '';
 		$default = '';
 
+		if ( ! $context ) { return ''; }
+
 		/*
 		Is last character of $context a slash?
 
@@ -329,38 +331,34 @@ class CoursePress_Core {
 		$slug_array = self::get_slug_array();
 		$options = $slug_array[ $context ];
 
-		if ( ! empty( $options ) ) {
-			if ( isset( $options['option'] ) ) {
-				$option_key = $options['option'];
-			}
-			if ( isset( $options['default'] ) ) {
-				$default = $options['default'];
-			}
-			if ( isset( $options['page_option'] ) ) {
-				$page_option = $options['page_option'];
+		if ( ! $options ) { return ''; }
+
+		$option_key = $options['option'];
+		$default = $options['default'];
+		if ( isset( $options['page_option'] ) ) {
+			$page_option = $options['page_option'];
+		}
+
+		if ( ! $full_url ) {
+			$return_value = CoursePress_Core::get_setting(
+				$option_key,
+				$default
+			);
+		} else {
+			$with_slash = true;
+
+			if ( $page_option ) {
+				$page_id = CoursePress_Core::get_setting( $page_option, 0 );
 			}
 
-			if ( ! $full_url ) {
-				$return_value = CoursePress_Core::get_setting(
+			if ( $page_id ) {
+				$return_value = get_permalink( (int) $page_id );
+			} else {
+				$path = CoursePress_Core::get_setting(
 					$option_key,
 					$default
 				);
-			} else {
-				$with_slash = true;
-
-				if ( $page_option ) {
-					$page_id = CoursePress_Core::get_setting( $page_option, 0 );
-				}
-
-				if ( $page_id ) {
-					$return_value = get_permalink( (int) $page_id );
-				} else {
-					$path = CoursePress_Core::get_setting(
-						$option_key,
-						$default
-					);
-					$return_value = home_url( $path );
-				}
+				$return_value = home_url( $path );
 			}
 		}
 
