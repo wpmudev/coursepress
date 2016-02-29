@@ -614,7 +614,6 @@ class CoursePress_Data_Student {
 			$total_mandatory = $mandatory + $assessable_mandatory;
 			$total_student_mandatory = $student_mandatory + $student_assessable_mandatory;
 
-			CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/required_mandatory', $total_mandatory );
 			CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/completed_mandatory', $total_student_mandatory );
 
 			if ( $total_mandatory === $total_student_mandatory ) {
