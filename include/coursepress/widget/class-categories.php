@@ -12,10 +12,11 @@ class CoursePress_Widget_Categories extends WP_Widget {
     public function __construct() {
         $widget_ops = array(
             'classname' => 'cp_course_categories',
-		    'description' => __( "A list or dropdown of course categories.", 'CP_TD' )
+		    'description' => __( 'A list or dropdown of course categories.', 'CP_TD' )
 		);
         
         parent::__construct( 'CP_Widget_Categories', __( 'Course Categories', 'CP_TD' ), $widget_ops );
+        
     }
     
     public function form( $instance ) {
