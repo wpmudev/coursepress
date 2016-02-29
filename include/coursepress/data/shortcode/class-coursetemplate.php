@@ -964,14 +964,13 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			$args = array( 'course_id' => $course_id );
 		}
 
-        $args['date_indicator'] = $date_indicator;
+		$args['date_indicator'] = $date_indicator;
 
+		return CoursePress_Data_Calendar::get_calendar( $args, $pre, $next );
 
-        return CoursePress_Data_Calendar::get_calendar( $args, $pre, $next );
+		//      $cal = new Course_Calendar( $args ); // @check
 
-//		$cal = new Course_Calendar( $args ); // @check
-
-//		return $cal->create_calendar( $pre, $next );
+		//      return $cal->create_calendar( $pre, $next );
 	}
 
 	/**
