@@ -651,6 +651,7 @@ class CoursePress_Data_Student {
 			$check = CoursePress_Helper_Utility::get_array_val( $student_progress, 'completion/completed' );
 			if ( isset( $check ) && empty( $check ) ) {
 				do_action( 'coursepress_student_course_completed', $student_id, $course_id, get_post_field( 'post_title', $course_id ) );
+				self::send_certificate();
 			}
 			CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/completed', true );
 		}
@@ -787,6 +788,31 @@ class CoursePress_Data_Student {
 		}
 
 		return $response_count > 0 ? (int) ( $results / $response_count ) : 0;
+    }
+
+	/**
+	 * Send certificate to student
+	 *
+	 *
+	 * @since 2.0.0
+	 */
+	public function send_certificate( $student_id, $course_id, $post_title, $course_id ) {
+
+		// If student doesn't exist, exit.
+		$student = get_userdata( $student_id );
+		if ( empty( $student ) ) {
+			return false;
+		}
+
+		$email_args = array();
+		$email_args['email_type'] = 'basic_certificate';
+		$email_args['course_id'] = $course_id;
+		$email_args['email'] = sanitize_email( $student->user_email );
+		$email_args['first_name'] = $student->user_firstname;
+		$email_args['last_name'] = $student->user_lastname;
+
+		return CoursePress_Helper_Email::send_email( $email_args );
+
 	}
 
 	/**
