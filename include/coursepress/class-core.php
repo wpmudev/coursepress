@@ -79,6 +79,7 @@ class CoursePress_Core {
 			CoursePress_View_Front_Course::init();
 			CoursePress_View_Front_Instructor::init();
 			CoursePress_View_Front_Dashboard::init();
+			CoursePress_View_Front_Student::init();
 			CoursePress_View_Front_Login::init();
 		}
 

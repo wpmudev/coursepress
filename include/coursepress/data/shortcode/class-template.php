@@ -705,7 +705,6 @@ class CoursePress_Data_Shortcode_Template {
 	 * @todo: Migrate those templates to 2.0 code!
 	 */
 	public static function cp_pages( $atts ) {
-		global $plugin_dir;
 		ob_start();
 		extract( shortcode_atts(
 			array(
@@ -716,23 +715,23 @@ class CoursePress_Data_Shortcode_Template {
 
 		switch ( $page ) {
 			case 'enrollment_process':
-				require( $plugin_dir . '_deprecated/templates/enrollment-process.php' );
+				CoursePress_View_Front_Student::render_enrollment_process_page();
 				break;
 
 			case 'student_login':
-				require( $plugin_dir . '_deprecated/templates/student-login.php' );
+				CoursePress_View_Front_Login::render_student_login_page();
 				break;
 
 			case 'student_signup':
-				require( $plugin_dir . '_deprecated/templates/student-signup.php' );
+				CoursePress_View_Front_Login::render_student_signup_page();
 				break;
 
 			case 'student_dashboard':
-				require( $plugin_dir . '_deprecated/templates/student-dashboard.php' );
+				CoursePress_View_Front_Student::render_student_dashboard_page();
 				break;
 
 			case 'student_settings':
-				require( $plugin_dir . '_deprecated/templates/student-settings.php' );
+				CoursePress_View_Front_Student::render_student_settings_page();
 				break;
 
 			default:
