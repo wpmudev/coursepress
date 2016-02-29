@@ -788,7 +788,7 @@ class CoursePress_Data_Student {
 		}
 
 		return $response_count > 0 ? (int) ( $results / $response_count ) : 0;
-    }
+	}
 
 	/**
 	 * Send certificate to student
