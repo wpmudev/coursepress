@@ -31,9 +31,6 @@ class CoursePress_Core {
 		// Initialize Capabilities.
 		CoursePress_Data_Capabilities::init();
 
-		// Initialize Certificates.
-		CoursePress_Data_Certificate::init();
-
 		/**
 		 * Initialise CoursePress Post Formats (post types not available until after WordPress 'init' action)
 		 *
