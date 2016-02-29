@@ -720,11 +720,11 @@ class CoursePress_Data_Shortcode_Template {
 				break;
 
 			case 'student_login':
-				CoursePress_View_Front_Student::render_student_login_page();
+				CoursePress_View_Front_Login::render_student_login_page();
 				break;
 
 			case 'student_signup':
-				CoursePress_View_Front_Student::render_student_signup_page();
+				CoursePress_View_Front_Login::render_student_signup_page();
 				break;
 
 			case 'student_dashboard':
