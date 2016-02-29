@@ -2469,6 +2469,9 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			if ( ! empty( $course_id ) ) {
 				$course_id = (int) $course_id;
 			}
+			else {
+				$course_id = do_shortcode( '[get_parent_course_id]' );
+			}
 			$label           = sanitize_text_field( $label );
 			$label_plural    = sanitize_text_field( $label_plural );
 			$label_delimeter = sanitize_text_field( $label_delimeter );
