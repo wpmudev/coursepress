@@ -308,7 +308,7 @@ class CoursePress_Data_Shortcode_Course {
 		);
 
 		// Check if user specified an alias.
-		if ( in_array( $action, $translate_action ) ) {
+		if ( array_key_exists( $action, $translate_action ) ) {
 			$action = $translate_action[ $action ];
 		}
 
@@ -478,9 +478,9 @@ class CoursePress_Data_Shortcode_Course {
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
 			'date_format' => get_option( 'date_format' ),
-			'label' => __( 'Course Start Date: ', 'CP_TD' ),
+			'label' => __( 'Course Start Date', 'CP_TD' ),
 			'label_tag' => 'strong',
-			'label_delimeter' => ':',
+			'label_delimeter' => ': ',
 			'class' => '',
 		), $atts, 'course_start' ) );
 
@@ -517,9 +517,9 @@ class CoursePress_Data_Shortcode_Course {
 	public static function course_length( $atts ) {
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
-			'label' => __( 'Course Length: ', 'CP_TD' ),
+			'label' => __( 'Course Length', 'CP_TD' ),
 			'label_tag' => 'strong',
-			'label_delimeter' => ':',
+			'label_delimeter' => ': ',
 			'class' => '',
 			'suffix' => ' Weeks',
 		), $atts, 'course_start' ) );
@@ -1132,7 +1132,7 @@ class CoursePress_Data_Shortcode_Course {
 			'label' => __( 'Course Category: ', 'CP_TD' ),
 			'label_tag' => 'strong',
 			'label_delimeter' => ':',
-			'no_category_test' => __( 'None', 'CP_TD' ),
+			'no_category_text' => __( 'None', 'CP_TD' ),
 			'class' => '',
 		), $atts, 'course_category' ) );
 
@@ -1142,7 +1142,7 @@ class CoursePress_Data_Shortcode_Course {
 		$label = sanitize_text_field( $label );
 		$label_tag = sanitize_html_class( $label_tag );
 		$label_delimeter = sanitize_html_class( $label_delimeter );
-		$no_category_test = sanitize_text_field( $no_category_test );
+		$no_category_text = sanitize_text_field( $no_category_text );
 		$class = sanitize_html_class( $class );
 
 		$content = '';

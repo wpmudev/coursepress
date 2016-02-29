@@ -928,8 +928,8 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			'course_id' => in_the_loop() ? get_the_ID() : false,
 			'month' => false,
 			'year' => false,
-			'pre' => __( 'Â« Previous', 'CP_TD' ),
-			'next' => __( 'Next Â»', 'CP_TD' ),
+			'pre' => __( '&laquo; Previous', 'CP_TD' ),
+			'next' => __( 'Next &raquo;', 'CP_TD' ),
 			'date_indicator' => 'indicator_light_block',
 		), $atts, 'course_calendar' ) );
 
@@ -963,9 +963,12 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		}
 
 		$args['date_indicator'] = $date_indicator;
-		$cal = new Course_Calendar( $args ); // @check
 
-		return $cal->create_calendar( $pre, $next );
+		return CoursePress_Data_Calendar::get_calendar( $args, $pre, $next );
+
+		//      $cal = new Course_Calendar( $args ); // @check
+
+		//      return $cal->create_calendar( $pre, $next );
 	}
 
 	/**
@@ -1313,7 +1316,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			$dropdown .= '<option value="">' . esc_html( $general_title ) . '</option>';
 		}
 		foreach ( $units as $unit ) {
-			$dropdown .= sprinf(
+			$dropdown .= sprintf(
 				'<option value="%s">%s</option>',
 				esc_attr( $unit->ID ),
 				esc_html( $unit->post_title )
