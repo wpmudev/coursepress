@@ -812,7 +812,7 @@ class CoursePress_Data_Shortcode_Template {
 	public static function course_signup( $atts ) {
 
 		if ( is_user_logged_in() ) {
-			return __( 'You are already logged in.', 'cp' );
+			return __( 'You are already logged in.', 'CP_TD' );
 		}
 
 		$allowed = array( 'signup', 'login' );
