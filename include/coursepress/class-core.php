@@ -90,6 +90,9 @@ class CoursePress_Core {
 
 		// Upgrade CoursePress if needed.
 		CoursePress_Upgrade::init();
+		
+		// Init categories widget
+		CoursePress_Widget_Categories::init();
 	}
 
 	/**
