@@ -336,9 +336,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		} else {
 			// For already enrolled students.
 
-			// COMPLETION LOGIX.
-			//$progress = Student_Completion::calculate_course_completion( get_current_user_id(), $course_id, false );  // @check
-			$progress = 0;
+			$progress = CoursePress_Data_Student::get_course_progress( get_current_user_id(), $course_id );
 
 			if ( $course->course_expired && ! $course->open_ended_course ) {
 				// COURSE EXPIRED

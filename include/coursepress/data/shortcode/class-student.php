@@ -419,7 +419,7 @@ class CoursePress_Data_Shortcode_Student {
 		$decimal_places = sanitize_text_field( $decimal_places );
 
 		return number_format_i18n(
-			Student_Completion::calculate_course_completion(  // @check
+			CoursePress_Data_Student::get_course_progress(
 				get_current_user_id(),
 				$course_id
 			),
@@ -449,7 +449,7 @@ class CoursePress_Data_Shortcode_Student {
 		$decimal_places = sanitize_text_field( $decimal_places );
 
 		$progress = number_format_i18n(
-			Student_Completion::calculate_unit_completion( // @check
+			CoursePress_Data_Student::get_unit_progress(
 				get_current_user_id(),
 				$course_id,
 				$unit_id
