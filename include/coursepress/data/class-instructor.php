@@ -414,7 +414,7 @@ class CoursePress_Data_Instructor {
 
 		$permalink = '';
 		if ( in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) ) ) {
-			$permalink = CoursePress_Core::get_slug( 'course', true ) . '/' . $post->post_name . '/';
+			$permalink = CoursePress_Core::get_slug( 'course/', true ) . $post->post_name . '/';
 		} else {
 			$permalink = get_permalink( $course_id );
 		}

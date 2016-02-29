@@ -500,7 +500,10 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				continue;
 			}
 
-			$unit_link = trailingslashit( CoursePress_Core::get_slug( 'courses', true ) ) . $course_slug . '/' . CoursePress_Core::get_slug( 'unit' ) . '/' . $unit['unit']->post_name;
+			$unit_link = CoursePress_Core::get_slug( 'courses/', true ) .
+				$course_slug . '/' .
+				CoursePress_Core::get_slug( 'unit/' ) .
+				$unit['unit']->post_name;
 
 			$estimation = CoursePress_Data_Unit::get_time_estimation( $unit_id, $units );
 
@@ -756,12 +759,21 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			$unit_image = ($unit_feature_image) ? '<div class="circle-thumbnail"><div class="unit-thumbnail"><img src="' . $unit_feature_image . '"" alt="' . $the_unit->post_title . '" /></div></div>' : '';
 
 			$post_name = empty( $the_unit->post_name ) ? $the_unit->ID : $the_unit->post_name;
+			$title_suffix = '';
+			if ( 'publish' != $the_unit->post_status && current_user_can( 'manage_options' ) ) {
+				$title_suffix = esc_html__( ' [DRAFT]', 'CP_TD' );
+			}
 			$content .= '
 				<li class="' . esc_attr( $additional_li_class ) . '">
 					<div class="unit-archive-single">
 						' . $unit_progress . '
 						' . $unit_image . '
-						<a class="unit-archive-single-title" href="' . esc_url_raw( get_permalink( CoursePress_Helper_Utility::the_course( true ) ) . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . $post_name ) . '" rel="bookmark">' . $the_unit->post_title . ' ' . ( 'publish' != $the_unit->post_status && current_user_can( 'manage_options' ) ? esc_html__( ' [DRAFT]', 'CP_TD' ) : '' ) . '</a>';
+						<a class="unit-archive-single-title" href="' .
+						esc_url_raw(
+							get_permalink( CoursePress_Helper_Utility::the_course( true ) ) .
+							CoursePress_Core::get_slug( 'unit/' ) . $post_name
+						) .
+						'" rel="bookmark">' . $the_unit->post_title . ' ' . $title_suffix . '</a>';
 
 			if ( $enrolled ) {
 				$content .= do_shortcode(
@@ -790,7 +802,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 						if ( 'normal' == $view_mode ) {
 							$module_table .= '<div class="section-title" data-id="' . $page_number . '">' . ( ! empty( $page['title'] ) ? esc_html( $page['title'] ) : esc_html__( 'Untitled', 'CP_TD' ) ) . '</div>';
 						} else {
-							$section_link = trailingslashit( $base_link . CoursePress_Core::get_slug( 'units' ) );
+							$section_link = $base_link . CoursePress_Core::get_slug( 'units' );
 							$section_link .= '#section-' . $page_number;
 							$module_table .= '<div class="section-title" data-id="' . $page_number . '"><a href="' . $section_link . '">' . ( ! empty( $page['title'] ) ? esc_html( $page['title'] ) : esc_html__( 'Untitled', 'CP_TD' ) ) . '</a></div>';
 						}
@@ -827,7 +839,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 						if ( 'normal' == $view_mode ) {
 							$module_table .= '<div class="module-title" data-id="' . $module->ID . '">' . $title . '</div>';
 						} else {
-							$module_link = trailingslashit( $base_link . CoursePress_Core::get_slug( 'units' ) );
+							$module_link = $base_link . CoursePress_Core::get_slug( 'units' );
 							$module_link .= '#module-' . $module->ID;
 							$module_table .= '<div class="module-title" data-id="' . $module->ID . '"><a href="' . $module_link . '">' . $title . '</a></div>';
 						}
