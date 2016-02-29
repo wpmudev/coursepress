@@ -705,7 +705,6 @@ class CoursePress_Data_Shortcode_Template {
 	 * @todo: Migrate those templates to 2.0 code!
 	 */
 	public static function cp_pages( $atts ) {
-		$plugin_dir = dirname(dirname(dirname(dirname( dirname( __FILE__ ))))) .'/';
 		ob_start();
 		extract( shortcode_atts(
 			array(
