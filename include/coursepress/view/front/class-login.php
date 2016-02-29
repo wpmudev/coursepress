@@ -5,9 +5,7 @@ class CoursePress_View_Front_Login {
 	public static $title = ''; // The page title
 
 	public static function init() {
-
 		add_action( 'parse_request', array( __CLASS__, 'parse_request' ) );
-
 	}
 
 	/**
@@ -46,9 +44,8 @@ class CoursePress_View_Front_Login {
 
 
 	public static function parse_request( &$wp ) {
-
 		// Login Page
-		if ( array_key_exists( 'pagename', $wp->query_vars ) && CoursePress_Core::get_slug( 'login' ) === $wp->query_vars['pagename'] ) {
+		if ( array_key_exists( 'pagename', $wp->query_vars ) && CoursePress_Core::get_slug( 'login' ) == $wp->query_vars['pagename'] ) {
 
 			// Redirect to a page
 			$vp = (int) CoursePress_Core::get_setting( 'pages/login', 0 );
@@ -71,11 +68,10 @@ class CoursePress_View_Front_Login {
 			$pg = new CoursePress_Data_VirtualPage( $args );
 
 			return;
-
 		}
 
 		// Signup Page
-		if ( array_key_exists( 'pagename', $wp->query_vars ) && CoursePress_Core::get_slug( 'signup' ) === $wp->query_vars['pagename'] ) {
+		if ( array_key_exists( 'pagename', $wp->query_vars ) && CoursePress_Core::get_slug( 'signup' ) == $wp->query_vars['pagename'] ) {
 
 			// Redirect to a page
 			$vp = (int) CoursePress_Core::get_setting( 'pages/signup', 0 );
@@ -98,7 +94,6 @@ class CoursePress_View_Front_Login {
 			$pg = new CoursePress_Data_VirtualPage( $args );
 
 			return;
-
 		}
 	}
 }

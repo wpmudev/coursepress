@@ -443,7 +443,6 @@ class CoursePress_View_Front_Course {
 	}
 
 	public static function remove_canonical( $wp_query ) {
-
 		global $wp_query;
 		if ( is_admin() || empty( $wp_query ) ) {
 			return;
@@ -619,7 +618,7 @@ class CoursePress_View_Front_Course {
 				$title = sprintf( '%s | %s', __( 'Discussions', 'CP_TD' ), get_post_field( 'post_title', $post_parent ) );
 
 				// Are we adding a new discussion?
-				if ( CoursePress_Core::get_slug( 'discussion_new' ) === $wp->query_vars['discussion_name'] ) {
+				if ( CoursePress_Core::get_slug( 'discussion_new' ) == $wp->query_vars['discussion_name'] ) {
 					$discussion_content = self::render_new_course_discussion();
 				} else {
 					$discussion_content = self::render_course_discussion();
@@ -819,7 +818,7 @@ class CoursePress_View_Front_Course {
 		}
 
 		// All other conditions have failed, so if post type is course, it must be the archive
-		if ( isset( $wp->query_vars['post_type'] ) && CoursePress_Data_Course::get_post_type_name() === $wp->query_vars['post_type'] && CoursePress_Core::get_slug( 'courses' ) === $wp->request ) {
+		if ( isset( $wp->query_vars['post_type'] ) && CoursePress_Data_Course::get_post_type_name() == $wp->query_vars['post_type'] && CoursePress_Core::get_slug( 'courses' ) == $wp->request ) {
 
 			$title = sprintf( '%s | %s', __( 'Courses', 'CP_TD' ), __( 'All Courses', 'CP_TD' ) );
 
