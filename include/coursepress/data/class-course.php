@@ -1054,6 +1054,7 @@ class CoursePress_Data_Course {
 		delete_user_option( $student_id, 'enrolled_course_class_' . $course_id, $global_option );
 		delete_user_option( $student_id, 'enrolled_course_group_' . $course_id, $global_option );
 		delete_user_option( $student_id, 'role', $global_option );
+		delete_user_option( $student_id, sprintf( 'course_%d_progress', $course_id ), $global_option );
 
 		update_user_option( $student_id, 'withdrawn_course_date_' . $course_id, $current_time, $global_option );
 
