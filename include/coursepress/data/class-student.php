@@ -672,7 +672,7 @@ class CoursePress_Data_Student {
 		}
 
 		return array(
-			'required' => CoursePress_Helper_Utility::get_array_val( $data, 'completion/' . $unit_id . '/required_mandatory' ),
+			'required' => CoursePress_Data_Unit::get_number_of_mandatory( $unit_id ),
 			'completed' => CoursePress_Helper_Utility::get_array_val( $data, 'completion/' . $unit_id . '/completed_mandatory' ),
 		);
 
