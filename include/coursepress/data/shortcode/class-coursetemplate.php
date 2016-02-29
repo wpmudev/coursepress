@@ -1399,9 +1399,6 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 	}
 
 	public static function course_breadcrumbs( $atts ) {
-		// Also check why we modify global $units_breadcrumbs here??
-		global $course_slug, $units_slug, $units_breadcrumbs; // @check
-
 		extract(
 			shortcode_atts(
 				array(
@@ -1422,12 +1419,14 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$post = get_post( $course_id );
 		$course_name = $post->post_title;
 		$course_url = get_permalink( $course_id );
+		$course_home = CoursePress_Core::get_slug( 'course', true );
+		$units_slug = CoursePress_Core::get_slug( 'unit' );
 
 		switch ( $type ) {
 			case 'unit_archive':
 				$units_breadcrumbs = sprintf(
 					'<div class="units-breadcrumbs"><a href="%s">%s</a> » <a href="%s">%s</a></div>',
-					esc_url( home_url( $course_slug . '/' ) ),
+					esc_url( $course_home . '/' ),
 					esc_html__( 'Courses', 'CP_TD' ),
 					esc_url( $course_url ),
 					esc_html( $course_name )
@@ -1437,7 +1436,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			case 'unit_single':
 				$units_breadcrumbs = sprintf(
 					'<div class="units-breadcrumbs"><a href="%s">%s</a> » <a href="%s">%s</a> » <a href="%s">%s</a></div>',
-					esc_url( home_url( $course_slug . '/' ) ),
+					esc_url( $course_home . '/' ),
 					esc_html__( 'Courses', 'CP_TD' ),
 					esc_url( $course_url ),
 					esc_html( $course_name ),
