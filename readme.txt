@@ -2,7 +2,7 @@
 Contributors: wpmudev
 Tags: elearning, lms, education, courses, lessons, assignments, students, teachers
 Requires at least: 4.1
-Tested up to: 4.3
+Tested up to: 4.4.2
 Stable tag: <%= wpmudev.plugin.version %>
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
