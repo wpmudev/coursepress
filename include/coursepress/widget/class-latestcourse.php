@@ -13,32 +13,33 @@ class CoursePress_Widget_LatestCourse extends WP_Widget {
 	public function __construct() {
 		$widget_ops = array(
 			'classname' => 'cp_latest_courses_widget',
-			'description' => __( 'Displays latest courses', 'CP_TD' )
+			'description' => __( 'Displays latest courses', 'CP_TD' ),
 		);
 
 		parent::__construct( 'CP_Latest_Courses', __( 'Latest Courses', 'CP_TD' ), $widget_ops );
 	}
 
-	public function form ( $instance ) {
-		$instance = wp_parse_args( ( array ) $instance, array( 'title' => '', 'limit' => '', 'button_title' => '' ) );
+	public function form( $instance ) {
+		$instance = wp_parse_args( (array) $instance, array( 'title' => '', 'limit' => '', 'button_title' => '' ) );
 
 		$title = $instance['title'];
 		$limit = $instance['limit'];
 		$button_title = $instance['button_title'];
 		?>
+
 		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'CP_TD' ); ?>:
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>"/></label>
 		</p>
 
 		<p><label for="<?php echo $this->get_field_id( 'limit' ); ?>"><?php _e( 'Number of Courses', 'CP_TD' ); ?>:<br/>
 			<select name="<?php echo $this->get_field_name( 'limit' ); ?>" class="widefat" id="<?php echo $this->get_field_id( 'limit' ); ?>">
-				<?php
-					for ( $i = 1; $i <= 30; $i ++ ) {
-				?>
-					<option value="<?php echo $i; ?>" <?php selected( $limit, $i, true ); ?>><?php echo $i; ?></option>
-				<?php
-					}
-				?>
+			<?php
+			for ( $i = 1; $i <= 30; $i ++ ) {
+			?>
+				<option value="<?php echo $i; ?>" <?php selected( $limit, $i, true ); ?>><?php echo $i; ?></option>
+			<?php
+			}
+			?>
 			</select>
 		</label></p>
 
@@ -64,7 +65,6 @@ class CoursePress_Widget_LatestCourse extends WP_Widget {
 	}
 
 	public function widget( $args, $instance ) {
-
 		extract( $args, EXTR_SKIP );
 
 		echo $before_widget;
@@ -82,7 +82,7 @@ class CoursePress_Widget_LatestCourse extends WP_Widget {
 		?>
 
 		<div class="cp_featured_widget_course_link">
-			<a href="<?php echo esc_url( '' ); ?>"><?php echo esc_html( $instance['button_title'] ); ?></a>
+			<a href="<?php echo esc_url( home_url( '/' ) . CoursePress_Core::get_slug( 'course' ) ); ?>"><?php echo esc_html( $instance['button_title'] ); ?></a>
 		</div>
 
 		<?php
