@@ -665,7 +665,7 @@ if ( ! class_exists( 'Unit' ) ) {
 			unset( $new_unit->guid );
 
 			$new_unit->post_author = get_current_user_id();
-			$new_unit->post_status = 'private';
+			$new_unit->post_status = $old_unit_id->post_status;
 			$new_unit->post_parent = $course_id;
 
 			$new_unit_id = wp_insert_post( $new_unit );
