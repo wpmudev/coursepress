@@ -566,10 +566,10 @@ class CoursePress_Data_Shortcode_Unit {
 
 		if ( is_user_logged_in() && $show_link ) {
 			// COMPLETION LOGIC.
-			if ( CoursePress_Data_Student::is_course_complete( get_current_user_id(), $course_id ) ) { 
-			// $certificate = CP_Basic_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'CP_TD' ) );
+			if ( CoursePress_Data_Student::is_course_complete( get_current_user_id(), $course_id ) ) {
+				// $certificate = CP_Basic_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'CP_TD' ) );
 
-			// $content .= '<li class="submenu-item submenu-certificate ' . ( $subpage == 'certificate' ? 'submenu-active' : '') . '">' . $certificate . '</li>';
+				// $content .= '<li class="submenu-item submenu-certificate ' . ( $subpage == 'certificate' ? 'submenu-active' : '') . '">' . $certificate . '</li>';
 			}
 		}
 
