@@ -98,6 +98,13 @@ class CoursePress_Widget_FeaturedCourse extends WP_Widget {
 	}
 
 	public function widget( $args, $instance ) {
+		global $wp_query;
+
+		/**
+		 * Set the course variable so that the needed js will be included.
+		 **/
+		$wp_query->query['course'] = true;
+		
 		extract( $args, EXTR_SKIP );
 
 		echo $before_widget;
@@ -123,7 +130,7 @@ class CoursePress_Widget_FeaturedCourse extends WP_Widget {
 			</div>
 
 			<div class="cp_featured_widget_course_link">
-				<button data-link="<?php echo esc_url( get_permalink( $course_id ) ); ?>"><?php echo esc_html( $instance['button_title'] ); ?></button>
+				<button class="apply-button apply-button-details" data-link="<?php echo esc_url( get_permalink( $course_id ) ); ?>"><?php echo esc_html( $instance['button_title'] ); ?></button>
 			</div>
 		</div>
 		<?php
