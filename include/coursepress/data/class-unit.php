@@ -187,28 +187,27 @@ class CoursePress_Data_Unit {
 		}
 
 		$unit_available = get_post_meta( $unit_id, 'unit_availability', true );
-		$now = strtotime( 'now' );		
+		$now = strtotime( 'now' );
 		$available = true;
 		$student_id = get_current_user_id();
-	
-		if( $unit_available === 'on_date' ) {
+
+		if ( 'on_date' === $unit_available ) {
 			$unit_date_availability = get_post_meta( $unit_id, 'unit_date_availability', true );
-			
-			if( ! empty( $unit_date_availability ) ) {
+
+			if ( ! empty( $unit_date_availability ) ) {
 				$unit_date_availability = strtotime( $unit_date_availability );
 				$available = ( $unit_date_availability - $now ) <= 0;
 			}
-		}
-		elseif( $unit_available === 'after_delay' ) {
+		} elseif ( 'after_delay' === $unit_available ) {
 			$delay_days = get_post_meta( $unit_id, 'unit_delay_days', true );
 			$date_enrolled = CoursePress_Data_Course::student_enrolled( $student_id, $course_id );
-			
-			if( (int) $delay_days > 0 ) {
+
+			if ( (int) $delay_days > 0 ) {
 				$date_enrolled = strtotime( $date_enrolled );
 				$delay_date = $date_enrolled + ( (int) $delay_days * 86400 );
 				$since_published = $now - $delay_date;
-				
-				$available = $since_published >= 0;				
+
+				$available = $since_published >= 0;
 			}
 		}
 
@@ -233,7 +232,7 @@ class CoursePress_Data_Unit {
 		CoursePress_Helper_Utility::set_array_val( $status, 'completion_required/enabled', $force_current_unit_successful_completion );
 		CoursePress_Helper_Utility::set_array_val( $status, 'completion_required/result', $unit_completed );
 
-		if( $available ) { 
+		if ( $available ) {
 			$available = $status['mandatory_required']['enabled'] ? $status['mandatory_required']['result'] : $available;
 			$available = $status['completion_required']['enabled'] ? $status['completion_required']['result'] : $available;
 		}
@@ -283,5 +282,30 @@ class CoursePress_Data_Unit {
 		}
 
 		return trailingslashit( $unit_url );
+	}
+
+	/**
+	 * Number of mandatory modules.
+	 *
+	 * Return number of mandatory modules based on unit id.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $unit_id Unit id..
+	 * @return integer Number of mandatory modules.
+	 */
+	public static function get_number_of_mandatory( $unit_id ) {
+
+		$args = array(
+			'fields'      => 'ids',
+			'meta_key'    => 'mandatory',
+			'meta_value'  => '1',
+			'nopaging'    => true,
+			'post_parent' => $unit_id,
+			'post_type'   => 'module',
+		);
+		$the_query = new WP_Query( $args );
+		return $the_query->post_count;
+
 	}
 }
