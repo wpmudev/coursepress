@@ -7,12 +7,12 @@ class CoursePress_View_Front_Student {
 
 	public static function render_enrollment_process_page() {
 
-		if ( !is_user_logged_in() ) {
+		if ( ! is_user_logged_in() ) {
 			_e( 'You must be logged in in order to complete the action', 'CP_TD' );
 			return;
 		}
 
-		if ( !isset( $_POST['course_id'] ) || !is_numeric( $_POST['course_id'] ) ) {
+		if ( ! isset( $_POST['course_id'] ) || ! is_numeric( $_POST['course_id'] ) ) {
 			_e( 'Please select a course first you want to enroll in.', 'CP_TD' );
 			return;
 		}
@@ -30,20 +30,20 @@ class CoursePress_View_Front_Student {
 
 		$is_paid = get_post_meta( $course_id, 'paid_course', true ) == 'on' ? true : false;
 
-		if ( $is_paid && isset( $course->details->marketpress_product ) && $course->details->marketpress_product != '' && $coursepress->marketpress_active ) {
+		if ( $is_paid && isset( $course->details->marketpress_product ) && '' != $course->details->marketpress_product && $coursepress->marketpress_active ) {
 			$course_price = 1; //forces user to purchase course / show purchase form
 			$course->is_user_purchased_course( $course->details->marketpress_product, $student_id );
 		}
 
-		if ( $course->details->enroll_type == 'passcode' ) {
+		if ( 'passcode' == $course->details->enroll_type ) {
 			if ( $_POST['passcode'] != $course->details->passcode ) {
 				$pass_errors ++;
 			}
 		}
 
 		if ( ! CoursePress_Data_Student::is_enrolled_in_course( $student_id, $course_id ) ) {
-			if ( $pass_errors == 0 ) {
-				if ( $course_price == 0 ) {//Course is FREE
+			if ( 0 == $pass_errors ) {
+				if ( 0 == $course_price ) {//Course is FREE
 					//Enroll student in
 					if ( CoursePress_Data_Course::enroll_student( $student_id, $course_id ) ) {
 						printf( __( 'Congratulations, you have successfully enrolled in "%s" course! Check your %s for more info.', 'CP_TD' ), '<strong>' . $course->details->post_title . '</strong>', '<a href="' . $this->get_student_dashboard_slug( true ) . '">' . __( 'Dashboard', 'CP_TD' ) . '</a>' );
@@ -76,21 +76,20 @@ class CoursePress_View_Front_Student {
 
 	public static function render_student_dashboard_page() {
 
-		if ( !is_user_logged_in() ) {
+		if ( ! is_user_logged_in() ) {
 			_e( 'You must be logged in in order to complete the action', 'CP_TD' );
 			exit;
 		}
 
 		$student_courses = CoursePress_Data_Student::get_enrolled_courses_ids( $student_id );
-?>
-	<div class="student-dashboard-wrapper">
-<?php
+		?>
+			<div class="student-dashboard-wrapper">
+		<?php
 
 		// Instructor Course List
 		$show = 'dates,class_size';
 
 		$course_list = do_shortcode( '[course_list instructor="' . $student_id . '" instructor_msg="" status="all" title_tag="h1" title_class="h1-title" list_wrapper_before="" show_divider="yes"  left_class="enroll-box-left" right_class="enroll-box-right" course_class="enroll-box" title_link="no" show="' . $show . '" show_title="no" admin_links="true" show_button="no" show_media="no"]' );
-
 
 		$show_random_courses = true;
 
@@ -148,8 +147,7 @@ class CoursePress_View_Front_Student {
 
 	public static function render_student_settings_page() {
 
-
-		if ( !is_user_logged_in() ) {
+		if ( ! is_user_logged_in() ) {
 			_e( 'You must be logged in in order to complete the action', 'CP_TD' );
 			exit;
 		}
@@ -169,7 +167,7 @@ class CoursePress_View_Front_Student {
 
 				do_action( 'coursepress_before_settings_validation' );
 
-				if ( $_POST['password'] != '' ) {
+				if ( '' != $_POST['password'] ) {
 					if ( $_POST['password'] == $_POST['password_confirmation'] ) {
 						$student_data['user_pass'] = $_POST['password'];
 					} else {
@@ -189,7 +187,7 @@ class CoursePress_View_Front_Student {
 					$form_errors ++;
 				}
 
-				if ( $form_errors == 0 ) {
+				if ( 0 == $form_errors ) {
 					$student = new Student( get_current_user_id() );
 					if ( $student->update_student_data( $student_data ) ) {
 						$form_message = __( 'Profile has been updated successfully.', 'CP_TD' );
@@ -253,7 +251,7 @@ class CoursePress_View_Front_Student {
 		<input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php _e( 'Save Changes', 'CP_TD' ); ?>"/>
 	</label>
 	</form><?php
-		do_action( 'coursepress_after_settings_form' ); 
+		do_action( 'coursepress_after_settings_form' );
 	}
-
 }
+
