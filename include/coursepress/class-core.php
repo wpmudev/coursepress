@@ -19,7 +19,7 @@ class CoursePress_Core {
 	public static function init() {
 		if ( ! defined( 'CP_IS_PREMIUM' ) ) { define( 'CP_IS_PREMIUM', false ); }
 		if ( ! defined( 'CP_IS_CAPUS' ) ) { define( 'CP_IS_CAPUS', false ); }
-		if ( ! defined( 'CP_IS_DEV' ) ) { define( 'CP_IS_DEV', false ); }
+		if ( ! defined( 'CP_IS_WPMUDEV' ) ) { define( 'CP_IS_WPMUDEV', false ); }
 
 		// We speak languages!
 		load_plugin_textdomain(
