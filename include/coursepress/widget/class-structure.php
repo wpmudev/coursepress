@@ -53,6 +53,21 @@ class CoursePress_Widget_Structure extends WP_Widget {
 	<?php
 	}
 
+	public function update( $new_instance, $old_instance ) {
+		$instance = $old_instance;
+
+		// Admin on single sites, Super admin on network
+		if ( current_user_can( 'unfiltered_html' ) ) {
+			$instance['title'] = $new_instance['title'];
+		} else {
+			$instance['title'] = strip_tags( $new_instance['title'] );
+		}
+
+		$instance['course'] = $new_instance['course'];
+
+		return $instance;
+	}
+
 	public function widget( $args, $instance ) {
 		global $post;
 
