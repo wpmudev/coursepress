@@ -285,6 +285,12 @@ class CoursePress_Data_Student {
 			'feedback' => array(),
 		);
 
+		if ( isset( $attributes['mandatory'] ) && $attributes['mandatory'] ) {
+			$key = 'completion/' . $unit_id . '/completed_mandatory';
+			$mandatory = (int) CoursePress_Helper_Utility::get_array_val( $data, $key );
+			CoursePress_Helper_Utility::set_array_val( $data, $key, $mandatory + 1 );
+		}
+
 		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/responses/' . $module_id . '/', $response_data );
 		self::update_completion_data( $student_id, $course_id, $data );
 
