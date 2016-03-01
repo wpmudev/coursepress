@@ -101,4 +101,48 @@ class CoursePress_View_Front_Login {
 
 		}
 	}
+
+	public static function render_student_signup_page() {
+
+		if ( is_user_logged_in() ) {
+			_e( 'You are already logged in.', 'CP_TD' );
+			return;
+		}
+
+		$redirect_url = '';
+		if ( ! empty( $_REQUEST['redirect_url'] ) ) {
+			$redirect_url = $_REQUEST['redirect_url'];
+		}
+		echo do_shortcode(
+			sprintf(
+				'[course_signup page="signup" signup_title="" redirect_url="%s" signup_url="%s" login_url="%s"]',
+				$redirect_url,
+				CoursePress_Core::get_slug( 'signup', true ),
+				cp_student_login_address()
+			)
+		);
+
+	}
+
+	public static function render_student_login_page() {
+
+		if ( is_user_logged_in() ) {
+			_e( 'You are already logged in.', 'CP_TD' );
+			return;
+		}
+
+		$redirect_url = '';
+		if ( ! empty( $_REQUEST['redirect_url'] ) ) {
+			$redirect_url = $_REQUEST['redirect_url'];
+		}
+		echo do_shortcode(
+			sprintf(
+				'[course_signup page="login" login_title="" redirect_url="%s" signup_url="%s" login_url="%s"]',
+				$redirect_url,
+				CoursePress_Core::get_slug( 'signup', true ),
+				cp_student_login_address()
+			)
+		);
+
+	}
 }

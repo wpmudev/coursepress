@@ -269,7 +269,7 @@ class CoursePress_Data_Shortcode_Unit {
 		}
 
 		if ( 'percent' == $field ) {
-			$percent_value = Student_Completion::calculate_unit_completion(  // @check
+			$percent_value = CoursePress_Data_Student::get_unit_progress(
 				$student_id,
 				$unit->course_id,
 				$unit_id
@@ -566,11 +566,11 @@ class CoursePress_Data_Shortcode_Unit {
 
 		if ( is_user_logged_in() && $show_link ) {
 			// COMPLETION LOGIC.
-			// if ( Student_Completion::is_course_complete( get_current_user_id(), $course_id ) ) {  // @check
+			if ( CoursePress_Data_Student::is_course_complete( get_current_user_id(), $course_id ) ) { 
 			// $certificate = CP_Basic_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'CP_TD' ) );
 
 			// $content .= '<li class="submenu-item submenu-certificate ' . ( $subpage == 'certificate' ? 'submenu-active' : '') . '">' . $certificate . '</li>';
-			// }
+			}
 		}
 
 		$content .= '
