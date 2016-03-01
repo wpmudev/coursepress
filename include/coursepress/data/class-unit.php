@@ -297,12 +297,12 @@ class CoursePress_Data_Unit {
 	public static function get_number_of_mandatory( $unit_id ) {
 
 		$args = array(
-			'fields'         => 'ids',
-			'meta_key'       => 'mandatory',
-			'meta_value_num' => 1,
-			'nopaging'       => true,
-			'post_parent'    => $unit_id,
-			'post_type'      => 'module',
+			'fields'      => 'ids',
+			'meta_key'    => 'mandatory',
+			'meta_value'  => '1',
+			'nopaging'    => true,
+			'post_parent' => $unit_id,
+			'post_type'   => 'module',
 		);
 		$the_query = new WP_Query( $args );
 		return $the_query->post_count;
