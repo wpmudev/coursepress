@@ -91,6 +91,9 @@ class CoursePress_Core {
 
 		// Upgrade CoursePress if needed.
 		CoursePress_Upgrade::init();
+		
+		// Initialize latest-course widget.
+		CoursePress_Widget_LatestCourse::init();
 	}
 
 	/**
