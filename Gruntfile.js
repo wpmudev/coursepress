@@ -23,7 +23,8 @@ module.exports = function(grunt) {
 			'{js}coursepress-course.js':       ['{js}src/coursepress-course.js'],
 			'{js}coursepress-courselist.js':   ['{js}src/coursepress-courselist.js'],
 			'{js}coursepress-front.js':        ['{js}src/coursepress-front.js'],
-			'{js}coursepress-unitsbuilder.js': ['{js}src/coursepress-UnitsBuilder.js']
+			'{js}coursepress-unitsbuilder.js': ['{js}src/coursepress-UnitsBuilder.js'],
+			'{js}coursepress-calendar.js': ['{js}src/coursepress-calendar.js']
 		},
 
 		// SASS files to process. Resulting CSS files will be minified as well.
