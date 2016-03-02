@@ -118,3 +118,44 @@ if ( ! function_exists( 'cp_is_true' ) ) {
 		return false;
 	}
 }
+
+if ( ! function_exists( 'cp_can_access_course' ) ) {
+	/**
+	 * Check user access to course.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $course_id Course ID
+	 * @return boolean User can or can not.
+	 */
+	function cp_can_access_course( $course_id ) {
+
+		if ( ! is_user_logged_in() ) {
+			wp_safe_redirect( get_permalink( $course_id ) );
+			exit;
+		}
+
+		if ( current_user_can( 'manage_options' ) ) {
+			return true;
+		}
+
+		/**
+		 * check student
+		 */
+		if ( CoursePress_Data_Student::is_enrolled_in_course( get_current_user_id(), $course_id ) ) {
+			return true;
+		}
+
+		/**
+		 * check instructor
+		 */
+		if ( CoursePress_Data_Instructor::is_assigned_to_course( get_current_user_id(), $course_id ) ) {
+			return true;
+		}
+
+		wp_safe_redirect( get_permalink( $course_id ) );
+		exit;
+
+	}
+}
+
