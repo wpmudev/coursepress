@@ -142,7 +142,7 @@ class CoursePress_Data_Instructor {
 		return count( self::get_course_meta_keys( $user ) );
 	}
 
-	public static function is_assigned_to_course( $course_id, $instructor_id ) {
+	public static function is_assigned_to_course( $instructor_id, $course_id ) {
 		$instructor_course_id = get_user_option( 'course_' . $course_id, $instructor_id );
 		if ( ! empty( $instructor_course_id ) ) {
 			return true;
