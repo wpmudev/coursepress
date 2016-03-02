@@ -407,6 +407,7 @@ class CoursePress_Core {
 				'CoursePress_Data_Module',
 				'CoursePress_Data_Discussion',
 				'CoursePress_Data_Notification',
+				'CoursePress_Data_Certificate',
 			)
 		);
 	}
