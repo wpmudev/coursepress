@@ -321,8 +321,11 @@ class CoursePress_View_Front_Course {
 	}
 
 	public static function render_course_unit_archive() {
-		if ( locate_template( array( 'archive-unit.php' ) ) == $theme_file ) {
+		if ( $theme_file = locate_template( array( 'archive-unit.php' ) ) ) {
 			// Something is missing here...
+			ob_start();
+			require $theme_file;
+			$content = ob_get_clean();
 		} else {
 			// wp_enqueue_style( 'front_course_single', $this->plugin_url . 'css/front_course_single.css', array(), $this->version );
 			if ( locate_template( array( 'archive-unit.php' ) ) ) {// add custom content in the single template ONLY if the post type doesn't already has its own template
