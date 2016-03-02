@@ -986,9 +986,6 @@ class CoursePress_Data_Course {
 		CoursePress_Data_Course::set_last_course_id( (int) $email_data['course_id'] );
 		$course_id = (int) $email_data['course_id'];
 
-		// We need to hook the email fields for the Utility method.
-		self::_add_invitation_email_hooks();
-
 		$type = self::get_setting( $course_id, 'enrollment_type', 'manually' );
 
 		// Not clear yet, why this email has 2 different types.
@@ -1007,76 +1004,16 @@ class CoursePress_Data_Course {
 		$user = get_user_by( 'email', $email_args['email'] );
 		if ( $user ) {
 			$email_data['user'] = $user;
-			$email_args['first_name'] = sanitize_text_field( $email_data['first_name'] );
-			$email_args['last_name'] = sanitize_text_field( $email_data['last_name'] );
+			$email_args['first_name'] = $email_data['first_name'];
+			$email_args['last_name'] = $email_data['last_name'];
 		}
 
-		$sent = CoursePress_Helper_Email::send_email( self::$type, $email_args );
+		$sent = CoursePress_Helper_Email::send_email(
+			self::$type,
+			$email_args
+		);
 
 		return $sent;
-	}
-
-	private static function _add_invitation_email_hooks() {
-		add_filter(
-			'coursepress_email_fields',
-			array( __CLASS__, 'invite_email_fields' ),
-			10, 2
-		);
-	}
-
-	public static function invite_email_fields( $fields, $args ) {
-		$email_settings = CoursePress_Helper_Email::get_email_fields(
-			self::$email_type
-		);
-
-		$course_id = (int) $args['course_id'];
-
-		// To Email Address.
-		$fields['email'] = sanitize_email( $args['email'] );
-
-		// Email Subject.
-		$fields['subject'] = $email_settings['subject'];
-
-		$post = get_post( $course_id );
-		$course_name = $post->post_title;
-		$valid_stati = array( 'draft', 'pending', 'auto-draft' );
-
-		$permalink = '';
-		if ( in_array( $post->post_status, $valid_stati ) ) {
-			$permalink = CoursePress_Core::get_slug( 'course/', true ) . $post->post_name . '/';
-		} else {
-			$permalink = get_permalink( $course_id );
-		}
-		$course_address = esc_url( $permalink );
-
-		// Email Content
-		$tags = array(
-			'STUDENT_FIRST_NAME',
-			'STUDENT_LAST_NAME',
-			'COURSE_NAME',
-			'COURSE_EXCERPT',
-			'COURSE_ADDRESS',
-			'WEBSITE_ADDRESS',
-			'PASSCODE',
-		);
-
-		$tags_replaces = array(
-			sanitize_text_field( $args['first_name'] ),
-			sanitize_text_field( $args['last_name'] ),
-			$course_name,
-			$post->post_excerpt,
-			$course_address,
-			home_url( '/' ),
-			self::get_setting( $course_id, 'enrollment_passcode', '' ),
-		);
-
-		$fields['message'] = str_replace(
-			$tags,
-			$tags_replaces,
-			$email_settings['content']
-		);
-
-		return $fields;
 	}
 
 	public static function is_full( $course_id ) {
