@@ -99,49 +99,49 @@ class CoursePress_Helper_Email {
 				case self::BASIC_CERTIFICATE:
 					$args['message'] = self::basic_certificate_message(
 						$args,
-						$email_settings
+						$email_settings['content']
 					);
 					break;
 
 				case self::REGISTRATION:
 					$args['message'] = self::registration_message(
 						$args,
-						$email_settings
+						$email_settings['content']
 					);
 					break;
 
 				case self::ENROLLMENT_CONFIRM:
 					$args['message'] = self::enrollment_confirm_message(
 						$args,
-						$email_settings
+						$email_settings['content']
 					);
 					break;
 
 				case self::COURSE_INVITATION:
 					$args['message'] = self::course_invitation_message(
 						$args,
-						$email_settings
+						$email_settings['content']
 					);
 					break;
 
 				case self::COURSE_INVITATION_PASSWORD:
 					$args['message'] = self::course_invitation_password_message(
 						$args,
-						$email_settings
+						$email_settings['content']
 					);
 					break;
 
 				case self::INSTRUCTOR_INVITATION:
 					$args['message'] = self::instructor_invitation_message(
 						$args,
-						$email_settings
+						$email_settings['content']
 					);
 					break;
 
 				case self::NEW_ORDER:
 					$args['message'] = self::new_order_message(
 						$args,
-						$email_settings
+						$email_settings['content']
 					);
 					break;
 			}
@@ -307,25 +307,13 @@ class CoursePress_Helper_Email {
 	 ***************************************************************************
 	 */
 
-	protected static function basic_certificate_message( $args, $email_settings ) {
+	protected static function basic_certificate_message( $args, $content ) {
 		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
 		// TODO: Finish this!
 		return '';
 	}
 
-	protected static function registration_message( $args, $email_settings ) {
-		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
-
-		// Email Content
-		$tags = array(
-			'STUDENT_FIRST_NAME',
-			'STUDENT_LAST_NAME',
-			'BLOG_NAME',
-			'LOGIN_ADDRESS',
-			'COURSES_ADDRESS',
-			'WEBSITE_ADDRESS',
-		);
-
+	protected static function registration_message( $args, $content ) {
 		if ( CoursePress_Core::get_setting( 'general/use_custom_login', true ) ) {
 			$login_url = CoursePress_Core::get_slug( 'login', true );
 		} else {
@@ -345,31 +333,28 @@ class CoursePress_Helper_Email {
 
 	}
 
-	protected static function enrollment_confirm_message( $args, $email_settings ) {
+	protected static function enrollment_confirm_message( $args, $content ) {
 		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
 		// Currently hooked elsewhere
 		return '';
 	}
 
-	protected static function course_invitation_message( $args, $email_settings ) {
+	protected static function course_invitation_message( $args, $content ) {
 		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
 		// Currently hooked elsewhere
 		return '';
 	}
 
-	protected static function course_invitation_password_message( $args, $email_settings ) {
-		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
-		// Currently hooked elsewhere
-		return '';
+	protected static function course_invitation_password_message( $args, $content ) {
+		// Not clear yet, why this email has 2 different types.
+		// @see CoursePress_Data_Course::send_invitation()
+		return self::course_invitation_message( $args, $content );
 	}
 
-	protected static function instructor_invitation_message( $args, $email_settings ) {
-		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
-		// Currently hooked elsewhere
-		return '';
+	protected static function instructor_invitation_message( $args, $content ) {
 	}
 
-	protected static function new_order_message( $args, $email_settings ) {
+	protected static function new_order_message( $args, $content ) {
 		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
 		// Currently hooked elsewhere
 		return '';
