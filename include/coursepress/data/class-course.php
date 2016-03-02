@@ -941,14 +941,6 @@ class CoursePress_Data_Course {
 			array( __CLASS__, 'enrollment_email_fields' ),
 			10, 2
 		);
-		add_filter(
-			'wp_mail_from',
-			array( __CLASS__, 'email_from' )
-		);
-		add_filter(
-			'wp_mail_from_name',
-			array( __CLASS__, 'email_from_name' )
-		);
 	}
 
 	public static function enrollment_email_fields( $fields, $args ) {
@@ -1006,26 +998,6 @@ class CoursePress_Data_Course {
 		return $fields;
 	}
 
-	public static function email_from( $from ) {
-		$email_settings = CoursePress_Helper_Email::get_email_fields(
-			self::$email_type
-		);
-
-		$from = $email_settings['email'];
-
-		return $from;
-	}
-
-	public static function email_from_name( $from_name ) {
-		$email_settings = CoursePress_Helper_Email::get_email_fields(
-			self::$email_type
-		);
-
-		$from = $email_settings['name'];
-
-		return $from;
-	}
-
 	public static function withdraw_student( $student_id, $course_id ) {
 		$global_option = ! is_multisite();
 		$current_time = current_time( 'mysql' );
@@ -1042,7 +1014,6 @@ class CoursePress_Data_Course {
 		do_action( 'student_withdraw_from_course_instructor_notification', $student_id, $course_id, $instructors );
 		do_action( 'student_withdraw_from_course_student_notification', $student_id, $course_id );
 		do_action( 'coursepress_student_withdrawn', $student_id, $course_id );
-
 	}
 
 	public static function withdraw_all_students( $course_id ) {
@@ -1063,7 +1034,9 @@ class CoursePress_Data_Course {
 
 		$type = self::get_setting( $course_id, 'enrollment_type', 'manually' );
 
-		if ( 'passcode' === $type ) {
+		// Not clear yet, why this email has 2 different types.
+		// @see CoursePress_Data_Course::send_invitation()
+		if ( 'passcode' == $type ) {
 			$type = CoursePress_Helper_Email::COURSE_INVITATION_PASSWORD;
 		} else {
 			$type = CoursePress_Helper_Email::COURSE_INVITATION;
@@ -1091,14 +1064,6 @@ class CoursePress_Data_Course {
 			'coursepress_email_fields',
 			array( __CLASS__, 'invite_email_fields' ),
 			10, 2
-		);
-		add_filter(
-			'wp_mail_from',
-			array( __CLASS__, 'email_from' )
-		);
-		add_filter(
-			'wp_mail_from_name',
-			array( __CLASS__, 'email_from_name' )
 		);
 	}
 

@@ -309,7 +309,7 @@ class CoursePress_Helper_Email {
 
 	protected static function basic_certificate_message( $args, $email_settings ) {
 		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
-
+		// TODO: Finish this!
 		return '';
 	}
 

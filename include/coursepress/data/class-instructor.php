@@ -389,8 +389,6 @@ class CoursePress_Data_Instructor {
 
 	private static function _add_email_hooks() {
 		add_filter( 'coursepress_email_fields', array( __CLASS__, 'email_fields' ), 10, 2 );
-		add_filter( 'wp_mail_from', array( __CLASS__, 'email_from' ) );
-		add_filter( 'wp_mail_from_name', array( __CLASS__, 'email_from_name' ) );
 	}
 
 	public static function email_fields( $fields, $args ) {
@@ -453,26 +451,6 @@ class CoursePress_Data_Instructor {
 		);
 
 		return $fields;
-	}
-
-	public static function email_from( $from ) {
-		$email_settings = CoursePress_Helper_Email::get_email_fields(
-			CoursePress_Helper_Email::INSTRUCTOR_INVITATION
-		);
-
-		$from = $email_settings['email'];
-
-		return $from;
-	}
-
-	public static function email_from_name( $from_name ) {
-		$email_settings = CoursePress_Helper_Email::get_email_fields(
-			CoursePress_Helper_Email::INSTRUCTOR_INVITATION
-		);
-
-		$from = $email_settings['name'];
-
-		return $from;
 	}
 
 	public static function verify_invitation_code( $course_id, $code, $invitation_data ) {
