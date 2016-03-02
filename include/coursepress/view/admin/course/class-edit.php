@@ -40,7 +40,9 @@ class CoursePress_View_Admin_Course_Edit {
 		add_action( 'wp_ajax_update_course', array( __CLASS__, 'update_course' ) );
 
 		// Update UnitBuilder
-		add_action( 'wp_ajax_unit_builder', array( 'CoursePress_View_Admin_Course_UnitBuilder', 'unit_builder_ajax' ) );
+		add_action( 'wp_ajax_unit_builder',
+			array( 'CoursePress_View_Admin_Course_UnitBuilder', 'unit_builder_ajax' )
+		);
 
 	}
 
@@ -1152,7 +1154,10 @@ class CoursePress_View_Admin_Course_Edit {
 			// Delete Invite
 			case 'delete_instructor_invite':
 				if ( wp_verify_nonce( $data->data->nonce, 'setup-course' ) ) {
-					CoursePress_Data_Instructor::delete_invitation( $data->data->course_id, $data->data->invite_code );
+					CoursePress_Data_Instructor::delete_invitation(
+						$data->data->course_id,
+						$data->data->invite_code
+					);
 					$json_data['course_id'] = $data->data->course_id;
 					$json_data['invite_code'] = $data->data->invite_code;
 
