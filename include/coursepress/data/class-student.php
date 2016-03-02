@@ -285,6 +285,12 @@ class CoursePress_Data_Student {
 			'feedback' => array(),
 		);
 
+		if ( isset( $attributes['mandatory'] ) && $attributes['mandatory'] ) {
+			$key = 'completion/' . $unit_id . '/completed_mandatory';
+			$mandatory = (int) CoursePress_Helper_Utility::get_array_val( $data, $key );
+			CoursePress_Helper_Utility::set_array_val( $data, $key, $mandatory + 1 );
+		}
+
 		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/responses/' . $module_id . '/', $response_data );
 		self::update_completion_data( $student_id, $course_id, $data );
 
@@ -614,7 +620,6 @@ class CoursePress_Data_Student {
 			$total_mandatory = $mandatory + $assessable_mandatory;
 			$total_student_mandatory = $student_mandatory + $student_assessable_mandatory;
 
-			CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/required_mandatory', $total_mandatory );
 			CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/completed_mandatory', $total_student_mandatory );
 
 			if ( $total_mandatory === $total_student_mandatory ) {
@@ -672,7 +677,7 @@ class CoursePress_Data_Student {
 		}
 
 		return array(
-			'required' => CoursePress_Helper_Utility::get_array_val( $data, 'completion/' . $unit_id . '/required_mandatory' ),
+			'required' => CoursePress_Data_Unit::get_number_of_mandatory( $unit_id ),
 			'completed' => CoursePress_Helper_Utility::get_array_val( $data, 'completion/' . $unit_id . '/completed_mandatory' ),
 		);
 
@@ -788,7 +793,7 @@ class CoursePress_Data_Student {
 		}
 
 		return $response_count > 0 ? (int) ( $results / $response_count ) : 0;
-    }
+	}
 
 	/**
 	 * Send certificate to student

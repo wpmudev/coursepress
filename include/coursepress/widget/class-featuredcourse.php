@@ -104,7 +104,7 @@ class CoursePress_Widget_FeaturedCourse extends WP_Widget {
 		 * Set the course variable so that the needed js will be included.
 		 **/
 		$wp_query->query['course'] = true;
-		
+
 		extract( $args, EXTR_SKIP );
 
 		echo $before_widget;
