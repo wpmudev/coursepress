@@ -19,7 +19,7 @@ class CoursePress_Core {
 	public static function init() {
 		if ( ! defined( 'CP_IS_PREMIUM' ) ) { define( 'CP_IS_PREMIUM', false ); }
 		if ( ! defined( 'CP_IS_CAPUS' ) ) { define( 'CP_IS_CAPUS', false ); }
-		if ( ! defined( 'CP_IS_DEV' ) ) { define( 'CP_IS_DEV', false ); }
+		if ( ! defined( 'CP_IS_WPMUDEV' ) ) { define( 'CP_IS_WPMUDEV', false ); }
 
 		// We speak languages!
 		load_plugin_textdomain(
@@ -79,6 +79,7 @@ class CoursePress_Core {
 			CoursePress_View_Front_Course::init();
 			CoursePress_View_Front_Instructor::init();
 			CoursePress_View_Front_Dashboard::init();
+			CoursePress_View_Front_Student::init();
 			CoursePress_View_Front_Login::init();
 		}
 
@@ -90,9 +91,15 @@ class CoursePress_Core {
 
 		// Upgrade CoursePress if needed.
 		CoursePress_Upgrade::init();
-		
+
 		// Init categories widget
 		CoursePress_Widget_Categories::init();
+
+		// Init Course Structure widget
+		CoursePress_Widget_Structure::init();
+
+		// Init Course Calendar widget
+		CoursePress_Widget_Calendar::init();
 	}
 
 	/**
