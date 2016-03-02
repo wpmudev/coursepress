@@ -366,8 +366,8 @@ class CoursePress_Helper_Email {
 		$vars = array(
 			'STUDENT_FIRST_NAME' => sanitize_text_field( $args['first_name'] ),
 			'STUDENT_LAST_NAME' => sanitize_text_field( $args['last_name'] ),
-			'BLOG_NAME' => get_bloginfo(),
-			'LOGIN_ADDRESS' => $login_url,
+			'BLOG_NAME' => get_bloginfo( 'name' ),
+			'LOGIN_ADDRESS' => esc_url( $login_url ),
 			'COURSES_ADDRESS' => CoursePress_Core::get_slug( 'course', true ),
 			'WEBSITE_ADDRESS' => home_url(),
 		);
@@ -404,7 +404,7 @@ class CoursePress_Helper_Email {
 			'COURSE_ADDRESS' => esc_url( $course_address ),
 			'STUDENT_DASHBOARD' => wp_login_url(),
 			'COURSES_ADDRESS' => CoursePress_Core::get_slug( 'course/', true ),
-			'BLOG_NAME' => get_bloginfo(),
+			'BLOG_NAME' => get_bloginfo( 'name' ),
 		);
 
 		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
@@ -450,14 +450,16 @@ class CoursePress_Helper_Email {
 	 * Email body for Student Invitation Emails.
 	 * Triggered by CoursePress_Data_Course::send_invitation()
 	 *
+	 * This uses the same function as the other invitation email. The difference
+	 * is, that the passcode email has a different $content value, i.e. the
+	 * actual email body is different.
+	 *
 	 * @since  2.0.0
 	 * @param  array $args Email params.
 	 * @param  string $content Default email content, with placeholders.
 	 * @return string Finished email content.
 	 */
 	protected static function course_invitation_password_message( $args, $content ) {
-		// Not clear yet, why this email has 2 different types.
-		// @see CoursePress_Data_Course::send_invitation()
 		return self::course_invitation_message( $args, $content );
 	}
 
@@ -501,7 +503,7 @@ class CoursePress_Helper_Email {
 			'COURSE_EXCERPT' => $course_summary,
 			'COURSE_ADDRESS' => esc_url( $course_address ),
 			'WEBSITE_ADDRESS' => home_url(),
-			'WEBSITE_NAME' => get_bloginfo(),
+			'WEBSITE_NAME' => get_bloginfo( 'name' ),
 		);
 
 		return CoursePress_Helper_Utility::replace_vars( $content, $vars );

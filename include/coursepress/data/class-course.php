@@ -128,8 +128,7 @@ class CoursePress_Data_Course {
 		$new_course = empty( $course_id ) ? true : false;
 		$course = $new_course ? false : get_post( $course_id );
 
-		// Publishing toggle
-		// $post_status = empty( $this->data[ 'status' ] ) ? 'publish' : $this->data[ 'status' ];
+		// Publishing toggle.
 		$post = array(
 			'post_author' => $course ? $course->post_author : $user_id,
 			'post_status' => $course ? $course->post_status : 'private',
