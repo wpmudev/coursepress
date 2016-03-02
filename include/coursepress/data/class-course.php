@@ -885,7 +885,6 @@ class CoursePress_Data_Course {
 		update_user_option( $student_id, 'enrolled_course_group_' . $course_id, $group, $global_option );
 		update_user_option( $student_id, 'role', 'student', $global_option ); // alternative to roles used.
 
-		self::_add_enrollment_email_hooks();
 		self::$email_type = CoursePress_Helper_Email::ENROLLMENT_CONFIRM;
 
 		$email_args = array();
@@ -933,69 +932,6 @@ class CoursePress_Data_Course {
 		do_action( 'coursepress_student_enrolled', $student_id, $course_id );
 
 		return true;
-	}
-
-	private static function _add_enrollment_email_hooks() {
-		add_filter(
-			'coursepress_email_fields',
-			array( __CLASS__, 'enrollment_email_fields' ),
-			10, 2
-		);
-	}
-
-	public static function enrollment_email_fields( $fields, $args ) {
-		$email_settings = CoursePress_Helper_Email::get_email_fields(
-			CoursePress_Helper_Email::ENROLLMENT_CONFIRM
-		);
-
-		$course_id = (int) $args['course_id'];
-
-		// To Email Address.
-		$fields['email'] = sanitize_email( $args['email'] );
-
-		// Email Subject.
-		$fields['subject'] = $email_settings['subject'];
-
-		$post = get_post( $course_id );
-		$course_name = $post->post_title;
-		$valid_stati = array( 'draft', 'pending', 'auto-draft' );
-
-		$permalink = '';
-		if ( in_array( $post->post_status, $valid_stati ) ) {
-			$permalink = CoursePress_Core::get_slug( 'course/', true ) . $post->post_name . '/';
-		} else {
-			$permalink = get_permalink( $course_id );
-		}
-		$course_address = esc_url( $permalink );
-
-		// Email Content
-		$tags = array(
-			'STUDENT_FIRST_NAME',
-			'STUDENT_LAST_NAME',
-			'COURSE_TITLE',
-			'COURSE_ADDRESS',
-			'STUDENT_DASHBOARD',
-			'COURSES_ADDRESS',
-			'BLOG_NAME',
-		);
-
-		$tags_replaces = array(
-			sanitize_text_field( $args['first_name'] ),
-			sanitize_text_field( $args['last_name'] ),
-			$course_name,
-			$course_address,
-			wp_login_url(),
-			CoursePress_Core::get_slug( 'course/', true ),
-			get_bloginfo(),
-		);
-
-		$fields['message'] = str_replace(
-			$tags,
-			$tags_replaces,
-			$email_settings['content']
-		);
-
-		return $fields;
 	}
 
 	public static function withdraw_student( $student_id, $course_id ) {

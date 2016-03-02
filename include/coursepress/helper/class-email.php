@@ -334,9 +334,29 @@ class CoursePress_Helper_Email {
 	}
 
 	protected static function enrollment_confirm_message( $args, $content ) {
-		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
-		// Currently hooked elsewhere
-		return '';
+		$course_id = (int) $args['course_id'];
+		$post = get_post( $course_id );
+		$course_name = $post->post_title;
+		$valid_stati = array( 'draft', 'pending', 'auto-draft' );
+
+		if ( in_array( $post->post_status, $valid_stati ) ) {
+			$course_address = CoursePress_Core::get_slug( 'course/', true ) . $post->post_name . '/';
+		} else {
+			$course_address = get_permalink( $course_id );
+		}
+
+		// Email Content.
+		$vars = array(
+			'STUDENT_FIRST_NAME' => sanitize_text_field( $args['first_name'] ),
+			'STUDENT_LAST_NAME' => sanitize_text_field( $args['last_name'] ),
+			'COURSE_TITLE' => $course_name,
+			'COURSE_ADDRESS' => esc_url( $course_address ),
+			'STUDENT_DASHBOARD' => wp_login_url(),
+			'COURSES_ADDRESS' => CoursePress_Core::get_slug( 'course/', true ),
+			'BLOG_NAME' => get_bloginfo(),
+		);
+
+		return self::replace_vars( $content, $vars );
 	}
 
 	protected static function course_invitation_message( $args, $content ) {
