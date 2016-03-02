@@ -4,7 +4,7 @@ class CoursePress_Helper_Email {
 
 	/**
 	 * Email type.
-	 * (not used anywhere yet)
+	 * Used by CoursePress_Data_Certificate::send_certificate().
 	 */
 	const BASIC_CERTIFICATE = 'basic_certificate';
 
@@ -88,8 +88,8 @@ class CoursePress_Helper_Email {
 		self::$current_type = $type;
 
 		if ( ! empty( $type ) ) {
-			add_filter( 'wp_mail_from', array( __CLASS__, 'email_from' ) );
-			add_filter( 'wp_mail_from_name', array( __CLASS__, 'email_from_name' ) );
+			add_filter( 'wp_mail_from', array( __CLASS__, 'wp_mail_from' ) );
+			add_filter( 'wp_mail_from_name', array( __CLASS__, 'wp_mail_from_name' ) );
 
 			$email_settings = self::get_email_fields( $type );
 
@@ -99,55 +99,56 @@ class CoursePress_Helper_Email {
 				case self::BASIC_CERTIFICATE:
 					$args['message'] = self::basic_certificate_message(
 						$args,
-						$email_settings
+						$email_settings['content']
 					);
 					break;
 
 				case self::REGISTRATION:
 					$args['message'] = self::registration_message(
 						$args,
-						$email_settings
+						$email_settings['content']
 					);
 					break;
 
 				case self::ENROLLMENT_CONFIRM:
 					$args['message'] = self::enrollment_confirm_message(
 						$args,
-						$email_settings
+						$email_settings['content']
 					);
 					break;
 
 				case self::COURSE_INVITATION:
 					$args['message'] = self::course_invitation_message(
 						$args,
-						$email_settings
+						$email_settings['content']
 					);
 					break;
 
 				case self::COURSE_INVITATION_PASSWORD:
 					$args['message'] = self::course_invitation_password_message(
 						$args,
-						$email_settings
+						$email_settings['content']
 					);
 					break;
 
 				case self::INSTRUCTOR_INVITATION:
 					$args['message'] = self::instructor_invitation_message(
 						$args,
-						$email_settings
+						$email_settings['content']
 					);
 					break;
 
 				case self::NEW_ORDER:
+					// (not used anywhere yet)
 					$args['message'] = self::new_order_message(
 						$args,
-						$email_settings
+						$email_settings['content']
 					);
 					break;
 			}
 		}
 
-		return self::process_and_send( $args );
+		return self::process_and_send( $type, $args );
 	}
 
 	/**
@@ -239,7 +240,7 @@ class CoursePress_Helper_Email {
 
 	/*
 	 ***************************************************************************
-	 * Premare default email contents.
+	 * Fetch email settings from DB.
 	 ***************************************************************************
 	 */
 
@@ -279,24 +280,48 @@ class CoursePress_Helper_Email {
 		);
 	}
 
-	protected static function basic_certificate_message( $args, $email_settings ) {
-		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
-
-		return '';
+	/**
+	 * Hooks into `wp_mail_from` to provide a custom sender email address.
+	 *
+	 * @since  2.0.0
+	 * @param  string $from Default WP Sender address.
+	 * @return string Custom sender address.
+	 */
+	public static function wp_mail_from( $from ) {
+		return self::from_email( self::$current_type );
 	}
 
-	protected static function registration_message( $args, $email_settings ) {
-		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
+	/**
+	 * Hooks into `wp_mail_from_name` to provide a custom sender name.
+	 *
+	 * @since  2.0.0
+	 * @param  string $from_name Default WP Sender name.
+	 * @return string Custom sender name.
+	 */
+	public static function wp_mail_from_name( $from_name ) {
+		return self::from_name( self::$current_type );
+	}
 
-		// Email Content
-		$tags = array(
-			'STUDENT_FIRST_NAME',
-			'STUDENT_LAST_NAME',
-			'BLOG_NAME',
-			'LOGIN_ADDRESS',
-			'COURSES_ADDRESS',
-			'WEBSITE_ADDRESS',
-		);
+	/*
+	 ***************************************************************************
+	 * Prepare default email contents.
+	 ***************************************************************************
+	 */
+
+	/**
+	 * Email body with a Course Certificate (when course is completed).
+	 * Triggered by CoursePress_Data_Certificate::send_certificate()
+	 *
+	 * Note: This uses the email settings defined in Settings > E-mail Settings
+	 *       and _not_ the content defined in Settingd > Basic Certificate!
+	 *
+	 * @since  2.0.0
+	 * @param  array $args Email params.
+	 * @param  string $content Default email content, with placeholders.
+	 * @return string Finished email content.
+	 */
+	protected static function basic_certificate_message( $args, $content ) {
+		$course_id = (int) $args['course_id'];
 
 		if ( CoursePress_Core::get_setting( 'general/use_custom_login', true ) ) {
 			$login_url = CoursePress_Core::get_slug( 'login', true );
@@ -304,67 +329,197 @@ class CoursePress_Helper_Email {
 			$login_url = wp_login_url();
 		}
 
-		$tags_replaces = array(
-			sanitize_text_field( $args['first_name'] ),
-			sanitize_text_field( $args['last_name'] ),
-			get_bloginfo(),
-			$login_url,
-			CoursePress_Core::get_slug( 'course', true ),
-			home_url(),
+		$vars = array(
+			'BLOG_NAME' => get_bloginfo( 'name' ),
+			'LOGIN_ADDRESS' => esc_url( $login_url ),
+			'COURSES_ADDRESS' => CoursePress_Core::get_slug( 'course', true ),
+			'WEBSITE_ADDRESS' => home_url(),
+			'COURSE_ADDRESS' => esc_url( $args['course_address'] ),
+			'FIRST_NAME' => sanitize_text_field( $args['first_name'] ),
+			'LAST_NAME' => sanitize_text_field( $args['last_name'] ),
+			'COURSE_NAME' => sanitize_text_field( $args['course_name'] ),
+			'COMPLETION_DATE' => sanitize_text_field( $args['completion_date'] ),
+			'CERTIFICATE_NUMBER' => sanitize_text_field( $args['certificate_id'] ),
+			'UNIT_LIST' => $args['unit_list'],
 		);
 
-		return str_replace( $tags, $tags_replaces, $email_settings['content'] );
-
+		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
 	}
 
-	protected static function enrollment_confirm_message( $args, $email_settings ) {
-		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
-		// Currently hooked elsewhere
-		return '';
-	}
+	/**
+	 * Email body for new user registration/welcome email.
+	 * Triggered by CoursePress_Data_Student::send_registration()
+	 *
+	 * @since  2.0.0
+	 * @param  array $args Email params.
+	 * @param  string $content Default email content, with placeholders.
+	 * @return string Finished email content.
+	 */
+	protected static function registration_message( $args, $content ) {
+		if ( CoursePress_Core::get_setting( 'general/use_custom_login', true ) ) {
+			$login_url = CoursePress_Core::get_slug( 'login', true );
+		} else {
+			$login_url = wp_login_url();
+		}
 
-	protected static function course_invitation_message( $args, $email_settings ) {
-		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
-		// Currently hooked elsewhere
-		return '';
-	}
-
-	protected static function course_invitation_password_message( $args, $email_settings ) {
-		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
-		// Currently hooked elsewhere
-		return '';
-	}
-
-	protected static function instructor_invitation_message( $args, $email_settings ) {
-		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
-		// Currently hooked elsewhere
-		return '';
-	}
-
-	protected static function new_order_message( $args, $email_settings ) {
-		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
-		// Currently hooked elsewhere
-		return '';
-	}
-
-
-	public static function email_from( $from ) {
-		$email_settings = CoursePress_Helper_Email::get_email_fields(
-			self::$current_type
+		// Email Content.
+		$vars = array(
+			'STUDENT_FIRST_NAME' => sanitize_text_field( $args['first_name'] ),
+			'STUDENT_LAST_NAME' => sanitize_text_field( $args['last_name'] ),
+			'BLOG_NAME' => get_bloginfo( 'name' ),
+			'LOGIN_ADDRESS' => esc_url( $login_url ),
+			'COURSES_ADDRESS' => CoursePress_Core::get_slug( 'course', true ),
+			'WEBSITE_ADDRESS' => home_url(),
 		);
 
-		$from = $email_settings['email'];
-
-		return $from;
+		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
 	}
 
-	public static function email_from_name( $from_name ) {
-		$email_settings = CoursePress_Helper_Email::get_email_fields(
-			self::$current_type
+	/**
+	 * Email body for confirmation of enrollment.
+	 * Triggered by CoursePress_Data_Course::enroll_student()
+	 *
+	 * @since  2.0.0
+	 * @param  array $args Email params.
+	 * @param  string $content Default email content, with placeholders.
+	 * @return string Finished email content.
+	 */
+	protected static function enrollment_confirm_message( $args, $content ) {
+		$course_id = (int) $args['course_id'];
+		$post = get_post( $course_id );
+		$course_name = $post->post_title;
+		$valid_stati = array( 'draft', 'pending', 'auto-draft' );
+
+		if ( in_array( $post->post_status, $valid_stati ) ) {
+			$course_address = CoursePress_Core::get_slug( 'course/', true ) . $post->post_name . '/';
+		} else {
+			$course_address = get_permalink( $course_id );
+		}
+
+		// Email Content.
+		$vars = array(
+			'STUDENT_FIRST_NAME' => sanitize_text_field( $args['first_name'] ),
+			'STUDENT_LAST_NAME' => sanitize_text_field( $args['last_name'] ),
+			'COURSE_TITLE' => $course_name,
+			'COURSE_ADDRESS' => esc_url( $course_address ),
+			'STUDENT_DASHBOARD' => wp_login_url(),
+			'COURSES_ADDRESS' => CoursePress_Core::get_slug( 'course/', true ),
+			'BLOG_NAME' => get_bloginfo( 'name' ),
 		);
 
-		$from = $email_settings['name'];
+		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
+	}
 
-		return $from;
+	/**
+	 * Email body for Student Invitation Emails.
+	 * Triggered by CoursePress_Data_Course::send_invitation()
+	 *
+	 * @since  2.0.0
+	 * @param  array $args Email params.
+	 * @param  string $content Default email content, with placeholders.
+	 * @return string Finished email content.
+	 */
+	protected static function course_invitation_message( $args, $content ) {
+		$course_id = (int) $args['course_id'];
+		$post = get_post( $course_id );
+		$course_name = $post->post_title;
+		$course_summary = $post->post_excerpt;
+		$valid_stati = array( 'draft', 'pending', 'auto-draft' );
+
+		if ( in_array( $post->post_status, $valid_stati ) ) {
+			$course_address = CoursePress_Core::get_slug( 'course/', true ) . $post->post_name . '/';
+		} else {
+			$course_address = get_permalink( $course_id );
+		}
+
+		// Email Content.
+		$tags = array(
+			'STUDENT_FIRST_NAME' => sanitize_text_field( $args['first_name'] ),
+			'STUDENT_LAST_NAME' => sanitize_text_field( $args['last_name'] ),
+			'COURSE_NAME' => $course_name,
+			'COURSE_EXCERPT' => $course_summary,
+			'COURSE_ADDRESS' => esc_url( $course_address ),
+			'WEBSITE_ADDRESS' => home_url( '/' ),
+			'PASSCODE' => self::get_setting( $course_id, 'enrollment_passcode', '' ),
+		);
+
+		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
+	}
+
+	/**
+	 * Email body for Student Invitation Emails.
+	 * Triggered by CoursePress_Data_Course::send_invitation()
+	 *
+	 * This uses the same function as the other invitation email. The difference
+	 * is, that the passcode email has a different $content value, i.e. the
+	 * actual email body is different.
+	 *
+	 * @since  2.0.0
+	 * @param  array $args Email params.
+	 * @param  string $content Default email content, with placeholders.
+	 * @return string Finished email content.
+	 */
+	protected static function course_invitation_password_message( $args, $content ) {
+		return self::course_invitation_message( $args, $content );
+	}
+
+	/**
+	 * Email body for Instructor Invitation Emails.
+	 * Triggered by CoursePress_Data_Instructor::send_invitation()
+	 *
+	 * @since  2.0.0
+	 * @param  array $args Email params.
+	 * @param  string $content Default email content, with placeholders.
+	 * @return string Finished email content.
+	 */
+	protected static function instructor_invitation_message( $args, $content ) {
+		$course_id = (int) $args['course_id'];
+		$post = get_post( $course_id );
+		$course_name = $post->post_title;
+		$course_summary = $post->post_excerpt;
+		$valid_stati = array( 'draft', 'pending', 'auto-draft' );
+
+		if ( in_array( $post->post_status, $valid_stati ) ) {
+			$course_address = CoursePress_Core::get_slug( 'course/', true ) . $post->post_name . '/';
+		} else {
+			$course_address = get_permalink( $course_id );
+		}
+
+		$confirm_link = sprintf(
+			'%s?action=course_invite&course_id=%s&c=%s&h=%s',
+			$course_address,
+			$course_id,
+			$args['invite_code'],
+			$args['invite_hash']
+		);
+
+		// Email Content.
+		$tags = array(
+			'INSTRUCTOR_FIRST_NAME' => sanitize_text_field( $args['first_name'] ),
+			'INSTRUCTOR_LAST_NAME' => sanitize_text_field( $args['last_name'] ),
+			'INSTRUCTOR_EMAIL' => sanitize_email( $args['email'] ),
+			'CONFIRMATION_LINK' => esc_url( $confirm_link ),
+			'COURSE_NAME' => $course_name,
+			'COURSE_EXCERPT' => $course_summary,
+			'COURSE_ADDRESS' => esc_url( $course_address ),
+			'WEBSITE_ADDRESS' => home_url(),
+			'WEBSITE_NAME' => get_bloginfo( 'name' ),
+		);
+
+		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
+	}
+
+	/**
+	 * (not used anywhere yet)
+	 *
+	 * @since  2.0.0
+	 * @param  array $args Email params.
+	 * @param  string $content Default email content, with placeholders.
+	 * @return string Finished email content.
+	 */
+	protected static function new_order_message( $args, $content ) {
+		$vars = array();
+
+		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
 	}
 }

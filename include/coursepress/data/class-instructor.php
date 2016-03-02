@@ -107,7 +107,7 @@ class CoursePress_Data_Instructor {
 		if ( ! $include_posts ) {
 			return $course_array;
 		} else {
-			$post_type = CoursePress_Data_Course::get_post_type_name( true );
+			$post_type = CoursePress_Data_Course::get_post_type_name();
 			$query = new WP_Query( array( 'post__in' => $course_array, 'post_type' => $post_type, 'posts_per_page' => -1 ) );
 			return $query->posts;
 		}
@@ -266,28 +266,17 @@ class CoursePress_Data_Instructor {
 		);
 	}
 
-	public static function send_invitation( $email_data ) {
-		$email_data['course_id'] = (int) $email_data['course_id'];
-
+	public static function send_invitation( $course_id, $email, $first_name, $last_name ) {
 		// So that we can use it later.
-		CoursePress_Data_Course::set_last_course_id( $email_data['course_id'] );
-
-		// We need to hook the email fields for the Utility method.
-		self::_add_email_hooks();
+		CoursePress_Data_Course::set_last_course_id( $course_id );
 
 		// Return data: Can be used by caller to get extra information
 		$return_data = array();
 
-		$email_args['course_id'] = $email_data['course_id'];
-		$email_args['email'] = sanitize_email( $email_data['email'] );
-
-		$user = get_user_by( 'email', $email_args['email'] );
-		if ( $user ) {
-			$email_data['user'] = $user;
-		}
-
-		$email_args['first_name'] = sanitize_text_field( $email_data['first_name'] );
-		$email_args['last_name'] = sanitize_text_field( $email_data['last_name'] );
+		$email_args['course_id'] = $course_id;
+		$email_args['email'] = $email;
+		$email_args['first_name'] = $first_name;
+		$email_args['last_name'] = $last_name;
 
 		$invite_data = self::_create_invite_code_hash( $email_args );
 		$email_args['invite_code'] = $invite_data['code'];
@@ -295,7 +284,7 @@ class CoursePress_Data_Instructor {
 
 		// Get invites
 		$instructor_invites = get_post_meta(
-			$email_data['course_id'],
+			$course_id,
 			'instructor_invites',
 			true
 		);
@@ -336,7 +325,7 @@ class CoursePress_Data_Instructor {
 				$instructor_invites[ $email_args['invite_code'] ] = $invite;
 
 				update_post_meta(
-					$email_data['course_id'],
+					$course_id,
 					'instructor_invites',
 					$instructor_invites
 				);
@@ -385,94 +374,6 @@ class CoursePress_Data_Instructor {
 			'code' => $invite_code,
 			'hash' => sha1( sanitize_email( $args['email'] ) . $invite_code ),
 		);
-	}
-
-	private static function _add_email_hooks() {
-		add_filter( 'coursepress_email_fields', array( __CLASS__, 'email_fields' ), 10, 2 );
-		add_filter( 'wp_mail_from', array( __CLASS__, 'email_from' ) );
-		add_filter( 'wp_mail_from_name', array( __CLASS__, 'email_from_name' ) );
-	}
-
-	public static function email_fields( $fields, $args ) {
-		$email_settings = CoursePress_Helper_Email::get_email_fields(
-			CoursePress_Helper_Email::INSTRUCTOR_INVITATION
-		);
-
-		$course_id = (int) $args['course_id'];
-
-		// To Email Address
-		$fields['email'] = sanitize_email( $args['email'] );
-
-		// Email Subject
-		$fields['subject'] = $email_settings['subject'];
-
-		// For unpublished courses.
-		$post = get_post( $course_id );
-
-		$course_name = $post->post_title;
-		$course_summary = $post->post_excerpt;
-
-		$permalink = '';
-		if ( in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) ) ) {
-			$permalink = CoursePress_Core::get_slug( 'course/', true ) . $post->post_name . '/';
-		} else {
-			$permalink = get_permalink( $course_id );
-		}
-		$course_address = esc_url( $permalink );
-		$confirm_link = esc_url( $course_address . '?action=course_invite&course_id=' . $course_id . '&c=' . $args['invite_code'] . '&h=' . $args['invite_hash'] );
-
-		// Email Content
-		$tags = array(
-			'INSTRUCTOR_FIRST_NAME',
-			'INSTRUCTOR_LAST_NAME',
-			'INSTRUCTOR_EMAIL',
-			'CONFIRMATION_LINK',
-			'COURSE_NAME',
-			'COURSE_EXCERPT',
-			'COURSE_ADDRESS',
-			'WEBSITE_ADDRESS',
-			'WEBSITE_NAME',
-		);
-
-		$tags_replaces = array(
-			sanitize_text_field( $args['first_name'] ),
-			sanitize_text_field( $args['last_name'] ),
-			$fields['email'],
-			$confirm_link,
-			$course_name,
-			$course_summary,
-			$course_address,
-			home_url(),
-			get_bloginfo(),
-		);
-
-		$fields['message'] = str_replace(
-			$tags,
-			$tags_replaces,
-			$email_settings['content']
-		);
-
-		return $fields;
-	}
-
-	public static function email_from( $from ) {
-		$email_settings = CoursePress_Helper_Email::get_email_fields(
-			CoursePress_Helper_Email::INSTRUCTOR_INVITATION
-		);
-
-		$from = $email_settings['email'];
-
-		return $from;
-	}
-
-	public static function email_from_name( $from_name ) {
-		$email_settings = CoursePress_Helper_Email::get_email_fields(
-			CoursePress_Helper_Email::INSTRUCTOR_INVITATION
-		);
-
-		$from = $email_settings['name'];
-
-		return $from;
 	}
 
 	public static function verify_invitation_code( $course_id, $code, $invitation_data ) {

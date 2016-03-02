@@ -216,7 +216,7 @@ class CoursePress_View_Front_Course {
 		//
 		// $name = get_query_var( 'course' );
 		// if ( ! empty( $name ) ) {
-		// $post_type = CoursePress_Data_Course::get_post_type_name( true );
+		// $post_type = CoursePress_Data_Course::get_post_type_name();
 		// }
 		//
 		// $coursename = get_query_var( 'coursename' );
@@ -224,7 +224,7 @@ class CoursePress_View_Front_Course {
 		//
 		// if ( ! empty( $coursename ) && ! empty( $unitname ) ) {
 		// $post_parent = CoursePress_Data_Course::by_name( $coursename, true );
-		// $post_type = CoursePress_Data_Unit::get_post_type_name( true );
+		// $post_type = CoursePress_Data_Unit::get_post_type_name();
 		// } else if ( ! empty( $coursename ) ) {
 		// $post_parent = CoursePress_Data_Course::by_name( $coursename, true );
 		// $is_archive = true;
@@ -239,19 +239,19 @@ class CoursePress_View_Front_Course {
 		//
 		// Render Main Course
 		// if ( ! empty( $name ) ) {
-		// set_query_var( 'post_type', CoursePress_Data_Course::get_post_type_name( true ) );
+		// set_query_var( 'post_type', CoursePress_Data_Course::get_post_type_name() );
 		// add_filter( 'the_content', array( __CLASS__, 'render_course_main' ), 1 );
 		// }
 		//
 		// Render Unit
 		// if ( empty( $name ) && ! empty( $coursename ) && ! empty( $unitname ) ) {
-		// set_query_var( 'post_type', CoursePress_Data_Course::get_post_type_name( true ) );
+		// set_query_var( 'post_type', CoursePress_Data_Course::get_post_type_name() );
 		// add_filter( 'the_content', array( __CLASS__, 'render_course_unit' ), 1 );
 		// }
 		//
 		// Render Unit Archive Display
 		// if ( empty( $name ) && ! empty( $coursename ) && empty( $unitname ) ) {
-		// set_query_var( 'post_type', CoursePress_Data_Course::get_post_type_name( true ) );
+		// set_query_var( 'post_type', CoursePress_Data_Course::get_post_type_name() );
 		// add_filter( 'the_content', array( __CLASS__, 'render_course_unit_archive' ), 1 );
 		// }
 		//
@@ -530,7 +530,7 @@ class CoursePress_View_Front_Course {
 						self::render_course_main(), $course_id,
 						'main'
 					),
-					'type' => CoursePress_Data_Course::get_post_type_name( true ),
+					'type' => CoursePress_Data_Course::get_post_type_name(),
 				);
 
 				$pg = new CoursePress_Data_VirtualPage( $args );
@@ -571,7 +571,7 @@ class CoursePress_View_Front_Course {
 						self::render_course_archive(),
 						$category
 					),
-					'type' => CoursePress_Data_Course::get_post_type_name( true ) . '_archive',
+					'type' => CoursePress_Data_Course::get_post_type_name() . '_archive',
 					'is_archive' => true,
 				),
 				$category
@@ -760,7 +760,7 @@ class CoursePress_View_Front_Course {
 				'title' => get_the_title( $post_parent ),
 				// 'show_title' => false,
 				'content' => apply_filters( 'coursepress_view_course', self::render_course_unit_archive(), $post_parent, 'workbook' ),
-				'type' => CoursePress_Data_Unit::get_post_type_name( true ) . '_archive',
+				'type' => CoursePress_Data_Unit::get_post_type_name() . '_archive',
 			);
 
 			$pg = new CoursePress_Data_VirtualPage( $args );
@@ -806,7 +806,7 @@ class CoursePress_View_Front_Course {
 				'title' => get_the_title( $post_parent ),
 				// 'show_title' => false,
 				'content' => apply_filters( 'coursepress_view_course_unit', self::render_course_unit( $post_id ), $post_parent, $post_id ),
-				'type' => CoursePress_Data_Unit::get_post_type_name( true ),
+				'type' => CoursePress_Data_Unit::get_post_type_name(),
 				'post_parent' => $post_parent,
 				'ID' => $post_id,// Will load the real post
 			);
@@ -828,7 +828,7 @@ class CoursePress_View_Front_Course {
 				'title' => get_the_title( $post_parent ),
 				'show_title' => false,
 				'content' => apply_filters( 'coursepress_view_course_archive', self::render_course_archive() ),
-				'type' => CoursePress_Data_Course::get_post_type_name( true ) . '_archive',
+				'type' => CoursePress_Data_Course::get_post_type_name() . '_archive',
 				'is_archive' => true,
 			);
 
@@ -845,8 +845,8 @@ class CoursePress_View_Front_Course {
 	}
 
 	public static function get_valid_post_types() {
-		$pt_course = CoursePress_Data_Course::get_post_type_name( true );
-		$pt_unit = CoursePress_Data_Unit::get_post_type_name( true );
+		$pt_course = CoursePress_Data_Course::get_post_type_name();
+		$pt_unit = CoursePress_Data_Unit::get_post_type_name();
 
 		return array(
 			$pt_course,
