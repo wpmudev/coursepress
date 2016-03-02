@@ -61,4 +61,26 @@ class CoursePress_Data_Certificate {
 	public static function get_post_type_name() {
 		return CoursePress_Data_PostFormat::prefix( self::$post_type );
 	}
+
+	/**
+	 * Send certificate to student.
+	 *
+	 * @since 2.0.0
+	 */
+	public function send_certificate( $student_id, $course_id ) {
+		// If student doesn't exist, exit.
+		$student = get_userdata( $student_id );
+		if ( empty( $student ) ) {
+			return false;
+		}
+
+		$email_args = array();
+		$email_args['email_type'] = CoursePress_Helper_Email::BASIC_CERTIFICATE;
+		$email_args['course_id'] = $course_id;
+		$email_args['email'] = sanitize_email( $student->user_email );
+		$email_args['first_name'] = $student->user_firstname;
+		$email_args['last_name'] = $student->user_lastname;
+
+		return CoursePress_Helper_Email::send_email( $email_args );
+	}
 }

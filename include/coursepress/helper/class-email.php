@@ -4,7 +4,7 @@ class CoursePress_Helper_Email {
 
 	/**
 	 * Email type.
-	 * (not used anywhere yet)
+	 * Used by CoursePress_Data_Certificate::send_certificate().
 	 */
 	const BASIC_CERTIFICATE = 'basic_certificate';
 
