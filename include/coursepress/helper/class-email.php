@@ -298,11 +298,17 @@ class CoursePress_Helper_Email {
 			'WEBSITE_ADDRESS',
 		);
 
+		if ( CoursePress_Core::get_setting( 'general/use_custom_login', true ) ) {
+			$login_url = CoursePress_Core::get_slug( 'login', true );
+		} else {
+			$login_url = wp_login_url();
+		}
+
 		$tags_replaces = array(
 			sanitize_text_field( $args['first_name'] ),
 			sanitize_text_field( $args['last_name'] ),
 			get_bloginfo(),
-			CoursePress_Core::get_setting( 'general/use_custom_login', true ) ? CoursePress_Core::get_slug( 'login', true ) : wp_login_url(),
+			$login_url,
 			CoursePress_Core::get_slug( 'course', true ),
 			home_url(),
 		);

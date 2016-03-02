@@ -28,7 +28,7 @@ class CoursePress_View_Front_Dashboard {
 	public static function parse_request( &$wp ) {
 
 		// Dashboard Page
-		if ( array_key_exists( 'pagename', $wp->query_vars ) && CoursePress_Core::get_slug( 'student_dashboard' ) === $wp->query_vars['pagename'] ) {
+		if ( array_key_exists( 'pagename', $wp->query_vars ) && CoursePress_Core::get_slug( 'student_dashboard' ) == $wp->query_vars['pagename'] ) {
 
 			// Redirect to a page
 			$vp = (int) CoursePress_Core::get_setting( 'pages/student_dashboard', 0 );

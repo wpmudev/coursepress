@@ -56,7 +56,7 @@ class CoursePress_Template_Communication {
 
 		$content = do_shortcode( '[course_unit_submenu]' );
 
-		$new_discussion_link = trailingslashit( CoursePress_Core::get_slug( 'course', true ) ) . $course->post_name . '/' . trailingslashit( CoursePress_Core::get_slug( 'discussions' ) ) . CoursePress_Core::get_slug( 'discussion_new' );
+		$new_discussion_link = CoursePress_Core::get_slug( 'course/', true ) . $course->post_name . '/' . CoursePress_Core::get_slug( 'discussions/' ) . CoursePress_Core::get_slug( 'discussion_new' );
 		$content .= '
 			<div class="discussion-new">
 				<a href="' . esc_url( $new_discussion_link ) . '" class="button">' . esc_html( 'Start a new discussion', 'CP_TD' ) . '</a>
@@ -90,8 +90,8 @@ class CoursePress_Template_Communication {
 
 			$date = get_the_date( get_option( 'date_format' ), $discussion );
 
-			$discussion_url = trailingslashit( CoursePress_Core::get_slug( 'courses', true ) ) . $course->post_name . '/';
-			$discussion_url = trailingslashit( $discussion_url . CoursePress_Core::get_slug( 'discussion' ) ) . $discussion->post_name;
+			$discussion_url = CoursePress_Core::get_slug( 'courses/', true ) . $course->post_name . '/';
+			$discussion_url = $discussion_url . CoursePress_Core::get_slug( 'discussion/' ) . $discussion->post_name;
 
 			$content .= '
 					<div class="discussion-archive-single">
@@ -144,7 +144,7 @@ class CoursePress_Template_Communication {
 		$content .= CoursePress_Helper_Utility::filter_content( $post_content );
 
 		if ( get_current_user_id() == (int) $author ) {
-			$edit_discussion_link = trailingslashit( CoursePress_Core::get_slug( 'course', true ) ) . get_post_field( 'post_name', $course_id ) . '/' . trailingslashit( CoursePress_Core::get_slug( 'discussions' ) ) . CoursePress_Core::get_slug( 'discussion_new' );
+			$edit_discussion_link = CoursePress_Core::get_slug( 'course/', true ) . get_post_field( 'post_name', $course_id ) . '/' . CoursePress_Core::get_slug( 'discussions/' ) . CoursePress_Core::get_slug( 'discussion_new' );
 			$edit_discussion_link .= '?id=' . $discussion->ID;
 			$content .= '<div class="edit-link"><a href="' . esc_url( $edit_discussion_link ) . '">' . esc_html__( 'Edit', 'CP_TD' ) . '</a>';
 		}
@@ -205,7 +205,7 @@ class CoursePress_Template_Communication {
 
 		// Input area.
 		$content .= wp_nonce_field( 'add-new-discussion', '_wpnonce', true, false );
-		$cancel_link = trailingslashit( CoursePress_Core::get_slug( 'course', true ) ) . get_post_field( 'post_name', $course_id ) . '/' . trailingslashit( CoursePress_Core::get_slug( 'discussions' ) );
+		$cancel_link = CoursePress_Core::get_slug( 'course/', true ) . get_post_field( 'post_name', $course_id ) . '/' . CoursePress_Core::get_slug( 'discussions' );
 		if ( $edit ) {
 			$content .= '<input type="hidden" name="id" value="' . $id . '" />';
 		}
@@ -216,7 +216,7 @@ class CoursePress_Template_Communication {
 			<input name="discussion_title" type="text" placeholder="' . esc_attr__( 'Title of the discussion', 'CP_TD' ) . '" value="' . esc_attr( $title ) . '" />
 			<textarea name="discussion_content" placeholder="' . esc_attr__( 'Type your discussion or question here…', 'CP_TD' ) . '">' . CoursePress_Helper_Utility::filter_content( $body ) . '</textarea>
 			<div class="button-links">
-				<a href="' . esc_html( $cancel_link ) . '">' . esc_html__( 'Cancel', 'CP_TD' ) . '</a>
+				<a href="' . esc_url( $cancel_link ) . '">' . esc_html__( 'Cancel', 'CP_TD' ) . '</a>
 				<a class="submit-discussion">' . esc_html( $add_edit ) . '</a>
 			</div>
 		</form>

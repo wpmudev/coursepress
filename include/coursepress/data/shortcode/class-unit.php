@@ -96,7 +96,7 @@ class CoursePress_Data_Shortcode_Unit {
 			//  $unit->details->$field = CoursePress_Data_Unit::get_url( $unit_id, $last_visited_page );
 			// } else {
 			$unit = get_post( $unit_id );
-			$content = get_permalink( $course_id ) . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . $unit->post_name;
+			$content = get_permalink( $course_id ) . CoursePress_Core::get_slug( 'unit/' ) . $unit->post_name;
 			// $unit->details->$field = CoursePress_Data_Unit::get_url( $unit_id );
 			// }
 		}
