@@ -1,27 +1,27 @@
 <?php
 
 class CoursePress_Template_Calendar {
-    private $days_of_week = array( 0, 1, 2, 3, 4, 5, 6 );
+	private $days_of_week = array( 0, 1, 2, 3, 4, 5, 6 );
 
 	private $first_day = false;
 	private $day_of_week = false;
-    private $number_of_days = false;
+	private $number_of_days = false;
 	private $date = false;
-    private $month_name = false;
+	private $month_name = false;
 	private $month = false;
-    private $year = false;
+	private $year = false;
 	private $course_id = false;
-    private $course_start = false;
+	private $course_start = false;
 	private $course_start_day = false;
-    private $course_end = false;
+	private $course_end = false;
 	private $course_end_day = false;
-    private $course_no_end = false;
+	private $course_no_end = false;
 	private $previous_month = false;
-    private $next_month = false;
+	private $next_month = false;
 	private $date_indicator = false;
-    
-    public function __construct( $args = array() ) {
-        global $wp_locale;
+
+	public function __construct( $args = array() ) {
+		global $wp_locale;
 
 		extract( wp_parse_args( $args, array(
 			'month' => false,
@@ -39,17 +39,17 @@ class CoursePress_Template_Calendar {
 			$this->course_start_day = $start_date;
 			$start_date = getdate( strtotime( str_replace( '-', '/', $start_date ) ) );
 			$this->course_start = $start_date;
-            $end_date = get_post_meta( $course_id, 'course_end_date', true );
+			$end_date = get_post_meta( $course_id, 'course_end_date', true );
 			$this->course_end_day = $end_date;
 			$end_date = getdate( strtotime( str_replace( '-', '/', $end_date ) ) );
 			$this->course_end = $end_date;
-            $this->course_no_end = 'off' == get_post_meta( $course_id, 'open_ended_course', true ) ? false : true;
+			$this->course_no_end = 'off' == get_post_meta( $course_id, 'open_ended_course', true ) ? false : true;
 
 			// Date provided?
 			if ( $month && $year ) {
 				$date = $this->get_date_pieces( $month, $year );
 				// Use today
-            } else {
+			} else {
 				$date = getdate();
 			}
 
@@ -57,13 +57,13 @@ class CoursePress_Template_Calendar {
 			$this->next_month = $this->get_next_month( $date, $this->course_end );
 			// If today (or given date) is bigger than course end date, then use the course start date
 			if ( ( strtotime( $date['year'] . '/' . $date['mon'] . '/' . $date['mday'] ) > strtotime( str_replace( '-', '/', $this->course_end_day ) ) ) &&
-                $this->course_start['mon'] != $date['mon'] && ! $this->course_no_end
+				$this->course_start['mon'] != $date['mon'] && ! $this->course_no_end
 			) {
 
 				$month = $start_date['mon'];
 				$year = $start_date['year'];
 				// Else use today's date
-            } else {
+			} else {
 				$month = $date['mon'];
 				$year = $date['year'];
 			}
@@ -73,7 +73,7 @@ class CoursePress_Template_Calendar {
 			$date = getdate();
 			$month = $month ? $month : $date['mon'];
 			$year = $year ? $year : $date['year'];
-            $this->date = ! $month && ! $year ? $date : $this->date;
+			$this->date = ! $month && ! $year ? $date : $this->date;
 
 				// still needs implementing
 				// $this->previous_month = $this->get_previous_month( $this->date );
@@ -83,28 +83,28 @@ class CoursePress_Template_Calendar {
 		$this->first_day = $this->first_day_of_month( $month, $year );
 		$this->number_of_days = $this->number_of_days_in_month( $month, $year );
 		$this->date = $this->date ? $this->date : $this->get_date_pieces( $month, $year );
-        $this->day_of_week = $this->date['wday'];
+		$this->day_of_week = $this->date['wday'];
 		$this->month_name = $wp_locale->month[ sprintf( '%02s', $this->date['mon'] ) ];
 		$this->year = $year;
-        $this->month = $month;
+		$this->month = $month;
 		$this->course_id = $course_id ? $course_id : false;
 		$this->date_indicator = sanitize_text_field( $date_indicator );
-    }
-    
-    public function create_calendar( $pre = '«', $next = '»' ) {
-        global $wp_locale;
-        
+	}
+
+	public function create_calendar( $pre = '«', $next = '»' ) {
+		global $wp_locale;
+
 		$calendar = '<div class="course-calendar" data-courseid="' . $this->course_id . '">';
 		$calendar .= ! empty( $this->previous_month ) ? '<a class="pre-month" data-date="' . $this->previous_month . '">' . $pre . '</a>' : '<a class="pre-month" data-date="empty">' . $pre . '</a>';
 		$calendar .= ! empty( $this->next_month ) ? '<a class="next-month" data-date="' . $this->next_month . '">' . $next . '</a>' : '<a class="next-month" data-date="empty">' . $next . '</a>';
-        $calendar .= sprintf( '<table class="course-calendar-body %s">', $this->date_indicator ); 
+		$calendar .= sprintf( '<table class="course-calendar-body %s">', $this->date_indicator ); 
 		$calendar .= '<caption>';
 		$calendar .= "$this->month_name $this->year";
-        $calendar .='</caption>';
+		$calendar .='</caption>';
 		$calendar .= '<tr>';
-	
+
 		// Headers
-        $week_day_names = array_keys( $wp_locale->weekday_initial );
+		$week_day_names = array_keys( $wp_locale->weekday_initial );
 
 		foreach ( $this->days_of_week as $day ) {
 			$calendar .= sprintf( '<th class="week-days">%s</th>', $wp_locale->weekday_initial[ $week_day_names[ $day ] ] ); 
@@ -187,40 +187,40 @@ class CoursePress_Template_Calendar {
 		 * but use the same slug to avoid multiple inclusion.
 		 **/
 		add_action( 'wp_footer', array( __CLASS__, 'enqueue_calendar_script' ) );
-		
+
 		return $calendar;
 
-    }
-	
+	}
+
 	public function enqueue_calendar_script() {
-		
+
 		$calendar_js = CoursePress::$url . 'asset/js/coursepress-calendar.js';
 		wp_enqueue_script( 'coursepress-calendar', $calendar_js, array(
 			'jquery'
 		), CoursePress::$version );
-		
+
 		$style = CoursePress::$url . 'asset/css/coursepress_front.css';
 		wp_enqueue_style( 'coursepress_general', $style, array( 'dashicons' ), CoursePress::$version );
 	}
-    
-    function first_day_of_month( $month, $year ) {
+
+	public function first_day_of_month( $month, $year ) {
 		return mktime( 0, 0, 0, $month, 1, $year );
 	}
 
-	function number_of_days_in_month( $month, $year ) {
+	public function number_of_days_in_month( $month, $year ) {
 		return date( 't', $this->first_day_of_month( $month, $year ) );
 	}
 
-	function get_date_pieces( $month, $year ) {
+	public function get_date_pieces( $month, $year ) {
 		return getdate( $this->first_day_of_month( $month, $year ) );
 	}
 
-	function get_previous_month( $date, $start_date = false ) {
+	public function get_previous_month( $date, $start_date = false ) {
 		if ( $date['mon'] > $start_date['mon'] || $date['year'] > $start_date['year'] ) {
 			$pre_year = $date['year'];
 			$pre_month = $date['mon'] - 1;
-				
-            if ( $pre_month < 1 ) {
+
+			if ( $pre_month < 1 ) {
 				$pre_year -= 1;
 				$pre_month = 12;
 			}
@@ -235,8 +235,8 @@ class CoursePress_Template_Calendar {
 		if ( $date['mon'] < $end_date['mon'] || $date['year'] < $end_date['year'] || $this->course_no_end ) {
 			$next_year = $date['year'];
 			$next_month = $date['mon'] + 1;
-				
-            if ( $next_month > 12 ) {
+
+			if ( $next_month > 12 ) {
 				$next_year += 1;
 				$next_month = 1;
 			}
