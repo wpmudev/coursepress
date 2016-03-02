@@ -100,6 +100,12 @@ class CoursePress_Core {
 
 		// Init Course Calendar widget
 		CoursePress_Widget_Calendar::init();
+
+		// Init Latest Course widget
+		CoursePress_Widget_LatestCourse::init();
+
+		// Init Featured Course widget
+		CoursePress_Widget_FeaturedCourse::init();
 	}
 
 	/**
