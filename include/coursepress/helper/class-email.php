@@ -320,17 +320,17 @@ class CoursePress_Helper_Email {
 			$login_url = wp_login_url();
 		}
 
-		$tags_replaces = array(
-			sanitize_text_field( $args['first_name'] ),
-			sanitize_text_field( $args['last_name'] ),
-			get_bloginfo(),
-			$login_url,
-			CoursePress_Core::get_slug( 'course', true ),
-			home_url(),
+		// Email Content
+		$vars = array(
+			'STUDENT_FIRST_NAME' => sanitize_text_field( $args['first_name'] ),
+			'STUDENT_LAST_NAME' => sanitize_text_field( $args['last_name'] ),
+			'BLOG_NAME' => get_bloginfo(),
+			'LOGIN_ADDRESS' => $login_url,
+			'COURSES_ADDRESS' => CoursePress_Core::get_slug( 'course', true ),
+			'WEBSITE_ADDRESS' => home_url(),
 		);
 
-		return str_replace( $tags, $tags_replaces, $email_settings['content'] );
-
+		return self::replace_vars( $content, $vars );
 	}
 
 	protected static function enrollment_confirm_message( $args, $content ) {
@@ -352,11 +352,64 @@ class CoursePress_Helper_Email {
 	}
 
 	protected static function instructor_invitation_message( $args, $content ) {
+		$course_id = (int) $args['course_id'];
+		$post = get_post( $course_id );
+		$course_name = $post->post_title;
+		$course_summary = $post->post_excerpt;
+
+		if ( in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) ) ) {
+			$course_address = CoursePress_Core::get_slug( 'course/', true ) . $post->post_name . '/';
+		} else {
+			$course_address = get_permalink( $course_id );
+		}
+
+		$confirm_link = sprintf(
+			'%s?action=course_invite&course_id=%s&c=%s&h=%s',
+			$course_address,
+			$course_id,
+			$args['invite_code'],
+			$args['invite_hash']
+		);
+
+		// Email Content
+		$tags = array(
+			'INSTRUCTOR_FIRST_NAME' => sanitize_text_field( $args['first_name'] ),
+			'INSTRUCTOR_LAST_NAME' => sanitize_text_field( $args['last_name'] ),
+			'INSTRUCTOR_EMAIL' => sanitize_email( $args['email'] ),
+			'CONFIRMATION_LINK' => esc_url( $confirm_link ),
+			'COURSE_NAME' => $course_name,
+			'COURSE_EXCERPT' => $course_summary,
+			'COURSE_ADDRESS' => esc_url( $course_address ),
+			'WEBSITE_ADDRESS' => home_url(),
+			'WEBSITE_NAME' => get_bloginfo(),
+		);
+
+		return self::replace_vars( $content, $vars );
 	}
 
 	protected static function new_order_message( $args, $content ) {
 		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
 		// Currently hooked elsewhere
 		return '';
+	}
+
+	/**
+	 * Replaces the defined placeholders in the content with specified values.
+	 *
+	 * @since  2.0.0
+	 * @param  string $content The full content, with placeholders.
+	 * @param  array  $vars List of placeholder => value.
+	 * @return string The content but with all placeholders replaced.
+	 */
+	protected static function replace_vars( $content, $vars ) {
+		$keys = array();
+		$values = array();
+
+		foreach ( $vars as $key => $value ) {
+			$keys[] = $key;
+			$values[] = $value;
+		}
+
+		return str_replace( $keys, $values, $content );
 	}
 }
