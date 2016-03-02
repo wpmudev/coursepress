@@ -229,7 +229,7 @@ class CoursePress_Data_Module {
 			$unit_id = get_post_field( 'post_parent', $comment->comment_post_ID );
 			$course_id = get_post_field( 'post_parent', $unit_id );
 			$course_link = get_permalink( $course_id );
-			$link = esc_url_raw( $course_link . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . get_post_field( 'post_name', $course_id ) . '#module-' . $comment->comment_post_ID );
+			$link = esc_url_raw( $course_link . CoursePress_Core::get_slug( 'unit/' ) . get_post_field( 'post_name', $course_id ) . '#module-' . $comment->comment_post_ID );
 		}
 
 		return $link;
@@ -252,7 +252,7 @@ class CoursePress_Data_Module {
 			$unit_id = get_post_field( 'post_parent', $post );
 			$course_id = get_post_field( 'post_parent', $unit_id );
 			$course_link = get_permalink( $course_id );
-			$link = esc_url_raw( $course_link . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . get_post_field( 'post_name', $unit_id ) . '#module-' . $post );
+			$link = esc_url_raw( $course_link . CoursePress_Core::get_slug( 'unit/' ) . get_post_field( 'post_name', $unit_id ) . '#module-' . $post );
 		}
 
 		return $link;
@@ -267,7 +267,7 @@ class CoursePress_Data_Module {
 			$unit_id = get_post_field( 'post_parent', $comment->comment_post_ID );
 			$course_id = get_post_field( 'post_parent', $unit_id );
 			$course_link = get_permalink( $course_id );
-			$location = esc_url_raw( $course_link . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . get_post_field( 'post_name', $unit_id ) . '#module-' . $comment->comment_post_ID );
+			$location = esc_url_raw( $course_link . CoursePress_Core::get_slug( 'unit/' ) . get_post_field( 'post_name', $unit_id ) . '#module-' . $comment->comment_post_ID );
 		}
 
 		return $location;
@@ -282,7 +282,7 @@ class CoursePress_Data_Module {
 		// $unit_id = get_post_field( 'post_parent', $comment->comment_post_ID );
 		// $course_id = get_post_field( 'post_parent', $unit_id );
 		// $course_link = get_permalink( $course_id );
-		// $link = esc_url_raw( $course_link . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . get_post_field('post_name', $unit_id ) . '#module-' . $comment->comment_post_ID );
+		// $link = esc_url_raw( $course_link . CoursePress_Core::get_slug( 'unit/' ) . get_post_field('post_name', $unit_id ) . '#module-' . $comment->comment_post_ID );
 		// }
 		if ( 'module' === $post->post_type ) {
 			if ( get_option( 'comment_registration' ) && ! is_user_logged_in() ) {
@@ -295,7 +295,7 @@ class CoursePress_Data_Module {
 				$unit_id = $post->post_parent;
 				$course_id = get_post_field( 'post_parent', $unit_id );
 				$course_link = get_permalink( $course_id );
-				$location = $course_link . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . get_post_field( 'post_name', $unit_id );
+				$location = $course_link . CoursePress_Core::get_slug( 'unit/' ) . get_post_field( 'post_name', $unit_id );
 				$location .= '&replytocom=' . $comment->comment_ID;
 				$location .= '&module=' . $post->ID;
 				// $location .= '#module-' . $post->ID;
@@ -328,7 +328,7 @@ class CoursePress_Data_Module {
 			$unit_id = get_post_field( 'post_parent', $comment->comment_post_ID );
 			$course_id = get_post_field( 'post_parent', $unit_id );
 			$course_link = get_permalink( $course_id );
-			$location = esc_url_raw( $course_link . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . get_post_field( 'post_name', $unit_id ) . '#module-' . $comment->comment_post_ID );
+			$location = esc_url_raw( $course_link . CoursePress_Core::get_slug( 'unit/' ) . get_post_field( 'post_name', $unit_id ) . '#module-' . $comment->comment_post_ID );
 		}
 
 		if ( empty( $text ) ) {

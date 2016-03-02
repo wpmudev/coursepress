@@ -30,7 +30,7 @@ class CoursePress_Data_Notification {
 				'map_meta_cap' => true,
 				'query_var' => true,
 				'rewrite' => array(
-					'slug' => trailingslashit( CoursePress_Core::get_slug( 'course' ) ) . '%course%/' . CoursePress_Core::get_slug( 'notification' ),
+					'slug' => CoursePress_Core::get_slug( 'course/' ) . '%course%/' . CoursePress_Core::get_slug( 'notification' ),
 				),
 			),
 		);
