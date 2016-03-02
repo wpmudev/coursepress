@@ -88,8 +88,8 @@ class CoursePress_Helper_Email {
 		self::$current_type = $type;
 
 		if ( ! empty( $type ) ) {
-			add_filter( 'wp_mail_from', array( __CLASS__, 'email_from' ) );
-			add_filter( 'wp_mail_from_name', array( __CLASS__, 'email_from_name' ) );
+			add_filter( 'wp_mail_from', array( __CLASS__, 'wp_mail_from' ) );
+			add_filter( 'wp_mail_from_name', array( __CLASS__, 'wp_mail_from_name' ) );
 
 			$email_settings = self::get_email_fields( $type );
 
@@ -147,7 +147,7 @@ class CoursePress_Helper_Email {
 			}
 		}
 
-		return self::process_and_send( $args );
+		return self::process_and_send( $type, $args );
 	}
 
 	/**
@@ -239,7 +239,7 @@ class CoursePress_Helper_Email {
 
 	/*
 	 ***************************************************************************
-	 * Premare default email contents.
+	 * Fetch email settings from DB.
 	 ***************************************************************************
 	 */
 
@@ -278,6 +278,34 @@ class CoursePress_Helper_Email {
 			$fields['content']
 		);
 	}
+
+	/**
+	 * Hooks into `wp_mail_from` to provide a custom sender email address.
+	 *
+	 * @since  2.0.0
+	 * @param  string $from Default WP Sender address.
+	 * @return string Custom sender address.
+	 */
+	public static function wp_mail_from( $from ) {
+		return self::from_email( self::$current_type );
+	}
+
+	/**
+	 * Hooks into `wp_mail_from_name` to provide a custom sender name.
+	 *
+	 * @since  2.0.0
+	 * @param  string $from_name Default WP Sender name.
+	 * @return string Custom sender name.
+	 */
+	public static function wp_mail_from_name( $from_name ) {
+		return self::from_name( self::$current_type );
+	}
+
+	/*
+	 ***************************************************************************
+	 * Prepare default email contents.
+	 ***************************************************************************
+	 */
 
 	protected static function basic_certificate_message( $args, $email_settings ) {
 		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
@@ -345,26 +373,5 @@ class CoursePress_Helper_Email {
 		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
 		// Currently hooked elsewhere
 		return '';
-	}
-
-
-	public static function email_from( $from ) {
-		$email_settings = CoursePress_Helper_Email::get_email_fields(
-			self::$current_type
-		);
-
-		$from = $email_settings['email'];
-
-		return $from;
-	}
-
-	public static function email_from_name( $from_name ) {
-		$email_settings = CoursePress_Helper_Email::get_email_fields(
-			self::$current_type
-		);
-
-		$from = $email_settings['name'];
-
-		return $from;
 	}
 }
