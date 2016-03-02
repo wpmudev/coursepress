@@ -139,6 +139,7 @@ class CoursePress_Helper_Email {
 					break;
 
 				case self::NEW_ORDER:
+					// (not used anywhere yet)
 					$args['message'] = self::new_order_message(
 						$args,
 						$email_settings['content']
@@ -307,12 +308,30 @@ class CoursePress_Helper_Email {
 	 ***************************************************************************
 	 */
 
+	/**
+	 * Email body with a Course Certificate (when course is completed).
+	 * Triggered by CoursePress_Data_Certificate::send_certificate()
+	 *
+	 * @since  2.0.0
+	 * @param  array $args Email params.
+	 * @param  string $content Default email content, with placeholders.
+	 * @return string Finished email content.
+	 */
 	protected static function basic_certificate_message( $args, $content ) {
 		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
 		// TODO: Finish this!
 		return '';
 	}
 
+	/**
+	 * Email body for new user registration/welcome email.
+	 * Triggered by CoursePress_Data_Student::send_registration()
+	 *
+	 * @since  2.0.0
+	 * @param  array $args Email params.
+	 * @param  string $content Default email content, with placeholders.
+	 * @return string Finished email content.
+	 */
 	protected static function registration_message( $args, $content ) {
 		if ( CoursePress_Core::get_setting( 'general/use_custom_login', true ) ) {
 			$login_url = CoursePress_Core::get_slug( 'login', true );
@@ -333,6 +352,15 @@ class CoursePress_Helper_Email {
 		return self::replace_vars( $content, $vars );
 	}
 
+	/**
+	 * Email body for confirmation of enrollment.
+	 * Triggered by CoursePress_Data_Course::enroll_student()
+	 *
+	 * @since  2.0.0
+	 * @param  array $args Email params.
+	 * @param  string $content Default email content, with placeholders.
+	 * @return string Finished email content.
+	 */
 	protected static function enrollment_confirm_message( $args, $content ) {
 		$course_id = (int) $args['course_id'];
 		$post = get_post( $course_id );
@@ -359,6 +387,15 @@ class CoursePress_Helper_Email {
 		return self::replace_vars( $content, $vars );
 	}
 
+	/**
+	 * Email body for Student Invitation Emails.
+	 * Triggered by CoursePress_Data_Course::send_invitation()
+	 *
+	 * @since  2.0.0
+	 * @param  array $args Email params.
+	 * @param  string $content Default email content, with placeholders.
+	 * @return string Finished email content.
+	 */
 	protected static function course_invitation_message( $args, $content ) {
 		$course_id = (int) $args['course_id'];
 		$post = get_post( $course_id );
@@ -386,12 +423,30 @@ class CoursePress_Helper_Email {
 		return self::replace_vars( $content, $vars );
 	}
 
+	/**
+	 * Email body for Student Invitation Emails.
+	 * Triggered by CoursePress_Data_Course::send_invitation()
+	 *
+	 * @since  2.0.0
+	 * @param  array $args Email params.
+	 * @param  string $content Default email content, with placeholders.
+	 * @return string Finished email content.
+	 */
 	protected static function course_invitation_password_message( $args, $content ) {
 		// Not clear yet, why this email has 2 different types.
 		// @see CoursePress_Data_Course::send_invitation()
 		return self::course_invitation_message( $args, $content );
 	}
 
+	/**
+	 * Email body for Instructor Invitation Emails.
+	 * Triggered by CoursePress_Data_Instructor::send_invitation()
+	 *
+	 * @since  2.0.0
+	 * @param  array $args Email params.
+	 * @param  string $content Default email content, with placeholders.
+	 * @return string Finished email content.
+	 */
 	protected static function instructor_invitation_message( $args, $content ) {
 		$course_id = (int) $args['course_id'];
 		$post = get_post( $course_id );
@@ -429,10 +484,18 @@ class CoursePress_Helper_Email {
 		return self::replace_vars( $content, $vars );
 	}
 
+	/**
+	 * (not used anywhere yet)
+	 *
+	 * @since  2.0.0
+	 * @param  array $args Email params.
+	 * @param  string $content Default email content, with placeholders.
+	 * @return string Finished email content.
+	 */
 	protected static function new_order_message( $args, $content ) {
-		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
-		// Currently hooked elsewhere
-		return '';
+		$vars = array();
+
+		return self::replace_vars( $content, $vars );
 	}
 
 	/**
