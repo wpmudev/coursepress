@@ -312,15 +312,38 @@ class CoursePress_Helper_Email {
 	 * Email body with a Course Certificate (when course is completed).
 	 * Triggered by CoursePress_Data_Certificate::send_certificate()
 	 *
+	 * Note: This uses the email settings defined in Settings > E-mail Settings
+	 *       and _not_ the content defined in Settingd > Basic Certificate!
+	 *
 	 * @since  2.0.0
 	 * @param  array $args Email params.
 	 * @param  string $content Default email content, with placeholders.
 	 * @return string Finished email content.
 	 */
 	protected static function basic_certificate_message( $args, $content ) {
-		$fields = isset( $args['fields'] ) ? $args['fields'] : array();
-		// TODO: Finish this!
-		return '';
+		$course_id = (int) $args['course_id'];
+
+		if ( CoursePress_Core::get_setting( 'general/use_custom_login', true ) ) {
+			$login_url = CoursePress_Core::get_slug( 'login', true );
+		} else {
+			$login_url = wp_login_url();
+		}
+
+		$vars = array(
+			'BLOG_NAME' => get_bloginfo( 'name' ),
+			'LOGIN_ADDRESS' => esc_url( $login_url ),
+			'COURSES_ADDRESS' => CoursePress_Core::get_slug( 'course', true ),
+			'WEBSITE_ADDRESS' => home_url(),
+			'COURSE_ADDRESS' => esc_url( $args['course_address'] ),
+			'FIRST_NAME' => sanitize_text_field( $args['first_name'] ),
+			'LAST_NAME' => sanitize_text_field( $args['last_name'] ),
+			'COURSE_NAME' => sanitize_text_field( $args['course_name'] ),
+			'COMPLETION_DATE' => sanitize_text_field( $args['completion_date'] ),
+			'CERTIFICATE_NUMBER' => sanitize_text_field( $args['certificate_id'] ),
+			'UNIT_LIST' => $args['unit_list'],
+		);
+
+		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
 	}
 
 	/**
@@ -349,7 +372,7 @@ class CoursePress_Helper_Email {
 			'WEBSITE_ADDRESS' => home_url(),
 		);
 
-		return self::replace_vars( $content, $vars );
+		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
 	}
 
 	/**
@@ -384,7 +407,7 @@ class CoursePress_Helper_Email {
 			'BLOG_NAME' => get_bloginfo(),
 		);
 
-		return self::replace_vars( $content, $vars );
+		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
 	}
 
 	/**
@@ -420,7 +443,7 @@ class CoursePress_Helper_Email {
 			'PASSCODE' => self::get_setting( $course_id, 'enrollment_passcode', '' ),
 		);
 
-		return self::replace_vars( $content, $vars );
+		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
 	}
 
 	/**
@@ -481,7 +504,7 @@ class CoursePress_Helper_Email {
 			'WEBSITE_NAME' => get_bloginfo(),
 		);
 
-		return self::replace_vars( $content, $vars );
+		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
 	}
 
 	/**
@@ -495,26 +518,6 @@ class CoursePress_Helper_Email {
 	protected static function new_order_message( $args, $content ) {
 		$vars = array();
 
-		return self::replace_vars( $content, $vars );
-	}
-
-	/**
-	 * Replaces the defined placeholders in the content with specified values.
-	 *
-	 * @since  2.0.0
-	 * @param  string $content The full content, with placeholders.
-	 * @param  array  $vars List of placeholder => value.
-	 * @return string The content but with all placeholders replaced.
-	 */
-	protected static function replace_vars( $content, $vars ) {
-		$keys = array();
-		$values = array();
-
-		foreach ( $vars as $key => $value ) {
-			$keys[] = $key;
-			$values[] = $value;
-		}
-
-		return str_replace( $keys, $values, $content );
+		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
 	}
 }

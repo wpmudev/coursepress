@@ -51,6 +51,8 @@ class CoursePress_Data_PostFormat {
 			// Register post-types.
 			if ( method_exists( $the_class, 'get_format' ) ) {
 				$format = call_user_func( $the_class . '::get_format' );
+				if ( ! $format ) { continue; }
+
 				$pt_slug = self::prefix( $format['post_type'] );
 				self::$registered_formats[] = $pt_slug;
 
@@ -63,6 +65,8 @@ class CoursePress_Data_PostFormat {
 			// Register taxonomies.
 			if ( method_exists( $the_class, 'get_taxonomy' ) ) {
 				$format = call_user_func( $the_class . '::get_taxonomy' );
+				if ( ! $format ) { continue; }
+
 				$tx_slug = self::prefix( $format['taxonomy_type'] );
 				self::$registered_taxonomies[] = $tx_slug;
 
