@@ -111,8 +111,8 @@ class CoursePress_Template_Unit {
 		// Pager
 		$preview_pages = isset( $preview['structure'][ $unit->ID ] ) ? array_keys( $preview['structure'][ $unit->ID ] ) : array();
 
-		$url_path = trailingslashit( CoursePress_Core::get_slug( 'course', true ) ) . trailingslashit( $course->post_name ) .
-					trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . trailingslashit( $unit->post_name ) . 'page/';
+		$url_path = CoursePress_Core::get_slug( 'course/', true ) . trailingslashit( $course->post_name ) .
+					CoursePress_Core::get_slug( 'unit/' ) . $unit->post_name . '/page/';
 		$content .= '<div class="pager unit-pager">';
 		for ( $i = 1; $i <= $total_pages; $i++ ) {
 			$unit_url = $url_path . $i;
@@ -155,8 +155,8 @@ class CoursePress_Template_Unit {
 			}
 		}
 		if ( ! empty( $next_unit ) && empty( $next_page ) ) {
-			$unit_url = trailingslashit( CoursePress_Core::get_slug( 'course', true ) ) . trailingslashit( $course->post_name ) .
-						trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . trailingslashit( get_post_field( 'post_name', $next_unit ) );
+			$unit_url = CoursePress_Core::get_slug( 'course/', true ) . trailingslashit( $course->post_name ) .
+						CoursePress_Core::get_slug( 'unit/' ) . get_post_field( 'post_name', $next_unit );
 			$content .= '<span class="next-button unit unit-' . $next_unit .'"><a href="' . esc_url_raw( $unit_url ) . '"><button>' . esc_html( 'Next Unit', 'CP_TD' ) . '</button></a></span> ';
 		}
 
