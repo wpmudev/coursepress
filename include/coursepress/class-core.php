@@ -92,6 +92,9 @@ class CoursePress_Core {
 		// Upgrade CoursePress if needed.
 		CoursePress_Upgrade::init();
 
+		// Initialize Calendar actions
+		CoursePress_View_Front_Calendar::init();
+
 		// Init categories widget
 		CoursePress_Widget_Categories::init();
 
@@ -100,6 +103,12 @@ class CoursePress_Core {
 
 		// Init Course Calendar widget
 		CoursePress_Widget_Calendar::init();
+
+		// Init Latest Course widget
+		CoursePress_Widget_LatestCourse::init();
+
+		// Init Featured Course widget
+		CoursePress_Widget_FeaturedCourse::init();
 	}
 
 	/**
