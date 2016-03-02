@@ -91,9 +91,12 @@ class CoursePress_Core {
 
 		// Upgrade CoursePress if needed.
 		CoursePress_Upgrade::init();
-		
+
 		// Init Course Structure widget
 		CoursePress_Widget_Structure::init();
+
+		// Init Course Calendar widget
+		CoursePress_Widget_Calendar::init();
 	}
 
 	/**
@@ -269,9 +272,49 @@ class CoursePress_Core {
 		);
 	}
 
-	public static function get_slug( $context, $url = false ) {
+	/**
+	 * Returns the slug or URL to the specified CoursePress page.
+	 *
+	 * Examples:
+	 *   CoursePress_Core::get_slug( 'course/', true );
+	 *   -> http://example.com/courses/
+	 *
+	 *   CoursePress_Core::get_slug( 'course', true );
+	 *   -> http://example.com/courses/
+	 *
+	 *   CoursePress_Core::get_slug( 'course/' );
+	 *   -> courses/
+	 *
+	 *   CoursePress_Core::get_slug( 'course' );
+	 *   -> courses
+	 *
+	 * @since  2.0.0
+	 * @param  string $context Which slug to return.
+	 * @param  bool   $full_url Return full URL (true) or only slug (false).
+	 * @return string The slug or URL.
+	 */
+	public static function get_slug( $context, $full_url = false ) {
 		$default_slug = '';
 		$option = '';
+		$with_slash = false;
+		$return_value = '';
+		$page_id = 0;
+		$page_option = '';
+		$option_key = '';
+		$default = '';
+
+		if ( ! $context ) { return ''; }
+
+		/*
+		Is last character of $context a slash?
+
+		Note: Using array-access to get last character is around 20% faster
+		than the common substr($context, -1) version.
+		*/
+		if ( '/' == $context[ strlen( $context ) - 1 ] ) {
+			$context = rtrim( $context, '/' );
+			$with_slash = true;
+		}
 
 		$map = array(
 			'courses' => 'course',
@@ -287,46 +330,57 @@ class CoursePress_Core {
 			'message_sent' => 'messages_sent',
 			'message_new' => 'messages_new',
 		);
-		$map_keys = array_keys( $map );
 
-		$context = in_array( $context, $map_keys ) ? $map[ $context ] : $context;
-
-		$slug_array = self::get_slug_array();
-
-		$options = $slug_array[ $context ];
-
-		switch ( $context ) {
-			case 'courses':
-			case 'course':
-				$default_slug = 'courses';
-				$option = 'slugs/course';
-				break;
-
+		if ( isset( $map[ $context ] ) ) {
+			$context = $map[ $context ];
 		}
 
-		if ( ! empty( $options ) ) {
+		$slug_array = self::get_slug_array();
+		$options = $slug_array[ $context ];
 
-			if ( ! $url ) {
-				return CoursePress_Core::get_setting( $options['option'], $options['default'] );
+		if ( ! $options ) { return ''; }
+
+		$option_key = $options['option'];
+		$default = $options['default'];
+		if ( isset( $options['page_option'] ) ) {
+			$page_option = $options['page_option'];
+		}
+
+		if ( ! $full_url ) {
+			$return_value = CoursePress_Core::get_setting(
+				$option_key,
+				$default
+			);
+		} else {
+			$with_slash = true;
+
+			if ( $page_option ) {
+				$page_id = CoursePress_Core::get_setting( $page_option, 0 );
+			}
+
+			if ( $page_id ) {
+				$return_value = get_permalink( (int) $page_id );
 			} else {
-
-				$custom = isset( $options['page_option'] ) ? CoursePress_Core::get_setting( $options['page_option'], 0 ) : 0;
-
-				if ( ! empty( $custom ) ) {
-					if ( empty( $GLOBALS['wp_rewrite'] ) ) {
-						$GLOBALS['wp_rewrite'] = new WP_Rewrite();
-					}
-					$return_value = trailingslashit( get_permalink( (int) $custom ) );
-				} else {
-					$return_value = trailingslashit( home_url( trailingslashit( CoursePress_Core::get_setting( $options['option'], $options['default'] ) ) ) );
-				}
-
-				$page_option = isset( $options['page_option'] ) ? $options['page_option'] : '';
-				return apply_filters( 'coursepress_slug_return', $return_value, $options['option'], $page_option, $options['default'], $url );
+				$path = CoursePress_Core::get_setting(
+					$option_key,
+					$default
+				);
+				$return_value = home_url( $path );
 			}
 		}
 
-		return '';
+		if ( $return_value && $with_slash ) {
+			$return_value = trailingslashit( $return_value );
+		}
+
+		return apply_filters(
+			'coursepress_slug_return',
+			$return_value,
+			$option_key,
+			$page_option,
+			$default,
+			$full_url
+		);
 	}
 
 
