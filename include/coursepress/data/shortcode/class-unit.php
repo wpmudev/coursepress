@@ -36,6 +36,10 @@ class CoursePress_Data_Shortcode_Unit {
 			'unit_discussion',
 			array( __CLASS__, 'unit_discussion' )
 		);
+		add_shortcode(
+			'course_unit_title',
+			array( __CLASS__, 'course_unit_title' )
+		);
 	}
 
 	public static function course_unit_details( $atts ) {
@@ -654,6 +658,47 @@ class CoursePress_Data_Shortcode_Unit {
 		comment_form( $comments_args, $unit_id );
 		$content = ob_get_clean();
 
+		return $content;
+	}
+
+	/**
+	 * Shows the course title.
+	 *
+	 * @since 1.0.0
+	 */
+	function course_unit_title( $atts ) {
+		extract( shortcode_atts( array(
+			'unit_id'   => in_the_loop() ? get_the_ID() : '',
+			'title_tag' => '',
+			'link'      => 'no',
+			'class'     => '',
+			'last_page' => 'no',
+		), $atts, 'course_unit_title' ) );
+
+		$unit_id   = (int) $unit_id;
+		$course_id = (int) get_post_field( 'post_parent', $unit_id );
+		$title_tag = sanitize_html_class( $title_tag );
+		$link      = sanitize_html_class( $link );
+		$last_page = sanitize_html_class( $last_page );
+		$class     = sanitize_html_class( $class );
+
+		$title = get_the_title( $unit_id );
+
+		$draft      = get_post_status( $unit_id ) !== 'publish';
+		$show_draft = $draft && cp_can_see_unit_draft();
+
+		$the_permalink = CoursePress_Data_Unit::get_url( $unit_id );
+
+		$content = '';
+		if ( ! $draft || ( $draft && $show_draft ) ) {
+			$content = ! empty( $title_tag ) ? '<' . $title_tag . ' class="course-unit-title course-unit-title-' . $unit_id . ' ' . $class . '">' : '';
+			$content .= 'yes' == $link ? '<a href="' . esc_url( $the_permalink ) . '" title="' . esc_attr( $title ) . '" class="unit-archive-single-title">' : '';
+			$content .= $title;
+			$content .= 'yes' == $link ? '</a>' : '';
+			$content .= ! empty( $title_tag ) ? '</' . $title_tag . '>' : '';
+		}
+
+		// Return the html in the buffer.
 		return $content;
 	}
 }
