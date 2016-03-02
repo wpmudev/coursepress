@@ -320,7 +320,7 @@ class CoursePress_Helper_Email {
 			$login_url = wp_login_url();
 		}
 
-		// Email Content
+		// Email Content.
 		$vars = array(
 			'STUDENT_FIRST_NAME' => sanitize_text_field( $args['first_name'] ),
 			'STUDENT_LAST_NAME' => sanitize_text_field( $args['last_name'] ),
@@ -376,8 +376,9 @@ class CoursePress_Helper_Email {
 		$post = get_post( $course_id );
 		$course_name = $post->post_title;
 		$course_summary = $post->post_excerpt;
+		$valid_stati = array( 'draft', 'pending', 'auto-draft' );
 
-		if ( in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) ) ) {
+		if ( in_array( $post->post_status, $valid_stati ) ) {
 			$course_address = CoursePress_Core::get_slug( 'course/', true ) . $post->post_name . '/';
 		} else {
 			$course_address = get_permalink( $course_id );
@@ -391,7 +392,7 @@ class CoursePress_Helper_Email {
 			$args['invite_hash']
 		);
 
-		// Email Content
+		// Email Content.
 		$tags = array(
 			'INSTRUCTOR_FIRST_NAME' => sanitize_text_field( $args['first_name'] ),
 			'INSTRUCTOR_LAST_NAME' => sanitize_text_field( $args['last_name'] ),

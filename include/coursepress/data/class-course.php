@@ -877,13 +877,34 @@ class CoursePress_Data_Course {
 
 		/**
 		 * Update metadata with relevant details.
+		 *
+		 * Link courses and student (in order to avoid custom tables) for
+		 * easy MySql queries (get courses stats, student courses, etc.)
 		 */
-		// Link courses and student (in order to avoid custom tables) for
-		// easy MySql queries (get courses stats, student courses, etc.)
-		update_user_option( $student_id, 'enrolled_course_date_' . $course_id, $current_time, $global_option );
-		update_user_option( $student_id, 'enrolled_course_class_' . $course_id, $class, $global_option );
-		update_user_option( $student_id, 'enrolled_course_group_' . $course_id, $group, $global_option );
-		update_user_option( $student_id, 'role', 'student', $global_option ); // alternative to roles used.
+		update_user_option(
+			$student_id,
+			'enrolled_course_date_' . $course_id,
+			$current_time,
+			$global_option
+		);
+		update_user_option(
+			$student_id,
+			'enrolled_course_class_' . $course_id,
+			$class,
+			$global_option
+		);
+		update_user_option(
+			$student_id,
+			'enrolled_course_group_' . $course_id,
+			$group,
+			$global_option
+		);
+		update_user_option(
+			$student_id,
+			'role',
+			'student',
+			$global_option
+		);
 
 		self::$email_type = CoursePress_Helper_Email::ENROLLMENT_CONFIRM;
 
