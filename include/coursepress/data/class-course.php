@@ -14,7 +14,6 @@ class CoursePress_Data_Course {
 	public static $structure_visibility = false;
 
 	public static function get_format() {
-
 		return array(
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
@@ -52,12 +51,9 @@ class CoursePress_Data_Course {
 	}
 
 	public static function get_taxonomy() {
-		$prefix = defined( 'COURSEPRESS_CPT_PREFIX' ) ? COURSEPRESS_CPT_PREFIX : '';
-		$prefix = empty( $prefix ) ? '' : sanitize_text_field( $prefix ) . '_';
-
 		return array(
-			'taxonomy_type' => self::$post_taxonomy,
-			'post_type' => $prefix . self::$post_type,
+			'taxonomy_type' => self::get_post_category_name(),
+			'post_type' => self::get_post_type_name(),
 			'taxonomy_args' => apply_filters(
 				'coursepress_register_course_category',
 				array(
@@ -137,7 +133,7 @@ class CoursePress_Data_Course {
 		$post = array(
 			'post_author' => $course ? $course->post_author : $user_id,
 			'post_status' => $course ? $course->post_status : 'private',
-			'post_type' => self::get_post_type_name( true ),
+			'post_type' => self::get_post_type_name(),
 		);
 
 		// Make sure we get existing settings if not all data is being submitted
@@ -213,7 +209,7 @@ class CoursePress_Data_Course {
 							wp_set_object_terms(
 								$course_id,
 								$sanitized_array,
-								self::get_post_category_name( true ),
+								self::get_post_category_name(),
 								false
 							);
 						} else {
@@ -222,7 +218,7 @@ class CoursePress_Data_Course {
 								wp_set_object_terms(
 									$course_id,
 									$cat,
-									self::get_post_category_name( true ),
+									self::get_post_category_name(),
 									false
 								);
 							}
@@ -486,33 +482,15 @@ class CoursePress_Data_Course {
 		return $val;
 	}
 
-	public static function get_post_type_name( $with_prefix = true ) {
-		if ( ! $with_prefix ) {
-			return self::$post_type;
-		} else {
-			$prefix = defined( 'COURSEPRESS_CPT_PREFIX' ) ? COURSEPRESS_CPT_PREFIX : '';
-			$prefix = empty( $prefix ) ? '' : sanitize_text_field( $prefix ) . '_';
-
-			return $prefix . self::$post_type;
-		}
+	public static function get_post_type_name() {
+		return CoursePress_Data_PostFormat::prefix( self::$post_type );
 	}
 
-	public static function get_post_category_name( $with_prefix = true ) {
-		if ( ! $with_prefix ) {
-			return self::$post_taxonomy;
-		} else {
-			$prefix = defined( 'COURSEPRESS_CPT_PREFIX' ) ? COURSEPRESS_CPT_PREFIX : '';
-			$prefix = empty( $prefix ) ? '' : sanitize_text_field( $prefix ) . '_';
-
-			return $prefix . self::$post_taxonomy;
-		}
+	public static function get_post_category_name() {
+		return CoursePress_Data_PostFormat::prefix( self::$post_taxonomy );
 	}
 
 	public static function get_terms() {
-		$prefix = defined( 'COURSEPRESS_CPT_PREFIX' ) ? COURSEPRESS_CPT_PREFIX : '';
-		$prefix = empty( $prefix ) ? '' : sanitize_text_field( $prefix ) . '_';
-		$category = $prefix . self::get_post_category_name();
-
 		$args = array(
 			'orderby' => 'name',
 			'order' => 'ASC',
@@ -521,15 +499,17 @@ class CoursePress_Data_Course {
 			'hierarchical' => true,
 		);
 
-		return get_terms( array( $category ), $args );
+		return get_terms(
+			array( self::get_post_category_name() ),
+			$args
+		);
 	}
 
 	public static function get_course_terms( $course_id, $array = false ) {
-		$prefix = defined( 'COURSEPRESS_CPT_PREFIX' ) ? COURSEPRESS_CPT_PREFIX : '';
-		$prefix = empty( $prefix ) ? '' : sanitize_text_field( $prefix ) . '_';
-		$category = $prefix . self::get_post_category_name();
-
-		$course_terms = wp_get_object_terms( (int) $course_id, array( $category ) );
+		$course_terms = wp_get_object_terms(
+			(int) $course_id,
+			array( self::get_post_category_name() )
+		);
 
 		if ( ! $array ) {
 			return $course_terms;
@@ -1581,7 +1561,7 @@ class CoursePress_Data_Course {
 	public static function by_name( $slug, $id_only ) {
 		$args = array(
 			'name' => $slug,
-			'post_type' => self::get_post_type_name( true ),
+			'post_type' => self::get_post_type_name(),
 			'post_status' => 'any',
 			'posts_per_page' => 1,
 		);

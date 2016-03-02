@@ -107,7 +107,7 @@ class CoursePress_Data_Instructor {
 		if ( ! $include_posts ) {
 			return $course_array;
 		} else {
-			$post_type = CoursePress_Data_Course::get_post_type_name( true );
+			$post_type = CoursePress_Data_Course::get_post_type_name();
 			$query = new WP_Query( array( 'post__in' => $course_array, 'post_type' => $post_type, 'posts_per_page' => -1 ) );
 			return $query->posts;
 		}

@@ -220,8 +220,8 @@ class CoursePress_View_Admin_Course_Edit {
 		);
 
 		// Course Category
-		$category = CoursePress_Data_Course::get_post_category_name( true );
-		$cpt = CoursePress_Data_Course::get_post_type_name( true );
+		$category = CoursePress_Data_Course::get_post_category_name();
+		$cpt = CoursePress_Data_Course::get_post_type_name();
 		$url = 'edit-tags.php?taxonomy=' . $category . '&post_type=' . $cpt;
 		$terms = CoursePress_Data_Course::get_terms();
 		$id = isset( $_GET['id'] ) ? (int) $_GET['id'] : 0;
