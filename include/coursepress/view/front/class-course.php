@@ -49,7 +49,7 @@ class CoursePress_View_Front_Course {
 			$module = get_post( $_POST['comment_post_ID'] );
 			$course_link = get_permalink( get_post_field( 'post_parent', $module->post_parent ) );
 
-			$return_url = esc_url_raw( $course_link . trailingslashit( CoursePress_Core::get_slug( 'unit' ) ) . get_post_field( 'post_name', $module->post_parent ) . '#module-' . $module->ID );
+			$return_url = esc_url_raw( $course_link . CoursePress_Core::get_slug( 'unit/' ) . get_post_field( 'post_name', $module->post_parent ) . '#module-' . $module->ID );
 			self::$args['discussion_url'] = $return_url;
 		}
 
@@ -83,8 +83,8 @@ class CoursePress_View_Front_Course {
 			update_post_meta( $id, 'course_id', $course_id );
 			update_post_meta( $id, 'unit_id', $unit_id );
 
-			$url = trailingslashit( CoursePress_Core::get_slug( 'course', true ) ) . get_post_field( 'post_name', $course_id ) . '/' . trailingslashit( CoursePress_Core::get_slug( 'discussions' ) );
-			;
+			$url = CoursePress_Core::get_slug( 'course/', true ) . get_post_field( 'post_name', $course_id ) . '/' . CoursePress_Core::get_slug( 'discussions/' );
+
 			wp_redirect( esc_url_raw( $url ) );
 			exit;
 		}
@@ -321,8 +321,11 @@ class CoursePress_View_Front_Course {
 	}
 
 	public static function render_course_unit_archive() {
-		if ( locate_template( array( 'archive-unit.php' ) ) == $theme_file ) {
+		if ( $theme_file = locate_template( array( 'archive-unit.php' ) ) ) {
 			// Something is missing here...
+			ob_start();
+			require $theme_file;
+			$content = ob_get_clean();
 		} else {
 			// wp_enqueue_style( 'front_course_single', $this->plugin_url . 'css/front_course_single.css', array(), $this->version );
 			if ( locate_template( array( 'archive-unit.php' ) ) ) {// add custom content in the single template ONLY if the post type doesn't already has its own template
@@ -443,7 +446,6 @@ class CoursePress_View_Front_Course {
 	}
 
 	public static function remove_canonical( $wp_query ) {
-
 		global $wp_query;
 		if ( is_admin() || empty( $wp_query ) ) {
 			return;
@@ -459,15 +461,13 @@ class CoursePress_View_Front_Course {
 	}
 
 	public static function no_access_redirect( $course_id ) {
-		$course_url = trailingslashit( CoursePress_Core::get_slug( 'courses', true ) ) . get_post_field( 'post_name', $course_id );
-
+		$course_url = CoursePress_Core::get_slug( 'courses/', true ) . get_post_field( 'post_name', $course_id );
 		wp_redirect( esc_url_raw( $course_url ) );
 		exit;
 	}
 
 	public static function archive_redirect() {
-
-		$archive_url = trailingslashit( CoursePress_Core::get_slug( 'courses', true ) );
+		$archive_url = CoursePress_Core::get_slug( 'courses/', true );
 		wp_redirect( esc_url_raw( $archive_url ) );
 		exit;
 	}
@@ -619,7 +619,7 @@ class CoursePress_View_Front_Course {
 				$title = sprintf( '%s | %s', __( 'Discussions', 'CP_TD' ), get_post_field( 'post_title', $post_parent ) );
 
 				// Are we adding a new discussion?
-				if ( CoursePress_Core::get_slug( 'discussion_new' ) === $wp->query_vars['discussion_name'] ) {
+				if ( CoursePress_Core::get_slug( 'discussion_new' ) == $wp->query_vars['discussion_name'] ) {
 					$discussion_content = self::render_new_course_discussion();
 				} else {
 					$discussion_content = self::render_course_discussion();
@@ -819,7 +819,7 @@ class CoursePress_View_Front_Course {
 		}
 
 		// All other conditions have failed, so if post type is course, it must be the archive
-		if ( isset( $wp->query_vars['post_type'] ) && CoursePress_Data_Course::get_post_type_name() === $wp->query_vars['post_type'] && CoursePress_Core::get_slug( 'courses' ) === $wp->request ) {
+		if ( isset( $wp->query_vars['post_type'] ) && CoursePress_Data_Course::get_post_type_name() == $wp->query_vars['post_type'] && CoursePress_Core::get_slug( 'courses' ) == $wp->request ) {
 
 			$title = sprintf( '%s | %s', __( 'Courses', 'CP_TD' ), __( 'All Courses', 'CP_TD' ) );
 
@@ -964,8 +964,8 @@ class CoursePress_View_Front_Course {
 
 				if ( ! empty( $course_id ) ) {
 					$course = get_post( $course_id );
-					$discussion_url = trailingslashit( CoursePress_Core::get_slug( 'courses', true ) ) . $course->post_name . '/';
-					$permalink = trailingslashit( $discussion_url . CoursePress_Core::get_slug( 'discussion' ) ) . $post->post_name;
+					$discussion_url = CoursePress_Core::get_slug( 'courses/', true ) . $course->post_name . '/';
+					$permalink = $discussion_url . CoursePress_Core::get_slug( 'discussion/' ) . $post->post_name;
 				} else {
 					return '';
 				}
@@ -1014,8 +1014,8 @@ class CoursePress_View_Front_Course {
 		$comment_page = (int) $matches[2];
 
 		$course_id = get_post_meta( self::$discussion, 'course_id', true );
-		$discussion_url = trailingslashit( CoursePress_Core::get_slug( 'courses', true ) ) . get_post_field( 'post_name', $course_id ) . '/';
-		$discussion_url = trailingslashit( $discussion_url . CoursePress_Core::get_slug( 'discussion' ) ) . get_post_field( 'post_name', self::$discussion );
+		$discussion_url = CoursePress_Core::get_slug( 'courses/', true ) . get_post_field( 'post_name', $course_id ) . '/';
+		$discussion_url = $discussion_url . CoursePress_Core::get_slug( 'discussion/' ) . get_post_field( 'post_name', self::$discussion );
 
 		if ( ! empty( $comment_page ) ) {
 			$result = $discussion_url . '?cpage=' . $comment_page . '#comments';

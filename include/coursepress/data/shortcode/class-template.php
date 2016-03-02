@@ -194,7 +194,7 @@ class CoursePress_Data_Shortcode_Template {
 		$clickable_label = sanitize_text_field( $a['clickable_label'] );
 		$echo = cp_is_true( $a['echo'] );
 		$clickable = cp_is_true( $a['clickable'] );
-		$url = trailingslashit( CoursePress_Core::get_slug( 'courses', true ) ) . get_post_field( 'post_name', $course_id );
+		$url = CoursePress_Core::get_slug( 'courses/', true ) . get_post_field( 'post_name', $course_id );
 
 		$course_image = CoursePress_Data_Course::get_setting( $course_id, 'listing_image' );
 		$has_thumbnail = ! empty( $course_image );
@@ -405,8 +405,8 @@ class CoursePress_Data_Shortcode_Template {
 		if ( $breadcrumbs ) {
 			// Course.
 			$c_link = get_the_permalink( $course_id );
-			$a_link = trailingslashit( $c_link . CoursePress_Core::get_slug( 'units' ) );
-			$u_link = trailingslashit( $a_link . get_post_field( 'post_name', $unit_id ) );
+			$a_link = $c_link . CoursePress_Core::get_slug( 'units/' );
+			$u_link = $a_link . get_post_field( 'post_name', $unit_id );
 
 			$c_link = '<a href="' . esc_url( $c_link ) . '" class="breadcrumb-course crumb">' . get_post_field( 'post_title', $course_id ) . '</a>';
 			$a_link = '<a href="' . esc_url( $a_link ) . '" class="breadcrumb-course-units crumb">' . esc_html__( 'Units', 'CP_TD' ) . '</a>';

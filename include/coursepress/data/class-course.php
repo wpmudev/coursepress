@@ -990,7 +990,7 @@ class CoursePress_Data_Course {
 
 		$permalink = '';
 		if ( in_array( $post->post_status, $valid_stati ) ) {
-			$permalink = CoursePress_Core::get_slug( 'course', true ) . '/' . $post->post_name . '/';
+			$permalink = CoursePress_Core::get_slug( 'course/', true ) . $post->post_name . '/';
 		} else {
 			$permalink = get_permalink( $course_id );
 		}
@@ -1013,7 +1013,7 @@ class CoursePress_Data_Course {
 			$course_name,
 			$course_address,
 			wp_login_url(),
-			trailingslashit( home_url( '/' ) . CoursePress_Core::get_slug( 'course' ) ),
+			CoursePress_Core::get_slug( 'course/', true ),
 			get_bloginfo(),
 		);
 
@@ -1141,7 +1141,7 @@ class CoursePress_Data_Course {
 
 		$permalink = '';
 		if ( in_array( $post->post_status, $valid_stati ) ) {
-			$permalink = CoursePress_Core::get_slug( 'course', true ) . '/' . $post->post_name . '/';
+			$permalink = CoursePress_Core::get_slug( 'course/', true ) . $post->post_name . '/';
 		} else {
 			$permalink = get_permalink( $course_id );
 		}
