@@ -10,20 +10,20 @@
 /* Default Background for .alt */
 /*
 .alt {
-    position: relative;
+		position: relative;
 }
 .alt:after {
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: #000;
-    display: block;
-    width: 100%;
-    content: '&nbsp;';
-    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=2)";
-    filter: alpha(opacity=2);
-    -moz-opacity: 0.02;
-    opacity: 0.02;
+		position: absolute;
+		top: 0;
+		left: 0;
+		background: #000;
+		display: block;
+		width: 100%;
+		content: '&nbsp;';
+		-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=2)";
+		filter: alpha(opacity=2);
+		-moz-opacity: 0.02;
+		opacity: 0.02;
 }
 */
 /* Sub Menu */
@@ -1030,8 +1030,9 @@ ul.notification-archive-list {
   width: 100%;
   padding-top: 30px;
   overflow: hidden;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 900;
 }
-
 .enrolment-container-div .bbm-wrapper {
   position: relative;
   margin: 0 auto;
@@ -1043,18 +1044,15 @@ ul.notification-archive-list {
   border-radius: 15px;
   box-shadow: 3px 3px 10px 0px rgba(0, 0, 0, 0.75);
 }
-
 .enrolment-container-div .bbm-wrapper a {
   text-decoration: underline;
 }
-
 .enrolment-container-div .bbm-wrapper #error-messages,
 .enrolment-container-div .bbm-wrapper #password-strength {
   display: block;
   font-style: italic;
   margin: 0 15px;
 }
-
 .enrolment-container-div .bbm-wrapper #error-messages {
   color: #d92e23;
 }
