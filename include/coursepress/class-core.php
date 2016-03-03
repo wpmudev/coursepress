@@ -70,18 +70,17 @@ class CoursePress_Core {
 			CoursePress_View_Admin_CoursePress::init();
 			CoursePress_View_Admin_Communication::init();
 			CoursePress_View_Admin_Setting::init();
-
-			// Admin AJAX.
-			CoursePress_View_Front_Course::init_ajax();
 		} else {
 			// Now we're in the front.
 			CoursePress_View_Front_General::init();
-			CoursePress_View_Front_Course::init();
 			CoursePress_View_Front_Instructor::init();
 			CoursePress_View_Front_Dashboard::init();
 			CoursePress_View_Front_Student::init();
 			CoursePress_View_Front_Login::init();
 		}
+
+		// Always initialize the Front-End; needed in is_admin() for ajax calls!
+		CoursePress_View_Front_Course::init();
 
 		// Initialize Utility actions.
 		CoursePress_Helper_Utility::init();
