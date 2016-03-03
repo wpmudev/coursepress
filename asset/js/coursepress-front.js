@@ -516,24 +516,12 @@ var CoursePress = CoursePress || {};
 			var valid = true;
 			$('.bbm-wrapper #error-messages' ).html('');
 
-			var errors = [];
 			// All fields required
 			if (
 				'' === $( 'input[name=log]' ).val().trim() ||
 				'' === $( 'input[name=pwd]' ).val().trim()
 			) {
 				valid = false;
-				errors.push( _coursepress.signup_errors['all_fields'] );
-			}
-
-			if ( errors.length > 0 ) {
-				var err_msg = '<ul>';
-				errors.forEach( function( item ) {
-					err_msg += '<li>' + item + '</li>';
-				} );
-				err_msg += '</ul>';
-
-				$( '.bbm-wrapper #error-messages' ).html( err_msg );
 			}
 
 			return valid;
@@ -683,7 +671,7 @@ var CoursePress = CoursePress || {};
 			}
 		}
 
-		if ( action == 'login' ) {
+		if ( action === 'login' ) {
 			fn = CoursePress.Enrollment.dialog[ 'login_validation' ];
 			if ( typeof fn === 'function' && true !== fn() ) {
 				return;
