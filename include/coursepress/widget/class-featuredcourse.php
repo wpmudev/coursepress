@@ -2,11 +2,11 @@
 
 class CoursePress_Widget_FeaturedCourse extends WP_Widget {
 
-	public function init() {
+	public static function init() {
 		add_action( 'widgets_init', array( 'CoursePress_Widget_FeaturedCourse', 'register' ) );
 	}
 
-	public function register() {
+	public static function register() {
 		register_widget( 'CoursePress_Widget_FeaturedCourse' );
 	}
 
