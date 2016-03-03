@@ -552,8 +552,8 @@ var CoursePress = CoursePress || {};
 
 		CoursePress.Enrollment.dialog.login_data = function( data ) {
 			var course_id = $( '.enrollment-modal-container.bbm-modal__views' ).attr('data-course');
-			data.username = $( 'input[name=username]' ).val();
-			data.password = $( 'input[name=password]' ).val();
+			data.username = $( 'input[name=log]' ).val();
+			data.password = $( 'input[name=pwd]' ).val();
 			data.course_id = course_id;
 			data.nonce = $( '.bbm-modal-nonce.login' ).attr('data-nonce');
 			return data;
