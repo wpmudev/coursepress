@@ -4,6 +4,7 @@
 1. Settings Wrapper
 2. Settings Tabs
 3. Settings Boxes
+4. Shortcodes Help
 
 A. Responsive
 --------------------------------------------------------------*/
@@ -1820,4 +1821,48 @@ body[class*="_page_coursepress_course"] .ui-datepicker .ui-state-default.ui-stat
 }
 body[class*="_page_coursepress_course"] .ui-datepicker .ui-state-default.ui-state-highlight {
   border: 1px solid rgba(0, 145, 205, 0.3);
+}
+
+/*--------------------------------------------------------------
+# 4. Shortcodes help
+--------------------------------------------------------------*/
+.shortcodes-list .cp-shortcode-heading {
+    font-size: 18pt;
+}
+.shortcodes-list .cp-shortcode-title {
+    padding-top:14px;
+    color: #0074a2;
+}
+
+.shortcodes-list .cp-shortcode-subheading {
+    margin: 10px 0 0;
+    padding: 0;
+    text-decoration: underline;
+}
+
+.shortcodes-list ul.cp-shortcode-options {
+    margin: 5px 0;
+
+}
+
+.shortcodes-list ul.cp-shortcode-options li {
+    line-height: 1.4em;
+}
+
+.shortcodes-list ul.cp-shortcode-options li span {
+    color: #d54e21;
+}
+
+.shortcodes-list .cp-shortcode-code {
+    line-height: 1.4em;
+    font-size:16px;
+    font-weight: 600;
+    /*	font-family: monospace;*/
+}
+
+.shortcodes-list .cp-content-box code {
+    display: block;
+}
+.shortcodes-list .inside {
+    padding: 0 1em 1.5em 1em;
 }
