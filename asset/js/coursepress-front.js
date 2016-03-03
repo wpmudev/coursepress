@@ -435,6 +435,7 @@ var CoursePress = CoursePress || {};
 		};
 
 		CoursePress.Enrollment.dialog.handle_login_return = function( data ) {
+
 			if ( data['logged_in'] === true ) {
 				if ( ! data['already_enrolled'] ) {
 					CoursePress.Enrollment.dialog.attempt_enroll( data );
@@ -496,6 +497,33 @@ var CoursePress = CoursePress || {};
 			if ( strength === 5 ) {
 				valid = false;
 				errors.push( _coursepress.signup_errors['mismatch_password'] );
+			}
+
+			if ( errors.length > 0 ) {
+				var err_msg = '<ul>';
+				errors.forEach( function( item ) {
+					err_msg += '<li>' + item + '</li>';
+				} );
+				err_msg += '</ul>';
+
+				$( '.bbm-wrapper #error-messages' ).html( err_msg );
+			}
+
+			return valid;
+		};
+
+		CoursePress.Enrollment.dialog.login_validation = function() {
+			var valid = true;
+			$('.bbm-wrapper #error-messages' ).html('');
+
+			var errors = [];
+			// All fields required
+			if (
+				'' === $( 'input[name=log]' ).val().trim() ||
+				'' === $( 'input[name=pwd]' ).val().trim()
+			) {
+				valid = false;
+				errors.push( _coursepress.signup_errors['all_fields'] );
 			}
 
 			if ( errors.length > 0 ) {
@@ -650,6 +678,13 @@ var CoursePress = CoursePress || {};
 
 		if ( action === 'signup' ) {
 			fn = CoursePress.Enrollment.dialog[ 'signup_validation' ];
+			if ( typeof fn === 'function' && true !== fn() ) {
+				return;
+			}
+		}
+
+		if ( action == 'login' ) {
+			fn = CoursePress.Enrollment.dialog[ 'login_validation' ];
 			if ( typeof fn === 'function' && true !== fn() ) {
 				return;
 			}
