@@ -877,6 +877,12 @@ ul.notification-archive-list {
   margin: 0;
 }
 
+.student-settings.signup-form,
+.student-settings.login-form {
+  margin: 0 -15px;
+  overflow: hidden;
+}
+
 .student-settings.login-form label input,
 .student-settings.signup-form label input,
 .student-settings.login-form label span,
@@ -887,7 +893,10 @@ ul.notification-archive-list {
 
 .student-settings.login-form label,
 .student-settings.signup-form label {
-  width: 45%;
+  width: 50%;
+  float: left;
+  padding: 10px 15px;
+  box-sizing: border-box;
   display: inline-block;
 }
 
@@ -1024,12 +1033,13 @@ ul.notification-archive-list {
 }
 
 .enrolment-container-div .bbm-wrapper {
+  position: relative;
   margin: 0 auto;
   max-width: 480px;
   width: 100%;
   background: #ffffff;
-  padding: 0 10px 10px 10px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 0;
+  border: 0;
   border-radius: 15px;
   box-shadow: 3px 3px 10px 0px rgba(0, 0, 0, 0.75);
 }
@@ -1042,6 +1052,7 @@ ul.notification-archive-list {
 .enrolment-container-div .bbm-wrapper #password-strength {
   display: block;
   font-style: italic;
+  margin: 0 15px;
 }
 
 .enrolment-container-div .bbm-wrapper #error-messages {
