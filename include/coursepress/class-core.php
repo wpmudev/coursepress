@@ -395,21 +395,33 @@ class CoursePress_Core {
 		);
 	}
 
-
-	public static function register_formats( $formats ) {
+	/**
+	 * Returns a list of classes that register CoursePress specific post-types.
+	 *
+	 * Each value that is returned is a class name that can provide further
+	 * details for registering a post type or taxonomy.
+	 *
+	 * This class can have either of these methods to register a post type or
+	 * custom taxonomy:
+	 *   CoursePress_Data_X::get_format()   // Details about post-type.
+	 *   CoursePress_Data_X::get_taxonomy() // Details about taxonomy.
+	 *
+	 * @since  2.0.0
+	 * @param  array $classes Default classes. Should be empty array here.
+	 * @return array The initial list of classes that register a post-type.
+	 */
+	public static function register_formats( $classes ) {
 		return array_merge(
-			$formats,
+			$classes,
 			array(
-				'Course',
-				'Unit',
-				'Module',
-				'Discussion',
-				'Notification',
+				'CoursePress_Data_Course',
+				'CoursePress_Data_Unit',
+				'CoursePress_Data_Module',
+				'CoursePress_Data_Discussion',
+				'CoursePress_Data_Notification',
+				'CoursePress_Data_Certificate',
 			)
 		);
-	}
-
-	public static function upgrade() {
 	}
 
 	public static function add_query_vars( $query_vars ) {

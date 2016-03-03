@@ -38,15 +38,8 @@ class CoursePress_Data_Discussion {
 
 	}
 
-	public static function get_post_type_name( $with_prefix = true ) {
-		if ( ! $with_prefix ) {
-			return self::$post_type;
-		} else {
-			$prefix = defined( 'COURSEPRESS_CPT_PREFIX' ) ? COURSEPRESS_CPT_PREFIX : '';
-			$prefix = empty( $prefix ) ? '' : sanitize_text_field( $prefix ) . '_';
-
-			return $prefix . self::$post_type;
-		}
+	public static function get_post_type_name() {
+		return CoursePress_Data_PostFormat::prefix( self::$post_type );
 	}
 
 	public static function attributes( $n_id ) {

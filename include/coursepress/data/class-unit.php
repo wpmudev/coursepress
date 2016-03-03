@@ -33,15 +33,8 @@ class CoursePress_Data_Unit {
 		);
 	}
 
-	public static function get_post_type_name( $with_prefix = true ) {
-		if ( ! $with_prefix ) {
-			return self::$post_type;
-		} else {
-			$prefix = defined( 'COURSEPRESS_CPT_PREFIX' ) ? COURSEPRESS_CPT_PREFIX : '';
-			$prefix = empty( $prefix ) ? '' : sanitize_text_field( $prefix ) . '_';
-
-			return $prefix . self::$post_type;
-		}
+	public static function get_post_type_name() {
+		return CoursePress_Data_PostFormat::prefix( self::$post_type );
 	}
 
 	public static function get_time_estimation( $unit_id, $data, $default = '1:00' ) {
@@ -113,7 +106,7 @@ class CoursePress_Data_Unit {
 	static function by_name( $slug, $id_only, $post_parent = '' ) {
 		$args = array(
 			'name' => $slug,
-			'post_type' => self::get_post_type_name( true ),
+			'post_type' => self::get_post_type_name(),
 			'post_status' => 'any',
 			'posts_per_page' => 1,
 		);

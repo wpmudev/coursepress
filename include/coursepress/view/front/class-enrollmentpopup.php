@@ -120,8 +120,12 @@ class CoursePress_View_Front_EnrollmentPopup {
 			case 'invite_instructor':
 
 				if ( wp_verify_nonce( $data->data->nonce, 'setup-course' ) ) {
-					$email_data = CoursePress_Helper_Utility::object_to_array( $data->data );
-					$response = CoursePress_Data_Instructor::send_invitation( $email_data );
+					$response = CoursePress_Data_Instructor::send_invitation(
+						(int) $data->data->course_id,
+						$data->data->email,
+						$data->data->first_name,
+						$data->data->last_name
+					);
 					$json_data['message'] = $response['message'];
 					$json_data['data'] = $data->data;
 					$json_data['invite_code'] = $response['invite_code'];

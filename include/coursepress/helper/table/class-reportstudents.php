@@ -21,7 +21,7 @@ class CoursePress_Helper_Table_ReportStudent extends WP_List_Table {
 			'ajax' => false,// should this table support ajax?
 		) );
 
-		// $this->post_type = CoursePress_Data_PostFormat::prefix() . $post_format['post_type'];
+		// $this->post_type = CoursePress_Data_PostFormat::prefix( $post_format['post_type'] );
 		// $this->count = wp_count_posts( $this->post_type );
 	}
 
