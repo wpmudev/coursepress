@@ -904,6 +904,115 @@ ul.notification-archive-list {
   margin-top: 10px;
 }
 
+.course-calendar {
+  position: relative;
+}
+
+.course-calendar-body {
+  width: 100%;
+}
+
+.course-calendar-body caption {
+  min-height: 10px;
+  padding-bottom: 10px;
+  vertical-align: top;
+}
+
+.course-calendar .pre-month {
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  font-size: 0.8em;
+  cursor: pointer;
+}
+
+.course-calendar .next-month {
+  position: absolute;
+  bottom: -20px;
+  right: 0;
+  font-size: 0.8em;
+  cursor: pointer;
+}
+
+.course-calendar .day,
+.course-calendar .week-days {
+  line-height: 1.2em;
+  min-width: 14%;
+}
+
+.course-calendar .today {
+  font-weight: bold;
+}
+
+/** Calendar Date Indicators */
+/* -- Light Theme: Block -- */
+.course-calendar .indicator_light_block .course-start-date {
+  background-color: #dfdfdf;
+}
+
+.course-calendar .indicator_light_block .course-active-date {
+  background-color: #f5f5f5;
+}
+
+.course-calendar .indicator_light_block .course-open-date {
+  background-color: #f5f5f5;
+}
+
+.course-calendar .indicator_light_block .course-end-date {
+  background-color: #dfdfdf;
+}
+
+/* -- Light Theme: Line -- */
+.course-calendar .indicator_light_line .course-start-date {
+  border-bottom: 2px solid #cfcfcf;
+}
+
+.course-calendar .indicator_light_line .course-active-date {
+  border-bottom: 2px solid #f5f5f5;
+}
+
+.course-calendar .indicator_light_line .course-open-date {
+  border-bottom: 2px solid #f5f5f5;
+}
+
+.course-calendar .indicator_light_line .course-end-date {
+  border-bottom: 2px solid #cfcfcf;
+}
+
+/* -- Dark Theme: Block -- */
+.course-calendar .indicator_dark_block .course-start-date {
+  background-color: #5f5f5f;
+}
+
+.course-calendar .indicator_dark_block .course-active-date {
+  background-color: #444444;
+}
+
+.course-calendar .indicator_dark_block .course-open-date {
+  background-color: #444444;
+}
+
+.course-calendar .indicator_dark_block .course-end-date {
+  background-color: #5f5f5f;
+}
+
+/* -- Dark Theme: Line -- */
+.course-calendar .indicator_dark_line .course-start-date {
+  border-bottom: 2px solid #5f5f5f;
+}
+
+.course-calendar .indicator_dark_line .course-active-date {
+  border-bottom: 2px solid #444444;
+}
+
+.course-calendar .indicator_dark_line .course-open-date {
+  border-bottom: 2px solid #444444;
+}
+
+.course-calendar .indicator_dark_line .course-end-date {
+  border-bottom: 2px solid #5f5f5f;
+}
+
 .enrolment-container-div {
   height: 100%;
   left: 0;
@@ -913,107 +1022,6 @@ ul.notification-archive-list {
   padding-top: 30px;
   overflow: hidden;
 }
-
-.course-calendar {
-    position: relative;
-}
-
-.course-calendar-body {
-    width: 100%;
-}
-
-.course-calendar-body caption {
-    min-height: 10px;
-    padding-bottom: 10px;
-    vertical-align: top;
-}
-
-.course-calendar .pre-month {
-    position: absolute;
-    bottom: -20px;
-    left: 0;
-    font-size: 0.8em;
-    cursor: pointer;
-}
-.course-calendar .next-month {
-    position: absolute;
-    bottom: -20px;
-    right: 0;
-    font-size: 0.8em;	
-    cursor: pointer;	
-}
-
-.course-calendar .day,
-.course-calendar .week-days {
-    line-height: 1.2em;
-    min-width: 14%;
-}
-
-.course-calendar .day {
-}
-
-.course-calendar .today {
-    font-weight: bold;
-}
-
-/** Calendar Date Indicators */
-
-/* -- Light Theme: Block -- */
-.course-calendar .indicator_light_block .course-start-date {
-    background-color: #dfdfdf;
-}
-.course-calendar .indicator_light_block .course-active-date {
-    background-color: #f5f5f5;
-}
-.course-calendar .indicator_light_block .course-open-date {
-    background-color: #f5f5f5;
-}
-.course-calendar .indicator_light_block .course-end-date {
-    background-color: #dfdfdf;
-}
-
-/* -- Light Theme: Line -- */
-.course-calendar .indicator_light_line .course-start-date {
-    border-bottom: 2px solid #cfcfcf;
-}
-.course-calendar .indicator_light_line .course-active-date {
-    border-bottom: 2px solid #f5f5f5;
-}
-.course-calendar .indicator_light_line .course-open-date {
-    border-bottom: 2px solid #f5f5f5;
-}
-.course-calendar .indicator_light_line .course-end-date {
-    border-bottom: 2px solid #cfcfcf;
-}
-
-/* -- Dark Theme: Block -- */
-.course-calendar .indicator_dark_block .course-start-date {
-    background-color: #5f5f5f;
-}
-.course-calendar .indicator_dark_block .course-active-date {
-    background-color: #444444;
-}
-.course-calendar .indicator_dark_block .course-open-date {
-    background-color: #444444;
-}
-.course-calendar .indicator_dark_block .course-end-date {
-    background-color: #5f5f5f;
-}
-
-/* -- Dark Theme: Line -- */
-.course-calendar .indicator_dark_line .course-start-date {
-    border-bottom: 2px solid #5f5f5f;
-}
-.course-calendar .indicator_dark_line .course-active-date {
-    border-bottom: 2px solid #444444;
-}
-.course-calendar .indicator_dark_line .course-open-date {
-    border-bottom: 2px solid #444444;
-}
-.course-calendar .indicator_dark_line .course-end-date {
-    border-bottom: 2px solid #5f5f5f;
-}
-
 
 .enrolment-container-div .bbm-wrapper {
   margin: 0 auto;

@@ -1,20 +1,36 @@
 <?php
+/**
+ * Admin view.
+ *
+ * @package CoursePress
+ */
 
+/**
+ * Capabilities for Instructors.
+ */
 class CoursePress_View_Admin_Setting_Capabilities {
 
 	public static function init() {
-
-		add_filter( 'coursepress_settings_tabs', array( __CLASS__, 'add_tabs' ) );
-		add_action( 'coursepress_settings_process_capabilities', array( __CLASS__, 'process_form' ), 10, 2 );
-		add_filter( 'coursepress_settings_render_tab_capabilities', array( __CLASS__, 'return_content' ), 10, 3 );
+		add_filter(
+			'coursepress_settings_tabs',
+			array( __CLASS__, 'add_tabs' )
+		);
+		add_action(
+			'coursepress_settings_process_capabilities',
+			array( __CLASS__, 'process_form' ),
+			10, 2
+		);
+		add_filter(
+			'coursepress_settings_render_tab_capabilities',
+			array( __CLASS__, 'return_content' ),
+			10, 3
+		);
 	}
 
-
 	public static function add_tabs( $tabs ) {
-
 		$tabs['capabilities'] = array(
 			'title' => __( 'Instructor Capabilities', 'CP_TD' ),
-			'description' => __( 'Setup the capabilities of instructors within CoursePress.', 'CP_TD' ),
+			'description' => __( 'Here you can decide, what your instructors can do on your page. Those are special capabilities only relevant for CoursePress.', 'CP_TD' ),
 			'order' => 30,
 		);
 
@@ -22,79 +38,110 @@ class CoursePress_View_Admin_Setting_Capabilities {
 	}
 
 	public static function return_content( $content, $slug, $tab ) {
-
 		$instructor_capabilities = CoursePress_Data_Capabilities::get_instructor_capabilities();
-
-		$content = '
-			<input type="hidden" name="page" value="' . esc_attr( $slug ) . '"/>
-			<input type="hidden" name="tab" value="' . esc_attr( $tab ) . '"/>
-			<input type="hidden" name="action" value="updateoptions"/>
-		' . wp_nonce_field( 'update-coursepress-options', '_wpnonce', true, false );
-
 		$boxes = self::_capability_boxes();
-		foreach ( $boxes as $method => $title ) {
-			if ( ! method_exists( __CLASS__, '_' . $method ) ) {
-				continue;
-			}
 
-			$items = call_user_func( __CLASS__ . '::_' . $method );
+		ob_start();
+		?>
+		<input type="hidden" name="page" value="' . esc_attr( $slug ) . '"/>
+		<input type="hidden" name="tab" value="' . esc_attr( $tab ) . '"/>
+		<input type="hidden" name="action" value="updateoptions"/>
+		<?php wp_nonce_field( 'update-coursepress-options', '_wpnonce' ); ?>
 
-			$content .= '
-				<h3 class="hndle" style="cursor:auto;"><span>' . esc_html( $title ) . '</span></h3>
-				<div class="inside">
-					<table class="form-table compressed">
-						<tbody id="items">';
+		<div class="capability-list">
 
-			foreach ( $items as $key => $value ) {
-				$checked = ! empty( $instructor_capabilities[ $key ] );
-				$checked_attr = $checked ? 'checked="checked"' : '';
-				$content .= '
-							<tr>
-								<td><label><input type="checkbox" ' . $checked_attr . ' name="coursepress_settings[instructor][capabilities][' . $key . ']" value="1"> ' . esc_html( $value ) . '</label></td>
+		<?php foreach ( $boxes as $group => $data ) : ?>
+			<div class="cp-content-box <?php echo esc_attr( $group ); ?>">
+			<h3 class="hndle">
+				<span><?php echo esc_html( $data['title'] ); ?></span>
+			</h3>
+			<div class="inside">
+				<table class="form-table compressed">
+					<tbody id="items">
+
+						<?php foreach ( $data['items'] as $key => $value ) : ?>
+							<?php $checked = ! empty( $instructor_capabilities[ $key ] ); ?>
+							<?php $name = 'coursepress_settings[instructor][capabilities][' . $key . ']'; ?>
+
+							<tr class="<?php echo esc_attr( $key ); ?>">
+								<td>
+									<label>
+										<input type="checkbox"
+											<?php checked( $checked ); ?>
+											name="<?php echo esc_attr( $name ); ?>"
+											value="1" />
+										<?php echo esc_html( $value ); ?>
+									</label>
+								</td>
 							</tr>
+						<?php endforeach; ?>
 
-				';
-			}
+					</tbody>
+				</table>
+			</div>
+			</div>
+		<?php endforeach; ?>
 
-			$content .= '
-						</tbody>
-					</table>
-				</div>
-			';
+		</div>
+		<?php
 
-		}
+		$content = ob_get_clean();
 
 		return $content;
-
 	}
 
 	private static function _capability_boxes() {
 		return array(
-			'instructor_capabilities_general' => __( 'General', 'CP_TD' ),
-			'instructor_capabilities_courses' => __( 'Courses', 'CP_TD' ),
-			'instructor_capabilities_course_categories' => __( 'Course Categories', 'CP_TD' ),
-			'instructor_capabilities_units' => __( 'Units', 'CP_TD' ),
-			'instructor_capabilities_instructors' => __( 'Instructors', 'CP_TD' ),
-			// 'instructor_capabilities_classes' => __( 'Classes', 'CP_TD' ),
-			'instructor_capabilities_students' => __( 'Students', 'CP_TD' ),
-			'instructor_capabilities_notifications' => __( 'Notifications', 'CP_TD' ),
-			'instructor_capabilities_discussions' => __( 'Discussions', 'CP_TD' ),
-			'instructor_capabilities_posts_and_pages' => __( 'Posts and Pages', 'CP_TD' ),
-			// 'instructor_capabilities_groups' => __( 'Settings Pages', 'CP_TD' ),
+			'general' => array(
+				'title' => __( 'General', 'CP_TD' ),
+				'items' => self::_instructor_capabilities_general(),
+			),
+			'course' => array(
+				'title' => __( 'Courses', 'CP_TD' ),
+				'items' => self::_instructor_capabilities_courses(),
+			),
+			'course-category' => array(
+				'title' => __( 'Course Categories', 'CP_TD' ),
+				'items' => self::_instructor_capabilities_course_categories(),
+			),
+			'course-unit' => array(
+				'title' => __( 'Units', 'CP_TD' ),
+				'items' => self::_instructor_capabilities_units(),
+			),
+			'instructor' => array(
+				'title' => __( 'Instructors', 'CP_TD' ),
+				'items' => self::_instructor_capabilities_instructors(),
+			),
+			'student' => array(
+				'title' => __( 'Students', 'CP_TD' ),
+				'items' => self::_instructor_capabilities_students(),
+			),
+			'notification' => array(
+				'title' => __( 'Notifications', 'CP_TD' ),
+				'items' => self::_instructor_capabilities_notifications(),
+			),
+			'discussion' => array(
+				'title' => __( 'Discussions', 'CP_TD' ),
+				'items' => self::_instructor_capabilities_discussions(),
+			),
+			'wordpress' => array(
+				'title' => __( 'Grant default WordPress capabilities', 'CP_TD' ),
+				'items' => self::_instructor_capabilities_posts_and_pages(),
+			),
 		);
 	}
 
 	private static function _instructor_capabilities_general() {
 		return array(
-			'coursepress_dashboard_cap' => __( 'Access to plugin menu', 'CP_TD' ),
-			'coursepress_courses_cap' => __( 'Access to the Courses menu item', 'CP_TD' ),
-			'coursepress_instructors_cap' => __( 'Access to the Intructors menu item', 'CP_TD' ),
-			'coursepress_students_cap' => __( 'Access to the Students menu item', 'CP_TD' ),
-			'coursepress_assessment_cap' => __( 'Assessment', 'CP_TD' ),
-			'coursepress_reports_cap' => __( 'Reports', 'CP_TD' ),
-			'coursepress_notifications_cap' => __( 'Notifications', 'CP_TD' ),
-			'coursepress_discussions_cap' => __( 'Discussions', 'CP_TD' ),
-			'coursepress_settings_cap' => __( 'Access to the Settings menu item', 'CP_TD' ),
+			'coursepress_dashboard_cap' => __( 'See the main CoursePress menu', 'CP_TD' ),
+			'coursepress_courses_cap' => __( 'Access the Courses submenus', 'CP_TD' ),
+			'coursepress_instructors_cap' => __( 'Access the Intructors submenu', 'CP_TD' ),
+			'coursepress_students_cap' => __( 'Access the Students submenu', 'CP_TD' ),
+			'coursepress_assessment_cap' => __( 'Access the Assessment submenu', 'CP_TD' ),
+			'coursepress_reports_cap' => __( 'Access the Reports submenu', 'CP_TD' ),
+			'coursepress_notifications_cap' => __( 'Access the Notifications submenu', 'CP_TD' ),
+			'coursepress_discussions_cap' => __( 'Access the Discussions submenu', 'CP_TD' ),
+			'coursepress_settings_cap' => __( 'Access the Settings submenu', 'CP_TD' ),
 		);
 	}
 
@@ -144,15 +191,6 @@ class CoursePress_View_Admin_Setting_Capabilities {
 		);
 	}
 
-	private static function _instructor_capabilities_classes() {
-		return array(
-			'coursepress_add_new_classes_cap' => __( 'Add new course classes to any course', 'CP_TD' ),
-			'coursepress_add_new_my_classes_cap' => __( 'Add new course classes to courses made by the instructor only', 'CP_TD' ),
-			'coursepress_delete_classes_cap' => __( 'Delete any course class', 'CP_TD' ),
-			'coursepress_delete_my_classes_cap' => __( 'Delete course classes from courses made by the instructor only', 'CP_TD' ),
-		);
-	}
-
 	private static function _instructor_capabilities_students() {
 		return array(
 			'coursepress_invite_students_cap' => __( 'Invite students to any course', 'CP_TD' ),
@@ -168,13 +206,6 @@ class CoursePress_View_Admin_Setting_Capabilities {
 			'coursepress_send_bulk_my_students_email_cap' => __( 'Send bulk e-mail to students', 'CP_TD' ),
 			'coursepress_send_bulk_students_email_cap' => __( 'Send bulk e-mail to students within a course made by the instructor only', 'CP_TD' ),
 			'coursepress_delete_students_cap' => __( 'Delete Students (deletes ALL associated course records)', 'CP_TD' ),
-		);
-	}
-
-	private static function _instructor_capabilities_groups() {
-		return array(
-			'coursepress_settings_groups_page_cap' => __( 'View Groups tab within the Settings page', 'CP_TD' ),
-			// 'coursepress_settings_shortcode_page_cap' => __( 'View Shortcode within the Settings page', 'CP_TD' )
 		);
 	}
 
@@ -216,25 +247,29 @@ class CoursePress_View_Admin_Setting_Capabilities {
 
 
 	public static function process_form( $page, $tab ) {
+		if ( ! isset( $_POST['action'] ) ) { return; }
+		if ( 'updateoptions' != $_POST['action'] ) { return; }
+		if ( 'capabilities' != $tab ) { return; }
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'update-coursepress-options' ) ) { return; }
 
-		if ( isset( $_POST['action'] ) && 'updateoptions' === $_POST['action'] && 'capabilities' === $tab && wp_verify_nonce( $_POST['_wpnonce'], 'update-coursepress-options' ) ) {
+		$settings = CoursePress_Core::get_setting( false ); // false: Get all settings.
+		$post_settings = (array) $_POST['coursepress_settings'];
 
-			$settings = CoursePress_Core::get_setting( false ); // false returns all settings
-			$post_settings = (array) $_POST['coursepress_settings'];
+		// Sanitize $post_settings, especially to fix up unchecked checkboxes.
+		$caps = array_keys( CoursePress_Data_Capabilities::$capabilities['instructor'] );
+		$set_caps = array_keys( $post_settings['instructor']['capabilities'] );
 
-			// Now is a good time to make changes to $post_settings, especially to fix up unchecked checkboxes
-			$caps = array_keys( CoursePress_Data_Capabilities::$capabilities['instructor'] );
-			$set_caps = array_keys( $post_settings['instructor']['capabilities'] );
-			foreach ( $caps as $cap ) {
-				if ( ! in_array( $cap, $set_caps ) ) {
-					$post_settings['instructor']['capabilities'][ $cap ] = 0;
-				}
-			}
+		foreach ( $caps as $cap ) {
+			$is_set = in_array( $cap, $set_caps );
+			$post_settings['instructor']['capabilities'][ $cap ] = $is_set;
+		}
 
-			// Don't replace settings if there is nothing to replace
-			if ( ! empty( $post_settings ) ) {
-				CoursePress_Core::update_setting( false, CoursePress_Core::merge_settings( $settings, $post_settings ) ); // false will replace all settings
-			}
+		// Don't replace settings if there is nothing to replace.
+		if ( ! empty( $post_settings ) ) {
+			CoursePress_Core::update_setting(
+				false, // False will replace all settings.
+				CoursePress_Core::merge_settings( $settings, $post_settings )
+			);
 		}
 	}
 }

@@ -1159,36 +1159,6 @@ var CoursePress = CoursePress || {};
 		}
 	} );
 
-	$( '.certificate_background_button' ).on( 'click', function() {
-		var target_url_field = $( this ).prevAll( '.certificate_background_url:first' );
-		wp.media.string.props = function( props, attachment ) {
-			$( target_url_field ).val( props.url );
-
-			if ( CoursePress.utility.valid_media_extension( attachment.url, target_url_field ) ) {//extension is allowed
-				$( target_url_field ).removeClass( 'invalid_extension_field' );
-				$( target_url_field ).parent().find( '.invalid_extension_message' ).hide();
-			} else {//extension is not allowed
-				$( target_url_field ).addClass( 'invalid_extension_field' );
-				$( target_url_field ).parent().find( '.invalid_extension_message' ).show();
-			}
-		};
-
-		wp.media.editor.send.attachment = function( props, attachment ) {
-			$( target_url_field ).val( attachment.url );
-			if ( CoursePress.utility.valid_media_extension( attachment.url, target_url_field ) ) {//extension is allowed
-				$( target_url_field ).removeClass( 'invalid_extension_field' );
-				$( target_url_field ).parent().find( '.invalid_extension_message' ).hide();
-			} else {//extension is not allowed
-				$( target_url_field ).addClass( 'invalid_extension_field' );
-				$( target_url_field ).parent().find( '.invalid_extension_message' ).show();
-			}
-		};
-
-		wp.media.editor.open( this );
-		return false;
-	} );
-
-
 	// Models
 	CoursePress.Models = CoursePress.Models || {};
 	CoursePress.Models.utility = CoursePress.Models.utility || {};
@@ -1216,5 +1186,133 @@ var CoursePress = CoursePress || {};
 
 		}
 	} );
+
+
+	/*
+	***** Settings > Basic Certificate *****
+	 */
+	(function() {
+		function check_extension( url, field ) {
+			jQuery( field ).val( url );
+
+			if ( CoursePress.utility.valid_media_extension( url, field ) ) {
+				// File extension is allowed :)
+				jQuery( field ).removeClass( 'invalid_extension_field' );
+				jQuery( field ).parent().find( '.invalid_extension_message' ).hide();
+				return true;
+			} else {
+				// File extension is not allowed!
+				jQuery( field ).addClass( 'invalid_extension_field' );
+				jQuery( field ).parent().find( '.invalid_extension_message' ).show();
+				return false;
+			}
+		}
+
+		function on_background_click() {
+			var el = jQuery( this ),
+				target_url_field = el.prevAll( '.certificate_background_url:first' );
+
+			wp.media.string.props = function( props ) {
+				check_extension( props.url, target_url_field );
+			};
+
+			wp.media.editor.send.attachment = function( props, attachment ) {
+				check_extension( attachment.url, target_url_field );
+			};
+
+			wp.media.editor.open( this );
+			return false;
+		}
+
+		function on_enabled_click() {
+			var check = jQuery( '.certificate_enabled' ),
+				form = jQuery( '.certificate-details' );
+
+			if ( check.is(':checked') ) {
+				form.show();
+			} else {
+				form.hide();
+			}
+		}
+
+		jQuery( '.certificate_enabled' ).on( 'click', on_enabled_click );
+		jQuery( '.certificate_background_button' ).on( 'click', on_background_click );
+
+		// Hide the form on page-load if certificates are disabled.
+		window.setTimeout( on_enabled_click, 10 );
+	}());
+
+	/*
+	***** Settings > Instructor Capabilities *****
+	 */
+
+	(function() {
+		function show_settings( key, checks ) {
+			var state = true;
+
+			for ( var i = 0; i < checks.length; i += 1 ) {
+				if ( ! jQuery( checks[i] ).is(':checked') ) {
+					state = false;
+					break;
+				}
+			}
+
+			if ( state ) {
+				jQuery( key ).show();
+			} else {
+				jQuery( key ).hide();
+			}
+		}
+
+		function on_dash_click() {
+			// Hide boxes.
+			show_settings( '.cp-content-box.course', [this, '.coursepress_courses_cap input'] );
+			show_settings( '.cp-content-box.course-category', [this, '.coursepress_courses_cap input'] );
+			show_settings( '.cp-content-box.course-unit', [this, '.coursepress_courses_cap input'] );
+			show_settings( '.cp-content-box.instructor', [this, '.coursepress_instructors_cap input'] );
+			show_settings( '.cp-content-box.student', [this, '.coursepress_students_cap input'] );
+			show_settings( '.cp-content-box.notification', [this, '.coursepress_notifications_cap input'] );
+			show_settings( '.cp-content-box.discussion', [this, '.coursepress_discussions_cap input'] );
+
+			// Hide submenu settings.
+			show_settings( '.capability-list .coursepress_courses_cap', [this] );
+			show_settings( '.capability-list .coursepress_instructors_cap', [this] );
+			show_settings( '.capability-list .coursepress_students_cap', [this] );
+			show_settings( '.capability-list .coursepress_assessment_cap', [this] );
+			show_settings( '.capability-list .coursepress_reports_cap', [this] );
+			show_settings( '.capability-list .coursepress_notifications_cap', [this] );
+			show_settings( '.capability-list .coursepress_discussions_cap', [this] );
+			show_settings( '.capability-list .coursepress_settings_cap', [this] );
+		}
+
+		function on_course_click() {
+			show_settings( '.cp-content-box.course', [this] );
+			show_settings( '.cp-content-box.course-category', [this] );
+			show_settings( '.cp-content-box.course-unit', [this] );
+		}
+
+		function on_instructor_click() {
+			show_settings( '.cp-content-box.instructor', [this] );
+		}
+
+		function on_student_click() {
+			show_settings( '.cp-content-box.student', [this] );
+		}
+
+		function on_notification_click() {
+			show_settings( '.cp-content-box.notification', [this] );
+		}
+
+		function on_discussion_click() {
+			show_settings( '.cp-content-box.discussion', [this] );
+		}
+
+		jQuery( '.capability-list .coursepress_dashboard_cap input' ).on( 'click', on_dash_click );
+		jQuery( '.capability-list .coursepress_courses_cap input' ).on( 'click', on_course_click );
+		jQuery( '.capability-list .coursepress_instructors_cap input' ).on( 'click', on_instructor_click );
+		jQuery( '.capability-list .coursepress_students_cap input' ).on( 'click', on_student_click );
+		jQuery( '.capability-list .coursepress_notifications_cap input' ).on( 'click', on_notification_click );
+		jQuery( '.capability-list .coursepress_discussions_cap input' ).on( 'click', on_discussion_click );
+	}());
 
 })( jQuery );
