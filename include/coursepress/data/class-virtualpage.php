@@ -1,77 +1,241 @@
 <?php
+/**
+ * Data access module.
+ *
+ * @package CoursePress
+ */
 
+/**
+ * Handles the virtual pages used by CoursePress.
+ *
+ * When the coursepress theme is used, these virtual pages are not used because
+ * the theme already comes with special template files for CoursePress pages.
+ *
+ * @since  2.0.0
+ */
 class CoursePress_Data_VirtualPage {
+	/**
+	 * The slug of our virtual page.
+	 *
+	 * @var string
+	 */
+	protected $slug = '';
 
-	var $slug = null;
-	var $title = null;
-	var $content = null;
-	var $author = null;
-	var $date = null;
-	var $type = null;
-	var $comment_status = 'closed';
-	var $ID = '';
+	/**
+	 * The title of our virtual page.
+	 *
+	 * @var string
+	 */
+	protected $title = '';
 
-	public static $the_post_id;
+	/**
+	 * The page contents of our virtual page.
+	 *
+	 * @var string
+	 */
+	protected $content = '';
 
-	function __construct( $args ) {
+	/**
+	 * The page-owner (user-ID) of the virtual page.
+	 *
+	 * @var int
+	 */
+	protected $author = 0;
+
+	/**
+	 * The parent page-ID of the virtual page.
+	 *
+	 * @var int
+	 */
+	protected $post_parent = 0;
+
+	/**
+	 * Creation date of the virtual page.
+	 *
+	 * @var string
+	 */
+	protected $date = '';
+
+	/**
+	 * The simulated post-type.
+	 * Usually this is set to a virtual post-type, e.g. 'coursepress_instructor'.
+	 *
+	 * @var string
+	 */
+	protected $type = 'page';
+
+	/**
+	 * Comment status (closed or open)
+	 *
+	 * @var string
+	 */
+	protected $comment_status = 'closed';
+
+	/**
+	 * The internal ID of the virtual page.
+	 *
+	 * @var int
+	 */
+	protected $ID = 0;
+
+	/**
+	 * The original post-ID of the WP page.
+	 *
+	 * @var int
+	 */
+	protected $orig_ID = 0;
+
+	/**
+	 * Flag if we should display the title.
+	 *
+	 * @var bool
+	 */
+	protected $show_title = true;
+
+	/**
+	 * Simulated `is_page` flag for the WP_Query object.
+	 *
+	 * @var bool
+	 */
+	protected $is_page = true;
+
+	/**
+	 * Simulated `is_singular` flag for the WP_Query object.
+	 *
+	 * @var bool
+	 */
+	protected $is_singular = true;
+
+	/**
+	 * Simulated `is_archive` flag for the WP_Query object.
+	 *
+	 * @var bool
+	 */
+	protected $is_archive = false;
+
+	/**
+	 * Initialize the Virtual page object.
+	 *
+	 * Note: There can be only one virtual page per request.
+	 * TODO This should be a singleton or static method!
+	 *
+	 * @since 2.0.0
+	 * @param array $args Constructor options.
+	 */
+	public function __construct( $args ) {
 		if ( ! isset( $args['slug'] ) ) {
 			throw new Exception( 'No slug given for the virtual page' );
 		}
 
-		$this->show_title = isset( $args['show_title'] ) ? $args['show_title'] : true;
 		$this->slug = $args['slug'];
-		$this->title = isset( $args['title'] ) ? $args['title'] : '';
-		$this->content = isset( $args['content'] ) ? $args['content'] : '';
-		$this->author = isset( $args['author'] ) ? $args['author'] : 1;
-		$this->date = isset( $args['date'] ) ? $args['date'] : current_time( 'mysql' );
-		$this->dategmt = isset( $args['date'] ) ? $args['date'] : current_time( 'mysql', 1 );
-		$this->type = isset( $args['type'] ) ? $args['type'] : 'page';
-		$this->post_parent = isset( $args['post_parent'] ) ? $args['post_parent'] : '';
-		$this->ID = isset( $args['ID'] ) ? $args['ID'] : '';
+		$this->date = current_time( 'mysql' );
+		$this->orig_ID = get_the_ID();
 
-		$this->is_page = isset( $args['is_page'] ) ? $args['is_page'] : true;
-		$this->is_singular = isset( $args['is_singular'] ) ? $args['is_singular'] : true;
-		$this->is_archive = isset( $args['is_archive'] ) ? $args['is_archive'] : false;
-		$this->comment_status = isset( $args['comment_status'] ) ? $args['comment_status'] : 'closed';
-		$this->post_type = 'public';
+		if ( isset( $args['show_title'] ) ) {
+			$this->show_title = $args['show_title'];
+		}
+		if ( isset( $args['title'] ) ) {
+			$this->title = $args['title'];
+		}
+		if ( isset( $args['content'] ) ) {
+			$this->content = $args['content'];
+		}
+		if ( isset( $args['author'] ) ) {
+			$this->author = $args['author'];
+		}
+		if ( isset( $args['date'] ) ) {
+			$this->date = $args['date'];
+		}
+		if ( isset( $args['type'] ) ) {
+			$this->type = $args['type'];
+		}
+		if ( isset( $args['ID'] ) ) {
+			$this->ID = $args['ID'];
+		}
+		if ( isset( $args['post_parent'] ) ) {
+			$this->post_parent = $args['post_parent'];
+		}
+		if ( isset( $args['comment_status'] ) ) {
+			$this->comment_status = $args['comment_status'];
+		}
 
-		add_filter( 'the_posts', array( &$this, 'virtual_page' ) );
-		add_filter( 'the_title', array( &$this, 'hide_title' ), 10, 2 );
-		remove_action( 'wp_head', 'start_post_rel_link', 10, 0 );
-		remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0 );
+		if ( isset( $args['is_page'] ) ) {
+			$this->is_page = $args['is_page'];
+		}
+		if ( isset( $args['is_singular'] ) ) {
+			$this->is_singular = $args['is_singular'];
+		}
+		if ( isset( $args['is_archive'] ) ) {
+			$this->is_archive = $args['is_archive'];
+		}
 
+		// Hook up our virtual page with WP.
+		add_filter(
+			'the_posts',
+			array( $this, 'virtual_page' )
+		);
+		add_filter(
+			'the_title',
+			array( $this, 'virtual_title' ),
+			10, 2
+		);
+		add_filter(
+			'comments_template',
+			array( $this, 'virtual_comments' )
+		);
+
+		// Unhook some WP hooks that are conflicting with virtual pages.
+		remove_action(
+			'wp_head',
+			'start_post_rel_link',
+			10, 0
+		);
+		remove_action(
+			'wp_head',
+			'adjacent_posts_rel_link_wp_head',
+			10, 0
+		);
 	}
 
-	// filter to create virtual page content
-	function virtual_page( $posts ) {
-		global $wp, $wp_query, $comment, $withcomments;
-		$withcomments = false;
+	/**
+	 * Create a dynamic WP_Post object to reflect the virtual page definition.
+	 * Handles the WP filter `the_posts`.
+	 *
+	 * @since  2.0.0
+	 * @param  array $posts Default list of WP_Posts to diwplay.
+	 * @return array Modified list, only contains 1 item: Our virtual page.
+	 */
+	public function virtual_page( $posts ) {
+		global $wp_query, $withcomments;
+		$virtual_post = false;
 
 		// This will be 0 if its a virtual page.
 		if ( 0 < $wp_query->post_count ) {
 			return $posts;
 		}
 
-		$virtual_post = '';
+		if ( 'closed' == $this->comment_status ) {
+			$withcomments = false;
+		}
 
 		// Try a real post first and then override it with args
-		// if ( ! empty( $this->ID ) ) {
-		// CoursePress_Data_VirtualPage::$the_post_id = $this->ID;
-		// $virtual_post = get_post( $this->ID );
-		// $virtual_post->post_content = $this->content;
-		// $virtual_post->post_title = $this->title;
-		// $virtual_post->post_parent = $this->post_parent;
-		// $virtual_post->post_type = $this->type;
-		// return array( $virtual_post );
-		// }
-		if ( empty( $virtual_post ) ) {
+		if ( $this->ID ) {
+			CoursePress_Utility_Helper::set_the_post( $this->ID );
+			$virtual_post = get_post( $this->ID );
+			$virtual_post->post_content = $this->content;
+			$virtual_post->post_title = $this->title;
+			$virtual_post->post_parent = $this->post_parent;
+			$virtual_post->post_type = $this->type;
+		}
 
-			$virtual_post = new stdClass;
+		// Not using `else` since get_post can also return null...
+		if ( ! $virtual_post ) {
+			$virtual_post = new stdClass();
 
-			$virtual_post->ID = $this->ID;
+			$virtual_post->ID = $this->orig_ID;
 			$virtual_post->post_author = $this->author;
 			$virtual_post->post_date = $this->date;
-			$virtual_post->post_date_gmt = $this->dategmt;
+			$virtual_post->post_date_gmt = $this->date;
 			$virtual_post->post_content = $this->content;
 			$virtual_post->post_title = $this->title;
 			$virtual_post->post_excerpt = '';
@@ -85,44 +249,57 @@ class CoursePress_Data_VirtualPage {
 			$virtual_post->modified = $virtual_post->post_date;
 			$virtual_post->modified_gmt = $virtual_post->post_date_gmt;
 			$virtual_post->post_content_filtered = '';
-			$virtual_post->post_parent = 0;
 			$virtual_post->guid = get_home_url( '/' . $this->slug );
 			$virtual_post->menu_order = 0;
 			$virtual_post->post_type = $this->type;
 			$virtual_post->post_mime_type = '';
 			$virtual_post->post_parent = $this->post_parent;
-
-			// setting this to -1 lets wordpress load comment 1... it uses the absolute value.
-			$virtual_post->comment_count = 0;
 		}
 
-		$posts = array( $virtual_post );
+		/*
+		Set to 0 (not -1; WP uses absint() to sanitize the value).
+		This prevents WordPress from displaying any comments.
+		*/
+		$virtual_post->comment_count = 0;
 
 		$wp_query->is_page = $this->is_page;
 		$wp_query->is_singular = $this->is_singular;
+		$wp_query->is_archive = $this->is_archive;
 		$wp_query->is_home = false;
-		$wp_query->is_archive = false;
 		$wp_query->is_category = false;
 		unset( $wp_query->query['error'] );
 		$wp_query->query_vars['error'] = '';
 		$wp_query->is_404 = false;
 
-		if ( 'closed' === $this->comment_status ) {
-			add_filter( 'comments_template', array( &$this, 'hide_comments' ) );
-		}
-
-		return ( $posts );
+		return array( $virtual_post );
 	}
 
-	function hide_comments( $template ) {
-		$template = CoursePress::$path . 'lib/CoursePress/Template/no-comment.php';
+	/**
+	 * Set the comments template to an empty file.
+	 *
+	 * @since  2.0.0
+	 * @param  string $template The default template filename from WordPress.
+	 * @return string The new template filename.
+	 */
+	public function virtual_comments( $template ) {
+		if ( 'closed' == $this->comment_status ) {
+			$template = CoursePress::$path . 'lib/CoursePress/Template/no-comment.php';
+		}
+
 		return $template;
 	}
 
-	function hide_title( $title, $id ) {
-
-		// Only for this post!
-		if ( $this->ID !== $id && ! empty( $id ) ) {
+	/**
+	 * Returns the contents for filter `the_title`
+	 *
+	 * @since  2.0.0
+	 * @param  string $title Default page title by WordPress.
+	 * @param  int    $id Page that is processed.
+	 * @return string Modified page title.
+	 */
+	public function virtual_title( $title, $id ) {
+		// Only modify title of the virtual page!
+		if ( $id && $this->ID != $id ) {
 			return $title;
 		}
 

@@ -1417,6 +1417,9 @@ class CoursePress_Data_Course {
 	}
 
 	public static function by_name( $slug, $id_only ) {
+		$res = false;
+
+		// First try to fetch the course by the slug (name).
 		$args = array(
 			'name' => $slug,
 			'post_type' => self::get_post_type_name(),
@@ -1424,19 +1427,39 @@ class CoursePress_Data_Course {
 			'posts_per_page' => 1,
 		);
 
-		if ( $id_only ) {
-			$args['fields']	= 'ids';
-		}
+		if ( $id_only ) { $args['fields'] = 'ids'; }
 
 		$post = get_posts( $args );
 
 		if ( $post ) {
-			if ( $id_only ) {
-				return (int) $post[0];
+			$res = $post[0];
+		} elseif ( is_numeric( $slug ) ) {
+			// If we did not find a course by name, try to fetch it via ID.
+			$post = get_post( $slug );
+
+			if ( $post->post_type == self::get_post_type_name() ) {
+				if ( $id_only ) {
+					$res = $post->ID;
+				} else {
+					$res = $post;
+				}
 			}
-			return $post[0];
-		} else {
-			return false;
 		}
+
+		return $res;
+	}
+
+	/**
+	 * Returns the permalink to the specified course.
+	 *
+	 * @since  2.0.0
+	 * @param  int $course_id The course-ID.
+	 * @return string The absolute URL to the main course page.
+	 */
+	public static function get_permalink( $course_id ) {
+		$base_url = CoursePress_Core::get_slug( 'courses/', true );
+		$slug = get_post_field( 'post_name', $course_id );
+
+		return trailingslashit( $baseurl . $slug );
 	}
 }
