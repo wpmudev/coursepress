@@ -286,7 +286,6 @@ class CoursePress_Template_Module {
 			'reverse_top_level' => false, // Show the latest comments at the top of the list
 			'echo' => false,
 			'style' => 'ul',
-			'callback' => function_exists( 'wpmudev_list_comments' ) ? 'wpmudev_list_comments' : false,
 		), $comments );
 		$content .= '</ul>';
 
