@@ -536,7 +536,7 @@ class CoursePress_Core {
 		/**
 		 * exit if we have some courses
 		 */
-		if ( ! empty( CoursePress_Data_Course::count_course() ) ) {
+		if ( ! empty( CoursePress_Data_Course::count_courses() ) ) {
 			return;
 		}
 		wp_safe_redirect(
