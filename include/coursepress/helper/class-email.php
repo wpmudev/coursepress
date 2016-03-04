@@ -443,7 +443,7 @@ class CoursePress_Helper_Email {
 			'PASSCODE' => self::get_setting( $course_id, 'enrollment_passcode', '' ),
 		);
 
-		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
+		return CoursePress_Helper_Utility::replace_vars( $content, $tags );
 	}
 
 	/**
@@ -506,7 +506,7 @@ class CoursePress_Helper_Email {
 			'WEBSITE_NAME' => get_bloginfo( 'name' ),
 		);
 
-		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
+		return CoursePress_Helper_Utility::replace_vars( $content, $tags );
 	}
 
 	/**
