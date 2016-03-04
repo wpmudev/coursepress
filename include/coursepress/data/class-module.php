@@ -325,7 +325,7 @@ class CoursePress_Data_Module {
 		}
 
 		if ( empty( $text ) ) {
-			$text = __( 'Click here to cancel reply.' ); }
+			$text = __( 'Click here to cancel reply.', 'CP_TD' ); }
 
 		$style = isset( $_GET['replytocom'] ) ? '' : ' style="display:none;"';
 
