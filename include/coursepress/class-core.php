@@ -108,6 +108,11 @@ class CoursePress_Core {
 
 		// Init Featured Course widget
 		CoursePress_Widget_FeaturedCourse::init();
+
+		/**
+		 * show guide page?
+		 */
+		add_action( 'admin_init', array( __CLASS__, 'redirect_to_guide_page' ) );
 	}
 
 	/**
@@ -507,5 +512,42 @@ class CoursePress_Core {
 
 		$x = '';
 		return array_merge( $new_rules, $rules );
+	}
+
+	/**
+	 * Redirect to Guide page.
+	 *
+	 * Redirect to Guide page after activate CoursePress plugin, only once and
+	 * only when we do not have courses in database.
+	 *
+	 * @since 2.0.0
+	 */
+	public static function redirect_to_guide_page() {
+		/**
+		 * exit if it is not first time
+		 */
+		if ( empty( get_option( 'coursepress_activate', false ) ) ) {
+			return;
+		}
+		/**
+		 * delete_option (semaphore to show guide page)
+		 */
+		delete_option( 'coursepress_activate' );
+		/**
+		 * exit if we have some courses
+		 */
+		if ( ! empty( CoursePress_Data_Course::count_course() ) ) {
+			return;
+		}
+		wp_safe_redirect(
+			add_query_arg(
+				array(
+					'page' => 'coursepress_settings',
+					'tab' => 'setup',
+				),
+				admin_url( 'admin.php' )
+			)
+		);
+		exit();
 	}
 }

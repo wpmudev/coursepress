@@ -1439,4 +1439,15 @@ class CoursePress_Data_Course {
 			return false;
 		}
 	}
+
+	/**
+	 * Count number of courses.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return integer number of courses
+	 */
+	public static function count_course() {
+		return array_sum( get_object_vars( wp_count_posts( self::get_post_type_name() ) ) );
+	}
 }
