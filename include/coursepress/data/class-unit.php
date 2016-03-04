@@ -198,9 +198,9 @@ class CoursePress_Data_Unit {
 			if ( (int) $delay_days > 0 ) {
 				$date_enrolled = strtotime( $date_enrolled );
 				$delay_date = $date_enrolled + ( (int) $delay_days * 86400 );
-				$since_published = $now - $delay_date;
+				$since_published = $delay_date - $now;
 
-				$available = $since_published >= 0;
+				$available = $since_published <= 0;
 			}
 		}
 

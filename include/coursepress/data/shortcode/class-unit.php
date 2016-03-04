@@ -629,7 +629,33 @@ class CoursePress_Data_Shortcode_Unit {
 
 				if( 'on_date' == $unit_availability ) {
 					$date = get_post_meta( $unit_id, 'unit_date_availability', true );
-					$content .= esc_html__( 'Available', 'CP_TD' ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( $date ) );
+					$content .= esc_html__( 'Available on ', 'CP_TD' ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( $date ) );
+				}
+				elseif( 'after_delay' == $unit_availability ) {
+					$student_id = get_current_user_id();
+
+					if( $student_id > 0 ) {
+						$now = strtotime( 'now' );
+						$delay_days = get_post_meta( $unit_id, 'unit_delay_days', true );
+						$date_enrolled = CoursePress_Data_Course::student_enrolled( $student_id, $course_id );
+
+						if ( (int) $delay_days > 0 ) {
+							$date_enrolled = strtotime( $date_enrolled );
+							$delay_date = $date_enrolled + ( (int) $delay_days * 86400 );
+							$since_published = $delay_date - $now;
+
+							$available = $since_published <= 0;
+
+							if( ! $available ) {
+								/**
+								 * Include the time_format to avoid confusion where the unit's availability
+								 * is the current date.
+								 **/
+								$content .= esc_html( 'Available on ', 'CP_TD' )
+									. date_i18n( get_option( 'date_format' ) . ' @ ' . get_option( 'time_format' ), $delay_date );
+							}
+						}
+					}
 				}
 			}
 		}
