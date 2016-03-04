@@ -1655,11 +1655,11 @@ var CoursePress = CoursePress || {};
 		self.headerView.template_variables.unit_feature_image = meta.unit_feature_image;
 
 		var checked = meta.force_current_unit_completion;
-		checked = 'on' === checked || true === checked || 1 === checked ? 'checked="checked"' : '';
+		checked = 'on' === checked || true === checked || 1 === parseInt( checked ) ? 'checked="checked"' : '';
 		self.headerView.template_variables.unit_force_completion_checked = checked;
 
 		checked = meta.force_current_unit_successful_completion;
-		checked = 'on' === checked || true === checked || 1 === checked ? 'checked="checked"' : '';
+		checked = 'on' === checked || true === checked || 1 === parseInt( checked ) ? 'checked="checked"' : '';
 		self.headerView.template_variables.unit_force_successful_completion_checked = checked;
 
 		self.headerView.render();
