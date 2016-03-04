@@ -625,8 +625,12 @@ class CoursePress_Data_Shortcode_Unit {
 				$content .= esc_html__( 'Previous unit must be completed successfully.', 'CP_TD' );
 			}
 			if ( ! $unit_status['date_restriction']['result'] ) {
-				$date = get_post_meta( $unit_id, 'unit_availability', true );
-				$content .= esc_html__( 'Available', 'CP_TD' ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( $date ) );
+				$unit_availability = get_post_meta( $unit_id, 'unit_availability', true );
+
+				if( 'on_date' == $unit_availability ) {
+					$date = get_post_meta( $unit_id, 'unit_date_availability', true );
+					$content .= esc_html__( 'Available', 'CP_TD' ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( $date ) );
+				}
 			}
 		}
 
