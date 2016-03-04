@@ -313,6 +313,12 @@ class CoursePress_Data_Module {
 	public static function discussion_cancel_reply_link( $formatted_link, $link, $text ) {
 
 		$comment_id = isset( $_GET['replytocom'] ) ? (int) $_GET['replytocom'] : '';
+
+		// Bail if comment_id is null
+		if( 0 == (int) $comment_id ) {
+			return;
+		}
+
 		$comment = get_comment( $comment_id );
 
 		$post_type = get_post_type( $comment->comment_post_ID );
