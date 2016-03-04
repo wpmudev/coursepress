@@ -220,7 +220,7 @@ class CoursePress_Data_VirtualPage {
 
 		// Try a real post first and then override it with args
 		if ( $this->ID ) {
-			CoursePress_Utility_Helper::set_the_post( $this->ID );
+			CoursePress_Helper_Utility::set_the_post( $this->ID );
 			$virtual_post = get_post( $this->ID );
 			$virtual_post->post_content = $this->content;
 			$virtual_post->post_title = $this->title;
