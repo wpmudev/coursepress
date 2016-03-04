@@ -934,7 +934,7 @@ class CoursePress_Template_Module {
 						<input type="hidden" name="student_id" value="' . get_current_user_id() . '" />';
 
 			$content .= '
-						<div class="module-quiz-questions" style="display: none;">
+						<div class="module-quiz-questions">
 			';
 
 			foreach ( $attributes['questions'] as $qi => $question ) {
