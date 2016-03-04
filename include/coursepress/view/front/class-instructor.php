@@ -49,7 +49,6 @@ class CoursePress_View_Front_Instructor {
 			$args = array(
 				'slug' => 'instructor_' . self::$last_instructor,
 				'title' => $page_title,
-				// 'show_title' => false,
 				'content' => ! empty( $content ) ? esc_html( $content ) : self::render_instructor_page(),
 				'type' => 'coursepress_instructor',
 			);

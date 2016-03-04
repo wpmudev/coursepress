@@ -54,7 +54,6 @@ class CoursePress_View_Front_Dashboard {
 			$args = array(
 				'slug' => CoursePress_Core::get_slug( 'student_dashboard' ),
 				'title' => esc_html( $page_title ),
-				// 'show_title' => false,
 				'content' => ! empty( $content ) ? esc_html( $content ) : self::render_dashboard_page(),
 				'type' => 'coursepress_student_dashboard',
 			);

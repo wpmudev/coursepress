@@ -60,7 +60,6 @@ class CoursePress_View_Front_Login {
 			$args = array(
 				'slug' => CoursePress_Core::get_slug( 'login' ),
 				'title' => esc_html( $page_title ),
-				// 'show_title' => false,
 				'content' => ! empty( $content ) ? esc_html( $content ) : self::render_login_page(),
 				'type' => 'coursepress_student_login',
 			);
@@ -86,7 +85,6 @@ class CoursePress_View_Front_Login {
 			$args = array(
 				'slug' => CoursePress_Core::get_slug( 'signup' ),
 				'title' => esc_html( $page_title ),
-				// 'show_title' => false,
 				'content' => ! empty( $content ) ? esc_html( $content ) : self::render_signup_page(),
 				'type' => 'coursepress_student_signup',
 			);
