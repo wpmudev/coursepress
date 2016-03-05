@@ -313,9 +313,13 @@ class CoursePress_Data_Shortcode_Student {
 	}
 
 	public static function coursepress_enrollment_templates( $atts ) {
-		$atts = shortcode_atts( array(
-			'course_id' => CoursePress_Helper_Utility::the_course( true ),
-		), $atts, 'course_page' );
+		$atts = shortcode_atts(
+			array(
+				'course_id' => CoursePress_Helper_Utility::the_course( true ),
+			),
+			$atts,
+			'course_page'
+		);
 
 		$course_id = (int) $atts['course_id'];
 
@@ -324,80 +328,85 @@ class CoursePress_Data_Shortcode_Student {
 		}
 
 		$nonce = wp_create_nonce( 'coursepress_enrollment_action' );
-		$modal_steps = apply_filters( 'coursepress_registration_modal', array(
-			'container' => '
-				<script type="text/template" id="modal-template">
-					<div class="enrollment-modal-container" data-nonce="' . $nonce . '" data-course="' . $course_id . '"></div>
-				</script>
-			',
-			'step_1' => do_shortcode( '
-				<script type="text/template" id="modal-view1-template" data-type="modal-step" data-modal-action="signup">
-					<div class="bbm-modal-nonce signup" data-nonce="' . wp_create_nonce( 'coursepress_enrollment_action_signup' ) . '"></div>
-					<div class="bbm-modal__topbar">
-						<h3 class="bbm-modal__title">' . esc_html__( 'Create new account', 'CP_TD' ) . '</h3>
-					</div>
-					<div class="bbm-modal__section">
-						<div class="modal-nav-link">
-						[course_signup_form login_link_id="step2" show_submit="no" ]
-						</div>
-					</div>
-					<div class="bbm-modal__bottombar">
-					<input type="submit" class="bbm-button done signup button cta-button" value="' . esc_attr__( 'Create an account', 'CP_TD' ) . '" />
-					<a href="#" class="cancel-link">' . __( 'Cancel', 'CP_TD' ) . '</a>
-					</div>
-				</script>
-			' ),
-			'step_2' => do_shortcode( '
-				<script type="text/template" id="modal-view2-template" data-type="modal-step" data-modal-action="login">
-					<div class="bbm-modal-nonce login" data-nonce="' . wp_create_nonce( 'coursepress_enrollment_action_login' ) . '"></div>
-					<div class="bbm-modal__topbar">
-						<h3 class="bbm-modal__title">' . esc_html__( 'Login to your account', 'CP_TD' ) . '</h3>
-					</div>
-					<div class="bbm-modal__section">
-						<div class="modal-nav-link">
-						[course_signup_form signup_link_id="step1" show_submit="no" page="login"]
-						</div>
-					</div>
-					<div class="bbm-modal__bottombar">
-					<input type="submit" class="bbm-button done button cta-button" value="' . esc_attr__( 'Log in', 'CP_TD' ) . '" />
-					<a href="#" class="cancel-link">' . __( 'Cancel', 'CP_TD' ) . '</a>
-					</div>
-				</script>
-			' ),
-			'step_3' => '
-				<script type="text/template" id="modal-view3-template" data-type="modal-step" data-modal-action="enrolled">
-					<div class="bbm-modal__topbar">
-						<h3 class="bbm-modal__title">' . esc_html__( 'Successfully enrolled.', 'CP_TD' ) . '</h3>
-					</div>
-					<div class="bbm-modal__section">
-						<p>' . __( 'Congratulations! You have successfully enrolled. Click below to get started.', 'CP_TD' ) . '</p>
-						<a href="' . get_permalink( CoursePress_Helper_Utility::the_course( true ) ) . CoursePress_Core::get_slug( 'units' ) . '">Start Learning</a>
-					</div>
-					<div class="bbm-modal__bottombar">
-					</div>
-				</script>
-			',
-			/*
-			'step_4' => '
-				<script type="text/template" id="modal-view4-template" data-type="modal-step" data-modal-action="login">
-					<div class="bbm-modal__topbar">
-						<h3 class="bbm-modal__title">Wizard example - step 4</h3>
-					</div>
-					<div class="bbm-modal__section">
-						<p>STEP 4</p>
-					</div>
-					<div class="bbm-modal__bottombar">
-					<a href="#" class="bbm-button previous inactive">Previous</a>
-					<a href="#" class="bbm-button done">Done</a>
-					</div>
-				</script>
-			',
-			*/
 
-		), $course_id );
+		$scode_1 = '[course_signup_form login_link_id="step2" show_submit="no"]';
+		$scode_2 = '[course_signup_form signup_link_id="step1" show_submit="no" page="login"]';
 
-		return implode( '', $modal_steps );
+		/**
+		 * The filters below can be used to customize the output of the
+		 * registration process.
+		 */
+		ob_start();
+		?>
+		<script type="text/template" id="modal-template">
+			<div class="enrollment-modal-container" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-course="<?php echo esc_attr( $course_id ); ?>"></div>
+		</script>
 
+		<?php if ( apply_filters( 'coursepress_registration_form_step-1', true ) ) : ?>
+		<script type="text/template" id="modal-view1-template" data-type="modal-step" data-modal-action="signup">
+			<div class="bbm-modal-nonce signup" data-nonce="<?php echo wp_create_nonce( 'coursepress_enrollment_action_signup' ); ?>"></div>
+			<div class="bbm-modal__topbar">
+				<h3 class="bbm-modal__title">
+					<?php esc_html_e( 'Create new account', 'CP_TD' ); ?>
+				</h3>
+			</div>
+			<div class="bbm-modal__section">
+				<div class="modal-nav-link">
+				<?php echo do_shortcode( $scode_1 ); ?>
+				</div>
+			</div>
+			<div class="bbm-modal__bottombar">
+			<input type="submit" class="bbm-button done signup button cta-button" value="<?php esc_attr_e( 'Create an account', 'CP_TD' ); ?>" />
+			<a href="#" class="cancel-link">
+				<?php esc_html_e( 'Cancel', 'CP_TD' ); ?>
+			</a>
+			</div>
+		</script>
+		<?php endif; ?>
+
+		<?php if ( apply_filters( 'coursepress_registration_form_step-2', true ) ) : ?>
+		<script type="text/template" id="modal-view2-template" data-type="modal-step" data-modal-action="login">
+			<div class="bbm-modal-nonce login" data-nonce="<?php echo wp_create_nonce( 'coursepress_enrollment_action_login' ); ?>"></div>
+			<div class="bbm-modal__topbar">
+				<h3 class="bbm-modal__title">
+					<?php esc_html_e( 'Login to your account', 'CP_TD' ); ?>
+				</h3>
+			</div>
+			<div class="bbm-modal__section">
+				<div class="modal-nav-link">
+				<?php echo do_shortcode( $scode_2 ); ?>
+				</div>
+			</div>
+			<div class="bbm-modal__bottombar">
+			<input type="submit" class="bbm-button done button cta-button" value="<?php esc_attr_e( 'Log in', 'CP_TD' ); ?>" />
+			<a href="#" class="cancel-link"><?php esc_html_e( 'Cancel', 'CP_TD' ); ?></a>
+			</div>
+		</script>
+		<?php endif; ?>
+
+		<?php if ( apply_filters( 'coursepress_registration_form_step-3', true ) ) : ?>
+		<script type="text/template" id="modal-view3-template" data-type="modal-step" data-modal-action="enrolled">
+			<div class="bbm-modal__topbar">
+				<h3 class="bbm-modal__title">
+					<?php esc_html_e( 'Successfully enrolled.', 'CP_TD' ); ?>
+				</h3>
+			</div>
+			<div class="bbm-modal__section">
+				<p>
+					<?php esc_html_e( 'Congratulations! You have successfully enrolled. Click below to get started.', 'CP_TD' ); ?>
+				</p>
+				<a href="<?php echo get_permalink( CoursePress_Helper_Utility::the_course( true ) ) . CoursePress_Core::get_slug( 'units' ); ?>">Start Learning</a>
+			</div>
+			<div class="bbm-modal__bottombar">
+			</div>
+		</script>
+		<?php endif; ?>
+
+		<?php
+		do_action( 'coursepress_registration_form_end' );
+		$content = ob_get_clean();
+
+		return $content;
 	}
 
 	/**
@@ -408,15 +417,19 @@ class CoursePress_Data_Shortcode_Student {
 	 * @return string Shortcode output.
 	 */
 	public static function course_progress( $atts ) {
-		extract( shortcode_atts( array(
-			'course_id' => CoursePress_Helper_Utility::the_course( true ),
-			'decimal_places' => '0',
-		), $atts, 'course_progress' ) );
-		if ( ! empty( $course_id ) ) {
-			$course_id = (int) $course_id;
-		}
+		extract(
+			shortcode_atts(
+				array(
+					'course_id' => CoursePress_Helper_Utility::the_course( true ),
+					'decimal_places' => '0',
+				),
+				$atts,
+				'course_progress'
+			)
+		);
 
-		$decimal_places = sanitize_text_field( $decimal_places );
+		if ( $course_id  ) { $course_id = (int) $course_id; }
+		$decimal_places = (int) $decimal_places ;
 
 		return number_format_i18n(
 			CoursePress_Data_Student::get_course_progress(

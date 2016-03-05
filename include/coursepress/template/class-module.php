@@ -266,7 +266,7 @@ class CoursePress_Template_Module {
 
 			if ( 1 == get_comments_number( $module->ID ) ) {
 				/* translators: %s: post title */
-				$content .= sprintf( __( 'One response to %s', 'CP_TD' ), '&#8220;' . get_the_title() . '&#8221;' );
+				$content .= sprintf( __( 'One response to %s', 'CP_TD' ), '&#8220;' . get_the_title( $module->ID ) . '&#8221;' );
 			} else {
 				/* translators: 1: number of comments, 2: post title */
 				$content .= sprintf( _n( '%1$s response to %2$s', '%1$s responses to %2$s', get_comments_number( $module->ID ), 'CP_TD' ),
@@ -286,7 +286,6 @@ class CoursePress_Template_Module {
 			'reverse_top_level' => false, // Show the latest comments at the top of the list
 			'echo' => false,
 			'style' => 'ul',
-			'callback' => 'wpmudev_list_comments',
 		), $comments );
 		$content .= '</ul>';
 
@@ -934,7 +933,7 @@ class CoursePress_Template_Module {
 						<input type="hidden" name="student_id" value="' . get_current_user_id() . '" />';
 
 			$content .= '
-						<div class="module-quiz-questions" style="display: none;">
+						<div class="module-quiz-questions">
 			';
 
 			foreach ( $attributes['questions'] as $qi => $question ) {
