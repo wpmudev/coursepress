@@ -635,14 +635,14 @@ class CoursePress_Data_Shortcode_Unit {
 					$student_id = get_current_user_id();
 
 					if( $student_id > 0 ) {
-						$now = strtotime( 'now' );
+						$now = strtotime( 'now', current_time( 'timestamp' ) );
 						$delay_days = get_post_meta( $unit_id, 'unit_delay_days', true );
 						$date_enrolled = CoursePress_Data_Course::student_enrolled( $student_id, $course_id );
 
 						if ( (int) $delay_days > 0 ) {
-							$date_enrolled = strtotime( $date_enrolled );
+							$date_enrolled = strtotime( $date_enrolled, current_time( 'timestamp' ) );
 							$delay_date = $date_enrolled + ( (int) $delay_days * 86400 );
-							$since_published = $delay_date - $now;
+							$since_published = $delay_date;
 
 							$available = $since_published <= 0;
 
@@ -651,8 +651,10 @@ class CoursePress_Data_Shortcode_Unit {
 								 * Include the time_format to avoid confusion where the unit's availability
 								 * is the current date.
 								 **/
-								$content .= esc_html( 'Available on ', 'CP_TD' )
-									. date_i18n( get_option( 'date_format' ) . ' @ ' . get_option( 'time_format' ), $delay_date );
+								$content .= sprintf( esc_html__( 'Available on %s @ %s', 'CP_TD' ),
+										date_i18n( get_option( 'date_format' ), $delay_date ),
+										date_i18n ( get_option( 'time_format' ), $delay_date )
+								);
 							}
 						}
 					}
