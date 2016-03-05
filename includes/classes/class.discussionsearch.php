@@ -13,12 +13,12 @@ if ( ! class_exists( 'Discussion_Search' ) ) {
 		var $args = array();
 		var $post_type = 'discussions';
 
-		function __construct( $search_term = '', $page_num = '' ) {
+		function __construct( $search_term = '', $page_num = '', $args = array() ) {
 			$this->search_term = $search_term;
 			$this->raw_page    = ( '' == $page_num ) ? false : ( int ) $page_num;
 			$this->page_num    = ( int ) ( '' == $page_num ) ? 1 : $page_num;
 
-			$args = array(
+			$defaults = array(
 				'posts_per_page' => $this->discussion_per_page,
 				'offset'         => ( $this->page_num - 1 ) * $this->discussion_per_page,
 				'orderby'        => 'post_date',
@@ -27,7 +27,7 @@ if ( ! class_exists( 'Discussion_Search' ) ) {
 				'post_status'    => 'any'
 			);
 
-			$this->args = $args;
+			$this->args = wp_parse_args( $args, $defaults );
 		}
 
 		function Discussion( $search_term = '', $page_num = '' ) {
