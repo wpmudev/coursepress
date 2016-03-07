@@ -26,22 +26,50 @@ class CoursePress_Helper_Integration_MarketPress {
 		}
 
 		// Enable Payment Support
-		add_filter( 'coursepress_payment_supported', array( __CLASS__, 'enable_payment' ) );
+		add_filter(
+			'coursepress_payment_supported',
+			array( __CLASS__, 'enable_payment' )
+		);
 
 		// Add additional fields to Course Setup Step 6 if paid is checked
-		add_filter( 'coursepress_course_setup_step_6_paid', array( __CLASS__, 'product_settings' ), 10, 2 );
+		add_filter(
+			'coursepress_course_setup_step_6_paid',
+			array( __CLASS__, 'product_settings' ),
+			10, 2
+		);
 
 		// Add MP Product if needed
-		add_filter( 'coursepress_course_update_meta', array( __CLASS__, 'maybe_create_product' ), 10, 2 );
+		add_filter(
+			'coursepress_course_update_meta',
+			array( __CLASS__, 'maybe_create_product' ),
+			10, 2
+		);
 
 		// Respond to Course Update/Create
-		add_action( 'coursepress_course_created', array( __CLASS__, 'update_product_from_course' ), 10, 2 );
-		add_action( 'coursepress_course_updated', array( __CLASS__, 'update_product_from_course' ), 10, 2 );
+		add_action(
+			'coursepress_course_created',
+			array( __CLASS__, 'update_product_from_course' ),
+			10, 2
+		);
+		add_action(
+			'coursepress_course_updated',
+			array( __CLASS__, 'update_product_from_course' ),
+			10, 2
+		);
 
-		// If for whatever reason the course gets updated in MarketPress, reflect those changes in the course
-		add_action( 'post_updated', array( __CLASS__, 'update_course_from_product' ), 10, 3 );
+		// If for whatever reason the course gets updated in MarketPress,
+		// reflect those changes in the course.
+		add_action(
+			'post_updated',
+			array( __CLASS__, 'update_course_from_product' ),
+			10, 3
+		);
 
-		add_filter( 'coursepress_shortcode_course_cost', array( __CLASS__, 'shortcode_cost' ), 10, 2 );
+		add_filter(
+			'coursepress_shortcode_course_cost',
+			array( __CLASS__, 'shortcode_cost' ),
+			10, 2
+		);
 
 		add_filter(
 			'mp_order_notification_subject',
@@ -56,16 +84,13 @@ class CoursePress_Helper_Integration_MarketPress {
 		);
 	}
 
-
-
 	public static function enable_payment( $payment_supported ) {
-		$payment_supported = true;
+		$payment_supported = true; // TODO: Should this be a setting??
 		return $payment_supported;
 	}
 
 	public static function product_settings( $content, $course_id ) {
-
-		// TIP: Use fields with meta_ prefix to automatically add it to the course meta
+		// Prefix fields with meta_ to automatically add it to the course meta!
 		$mp_content = '
 			<div class="wide">
 				<label>' .
@@ -99,9 +124,10 @@ class CoursePress_Helper_Integration_MarketPress {
 				</label>';
 
 		$product_id = CoursePress_Data_Course::get_setting( $course_id, 'mp_product_id', false );
-		$product_id = ! empty( $product_id ) && get_post_status( $product_id ) ? $product_id : false;
-		if ( false !== $product_id ) {
-			// Add MP product ID as indication
+		$product_id = $product_id && get_post_status( $product_id ) ? $product_id : false;
+
+		if ( $product_id ) {
+			// Add MP product ID as indication.
 			$mp_content .= '
 				<label class="description">' . sprintf( __( 'MarketPress Product ID: %d', 'CP_TD' ), $product_id ) . '</label>
 			';
@@ -116,23 +142,20 @@ class CoursePress_Helper_Integration_MarketPress {
 		return $content;
 	}
 
-
 	// Return settings, this is a filter
 	public static function maybe_create_product( $settings, $course_id ) {
-
 		// Settings fields will exist because it will be created with this integration in ::product_settings
 		$is_paid = isset( $settings['payment_paid_course'] ) ? $settings['payment_paid_course'] : false;
-		$is_paid = empty( $is_paid ) || 'off' === $is_paid ? false : true;
+		$is_paid = ! $is_paid || 'off' == $is_paid ? false : true;
 
 		// Check for existance of product id first
 		$product_id = CoursePress_Data_Course::get_setting( $course_id, 'mp_product_id', false );
 
 		// Check if the corresponding product exists, if not, set product ID to false. This happens if the product "accidentally" got deleted.
-		$product_id = ! empty( $product_id ) && get_post_status( $product_id ) ? $product_id : false;
+		$product_id = $product_id && get_post_status( $product_id ) ? $product_id : false;
 
-		// Assume product does not exist and create one
-		if ( false === $product_id && $is_paid ) {
-
+		// Assume product does not exist and create one.
+		if ( ! $product_id && $is_paid ) {
 			$course = get_post( $course_id );
 
 			$product = array(
@@ -152,7 +175,7 @@ class CoursePress_Helper_Integration_MarketPress {
 		}
 
 		// If its not paid and a product doesn't exist, do nothing.
-		if ( false === $product_id ) {
+		if ( ! $product_id ) {
 			return $settings;
 		}
 
@@ -187,7 +210,6 @@ class CoursePress_Helper_Integration_MarketPress {
 	}
 
 	public static function update_product_from_course( $course_id, $settings ) {
-
 		self::$course_id = $course_id;
 
 		// Avoid possible messy loop
@@ -199,15 +221,15 @@ class CoursePress_Helper_Integration_MarketPress {
 		// If course status is no longer paid, but an MP ID exists, then disable the MP product (don't delete)
 		$product_id = CoursePress_Data_Course::get_setting( $course_id, 'mp_product_id', false );
 		$product_status = get_post_status( $product_id );
-		$product_id = ! empty( $product_id ) && $product_status ? $product_id : false;
+		$product_id = $product_id && $product_status ? $product_id : false;
 
 		$is_paid = CoursePress_Data_Course::is_paid_course( $course_id );
 
 		// Update and publish
-		if ( false !== $product_id && $is_paid ) {
+		if ( $product_id && $is_paid ) {
 			self::update_product_meta( $product_id, $settings, $course_id );
 
-			if ( ! empty( $product_status ) && 'publish' !== $product_status ) {
+			if ( $product_status && 'publish' != $product_status ) {
 				$product = array(
 					'ID' => $product_id,
 					'post_status' => 'publish',
@@ -217,11 +239,11 @@ class CoursePress_Helper_Integration_MarketPress {
 			}
 		}
 
-		// Update and hide
-		if ( false !== $product_id && ! $is_paid ) {
+		// Update and hide.
+		if ( $product_id && ! $is_paid ) {
 			self::update_product_meta( $product_id, $settings, $course_id );
 
-			if ( ! empty( $product_status ) && 'publish' !== $product_status ) {
+			if ( $product_status && 'publish' != $product_status ) {
 				$product = array(
 					'ID' => $product_id,
 					'post_status' => 'draft',
@@ -230,13 +252,11 @@ class CoursePress_Helper_Integration_MarketPress {
 				wp_update_post( $product );
 			}
 		}
-
 	}
 
 	public static function update_course_from_product( $product_id, $post, $before_update ) {
-
 		// If its not a product, exit
-		if ( 'product' !== $post->post_type ) {
+		if ( 'product' != $post->post_type ) {
 			return;
 		}
 
@@ -248,8 +268,8 @@ class CoursePress_Helper_Integration_MarketPress {
 
 		$course_id = (int) get_post_meta( $product_id, 'mp_course_id', true );
 
-		// No point proceeding if there is no associated course
-		if ( empty( $course_id ) ) {
+		// No point proceeding if there is no associated course.
+		if ( ! $course_id ) {
 			return;
 		}
 
@@ -264,7 +284,7 @@ class CoursePress_Helper_Integration_MarketPress {
 
 		$is_sale = get_post_meta( $product_id, 'mp_is_sale', true );
 
-		$is_paid = 'publish' === $post->post_status;
+		$is_paid = ('publish' == $post->post_status);
 
 		$settings = CoursePress_Data_Course::get_setting( $course_id );
 		CoursePress_Data_Course::set_setting( $settings, 'mp_sku', $sku );
@@ -275,18 +295,23 @@ class CoursePress_Helper_Integration_MarketPress {
 		CoursePress_Data_Course::update_setting( $course_id, true, $settings );
 
 		self::$updated = true;
-
 	}
 
 	public static function shortcode_cost( $content, $course_id ) {
+		$product_id = CoursePress_Data_Course::get_setting(
+			$course_id,
+			'mp_product_id',
+			false
+		);
 
-		$product_id = CoursePress_Data_Course::get_setting( $course_id, 'mp_product_id', false );
-
-		return do_shortcode( '[mp_product_price product_id="' . $product_id . '" label=""]' );
+		return do_shortcode(
+			'[mp_product_price product_id="' . $product_id . '" label=""]'
+		);
 	}
 }
 
 // --- Legacy functions --------------------------------------------------------
+// TODO: Those functions should be moved into the class.
 
 if ( ! function_exists( 'cp_get_order_course_id' ) ) {
 
