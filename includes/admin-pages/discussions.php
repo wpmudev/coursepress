@@ -48,7 +48,21 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 		$discussionsearch = '';
 	}
 
-	$wp_discussion_search = new Discussion_Search( $discussionsearch, $page_num );
+	$discussion_query_args = array();
+	if ( !current_user_can( 'manage_options' ) && !current_user_can( 'coursepress_update_discussion_cap' ) ) {
+		// List only the discussions that belong to a course assigned to the current user.
+		$instructor         = new Instructor( get_current_user_id() );
+		$instructor_courses = $instructor->get_assigned_courses_ids();
+		$discussion_query_args['meta_query'] = array(
+			array(
+				'key'     => 'course_id',
+				'value'   => $instructor_courses,
+				'compare' => 'IN',
+			),
+		);
+	}
+
+	$wp_discussion_search = new Discussion_Search( $discussionsearch, $page_num, $discussion_query_args );
 
 	if ( isset( $_GET['discussion_id'] ) ) {
 		$discussion = new Discussion( $_GET['discussion_id'] );
