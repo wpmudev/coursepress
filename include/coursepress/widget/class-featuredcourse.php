@@ -113,6 +113,7 @@ class CoursePress_Widget_FeaturedCourse extends WP_Widget {
 
 		$selected_type = isset( $instance['type'] ) ? $instance['type'] : 'image';
 		$selected_priority = isset( $instance['priority'] ) ? $instance['priority'] : 'image';
+		$button_label = isset( $instance['button_title'] ) ? $instance['button_title'] : __( 'Details', 'CP_TD' );
 
 		$title = empty( $instance['title'] ) ? ' ' : apply_filters( 'widget_title', $instance['title'] );
 
@@ -130,7 +131,7 @@ class CoursePress_Widget_FeaturedCourse extends WP_Widget {
 			</div>
 
 			<div class="cp_featured_widget_course_link">
-				<button class="apply-button apply-button-details" data-link="<?php echo esc_url( get_permalink( $course_id ) ); ?>"><?php echo esc_html( $instance['button_title'] ); ?></button>
+				<button class="apply-button apply-button-details" data-link="<?php echo esc_url( get_permalink( $course_id ) ); ?>"><?php echo esc_html( $button_label ); ?></button>
 			</div>
 		</div>
 		<?php
