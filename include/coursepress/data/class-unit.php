@@ -185,7 +185,7 @@ class CoursePress_Data_Unit {
 		}
 
 		$unit_available = get_post_meta( $unit_id, 'unit_availability', true );
-		$now = strtotime( 'now' );
+		$now = strtotime( 'now', current_time( 'timestamp' ) );
 		$available = true;
 		$student_id = get_current_user_id();
 
@@ -193,7 +193,7 @@ class CoursePress_Data_Unit {
 			$unit_date_availability = get_post_meta( $unit_id, 'unit_date_availability', true );
 
 			if ( ! empty( $unit_date_availability ) ) {
-				$unit_date_availability = strtotime( $unit_date_availability );
+				$unit_date_availability = strtotime( $unit_date_availability, current_time( 'timestamp' ) );
 				$available = ( $unit_date_availability - $now ) <= 0;
 			}
 		} elseif ( 'after_delay' === $unit_available ) {
@@ -201,11 +201,11 @@ class CoursePress_Data_Unit {
 			$date_enrolled = CoursePress_Data_Course::student_enrolled( $student_id, $course_id );
 
 			if ( (int) $delay_days > 0 ) {
-				$date_enrolled = strtotime( $date_enrolled );
-				$delay_date = $date_enrolled + ( (int) $delay_days * 86400 );
-				$since_published = $now - $delay_date;
+				$date_enrolled = strtotime( $date_enrolled, current_time( 'timestamp' ) );
+				$delay_date = $date_enrolled + (  (int) $delay_days * 86400 );
+				$since_published = $delay_date - $now;
 
-				$available = $since_published >= 0;
+				$available = $since_published <= 0;
 			}
 		}
 

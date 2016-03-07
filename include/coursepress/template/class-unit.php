@@ -189,7 +189,7 @@ class CoursePress_Template_Unit {
 		// if ( 100 == (int) $progress ) {
 		// echo sprintf( '<div class="unit-archive-course-complete">%s %s</div>', '<i class="fa fa-check-circle"></i>', __( 'Course Complete', 'CP_TD' ) );
 		// }
-		$content .= do_shortcode( '[unit_archive_list]' );
+		$content .= do_shortcode( '[unit_archive_list description="true"]' );
 
 		return $content;
 
