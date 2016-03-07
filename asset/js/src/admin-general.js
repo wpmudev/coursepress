@@ -1,48 +1,25 @@
-/*global wp*/
+(jQuery(function() {
 
-var CoursePress = CoursePress || {};
+	// Make the left menu sticky.
+	jQuery( '.sticky-tabs' ).sticky( { topSpacing: 45 } );
 
-(function( $ ) {
+	/*
+	***** General Admin Patterns *****
+	 */
 
-	$( document ).ready( function( $ ) {
+	(function() {
+		function on_content_handle_click() {
+			var el = jQuery( this ),
+				box = el.closest( '.cp-content-box' );
 
-		// Make the left menu sticky.
-		$( '.sticky-tabs' ).sticky( { topSpacing: 45 } );
+			if ( box.hasClass('collapsed') ) {
+				box.removeClass('collapsed');
+			} else {
+				box.addClass('collapsed');
+			}
+		}
 
-		/*
-		 * Certificate Background Image.
-		 */
-		$( '.certificate_background_button' ).on( 'click', function() {
-			var target_url_field = $( this ).prevAll( '.certificate_background_url:first' );
-			wp.media.string.props = function( props, attachment ) {
-				$( target_url_field ).val( props.url );
+		jQuery( '.cp-content-box h3.hndle' ).on( 'click', on_content_handle_click );
+	}());
 
-				if ( CoursePress.utility.valid_media_extension( attachment.url, target_url_field ) ) {
-					// extension is allowed.
-					$( target_url_field ).removeClass( 'invalid_extension_field' );
-					$( target_url_field ).parent().find( '.invalid_extension_message' ).hide();
-				} else {
-					// extension is not allowed.
-					$( target_url_field ).addClass( 'invalid_extension_field' );
-					$( target_url_field ).parent().find( '.invalid_extension_message' ).show();
-				}
-			};
-
-			wp.media.editor.send.attachment = function( props, attachment ) {
-				$( target_url_field ).val( attachment.url );
-				if ( CoursePress.utility.valid_media_extension( attachment.url, target_url_field ) ) {
-					// extension is allowed.
-					$( target_url_field ).removeClass( 'invalid_extension_field' );
-					$( target_url_field ).parent().find( '.invalid_extension_message' ).hide();
-				} else {
-					// extension is not allowed.
-					$( target_url_field ).addClass( 'invalid_extension_field' );
-					$( target_url_field ).parent().find( '.invalid_extension_message' ).show();
-				}
-			};
-
-			wp.media.editor.open( this );
-			return false;
-		} );
-	} );
-})( jQuery );
+}));

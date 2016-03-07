@@ -1,103 +1,120 @@
 /**
  * Invalid file extension
  */
-.invalid_extension_field{
-  border: 1px red solid !important;
+
+.invalid_extension_field {
+	border: 1px red solid !important;
 }
 
-.invalid_extension_message{
-  color: red;
-  display: none;
+.invalid_extension_message {
+	color: red;
+	display: none;
+}
+
+/**
+ * Collapsible boxes
+ */
+
+.cp-content-box {
+	.hndle {
+		cursor: pointer;
+	}
+
+	&.collapsed .inside {
+		display: none;
+	}
 }
 
 /**
  * jQuery Date Picker
  */
 
-body[class*="_page_coursepress_course"] .ui-datepicker {
-  background: #F1F1F1;
-  color: #333333;
-  border-radius: 4px;
-  box-shadow: 0 0 2px white inset, 0 1px 0 rgba(0, 0, 0, 0.05);
-  border: 1px solid #ddd;
-  padding: 4px;
-  font-family: Verdana,Arial,sans-serif;
-}
+body[class*="_page_coursepress_course"] {
+	.ui-datepicker {
+		background: #F1F1F1;
+		color: #333333;
+		border-radius: 4px;
+		box-shadow: 0 0 2px white inset, 0 1px 0 rgba(0, 0, 0, 0.05);
+		border: 1px solid #ddd;
+		padding: 4px;
+		font-family: Verdana,Arial,sans-serif;
+	}
 
-body[class*="_page_coursepress_course"] .ui-datepicker-header {
-  position: relative;
-  background: #0091CD;
-  padding: 10px;
-  text-align: center;
-  border-radius: 4px 4px 0 0;
-  font-weight: bold;
-  color: #fff;
-}
+	.ui-datepicker-header {
+		position: relative;
+		background: #0091CD;
+		padding: 10px;
+		text-align: center;
+		border-radius: 4px 4px 0 0;
+		font-weight: bold;
+		color: #fff;
+	}
 
-body[class*="_page_coursepress_course"] .ui-datepicker-prev,
-body[class*="_page_coursepress_course"] .ui-datepicker-next {
-  position: absolute;
-  top: -0.5em;
-}
+	.ui-datepicker-prev,
+	.ui-datepicker-next {
+		position: absolute;
+		top: -0.5em;
+	}
 
-body[class*="_page_coursepress_course"] .ui-datepicker-prev {
-  left: 0;
-}
+	.ui-datepicker-prev {
+		left: 0;
+	}
 
-body[class*="_page_coursepress_course"] .ui-datepicker-next {
-  right: 0;
-}
+	.ui-datepicker-next {
+		right: 0;
+	}
 
-body[class*="_page_coursepress_course"] .ui-datepicker-prev:after {
-  color: #fff;
-  content: "\f141";
-  font-family: dashicons;
-  font-size: 2.5em;
-  height: 16px;
-  width: 16px;
-}
-body[class*="_page_coursepress_course"] .ui-datepicker-next:after {
-  color: #fff;
-  content: "\f139";
-  font-family: dashicons;
-  font-size: 2.5em;
-  height: 16px;
-  width: 16px;
-}
+	.ui-datepicker-prev:after {
+		color: #fff;
+		content: "\f141";
+		font-family: dashicons;
+		font-size: 2.5em;
+		height: 16px;
+		width: 16px;
+	}
+	.ui-datepicker-next:after {
+		color: #fff;
+		content: "\f139";
+		font-family: dashicons;
+		font-size: 2.5em;
+		height: 16px;
+		width: 16px;
+	}
 
-body[class*="_page_coursepress_course"] .ui-datepicker-prev span,
-body[class*="_page_coursepress_course"] .ui-datepicker-next span {
-  text-indent: -9999px;
-  display:block;
-}
+	.ui-datepicker-prev span,
+	.ui-datepicker-next span {
+		text-indent: -9999px;
+		display:block;
+	}
 
-body[class*="_page_coursepress_course"] .ui-datepicker .ui-datepicker-calendar td {
-  padding: 0;
-}
+	.ui-datepicker .ui-datepicker-calendar td {
+		padding: 0;
+	}
 
-body[class*="_page_coursepress_course"] .ui-datepicker-calendar tr th {
-  padding: 5px 0;
-}
-body[class*="_page_coursepress_course"] .ui-datepicker-calendar tr th span {
-  font-size: 0.8em;
-}
+	.ui-datepicker-calendar tr th {
+		padding: 5px 0;
+	}
+	.ui-datepicker-calendar tr th span {
+		font-size: 0.8em;
+	}
 
-body[class*="_page_coursepress_course"] .ui-datepicker .ui-state-default {
-  width: 2em;
-  display: inline-block;
-  text-align: right;
-  text-decoration: none;
-  background: #C7EBF6;
-  color: #333;
-  padding: 2px;
-  margin: 0;
-}
+	.ui-datepicker .ui-state-default {
+		width: 2em;
+		display: inline-block;
+		text-align: right;
+		text-decoration: none;
+		background: #C7EBF6;
+		color: #333;
+		padding: 2px;
+		margin: 0;
+	}
 
-body[class*="_page_coursepress_course"] .ui-datepicker .ui-state-default.ui-state-active {
-  background: #0091CD;
-  color: #fff;
-}
+	.ui-datepicker .ui-state-default.ui-state-active {
+		background: #0091CD;
+		color: #fff;
+	}
 
-body[class*="_page_coursepress_course"] .ui-datepicker .ui-state-default.ui-state-highlight {
-  border: 1px solid rgba(0, 145, 205, 0.30);
+	.ui-datepicker .ui-state-default.ui-state-highlight {
+		border: 1px solid rgba(0, 145, 205, 0.30);
+	}
 }

@@ -6,8 +6,21 @@ class CoursePress_Helper_Utility {
 	private static $sort_key;
 	private static $image_url; // used to get attachment ID.
 	public static $is_singular;
-	public static $post_page = 1;
 	public static $embed_args = array();
+
+	/**
+	 * Stores the pagination position of current request.
+	 *
+	 * @var int
+	 */
+	protected static $cp_pagination = null;
+
+	/**
+	 * Stores the currently displayed post-ID.
+	 *
+	 * @var int
+	 */
+	protected static $cp_post_id = null;
 
 	public static function init() {
 		add_action( 'wp_ajax_attachment_model', array( __CLASS__, 'attachment_model_ajax' ) );
@@ -770,18 +783,65 @@ class CoursePress_Helper_Utility {
 		return $excerpt;
 	}
 
-	public static function the_post( $id_only = false ) {
-		$id = CoursePress_Data_VirtualPage::$the_post_id;
+	/**
+	 * Stores the post-ID for later usage via self::the_post()
+	 *
+	 * @since 2.0.0
+	 * @param int $post The post-ID
+	 */
+	public static function set_the_post( $post ) {
+		self::$cp_post_id = (int) $post;
+	}
 
-		if ( $id_only ) {
-			return $id;
-		} else {
-			return get_post( $id );
+	/**
+	 * Returns the post-ID (or WP_Post object) that was previously stored via
+	 * self::set_the_post()
+	 *
+	 * @since  2.0.0
+	 * @param  string $type Either 'id' or 'full'.
+	 * @return int|WP_Post The post-ID or post object.
+	 */
+	public static function the_post( $type = 'full' ) {
+		$id = self::$cp_post_id;
+
+		switch ( $type ) {
+			case 'id':
+				return $id;
+
+			case 'full':
+			default:
+				return get_post( $id );
 		}
 	}
 
-	public static function the_post_page() {
-		return self::$post_page;
+	/**
+	 * Store the pagination offset for current archive list.
+	 *
+	 * @since 2.0.0
+	 * @param int $page The pagination offset (i.e. number of current page).
+	 */
+	public static function set_the_pagination( $page ) {
+		self::$cp_pagination = (int) $page;
+	}
+
+	/**
+	 * Returns the number of the currently displayed pagination page.
+	 *
+	 * @since  2.0.0
+	 * @return int The pagination offset (1 is first page).
+	 */
+	public static function the_pagination() {
+		global $wp;
+
+		if ( null === self::$cp_pagination ) {
+			if ( isset( $wp->query_vars['paged'] ) ) {
+				self::$cp_pagination = (int) $wp->query_vars['paged'];
+			} else {
+				self::$cp_pagination = 1;
+			}
+		}
+
+		return self::$cp_pagination;
 	}
 
 	public static function the_course( $id_only = false ) {
@@ -802,18 +862,6 @@ class CoursePress_Helper_Utility {
 
 	public static function the_course_subpage() {
 		return CoursePress_Data_Course::$last_course_subpage;
-	}
-
-	public static function set_the_post( $post ) {
-		if ( is_object( $post ) ) {
-			CoursePress_Data_VirtualPage::$the_post_id = (int) $post->ID;
-		} else {
-			CoursePress_Data_VirtualPage::$the_post_id = (int) $post;
-		}
-	}
-
-	public static function set_the_post_page( $page ) {
-		self::$post_page = (int) $page;
 	}
 
 	public static function set_the_course( $post ) {
@@ -1032,5 +1080,25 @@ class CoursePress_Helper_Utility {
 		}
 
 		return $hash;
+	}
+
+	/**
+	 * Replaces the defined placeholders in the content with specified values.
+	 *
+	 * @since  2.0.0
+	 * @param  string $content The full content, with placeholders.
+	 * @param  array  $vars List of placeholder => value.
+	 * @return string The content but with all placeholders replaced.
+	 */
+	public static function replace_vars( $content, $vars ) {
+		$keys = array();
+		$values = array();
+
+		foreach ( $vars as $key => $value ) {
+			$keys[] = $key;
+			$values[] = $value;
+		}
+
+		return str_replace( $keys, $values, $content );
 	}
 }

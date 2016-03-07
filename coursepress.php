@@ -119,6 +119,12 @@ class CoursePress {
 		if ( file_exists( self::$path . '/campus/init.php' ) ) {
 			include_once self::$path . '/campus/init.php';
 		}
+
+		/**
+		register_activation_hook * register_activation_hook
+		 */
+		register_activation_hook( __FILE__, array( __CLASS__, 'register_activation_hook' ) );
+
 	}
 
 	/**
@@ -199,5 +205,14 @@ class CoursePress {
 		} // End of foreach loop.
 
 		return false;
+	}
+
+	/**
+	 * Redirect to Guide page semaphore.
+	 *
+	 * @since 2.0.0
+	 */
+	public static function register_activation_hook() {
+		add_option( 'coursepress_activate', true );
 	}
 }

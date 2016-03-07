@@ -33,15 +33,8 @@ class CoursePress_Data_Unit {
 		);
 	}
 
-	public static function get_post_type_name( $with_prefix = true ) {
-		if ( ! $with_prefix ) {
-			return self::$post_type;
-		} else {
-			$prefix = defined( 'COURSEPRESS_CPT_PREFIX' ) ? COURSEPRESS_CPT_PREFIX : '';
-			$prefix = empty( $prefix ) ? '' : sanitize_text_field( $prefix ) . '_';
-
-			return $prefix . self::$post_type;
-		}
+	public static function get_post_type_name() {
+		return CoursePress_Data_PostFormat::prefix( self::$post_type );
 	}
 
 	public static function get_time_estimation( $unit_id, $data, $default = '1:00' ) {
@@ -111,32 +104,37 @@ class CoursePress_Data_Unit {
 	}
 
 	static function by_name( $slug, $id_only, $post_parent = '' ) {
+		$res = false;
+
+		// First try to fetch the unit by the slug (name).
 		$args = array(
 			'name' => $slug,
-			'post_type' => self::get_post_type_name( true ),
+			'post_type' => self::get_post_type_name(),
 			'post_status' => 'any',
 			'posts_per_page' => 1,
 		);
 
-		if ( $id_only ) {
-			$args['fields'] = 'ids';
-		}
-
-		if ( ! empty( $post_parent ) ) {
-			$args['post_parent'] = (int) $post_parent;
-		}
+		if ( $id_only ) { $args['fields'] = 'ids'; }
+		if ( $post_parent ) { $args['post_parent'] = (int) $post_parent; }
 
 		$post = get_posts( $args );
 
 		if ( $post ) {
-			if ( $id_only ) {
-				return (int) $post[0];
-			}
-
-			return $post[0];
+			$res = $post[0];
 		} else {
-			return false;
+			// If we did not find a unit by name, try to fetch it via ID.
+			$post = get_post( $slug );
+
+			if ( $post->post_type == self::get_post_type_name() ) {
+				if ( $id_only ) {
+					$res = $post->ID;
+				} else {
+					$res = $post;
+				}
+			}
 		}
+
+		return $res;
 	}
 
 	public static function is_unit_available( $course, $unit, $previous_unit, $status = false ) {
@@ -295,7 +293,6 @@ class CoursePress_Data_Unit {
 	 * @return integer Number of mandatory modules.
 	 */
 	public static function get_number_of_mandatory( $unit_id ) {
-
 		$args = array(
 			'fields'      => 'ids',
 			'meta_key'    => 'mandatory',
@@ -304,8 +301,8 @@ class CoursePress_Data_Unit {
 			'post_parent' => $unit_id,
 			'post_type'   => 'module',
 		);
+
 		$the_query = new WP_Query( $args );
 		return $the_query->post_count;
-
 	}
 }

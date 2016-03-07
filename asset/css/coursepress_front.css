@@ -7,25 +7,6 @@
   display: none;
 }
 
-/* Default Background for .alt */
-/*
-.alt {
-    position: relative;
-}
-.alt:after {
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: #000;
-    display: block;
-    width: 100%;
-    content: '&nbsp;';
-    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=2)";
-    filter: alpha(opacity=2);
-    -moz-opacity: 0.02;
-    opacity: 0.02;
-}
-*/
 /* Sub Menu */
 .submenu.nav-submenu {
   list-style: outside none none;
@@ -36,23 +17,9 @@
 }
 
 .submenu-item {
-  /*float: left;*/
-  /*margin: 0 10px 50px;*/
   display: inline-block;
   margin: 0 10px 10px 0;
   padding: 0 0 10px 0;
-  /*text-align: center;*/
-}
-
-.submenu.nav-submenu:after {
-  /*content: '<hr />';*/
-  /*display: block;*/
-  /*min-height: 1px;*/
-  /*height: 1px;*/
-  /*width: 100%;*/
-  /*background-color: #000000;*/
-  /*opacity: 0.4;*/
-  /*clear: both;*/
 }
 
 /* Unit Archive Styles */
@@ -73,12 +40,12 @@
 .units-archive-list li .course-preview-container {
   float: right;
   font-size: 0.8em;
-  font-style: oblique;
+  font-style: italic;
 }
 
 .units-archive-list .unit-archive-single-module-status {
   font-size: 0.7em;
-  font-style: oblique;
+  font-style: italic;
   opacity: 0.5;
 }
 
@@ -114,7 +81,7 @@
 
 .module-container .is-mandatory {
   float: right;
-  font-style: oblique;
+  font-style: italic;
   font-size: 0.7em;
   opacity: 0.5;
 }
@@ -126,12 +93,7 @@
 .module-container .no-browser-support,
 .module-container .module-submit-action {
   font-size: 0.9em;
-  /*padding: 4px 10px;*/
   margin: 0.4em 0 0 0;
-  /*background: none;*/
-  /*display: inline-block;*/
-  /*float: left;*/
-  /*display: block;*/
   cursor: pointer;
   clear: both;
   border: none;
@@ -227,7 +189,6 @@
   text-align: center;
   display: inline-block;
   margin-right: 4px;
-  /*border: 1px solid #000000;*/
   opacity: 0.5;
   width: 11px;
   height: 12px;
@@ -260,7 +221,6 @@
 .module-container.input-radio .module-response li.chosen-answer.correct:after,
 .module-container.input-checkbox .module-response li.chosen-answer.incorrect:after,
 .module-container.input-checkbox .module-response li.chosen-answer.correct:after {
-  /*position: absolute;*/
   font-family: dashicons;
   display: inline-block;
   float: right;
@@ -310,11 +270,9 @@
 .workbook-table .page-separator,
 .workbook-table th {
   font-size: 0.8em;
-  /*font-weight: 300;*/
 }
 
 .workbook-table td {
-  /*font-size: 1em;*/
   font-weight: 300;
 }
 
@@ -322,7 +280,7 @@
 .workbook-table .page-separator td {
   padding-top: 0;
   padding-bottom: 0;
-  font-style: oblique;
+  font-style: italic;
   font-size: 0.8em;
 }
 
@@ -345,7 +303,6 @@
 
 .workbook-unit .mandatory {
   font-size: 7px;
-  /*position: absolute;*/
   line-height: 2em;
   width: auto;
   height: auto;
@@ -354,7 +311,6 @@
 
 .workbook-unit .non-assessable {
   font-size: 7px;
-  /*position: absolute;*/
   line-height: 2em;
   width: auto;
   height: auto;
@@ -387,7 +343,6 @@
 .workbook-table .view-response .link-popup .popup-link {
   text-decoration: none;
   border: none;
-  /*font-size: 2em;*/
 }
 
 .workbook-table .view-response.input-textarea .popup {
@@ -469,7 +424,7 @@ ul.notification-archive-list {
 
 .notification-archive-single-meta .notification-time {
   font-size: 0.8em;
-  font-style: oblique;
+  font-style: italic;
   opacity: 0.5;
   text-align: center;
 }
@@ -483,15 +438,13 @@ ul.notification-archive-list {
 
 .discussion-archive-single-meta .discussion-comment .comment {
   font-size: 1.3em;
-  marging: 0;
+  margin: 0;
   position: absolute;
   top: 50%;
   left: 50%;
-  /*font-weight: lighter;*/
   -webkit-transform: translate(-50%, -50%) scale(1.2, 1);
   -ms-transform: translate(-50%, -50%) scale(1.2, 1);
   transform: translate(-50%, -50%) scale(1.2, 1);
-  /*padding-top: 0.2em;*/
 }
 
 .discussion-archive-single,
@@ -516,7 +469,7 @@ ul.notification-archive-list {
 .discussion-archive-single .meta,
 .notification-archive-single .notification_author {
   font-size: 0.8em;
-  font-style: oblique;
+  font-style: italic;
 }
 
 .discussion-archive-single hr {
@@ -572,7 +525,6 @@ ul.notification-archive-list {
 .course_list_box_item.has-thumbnail .course-thumbnail {
   width: 40%;
   float: left;
-  /*border-right: 5px solid rgba( 0, 0, 0, 0.2 );*/
   padding-right: 2px;
   position: absolute;
   top: 0;
@@ -588,7 +540,6 @@ ul.notification-archive-list {
 .course_list_box_item.has-thumbnail .course-information {
   width: 60%;
   float: right;
-  /*border: none;*/
 }
 
 .course_list_box_item button {
@@ -624,16 +575,13 @@ ul.notification-archive-list {
 
 .course_list_box_item.clickable:hover .course-information *:not([class*="clickable-label"]) {
   -webkit-filter: blur(2px);
-  -moz-filter: blur(2px);
-  -o-filter: blur(2px);
-  -ms-filter: blur(2px);
   filter: blur(2px);
 }
 
 .course_list_box_item.clickable .clickable-label {
   display: none;
   font-size: 1em;
-  marging: 0;
+  margin: 0;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -673,9 +621,7 @@ ul.notification-archive-list {
 .course-wrapper .enroll-box {
   overflow: hidden;
   border-top: 1px solid rgba(0, 0, 0, 0.2);
-  /*border-bottom: 3px solid rgba( 0, 0, 0, 0.2 );*/
   position: relative;
-  /*min-height: 4em;*/
 }
 
 .course-wrapper .enroll-box-left {
@@ -716,7 +662,6 @@ ul.notification-archive-list {
 .course-wrapper .unit-page-title,
 .course-wrapper .unit-title {
   float: left;
-  /*clear: both;*/
 }
 
 .course-wrapper .enrolled .module-title,
@@ -763,14 +708,9 @@ ul.notification-archive-list {
 .course-wrapper .unit-link {
   float: right;
   margin-right: 50px;
-  /*position: absolute;*/
-  /*top: 2px;*/
-  /*right: 4em;*/
-  /*z-index: 10;*/
 }
 
 .course-wrapper .unit-page-estimate {
-  /*float: right;*/
   position: absolute;
   top: 2px;
   right: 0;
@@ -834,7 +774,7 @@ ul.notification-archive-list {
 
 .course-wrapper .instructor-profile .profile-name {
   font-size: 0.9em;
-  font-style: oblique;
+  font-style: italic;
   text-align: center;
   line-height: 1em;
 }
@@ -877,6 +817,12 @@ ul.notification-archive-list {
   margin: 0;
 }
 
+.student-settings.signup-form,
+.student-settings.login-form {
+  margin: 0 -15px;
+  overflow: hidden;
+}
+
 .student-settings.login-form label input,
 .student-settings.signup-form label input,
 .student-settings.login-form label span,
@@ -887,7 +833,10 @@ ul.notification-archive-list {
 
 .student-settings.login-form label,
 .student-settings.signup-form label {
-  width: 45%;
+  width: 50%;
+  float: left;
+  padding: 10px 15px;
+  box-sizing: border-box;
   display: inline-block;
 }
 
@@ -904,6 +853,115 @@ ul.notification-archive-list {
   margin-top: 10px;
 }
 
+.course-calendar {
+  position: relative;
+}
+
+.course-calendar-body {
+  width: 100%;
+}
+
+.course-calendar-body caption {
+  min-height: 10px;
+  padding-bottom: 10px;
+  vertical-align: top;
+}
+
+.course-calendar .pre-month {
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  font-size: 0.8em;
+  cursor: pointer;
+}
+
+.course-calendar .next-month {
+  position: absolute;
+  bottom: -20px;
+  right: 0;
+  font-size: 0.8em;
+  cursor: pointer;
+}
+
+.course-calendar .day,
+.course-calendar .week-days {
+  line-height: 1.2em;
+  min-width: 14%;
+}
+
+.course-calendar .today {
+  font-weight: bold;
+}
+
+/** Calendar Date Indicators */
+/* -- Light Theme: Block -- */
+.course-calendar .indicator_light_block .course-start-date {
+  background-color: #dfdfdf;
+}
+
+.course-calendar .indicator_light_block .course-active-date {
+  background-color: #f5f5f5;
+}
+
+.course-calendar .indicator_light_block .course-open-date {
+  background-color: #f5f5f5;
+}
+
+.course-calendar .indicator_light_block .course-end-date {
+  background-color: #dfdfdf;
+}
+
+/* -- Light Theme: Line -- */
+.course-calendar .indicator_light_line .course-start-date {
+  border-bottom: 2px solid #cfcfcf;
+}
+
+.course-calendar .indicator_light_line .course-active-date {
+  border-bottom: 2px solid #f5f5f5;
+}
+
+.course-calendar .indicator_light_line .course-open-date {
+  border-bottom: 2px solid #f5f5f5;
+}
+
+.course-calendar .indicator_light_line .course-end-date {
+  border-bottom: 2px solid #cfcfcf;
+}
+
+/* -- Dark Theme: Block -- */
+.course-calendar .indicator_dark_block .course-start-date {
+  background-color: #5f5f5f;
+}
+
+.course-calendar .indicator_dark_block .course-active-date {
+  background-color: #444444;
+}
+
+.course-calendar .indicator_dark_block .course-open-date {
+  background-color: #444444;
+}
+
+.course-calendar .indicator_dark_block .course-end-date {
+  background-color: #5f5f5f;
+}
+
+/* -- Dark Theme: Line -- */
+.course-calendar .indicator_dark_line .course-start-date {
+  border-bottom: 2px solid #5f5f5f;
+}
+
+.course-calendar .indicator_dark_line .course-active-date {
+  border-bottom: 2px solid #444444;
+}
+
+.course-calendar .indicator_dark_line .course-open-date {
+  border-bottom: 2px solid #444444;
+}
+
+.course-calendar .indicator_dark_line .course-end-date {
+  border-bottom: 2px solid #5f5f5f;
+}
+
 .enrolment-container-div {
   height: 100%;
   left: 0;
@@ -912,29 +970,29 @@ ul.notification-archive-list {
   width: 100%;
   padding-top: 30px;
   overflow: hidden;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 900;
 }
-
 .enrolment-container-div .bbm-wrapper {
+  position: relative;
   margin: 0 auto;
   max-width: 480px;
   width: 100%;
   background: #ffffff;
-  padding: 0 10px 10px 10px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 0;
+  border: 0;
   border-radius: 15px;
   box-shadow: 3px 3px 10px 0px rgba(0, 0, 0, 0.75);
 }
-
 .enrolment-container-div .bbm-wrapper a {
   text-decoration: underline;
 }
-
 .enrolment-container-div .bbm-wrapper #error-messages,
 .enrolment-container-div .bbm-wrapper #password-strength {
   display: block;
   font-style: italic;
+  margin: 0 15px;
 }
-
 .enrolment-container-div .bbm-wrapper #error-messages {
   color: #d92e23;
 }
@@ -961,7 +1019,7 @@ ul.notification-archive-list {
 }
 
 .unit-archive-single .section-title {
-  font-style: oblique;
+  font-style: italic;
   font-weight: normal;
   margin-left: 0px;
 }
@@ -976,10 +1034,6 @@ ul.notification-archive-list {
   border: none;
   display: block;
   width: 100%;
-}
-
-.coursepress-focus-view {
-  /*height: 100vh;*/
 }
 
 .coursepress-focus-view .focus-nav-prev,
@@ -1039,7 +1093,6 @@ ul.notification-archive-list {
 
 .module-container.module.discussion .comments-area {
   margin: 0;
-  /*padding: 5.3333%;*/
 }
 
 .module-container.module.discussion .comments-list {
@@ -1091,29 +1144,6 @@ ul.notification-archive-list {
   margin-bottom: 15px;
 }
 
-/*.student-settings.login-form .half-left,*/
-/*.student-settings.signup-form .half-left,*/
-/*.student-settings.login-form .half-right,*/
-/*.student-settings.signup-form .half-right,*/
-/*.student-settings.login-form .half,*/
-/*.student-settings.signup-form .half {*/
-/*display: inline-block;*/
-/*width: 50%;*/
-/*box-sizing: border-box;*/
-/*}*/
-/*.student-settings.login-form .half-left,*/
-/*.student-settings.signup-form .half-left {*/
-/*float: left;*/
-/*}*/
-/*.student-settings.login-form .half-right,*/
-/*.student-settings.signup-form .half-right {*/
-/*float: right;*/
-/*text-align: right;*/
-/*}*/
-/*-webkit-transform-origin: 50% 50%;*/
-/*-moz-transform-origin: 50% 50%;*/
-/*-o-transform-origin: 50% 50%;*/
-/*transform-origin: 50% 50%;*/
 @-webkit-keyframes spinner {
   0% {
     -webkit-transform: rotate(0deg);
@@ -1124,6 +1154,7 @@ ul.notification-archive-list {
     transform: rotate(359deg);
   }
 }
+
 @keyframes spinner {
   0% {
     -webkit-transform: rotate(0deg);

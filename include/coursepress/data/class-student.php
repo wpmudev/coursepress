@@ -639,105 +639,156 @@ class CoursePress_Data_Student {
 				CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/completed', true );
 			}
 
-			$progress = (int) ( $completed_steps / $required_steps * 100 );
-			CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/progress', $progress );
+			$progress = (int) ($completed_steps / $required_steps * 100);
+			CoursePress_Helper_Utility::set_array_val(
+				$student_progress,
+				'completion/' . $unit_id . '/progress',
+				$progress
+			);
 			$total_completion += $progress;
 
 			// Update Course Steps
 			$course_required_steps += $required_steps;
 			$course_completed_steps += $completed_steps;
-			CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/required_steps', $course_required_steps );
-			CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/completed_steps', $course_completed_steps );
+			CoursePress_Helper_Utility::set_array_val(
+				$student_progress,
+				'completion/required_steps',
+				$course_required_steps
+			);
+			CoursePress_Helper_Utility::set_array_val(
+				$student_progress,
+				'completion/completed_steps',
+				$course_completed_steps
+			);
 
+		} // End of foreach ( $units ) ...
+
+		// Record course progress.
+		$progress = 0;
+		if ( $total_units > 0 ) {
+			$progress = (int) ($total_completion / $total_units * 100);
 		}
 
-		// Is course complete?
+		CoursePress_Helper_Utility::set_array_val(
+			$student_progress,
+			'completion/progress',
+			$progress
+		);
+
+		// Check if course is completed.
 		if ( $course_required_steps === $course_completed_steps && ! empty( $student_units ) ) {
-			$check = CoursePress_Helper_Utility::get_array_val( $student_progress, 'completion/completed' );
-			if ( isset( $check ) && empty( $check ) ) {
-				do_action( 'coursepress_student_course_completed', $student_id, $course_id, get_post_field( 'post_title', $course_id ) );
-				self::send_certificate();
+			$check = CoursePress_Helper_Utility::get_array_val(
+				$student_progress,
+				'completion/completed'
+			);
+
+			// Only process if not completed yet.
+			if ( empty( $check ) ) {
+				// Notify other modules about the lucky student!
+				do_action(
+					'coursepress_student_course_completed',
+					$student_id,
+					$course_id,
+					get_post_field( 'post_title', $course_id )
+				);
+
+				// Generate the certificate and send email to the student.
+				CoursePress_Data_Certificate::generate_certificate(
+					$student_id,
+					$course_id
+				);
+
+				// Mark course as completed.
+				CoursePress_Helper_Utility::set_array_val(
+					$student_progress,
+					'completion/completed',
+					true
+				);
 			}
-			CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/completed', true );
 		}
 
-		// $progress = (int) ( ( $course_completed_steps / $course_required_steps * 100 ) / $total_units );
-		$progress = $total_units > 0 ? (int) ( $total_completion / $total_units ) : 0;
-		CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/progress', $progress );
-
-		self::update_completion_data( $student_id, $course_id, $student_progress );
+		self::update_completion_data(
+			$student_id,
+			$course_id,
+			$student_progress
+		);
 
 		return $student_progress;
 	}
 
 	public static function get_mandatory_completion( $student_id, $course_id, $unit_id, &$data = false ) {
-
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
 
 		return array(
 			'required' => CoursePress_Data_Unit::get_number_of_mandatory( $unit_id ),
-			'completed' => CoursePress_Helper_Utility::get_array_val( $data, 'completion/' . $unit_id . '/completed_mandatory' ),
+			'completed' => CoursePress_Helper_Utility::get_array_val(
+				$data,
+				'completion/' . $unit_id . '/completed_mandatory'
+			),
 		);
-
 	}
 
 	public static function get_unit_progress( $student_id, $course_id, $unit_id, &$data = false ) {
-
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
 
-		return (int) CoursePress_Helper_Utility::get_array_val( $data, 'completion/' . $unit_id . '/progress' );
-
+		return (int) CoursePress_Helper_Utility::get_array_val(
+			$data,
+			'completion/' . $unit_id . '/progress'
+		);
 	}
 
 	public static function get_course_progress( $student_id, $course_id, &$data = false ) {
-
 		if ( empty( $data ) ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
 
-		return (int) CoursePress_Helper_Utility::get_array_val( $data, 'completion/progress' );
-
+		return (int) CoursePress_Helper_Utility::get_array_val(
+			$data,
+			'completion/progress'
+		);
 	}
 
 	public static function is_mandatory_done( $student_id, $course_id, $unit_id, &$data = false ) {
-
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
 
-		$mandatory = CoursePress_Helper_Utility::get_array_val( $data, 'completion/' . $unit_id . '/all_mandatory' );
+		$mandatory = CoursePress_Helper_Utility::get_array_val(
+			$data,
+			'completion/' . $unit_id . '/all_mandatory'
+		);
 
 		return cp_is_true( $mandatory );
-
 	}
 
 	public static function is_unit_complete( $student_id, $course_id, $unit_id, &$data = false ) {
-
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
 
-		$completed = CoursePress_Helper_Utility::get_array_val( $data, 'completion/' . $unit_id . '/completed' );
+		$completed = CoursePress_Helper_Utility::get_array_val(
+			$data,
+			'completion/' . $unit_id . '/completed'
+		);
 
 		return cp_is_true( $completed );
-
 	}
 
 	public static function is_course_complete( $student_id, $course_id, &$data = false ) {
-
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
 
-		$progress = (int) CoursePress_Helper_Utility::get_array_val( $data, 'completion/progress' );
+		$progress = CoursePress_Helper_Utility::get_array_val(
+			$data,
+			'completion/completed'
+		);
 
-		// $completed = CoursePress_Helper_Utility::get_array_val( $data, 'completion/completed' );
-		return 100 === $progress;
-
+		return cp_is_true( $progress );
 	}
 
 	public static function count_course_responses( $student_id, $course_id, $data = false ) {
@@ -749,7 +800,10 @@ class CoursePress_Data_Student {
 
 		$response_count = 0;
 		foreach ( $units as $key => $unit ) {
-			$modules = CoursePress_Helper_Utility::get_array_val( $data, 'units/' . $key . '/responses' );
+			$modules = CoursePress_Helper_Utility::get_array_val(
+				$data,
+				'units/' . $key . '/responses'
+			);
 
 			foreach ( $modules as $mod_key => $module ) {
 				$attributes = CoursePress_Data_Module::attributes( $mod_key );
@@ -762,7 +816,6 @@ class CoursePress_Data_Student {
 		}
 
 		return $response_count;
-
 	}
 
 	public static function average_course_responses( $student_id, $course_id, $data = false ) {
@@ -771,11 +824,17 @@ class CoursePress_Data_Student {
 		}
 
 		$units = isset( $data['units'] ) ? $data['units'] : array();
+		$total_response = 0;
+		$total_grade = 0;
 
-		$response_count = 0;
-		$results = 0;
 		foreach ( $units as $key => $unit ) {
-			$modules = CoursePress_Helper_Utility::get_array_val( $data, 'units/' . $key . '/responses' );
+			$modules = CoursePress_Helper_Utility::get_array_val(
+				$data,
+				'units/' . $key . '/responses'
+			);
+
+			$total_response += count( $modules );
+
 			foreach ( $modules as $mod_key => $module ) {
 				$attributes = CoursePress_Data_Module::attributes( $mod_key );
 				if ( 'output' === $attributes['mode'] || ! $attributes['assessable'] ) {
@@ -783,41 +842,28 @@ class CoursePress_Data_Student {
 					continue;
 				}
 
-				$responses = CoursePress_Helper_Utility::get_array_val( $data, 'units/' . $key . '/responses/' . $mod_key );
-				if ( isset( $responses[ count( $responses ) - 1 ] ) ) {
-					$last_response = $responses[ count( $responses ) - 1 ];
-					$results += isset( $last_response['grades'] ) && isset( $last_response['grades'][ count( $last_response['grades'] ) - 1 ] ) ? (int) $last_response['grades'][ count( $last_response['grades'] ) - 1 ]['grade'] : 0;
-				}
+				$responses = CoursePress_Helper_Utility::get_array_val(
+					$data,
+					'units/' . $key . '/responses/' . $mod_key
+				);
+
+				if ( ! is_array( $responses ) ) { continue; }
+				if ( ! count( $responses ) ) { continue; }
+
+				$last_response = array_pop( $responses );
+
+				if ( ! isset( $last_response['grades'] ) ) { continue; }
+				if ( ! is_array( $last_response['grades'] ) ) { continue; }
+
+				$grade = array_pop( $last_response['grades'] );
+				$total_grade += (int) $grade['grade'];
 			}
-			$response_count += count( $modules );
 		}
 
-		return $response_count > 0 ? (int) ( $results / $response_count ) : 0;
-	}
-
-	/**
-	 * Send certificate to student
-	 *
-	 *
-	 * @since 2.0.0
-	 */
-	public function send_certificate( $student_id, $course_id, $post_title, $course_id ) {
-
-		// If student doesn't exist, exit.
-		$student = get_userdata( $student_id );
-		if ( empty( $student ) ) {
-			return false;
+		if ( $total_response > 0 ) {
+			return (int) ($total_grade / $total_response);
 		}
-
-		$email_args = array();
-		$email_args['email_type'] = 'basic_certificate';
-		$email_args['course_id'] = $course_id;
-		$email_args['email'] = sanitize_email( $student->user_email );
-		$email_args['first_name'] = $student->user_firstname;
-		$email_args['last_name'] = $student->user_lastname;
-
-		return CoursePress_Helper_Email::send_email( $email_args );
-
+		return 0;
 	}
 
 	/**

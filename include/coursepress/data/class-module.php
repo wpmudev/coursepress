@@ -46,15 +46,8 @@ class CoursePress_Data_Module {
 
 	}
 
-	public static function get_post_type_name( $with_prefix = true ) {
-		if ( ! $with_prefix ) {
-			return self::$post_type;
-		} else {
-			$prefix = defined( 'COURSEPRESS_CPT_PREFIX' ) ? COURSEPRESS_CPT_PREFIX : '';
-			$prefix = empty( $prefix ) ? '' : sanitize_text_field( $prefix ) . '_';
-
-			return $prefix . self::$post_type;
-		}
+	public static function get_post_type_name() {
+		return CoursePress_Data_PostFormat::prefix( self::$post_type );
 	}
 
 	public static function get_time_estimation( $module_id, $default = '1:00', $formatted = false ) {
@@ -320,6 +313,12 @@ class CoursePress_Data_Module {
 	public static function discussion_cancel_reply_link( $formatted_link, $link, $text ) {
 
 		$comment_id = isset( $_GET['replytocom'] ) ? (int) $_GET['replytocom'] : '';
+
+		// Bail if comment_id is null
+		if( 0 == (int) $comment_id ) {
+			return;
+		}
+
 		$comment = get_comment( $comment_id );
 
 		$post_type = get_post_type( $comment->comment_post_ID );
@@ -332,7 +331,7 @@ class CoursePress_Data_Module {
 		}
 
 		if ( empty( $text ) ) {
-			$text = __( 'Click here to cancel reply.' ); }
+			$text = __( 'Click here to cancel reply.', 'CP_TD' ); }
 
 		$style = isset( $_GET['replytocom'] ) ? '' : ' style="display:none;"';
 

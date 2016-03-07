@@ -8,7 +8,7 @@ class CoursePress_Template_Unit {
 		$course = CoursePress_Helper_Utility::the_course();
 		$course_id = $course->ID;
 		$unit_id = CoursePress_Helper_Utility::the_post( true );
-		$page = (int) CoursePress_Helper_Utility::the_post_page();
+		$page = (int) CoursePress_Helper_Utility::the_pagination();
 
 		$student_id = get_current_user_id();
 		$instructors = CoursePress_Data_Course::get_instructors( $course_id );
@@ -39,7 +39,7 @@ class CoursePress_Template_Unit {
 		$course_id = $course->ID;
 		$unit = CoursePress_Helper_Utility::the_post();
 		$unit_id = $unit->ID;
-		$page = (int) CoursePress_Helper_Utility::the_post_page();
+		$page = (int) CoursePress_Helper_Utility::the_pagination();
 
 		$student_id = get_current_user_id();
 		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );

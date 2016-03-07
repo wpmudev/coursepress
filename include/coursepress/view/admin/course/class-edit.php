@@ -40,7 +40,9 @@ class CoursePress_View_Admin_Course_Edit {
 		add_action( 'wp_ajax_update_course', array( __CLASS__, 'update_course' ) );
 
 		// Update UnitBuilder
-		add_action( 'wp_ajax_unit_builder', array( 'CoursePress_View_Admin_Course_UnitBuilder', 'unit_builder_ajax' ) );
+		add_action( 'wp_ajax_unit_builder',
+			array( 'CoursePress_View_Admin_Course_UnitBuilder', 'unit_builder_ajax' )
+		);
 
 	}
 
@@ -220,8 +222,8 @@ class CoursePress_View_Admin_Course_Edit {
 		);
 
 		// Course Category
-		$category = CoursePress_Data_Course::get_post_category_name( true );
-		$cpt = CoursePress_Data_Course::get_post_type_name( true );
+		$category = CoursePress_Data_Course::get_post_category_name();
+		$cpt = CoursePress_Data_Course::get_post_type_name();
 		$url = 'edit-tags.php?taxonomy=' . $category . '&post_type=' . $cpt;
 		$terms = CoursePress_Data_Course::get_terms();
 		$id = isset( $_GET['id'] ) ? (int) $_GET['id'] : 0;
@@ -1134,8 +1136,12 @@ class CoursePress_View_Admin_Course_Edit {
 			case 'invite_instructor':
 
 				if ( wp_verify_nonce( $data->data->nonce, 'setup-course' ) ) {
-					$email_data = CoursePress_Helper_Utility::object_to_array( $data->data );
-					$response = CoursePress_Data_Instructor::send_invitation( $email_data );
+					$response = CoursePress_Data_Instructor::send_invitation(
+						(int) $data->data->course_id,
+						$data->data->email,
+						$data->data->first_name,
+						$data->data->last_name
+					);
 					$json_data['message'] = $response['message'];
 					$json_data['data'] = $data->data;
 					$json_data['invite_code'] = $response['invite_code'];
@@ -1148,7 +1154,10 @@ class CoursePress_View_Admin_Course_Edit {
 			// Delete Invite
 			case 'delete_instructor_invite':
 				if ( wp_verify_nonce( $data->data->nonce, 'setup-course' ) ) {
-					CoursePress_Data_Instructor::delete_invitation( $data->data->course_id, $data->data->invite_code );
+					CoursePress_Data_Instructor::delete_invitation(
+						$data->data->course_id,
+						$data->data->invite_code
+					);
 					$json_data['course_id'] = $data->data->course_id;
 					$json_data['invite_code'] = $data->data->invite_code;
 

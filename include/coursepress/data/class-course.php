@@ -14,7 +14,6 @@ class CoursePress_Data_Course {
 	public static $structure_visibility = false;
 
 	public static function get_format() {
-
 		return array(
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
@@ -52,12 +51,9 @@ class CoursePress_Data_Course {
 	}
 
 	public static function get_taxonomy() {
-		$prefix = defined( 'COURSEPRESS_CPT_PREFIX' ) ? COURSEPRESS_CPT_PREFIX : '';
-		$prefix = empty( $prefix ) ? '' : sanitize_text_field( $prefix ) . '_';
-
 		return array(
-			'taxonomy_type' => self::$post_taxonomy,
-			'post_type' => $prefix . self::$post_type,
+			'taxonomy_type' => self::get_post_category_name(),
+			'post_type' => self::get_post_type_name(),
 			'taxonomy_args' => apply_filters(
 				'coursepress_register_course_category',
 				array(
@@ -132,12 +128,11 @@ class CoursePress_Data_Course {
 		$new_course = empty( $course_id ) ? true : false;
 		$course = $new_course ? false : get_post( $course_id );
 
-		// Publishing toggle
-		// $post_status = empty( $this->data[ 'status' ] ) ? 'publish' : $this->data[ 'status' ];
+		// Publishing toggle.
 		$post = array(
 			'post_author' => $course ? $course->post_author : $user_id,
 			'post_status' => $course ? $course->post_status : 'private',
-			'post_type' => self::get_post_type_name( true ),
+			'post_type' => self::get_post_type_name(),
 		);
 
 		// Make sure we get existing settings if not all data is being submitted
@@ -213,7 +208,7 @@ class CoursePress_Data_Course {
 							wp_set_object_terms(
 								$course_id,
 								$sanitized_array,
-								self::get_post_category_name( true ),
+								self::get_post_category_name(),
 								false
 							);
 						} else {
@@ -222,7 +217,7 @@ class CoursePress_Data_Course {
 								wp_set_object_terms(
 									$course_id,
 									$cat,
-									self::get_post_category_name( true ),
+									self::get_post_category_name(),
 									false
 								);
 							}
@@ -486,33 +481,15 @@ class CoursePress_Data_Course {
 		return $val;
 	}
 
-	public static function get_post_type_name( $with_prefix = true ) {
-		if ( ! $with_prefix ) {
-			return self::$post_type;
-		} else {
-			$prefix = defined( 'COURSEPRESS_CPT_PREFIX' ) ? COURSEPRESS_CPT_PREFIX : '';
-			$prefix = empty( $prefix ) ? '' : sanitize_text_field( $prefix ) . '_';
-
-			return $prefix . self::$post_type;
-		}
+	public static function get_post_type_name() {
+		return CoursePress_Data_PostFormat::prefix( self::$post_type );
 	}
 
-	public static function get_post_category_name( $with_prefix = true ) {
-		if ( ! $with_prefix ) {
-			return self::$post_taxonomy;
-		} else {
-			$prefix = defined( 'COURSEPRESS_CPT_PREFIX' ) ? COURSEPRESS_CPT_PREFIX : '';
-			$prefix = empty( $prefix ) ? '' : sanitize_text_field( $prefix ) . '_';
-
-			return $prefix . self::$post_taxonomy;
-		}
+	public static function get_post_category_name() {
+		return CoursePress_Data_PostFormat::prefix( self::$post_taxonomy );
 	}
 
 	public static function get_terms() {
-		$prefix = defined( 'COURSEPRESS_CPT_PREFIX' ) ? COURSEPRESS_CPT_PREFIX : '';
-		$prefix = empty( $prefix ) ? '' : sanitize_text_field( $prefix ) . '_';
-		$category = $prefix . self::get_post_category_name();
-
 		$args = array(
 			'orderby' => 'name',
 			'order' => 'ASC',
@@ -521,15 +498,17 @@ class CoursePress_Data_Course {
 			'hierarchical' => true,
 		);
 
-		return get_terms( array( $category ), $args );
+		return get_terms(
+			array( self::get_post_category_name() ),
+			$args
+		);
 	}
 
 	public static function get_course_terms( $course_id, $array = false ) {
-		$prefix = defined( 'COURSEPRESS_CPT_PREFIX' ) ? COURSEPRESS_CPT_PREFIX : '';
-		$prefix = empty( $prefix ) ? '' : sanitize_text_field( $prefix ) . '_';
-		$category = $prefix . self::get_post_category_name();
-
-		$course_terms = wp_get_object_terms( (int) $course_id, array( $category ) );
+		$course_terms = wp_get_object_terms(
+			(int) $course_id,
+			array( self::get_post_category_name() )
+		);
 
 		if ( ! $array ) {
 			return $course_terms;
@@ -897,15 +876,35 @@ class CoursePress_Data_Course {
 
 		/**
 		 * Update metadata with relevant details.
+		 *
+		 * Link courses and student (in order to avoid custom tables) for
+		 * easy MySql queries (get courses stats, student courses, etc.)
 		 */
-		// Link courses and student (in order to avoid custom tables) for
-		// easy MySql queries (get courses stats, student courses, etc.)
-		update_user_option( $student_id, 'enrolled_course_date_' . $course_id, $current_time, $global_option );
-		update_user_option( $student_id, 'enrolled_course_class_' . $course_id, $class, $global_option );
-		update_user_option( $student_id, 'enrolled_course_group_' . $course_id, $group, $global_option );
-		update_user_option( $student_id, 'role', 'student', $global_option ); // alternative to roles used.
+		update_user_option(
+			$student_id,
+			'enrolled_course_date_' . $course_id,
+			$current_time,
+			$global_option
+		);
+		update_user_option(
+			$student_id,
+			'enrolled_course_class_' . $course_id,
+			$class,
+			$global_option
+		);
+		update_user_option(
+			$student_id,
+			'enrolled_course_group_' . $course_id,
+			$group,
+			$global_option
+		);
+		update_user_option(
+			$student_id,
+			'role',
+			'student',
+			$global_option
+		);
 
-		self::_add_enrollment_email_hooks();
 		self::$email_type = CoursePress_Helper_Email::ENROLLMENT_CONFIRM;
 
 		$email_args = array();
@@ -955,97 +954,6 @@ class CoursePress_Data_Course {
 		return true;
 	}
 
-	private static function _add_enrollment_email_hooks() {
-		add_filter(
-			'coursepress_email_fields',
-			array( __CLASS__, 'enrollment_email_fields' ),
-			10, 2
-		);
-		add_filter(
-			'wp_mail_from',
-			array( __CLASS__, 'email_from' )
-		);
-		add_filter(
-			'wp_mail_from_name',
-			array( __CLASS__, 'email_from_name' )
-		);
-	}
-
-	public static function enrollment_email_fields( $fields, $args ) {
-		$email_settings = CoursePress_Helper_Email::get_email_fields(
-			CoursePress_Helper_Email::ENROLLMENT_CONFIRM
-		);
-
-		$course_id = (int) $args['course_id'];
-
-		// To Email Address.
-		$fields['email'] = sanitize_email( $args['email'] );
-
-		// Email Subject.
-		$fields['subject'] = $email_settings['subject'];
-
-		$post = get_post( $course_id );
-		$course_name = $post->post_title;
-		$valid_stati = array( 'draft', 'pending', 'auto-draft' );
-
-		$permalink = '';
-		if ( in_array( $post->post_status, $valid_stati ) ) {
-			$permalink = CoursePress_Core::get_slug( 'course/', true ) . $post->post_name . '/';
-		} else {
-			$permalink = get_permalink( $course_id );
-		}
-		$course_address = esc_url( $permalink );
-
-		// Email Content
-		$tags = array(
-			'STUDENT_FIRST_NAME',
-			'STUDENT_LAST_NAME',
-			'COURSE_TITLE',
-			'COURSE_ADDRESS',
-			'STUDENT_DASHBOARD',
-			'COURSES_ADDRESS',
-			'BLOG_NAME',
-		);
-
-		$tags_replaces = array(
-			sanitize_text_field( $args['first_name'] ),
-			sanitize_text_field( $args['last_name'] ),
-			$course_name,
-			$course_address,
-			wp_login_url(),
-			CoursePress_Core::get_slug( 'course/', true ),
-			get_bloginfo(),
-		);
-
-		$fields['message'] = str_replace(
-			$tags,
-			$tags_replaces,
-			$email_settings['content']
-		);
-
-		return $fields;
-	}
-
-	public static function email_from( $from ) {
-		$email_settings = CoursePress_Helper_Email::get_email_fields(
-			self::$email_type
-		);
-
-		$from = $email_settings['email'];
-
-		return $from;
-	}
-
-	public static function email_from_name( $from_name ) {
-		$email_settings = CoursePress_Helper_Email::get_email_fields(
-			self::$email_type
-		);
-
-		$from = $email_settings['name'];
-
-		return $from;
-	}
-
 	public static function withdraw_student( $student_id, $course_id ) {
 		$global_option = ! is_multisite();
 		$current_time = current_time( 'mysql' );
@@ -1062,7 +970,6 @@ class CoursePress_Data_Course {
 		do_action( 'student_withdraw_from_course_instructor_notification', $student_id, $course_id, $instructors );
 		do_action( 'student_withdraw_from_course_student_notification', $student_id, $course_id );
 		do_action( 'coursepress_student_withdrawn', $student_id, $course_id );
-
 	}
 
 	public static function withdraw_all_students( $course_id ) {
@@ -1078,12 +985,11 @@ class CoursePress_Data_Course {
 		CoursePress_Data_Course::set_last_course_id( (int) $email_data['course_id'] );
 		$course_id = (int) $email_data['course_id'];
 
-		// We need to hook the email fields for the Utility method.
-		self::_add_invitation_email_hooks();
-
 		$type = self::get_setting( $course_id, 'enrollment_type', 'manually' );
 
-		if ( 'passcode' === $type ) {
+		// Not clear yet, why this email has 2 different types.
+		// @see CoursePress_Data_Course::send_invitation()
+		if ( 'passcode' == $type ) {
 			$type = CoursePress_Helper_Email::COURSE_INVITATION_PASSWORD;
 		} else {
 			$type = CoursePress_Helper_Email::COURSE_INVITATION;
@@ -1097,84 +1003,16 @@ class CoursePress_Data_Course {
 		$user = get_user_by( 'email', $email_args['email'] );
 		if ( $user ) {
 			$email_data['user'] = $user;
-			$email_args['first_name'] = sanitize_text_field( $email_data['first_name'] );
-			$email_args['last_name'] = sanitize_text_field( $email_data['last_name'] );
+			$email_args['first_name'] = $email_data['first_name'];
+			$email_args['last_name'] = $email_data['last_name'];
 		}
 
-		$sent = CoursePress_Helper_Email::send_email( self::$type, $email_args );
+		$sent = CoursePress_Helper_Email::send_email(
+			self::$type,
+			$email_args
+		);
 
 		return $sent;
-	}
-
-	private static function _add_invitation_email_hooks() {
-		add_filter(
-			'coursepress_email_fields',
-			array( __CLASS__, 'invite_email_fields' ),
-			10, 2
-		);
-		add_filter(
-			'wp_mail_from',
-			array( __CLASS__, 'email_from' )
-		);
-		add_filter(
-			'wp_mail_from_name',
-			array( __CLASS__, 'email_from_name' )
-		);
-	}
-
-	public static function invite_email_fields( $fields, $args ) {
-		$email_settings = CoursePress_Helper_Email::get_email_fields(
-			self::$email_type
-		);
-
-		$course_id = (int) $args['course_id'];
-
-		// To Email Address.
-		$fields['email'] = sanitize_email( $args['email'] );
-
-		// Email Subject.
-		$fields['subject'] = $email_settings['subject'];
-
-		$post = get_post( $course_id );
-		$course_name = $post->post_title;
-		$valid_stati = array( 'draft', 'pending', 'auto-draft' );
-
-		$permalink = '';
-		if ( in_array( $post->post_status, $valid_stati ) ) {
-			$permalink = CoursePress_Core::get_slug( 'course/', true ) . $post->post_name . '/';
-		} else {
-			$permalink = get_permalink( $course_id );
-		}
-		$course_address = esc_url( $permalink );
-
-		// Email Content
-		$tags = array(
-			'STUDENT_FIRST_NAME',
-			'STUDENT_LAST_NAME',
-			'COURSE_NAME',
-			'COURSE_EXCERPT',
-			'COURSE_ADDRESS',
-			'WEBSITE_ADDRESS',
-			'PASSCODE',
-		);
-
-		$tags_replaces = array(
-			sanitize_text_field( $args['first_name'] ),
-			sanitize_text_field( $args['last_name'] ),
-			$course_name,
-			$post->post_excerpt,
-			$course_address,
-			home_url( '/' ),
-			self::get_setting( $course_id, 'enrollment_passcode', '' ),
-		);
-
-		$fields['message'] = str_replace(
-			$tags,
-			$tags_replaces,
-			$email_settings['content']
-		);
-
-		return $fields;
 	}
 
 	public static function is_full( $course_id ) {
@@ -1579,26 +1417,60 @@ class CoursePress_Data_Course {
 	}
 
 	public static function by_name( $slug, $id_only ) {
+		$res = false;
+
+		// First try to fetch the course by the slug (name).
 		$args = array(
 			'name' => $slug,
-			'post_type' => self::get_post_type_name( true ),
+			'post_type' => self::get_post_type_name(),
 			'post_status' => 'any',
 			'posts_per_page' => 1,
 		);
 
-		if ( $id_only ) {
-			$args['fields']	= 'ids';
-		}
+		if ( $id_only ) { $args['fields'] = 'ids'; }
 
 		$post = get_posts( $args );
 
 		if ( $post ) {
-			if ( $id_only ) {
-				return (int) $post[0];
+			$res = $post[0];
+		} elseif ( is_numeric( $slug ) ) {
+			// If we did not find a course by name, try to fetch it via ID.
+			$post = get_post( $slug );
+
+			if ( $post->post_type == self::get_post_type_name() ) {
+				if ( $id_only ) {
+					$res = $post->ID;
+				} else {
+					$res = $post;
+				}
 			}
-			return $post[0];
-		} else {
-			return false;
 		}
+
+		return $res;
+	}
+
+	/**
+	 * Returns the permalink to the specified course.
+	 *
+	 * @since  2.0.0
+	 * @param  int $course_id The course-ID.
+	 * @return string The absolute URL to the main course page.
+	 */
+	public static function get_permalink( $course_id ) {
+		$base_url = CoursePress_Core::get_slug( 'courses/', true );
+		$slug = get_post_field( 'post_name', $course_id );
+
+		return trailingslashit( $baseurl . $slug );
+	}
+
+	/**
+	 * Count number of courses.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return integer number of courses
+	 */
+	public static function count_courses() {
+		return array_sum( get_object_vars( wp_count_posts( self::get_post_type_name() ) ) );
 	}
 }

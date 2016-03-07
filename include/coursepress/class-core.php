@@ -18,7 +18,7 @@ class CoursePress_Core {
 	 */
 	public static function init() {
 		if ( ! defined( 'CP_IS_PREMIUM' ) ) { define( 'CP_IS_PREMIUM', false ); }
-		if ( ! defined( 'CP_IS_CAPUS' ) ) { define( 'CP_IS_CAPUS', false ); }
+		if ( ! defined( 'CP_IS_CAMPUS' ) ) { define( 'CP_IS_CAMPUS', false ); }
 		if ( ! defined( 'CP_IS_WPMUDEV' ) ) { define( 'CP_IS_WPMUDEV', false ); }
 
 		// We speak languages!
@@ -70,18 +70,17 @@ class CoursePress_Core {
 			CoursePress_View_Admin_CoursePress::init();
 			CoursePress_View_Admin_Communication::init();
 			CoursePress_View_Admin_Setting::init();
-
-			// Admin AJAX.
-			CoursePress_View_Front_Course::init_ajax();
 		} else {
 			// Now we're in the front.
 			CoursePress_View_Front_General::init();
-			CoursePress_View_Front_Course::init();
 			CoursePress_View_Front_Instructor::init();
 			CoursePress_View_Front_Dashboard::init();
 			CoursePress_View_Front_Student::init();
 			CoursePress_View_Front_Login::init();
 		}
+
+		// Always initialize the Front-End; needed in is_admin() for ajax calls!
+		CoursePress_View_Front_Course::init();
 
 		// Initialize Utility actions.
 		CoursePress_Helper_Utility::init();
@@ -109,6 +108,11 @@ class CoursePress_Core {
 
 		// Init Featured Course widget
 		CoursePress_Widget_FeaturedCourse::init();
+
+		/**
+		 * show guide page?
+		 */
+		add_action( 'admin_init', array( __CLASS__, 'redirect_to_guide_page' ) );
 	}
 
 	/**
@@ -395,21 +399,33 @@ class CoursePress_Core {
 		);
 	}
 
-
-	public static function register_formats( $formats ) {
+	/**
+	 * Returns a list of classes that register CoursePress specific post-types.
+	 *
+	 * Each value that is returned is a class name that can provide further
+	 * details for registering a post type or taxonomy.
+	 *
+	 * This class can have either of these methods to register a post type or
+	 * custom taxonomy:
+	 *   CoursePress_Data_X::get_format()   // Details about post-type.
+	 *   CoursePress_Data_X::get_taxonomy() // Details about taxonomy.
+	 *
+	 * @since  2.0.0
+	 * @param  array $classes Default classes. Should be empty array here.
+	 * @return array The initial list of classes that register a post-type.
+	 */
+	public static function register_formats( $classes ) {
 		return array_merge(
-			$formats,
+			$classes,
 			array(
-				'Course',
-				'Unit',
-				'Module',
-				'Discussion',
-				'Notification',
+				'CoursePress_Data_Course',
+				'CoursePress_Data_Unit',
+				'CoursePress_Data_Module',
+				'CoursePress_Data_Discussion',
+				'CoursePress_Data_Notification',
+				'CoursePress_Data_Certificate',
 			)
 		);
-	}
-
-	public static function upgrade() {
 	}
 
 	public static function add_query_vars( $query_vars ) {
@@ -496,5 +512,42 @@ class CoursePress_Core {
 
 		$x = '';
 		return array_merge( $new_rules, $rules );
+	}
+
+	/**
+	 * Redirect to Guide page.
+	 *
+	 * Redirect to Guide page after activate CoursePress plugin, only once and
+	 * only when we do not have courses in database.
+	 *
+	 * @since 2.0.0
+	 */
+	public static function redirect_to_guide_page() {
+		/**
+		 * exit if it is not first time
+		 */
+		if ( empty( get_option( 'coursepress_activate', false ) ) ) {
+			return;
+		}
+		/**
+		 * delete_option (semaphore to show guide page)
+		 */
+		delete_option( 'coursepress_activate' );
+		/**
+		 * exit if we have some courses
+		 */
+		if ( ! empty( CoursePress_Data_Course::count_courses() ) ) {
+			return;
+		}
+		wp_safe_redirect(
+			add_query_arg(
+				array(
+					'page' => 'coursepress_settings',
+					'tab' => 'setup',
+				),
+				admin_url( 'admin.php' )
+			)
+		);
+		exit();
 	}
 }

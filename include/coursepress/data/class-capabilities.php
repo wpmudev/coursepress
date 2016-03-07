@@ -1,4 +1,9 @@
 <?php
+/**
+ * Data access module.
+ *
+ * @package CoursePress
+ */
 
 /**
  * Helper class for working with CoursePress capabilities.
@@ -6,8 +11,6 @@
  * Previously CoursePress_Capabilities
  *
  * @since 1.0.0
- *
- * @return object
  */
 class CoursePress_Data_Capabilities {
 
