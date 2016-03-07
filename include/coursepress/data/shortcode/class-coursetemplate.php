@@ -1434,7 +1434,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$course_name = $post->post_title;
 		$course_url = get_permalink( $course_id );
 		$course_home = CoursePress_Core::get_slug( 'course', true );
-		$units_slug = CoursePress_Core::get_slug( 'unit' );
+		$units_slug = CoursePress_Core::get_slug( 'unit/' );
 
 		switch ( $type ) {
 			case 'unit_archive':

@@ -531,7 +531,7 @@ class CoursePress_Data_Shortcode_Unit {
 		$content = '
 		<div class="submenu-main-container">
 			<ul id="submenu-main" class="submenu nav-submenu">
-				<li class="submenu-item submenu-units ' . ( 'units' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( get_permalink( $course_id ) . CoursePress_Core::get_slug( 'unit' ) ) . '">' . esc_html__( 'Units', 'CP_TD' ) . '</a></li>
+				<li class="submenu-item submenu-units ' . ( 'units' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( get_permalink( $course_id ) . CoursePress_Core::get_slug( 'unit/' ) ) . '">' . esc_html__( 'Units', 'CP_TD' ) . '</a></li>
 		';
 
 		$student_id = is_user_logged_in() ? get_current_user_id() : false;
