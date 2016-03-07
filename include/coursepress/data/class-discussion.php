@@ -95,4 +95,109 @@ class CoursePress_Data_Discussion {
 		$x = '';
 
 	}
+
+	public static function update_discussion( $discussion_title = '', $discussion_description = '', $course_id = '', $unit_id = '' ) {
+			global $wpdb;
+
+			$post_status = 'publish';
+
+			$post = array(
+				'post_author'  => get_current_user_id(),
+				'post_content' => CoursePress_Helper_Utility::filter_content( $discussion_description == '' ? $_POST['discussion_description'] : $discussion_description ),
+				'post_status'  => $post_status,
+				'post_title'   => CoursePress_Helper_Utility::filter_content( ( $discussion_title == '' ? $_POST['discussion_name'] : $discussion_title ), true ),
+				'post_type'    => self::$post_type,
+			);
+
+			if ( isset( $_POST['discussion_id'] ) ) {
+				$post['ID'] = $_POST['discussion_id']; //If ID is set, wp_insert_post will do the UPDATE instead of insert
+			}
+
+			$post_id = wp_insert_post( $post );
+
+			//Update post meta
+			if ( $post_id != 0 ) {
+
+				if ( ! isset( $_POST['discussion_id'] ) ) {//new discussion added
+					$instructors = CoursePress_Data_Course::get_setting( $course_id, 'instructors', false );
+					do_action( 'new_discussion_added_instructor_notification', $user_id, $course_id, $instructors );
+
+					$students = CoursePress_Data_Course::get_student_ids( $course_id );
+					do_action( 'new_discussion_added_student_notification', $user_id, $course_id, $students );
+				}
+
+				if ( $unit_id == '' ) {
+					$unit_id = $_POST['units_dropdown'];
+				}
+
+				update_post_meta( $post_id, 'course_id', $course_id );
+				update_post_meta( $post_id, 'unit_id', $unit_id );
+
+				foreach ( $_POST as $key => $value ) {
+					if ( preg_match( '/meta_/i', $key ) ) {//every field name with prefix "meta_" will be saved as post meta automatically
+						update_post_meta( $post_id, str_replace( 'meta_', '', $key ), CoursePress_Helper_Utility::filter_content( $value ) );
+					}
+				}
+			}
+
+			return $post_id;
+	}
+
+	/**
+	 * Get single discussions
+	 *
+	 * Description.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $post_id Optional. Post id of discussion.
+	 * @return null/WP_Post Discussion post object or null.
+	 */
+	public static function get_one( $post_id = 0 ) {
+		$post = array(
+			'ID'           => 0,
+			'post_title'   => '',
+			'post_content' => '',
+		);
+		/**
+		 * if no $post_id try guess from $_GET
+		 */
+		if ( empty( $post_id ) ) {
+			if ( isset( $_GET['id'] ) ) {
+				$post_id = intval( $_GET['id'] );
+			}
+		}
+		/**
+		 * if still no $post_id, then it is new
+		 */
+		if ( empty( $post_id ) ) {
+			return $post;
+		}
+		/**
+		 * check post if not exists, then new
+		 */
+		$discussion = get_post( $post_id );
+		if ( empty( $discussion ) ) {
+			return $post;
+		}
+		/**
+		 * check post_type to avoid geting any content
+		 */
+		if ( self::$post_type != $discussion->post_type ) {
+			return $post;
+		}
+		/**
+		 * check post author
+		 */
+		if ( get_current_user_id() != $discussion->post_author ) {
+			return $post;
+		}
+		/**
+		 * finally!
+		 */
+		$post['post_title']   = $discussion->post_title;
+		$post['post_content'] = $discussion->post_content;
+		$post['ID']           = $discussion->ID;
+		return $post;
+	}
 }
