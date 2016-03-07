@@ -499,7 +499,7 @@ if ( ! class_exists( 'CP_Basic_Certificate' ) ) {
 				'unit_list' => $unit_list,
 			);
 
-			return $fields;
+			return apply_filters( 'coursepress_certificate_fields', $fields, $student, $course );
 
 		}
 
