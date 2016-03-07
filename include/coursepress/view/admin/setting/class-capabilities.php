@@ -148,90 +148,90 @@ class CoursePress_View_Admin_Setting_Capabilities {
 	private static function _instructor_capabilities_courses() {
 		return array(
 			'coursepress_create_course_cap' => __( 'Create new courses', 'CP_TD' ),
+			'coursepress_update_my_course_cap' => __( 'Update own courses', 'CP_TD' ),
 			'coursepress_update_course_cap' => __( 'Update any assigned course', 'CP_TD' ),
-			'coursepress_update_my_course_cap' => __( 'Update courses made by the instructor only', 'CP_TD' ),
 			// 'coursepress_update_all_courses_cap' => __( 'Update ANY course', 'CP_TD' ),
+			'coursepress_delete_my_course_cap' => __( 'Delete own courses', 'CP_TD' ),
 			'coursepress_delete_course_cap' => __( 'Delete any assigned course', 'CP_TD' ),
-			'coursepress_delete_my_course_cap' => __( 'Delete courses made by the instructor only', 'CP_TD' ),
 			// 'coursepress_delete_all_courses_cap' => __( 'Delete ANY course', 'CP_TD' ),
+			'coursepress_change_my_course_status_cap' => __( 'Change status of own courses', 'CP_TD' ),
 			'coursepress_change_course_status_cap' => __( 'Change status of any assigned course', 'CP_TD' ),
-			'coursepress_change_my_course_status_cap' => __( 'Change status of courses made by the instructor only', 'CP_TD' ),
 			// 'coursepress_change_all_courses_status_cap' => __( 'Change status of ALL course', 'CP_TD' ),
 		);
 	}
 
 	private static function _instructor_capabilities_course_categories() {
 		return array(
-			'coursepress_course_categories_manage_terms_cap' => __( 'Manage Categories', 'CP_TD' ),
-			'coursepress_course_categories_edit_terms_cap' => __( 'Edit Categories', 'CP_TD' ),
-			'coursepress_course_categories_delete_terms_cap' => __( 'Delete Categories', 'CP_TD' ),
+			'coursepress_course_categories_manage_terms_cap' => __( 'View and create categories', 'CP_TD' ),
+			'coursepress_course_categories_edit_terms_cap' => __( 'Edit any category', 'CP_TD' ),
+			'coursepress_course_categories_delete_terms_cap' => __( 'Delete any category', 'CP_TD' ),
 		);
 	}
 
 	private static function _instructor_capabilities_units() {
 		return array(
 			'coursepress_create_course_unit_cap' => __( 'Create new course units', 'CP_TD' ),
-			'coursepress_view_all_units_cap' => __( 'View units in every course ( can view from other Instructors as well )', 'CP_TD' ),
-			'coursepress_update_course_unit_cap' => __( 'Update any unit (within assigned courses)', 'CP_TD' ),
-			'coursepress_update_my_course_unit_cap' => __( 'Update units made by the instructor only', 'CP_TD' ),
+			'coursepress_view_all_units_cap' => __( 'View units in every course (also from other instructors)', 'CP_TD' ),
+			'coursepress_update_my_course_unit_cap' => __( 'Update own units', 'CP_TD' ),
+			'coursepress_update_course_unit_cap' => __( 'Update any unit within assigned courses', 'CP_TD' ),
 			// 'coursepress_update_all_courses_unit_cap' => __( 'Update units of ALL courses', 'CP_TD' ),
-			'coursepress_delete_course_units_cap' => __( 'Delete any unit (within assigned courses)', 'CP_TD' ),
-			'coursepress_delete_my_course_units_cap' => __( 'Delete course units made by the instructor only', 'CP_TD' ),
+			'coursepress_delete_my_course_units_cap' => __( 'Delete own units', 'CP_TD' ),
+			'coursepress_delete_course_units_cap' => __( 'Delete any unit within assigned courses', 'CP_TD' ),
 			// 'coursepress_delete_all_courses_units_cap' => __( 'Delete units of ALL courses', 'CP_TD' ),
-			'coursepress_change_course_unit_status_cap' => __( 'Change status of any unit (within assigned courses)', 'CP_TD' ),
-			'coursepress_change_my_course_unit_status_cap' => __( 'Change statuses of course units made by the instructor only', 'CP_TD' ),
+			'coursepress_change_my_course_unit_status_cap' => __( 'Change status of own units', 'CP_TD' ),
+			'coursepress_change_course_unit_status_cap' => __( 'Change status of any unit within assigned courses', 'CP_TD' ),
 			// 'coursepress_change_all_courses_unit_status_cap' => __( 'Change status of any unit of ALL courses', 'CP_TD' ),
 		);
 	}
 
 	private static function _instructor_capabilities_instructors() {
 		return array(
-			'coursepress_assign_and_assign_instructor_course_cap' => __( 'Assign instructors to any course', 'CP_TD' ),
-			'coursepress_assign_and_assign_instructor_my_course_cap' => __( 'Assign instructors to courses made by the instructor only', 'CP_TD' ),
+			'coursepress_assign_and_assign_instructor_my_course_cap' => __( 'Assign other instructors to own courses', 'CP_TD' ),
+			'coursepress_assign_and_assign_instructor_course_cap' => __( 'Assign other instructors to any course', 'CP_TD' ),
 		);
 	}
 
 	private static function _instructor_capabilities_students() {
 		return array(
+			'coursepress_invite_my_students_cap' => __( 'Invite students to own courses', 'CP_TD' ),
 			'coursepress_invite_students_cap' => __( 'Invite students to any course', 'CP_TD' ),
-			'coursepress_invite_my_students_cap' => __( 'Invite students to courses made by the instructor only', 'CP_TD' ),
+			'coursepress_withdraw_my_students_cap' => __( 'Withdraw students from own courses', 'CP_TD' ),
 			'coursepress_withdraw_students_cap' => __( 'Withdraw students from any course', 'CP_TD' ),
-			'coursepress_withdraw_my_students_cap' => __( 'Withdraw students from courses made by the instructor only', 'CP_TD' ),
+			'coursepress_add_move_my_students_cap' => __( 'Add students to own courses', 'CP_TD' ),
 			'coursepress_add_move_students_cap' => __( 'Add students to any course', 'CP_TD' ),
-			'coursepress_add_move_my_students_cap' => __( 'Add students to courses made by the instructor only', 'CP_TD' ),
-			'coursepress_add_move_my_assigned_students_cap' => __( 'Add students to courses assigned to the instructor only', 'CP_TD' ),
-			// 'coursepress_change_students_group_class_cap' => __( "Change student's group", 'CP_TD' ),
-			// 'coursepress_change_my_students_group_class_cap' => __( "Change student's group within a class made by the instructor only", 'CP_TD' ),
-			'coursepress_add_new_students_cap' => __( 'Add new users with Student role to the blog', 'CP_TD' ),
-			'coursepress_send_bulk_my_students_email_cap' => __( 'Send bulk e-mail to students', 'CP_TD' ),
-			'coursepress_send_bulk_students_email_cap' => __( 'Send bulk e-mail to students within a course made by the instructor only', 'CP_TD' ),
-			'coursepress_delete_students_cap' => __( 'Delete Students (deletes ALL associated course records)', 'CP_TD' ),
+			'coursepress_add_move_my_assigned_students_cap' => __( 'Add students to assigned courses', 'CP_TD' ),
+			// 'coursepress_change_my_students_group_class_cap' => __( 'Change students group within own courses', 'CP_TD' ),
+			// 'coursepress_change_students_group_class_cap' => __( 'Change students group in any course', 'CP_TD' ),
+			'coursepress_send_bulk_my_students_email_cap' => __( 'Send bulk email to students of own courses', 'CP_TD' ),
+			'coursepress_send_bulk_students_email_cap' => __( 'Send bulk email to all students', 'CP_TD' ),
+			'coursepress_add_new_students_cap' => __( 'Create new users with student role to the blog', 'CP_TD' ),
+			'coursepress_delete_students_cap' => __( 'Delete students (deletes ALL associated course records)', 'CP_TD' ),
 		);
 	}
 
 	private static function _instructor_capabilities_notifications() {
 		return array(
+			'coursepress_create_my_notification_cap' => __( 'Create new notifications for own courses', 'CP_TD' ),
+			'coursepress_create_my_assigned_notification_cap' => __( 'Create new notifications for assigned courses', 'CP_TD' ),
 			'coursepress_create_notification_cap' => __( 'Create new notifications', 'CP_TD' ),
-			'coursepress_create_my_notification_cap' => __( 'Create new notifications for courses created by the instructor only', 'CP_TD' ),
-			'coursepress_create_my_assigned_notification_cap' => __( 'Create new notifications for courses assigned to the instructor only', 'CP_TD' ),
+			'coursepress_update_my_notification_cap' => __( 'Update own notifications', 'CP_TD' ),
 			'coursepress_update_notification_cap' => __( 'Update every notification', 'CP_TD' ),
-			'coursepress_update_my_notification_cap' => __( 'Update notifications made by the instructor only', 'CP_TD' ),
+			'coursepress_delete_my_notification_cap' => __( 'Delete own notifications', 'CP_TD' ),
 			'coursepress_delete_notification_cap' => __( 'Delete every notification', 'CP_TD' ),
-			'coursepress_delete_my_notification_cap' => __( 'Delete notifications made by the instructor only', 'CP_TD' ),
+			'coursepress_change_my_notification_status_cap' => __( 'Change statuses of own notifications', 'CP_TD' ),
 			'coursepress_change_notification_status_cap' => __( 'Change status of every notification', 'CP_TD' ),
-			'coursepress_change_my_notification_status_cap' => __( 'Change statuses of notifications made by the instructor only', 'CP_TD' ),
 		);
 	}
 
 	private static function _instructor_capabilities_discussions() {
 		return array(
 			'coursepress_create_discussion_cap' => __( 'Create new discussions', 'CP_TD' ),
-			'coursepress_create_my_discussion_cap' => __( 'Create new discussions for courses created by the instructor only', 'CP_TD' ),
-			'coursepress_create_my_assigned_discussion_cap' => __( 'Create new discussions for courses assigned to the instructor only', 'CP_TD' ),
-			'coursepress_update_discussion_cap' => __( 'Update every discussions', 'CP_TD' ),
-			'coursepress_update_my_discussion_cap' => __( 'Update discussions made by the instructor only', 'CP_TD' ),
-			'coursepress_delete_discussion_cap' => __( 'Delete every discussions', 'CP_TD' ),
-			'coursepress_delete_my_discussion_cap' => __( 'Delete discussions made by the instructor only', 'CP_TD' ),
+			'coursepress_create_my_discussion_cap' => __( 'Create new discussions for own courses', 'CP_TD' ),
+			'coursepress_create_my_assigned_discussion_cap' => __( 'Create new discussions for assigned courses', 'CP_TD' ),
+			'coursepress_update_my_discussion_cap' => __( 'Update own discussions', 'CP_TD' ),
+			'coursepress_update_discussion_cap' => __( 'Update every discussion', 'CP_TD' ),
+			'coursepress_delete_my_discussion_cap' => __( 'Delete own discussions', 'CP_TD' ),
+			'coursepress_delete_discussion_cap' => __( 'Delete every discussion', 'CP_TD' ),
 		);
 	}
 
