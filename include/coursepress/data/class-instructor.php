@@ -377,7 +377,14 @@ class CoursePress_Data_Instructor {
 	}
 
 	public static function verify_invitation_code( $course_id, $code, $invitation_data ) {
-		// Not done yet.
+		$invitation_data = (array) $invitation_data;
+		$is_valid = in_array( array_keys( $invitation_data ), $code );
+
+		if( $is_valid ) {
+			$invite_data = $invitation_data[ $code ];
+		} else {
+
+		}
 	}
 
 

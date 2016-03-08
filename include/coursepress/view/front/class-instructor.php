@@ -58,5 +58,29 @@ class CoursePress_View_Front_Instructor {
 			return;
 
 		}
+
+
+		/**
+		 * Check for instructor invitation code.
+		 **/
+		if( isset( $_GET['action'] ) && 'course_invite' == $_GET['action'] ) {
+			$course_id = (int) $_GET['course_id'];
+			$code = $_GET['c'];
+			$hash = $_GET['h'];
+			$invitation_data = get_post_meta( $course_id, 'instructor_invite', true );
+
+			if( CoursePress_Data_Instructor::verify_invitation_code( $course_id, $code, $invitation_data ) ) {
+				
+			} else {
+				$vp_args = array(
+					'slug' => 'instructor_invitation',
+					'show_title' => false
+				);
+				
+				new CoursePress_Data_VirtualPage( $vp_args );
+
+				return;
+			}
+		}
 	}
 }
