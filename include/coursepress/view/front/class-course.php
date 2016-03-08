@@ -816,7 +816,7 @@ class CoursePress_View_Front_Course {
 				'coursepress_category_page_args',
 				array(
 					'slug' => 'course_archive',
-					'title' => $title,
+					'title' => $cp->title,
 					'show_title' => true,
 					'content' => apply_filters(
 						'coursepress_view_course_archive',
