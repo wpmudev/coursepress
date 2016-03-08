@@ -10,6 +10,7 @@ class CoursePress_Helper_Table_ReportStudent extends WP_List_Table {
 	private $add_new = false;
 	private $students = array();
 	private $last_student_progress = array();
+	private $is_cache_patch_writable;
 
 	/** Class constructor */
 	public function __construct() {
@@ -20,6 +21,8 @@ class CoursePress_Helper_Table_ReportStudent extends WP_List_Table {
 			'plural' => __( 'Students', 'CP_TD' ),
 			'ajax' => false,// should this table support ajax?
 		) );
+
+		$this->is_cache_patch_writable = CoursePress_Helper_PDF::is_cache_patch_writable();
 
 		// $this->post_type = CoursePress_Data_PostFormat::prefix( $post_format['post_type'] );
 		// $this->count = wp_count_posts( $this->post_type );
@@ -106,9 +109,14 @@ class CoursePress_Helper_Table_ReportStudent extends WP_List_Table {
 	}
 
 	public function column_report( $item ) {
-		return sprintf(
-			'<a class="pdf" data-student="%d" data-course="%d">&nbsp;</a>', $item->ID, $this->course_id
-		);
+		if ( $this->is_cache_patch_writable ) {
+			return sprintf(
+				'<a class="pdf" data-student="%d" data-course="%d">&nbsp;</a>',
+				esc_attr( $item->ID ),
+				esc_attr( $this->course_id )
+			);
+		}
+		return sprintf( '<span class="pdf" title="%s" data-click="false"></span>', esc_attr__( 'We can not generata PDF. Cache directory is not writable.', 'CP_TD' ) );
 	}
 
 	public function prepare_items() {

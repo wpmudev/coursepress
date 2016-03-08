@@ -385,5 +385,19 @@ class CoursePress_Helper_PDF extends TCPDF {
 				break;
 		}
 
-	}
+    }
+
+    /**
+     * Check pdf-cache directory.
+     *
+     * @since 2.0.0
+     *
+     * @return boolen is writable or not?
+     */
+    public static function is_cache_patch_writable( ) {
+
+        $cache_path = apply_filters( 'coursepress_pdf_cache_path', trailingslashit( CoursePress::$path ) . 'pdf-cache/' );
+        return is_dir( $cache_path ) && is_writable( $cache_path );
+
+    }
 }
