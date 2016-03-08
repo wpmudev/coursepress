@@ -852,7 +852,7 @@ class CoursePress_Data_Shortcode_Course {
 			'label_tag' => 'strong',
 			'label_delimeter' => ':',
 			'manual_text' => __( 'Students are added by instructors.', 'CP_TD' ),
-			'prerequisite_text' => __( 'Students need to complete "%s" first.', 'CP_TD' ),
+			'prerequisite_text' => __( 'Students need to complete %s first.', 'CP_TD' ),
 			'passcode_text' => __( 'A passcode is required to enroll.', 'CP_TD' ),
 			'anyone_text' => __( 'Anyone', 'CP_TD' ),
 			'registered_text' => __( 'Registered users', 'CP_TD' ),
@@ -890,9 +890,16 @@ class CoursePress_Data_Shortcode_Course {
 				break;
 
 			case 'prerequisite':
-				$prereq = get_post_meta( $course_id, 'prerequisite', true );
-				$pretitle = '<a href="' . get_permalink( $prereq ) . '">' . get_the_title( $prereq ) . '</a>';
-				$enrollment_text = sprintf( $prerequisite_text, $pretitle );
+				$prereq = CoursePress_Data_Course::get_setting( $course_id, 'enrollment_prerequisite', array() );
+				$prereq_courses = array();
+				foreach ( $prereq as $prereq_id ) {
+					$prereq_courses[] = sprintf(
+						'<a href="%s">%s</a>',
+						esc_url( get_permalink( $prereq_id ) ),
+						get_the_title( $prereq_id )
+					);
+				}
+				$enrollment_text = sprintf( $prerequisite_text, implode( ', ', $prereq_courses ) );
 				break;
 
 			case 'manually':
