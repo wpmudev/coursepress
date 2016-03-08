@@ -816,7 +816,7 @@ class CoursePress_View_Front_Course {
 				'coursepress_category_page_args',
 				array(
 					'slug' => 'course_archive',
-					'title' => $title,
+					'title' => $cp->title,
 					'show_title' => true,
 					'content' => apply_filters(
 						'coursepress_view_course_archive',
@@ -1037,7 +1037,7 @@ class CoursePress_View_Front_Course {
 				'ID' => $post_id, // Will load the real post.
 			);
 			// -----------------------------------------------------------------
-		} elseif ( $is_other_cp_page ) {
+		} elseif ( isset( $is_other_cp_page ) && $is_other_cp_page ) {
 			// All other conditions have failed but post type is 'course':
 			// It must be the archive!
 			$cp->title = sprintf(
