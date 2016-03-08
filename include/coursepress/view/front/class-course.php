@@ -673,7 +673,7 @@ class CoursePress_View_Front_Course {
 				$type,
 				$item_id
 			);
-			echo do_shortcode( $scode );
+			echo do_shortcode( $csode );
 			die();
 		}
 
