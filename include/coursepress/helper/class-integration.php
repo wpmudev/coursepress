@@ -38,8 +38,9 @@ class CoursePress_Helper_Integration {
 
 	/**
 	 * Returns a list of all known integrations.
+	 *
 	 * @since  1.0.0
-	 * @return [type] [description]
+	 * @return array List of plugin integrations to load.
 	 */
 	public static function get_plugins() {
 		if ( null === self::$plugins ) {

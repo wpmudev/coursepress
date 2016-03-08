@@ -271,7 +271,7 @@ class CoursePress_Data_Unit {
 		$unit_url = sprintf(
 			'%s%s%s',
 			get_permalink( $course_id ),
-			CoursePress_Core::get_slug( 'unit' ),
+			CoursePress_Core::get_slug( 'unit/' ),
 			$unit->post_name
 		);
 
