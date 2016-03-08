@@ -769,10 +769,11 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 						' . $unit_progress . '
 						' . $unit_image . '
 						<a class="unit-archive-single-title" href="' .
+						( ! $is_unit_available ? esc_url( remove_query_arg( 'dummy-query' ) ) :
 						esc_url_raw(
 							get_permalink( CoursePress_Helper_Utility::the_course( true ) ) .
 							CoursePress_Core::get_slug( 'unit/' ) . $post_name
-						) .
+						) ) .
 						'" rel="bookmark">' . $the_unit->post_title . ' ' . $title_suffix . '</a>';
 
 			if ( $enrolled ) {
@@ -785,7 +786,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				$content .= $the_unit->post_content;
 			}
 
-			if ( $with_modules ) {
+			if ( $is_unit_available && $with_modules ) {
 				$structure_level = CoursePress_Data_Course::get_setting( $course_id, 'structure_level', 'unit' );
 				$module_table = '<ul class="unit-archive-module-wrapper">';
 				$unit['pages'] = isset( $unit['pages'] ) ? $unit['pages'] : array();
@@ -1433,7 +1434,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$course_name = $post->post_title;
 		$course_url = get_permalink( $course_id );
 		$course_home = CoursePress_Core::get_slug( 'course', true );
-		$units_slug = CoursePress_Core::get_slug( 'unit' );
+		$units_slug = CoursePress_Core::get_slug( 'unit/' );
 
 		switch ( $type ) {
 			case 'unit_archive':
