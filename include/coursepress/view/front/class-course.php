@@ -649,6 +649,7 @@ class CoursePress_View_Front_Course {
 
 		CoursePress_Helper_Utility::$is_singular = false;
 		CoursePress_Helper_Utility::set_the_course_subpage( '' );
+		$is_other_cp_page = false;
 
 		if ( array_key_exists( 'coursepress_focus', $wp->query_vars ) ) {
 			$cp->is_focus = (1 == $wp->query_vars['coursepress_focus']);
