@@ -14,10 +14,26 @@ class CoursePress_Helper_Setting {
 
 	public static function admin_menu() {
 		$parent_handle = 'coursepress';
-		self::$page_refs[ $parent_handle ] = add_menu_page( CoursePress::$name, CoursePress::$name, 'coursepress_dashboard_cap', $parent_handle, array(
-			__CLASS__,
-			'menu_handler',
-		), CoursePress::$url . 'asset/img/coursepress-icon.png' );
+		self::$page_refs[ $parent_handle ] = add_menu_page(
+			CoursePress::$name,
+			CoursePress::$name,
+			/**
+			 * Filer allow to change capability.
+			 *
+			 * @since 2.0.0
+			 *
+			 * @param string $capability CoursePress capability.
+			 * @param string $slug CoursePress page slug
+			 *
+			 */
+			apply_filters( 'coursepress_capabilities', 'coursepress_dashboard_cap', $parent_handle ),
+			$parent_handle,
+			array(
+				__CLASS__,
+				'menu_handler',
+			),
+			CoursePress::$url . 'asset/img/coursepress-icon.png'
+		);
 
 		$pages = self::_get_pages();
 

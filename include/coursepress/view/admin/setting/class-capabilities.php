@@ -135,7 +135,7 @@ class CoursePress_View_Admin_Setting_Capabilities {
 		return array(
 			'coursepress_dashboard_cap' => __( 'See the main CoursePress menu', 'CP_TD' ),
 			'coursepress_courses_cap' => __( 'Access the Courses submenus', 'CP_TD' ),
-			'coursepress_instructors_cap' => __( 'Access the Intructors submenu', 'CP_TD' ),
+			// 'coursepress_instructors_cap' => __( 'Access the Intructors submenu', 'CP_TD' ),
 			'coursepress_students_cap' => __( 'Access the Students submenu', 'CP_TD' ),
 			'coursepress_assessment_cap' => __( 'Access the Assessment submenu', 'CP_TD' ),
 			'coursepress_reports_cap' => __( 'Access the Reports submenu', 'CP_TD' ),

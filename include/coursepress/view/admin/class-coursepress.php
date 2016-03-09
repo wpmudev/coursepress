@@ -60,8 +60,9 @@ class CoursePress_View_Admin_CoursePress {
 		$pages[ self::$slug ] = array(
 			'title' => self::$title,
 			'menu_title' => self::$menu_title,
+			/** This filter is documented in include/coursepress/helper/class-setting.php */
+			'cap' => apply_filters( 'coursepress_capabilities', 'coursepress_courses_cap', self::$slug ),
 		);
-
 		$category = CoursePress_Data_Course::get_post_category_name();
 		$cpt = CoursePress_Data_Course::get_post_type_name();
 		$pages['course_categories'] = array(
