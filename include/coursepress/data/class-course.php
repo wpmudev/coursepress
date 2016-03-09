@@ -327,10 +327,20 @@ class CoursePress_Data_Course {
 	public static function add_instructor( $course_id, $instructor_id ) {
 		$instructors = maybe_unserialize( self::get_setting( $course_id, 'instructors', false ) );
 		$instructors = empty( $instructors ) ? array() : $instructors;
+		$global_option = ! is_multisite();
 
 		if ( ! in_array( $instructor_id, $instructors ) ) {
 			CoursePress_Data_Instructor::added_to_course( $instructor_id, $course_id );
 			$instructors[] = $instructor_id;
+			/**
+			 * update information to instructor
+			 */
+			update_user_option(
+				$instructor_id,
+				'course_' . $course_id,
+				$course_id,
+				$global_option
+			);
 		}
 
 		self::update_setting( $course_id, 'instructors', $instructors );
@@ -338,11 +348,20 @@ class CoursePress_Data_Course {
 
 	public static function remove_instructor( $course_id, $instructor_id ) {
 		$instructors = maybe_unserialize( self::get_setting( $course_id, 'instructors', false ) );
+		$global_option = ! is_multisite();
 
 		foreach ( $instructors as $idx => $instructor ) {
 			if ( (int) $instructor === $instructor_id ) {
 				CoursePress_Data_Instructor::removed_from_course( $instructor_id, $course_id );
 				unset( $instructors[ $idx ] );
+				/**
+				 * delete information to instructor
+				 */
+				delete_user_option(
+					$instructor_id,
+					'course_' . $course_id,
+					$global_option
+				);
 			}
 		}
 
