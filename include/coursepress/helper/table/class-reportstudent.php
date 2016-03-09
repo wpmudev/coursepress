@@ -10,7 +10,7 @@ class CoursePress_Helper_Table_ReportStudent extends WP_List_Table {
 	private $add_new = false;
 	private $students = array();
 	private $last_student_progress = array();
-	private $is_cache_patch_writable;
+	private $is_cache_path_writable;
 
 	/** Class constructor */
 	public function __construct() {
@@ -22,7 +22,7 @@ class CoursePress_Helper_Table_ReportStudent extends WP_List_Table {
 			'ajax' => false,// should this table support ajax?
 		) );
 
-		$this->is_cache_patch_writable = CoursePress_Helper_PDF::is_cache_patch_writable();
+		$this->is_cache_path_writable = CoursePress_Helper_PDF::is_cache_path_writable();
 
 		// $this->post_type = CoursePress_Data_PostFormat::prefix( $post_format['post_type'] );
 		// $this->count = wp_count_posts( $this->post_type );
@@ -109,7 +109,7 @@ class CoursePress_Helper_Table_ReportStudent extends WP_List_Table {
 	}
 
 	public function column_report( $item ) {
-		if ( $this->is_cache_patch_writable ) {
+		if ( $this->is_cache_path_writable ) {
 			return sprintf(
 				'<a class="pdf" data-student="%d" data-course="%d">&nbsp;</a>',
 				esc_attr( $item->ID ),
