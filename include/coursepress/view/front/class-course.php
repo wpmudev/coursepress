@@ -666,14 +666,14 @@ class CoursePress_View_Front_Course {
 
 			// Focus mode means:
 			// We display the course item, no other theme/page elements.
-			$csode = sprintf(
+			$shortcode = sprintf(
 				'[coursepress_focus_item course="%d" unit="%d" type="%s" item_id="%d"]',
 				$cp->course_id,
 				$unit_id,
 				$type,
 				$item_id
 			);
-			echo do_shortcode( $csode );
+			echo do_shortcode( $shortcode );
 			die();
 		}
 
