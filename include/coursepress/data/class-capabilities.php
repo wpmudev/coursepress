@@ -19,7 +19,7 @@ class CoursePress_Data_Capabilities {
 			/* General */
 			'coursepress_dashboard_cap' => 1,
 			'coursepress_courses_cap' => 1,
-			'coursepress_instructors_cap' => 1,
+			'coursepress_instructors_cap' => 1, // DEPRECATED
 			'coursepress_students_cap' => 1,
 			'coursepress_assessment_cap' => 1,
 			'coursepress_reports_cap' => 1,
@@ -113,7 +113,6 @@ class CoursePress_Data_Capabilities {
 	public static function init() {
 		add_action( 'set_user_role', array( __CLASS__, 'assign_role_capabilities' ), 10, 3 );
 		add_action( 'wp_login', array( __CLASS__, 'restore_capabilities' ), 10, 2 );
-		add_action( 'admin_init', array( __CLASS__, 'fix_admin_capabilities' ) );
 	}
 
 	/**
@@ -123,21 +122,14 @@ class CoursePress_Data_Capabilities {
 	 */
 	public static function assign_role_capabilities( $user_id, $role, $old_role ) {
 
-		$capability_types = self::$capabilities['instructor'];
-
 		if ( 'administrator' == $role ) {
-
 			self::assign_admin_capabilities( $user_id );
 		} else {
 
-			$user = new WP_User( $user_id );
-			$instructor_courses = CoursePress_Data_Instructor::get_assigned_courses_ids( $user_id );
-
 			// Remove all CoursePress capabilities
-			foreach ( $capability_types as $key => $value ) {
-				$user->remove_cap( $key );
-			}
+			self:remove_instructor_capabilities( $user_id );
 
+			$instructor_courses = CoursePress_Data_Instructor::get_assigned_courses_ids( $user_id );
 			// If they are an instructor, give them their appropriate capabilities back
 			if ( ! empty( $instructor_courses ) ) {
 				self::assign_instructor_capabilities( $user_id );
@@ -151,28 +143,39 @@ class CoursePress_Data_Capabilities {
 	 * @since 1.2.3.3.
 	 */
 	public static function restore_capabilities( $user_login = false, $user ) {
-		if ( user_can( $user, 'manage_options' ) && ! user_can( $user, 'coursepress_dashboard_cap' ) ) {
-			self::assign_admin_capabilities( $user->ID );
+
+		if ( user_can( $user, 'manage_options' ) ) {
+			self::assign_admin_capabilities( $user );
+			return;
 		}
+		if ( ! empty( CoursePress_Data_Instructor::get_course_count( $user->id ) ) ) {
+			self::assign_instructor_capabilities( $user->ID );
+			return;
+		}
+		self::remove_instructor_capabilities( $user );
 	}
 
-
-	public static function fix_admin_capabilities() {
-		$user_id = get_current_user_id();
-		if ( user_can( $user_id, 'manage_options' ) && ! user_can( $user_id, 'coursepress_dashboard_cap' ) ) {
-			self::assign_admin_capabilities( $user_id );
+	public static function remove_instructor_capabilities( $user ) {
+		if ( ! is_object( $user ) ) {
+			$user = new WP_User( $user_id );
+		}
+		$capability_types = self::$capabilities['instructor'];
+		foreach ( $capability_types as $key => $value ) {
+			$user->remove_cap( $key );
 		}
 	}
 
 	public static function assign_admin_capabilities( $user ) {
 
-		$user_id = CoursePress_Helper_Utility::get_id( $user );
-		$user = new WP_User( $user_id );
+		if ( ! is_object( $user ) ) {
+			$user_id = CoursePress_Helper_Utility::get_id( $user );
+			$user = new WP_User( $user_id );
+		}
 		$capability_types = self::$capabilities['instructor'];
-		$user->add_cap( 'manage_options' );
 		foreach ( $capability_types as $key => $value ) {
 			$user->add_cap( $key );
 		}
+
 	}
 
 	/**
@@ -516,8 +519,12 @@ class CoursePress_Data_Capabilities {
 		$role->add_cap( 'read' );
 		$role->add_cap( 'upload_files' );
 
-		foreach ( $instructor_capabilities as $cap ) {
-			$role->add_cap( $cap );
+		foreach ( $instructor_capabilities as $capability_name => $capability_status ) {
+			if ( $capability_status ) {
+				$role->add_cap( $capability_name );
+			} else {
+				$role->remove_cap( $capability_name );
+			}
 		}
 	}
 
