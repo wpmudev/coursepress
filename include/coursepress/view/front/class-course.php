@@ -649,6 +649,7 @@ class CoursePress_View_Front_Course {
 
 		CoursePress_Helper_Utility::$is_singular = false;
 		CoursePress_Helper_Utility::set_the_course_subpage( '' );
+		$is_other_cp_page = false;
 
 		if ( array_key_exists( 'coursepress_focus', $wp->query_vars ) ) {
 			$cp->is_focus = (1 == $wp->query_vars['coursepress_focus']);
@@ -666,14 +667,14 @@ class CoursePress_View_Front_Course {
 
 			// Focus mode means:
 			// We display the course item, no other theme/page elements.
-			$csode = sprintf(
+			$shortcode = sprintf(
 				'[coursepress_focus_item course="%d" unit="%d" type="%s" item_id="%d"]',
 				$cp->course_id,
 				$unit_id,
 				$type,
 				$item_id
 			);
-			echo do_shortcode( $scode );
+			echo do_shortcode( $shortcode );
 			die();
 		}
 
