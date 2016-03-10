@@ -103,6 +103,13 @@ Its now easier to bundle MarketPress with CoursePress.
 * Place the zip file in `includes/plugins` and remove the old zip.  
 * Update the zip file name in `coursepress.php` variable. e.g. `$this->mp_file = '128762_marketpress-ecommerce-3.0.0.2.zip';`  
 
+# CAMPUSPRESS BRANCH #
+
+The branch `coursepress/campus` is used by CampusPress sites. This branch is usually synced with `coursepress/pro`.
+
+Whenever a change is needed in CampusPress, DO NOT modify `coursepress/campus`. Instead, fix `coursepress/base`, make a release and merge `coursepress/pro` into `coursepress/campus`
+
+The CampusPress branch does not need to be updated in every release, the branch should be merged by an Edublogs team member in order to review changes.
 
 # RELEASING #
 
