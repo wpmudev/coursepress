@@ -65,6 +65,14 @@ class CoursePress_View_Front_Instructor {
 		}
 	}
 
+	/**
+	 * Intercep the virtual page rendered in main course page.
+	 *
+	 * @since 2.0
+	 *
+	 * @param (mixed) $_vr_args		 The previous arguments used to construct a virtual page or (bool) false.
+	 * @param (object) $cp		 The object.
+	 **/
 	public static function instructor_verification( $_vp_args, $cp ) {
 		if( $course_invite = CoursePress_Data_Instructor::is_course_invite() ) {
 			$is_verified = CoursePress_Data_Instructor::verify_invitation_code( $course_invite->course_id, $course_invite->code, $course_invite->invitation_data );

@@ -778,9 +778,12 @@ class CoursePress_View_Front_Course {
 			CoursePress_Helper_Utility::$is_singular = true;
 
 			/**
-			 * Filter the single title display.
+			 * Filter whether to display the course title.
 			 *
 			 * @since 2.0
+			 *
+			 * @param (bool) $show_title	Whether to show the title or not.
+			 * @param (int) $course_id	The current course ID.
 			 **/
 			$show_title = apply_filters( 'coursepress_single_show_title', true, $cp->course_id );
 

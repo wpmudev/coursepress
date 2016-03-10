@@ -378,6 +378,10 @@ class CoursePress_Data_Instructor {
 
 	/**
 	 * Check to see if the current page is the link sent from invitation email.
+	 *
+	 * @since 2.0
+	 *
+	 * @return (mixed)	 Returns an (object) on success and false if for error.
 	 **/
 	public static function is_course_invite() {
 		if( isset( $_GET['action'] ) && 'course_invite' == $_GET['action'] ) {
@@ -399,6 +403,10 @@ class CoursePress_Data_Instructor {
 
 	/**
 	 * Add invitation data object to $localize_array.
+	 *
+	 * @since 2.0
+	 *
+	 * @param (array)	 The previously set localize array.
 	 **/
 	public static function invitation_data( $localize_array ) {
 
@@ -411,6 +419,17 @@ class CoursePress_Data_Instructor {
 		return $localize_array;
 	}
 
+	/**
+	 * Verify if it is a valid invitation code.
+	 *
+	 * @since 2.0
+	 * 
+	 * @param (int) $course_id 	The course ID.
+	 * @param (string) $code 	 The code that was attached by the verification link.
+	 * @param (array) $invitation_data	 The list of invitations sent.
+	 *
+	 * @return (bool)
+	 **/
 	public static function verify_invitation_code( $course_id, $code, $invitation_data = false ) {
 		$invitation_data = ! $invitation_data ? (array) get_post_meta( $course_id, 'instructor_invites', true ) : (array) $invitation_data;
 		$is_valid = in_array( $code, array_keys( $invitation_data ) );
