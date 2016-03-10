@@ -384,4 +384,38 @@ class CoursePress_Helper_UI {
 
 		return $content;
 	}
+
+	/**
+	 * Common Admin Page Header
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $title Header title.
+	 * @param string $action_title Header action title.
+	 * @param string $action_url Header action url,
+	 * @param string $action_cap Header action capability
+	 *
+	 * @return string Admin Page Header.
+	 */
+	public static function get_admin_page_title( $title, $action_title = '', $action_url = '', $action_cap = '' ) {
+		$content = sprintf(
+			'<h1>%s : %s',
+			esc_html( CoursePress::$name ),
+			esc_html( $title )
+		);
+		/**
+		 * title action
+		 */
+		if ( ! empty( $action_title )  && ! empty( $action_url ) ) {
+			if ( empty( $action_cap ) || current_user_can( $action_cap ) ) {
+				$content .= sprintf(
+					' <a href="%s" class="page-title-action">%s</a>',
+					esc_url( $action_url ),
+					esc_html( $action_title )
+				);
+			}
+		}
+		$content .= '</h1>';
+		return $content;
+	}
 }

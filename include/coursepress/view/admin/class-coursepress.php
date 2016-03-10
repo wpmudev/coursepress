@@ -79,13 +79,14 @@ class CoursePress_View_Admin_CoursePress {
 		$list_course = new CoursePress_Helper_Table_CourseList();
 		$list_course->prepare_items();
 
-		$url = admin_url( 'admin.php?page=' . CoursePress_View_Admin_Course_Edit::$slug );
-
-		$content = '<div class="coursepress_settings_wrapper wrap">' .
-			'<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '
-			<a class="add-new-h2" href="' . esc_url_raw( $url ) . '">' . esc_html__( 'New Course', 'CP_TD' ) . '</a>
-			</h3>
-			<hr />';
+		$content = '<div class="wrap">';
+		$content .= CoursePress_Helper_UI::get_admin_page_title(
+			self::$menu_title,
+			__( 'New Course', 'CP_TD' ),
+			admin_url( 'admin.php?page=' . CoursePress_View_Admin_Course_Edit::$slug ),
+			/** This filter is documented in include/coursepress/helper/class-setting.php */
+			apply_filters( 'coursepress_capabilities', 'coursepress_create_course_cap', CoursePress_View_Admin_CoursePress::$slug )
+		);
 
 		$bulk_nonce = wp_create_nonce( 'bulk_action_nonce' );
 		$content .= '<div class="nonce-holder" data-nonce="' . $bulk_nonce . '"></div>';
@@ -93,6 +94,7 @@ class CoursePress_View_Admin_CoursePress {
 		$list_course->display();
 		$content .= ob_get_clean();
 
+		$content .= '</div>';
 		$content .= '</div>';
 
 		echo apply_filters( 'coursepress_admin_page_main', $content );

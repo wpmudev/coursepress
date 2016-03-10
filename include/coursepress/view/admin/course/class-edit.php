@@ -12,6 +12,7 @@ class CoursePress_View_Admin_Course_Edit {
 	);
 	private static $tabs = array();
 	private static $current_course = false;
+	private static $capability = 'manage_options';
 
 	public static function init() {
 
@@ -22,13 +23,33 @@ class CoursePress_View_Admin_Course_Edit {
 		switch ( self::$action ) {
 			case 'new':
 				self::$menu_title = __( 'New Course', 'CP_TD' );
-				break;
+				self::$capability = 'coursepress_create_course_cap';
+			break;
 			case 'edit':
 				if ( isset( $_GET['id'] ) && 0 !== (int) $_GET['id'] ) {
 					self::$current_course = get_post( (int) $_GET['id'] );
 				}
 				self::$menu_title = __( 'Edit Course', 'CP_TD' );
-				break;
+				/**
+				 * set cap
+				 */
+				if ( is_object( self::$current_course ) ) {
+					/**
+					 * Update own courses
+					 */
+					$instructor_id = get_current_user_id();
+					if ( $instructor_id == self::$current_course->post_author ) {
+						self::$capability = 'coursepress_update_my_course_cap';
+					} else {
+						/**
+						 * Update any assigned course
+						 */
+						if ( CoursePress_Data_Instructor::is_assigned_to_course( $instructor_id, self::$current_course->ID ) ) {
+							self::$capability = 'coursepress_update_course_cap';
+						}
+					}
+				}
+			break;
 		}
 
 		add_filter( 'coursepress_admin_valid_pages', array( __CLASS__, 'add_valid' ) );
@@ -57,7 +78,7 @@ class CoursePress_View_Admin_Course_Edit {
 			'title' => self::$title,
 			'menu_title' => self::$menu_title,
 			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			'cap' => apply_filters( 'coursepress_capabilities', 'coursepress_dashboard_cap', self::$slug ),
+			'cap' => apply_filters( 'coursepress_capabilities', self::$capability, self::$slug ),
 		);
 
 		return $pages;
@@ -1066,7 +1087,11 @@ class CoursePress_View_Admin_Course_Edit {
 			// Update Course
 			case 'update_course':
 
-				if ( isset( $step_data->step ) && wp_verify_nonce( $data->data->nonce, 'setup-course' ) ) {
+				if (
+					isset( $step_data->step )
+					&& wp_verify_nonce( $data->data->nonce, 'setup-course' )
+					&& CoursePress_Data_Instructor::current_user_can_edit_course( $step_data->course_id )
+				) {
 
 					$step = (int) $step_data->step;
 
@@ -1087,7 +1112,10 @@ class CoursePress_View_Admin_Course_Edit {
 
 				$course_id = $data->data->course_id;
 
-				if ( wp_verify_nonce( $data->data->nonce, 'publish-course' ) ) {
+				if (
+					wp_verify_nonce( $data->data->nonce, 'publish-course' )
+					&& CoursePress_Data_Instructor::current_user_can_edit_course( $data->data->course_id )
+				) {
 
 					wp_update_post( array(
 						'ID' => $course_id,
@@ -1226,21 +1254,30 @@ class CoursePress_View_Admin_Course_Edit {
 						switch ( $action ) {
 
 							case 'publish':
+								if ( ! CoursePress_Data_Instructor::current_user_can_edit_course( $course_id ) ) {
+									continue;
+								}
 								wp_update_post( array(
 									'ID' => $course_id,
 									'post_status' => 'publish',
 								) );
-								break;
+							break;
 							case 'unpublish':
+								if ( ! CoursePress_Data_Instructor::current_user_can_edit_course( $course_id ) ) {
+									continue;
+								}
 								wp_update_post( array(
 									'ID' => $course_id,
 									'post_status' => 'draft',
 								) );
-								break;
+							break;
 							case 'delete':
+								if ( ! CoursePress_Data_Instructor::current_user_can_delete_course( $course_id ) ) {
+									continue;
+								}
 								wp_delete_post( $course_id );
 								do_action( 'coursepress_course_deleted', $course_id );
-								break;
+							break;
 
 						}
 					}
@@ -1257,6 +1294,10 @@ class CoursePress_View_Admin_Course_Edit {
 				if ( wp_verify_nonce( $data->data->nonce, 'delete_course' ) ) {
 
 					$course_id = (int) $data->data->course_id;
+					if ( ! CoursePress_Data_Instructor::current_user_can_delete_course( $course_id ) ) {
+						break;
+					}
+
 					wp_delete_post( $course_id );
 					do_action( 'coursepress_course_deleted', $course_id );
 
