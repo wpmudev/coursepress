@@ -776,9 +776,17 @@ class CoursePress_View_Front_Course {
 			// This is a single course page!
 			CoursePress_Helper_Utility::$is_singular = true;
 
+			/**
+			 * Filter the single title display.
+			 *
+			 * @since 2.0
+			 **/
+			$show_title = apply_filters( 'coursepress_single_show_title', true, $cp->course_id );
+
 			$cp->vp_args = array(
 				'slug' => 'course_' . $cp->course_id,
-				'show_title' => false,
+				'title' => get_the_title( $cp->course_id ),
+				'show_title' => $show_title,
 				'content' => apply_filters(
 					'coursepress_view_course',
 					self::render_course_main(),
@@ -1058,6 +1066,11 @@ class CoursePress_View_Front_Course {
 				'is_archive' => true,
 			);
 		}
+
+		/**
+		 * Filter $cp->vp_args
+		 **/
+		$cp->vp_args = apply_filters( 'coursepress_virtual_page', $cp->vp_args, $cp );
 
 		// Finally set up the virtual page, if we found a special CP page.
 		if ( $cp->vp_args ) {

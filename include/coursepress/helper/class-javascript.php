@@ -240,6 +240,14 @@ class CoursePress_Helper_JavaScript {
 				'mismatch_password' => __( 'Passwords do not match.', 'CP_TD' ),
 			),
 		);
+
+		/**
+		 * Filter localize script.
+		 *
+		 * @since 2.0
+		 **/
+		$localize_array = apply_filters( 'coursepress_localize_object', $localize_array );
+
 		wp_localize_script(
 			'coursepress_object',
 			'_coursepress',
