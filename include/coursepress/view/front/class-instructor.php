@@ -74,7 +74,10 @@ class CoursePress_View_Front_Instructor {
 	 * @param (object) $cp		 The object.
 	 **/
 	public static function instructor_verification( $_vp_args, $cp ) {
-		if( $course_invite = CoursePress_Data_Instructor::is_course_invite() ) {
+		$course_invite = CoursePress_Data_Instructor::is_course_invite();
+
+		if ( $course_invit ) {
+
 			$is_verified = CoursePress_Data_Instructor::verify_invitation_code( $course_invite->course_id, $course_invite->code, $course_invite->invitation_data );
 			$vp_args = array(
 				'slug' => 'instructor_verification' . $course_invite->course_id,
@@ -82,52 +85,53 @@ class CoursePress_View_Front_Instructor {
 				'is_page' => true,
 			);
 
-			if( $is_verified ) {
-				if( ! is_user_logged_in() ) {
+			if ( $is_verified ) {
+
+				if ( ! is_user_logged_in() ) {
+
 					add_filter( 'coursepress_localize_object', array( 'CoursePress_Data_Instructor', 'invitation_data' ) );
 					add_action( 'wp_footer', array( __CLASS__, 'modal_view' ) );
 					$vp_args = $_vp_args;
+
 				} else {
 					$user_id = get_current_user_id();
 					$is_added = CoursePress_Data_Instructor::add_from_invitation( $course_invite->course_id, $user_id, $course_invite->code );
 
-					if( $is_added ) { 
-						$vp_args = wp_parse_args( array(
+					if ( $is_added ) {
+						$main_course = apply_filters( 'coursepress_view_course', CoursePress_View_Front_Course::render_course_main(), $course_invite->course_id, 'main' );
+						$args = array(
 							'show_title' => true,
 							'title' => get_the_title( $course_invite->course_id ),
-							'content' => sprintf( '<h3>%s</h3><p>%s</p>',
+							'content' => sprintf( '<h3>%s</h3><p>%s</p>%s',
 								esc_html__( 'Invitation activated.', 'CP_TD' ),
-								esc_html__( 'Congratulations. You are now an instructor of this course. ', 'CP_TD' )
-							)
-							. apply_filters( 'coursepress_view_course',
-								CoursePress_View_Front_Course::render_course_main(),
-								$course_invite->course_id,
-								'main'
+								esc_html__( 'Congratulations. You are now an instructor of this course. ', 'CP_TD' ),
+								$main_course
 							),
-						), $vp_args );
+						);
+						$vp_args = wp_parse_args( $args, $vp_args );
 					} else {
-						$vp_args = wp_parse_args( array(
+						$args = array(
 							'show_title' => false,
 							'content' => sprintf( '<h3>%s</h3><p>%s</p><p>%s</p>',
 								esc_html__( 'Invalid invitation.', 'CP_TD' ),
 								esc_html__( 'This invitation link is not associated with your email address.', 'CP_TD' ),
 								esc_html__( 'Please contact your course administator and ask them to send a new invitation to the email address that you have associated with your account.', 'CP_TD' )
-							)
-						), $vp_args );
+							),
+						);
+						$vp_args = wp_parse_args( $args, $vp_args );
 					}
-
 				}
 			} else {
-				$vp_args = wp_parse_args( array(
+				$args = array(
 					'show_title' => false,
 					'content' => sprintf( '<h3>%s</h3><p>%s</p><p>%s</p>',
 						esc_html__( 'Invitation not found.', 'CP_TD' ),
 						esc_html__( 'This invitation could not be found or is no longer available.', 'CP_TD' ),
 						esc_html__( 'Please contact us if you believe this to be an error.', 'CP_TD' )
 					),
-				), $vp_args );
+				);
+				$vp_args = wp_parse_args( $args, $vp_args );
 			}
-
 		} else {
 			$vp_args = $_vp_args;
 		}
@@ -155,7 +159,7 @@ class CoursePress_View_Front_Instructor {
 				<h3 class="bbm-modal__title"><?php esc_html_e( 'Invalid invitation.', 'CP_TD' ); ?></h3>
 			</div>
 			<div class="bbm-modal__section">
-				<p><?php esc_html_e( 'This invitation link is not associated with your email address.', 'CP_TD'  ); ?></p>
+				<p><?php esc_html_e( 'This invitation link is not associated with your email address.', 'CP_TD' ); ?></p>
 				<p><?php esc_html_e( 'Please contact your course administator and ask them to send a new invitation to the email address that you have associated with your account.', 'CP_TD' ); ?></p>
 			</div>
 			<div class="bbm-modal__bottombar">

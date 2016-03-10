@@ -192,7 +192,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 					$success = true;
 
 					// Remove instructor invitation from the list
-					if( ! empty( $data->data->invite_code ) ) {
+					if ( ! empty( $data->data->invite_code ) ) {
 						$success = $json_data['success'] = CoursePress_Data_Instructor::add_from_invitation( $data->data->course_id, $data->data->instructor_id, $data->data->invite_code );
 					}
 				}
