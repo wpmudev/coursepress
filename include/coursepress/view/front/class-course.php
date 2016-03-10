@@ -1072,7 +1072,12 @@ class CoursePress_View_Front_Course {
 		}
 
 		/**
-		 * Filter $cp->vp_args
+		 * Filter the virtual page arguments.
+		 *
+		 * @since 2.0
+		 *
+		 * @param (array) $cp->vp_args.	 The arguments to use to create a virtual page.
+		 * @param (object) $cp.
 		 **/
 		$cp->vp_args = apply_filters( 'coursepress_virtual_page', $cp->vp_args, $cp );
 
