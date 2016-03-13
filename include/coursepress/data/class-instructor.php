@@ -435,6 +435,9 @@ class CoursePress_Data_Instructor {
 		if ( current_user_can( 'manage_options' ) ) {
 			return true;
 		}
+		if ( ! is_object( $course ) ) {
+			$course = get_post( $course );
+		}
 		$instructor_id = get_current_user_id();
 		$capability = false;
 		if ( $instructor_id == $course->post_author ) {
