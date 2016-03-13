@@ -22,24 +22,10 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 
 
 	public static function view_templates( $template = false ) {
-		$templates = array(
 
-			'unit_builder' => '
-				<script type="text/template" id="unit-builder-template">
-					<div class="tab-container vertical unit-builder-container">
-						<div class="tab-tabs unit-builder-tabs">
-						<div id="sticky-wrapper" class="sticky-wrapper sticky-wrapper-tabs">
-							<div class="tabs"></div>
-							<div class="sticky-buttons"><div class="button button-add-new-unit"><i class="fa fa-plus-square"></i> ' . esc_html__( 'Add New Unit', 'CP_TD' ) . '</div></div>
-						</div>
-					</div>
-					<div class="tab-content tab-content-vertical unit-builder-content">
-						<div class="section static unit-builder-header"></div>
-						<div class="section static unit-builder-body"></div>
-					</div>
-					</div>
-				</script>
-			',
+		$templates = array();
+
+		$templates = array(
 			'unit_builder_tab' => '
 				<script type="text/template" id="unit-builder-tab-template">
 					<li class="coursepress-ub-tab <%= unit_live_class %> <%= unit_active_class %>" data-tab="<%= unit_id %>" data-order="<%= unit_order %>" data-cid="<%= unit_cid %>"><span><%= unit_title %></span></li>
@@ -206,6 +192,45 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 				</script>
 			';
 
+		/**
+		 * remove templates, depend of capabilities: Create new course units
+		 */
+		/** This filter is documented in include/coursepress/helper/class-setting.php */
+		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_course_unit_cap', 'create_new_unit' );
+		if ( current_user_can( $capability ) ) {
+			$templates['unit_builder'] = '
+				<script type="text/template" id="unit-builder-template">
+					<div class="tab-container vertical unit-builder-container">
+						<div class="tab-tabs unit-builder-tabs">
+						<div id="sticky-wrapper" class="sticky-wrapper sticky-wrapper-tabs">
+							<div class="tabs"></div>
+							<div class="sticky-buttons"><div class="button button-add-new-unit"><i class="fa fa-plus-square"></i> ' . esc_html__( 'Add New Unit', 'CP_TD' ) . '</div></div>
+						</div>
+					</div>
+					<div class="tab-content tab-content-vertical unit-builder-content">
+						<div class="section static unit-builder-header"></div>
+						<div class="section static unit-builder-body"></div>
+					</div>
+					</div>
+				</script>
+			';
+		} else {
+			$templates['unit_builder'] = '
+				<script type="text/template" id="unit-builder-template">
+					<div class="tab-container vertical unit-builder-container">
+						<div class="tab-tabs unit-builder-tabs">
+						<div id="sticky-wrapper" class="sticky-wrapper sticky-wrapper-tabs">
+							<div class="tabs"></div>
+						</div>
+					</div>
+					<div class="tab-content tab-content-vertical unit-builder-content">
+						<div class="section static unit-builder-header"></div>
+						<div class="section static unit-builder-body"></div>
+					</div>
+					</div>
+				</script>
+			';
+		}
 		return $templates;
 	}
 
