@@ -70,6 +70,8 @@ class CoursePress_View_Admin_CoursePress {
 			'menu_title' => __( 'Course Categories', 'CP_TD' ),
 			'handle' => 'edit-tags.php?taxonomy=' . $category . '&post_type=' . $cpt,
 			'callback' => 'none',
+			/** This filter is documented in include/coursepress/helper/class-setting.php */
+			'cap' => apply_filters( 'coursepress_capabilities', 'coursepress_course_categories_edit_terms_cap', 'course_categories' ),
 		);
 
 		return $pages;
