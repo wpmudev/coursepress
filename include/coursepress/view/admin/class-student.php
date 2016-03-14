@@ -67,6 +67,8 @@ class CoursePress_View_Admin_Student {
 			self::$table_manager->display();
 		} elseif ( 'workbook' == $view ) {
 			CoursePress_View_Admin_Student_Workbook::display();
+		} elseif ( 'profile' == $view ) {
+			CoursePress_View_Admin_Student_Profile::display();
 		}
 	}
 

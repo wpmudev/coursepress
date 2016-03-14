@@ -138,16 +138,11 @@ class CoursePress_View_Admin_Instructor {
 									while ( have_posts() ):
 										the_post();
 										$style = ( ' class="alternate"' == $style ) ? '' : ' class="alternate"';
-										$edit_link = add_query_arg(
-											array(
-												'page' => CoursePress_View_Admin_Course_Edit::$slug,
-												'course_id' => get_the_ID(),
-											)
-										);
+										$course = CoursePress_Data_Course::get_course( get_the_ID() )
 										?>
 										<tr <?php echo $style; ?>>
 											<td>
-												<a href="<?php echo $edit_link; ?>" class="course-title"><?php the_title(); ?></a>
+												<a href="<?php echo $course->edit_link; ?>" class="course-title"><?php the_title(); ?></a>
 												<?php the_excerpt(); ?>
 											</td>
 											<td style="width:25%;">
@@ -155,29 +150,16 @@ class CoursePress_View_Admin_Instructor {
 													<div>
 														<span class="info_caption"><?php esc_html_e( 'Start', 'CP_TD' ); ?></span>
 														<span class="info">
-															<?php
-																$start_date = CoursePress_Data_Course::get_setting( 'coursepress_start_date' );
-																echo date_i18n( $date_format, strtotime( $start_date ) );
-															?>
+															<?php echo $course->start_date; ?>
 														</span>
 													</div>
 													<div>
 														<span class="info_caption"><?php esc_html_e( 'End', 'CP_TD' ); ?></span>
-														<span class="info">
-															<?php
-																$end_date = CoursePress_Data_Course::get_setting( 'coursepress_end_date' );
-																echo date_i18n( $date_format, strtotime( $end_date ) );
-															?>
-														</span>
+														<span class="info"><?php echo $course->end_date; ?></span>
 													</div>
 													<div>
 														<span class="info_caption"><?php esc_html_e( 'Duration', 'CP_TD' ); ?></span>
-														<span class="info">
-															<?php
-																$duration = ceil( ( strtotime( $end_date ) - strtotime( $start_date ) ) / 86400 );
-																printf( _n( '%s Day', '%s Days', $duration, 'CP_TD' ), $duration );
-															?>
-														</span>
+														<span class="info"><?php echo $course->duration; ?></span>
 													</div>
 												</div>
 											</td>

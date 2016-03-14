@@ -891,4 +891,18 @@ class CoursePress_Data_Student {
 
 		return $sent;
 	}
+
+	public static function get_admin_workbook_link( $student_id, $course_id ) {
+		$workbook_link = add_query_arg(
+			array( 
+				'page' => CoursePress_View_Admin_Student::$slug,
+				'view' => 'workbook',
+				'course_id' => $course_id,
+				'student_id' => $student_id,
+			),
+			admin_url( 'admin.php' )
+		);
+
+		return $workbook_link;
+	}
 }

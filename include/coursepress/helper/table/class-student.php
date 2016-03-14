@@ -76,7 +76,7 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 
 			case 'profile':
 				$profile_link = add_query_arg(
-					array( 'action' => 'view', 'instructor_id' => $user_id )
+					array( 'view' => 'profile', 'student_id' => $user_id )
 				);
 				$return = sprintf( '<a href="%s"><i class="fa fa-user cp-move-icon remove-btn"></i></a>', $profile_link );
 				break;
