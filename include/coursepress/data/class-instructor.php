@@ -229,9 +229,16 @@ class CoursePress_Data_Instructor {
 
 	public static function added_to_course( $instructor_id, $course_id ) {
 
+		$instructor = get_userdata( $instructor_id );
+		$assigned_courses_ids = self::get_assigned_courses_ids( $instructor );
+		$assigned_courses_ids = array_filter( $assigned_courses_ids );
+
+		if ( empty( $assigned_courses_ids ) ) {
+			CoursePress_Data_Capabilities::assign_instructor_capabilities( $instructor );
+		}
+
 		$global_option = ! is_multisite();
 		update_user_option( $instructor_id, 'course_' . $course_id, $course_id, $global_option );
-
 	}
 
 	public static function removed_from_course( $instructor_id, $course_id ) {
@@ -243,6 +250,16 @@ class CoursePress_Data_Instructor {
 		// Other associated actions
 		self::unassign_from_course( $instructor_id, $course_id );
 
+		$instructor = get_userdata( $instructor_id );
+		$assigned_courses_ids = self::get_assigned_courses_ids( $instructor );
+		$assigned_courses_ids = array_filter( $assigned_courses_ids );
+
+		/**
+		 * Drop capabilities if no assigned courses found.
+		 **/
+		if ( empty( $assigned_courses_ids ) ) {
+			CoursePress_Data_Capabilities::drop_instructor_capabilities( $instructor );
+		}
 	}
 
 	public static function delete_invitation( $course_id, $invite_code ) {

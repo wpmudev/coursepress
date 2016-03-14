@@ -516,8 +516,10 @@ class CoursePress_Data_Capabilities {
 		$role->add_cap( 'read' );
 		$role->add_cap( 'upload_files' );
 
-		foreach ( $instructor_capabilities as $cap ) {
-			$role->add_cap( $cap );
+		foreach ( $instructor_capabilities as $cap => $is_true ) {
+			if ( $is_true ) {
+				$role->add_cap( $cap );
+			}
 		}
 	}
 
@@ -541,7 +543,7 @@ class CoursePress_Data_Capabilities {
 		$role->remove_cap( 'upload_files' );
 
 		$capabilities = array_keys( self::$capabilities['instructor'] );
-		foreach ( $capabilities as $cap ) {
+		foreach ( $capabilities as $cap => $is_true ) {
 			$role->remove_cap( $cap );
 		}
 
