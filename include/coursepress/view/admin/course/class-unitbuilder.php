@@ -148,7 +148,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 		 * show delete unit button?
 		 */
 		$content = '';
-		if ( CoursePress_Data_Capabilities::current_user_can_delete_units( $course_id ) ) {
+		if ( CoursePress_Data_Capabilities::can_delete_units( $course_id ) ) {
 			$content = sprintf(
 				'<div class="button unit-delete-button"><i class="fa fa-trash-o"></i> %s</div>',
 				esc_html__( 'Delete Unit', 'CP_TD' )
@@ -160,7 +160,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 		 * show save unit button?
 		 */
 		$content = '';
-		if ( CoursePress_Data_Capabilities::current_user_can_update_units( $course_id ) ) {
+		if ( CoursePress_Data_Capabilities::can_update_course_unit( $course_id ) ) {
 			$content = sprintf(
 				'<div class="button unit-save-button">%s</div>',
 				esc_html__( 'Save', 'CP_TD' )
@@ -172,7 +172,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 		 * show change status
 		 */
 		$content = '';
-		if ( CoursePress_Data_Capabilities::current_user_can_change_status_course( $course_id ) ) {
+		if ( CoursePress_Data_Capabilities::can_change_course_status( $course_id ) ) {
 			$content = CoursePress_Helper_UI::toggle_switch(
 				'unit-live-toggle-2',
 				'unit-live-toggle-2',
@@ -188,13 +188,13 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 		 * unit_builder_footer
 		 */
 		$templates['unit_builder_footer'] = '<script type="text/template" id="unit-builder-footer-template">';
-		if ( CoursePress_Data_Capabilities::current_user_can_update_units( $course_id ) ) {
+		if ( CoursePress_Data_Capabilities::can_update_course_unit( $course_id ) ) {
 			$templates['unit_builder_footer'] .= sprintf(
 				'<div class="button unit-save-button">%s</div>',
 				esc_html__( 'Save', 'CP_TD' )
 			);
 		}
-		if ( CoursePress_Data_Capabilities::current_user_can_change_status_course( $course_id ) ) {
+		if ( CoursePress_Data_Capabilities::can_change_course_status( $course_id ) ) {
 			$templates['unit_builder_footer'] .= CoursePress_Helper_UI::toggle_switch(
 				'unit-live-toggle-2',
 				'unit-live-toggle-2',
@@ -240,9 +240,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 		/**
 		 * remove templates, depend of capabilities: Create new course units
 		 */
-		/** This filter is documented in include/coursepress/helper/class-setting.php */
-		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_course_unit_cap', 'create_new_unit' );
-		if ( current_user_can( $capability ) ) {
+		if ( CoursePress_Data_Capabilities::can_create_unit() ) {
 			$templates['unit_builder'] = '
 				<script type="text/template" id="unit-builder-template">
 					<div class="tab-container vertical unit-builder-container">

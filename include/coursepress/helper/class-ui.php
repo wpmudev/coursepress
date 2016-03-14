@@ -274,7 +274,7 @@ class CoursePress_Helper_UI {
 		global $post_id, $wpdb;
 
 		$remove_buttons = false;
-		if ( CoursePress_Data_Capabilities::current_user_can_assign_course_instructor( $course_id ) ) {
+		if ( CoursePress_Data_Capabilities::can_assign_course_instructor( $course_id ) ) {
 			$remove_buttons = isset( $options['remove_buttons'] ) ? $options['remove_buttons'] : true;
 		}
 

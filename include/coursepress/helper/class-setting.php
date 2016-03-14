@@ -26,7 +26,7 @@ class CoursePress_Helper_Setting {
 			 * @param string $slug CoursePress page slug
 			 *
 			 */
-			apply_filters( 'coursepress_capabilities', 'coursepress_dashboard_cap', $parent_handle ),
+			apply_filters( 'coursepress_capabilities', 'coursepress_dashboard_cap' ),
 			$parent_handle,
 			array(
 				__CLASS__,

@@ -78,7 +78,7 @@ class CoursePress_View_Admin_Course_Edit {
 			'title' => self::$title,
 			'menu_title' => self::$menu_title,
 			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			'cap' => apply_filters( 'coursepress_capabilities', self::$capability, self::$slug ),
+			'cap' => apply_filters( 'coursepress_capabilities', self::$capability ),
 		);
 
 		return $pages;
@@ -125,7 +125,7 @@ class CoursePress_View_Admin_Course_Edit {
 		);
 		$ui['class'] = 'course-' . $course_id;
 		$publish_toggle = '';
-		if ( CoursePress_Data_Capabilities::current_user_can_change_status_course( $course_id ) ) {
+		if ( CoursePress_Data_Capabilities::can_change_course_status( $course_id ) ) {
 			$publish_toggle = ! empty( $course_id ) ? CoursePress_Helper_UI::toggle_switch( 'publish-course-toggle', 'publish-course-toggle', $ui ) : '';
 		}
 
@@ -558,7 +558,7 @@ class CoursePress_View_Admin_Course_Edit {
 			';
 
 		// Instructors
-		if ( CoursePress_Data_Capabilities::current_user_can_assign_course_instructor( $course_id ) ) {
+		if ( CoursePress_Data_Capabilities::can_assign_course_instructor( $course_id ) ) {
 			$content .= '
 				<div class="wide">
 						<label for="course_name" class="">' .
@@ -594,7 +594,7 @@ class CoursePress_View_Admin_Course_Edit {
 				</div>';
 
 		// Instructor Invite
-		if ( CoursePress_Data_Capabilities::current_user_can_assign_course_instructor( $course_id ) ) {
+		if ( CoursePress_Data_Capabilities::can_assign_course_instructor( $course_id ) ) {
 			$content .= '
 				<div class="wide">
 					<hr />
@@ -1039,7 +1039,7 @@ class CoursePress_View_Admin_Course_Edit {
 		if ( 'edit' == self::_current_action() ) {
 
 			$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
-			if ( CoursePress_Data_Capabilities::current_user_can_view_units( $course_id ) ) {
+			if ( CoursePress_Data_Capabilities::can_view_course_units( $course_id ) ) {
 				$units = CoursePress_Data_Course::get_unit_ids( $course_id, array( 'publish', 'draft' ) );
 				self::$tabs['units'] = array(
 					'title' => sprintf( __( 'Units (%s)', 'CP_TD' ), count( $units ) ),
@@ -1095,7 +1095,7 @@ class CoursePress_View_Admin_Course_Edit {
 				if (
 					isset( $step_data->step )
 					&& wp_verify_nonce( $data->data->nonce, 'setup-course' )
-					&& CoursePress_Data_Capabilities::current_user_can_edit_course( $step_data->course_id )
+					&& CoursePress_Data_Capabilities::can_update_course( $step_data->course_id )
 				) {
 
 					$step = (int) $step_data->step;
@@ -1119,7 +1119,7 @@ class CoursePress_View_Admin_Course_Edit {
 
 				if (
 					wp_verify_nonce( $data->data->nonce, 'publish-course' )
-					&& CoursePress_Data_Capabilities::current_user_can_edit_course( $data->data->course_id )
+					&& CoursePress_Data_Capabilities::can_update_course( $data->data->course_id )
 				) {
 
 					wp_update_post( array(
@@ -1259,7 +1259,7 @@ class CoursePress_View_Admin_Course_Edit {
 						switch ( $action ) {
 
 							case 'publish':
-								if ( ! CoursePress_Data_Capabilities::current_user_can_edit_course( $course_id ) ) {
+								if ( ! CoursePress_Data_Capabilities::can_update_course( $course_id ) ) {
 									continue;
 								}
 								wp_update_post( array(
@@ -1268,7 +1268,7 @@ class CoursePress_View_Admin_Course_Edit {
 								) );
 							break;
 							case 'unpublish':
-								if ( ! CoursePress_Data_Capabilities::current_user_can_edit_course( $course_id ) ) {
+								if ( ! CoursePress_Data_Capabilities::can_update_course( $course_id ) ) {
 									continue;
 								}
 								wp_update_post( array(
@@ -1277,7 +1277,7 @@ class CoursePress_View_Admin_Course_Edit {
 								) );
 							break;
 							case 'delete':
-								if ( ! CoursePress_Data_Capabilities::current_user_can_delete_course( $course_id ) ) {
+								if ( ! CoursePress_Data_Capabilities::can_delete_course( $course_id ) ) {
 									continue;
 								}
 								wp_delete_post( $course_id );
@@ -1299,7 +1299,7 @@ class CoursePress_View_Admin_Course_Edit {
 				if ( wp_verify_nonce( $data->data->nonce, 'delete_course' ) ) {
 
 					$course_id = (int) $data->data->course_id;
-					if ( ! CoursePress_Data_Capabilities::current_user_can_delete_course( $course_id ) ) {
+					if ( ! CoursePress_Data_Capabilities::can_delete_course( $course_id ) ) {
 						break;
 					}
 
@@ -1429,7 +1429,7 @@ class CoursePress_View_Admin_Course_Edit {
 	}
 
 	private static function button_update( $course_id, $step ) {
-		if ( CoursePress_Data_Capabilities::current_user_can_update_course( $course_id ) ) {
+		if ( CoursePress_Data_Capabilities::can_update_course( $course_id ) ) {
 			return sprintf(
 				'<input type="button" class="button step update hidden step-%d" value="%s" />',
 				esc_attr( $step ),

@@ -61,7 +61,7 @@ class CoursePress_View_Admin_CoursePress {
 			'title' => self::$title,
 			'menu_title' => self::$menu_title,
 			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			'cap' => apply_filters( 'coursepress_capabilities', 'coursepress_courses_cap', self::$slug ),
+			'cap' => apply_filters( 'coursepress_capabilities', 'coursepress_courses_cap' ),
 		);
 		$category = CoursePress_Data_Course::get_post_category_name();
 		$cpt = CoursePress_Data_Course::get_post_type_name();
@@ -71,7 +71,7 @@ class CoursePress_View_Admin_CoursePress {
 			'handle' => 'edit-tags.php?taxonomy=' . $category . '&post_type=' . $cpt,
 			'callback' => 'none',
 			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			'cap' => apply_filters( 'coursepress_capabilities', 'coursepress_course_categories_edit_terms_cap', 'course_categories' ),
+			'cap' => apply_filters( 'coursepress_capabilities', 'coursepress_course_categories_edit_terms_cap' ),
 		);
 
 		return $pages;
@@ -87,7 +87,7 @@ class CoursePress_View_Admin_CoursePress {
 			__( 'New Course', 'CP_TD' ),
 			admin_url( 'admin.php?page=' . CoursePress_View_Admin_Course_Edit::$slug ),
 			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			apply_filters( 'coursepress_capabilities', 'coursepress_create_course_cap', CoursePress_View_Admin_CoursePress::$slug )
+			apply_filters( 'coursepress_capabilities', 'coursepress_create_course_cap' )
 		);
 
 		$bulk_nonce = wp_create_nonce( 'bulk_action_nonce' );

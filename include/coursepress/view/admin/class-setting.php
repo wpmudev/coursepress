@@ -48,7 +48,7 @@ class CoursePress_View_Admin_Setting {
 			'title' => self::$title,
 			'menu_title' => self::$menu_title,
 			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			'cap' => apply_filters( 'coursepress_capabilities', 'coursepress_settings_cap', self::$slug ),
+			'cap' => apply_filters( 'coursepress_capabilities', 'coursepress_settings_cap' ),
 		);
 
 		return $pages;
