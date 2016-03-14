@@ -148,7 +148,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 		 * show delete unit button?
 		 */
 		$content = '';
-		if ( CoursePress_Data_Capabilities::can_delete_units( $course_id ) ) {
+		if ( CoursePress_Data_Capabilities::can_delete_course_unit( $course_id ) ) {
 			$content = sprintf(
 				'<div class="button unit-delete-button"><i class="fa fa-trash-o"></i> %s</div>',
 				esc_html__( 'Delete Unit', 'CP_TD' )

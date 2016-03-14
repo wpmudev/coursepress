@@ -166,10 +166,15 @@ class CoursePress_Data_Capabilities {
 	}
 
 	public static function assign_admin_capabilities( $user ) {
-
 		if ( ! is_object( $user ) ) {
 			$user_id = CoursePress_Helper_Utility::get_id( $user );
 			$user = new WP_User( $user_id );
+		}
+		/**
+		 * do not add_cap if user can manage_options
+		 */
+		if ( user_can( $user->ID, 'manage_options' ) ) {
+			return;
 		}
 		$capability_types = self::$capabilities['instructor'];
 		foreach ( $capability_types as $key => $value ) {
@@ -522,12 +527,97 @@ class CoursePress_Data_Capabilities {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
+		if ( user_can( $user_id, 'manage_options' ) ) {
+			return true;
+		}
 
 		$my_course = self::is_course_instructor( $course_id, $user_id );
 
 		return ( $my_course && user_can( $user_id, 'coursepress_invite_my_students_cap' ) ) || user_can( $user_id, 'coursepress_invite_students_cap' ) || user_can( $user_id, 'manage_options' ) ? true : false;
 	}
 
+	/**
+	 * Can add student
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param WP_Post $course Course data.
+	 * @return boolean Can or can't? - this is a question.
+	 */
+	public static function can_add_course_student( $course, $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		if ( user_can( $user_id, 'manage_options' ) ) {
+			return true;
+		}
+		/**
+		 * Add students to any course
+		 */
+		/** This filter is documented in include/coursepress/helper/class-setting.php */
+		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_add_move_students_cap' );
+		if ( user_can( $user_id, $capability ) ) {
+			return true;
+		}
+		/**
+		 * Add students to own courses
+		 */
+		$course_id = is_object( $course )? $course->ID : $course;
+		if ( self::is_course_creator( $course, $user_id ) ) {
+			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_add_move_my_students_cap' );
+			if ( user_can( $user_id, $capability ) ) {
+				return true;
+			}
+		}
+		/**
+		 * Add students to assigned courses
+		 */
+		if ( CoursePress_Data_Instructor::is_assigned_to_course( $user_id, $course_id ) ) {
+			/** This filter is documented in include/coursepress/helper/class-setting.php */
+			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_add_move_my_assigned_students_cap' );
+			if ( user_can( $user_id, $capability ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Can withdraw student
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param WP_Post $course Course data.
+	 * @return boolean Can or can't? - this is a question.
+	 */
+	public static function can_withdraw_course_student( $course, $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		if ( user_can( $user_id, 'manage_options' ) ) {
+			return true;
+		}
+		/**
+		 * withdraw students to any course
+		 */
+		/** This filter is documented in include/coursepress/helper/class-setting.php */
+		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_withdraw_students_cap' );
+		if ( user_can( $user_id, $capability ) ) {
+			return true;
+		}
+		/**
+		 * withdraw students to own courses
+		 */
+		$course_id = is_object( $course )? $course->ID : $course;
+		if ( self::is_course_creator( $course, $user_id ) ) {
+			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_withdraw_my_students_cap' );
+			if ( user_can( $user_id, $capability ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
 	/**
 	 * Is the user an instructor of this course?
 	 *
@@ -585,8 +675,13 @@ class CoursePress_Data_Capabilities {
 
 	public static function grant_private_caps( $user_id ) {
 		$user = new WP_User( $user_id );
+		/**
+		 * do not add_cap if user can manage_options
+		 */
+		if ( user_can( $user_id, 'manage_options' ) ) {
+			return;
+		}
 		$capability_types = array( 'course', 'unit', 'module', 'module_response', 'notification', 'discussion' );
-
 		foreach ( $capability_types as $capability_type ) {
 			$user->add_cap( "read_private_{$capability_type}s" );
 		}
@@ -595,6 +690,12 @@ class CoursePress_Data_Capabilities {
 	public static function drop_private_caps( $user_id = '', $role = '' ) {
 
 		if ( empty( $user_id ) && empty( $role ) ) {
+			return;
+		}
+		/**
+		 * do not add_cap if user can manage_options
+		 */
+		if ( user_can( $user_id, 'manage_options' ) ) {
 			return;
 		}
 
@@ -618,7 +719,12 @@ class CoursePress_Data_Capabilities {
 	public static function assign_instructor_capabilities( $user ) {
 
 		$user_id = CoursePress_Helper_Utility::get_id( $user );
-
+		/**
+		 * do not add_cap if user can manage_options
+		 */
+		if ( user_can( $user_id, 'manage_options' ) ) {
+			return;
+		}
 		// The default capabilities for an instructor
 		$instructor_capabilities = self::get_instructor_capabilities();
 
