@@ -558,22 +558,23 @@ class CoursePress_View_Admin_Course_Edit {
 			';
 
 		// Instructors
-		$content .= '
+		if ( CoursePress_Data_Capabilities::current_user_can_assign_course_instructor( $course_id ) ) {
+			$content .= '
 				<div class="wide">
 						<label for="course_name" class="">' .
 					esc_html__( 'Course Instructor(s)', 'CP_TD' ) . '
 						<p class="description">' . esc_html__( 'Select one or more instructor to facilitate this course', 'CP_TD' ) . '</p>
 						</label>
 						' . CoursePress_Helper_UI::get_user_dropdown( 'instructors', 'instructors', array(
-			'placeholder' => __( 'Choose a Course Instructor...', 'CP_TD' ),
-			'class' => 'chosen-select medium',
-			'context' => 'instructors',
-		) ) . '
+				'placeholder' => __( 'Choose a Course Instructor...', 'CP_TD' ),
+				'class' => 'chosen-select medium',
+				'context' => 'instructors',
+			) ) . '
 						<input type="button" class="button button-primary instructor-assign" value="' . esc_attr__( 'Assign', 'CP_TD' ) . '" />
-				</div>
-				<div class="instructors-info medium" id="instructors-info">
-					<p>' . esc_html__( 'Assigned Instructors:', 'CP_TD' ) . '</p>
-				';
+				</div>';
+		}
+		$content .= '<div class="instructors-info medium" id="instructors-info">
+					<p>' . esc_html__( 'Assigned Instructors:', 'CP_TD' ) . '</p>';
 
 		if ( 0 >= CoursePress_Helper_UI::course_instructors_avatars( $course_id, array(
 			'remove_buttons' => true,
@@ -593,7 +594,8 @@ class CoursePress_View_Admin_Course_Edit {
 				</div>';
 
 		// Instructor Invite
-		$content .= '
+		if ( CoursePress_Data_Capabilities::current_user_can_assign_course_instructor( $course_id ) ) {
+			$content .= '
 				<div class="wide">
 					<hr />
 
@@ -613,10 +615,9 @@ class CoursePress_View_Admin_Course_Edit {
 							<input class="button-primary" name="invite_instructor_trigger" id="invite-instructor-trigger" type="button" value="' . esc_attr__( 'Send Invite', 'CP_TD' ) . '">
 						</div>
 					</div>
-
-
 				</div>
-				';
+';
+		}
 
 		/**
 		 * Add additional fields.

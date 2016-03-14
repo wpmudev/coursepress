@@ -380,23 +380,37 @@ class CoursePress_Data_Capabilities {
 	/**
 	 * Can the user assign a course instructor?
 	 *
-	 * @since 1.0.0
+	 * @since 2.0.0
 	 *
-	 * @return bool
+	 * @param WP_Post $course Course data.
+	 * @return boolean Can or can't? - this is a question.
 	 */
-	public static function can_assign_course_instructor( $course_id, $user_id = '' ) {
-		if ( empty( $user_id ) ) {
-			$user_id = get_current_user_id();
-		}
-
-		// For new courses
-		if ( ( empty( $course_id ) || 0 == $course_id ) && ( user_can( $user_id, 'coursepress_assign_and_assign_instructor_my_course_cap' ) || user_can( $user_id, 'coursepress_assign_and_assign_instructor_course_cap' ) || user_can( $user_id, 'manage_options' ) ) ) {
+	public static function current_user_can_assign_course_instructor( $course ) {
+		if ( current_user_can( 'manage_options' ) ) {
 			return true;
 		}
+		$course_id = is_object( $course )? $course->ID : $course;
+		/**
+		 * check can assign instructor every courses
+		 */
+		/** This filter is documented in include/coursepress/helper/class-setting.php */
+		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_assign_and_assign_instructor_course_cap', 'instructor-assign' );
+		if ( current_user_can( $capability ) ) {
+			return true;
+		}
+		/**
+		 * check instructor
+		 */
+		$instructor_id = get_current_user_id();
+		if ( CoursePress_Data_Instructor::is_assigned_to_course( $instructor_id, $course_id ) ) {
+			/** This filter is documented in include/coursepress/helper/class-setting.php */
+			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_assign_and_assign_instructor_my_course_cap', 'instructor-assign' );
+			if ( current_user_can( $capability ) ) {
+				return true;
+			}
+		}
+		return false;
 
-		$my_course = self::is_course_instructor( $course_id, $user_id );
-
-		return ( $my_course && user_can( $user_id, 'coursepress_assign_and_assign_instructor_my_course_cap' ) ) || user_can( $user_id, 'coursepress_assign_and_assign_instructor_course_cap' ) || user_can( $user_id, 'manage_options' ) ? true : false;
 	}
 
 	/**

@@ -273,7 +273,11 @@ class CoursePress_Helper_UI {
 	public static function course_instructors_avatars( $course_id, $options = array(), $show_pending = false ) {
 		global $post_id, $wpdb;
 
-		$remove_buttons = isset( $options['remove_buttons'] ) ? $options['remove_buttons'] : true;
+		$remove_buttons = false;
+		if ( CoursePress_Data_Capabilities::current_user_can_assign_course_instructor( $course_id ) ) {
+			$remove_buttons = isset( $options['remove_buttons'] ) ? $options['remove_buttons'] : true;
+		}
+
 		$just_count = isset( $options['count'] ) ? $options['count'] : false;
 
 		$content = '';
