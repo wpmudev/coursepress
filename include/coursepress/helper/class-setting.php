@@ -123,6 +123,12 @@ class CoursePress_Helper_Setting {
 				$instructor_css = CoursePress::$url . 'asset/css/admin-instructor.css';
 				wp_enqueue_style( 'coursepress_admin_instructor', $instructor_css, false, CoursePress::$version );
 			}
+
+			// Add student stylesshet
+			if ( CoursePress_View_Admin_Student::$slug == $page ) {
+				$student_css = CoursePress::$url . 'asset/css/admin-student.css';
+				wp_enqueue_style( 'coursepress_admin_student', $student_css, false, CoursePress::$version );
+			}
 		}
 
 		wp_enqueue_style( 'coursepress_admin_global', $style_global, array(), CoursePress::$version );

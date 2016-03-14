@@ -74,7 +74,7 @@ class CoursePress_Helper_Table_Instructor extends WP_Users_List_Table {
 			'registered' => __( 'Registered', 'CP_TD' ),
 			'courses' => __( 'Courses', 'CP_TD' ),
 			'profile' => __( 'Profile', 'CP_TD' ),
-			'remove' => __( 'Remove', 'CP_TD' )
+			'remove' => __( 'Remove', 'CP_TD' ),
 		);
 
 		return $columns;
