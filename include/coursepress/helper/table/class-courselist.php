@@ -78,8 +78,10 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		/**
 		 * check instructor privileges
 		 */
-		if ( ! CoursePress_Data_Instructor::current_user_can_edit_course( $item ) ) {
+		if ( ! CoursePress_Data_Capabilities::current_user_can_edit_course( $item ) ) {
 			unset( $actions['edit'] );
+			unset( $actions['units'] );
+			unset( $actions['students'] );
 		}
 
 		return $title . $this->row_actions( $actions );
@@ -128,7 +130,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		/**
 		 * check instructor privileges
 		 */
-		if ( ! CoursePress_Data_Instructor::current_user_can_edit_course( $item ) ) {
+		if ( ! CoursePress_Data_Capabilities::current_user_can_edit_course( $item ) ) {
 			return '&nbsp;';
 		}
 
@@ -156,7 +158,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		/**
 		 * check instructor privileges
 		 */
-		if ( ! CoursePress_Data_Instructor::current_user_can_delete_course( $item ) ) {
+		if ( ! CoursePress_Data_Capabilities::current_user_can_delete_course( $item ) ) {
 			return '&nbsp;';
 		}
 		$delete_nonce = wp_create_nonce( 'delete_course' );
