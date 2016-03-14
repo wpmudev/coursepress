@@ -115,6 +115,7 @@ class CoursePress_Core {
 		 * show guide page?
 		 */
 		add_action( 'admin_init', array( __CLASS__, 'redirect_to_guide_page' ) );
+
 	}
 
 	/**

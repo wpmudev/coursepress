@@ -114,6 +114,11 @@ class CoursePress_Data_Capabilities {
 		add_action( 'set_user_role', array( __CLASS__, 'assign_role_capabilities' ), 10, 3 );
 		add_action( 'wp_login', array( __CLASS__, 'restore_capabilities' ), 10, 2 );
 		add_action( 'admin_init', array( __CLASS__, 'fix_admin_capabilities' ) );
+
+		if ( ! is_super_admin() ) {
+			// Filter the capability of the current user
+			add_filter( 'user_has_cap', array( __CLASS__, 'user_cap' ), 10, 3 );
+		}
 	}
 
 	/**
@@ -543,7 +548,7 @@ class CoursePress_Data_Capabilities {
 		$role->remove_cap( 'upload_files' );
 
 		$capabilities = array_keys( self::$capabilities['instructor'] );
-		foreach ( $capabilities as $cap => $is_true ) {
+		foreach ( $capabilities as $cap ) {
 			$role->remove_cap( $cap );
 		}
 
@@ -578,5 +583,19 @@ class CoursePress_Data_Capabilities {
 		}
 
 		return $instructor_capabilities;
+	}
+
+	public static function user_cap( $allcaps, $cap, $args ) {
+
+		$instructor_capabilities = CoursePress_Data_Capabilities::get_instructor_capabilities();
+		foreach ( $instructor_capabilities as $instructor_cap => $is_true ) {
+			if ( ! $is_true ) {
+				if ( isset( $allcaps[ $instructor_cap ] ) ) {
+					unset( $allcaps[ $instructor_cap ] );
+				}
+			} 
+		}
+
+		return $allcaps;
 	}
 }

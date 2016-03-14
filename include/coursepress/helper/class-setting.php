@@ -44,10 +44,12 @@ class CoursePress_Helper_Setting {
 				$page['handle'] = $handle;
 			}
 
-			if ( 'none' != $page['parent'] ) {
-				self::$page_refs[ $handle ] = add_submenu_page( $page['parent'], $page['title'], $page['menu_title'], $capability, $page['handle'], $callback );
-			} else {
-				self::$page_refs[ $handle ] = add_submenu_page( null, $page['title'], $page['menu_title'], $capability, $page['handle'], $callback );
+			if ( current_user_can( 'coursepress_courses_cap' ) ) {
+				if ( 'none' != $page['parent'] ) {
+					self::$page_refs[ $handle ] = add_submenu_page( $page['parent'], $page['title'], $page['menu_title'], $capability, $page['handle'], $callback );
+				} else {
+					self::$page_refs[ $handle ] = add_submenu_page( null, $page['title'], $page['menu_title'], $capability, $page['handle'], $callback );
+				}
 			}
 		}
 

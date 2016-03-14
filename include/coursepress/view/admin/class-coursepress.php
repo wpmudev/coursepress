@@ -62,14 +62,28 @@ class CoursePress_View_Admin_CoursePress {
 			'menu_title' => self::$menu_title,
 		);
 
-		$category = CoursePress_Data_Course::get_post_category_name();
-		$cpt = CoursePress_Data_Course::get_post_type_name();
-		$pages['course_categories'] = array(
-			'title' => __( 'Edit Course Categories', 'CP_TD' ),
-			'menu_title' => __( 'Course Categories', 'CP_TD' ),
-			'handle' => 'edit-tags.php?taxonomy=' . $category . '&post_type=' . $cpt,
-			'callback' => 'none',
-		);
+		$user_can = is_super_admin();
+
+		if ( ! $user_can ) {
+			$user_can = current_user_can( 'coursepress_courses_cap' );
+
+			if ( $user_can ) {
+				if ( current_user_can( 'course_categories_manage_terms_cap' ) ) {
+					$user_can = true;
+				}
+			}
+		}
+
+		if ( $user_can ) {
+			$category = CoursePress_Data_Course::get_post_category_name();
+			$cpt = CoursePress_Data_Course::get_post_type_name();
+			$pages['course_categories'] = array(
+				'title' => __( 'Edit Course Categories', 'CP_TD' ),
+				'menu_title' => __( 'Course Categories', 'CP_TD' ),
+				'handle' => 'edit-tags.php?taxonomy=' . $category . '&post_type=' . $cpt,
+				'callback' => 'none',
+			);
+		}
 
 		return $pages;
 	}
