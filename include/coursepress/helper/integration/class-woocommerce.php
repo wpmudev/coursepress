@@ -196,7 +196,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 							array(
 								'ID' => $mp_product_id,
 								'post_status' => 'draft',
-							);
+							)
 						);
 					}
 				}
