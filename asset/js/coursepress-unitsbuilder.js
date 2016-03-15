@@ -147,7 +147,45 @@ var CoursePress = CoursePress || {};
 			$( '#unit-live-toggle-2' ).removeClass( 'on' );
 			$( '#unit-live-toggle-2' ).addClass( 'off' );
 		}
-		$( '.coursepress-ui-toggle-switch' ).coursepress_ui_toggle();
+
+		var activeUnit = CoursePress.UnitBuilder.unit_collection.get( CoursePress.UnitBuilder.activeUnitRef ),
+			unit_user_cap = activeUnit && activeUnit.get( 'user_cap' ) ? activeUnit.get( 'user_cap' ) : {};
+
+		$( '.coursepress-ui-toggle-switch' ).each( function() {
+
+			var	ui = $( this ),
+				ui_name = ui.attr( 'name' ),
+				is_toggle = true;
+
+			if ( 'publish-course-toggle' == ui_name ) {
+				if ( ! CoursePress.current_user_can( 'coursepress_change_status_cap' ) ) {
+					is_toggle = false;
+					ui.unbind( 'click' );
+				}
+			}
+			if ( 'unit-live-toggle' == ui_name || 'unit-live-toggle-2' == ui_name ) {
+				if ( ! unit_user_cap['coursepress_change_unit_status_cap'] ) {
+					is_toggle = false;
+				}
+			}
+
+			if ( is_toggle ) {
+				ui.coursepress_ui_toggle();
+			}
+		});
+
+		// Hide delete button
+		var unit_delete_button = CoursePress.UnitBuilder.$el.find( '.unit-delete-button' );
+		if ( ! unit_user_cap['coursepress_delete_course_units_cap'] ){
+			unit_delete_button.addClass( 'button-hidden-in-js' ).hide();
+		}
+
+		// Disable save button
+		var unit_save_button = CoursePress.UnitBuilder.$el.find( '.unit-save-button' );
+		if ( ! unit_user_cap['coursepress_update_course_unit_cap'] ) {
+			//CoursePress.UnitBuilder.headerView.$el.hide();
+			//CoursePress.UnitBuilder.contentView.$el.hide();
+		}
 
 		// Delete Page button
 		if ( CoursePress.UnitBuilder.totalPages === 1 ) {

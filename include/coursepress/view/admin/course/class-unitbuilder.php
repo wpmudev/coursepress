@@ -20,9 +20,25 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 		return $content;
 	}
 
+	public static function filter_user_capabilities( $allcaps ) {
+		$course_id = (int) $_GET['id'];
+		$user_id = get_current_user_id();
+
+		if ( CoursePress_Data_Capabilities::can_change_course_status( $course_id, $user_id ) ) {
+			$allcaps['coursepress_change_status_cap'] = true;
+		} else {
+			if ( ! empty( $allcaps['coursepress_change_status_cap'] ) ) {
+				unset( $allcaps['coursepress_change_status_cap'] );
+			}
+		}
+
+		return $allcaps;
+	}
 
 	public static function view_templates( $template = false ) {
 		$course_id = (int) $_GET['id'];
+
+		add_filter( 'coursepress_current_user_capabilities', array( __CLASS__, 'filter_user_capabilities' ) );
 
 		$templates = array(
 
@@ -32,7 +48,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 						<div class="tab-tabs unit-builder-tabs">
 						<div id="sticky-wrapper" class="sticky-wrapper sticky-wrapper-tabs">
 							<div class="tabs"></div>' .
-							( CoursePress_Data_Capabilities::can_create_course_unit( $course_id ) ? 
+							( CoursePress_Data_Capabilities::can_create_unit() ? 
 							'<div class="sticky-buttons"><div class="button button-add-new-unit"><i class="fa fa-plus-square"></i> ' . esc_html__( 'Add New Unit', 'CP_TD' ) . '</div></div>' : '' )
 						. '</div>
 					</div>
@@ -220,7 +236,9 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 
 		switch ( $_REQUEST['task'] ) {
 			case 'units':
-				$units = CoursePress_Data_Course::get_units( $_REQUEST['course_id'], 'any' );
+				$course_id = (int) $_REQUEST['course_id'];
+				$user_id = get_current_user_id();
+				$units = CoursePress_Data_Course::get_units( $course_id, 'any' );
 
 				foreach ( $units as $unit ) {
 					$meta = get_post_meta( $unit->ID );
@@ -230,6 +248,19 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					// Temp for reordering
 					$unit->unit_order = isset( $meta['unit_order'] ) ? $meta['unit_order'] : 0;
 					$unit->meta = $meta;
+
+					// Let's add unit capabilities
+					$user_cap = array();
+					if ( CoursePress_Data_Capabilities::can_change_course_unit_status( $course_id, $unit->ID, $user_id ) ) {
+						$user_cap['coursepress_change_unit_status_cap'] = true;
+					}
+					if ( CoursePress_Data_Capabilities::can_delete_course_unit( $course_id, $unit->ID, $user_id ) ) {
+						$user_cap['coursepress_delete_course_units_cap'] = true;
+					}
+					if ( CoursePress_Data_Capabilities::can_update_course_unit( $course_id, $unit->ID, $user_id ) ) {
+						$user_cap['coursepress_update_course_unit_cap'] = true;
+					}
+					$unit->user_cap = $user_cap;
 				}
 
 				// Reorder units before returning it

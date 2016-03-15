@@ -643,6 +643,8 @@ class CoursePress_Data_Capabilities {
 		$userdata = get_userdata( $user_id );
 		$caps = $userdata->caps;
 
-		return $userdata->caps;
+		$caps = apply_filters( 'coursepress_current_user_capabilities', $caps );
+
+		return $caps;
 	}
 }
