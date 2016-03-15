@@ -344,6 +344,11 @@ class CoursePress_Data_Course {
 		}
 
 		self::update_setting( $course_id, 'instructors', $instructors );
+
+		/**
+		 * update instructor roles
+		 */
+		CoursePress_Data_Capabilities::assign_role_capabilities( $instructor_id, '', '' );
 	}
 
 	public static function remove_instructor( $course_id, $instructor_id ) {
@@ -366,6 +371,11 @@ class CoursePress_Data_Course {
 		}
 
 		self::update_setting( $course_id, 'instructors', $instructors );
+
+		/**
+		 * update instructor roles
+		 */
+		CoursePress_Data_Capabilities::assign_role_capabilities( $instructor_id, '', '' );
 	}
 
 	public static function get_setting( $course_id, $key = true, $default = null ) {
