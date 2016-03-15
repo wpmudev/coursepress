@@ -673,11 +673,11 @@ class CoursePress_Data_Capabilities {
 	}
 
 	/**
-	 * Can withdraw student
+	 * Can add notification
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param WP_Post $course Course data.
+	 * @param WP_Post/integer $course Course data or course ID.
 	 * @return boolean Can or can't? - this is a question.
 	 */
 	public static function can_add_notification( $course, $user_id = '' ) {
@@ -696,10 +696,10 @@ class CoursePress_Data_Capabilities {
 			return true;
 		}
 		/**
-		 *Create new notifications for own courses
+		 * Create new notifications for own courses
 		 */
 		$course_id = is_object( $course )? $course->ID : $course;
-		if ( empty( $course ) || self::is_course_creator( $course, $user_id ) ) {
+		if ( self::is_course_creator( $course, $user_id ) ) {
 			/** This filter is documented in include/coursepress/helper/class-setting.php */
 			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_notification_cap' );
 			if ( user_can( $user_id, $capability ) ) {
@@ -709,9 +709,46 @@ class CoursePress_Data_Capabilities {
 		/**
 		 * Create new notifications for assigned courses
 		 */
-		if ( empty( $course ) || self::is_course_instructor( $course, $user_id ) ) {
+		if ( self::is_course_instructor( $course, $user_id ) ) {
 			/** This filter is documented in include/coursepress/helper/class-setting.php */
 			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_assigned_notification_cap' );
+			if ( user_can( $user_id, $capability ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Can update notification
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param WP_Post/integer $notification notification data or notification ID.
+	 * @return boolean Can or can't? - this is a question.
+	 */
+	public static function can_update_notification( $notification, $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		if ( user_can( $user_id, 'manage_options' ) ) {
+			return true;
+		}
+		/**
+		 * Update every notification
+		 */
+		/** This filter is documented in include/coursepress/helper/class-setting.php */
+		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_update_notification_cap' );
+		if ( user_can( $user_id, $capability ) ) {
+			return true;
+		}
+		/**
+		 * Update own notifications
+		 */
+		$notification_id = is_object( $notification )? $notification->ID : $notification;
+		if ( self::is_notification_creator( $notification, $user_id ) ) {
+			/** This filter is documented in include/coursepress/helper/class-setting.php */
+			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_delete_my_notification_cap' );
 			if ( user_can( $user_id, $capability ) ) {
 				return true;
 			}
@@ -776,6 +813,28 @@ class CoursePress_Data_Capabilities {
 			return false;
 		}
 		return get_post_field( 'post_author', $course ) == $user_id;
+	}
+
+	/**
+	 * Is the user the notification author?
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param WP_Post/integer $course Course data or course ID.
+	 * @param integer $user_id user ID, can be empty
+	 *
+	 * @return boolean Can or can't? - this is a question.
+	 */
+	public static function is_notification_creator( $notification, $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		$notification_id = is_object( $notification )? $notification->ID : $notification;
+		if ( empty( $notification_id ) ) {
+			return false;
+		} else {
+			return get_post_field( 'post_author', $notification_id ) == $user_id;
+		}
 	}
 
 	public static function grant_private_caps( $user_id ) {
@@ -892,7 +951,6 @@ class CoursePress_Data_Capabilities {
 
 		self::drop_private_caps( '', $role );
 	}
-
 
 	public static function get_instructor_capabilities() {
 		$default_capabilities = array_keys( CoursePress_Data_Capabilities::$capabilities['instructor'], 1 );

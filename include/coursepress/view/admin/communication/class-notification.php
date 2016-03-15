@@ -43,6 +43,15 @@ class CoursePress_View_Admin_Communication_Notification {
 			// Update the notification
 			$id = isset( $_REQUEST['id'] ) ? (int) $_REQUEST['id'] : false;
 
+			/**
+			 * check permissions
+			 */
+			if ( ! empty( $id ) ) {
+				if ( ! CoursePress_Data_Capabilities::can_update_notification( $id ) ) {
+					return __( 'You do not have permission to edit this notification.', 'CP_TD' );
+				}
+			}
+
 			$content = CoursePress_Helper_Utility::filter_content( $_POST['post_content'] );
 			$title = CoursePress_Helper_Utility::filter_content( $_POST['post_title'] );
 			$course_id = 'all' === $_POST['meta_course_id'] ? $_POST['meta_course_id'] : (int) $_POST['meta_course_id'];
@@ -97,9 +106,11 @@ class CoursePress_View_Admin_Communication_Notification {
 		} else {
 			switch ( $action ) {
 				case 'edit':
-					$content .= CoursePress_Helper_UI::get_admin_page_title(
-						__( 'Add New Notification', 'CP_TD' )
-					);
+					$title = __( 'Edit Notification', 'CP_TD' );
+					if ( isset( $_GET['id'] ) && 'new' == $_GET['id'] ) {
+						$title = __( 'Add New Notification', 'CP_TD' );
+					}
+					$content .= CoursePress_Helper_UI::get_admin_page_title( $title );
 					$content .= self::render_edit_page();
 				break;
 			}
@@ -120,6 +131,9 @@ class CoursePress_View_Admin_Communication_Notification {
 		}
 
 		if ( 'new' !== $the_id ) {
+			if ( ! CoursePress_Data_Capabilities::can_update_notification( $the_id ) ) {
+				return __( 'You do not have permission to edit this notification.', 'CP_TD' );
+			}
 			$post = get_post( $the_id );
 			$attributes = CoursePress_Data_Notification::attributes( $the_id );
 			$course_id = $attributes['course_id'];
@@ -127,6 +141,9 @@ class CoursePress_View_Admin_Communication_Notification {
 			$post_title = $post->post_title;
 			$post_content = $post->post_content;
 		} else {
+			if ( ! CoursePress_Data_Capabilities::can_add_notification( 0 ) ) {
+				return __( 'You do not have permission to add notification.', 'CP_TD' );
+			}
 			$course_id = 'all';
 			$post_status = 'publish';
 			$post_title = '';
