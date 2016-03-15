@@ -757,6 +757,80 @@ class CoursePress_Data_Capabilities {
 	}
 
 	/**
+	 * Can delete notification
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param WP_Post/integer $notification notification data or notification ID.
+	 * @return boolean Can or can't? - this is a question.
+	 */
+	public static function can_delete_notification( $notification, $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		if ( user_can( $user_id, 'manage_options' ) ) {
+			return true;
+		}
+		/**
+		 * delete every notification
+		 */
+		/** This filter is documented in include/coursepress/helper/class-setting.php */
+		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_delete_notification_cap' );
+		if ( user_can( $user_id, $capability ) ) {
+			return true;
+		}
+		/**
+		 * delete own notifications
+		 */
+		$notification_id = is_object( $notification )? $notification->ID : $notification;
+		if ( self::is_notification_creator( $notification, $user_id ) ) {
+			/** This filter is documented in include/coursepress/helper/class-setting.php */
+			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_delete_my_notification_cap' );
+			if ( user_can( $user_id, $capability ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Can change_status notification
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param WP_Post/integer $notification notification data or notification ID.
+	 * @return boolean Can or can't? - this is a question.
+	 */
+	public static function can_change_status_notification( $notification, $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		if ( user_can( $user_id, 'manage_options' ) ) {
+			return true;
+		}
+		/**
+		 * change_status every notification
+		 */
+		/** This filter is documented in include/coursepress/helper/class-setting.php */
+		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_change_notification_status_cap' );
+		if ( user_can( $user_id, $capability ) ) {
+			return true;
+		}
+		/**
+		 * change_status own notifications
+		 */
+		$notification_id = is_object( $notification )? $notification->ID : $notification;
+		if ( self::is_notification_creator( $notification, $user_id ) ) {
+			/** This filter is documented in include/coursepress/helper/class-setting.php */
+			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_change_my_notification_status_cap' );
+			if ( user_can( $user_id, $capability ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * HELPERS
 	 */
 

@@ -114,6 +114,12 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 	}
 
 	public function column_status( $item ) {
+		/**
+		 * check permissions
+		 */
+		if ( ! CoursePress_Data_Capabilities::can_change_status_notification( $item ) ) {
+			return '';
+		}
 		// Publish Course Toggle
 		$d_id = $item->ID;
 		$status = get_post_status( $d_id );
@@ -135,6 +141,12 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 	}
 
 	public function column_actions( $item ) {
+		/**
+		 * check permissions
+		 */
+		if ( ! CoursePress_Data_Capabilities::can_delete_notification( $item ) ) {
+			return '';
+		}
 		$delete_nonce = wp_create_nonce( 'delete-notification' );
 		return sprintf(
 			'<a data-id="%s" data-nonce="%s" class="delete-notification-link"><i class="fa fa-times-circle remove-btn"></i></a>', $item->ID, $delete_nonce

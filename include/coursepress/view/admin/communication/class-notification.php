@@ -270,21 +270,27 @@ class CoursePress_View_Admin_Communication_Notification {
 					foreach ( $ids as $id ) {
 
 						if ( 'bulk_unpublish' === $action ) {
-							wp_update_post( array(
-								'ID' => $id,
-								'post_status' => 'draft',
-							) );
+							if ( CoursePress_Data_Capabilities::can_update_notification( $id ) ) {
+								wp_update_post( array(
+									'ID' => $id,
+									'post_status' => 'draft',
+								) );
+							}
 						}
 
 						if ( 'bulk_publish' === $action ) {
-							wp_update_post( array(
-								'ID' => $id,
-								'post_status' => 'publish',
-							) );
+							if ( CoursePress_Data_Capabilities::can_update_notification( $id ) ) {
+								wp_update_post( array(
+									'ID' => $id,
+									'post_status' => 'publish',
+								) );
+							}
 						}
 
 						if ( 'bulk_delete' === $action ) {
-							wp_delete_post( $id );
+							if ( CoursePress_Data_Capabilities::can_delete_notification( $id ) ) {
+								wp_delete_post( $id );
+							}
 						}
 					}
 
