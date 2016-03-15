@@ -86,8 +86,7 @@ class CoursePress_View_Admin_CoursePress {
 			self::$menu_title,
 			__( 'New Course', 'CP_TD' ),
 			admin_url( 'admin.php?page=' . CoursePress_View_Admin_Course_Edit::$slug ),
-			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			apply_filters( 'coursepress_capabilities', 'coursepress_create_course_cap' )
+			CoursePress_Data_Capabilities::can_add_course()
 		);
 
 		$bulk_nonce = wp_create_nonce( 'bulk_action_nonce' );

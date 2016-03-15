@@ -67,10 +67,10 @@ class CoursePress_Data_Capabilities {
 			'coursepress_add_move_my_assigned_students_cap' => 1,
 			// 'coursepress_change_students_group_class_cap' => 0,
 			// 'coursepress_change_my_students_group_class_cap' => 0,
-			'coursepress_add_new_students_cap' => 1,
-			'coursepress_send_bulk_my_students_email_cap' => 0,
-			'coursepress_send_bulk_students_email_cap' => 1,
-			'coursepress_delete_students_cap' => 0,
+			'coursepress_add_new_students_cap' => 0, // DEPRECATED
+			'coursepress_send_bulk_my_students_email_cap' => 0, // DEPRECATED
+			'coursepress_send_bulk_students_email_cap' => 0, // DEPRECATED
+			'coursepress_delete_students_cap' => 0, // DEPRECATED
 			/* Groups */
 			'coursepress_settings_groups_page_cap' => 0,
 			// 'coursepress_settings_shortcode_page_cap' => 0,
@@ -181,6 +181,33 @@ class CoursePress_Data_Capabilities {
 			$user->add_cap( $key );
 		}
 
+	}
+
+	/**
+	 * Can add course?
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $user_id User ID or empty.
+	 *
+	 * @return boolean Can or can't? - this is a question.
+	 */
+	public static function can_add_course( $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		if ( user_can( $user_id, 'manage_options' ) ) {
+			return true;
+		}
+		/**
+		 * Create new courses
+		 */
+		/** This filter is documented in include/coursepress/helper/class-setting.php */
+		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_course_cap' );
+		if ( user_can( $user_id, $capability ) ) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -618,6 +645,84 @@ class CoursePress_Data_Capabilities {
 		}
 		return false;
 	}
+
+	/**
+	 * Can withdraw student
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param WP_Post $course Course data.
+	 * @return boolean Can or can't? - this is a question.
+	 */
+	public static function can_add_notification_to_all( $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		if ( user_can( $user_id, 'manage_options' ) ) {
+			return true;
+		}
+		/**
+		 * Create new notifications
+		 */
+		/** This filter is documented in include/coursepress/helper/class-setting.php */
+		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_notification_cap' );
+		if ( user_can( $user_id, $capability ) ) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Can withdraw student
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param WP_Post $course Course data.
+	 * @return boolean Can or can't? - this is a question.
+	 */
+	public static function can_add_notification( $course, $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		if ( user_can( $user_id, 'manage_options' ) ) {
+			return true;
+		}
+		/**
+		 * Create new notifications
+		 */
+		/** This filter is documented in include/coursepress/helper/class-setting.php */
+		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_notification_cap' );
+		if ( user_can( $user_id, $capability ) ) {
+			return true;
+		}
+		/**
+		 *Create new notifications for own courses
+		 */
+		$course_id = is_object( $course )? $course->ID : $course;
+		if ( empty( $course ) || self::is_course_creator( $course, $user_id ) ) {
+			/** This filter is documented in include/coursepress/helper/class-setting.php */
+			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_notification_cap' );
+			if ( user_can( $user_id, $capability ) ) {
+				return true;
+			}
+		}
+		/**
+		 * Create new notifications for assigned courses
+		 */
+		if ( empty( $course ) || self::is_course_instructor( $course, $user_id ) ) {
+			/** This filter is documented in include/coursepress/helper/class-setting.php */
+			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_assigned_notification_cap' );
+			if ( user_can( $user_id, $capability ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * HELPERS
+	 */
+
 	/**
 	 * Is the user an instructor of this course?
 	 *

@@ -401,7 +401,7 @@ class CoursePress_Helper_UI {
 	 *
 	 * @return string Admin Page Header.
 	 */
-	public static function get_admin_page_title( $title, $action_title = '', $action_url = '', $action_cap = '' ) {
+	public static function get_admin_page_title( $title, $action_title = '', $action_url = '', $can_add = false ) {
 		$content = sprintf(
 			'<h1>%s : %s',
 			esc_html( CoursePress::$name ),
@@ -410,14 +410,12 @@ class CoursePress_Helper_UI {
 		/**
 		 * title action
 		 */
-		if ( ! empty( $action_title )  && ! empty( $action_url ) ) {
-			if ( empty( $action_cap ) || current_user_can( $action_cap ) ) {
-				$content .= sprintf(
-					' <a href="%s" class="page-title-action">%s</a>',
-					esc_url( $action_url ),
-					esc_html( $action_title )
-				);
-			}
+		if ( ! empty( $action_title ) && $can_add ) {
+			$content .= sprintf(
+				' <a href="%s" class="page-title-action">%s</a>',
+				esc_url( $action_url ),
+				esc_html( $action_title )
+			);
 		}
 		$content .= '</h1>';
 		return $content;

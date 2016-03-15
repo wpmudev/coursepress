@@ -38,9 +38,6 @@ class CoursePress_View_Admin_Communication_Notification {
 
 	public static function process_form() {
 
-		//
-		// if ( isset( $_GET['action'] ) && isset( $_GET['id'] ) && 'edit' === $_GET['action'] && 'new' === $_GET['id'] ) {
-		// }
 		if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'edit_notification' ) ) {
 
 			// Update the notification
@@ -83,16 +80,15 @@ class CoursePress_View_Admin_Communication_Notification {
 		$list_notification = new CoursePress_Helper_Table_NotificationList();
 		$list_notification->prepare_items();
 
-		$url = admin_url( 'admin.php?page=' . self::$slug . '&action=edit&id=new' );
-
-		$content = '<div class="coursepress_communications_wrapper notifications wrap">' .
-			'<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '
-			<a class="add-new-h2" href="' . esc_url_raw( $url ) . '">' . esc_html__( 'New Notification', 'CP_TD' ) . '</a>
-			</h3>
-			<hr />';
+		$content = '<div class="wrap">';
 
 		if ( empty( $action ) ) {
-
+			$content .= CoursePress_Helper_UI::get_admin_page_title(
+				self::$menu_title,
+				__( 'New Notification', 'CP_TD' ),
+				admin_url( 'admin.php?page=' . self::$slug . '&action=edit&id=new' ),
+				CoursePress_Data_Capabilities::can_add_notification( 0 )
+			);
 			$bulk_nonce = wp_create_nonce( 'bulk_action_nonce' );
 			$content .= '<div class="nonce-holder" data-nonce="' . $bulk_nonce . '"></div>';
 			ob_start();
@@ -101,11 +97,15 @@ class CoursePress_View_Admin_Communication_Notification {
 		} else {
 			switch ( $action ) {
 				case 'edit':
+					$content .= CoursePress_Helper_UI::get_admin_page_title(
+						__( 'Add New Notification', 'CP_TD' )
+					);
 					$content .= self::render_edit_page();
-					break;
+				break;
 			}
 		}
 
+		$content .= '</div>';
 		$content .= '</div>';
 
 		echo $content;
@@ -136,10 +136,17 @@ class CoursePress_View_Admin_Communication_Notification {
 		$options = array();
 		$options['value'] = $course_id;
 		$options['class'] = 'medium';
-		$options['first_option'] = array(
-			'text' => __( 'All courses', 'CP_TD' ),
-			'value' => 'all',
-		);
+		if ( CoursePress_Data_Capabilities::can_add_notification_to_all() ) {
+			$options['first_option'] = array(
+				'text' => __( 'All courses', 'CP_TD' ),
+				'value' => 'all',
+			);
+		} else {
+			$options['courses'] = self::get_courses();
+			if ( empty( $options['courses'] ) ) {
+				return __( 'You do not have permission to add notification.', 'CP_TD' );
+			}
+		}
 
 		$content = '';
 
@@ -280,5 +287,59 @@ class CoursePress_View_Admin_Communication_Notification {
 			wp_send_json_error( $json_data );
 		}
 
+	}
+
+	/**
+	 * Get courses list if curen user do not have 'manage_options'
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return array $courses Array of WP_Post objects
+	 */
+	private static function get_courses() {
+		$user_id = get_current_user_id();
+		if ( empty( $user_id ) ) {
+			return array();
+		}
+		/**
+		 * check is author
+		 */
+		/** This filter is documented in include/coursepress/helper/class-setting.php */
+		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_notification_cap' );
+		$is_author = user_can( $user_id, $capability );
+		/**
+		 * check is instructor
+		 */
+		/** This filter is documented in include/coursepress/helper/class-setting.php */
+		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_assigned_notification_cap' );
+		$is_instructor = user_can( $user_id, $capability );
+		$instructor_courses = array();
+		if ( $is_instructor ) {
+			$instructor_courses = CoursePress_Data_Instructor::get_assigned_courses_ids( $user_id );
+		}
+		/**
+		 * no rights?
+		 */
+		if ( ! $is_author && ! $is_instructor ) {
+			return array();
+		}
+		$all_courses = get_posts( 'post_type=' . CoursePress_Data_Course::get_post_type_name() );
+		$courses = array();
+		foreach ( $all_courses as $course ) {
+			/**
+			 * add if author
+			 */
+			if ( $is_author && $user_id == $course->post_author ) {
+				$courses[] = $course;
+				continue;
+			}
+			/**
+			 * add if assigned
+			 */
+			if ( $is_instructor && in_array( $course->ID, $instructor_courses ) ) {
+				$courses[] = $course;
+			}
+		}
+		return $courses;
 	}
 }
