@@ -129,7 +129,7 @@ class CoursePress_Data_Capabilities {
 		} else {
 
 			// Remove all CoursePress capabilities
-			self:remove_instructor_capabilities( $user_id );
+			self::remove_instructor_capabilities( $user_id );
 
 			$instructor_courses = CoursePress_Data_Instructor::get_assigned_courses_ids( $user_id );
 			// If they are an instructor, give them their appropriate capabilities back
