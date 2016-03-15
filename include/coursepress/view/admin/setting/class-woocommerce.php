@@ -42,6 +42,10 @@ class CoursePress_View_Admin_Setting_WooCommerce {
 			array( __CLASS__, 'return_content' ),
 			10, 3
 		);
+		add_action(
+			'coursepress_general_options_page',
+			array( __CLASS__, 'add_woocommerce_general_option' )
+		);
 	}
 
 	public static function add_tabs( $tabs ) {
@@ -56,7 +60,8 @@ class CoursePress_View_Admin_Setting_WooCommerce {
 
 	public static function return_content( $content, $slug, $tab ) {
 		$is_enabled = CoursePress_Core::get_setting( 'woocommerce/enabled', true );
-		$use_redirect = CoursePress_Core::get_setting( 'woocommerce/redirect', true );
+		$use_redirect = CoursePress_Core::get_setting( 'woocommerce/redirect', false );
+		$unpaid = CoursePress_Core::get_setting( 'woocommerce/unpaid', 'change_status' );
 
 		ob_start();
 		?>
@@ -80,12 +85,29 @@ class CoursePress_View_Admin_Setting_WooCommerce {
 					<tr>
 						<td><label>
 							<input type="checkbox"
-								<?php checked( cp_is_true( $is_enabled ) ); ?>
+								<?php checked( cp_is_true( $use_redirect ) ); ?>
 								name="coursepress_settings[woocommerce][redirect]"
 								class="certificate_enabled"
 								value="1" />
 							<?php esc_html_e( 'Redirect WooCommerce product post to a parent course post', 'CP_TD' ); ?>
 						</label></td>
+					</tr>
+					<tr>
+						<td>
+							<h3><?php esc_html_e( 'When the course becomes unpaid, then:', 'CP_TD' ); ?></h3>
+							<ul>
+								<li><label><input type="radio"
+									<?php checked( $unpaid, 'change_status' ); ?>
+									name="coursepress_settings[woocommerce][unpaid]"
+									class="certificate_enabled"
+									value="change_status" /> <?php esc_html_e( 'Change to draft related WooCommerce product.', 'CP_TD' ); ?></label></li>
+								<li><label><input type="radio"
+									<?php checked( $unpaid, 'delete' ); ?>
+									name="coursepress_settings[woocommerce][unpaid]"
+									class="certificate_enabled"
+									value="delete" /> <?php esc_html_e( 'Delete related WooCommerce product.', 'CP_TD' ); ?></label></li>
+							</ul>
+						</td>
 					</tr>
 				</tbody>
 				</tbody>
@@ -103,17 +125,38 @@ class CoursePress_View_Admin_Setting_WooCommerce {
 		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'update-coursepress-options' ) ) { return; }
 
 		$settings = CoursePress_Core::get_setting( false ); // false: Get all settings.
-		$post_settings = (array) $_POST['coursepress_settings'];
 
-		// Sanitize $post_settings, especially to fix up unchecked checkboxes.
-		if ( isset( $post_settings['woocommerce']['enabled'] ) ) {
-			$post_settings['woocommerce']['enabled'] = true;
-		} else {
-			$post_settings['woocommerce']['enabled'] = false;
+		$post_settings = array(
+			'woocommerce' => array(
+				'enabled' => false,
+				'redirect' => false,
+				'unpaid' => 'change_status',
+			),
+		);
+		/**
+		 * check data and if exists, then update
+		 */
+		if (
+			isset( $_POST['coursepress_settings'] )
+			&& is_array( $_POST['coursepress_settings'] )
+			&& isset( $_POST['coursepress_settings']['woocommerce'] )
+			&& is_array( $_POST['coursepress_settings']['woocommerce'] )
+		) {
+			foreach ( $post_settings['woocommerce'] as $key => $value ) {
+				if ( isset( $_POST['coursepress_settings']['woocommerce'][ $key ] ) ) {
+					$post_settings['woocommerce'][ $key ] = true;
+				}
+			}
+			if (
+				isset( $_POST['coursepress_settings']['woocommerce']['unpaid'] )
+				&& 'delete' == $_POST['coursepress_settings']['woocommerce']['unpaid']
+			) {
+				$post_settings['woocommerce']['unpaid'] = 'delete';
+			} else {
+				$post_settings['woocommerce']['unpaid'] = 'change_status';
+			}
 		}
-
 		$post_settings = CoursePress_Helper_Utility::sanitize_recursive( $post_settings );
-
 		// Don't replace settings if there is nothing to replace.
 		if ( ! empty( $post_settings ) ) {
 			CoursePress_Core::update_setting(
