@@ -58,6 +58,10 @@ class CoursePress_View_Admin_Course_Edit {
 			'menu_title' => self::$menu_title,
 		);
 
+		if ( 'new' == self::$action ) {
+			$pages[self::$slug]['cap'] = 'coursepress_create_course_cap';
+		}
+
 		return $pages;
 	}
 
@@ -78,6 +82,7 @@ class CoursePress_View_Admin_Course_Edit {
 		$tab = empty( $_GET['tab'] ) ? $first_tab : ( in_array( $_GET['tab'], $tab_keys ) ? sanitize_text_field( $_GET['tab'] ) : '' );
 
 		$method = preg_replace( '/\_$/', '', 'render_tab_' . $tab );
+		$content = '';
 
 		if ( method_exists( __CLASS__, $method ) ) {
 			$content = call_user_func( __CLASS__ . '::' . $method );
@@ -89,6 +94,9 @@ class CoursePress_View_Admin_Course_Edit {
 		// Publish Course Toggle
 		$course_id = isset( $_GET['id'] ) ? (int) $_GET['id'] : 0;
 		$status = get_post_status( $course_id );
+		$user_id = get_current_user_id();
+		$publish_toggle = '';
+
 		$ui = array(
 			'label' => 'Publish Course',
 			'left' => '<i class="fa fa-ban"></i>',
@@ -1086,15 +1094,15 @@ class CoursePress_View_Admin_Course_Edit {
 				$course_id = $data->data->course_id;
 
 				if ( wp_verify_nonce( $data->data->nonce, 'publish-course' ) ) {
-
-					wp_update_post( array(
-						'ID' => $course_id,
-						'post_status' => $data->data->status,
-					) );
-
-					$json_data['nonce'] = wp_create_nonce( 'publish-course' );
-					$success = true;
-
+					if ( CoursePress_Data_Capabilities::can_change_course_status( $course_id ) ) {
+						wp_update_post( array(
+							'ID' => $course_id,
+							'post_status' => $data->data->status,
+						) );
+	
+						$json_data['nonce'] = wp_create_nonce( 'publish-course' );
+						$success = true;
+					}
 				}
 
 				$json_data['course_id'] = $course_id;

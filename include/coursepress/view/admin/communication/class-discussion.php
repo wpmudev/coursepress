@@ -23,6 +23,7 @@ class CoursePress_View_Admin_Communication_Discussion {
 		$pages[ self::$slug ] = array(
 			'title' => self::$title,
 			'menu_title' => self::$menu_title,
+			'cap' => self::$slug . '_cap',
 		);
 
 		return $pages;

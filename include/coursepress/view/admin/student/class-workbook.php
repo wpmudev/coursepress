@@ -66,13 +66,14 @@ class CoursePress_View_Admin_Student_Workbook {
 		$student_id = (int) $_GET[ 'student_id' ];
 		$student = get_userdata( $student_id );
 		?>
-		<div class="wrap nocoursesub student-workbook cp-wrap">
+		<div class="wrap nocoursesub assessment student-workbook cp-wrap">
 			<h2><?php esc_html_e( 'Student Workbook', 'CP_TD' ); ?></h2>
 			<hr />
 			<?php
 				self::profile();
 
-				$courses = CoursePress_Data_Instructor::get_accessable_courses( wp_get_current_user(), true );
+				$courses = CoursePress_Data_Student::get_enrolled_courses_ids( $student_id ); //CoursePress_Data_Instructor::get_accessable_courses( wp_get_current_user(), true );
+				$courses = array_map( create_function( '$a', ' return CoursePress_Data_Course::get_course( $a ); ' ), $courses );
 				$first = array_shift( $courses );
 				$selected_course = ! empty( $_GET['course_id'] ) ? (int) $_GET['course_id'] : $first->ID;
 				$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $selected_course );

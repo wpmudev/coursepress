@@ -68,8 +68,8 @@ class CoursePress_View_Admin_CoursePress {
 			$user_can = current_user_can( 'coursepress_courses_cap' );
 
 			if ( $user_can ) {
-				if ( current_user_can( 'course_categories_manage_terms_cap' ) ) {
-					$user_can = true;
+				if ( ! current_user_can( 'coursepress_course_categories_manage_terms_cap' ) ) {
+					$user_can = false;
 				}
 			}
 		}

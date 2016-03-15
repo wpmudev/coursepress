@@ -196,7 +196,13 @@ var CoursePress = CoursePress || {};
 		} );
 
 		// Fix heights if needed
-		var button_position = $( '.button-add-new-unit' ).position().top + $( '.button-add-new-unit' ).innerHeight() + 20;
+		var button_position = $( '.button-add-new-unit' );
+		
+		if ( button_position.length > 0 ) {
+			button_position = button_position.position().top + $( '.button-add-new-unit' ).innerHeight() + 20;
+		} else {
+			button_position = 0;
+		}
 		var current_min = parseFloat( $( '#unit-builder .tab-content' ).css( 'min-height' ).replace( 'px', '' ) );
 		if ( current_min < 818 ) {
 			current_min = 818;

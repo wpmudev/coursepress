@@ -118,7 +118,12 @@ class CoursePress_Data_Capabilities {
 		if ( ! is_super_admin() ) {
 			// Filter the capability of the current user
 			add_filter( 'user_has_cap', array( __CLASS__, 'user_cap' ), 10, 3 );
+
+			// If current user can view and create categories but not edit
+			add_filter( 'tag_row_actions', array( __CLASS__, 'filter_row_actions' ), 10, 2 );
+
 		}
+
 	}
 
 	/**
@@ -505,6 +510,12 @@ class CoursePress_Data_Capabilities {
 		}
 	}
 
+	public static function is_instructor( $user_id = 0 ) {
+		$user_id = ! $user_id ? get_current_user_id() : $user_id;
+
+		return ( 'instructor' == get_user_option( 'role_ins', $user_id ) );
+	}
+
 	public static function assign_instructor_capabilities( $user ) {
 
 		$user_id = CoursePress_Helper_Utility::get_id( $user );
@@ -587,15 +598,51 @@ class CoursePress_Data_Capabilities {
 
 	public static function user_cap( $allcaps, $cap, $args ) {
 
-		$instructor_capabilities = CoursePress_Data_Capabilities::get_instructor_capabilities();
-		foreach ( $instructor_capabilities as $instructor_cap => $is_true ) {
-			if ( ! $is_true ) {
-				if ( isset( $allcaps[ $instructor_cap ] ) ) {
-					unset( $allcaps[ $instructor_cap ] );
+		if ( self::is_instructor() ) { 
+			$instructor_capabilities = CoursePress_Data_Capabilities::get_instructor_capabilities();
+
+			foreach ( $instructor_capabilities as $instructor_cap => $is_true ) {
+				if ( ! $is_true ) {
+					if ( isset( $allcaps[ $instructor_cap ] ) ) {
+						unset( $allcaps[ $instructor_cap ] );
+					}
+				} else {
+					$allcaps[ $instructor_cap ] = true;
 				}
-			} 
+			}
+
+			if ( ! empty( $instructor_capabilities[ 'coursepress_course_categories_manage_terms_cap' ] ) ) {
+				$allcaps['coursepress_course_categories_edit_terms_cap'] = true;
+			}
+
 		}
 
 		return $allcaps;
+	}
+
+	public static function filter_row_actions( $actions, $tag ) {
+		if ( ! empty( $tag->taxonomy ) && $tag->taxonomy == CoursePress_Data_Course::get_post_category_name() ) {
+			$instructor_capabilities = CoursePress_Data_Capabilities::get_instructor_capabilities();
+
+			if ( ! $instructor_capabilities['coursepress_course_categories_edit_terms_cap'] ) {
+				// Remove edit link
+				if ( isset( $actions['edit'] ) ) {
+					unset( $actions['edit'] );
+				}
+				// Remove quick-edit
+				if( isset( $actions['inline hide-if-no-js'] ) ) {
+					unset( $actions['inline hide-if-no-js'] );
+				}
+			}
+		}
+		return $actions;
+	}
+
+	public static function get_user_capabilities() {
+		$user_id = get_current_user_id();
+		$userdata = get_userdata( $user_id );
+		$caps = $userdata->caps;
+
+		return $userdata->caps;
 	}
 }

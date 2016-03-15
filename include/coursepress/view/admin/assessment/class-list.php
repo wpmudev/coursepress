@@ -45,7 +45,7 @@ class CoursePress_View_Admin_Assessment_List {
 		$pages[ self::$slug ] = array(
 			'title' => self::$title,
 			'menu_title' => self::$menu_title,
-			'cap' => self::$slug . '_cap',
+			'cap' => 'coursepress_assessment_cap',
 		);
 
 		return $pages;

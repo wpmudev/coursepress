@@ -1187,6 +1187,13 @@ var CoursePress = CoursePress || {};
 		}
 	} );
 
+	// User Capabilities
+	CoursePress.current_user_can = function ( cap ) {
+		return (
+			( _coursepress.is_super_admin  && true == parseInt( _coursepress.is_super_admin ) )
+			|| ( _coursepress.user_caps[ cap ] && true == parseInt( _coursepress.user_caps[ cap ] ) )
+		);
+	};
 
 	/*
 	***** Settings > Basic Certificate *****
