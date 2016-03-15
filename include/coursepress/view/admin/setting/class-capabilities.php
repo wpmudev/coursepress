@@ -232,6 +232,8 @@ class CoursePress_View_Admin_Setting_Capabilities {
 			'coursepress_update_discussion_cap' => __( 'Update every discussion', 'CP_TD' ),
 			'coursepress_delete_my_discussion_cap' => __( 'Delete own discussions', 'CP_TD' ),
 			'coursepress_delete_discussion_cap' => __( 'Delete every discussion', 'CP_TD' ),
+			'coursepress_change_my_discussion_status_cap' => __( 'Change statuses of own discussions', 'CP_TD' ),
+			'coursepress_change_discussion_status_cap' => __( 'Change status of every discussion', 'CP_TD' ),
 		);
 	}
 

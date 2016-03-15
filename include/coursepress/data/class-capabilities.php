@@ -92,6 +92,8 @@ class CoursePress_Data_Capabilities {
 			'coursepress_update_my_discussion_cap' => 1,
 			'coursepress_delete_discussion_cap' => 0,
 			'coursepress_delete_my_discussion_cap' => 1,
+			'coursepress_change_discussion_status_cap' => 0,
+			'coursepress_change_my_discussion_status_cap' => 1,
 			/* Certificates */
 			'coursepress_certificates_cap' => 0,
 			'coursepress_create_certificates_cap' => 0,
@@ -647,6 +649,12 @@ class CoursePress_Data_Capabilities {
 	}
 
 	/**
+	 *
+	 * NOTIFICATIONS
+	 *
+	 */
+
+	/**
 	 * Can withdraw student
 	 *
 	 * @since 2.0.0
@@ -748,7 +756,7 @@ class CoursePress_Data_Capabilities {
 		$notification_id = is_object( $notification )? $notification->ID : $notification;
 		if ( self::is_notification_creator( $notification, $user_id ) ) {
 			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_delete_my_notification_cap' );
+			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_update_my_notification_cap' );
 			if ( user_can( $user_id, $capability ) ) {
 				return true;
 			}
@@ -831,6 +839,196 @@ class CoursePress_Data_Capabilities {
 	}
 
 	/**
+	 *
+	 * DISCUSSIONS
+	 *
+	 */
+
+	/**
+	 * Can withdraw student
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param WP_Post $course Course data.
+	 * @return boolean Can or can't? - this is a question.
+	 */
+	public static function can_add_discussion_to_all( $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		if ( user_can( $user_id, 'manage_options' ) ) {
+			return true;
+		}
+		/**
+		 * Create new discussions
+		 */
+		/** This filter is documented in include/coursepress/helper/class-setting.php */
+		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_discussion_cap' );
+		if ( user_can( $user_id, $capability ) ) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Can add discussion
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param WP_Post/integer $course Course data or course ID.
+	 * @return boolean Can or can't? - this is a question.
+	 */
+	public static function can_add_discussion( $course, $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		if ( user_can( $user_id, 'manage_options' ) ) {
+			return true;
+		}
+		/**
+		 * Create new discussions
+		 */
+		/** This filter is documented in include/coursepress/helper/class-setting.php */
+		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_discussion_cap' );
+		if ( user_can( $user_id, $capability ) ) {
+			return true;
+		}
+		/**
+		 * Create new discussions for own courses
+		 */
+		$course_id = is_object( $course )? $course->ID : $course;
+		if ( self::is_course_creator( $course, $user_id ) ) {
+			/** This filter is documented in include/coursepress/helper/class-setting.php */
+			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_discussion_cap' );
+			if ( user_can( $user_id, $capability ) ) {
+				return true;
+			}
+		}
+		/**
+		 * Create new discussions for assigned courses
+		 */
+		if ( self::is_course_instructor( $course, $user_id ) ) {
+			/** This filter is documented in include/coursepress/helper/class-setting.php */
+			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_assigned_discussion_cap' );
+			if ( user_can( $user_id, $capability ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Can update discussion
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param WP_Post/integer $discussion discussion data or discussion ID.
+	 * @return boolean Can or can't? - this is a question.
+	 */
+	public static function can_update_discussion( $discussion, $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		if ( user_can( $user_id, 'manage_options' ) ) {
+			return true;
+		}
+		/**
+		 * Update every discussion
+		 */
+		/** This filter is documented in include/coursepress/helper/class-setting.php */
+		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_update_discussion_cap' );
+		if ( user_can( $user_id, $capability ) ) {
+			return true;
+		}
+		/**
+		 * Update own discussions
+		 */
+		$discussion_id = is_object( $discussion )? $discussion->ID : $discussion;
+		if ( self::is_discussion_creator( $discussion, $user_id ) ) {
+			/** This filter is documented in include/coursepress/helper/class-setting.php */
+			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_update_my_discussion_cap' );
+			if ( user_can( $user_id, $capability ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Can delete discussion
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param WP_Post/integer $discussion discussion data or discussion ID.
+	 * @return boolean Can or can't? - this is a question.
+	 */
+	public static function can_delete_discussion( $discussion, $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		if ( user_can( $user_id, 'manage_options' ) ) {
+			return true;
+		}
+		/**
+		 * delete every discussion
+		 */
+		/** This filter is documented in include/coursepress/helper/class-setting.php */
+		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_delete_discussion_cap' );
+		if ( user_can( $user_id, $capability ) ) {
+			return true;
+		}
+		/**
+		 * delete own discussions
+		 */
+		$discussion_id = is_object( $discussion )? $discussion->ID : $discussion;
+		if ( self::is_discussion_creator( $discussion, $user_id ) ) {
+			/** This filter is documented in include/coursepress/helper/class-setting.php */
+			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_delete_my_discussion_cap' );
+			if ( user_can( $user_id, $capability ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Can change_status discussion
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param WP_Post/integer $discussion discussion data or discussion ID.
+	 * @return boolean Can or can't? - this is a question.
+	 */
+	public static function can_change_status_discussion( $discussion, $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		if ( user_can( $user_id, 'manage_options' ) ) {
+			return true;
+		}
+		/**
+		 * change_status every discussion
+		 */
+		/** This filter is documented in include/coursepress/helper/class-setting.php */
+		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_change_discussion_status_cap' );
+		if ( user_can( $user_id, $capability ) ) {
+			return true;
+		}
+		/**
+		 * change_status own discussions
+		 */
+		$discussion_id = is_object( $discussion )? $discussion->ID : $discussion;
+		if ( self::is_discussion_creator( $discussion, $user_id ) ) {
+			/** This filter is documented in include/coursepress/helper/class-setting.php */
+			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_change_my_discussion_status_cap' );
+			if ( user_can( $user_id, $capability ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * HELPERS
 	 */
 
@@ -851,25 +1049,6 @@ class CoursePress_Data_Capabilities {
 	}
 
 	/**
-	 * Is the user the unit author?
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return bool
-	 */
-	public static function is_unit_creator( $unit_id = '', $user_id = '' ) {
-		if ( empty( $user_id ) ) {
-			$user_id = get_current_user_id();
-		}
-
-		if ( empty( $unit_id ) ) {
-			return false;
-		} else {
-			return get_post_field( 'post_author', $unit_id ) == $user_id;
-		}
-	}
-
-	/**
 	 * Is the user the course author?
 	 *
 	 * @since 1.0.0
@@ -877,16 +1056,26 @@ class CoursePress_Data_Capabilities {
 	 * @return bool
 	 */
 	public static function is_course_creator( $course, $user_id = '' ) {
-		if ( empty( $user_id ) ) {
-			$user_id = get_current_user_id();
-		}
-		if ( is_object( $course ) ) {
-			return $user_id == $course->post_author;
-		}
-		if ( empty( $course ) ) {
-			return false;
-		}
-		return get_post_field( 'post_author', $course ) == $user_id;
+		return self::is_creator(
+			$course,
+			CoursePress_Data_Course::get_post_type_name(),
+			$user_id
+		);
+	}
+
+	/**
+	 * Is the user the unit author?
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return bool
+	 */
+	public static function is_unit_creator( $unit = '', $user_id = '' ) {
+		return self::is_creator(
+			$unit,
+			CoursePress_Data_Unit::get_post_type_name(),
+			$user_id
+		);
 	}
 
 	/**
@@ -900,14 +1089,59 @@ class CoursePress_Data_Capabilities {
 	 * @return boolean Can or can't? - this is a question.
 	 */
 	public static function is_notification_creator( $notification, $user_id = '' ) {
+		return self::is_creator(
+			$notification,
+			CoursePress_Data_Notification::get_post_type_name(),
+			$user_id
+		);
+	}
+
+	/**
+	 * Is the user the discussion author?
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param WP_Post/integer $course Course data or course ID.
+	 * @param integer $user_id user ID, can be empty
+	 *
+	 * @return boolean Can or can't? - this is a question.
+	 */
+	public static function is_discussion_creator( $discussion, $user_id = '' ) {
+		return self::is_creator(
+			$discussion,
+			CoursePress_Data_Discussion::get_post_type_name(),
+			$user_id
+		);
+	}
+
+	/**
+	 * Is the user the discussion author?
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param WP_Post/integer $course Course data or course ID.
+	 * @param integer $user_id user ID, can be empty
+	 *
+	 * @return boolean Can or can't? - this is a question.
+	 */
+	private static function is_creator( $post, $post_type, $user_id = '' ) {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
-		$notification_id = is_object( $notification )? $notification->ID : $notification;
-		if ( empty( $notification_id ) ) {
+		$post_id = is_object( $post )? $post->ID : $post;
+		if ( empty( $post_id ) ) {
 			return false;
 		} else {
-			return get_post_field( 'post_author', $notification_id ) == $user_id;
+			/**
+			 * check post type
+			 */
+			if ( $post_type != get_post_type( $post ) ) {
+				return false;
+			}
+			/**
+			 * check author
+			 */
+			return get_post_field( 'post_author', $post_id ) == $user_id;
 		}
 	}
 
