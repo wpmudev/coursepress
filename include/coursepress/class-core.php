@@ -62,6 +62,9 @@ class CoursePress_Core {
 		// Init shortcodes.
 		CoursePress_Data_Shortcode::init();
 
+		// Init WooCommerce
+		CoursePress_Data_Integration_WooCommerce::init();
+
 		if ( is_admin() ) {
 			// Initialize Admin Settings.
 			CoursePress_Helper_Setting::init();
