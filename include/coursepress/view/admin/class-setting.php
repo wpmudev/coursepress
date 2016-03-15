@@ -105,11 +105,10 @@ class CoursePress_View_Admin_Setting {
 		$hidden_args = $_GET;
 		unset( $hidden_args['_wpnonce'] );
 
-		$content = '<div class="coursepress_settings_wrapper">' .
-			'<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
-			<hr />' .
-			CoursePress_Helper_Tabs::render_tabs( $tabs, $content, $hidden_args, self::$slug, $tab, false ) .
-			'</div>';
+		$content = '<div class="coursepress_settings_wrapper wrap">';
+		$content .= CoursePress_Helper_UI::get_admin_page_title( self::$menu_title );
+		$content .= CoursePress_Helper_Tabs::render_tabs( $tabs, $content, $hidden_args, self::$slug, $tab, false );
+		$content .= '</div>';
 
 		echo apply_filters( 'coursepress_settings_page_main', $content );
 
