@@ -4,6 +4,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 
+
 class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 
 	private $count = array();
@@ -40,6 +41,9 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			'actions' => __( 'Actions', 'CP_TD' ),
 		);
 
+		if ( ! CoursePress_Data_Capabilities::can_manage_courses() ) {
+			unset( $columns['cb'], $columns['actions'], $columns['units'] );
+		}
 		return $columns;
 	}
 
@@ -71,12 +75,13 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			'units' => sprintf( '<a href="?page=%s&action=%s&id=%s&tab=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), 'units', __( 'Units', 'CP_TD' ) ),
 			'students' => sprintf( '<a href="?page=%s&action=%s&id=%s&tab=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), 'students',  __( 'Students', 'CP_TD' ) ),
 			'view_course' => sprintf( '<a href="%s">%s</a>', get_permalink( $item->ID ), __( 'View Course', 'CP_TD' ) ),
-			// 'view_units' => sprintf( '<a href="?page=%s&action=%s&id=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'view_units', absint( $item->ID ), __( 'View Units', 'CP_TD' ) ),
 			'duplicate' => sprintf( '<a data-nonce="%s" data-id="%s" class="duplicate-course-link">%s</a>', $duplicate_nonce, $item->ID, __( 'Duplicate Course', 'CP_TD' ) ),
 		);
 
 		// Apply course capabilities
 		$user_id = get_current_user_id();
+		$can_edit = false;
+
 		if ( ! CoursePress_Data_Capabilities::can_update_course( $item->ID, $user_id ) ) {
 				unset( $actions['edit'] );
 		}
@@ -85,6 +90,9 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		}
 		if( ! CoursePress_Data_Capabilities::can_view_course_units( $item->ID, $user_id ) ) {
 			unset( $actions['units'] );
+		}
+		if ( ! CoursePress_Data_Capabilities::can_view_course_students( $item->ID ) ) {
+			unset( $actions['students'] );
 		}
 
 		return $title . $this->row_actions( $actions );
@@ -189,10 +197,12 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		$valid_categories = array_keys( $valid_categories );
 		$category = isset( $_GET['category'] ) && in_array( $_GET['category'], $valid_categories ) ? sanitize_text_field( $_GET['category'] ) : false;
 
-		$post_status = 'all' == $tab ? array( 'publish', 'private' ) : $tab;
+		$post_status = array( 'publish', 'private' );
 
-		// Debug
-		$post_status = 'all';
+		// Hide private courses
+		if ( ! CoursePress_Data_Capabilities::can_manage_courses() ) {
+			$post_status = 'publish';
+		}
 
 		$columns = $this->get_columns();
 		$hidden = $this->get_hidden_columns();
@@ -238,6 +248,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 				'per_page' => $per_page,
 			)
 		);
+
 	}
 
 
@@ -318,9 +329,15 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		?>
 		<div class="tablenav <?php echo esc_attr( $which ); ?>">
 
-		<div class="alignleft actions bulkactions">
-			<?php $this->bulk_actions( $which ); ?>
-		</div>
+		<?php
+			if ( Coursepress_Data_Capabilities::can_manage_courses() ) {
+		?>
+			<div class="alignleft actions bulkactions">
+				<?php $this->bulk_actions( $which ); ?>
+			</div>
+		<?php
+			}
+		?>
 		<div class="alignleft actions category-filter">
 			<?php $this->course_filter( $which ); ?>
 		</div>

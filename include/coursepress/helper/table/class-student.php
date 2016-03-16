@@ -32,6 +32,9 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 			'remove' => __( 'Remove', 'CP_TD' ),
 		);
 
+		if ( ! CoursePress_Data_Capabilities::can_delete_student() ) {
+			unset( $columns['remove'] );
+		}
 		return $columns;
 	}
 
@@ -86,7 +89,7 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 				$return = count( $courses );
 				break;
 
-			case 'remove':
+			case 'remove' && CoursePress_Data_Capabilities::can_delete_student():
 				$delete_link = add_query_arg(
 					array(
 						'action' => 'delete',
@@ -107,7 +110,22 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 	public function display() {
 		?>
 		<div class="wrap">
-			<h2><?php esc_html_e( 'Students', 'CP_TD' ); ?></h2>
+			<h2>
+				<?php
+					esc_html_e( 'Students', 'CP_TD' );
+
+					if ( CoursePress_Data_Capabilities::can_create_student() ) {
+						$add_link = admin_url( 'user-new.php' );
+				?>
+					<a href="<?php echo $add_link; ?>" class="add-new-h2">
+						<?php
+							esc_html_e( 'Add New', 'CP_TD' );
+						?>
+					</a>
+				<?php
+					}
+				?>
+			</h2>
 			<hr />
 			<form method="post">
 				<?php parent::display(); ?>

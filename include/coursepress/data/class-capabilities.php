@@ -185,6 +185,19 @@ class CoursePress_Data_Capabilities {
 		}
 	}
 
+	public static function can_manage_courses( $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		$return = user_can( $user_id, 'manage_options' );
+
+		if ( ! $return ) {
+			$return = user_can( $user_id, 'coursepress_courses_cap' );
+		}
+
+		return $return;
+	}
+
 	/**
 	 * Can the user create a course?
 	 *
@@ -196,8 +209,15 @@ class CoursePress_Data_Capabilities {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
+		$return = user_can( $user_id, 'manage_options' );
 
-		return ( user_can( $user_id, 'coursepress_create_course_cap' ) ) || user_can( $user_id, 'manage_options' );
+		if ( ! $return ) {
+			if ( self::can_manage_courses( $user_id ) ) {
+				$return = user_can( $user_id, 'coursepress_create_course_cap' );
+			}
+		}
+
+		return $return;
 	}
 
 	/**
@@ -211,17 +231,26 @@ class CoursePress_Data_Capabilities {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
+		$return = user_can( $user_id, 'manage_options' );
+		$post_status = get_post_status( $course_id );
 
-		$course_creator = self::is_course_creator( $course_id, $user_id );
-		$my_course = self::is_course_instructor( $course_id, $user_id );
+		if ( ! $return ) {
+			$course_creator = self::is_course_creator( $course_id, $user_id );
+			$is_instructor = self::is_course_instructor( $course_id, $user_id );
 
-		// For new courses
-		if ( ( empty( $course_id ) || 0 == $course_id ) && ( user_can( $user_id, 'coursepress_update_my_course_cap' ) || user_can( $user_id, 'coursepress_update_course_cap' ) || user_can( $user_id, 'coursepress_update_all_courses_cap' ) || user_can( $user_id, 'manage_options' ) ) ) {
-			return true;
+			if ( $course_creator ) {
+				if ( in_array( $post_status, array( 'private', 'draft' ) ) ) {
+					// If the course is not public yet, always give the owner write permission
+					$return = true;
+				} else {
+					$return = user_can( $user_id, 'coursepress_update_my_course_cap' );
+				}
+			} elseif ( $is_instructor ) {
+				$return = user_can( $user_id, 'coursepress_update_course_cap' );
+			}
 		}
 
-		// return ($my_course && user_can( $user_id, 'coursepress_update_my_course_cap' ) ) || user_can( $user_id, 'coursepress_update_course_cap' ) ? true : false;
-		return ( $my_course && ( ( $course_creator && user_can( $user_id, 'coursepress_update_my_course_cap' ) ) || user_can( $user_id, 'coursepress_update_course_cap' ) ) ) || user_can( $user_id, 'coursepress_update_all_courses_cap' ) || user_can( $user_id, 'manage_options' ) ? true : false;
+		return $return;
 	}
 
 	/**
@@ -235,12 +264,22 @@ class CoursePress_Data_Capabilities {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
+		$return = user_can( $user_id, 'manage_options' );
+		$post_status = get_post_status( $course_id );
 
-		$course_creator = self::is_course_creator( $course_id, $user_id );
-		$my_course = self::is_course_instructor( $course_id, $user_id );
+		if ( ! $return ) {
+			$course_creator = self::is_course_creator( $course_id, $user_id );
+			$is_instructor = self::is_course_instructor( $course_id, $user_id );
 
-		// return ($my_course && user_can( $user_id, 'coursepress_delete_my_course_cap' ) ) || user_can( $user_id, 'coursepress_delete_course_cap' ) ? true : false;
-		return ( $my_course && ( ( $course_creator && user_can( $user_id, 'coursepress_delete_my_course_cap' ) ) || user_can( $user_id, 'coursepress_delete_course_cap' ) ) ) || user_can( $user_id, 'coursepress_delete_all_courses_cap' ) || user_can( $user_id, 'manage_options' ) ? true : false;
+			if ( $course_creator ) {
+				$return = user_can( $user_id, 'coursepress_delete_my_course_cap' );
+			} elseif ( $is_instructor ) {
+				$return = user_can( $user_id, 'coursepress_delete_course_cap' );
+			}
+		}
+
+		return $return;
+
 	}
 
 	/**
@@ -254,16 +293,33 @@ class CoursePress_Data_Capabilities {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
+		$return = user_can( $user_id, 'manage_options' );
 
-		// For new courses
-		if ( ( empty( $course_id ) || 0 == $course_id ) && ( user_can( $user_id, 'coursepress_change_my_course_status_cap' ) || user_can( $user_id, 'coursepress_change_course_status_cap' ) || user_can( $user_id, 'coursepress_change_all_courses_status_cap' ) || user_can( $user_id, 'manage_options' ) ) ) {
-			return true;
+		if ( ! $return ) {
+			$course_creator = self::is_course_creator( $course_id, $user_id );
+			$is_instructor = self::is_course_instructor( $course_id, $user_id );
+
+			if ( $course_creator ) {
+				$return = user_can( $user_id, 'coursepress_change_my_course_status_cap' );
+			} elseif ( $is_instructor ) {
+				$return = user_can( $user_id, 'coursepress_change_course_status_cap' );
+			}
 		}
 
-		$course_creator = self::is_course_creator( $course_id, $user_id );
-		$my_course = self::is_course_instructor( $course_id, $user_id );
+		return $return;
+	}
 
-		return ( $my_course && ( ( $course_creator && user_can( $user_id, 'coursepress_change_my_course_status_cap' ) ) || user_can( $user_id, 'coursepress_change_course_status_cap' ) ) ) || user_can( $user_id, 'coursepress_change_all_courses_status_cap' ) || user_can( $user_id, 'manage_options' ) ? true : false;
+	public static function can_manage_categories( $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		$return = user_can( $user_id, 'manage_options' );
+
+		if ( ! $return ) {
+			$return = user_can( $user_id, 'coursepress_course_categories_manage_terms_cap' );
+		}
+
+		return $return;
 	}
 
 	/**
@@ -277,8 +333,13 @@ class CoursePress_Data_Capabilities {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
+		$return = user_can( $user_id, 'manage_options' );
 
-		return user_can( $user_id, 'coursepress_create_course_unit_cap' ) || user_can( $user_id, 'manage_options' ) ? true : false;
+		if ( ! $return ) {
+			$return = user_can( $user_id, 'coursepress_create_course_unit_cap' );
+		}
+
+		return $return;
 	}
 
 	/**
@@ -292,11 +353,27 @@ class CoursePress_Data_Capabilities {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
+		$return = user_can( $user_id, 'manage_options' );
 
-		$can_update_course = self::can_update_course( $course_id, $user_id );
-		$can_create_units = self::can_create_unit( $user_id );
+		if ( ! $return ) {
+			$course_creator = self::is_course_creator( $course_id, $user_id );
+			$is_instructor = self::is_course_instructor( $course_id, $user_id );
 
-		return ( $can_update_course && $can_create_units ) || user_can( $user_id, 'manage_options' ) ? true : false;
+			if ( $course_creator ) {
+				$post_status = get_post_status( $course_id );
+
+				if ( in_array( $post_status, array( 'private', 'draft' ) ) ) {
+					// If the course is not public yet, always give the owner the write permission
+					$return = true;
+				} else {
+					$return = user_can( $user_id, 'coursepress_update_my_course_unit_cap' );
+				}
+			} elseif ( $is_instructor ) {
+				$return = self::can_create_unit() || user_can( $user_id, 'coursepress_update_course_unit_cap' );
+			}
+		}
+
+		return $return;
 	}
 
 	/**
@@ -310,10 +387,21 @@ class CoursePress_Data_Capabilities {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
+		$return = user_can( $user_id, 'manage_options' );
 
-		$my_course = self::is_course_instructor( $course_id, $user_id );
+		if ( ! $return ) {
+			$return = self::can_update_course( $course_id );
 
-		return ( $my_course || user_can( $user_id, 'coursepress_view_all_units_cap' ) ) || user_can( $user_id, 'manage_options' ) ? true : false;
+			if ( ! $return ) {
+				if ( user_can( $user_id, 'coursepress_courses_cap') ) {
+					$my_course = self::is_course_instructor( $course_id, $user_id );
+	
+					$return = ( $my_course || user_can( $user_id, 'coursepress_view_all_units_cap' ) );
+				}
+			}
+		}
+
+		return $return;
 	}
 
 	/**
@@ -395,19 +483,48 @@ class CoursePress_Data_Capabilities {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
+		$return = user_can( $user_id, 'manage_options' );
 
-		// For new courses
-		if ( ( empty( $course_id ) || 0 == $course_id ) && ( user_can( $user_id, 'coursepress_assign_and_assign_instructor_my_course_cap' ) || user_can( $user_id, 'coursepress_assign_and_assign_instructor_course_cap' ) || user_can( $user_id, 'manage_options' ) ) ) {
-			return true;
+		if ( ! $return ) {
+			$course_creator = self::is_course_creator( $course_id, $user_id );
+
+			if ( ! $course_id || $course_creator ) {
+				$return = user_can( $user_id, 'coursepress_assign_and_assign_instructor_my_course_cap' );
+			} else {
+				$return = user_can( $user_id, 'coursepress_assign_and_assign_instructor_course_cap' );
+			}
 		}
 
-		$my_course = self::is_course_instructor( $course_id, $user_id );
-
-		return ( $my_course && user_can( $user_id, 'coursepress_assign_and_assign_instructor_my_course_cap' ) ) || user_can( $user_id, 'coursepress_assign_and_assign_instructor_course_cap' ) || user_can( $user_id, 'manage_options' ) ? true : false;
+		return $return;
 	}
 
+	public static function can_view_students( $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		$return = user_can( $user_id, 'manage_options' );
+
+		if ( ! $return ) {
+			$return = ( user_can( $user_id, 'coursepress_courses_cap' ) && user_can( $user_id, 'coursepress_students_cap' ) );
+		}
+
+		return $return;
+	}
+
+	public static function can_view_course_students( $course_id, $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		$return = user_can( $user_id, 'manage_options' );
+
+		if ( ! $return ) {
+			$return = self::can_update_course( $course_id );
+		}
+
+		return $return;
+	}
 	/**
-	 * Can the user invite students?
+	 * Can the user add students?
 	 *
 	 * @since 1.0.0
 	 *
@@ -417,10 +534,86 @@ class CoursePress_Data_Capabilities {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
+		$return = user_can( $user_id, 'manage_options' ) || user_can( $user_id, 'coursepress_add_move_students_cap' );
 
-		$my_course = self::is_course_instructor( $course_id, $user_id );
+		if ( ! $return ) {
+			$course_creator = self::is_course_creator( $course_id, $user_id );
+			$is_instructor = self::is_course_instructor( $course_id, $user_id );
 
-		return ( $my_course && user_can( $user_id, 'coursepress_invite_my_students_cap' ) ) || user_can( $user_id, 'coursepress_invite_students_cap' ) || user_can( $user_id, 'manage_options' ) ? true : false;
+			if ( $course_creator ) {
+				$return = user_can( $user_id, 'coursepress_add_move_my_students_cap' );
+			} elseif ( $is_instructor ) {
+				$return = user_can( $user_id, 'coursepress_add_move_my_assigned_students_cap' );
+			}
+		}
+
+		return $return;
+	}
+
+	public static function can_invite_students( $course_id, $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		$return = user_can( $user_id, 'manage_options' );
+
+		if ( ! $return ) {
+			$course_creator = self::is_course_creator( $course_id, $user_id );
+			$is_instructor = self::is_course_instructor( $course_id, $user_id );
+
+			if ( $course_creator ) {
+				$return = user_can( $user_id, 'coursepress_invite_my_students_cap' );
+			} elseif ( $is_instructor ) {
+				$return = user_can( $user_id, 'coursepress_invite_students_cap' );
+			}
+		}
+
+		return $return;
+	}
+
+	public static function can_withdraw_students( $course_id, $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		$return = user_can( $user_id, 'manage_options' );
+
+		if ( ! $return ) {
+			$course_creator = self::is_course_creator( $course_id, $user_id );
+			$is_instructor = self::is_course_instructor( $course_id, $user_id );
+
+			if ( $course_creator ) {
+				$return = user_can( $user_id, 'coursepress_withdraw_my_students_cap' );
+			} elseif ( $is_instructor ) {
+				$return = user_can( $user_id, 'coursepress_withdraw_students_cap' );
+			}
+		}
+
+		return $return;
+	}
+
+	public static function can_create_student( $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		$return = user_can( $user_id, 'manage_options' );
+
+		if ( ! $return ) {
+			$return = user_can( $user_id, 'coursepress_add_new_students_cap' );
+		}
+
+		return $return;
+	}
+
+	public static function can_delete_student( $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		$return = user_can( $user_id, 'manage_options' );
+
+		if ( ! $return ) {
+			$return = user_can( $user_id, 'coursepress_delete_students_cap' );
+		}
+
+		return $return;
 	}
 
 	/**

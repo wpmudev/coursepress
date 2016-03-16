@@ -403,7 +403,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 				$( '.step-title.step-' + step ).find( '.status' ).removeClass( 'save-attention' );
 				$( '.step-title.step-' + step ).find( '.status' ).addClass( 'save-process' );
 				CoursePress.Course.get_step( step, action_type );
-				CoursePress.Course.save();
+				CoursePress.Course.save(null, {error:function(a,b,c){ alert(b.responseText);}});
 			}
 		} );
 

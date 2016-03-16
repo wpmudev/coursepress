@@ -238,12 +238,16 @@ class CoursePress_View_Admin_Course_Edit {
 		$course_terms_array = CoursePress_Data_Course::get_course_terms( $id, true );
 
 		$class_extra = is_rtl() ? 'chosen-rtl' : '';
+		$manage_category_link = '';
+
+		if ( CoursePress_Data_Capabilities::can_manage_categories() ) {
+			$manage_category_link = sprintf( '<a href="%s" class="context-link">%s</a>', esc_url_raw( $url ), esc_html__( 'Manage Categories', 'CP_TD' ) );
+		}
 
 		$content .= '
 				<div class="wide">
 					<label for="meta_course_category" class="medium">' .
-					esc_html__( 'Course Category', 'CP_TD' ) . '
-						<a class="context-link" href="' . esc_url_raw( $url ) . '">' . esc_html__( 'Manage Categories', 'CP_TD' ) . '</a>
+					esc_html__( 'Course Category', 'CP_TD' ) . $manage_category_link . '
 					</label>
 					<select name="meta_course_category" class="medium chosen-select chosen-select-course ' . $class_extra . '" multiple="true">';
 
@@ -286,6 +290,7 @@ class CoursePress_View_Admin_Course_Edit {
 		';
 
 		return $content;
+
 	}
 
 	private static function render_setup_step_2() {
@@ -531,6 +536,8 @@ class CoursePress_View_Admin_Course_Edit {
 		$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
 		$setup_class = CoursePress_Data_Course::get_setting( $course_id, 'setup_step_3', '' );
 		$setup_class = (int) CoursePress_Data_Course::get_setting( $course_id, 'setup_marker', 0 ) === 2 ? $setup_class . ' setup_marker' : $setup_class;
+		$can_assign_instructor = CoursePress_Data_Capabilities::can_assign_course_instructor( $course_id );
+
 		$content = '
 			<div class="step-title step-3">' . esc_html__( 'Step 3 – Instructors', 'CP_TD' ) . '
 				<div class="status ' . $setup_class . '"></div>
@@ -539,6 +546,7 @@ class CoursePress_View_Admin_Course_Edit {
 				<input type="hidden" name="meta_setup_step_3" value="saved" />
 			';
 
+			if ( $can_assign_instructor ) {
 		// Instructors
 		$content .= '
 				<div class="wide">
@@ -552,8 +560,10 @@ class CoursePress_View_Admin_Course_Edit {
 			'context' => 'instructors',
 		) ) . '
 						<input type="button" class="button button-primary instructor-assign" value="' . esc_attr__( 'Assign', 'CP_TD' ) . '" />
-				</div>
-				<div class="instructors-info medium" id="instructors-info">
+				</div>';
+			}
+
+		$content .= '<div class="instructors-info medium" id="instructors-info">
 					<p>' . esc_html__( 'Assigned Instructors:', 'CP_TD' ) . '</p>
 				';
 
@@ -562,11 +572,13 @@ class CoursePress_View_Admin_Course_Edit {
 			'count' => true,
 		) )
 		) {
-			$content .= '
-					<div class="instructor-avatar-holder empty">
-						<span class="instructor-name">' . esc_html__( 'Please Assign Instructor', 'CP_TD' ) . '</span>
-					</div>
-			';
+			if( $can_assign_instructor ) {
+				$content .= '
+						<div class="instructor-avatar-holder empty">
+							<span class="instructor-name">' . esc_html__( 'Please Assign Instructor', 'CP_TD' ) . '</span>
+						</div>
+				';
+			}
 		} else {
 			$content .= CoursePress_Helper_UI::course_instructors_avatars( $course_id, array(), true );
 		}
@@ -574,31 +586,32 @@ class CoursePress_View_Admin_Course_Edit {
 		$content .= '
 				</div>';
 
-		// Instructor Invite
-		$content .= '
-				<div class="wide">
-					<hr />
+		if ( $can_assign_instructor ) {
+			// Instructor Invite
+			$content .= '
+					<div class="wide">
+						<hr />
 
-					<label>' .
-					esc_html__( 'Invite New Instructor', 'CP_TD' ) . '
-						<p class="description">' . esc_html__( 'If the instructor can not be found in the list above, you will need to invite them via email.', 'CP_TD' ) . '</p>
-					</label>
-					<div class="instructor-invite">
-						<label for="invite_instructor_first_name">' . esc_html__( 'First Name', 'CP_TD' ) . '</label>
-						<input type="text" name="invite_instructor_first_name" placeholder="' . esc_attr__( 'First Name', 'CP_TD' ) . '"/>
-						<label for="invite_instructor_last_name">' . esc_html__( 'Last Name', 'CP_TD' ) . '</label>
-						<input type="text" name="invite_instructor_last_name" placeholder="' . esc_attr__( 'Last Name', 'CP_TD' ) . '"/>
-						<label for="invite_instructor_email">' . esc_html__( 'E-Mail', 'CP_TD' ) . '</label>
-						<input type="text" name="invite_instructor_email" placeholder="' . esc_attr__( 'instructor@email.com', 'CP_TD' ) . '"/>
+						<label>' .
+						esc_html__( 'Invite New Instructor', 'CP_TD' ) . '
+							<p class="description">' . esc_html__( 'If the instructor can not be found in the list above, you will need to invite them via email.', 'CP_TD' ) . '</p>
+						</label>
+						<div class="instructor-invite">
+							<label for="invite_instructor_first_name">' . esc_html__( 'First Name', 'CP_TD' ) . '</label>
+							<input type="text" name="invite_instructor_first_name" placeholder="' . esc_attr__( 'First Name', 'CP_TD' ) . '"/>
+							<label for="invite_instructor_last_name">' . esc_html__( 'Last Name', 'CP_TD' ) . '</label>
+							<input type="text" name="invite_instructor_last_name" placeholder="' . esc_attr__( 'Last Name', 'CP_TD' ) . '"/>
+							<label for="invite_instructor_email">' . esc_html__( 'E-Mail', 'CP_TD' ) . '</label>
+							<input type="text" name="invite_instructor_email" placeholder="' . esc_attr__( 'instructor@email.com', 'CP_TD' ) . '"/>
 
-						<div class="submit-message">
-							<input class="button-primary" name="invite_instructor_trigger" id="invite-instructor-trigger" type="button" value="' . esc_attr__( 'Send Invite', 'CP_TD' ) . '">
+							<div class="submit-message">
+								<input class="button-primary" name="invite_instructor_trigger" id="invite-instructor-trigger" type="button" value="' . esc_attr__( 'Send Invite', 'CP_TD' ) . '">
+							</div>
 						</div>
+
 					</div>
-
-
-				</div>
-				';
+					';
+		}
 
 		/**
 		 * Add additional fields.

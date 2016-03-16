@@ -1908,7 +1908,6 @@ var CoursePress = CoursePress || {};
 				this.$el.html( template );
 				this.initial = false;
 			} else {
-
 				template = _.template( $( '#unit-builder-content-template' ).html(), {} );
 				this.$el.html( template );
 
@@ -1963,7 +1962,6 @@ var CoursePress = CoursePress || {};
 					$( 'body,html' ).scrollTop( $( last_added ).offset().top - 80 );
 
 				}
-
 			}
 
 			return this;

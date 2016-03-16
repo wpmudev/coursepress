@@ -39,7 +39,12 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 		$course_id = (int) $_GET['id'];
 
 		add_filter( 'coursepress_current_user_capabilities', array( __CLASS__, 'filter_user_capabilities' ) );
+		$can_create_units = CoursePress_Data_Capabilities::can_create_unit();
 
+		if ( ! $can_create_units ) {
+			$can_create_units = CoursePress_Data_Capabilities::can_create_course_unit( $course_id );
+		}
+		
 		$templates = array(
 
 			'unit_builder' => '
@@ -48,7 +53,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 						<div class="tab-tabs unit-builder-tabs">
 						<div id="sticky-wrapper" class="sticky-wrapper sticky-wrapper-tabs">
 							<div class="tabs"></div>' .
-							( CoursePress_Data_Capabilities::can_create_unit() ? 
+							( $can_create_units ? 
 							'<div class="sticky-buttons"><div class="button button-add-new-unit"><i class="fa fa-plus-square"></i> ' . esc_html__( 'Add New Unit', 'CP_TD' ) . '</div></div>' : '' )
 						. '</div>
 					</div>
@@ -268,6 +273,18 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 
 				foreach ( $units as $unit ) {
 					$json_data[] = $unit;
+				}
+
+				if ( empty( $units ) ) {
+					// Give the user something to work on to.
+					$unit = array(
+						'ID' => 0,
+						'post_type' => CoursePress_Data_Course::get_post_type_name(),
+						'post_title' => __( 'Untitled Unit', 'CP_TD' ),
+						'meta' => array()
+					);
+					$json_data[] = $unit;
+					$units[] = $unit;
 				}
 
 				$skip_empty = empty( $units ) ? true : false;

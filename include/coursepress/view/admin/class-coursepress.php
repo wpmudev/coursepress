@@ -5,6 +5,7 @@ class CoursePress_View_Admin_CoursePress {
 	private static $slug = 'coursepress';
 	private static $title = '';
 	private static $menu_title = '';
+	private static $list_course = null;
 
 	private static $admin_pages = array(
 		'Course_Edit',
@@ -92,23 +93,30 @@ class CoursePress_View_Admin_CoursePress {
 		$list_course = new CoursePress_Helper_Table_CourseList();
 		$list_course->prepare_items();
 
-		$url = admin_url( 'admin.php?page=' . CoursePress_View_Admin_Course_Edit::$slug );
-
-		$content = '<div class="coursepress_settings_wrapper wrap">' .
-			'<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '
-			<a class="add-new-h2" href="' . esc_url_raw( $url ) . '">' . esc_html__( 'New Course', 'CP_TD' ) . '</a>
-			</h3>
-			<hr />';
-
-		$bulk_nonce = wp_create_nonce( 'bulk_action_nonce' );
-		$content .= '<div class="nonce-holder" data-nonce="' . $bulk_nonce . '"></div>';
 		ob_start();
-		$list_course->display();
-		$content .= ob_get_clean();
+		?>
+			<div class="coursepress_settings_wrapper wrap">
+				<h2>
+					<?php
+						echo esc_html( CoursePress::$name );
+						$create_link = add_query_arg( 'page', CoursePress_View_Admin_Course_Edit::$slug, admin_url( 'admin.php' ) );
+						
+						if ( CoursePress_Data_Capabilities::can_create_course() ) :
+					?>
+						<a href="<?php echo esc_url( $create_link ); ?>" class="add-new-h2"><?php esc_html_e( 'New Course', 'CP_TD' ); ?></a>
+					<?php
+						endif;
+					?>
+				</h2>
+				<div class="nonce-holder" data-nonce="<?php echo wp_create_nonce( 'bulk_action_nonce' ); ?>"></div>
+				<?php $list_course->display(); ?>
+			</div>
+		<?php
 
-		$content .= '</div>';
-
+		$content = ob_get_clean();
+		
 		echo apply_filters( 'coursepress_admin_page_main', $content );
+
 	}
 
 	public static function init_tiny_mce_listeners( $init_array ) {

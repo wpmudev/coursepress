@@ -44,7 +44,7 @@ class CoursePress_Helper_Setting {
 				$page['handle'] = $handle;
 			}
 
-			if ( current_user_can( 'coursepress_courses_cap' ) ) {
+			if ( current_user_can( 'coursepress_courses_cap' ) && current_user_can( 'coursepress_dashboard_cap' ) ) {
 				if ( 'none' != $page['parent'] ) {
 					self::$page_refs[ $handle ] = add_submenu_page( $page['parent'], $page['title'], $page['menu_title'], $capability, $page['handle'], $callback );
 				} else {
