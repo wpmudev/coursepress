@@ -78,6 +78,7 @@ class CoursePress_Core {
 			CoursePress_View_Front_General::init();
 			CoursePress_View_Front_Instructor::init();
 			CoursePress_View_Front_Dashboard::init();
+			CoursePress_View_Front_Settings::init();
 			CoursePress_View_Front_Student::init();
 			CoursePress_View_Front_Login::init();
 		}
@@ -489,6 +490,21 @@ class CoursePress_Core {
 		// Courses slug need to redirect to course archive pages
 		$new_rules[ '^' . self::get_slug( 'course' ) . '/page/([^/]*)/?' ] = 'index.php?page_id=-1&course_category=all&paged=$matches[1]';
 		$new_rules[ '^' . self::get_slug( 'course' ) . '/?$' ] = 'index.php?page_id=-1&course_category=all';
+
+		/**
+		 * student login page
+		 */
+		$new_rules[ '^' . self::get_slug( 'login' ) . '/?$' ] = 'index.php?page_id=-1&pagename='.self::get_slug( 'login' );
+
+		/**
+		 * create account
+		 */
+		$new_rules[ '^' . self::get_slug( 'signup' ) . '/?$' ] = 'index.php?page_id=-1&pagename='.self::get_slug( 'signup' );
+
+		/**
+		 * account settings
+		 */
+		$new_rules[ '^' . self::get_slug( 'student_settings' ) . '/?$' ] = 'index.php?page_id=-1&pagename='.self::get_slug( 'student_settings' );
 
 		$upload_dir = wp_upload_dir();
 		$upload_path = trailingslashit( str_replace( home_url(), '', $upload_dir['baseurl'] ) );

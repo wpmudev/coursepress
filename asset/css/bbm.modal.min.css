@@ -2,4 +2,4 @@
  * 
  * Copyright (c) 2016; * Licensed GPLv2+ */
 
-.bbm-wrapper{position:absolute;top:65px;width:100%}.enrollment-modal-container{background:#fff none repeat scroll 0 0;border:1px solid #e6e6e6;margin:20px auto;width:480px;padding:20px}.enrollment-modal-container .bbm-modal__bottombar{padding:20px 0 0}
+.bbm-wrapper{position:absolute;top:65px;width:100%}.enrollment-modal-container{background:#fff none repeat scroll 0 0;border:1px solid #e6e6e6;margin:0;padding:20px;border-radius:15px}.enrollment-modal-container .bbm-modal__bottombar{padding:20px 0 0}

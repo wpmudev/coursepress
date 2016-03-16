@@ -75,6 +75,15 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			'duplicate' => sprintf( '<a data-nonce="%s" data-id="%s" class="duplicate-course-link">%s</a>', $duplicate_nonce, $item->ID, __( 'Duplicate Course', 'CP_TD' ) ),
 		);
 
+		/**
+		 * check instructor privileges
+		 */
+		if ( ! CoursePress_Data_Capabilities::can_update_course( $item ) ) {
+			unset( $actions['edit'] );
+			unset( $actions['units'] );
+			unset( $actions['students'] );
+		}
+
 		return $title . $this->row_actions( $actions );
 	}
 
@@ -118,6 +127,13 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 
 	public function column_status( $item ) {
 
+		/**
+		 * check instructor privileges
+		 */
+		if ( ! CoursePress_Data_Capabilities::can_update_course( $item ) ) {
+			return '&nbsp;';
+		}
+
 		// Publish Course Toggle
 		$course_id = $item->ID;
 		$status = get_post_status( $course_id );
@@ -139,6 +155,12 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 	}
 
 	public function column_actions( $item ) {
+		/**
+		 * check instructor privileges
+		 */
+		if ( ! CoursePress_Data_Capabilities::can_delete_course( $item ) ) {
+			return '&nbsp;';
+		}
 		$delete_nonce = wp_create_nonce( 'delete_course' );
 		return sprintf(
 			'<a data-id="%s" data-nonce="%s" class="delete-course-link"><i class="fa fa-times-circle remove-btn"></i></a>', $item->ID, $delete_nonce

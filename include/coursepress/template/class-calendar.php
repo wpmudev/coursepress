@@ -67,7 +67,6 @@ class CoursePress_Template_Calendar {
 				$month = $date['mon'];
 				$year = $date['year'];
 			}
-
 		} else {
 			$this->course_id = false;
 			$date = getdate();
@@ -97,17 +96,17 @@ class CoursePress_Template_Calendar {
 		$calendar = '<div class="course-calendar" data-courseid="' . $this->course_id . '">';
 		$calendar .= ! empty( $this->previous_month ) ? '<a class="pre-month" data-date="' . $this->previous_month . '">' . $pre . '</a>' : '<a class="pre-month" data-date="empty">' . $pre . '</a>';
 		$calendar .= ! empty( $this->next_month ) ? '<a class="next-month" data-date="' . $this->next_month . '">' . $next . '</a>' : '<a class="next-month" data-date="empty">' . $next . '</a>';
-		$calendar .= sprintf( '<table class="course-calendar-body %s">', $this->date_indicator ); 
+		$calendar .= sprintf( '<table class="course-calendar-body %s">', $this->date_indicator );
 		$calendar .= '<caption>';
 		$calendar .= "$this->month_name $this->year";
-		$calendar .='</caption>';
+		$calendar .= '</caption>';
 		$calendar .= '<tr>';
 
 		// Headers
 		$week_day_names = array_keys( $wp_locale->weekday_initial );
 
 		foreach ( $this->days_of_week as $day ) {
-			$calendar .= sprintf( '<th class="week-days">%s</th>', $wp_locale->weekday_initial[ $week_day_names[ $day ] ] ); 
+			$calendar .= sprintf( '<th class="week-days">%s</th>', $wp_locale->weekday_initial[ $week_day_names[ $day ] ] );
 		}
 
 		$current_day = 1;
@@ -115,7 +114,7 @@ class CoursePress_Template_Calendar {
 		$calendar .= '</tr><tr>';
 
 		if ( $this->day_of_week > 0 ) {
-			$calendar .= sprintf( '<td colspan="%s">&nbsp;</td>', $this->day_of_week ); 
+			$calendar .= sprintf( '<td colspan="%s">&nbsp;</td>', $this->day_of_week );
 		}
 
 		$month = str_pad( $this->month, 2, '0', STR_PAD_LEFT );
@@ -141,17 +140,17 @@ class CoursePress_Template_Calendar {
 					$class = 'course-start-date';
 				}
 				if ( $this->course_no_end &&
-					 ( strtotime( str_replace( '-', '/', $date ) ) > strtotime( str_replace( '-', '/', $this->course_start_day ) ) )
+					( strtotime( str_replace( '-', '/', $date ) ) > strtotime( str_replace( '-', '/', $this->course_start_day ) ) )
 				) {
 					$class = 'course-open-date';
 				}
 				if ( ( strtotime( str_replace( '-', '/', $date ) ) < strtotime( str_replace( '-', '/', $this->course_end_day ) ) ) &&
-					 ( strtotime( str_replace( '-', '/', $date ) ) > strtotime( str_replace( '-', '/', $this->course_start_day ) ) )
+					( strtotime( str_replace( '-', '/', $date ) ) > strtotime( str_replace( '-', '/', $this->course_start_day ) ) )
 				) {
 					$class = 'course-active-date';
 				}
 				if ( strtotime( str_replace( '-', '/', $date ) ) == strtotime( str_replace( '-', '/', $this->course_end_day ) ) &&
-				     ! $this->course_no_end
+					! $this->course_no_end
 				) {
 					$class = 'course-end-date';
 				}
@@ -168,12 +167,11 @@ class CoursePress_Template_Calendar {
 			$day_of_week ++;
 		}
 
-
 		// Pad the last week if any days remain.
 		if ( 7 != $day_of_week ) {
 
 			$remaining = 7 - $day_of_week;
-			$calendar .= sprintf( '<td colspan="%s">&nbsp;</td>', $remaining ); 
+			$calendar .= sprintf( '<td colspan="%s">&nbsp;</td>', $remaining );
 
 		}
 

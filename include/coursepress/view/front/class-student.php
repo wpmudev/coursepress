@@ -188,8 +188,7 @@ class CoursePress_View_Front_Student {
 				}
 
 				if ( 0 == $form_errors ) {
-					$student = new Student( get_current_user_id() );
-					if ( $student->update_student_data( $student_data ) ) {
+					if ( CoursePress_Data_Student::update_student_data( get_current_user_id(), $student_data ) ) {
 						$form_message = __( 'Profile has been updated successfully.', 'CP_TD' );
 						$form_message_class = 'regular';
 					} else {
