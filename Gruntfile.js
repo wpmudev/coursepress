@@ -81,7 +81,7 @@ module.exports = function(grunt) {
 				'./readme.txt',
 				'./language/coursepress.pot'
 			],
-			base: 'agile/2.0-A1IGTDI1-remove-old-v1-x-code',
+			base: 'coursepress/2.0-dev',
 			pro: 'coursepress/2-pro',
 			free: 'coursepress/2-free',
 			campus: 'coursepress/2-campus'
