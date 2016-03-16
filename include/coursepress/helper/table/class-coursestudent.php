@@ -27,6 +27,17 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 		$this->course_id = (int) $id;
 	}
 
+	/**
+	 * get course_id
+	 *
+	 * @since 2.0.0
+	 *
+	 * return integer course id
+	 */
+	public function get_course_id() {
+		return $this->course_id;
+	}
+
 	public function set_add_new( $bool ) {
 		$this->add_new = $bool;
 	}
@@ -93,6 +104,9 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 	}
 
 	public function column_actions( $item ) {
+		if ( ! CoursePress_Data_Capabilities::can_withdraw_course_student( $this->course_id ) ) {
+			return '';
+		}
 		$nonce = wp_create_nonce( 'withdraw-single-student' );
 		return sprintf(
 			'<a href="" class="withdraw-student" data-id="%s" data-nonce="%s"><i class="fa fa-times-circle remove-btn"></i></a>', $item->ID, $nonce

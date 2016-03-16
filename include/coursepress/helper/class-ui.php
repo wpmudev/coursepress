@@ -273,7 +273,11 @@ class CoursePress_Helper_UI {
 	public static function course_instructors_avatars( $course_id, $options = array(), $show_pending = false ) {
 		global $post_id, $wpdb;
 
-		$remove_buttons = isset( $options['remove_buttons'] ) ? $options['remove_buttons'] : true;
+		$remove_buttons = false;
+		if ( CoursePress_Data_Capabilities::can_assign_course_instructor( $course_id ) ) {
+			$remove_buttons = isset( $options['remove_buttons'] ) ? $options['remove_buttons'] : true;
+		}
+
 		$just_count = isset( $options['count'] ) ? $options['count'] : false;
 
 		$content = '';
@@ -382,6 +386,38 @@ class CoursePress_Helper_UI {
 			</div>
 		';
 
+		return $content;
+	}
+
+	/**
+	 * Common Admin Page Header
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $title Header title.
+	 * @param string $action_title Header action title.
+	 * @param string $action_url Header action url,
+	 * @param string $action_cap Header action capability
+	 *
+	 * @return string Admin Page Header.
+	 */
+	public static function get_admin_page_title( $title, $action_title = '', $action_url = '', $can_add = false ) {
+		$content = sprintf(
+			'<h1>%s : %s',
+			esc_html( CoursePress::$name ),
+			esc_html( $title )
+		);
+		/**
+		 * title action
+		 */
+		if ( ! empty( $action_title ) && $can_add ) {
+			$content .= sprintf(
+				' <a href="%s" class="page-title-action">%s</a>',
+				esc_url( $action_url ),
+				esc_html( $action_title )
+			);
+		}
+		$content .= '</h1>';
 		return $content;
 	}
 }
