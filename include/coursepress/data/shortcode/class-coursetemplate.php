@@ -402,7 +402,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		// Wrap button in form if needed.
 		if ( $is_form ) {
 			$button = '<form name="enrollment-process" method="post" action="' . $button_url . '">' . $button;
-			$button .= wp_nonce_field( 'enrollment_process' );
+			$button .= wp_nonce_field( 'enrollment_process', '_wpnonce', true, false );
 			$button .= '<input type="hidden" name="course_id" value="' . $course_id . '" />';
 			$button .= '</form>';
 		}

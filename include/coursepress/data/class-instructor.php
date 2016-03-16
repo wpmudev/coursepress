@@ -376,12 +376,103 @@ class CoursePress_Data_Instructor {
 		);
 	}
 
-	public static function verify_invitation_code( $course_id, $code, $invitation_data ) {
-		// Not done yet.
+	/**
+	 * Check to see if the current page is the link sent from invitation email.
+	 *
+	 * @since 2.0
+	 *
+	 * @return (mixed)	 Returns an (object) on success and false if for error.
+	 **/
+	public static function is_course_invite() {
+		if( isset( $_GET['action'] ) && 'course_invite' == $_GET['action'] ) {
+			$course_id = (int) $_GET['course_id'];
+			$code = $_GET['c'];
+			$hash = $_GET['h'];
+			$invitation_data = (array) get_post_meta( $course_id, 'instructor_invites', true );
+
+			return (object) array(
+				'course_id' => $course_id,
+				'code' => $code,
+				'hash' => $hash,
+				'invitation_data' => $invitation_data,
+			);
+		}
+
+		return false;
 	}
 
+	/**
+	 * Add invitation data object to $localize_array.
+	 *
+	 * @since 2.0
+	 *
+	 * @param (array)	 The previously set localize array.
+	 **/
+	public static function invitation_data( $localize_array ) {
 
-	public static function add_from_invitation( $course_id, $instructor_data ) {
-		// Not done yet.
+		if( $invitation_data = self::is_course_invite() ) {
+			$invitation_data->invitation_data = $invitation_data->invitation_data[ $invitation_data->code ];
+			$invitation_data->nonce = wp_create_nonce( 'coursepress_add_instructor' );
+			$localize_array[ 'invitation_data' ] = $invitation_data;
+		}
+
+		return $localize_array;
+	}
+
+	/**
+	 * Verify if it is a valid invitation code.
+	 *
+	 * @since 2.0
+	 * 
+	 * @param (int) $course_id 	The course ID.
+	 * @param (string) $code 	 The code that was attached by the verification link.
+	 * @param (array) $invitation_data	 The list of invitations sent.
+	 *
+	 * @return (bool)
+	 **/
+	public static function verify_invitation_code( $course_id, $code, $invitation_data = false ) {
+		$invitation_data = ! $invitation_data ? (array) get_post_meta( $course_id, 'instructor_invites', true ) : (array) $invitation_data;
+		$is_valid = in_array( $code, array_keys( $invitation_data ) );
+
+		return $is_valid ? $invitation_data[ $code ] : false;
+	}
+
+	public static function add_from_invitation( $course_id, $instructor_id, $invitation_code ) {
+		$invite_data = self::verify_invitation_code( $course_id, $invitation_code ); 
+		$userdata = get_userdata( $instructor_id );
+
+		if( !empty( $invite_data[ 'email' ] ) && $invite_data[ 'email' ] == $userdata->user_email ) {
+			CoursePress_Data_Course::add_instructor( $course_id, $instructor_id );
+			CoursePress_Data_Capabilities::assign_instructor_capabilities( $userdata );
+			CoursePress_Data_Instructor::delete_invitation( $course_id, $invite_data[ 'code' ] );
+
+			/**
+			 * Instructor invite confirmed.
+			 *
+			 * @since 1.2.1
+			 *
+			 * @param int course_id The course instructor was added to.
+			 * @param int instructor_id The user ID of instructor assigned.
+			 *
+			 */
+			do_action( 'coursepress_instructor_invite_confirmed', $course_id, $instructor_id );
+
+			return true;
+		}
+
+		/**
+		 * Instructor confirmation failed.
+		 *
+		 * Usually when the email sent to and the one trying to register don't match.
+		 *
+		 * @since 1.2.1
+		 *
+		 * @param int course_id The course instructor was added to.
+		 * @param int instructor_id The user ID of instructor assigned.
+		 *
+		 */
+		do_action( 'coursepress_instructor_invite_confirm_fail', $course_id, $instructor_id );
+
+		return false;
 	}
 }

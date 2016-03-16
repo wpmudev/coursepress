@@ -387,7 +387,7 @@ var CoursePress = CoursePress || {};
 			var steps = $( '[data-type="modal-step"]' );
 
 			$.each( steps, function( i, step ) {
-				var step_action = step.attr('data-modal-action');
+				var step_action = $( step ).attr('data-modal-action');
 				if ( undefined !== step_action && action === step_action ) {
 					CoursePress.Enrollment.dialog.openAt( i );
 				}
@@ -404,8 +404,14 @@ var CoursePress = CoursePress || {};
 			var signup_errors = data['signup_errors'];
 
 			if ( signup_errors.length === 0 && data['user_data']['logged_in'] === true ) {
-				// We're in! Now lets enroll
-				CoursePress.Enrollment.dialog.attempt_enroll( data );
+				// Check if the page is redirected from an invitation link
+				if ( _coursepress.invitation_data ) {
+					// Add user as instructor
+					CoursePress.Enrollment.dialog.add_instructor( data );
+				} else {
+					// We're in! Now lets enroll
+					CoursePress.Enrollment.dialog.attempt_enroll( data );
+				}
 			} else {
 				if ( signup_errors.length > 0 ) {
 					$( '.bbm-wrapper #error-messages' ).html('');
@@ -437,10 +443,16 @@ var CoursePress = CoursePress || {};
 		CoursePress.Enrollment.dialog.handle_login_return = function( data ) {
 
 			if ( data['logged_in'] === true ) {
-				if ( ! data['already_enrolled'] ) {
-					CoursePress.Enrollment.dialog.attempt_enroll( data );
+				// Check if the page is redirected from an invitation link
+				if ( _coursepress.invitation_data ) {
+					// Add user as instructor
+					CoursePress.Enrollment.dialog.add_instructor( data );
 				} else {
-					location.href = _coursepress.course_url;
+					if ( ! data['already_enrolled'] ) {
+						CoursePress.Enrollment.dialog.attempt_enroll( data );
+					} else {
+						location.href = _coursepress.course_url;
+					}
 				}
 			}
 		};
@@ -593,6 +605,58 @@ var CoursePress = CoursePress || {};
 					}
 				}
 			} );
+		};
+
+		// Get new nonce instance
+		CoursePress.Enrollment.dialog.new_nonce = function( nonce_name, callback ) {
+			CoursePress.Post.prepare( 'course_enrollment', 'enrollment:' );
+			CoursePress.Post.set( 'action', 'get_nonce' );
+
+			var data = {
+				action: 'get_nonce',
+				nonce: nonce_name,
+				step: ''
+			};
+
+			CoursePress.Post.set( 'data', data );
+			CoursePress.Post.save();
+
+			CoursePress.Post.off( 'coursepress:enrollment:get_nonce_success' );
+			CoursePress.Post.on( 'coursepress:enrollment:get_nonce_success', callback );
+		};
+
+		// Add instructor
+		CoursePress.Enrollment.dialog.add_instructor = function( return_data ) {
+
+			CoursePress.Enrollment.dialog.new_nonce( 'coursepress_add_instructor', function( nonce ) {
+				var course_id = _coursepress.invitation_data.course_id;
+
+				CoursePress.Post.prepare( 'course_enrollment', 'enrollment:' );
+				CoursePress.Post.set( 'action', 'add_instructor' );
+
+				var data = {
+					action: 'add_instructor',
+					nonce: nonce.nonce,
+					course_id: course_id,
+					invite_code: _coursepress.invitation_data.code,
+					instructor_id: return_data.user_data.ID,
+					step: ''
+				};
+
+				CoursePress.Post.set( 'data', data );
+				CoursePress.Post.save();
+
+				CoursePress.Post.off( 'coursepress:enrollment:add_instructor_success' );
+				CoursePress.Post.on( 'coursepress:enrollment:add_instructor_success', function() {
+					CoursePress.Enrollment.dialog.openAtAction( 'instructor-verified' );
+				} );
+
+				CoursePress.Post.off( 'coursepress:enrollment:add_instructor_error' );
+				CoursePress.Post.on( 'coursepress:enrollment:add_instructor_error', function() {
+					CoursePress.Enrollment.dialog.openAtAction( 'verification-failed' );
+				});
+
+			});
 		};
 
 		// Password Indicator

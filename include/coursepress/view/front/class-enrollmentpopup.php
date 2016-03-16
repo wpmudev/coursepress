@@ -121,6 +121,14 @@ class CoursePress_View_Front_EnrollmentPopup {
 		$json_data['last_step'] = (int) $step_data->step;
 
 		switch ( $action ) {
+			/**
+			 * Get a new wp_nonce instance.
+			 **/
+			case 'get_nonce':
+				$json_data['nonce'] = wp_create_nonce( $data->data->nonce );
+				$json_data['success'] = true;
+				$success = true;
+				break;
 
 			// Update Course
 			case 'update_course':
@@ -172,7 +180,8 @@ class CoursePress_View_Front_EnrollmentPopup {
 
 			// Add Instructor
 			case 'add_instructor':
-				if ( wp_verify_nonce( $data->data->nonce, 'setup-course' ) ) {
+
+				if ( wp_verify_nonce( $data->data->nonce, 'coursepress_add_instructor' ) ) {
 					CoursePress_Data_Course::add_instructor( $data->data->course_id, $data->data->instructor_id );
 					$user = get_userdata( $data->data->instructor_id );
 					$json_data['instructor_id'] = $data->data->instructor_id;
@@ -181,6 +190,11 @@ class CoursePress_View_Front_EnrollmentPopup {
 
 					$json_data['nonce'] = wp_create_nonce( 'setup-course' );
 					$success = true;
+
+					// Remove instructor invitation from the list
+					if ( ! empty( $data->data->invite_code ) ) {
+						$success = $json_data['success'] = CoursePress_Data_Instructor::add_from_invitation( $data->data->course_id, $data->data->instructor_id, $data->data->invite_code );
+					}
 				}
 				break;
 
