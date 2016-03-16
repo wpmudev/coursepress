@@ -83,7 +83,7 @@ class CoursePress_Data_VirtualPage {
 	 *
 	 * @var int
 	 */
-	protected $orig_ID = 0;
+	protected $orig_id = 0;
 
 	/**
 	 * Flag if we should display the title.
@@ -129,7 +129,7 @@ class CoursePress_Data_VirtualPage {
 
 		$this->slug = $args['slug'];
 		$this->date = current_time( 'mysql' );
-		$this->orig_ID = get_the_ID();
+		$this->orig_id = get_the_ID();
 
 		if ( isset( $args['show_title'] ) ) {
 			$this->show_title = $args['show_title'];
@@ -232,7 +232,7 @@ class CoursePress_Data_VirtualPage {
 		if ( ! $virtual_post ) {
 			$virtual_post = new stdClass();
 
-			$virtual_post->ID = $this->orig_ID;
+			$virtual_post->ID = $this->orig_id;
 			$virtual_post->post_author = $this->author;
 			$virtual_post->post_date = $this->date;
 			$virtual_post->post_date_gmt = $this->date;

@@ -763,18 +763,20 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			if ( 'publish' != $the_unit->post_status && current_user_can( 'manage_options' ) ) {
 				$title_suffix = esc_html__( ' [DRAFT]', 'CP_TD' );
 			}
-			$content .= '
-				<li class="' . esc_attr( $additional_li_class ) . '">
-					<div class="unit-archive-single">
-						' . $unit_progress . '
-						' . $unit_image . '
-						<a class="unit-archive-single-title" href="' .
-						( ! $is_unit_available ? esc_url( remove_query_arg( 'dummy-query' ) ) :
-						esc_url_raw(
-							get_permalink( CoursePress_Helper_Utility::the_course( true ) ) .
-							CoursePress_Core::get_slug( 'unit/' ) . $post_name
-						) ) .
-						'" rel="bookmark">' . $the_unit->post_title . ' ' . $title_suffix . '</a>';
+
+			if ( $is_unit_available ) {
+				$unit_url = get_permalink( CoursePress_Helper_Utility::the_course( true ) ) .
+					CoursePress_Core::get_slug( 'unit/' ) . $post_name;
+			} else {
+				$unit_url = remove_query_arg( 'dummy-query' );
+			}
+
+			$content .= '<li class="' . esc_attr( $additional_li_class ) . '">' .
+				'<div class="unit-archive-single">' .
+				$unit_progress .
+				$unit_image .
+				'<a class="unit-archive-single-title" href="' . esc_url( $unit_url ) .
+				'" rel="bookmark">' . $the_unit->post_title . ' ' . $title_suffix . '</a>';
 
 			if ( $enrolled ) {
 				$content .= do_shortcode(

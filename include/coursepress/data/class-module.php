@@ -315,7 +315,7 @@ class CoursePress_Data_Module {
 		$comment_id = isset( $_GET['replytocom'] ) ? (int) $_GET['replytocom'] : '';
 
 		// Bail if comment_id is null
-		if( 0 == (int) $comment_id ) {
+		if ( 0 == (int) $comment_id ) {
 			return;
 		}
 

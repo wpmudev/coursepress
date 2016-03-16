@@ -384,7 +384,7 @@ class CoursePress_Data_Instructor {
 	 * @return (mixed)	 Returns an (object) on success and false if for error.
 	 **/
 	public static function is_course_invite() {
-		if( isset( $_GET['action'] ) && 'course_invite' == $_GET['action'] ) {
+		if ( isset( $_GET['action'] ) && 'course_invite' == $_GET['action'] ) {
 			$course_id = (int) $_GET['course_id'];
 			$code = $_GET['c'];
 			$hash = $_GET['h'];
@@ -410,10 +410,10 @@ class CoursePress_Data_Instructor {
 	 **/
 	public static function invitation_data( $localize_array ) {
 
-		if( $invitation_data = self::is_course_invite() ) {
+		if ( $invitation_data = self::is_course_invite() ) {
 			$invitation_data->invitation_data = $invitation_data->invitation_data[ $invitation_data->code ];
 			$invitation_data->nonce = wp_create_nonce( 'coursepress_add_instructor' );
-			$localize_array[ 'invitation_data' ] = $invitation_data;
+			$localize_array['invitation_data'] = $invitation_data;
 		}
 
 		return $localize_array;
@@ -423,7 +423,7 @@ class CoursePress_Data_Instructor {
 	 * Verify if it is a valid invitation code.
 	 *
 	 * @since 2.0
-	 * 
+	 *
 	 * @param (int) $course_id 	The course ID.
 	 * @param (string) $code 	 The code that was attached by the verification link.
 	 * @param (array) $invitation_data	 The list of invitations sent.
@@ -438,13 +438,13 @@ class CoursePress_Data_Instructor {
 	}
 
 	public static function add_from_invitation( $course_id, $instructor_id, $invitation_code ) {
-		$invite_data = self::verify_invitation_code( $course_id, $invitation_code ); 
+		$invite_data = self::verify_invitation_code( $course_id, $invitation_code );
 		$userdata = get_userdata( $instructor_id );
 
-		if( !empty( $invite_data[ 'email' ] ) && $invite_data[ 'email' ] == $userdata->user_email ) {
+		if ( ! empty( $invite_data['email'] ) && $invite_data['email'] == $userdata->user_email ) {
 			CoursePress_Data_Course::add_instructor( $course_id, $instructor_id );
 			CoursePress_Data_Capabilities::assign_instructor_capabilities( $userdata );
-			CoursePress_Data_Instructor::delete_invitation( $course_id, $invite_data[ 'code' ] );
+			CoursePress_Data_Instructor::delete_invitation( $course_id, $invite_data['code'] );
 
 			/**
 			 * Instructor invite confirmed.

@@ -245,7 +245,7 @@ class CoursePress_Helper_JavaScript {
 		 * Filter localize script to allow data insertion.
 		 *
 		 * @since 2.0
-		 * 
+		 *
 		 * @param (array) $localize_array.
 		 **/
 		$localize_array = apply_filters( 'coursepress_localize_object', $localize_array );
