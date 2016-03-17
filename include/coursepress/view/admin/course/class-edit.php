@@ -292,11 +292,7 @@ class CoursePress_View_Admin_Course_Edit {
 		$content .= apply_filters( 'coursepress_course_setup_step_1', '', $course_id );
 
 		// Buttons
-		$content .= '
-				<div class="wide course-step-buttons">
-					<input type="button" class="button step next step-1" value="' . esc_attr__( 'Next', 'CP_TD' ) . '" />';
-		$content .= self::button_update( $course_id,  1 );
-		$content .= '</div>';
+		$content .= self::get_buttons( $course_id, 1, array( 'previous' => false ) );
 
 		// End
 		$content .= '
@@ -530,12 +526,7 @@ class CoursePress_View_Admin_Course_Edit {
 		$content .= apply_filters( 'coursepress_course_setup_step_2', '', $course_id );
 
 		// Buttons
-		$content .= '
-				<div class="wide course-step-buttons">
-					<input type="button" class="button step prev step-2" value="' . esc_attr__( 'Previous', 'CP_TD' ) . '" />
-					<input type="button" class="button step next step-2" value="' . esc_attr__( 'Next', 'CP_TD' ) . '" />';
-		$content .= self::button_update( $course_id,  2 );
-		$content .= '</div>';
+		$content .= self::get_buttons( $course_id, 2 );
 
 		// End
 		$content .= '
@@ -627,12 +618,7 @@ class CoursePress_View_Admin_Course_Edit {
 		$content .= apply_filters( 'coursepress_course_setup_step_3', '', $course_id );
 
 		// Buttons
-		$content .= '
-				<div class="wide course-step-buttons">
-					<input type="button" class="button step prev step-3" value="' . esc_attr__( 'Previous', 'CP_TD' ) . '" />
-					<input type="button" class="button step next step-3" value="' . esc_attr__( 'Next', 'CP_TD' ) . '" />';
-		$content .= self::button_update( $course_id,  3 );
-		$content .= '</div>';
+		$content .= self::get_buttons( $course_id, 3 );
 
 		// End
 		$content .= '
@@ -720,12 +706,7 @@ class CoursePress_View_Admin_Course_Edit {
 		$content .= apply_filters( 'coursepress_course_setup_step_4', '', $course_id );
 
 		// Buttons
-		$content .= '
-				<div class="wide course-step-buttons">
-					<input type="button" class="button step prev step-4" value="' . esc_attr__( 'Previous', 'CP_TD' ) . '" />
-					<input type="button" class="button step next step-4" value="' . esc_attr__( 'Next', 'CP_TD' ) . '" />';
-		$content .= self::button_update( $course_id,  4 );
-		$content .= '</div>';
+		$content .= self::get_buttons( $course_id, 4 );
 
 		// End
 		$content .= '
@@ -798,12 +779,7 @@ class CoursePress_View_Admin_Course_Edit {
 		$content .= apply_filters( 'coursepress_course_setup_step_5', '', $course_id );
 
 		// Buttons
-		$content .= '
-				<div class="wide course-step-buttons">
-					<input type="button" class="button step prev step-5" value="' . esc_attr__( 'Previous', 'CP_TD' ) . '" />
-					<input type="button" class="button step next step-5" value="' . esc_attr__( 'Next', 'CP_TD' ) . '" />';
-		$content .= self::button_update( $course_id,  5 );
-		$content .= '</div>';
+		$content .= self::get_buttons( $course_id, 5 );
 
 		// End
 		$content .= '
@@ -999,12 +975,7 @@ class CoursePress_View_Admin_Course_Edit {
 		$content .= apply_filters( 'coursepress_course_setup_step_6', '', $course_id );
 
 		// Buttons
-		$content .= '
-				<div class="wide course-step-buttons">
-					<input type="button" class="button step prev step-6" value="' . esc_attr__( 'Previous', 'CP_TD' ) . '" />
-					<input type="button" class="button step finish step-6" value="' . esc_attr__( 'Finish', 'CP_TD' ) . '" />';
-		$content .= self::button_update( $course_id,  6 );
-		$content .= '</div>';
+		$content .= self::get_buttons( $course_id, 6, array( 'next' => false ) );
 
 		// End
 		$content .= '
@@ -1428,14 +1399,64 @@ class CoursePress_View_Admin_Course_Edit {
 
 	}
 
-	private static function button_update( $course_id, $step ) {
-		if ( CoursePress_Data_Capabilities::can_update_course( $course_id ) ) {
-			return sprintf(
+	/**
+	 * Build course step buttons
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $course_id Course ID.
+	 * @param integer $step Step.
+	 * @param array $args Array of buttons to show info, default is true, use
+	 * to disable selected button e.g. 'next' => false
+	 *
+	 * @return string Buttons.
+	 */
+	private static function get_buttons( $course_id, $step, $args = array() ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'previous' => true,
+				'next' => true,
+				'update' => true,
+			)
+		);
+		$content = '';
+		/**
+		 * previous button
+		 */
+		if ( $args['previous'] ) {
+			$content .= sprintf(
+				'<input type="button" class="button step prev step-%d" value="%s" />',
+				esc_attr( $step ),
+				esc_attr__( 'Previous', 'CP_TD' )
+			);
+		}
+		/**
+		 * next button
+		 */
+		if ( $args['next'] ) {
+			$content .= sprintf(
+				'<input type="button" class="button step next step-%d" value="%s" />',
+				esc_attr( $step ),
+				esc_attr__( 'Next', 'CP_TD' )
+			);
+		}
+		/**
+		 * update button
+		 */
+		if ( $args['update'] && CoursePress_Data_Capabilities::can_update_course( $course_id ) ) {
+			$content .= sprintf(
 				'<input type="button" class="button step update hidden step-%d" value="%s" />',
 				esc_attr( $step ),
 				esc_attr__( 'Update', 'CP_TD' )
 			);
 		}
-		return '';
+		/**
+		 * if empty, do not use wrapper!
+		 */
+		if ( empty( $content ) ) {
+			return $content;
+		}
+		return sprintf( '<div class="wide course-step-buttons">%s</div>', $content );
 	}
 }
