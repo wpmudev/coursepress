@@ -66,14 +66,24 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 
 		$edit_page = CoursePress_View_Admin_Course_Edit::$slug;
 
-		$actions = array(
-			'edit' => sprintf( '<a href="?page=%s&action=%s&id=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), __( 'Edit', 'CP_TD' ) ),
-			'units' => sprintf( '<a href="?page=%s&action=%s&id=%s&tab=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), 'units', __( 'Units', 'CP_TD' ) ),
-			'students' => sprintf( '<a href="?page=%s&action=%s&id=%s&tab=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), 'students',  __( 'Students', 'CP_TD' ) ),
-			'view_course' => sprintf( '<a href="%s">%s</a>', get_permalink( $item->ID ), __( 'View Course', 'CP_TD' ) ),
-			// 'view_units' => sprintf( '<a href="?page=%s&action=%s&id=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'view_units', absint( $item->ID ), __( 'View Units', 'CP_TD' ) ),
-			'duplicate' => sprintf( '<a data-nonce="%s" data-id="%s" class="duplicate-course-link">%s</a>', $duplicate_nonce, $item->ID, __( 'Duplicate Course', 'CP_TD' ) ),
-		);
+		$actions = array();
+		/**
+		 * check instructor privileges
+		 */
+		if ( CoursePress_Data_Capabilities::can_update_course( $item ) ) {
+			$actions['edit'] = sprintf( '<a href="?page=%s&action=%s&id=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), __( 'Edit', 'CP_TD' ) );
+			$actions['units'] = sprintf( '<a href="?page=%s&action=%s&id=%s&tab=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), 'units', __( 'Units', 'CP_TD' ) );
+			$actions['students'] = sprintf( '<a href="?page=%s&action=%s&id=%s&tab=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), 'students',  __( 'Students', 'CP_TD' ) );
+		}
+
+		$actions['view_course'] = sprintf( '<a href="%s">%s</a>', get_permalink( $item->ID ), __( 'View Course', 'CP_TD' ) );
+
+		/**
+		 * check instructor privileges
+		 */
+		if ( CoursePress_Data_Capabilities::can_add_course() ) {
+			$actions['duplicate'] = sprintf( '<a data-nonce="%s" data-id="%s" class="duplicate-course-link">%s</a>', $duplicate_nonce, $item->ID, __( 'Duplicate Course', 'CP_TD' ) );
+		}
 
 		/**
 		 * check instructor privileges
