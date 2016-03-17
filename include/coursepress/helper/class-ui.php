@@ -402,22 +402,21 @@ class CoursePress_Helper_UI {
 	 * @return string Admin Page Header.
 	 */
 	public static function get_admin_page_title( $title, $action_title = '', $action_url = '', $can_add = false ) {
-		$content = sprintf(
-			'<h1>%s : %s',
-			esc_html( CoursePress::$name ),
-			esc_html( $title )
-		);
+		$page_title = esc_html( $title );
+
 		/**
 		 * title action
 		 */
 		if ( ! empty( $action_title ) && $can_add ) {
-			$content .= sprintf(
+			$page_title .= sprintf(
 				' <a href="%s" class="page-title-action">%s</a>',
 				esc_url( $action_url ),
 				esc_html( $action_title )
 			);
 		}
-		$content .= '</h1>';
+
+		$content = sprintf( '<h1>%s</h1>', $page_title );
+
 		return $content;
 	}
 }
