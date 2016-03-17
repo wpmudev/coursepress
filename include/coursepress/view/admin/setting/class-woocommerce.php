@@ -59,7 +59,7 @@ class CoursePress_View_Admin_Setting_WooCommerce {
 	}
 
 	public static function return_content( $content, $slug, $tab ) {
-		$is_enabled = CoursePress_Core::get_setting( 'woocommerce/enabled', False);
+		$is_enabled = CoursePress_Core::get_setting( 'woocommerce/enabled', false );
 		$use_redirect = CoursePress_Core::get_setting( 'woocommerce/redirect', false );
 		$unpaid = CoursePress_Core::get_setting( 'woocommerce/unpaid', 'change_status' );
 		$delete = CoursePress_Core::get_setting( 'woocommerce/delete', 'change_status' );
