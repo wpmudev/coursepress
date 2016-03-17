@@ -777,9 +777,20 @@ class CoursePress_View_Front_Course {
 			// This is a single course page!
 			CoursePress_Helper_Utility::$is_singular = true;
 
+			/**
+			 * Filter whether to display the course title.
+			 *
+			 * @since 2.0
+			 *
+			 * @param (bool) $show_title	Whether to show the title or not.
+			 * @param (int) $course_id	The current course ID.
+			 **/
+			$show_title = apply_filters( 'coursepress_single_show_title', true, $cp->course_id );
+
 			$cp->vp_args = array(
 				'slug' => 'course_' . $cp->course_id,
-				'show_title' => false,
+				'title' => get_the_title( $cp->course_id ),
+				'show_title' => $show_title,
 				'content' => apply_filters(
 					'coursepress_view_course',
 					self::render_course_main(),
@@ -1059,6 +1070,16 @@ class CoursePress_View_Front_Course {
 				'is_archive' => true,
 			);
 		}
+
+		/**
+		 * Filter the virtual page arguments.
+		 *
+		 * @since 2.0
+		 *
+		 * @param (array) $cp->vp_args.	 The arguments to use to create a virtual page.
+		 * @param (object) $cp.
+		 **/
+		$cp->vp_args = apply_filters( 'coursepress_virtual_page', $cp->vp_args, $cp );
 
 		// Finally set up the virtual page, if we found a special CP page.
 		if ( $cp->vp_args ) {

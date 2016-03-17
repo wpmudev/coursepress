@@ -1135,7 +1135,7 @@ class CoursePress_Data_Capabilities {
 			/**
 			 * check post type
 			 */
-			if ( $post_type != get_post_type( $post ) ) {
+			if ( get_post_type( $post ) != $post_type ) {
 				return false;
 			}
 			/**

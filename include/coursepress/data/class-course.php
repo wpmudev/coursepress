@@ -1466,7 +1466,7 @@ class CoursePress_Data_Course {
 			// If we did not find a course by name, try to fetch it via ID.
 			$post = get_post( $slug );
 
-			if ( $post->post_type == self::get_post_type_name() ) {
+			if ( self::get_post_type_name() == $post->post_type ) {
 				if ( $id_only ) {
 					$res = $post->ID;
 				} else {

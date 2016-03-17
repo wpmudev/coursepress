@@ -1206,9 +1206,9 @@ if ( ! function_exists( 'cp_set_visited_unit_page' ) ) {
 		if ( ! $student_id ) { $student_id = get_current_user_ID(); }
 
 		$course_id = wp_get_post_parent_id( (int) $unit_id );
-		
+
 		CoursePress_Data_Student::visited_page( $student_id, $course_id, $unit_id, $page_num );
-		
+
 		// Legacy but still needed.
 
 		$visited_pages = get_user_option(
