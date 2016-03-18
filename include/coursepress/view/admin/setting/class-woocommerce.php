@@ -82,7 +82,7 @@ class CoursePress_View_Admin_Setting_WooCommerce {
 								value="1" />
 							<?php esc_html_e( 'Use WooCommerce to sell courses', 'CP_TD' ); ?>
 						</label>
-						<p class="description"><?php _e( 'If checked, WooCommerce will be use instead of the MarketPress for selling courses', 'cp' ) ?></p>
+						<p class="description"><?php _e( 'If checked, WooCommerce will be use instead of the MarketPress for selling courses', 'CP_TD' ) ?></p>
 </td>
 					</tr>
 					<tr>
@@ -94,7 +94,7 @@ class CoursePress_View_Admin_Setting_WooCommerce {
 								value="1" />
 							<?php esc_html_e( 'Redirect WooCommerce product post to a parent course post', 'CP_TD' ); ?>
 						</label>
-							<p class="description"><?php _e( 'If checked, visitors who try to access WooCommerce single post will be automatically redirected to a parent course single post.', 'cp' ) ?></p>
+							<p class="description"><?php _e( 'If checked, visitors who try to access WooCommerce single post will be automatically redirected to a parent course single post.', 'CP_TD' ) ?></p>
 						</td>
 					</tr>
 					<tr>

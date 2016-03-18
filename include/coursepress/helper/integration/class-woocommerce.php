@@ -350,7 +350,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 	}
 
 	public static function add_post_parent_metaboxe() {
-		add_meta_box( 'cp_woo_post_parent', __( 'Parent Course', 'cp' ), array( __CLASS__, 'cp_woo_post_parent_box_content' ), self::$product_ctp, 'side', 'default' );
+		add_meta_box( 'cp_woo_post_parent', __( 'Parent Course', 'CP_TD' ), array( __CLASS__, 'cp_woo_post_parent_box_content' ), self::$product_ctp, 'side', 'default' );
 	}
 
 	public static function cp_woo_post_parent_box_content() {
@@ -423,12 +423,12 @@ class CoursePress_Helper_Integration_WooCommerce {
 		if ( ! $purchased_course ) {
 			return;
 		}
-		printf( '<h2 class="cp_woo_header">%s</h2>', esc_html__( 'Course', 'cp' ) );
+		printf( '<h2 class="cp_woo_header">%s</h2>', esc_html__( 'Course', 'CP_TD' ) );
 		printf( '<p class="cp_woo_thanks">%s</p>', esc_html__( 'Thank you for signing up for the course. We hope you enjoy your experience.', 'CP_TD' ) );
 		if ( is_user_logged_in() && $order->post_status == 'wc-completed' ) {
 			echo '<p class="cp_woo_dashboard_link">';
 			printf(
-				__( 'You can find the course in your <a href="%s">Dashboard</a>', 'cp' ),
+				__( 'You can find the course in your <a href="%s">Dashboard</a>', 'CP_TD' ),
 				CoursePress::instance()->get_student_dashboard_slug( true )
 			);
 			echo '</p><hr />';
