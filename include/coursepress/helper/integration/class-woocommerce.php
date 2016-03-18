@@ -92,6 +92,12 @@ class CoursePress_Helper_Integration_WooCommerce {
 			array( __CLASS__, 'enroll_button' ),
 			10, 4
 		);
+
+		add_filter(
+			'coursepress_shortcode_course_cost',
+			array( __CLASS__, 'get_course_cost_html' ),
+			10, 2
+		);
 	}
 
 	public static function change_order_status( $order_id, $old_status, $new_status ) {
@@ -477,31 +483,31 @@ class CoursePress_Helper_Integration_WooCommerce {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param string $button current button string
+	 * @param string $content current button string
 	 * @param integer $course_id course to check
 	 * @param integer $user_id user to check
 	 * @param string $button_option button optiopn
 	 *
 	 * @return string button string
 	 */
-	public static function enroll_button( $button, $course_id, $user_id, $button_option ) {
+	public static function enroll_button( $content, $course_id, $user_id, $button_option ) {
 		/**
 		 * do not change on lists
 		 */
 		if ( ! CoursePress_Helper_Utility::$is_singular ) {
-			return $button;
+			return $content;
 		}
 		/**
 		 * change button only when when really need to do it
 		 */
 		if ( 'enroll' != $button_option ) {
-			return $button;
+			return $content;
 		}
 		/**
 		 * if already purchased, then return too
 		 */
 		if ( self::is_user_purchased_course( false, $course_id, $user_id ) ) {
-			return $button;
+			return $content;
 		}
 		$product_id = CoursePress_Data_Course::get_setting( $course_id, 'woo/product_id', false );
 		$product = new WC_Product( $product_id );
@@ -509,7 +515,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 		 * no or invalid product? any doubts?
 		 */
 		if ( ! $product->is_purchasable() || ! $product->is_in_stock() ) {
-			return $button;
+			return $content;
 		}
 
 		ob_start();
@@ -522,9 +528,31 @@ class CoursePress_Helper_Integration_WooCommerce {
     </form>
 <?php
 		do_action( 'woocommerce_after_add_to_cart_form' );
-		$button = ob_get_contents();
+		$content = ob_get_contents();
 		ob_end_clean();
-		return $button;
+		return $content;
+	}
+
+	/**
+	 * Get course price, using WooCommerce object
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $content current cost
+	 * @param integer $course_id course to check
+	 *
+	 * @return string html with product price
+	 */
+	public static function get_course_cost_html( $content, $course_id ) {
+		$product_id = CoursePress_Data_Course::get_setting( $course_id, 'woo/product_id', false );
+		$product = new WC_Product( $product_id );
+		/**
+		 * no or invalid product? any doubts?
+		 */
+		if ( ! $product->is_purchasable() || ! $product->is_in_stock() ) {
+			return $content;
+		}
+		return $product->get_price_html();
 	}
 }
 

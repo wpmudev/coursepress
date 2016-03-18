@@ -1004,7 +1004,6 @@ class CoursePress_Data_Shortcode_Course {
 	 */
 	public static function course_cost( $atts ) {
 		global $coursepress;
-
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
 			'label' => __( 'Price:&nbsp;', 'CP_TD' ),
@@ -1031,8 +1030,6 @@ class CoursePress_Data_Shortcode_Course {
 		$content = '';
 
 		if ( $is_paid ) {
-
-			// ADD WOO INTEGRATION
 			$content .= apply_filters( 'coursepress_shortcode_course_cost', '', $course_id );
 		} else {
 			if ( $show_icon ) {
@@ -1042,21 +1039,6 @@ class CoursePress_Data_Shortcode_Course {
 			}
 		}
 
-		// if ( cp_use_woo() ) {
-		// if ( $is_paid ) {
-		//
-		// $woo_product = get_post_meta( $course_id, 'woo_product', true );
-		// $wc_product = new WC_Product( $woo_product );
-		//
-		// $content .= $wc_product->get_price_html();
-		// } else {
-		// if ( $show_icon ) {
-		// $content .= '<span class="mp_product_price">' . $no_cost_text . '</span>';
-		// } else {
-		// $content .= $no_cost_text;
-		// }
-		// }
-		// } else {
 		// if ( $is_paid && CoursePress::instance()->marketpress_active ) {
 		//
 		// $mp_product = get_post_meta( $course_id, 'marketpress_product', true );
