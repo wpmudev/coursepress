@@ -115,8 +115,6 @@ class CoursePress_Data_Capabilities {
 	public static function init() {
 		add_action( 'set_user_role', array( __CLASS__, 'assign_role_capabilities' ), 10, 3 );
 
-		add_action( 'admin_init', array( __CLASS__, 'fix_admin_capabilities' ) );
-
 		if ( ! is_super_admin() ) {
 			// Filter the capability of the current user
 			add_filter( 'user_has_cap', array( __CLASS__, 'user_cap' ), 10, 3 );

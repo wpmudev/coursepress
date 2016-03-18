@@ -562,9 +562,7 @@ class CoursePress_View_Admin_Course_Edit {
 				<input type="hidden" name="meta_setup_step_3" value="saved" />
 			';
 
-			if ( $can_assign_instructor ) {
-		// Instructors
-		if ( CoursePress_Data_Capabilities::can_assign_course_instructor( $course_id ) ) {
+		if ( $can_assign_instructor ) {
 			$content .= '
 				<div class="wide">
 						<label for="course_name" class="">' .
