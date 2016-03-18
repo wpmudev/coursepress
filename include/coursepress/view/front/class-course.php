@@ -1197,7 +1197,7 @@ class CoursePress_View_Front_Course {
 				$student_id = (int) $data->student_id;
 
 				if ( $student_id > 0 ) {
-					$progress = CoursePress_Data_Student::calculate_completion( $student_id, $course_id );
+					//$progress = CoursePress_Data_Student::calculate_completion( $student_id, $course_id );
 				}
 
 				$success = true;

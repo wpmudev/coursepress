@@ -220,17 +220,19 @@ class CoursePress_Data_Unit {
 
 		$status = array();
 
-		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
-		$mandatory_done = CoursePress_Data_Student::is_mandatory_done( $student_id, $course_id, $unit_id, $student_progress );
-		$unit_completed = CoursePress_Data_Student::is_unit_complete( $student_id, $course_id, $unit_id, $student_progress );
+		if ( ! empty( $previous_unit_id ) ) {
+			$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
+			$mandatory_done = CoursePress_Data_Student::is_mandatory_done( $student_id, $course_id, $previous_unit_id, $student_progress );
+			$unit_completed = CoursePress_Data_Student::is_unit_complete( $student_id, $course_id, $previous_unit_id, $student_progress );
 
-		CoursePress_Helper_Utility::set_array_val( $status, 'mandatory_required/enabled', $force_current_unit_completion );
-		CoursePress_Helper_Utility::set_array_val( $status, 'mandatory_required/result', $mandatory_done );
+			CoursePress_Helper_Utility::set_array_val( $status, 'mandatory_required/enabled', $force_current_unit_completion );
+			CoursePress_Helper_Utility::set_array_val( $status, 'mandatory_required/result', $mandatory_done );
+		
+			CoursePress_Helper_Utility::set_array_val( $status, 'completion_required/enabled', $force_current_unit_successful_completion );
+			CoursePress_Helper_Utility::set_array_val( $status, 'completion_required/result', $unit_completed );
+		}
 
-		CoursePress_Helper_Utility::set_array_val( $status, 'completion_required/enabled', $force_current_unit_successful_completion );
-		CoursePress_Helper_Utility::set_array_val( $status, 'completion_required/result', $unit_completed );
-
-		if ( $available ) {
+		if ( ! empty( $status ) ) {
 			$available = $status['mandatory_required']['enabled'] ? $status['mandatory_required']['result'] : $available;
 			$available = $status['completion_required']['enabled'] ? $status['completion_required']['result'] : $available;
 		}
@@ -252,7 +254,16 @@ class CoursePress_Data_Unit {
 		$available = apply_filters( 'coursepress_filter_unit_availability', $available, $unit_id );
 
 		$status['available'] = $available;
-
+		
+if( isset( $_GET['print']) && $previous_unit_id ) {
+	header('Content-type: text/plain');
+	//print_r( $status );
+	print_r( $student_progress );
+exit;
+} else {
+	//echo $unit_id . '=';
+	//print_r( $status );
+}
 		return $status;
 	}
 

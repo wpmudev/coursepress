@@ -15,7 +15,6 @@ class CoursePress_Helper_Table_ReportStudent extends WP_List_Table {
 	/** Class constructor */
 	public function __construct() {
 
-		// $post_format = CoursePress_Data_Course::get_format();
 		parent::__construct( array(
 			'singular' => __( 'Student', 'CP_TD' ),
 			'plural' => __( 'Students', 'CP_TD' ),
@@ -24,8 +23,6 @@ class CoursePress_Helper_Table_ReportStudent extends WP_List_Table {
 
 		$this->is_cache_path_writable = CoursePress_Helper_PDF::is_cache_path_writable();
 
-		// $this->post_type = CoursePress_Data_PostFormat::prefix( $post_format['post_type'] );
-		// $this->count = wp_count_posts( $this->post_type );
 	}
 
 	public function set_course( $id ) {

@@ -65,7 +65,7 @@ class CoursePress_Data_Shortcode_Unit {
 					'unit_page_title_tag_class' => '',
 					'last_visited' => 'false',
 					'parent_course_preceding_content' => __( 'Course: ', 'CP_TD' ),
-					'student_id' => get_current_user_ID(),
+					'student_id' => get_current_user_id(),
 				)
 			),
 			$atts
@@ -624,7 +624,7 @@ class CoursePress_Data_Shortcode_Unit {
 			} elseif ( $unit_status['completion_required']['enabled'] && ! $unit_status['completion_required']['result'] ) {
 				$content .= esc_html__( 'Previous unit must be completed successfully.', 'CP_TD' );
 			}
-			if ( ! $unit_status['date_restriction']['result'] ) {
+			if ( ! empty( $unit_status['date_restriction'] ) && ! $unit_status['date_restriction']['result'] ) {
 				$unit_availability = get_post_meta( $unit_id, 'unit_availability', true );
 
 				if ( 'on_date' == $unit_availability ) {
