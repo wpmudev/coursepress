@@ -113,7 +113,7 @@ class CoursePress_Widget_FeaturedCourse extends WP_Widget {
 
 		$selected_type = isset( $instance['type'] ) ? $instance['type'] : 'image';
 		$selected_priority = isset( $instance['priority'] ) ? $instance['priority'] : 'image';
-		$button_label = isset( $instance['button_title'] ) && !empty( $instance['button_title'] ) ? $instance['button_title'] : __( 'Details', 'CP_TD' );
+		$button_label = isset( $instance['button_title'] ) && ! empty( $instance['button_title'] ) ? $instance['button_title'] : __( 'Details', 'CP_TD' );
 
 		$title = empty( $instance['title'] ) ? ' ' : apply_filters( 'widget_title', $instance['title'] );
 

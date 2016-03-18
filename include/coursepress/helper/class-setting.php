@@ -5,6 +5,7 @@ class CoursePress_Helper_Setting {
 	private static $page_refs = array();
 	private static $valid_pages = array();
 	private static $pages = array();
+	private static $default_capability;
 
 	public static function init() {
 		add_action( 'plugins_loaded', array( __CLASS__, 'admin_plugins_loaded' ) );
@@ -12,12 +13,55 @@ class CoursePress_Helper_Setting {
 		add_action( 'admin_init', array( __CLASS__, 'admin_init' ) );
 	}
 
+	/**
+	 * allow to get default capability
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return string default capability
+	 */
+	private static function get_default_capability() {
+		if ( empty( self::$default_capability ) ) {
+			self::$default_capability = 'coursepress_dashboard_cap';
+			if ( current_user_can( 'manage_options' ) ) {
+				self::$default_capability = 'manage_options';
+			}
+			/**
+			 * Filer allow to change default capability.
+			 *
+			 * @since 2.0.0
+			 *
+			 * @param string $capability CoursePress capability.
+			 * @param string $slug CoursePress page slug
+			 *
+			 */
+			self::$default_capability = apply_filters( 'coursepress_capabilities', self::$default_capability );
+		}
+		return self::$default_capability;
+	}
+
 	public static function admin_menu() {
 		$parent_handle = 'coursepress';
-		self::$page_refs[ $parent_handle ] = add_menu_page( CoursePress::$name, CoursePress::$name, 'coursepress_dashboard_cap', $parent_handle, array(
-			__CLASS__,
-			'menu_handler',
-		), CoursePress::$url . 'asset/img/coursepress-icon.png' );
+		self::$page_refs[ $parent_handle ] = add_menu_page(
+			CoursePress::$name,
+			CoursePress::$name,
+			/**
+			 * Filer allow to change capability.
+			 *
+			 * @since 2.0.0
+			 *
+			 * @param string $capability CoursePress capability.
+			 * @param string $slug CoursePress page slug
+			 *
+			 */
+			apply_filters( 'coursepress_capabilities', self::get_default_capability() ),
+			$parent_handle,
+			array(
+				__CLASS__,
+				'menu_handler',
+			),
+			CoursePress::$url . 'asset/img/coursepress-icon.png'
+		);
 
 		$pages = self::_get_pages();
 
@@ -34,7 +78,7 @@ class CoursePress_Helper_Setting {
 			}
 
 			// Use default capability if not defined
-			$capability = empty( $page['cap'] ) ? 'coursepress_dashboard_cap' : $page['cap'];
+			$capability = empty( $page['cap'] ) ? self::get_default_capability() : $page['cap'];
 
 			if ( empty( $page['parent'] ) ) {
 				$page['parent'] = $parent_handle;

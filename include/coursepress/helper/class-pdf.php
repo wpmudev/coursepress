@@ -385,5 +385,28 @@ class CoursePress_Helper_PDF extends TCPDF {
 				break;
 		}
 
-	}
+    }
+
+    /**
+     * Check pdf-cache directory.
+     *
+     * @since 2.0.0
+     *
+     * @return boolen is writable or not?
+     */
+    public static function is_cache_path_writable( ) {
+
+        $cache_path = apply_filters( 'coursepress_pdf_cache_path', trailingslashit( CoursePress::$path ) . 'pdf-cache/' );
+        $is_writable = is_dir( $cache_path ) && is_writable( $cache_path );
+        if ( ! $is_writable ) {
+            error_log(
+                sprintf(
+                    __( 'CoursePress cannot generate PDF because directory is not writable: %s', 'CP_TD' ),
+                    $cache_path
+                )
+            );
+        }
+        return $is_writable;
+
+    }
 }

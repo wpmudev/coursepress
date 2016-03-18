@@ -26,7 +26,8 @@ class CoursePress_View_Admin_Assessment_Report {
 		$pages[ self::$slug ] = array(
 			'title' => self::$title,
 			'menu_title' => self::$menu_title,
-			'cap' => self::$slug . '_cap',
+			/** This filter is documented in include/coursepress/helper/class-setting.php */
+			'cap' => apply_filters( 'coursepress_capabilities', 'coursepress_reports_cap' ),
 		);
 
 		return $pages;
@@ -221,9 +222,8 @@ class CoursePress_View_Admin_Assessment_Report {
 	}
 
 	public static function render_page() {
-		$content = '<div class="coursepress_settings_wrapper reports">' .
-				'<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
-				<hr />';
+		$content = '<div class="coursepress_settings_wrapper reports wrap">';
+		$content .= CoursePress_Helper_UI::get_admin_page_title( self::$menu_title );
 		$content .= self::render_report_list();
 		$content .= '</div>';
 

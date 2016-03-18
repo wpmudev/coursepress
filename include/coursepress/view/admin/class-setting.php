@@ -47,7 +47,8 @@ class CoursePress_View_Admin_Setting {
 		$pages[ self::$slug ] = array(
 			'title' => self::$title,
 			'menu_title' => self::$menu_title,
-			'cap' => self::$slug . '_cap'
+			/** This filter is documented in include/coursepress/helper/class-setting.php */
+			'cap' => apply_filters( 'coursepress_capabilities', 'coursepress_settings_cap' ),
 		);
 
 		return $pages;
@@ -104,13 +105,12 @@ class CoursePress_View_Admin_Setting {
 		$hidden_args = $_GET;
 		unset( $hidden_args['_wpnonce'] );
 
-		$content = '<div class="coursepress_settings_wrapper">' .
-			'<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
-			<hr />' .
-			CoursePress_Helper_Tabs::render_tabs( $tabs, $content, $hidden_args, self::$slug, $tab, false ) .
-			'</div>';
+		$output = '<div class="coursepress_settings_wrapper wrap">';
+		$output .= CoursePress_Helper_UI::get_admin_page_title( self::$menu_title );
+		$output .= CoursePress_Helper_Tabs::render_tabs( $tabs, $content, $hidden_args, self::$slug, $tab, false );
+		$output .= '</div>';
 
-		echo apply_filters( 'coursepress_settings_page_main', $content );
+		echo apply_filters( 'coursepress_settings_page_main', $output );
 
 	}
 }

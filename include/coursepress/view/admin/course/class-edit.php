@@ -12,6 +12,7 @@ class CoursePress_View_Admin_Course_Edit {
 	);
 	private static $tabs = array();
 	private static $current_course = false;
+	private static $capability = 'manage_options';
 
 	public static function init() {
 
@@ -22,13 +23,33 @@ class CoursePress_View_Admin_Course_Edit {
 		switch ( self::$action ) {
 			case 'new':
 				self::$menu_title = __( 'New Course', 'CP_TD' );
-				break;
+				self::$capability = 'coursepress_create_course_cap';
+			break;
 			case 'edit':
 				if ( isset( $_GET['id'] ) && 0 !== (int) $_GET['id'] ) {
 					self::$current_course = get_post( (int) $_GET['id'] );
 				}
 				self::$menu_title = __( 'Edit Course', 'CP_TD' );
-				break;
+				/**
+				 * set cap
+				 */
+				if ( is_object( self::$current_course ) ) {
+					/**
+					 * Update own courses
+					 */
+					$instructor_id = get_current_user_id();
+					if ( $instructor_id == self::$current_course->post_author ) {
+						self::$capability = 'coursepress_update_my_course_cap';
+					} else {
+						/**
+						 * Update any assigned course
+						 */
+						if ( CoursePress_Data_Instructor::is_assigned_to_course( $instructor_id, self::$current_course->ID ) ) {
+							self::$capability = 'coursepress_update_course_cap';
+						}
+					}
+				}
+			break;
 		}
 
 		add_filter( 'coursepress_admin_valid_pages', array( __CLASS__, 'add_valid' ) );
@@ -56,6 +77,8 @@ class CoursePress_View_Admin_Course_Edit {
 		$pages[ self::$slug ] = array(
 			'title' => self::$title,
 			'menu_title' => self::$menu_title,
+			/** This filter is documented in include/coursepress/helper/class-setting.php */
+			'cap' => apply_filters( 'coursepress_capabilities', self::$capability ),
 		);
 
 		if ( 'new' == self::$action ) {
@@ -109,11 +132,13 @@ class CoursePress_View_Admin_Course_Edit {
 			),
 		);
 		$ui['class'] = 'course-' . $course_id;
-		$publish_toggle = ! empty( $course_id ) ? CoursePress_Helper_UI::toggle_switch( 'publish-course-toggle', 'publish-course-toggle', $ui ) : '';
+		$publish_toggle = '';
+		if ( CoursePress_Data_Capabilities::can_change_course_status( $course_id ) ) {
+			$publish_toggle = ! empty( $course_id ) ? CoursePress_Helper_UI::toggle_switch( 'publish-course-toggle', 'publish-course-toggle', $ui ) : '';
+		}
 
-		$content = '<div class="coursepress_settings_wrapper">' .
-			'<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html( self::$menu_title ) . '</h3>
-			<hr />' .
+		$content = '<div class="coursepress_settings_wrapper wrap">' .
+			CoursePress_Helper_UI::get_admin_page_title( self::$menu_title ).
 			CoursePress_Helper_Tabs::render_tabs( $tabs, $content, $hidden_args, self::$slug, $tab, false, 'horizontal', $publish_toggle ) .
 			'</div>';
 
@@ -278,11 +303,7 @@ class CoursePress_View_Admin_Course_Edit {
 		$content .= apply_filters( 'coursepress_course_setup_step_1', '', $course_id );
 
 		// Buttons
-		$content .= '
-				<div class="wide course-step-buttons">
-					<input type="button" class="button step next step-1" value="' . esc_attr__( 'Next', 'CP_TD' ) . '" />
-					<input type="button" class="button step update hidden step-1" value="' . esc_attr__( 'Update', 'CP_TD' ) . '" />
-				</div>';
+		$content .= self::get_buttons( $course_id, 1, array( 'previous' => false ) );
 
 		// End
 		$content .= '
@@ -517,12 +538,7 @@ class CoursePress_View_Admin_Course_Edit {
 		$content .= apply_filters( 'coursepress_course_setup_step_2', '', $course_id );
 
 		// Buttons
-		$content .= '
-				<div class="wide course-step-buttons">
-					<input type="button" class="button step prev step-2" value="' . esc_attr__( 'Previous', 'CP_TD' ) . '" />
-					<input type="button" class="button step next step-2" value="' . esc_attr__( 'Next', 'CP_TD' ) . '" />
-					<input type="button" class="button step update hidden step-2" value="' . esc_attr__( 'Update', 'CP_TD' ) . '" />
-				</div>';
+		$content .= self::get_buttons( $course_id, 2 );
 
 		// End
 		$content .= '
@@ -548,17 +564,18 @@ class CoursePress_View_Admin_Course_Edit {
 
 			if ( $can_assign_instructor ) {
 		// Instructors
-		$content .= '
+		if ( CoursePress_Data_Capabilities::can_assign_course_instructor( $course_id ) ) {
+			$content .= '
 				<div class="wide">
 						<label for="course_name" class="">' .
 					esc_html__( 'Course Instructor(s)', 'CP_TD' ) . '
 						<p class="description">' . esc_html__( 'Select one or more instructor to facilitate this course', 'CP_TD' ) . '</p>
 						</label>
 						' . CoursePress_Helper_UI::get_user_dropdown( 'instructors', 'instructors', array(
-			'placeholder' => __( 'Choose a Course Instructor...', 'CP_TD' ),
-			'class' => 'chosen-select medium',
-			'context' => 'instructors',
-		) ) . '
+				'placeholder' => __( 'Choose a Course Instructor...', 'CP_TD' ),
+				'class' => 'chosen-select medium',
+				'context' => 'instructors',
+			) ) . '
 						<input type="button" class="button button-primary instructor-assign" value="' . esc_attr__( 'Assign', 'CP_TD' ) . '" />
 				</div>';
 			}
@@ -591,7 +608,6 @@ class CoursePress_View_Admin_Course_Edit {
 			$content .= '
 					<div class="wide">
 						<hr />
-
 						<label>' .
 						esc_html__( 'Invite New Instructor', 'CP_TD' ) . '
 							<p class="description">' . esc_html__( 'If the instructor can not be found in the list above, you will need to invite them via email.', 'CP_TD' ) . '</p>
@@ -608,7 +624,6 @@ class CoursePress_View_Admin_Course_Edit {
 								<input class="button-primary" name="invite_instructor_trigger" id="invite-instructor-trigger" type="button" value="' . esc_attr__( 'Send Invite', 'CP_TD' ) . '">
 							</div>
 						</div>
-
 					</div>
 					';
 		}
@@ -621,12 +636,7 @@ class CoursePress_View_Admin_Course_Edit {
 		$content .= apply_filters( 'coursepress_course_setup_step_3', '', $course_id );
 
 		// Buttons
-		$content .= '
-				<div class="wide course-step-buttons">
-					<input type="button" class="button step prev step-3" value="' . esc_attr__( 'Previous', 'CP_TD' ) . '" />
-					<input type="button" class="button step next step-3" value="' . esc_attr__( 'Next', 'CP_TD' ) . '" />
-					<input type="button" class="button step update hidden step-3" value="' . esc_attr__( 'Update', 'CP_TD' ) . '" />
-				</div>';
+		$content .= self::get_buttons( $course_id, 3 );
 
 		// End
 		$content .= '
@@ -714,12 +724,7 @@ class CoursePress_View_Admin_Course_Edit {
 		$content .= apply_filters( 'coursepress_course_setup_step_4', '', $course_id );
 
 		// Buttons
-		$content .= '
-				<div class="wide course-step-buttons">
-					<input type="button" class="button step prev step-4" value="' . esc_attr__( 'Previous', 'CP_TD' ) . '" />
-					<input type="button" class="button step next step-4" value="' . esc_attr__( 'Next', 'CP_TD' ) . '" />
-					<input type="button" class="button step update hidden step-4" value="' . esc_attr__( 'Update', 'CP_TD' ) . '" />
-				</div>';
+		$content .= self::get_buttons( $course_id, 4 );
 
 		// End
 		$content .= '
@@ -792,12 +797,7 @@ class CoursePress_View_Admin_Course_Edit {
 		$content .= apply_filters( 'coursepress_course_setup_step_5', '', $course_id );
 
 		// Buttons
-		$content .= '
-				<div class="wide course-step-buttons">
-					<input type="button" class="button step prev step-5" value="' . esc_attr__( 'Previous', 'CP_TD' ) . '" />
-					<input type="button" class="button step next step-5" value="' . esc_attr__( 'Next', 'CP_TD' ) . '" />
-					<input type="button" class="button step update hidden step-5" value="' . esc_attr__( 'Update', 'CP_TD' ) . '" />
-				</div>';
+		$content .= self::get_buttons( $course_id, 5 );
 
 		// End
 		$content .= '
@@ -993,12 +993,7 @@ class CoursePress_View_Admin_Course_Edit {
 		$content .= apply_filters( 'coursepress_course_setup_step_6', '', $course_id );
 
 		// Buttons
-		$content .= '
-				<div class="wide course-step-buttons">
-					<input type="button" class="button step prev step-6" value="' . esc_attr__( 'Previous', 'CP_TD' ) . '" />
-					<input type="button" class="button step finish step-6" value="' . esc_attr__( 'Finish', 'CP_TD' ) . '" />
-					<input type="button" class="button step update hidden step-6" value="' . esc_attr__( 'Update', 'CP_TD' ) . '" />
-				</div>';
+		$content .= self::get_buttons( $course_id, 6, array( 'next' => false ) );
 
 		// End
 		$content .= '
@@ -1033,14 +1028,15 @@ class CoursePress_View_Admin_Course_Edit {
 		if ( 'edit' == self::_current_action() ) {
 
 			$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
-			$units = CoursePress_Data_Course::get_unit_ids( $course_id, array( 'publish', 'draft' ) );
-
-			self::$tabs['units'] = array(
-				'title' => sprintf( __( 'Units (%s)', 'CP_TD' ), count( $units ) ),
-				'description' => __( 'Edit your course specific settings below.', 'CP_TD' ),
-				'order' => 20,
-				'buttons' => 'none',
-			);
+			if ( CoursePress_Data_Capabilities::can_view_course_units( $course_id ) ) {
+				$units = CoursePress_Data_Course::get_unit_ids( $course_id, array( 'publish', 'draft' ) );
+				self::$tabs['units'] = array(
+					'title' => sprintf( __( 'Units (%s)', 'CP_TD' ), count( $units ) ),
+					'description' => __( 'Edit your course specific settings below.', 'CP_TD' ),
+					'order' => 20,
+					'buttons' => 'none',
+				);
+			}
 
 			self::$tabs['students'] = array(
 				'title' => sprintf( __( 'Students (%s)', 'CP_TD' ), CoursePress_Data_Course::count_students( $course_id ) ),
@@ -1085,7 +1081,11 @@ class CoursePress_View_Admin_Course_Edit {
 			// Update Course
 			case 'update_course':
 
-				if ( isset( $step_data->step ) && wp_verify_nonce( $data->data->nonce, 'setup-course' ) ) {
+				if (
+					isset( $step_data->step )
+					&& wp_verify_nonce( $data->data->nonce, 'setup-course' )
+					&& CoursePress_Data_Capabilities::can_update_course( $step_data->course_id )
+				) {
 
 					$step = (int) $step_data->step;
 
@@ -1106,16 +1106,19 @@ class CoursePress_View_Admin_Course_Edit {
 
 				$course_id = $data->data->course_id;
 
-				if ( wp_verify_nonce( $data->data->nonce, 'publish-course' ) ) {
-					if ( CoursePress_Data_Capabilities::can_change_course_status( $course_id ) ) {
-						wp_update_post( array(
-							'ID' => $course_id,
-							'post_status' => $data->data->status,
-						) );
-	
-						$json_data['nonce'] = wp_create_nonce( 'publish-course' );
-						$success = true;
-					}
+				if (
+					wp_verify_nonce( $data->data->nonce, 'publish-course' )
+					&& CoursePress_Data_Capabilities::can_update_course( $data->data->course_id )
+				) {
+
+					wp_update_post( array(
+						'ID' => $course_id,
+						'post_status' => $data->data->status,
+					) );
+
+					$json_data['nonce'] = wp_create_nonce( 'publish-course' );
+					$success = true;
+
 				}
 
 				$json_data['course_id'] = $course_id;
@@ -1245,21 +1248,30 @@ class CoursePress_View_Admin_Course_Edit {
 						switch ( $action ) {
 
 							case 'publish':
+								if ( ! CoursePress_Data_Capabilities::can_update_course( $course_id ) ) {
+									continue;
+								}
 								wp_update_post( array(
 									'ID' => $course_id,
 									'post_status' => 'publish',
 								) );
-								break;
+							break;
 							case 'unpublish':
+								if ( ! CoursePress_Data_Capabilities::can_update_course( $course_id ) ) {
+									continue;
+								}
 								wp_update_post( array(
 									'ID' => $course_id,
 									'post_status' => 'draft',
 								) );
-								break;
+							break;
 							case 'delete':
+								if ( ! CoursePress_Data_Capabilities::can_delete_course( $course_id ) ) {
+									continue;
+								}
 								wp_delete_post( $course_id );
 								do_action( 'coursepress_course_deleted', $course_id );
-								break;
+							break;
 
 						}
 					}
@@ -1276,6 +1288,10 @@ class CoursePress_View_Admin_Course_Edit {
 				if ( wp_verify_nonce( $data->data->nonce, 'delete_course' ) ) {
 
 					$course_id = (int) $data->data->course_id;
+					if ( ! CoursePress_Data_Capabilities::can_delete_course( $course_id ) ) {
+						break;
+					}
+
 					wp_delete_post( $course_id );
 					do_action( 'coursepress_course_deleted', $course_id );
 
@@ -1399,5 +1415,66 @@ class CoursePress_View_Admin_Course_Edit {
 			wp_send_json_error( $json_data );
 		}
 
+	}
+
+	/**
+	 * Build course step buttons
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $course_id Course ID.
+	 * @param integer $step Step.
+	 * @param array $args Array of buttons to show info, default is true, use
+	 * to disable selected button e.g. 'next' => false
+	 *
+	 * @return string Buttons.
+	 */
+	private static function get_buttons( $course_id, $step, $args = array() ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'previous' => true,
+				'next' => true,
+				'update' => true,
+			)
+		);
+		$content = '';
+		/**
+		 * previous button
+		 */
+		if ( $args['previous'] ) {
+			$content .= sprintf(
+				'<input type="button" class="button step prev step-%d" value="%s" />',
+				esc_attr( $step ),
+				esc_attr__( 'Previous', 'CP_TD' )
+			);
+		}
+		/**
+		 * next button
+		 */
+		if ( $args['next'] ) {
+			$content .= sprintf(
+				'<input type="button" class="button step next step-%d" value="%s" />',
+				esc_attr( $step ),
+				esc_attr__( 'Next', 'CP_TD' )
+			);
+		}
+		/**
+		 * update button
+		 */
+		if ( $args['update'] && CoursePress_Data_Capabilities::can_update_course( $course_id ) ) {
+			$content .= sprintf(
+				'<input type="button" class="button step update hidden step-%d" value="%s" />',
+				esc_attr( $step ),
+				esc_attr__( 'Update', 'CP_TD' )
+			);
+		}
+		/**
+		 * if empty, do not use wrapper!
+		 */
+		if ( empty( $content ) ) {
+			return $content;
+		}
+		return sprintf( '<div class="wide course-step-buttons">%s</div>', $content );
 	}
 }

@@ -27,6 +27,17 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 		$this->course_id = (int) $id;
 	}
 
+	/**
+	 * get course_id
+	 *
+	 * @since 2.0.0
+	 *
+	 * return integer course id
+	 */
+	public function get_course_id() {
+		return $this->course_id;
+	}
+
 	public function set_add_new( $bool ) {
 		$this->add_new = $bool;
 	}

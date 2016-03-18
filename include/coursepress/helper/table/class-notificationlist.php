@@ -68,9 +68,27 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 
 		$edit_page = CoursePress_View_Admin_Communication_Notification::$slug;
 
-		$actions = array(
-			'edit' => sprintf( '<a href="?page=%s&action=%s&id=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), __( 'Edit', 'CP_TD' ) ),
-		);
+		$actions = array();
+
+		/**
+		 * check current_user_can update?
+		 */
+		if ( CoursePress_Data_Capabilities::can_update_notification( $item ) ) {
+			$actions['edit'] = sprintf(
+				'<a href="%s">%s</a>',
+				esc_url(
+					add_query_arg(
+						array(
+							'page' => $edit_page,
+							'action' => 'edit',
+							'id' => $item->ID,
+						),
+						admin_url( 'admin.php' )
+					)
+				),
+				__( 'Edit', 'CP_TD' )
+			);
+		}
 
 		return $title . '<br />' . $excerpt . $this->row_actions( $actions );
 	}
@@ -96,6 +114,12 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 	}
 
 	public function column_status( $item ) {
+		/**
+		 * check permissions
+		 */
+		if ( ! CoursePress_Data_Capabilities::can_change_status_notification( $item ) ) {
+			return '';
+		}
 		// Publish Course Toggle
 		$d_id = $item->ID;
 		$status = get_post_status( $d_id );
@@ -117,6 +141,12 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 	}
 
 	public function column_actions( $item ) {
+		/**
+		 * check permissions
+		 */
+		if ( ! CoursePress_Data_Capabilities::can_delete_notification( $item ) ) {
+			return '';
+		}
 		$delete_nonce = wp_create_nonce( 'delete-notification' );
 		return sprintf(
 			'<a data-id="%s" data-nonce="%s" class="delete-notification-link"><i class="fa fa-times-circle remove-btn"></i></a>', $item->ID, $delete_nonce

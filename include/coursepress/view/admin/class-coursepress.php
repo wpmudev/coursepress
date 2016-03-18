@@ -61,6 +61,8 @@ class CoursePress_View_Admin_CoursePress {
 		$pages[ self::$slug ] = array(
 			'title' => self::$title,
 			'menu_title' => self::$menu_title,
+			/** This filter is documented in include/coursepress/helper/class-setting.php */
+			'cap' => apply_filters( 'coursepress_capabilities', 'coursepress_courses_cap' ),
 		);
 
 		$user_can = is_super_admin();
@@ -114,7 +116,6 @@ class CoursePress_View_Admin_CoursePress {
 		<?php
 
 		$content = ob_get_clean();
-		
 		echo apply_filters( 'coursepress_admin_page_main', $content );
 
 	}

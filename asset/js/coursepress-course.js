@@ -984,6 +984,10 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		} );
 
 		$( '.coursepress_settings_wrapper.reports .column-report .pdf' ).on( 'click', function() {
+			if ( false == $(this).data('click') ) {
+				alert( $(this).attr('title') );
+				return false;
+			}
 			var form = $( this ).parents( 'form' )[ 0 ];
 			var student = $( this ).attr( 'data-student' );
 

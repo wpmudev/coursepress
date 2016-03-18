@@ -103,9 +103,9 @@ class CoursePress_Data_Discussion {
 
 			$post = array(
 				'post_author'  => get_current_user_id(),
-				'post_content' => CoursePress_Helper_Utility::filter_content( $discussion_description == '' ? $_POST['discussion_description'] : $discussion_description ),
+				'post_content' => CoursePress_Helper_Utility::filter_content( ! $discussion_description ? $_POST['discussion_description'] : $discussion_description ),
 				'post_status'  => $post_status,
-				'post_title'   => CoursePress_Helper_Utility::filter_content( ( $discussion_title == '' ? $_POST['discussion_name'] : $discussion_title ), true ),
+				'post_title'   => CoursePress_Helper_Utility::filter_content( ( ! $discussion_title ? $_POST['discussion_name'] : $discussion_title ), true ),
 				'post_type'    => self::$post_type,
 			);
 
@@ -116,7 +116,7 @@ class CoursePress_Data_Discussion {
 			$post_id = wp_insert_post( $post );
 
 			//Update post meta
-			if ( $post_id != 0 ) {
+			if ( $post_id ) {
 
 				if ( ! isset( $_POST['discussion_id'] ) ) {//new discussion added
 					$instructors = CoursePress_Data_Course::get_setting( $course_id, 'instructors', false );
@@ -126,7 +126,7 @@ class CoursePress_Data_Discussion {
 					do_action( 'new_discussion_added_student_notification', $user_id, $course_id, $students );
 				}
 
-				if ( $unit_id == '' ) {
+				if ( ! $unit_id ) {
 					$unit_id = $_POST['units_dropdown'];
 				}
 

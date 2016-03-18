@@ -138,6 +138,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 	}
 
 	public function column_status( $item ) {
+
 		$user_id = get_current_user_id();
 		$publish_toggle = ucfirst( $item->post_status );
 
@@ -250,7 +251,6 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		);
 
 	}
-
 
 	protected function course_filter( $which = '' ) {
 		if ( 'top' !== $which ) {
