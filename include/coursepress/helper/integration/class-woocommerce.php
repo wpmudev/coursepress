@@ -39,6 +39,21 @@ class CoursePress_Helper_Integration_WooCommerce {
 			10, 2
 		);
 
+		/**
+		 * This filter allow to set that the user bought the course.
+		 *
+		 * @since 2.0.0
+		 *
+		 * @param boolean $is_user_purchased_course user purchase course?
+		 * @param WP_Post $course current course to check
+		 * @param integer $user_id user to check
+		 */
+		add_filter(
+			'coursepress_is_user_purchased_course',
+			array( __CLASS__, 'is_user_purchased_course' ),
+			10, 3
+		);
+
 		add_action(
 			'coursepress_course_updated',
 			array( __CLASS__, 'update_product' ),
@@ -70,6 +85,33 @@ class CoursePress_Helper_Integration_WooCommerce {
 		add_action( 'woocommerce_order_details_after_order_table', array( __CLASS__, 'show_course_message_woocommerce_order_details_after_order_table' ), 10, 2 );
 		add_filter( 'woocommerce_cart_item_name', array( __CLASS__, 'change_cp_item_name' ), 10, 3 );
 		add_filter( 'woocommerce_order_item_name', array( __CLASS__, 'change_cp_order_item_name' ), 10, 2 );
+		add_action( 'woocommerce_order_status_changed', array( __CLASS__, 'change_order_status' ), 10, 3 );
+
+		add_filter(
+			'coursepress_enroll_button',
+			array( __CLASS__, 'enroll_button' ),
+			10, 4
+		);
+	}
+
+	public static function change_order_status( $order_id, $old_status, $new_status ) {
+		/**
+		 * if we do not use woo, then we should not use this function
+		 */
+		if ( ! self::$use_woo ) {
+			return;
+		}
+		$order = new WC_order( $order_id );
+		$items = $order->get_items();
+		$user_id = get_post_meta( $order_id, '_customer_user', true );
+		foreach ( $items as $item ) {
+			$course_id = get_post_meta( $item['product_id'], 'cp_course_id', false );
+			if ( empty( $course_id ) ) {
+				continue;
+			}
+			$key = sprintf( 'course_%d_woo_payment_status', $course_id );
+			update_user_meta( $user_id, $key, $new_status );
+		}
 	}
 
 	public static function is_payment_supported( $payment_supported, $course_id ) {
@@ -411,6 +453,78 @@ class CoursePress_Helper_Integration_WooCommerce {
 			}
 		}
 		return $name;
+	}
+
+	/**
+	 * Allow to check that the user bought the course.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param boolean $is_user_purchased_course user purchase course?
+	 * @param WP_Post $course current course to check
+	 * @param integer i$user_id user to check
+	 *
+	 * @return boolean
+	 */
+	public static function is_user_purchased_course( $is_user_purchased_course, $course, $user_id ) {
+		$course_id = is_object( $course )? $course->ID : $course;
+		$key = sprintf( 'course_%d_woo_payment_status', $course_id );
+		return 'wc-completed' == get_user_meta( $user_id, $key, true );
+	}
+
+	/**
+	 * Allow to change enroll button
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $button current button string
+	 * @param integer $course_id course to check
+	 * @param integer $user_id user to check
+	 * @param string $button_option button optiopn
+	 *
+	 * @return string button string
+	 */
+	public static function enroll_button( $button, $course_id, $user_id, $button_option ) {
+		/**
+		 * do not change on lists
+		 */
+		if ( ! CoursePress_Helper_Utility::$is_singular ) {
+			return $button;
+		}
+		/**
+		 * change button only when when really need to do it
+		 */
+		if ( 'enroll' != $button_option ) {
+			return $button;
+		}
+		/**
+		 * if already purchased, then return too
+		 */
+		if ( self::is_user_purchased_course( false, $course_id, $user_id ) ) {
+			return $button;
+		}
+		$product_id = CoursePress_Data_Course::get_setting( $course_id, 'woo/product_id', false );
+		$product = new WC_Product( $product_id );
+		/**
+		 * no or invalid product? any doubts?
+		 */
+		if ( ! $product->is_purchasable() || ! $product->is_in_stock() ) {
+			return $button;
+		}
+
+		ob_start();
+		do_action( 'woocommerce_before_add_to_cart_form' ); ?>
+        <form class="cart" method="post" enctype='multipart/form-data' action="<?php echo esc_url( wc_get_cart_url() ); ?>">
+        <?php do_action( 'woocommerce_before_add_to_cart_button' ); ?>
+        <input type="hidden" name="add-to-cart" value="<?php echo esc_attr( $product->id ); ?>" />
+        <button type="submit" class="single_add_to_cart_button button alt"><?php echo esc_html( $product->single_add_to_cart_text() ); ?></button>
+        <?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
+    </form>
+<?php
+		do_action( 'woocommerce_after_add_to_cart_form' );
+		$button = ob_get_contents();
+		ob_end_clean();
+		return $button;
 	}
 }
 

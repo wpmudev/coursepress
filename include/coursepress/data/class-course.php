@@ -798,7 +798,6 @@ class CoursePress_Data_Course {
 		$is_paid = empty( $is_paid ) || 'off' === $is_paid ? false : true;
 	}
 
-
 	public static function get_users( $args ) {
 		return new WP_User_Query( $args );
 	}
@@ -1489,7 +1488,7 @@ class CoursePress_Data_Course {
 		$base_url = CoursePress_Core::get_slug( 'courses/', true );
 		$slug = get_post_field( 'post_name', $course_id );
 
-		return trailingslashit( $baseurl . $slug );
+		return trailingslashit( $base_url . $slug );
 	}
 
 	/**

@@ -366,7 +366,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		} else {
 			//$button = apply_filters( 'coursepress_enroll_button_content', '', $course );
 			if ( empty( $button_option ) || ( 'manually' == $course->enroll_type && ! ( 'access' == $button_option || 'continue' == $button_option ) ) ) {
-				return apply_filters( 'coursepress_enroll_button', $button, $course_id, $student_id );
+				return apply_filters( 'coursepress_enroll_button', $button, $course_id, $student_id, $button_option );
 			}
 
 			$button_attributes = '';
@@ -411,7 +411,8 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			'coursepress_enroll_button',
 			$button,
 			$course_id,
-			$student_id
+			$student_id,
+			$button_option
 		);
 	}
 
