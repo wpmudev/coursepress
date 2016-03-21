@@ -339,7 +339,11 @@ class CoursePress_Data_Shortcode_Student {
 		ob_start();
 		?>
 		<script type="text/template" id="modal-template">
-			<div class="enrollment-modal-container" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-course="<?php echo esc_attr( $course_id ); ?>"></div>
+			<div class="enrollment-modal-container"
+				data-nonce="<?php echo esc_attr( $nonce ); ?>"
+				data-course="<?php echo esc_attr( $course_id ); ?>"
+				data-course-is-paid="<?php esc_html_e( intval( CoursePress_Data_Course::is_paid_course( $course_id ) ) ); ?>"
+			></div>
 		</script>
 
 		<?php if ( apply_filters( 'coursepress_registration_form_step-1', true ) ) : ?>
@@ -356,6 +360,7 @@ class CoursePress_Data_Shortcode_Student {
 				</div>
 			</div>
 			<div class="bbm-modal__bottombar">
+			<input type="hidden" name="course_id" value="<?php esc_attr_e( $course_id ); ?>" />
 			<input type="submit" class="bbm-button done signup button cta-button" value="<?php esc_attr_e( 'Create an account', 'CP_TD' ); ?>" />
 			<a href="#" class="cancel-link">
 				<?php esc_html_e( 'Cancel', 'CP_TD' ); ?>
@@ -403,7 +408,7 @@ class CoursePress_Data_Shortcode_Student {
 		<?php endif; ?>
 
 		<?php
-		do_action( 'coursepress_registration_form_end' );
+		do_action( 'coursepress_registration_form_end', $atts );
 		$content = ob_get_clean();
 
 		return $content;

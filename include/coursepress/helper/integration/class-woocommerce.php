@@ -98,6 +98,13 @@ class CoursePress_Helper_Integration_WooCommerce {
 			array( __CLASS__, 'get_course_cost_html' ),
 			10, 2
 		);
+
+		add_action(
+			'coursepress_registration_form_end',
+			array( __CLASS__, 'add_woo_add_to_cart_template' ),
+			10, 1
+		);
+
 	}
 
 	public static function change_order_status( $order_id, $old_status, $new_status ) {
@@ -509,6 +516,21 @@ class CoursePress_Helper_Integration_WooCommerce {
 		if ( self::is_user_purchased_course( false, $course_id, $user_id ) ) {
 			return $content;
 		}
+		return self::get_add_to_cart_button_by_course_id( $course_id );
+	}
+
+	/**
+	 * Get WOO add to cart button
+	 *
+	 * @since 2.0.0
+	 *
+	 * @access: private
+	 *
+	 * @param integer $course_id course to check
+	 *
+	 * @return string html with "add to cart" button
+	 */
+	private static function get_add_to_cart_button_by_course_id( $course_id ) {
 		$product_id = CoursePress_Data_Course::get_setting( $course_id, 'woo/product_id', false );
 		$product = new WC_Product( $product_id );
 		/**
@@ -519,6 +541,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 		}
 
 		ob_start();
+		d( $product );
 		do_action( 'woocommerce_before_add_to_cart_form' ); ?>
         <form class="cart" method="post" enctype='multipart/form-data' action="<?php echo esc_url( wc_get_cart_url() ); ?>">
         <?php do_action( 'woocommerce_before_add_to_cart_button' ); ?>
@@ -553,6 +576,44 @@ class CoursePress_Helper_Integration_WooCommerce {
 			return $content;
 		}
 		return $product->get_price_html();
+	}
+
+	/**
+	 * Allow to change enroll button
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $content current button string
+	 * @param integer $course_id course to check
+	 * @param integer $user_id user to check
+	 * @param string $button_option button optiopn
+	 *
+	 * @return string button string
+	 */
+	public static function add_woo_add_to_cart_template( $atts ) {
+		/**
+		 * if we do not use woo, then we should not use this function
+		 */
+		if ( ! self::$use_woo ) {
+			return;
+		}
+?>
+		<script type="text/template" id="modal-view-woo-template" data-type="modal-step" data-modal-action="paid_enrollment">
+			<div class="bbm-modal__topbar">
+				<h3 class="bbm-modal__title">
+					<?php esc_html_e( 'Add Course to cart.', 'CP_TD' ); ?>
+				</h3>
+			</div>
+			<div class="bbm-modal__section">
+				<p>
+					<?php esc_html_e( 'You can now add this course to cart.', 'CP_TD' ); ?>
+				</p>
+<?php echo self::get_add_to_cart_button_by_course_id( $atts['course_id'] ); ?>
+			</div>
+			<div class="bbm-modal__bottombar">
+			</div>
+        </script>
+<?php
 	}
 }
 

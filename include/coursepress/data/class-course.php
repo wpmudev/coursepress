@@ -796,6 +796,7 @@ class CoursePress_Data_Course {
 	public static function is_paid_course( $course_id ) {
 		$is_paid = self::get_setting( $course_id, 'payment_paid_course', false );
 		$is_paid = empty( $is_paid ) || 'off' === $is_paid ? false : true;
+		return $is_paid;
 	}
 
 	public static function get_users( $args ) {
