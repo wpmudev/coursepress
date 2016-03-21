@@ -510,16 +510,13 @@ class CoursePress_Data_Capabilities {
 			if ( user_can( $user_id, $capability ) ) {
 				return true;
 			}
+		} else {
+			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_delete_course_units_cap' );
+			if ( user_can( $user_id, $capability ) ) {
+				return true;
+			}
 		}
-		/**
-		 * Delete any unit within assigned courses
-		 */
-		$my_course = self::is_course_instructor( $course, $user_id );
-		/** This filter is documented in include/coursepress/helper/class-setting.php */
-		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_delete_my_course_units_cap' );
-		if ( user_can( $user_id, $capability ) ) {
-			return true;
-		}
+
 		return false;
 	}
 
@@ -543,22 +540,18 @@ class CoursePress_Data_Capabilities {
 		$my_unit = self::is_unit_creator( $unit_id, $user_id );
 		if ( $my_unit ) {
 			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_change_status_my_course_units_cap' );
+			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_change_my_course_unit_status_cap' );
 			if ( user_can( $user_id, $capability ) ) {
 				return true;
 			}
-		}
-		/**
-		 * change_status assigned
-		 */
-		$my_course = self::is_course_instructor( $course, $user_id );
-		if ( empty( $unit_id ) || $my_course ) {
+		} else {
 			/** This filter is documented in include/coursepress/helper/class-setting.php */
 			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_change_course_unit_status_cap' );
 			if ( user_can( $user_id, $capability ) ) {
 				return true;
 			}
 		}
+
 		return false;
 	}
 
