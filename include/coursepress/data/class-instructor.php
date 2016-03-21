@@ -119,7 +119,7 @@ class CoursePress_Data_Instructor {
 				$can_search = true;
 			}
 			if ( user_can( $user_id, 'coursepress_update_course_cap' ) ) {
-				$assigned_courses = CoursePress_Data_Instructor::get_assigned_courses_ids( $user_id );
+				$assigned_courses = self::get_assigned_courses_ids( $user_id );
 				$args['post__in'] = $assigned_courses;
 
 				if ( $can_search ) {

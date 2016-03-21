@@ -846,13 +846,15 @@ class CoursePress_Data_Capabilities {
 			$capability3 = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_assigned_notification_cap' );
 			$return = user_can( $user_id, $capability );
 
-			if ( ! is_object( $course ) ) {
-				$return = user_can( $user_id, $capability2 ) || user_can( $user_id, $capability3 );
-			} else {
-				if ( self::is_course_creator( $course, $user_id ) ) {
-					$return = user_can( $user_id, $capability2 );
-				} elseif ( self::is_course_instructor( $course, $user_id ) ) {
-					$return = user_can( $user_id, $capability3 );
+			if ( ! $return ) {
+				if ( ! is_object( $course ) ) {
+					$return = user_can( $user_id, $capability2 ) || user_can( $user_id, $capability3 );
+				} else {
+					if ( self::is_course_creator( $course, $user_id ) ) {
+						$return = user_can( $user_id, $capability2 );
+					} elseif ( self::is_course_instructor( $course, $user_id ) ) {
+						$return = user_can( $user_id, $capability3 );
+					}
 				}
 			}
 		}
