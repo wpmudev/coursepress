@@ -45,7 +45,7 @@ class CoursePress_Data_Instructor {
 		$user_id = get_current_user_id();
 		$post_type = CoursePress_Data_Course::get_post_type_name();
 
-		$where .= $wpdb->prepare( " OR ({$wpdb->posts}.post_type='%s' AND {$wpdb->posts}.post_author=%d)", $post_type, $user_id );
+		$where .= $wpdb->prepare( " OR ({$wpdb->posts}.post_type='%s' AND {$wpdb->posts}.post_author=%d AND {$wpdb->posts}.post_status=%s)", $post_type, $user_id, 'publish' );
 
 		// Let's remove the filter right away
 		remove_filter( 'posts_where', array( __CLASS__, 'filter_by_where' ) );
