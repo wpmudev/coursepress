@@ -1000,10 +1000,9 @@ class CoursePress_View_Admin_Course_Edit {
 			'order' => 10,
 			'buttons' => 'none',
 		);
+		$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
 
 		if ( 'edit' == self::_current_action() ) {
-
-			$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
 			if ( CoursePress_Data_Capabilities::can_view_course_units( $course_id ) ) {
 				$units = CoursePress_Data_Course::get_unit_ids( $course_id, array( 'publish', 'draft' ) );
 				self::$tabs['units'] = array(

@@ -602,9 +602,10 @@ class CoursePress_Data_Capabilities {
 			$user_id = get_current_user_id();
 		}
 		$return = user_can( $user_id, 'manage_options' );
+		$post_status = get_post_status( $course_id );
 
 		if ( ! $return ) {
-			$return = user_can( $user_id, 'coursepress_students_cap' ); //self::can_update_course( $course_id );
+			$return = user_can( $user_id, 'coursepress_students_cap' ) && 'publish' == $post_status;
 		}
 
 		return $return;
