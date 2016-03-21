@@ -556,6 +556,8 @@ class CoursePress_View_Admin_Course_Edit {
 		$content .= '<div class="instructors-info medium" id="instructors-info">';
 		if ( $can_assign_instructor ) {
 			$content .= '<p>' . esc_html__( 'Assigned Instructors:', 'CP_TD' ) . '</p>';
+		} else {
+			$content .= '<p>' . esc_html__( 'You do not have sufficient permission to add instructor!', 'CP_TD' );
 		}
 
 		if ( 0 >= CoursePress_Helper_UI::course_instructors_avatars( $course_id, array(
