@@ -475,19 +475,14 @@ class CoursePress_Data_Capabilities {
 			if ( user_can( $user_id, $capability ) ) {
 				return true;
 			}
-		}
-		/**
-		 * Update any unit within assigned courses
-		 */
-		$course_id = is_object( $course )? $course->ID : $course;
-		$my_course = self::is_course_instructor( $course_id, $user_id );
-		if ( $my_course ) {
+		} else {
 			/** This filter is documented in include/coursepress/helper/class-setting.php */
 			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_update_course_unit_cap' );
 			if ( user_can( $user_id, $capability ) ) {
 				return true;
 			}
 		}
+
 		return false;
 	}
 

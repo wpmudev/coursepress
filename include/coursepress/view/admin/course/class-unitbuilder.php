@@ -56,6 +56,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					<div class="tab-content tab-content-vertical unit-builder-content">
 						<div class="section static unit-builder-header"></div>
 						<div class="section static unit-builder-body"></div>
+						<div class="section static unit-builder-no-access">'. __( 'You do not have sufficient access to edit this unit!', 'CP_TD' ) . '</div>
 					</div>
 					</div>
 				</script>
