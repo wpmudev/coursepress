@@ -29,10 +29,6 @@ class CoursePress_View_Admin_Assessment_List {
 		add_action( 'coursepress_admin_' . self::$slug, array( __CLASS__, 'process_form' ) );
 		add_action( 'coursepress_admin_' . self::$slug, array( __CLASS__, 'render_page' ) );
 
-		// Update Course
-		// add_action( 'wp_ajax_update_course', array( __CLASS__, 'update_course' ) );
-		// Update UnitBuilder
-		// add_action( 'wp_ajax_unit_builder', array( 'CoursePress_View_Admin_Course_UnitBuilder', 'unit_builder_ajax' ) );
 	}
 
 	public static function add_valid( $valid_pages ) {
@@ -51,7 +47,6 @@ class CoursePress_View_Admin_Assessment_List {
 
 		return $pages;
 	}
-
 
 	public static function process_form() {
 
@@ -333,7 +328,6 @@ class CoursePress_View_Admin_Assessment_List {
 			$keys = array_keys( $units );
 
 			$selected_unit = isset( $_GET['unit_id'] ) ? (int) $_GET['unit_id'] : $units[ $keys[0] ]['unit']->ID;
-			;
 
 			// Get the tab array
 			$tabs = array();
@@ -462,50 +456,6 @@ class CoursePress_View_Admin_Assessment_List {
 							$url = admin_url( 'admin.php?page=coursepress_assessments' . '&' . $qv );
 							$response_display = '<a href="' . esc_url_raw( $url ) . '">' . esc_html__( 'View', 'CP_TD' ) . '</a>';
 						}
-
-						// $response_display = $response['response'];
-						// switch ( $attributes['module_type'] ) {
-						//
-						// case 'input-checkbox':
-						// $response_display = '';
-						// if ( ! empty( $response['response'] ) && is_array( $response['response'] ) ) {
-						// foreach ( $response['response'] as $r ) {
-						// $response_display .= '<p class="answer list">' . $attributes['answers'][(int) $r] . '</p>';
-						// }
-						// }
-						//
-						// break;
-						//
-						// case 'input-radio':
-						// case 'input-select':
-						// $response_display = '';
-						// if ( isset( $response['response'] ) ) {
-						// $response_display = '<p class="answer">' . $attributes['answers'][(int) $response['response']] . '</p>';
-						// }
-						//
-						// break;
-						// case 'input-upload':
-						//
-						// if ( $response ) {
-						// $url = $response['response']['url'];
-						//
-						// $file_size = isset( $response['response']['size'] ) ? $response['response']['size'] : false;
-						// $file_size = $file_size ? CoursePress_Helper_Utility::format_file_size( $file_size ) : '';
-						// $file_size = ! empty( $file_size ) ? '<small>(' . esc_html( $file_size ) . ')</small>' : '';
-						//
-						// $file_name = explode( '/', $url );
-						// $file_name = array_pop( $file_name );
-						//
-						// $url = CoursePress_Helper_Utility::encode( $url );
-						// $url = trailingslashit( home_url() ) . '?fdcpf=' . $url;
-						//
-						// $response_display = '<a href="' . esc_url( $url ) . '">' . esc_html( $file_name ) . ' ' . CoursePress_Helper_Utility::filter_content( $file_size ) . '</a>';
-						// } else {
-						// $response_display = '';
-						// }
-						//
-						// break;
-						// }
 
 						$response_date = ! isset( $response['date'] ) ? '' : date_i18n( get_option( 'date_format' ), strtotime( $response['date'] ) );
 						$grade_display = (-1 == $grade['grade'] ? __( '--', 'CP_TD' ) : $grade['grade'] );

@@ -148,6 +148,7 @@ class CoursePress_View_Admin_Setting_Capabilities {
 	private static function _instructor_capabilities_courses() {
 		return array(
 			'coursepress_create_course_cap' => __( 'Create new courses', 'CP_TD' ),
+			'coursepress_view_others_course_cap' => __( 'View other instructors course', 'CP_TD' ),
 			'coursepress_update_my_course_cap' => __( 'Update own courses', 'CP_TD' ),
 			'coursepress_update_course_cap' => __( 'Update any assigned course', 'CP_TD' ),
 			// 'coursepress_update_all_courses_cap' => __( 'Update ANY course', 'CP_TD' ),
@@ -202,10 +203,10 @@ class CoursePress_View_Admin_Setting_Capabilities {
 			'coursepress_add_move_my_assigned_students_cap' => __( 'Add students to assigned courses', 'CP_TD' ),
 			// 'coursepress_change_my_students_group_class_cap' => __( 'Change students group within own courses', 'CP_TD' ),
 			// 'coursepress_change_students_group_class_cap' => __( 'Change students group in any course', 'CP_TD' ),
-			'coursepress_send_bulk_my_students_email_cap' => __( 'Send bulk email to students of own courses', 'CP_TD' ),
-			'coursepress_send_bulk_students_email_cap' => __( 'Send bulk email to all students', 'CP_TD' ),
-			'coursepress_add_new_students_cap' => __( 'Create new users with student role to the blog', 'CP_TD' ),
-			'coursepress_delete_students_cap' => __( 'Delete students (deletes ALL associated course records)', 'CP_TD' ),
+			//'coursepress_send_bulk_my_students_email_cap' => __( 'Send bulk email to students of own courses', 'CP_TD' ),
+			//'coursepress_send_bulk_students_email_cap' => __( 'Send bulk email to all students', 'CP_TD' ),
+			//'coursepress_add_new_students_cap' => __( 'Create new users with student role to the blog', 'CP_TD' ),
+			//'coursepress_delete_students_cap' => __( 'Delete students (deletes ALL associated course records)', 'CP_TD' ),
 		);
 	}
 

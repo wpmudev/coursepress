@@ -592,6 +592,10 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 				};
 				CoursePress.Course.set( 'data', data );
 				CoursePress.Course.save();
+				CoursePress.Course.on( 'coursepress:withdraw_student_success', function(){
+					window.location = self.location;
+				});
+				return false;
 			}
 		} );
 
@@ -605,6 +609,10 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 				};
 				CoursePress.Course.set( 'data', data );
 				CoursePress.Course.save();
+				CoursePress.Course.on( 'coursepress:withdraw_all_students_success', function(){
+					window.location = self.location;
+				});
+				return false;
 			}
 		} );
 

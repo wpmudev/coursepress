@@ -320,6 +320,7 @@ class CoursePress_View_Admin_Communication_Notification {
 	 * @return array $courses Array of WP_Post objects
 	 */
 	private static function get_courses() {
+
 		$user_id = get_current_user_id();
 		if ( empty( $user_id ) ) {
 			return array();

@@ -33,21 +33,9 @@ class CoursePress_View_Admin_Course_Edit {
 				/**
 				 * set cap
 				 */
-				if ( is_object( self::$current_course ) ) {
-					/**
-					 * Update own courses
-					 */
-					$instructor_id = get_current_user_id();
-					if ( $instructor_id == self::$current_course->post_author ) {
-						self::$capability = 'coursepress_update_my_course_cap';
-					} else {
-						/**
-						 * Update any assigned course
-						 */
-						if ( CoursePress_Data_Instructor::is_assigned_to_course( $instructor_id, self::$current_course->ID ) ) {
-							self::$capability = 'coursepress_update_course_cap';
-						}
-					}
+				if ( is_object( self::$current_course )
+					&& CoursePress_Data_Capabilities::can_update_course( self::$current_course->ID ) ) {
+					self::$capability = 'coursepress_create_course_cap';
 				}
 			break;
 		}
@@ -507,19 +495,6 @@ class CoursePress_View_Admin_Course_Edit {
 
 				}
 			}
-
-			// Fix broken pages
-			// $page_titles = get_post_meta( $unit->ID, 'page_title', true );
-			// if ( empty( $page_titles ) ) {
-			// $page_titles = array();
-			// $page_visible = array();
-			// foreach ( $unit['pages'] as $key => $page ) {
-			// $page_titles[ 'page_' . $key ] = $page['title'];
-			// $page_visible[] = true;
-			// }
-			// update_post_meta( $unit->ID, 'page_title', $page_titles );
-			// update_post_meta( $unit->ID, 'show_page_title', $page_visible );
-			// }
 		}
 
 		$content .= '
@@ -576,11 +551,12 @@ class CoursePress_View_Admin_Course_Edit {
 			) ) . '
 						<input type="button" class="button button-primary instructor-assign" value="' . esc_attr__( 'Assign', 'CP_TD' ) . '" />
 				</div>';
-			}
+		}
 
-		$content .= '<div class="instructors-info medium" id="instructors-info">
-					<p>' . esc_html__( 'Assigned Instructors:', 'CP_TD' ) . '</p>
-				';
+		$content .= '<div class="instructors-info medium" id="instructors-info">';
+		if ( $can_assign_instructor ) {
+			$content .= '<p>' . esc_html__( 'Assigned Instructors:', 'CP_TD' ) . '</p>';
+		}
 
 		if ( 0 >= CoursePress_Helper_UI::course_instructors_avatars( $course_id, array(
 			'remove_buttons' => true,
@@ -1036,13 +1012,14 @@ class CoursePress_View_Admin_Course_Edit {
 				);
 			}
 
+			if ( CoursePress_Data_Capabilities::can_view_course_students( $course_id ) ) {
 			self::$tabs['students'] = array(
 				'title' => sprintf( __( 'Students (%s)', 'CP_TD' ), CoursePress_Data_Course::count_students( $course_id ) ),
 				'description' => __( 'Edit your course specific settings below.', 'CP_TD' ),
 				'order' => 30,
 				'buttons' => 'none',
 			);
-
+			}
 		}
 
 		// Make sure that we have all the fields we need
@@ -1082,7 +1059,6 @@ class CoursePress_View_Admin_Course_Edit {
 				if (
 					isset( $step_data->step )
 					&& wp_verify_nonce( $data->data->nonce, 'setup-course' )
-					&& CoursePress_Data_Capabilities::can_update_course( $step_data->course_id )
 				) {
 
 					$step = (int) $step_data->step;
@@ -1455,6 +1431,14 @@ class CoursePress_View_Admin_Course_Edit {
 				'<input type="button" class="button step next step-%d" value="%s" />',
 				esc_attr( $step ),
 				esc_attr__( 'Next', 'CP_TD' )
+			);
+		}
+
+		// Finish button
+		if ( 6 == $step ) {
+			$content .= sprintf(
+				'<input type="button" class="button step finish step-6" value="%s" />',
+				esc_attr__( 'Finish', 'CP_TD' )
 			);
 		}
 		/**

@@ -97,7 +97,6 @@ class CoursePress_Helper_Setting {
 			}
 		}
 
-		// error_log( print_r( self::$page_refs, true  ) );
 	}
 
 	public static function menu_handler() {

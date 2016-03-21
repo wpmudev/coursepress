@@ -624,7 +624,7 @@ class CoursePress_Data_Shortcode_Unit {
 			} elseif ( $unit_status['completion_required']['enabled'] && ! $unit_status['completion_required']['result'] ) {
 				$content .= esc_html__( 'Previous unit must be completed successfully.', 'CP_TD' );
 			}
-			if ( ! $unit_status['date_restriction']['result'] ) {
+			if ( ! empty( $unit_status['date_restriction'] ) && ! $unit_status['date_restriction']['result'] ) {
 				$unit_availability = get_post_meta( $unit_id, 'unit_availability', true );
 
 				if ( 'on_date' == $unit_availability ) {

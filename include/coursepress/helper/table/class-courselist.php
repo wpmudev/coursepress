@@ -44,6 +44,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		if ( ! CoursePress_Data_Capabilities::can_manage_courses() ) {
 			unset( $columns['cb'], $columns['actions'], $columns['units'] );
 		}
+
 		return $columns;
 	}
 
@@ -80,10 +81,9 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 
 		// Apply course capabilities
 		$user_id = get_current_user_id();
-		$can_edit = false;
 
 		if ( ! CoursePress_Data_Capabilities::can_update_course( $item->ID, $user_id ) ) {
-				unset( $actions['edit'] );
+			unset( $actions['edit'] );
 		}
 		if ( ! CoursePress_Data_Capabilities::can_create_course( $user_id ) ) {
 			unset( $actions['duplicate'] );
@@ -181,11 +181,8 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 	public function column_default( $item, $column_name ) {
 
 		switch ( $column_name ) {
-
 			case 'ID':
-				// case 'post_title':
 				return $item->{$column_name};
-
 		}
 
 	}
@@ -226,9 +223,24 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			's' => isset( $_GET['s'] ) && ! empty( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '',
 		);
 
-		// @todo: Add permissions
-		// Add category filter
-		if ( $category ) {
+		if ( ! CoursePress_Data_Capabilities::can_view_others_course() ) {
+			$user_id = get_current_user_id();
+			$post_args['author'] = $user_id;
+
+			if ( user_can( $user_id, 'coursepress_update_course_cap' ) ) {
+
+				$assigned_courses = CoursePress_Data_Instructor::get_assigned_courses_ids( $user_id );
+
+				if ( ! empty( $assigned_courses ) ) {
+					$post_args['post__in'] = $assigned_courses;
+					unset( $post_args['author'] );
+					add_filter( 'posts_where', array( 'CoursePress_Data_Instructor', 'filter_by_where' ) );
+				}
+
+			} 
+		}
+
+		if ( $category && CoursePress_Data_Capabilities::can_manage_categories() ) {
 			$post_args['tax_query'] = array(
 				array(
 					'taxonomy' => 'course_category',
