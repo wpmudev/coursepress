@@ -274,7 +274,7 @@ class CoursePress_Data_Capabilities {
 		$return = user_can( $user_id, 'manage_options' );
 		$post_status = get_post_status( $course_id );
 
-		if ( ! $return && self::can_manage_courses( $user_id ) ) {
+		if ( ! $return && self::can_manage_courses( $user_id ) && self::can_create_course() ) {
 			$course_creator = self::is_course_creator( $course_id, $user_id );
 			$is_instructor = self::is_course_instructor( $course_id, $user_id );
 
@@ -305,16 +305,19 @@ class CoursePress_Data_Capabilities {
 			$user_id = get_current_user_id();
 		}
 		$return = user_can( $user_id, 'manage_options' );
-		$post_status = get_post_status( $course_id );
 
 		if ( ! $return ) {
-			$course_creator = self::is_course_creator( $course_id, $user_id );
-			$is_instructor = self::is_course_instructor( $course_id, $user_id );
-
-			if ( $course_creator ) {
-				$return = user_can( $user_id, 'coursepress_delete_my_course_cap' );
-			} elseif ( $is_instructor ) {
-				$return = user_can( $user_id, 'coursepress_delete_course_cap' );
+			if ( (int) $course_id > 0 ) {
+				$course_creator = self::is_course_creator( $course_id, $user_id );
+				$is_instructor = self::is_course_instructor( $course_id, $user_id );
+	
+				if ( $course_creator ) {
+					$return = user_can( $user_id, 'coursepress_delete_my_course_cap' );
+				} elseif ( $is_instructor ) {
+					$return = user_can( $user_id, 'coursepress_delete_course_cap' );
+				}
+			} else {
+				$return = user_can( $user_id, 'coursepress_delete_course_cap' ) || user_can( $user_id, 'coursepress_delete_my_course_cap' );
 			}
 		}
 
@@ -336,13 +339,17 @@ class CoursePress_Data_Capabilities {
 		$return = user_can( $user_id, 'manage_options' );
 
 		if ( ! $return ) {
-			$course_creator = self::is_course_creator( $course_id, $user_id );
-			$is_instructor = self::is_course_instructor( $course_id, $user_id );
-
-			if ( $course_creator ) {
-				$return = user_can( $user_id, 'coursepress_change_my_course_status_cap' );
-			} elseif ( $is_instructor ) {
-				$return = user_can( $user_id, 'coursepress_change_course_status_cap' );
+			if ( (int) $course_id > 0 ) {
+				$course_creator = self::is_course_creator( $course_id, $user_id );
+				$is_instructor = self::is_course_instructor( $course_id, $user_id );
+	
+				if ( $course_creator ) {
+					$return = user_can( $user_id, 'coursepress_change_my_course_status_cap' );
+				} elseif ( $is_instructor ) {
+					$return = user_can( $user_id, 'coursepress_change_course_status_cap' );
+				}
+			} else {
+				$return = user_can( $user_id, 'coursepress_change_my_course_status_cap' ) || user_can( $user_id, 'coursepress_change_course_status_cap' );
 			}
 		}
 

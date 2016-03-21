@@ -44,6 +44,9 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		if ( ! CoursePress_Data_Capabilities::can_manage_courses() ) {
 			unset( $columns['cb'], $columns['actions'], $columns['units'] );
 		}
+		if ( ! CoursePress_Data_Capabilities::can_delete_course( 0 ) ) {
+			unset( $columns['actions'] );
+		}
 
 		return $columns;
 	}
@@ -105,6 +108,12 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			'delete' => __( 'Delete', 'CP_TD' ),
 		);
 
+		if ( ! CoursePress_Data_Capabilities::can_delete_course( 0 ) ) {
+			unset( $actions['delete'] );
+		}
+		if ( ! CoursePress_Data_Capabilities::can_change_course_status( 0 ) ) {
+			unset( $actions['publish'], $actions['unpublish'] );
+		}
 		return $actions;
 	}
 
