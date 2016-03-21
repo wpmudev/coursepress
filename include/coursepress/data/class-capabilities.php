@@ -1016,6 +1016,13 @@ class CoursePress_Data_Capabilities {
 		if ( user_can( $user_id, 'manage_options' ) ) {
 			return true;
 		}
+
+		if ( ! $course ) {
+			return ( user_can( $user_id, 'courespress_create_discussion_cap' ) ||
+					user_can( $user_id, 'coursepress_create_my_discussion_cap' ) ||
+					user_can( $user_id, 'coursepress_create_my_assigned_discussion_cap' ) );
+		}
+
 		/**
 		 * Create new discussions
 		 */
@@ -1063,22 +1070,21 @@ class CoursePress_Data_Capabilities {
 		if ( user_can( $user_id, 'manage_options' ) ) {
 			return true;
 		}
-		/**
-		 * Update every discussion
-		 */
+
 		/** This filter is documented in include/coursepress/helper/class-setting.php */
 		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_update_discussion_cap' );
-		if ( user_can( $user_id, $capability ) ) {
-			return true;
-		}
-		/**
-		 * Update own discussions
-		 */
-		$discussion_id = is_object( $discussion )? $discussion->ID : $discussion;
-		if ( self::is_discussion_creator( $discussion, $user_id ) ) {
-			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_update_my_discussion_cap' );
+		$capability2 = apply_filters( 'coursepress_capabilities', 'coursepress_update_my_discussion_cap' );
+
+
+		if ( empty( $discussion ) ) {
+			return user_can( $user_id, $capability ) || user_can( $capability2 );
+		} else {
 			if ( user_can( $user_id, $capability ) ) {
+				return true;
+			}
+
+			$discussion_id = is_object( $discussion )? $discussion->ID : $discussion;
+			if ( self::is_discussion_creator( $discussion, $user_id ) && user_can( $user_id, $capability2 ) ) {
 				return true;
 			}
 		}
@@ -1100,25 +1106,24 @@ class CoursePress_Data_Capabilities {
 		if ( user_can( $user_id, 'manage_options' ) ) {
 			return true;
 		}
-		/**
-		 * delete every discussion
-		 */
+
 		/** This filter is documented in include/coursepress/helper/class-setting.php */
 		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_delete_discussion_cap' );
-		if ( user_can( $user_id, $capability ) ) {
-			return true;
-		}
-		/**
-		 * delete own discussions
-		 */
-		$discussion_id = is_object( $discussion )? $discussion->ID : $discussion;
-		if ( self::is_discussion_creator( $discussion, $user_id ) ) {
-			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_delete_my_discussion_cap' );
+		$capability2 = apply_filters( 'coursepress_capabilities', 'coursepress_delete_my_discussion_cap' );
+
+		if ( ! $discussion ) {
+			return user_can( $user_id, $capability ) || user_can( $user_id, $capability2 );
+		} else {
 			if ( user_can( $user_id, $capability ) ) {
 				return true;
 			}
+
+			$discussion_id = is_object( $discussion )? $discussion->ID : $discussion;
+			if ( self::is_discussion_creator( $discussion, $user_id )  && user_can( $user_id, $capability2 ) ) {
+				return true;
+			}
 		}
+
 		return false;
 	}
 
@@ -1137,25 +1142,24 @@ class CoursePress_Data_Capabilities {
 		if ( user_can( $user_id, 'manage_options' ) ) {
 			return true;
 		}
-		/**
-		 * change_status every discussion
-		 */
+
 		/** This filter is documented in include/coursepress/helper/class-setting.php */
 		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_change_discussion_status_cap' );
-		if ( user_can( $user_id, $capability ) ) {
-			return true;
-		}
-		/**
-		 * change_status own discussions
-		 */
-		$discussion_id = is_object( $discussion )? $discussion->ID : $discussion;
-		if ( self::is_discussion_creator( $discussion, $user_id ) ) {
-			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_change_my_discussion_status_cap' );
+		$capability2 = apply_filters( 'coursepress_capabilities', 'coursepress_change_my_discussion_status_cap' );
+
+		if ( ! $discussion ) {
+			return user_can( $user_id, $capability ) || user_can( $user_id, $capability2 );
+		} else {
 			if ( user_can( $user_id, $capability ) ) {
 				return true;
 			}
+
+			$discussion_id = is_object( $discussion )? $discussion->ID : $discussion;
+			if ( self::is_discussion_creator( $discussion, $user_id ) && user_can( $user_id, $capability2 ) ) {
+				return true;
+			}
 		}
+
 		return false;
 	}
 

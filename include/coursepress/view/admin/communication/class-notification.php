@@ -158,7 +158,7 @@ class CoursePress_View_Admin_Communication_Notification {
 				'text' => __( 'All courses', 'CP_TD' ),
 				'value' => 'all',
 			);
-			$courses = CoursePress_Data_Instructor::get_accessable_courses();
+			$courses = false;
 		} else {
 			$courses = self::get_courses();
 			if ( empty( $courses ) ) {

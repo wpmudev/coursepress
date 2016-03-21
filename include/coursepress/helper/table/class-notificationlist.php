@@ -285,7 +285,7 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 			'text' => __( 'All courses', 'CP_TD' ),
 			'value' => 'all',
 		);
-		$courses = CoursePress_View_Admin_Communication_Notification::get_courses();
+		$courses = CoursePress_Data_Capabilities::can_add_notification_to_all() ? false : CoursePress_View_Admin_Communication_Notification::get_courses();
 		echo CoursePress_Helper_UI::get_course_dropdown( 'course_id' . $two, 'course_id' . $two, $courses, $options );
 
 		submit_button( __( 'Filter', 'CP_TD' ), 'category-filter', '', false, array( 'id' => "filter-courses$two" ) );
