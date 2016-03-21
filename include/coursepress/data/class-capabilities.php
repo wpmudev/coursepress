@@ -169,7 +169,7 @@ class CoursePress_Data_Capabilities {
 
 	public static function remove_instructor_capabilities( $user ) {
 		if ( ! is_object( $user ) ) {
-			$user = new WP_User( $user_id );
+			$user = new WP_User( $user );
 		}
 		$capability_types = self::$capabilities['instructor'];
 		foreach ( $capability_types as $key => $value ) {
