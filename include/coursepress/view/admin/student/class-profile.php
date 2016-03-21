@@ -27,12 +27,11 @@ class CoursePress_View_Admin_Student_Profile extends CoursePress_View_Admin_Stud
 				if ( have_posts() ) :
 			?>
 				<table class="widefat">
-					<?php
-						while( have_posts() ):
+					<?php while ( have_posts() ) :
 							the_post();
 							$course = CoursePress_Data_Course::get_course( get_the_ID() );
 							$workbook_link = CoursePress_Data_Student::get_admin_workbook_link( $student_id, get_the_ID() );
-					?>
+						?>
 						<tr>
 							<td>
 								<a href="<?php echo $workbook_link; ?>" class="button button-units workbook-button">

@@ -3,7 +3,7 @@
 class CoursePress_View_Admin_Student_Workbook {
 
 	public static function profile() {
-		$student_id = (int) $_GET[ 'student_id' ];
+		$student_id = (int) $_GET['student_id'];
 		$student = get_userdata( $student_id );
 		?>
 			<table cellspacing="0">
@@ -65,7 +65,7 @@ class CoursePress_View_Admin_Student_Workbook {
 	}
 
 	public static function display() {
-		$student_id = (int) $_GET[ 'student_id' ];
+		$student_id = (int) $_GET['student_id'];
 		$student = get_userdata( $student_id );
 		?>
 		<div class="wrap nocoursesub assessment student-workbook cp-wrap">
@@ -80,14 +80,12 @@ class CoursePress_View_Admin_Student_Workbook {
 				$selected_course = ! empty( $_GET['course_id'] ) ? (int) $_GET['course_id'] : $first->ID;
 				$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $selected_course );
 
-				if ( 0 == count( $courses ) ) :
+			if ( 0 == count( $courses ) ) :
 			?>
 				<div class="zero-courses">
 					<?php echo $student->user_login; esc_html_e( ' did not enroll to any courses yet.', 'CP_TD' ); ?>
 				</div>
-			<?php
-				else:
-			?>
+			<?php else : ?>
 				<div class="tablenav">
 					<span class="info_caption"><?php esc_html_e( 'Select Course', 'CP_TD' ); ?></span>
 					<?php
@@ -97,7 +95,7 @@ class CoursePress_View_Admin_Student_Workbook {
 							$courses,
 							array(
 								'class' => 'medium',
-								'value' => $selected_course
+								'value' => $selected_course,
 							)
 						);
 					?>
@@ -117,27 +115,27 @@ class CoursePress_View_Admin_Student_Workbook {
 					</label>
 				</div>
 			<?php
-					$units = CoursePress_Data_Course::get_units_with_modules( $selected_course, array( 'publish', 'draft' ) );
-					$active_unit_id = ! empty( $_GET[ 'unit_id' ] ) ? (int) $_GET[ 'unit_id' ] : null;
-					$active_unit = null;
+				$units = CoursePress_Data_Course::get_units_with_modules( $selected_course, array( 'publish', 'draft' ) );
+				$active_unit_id = ! empty( $_GET['unit_id'] ) ? (int) $_GET['unit_id'] : null;
+				$active_unit = null;
 
-					if ( ! empty( $units ) ) :
+			if ( ! empty( $units ) ) :
 			?>
 				<div class="units-tab-container">
 					<span class="info_caption"><?php esc_html_e( 'Select Unit', 'CP_TD' ); ?></span>
 					<div class="units-tab">
 					<?php
-						$tab = 1;
-						foreach( $units as $unit_id => $unit ) :
+					$tab = 1;
+					foreach ( $units as $unit_id => $unit ) :
 							$unit_url = add_query_arg(
 								array(
 									'course_id' => $selected_course,
-									'unit_id' => $unit_id
+									'unit_id' => $unit_id,
 								)
 							);
 
 							if ( ! $active_unit_id ) :
-								if ( $tab == 1 ) :
+								if ( 1 == $tab ) :
 									$active_unit = $unit;
 									$active_unit_id = $unit_id;
 								endif;
@@ -172,9 +170,9 @@ class CoursePress_View_Admin_Student_Workbook {
 						<?php
 							$pages = $active_unit['pages'];
 
-							if ( $pages ) :
-								foreach( $pages as $page_number => $page ) :
-							?>
+						if ( $pages ) :
+							foreach ( $pages as $page_number => $page ) :
+								?>
 								<tr>
 									<th colspan="6">
 										<?php echo $page['title']; ?>
@@ -183,7 +181,7 @@ class CoursePress_View_Admin_Student_Workbook {
 								<?php
 									$modules = $page['modules'];
 
-									foreach ( $modules as $module_id => $module ) :
+								foreach ( $modules as $module_id => $module ) :
 										$response = CoursePress_Data_Student::get_response(
 											$student_id,
 											$selected_course,
@@ -219,7 +217,7 @@ class CoursePress_View_Admin_Student_Workbook {
 													'course_id' => $selected_course,
 													'unit_id' => $active_unit_id,
 													'module_id' => $module_id,
-													'student_id' => $student_id
+													'student_id' => $student_id,
 												),
 												admin_url( 'admin.php' )
 											);
@@ -231,9 +229,9 @@ class CoursePress_View_Admin_Student_Workbook {
 											<td><?php echo $module->post_title; ?></td>
 											<td>
 												<?php
-													if ( $response && ! empty( $response['date'] ) ) :
+												if ( $response && ! empty( $response['date'] ) ) :
 														$date_format = get_option( 'date_format' );
-														echo date_i18n( $date_format, strtotime( $response[ 'date' ] ) );
+														echo date_i18n( $date_format, strtotime( $response['date'] ) );
 													endif;
 												?>
 											</td>
