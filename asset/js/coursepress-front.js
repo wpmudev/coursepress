@@ -440,8 +440,8 @@ var CoursePress = CoursePress || {};
 		};
 
 		CoursePress.Enrollment.dialog.handle_login_return = function( data ) {
-
-			if ( data['logged_in'] === true ) {
+			var signup_errors = data['signup_errors'];
+			if ( 0 === signup_errors.length && data['logged_in'] === true ) {
 				// Check if the page is redirected from an invitation link
 				if ( _coursepress.invitation_data ) {
 					// Add user as instructor
@@ -452,6 +452,18 @@ var CoursePress = CoursePress || {};
 					} else {
 						location.href = _coursepress.course_url;
 					}
+				}
+			} else {
+				if ( signup_errors.length > 0 ) {
+					$( '.bbm-wrapper #error-messages' ).html('');
+					// Display signup errors
+					var err_msg = '<ul>';
+					signup_errors.forEach( function( item ) {
+						err_msg += '<li>' + item + '</li>';
+					} );
+					err_msg += '</ul>';
+					$( '.bbm-wrapper #error-messages' ).html( err_msg );
+					$( 'input[name=password]' ).val('');
 				}
 			}
 		};

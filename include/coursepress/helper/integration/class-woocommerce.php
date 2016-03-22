@@ -532,6 +532,23 @@ class CoursePress_Helper_Integration_WooCommerce {
 	 */
 	private static function get_add_to_cart_button_by_course_id( $course_id ) {
 		$product_id = CoursePress_Data_Course::get_setting( $course_id, 'woo/product_id', false );
+		if ( empty( $product_id ) ) {
+			return '';
+		}
+		$cart_data = WC()->cart->get_cart();
+		foreach ( $cart_data as $cart_item_key => $values ) {
+			$_product = $values['data'];
+			if ( $product_id == $_product->id ) {
+				$content = __( 'This course is alredy in the cart.', 'CP_TD' );
+				global $woocommerce;
+				$content .= sprintf(
+					' <button data-link="%s" class="course_list_box_item button">%s</button>',
+					esc_url( $woocommerce->cart->get_cart_url() ),
+					esc_html__( 'Show cart', 'CP_TD' )
+				);
+				return wpautop( $content );
+			}
+		}
 		$product = new WC_Product( $product_id );
 		/**
 		 * no or invalid product? any doubts?
@@ -548,6 +565,13 @@ class CoursePress_Helper_Integration_WooCommerce {
         <button type="submit" class="single_add_to_cart_button button alt"><?php echo esc_html( $product->single_add_to_cart_text() ); ?></button>
         <?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
     </form>
+=======
+<form class="cart" method="post" enctype='multipart/form-data' action="<?php echo esc_url( wc_get_cart_url() ); ?>">
+<?php do_action( 'woocommerce_before_add_to_cart_button' ); ?>
+<input type="hidden" name="add-to-cart" value="<?php echo esc_attr( $product->id ); ?>" />
+<button type="submit" class="single_add_to_cart_button button alt"><?php echo esc_html( $product->single_add_to_cart_text() ); ?></button>
+<?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
+</form>
 <?php
 		do_action( 'woocommerce_after_add_to_cart_form' );
 		$content = ob_get_contents();

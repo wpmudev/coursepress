@@ -996,6 +996,9 @@ ul.notification-archive-list {
 .enrolment-container-div .bbm-wrapper #error-messages {
   color: #d92e23;
 }
+.enrolment-container-div .bbm-wrapper #error-messages ul {
+  margin: 0;
+}
 
 .entry-content .coursepress-course-share a {
   border: none;
