@@ -541,7 +541,6 @@ class CoursePress_Helper_Integration_WooCommerce {
 		}
 
 		ob_start();
-		d( $product );
 		do_action( 'woocommerce_before_add_to_cart_form' ); ?>
         <form class="cart" method="post" enctype='multipart/form-data' action="<?php echo esc_url( wc_get_cart_url() ); ?>">
         <?php do_action( 'woocommerce_before_add_to_cart_button' ); ?>
