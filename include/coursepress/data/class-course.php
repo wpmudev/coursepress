@@ -904,6 +904,21 @@ class CoursePress_Data_Course {
 		}
 
 		/**
+		 * Filter allow to stop enrolled process.
+		 *
+		 * Return false to stop enrolled process. See more in Woo Integration class.
+		 *
+		 * @since 2.0.0
+		 *
+		 * @param boolean $enroll_student Allow student to enroll? Default true.
+		 * @param integer $student_id Student ID.
+		 * @param integer $course_id Course ID.
+		 */
+		if ( ! apply_filters( 'coursepress_enroll_student', true, $student_id, $course_id ) ) {
+			return;
+		}
+
+		/**
 		 * Update metadata with relevant details.
 		 *
 		 * Link courses and student (in order to avoid custom tables) for

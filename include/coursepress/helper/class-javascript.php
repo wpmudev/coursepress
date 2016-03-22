@@ -228,7 +228,7 @@ class CoursePress_Helper_JavaScript {
 			'response_saved_message' => __( 'Your response was recorded successfully.', 'CP_TD' ),
 			'response_fail_message' => __( 'There was a problem saving your response. Please reload this page and try again.', 'CP_TD' ),
 			'current_course' => $course_id,
-			'current_course_is_paid' => intval( CoursePress_Data_Course::is_paid_course( $course_id ) ),
+			'current_course_is_paid' => CoursePress_Data_Course::is_paid_course( $course_id )? 'yes':'no',
 			'course_url' => get_permalink( CoursePress_Helper_Utility::the_course( true ) ),
 			'home_url' => home_url(),
 			'current_student' => get_current_user_id(),

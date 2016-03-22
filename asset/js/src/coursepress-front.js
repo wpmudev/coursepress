@@ -445,11 +445,18 @@ var CoursePress = CoursePress || {};
 					// Add user as instructor
 					CoursePress.Enrollment.dialog.add_instructor( data );
 				} else {
-					if ( ! data['already_enrolled'] ) {
-						CoursePress.Enrollment.dialog.attempt_enroll( data );
-					} else {
-						location.href = _coursepress.course_url;
-					}
+					$.each( steps, function( i, step ) {
+						var action = $( step ).attr( 'data-modal-action' );
+						if ( 'yes' == _coursepress.current_course_is_paid && 'paid_enrollment' === action ) {
+							CoursePress.Enrollment.dialog.openAt( i );
+						} else if ( 'enrolled' === action ) {
+							if ( ! data['already_enrolled'] ) {
+								CoursePress.Enrollment.dialog.attempt_enroll( data );
+							} else {
+								location.href = _coursepress.course_url;
+							}
+						}
+					});
 				}
 			} else {
 				if ( signup_errors.length > 0 ) {
@@ -473,7 +480,7 @@ var CoursePress = CoursePress || {};
 			if ( true === data['success'] ) {
 				$.each( steps, function( i, step ) {
 					var action = $( step ).attr( 'data-modal-action' );
-					if ( _coursepress.current_course_is_paid && 'paid_enrollment' === action ) {
+					if ( 'yes' == _coursepress.current_course_is_paid && 'paid_enrollment' === action ) {
 						CoursePress.Enrollment.dialog.openAt( i );
 					} else if ( 'enrolled' === action ) {
 						CoursePress.Enrollment.dialog.openAt( i );
@@ -700,25 +707,21 @@ var CoursePress = CoursePress || {};
 		if ( _coursepress.current_student > 0 ) {
 
 			// Is paid course?
-
-			if ( ! _coursepress.current_course_is_paid ) {
+			if ( 'yes' == _coursepress.current_course_is_paid ) {
+				// DEBUG code. remove it.
+				window.console.log('open at paid_enrollment');
+				$(newDiv).html(CoursePress.Enrollment.dialog.render().el);
+				CoursePress.Enrollment.dialog.openAtAction('paid_enrollment');
+			} else {
 				$(newDiv ).addClass('hidden');
-
 				var enroll_data = {
 					user_data: {
 						ID: parseInt( _coursepress.current_student )
 					}
 				};
-
 				// We're logged in, so lets try to enroll
 				CoursePress.Enrollment.dialog.attempt_enroll( enroll_data );
-
 				$(newDiv).html(CoursePress.Enrollment.dialog.render().el);
-			} else {
-				// DEBUG code. remove it.
-				window.console.log('open at paid_enrollment');
-				$(newDiv).html(CoursePress.Enrollment.dialog.render().el);
-				CoursePress.Enrollment.dialog.openAtAction('paid_enrollment');
 			}
 
 		} else {

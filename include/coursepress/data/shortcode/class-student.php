@@ -353,6 +353,7 @@ class CoursePress_Data_Shortcode_Student {
 				<h3 class="bbm-modal__title">
 					<?php esc_html_e( 'Create new account', 'CP_TD' ); ?>
 				</h3>
+				<span id="error-messages"></span>
 			</div>
 			<div class="bbm-modal__section">
 				<div class="modal-nav-link">
@@ -376,7 +377,6 @@ class CoursePress_Data_Shortcode_Student {
 				<h3 class="bbm-modal__title">
 					<?php esc_html_e( 'Login to your account', 'CP_TD' ); ?>
 				</h3>
-				<span id="error-messages"></span>
 			</div>
 			<div class="bbm-modal__section">
 				<div class="modal-nav-link">

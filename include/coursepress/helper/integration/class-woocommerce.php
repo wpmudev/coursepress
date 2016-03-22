@@ -105,6 +105,13 @@ class CoursePress_Helper_Integration_WooCommerce {
 			10, 1
 		);
 
+		/** This filter is documented in include/coursepress/data/class-course.php */
+		add_filter(
+			'coursepress_enroll_student',
+			array( __CLASS__, 'allow_student_to_enroll' ),
+			10, 3
+		);
+
 	}
 
 	public static function change_order_status( $order_id, $old_status, $new_status ) {
@@ -220,7 +227,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 			return true;
 		}
 
-		$mp_product_id = self::woo_product_id( $course_id );
+		$product_id = self::woo_product_id( $course_id );
 
 		$course = get_post( $course_id );
 
@@ -235,8 +242,8 @@ class CoursePress_Helper_Integration_WooCommerce {
 		// Add or Update a product if its a paid course
 		if ( isset( $settings['payment_paid_course'] ) && 'on' == $settings['payment_paid_course'] ) {
 
-			if ( $mp_product_id ) {
-				$post['ID'] = $mp_product_id; //If ID is set, wp_insert_post will do the UPDATE instead of insert
+			if ( $product_id ) {
+				$post['ID'] = $product_id; //If ID is set, wp_insert_post will do the UPDATE instead of insert
 			}
 
 			$post_id = wp_insert_post( $post );
@@ -247,7 +254,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 
 			$automatic_sku = $settings['mp_auto_sku'];
 
-			if ( $automatic_sku == 'on' ) {
+			if ( 'on' == $automatic_sku ) {
 				$sku[0] = $automatic_sku_number;
 			} else {
 				$sku[0] = CoursePress_Helper_Utility::filter_content( ( ! empty( $settings['mp_sku'] ) ? $settings['mp_sku'] : '' ), true );
@@ -277,20 +284,20 @@ class CoursePress_Helper_Integration_WooCommerce {
 			}
 			// Remove product if its not a paid course (clean up MarketPress products)
 		} elseif ( isset( $settings['payment_paid_course'] ) && empty( $settings['payment_paid_course'] ) ) {
-			if ( $mp_product_id && 0 != $mp_product_id ) {
+			if ( $product_id && 0 != $product_id ) {
 				if ( self::$use_woo ) {
 					$unpaid = CoursePress_Core::get_setting( 'woocommerce/unpaid', 'change_status' );
 					if ( 'delete' == $unpaid ) {
 						CoursePress_Data_Course::delete_setting( $course_id, 'woo' );
-						wp_delete_post( $mp_product_id );
+						wp_delete_post( $product_id );
 					} else {
 						wp_update_post(
 							array(
-								'ID' => $mp_product_id,
+								'ID' => $product_id,
 								'post_status' => 'draft',
 							)
 						);
-						update_post_meta( $mp_product_id, '_stock_status', 'outofstock' );
+						update_post_meta( $product_id, '_stock_status', 'outofstock' );
 					}
 				}
 			}
@@ -343,22 +350,22 @@ class CoursePress_Helper_Integration_WooCommerce {
 		/**
 		 * get product
 		 */
-		$mp_product_id = self::woo_product_id( $course_id );
-		if ( empty( $mp_product_id ) ) {
+		$product_id = self::woo_product_id( $course_id );
+		if ( empty( $product_id ) ) {
 			return;
 		}
 		$delete = CoursePress_Core::get_setting( 'woocommerce/delete', 'change_status' );
 		if ( 'delete' == $delete ) {
 			CoursePress_Data_Course::delete_setting( $course_id, 'woo' );
-			wp_delete_post( $mp_product_id );
+			wp_delete_post( $product_id );
 		} else {
 			wp_update_post(
 				array(
-					'ID' => $mp_product_id,
+					'ID' => $product_id,
 					'post_status' => 'draft',
 				)
 			);
-			update_post_meta( $mp_product_id, '_stock_status', 'outofstock' );
+			update_post_meta( $product_id, '_stock_status', 'outofstock' );
 		}
 	}
 
@@ -369,9 +376,10 @@ class CoursePress_Helper_Integration_WooCommerce {
 	public static function cp_woo_post_parent_box_content() {
 		global $post;
 		if ( isset( $post->ID ) ) {
-?>
-                    <input type="text" name="parent_course" value="<?php echo esc_attr( wp_get_post_parent_id( $post->ID ) ); ?>" />
-<?php
+			printf(
+				'<input type="text" name="parent_course" value="%s" />',
+				esc_attr( wp_get_post_parent_id( $post->ID ) )
+			);
 		}
 	}
 
@@ -438,7 +446,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 		}
 		printf( '<h2 class="cp_woo_header">%s</h2>', esc_html__( 'Course', 'CP_TD' ) );
 		printf( '<p class="cp_woo_thanks">%s</p>', esc_html__( 'Thank you for signing up for the course. We hope you enjoy your experience.', 'CP_TD' ) );
-		if ( is_user_logged_in() && $order->post_status == 'wc-completed' ) {
+		if ( is_user_logged_in() && 'wc-completed' == $order->post_status ) {
 			echo '<p class="cp_woo_dashboard_link">';
 			printf(
 				__( 'You can find the course in your <a href="%s">Dashboard</a>', 'CP_TD' ),
@@ -505,6 +513,12 @@ class CoursePress_Helper_Integration_WooCommerce {
 			return $content;
 		}
 		/**
+		 * do not chane for free courses
+		 */
+		if ( ! CoursePress_Data_Course::is_paid_course( $course_id ) ) {
+			return $content;
+		}
+		/**
 		 * change button only when when really need to do it
 		 */
 		if ( 'enroll' != $button_option ) {
@@ -559,13 +573,6 @@ class CoursePress_Helper_Integration_WooCommerce {
 
 		ob_start();
 		do_action( 'woocommerce_before_add_to_cart_form' ); ?>
-        <form class="cart" method="post" enctype='multipart/form-data' action="<?php echo esc_url( wc_get_cart_url() ); ?>">
-        <?php do_action( 'woocommerce_before_add_to_cart_button' ); ?>
-        <input type="hidden" name="add-to-cart" value="<?php echo esc_attr( $product->id ); ?>" />
-        <button type="submit" class="single_add_to_cart_button button alt"><?php echo esc_html( $product->single_add_to_cart_text() ); ?></button>
-        <?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
-    </form>
-=======
 <form class="cart" method="post" enctype='multipart/form-data' action="<?php echo esc_url( wc_get_cart_url() ); ?>">
 <?php do_action( 'woocommerce_before_add_to_cart_button' ); ?>
 <input type="hidden" name="add-to-cart" value="<?php echo esc_attr( $product->id ); ?>" />
@@ -620,6 +627,12 @@ class CoursePress_Helper_Integration_WooCommerce {
 		if ( ! self::$use_woo ) {
 			return;
 		}
+		/**
+		 * do not add template for free courses
+		 */
+		if ( ! CoursePress_Data_Course::is_paid_course( $atts['course_id'] ) ) {
+			return $content;
+		}
 ?>
 		<script type="text/template" id="modal-view-woo-template" data-type="modal-step" data-modal-action="paid_enrollment">
 			<div class="bbm-modal__topbar">
@@ -635,11 +648,28 @@ class CoursePress_Helper_Integration_WooCommerce {
 			</div>
 			<div class="bbm-modal__bottombar">
 			</div>
-        </script>
+		</script>
 <?php
 	}
-}
 
+	/**
+	 * Check course if is paid, stop enabled process.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param boolean $enroll_student Allow student to enroll? Default true.
+	 * @param integer $student_id Student ID.
+	 * @param integer $course_id Course ID.
+	 *
+	 * @return boolean stop or not enrollment process?
+	 */
+	public static function allow_student_to_enroll( $enroll_student, $student_id, $course_id ) {
+		if ( ! self::$use_woo ) {
+			return $enroll_student;
+		}
+		return ! CoursePress_Data_Course::is_paid_course( $course_id );
+	}
+}
 /**
  * Template functions
  */
