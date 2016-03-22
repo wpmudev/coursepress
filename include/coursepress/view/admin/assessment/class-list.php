@@ -165,9 +165,12 @@ class CoursePress_View_Admin_Assessment_List {
 
 		$content .= '<h3 class="module-title">' . esc_html__( 'Activity: ', 'CP_TD' ) . '<span class="module-name">' . esc_html( $module->post_title ) . '</span></h3>' .
 					'<div class="activity-wrapper">' .
-					'<p class="description">' . $module->post_content . '</p>' .
-					'<p><strong>' . esc_html__( 'Student Response', 'CP_TD' ) . '</strong></p>' .
+					'<p class="description">' . $module->post_content . '</p>';
+
+		if ( 'input-quiz' != $attributes['module_type'] ) {
+			$content .= '<p><strong>' . esc_html__( 'Student Response', 'CP_TD' ) . '</strong></p>' .
 					'<div class="response">';
+		}
 
 		$response_display = $response['response'];
 		switch ( $attributes['module_type'] ) {
@@ -224,11 +227,50 @@ class CoursePress_View_Admin_Assessment_List {
 				}
 
 				break;
+			case 'input-quiz':
+				$display = '';
+
+				if ( $response_display ) {
+
+					foreach ( $response_display as $q_index => $answers ) {
+						$question = CoursePress_Helper_Utility::get_array_val(
+							$attributes,
+							'questions/' . $q_index . '/question'
+						);
+						$content .= sprintf('<p><strong>%s</strong></p>', $question );
+						$content .= sprintf('<p><strong>%s</strong></p>', __( 'Student Response', 'CP_TD' ) );
+						$content .= '<div class="response">';
+						$q_answers = CoursePress_Helper_Utility::get_array_val(
+							$attributes,
+							'questions/' . $q_index . '/options/answers'
+						);
+						
+
+						$content .= '<ul>';
+						foreach ( $q_answers as $a_index => $answer ) {
+							$checked = CoursePress_Helper_Utility::get_array_val(
+								$attributes,
+								'questions/' . $q_index . '/options/checked/' . $a_index
+							);
+							$class = '';
+							if ( ! empty( $answers[$a_index ] ) ) {
+								$class = 'chosen-answer ' . ( cp_is_true( $checked ) ? 'correct' : 'incorrect' );
+							}
+							$content .= sprintf( '<li class="%s">%s</li>', $class, $answer );
+						}
+
+						$content .= '</ul>';
+						$content .= '</div>';
+					}
+				}
+				$response_display = $display;
+				break;
 		}
 
-		$content .= $response_display;
-
-		$content .= '</div>'; // .response
+		if ( 'input-quiz' != $attributes['module_type'] ) {
+			$content .= $response_display;
+			$content .= '</div>'; // .response
+		}
 
 		$response_date = ! isset( $response['date'] ) ? '' : date_i18n( get_option( 'date_format' ), strtotime( $response['date'] ) );
 		$content .= '<div><em>' . sprintf( __( 'Submitted on: %s', 'CP_TD' ), $response_date ) . '</em></div>';
@@ -352,7 +394,12 @@ class CoursePress_View_Admin_Assessment_List {
 				if ( $selected_unit == $tab['unit_id'] ) {
 					$tab['class'] .= ' active';
 				}
-				$tab_url = $url . '&unit_id=' . $tab['unit_id'];
+				$tab_url = add_query_arg(
+					array(
+						'course_id' => $selected_course,
+						'unit_id' => $tab['unit_id'],
+					)
+				);
 				$tab_string .= '<a href="' . $tab_url . '" class="unit-tab ' . $tab['class'] . '" data-unit="' . (int) $tab['unit_id'] . '" data-title="' . esc_attr( $tab['unit_title'] ) . '">' . ( $key + 1 ) . '</a>';
 			}
 
