@@ -190,17 +190,18 @@ class CoursePress_Helper_Integration_MarketPress {
 	public static function update_product_meta( $product_id, $settings, $course_id ) {
 		// Update the meta
 		$product_meta = array(
-			'mp_sku' => array( $settings['mp_sku'] ),
-			'mp_price' => array( $settings['mp_product_price'] ),
-			'mp_is_sale' => $settings['mp_sale_price_enabled'],
-			'mp_sale_price' => array( $settings['mp_product_sale_price'] ),
+			'sku' => $settings['mp_sku'],
+			'regular_price' => $settings['mp_product_price'],
+			'has_sale' => 'on' == $settings['mp_sale_price_enabled']? 1 : 0,
+			'sale_price_amount' => $settings['mp_product_sale_price'],
+			'sort_price' => $settings['mp_product_sale_price'],
 			'mp_course_id' => $course_id,
 		);
 
 		// Create Auto SKU
 		if ( ! empty( $settings['mp_auto_sku'] ) || empty( $settings['mp_sku'] ) ) {
 			$sku_prefix = apply_filters( 'coursepress_course_sku_prefix', 'CP-' );
-			$product_meta['mp_sku'] = $sku_prefix . str_pad( $course_id, 5, '0', STR_PAD_LEFT );
+			$product_meta['sku'] = $sku_prefix . str_pad( $course_id, 5, '0', STR_PAD_LEFT );
 		}
 
 		foreach ( $product_meta as $key => $value ) {
