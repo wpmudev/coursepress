@@ -76,7 +76,7 @@ class CoursePress_View_Front_Instructor {
 	public static function instructor_verification( $_vp_args, $cp ) {
 		$course_invite = CoursePress_Data_Instructor::is_course_invite();
 
-		if ( $course_invit ) {
+		if ( $course_invite ) {
 
 			$is_verified = CoursePress_Data_Instructor::verify_invitation_code( $course_invite->course_id, $course_invite->code, $course_invite->invitation_data );
 			$vp_args = array(
