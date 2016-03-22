@@ -12,7 +12,8 @@
 class CoursePress_Helper_Integration_MarketPress {
 
 	private static $updated = false;
-	private static $course_id = 0;
+	private static $use_marketpress = false;
+	private static $product_ctp = 'product';
 
 	/**
 	 * Initialize the Integration.
@@ -24,6 +25,7 @@ class CoursePress_Helper_Integration_MarketPress {
 		if ( ! CoursePress_Helper_Extension_MarketPress::activated() ) {
 			return false;
 		}
+		self::$use_marketpress = true;
 
 		// Enable Payment Support
 		add_filter(
@@ -82,6 +84,17 @@ class CoursePress_Helper_Integration_MarketPress {
 			'cp_mp_order_notification_body',
 			10, 2
 		);
+
+		add_action(
+			'before_delete_post',
+			array( __CLASS__, 'update_product_when_deleting_course' )
+		);
+
+		add_action(
+			'before_delete_post',
+			array( __CLASS__, 'update_course_when_deleting_product' )
+		);
+
 	}
 
 	public static function enable_payment( $payment_supported ) {
@@ -123,8 +136,7 @@ class CoursePress_Helper_Integration_MarketPress {
 					<span>' . esc_html__( 'Automatically generate Stock Keeping Units (SKUs)', 'CP_TD' ) . '</span>
 				</label>';
 
-		$product_id = CoursePress_Data_Course::get_setting( $course_id, 'mp_product_id', false );
-		$product_id = $product_id && get_post_status( $product_id ) ? $product_id : false;
+		$product_id = self::get_product_id( $course_id );
 
 		if ( $product_id ) {
 			// Add MP product ID as indication.
@@ -149,10 +161,7 @@ class CoursePress_Helper_Integration_MarketPress {
 		$is_paid = ! $is_paid || 'off' == $is_paid ? false : true;
 
 		// Check for existance of product id first
-		$product_id = CoursePress_Data_Course::get_setting( $course_id, 'mp_product_id', false );
-
-		// Check if the corresponding product exists, if not, set product ID to false. This happens if the product "accidentally" got deleted.
-		$product_id = $product_id && get_post_status( $product_id ) ? $product_id : false;
+		$product_id = self::get_product_id( $course_id );
 
 		// Assume product does not exist and create one.
 		if ( ! $product_id && $is_paid ) {
@@ -162,10 +171,10 @@ class CoursePress_Helper_Integration_MarketPress {
 				'post_title' => $course->post_title,
 				'post_content' => $course->post_content,
 				'post_excerpt' => $course->post_excerpt,
-				'post_type' => 'product',
+				'post_type' => self::$product_ctp,
 				'ping_status' => 'closed',
 				'comment_status' => 'closed',
-				'post_status' => 'publish',
+				'post_status' => $course->post_status,
 			);
 
 			$product_id = wp_insert_post( $product );
@@ -211,7 +220,6 @@ class CoursePress_Helper_Integration_MarketPress {
 	}
 
 	public static function update_product_from_course( $course_id, $settings ) {
-		self::$course_id = $course_id;
 
 		// Avoid possible messy loop
 		if ( self::$updated ) {
@@ -220,9 +228,13 @@ class CoursePress_Helper_Integration_MarketPress {
 		}
 
 		// If course status is no longer paid, but an MP ID exists, then disable the MP product (don't delete)
-		$product_id = CoursePress_Data_Course::get_setting( $course_id, 'mp_product_id', false );
+		$product_id = self::get_product_id( $course_id );
 		$product_status = get_post_status( $product_id );
 		$product_id = $product_id && $product_status ? $product_id : false;
+
+		if ( ! $product_id ) {
+			return;
+		}
 
 		$is_paid = CoursePress_Data_Course::is_paid_course( $course_id );
 
@@ -233,7 +245,7 @@ class CoursePress_Helper_Integration_MarketPress {
 			if ( $product_status && 'publish' != $product_status ) {
 				$product = array(
 					'ID' => $product_id,
-					'post_status' => 'publish',
+					'post_status' => get_post_status( $course_id ),
 				);
 				self::$updated = true;
 				wp_update_post( $product );
@@ -256,8 +268,12 @@ class CoursePress_Helper_Integration_MarketPress {
 	}
 
 	public static function update_course_from_product( $product_id, $post, $before_update ) {
+		if ( ! self::$use_marketpress ) {
+			return;
+		}
+
 		// If its not a product, exit
-		if ( 'product' != $post->post_type ) {
+		if ( self::$product_ctp != $post->post_type ) {
 			return;
 		}
 
@@ -274,26 +290,26 @@ class CoursePress_Helper_Integration_MarketPress {
 			return;
 		}
 
-		$sku = get_post_meta( $product_id, 'mp_sku', true );
-		$sku = is_array( $sku ) ? array_shift( $sku ) : $sku;
-
-		$price = get_post_meta( $product_id, 'mp_price', true );
-		$price = is_array( $price ) ? array_shift( $price ) : $price;
-
-		$sale_price = get_post_meta( $product_id, 'mp_sale_price', true );
-		$sale_price = is_array( $sale_price ) ? array_shift( $sale_price ) : $sale_price;
-
-		$is_sale = get_post_meta( $product_id, 'mp_is_sale', true );
+		$sku = get_post_meta( $product_id, 'sku', true );
+		$price = get_post_meta( $product_id, 'regular_price', true );
+		$sale_price = get_post_meta( $product_id, 'sale_price_amount', true );
+		$is_sale = get_post_meta( $product_id, 'has_sale', true )? 'on':'off';
 
 		$is_paid = ('publish' == $post->post_status);
 
 		$settings = CoursePress_Data_Course::get_setting( $course_id );
+
 		CoursePress_Data_Course::set_setting( $settings, 'mp_sku', $sku );
 		CoursePress_Data_Course::set_setting( $settings, 'mp_product_price', $price );
 		CoursePress_Data_Course::set_setting( $settings, 'mp_product_sale_price', $sale_price );
 		CoursePress_Data_Course::set_setting( $settings, 'mp_sale_price_enabled', $is_sale );
 		CoursePress_Data_Course::set_setting( $settings, 'payment_paid_course', $is_paid );
 		CoursePress_Data_Course::update_setting( $course_id, true, $settings );
+
+		wp_update_post( array(
+			'ID' => $course_id,
+			'post_status' => $post->post_status,
+		) );
 
 		self::$updated = true;
 	}
@@ -308,6 +324,104 @@ class CoursePress_Helper_Integration_MarketPress {
 		return do_shortcode(
 			'[mp_product_price product_id="' . $product_id . '" label=""]'
 		);
+	}
+
+	/**
+	 * Allow to take some action when we delete product
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $product_id product to check
+	 *
+	 */
+	public static function update_course_when_deleting_product( $product_id ) {
+		/**
+		 * if we do not use MarketPress, then we should not use this function
+		 */
+		if ( ! self::$use_marketpress ) {
+			return;
+		}
+		/**
+		 * check post type
+		 */
+		$post_type = get_post_type( $product_id );
+		if ( self::$product_ctp != $post_type ) {
+			return;
+		}
+		/**
+		 * get course id, return if empty
+		 */
+		$course_id = get_post_meta( $product_id, 'cp_course_id', true );
+		if ( empty( $course_id ) ) {
+			return;
+		}
+		CoursePress_Data_Course::update_setting( $course_id, 'payment_paid_course', 'off' );
+		CoursePress_Data_Course::delete_setting( $course_id, 'mp_product_id' );
+	}
+
+	/**
+	 * Allow to take some action when we delete course
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $course_id course to check
+	 *
+	 */
+	public static function update_product_when_deleting_course( $course_id ) {
+		/**
+		 * if we do not use MarketPress, then we should not use this function
+		 */
+		if ( ! self::$use_marketpress ) {
+			return;
+		}
+		/**
+		 * check post type
+		 */
+		$post_type = get_post_type( $course_id );
+		$course_post_type = CoursePress_Data_Course::get_post_type_name();
+		/**
+		 * handle only correct post_type
+		 */
+		if ( $course_post_type != $post_type ) {
+			return;
+		}
+		/**
+		 * get product
+		 */
+		$product_id = self::get_product_id( $course_id );
+		if ( empty( $product_id ) ) {
+			return;
+		}
+		$delete = coursepress_core::get_setting( 'marketpress/delete', 'change_status' );
+		if ( 'delete' == $delete ) {
+			wp_delete_post( $product_id );
+		} else {
+			wp_update_post(
+				array(
+					'ID' => $product_id,
+					'post_status' => 'draft',
+				)
+			);
+			update_post_meta( $product_id, '_stock_status', 'outofstock' );
+		}
+	}
+
+	/**
+	 * Get course id from course id
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $course_id course ID
+	 *
+	 * @return integer product ID
+	 */
+	public static function get_product_id( $course_id = false ) {
+		$product_id = CoursePress_Data_Course::get_setting( $course_id, 'mp_product_id', false );
+		/**
+		 * Check if the corresponding product exists, if not, set product ID
+		 * to false. This happens if the product "accidentally" got deleted.
+		 */
+		return  $product_id && get_post_status( $product_id ) ? $product_id : false;
 	}
 }
 

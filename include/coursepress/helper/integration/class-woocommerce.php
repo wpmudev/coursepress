@@ -199,7 +199,15 @@ class CoursePress_Helper_Integration_WooCommerce {
 		return $content;
 	}
 
-	public static function woo_product_id( $course_id = false ) {
+	/**
+	 * Get course id from course id
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $course_id course to check
+	 *
+	 */
+	public static function get_product_id( $course_id = false ) {
 		$args = array(
 			'posts_per_page' => 1,
 			'post_type'		 => self::$product_ctp,
@@ -227,12 +235,12 @@ class CoursePress_Helper_Integration_WooCommerce {
 			return true;
 		}
 
-		$product_id = self::woo_product_id( $course_id );
+		$product_id = self::get_product_id( $course_id );
 
 		$course = get_post( $course_id );
 
 		$post = array(
-			'post_status'  => 'publish',
+			'post_status'  => $course->post_status,
 			'post_title'   => CoursePress_Helper_Utility::filter_content( $course->post_title, true ),
 			'post_type'    => self::$product_ctp,
 			'post_parent'  => $course_id,
@@ -304,9 +312,17 @@ class CoursePress_Helper_Integration_WooCommerce {
 		}
 	}
 
+	/**
+	 * Allow to take some action when we delete product
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $product_id product to check
+	 *
+	 */
 	public static function update_course_when_deleting_product( $product_id ) {
 		/**
-		 * if we do not use woo, then we should not use this function
+		 * if we do not use MarketPress, then we should not use this function
 		 */
 		if ( ! self::$use_woo ) {
 			return;
@@ -329,9 +345,17 @@ class CoursePress_Helper_Integration_WooCommerce {
 		CoursePress_Data_Course::update_setting( $course_id, 'payment_paid_course', 'off' );
 	}
 
+	/**
+	 * Allow to take some action when we delete course
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $course_id course to check
+	 *
+	 */
 	public static function update_product_when_deleting_course( $course_id ) {
 		/**
-		 * if we do not use woo, then we should not use this function
+		 * if we do not use MarketPress, then we should not use this function
 		 */
 		if ( ! self::$use_woo ) {
 			return;
@@ -350,13 +374,12 @@ class CoursePress_Helper_Integration_WooCommerce {
 		/**
 		 * get product
 		 */
-		$product_id = self::woo_product_id( $course_id );
+		$product_id = self::get_product_id( $course_id );
 		if ( empty( $product_id ) ) {
 			return;
 		}
 		$delete = CoursePress_Core::get_setting( 'woocommerce/delete', 'change_status' );
 		if ( 'delete' == $delete ) {
-			CoursePress_Data_Course::delete_setting( $course_id, 'woo' );
 			wp_delete_post( $product_id );
 		} else {
 			wp_update_post(
