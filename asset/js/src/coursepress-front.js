@@ -871,6 +871,24 @@ var CoursePress = CoursePress || {};
 		//$( '.view-response' ).link_popup( { link_text:  '<span class="dashicons dashicons-visibility"></span>' });
 		$( '.workbook-table .view-response' ).link_popup( { link_text:  '<span class="dashicons dashicons-visibility"></span>', offset_x: -160 });
 		$( '.workbook-table .feedback' ).link_popup( { link_text:  '<span class="dashicons dashicons-admin-comments"></span>' });
+		/**
+		 * MP add to cart
+		 */
+		$('body.single-course .apply-box button.mp_button-addcart').on( 'click', function() {
+			form = $(this).closest('form');
+			$.ajax({
+				type: "POST",
+				url: form.data('ajax-url'),
+				data: {
+					product: $('[name=product_id]', form).val(),
+					cart_action: "add_item"
+				}
+			});
+			if ( 'undefined' != _coursepress.marketpress_cart_url ) {
+				return _coursepress.marketpress_cart_url;
+			}
+			return false;
+		});
 	}
 
 	function bind_module_actions() {

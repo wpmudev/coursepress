@@ -102,6 +102,18 @@ class CoursePress_Helper_Integration_MarketPress {
 			array( __CLASS__, 'update_course_when_deleting_product' )
 		);
 
+		add_filter(
+			'coursepress_enroll_button',
+			array( __CLASS__, 'enroll_button' ),
+			10, 4
+		);
+
+		/** This filter is documented in include/coursepress/helper/class-javascript.php */
+		add_filter(
+			'coursepress_localize_object',
+			array( __CLASS__, 'add_cart_url' )
+		);
+
 	}
 
 	public static function enable_payment( $payment_supported ) {
@@ -503,6 +515,93 @@ class CoursePress_Helper_Integration_MarketPress {
 			$product['post_status'] = $course->post_status;
 		}
 		return wp_insert_post( $product );
+	}
+
+	/**
+	 * Allow to check that the user bought the course.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param boolean $is_user_purchased_course user purchase course?
+	 * @param WP_Post $course current course to check
+	 * @param integer i$user_id user to check
+	 *
+	 * @return boolean
+	 */
+	public static function is_user_purchased_course( $is_user_purchased_course, $course, $user_id ) {
+		$course_id = is_object( $course )? $course->ID : $course;
+		return $is_user_purchased_course;
+	}
+
+	/**
+	 * Allow to change enroll button
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $content current button string
+	 * @param integer $course_id course to check
+	 * @param integer $user_id user to check
+	 * @param string $button_option button optiopn
+	 *
+	 * @return string button string
+	 */
+	public static function enroll_button( $content, $course_id, $user_id, $button_option ) {
+		/**
+		 * do not change on lists
+		 */
+		if ( ! CoursePress_Helper_Utility::$is_singular ) {
+			return $content;
+		}
+		/**
+		 * do not chane for free courses
+		 */
+		if ( ! CoursePress_Data_Course::is_paid_course( $course_id ) ) {
+			return $content;
+		}
+		/**
+		 * change button only when when really need to do it
+		 */
+		if ( 'enroll' != $button_option ) {
+			return $content;
+		}
+		/**
+		 * if already purchased, then return too
+		 */
+		if ( self::is_user_purchased_course( false, $course_id, $user_id ) ) {
+			return $content;
+		}
+		return self::_get_add_to_cart_button_by_course_id( $course_id );
+	}
+
+	/**
+	 * Get add to cart button
+	 *
+	 * @since 2.0.0
+	 *
+	 * @access: private
+	 *
+	 * @param integer $course_id course to check
+	 *
+	 * @return string html with "add to cart" button
+	 */
+	private static function _get_add_to_cart_button_by_course_id( $course_id ) {
+		$product_id = self::get_product_id( $course_id );
+		$product = new MP_Product( $product_id );
+		return $product->buy_button( false );
+	}
+
+	/**
+	 * Function add MarketPress Cart URL to javascript configuration.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $localize_array CoursePress javascript configuration.
+	 */
+	static public function add_cart_url( $localize_array ) {
+		if ( function_exists( 'mp_store_page_url' ) ) {
+			$localize_array['marketpress_cart_url'] = mp_store_page_url( 'cart', false );
+		}
+		return $localize_array;
 	}
 }
 
