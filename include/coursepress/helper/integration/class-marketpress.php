@@ -53,6 +53,7 @@ class CoursePress_Helper_Integration_MarketPress {
 			array( __CLASS__, 'update_product_from_course' ),
 			10, 2
 		);
+
 		add_action(
 			'coursepress_course_updated',
 			array( __CLASS__, 'update_product_from_course' ),
@@ -64,6 +65,12 @@ class CoursePress_Helper_Integration_MarketPress {
 		add_action(
 			'post_updated',
 			array( __CLASS__, 'update_course_from_product' ),
+			10, 3
+		);
+
+		add_action(
+			'wp_insert_post',
+			array( __CLASS__, 'update_product_from_course_on_wp_insert_post' ),
 			10, 3
 		);
 
@@ -165,20 +172,7 @@ class CoursePress_Helper_Integration_MarketPress {
 
 		// Assume product does not exist and create one.
 		if ( ! $product_id && $is_paid ) {
-			$course = get_post( $course_id );
-
-			$product = array(
-				'post_title' => $course->post_title,
-				'post_content' => $course->post_content,
-				'post_excerpt' => $course->post_excerpt,
-				'post_type' => self::$product_ctp,
-				'ping_status' => 'closed',
-				'comment_status' => 'closed',
-				'post_status' => $course->post_status,
-			);
-
-			$product_id = wp_insert_post( $product );
-
+			$product_id = self::_update_product_using_course( $course_id );
 			// Avoid the looping
 			self::$updated = true;
 		}
@@ -220,7 +214,6 @@ class CoursePress_Helper_Integration_MarketPress {
 	}
 
 	public static function update_product_from_course( $course_id, $settings ) {
-
 		// Avoid possible messy loop
 		if ( self::$updated ) {
 			self::$updated = false;
@@ -231,32 +224,27 @@ class CoursePress_Helper_Integration_MarketPress {
 		$product_id = self::get_product_id( $course_id );
 		$product_status = get_post_status( $product_id );
 		$product_id = $product_id && $product_status ? $product_id : false;
-
 		if ( ! $product_id ) {
 			return;
 		}
-
 		$is_paid = CoursePress_Data_Course::is_paid_course( $course_id );
-
 		// Update and publish
 		if ( $product_id && $is_paid ) {
 			self::update_product_meta( $product_id, $settings, $course_id );
-
-			if ( $product_status && 'publish' != $product_status ) {
-				$product = array(
-					'ID' => $product_id,
-					'post_status' => get_post_status( $course_id ),
-				);
-				self::$updated = true;
-				wp_update_post( $product );
-			}
+			self::_update_product_using_course( $course_id, $product_id );
+			self::$updated = true;
 		}
-
 		// Update and hide.
 		if ( $product_id && ! $is_paid ) {
 			self::update_product_meta( $product_id, $settings, $course_id );
-
 			if ( $product_status && 'publish' != $product_status ) {
+				/**
+				 * update product
+				 */
+				self::_update_product_using_course( $course_id, $product_id );
+				/**
+				 * update status
+				 */
 				$product = array(
 					'ID' => $product_id,
 					'post_status' => 'draft',
@@ -422,6 +410,99 @@ class CoursePress_Helper_Integration_MarketPress {
 		 * to false. This happens if the product "accidentally" got deleted.
 		 */
 		return  $product_id && get_post_status( $product_id ) ? $product_id : false;
+	}
+
+	/**
+	 * Create new product when we insert new post
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $course_id Currently updated entry
+	 * @param WP_Post $course object of course
+	 * @param boolean is an existing post updated or not
+	 *
+	 */
+	static public function update_product_from_course_on_wp_insert_post( $course_id, $course, $update ) {
+		/**
+		 * If this is a revision, don't send the email.
+		 */
+		if ( wp_is_post_revision( $course_id ) ) {
+			return;
+		}
+		/**
+		 * if we do not use MarketPress, then we should not use this function
+		 */
+		if ( ! self::$use_marketpress ) {
+			return;
+		}
+		/**
+		 * check post type
+		 */
+		$course_post_type = CoursePress_Data_Course::get_post_type_name();
+		/**
+		 * handle only correct post_type
+		 */
+		if ( $course_post_type != $course->post_type ) {
+			return;
+		}
+		/**
+		 * get product
+		 */
+		$product_id = self::get_product_id( $course_id );
+		if ( empty( $product_id ) ) {
+			$settings = CoursePress_Data_Course::get_setting( $course_id, true );
+			$is_paid = isset( $settings['payment_paid_course'] ) ? $settings['payment_paid_course'] : false;
+			$is_paid = ! $is_paid || 'off' == $is_paid ? false : true;
+			/**
+			 * Create product only for paid course
+			 */
+			if ( $is_paid ) {
+				$product_id = self::_update_product_using_course( $course_id );
+				self::update_product_meta( $product_id, $settings, $course_id );
+			}
+		}
+	}
+
+	/**
+	 * Insert product from course
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param WP_Post/integer $course post object or integer Course ID
+	 * @param integer $product_id product ID
+	 *
+	 * @return integer product ID
+	 */
+	private static function _update_product_using_course( $course, $product_id = 0 ) {
+		if ( ! is_object( $course ) ) {
+			$course = get_post( $course );
+		}
+		if ( empty( $course ) ) {
+			return 0;
+		}
+		$product = array(
+			'post_title' => $course->post_title,
+			'post_content' => $course->post_content,
+			'post_excerpt' => $course->post_excerpt,
+			'post_type' => self::$product_ctp,
+			'ping_status' => 'closed',
+			'comment_status' => 'closed',
+		);
+		/**
+		 * if this is exist product, then update instead insert
+		 */
+		if ( ! empty( $product_id ) ) {
+			$product['ID'] = $product_id;
+			$product['post_status'] = get_post_status( $product_id );
+		}
+		/**
+		 * update product status if this is new product or status is not
+		 * publish
+		 */
+		if ( empty( $product_id ) || 'publish' != $course->post_status ) {
+			$product['post_status'] = $course->post_status;
+		}
+		return wp_insert_post( $product );
 	}
 }
 
