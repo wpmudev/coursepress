@@ -553,7 +553,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 		if ( self::is_user_purchased_course( false, $course_id, $user_id ) ) {
 			return $content;
 		}
-		return self::get_add_to_cart_button_by_course_id( $course_id );
+		return self::_get_add_to_cart_button_by_course_id( $course_id );
 	}
 
 	/**
@@ -567,7 +567,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 	 *
 	 * @return string html with "add to cart" button
 	 */
-	private static function get_add_to_cart_button_by_course_id( $course_id ) {
+	private static function _get_add_to_cart_button_by_course_id( $course_id ) {
 		$product_id = CoursePress_Data_Course::get_setting( $course_id, 'woo/product_id', false );
 		if ( empty( $product_id ) ) {
 			return '';
@@ -667,7 +667,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 				<p>
 					<?php esc_html_e( 'You can now add this course to cart.', 'CP_TD' ); ?>
 				</p>
-<?php echo self::get_add_to_cart_button_by_course_id( $atts['course_id'] ); ?>
+<?php echo self::_get_add_to_cart_button_by_course_id( $atts['course_id'] ); ?>
 			</div>
 			<div class="bbm-modal__bottombar">
 			</div>
