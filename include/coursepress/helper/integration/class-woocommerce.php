@@ -99,9 +99,17 @@ class CoursePress_Helper_Integration_WooCommerce {
 			10, 2
 		);
 
+		/**
+		 * Allow to add step template.
+		 *
+		 * @since 2.0.0
+		 *
+		 * @param arrat $atts Configuration array.
+		 *
+		 */
 		add_action(
 			'coursepress_registration_form_end',
-			array( __CLASS__, 'add_woo_add_to_cart_template' ),
+			array( __CLASS__, 'add_to_cart_template' ),
 			10, 1
 		);
 
@@ -632,18 +640,13 @@ class CoursePress_Helper_Integration_WooCommerce {
 	}
 
 	/**
-	 * Allow to change enroll button
+	 * Allow to add step template.
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param string $content current button string
-	 * @param integer $course_id course to check
-	 * @param integer $user_id user to check
-	 * @param string $button_option button optiopn
-	 *
-	 * @return string button string
+	 * @param arrat $atts Configuration array.
 	 */
-	public static function add_woo_add_to_cart_template( $atts ) {
+	public static function add_to_cart_template( $atts ) {
 		/**
 		 * if we do not use woo, then we should not use this function
 		 */
