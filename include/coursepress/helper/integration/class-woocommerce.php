@@ -695,35 +695,15 @@ class CoursePress_Helper_Integration_WooCommerce {
 		}
 		return ! CoursePress_Data_Course::is_paid_course( $course_id );
 	}
-}
-/**
- * Template functions
- */
 
-if ( ! function_exists( 'cp_use_woo' ) ) {
-	$active_plugins = apply_filters(
-		'active_plugins',
-		get_option( 'active_plugins' )
-	);
-
-	if ( in_array( 'woocommerce/woocommerce.php', $active_plugins ) ) {
-		function cp_use_woo() {
-			return true;
-		}
-	} else {
-		function cp_use_woo() {
+	public static function use_redirect_woo_to_course() {
+		if ( ! self::$use_woo ) {
 			return false;
 		}
-	}
-}
-
-if ( ! function_exists( 'cp_redirect_woo_to_course' ) ) {
-	function cp_redirect_woo_to_course() {
-		$redirect_woo_to_course = get_option( 'redirect_woo_to_course', 0 );
+		$redirect_woo_to_course = CoursePress_Core::get_setting( 'woocommerce/redirect', false );
 		if ( ! $redirect_woo_to_course ) {
 			return false;
-		} else {
-			return true;
 		}
+		return true;
 	}
 }
