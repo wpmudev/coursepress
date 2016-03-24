@@ -447,8 +447,9 @@ var CoursePress = CoursePress || {};
 				} else {
 					$.each( steps, function( i, step ) {
 						var action = $( step ).attr( 'data-modal-action' );
-						if ( 'yes' == _coursepress.current_course_is_paid && 'paid_enrollment' === action ) {
+						if ( 'yes' === _coursepress.current_course_is_paid && 'paid_enrollment' === action ) {
 							CoursePress.Enrollment.dialog.openAt( i );
+							bind_marketpress_add_to_cart_button();
 						} else if ( 'enrolled' === action ) {
 							if ( ! data['already_enrolled'] ) {
 								CoursePress.Enrollment.dialog.attempt_enroll( data );
@@ -480,8 +481,9 @@ var CoursePress = CoursePress || {};
 			if ( true === data['success'] ) {
 				$.each( steps, function( i, step ) {
 					var action = $( step ).attr( 'data-modal-action' );
-					if ( 'yes' == _coursepress.current_course_is_paid && 'paid_enrollment' === action ) {
+					if ( 'yes' === _coursepress.current_course_is_paid && 'paid_enrollment' === action ) {
 						CoursePress.Enrollment.dialog.openAt( i );
+						bind_marketpress_add_to_cart_button();
 					} else if ( 'enrolled' === action ) {
 						CoursePress.Enrollment.dialog.openAt( i );
 					}
@@ -707,7 +709,7 @@ var CoursePress = CoursePress || {};
 		if ( _coursepress.current_student > 0 ) {
 
 			// Is paid course?
-			if ( 'yes' == _coursepress.current_course_is_paid ) {
+			if ( 'yes' === _coursepress.current_course_is_paid ) {
 				// DEBUG code. remove it.
 				window.console.log('open at paid_enrollment');
 				$(newDiv).html(CoursePress.Enrollment.dialog.render().el);
@@ -871,22 +873,29 @@ var CoursePress = CoursePress || {};
 		//$( '.view-response' ).link_popup( { link_text:  '<span class="dashicons dashicons-visibility"></span>' });
 		$( '.workbook-table .view-response' ).link_popup( { link_text:  '<span class="dashicons dashicons-visibility"></span>', offset_x: -160 });
 		$( '.workbook-table .feedback' ).link_popup( { link_text:  '<span class="dashicons dashicons-admin-comments"></span>' });
+		bind_marketpress_add_to_cart_button();
+	}
 		/**
 		 * MP add to cart
 		 */
-		$('body.single-course .apply-box button.mp_button-addcart').on( 'click', function() {
-			form = $(this).closest('form');
+	function bind_marketpress_add_to_cart_button() {
+		if ( 'undefined' === typeof( _coursepress.marketpress_is_used ) || 'no' === _coursepress.marketpress_is_used ) {
+			return;
+		}
+		$('body.single-course button.mp_button-addcart').on( 'click', function() {
+			var form = $(this).closest('form');
 			$.ajax({
-				type: "POST",
+				type: 'POST',
 				url: form.data('ajax-url'),
 				data: {
 					product: $('[name=product_id]', form).val(),
-					cart_action: "add_item"
+					cart_action: 'add_item'
+				}
+			}).done( function(data) {
+				if ( data.success && 'undefined' !== typeof( _coursepress.marketpress_cart_url ) ) {
+					window.location.assign( _coursepress.marketpress_cart_url );
 				}
 			});
-			if ( 'undefined' != _coursepress.marketpress_cart_url ) {
-				return _coursepress.marketpress_cart_url;
-			}
 			return false;
 		});
 	}
