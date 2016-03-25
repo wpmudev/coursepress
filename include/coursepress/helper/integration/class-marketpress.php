@@ -1003,10 +1003,16 @@ class CoursePress_Helper_Integration_MarketPress {
 				</h3>
 			</div>
 			<div class="bbm-modal__section">
-				<p>
-					<?php esc_html_e( 'You can now add this course to cart.', 'CP_TD' ); ?>
-				</p>
-<?php echo self::_get_add_to_cart_button_by_course_id( $atts['course_id'] ); ?>
+				<p><?php esc_html_e( 'You can now add this course to cart.', 'CP_TD' ); ?></p>
+				<p><?php printf(
+					'<a href="%s">%s</a>',
+					esc_url( get_permalink( $atts['course_id'] ) ),
+					sprintf(
+						esc_html__( 'Show course: %s', 'CP_TD' ),
+						get_the_title( $atts['course_id'] )
+					)
+				); ?></p>
+<?php /* echo self::_get_add_to_cart_button_by_course_id( $atts['course_id'] ); */ ?>
 			</div>
 			<div class="bbm-modal__bottombar">
 			</div>
