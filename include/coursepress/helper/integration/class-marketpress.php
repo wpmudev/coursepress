@@ -203,6 +203,25 @@ class CoursePress_Helper_Integration_MarketPress {
 			10, 3
 		);
 
+		/**
+		 * redirect product to course
+		 */
+		/* This action is documented in WordPress file: /wp-includes/template-loader.php */
+		add_action(
+			'template_redirect',
+			array( __CLASS__, 'redirect_to_product' )
+		);
+
+		/**
+		 * replace product link to course link
+		 */
+		/* This filter is documented in WordPress file: /wp-includes/link-template.php */
+		add_filter(
+			'post_type_link',
+			array( __CLASS__, 'change_product_linkt_to_course_link' ),
+			10, 2
+		);
+
 	}
 
 	public static function fix_mp3_on_sale( $on_sale, $product ) {
@@ -984,7 +1003,7 @@ class CoursePress_Helper_Integration_MarketPress {
 	 */
 	public static function add_to_cart_template( $atts ) {
 		/**
-		 * if we do not use woo, then we should not use this function
+		 * if we do not use MarketPress, then we should not use this function
 		 */
 		if ( ! self::$is_active ) {
 			return;
@@ -1099,6 +1118,84 @@ Yours sincerely,
 	public static function add_settings_to_js_coursepress( $localize_array ) {
 		$localize_array['marketpress_is_used'] = self::$is_active? 'yes' : 'no';
 		return $localize_array;
+	}
+
+	/**
+	 * rediret product from product to course
+	 *
+	 * @since 2.0.0
+	 *
+	 * @global WP_Post $post current post
+	 * @global WP_Query $wp_query
+	 */
+	public static function redirect_to_product() {
+		global $post, $wp_query;
+		if ( ! self::$is_active ) {
+			return;
+		}
+		/**
+		 * only when redirect option is on.
+		 */
+		$use_redirect = CoursePress_Core::get_setting( 'marketpress/redirect', false );
+		if ( ! $use_redirect ) {
+			return;
+		}
+		/**
+		 * only single!
+		 */
+		if ( ! $wp_query->is_singular ) {
+			return;
+		}
+		/**
+		/* If its not a product, exit
+		 */
+		if ( self::$product_ctp != $post->post_type ) {
+			return;
+		}
+		/**
+		 * redirect if course exists
+		 */
+		$course_id = self::get_course_id_by_product( $post );
+		if ( $course_id ) {
+			wp_safe_redirect( get_permalink( $course_id ) );
+			exit;
+		}
+	}
+
+	/**
+	 * Allow to replace link to product.
+	 *
+	 * This function is used in 'post_link' filter to change product link to
+	 * reduce number of redirects.
+	 *
+	 * @since: 2.0.0
+	 *
+	 * @param string $url Current post url.
+	 * @param WP_Post $post Curent post object.
+	 *
+	 */
+	public static function change_product_linkt_to_course_link( $url, $post ) {
+		if ( ! self::$is_active ) {
+			return $url;
+		}
+		/**
+		/* If its not a product, exit
+		 */
+		if ( self::$product_ctp != $post->post_type ) {
+			return $url;
+		}
+		/**
+		 * only when redirect option is on.
+		 */
+		$use_redirect = CoursePress_Core::get_setting( 'marketpress/redirect', false );
+		if ( ! $use_redirect ) {
+			return $url;
+		}
+		$course_id = self::get_course_id_by_product( $post );
+		if ( $course_id ) {
+			return get_permalink( $course_id );
+		}
+		return $url;
 	}
 }
 
