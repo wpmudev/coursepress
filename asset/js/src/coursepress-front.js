@@ -1077,8 +1077,15 @@ var CoursePress = CoursePress || {};
 			model.save();
 
 			model.on( 'coursepress:record_module_response_success', function( data ) {
-				// DEBUG code. remove it.
-				window.console.log( data );
+
+				// Redirect back to units details when completed.
+				if ( data.completed ) {
+					var course_link = $( '.course-units-link' );
+
+					if ( course_link.length > 0 ) {
+						window.location = course_link.attr( 'href' );
+					}
+				}
 				$( elements ).find( '.response-processing' ).detach();
 
 				$( result ).detach();
