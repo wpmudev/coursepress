@@ -246,6 +246,12 @@ class CoursePress_Data_Certificate {
 			'CERTIFICATE_NUMBER' => (int) $data['certificate_id'],
 			'UNIT_LIST' => $data['unit_list'],
 		);
+		/**
+		 * Filter variables before applying changes.
+		 *
+		 * @param (array) $vars.
+		 **/
+		$vars = apply_filters( 'coursepress_basic_certificate_vars', $vars );
 
 		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
 	}
