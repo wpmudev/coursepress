@@ -98,7 +98,22 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 			<?php esc_html_e( 'Use the editor below to create the layout of your certificate.', 'CP_TD' ); ?>
 		</p>
 		<p class="description">
-			<?php esc_html_e( 'These codes will be replaced with actual data: FIRST_NAME, LAST_NAME, COURSE_NAME, COMPLETION_DATE, CERTIFICATE_NUMBER, UNIT_LIST', 'CP_TD' ); ?>
+			<?php
+				$fields = apply_filters( 'coursepress_fields_basic_certificate',
+					array(
+						'FIRST_NAME' => '',
+						'LAST_NAME' => '',
+						'COURSE_NAME' => '',
+						'COMPLETION_DATE' => '',
+						'CERTIFICATE_NUMBER' => '',
+						'UNIT_LIST' => '',
+					),
+					null
+				);
+				$field_keys = array_keys( $fields );
+				esc_html_e( 'These codes will be replaced with actual data: ', 'CP_TD' );
+				echo implode( ', ', $field_keys );
+				?>
 		</p>
 		<div class="inside">
 			<table class="form-table compressed">
