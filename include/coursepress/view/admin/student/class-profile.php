@@ -1,0 +1,87 @@
+<?php
+
+class CoursePress_View_Admin_Student_Profile extends CoursePress_View_Admin_Student_Workbook {
+	public static function display() {
+		global $wp_query;
+
+		$student_id = (int) $_GET['student_id'];
+		$student = get_userdata( $student_id );
+		$date_format = get_option( 'date_format' );
+		?>
+		<div class="wrap student-workbook student-profile">
+			<h2><?php esc_html_e( 'Student Profile', 'CP_TD' ); ?></h2>
+			<hr />
+			<?php
+				self::profile();
+			?>
+			<h3><?php esc_html_e( 'Courses', 'CP_TD' ); ?></h3>
+			<?php
+				$enrolled_courses = CoursePress_Data_Student::get_enrolled_courses_ids( $student_id );
+				$args = array(
+					'post_type' => CoursePress_Data_Course::get_post_type_name(),
+					'post_status' => array( 'publish', 'draft' ),
+					'post__in' => (array) $enrolled_courses,
+				);
+				$wp_query = new WP_Query( $args );
+
+				if ( have_posts() ) :
+			?>
+				<table class="widefat">
+					<?php while ( have_posts() ) :
+							the_post();
+							$course = CoursePress_Data_Course::get_course( get_the_ID() );
+							$workbook_link = CoursePress_Data_Student::get_admin_workbook_link( $student_id, get_the_ID() );
+						?>
+						<tr>
+							<td>
+								<a href="<?php echo $workbook_link; ?>" class="button button-units workbook-button">
+									<?php esc_html_e( 'View Workbook', 'CP_TD' ); ?>
+								</a>
+							</td>
+							<td>
+								<div class="student-course">
+									<div class="course-top">
+										<div class="course-title">
+											<a href="<?php echo $course->edit_link; ?>"><?php the_title(); ?></a>
+											<a href="<?php echo $course->edit_link; ?>"><i class="fa fa-pencil"></i></a>
+											<a href="<?php the_permalink(); ?>" target="_blank"><i class="fa fa-external-link"></i></a>
+										</div>
+									</div>
+									<div class="course-bottom">
+										<div class="course-summary"><?php the_excerpt(); ?></div>
+										<div class="course-info-holder">
+											<span class="info_caption">
+												<?php esc_html_e( 'Start', 'CP_TD' ); ?>
+												<i class="fa fa-calendar"></i>
+											</span>
+											<span class="info">
+												<?php echo $course->start_date; ?>
+											</span>
+											<span class="info_caption">
+												<?php esc_html_e( 'End', 'CP_TD' ); ?>
+											</span>
+											<span class="info">
+												<?php echo $course->end_date; ?>
+											</span>
+											<span class="info_caption">
+												<?php esc_html_e( 'Duration', 'CP_TD' ); ?>
+												<i class="fa fa-clock-o"></i>
+											</span>
+											<span class="info"><?php echo $course->duration; ?></span>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+					<?php
+						endwhile;
+					?>
+				</table>
+			<?php
+				endif;
+				wp_reset_postdata();
+			?>
+		</div>
+		<?php
+	}
+}

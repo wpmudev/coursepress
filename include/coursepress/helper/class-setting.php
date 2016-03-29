@@ -5,11 +5,39 @@ class CoursePress_Helper_Setting {
 	private static $page_refs = array();
 	private static $valid_pages = array();
 	private static $pages = array();
+	private static $default_capability;
 
 	public static function init() {
 		add_action( 'plugins_loaded', array( __CLASS__, 'admin_plugins_loaded' ) );
 		add_action( 'admin_menu', array( __CLASS__, 'admin_menu' ) );
 		add_action( 'admin_init', array( __CLASS__, 'admin_init' ) );
+	}
+
+	/**
+	 * allow to get default capability
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return string default capability
+	 */
+	private static function get_default_capability() {
+		if ( empty( self::$default_capability ) ) {
+			self::$default_capability = 'coursepress_dashboard_cap';
+			if ( current_user_can( 'manage_options' ) ) {
+				self::$default_capability = 'manage_options';
+			}
+			/**
+			 * Filer allow to change default capability.
+			 *
+			 * @since 2.0.0
+			 *
+			 * @param string $capability CoursePress capability.
+			 * @param string $slug CoursePress page slug
+			 *
+			 */
+			self::$default_capability = apply_filters( 'coursepress_capabilities', self::$default_capability );
+		}
+		return self::$default_capability;
 	}
 
 	public static function admin_menu() {
@@ -26,7 +54,7 @@ class CoursePress_Helper_Setting {
 			 * @param string $slug CoursePress page slug
 			 *
 			 */
-			apply_filters( 'coursepress_capabilities', 'coursepress_dashboard_cap' ),
+			apply_filters( 'coursepress_capabilities', self::get_default_capability() ),
 			$parent_handle,
 			array(
 				__CLASS__,
@@ -50,7 +78,7 @@ class CoursePress_Helper_Setting {
 			}
 
 			// Use default capability if not defined
-			$capability = empty( $page['cap'] ) ? 'coursepress_dashboard_cap' : $page['cap'];
+			$capability = empty( $page['cap'] ) ? self::get_default_capability() : $page['cap'];
 
 			if ( empty( $page['parent'] ) ) {
 				$page['parent'] = $parent_handle;
@@ -60,14 +88,15 @@ class CoursePress_Helper_Setting {
 				$page['handle'] = $handle;
 			}
 
-			if ( 'none' != $page['parent'] ) {
-				self::$page_refs[ $handle ] = add_submenu_page( $page['parent'], $page['title'], $page['menu_title'], $capability, $page['handle'], $callback );
-			} else {
-				self::$page_refs[ $handle ] = add_submenu_page( null, $page['title'], $page['menu_title'], $capability, $page['handle'], $callback );
+			if ( current_user_can( 'coursepress_courses_cap' ) && current_user_can( 'coursepress_dashboard_cap' ) ) {
+				if ( 'none' != $page['parent'] ) {
+					self::$page_refs[ $handle ] = add_submenu_page( $page['parent'], $page['title'], $page['menu_title'], $capability, $page['handle'], $callback );
+				} else {
+					self::$page_refs[ $handle ] = add_submenu_page( null, $page['title'], $page['menu_title'], $capability, $page['handle'], $callback );
+				}
 			}
 		}
 
-		// error_log( print_r( self::$page_refs, true  ) );
 	}
 
 	public static function menu_handler() {
@@ -133,6 +162,18 @@ class CoursePress_Helper_Setting {
 
 			// Font Awesome.
 			wp_enqueue_style( 'fontawesome', $fontawesome, array(), CoursePress::$version );
+
+			// Add instructor stylesheet
+			if ( CoursePress_View_Admin_Instructor::$slug == $page ) {
+				$instructor_css = CoursePress::$url . 'asset/css/admin-instructor.css';
+				wp_enqueue_style( 'coursepress_admin_instructor', $instructor_css, false, CoursePress::$version );
+			}
+
+			// Add student stylesshet
+			if ( CoursePress_View_Admin_Student::$slug == $page ) {
+				$student_css = CoursePress::$url . 'asset/css/admin-student.css';
+				wp_enqueue_style( 'coursepress_admin_student', $student_css, false, CoursePress::$version );
+			}
 		}
 
 		wp_enqueue_style( 'coursepress_admin_global', $style_global, array(), CoursePress::$version );

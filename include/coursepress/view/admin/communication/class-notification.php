@@ -158,9 +158,10 @@ class CoursePress_View_Admin_Communication_Notification {
 				'text' => __( 'All courses', 'CP_TD' ),
 				'value' => 'all',
 			);
+			$courses = false;
 		} else {
-			$options['courses'] = self::get_courses();
-			if ( empty( $options['courses'] ) ) {
+			$courses = self::get_courses();
+			if ( empty( $courses ) ) {
 				return __( 'You do not have permission to add notification.', 'CP_TD' );
 			}
 		}
@@ -195,7 +196,7 @@ class CoursePress_View_Admin_Communication_Notification {
 
 		$content .= '
 			<label><strong>' . esc_html__( 'Related Course', 'CP_TD' ) . '</strong><br />
-			' . CoursePress_Helper_UI::get_course_dropdown( 'course_id', 'meta_course_id', false, $options ) . '
+			' . CoursePress_Helper_UI::get_course_dropdown( 'course_id', 'meta_course_id', $courses, $options ) . '
 			</label>
 			<label class="right">
 				<input type="submit" class="button button-primary" value="' . esc_attr__( 'Save Notification', 'CP_TD' ) . '" />
@@ -319,50 +320,32 @@ class CoursePress_View_Admin_Communication_Notification {
 	 *
 	 * @return array $courses Array of WP_Post objects
 	 */
-	private static function get_courses() {
+	public static function get_courses() {
+
 		$user_id = get_current_user_id();
 		if ( empty( $user_id ) ) {
 			return array();
 		}
-		/**
-		 * check is author
-		 */
-		/** This filter is documented in include/coursepress/helper/class-setting.php */
-		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_notification_cap' );
-		$is_author = user_can( $user_id, $capability );
-		/**
-		 * check is instructor
-		 */
-		/** This filter is documented in include/coursepress/helper/class-setting.php */
-		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_assigned_notification_cap' );
-		$is_instructor = user_can( $user_id, $capability );
-		$instructor_courses = array();
-		if ( $is_instructor ) {
-			$instructor_courses = CoursePress_Data_Instructor::get_assigned_courses_ids( $user_id );
-		}
-		/**
-		 * no rights?
-		 */
-		if ( ! $is_author && ! $is_instructor ) {
-			return array();
-		}
-		$all_courses = get_posts( 'post_type=' . CoursePress_Data_Course::get_post_type_name() );
-		$courses = array();
-		foreach ( $all_courses as $course ) {
-			/**
-			 * add if author
-			 */
-			if ( $is_author && $user_id == $course->post_author ) {
-				$courses[] = $course;
-				continue;
-			}
-			/**
-			 * add if assigned
-			 */
-			if ( $is_instructor && in_array( $course->ID, $instructor_courses ) ) {
-				$courses[] = $course;
+
+		$courses = CoursePress_Data_Instructor::get_accessable_courses();
+
+		if ( ! empty( $courses ) ) {
+			/** This filter is documented in include/coursepress/helper/class-setting.php */
+			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_assigned_notification_cap' );
+			$is_instructor = user_can( $user_id, $capability );
+			$capability2 = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_notification_cap' );
+			$is_author = user_can( $user_id, $capability2 );
+
+			foreach ( $courses as $index => $course ) {
+				if ( CoursePress_Data_Capabilities::is_course_instructor( $course ) && ! $is_instructor ) {
+					unset( $courses[$index] );
+				}
+				if ( $user_id == $course->post_author && ! $is_author ) {
+					unset( $courses[$index] );
+				}
 			}
 		}
+
 		return $courses;
 	}
 }

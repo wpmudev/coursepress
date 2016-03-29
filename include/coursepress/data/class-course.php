@@ -1502,4 +1502,34 @@ class CoursePress_Data_Course {
 	public static function count_courses() {
 		return array_sum( get_object_vars( wp_count_posts( self::get_post_type_name() ) ) );
 	}
+
+	public static function get_course( $course_id = 0 ) {
+		$course_id = ! $course_id ? get_the_ID() : $course_id;
+		$course = get_post( $course_id );
+
+		// Set duration
+		$date_format = get_option( 'date_format' );
+		$start_date = self::get_setting( $course_id, 'course_start_date' );
+		$end_date = self::get_setting( $course_id, 'course_end_date' );
+		$duration = ceil( ( strtotime( $end_date ) - strtotime( $start_date ) ) / 86400 );
+		
+		$course->start_date = date_i18n( $date_format, strtotime( $start_date, current_time( 'timestamp' ) ) );
+		$course->end_date = $duration > 0 ? date_i18n( $date_format, strtotime( $end_date, current_time( 'timestamp' ) ) ) : '--';
+		$course->duration = $duration > 0 ? sprintf( _n( '%s Day', '%s Days', $duration, 'CP_TD' ), $duration ) : __( 'Open-ended', 'CP_TD' );
+		
+		// Links
+		$course->permalink = get_permalink( $course_id );
+		$course->edit_link = add_query_arg(
+			array(
+				'page' => CoursePress_View_Admin_Course_Edit::$slug,
+				'id' => $course_id,
+				'action' => 'edit'
+			),
+			admin_url( 'admin.php' )
+		);
+
+		$course = apply_filters( 'coursepress_get_course', $course, $course_id );
+		
+		return $course;
+	}
 }
