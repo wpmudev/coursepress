@@ -254,16 +254,7 @@ class CoursePress_Data_Unit {
 		$available = apply_filters( 'coursepress_filter_unit_availability', $available, $unit_id );
 
 		$status['available'] = $available;
-		
-if( isset( $_GET['print']) && $previous_unit_id ) {
-	header('Content-type: text/plain');
-	//print_r( $status );
-	print_r( $student_progress );
-exit;
-} else {
-	//echo $unit_id . '=';
-	//print_r( $status );
-}
+
 		return $status;
 	}
 
