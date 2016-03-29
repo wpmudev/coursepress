@@ -207,6 +207,7 @@ class CoursePress_View_Front_Course {
 	 * @since  2.0.0
 	 */
 	public static function handle_module_uploads() {
+
 		if ( empty( $_REQUEST['course_action'] ) ) { return; }
 		if ( 'upload-file' != $_REQUEST['course_action'] ) { return; }
 
@@ -255,6 +256,7 @@ class CoursePress_View_Front_Course {
 			// Check if we should continue with this upload (in case students cheat with the code)
 			$attributes = CoursePress_Data_Module::attributes( $module_id );
 			$can_retry = ! $attributes['allow_retries'];
+
 			if ( $can_retry ) {
 				$responses = CoursePress_Helper_Utility::get_array_val(
 					$student_progress,
@@ -1224,7 +1226,7 @@ class CoursePress_View_Front_Course {
 
 				if ( $student_id > 0 ) {
 					$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
-					$student_progress = CoursePress_Data_Student::calculate_completion( $student_id, $course_id, $student_progress );
+					$student_progress = CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course_id, $student_progress );
 					CoursePress_Data_Student::update_completion_data( $student_id, $course_id, $student_progress );
 				}
 

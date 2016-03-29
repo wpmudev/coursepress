@@ -292,12 +292,10 @@ class CoursePress_Data_Student {
 		}
 
 		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/responses/' . $module_id . '/', $response_data );
-		
+		self::update_completion_data( $student_id, $course_id, $data );
 
 		// Might as well do it on an AJAX call to make the experience a bit better.
 		//self::calculate_completion( $student_id, $course_id );
-		self::get_calculated_completion_data( $student_id, $course_id, $data );
-		self::update_completion_data( $student_id, $course_id, $data );
 
 		return $data;
 
@@ -402,8 +400,8 @@ class CoursePress_Data_Student {
 
 		// If grade changes, lets calculate completion
 		//self::calculate_completion( $student_id, $course_id );
-		self::get_calculated_completion_data( $student_id, $course_id, $data );
-self::update_completion_data( $student_id, $course_id, $data );
+		$data = self::get_calculated_completion_data( $student_id, $course_id, $data );
+		self::update_completion_data( $student_id, $course_id, $data );
 		return $data;
 	}
 
@@ -486,13 +484,14 @@ self::update_completion_data( $student_id, $course_id, $data );
 		return $data;
 	}
 
-	public static function get_calculated_completion_data( $student_id, $course_id, &$student_progress ) {
+	public static function get_calculated_completion_data( $student_id, $course_id, &$student_progress = false ) {
 
 		if ( ! $student_progress ) {
 			$student_progress = self::get_completion_data( $student_id, $course_id );
 		}
 
 		$student_units = isset( $student_progress['units'] ) ? array_keys( $student_progress['units'] ) : array();
+
 		$units = CoursePress_Data_Course::get_units_with_modules( $course_id );
 
 		$course_required_steps = 0;
