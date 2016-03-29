@@ -267,6 +267,23 @@ exit;
 		return $status;
 	}
 
+	public static function get_previous_unit_id( $course_id, $unit_id ) {
+		$previous_unit = false;
+		$units = CoursePress_Data_Course::get_units( $course_id, array( 'publish' ) );
+
+		if ( $units ) {
+			foreach ( $units as $unit_index => $unit ) {
+				if ( $unit->ID === $unit_id ) {
+					if ( $unit_index > 0 ) {
+						$previous_unit = $units[ $unit_index - 1 ];
+					}
+				}
+			}
+		}
+		
+		return $previous_unit ? $previous_unit->ID : false;
+	}
+
 	/**
 	 * Returns the permalink to the specific unit.
 	 *

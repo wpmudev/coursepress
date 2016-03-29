@@ -1079,8 +1079,6 @@ var CoursePress = CoursePress || {};
 			model.save();
 
 			model.on( 'coursepress:record_module_response_success', function( data ) {
-				// DEBUG code. remove it.
-				window.console.log( data );
 				$( elements ).find( '.response-processing' ).detach();
 
 				$( result ).detach();

@@ -1188,6 +1188,8 @@ class CoursePress_View_Front_Course {
 				}
 
 				$json_data = array_merge( $json_data, $data );
+				$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
+				$student_progress = CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course_id, $student_progress );
 				$success = true;
 				break;
 

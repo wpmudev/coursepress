@@ -96,7 +96,6 @@ class CoursePress_View_Admin_CoursePress {
 		$content .= ob_get_clean();
 
 		$content .= '</div>';
-		$content .= '</div>';
 
 		echo apply_filters( 'coursepress_admin_page_main', $content );
 	}
