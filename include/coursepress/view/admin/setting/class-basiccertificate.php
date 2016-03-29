@@ -99,7 +99,7 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 		</p>
 		<p class="description">
 			<?php
-				$fields = apply_filters( 'coursepress_fields_basic_certificate',
+				$fields = apply_filters( 'coursepress_basic_certificate_vars',
 					array(
 						'FIRST_NAME' => '',
 						'LAST_NAME' => '',
