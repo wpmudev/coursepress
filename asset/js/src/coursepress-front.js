@@ -1016,13 +1016,14 @@ var CoursePress = CoursePress || {};
 								data = JSON.parse( e.target.responseText );
 							} catch( err ) {}
 
-							if ( readyState === 4 && status === '200' && data.success ) {
+							if ( readyState === 4 && parseInt( status ) === 200 && data.success ) {
 
 								$( parent ).find( '.upload-percent' ).detach();
 								$( parent ).find( '.upload-progress .spinner' ).detach();
 								$( result ).detach();
 								$( elements ).addClass( 'hide' );
-								$( response ).replaceWith( '<div class="module-response">' +
+								var response_div = response.length > 0 ? $( response ) : $( '<div class="module-response">' ).insertAfter( elements );
+								response_div.replaceWith( '<div class="module-response">' +
 									'<p class="file_holder">' + _coursepress.file_uploaded_message + '</p>' +
 									'</div>'
 								);
@@ -1032,7 +1033,9 @@ var CoursePress = CoursePress || {};
 								$( parent ).find( '.upload-progress .spinner' ).detach();
 								$( result ).detach();
 								$( elements ).addClass( 'hide' );
-								$( response ).replaceWith( '<div class="module-response">' +
+								var response_div = response.length > 0 ? $( response ) : $( '<div class="module-response">' ).insertAfter( elements );
+
+								response_div.replaceWith( '<div class="module-response">' +
 									'<p class="file_holder">' + _coursepress.file_upload_fail_message + '</p>' +
 									'</div>'
 								);
