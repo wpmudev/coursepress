@@ -273,7 +273,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		/**
 		 * course title
 		 */
-		if ( 'undefined' !== _coursepress.course_title ) {
+		if ( _coursepress.course_title ) {
 			$('.coursepress_settings_wrapper h1').append( ': <small>'+_coursepress.course_title+'</small>');
 			$('#course_name').on('change', function() {
 				$('.coursepress_settings_wrapper h1 small').html($(this).val());
