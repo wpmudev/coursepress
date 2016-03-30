@@ -2,6 +2,11 @@
 
 class CoursePress_Helper_Schema {
 
+	/**
+	 * Init function
+	 *
+	 * @since 2.0.0
+	 */
 	public static function init() {
 		/**
 		 * schema.org
@@ -12,6 +17,15 @@ class CoursePress_Helper_Schema {
 			return;
 		}
 
+		/**
+		 * Schema filter
+		 *
+		 * @since 2.0.0
+		 *
+		 * @param string $string value to change
+		 * @param string $context context of usage
+		 *
+		 */
 		add_filter(
 			'coursepress_schema',
 			array( __CLASS__, 'add_schema' ),
@@ -19,6 +33,16 @@ class CoursePress_Helper_Schema {
 		);
 	}
 
+	/**
+	 * Add schema information
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $string value to change
+	 * @param string $context context of usage
+	 *
+	 * @return $string value improved by schema
+	 */
 	public static function add_schema( $string, $context ) {
 
 		switch ( $context ) {
@@ -37,6 +61,15 @@ class CoursePress_Helper_Schema {
 		return $string;
 	}
 
+	/**
+	 * Add schema information
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $title title or name
+	 *
+	 * @return $string value wrapped by schema
+	 */
 	public static function itemprop_name( $title ) {
 		if ( empty( $title ) ) {
 			return $title;
@@ -44,6 +77,16 @@ class CoursePress_Helper_Schema {
 		return sprintf( '<span itemprop="name">%s</span>', $title );
 	}
 
+	/**
+	 * Schema function for itemscope
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $item item value - unused
+	 * @param string $itemtype type of item
+	 *
+	 * @return $string value improved by schema
+	 */
 	public static function itemscope( $item, $itemtype = 'Product' ) {
 		return sprintf(
 			' itemscope itemtype="http://schema.org/%s"',
@@ -51,10 +94,28 @@ class CoursePress_Helper_Schema {
 		);
 	}
 
+	/**
+	 * Schema function for description
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $item item value - unused
+	 *
+	 * @return $string value improved by schema
+	 */
 	public static function description( $item ) {
 		return ' itemprop="description"';
 	}
 
+	/**
+	 * Schema function for image
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $item item value - unused
+	 *
+	 * @return $string value improved by schema
+	 */
 	public static function image( $item ) {
 		return ' itemprop="image"';
 	}
