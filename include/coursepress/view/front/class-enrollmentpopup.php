@@ -470,6 +470,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 			case 'login':
 				$nonce = wp_create_nonce( 'coursepress_enrollment_action' );
 				$json_data['nonce'] = $nonce;
+				$json_data['signup_errors'] = array();
 
 				$username = sanitize_text_field( $data->data->username );
 				$password = sanitize_text_field( $data->data->password );
@@ -487,6 +488,9 @@ class CoursePress_View_Front_EnrollmentPopup {
 					$json_data['already_enrolled'] = ! empty( $enrolled );
 				} else {
 					$json_data['logged_in'] = false;
+					foreach ( $user->errors as $key => $message_array ) {
+						$json_data['signup_errors'][] = implode( ' ', $message_array );
+					}
 				}
 
 				// handle_signup_return
