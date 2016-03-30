@@ -18,6 +18,7 @@ class CoursePress_Data_Shortcode_Course {
 	 * @since  2.0.0
 	 */
 	public static function init() {
+
 		add_shortcode(
 			'course',
 			array( __CLASS__, 'course' )
@@ -368,7 +369,7 @@ class CoursePress_Data_Shortcode_Course {
 
 		$content = ! empty( $title_tag ) ? '<' . $title_tag . ' class="course-title course-title-' . $course_id . ' ' . $class . '">' : '';
 		$content .= 'yes' == $link ? '<a href="' . get_permalink( $course_id ) . '" title="' . $title . '">' : '';
-		$content .= $title;
+		$content .= apply_filters( 'coursepress_schema', $title, 'title' );
 		$content .= 'yes' == $link ? '</a>' : '';
 		$content .= ! empty( $title_tag ) ? '</' . $title_tag . '>' : '';
 
@@ -458,7 +459,12 @@ class CoursePress_Data_Shortcode_Course {
 		$title = ! empty( $title ) ? '<h3 class="section-title">' . esc_html( $title ) . '</h3>' : $title;
 		$course = get_post( $course_id );
 
-		$content = '<div class="course-description course-description-' . $course_id . ' ' . $class . '">';
+		/**
+		 * schema.org
+		 */
+		$schema = apply_filters( 'coursepress_schema', '', 'description' );
+
+		$content = '<div class="course-description course-description-' . $course_id . ' ' . $class . '"' . $schema . '>';
 		$content .= $title;
 		$content .= do_shortcode( $course->post_content );
 		$content .= '</div>';
@@ -1214,9 +1220,14 @@ class CoursePress_Data_Shortcode_Course {
 			$width = 'default' == $width ? $img_w : $width;
 			$height = 'default' == $height ? $img_h : $height;
 
+			/**
+			 * schema.org
+			 */
+			$schema = apply_filters( 'coursepress_schema', '', 'image' );
+
 			$content = '<div class="course-list-image course-list-image-' . $course_id . ' ' . $class . '">';
 
-			$content .= '<img width="' . esc_attr( $width ) . '" height="' . esc_attr( $height ) . '" src="' . esc_url( $image_src ) . '" alt="' . esc_attr( $course->post_title ) . '" title="' . esc_attr( $course->post_title ) . '"/>';
+			$content .= '<img width="' . esc_attr( $width ) . '" height="' . esc_attr( $height ) . '" src="' . esc_url( $image_src ) . '" alt="' . esc_attr( $course->post_title ) . '" title="' . esc_attr( $course->post_title ) . '"'.$schema.' />';
 
 			$content .= '</div>';
 
