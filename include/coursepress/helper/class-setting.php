@@ -117,8 +117,31 @@ class CoursePress_Helper_Setting {
 		return self::$page_refs;
 	}
 
+	public static function reorder_menu( $a, $b ) {
+		return $a > $b;
+	}
+
 	private static function _get_pages() {
-		return apply_filters( 'coursepress_admin_pages', self::$pages );
+		$pages = apply_filters( 'coursepress_admin_pages', self::$pages );
+		$order = array_map( create_function( '$a', ' return ! empty( $a["order"] ) ? $a["order"] : 0; '), $pages );
+		$max_order = max( $order );
+		$new_order = array();
+		
+		foreach ( $pages as $key => $page ) {
+			$page_order = ! empty( $page['order'] ) ? $page['order'] : ( $max_order += 5 );
+			$page['order'] = $page_order;
+			$pages[$key] = $page;
+			$new_order[ $page_order ] = $key;
+		}
+
+		uksort( $new_order, array( __CLASS__, 'reorder_menu' ) );
+		$new_pages = array();
+		foreach ( $new_order as $order => $key ) {
+			$new_pages[$key] = $pages[$key];
+		}
+
+		return $new_pages;
+
 	}
 
 	public static function admin_init() {

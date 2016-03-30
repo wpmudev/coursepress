@@ -292,6 +292,7 @@ class CoursePress_Data_Student {
 		}
 
 		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/responses/' . $module_id . '/', $response_data );
+		self::get_calculated_completion_data( $student_id, $course_id, $data );
 		self::update_completion_data( $student_id, $course_id, $data );
 
 		// Might as well do it on an AJAX call to make the experience a bit better.
@@ -396,11 +397,7 @@ class CoursePress_Data_Student {
 			$grade_data
 		);
 
-		
-
-		// If grade changes, lets calculate completion
-		//self::calculate_completion( $student_id, $course_id );
-		$data = self::get_calculated_completion_data( $student_id, $course_id, $data );
+		self::get_calculated_completion_data( $student_id, $course_id, $data );
 		self::update_completion_data( $student_id, $course_id, $data );
 		return $data;
 	}

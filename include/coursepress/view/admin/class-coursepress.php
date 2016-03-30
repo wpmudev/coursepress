@@ -63,6 +63,7 @@ class CoursePress_View_Admin_CoursePress {
 			'menu_title' => self::$menu_title,
 			/** This filter is documented in include/coursepress/helper/class-setting.php */
 			'cap' => apply_filters( 'coursepress_capabilities', 'coursepress_courses_cap' ),
+			'order' => 5,
 		);
 
 		$user_can = is_super_admin();
@@ -85,6 +86,7 @@ class CoursePress_View_Admin_CoursePress {
 				'menu_title' => __( 'Course Categories', 'CP_TD' ),
 				'handle' => 'edit-tags.php?taxonomy=' . $category . '&post_type=' . $cpt,
 				'callback' => 'none',
+				'order' => 15,
 			);
 		}
 
