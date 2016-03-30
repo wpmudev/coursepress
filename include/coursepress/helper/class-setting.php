@@ -123,7 +123,7 @@ class CoursePress_Helper_Setting {
 	}
 
 	private static function _get_pages() {
-		return $pages = apply_filters( 'coursepress_admin_pages', self::$pages );
+		$pages = apply_filters( 'coursepress_admin_pages', self::$pages );
 		$order = array_map( create_function( '$a', ' return ! empty( $a["order"] ) ? $a["order"] : 0; '), $pages );
 		$max_order = max( $order );
 		$new_order = array();

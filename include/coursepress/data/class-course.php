@@ -711,7 +711,7 @@ class CoursePress_Data_Course {
 
 			// Fix broken page titles
 			$page_titles = get_post_meta( $post_id, 'page_title', true );
-			if ( empty( $page_titles ) ) {
+			if ( empty( $page_titles ) && ! empty( $unit['pages'] ) ) {
 				$page_titles = array();
 				$page_visible = array();
 				foreach ( $unit['pages'] as $key => $page ) {
@@ -1041,7 +1041,7 @@ class CoursePress_Data_Course {
 	}
 
 	public static function is_full( $course_id ) {
-		$limited = cp_is_true( self::get_setting( $course_id, 'class_size' ) );
+		$limited = cp_is_true( self::get_setting( $course_id, 'class_limited' ) );
 
 		if ( $limited ) {
 			$limit = self::get_setting( $course_id, 'class_size' );

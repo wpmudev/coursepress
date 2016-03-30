@@ -1079,7 +1079,7 @@ var CoursePress = CoursePress || {};
 			model.set( 'response', value );
 			model.set( 'module_type', module_type );
 
-			model.save();
+			model.save(null, {error:function(a,b,c){ alert(b.responseText); }});
 
 			model.on( 'coursepress:record_module_response_success', function( data ) {
 
@@ -1114,7 +1114,7 @@ var CoursePress = CoursePress || {};
 				}
 
 				if ( 0 === response.length ) {
-					$( parent ).append( html );
+					$( html ).insertAfter( elements );
 				} else {
 					$( response ).replaceWith( html );
 				}

@@ -160,7 +160,6 @@ var CoursePress = CoursePress || {};
 			if ( 'publish-course-toggle' === ui_name ) {
 				if ( ! CoursePress.current_user_can( 'coursepress_change_status_cap' ) ) {
 					is_toggle = false;
-					ui.unbind( 'click' );
 				}
 			}
 			if ( 'unit-live-toggle' === ui_name || 'unit-live-toggle-2' === ui_name ) {

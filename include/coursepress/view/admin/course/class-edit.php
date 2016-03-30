@@ -276,6 +276,9 @@ class CoursePress_View_Admin_Course_Edit {
 
 		// Course Language
 		$language = CoursePress_Data_Course::get_setting( $course_id, 'course_language' );
+		if ( empty( $language ) ) {
+			$language = __( 'English', 'CP_TD' );
+		}
 		$content .= '
 				<div class="wide">
 						<label for="meta_course_language">' .

@@ -283,16 +283,17 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					$unit_id = wp_insert_post( $unit );
 					$unit['ID'] = $unit_id;
 					$unit['meta'] = array(
-						'unit_order' => 0,
+						'unit_order' => 1,
 						'page_title' => array(
 							'page_1' => ''
 						),
-						'show_page_title' => array( true )
+						'show_page_title' => array( true ),
 					);
+					
+					foreach ( $unit['meta'] as $key => $value ) {
+						update_post_meta( $unit_id, $key, $value );
+					}
 
-					$json_data[] = $unit;
-					
-					
 					// Let's add unit capabilities
 					$user_cap = array();
 					if ( CoursePress_Data_Capabilities::can_change_course_unit_status( $course_id, $unit_id, $user_id ) ) {
@@ -306,6 +307,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					}
 					$unit['user_cap'] = $user_cap;
 					$units[] = $unit;
+					$json_data[] = $unit;
 				}
 
 				$skip_empty = empty( $units ) ? true : false;
