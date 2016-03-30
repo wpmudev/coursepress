@@ -796,8 +796,8 @@ class CoursePress_Data_Course {
 	public static function is_paid_course( $course_id ) {
 		$is_paid = self::get_setting( $course_id, 'payment_paid_course', false );
 		$is_paid = empty( $is_paid ) || 'off' === $is_paid ? false : true;
+		return $is_paid;
 	}
-
 
 	public static function get_users( $args ) {
 		return new WP_User_Query( $args );
@@ -1489,7 +1489,7 @@ class CoursePress_Data_Course {
 		$base_url = CoursePress_Core::get_slug( 'courses/', true );
 		$slug = get_post_field( 'post_name', $course_id );
 
-		return trailingslashit( $baseurl . $slug );
+		return trailingslashit( $base_url . $slug );
 	}
 
 	/**

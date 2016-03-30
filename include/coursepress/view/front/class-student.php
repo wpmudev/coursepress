@@ -30,6 +30,9 @@ class CoursePress_View_Front_Student {
 
 		$is_paid = get_post_meta( $course_id, 'paid_course', true ) == 'on' ? true : false;
 
+		/** This filter is documented in * include/coursepress/helper/integration/class-woocommerce.php */
+		$is_user_purchased_course = apply_filters( 'coursepress_is_user_purchased_course', false, $course, $student_id );
+
 		if ( $is_paid && isset( $course->details->marketpress_product ) && '' != $course->details->marketpress_product && $coursepress->marketpress_active ) {
 			$course_price = 1; //forces user to purchase course / show purchase form
 			$course->is_user_purchased_course( $course->details->marketpress_product, $student_id );

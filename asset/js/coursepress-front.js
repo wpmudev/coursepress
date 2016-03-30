@@ -385,7 +385,6 @@ var CoursePress = CoursePress || {};
 
 		CoursePress.Enrollment.dialog.openAtAction = function( action ) {
 			var steps = $( '[data-type="modal-step"]' );
-
 			$.each( steps, function( i, step ) {
 				var step_action = $( step ).attr('data-modal-action');
 				if ( undefined !== step_action && action === step_action ) {
@@ -464,10 +463,12 @@ var CoursePress = CoursePress || {};
 			if ( true === data['success'] ) {
 				$.each( steps, function( i, step ) {
 					var action = $( step ).attr( 'data-modal-action' );
-					if ( 'enrolled' === action ) {
+					if ( _coursepress.current_course_is_paid && 'paid_enrollment' === action ) {
+						CoursePress.Enrollment.dialog.openAt( i );
+					} else if ( 'enrolled' === action ) {
 						CoursePress.Enrollment.dialog.openAt( i );
 					}
-				} );
+				});
 			}
 
 			$('.enrolment-container-div' ).removeClass('hidden');
@@ -689,9 +690,8 @@ var CoursePress = CoursePress || {};
 		if ( _coursepress.current_student > 0 ) {
 
 			// Is paid course?
-			var is_paid = false; //debug
 
-			if ( ! is_paid ) {
+			if ( ! _coursepress.current_course_is_paid ) {
 				$(newDiv ).addClass('hidden');
 
 				var enroll_data = {
