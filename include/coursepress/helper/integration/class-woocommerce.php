@@ -72,7 +72,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 
 		add_action(
 			'add_meta_boxes',
-			array( __CLASS__, 'add_post_parent_metaboxe' )
+			array( __CLASS__, 'add_post_parent_metabox' )
 		);
 
 		add_action(
@@ -247,7 +247,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 
 			$automatic_sku = $settings['mp_auto_sku'];
 
-			if ( $automatic_sku == 'on' ) {
+			if ( 'on' == $automatic_sku ) {
 				$sku[0] = $automatic_sku_number;
 			} else {
 				$sku[0] = CoursePress_Helper_Utility::filter_content( ( ! empty( $settings['mp_sku'] ) ? $settings['mp_sku'] : '' ), true );
@@ -362,16 +362,16 @@ class CoursePress_Helper_Integration_WooCommerce {
 		}
 	}
 
-	public static function add_post_parent_metaboxe() {
+	public static function add_post_parent_metabox() {
 		add_meta_box( 'cp_woo_post_parent', __( 'Parent Course', 'CP_TD' ), array( __CLASS__, 'cp_woo_post_parent_box_content' ), self::$product_ctp, 'side', 'default' );
 	}
 
 	public static function cp_woo_post_parent_box_content() {
 		global $post;
 		if ( isset( $post->ID ) ) {
-?>
-                    <input type="text" name="parent_course" value="<?php echo esc_attr( wp_get_post_parent_id( $post->ID ) ); ?>" />
-<?php
+			?>
+			<input type="text" name="parent_course" value="<?php echo esc_attr( wp_get_post_parent_id( $post->ID ) ); ?>" />
+			<?php
 		}
 	}
 
@@ -542,13 +542,13 @@ class CoursePress_Helper_Integration_WooCommerce {
 
 		ob_start();
 		do_action( 'woocommerce_before_add_to_cart_form' ); ?>
-        <form class="cart" method="post" enctype='multipart/form-data' action="<?php echo esc_url( wc_get_cart_url() ); ?>">
-        <?php do_action( 'woocommerce_before_add_to_cart_button' ); ?>
-        <input type="hidden" name="add-to-cart" value="<?php echo esc_attr( $product->id ); ?>" />
-        <button type="submit" class="single_add_to_cart_button button alt"><?php echo esc_html( $product->single_add_to_cart_text() ); ?></button>
-        <?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
-    </form>
-<?php
+		<form class="cart" method="post" enctype='multipart/form-data' action="<?php echo esc_url( wc_get_cart_url() ); ?>">
+		<?php do_action( 'woocommerce_before_add_to_cart_button' ); ?>
+		<input type="hidden" name="add-to-cart" value="<?php echo esc_attr( $product->id ); ?>" />
+		<button type="submit" class="single_add_to_cart_button button alt"><?php echo esc_html( $product->single_add_to_cart_text() ); ?></button>
+		<?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
+		</form>
+		<?php
 		do_action( 'woocommerce_after_add_to_cart_form' );
 		$content = ob_get_contents();
 		ob_end_clean();
@@ -596,7 +596,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 		if ( ! self::$use_woo ) {
 			return;
 		}
-?>
+		?>
 		<script type="text/template" id="modal-view-woo-template" data-type="modal-step" data-modal-action="paid_enrollment">
 			<div class="bbm-modal__topbar">
 				<h3 class="bbm-modal__title">
@@ -607,12 +607,12 @@ class CoursePress_Helper_Integration_WooCommerce {
 				<p>
 					<?php esc_html_e( 'You can now add this course to cart.', 'CP_TD' ); ?>
 				</p>
-<?php echo self::get_add_to_cart_button_by_course_id( $atts['course_id'] ); ?>
+				<?php echo self::get_add_to_cart_button_by_course_id( $atts['course_id'] ); ?>
 			</div>
 			<div class="bbm-modal__bottombar">
 			</div>
-        </script>
-<?php
+		</script>
+		<?php
 	}
 }
 
