@@ -881,11 +881,6 @@ class CoursePress_Data_Course {
 		return ! empty( $enrolled ) ? $enrolled : '';
 	}
 
-	public static function student_completed( $student_id, $course_id ) {
-		// COMPLETION LOGIC
-		return false;
-	}
-
 	public static function enroll_student( $student_id, $course_id, $class = '', $group = '' ) {
 		$current_time = current_time( 'mysql' );
 
