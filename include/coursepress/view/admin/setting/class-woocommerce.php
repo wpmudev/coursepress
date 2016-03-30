@@ -51,7 +51,7 @@ class CoursePress_View_Admin_Setting_WooCommerce {
 	public static function add_tabs( $tabs ) {
 		$tabs['woocommerce'] = array(
 			'title' => __( 'WooCommerce', 'CP_TD' ),
-			'description' => __( 'Allow to integrate WooCommerce to sell courses..', 'CP_TD' ),
+			'description' => __( 'Allow to integrate WooCommerce to sell courses.', 'CP_TD' ),
 			'order' => 69,
 		);
 
@@ -83,7 +83,7 @@ class CoursePress_View_Admin_Setting_WooCommerce {
 							<?php esc_html_e( 'Use WooCommerce to sell courses', 'CP_TD' ); ?>
 						</label>
 						<p class="description"><?php _e( 'If checked, WooCommerce will be use instead of the MarketPress for selling courses', 'CP_TD' ) ?></p>
-</td>
+						</td>
 					</tr>
 					<tr>
 						<td><label>
@@ -141,10 +141,13 @@ class CoursePress_View_Admin_Setting_WooCommerce {
 	}
 
 	public static function process_form( $page, $tab ) {
+		// First verify nonce before checking any other POST value.
+		if ( ! isset( $_POST['_wpnonce'] ) ) { return; }
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'update-coursepress-options' ) ) { return; }
+
+		if ( 'woocommerce' != $tab ) { return; }
 		if ( ! isset( $_POST['action'] ) ) { return; }
 		if ( 'updateoptions' != $_POST['action'] ) { return; }
-		if ( 'woocommerce' != $tab ) { return; }
-		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'update-coursepress-options' ) ) { return; }
 
 		$settings = CoursePress_Core::get_setting( false ); // false: Get all settings.
 
@@ -155,6 +158,7 @@ class CoursePress_View_Admin_Setting_WooCommerce {
 				'unpaid' => 'change_status',
 			),
 		);
+
 		/**
 		 * check data and if exists, then update
 		 */
