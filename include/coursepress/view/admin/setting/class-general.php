@@ -571,6 +571,33 @@ class CoursePress_View_Admin_Setting_General {
 					</table>
 				</div>
 
+				<!-- schema.org -->
+				<h3 class="hndle" style="cursor:auto;"><span>' . esc_html__( 'schema.org', 'CP_TD' ) . '</span></h3>
+				<div class="inside">
+					<table class="form-table">
+						<tbody>
+							<tr valign="top">
+								<th scope="row">
+								' . esc_html__( 'Add microdata syntax.', 'CP_TD' ) . '
+									<a class="help-icon" href="javascript:;"></a>
+									<div class="tooltip hidden">
+										<div class="tooltip-before"></div>
+										<div class="tooltip-button">&times;</div>
+										<div class="tooltip-content">
+											' . __( '', 'CP_TD' ) . '
+										</div>
+									</div>
+								</th>
+								<td>';
+		$checked = cp_is_true( CoursePress_Core::get_setting( 'general/add_structure_data', 1 ) ) ? 'checked' : '';
+		$content .= '
+									<input type="checkbox" name="coursepress_settings[general][add_structure_data]" ' . $checked  . ' />
+				<p class="description">' . esc_html__( 'Add structure data to courses.', 'CP_TD' ) . '</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 		';
 
 		return $content;
@@ -589,6 +616,7 @@ class CoursePress_View_Admin_Setting_General {
 			$post_settings['general']['use_custom_login'] = isset( $post_settings['general']['use_custom_login'] ) ? $post_settings['general']['use_custom_login'] : 'off';
 			$post_settings['general']['redirect_after_login'] = isset( $post_settings['general']['redirect_after_login'] ) ? $post_settings['general']['redirect_after_login'] : 'off';
 			$post_settings['instructor']['show_username'] = isset( $post_settings['instructor']['show_username'] ) ? $post_settings['instructor']['show_username'] : false;
+			$post_settings['general']['add_structure_data'] = isset( $post_settings['general']['add_structure_data'] ) ? $post_settings['general']['add_structure_data'] : 'off';
 
 			$post_settings = CoursePress_Helper_Utility::sanitize_recursive( $post_settings );
 
