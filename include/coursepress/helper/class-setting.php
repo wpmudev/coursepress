@@ -21,6 +21,7 @@ class CoursePress_Helper_Setting {
 	 * @return string default capability
 	 */
 	private static function get_default_capability() {
+		$userdata = get_userdata( get_current_user_id() );
 		if ( empty( self::$default_capability ) ) {
 			self::$default_capability = 'coursepress_dashboard_cap';
 			if ( current_user_can( 'manage_options' ) ) {
@@ -88,7 +89,7 @@ class CoursePress_Helper_Setting {
 				$page['handle'] = $handle;
 			}
 
-			if ( current_user_can( 'coursepress_courses_cap' ) && current_user_can( 'coursepress_dashboard_cap' ) ) {
+			if ( CoursePress_Data_Capabilities::can_manage_courses() ) {
 				if ( 'none' != $page['parent'] ) {
 					self::$page_refs[ $handle ] = add_submenu_page( $page['parent'], $page['title'], $page['menu_title'], $capability, $page['handle'], $callback );
 				} else {
@@ -122,7 +123,7 @@ class CoursePress_Helper_Setting {
 	}
 
 	private static function _get_pages() {
-		$pages = apply_filters( 'coursepress_admin_pages', self::$pages );
+		return $pages = apply_filters( 'coursepress_admin_pages', self::$pages );
 		$order = array_map( create_function( '$a', ' return ! empty( $a["order"] ) ? $a["order"] : 0; '), $pages );
 		$max_order = max( $order );
 		$new_order = array();

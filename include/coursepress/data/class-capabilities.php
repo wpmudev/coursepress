@@ -118,13 +118,12 @@ class CoursePress_Data_Capabilities {
 		add_action( 'wp_login', array( __CLASS__, 'restore_capabilities' ), 10, 2 );
 		add_action( 'admin_init', array( __CLASS__, 'fix_admin_capabilities' ) );
 
-		if ( ! is_super_admin() ) {
-			// Filter the capability of the current user
-			add_filter( 'user_has_cap', array( __CLASS__, 'user_cap' ), 10, 3 );
+		// Filter the capability of the current user
+		add_filter( 'user_has_cap', array( __CLASS__, 'user_cap' ), 10, 3 );
 
+		if ( ! current_user_can( 'manage_options' ) ) {
 			// If current user can view and create categories but not edit
 			add_filter( 'tag_row_actions', array( __CLASS__, 'filter_row_actions' ), 10, 2 );
-
 		}
 	}
 
@@ -189,12 +188,7 @@ class CoursePress_Data_Capabilities {
 			$user_id = CoursePress_Helper_Utility::get_id( $user );
 			$user = new WP_User( $user_id );
 		}
-		/**
-		 * do not add_cap if user can manage_options
-		 */
-		if ( user_can( $user->ID, 'manage_options' ) ) {
-			return;
-		}
+
 		$capability_types = self::$capabilities['instructor'];
 		foreach ( $capability_types as $key => $value ) {
 			$user->add_cap( $key );
@@ -1282,12 +1276,7 @@ class CoursePress_Data_Capabilities {
 
 	public static function grant_private_caps( $user_id ) {
 		$user = new WP_User( $user_id );
-		/**
-		 * do not add_cap if user can manage_options
-		 */
-		if ( user_can( $user_id, 'manage_options' ) ) {
-			return;
-		}
+
 		$capability_types = array( 'course', 'unit', 'module', 'module_response', 'notification', 'discussion' );
 		foreach ( $capability_types as $capability_type ) {
 			$user->add_cap( "read_private_{$capability_type}s" );
@@ -1332,12 +1321,7 @@ class CoursePress_Data_Capabilities {
 	public static function assign_instructor_capabilities( $user ) {
 
 		$user_id = CoursePress_Helper_Utility::get_id( $user );
-		/**
-		 * do not add_cap if user can manage_options
-		 */
-		if ( user_can( $user_id, 'manage_options' ) ) {
-			return;
-		}
+
 		// The default capabilities for an instructor
 		$instructor_capabilities = self::get_instructor_capabilities();
 

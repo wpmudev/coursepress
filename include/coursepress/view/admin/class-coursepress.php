@@ -66,7 +66,7 @@ class CoursePress_View_Admin_CoursePress {
 			'order' => 5,
 		);
 
-		$user_can = is_super_admin();
+		$user_can = current_user_can( 'manage_options' );
 
 		if ( ! $user_can ) {
 			$user_can = current_user_can( 'coursepress_courses_cap' );

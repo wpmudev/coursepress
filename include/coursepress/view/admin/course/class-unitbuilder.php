@@ -291,6 +291,20 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					);
 
 					$json_data[] = $unit;
+					
+					
+					// Let's add unit capabilities
+					$user_cap = array();
+					if ( CoursePress_Data_Capabilities::can_change_course_unit_status( $course_id, $unit_id, $user_id ) ) {
+						$user_cap['coursepress_change_unit_status_cap'] = true;
+					}
+					if ( CoursePress_Data_Capabilities::can_delete_course_unit( $course_id, $unit_id, $user_id ) ) {
+						$user_cap['coursepress_delete_course_units_cap'] = true;
+					}
+					if ( CoursePress_Data_Capabilities::can_update_course_unit( $course_id, $unit_id, $user_id ) ) {
+						$user_cap['coursepress_update_course_unit_cap'] = true;
+					}
+					$unit['user_cap'] = $user_cap;
 					$units[] = $unit;
 				}
 
