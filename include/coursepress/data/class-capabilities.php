@@ -118,10 +118,10 @@ class CoursePress_Data_Capabilities {
 		add_action( 'wp_login', array( __CLASS__, 'restore_capabilities' ), 10, 2 );
 		add_action( 'admin_init', array( __CLASS__, 'fix_admin_capabilities' ) );
 
-		// Filter the capability of the current user
-		add_filter( 'user_has_cap', array( __CLASS__, 'user_cap' ), 10, 3 );
-
 		if ( ! current_user_can( 'manage_options' ) ) {
+			// Filter the capability of the current user
+			add_filter( 'user_has_cap', array( __CLASS__, 'user_cap' ), 10, 3 );
+
 			// If current user can view and create categories but not edit
 			add_filter( 'tag_row_actions', array( __CLASS__, 'filter_row_actions' ), 10, 2 );
 		}
@@ -178,7 +178,7 @@ class CoursePress_Data_Capabilities {
 
 	public static function fix_admin_capabilities() {
 		$user_id = get_current_user_id();
-		if ( user_can( $user_id, 'manage_options' ) && ! user_can( $user_id, 'coursepress_dashboard_cap' ) ) {
+		if ( user_can( $user_id, 'manage_options' ) ) {
 			self::assign_admin_capabilities( $user_id );
 		}
 	}
