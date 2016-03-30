@@ -81,6 +81,17 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 				esc_html__( 'all mandatory assessments', 'CP_TD' )
 			) . '</span></label>
 					</div>
+					<div class="progress-next-unit">
+						<label>'. esc_html__( 'Minimum progress to next unit', 'CP_TD' ) . '</label>
+						<label><input id="minimum_current_unit_completion" type="checkbox" value="on" name="meta_minimum_current_unit_completion" <%= unit_minimum_completion_checked %> /><span>'.
+				sprintf( '%s <em>%s</em> %s',
+					esc_html__( 'User needs to', 'CP_TD' ),
+					esc_html__( 'answer', 'CP_TD' ),
+					esc_html__( 'minimum mandatory assessments and view all pages in order to access the next unit', 'CP_TD' )
+				) . '</span></label>
+						<label><input id="minimum_current_unit_successful_completion" type="number" value="<%= unit_minimum_successful_completion %>" name="meta_minimum_current_unit_successful_completion" class="small-text" min="0" max="100" /><span> '.
+				esc_html__( 'Minimum grading to pass to next unit.', 'CP_TD' ).'
+					</div>
 				</div>
 				<div class="unit-buttons">%BUTTON_SAVE% %BUTTON_DELETE% </div>
 				</script>

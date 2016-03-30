@@ -1687,7 +1687,9 @@ var CoursePress = CoursePress || {};
 				unit_date_availability: '',
 				unit_delay_days: 0,
 				unit_force_completion_checked: '',
-				unit_force_successful_completion_checked: ''
+				unit_force_successful_completion_checked: '',
+				unit_minimum_completion_checked: '',
+				unit_minimum_successful_completion: ''
 			};
 
 			this.render();
