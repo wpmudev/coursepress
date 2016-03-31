@@ -401,15 +401,26 @@ var CoursePress = CoursePress || {};
 		// Dialog return actions
 		CoursePress.Enrollment.dialog.handle_signup_return = function( data ) {
 			var signup_errors = data['signup_errors'];
-
-			if ( signup_errors.length === 0 && data['user_data']['logged_in'] === true ) {
+			var steps = $( '[data-type="modal-step"]' );
+			if ( 0 === signup_errors.length && data['user_data']['logged_in'] === true ) {
 				// Check if the page is redirected from an invitation link
 				if ( _coursepress.invitation_data ) {
 					// Add user as instructor
 					CoursePress.Enrollment.dialog.add_instructor( data );
 				} else {
-					// We're in! Now lets enroll
-					CoursePress.Enrollment.dialog.attempt_enroll( data );
+					$.each( steps, function( i, step ) {
+						var action = $( step ).attr( 'data-modal-action' );
+						if ( 'yes' === _coursepress.current_course_is_paid && 'paid_enrollment' === action ) {
+							CoursePress.Enrollment.dialog.openAt( i );
+						} else if ( 'enrolled' === action ) {
+							if ( ! data['already_enrolled'] ) {
+								// We're in! Now lets enroll
+								CoursePress.Enrollment.dialog.attempt_enroll( data );
+							} else {
+								location.href = _coursepress.course_url;
+							}
+						}
+					});
 				}
 			} else {
 				if ( signup_errors.length > 0 ) {
@@ -427,8 +438,6 @@ var CoursePress = CoursePress || {};
 					$( 'input[name=password_confirmation]' ).val('');
 				} else {
 					// Redirect to login
-					var steps = $( '[data-type="modal-step"]' );
-
 					$.each( steps, function( i, step ) {
 						var action = step.attr('data-modal-action');
 						if ( 'login' === action ) {
@@ -441,6 +450,7 @@ var CoursePress = CoursePress || {};
 
 		CoursePress.Enrollment.dialog.handle_login_return = function( data ) {
 			var signup_errors = data['signup_errors'];
+			var steps = $( '[data-type="modal-step"]' );
 			if ( 0 === signup_errors.length && data['logged_in'] === true ) {
 				// Check if the page is redirected from an invitation link
 				if ( _coursepress.invitation_data ) {
@@ -453,6 +463,7 @@ var CoursePress = CoursePress || {};
 							CoursePress.Enrollment.dialog.openAt( i );
 						} else if ( 'enrolled' === action ) {
 							if ( ! data['already_enrolled'] ) {
+								// We're in! Now lets enroll
 								CoursePress.Enrollment.dialog.attempt_enroll( data );
 							} else {
 								location.href = _coursepress.course_url;
@@ -868,11 +879,36 @@ var CoursePress = CoursePress || {};
 			e.preventDefault();
 		} );
 
-
 		//$( '.view-response' ).link_popup( { link_text:  _coursepress.workbook_view_answer });
 		//$( '.view-response' ).link_popup( { link_text:  '<span class="dashicons dashicons-visibility"></span>' });
 		$( '.workbook-table .view-response' ).link_popup( { link_text:  '<span class="dashicons dashicons-visibility"></span>', offset_x: -160 });
 		$( '.workbook-table .feedback' ).link_popup( { link_text:  '<span class="dashicons dashicons-admin-comments"></span>' });
+		bind_marketpress_add_to_cart_button();
+	}
+
+	/**
+	 * MP add to cart
+	 */
+	function bind_marketpress_add_to_cart_button() {
+		if ( 'undefined' === typeof( _coursepress.marketpress_is_used ) || 'no' === _coursepress.marketpress_is_used ) {
+			return;
+		}
+		$('body.single-course button.mp_button-addcart').on( 'click', function() {
+			var form = $(this).closest('form');
+			$.ajax({
+				type: 'POST',
+				url: form.data('ajax-url'),
+				data: {
+					product: $('[name=product_id]', form).val(),
+					cart_action: 'add_item'
+				}
+			}).done( function(data) {
+				if ( data.success && 'undefined' !== typeof( _coursepress.marketpress_cart_url ) ) {
+					window.location.assign( _coursepress.marketpress_cart_url );
+				}
+			});
+			return false;
+		});
 	}
 
 	function bind_module_actions() {

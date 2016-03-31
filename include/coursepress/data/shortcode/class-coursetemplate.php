@@ -259,6 +259,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 					$prerequisites = maybe_unserialize( $pre_course );
 					$prerequisites = empty( $prerequisites ) ? array() : $prerequisites;
+					$prerequisites = is_array( $prerequisites ) ? $prerequisites : array();
 
 					$completed = 0;
 					$all_complete = false;
