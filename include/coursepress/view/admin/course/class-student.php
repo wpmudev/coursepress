@@ -95,7 +95,7 @@ if ( $is_open_end_course ) {
 	$start = strtotime( CoursePress_Data_Course::get_setting( $course_id, 'course_start_date', true ) );
 	$end = strtotime( CoursePress_Data_Course::get_setting( $course_id, 'course_end_date', true ) );
 	$diff = abs( $end - $start );
-	$days = $diff / 86400;  // 86400 seconds in one day
+	$days = $diff / DAY_IN_SECONDS;
 	$days = intval( $days );
 	printf( _n( '%s Day', '%s Days', $days, 'CP_TD' ), $days );
 }
