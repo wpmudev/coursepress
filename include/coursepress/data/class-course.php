@@ -31,7 +31,7 @@ class CoursePress_Data_Course {
 					'not_found_in_trash' => __( 'No Courses found in Trash', 'CP_TD' ),
 					'view' => __( 'View Course', 'CP_TD' ),
 				),
-				'public' => false,
+				'public' => true,
 				'exclude_from_search' => false,
 				'has_archive' => true,
 				'show_ui' => false,
@@ -627,7 +627,9 @@ class CoursePress_Data_Course {
 
 	public static function get_units_with_modules( $course_id, $status = array( 'publish' ) ) {
 		self::$last_course_id = $course_id;
-		$combine = array();
+        $combine = array(
+            'pages' => array(),
+        );
 
 		if ( ! array( $status ) ) {
 			$status = array( $status );
@@ -715,9 +717,9 @@ class CoursePress_Data_Course {
 
 			// Fix broken page titles
 			$page_titles = get_post_meta( $post_id, 'page_title', true );
-			if ( empty( $page_titles ) ) {
+			if ( empty( $page_titles ) && isset( $unit['pages'] ) ) {
 				$page_titles = array();
-				$page_visible = array();
+                $page_visible = array();
 				foreach ( $unit['pages'] as $key => $page ) {
 					$page_titles[ 'page_' . $key ] = $page['title'];
 					$page_visible[] = true;
