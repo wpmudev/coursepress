@@ -76,7 +76,25 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			$actions['students'] = sprintf( '<a href="?page=%s&action=%s&id=%s&tab=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), 'students',  __( 'Students', 'CP_TD' ) );
 		}
 
-		$actions['view_course'] = sprintf( '<a href="%s">%s</a>', get_permalink( $item->ID ), __( 'View Course', 'CP_TD' ) );
+		if ( 'publish' === $item->post_status ) {
+			$actions['view_course'] = sprintf(
+				'<a href="%s">%s</a>',
+				get_permalink( $item->ID ),
+				__( 'View Course', 'CP_TD' )
+			);
+		}
+
+		/**
+		 * link to units
+		 */
+		if ( 'publish' === $item->post_status ) {
+			$actions['view_units'] = sprintf(
+				'<a href="%s%s">%s</a>',
+				get_permalink( $item->ID ),
+				CoursePress_Core::get_slug( 'units/' ),
+				__( 'View Units', 'CP_TD' )
+			);
+		}
 
 		/**
 		 * check instructor privileges
