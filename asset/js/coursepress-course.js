@@ -270,6 +270,16 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			animate: 200 // collapse will take 300ms
 		} );
 
+		/**
+		 * course title
+		 */
+		if ( _coursepress.course_title ) {
+			$('.coursepress_settings_wrapper h1').append( ': <small>'+_coursepress.course_title+'</small>');
+			$('#course_name').on('change', function() {
+				$('.coursepress_settings_wrapper h1 small').html($(this).val());
+			});
+		}
+
 		// Slide Accordion into Position
 		$( '#course-setup-steps .step-title' ).bind( 'click', function() {
 			var self = jQuery( this );
@@ -984,8 +994,8 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		} );
 
 		$( '.coursepress_settings_wrapper.reports .column-report .pdf' ).on( 'click', function() {
-			if ( false == $(this).data('click') ) {
-				alert( $(this).attr('title') );
+			if ( ! $(this).data('click') ) {
+				window.alert( $(this).attr('title') );
 				return false;
 			}
 			var form = $( this ).parents( 'form' )[ 0 ];

@@ -107,6 +107,7 @@ class CoursePress_Helper_JavaScript {
 
 			if ( ! empty( $_REQUEST['id'] ) ) {
 				$localize_array['course_id'] = (int) $_REQUEST['id'];
+				$localize_array['course_title'] = get_the_title( $_REQUEST['id'] );
 			}
 		}
 
