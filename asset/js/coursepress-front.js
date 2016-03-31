@@ -890,7 +890,7 @@ var CoursePress = CoursePress || {};
 	 * MP add to cart
 	 */
 	function bind_marketpress_add_to_cart_button() {
-		if ( 'undefined' === typeof( _coursepress.marketpress_is_used ) || 'no' === _coursepress.marketpress_is_used ) {
+		if ( undefined === _coursepress.marketpress_is_used || 'no' === _coursepress.marketpress_is_used ) {
 			return;
 		}
 		$('body.single-course button.mp_button-addcart').on( 'click', function() {
@@ -903,7 +903,7 @@ var CoursePress = CoursePress || {};
 					cart_action: 'add_item'
 				}
 			}).done( function(data) {
-				if ( data.success && 'undefined' !== typeof( _coursepress.marketpress_cart_url ) ) {
+				if ( data.success && undefined !== _coursepress.marketpress_cart_url ) {
 					window.location.assign( _coursepress.marketpress_cart_url );
 				}
 			});
