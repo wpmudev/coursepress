@@ -265,7 +265,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					$all_complete = false;
 
 					foreach ( $prerequisites as $prerequisite ) {
-						if ( CoursePress_Data_Course::student_enrolled( $student_id, $prerequisite ) && CoursePress_Data_Course::student_completed( $student_id, $course_id ) ) {
+						if ( CoursePress_Data_Course::student_enrolled( $student_id, $prerequisite ) && CoursePress_Data_Student::is_course_complete( $student_id, $course_id ) ) {
 							$completed += 1;
 						}
 					}
@@ -317,7 +317,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 						$all_complete = false;
 
 						foreach ( $prerequisites as $prerequisite ) {
-							if ( CoursePress_Data_Course::student_enrolled( $student_id, $prerequisite ) && CoursePress_Data_Course::student_completed( $student_id, $course_id ) ) {
+							if ( CoursePress_Data_Course::student_enrolled( $student_id, $prerequisite ) && CoursePress_Data_Student::is_course_complete( $student_id, $course_id ) ) {
 								$completed += 1;
 							}
 						}

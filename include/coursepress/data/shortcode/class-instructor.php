@@ -146,11 +146,20 @@ class CoursePress_Data_Shortcode_Instructor {
 					$show_username = cp_is_true( CoursePress_Core::get_setting( 'instructor/show_username', true ) );
 					$profile_href .= $show_username ? trailingslashit( $instructor->user_login ) : trailingslashit( $hash );
 
-					$display_name = CoursePress_Helper_Utility::get_user_name( $instructor->ID, false, false );
+					$display_name = apply_filters(
+						'coursepress_schema',
+						CoursePress_Helper_Utility::get_user_name( $instructor->ID, false, false ),
+						'title'
+					);
 
 					switch ( $style ) {
 						case 'block':
-							$content .= '<div class="instructor-profile ' . $class . '">';
+							/**
+							 * schema.org
+							 */
+							$schema = apply_filters( 'coursepress_schema', '', 'itemscope-person' );
+
+							$content .= '<div class="instructor-profile ' . $class . '"'.$schema.'>';
 
 							if ( $link_all ) {
 								$content .= '<a href="' . esc_url_raw( $profile_href ) . '">';
@@ -160,7 +169,12 @@ class CoursePress_Data_Shortcode_Instructor {
 								$content .= '<div class="profile-name">' . $display_name . '</div>';
 							}
 
-							$content .= '<div class="profile-avatar">';
+							/**
+							 * schema.org
+							 */
+							$schema = apply_filters( 'coursepress_schema', '', 'image' );
+
+							$content .= '<div class="profile-avatar"'.$schema.'>';
 							$content .= get_avatar(
 								$instructor->ID,
 								$avatar_size,
