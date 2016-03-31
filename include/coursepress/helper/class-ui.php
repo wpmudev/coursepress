@@ -419,4 +419,23 @@ class CoursePress_Helper_UI {
 
 		return $content;
 	}
+
+	/**
+	 * Allow to setup posts per page
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $name option name
+	 * @param string $label Label for the option.
+	 *
+	 */
+	public static function admin_per_page_add_options( $name, $label ) {
+		$option = 'per_page';
+		$args = array(
+			'label' => $label,
+			'default' => 10,
+			'option' => sprintf( 'coursepress_%s_%s', $name, $option ),
+		);
+		add_screen_option( $option, $args );
+	}
 }

@@ -48,6 +48,11 @@ class CoursePress_View_Admin_CoursePress {
 			'tiny_mce_before_init',
 			array( __CLASS__, 'init_tiny_mce_listeners' )
 		);
+
+		/**
+		 * load admin page hook
+		 */
+		add_action( 'load-toplevel_page_coursepress', array( __CLASS__, 'load' ) );
 	}
 
 	public static function add_valid( $valid_pages ) {
@@ -123,5 +128,18 @@ class CoursePress_View_Admin_CoursePress {
 		}
 
 		return $init_array;
+	}
+
+	/**
+	 * Acction called when page is loaded.
+	 *
+	 * @since 2.0.0
+	 *
+	 */
+	public static function load() {
+		CoursePress_Helper_UI::admin_per_page_add_options(
+			'courses',
+			__( 'Courses', 'CP_TD' )
+		);
 	}
 }
