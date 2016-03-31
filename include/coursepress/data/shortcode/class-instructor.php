@@ -148,7 +148,7 @@ class CoursePress_Data_Shortcode_Instructor {
 
 					$display_name = apply_filters(
 						'coursepress_schema',
-						CoursePress_Helper_Utility::get_user_name( $instructor->ID, false, false ),
+						esc_html( CoursePress_Helper_Utility::get_user_name( $instructor->ID, false, false ) ),
 						'title'
 					);
 
@@ -211,9 +211,9 @@ class CoursePress_Data_Shortcode_Instructor {
 						case 'list':
 						case 'list-flat':
 							if ( $link ) {
-								$list[] = '<a href="' . esc_url_raw( $profile_href ) . '">' . esc_html( $display_name ) . '</a>';
+								$list[] = '<a href="' . esc_url_raw( $profile_href ) . '">' . $display_name . '</a>';
 							} else {
-								$list[] = esc_html( $display_name );
+								$list[] = $display_name;
 							}
 							break;
 					}
