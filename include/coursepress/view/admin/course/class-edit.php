@@ -1295,8 +1295,12 @@ class CoursePress_View_Admin_Course_Edit {
 				break;
 
 			case 'duplicate_course':
-				$json_data = CoursePress_Data_Course::duplicate_course( $data );
-				$success = ! empty( $json_data );
+				// Check wp nonce.
+				if ( wp_verify_nonce( $data->data->nonce, 'duplicate_course' ) ) {
+					$json_data = CoursePress_Data_Course::duplicate_course( $data );
+					$success = ! empty( $json_data );
+				}
+
 				break;
 
 		}

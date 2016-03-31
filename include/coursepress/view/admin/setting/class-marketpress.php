@@ -12,7 +12,7 @@ class CoursePress_View_Admin_Setting_MarketPress {
 
 	public static function init() {
 		/**
-		 * do not runt if integration is not active
+		 * do not run if integration is not active
 		 */
 		if ( ! CoursePress_Helper_Extension_MarketPress::activated() ) {
 			return;
@@ -131,10 +131,12 @@ class CoursePress_View_Admin_Setting_MarketPress {
 	}
 
 	public static function process_form( $page, $tab ) {
+		if ( ! isset( $_POST['_wpnonce'] ) ) { return; }
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'update-coursepress-options' ) ) { return; }
+
 		if ( ! isset( $_POST['action'] ) ) { return; }
 		if ( 'updateoptions' != $_POST['action'] ) { return; }
 		if ( 'marketpress' != $tab ) { return; }
-		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'update-coursepress-options' ) ) { return; }
 
 		$settings = CoursePress_Core::get_setting( false ); // false: Get all settings.
 

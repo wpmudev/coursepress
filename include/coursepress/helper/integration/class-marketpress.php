@@ -177,10 +177,10 @@ class CoursePress_Helper_Integration_MarketPress {
 
 		// Fix missing MP3.0 meta fields
 		add_filter( 'wpmudev_field/get_value/sku', array( __CLASS__, 'fix_mp3_sku' ), 10, 4 );
-			add_filter( 'wpmudev_field/get_value/regular_price', array( __CLASS__, 'fix_mp3_regular_price' ), 10, 4 );
-			add_filter( 'wpmudev_field/get_value/has_sale', array( __CLASS__, 'fix_mp3_has_sale' ), 10, 4 );
-			add_filter( 'wpmudev_field/get_value/sale_price[amount]', array( __CLASS__, 'fix_mp3_sale_price_amount' ), 10, 4 );
-			add_filter( 'wpmudev_field/get_value/file_url', array( __CLASS__, 'fix_mp3_file_url' ), 10, 4 );
+		add_filter( 'wpmudev_field/get_value/regular_price', array( __CLASS__, 'fix_mp3_regular_price' ), 10, 4 );
+		add_filter( 'wpmudev_field/get_value/has_sale', array( __CLASS__, 'fix_mp3_has_sale' ), 10, 4 );
+		add_filter( 'wpmudev_field/get_value/sale_price[amount]', array( __CLASS__, 'fix_mp3_sale_price_amount' ), 10, 4 );
+		add_filter( 'wpmudev_field/get_value/file_url', array( __CLASS__, 'fix_mp3_file_url' ), 10, 4 );
 
 		/**
 		 * Allow to add step template.
@@ -489,7 +489,6 @@ class CoursePress_Helper_Integration_MarketPress {
 					'ID' => $product_id,
 					'post_status' => 'draft',
 				);
-				error_log( 'a' );
 				self::$updated = true;
 				wp_update_post( $product );
 			}
@@ -691,13 +690,10 @@ class CoursePress_Helper_Integration_MarketPress {
 		 */
 		$product_id = self::get_product_id( $course_id );
 		if ( empty( $product_id ) ) {
-			$settings = CoursePress_Data_Course::get_setting( $course_id, true );
-			$is_paid = isset( $settings['payment_paid_course'] ) ? $settings['payment_paid_course'] : false;
-			$is_paid = ! $is_paid || 'off' == $is_paid ? false : true;
 			/**
 			 * Create product only for paid course
 			 */
-			if ( $is_paid ) {
+			if ( CoursePress_Data_Course::is_paid_course( $course_id ) ) {
 				$product_id = self::_update_product_using_course( $course_id );
 				self::update_product_meta( $product_id, $settings, $course_id );
 			}
@@ -909,29 +905,24 @@ class CoursePress_Helper_Integration_MarketPress {
 			mp_orderstatus_link( false, true ) . $order->post_title . '/'
 		);
 
-		$tags = array(
-			'CUSTOMER_NAME',
-			'BLOG_NAME',
-			'LOGIN_ADDRESS',
-			'WEBSITE_ADDRESS',
-			'COURSE_ADDRESS',
-			'COURSE_TITLE',
-			'ORDER_ID',
-			'ORDER_STATUS_URL',
-		);
-		$tags_replaces = array(
-			$order->mp_shipping_info['name'],
-			get_bloginfo(),
-			cp_student_login_address(),
-			home_url(),
-			get_permalink( $course_id ),
-			$course_name,
-			$order->ID,
-			$tracking_url,
+		$vars = array(
+			'CUSTOMER_NAME' => $order->mp_shipping_info['name'],
+			'BLOG_NAME' => get_bloginfo(),
+			'LOGIN_ADDRESS' => cp_student_login_address(),
+			'WEBSITE_ADDRESS' => home_url(),
+			'COURSE_ADDRESS' => get_permalink( $course_id ),
+			'COURSE_TITLE' => $course_name,
+			'ORDER_ID' => $order->ID,
+			'ORDER_STATUS_URL' => $tracking_url,
 		);
 
-		$order_message_body = self::_get_order_content_email();
-		$order_message_body = str_replace( $tags, $tags_replaces, $order_message_body );
+		$order_message_body = CoursePress_Helper_Utility::replace_vars(
+			self::_get_order_content_email(),
+			apply_filters(
+				'coursepress_order_email_vars',
+				$vars
+			)
+		);
 
 		add_filter(
 			'wp_mail_from',
@@ -1014,7 +1005,7 @@ class CoursePress_Helper_Integration_MarketPress {
 		if ( ! CoursePress_Data_Course::is_paid_course( $atts['course_id'] ) ) {
 			return $content;
 		}
-?>
+		?>
 		<script type="text/template" id="modal-view-mp-template" data-type="modal-step" data-modal-action="paid_enrollment">
 			<div class="bbm-modal__topbar">
 				<h3 class="bbm-modal__title">
@@ -1031,12 +1022,12 @@ class CoursePress_Helper_Integration_MarketPress {
 						get_the_title( $atts['course_id'] )
 					)
 				); ?></p>
-<?php /* echo self::_get_add_to_cart_button_by_course_id( $atts['course_id'] ); */ ?>
+				<?php /* echo self::_get_add_to_cart_button_by_course_id( $atts['course_id'] ); */ ?>
 			</div>
 			<div class="bbm-modal__bottombar">
 			</div>
 		</script>
-<?php
+		<?php
 	}
 
 	/**
@@ -1051,7 +1042,8 @@ class CoursePress_Helper_Integration_MarketPress {
 		global $mp;
 
 		if ( empty( $mp ) ) { return false; }
-		$cart_info = $mp->get_order( $order_id )->mp_cart_info;
+		$order = $mp->get_order( $order_id );
+		$cart_info = $order->mp_cart_info;
 		if ( ! is_array( $cart_info ) ) { return false; }
 
 		$mp_product_id = key( $cart_info );
@@ -1067,7 +1059,7 @@ class CoursePress_Helper_Integration_MarketPress {
 	private static function _get_order_content_email() {
 		$default_mp_order_content_email = sprintf( __( 'Thank you for your order %1$s,
 
-Your order for course "%2$s" has been received! 
+Your order for course "%2$s" has been received!
 
 Please refer to your Order ID (ORDER_ID) whenever contacting us.
 
@@ -1147,7 +1139,7 @@ Yours sincerely,
 			return;
 		}
 		/**
-		/* If its not a product, exit
+		 * If its not a product, exit
 		 */
 		if ( self::$product_ctp != $post->post_type ) {
 			return;

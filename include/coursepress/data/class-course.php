@@ -1523,13 +1523,6 @@ class CoursePress_Data_Course {
 	 *
 	 */
 	static public function duplicate_course( $data ) {
-		/**
-		 * first check wp nonce!
-		 */
-		if ( ! wp_verify_nonce( $data->data->nonce, 'duplicate_course' ) ) {
-			return array();
-		}
-
 		$course_id = (int) $data->data->course_id;
 
 		$the_course = get_post( $course_id );
@@ -1541,7 +1534,10 @@ class CoursePress_Data_Course {
 		$the_course = CoursePress_Helper_Utility::object_to_array( $the_course );
 		$the_course['post_author'] = get_current_user_id();
 		$the_course['comment_count'] = 0;
-		$the_course['post_title'] = $the_course['post_title'] . ' ' . __( 'Copy', 'CP_TD' );
+		$the_course['post_title'] = sprintf(
+			_x( '%s Copy', 'Default title for a duplicated course. Variable is original title.', 'CP_TD' ),
+			$the_course['post_title']
+		);
 		$the_course['post_status'] = 'draft';
 		unset( $the_course['ID'] );
 		unset( $the_course['post_date'] );
