@@ -14,7 +14,7 @@
  */
 class CoursePress_Helper_Integration_WooCommerce {
 
-	private static $use_woo = false;
+	private static $is_active = false;
 	private static $updated = false;
 	private static $product_ctp = 'product';
 
@@ -24,11 +24,19 @@ class CoursePress_Helper_Integration_WooCommerce {
 	 * @since  2.0.0
 	 */
 	public static function init() {
-		// NOT DONE YET...
-		if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+
+		/**
+		 * Always setup _coursepress javasctipt object.
+		 */
+		add_filter(
+			'coursepress_localize_object',
+			array( __CLASS__, 'add_settings_to_js_coursepress' )
+		);
+
+		if ( ! class_exists( 'WooCommerce' ) ) {
 			return;
 		}
-		self::$use_woo = true;
+		self::$is_active = true;
 
 		add_filter( 'coursepress_payment_supported', array( __CLASS__, 'is_payment_supported' ), 10, 2 );
 
@@ -99,9 +107,17 @@ class CoursePress_Helper_Integration_WooCommerce {
 			10, 2
 		);
 
+		/**
+		 * Allow to add step template.
+		 *
+		 * @since 2.0.0
+		 *
+		 * @param arrat $atts Configuration array.
+		 *
+		 */
 		add_action(
 			'coursepress_registration_form_end',
-			array( __CLASS__, 'add_woo_add_to_cart_template' ),
+			array( __CLASS__, 'add_to_cart_template' ),
 			10, 1
 		);
 
@@ -112,20 +128,39 @@ class CoursePress_Helper_Integration_WooCommerce {
 			10, 3
 		);
 
+		/**
+		 * redirect product to course
+		 */
+		/* This action is documented in WordPress file: /wp-includes/template-loader.php */
+		add_action(
+			'template_redirect',
+			array( __CLASS__, 'redirect_to_product' )
+		);
+
+		/**
+		 * replace product link to course link
+		 */
+		/* This filter is documented in WordPress file: /wp-includes/link-template.php */
+		add_filter(
+			'post_type_link',
+			array( __CLASS__, 'change_product_linkt_to_course_link' ),
+			10, 2
+		);
+
 	}
 
 	public static function change_order_status( $order_id, $old_status, $new_status ) {
 		/**
 		 * if we do not use woo, then we should not use this function
 		 */
-		if ( ! self::$use_woo ) {
+		if ( ! self::$is_active ) {
 			return;
 		}
 		$order = new WC_order( $order_id );
 		$items = $order->get_items();
 		$user_id = get_post_meta( $order_id, '_customer_user', true );
 		foreach ( $items as $item ) {
-			$course_id = get_post_meta( $item['product_id'], 'cp_course_id', false );
+			$course_id = self::get_course_id_by_product( $item['product_id'] );
 			if ( empty( $course_id ) ) {
 				continue;
 			}
@@ -199,7 +234,15 @@ class CoursePress_Helper_Integration_WooCommerce {
 		return $content;
 	}
 
-	public static function woo_product_id( $course_id = false ) {
+	/**
+	 * Get course id from course id
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $course_id course to check
+	 *
+	 */
+	public static function get_product_id( $course_id = false ) {
 		$args = array(
 			'posts_per_page' => 1,
 			'post_type'		 => self::$product_ctp,
@@ -222,17 +265,17 @@ class CoursePress_Helper_Integration_WooCommerce {
 	public static function update_product( $course_id, $settings ) {
 		$automatic_sku_number = 'CP-' . $course_id;
 
-		if ( ! self::$use_woo ) {
+		if ( ! self::$is_active ) {
 			do_action( 'coursepress_mp_update_product', $course_id );
 			return true;
 		}
 
-		$product_id = self::woo_product_id( $course_id );
+		$product_id = self::get_product_id( $course_id );
 
 		$course = get_post( $course_id );
 
 		$post = array(
-			'post_status'  => 'publish',
+			'post_status'  => $course->post_status,
 			'post_title'   => CoursePress_Helper_Utility::filter_content( $course->post_title, true ),
 			'post_type'    => self::$product_ctp,
 			'post_parent'  => $course_id,
@@ -260,7 +303,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 				$sku[0] = CoursePress_Helper_Utility::filter_content( ( ! empty( $settings['mp_sku'] ) ? $settings['mp_sku'] : '' ), true );
 			}
 
-			if ( self::$use_woo ) {
+			if ( self::$is_active ) {
 				CoursePress_Data_Course::update_setting( $course_id, 'woo/product_id', $post_id );
 
 				$price	  = CoursePress_Helper_Utility::filter_content( ( ! empty( $settings['mp_product_price'] ) ? $settings['mp_product_price'] : 0 ), true );
@@ -282,10 +325,10 @@ class CoursePress_Helper_Integration_WooCommerce {
 				update_post_meta( $post_id, 'mp_sale_price_enabled', CoursePress_Helper_Utility::filter_content( ( ! empty( $settings['mp_sale_price_enabled'] ) ? $settings['mp_sale_price_enabled'] : '' ), true ) );
 				update_post_meta( $post_id, 'cp_course_id', $course_id );
 			}
-			// Remove product if its not a paid course (clean up MarketPress products)
+			// Remove product if its not a paid course (clean up WooCommerce products)
 		} elseif ( isset( $settings['payment_paid_course'] ) && empty( $settings['payment_paid_course'] ) ) {
 			if ( $product_id && 0 != $product_id ) {
-				if ( self::$use_woo ) {
+				if ( self::$is_active ) {
 					$unpaid = CoursePress_Core::get_setting( 'woocommerce/unpaid', 'change_status' );
 					if ( 'delete' == $unpaid ) {
 						CoursePress_Data_Course::delete_setting( $course_id, 'woo' );
@@ -304,11 +347,19 @@ class CoursePress_Helper_Integration_WooCommerce {
 		}
 	}
 
+	/**
+	 * Allow to take some action when we delete product
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $product_id product to check
+	 *
+	 */
 	public static function update_course_when_deleting_product( $product_id ) {
 		/**
-		 * if we do not use woo, then we should not use this function
+		 * if we do not use WooCommerce, then we should not use this function
 		 */
-		if ( ! self::$use_woo ) {
+		if ( ! self::$is_active ) {
 			return;
 		}
 		/**
@@ -321,7 +372,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 		/**
 		 * get course id, return if empty
 		 */
-		$course_id = get_post_meta( $product_id, 'cp_course_id', true );
+		$course_id = self::get_course_id_by_product( $product_id );
 		if ( empty( $course_id ) ) {
 			return;
 		}
@@ -329,11 +380,19 @@ class CoursePress_Helper_Integration_WooCommerce {
 		CoursePress_Data_Course::update_setting( $course_id, 'payment_paid_course', 'off' );
 	}
 
+	/**
+	 * Allow to take some action when we delete course
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $course_id course to check
+	 *
+	 */
 	public static function update_product_when_deleting_course( $course_id ) {
 		/**
-		 * if we do not use woo, then we should not use this function
+		 * if we do not use WooCommerce, then we should not use this function
 		 */
-		if ( ! self::$use_woo ) {
+		if ( ! self::$is_active ) {
 			return;
 		}
 		/**
@@ -350,13 +409,12 @@ class CoursePress_Helper_Integration_WooCommerce {
 		/**
 		 * get product
 		 */
-		$product_id = self::woo_product_id( $course_id );
+		$product_id = self::get_product_id( $course_id );
 		if ( empty( $product_id ) ) {
 			return;
 		}
 		$delete = CoursePress_Core::get_setting( 'woocommerce/delete', 'change_status' );
 		if ( 'delete' == $delete ) {
-			CoursePress_Data_Course::delete_setting( $course_id, 'woo' );
 			wp_delete_post( $product_id );
 		} else {
 			wp_update_post(
@@ -393,7 +451,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 	}
 
 	public static function update_course_from_product( $product_id, $post, $before_update ) {
-		if ( ! self::$use_woo ) {
+		if ( ! self::$is_active ) {
 			return;
 		}
 		$x = '';
@@ -408,7 +466,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 			return;
 		}
 
-		$course_id = (int) get_post_meta( $product_id, 'cp_course_id', true );
+		$course_id = self::get_course_id_by_product( $product_id );
 
 		// No point proceeding if there is no associated course
 		if ( empty( $course_id ) ) {
@@ -529,7 +587,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 		if ( self::is_user_purchased_course( false, $course_id, $user_id ) ) {
 			return $content;
 		}
-		return self::get_add_to_cart_button_by_course_id( $course_id );
+		return self::_get_add_to_cart_button_by_course_id( $course_id );
 	}
 
 	/**
@@ -543,7 +601,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 	 *
 	 * @return string html with "add to cart" button
 	 */
-	private static function get_add_to_cart_button_by_course_id( $course_id ) {
+	private static function _get_add_to_cart_button_by_course_id( $course_id ) {
 		$product_id = CoursePress_Data_Course::get_setting( $course_id, 'woo/product_id', false );
 		if ( empty( $product_id ) ) {
 			return '';
@@ -608,22 +666,17 @@ class CoursePress_Helper_Integration_WooCommerce {
 	}
 
 	/**
-	 * Allow to change enroll button
+	 * Allow to add step template.
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param string $content current button string
-	 * @param integer $course_id course to check
-	 * @param integer $user_id user to check
-	 * @param string $button_option button optiopn
-	 *
-	 * @return string button string
+	 * @param arrat $atts Configuration array.
 	 */
-	public static function add_woo_add_to_cart_template( $atts ) {
+	public static function add_to_cart_template( $atts ) {
 		/**
 		 * if we do not use woo, then we should not use this function
 		 */
-		if ( ! self::$use_woo ) {
+		if ( ! self::$is_active ) {
 			return;
 		}
 
@@ -638,7 +691,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 				<p>
 					<?php esc_html_e( 'You can now add this course to cart.', 'CP_TD' ); ?>
 				</p>
-				<?php echo self::get_add_to_cart_button_by_course_id( $atts['course_id'] ); ?>
+				<?php echo self::_get_add_to_cart_button_by_course_id( $atts['course_id'] ); ?>
 			</div>
 			<div class="bbm-modal__bottombar">
 			</div>
@@ -658,41 +711,138 @@ class CoursePress_Helper_Integration_WooCommerce {
 	 * @return boolean stop or not enrollment process?
 	 */
 	public static function allow_student_to_enroll( $enroll_student, $student_id, $course_id ) {
-		if ( ! self::$use_woo ) {
+		if ( ! self::$is_active ) {
 			return $enroll_student;
 		}
 		return ! CoursePress_Data_Course::is_paid_course( $course_id );
 	}
-}
 
-/**
- * Template functions
- */
-
-if ( ! function_exists( 'cp_use_woo' ) ) {
-	$active_plugins = apply_filters(
-		'active_plugins',
-		get_option( 'active_plugins' )
-	);
-
-	if ( in_array( 'woocommerce/woocommerce.php', $active_plugins ) ) {
-		function cp_use_woo() {
-			return true;
-		}
-	} else {
-		function cp_use_woo() {
+	public static function use_redirect_woo_to_course() {
+		if ( ! self::$is_active ) {
 			return false;
 		}
-	}
-}
-
-if ( ! function_exists( 'cp_redirect_woo_to_course' ) ) {
-	function cp_redirect_woo_to_course() {
-		$redirect_woo_to_course = get_option( 'redirect_woo_to_course', 0 );
+		$redirect_woo_to_course = CoursePress_Core::get_setting( 'woocommerce/redirect', false );
 		if ( ! $redirect_woo_to_course ) {
 			return false;
-		} else {
-			return true;
 		}
+		return true;
+	}
+
+	/**
+	 * Return private variable, is extension active or not.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return boolean Is extension active?
+	 */
+	public static function is_active() {
+		return self::$is_active;
+	}
+
+	/**
+	 * Add extension settings to _coursepress javascript array
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $localize_array Array of settings.
+	 */
+	public static function add_settings_to_js_coursepress( $localize_array ) {
+		$localize_array['woocommerce_is_used'] = self::$is_active? 'yes' : 'no';
+		return $localize_array;
+	}
+
+	/**
+	 * rediret product from product to course
+	 *
+	 * @since 2.0.0
+	 *
+	 * @global WP_Post $post current post
+	 * @global WP_Query $wp_query
+	 */
+	public static function redirect_to_product() {
+		global $post, $wp_query;
+		if ( ! self::$is_active ) {
+			return;
+		}
+		/**
+		 * only when redirect option is on.
+		 */
+		$use_redirect = CoursePress_Core::get_setting( 'woocommerce/redirect', false );
+		if ( ! $use_redirect ) {
+			return;
+		}
+		/**
+		 * only single!
+		 */
+		if ( ! $wp_query->is_singular ) {
+			return;
+		}
+		/**
+		/* If its not a product, exit
+		 */
+		if ( self::$product_ctp != $post->post_type ) {
+			return;
+		}
+		/**
+		 * redirect if course exists
+		 */
+		$course_id = self::get_course_id_by_product( $post );
+		if ( $course_id ) {
+			wp_safe_redirect( get_permalink( $course_id ) );
+			exit;
+		}
+	}
+
+	/**
+	 * Allow to replace link to product.
+	 *
+	 * This function is used in 'post_link' filter to change product link to
+	 * reduce number of redirects.
+	 *
+	 * @since: 2.0.0
+	 *
+	 * @param string $url Current post url.
+	 * @param WP_Post $post Curent post object.
+	 *
+	 */
+	public static function change_product_linkt_to_course_link( $url, $post ) {
+		if ( ! self::$is_active ) {
+			return $url;
+		}
+		/**
+		/* If its not a product, exit
+		 */
+		if ( self::$product_ctp != $post->post_type ) {
+			return $url;
+		}
+		/**
+		 * only when redirect option is on.
+		 */
+		$use_redirect = CoursePress_Core::get_setting( 'woocommerce/redirect', false );
+		if ( ! $use_redirect ) {
+			return $url;
+		}
+		$course_id = self::get_course_id_by_product( $post );
+		if ( $course_id ) {
+			return get_permalink( $course_id );
+		}
+		return $url;
+	}
+
+	/**
+	 * Get Course ID from product
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param WP_Post/integer product object or product id
+	 *
+	 * @return integer Course ID.
+	 */
+	public static function get_course_id_by_product( $product ) {
+		$product_id = is_object( $product ) ? $product->ID : $product;
+		if ( empty( $product_id ) ) {
+			return 0;
+		}
+		return intval( get_post_meta( $product_id, 'cp_course_id', true ) );
 	}
 }
