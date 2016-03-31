@@ -204,7 +204,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		$valid_categories = array_keys( $valid_categories );
 		$category = isset( $_GET['category'] ) && in_array( $_GET['category'], $valid_categories ) ? sanitize_text_field( $_GET['category'] ) : false;
 
-		$post_status = array( 'publish', 'private' );
+		$post_status = array( 'publish', 'private', 'draft' );
 
 		// Hide private courses
 		if ( ! CoursePress_Data_Capabilities::can_manage_courses() ) {
@@ -243,7 +243,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 				if ( ! empty( $assigned_courses ) ) {
 					$post_args['post__in'] = $assigned_courses;
 					unset( $post_args['author'] );
-					add_filter( 'posts_where', array( 'CoursePress_Data_Instructor', 'filter_by_where' ) );
+					add_filter( 'posts_where', array( 'CoursePress_Data_Instructor', 'filter_by_whereall' ) );
 				}
 
 			} 

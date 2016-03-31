@@ -53,6 +53,20 @@ class CoursePress_Data_Instructor {
 		return $where;
 	}
 
+	public static function filter_by_whereall( $where ) {
+		global $wpdb;
+
+		$user_id = get_current_user_id();
+		$post_type = CoursePress_Data_Course::get_post_type_name();
+
+		$where .= $wpdb->prepare( " OR ({$wpdb->posts}.post_type='%s' AND {$wpdb->posts}.post_author=%d)", $post_type, $user_id );
+
+		// Let's remove the filter right away
+		remove_filter( 'posts_where', array( __CLASS__, 'filter_by_whereall' ) );
+
+		return $where;
+	}
+
 	public static function get_assigned_courses_ids( $user, $status = 'all' ) {
 		global $wpdb;
 
