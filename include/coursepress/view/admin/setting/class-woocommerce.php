@@ -14,19 +14,6 @@ class CoursePress_View_Admin_Setting_WooCommerce {
 		if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 			return;
 		}
-		// TODO Find out if Certificates are a premium feature?
-		//      Or only certificate-emails... Or if this condition is wrong...
-		if ( ! CP_IS_PREMIUM ) {
-			add_filter(
-				'coursepress_default_email_settings',
-				array( __CLASS__, 'remove_woocommerce_email' )
-			);
-			add_filter(
-				'coursepress_default_email_settings_sections',
-				array( __CLASS__, 'remove_woocommerce_email' )
-			);
-			return;
-		}
 
 		add_filter(
 			'coursepress_settings_tabs',
