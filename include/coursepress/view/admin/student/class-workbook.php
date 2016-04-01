@@ -98,22 +98,6 @@ class CoursePress_View_Admin_Student_Workbook {
 							)
 						);
 					?>
-<!--
-					<label class="ungraded-elements">
-						<input type="checkbox" value="0" />
-						<span><?php esc_html_e( 'Ungraded elements only.', 'CP_TD' ); ?></span>
-					</label>
-					<label class="submitted-elements">
-						<input type="checkbox" value="0" />
-						<span><?php esc_html_e( 'Submitted elements only.', 'CP_TD' ); ?></span>
-					</label>
-					<label class="expand-all-students">
-						<a><?php esc_html_e( 'Expand List', 'CP_TD' ); ?></a>
-					</label>
-					<label class="collapse-all-students">
-						<a><?php esc_html_e( 'Collapse List', 'CP_TD' ); ?></a>
-					</label>
--->
 				</div>
 			<?php
 				$units = CoursePress_Data_Course::get_units_with_modules( $selected_course, array( 'publish', 'draft' ) );
