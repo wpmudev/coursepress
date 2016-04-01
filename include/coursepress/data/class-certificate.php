@@ -25,6 +25,13 @@ class CoursePress_Data_Certificate {
 	private static $is_enabled = null;
 
 	/**
+	 * Certificate ID currently generated.
+	 *
+	 * @var int
+	 **/
+	public static $certificate_id = 0;
+
+	/**
 	 * Returns details about the custom post-type.
 	 *
 	 * @since  2.0.0
@@ -132,11 +139,36 @@ class CoursePress_Data_Certificate {
 
 		$email_args = self::fetch_params( $certificate_id );
 
-		// TODO: We want to add PDF attachment to the email.
+		// Hooked to `coursepress_email_headers' to attached PDF Certificate as attachment.
+		self::$certificate_id = $certificate_id;
+		add_filter( 'coursepress_email_headers', array( __CLASS__, 'attached_pdf_certificate' ) );
+
 		return CoursePress_Helper_Email::send_email(
 			CoursePress_Helper_Email::BASIC_CERTIFICATE,
 			$email_args
 		);
+	}
+
+	public static function attached_pdf_certificate( $headers ) {
+		$certificate = get_post( self::$certificate_id );
+
+		if ( is_object( $certificate ) ) {
+			$course_id = $certificate->post_parent;
+			$student_id = $certificate->post_author;
+			$filename = 'certificate-' . $course_id . '-' . $student_id . '.pdf';
+			$pdf_file = CoursePress_Helper_PDF::cache_path() . $filename;
+
+			if ( ! is_readable( $pdf_file ) ) {
+				if ( self::generate_certificate( $student_id, $course_id, false ) ) {
+					$headers[] = $pdf_file;
+				}
+			} else {
+				$headers[] = $pdf_file;
+			}
+
+		}
+
+		return $headers;
 	}
 
 	/**
@@ -337,16 +369,26 @@ class CoursePress_Data_Certificate {
 		}
 	}
 
-	public static function get_certificate_link( $student_id, $course_id, $link_title ) {
-		if ( empty( $student_id ) ) {
-			$student_id = get_current_user_id();
-		}
+	/**
+	 * Certificate link.
+	 *
+	 *
+	 * @param (int) $student_id The ID of the student the certification belongs to.
+	 * @param (int) $course_id The ID of the completed course.
+	 *
+	 * @return (mixed) A link to pdf certificate or null.
+	 **/
 
-		$link = 'certificate-' . $course_id . '-' . $student_id . '.pdf';
-		$pdf_link = CoursePress_Helper_PDF::cache_path() . $link;
+	public static function get_certificate_link( $student_id, $course_id, $link_title ) {
+		$filename = 'certificate-' . $course_id . '-' . $student_id . '.pdf';
+
+		$pdf_link = CoursePress_Helper_PDF::cache_url() . $filename;
 
 		if ( ! is_readable( $pdf_link ) ) {
-			self::generate_pdf_certificate( $course_id, $student_id, false );
+			// Attempt to generate the PDF
+			if ( ! self::generate_pdf_certificate( $course_id, $student_id, false ) ) {
+				return '';
+			}
 		}
 
 		return sprintf( '<a href="%s">%s</a>', $pdf_link, $link_title );
