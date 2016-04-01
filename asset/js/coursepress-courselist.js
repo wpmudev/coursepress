@@ -110,14 +110,14 @@ var CoursePress = CoursePress || {};
 				};
 
 				CoursePress.Course.set( 'data', data );
-				CoursePress.Course.save();
+				CoursePress.Course.save( null, {
+					success: function() {
+						window.location.reload();
+					}
+				});
 
 			}
 		});
-
-		CoursePress.Course.on( 'coursepress:delete_course_success', function() {
-			window.location.reload();
-		} );
 
 		$('.duplicate-course-link' ).on( 'click', function( e ) {
 			e.stopImmediatePropagation();
@@ -132,14 +132,13 @@ var CoursePress = CoursePress || {};
 				};
 
 				CoursePress.Course.set( 'data', data );
-				CoursePress.Course.save();
-
+				CoursePress.Course.save( null, {
+					success: function() {
+						window.location.reload();
+					}
+				});
 			}
 		});
-
-		CoursePress.Course.on( 'coursepress:duplicate_course_success', function() {
-			window.location.reload();
-		} );
 
 		// ====== COURSEPRESS UI TOGGLES =====
 		$( '.coursepress-ui-toggle-switch' ).coursepress_ui_toggle();

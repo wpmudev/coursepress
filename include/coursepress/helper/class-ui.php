@@ -421,6 +421,7 @@ class CoursePress_Helper_UI {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Allow to setup posts per page
 	 *
 	 * @since 2.0.0
@@ -437,5 +438,101 @@ class CoursePress_Helper_UI {
 			'option' => sprintf( 'coursepress_%s_%s', $name, $option ),
 		);
 		add_screen_option( $option, $args );
+	}
+
+	/**
+	 * Common Admin Page
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $post_type Currently edited post type.
+	 * @param string $form_output Content to show before admin areas
+	 *
+	 * @return string Admin Page.
+	 */
+	public static function get_admin_screen( $post_type, $form_output = '' ) {
+		$screen = get_current_screen();
+		$columns = ( 1 == $screen->get_columns() ) ? '1' : '2';
+		ob_start();
+?>
+<div id="poststuff">
+	<div id="post-body" class="metabox-holder columns-<?php echo $columns ; ?>">
+<?php echo $form_output; ?>
+		<div id="postbox-container-1" class="postbox-container">
+			<?php do_meta_boxes( $post_type, 'side', null ); ?>
+		</div>
+		<div id="postbox-container-2" class="postbox-container">
+<?php
+	do_meta_boxes( $post_type, 'normal', null );
+	do_meta_boxes( $post_type, 'advanced', null );
+?>
+		</div>
+	</div>
+</div>
+<?php
+		$content = ob_get_contents();
+		ob_end_clean();
+		return $content;
+	}
+
+	/**
+	 * Common Admin edit field
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $value Title of edited entry.
+	 * @param string $label Label for title, it is used as placeholder.
+	 *
+	 * @return string Edit tile field with proper wrapper.
+	 */
+	public static function get_admin_edit_title_field( $value, $label = '' ) {
+		if ( empty( $label ) ) {
+			$label = __( 'Enter title here.', 'CP_TD' );
+		}
+		$content = '<div id="titlediv">';
+		$content .= '<div id="titlewrap">';
+		$content .= sprintf(
+			'<label class="screen-reader-text" id="title-prompt-text" for="title">%s</label>',
+			esc_html( $label )
+		);
+		$content .= sprintf(
+			'<input type="text" name="post_title" size="30" value="%s" id="title" spellcheck="true" autocomplete="off">',
+			esc_attr( $value )
+		);
+		$content .= '</div>';
+		$content .= '</div>';
+		return $content;
+	}
+
+	/**
+	 * get user box settings for current screen.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return array box context setting
+	 */
+	public static function get_user_boxes_settings() {
+		$settings = array();
+		$screen = get_current_screen();
+		if ( empty( $screen ) || ! isset( $screen->base ) ) {
+			return $settings;
+		}
+		$user_settings = get_user_meta( get_current_user_id(), 'meta-box-order_'.$screen->base, true );
+		if ( empty( $user_settings ) ) {
+			return $settings;
+		}
+		foreach ( $user_settings as $context => $data ) {
+			if ( empty( $data ) ) {
+				continue;
+			}
+			$boxes = explode( ',', $data );
+			foreach ( $boxes as $box ) {
+				if ( empty( $box ) ) {
+					continue;
+				}
+				$settings[ $box ] = $context;
+			}
+		}
+		return $settings;
 	}
 }

@@ -53,6 +53,13 @@ class CoursePress_View_Admin_CoursePress {
 		 * load admin page hook
 		 */
 		add_action( 'load-toplevel_page_coursepress', array( __CLASS__, 'load' ) );
+
+		/**
+		 * add Courses list on profile page
+		 */
+		add_action( 'show_user_profile', array( 'CoursePress_View_Admin_Course_Student', 'render_student_courses' ) );
+		add_action( 'edit_user_profile', array( 'CoursePress_View_Admin_Course_Student', 'render_student_courses' ) );
+
 	}
 
 	public static function add_valid( $valid_pages ) {

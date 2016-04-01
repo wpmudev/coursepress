@@ -1512,4 +1512,112 @@ class CoursePress_Data_Course {
 	public static function count_courses() {
 		return array_sum( get_object_vars( wp_count_posts( self::get_post_type_name() ) ) );
 	}
+
+
+	/**
+	 * duplciate course
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $data
+	 *
+	 */
+	static public function duplicate_course( $data ) {
+		$course_id = (int) $data->data->course_id;
+
+		$the_course = get_post( $course_id );
+
+		if ( empty( $the_course ) ) {
+			return array();
+		}
+
+		$the_course = CoursePress_Helper_Utility::object_to_array( $the_course );
+		$the_course['post_author'] = get_current_user_id();
+		$the_course['comment_count'] = 0;
+		$the_course['post_title'] = sprintf(
+			_x( '%s Copy', 'Default title for a duplicated course. Variable is original title.', 'CP_TD' ),
+			$the_course['post_title']
+		);
+		$the_course['post_status'] = 'draft';
+		unset( $the_course['ID'] );
+		unset( $the_course['post_date'] );
+		unset( $the_course['post_date_gmt'] );
+		unset( $the_course['post_name'] );
+		unset( $the_course['post_modified'] );
+		unset( $the_course['post_modified_gmt'] );
+		unset( $the_course['guid'] );
+
+		$new_course_id = wp_insert_post( $the_course );
+
+		$course_meta = get_post_meta( $course_id );
+		foreach ( $course_meta as $key => $value ) {
+			if ( ! preg_match( '/^_/', $key ) ) {
+				update_post_meta( $new_course_id, $key, maybe_unserialize( $value[0] ) );
+			}
+		}
+
+		$course_data = CoursePress_Helper_Utility::object_to_array( CoursePress_Data_Course::get_units_with_modules( $course_id, array(
+			'publish',
+			'draft',
+		) ) );
+		$course_data = CoursePress_Helper_Utility::sort_on_key( $course_data, 'order' );
+
+		foreach ( $course_data as $unit_id => $unit_schema ) {
+
+			$unit = $unit_schema['unit'];
+			// Set Fields
+			$unit['post_author'] = get_current_user_id();
+			$unit['post_parent'] = $new_course_id;
+			$unit['comment_count'] = 0;
+			$unit['post_status'] = 'draft';
+			unset( $unit['ID'] );
+			unset( $unit['post_date'] );
+			unset( $unit['post_date_gmt'] );
+			unset( $unit['post_name'] );
+			unset( $unit['post_modified'] );
+			unset( $unit['post_modified_gmt'] );
+			unset( $unit['guid'] );
+
+			$new_unit_id = wp_insert_post( $unit );
+			$unit_meta = get_post_meta( $unit_id );
+			foreach ( $unit_meta as $key => $value ) {
+				if ( ! preg_match( '/^_/', $key ) ) {
+					update_post_meta( $new_unit_id, $key, maybe_unserialize( $value[0] ) );
+				}
+			}
+
+			$pages = isset( $unit_schema['pages'] ) ? $unit_schema['pages'] : array();
+			foreach ( $pages as $page ) {
+
+				$modules = $page['modules'];
+				foreach ( $modules as $module_id => $module ) {
+
+					$module['post_author'] = get_current_user_id();
+					$module['post_parent'] = $new_unit_id;
+					$module['comment_count'] = 0;
+					unset( $module['ID'] );
+					unset( $module['post_date'] );
+					unset( $module['post_date_gmt'] );
+					unset( $module['post_name'] );
+					unset( $module['post_modified'] );
+					unset( $module['post_modified_gmt'] );
+					unset( $module['guid'] );
+
+					$new_module_id = wp_insert_post( $module );
+
+					$module_meta = get_post_meta( $module_id );
+					foreach ( $module_meta as $key => $value ) {
+						if ( ! preg_match( '/^_/', $key ) ) {
+							update_post_meta( $new_module_id, $key, maybe_unserialize( $value[0] ) );
+						}
+					}
+				}
+			}
+		}
+		$json_data['course_id'] = $new_course_id;
+		do_action( 'coursepress_course_duplicated', $new_course_id, $course_id );
+		$json_data['data'] = $data->data;
+		$json_data['nonce'] = wp_create_nonce( 'duplicate_course' );
+		return $json_data;
+	}
 }
