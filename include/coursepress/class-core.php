@@ -73,6 +73,7 @@ class CoursePress_Core {
 			CoursePress_View_Admin_CoursePress::init();
 			CoursePress_View_Admin_Communication::init();
 			CoursePress_View_Admin_Setting::init();
+			CoursePress_Helper_PDF::init();
 		} else {
 			// Now we're in the front.
 			CoursePress_View_Front_General::init();

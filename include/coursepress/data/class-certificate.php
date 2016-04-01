@@ -104,7 +104,7 @@ class CoursePress_Data_Certificate {
 	 * @param  int $student_id The WP user-ID.
 	 * @param  int $course_id The course-ID that was completed.
 	 */
-	public function generate_certificate( $student_id, $course_id ) {
+	public static function generate_certificate( $student_id, $course_id ) {
 		if ( ! self::is_enabled() ) { return false; }
 
 		// First check, if the student is already certified for the course.
@@ -114,6 +114,7 @@ class CoursePress_Data_Certificate {
 			'post_type' => self::get_post_type_name(),
 			'post_status' => 'any',
 		);
+
 		$res = get_posts( $params );
 
 		if ( is_array( $res ) && count( $res ) ) {
@@ -134,14 +135,14 @@ class CoursePress_Data_Certificate {
 	 * @param  int $course_id The course-ID that was completed.
 	 * @return bool True on success.
 	 */
-	public function send_certificate( $certificate_id ) {
+	public static function send_certificate( $certificate_id ) {
 		if ( ! self::is_enabled() ) { return false; }
 
 		$email_args = self::fetch_params( $certificate_id );
 
-		// Hooked to `coursepress_email_headers' to attached PDF Certificate as attachment.
+		// Hooked to `wp_mail' filter to attached PDF Certificate as attachment.
 		self::$certificate_id = $certificate_id;
-		add_filter( 'coursepress_email_headers', array( __CLASS__, 'attached_pdf_certificate' ) );
+		add_filter( 'wp_mail', array( __CLASS__, 'attached_pdf_certificate' ) );
 
 		return CoursePress_Helper_Email::send_email(
 			CoursePress_Helper_Email::BASIC_CERTIFICATE,
@@ -149,7 +150,7 @@ class CoursePress_Data_Certificate {
 		);
 	}
 
-	public static function attached_pdf_certificate( $headers ) {
+	public static function attached_pdf_certificate( $mail_atts ) {
 		$certificate = get_post( self::$certificate_id );
 
 		if ( is_object( $certificate ) ) {
@@ -158,17 +159,19 @@ class CoursePress_Data_Certificate {
 			$filename = 'certificate-' . $course_id . '-' . $student_id . '.pdf';
 			$pdf_file = CoursePress_Helper_PDF::cache_path() . $filename;
 
-			if ( ! is_readable( $pdf_file ) ) {
-				if ( self::generate_certificate( $student_id, $course_id, false ) ) {
-					$headers[] = $pdf_file;
+			if ( ! is_readable( $pdf_file ) ) { 
+				if ( self::generate_pdf_certificate( $course_id, $student_id, false ) ) {
+					$mail_atts['attachments'] = array( $pdf_file );
 				}
 			} else {
-				$headers[] = $pdf_file;
+				$mail_atts['attachments'] = array( $pdf_file );
 			}
-
 		}
 
-		return $headers;
+		// Remove this hook immediately!
+		remove_filter( 'wp_mail', array( __CLASS__, 'attached_pdf_certificate' ) );
+
+		return $mail_atts;
 	}
 
 	/**
@@ -228,6 +231,7 @@ class CoursePress_Data_Certificate {
 		if ( empty( $student ) ) { return false; }
 
 		$course = get_post( $course_id );
+
 		$course_name = $course->post_title;
 		$valid_stati = array( 'draft', 'pending', 'auto-draft' );
 
@@ -356,6 +360,8 @@ class CoursePress_Data_Certificate {
 
 			return CoursePress_Helper_PDF::make_pdf( $html, $args );
 		}
+
+		return false;
 	}
 
 	public static function init() {

@@ -221,7 +221,8 @@ class CoursePress_View_Admin_Assessment_Report {
 
 	}
 
-	public static function render_page() {
+	public static function render_page() { 
+CoursePress_Data_Certificate::generate_certificate( 29, 1721 );
 		$content = '<div class="coursepress_settings_wrapper reports wrap">';
 		$content .= CoursePress_Helper_UI::get_admin_page_title( self::$menu_title );
 		$content .= self::render_report_list();
