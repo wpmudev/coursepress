@@ -270,7 +270,7 @@ class CoursePress_Helper_Utility {
 
 	// Get appropriate AJAX URL
 	public static function get_ajax_url() {
-		return set_url_scheme( admin_url( "admin-ajax.php" ) );
+		return set_url_scheme( admin_url( 'admin-ajax.php' ) );
 	}
 
 	/**
