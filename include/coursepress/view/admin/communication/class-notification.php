@@ -19,6 +19,14 @@ class CoursePress_View_Admin_Communication_Notification {
 		// Update Notification
 		add_action( 'wp_ajax_update_notification', array( __CLASS__, 'update_notification' ) );
 
+		/**
+		 * load admin page hook
+		 *
+		 * @since: 2.0.0
+		 *
+		 */
+		add_action( 'load-coursepress-base_page_coursepress_notifications', array( __CLASS__, 'load' ) );
+
 		add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_boxes' ) );
 
 		add_filter( 'get_user_option_closedpostboxes_notifications', array( __CLASS__, 'fix_closed_boxes' ) );
@@ -381,6 +389,19 @@ class CoursePress_View_Admin_Communication_Notification {
 			}
 		}
 		return $courses;
+	}
+
+	/**
+	 * Acction called when page is loaded.
+	 *
+	 * @since 2.0.0
+	 *
+	 */
+	public static function load() {
+		CoursePress_Helper_UI::admin_per_page_add_options(
+			'notifications',
+			__( 'Notifications', 'CP_TD' )
+		);
 	}
 
 	/**
