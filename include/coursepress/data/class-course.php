@@ -1515,7 +1515,6 @@ class CoursePress_Data_Course {
 		return array_sum( get_object_vars( wp_count_posts( self::get_post_type_name() ) ) );
 	}
 
-
 	/**
 	 * duplciate course
 	 *
@@ -1622,4 +1621,27 @@ class CoursePress_Data_Course {
 		$json_data['nonce'] = wp_create_nonce( 'duplicate_course' );
 		return $json_data;
 	}
+
+	/**
+	 * Check is that single course?
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return boolean is single post type course?
+	 */
+	public static function is_single() {
+		return is_singular( self::$post_type );
+	}
+
+	/**
+	 * Check is this post type course archive page.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return boolean is archive page for post type course
+	 */
+	public static function is_archvie() {
+		return is_post_type_archive( self::$post_type );
+	}
+
 }

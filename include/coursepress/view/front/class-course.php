@@ -105,6 +105,7 @@ class CoursePress_View_Front_Course {
         );
 
 //        add_action( 'parse_request', array( __CLASS__, 'parse_request' ));
+        add_filter( 'the_content', array( __CLASS__, 'the_content_on_single' ));
         add_filter( 'the_content', array( __CLASS__, 'the_content_on_archive_page' ));
         add_filter( 'the_excerpt', array( __CLASS__, 'the_excerpt_on_archive_page' ));
         add_filter( 'post_class', array( __CLASS__, 'post_class_on_archive_page' ) );
@@ -1344,27 +1345,34 @@ class CoursePress_View_Front_Course {
 		return $args;
     }
 
-    private static function _is_course_archvie() {
-        $post_type = CoursePress_Data_Course::get_post_type_name();
-        return is_post_type_archive( $post_type );
-    }
-
     public static function get_the_archive_title( $title ) {
-        if ( self::_is_course_archvie() ) {
+        if ( CoursePress_Data_Course::is_archvie() ) {
             return __( 'All Courses', 'CP_TD' );
         }
         return $title;
     }
 
     public static function the_excerpt_on_archive_page( $excerpt ) {
-        if ( self::_is_course_archvie() ) {
+        if ( CoursePress_Data_Course::is_archvie() ) {
 //            return false;
         }
         return $excerpt;
     }
 
+    public static function the_content_on_single( $content ) {
+        if ( ! CoursePress_Data_Course::is_single() ) {
+            return $content;
+        }
+        global $post;
+
+        $args = array(
+            'course_id' => $post->ID,
+        );
+        return CoursePress_Data_Shortcode_Template::course_page( $args );
+    }
+
     public static function the_content_on_archive_page( $content ) {
-        if ( ! self::_is_course_archvie() ) {
+        if ( ! CoursePress_Data_Course::is_archvie() ) {
             return $content;
         }
         global $post;
@@ -1381,7 +1389,10 @@ class CoursePress_View_Front_Course {
         /**
          * fix twentysixteen styles
          */
-        if ( self::_is_course_archvie() ) {
+        if (
+            CoursePress_Data_Course::is_archvie()
+            || CoursePress_Data_Course::is_single()
+        ) {
             array_unshift( $classes, 'type-page' );
         }
         return $classes;
