@@ -1500,8 +1500,7 @@ class CoursePress_Data_Course {
 	public static function count_courses() {
 		return array_sum( get_object_vars( wp_count_posts( self::get_post_type_name() ) ) );
 	}
-/*
-<<<<<<< HEAD
+
 	public static function get_course( $course_id = 0 ) {
 		$course_id = ! $course_id ? get_the_ID() : $course_id;
 		$course = get_post( $course_id );
@@ -1528,10 +1527,10 @@ class CoursePress_Data_Course {
 		);
 
 		$course = apply_filters( 'coursepress_get_course', $course, $course_id );
-		
+
 		return $course;
-=======
-*/
+	}
+
 	/**
 	 * duplciate course
 	 *
