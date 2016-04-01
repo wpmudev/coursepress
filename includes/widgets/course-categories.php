@@ -7,9 +7,9 @@ class CP_Widget_Categories extends WP_Widget {
 
 	function __construct() {
 		$widget_ops = array( 'classname'   => 'cp_course_categories',
-		                     'description' => __( "A list or dropdown of course categories.", 'coursepress_base_td' )
+		                     'description' => __( "A list or dropdown of course categories.", 'cp' )
 		);
-		parent::__construct( 'CP_Widget_Categories', __( 'Course Categories', 'coursepress_base_td' ), $widget_ops );
+		parent::__construct( 'CP_Widget_Categories', __( 'Course Categories', 'cp' ), $widget_ops );
 	}
 
 	function widget( $args, $instance ) {

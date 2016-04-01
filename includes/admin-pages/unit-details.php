@@ -11,7 +11,7 @@ if ( isset( $_GET[ 'course_id' ] ) && is_numeric( $_GET[ 'course_id' ] ) ) {
 }
 
 if ( !empty( $course_id ) && !CoursePress_Capabilities::can_view_course_units( $_GET[ 'course_id' ] ) ) {
-	die( __( 'You do not have required permissions to access this page.', 'coursepress_base_td' ) );
+	die( __( 'You do not have required permissions to access this page.', 'cp' ) );
 }
 
 if ( !isset( $_POST[ 'force_current_unit_completion' ] ) ) {
@@ -77,7 +77,7 @@ if ( isset( $_POST[ 'action' ] ) && $_POST[ 'action' ] == 'update_unit' ) {
 		}
 
 		/* }else{
-		  die( __( 'You don\'t have right permissions for the requested action', 'coursepress_base_td' ) );
+		  die( __( 'You don\'t have right permissions for the requested action', 'cp' ) );
 		  } */
 	}
 }
@@ -134,7 +134,7 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 			?>
 			<?php if ( CoursePress_Capabilities::can_create_course_unit( $course_id ) ) { ?>
 				<li class="mp-tab <?php echo (!isset( $_GET[ 'unit_id' ] ) ? 'active' : '' ); ?> static">
-					<a href="<?php echo admin_url( 'admin.php?page=course_details&tab=units&course_id=' . $course_id . '&action=add_new_unit' ); ?>" class="<?php echo (!isset( $_GET[ 'unit_id' ] ) ? 'mp-tab-link' : 'button-secondary' ); ?>"><?php _e( 'Add new Unit', 'coursepress_base_td' ); ?></a>
+					<a href="<?php echo admin_url( 'admin.php?page=course_details&tab=units&course_id=' . $course_id . '&action=add_new_unit' ); ?>" class="<?php echo (!isset( $_GET[ 'unit_id' ] ) ? 'mp-tab-link' : 'button-secondary' ); ?>"><?php _e( 'Add new Unit', 'cp' ); ?></a>
 				</li>
 			<?php } ?>
         </ul>
@@ -142,7 +142,7 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 		<?php if ( CoursePress_Capabilities::can_create_course_unit( $course_id ) ) { ?>
 			<!--<div class="mp-tabs">
 				<div class="mp-tab <?php echo (!isset( $_GET[ 'unit_id' ] ) ? 'active' : '' ); ?>">
-					<a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&action=add_new_unit" class="<?php echo (!isset( $_GET[ 'unit_id' ] ) ? 'mp-tab-link' : 'button-secondary' ); ?>"><?php _e( 'Add new Unit', 'coursepress_base_td' ); ?></a>
+					<a href="?page=course_details&tab=units&course_id=<?php echo $course_id; ?>&action=add_new_unit" class="<?php echo (!isset( $_GET[ 'unit_id' ] ) ? 'mp-tab-link' : 'button-secondary' ); ?>"><?php _e( 'Add new Unit', 'cp' ); ?></a>
 				</div>
 			</div>-->
 		<?php } ?>
@@ -172,7 +172,7 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 
             <div class='section static'>
                 <div class='unit-detail-settings'>
-                    <h3><i class="fa fa-cog"></i> <?php _e( 'Unit Settings', 'coursepress_base_td' ); ?>
+                    <h3><i class="fa fa-cog"></i> <?php _e( 'Unit Settings', 'cp' ); ?>
                         <div class="unit-state">
 							<?php
 							$control_position	 = 'off';
@@ -181,29 +181,29 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 							}
 							?>
                             <div class="unit_state_id" data-id="<?php echo $unit_id; ?>" data-nonce="<?php echo $data_nonce; ?>"></div>
-                            <span class="draft <?php echo 'off' == $control_position ? 'on' : 'off'; ?>"><?php _e( 'Draft', 'coursepress_base_td' ); ?></span>
+                            <span class="draft <?php echo 'off' == $control_position ? 'on' : 'off'; ?>"><?php _e( 'Draft', 'cp' ); ?></span>
                             <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo $control_position; ?>">
                                 <div class="toggle"></div>
                             </div>
-                            <span class="live <?php echo 'on' == $control_position ? 'on' : 'off'; ?>"><?php _e( 'Live', 'coursepress_base_td' ); ?></span>
+                            <span class="live <?php echo 'on' == $control_position ? 'on' : 'off'; ?>"><?php _e( 'Live', 'cp' ); ?></span>
                         </div>
                     </h3>
 
-                    <div class='mp-settings-label'><label for='unit_name'><?php _e( 'Unit Title', 'coursepress_base_td' ); ?></label></div>
+                    <div class='mp-settings-label'><label for='unit_name'><?php _e( 'Unit Title', 'cp' ); ?></label></div>
                     <div class='mp-settings-field'>
                         <input class='wide' type='text' name='unit_name' id='unit_name' value='<?php echo esc_attr( stripslashes( isset( $unit_details->post_title ) ? $unit_details->post_title : ''  ) ); ?>' />					
                     </div>
-                    <div class='mp-settings-label'><label for='unit_availability'><?php _e( 'Unit Availability', 'coursepress_base_td' ); ?></label></div>
+                    <div class='mp-settings-label'><label for='unit_availability'><?php _e( 'Unit Availability', 'cp' ); ?></label></div>
                     <div class='mp-settings-field'>
                         <input type="text" class="dateinput" name="unit_availability" value="<?php echo esc_attr( stripslashes( isset( $unit_details->unit_availability ) ? $unit_details->unit_availability : ( date( 'Y-m-d', current_time( 'timestamp', 0 ) ) )  ) ); ?>" />
                         <div class="force_unit_completion">
-                            <input type="checkbox" name="force_current_unit_completion" id="force_current_unit_completion" value="on" <?php echo ( $force_current_unit_completion == 'on' ) ? 'checked' : ''; ?> /> <?php _e( 'User needs to <strong><em>answer</em></strong> all mandatory assessments and view all pages in order to access the next unit', 'coursepress_base_td' ); ?>
+                            <input type="checkbox" name="force_current_unit_completion" id="force_current_unit_completion" value="on" <?php echo ( $force_current_unit_completion == 'on' ) ? 'checked' : ''; ?> /> <?php _e( 'User needs to <strong><em>answer</em></strong> all mandatory assessments and view all pages in order to access the next unit', 'cp' ); ?>
                         </div>						
                         <div class="force_unit_successful_completion">
-							<input type="checkbox" name="force_current_unit_successful_completion" id="force_current_unit_successful_completion" value="on" <?php echo ( $force_current_unit_successful_completion == 'on' ) ? 'checked' : ''; ?> /> <?php _e( 'User also needs to <strong><em>pass</em></strong> all mandatory assessments', 'coursepress_base_td' ); ?>
+							<input type="checkbox" name="force_current_unit_successful_completion" id="force_current_unit_successful_completion" value="on" <?php echo ( $force_current_unit_successful_completion == 'on' ) ? 'checked' : ''; ?> /> <?php _e( 'User also needs to <strong><em>pass</em></strong> all mandatory assessments', 'cp' ); ?>
 						</div>
                         <div class="refresh_unit_completion_progress">
-                            <input type="checkbox" name="refresh_unit_completion_progress" id="refresh_unit_completion_progress" value="on" /> <?php _e( 'Force unit completion refresh.', 'coursepress_base_td' ); ?>
+                            <input type="checkbox" name="refresh_unit_completion_progress" id="refresh_unit_completion_progress" value="on" /> <?php _e( 'Force unit completion refresh.', 'cp' ); ?>
                         </div>
                     </div>					
                 </div>
@@ -213,8 +213,8 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 					if ( $unit_id == 0 && CoursePress_Capabilities::can_create_course_unit( $course_id ) ) {//do not show anything
 						?>
 						<input type="hidden" name="preview_redirect" value="<?php echo $preview_redirect; ?>" />
-						<input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php _e( 'Save', 'coursepress_base_td' ); ?>">
-						<!--<input type="submit" name="submit-unit-publish" class="button button-units button-publish" value="<?php _e( 'Publish', 'coursepress_base_td' ); ?>">-->
+						<input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php _e( 'Save', 'cp' ); ?>">
+						<!--<input type="submit" name="submit-unit-publish" class="button button-units button-publish" value="<?php _e( 'Publish', 'cp' ); ?>">-->
 
 					<?php } ?>
 
@@ -222,17 +222,17 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 					if ( $unit_id != 0 && CoursePress_Capabilities::can_update_course_unit( $course_id, $unit_id ) ) {//do not show anything
 						?>
 						<input type="hidden" name="preview_redirect" value="<?php echo $preview_redirect; ?>" />
-						<input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ( $unit_object->post_status == 'draft' ) ? __( 'Save', 'coursepress_base_td' ) : __( 'Save', 'coursepress_base_td' ); ?>">
+						<input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ( $unit_object->post_status == 'draft' ) ? __( 'Save', 'cp' ) : __( 'Save', 'cp' ); ?>">
 					<?php } ?>
 
 					<?php
 					if ( CoursePress_Capabilities::can_update_course_unit( $course_id, $unit_id ) ) {//do not show anything if user can't update course unit
 						?>
-						<a class="button button-preview" href="<?php echo get_permalink( $unit_id ); ?>" data-href="<?php echo get_permalink( $unit_id ); ?>" target="_new"><?php _e( 'Preview', 'coursepress_base_td' ); ?></a>
+						<a class="button button-preview" href="<?php echo get_permalink( $unit_id ); ?>" data-href="<?php echo get_permalink( $unit_id ); ?>" target="_new"><?php _e( 'Preview', 'cp' ); ?></a>
 
 						<?php
 						/* if (current_user_can('coursepress_change_course_unit_status_cap') || ( current_user_can('coursepress_change_my_course_unit_status_cap') && $unit_object->post_author == get_current_user_id() )) { ?>
-						  <input type="submit" name="submit-unit-<?php echo ( $unit_object->post_status == 'draft' ) ? 'publish' : 'unpublish'; ?>" class="button button-units button-<?php echo ( $unit_object->post_status == 'draft' ) ? 'publish' : 'unpublish'; ?>" value="<?php echo ( $unit_object->post_status == 'draft' ) ? __('Publish', 'coursepress_base_td') : __('Unpublish', 'coursepress_base_td'); ?>">
+						  <input type="submit" name="submit-unit-<?php echo ( $unit_object->post_status == 'draft' ) ? 'publish' : 'unpublish'; ?>" class="button button-units button-<?php echo ( $unit_object->post_status == 'draft' ) ? 'publish' : 'unpublish'; ?>" value="<?php echo ( $unit_object->post_status == 'draft' ) ? __('Publish', 'cp') : __('Unpublish', 'cp'); ?>">
 						  <?php
 						  } */
 					}
@@ -241,7 +241,7 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 					<?php if ( $unit_id != 0 ) { ?>
 						<span class="delete_unit">							
 							<a class="button button-units button-delete-unit" href="<?php echo admin_url( 'admin.php?page=course_details&tab=units&course_id=' . $course_id . '&unit_id=' . $unit_id . '&action=delete_unit' ); ?>" onclick="return removeUnit();">
-								<i class="fa fa-trash-o"></i>&nbsp;&nbsp;&nbsp;<?php _e( 'Delete Unit', 'coursepress_base_td' ); ?>
+								<i class="fa fa-trash-o"></i>&nbsp;&nbsp;&nbsp;<?php _e( 'Delete Unit', 'cp' ); ?>
 							</a>
 						</span>
 					<?php } ?>
@@ -258,7 +258,7 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
                         <div class='course-holder'>
                             <!--<div class='course-details'>
 
-                                <label for='unit_description'><?php //_e('Introduction to this Unit', 'coursepress_base_td');                   ?></label>
+                                <label for='unit_description'><?php //_e('Introduction to this Unit', 'cp');                   ?></label>
 							<?php
 							// $editor_name = "unit_description";
 							// $editor_id = "unit_description";
@@ -284,12 +284,12 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 
 
                             <div class="module-droppable levels-sortable ui-droppable" style='display: none;'>
-								<?php _e( 'Drag & Drop unit elements here', 'coursepress_base_td' ); ?>
+								<?php _e( 'Drag & Drop unit elements here', 'cp' ); ?>
                             </div>
 
                             <div id="unit-pages">
                                 <ul class="sidebar-name unit-pages-navigation">
-                                    <li class="unit-pages-title"><span><?php _e( 'Unit Page(s)', 'coursepress_base_td' ); ?></span></li>
+                                    <li class="unit-pages-title"><span><?php _e( 'Unit Page(s)', 'cp' ); ?></span></li>
 									<?php
 									if ( $unit_pagination ) {
 										$unit_pages = coursepress_unit_pages( $unit_id, $unit_pagination );
@@ -318,21 +318,21 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 									<div id="unit-page-<?php echo $i; ?>" class='unit-page-holder'>
 										<div class='course-details elements-holder'>
 											<div class="unit_page_title">
-												<label><?php _e( 'Page Label', 'coursepress_base_td' ); ?>
+												<label><?php _e( 'Page Label', 'cp' ); ?>
 													<span class="delete_unit_page">							
-														<a class="button button-units button-delete-unit"><i class="fa fa-trash-o"></i> <?php _e( 'Delete Page', 'coursepress_base_td' ); ?></a>
+														<a class="button button-units button-delete-unit"><i class="fa fa-trash-o"></i> <?php _e( 'Delete Page', 'cp' ); ?></a>
 													</span>
 												</label>
-												<div class="description"><?php _e( 'The label will be displayed on the Course Overview and Unit page', 'coursepress_base_td' ); ?></div>
+												<div class="description"><?php _e( 'The label will be displayed on the Course Overview and Unit page', 'cp' ); ?></div>
 												<input type="text" value="<?php echo esc_attr( $unit->get_unit_page_name( $i ) ); ?>" name="page_title[page_<?php echo $i; ?>]" id="page_title_<?php echo $i; ?>" class="page_title" />
 												<label class="show_page_title">
 													<input type="checkbox" name="show_page_title[]" value="yes" <?php echo ( isset( $show_title[ $i - 1 ] ) && $show_title[ $i - 1 ] == 'yes' ? 'checked' : (!isset( $show_title[ $i - 1 ] ) ) ? 'checked' : '' ) ?> />
 													<input type="hidden" name="show_page_title_field[]" value="<?php echo ( (isset( $show_title[ $i - 1 ] ) && $show_title[ $i - 1 ] == 'yes') || !isset( $show_title[ $i - 1 ] ) ? 'yes' : 'no' ) ?>" />
-													<?php _e( 'Show page label on unit.', 'coursepress_base_td' ); ?><br />
+													<?php _e( 'Show page label on unit.', 'cp' ); ?><br />
 												</label>
 
-												<label><?php _e( 'Build Page', 'coursepress_base_td' ); ?></label>
-												<div class="description"><?php _e( 'Click to add elements to the page', 'coursepress_base_td' ); ?></div>
+												<label><?php _e( 'Build Page', 'cp' ); ?></label>
+												<div class="description"><?php _e( 'Click to add elements to the page', 'cp' ); ?></div>
 											</div>
 											<?php
 											foreach ( $coursepress_modules_ordered[ 'output' ] as $element ) {
@@ -382,14 +382,14 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 
 											<hr />
 
-											<span class="no-elements"><?php _e( 'No elements have been added to this page yet', 'coursepress_base_td' ); ?></span>
+											<span class="no-elements"><?php _e( 'No elements have been added to this page yet', 'cp' ); ?></span>
 
 										</div>
 
 
 										<?php /* if ( is_array( $modules ) && count( $modules ) >= 1 ) {
 										  ?>
-										  <div class="loading_elements"><?php _e( 'Loading Unit elements, please wait...', 'coursepress_base_td' ); ?></div>
+										  <div class="loading_elements"><?php _e( 'Loading Unit elements, please wait...', 'cp' ); ?></div>
 										  <?php } */ ?>
 
 										<div class="modules_accordion">
@@ -440,11 +440,11 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
                             </div>
 
 							<div class="unit_pages_preloader">
-								<div class="preloader_image"><?php _e( 'Loading unit elements...', 'coursepress_base_td' ); ?></div>
+								<div class="preloader_image"><?php _e( 'Loading unit elements...', 'cp' ); ?></div>
 							</div>
 
 							<div class="unit_pages_delete">
-								<div class="unit_pages_delete_message"><?php _e( 'Deleting the unit page...', 'coursepress_base_td' ); ?></div>
+								<div class="unit_pages_delete_message"><?php _e( 'Deleting the unit page...', 'cp' ); ?></div>
 							</div>
 
                             <div class="course-details-unit-controls">
@@ -454,8 +454,8 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 									if ( $unit_id == 0 && CoursePress_Capabilities::can_create_course_unit( $course_id ) ) {//do not show anything
 										?>
 										<input type="hidden" name="preview_redirect" value="<?php echo $preview_redirect; ?>" />
-										<input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php _e( 'Save', 'coursepress_base_td' ); ?>">
-										<!--<input type="submit" name="submit-unit-publish" class="button button-units button-publish" value="<?php _e( 'Publish', 'coursepress_base_td' ); ?>">-->
+										<input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php _e( 'Save', 'cp' ); ?>">
+										<!--<input type="submit" name="submit-unit-publish" class="button button-units button-publish" value="<?php _e( 'Publish', 'cp' ); ?>">-->
 
 									<?php } ?>
 
@@ -463,17 +463,17 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 									if ( $unit_id != 0 && CoursePress_Capabilities::can_update_course_unit( $course_id, $unit_id ) ) {//do not show anything
 										?>
 										<input type="hidden" name="preview_redirect" value="<?php echo $preview_redirect; ?>" />
-										<input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ( $unit_object->post_status == 'draft' ) ? __( 'Save', 'coursepress_base_td' ) : __( 'Save', 'coursepress_base_td' ); ?>">
+										<input type="submit" name="submit-unit" class="button button-units save-unit-button" value="<?php echo ( $unit_object->post_status == 'draft' ) ? __( 'Save', 'cp' ) : __( 'Save', 'cp' ); ?>">
 									<?php } ?>
 
 									<?php
 									if ( CoursePress_Capabilities::can_update_course_unit( $course_id, $unit_id ) ) {//do not show anything
 										?>
-										<a class="button button-preview" href="<?php echo get_permalink( $unit_id ); ?>" data-href="<?php echo get_permalink( $unit_id ); ?>" target="_new"><?php _e( 'Preview', 'coursepress_base_td' ); ?></a>
+										<a class="button button-preview" href="<?php echo get_permalink( $unit_id ); ?>" data-href="<?php echo get_permalink( $unit_id ); ?>" target="_new"><?php _e( 'Preview', 'cp' ); ?></a>
 
 										<?php
 										/* if (current_user_can('coursepress_change_course_unit_status_cap') || ( current_user_can('coursepress_change_my_course_unit_status_cap') && $unit_object->post_author == get_current_user_id() )) { ?>
-										  <input type="submit" name="submit-unit-<?php echo ( $unit_object->post_status == 'draft' ) ? 'publish' : 'unpublish'; ?>" class="button button-units button-<?php echo ( $unit_object->post_status == 'draft' ) ? 'publish' : 'unpublish'; ?>" value="<?php echo ( $unit_object->post_status == 'draft' ) ? __('Publish', 'coursepress_base_td') : __('Unpublish', 'coursepress_base_td'); ?>">
+										  <input type="submit" name="submit-unit-<?php echo ( $unit_object->post_status == 'draft' ) ? 'publish' : 'unpublish'; ?>" class="button button-units button-<?php echo ( $unit_object->post_status == 'draft' ) ? 'publish' : 'unpublish'; ?>" value="<?php echo ( $unit_object->post_status == 'draft' ) ? __('Publish', 'cp') : __('Unpublish', 'cp'); ?>">
 										  <?php
 										  } */
 									}
@@ -487,11 +487,11 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
 										}
 										?>
                                         <div class="unit_state_id" data-id="<?php echo $unit_id; ?>" data-nonce="<?php echo $data_nonce; ?>"></div>
-                                        <span class="draft <?php echo 'off' == $control_position ? 'on' : 'off'; ?>"><?php _e( 'Draft', 'coursepress_base_td' ); ?></span>
+                                        <span class="draft <?php echo 'off' == $control_position ? 'on' : 'off'; ?>"><?php _e( 'Draft', 'cp' ); ?></span>
                                         <div class="control <?php echo $can_publish ? '' : 'disabled'; ?> <?php echo $control_position; ?>">
                                             <div class="toggle"></div>
                                         </div>
-                                        <span class="live <?php echo 'on' == $control_position ? 'on' : 'off'; ?>"><?php _e( 'Live', 'coursepress_base_td' ); ?></span>
+                                        <span class="live <?php echo 'on' == $control_position ? 'on' : 'off'; ?>"><?php _e( 'Live', 'cp' ); ?></span>
                                     </div>
 
                                 </div>
@@ -507,7 +507,7 @@ $preview_redirect	 = isset( $_REQUEST[ 'preview_redirect' ] ) ? $_REQUEST[ 'prev
     <div class='level-liquid-right' style="display:none;">
         <div class="level-holder-wrap">
 			<?php
-			$sections = array( "input" => __( 'Input Elements', 'coursepress_base_td' ), "output" => __( 'Output Elements', 'coursepress_base_td' ), "invisible" => __( 'Invisible Elements', 'coursepress_base_td' ) );
+			$sections = array( "input" => __( 'Input Elements', 'cp' ), "output" => __( 'Output Elements', 'cp' ), "invisible" => __( 'Invisible Elements', 'cp' ) );
 
 			foreach ( $sections as $key => $section ) {
 				?>
