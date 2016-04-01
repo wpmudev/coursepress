@@ -148,7 +148,7 @@ class CoursePress_Data_Shortcode_Instructor {
 
 					$display_name = apply_filters(
 						'coursepress_schema',
-						CoursePress_Helper_Utility::get_user_name( $instructor->ID, false, false ),
+						esc_html( CoursePress_Helper_Utility::get_user_name( $instructor->ID, false, false ) ),
 						'title'
 					);
 
@@ -185,7 +185,12 @@ class CoursePress_Data_Shortcode_Instructor {
 							$content .= '</div>';
 
 							if ( 'top' == $avatar_position ) {
-								$content .= '<div class="profile-name">' . $display_name . '</div>';
+								$schema = apply_filters( 'coursepress_schema', '', 'itemscope-person' );
+								$content .= sprintf(
+									'<div class="profile-name" %s>%s</div>',
+									$schema,
+									$display_name
+								);
 							}
 
 							if ( $link_all ) {
@@ -211,9 +216,15 @@ class CoursePress_Data_Shortcode_Instructor {
 						case 'list':
 						case 'list-flat':
 							if ( $link ) {
-								$list[] = '<a href="' . esc_url_raw( $profile_href ) . '">' . esc_html( $display_name ) . '</a>';
+								$schema = apply_filters( 'coursepress_schema', '', 'itemscope-person' );
+								$list[] = sprintf(
+									'<a href="%s" %s>%s</a>',
+									esc_url_raw( $profile_href ),
+									esc_attr( $schema ),
+									$display_name
+								);
 							} else {
-								$list[] = esc_html( $display_name );
+								$list[] = $display_name;
 							}
 							break;
 					}

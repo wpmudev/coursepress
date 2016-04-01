@@ -49,7 +49,7 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 			'display_name' => __( 'Username', 'CP_TD' ),
 			'first_name' => __( 'First Name', 'CP_TD' ),
 			'last_name' => __( 'Last Name', 'CP_TD' ),
-		// 'profile' => __( 'Profile', 'CP_TD' ),
+			'profile' => __( 'Profile', 'CP_TD' ),
 			'actions' => __( 'Withdraw', 'CP_TD' ),
 		);
 
@@ -96,11 +96,21 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 	}
 
 	public function column_profile( $item ) {
-		// https://premium.wpmudev.dev/wp-admin/user-edit.php?user_id=1874&wp_http_referer=%2Fwp-admin%2Fusers.php
-		// return sprintf(
-		// '%s', get_user_option( 'last_name', $item->ID )
-		// );
-		return '';
+		if ( current_user_can( 'edit_users' ) ) {
+			return sprintf(
+				'<a href="%s#courses">%s</a>',
+				esc_url(
+					add_query_arg(
+						array(
+							'courses' => 'show',
+						),
+						get_edit_user_link( $item->ID )
+					)
+				),
+				__( 'Edit Profile', 'CP_TD' )
+			);
+		}
+		return ' ';
 	}
 
 	public function column_actions( $item ) {

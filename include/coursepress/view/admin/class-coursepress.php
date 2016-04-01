@@ -48,6 +48,18 @@ class CoursePress_View_Admin_CoursePress {
 			'tiny_mce_before_init',
 			array( __CLASS__, 'init_tiny_mce_listeners' )
 		);
+
+		/**
+		 * load admin page hook
+		 */
+		add_action( 'load-toplevel_page_coursepress', array( __CLASS__, 'load' ) );
+
+		/**
+		 * add Courses list on profile page
+		 */
+		add_action( 'show_user_profile', array( 'CoursePress_View_Admin_Course_Student', 'render_student_courses' ) );
+		add_action( 'edit_user_profile', array( 'CoursePress_View_Admin_Course_Student', 'render_student_courses' ) );
+
 	}
 
 	public static function add_valid( $valid_pages ) {
@@ -123,5 +135,18 @@ class CoursePress_View_Admin_CoursePress {
 		}
 
 		return $init_array;
+	}
+
+	/**
+	 * Acction called when page is loaded.
+	 *
+	 * @since 2.0.0
+	 *
+	 */
+	public static function load() {
+		CoursePress_Helper_UI::admin_per_page_add_options(
+			'courses',
+			__( 'Courses', 'CP_TD' )
+		);
 	}
 }
