@@ -353,25 +353,17 @@ class CoursePress_Data_Course {
 
 		foreach ( $instructors as $idx => $instructor ) {
 			if ( (int) $instructor === $instructor_id ) {
-				CoursePress_Data_Instructor::removed_from_course( $instructor_id, $course_id );
 				unset( $instructors[ $idx ] );
-				/**
-				 * delete information to instructor
-				 */
-				delete_user_option(
-					$instructor_id,
-					'course_' . $course_id,
-					$global_option
-				);
 			}
 		}
 
-		self::update_setting( $course_id, 'instructors', $instructors );
-
+		CoursePress_Data_Instructor::removed_from_course( $instructor_id, $course_id );
 		/**
-		 * update instructor roles
+		 * delete information to instructor
 		 */
-		CoursePress_Data_Capabilities::assign_role_capabilities( $instructor_id, '', '' );
+		delete_user_option( $instructor_id, 'course_' . $course_id, $global_option );
+
+		self::update_setting( $course_id, 'instructors', $instructors );
 	}
 
 	public static function get_setting( $course_id, $key = true, $default = null ) {

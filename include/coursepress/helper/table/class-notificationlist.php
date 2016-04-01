@@ -163,6 +163,10 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 
 	}
 
+	public static function get_course_id( $course ) {
+		return is_object( $course ) ? $course->ID : null;
+	}
+
 	public function prepare_items() {
 		$post_status = 'all';
 
@@ -196,7 +200,7 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 		} else {
 			// Only show notifications where the current user have access with.
 			$courses = CoursePress_View_Admin_Communication_Notification::get_courses();
-			$courses_ids = array_map( create_function( '$a', ' return $a->ID; ' ), $courses );
+			$courses_ids = array_map( array( __CLASS__, 'get_course_id' ), $courses );
 			$post_args['meta_query'] = array(
 				array(
 					'key' => 'course_id',

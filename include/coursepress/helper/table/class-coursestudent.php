@@ -43,7 +43,7 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 	}
 
 	public function get_columns() {
-		$course_id = (int) $_GET['id'];
+		$course_id = isset( $_GET['id'] ) ? (int) $_GET['id'] : null;
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
 			'ID' => __( 'ID', 'CP_TD' ),
@@ -108,7 +108,7 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 	}
 
 	public function column_actions( $item ) {
-		$course_id = (int) $_GET['id'];
+		$course_id = isset( $_GET['id'] ) ? (int) $_GET['id'] : null;
 		$nonce = wp_create_nonce( 'withdraw-single-student' );
 		$withdraw = sprintf(
 			'<a href="" class="withdraw-student" data-id="%s" data-nonce="%s"><i class="fa fa-times-circle remove-btn"></i></a>', $item->ID, $nonce

@@ -407,7 +407,7 @@ class CoursePress_Data_Capabilities {
 			if ( $course_creator ) {
 				$post_status = get_post_status( $course_id );
 
-				if ( in_array( $post_status, array( 'private', 'draft' ) ) ) {
+				if ( 'publish' != $post_status ) {
 					// If the course is not public yet, always give the owner the write permission
 					$return = true;
 				} else {

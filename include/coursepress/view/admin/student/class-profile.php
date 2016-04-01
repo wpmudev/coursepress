@@ -2,8 +2,6 @@
 
 class CoursePress_View_Admin_Student_Profile extends CoursePress_View_Admin_Student_Workbook {
 	public static function display() {
-		global $wp_query;
-
 		$student_id = (int) $_GET['student_id'];
 		$student = get_userdata( $student_id );
 		$date_format = get_option( 'date_format' );
@@ -22,13 +20,13 @@ class CoursePress_View_Admin_Student_Profile extends CoursePress_View_Admin_Stud
 					'post_status' => array( 'publish', 'draft' ),
 					'post__in' => (array) $enrolled_courses,
 				);
-				$wp_query = new WP_Query( $args );
+				$query = new WP_Query( $args );
 
-				if ( have_posts() ) :
+				if ( $query->have_posts() ) :
 			?>
 				<table class="widefat">
-					<?php while ( have_posts() ) :
-							the_post();
+					<?php while ( $query->have_posts() ) :
+							$query->the_post();
 							$course = CoursePress_Data_Course::get_course( get_the_ID() );
 							$workbook_link = CoursePress_Data_Student::get_admin_workbook_link( $student_id, get_the_ID() );
 						?>

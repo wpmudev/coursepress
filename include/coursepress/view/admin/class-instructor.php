@@ -51,6 +51,7 @@ class CoursePress_View_Admin_Instructor {
 			'title' => self::$title,
 			'menu_title' => self::$menu_title,
 			'cap' => self::$slug . '_cap',
+			'order' => 25,
 		);
 
 		return $pages;
@@ -60,7 +61,7 @@ class CoursePress_View_Admin_Instructor {
 		if ( empty( $_GET[ 'action' ] ) ) {
 			self::$table_manager = new CoursePress_Helper_Table_Instructor;
 			self::$table_manager->prepare_items();
-		} elseif ( 'delete' == $_GET[ 'action' ] ) {
+		} elseif ( 'delete' == $_GET[ 'action' ] && isset( $_GET['instructor_id'] ) ) {
 			$instructor_id = (int) $_GET[ 'instructor_id' ];
 			self::remove_instructor( $instructor_id );
 
@@ -106,8 +107,6 @@ class CoursePress_View_Admin_Instructor {
 	}
 
 	public static function instructor_profile() {
-		global $wp_query;
-
 		$instructor_id = (int) $_GET[ 'instructor_id' ];
 		$instructor = get_userdata( $instructor_id );
 		$page = get_query_var( 'paged' );
@@ -132,11 +131,11 @@ class CoursePress_View_Admin_Instructor {
 									'post_status' => array( 'publish', 'draft' ),
 									'post__in' => $assigned_courses,
 								);
-								$wp_query = new WP_Query( $args );
+								$query = new WP_Query( $args );
 
-								if ( have_posts() ):
-									while ( have_posts() ):
-										the_post();
+								if ( $query->have_posts() ):
+									while ( $query->have_posts() ):
+										$query->the_post();
 										$style = ( ' class="alternate"' == $style ) ? '' : ' class="alternate"';
 										$course = CoursePress_Data_Course::get_course( get_the_ID() )
 										?>

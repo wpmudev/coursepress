@@ -7,7 +7,9 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 	public function prepare_items() {
 		add_filter( 'manage_users_custom_column', array( __CLASS__, 'custom_columns' ), 10, 3 );
 		add_filter( 'users_list_table_query_args', array( __CLASS__, 'filter_args' ) );
+		add_filter( 'user_row_actions', array( __CLASS__, 'user_row_actions' ), 10, 2 );
 
+		self::delete_student();
 		parent::prepare_items();
 	}
 
@@ -17,19 +19,63 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 		return $args;
 	}
 
+	public static function user_row_actions( $actions, $user_object ) {
+		$profile_link = add_query_arg(
+			array( 'view' => 'profile', 'student_id' => $user_object->ID )
+		);
+		$workbook_link = add_query_arg(
+			array( 'view' => 'workbook', 'student_id' => $user_object->ID )
+		);
+		$delete_link = add_query_arg(
+			array(
+				'student_id' => $user_object->ID,
+				'nonce' => wp_create_nonce( 'coursepress_remove_student' ),
+				)
+		);
+		$actions = array(
+			'profile' => sprintf( '<a href="%s">%s</a>', $profile_link, __( 'Profile', 'CP_TD' ) ),
+			'workbook' => sprintf( '<a href="%s">%s</a>', $workbook_link, __( 'Workbook', 'CP_TD' ) ),
+			'delete' => sprintf( '<a href="%s">%s</a>', $delete_link, __( 'Remove', 'CP_TD' ) )
+		);
+
+		return $actions;
+	}
+
+	/**
+	 * Withdraw student to all courses
+	 **/
+	public static function delete_student() {
+		if ( isset( $_GET['nonce'] )
+			&& wp_verify_nonce( $_GET['nonce'], 'coursepress_remove_student' )
+			&& isset( $_GET['student_id'] ) )
+		{
+			$student_id = (int) $_GET['student_id'];
+			$courses = CoursePress_Data_Student::get_enrolled_courses_ids( $student_id );
+
+			foreach ( $courses as $course_id ) {
+				CoursePress_Data_Course::withdraw_student( $student_id, $course_id );
+			}
+
+			// Return to student's list.
+			$return_url = remove_query_arg(
+				array(
+					'view',
+					'student_id',
+					'nonce',
+				)
+			);
+			wp_safe_redirect( $return_url ); exit;
+		}
+	}
+
 	public function get_columns() {
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
-			'id' => __( 'ID', 'CP_TD' ),
-			'user' => __( 'Username', 'CP_TD' ),
-			'first_name' => __( 'First Name', 'CP_TD' ),
-			'last_name' => __( 'Last Name', 'CP_TD' ),
+			'username' => __( 'Username', 'CP_TD' ),
+			'name' => __( 'Name', 'CP_TD' ),
 			'registered' => __( 'Registered', 'CP_TD' ),
 			'last_activity' => __( 'Last Activity', 'CP_TD' ),
 			'courses' => __( 'Courses', 'CP_TD' ),
-			'workbook' => __( 'Workbook', 'CP_TD' ),
-			'profile' => __( 'Profile', 'CP_TD' ),
-			'remove' => __( 'Remove', 'CP_TD' ),
 		);
 
 		if ( ! CoursePress_Data_Capabilities::can_delete_student() ) {
@@ -49,18 +95,6 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 				$return = $user_id;
 				break;
 
-			case 'user':
-				$return = $student->user_login;
-				break;
-
-			case 'first_name':
-				$return = $student->first_name;
-				break;
-
-			case 'last_name':
-				$return = $student->last_name;
-				break;
-
 			case 'registered':
 				$return = date_i18n( $date_format, strtotime( $student->user_registered, current_time( 'timestamp' ) ) );
 				break;
@@ -70,42 +104,24 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 				$return = date_i18n( $date_format . ' ' . $time_format, strtotime( $last_activity, current_time( 'timestamp' ) ) );
 				break;
 
-			case 'workbook':
-				$workbook_link = add_query_arg(
-					array( 'view' => 'workbook', 'student_id' => $user_id )
-				);
-				$return = sprintf( '<a href="%s"><i class="fa fa-book cp-move-icon remove-btn"></i></a>', $workbook_link );
-				break;
-
-			case 'profile':
+			case 'courses':
+				$courses = CoursePress_Data_Student::get_enrolled_courses_ids( $user_id );
 				$profile_link = add_query_arg(
 					array( 'view' => 'profile', 'student_id' => $user_id )
 				);
-				$return = sprintf( '<a href="%s"><i class="fa fa-user cp-move-icon remove-btn"></i></a>', $profile_link );
+				$return = sprintf( '<a href="%s">%s</a>', $profile_link, count( $courses ) );
 				break;
 
-			case 'courses':
-				$courses = CoursePress_Data_Student::get_enrolled_courses_ids( $user_id );
-				$return = count( $courses );
-				break;
-
-			case 'remove' && CoursePress_Data_Capabilities::can_delete_student():
-				$delete_link = add_query_arg(
-					array(
-						'action' => 'delete',
-						'instructor_id' => $user_id,
-						'nonce' => wp_create_nonce( 'coursepress_remove_instructor' )
-					)
-				);
-				$return = sprintf( '<a href="%s"><i class="fa fa-times-circle cp-move-icon remove-btn"></i></a>', $delete_link );
-				break;
 		}
 
 		return $return;
 	}
 
 	public function extra_tablenav( $which ) { return; }
-	public function row_actions( $actions, $always_show = false ) { return; }
+
+	public function no_items() {
+		esc_html_e( 'No students found.', 'CP_TD' );
+	}
 
 	public function display() {
 		?>

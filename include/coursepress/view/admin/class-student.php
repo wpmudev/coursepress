@@ -46,6 +46,7 @@ class CoursePress_View_Admin_Student {
 			'title' => self::$title,
 			'menu_title' => self::$menu_title,
 			'cap' => self::$slug . '_cap',
+			'order' => 20,
 		);
 
 		return $pages;

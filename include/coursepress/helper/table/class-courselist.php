@@ -259,6 +259,10 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			);
 		}
 
+		if ( isset( $_GET['instructor_id'] ) ) {
+			$post_args['author'] = (int) $_GET['instructor_id'];
+		}
+
 		$query = new WP_Query( $post_args );
 
 		$this->items = $query->posts;

@@ -108,11 +108,7 @@ class CoursePress_Data_Instructor {
 		return $assigned_courses;
 	}
 
-	public static function get_accessable_courses( $user_id = '' ) {
-		global $wp_query;
-
-		$posts = array();
-
+	public static function get_accessable_courses( $user_id = '', $post_status = 'publish' ) {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		} elseif ( is_object( $user_id ) ) {
@@ -121,8 +117,7 @@ class CoursePress_Data_Instructor {
 
 		$args = array(
 			'post_type' => CoursePress_Data_Course::get_post_type_name(),
-			// There's no point getting the unpublished courses.
-			'post_status' => 'publish',
+			'post_status' => $post_status,
 			'posts_per_page' => -1,
 		);
 
@@ -134,7 +129,7 @@ class CoursePress_Data_Instructor {
 			}
 			if ( user_can( $user_id, 'coursepress_update_course_cap' ) ) {
 				$assigned_courses = self::get_assigned_courses_ids( $user_id );
-				$args['post__in'] = $assigned_courses;
+				$args['include'] = $assigned_courses;
 
 				if ( $can_search ) {
 					// Let's add the author param via filter hooked.
@@ -150,11 +145,7 @@ class CoursePress_Data_Instructor {
 			}
 		}
 
-		$wp_query = new WP_Query( $args );
-		if ( have_posts() ) {
-			$posts = $wp_query->posts;
-		}
-		wp_reset_postdata();
+		$posts = get_posts( $args );
 
 		return $posts;
 	}
