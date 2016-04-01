@@ -421,7 +421,6 @@ class CoursePress_Helper_UI {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Allow to setup posts per page
 	 *
 	 * @since 2.0.0
