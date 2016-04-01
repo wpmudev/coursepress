@@ -117,6 +117,9 @@ class CoursePress_Core {
 		// Init Featured Course widget
 		CoursePress_Widget_FeaturedCourse::init();
 
+		// Downloadable certificate
+		add_action( 'init', array( 'CoursePress_Data_Certificate', 'init' ) );
+
 		/**
 		 * show guide page?
 		 */

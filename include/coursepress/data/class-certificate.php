@@ -208,13 +208,31 @@ class CoursePress_Data_Certificate {
 		$params = array();
 		$params['course_id'] = $course_id;
 		$params['email'] = sanitize_email( $student->user_email );
-		$params['first_name'] = $student->user_firstname;
-		$params['last_name'] = $student->user_lastname;
+		$params['first_name'] = $student->first_name;
+		$params['last_name'] = $student->last_name;
 		$params['completion_date'] = $completion_date;
 		$params['certificate_id'] = $certificate_id;
 		$params['course_name'] = $course_name;
 		$params['course_address'] = $course_address;
-		$params['unit_list'] = '...'; // TODO: Insert the Unit-List!
+		$params['unit_list'] = '';
+
+		$units = CoursePress_Data_Course::get_units( $course_id );
+
+		if ( $units ) {
+			$list = array();
+			$previous_unit_id = null;
+
+			foreach ( $units as $unit ) {
+				$is_unit_available = CoursePress_Data_Unit::is_unit_available( $course_id, $unit->ID, $previous_unit_id );
+				$previous_unit_id = $unit->ID;
+
+				if ( $is_unit_available ) {
+					$list[] = sprintf( '<li>%s</li>', $unit->post_title );
+				}
+			}
+
+			$params['unit_list'] = sprintf( '<ul>%s</ul>', implode( ' ', $list ) );
+		}
 
 		return $params;
 	}
@@ -231,12 +249,8 @@ class CoursePress_Data_Certificate {
 		$data = self::fetch_params( $certificate_id );
 
 		$content = CoursePress_Core::get_setting(
-			'basic_certificate/content',
-			$fields['content']
+			'basic_certificate/content'
 		);
-
-		// TODO: Add background and padding...
-		// TODO: Convert certificate into PDF...
 
 		$vars = array(
 			'FIRST_NAME' => sanitize_text_field( $data['first_name'] ),
@@ -248,5 +262,93 @@ class CoursePress_Data_Certificate {
 		);
 
 		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
+	}
+
+	public static function generate_pdf_certificate( $course_id, $student_id = '', $download = true ) {
+		if ( empty( $student_id ) ) {
+			$student_id = get_current_user_id();
+		}
+		$post_params = array(
+			'post_type' => self::get_post_type_name(),
+			'author' => $student_id,
+			'post_parent' => $course_id,
+			'post_status' => 'any'
+		);
+		$post = get_posts( $post_params );
+
+		if ( count( $post ) > 0 ) {
+			$post = $post[0];
+			// We'll replace the existing content to a new one to apply settings changes when applicable.
+			$certificate = self::get_certificate_content( $post->ID );
+			$settings = CoursePress_Core::get_setting( 'basic_certificate' );
+			$background_image = CoursePress_Helper_Utility::get_array_val( $settings, 'background_image' );
+			$orientation = CoursePress_Helper_Utility::get_array_val( $settings, 'orientation' );
+			$padding = (array) CoursePress_Helper_Utility::get_array_val( $settings, 'padding' );
+			$filename = 'certificate-' . $course_id . '-' . $student_id . '.pdf';
+			$styles = array();
+
+			if ( ! empty( $padding['top'] ) ) {
+				$styles[] = 'padding-top:' . $padding['top'] . 'px;';
+			}
+			if ( ! empty( $padding['bottom'] ) ) {
+				$styles[] = 'padding-bottom:' . $padding['bottom'] . 'px;';
+			}
+			if ( ! empty( $padding['left'] ) ) {
+				$styles[] = 'padding-left:' . $padding['left'] . 'px;';
+			}
+			if ( ! empty( $padding['right'] ) ) {
+				$styles[]= 'padding-right:' . $padding['right'] . 'px;';
+			}
+			$style = '.basic_certificate {' . implode( ' ', $styles ) . '}';
+
+			// Set the content
+			$certificate = stripslashes( $certificate );
+			$html = '<div class="basic_certificate">'. $certificate . '</div>';
+
+			$html = apply_filters( 'coursepress_basic_certificate_html', $html, $course_id, $student_id );
+
+			$certificate_title = apply_filters( 'coursepress_certificate_title', __( 'Certificate of Completion', 'CP_TD' ) );
+			$args = array(
+				'title' => $certificate_title,
+				'orientation' => $orientation,
+				'image' => $background_image,
+				'filename' => $filename,
+				'format' => 'F',
+				'uid' => $post->ID,
+				'style' => '<style>'. $style . '</style>',
+			);
+
+			if ( ! $download ) {
+				$args['format'] = 'F';
+			}
+
+			return CoursePress_Helper_PDF::make_pdf( $html, $args );
+		}
+	}
+
+	public static function init() {
+		if ( ! empty( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], 'coursepress_basic_certificate' ) ) {
+			$course_id = (int) $_REQUEST['course_id'];
+			$student_id = (int) $_REQUEST['student_id'];
+
+			if ( self::generate_pdf_certificate( $course_id, $student_id ) ) {
+				exit;
+			}
+		}
+	}
+
+	public static function get_certificate_link( $student_id, $course_id, $link_title ) {
+		if ( empty( $student_id ) ) {
+			$student_id = get_current_user_id();
+		}
+
+		$link = 'certificate-' . $course_id . '-' . $student_id . '.pdf';
+		$pdf_link = CoursePress_Helper_PDF::cache_path() . $link;
+
+		if ( ! is_readable( $pdf_link ) ) {
+			self::generate_pdf_certificate( $course_id, $student_id, false );
+		}
+
+		return sprintf( '<a href="%s">%s</a>', $pdf_link, $link_title );
 	}
 }

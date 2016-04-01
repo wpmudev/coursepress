@@ -112,12 +112,14 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 					'basic_certificate/content',
 					self::default_certificate_content()
 				);
+				$editor_content = stripslashes( $editor_content );
 
 				$args = array(
 					'textarea_name' => $editor_name,
 					'textarea_rows' => 10,
 					'wpautop' => true,
 					'quicktags' => true,
+					'tinymce' => true,
 				);
 				wp_editor( $editor_content, $editor_id, $args );
 				?>

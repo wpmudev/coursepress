@@ -387,6 +387,12 @@ class CoursePress_Helper_PDF extends TCPDF {
 
     }
 
+	public static function cache_path() {
+		$cache_path = apply_filters( 'coursepress_pdf_cache_url', trailingslashit( CoursePress::$url ) . 'pdf-cache/' ); //apply_filters( 'coursepress_pdf_cache_path', trailingslashit( CoursePress::$path ) . 'pdf-cache/' );
+
+		return $cache_path;
+	}
+
     /**
      * Check pdf-cache directory.
      *
