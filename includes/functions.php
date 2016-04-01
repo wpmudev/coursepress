@@ -70,9 +70,7 @@ function cp_messaging_get_unread_messages_count() {
 }
 
 function cp_admin_ajax_url() {
-	$scheme = ( is_ssl() || force_ssl_admin() ? 'https' : 'http' );
-
-	return admin_url( "admin-ajax.php", $scheme );
+	return set_url_scheme( admin_url( "admin-ajax.php" ) );
 }
 
 function cp_get_user_option( $option, $user_id = false ) {

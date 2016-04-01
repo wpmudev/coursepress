@@ -5,6 +5,9 @@ CHANGE LOG
 =================================================
 
 == Changelog ==
+= Next version =
+* Fixed: AJAX url was not properly generated in some cases (if only admin  is SSL)
+
 = 1.3 =
 * Fixed: Console error when opening course categories.
 * Fixed: Console error when opening New Course in page settings.
