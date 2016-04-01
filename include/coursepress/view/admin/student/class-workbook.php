@@ -75,7 +75,6 @@ class CoursePress_View_Admin_Student_Workbook {
 				self::profile();
 
 				$courses = CoursePress_Data_Instructor::get_accessable_courses( wp_get_current_user(), true );
-				//$courses = array_map( create_function( '$a', ' return CoursePress_Data_Course::get_course( $a ); ' ), $courses );
 				$first = array_shift( $courses );
 				$selected_course = ! empty( $_GET['course_id'] ) ? (int) $_GET['course_id'] : $first->ID;
 				$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $selected_course );
@@ -99,6 +98,7 @@ class CoursePress_View_Admin_Student_Workbook {
 							)
 						);
 					?>
+<!--
 					<label class="ungraded-elements">
 						<input type="checkbox" value="0" />
 						<span><?php esc_html_e( 'Ungraded elements only.', 'CP_TD' ); ?></span>
@@ -113,6 +113,7 @@ class CoursePress_View_Admin_Student_Workbook {
 					<label class="collapse-all-students">
 						<a><?php esc_html_e( 'Collapse List', 'CP_TD' ); ?></a>
 					</label>
+-->
 				</div>
 			<?php
 				$units = CoursePress_Data_Course::get_units_with_modules( $selected_course, array( 'publish', 'draft' ) );
