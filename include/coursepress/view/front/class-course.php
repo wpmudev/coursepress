@@ -1365,10 +1365,17 @@ class CoursePress_View_Front_Course {
         }
         global $post;
 
-        $args = array(
-            'course_id' => $post->ID,
-        );
-        return CoursePress_Data_Shortcode_Template::course_page( $args );
+        $units = get_query_var( 'units' );
+
+        if ( 'show' == $units ) {
+            return CoursePress_Template_Unit::unit_archive();
+        } else {
+            $args = array(
+                'course_id' => $post->ID,
+            );
+            return CoursePress_Data_Shortcode_Template::course_page( $args );
+        }
+        return $content;
     }
 
     public static function the_content_on_archive_page( $content ) {

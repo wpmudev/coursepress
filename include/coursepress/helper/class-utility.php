@@ -844,10 +844,19 @@ class CoursePress_Helper_Utility {
 		return self::$cp_pagination;
 	}
 
-	public static function the_course( $id_only = false ) {
+    public static function the_course( $id_only = false ) {
+        if ( is_singular() ) {
+            global $post;
+            if ( $id_only ) {
+                return $post->ID;
+            }
+            return $post;
+        }
 		$id = CoursePress_Data_Course::last_course_id();
 
-		if ( empty( $id ) ) { return ''; }
+        if ( empty( $id ) ) {
+            return '';
+        }
 
 		if ( $id_only ) {
 			return $id;

@@ -131,7 +131,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			$is_instructor = CoursePress_Data_Instructor::is_assigned_to_course( $course_id, $student_id );
 		}
 
-		$is_single = CoursePress_Helper_Utility::$is_singular;
+		$is_single = CoursePress_Data_Course::is_single();
 
 		$buttons = apply_filters(
 			'coursepress_course_enrollment_button_options',
