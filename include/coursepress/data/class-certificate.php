@@ -364,17 +364,6 @@ class CoursePress_Data_Certificate {
 		return false;
 	}
 
-	public static function init() {
-		if ( ! empty( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], 'coursepress_basic_certificate' ) ) {
-			$course_id = (int) $_REQUEST['course_id'];
-			$student_id = (int) $_REQUEST['student_id'];
-
-			if ( self::generate_pdf_certificate( $course_id, $student_id ) ) {
-				exit;
-			}
-		}
-	}
-
 	/**
 	 * Certificate link.
 	 *
