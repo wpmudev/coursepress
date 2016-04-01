@@ -112,6 +112,7 @@ class CoursePress_Helper_JavaScript {
 
 			if ( ! empty( $_REQUEST['id'] ) ) {
 				$localize_array['course_id'] = (int) $_REQUEST['id'];
+				$localize_array['course_title'] = get_the_title( $_REQUEST['id'] );
 			}
 		}
 
@@ -217,6 +218,8 @@ class CoursePress_Helper_JavaScript {
 			CoursePress::$version
 		);
 
+		$course_id = CoursePress_Helper_Utility::the_course( true );
+
 		$localize_array = array(
 			'_ajax_url' => CoursePress_Helper_Utility::get_ajax_url(),
 			'allowed_video_extensions' => wp_get_video_extensions(),
@@ -230,7 +233,8 @@ class CoursePress_Helper_JavaScript {
 			'file_upload_fail_message' => __( 'There was a problem processing your file.', 'CP_TD' ),
 			'response_saved_message' => __( 'Your response was recorded successfully.', 'CP_TD' ),
 			'response_fail_message' => __( 'There was a problem saving your response. Please reload this page and try again.', 'CP_TD' ),
-			'current_course' => CoursePress_Helper_Utility::the_course( true ),
+			'current_course' => $course_id,
+			'current_course_is_paid' => CoursePress_Data_Course::is_paid_course( $course_id )? 'yes':'no',
 			'course_url' => get_permalink( CoursePress_Helper_Utility::the_course( true ) ),
 			'home_url' => home_url(),
 			'current_student' => get_current_user_id(),

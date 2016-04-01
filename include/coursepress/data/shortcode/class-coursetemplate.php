@@ -259,12 +259,13 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 					$prerequisites = maybe_unserialize( $pre_course );
 					$prerequisites = empty( $prerequisites ) ? array() : $prerequisites;
+					$prerequisites = is_array( $prerequisites ) ? $prerequisites : array();
 
 					$completed = 0;
 					$all_complete = false;
 
 					foreach ( $prerequisites as $prerequisite ) {
-						if ( CoursePress_Data_Course::student_enrolled( $student_id, $prerequisite ) && CoursePress_Data_Course::student_completed( $student_id, $course_id ) ) {
+						if ( CoursePress_Data_Course::student_enrolled( $student_id, $prerequisite ) && CoursePress_Data_Student::is_course_complete( $student_id, $course_id ) ) {
 							$completed += 1;
 						}
 					}
@@ -316,7 +317,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 						$all_complete = false;
 
 						foreach ( $prerequisites as $prerequisite ) {
-							if ( CoursePress_Data_Course::student_enrolled( $student_id, $prerequisite ) && CoursePress_Data_Course::student_completed( $student_id, $course_id ) ) {
+							if ( CoursePress_Data_Course::student_enrolled( $student_id, $prerequisite ) && CoursePress_Data_Student::is_course_complete( $student_id, $course_id ) ) {
 								$completed += 1;
 							}
 						}
@@ -366,7 +367,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		} else {
 			//$button = apply_filters( 'coursepress_enroll_button_content', '', $course );
 			if ( empty( $button_option ) || ( 'manually' == $course->enroll_type && ! ( 'access' == $button_option || 'continue' == $button_option ) ) ) {
-				return apply_filters( 'coursepress_enroll_button', $button, $course_id, $student_id );
+				return apply_filters( 'coursepress_enroll_button', $button, $course_id, $student_id, $button_option );
 			}
 
 			$button_attributes = '';
@@ -411,7 +412,8 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			'coursepress_enroll_button',
 			$button,
 			$course_id,
-			$student_id
+			$student_id,
+			$button_option
 		);
 	}
 

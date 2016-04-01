@@ -219,7 +219,12 @@ class CoursePress_Data_Shortcode_Template {
 			$button_text = '<button class="coursepress-course-link" data-link="' . esc_url( $a['override_button_link'] ) . '">' . esc_attr( $a['override_button_text'] ) . '</button>';
 		}
 
-		$template = '<div class="course course_list_box_item course_' . $course_id . ' ' . $clickable_class . ' ' . $completion_class . ' ' . $thumbnail_class . '" ' . $clickable_link . '>
+		/**
+		 * schema.org
+		 */
+		$schema = apply_filters( 'coursepress_schema', '', 'itemscope' );
+
+		$template = '<div class="course course_list_box_item course_' . $course_id . ' ' . $clickable_class . ' ' . $completion_class . ' ' . $thumbnail_class . '" ' . $clickable_link . ' ' . $schema .'>
 			[course_thumbnail course_id="' . $course_id . '"]
 			<div class="course-information">
 				[course_title course_id="' . $course_id . '"]
@@ -255,7 +260,12 @@ class CoursePress_Data_Shortcode_Template {
 		$course_id = (int) $a['course_id'];
 		$echo = cp_is_true( $a['echo'] );
 
-		$template = '<div class="course-wrapper">
+		/**
+		 * schema.org
+		 */
+		$schema = apply_filters( 'coursepress_schema', '', 'itemscope' );
+
+		$template = '<div class="course-wrapper"'.$schema.'>
 			[course_media course_id="' . $course_id . '"]
 			[course_social_links course_id="' . $course_id . '"]
 			[course_enroll_box course_id="' . $course_id . '"]
@@ -287,9 +297,19 @@ class CoursePress_Data_Shortcode_Template {
 
 		$echo = cp_is_true( $a['echo'] );
 
-		$template = '<div class="instructor-wrapper">
-			[course_instructor_avatar instructor_id="' . $instructor_id . '" force_display="true" thumb_size="200"]
-			<div class="instructor-bio">' . CoursePress_Helper_Utility::filter_content( get_user_meta( $instructor_id, 'description', true ) ) . '</div>
+		/**
+		 * schema.org
+		 */
+		$schema = apply_filters( 'coursepress_schema', '', 'itemscope-person' );
+
+		$template = '<div class="instructor-wrapper"'.$schema.'>
+			[course_instructor_avatar instructor_id="' . $instructor_id . '" force_display="true" thumb_size="200"]';
+		/**
+		 * schema.org
+		 */
+		$schema = apply_filters( 'coursepress_schema', '', 'description' );
+
+		$template .= '<div class="instructor-bio"'.$schema.'>' . CoursePress_Helper_Utility::filter_content( get_user_meta( $instructor_id, 'description', true ) ) . '</div>
 			<h3 class="courses-title">' . esc_html__( 'Courses', 'CP_TD' ) . '</h3>
 			[course_list instructor="' . $instructor_id . '" class="course" left_class="enroll-box-left" right_class="enroll-box-right" course_class="enroll-box" title_link="yes" show_media="yes"]
 		</div>

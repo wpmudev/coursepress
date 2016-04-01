@@ -384,7 +384,6 @@ var CoursePress = CoursePress || {};
 
 		CoursePress.Enrollment.dialog.openAtAction = function( action ) {
 			var steps = $( '[data-type="modal-step"]' );
-
 			$.each( steps, function( i, step ) {
 				var step_action = $( step ).attr('data-modal-action');
 				if ( undefined !== step_action && action === step_action ) {
@@ -401,15 +400,26 @@ var CoursePress = CoursePress || {};
 		// Dialog return actions
 		CoursePress.Enrollment.dialog.handle_signup_return = function( data ) {
 			var signup_errors = data['signup_errors'];
-
-			if ( signup_errors.length === 0 && data['user_data']['logged_in'] === true ) {
+			var steps = $( '[data-type="modal-step"]' );
+			if ( 0 === signup_errors.length && data['user_data']['logged_in'] === true ) {
 				// Check if the page is redirected from an invitation link
 				if ( _coursepress.invitation_data ) {
 					// Add user as instructor
 					CoursePress.Enrollment.dialog.add_instructor( data );
 				} else {
-					// We're in! Now lets enroll
-					CoursePress.Enrollment.dialog.attempt_enroll( data );
+					$.each( steps, function( i, step ) {
+						var action = $( step ).attr( 'data-modal-action' );
+						if ( 'yes' === _coursepress.current_course_is_paid && 'paid_enrollment' === action ) {
+							CoursePress.Enrollment.dialog.openAt( i );
+						} else if ( 'enrolled' === action ) {
+							if ( ! data['already_enrolled'] ) {
+								// We're in! Now lets enroll
+								CoursePress.Enrollment.dialog.attempt_enroll( data );
+							} else {
+								location.href = _coursepress.course_url;
+							}
+						}
+					});
 				}
 			} else {
 				if ( signup_errors.length > 0 ) {
@@ -427,8 +437,6 @@ var CoursePress = CoursePress || {};
 					$( 'input[name=password_confirmation]' ).val('');
 				} else {
 					// Redirect to login
-					var steps = $( '[data-type="modal-step"]' );
-
 					$.each( steps, function( i, step ) {
 						var action = step.attr('data-modal-action');
 						if ( 'login' === action ) {
@@ -440,18 +448,39 @@ var CoursePress = CoursePress || {};
 		};
 
 		CoursePress.Enrollment.dialog.handle_login_return = function( data ) {
-
-			if ( data['logged_in'] === true ) {
+			var signup_errors = data['signup_errors'];
+			var steps = $( '[data-type="modal-step"]' );
+			if ( 0 === signup_errors.length && data['logged_in'] === true ) {
 				// Check if the page is redirected from an invitation link
 				if ( _coursepress.invitation_data ) {
 					// Add user as instructor
 					CoursePress.Enrollment.dialog.add_instructor( data );
 				} else {
-					if ( ! data['already_enrolled'] ) {
-						CoursePress.Enrollment.dialog.attempt_enroll( data );
-					} else {
-						location.href = _coursepress.course_url;
-					}
+					$.each( steps, function( i, step ) {
+						var action = $( step ).attr( 'data-modal-action' );
+						if ( 'yes' === _coursepress.current_course_is_paid && 'paid_enrollment' === action ) {
+							CoursePress.Enrollment.dialog.openAt( i );
+						} else if ( 'enrolled' === action ) {
+							if ( ! data['already_enrolled'] ) {
+								// We're in! Now lets enroll
+								CoursePress.Enrollment.dialog.attempt_enroll( data );
+							} else {
+								location.href = _coursepress.course_url;
+							}
+						}
+					});
+				}
+			} else {
+				if ( signup_errors.length > 0 ) {
+					$( '.bbm-wrapper #error-messages' ).html('');
+					// Display signup errors
+					var err_msg = '<ul>';
+					signup_errors.forEach( function( item ) {
+						err_msg += '<li>' + item + '</li>';
+					} );
+					err_msg += '</ul>';
+					$( '.bbm-wrapper #error-messages' ).html( err_msg );
+					$( 'input[name=password]' ).val('');
 				}
 			}
 		};
@@ -463,10 +492,12 @@ var CoursePress = CoursePress || {};
 			if ( true === data['success'] ) {
 				$.each( steps, function( i, step ) {
 					var action = $( step ).attr( 'data-modal-action' );
-					if ( 'enrolled' === action ) {
+					if ( 'yes' === _coursepress.current_course_is_paid && 'paid_enrollment' === action ) {
+						CoursePress.Enrollment.dialog.openAt( i );
+					} else if ( 'enrolled' === action ) {
 						CoursePress.Enrollment.dialog.openAt( i );
 					}
-				} );
+				});
 			}
 
 			$('.enrolment-container-div' ).removeClass('hidden');
@@ -688,26 +719,21 @@ var CoursePress = CoursePress || {};
 		if ( _coursepress.current_student > 0 ) {
 
 			// Is paid course?
-			var is_paid = false; //debug
-
-			if ( ! is_paid ) {
+			if ( 'yes' === _coursepress.current_course_is_paid ) {
+				// DEBUG code. remove it.
+				window.console.log('open at paid_enrollment');
+				$(newDiv).html(CoursePress.Enrollment.dialog.render().el);
+				CoursePress.Enrollment.dialog.openAtAction('paid_enrollment');
+			} else {
 				$(newDiv ).addClass('hidden');
-
 				var enroll_data = {
 					user_data: {
 						ID: parseInt( _coursepress.current_student )
 					}
 				};
-
 				// We're logged in, so lets try to enroll
 				CoursePress.Enrollment.dialog.attempt_enroll( enroll_data );
-
 				$(newDiv).html(CoursePress.Enrollment.dialog.render().el);
-			} else {
-				// DEBUG code. remove it.
-				window.console.log('open at paid_enrollment');
-				$(newDiv).html(CoursePress.Enrollment.dialog.render().el);
-				CoursePress.Enrollment.dialog.openAtAction('paid_enrollment');
 			}
 
 		} else {
@@ -852,11 +878,36 @@ var CoursePress = CoursePress || {};
 			e.preventDefault();
 		} );
 
-
 		//$( '.view-response' ).link_popup( { link_text:  _coursepress.workbook_view_answer });
 		//$( '.view-response' ).link_popup( { link_text:  '<span class="dashicons dashicons-visibility"></span>' });
 		$( '.workbook-table .view-response' ).link_popup( { link_text:  '<span class="dashicons dashicons-visibility"></span>', offset_x: -160 });
 		$( '.workbook-table .feedback' ).link_popup( { link_text:  '<span class="dashicons dashicons-admin-comments"></span>' });
+		bind_marketpress_add_to_cart_button();
+	}
+
+	/**
+	 * MP add to cart
+	 */
+	function bind_marketpress_add_to_cart_button() {
+		if ( undefined === _coursepress.marketpress_is_used || 'no' === _coursepress.marketpress_is_used ) {
+			return;
+		}
+		$('body.single-course button.mp_button-addcart').on( 'click', function() {
+			var form = $(this).closest('form');
+			$.ajax({
+				type: 'POST',
+				url: form.data('ajax-url'),
+				data: {
+					product: $('[name=product_id]', form).val(),
+					cart_action: 'add_item'
+				}
+			}).done( function(data) {
+				if ( data.success && undefined !== _coursepress.marketpress_cart_url ) {
+					window.location.assign( _coursepress.marketpress_cart_url );
+				}
+			});
+			return false;
+		});
 	}
 
 	function bind_module_actions() {
@@ -962,6 +1013,7 @@ var CoursePress = CoursePress || {};
 						var extension = file.name.split( '.' ).pop();
 						var allowed_extensions = _.keys( _coursepress.allowed_student_extensions );
 						var allowed = _.contains( allowed_extensions, extension );
+						var response_div;
 
 						if ( !allowed ) {
 							return;
@@ -1023,7 +1075,7 @@ var CoursePress = CoursePress || {};
 								$( parent ).find( '.upload-progress .spinner' ).detach();
 								$( result ).detach();
 								$( elements ).addClass( 'hide' );
-								var response_div = response.length > 0 ? $( response ) : $( '<div class="module-response">' ).insertAfter( elements );
+								response_div = response.length > 0 ? $( response ) : $( '<div class="module-response">' ).insertAfter( elements );
 								response_div.replaceWith( '<div class="module-response">' +
 									'<p class="file_holder">' + _coursepress.file_uploaded_message + '</p>' +
 									'</div>'
@@ -1034,7 +1086,7 @@ var CoursePress = CoursePress || {};
 								$( parent ).find( '.upload-progress .spinner' ).detach();
 								$( result ).detach();
 								$( elements ).addClass( 'hide' );
-								var response_div = response.length > 0 ? $( response ) : $( '<div class="module-response">' ).insertAfter( elements );
+								response_div = response.length > 0 ? $( response ) : $( '<div class="module-response">' ).insertAfter( elements );
 
 								response_div.replaceWith( '<div class="module-response">' +
 									'<p class="file_holder">' + _coursepress.file_upload_fail_message + '</p>' +
@@ -1078,7 +1130,7 @@ var CoursePress = CoursePress || {};
 			model.set( 'response', value );
 			model.set( 'module_type', module_type );
 
-			model.save(null, {error:function(a,b,c){ alert(b.responseText); }});
+			model.save();
 
 			model.on( 'coursepress:record_module_response_success', function( data ) {
 

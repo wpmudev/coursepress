@@ -13,6 +13,8 @@ class CoursePress_View_Admin_Setting {
 		'BasicCertificate',
 		'Shortcodes',
 		'Extensions',
+		'MarketPress',
+		'WooCommerce',
 		'Setup',
 	);
 

@@ -18,6 +18,7 @@ class CoursePress_Data_Shortcode_Course {
 	 * @since  2.0.0
 	 */
 	public static function init() {
+
 		add_shortcode(
 			'course',
 			array( __CLASS__, 'course' )
@@ -368,7 +369,7 @@ class CoursePress_Data_Shortcode_Course {
 
 		$content = ! empty( $title_tag ) ? '<' . $title_tag . ' class="course-title course-title-' . $course_id . ' ' . $class . '">' : '';
 		$content .= 'yes' == $link ? '<a href="' . get_permalink( $course_id ) . '" title="' . $title . '">' : '';
-		$content .= $title;
+		$content .= apply_filters( 'coursepress_schema', $title, 'title' );
 		$content .= 'yes' == $link ? '</a>' : '';
 		$content .= ! empty( $title_tag ) ? '</' . $title_tag . '>' : '';
 
@@ -458,7 +459,12 @@ class CoursePress_Data_Shortcode_Course {
 		$title = ! empty( $title ) ? '<h3 class="section-title">' . esc_html( $title ) . '</h3>' : $title;
 		$course = get_post( $course_id );
 
-		$content = '<div class="course-description course-description-' . $course_id . ' ' . $class . '">';
+		/**
+		 * schema.org
+		 */
+		$schema = apply_filters( 'coursepress_schema', '', 'description' );
+
+		$content = '<div class="course-description course-description-' . $course_id . ' ' . $class . '"' . $schema . '>';
 		$content .= $title;
 		$content .= do_shortcode( $course->post_content );
 		$content .= '</div>';
@@ -1004,7 +1010,6 @@ class CoursePress_Data_Shortcode_Course {
 	 */
 	public static function course_cost( $atts ) {
 		global $coursepress;
-
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
 			'label' => __( 'Price:&nbsp;', 'CP_TD' ),
@@ -1031,8 +1036,6 @@ class CoursePress_Data_Shortcode_Course {
 		$content = '';
 
 		if ( $is_paid ) {
-
-			// ADD WOO INTEGRATION
 			$content .= apply_filters( 'coursepress_shortcode_course_cost', '', $course_id );
 		} else {
 			if ( $show_icon ) {
@@ -1042,21 +1045,6 @@ class CoursePress_Data_Shortcode_Course {
 			}
 		}
 
-		// if ( cp_use_woo() ) {
-		// if ( $is_paid ) {
-		//
-		// $woo_product = get_post_meta( $course_id, 'woo_product', true );
-		// $wc_product = new WC_Product( $woo_product );
-		//
-		// $content .= $wc_product->get_price_html();
-		// } else {
-		// if ( $show_icon ) {
-		// $content .= '<span class="mp_product_price">' . $no_cost_text . '</span>';
-		// } else {
-		// $content .= $no_cost_text;
-		// }
-		// }
-		// } else {
 		// if ( $is_paid && CoursePress::instance()->marketpress_active ) {
 		//
 		// $mp_product = get_post_meta( $course_id, 'marketpress_product', true );
@@ -1214,9 +1202,14 @@ class CoursePress_Data_Shortcode_Course {
 			$width = 'default' == $width ? $img_w : $width;
 			$height = 'default' == $height ? $img_h : $height;
 
+			/**
+			 * schema.org
+			 */
+			$schema = apply_filters( 'coursepress_schema', '', 'image' );
+
 			$content = '<div class="course-list-image course-list-image-' . $course_id . ' ' . $class . '">';
 
-			$content .= '<img width="' . esc_attr( $width ) . '" height="' . esc_attr( $height ) . '" src="' . esc_url( $image_src ) . '" alt="' . esc_attr( $course->post_title ) . '" title="' . esc_attr( $course->post_title ) . '"/>';
+			$content .= '<img width="' . esc_attr( $width ) . '" height="' . esc_attr( $height ) . '" src="' . esc_url( $image_src ) . '" alt="' . esc_attr( $course->post_title ) . '" title="' . esc_attr( $course->post_title ) . '"'.$schema.' />';
 
 			$content .= '</div>';
 

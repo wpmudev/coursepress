@@ -11,6 +11,8 @@ class CoursePress_Helper_Setting {
 		add_action( 'plugins_loaded', array( __CLASS__, 'admin_plugins_loaded' ) );
 		add_action( 'admin_menu', array( __CLASS__, 'admin_menu' ) );
 		add_action( 'admin_init', array( __CLASS__, 'admin_init' ) );
+		/** This filter is documented in /wp-admin/includes/misc.php */
+		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
 	}
 
 	/**
@@ -213,5 +215,23 @@ class CoursePress_Helper_Setting {
 
 		return $extensions;
 
+	}
+
+	/**
+	 * Function return value for CoursePress options.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param bool|int $value Screen option value. Default false to skip.
+	 * @param string $option The option name.
+	 * @param integer $value The number of rows to use.
+	 *
+	 * @return mixed value or status.
+	 */
+	public static function set_screen_option( $status, $option, $value ) {
+		if ( preg_match( '/^coursepress_/', $option ) ) {
+			return $value;
+		}
+		return $status;
 	}
 }

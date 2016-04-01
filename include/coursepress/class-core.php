@@ -62,6 +62,9 @@ class CoursePress_Core {
 		// Init shortcodes.
 		CoursePress_Data_Shortcode::init();
 
+		// Init WooCommerce
+		CoursePress_Helper_Integration_WooCommerce::init();
+
 		if ( is_admin() ) {
 			// Initialize Admin Settings.
 			CoursePress_Helper_Setting::init();
@@ -80,6 +83,10 @@ class CoursePress_Core {
 			CoursePress_View_Front_Settings::init();
 			CoursePress_View_Front_Student::init();
 			CoursePress_View_Front_Login::init();
+			/**
+			 * add schema.org microdata
+			 */
+			CoursePress_Helper_Schema::init();
 		}
 
 		// Always initialize the Front-End; needed in is_admin() for ajax calls!

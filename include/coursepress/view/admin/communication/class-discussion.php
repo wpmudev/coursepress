@@ -5,6 +5,7 @@ class CoursePress_View_Admin_Communication_Discussion {
 	public static $slug = 'coursepress_discussions';
 	private static $title = '';
 	private static $menu_title = '';
+	private static $the_id = false;
 
 	public static function init() {
 		self::$title = __( 'Discussions', 'CP_TD' );
@@ -17,6 +18,17 @@ class CoursePress_View_Admin_Communication_Discussion {
 
 		// Update Discussion
 		add_action( 'wp_ajax_update_discussion', array( __CLASS__, 'update_discussion' ) );
+
+		/**
+		 * load admin page hook
+		 *
+		 * @since: 2.0.0
+		 *
+		 */
+		add_action( 'load-coursepress-base_page_coursepress_discussions', array( __CLASS__, 'load' ) );
+		add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_boxes' ) );
+
+		add_filter( 'get_user_option_closedpostboxes_discussions', array( __CLASS__, 'fix_closed_boxes' ) );
 	}
 
 	public static function add_page( $pages ) {
@@ -110,25 +122,53 @@ class CoursePress_View_Admin_Communication_Discussion {
 						$title = __( 'Add New Discussion', 'CP_TD' );
 					}
 					$content .= CoursePress_Helper_UI::get_admin_page_title( $title );
-					$content .= self::render_edit_page();
-					break;
+					$post_type = CoursePress_Data_Discussion::get_post_type_name();
+					$admin = self::render_edit_page();
+					$content .= '<form method="post" class="edit">';
+					$content .= CoursePress_Helper_UI::get_admin_screen( $post_type, $admin );
+					$content .= '</form>';
+				break;
 			}
 		}
 
-		$content .= '</div>';
 		$content .= '</div>';
 
 		echo $content;
 	}
 
 	public static function render_edit_page() {
-		$the_id = isset( $_GET['id'] ) ? $_GET['id'] : false;
-		$the_id = 'new' === $the_id ? $the_id : (int) $the_id;
+		$the_id = self::_get_the_id();
 
 		if ( empty( $the_id ) ) {
 			return '';
 		}
 
+		$post = null;
+
+		$box = CoursePress_Data_Discussion::get_post_type_name();
+
+		do_action( 'add_meta_boxes', $box, $post );
+
+		/** This action is documented in wp-admin/edit-form-advanced.php */
+		do_action( 'do_meta_boxes', $box, 'normal', $post );
+		/** This action is documented in wp-admin/edit-form-advanced.php */
+		do_action( 'do_meta_boxes', $box, 'advanced', $post );
+		/** This action is documented in wp-admin/edit-form-advanced.php */
+		do_action( 'do_meta_boxes', $box, 'side', $post );
+
+		add_screen_option( 'layout_columns', array( 'max' => 2, 'default' => 2 ) );
+
+		/**
+		 * WP control for meta boxes
+		 */
+		include_once ABSPATH.'/wp-admin/includes/meta-boxes.php';
+		wp_enqueue_script( 'post' );
+
+		$content = '';
+
+		$content .= wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false, false );
+		$content .= wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false, false );
+		$content .= '<div id="post-body-content">';
 		if ( 'new' !== $the_id ) {
 			if ( ! CoursePress_Data_Capabilities::can_update_discussion( $the_id ) ) {
 				return __( 'You do not have permission to edit this discussion.', 'CP_TD' );
@@ -174,17 +214,12 @@ class CoursePress_View_Admin_Communication_Discussion {
 			'value' => 'course',
 		);
 
-		$content = '';
-
-		$content .= '<form method="POST" class="edit">';
-
-		$content .= '
-			<input type="hidden" name="post_status" value="' . esc_attr( $post_status ) . '" />
-			' . wp_nonce_field( 'edit_discussion', '_wpnonce', true, false ) . '
-			<label><strong>' . esc_html__( 'Discussion Title', 'CP_TD' ). '</strong><br />
-			<input type="text" class="wide" name="post_title" value="' . esc_attr( $post_title ) . '" /></label>
-
-			<label><strong>' . esc_html__( 'Discussion Content', 'CP_TD' ). '</strong><br />';
+		$content .= '<input type="hidden" name="post_status" value="' . esc_attr( $post_status ) . '" />';
+		$content .= wp_nonce_field( 'edit_discussion', '_wpnonce', true, false );
+		$content .= CoursePress_Helper_UI::get_admin_edit_title_field(
+			$post_title,
+			__( 'Discussion Title', 'CP_TD' )
+		);
 
 		$editor_name = 'post_content';
 		$editor_id = 'postContent';
@@ -197,24 +232,12 @@ class CoursePress_View_Admin_Communication_Discussion {
 		// Filter $args
 		$args = apply_filters( 'coursepress_element_editor_args', $args, $editor_name, $editor_id );
 
+		$content .= '<br /><div id="postdivrich" class="postarea wp-editor-expand">';
 		ob_start();
 		wp_editor( $post_content, $editor_id, $args );
 		$content .= ob_get_clean();
-		$content .= '</label>';
-
-		$content .= '
-			<label><strong>' . esc_html__( 'Related Course', 'CP_TD' ) . '</strong><br />
-			' . CoursePress_Helper_UI::get_course_dropdown( 'course_id', 'meta_course_id', $courses, $options ) . '
-			</label>
-			<label><strong>' . esc_html__( 'Related Unit', 'CP_TD' ) . '</strong><br />
-			' . CoursePress_Helper_UI::get_unit_dropdown( 'unit_id', 'meta_unit_id', $course_id, false, $options_unit ) . '
-			</label>
-			<label class="right">
-				<input type="submit" class="button button-primary" value="' . esc_attr__( 'Save Discussion', 'CP_TD' ) . '" />
-			</label>
-		';
-
-		$content .= '</form>';
+		$content .= '</div>';
+		$content .= '</div>';
 
 		return $content;
 	}
@@ -382,5 +405,139 @@ class CoursePress_View_Admin_Communication_Discussion {
 		}
 
 		return $courses;
+	}
+
+	/**
+	 * Acction called when page is loaded.
+	 *
+	 * @since 2.0.0
+	 *
+	 */
+	public static function load() {
+		CoursePress_Helper_UI::admin_per_page_add_options(
+			'discussions',
+			__( 'Discussions', 'CP_TD' )
+		);
+	}
+
+	/**
+	 * Add meta boxes
+	 *
+	 * @since 2.0.0
+	 *
+	 */
+	public static function add_meta_boxes() {
+		$screen = get_current_screen();
+		if ( empty( $screen ) || ! isset( $screen->base ) ) {
+			return;
+		}
+		$user_settings = CoursePress_Helper_UI::get_user_boxes_settings();
+		add_meta_box(
+			'submitdiv',
+			__( 'Save', 'CP_TD' ),
+			array( __CLASS__, 'box_submitdiv' ),
+			CoursePress_Data_Discussion::get_post_type_name(),
+			isset( $user_settings['submitdiv'] )? $user_settings['submitdiv'] : 'side',
+			'high'
+		);
+		add_meta_box(
+			'related_courses',
+			__( 'Related courses', 'CP_TD' ),
+			array( __CLASS__, 'box_related' ),
+			CoursePress_Data_Discussion::get_post_type_name(),
+			isset( $user_settings['related_courses'] )? $user_settings['related_courses'] : 'side'
+		);
+	}
+
+	/**
+	 * Content of box related courses
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return string Content of related courses.
+	 */
+	public static function box_related() {
+		$the_id = self::_get_the_id();
+
+		if ( empty( $the_id ) ) {
+			return '';
+		}
+		$course_id = 'all';
+		$unit_id = 'course';
+		if ( 'new' !== $the_id ) {
+			if ( ! CoursePress_Data_Capabilities::can_update_discussion( $the_id ) ) {
+				_e( 'You do not have permission to edit this discussion.', 'CP_TD' );
+				return;
+			}
+			$post = get_post( $the_id );
+			$attributes = CoursePress_Data_Discussion::attributes( $the_id );
+			$course_id = $attributes['course_id'];
+			$unit_id = $attributes['unit_id'];
+		} else {
+			if ( ! CoursePress_Data_Capabilities::can_add_discussion( 0 ) ) {
+				_e( 'You do not have permission to add discussion.', 'CP_TD' );
+				return;
+			}
+		}
+		$options = array();
+		$options['value'] = $course_id;
+		if ( ! CoursePress_Data_Capabilities::can_add_discussion_to_all() ) {
+			$options['courses'] = self::get_courses();
+			if ( empty( $options['courses'] ) ) {
+				_e( 'You do not have permission to add discussion.', 'CP_TD' );
+				return;
+			}
+		}
+		printf( '<h4>%s</h4>', esc_html__( 'Related Course', 'CP_TD' ) );
+		echo CoursePress_Helper_UI::get_course_dropdown( 'course_id', 'meta_course_id', false, $options );
+		/**
+		 * units
+		 */
+		$options_unit = array();
+		$options_unit['value'] = $unit_id;
+		$options_unit['first_option'] = array(
+			'text' => __( 'All units', 'CP_TD' ),
+			'value' => 'course',
+		);
+		printf( '<h4>%s</h4>', esc_html__( 'Related Unit', 'CP_TD' ) );
+		echo CoursePress_Helper_UI::get_unit_dropdown( 'unit_id', 'meta_unit_id', $course_id, false, $options_unit );
+	}
+
+	/**
+	 * Content of box submitbox
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return string Content of submitbox.
+	 */
+	public static function box_submitdiv() {
+		echo '<div class="submitbox" id="submitpost"><div id="major-publishing-actions"><div id="publishing-action"><span class="spinner"></span>';
+		printf(
+			'<input type="submit" class="button button-primary" value="%s" />',
+			esc_attr__( 'Save Discussion', 'CP_TD' )
+		);
+		echo '</div><div class="clear"></div></div></div>';
+	}
+
+	/**
+	 * fix option name
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param $value value of autonamed option (always empty).
+	 *
+	 * @return array Currently closed boxes.
+	 */
+	public static function fix_closed_boxes( $value ) {
+		return get_user_option( 'closedpostboxes_coursepress-base_page_coursepress_discussions' );
+	}
+
+	private static function _get_the_id() {
+		if ( ! empty( self::$the_id ) ) {
+			return self::$the_id;
+		}
+		self::$the_id = isset( $_GET['id'] ) ? $_GET['id'] : false;
+		self::$the_id = 'new' === self::$the_id ? self::$the_id : (int) self::$the_id;
+		return self::$the_id;
 	}
 }
