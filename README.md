@@ -10,7 +10,7 @@ The **core** development branch for CoursePress 1.x is `coursepress/base`. This 
 
 # DEVELOPMENT BRANCHES   
 
-CoursePress has a number of development branches: coursepress/base, coursepress/campus-dev and coursepress/2.0-dev  
+CoursePress has a number of development branches: coursepress/base and coursepress/2.0-dev  
 
 ## CoursePress Pro (coursepress/base) - CoursePress 1.x    
 
@@ -33,10 +33,6 @@ E.g.
     //</wpmudev.plugin.free_only>  
 
 **NEVER** under any circumstances package and release `coursepress/base` on Premium or WordPress.org.
-
-## CoursePress Campus (coursepress/campus-dev) - CoursePress for Edublogs/CampusPress    
-
-This branch is not usually touched by the CoursePress developers unless `coursepress/pro` production branch changes.  Make sure that `coursepress/pro` gets merged into `coursepress/campus-dev`, from this point on, the campus team takes over and do what they need to do.
 
 ## CoursePress Pro 2.0 (coursepress/2.0-dev)  
 
