@@ -635,7 +635,6 @@ class CoursePress_View_Front_Course {
 			'cp_course' => '',
 			'cp_category' => '',
 			'discussion' => '',
-			'is_focus' => false,
 			'is_course' => false,
 			'is_category' => false,
 			'is_unit' => false,
@@ -657,32 +656,9 @@ class CoursePress_View_Front_Course {
 		CoursePress_Helper_Utility::set_the_course_subpage( '' );
 		$is_other_cp_page = false;
 
-		if ( array_key_exists( 'coursepress_focus', $wp->query_vars ) ) {
-			$cp->is_focus = (1 == $wp->query_vars['coursepress_focus']);
-		}
-
 		// THIS IS WHERE WE WANT TO DO ACCESS CONTROL!
 		// ------------------------------ Do something -------------------------
 
-		// Check Focus Mode First.
-		if ( $cp->is_focus ) {
-			$cp->course_id = (int) $wp->query_vars['course'];
-			$unit_id = (int) $wp->query_vars['unit'];
-			$type = sanitize_text_field( $wp->query_vars['type'] );
-			$item_id = (int) $wp->query_vars['item'];
-
-			// Focus mode means:
-			// We display the course item, no other theme/page elements.
-			$shortcode = sprintf(
-				'[coursepress_focus_item course="%d" unit="%d" type="%s" item_id="%d"]',
-				$cp->course_id,
-				$unit_id,
-				$type,
-				$item_id
-			);
-			echo do_shortcode( $shortcode );
-			die();
-		}
 
 		// -- If not in focus mode we will continue here -----------------------
 
