@@ -659,7 +659,6 @@ class CoursePress_View_Front_Course {
 		// THIS IS WHERE WE WANT TO DO ACCESS CONTROL!
 		// ------------------------------ Do something -------------------------
 
-
 		// -- If not in focus mode we will continue here -----------------------
 
 		// Find out which template/VirtualPage we need.
@@ -1340,17 +1339,23 @@ class CoursePress_View_Front_Course {
 		}
 		global $post;
 
-		$units = get_query_var( 'units' );
+		$cp_action = get_query_var( 'cp_action' );
 
-		switch ( $units ) {
-			case 'one':
+		switch ( $cp_action ) {
+			case 'show_single_unit':
 				$unitname = get_query_var( 'unitname' );
 				$unit_id = CoursePress_Data_Unit::by_name( $unitname, true );
 				CoursePress_Helper_Utility::set_the_post( $unit_id );
 			return CoursePress_Template_Unit::unit_with_modules();
 
-			case 'show':
-			return CoursePress_Template_Unit::unit_archive();
+			case 'show_units':
+				return CoursePress_Template_Unit::unit_archive();
+
+			case 'notifications_archive':
+				return CoursePress_Template_Communication::render_notifications();
+
+			case 'discussions_archive':
+				return CoursePress_Template_Communication::render_discussions();
 
 			default:
 				$args = array(

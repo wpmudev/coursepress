@@ -452,16 +452,14 @@ class CoursePress_Core {
 		$query_vars[] = 'sent_messages';
 		$query_vars[] = 'paged';
 		$query_vars[] = 'course';
-		$query_vars[] = 'units';
 		$query_vars[] = 'unit';
 		$query_vars[] = 'type';
 		$query_vars[] = 'item';
 		$query_vars[] = 'coursepress_focus';
+		$query_vars[] = 'cp_action';
 
 		return $query_vars;
 	}
-
-
 
 	public static function add_rewrite_rules( $rules ) {
 		$new_rules = array();
@@ -469,8 +467,14 @@ class CoursePress_Core {
 		/**
 		 * units (DROP VP)
 		 */
-		$new_rules[ self::get_slug( 'courses' ).'/([^/]+)/'.self::get_slug( 'unit' ).'/([^/]+)/?$' ] = 'index.php?course=$matches[1]&units=one&unitname=$matches[2]';
-		$new_rules[ self::get_slug( 'courses' ).'/([^/]+)(?:/([0-9]+))?/'.self::get_slug( 'unit' ).'/?$' ] = 'index.php?course=$matches[1]&page=$matches[2]&units=show';
+		$new_rules[ self::get_slug( 'courses' ).'/([^/]+)/'.self::get_slug( 'unit' ).'/([^/]+)/?$' ] = 'index.php?course=$matches[1]&cp_action=show_single_unit&unitname=$matches[2]';
+		$new_rules[ self::get_slug( 'courses' ).'/([^/]+)(?:/([0-9]+))?/'.self::get_slug( 'unit' ).'/?$' ] = 'index.php?course=$matches[1]&page=$matches[2]&cp_action=show_units';
+
+		/**
+		 * communications (DROP VP)
+		 */
+		$new_rules[ self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'notification' ) . '(?:/page/([0-9]+))?/?' ] = 'index.php?course=$matches[1]&cp_action=notifications_archive&page=$matches[2]';
+		$new_rules[ self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'discussion' ) . '(?:/page/([0-9]+))?/?' ] = 'index.php?course=$matches[1]&cp_action=discussions_archive&page=$matches[2]';
 
 		// Special Rules for CoursePress Focus mode
 		$new_rules['^coursepress_focus/([^/]*)/([^/]*)/([^/]*)/([^/]*)/?$'] = 'index.php?coursepress_focus=1&course=$matches[1]&unit=$matches[2]&type=$matches[3]&item=$matches[4]'; // Matches item
@@ -482,9 +486,9 @@ class CoursePress_Core {
 		$new_rules[ '^' . self::get_slug( 'course' ) . '/' . self::get_slug( 'category' ) . '/([^/]*)/page/([^/]*)/?' ] = 'index.php?page_id=-1&course_category=$matches[1]&paged=$matches[2]';
 		$new_rules[ '^' . self::get_slug( 'course' ) . '/' . self::get_slug( 'category' ) . '/([^/]*)/?' ] = 'index.php?page_id=-1&course_category=$matches[1]';
 
-		$new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'discussion' ) . '/page/([^/]*)/?' ] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive&paged=$matches[2]'; // page/?( [0-9]{1,} )/?$
+		// DROP VP $new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'discussion' ) . '/page/([^/]*)/?' ] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive&paged=$matches[2]'; // page/?( [0-9]{1,} )/?$
 		$new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'discussion' ) . '/([^/]*)/?' ] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_name=$matches[2]';
-		$new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'discussion' ) ] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive';
+		// DROP VP $new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'discussion' ) ] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive';
 
 		$new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'grades' ) ] = 'index.php?page_id=-1&coursename=$matches[1]&grades_archive';
 		$new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'workbook' ) ] = 'index.php?page_id=-1&coursename=$matches[1]&workbook';
@@ -493,8 +497,8 @@ class CoursePress_Core {
 		// DROP VP $new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'unit' ) . '/([^/]*)/?' ] = 'index.php?page_id=-1&coursename=$matches[1]&unitname=$matches[2]';
 		// DROP VP $new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'unit' ) ] = 'index.php?page_id=-1&coursename=$matches[1]';
 
-		$new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'notification' ) . '/page/([^/]*)/?' ] = 'index.php?page_id=-1&coursename=$matches[1]&notifications_archive&paged=$matches[2]'; // page/?( [0-9]{1,} )/?$
-		$new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'notification' ) ] = 'index.php?page_id=-1&coursename=$matches[1]&notifications_archive';
+		// DROP VP $new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'notification' ) . '/page/([^/]*)/?' ] = 'index.php?page_id=-1&coursename=$matches[1]&notifications_archive&paged=$matches[2]'; // page/?( [0-9]{1,} )/?$
+		// DROP VP $new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'notification' ) ] = 'index.php?page_id=-1uu&coursename=$matches[1]&notifications_archive';
 
 		$new_rules[ '^' . self::get_slug( 'instructor' ) . '/([^/]*)/?' ] = 'index.php?page_id=-1&instructor_username=$matches[1]';
 
