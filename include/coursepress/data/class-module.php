@@ -12,6 +12,7 @@ class CoursePress_Data_Module {
 		add_filter( 'cancel_comment_reply_link', array( __CLASS__, 'discussion_cancel_reply_link' ), 10, 3 );
 		add_filter( 'comment_reply_link', array( __CLASS__, 'discussion_reply_link' ), 10, 4 );
 		add_filter( 'comments_open', array( __CLASS__, 'discussions_comments_open' ), 10, 2 );
+		add_action( 'parse_request', array( __CLASS__, 'parse_request' ) );
 
 	}
 
@@ -466,5 +467,31 @@ class CoursePress_Data_Module {
 
 		return $template;
 
+	}
+
+	/**
+	 * @since  2.0.0
+	 * @param  WP $wp The main WP object.
+	 */
+	public static function parse_request( $wp ) {
+		if ( ! array_key_exists( 'coursepress_focus', $wp->query_vars ) ) {
+			return;
+		}
+		$course_id = (int) $wp->query_vars['course'];
+		$unit_id = (int) $wp->query_vars['unit'];
+		$type = sanitize_text_field( $wp->query_vars['type'] );
+		$item_id = (int) $wp->query_vars['item'];
+
+		// Focus mode means:
+		// We display the course item, no other theme/page elements.
+		$shortcode = sprintf(
+			'[coursepress_focus_item course="%d" unit="%d" type="%s" item_id="%d"]',
+			$course_id,
+			$unit_id,
+			$type,
+			$item_id
+		);
+		echo do_shortcode( $shortcode );
+		die();
 	}
 }
