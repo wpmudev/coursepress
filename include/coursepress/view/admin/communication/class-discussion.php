@@ -18,6 +18,14 @@ class CoursePress_View_Admin_Communication_Discussion {
 
 		// Update Discussion
 		add_action( 'wp_ajax_update_discussion', array( __CLASS__, 'update_discussion' ) );
+
+		/**
+		 * load admin page hook
+		 *
+		 * @since: 2.0.0
+		 *
+		 */
+		add_action( 'load-coursepress-base_page_coursepress_discussions', array( __CLASS__, 'load' ) );
 		add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_boxes' ) );
 
 		add_filter( 'get_user_option_closedpostboxes_discussions', array( __CLASS__, 'fix_closed_boxes' ) );
@@ -415,6 +423,19 @@ class CoursePress_View_Admin_Communication_Discussion {
 			}
 		}
 		return $courses;
+	}
+
+	/**
+	 * Acction called when page is loaded.
+	 *
+	 * @since 2.0.0
+	 *
+	 */
+	public static function load() {
+		CoursePress_Helper_UI::admin_per_page_add_options(
+			'discussions',
+			__( 'Discussions', 'CP_TD' )
+		);
 	}
 
 	/**
