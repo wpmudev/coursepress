@@ -1650,4 +1650,16 @@ class CoursePress_Data_Course {
 	public static function is_archvie() {
 		return is_post_type_archive( self::$post_type );
 	}
+
+	/**
+	 * Check is this post type course category page.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return boolean is course Category page for post type course
+	 */
+	public static function is_course_category() {
+		$taxonomy_name = self::get_post_category_name();
+		return is_tax( $taxonomy_name );
+	}
 }

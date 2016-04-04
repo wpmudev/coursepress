@@ -1299,7 +1299,6 @@ class CoursePress_View_Front_Course {
 		return $comments;
 	}
 
-
 	public static function remove_discussions_from_comments( $args ) {
 		$discussion_type = CoursePress_Data_Discussion::get_post_type_name();
 
@@ -1364,17 +1363,19 @@ class CoursePress_View_Front_Course {
 	}
 
 	public static function the_content_on_archive_page( $content ) {
-		if ( ! CoursePress_Data_Course::is_archvie() ) {
-			return $content;
+		if (
+			CoursePress_Data_Course::is_archvie()
+			|| CoursePress_Data_Course::is_course_category()
+		) {
+			global $post;
+			$args = array(
+				'course_id' => $post->ID,
+				'show_title' => false,
+				'show_excerpt' => false,
+			);
+			return CoursePress_Data_Shortcode_Template::course_list_box( $args );
 		}
-		global $post;
-
-		$args = array(
-			'course_id' => $post->ID,
-			'show_title' => false,
-			'show_excerpt' => false,
-		);
-		return CoursePress_Data_Shortcode_Template::course_list_box( $args );
+		return $content;
 	}
 
 	public static function post_class_on_archive_page( $classes ) {
@@ -1384,6 +1385,7 @@ class CoursePress_View_Front_Course {
 		if (
 			CoursePress_Data_Course::is_archvie()
 			|| CoursePress_Data_Course::is_single()
+			|| CoursePress_Data_Course::is_course_category()
 		) {
 			array_unshift( $classes, 'type-page' );
 		}
@@ -1422,4 +1424,5 @@ class CoursePress_View_Front_Course {
 		 */
 		return false;
 	}
+
 }
