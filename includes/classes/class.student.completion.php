@@ -60,9 +60,11 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 				return CoursePress_Cache::cp_cache_get($cache_key);
 			}
 
+			$current_user_is_student = $student_id == get_current_user_id();
+
 			$session_data = CoursePress_Session::session( 'coursepress_student', null, false, '+10 minutes' ); // Keep completion data for only 10 minutes
 
-			$in_session = isset( $session_data ) && isset( $session_data[ $student_id ]['course_completion'][ $course_id ]['unit'] );
+			$in_session = $current_user_is_student && isset( $session_data ) && isset( $session_data[ $student_id ]['course_completion'][ $course_id ]['unit'] );
 			//$in_session = isset( $_SESSION['coursepress_student'][ $student_id ]['course_completion'][ $course_id ] );
 
 			if ( $in_session && ! empty( $session_data[ $student_id ]['course_completion'][ $course_id ]['unit'] ) ) {
@@ -84,14 +86,6 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 			        }
 				}
 			}
-
-            /********** CHANGE ****/
-            /*$course_progress = get_user_option( '_course_' . $course_id . '_progress', $student_id );
-            if ( empty( $course_progress ) ) {
-                $course_progress = array();
-            }
-            $in_session = false;*/
-            /****** END CHANGE *****/
 
 			if ( ! $in_session ) {
 				//$_SESSION['coursepress_student'][ $student_id ]['course_completion'][ $course_id ] = $course_progress;
