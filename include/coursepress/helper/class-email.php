@@ -440,7 +440,7 @@ class CoursePress_Helper_Email {
 			'COURSE_EXCERPT' => $course_summary,
 			'COURSE_ADDRESS' => esc_url( $course_address ),
 			'WEBSITE_ADDRESS' => home_url( '/' ),
-			'PASSCODE' => self::get_setting( $course_id, 'enrollment_passcode', '' ),
+			'PASSCODE' => CoursePress_Data_Course::get_setting( $course_id, 'enrollment_passcode', '' ),
 		);
 
 		return CoursePress_Helper_Utility::replace_vars( $content, $tags );
