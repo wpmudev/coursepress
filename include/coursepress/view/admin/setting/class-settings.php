@@ -17,7 +17,7 @@ abstract class CoursePress_View_Admin_Setting_Setting {
 	 */
 	protected static function row( $label, $content, $description = null ) {
 		$row = '<tr valign="top">';
-		$row .= sprintf( '<th scope="row">%s</th>', $label );
+		$row .= sprintf( '<th scope="row">%s</th>', esc_html( $label ) );
 		$row .= sprintf( '<td>%s', $content );
 		if ( ! empty( $description ) ) {
 			$row .= sprintf(
