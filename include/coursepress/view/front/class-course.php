@@ -1106,20 +1106,17 @@ class CoursePress_View_Front_Course {
 		);
 	}
 
-
+	// Only enqueue when needed.
 	public static function coursepress_front_css() {
-
-		$valid_types = self::get_valid_post_types();
-		$post_type = get_post_type();
-
-		// Only enqueue when needed.
-		if ( in_array( $post_type, $valid_types ) ) {
-			$style = CoursePress::$url . 'asset/css/coursepress_front.css';
-			wp_enqueue_style( 'coursepress_general', $style, array( 'dashicons' ), CoursePress::$version );
-
-			$style = CoursePress::$url . 'asset/css/bbm.modal.css';
-			wp_enqueue_style( 'coursepress_bbm_modal', $style, array(), CoursePress::$version );
+		if ( ! self::_check_add_style() ) {
+			return;
 		}
+
+		$style = CoursePress::$url . 'asset/css/coursepress_front.css';
+		wp_enqueue_style( 'coursepress_general', $style, array( 'dashicons' ), CoursePress::$version );
+
+		$style = CoursePress::$url . 'asset/css/bbm.modal.css';
+		wp_enqueue_style( 'coursepress_bbm_modal', $style, array(), CoursePress::$version );
 	}
 
 	// Some themes think having an author bio makes it ok to display it... not for CoursePress.
@@ -1391,5 +1388,38 @@ class CoursePress_View_Front_Course {
 			array_unshift( $classes, 'type-page' );
 		}
 		return $classes;
+	}
+
+	/**
+	 * Check when enqueue styles
+	 *
+	 * @since 2.0.0
+	 *
+	 * @global WP_Post $post Current WP Post object.
+	 *
+	 * @return boolean Enqueue styles or not enqueue?
+	 */
+	private static function _check_add_style() {
+		$valid_types = self::get_valid_post_types();
+		$post_type = get_post_type();
+
+		// Only enqueue when needed.
+		if ( in_array( $post_type, $valid_types ) ) {
+			return true;
+		}
+
+		/**
+		 * check is maybe some of CoursePress pages?
+		 */
+		if ( is_page() ) {
+			global $post;
+			$pages = CoursePress_Core::get_setting( 'pages' );
+			return in_array( $post->ID, $pages );
+		}
+
+		/**
+		 * by default return false
+		 */
+		return false;
 	}
 }

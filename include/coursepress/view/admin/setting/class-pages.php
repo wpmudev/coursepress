@@ -59,6 +59,16 @@ class CoursePress_View_Admin_Setting_Pages {
 			' . wp_nonce_field( 'update-coursepress-options', '_wpnonce', true, false );
 		$content .= '<div class="inside"><table class="form-table slug-settings"><tbody>';
 		/**
+		 * Student Dashboard Page
+		 */
+		$content .= '<tr valign="top">
+			<th scope="row">' . esc_html__( 'Student Dashboard Page', 'CP_TD' ) . '</th>
+			<td>' .
+			$page_dropdowns['student_dashboard'] .
+			'<p class="description">' . __( 'Select page where student can view courses.', 'CP_TD' ) . '</p>
+			</td>
+			</tr>';
+		/**
 		 * Student Settings Page
 		 */
 		$content .= '<tr valign="top">

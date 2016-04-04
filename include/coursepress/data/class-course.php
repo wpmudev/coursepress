@@ -627,9 +627,9 @@ class CoursePress_Data_Course {
 
 	public static function get_units_with_modules( $course_id, $status = array( 'publish' ) ) {
 		self::$last_course_id = $course_id;
-        $combine = array(
-            'pages' => array(),
-        );
+		$combine = array(
+			'pages' => array(),
+		);
 
 		if ( ! array( $status ) ) {
 			$status = array( $status );
@@ -715,11 +715,18 @@ class CoursePress_Data_Course {
 				unset( $combine[ $post_id ] );
 			}
 
+			/**
+			 * add empty 'pages' field
+			 */
+			if ( ! isset( $unit['pages'] ) ) {
+				$combine[ $post_id ]['pages'] = array();
+			}
+
 			// Fix broken page titles
 			$page_titles = get_post_meta( $post_id, 'page_title', true );
 			if ( empty( $page_titles ) && isset( $unit['pages'] ) ) {
 				$page_titles = array();
-                $page_visible = array();
+				$page_visible = array();
 				foreach ( $unit['pages'] as $key => $page ) {
 					$page_titles[ 'page_' . $key ] = $page['title'];
 					$page_visible[] = true;
@@ -1643,5 +1650,4 @@ class CoursePress_Data_Course {
 	public static function is_archvie() {
 		return is_post_type_archive( self::$post_type );
 	}
-
 }
