@@ -11,10 +11,10 @@
 
 			<?php
 			} else {
-				_e( 'Messaging plugin is not active.', 'coursepress_base_td' );
+				_e( 'Messaging plugin is not active.', 'cp' );
 			}
 		} else {
-			_e( 'Messaging is not allowed.', 'coursepress_base_td' );
+			_e( 'Messaging is not allowed.', 'cp' );
 		}
 		?>
 	</main>

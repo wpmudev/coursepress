@@ -27,7 +27,7 @@ class text_input_module extends Unit_Module {
 				?>
 				<div class="module_text_response_answer">
 					<?php if ( $show_label ) { ?>
-						<label><?php _e( 'Response', 'coursepress_base_td' ); ?></label>
+						<label><?php _e( 'Response', 'cp' ); ?></label>
 					<?php } ?>
 					<div class="front_response_content">
 						<?php echo nl2br( $response->post_content ); ?>
@@ -39,7 +39,7 @@ class text_input_module extends Unit_Module {
 				?>
 				<div class="module_textarea_response_answer">
 					<?php if ( $show_label ) { ?>
-						<label><?php _e( 'Response', 'coursepress_base_td' ); ?></label>
+						<label><?php _e( 'Response', 'cp' ); ?></label>
 					<?php } ?>
 					<div class="front_response_content">
 						<?php echo nl2br( $response->post_content ); ?>
@@ -48,7 +48,7 @@ class text_input_module extends Unit_Module {
 			<?php
 			}
 		} else {
-			_e( 'No answer / response', 'coursepress_base_td' );
+			_e( 'No answer / response', 'cp' );
 		}
 		?>
 		<div class="full regular-border-divider"></div>
@@ -167,7 +167,7 @@ class text_input_module extends Unit_Module {
 
 			<h3 class="module-title sidebar-name <?php echo( ! empty( $data->active_module ) ? 'is_active_module' : '' ); ?>" data-panel="<?php echo( ! empty( $data->panel ) ? $data->panel : '' ); ?>" data-id="<?php echo( ! empty( $data->ID ) ? $data->ID : '' ); ?>">
 				<span class="h3-label">
-					<span class="h3-label-left"><?php echo( isset( $data->post_title ) && $data->post_title !== '' ? $data->post_title : __( 'Untitled', 'coursepress_base_td' ) ); ?></span>
+					<span class="h3-label-left"><?php echo( isset( $data->post_title ) && $data->post_title !== '' ? $data->post_title : __( 'Untitled', 'cp' ) ); ?></span>
 					<span class="h3-label-right"><?php echo $this->label; ?></span>
 					<?php
 		parent::get_module_move_link();
@@ -185,7 +185,7 @@ class text_input_module extends Unit_Module {
 				<input type="hidden" class="element_id" value="<?php echo esc_attr( isset( $data->ID ) ? $data->ID : '' ); ?>" />
 
 				<label class="bold-label"><?php
-		_e( 'Element Title', 'coursepress_base_td' );
+		_e( 'Element Title', 'cp' );
 		$this->time_estimation( $data );
 		?></label>
 					<?php echo $this->element_title_description(); ?>
@@ -202,7 +202,7 @@ class text_input_module extends Unit_Module {
 		<?php echo $this->limit_attempts_element( $data ); ?>
 			</div>
 
-			<label class="bold-label"><?php _e( 'Content', 'coursepress_base_td' ); ?></label>
+			<label class="bold-label"><?php _e( 'Content', 'cp' ); ?></label>
 
 			<div class="editor_in_place">
 				<?php
@@ -216,9 +216,9 @@ class text_input_module extends Unit_Module {
 			</div>
 
 			<div class="answer_length">  
-				<label class="bold-label"><?php _e( 'Answer Length', 'coursepress_base_td' ); ?></label>
-				<input type="radio" name="<?php echo $this->name . '_answer_length[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . '][]'; ?>" value="single" <?php ?> <?php echo( isset( $data->checked_length ) && $data->checked_length == 'single' ? 'checked' : ( ! isset( $data->checked_length ) ) ? 'checked' : '' ) ?> /> <?php _e( 'Single Line', 'coursepress_base_td' ); ?><br /><br />
-				<input type="radio" name="<?php echo $this->name . '_answer_length[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . '][]'; ?>" value="multi" <?php echo( isset( $data->checked_length ) && $data->checked_length == 'multi' ? 'checked' : '' ); ?> /> <?php _e( 'Multiple Lines', 'coursepress_base_td' ); ?>
+				<label class="bold-label"><?php _e( 'Answer Length', 'cp' ); ?></label>
+				<input type="radio" name="<?php echo $this->name . '_answer_length[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . '][]'; ?>" value="single" <?php ?> <?php echo( isset( $data->checked_length ) && $data->checked_length == 'single' ? 'checked' : ( ! isset( $data->checked_length ) ) ? 'checked' : '' ) ?> /> <?php _e( 'Single Line', 'cp' ); ?><br /><br />
+				<input type="radio" name="<?php echo $this->name . '_answer_length[' . ( isset( $data->module_order ) ? $data->module_order : 999 ) . '][]'; ?>" value="multi" <?php echo( isset( $data->checked_length ) && $data->checked_length == 'multi' ? 'checked' : '' ); ?> /> <?php _e( 'Multiple Lines', 'cp' ); ?>
 			</div>
 
 			<?php echo $this->placeholder_element( $data ); ?>
@@ -233,8 +233,8 @@ class text_input_module extends Unit_Module {
 
 	function on_create() {
 		$this->order       = apply_filters( 'coursepress_' . $this->name . '_order', $this->order );
-		$this->description = __( 'Allow students to enter a single line of text', 'coursepress_base_td' );
-		$this->label       = __( 'Answer Field', 'coursepress_base_td' );
+		$this->description = __( 'Allow students to enter a single line of text', 'cp' );
+		$this->label       = __( 'Answer Field', 'cp' );
 		$this->save_module_data();
 		parent::additional_module_actions();
 	}

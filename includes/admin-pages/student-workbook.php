@@ -9,17 +9,17 @@ if ( isset( $_POST['course_id'] ) ) {
 		if ( current_user_can( 'manage_options' ) || ( current_user_can( 'coursepress_change_students_group_class_cap' ) ) || ( current_user_can( 'coursepress_change_my_students_group_class_cap' ) && $course->details->post_author == get_current_user_id() ) ) {
 			$student->update_student_group( $_POST['course_id'], $_POST['course_group'] );
 			$student->update_student_class( $_POST['course_id'], $_POST['course_class'] );
-			$message = __( 'Group and Class for the student has been updated successfully.', 'coursepress_base_td' );
+			$message = __( 'Group and Class for the student has been updated successfully.', 'cp' );
 		} else {
-			$message = __( 'You do not have required permissions to change course group and/or class for the student.', 'coursepress_base_td' );
+			$message = __( 'You do not have required permissions to change course group and/or class for the student.', 'cp' );
 		}
 	}
 }
 ?>
 <div class="wrap nocoursesub student-workbook cp-wrap">
-	<a href="<?php echo admin_url( 'admin.php?page=students' ); ?>" class="back_link">&laquo; <?php _e( 'Back to Students', 'coursepress_base_td' ); ?></a>
+	<a href="<?php echo admin_url( 'admin.php?page=students' ); ?>" class="back_link">&laquo; <?php _e( 'Back to Students', 'cp' ); ?></a>
 
-	<h2><?php _e( 'Student Workbook', 'coursepress_base_td' ); ?></h2>
+	<h2><?php _e( 'Student Workbook', 'cp' ); ?></h2>
 
 	<div class="course">
 
@@ -42,31 +42,31 @@ if ( isset( $_POST['course_id'] ) ) {
 
 						<div class="student_additional_info">
 							<div>
-								<span class="info_caption"><?php _e( 'Student ID', 'coursepress_base_td' ); ?></span>
+								<span class="info_caption"><?php _e( 'Student ID', 'cp' ); ?></span>
 								<span class="info"><?php echo $student->ID; ?></span>
 							</div>
 							<div>
-								<span class="info_caption"><?php _e( 'First Name', 'coursepress_base_td' ); ?></span>
+								<span class="info_caption"><?php _e( 'First Name', 'cp' ); ?></span>
 								<span class="info"><?php echo $student->user_firstname; ?></span>
 							</div>
 							<div>
-								<span class="info_caption"><?php _e( 'Surname', 'coursepress_base_td' ); ?></span>
+								<span class="info_caption"><?php _e( 'Surname', 'cp' ); ?></span>
 								<span class="info"><?php echo $student->user_lastname; ?></span>
 							</div>
 							<div>
-								<span class="info_caption"><?php _e( 'Email', 'coursepress_base_td' ); ?></span>
+								<span class="info_caption"><?php _e( 'Email', 'cp' ); ?></span>
 								<span class="info"><a href="mailto:<?php echo $student->user_email; ?>"><?php echo $student->user_email; ?></a></span>
 							</div>
 							<div>
-								<span class="info_caption"><?php _e( 'Courses', 'coursepress_base_td' ); ?></span>
+								<span class="info_caption"><?php _e( 'Courses', 'cp' ); ?></span>
 								<span class="info"><?php echo Student::get_courses_number( $student->ID ); ?></span>
 							</div>
 							<div>
-								<span class="info_caption"><?php _e( 'Edit', 'coursepress_base_td' ); ?></span>
+								<span class="info_caption"><?php _e( 'Edit', 'cp' ); ?></span>
 								<span class="info"><a href="user-edit.php?user_id=<?php echo $student->ID; ?>"><i class="fa fa-pencil"></i></a></span>
 							</div>
 							<div>
-								<span class="info_caption"><?php _e( 'Profile', 'coursepress_base_td' ); ?></span>
+								<span class="info_caption"><?php _e( 'Profile', 'cp' ); ?></span>
 								<span class="info"><a href="<?php echo admin_url( 'admin.php?page=students&action=view&student_id=' . $student->ID ); ?>"><i class="fa fa-user"></i></a></span>
 							</div>
 						</div>
@@ -82,7 +82,7 @@ if ( isset( $_POST['course_id'] ) ) {
 
 							if ( count( $enrolled_courses ) == 0 ) {
 								?>
-								<div class="zero-courses"><?php _e( 'Student did not enroll in any course yet.', 'coursepress_base_td' ); ?></div>
+								<div class="zero-courses"><?php _e( 'Student did not enroll in any course yet.', 'cp' ); ?></div>
 							<?php } else {
 								?>
 								<div class="tablenav">
@@ -128,7 +128,7 @@ if ( isset( $_POST['course_id'] ) ) {
 
 												if ( $courses_with_students == 0 ) {
 													?>
-													<option value=""><?php _e( 'Student did not enroll into any course yet.', 'coursepress_base_td' ); ?></option>
+													<option value=""><?php _e( 'Student did not enroll into any course yet.', 'cp' ); ?></option>
 												<?php
 												}
 												?>
@@ -151,7 +151,7 @@ if ( isset( $_POST['course_id'] ) ) {
 												if ( count( $course_units ) >= 1 ) {
 													?>
 
-													<label class="ungraded"><?php _e( 'Ungraded Elements Only', 'coursepress_base_td' ); ?>
+													<label class="ungraded"><?php _e( 'Ungraded Elements Only', 'cp' ); ?>
 														<?php
 														if ( isset( $_GET['ungraded'] ) && $_GET['ungraded'] == 'yes' ) {
 															$ungraded_filter = 'yes';
@@ -182,12 +182,12 @@ if ( isset( $_POST['course_id'] ) ) {
 											<div class="accordion-inner">
 												<?php
 												$columns = array(
-													"module"          => __( 'Element', 'coursepress_base_td' ),
-													"title"           => __( 'Title', 'coursepress_base_td' ),
-													"submission_date" => __( 'Submitted', 'coursepress_base_td' ),
-													"response"        => __( 'Response', 'coursepress_base_td' ),
-													"grade"           => __( 'Grade', 'coursepress_base_td' ),
-													"comment"         => __( 'Comment', 'coursepress_base_td' ),
+													"module"          => __( 'Element', 'cp' ),
+													"title"           => __( 'Title', 'cp' ),
+													"submission_date" => __( 'Submitted', 'cp' ),
+													"response"        => __( 'Response', 'cp' ),
+													"grade"           => __( 'Grade', 'cp' ),
+													"comment"         => __( 'Comment', 'cp' ),
 												);
 
 
@@ -277,13 +277,13 @@ if ( isset( $_POST['course_id'] ) ) {
 																		<td class="column-title <?php echo $style . ' ' . $visibility_class; ?>">
 																			<?php echo $mod->post_title; ?>
 																			<div class="extra-information visible-extra-small">
-																				<?php _e( 'Submitted:', 'coursepress_base_td' ); ?>
-																				<br/> <?php echo( count( $response ) >= 1 ? $response->post_date : __( 'Not submitted', 'coursepress_base_td' ) ); ?>
+																				<?php _e( 'Submitted:', 'cp' ); ?>
+																				<br/> <?php echo( count( $response ) >= 1 ? $response->post_date : __( 'Not submitted', 'cp' ) ); ?>
 																			</div>
 																		</td>
 
 																		<td class="coloumn-submission-date <?php echo $style . ' ' . $visibility_class; ?>">
-																			<?php echo( count( $response ) >= 1 ? $response->post_date : __( 'Not submitted', 'coursepress_base_td' ) ); ?>
+																			<?php echo( count( $response ) >= 1 ? $response->post_date : __( 'Not submitted', 'cp' ) ); ?>
 																		</td>
 
 																		<td class="column-response <?php echo $style . ' ' . $visibility_class; ?>">
@@ -291,7 +291,7 @@ if ( isset( $_POST['course_id'] ) ) {
 																			if ( count( $response ) >= 1 ) {
 																				?>
 
-																				<a class="assessment-view-response-link button button-units" href="<?php echo admin_url( 'admin.php?page=assessment&course_id=' . $current_course_id . '&unit_id=' . $unit_id . '&user_id=' . $user_object->ID . '&module_id=' . $mod->ID . '&response_id=' . $response->ID . '&assessment_page=' . $assessment_page ); ?>"><?php _e( 'View', 'coursepress_base_td' ); ?></a>
+																				<a class="assessment-view-response-link button button-units" href="<?php echo admin_url( 'admin.php?page=assessment&course_id=' . $current_course_id . '&unit_id=' . $unit_id . '&user_id=' . $user_object->ID . '&module_id=' . $mod->ID . '&response_id=' . $response->ID . '&assessment_page=' . $assessment_page ); ?>"><?php _e( 'View', 'cp' ); ?></a>
 
 																			<?php
 																			} else {
@@ -313,23 +313,23 @@ if ( isset( $_POST['course_id'] ) ) {
 																					if ( isset( $grade_data ) ) {
 																						?>
 																						<a class="response_grade" alt="<?php
-																						_e( 'Grade by ', 'coursepress_base_td' );
+																						_e( 'Grade by ', 'cp' );
 																						echo $instructor_name->display_name;
-																						echo sprintf( __( ' on %s', 'coursepress_base_td' ), $grade_time );
+																						echo sprintf( __( ' on %s', 'cp' ), $grade_time );
 																						?>" title="<?php
-																						_e( 'Grade by ', 'coursepress_base_td' );
+																						_e( 'Grade by ', 'cp' );
 																						echo $instructor_name->display_name;
-																						echo sprintf( __( ' on %s', 'coursepress_base_td' ), $grade_time );
+																						echo sprintf( __( ' on %s', 'cp' ), $grade_time );
 																						?>"><?php echo $grade; ?>%</a>
 																					<?php
 																					} else {
-																						_e( 'Pending grade', 'coursepress_base_td' );
+																						_e( 'Pending grade', 'cp' );
 																					}
 																				} else {
 																					echo '-';
 																				}
 																			} else {
-																				_e( 'Non-assessable', 'coursepress_base_td' );
+																				_e( 'Non-assessable', 'cp' );
 																			}
 																			?>
 																		</td>
@@ -361,7 +361,7 @@ if ( isset( $_POST['course_id'] ) ) {
 													if ( ! isset( $input_modules_count ) || isset( $input_modules_count ) && $input_modules_count == 0 ) {
 														?>
 														<tr>
-															<td colspan="7"><?php _e( '0 input elements in the selected unit.', 'coursepress_base_td' ); ?></td>
+															<td colspan="7"><?php _e( '0 input elements in the selected unit.', 'cp' ); ?></td>
 														</tr>
 													<?php
 													}
@@ -372,7 +372,7 @@ if ( isset( $_POST['course_id'] ) ) {
 										<?php } ?>
 									</div>
 								<?php } else { ?>
-									<div class="zero-courses"><?php _e( '0 Units in the course', 'coursepress_base_td' ); ?></div>
+									<div class="zero-courses"><?php _e( '0 Units in the course', 'cp' ); ?></div>
 								<?php
 								}
 							}

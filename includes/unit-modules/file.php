@@ -62,7 +62,7 @@ class file_module extends Unit_Module {
 
 			<h3 class="module-title sidebar-name <?php echo( ! empty( $data->active_module ) ? 'is_active_module' : '' ); ?>" data-panel="<?php echo( ! empty( $data->panel ) ? $data->panel : '' ); ?>" data-id="<?php echo( ! empty( $data->ID ) ? $data->ID : '' ); ?>">
 				<span class="h3-label">
-					<span class="h3-label-left"><?php echo( isset( $data->post_title ) && $data->post_title !== '' ? $data->post_title : __( 'Untitled', 'coursepress_base_td' ) ); ?></span>
+					<span class="h3-label-left"><?php echo( isset( $data->post_title ) && $data->post_title !== '' ? $data->post_title : __( 'Untitled', 'cp' ) ); ?></span>
 					<span class="h3-label-right"><?php echo $this->label; ?></span>
 					<?php
 					parent::get_module_move_link();
@@ -78,7 +78,7 @@ class file_module extends Unit_Module {
 
 				<input type="hidden" class="element_id" value="<?php echo esc_attr( isset( $data->ID ) ? $data->ID : '' ); ?>"/>
 
-				<label class="bold-label"><?php _e( 'Element Title', 'coursepress_base_td' ); ?></label>
+				<label class="bold-label"><?php _e( 'Element Title', 'cp' ); ?></label>
 				<?php echo $this->element_title_description(); ?>
 				<input type="text" class="element_title" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr( isset( $data->post_title ) ? $data->post_title : '' ); ?>"/>
 
@@ -98,13 +98,13 @@ class file_module extends Unit_Module {
 
 
 				<div class="file_url_holder">
-					<label><?php _e( 'Link Text', 'coursepress_base_td' ); ?>
-						<input type="text" name="<?php echo $this->name; ?>_link_text[]" value="<?php echo esc_attr( isset( $data->link_text ) ? $data->link_text : __( 'Download', 'coursepress_base_td' ) ); ?>"/>
+					<label><?php _e( 'Link Text', 'cp' ); ?>
+						<input type="text" name="<?php echo $this->name; ?>_link_text[]" value="<?php echo esc_attr( isset( $data->link_text ) ? $data->link_text : __( 'Download', 'cp' ) ); ?>"/>
 					</label>
 
-					<label><?php _e( 'Enter a URL or Browse for a file.', 'coursepress_base_td' ); ?>
+					<label><?php _e( 'Enter a URL or Browse for a file.', 'cp' ); ?>
 						<input class="file_url" type="text" size="36" name="<?php echo $this->name; ?>_file_url[]" value="<?php echo esc_attr( ( isset( $data->file_url ) ? $data->file_url : '' ) ); ?>"/>
-						<input class="file_url_button" type="button" value="<?php _e( 'Browse', 'coursepress_base_td' ); ?>"/>
+						<input class="file_url_button" type="button" value="<?php _e( 'Browse', 'cp' ); ?>"/>
 					</label>
 				</div>
 
@@ -120,8 +120,8 @@ class file_module extends Unit_Module {
 
 	function on_create() {
 		$this->order       = apply_filters( 'coursepress_' . $this->name . '_order', $this->order );
-		$this->description = __( 'Ask students to upload a file. Useful if students need to send you various files like essays, homework etc.', 'coursepress_base_td' );
-		$this->label       = __( 'File Download', 'coursepress_base_td' );
+		$this->description = __( 'Ask students to upload a file. Useful if students need to send you various files like essays, homework etc.', 'cp' );
+		$this->label       = __( 'File Download', 'cp' );
 		$this->save_module_data();
 		parent::additional_module_actions();
 	}
