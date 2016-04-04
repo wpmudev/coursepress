@@ -509,12 +509,12 @@ class CoursePress_Core {
 		/**
 		 * student login page
 		 */
-		$new_rules[ '^' . self::get_slug( 'login' ) . '/?$' ] = 'index.php?page_id=-1&pagename='.self::get_slug( 'login' );
+		// DROP VP $new_rules[ '^' . self::get_slug( 'login' ) . '/?$' ] = 'index.php?page_id=-1&pagename='.self::get_slug( 'login' );
 
 		/**
 		 * create account
 		 */
-		$new_rules[ '^' . self::get_slug( 'signup' ) . '/?$' ] = 'index.php?page_id=-1&pagename='.self::get_slug( 'signup' );
+		// DROP VP $new_rules[ '^' . self::get_slug( 'signup' ) . '/?$' ] = 'index.php?page_id=-1&pagename='.self::get_slug( 'signup' );
 
 		/**
 		 * account settings

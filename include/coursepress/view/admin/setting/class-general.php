@@ -120,33 +120,6 @@ class CoursePress_View_Admin_Setting_General {
 								</td>
 							</tr>
 
-							<tr valign="top" class="break">
-								<th scope="row">' . esc_html__( 'Login Slug', 'CP_TD' ) . '</th>
-								<td>' . trailingslashit( esc_url( home_url() ) ) . '
-									&nbsp;<input type="text" name="coursepress_settings[slugs][login]" id="login_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/login', 'student-login' ) ) . '" />&nbsp;/
-								</td>
-							</tr>
-							<tr valign="top">
-								<th scope="row">' . esc_html__( 'Login Page', 'CP_TD' ) . '</th>
-								<td>' .
-									$page_dropdowns['login'] .
-									'<p class="description">' . sprintf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'CP_TD' ), '<strong>[cp_pages page="student_login"]</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET['page'] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'CP_TD' ) . '</a>' ) . '</p>
-								</td>
-							</tr>
-
-							<tr valign="top" class="break">
-								<th scope="row">' . esc_html__( 'Signup Slug', 'CP_TD' ) . '</th>
-								<td>' . trailingslashit( esc_url( home_url() ) ) . '
-									&nbsp;<input type="text" name="coursepress_settings[slugs][signup]" id="signup_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/signup', 'courses-signup' ) ) . '" />&nbsp;/
-								</td>
-							</tr>
-							<tr valign="top">
-								<th scope="row">' . esc_html__( 'Signup Page', 'CP_TD' ) . '</th>
-								<td>' .
-									$page_dropdowns['signup'] .
-									'<p class="description">' . sprintf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'CP_TD' ), '<strong>[cp_pages page="student_signup"]</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET['page'] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'CP_TD' ) . '</a>' ) . '</p>
-								</td>
-							</tr>
 
 							<tr valign="top" class="break">
 								<th scope="row">' . esc_html__( 'Instructor Profile Slug', 'CP_TD' ) . '</th>
