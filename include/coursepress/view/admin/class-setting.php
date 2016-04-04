@@ -8,6 +8,7 @@ class CoursePress_View_Admin_Setting {
 	private static $tabs = array();
 	private static $settings_classes = array(
 		'General',
+		'Pages',
 		'Email',
 		'Capabilities',
 		'BasicCertificate',

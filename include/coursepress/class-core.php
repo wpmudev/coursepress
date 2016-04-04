@@ -519,7 +519,7 @@ class CoursePress_Core {
 		/**
 		 * account settings
 		 */
-		$new_rules[ '^' . self::get_slug( 'student_settings' ) . '/?$' ] = 'index.php?page_id=-1&pagename='.self::get_slug( 'student_settings' );
+		// DROP VP $new_rules[ '^' . self::get_slug( 'student_settings' ) . '/?$' ] = 'index.php?page_id=-1&pagename='.self::get_slug( 'student_settings' );
 
 		$upload_dir = wp_upload_dir();
 		$upload_path = trailingslashit( str_replace( home_url(), '', $upload_dir['baseurl'] ) );

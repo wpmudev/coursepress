@@ -9,7 +9,6 @@ class CoursePress_View_Admin_Setting_General {
 		add_filter( 'coursepress_settings_render_tab_general', array( __CLASS__, 'return_content' ), 10, 3 );
 	}
 
-
 	public static function add_tabs( $tabs ) {
 
 		$tabs['general'] = array(
@@ -47,10 +46,6 @@ class CoursePress_View_Admin_Setting_General {
 		$pages_args['selected'] = CoursePress_Core::get_setting( 'pages/student_dashboard', 0 );
 		$pages_args['name'] = 'coursepress_settings[pages][student_dashboard]';
 		$page_dropdowns['student_dashboard'] = wp_dropdown_pages( $pages_args );
-
-		$pages_args['selected'] = CoursePress_Core::get_setting( 'pages/student_settings', 0 );
-		$pages_args['name'] = 'coursepress_settings[pages][student_settings]';
-		$page_dropdowns['student_settings'] = wp_dropdown_pages( $pages_args );
 
 		$content = '
 			<input type="hidden" name="page" value="' . esc_attr( $slug ) . '"/>
@@ -172,20 +167,6 @@ class CoursePress_View_Admin_Setting_General {
 							</tr>
 
 							<tr valign="top" class="break">
-								<th scope="row">' . esc_html__( 'Student Dashboard Slug', 'CP_TD' ) . '</th>
-								<td>' . trailingslashit( esc_url( home_url() ) ) . '
-									&nbsp;<input type="text" name="coursepress_settings[slugs][student_settings]" id="student_settings_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/student_settings', 'student-settings' ) ) . '" />&nbsp;/
-								</td>
-							</tr>
-							<tr valign="top">
-								<th scope="row">' . esc_html__( 'Student Dashboard Page', 'CP_TD' ) . '</th>
-								<td>' .
-									$page_dropdowns['student_settings'] .
-									'<p class="description">' . sprintf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'CP_TD' ), '<strong>[cp_pages page="student_settings"]</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET['page'] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'CP_TD' ) . '</a>' ) . '</p>
-								</td>
-							</tr>
-
-							<tr valign="top" class="break">
 								<th scope="row">' . esc_html__( 'Instructor Profile Slug', 'CP_TD' ) . '</th>
 								<td>' . trailingslashit( esc_url( home_url() ) ) . '
 									&nbsp;<input type="text" name="coursepress_settings[slugs][instructor_profile]" id="instructor_profile_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/instructor_profile', 'instructor' ) ) . '" />&nbsp;/
@@ -220,8 +201,6 @@ class CoursePress_View_Admin_Setting_General {
 		$content .= '
 						</tbody>
 					</table>
-
-
 				</div>
 
 				<!-- THEME MENU ITEMS -->
