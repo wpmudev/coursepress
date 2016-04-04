@@ -72,9 +72,6 @@ class CoursePress_Template_Unit {
 
 		// Let BackboneJS take over if its in Focus mode.
 		if ( 'focus' == $view_mode ) {
-			// TODO: We need to enqueue correct javascript here to make focus-
-			//       mode work!
-
 			return '<div class="coursepress-focus-view" data-course="' . $course_id . '" data-unit="' . $unit_id . '" data-page="' . $page . '"><span class="loader hidden"><i class="fa fa-spinner fa-pulse"></i></span></div>';
 		}
 
@@ -111,7 +108,22 @@ class CoursePress_Template_Unit {
 			);
 
 			if ( $page_title ) {
-				$content .= '<div class="unit-page-header unit-section-header"><h3 class="page-title unit-section-title">' . $page_title . '</h3></div>';
+				$content .= '<div class="unit-page-header unit-section-header">';
+
+				$page_feature_image = get_post_meta( $unit->ID, 'page_feature_image', true );
+				if ( ! empty( $page_feature_image[ 'page_'. $page ] ) ) {
+					$feature_image = sprintf( '<img src="%s" alt="%s" />', esc_url( $page_feature_image['page_'. $page] ), esc_attr( basename( $page_feature_image['page_'. $page] ) ) );
+					$content .= '<div class="unit-page-feature-image section-thumbnail">' . $feature_image . '</div>';
+				}
+
+				$content .= '<h3 class="page-title unit-section-title">' . $page_title . '</h3>';
+
+				$page_description = get_post_meta( $unit->ID, 'page_description', true );
+				if ( ! empty( $page_description['page_' . $page] ) ) {
+					$content .= $page_description['page_' . $page];
+				}
+
+				$content .= '</div>';
 			}
 		}
 

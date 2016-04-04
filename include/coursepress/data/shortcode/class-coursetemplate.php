@@ -552,6 +552,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 				$preview_class = ( $free_show && ! $enrolled && ! empty( $preview['structure'][ $unit_id ] ) && is_array( $preview['structure'][ $unit_id ] ) ) ? $free_class : '';
 				$content .= '<div class="unit-page-title-wrapper ' . $preview_class . '">';
+
 				$content .= '<div class="unit-page-title">' . $page_title . '</div>';
 				if ( $free_show && ! $enrolled && ! empty( $preview['structure'][ $unit_id ] ) && is_array( $preview['structure'][ $unit_id ] ) ) {
 					$content .= '<div class="unit-page-link"><a href="' . esc_url( $page_link ) . '">' . $free_text . '</a></div>';
@@ -804,12 +805,24 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					$module_table .= '<li>';
 
 					if ( $heading_visible ) {
+						// Set featured image
+						if ( ! empty( $page['feature_image'] ) ) {
+							$page_featured_image = sprintf( '<img src="%s" alt="%s" />', esc_url( $page['feature_image'] ), esc_attr( basename( $page['feature_image'] ) ) );
+							$module_table .= '<div class="section-thumbnail">' . $page_featured_image . '</div>';
+						}
+
 						if ( 'normal' == $view_mode ) {
 							$module_table .= '<div class="section-title" data-id="' . $page_number . '">' . ( ! empty( $page['title'] ) ? esc_html( $page['title'] ) : esc_html__( 'Untitled', 'CP_TD' ) ) . '</div>';
 						} else {
 							$section_link = $base_link . CoursePress_Core::get_slug( 'units' );
 							$section_link .= '#section-' . $page_number;
-							$module_table .= '<div class="section-title" data-id="' . $page_number . '"><a href="' . $section_link . '">' . ( ! empty( $page['title'] ) ? esc_html( $page['title'] ) : esc_html__( 'Untitled', 'CP_TD' ) ) . '</a></div>';
+							$module_table .= '<div class="section-title" data-id="' . $page_number . '">';
+							$module_table .= '<a href="' . $section_link . '">' . ( ! empty( $page['title'] ) ? esc_html( $page['title'] ) : esc_html__( 'Untitled', 'CP_TD' ) ) . '</a>';
+							$module_table .= '</div>';
+						}
+
+						if ( ! empty( $page['description'] ) ) {
+							$module_table .= $page['description'];
 						}
 					}
 
@@ -817,9 +830,9 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 					foreach ( $page['modules'] as $module ) {
 						$attributes = CoursePress_Data_Module::attributes( $module->ID );
-						if ( 'normal' != $view_mode && 'input' == $attributes['mode'] ) {
-							continue;
-						}
+						//if ( 'normal' != $view_mode && 'input' == $attributes['mode'] ) {
+						//	continue;
+						//}
 
 						if ( ! CoursePress_Data_Course::can_view_module( $course_id, $unit_id, $module->ID, $page_number ) ) {
 							continue;

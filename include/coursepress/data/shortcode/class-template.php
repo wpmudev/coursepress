@@ -473,10 +473,20 @@ class CoursePress_Data_Shortcode_Template {
 
 				$content .= '<div class="focus-main section">';
 
-				$template = '<div class="focus-item focus-item-' . esc_attr( $type ) . '">
-					' . $page_info['title'] . '
-				</div>
-				';
+				$template = '<div class="focus-item focus-item-' . esc_attr( $type ) . '">';
+
+				if ( ! empty( $page_info['feature_image'] ) ) {
+					$feature_image = sprintf( '<img src="%s" alt="%s" />', esc_url( $page_info['feature_image'] ), esc_attr( basename( $page_info['feature_image'] ) ) );
+					$template .= '<div class="section-thumbnail">' . $feature_image . '</div>';
+				}
+
+				$template .= '<h3>'. $page_info['title'] . '</h3>';
+
+				if ( ! empty( $page_info['description'] ) ) {
+					$template .= $page_info['description'];
+				}
+
+				$template .= '</div>';
 
 				$template = apply_filters( 'coursepress_template_focus_item_section', $template, $a );
 
