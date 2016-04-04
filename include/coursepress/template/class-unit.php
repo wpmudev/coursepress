@@ -267,10 +267,10 @@ class CoursePress_Template_Unit {
 	 * @since  2.0.0
 	 * @return string HTML Content of the page.
 	 */
-    public static function unit_archive() {
+	public static function unit_archive() {
 
 		$content = '';
-        $content .= do_shortcode( '[course_unit_submenu]' );
+		$content .= do_shortcode( '[course_unit_submenu]' );
 
 		$content .= '
 			<div class="instructors-content">

@@ -476,12 +476,26 @@ class CoursePress_Core {
 		$new_rules[ self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'notification' ) . '(?:/page/([0-9]+))?/?' ] = 'index.php?course=$matches[1]&cp_action=notifications_archive&page=$matches[2]';
 		$new_rules[ self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'discussion' ) . '(?:/page/([0-9]+))?/?' ] = 'index.php?course=$matches[1]&cp_action=discussions_archive&page=$matches[2]';
 
-		// Special Rules for CoursePress Focus mode
+		/**
+		 *  Special Rules for CoursePress Focus mode ( DROP VP and old )
+		 */
 		$new_rules['^coursepress_focus/([^/]*)/([^/]*)/([^/]*)/([^/]*)/?$'] = 'index.php?coursepress_focus=1&course=$matches[1]&unit=$matches[2]&type=$matches[3]&item=$matches[4]'; // Matches item
 		$new_rules['^coursepress_focus/([^/]*)/([^/]*)/([^/]*)/?$'] = 'index.php?coursepress_focus=1&course=$matches[1]&unit=$matches[2]&type=$matches[3]'; // Matches type
 		$new_rules['^coursepress_focus/([^/]*)/([^/]*)/?$'] = 'index.php?coursepress_focus=1&course=$matches[1]&unit=$matches[2]'; // Matches unit
 		$new_rules['^coursepress_focus/([^/]*)/?$'] = 'index.php?coursepress_focus=1&course=$matches[1]'; // Matches course
 		$new_rules['^coursepress_focus/.*?$'] = 'index.php?coursepress_focus=1';  // Not useful practically
+
+		/**
+		 * instructor ( DROP VP )
+		 */
+		$page_id = CoursePress_Core::get_setting( 'pages/instructor' );
+		if ( ! empty( $page_id ) ) {
+			$slug = CoursePress_Core::get_setting( 'slugs/instructor', 'instructor' );
+			$new_rules[ '^'.$slug.'/([^/]+)/?$' ] = sprintf(
+				'index.php?page_id=%d&instructor_username=$matches[1]',
+				$page_id
+			);
+		}
 
 		// DROP VP $new_rules[ '^' . self::get_slug( 'course' ) . '/' . self::get_slug( 'category' ) . '/([^/]*)/page/([^/]*)/?' ] = 'index.php?page_id=-1&course_category=$matches[1]&paged=$matches[2]';
 		// DROP VP $new_rules[ '^' . self::get_slug( 'course' ) . '/' . self::get_slug( 'category' ) . '/([^/]*)/?' ] = 'index.php?page_id=-1&course_category=$matches[1]';
@@ -500,7 +514,7 @@ class CoursePress_Core {
 		// DROP VP $new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'notification' ) . '/page/([^/]*)/?' ] = 'index.php?page_id=-1&coursename=$matches[1]&notifications_archive&paged=$matches[2]'; // page/?( [0-9]{1,} )/?$
 		// DROP VP $new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'notification' ) ] = 'index.php?page_id=-1uu&coursename=$matches[1]&notifications_archive';
 
-		$new_rules[ '^' . self::get_slug( 'instructor' ) . '/([^/]*)/?' ] = 'index.php?page_id=-1&instructor_username=$matches[1]';
+		// DROP VP $new_rules[ '^' . self::get_slug( 'instructor' ) . '/([^/]*)/?' ] = 'index.php?page_id=-1&instructor_username=$matches[1]';
 
 		// Courses slug need to redirect to course archive pages
 		// DROP VP $new_rules[ '^' . self::get_slug( 'course' ) . '/page/([^/]*)/?' ] = 'index.php?page_id=-1&course_category=all&paged=$matches[1]';

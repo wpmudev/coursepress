@@ -2,12 +2,9 @@
 
 require_once dirname( __FILE__ ) . '/class-settings.php';
 
-
 class CoursePress_View_Admin_Setting_Pages extends CoursePress_View_Admin_Setting_Setting {
 
 	public static function init() {
-
-		self::$slug = 'pages';
 
 		add_action( 'coursepress_settings_process_pages', array( __CLASS__, 'process_form' ), 10, 2 );
 		add_filter( 'coursepress_settings_render_tab_pages', array( __CLASS__, 'return_content' ), 10, 3 );
@@ -17,6 +14,7 @@ class CoursePress_View_Admin_Setting_Pages extends CoursePress_View_Admin_Settin
 
 	public static function add_tabs( $tabs ) {
 
+		self::$slug = 'pages';
 		$tabs[ self::$slug ] = array(
 			'title' => __( 'Pages', 'CP_TD' ),
 			'description' => __( 'Configure the pages for CoursePress.', 'CP_TD' ),
@@ -24,6 +22,7 @@ class CoursePress_View_Admin_Setting_Pages extends CoursePress_View_Admin_Settin
 		);
 
 		return $tabs;
+
 	}
 
 	public static function return_content( $content, $slug, $tab ) {
@@ -55,7 +54,14 @@ class CoursePress_View_Admin_Setting_Pages extends CoursePress_View_Admin_Settin
 		$pages_args['name'] = 'coursepress_settings[pages][student_settings]';
 		$page_dropdowns['student_settings'] = wp_dropdown_pages( $pages_args );
 
-		$content = self::page_start( $slug, $tab );
+		$pages_args['selected'] = CoursePress_Core::get_setting( 'pages/instructor', 0 );
+		$pages_args['name'] = 'coursepress_settings[pages][instructor]';
+		$page_dropdowns['instructor'] = wp_dropdown_pages( $pages_args );
+
+		$content = '';
+
+		$content .= self::page_start( $slug, $tab );
+		$content .= self::table_start();
 
 		/**
 		 * Student Dashboard
@@ -93,7 +99,16 @@ class CoursePress_View_Admin_Setting_Pages extends CoursePress_View_Admin_Settin
 			__( 'Select page where student can create an accont.', 'CP_TD' )
 		);
 
-		$content .= self::page_end();
+		/**
+		 * Instructor.
+		 */
+		$content .= self::row(
+			__( 'Instructor', 'CP_TD' ),
+			$page_dropdowns['instructor'],
+			__( 'Select page where we display instructor profile.', 'CP_TD' )
+		);
+
+		$content .= self::table_end();
 		return $content;
 
 	}
