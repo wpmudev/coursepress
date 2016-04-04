@@ -26,6 +26,44 @@ class CoursePress_View_Admin_Course_Student {
 		 * Invite Student
 		 */
 		if ( CoursePress_Data_Capabilities::can_assign_course_student( $list_course->get_course_id() ) ) {
+			// Show lists of previously invited students
+			$invited_students = CoursePress_Data_Course::get_setting( $list_course->get_course_id(), 'invited_students', array() );
+			$invited_students = array_filter( (array) $invited_students );
+			$student_invite_nonce = wp_create_nonce( 'coursepress_remove_invite' );
+
+			if ( ! empty( $invited_students ) ) {
+				$content .= '<div class="coursepress_course_invite_student_wrapper invited-students">';
+				$content .= '<h3>'. esc_html__( 'Invited Students', 'CP_TD' ) . '</h3>';
+				$content .= '<p class="description">' . esc_html__( 'List of invited students.', 'CP_TD' ) . '</p>';
+				$content .= '<table class="wp-list-table widefat fixed striped">';
+				$content .= '<thead><tr><th>' . __( 'First Name', 'CP_TD' ) . '</th>';
+				$content .= '<th>'. __( 'Last Name', 'CP_TD' ) . '</th><th>' . __( 'Email', 'CP_TD' ) . '</th><th></th></tr></thead>';
+				foreach ( $invited_students as $student_email => $student_data ) {
+					$content .= '<tr class="invited-list">';
+					$content .= '<td>' . $student_data['first_name'] . '</td>';
+					$content .= '<td>'. $student_data['last_name'] . '</td>';
+					$content .= '<td>'. $student_data['email'] . '</td>';
+					$content .= '<td class="actions column-actions">';
+					$content .= sprintf(
+						'<a href="%s" title="%s" class="resend-invite" data-firstname="%s" data-lastname="%s" data-email="%s"><i class="fa fa-send"></i></a> ',
+						'',
+						esc_attr( __( 'Resend Invitation', 'CP_TD') ),
+						esc_attr( $student_data['first_name'] ),
+						esc_attr( $student_data['last_name'] ),
+						esc_attr( $student_data['email'] )
+					);
+					$content .= sprintf( '<a href="%s" title="%s" data-email="%s" data-nonce="%s" class="remove-invite"><i class="fa fa-times-circle remove-btn"></i></a>',
+									'',
+									esc_attr( __( 'Remove Invitation', 'CP_TD' ) ),
+									esc_attr( $student_email ),
+									esc_attr( $student_invite_nonce )
+								);
+					$content .= '</td></tr>';
+				}
+				$content .= '</table>';
+				$content .= '</div><br />';
+			}
+
 			$nonce = wp_create_nonce( 'invite_student' );
 			$content .= '<div class="coursepress_course_invite_student_wrapper">';
 			$content .= '<h3>' . esc_html__( 'Invite Student', 'CP_TD' ) .'</h3>';

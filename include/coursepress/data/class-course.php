@@ -892,6 +892,13 @@ class CoursePress_Data_Course {
 			return false;
 		}
 
+		// Check invitation list then remove it exist.
+		$invited_students = self::get_setting( $course_id, 'invited_students', array() );
+		if ( is_array( $invited_students ) && ! empty( $invited_students[$student->user_email] ) ) {
+			unset( $invited_students[$student->user_email] );
+			self::update_setting( $course_id, 'invited_students', $invited_students );
+		}
+
 		// If student is already enrolled, exit.
 		$enrolled = self::student_enrolled( $student_id, $course_id );
 		if ( ! empty( $enrolled ) ) {
@@ -1049,7 +1056,6 @@ class CoursePress_Data_Course {
 		}
 		$email_args['first_name'] = $email_data['first_name'];
 		$email_args['last_name'] = $email_data['last_name'];
-		print_r( $email_args );
 
 		$sent = CoursePress_Helper_Email::send_email(
 			$type,

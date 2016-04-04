@@ -660,6 +660,10 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 				};
 				CoursePress.Course.set( 'data', data );
 				CoursePress.Course.save();
+				CoursePress.Course.on( 'coursepress:invite_student_success', function(){
+					// Reload page
+					window.location = self.location;
+				});
 			}
 
 			$( '[name=invite-email]' ).val( '' );
@@ -667,6 +671,49 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			$( '[name=invite-lastname]' ).val( '' );
 
 		} );
+
+		//Resend student invitation
+		$( '.column-actions .resend-invite' ).on( 'click', function(){
+			var el = $(this),
+				element_data = el.data();
+
+			$( '[name=invite-email]' ).val( element_data.email );
+			$( '[name=invite-firstname]' ).val( element_data.firstname );
+			$( '[name=invite-lastname]' ).val( element_data.lastname );
+			$( '.coursepress_course_invite_student_wrapper .invite-submit' ).trigger( 'click' );
+
+			return false;
+		});
+
+		// Remove invitation from the list
+		$( '.column-actions .remove-invite' ).on( 'click', function(){
+			var that = this,
+				student_data = $( this ).data(),
+				data = {
+					email: student_data.email,
+					nonce: student_data.nonce,
+					course_id: _coursepress.course_id
+				};
+
+			CoursePress.Course.set( 'action', 'remove_student_invitation' );
+			CoursePress.Course.set( 'data', data );
+			CoursePress.Course.save();
+
+			CoursePress.Course.on( 'coursepress:remove_student_invitation_success', function() {
+				$( that ).parents( 'tr' ).first().slideUp(function(){
+					$(this).remove();
+					// Check if there are no longer invitation
+					var invited_list = $( '.invited-list' );
+
+					if ( 0 == invited_list.length ) {
+						$( '.invited-students' ).hide();
+					}
+				});
+			});
+
+			return false;
+		});
+
 	}
 
 	/**
