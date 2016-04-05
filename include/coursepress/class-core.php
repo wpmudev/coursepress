@@ -475,9 +475,15 @@ class CoursePress_Core {
 		$new_rules[ self::get_slug( 'courses' ).'/([^/]+)(?:/([0-9]+))?/'.self::get_slug( 'unit' ).'/?$' ] = 'index.php?course=$matches[1]&page=$matches[2]&cp_action=show_units';
 
 		/**
-		 * communications (DROP VP)
+		 * notifications (DROP VP)
 		 */
 		$new_rules[ self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'notification' ) . '(?:/page/([0-9]+))?/?' ] = 'index.php?course=$matches[1]&cp_action=notifications_archive&page=$matches[2]';
+
+		/**
+		 * discussion (DROP VP)
+		 */
+		$new_rules[ self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'discussion' ) . '/' . self::get_slug( 'discussions_new' ).  '/?' ] = 'index.php?course=$matches[1]&cp_action=discussion_new';
+		$new_rules[ self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'discussion' ) . '/([^/]+)/?' ] = 'index.php?course=$matches[1]&cp_action=discussion_show&discussion_name=$matches[2]';
 		$new_rules[ self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'discussion' ) . '(?:/page/([0-9]+))?/?' ] = 'index.php?course=$matches[1]&cp_action=discussions_archive&page=$matches[2]';
 
 		/**

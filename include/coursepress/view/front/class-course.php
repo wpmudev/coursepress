@@ -1382,7 +1382,14 @@ class CoursePress_View_Front_Course {
 			case 'discussions_archive':
 				return CoursePress_Template_Communication::render_discussions();
 
+			case 'discussion_new':
+				return CoursePress_Template_Communication::render_new_discussion();
+
+			case 'discussion_show':
+				return CoursePress_Template_Communication::render_discussion();
+
 			default:
+				d( $cp_action );
 				$args = array(
 				'course_id' => $post->ID,
 				);
@@ -1453,5 +1460,4 @@ class CoursePress_View_Front_Course {
 		 */
 		return false;
 	}
-
 }

@@ -151,9 +151,13 @@ class CoursePress_Template_Communication {
 		$content .= '</div>';
 
 		if ( ! empty( $discussion ) ) {
+			wp_enqueue_script( 'comment-reply' );
+			global $post;
 			ob_start();
+			$post = $discussion;
 			comments_template();
 			$content .= ob_get_clean();
+			wp_reset_postdata();
 		}
 
 		$content .= '</div>';

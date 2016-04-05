@@ -324,15 +324,30 @@ class CoursePress_Data_Module {
 
 		$post_type = get_post_type( $comment->comment_post_ID );
 
-		if ( 'module' === $post_type ) {
-			$unit_id = get_post_field( 'post_parent', $comment->comment_post_ID );
-			$course_id = get_post_field( 'post_parent', $unit_id );
-			$course_link = get_permalink( $course_id );
-			$location = esc_url_raw( $course_link . CoursePress_Core::get_slug( 'unit/' ) . get_post_field( 'post_name', $unit_id ) . '#module-' . $comment->comment_post_ID );
+		switch ( $post_type ) {
+
+			case 'module':
+				$unit_id = get_post_field( 'post_parent', $comment->comment_post_ID );
+				$course_id = get_post_field( 'post_parent', $unit_id );
+				$course_link = get_permalink( $course_id );
+				$location = esc_url_raw( $course_link . CoursePress_Core::get_slug( 'unit/' ) . get_post_field( 'post_name', $unit_id ) . '#module-' . $comment->comment_post_ID );
+			break;
+
+			case 'discussions':
+				$slug = get_query_var( 'course' );
+				$course = get_page_by_path( $slug, OBJECT, 'course' );
+				$course_link = get_permalink( $course->ID );
+				$location = esc_url_raw( $course_link . CoursePress_Core::get_slug( 'discussion/' ) . get_post_field( 'post_name', $comment->comment_post_ID ) . '#comment' . $comment->comment_ID );
+			break;
+
+			default:
+			return;
+
 		}
 
 		if ( empty( $text ) ) {
-			$text = __( 'Click here to cancel reply.', 'CP_TD' ); }
+			$text = __( 'Click here to cancel reply.', 'CP_TD' );
+		}
 
 		$style = isset( $_GET['replytocom'] ) ? '' : ' style="display:none;"';
 
