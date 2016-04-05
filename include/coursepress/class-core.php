@@ -581,22 +581,17 @@ class CoursePress_Core {
 	 * @since 2.0.0
 	 */
 	public static function redirect_to_guide_page() {
-		/**
-		 * exit if it is not first time
-		 */
-		if ( empty( get_option( 'coursepress_activate', false ) ) ) {
-			return;
-		}
-		/**
-		 * delete_option (semaphore to show guide page)
-		 */
+		// Exit if it is not first time.
+		$is_active = get_option( 'coursepress_activate', false );
+		if ( empty( $is_active ) ) { return; }
+
+		// delete_option (semaphore to show guide page)
 		delete_option( 'coursepress_activate' );
-		/**
-		 * exit if we have some courses
-		 */
-		if ( ! empty( CoursePress_Data_Course::count_courses() ) ) {
-			return;
-		}
+
+		// exit if we have some courses.
+		$count = CoursePress_Data_Course::count_courses();
+		if ( ! empty( $count ) ) { return; }
+
 		wp_safe_redirect(
 			add_query_arg(
 				array(
