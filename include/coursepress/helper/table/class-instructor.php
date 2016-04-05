@@ -1,6 +1,6 @@
 <?php
 
-if( ! class_exists( 'WP_Users_List_Table' ) ) {
+if ( ! class_exists( 'WP_Users_List_Table' ) ) {
 	require ABSPATH . 'wp-admin/includes/class-wp-users-list-table.php';
 }
 
@@ -15,7 +15,7 @@ class CoursePress_Helper_Table_Instructor extends WP_Users_List_Table {
 	}
 
 	public static function filter_args( $args ) {
-		$args[ 'meta_value' ] = 'instructor';
+		$args['meta_value'] = 'instructor';
 
 		return $args;
 	}
@@ -28,12 +28,12 @@ class CoursePress_Helper_Table_Instructor extends WP_Users_List_Table {
 			array(
 				'action' => 'delete',
 				'instructor_id' => $user_object->ID,
-				'nonce' => wp_create_nonce( 'coursepress_remove_instructor' )
+				'nonce' => wp_create_nonce( 'coursepress_remove_instructor' ),
 			)
 		);
 		$actions = array(
 			'profile' => sprintf( '<a href="%s">%s</a>', $profile_link, __( 'Profile', 'CP_TD' ) ),
-			'delete' => sprintf( '<a href="%s">%s</a>', $delete_link, __( 'Remove', 'CP_TD' ) )
+			'delete' => sprintf( '<a href="%s">%s</a>', $delete_link, __( 'Remove', 'CP_TD' ) ),
 		);
 
 		$actions = apply_filters( 'coursepress_instructor_row_actions', $actions, $user_object );
@@ -45,17 +45,20 @@ class CoursePress_Helper_Table_Instructor extends WP_Users_List_Table {
 		$instructor = get_userdata( $user_id );
 		$return = '';
 
-		switch( $column ) {
+		switch ( $column ) {
 			case 'id':
 				$return = $user_id;
 				break;
+
 			case 'user':
 				$return = $instructor->user_login;
 				break;
+
 			case 'registered':
 				$date_format = get_option( 'date_format' );
 				$return = date_i18n( $date_format, strtotime( $instructor->user_registered ) );
 				break;
+
 			case 'courses':
 				$count = CoursePress_Data_Instructor::get_courses_number( $instructor );
 				$courses_link = add_query_arg(
@@ -89,14 +92,16 @@ class CoursePress_Helper_Table_Instructor extends WP_Users_List_Table {
 		esc_html_e( 'No instructors found...', 'CP_TD' );
 	}
 
-	public function extra_tablenav( $which ) { return; }
+	public function extra_tablenav( $which ) {
+		// Do nothing.
+	}
 
 	public function display() {
 		?>
 		<div class="wrap">
 			<h2>
 				<?php esc_html_e( 'Instructors', 'CP_TD' ); ?>
-				<?php if ( current_user_can( 'manage_options' ) ): ?>
+				<?php if ( current_user_can( 'manage_options' ) ) : ?>
 					<a href="user-new.php" class="add-new-h2">
 						<?php esc_html_e( 'Add New', 'CP_TD' ); ?>
 					</a>

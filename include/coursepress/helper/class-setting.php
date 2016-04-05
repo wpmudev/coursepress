@@ -124,23 +124,38 @@ class CoursePress_Helper_Setting {
 		return $a > $b;
 	}
 
+	/**
+	 * Internal helper function used by array_map() to get numeric order values.
+	 *
+	 * @since  2.0.0
+	 * @param  array $a
+	 * @return int
+	 */
+	public static function _page_order( $a ) {
+		if ( empty( $a['order'] ) ) {
+			return 0;
+		} else {
+			return (int) $a['order'];
+		}
+	}
+
 	private static function _get_pages() {
 		$pages = apply_filters( 'coursepress_admin_pages', self::$pages );
-		$order = array_map( create_function( '$a', ' return ! empty( $a["order"] ) ? $a["order"] : 0; '), $pages );
+		$order = array_map( array( self, '_page_order' ), $pages );
 		$max_order = max( $order );
 		$new_order = array();
-		
+
 		foreach ( $pages as $key => $page ) {
 			$page_order = ! empty( $page['order'] ) ? $page['order'] : ( $max_order += 5 );
 			$page['order'] = $page_order;
-			$pages[$key] = $page;
+			$pages[ $key ] = $page;
 			$new_order[ $page_order ] = $key;
 		}
 
 		uksort( $new_order, array( __CLASS__, 'reorder_menu' ) );
 		$new_pages = array();
 		foreach ( $new_order as $order => $key ) {
-			$new_pages[$key] = $pages[$key];
+			$new_pages[ $key ] = $pages[ $key ];
 		}
 
 		return $new_pages;

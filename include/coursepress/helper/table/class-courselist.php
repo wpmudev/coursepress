@@ -187,7 +187,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		if ( ! CoursePress_Data_Capabilities::can_create_course( $user_id ) ) {
 			unset( $actions['duplicate'] );
 		}
-		if( ! CoursePress_Data_Capabilities::can_view_course_units( $item->ID, $user_id ) ) {
+		if ( ! CoursePress_Data_Capabilities::can_view_course_units( $item->ID, $user_id ) ) {
 			unset( $actions['units'] );
 		}
 		if ( ! CoursePress_Data_Capabilities::can_view_course_students( $item->ID ) ) {
@@ -421,8 +421,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 					unset( $post_args['author'] );
 					add_filter( 'posts_where', array( 'CoursePress_Data_Instructor', 'filter_by_whereall' ) );
 				}
-
-			} 
+			}
 		}
 
 		if ( $category && CoursePress_Data_Capabilities::can_manage_categories() ) {
@@ -545,13 +544,13 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		<div class="tablenav <?php echo esc_attr( $which ); ?>">
 
 		<?php
-			if ( Coursepress_Data_Capabilities::can_manage_courses() ) {
+		if ( Coursepress_Data_Capabilities::can_manage_courses() ) {
 		?>
 			<div class="alignleft actions bulkactions">
 				<?php $this->bulk_actions( $which ); ?>
 			</div>
 		<?php
-			}
+		}
 		?>
 		<div class="alignleft actions category-filter">
 			<?php $this->course_filter( $which ); ?>

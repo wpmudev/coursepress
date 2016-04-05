@@ -20,13 +20,16 @@ class CoursePress_Widget_FeaturedCourse extends WP_Widget {
 	}
 
 	public function form( $instance ) {
-		$instance = wp_parse_args( (array) $instance, array(
-						'title' => '',
-						'button_title' => '',
-						'course' => '',
-						'type' => '',
-						'priority' => '',
-		) );
+		$instance = wp_parse_args(
+			(array) $instance,
+			array(
+				'title' => '',
+				'button_title' => '',
+				'course' => '',
+				'type' => '',
+				'priority' => '',
+			)
+		);
 		$title = $instance['title'];
 		$button_title = $instance['button_title'];
 		$selected_course = $instance['course'];

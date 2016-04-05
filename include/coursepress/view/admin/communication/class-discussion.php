@@ -396,10 +396,10 @@ class CoursePress_View_Admin_Communication_Discussion {
 
 			foreach ( $courses as $index => $course ) {
 				if ( $course->post_author == $user_id && ! $is_author ) {
-					unset( $courses[$index] );
+					unset( $courses[ $index ] );
 				}
 				if ( CoursePress_Data_Capabilities::is_course_instructor( $course ) && ! $is_instructor ) {
-					unset( $courses[$index] );
+					unset( $courses[ $index ] );
 				}
 			}
 		}

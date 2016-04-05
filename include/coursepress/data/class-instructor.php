@@ -150,7 +150,9 @@ class CoursePress_Data_Instructor {
 		return $posts;
 	}
 
-/*
+	/*
+	TODO: Remove this in 2.1 or so - keep it in 2.0 for reference:
+
 	public static function get_accessable_courses( $user, $include_posts = false ) {
 		return self::get_instructor_courses( $user );
 		$user_id = self::_get_id( $user );
@@ -183,7 +185,7 @@ class CoursePress_Data_Instructor {
 			return $query->posts;
 		}
 	}
-*/
+	*/
 
 	public static function unassign_from_course( $user, $course_id = 0 ) {
 		$user_id = self::_get_id( $user );

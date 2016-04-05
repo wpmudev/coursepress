@@ -554,9 +554,9 @@ class CoursePress_Data_Student {
 						if ( $is_mandatory ) {
 							$unit_mandatory_answered++;
 						}
-						
+
 						$minimum_grade = (int) $attributes['minimum_grade'];
-	
+
 						// Get the last grade and see if we pass
 						$grades = self::get_grade( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
 						$grade = CoursePress_Helper_Utility::get_array_val(
@@ -578,7 +578,7 @@ class CoursePress_Data_Student {
 							if ( ! $pass ) {
 								$unit_assessables++;
 							}
-						} 
+						}
 					}
 				}
 			}
@@ -589,13 +589,13 @@ class CoursePress_Data_Student {
 					'completion/' . $unit_id . '/required_steps',
 					$unit_required_steps
 				);
-	
+
 				CoursePress_Helper_Utility::set_array_val(
 					$student_progress,
 					'completion/' . $unit_id . '/completed_mandatory',
 					$unit_mandatory_answered
 				);
-	
+
 				if ( $unit_required_steps === $unit_mandatory_answered ) {
 					CoursePress_Helper_Utility::set_array_val(
 						$student_progress,
@@ -612,7 +612,7 @@ class CoursePress_Data_Student {
 					);
 					$course_completed += $unit_steps;
 				}
-	
+
 				CoursePress_Helper_Utility::set_array_val(
 					$student_progress,
 					'completion/' . $unit_id . '/completed_steps',
@@ -626,7 +626,7 @@ class CoursePress_Data_Student {
 					'completion/' . $unit_id . '/progress',
 					$unit_progress
 				);
-				
+
 				if ( $is_valid_unit ) {
 					$valid_units++;
 				}
@@ -675,7 +675,7 @@ class CoursePress_Data_Student {
 					$course_id,
 					get_post_field( 'post_title', $course_id )
 				);
-				
+
 				// Generate the certificate and send email to the student.
 				CoursePress_Data_Certificate::generate_certificate(
 					$student_id,
@@ -1023,7 +1023,9 @@ class CoursePress_Data_Student {
 			'completion/average'
 		);
 		return (int) $average;
-/*
+
+		/*
+		TODO: Remove this in 2.1 or so, but keep in 2.0 for reference:
 
 		$units = isset( $data['units'] ) ? $data['units'] : array();
 		$total_response = 0;
@@ -1066,7 +1068,7 @@ class CoursePress_Data_Student {
 			return (int) ($total_grade / $total_response);
 		}
 		return 0;
-/*/
+		*/
 	}
 
 	/**
@@ -1099,7 +1101,7 @@ class CoursePress_Data_Student {
 
 	public static function get_admin_workbook_link( $student_id, $course_id ) {
 		$workbook_link = add_query_arg(
-			array( 
+			array(
 				'page' => CoursePress_View_Admin_Student::$slug,
 				'view' => 'workbook',
 				'course_id' => $course_id,

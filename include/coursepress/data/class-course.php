@@ -882,8 +882,8 @@ class CoursePress_Data_Course {
 
 		// Check invitation list then remove it exist.
 		$invited_students = self::get_setting( $course_id, 'invited_students', array() );
-		if ( is_array( $invited_students ) && ! empty( $invited_students[$student->user_email] ) ) {
-			unset( $invited_students[$student->user_email] );
+		if ( is_array( $invited_students ) && ! empty( $invited_students[ $student->user_email ] ) ) {
+			unset( $invited_students[ $student->user_email ] );
 			self::update_setting( $course_id, 'invited_students', $invited_students );
 		}
 
@@ -1521,18 +1521,18 @@ class CoursePress_Data_Course {
 		$start_date = self::get_setting( $course_id, 'course_start_date' );
 		$end_date = self::get_setting( $course_id, 'course_end_date' );
 		$duration = ceil( ( strtotime( $end_date ) - strtotime( $start_date ) ) / 86400 );
-		
+
 		$course->start_date = date_i18n( $date_format, strtotime( $start_date, current_time( 'timestamp' ) ) );
 		$course->end_date = $duration > 0 ? date_i18n( $date_format, strtotime( $end_date, current_time( 'timestamp' ) ) ) : '--';
 		$course->duration = $duration > 0 ? sprintf( _n( '%s Day', '%s Days', $duration, 'CP_TD' ), $duration ) : __( 'Open-ended', 'CP_TD' );
-		
+
 		// Links
 		$course->permalink = get_permalink( $course_id );
 		$course->edit_link = add_query_arg(
 			array(
 				'page' => CoursePress_View_Admin_Course_Edit::$slug,
 				'id' => $course_id,
-				'action' => 'edit'
+				'action' => 'edit',
 			),
 			admin_url( 'admin.php' )
 		);

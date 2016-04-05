@@ -40,7 +40,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 
 		add_filter( 'coursepress_current_user_capabilities', array( __CLASS__, 'filter_user_capabilities' ) );
 		$can_create_units = CoursePress_Data_Capabilities::can_create_course_unit( $course_id );
-		
+
 		$templates = array(
 
 			'unit_builder' => '
@@ -49,7 +49,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 						<div class="tab-tabs unit-builder-tabs">
 						<div id="sticky-wrapper" class="sticky-wrapper sticky-wrapper-tabs">
 							<div class="tabs"></div>' .
-							( $can_create_units ? 
+							( $can_create_units ?
 							'<div class="sticky-buttons"><div class="button button-add-new-unit"><i class="fa fa-plus-square"></i> ' . esc_html__( 'Add New Unit', 'CP_TD' ) . '</div></div>' : '' )
 						. '</div>
 					</div>
@@ -278,18 +278,18 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 						'post_title' => __( 'Untitled Unit', 'CP_TD' ),
 						'post_type' => CoursePress_Data_Unit::get_post_type_name(),
 						'post_status' => 'draft',
-						'post_parent' => $course_id
+						'post_parent' => $course_id,
 					);
 					$unit_id = wp_insert_post( $unit );
 					$unit['ID'] = $unit_id;
 					$unit['meta'] = array(
 						'unit_order' => 1,
 						'page_title' => array(
-							'page_1' => ''
+							'page_1' => '',
 						),
 						'show_page_title' => array( true ),
 					);
-					
+
 					foreach ( $unit['meta'] as $key => $value ) {
 						update_post_meta( $unit_id, $key, $value );
 					}

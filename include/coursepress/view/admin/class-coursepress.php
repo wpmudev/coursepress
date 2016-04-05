@@ -114,14 +114,16 @@ class CoursePress_View_Admin_CoursePress {
 			<div class="coursepress_settings_wrapper wrap">
 				<h2>
 					<?php
-						echo esc_html( CoursePress::$name );
-						$create_link = add_query_arg( 'page', CoursePress_View_Admin_Course_Edit::$slug, admin_url( 'admin.php' ) );
-						
-						if ( CoursePress_Data_Capabilities::can_create_course() ) :
+					echo esc_html( CoursePress::$name );
+					$create_link = add_query_arg( 'page', CoursePress_View_Admin_Course_Edit::$slug, admin_url( 'admin.php' ) );
+
+					if ( CoursePress_Data_Capabilities::can_create_course() ) :
 					?>
-						<a href="<?php echo esc_url( $create_link ); ?>" class="add-new-h2"><?php esc_html_e( 'New Course', 'CP_TD' ); ?></a>
+						<a href="<?php echo esc_url( $create_link ); ?>" class="add-new-h2">
+							<?php esc_html_e( 'New Course', 'CP_TD' ); ?>
+						</a>
 					<?php
-						endif;
+					endif;
 					?>
 				</h2>
 				<div class="nonce-holder" data-nonce="<?php echo wp_create_nonce( 'bulk_action_nonce' ); ?>"></div>

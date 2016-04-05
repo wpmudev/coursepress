@@ -53,7 +53,7 @@ class CoursePress_View_Admin_Student {
 	}
 
 	public static function pre_process() {
-		$view = ! empty( $_GET[ 'view' ] ) ? $_GET[ 'view' ] : '';
+		$view = ! empty( $_GET['view'] ) ? $_GET['view'] : '';
 
 		if ( empty( $view ) ) {
 			self::$table_manager = new CoursePress_Helper_Table_Student;
@@ -62,7 +62,7 @@ class CoursePress_View_Admin_Student {
 	}
 
 	public static function render_page() {
-		$view = ! empty( $_GET[ 'view' ] ) ? $_GET[ 'view' ] : '';
+		$view = ! empty( $_GET['view'] ) ? $_GET['view'] : '';
 
 		if ( empty( $view ) ) {
 			self::$table_manager->display();
@@ -72,5 +72,4 @@ class CoursePress_View_Admin_Student {
 			CoursePress_View_Admin_Student_Profile::display();
 		}
 	}
-
 }
