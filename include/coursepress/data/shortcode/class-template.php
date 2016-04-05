@@ -187,9 +187,9 @@ class CoursePress_Data_Shortcode_Template {
 			'clickable_label' => __( 'Course Details', 'CP_TD' ),
 			'override_button_text' => '',
 			'override_button_link' => '',
-            'echo' => false,
-            'show_title' => true,
-            'show_excerpt' => true,
+			'echo' => false,
+			'show_title' => true,
+			'show_excerpt' => true,
 		), $a, 'course_list_box' );
 
 		$course_id = (int) $a['course_id'];
@@ -229,13 +229,13 @@ class CoursePress_Data_Shortcode_Template {
 		$template = '<div class="course course_list_box_item course_' . $course_id . ' ' . $clickable_class . ' ' . $completion_class . ' ' . $thumbnail_class . '" ' . $clickable_link . ' ' . $schema .'>
 			[course_thumbnail course_id="' . $course_id . '"]
             <div class="course-information">';
-        if ( $a['show_title'] ) {
-            $template .= '[course_title course_id="' . $course_id . '"]';
-        }
-        if ( $a['show_excerpt'] ) {
-            $template .= '[course_summary course_id="' . $course_id . '"]';
-        }
-        $template .= '[course_instructors style="list-flat" link="' . $instructor_link . '" course_id="' . $course_id . '"]
+		if ( $a['show_title'] ) {
+			$template .= '[course_title course_id="' . $course_id . '"]';
+		}
+		if ( $a['show_excerpt'] ) {
+			$template .= '[course_summary course_id="' . $course_id . '"]';
+		}
+		$template .= '[course_instructors style="list-flat" link="' . $instructor_link . '" course_id="' . $course_id . '"]
 				<div class="course-meta-information">
 					[course_start label="" course_id="' . $course_id . '"]
 					[course_language label="" course_id="' . $course_id . '"]
