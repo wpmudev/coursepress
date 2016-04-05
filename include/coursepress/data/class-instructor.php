@@ -141,7 +141,7 @@ class CoursePress_Data_Instructor {
 
 			if ( ! $can_search ) {
 				// Bail early
-				return $posts;
+				return array();
 			}
 		}
 
