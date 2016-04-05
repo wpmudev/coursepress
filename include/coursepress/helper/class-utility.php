@@ -64,7 +64,6 @@ class CoursePress_Helper_Utility {
 	// Sort multi-dimension arrays on 'order' value.
 	public static function sort_on_key( $array, $sort_key, $sort_asc = true ) {
 		self::$sort_key = $sort_key;
-
 		if ( ! $sort_asc ) {
 			uasort( $array, array( __CLASS__, 'sort_desc' ) );
 		} else {
@@ -76,6 +75,12 @@ class CoursePress_Helper_Utility {
 
 	// uasort callback to sort ascending.
 	public static function sort_asc( $x, $y ) {
+		/**
+		 * if key do not exists, do not sort
+		 */
+		if ( ! isset( $x[ self::$sort_key ] ) || ! isset( $y[ self::$sort_key ] ) ) {
+			return 0;
+		}
 		if ( $x[ self::$sort_key ] == $y[ self::$sort_key ] ) {
 			return 0;
 		} else if ( $x[ self::$sort_key ] < $y[ self::$sort_key ] ) {
@@ -87,6 +92,12 @@ class CoursePress_Helper_Utility {
 
 	// uasort callback to sort descending.
 	public static function sort_desc( $x, $y ) {
+		/**
+		 * if key do not exists, do not sort
+		 */
+		if ( ! isset( $x[ self::$sort_key ] ) || ! isset( $y[ self::$sort_key ] ) ) {
+			return 0;
+		}
 		if ( $x[ self::$sort_key ] == $y[ self::$sort_key ] ) {
 			return 0;
 		} else if ( $x[ self::$sort_key ] > $y[ self::$sort_key ] ) {
@@ -843,19 +854,19 @@ class CoursePress_Helper_Utility {
 		return self::$cp_pagination;
 	}
 
-    public static function the_course( $id_only = false ) {
-        if ( is_singular() ) {
-            global $post;
-            if ( $id_only ) {
-                return $post->ID;
-            }
-            return $post;
-        }
+	public static function the_course( $id_only = false ) {
+		if ( is_singular() ) {
+			global $post;
+			if ( $id_only ) {
+				return $post->ID;
+			}
+			return $post;
+		}
 		$id = CoursePress_Data_Course::last_course_id();
 
-        if ( empty( $id ) ) {
-            return '';
-        }
+		if ( empty( $id ) ) {
+			return '';
+		}
 
 		if ( $id_only ) {
 			return $id;

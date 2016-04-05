@@ -706,7 +706,7 @@ class CoursePress_Data_Course {
 			/**
 			 * add empty 'pages' field
 			 */
-			if ( ! isset( $unit['pages'] ) ) {
+			if ( is_numeric( $post_id ) && ! isset( $unit['pages'] ) ) {
 				$combine[ $post_id ]['pages'] = array();
 			}
 
