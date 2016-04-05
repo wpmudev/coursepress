@@ -232,14 +232,13 @@ class CoursePress_View_Admin_Assessment_List {
 							$attributes,
 							'questions/' . $q_index . '/question'
 						);
-						$content .= sprintf('<p><strong>%s</strong></p>', $question );
-						$content .= sprintf('<p><strong>%s</strong></p>', __( 'Student Response', 'CP_TD' ) );
+						$content .= sprintf( '<p><strong>%s</strong></p>', $question );
+						$content .= sprintf( '<p><strong>%s</strong></p>', __( 'Student Response', 'CP_TD' ) );
 						$content .= '<div class="response">';
 						$q_answers = CoursePress_Helper_Utility::get_array_val(
 							$attributes,
 							'questions/' . $q_index . '/options/answers'
 						);
-						
 
 						$content .= '<ul>';
 						foreach ( $q_answers as $a_index => $answer ) {
@@ -248,7 +247,7 @@ class CoursePress_View_Admin_Assessment_List {
 								'questions/' . $q_index . '/options/checked/' . $a_index
 							);
 							$class = '';
-							if ( ! empty( $answers[$a_index ] ) ) {
+							if ( ! empty( $answers[ $a_index ] ) ) {
 								$class = 'chosen-answer ' . ( cp_is_true( $checked ) ? 'correct' : 'incorrect' );
 							}
 							$content .= sprintf( '<li class="%s">%s</li>', $class, $answer );

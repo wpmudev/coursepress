@@ -304,7 +304,7 @@ class CoursePress_Data_Capabilities {
 			if ( (int) $course_id > 0 ) {
 				$course_creator = self::is_course_creator( $course_id, $user_id );
 				$is_instructor = self::is_course_instructor( $course_id, $user_id );
-	
+
 				if ( $course_creator ) {
 					$return = user_can( $user_id, 'coursepress_delete_my_course_cap' );
 				} elseif ( $is_instructor ) {
@@ -336,7 +336,7 @@ class CoursePress_Data_Capabilities {
 			if ( (int) $course_id > 0 ) {
 				$course_creator = self::is_course_creator( $course_id, $user_id );
 				$is_instructor = self::is_course_instructor( $course_id, $user_id );
-	
+
 				if ( $course_creator ) {
 					$return = user_can( $user_id, 'coursepress_change_my_course_status_cap' );
 				} elseif ( $is_instructor ) {
@@ -1069,7 +1069,6 @@ class CoursePress_Data_Capabilities {
 		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_update_discussion_cap' );
 		$capability2 = apply_filters( 'coursepress_capabilities', 'coursepress_update_my_discussion_cap' );
 
-
 		if ( empty( $discussion ) ) {
 			return user_can( $user_id, $capability ) || user_can( $capability2 );
 		} else {
@@ -1401,7 +1400,7 @@ class CoursePress_Data_Capabilities {
 
 	public static function user_cap( $allcaps, $cap, $args ) {
 
-		if ( self::is_instructor() ) { 
+		if ( self::is_instructor() ) {
 			$instructor_capabilities = CoursePress_Data_Capabilities::get_instructor_capabilities();
 
 			foreach ( $instructor_capabilities as $instructor_cap => $is_true ) {
@@ -1414,17 +1413,16 @@ class CoursePress_Data_Capabilities {
 				}
 			}
 
-			if ( ! empty( $instructor_capabilities[ 'coursepress_course_categories_manage_terms_cap' ] ) ) {
+			if ( ! empty( $instructor_capabilities['coursepress_course_categories_manage_terms_cap'] ) ) {
 				$allcaps['coursepress_course_categories_edit_terms_cap'] = true;
 			}
-
 		}
 
 		return $allcaps;
 	}
 
 	public static function filter_row_actions( $actions, $tag ) {
-		if ( ! empty( $tag->taxonomy ) && $tag->taxonomy == CoursePress_Data_Course::get_post_category_name() ) {
+		if ( ! empty( $tag->taxonomy ) && CoursePress_Data_Course::get_post_category_name() == $tag->taxonomy ) {
 			$instructor_capabilities = CoursePress_Data_Capabilities::get_instructor_capabilities();
 
 			if ( ! $instructor_capabilities['coursepress_course_categories_edit_terms_cap'] ) {
@@ -1433,7 +1431,7 @@ class CoursePress_Data_Capabilities {
 					unset( $actions['edit'] );
 				}
 				// Remove quick-edit
-				if( isset( $actions['inline hide-if-no-js'] ) ) {
+				if ( isset( $actions['inline hide-if-no-js'] ) ) {
 					unset( $actions['inline hide-if-no-js'] );
 				}
 			}

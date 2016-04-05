@@ -71,7 +71,7 @@ class CoursePress_View_Admin_Course_Edit {
 		);
 
 		if ( 'new' == self::$action ) {
-			$pages[self::$slug]['cap'] = 'coursepress_create_course_cap';
+			$pages[ self::$slug ]['cap'] = 'coursepress_create_course_cap';
 		}
 
 		return $pages;
@@ -82,7 +82,6 @@ class CoursePress_View_Admin_Course_Edit {
 	}
 
 	public static function process_form() {
-
 		// error_log( print_r( $_REQUEST, true ) );
 	}
 
@@ -569,11 +568,11 @@ class CoursePress_View_Admin_Course_Edit {
 			'count' => true,
 		) )
 		) {
-			if( $can_assign_instructor ) {
+			if ( $can_assign_instructor ) {
 				$content .= '
-						<div class="instructor-avatar-holder empty">
-							<span class="instructor-name">' . esc_html__( 'Please Assign Instructor', 'CP_TD' ) . '</span>
-						</div>
+					<div class="instructor-avatar-holder empty">
+						<span class="instructor-name">' . esc_html__( 'Please Assign Instructor', 'CP_TD' ) . '</span>
+					</div>
 				';
 			}
 		} else {
@@ -1018,12 +1017,15 @@ class CoursePress_View_Admin_Course_Edit {
 			}
 
 			if ( CoursePress_Data_Capabilities::can_view_course_students( $course_id ) ) {
-			self::$tabs['students'] = array(
-				'title' => sprintf( __( 'Students (%s)', 'CP_TD' ), CoursePress_Data_Course::count_students( $course_id ) ),
-				'description' => __( 'Edit your course specific settings below.', 'CP_TD' ),
-				'order' => 30,
-				'buttons' => 'none',
-			);
+				self::$tabs['students'] = array(
+					'title' => sprintf(
+						__( 'Students (%s)', 'CP_TD' ),
+						CoursePress_Data_Course::count_students( $course_id )
+					),
+					'description' => __( 'Edit your course specific settings below.', 'CP_TD' ),
+					'order' => 30,
+					'buttons' => 'none',
+				);
 			}
 		}
 
@@ -1226,9 +1228,9 @@ class CoursePress_View_Admin_Course_Edit {
 					$invite_data = array(
 						'first_name' => $email_data['first_name'],
 						'last_name' => $email_data['last_name'],
-						'email' => $email_data['email']
+						'email' => $email_data['email'],
 					);
-					$invited_students[$email] = $invite_data;
+					$invited_students[ $email ] = $invite_data;
 
 					// Save invited data
 					CoursePress_Data_Course::update_setting( $course_id, 'invited_students', $invited_students );
@@ -1243,8 +1245,8 @@ class CoursePress_View_Admin_Course_Edit {
 					$student_email = sanitize_email( $data->data->email );
 					$invited_students = CoursePress_Data_Course::get_setting( $course_id, 'invited_students', array() );
 
-					if ( ! empty( $invited_students[$student_email] ) ) {
-						unset( $invited_students[$student_email] );
+					if ( ! empty( $invited_students[ $student_email ] ) ) {
+						unset( $invited_students[ $student_email ] );
 					}
 					// Resaved invited students
 					CoursePress_Data_Course::update_setting( $course_id, 'invited_students', $invited_students );

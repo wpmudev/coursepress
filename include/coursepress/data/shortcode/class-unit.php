@@ -569,7 +569,7 @@ class CoursePress_Data_Shortcode_Unit {
 			if ( CoursePress_Data_Student::is_course_complete( get_current_user_id(), $course_id ) ) {
 				$certificate = CoursePress_Data_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'CP_TD' ) );
 
-				$content .= '<li class="submenu-item submenu-certificate ' . ( $subpage == 'certificate' ? 'submenu-active' : '') . '">' . $certificate . '</li>';
+				$content .= '<li class="submenu-item submenu-certificate ' . ( 'certificate' == $subpage ? 'submenu-active' : '') . '">' . $certificate . '</li>';
 			}
 		}
 

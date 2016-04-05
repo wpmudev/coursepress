@@ -32,21 +32,23 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 	public static function return_content( $content, $slug, $tab ) {
 		$content = 'shortcodes!';
 		$boxes = self::_boxes();
+
 		ob_start();
-?>
-	<div class="shortcodes-list">
+		?>
+		<div class="shortcodes-list">
 
-		<?php foreach ( $boxes as $group => $data ) : ?>
-		<div class="cp-content-box <?php echo esc_attr( $group ); ?>">
-			<h3 class="hndle">
-				<span><?php echo esc_html( $data['title'] ); ?></span>
-			</h3>
-            <div class="inside"><?php echo $data['content']; ?></div>
+			<?php foreach ( $boxes as $group => $data ) : ?>
+			<div class="cp-content-box <?php echo esc_attr( $group ); ?>">
+				<h3 class="hndle">
+					<span><?php echo esc_html( $data['title'] ); ?></span>
+				</h3>
+				<div class="inside"><?php echo $data['content']; ?></div>
+			</div>
+			<?php endforeach; ?>
+
 		</div>
-		<?php endforeach; ?>
+		<?php
 
-	</div>
-<?php
 		$content = ob_get_contents();
 		ob_end_clean();
 		return $content;
@@ -193,54 +195,54 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>course_id</span>
-        – <?php _e( 'ID of the course instructors are assign to ( required if use it outside of a loop )', 'CP_TD' ); ?>
-    </li>
-    <li><span>style</span>
-        – <?php _e( 'How to display the instructors. Options: <em>block</em> (default), <em>list</em>, <em>list-flat</em>, <em>count</em> (counts instructors for the course).', 'CP_TD' ); ?>
-    </li>
-    <li><span>label</span>
-        – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_plural</span>
-        – <?php _e( 'Plural if more than one instructor. Default: Instructors', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_delimeter</span>
-        – <?php _e( 'Symbol to put after label. Default is colon (<strong>:</strong>)', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_tag</span>
-        – <?php _e( 'HTML tag to wrap the label (without brackets, e.g. <em>h3</em>). Default: empty', 'CP_TD' ); ?>
-    </li>
-    <li><span>link_text</span>
-        – <?php _e( 'Text to click to link to full profiles. Default: "View Full Profile".', 'CP_TD' ); ?>
-    </li>
-    <li><span>show_label</span>
-        – <?php _e( 'Show the label. Options: <em>yes</em>, <em>no</em>.', 'CP_TD' ); ?></li>
-    <li><span>summary_length</span>
-        – <?php _e( 'Length of instructor bio to show when style is "blocl". Default: 50', 'CP_TD' ); ?>
-    </li>
-    <li><span>list_separator</span>
-        – <?php _e( 'Symbol to use to separate instructors when styl is "list" or "list-flat". Default: comma (,)', 'CP_TD' ); ?>
-    </li>
-    <li><span>avatar_size</span>
-        – <?php _e( 'Pixel size of the avatars when viewing in block mode. Default: 80', 'CP_TD' ); ?>
-    </li>
-    <li><span>default_avatar</span>
-        – <?php _e( 'URL to a default image if the user avatar cannot be found.', 'CP_TD' ); ?>
-    </li>
-    <li><span>show_divider</span>
-        – <?php _e( 'Put a divider between instructor profiles when style is "block".', 'CP_TD' ); ?>
-    </li>
-    <li><span>link_all</span>
-        – <?php _e( 'Make the entire instructor profile a link to the full profile.', 'CP_TD' ); ?>
-    </li>
-    <li><span>class</span>
-        – <?php _e( 'Additional CSS classes to use for further styling.', 'CP_TD' ); ?></li>
+	<li><span>course_id</span>
+		– <?php _e( 'ID of the course instructors are assign to ( required if use it outside of a loop )', 'CP_TD' ); ?>
+	</li>
+	<li><span>style</span>
+		– <?php _e( 'How to display the instructors. Options: <em>block</em> (default), <em>list</em>, <em>list-flat</em>, <em>count</em> (counts instructors for the course).', 'CP_TD' ); ?>
+	</li>
+	<li><span>label</span>
+		– <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_plural</span>
+		– <?php _e( 'Plural if more than one instructor. Default: Instructors', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_delimeter</span>
+		– <?php _e( 'Symbol to put after label. Default is colon (<strong>:</strong>)', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_tag</span>
+		– <?php _e( 'HTML tag to wrap the label (without brackets, e.g. <em>h3</em>). Default: empty', 'CP_TD' ); ?>
+	</li>
+	<li><span>link_text</span>
+		– <?php _e( 'Text to click to link to full profiles. Default: "View Full Profile".', 'CP_TD' ); ?>
+	</li>
+	<li><span>show_label</span>
+		– <?php _e( 'Show the label. Options: <em>yes</em>, <em>no</em>.', 'CP_TD' ); ?></li>
+	<li><span>summary_length</span>
+		– <?php _e( 'Length of instructor bio to show when style is "blocl". Default: 50', 'CP_TD' ); ?>
+	</li>
+	<li><span>list_separator</span>
+		– <?php _e( 'Symbol to use to separate instructors when styl is "list" or "list-flat". Default: comma (,)', 'CP_TD' ); ?>
+	</li>
+	<li><span>avatar_size</span>
+		– <?php _e( 'Pixel size of the avatars when viewing in block mode. Default: 80', 'CP_TD' ); ?>
+	</li>
+	<li><span>default_avatar</span>
+		– <?php _e( 'URL to a default image if the user avatar cannot be found.', 'CP_TD' ); ?>
+	</li>
+	<li><span>show_divider</span>
+		– <?php _e( 'Put a divider between instructor profiles when style is "block".', 'CP_TD' ); ?>
+	</li>
+	<li><span>link_all</span>
+		– <?php _e( 'Make the entire instructor profile a link to the full profile.', 'CP_TD' ); ?>
+	</li>
+	<li><span>class</span>
+		– <?php _e( 'Additional CSS classes to use for further styling.', 'CP_TD' ); ?></li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'CP_TD' ); ?></p>
 <code>[course_instructors]<br/>[course_instructors course_id="5"]<br/>[course_instructors
-    style="list"]</code>
+	style="list"]</code>
 <span class="description"></span>
 <?php
 		$content = ob_get_contents();
@@ -265,18 +267,18 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>instructor_id</span> – <?php _e( 'The user id of the instructor.', 'CP_TD' ); ?>
-    </li>
+	<li><span>instructor_id</span> – <?php _e( 'The user id of the instructor.', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>thumb_size</span>
-        – <?php _e( 'Size of avatar thumbnail. Default: 80', 'CP_TD' ); ?></li>
-    <li><span>class</span>
-        – <?php _e( 'CSS class to use for the avatar. Plugin Default: small-circle-profile-image', 'CP_TD' ); ?>
-    </li>
+	<li><span>thumb_size</span>
+		– <?php _e( 'Size of avatar thumbnail. Default: 80', 'CP_TD' ); ?></li>
+	<li><span>class</span>
+		– <?php _e( 'CSS class to use for the avatar. Plugin Default: small-circle-profile-image', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'CP_TD' ); ?></p>
@@ -304,8 +306,8 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>instructor_id</span> – <?php _e( 'The user id of the instructor.', 'CP_TD' ); ?>
-    </li>
+	<li><span>instructor_id</span> – <?php _e( 'The user id of the instructor.', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'CP_TD' ); ?></p>
@@ -333,31 +335,31 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
-    </li>
-    <li>
-        <span>show</span>
-        – <?php _e( 'All the fields you would like to show. Default: summary', 'CP_TD' ); ?>
-        <p class="description"><strong><?php _e( 'Available fields:', 'CP_TD' ) ?></strong>
-            title, summary, description, start, end, dates, enrollment_start,
-            enrollment_end, enrollment_dates, enrollment_type, class_size, cost, language,
-            instructors, image, video, media, button, action_links, calendar</p>
-    </li>
+	<li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
+	</li>
+	<li>
+		<span>show</span>
+		– <?php _e( 'All the fields you would like to show. Default: summary', 'CP_TD' ); ?>
+		<p class="description"><strong><?php _e( 'Available fields:', 'CP_TD' ) ?></strong>
+			title, summary, description, start, end, dates, enrollment_start,
+			enrollment_end, enrollment_dates, enrollment_type, class_size, cost, language,
+			instructors, image, video, media, button, action_links, calendar</p>
+	</li>
 </ul>
 
 
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>show_title</span>
-        – <?php _e( 'yes | no - Required when showing the "title" field.', 'CP_TD' ); ?></li>
-    <li><span>date_format</span>
-        – <?php _e( 'PHP style date format. Default: WordPress setting.', 'CP_TD' ); ?></li>
-    <li><span>label_tag</span>
-        – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_delimeter</span>
-        – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
+	<li><span>show_title</span>
+		– <?php _e( 'yes | no - Required when showing the "title" field.', 'CP_TD' ); ?></li>
+	<li><span>date_format</span>
+		– <?php _e( 'PHP style date format. Default: WordPress setting.', 'CP_TD' ); ?></li>
+	<li><span>label_tag</span>
+		– <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_delimeter</span>
+		– <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'CP_TD' ); ?></p>
@@ -385,21 +387,21 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
-    </li>
+	<li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>title_tag</span>
-        – <?php _e( 'The HTML tag (without brackets) to use for the title. Default: h3', 'CP_TD' ); ?>
-    </li>
-    <li><span>link</span>
-        – <?php _e( 'Should the title link to the course?  Accepts "yes" or "no". Default: no', 'CP_TD' ); ?>
-    </li>
-    <li><span>class</span>
-        – <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
+	<li><span>title_tag</span>
+		– <?php _e( 'The HTML tag (without brackets) to use for the title. Default: h3', 'CP_TD' ); ?>
+	</li>
+	<li><span>link</span>
+		– <?php _e( 'Should the title link to the course?  Accepts "yes" or "no". Default: no', 'CP_TD' ); ?>
+	</li>
+	<li><span>class</span>
+		– <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
 </ul>
 
 
@@ -428,19 +430,19 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
-    </li>
+	<li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>length</span>
-        – <?php _e( 'Text length of the summary. Default: empty (uses WordPress excerpt length)', 'CP_TD' ); ?>
-    </li>
-    <li><span>class</span>
-        – <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
+	<li><span>length</span>
+		– <?php _e( 'Text length of the summary. Default: empty (uses WordPress excerpt length)', 'CP_TD' ); ?>
+	</li>
+	<li><span>class</span>
+		– <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
 </ul>
 
 
@@ -469,53 +471,53 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
-    </li>
+	<li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>class</span>
-        – <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
+	<li><span>class</span>
+		– <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
 </ul>
 
 
 <p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'CP_TD' ); ?></p>
 <code>[course_description course_id="4"]<br/>[course_description]</code>
-                        </td>
-                    </tr>
+						</td>
+					</tr>
 
-                    <tr>
-                        <th scope="row" class="cp-shortcode-title"><?php _e( 'Course Start Date', 'CP_TD' ); ?></th>
-                        <td>
+					<tr>
+						<th scope="row" class="cp-shortcode-title"><?php _e( 'Course Start Date', 'CP_TD' ); ?></th>
+						<td>
 <span class="cp-shortcode-code">[course_start]</span><br/>
 <span class=""><?php _e( 'Shows the course start date.', 'CP_TD' ); ?></span>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
-    </li>
+	<li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>date_format</span>
-        – <?php _e( 'PHP style date format. Default: WordPress setting.', 'CP_TD' ); ?></li>
-    <li><span>label</span>
-        – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_tag</span>
-        – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_delimeter</span>
-        – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
-    <li><span>class</span>
-        – <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
+	<li><span>date_format</span>
+		– <?php _e( 'PHP style date format. Default: WordPress setting.', 'CP_TD' ); ?></li>
+	<li><span>label</span>
+		– <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_tag</span>
+		– <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_delimeter</span>
+		– <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
+	<li><span>class</span>
+		– <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
 </ul>
 
 
@@ -544,29 +546,29 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
-    </li>
+	<li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>date_format</span>
-        – <?php _e( 'PHP style date format. Default: WordPress setting.', 'CP_TD' ); ?></li>
-    <li><span>label</span>
-        – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_tag</span>
-        – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_delimeter</span>
-        – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
-    <li><span>no_date_text</span>
-        – <?php _e( 'Text to display if the course has no end date. Default: No End Date', 'CP_TD' ); ?>
-    </li>
-    <li><span>class</span>
-        – <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
+	<li><span>date_format</span>
+		– <?php _e( 'PHP style date format. Default: WordPress setting.', 'CP_TD' ); ?></li>
+	<li><span>label</span>
+		– <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_tag</span>
+		– <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_delimeter</span>
+		– <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
+	<li><span>no_date_text</span>
+		– <?php _e( 'Text to display if the course has no end date. Default: No End Date', 'CP_TD' ); ?>
+	</li>
+	<li><span>class</span>
+		– <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'CP_TD' ); ?></p>
@@ -594,39 +596,39 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
-    </li>
+	<li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>date_format</span>
-        – <?php _e( 'PHP style date format. Default: WordPress setting.', 'CP_TD' ); ?></li>
-    <li><span>label</span>
-        – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_tag</span>
-        – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_delimeter</span>
-        – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
-    <li><span>no_date_text</span>
-        – <?php _e( 'Text to display if the course has no end date. Default: No End Date', 'CP_TD' ); ?>
-    </li>
-    <li><span>alt_display_text</span>
-        – <?php _e( 'Alternate display when there is no end date. Default: Open-ended', 'CP_TD' ); ?>
-    </li>
-    <li><span>show_alt_display</span>
-        – <?php _e( 'If set to "yes" use the alt_display_text. If set to "no" use the "no_date_text". Default: no', 'CP_TD' ); ?>
-    </li>
-    <li><span>class</span>
-        – <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
+	<li><span>date_format</span>
+		– <?php _e( 'PHP style date format. Default: WordPress setting.', 'CP_TD' ); ?></li>
+	<li><span>label</span>
+		– <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_tag</span>
+		– <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_delimeter</span>
+		– <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
+	<li><span>no_date_text</span>
+		– <?php _e( 'Text to display if the course has no end date. Default: No End Date', 'CP_TD' ); ?>
+	</li>
+	<li><span>alt_display_text</span>
+		– <?php _e( 'Alternate display when there is no end date. Default: Open-ended', 'CP_TD' ); ?>
+	</li>
+	<li><span>show_alt_display</span>
+		– <?php _e( 'If set to "yes" use the alt_display_text. If set to "no" use the "no_date_text". Default: no', 'CP_TD' ); ?>
+	</li>
+	<li><span>class</span>
+		– <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'CP_TD' ); ?></p>
 <code>[course_dates course_id="42"]<br/>[course_dates course_id="42" show_alt_display="yes"
-    alt_display_text="Learn Anytime!"]</code>
+	alt_display_text="Learn Anytime!"]</code>
 <?php
 		$content = ob_get_contents();
 		ob_end_clean();
@@ -650,29 +652,29 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
-    </li>
+	<li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>date_format</span>
-        – <?php _e( 'PHP style date format. Default: WordPress setting.', 'CP_TD' ); ?></li>
-    <li><span>label</span>
-        – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_tag</span>
-        – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_delimeter</span>
-        – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
-    <li><span>no_date_text</span>
-        – <?php _e( 'Text to display if the course has no defined enrollment start date. Default: Enroll Anytime', 'CP_TD' ); ?>
-    </li>
-    <li><span>class</span>
-        – <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
+	<li><span>date_format</span>
+		– <?php _e( 'PHP style date format. Default: WordPress setting.', 'CP_TD' ); ?></li>
+	<li><span>label</span>
+		– <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_tag</span>
+		– <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_delimeter</span>
+		– <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
+	<li><span>no_date_text</span>
+		– <?php _e( 'Text to display if the course has no defined enrollment start date. Default: Enroll Anytime', 'CP_TD' ); ?>
+	</li>
+	<li><span>class</span>
+		– <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
 </ul>
 
 
@@ -701,32 +703,32 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
-    </li>
+	<li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>date_format</span>
-        – <?php _e( 'PHP style date format. Default: WordPress setting.', 'CP_TD' ); ?></li>
-    <li><span>label</span>
-        – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_tag</span>
-        – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_delimeter</span>
-        – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
-    <li><span>no_date_text</span>
-        – <?php _e( 'Text to display if there is no enrollment end date. Default: Enroll Anytime', 'CP_TD' ); ?>
-    </li>
-    <li><span>show_all_dates</span>
-        – <?php _e( 'If "yes" it will display the no_date_text even if there is no date. If "no" then nothing will be displayed. Default: no', 'CP_TD' ); ?>
-    </li>
-    <li><span>class</span>
-        – <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
+	<li><span>date_format</span>
+		– <?php _e( 'PHP style date format. Default: WordPress setting.', 'CP_TD' ); ?></li>
+	<li><span>label</span>
+		– <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_tag</span>
+		– <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_delimeter</span>
+		– <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
+	<li><span>no_date_text</span>
+		– <?php _e( 'Text to display if there is no enrollment end date. Default: Enroll Anytime', 'CP_TD' ); ?>
+	</li>
+	<li><span>show_all_dates</span>
+		– <?php _e( 'If "yes" it will display the no_date_text even if there is no date. If "no" then nothing will be displayed. Default: no', 'CP_TD' ); ?>
+	</li>
+	<li><span>class</span>
+		– <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'CP_TD' ); ?></p>
@@ -754,34 +756,34 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
-    </li>
+	<li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>date_format</span>
-        – <?php _e( 'PHP style date format. Default: WordPress setting.', 'CP_TD' ); ?></li>
-    <li><span>label</span>
-        – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_tag</span>
-        – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_delimeter</span>
-        – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
-    <li><span>no_date_text</span>
-        – <?php _e( 'Text to display if there is no enrollment start or end dates. Default: Enroll Anytime', 'CP_TD' ); ?>
-    </li>
-    <li><span>alt_display_text</span>
-        – <?php _e( 'Alternate display when there is no enrollment start or end dates. Default: Open-ended', 'CP_TD' ); ?>
-    </li>
-    <li><span>show_alt_display</span>
-        – <?php _e( 'If set to "yes" use the alt_display_text. If set to "no" use the "no_date_text". Default: no', 'CP_TD' ); ?>
-    </li>
-    <li><span>class</span>
-        – <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
+	<li><span>date_format</span>
+		– <?php _e( 'PHP style date format. Default: WordPress setting.', 'CP_TD' ); ?></li>
+	<li><span>label</span>
+		– <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_tag</span>
+		– <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_delimeter</span>
+		– <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
+	<li><span>no_date_text</span>
+		– <?php _e( 'Text to display if there is no enrollment start or end dates. Default: Enroll Anytime', 'CP_TD' ); ?>
+	</li>
+	<li><span>alt_display_text</span>
+		– <?php _e( 'Alternate display when there is no enrollment start or end dates. Default: Open-ended', 'CP_TD' ); ?>
+	</li>
+	<li><span>show_alt_display</span>
+		– <?php _e( 'If set to "yes" use the alt_display_text. If set to "no" use the "no_date_text". Default: no', 'CP_TD' ); ?>
+	</li>
+	<li><span>class</span>
+		– <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'CP_TD' ); ?></p>
@@ -809,35 +811,35 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
-    </li>
+	<li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>label</span>
-        – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_tag</span>
-        – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_delimeter</span>
-        – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
-    <li><span>manual_text</span>
-        – <?php _e( 'Text to display for manual enrollments. Default: Students are added by instructors.', 'CP_TD' ); ?>
-    </li>
-    <li><span>prerequisite_text</span>
-        – <?php _e( 'Text to display when there is a prerequisite. Use %s as placeholder for prerequisite course title.  Default: Students need to complete "%s" first.', 'CP_TD' ); ?>
-    </li>
-    <li><span>passcode_text</span>
-        – <?php _e( 'Text to display when a passcode is required. Default: A passcode is required to enroll.', 'CP_TD' ); ?>
-    </li>
-    <li><span>anyone_text</span>
-        – <?php _e( 'Text to display when anyone can enroll. Default: Anyone', 'CP_TD' ); ?>
-    </li>
-    <li><span>class</span>
-        – <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
+	<li><span>label</span>
+		– <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_tag</span>
+		– <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_delimeter</span>
+		– <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
+	<li><span>manual_text</span>
+		– <?php _e( 'Text to display for manual enrollments. Default: Students are added by instructors.', 'CP_TD' ); ?>
+	</li>
+	<li><span>prerequisite_text</span>
+		– <?php _e( 'Text to display when there is a prerequisite. Use %s as placeholder for prerequisite course title.  Default: Students need to complete "%s" first.', 'CP_TD' ); ?>
+	</li>
+	<li><span>passcode_text</span>
+		– <?php _e( 'Text to display when a passcode is required. Default: A passcode is required to enroll.', 'CP_TD' ); ?>
+	</li>
+	<li><span>anyone_text</span>
+		– <?php _e( 'Text to display when anyone can enroll. Default: Anyone', 'CP_TD' ); ?>
+	</li>
+	<li><span>class</span>
+		– <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'CP_TD' ); ?></p>
@@ -865,35 +867,35 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
-    </li>
+	<li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>label</span>
-        – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_tag</span>
-        – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_delimeter</span>
-        – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
-    <li><span>show_no_limit</span>
-        – <?php _e( 'If "yes" it will show the no_limit_text. If "no" then nothing will display for unlimited courses. Default: no', 'CP_TD' ); ?>
-    </li>
-    <li><span>show_remaining</span>
-        – <?php _e( 'If "yes" show remaining_text. If "no" don’t show remaining places. Default: "Yes"', 'CP_TD' ); ?>
-    </li>
-    <li><span>no_limit_text</span>
-        – <?php _e( 'Text to display for unlimited class sizes. Default: Unlimited', 'CP_TD' ); ?>
-    </li>
-    <li><span>remaining_text</span>
-        – <?php _e( 'Text to display for remaining places. Use %d for the remaining number. Default: (%d places left)', 'CP_TD' ); ?>
-    </li>
-    <li><span>class</span>
-        – <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
+	<li><span>label</span>
+		– <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_tag</span>
+		– <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_delimeter</span>
+		– <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
+	<li><span>show_no_limit</span>
+		– <?php _e( 'If "yes" it will show the no_limit_text. If "no" then nothing will display for unlimited courses. Default: no', 'CP_TD' ); ?>
+	</li>
+	<li><span>show_remaining</span>
+		– <?php _e( 'If "yes" show remaining_text. If "no" don’t show remaining places. Default: "Yes"', 'CP_TD' ); ?>
+	</li>
+	<li><span>no_limit_text</span>
+		– <?php _e( 'Text to display for unlimited class sizes. Default: Unlimited', 'CP_TD' ); ?>
+	</li>
+	<li><span>remaining_text</span>
+		– <?php _e( 'Text to display for remaining places. Use %d for the remaining number. Default: (%d places left)', 'CP_TD' ); ?>
+	</li>
+	<li><span>class</span>
+		– <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'CP_TD' ); ?></p>
@@ -921,25 +923,25 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
-    </li>
+	<li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>label</span>
-        – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_tag</span>
-        – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_delimeter</span>
-        – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
-    <li><span>no_cost_text</span>
-        – <?php _e( 'Text to display for unpaid courses. Default: FREE', 'CP_TD' ); ?></li>
-    <li><span>class</span>
-        – <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
+	<li><span>label</span>
+		– <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_tag</span>
+		– <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_delimeter</span>
+		– <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
+	<li><span>no_cost_text</span>
+		– <?php _e( 'Text to display for unpaid courses. Default: FREE', 'CP_TD' ); ?></li>
+	<li><span>class</span>
+		– <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'CP_TD' ); ?></p>
@@ -967,25 +969,25 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
-    </li>
+	<li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>label</span>
-        – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_tag</span>
-        – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_delimeter</span>
-        – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
-    <li><span>wrapper</span>
-        – <?php _e( 'Wrap inside a div tag (yes|no). Default: no', 'CP_TD' ); ?></li>
-    <li><span>class</span>
-        – <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
+	<li><span>label</span>
+		– <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_tag</span>
+		– <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_delimeter</span>
+		– <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
+	<li><span>wrapper</span>
+		– <?php _e( 'Wrap inside a div tag (yes|no). Default: no', 'CP_TD' ); ?></li>
+	<li><span>class</span>
+		– <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'CP_TD' ); ?></p>
@@ -1013,23 +1015,23 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
-    </li>
+	<li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>label</span>
-        – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_tag</span>
-        – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_delimeter</span>
-        – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
-    <li><span>class</span>
-        – <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
+	<li><span>label</span>
+		– <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_tag</span>
+		– <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_delimeter</span>
+		– <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
+	<li><span>class</span>
+		– <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'CP_TD' ); ?></p>
@@ -1057,19 +1059,19 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
-    </li>
+	<li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>width</span> – <?php _e( 'Width of image. Default: Original width', 'CP_TD' ); ?>
-    </li>
-    <li><span>height</span>
-        – <?php _e( 'Height of image. Default: Original height', 'CP_TD' ); ?></li>
-    <li><span>class</span>
-        – <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
+	<li><span>width</span> – <?php _e( 'Width of image. Default: Original width', 'CP_TD' ); ?>
+	</li>
+	<li><span>height</span>
+		– <?php _e( 'Height of image. Default: Original height', 'CP_TD' ); ?></li>
+	<li><span>class</span>
+		– <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'CP_TD' ); ?></p>
@@ -1097,20 +1099,20 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
-    </li>
+	<li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>width</span>
-        – <?php _e( 'Width of video player. Default: Default player width', 'CP_TD' ); ?></li>
-    <li><span>height</span>
-        – <?php _e( 'Height of video player. Default: Default player height', 'CP_TD' ); ?>
-    </li>
-    <li><span>class</span>
-        – <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
+	<li><span>width</span>
+		– <?php _e( 'Width of video player. Default: Default player width', 'CP_TD' ); ?></li>
+	<li><span>height</span>
+		– <?php _e( 'Height of video player. Default: Default player height', 'CP_TD' ); ?>
+	</li>
+	<li><span>class</span>
+		– <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'CP_TD' ); ?></p>
@@ -1138,25 +1140,25 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
-    </li>
+	<li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>type</span>
-        – <?php _e( 'Use "image" to only display list image if available. Use "video" to only show the video if available. Use "thumbnail" to show the course thumbnail (shortcut for type="image" and priority="image"). Use "default" to enable priority mode (see priority attribute). Default: CoursePress Settings', 'CP_TD' ); ?>
-    </li>
-    <li><span>priority</span>
-        – <?php _e( 'Use "image" to try to show the list image first. If not available, then try to use the featured video.  Use "video" to try to show the featured video first. If not available, try to use the list image. Default: CoursePress Settings', 'CP_TD' ); ?>
-    </li>
-    <li><span>list_page</span>
-        – <?php _e( 'Use "yes" to use the CoursePress Settings for "Course Listings". Use "no" to use the CoursePress Settings for "Course Details Page". Default: no', 'CP_TD' ); ?>
-    </li>
-    <li><span>class</span>
-        – <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
+	<li><span>type</span>
+		– <?php _e( 'Use "image" to only display list image if available. Use "video" to only show the video if available. Use "thumbnail" to show the course thumbnail (shortcut for type="image" and priority="image"). Use "default" to enable priority mode (see priority attribute). Default: CoursePress Settings', 'CP_TD' ); ?>
+	</li>
+	<li><span>priority</span>
+		– <?php _e( 'Use "image" to try to show the list image first. If not available, then try to use the featured video.  Use "video" to try to show the featured video first. If not available, try to use the list image. Default: CoursePress Settings', 'CP_TD' ); ?>
+	</li>
+	<li><span>list_page</span>
+		– <?php _e( 'Use "yes" to use the CoursePress Settings for "Course Listings". Use "no" to use the CoursePress Settings for "Course Details Page". Default: no', 'CP_TD' ); ?>
+	</li>
+	<li><span>class</span>
+		– <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
 </ul>
 
 
@@ -1185,53 +1187,53 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
-    </li>
+	<li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>course_full_text</span>
-        – <?php _e( 'Text to display if the course is full. Default: Course Full', 'CP_TD' ); ?>
-    </li>
-    <li><span>course_expired_text</span>
-        – <?php _e( 'Text to display when the course has expired. Default: Not available', 'CP_TD' ); ?>
-    </li>
-    <li><span>enrollment_finished_text</span>
-        – <?php _e( 'Text to display when enrollments are finished (expired). Default: Enrollments Finished', 'CP_TD' ); ?>
-    </li>
-    <li><span>enrollment_closed_text</span>
-        – <?php _e( 'Text to display when enrollments haven’t started yet. Default: Enrollments Closed', 'CP_TD' ); ?>
-    </li>
-    <li><span>enroll_text</span>
-        – <?php _e( 'Text to display when course is ready for enrollments. Default: Enroll now', 'CP_TD' ); ?>
-    </li>
-    <li><span>signup_text</span>
-        – <?php _e( 'Text to display when course is ready for enrollments, but the user is not logged in (visitor). Default: Signup!', 'CP_TD' ); ?>
-    </li>
-    <li><span>details_text</span>
-        – <?php _e( 'Text for the button that takes you to the full course page. Default: Course Details', 'CP_TD' ); ?>
-    </li>
-    <li><span>prerequisite_text</span>
-        – <?php _e( 'Text to display if the course has a prerequisite. Default: Pre-requisite Required', 'CP_TD' ); ?>
-    </li>
-    <li><span>passcode_text</span>
-        – <?php _e( 'Text to display if the course requires a password. Default: Passcode Required', 'CP_TD' ); ?>
-    </li>
-    <li><span>not_started_text</span>
-        – <?php _e( 'Text to display when a student is enrolled, but the course hasn’t started yet. Default: Not available', 'CP_TD' ); ?>
-    </li>
-    <li><span>access_text</span>
-        – <?php _e( 'Text to display when the user is enrolled and ready to learn. Default: Start Learning', 'CP_TD' ); ?>
-    </li>
-    <li><span>class</span>
-        – <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
+	<li><span>course_full_text</span>
+		– <?php _e( 'Text to display if the course is full. Default: Course Full', 'CP_TD' ); ?>
+	</li>
+	<li><span>course_expired_text</span>
+		– <?php _e( 'Text to display when the course has expired. Default: Not available', 'CP_TD' ); ?>
+	</li>
+	<li><span>enrollment_finished_text</span>
+		– <?php _e( 'Text to display when enrollments are finished (expired). Default: Enrollments Finished', 'CP_TD' ); ?>
+	</li>
+	<li><span>enrollment_closed_text</span>
+		– <?php _e( 'Text to display when enrollments haven’t started yet. Default: Enrollments Closed', 'CP_TD' ); ?>
+	</li>
+	<li><span>enroll_text</span>
+		– <?php _e( 'Text to display when course is ready for enrollments. Default: Enroll now', 'CP_TD' ); ?>
+	</li>
+	<li><span>signup_text</span>
+		– <?php _e( 'Text to display when course is ready for enrollments, but the user is not logged in (visitor). Default: Signup!', 'CP_TD' ); ?>
+	</li>
+	<li><span>details_text</span>
+		– <?php _e( 'Text for the button that takes you to the full course page. Default: Course Details', 'CP_TD' ); ?>
+	</li>
+	<li><span>prerequisite_text</span>
+		– <?php _e( 'Text to display if the course has a prerequisite. Default: Pre-requisite Required', 'CP_TD' ); ?>
+	</li>
+	<li><span>passcode_text</span>
+		– <?php _e( 'Text to display if the course requires a password. Default: Passcode Required', 'CP_TD' ); ?>
+	</li>
+	<li><span>not_started_text</span>
+		– <?php _e( 'Text to display when a student is enrolled, but the course hasn’t started yet. Default: Not available', 'CP_TD' ); ?>
+	</li>
+	<li><span>access_text</span>
+		– <?php _e( 'Text to display when the user is enrolled and ready to learn. Default: Start Learning', 'CP_TD' ); ?>
+	</li>
+	<li><span>class</span>
+		– <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'CP_TD' ); ?></p>
 <code>[course_join_button]<br/>[course_join_button course_id="11" course_expired_text="You
-    missed out big time!"]</code>
+	missed out big time!"]</code>
 <?php
 		$content = ob_get_contents();
 		ob_end_clean();
@@ -1255,15 +1257,15 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
-    </li>
+	<li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>class</span>
-        – <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
+	<li><span>class</span>
+		– <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'CP_TD' ); ?></p>
@@ -1291,24 +1293,24 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
-    </li>
+	<li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>month</span>
-        – <?php _e( 'Month to display as number (e.g. 03 for March). Default: Today’s date', 'CP_TD' ); ?>
-    </li>
-    <li><span>year</span>
-        – <?php _e( 'Year to display as 4-digit number (e.g. 2014). Default: Today’s date', 'CP_TD' ); ?>
-    </li>
-    <li><span>pre</span>
-        – <?php _e( 'Text to display for previous month link. Default: « Previous', 'CP_TD' ); ?>
-    </li>
-    <li><span>next</span>
-        – <?php _e( 'Text to display for next month link. Default: Next »', 'CP_TD' ); ?></li>
+	<li><span>month</span>
+		– <?php _e( 'Month to display as number (e.g. 03 for March). Default: Today’s date', 'CP_TD' ); ?>
+	</li>
+	<li><span>year</span>
+		– <?php _e( 'Year to display as 4-digit number (e.g. 2014). Default: Today’s date', 'CP_TD' ); ?>
+	</li>
+	<li><span>pre</span>
+		– <?php _e( 'Text to display for previous month link. Default: « Previous', 'CP_TD' ); ?>
+	</li>
+	<li><span>next</span>
+		– <?php _e( 'Text to display for next month link. Default: Next »', 'CP_TD' ); ?></li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'CP_TD' ); ?></p>
@@ -1336,65 +1338,65 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>status</span>
-        – <?php _e( 'The status of courses to show (uses WordPress status). Default: published', 'CP_TD' ); ?>
-    </li>
-    <li><span>instructor</span>
-        – <?php _e( 'The instructor id to list courses for a specific instructor. Can also specify multiple instructors using commas. (e.g. instructor="1,2,3"). Default: empty', 'CP_TD' ); ?>
-    </li>
-    <li><span>student</span>
-        – <?php _e( 'The student id to list courses for a specific student. Can also specify multiple students using commas. (e.g. student="1,2,3"). Default: empty', 'CP_TD' ); ?>
-        <br/>
-        <strong>Note:</strong> If both student and instructor are specified, only the
-        student will be used.
-    </li>
-    <li><span>two_column</span>
-        – <?php _e( 'Use "yes" to display primary fields in left column and actions in right column. Use "no" for a single column. Default: yes', 'CP_TD' ); ?>
-    </li>
-    <li><span>left_class</span>
-        – <?php _e( 'Additional CSS classes for styling the left column (if selected). Default: empty', 'CP_TD' ); ?>
-    </li>
-    <li><span>right_class</span>
-        – <?php _e( 'Additional CSS classes for styling the right column (if selected). Default: empty', 'CP_TD' ); ?>
-    </li>
-    <li><span>title_link</span>
-        – <?php _e( 'Use "yes" to turn titles into links to the course. Use "no" to display titles without links. Default: yes', 'CP_TD' ); ?>
-    </li>
-    <li><span>title_tag</span>
-        – <?php _e( 'The HTML element (without brackets) to use for course titles. Default: h3', 'CP_TD' ); ?>
-    </li>
-    <li><span>title_class</span>
-        – <?php _e( 'Additional CSS classes for styling the course titles. Default: empty', 'CP_TD' ); ?>
-    </li>
-    <li><span>show</span>
-        – <?php _e( 'The fields to show for the course body. See [course] shortcode. Default: dates,enrollment_dates,class_size,cost', 'CP_TD' ); ?>
-    </li>
-    <li><span>show_button</span>
-        – <?php _e( 'Show [course_join_button]. Accepts "yes" and "no". Default: yes', 'CP_TD' ); ?>
-    </li>
-    <li><span>show_divider</span>
-        – <?php _e( 'Add divider between courses. Accepts "yes" or "no". Default: yes', 'CP_TD' ); ?>
-    </li>
-    <li><span>show_media</span>
-        – <?php _e( 'Show [course_media] if "yes". Default: no', 'CP_TD' ); ?></li>
-    <li><span>media_type</span>
-        – <?php _e( 'Type to use for media. See [course_media]. Default: CoursePress settings for Course Listing Pages.', 'CP_TD' ); ?>
-    </li>
-    <li><span>media_priority</span>
-        – <?php _e( 'Priority to use for media. See [course_media]. Default: CoursePress settings for Course Listing Pages.', 'CP_TD' ); ?>
-    </li>
-    <li><span>course_class</span>
-        – <?php _e( 'Additional CSS classes for styling each course. Default: empty', 'CP_TD' ); ?>
-    </li>
-    <li><span>limit</span>
-        – <?php _e( 'Limit the number of courses. Use -1 to show all. Default: -1', 'CP_TD' ); ?>
-    </li>
-    <li><span>order</span>
-        – <?php _e( 'Order the courses by title. "ASC" for ascending order. "DESC" for descending order. Empty for WordPress default. Default: "ASC"', 'CP_TD' ); ?>
-    </li>
-    <li><span>class</span>
-        – <?php _e( 'Additional CSS classes for styling the whole list. Default: empty', 'CP_TD' ); ?>
-    </li>
+	<li><span>status</span>
+		– <?php _e( 'The status of courses to show (uses WordPress status). Default: published', 'CP_TD' ); ?>
+	</li>
+	<li><span>instructor</span>
+		– <?php _e( 'The instructor id to list courses for a specific instructor. Can also specify multiple instructors using commas. (e.g. instructor="1,2,3"). Default: empty', 'CP_TD' ); ?>
+	</li>
+	<li><span>student</span>
+		– <?php _e( 'The student id to list courses for a specific student. Can also specify multiple students using commas. (e.g. student="1,2,3"). Default: empty', 'CP_TD' ); ?>
+		<br/>
+		<strong>Note:</strong> If both student and instructor are specified, only the
+		student will be used.
+	</li>
+	<li><span>two_column</span>
+		– <?php _e( 'Use "yes" to display primary fields in left column and actions in right column. Use "no" for a single column. Default: yes', 'CP_TD' ); ?>
+	</li>
+	<li><span>left_class</span>
+		– <?php _e( 'Additional CSS classes for styling the left column (if selected). Default: empty', 'CP_TD' ); ?>
+	</li>
+	<li><span>right_class</span>
+		– <?php _e( 'Additional CSS classes for styling the right column (if selected). Default: empty', 'CP_TD' ); ?>
+	</li>
+	<li><span>title_link</span>
+		– <?php _e( 'Use "yes" to turn titles into links to the course. Use "no" to display titles without links. Default: yes', 'CP_TD' ); ?>
+	</li>
+	<li><span>title_tag</span>
+		– <?php _e( 'The HTML element (without brackets) to use for course titles. Default: h3', 'CP_TD' ); ?>
+	</li>
+	<li><span>title_class</span>
+		– <?php _e( 'Additional CSS classes for styling the course titles. Default: empty', 'CP_TD' ); ?>
+	</li>
+	<li><span>show</span>
+		– <?php _e( 'The fields to show for the course body. See [course] shortcode. Default: dates,enrollment_dates,class_size,cost', 'CP_TD' ); ?>
+	</li>
+	<li><span>show_button</span>
+		– <?php _e( 'Show [course_join_button]. Accepts "yes" and "no". Default: yes', 'CP_TD' ); ?>
+	</li>
+	<li><span>show_divider</span>
+		– <?php _e( 'Add divider between courses. Accepts "yes" or "no". Default: yes', 'CP_TD' ); ?>
+	</li>
+	<li><span>show_media</span>
+		– <?php _e( 'Show [course_media] if "yes". Default: no', 'CP_TD' ); ?></li>
+	<li><span>media_type</span>
+		– <?php _e( 'Type to use for media. See [course_media]. Default: CoursePress settings for Course Listing Pages.', 'CP_TD' ); ?>
+	</li>
+	<li><span>media_priority</span>
+		– <?php _e( 'Priority to use for media. See [course_media]. Default: CoursePress settings for Course Listing Pages.', 'CP_TD' ); ?>
+	</li>
+	<li><span>course_class</span>
+		– <?php _e( 'Additional CSS classes for styling each course. Default: empty', 'CP_TD' ); ?>
+	</li>
+	<li><span>limit</span>
+		– <?php _e( 'Limit the number of courses. Use -1 to show all. Default: -1', 'CP_TD' ); ?>
+	</li>
+	<li><span>order</span>
+		– <?php _e( 'Order the courses by title. "ASC" for ascending order. "DESC" for descending order. Empty for WordPress default. Default: "ASC"', 'CP_TD' ); ?>
+	</li>
+	<li><span>class</span>
+		– <?php _e( 'Additional CSS classes for styling the whole list. Default: empty', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'CP_TD' ); ?></p>
@@ -1422,27 +1424,27 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>course_id</span>
-        – <?php _e( 'If no id is pecified then it will return empty text.', 'CP_TD' ); ?></li>
+	<li><span>course_id</span>
+		– <?php _e( 'If no id is pecified then it will return empty text.', 'CP_TD' ); ?></li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>featured_title</span>
-        – <?php _e( 'The title to display for the featured course. Default: Featured Course', 'CP_TD' ); ?>
-    </li>
-    <li><span>button_title</span>
-        – <?php _e( 'Text to display on the call to action button. Default: Find out more.', 'CP_TD' ); ?>
-    </li>
-    <li><span>media_type</span>
-        – <?php _e( 'Media type to use for featured course. See [course_media]. Default: default', 'CP_TD' ); ?>
-    </li>
-    <li><span>media_priority</span>
-        – <?php _e( 'Media priority to use for featured course. See [course_media]. Default: video', 'CP_TD' ); ?>
-    </li>
-    <li><span>class</span>
-        – <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
+	<li><span>featured_title</span>
+		– <?php _e( 'The title to display for the featured course. Default: Featured Course', 'CP_TD' ); ?>
+	</li>
+	<li><span>button_title</span>
+		– <?php _e( 'Text to display on the call to action button. Default: Find out more.', 'CP_TD' ); ?>
+	</li>
+	<li><span>media_type</span>
+		– <?php _e( 'Media type to use for featured course. See [course_media]. Default: default', 'CP_TD' ); ?>
+	</li>
+	<li><span>media_priority</span>
+		– <?php _e( 'Media priority to use for featured course. See [course_media]. Default: video', 'CP_TD' ); ?>
+	</li>
+	<li><span>class</span>
+		– <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'CP_TD' ); ?></p>
@@ -1470,39 +1472,39 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
-    </li>
+	<li><span>course_id</span> – <?php _e( 'If outside of the WordPress loop.', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>free_text</span>
-        – <?php _e( 'Text to show for FREE preview items. Default: Free', 'CP_TD' ); ?></li>
-    <li><span>show_title</span>
-        – <?php _e( 'Show course title in structure, "yes" or "no". Default: "no"', 'CP_TD' ); ?>
-    </li>
-    <li><span>show_label</span>
-        – <?php _e( 'Show label text as tree heading, "yes" or "no". Default: no', 'CP_TD' ); ?>
-    </li>
-    <li><span>show_divider</span>
-        – <?php _e( 'Show divider between major items in the tree, "yes" or "no". Default: yes', 'CP_TD' ); ?>
-    </li>
-    <li><span>label</span>
-        – <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_tag</span>
-        – <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
-    </li>
-    <li><span>label_delimeter</span>
-        – <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
-    <li><span>class</span>
-        – <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
+	<li><span>free_text</span>
+		– <?php _e( 'Text to show for FREE preview items. Default: Free', 'CP_TD' ); ?></li>
+	<li><span>show_title</span>
+		– <?php _e( 'Show course title in structure, "yes" or "no". Default: "no"', 'CP_TD' ); ?>
+	</li>
+	<li><span>show_label</span>
+		– <?php _e( 'Show label text as tree heading, "yes" or "no". Default: no', 'CP_TD' ); ?>
+	</li>
+	<li><span>show_divider</span>
+		– <?php _e( 'Show divider between major items in the tree, "yes" or "no". Default: yes', 'CP_TD' ); ?>
+	</li>
+	<li><span>label</span>
+		– <?php _e( 'Label to display for the output. Set label to "" to hide the label completely.', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_tag</span>
+		– <?php _e( 'HTML tag (without brackets) to use for the individual labels. Default: strong', 'CP_TD' ); ?>
+	</li>
+	<li><span>label_delimeter</span>
+		– <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
+	<li><span>class</span>
+		– <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'CP_TD' ); ?></p>
 <code>[course_structure]<br/>[course_structure course_id="42" free_text="Gratis!"
-    show_title="no"]<br/>[course_structure show_title="no" label="Curriculum"]</code>
+	show_title="no"]<br/>[course_structure show_title="no" label="Curriculum"]</code>
 <?php
 		$content = ob_get_contents();
 		ob_end_clean();
@@ -1526,26 +1528,26 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 <p class="cp-shortcode-subheading"><?php _e( 'Optional Attributes:', 'CP_TD' ); ?></p>
 
 <ul class="cp-shortcode-options">
-    <li><span>failed_login_text</span>
-        – <?php _e( 'Text to display when user doesn’t authenticate. Default: Invalid login.', 'CP_TD' ); ?>
-    </li>
-    <li><span>failed_login_class</span>
-        – <?php _e( 'CSS class to use for invalid login. Default: red', 'CP_TD' ); ?></li>
-    <li><span>logout_url</span>
-        – <?php _e( 'URL to redirect to when user logs out. Default: Plugin defaults.', 'CP_TD' ); ?>
-    </li>
-    <li><span>signup_title</span>
-        – <?php _e( 'Title to use for Signup section. Default: &lt;h3>Signup&lt;/h3>', 'CP_TD' ); ?>
-    </li>
-    <li><span>login_title</span>
-        – <?php _e( 'Title to use for Login section. Default: &lt;h3>Login&lt;/h3>', 'CP_TD' ); ?>
-    </li>
-    <li><span>signup_url</span>
-        – <?php _e( 'URL to redirect to when clicking on "Don\'t have an account? Go to Signup!"  Default: Plugin defaults.', 'CP_TD' ); ?>
-    </li>
-    <li><span>login_url</span>
-        – <?php _e( 'URL to redirect to when clicking on "Already have an Account?". Default: Plugin defaults.', 'CP_TD' ); ?>
-    </li>
+	<li><span>failed_login_text</span>
+		– <?php _e( 'Text to display when user doesn’t authenticate. Default: Invalid login.', 'CP_TD' ); ?>
+	</li>
+	<li><span>failed_login_class</span>
+		– <?php _e( 'CSS class to use for invalid login. Default: red', 'CP_TD' ); ?></li>
+	<li><span>logout_url</span>
+		– <?php _e( 'URL to redirect to when user logs out. Default: Plugin defaults.', 'CP_TD' ); ?>
+	</li>
+	<li><span>signup_title</span>
+		– <?php _e( 'Title to use for Signup section. Default: &lt;h3>Signup&lt;/h3>', 'CP_TD' ); ?>
+	</li>
+	<li><span>login_title</span>
+		– <?php _e( 'Title to use for Login section. Default: &lt;h3>Login&lt;/h3>', 'CP_TD' ); ?>
+	</li>
+	<li><span>signup_url</span>
+		– <?php _e( 'URL to redirect to when clicking on "Don\'t have an account? Go to Signup!"  Default: Plugin defaults.', 'CP_TD' ); ?>
+	</li>
+	<li><span>login_url</span>
+		– <?php _e( 'URL to redirect to when clicking on "Already have an Account?". Default: Plugin defaults.', 'CP_TD' ); ?>
+	</li>
 </ul>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Examples:', 'CP_TD' ); ?></p>

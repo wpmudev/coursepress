@@ -159,7 +159,7 @@ class CoursePress_Data_Certificate {
 			$filename = 'certificate-' . $course_id . '-' . $student_id . '.pdf';
 			$pdf_file = CoursePress_Helper_PDF::cache_path() . $filename;
 
-			if ( ! is_readable( $pdf_file ) ) { 
+			if ( ! is_readable( $pdf_file ) ) {
 				if ( self::generate_pdf_certificate( $course_id, $student_id, false ) ) {
 					$mail_atts['attachments'] = array( $pdf_file );
 				}
@@ -314,7 +314,7 @@ class CoursePress_Data_Certificate {
 			'post_type' => self::get_post_type_name(),
 			'author' => $student_id,
 			'post_parent' => $course_id,
-			'post_status' => 'any'
+			'post_status' => 'any',
 		);
 		$post = get_posts( $post_params );
 
@@ -339,7 +339,7 @@ class CoursePress_Data_Certificate {
 				$styles[] = 'padding-left:' . $padding['left'] . 'px;';
 			}
 			if ( ! empty( $padding['right'] ) ) {
-				$styles[]= 'padding-right:' . $padding['right'] . 'px;';
+				$styles[] = 'padding-right:' . $padding['right'] . 'px;';
 			}
 			$style = '.basic_certificate {' . implode( ' ', $styles ) . '}';
 

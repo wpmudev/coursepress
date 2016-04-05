@@ -1,5 +1,5 @@
 <?php
-if( ! class_exists( 'WP_Users_List_Table' ) ) {
+if ( ! class_exists( 'WP_Users_List_Table' ) ) {
 	require ABSPATH . 'wp-admin/includes/class-wp-users-list-table.php';
 }
 
@@ -35,7 +35,7 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 		$actions = array(
 			'profile' => sprintf( '<a href="%s">%s</a>', $profile_link, __( 'Profile', 'CP_TD' ) ),
 			'workbook' => sprintf( '<a href="%s">%s</a>', $workbook_link, __( 'Workbook', 'CP_TD' ) ),
-			'delete' => sprintf( '<a href="%s">%s</a>', $delete_link, __( 'Remove', 'CP_TD' ) )
+			'delete' => sprintf( '<a href="%s">%s</a>', $delete_link, __( 'Remove', 'CP_TD' ) ),
 		);
 
 		return $actions;
@@ -45,27 +45,27 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 	 * Withdraw student to all courses
 	 **/
 	public static function delete_student() {
-		if ( isset( $_GET['nonce'] )
-			&& wp_verify_nonce( $_GET['nonce'], 'coursepress_remove_student' )
-			&& isset( $_GET['student_id'] ) )
-		{
-			$student_id = (int) $_GET['student_id'];
-			$courses = CoursePress_Data_Student::get_enrolled_courses_ids( $student_id );
+		if ( empty( $_GET['nonce'] ) ) { return; }
+		if ( ! wp_verify_nonce( $_GET['nonce'], 'coursepress_remove_student' ) ) { return; }
+		if ( ! isset( $_GET['student_id'] ) ) { return; }
 
-			foreach ( $courses as $course_id ) {
-				CoursePress_Data_Course::withdraw_student( $student_id, $course_id );
-			}
+		$student_id = (int) $_GET['student_id'];
+		$courses = CoursePress_Data_Student::get_enrolled_courses_ids( $student_id );
 
-			// Return to student's list.
-			$return_url = remove_query_arg(
-				array(
-					'view',
-					'student_id',
-					'nonce',
-				)
-			);
-			wp_safe_redirect( $return_url ); exit;
+		foreach ( $courses as $course_id ) {
+			CoursePress_Data_Course::withdraw_student( $student_id, $course_id );
 		}
+
+		// Return to student's list.
+		$return_url = remove_query_arg(
+			array(
+				'view',
+				'student_id',
+				'nonce',
+			)
+		);
+		wp_safe_redirect( $return_url );
+		exit;
 	}
 
 	public function get_columns() {
@@ -90,7 +90,7 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 		$time_format = get_option( 'time_format' );
 		$return = '';
 
-		switch( $column ) {
+		switch ( $column ) {
 			case 'id':
 				$return = $user_id;
 				break;
@@ -117,7 +117,9 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 		return $return;
 	}
 
-	public function extra_tablenav( $which ) { return; }
+	public function extra_tablenav( $which ) {
+		// Do nothing...
+	}
 
 	public function no_items() {
 		esc_html_e( 'No students found.', 'CP_TD' );
@@ -128,18 +130,16 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 		<div class="wrap">
 			<h2>
 				<?php
-					esc_html_e( 'Students', 'CP_TD' );
+				esc_html_e( 'Students', 'CP_TD' );
 
-					if ( CoursePress_Data_Capabilities::can_create_student() ) {
-						$add_link = admin_url( 'user-new.php' );
-				?>
+				if ( CoursePress_Data_Capabilities::can_create_student() ) {
+					$add_link = admin_url( 'user-new.php' );
+					?>
 					<a href="<?php echo $add_link; ?>" class="add-new-h2">
-						<?php
-							esc_html_e( 'Add New', 'CP_TD' );
-						?>
+						<?php esc_html_e( 'Add New', 'CP_TD' ); ?>
 					</a>
 				<?php
-					}
+				}
 				?>
 			</h2>
 			<hr />

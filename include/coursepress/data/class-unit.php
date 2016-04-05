@@ -227,7 +227,7 @@ class CoursePress_Data_Unit {
 
 			CoursePress_Helper_Utility::set_array_val( $status, 'mandatory_required/enabled', $force_current_unit_completion );
 			CoursePress_Helper_Utility::set_array_val( $status, 'mandatory_required/result', $mandatory_done );
-		
+
 			CoursePress_Helper_Utility::set_array_val( $status, 'completion_required/enabled', $force_current_unit_successful_completion );
 			CoursePress_Helper_Utility::set_array_val( $status, 'completion_required/result', $unit_completed );
 		}
@@ -271,7 +271,7 @@ class CoursePress_Data_Unit {
 				}
 			}
 		}
-		
+
 		return $previous_unit ? $previous_unit->ID : false;
 	}
 

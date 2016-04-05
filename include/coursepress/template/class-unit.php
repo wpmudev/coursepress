@@ -95,7 +95,7 @@ class CoursePress_Template_Unit {
 				array(
 					'course_id' => $course_id,
 					'unit_id' => $unit_id,
-					'previous_unit' => $previous_unit_id
+					'previous_unit' => $previous_unit_id,
 				)
 			);
 			$content .= sprintf( '<p><em>%s</em></p>', $message );
@@ -137,15 +137,15 @@ class CoursePress_Template_Unit {
 
 				$page_feature_image = get_post_meta( $unit->ID, 'page_feature_image', true );
 				if ( ! empty( $page_feature_image[ 'page_'. $page ] ) ) {
-					$feature_image = sprintf( '<img src="%s" alt="%s" />', esc_url( $page_feature_image['page_'. $page] ), esc_attr( basename( $page_feature_image['page_'. $page] ) ) );
+					$feature_image = sprintf( '<img src="%s" alt="%s" />', esc_url( $page_feature_image[ 'page_'. $page ] ), esc_attr( basename( $page_feature_image[ 'page_'. $page ] ) ) );
 					$content .= '<div class="unit-page-feature-image section-thumbnail">' . $feature_image . '</div>';
 				}
 
 				$content .= '<h3 class="page-title unit-section-title">' . $page_title . '</h3>';
 
 				$page_description = get_post_meta( $unit->ID, 'page_description', true );
-				if ( ! empty( $page_description['page_' . $page] ) ) {
-					$content .= $page_description['page_' . $page];
+				if ( ! empty( $page_description[ 'page_' . $page ] ) ) {
+					$content .= $page_description[ 'page_' . $page ];
 				}
 
 				$content .= '</div>';
@@ -202,7 +202,7 @@ class CoursePress_Template_Unit {
 		if ( $total_pages > 1 ) {
 			for ( $i = 1; $i <= $total_pages; $i++ ) {
 				$unit_url = $url_path . $i;
-	
+
 				if ( $enrolled
 					|| $is_instructor
 					|| in_array( $i, $preview_pages )
@@ -211,7 +211,7 @@ class CoursePress_Template_Unit {
 					$content .= '<span class="page page-' . $i . '"><a href="' . esc_url_raw( $unit_url ) . '">' . $i . '</a></span> ';
 				}
 			}
-	
+
 			// Next Page.
 			if ( ! $enrolled && ! $is_instructor ) {
 				for ( $i = $page + 1; $i <= $total_pages; $i++ ) {
@@ -220,7 +220,7 @@ class CoursePress_Template_Unit {
 					} elseif ( ! is_array( $preview['structure'][ $unit->ID ] ) ) {
 						$next_page = $i;
 					}
-	
+
 					if ( $next_page ) {
 						break;
 					}
@@ -230,7 +230,7 @@ class CoursePress_Template_Unit {
 					$next_page = $page + 1;
 				}
 			}
-	
+
 			if ( $next_page ) {
 				$unit_url = $url_path . $next_page;
 				$content .= '<span class="next-button page page-' . $i .'"><a href="' . esc_url_raw( $unit_url ) . '"><button>' . esc_html( 'Next', 'CP_TD' ) . '</button></a></span> ';

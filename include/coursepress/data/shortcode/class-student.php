@@ -269,11 +269,11 @@ class CoursePress_Data_Shortcode_Student {
 								break;
 							case 'input-quiz':
 								$display = '';
-								
+
 								if ( $response_display ) {
-								
-									foreach ( $response_display as $q_index => $answers ) {										
-										foreach( $answers as $a_index => $answer ) {											
+
+									foreach ( $response_display as $q_index => $answers ) {
+										foreach ( $answers as $a_index => $answer ) {
 											if ( ! empty( $answer ) ) {
 												$the_answer = CoursePress_Helper_Utility::get_array_val(
 													$attributes,

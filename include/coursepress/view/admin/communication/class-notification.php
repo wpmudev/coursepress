@@ -363,10 +363,10 @@ class CoursePress_View_Admin_Communication_Notification {
 
 			foreach ( $courses as $index => $course ) {
 				if ( CoursePress_Data_Capabilities::is_course_instructor( $course ) && ! $is_instructor ) {
-					unset( $courses[$index] );
+					unset( $courses[ $index ] );
 				}
 				if ( $user_id == $course->post_author && ! $is_author ) {
-					unset( $courses[$index] );
+					unset( $courses[ $index ] );
 				}
 			}
 		}

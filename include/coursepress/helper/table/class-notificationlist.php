@@ -358,8 +358,8 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 				array(
 					'key' => 'course_id',
 					'value' => (array) $courses_ids,
-					'compare' => 'IN'
-				)
+					'compare' => 'IN',
+				),
 			);
 		}
 
@@ -385,8 +385,8 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 		 */
 		$this->set_pagination_args(
 			array(
-			'total_items' => $total_items,				  //WE have to calculate the total number of items
-			'per_page'	=> $per_page,					 //WE have to determine how many items to show on a page
+			'total_items' => $total_items,				//WE have to calculate the total number of items
+			'per_page'	=> $per_page,					//WE have to determine how many items to show on a page
 			'total_pages' => ceil( $total_items / $per_page ),//WE have to calculate the total number of pages
 			)
 		);

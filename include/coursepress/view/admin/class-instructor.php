@@ -58,27 +58,27 @@ class CoursePress_View_Admin_Instructor {
 	}
 
 	public static function pre_process() {
-		if ( empty( $_GET[ 'action' ] ) ) {
+		if ( empty( $_GET['action'] ) ) {
 			self::$table_manager = new CoursePress_Helper_Table_Instructor;
 			self::$table_manager->prepare_items();
-		} elseif ( 'delete' == $_GET[ 'action' ] && isset( $_GET['instructor_id'] ) ) {
-			$instructor_id = (int) $_GET[ 'instructor_id' ];
+		} elseif ( 'delete' == $_GET['action'] && isset( $_GET['instructor_id'] ) ) {
+			$instructor_id = (int) $_GET['instructor_id'];
 			self::remove_instructor( $instructor_id );
 
 			$query_arg = array(
 				'action',
 				'instructor_id',
-				'nonce'
+				'nonce',
 			);
 			$redirect = remove_query_arg( $query_arg );
 			wp_safe_redirect( $redirect ); exit;
 		}
 
-		if ( ! empty( $_POST[ 'action' ] )
-			&& 'remove' == $_POST[ 'action']
-			&& ! empty( $_POST[ 'users' ] )
+		if ( ! empty( $_POST['action'] )
+			&& 'remove' == $_POST['action']
+			&& ! empty( $_POST['users'] )
 		) {
-			$instructor_ids = (array) $_POST[ 'users' ];
+			$instructor_ids = (array) $_POST['users'];
 			$instructor_ids = array_filter( $instructor_ids );
 			array_map(
 				array( __CLASS__, 'remove_instructor' ),
@@ -99,15 +99,15 @@ class CoursePress_View_Admin_Instructor {
 	}
 
 	public static function render_page() {
-		if( empty( $_GET[ 'action' ] ) ) {
+		if ( empty( $_GET['action'] ) ) {
 			self::$table_manager->display();
-		} elseif ( 'view' == $_GET[ 'action' ] ) {
+		} elseif ( 'view' == $_GET['action'] ) {
 			self::instructor_profile();
 		}
 	}
 
 	public static function instructor_profile() {
-		$instructor_id = (int) $_GET[ 'instructor_id' ];
+		$instructor_id = (int) $_GET['instructor_id'];
 		$instructor = get_userdata( $instructor_id );
 		$page = get_query_var( 'paged' );
 		?>
@@ -133,8 +133,8 @@ class CoursePress_View_Admin_Instructor {
 								);
 								$query = new WP_Query( $args );
 
-								if ( $query->have_posts() ):
-									while ( $query->have_posts() ):
+								if ( $query->have_posts() ) :
+									while ( $query->have_posts() ) :
 										$query->the_post();
 										$style = ( ' class="alternate"' == $style ) ? '' : ' class="alternate"';
 										$course = CoursePress_Data_Course::get_course( get_the_ID() )
