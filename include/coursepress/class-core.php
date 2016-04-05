@@ -71,6 +71,8 @@ class CoursePress_Core {
 
 			// Initialize Admin Views.
 			CoursePress_View_Admin_CoursePress::init();
+			CoursePress_View_Admin_Instructor::init();
+			CoursePress_View_Admin_Student::init();
 			CoursePress_View_Admin_Communication::init();
 			CoursePress_View_Admin_Setting::init();
 		} else {
@@ -121,6 +123,7 @@ class CoursePress_Core {
 		 * show guide page?
 		 */
 		add_action( 'admin_init', array( __CLASS__, 'redirect_to_guide_page' ) );
+
 	}
 
 	/**

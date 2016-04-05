@@ -23,6 +23,7 @@ class CoursePress_Helper_Setting {
 	 * @return string default capability
 	 */
 	private static function get_default_capability() {
+		$userdata = get_userdata( get_current_user_id() );
 		if ( empty( self::$default_capability ) ) {
 			self::$default_capability = 'coursepress_dashboard_cap';
 			if ( current_user_can( 'manage_options' ) ) {
@@ -90,10 +91,12 @@ class CoursePress_Helper_Setting {
 				$page['handle'] = $handle;
 			}
 
-			if ( 'none' != $page['parent'] ) {
-				self::$page_refs[ $handle ] = add_submenu_page( $page['parent'], $page['title'], $page['menu_title'], $capability, $page['handle'], $callback );
-			} else {
-				self::$page_refs[ $handle ] = add_submenu_page( null, $page['title'], $page['menu_title'], $capability, $page['handle'], $callback );
+			if ( CoursePress_Data_Capabilities::can_manage_courses() ) {
+				if ( 'none' != $page['parent'] ) {
+					self::$page_refs[ $handle ] = add_submenu_page( $page['parent'], $page['title'], $page['menu_title'], $capability, $page['handle'], $callback );
+				} else {
+					self::$page_refs[ $handle ] = add_submenu_page( null, $page['title'], $page['menu_title'], $capability, $page['handle'], $callback );
+				}
 			}
 		}
 
@@ -117,8 +120,31 @@ class CoursePress_Helper_Setting {
 		return self::$page_refs;
 	}
 
+	public static function reorder_menu( $a, $b ) {
+		return $a > $b;
+	}
+
 	private static function _get_pages() {
-		return apply_filters( 'coursepress_admin_pages', self::$pages );
+		$pages = apply_filters( 'coursepress_admin_pages', self::$pages );
+		$order = array_map( create_function( '$a', ' return ! empty( $a["order"] ) ? $a["order"] : 0; '), $pages );
+		$max_order = max( $order );
+		$new_order = array();
+		
+		foreach ( $pages as $key => $page ) {
+			$page_order = ! empty( $page['order'] ) ? $page['order'] : ( $max_order += 5 );
+			$page['order'] = $page_order;
+			$pages[$key] = $page;
+			$new_order[ $page_order ] = $key;
+		}
+
+		uksort( $new_order, array( __CLASS__, 'reorder_menu' ) );
+		$new_pages = array();
+		foreach ( $new_order as $order => $key ) {
+			$new_pages[$key] = $pages[$key];
+		}
+
+		return $new_pages;
+
 	}
 
 	public static function admin_init() {
@@ -162,6 +188,18 @@ class CoursePress_Helper_Setting {
 
 			// Font Awesome.
 			wp_enqueue_style( 'fontawesome', $fontawesome, array(), CoursePress::$version );
+
+			// Add instructor stylesheet
+			if ( CoursePress_View_Admin_Instructor::$slug == $page ) {
+				$instructor_css = CoursePress::$url . 'asset/css/admin-instructor.css';
+				wp_enqueue_style( 'coursepress_admin_instructor', $instructor_css, false, CoursePress::$version );
+			}
+
+			// Add student stylesshet
+			if ( CoursePress_View_Admin_Student::$slug == $page ) {
+				$student_css = CoursePress::$url . 'asset/css/admin-student.css';
+				wp_enqueue_style( 'coursepress_admin_student', $student_css, false, CoursePress::$version );
+			}
 		}
 
 		wp_enqueue_style( 'coursepress_admin_global', $style_global, array(), CoursePress::$version );

@@ -602,6 +602,10 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 				};
 				CoursePress.Course.set( 'data', data );
 				CoursePress.Course.save();
+				CoursePress.Course.on( 'coursepress:withdraw_student_success', function(){
+					window.location = window.self.location;
+				});
+				return false;
 			}
 		} );
 
@@ -615,6 +619,10 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 				};
 				CoursePress.Course.set( 'data', data );
 				CoursePress.Course.save();
+				CoursePress.Course.on( 'coursepress:withdraw_all_students_success', function(){
+					window.location = window.self.location;
+				});
+				return false;
 			}
 		} );
 
@@ -994,8 +1002,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		} );
 
 		$( '.coursepress_settings_wrapper.reports .column-report .pdf' ).on( 'click', function() {
-			if ( ! $(this).data('click') ) {
-				window.alert( $(this).attr('title') );
+			if ( false === $(this).data('click') ) {
 				return false;
 			}
 			var form = $( this ).parents( 'form' )[ 0 ];

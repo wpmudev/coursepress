@@ -4,6 +4,7 @@
 /*global _coursepress*/
 /*global pwsL10n*/
 
+
 var CoursePress = CoursePress || {};
 
 (function( $ ) {
@@ -1014,6 +1015,7 @@ var CoursePress = CoursePress || {};
 						var extension = file.name.split( '.' ).pop();
 						var allowed_extensions = _.keys( _coursepress.allowed_student_extensions );
 						var allowed = _.contains( allowed_extensions, extension );
+						var response_div;
 
 						if ( !allowed ) {
 							return;
@@ -1069,13 +1071,14 @@ var CoursePress = CoursePress || {};
 								data = JSON.parse( e.target.responseText );
 							} catch( err ) {}
 
-							if ( readyState === 4 && status === '200' && data.success ) {
+							if ( readyState === 4 && parseInt( status ) === 200 && data.success ) {
 
 								$( parent ).find( '.upload-percent' ).detach();
 								$( parent ).find( '.upload-progress .spinner' ).detach();
 								$( result ).detach();
 								$( elements ).addClass( 'hide' );
-								$( response ).replaceWith( '<div class="module-response">' +
+								response_div = response.length > 0 ? $( response ) : $( '<div class="module-response">' ).insertAfter( elements );
+								response_div.replaceWith( '<div class="module-response">' +
 									'<p class="file_holder">' + _coursepress.file_uploaded_message + '</p>' +
 									'</div>'
 								);
@@ -1085,7 +1088,9 @@ var CoursePress = CoursePress || {};
 								$( parent ).find( '.upload-progress .spinner' ).detach();
 								$( result ).detach();
 								$( elements ).addClass( 'hide' );
-								$( response ).replaceWith( '<div class="module-response">' +
+								response_div = response.length > 0 ? $( response ) : $( '<div class="module-response">' ).insertAfter( elements );
+
+								response_div.replaceWith( '<div class="module-response">' +
 									'<p class="file_holder">' + _coursepress.file_upload_fail_message + '</p>' +
 									'</div>'
 								);
@@ -1130,8 +1135,15 @@ var CoursePress = CoursePress || {};
 			model.save();
 
 			model.on( 'coursepress:record_module_response_success', function( data ) {
-				// DEBUG code. remove it.
-				window.console.log( data );
+
+				// Redirect back to units details when completed.
+				if ( data.completed ) {
+					var course_link = $( '.course-units-link' );
+
+					if ( course_link.length > 0 ) {
+						window.location = course_link.attr( 'href' );
+					}
+				}
 				$( elements ).find( '.response-processing' ).detach();
 
 				$( result ).detach();
@@ -1155,7 +1167,7 @@ var CoursePress = CoursePress || {};
 				}
 
 				if ( 0 === response.length ) {
-					$( parent ).append( html );
+					$( html ).insertAfter( elements );
 				} else {
 					$( response ).replaceWith( html );
 				}

@@ -97,7 +97,7 @@ class CoursePress_Data_Certificate {
 	 * @param  int $student_id The WP user-ID.
 	 * @param  int $course_id The course-ID that was completed.
 	 */
-	public function generate_certificate( $student_id, $course_id ) {
+	public static function generate_certificate( $student_id, $course_id ) {
 		if ( ! self::is_enabled() ) { return false; }
 
 		// First check, if the student is already certified for the course.
@@ -127,7 +127,7 @@ class CoursePress_Data_Certificate {
 	 * @param  int $course_id The course-ID that was completed.
 	 * @return bool True on success.
 	 */
-	public function send_certificate( $certificate_id ) {
+	public static function send_certificate( $certificate_id ) {
 		if ( ! self::is_enabled() ) { return false; }
 
 		$email_args = self::fetch_params( $certificate_id );
@@ -246,6 +246,12 @@ class CoursePress_Data_Certificate {
 			'CERTIFICATE_NUMBER' => (int) $data['certificate_id'],
 			'UNIT_LIST' => $data['unit_list'],
 		);
+		/**
+		 * Filter variables before applying changes.
+		 *
+		 * @param (array) $vars.
+		 **/
+		$vars = apply_filters( 'coursepress_basic_certificate_vars', $vars );
 
 		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
 	}

@@ -209,7 +209,7 @@ class CoursePress_Data_Shortcode_Template {
 		$completed = false;
 		$student_progress = false;
 		if ( is_user_logged_in() ) {
-			$student_progress = CoursePress_Data_Student::calculate_completion( get_current_user_id(), $course_id );
+			$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id ); //CoursePress_Data_Student::calculate_completion( get_current_user_id(), $course_id );
 			$completed = isset( $student_progress['completion']['completed'] ) && ! empty( $student_progress['completion']['completed'] );
 		}
 		$completion_class = $completed ? 'course-completed' : '';

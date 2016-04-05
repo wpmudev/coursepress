@@ -18,6 +18,7 @@ class CoursePress_Helper_JavaScript {
 	}
 
 	public static function enqueue_scripts() {
+
 		$course_js_pages = array(
 			'coursepress_course',
 			'coursepress_assessments',
@@ -51,6 +52,8 @@ class CoursePress_Helper_JavaScript {
 		) );
 		$dummy_editor = ob_get_clean();
 
+		$is_super_admin = user_can( 'manage_options', get_current_user_id() );
+
 		$localize_array = array(
 			'_ajax_url' => CoursePress_Helper_Utility::get_ajax_url(),
 			'_dummy_editor' => $dummy_editor,
@@ -66,6 +69,8 @@ class CoursePress_Helper_JavaScript {
 			'assessment_report_url' => admin_url( 'admin.php?page=coursepress_reports' ),
 			'is_wpmudev' => CP_IS_WPMUDEV,
 			'is_campus' => CP_IS_CAMPUS,
+			'is_super_admin' => $is_super_admin,
+			'user_caps' => CoursePress_Data_Capabilities::get_user_capabilities(),
 		);
 
 		// Models

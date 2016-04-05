@@ -6,12 +6,11 @@ class CoursePress_View_Admin_Course_Student {
 		/**
 		 * Student List
 		 */
+		$course_id = (int) $_GET['id'];
 		$list_course = new CoursePress_Helper_Table_CourseStudent();
 
-		$list_course->set_course( (int) $_GET['id'] );
-		if ( CoursePress_Data_Capabilities::can_add_course_student( $list_course->get_course_id() ) ) {
-			$list_course->set_add_new( true );
-		}
+		$list_course->set_course( $course_id );
+		$list_course->set_add_new( true );
 		$list_course->prepare_items();
 
 		$content = '<div class="coursepress_Course_Student_wrapper">';
@@ -22,10 +21,10 @@ class CoursePress_View_Admin_Course_Student {
 
 		$content .= '</div>';
 
-		/**
-		 * Invite Student
-		 */
-		if ( CoursePress_Data_Capabilities::can_assign_course_student( $list_course->get_course_id() ) ) {
+		if ( CoursePress_Data_Capabilities::can_invite_students( $course_id ) ) {
+			/**
+			 * Invite Student
+			 */
 			$nonce = wp_create_nonce( 'invite_student' );
 			$content .= '<div class="coursepress_course_invite_student_wrapper">';
 			$content .= '<h3>' . esc_html__( 'Invite Student', 'CP_TD' ) .'</h3>';

@@ -43,6 +43,7 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 	}
 
 	public function get_columns() {
+		$course_id = isset( $_GET['id'] ) ? (int) $_GET['id'] : null;
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
 			'ID' => __( 'ID', 'CP_TD' ),
@@ -52,6 +53,10 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 			'profile' => __( 'Profile', 'CP_TD' ),
 			'actions' => __( 'Withdraw', 'CP_TD' ),
 		);
+
+		if ( ! CoursePress_Data_Capabilities::can_withdraw_students( $course_id ) ) {
+			unset( $columns['actions'] );
+		}
 
 		return $columns;
 	}
@@ -114,13 +119,15 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 	}
 
 	public function column_actions( $item ) {
-		if ( ! CoursePress_Data_Capabilities::can_withdraw_course_student( $this->course_id ) ) {
-			return '';
-		}
+		$course_id = isset( $_GET['id'] ) ? (int) $_GET['id'] : null;
 		$nonce = wp_create_nonce( 'withdraw-single-student' );
-		return sprintf(
+		$withdraw = sprintf(
 			'<a href="" class="withdraw-student" data-id="%s" data-nonce="%s"><i class="fa fa-times-circle remove-btn"></i></a>', $item->ID, $nonce
 		);
+
+		if ( CoursePress_Data_Capabilities::can_withdraw_students( $course_id ) ) {
+			echo $withdraw;
+		}
 	}
 
 	public function prepare_items() {
@@ -137,13 +144,6 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
-		// $post_args = array(
-		// 'post_type' => $this->post_type,
-		// 'post_status' => $post_status,
-		// 'posts_per_page' => $per_page,
-		// 'offset' => $offset,
-		// 's' => isset( $_GET['s'] ) && ! empty( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : ''
-		// );
 		if ( is_multisite() ) {
 			$course_meta_key = $wpdb->prefix . 'enrolled_course_date_' . $this->course_id;
 		} else {
@@ -173,39 +173,48 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 	}
 
 	public function extra_tablenav( $which ) {
+		$course_id = (int) $_GET['id'];
 
 		if ( 'bottom' === $which && $this->add_new ) {
 
 			?>
 			<div class="coursepress_course_add_student_wrapper">
 			<?php
-
-			$name = 'student-add';
-			$id = 'student-add';
-			if ( apply_filters( 'coursepress_use_default_student_selector', true ) ) {
-				$user_selector = CoursePress_Helper_UI::get_user_dropdown(
-					$id,
-					$name,
-					array(
-						'placeholder' => __( 'Choose student...', 'CP_TD' ),
-						'class' => 'chosen-select narrow',
-						'exclude' => $this->students,
-						'context' => 'students',
-					)
-				);
-			} else {
-				$user_selector = '<input type="text" id="' . $id .'" name="' . $name . '" placeholder="' . esc_attr__( 'Enter user ID', 'CP_TD' ) . '" />';
-			}
-
-			$user_selector = apply_filters( 'coursepress_student_selector', $user_selector, $id, $name );
-			echo $user_selector;
-
 			$nonce = wp_create_nonce( 'add_student' );
 			$withdraw_nonce = wp_create_nonce( 'withdraw_all_students' );
-			?>
 
+			if ( CoursePress_Data_Capabilities::can_assign_course_student( $course_id ) ) {
+				$name = 'student-add';
+				$id = 'student-add';
+				if ( apply_filters( 'coursepress_use_default_student_selector', true ) ) {
+					$user_selector = CoursePress_Helper_UI::get_user_dropdown(
+						$id,
+						$name,
+						array(
+							'placeholder' => __( 'Choose student...', 'CP_TD' ),
+							'class' => 'chosen-select narrow',
+							'exclude' => $this->students,
+							'context' => 'students',
+						)
+					);
+				} else {
+					$user_selector = '<input type="text" id="' . $id .'" name="' . $name . '" placeholder="' . esc_attr__( 'Enter user ID', 'CP_TD' ) . '" />';
+				}
+	
+				$user_selector = apply_filters( 'coursepress_student_selector', $user_selector, $id, $name );
+				echo $user_selector;
+			?>
 			<input type="button" class="add-new-student-button button" data-nonce="<?php echo $nonce; ?>" value="<?php esc_attr_e( 'Add Student', 'CP_TD' ); ?>" />
-			<a class="withdraw-all-students" data-nonce="<?php echo $withdraw_nonce; ?>" href="#"><?php esc_html_e( 'Withdraw all students', 'CP_TD' ); ?></a>
+			<?php
+			}
+
+			if ( CoursePress_Data_Capabilities::can_withdraw_students( $course_id ) ) {
+			?>
+				<a class="withdraw-all-students" data-nonce="<?php echo $withdraw_nonce; ?>" href="#"><?php esc_html_e( 'Withdraw all students', 'CP_TD' ); ?></a>
+			<?php
+			}
+			?>
+			<br />
 			</div>
 		<?php
 
@@ -214,6 +223,12 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 	}
 
 	public function no_items() {
-		_e( 'There are no students enrolled in this course. Add them below.', 'CP_TD' );
+		$course_id = (int) $_GET['id'];
+
+		if ( CoursePress_Data_Capabilities::can_assign_course_student( $course_id ) || CoursePress_Data_Capabilities::can_invite_students( $course_id ) ) {
+			esc_html_e( 'There are no students enrolled in this course. Add them below.', 'CP_TD' );
+		} else {
+			esc_html_e( 'There are no students enrolled in this course.', 'CP_TD' );
+		}
 	}
 }
