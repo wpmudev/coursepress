@@ -601,7 +601,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 				CoursePress.Course.set( 'data', data );
 				CoursePress.Course.save();
 				CoursePress.Course.on( 'coursepress:withdraw_student_success', function(){
-					window.location = window.self.location;
+					window.location.reload();
 				});
 				return false;
 			}
@@ -618,7 +618,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 				CoursePress.Course.set( 'data', data );
 				CoursePress.Course.save();
 				CoursePress.Course.on( 'coursepress:withdraw_all_students_success', function(){
-					window.location = window.self.location;
+					window.location.reload();
 				});
 				return false;
 			}
@@ -670,7 +670,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 				CoursePress.Course.save();
 				CoursePress.Course.on( 'coursepress:invite_student_success', function(){
 					// Reload page
-					window.location = self.location;
+					window.location.reload();
 				});
 			}
 
@@ -713,7 +713,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 					// Check if there are no longer invitation
 					var invited_list = $( '.invited-list' );
 
-					if ( 0 == invited_list.length ) {
+					if ( ! invited_list.length ) {
 						$( '.invited-students' ).hide();
 					}
 				});
