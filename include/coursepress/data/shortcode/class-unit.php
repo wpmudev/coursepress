@@ -561,19 +561,15 @@ class CoursePress_Data_Shortcode_Unit {
 
 		if ( CP_IS_PREMIUM ) {
 			// CERTIFICATE CLASS.
-			// $show_link = CP_Basic_Certificate::option( 'basic_certificate_enabled' );
-			// $show_link = ! empty( $show_link ) ? true : false;
-
-			// Debug code. Remove it!
-			$show_link = false;
+			$show_link = CoursePress_Data_Certificate::is_enabled();
 		}
 
 		if ( is_user_logged_in() && $show_link ) {
 			// COMPLETION LOGIC.
 			if ( CoursePress_Data_Student::is_course_complete( get_current_user_id(), $course_id ) ) {
-				// $certificate = CP_Basic_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'CP_TD' ) );
+				$certificate = CoursePress_Data_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'CP_TD' ) );
 
-				// $content .= '<li class="submenu-item submenu-certificate ' . ( $subpage == 'certificate' ? 'submenu-active' : '') . '">' . $certificate . '</li>';
+				$content .= '<li class="submenu-item submenu-certificate ' . ( $subpage == 'certificate' ? 'submenu-active' : '') . '">' . $certificate . '</li>';
 			}
 		}
 
