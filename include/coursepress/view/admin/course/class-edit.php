@@ -1218,7 +1218,37 @@ class CoursePress_View_Admin_Course_Edit {
 					$json_data['data'] = $data->data;
 
 					$json_data['nonce'] = wp_create_nonce( 'invite_student' );
+
+					// Save invited student
+					$email = sanitize_email( $email_data['email'] );
+					$course_id = (int) $email_data['course_id'];
+					$invited_students = CoursePress_Data_Course::get_setting( $course_id, 'invited_students', array() );
+					$invite_data = array(
+						'first_name' => $email_data['first_name'],
+						'last_name' => $email_data['last_name'],
+						'email' => $email_data['email']
+					);
+					$invited_students[$email] = $invite_data;
+
+					// Save invited data
+					CoursePress_Data_Course::update_setting( $course_id, 'invited_students', $invited_students );
+
 					$success = $response;
+				}
+				break;
+
+			case 'remove_student_invitation':
+				if ( wp_verify_nonce( $data->data->nonce, 'coursepress_remove_invite' ) ) {
+					$course_id = (int) $data->data->course_id;
+					$student_email = sanitize_email( $data->data->email );
+					$invited_students = CoursePress_Data_Course::get_setting( $course_id, 'invited_students', array() );
+
+					if ( ! empty( $invited_students[$student_email] ) ) {
+						unset( $invited_students[$student_email] );
+					}
+					// Resaved invited students
+					CoursePress_Data_Course::update_setting( $course_id, 'invited_students', $invited_students );
+					$success = true;
 				}
 				break;
 

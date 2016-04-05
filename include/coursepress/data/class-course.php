@@ -880,6 +880,13 @@ class CoursePress_Data_Course {
 			return false;
 		}
 
+		// Check invitation list then remove it exist.
+		$invited_students = self::get_setting( $course_id, 'invited_students', array() );
+		if ( is_array( $invited_students ) && ! empty( $invited_students[$student->user_email] ) ) {
+			unset( $invited_students[$student->user_email] );
+			self::update_setting( $course_id, 'invited_students', $invited_students );
+		}
+
 		// If student is already enrolled, exit.
 		$enrolled = self::student_enrolled( $student_id, $course_id );
 		if ( ! empty( $enrolled ) ) {
@@ -1014,8 +1021,12 @@ class CoursePress_Data_Course {
 
 		$type = self::get_setting( $course_id, 'enrollment_type', 'manually' );
 
-		// Not clear yet, why this email has 2 different types.
-		// @see CoursePress_Data_Course::send_invitation()
+		/**
+		 * Check the type of email to send.
+		 *
+		 * @type passcode 	Use for courses which require passcode to access.
+		 * @type default 	Use for normal courses.
+		 **/
 		if ( 'passcode' == $type ) {
 			$type = CoursePress_Helper_Email::COURSE_INVITATION_PASSWORD;
 		} else {
@@ -1030,12 +1041,12 @@ class CoursePress_Data_Course {
 		$user = get_user_by( 'email', $email_args['email'] );
 		if ( $user ) {
 			$email_data['user'] = $user;
-			$email_args['first_name'] = $email_data['first_name'];
-			$email_args['last_name'] = $email_data['last_name'];
 		}
+		$email_args['first_name'] = $email_data['first_name'];
+		$email_args['last_name'] = $email_data['last_name'];
 
 		$sent = CoursePress_Helper_Email::send_email(
-			self::$type,
+			$type,
 			$email_args
 		);
 
