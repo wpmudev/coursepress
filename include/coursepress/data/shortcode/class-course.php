@@ -897,6 +897,9 @@ class CoursePress_Data_Shortcode_Course {
 
 			case 'prerequisite':
 				$prereq = CoursePress_Data_Course::get_setting( $course_id, 'enrollment_prerequisite', array() );
+				if ( ! empty( $prereq ) && is_string( $prereq ) ) {
+					$prereq = array( $prereq );
+				}
 				$prereq_courses = array();
 				foreach ( $prereq as $prereq_id ) {
 					$prereq_courses[] = sprintf(
