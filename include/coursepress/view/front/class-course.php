@@ -1388,8 +1388,10 @@ class CoursePress_View_Front_Course {
 			case 'discussion_show':
 				return CoursePress_Template_Communication::render_discussion();
 
+			case 'workbook':
+				return self::render_course_workbook();
+
 			default:
-				d( $cp_action );
 				$args = array(
 				'course_id' => $post->ID,
 				);
