@@ -35,17 +35,26 @@ class CoursePress_View_Front_Instructor {
 		return $content;
 	}
 
-	public static function parse_request( &$wp ) {
+	public static function parse_request( $wp ) {
 
 		if ( ! array_key_exists( 'instructor_username', $wp->query_vars ) ) {
 			return;
 		}
 
 		$username = sanitize_text_field( $wp->query_vars['instructor_username'] );
-		$instructor = CoursePress_Data_Instructor::instructor_by_login( $username );
-		if ( empty( $instructor ) ) {
+
+		/**
+		 * allow names only if it is allowed
+		 */
+		$show_username = cp_is_true( CoursePress_Core::get_setting( 'instructor/show_username', true ) );
+		$instructor = false;
+
+		if ( $show_username ) {
+			$instructor = CoursePress_Data_Instructor::instructor_by_login( $username );
+		} else {
 			$instructor = CoursePress_Data_Instructor::instructor_by_hash( $username );
 		}
+
 		if ( empty( $instructor ) ) {
 			$wp->set_query_var( 'error', 404 );
 			$wp->set_query_var( 'page_id', false );

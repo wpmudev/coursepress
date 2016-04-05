@@ -494,8 +494,8 @@ class CoursePress_Core {
 		 */
 		$page_id = CoursePress_Core::get_setting( 'pages/instructor' );
 		if ( ! empty( $page_id ) ) {
-			$slug = CoursePress_Core::get_setting( 'slugs/instructor', 'instructor' );
-			$new_rules[ '^'.$slug.'/([^/]+)/?$' ] = sprintf(
+			$slug = CoursePress_Core::get_setting( 'slugs/instructor_profile', 'instructor' );
+			$new_rules[ $slug.'/([^/]+)/?$' ] = sprintf(
 				'index.php?page_id=%d&instructor_username=$matches[1]',
 				$page_id
 			);
