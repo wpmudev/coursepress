@@ -33,21 +33,9 @@ class CoursePress_View_Admin_Course_Edit {
 				/**
 				 * set cap
 				 */
-				if ( is_object( self::$current_course ) ) {
-					/**
-					 * Update own courses
-					 */
-					$instructor_id = get_current_user_id();
-					if ( $instructor_id == self::$current_course->post_author ) {
-						self::$capability = 'coursepress_update_my_course_cap';
-					} else {
-						/**
-						 * Update any assigned course
-						 */
-						if ( CoursePress_Data_Instructor::is_assigned_to_course( $instructor_id, self::$current_course->ID ) ) {
-							self::$capability = 'coursepress_update_course_cap';
-						}
-					}
+				if ( is_object( self::$current_course )
+					&& CoursePress_Data_Capabilities::can_update_course( self::$current_course->ID ) ) {
+					self::$capability = 'coursepress_create_course_cap';
 				}
 			break;
 		}
@@ -79,7 +67,12 @@ class CoursePress_View_Admin_Course_Edit {
 			'menu_title' => self::$menu_title,
 			/** This filter is documented in include/coursepress/helper/class-setting.php */
 			'cap' => apply_filters( 'coursepress_capabilities', self::$capability ),
+			'order' => 10,
 		);
+
+		if ( 'new' == self::$action ) {
+			$pages[self::$slug]['cap'] = 'coursepress_create_course_cap';
+		}
 
 		return $pages;
 	}
@@ -101,6 +94,7 @@ class CoursePress_View_Admin_Course_Edit {
 		$tab = empty( $_GET['tab'] ) ? $first_tab : ( in_array( $_GET['tab'], $tab_keys ) ? sanitize_text_field( $_GET['tab'] ) : '' );
 
 		$method = preg_replace( '/\_$/', '', 'render_tab_' . $tab );
+		$content = '';
 
 		if ( method_exists( __CLASS__, $method ) ) {
 			$content = call_user_func( __CLASS__ . '::' . $method );
@@ -112,6 +106,9 @@ class CoursePress_View_Admin_Course_Edit {
 		// Publish Course Toggle
 		$course_id = isset( $_GET['id'] ) ? (int) $_GET['id'] : 0;
 		$status = get_post_status( $course_id );
+		$user_id = get_current_user_id();
+		$publish_toggle = '';
+
 		$ui = array(
 			'label' => 'Publish Course',
 			'left' => '<i class="fa fa-ban"></i>',
@@ -255,12 +252,16 @@ class CoursePress_View_Admin_Course_Edit {
 		$course_terms_array = CoursePress_Data_Course::get_course_terms( $id, true );
 
 		$class_extra = is_rtl() ? 'chosen-rtl' : '';
+		$manage_category_link = '';
+
+		if ( CoursePress_Data_Capabilities::can_manage_categories() ) {
+			$manage_category_link = sprintf( '<a href="%s" class="context-link">%s</a>', esc_url_raw( $url ), esc_html__( 'Manage Categories', 'CP_TD' ) );
+		}
 
 		$content .= '
 				<div class="wide">
 					<label for="meta_course_category" class="medium">' .
-					esc_html__( 'Course Category', 'CP_TD' ) . '
-						<a class="context-link" href="' . esc_url_raw( $url ) . '">' . esc_html__( 'Manage Categories', 'CP_TD' ) . '</a>
+					esc_html__( 'Course Category', 'CP_TD' ) . $manage_category_link . '
 					</label>
 					<select name="meta_course_category" class="medium chosen-select chosen-select-course ' . $class_extra . '" multiple="true">';
 
@@ -275,6 +276,9 @@ class CoursePress_View_Admin_Course_Edit {
 
 		// Course Language
 		$language = CoursePress_Data_Course::get_setting( $course_id, 'course_language' );
+		if ( empty( $language ) ) {
+			$language = __( 'English', 'CP_TD' );
+		}
 		$content .= '
 				<div class="wide">
 						<label for="meta_course_language">' .
@@ -299,6 +303,7 @@ class CoursePress_View_Admin_Course_Edit {
 		';
 
 		return $content;
+
 	}
 
 	private static function render_setup_step_2() {
@@ -494,19 +499,6 @@ class CoursePress_View_Admin_Course_Edit {
 
 				}
 			}
-
-			// Fix broken pages
-			// $page_titles = get_post_meta( $unit->ID, 'page_title', true );
-			// if ( empty( $page_titles ) ) {
-			// $page_titles = array();
-			// $page_visible = array();
-			// foreach ( $unit['pages'] as $key => $page ) {
-			// $page_titles[ 'page_' . $key ] = $page['title'];
-			// $page_visible[] = true;
-			// }
-			// update_post_meta( $unit->ID, 'page_title', $page_titles );
-			// update_post_meta( $unit->ID, 'show_page_title', $page_visible );
-			// }
 		}
 
 		$content .= '
@@ -539,6 +531,8 @@ class CoursePress_View_Admin_Course_Edit {
 		$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
 		$setup_class = CoursePress_Data_Course::get_setting( $course_id, 'setup_step_3', '' );
 		$setup_class = (int) CoursePress_Data_Course::get_setting( $course_id, 'setup_marker', 0 ) === 2 ? $setup_class . ' setup_marker' : $setup_class;
+		$can_assign_instructor = CoursePress_Data_Capabilities::can_assign_course_instructor( $course_id );
+
 		$content = '
 			<div class="step-title step-3">' . esc_html__( 'Step 3 – Instructors', 'CP_TD' ) . '
 				<div class="status ' . $setup_class . '"></div>
@@ -547,8 +541,7 @@ class CoursePress_View_Admin_Course_Edit {
 				<input type="hidden" name="meta_setup_step_3" value="saved" />
 			';
 
-		// Instructors
-		if ( CoursePress_Data_Capabilities::can_assign_course_instructor( $course_id ) ) {
+		if ( $can_assign_instructor ) {
 			$content .= '
 				<div class="wide">
 						<label for="course_name" class="">' .
@@ -563,19 +556,26 @@ class CoursePress_View_Admin_Course_Edit {
 						<input type="button" class="button button-primary instructor-assign" value="' . esc_attr__( 'Assign', 'CP_TD' ) . '" />
 				</div>';
 		}
-		$content .= '<div class="instructors-info medium" id="instructors-info">
-					<p>' . esc_html__( 'Assigned Instructors:', 'CP_TD' ) . '</p>';
+
+		$content .= '<div class="instructors-info medium" id="instructors-info">';
+		if ( $can_assign_instructor ) {
+			$content .= '<p>' . esc_html__( 'Assigned Instructors:', 'CP_TD' ) . '</p>';
+		} else {
+			$content .= '<p>' . esc_html__( 'You do not have sufficient permission to add instructor!', 'CP_TD' );
+		}
 
 		if ( 0 >= CoursePress_Helper_UI::course_instructors_avatars( $course_id, array(
 			'remove_buttons' => true,
 			'count' => true,
 		) )
 		) {
-			$content .= '
-					<div class="instructor-avatar-holder empty">
-						<span class="instructor-name">' . esc_html__( 'Please Assign Instructor', 'CP_TD' ) . '</span>
-					</div>
-			';
+			if( $can_assign_instructor ) {
+				$content .= '
+						<div class="instructor-avatar-holder empty">
+							<span class="instructor-name">' . esc_html__( 'Please Assign Instructor', 'CP_TD' ) . '</span>
+						</div>
+				';
+			}
 		} else {
 			$content .= CoursePress_Helper_UI::course_instructors_avatars( $course_id, array(), true );
 		}
@@ -583,30 +583,29 @@ class CoursePress_View_Admin_Course_Edit {
 		$content .= '
 				</div>';
 
-		// Instructor Invite
-		if ( CoursePress_Data_Capabilities::can_assign_course_instructor( $course_id ) ) {
+		if ( $can_assign_instructor ) {
+			// Instructor Invite
 			$content .= '
-				<div class="wide">
-					<hr />
+					<div class="wide">
+						<hr />
+						<label>' .
+						esc_html__( 'Invite New Instructor', 'CP_TD' ) . '
+							<p class="description">' . esc_html__( 'If the instructor can not be found in the list above, you will need to invite them via email.', 'CP_TD' ) . '</p>
+						</label>
+						<div class="instructor-invite">
+							<label for="invite_instructor_first_name">' . esc_html__( 'First Name', 'CP_TD' ) . '</label>
+							<input type="text" name="invite_instructor_first_name" placeholder="' . esc_attr__( 'First Name', 'CP_TD' ) . '"/>
+							<label for="invite_instructor_last_name">' . esc_html__( 'Last Name', 'CP_TD' ) . '</label>
+							<input type="text" name="invite_instructor_last_name" placeholder="' . esc_attr__( 'Last Name', 'CP_TD' ) . '"/>
+							<label for="invite_instructor_email">' . esc_html__( 'E-Mail', 'CP_TD' ) . '</label>
+							<input type="text" name="invite_instructor_email" placeholder="' . esc_attr__( 'instructor@email.com', 'CP_TD' ) . '"/>
 
-					<label>' .
-					esc_html__( 'Invite New Instructor', 'CP_TD' ) . '
-						<p class="description">' . esc_html__( 'If the instructor can not be found in the list above, you will need to invite them via email.', 'CP_TD' ) . '</p>
-					</label>
-					<div class="instructor-invite">
-						<label for="invite_instructor_first_name">' . esc_html__( 'First Name', 'CP_TD' ) . '</label>
-						<input type="text" name="invite_instructor_first_name" placeholder="' . esc_attr__( 'First Name', 'CP_TD' ) . '"/>
-						<label for="invite_instructor_last_name">' . esc_html__( 'Last Name', 'CP_TD' ) . '</label>
-						<input type="text" name="invite_instructor_last_name" placeholder="' . esc_attr__( 'Last Name', 'CP_TD' ) . '"/>
-						<label for="invite_instructor_email">' . esc_html__( 'E-Mail', 'CP_TD' ) . '</label>
-						<input type="text" name="invite_instructor_email" placeholder="' . esc_attr__( 'instructor@email.com', 'CP_TD' ) . '"/>
-
-						<div class="submit-message">
-							<input class="button-primary" name="invite_instructor_trigger" id="invite-instructor-trigger" type="button" value="' . esc_attr__( 'Send Invite', 'CP_TD' ) . '">
+							<div class="submit-message">
+								<input class="button-primary" name="invite_instructor_trigger" id="invite-instructor-trigger" type="button" value="' . esc_attr__( 'Send Invite', 'CP_TD' ) . '">
+							</div>
 						</div>
 					</div>
-				</div>
-';
+					';
 		}
 
 		/**
@@ -1005,10 +1004,9 @@ class CoursePress_View_Admin_Course_Edit {
 			'order' => 10,
 			'buttons' => 'none',
 		);
+		$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
 
 		if ( 'edit' == self::_current_action() ) {
-
-			$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
 			if ( CoursePress_Data_Capabilities::can_view_course_units( $course_id ) ) {
 				$units = CoursePress_Data_Course::get_unit_ids( $course_id, array( 'publish', 'draft' ) );
 				self::$tabs['units'] = array(
@@ -1019,13 +1017,14 @@ class CoursePress_View_Admin_Course_Edit {
 				);
 			}
 
+			if ( CoursePress_Data_Capabilities::can_view_course_students( $course_id ) ) {
 			self::$tabs['students'] = array(
 				'title' => sprintf( __( 'Students (%s)', 'CP_TD' ), CoursePress_Data_Course::count_students( $course_id ) ),
 				'description' => __( 'Edit your course specific settings below.', 'CP_TD' ),
 				'order' => 30,
 				'buttons' => 'none',
 			);
-
+			}
 		}
 
 		// Make sure that we have all the fields we need
@@ -1065,7 +1064,6 @@ class CoursePress_View_Admin_Course_Edit {
 				if (
 					isset( $step_data->step )
 					&& wp_verify_nonce( $data->data->nonce, 'setup-course' )
-					&& CoursePress_Data_Capabilities::can_update_course( $step_data->course_id )
 				) {
 
 					$step = (int) $step_data->step;
@@ -1383,6 +1381,14 @@ class CoursePress_View_Admin_Course_Edit {
 				'<input type="button" class="button step next step-%d" value="%s" />',
 				esc_attr( $step ),
 				esc_attr__( 'Next', 'CP_TD' )
+			);
+		}
+
+		// Finish button
+		if ( 6 == $step ) {
+			$content .= sprintf(
+				'<input type="button" class="button step finish step-6" value="%s" />',
+				esc_attr__( 'Finish', 'CP_TD' )
 			);
 		}
 		/**

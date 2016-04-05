@@ -37,6 +37,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  *
  * Our theme for this list table is going to be movies.
  */
+
 class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 
 	private $count = array();
@@ -90,6 +91,13 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			'status' => __( 'Status', 'CP_TD' ),
 			'actions' => __( 'Actions', 'CP_TD' ),
 		);
+
+		if ( ! CoursePress_Data_Capabilities::can_manage_courses() ) {
+			unset( $columns['cb'], $columns['actions'], $columns['units'] );
+		}
+		if ( ! CoursePress_Data_Capabilities::can_delete_course( 0 ) ) {
+			unset( $columns['actions'] );
+		}
 
 		return $columns;
 	}
@@ -170,19 +178,19 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			);
 		}
 
-		/**
-		 * check instructor privileges
-		 */
-		if ( CoursePress_Data_Capabilities::can_add_course() ) {
-			$actions['duplicate'] = sprintf( '<a data-nonce="%s" data-id="%s" class="duplicate-course-link">%s</a>', $duplicate_nonce, $item->ID, __( 'Duplicate Course', 'CP_TD' ) );
-		}
+		// Apply course capabilities
+		$user_id = get_current_user_id();
 
-		/**
-		 * check instructor privileges
-		 */
-		if ( ! CoursePress_Data_Capabilities::can_update_course( $item ) ) {
+		if ( ! CoursePress_Data_Capabilities::can_update_course( $item->ID, $user_id ) ) {
 			unset( $actions['edit'] );
+		}
+		if ( ! CoursePress_Data_Capabilities::can_create_course( $user_id ) ) {
+			unset( $actions['duplicate'] );
+		}
+		if( ! CoursePress_Data_Capabilities::can_view_course_units( $item->ID, $user_id ) ) {
 			unset( $actions['units'] );
+		}
+		if ( ! CoursePress_Data_Capabilities::can_view_course_students( $item->ID ) ) {
 			unset( $actions['students'] );
 		}
 
@@ -209,6 +217,13 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			'unpublish' => __( 'Unpublish', 'CP_TD' ),
 			'delete' => __( 'Delete', 'CP_TD' ),
 		);
+
+		if ( ! CoursePress_Data_Capabilities::can_delete_course( 0 ) ) {
+			unset( $actions['delete'] );
+		}
+		if ( ! CoursePress_Data_Capabilities::can_change_course_status( 0 ) ) {
+			unset( $actions['publish'], $actions['unpublish'] );
+		}
 		return $actions;
 	}
 
@@ -243,44 +258,43 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 
 	public function column_status( $item ) {
 
-		/**
-		 * check instructor privileges
-		 */
-		if ( ! CoursePress_Data_Capabilities::can_update_course( $item ) ) {
-			return '&nbsp;';
-		}
+		$user_id = get_current_user_id();
+		$publish_toggle = ucfirst( $item->post_status );
 
-		// Publish Course Toggle
-		$course_id = $item->ID;
-		$status = get_post_status( $course_id );
-		$ui = array(
-			'label' => '',
-			'left' => '<i class="fa fa-ban"></i>',
-			'left_class' => 'red',
-			'right' => '<i class="fa fa-check"></i>',
-			'right_class' => 'green',
-			'state' => 'publish' === $status ? 'on' : 'off',
-			'data' => array(
-				'nonce' => wp_create_nonce( 'publish-course' ),
-			),
-		);
-		$ui['class'] = 'course-' . $course_id;
-		$publish_toggle = ! empty( $course_id ) ? CoursePress_Helper_UI::toggle_switch( 'publish-course-toggle-' . $course_id, 'publish-course-toggle-' . $course_id, $ui ) : '';
+		if ( CoursePress_Data_Capabilities::can_change_course_status( $item->ID, $user_id ) ) {
+			// Publish Course Toggle
+			$course_id = $item->ID;
+			$status = get_post_status( $course_id );
+			$ui = array(
+				'label' => '',
+				'left' => '<i class="fa fa-ban"></i>',
+				'left_class' => 'red',
+				'right' => '<i class="fa fa-check"></i>',
+				'right_class' => 'green',
+				'state' => 'publish' === $status ? 'on' : 'off',
+				'data' => array(
+					'nonce' => wp_create_nonce( 'publish-course' ),
+				),
+			);
+			$ui['class'] = 'course-' . $course_id;
+			$publish_toggle = ! empty( $course_id ) ? CoursePress_Helper_UI::toggle_switch( 'publish-course-toggle-' . $course_id, 'publish-course-toggle-' . $course_id, $ui ) : '';
+		}
 
 		return $publish_toggle;
 	}
 
 	public function column_actions( $item ) {
-		/**
-		 * check instructor privileges
-		 */
-		if ( ! CoursePress_Data_Capabilities::can_delete_course( $item ) ) {
-			return '&nbsp;';
+		$delete_link = '--';
+		$user_id = get_current_user_id();
+
+		if ( CoursePress_Data_Capabilities::can_delete_course( $item->ID, $user_id ) ) {
+			$delete_nonce = wp_create_nonce( 'delete_course' );
+			$delete_link = sprintf(
+				'<a data-id="%s" data-nonce="%s" class="delete-course-link"><i class="fa fa-times-circle remove-btn"></i></a>', $item->ID, $delete_nonce
+			);
 		}
-		$delete_nonce = wp_create_nonce( 'delete_course' );
-		return sprintf(
-			'<a data-id="%s" data-nonce="%s" class="delete-course-link"><i class="fa fa-times-circle remove-btn"></i></a>', $item->ID, $delete_nonce
-		);
+
+		return $delete_link;
 	}
 
 	/** ************************************************************************
@@ -307,11 +321,8 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 	public function column_default( $item, $column_name ) {
 
 		switch ( $column_name ) {
-
 			case 'ID':
-				// case 'post_title':
 				return $item->{$column_name};
-
 		}
 
 	}
@@ -338,10 +349,12 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		$valid_categories = array_keys( $valid_categories );
 		$category = isset( $_GET['category'] ) && in_array( $_GET['category'], $valid_categories ) ? sanitize_text_field( $_GET['category'] ) : false;
 
-		$post_status = 'all' == $tab ? array( 'publish', 'private' ) : $tab;
+		$post_status = array( 'publish', 'private', 'draft' );
 
-		// Debug
-		$post_status = 'all';
+		// Hide private courses
+		if ( ! CoursePress_Data_Capabilities::can_manage_courses() ) {
+			$post_status = 'publish';
+		}
 
 		/**
 		 * REQUIRED. Now we need to define our column headers. This includes a complete
@@ -395,9 +408,24 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			's' => $s,
 		);
 
-		// @todo: Add permissions
-		// Add category filter
-		if ( $category ) {
+		if ( ! CoursePress_Data_Capabilities::can_view_others_course() ) {
+			$user_id = get_current_user_id();
+			$post_args['author'] = $user_id;
+
+			if ( user_can( $user_id, 'coursepress_update_course_cap' ) ) {
+
+				$assigned_courses = CoursePress_Data_Instructor::get_assigned_courses_ids( $user_id );
+
+				if ( ! empty( $assigned_courses ) ) {
+					$post_args['post__in'] = $assigned_courses;
+					unset( $post_args['author'] );
+					add_filter( 'posts_where', array( 'CoursePress_Data_Instructor', 'filter_by_whereall' ) );
+				}
+
+			} 
+		}
+
+		if ( $category && CoursePress_Data_Capabilities::can_manage_categories() ) {
 			$post_args['tax_query'] = array(
 				array(
 					'taxonomy' => 'course_category',
@@ -405,6 +433,10 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 					'terms' => array( $category ),
 				),
 			);
+		}
+
+		if ( isset( $_GET['instructor_id'] ) ) {
+			$post_args['author'] = (int) $_GET['instructor_id'];
 		}
 
 		$query = new WP_Query( $post_args );
@@ -512,9 +544,15 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		?>
 		<div class="tablenav <?php echo esc_attr( $which ); ?>">
 
-		<div class="alignleft actions bulkactions">
-			<?php $this->bulk_actions( $which ); ?>
-		</div>
+		<?php
+			if ( Coursepress_Data_Capabilities::can_manage_courses() ) {
+		?>
+			<div class="alignleft actions bulkactions">
+				<?php $this->bulk_actions( $which ); ?>
+			</div>
+		<?php
+			}
+		?>
 		<div class="alignleft actions category-filter">
 			<?php $this->course_filter( $which ); ?>
 		</div>

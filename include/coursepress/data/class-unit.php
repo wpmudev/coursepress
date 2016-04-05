@@ -220,17 +220,19 @@ class CoursePress_Data_Unit {
 
 		$status = array();
 
-		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
-		$mandatory_done = CoursePress_Data_Student::is_mandatory_done( $student_id, $course_id, $unit_id, $student_progress );
-		$unit_completed = CoursePress_Data_Student::is_unit_complete( $student_id, $course_id, $unit_id, $student_progress );
+		if ( ! empty( $previous_unit_id ) ) {
+			$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
+			$mandatory_done = CoursePress_Data_Student::is_mandatory_done( $student_id, $course_id, $previous_unit_id, $student_progress );
+			$unit_completed = CoursePress_Data_Student::is_unit_complete( $student_id, $course_id, $previous_unit_id, $student_progress );
 
-		CoursePress_Helper_Utility::set_array_val( $status, 'mandatory_required/enabled', $force_current_unit_completion );
-		CoursePress_Helper_Utility::set_array_val( $status, 'mandatory_required/result', $mandatory_done );
+			CoursePress_Helper_Utility::set_array_val( $status, 'mandatory_required/enabled', $force_current_unit_completion );
+			CoursePress_Helper_Utility::set_array_val( $status, 'mandatory_required/result', $mandatory_done );
+		
+			CoursePress_Helper_Utility::set_array_val( $status, 'completion_required/enabled', $force_current_unit_successful_completion );
+			CoursePress_Helper_Utility::set_array_val( $status, 'completion_required/result', $unit_completed );
+		}
 
-		CoursePress_Helper_Utility::set_array_val( $status, 'completion_required/enabled', $force_current_unit_successful_completion );
-		CoursePress_Helper_Utility::set_array_val( $status, 'completion_required/result', $unit_completed );
-
-		if ( $available ) {
+		if ( ! empty( $status ) ) {
 			$available = $status['mandatory_required']['enabled'] ? $status['mandatory_required']['result'] : $available;
 			$available = $status['completion_required']['enabled'] ? $status['completion_required']['result'] : $available;
 		}
@@ -254,6 +256,23 @@ class CoursePress_Data_Unit {
 		$status['available'] = $available;
 
 		return $status;
+	}
+
+	public static function get_previous_unit_id( $course_id, $unit_id ) {
+		$previous_unit = false;
+		$units = CoursePress_Data_Course::get_units( $course_id, array( 'publish' ) );
+
+		if ( $units ) {
+			foreach ( $units as $unit_index => $unit ) {
+				if ( $unit->ID === $unit_id ) {
+					if ( $unit_index > 0 ) {
+						$previous_unit = $units[ $unit_index - 1 ];
+					}
+				}
+			}
+		}
+		
+		return $previous_unit ? $previous_unit->ID : false;
 	}
 
 	/**

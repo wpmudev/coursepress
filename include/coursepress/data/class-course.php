@@ -345,10 +345,6 @@ class CoursePress_Data_Course {
 
 		self::update_setting( $course_id, 'instructors', $instructors );
 
-		/**
-		 * update instructor roles
-		 */
-		CoursePress_Data_Capabilities::assign_role_capabilities( $instructor_id, '', '' );
 	}
 
 	public static function remove_instructor( $course_id, $instructor_id ) {
@@ -357,25 +353,17 @@ class CoursePress_Data_Course {
 
 		foreach ( $instructors as $idx => $instructor ) {
 			if ( (int) $instructor === $instructor_id ) {
-				CoursePress_Data_Instructor::removed_from_course( $instructor_id, $course_id );
 				unset( $instructors[ $idx ] );
-				/**
-				 * delete information to instructor
-				 */
-				delete_user_option(
-					$instructor_id,
-					'course_' . $course_id,
-					$global_option
-				);
 			}
 		}
 
-		self::update_setting( $course_id, 'instructors', $instructors );
-
+		CoursePress_Data_Instructor::removed_from_course( $instructor_id, $course_id );
 		/**
-		 * update instructor roles
+		 * delete information to instructor
 		 */
-		CoursePress_Data_Capabilities::assign_role_capabilities( $instructor_id, '', '' );
+		delete_user_option( $instructor_id, 'course_' . $course_id, $global_option );
+
+		self::update_setting( $course_id, 'instructors', $instructors );
 	}
 
 	public static function get_setting( $course_id, $key = true, $default = null ) {
@@ -715,7 +703,7 @@ class CoursePress_Data_Course {
 
 			// Fix broken page titles
 			$page_titles = get_post_meta( $post_id, 'page_title', true );
-			if ( empty( $page_titles ) ) {
+			if ( empty( $page_titles ) && ! empty( $unit['pages'] ) ) {
 				$page_titles = array();
 				$page_visible = array();
 				foreach ( $unit['pages'] as $key => $page ) {
@@ -1066,7 +1054,7 @@ class CoursePress_Data_Course {
 	}
 
 	public static function is_full( $course_id ) {
-		$limited = cp_is_true( self::get_setting( $course_id, 'class_size' ) );
+		$limited = cp_is_true( self::get_setting( $course_id, 'class_limited' ) );
 
 		if ( $limited ) {
 			$limit = self::get_setting( $course_id, 'class_size' );
@@ -1524,6 +1512,35 @@ class CoursePress_Data_Course {
 		return array_sum( get_object_vars( wp_count_posts( self::get_post_type_name() ) ) );
 	}
 
+	public static function get_course( $course_id = 0 ) {
+		$course_id = ! $course_id ? get_the_ID() : $course_id;
+		$course = get_post( $course_id );
+
+		// Set duration
+		$date_format = get_option( 'date_format' );
+		$start_date = self::get_setting( $course_id, 'course_start_date' );
+		$end_date = self::get_setting( $course_id, 'course_end_date' );
+		$duration = ceil( ( strtotime( $end_date ) - strtotime( $start_date ) ) / 86400 );
+		
+		$course->start_date = date_i18n( $date_format, strtotime( $start_date, current_time( 'timestamp' ) ) );
+		$course->end_date = $duration > 0 ? date_i18n( $date_format, strtotime( $end_date, current_time( 'timestamp' ) ) ) : '--';
+		$course->duration = $duration > 0 ? sprintf( _n( '%s Day', '%s Days', $duration, 'CP_TD' ), $duration ) : __( 'Open-ended', 'CP_TD' );
+		
+		// Links
+		$course->permalink = get_permalink( $course_id );
+		$course->edit_link = add_query_arg(
+			array(
+				'page' => CoursePress_View_Admin_Course_Edit::$slug,
+				'id' => $course_id,
+				'action' => 'edit'
+			),
+			admin_url( 'admin.php' )
+		);
+
+		$course = apply_filters( 'coursepress_get_course', $course, $course_id );
+
+		return $course;
+	}
 
 	/**
 	 * duplciate course
@@ -1630,5 +1647,6 @@ class CoursePress_Data_Course {
 		$json_data['data'] = $data->data;
 		$json_data['nonce'] = wp_create_nonce( 'duplicate_course' );
 		return $json_data;
+
 	}
 }

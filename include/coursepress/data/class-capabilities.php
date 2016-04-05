@@ -28,6 +28,7 @@ class CoursePress_Data_Capabilities {
 			'coursepress_settings_cap' => 1,
 			/* Courses */
 			'coursepress_create_course_cap' => 1,
+			'coursepress_view_others_course_cap' => 1,
 			'coursepress_update_course_cap' => 1,
 			'coursepress_update_my_course_cap' => 1,
 			'coursepress_update_all_courses_cap' => 0, // NOT IMPLEMENTED YET
@@ -67,10 +68,10 @@ class CoursePress_Data_Capabilities {
 			'coursepress_add_move_my_assigned_students_cap' => 1,
 			// 'coursepress_change_students_group_class_cap' => 0,
 			// 'coursepress_change_my_students_group_class_cap' => 0,
-			'coursepress_add_new_students_cap' => 0, // DEPRECATED
-			'coursepress_send_bulk_my_students_email_cap' => 0, // DEPRECATED
-			'coursepress_send_bulk_students_email_cap' => 0, // DEPRECATED
-			'coursepress_delete_students_cap' => 0, // DEPRECATED
+			//'coursepress_add_new_students_cap' => 0, // DEPRECATED
+			//'coursepress_send_bulk_my_students_email_cap' => 0, // DEPRECATED
+			//'coursepress_send_bulk_students_email_cap' => 0, // DEPRECATED
+			//'coursepress_delete_students_cap' => 0, // DEPRECATED
 			/* Groups */
 			'coursepress_settings_groups_page_cap' => 0,
 			// 'coursepress_settings_shortcode_page_cap' => 0,
@@ -115,6 +116,15 @@ class CoursePress_Data_Capabilities {
 	public static function init() {
 		add_action( 'set_user_role', array( __CLASS__, 'assign_role_capabilities' ), 10, 3 );
 		add_action( 'wp_login', array( __CLASS__, 'restore_capabilities' ), 10, 2 );
+		add_action( 'admin_init', array( __CLASS__, 'fix_admin_capabilities' ) );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			// Filter the capability of the current user
+			add_filter( 'user_has_cap', array( __CLASS__, 'user_cap' ), 10, 3 );
+
+			// If current user can view and create categories but not edit
+			add_filter( 'tag_row_actions', array( __CLASS__, 'filter_row_actions' ), 10, 2 );
+		}
 	}
 
 	/**
@@ -154,16 +164,22 @@ class CoursePress_Data_Capabilities {
 			self::assign_instructor_capabilities( $user->ID );
 			return;
 		}
-		self::remove_instructor_capabilities( $user );
 	}
 
 	public static function remove_instructor_capabilities( $user ) {
 		if ( ! is_object( $user ) ) {
-			$user = new WP_User( $user_id );
+			$user = new WP_User( $user );
 		}
 		$capability_types = self::$capabilities['instructor'];
 		foreach ( $capability_types as $key => $value ) {
 			$user->remove_cap( $key );
+		}
+	}
+
+	public static function fix_admin_capabilities() {
+		$user_id = get_current_user_id();
+		if ( user_can( $user_id, 'manage_options' ) ) {
+			self::assign_admin_capabilities( $user_id );
 		}
 	}
 
@@ -172,17 +188,45 @@ class CoursePress_Data_Capabilities {
 			$user_id = CoursePress_Helper_Utility::get_id( $user );
 			$user = new WP_User( $user_id );
 		}
-		/**
-		 * do not add_cap if user can manage_options
-		 */
-		if ( user_can( $user->ID, 'manage_options' ) ) {
-			return;
-		}
+
 		$capability_types = self::$capabilities['instructor'];
 		foreach ( $capability_types as $key => $value ) {
 			$user->add_cap( $key );
 		}
 
+	}
+
+	public static function can_manage_courses( $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		$return = user_can( $user_id, 'manage_options' );
+
+		if ( ! $return ) {
+			$return = user_can( $user_id, 'coursepress_courses_cap' );
+		}
+
+		return $return;
+	}
+
+	/**
+	 * Can an instructor view other intructors courses?
+	 *
+	 * @since 2.0
+	 * @param (int) $user_id	Default current user ID.
+	 * @return boolen
+	 **/
+	public static function can_view_others_course( $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		$return = user_can( $user_id, 'manage_options' );
+
+		if ( ! $return ) {
+			$return = user_can( $user_id, 'coursepress_view_others_course_cap' );
+		}
+
+		return $return;
 	}
 
 	/**
@@ -194,22 +238,20 @@ class CoursePress_Data_Capabilities {
 	 *
 	 * @return boolean Can or can't? - this is a question.
 	 */
-	public static function can_add_course( $user_id = '' ) {
+	public static function can_create_course( $user_id = '' ) {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
-		if ( user_can( $user_id, 'manage_options' ) ) {
-			return true;
+
+		$return = user_can( $user_id, 'manage_options' );
+
+		if ( ! $return ) {
+			if ( self::can_manage_courses( $user_id ) ) {
+				$return = user_can( $user_id, 'coursepress_create_course_cap' );
+			}
 		}
-		/**
-		 * Create new courses
-		 */
-		/** This filter is documented in include/coursepress/helper/class-setting.php */
-		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_course_cap' );
-		if ( user_can( $user_id, $capability ) ) {
-			return true;
-		}
-		return false;
+
+		return $return;
 	}
 
 	/**
@@ -219,32 +261,30 @@ class CoursePress_Data_Capabilities {
 	 *
 	 * @return bool
 	 */
-	public static function can_update_course( $course, $user_id = '' ) {
+	public static function can_update_course( $course_id, $user_id = '' ) {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
-		if ( user_can( $user_id, 'manage_options' ) ) {
-			return true;
-		}
-		$course_id = is_object( $course )? $course->ID : $course;
-		if ( CoursePress_Data_Instructor::is_assigned_to_course( $user_id, $course_id ) ) {
-			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_update_course_cap' );
-			if ( user_can( $user_id, $capability ) ) {
-				return true;
+		$return = user_can( $user_id, 'manage_options' );
+		$post_status = get_post_status( $course_id );
+
+		if ( ! $return && self::can_manage_courses( $user_id ) && self::can_create_course() ) {
+			$course_creator = self::is_course_creator( $course_id, $user_id );
+			$is_instructor = self::is_course_instructor( $course_id, $user_id );
+
+			if ( $course_creator ) {
+				if ( in_array( $post_status, array( 'private', 'draft' ) ) ) {
+					// If the course is not public yet, always give the owner write permission
+					$return = true;
+				} else {
+					$return = user_can( $user_id, 'coursepress_update_my_course_cap' );
+				}
+			} elseif ( $is_instructor ) {
+				$return = user_can( $user_id, 'coursepress_update_course_cap' );
 			}
 		}
-		/**
-		 * update my own course
-		 */
-		if ( self::is_course_creator( $course, $user_id ) ) {
-			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_update_my_course_cap' );
-			if ( user_can( $user_id, $capability ) ) {
-				return true;
-			}
-		}
-		return false;
+
+		return $return;
 	}
 
 	/**
@@ -254,35 +294,29 @@ class CoursePress_Data_Capabilities {
 	 *
 	 * @return bool
 	 */
-	public static function can_delete_course( $course, $user_id = '' ) {
+	public static function can_delete_course( $course_id, $user_id = '' ) {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
-		if ( user_can( $user_id, 'manage_options' ) ) {
-			return true;
-		}
-		/**
-		 * delete my own course
-		 */
-		if ( self::is_course_creator( $course, $user_id ) ) {
-			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_delete_my_course_cap' );
-			if ( user_can( $user_id, $capability ) ) {
-				return true;
+		$return = user_can( $user_id, 'manage_options' );
+
+		if ( ! $return ) {
+			if ( (int) $course_id > 0 ) {
+				$course_creator = self::is_course_creator( $course_id, $user_id );
+				$is_instructor = self::is_course_instructor( $course_id, $user_id );
+	
+				if ( $course_creator ) {
+					$return = user_can( $user_id, 'coursepress_delete_my_course_cap' );
+				} elseif ( $is_instructor ) {
+					$return = user_can( $user_id, 'coursepress_delete_course_cap' );
+				}
+			} else {
+				$return = user_can( $user_id, 'coursepress_delete_course_cap' ) || user_can( $user_id, 'coursepress_delete_my_course_cap' );
 			}
 		}
-		/**
-		 * delete any assigned course
-		 */
-		$course_id = is_object( $course )? $course->ID : $course;
-		if ( CoursePress_Data_Instructor::is_assigned_to_course( $user_id, $course_id ) ) {
-			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_delete_course_cap' );
-			if ( user_can( $user_id, $capability ) ) {
-				return true;
-			}
-		}
-		return false;
+
+		return $return;
+
 	}
 
 	/**
@@ -292,34 +326,41 @@ class CoursePress_Data_Capabilities {
 	 *
 	 * @return bool
 	 */
-	public static function can_change_course_status( $course, $user_id = '' ) {
+	public static function can_change_course_status( $course_id, $user_id = '' ) {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
-		if ( user_can( $user_id, 'manage_options' ) ) {
-			return true;
-		}
-		/**
-		 * change_status any assigned course
-		 */
-		if ( self::is_course_instructor( $course, $user_id ) ) {
-			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_change_course_status_cap' );
-			if ( user_can( $user_id, $capability ) ) {
-				return true;
+		$return = user_can( $user_id, 'manage_options' );
+
+		if ( ! $return ) {
+			if ( (int) $course_id > 0 ) {
+				$course_creator = self::is_course_creator( $course_id, $user_id );
+				$is_instructor = self::is_course_instructor( $course_id, $user_id );
+	
+				if ( $course_creator ) {
+					$return = user_can( $user_id, 'coursepress_change_my_course_status_cap' );
+				} elseif ( $is_instructor ) {
+					$return = user_can( $user_id, 'coursepress_change_course_status_cap' );
+				}
+			} else {
+				$return = user_can( $user_id, 'coursepress_change_my_course_status_cap' ) || user_can( $user_id, 'coursepress_change_course_status_cap' );
 			}
 		}
-		/**
-		 * change_status my own course
-		 */
-		if ( empty( $course ) || self::is_course_creator( $course, $user_id ) ) {
-			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_change_my_course_status_cap' );
-			if ( user_can( $user_id, $capability ) ) {
-				return true;
-			}
+
+		return $return;
+	}
+
+	public static function can_manage_categories( $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
 		}
-		return false;
+		$return = user_can( $user_id, 'manage_options' );
+
+		if ( ! $return ) {
+			$return = user_can( $user_id, 'coursepress_course_categories_manage_terms_cap' );
+		}
+
+		return $return;
 	}
 
 	/**
@@ -333,6 +374,7 @@ class CoursePress_Data_Capabilities {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
+
 		if ( user_can( $user_id, 'manage_options' ) ) {
 			return true;
 		}
@@ -342,6 +384,7 @@ class CoursePress_Data_Capabilities {
 			return true;
 		}
 		return false;
+
 	}
 
 	/**
@@ -355,11 +398,27 @@ class CoursePress_Data_Capabilities {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
+		$return = user_can( $user_id, 'manage_options' );
 
-		$can_update_course = self::can_update_course( $course_id, $user_id );
-		$can_create_units = self::can_create_unit( $user_id );
+		if ( ! $return ) {
+			$course_creator = self::is_course_creator( $course_id, $user_id );
+			$is_instructor = self::is_course_instructor( $course_id, $user_id );
 
-		return ( $can_update_course && $can_create_units ) || user_can( $user_id, 'manage_options' ) ? true : false;
+			if ( $course_creator ) {
+				$post_status = get_post_status( $course_id );
+
+				if ( 'publish' != $post_status ) {
+					// If the course is not public yet, always give the owner the write permission
+					$return = true;
+				} else {
+					$return = user_can( $user_id, 'coursepress_update_my_course_unit_cap' );
+				}
+			} elseif ( $is_instructor ) {
+				$return = self::can_create_unit() || user_can( $user_id, 'coursepress_update_course_unit_cap' );
+			}
+		}
+
+		return $return;
 	}
 
 	/**
@@ -367,28 +426,23 @@ class CoursePress_Data_Capabilities {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param WP_Post/integer  $course Course data or $course_id
+	 * @param (int) $course_id	The ID of the currently course.
 	 * @return boolean Can or can't? - this is a question.
 	 */
-	public static function can_view_course_units( $course, $user_id = '' ) {
+	public static function can_view_course_units( $course_id, $user_id = '' ) {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
-		if ( user_can( $user_id, 'manage_options' ) ) {
-			return true;
+		$return = user_can( $user_id, 'manage_options' );
+
+		if ( ! $return ) {
+			if ( self::can_manage_courses( $user_id ) ) {
+				$return = self::can_update_course( $course_id );
+			}
 		}
-		/**
-		 * check can view every courses
-		 */
-		/** This filter is documented in include/coursepress/helper/class-setting.php */
-		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_view_all_units_cap' );
-		if ( user_can( $user_id, $capability ) ) {
-			return true;
-		}
-		/**
-		 * if can edit, then , can view!
-		 */
-		return self::can_update_course( $course, $user_id );
+
+		return $return;
+
 	}
 
 	/**
@@ -415,19 +469,14 @@ class CoursePress_Data_Capabilities {
 			if ( user_can( $user_id, $capability ) ) {
 				return true;
 			}
-		}
-		/**
-		 * Update any unit within assigned courses
-		 */
-		$course_id = is_object( $course )? $course->ID : $course;
-		$my_course = self::is_course_instructor( $course_id, $user_id );
-		if ( $my_course ) {
+		} else {
 			/** This filter is documented in include/coursepress/helper/class-setting.php */
 			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_update_course_unit_cap' );
 			if ( user_can( $user_id, $capability ) ) {
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -455,16 +504,13 @@ class CoursePress_Data_Capabilities {
 			if ( user_can( $user_id, $capability ) ) {
 				return true;
 			}
+		} else {
+			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_delete_course_units_cap' );
+			if ( user_can( $user_id, $capability ) ) {
+				return true;
+			}
 		}
-		/**
-		 * Delete any unit within assigned courses
-		 */
-		$my_course = self::is_course_instructor( $course, $user_id );
-		/** This filter is documented in include/coursepress/helper/class-setting.php */
-		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_delete_my_course_units_cap' );
-		if ( user_can( $user_id, $capability ) ) {
-			return true;
-		}
+
 		return false;
 	}
 
@@ -488,22 +534,18 @@ class CoursePress_Data_Capabilities {
 		$my_unit = self::is_unit_creator( $unit_id, $user_id );
 		if ( $my_unit ) {
 			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_change_status_my_course_units_cap' );
+			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_change_my_course_unit_status_cap' );
 			if ( user_can( $user_id, $capability ) ) {
 				return true;
 			}
-		}
-		/**
-		 * change_status assigned
-		 */
-		$my_course = self::is_course_instructor( $course, $user_id );
-		if ( empty( $unit_id ) || $my_course ) {
+		} else {
 			/** This filter is documented in include/coursepress/helper/class-setting.php */
 			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_change_course_unit_status_cap' );
 			if ( user_can( $user_id, $capability ) ) {
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -515,38 +557,55 @@ class CoursePress_Data_Capabilities {
 	 * @param WP_Post $course Course data.
 	 * @return boolean Can or can't? - this is a question.
 	 */
-	public static function can_assign_course_instructor( $course, $user_id = '' ) {
+	public static function can_assign_course_instructor( $course_id, $user_id = '' ) {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
-		if ( user_can( $user_id, 'manage_options' ) ) {
-			return true;
-		}
-		/**
-		 * check can assign instructor every courses
-		 */
-		/** This filter is documented in include/coursepress/helper/class-setting.php */
-		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_assign_and_assign_instructor_course_cap' );
-		if ( user_can( $user_id, $capability ) ) {
-			return true;
-		}
-		/**
-		 * check instructor
-		 */
-		$course_id = is_object( $course )? $course->ID : $course;
-		if ( self::is_course_instructor( $course_id, $user_id ) ) {
-			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_assign_and_assign_instructor_my_course_cap' );
-			if ( user_can( $user_id, $capability ) ) {
-				return true;
+
+		$return = user_can( $user_id, 'manage_options' );
+
+		if ( ! $return ) {
+			$course_creator = self::is_course_creator( $course_id, $user_id );
+
+			if ( ! $course_id || $course_creator ) {
+				$return = user_can( $user_id, 'coursepress_assign_and_assign_instructor_my_course_cap' );
+			} else {
+				$return = user_can( $user_id, 'coursepress_assign_and_assign_instructor_course_cap' );
 			}
 		}
-		return false;
+
+		return $return;
+	}
+
+	public static function can_view_students( $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		$return = user_can( $user_id, 'manage_options' );
+
+		if ( ! $return ) {
+			$return = ( user_can( $user_id, 'coursepress_courses_cap' ) && user_can( $user_id, 'coursepress_students_cap' ) );
+		}
+
+		return $return;
 
 	}
 
+	public static function can_view_course_students( $course_id, $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		$return = user_can( $user_id, 'manage_options' );
+		$post_status = get_post_status( $course_id );
+
+		if ( ! $return ) {
+			$return = user_can( $user_id, 'coursepress_students_cap' ) && 'publish' == $post_status;
+		}
+
+		return $return;
+	}
 	/**
-	 * Can the user invite students?
+	 * Can the user add students?
 	 *
 	 * @since 1.0.0
 	 *
@@ -556,13 +615,86 @@ class CoursePress_Data_Capabilities {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
-		if ( user_can( $user_id, 'manage_options' ) ) {
-			return true;
+		$return = user_can( $user_id, 'manage_options' ) || user_can( $user_id, 'coursepress_add_move_students_cap' );
+
+		if ( ! $return ) {
+			$course_creator = self::is_course_creator( $course_id, $user_id );
+			$is_instructor = self::is_course_instructor( $course_id, $user_id );
+
+			if ( $course_creator ) {
+				$return = user_can( $user_id, 'coursepress_add_move_my_students_cap' );
+			} elseif ( $is_instructor ) {
+				$return = user_can( $user_id, 'coursepress_add_move_my_assigned_students_cap' );
+			}
 		}
 
-		$my_course = self::is_course_instructor( $course_id, $user_id );
+		return $return;
+	}
 
-		return ( $my_course && user_can( $user_id, 'coursepress_invite_my_students_cap' ) ) || user_can( $user_id, 'coursepress_invite_students_cap' ) || user_can( $user_id, 'manage_options' ) ? true : false;
+	public static function can_invite_students( $course_id, $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		$return = user_can( $user_id, 'manage_options' );
+
+		if ( ! $return ) {
+			$course_creator = self::is_course_creator( $course_id, $user_id );
+			$is_instructor = self::is_course_instructor( $course_id, $user_id );
+
+			if ( $course_creator ) {
+				$return = user_can( $user_id, 'coursepress_invite_my_students_cap' );
+			} elseif ( $is_instructor ) {
+				$return = user_can( $user_id, 'coursepress_invite_students_cap' );
+			}
+		}
+
+		return $return;
+	}
+
+	public static function can_withdraw_students( $course_id, $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		$return = user_can( $user_id, 'manage_options' );
+
+		if ( ! $return ) {
+			$course_creator = self::is_course_creator( $course_id, $user_id );
+			$is_instructor = self::is_course_instructor( $course_id, $user_id );
+
+			if ( $course_creator ) {
+				$return = user_can( $user_id, 'coursepress_withdraw_my_students_cap' );
+			} elseif ( $is_instructor ) {
+				$return = user_can( $user_id, 'coursepress_withdraw_students_cap' );
+			}
+		}
+
+		return $return;
+	}
+
+	public static function can_create_student( $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		$return = user_can( $user_id, 'manage_options' );
+
+		if ( ! $return ) {
+			$return = user_can( $user_id, 'coursepress_add_new_students_cap' );
+		}
+
+		return $return;
+	}
+
+	public static function can_delete_student( $user_id = '' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		$return = user_can( $user_id, 'manage_options' );
+
+		if ( ! $return ) {
+			$return = user_can( $user_id, 'coursepress_delete_students_cap' );
+		}
+
+		return $return;
 	}
 
 	/**
@@ -692,39 +824,32 @@ class CoursePress_Data_Capabilities {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
-		if ( user_can( $user_id, 'manage_options' ) ) {
-			return true;
-		}
-		/**
-		 * Create new notifications
-		 */
-		/** This filter is documented in include/coursepress/helper/class-setting.php */
-		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_notification_cap' );
-		if ( user_can( $user_id, $capability ) ) {
-			return true;
-		}
-		/**
-		 * Create new notifications for own courses
-		 */
-		$course_id = is_object( $course )? $course->ID : $course;
-		if ( self::is_course_creator( $course, $user_id ) ) {
+		$return = user_can( $user_id, 'manage_options' );
+
+		if ( ! $return ) {
+			/**
+			* Create new notifications
+			*/
 			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_notification_cap' );
-			if ( user_can( $user_id, $capability ) ) {
-				return true;
+			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_notification_cap' );
+			$capability2 = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_notification_cap' );
+			$capability3 = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_assigned_notification_cap' );
+			$return = user_can( $user_id, $capability );
+
+			if ( ! $return ) {
+				if ( ! is_object( $course ) ) {
+					$return = user_can( $user_id, $capability2 ) || user_can( $user_id, $capability3 );
+				} else {
+					if ( self::is_course_creator( $course, $user_id ) ) {
+						$return = user_can( $user_id, $capability2 );
+					} elseif ( self::is_course_instructor( $course, $user_id ) ) {
+						$return = user_can( $user_id, $capability3 );
+					}
+				}
 			}
 		}
-		/**
-		 * Create new notifications for assigned courses
-		 */
-		if ( self::is_course_instructor( $course, $user_id ) ) {
-			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_assigned_notification_cap' );
-			if ( user_can( $user_id, $capability ) ) {
-				return true;
-			}
-		}
-		return false;
+
+		return $return;
 	}
 
 	/**
@@ -885,6 +1010,13 @@ class CoursePress_Data_Capabilities {
 		if ( user_can( $user_id, 'manage_options' ) ) {
 			return true;
 		}
+
+		if ( ! $course ) {
+			return ( user_can( $user_id, 'courespress_create_discussion_cap' ) ||
+					user_can( $user_id, 'coursepress_create_my_discussion_cap' ) ||
+					user_can( $user_id, 'coursepress_create_my_assigned_discussion_cap' ) );
+		}
+
 		/**
 		 * Create new discussions
 		 */
@@ -932,22 +1064,21 @@ class CoursePress_Data_Capabilities {
 		if ( user_can( $user_id, 'manage_options' ) ) {
 			return true;
 		}
-		/**
-		 * Update every discussion
-		 */
+
 		/** This filter is documented in include/coursepress/helper/class-setting.php */
 		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_update_discussion_cap' );
-		if ( user_can( $user_id, $capability ) ) {
-			return true;
-		}
-		/**
-		 * Update own discussions
-		 */
-		$discussion_id = is_object( $discussion )? $discussion->ID : $discussion;
-		if ( self::is_discussion_creator( $discussion, $user_id ) ) {
-			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_update_my_discussion_cap' );
+		$capability2 = apply_filters( 'coursepress_capabilities', 'coursepress_update_my_discussion_cap' );
+
+
+		if ( empty( $discussion ) ) {
+			return user_can( $user_id, $capability ) || user_can( $capability2 );
+		} else {
 			if ( user_can( $user_id, $capability ) ) {
+				return true;
+			}
+
+			$discussion_id = is_object( $discussion )? $discussion->ID : $discussion;
+			if ( self::is_discussion_creator( $discussion, $user_id ) && user_can( $user_id, $capability2 ) ) {
 				return true;
 			}
 		}
@@ -969,25 +1100,24 @@ class CoursePress_Data_Capabilities {
 		if ( user_can( $user_id, 'manage_options' ) ) {
 			return true;
 		}
-		/**
-		 * delete every discussion
-		 */
+
 		/** This filter is documented in include/coursepress/helper/class-setting.php */
 		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_delete_discussion_cap' );
-		if ( user_can( $user_id, $capability ) ) {
-			return true;
-		}
-		/**
-		 * delete own discussions
-		 */
-		$discussion_id = is_object( $discussion )? $discussion->ID : $discussion;
-		if ( self::is_discussion_creator( $discussion, $user_id ) ) {
-			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_delete_my_discussion_cap' );
+		$capability2 = apply_filters( 'coursepress_capabilities', 'coursepress_delete_my_discussion_cap' );
+
+		if ( ! $discussion ) {
+			return user_can( $user_id, $capability ) || user_can( $user_id, $capability2 );
+		} else {
 			if ( user_can( $user_id, $capability ) ) {
 				return true;
 			}
+
+			$discussion_id = is_object( $discussion )? $discussion->ID : $discussion;
+			if ( self::is_discussion_creator( $discussion, $user_id )  && user_can( $user_id, $capability2 ) ) {
+				return true;
+			}
 		}
+
 		return false;
 	}
 
@@ -1006,25 +1136,24 @@ class CoursePress_Data_Capabilities {
 		if ( user_can( $user_id, 'manage_options' ) ) {
 			return true;
 		}
-		/**
-		 * change_status every discussion
-		 */
+
 		/** This filter is documented in include/coursepress/helper/class-setting.php */
 		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_change_discussion_status_cap' );
-		if ( user_can( $user_id, $capability ) ) {
-			return true;
-		}
-		/**
-		 * change_status own discussions
-		 */
-		$discussion_id = is_object( $discussion )? $discussion->ID : $discussion;
-		if ( self::is_discussion_creator( $discussion, $user_id ) ) {
-			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_change_my_discussion_status_cap' );
+		$capability2 = apply_filters( 'coursepress_capabilities', 'coursepress_change_my_discussion_status_cap' );
+
+		if ( ! $discussion ) {
+			return user_can( $user_id, $capability ) || user_can( $user_id, $capability2 );
+		} else {
 			if ( user_can( $user_id, $capability ) ) {
 				return true;
 			}
+
+			$discussion_id = is_object( $discussion )? $discussion->ID : $discussion;
+			if ( self::is_discussion_creator( $discussion, $user_id ) && user_can( $user_id, $capability2 ) ) {
+				return true;
+			}
 		}
+
 		return false;
 	}
 
@@ -1147,12 +1276,7 @@ class CoursePress_Data_Capabilities {
 
 	public static function grant_private_caps( $user_id ) {
 		$user = new WP_User( $user_id );
-		/**
-		 * do not add_cap if user can manage_options
-		 */
-		if ( user_can( $user_id, 'manage_options' ) ) {
-			return;
-		}
+
 		$capability_types = array( 'course', 'unit', 'module', 'module_response', 'notification', 'discussion' );
 		foreach ( $capability_types as $capability_type ) {
 			$user->add_cap( "read_private_{$capability_type}s" );
@@ -1188,15 +1312,16 @@ class CoursePress_Data_Capabilities {
 		}
 	}
 
+	public static function is_instructor( $user_id = 0 ) {
+		$user_id = ! $user_id ? get_current_user_id() : $user_id;
+
+		return ( 'instructor' == get_user_option( 'role_ins', $user_id ) );
+	}
+
 	public static function assign_instructor_capabilities( $user ) {
 
 		$user_id = CoursePress_Helper_Utility::get_id( $user );
-		/**
-		 * do not add_cap if user can manage_options
-		 */
-		if ( user_can( $user_id, 'manage_options' ) ) {
-			return;
-		}
+
 		// The default capabilities for an instructor
 		$instructor_capabilities = self::get_instructor_capabilities();
 
@@ -1272,5 +1397,57 @@ class CoursePress_Data_Capabilities {
 		}
 
 		return $instructor_capabilities;
+	}
+
+	public static function user_cap( $allcaps, $cap, $args ) {
+
+		if ( self::is_instructor() ) { 
+			$instructor_capabilities = CoursePress_Data_Capabilities::get_instructor_capabilities();
+
+			foreach ( $instructor_capabilities as $instructor_cap => $is_true ) {
+				if ( ! $is_true ) {
+					if ( isset( $allcaps[ $instructor_cap ] ) ) {
+						unset( $allcaps[ $instructor_cap ] );
+					}
+				} else {
+					$allcaps[ $instructor_cap ] = true;
+				}
+			}
+
+			if ( ! empty( $instructor_capabilities[ 'coursepress_course_categories_manage_terms_cap' ] ) ) {
+				$allcaps['coursepress_course_categories_edit_terms_cap'] = true;
+			}
+
+		}
+
+		return $allcaps;
+	}
+
+	public static function filter_row_actions( $actions, $tag ) {
+		if ( ! empty( $tag->taxonomy ) && $tag->taxonomy == CoursePress_Data_Course::get_post_category_name() ) {
+			$instructor_capabilities = CoursePress_Data_Capabilities::get_instructor_capabilities();
+
+			if ( ! $instructor_capabilities['coursepress_course_categories_edit_terms_cap'] ) {
+				// Remove edit link
+				if ( isset( $actions['edit'] ) ) {
+					unset( $actions['edit'] );
+				}
+				// Remove quick-edit
+				if( isset( $actions['inline hide-if-no-js'] ) ) {
+					unset( $actions['inline hide-if-no-js'] );
+				}
+			}
+		}
+		return $actions;
+	}
+
+	public static function get_user_capabilities() {
+		$user_id = get_current_user_id();
+		$userdata = get_userdata( $user_id );
+		$caps = $userdata->caps;
+
+		$caps = apply_filters( 'coursepress_current_user_capabilities', $caps );
+
+		return $caps;
 	}
 }

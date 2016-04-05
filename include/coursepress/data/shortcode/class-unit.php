@@ -65,7 +65,7 @@ class CoursePress_Data_Shortcode_Unit {
 					'unit_page_title_tag_class' => '',
 					'last_visited' => 'false',
 					'parent_course_preceding_content' => __( 'Course: ', 'CP_TD' ),
-					'student_id' => get_current_user_ID(),
+					'student_id' => get_current_user_id(),
 				)
 			),
 			$atts
@@ -531,7 +531,7 @@ class CoursePress_Data_Shortcode_Unit {
 		$content = '
 		<div class="submenu-main-container">
 			<ul id="submenu-main" class="submenu nav-submenu">
-				<li class="submenu-item submenu-units ' . ( 'units' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( get_permalink( $course_id ) . CoursePress_Core::get_slug( 'unit/' ) ) . '">' . esc_html__( 'Units', 'CP_TD' ) . '</a></li>
+				<li class="submenu-item submenu-units ' . ( 'units' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( get_permalink( $course_id ) . CoursePress_Core::get_slug( 'unit/' ) ) . '" class="course-units-link">' . esc_html__( 'Units', 'CP_TD' ) . '</a></li>
 		';
 
 		$student_id = is_user_logged_in() ? get_current_user_id() : false;
@@ -561,19 +561,15 @@ class CoursePress_Data_Shortcode_Unit {
 
 		if ( CP_IS_PREMIUM ) {
 			// CERTIFICATE CLASS.
-			// $show_link = CP_Basic_Certificate::option( 'basic_certificate_enabled' );
-			// $show_link = ! empty( $show_link ) ? true : false;
-
-			// Debug code. Remove it!
-			$show_link = false;
+			$show_link = CoursePress_Data_Certificate::is_enabled();
 		}
 
 		if ( is_user_logged_in() && $show_link ) {
 			// COMPLETION LOGIC.
 			if ( CoursePress_Data_Student::is_course_complete( get_current_user_id(), $course_id ) ) {
-				// $certificate = CP_Basic_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'CP_TD' ) );
+				$certificate = CoursePress_Data_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'CP_TD' ) );
 
-				// $content .= '<li class="submenu-item submenu-certificate ' . ( $subpage == 'certificate' ? 'submenu-active' : '') . '">' . $certificate . '</li>';
+				$content .= '<li class="submenu-item submenu-certificate ' . ( $subpage == 'certificate' ? 'submenu-active' : '') . '">' . $certificate . '</li>';
 			}
 		}
 
@@ -624,7 +620,7 @@ class CoursePress_Data_Shortcode_Unit {
 			} elseif ( $unit_status['completion_required']['enabled'] && ! $unit_status['completion_required']['result'] ) {
 				$content .= esc_html__( 'Previous unit must be completed successfully.', 'CP_TD' );
 			}
-			if ( ! $unit_status['date_restriction']['result'] ) {
+			if ( ! empty( $unit_status['date_restriction'] ) && ! $unit_status['date_restriction']['result'] ) {
 				$unit_availability = get_post_meta( $unit_id, 'unit_availability', true );
 
 				if ( 'on_date' == $unit_availability ) {
