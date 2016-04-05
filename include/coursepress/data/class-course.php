@@ -345,10 +345,6 @@ class CoursePress_Data_Course {
 
 		self::update_setting( $course_id, 'instructors', $instructors );
 
-		/**
-		 * update instructor roles
-		 */
-		CoursePress_Data_Capabilities::assign_role_capabilities( $instructor_id, '', '' );
 	}
 
 	public static function remove_instructor( $course_id, $instructor_id ) {
@@ -357,25 +353,17 @@ class CoursePress_Data_Course {
 
 		foreach ( $instructors as $idx => $instructor ) {
 			if ( (int) $instructor === $instructor_id ) {
-				CoursePress_Data_Instructor::removed_from_course( $instructor_id, $course_id );
 				unset( $instructors[ $idx ] );
-				/**
-				 * delete information to instructor
-				 */
-				delete_user_option(
-					$instructor_id,
-					'course_' . $course_id,
-					$global_option
-				);
 			}
 		}
 
-		self::update_setting( $course_id, 'instructors', $instructors );
-
+		CoursePress_Data_Instructor::removed_from_course( $instructor_id, $course_id );
 		/**
-		 * update instructor roles
+		 * delete information to instructor
 		 */
-		CoursePress_Data_Capabilities::assign_role_capabilities( $instructor_id, '', '' );
+		delete_user_option( $instructor_id, 'course_' . $course_id, $global_option );
+
+		self::update_setting( $course_id, 'instructors', $instructors );
 	}
 
 	public static function get_setting( $course_id, $key = true, $default = null ) {
@@ -724,7 +712,7 @@ class CoursePress_Data_Course {
 
 			// Fix broken page titles
 			$page_titles = get_post_meta( $post_id, 'page_title', true );
-			if ( empty( $page_titles ) && isset( $unit['pages'] ) ) {
+			if ( empty( $page_titles ) && ! empty( $unit['pages'] ) ) {
 				$page_titles = array();
 				$page_visible = array();
 				foreach ( $unit['pages'] as $key => $page ) {
@@ -901,6 +889,13 @@ class CoursePress_Data_Course {
 			return false;
 		}
 
+		// Check invitation list then remove it exist.
+		$invited_students = self::get_setting( $course_id, 'invited_students', array() );
+		if ( is_array( $invited_students ) && ! empty( $invited_students[ $student->user_email ] ) ) {
+			unset( $invited_students[ $student->user_email ] );
+			self::update_setting( $course_id, 'invited_students', $invited_students );
+		}
+
 		// If student is already enrolled, exit.
 		$enrolled = self::student_enrolled( $student_id, $course_id );
 		if ( ! empty( $enrolled ) ) {
@@ -1035,8 +1030,12 @@ class CoursePress_Data_Course {
 
 		$type = self::get_setting( $course_id, 'enrollment_type', 'manually' );
 
-		// Not clear yet, why this email has 2 different types.
-		// @see CoursePress_Data_Course::send_invitation()
+		/**
+		 * Check the type of email to send.
+		 *
+		 * @type passcode 	Use for courses which require passcode to access.
+		 * @type default 	Use for normal courses.
+		 **/
 		if ( 'passcode' == $type ) {
 			$type = CoursePress_Helper_Email::COURSE_INVITATION_PASSWORD;
 		} else {
@@ -1051,12 +1050,12 @@ class CoursePress_Data_Course {
 		$user = get_user_by( 'email', $email_args['email'] );
 		if ( $user ) {
 			$email_data['user'] = $user;
-			$email_args['first_name'] = $email_data['first_name'];
-			$email_args['last_name'] = $email_data['last_name'];
 		}
+		$email_args['first_name'] = $email_data['first_name'];
+		$email_args['last_name'] = $email_data['last_name'];
 
 		$sent = CoursePress_Helper_Email::send_email(
-			self::$type,
+			$type,
 			$email_args
 		);
 
@@ -1064,7 +1063,7 @@ class CoursePress_Data_Course {
 	}
 
 	public static function is_full( $course_id ) {
-		$limited = cp_is_true( self::get_setting( $course_id, 'class_size' ) );
+		$limited = cp_is_true( self::get_setting( $course_id, 'class_limited' ) );
 
 		if ( $limited ) {
 			$limit = self::get_setting( $course_id, 'class_size' );
@@ -1522,6 +1521,36 @@ class CoursePress_Data_Course {
 		return array_sum( get_object_vars( wp_count_posts( self::get_post_type_name() ) ) );
 	}
 
+	public static function get_course( $course_id = 0 ) {
+		$course_id = ! $course_id ? get_the_ID() : $course_id;
+		$course = get_post( $course_id );
+
+		// Set duration
+		$date_format = get_option( 'date_format' );
+		$start_date = self::get_setting( $course_id, 'course_start_date' );
+		$end_date = self::get_setting( $course_id, 'course_end_date' );
+		$duration = ceil( ( strtotime( $end_date ) - strtotime( $start_date ) ) / 86400 );
+
+		$course->start_date = date_i18n( $date_format, strtotime( $start_date, current_time( 'timestamp' ) ) );
+		$course->end_date = $duration > 0 ? date_i18n( $date_format, strtotime( $end_date, current_time( 'timestamp' ) ) ) : '--';
+		$course->duration = $duration > 0 ? sprintf( _n( '%s Day', '%s Days', $duration, 'CP_TD' ), $duration ) : __( 'Open-ended', 'CP_TD' );
+
+		// Links
+		$course->permalink = get_permalink( $course_id );
+		$course->edit_link = add_query_arg(
+			array(
+				'page' => CoursePress_View_Admin_Course_Edit::$slug,
+				'id' => $course_id,
+				'action' => 'edit',
+			),
+			admin_url( 'admin.php' )
+		);
+
+		$course = apply_filters( 'coursepress_get_course', $course, $course_id );
+
+		return $course;
+	}
+
 	/**
 	 * duplciate course
 	 *
@@ -1627,6 +1656,7 @@ class CoursePress_Data_Course {
 		$json_data['data'] = $data->data;
 		$json_data['nonce'] = wp_create_nonce( 'duplicate_course' );
 		return $json_data;
+
 	}
 
 	/**

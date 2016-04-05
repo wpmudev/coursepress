@@ -215,6 +215,7 @@ class CoursePress_View_Admin_Assessment_Report {
 			$pdf_args['filename'] = $course_title . '_' . $unit_file_part . '_bulk.pdf';
 		}
 
+		$pdf_args['filename'] = strtolower( str_replace( ' ', '-', $pdf_args['filename'] ) );
 		$pdf_args['footer'] = __( 'Course Report', 'CP_TD' );
 
 		CoursePress_Helper_PDF::make_pdf( $html, $pdf_args );

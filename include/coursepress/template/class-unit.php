@@ -72,9 +72,6 @@ class CoursePress_Template_Unit {
 
 		// Let BackboneJS take over if its in Focus mode.
 		if ( 'focus' == $view_mode ) {
-			// TODO: We need to enqueue correct javascript here to make focus-
-			//       mode work!
-
 			return '<div class="coursepress-focus-view" data-course="' . $course_id . '" data-unit="' . $unit_id . '" data-page="' . $page . '"><span class="loader hidden"><i class="fa fa-spinner fa-pulse"></i></span></div>';
 		}
 
@@ -88,6 +85,31 @@ class CoursePress_Template_Unit {
 
 		// Sub Menu.
 		$content = do_shortcode( '[course_unit_submenu]' );
+
+		// Check if available
+		$previous_unit_id = CoursePress_Data_Unit::get_previous_unit_id( $course_id, $unit_id );
+		$availability = CoursePress_Data_Unit::get_unit_availability_status( $course_id, $unit_id, $previous_unit_id );
+
+		if ( empty( $availability['available'] ) ) {
+			$message = CoursePress_Data_Shortcode_Unit::module_status(
+				array(
+					'course_id' => $course_id,
+					'unit_id' => $unit_id,
+					'previous_unit' => $previous_unit_id,
+				)
+			);
+			$content .= sprintf( '<p><em>%s</em></p>', $message );
+
+			if ( $previous_unit_id ) {
+				$unit_url = CoursePress_Core::get_slug( 'course/', true ) .
+					trailingslashit( $course->post_name ) .
+					CoursePress_Core::get_slug( 'unit/' ) . get_post_field( 'post_name', $previous_unit_id );
+
+				$content .= '<span class="next-button unit unit-' . $previous_unit_id .'"><a href="' . esc_url_raw( $unit_url ) . '"><button>' . esc_html( 'Previous Unit', 'CP_TD' ) . '</button></a></span> ';
+			}
+
+			return $content;
+		}
 
 		// Get modules for the current page only.
 		$modules = CoursePress_Data_Course::get_unit_modules(
@@ -111,7 +133,22 @@ class CoursePress_Template_Unit {
 			);
 
 			if ( $page_title ) {
-				$content .= '<div class="unit-page-header unit-section-header"><h3 class="page-title unit-section-title">' . $page_title . '</h3></div>';
+				$content .= '<div class="unit-page-header unit-section-header">';
+
+				$page_feature_image = get_post_meta( $unit->ID, 'page_feature_image', true );
+				if ( ! empty( $page_feature_image[ 'page_'. $page ] ) ) {
+					$feature_image = sprintf( '<img src="%s" alt="%s" />', esc_url( $page_feature_image[ 'page_'. $page ] ), esc_attr( basename( $page_feature_image[ 'page_'. $page ] ) ) );
+					$content .= '<div class="unit-page-feature-image section-thumbnail">' . $feature_image . '</div>';
+				}
+
+				$content .= '<h3 class="page-title unit-section-title">' . $page_title . '</h3>';
+
+				$page_description = get_post_meta( $unit->ID, 'page_description', true );
+				if ( ! empty( $page_description[ 'page_' . $page ] ) ) {
+					$content .= $page_description[ 'page_' . $page ];
+				}
+
+				$content .= '</div>';
 			}
 		}
 
@@ -141,6 +178,7 @@ class CoursePress_Template_Unit {
 			}
 
 			if ( $enrolled || $is_instructor || 'output' == $attributes['mode'] ) {
+
 				if ( method_exists( $template, $method ) ) {
 					$content .= call_user_func(
 						array( $template, $method ),
@@ -160,40 +198,43 @@ class CoursePress_Template_Unit {
 					CoursePress_Core::get_slug( 'unit/' ) . $unit->post_name . '/page/';
 
 		$content .= '<div class="pager unit-pager">';
-		for ( $i = 1; $i <= $total_pages; $i++ ) {
-			$unit_url = $url_path . $i;
+		// Show pager only if there's more than 1 pages.
+		if ( $total_pages > 1 ) {
+			for ( $i = 1; $i <= $total_pages; $i++ ) {
+				$unit_url = $url_path . $i;
 
-			if ( $enrolled
-				|| $is_instructor
-				|| in_array( $i, $preview_pages )
-				|| ! is_array( $preview['structure'][ $unit->ID ] )
-			) {
-				$content .= '<span class="page page-' . $i . '"><a href="' . esc_url_raw( $unit_url ) . '">' . $i . '</a></span> ';
-			}
-		}
-
-		// Next Page.
-		if ( ! $enrolled && ! $is_instructor ) {
-			for ( $i = $page + 1; $i <= $total_pages; $i++ ) {
-				if ( in_array( $i, $preview_pages ) ) {
-					$next_page = $i;
-				} elseif ( ! is_array( $preview['structure'][ $unit->ID ] ) ) {
-					$next_page = $i;
-				}
-
-				if ( $next_page ) {
-					break;
+				if ( $enrolled
+					|| $is_instructor
+					|| in_array( $i, $preview_pages )
+					|| ! is_array( $preview['structure'][ $unit->ID ] )
+				) {
+					$content .= '<span class="page page-' . $i . '"><a href="' . esc_url_raw( $unit_url ) . '">' . $i . '</a></span> ';
 				}
 			}
-		} else {
-			if ( 1 != $total_pages && $total_pages != $page ) {
-				$next_page = $page + 1;
-			}
-		}
 
-		if ( $next_page ) {
-			$unit_url = $url_path . $next_page;
-			$content .= '<span class="next-button page page-' . $i .'"><a href="' . esc_url_raw( $unit_url ) . '"><button>' . esc_html( 'Next', 'CP_TD' ) . '</button></a></span> ';
+			// Next Page.
+			if ( ! $enrolled && ! $is_instructor ) {
+				for ( $i = $page + 1; $i <= $total_pages; $i++ ) {
+					if ( in_array( $i, $preview_pages ) ) {
+						$next_page = $i;
+					} elseif ( ! is_array( $preview['structure'][ $unit->ID ] ) ) {
+						$next_page = $i;
+					}
+
+					if ( $next_page ) {
+						break;
+					}
+				}
+			} else {
+				if ( 1 != $total_pages && $total_pages != $page ) {
+					$next_page = $page + 1;
+				}
+			}
+
+			if ( $next_page ) {
+				$unit_url = $url_path . $next_page;
+				$content .= '<span class="next-button page page-' . $i .'"><a href="' . esc_url_raw( $unit_url ) . '"><button>' . esc_html( 'Next', 'CP_TD' ) . '</button></a></span> ';
+			}
 		}
 
 		// Next unit.

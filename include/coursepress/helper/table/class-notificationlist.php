@@ -203,7 +203,7 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 		 * check permissions
 		 */
 		if ( ! CoursePress_Data_Capabilities::can_change_status_notification( $item ) ) {
-			return '';
+			return ucfirst( $item->post_status );
 		}
 		// Publish Course Toggle
 		$d_id = $item->ID;
@@ -267,6 +267,10 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 			return '';
 		}
 
+	}
+
+	public static function get_course_id( $course ) {
+		return is_object( $course ) ? $course->ID : null;
 	}
 
 	/** ************************************************************************
@@ -346,6 +350,17 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 					'value' => (int) $course_id,
 				),
 			);
+		} else {
+			// Only show notifications where the current user have access with.
+			$courses = CoursePress_View_Admin_Communication_Notification::get_courses();
+			$courses_ids = array_map( array( __CLASS__, 'get_course_id' ), $courses );
+			$post_args['meta_query'] = array(
+				array(
+					'key' => 'course_id',
+					'value' => (array) $courses_ids,
+					'compare' => 'IN',
+				),
+			);
 		}
 
 		// @todo: Add permissions
@@ -370,8 +385,8 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 		 */
 		$this->set_pagination_args(
 			array(
-			'total_items' => $total_items,				  //WE have to calculate the total number of items
-			'per_page'	=> $per_page,					 //WE have to determine how many items to show on a page
+			'total_items' => $total_items,				//WE have to calculate the total number of items
+			'per_page'	=> $per_page,					//WE have to determine how many items to show on a page
 			'total_pages' => ceil( $total_items / $per_page ),//WE have to calculate the total number of pages
 			)
 		);
@@ -443,8 +458,8 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 			'text' => __( 'All courses', 'CP_TD' ),
 			'value' => 'all',
 		);
-
-		echo CoursePress_Helper_UI::get_course_dropdown( 'course_id' . $two, 'course_id' . $two, false, $options );
+		$courses = CoursePress_Data_Capabilities::can_add_notification_to_all() ? false : CoursePress_View_Admin_Communication_Notification::get_courses();
+		echo CoursePress_Helper_UI::get_course_dropdown( 'course_id' . $two, 'course_id' . $two, $courses, $options );
 
 		submit_button( __( 'Filter', 'CP_TD' ), 'category-filter', '', false, array( 'id' => "filter-courses$two" ) );
 		echo '</form>';

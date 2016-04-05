@@ -213,6 +213,7 @@ class CoursePress_View_Front_Course {
 	 * @since  2.0.0
 	 */
 	public static function handle_module_uploads() {
+
 		if ( empty( $_REQUEST['course_action'] ) ) { return; }
 		if ( 'upload-file' != $_REQUEST['course_action'] ) { return; }
 
@@ -261,6 +262,7 @@ class CoursePress_View_Front_Course {
 			// Check if we should continue with this upload (in case students cheat with the code)
 			$attributes = CoursePress_Data_Module::attributes( $module_id );
 			$can_retry = ! $attributes['allow_retries'];
+
 			if ( $can_retry ) {
 				$responses = CoursePress_Helper_Utility::get_array_val(
 					$student_progress,
@@ -1165,6 +1167,31 @@ class CoursePress_View_Front_Course {
 
 				}
 
+				// Check if it is the last unit
+				$units = CoursePress_Data_Course::get_units( $course_id, array( 'publish' ) );
+				if ( $units ) {
+					$last_unit = array_pop( $units );
+
+					if ( ! empty( $last_unit->ID ) && $last_unit->ID == $unit_id ) {
+						// Check if it is the last module
+						$modules = CoursePress_Data_Course::get_unit_modules( $unit_id );
+						$last_module = array_pop( $modules );
+
+						if ( ! empty( $last_module->ID ) && $last_module->ID == $module_id ) {
+							$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
+							CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course_id, $student_progress );
+
+							$is_completed = CoursePress_Helper_Utility::get_array_val(
+								$student_progress,
+								'completion/completed'
+							);
+							if ( $is_completed ) {
+								$json_data['completed'] = true;
+							}
+						}
+					}
+				}
+
 				$json_data = array_merge( $json_data, $data );
 				$success = true;
 				break;
@@ -1175,7 +1202,9 @@ class CoursePress_View_Front_Course {
 				$student_id = (int) $data->student_id;
 
 				if ( $student_id > 0 ) {
-					$progress = CoursePress_Data_Student::calculate_completion( $student_id, $course_id );
+					$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
+					CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course_id, $student_progress );
+					CoursePress_Data_Student::update_completion_data( $student_id, $course_id, $student_progress );
 				}
 
 				$success = true;

@@ -90,6 +90,9 @@ class CoursePress_Helper_Table_DiscussionList extends WP_List_Table {
 			'actions' => __( 'Actions', 'CP_TD' ),
 		);
 
+		if ( ! CoursePress_Data_Capabilities::can_delete_discussion( 0 ) ) {
+			unset( $columns['actions'] );
+		}
 		return $columns;
 	}
 
@@ -184,6 +187,14 @@ class CoursePress_Helper_Table_DiscussionList extends WP_List_Table {
 			'unpublish' => __( 'Private', 'CP_TD' ),
 			'delete' => __( 'Delete', 'CP_TD' ),
 		);
+
+		if ( ! CoursePress_Data_Capabilities::can_delete_discussion( 0 ) ) {
+			unset( $actions['delete'] );
+		}
+
+		if ( ! CoursePress_Data_Capabilities::can_change_status_discussion( 0 ) ) {
+			unset( $actions['publish'], $actions['unpublish'] );
+		}
 		return $actions;
 	}
 
@@ -203,7 +214,7 @@ class CoursePress_Helper_Table_DiscussionList extends WP_List_Table {
 		 * check permissions
 		 */
 		if ( ! CoursePress_Data_Capabilities::can_change_status_discussion( $item ) ) {
-			return '';
+			return ucfirst( $item->post_status );
 		}
 		// Publish Course Toggle
 		$d_id = $item->ID;
@@ -438,8 +449,9 @@ class CoursePress_Helper_Table_DiscussionList extends WP_List_Table {
 			'text' => __( 'All courses', 'CP_TD' ),
 			'value' => 'all',
 		);
+		$courses = CoursePress_Data_Capabilities::can_add_discussion_to_all() ? false : CoursePress_View_Admin_Communication_Discussion::get_courses();
 
-		echo CoursePress_Helper_UI::get_course_dropdown( 'course_id' . $two, 'course_id' . $two, false, $options );
+		echo CoursePress_Helper_UI::get_course_dropdown( 'course_id' . $two, 'course_id' . $two, $courses, $options );
 
 		submit_button( __( 'Filter', 'CP_TD' ), 'category-filter', '', false, array( 'id' => "filter-courses$two" ) );
 		echo '</form>';

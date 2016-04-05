@@ -29,10 +29,6 @@ class CoursePress_View_Admin_Assessment_List {
 		add_action( 'coursepress_admin_' . self::$slug, array( __CLASS__, 'process_form' ) );
 		add_action( 'coursepress_admin_' . self::$slug, array( __CLASS__, 'render_page' ) );
 
-		// Update Course
-		// add_action( 'wp_ajax_update_course', array( __CLASS__, 'update_course' ) );
-		// Update UnitBuilder
-		// add_action( 'wp_ajax_unit_builder', array( 'CoursePress_View_Admin_Course_UnitBuilder', 'unit_builder_ajax' ) );
 	}
 
 	public static function add_valid( $valid_pages ) {
@@ -51,7 +47,6 @@ class CoursePress_View_Admin_Assessment_List {
 
 		return $pages;
 	}
-
 
 	public static function process_form() {
 
@@ -165,9 +160,12 @@ class CoursePress_View_Admin_Assessment_List {
 
 		$content .= '<h3 class="module-title">' . esc_html__( 'Activity: ', 'CP_TD' ) . '<span class="module-name">' . esc_html( $module->post_title ) . '</span></h3>' .
 					'<div class="activity-wrapper">' .
-					'<p class="description">' . $module->post_content . '</p>' .
-					'<p><strong>' . esc_html__( 'Student Response', 'CP_TD' ) . '</strong></p>' .
+					'<p class="description">' . $module->post_content . '</p>';
+
+		if ( 'input-quiz' != $attributes['module_type'] ) {
+			$content .= '<p><strong>' . esc_html__( 'Student Response', 'CP_TD' ) . '</strong></p>' .
 					'<div class="response">';
+		}
 
 		$response_display = $response['response'];
 		switch ( $attributes['module_type'] ) {
@@ -224,11 +222,49 @@ class CoursePress_View_Admin_Assessment_List {
 				}
 
 				break;
+			case 'input-quiz':
+				$display = '';
+
+				if ( $response_display ) {
+
+					foreach ( $response_display as $q_index => $answers ) {
+						$question = CoursePress_Helper_Utility::get_array_val(
+							$attributes,
+							'questions/' . $q_index . '/question'
+						);
+						$content .= sprintf( '<p><strong>%s</strong></p>', $question );
+						$content .= sprintf( '<p><strong>%s</strong></p>', __( 'Student Response', 'CP_TD' ) );
+						$content .= '<div class="response">';
+						$q_answers = CoursePress_Helper_Utility::get_array_val(
+							$attributes,
+							'questions/' . $q_index . '/options/answers'
+						);
+
+						$content .= '<ul>';
+						foreach ( $q_answers as $a_index => $answer ) {
+							$checked = CoursePress_Helper_Utility::get_array_val(
+								$attributes,
+								'questions/' . $q_index . '/options/checked/' . $a_index
+							);
+							$class = '';
+							if ( ! empty( $answers[ $a_index ] ) ) {
+								$class = 'chosen-answer ' . ( cp_is_true( $checked ) ? 'correct' : 'incorrect' );
+							}
+							$content .= sprintf( '<li class="%s">%s</li>', $class, $answer );
+						}
+
+						$content .= '</ul>';
+						$content .= '</div>';
+					}
+				}
+				$response_display = $display;
+				break;
 		}
 
-		$content .= $response_display;
-
-		$content .= '</div>'; // .response
+		if ( 'input-quiz' != $attributes['module_type'] ) {
+			$content .= $response_display;
+			$content .= '</div>'; // .response
+		}
 
 		$response_date = ! isset( $response['date'] ) ? '' : date_i18n( get_option( 'date_format' ), strtotime( $response['date'] ) );
 		$content .= '<div><em>' . sprintf( __( 'Submitted on: %s', 'CP_TD' ), $response_date ) . '</em></div>';
@@ -333,7 +369,6 @@ class CoursePress_View_Admin_Assessment_List {
 			$keys = array_keys( $units );
 
 			$selected_unit = isset( $_GET['unit_id'] ) ? (int) $_GET['unit_id'] : $units[ $keys[0] ]['unit']->ID;
-			;
 
 			// Get the tab array
 			$tabs = array();
@@ -352,7 +387,12 @@ class CoursePress_View_Admin_Assessment_List {
 				if ( $selected_unit == $tab['unit_id'] ) {
 					$tab['class'] .= ' active';
 				}
-				$tab_url = $url . '&unit_id=' . $tab['unit_id'];
+				$tab_url = add_query_arg(
+					array(
+						'course_id' => $selected_course,
+						'unit_id' => $tab['unit_id'],
+					)
+				);
 				$tab_string .= '<a href="' . $tab_url . '" class="unit-tab ' . $tab['class'] . '" data-unit="' . (int) $tab['unit_id'] . '" data-title="' . esc_attr( $tab['unit_title'] ) . '">' . ( $key + 1 ) . '</a>';
 			}
 
@@ -462,50 +502,6 @@ class CoursePress_View_Admin_Assessment_List {
 							$url = admin_url( 'admin.php?page=coursepress_assessments' . '&' . $qv );
 							$response_display = '<a href="' . esc_url_raw( $url ) . '">' . esc_html__( 'View', 'CP_TD' ) . '</a>';
 						}
-
-						// $response_display = $response['response'];
-						// switch ( $attributes['module_type'] ) {
-						//
-						// case 'input-checkbox':
-						// $response_display = '';
-						// if ( ! empty( $response['response'] ) && is_array( $response['response'] ) ) {
-						// foreach ( $response['response'] as $r ) {
-						// $response_display .= '<p class="answer list">' . $attributes['answers'][(int) $r] . '</p>';
-						// }
-						// }
-						//
-						// break;
-						//
-						// case 'input-radio':
-						// case 'input-select':
-						// $response_display = '';
-						// if ( isset( $response['response'] ) ) {
-						// $response_display = '<p class="answer">' . $attributes['answers'][(int) $response['response']] . '</p>';
-						// }
-						//
-						// break;
-						// case 'input-upload':
-						//
-						// if ( $response ) {
-						// $url = $response['response']['url'];
-						//
-						// $file_size = isset( $response['response']['size'] ) ? $response['response']['size'] : false;
-						// $file_size = $file_size ? CoursePress_Helper_Utility::format_file_size( $file_size ) : '';
-						// $file_size = ! empty( $file_size ) ? '<small>(' . esc_html( $file_size ) . ')</small>' : '';
-						//
-						// $file_name = explode( '/', $url );
-						// $file_name = array_pop( $file_name );
-						//
-						// $url = CoursePress_Helper_Utility::encode( $url );
-						// $url = trailingslashit( home_url() ) . '?fdcpf=' . $url;
-						//
-						// $response_display = '<a href="' . esc_url( $url ) . '">' . esc_html( $file_name ) . ' ' . CoursePress_Helper_Utility::filter_content( $file_size ) . '</a>';
-						// } else {
-						// $response_display = '';
-						// }
-						//
-						// break;
-						// }
 
 						$response_date = ! isset( $response['date'] ) ? '' : date_i18n( get_option( 'date_format' ), strtotime( $response['date'] ) );
 						$grade_display = (-1 == $grade['grade'] ? __( '--', 'CP_TD' ) : $grade['grade'] );

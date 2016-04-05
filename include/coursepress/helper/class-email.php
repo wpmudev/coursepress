@@ -342,6 +342,13 @@ class CoursePress_Helper_Email {
 			'CERTIFICATE_NUMBER' => sanitize_text_field( $args['certificate_id'] ),
 			'UNIT_LIST' => $args['unit_list'],
 		);
+		/**
+		 * Filter the variables before applying changes.
+		 *
+		 * @param (array) $vars
+		 * @param (int) $course_id
+		 **/
+		$vars = apply_filters( 'coursepress_fields_' . self::BASIC_CERTIFICATE, $vars, $course_id );
 
 		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
 	}
@@ -371,6 +378,13 @@ class CoursePress_Helper_Email {
 			'COURSES_ADDRESS' => CoursePress_Core::get_slug( 'course', true ),
 			'WEBSITE_ADDRESS' => home_url(),
 		);
+
+		/**
+		 * Filter the registration variables before applying the changes.
+		 *
+		 * @param (array) $vars
+		 **/
+		$vars = apply_filters( 'coursepress_fields_' . self::REGISTRATION, $vars );
 
 		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
 	}
@@ -406,6 +420,13 @@ class CoursePress_Helper_Email {
 			'COURSES_ADDRESS' => CoursePress_Core::get_slug( 'course/', true ),
 			'BLOG_NAME' => get_bloginfo( 'name' ),
 		);
+		/**
+		 * Filter the variables before applying changes.
+		 *
+		 * @param (array) $vars
+		 * @param (int) $course_id
+		 **/
+		$vars = apply_filters( 'coursepress_fields_' . self::ENROLLMENT_CONFIRM, $vars, $course_id );
 
 		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
 	}
@@ -433,17 +454,24 @@ class CoursePress_Helper_Email {
 		}
 
 		// Email Content.
-		$tags = array(
+		$vars = array(
 			'STUDENT_FIRST_NAME' => sanitize_text_field( $args['first_name'] ),
 			'STUDENT_LAST_NAME' => sanitize_text_field( $args['last_name'] ),
 			'COURSE_NAME' => $course_name,
 			'COURSE_EXCERPT' => $course_summary,
 			'COURSE_ADDRESS' => esc_url( $course_address ),
 			'WEBSITE_ADDRESS' => home_url( '/' ),
-			'PASSCODE' => self::get_setting( $course_id, 'enrollment_passcode', '' ),
+			'PASSCODE' => CoursePress_Data_Course::get_setting( $course_id, 'enrollment_passcode', '' ),
 		);
+		/**
+		 * Filter the variables before applying changes.
+		 *
+		 * @param (array) $vars.
+		 * @param (int) $course_id
+		 **/
+		$vars = apply_filters( 'coursepress_fields_' . self::COURSE_INVITATION, $vars, $course_id );
 
-		return CoursePress_Helper_Utility::replace_vars( $content, $tags );
+		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
 	}
 
 	/**
@@ -494,7 +522,7 @@ class CoursePress_Helper_Email {
 		);
 
 		// Email Content.
-		$tags = array(
+		$vars = array(
 			'INSTRUCTOR_FIRST_NAME' => sanitize_text_field( $args['first_name'] ),
 			'INSTRUCTOR_LAST_NAME' => sanitize_text_field( $args['last_name'] ),
 			'INSTRUCTOR_EMAIL' => sanitize_email( $args['email'] ),
@@ -505,8 +533,15 @@ class CoursePress_Helper_Email {
 			'WEBSITE_ADDRESS' => home_url(),
 			'WEBSITE_NAME' => get_bloginfo( 'name' ),
 		);
+		/**
+		 * Filter the variables before applying changes.
+		 *
+		 * @param (array) $vars
+		 * @param (array) $course_id
+		 **/
+		$vars = apply_filters( 'coursepress_fields_' . self::INSTRUCTOR_INVITATION, $vars, $course_id );
 
-		return CoursePress_Helper_Utility::replace_vars( $content, $tags );
+		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
 	}
 
 	/**

@@ -211,7 +211,7 @@ class CoursePress_Data_Shortcode_Template {
 		$completed = false;
 		$student_progress = false;
 		if ( is_user_logged_in() ) {
-			$student_progress = CoursePress_Data_Student::calculate_completion( get_current_user_id(), $course_id );
+			$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id ); //CoursePress_Data_Student::calculate_completion( get_current_user_id(), $course_id );
 			$completed = isset( $student_progress['completion']['completed'] ) && ! empty( $student_progress['completion']['completed'] );
 		}
 		$completion_class = $completed ? 'course-completed' : '';
@@ -479,10 +479,20 @@ class CoursePress_Data_Shortcode_Template {
 
 				$content .= '<div class="focus-main section">';
 
-				$template = '<div class="focus-item focus-item-' . esc_attr( $type ) . '">
-					' . $page_info['title'] . '
-				</div>
-				';
+				$template = '<div class="focus-item focus-item-' . esc_attr( $type ) . '">';
+
+				if ( ! empty( $page_info['feature_image'] ) ) {
+					$feature_image = sprintf( '<img src="%s" alt="%s" />', esc_url( $page_info['feature_image'] ), esc_attr( basename( $page_info['feature_image'] ) ) );
+					$template .= '<div class="section-thumbnail">' . $feature_image . '</div>';
+				}
+
+				$template .= '<h3>'. $page_info['title'] . '</h3>';
+
+				if ( ! empty( $page_info['description'] ) ) {
+					$template .= $page_info['description'];
+				}
+
+				$template .= '</div>';
 
 				$template = apply_filters( 'coursepress_template_focus_item_section', $template, $a );
 

@@ -111,6 +111,7 @@ if ( ! function_exists( 'cp_is_true' ) ) {
 		}
 
 		$value = strtolower( (string) $value );
+
 		if ( 'on' == $value || 'yes' == $value || 'true' == $value ) {
 			return true;
 		}

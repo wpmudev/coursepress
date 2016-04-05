@@ -227,8 +227,8 @@ class CoursePress_Helper_PDF extends TCPDF {
 		$the_font = apply_filters( 'coursepress_pdf_font', 'helvetica' );
 
 		// If filtering, please make sure both path and url refer to the same location
-		$cache_path = apply_filters( 'coursepress_pdf_cache_path', trailingslashit( CoursePress::$path ) . 'pdf-cache/' );
-		$furl_path = apply_filters( 'coursepress_pdf_cache_url', trailingslashit( CoursePress::$url ) . 'pdf-cache/' );
+		$cache_path = self::cache_path(); 
+		$furl_path = self::cache_url(); 
 
 		$page_orientation = isset( $args['orientation'] ) ? $args['orientation'] : PDF_PAGE_ORIENTATION;
 
@@ -387,6 +387,20 @@ class CoursePress_Helper_PDF extends TCPDF {
 
     }
 
+	public static function cache_path() {
+		$uploads_dir = wp_upload_dir();
+		$cache_path = apply_filters( 'coursepress_pdf_cache_path', trailingslashit( $uploads_dir['basedir'] ) . 'pdf-cache/' );
+
+		return $cache_path;
+	}
+
+	public static function cache_url() {
+		$uploads_dir = wp_upload_dir();
+		$cache_url = apply_filters( 'coursepress_pdf_cache_url', trailingslashit( $uploads_dir['baseurl'] ) . 'pdf-cache/' );
+
+		return $cache_url;
+	}
+
     /**
      * Check pdf-cache directory.
      *
@@ -396,17 +410,40 @@ class CoursePress_Helper_PDF extends TCPDF {
      */
     public static function is_cache_path_writable( ) {
 
-        $cache_path = apply_filters( 'coursepress_pdf_cache_path', trailingslashit( CoursePress::$path ) . 'pdf-cache/' );
+        $cache_path = self::cache_path();
         $is_writable = is_dir( $cache_path ) && is_writable( $cache_path );
         if ( ! $is_writable ) {
-            error_log(
-                sprintf(
-                    __( 'CoursePress cannot generate PDF because directory is not writable: %s', 'CP_TD' ),
-                    $cache_path
-                )
-            );
+			// Attempt to write locally
+			if ( mkdir( $cache_path, 0775, true ) ) {
+				$is_writable = true;
+			} else {
+				// Unable to write? Let's try Filesystem API
+				if ( ! function_exists( 'WP_Filesystem' ) ) {
+					$file_system = ABSPATH . 'wp-admin/includes/file.php';
+					require_once $file_system;
+				}
+				$wp_filesystem = WP_Filesystem();
+				$is_writable = $wp_filesystem->mkdir( $cache_path, 0775 );
+			}
         }
         return $is_writable;
 
     }
+
+	public static function init() {
+		$is_writable = self::is_cache_path_writable();
+
+		if ( ! $is_writable ) {
+			add_action( 'admin_notices', array( __CLASS__, 'pdf_notice' ) );
+		}
+	}
+
+	public static function pdf_notice() {
+		$cache_path = self::cache_path();
+		?>
+		<div class="notice notice-error">
+			<p><?php printf( esc_html__( 'CoursePress cannot generate PDF because directory is not writable: %s', 'CP_TD' ), $cache_path); ?></p>
+		</div>
+		<?php
+	}
 }

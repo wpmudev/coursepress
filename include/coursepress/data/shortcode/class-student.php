@@ -174,8 +174,9 @@ class CoursePress_Data_Shortcode_Student {
 			$content .= '<h3 class="course-completion-progress">' . esc_html__( 'Course completion: ', 'CP_TD' ) . '<small>' . CoursePress_Data_Student::get_course_progress( $student_id, $course_id, $student_progress ) . '%</small>' . '</h3>';
 		}
 
+		$student_progress_units = ( ! empty( $student_progress['units'] ) ) ? $student_progress['units'] : array();
 		foreach ( $unit_list as $unit_id => $unit ) {
-			if ( ! array_key_exists( $unit_id, $student_progress['units'] = array() ) ) {
+			if ( ! array_key_exists( $unit_id, $student_progress_units ) ) {
 				continue;
 			}
 
@@ -227,6 +228,7 @@ class CoursePress_Data_Shortcode_Student {
 						$feedback = CoursePress_Data_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
 
 						$response_display = $response['response'];
+
 						switch ( $attributes['module_type'] ) {
 
 							case 'input-checkbox':
@@ -264,6 +266,25 @@ class CoursePress_Data_Shortcode_Student {
 								} else {
 									$response_display = '';
 								}
+								break;
+							case 'input-quiz':
+								$display = '';
+
+								if ( $response_display ) {
+
+									foreach ( $response_display as $q_index => $answers ) {
+										foreach ( $answers as $a_index => $answer ) {
+											if ( ! empty( $answer ) ) {
+												$the_answer = CoursePress_Helper_Utility::get_array_val(
+													$attributes,
+													'questions/' . $q_index . '/options/answers/' . $a_index
+												);
+												$display .= sprintf( '<p class="answer">%s</p>', $the_answer );
+											}
+										}
+									}
+								}
+								$response_display = $display;
 								break;
 						}
 

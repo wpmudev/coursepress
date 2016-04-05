@@ -20,14 +20,47 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 		return $content;
 	}
 
+	public static function filter_user_capabilities( $allcaps ) {
+		$course_id = (int) $_GET['id'];
+		$user_id = get_current_user_id();
+
+		if ( CoursePress_Data_Capabilities::can_change_course_status( $course_id, $user_id ) ) {
+			$allcaps['coursepress_change_status_cap'] = true;
+		} else {
+			if ( ! empty( $allcaps['coursepress_change_status_cap'] ) ) {
+				unset( $allcaps['coursepress_change_status_cap'] );
+			}
+		}
+
+		return $allcaps;
+	}
 
 	public static function view_templates( $template = false ) {
+		$course_id = (int) $_GET['id'];
 
-		$course_id = isset( $_GET['id'] )? intval( $_GET['id'] ) : 0;
-
-		$templates = array();
+		add_filter( 'coursepress_current_user_capabilities', array( __CLASS__, 'filter_user_capabilities' ) );
+		$can_create_units = CoursePress_Data_Capabilities::can_create_course_unit( $course_id );
 
 		$templates = array(
+
+			'unit_builder' => '
+				<script type="text/template" id="unit-builder-template">
+					<div class="tab-container vertical unit-builder-container">
+						<div class="tab-tabs unit-builder-tabs">
+						<div id="sticky-wrapper" class="sticky-wrapper sticky-wrapper-tabs">
+							<div class="tabs"></div>' .
+							( $can_create_units ?
+							'<div class="sticky-buttons"><div class="button button-add-new-unit"><i class="fa fa-plus-square"></i> ' . esc_html__( 'Add New Unit', 'CP_TD' ) . '</div></div>' : '' )
+						. '</div>
+					</div>
+					<div class="tab-content tab-content-vertical unit-builder-content">
+						<div class="section static unit-builder-header"></div>
+						<div class="section static unit-builder-body"></div>
+						<div class="section static unit-builder-no-access">'. __( 'You do not have sufficient access to edit this unit!', 'CP_TD' ) . '</div>
+					</div>
+					</div>
+				</script>
+			',
 			'unit_builder_tab' => '
 				<script type="text/template" id="unit-builder-tab-template">
 					<li class="coursepress-ub-tab <%= unit_live_class %> <%= unit_active_class %>" data-tab="<%= unit_id %>" data-order="<%= unit_order %>" data-cid="<%= unit_cid %>"><span><%= unit_title %></span></li>
@@ -36,7 +69,16 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 			'unit_builder_header' => '
 				<script type="text/template" id="unit-builder-header-template">
 				<div class="unit-detail" data-cid="<%- unit_cid %>">
-					<h3><i class="fa fa-cog"></i>' . esc_html__( 'Unit Settings', 'CP_TD' ) . '<div class="unit-state">%TOGGLE_SWITCH%</h3>
+					<h3><i class="fa fa-cog"></i>' . esc_html__( 'Unit Settings', 'CP_TD' ) . '<div class="unit-state">' .
+						CoursePress_Helper_UI::toggle_switch(
+							'unit-live-toggle',
+							'unit-live-toggle',
+							array(
+								'left' => __( 'Draft', 'CP_TD' ),
+								'right' => __( 'Live', 'CP_TD' ),
+							)
+						)
+					. '</h3>
 					<label for="unit_name">Unit Title</label>
 					<input id="unit_name" class="wide" type="text" value="<%= unit_title %>" name="post_title" spellcheck="true">
 					<div class="unit-additional-info">
@@ -82,7 +124,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 			) . '</span></label>
 					</div>
 				</div>
-				<div class="unit-buttons">%BUTTON_SAVE% %BUTTON_DELETE% </div>
+				<div class="unit-buttons"><div class="button unit-save-button">' . __( 'Save', 'CP_TD' ) . '</div><div class="button unit-delete-button"><i class="fa fa-trash-o"></i> ' . __( 'Delete Unit', 'CP_TD' ) . '</div></div>
 				</script>
 			',
 			'unit_builder_content_placeholder' => '
@@ -141,70 +183,19 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					'. __( 'Modules! This template wont be used... its just here for testing.', 'CP_TD' ) . '
 				</script>
 			',
-			'unit_builder_footer' => '',
+			'unit_builder_footer' => '
+				<script type="text/template" id="unit-builder-footer-template">
+				<div class="button unit-save-button">' . __( 'Save', 'CP_TD' ) . '</div>' .
+					CoursePress_Helper_UI::toggle_switch(
+						'unit-live-toggle-2',
+						'unit-live-toggle-2',
+						array(
+							'left' => __( 'Draft', 'CP_TD' ),
+							'right' => __( 'Live', 'CP_TD' ),
+						)
+					) .
+					'</script>',
 		);
-
-		/**
-		 * show delete unit button?
-		 */
-		$content = '';
-		if ( CoursePress_Data_Capabilities::can_delete_course_unit( $course_id ) ) {
-			$content = sprintf(
-				'<div class="button unit-delete-button"><i class="fa fa-trash-o"></i> %s</div>',
-				esc_html__( 'Delete Unit', 'CP_TD' )
-			);
-		}
-		$templates['unit_builder_header'] = preg_replace( '/%BUTTON_DELETE%/', $content, $templates['unit_builder_header'] );
-
-		/**
-		 * show save unit button?
-		 */
-		$content = '';
-		if ( CoursePress_Data_Capabilities::can_update_course_unit( $course_id ) ) {
-			$content = sprintf(
-				'<div class="button unit-save-button">%s</div>',
-				esc_html__( 'Save', 'CP_TD' )
-			);
-		}
-		$templates['unit_builder_header'] = preg_replace( '/%BUTTON_SAVE%/', $content, $templates['unit_builder_header'] );
-
-		/**
-		 * show change status
-		 */
-		$content = '';
-		if ( CoursePress_Data_Capabilities::can_change_course_status( $course_id ) ) {
-			$content = CoursePress_Helper_UI::toggle_switch(
-				'unit-live-toggle-2',
-				'unit-live-toggle-2',
-				array(
-					'left' => __( 'Draft', 'CP_TD' ),
-					'right' => __( 'Live', 'CP_TD' ),
-				)
-			);
-		}
-		$templates['unit_builder_header'] = preg_replace( '/%TOGGLE_SWITCH%/', $content, $templates['unit_builder_header'] );
-
-		/**
-		 * unit_builder_footer
-		 */
-		$templates['unit_builder_footer'] = '<script type="text/template" id="unit-builder-footer-template">';
-		if ( CoursePress_Data_Capabilities::can_update_course_unit( $course_id ) ) {
-			$templates['unit_builder_footer'] .= sprintf(
-				'<div class="button unit-save-button">%s</div>',
-				esc_html__( 'Save', 'CP_TD' )
-			);
-		}
-		if ( CoursePress_Data_Capabilities::can_change_course_status( $course_id ) ) {
-			$templates['unit_builder_footer'] .= CoursePress_Helper_UI::toggle_switch(
-				'unit-live-toggle-2',
-				'unit-live-toggle-2',
-				array(
-					'left' => __( 'Draft', 'CP_TD' ),
-					'right' => __( 'Live', 'CP_TD' ),
-				)
-			);
-		}
-		$templates['unit_builder_footer'] .= '</script>';
 
 		$templates['unit_builder_content_components'] = '
 				<script type="text/template" id="unit-builder-components-template">
@@ -237,43 +228,6 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 				</script>
 			';
 
-		/**
-		 * remove templates, depend of capabilities: Create new course units
-		 */
-		if ( CoursePress_Data_Capabilities::can_create_unit() ) {
-			$templates['unit_builder'] = '
-				<script type="text/template" id="unit-builder-template">
-					<div class="tab-container vertical unit-builder-container">
-						<div class="tab-tabs unit-builder-tabs">
-						<div id="sticky-wrapper" class="sticky-wrapper sticky-wrapper-tabs">
-							<div class="tabs"></div>
-							<div class="sticky-buttons"><div class="button button-add-new-unit"><i class="fa fa-plus-square"></i> ' . esc_html__( 'Add New Unit', 'CP_TD' ) . '</div></div>
-						</div>
-					</div>
-					<div class="tab-content tab-content-vertical unit-builder-content">
-						<div class="section static unit-builder-header"></div>
-						<div class="section static unit-builder-body"></div>
-					</div>
-					</div>
-				</script>
-			';
-		} else {
-			$templates['unit_builder'] = '
-				<script type="text/template" id="unit-builder-template">
-					<div class="tab-container vertical unit-builder-container">
-						<div class="tab-tabs unit-builder-tabs">
-						<div id="sticky-wrapper" class="sticky-wrapper sticky-wrapper-tabs">
-							<div class="tabs"></div>
-						</div>
-					</div>
-					<div class="tab-content tab-content-vertical unit-builder-content">
-						<div class="section static unit-builder-header"></div>
-						<div class="section static unit-builder-body"></div>
-					</div>
-					</div>
-				</script>
-			';
-		}
 		return $templates;
 	}
 
@@ -284,7 +238,9 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 
 		switch ( $_REQUEST['task'] ) {
 			case 'units':
-				$units = CoursePress_Data_Course::get_units( $_REQUEST['course_id'], 'any' );
+				$course_id = (int) $_REQUEST['course_id'];
+				$user_id = get_current_user_id();
+				$units = CoursePress_Data_Course::get_units( $course_id, 'any' );
 
 				foreach ( $units as $unit ) {
 					$meta = get_post_meta( $unit->ID );
@@ -294,12 +250,63 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					// Temp for reordering
 					$unit->unit_order = isset( $meta['unit_order'] ) ? $meta['unit_order'] : 0;
 					$unit->meta = $meta;
+
+					// Let's add unit capabilities
+					$user_cap = array();
+					if ( CoursePress_Data_Capabilities::can_change_course_unit_status( $course_id, $unit->ID, $user_id ) ) {
+						$user_cap['coursepress_change_unit_status_cap'] = true;
+					}
+					if ( CoursePress_Data_Capabilities::can_delete_course_unit( $course_id, $unit->ID, $user_id ) ) {
+						$user_cap['coursepress_delete_course_units_cap'] = true;
+					}
+					if ( CoursePress_Data_Capabilities::can_update_course_unit( $course_id, $unit->ID, $user_id ) ) {
+						$user_cap['coursepress_update_course_unit_cap'] = true;
+					}
+					$unit->user_cap = $user_cap;
 				}
 
 				// Reorder units before returning it
 				$units = CoursePress_Helper_Utility::sort_on_key( CoursePress_Helper_Utility::object_to_array( $units ), 'unit_order' );
 
 				foreach ( $units as $unit ) {
+					$json_data[] = $unit;
+				}
+
+				if ( empty( $units ) ) {
+					// Give the user something to work on to.
+					$unit = array(
+						'post_title' => __( 'Untitled Unit', 'CP_TD' ),
+						'post_type' => CoursePress_Data_Unit::get_post_type_name(),
+						'post_status' => 'draft',
+						'post_parent' => $course_id,
+					);
+					$unit_id = wp_insert_post( $unit );
+					$unit['ID'] = $unit_id;
+					$unit['meta'] = array(
+						'unit_order' => 1,
+						'page_title' => array(
+							'page_1' => '',
+						),
+						'show_page_title' => array( true ),
+					);
+
+					foreach ( $unit['meta'] as $key => $value ) {
+						update_post_meta( $unit_id, $key, $value );
+					}
+
+					// Let's add unit capabilities
+					$user_cap = array();
+					if ( CoursePress_Data_Capabilities::can_change_course_unit_status( $course_id, $unit_id, $user_id ) ) {
+						$user_cap['coursepress_change_unit_status_cap'] = true;
+					}
+					if ( CoursePress_Data_Capabilities::can_delete_course_unit( $course_id, $unit_id, $user_id ) ) {
+						$user_cap['coursepress_delete_course_units_cap'] = true;
+					}
+					if ( CoursePress_Data_Capabilities::can_update_course_unit( $course_id, $unit_id, $user_id ) ) {
+						$user_cap['coursepress_update_course_unit_cap'] = true;
+					}
+					$unit['user_cap'] = $user_cap;
+					$units[] = $unit;
 					$json_data[] = $unit;
 				}
 

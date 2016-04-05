@@ -39,6 +39,34 @@ class CoursePress_Data_Instructor {
 		}
 	}
 
+	public static function filter_by_where( $where ) {
+		global $wpdb;
+
+		$user_id = get_current_user_id();
+		$post_type = CoursePress_Data_Course::get_post_type_name();
+
+		$where .= $wpdb->prepare( " OR ({$wpdb->posts}.post_type='%s' AND {$wpdb->posts}.post_author=%d AND {$wpdb->posts}.post_status=%s)", $post_type, $user_id, 'publish' );
+
+		// Let's remove the filter right away
+		remove_filter( 'posts_where', array( __CLASS__, 'filter_by_where' ) );
+
+		return $where;
+	}
+
+	public static function filter_by_whereall( $where ) {
+		global $wpdb;
+
+		$user_id = get_current_user_id();
+		$post_type = CoursePress_Data_Course::get_post_type_name();
+
+		$where .= $wpdb->prepare( " OR ({$wpdb->posts}.post_type='%s' AND {$wpdb->posts}.post_author=%d)", $post_type, $user_id );
+
+		// Let's remove the filter right away
+		remove_filter( 'posts_where', array( __CLASS__, 'filter_by_whereall' ) );
+
+		return $where;
+	}
+
 	public static function get_assigned_courses_ids( $user, $status = 'all' ) {
 		global $wpdb;
 
@@ -80,8 +108,53 @@ class CoursePress_Data_Instructor {
 		return $assigned_courses;
 	}
 
-	public static function get_accessable_courses( $user, $include_posts = false ) {
+	public static function get_accessable_courses( $user_id = '', $post_status = 'publish' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		} elseif ( is_object( $user_id ) ) {
+			$user_id = $user_id->ID;
+		}
 
+		$args = array(
+			'post_type' => CoursePress_Data_Course::get_post_type_name(),
+			'post_status' => $post_status,
+			'posts_per_page' => -1,
+		);
+
+		if ( ! user_can( $user_id, 'manage_options' ) ) {
+			$can_search = false;
+			if ( user_can( $user_id, 'coursepress_update_my_course_cap' ) ) {
+				$args['author'] = $user_id;
+				$can_search = true;
+			}
+			if ( user_can( $user_id, 'coursepress_update_course_cap' ) ) {
+				$assigned_courses = self::get_assigned_courses_ids( $user_id );
+				$args['include'] = $assigned_courses;
+
+				if ( $can_search ) {
+					// Let's add the author param via filter hooked.
+					unset( $args['author'] );
+					add_filter( 'posts_where', array( __CLASS__, 'filter_by_where' ) );
+				}
+				$can_search = true;
+			}
+
+			if ( ! $can_search ) {
+				// Bail early
+				return $posts; // TODO: $posts is not defined here...
+			}
+		}
+
+		$posts = get_posts( $args );
+
+		return $posts;
+	}
+
+	/*
+	TODO: Remove this in 2.1 or so - keep it in 2.0 for reference:
+
+	public static function get_accessable_courses( $user, $include_posts = false ) {
+		return self::get_instructor_courses( $user );
 		$user_id = self::_get_id( $user );
 		$courses = self::get_assigned_courses_ids( $user_id );
 		$course_array = array();
@@ -111,8 +184,8 @@ class CoursePress_Data_Instructor {
 			$query = new WP_Query( array( 'post__in' => $course_array, 'post_type' => $post_type, 'posts_per_page' => -1 ) );
 			return $query->posts;
 		}
-
 	}
+	*/
 
 	public static function unassign_from_course( $user, $course_id = 0 ) {
 		$user_id = self::_get_id( $user );
@@ -229,9 +302,16 @@ class CoursePress_Data_Instructor {
 
 	public static function added_to_course( $instructor_id, $course_id ) {
 
+		$instructor = get_userdata( $instructor_id );
+		$assigned_courses_ids = self::get_assigned_courses_ids( $instructor );
+		$assigned_courses_ids = array_filter( $assigned_courses_ids );
+
+		if ( empty( $assigned_courses_ids ) ) {
+			CoursePress_Data_Capabilities::assign_instructor_capabilities( $instructor );
+		}
+
 		$global_option = ! is_multisite();
 		update_user_option( $instructor_id, 'course_' . $course_id, $course_id, $global_option );
-
 	}
 
 	public static function removed_from_course( $instructor_id, $course_id ) {
@@ -243,6 +323,16 @@ class CoursePress_Data_Instructor {
 		// Other associated actions
 		self::unassign_from_course( $instructor_id, $course_id );
 
+		$instructor = get_userdata( $instructor_id );
+		$assigned_courses_ids = self::get_assigned_courses_ids( $instructor );
+		$assigned_courses_ids = array_filter( $assigned_courses_ids );
+
+		/**
+		 * Drop capabilities if no assigned courses found.
+		 **/
+		if ( empty( $assigned_courses_ids ) ) {
+			CoursePress_Data_Capabilities::drop_instructor_capabilities( $instructor );
+		}
 	}
 
 	public static function delete_invitation( $course_id, $invite_code ) {
