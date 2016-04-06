@@ -1,3 +1,12 @@
+**CoursePress 2.0 Readme:**
+
+https://bitbucket.org/incsub/coursepress/src/493fe75d6a198f29439848aa837d32cbd3905b18?at=coursepress/2.0-dev
+
+-----
+
+**This is outdated 1.3 documentation:**
+
+
 # README #
 
 The **core** development branch for CoursePress 1.x is `coursepress/base`. This branch ultimately is responsible for creating the `coursepress/pro` and `coursepress/standard` branches. Consider it to be a "super branch".  
