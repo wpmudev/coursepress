@@ -425,7 +425,7 @@ class CoursePress_Data_Shortcode_Template {
 
 		if ( $breadcrumbs ) {
 			// Course.
-			$c_link = CoursePress_Data_Course::get_course_url( $course_id ); 
+			$c_link = CoursePress_Data_Course::get_course_url( $course_id );
 			$a_link = $c_link . CoursePress_Core::get_slug( 'units/' );
 			$u_post_name = get_post_field( 'post_name', $unit_id );
 			$u_link = $a_link . ( ! $u_post_name ? $unit_id : $u_post_name );

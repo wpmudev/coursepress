@@ -165,7 +165,7 @@ class CoursePress_Template_Unit {
 			$method = 'render_' . str_replace( '-', '_', $attributes['module_type'] );
 			$template = 'CoursePress_Template_Module';
 
-			if ( ! empty( $preview['structure'] ) && ! empty( $preview['structure'][$unit->ID] ) && isset( $preview['structure'][ $unit->ID ][ $page ] ) ) {
+			if ( ! empty( $preview['structure'] ) && ! empty( $preview['structure'][ $unit->ID ] ) && isset( $preview['structure'][ $unit->ID ][ $page ] ) ) {
 				$preview_modules = array_keys( $preview['structure'][ $unit->ID ][ $page ] );
 			}
 			if ( in_array( $module->ID, $preview_modules ) || $can_update_course ) {
