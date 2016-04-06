@@ -453,7 +453,6 @@ A. Responsive
   width: 120px;
   border-radius: 0;
 }
-
 .coursepress-course-step-container .button-preview:hover {
   background: #e99a53;
   color: #ffffff;
@@ -544,7 +543,7 @@ A. Responsive
 #course-setup-steps .step-title .status.save-process {
   background: url("../img/ajax-loader.gif");
   color: #ffffff;
-  border: none;
+  border: 0;
   background-repeat: no-repeat;
   background-size: 20px;
 }
@@ -552,7 +551,7 @@ A. Responsive
 #course-setup-steps .step-title.ui-state-active .status.save-process {
   background: url("../img/ajax-loader-blue.gif");
   color: #ffffff;
-  border: none;
+  border: 0;
   background-repeat: no-repeat;
   background-size: 20px;
 }
@@ -735,15 +734,6 @@ input.button.button-primary.instructor-assign {
 }
 
 #course-setup-steps .step-content .instructor-avatar-holder:hover {
-  /* IE 8 */
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha( Opacity=50 )";
-  /* IE 5-7 */
-  filter: alpha(opacity=70);
-  /* Netscape */
-  -moz-opacity: 0.7;
-  /* Safari 1.x */
-  -khtml-opacity: 0.7;
-  /* Good browsers */
   opacity: 0.7;
 }
 
@@ -758,7 +748,7 @@ input.button.button-primary.instructor-assign {
   height: 80px;
   position: absolute;
   font-size: 28px;
-  color: white;
+  color: #FFF;
   text-indent: 9999px;
   overflow: hidden;
   text-decoration: none;
@@ -797,7 +787,7 @@ input.button.button-primary.instructor-assign {
 #course-setup-steps .step-content .instructor-status {
   background: none repeat scroll 0 0 #0091cd;
   box-sizing: border-box;
-  color: #ffffff;
+  color: #fff;
   position: absolute;
   top: 0;
   width: 80px;
