@@ -17,6 +17,8 @@ module.exports = function(grunt) {
 	// Load all grunt tasks.
 	require( 'load-grunt-tasks' )(grunt);
 
+	var buildtime = new Date().toISOString();
+
 	// -------------------------------------------------------------------------
 	// Configuration.
 	var conf = {
@@ -101,6 +103,7 @@ module.exports = function(grunt) {
 		plugin_patterns: {
 			pro: [
 				{ match: /CoursePress Base/g, replace: 'CoursePress Pro' },
+				{ match: /BUILDTIME/g, replace: buildtime },
 				{ match: /'CP_TD'/g, replace: '\'cp\'' },
 				{ match: /\/\* start:pro \*\//g, replace: '' },
 				{ match: /\/\* end:pro \*\//g, replace: '' },
@@ -109,6 +112,7 @@ module.exports = function(grunt) {
 			],
 			free: [
 				{ match: /CoursePress Base/g, replace: 'CoursePress' },
+				{ match: /BUILDTIME/g, replace: buildtime },
 				{ match: /'CP_TD'/g, replace: '\'coursepress\'' },
 				{ match: /\/\* start:free \*\//g, replace: '' },
 				{ match: /\/\* end:free \*\//g, replace: '' },
@@ -117,6 +121,7 @@ module.exports = function(grunt) {
 			],
 			campus: [
 				{ match: /CoursePress Base/g, replace: 'CoursePress Campus' },
+				{ match: /BUILDTIME/g, replace: buildtime },
 				{ match: /'CP_TD'/g, replace: '\'cp\'' },
 				{ match: /\/\* start:campus \*\//g, replace: '' },
 				{ match: /\/\* end:campus \*\//g, replace: '' },

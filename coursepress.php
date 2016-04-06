@@ -11,6 +11,7 @@
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * TextDomain:  cp
  * Domain Path: /language/
+ * Build Time:  BUILDTIME
  * WDP ID:      913071
  *
  * @package CoursePress

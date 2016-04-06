@@ -1,5 +1,6 @@
 Plugin Name: CoursePress Pro
-Author: Marko Miljus ( Incsub ) / Rheinard Korf ( Incsub )
+Author:      WPMU DEV (Irene, Marcin, Philipp, Marko, Jose, Rheinard)
+Build Time:  BUILDTIME
 
 CHANGE LOG
 =================================================
