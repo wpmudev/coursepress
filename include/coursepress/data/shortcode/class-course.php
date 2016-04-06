@@ -1519,7 +1519,16 @@ class CoursePress_Data_Shortcode_Course {
 		$courses = $courses->posts;
 		$class = sanitize_html_class( $class );
 
-		$content = 0 < count( $courses ) ? '<div class="course-random ' . $class . '">' : '';
+		$content = '';
+
+		/**
+		 * nothing to suggest
+		 */
+		if ( ! count( $courses ) ) {
+			return $content;
+		}
+
+		$content = '<div class="course-random ' . $class . '">';
 
 		$featured_atts = '';
 
@@ -1545,7 +1554,7 @@ class CoursePress_Data_Shortcode_Course {
 			$content .= '</div>';
 		}
 
-		$content .= 0 < count( $courses ) ? '</div>' : '';
+		$content .= '<br class="clear" /></div>';
 
 		return $content;
 	}
