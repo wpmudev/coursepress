@@ -463,9 +463,24 @@ module.exports = function(grunt) {
 
 		// BUILD: Remove files that are not relevant for target product.
 		clean: {
-			release_pro: { src: ['release/<%= pkg.version %>-pro/'] },
-			release_free: { src: ['release/<%= pkg.version %>-free/'] },
-			release_campus: { src: ['release/<%= pkg.version %>-campus/'] },
+			release_pro: {
+				src: [
+					'release/<%= pkg.version %>-pro/',
+					'release/<%= pkg.version %>-pro-<%= pkg.version %>.zip'
+				]
+			},
+			release_free: {
+				src: [
+					'release/<%= pkg.version %>-free/',
+					'release/<%= pkg.version %>-free-<%= pkg.version %>.zip'
+				]
+			},
+			release_campus: {
+				src: [
+					'release/<%= pkg.version %>-campus/',
+					'release/<%= pkg.version %>-campus-<%= pkg.version %>.zip'
+				]
+			},
 			pro: conf.plugin_branches.exclude_pro,
 			free: conf.plugin_branches.exclude_free,
 			campus: conf.plugin_branches.exclude_campus
