@@ -1088,6 +1088,12 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 .tab-content .unit-builder-content .unit-buttons .hidden {
   display: none;
 }
+.tab-content .unit-builder-content .button.button-preview {
+  background: #ec8c35;
+}
+.tab-content .unit-builder-content .button.button-preview:hover {
+  background: #e99a53;
+}
 .tab-content .unit-builder-content .unit-builder-header {
   background: #0074A2;
   color: #ffffff;

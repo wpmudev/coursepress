@@ -390,6 +390,7 @@ class CoursePress_Data_Shortcode_Template {
 		$page_count = count( $titles );
 
 		$preview = CoursePress_Data_Course::previewability( $course_id );
+		$can_update_course = CoursePress_Data_Capabilities::can_update_course( $course_id );
 
 		if ( 'section' === $type ) {
 			$page = $item_id;
@@ -424,9 +425,10 @@ class CoursePress_Data_Shortcode_Template {
 
 		if ( $breadcrumbs ) {
 			// Course.
-			$c_link = get_the_permalink( $course_id );
+			$c_link = CoursePress_Data_Course::get_course_url( $course_id ); 
 			$a_link = $c_link . CoursePress_Core::get_slug( 'units/' );
-			$u_link = $a_link . get_post_field( 'post_name', $unit_id );
+			$u_post_name = get_post_field( 'post_name', $unit_id );
+			$u_link = $a_link . ( ! $u_post_name ? $unit_id : $u_post_name );
 
 			$c_link = '<a href="' . esc_url( $c_link ) . '" class="breadcrumb-course crumb">' . get_post_field( 'post_title', $course_id ) . '</a>';
 			$a_link = '<a href="' . esc_url( $a_link ) . '" class="breadcrumb-course-units crumb">' . esc_html__( 'Units', 'CP_TD' ) . '</a>';
@@ -458,7 +460,7 @@ class CoursePress_Data_Shortcode_Template {
 			}
 		}
 
-		$type = $can_view ? $type : 'no_access';
+		$type = $can_view || $can_update_course ? $type : 'no_access';
 		$template = '';
 
 		switch ( $type ) {
@@ -541,8 +543,10 @@ class CoursePress_Data_Shortcode_Template {
 
 				$can_preview_page = isset( $preview['has_previews'] ) && isset( $preview['structure'][ $unit_id ] ) && isset( $preview['structure'][ $unit_id ][ $page ] ) && ! empty( $preview['structure'][ $unit_id ][ $page ] );
 				$can_preview_page = ! $can_preview_page && isset( $preview['structure'][ $unit_id ] ) && true === $preview['structure'][ $unit_id ] ? true : $can_preview_page;
+				//$can_preview_page = ! $can_preview_page ? $can_update_course : $can_preview_page;
+				$modules_status = $can_update_course && ! $can_preview_page ? 'any' : array( 'publish' );
 
-				$modules = CoursePress_Data_Course::get_unit_modules( $unit_id, array( 'publish' ), true, false, array( 'page' => $page ) );
+				$modules = CoursePress_Data_Course::get_unit_modules( $unit_id, $modules_status, true, false, array( 'page' => $page ) );
 
 				// Navigation Vars
 				$module_index = array_search( $item_id, $modules );
@@ -628,10 +632,10 @@ class CoursePress_Data_Shortcode_Template {
 				$preview_modules = isset( $preview['structure'][ $unit_id ][ $page ] ) ? array_keys( $preview['structure'][ $unit_id ][ $page ] ) : array();
 				$can_preview_module = in_array( $module->ID, $preview_modules ) || ( isset( $preview['structure'][ $unit_id ] ) && ! is_array( $preview['structure'][ $unit_id ] ) );
 
-				if ( ! $enrolled && ! $can_preview_module && ! $is_instructor ) {
+				if ( ! $enrolled && ! $can_preview_module && ! $is_instructor && ! $can_update_course ) {
 					$content = '';
 				} else {
-					if ( method_exists( $template, $method ) && ( ( $enrolled || $is_instructor ) || ( ! $enrolled && 'output' === $attributes['mode'] ) ) ) {
+					if ( method_exists( $template, $method ) && ( ( $enrolled || $is_instructor || $can_update_course ) || ( ! $enrolled && 'output' === $attributes['mode'] ) ) ) {
 						$content .= call_user_func( $template . '::' . $method, $module, $attributes );
 					}
 				}

@@ -47,6 +47,7 @@ class CoursePress_Template_Unit {
 		}
 
 		$preview = CoursePress_Data_Course::previewability( $course_id );
+		$can_update_course = CoursePress_Data_Capabilities::can_update_course( $course_id );
 
 		if ( ! isset( $preview['has_previews'] ) ) {
 			$can_preview_page = false;
@@ -59,6 +60,8 @@ class CoursePress_Template_Unit {
 		} elseif ( isset( $preview['structure'][ $unit->ID ] ) ) {
 			$can_preview_page = $preview['structure'][ $unit->ID ];
 		}
+
+		$can_preview_page = ! $can_preview_page ? $can_update_course : $can_preview_page;
 
 		if ( ! $enrolled && ! $can_preview_page && ! $is_instructor ) {
 			return __( 'Sorry. You are not permitted to view this part of the course.', 'CP_TD' );
@@ -162,10 +165,10 @@ class CoursePress_Template_Unit {
 			$method = 'render_' . str_replace( '-', '_', $attributes['module_type'] );
 			$template = 'CoursePress_Template_Module';
 
-			if ( isset( $preview['structure'][ $unit->ID ][ $page ] ) ) {
+			if ( ! empty( $preview['structure'] ) && ! empty( $preview['structure'][$unit->ID] ) && isset( $preview['structure'][ $unit->ID ][ $page ] ) ) {
 				$preview_modules = array_keys( $preview['structure'][ $unit->ID ][ $page ] );
 			}
-			if ( in_array( $module->ID, $preview_modules ) ) {
+			if ( in_array( $module->ID, $preview_modules ) || $can_update_course ) {
 				$can_preview_module = true;
 			} elseif ( isset( $preview['structure'][ $unit->ID ] ) ) {
 				$can_preview_module = ! is_array( $preview['structure'][ $unit->ID ] );
@@ -177,7 +180,7 @@ class CoursePress_Template_Unit {
 				continue;
 			}
 
-			if ( $enrolled || $is_instructor || 'output' == $attributes['mode'] ) {
+			if ( $enrolled || $is_instructor || $can_update_course || 'output' == $attributes['mode'] ) {
 
 				if ( method_exists( $template, $method ) ) {
 					$content .= call_user_func(
@@ -241,6 +244,12 @@ class CoursePress_Template_Unit {
 		$units = CoursePress_Data_Course::get_unit_ids( $course_id );
 		$unit_index = array_search( $unit->ID, $units );
 
+		// If current user can update the current course, redo!
+		if ( ! $unit_index && $can_update_course ) {
+			$units = CoursePress_Data_Course::get_unit_ids( $course_id, 'any' );
+			$unit_index = array_search( $unit->ID, $units );
+		}
+
 		for ( $i = $unit_index; $i < count( $units ); $i++ ) {
 			$preview_units = array();
 
@@ -252,7 +261,7 @@ class CoursePress_Template_Unit {
 			}
 
 			$can_preview_unit = in_array( $units[ $i ], $preview_units );
-			if ( $is_instructor || $enrolled ) {
+			if ( $is_instructor || $enrolled || $can_update_course ) {
 				$unit_available = true;
 			} elseif ( $can_preview_unit ) {
 				$unit_available = CoursePress_Data_Unit::is_unit_available(

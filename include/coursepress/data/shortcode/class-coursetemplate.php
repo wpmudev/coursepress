@@ -661,6 +661,8 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		if ( empty( $course_id ) ) { return ''; }
 
 		$with_modules = cp_is_true( $with_modules );
+		$course_base_url = CoursePress_Data_Course::get_course_url( $course_id );
+		$can_update_course = CoursePress_Data_Capabilities::can_update_course( $course_id );
 
 		if ( ! $with_modules ) {
 			$unit_mode = CoursePress_Data_Course::get_setting( $course_id, 'structure_level', 'unit' );
@@ -668,7 +670,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		}
 
 		$view_mode = CoursePress_Data_Course::get_setting( $course_id, 'course_view', 'normal' );
-		$base_link = get_permalink( $course_id );
+		$base_link = $course_base_url; //get_permalink( $course_id );
 
 		$knob_fg_color = sanitize_text_field( $knob_fg_color );
 		$knob_bg_color = sanitize_text_field( $knob_bg_color );
@@ -768,13 +770,12 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 			$post_name = empty( $the_unit->post_name ) ? $the_unit->ID : $the_unit->post_name;
 			$title_suffix = '';
-			if ( 'publish' != $the_unit->post_status && current_user_can( 'manage_options' ) ) {
+			if ( 'publish' != $the_unit->post_status && $can_update_course ) {
 				$title_suffix = esc_html__( ' [DRAFT]', 'CP_TD' );
 			}
 
-			if ( $is_unit_available ) {
-				$unit_url = get_permalink( CoursePress_Helper_Utility::the_course( true ) ) .
-					CoursePress_Core::get_slug( 'unit/' ) . $post_name;
+			if ( $is_unit_available || $can_update_course ) {
+				$unit_url = $course_base_url . CoursePress_Core::get_slug( 'unit/' ) . $post_name;
 			} else {
 				$unit_url = remove_query_arg( 'dummy-query' );
 			}
@@ -819,7 +820,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 						if ( 'normal' == $view_mode ) {
 							$module_table .= '<div class="section-title" data-id="' . $page_number . '">' . ( ! empty( $page['title'] ) ? esc_html( $page['title'] ) : esc_html__( 'Untitled', 'CP_TD' ) ) . '</div>';
 						} else {
-							$section_link = $base_link . CoursePress_Core::get_slug( 'units' );
+							$section_link = $base_link . CoursePress_Core::get_slug( 'units/' );
 							$section_link .= '#section-' . $page_number;
 							$module_table .= '<div class="section-title" data-id="' . $page_number . '">';
 							$module_table .= '<a href="' . $section_link . '">' . ( ! empty( $page['title'] ) ? esc_html( $page['title'] ) : esc_html__( 'Untitled', 'CP_TD' ) ) . '</a>';
@@ -862,7 +863,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 						if ( 'normal' == $view_mode ) {
 							$module_table .= '<div class="module-title" data-id="' . $module->ID . '">' . $title . '</div>';
 						} else {
-							$module_link = $base_link . CoursePress_Core::get_slug( 'units' );
+							$module_link = $base_link . CoursePress_Core::get_slug( 'units/' );
 							$module_link .= '#module-' . $module->ID;
 							$module_table .= '<div class="module-title" data-id="' . $module->ID . '"><a href="' . $module_link . '">' . $title . '</a></div>';
 						}
@@ -1454,7 +1455,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 		$post = get_post( $course_id );
 		$course_name = $post->post_title;
-		$course_url = get_permalink( $course_id );
+		$course_url = CoursePress_Data_Course::get_course_url( $course_id ); //get_permalink( $course_id );
 		$course_home = CoursePress_Core::get_slug( 'course', true );
 		$units_slug = CoursePress_Core::get_slug( 'unit/' );
 

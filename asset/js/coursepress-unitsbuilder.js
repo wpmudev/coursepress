@@ -1077,7 +1077,8 @@ var CoursePress = CoursePress || {};
 			'click .unit-delete-page-button': 'deletePage',
 			'click .unit-delete-button': 'deleteUnit',
 			'click .button-add-new-unit': 'newUnit',
-			'click .unit-builder-tabs ul.sticky-tabs li': 'changeActive'
+			'click .unit-builder-tabs ul.sticky-tabs li': 'changeActive',
+			'click .button-preview': 'toPreview'
 		},
 		render: function() {
 
@@ -1250,14 +1251,15 @@ var CoursePress = CoursePress || {};
 			this.unit_collection.each( function( unit ) {
 				if ( parseInt( model_id ) === parseInt( unit.get( 'ID' ) ) ) {
 					CoursePress.Helpers.changeUnit( unit, self );
-					//$( 'body,html' ).animate( {
-					//    scrollTop: $( '.section.unit-builder-header' ).offset().top - 20,
-					//    duration: 200
-					//} );
 				}
 			} );
-		}
+		},
 
+		toPreview: function( e ) {
+			var preview_btn = $( e.currentTarget ),
+				href = preview_btn.data( 'href' );
+			preview_btn.attr( 'href', href + this.activeUnitID );
+		}
 	} );
 
 	// Unit Tab View / Models / Collections
