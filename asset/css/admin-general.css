@@ -442,6 +442,23 @@ A. Responsive
   border: 1px solid #f1f1f1;
 }
 
+.coursepress-course-step-container .button-preview {
+  background: #ec8c35;
+  border: none;
+  box-shadow: none;
+  color: #ffffff;
+  display: inline-block;
+  margin: 5px 5px 15px auto;
+  text-align: center;
+  width: 120px;
+  border-radius: 0;
+}
+
+.coursepress-course-step-container .button-preview:hover {
+  background: #e99a53;
+  color: #ffffff;
+}
+
 .coursepress-course-step-container.metaboxes {
   box-sizing: border-box;
   width: 70%;

@@ -65,7 +65,6 @@
   color: #dddddd;
 }
 
-
 #course-setup-steps .step-content label p.description {
   font-weight: normal;
 }
@@ -118,6 +117,23 @@
   background: #ffffff;
   border: 1px solid #f1f1f1;
 
+}
+.coursepress-course-step-container .button-preview {
+  background: rgb(236, 140, 53);
+  border: none;
+  box-shadow: none;
+  color: #ffffff;
+  display: inline-block;
+  margin: 5px 5px 15px auto;
+  text-align: center;
+  width: 120px;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+.coursepress-course-step-container .button-preview:hover {
+  background: rgb(233, 154, 83);
+  color: #ffffff;
 }
 
 .coursepress-course-step-container.metaboxes {

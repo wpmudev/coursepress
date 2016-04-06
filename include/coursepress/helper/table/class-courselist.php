@@ -166,7 +166,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 				'<a href="%s%s" target="_blank">%s</a>',
 				CoursePress_Data_Course::get_course_url( $item->ID ),
 				CoursePress_Core::get_slug( 'units/' ),
-				__( 'View Units', 'CP_TD' )
+				'publish' == $item->post_status ? __( 'View Units', 'CP_TD' ) : __( 'Preview Units', 'CP_TD' )
 			);
 		}
 
@@ -174,7 +174,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			$actions['view_course'] = sprintf(
 				'<a href="%s" target="_blank">%s</a>',
 				CoursePress_Data_Course::get_course_url( $item->ID ),
-				__( 'View Course', 'CP_TD' )
+				'publish' == $item->post_status ? __( 'View Course', 'CP_TD' ) : __( 'Preview Course', 'CP_TD' )
 			);
 		}
 
