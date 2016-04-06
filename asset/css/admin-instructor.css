@@ -21,13 +21,9 @@
     width: 50%; 
     top: 80%;
     max-width:300px;
-    background: rgba( 0, 0, 0, 0.7 ); 
-    -webkit-box-shadow: 0 15px 10px rgba( 0,0,0, 0.7 );   
-    -moz-box-shadow: 0 15px 10px rgba( 0, 0, 0, 0.7 );
+    background: rgba( 0, 0, 0, 0.7 );
     box-shadow: 0 15px 10px rgba( 0, 0, 0, 0.7 );
-    -webkit-transform: rotate( -3deg );    
-    -moz-transform: rotate( -3deg );   
-    -o-transform: rotate( -3deg );
+    -webkit-transform: rotate( -3deg );
     -ms-transform: rotate( -3deg );
     transform: rotate( -3deg );
 }
@@ -35,8 +31,6 @@
 .shadow-table:after 
 {
     -webkit-transform: rotate( 3deg );
-    -moz-transform: rotate( 3deg );
-    -o-transform: rotate( 3deg );
     -ms-transform: rotate( 3deg );
     transform: rotate( 3deg );
     right: 10px;
@@ -441,9 +435,7 @@ div.buttons a.cancellink {
     left: 53px;
     width: 10px;
     height: 10px;
-    -moz-transform: matrix( -1.6,1,1.6,1,0,0 );
     -webkit-transform: matrix( -1.6,1,1.6,1,0,0 );
-    -o-transform: matrix( -1.6,1,1.6,1,0,0 );
     -ms-transform: matrix( -1.6,1,1.6,1,0,0 );
     transform: matrix( -1.6,1,1.6,1,0,0 );
     background: #808080;
@@ -455,9 +447,7 @@ div.buttons a.cancellink {
     left: 53px;
     width: 10px;
     height: 10px;
-    -moz-transform: matrix( -1.6,1,1.6,1,0,0 );
     -webkit-transform: matrix( -1.6,1,1.6,1,0,0 );
-    -o-transform: matrix( -1.6,1,1.6,1,0,0 );
     -ms-transform: matrix( -1.6,1,1.6,1,0,0 );
     transform: matrix( -1.6,1,1.6,1,0,0 );
     background: #cfcfcf;

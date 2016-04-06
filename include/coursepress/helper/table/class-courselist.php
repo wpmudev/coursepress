@@ -158,23 +158,23 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			$actions['students'] = sprintf( '<a href="?page=%s&action=%s&id=%s&tab=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), 'students',  __( 'Students', 'CP_TD' ) );
 		}
 
-		if ( 'publish' === $item->post_status ) {
-			$actions['view_course'] = sprintf(
-				'<a href="%s">%s</a>',
-				get_permalink( $item->ID ),
-				__( 'View Course', 'CP_TD' )
-			);
-		}
-
 		/**
 		 * link to units
 		 */
-		if ( 'publish' === $item->post_status ) {
+		if ( 'publish' === $item->post_status || CoursePress_Data_Capabilities::can_update_course( $item->ID ) ) {
 			$actions['view_units'] = sprintf(
-				'<a href="%s%s">%s</a>',
-				get_permalink( $item->ID ),
+				'<a href="%s%s" target="_blank">%s</a>',
+				CoursePress_Data_Course::get_course_url( $item->ID ),
 				CoursePress_Core::get_slug( 'units/' ),
-				__( 'View Units', 'CP_TD' )
+				'publish' == $item->post_status ? __( 'View Units', 'CP_TD' ) : __( 'Preview Units', 'CP_TD' )
+			);
+		}
+
+		if ( 'publish' === $item->post_status || CoursePress_Data_Capabilities::can_update_course( $item->ID ) ) {
+			$actions['view_course'] = sprintf(
+				'<a href="%s" target="_blank">%s</a>',
+				CoursePress_Data_Course::get_course_url( $item->ID ),
+				'publish' == $item->post_status ? __( 'View Course', 'CP_TD' ) : __( 'Preview Course', 'CP_TD' )
 			);
 		}
 

@@ -141,7 +141,7 @@ class CoursePress_Helper_Setting {
 
 	private static function _get_pages() {
 		$pages = apply_filters( 'coursepress_admin_pages', self::$pages );
-		$order = array_map( array( self, '_page_order' ), $pages );
+		$order = array_map( array( __CLASS__, '_page_order' ), $pages );
 		$max_order = max( $order );
 		$new_order = array();
 

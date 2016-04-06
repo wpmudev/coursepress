@@ -709,6 +709,7 @@ class CoursePress_View_Front_Course {
 		// Find course-ID by course-name.
 		if ( $cp->cp_course ) {
 			$cp->course_id = CoursePress_Data_Course::by_name( $cp->cp_course, true );
+			$cp->can_preview = CoursePress_Data_Capabilities::can_update_course( $cp->course_id );
 
 			// The course-name did not resolve to a course_id. Back to start!
 			if ( ! $cp->course_id ) { self::archive_redirect(); }
@@ -762,8 +763,9 @@ class CoursePress_View_Front_Course {
 
 		// We have a course-slug, find the ID.
 		if ( $cp->course_id ) {
-			$preview = CoursePress_Data_Course::previewability( $cp->course_id );
-			$cp->can_preview = $preview['has_previews'];
+			$cp->can_preview = CoursePress_Data_Capabilities::can_update_course( $cp->course_id );
+			//$preview = CoursePress_Data_Course::previewability( $cp->course_id );
+			//$cp->can_preview = $preview['has_previews'];
 
 			$cp->title = sprintf(
 				'%s | %s',

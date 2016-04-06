@@ -21,13 +21,13 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 	}
 
 	public static function filter_user_capabilities( $allcaps ) {
-		$course_id = (int) $_GET['id'];
+		$course_id = isset( $_GET['id'] ) ? (int) $_GET['id'] : null;
 		$user_id = get_current_user_id();
 
 		if ( CoursePress_Data_Capabilities::can_change_course_status( $course_id, $user_id ) ) {
 			$allcaps['coursepress_change_status_cap'] = true;
 		} else {
-			if ( ! empty( $allcaps['coursepress_change_status_cap'] ) ) {
+			if ( ! empty( $allcaps['scoursepress_change_status_cap'] ) ) {
 				unset( $allcaps['coursepress_change_status_cap'] );
 			}
 		}
@@ -36,7 +36,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 	}
 
 	public static function view_templates( $template = false ) {
-		$course_id = (int) $_GET['id'];
+		$course_id = isset( $_GET['id'] ) ? (int) $_GET['id'] : null;
 
 		add_filter( 'coursepress_current_user_capabilities', array( __CLASS__, 'filter_user_capabilities' ) );
 		$can_create_units = CoursePress_Data_Capabilities::can_create_course_unit( $course_id );
@@ -56,7 +56,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					<div class="tab-content tab-content-vertical unit-builder-content">
 						<div class="section static unit-builder-header"></div>
 						<div class="section static unit-builder-body"></div>
-						<div class="section static unit-builder-no-access">'. __( 'You do not have sufficient access to edit this unit!', 'CP_TD' ) . '</div>
+						<div class="section static unit-builder-no-access" style="display:none;">'. __( 'You do not have sufficient access to edit this unit!', 'CP_TD' ) . '</div>
 					</div>
 					</div>
 				</script>
@@ -124,7 +124,10 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 			) . '</span></label>
 					</div>
 				</div>
-				<div class="unit-buttons"><div class="button unit-save-button">' . __( 'Save', 'CP_TD' ) . '</div><div class="button unit-delete-button"><i class="fa fa-trash-o"></i> ' . __( 'Delete Unit', 'CP_TD' ) . '</div></div>
+				<div class="unit-buttons">
+					<div class="button unit-save-button">' . __( 'Save Whole Units', 'CP_TD' ) . '</div>
+					<a href="#" data-href="'. esc_attr( CoursePress_Data_Course::get_course_url( $course_id ) ) . CoursePress_Core::get_slug( 'units/' ) . '" class="button button-preview" target="_blank">'. __( 'Preview', 'CP_TD' ) . '</a>
+					<div class="button unit-delete-button"><i class="fa fa-trash-o"></i> ' . __( 'Delete Unit', 'CP_TD' ) . '</div></div>
 				</script>
 			',
 			'unit_builder_content_placeholder' => '
@@ -185,7 +188,10 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 			',
 			'unit_builder_footer' => '
 				<script type="text/template" id="unit-builder-footer-template">
-				<div class="button unit-save-button">' . __( 'Save', 'CP_TD' ) . '</div>' .
+				<div class="button unit-save-button">' . __( 'Save Whole Units', 'CP_TD' ) . '</div>
+				<a href="#" data-href="'. esc_attr( CoursePress_Data_Course::get_course_url( $course_id ) ) . CoursePress_Core::get_slug( 'units/' ) . '" class="button button-preview" target="_blank">'. __( 'Preview', 'CP_TD' ) . '</a>
+				<!-- <a class="button button-preview" href="#">'. __( 'Preview', 'CP_TD' ) . '</a> -->
+				' .
 					CoursePress_Helper_UI::toggle_switch(
 						'unit-live-toggle-2',
 						'unit-live-toggle-2',

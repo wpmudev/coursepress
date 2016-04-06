@@ -13,6 +13,7 @@ class CoursePress_View_Front_General {
 			 */
 			add_filter( 'wp_nav_menu_objects', array( __CLASS__, 'main_navigation_links' ), 10, 2 );
 		}
+
 	}
 
 	public static function main_navigation_links( $sorted_menu_items, $args ) {
