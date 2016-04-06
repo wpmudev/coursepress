@@ -125,6 +125,7 @@ module.exports = function(grunt) {
 					'!node_modules/**',
 					'!vendor/**',
 					'!language/**',
+					'!release/**',
 					'!asset/file/**',
 					'!Gruntfile.js',
 					'!build/**',
@@ -135,7 +136,8 @@ module.exports = function(grunt) {
 		},
 
 		// Different plugin settings.
-		plugin_file: 'coursepress.php'
+		plugin_file: 'coursepress.php',
+		plugin_dir: 'coursepress'
 	};
 	// -------------------------------------------------------------------------
 	var key, ind, newkey, newval;
@@ -338,6 +340,52 @@ module.exports = function(grunt) {
 				src: conf.translation.pot_dir + conf.translation.textdomain_pro + '.pot',
 				dest: conf.translation.pot_dir + conf.translation.textdomain_free + '.pot',
 				nonull: true
+			},
+			pro: {
+				src: [conf.plugin_patterns.files],
+				dest: 'release/<%= pkg.version %>-pro/'
+			},
+			free: {
+				src: [conf.plugin_patterns.files],
+				dest: 'release/<%= pkg.version %>-free/'
+			},
+			campus: {
+				src: [conf.plugin_patterns.files],
+				dest: 'release/<%= pkg.version %>-campus/'
+			}
+		},
+
+		// COMPRESS: Create a zip-archive of the plugin (for distribution).
+		compress: {
+			pro: {
+				options: {
+					mode: 'zip',
+					archive: './release/<%= pkg.name %>-pro-<%= pkg.version %>.zip'
+				},
+				expand: true,
+				cwd: 'release/<%= pkg.version %>-pro/',
+				src: [ '**/*' ],
+				dest: paths.plugin_dir
+			},
+			free: {
+				options: {
+					mode: 'zip',
+					archive: './release/<%= pkg.name %>-free-<%= pkg.version %>.zip'
+				},
+				expand: true,
+				cwd: 'release/<%= pkg.version %>-free/',
+				src: [ '**/*' ],
+				dest: paths.plugin_dir
+			},
+			campus: {
+				options: {
+					mode: 'zip',
+					archive: './release/<%= pkg.name %>-campus-<%= pkg.version %>.zip'
+				},
+				expand: true,
+				cwd: 'release/<%= pkg.version %>-campus/',
+				src: [ '**/*' ],
+				dest: paths.plugin_dir
 			}
 		},
 
@@ -514,6 +562,11 @@ module.exports = function(grunt) {
 			// Add the processes/cleaned files to the target branch.
 			grunt.task.run( 'gitadd:' + branch );
 			grunt.task.run( 'gitcommit:' + branch );
+
+			// Create a distributable zip-file of the plugin branch.
+			grunt.task.run( 'copy:' + branch );
+			grunt.task.run( 'compress:' + branch );
+
 			grunt.task.run( 'gitcheckout:base');
 		}
 	});
