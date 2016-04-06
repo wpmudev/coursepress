@@ -6,7 +6,6 @@
  * Author:      WPMU DEV
  * Author URI:  http://premium.wpmudev.org
  * Plugin URI:  http://premium.wpmudev.org/project/coursepress/
- * Developers:  Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
  * License:     GPL2
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * TextDomain:  cp
