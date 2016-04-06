@@ -365,7 +365,7 @@ module.exports = function(grunt) {
 				expand: true,
 				cwd: 'release/<%= pkg.version %>-pro/',
 				src: [ '**/*' ],
-				dest: paths.plugin_dir
+				dest: conf.plugin_dir
 			},
 			free: {
 				options: {
@@ -375,7 +375,7 @@ module.exports = function(grunt) {
 				expand: true,
 				cwd: 'release/<%= pkg.version %>-free/',
 				src: [ '**/*' ],
-				dest: paths.plugin_dir
+				dest: conf.plugin_dir
 			},
 			campus: {
 				options: {
@@ -385,7 +385,7 @@ module.exports = function(grunt) {
 				expand: true,
 				cwd: 'release/<%= pkg.version %>-campus/',
 				src: [ '**/*' ],
-				dest: paths.plugin_dir
+				dest: conf.plugin_dir
 			}
 		},
 
