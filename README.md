@@ -75,6 +75,26 @@ echo 'This is only in coursepress/2-campus';
 ```
 
 
+## WP-Academy
+
+Updating CoursePress in wp-academy is very simple. It takes two steps: 
+First update and push CoursePress 2-Pro to latest version.
+Second clone and commit CoursePress 2-Pro in WP-Academy.
+
+**First:**
+
+* In the *coursepress/2.0-dev* branch:
+* `grunt build:pro`
+* Push the changes to bitbucket.
+
+**Second:**
+
+* In the *wpmu-dev/wp-academy* branch:
+* `grunt coursepress`
+* This command will automatically clone the CP 2-Pro branch (that we updated in first step) inside the wp-academy branch.
+* Now you simply need to commit and push the changes. Easy!
+
+
 ## Working with the branches
 
 ### Cloning
@@ -186,6 +206,18 @@ Build | `grunt build:pro` | Same as build, but only build the pro plugin version
 Build | `grunt build:free` | Same as build, but only build the free plugin version.
 Build | `grunt build:campus` | Same as build, but only build the campus plugin version.
 
+
+### Update product versions
+
+The example shows how to update the Pro-version, but the process for free nad campus versions are identical.
+
+1. **Switch** to branch `coursepress/2.0-dev`
+1. Run **grunt** command `$ grunt build:pro`
+1. **Switch** to branch `coursepress/2-pro`
+1. Do a git **pull**, *possibly some conflicts are identified!*
+1. Do NOT resolve the conflicts, but **revert** the conflicting files to last version!!
+> Grunt already committed the correct file version to git. The conflicts are irrelevant!
+1. Now **commit** and **push** the changes to bitbucket
 
 ### Set up grunt
 
