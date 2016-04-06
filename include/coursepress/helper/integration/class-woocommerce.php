@@ -513,7 +513,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 		}
 	}
 
-	function change_cp_item_name( $title, $cart_item, $cart_item_key ) {
+	public static function change_cp_item_name( $title, $cart_item, $cart_item_key ) {
 		$course_id = wp_get_post_parent_id( $cart_item['product_id'] );
 		if ( $course_id && get_post_type( $course_id ) == 'course' ) {
 			return get_the_title( $course_id );
@@ -521,7 +521,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 		return $title;
 	}
 
-	function change_cp_order_item_name( $name, $item ) {
+	public static function change_cp_order_item_name( $name, $item ) {
 		$product_id = isset( $item['item_meta']['_product_id'] ) ? $item['item_meta']['_product_id'] : '';
 		$product_id = $product_id[0];
 		if ( is_numeric( $product_id ) ) {
