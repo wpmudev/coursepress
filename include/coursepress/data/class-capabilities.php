@@ -160,7 +160,9 @@ class CoursePress_Data_Capabilities {
 			self::assign_admin_capabilities( $user );
 			return;
 		}
-		if ( ! empty( CoursePress_Data_Instructor::get_course_count( $user->id ) ) ) {
+
+		$count = CoursePress_Data_Instructor::get_course_count( $user->id );
+		if ( ! empty( $count ) ) {
 			self::assign_instructor_capabilities( $user->ID );
 			return;
 		}

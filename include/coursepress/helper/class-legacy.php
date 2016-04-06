@@ -250,7 +250,12 @@ if ( ! function_exists( 'cp_object_encode' ) ) {
 			'2.0'
 		);
 
-		$encoded = json_encode( $object, JSON_FORCE_OBJECT | JSON_HEX_QUOT | JSON_HEX_APOS );
+		if ( version_compare( PHP_VERSION, '5.3.0' ) >= 0 && defined( 'JSON_FORCE_OBJECT' ) ) {
+			$encoded = json_encode( $object, JSON_FORCE_OBJECT | JSON_HEX_QUOT | JSON_HEX_APOS );
+		} else {
+			$encoded = json_encode( $object );
+		}
+
 		$encoded = str_replace( '"', '&quot;', $encoded );
 		$encoded = str_replace( "'", '&apos;', $encoded );
 
