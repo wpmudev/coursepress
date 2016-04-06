@@ -20,4 +20,5 @@ coursepress-files/pdf-cache/
 /vendor
 /composer.lock
 /composer
+/release
 composer.json
