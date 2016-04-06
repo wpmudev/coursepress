@@ -190,7 +190,7 @@ class CoursePress_Template_Communication {
 
 		// Form.
 		$content .= '
-		<form method="POST">';
+		<form method="POST" class="comment-form">';
 
 		// Course Area
 		$options_unit = array();
@@ -200,10 +200,10 @@ class CoursePress_Template_Communication {
 			'value' => 'course',
 		);
 		$content .= '<div class="discussion-section">
-				<label><span>' .
-				esc_html( 'This discussion is about ', 'CP_TD' ) .
+				<p class="comment-form-comment"><label><span>' .
+				esc_html( 'This discussion is about ', 'CP_TD' ) . '<br />'.
 				CoursePress_Helper_UI::get_unit_dropdown( 'unitID', 'unit_id', $course_id, false, $options_unit ) .
-				'</span></label>
+				'</span></label></p>
 			</div>
 		';
 
@@ -217,11 +217,12 @@ class CoursePress_Template_Communication {
 		$add_edit = $edit ? esc_html__( 'Update discussion', 'CP_TD' ) : esc_html__( 'Add discussion', 'CP_TD' );
 
 		$content .= '<input type="hidden" value="add_new_discussion" name="action" /><input type="hidden" value="' . esc_attr( $course_id ) . '" name="course_id" />
-			<input name="discussion_title" type="text" placeholder="' . esc_attr__( 'Title of the discussion', 'CP_TD' ) . '" value="' . esc_attr( $title ) . '" />
-			<textarea name="discussion_content" placeholder="' . esc_attr__( 'Type your discussion or question here…', 'CP_TD' ) . '">' . CoursePress_Helper_Utility::filter_content( $body ) . '</textarea>
+            <p class="comment-form-comment"><label for="discussion_title">' . __( 'Title', 'CP_TD' ) . '</label> <input name="discussion_title" type="text" placeholder="' . esc_attr__( 'Title of the discussion', 'CP_TD' ) . '" value="' . esc_attr( $title ) . '" />
+
+            <p class="comment-form-comment"><label for="discussion_content">' . __( 'Description', 'CP_TD' ) . '</label> <textarea name="discussion_content" placeholder="' . esc_attr__( 'Type your discussion or question here…', 'CP_TD' ) . '">' . CoursePress_Helper_Utility::filter_content( $body ) . '</textarea></p>
 			<div class="button-links">
 				<a href="' . esc_url( $cancel_link ) . '">' . esc_html__( 'Cancel', 'CP_TD' ) . '</a>
-				<a class="submit-discussion">' . esc_html( $add_edit ) . '</a>
+				<button class="submit-discussion">' . esc_html( $add_edit ) . '</button>
 			</div>
 		</form>
 		';
