@@ -1,5 +1,15 @@
 /*global require*/
 
+/**
+ * When grunt command does not execute try these steps:
+ *
+ * - delete folder 'node_modules' and run command in console:
+ *   $ npm install
+ *
+ * - Run test-command in console, to find syntax errors in script:
+ *   $ grunt hello
+ */
+
 module.exports = function(grunt) {
 	// Show elapsed time at the end.
 	require( 'time-grunt' )(grunt);
