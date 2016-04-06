@@ -352,15 +352,15 @@ module.exports = function(grunt) {
 				nonull: true
 			},
 			pro: {
-				src: [conf.plugin_patterns.files],
+				src: conf.plugin_patterns.files.src,
 				dest: 'release/<%= pkg.version %>-pro/'
 			},
 			free: {
-				src: [conf.plugin_patterns.files],
+				src: conf.plugin_patterns.files.src,
 				dest: 'release/<%= pkg.version %>-free/'
 			},
 			campus: {
-				src: [conf.plugin_patterns.files],
+				src: conf.plugin_patterns.files.src,
 				dest: 'release/<%= pkg.version %>-campus/'
 			}
 		},
