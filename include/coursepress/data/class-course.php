@@ -1658,7 +1658,7 @@ class CoursePress_Data_Course {
 
 		if ( $course ) {
 			// Check if current course is not yet live.
-			if ( 'publih' != $course->post_status ) {
+			if ( 'publish' != $course->post_status ) {
 				return CoursePress_Core::get_slug( 'courses', true ) . $course->post_name . '/';
 			} else {
 				return get_permalink( $course_id );

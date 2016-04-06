@@ -997,7 +997,7 @@ class CoursePress_View_Front_Course {
 				'type' => 'course_notifications_archive',
 			);
 			// -----------------------------------------------------------------
-		} elseif ( $cp->is_unit ) { 
+		} elseif ( $cp->is_unit ) {
 			// A differnet unit page can only be the Unit-Archive!
 			CoursePress_Helper_Utility::set_the_course_subpage( 'units' );
 
