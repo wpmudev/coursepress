@@ -469,25 +469,25 @@ class CoursePress_Core {
 		$new_rules = array();
 
 		/**
-		 * units (DROP VP)
+		 * units
 		 */
 		$new_rules[ self::get_slug( 'courses' ).'/([^/]+)/'.self::get_slug( 'unit' ).'/([^/]+)/?$' ] = 'index.php?course=$matches[1]&cp_action=show_single_unit&unitname=$matches[2]';
 		$new_rules[ self::get_slug( 'courses' ).'/([^/]+)(?:/([0-9]+))?/'.self::get_slug( 'unit' ).'/?$' ] = 'index.php?course=$matches[1]&page=$matches[2]&cp_action=show_units';
 
 		/**
-		 * notifications (DROP VP)
+		 * notifications
 		 */
 		$new_rules[ self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'notification' ) . '(?:/page/([0-9]+))?/?' ] = 'index.php?course=$matches[1]&cp_action=notifications_archive&page=$matches[2]';
 
 		/**
-		 * discussion (DROP VP)
+		 * discussion
 		 */
 		$new_rules[ self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'discussion' ) . '/' . self::get_slug( 'discussions_new' ).  '/?' ] = 'index.php?course=$matches[1]&cp_action=discussion_new';
 		$new_rules[ self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'discussion' ) . '/([^/]+)/?' ] = 'index.php?course=$matches[1]&cp_action=discussion_show&discussion_name=$matches[2]';
 		$new_rules[ self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'discussion' ) . '(?:/page/([0-9]+))?/?' ] = 'index.php?course=$matches[1]&cp_action=discussions_archive&page=$matches[2]';
 
 		/**
-		 *  Special Rules for CoursePress Focus mode ( DROP VP and old )
+		 *  Special Rules for CoursePress Focus mode
 		 */
 		$new_rules['^coursepress_focus/([^/]*)/([^/]*)/([^/]*)/([^/]*)/?$'] = 'index.php?coursepress_focus=1&course=$matches[1]&unit=$matches[2]&type=$matches[3]&item=$matches[4]'; // Matches item
 		$new_rules['^coursepress_focus/([^/]*)/([^/]*)/([^/]*)/?$'] = 'index.php?coursepress_focus=1&course=$matches[1]&unit=$matches[2]&type=$matches[3]'; // Matches type
@@ -496,7 +496,7 @@ class CoursePress_Core {
 		$new_rules['^coursepress_focus/.*?$'] = 'index.php?coursepress_focus=1';  // Not useful practically
 
 		/**
-		 * instructor ( DROP VP )
+		 * instructor
 		 */
 		$page_id = CoursePress_Core::get_setting( 'pages/instructor' );
 		if ( ! empty( $page_id ) ) {
@@ -508,59 +508,13 @@ class CoursePress_Core {
 		}
 
 		/**
-		 * workbook(DROP VP)
+		 * workbook
 		 */
 		$new_rules[ self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'workbook' ) . '(?:/page/([0-9]+))?/?' ] = 'index.php?course=$matches[1]&cp_action=workbook&page=$matches[2]';
-
-		// DROP VP $new_rules[ '^' . self::get_slug( 'course' ) . '/' . self::get_slug( 'category' ) . '/([^/]*)/page/([^/]*)/?' ] = 'index.php?page_id=-1&course_category=$matches[1]&paged=$matches[2]';
-		// DROP VP $new_rules[ '^' . self::get_slug( 'course' ) . '/' . self::get_slug( 'category' ) . '/([^/]*)/?' ] = 'index.php?page_id=-1&course_category=$matches[1]';
-
-		// DROP VP $new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'discussion' ) . '/page/([^/]*)/?' ] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive&paged=$matches[2]'; // page/?( [0-9]{1,} )/?$
-		$new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'discussion' ) . '/([^/]*)/?' ] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_name=$matches[2]';
-		// DROP VP $new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'discussion' ) ] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive';
-
-		$new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'grades' ) ] = 'index.php?page_id=-1&coursename=$matches[1]&grades_archive';
-		// DROP VP $new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'workbook' ) ] = 'index.php?page_id=-1&coursename=$matches[1]&workbook';
-
-		// DROP VP $new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'unit' ) . '/([^/]*)/page/([^/]*)/?' ] = 'index.php?page_id=-1&coursename=$matches[1]&unitname=$matches[2]&paged=$matches[3]'; // page/?( [0-9]{1,} )/?$
-		// DROP VP $new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'unit' ) . '/([^/]*)/?' ] = 'index.php?page_id=-1&coursename=$matches[1]&unitname=$matches[2]';
-		// DROP VP $new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'unit' ) ] = 'index.php?page_id=-1&coursename=$matches[1]';
-
-		// DROP VP $new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'notification' ) . '/page/([^/]*)/?' ] = 'index.php?page_id=-1&coursename=$matches[1]&notifications_archive&paged=$matches[2]'; // page/?( [0-9]{1,} )/?$
-		// DROP VP $new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'notification' ) ] = 'index.php?page_id=-1uu&coursename=$matches[1]&notifications_archive';
-
-		// DROP VP $new_rules[ '^' . self::get_slug( 'instructor' ) . '/([^/]*)/?' ] = 'index.php?page_id=-1&instructor_username=$matches[1]';
-
-		// Courses slug need to redirect to course archive pages
-		// DROP VP $new_rules[ '^' . self::get_slug( 'course' ) . '/page/([^/]*)/?' ] = 'index.php?page_id=-1&course_category=all&paged=$matches[1]';
-		// DROP VP $new_rules[ '^' . self::get_slug( 'course' ) . '/?$' ] = 'index.php?page_id=-1&course_category=all';
-
-		/**
-		 * student login page
-		 */
-		// DROP VP $new_rules[ '^' . self::get_slug( 'login' ) . '/?$' ] = 'index.php?page_id=-1&pagename='.self::get_slug( 'login' );
-
-		/**
-		 * create account
-		 */
-		// DROP VP $new_rules[ '^' . self::get_slug( 'signup' ) . '/?$' ] = 'index.php?page_id=-1&pagename='.self::get_slug( 'signup' );
-
-		/**
-		 * account settings
-		 */
-		// DROP VP $new_rules[ '^' . self::get_slug( 'student_settings' ) . '/?$' ] = 'index.php?page_id=-1&pagename='.self::get_slug( 'student_settings' );
 
 		$upload_dir = wp_upload_dir();
 		$upload_path = trailingslashit( str_replace( home_url(), '', $upload_dir['baseurl'] ) );
 		$new_rules[ '^' . self::get_slug( 'course' ) . '/file/([^/]*)/'  ] = 'wp-content/uploads/$matches[1]';
-
-		// Remove potential conflicts between single and virtual page on single site.
-		/**
-		 * @todo: Check if this exists in 1.x and remove it if not needed!
-		if ( ! is_multisite() ) {
-			unset( $rules['( [^/]+ )( /[0-9]+ )?/?$'] );
-		}
-		*/
 
 		$new_rules[ '^' . self::get_slug( 'inbox' ) . '/?' ] = 'index.php?page_id=-1&inbox';
 		$new_rules[ '^' . self::get_slug( 'messages_new' ) . '/?' ] = 'index.php?page_id=-1&new_message';
