@@ -2,7 +2,21 @@
 
 abstract class CoursePress_View_Admin_Setting_Setting {
 
+	/**
+	 * Slug of current tab.
+	 *
+	 * @since 2.0.0
+	 * @var string $slug Slug of current tab.
+	 */
 	protected static $slug = '';
+
+	/**
+	 * Allowed tags.
+	 *
+	 * @since 2.0.0
+	 * @var array $allowed_tags Array of allowed tags for wp_kses() function.
+	 */
+	protected static $allowed_tags;
 
 	/**
 	 * Get one row of settings
@@ -20,9 +34,12 @@ abstract class CoursePress_View_Admin_Setting_Setting {
 		$row .= sprintf( '<th scope="row">%s</th>', esc_html( $label ) );
 		$row .= sprintf( '<td>%s', $content );
 		if ( ! empty( $description ) ) {
+			if ( empty( self::$allowed_tags ) ) {
+				$allowed_tags = wp_kses_allowed_html( 'post' );
+			}
 			$row .= sprintf(
 				'<p class="description">%s</p>',
-				$description
+				wp_kses( $description, self::$allowed_tags )
 			);
 		}
 		$row .= '</td></tr>';
@@ -88,10 +105,28 @@ abstract class CoursePress_View_Admin_Setting_Setting {
 	 *
 	 * @since 2.0.0
 	 *
+	 * @param string $title If exist, then add title before table open.
+	 *
 	 * @return string Table open.
 	 */
-	protected static function table_start() {
+	protected static function table_start( $title = null, $description = null ) {
 
+		$content = '';
+		if ( ! empty( $title ) ) {
+			$content .= sprintf(
+				'<h3 class="hndle" style="cursor:auto;"><span>%s</span></h3>',
+				esc_html( $title )
+			);
+			if ( ! empty( $description ) ) {
+				if ( empty( self::$allowed_tags ) ) {
+					$allowed_tags = wp_kses_allowed_html( 'post' );
+				}
+				$content .= sprintf(
+					'<p class="description">%s</p>',
+					wp_kses( $description, self::$allowed_tags )
+				);
+			}
+		}
 		$content .= '<div class="inside">';
 		$content .= '<table class="form-table"><tbody>';
 		return $content;

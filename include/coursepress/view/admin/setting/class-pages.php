@@ -108,6 +108,14 @@ class CoursePress_View_Admin_Setting_Pages extends CoursePress_View_Admin_Settin
 			__( 'Select page where we display instructor profile.', 'CP_TD' )
 		);
 
+		/**
+		 * Enrollment
+		 */
+		$content .= self::row(
+			__( 'Enrollment Process Page', 'CP_TD' ),
+			$page_dropdowns['enrollment'],
+			sprintf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'CP_TD' ), '<strong>[cp_pages page="enrollment_process"]</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET['page'] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'CP_TD' ) . '</a>' )
+		);
 		$content .= self::table_end();
 		return $content;
 

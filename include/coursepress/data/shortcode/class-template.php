@@ -1322,10 +1322,12 @@ class CoursePress_Data_Shortcode_Template {
 		$forgot_url = wp_lostpassword_url();
 
 		// Set a cookie now to see if they are supported by the browser.
+		/*
 		setcookie( TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN );
 		if ( SITECOOKIEPATH != COOKIEPATH ) {
 			setcookie( TEST_COOKIE, 'WP Cookie check', 0, SITECOOKIEPATH, COOKIE_DOMAIN );
-		};
+        };
+         */
 
 		$content = '';
 		switch ( $page ) {
