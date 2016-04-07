@@ -211,7 +211,8 @@ class CoursePress_Helper_Setting {
 			}
 
 			// Add student stylesshet
-			if ( CoursePress_View_Admin_Student::$slug == $page ) {
+			$slug = CoursePress_View_Admin_Student::get_slug();
+			if ( $slug == $page ) {
 				$student_css = CoursePress::$url . 'asset/css/admin-student.css';
 				wp_enqueue_style( 'coursepress_admin_student', $student_css, false, CoursePress::$version );
 			}
