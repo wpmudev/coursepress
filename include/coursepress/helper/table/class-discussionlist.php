@@ -450,15 +450,11 @@ class CoursePress_Helper_Table_DiscussionList extends WP_List_Table {
 			$two = '2';
 		}
 
-		if ( empty( $this->_categories ) ) {
-			return; }
-
 		$page = get_query_var( 'page', 'coursepress_discussions' );
 
 		$s = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '';
 		$course_id = isset( $_GET['course_id'] ) ? sanitize_text_field( $_GET['course_id'] ) : '';
 
-		echo '<form method="GET">';
 		echo '<input type="hidden" name="page" value="' . $page . '" />';
 		echo '<input type="hidden" name="s" value="' . $s . '" />';
 		echo "<label for='course-category-selector-" . esc_attr( $which ) . "' class='screen-reader-text'>" . __( 'Select course category', 'CP_TD' ) . '</label>';
@@ -474,7 +470,7 @@ class CoursePress_Helper_Table_DiscussionList extends WP_List_Table {
 		echo CoursePress_Helper_UI::get_course_dropdown( 'course_id' . $two, 'course_id' . $two, $courses, $options );
 
 		submit_button( __( 'Filter', 'CP_TD' ), 'category-filter', '', false, array( 'id' => "filter-courses$two" ) );
-		echo '</form>';
+
 		echo "\n";
 	}
 

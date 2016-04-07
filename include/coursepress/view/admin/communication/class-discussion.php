@@ -113,7 +113,7 @@ class CoursePress_View_Admin_Communication_Discussion {
 			$content .= '<div class="nonce-holder" data-nonce="' . $bulk_nonce . '"></div>';
 			ob_start();
 
-			echo '<form method="post">';
+			echo '<form method="post" action="'. remove_query_arg( 'course_id' ) . '">';
 			$list_discussion->display();
 			echo '</form>';
 
