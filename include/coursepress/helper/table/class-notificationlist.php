@@ -354,6 +354,8 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 			// Only show notifications where the current user have access with.
 			$courses = CoursePress_View_Admin_Communication_Notification::get_courses();
 			$courses_ids = array_map( array( __CLASS__, 'get_course_id' ), $courses );
+			// Include notification for all courses
+			$courses_ids[] = 'all';
 			$post_args['meta_query'] = array(
 				array(
 					'key' => 'course_id',

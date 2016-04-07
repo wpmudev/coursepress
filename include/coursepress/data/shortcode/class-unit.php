@@ -563,7 +563,7 @@ class CoursePress_Data_Shortcode_Unit {
 
 		if ( CP_IS_PREMIUM ) {
 			// CERTIFICATE CLASS.
-			$show_link = CoursePress_Data_Certificate::is_enabled();
+			$show_link = CoursePress_Data_Certificate::is_enabled() && CoursePress_Data_Student::is_enrolled_in_course( $student_id, $course_id );
 		}
 
 		if ( is_user_logged_in() && $show_link ) {
