@@ -1187,6 +1187,7 @@ class CoursePress_Data_Course {
 	}
 
 	public static function previewability( $course_id ) {
+
 		if ( empty( self::$previewability ) ) {
 			$units = array_filter(
 				CoursePress_Data_Course::get_setting(
@@ -1358,8 +1359,9 @@ class CoursePress_Data_Course {
 		$enrolled = ! empty( $student_id ) ? CoursePress_Data_Course::student_enrolled( $student_id, $course_id ) : false;
 		$instructors = array_filter( CoursePress_Data_Course::get_instructors( $course_id ) );
 		$is_instructor = in_array( $student_id, $instructors );
+		$can_update_course = CoursePress_Data_Capabilities::can_update_course( $course_id );
 
-		if ( $enrolled || $is_instructor ) {
+		if ( $enrolled || $is_instructor || $can_update_course ) {
 			return true;
 		}
 
@@ -1404,8 +1406,9 @@ class CoursePress_Data_Course {
 		$enrolled = ! empty( $student_id ) ? CoursePress_Data_Course::student_enrolled( $student_id, $course_id ) : false;
 		$instructors = array_filter( CoursePress_Data_Course::get_instructors( $course_id ) );
 		$is_instructor = in_array( $student_id, $instructors );
+		$can_update_course = CoursePress_Data_Capabilities::can_update_course( $course_id );
 
-		if ( $enrolled || $is_instructor ) {
+		if ( $enrolled || $is_instructor || $can_update_course ) {
 			return true;
 		}
 
@@ -1691,5 +1694,23 @@ class CoursePress_Data_Course {
 	public static function is_course_category() {
 		$taxonomy_name = self::get_post_category_name();
 		return is_tax( $taxonomy_name );
+	}
+
+	public static function get_course_url( $course_id ) {
+		$course = get_post( $course_id );
+
+		if ( $course ) {
+			// Check if current course is not yet live.
+			if ( 'publish' != $course->post_status ) {
+				return CoursePress_Core::get_slug( 'courses', true ) . $course->post_name . '/';
+			} else {
+				return get_permalink( $course_id );
+			}
+		}
+	}
+
+	public static function is_course_preview( $course_id ) {
+		$post_status = get_post_status( $course_id );
+		$can_update_course = CoursePress_Data_Capabilities::can_update_course( $course_id );
 	}
 }

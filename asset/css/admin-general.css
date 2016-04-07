@@ -442,6 +442,22 @@ A. Responsive
   border: 1px solid #f1f1f1;
 }
 
+.coursepress-course-step-container .button-preview {
+  background: #ec8c35;
+  border: none;
+  box-shadow: none;
+  color: #ffffff;
+  display: inline-block;
+  margin: 5px 5px 15px auto;
+  text-align: center;
+  width: 120px;
+  border-radius: 0;
+}
+.coursepress-course-step-container .button-preview:hover {
+  background: #e99a53;
+  color: #ffffff;
+}
+
 .coursepress-course-step-container.metaboxes {
   box-sizing: border-box;
   width: 70%;
@@ -527,7 +543,7 @@ A. Responsive
 #course-setup-steps .step-title .status.save-process {
   background: url("../img/ajax-loader.gif");
   color: #ffffff;
-  border: none;
+  border: 0;
   background-repeat: no-repeat;
   background-size: 20px;
 }
@@ -535,7 +551,7 @@ A. Responsive
 #course-setup-steps .step-title.ui-state-active .status.save-process {
   background: url("../img/ajax-loader-blue.gif");
   color: #ffffff;
-  border: none;
+  border: 0;
   background-repeat: no-repeat;
   background-size: 20px;
 }
@@ -718,15 +734,6 @@ input.button.button-primary.instructor-assign {
 }
 
 #course-setup-steps .step-content .instructor-avatar-holder:hover {
-  /* IE 8 */
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha( Opacity=50 )";
-  /* IE 5-7 */
-  filter: alpha(opacity=70);
-  /* Netscape */
-  -moz-opacity: 0.7;
-  /* Safari 1.x */
-  -khtml-opacity: 0.7;
-  /* Good browsers */
   opacity: 0.7;
 }
 
@@ -741,7 +748,7 @@ input.button.button-primary.instructor-assign {
   height: 80px;
   position: absolute;
   font-size: 28px;
-  color: white;
+  color: #FFF;
   text-indent: 9999px;
   overflow: hidden;
   text-decoration: none;
@@ -780,7 +787,7 @@ input.button.button-primary.instructor-assign {
 #course-setup-steps .step-content .instructor-status {
   background: none repeat scroll 0 0 #0091cd;
   box-sizing: border-box;
-  color: #ffffff;
+  color: #fff;
   position: absolute;
   top: 0;
   width: 80px;
@@ -1087,6 +1094,12 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 }
 .tab-content .unit-builder-content .unit-buttons .hidden {
   display: none;
+}
+.tab-content .unit-builder-content .button.button-preview {
+  background: #ec8c35;
+}
+.tab-content .unit-builder-content .button.button-preview:hover {
+  background: #e99a53;
 }
 .tab-content .unit-builder-content .unit-builder-header {
   background: #0074A2;

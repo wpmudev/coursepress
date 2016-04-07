@@ -152,8 +152,19 @@ class CoursePress_View_Admin_Course_Edit {
 		$has_metaboxes = ! empty( $wp_meta_boxes ) && array_key_exists( self::$slug, $wp_meta_boxes );
 
 		$metabox_class = $has_metaboxes ? 'metaboxes' : '';
+		$preview_button = '';
+
+		if ( $course_id > 0 ) {
+			$preview_button = sprintf(
+				'<div><a href="%s" target="_blank" class="button button-preview">%s</a></div>',
+				CoursePress_Data_Course::get_course_url( $course_id ),
+				__( 'Preview', 'CP_TD' )
+			);
+		}
+
 		$content = '
 		<div class="coursepress-course-step-container ' . $metabox_class . '">
+			'. $preview_button . '
 			<div id="course-setup-steps" data-nonce="' . $setup_nonce . '">
 				' . self::render_setup_step_1() . '
 				' . self::render_setup_step_2() . '
@@ -177,6 +188,7 @@ class CoursePress_View_Admin_Course_Edit {
 		$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
 		$setup_class = CoursePress_Data_Course::get_setting( $course_id, 'setup_step_1', '' );
 		$setup_class = ( (int) CoursePress_Data_Course::get_setting( $course_id, 'setup_marker', 0 ) === 6 ) || ( (int) CoursePress_Data_Course::get_setting( $course_id, 'setup_marker', 0 ) === 0 ) ? $setup_class . ' setup_marker' : $setup_class;
+
 		$content = '
 			<div class="step-title step-1">' . esc_html__( 'Step 1 – Course Overview', 'CP_TD' ) . '
 				<div class="status ' . $setup_class . '"></div>

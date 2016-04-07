@@ -1,11 +1,23 @@
 /*global require*/
 
+/**
+ * When grunt command does not execute try these steps:
+ *
+ * - delete folder 'node_modules' and run command in console:
+ *   $ npm install
+ *
+ * - Run test-command in console, to find syntax errors in script:
+ *   $ grunt hello
+ */
+
 module.exports = function(grunt) {
 	// Show elapsed time at the end.
 	require( 'time-grunt' )(grunt);
 
 	// Load all grunt tasks.
 	require( 'load-grunt-tasks' )(grunt);
+
+	var buildtime = new Date().toISOString();
 
 	// -------------------------------------------------------------------------
 	// Configuration.
@@ -91,6 +103,7 @@ module.exports = function(grunt) {
 		plugin_patterns: {
 			pro: [
 				{ match: /CoursePress Base/g, replace: 'CoursePress Pro' },
+				{ match: /BUILDTIME/g, replace: buildtime },
 				{ match: /'CP_TD'/g, replace: '\'cp\'' },
 				{ match: /\/\* start:pro \*\//g, replace: '' },
 				{ match: /\/\* end:pro \*\//g, replace: '' },
@@ -99,6 +112,7 @@ module.exports = function(grunt) {
 			],
 			free: [
 				{ match: /CoursePress Base/g, replace: 'CoursePress' },
+				{ match: /BUILDTIME/g, replace: buildtime },
 				{ match: /'CP_TD'/g, replace: '\'coursepress\'' },
 				{ match: /\/\* start:free \*\//g, replace: '' },
 				{ match: /\/\* end:free \*\//g, replace: '' },
@@ -107,6 +121,7 @@ module.exports = function(grunt) {
 			],
 			campus: [
 				{ match: /CoursePress Base/g, replace: 'CoursePress Campus' },
+				{ match: /BUILDTIME/g, replace: buildtime },
 				{ match: /'CP_TD'/g, replace: '\'cp\'' },
 				{ match: /\/\* start:campus \*\//g, replace: '' },
 				{ match: /\/\* end:campus \*\//g, replace: '' },
@@ -125,6 +140,7 @@ module.exports = function(grunt) {
 					'!node_modules/**',
 					'!vendor/**',
 					'!language/**',
+					'!release/**',
 					'!asset/file/**',
 					'!Gruntfile.js',
 					'!build/**',
@@ -135,7 +151,8 @@ module.exports = function(grunt) {
 		},
 
 		// Different plugin settings.
-		plugin_file: 'coursepress.php'
+		plugin_file: 'coursepress.php',
+		plugin_dir: 'coursepress'
 	};
 	// -------------------------------------------------------------------------
 	var key, ind, newkey, newval;
@@ -338,6 +355,52 @@ module.exports = function(grunt) {
 				src: conf.translation.pot_dir + conf.translation.textdomain_pro + '.pot',
 				dest: conf.translation.pot_dir + conf.translation.textdomain_free + '.pot',
 				nonull: true
+			},
+			pro: {
+				src: conf.plugin_patterns.files.src,
+				dest: 'release/<%= pkg.version %>-pro/'
+			},
+			free: {
+				src: conf.plugin_patterns.files.src,
+				dest: 'release/<%= pkg.version %>-free/'
+			},
+			campus: {
+				src: conf.plugin_patterns.files.src,
+				dest: 'release/<%= pkg.version %>-campus/'
+			}
+		},
+
+		// COMPRESS: Create a zip-archive of the plugin (for distribution).
+		compress: {
+			pro: {
+				options: {
+					mode: 'zip',
+					archive: './release/<%= pkg.name %>-pro-<%= pkg.version %>.zip'
+				},
+				expand: true,
+				cwd: 'release/<%= pkg.version %>-pro/',
+				src: [ '**/*' ],
+				dest: conf.plugin_dir
+			},
+			free: {
+				options: {
+					mode: 'zip',
+					archive: './release/<%= pkg.name %>-free-<%= pkg.version %>.zip'
+				},
+				expand: true,
+				cwd: 'release/<%= pkg.version %>-free/',
+				src: [ '**/*' ],
+				dest: conf.plugin_dir
+			},
+			campus: {
+				options: {
+					mode: 'zip',
+					archive: './release/<%= pkg.name %>-campus-<%= pkg.version %>.zip'
+				},
+				expand: true,
+				cwd: 'release/<%= pkg.version %>-campus/',
+				src: [ '**/*' ],
+				dest: conf.plugin_dir
 			}
 		},
 
@@ -400,6 +463,24 @@ module.exports = function(grunt) {
 
 		// BUILD: Remove files that are not relevant for target product.
 		clean: {
+			release_pro: {
+				src: [
+					'release/<%= pkg.version %>-pro/',
+					'release/<%= pkg.version %>-pro-<%= pkg.version %>.zip'
+				]
+			},
+			release_free: {
+				src: [
+					'release/<%= pkg.version %>-free/',
+					'release/<%= pkg.version %>-free-<%= pkg.version %>.zip'
+				]
+			},
+			release_campus: {
+				src: [
+					'release/<%= pkg.version %>-campus/',
+					'release/<%= pkg.version %>-campus-<%= pkg.version %>.zip'
+				]
+			},
 			pro: conf.plugin_branches.exclude_pro,
 			free: conf.plugin_branches.exclude_free,
 			campus: conf.plugin_branches.exclude_campus
@@ -514,6 +595,12 @@ module.exports = function(grunt) {
 			// Add the processes/cleaned files to the target branch.
 			grunt.task.run( 'gitadd:' + branch );
 			grunt.task.run( 'gitcommit:' + branch );
+
+			// Create a distributable zip-file of the plugin branch.
+			grunt.task.run( 'clean:release_' + branch );
+			grunt.task.run( 'copy:' + branch );
+			grunt.task.run( 'compress:' + branch );
+
 			grunt.task.run( 'gitcheckout:base');
 		}
 	});
