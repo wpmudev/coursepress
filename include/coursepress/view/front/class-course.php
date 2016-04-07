@@ -108,9 +108,8 @@ class CoursePress_View_Front_Course {
 		add_filter( 'the_excerpt', array( __CLASS__, 'the_excerpt_on_archive_page' ) );
 		add_filter( 'post_class', array( __CLASS__, 'post_class_on_archive_page' ) );
 
-		if ( ! CP_IS_WPMUDEV ) {
-			remove_filter( 'the_content', 'wpautop' );
-		}
+		// TODO: The filter is always removed... Does not look correct.
+		remove_filter( 'the_content', 'wpautop' );
 
 		self::handle_module_uploads();
 		CoursePress_View_Front_EnrollmentPopup::init();

@@ -31,7 +31,7 @@ class CoursePress_Data_Shortcode_Student {
 			array( __CLASS__, 'coursepress_enrollment_templates' )
 		);
 
-		if ( ! CP_IS_WPMUDEV && ! CP_IS_CAMPUS ) {
+		if ( ! CP_IS_CAMPUS ) {
 			add_shortcode(
 				'student_registration_form',
 				array( __CLASS__, 'student_registration_form' )

@@ -232,9 +232,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			$course_id
 		);
 
-		if ( CP_IS_WPMUDEV ) {
-			unset( $buttons['signup']['attr']['data-type'] );
-		}
+		$buttons = apply_filters( 'coursepress_coursetemplate_join_button', $buttons );
 
 		// Determine the button option.
 		if ( ! $student_enrolled && ! $is_instructor ) {

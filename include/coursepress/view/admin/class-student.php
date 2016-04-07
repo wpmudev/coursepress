@@ -1,7 +1,7 @@
 <?php
 
 class CoursePress_View_Admin_Student {
-	public static $slug = 'coursepress_students';
+	private static $slug = 'coursepress_students';
 	private static $title = '';
 	private static $menu_title = '';
 	private static $table_manager = null;
@@ -72,4 +72,16 @@ class CoursePress_View_Admin_Student {
 			CoursePress_View_Admin_Student_Profile::display();
 		}
 	}
+
+	/**
+	 * return slug.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return string slug
+	 */
+	public static function get_slug() {
+		return self::$slug;
+	}
+
 }

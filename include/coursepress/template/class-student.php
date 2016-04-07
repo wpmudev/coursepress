@@ -77,8 +77,12 @@ class CoursePress_Template_Student {
 			return $content;
 
 		} else {
-			// Might need to add url to signup slug
-			if ( ! CP_IS_WPMUDEV && ! CP_IS_CAMPUS ) {
+			$signup_redirect = apply_filters(
+				'coursepress_signup_redirect_for_guest',
+				! CP_IS_CAMPUS
+			);
+
+			if ( $signup_redirect ) {
 				if ( CoursePress_Core::get_setting( 'general/use_custom_login' ) ) {
 					$url = CoursePress_Core::get_slug( 'signup', true );
 				} else {
@@ -195,8 +199,12 @@ class CoursePress_Template_Student {
 
 			return $content;
 		} else {
+			$signup_redirect = apply_filters(
+				'coursepress_signup_redirect_for_guest',
+				! CP_IS_CAMPUS
+			);
 
-			if ( ! CP_IS_WPMUDEV && ! CP_IS_CAMPUS ) {
+			if ( $signup_redirect ) {
 				if ( CoursePress_Core::get_setting( 'general/use_custom_login' ) ) {
 					$url = CoursePress_Core::get_slug( 'signup', true );
 				} else {

@@ -67,7 +67,6 @@ class CoursePress_Helper_JavaScript {
 			'invalid_extension_message' => __( 'Extension of the file is not valid. Please use one of the following:', 'CP_TD' ),
 			'assessment_grid_url' => admin_url( 'admin.php?page=coursepress_assessments' ),
 			'assessment_report_url' => admin_url( 'admin.php?page=coursepress_reports' ),
-			'is_wpmudev' => CP_IS_WPMUDEV,
 			'is_campus' => CP_IS_CAMPUS,
 			'is_super_admin' => $is_super_admin,
 			'user_caps' => CoursePress_Data_Capabilities::get_user_capabilities(),
