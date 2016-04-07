@@ -85,7 +85,6 @@ class CoursePress_Data_Shortcode_Instructor {
 		), $atts, 'course_instructors' ) );
 
 		$course_id = (int) $course_id;
-		if ( empty( $course_id ) ) { return ''; }
 
 		$label = sanitize_text_field( $label );
 		$label_plural = sanitize_text_field( $label_plural );
@@ -111,7 +110,11 @@ class CoursePress_Data_Shortcode_Instructor {
 
 		$show_label = 'list-flat' === $style && ! $show_label ? 'yes' : $show_label;
 
-		$instructors = CoursePress_Data_Course::get_instructors( $course_id, true );
+		if ( empty( $course_id ) ) {
+			$instructors = get_users( array( 'meta_value' => 'instructor' ) );
+		} else {
+			$instructors = CoursePress_Data_Course::get_instructors( $course_id, true );
+		}
 
 		$list = array();
 		$content = '';
