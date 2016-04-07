@@ -32,7 +32,7 @@ class CoursePress_View_Admin_Setting_Pages extends CoursePress_View_Admin_Settin
 		$pages_args = array(
 			'selected' => CoursePress_Core::get_setting( 'pages/enrollment', 0 ),
 			'echo' => 0,
-			'show_option_none' => __( 'Use virtual page', 'CP_TD' ),
+			'show_option_none' => __( '&mdash; Select &mdash;', 'CP_TD' ),
 			'option_none_value' => 0,
 			'name' => 'coursepress_settings[pages][enrollment]',
 		);
@@ -114,7 +114,7 @@ class CoursePress_View_Admin_Setting_Pages extends CoursePress_View_Admin_Settin
 		$content .= self::row(
 			__( 'Enrollment Process Page', 'CP_TD' ),
 			$page_dropdowns['enrollment'],
-			sprintf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'CP_TD' ), '<strong>[cp_pages page="enrollment_process"]</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET['page'] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'CP_TD' ) . '</a>' )
+			sprintf( __( 'Select page where we display enrollment process.', 'CP_TD' ) . '</a>' )
 		);
 		$content .= self::table_end();
 		return $content;
