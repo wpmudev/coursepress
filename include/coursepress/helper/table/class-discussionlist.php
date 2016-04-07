@@ -60,8 +60,28 @@ class CoursePress_Helper_Table_DiscussionList extends WP_List_Table {
 		$this->post_type = CoursePress_Data_Discussion::get_post_type_name();
 		$this->count = wp_count_posts( CoursePress_Data_Discussion::get_post_type_name() );
 
+		// Update or delete discussions
+		$this->update_diScussions();
 	}
 
+	public function update_discussions() {
+		if ( isset( $_POST['action'] )  && ! empty( $_POST['bulk-actions'] ) ) {
+			$action = '-1' != $_POST['action'] ? $_POST['action'] : $_POST['action2'];
+			$post_ids = $_POST['bulk-actions'];
+
+			foreach ( $post_ids as $post_id ) {
+				if ( 'delete' != $action ) {
+					$the_post = get_post( $post_id );
+					$the_post->post_status = $action;
+					// Update status
+					wp_update_post( $the_post );
+				} else {
+					wp_delete_post( $post_id );
+				}
+			}
+
+		}
+	}
 
 	/** No items */
 	public function no_items() {
@@ -184,7 +204,7 @@ class CoursePress_Helper_Table_DiscussionList extends WP_List_Table {
 	function get_bulk_actions() {
 		$actions = array(
 			'publish' => __( 'Visible', 'CP_TD' ),
-			'unpublish' => __( 'Private', 'CP_TD' ),
+			'draft' => __( 'Private', 'CP_TD' ),
 			'delete' => __( 'Delete', 'CP_TD' ),
 		);
 
@@ -476,10 +496,8 @@ class CoursePress_Helper_Table_DiscussionList extends WP_List_Table {
 
 			if ( 'top' == $which ) {
 				?>
-				<form method="get">
 					<input type="hidden" name="page" value="coursepress_discussions"/>
 					<?php $this->search_box( __( 'Search Discussions', 'CP_TD' ), 'search_discussions' ); ?>
-				</form>
 			<?php
 			} else {
 				$this->pagination( $which );
