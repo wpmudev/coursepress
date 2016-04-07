@@ -242,10 +242,12 @@ class CoursePress_Helper_UI {
 		}
 
 		$roles = apply_filters( 'coursepress_allowed_roles', array(), $context );
-		if ( CP_IS_WPMUDEV || ! empty( $roles ) ) {
+		$get_by_role = apply_filters( 'coursepress_allowed_users_by_role', ! empty( $roles ) );
+
+		if ( $get_by_role ) {
 			$users = array();
-			if ( empty( $include_users ) ) {
-				$roles = empty( $roles ) && CP_IS_WPMUDEV ? array( 'administrator' ) : $roles;
+			if ( empty( $include_users ) && empty( $roles ) ) {
+				$roles = array( 'administrator' ); // Default to a list of administrators.
 			}
 			foreach ( $roles as $role ) {
 				$args['role'] = $role;

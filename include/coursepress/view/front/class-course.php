@@ -103,9 +103,8 @@ class CoursePress_View_Front_Course {
 			array( __CLASS__, 'maybe_save_discussion' )
 		);
 
-		if ( ! CP_IS_WPMUDEV ) {
-			remove_filter( 'the_content', 'wpautop' );
-		}
+		// TODO: The filter is always removed... Does not look correct.
+		remove_filter( 'the_content', 'wpautop' );
 
 		self::handle_module_uploads();
 		CoursePress_View_Front_EnrollmentPopup::init();

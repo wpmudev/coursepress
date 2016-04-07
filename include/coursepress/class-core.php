@@ -19,7 +19,6 @@ class CoursePress_Core {
 	public static function init() {
 		if ( ! defined( 'CP_IS_PREMIUM' ) ) { define( 'CP_IS_PREMIUM', false ); }
 		if ( ! defined( 'CP_IS_CAMPUS' ) ) { define( 'CP_IS_CAMPUS', false ); }
-		if ( ! defined( 'CP_IS_WPMUDEV' ) ) { define( 'CP_IS_WPMUDEV', false ); }
 
 		// We speak languages!
 		load_plugin_textdomain(
@@ -125,6 +124,10 @@ class CoursePress_Core {
 		 */
 		add_action( 'admin_init', array( __CLASS__, 'redirect_to_guide_page' ) );
 
+		/**
+		 * Allow other plugins to hook into the initialization process.
+		 */
+		do_action( 'coursepress_initialized' );
 	}
 
 	/**
