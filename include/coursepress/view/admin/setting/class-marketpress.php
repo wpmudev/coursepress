@@ -14,7 +14,7 @@ class CoursePress_View_Admin_Setting_MarketPress {
 		/**
 		 * do not run if integration is not active
 		 */
-		if ( ! CoursePress_Helper_Extension_MarketPress::activated() ) {
+		if ( ! CoursePress_Helper_Integration_MarketPress::is_active() ) {
 			return;
 		}
 
@@ -40,7 +40,7 @@ class CoursePress_View_Admin_Setting_MarketPress {
 
 	public static function add_tabs( $tabs ) {
 		$tabs['marketpress'] = array(
-			'title' => __( 'MarketPress', 'CP_TD' ),
+			'title' => __( 'Course Payments', 'CP_TD' ),
 			'description' => __( 'Allow to integrate MarketPress to sell courses..', 'CP_TD' ),
 			'order' => 69,
 		);
@@ -49,7 +49,6 @@ class CoursePress_View_Admin_Setting_MarketPress {
 	}
 
 	public static function return_content( $content, $slug, $tab ) {
-		$is_enabled = CoursePress_Core::get_setting( 'marketpress/enabled', false );
 		$use_redirect = CoursePress_Core::get_setting( 'marketpress/redirect', false );
 		$unpaid = CoursePress_Core::get_setting( 'marketpress/unpaid', 'change_status' );
 		$delete = CoursePress_Core::get_setting( 'marketpress/delete', 'change_status' );
@@ -63,18 +62,6 @@ class CoursePress_View_Admin_Setting_MarketPress {
 
 			<table class="form-table compressed">
 				<tbody>
-					<tr>
-						<td><label>
-							<input type="checkbox"
-								<?php checked( cp_is_true( $is_enabled ) ); ?>
-								name="coursepress_settings[marketpress][enabled]"
-								class="certificate_enabled"
-								value="1" />
-							<?php esc_html_e( 'Use MarketPress to sell courses', 'CP_TD' ); ?>
-						</label>
-						<p class="description"><?php _e( 'If checked, MarketPress will be use instead of the MarketPress for selling courses', 'CP_TD' ) ?></p>
-</td>
-					</tr>
 					<tr>
 						<td><label>
 							<input type="checkbox"

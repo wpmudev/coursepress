@@ -9,6 +9,7 @@ class CoursePress_View_Admin_Setting_General extends CoursePress_View_Admin_Sett
 		add_filter( 'coursepress_settings_tabs', array( __CLASS__, 'add_tabs' ) );
 		add_action( 'coursepress_settings_process_general', array( __CLASS__, 'process_form' ), 10, 2 );
 		add_filter( 'coursepress_settings_render_tab_general', array( __CLASS__, 'return_content' ), 10, 3 );
+
 	}
 
 	public static function add_tabs( $tabs ) {
@@ -28,10 +29,12 @@ class CoursePress_View_Admin_Setting_General extends CoursePress_View_Admin_Sett
 	public static function return_content( $content, $slug, $tab ) {
 
 		$content .= self::page_start( $slug, $tab );
-		$content .= self::table_start();
 
+		/**
+		 * Messaging
+		 */
 		if ( function_exists( 'messaging_init' ) ) {
-
+			$content .= self::table_start( __( 'Messaging', 'CP_TD' ) );
 			$content .= self::row(
 				__( 'Messaging: Inbox Slug', 'CP_TD' ),
 				trailingslashit( esc_url( home_url() ) ) . '&nbsp;<input type="text" name="coursepress_settings[slugs][inbox]" id="inbox_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/inbox', 'student-inbox' ) ) . '" />&nbsp;/'
@@ -46,12 +49,33 @@ class CoursePress_View_Admin_Setting_General extends CoursePress_View_Admin_Sett
 				__( 'New Messages Slug', 'CP_TD' ),
 				trailingslashit( esc_url( home_url() ) ) . '&nbsp;<input type="text" name="coursepress_settings[slugs][new_messages]" id="new_messages_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/new_messages', 'student-new-message' ) ) . '" />&nbsp;/'
 			);
+			$content .= self::table_end();
 		}
 
-		$content .= self::table_end();
+		/**
+		 * General
+		 */
+		$content .= self::table_start( __( 'General', 'CP_TD' ) );
 
-		$content .= self::table_start();
+		/**
+		 * Course Payments
+		 */
+		$options = CoursePress_Helper_Setting::get_course_payment_options_array();
+		$selected = CoursePress_Helper_Setting::get_course_payment_options_selected_value( $options );
+		$options = self::radio( 'general', 'course_payment', $options, $selected );
+		$content .= self::row(
+			__( 'Courses Payments', 'CP_TD' ),
+			$options
+		);
 
+		/**
+		 * Direction
+		 */
+		$selected_dir = CoursePress_Core::get_setting( 'course/order_by_direction', 'DESC' );
+		$content .= self::row(
+			__( 'Direction', 'CP_TD' ),
+			'<select name="coursepress_settings[course][order_by_direction]" id="course_order_by_direction"><option value="DESC" ' . selected( $selected_dir, 'DESC', false ) .'>' . __( 'Descending', 'CP_TD' ) . '</option><option value="ASC" ' . selected( $selected_dir, 'ASC', false ) .'>' . __( 'Ascending', 'CP_TD' ) . '</option></select>'
+		);
 		$checked = cp_is_true( CoursePress_Core::get_setting( 'general/show_coursepress_menu', 1 ) ) ? 'checked' : '';
 		$content .= self::row(
 			__( 'Theme Menu Items', 'CP_TD' ),
