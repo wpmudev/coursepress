@@ -13,7 +13,7 @@ class CoursePress_View_Front_Student {
 		}
 
 		if ( ! isset( $_POST['course_id'] ) || ! is_numeric( $_POST['course_id'] ) ) {
-			_e( 'Please select a course first you want to enroll in.', 'CP_TD' );
+			_e( 'Please select a course first you want to enrol in.', 'CP_TD' );
 			return;
 		}
 
@@ -47,20 +47,20 @@ class CoursePress_View_Front_Student {
 		if ( ! CoursePress_Data_Student::is_enrolled_in_course( $student_id, $course_id ) ) {
 			if ( 0 == $pass_errors ) {
 				if ( 0 == $course_price ) {//Course is FREE
-					//Enroll student in
+					//Enrol student in
 					if ( CoursePress_Data_Course::enroll_student( $student_id, $course_id ) ) {
 						printf( __( 'Congratulations, you have successfully enrolled in "%s" course! Check your %s for more info.', 'CP_TD' ), '<strong>' . $course->details->post_title . '</strong>', '<a href="' . $this->get_student_dashboard_slug( true ) . '">' . __( 'Dashboard', 'CP_TD' ) . '</a>' );
 
 					} else {
-						_e( 'Something went wrong during the enrollment process. Please try again later.', 'CP_TD' );
+						_e( 'Something went wrong during the enrolment process. Please try again later.', 'CP_TD' );
 					}
 				} else {
 					if ( $course->is_user_purchased_course( $course->details->marketpress_product, $student_id ) ) {
-						//Enroll student in
+						//Enrol student in
 						if ( CoursePress_Data_Course::enroll_student( $student_id, $course_id ) ) {
 							printf( __( 'Congratulations, you have successfully enrolled in "%s" course! Check your %s for more info.', 'CP_TD' ), '<strong>' . $course->details->post_title . '</strong>', '<a href="' . $this->get_student_dashboard_slug( true ) . '">' . __( 'Dashboard', 'CP_TD' ) . '</a>' );
 						} else {
-							_e( 'Something went wrong during the enrollment process. Please try again later.', 'CP_TD' );
+							_e( 'Something went wrong during the enrolment process. Please try again later.', 'CP_TD' );
 						}
 					} else {
 						$course->show_purchase_form( $course->details->marketpress_product );

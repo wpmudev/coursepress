@@ -665,9 +665,9 @@ class CoursePress_Data_Shortcode_Course {
 	}
 
 	/**
-	 * Shows the enrollment start date.
+	 * Shows the enrolment start date.
 	 *
-	 * If it is an open ended enrollment the no_date_text will be displayed.
+	 * If it is an open ended enrolment the no_date_text will be displayed.
 	 *
 	 * @since 1.0.0
 	 * @param  array $atts Shortcode attributes.
@@ -677,10 +677,10 @@ class CoursePress_Data_Shortcode_Course {
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
 			'date_format' => get_option( 'date_format' ),
-			'label' => __( 'Enrollment Start Date: ', 'CP_TD' ),
+			'label' => __( 'Enrolment Start Date: ', 'CP_TD' ),
 			'label_tag' => 'strong',
 			'label_delimeter' => ':',
-			'no_date_text' => __( 'Enroll Anytime', 'CP_TD' ),
+			'no_date_text' => __( 'Enrol Anytime', 'CP_TD' ),
 			'class' => '',
 		), $atts, 'course_enrollment_start' ) );
 
@@ -712,11 +712,11 @@ class CoursePress_Data_Shortcode_Course {
 	}
 
 	/**
-	 * Shows the enrollment end date.
+	 * Shows the enrolment end date.
 	 *
-	 * By default this will not show for open ended enrollments.
+	 * By default this will not show for open ended enrolments.
 	 * Set show_all_dates="yes" to make it display.
-	 * If it is an open ended enrollment the no_date_text will be displayed.
+	 * If it is an open ended enrolment the no_date_text will be displayed.
 	 *
 	 * @since 1.0.0
 	 * @param  array $atts Shortcode attributes.
@@ -726,10 +726,10 @@ class CoursePress_Data_Shortcode_Course {
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
 			'date_format' => get_option( 'date_format' ),
-			'label' => __( 'Enrollment End Date: ', 'CP_TD' ),
+			'label' => __( 'Enrolment End Date: ', 'CP_TD' ),
 			'label_tag' => 'strong',
 			'label_delimeter' => ':',
-			'no_date_text' => __( 'Enroll Anytime ', 'CP_TD' ),
+			'no_date_text' => __( 'Enrol Anytime ', 'CP_TD' ),
 			'show_all_dates' => 'no',
 			'class' => '',
 		), $atts, 'course_enrollment_end' ) );
@@ -767,9 +767,9 @@ class CoursePress_Data_Shortcode_Course {
 	}
 
 	/**
-	 * Shows the enrollment start and end date.
+	 * Shows the enrolment start and end date.
 	 *
-	 * If it is an open ended enrollment the no_date_text will be displayed.
+	 * If it is an open ended enrolment the no_date_text will be displayed.
 	 *
 	 * @since 1.0.0
 	 * @param  array $atts Shortcode attributes.
@@ -779,12 +779,12 @@ class CoursePress_Data_Shortcode_Course {
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
 			'date_format' => get_option( 'date_format' ),
-			'label' => __( 'Enrollment Dates: ', 'CP_TD' ),
+			'label' => __( 'Enrolment Dates: ', 'CP_TD' ),
 			'label_enrolled' => __( 'You Enrolled on: ', 'CP_TD' ),
 			'show_enrolled_display' => 'yes',
 			'label_tag' => 'strong',
 			'label_delimeter' => ':',
-			'no_date_text' => __( 'Enroll Anytime', 'CP_TD' ),
+			'no_date_text' => __( 'Enrol Anytime', 'CP_TD' ),
 			'alt_display_text' => __( 'Open-ended', 'CP_TD' ),
 			'show_alt_display' => 'no',
 			'class' => '',
@@ -845,7 +845,7 @@ class CoursePress_Data_Shortcode_Course {
 	}
 
 	/**
-	 * Shows a friendly course enrollment type message.
+	 * Shows a friendly course enrolment type message.
 	 *
 	 * @since 1.0.0
 	 * @param  array $atts Shortcode attributes.

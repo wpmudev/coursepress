@@ -111,15 +111,15 @@ class CoursePress_View_Admin_Setting_Setup {
 	</div>
 
 	<div class="changelog">
-		<h3><?php _e( 'Step 3. Enroll students', 'CP_TD' ); ?></h3>
+		<h3><?php _e( 'Step 3. Enrol students', 'CP_TD' ); ?></h3>
 
 		<div class="about-text">
 <?php
-		_e( 'Configure student enrollment, select to either:', 'CP_TD' );
+		_e( 'Configure student enrolment, select to either:', 'CP_TD' );
 ?>
 			<ul>
 				<li><?php _e( 'Manually add students with or without passcode restriction', 'CP_TD' ); ?></li>
-				<li><?php _e( 'Enroll students  automatically after registration and/or payment', 'CP_TD' ); ?></li>
+				<li><?php _e( 'Enrol students  automatically after registration and/or payment', 'CP_TD' ); ?></li>
 			</ul>
 
 		</div>
