@@ -6,7 +6,7 @@
  */
 
 /**
- * Handles the enrollment popup and ajax commands.
+ * Handles the enrolment popup and ajax commands.
  */
 class CoursePress_View_Front_EnrollmentPopup {
 
@@ -477,7 +477,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 					$json_data['course_id'] = $course_id;
 					$json_data['success'] = true;
 				} else {
-					$json_data['error_message'] = __( 'Could not enroll at this time.', 'CP_TD' );
+					$json_data['error_message'] = __( 'Could not enrol at this time.', 'CP_TD' );
 					$json_data['success'] = false;
 				}
 

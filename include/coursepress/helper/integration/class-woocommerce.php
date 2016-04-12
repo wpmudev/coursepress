@@ -559,7 +559,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 	}
 
 	/**
-	 * Allow to change enroll button
+	 * Allow to change enrol button
 	 *
 	 * @since 2.0.0
 	 *
@@ -716,7 +716,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 	 * @param integer $student_id Student ID.
 	 * @param integer $course_id Course ID.
 	 *
-	 * @return boolean stop or not enrollment process?
+	 * @return boolean stop or not enrolment process?
 	 */
 	public static function allow_student_to_enroll( $enroll_student, $student_id, $course_id ) {
 		if ( ! self::$is_active ) {

@@ -683,12 +683,12 @@ class CoursePress_View_Admin_Course_Edit {
 		$content .= '
 				<div class="wide enrollment-dates">
 					<label>' .
-					esc_html__( 'Course Enrollment Dates', 'CP_TD' ) . '
+					esc_html__( 'Course Enrolment Dates', 'CP_TD' ) . '
 					</label>
-					<p class="description">' . esc_html__( 'These are the dates that students will be able to enroll in a course.', 'CP_TD' ) . '</p>
+					<p class="description">' . esc_html__( 'These are the dates that students will be able to enrol in a course.', 'CP_TD' ) . '</p>
 					<label class="checkbox medium">
 						<input type="checkbox" name="meta_enrollment_open_ended" ' . $open_ended_checked . ' />
-						<span>' . esc_html__( 'Students can enroll at any time', 'CP_TD' ) . '</span>
+						<span>' . esc_html__( 'Students can enrol at any time', 'CP_TD' ) . '</span>
 					</label>
 					<div class="date-range enrollment">
 						<div class="start-date ' . ( $open_ended ? 'disabled' : '' ) . '">
@@ -819,7 +819,7 @@ class CoursePress_View_Admin_Course_Edit {
 				<input type="hidden" name="meta_setup_step_6" value="saved" />
 			';
 
-		// Enrollment Options
+		// Enrolment Options
 		$enrollment_types = array(
 			'manually' => __( 'Manually added only', 'CP_TD' ),
 		);
@@ -841,7 +841,7 @@ class CoursePress_View_Admin_Course_Edit {
 		$content .= '
 				<div class="wide">
 					<label>' .
-					esc_html__( 'Enrollment Restrictions', 'CP_TD' ) . '
+					esc_html__( 'Enrolment Restrictions', 'CP_TD' ) . '
 					</label>
 					<p class="description">' . esc_html__( 'Select the limitations on accessing and enrolling in this course.', 'CP_TD' ) . '</p>
 					<select name="meta_enrollment_type" class="chosen-select medium">';

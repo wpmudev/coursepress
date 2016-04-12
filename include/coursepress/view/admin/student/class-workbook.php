@@ -82,7 +82,7 @@ class CoursePress_View_Admin_Student_Workbook {
 			if ( 0 == count( $courses ) ) :
 			?>
 				<div class="zero-courses">
-					<?php echo $student->user_login; esc_html_e( ' did not enroll to any courses yet.', 'CP_TD' ); ?>
+					<?php echo $student->user_login; esc_html_e( ' did not enrol to any courses yet.', 'CP_TD' ); ?>
 				</div>
 			<?php else : ?>
 				<div class="tablenav">
