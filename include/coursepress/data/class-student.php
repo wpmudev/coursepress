@@ -840,7 +840,12 @@ class CoursePress_Data_Student {
 				CoursePress_Helper_Utility::set_array_val( $student_progress, 'completion/' . $unit_id . '/completed', true );
 			}
 
-			$progress = (int) ($completed_steps / $required_steps * 100);
+			$progress = 0;
+
+			if ( $required_steps ) {
+				$progress = (int) ($completed_steps / $required_steps * 100);
+			}
+
 			CoursePress_Helper_Utility::set_array_val(
 				$student_progress,
 				'completion/' . $unit_id . '/progress',

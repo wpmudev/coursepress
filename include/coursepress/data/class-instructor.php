@@ -251,7 +251,7 @@ class CoursePress_Data_Instructor {
 
 		// Not in cache, so retrieve
 		if ( empty( $user_id ) ) {
-			$sql = $wpdb->prepare( 'SELECT user_id FROM ' . $wpdb->prefix . 'usermeta WHERE meta_key = %s', $hash );
+			$sql = $wpdb->prepare( 'SELECT user_id FROM ' . $wpdb->usermeta. ' WHERE meta_key = %s', $hash );
 			$user_id = $wpdb->get_var( $sql );
 			wp_cache_add( $hash, $user_id, 'coursepress_userhash' );
 		}
@@ -296,9 +296,15 @@ class CoursePress_Data_Instructor {
 
 		$option = get_user_option( $hash, $user_id );
 
-		return null !== $option ? $hash : false;
+		/**
+		 * create hash if user do not have one!
+		 */
+		if ( empty( $option ) ) {
+			self::create_hash( $user );
+			return $hash;
+		}
+		return $option;
 	}
-
 
 	public static function added_to_course( $instructor_id, $course_id ) {
 

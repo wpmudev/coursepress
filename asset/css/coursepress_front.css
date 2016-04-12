@@ -790,15 +790,19 @@ ul.notification-archive-list {
   margin: 0;
 }
 
+.dashboard-course-list.suggested {
+  padding-bottom: 2em;
+}
+
 .dashboard-course-list.suggested .course-item {
-  width: 30%;
+  width: 32%;
   box-sizing: border-box;
-  margin-right: 10px;
+  margin-left: 2%;
   float: left;
 }
 
-.dashboard-course-list.suggested .course-item:last-child {
-  margin-right: 0;
+.dashboard-course-list.suggested .course-item:first-child {
+  margin-left: 0;
 }
 
 .dashboard-course-list.suggested .featured-course {

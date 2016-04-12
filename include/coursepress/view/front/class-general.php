@@ -32,8 +32,8 @@ class CoursePress_View_Front_General {
 			// Put extra menu items only in primary (most likely header) menu.
 			$is_in = is_user_logged_in();
 
-			$courses = new stdClass();
-
+			/*
+            $courses = new stdClass();
 			$courses->title = __( 'Courses', 'CP_TD' );
 			$courses->description = '';
 			$courses->menu_item_parent = 0;
@@ -43,7 +43,8 @@ class CoursePress_View_Front_General {
 			if ( $current_url == $courses->url ) {
 				$courses->classes[] = 'current_page_item';
 			}
-			$sorted_menu_items[] = $courses;
+            $sorted_menu_items[] = $courses;
+             */
 
 			/* Student Dashboard page */
 

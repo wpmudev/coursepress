@@ -77,9 +77,10 @@ class CoursePress_Helper_Tabs {
 
 		// Add content header
 		if ( 'horizontal' !== $mode ) {
+			$allowed_tags = wp_kses_allowed_html( 'post' );
 			$content .= '<div class="header">
-				<h3>' . esc_html( $tabs[ $active ]['title'] ) . '</h3>
-				<p class="description">' . esc_html( $tabs[ $active ]['description'] ) . '</p>
+				<h2>' . esc_html( $tabs[ $active ]['title'] ) . '</h2>
+				<p class="description">' . wp_kses( $tabs[ $active ]['description'], $allowed_tags ) . '</p>
 			</div>';
 		}
 

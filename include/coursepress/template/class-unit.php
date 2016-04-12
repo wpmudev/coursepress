@@ -16,8 +16,6 @@ class CoursePress_Template_Unit {
 	 * This function is called by:
 	 * CoursePress_View_Front_Course::render_course_unit()
 	 *
-	 * It renders the contents of a VirtualPage.
-	 *
 	 * @since  2.0.0
 	 * @return string HTML Content of the page.
 	 */
@@ -312,12 +310,11 @@ class CoursePress_Template_Unit {
 	 * This function is called by:
 	 * CoursePress_View_Front_Course::render_course_unit_archive()
 	 *
-	 * It renders the contents of a VirtualPage.
-	 *
 	 * @since  2.0.0
 	 * @return string HTML Content of the page.
 	 */
 	public static function unit_archive() {
+
 		$content = '';
 		$content .= do_shortcode( '[course_unit_submenu]' );
 
