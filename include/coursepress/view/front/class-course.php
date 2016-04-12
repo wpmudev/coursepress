@@ -993,10 +993,20 @@ class CoursePress_View_Front_Course {
     public static function setup_units_template( $template ) {
 
         $cp_action = get_query_var( 'cp_action' );
-        if ( empty( $cp_action ) || 'show_units' !== $cp_action ) {
+        if ( empty( $cp_action ) ) {
             return $template;
         }
-        $new_template = locate_template( array( 'archive-unit.php' ) );
+        switch ( $cp_action ) {
+        case 'show_units':
+            $new_template = locate_template( array( 'archive-unit.php' ) );
+            break;
+        case 'show_single_unit':
+            $new_template = locate_template( array( 'single-unit.php' ) );
+            break;
+            break;
+        default:
+            return $template;
+        }
         if ( ! empty( $new_template ) ) {
             return $new_template;
         }
