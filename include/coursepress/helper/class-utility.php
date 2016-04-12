@@ -857,10 +857,13 @@ class CoursePress_Helper_Utility {
 	public static function the_course( $id_only = false ) {
 		if ( is_singular() ) {
 			global $post;
-			if ( $id_only ) {
-				return $post->ID;
+			$post_type = CoursePress_Data_Course::get_post_type_name();
+			if ( $post_type == $post->post_type ) {
+				if ( $id_only ) {
+					return $post->ID;
+				}
+				return $post;
 			}
-			return $post;
 		}
 		$id = CoursePress_Data_Course::last_course_id();
 
