@@ -107,6 +107,7 @@ class CoursePress_View_Front_Course {
 		add_filter( 'the_content', array( __CLASS__, 'the_content_on_archive_page' ) );
 		add_filter( 'the_excerpt', array( __CLASS__, 'the_excerpt_on_archive_page' ) );
 		add_filter( 'post_class', array( __CLASS__, 'post_class_on_archive_page' ) );
+		add_filter( 'template_include', array( __CLASS__, 'setup_units_template' ));
 
 		// TODO: The filter is always removed... Does not look correct.
 		remove_filter( 'the_content', 'wpautop' );
@@ -988,6 +989,32 @@ class CoursePress_View_Front_Course {
 		}
 		return $classes;
 	}
+
+    public static function setup_units_template( $template ) {
+
+        $cp_action = get_query_var( 'cp_action' );
+        if ( empty( $cp_action ) ) {
+            return $template;
+        }
+        switch ( $cp_action ) {
+        case 'show_units':
+            $new_template = locate_template( array( 'archive-unit.php' ) );
+            break;
+        case 'show_single_unit':
+            $new_template = locate_template( array( 'single-unit.php' ) );
+            break;
+            break;
+        default:
+            return $template;
+        }
+        if ( ! empty( $new_template ) ) {
+            return $new_template;
+        }
+        return $template;
+
+    }
+
+
 
 	/**
 	 * Check when enqueue styles

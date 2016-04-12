@@ -654,10 +654,14 @@ class CoursePress_Data_Student {
 			( 100 / $course_all_steps ) * $course_average_grade
 		);
 
+		$completion_progress = 0;
+		if ( $valid_units > 0 ) {
+			$completion_progress = $course_progress / $valid_units;
+		}
 		CoursePress_Helper_Utility::set_array_val(
 			$student_progress,
 			'completion/progress',
-			$course_progress / $valid_units
+			$completion_progress
 		);
 
 		if ( $course_completed === $course_all_steps ) {
