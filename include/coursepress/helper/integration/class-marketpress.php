@@ -33,17 +33,22 @@ class CoursePress_Helper_Integration_MarketPress {
 
 		// If MarketPress is not activated just exit.
 		if ( ! CoursePress_Helper_Extension_MarketPress::activated() ) {
-			return false;
+			return;
 		}
-		if ( ! CoursePress_Core::get_setting( 'marketpress/enabled' ) ) {
-			return false;
+
+		/**
+		 * check general Course Payment option
+		 */
+		$course_payments = CoursePress_Core::get_setting( 'general/course_payment', 'none' );
+		if ( 'marketpress' != $course_payments ) {
+			return;
 		}
 		self::$is_active = true;
 
 		// Enable Payment Support
 		add_filter(
 			'coursepress_payment_supported',
-			array( __CLASS__, 'enable_payment' )
+			array( __CLASS__, 'is_active' )
 		);
 
 		// Add additional fields to Course Setup Step 6 if paid is checked
@@ -341,11 +346,6 @@ class CoursePress_Helper_Integration_MarketPress {
 				CoursePress_Data_Course::enroll_student( $user_id, $course_id );
 			}
 		}
-	}
-
-	public static function enable_payment( $payment_supported ) {
-		$payment_supported = true; // TODO: Should this be a setting??
-		return $payment_supported;
 	}
 
 	public static function product_settings( $content, $course_id ) {

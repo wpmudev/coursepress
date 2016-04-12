@@ -896,7 +896,23 @@ class CoursePress_View_Front_Course {
 		if ( ! CoursePress_Data_Course::is_single() ) {
 			return $content;
 		}
+
 		global $post;
+		/**
+		 * Check template for single post
+		 */
+		$template = locate_template("single-{$post->post_type}-{$post->post_name}.php");
+		if ( ! empty( $template ) ) {
+			return $content;
+		}
+
+		/**
+		 * Check template for post type
+		 */
+		$template = locate_template("single-{$post->post_type}.php");
+		if ( ! empty( $template ) ) {
+			return $content;
+		}
 
 		$cp_action = get_query_var( 'cp_action' );
 
@@ -940,6 +956,15 @@ class CoursePress_View_Front_Course {
 			|| CoursePress_Data_Course::is_course_category()
 		) {
 			global $post;
+
+			/**
+			 * Check template for post type
+			 */
+			$template = locate_template("archive-{$post->post_type}.php");
+			if ( ! empty( $template ) ) {
+				return $content;
+			}
+
 			$args = array(
 				'course_id' => $post->ID,
 				'show_title' => false,

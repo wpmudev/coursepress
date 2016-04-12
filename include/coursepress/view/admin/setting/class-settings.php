@@ -34,13 +34,7 @@ abstract class CoursePress_View_Admin_Setting_Setting {
 		$row .= sprintf( '<th scope="row">%s</th>', esc_html( $label ) );
 		$row .= sprintf( '<td>%s', $content );
 		if ( ! empty( $description ) ) {
-			if ( empty( self::$allowed_tags ) ) {
-				$allowed_tags = wp_kses_allowed_html( 'post' );
-			}
-			$row .= sprintf(
-				'<p class="description">%s</p>',
-				wp_kses( $description, self::$allowed_tags )
-			);
+			$content .= self::_add_description( $description );
 		}
 		$row .= '</td></tr>';
 		return $row;
@@ -118,13 +112,7 @@ abstract class CoursePress_View_Admin_Setting_Setting {
 				esc_html( $title )
 			);
 			if ( ! empty( $description ) ) {
-				if ( empty( self::$allowed_tags ) ) {
-					$allowed_tags = wp_kses_allowed_html( 'post' );
-				}
-				$content .= sprintf(
-					'<p class="description">%s</p>',
-					wp_kses( $description, self::$allowed_tags )
-				);
+				$content .= self::_add_description( $description );
 			}
 		}
 		$content .= '<div class="inside">';
@@ -143,6 +131,54 @@ abstract class CoursePress_View_Admin_Setting_Setting {
 	protected static function table_end() {
 
 		return '</tbody></table></div>';
+
+	}
+
+	/**
+	 * Produce list with radio option.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $group Group of settings.
+	 * @param string $name Name of settings.
+	 * @param array $options Array of options.
+	 * @param string $selected Selected item.
+	 *
+	 * @return string List of radio.
+	 */
+	protected static function radio( $group, $name, $options, $selected = '' ) {
+
+		$content = '<ul>';
+		foreach ( $options as $key => $data ) {
+			$content .= '<li>';
+			$content .= sprintf(
+				'<label><input type="radio" name="coursepress_settings[%s][%s]" %s %s value="%s" /> %s</label>',
+				$group,
+				$name,
+				checked( $selected, $key, false ),
+				isset( $data['disabled'] ) && 'disabled' == $data['disabled'] ? 'disabled="disabled"' : '',
+				esc_attr( $key ),
+				$data['label']
+			);
+			if ( isset( $data['description'] ) ) {
+				$content .= self::_add_description( $data['description'] );
+			}
+			$content .= '</li>';
+		}
+		$content .= '</ul>';
+		return $content;
+
+	}
+
+	private static function _add_description( $description ) {
+
+		if ( empty( self::$allowed_tags ) ) {
+			self::$allowed_tags = wp_kses_allowed_html( 'post' );
+		}
+		return  sprintf(
+			'<p class="description">%s</p>',
+			wp_kses( $description, self::$allowed_tags )
+		);
 
 	}
 }

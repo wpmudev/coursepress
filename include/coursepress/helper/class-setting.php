@@ -250,4 +250,108 @@ class CoursePress_Helper_Setting {
 		}
 		return $status;
 	}
+
+	/**
+	 * Function return array of payment options.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return array Array of options.
+	 */
+	public static function get_course_payment_options_array() {
+		$options = array(
+			'none' => array(
+				'label' => __( 'Do not sell courses', 'CP_TD' ),
+			),
+			'marketpress' => array(
+				'label' => __( 'Use MarketPress to sell courses', 'CP_TD' ),
+			),
+			'woocommerce' => array(
+				'label' => __( 'Use WooCommerce to sell courses', 'CP_TD' ),
+			),
+		);
+		/**
+		 * check MarketPress status
+		 */
+		$installed = CoursePress_Helper_Extension_MarketPress::installed();
+		if ( $installed ) {
+			$activated = CoursePress_Helper_Extension_MarketPress::activated();
+			if ( ! $activated ) {
+				$options['marketpress']['disabled'] = 'disabled';
+				$options['marketpress']['description'] = sprintf(
+					__( 'Please <a href="%s">activate</a> <b>%s</b> plugin first.', 'CP_TD' ),
+					esc_url_raw(
+						add_query_arg(
+							array(
+								'page' => 'coursepress_settings',
+								'tab' => 'extensions',
+							),
+							admin_url( 'admin.php' )
+						)
+					),
+					'MarketPress'
+				);
+			}
+		} else {
+			$options['marketpress']['disabled'] = 'disabled';
+			$options['marketpress']['description'] = sprintf(
+				__( 'Please <b>install</b> %s plugin first.', 'CP_TD' ),
+				'MarketPress'
+			);
+		}
+		/**
+		 * check WooCommerce status
+		 */
+		$installed = CoursePress_Helper_Extension_WooCommerce::installed();
+		if ( $installed ) {
+			$activated = CoursePress_Helper_Extension_WooCommerce::activated();
+			if ( ! $activated ) {
+				$options['woocommerce']['disabled'] = 'disabled';
+				$options['woocommerce']['description'] = sprintf(
+					__( 'Please <a href="%s#woocommerce">activate</a> <b>%s</b> plugin first.', 'CP_TD' ),
+					esc_url_raw(
+						add_query_arg(
+							array(
+								'plugin_status' => 'inactive',
+							),
+							admin_url( 'plugins.php' )
+						)
+					),
+					'WooCommerce'
+				);
+			}
+		} else {
+			$options['woocommerce']['disabled'] = 'disabled';
+			$options['woocommerce']['description'] = sprintf(
+				__( 'Please <b>install</b> %s plugin first.', 'CP_TD' ),
+				'WooCommerce'
+			);
+		}
+		return $options;
+
+	}
+
+	/**
+	 * Function return selected payment option.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $options Array of options.
+	 *
+	 * @return string key of current option.
+	 */
+	public static function get_course_payment_options_selected_value( $options ) {
+		$selected = CoursePress_Core::get_setting( 'general/course_payment', 'none' );
+		// sanitize selected value
+		if (
+			! array_key_exists( $selected, $options )
+			|| (
+				isset( $options[ $selected ]['disabled'] )
+				&& 'disabled' == $options[ $selected ]['disabled']
+			)
+		) {
+			return 'none';
+		}
+		return $selected;
+	}
 }
