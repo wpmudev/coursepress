@@ -70,7 +70,7 @@ class CoursePress_View_Admin_Setting_Setup {
 		printf( __( '%s has also installed - but not activated - MarketPress Lite.', 'CP_TD' ), CoursePress::$name );
 ?>
 		<br/>
-		<?php _e( 'For those of you who wish to sell your amazing courses you will need to activate and set up a payment gateway.  But more on that later.', 'CP_TD' ); ?>
+		<?php _e( 'For those of you who wish to sell your amazing courses you will need to activate and set up a payment gateway. But more on that later.', 'CP_TD' ); ?>
 	</div>
 
 	<h1><?php _e( 'Let’s Get Started', 'CP_TD' ); ?></h1>
@@ -111,15 +111,15 @@ class CoursePress_View_Admin_Setting_Setup {
 	</div>
 
 	<div class="changelog">
-		<h3><?php _e( 'Step 3. Enroll students', 'CP_TD' ); ?></h3>
+		<h3><?php _e( 'Step 3. Enrol students', 'CP_TD' ); ?></h3>
 
 		<div class="about-text">
 <?php
-		_e( 'Configure student enrollment, select to either:', 'CP_TD' );
+		_e( 'Configure student enrolment, select to either:', 'CP_TD' );
 ?>
 			<ul>
 				<li><?php _e( 'Manually add students with or without passcode restriction', 'CP_TD' ); ?></li>
-				<li><?php _e( 'Enroll students  automatically after registration and/or payment', 'CP_TD' ); ?></li>
+				<li><?php _e( 'Enrol students automatically after registration and/or payment', 'CP_TD' ); ?></li>
 			</ul>
 
 		</div>

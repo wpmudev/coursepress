@@ -96,19 +96,19 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 				'content' => self::_box_course_dates(),
 			),
 			'course_enrollment_start' => array(
-				'title' => __( 'Course Enrollment Start', 'CP_TD' ),
+				'title' => __( 'Course Enrolment Start', 'CP_TD' ),
 				'content' => self::_box_course_enrollment_start(),
 			),
 			'course_enrollment_end' => array(
-				'title' => __( 'Course Enrollment End', 'CP_TD' ),
+				'title' => __( 'Course Enrolment End', 'CP_TD' ),
 				'content' => self::_box_course_enrollment_end(),
 			),
 			'course_enrollment_dates' => array(
-				'title' => __( 'Course Enrollment Dates', 'CP_TD' ),
+				'title' => __( 'Course Enrolment Dates', 'CP_TD' ),
 				'content' => self::_box_course_enrollment_dates(),
 			),
 			'course_enrollment_type' => array(
-				'title' => __( 'Coure Enrollment Type', 'CP_TD' ),
+				'title' => __( 'Coure Enrolment Type', 'CP_TD' ),
 				'content' => self::_box_course_enrollment_type(),
 			),
 			'course_class_size' => array(
@@ -647,7 +647,7 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 		ob_start();
 ?>
 <span class="cp-shortcode-code">[course_enrollment_start]</span><br/>
-<span class=""><?php _e( 'Displays the course enrollment start date.', 'CP_TD' ); ?></span>
+<span class=""><?php _e( 'Displays the course enrolment start date.', 'CP_TD' ); ?></span>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
@@ -671,7 +671,7 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 	<li><span>label_delimeter</span>
 		– <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
 	<li><span>no_date_text</span>
-		– <?php _e( 'Text to display if the course has no defined enrollment start date. Default: Enroll Anytime', 'CP_TD' ); ?>
+		– <?php _e( 'Text to display if the course has no defined enrolment start date. Default: Enrol Anytime', 'CP_TD' ); ?>
 	</li>
 	<li><span>class</span>
 		– <?php _e( 'Additional CSS classes for styling. Default: empty', 'CP_TD' ); ?></li>
@@ -698,7 +698,7 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 		ob_start();
 ?>
 <span class="cp-shortcode-code">[course_enrollment_end]</span><br/>
-<span class=""><?php _e( 'Shows the course enrollment end date.', 'CP_TD' ); ?></span>
+<span class=""><?php _e( 'Shows the course enrolment end date.', 'CP_TD' ); ?></span>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
@@ -722,7 +722,7 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 	<li><span>label_delimeter</span>
 		– <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
 	<li><span>no_date_text</span>
-		– <?php _e( 'Text to display if there is no enrollment end date. Default: Enroll Anytime', 'CP_TD' ); ?>
+		– <?php _e( 'Text to display if there is no enrolment end date. Default: Enrol Anytime', 'CP_TD' ); ?>
 	</li>
 	<li><span>show_all_dates</span>
 		– <?php _e( 'If "yes" it will display the no_date_text even if there is no date. If "no" then nothing will be displayed. Default: no', 'CP_TD' ); ?>
@@ -751,7 +751,7 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 		ob_start();
 ?>
 <span class="cp-shortcode-code">[course_enrollment_dates]</span><br/>
-<span class=""><?php _e( 'Displays the course enrollment start and end date range. Typically as [course_enrollment_start] - [course_enrollment_end].', 'CP_TD' ); ?></span>
+<span class=""><?php _e( 'Displays the course enrolment start and end date range. Typically as [course_enrollment_start] - [course_enrollment_end].', 'CP_TD' ); ?></span>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
@@ -774,10 +774,10 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 	<li><span>label_delimeter</span>
 		– <?php _e( 'Symbol to use after the label. Default is colon (:)', 'CP_TD' ); ?></li>
 	<li><span>no_date_text</span>
-		– <?php _e( 'Text to display if there is no enrollment start or end dates. Default: Enroll Anytime', 'CP_TD' ); ?>
+		– <?php _e( 'Text to display if there is no enrolment start or end dates. Default: Enrol Anytime', 'CP_TD' ); ?>
 	</li>
 	<li><span>alt_display_text</span>
-		– <?php _e( 'Alternate display when there is no enrollment start or end dates. Default: Open-ended', 'CP_TD' ); ?>
+		– <?php _e( 'Alternate display when there is no enrolment start or end dates. Default: Open-ended', 'CP_TD' ); ?>
 	</li>
 	<li><span>show_alt_display</span>
 		– <?php _e( 'If set to "yes" use the alt_display_text. If set to "no" use the "no_date_text". Default: no', 'CP_TD' ); ?>
@@ -806,7 +806,7 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 		ob_start();
 ?>
 <span class="cp-shortcode-code">[course_enrollment_type]</span><br/>
-<span class=""><?php _e( 'Shows the type of enrollment (manual, prerequisite, passcode or anyone).', 'CP_TD' ); ?></span>
+<span class=""><?php _e( 'Shows the type of enrolment (manual, prerequisite, passcode or anyone).', 'CP_TD' ); ?></span>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
@@ -1182,7 +1182,7 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 		ob_start();
 ?>
 <span class="cp-shortcode-code">[course_join_button]</span><br/>
-<span class=""><?php _e( 'Shows the Join/Signup/Enroll button for the course. What it displays is dependent on the course settings and the user’s status/enrollment.<br />See the attributes for possible button labels.', 'CP_TD' ); ?></span>
+<span class=""><?php _e( 'Shows the Join/Signup/Enrol button for the course. What it displays is dependent on the course settings and the user’s status/enrolment.<br />See the attributes for possible button labels.', 'CP_TD' ); ?></span>
 
 <p class="cp-shortcode-subheading"><?php _e( 'Required Attributes:', 'CP_TD' ); ?></p>
 
@@ -1207,7 +1207,7 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 		– <?php _e( 'Text to display when enrollments haven’t started yet. Default: Enrollments Closed', 'CP_TD' ); ?>
 	</li>
 	<li><span>enroll_text</span>
-		– <?php _e( 'Text to display when course is ready for enrollments. Default: Enroll now', 'CP_TD' ); ?>
+		– <?php _e( 'Text to display when course is ready for enrollments. Default: Enrol now', 'CP_TD' ); ?>
 	</li>
 	<li><span>signup_text</span>
 		– <?php _e( 'Text to display when course is ready for enrollments, but the user is not logged in (visitor). Default: Signup!', 'CP_TD' ); ?>
