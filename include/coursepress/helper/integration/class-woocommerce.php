@@ -36,9 +36,21 @@ class CoursePress_Helper_Integration_WooCommerce {
 		if ( ! class_exists( 'WooCommerce' ) ) {
 			return;
 		}
+		/**
+		 * check general Course Payment option
+		 */
+		$course_payments = CoursePress_Core::get_setting( 'general/course_payment', 'none' );
+		if ( 'woocommerce' != $course_payments ) {
+			return;
+		}
+
 		self::$is_active = true;
 
-		add_filter( 'coursepress_payment_supported', array( __CLASS__, 'is_payment_supported' ), 10, 2 );
+		// Enable Payment Support
+		add_filter(
+			'coursepress_payment_supported',
+			array( __CLASS__, 'is_active' )
+		);
 
 		// Add additional fields to Course Setup Step 6 if paid is checked
 		add_filter(
@@ -167,10 +179,6 @@ class CoursePress_Helper_Integration_WooCommerce {
 			$key = sprintf( 'course_%d_woo_payment_status', $course_id );
 			update_user_meta( $user_id, $key, $new_status );
 		}
-	}
-
-	public static function is_payment_supported( $payment_supported, $course_id ) {
-		return CoursePress_Core::get_setting( 'woocommerce/enabled', false );
 	}
 
 	public static function product_settings( $content, $course_id ) {
@@ -513,7 +521,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 		}
 	}
 
-	function change_cp_item_name( $title, $cart_item, $cart_item_key ) {
+	public static function change_cp_item_name( $title, $cart_item, $cart_item_key ) {
 		$course_id = wp_get_post_parent_id( $cart_item['product_id'] );
 		if ( $course_id && get_post_type( $course_id ) == 'course' ) {
 			return get_the_title( $course_id );
@@ -521,7 +529,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 		return $title;
 	}
 
-	function change_cp_order_item_name( $name, $item ) {
+	public static function change_cp_order_item_name( $name, $item ) {
 		$product_id = isset( $item['item_meta']['_product_id'] ) ? $item['item_meta']['_product_id'] : '';
 		$product_id = $product_id[0];
 		if ( is_numeric( $product_id ) ) {

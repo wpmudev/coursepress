@@ -47,11 +47,6 @@ class CoursePress_View_Front_Course {
 			array( __CLASS__, 'remove_canonical' )
 		);
 
-		add_action(
-			'parse_request',
-			array( __CLASS__, 'parse_request' )
-		);
-
 		add_filter(
 			'template_include',
 			array( __CLASS__, 'template_include' )
@@ -102,6 +97,16 @@ class CoursePress_View_Front_Course {
 			'init',
 			array( __CLASS__, 'maybe_save_discussion' )
 		);
+
+		add_filter(
+			'get_the_archive_title',
+			array( __CLASS__, 'get_the_archive_title' )
+		);
+
+		add_filter( 'the_content', array( __CLASS__, 'the_content_on_single' ) );
+		add_filter( 'the_content', array( __CLASS__, 'the_content_on_archive_page' ) );
+		add_filter( 'the_excerpt', array( __CLASS__, 'the_excerpt_on_archive_page' ) );
+		add_filter( 'post_class', array( __CLASS__, 'post_class_on_archive_page' ) );
 
 		// TODO: The filter is always removed... Does not look correct.
 		remove_filter( 'the_content', 'wpautop' );
@@ -616,497 +621,6 @@ class CoursePress_View_Front_Course {
 		return $template;
 	}
 
-	/**
-	 * The heart of this class: This is the logic that decides, which
-	 * CoursePress-template (theme) or VirtualPage to display.
-	 *
-	 * @since  2.0.0
-	 * @param  WP $wp The main WP object.
-	 */
-	public static function parse_request( $wp ) {
-		$cp = (object) array(
-			'vp_args' => false,
-			'title' => '',
-			'cp_course' => '',
-			'cp_category' => '',
-			'discussion' => '',
-			'is_focus' => false,
-			'is_course' => false,
-			'is_category' => false,
-			'is_unit' => false,
-			'is_modules' => false,
-			'is_enrolled' => false,
-			'is_instructor' => false,
-			'is_unit_discussion' => false,
-			'is_unit_discussion_list' => false,
-			'is_unit_grades' => false,
-			'is_unit_workbook' => false,
-			'is_unit_notification' => false,
-			'can_preview' => false,
-			'course_id' => 0,
-			'student_id' => get_current_user_id(),
-			'pagination' => 0,
-		);
-
-		CoursePress_Helper_Utility::$is_singular = false;
-		CoursePress_Helper_Utility::set_the_course_subpage( '' );
-		$is_other_cp_page = false;
-
-		if ( array_key_exists( 'coursepress_focus', $wp->query_vars ) ) {
-			$cp->is_focus = (1 == $wp->query_vars['coursepress_focus']);
-		}
-
-		// THIS IS WHERE WE WANT TO DO ACCESS CONTROL!
-		// ------------------------------ Do something -------------------------
-
-		// Check Focus Mode First.
-		if ( $cp->is_focus ) {
-			$cp->course_id = (int) $wp->query_vars['course'];
-			$unit_id = (int) $wp->query_vars['unit'];
-			$type = sanitize_text_field( $wp->query_vars['type'] );
-			$item_id = (int) $wp->query_vars['item'];
-
-			// Focus mode means:
-			// We display the course item, no other theme/page elements.
-			$shortcode = sprintf(
-				'[coursepress_focus_item course="%d" unit="%d" type="%s" item_id="%d"]',
-				$cp->course_id,
-				$unit_id,
-				$type,
-				$item_id
-			);
-			echo do_shortcode( $shortcode );
-			die();
-		}
-
-		// -- If not in focus mode we will continue here -----------------------
-
-		// Find out which template/VirtualPage we need.
-		if ( isset( $wp->query_vars['course'] ) ) {
-			$cp->is_course = true;
-			$cp->cp_course = $wp->query_vars['course'];
-		}
-
-		if ( $cp->is_course && CoursePress_Core::get_slug( 'category' ) == $cp->cp_course ) {
-			// Warning: A course should not have the same post_name as the
-			// category slug, it will be skipped!
-			$cp->is_course = false;
-			$cp->is_category = true;
-			$cp->cp_category = $cp->cp_course;
-		} elseif ( isset( $wp->query_vars['course_category'] ) ) {
-			$cp->is_category = true;
-			$cp->cp_category = $wp->query_vars['course_category'];
-		}
-		if ( isset( $wp->query_vars['coursename'] ) ) {
-			$cp->is_unit = true;
-			$cp->cp_course = $wp->query_vars['coursename'];
-		}
-		if ( isset( $wp->query_vars['unitname'] ) ) {
-			$cp->is_unit = false;
-			$cp->is_modules = true;
-		}
-		// Find course-ID by course-name.
-		if ( $cp->cp_course ) {
-			$cp->course_id = CoursePress_Data_Course::by_name( $cp->cp_course, true );
-			$cp->can_preview = CoursePress_Data_Capabilities::can_update_course( $cp->course_id );
-
-			// The course-name did not resolve to a course_id. Back to start!
-			if ( ! $cp->course_id ) { self::archive_redirect(); }
-		}
-		// Find out if user is enrolled in current course or even instructor.
-		if ( $cp->student_id && $cp->course_id ) {
-			$cp->is_enrolled = CoursePress_Data_Course::student_enrolled(
-				$cp->student_id,
-				$cp->course_id
-			);
-
-			$cp->is_instructor = in_array(
-				$cp->student_id,
-				CoursePress_Data_Course::get_instructors( $cp->course_id )
-			);
-		}
-		if ( $cp->is_unit ) {
-			// All unit-contents require a permission check.
-			if ( ! $cp->is_instructor && ! $cp->is_enrolled && ! $cp->can_preview ) {
-				self::no_access_redirect( $cp->course_id );
-			}
-
-			if ( isset( $wp->query_vars['discussion_name'] ) ) {
-				$cp->is_unit_discussion = true;
-				$cp->discussion = $wp->query_vars['discussion_name'];
-			} elseif ( isset( $wp->query_vars['discussion_archive'] ) ) {
-				$cp->is_unit_discussion_list = true;
-			} elseif ( isset( $wp->query_vars['grades_archive'] ) ) {
-				$cp->is_unit_grades = true;
-			} elseif ( isset( $wp->query_vars['workbook'] ) ) {
-				$cp->is_unit_workbook = true;
-			} else if ( isset( $wp->query_vars['notifications_archive'] ) ) {
-				$cp->is_unit_notification = true;
-			}
-		} elseif ( isset( $wp->query_vars['post_type'] ) ) {
-			$post_type = $wp->query_vars['post_type'];
-
-			// Note: $wp->request is the slug, e.g. "courses/coursename/units".
-			// Here we check, if the request starts with courses-slug.
-			$is_cp = (0 == strpos( $wp->request, CoursePress_Core::get_slug( 'courses' ) ) );
-
-			if ( $is_cp && CoursePress_Data_Course::get_post_type_name() == $post_type ) {
-				$is_other_cp_page = true;
-			}
-		}
-
-		if ( isset( $wp->query_vars['paged'] ) ) {
-			$cp->pagination = (int) $wp->query_vars['paged'];
-			CoursePress_Helper_Utility::set_the_pagination( $cp->pagination );
-		}
-
-		// We have a course-slug, find the ID.
-		if ( $cp->course_id ) {
-			$cp->can_preview = CoursePress_Data_Capabilities::can_update_course( $cp->course_id );
-			//$preview = CoursePress_Data_Course::previewability( $cp->course_id );
-			//$cp->can_preview = $preview['has_previews'];
-
-			$cp->title = sprintf(
-				'%s | %s',
-				__( 'Course', 'CP_TD' ),
-				get_post_field( 'post_title', $cp->course_id )
-			);
-
-			CoursePress_Helper_Utility::set_the_course( $cp->course_id );
-		}
-
-		// ---------------------------------------------------------------------
-		if ( $cp->is_course ) {
-			// This is a single course page!
-			CoursePress_Helper_Utility::$is_singular = true;
-
-			/**
-			 * Filter whether to display the course title.
-			 *
-			 * @since 2.0
-			 *
-			 * @param (bool) $show_title	Whether to show the title or not.
-			 * @param (int) $course_id	The current course ID.
-			 **/
-			$show_title = apply_filters( 'coursepress_single_show_title', true, $cp->course_id );
-
-			$cp->vp_args = array(
-				'slug' => 'course_' . $cp->course_id,
-				'title' => get_the_title( $cp->course_id ),
-				'show_title' => $show_title,
-				'content' => apply_filters(
-					'coursepress_view_course',
-					self::render_course_main(),
-					$cp->course_id,
-					'main'
-				),
-				'type' => CoursePress_Data_Course::get_post_type_name(),
-			);
-			// -----------------------------------------------------------------
-		} elseif ( $cp->is_category ) {
-			// Course Category Overview.
-			CoursePress_Helper_Utility::set_the_course_category( $cp->cp_category );
-
-			$course_taxonomy = CoursePress_Data_Course::get_taxonomy();
-			$tax = get_term_by(
-				'slug',
-				$cp->cp_category,
-				$course_taxonomy['taxonomy_type']
-			);
-
-			if ( $tax ) {
-				$cp->title = sprintf(
-					'%s %s',
-					__( 'Courses in', 'CP_TD' ),
-					$tax->name
-				);
-			} elseif ( 'all' === $cp->cp_category ) {
-				$cp->title = __( 'All Courses', 'CP_TD' );
-			} else {
-				self::archive_redirect();
-				// Invalid category... Redirect to course-list!
-			}
-
-			$cp->vp_args = apply_filters(
-				'coursepress_category_page_args',
-				array(
-					'slug' => 'course_archive',
-					'title' => $cp->title,
-					'show_title' => true,
-					'content' => apply_filters(
-						'coursepress_view_course_archive',
-						self::render_course_archive(),
-						$cp->cp_category
-					),
-					'type' => CoursePress_Data_Course::get_post_type_name() . '_archive',
-					'is_archive' => true,
-				),
-				$cp->cp_category
-			);
-			// -----------------------------------------------------------------
-		} elseif ( $cp->is_unit_discussion ) {
-			// Unit discussion details.
-			if ( ! $cp->is_instructor && ! $cp->is_enrolled ) {
-				self::no_access_redirect( $cp->course_id );
-			}
-
-			CoursePress_Helper_Utility::set_the_course_subpage( 'discussions' );
-
-			// Are we adding a new discussion?
-			if ( CoursePress_Core::get_slug( 'discussion_new' ) == $cp->discussion ) {
-				$discussion_content = self::render_new_course_discussion();
-			} else {
-				$discussion_content = self::render_course_discussion();
-			}
-
-			$discussion = get_page_by_path(
-				$cp->discussion,
-				OBJECT,
-				CoursePress_Data_Discussion::get_post_type_name()
-			);
-			if ( $discussion ) {
-				$comment_status = 'open';
-				CoursePress_Data_Discussion::$last_discussion = $discussion->ID;
-			} else {
-				$comment_status = 'closed';
-				CoursePress_Data_Discussion::$last_discussion = '';
-			}
-
-			$cp->title = sprintf(
-				'%s | %s',
-				__( 'Discussions', 'CP_TD' ),
-				get_post_field( 'post_title', $cp->course_id )
-			);
-
-			$cp->vp_args = array(
-				'ID' => ! empty( $discussion ) ? $discussion->ID : '',
-				'slug' => 'discussion_' . $cp->course_id,
-				'title' => get_the_title( $cp->course_id ),
-				'content' => apply_filters(
-					'coursepress_view_course',
-					$discussion_content,
-					$cp->course_id,
-					'discussion'
-				),
-				'type' => 'course_discussion',
-				'comment_status' => $comment_status,
-			);
-			// -----------------------------------------------------------------
-		} elseif ( $cp->is_unit_discussion_list ) {
-			// Unit discussion archive.
-			if ( ! $cp->is_instructor && ! $cp->is_enrolled ) {
-				self::no_access_redirect( $cp->course_id );
-			}
-
-			CoursePress_Helper_Utility::set_the_course_subpage( 'discussions' );
-
-			$cp->title = sprintf(
-				'%s | %s',
-				__( 'Discussions', 'CP_TD' ),
-				get_post_field( 'post_title', $cp->course_id )
-			);
-
-			$cp->vp_args = array(
-				'slug' => 'discussion_archive_' . $cp->course_id,
-				'title' => get_the_title( $cp->course_id ),
-				'content' => apply_filters(
-					'coursepress_view_course',
-					self::render_course_discussion_archive(),
-					$cp->course_id,
-					'discussion_archive'
-				),
-				'type' => 'course_discussion_archive',
-			);
-			// -----------------------------------------------------------------
-		} elseif ( $cp->is_unit_grades ) {
-			// Unit grades.
-			if ( ! $cp->is_instructor && ! $cp->is_enrolled ) {
-				self::no_access_redirect( $cp->course_id );
-			}
-
-			CoursePress_Helper_Utility::set_the_course_subpage( 'grades' );
-
-			$cp->title = sprintf(
-				'%s | %s',
-				__( 'Grades', 'CP_TD' ),
-				get_post_field( 'post_title', $cp->course_id )
-			);
-
-			$cp->vp_args = array(
-				'slug' => 'grades_archive_' . $cp->course_id,
-				'title' => get_the_title( $cp->course_id ),
-				'content' => apply_filters(
-					'coursepress_view_course',
-					self::render_course_grades_archive(),
-					$cp->course_id,
-					'grades_archive'
-				),
-				'type' => 'course_grades_archive',
-			);
-			// -----------------------------------------------------------------
-		} elseif ( $cp->is_unit_workbook ) {
-			// Unit workbook.
-			if ( ! $cp->is_instructor && ! $cp->is_enrolled ) {
-				self::no_access_redirect( $cp->course_id );
-			}
-
-			CoursePress_Helper_Utility::set_the_course_subpage( 'workbook' );
-
-			$cp->title = sprintf(
-				'%s | %s',
-				__( 'Workbook', 'CP_TD' ),
-				get_post_field( 'post_title', $cp->course_id )
-			);
-
-			$cp->vp_args = array(
-				'slug' => 'workbook_' . $cp->course_id,
-				'title' => get_the_title( $cp->course_id ),
-				'content' => apply_filters(
-					'coursepress_view_course',
-					self::render_course_workbook(),
-					$cp->course_id,
-					'workbook'
-				),
-				'type' => 'course_workbook',
-			);
-			// -----------------------------------------------------------------
-		} elseif ( $cp->is_unit_notification ) {
-			// Unit notifications.
-			if ( ! $cp->is_instructor && ! $cp->is_enrolled ) {
-				self::no_access_redirect( $cp->course_id );
-			}
-
-			CoursePress_Helper_Utility::set_the_course_subpage( 'notifications' );
-
-			$cp->title = sprintf(
-				'%s | %s',
-				__( 'Notifications', 'CP_TD' ),
-				get_post_field( 'post_title', $cp->course_id )
-			);
-
-			$cp->vp_args = array(
-				'slug' => 'notifications_archive_' . $cp->course_id,
-				'title' => get_the_title( $cp->course_id ),
-				'content' => apply_filters(
-					'coursepress_view_course',
-					self::render_course_notifications_archive(),
-					$cp->course_id,
-					'workbook'
-				),
-				'type' => 'course_notifications_archive',
-			);
-			// -----------------------------------------------------------------
-		} elseif ( $cp->is_unit ) {
-			// A differnet unit page can only be the Unit-Archive!
-			CoursePress_Helper_Utility::set_the_course_subpage( 'units' );
-
-			$cp->title = sprintf(
-				'%s | %s',
-				__( 'Units', 'CP_TD' ),
-				get_post_field( 'post_title', $cp->course_id )
-			);
-
-			$cp->vp_args = array(
-				'slug' => 'unit_archive_' . $cp->course_id,
-				'title' => get_the_title( $cp->course_id ),
-				'content' => apply_filters(
-					'coursepress_view_course',
-					self::render_course_unit_archive(),
-					$cp->course_id,
-					'workbook'
-				),
-				'type' => CoursePress_Data_Unit::get_post_type_name() . '_archive',
-			);
-			// -----------------------------------------------------------------
-		} elseif ( $cp->is_modules ) {
-			// Unit With Modules.
-			if ( ! $cp->is_enrolled && ! $cp->can_preview && ! $cp->is_instructor ) {
-				self::no_access_redirect( $cp->course_id );
-			}
-
-			CoursePress_Helper_Utility::$is_singular = true;
-
-			$post_id = CoursePress_Data_Unit::by_name(
-				$wp->query_vars['unitname'],
-				true,
-				$cp->course_id
-			);
-			CoursePress_Helper_Utility::set_the_post( $post_id );
-
-			$cp->title = sprintf(
-				'%s',
-				get_post_field( 'post_title', $cp->course_id )
-			);
-
-			$cp->vp_args = array(
-				'slug' => $wp->query_vars['unitname'],
-				'title' => get_the_title( $cp->course_id ),
-				'content' => apply_filters(
-					'coursepress_view_course_unit',
-					self::render_course_unit( $post_id ),
-					$cp->course_id,
-					$post_id
-				),
-				'type' => CoursePress_Data_Unit::get_post_type_name(),
-				'post_parent' => $cp->course_id,
-				'ID' => $post_id, // Will load the real post.
-			);
-			// -----------------------------------------------------------------
-		} elseif ( isset( $is_other_cp_page ) && $is_other_cp_page ) {
-			// All other conditions have failed but post type is 'course':
-			// It must be the archive!
-			$cp->title = sprintf(
-				'%s | %s',
-				__( 'Courses', 'CP_TD' ),
-				__( 'All Courses', 'CP_TD' )
-			);
-
-			$cp->vp_args = array(
-				'slug' => 'course_archive',
-				'title' => get_the_title( $cp->course_id ),
-				'show_title' => false,
-				'content' => apply_filters(
-					'coursepress_view_course_archive',
-					self::render_course_archive()
-				),
-				'type' => CoursePress_Data_Course::get_post_type_name() . '_archive',
-				'is_archive' => true,
-			);
-		}
-
-		/**
-		 * Filter the virtual page arguments.
-		 *
-		 * @since 2.0
-		 *
-		 * @param (array) $cp->vp_args.	 The arguments to use to create a virtual page.
-		 * @param (object) $cp.
-		 **/
-		$cp->vp_args = apply_filters( 'coursepress_virtual_page', $cp->vp_args, $cp );
-
-		// Finally set up the virtual page, if we found a special CP page.
-		if ( $cp->vp_args ) {
-			$pg = new CoursePress_Data_VirtualPage( $cp->vp_args );
-			self::$title = $cp->title;
-
-			add_filter(
-				'wp_title',
-				array( __CLASS__, 'the_title' )
-			);
-		}
-	}
-
-	/**
-	 * Returns the custom page title for our Virtual Pages.
-	 *
-	 * @since  2.0.0
-	 * @param  string $title Default title by WordPress.
-	 * @return string Custom page title.
-	 */
-	public static function the_title( $title ) {
-		return self::$title;
-	}
-
 	public static function get_valid_post_types() {
 		$pt_course = CoursePress_Data_Course::get_post_type_name();
 		$pt_unit = CoursePress_Data_Unit::get_post_type_name();
@@ -1128,20 +642,17 @@ class CoursePress_View_Front_Course {
 		);
 	}
 
-
+	// Only enqueue when needed.
 	public static function coursepress_front_css() {
-
-		$valid_types = self::get_valid_post_types();
-		$post_type = get_post_type();
-
-		// Only enqueue when needed.
-		if ( in_array( $post_type, $valid_types ) ) {
-			$style = CoursePress::$url . 'asset/css/coursepress_front.css';
-			wp_enqueue_style( 'coursepress_general', $style, array( 'dashicons' ), CoursePress::$version );
-
-			$style = CoursePress::$url . 'asset/css/bbm.modal.css';
-			wp_enqueue_style( 'coursepress_bbm_modal', $style, array(), CoursePress::$version );
+		if ( ! self::_check_add_style() ) {
+			return;
 		}
+
+		$style = CoursePress::$url . 'asset/css/coursepress_front.css';
+		wp_enqueue_style( 'coursepress_general', $style, array( 'dashicons' ), CoursePress::$version );
+
+		$style = CoursePress::$url . 'asset/css/bbm.modal.css';
+		wp_enqueue_style( 'coursepress_bbm_modal', $style, array(), CoursePress::$version );
 	}
 
 	// Some themes think having an author bio makes it ok to display it... not for CoursePress.
@@ -1351,7 +862,6 @@ class CoursePress_View_Front_Course {
 		return $comments;
 	}
 
-
 	public static function remove_discussions_from_comments( $args ) {
 		$discussion_type = CoursePress_Data_Discussion::get_post_type_name();
 
@@ -1366,5 +876,149 @@ class CoursePress_View_Front_Course {
 		}
 
 		return $args;
+	}
+
+	public static function get_the_archive_title( $title ) {
+		if ( CoursePress_Data_Course::is_archvie() ) {
+			return __( 'All Courses', 'CP_TD' );
+		}
+		return $title;
+	}
+
+	public static function the_excerpt_on_archive_page( $excerpt ) {
+		if ( CoursePress_Data_Course::is_archvie() ) {
+			//            return false;
+		}
+		return $excerpt;
+	}
+
+	public static function the_content_on_single( $content ) {
+		if ( ! CoursePress_Data_Course::is_single() ) {
+			return $content;
+		}
+
+		global $post;
+		/**
+		 * Check template for single post
+		 */
+		$template = locate_template("single-{$post->post_type}-{$post->post_name}.php");
+		if ( ! empty( $template ) ) {
+			return $content;
+		}
+
+		/**
+		 * Check template for post type
+		 */
+		$template = locate_template("single-{$post->post_type}.php");
+		if ( ! empty( $template ) ) {
+			return $content;
+		}
+
+		$cp_action = get_query_var( 'cp_action' );
+
+		switch ( $cp_action ) {
+			case 'show_single_unit':
+				$unitname = get_query_var( 'unitname' );
+				$unit_id = CoursePress_Data_Unit::by_name( $unitname, true );
+				CoursePress_Helper_Utility::set_the_post( $unit_id );
+			return CoursePress_Template_Unit::unit_with_modules();
+
+			case 'show_units':
+				return CoursePress_Template_Unit::unit_archive();
+
+			case 'notifications_archive':
+				return CoursePress_Template_Communication::render_notifications();
+
+			case 'discussions_archive':
+				return CoursePress_Template_Communication::render_discussions();
+
+			case 'discussion_new':
+				return CoursePress_Template_Communication::render_new_discussion();
+
+			case 'discussion_show':
+				return CoursePress_Template_Communication::render_discussion();
+
+			case 'workbook':
+				return self::render_course_workbook();
+
+			default:
+				$args = array(
+				'course_id' => $post->ID,
+				);
+			return CoursePress_Data_Shortcode_Template::course_page( $args );
+		}
+		return $content;
+	}
+
+	public static function the_content_on_archive_page( $content ) {
+		if (
+			CoursePress_Data_Course::is_archvie()
+			|| CoursePress_Data_Course::is_course_category()
+		) {
+			global $post;
+
+			/**
+			 * Check template for post type
+			 */
+			$template = locate_template("archive-{$post->post_type}.php");
+			if ( ! empty( $template ) ) {
+				return $content;
+			}
+
+			$args = array(
+				'course_id' => $post->ID,
+				'show_title' => false,
+				'show_excerpt' => false,
+			);
+			return CoursePress_Data_Shortcode_Template::course_list_box( $args );
+		}
+		return $content;
+	}
+
+	public static function post_class_on_archive_page( $classes ) {
+		/**
+		 * fix twentysixteen styles
+		 */
+		if (
+			CoursePress_Data_Course::is_archvie()
+			|| CoursePress_Data_Course::is_single()
+			|| CoursePress_Data_Course::is_course_category()
+		) {
+			array_unshift( $classes, 'type-page' );
+		}
+		return $classes;
+	}
+
+	/**
+	 * Check when enqueue styles
+	 *
+	 * @since 2.0.0
+	 *
+	 * @global WP_Post $post Current WP Post object.
+	 *
+	 * @return boolean Enqueue styles or not enqueue?
+	 */
+	private static function _check_add_style() {
+		$valid_types = self::get_valid_post_types();
+		$post_type = get_post_type();
+
+		// Only enqueue when needed.
+		if ( in_array( $post_type, $valid_types ) ) {
+			return true;
+		}
+
+		/**
+		 * check is maybe some of CoursePress pages?
+		 */
+		if ( is_page() ) {
+			global $post;
+			$pages = CoursePress_Core::get_setting( 'pages' );
+			return in_array( $post->ID, $pages );
+		}
+
+		/**
+		 * by default return false
+		 */
+		return false;
 	}
 }

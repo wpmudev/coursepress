@@ -31,7 +31,7 @@ class CoursePress_Data_Course {
 					'not_found_in_trash' => __( 'No Courses found in Trash', 'CP_TD' ),
 					'view' => __( 'View Course', 'CP_TD' ),
 				),
-				'public' => false,
+				'public' => true,
 				'exclude_from_search' => false,
 				'has_archive' => true,
 				'show_ui' => false,
@@ -615,7 +615,9 @@ class CoursePress_Data_Course {
 
 	public static function get_units_with_modules( $course_id, $status = array( 'publish' ) ) {
 		self::$last_course_id = $course_id;
-		$combine = array();
+		$combine = array(
+			'pages' => array(),
+		);
 
 		if ( ! array( $status ) ) {
 			$status = array( $status );
@@ -699,6 +701,13 @@ class CoursePress_Data_Course {
 		foreach ( $combine as $post_id => $unit ) {
 			if ( ! isset( $unit['unit'] ) ) {
 				unset( $combine[ $post_id ] );
+			}
+
+			/**
+			 * add empty 'pages' field
+			 */
+			if ( is_numeric( $post_id ) && ! isset( $unit['pages'] ) ) {
+				$combine[ $post_id ]['pages'] = array();
 			}
 
 			// Fix broken page titles
@@ -1651,6 +1660,40 @@ class CoursePress_Data_Course {
 		$json_data['nonce'] = wp_create_nonce( 'duplicate_course' );
 		return $json_data;
 
+	}
+
+	/**
+	 * Check is that single course?
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return boolean is single post type course?
+	 */
+	public static function is_single() {
+		return is_singular( self::$post_type );
+	}
+
+	/**
+	 * Check is this post type course archive page.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return boolean is archive page for post type course
+	 */
+	public static function is_archvie() {
+		return is_post_type_archive( self::$post_type );
+	}
+
+	/**
+	 * Check is this post type course category page.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return boolean is course Category page for post type course
+	 */
+	public static function is_course_category() {
+		$taxonomy_name = self::get_post_category_name();
+		return is_tax( $taxonomy_name );
 	}
 
 	public static function get_course_url( $course_id ) {

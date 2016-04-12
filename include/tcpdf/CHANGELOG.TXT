@@ -29,29 +29,29 @@
 
 6.2.3 (2014-12-18)
 	- New comment.
-	- Moved the K_PATH_IMAGES definition in tcpdf_autoconfig.
+	- Moved the CP_K_PATH_IMAGES definition in tcpdf_autoconfig.
 
 6.2.2 (2014-12-18)
 	- Fixed mispelled words.
 	- Fixed version number.
 
 6.2.1 (2014-12-18)
-	- The constant K_TCPDF_THROW_EXCEPTION_ERROR is now set to false in the default configuration file.
+	- The constant CP_CP_TCPDF_THROW_EXCEPTION_ERROR is now set to false in the default configuration file.
 	- An issue with the _destroy() method was fixed.
 
 6.2.0 (2014-12-10)
 	- Bug #1005 "Security Report, LFI posting internal files externally abusing default parameter" was fixed.
 	- Static methods serializeTCPDFtagParameters() and unserializeTCPDFtagParameters() were moved as non static to the main TCPDF class (see changes in example n. 49).
-	- Deprecated methods were removed, please use the equivalents defined in other classes (i.e. TCPDF_STATIC and TCPDF_FONTS).
-	- The constant K_TCPDF_CALLS_IN_HTML is now set by default to FALSE.
+	- Deprecated methods were removed, please use the equivalents defined in other classes (i.e. CP_TCPDF_STATIC and CP_TCPDF_FONTS).
+	- The constant CP_K_TCPDF_CALLS_IN_HTML is now set by default to FALSE.
 	- DLE, DLX and DLP page format was added.
-	- Page format are now defined as a public property in TCPDF_STATIC.
+	- Page format are now defined as a public property in CP_TCPDF_STATIC.
 
 6.1.1 (2014-12-09)
 	- Fixed bug with the register_shutdown_function().
 
 6.1.0 (2014-12-07)
-	- The method TCPDF_STATIC::getRandomSeed() was improved.
+	- The method CP_TCPDF_STATIC::getRandomSeed() was improved.
 	- The disk caching feature was removed.
 	- Bug #1003 "Backslashes become duplicated in table, using WriteHTML" was fixed.
 	- Bug #1002 "SVG radialGradient within non-square Rect" was fixed.
@@ -80,7 +80,7 @@
 
 6.0.093 (2014-09-02)
 	- Security fix: some serialize/unserialize methods were replaced with json_encode/json_decode to avoid a potential object injection with user supplied content. Thanks to ownCloud Inc. for reporting this issue.
-	- K_TIMEZONE constant was added to the default configuration to suppress date-time warnings.
+	- CP_K_TIMEZONE constant was added to the default configuration to suppress date-time warnings.
 
 6.0.092 (2014-09-01)
 	- Bug item #956 "Monospaced fonts are not alignd at the baseline" was fixed.
@@ -133,7 +133,7 @@
 6.0.080 (2014-05-20)
 	- Bug item #921 "Fatal error in hyphenateText() function" was fixed.
 	- Bug item #923 "Automatic Hyphenation error" was fixed.
-	- Patch #70 "Augument TCPDFBarcode classes with ability to return raw png image data" was applied.
+	- Patch #70 "Augument CP_TCPDFBarcode classes with ability to return raw png image data" was applied.
 
 6.0.079 (2014-05-19)
 	- Patch item #69 "Named destinations, HTML internal and external links" was merged.
@@ -194,7 +194,7 @@
 	- Bug #904 "PDF corrupted" was fixed.
 
 6.0.063 (2014-04-03)
-	- Method TCPDF_IMAGES::_parsepng() was fixed to support transparency in Indexed images.
+	- Method CP_TCPDF_IMAGES::_parsepng() was fixed to support transparency in Indexed images.
 
 6.0.062 (2014-03-02)
 	- The method startLayer() now accepts the NULL value for the $print parameter to not set the print layer option.
@@ -259,7 +259,7 @@
 6.0.044 (2013-11-10)
 	- Bug #857 "Undefined offset error" was fixed.
 	- The uniord method now uses a static cache to improve performances (thanks to Mathieu Masseboeuf for the sugegstion).
-	- Two bugs in the TCPDF_FONTS class were fixed.
+	- Two bugs in the CP_TCPDF_FONTS class were fixed.
 
 6.0.043 (2013-10-29)
 	- Bug #854 "CSS instruction display" was fixed.
@@ -318,7 +318,7 @@
 
 6.0.028 (2013-09-15)
 	- A debug print_r was removed form tcpdf_parser.php.
-	- TCPDF_FILTERS class now throws an exception in case of error.
+	- CP_TCPDF_FILTERS class now throws an exception in case of error.
 	- TCPDF_PARSER class now throws an exception in case of error unless you define the constant K_TCPDF_PARSER_THROW_EXCEPTION_ERROR to false.
 	- The constant K_TCPDF_PARSER_IGNORE_DECODING_ERRORS can be set to tru eto ignore decoding errors on TCPDF_PARSER.
 
@@ -366,7 +366,7 @@
 
 6.0.016 (2013-05-15)
 	- The tcpdf_addfont.php tool was improved (thanks to Remi Collet).
-	- Constant K_PATH_IMAGES is now automatically set in configuration file.
+	- Constant CP_K_PATH_IMAGES is now automatically set in configuration file.
 
 6.0.015 (2013-05-14)
 	- Some unused vars were removed from AddFont() method.
@@ -446,7 +446,7 @@
 	- Minor documentation fixes.
 
 5.9.205 (2013-02-06)
-	- The constant K_TCPDF_THROW_EXCEPTION_ERROR was added on configuration file to change the behavior of Error() method.
+	- The constant CP_CP_TCPDF_THROW_EXCEPTION_ERROR was added on configuration file to change the behavior of Error() method.
 	- PDF417 barcode bug was fixed.
 
 5.9.204 (2013-01-23)
@@ -672,7 +672,7 @@
 
 5.9.146 (2012-02-12)
 	- Bug item #3486880 "$filehash undefine error" was fixed.
-	- The default font is now the one specified at PDF_FONT_NAME_MAIN constant.
+	- The default font is now the one specified at CP_PDF_FONT_NAME_MAIN constant.
 
 5.9.145 (2012-01-28)
 	- Japanese language file was added.
@@ -780,14 +780,14 @@
 	- This version includes some changes that allows you to add a bookmark for a page that do not exist.
 
 5.9.117 (2011-09-15)
-	- TCPDFBarcode and TCPDF2DBarcode classes were extended to include a method for exporting barcodes as PNG images.
+	- CP_TCPDFBarcode and TCPDF2DBarcode classes were extended to include a method for exporting barcodes as PNG images.
 
 5.9.116 (2011-09-14)
 	- Datamatrix class was improved and documentation was fixed.
 
 5.9.115 (2011-09-13)
 	- Datamatrix ECC200 barcode support was added (a new datamatrix.php file was added) - check example n. 50.
-	- getBarcodeHTML() method was added on TCPDFBarcode and TCPDF2DBarcode classes to return an HTML representation of the barcode.
+	- getBarcodeHTML() method was added on CP_TCPDFBarcode and TCPDF2DBarcode classes to return an HTML representation of the barcode.
 	- cURL options on Image() method were improved.
 	- A bug on write2DBarcode() was fixed.
 
@@ -894,7 +894,7 @@
 	- Output() method was improved to use compression when available.
 
 5.9.085 (2011-05-31)
-	- TCPDFBarcode class (barcodes.php) now includes getBarcodeSVG() and getBarcodeSVGcode() methods to get SVG image representation of the barcode.
+	- CP_TCPDFBarcode class (barcodes.php) now includes getBarcodeSVG() and getBarcodeSVGcode() methods to get SVG image representation of the barcode.
 	- TCPDF2DBarcode class (2dbarcodes.php) now includes getBarcodeSVG() and getBarcodeSVGcode() methods to get SVG image representation of the barcode.
 
 5.9.084 (2011-05-29)
@@ -1572,7 +1572,7 @@
 	- Shading to transparency is now supported.
 	- Image alignments were fixed.
 	- Support for dynamic images were improved.
-	- PDF_IMAGE_SCALE_RATIO has been changed to 1.25 for better compatibility with SVG.
+	- CP_PDF_IMAGE_SCALE_RATIO has been changed to 1.25 for better compatibility with SVG.
 	- RAW and RAW2 modes were added to 2D Barcodes (see example n. 50).
 	- Automatic padding feature was added on barcodes (see examples n. 27 and 50).
 	- Bug #2995003 "Reproduced thead bug" was fixed.
@@ -1630,7 +1630,7 @@
 	- Font Descent computation was fixed (patch #2981441).
 
 4.9.006 (2010-04-02)
-	- The constant K_TCPDF_CALLS_IN_HTML was added on configuration file to enable/disable the ability to call TCPDF methods in HTML.
+	- The constant CP_K_TCPDF_CALLS_IN_HTML was added on configuration file to enable/disable the ability to call TCPDF methods in HTML.
 	- The usage of tcpdf tag in HTML mode was changed to remove the possible security flaw offered by the eval() function (thanks to Matthias Hecker for spotting this security problem). See the new example n. 49 for further information.
 
 4.9.005 (2010-04-01)
@@ -1973,7 +1973,7 @@
 	- Documentation of rollbackTransaction() method was fixed.
 	- The setImageScale() and getImageScale() methods now set and get the adjusting parameter used by pixelsToUnits() method.
 	- HTML images now support other units of measure than pixels (getHTMLUnitToUnits() is now used instead of pixelsToUnits()).
-	- WARNING: PDF_IMAGE_SCALE_RATIO has been changed by default to 1.
+	- WARNING: CP_PDF_IMAGE_SCALE_RATIO has been changed by default to 1.
 
 4.6.001 (2009-04-17)
 	- Spaces between HTML block tags are now automatically removed.
@@ -2076,7 +2076,7 @@
 4.5.028 (2009-03-18)
 	- Bug #2690945 "List Bugs" was fixed.
 	- HTML text alignment on lists was fixed.
-	- The constant PDF_FONT_MONOSPACED was added to the configuration file to define the default monospaced font.
+	- The constant CP_PDF_FONT_MONOSPACED was added to the configuration file to define the default monospaced font.
 	- The following methods were fixed: getPageWidth(), getPageHeight(), getBreakMargin().
 	- All examples were updated.
 
@@ -2545,7 +2545,7 @@
 ------------------------------------------------------------
 
 3.1.001 (2008-06-13)
-	- Bug [1992515] "K_PATH_FONTS default value wrong" was fixed.
+	- Bug [1992515] "CP_K_PATH_FONTS default value wrong" was fixed.
 	- Vera font was removed, DejaVu font and Free fonts were updated.
 	- Image handling was improved.
 	- All examples were updated.
@@ -2742,7 +2742,7 @@
 	- The bug "[1890217] xpdf complains that pdf is incorrect" was fixed.
 
 2.1.000 (2008-01-07)
-	- FPDF_FONTPATH constant was changed to K_PATH_FONTS on config file
+	- FPDF_FONTPATH constant was changed to CP_K_PATH_FONTS on config file
 	- Bidirectional Algorithm to correctly reverse bidirectional languages was added.
 	- SetLeftMargin, SetTopMargin, SetRightMargin functions were fixed.
 	- SetCellPadding function was added.

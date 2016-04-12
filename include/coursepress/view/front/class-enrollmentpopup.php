@@ -31,18 +31,10 @@ class CoursePress_View_Front_EnrollmentPopup {
 	 * @since 2.0.0
 	 */
 	public static function add_hooks() {
-		if ( get_theme_support( 'coursepress' ) ) {
-			add_filter(
-				'wp_footer',
-				array( __CLASS__, 'add_backbone_registration_templates_footer' )
-			);
-		} else {
-			add_filter(
-				'coursepress_view_course',
-				array( __CLASS__, 'add_backbone_registration_templates_vp' ),
-				10, 3
-			);
-		}
+		add_filter(
+			'wp_footer',
+			array( __CLASS__, 'add_backbone_registration_templates_footer' )
+		);
 	}
 
 	/**
@@ -60,29 +52,6 @@ class CoursePress_View_Front_EnrollmentPopup {
 			'wp_ajax_nopriv_course_enrollment',
 			array( __CLASS__, 'course_enrollment' )
 		);
-	}
-
-	/**
-	 * Adds the backbone code for registration popup to the page contents of a
-	 * VirtualPage.
-	 *
-	 * @since  2.0.0
-	 * @param  string $content Contents of the virtual page.
-	 * @param  int    $course_id The course ID.
-	 * @param  string $context Context.
-	 * @return string The modified page contents.
-	 */
-	public static function add_backbone_registration_templates_vp( $content, $course_id, $context ) {
-		if ( 'main' == $context ) {
-			$scode = sprintf(
-				'[coursepress_enrollment_templates course_id="%d"]',
-				$course_id
-			);
-			$modal_content = do_shortcode( $scode );
-			return $modal_content . $content;
-		}
-
-		return $content;
 	}
 
 	/**

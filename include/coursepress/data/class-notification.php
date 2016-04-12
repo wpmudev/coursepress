@@ -73,7 +73,7 @@ class CoursePress_Data_Notification {
 					'compare' => 'IN',
 				),
 			),
-			'post_per_page' => 20,
+			'posts_per_page' => 20,
 		);
 
 		return get_posts( $args );

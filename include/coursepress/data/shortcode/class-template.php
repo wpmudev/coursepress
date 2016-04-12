@@ -13,6 +13,8 @@
  */
 class CoursePress_Data_Shortcode_Template {
 
+	static private $show_error = false;
+
 	/**
 	 * Register the shortcodes.
 	 *
@@ -71,6 +73,33 @@ class CoursePress_Data_Shortcode_Template {
 			'messaging_submenu',
 			array( __CLASS__, 'messaging_submenu' )
 		);
+
+		add_action(
+			'parse_request',
+			array( __CLASS__, 'try_to_login' )
+		);
+
+	}
+
+	public static function try_to_login() {
+		if ( isset( $_POST['log'] ) && isset( $_POST['pwd'] ) ) {
+
+			$auth = wp_authenticate_username_password( null, $_POST['log'], $_POST['pwd'] );
+			if ( ! is_wp_error( $auth ) ) {
+				$user = get_user_by( 'login', $_POST['log'] );
+				$user_id = $user->ID;
+				wp_set_current_user( $user_id );
+				wp_set_auth_cookie( $user_id );
+				if ( ! empty( $redirect_url ) ) {
+					wp_redirect( urldecode( esc_url_raw( $redirect_url ) ) );
+				} else {
+					wp_redirect( esc_url_raw( CoursePress_Core::get_slug( 'student_dashboard', true ) ) );
+				}
+				exit;
+			} else {
+				self::$show_error = true;
+			}
+		}
 	}
 
 	public static function course_archive( $a ) {
@@ -188,6 +217,8 @@ class CoursePress_Data_Shortcode_Template {
 			'override_button_text' => '',
 			'override_button_link' => '',
 			'echo' => false,
+			'show_title' => true,
+			'show_excerpt' => true,
 		), $a, 'course_list_box' );
 
 		$course_id = (int) $a['course_id'];
@@ -226,10 +257,14 @@ class CoursePress_Data_Shortcode_Template {
 
 		$template = '<div class="course course_list_box_item course_' . $course_id . ' ' . $clickable_class . ' ' . $completion_class . ' ' . $thumbnail_class . '" ' . $clickable_link . ' ' . $schema .'>
 			[course_thumbnail course_id="' . $course_id . '"]
-			<div class="course-information">
-				[course_title course_id="' . $course_id . '"]
-				[course_summary course_id="' . $course_id . '"]
-				[course_instructors style="list-flat" link="' . $instructor_link . '" course_id="' . $course_id . '"]
+            <div class="course-information">';
+		if ( $a['show_title'] ) {
+			$template .= '[course_title course_id="' . $course_id . '"]';
+		}
+		if ( $a['show_excerpt'] ) {
+			$template .= '[course_summary course_id="' . $course_id . '"]';
+		}
+		$template .= '[course_instructors style="list-flat" link="' . $instructor_link . '" course_id="' . $course_id . '"]
 				<div class="course-meta-information">
 					[course_start label="" course_id="' . $course_id . '"]
 					[course_language label="" course_id="' . $course_id . '"]
@@ -897,34 +932,15 @@ class CoursePress_Data_Shortcode_Template {
 			$login_url = $login_url . '?redirect_url=' . $_POST['redirect_url'];
 		}
 
-		// Set a cookie now to see if they are supported by the browser.
-		setcookie( TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN );
-		if ( SITECOOKIEPATH != COOKIEPATH ) {
-			setcookie( TEST_COOKIE, 'WP Cookie check', 0, SITECOOKIEPATH, COOKIE_DOMAIN );
-		};
-
 		$form_message = '';
 		$form_message_class = '';
 
-		// Attempt a login if submitted.
-		if ( isset( $_POST['log'] ) && isset( $_POST['pwd'] ) ) {
-
-			$auth = wp_authenticate_username_password( null, $_POST['log'], $_POST['pwd'] );
-			if ( ! is_wp_error( $auth ) ) {
-				$user = get_user_by( 'login', $_POST['log'] );
-				$user_id = $user->ID;
-				wp_set_current_user( $user_id );
-				wp_set_auth_cookie( $user_id );
-				if ( ! empty( $redirect_url ) ) {
-					wp_redirect( urldecode( esc_url_raw( $redirect_url ) ) );
-				} else {
-					wp_redirect( esc_url_raw( CoursePress_Core::get_slug( 'student_dashboard', true ) ) );
-				}
-				exit;
-			} else {
-				$form_message = $failed_login_text;
-				$form_message_class = $failed_login_class;
-			}
+		/**
+		 * Set error messages if login fails. See method try_to_login()
+		 */
+		if ( isset( $_POST['log'] ) && isset( $_POST['pwd'] ) && self::$show_error ) {
+			$form_message = $failed_login_text;
+			$form_message_class = $failed_login_class;
 		}
 
 		$content = '';
@@ -1310,10 +1326,12 @@ class CoursePress_Data_Shortcode_Template {
 		$forgot_url = wp_lostpassword_url();
 
 		// Set a cookie now to see if they are supported by the browser.
+		/*
 		setcookie( TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN );
 		if ( SITECOOKIEPATH != COOKIEPATH ) {
 			setcookie( TEST_COOKIE, 'WP Cookie check', 0, SITECOOKIEPATH, COOKIE_DOMAIN );
-		};
+        };
+         */
 
 		$content = '';
 		switch ( $page ) {

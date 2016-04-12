@@ -152,7 +152,7 @@ class CoursePress {
 				'namespace_folder' => 'include/coursepress', // Base folder for classes.
 				'filename_prefix' => 'class-',               // Prefix filenames.
 			),
-			'TCPDF' => array(
+			'CP_TCPDF' => array(
 				'namespace_folder' => 'include/tcpdf', // Base folder for classes.
 				'filename_prefix' => false,            // No prefix for filenames.
 			),
