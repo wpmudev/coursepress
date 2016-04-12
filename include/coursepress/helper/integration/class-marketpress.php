@@ -122,7 +122,7 @@ class CoursePress_Helper_Integration_MarketPress {
 		);
 
 		/**
-		 * Enrol upon pay
+		 * Enroll upon pay
 		 *
 		 * Reference to order ID, will need to get the actual product using the MarketPress Order class
 		 */
@@ -753,7 +753,7 @@ class CoursePress_Helper_Integration_MarketPress {
 	}
 
 	/**
-	 * Allow to change enrol button
+	 * Allow to change enroll button
 	 *
 	 * @since 2.0.0
 	 *
@@ -1080,7 +1080,7 @@ Yours sincerely,
 	 * @param integer $student_id Student ID.
 	 * @param integer $course_id Course ID.
 	 *
-	 * @return boolean stop or not enrolment process?
+	 * @return boolean stop or not enrollment process?
 	 */
 	public static function allow_student_to_enroll( $enroll_student, $student_id, $course_id ) {
 		if ( ! self::$is_active ) {

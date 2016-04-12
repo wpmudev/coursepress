@@ -116,13 +116,13 @@ class CoursePress_View_Admin_Setting_General {
 							</tr>
 
 							<tr valign="top" class="break">
-								<th scope="row">' . esc_html__( 'Enrolment Process Slug', 'CP_TD' ) . '</th>
+								<th scope="row">' . esc_html__( 'Enrollment Process Slug', 'CP_TD' ) . '</th>
 								<td>' . trailingslashit( esc_url( home_url() ) ) . '
 									&nbsp;<input type="text" name="coursepress_settings[slugs][enrollment]" id="enrollment_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/enrollment', 'enrollment_process' ) ) . '" />&nbsp;/
 								</td>
 							</tr>
 							<tr valign="top">
-								<th scope="row">' . esc_html__( 'Enrolment Process Page', 'CP_TD' ) . '</th>
+								<th scope="row">' . esc_html__( 'Enrollment Process Page', 'CP_TD' ) . '</th>
 								<td>' .
 									$page_dropdowns['enrollment'] .
 									'<p class="description">' . sprintf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'CP_TD' ), '<strong>[cp_pages page="enrollment_process"]</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET['page'] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'CP_TD' ) . '</a>' ) . '</p>

@@ -78,9 +78,9 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
 			'course_full_text' => __( 'Course Full', 'CP_TD' ),
 			'course_expired_text' => __( 'Not available', 'CP_TD' ),
-			'enrollment_finished_text' => __( 'Enrolments Finished', 'CP_TD' ),
-			'enrollment_closed_text' => __( 'Enrolments Closed', 'CP_TD' ),
-			'enroll_text' => __( 'Enrol now', 'CP_TD' ),
+			'enrollment_finished_text' => __( 'Enrollments Finished', 'CP_TD' ),
+			'enrollment_closed_text' => __( 'Enrollments Closed', 'CP_TD' ),
+			'enroll_text' => __( 'Enroll now', 'CP_TD' ),
 			'signup_text' => __( 'Signup!', 'CP_TD' ),
 			'details_text' => __( 'Details', 'CP_TD' ),
 			'prerequisite_text' => __( 'Pre-requisite Required', 'CP_TD' ),
@@ -167,7 +167,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				'enroll' => array(
 					'label' => sanitize_text_field( $enroll_text ),
 					'attr' => array(
-						'class' => 'apply-button enrol ' . $class,
+						'class' => 'apply-button enroll ' . $class,
 						'data-link' => esc_url( $signup_url . '?course_id=' . $course_id ),
 						'data-course-id' => $course_id,
 					),
@@ -1394,7 +1394,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					 */
 					if ( ! CoursePress_Data_Student::is_enrolled_in_course( $user_id, $course_id ) ) {
 						// If not, redirect him to the course page so he may
-						// enrol it if the enrolment is available.
+						// enroll it if the enrollment is available.
 						wp_redirect( get_permalink( $course_id ) );
 						exit;
 					}

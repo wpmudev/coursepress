@@ -390,7 +390,7 @@ class CoursePress_Helper_Email {
 	}
 
 	/**
-	 * Email body for confirmation of enrolment.
+	 * Email body for confirmation of enrollment.
 	 * Triggered by CoursePress_Data_Course::enroll_student()
 	 *
 	 * @since  2.0.0

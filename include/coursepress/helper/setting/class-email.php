@@ -22,7 +22,7 @@ class CoursePress_Helper_Setting_Email {
 				CoursePress_Helper_Email::ENROLLMENT_CONFIRM => array(
 					'from_name' => get_option( 'blogname' ),
 					'from_email' => get_option( 'admin_email' ),
-					'subject' => __( 'Enrolment Confirmation', 'CP_TD' ),
+					'subject' => __( 'Enrollment Confirmation', 'CP_TD' ),
 					'content' => self::_enrollment_confirmation_email(),
 				),
 				CoursePress_Helper_Email::COURSE_INVITATION => array(
@@ -149,8 +149,8 @@ class CoursePress_Helper_Setting_Email {
 					'order' => 1,
 				),
 				CoursePress_Helper_Email::ENROLLMENT_CONFIRM => array(
-					'title' => __( 'Course Enrolment Confirmation E-mail', 'CP_TD' ),
-					'description' => __( 'Settings for an e-mail student get upon enrolment.', 'CP_TD' ),
+					'title' => __( 'Course Enrollment Confirmation E-mail', 'CP_TD' ),
+					'description' => __( 'Settings for an e-mail student get upon enrollment.', 'CP_TD' ),
 					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'CP_TD' ) . implode( ', ', $enrollment_confirm ),
 					'order' => 2,
 				),
