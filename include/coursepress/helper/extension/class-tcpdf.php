@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * This class is current not in used as of 2.0!
+ **/
 class CoursePress_Helper_Extension_TCPDF {
 
 	private static $base_path = array(

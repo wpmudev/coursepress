@@ -23,13 +23,16 @@
 //                            that do not adhere to WP Coding Standards.
 
 /**
- * Class to Extend TCPF.
+ * Class to Extend CP_TCPDF.
  *
+ * Note: CP_TCPDF is a modified TCPDF Library for CP only. Updating integrated TCPDF Library
+ * requires prefixing `CP_` to all classes and CONSTANTS used.
+ * 
  * @since 1.2.1
  *
  * @return object
  */
-class CoursePress_Helper_PDF extends TCPDF {
+class CoursePress_Helper_PDF extends CP_TCPDF {
 
 	private $footer_text = '';
 
@@ -58,7 +61,6 @@ class CoursePress_Helper_PDF extends TCPDF {
 		$this->Cell( 0, 5, 'Page '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'T' );
 		$line_width = (0.85 / $this->k);
 
-		// $this->SetLineStyle(array('width' => $line_width, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => $this->footer_line_color));
 		$pageWidth = $this->getPageWidth();   // Get total page width, without margins
 		$pageMargins = $this->getMargins();     // Get all margins as array
 		$headerMargin = $pageMargins['footer']; // Get the header margin
@@ -68,7 +70,6 @@ class CoursePress_Helper_PDF extends TCPDF {
 		$px2 = $pageWidth - $pageMargins['right'];
 		$p1x = $pageMargins['left'];
 
-		// $p1x = $this->getX();
 		$p1y = $this->getY();
 		$p2x = $px2;
 		$p2y = $p1y;  // Use same y for a straight line
@@ -106,65 +107,6 @@ class CoursePress_Helper_PDF extends TCPDF {
 			'zapfdingbats.php' => __( 'ZapfDingbats', 'CP_TD' ),
 		);
 
-		if ( defined( 'TCPDF_PLUGIN_ACTIVE' ) && TCPDF_PLUGIN_ACTIVE ) {
-			$fonts = array_merge( $fonts, array(
-				'aealarabiya.php' => __( 'Al Arabiya', 'CP_TD' ),
-				'aefurat.php' => __( 'Furat', 'CP_TD' ),
-				'dejavusans.php' => __( 'DejaVu Sans', 'CP_TD' ),
-				'dejavusansb.php' => '',
-				'dejavusansbi.php' => '',
-				'dejavusanscondensed.php' => __( 'DejaVu Sans Condensed', 'CP_TD' ),
-				'dejavusanscondensedb.php' => '',
-				'dejavusanscondensedbi.php' => '',
-				'dejavusanscondensedi.php' => '',
-				'dejavusansextralight.php' => __( 'DejaVu Sans ExtraLight', 'CP_TD' ),
-				'dejavusansi.php' => '',
-				'dejavusansmono.php' => __( 'DejaVu Sans Mono', 'CP_TD' ),
-				'dejavusansmonob.php' => '',
-				'dejavusansmonobi.php' => '',
-				'dejavusansmonoi.php' => '',
-				'dejavuserif.php' => __( 'DejaVu Serif', 'CP_TD' ),
-				'dejavuserifb.php' => '',
-				'dejavuserifbi.php' => '',
-				'dejavuserifcondensed.php' => __( 'DejaVu Serif Condensed', 'CP_TD' ),
-				'dejavuserifcondensedb.php' => '',
-				'dejavuserifcondensedbi.php' => '',
-				'dejavuserifcondensedi.php' => '',
-				'dejavuserifi.php' => '',
-				'freemono.php' => __( 'Free Mono', 'CP_TD' ),
-				'freemonob.php' => '',
-				'freemonobi.php' => '',
-				'freemonoi.php' => '',
-				'freesans.php' => __( 'Free Sans', 'CP_TD' ),
-				'freesansb.php' => '',
-				'freesansbi.php' => '',
-				'freesansi.php' => '',
-				'freeserif.php' => __( 'Free Serif', 'CP_TD' ),
-				'freeserifb.php' => '',
-				'freeserifbi.php' => '',
-				'freeserifi.php' => '',
-				'hysmyeongjostdmedium.php' => __( 'MyungJo Medium (Korean)', 'CP_TD' ),
-				'kozgopromedium.php' => __( 'Kozuka Gothic Pro (Japanese Sans-Serif)', 'CP_TD' ),
-				'kozminproregular.php' => __( 'Kozuka Mincho Pro (Japanese Serif)', 'CP_TD' ),
-				'msungstdlight.php' => __( 'MSung Light (Traditional Chinese)', 'CP_TD' ),
-				'pdfacourier.php' => __( 'PDFA Courier', 'CP_TD' ),
-				'pdfacourierb.php' => '',
-				'pdfacourierbi.php' => '',
-				'pdfacourieri.php' => '',
-				'pdfahelvetica.php' => __( 'PDFA Helvetica', 'CP_TD' ),
-				'pdfahelveticab.php' => '',
-				'pdfahelveticabi.php' => '',
-				'pdfahelveticai.php' => '',
-				'pdfasymbol.php' => __( 'PDFA Symbol', 'CP_TD' ),
-				'pdfatimes.php' => __( 'PDFA Times', 'CP_TD' ),
-				'pdfatimesb.php' => '',
-				'pdfatimesbi.php' => '',
-				'pdfatimesi.php' => '',
-				'pdfazapfdingbats.php' => __( 'PDFA ZapfDingbats', 'CP_TD' ),
-				'stsongstdlight.php' => __( 'STSong Light (Simplified Chinese)', 'CP_TD' ),
-			) );
-		}
-
 		// If you are hooking this, make sure you are using fonts for TCPDF and that they are located in relevant font path
 		return apply_filters( 'coursepress_pdf_font_list', $fonts );
 
@@ -173,7 +115,7 @@ class CoursePress_Helper_PDF extends TCPDF {
 	protected function getFontsList() {
 
 		$fonts = CoursePress_Helper_PDF::fonts();
-		$font_path = apply_filters( 'coursepress_pdf_font_path', TCPDF_FONTS::_getfontpath() );
+		$font_path = apply_filters( 'coursepress_pdf_font_path', CP_TCPDF_FONTS::_getfontpath() );
 
 		foreach ( $fonts as $font => $font_name ) {
 			array_push( $this->fontlist, strtolower( trailingslashit( $font_path ) . $font ) );
@@ -182,7 +124,7 @@ class CoursePress_Helper_PDF extends TCPDF {
 	}
 
 	public static function get_format_in_mm( $format ) {
-		$dimension = TCPDF_STATIC::getPageSizeFromFormat( $format );
+		$dimension = CP_TCPDF_STATIC::getPageSizeFromFormat( $format );
 		$dimension[0] = round( $dimension[0] / 72 * 25.5 );
 		$dimension[1] = round( $dimension[1] / 72 * 25.5 );
 
@@ -250,10 +192,10 @@ class CoursePress_Helper_PDF extends TCPDF {
 		}
 
 		// create new PDF document
-		$pdf = new CoursePress_Helper_PDF( $page_orientation, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false );
+		$pdf = new CoursePress_Helper_PDF( $page_orientation, CP_PDF_UNIT, CP_PDF_PAGE_FORMAT, true, 'UTF-8', false );
 
-		// $dimension = $this->get_format_in_mm( PDF_PAGE_FORMAT );
-		$dimension = self::get_format_in_px( PDF_PAGE_FORMAT );
+		// $dimension = $this->get_format_in_mm( CP_PDF_PAGE_FORMAT );
+		$dimension = self::get_format_in_px( CP_PDF_PAGE_FORMAT );
 		if ( 'P' == $page_orientation ) {
 			$temp = $dimension[0];
 			$dimension[0] = $dimension[1];
@@ -262,7 +204,7 @@ class CoursePress_Helper_PDF extends TCPDF {
 
 		// Note: If uncommenting below, please remove previous call.
 		// Can use the following to change language symbols to appropriate standard, e.g. ISO-638-2 languages.
-		// $pdf = new TCPDF( $page_orientation, PDF_UNIT, PDF_PAGE_FORMAT, false, 'ISO-639-2', false );
+		// $pdf = new TCPDF( $page_orientation, CP_PDF_UNIT, CP_PDF_PAGE_FORMAT, false, 'ISO-639-2', false );
 		// set document information
 		$pdf->SetCreator( CoursePress::$name );
 		$pdf->SetTitle( $args['title'] );
@@ -274,36 +216,36 @@ class CoursePress_Helper_PDF extends TCPDF {
 			$subtitle = isset( $args['header']['subtitle'] ) ? $args['header']['subtitle'] : '';
 
 			if ( empty( $subtitle ) ) {
-				$pdf->SetHeaderMargin( PDF_MARGIN_HEADER );
+				$pdf->SetHeaderMargin( CP_PDF_MARGIN_HEADER );
 			}
 
 			// setHeaderData($ln='', $lw=0, $ht='', $hs='', $tc=array(0,0,0), $lc=array(0,0,0)
 			$pdf->SetHeaderData( '', '', $title, $subtitle );
-			$pdf->setHeaderFont( array( PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN ) );
+			$pdf->setHeaderFont( array( CP_PDF_FONT_NAME_MAIN, '', CP_PDF_FONT_SIZE_MAIN ) );
 
 		} else {
 			// remove default header
 			$pdf->setPrintHeader( false );
 			// adjust margin
-			$pdf->SetHeaderMargin( PDF_MARGIN_HEADER );
+			$pdf->SetHeaderMargin( CP_PDF_MARGIN_HEADER );
 		}
 
 		if ( isset( $args['footer'] ) ) {
 
 			$pdf->footer_text = $args['footer'];
-			$pdf->setFooterFont( array( PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA ) );
+			$pdf->setFooterFont( array( CP_PDF_FONT_NAME_DATA, '', CP_PDF_FONT_SIZE_DATA ) );
 		} else {
 			// remove default footer
 			$pdf->setPrintFooter( false );
 			// adjust margins
-			$pdf->SetFooterMargin( PDF_MARGIN_FOOTER );
+			$pdf->SetFooterMargin( CP_PDF_MARGIN_FOOTER );
 		}
 
 		// set default monospaced font
-		$pdf->SetDefaultMonospacedFont( PDF_FONT_MONOSPACED );
+		$pdf->SetDefaultMonospacedFont( CP_PDF_FONT_MONOSPACED );
 
 		// set image scale factor
-		$pdf->setImageScale( PDF_IMAGE_SCALE_RATIO );
+		$pdf->setImageScale( CP_PDF_IMAGE_SCALE_RATIO );
 
 		// set some language-dependent strings
 		global $l;
@@ -339,7 +281,7 @@ class CoursePress_Helper_PDF extends TCPDF {
 
 		// $pdf->SetMargins( PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT );
 		// set auto page breaks
-		$pdf->SetAutoPageBreak( true, PDF_MARGIN_BOTTOM );
+		$pdf->SetAutoPageBreak( true, CP_PDF_MARGIN_BOTTOM );
 
 		// output the HTML content
 		$pdf->writeHTML( $html, true, false, true, false, '' );
