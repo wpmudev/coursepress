@@ -60,8 +60,30 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 		$this->post_type = CoursePress_Data_Notification::get_post_type_name();
 		$this->count = wp_count_posts( CoursePress_Data_Notification::get_post_type_name() );
 
+		// Update or delete notifications
+		$this->update_notifications();
 	}
 
+	public function update_notifications() {
+
+		if ( isset( $_POST['action'] )  && ! empty( $_POST['bulk-actions'] ) ) {
+
+			$action = '-1' != $_POST['action'] ? $_POST['action'] : $_POST['action2'];
+			$post_ids = $_POST['bulk-actions'];
+
+			foreach ( $post_ids as $post_id ) {
+				if ( 'delete' != $action ) {
+					$the_post = get_post( $post_id );
+					$the_post->post_status = $action;
+					// Update status
+					wp_update_post( $the_post );
+				} else {
+					wp_delete_post( $post_id );
+				}
+			}
+
+		}
+	}
 
 	/** No items */
 	public function no_items() {
@@ -181,7 +203,7 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 	function get_bulk_actions() {
 		$actions = array(
 			'publish' => __( 'Visible', 'CP_TD' ),
-			'unpublish' => __( 'Private', 'CP_TD' ),
+			'draft' => __( 'Private', 'CP_TD' ),
 			'delete' => __( 'Delete', 'CP_TD' ),
 		);
 		return $actions;
@@ -427,7 +449,7 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 	<?php
 	}
 
-	protected function course_filter( $which = '' ) {
+	protected function course_filter( $which = '' ) { 
 		if ( 'top' !== $which ) {
 			return;
 		}
@@ -440,16 +462,11 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 			$two = '2';
 		}
 
-		if ( empty( $this->_categories ) ) {
-			return;
-		}
-
 		$page = get_query_var( 'page', 'coursepress_notifications' );
 
 		$s = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '';
 		$course_id = isset( $_GET['course_id'] ) ? sanitize_text_field( $_GET['course_id'] ) : '';
 
-		echo '<form method="GET">';
 		echo '<input type="hidden" name="page" value="' . $page . '" />';
 		echo '<input type="hidden" name="s" value="' . $s . '" />';
 		echo "<label for='course-category-selector-" . esc_attr( $which ) . "' class='screen-reader-text'>" . __( 'Select course category', 'CP_TD' ) . '</label>';
@@ -464,7 +481,7 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 		echo CoursePress_Helper_UI::get_course_dropdown( 'course_id' . $two, 'course_id' . $two, $courses, $options );
 
 		submit_button( __( 'Filter', 'CP_TD' ), 'category-filter', '', false, array( 'id' => "filter-courses$two" ) );
-		echo '</form>';
+
 		echo "\n";
 	}
 
@@ -486,7 +503,6 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 
 			if ( 'top' == $which ) {
 				?>
-				<form method="get">
 					<input type="hidden" name="page" value="coursepress_notifications"/>
 					<?php
 					$this->search_box(
@@ -494,7 +510,6 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 						'search_notifications'
 					);
 					?>
-				</form>
 			<?php
 			} else {
 				$this->pagination( $which );

@@ -2212,8 +2212,8 @@ var CoursePress = CoursePress || {};
 			var boxes = $( container ).find( '.answer' );
 			var value = boxes.length;
 
-			var el_type = $( $(el).parents('.module-holder')[0] ).attr('class').match(/input-radio/) ? 'radio' : 'checkbox';
-			var new_name = $( $(el).parents('.module-holder')[0] ).attr('class').match(/input-radio/) ? 'meta_answers_selected[' + cid + ']' : 'meta_answers_selected[' + cid + '][]';
+			var el_type = $( $(el).parents('.module-holder')[0] ).attr('class').match(/input-radio|input-select/) ? 'radio' : 'checkbox';
+			var new_name = $( $(el).parents('.module-holder')[0] ).attr('class').match(/input-radio|input-select/) ? 'meta_answers_selected[' + cid + ']' : 'meta_answers_selected[' + cid + '][]';
 
 			$( group ).append( '<div class="answer"><input type="' + el_type + '" value="' + value + '" name="' + new_name + '">' +
 			'<input class="component-' + el_type + '-answer wide" type="text" name="meta_answers[]" value="">' +

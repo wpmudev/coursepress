@@ -1284,5 +1284,17 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		// Get setup marker and advance accordion.
 		var setup_marker = jQuery( '#course-setup-steps .step-title .status.setup_marker' );
 		setup_marker.click();
-	} );
+	} )
+	// Set course_id param for discussions && notifications
+	.on( 'change', '#course_id', function() {
+		var course_id = $( this ).val(),
+			return_url = $( this ).parents( 'form' ).first().attr( 'action' )
+		;
+
+		if ( parseInt( course_id ) > 0 ) {
+			return_url += '&course_id=' + course_id;
+		}
+
+		window.location.assign( return_url );
+	});
 })( jQuery );

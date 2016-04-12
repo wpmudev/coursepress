@@ -112,7 +112,11 @@ class CoursePress_View_Admin_Communication_Discussion {
 			$bulk_nonce = wp_create_nonce( 'bulk_action_nonce' );
 			$content .= '<div class="nonce-holder" data-nonce="' . $bulk_nonce . '"></div>';
 			ob_start();
+
+			echo '<form method="post" action="'. remove_query_arg( 'course_id' ) . '">';
 			$list_discussion->display();
+			echo '</form>';
+
 			$content .= ob_get_clean();
 		} else {
 			switch ( $action ) {
