@@ -606,7 +606,7 @@ var CoursePress = CoursePress || {};
 				$( '.save-progress' ).detach();
 				nonce = response[ 'nonce' ];
 				$( '#unit-builder' ).attr( 'data-nonce', nonce );
-				CoursePress.UnitBuilder.unit_collection.trigger( custom_event, this );
+				CoursePress.UnitBuilder.unit_collection.trigger( custom_event, CoursePress.UnitBuilder.unit_collection );
 			},
 			error: function() {
 				$( '.save-progress' ).detach();
