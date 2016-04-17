@@ -80,7 +80,7 @@ var CoursePress = CoursePress || {};
 			axis: 'y',
 			handle: 'h3',
 			stop: function( event, ui ) {
-				ui.item.children( 'h3' ).triggerHandler( 'focusout', this );
+				ui.item.children( 'h3' ).triggerHandler( 'focusout', ui );
 
 				var modules = $( '.module-holder' );
 				$.each( modules, function( index, module ) {
@@ -207,7 +207,7 @@ var CoursePress = CoursePress || {};
 					meta[ 'module_page' ] = page;
 					meta[ 'module_order' ] = meta[ 'module_order' ] + 900;
 					CoursePress.UnitBuilder.module_collection._byId[ mod_ref ].set( 'meta', meta );
-					CoursePress.UnitBuilder.module_collection._byId[ mod_ref ].trigger( 'change', this );
+					CoursePress.UnitBuilder.module_collection._byId[ mod_ref ].trigger( 'change', CoursePress.UnitBuilder.module_collection._byId[ mod_ref ] );
 					$( mod_el ).detach();
 				} else {
 
@@ -1154,7 +1154,7 @@ var CoursePress = CoursePress || {};
 				meta[ 'page_title' ] = new_object;
 				meta[ 'show_page_title' ] = new_array;
 				self.unit_collection._byId[ self.activeUnitRef ].set( 'meta', meta );
-				self.unit_collection._byId[ self.activeUnitRef ].trigger( 'change', self.unit_collection );
+				self.unit_collection._byId[ self.activeUnitRef ].trigger( 'change', self.unit_collection._byId[ self.activeUnitRef ] );
 
 				// Update page count
 				self.totalPages = meta[ 'show_page_title' ].length;
