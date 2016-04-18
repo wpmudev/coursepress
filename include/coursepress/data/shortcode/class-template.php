@@ -398,6 +398,8 @@ class CoursePress_Data_Shortcode_Template {
 			'item_id' => 0,
 			'pre_text' => __( '&laquo; Previous', 'CP_TD' ),
 			'next_text' => __( 'Next &raquo;', 'CP_TD' ),
+			'next_section_title' => __( 'Proceed to the next section', 'CP_TD' ),
+			'next_module_title' => __( 'Proceed to the next module', 'CP_TD' ),
 			'next_section_text' => __( 'Next Section', 'CP_TD' ),
 			'echo' => false,
 		), $a, 'coursepress_focus_item' );
@@ -417,6 +419,8 @@ class CoursePress_Data_Shortcode_Template {
 		$type = sanitize_text_field( $a['type'] );
 		$pre_text = sanitize_text_field( $a['pre_text'] );
 		$next_text = sanitize_text_field( $a['next_text'] );
+		$next_module_title = sanitize_title_field( $a['next_module_title'] );
+		$next_section_title = sanitize_title_field( $a['next_section_title'] );
 		$next_section_text = sanitize_text_field( $a['next_section_text'] );
 
 		$titles = get_post_meta( $unit_id, 'page_title', true );
@@ -551,7 +555,7 @@ class CoursePress_Data_Shortcode_Template {
 
 				if ( ! empty( $next_modules ) ) {
 					$content .= '
-							<div class="focus-nav-next" data-title="" data-id="' . $next_module . '" data-type="module"><a href="#module-' . esc_attr( $next_module ) . '">' . $next_text . '</a></div>
+							<div class="focus-nav-next" data-title="" data-id="' . $next_module . '" data-type="module"><a href="#module-' . esc_attr( $next_module ) . '" title="' . esc_attr( $next_section_title ) . '">' . $next_text . '</a></div>
 						';
 				}
 				$content .= '</div>'; // .focus-nav
@@ -692,7 +696,7 @@ class CoursePress_Data_Shortcode_Template {
 					$content .= $goto_next_section ? '
 						<div class="focus-nav-next ' . $next_module_class . ' next-section" data-id="' . ( $page + 1 ) . '" data-type="section"><a href="#section-' . esc_attr( ( $page + 1 ) ) . '">' . $next_section_text . '</a></div>
 					' : '
-						<div class="focus-nav-next ' . $next_module_class . '" data-id="' . $next_module . '" data-type="module"><a href="#module-' . esc_attr( $next_module ) . '">' . $next_text . '</a></div>
+						<div class="focus-nav-next ' . $next_module_class . '" data-id="' . $next_module . '" data-type="module"><a href="#module-' . esc_attr( $next_module ) . '" title="' . esc_attr( $next_module_title ) . '">' . $next_text . '</a></div>
 					';
 				}
 				$content .= '</div>'; // .focus-nav
