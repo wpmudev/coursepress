@@ -403,7 +403,7 @@ class CoursePress_Data_Course {
 		 **/
 		if ( $key && is_array( $value ) ) {
 			foreach( $value as $meta_key => $meta_value ) {
-				update_post_meta( $course_id, $meta_key, $meta_value );
+				update_post_meta( $course_id, "cp_{$meta_key}", $meta_value );
 			}
 		}
 
