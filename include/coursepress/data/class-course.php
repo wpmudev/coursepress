@@ -396,6 +396,17 @@ class CoursePress_Data_Course {
 			CoursePress_Helper_Utility::set_array_val( $settings, $key, $value );
 		}
 
+		/**
+		 * Save course settings as single post_meta to help
+		 * quick manipulation to courses.
+		 * @since 2.0
+		 **/
+		if ( $key && is_array( $value ) ) {
+			foreach( $value as $meta_key => $meta_value ) {
+				update_post_meta( $course_id, $meta_key, $meta_value );
+			}
+		}
+
 		return update_post_meta( $course_id, 'course_settings', $settings );
 	}
 
