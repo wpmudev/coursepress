@@ -419,8 +419,8 @@ class CoursePress_Data_Shortcode_Template {
 		$type = sanitize_text_field( $a['type'] );
 		$pre_text = sanitize_text_field( $a['pre_text'] );
 		$next_text = sanitize_text_field( $a['next_text'] );
-		$next_module_text = sanitize_text_field( $a['next_module_text'] );
-		$next_section_text = sanitize_text_field( $a['next_section_text'] );
+		$next_module_title = sanitize_text_field( $a['next_module_title'] );
+		$next_section_title = sanitize_text_field( $a['next_section_title'] );
 		$next_section_text = sanitize_text_field( $a['next_section_text'] );
 
 		$titles = get_post_meta( $unit_id, 'page_title', true );
