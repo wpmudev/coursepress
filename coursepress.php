@@ -1757,6 +1757,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			if( $is_paid ) {
 				if ( cp_use_woo() ) {
 					global $woocommerce;
+					remove_filter( 'nonce_user_logged_out', array( $woocommerce->session, 'nonce_user_logged_out' ) ); // Custom nonce for non-logued users caused issues with ajax form.
 					$product_id = CP_WooCommerce_Integration::woo_product_id( $course_id );
 					if ( ! empty( $product_id ) ) {
 						$signup_steps = array_merge( $signup_steps, array(
