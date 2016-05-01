@@ -1988,8 +1988,9 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			} else {
 				$course_id = ! empty( $_POST['course_id'] ) ? (int) $_POST['course_id'] : false;
 			}
-			
-			$product_id = CP_WooCommerce_Integration::woo_product_id( $course_id );
+
+			$course     = new Course( $course_id );
+			$product_id = $course->mp_product_id();
 
 			CP_WooCommerce_Integration::add_product_to_cart( $product_id );
 		}
