@@ -226,7 +226,9 @@ function cp_filter_search( $query ) {
 		if ( !is_admin() ) {
 			// Bail if it is a bbpress topic-reply query.
 			if ( function_exists('bbp_get_topic_post_type') &&
-				( array( bbp_get_topic_post_type(), bbp_get_reply_post_type() ) === $query->get( 'post_type' ) ) ) {
+				(in_array( bbp_get_topic_post_type(), (array)$query->get( 'post_type' ) )
+					|| in_array( bbp_get_reply_post_type(), (array)$query->get( 'post_type' ) ) )
+			) {
 				return $query;
 			}
 
