@@ -849,6 +849,11 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 						continue;
 					}
 
+					if ( get_post_meta( $ungraded_response->post_parent, 'gradable_answer', true ) != 'yes' ) {
+						unset( $ungraded_responses[ $key ] );
+						continue;
+					}
+
 					if ( get_user_option( 'role', $ungraded_response->post_author ) !== 'student' ) {
 						unset( $ungraded_responses[ $key ] );
 						continue;
@@ -907,6 +912,11 @@ if ( ! class_exists( 'Unit_Module' ) ) {
 
 				//Count only ungraded responses from STUDENTS!
 				foreach ( $ungraded_responses as $key => $ungraded_response ) {
+
+					if ( get_post_meta( $ungraded_response->post_parent, 'gradable_answer', true ) != 'yes' ) {
+						unset( $ungraded_responses[ $key ] );
+						continue;
+					}
 
 					if ( get_user_option( 'role', $ungraded_response->post_author ) !== 'student' ) {
 						unset( $ungraded_responses[ $key ] );
