@@ -111,6 +111,12 @@ class text_input_module extends Unit_Module {
 			$enabled = 'disabled';
 			$grade   = Unit_Module::get_response_grade( $response->ID );
 		}
+
+		$resubmitting = false;
+		if ( isset( $_GET['previous_response'] ) && empty( $response ) && get_post( $_GET['previous_response'] ) ) {
+			$response = get_post( $_GET['previous_response'] );
+			$resubmitting = true;
+		}
 		?>
 		<?php if ( ( isset( $data->checked_length ) && $data->checked_length == 'single' ) || ( ! isset( $data->checked_length ) ) ) { ?>
 			<div id="module-<?php echo $data->ID; ?>" class="<?php echo $data->name; ?> front-single-module<?php echo( text_input_module::FRONT_SAVE == true ? '-save' : '' ); ?>">
@@ -120,7 +126,7 @@ class text_input_module extends Unit_Module {
 				<?php if ( $data->post_content != '' ) { ?>
 					<div class="module_description"><?php echo apply_filters( 'element_content_filter', apply_filters( 'the_content', $data->post_content ) ); ?></div>
 				<?php } ?>
-				<?php if ( is_object( $response ) && count( $response ) >= 1 && trim( $response->post_content ) !== '' ) { ?>
+				<?php if ( is_object( $response ) && count( $response ) >= 1 && trim( $response->post_content ) !== '' && ! $resubmitting ) { ?>
 					<div class="front_response_content">
 						<?php echo $response->post_content; ?>
 					</div>
@@ -144,12 +150,12 @@ class text_input_module extends Unit_Module {
 					<div class="module_description"><?php echo apply_filters( 'element_content_filter', $data->post_content ); ?></div>
 				<?php } ?>
 				<div class="module_textarea_input">
-					<?php if ( count( $response ) >= 1 && trim( $response->post_content ) !== '' ) { ?>
+					<?php if ( count( $response ) >= 1 && trim( $response->post_content ) !== '' && ! $resubmitting ) { ?>
 						<div class="front_response_content">
 							<?php echo $response->post_content; ?>
 						</div>
 					<?php } else { ?>
-						<textarea <?php echo ( $data->mandatory_answer == 'yes' ) ? 'data-mandatory="yes"' : 'data-mandatory="no"'; ?> class="<?php echo $data->name . '_front'; ?>" name="<?php echo $data->name . '_front_' . $data->ID; ?>" id="<?php echo $data->name . '_front_' . $data->ID; ?>" placeholder="<?php echo( isset( $data->placeholder_text ) && esc_attr( $data->placeholder_text ) !== '' ? $data->placeholder_text : ' ' ); ?>" <?php echo $enabled; ?>></textarea>
+						<textarea <?php echo ( $data->mandatory_answer == 'yes' ) ? 'data-mandatory="yes"' : 'data-mandatory="no"'; ?> class="<?php echo $data->name . '_front'; ?>" name="<?php echo $data->name . '_front_' . $data->ID; ?>" id="<?php echo $data->name . '_front_' . $data->ID; ?>" placeholder="<?php echo( isset( $data->placeholder_text ) && esc_attr( $data->placeholder_text ) !== '' ? $data->placeholder_text : ' ' ); ?>" <?php echo $enabled; ?>><?php echo ! empty( $response ) && is_object( $response ) ? esc_textarea( $response->post_content ) : ''; ?></textarea>
 					<?php } ?>
 				</div>
 
