@@ -66,3 +66,5 @@ composer
 composer.lock
 composer.json
 /vendor
+
+release/
