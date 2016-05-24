@@ -7,6 +7,7 @@ CHANGE LOG
 == Changelog ==
 = 1.3.4 =
 * Fixed: Empty text field by default when resubmitting an answer
+* Fixed: Warning for key_exists using wrong paramter for unit details when scheduled and in single installs.
 
 = 1.3.3 =
 * Fixed: Compatibility issues with WP 4.5.
