@@ -5,6 +5,9 @@ CHANGE LOG
 =================================================
 
 == Changelog ==
+= 1.3.4 =
+* Fixed: Empty text field by default when resubmitting an answer
+
 = 1.3.3 =
 * Fixed: Compatibility issues with WP 4.5.
 
