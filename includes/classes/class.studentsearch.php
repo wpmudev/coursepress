@@ -103,7 +103,7 @@ if ( ! class_exists( 'Student_Search' ) ) {
 				) );
 
 				if ( $this->paging_text ) {
-					$this->paging_text = sprintf( '<span class="displaying-num">' . __( 'Displaying %s&#8211;%s of %s', 'coursepress_base_td' ) . '</span>%s', number_format_i18n( ( $this->page_num - 1 ) * $this->users_per_page + 1 ), number_format_i18n( min( $this->page_num * $this->users_per_page, $this->total_users_for_query ) ), number_format_i18n( $this->total_users_for_query ), $this->paging_text
+					$this->paging_text = sprintf( '<span class="displaying-num">' . __( 'Displaying %s&#8211;%s of %s', 'cp' ) . '</span>%s', number_format_i18n( ( $this->page_num - 1 ) * $this->users_per_page + 1 ), number_format_i18n( min( $this->page_num * $this->users_per_page, $this->total_users_for_query ) ), number_format_i18n( $this->total_users_for_query ), $this->paging_text
 					);
 				}
 			}
@@ -114,13 +114,13 @@ if ( ! class_exists( 'Student_Search' ) ) {
 			$pagination->Items( $this->get_total() );
 			$pagination->limit( $this->users_per_page );
 			$pagination->parameterName = 'page_num';
-			$pagination->nextT         = __( 'Next', 'coursepress_base_td' );
-			$pagination->prevT         = __( 'Previous', 'coursepress_base_td' );
+			$pagination->nextT         = __( 'Next', 'cp' );
+			$pagination->prevT         = __( 'Previous', 'cp' );
 			$pagination->target( esc_url( "admin.php?page=" . ( isset( $_GET['page'] ) ? $_GET['page'] : 'students' ) . '&' . http_build_query( $this->additional_url_args ) ) );
 			$pagination->currentPage( $this->page_num );
 			$pagination->nextIcon( '&#9658;' );
 			$pagination->prevIcon( '&#9668;' );
-			$pagination->items_title = __( 'students', 'coursepress_base_td' );
+			$pagination->items_title = __( 'students', 'cp' );
 			$pagination->show();
 		}
 

@@ -11,11 +11,11 @@ if ( empty( $tab ) ) {
 	} else {
 		?>
 		<div id="error-page">
-			<p><?php _e( 'You do not have required permissions to access Settings.', 'coursepress_base_td' ); ?></p>
+			<p><?php _e( 'You do not have required permissions to access Settings.', 'cp' ); ?></p>
 		</div>
 		<?php
 		exit;
-		//die( __( 'You do not have required permissions to access Settings.', 'coursepress_base_td' ) );
+		//die( __( 'You do not have required permissions to access Settings.', 'cp' ) );
 	}
 }
 
@@ -77,12 +77,12 @@ if ( isset( $_POST['_wpnonce'] ) && current_user_can( 'manage_options' ) ) {
 
 <div class='wrap mp-wrap nocoursesub cp-wrap' id="settings-wrap">
 	<div class="icon32 icon32-posts-page" id="icon-options-general"><br></div>
-	<h2><?php _e( 'Settings', 'coursepress_base_td' ); ?></h2>
+	<h2><?php _e( 'Settings', 'cp' ); ?></h2>
 
 	<?php
 	if ( isset( $_POST['submit'] ) ) {
 		?>
-		<div id="message" class="updated fade"><p><?php _e( 'Settings saved successfully.', 'coursepress_base_td' ); ?></p></div>
+		<div id="message" class="updated fade"><p><?php _e( 'Settings saved successfully.', 'cp' ); ?></p></div>
 	<?php
 	}
 	?>
@@ -91,28 +91,28 @@ if ( isset( $_POST['_wpnonce'] ) && current_user_can( 'manage_options' ) ) {
 	<?php
 	$menus = array();
 	if ( current_user_can( 'manage_options' ) ) {
-		$menus['general'] = __( 'General', 'coursepress_base_td' );
+		$menus['general'] = __( 'General', 'cp' );
 	}
 
 	/* if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_settings_groups_page_cap' ) ) {
-	  //$menus['groups'] = __( 'Class Groups', 'coursepress_base_td' ); //to do in the next release
+	  //$menus['groups'] = __( 'Class Groups', 'cp' ); //to do in the next release
 	  } */
 
 	if ( current_user_can( 'manage_options' ) ) {
-		/* $menus['payment'] = __( 'Payment Settings', 'coursepress_base_td' ); */
-		$menus['email'] = __( 'E-mail Settings', 'coursepress_base_td' );
+		/* $menus['payment'] = __( 'Payment Settings', 'cp' ); */
+		$menus['email'] = __( 'E-mail Settings', 'cp' );
 	}
 
 	if ( current_user_can( 'manage_options' ) ) {
-		$menus['instructor_capabilities'] = __( 'Instructor Capabilities', 'coursepress_base_td' );
+		$menus['instructor_capabilities'] = __( 'Instructor Capabilities', 'cp' );
 	}
 
 	if ( current_user_can( 'coursepress_settings_shortcode_page_cap' ) || current_user_can( 'manage_options' ) ) {
-		$menus['shortcodes'] = __( 'Shortcodes', 'coursepress_base_td' );
+		$menus['shortcodes'] = __( 'Shortcodes', 'cp' );
 	}
 
 	if ( current_user_can( 'install_plugins' ) && current_user_can( 'activate_plugins' ) ) {
-		$menus['cp-marketpress'] = __( 'MarketPress', 'coursepress_base_td' );
+		$menus['cp-marketpress'] = __( 'MarketPress', 'cp' );
 	}
 
 	$menus = apply_filters( 'coursepress_settings_new_menus', $menus );
@@ -131,7 +131,7 @@ if ( isset( $_POST['_wpnonce'] ) && current_user_can( 'manage_options' ) ) {
 			}
 			?>
 			<li class="mp-tab">
-				<a class="mp-tab-link" href="<?php echo admin_url( 'admin.php?page=courses&quick_setup' ); ?>"><?php _e( 'View Setup Guide', 'coursepress_base_td' ); ?></a>
+				<a class="mp-tab-link" href="<?php echo admin_url( 'admin.php?page=courses&quick_setup' ); ?>"><?php _e( 'View Setup Guide', 'cp' ); ?></a>
 			</li>
 		</ul>
 	</div>
