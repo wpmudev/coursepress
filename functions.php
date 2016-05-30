@@ -224,6 +224,14 @@ function author_description_excerptOLD( $user_id ) {
 function cp_filter_search( $query ) {
 	if ( $query->is_search ) {
 		if ( !is_admin() ) {
+			// Bail if it is a bbpress topic-reply query.
+			if ( function_exists('bbp_get_topic_post_type') &&
+				(in_array( bbp_get_topic_post_type(), (array)$query->get( 'post_type' ) )
+					|| in_array( bbp_get_reply_post_type(), (array)$query->get( 'post_type' ) ) )
+			) {
+				return $query;
+			}
+
 			$query->set( 'post_type', array( 'post', 'course' ) );
 		}
 	}
