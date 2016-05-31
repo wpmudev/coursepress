@@ -16,12 +16,12 @@ if ( isset( $_POST['action'] ) && isset( $_POST['users'] ) && current_user_can( 
 			switch ( addslashes( $action ) ) {
 				case 'delete':
 					$instructor->delete_instructor();
-					$message = __( 'Selected instructors has been removed successfully.', 'coursepress_base_td' );
+					$message = __( 'Selected instructors has been removed successfully.', 'cp' );
 					break;
 
 				case 'unassign':
 					$instructor->unassign_from_all_courses();
-					$message = __( 'Selected instructors has been unassigned from all courses successfully.', 'coursepress_base_td' );
+					$message = __( 'Selected instructors has been unassigned from all courses successfully.', 'cp' );
 					break;
 			}
 		}
@@ -46,10 +46,10 @@ if ( isset( $_GET['instructor_id'] ) && is_numeric( $_GET['instructor_id'] ) ) {
 
 if ( isset( $_GET['action'] ) && $_GET['action'] == 'delete' && isset( $_GET['instructor_id'] ) && is_numeric( $_GET['instructor_id'] ) ) {
 	if ( ! isset( $_GET['cp_nonce'] ) || ! wp_verify_nonce( $_GET['cp_nonce'], 'delete_instructor_' . $_GET['instructor_id'] ) ) {
-		die( __( 'Cheating huh?', 'coursepress_base_td' ) );
+		die( __( 'Cheating huh?', 'cp' ) );
 	}
 	$instructor->delete_instructor();
-	$message = __( 'Selected instructor has been removed successfully.', 'coursepress_base_td' );
+	$message = __( 'Selected instructor has been removed successfully.', 'cp' );
 }
 
 if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] == 'view' ) && isset( $_GET['instructor_id'] ) && is_numeric( $_GET['instructor_id'] ) ) {
@@ -63,8 +63,8 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
 	<div class="wrap nosubsub instructors cp-wrap">
 
 		<div class="icon32 " id="icon-users"><br></div>
-		<h2><?php _e( 'Instructors', 'coursepress_base_td' ); ?><?php if ( current_user_can( 'manage_options' ) ) { ?>
-				<a class="add-new-h2" href="user-new.php"><?php _e( 'Add New', 'coursepress_base_td' ); ?></a><?php } ?></h2>
+		<h2><?php _e( 'Instructors', 'cp' ); ?><?php if ( current_user_can( 'manage_options' ) ) { ?>
+				<a class="add-new-h2" href="user-new.php"><?php _e( 'Add New', 'cp' ); ?></a><?php } ?></h2>
 
 		<?php
 		if ( isset( $message ) ) {
@@ -80,9 +80,9 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
 				<form method="get" action="<?php echo esc_attr( admin_url( 'admin.php?page=' . $page ) ); ?>" class="search-form">
 					<p class="search-box">
 						<input type='hidden' name='page' value='<?php echo esc_attr( $page ); ?>'/>
-						<label class="screen-reader-text"><?php _e( 'Search Instructors', 'coursepress_base_td' ); ?>:</label>
+						<label class="screen-reader-text"><?php _e( 'Search Instructors', 'cp' ); ?>:</label>
 						<input type="text" value="<?php echo esc_attr( isset( $s ) ? $s : '' ); ?>" name="s">
-						<input type="submit" class="button" value="<?php _e( 'Search Instructors', 'coursepress_base_td' ); ?>">
+						<input type="submit" class="button" value="<?php _e( 'Search Instructors', 'cp' ); ?>">
 					</p>
 				</form>
 			</div>
@@ -92,11 +92,11 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
 				<div class="alignleft actions">
 					<?php if ( current_user_can( 'manage_options' ) ) { ?>
 						<select name="action">
-							<option selected="selected" value=""><?php _e( 'Bulk Actions', 'coursepress_base_td' ); ?></option>
-							<option value="delete"><?php _e( 'Remove', 'coursepress_base_td' ); ?></option>
-							<option value="unassign"><?php _e( 'Unassign from all courses', 'coursepress_base_td' ); ?></option>
+							<option selected="selected" value=""><?php _e( 'Bulk Actions', 'cp' ); ?></option>
+							<option value="delete"><?php _e( 'Remove', 'cp' ); ?></option>
+							<option value="unassign"><?php _e( 'Unassign from all courses', 'cp' ); ?></option>
 						</select>
-						<input type="submit" class="button-secondary action" id="doaction" name="doaction" value="<?php _e( 'Apply', 'coursepress_base_td' ); ?>"/>
+						<input type="submit" class="button-secondary action" id="doaction" name="doaction" value="<?php _e( 'Apply', 'cp' ); ?>"/>
 					<?php } ?>
 				</div>
 
@@ -111,14 +111,14 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
 		wp_nonce_field( 'bulk-instructors' );
 
 		$columns = array(
-			"ID"                => __( 'ID', 'coursepress_base_td' ),
-			"username"          => __( 'Username', 'coursepress_base_td' ),
-			"user_fullname"     => __( 'Full Name', 'coursepress_base_td' ),
-			"user_firstname"    => __( 'First Name', 'coursepress_base_td' ),
-			"user_lastname"     => __( 'Surname', 'coursepress_base_td' ),
-			"registration_date" => __( 'Registered', 'coursepress_base_td' ),
-			"courses"           => __( 'Courses', 'coursepress_base_td' ),
-			"edit"              => __( 'Profile', 'coursepress_base_td' ),
+			"ID"                => __( 'ID', 'cp' ),
+			"username"          => __( 'Username', 'cp' ),
+			"user_fullname"     => __( 'Full Name', 'cp' ),
+			"user_firstname"    => __( 'First Name', 'cp' ),
+			"user_lastname"     => __( 'Surname', 'cp' ),
+			"registration_date" => __( 'Registered', 'cp' ),
+			"courses"           => __( 'Courses', 'cp' ),
+			"edit"              => __( 'Profile', 'cp' ),
 		);
 
 
@@ -134,7 +134,7 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
 		);
 
 
-		$columns["delete"] = __( 'Remove', 'coursepress_base_td' );
+		$columns["delete"] = __( 'Remove', 'cp' );
 		$col_sizes[]       = '5';
 
 		?>
@@ -204,7 +204,7 @@ if ( isset( $_GET['action'] ) && ( $_GET['action'] == 'edit' || $_GET['action'] 
 				?>
 				<tr>
 					<td colspan="8">
-						<div class="zero"><?php _e( 'No instructors found.', 'coursepress_base_td' ); ?></div>
+						<div class="zero"><?php _e( 'No instructors found.', 'cp' ); ?></div>
 					</td>
 				</tr>
 			<?php

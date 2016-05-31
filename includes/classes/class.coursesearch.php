@@ -143,8 +143,8 @@ if ( ! class_exists( 'Course_Search' ) ) {
 			$pagination->Items( $this->get_count_of_all_courses( $course_category ) );
 			$pagination->limit( $this->courses_per_page );
 			$pagination->parameterName = 'page_num';
-			$pagination->nextT         = __( 'Next', 'coursepress_base_td' );
-			$pagination->prevT         = __( 'Previous', 'coursepress_base_td' );
+			$pagination->nextT         = __( 'Next', 'cp' );
+			$pagination->prevT         = __( 'Previous', 'cp' );
 			if ( $this->search_term != '' ) {
 				$pagination->target( esc_url( "admin.php?page=courses&s=" . $this->search_term ) );
 			} else {
@@ -153,7 +153,7 @@ if ( ! class_exists( 'Course_Search' ) ) {
 			$pagination->currentPage( $this->page_num );
 			$pagination->nextIcon( '&#9658;' );
 			$pagination->prevIcon( '&#9668;' );
-			$pagination->items_title = __( 'courses', 'coursepress_base_td' );
+			$pagination->items_title = __( 'courses', 'cp' );
 			$pagination->show();
 		}
 
