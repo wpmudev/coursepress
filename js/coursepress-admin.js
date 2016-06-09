@@ -1262,7 +1262,7 @@ jQuery( document ).ready( function ( $ ) {
 
         var unique_group_id = jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val();
         var radio_input_html = jQuery( this ).closest( ".module-content" ).find( ".radio_answer_check:last").parent().html();
-        radio_input_html = radio_input_html.replace(/\[([\d])\]\[([\d])\]/g, function( full, capture1, capture2) {
+        radio_input_html = radio_input_html.replace(/\[([\d]+)\]\[([\d]+)\]/g, function( full, capture1, capture2) {
             return "[" + capture1 + "][" + (Number(capture2) + 1) + "]";
         });
         radio_input_html = radio_input_html.replace(/data-unique-id=\"([\d])\"/g, function( full, capture1) {
@@ -1278,7 +1278,7 @@ jQuery( document ).ready( function ( $ ) {
     jQuery( document.body ).on( 'click', 'a.checkbox_new_link', function () {
         var unique_group_id = jQuery( this ).closest( ".module-content" ).find( '.module_order' ).val();
         var checkbox_html = jQuery( this ).closest( ".module-content" ).find( ".checkbox_answer_check:last").parent().html();
-        checkbox_html = checkbox_html.replace(/\[([\d])\]\[([\d])\]/g, function( full, capture1, capture2) {
+        checkbox_html = checkbox_html.replace(/\[([\d]+)\]\[([\d]+)\]/g, function( full, capture1, capture2) {
             return "[" + capture1 + "][" + (Number(capture2) + 1) + "]";
         });
         checkbox_html = checkbox_html.replace(/data-unique-id=\"([\d])\"/g, function( full, capture1) {
