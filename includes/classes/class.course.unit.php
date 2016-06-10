@@ -678,6 +678,7 @@ if ( ! class_exists( 'Unit' ) ) {
 			if ( ! empty( $new_unit_id ) ) {
 				$post_metas = get_post_meta( $old_unit_id );
 				foreach ( $post_metas as $key => $meta_value ) {
+					if( 'input_modules' == $key ) continue;// Modules IDs won't match with new modules.
 					$value = array_pop( $meta_value );
 					$value = maybe_unserialize( $value );
 					update_post_meta( $new_unit_id, $key, $value );
