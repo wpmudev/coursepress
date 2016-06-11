@@ -101,21 +101,25 @@ if ( !class_exists( 'Student' ) ) {
 		 * @return bool
 		 */
 		function user_enrolled_in_course( $course_id, $user_id = false, $action = '' ) {
-
+			$is_user_enrolled = false;
 			if ( empty( $user_id ) ) {
 				$user_id = $this->ID;
 			}
 
 			if ( get_user_option( 'enrolled_course_date_' . $course_id, $user_id ) ) {
-				return true;
+				$is_user_enrolled = true;
 			} else {
-				return false;
+				$is_user_enrolled = false;
 			}
+
+			return apply_filters( 'coursepress_user_enrolled_in_course', $is_user_enrolled, $course_id, $user_id );
 		}
 
 		// Same as above, but static
 		public static function enrolled_in_course( $course_id, $user_id ) {
-			return get_user_option( 'enrolled_course_date_' . $course_id, $user_id ) ? true : false;
+			$is_user_enrolled = get_user_option( 'enrolled_course_date_' . $course_id, $user_id ) ? true : false;
+
+			return apply_filters( 'coursepress_user_enrolled_in_course', $is_user_enrolled, $course_id, $user_id );
 		}
 
 		/**
