@@ -29,7 +29,7 @@
     }
 
     h1.widget-title span.yellow{
-        color: <?php echo get_option( 'widget_title_color' ); ?>; 
+        color: <?php echo get_option( 'cp_widget_title_color' ); ?>; 
     }
     
     .site-footer{

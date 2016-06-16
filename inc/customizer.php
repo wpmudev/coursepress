@@ -79,7 +79,7 @@ function coursepress_customize_register( $wp_customize ) {
     );
 
     $colors[] = array(
-        'slug' => 'widget_title_color',
+        'slug' => 'cp_widget_title_color',
         'default' => '#c0c21e',
         'label' => __( 'Widgets Title Color', 'cp' )
     );
