@@ -33,6 +33,13 @@ var CoursePress = CoursePress || {};
 
 		id = id.replace( /\#/g, '' );
 
+		if ( ! _coursepress._dummy_editor ) {
+			var cp_wp_editor = $( '#cp-wp-editor' );
+			if ( cp_wp_editor.length > 0 ) {
+				_coursepress._dummy_editor = cp_wp_editor.html();
+			}
+		}
+
 		var editor = _coursepress._dummy_editor;
 
 		// Editor content replace
@@ -63,6 +70,23 @@ var CoursePress = CoursePress || {};
 				ed.on( 'keyup', function() {
 					CoursePress.Events.trigger('editor:keyup',ed);
 				} );
+
+				/**
+				 * Markup changing catch-all hack
+				 *
+				 * Basically, trick the CoursePress listeners into believing
+				 * that node changes are coming from a 'keyup' event. They don't necessarily do.
+				 *
+				 * Fixes: https://app.asana.com/0/47062597347068/118070383825539
+				 *
+				 * Downside: this will be triggered *a lot*. The overall performance might
+				 * benefit from debouncing the actual listeners.
+				 */
+				ed.on("NodeChange", function () {
+					CoursePress.Events.trigger('editor:keyup',ed);
+				});
+				// End of hack
+
 			};
 			// Don't forget to add the trigger to the textarea if TinyMCE is not used (QTags mode)
 			$('textarea#' + id ).on( 'keyup', function() {
@@ -220,14 +244,24 @@ var CoursePress = CoursePress || {};
 	};
 
 	CoursePress.utility.valid_media_extension = function( filename, type ) {
+
 		type = $( type ).hasClass( 'image_url' ) ? 'image_url' : type;
 		type = $( type ).hasClass( 'audio_url' ) ? 'audio_url' : type;
 		type = $( type ).hasClass( 'video_url' ) ? 'video_url' : type;
+		type = $( type ).hasClass( 'any_url' ) ? 'any_url' : type;
+
+		/**
+		 * any type, do not check
+		 */
+		if ( 'any_url' === type ) {
+			return true;
+		}
 
 		var extension = filename.split( '.' ).pop();
 		var audio_extensions = _coursepress.allowed_audio_extensions;
 		var video_extensions = _coursepress.allowed_video_extensions;
 		var image_extensions = _coursepress.allowed_image_extensions;
+
 
 		if ( type === 'featured_url' ) {
 			type = 'image_url';

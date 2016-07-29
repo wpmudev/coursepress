@@ -1,0 +1,38 @@
+
+.coursepress_wrapper {
+	.page-tagline {
+		font-size: 16px;
+		font-weight: 200;
+	}
+
+	.dropdown {
+		min-width: 300px;
+	}
+	.cp-box {
+		display: inline-block;
+		vertical-align: bottom;
+
+		label {
+			font-weight: 700;
+			padding-bottom: 5px;
+			display: block;
+		}
+	}
+	.cp-progress-indicator {
+		font-size: 13px !important;
+		display: inline-block;
+		vertical-align: middle;
+		margin: 5px;
+		color: rgb(0, 142, 194);
+		.fa {
+			font-size: 16px;
+			margin: 0 5px;
+		}
+		&.success {
+			color: rgb(65, 187, 138);
+		}
+		&.error {
+			color: #FF6D6D;
+		}
+	}
+}

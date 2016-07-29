@@ -7,6 +7,11 @@ if ( ! class_exists( 'WP_Users_List_Table' ) ) {
 class CoursePress_Helper_Table_Instructor extends WP_Users_List_Table {
 
 	public function prepare_items() {
+		// Remove possible query injections
+		remove_all_filters( 'users_list_table_query_args' );
+		remove_all_filters( 'get_role_list' );
+		remove_all_filters( 'pre_user_query' );
+
 		add_filter( 'manage_users_custom_column', array( __CLASS__, 'custom_columns' ), 10, 3 );
 		add_filter( 'users_list_table_query_args', array( __CLASS__, 'filter_args' ) );
 		add_filter( 'user_row_actions', array( __CLASS__, 'user_row_actions' ), 10, 2 );
@@ -16,6 +21,7 @@ class CoursePress_Helper_Table_Instructor extends WP_Users_List_Table {
 
 	public static function filter_args( $args ) {
 		$args['meta_value'] = 'instructor';
+		$args['meta_key'] = 'role_ins';
 
 		return $args;
 	}
@@ -32,8 +38,8 @@ class CoursePress_Helper_Table_Instructor extends WP_Users_List_Table {
 			)
 		);
 		$actions = array(
-			'profile' => sprintf( '<a href="%s">%s</a>', $profile_link, __( 'Profile', 'CP_TD' ) ),
-			'delete' => sprintf( '<a href="%s">%s</a>', $delete_link, __( 'Remove', 'CP_TD' ) ),
+			'profile' => sprintf( '<a href="%s">%s</a>', $profile_link, __( 'Profile', 'cp' ) ),
+			'delete' => sprintf( '<a href="%s">%s</a>', $delete_link, __( 'Remove', 'cp' ) ),
 		);
 
 		$actions = apply_filters( 'coursepress_instructor_row_actions', $actions, $user_object );
@@ -56,11 +62,11 @@ class CoursePress_Helper_Table_Instructor extends WP_Users_List_Table {
 
 			case 'registered':
 				$date_format = get_option( 'date_format' );
-				$return = date_i18n( $date_format, strtotime( $instructor->user_registered ) );
+				$return = date_i18n( $date_format, CoursePress_Data_Course::strtotime( $instructor->user_registered ) );
 				break;
 
 			case 'courses':
-				$count = CoursePress_Data_Instructor::get_courses_number( $instructor );
+				$count = CoursePress_Data_Instructor::count_courses( $user_id );
 				$courses_link = add_query_arg(
 					array(
 						'page' => 'coursepress',
@@ -78,18 +84,18 @@ class CoursePress_Helper_Table_Instructor extends WP_Users_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
-			//'id' => __( 'ID', 'CP_TD' ),
-			'username' => __( 'Username', 'CP_TD' ),
-			'name' => __( 'Name', 'CP_TD' ),
-			'registered' => __( 'Registered', 'CP_TD' ),
-			'courses' => __( 'Courses', 'CP_TD' ),
+			//'id' => __( 'ID', 'cp' ),
+			'username' => __( 'Username', 'cp' ),
+			'name' => __( 'Name', 'cp' ),
+			'registered' => __( 'Registered', 'cp' ),
+			'courses' => __( 'Courses', 'cp' ),
 		);
 
 		return $columns;
 	}
 
 	public function no_items() {
-		esc_html_e( 'No instructors found...', 'CP_TD' );
+		esc_html_e( 'No instructors found...', 'cp' );
 	}
 
 	public function extra_tablenav( $which ) {
@@ -100,10 +106,10 @@ class CoursePress_Helper_Table_Instructor extends WP_Users_List_Table {
 		?>
 		<div class="wrap">
 			<h2>
-				<?php esc_html_e( 'Instructors', 'CP_TD' ); ?>
+				<?php esc_html_e( 'Instructors', 'cp' ); ?>
 				<?php if ( current_user_can( 'manage_options' ) ) : ?>
 					<a href="user-new.php" class="add-new-h2">
-						<?php esc_html_e( 'Add New', 'CP_TD' ); ?>
+						<?php esc_html_e( 'Add New', 'cp' ); ?>
 					</a>
 				<?php endif; ?>
 			</h2>

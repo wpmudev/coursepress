@@ -8,12 +8,20 @@ class CoursePress_Data_Module {
 
 		add_filter( 'get_comment_link', array( __CLASS__, 'discussion_module_link' ), 10, 3 );
 		add_filter( 'get_edit_post_link', array( __CLASS__, 'discussion_post_link' ), 10, 3 );
-		add_filter( 'comment_edit_redirect', array( __CLASS__, 'discussion_edit_redirect' ), 10, 3 );
-		add_filter( 'cancel_comment_reply_link', array( __CLASS__, 'discussion_cancel_reply_link' ), 10, 3 );
-		add_filter( 'comment_reply_link', array( __CLASS__, 'discussion_reply_link' ), 10, 4 );
+		add_filter( 'comment_edit_redirect', array( __CLASS__, 'discussion_edit_redirect' ), 20, 3 );
+		add_filter( 'comment_post_redirect', array( __CLASS__, 'discussion_edit_redirect' ), 20, 3 );
+		//add_filter( 'cancel_comment_reply_link', array( __CLASS__, 'discussion_cancel_reply_link' ), 10, 3 );
+		//add_filter( 'comment_reply_link', array( __CLASS__, 'discussion_reply_link' ), 10, 4 );
 		add_filter( 'comments_open', array( __CLASS__, 'discussions_comments_open' ), 10, 2 );
-		add_action( 'parse_request', array( __CLASS__, 'parse_request' ) );
+		add_action( 'wp_insert_comment', array( __CLASS__, 'add_last_login_time' ), 74, 2 );
+		add_filter( 'wp_list_comments_args', array( __CLASS__, 'add_instructors_to_comments_args' ) );
 
+		/**
+		 * Show by default new module on course list.
+		 *
+		 * @since 2.0.0
+		 */
+		add_action( 'coursepress_module_added', array( __CLASS__, 'show_on_list' ), 10, 3 );
 	}
 
 	public static function get_format() {
@@ -22,18 +30,18 @@ class CoursePress_Data_Module {
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
 				'labels' => array(
-					'name' => __( 'Modules', 'CP_TD' ),
-					'singular_name' => __( 'Module', 'CP_TD' ),
-					'add_new' => __( 'Create New', 'CP_TD' ),
-					'add_new_item' => __( 'Create New Module', 'CP_TD' ),
-					'edit_item' => __( 'Edit Module', 'CP_TD' ),
-					'edit' => __( 'Edit', 'CP_TD' ),
-					'new_item' => __( 'New Module', 'CP_TD' ),
-					'view_item' => __( 'View Module', 'CP_TD' ),
-					'search_items' => __( 'Search Modules', 'CP_TD' ),
-					'not_found' => __( 'No Modules Found', 'CP_TD' ),
-					'not_found_in_trash' => __( 'No Modules found in Trash', 'CP_TD' ),
-					'view' => __( 'View Module', 'CP_TD' ),
+					'name' => __( 'Modules', 'cp' ),
+					'singular_name' => __( 'Module', 'cp' ),
+					'add_new' => __( 'Create New', 'cp' ),
+					'add_new_item' => __( 'Create New Module', 'cp' ),
+					'edit_item' => __( 'Edit Module', 'cp' ),
+					'edit' => __( 'Edit', 'cp' ),
+					'new_item' => __( 'New Module', 'cp' ),
+					'view_item' => __( 'View Module', 'cp' ),
+					'search_items' => __( 'Search Modules', 'cp' ),
+					'not_found' => __( 'No Modules Found', 'cp' ),
+					'not_found_in_trash' => __( 'No Modules found in Trash', 'cp' ),
+					'view' => __( 'View Module', 'cp' ),
 				),
 				// 'supports' => array( 'title', 'excerpt', 'comments' ),
 				'public' => false,
@@ -242,7 +250,7 @@ class CoursePress_Data_Module {
 	public static function discussion_post_link( $link, $post, $args ) {
 		$post_type = get_post_type( $post );
 
-		if ( 'module' === $post_type ) {
+		if ( self::$post_type === $post_type ) {
 			$unit_id = get_post_field( 'post_parent', $post );
 			$course_id = get_post_field( 'post_parent', $unit_id );
 			$course_link = get_permalink( $course_id );
@@ -257,11 +265,11 @@ class CoursePress_Data_Module {
 
 		$post_type = get_post_type( $comment->comment_post_ID );
 
-		if ( 'module' === $post_type ) {
+		if ( self::$post_type === $post_type ) {
 			$unit_id = get_post_field( 'post_parent', $comment->comment_post_ID );
 			$course_id = get_post_field( 'post_parent', $unit_id );
 			$course_link = get_permalink( $course_id );
-			$location = esc_url_raw( $course_link . CoursePress_Core::get_slug( 'unit/' ) . get_post_field( 'post_name', $unit_id ) . '#module-' . $comment->comment_post_ID );
+			$location = esc_url_raw( $course_link . CoursePress_Core::get_slug( 'unit/' ) . get_post_field( 'post_name', $unit_id ) . '#comment-' . $comment->comment_ID );
 		}
 
 		return $location;
@@ -324,30 +332,15 @@ class CoursePress_Data_Module {
 
 		$post_type = get_post_type( $comment->comment_post_ID );
 
-		switch ( $post_type ) {
-
-			case 'module':
-				$unit_id = get_post_field( 'post_parent', $comment->comment_post_ID );
-				$course_id = get_post_field( 'post_parent', $unit_id );
-				$course_link = get_permalink( $course_id );
-				$location = esc_url_raw( $course_link . CoursePress_Core::get_slug( 'unit/' ) . get_post_field( 'post_name', $unit_id ) . '#module-' . $comment->comment_post_ID );
-			break;
-
-			case 'discussions':
-				$slug = get_query_var( 'course' );
-				$course = get_page_by_path( $slug, OBJECT, 'course' );
-				$course_link = get_permalink( $course->ID );
-				$location = esc_url_raw( $course_link . CoursePress_Core::get_slug( 'discussion/' ) . get_post_field( 'post_name', $comment->comment_post_ID ) . '#comment' . $comment->comment_ID );
-			break;
-
-			default:
-			return;
-
+		if ( 'module' === $post_type ) {
+			$unit_id = get_post_field( 'post_parent', $comment->comment_post_ID );
+			$course_id = get_post_field( 'post_parent', $unit_id );
+			$course_link = get_permalink( $course_id );
+			$location = esc_url_raw( $course_link . CoursePress_Core::get_slug( 'unit/' ) . get_post_field( 'post_name', $unit_id ) . '#module-' . $comment->comment_post_ID );
 		}
 
 		if ( empty( $text ) ) {
-			$text = __( 'Click here to cancel reply.', 'CP_TD' );
-		}
+			$text = __( 'Click here to cancel reply.', 'cp' ); }
 
 		$style = isset( $_GET['replytocom'] ) ? '' : ' style="display:none;"';
 
@@ -432,6 +425,30 @@ class CoursePress_Data_Module {
 		$grade = (int) ( $gross_correct / $total_questions * 100 );
 		$passed = $grade >= $minimum_grade;
 
+		/**
+		 * try it message
+		 */
+		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
+		$responses = CoursePress_Data_Student::get_responses( $student_id, $course_id, $unit_id, $module_id, true, $student_progress );
+		$response_count = count( $responses );
+		$unlimited = empty( $attributes['retry_attempts'] );
+		$remaining = ! $unlimited ? (int) $attributes['retry_attempts'] - ( $response_count - 1 ) : 0;
+		$remaining_message = ! $unlimited ? sprintf( __( 'You have %d attempts left.', 'cp' ), $remaining ) : '';
+		$remaining_message = sprintf(
+			esc_html__( 'Your last attempt was unsuccessful. Try again. %s', 'cp' ),
+			$remaining_message
+		);
+		$allow_retries = cp_is_true( $attributes['allow_retries'] );
+
+		if ( ! $allow_retries || ( ! $unlimited && 1 > $remaining ) ) {
+			$remaining_message = esc_html__( 'Your last attempt was unsuccessful. You can not try anymore.', 'cp' );
+		}
+
+		$message = array(
+			'hide' => $passed,
+			'text' => $remaining_message,
+		);
+
 		return array(
 			'grade' => (int) $grade,
 			'correct' => (int) $gross_correct,
@@ -439,6 +456,7 @@ class CoursePress_Data_Module {
 			'total_questions' => (int) $total_questions,
 			'passed' => $passed,
 			'attributes' => $attributes,
+			'message' => $message,
 		);
 
 	}
@@ -449,26 +467,79 @@ class CoursePress_Data_Module {
 		if ( empty( $quiz_result ) ) {
 			$quiz_result = self::get_quiz_results( $student_id, $course_id, $unit_id, $module_id );
 		}
+		$quiz_passed = ! empty( $quiz_result['passed'] );
 
-		$passed_class = ! empty( $quiz_result['passed'] ) ? 'passed' : 'not-passed';
-		$passed_heading = ! empty( $quiz_result['passed'] ) ? __( 'Success!', 'CP_TD' ) : __( 'Quiz not passed.', 'CP_TD' );
-		$passed_message = ! empty( $quiz_result['passed'] ) ? __( 'You have successfully passed the quiz. Here are your results.', 'CP_TD' ) : __( 'You did not pass the quiz this time. Here are your results.', 'CP_TD' );
+		$passed_class = $quiz_passed ? 'passed' : 'not-passed';
+		$passed_heading = ! empty( $quiz_result['passed'] ) ? __( 'Success!', 'cp' ) : __( 'Quiz not passed.', 'cp' );
+		$passed_message = ! empty( $quiz_result['passed'] ) ? __( 'You have successfully passed the quiz. Here are your results.', 'cp' ) : __( 'You did not pass the quiz this time. Here are your results.', 'cp' );
 
-		$template = '<div class="coursepress-quiz-results ' . esc_attr( $passed_class ) . '">
+		$template = '<div class="module-quiz-questions"><div class="coursepress-quiz-results ' . esc_attr( $passed_class ) . '">
 			<div class="quiz-message">
-				<h3 class="result-title">' . $passed_heading . '</h3>
-				<p class="result-message">' . $passed_message . '</p>
+			<h3 class="result-title">' . $passed_heading . '</h3>
+			<p class="result-message">' . $passed_message . '</p>
 			</div>
 			<div class="quiz-results">
-				<table>
-					<tr><th>' . esc_html__( 'Total Questions', 'CP_TD' ) . '</th><td>' . esc_html( $quiz_result['total_questions'] ) . '</td></tr>
-					<tr><th>' . esc_html__( 'Correct', 'CP_TD' ) . '</th><td>' . esc_html( $quiz_result['correct'] ) . '</td></tr>
-					<tr><th>' . esc_html__( 'Incorrect', 'CP_TD' ) . '</th><td>' . esc_html( $quiz_result['wrong'] ) . '</td></tr>
-					<tr><th>' . esc_html__( 'Grade', 'CP_TD' ) . '</th><td>' . esc_html( $quiz_result['grade'] ) . '%</td></tr>
-				</table>
+			<table>
+			<tr><th>' . esc_html__( 'Total Questions', 'cp' ) . '</th><td>' . esc_html( $quiz_result['total_questions'] ) . '</td></tr>
+			<tr><th>' . esc_html__( 'Correct', 'cp' ) . '</th><td>' . esc_html( $quiz_result['correct'] ) . '</td></tr>
+			<tr><th>' . esc_html__( 'Incorrect', 'cp' ) . '</th><td>' . esc_html( $quiz_result['wrong'] ) . '</td></tr>
+			<tr><th>' . esc_html__( 'Grade', 'cp' ) . '</th><td>' . esc_html( $quiz_result['grade'] ) . '%</td></tr>
+			</table>
 			</div>
-		</div>
-		';
+			</div>';
+
+		/**
+		* retry button
+		*/
+		if ( ! $quiz_passed ) {
+			$attributes = CoursePress_Data_Module::attributes( $module_id );
+			$can_retry = $attributes['allow_retries'];
+			if ( $can_retry ) {
+				$is_enabled = false;
+				if ( ! $attributes['retry_attempts'] ) {
+					// Unlimited attempts.
+					$is_enabled = true;
+				} else {
+					/**
+					 * get student progress
+					 */
+					$student_progress = array();
+					if ( $student_id ) {
+						$student_progress = CoursePress_Data_Student::get_completion_data(
+							$student_id,
+							$course_id
+						);
+					}
+
+					$responses = CoursePress_Helper_Utility::get_array_val(
+						$student_progress,
+						'units/' . $unit_id . '/responses/' . $module_id
+					);
+					$response_count = 0;
+					if ( $responses && is_array( $responses ) ) {
+						$response_count = count( $responses );
+					}
+					if ( (int) $attributes['retry_attempts'] >= $response_count ) {
+						// Retry limit not yet reached.
+						$is_enabled = true;
+					}
+				}
+				if ( $is_enabled ) {
+					$template .= sprintf(
+						'<div class="module-elements focus-nav-reload" data-id="%d" data-type="module">',
+						esc_attr( $module_id )
+					);
+					$template .= sprintf(
+						'<a class="module-submit-action button-reload-module" href="#module-%d">%s</a>',
+						esc_attr( $module_id ),
+						__( 'Try again!', 'cp' )
+					);
+					$template .= ' </div>';
+				}
+			}
+		}
+
+		$template .= '</div>';
 
 		$attributes = array(
 			'course_id' => $course_id,
@@ -482,32 +553,280 @@ class CoursePress_Data_Module {
 		$template = apply_filters( 'coursepress_template_quiz_results', $template, $attributes );
 
 		return $template;
-
 	}
 
 	/**
-	 * @since  2.0.0
-	 * @param  WP $wp The main WP object.
+	 * WP_Query args for mandatory modules.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $unit_id Unit id.
+	 *
+	 * @return array Configuration array for WP_Query.
 	 */
-	public static function parse_request( $wp ) {
-		if ( ! array_key_exists( 'coursepress_focus', $wp->query_vars ) ) {
+	public static function get_args_mandatory_modules( $unit_id ) {
+		return array(
+			'fields'      => 'ids',
+			'meta_key'    => 'mandatory',
+			'meta_value'  => '1',
+			'nopaging'    => true,
+			'post_parent' => $unit_id,
+			'post_type'   => self::get_post_type_name(),
+		);
+	}
+
+	/**
+	 * List of ids of andatory modules.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $unit_id Unit id.
+	 *
+	 * @return array List of mandatory modules.
+	 */
+	public static function get_mandatory_modules( $unit_id ) {
+		$args = self::get_args_mandatory_modules( $unit_id );
+		$the_query = new WP_Query( $args );
+		$mandatory_modules = array();
+		if ( $the_query->have_posts() ) {
+			foreach ( $the_query->posts as $module_id ) {
+				$mandatory_modules[ $module_id ] = get_post_meta( $module_id, 'module_type', true );
+			}
+		}
+		return $mandatory_modules;
+	}
+
+	/**
+	 * Check is module done by student?
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $module_id Modue ID to check
+	 * @param integer $student_id student to check. Default empty.
+	 *
+	 * @return boolean is module done?
+	 */
+	public static function is_module_done_by_student( $module_id, $student_id ) {
+		if ( ! $student_id ) {
+			$student_id = get_current_user_id();
+		}
+
+		$unit_id = wp_get_post_parent_id( $module_id );
+		$mandatory_modules = self::get_mandatory_modules( $unit_id );
+		if ( isset( $mandatory_modules[ $module_id ] ) ) {
+			switch ( $mandatory_modules[ $module_id ] ) {
+				case 'discussion':
+					$args = array(
+					'post_id' => $module_id,
+					'user_id' => $student_id,
+					'order' => 'ASC',
+					'number' => 1, // We only need one to verify if current user posted a comment.
+					'fields' => 'ids',
+					);
+					$comments = get_comments( $args );
+
+					return count( $comments ) > 0;
+				break;
+
+				default:
+					$course_id = wp_get_post_parent_id( $unit_id );
+					$completion_data = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
+					$response = CoursePress_Helper_Utility::get_array_val(
+						$completion_data,
+						'units/' . $unit_id . '/responses/' . $module_id
+					);
+
+					$is_done = false;
+					$last_answer = is_array( $response ) ? array_pop( $response ) : false;
+
+					if ( ! empty( $last_answer ) ) {
+						$is_done = true;
+					}
+
+					return $is_done;
+
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Add last_login timestamp from user data to comment
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $comment_id Comment ID.
+	 * @param object $comment WP_Comment Object.
+	 *
+	 */
+	public static function add_last_login_time( $comment_id, $comment ) {
+		$parent_post_type = get_post_type( $comment->comment_post_ID );
+		if ( $parent_post_type != self::$post_type ) {
 			return;
 		}
-		$course_id = (int) $wp->query_vars['course'];
-		$unit_id = (int) $wp->query_vars['unit'];
-		$type = sanitize_text_field( $wp->query_vars['type'] );
-		$item_id = (int) $wp->query_vars['item'];
+		$student_last_login_time = self::_get_last_login_time( $comment->user_id );
+		add_comment_meta( $comment_id, 'last_login', $student_last_login_time, true );
+	}
 
-		// Focus mode means:
-		// We display the course item, no other theme/page elements.
-		$shortcode = sprintf(
-			'[coursepress_focus_item course="%d" unit="%d" type="%s" item_id="%d"]',
-			$course_id,
-			$unit_id,
-			$type,
-			$item_id
+	/**
+	 * Get modules IDS by unit id.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $unit_id Unit ID.
+	 *
+	 * @return array List of modules of the unit.
+	 */
+	public static function get_modules_ids_by_unit( $unit_id ) {
+		$args = array(
+			'post_type' => self::$post_type,
+			'post_status' => 'publish',
+			'fields' => 'ids',
+			'suppress_filters' => true,
+			'nopaging' => true,
+			'post_parent' => $unit_id,
 		);
-		echo do_shortcode( $shortcode );
-		die();
+		$query = new WP_Query( $args );
+		return $query->posts;
+	}
+
+	/**
+	 * Get last_login timestamp from user data
+	 *
+	 * @since 2.0.0
+	 *
+	 * @access private
+	 *
+	 * @param integer $user_id User ID.
+	 *
+	 * @return timestamp Returrn last login timestamp.
+	 */
+	private static function _get_last_login_time( $user_id ) {
+		$last_login_time = get_user_meta( $user_id, 'last_login', true );
+		if ( isset( $last_login_time['time'] ) ) {
+			return $last_login_time['time'];
+		}
+		return 0;
+	}
+
+	/**
+	 * Get unit ID by module
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer/WP_Post $module Module ID or module WP_Post object.
+	 *
+	 * @return integer Returns unit id.
+	 */
+	public static function get_unit_id_by_module( $module ) {
+		if ( is_integer( $module ) ) {
+			$module = get_post( $module );
+		}
+		$post_type = self::get_post_type_name();
+		if ( $module->post_type == $post_type ) {
+			return $module->post_parent;
+		}
+		return 0;
+	}
+
+	/**
+	 * Get course ID by module
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer/WP_Post $module Module ID or module WP_Post object.
+	 *
+	 * @return integer Returns course id.
+	 */
+	public static function get_course_id_by_module( $module ) {
+		$unit_id = self::get_unit_id_by_module( $module );
+		return CoursePress_Data_Unit::get_course_id_by_unit( $unit_id );
+	}
+
+	/**
+	 * Get instructors.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $module_id Module ID or module WP_Post object.
+	 *
+	 * @return array Array of instructors assigned to course.
+	 */
+	public static function get_instructors( $module_id, $objects = false ) {
+		$unit_id = self::get_unit_id_by_module( $module_id );
+		return CoursePress_Data_Unit::get_instructors( $unit_id, $objects );
+	}
+
+	/**
+	 * Add instructors list to comments walker params.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $args Args of comments walker params.
+	 *
+	 * @return array $args Args of comments walker params.
+	 */
+	public static function add_instructors_to_comments_args( $args ) {
+		global $post;
+		$post_type = self::get_post_type_name();
+		if ( $post_type != $post->post_type ) {
+			return $args;
+		}
+		$args['coursepress_instructors'] = self::get_instructors( $post->ID );
+		return $args;
+	}
+
+	/**
+	 * Get modules ids by unit ids.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $ids unit IDs.
+	 * @return array Array of module IDs.
+	 */
+	public static function get_module_ids_by_unit_ids( $ids ) {
+		$args = array(
+			'post_type' => self::$post_type,
+			'nopaging' => true,
+			'suppress_filters' => true,
+			'ignore_sticky_posts' => true,
+			'fields' => 'ids',
+		);
+		if ( ! empty( $ids ) ) {
+			$args['post_parent__in'] = $ids;
+		}
+		$query = new WP_Query( $args );
+		return $query->posts;
+	}
+
+	/**
+	 * New module will be shown on course structure list by default.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $module_id Module ID.
+	 * @param integer $unit_id unit ID.
+	 * @param array $meta Meta data.
+	 */
+	public static function show_on_list( $module_id, $unit_id, $meta ) {
+		$course_id = CoursePress_Data_Unit::get_course_id_by_unit( $unit_id );
+		$visible_modules = CoursePress_Data_Course::get_setting( $course_id, 'structure_visible_modules', array() );
+		$id = sprintf(
+			'%d_%d_%d',
+			$unit_id,
+			isset( $meta['module_page'] )? $meta['module_page'] : 1,
+			$module_id
+		);
+		$visible_modules[ $id ] = 1;
+		CoursePress_Data_Course::update_setting( $course_id, 'structure_visible_modules', $visible_modules );
+		/**
+		 * check visibility of page
+		 */
+		$page_id = isset( $meta['module_page'] )? $meta['module_page']: 1;
+		$visible_pages = CoursePress_Data_Course::get_setting( $course_id, 'structure_visible_pages', array() );
+		$id = sprintf( '%d_%d', $unit_id, $page_id );
+		if ( ! isset( $visible_modules[ $id ] ) ) {
+			CoursePress_Data_Unit::show_page( $unit_id, $page_id, $course_id );
+		}
 	}
 }

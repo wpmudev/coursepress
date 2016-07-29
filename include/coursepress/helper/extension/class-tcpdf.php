@@ -1,7 +1,5 @@
 <?php
-/**
- * This class is current not in used as of 2.0!
- **/
+
 class CoursePress_Helper_Extension_TCPDF {
 
 	private static $base_path = array(
@@ -21,7 +19,7 @@ class CoursePress_Helper_Extension_TCPDF {
 			'slug' => 'tcpdf',
 			'base_path' => self::$base_path['free'],
 			'source' => 'downloads.wordpress.org/plugin/tcpdf.zip',
-			'source_message' => __( 'Complete TCPDF Library with additional fonts (WordPress.org)', 'CP_TD' ),
+			'source_message' => __( 'Complete TCPDF Library with additional fonts (WordPress.org)', 'cp' ),
 			'external_url' => 'https://wordpress.org/plugins/tcpdf/',
 			'external' => 'yes',
 			'protocol' => 'https',

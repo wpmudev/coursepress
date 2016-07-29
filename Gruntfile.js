@@ -80,7 +80,16 @@ module.exports = function(grunt) {
 				'./test',
 				'./readme.txt',
 				'./language/coursepress.pot',
-				'./campus'
+				'./campus',
+				'./node_modules',
+				'./vendor',
+				'./.gitattributes',
+				'./.gitignore',
+				'./composer.json',
+				'./composer.lock',
+				'./Gruntfile.js',
+				'./package.json',
+				'./README.md'
 			],
 			exclude_free: [
 				'./test',

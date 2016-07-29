@@ -8,8 +8,6 @@ class CoursePress_View_Admin_Setting {
 	private static $tabs = array();
 	private static $settings_classes = array(
 		'General',
-		'Slugs',
-		'Pages',
 		'Email',
 		'Capabilities',
 		'BasicCertificate',
@@ -22,8 +20,8 @@ class CoursePress_View_Admin_Setting {
 
 	public static function init() {
 
-		self::$title = __( 'Settings/CoursePress', 'CP_TD' );
-		self::$menu_title = __( 'Settings', 'CP_TD' );
+		self::$title = __( 'Settings/CoursePress', 'cp' );
+		self::$menu_title = __( 'Settings', 'cp' );
 
 		add_filter( 'coursepress_admin_valid_pages', array( __CLASS__, 'add_valid' ) );
 		add_filter( 'coursepress_admin_pages', array( __CLASS__, 'add_page' ) );
@@ -38,7 +36,6 @@ class CoursePress_View_Admin_Setting {
 				call_user_func( $class . '::init' );
 			}
 		}
-
 	}
 
 	public static function add_valid( $valid_pages ) {
@@ -117,4 +114,16 @@ class CoursePress_View_Admin_Setting {
 		echo apply_filters( 'coursepress_settings_page_main', $output );
 
 	}
+
+	/**
+	 * return slug.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return string slug
+	 */
+	public static function get_slug() {
+		return self::$slug;
+	}
+
 }

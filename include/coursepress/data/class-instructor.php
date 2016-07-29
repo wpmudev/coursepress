@@ -30,13 +30,31 @@ class CoursePress_Data_Instructor {
 		return $meta;
 	}
 
-	public static function filter_course_meta_array( $var ) {
+	/**
+	 * Callback for array_filter() that will return the meta-key if it
+	 * indicates an instructor-course-link.
+	 *
+	 * So this function only returns values if the associated user is an
+	 * instructor.
+	 *
+	 * @since  2.0.0
+	 */
+	public static function filter_course_meta_array( $meta_key ) {
 		global $wpdb;
-		if ( preg_match( '/^course\_/', $var ) || preg_match( '/^' . $wpdb->prefix . 'course\_/', $var ) ||
-			( is_multisite() && ( defined( 'BLOG_ID_CURRENT_SITE' ) && BLOG_ID_CURRENT_SITE == get_current_blog_id() ) && preg_match( '/^' . $wpdb->base_prefix . 'course\_/', $var ) )
-		) {
-			return $var;
+
+		$regex = array();
+		$regex[] = 'course_\d+';
+		$regex[] = $wpdb->prefix . 'course_\d+';
+		if ( is_multisite() && defined( 'BLOG_ID_CURRENT_SITE' ) && BLOG_ID_CURRENT_SITE == get_current_blog_id() ) {
+			$regex[] = $wpdb->base_prefix . 'course_\d+';
 		}
+
+		$pattern = sprintf( '/^(%s)$/', implode( '|', $regex ) );
+
+		if ( preg_match( $pattern, $meta_key ) ) {
+			return $meta_key;
+		}
+		return false;
 	}
 
 	public static function filter_by_where( $where ) {
@@ -67,6 +85,14 @@ class CoursePress_Data_Instructor {
 		return $where;
 	}
 
+	/**
+	 * Return a list of courses of which the specified user is an instructor.
+	 *
+	 * @since  2.0.0
+	 * @param  int|WP_User $user The instructor/user to check.
+	 * @param  string      $status all|publish|draft.
+	 * @return array List of course IDs.
+	 */
 	public static function get_assigned_courses_ids( $user, $status = 'all' ) {
 		global $wpdb;
 
@@ -147,6 +173,17 @@ class CoursePress_Data_Instructor {
 
 		$posts = get_posts( $args );
 
+		// Filter posts
+		if ( count( $posts ) > 0 ) {
+			foreach ( $posts as $index => $post ) {
+				$can_update = CoursePress_Data_Capabilities::can_update_course( $post->ID );
+
+				if ( false === $can_update ) {
+					unset( $posts[$index] );
+				}
+			}
+		}
+
 		return $posts;
 	}
 
@@ -224,6 +261,11 @@ class CoursePress_Data_Instructor {
 		}
 	}
 
+	/**
+	 * @todo This function is not used in CP 2.0 and is not finished
+	 *       Need to remove instructor from all courses before removing the
+	 *       role_ins meta value!
+	 */
 	public static function remove_instructor_status( $user ) {
 		$user_id = self::_get_id( $user );
 		$global_option = ! is_multisite();
@@ -232,12 +274,19 @@ class CoursePress_Data_Instructor {
 		// Legacy
 		delete_user_meta( $user_id, 'role_ins', 'instructor' );
 		self::unassign_from_all_courses( $user_id );
-		// CoursePress::instance()->drop_instructor_capabilities( $user_id );
-	}
 
+		CoursePress_Data_Capabilities::drop_instructor_capabilities( $user_id );
+	}
+	// */
+
+	/**
+	 * @todo This function is not used in CP 2.0 and does not look finished
+	 *       $delete_user param is not used
+	 */
 	public static function delete_instructor( $user, $delete_user = true ) {
 		self::remove_instructor_status( $user );
 	}
+	// */
 
 	public static function instructor_by_hash( $hash ) {
 		global $wpdb;
@@ -251,7 +300,7 @@ class CoursePress_Data_Instructor {
 
 		// Not in cache, so retrieve
 		if ( empty( $user_id ) ) {
-			$sql = $wpdb->prepare( 'SELECT user_id FROM ' . $wpdb->usermeta. ' WHERE meta_key = %s', $hash );
+			$sql = $wpdb->prepare( 'SELECT user_id FROM ' . $wpdb->prefix . 'usermeta WHERE meta_key = %s', $hash );
 			$user_id = $wpdb->get_var( $sql );
 			wp_cache_add( $hash, $user_id, 'coursepress_userhash' );
 		}
@@ -296,14 +345,52 @@ class CoursePress_Data_Instructor {
 
 		$option = get_user_option( $hash, $user_id );
 
-		/**
-		 * create hash if user do not have one!
-		 */
-		if ( empty( $option ) ) {
-			self::create_hash( $user );
-			return $hash;
+		return null !== $option ? $hash : false;
+	}
+
+	public static function count_courses( $instructor_id, $refresh = false ) {
+		$count = get_user_meta( $instructor_id, 'cp_instructor_course_count', true );
+
+		if ( ! $count || $refresh ) {
+			global $wpdb;
+
+			$meta_keys = $wpdb->get_results(
+				$wpdb->prepare( "
+					SELECT `meta_key`
+					FROM $wpdb->usermeta
+					WHERE `meta_key` LIKE 'course_%%' AND `user_id`=%d",
+					$instructor_id
+				),
+				ARRAY_A
+			);
+
+			if ( $meta_keys ) {
+				$meta_keys = array_map(
+					array( __CLASS__, 'meta_key' ),
+					$meta_keys
+				);
+
+				$course_ids = array_map(
+					array( 'CoursePress_Data_Instructor', 'filter_course_meta_array' ),
+					$meta_keys
+				);
+				$course_ids = array_filter( $course_ids ); 
+				$count = count( $course_ids );
+
+				// Save counted courses.
+				update_user_meta( $instructor_id, 'cp_instructor_course_count', $count );
+			}
 		}
-		return $option;
+
+		return $count;
+	}
+
+	public static function meta_key( $key ) {
+		return $key['meta_key'];
+	}
+
+	public static function instructor_key( $meta_key ) {
+		return ! preg_match( '/_progress$/', $meta_key );
 	}
 
 	public static function added_to_course( $instructor_id, $course_id ) {
@@ -318,7 +405,11 @@ class CoursePress_Data_Instructor {
 
 		$global_option = ! is_multisite();
 		update_user_option( $instructor_id, 'course_' . $course_id, $course_id, $global_option );
+
+		// Update course count
+		self::count_courses( $instructor_id, true );
 	}
+
 
 	public static function removed_from_course( $instructor_id, $course_id ) {
 
@@ -333,12 +424,17 @@ class CoursePress_Data_Instructor {
 		$assigned_courses_ids = self::get_assigned_courses_ids( $instructor );
 		$assigned_courses_ids = array_filter( $assigned_courses_ids );
 
+		// Update course count
+		self::count_courses( $instructor_id, true );
+
 		/**
 		 * Drop capabilities if no assigned courses found.
 		 **/
 		if ( empty( $assigned_courses_ids ) ) {
 			CoursePress_Data_Capabilities::drop_instructor_capabilities( $instructor );
+			delete_user_meta( $instructor_id, 'cp_instructor_course_count' );
 		}
+
 	}
 
 	public static function delete_invitation( $course_id, $invite_code ) {
@@ -432,7 +528,7 @@ class CoursePress_Data_Instructor {
 				CoursePress_Helper_Utility::set_array_val(
 					$return_data,
 					'message/sent',
-					__( 'Invitation successfully sent.', 'CP_TD' )
+					__( 'Invitation successfully sent.', 'cp' )
 				);
 
 			} else {
@@ -442,7 +538,7 @@ class CoursePress_Data_Instructor {
 				CoursePress_Helper_Utility::set_array_val(
 					$return_data,
 					'message/exists',
-					__( 'Invitation already exists. Invitation was re-sent.', 'CP_TD' )
+					__( 'Invitation already exists. Invitation was re-sent.', 'cp' )
 				);
 			}
 		} else {
@@ -451,7 +547,7 @@ class CoursePress_Data_Instructor {
 			CoursePress_Helper_Utility::set_array_val(
 				$return_data,
 				'message/send_error',
-				__( 'Email failed to send.', 'CP_TD' )
+				__( 'Email failed to send.', 'cp' )
 			);
 		};
 
@@ -570,5 +666,64 @@ class CoursePress_Data_Instructor {
 		do_action( 'coursepress_instructor_invite_confirm_fail', $course_id, $instructor_id );
 
 		return false;
+	}
+
+	/**
+	 * Get total number of students of a given instructor ID.
+	 *
+	 * @since 2.0
+	 *
+	 * @param (int) $instructor_id	WP_User ID.
+	 * @return (int) $count			Total number of students.
+	 **/
+	public static function get_students_count( $instructor_id, $refresh = false ) {
+		if ( empty( $instructor_id ) ) {
+			return 0; // Bail if no ID
+		}
+		$count = get_user_meta( $instructor_id, 'coursepress_followers_count', true );
+
+		if ( false === $count || $refresh ) {
+			// Not set yet, let's get the total student count
+			$count = self::_get_students_count( $instructor_id );
+			// Update usermeta setting
+			update_user_meta( $instructor_id, 'coursepress_followers_count', $count );
+		}
+
+		return $count;
+	}
+
+	public static function _get_students_count( $instructor_id ) {
+		global $wpdb;
+
+		$course_ids = self::get_assigned_courses_ids( (int) $instructor_id, 'publish' );
+		$keys = array();
+		$students = array();
+
+		foreach ( $course_ids as $course_id ) {
+			$key = 'enrolled_course_date_' . $course_id;
+
+			if ( is_multisite() ) {
+				$key = $wpdb->prefix . $key;
+			}
+			$keys[] = "'{$key}'";
+		}
+
+		// We use custom SQL to avoid over capacity.
+		$custom_sql = $wpdb->prepare( "SELECT DISTINCT(user_id) FROM $wpdb->usermeta as m WHERE m.meta_key IN (%s)", implode( ',', $keys ) );
+		$results = $wpdb->get_results( $custom_sql );
+
+		return count( $results );
+	}
+
+	/**
+	 * Reset instructors students count.
+	 **/
+	public static function reset_students_count( $instructors ) {
+		if ( is_array( $instructors ) ) {
+			foreach ( $instructors as $instructor ) {
+				$instructor_id = is_object( $instructor ) ? $instructor->ID : $instructor;
+				self::get_students_count( $instructor_id, true );
+			}
+		}
 	}
 }

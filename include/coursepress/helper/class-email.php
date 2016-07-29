@@ -45,6 +45,24 @@ class CoursePress_Helper_Email {
 	const NEW_ORDER = 'new_order';
 
 	/**
+	 * Email type.
+	 * Used CoursePress_Data_Student::notify_student()
+	 **/
+	const COURSE_START_NOTIFICATION = 'course_start';
+
+	/**
+	 * Email type.
+	 * Used CoursePress_Template_Discussion::notify_all()
+	 **/
+	const DISCUSSION_NOTIFICATION = 'discussion_notification';
+
+	/**
+	 * Email type.
+	 * Used at CoursePress_Helper_EmailAlerts::unit_started()
+	 **/
+	const UNIT_STARTED_NOTIFICATION = 'unit_started';
+
+	/**
 	 * Stores the current email-template-type for usage in filter-callbacks.
 	 *
 	 * @var string
@@ -82,7 +100,7 @@ class CoursePress_Helper_Email {
 	 *               first_name
 	 *               last_name
 	 *               fields .. content variables, array of key-value pairs.
-	 * @return mixed
+	 * @return bool True if email was accepted by wp_mail.
 	 */
 	public static function send_email( $type, $args ) {
 		self::$current_type = $type;
@@ -145,10 +163,51 @@ class CoursePress_Helper_Email {
 						$email_settings['content']
 					);
 					break;
+
+				case self::COURSE_START_NOTIFICATION:
+					$args['message'] = self::course_start_notification_message(
+						$args,
+						$email_settings['content']
+					);
+					break;
+
+				case self::DISCUSSION_NOTIFICATION:
+					$args['message'] = self::discussion_notification_message(
+						$args,
+						$email_settings['content']
+					);
+					if ( ! empty( $args['uniq_subject'] ) ) {
+						$args['subject'] = $args['uniq_subject'];
+					}
+					break;
+
+				case self::UNIT_STARTED_NOTIFICATION:
+					$args['message'] = self::units_started_notification_message(
+						$args,
+						$email_settings['content']
+					);
+					$args['subject'] = self::units_started_notification_subject(
+						$args,
+						$args['subject']
+					);
+					break;
 			}
 		}
 
-		return self::process_and_send( $type, $args );
+		/**
+		 * Check whether an email should be send or not.
+		 *
+		 * @since 2.0
+		 *
+		 * @param (bool) $send
+		 **/
+		$send = CoursePress_Data_Unsubscribe::is_send( $type, $args );
+
+		if ( $send ) {
+			return self::process_and_send( $type, $args );
+		}
+
+		return false;
 	}
 
 	/**
@@ -194,9 +253,13 @@ class CoursePress_Helper_Email {
 			'headers' => apply_filters(
 				'coursepress_email_headers',
 				array(
-					'Content-type' => 'text/html',
+					'Content-Type' => 'text/html',
 				)
 			),
+			'attachments' => apply_filters(
+				'coursepress_email_attachments',
+				isset( $args['attachments'] ) ? $args['attachments'] : array()
+			)
 		);
 
 		$email = apply_filters(
@@ -221,16 +284,52 @@ class CoursePress_Helper_Email {
 		}
 
 		$header_string = '';
+
+		if ( isset( $args['bcc'] ) ) {
+			if ( is_array( $args['bcc'] ) ) {
+				$bcc = implode( ',', $args['bcc'] );
+			} else {
+				$bcc = $args['bcc'];
+			}
+			if ( ! empty( $bcc ) ) {
+				$header_string .= 'Bcc: ' . $bcc . ';';
+			}
+		}
+
 		foreach ( $email['headers'] as $key => $value ) {
 			$header_string .= $key . ': ' . $value . "\r\n";
 		}
 
-		$result = wp_mail(
-			$email['to'],
-			$email['subject'],
-			CoursePress_Helper_Utility::filter_content( $email['message'] ),
-			$header_string
+		$email['message'] = CoursePress_Helper_Utility::filter_content( $email['message'] );
+		$email['headers'] = $header_string;
+
+		/**
+		 * Action offers other plugins to implement custom email sending code,
+		 * for example to use a custom built HTML template or similar.
+		 *
+		 * @var bool  $result Output parameter, this should be set to true/false
+		 *            if the email was processed by the custom action handler.
+		 * @var array $email The email options for wp_mail.
+		 * @var array $args Email parameters passed to the CoursePress function.
+		 */
+		$result = apply_filters(
+			'coursepress_send_email',
+			null,
+			$email,
+			$args,
+			$type
 		);
+
+		// If custom send-option failed or was not used then send via wp_mail.
+		if ( ! $result ) {
+			$result = wp_mail(
+				$email['to'],
+				$email['subject'],
+				$email['message'],
+				$email['headers'],
+				$email['attachments']
+			);
+		}
 
 		do_action( 'coursepress_email_sent', $args, $type, $result );
 		do_action( 'coursepress_email_sent-' . $type, $args, $result );
@@ -248,8 +347,8 @@ class CoursePress_Helper_Email {
 		$fields = CoursePress_Helper_Setting_Email::get_defaults( $email_type );
 
 		return CoursePress_Core::get_setting(
-			'email/' . $email_type . '/from_name',
-			$fields['from_name']
+			'email/' . $email_type . '/from',
+			$fields['from']
 		);
 	}
 
@@ -257,8 +356,8 @@ class CoursePress_Helper_Email {
 		$fields = CoursePress_Helper_Setting_Email::get_defaults( $email_type );
 
 		return CoursePress_Core::get_setting(
-			'email/' . $email_type . '/from_email',
-			$fields['from_email']
+			'email/' . $email_type . '/email',
+			$fields['email']
 		);
 	}
 
@@ -340,12 +439,14 @@ class CoursePress_Helper_Email {
 			'COURSE_NAME' => sanitize_text_field( $args['course_name'] ),
 			'COMPLETION_DATE' => sanitize_text_field( $args['completion_date'] ),
 			'CERTIFICATE_NUMBER' => sanitize_text_field( $args['certificate_id'] ),
+			'CERTIFICATE_URL' => esc_url( CoursePress_Data_Certificate::get_encoded_url( $course_id, $args['student_id'] ) ),
 			'UNIT_LIST' => $args['unit_list'],
 		);
+
 		/**
 		 * Filter the variables before applying changes.
 		 *
-		 * @param (array) $vars
+		 * @param array $vars
 		 * @param (int) $course_id
 		 **/
 		$vars = apply_filters( 'coursepress_fields_' . self::BASIC_CERTIFICATE, $vars, $course_id );
@@ -382,7 +483,7 @@ class CoursePress_Helper_Email {
 		/**
 		 * Filter the registration variables before applying the changes.
 		 *
-		 * @param (array) $vars
+		 * @param array $vars
 		 **/
 		$vars = apply_filters( 'coursepress_fields_' . self::REGISTRATION, $vars );
 
@@ -390,7 +491,7 @@ class CoursePress_Helper_Email {
 	}
 
 	/**
-	 * Email body for confirmation of enrolment.
+	 * Email body for confirmation of enrollment.
 	 * Triggered by CoursePress_Data_Course::enroll_student()
 	 *
 	 * @since  2.0.0
@@ -410,6 +511,8 @@ class CoursePress_Helper_Email {
 			$course_address = get_permalink( $course_id );
 		}
 
+		$unsubscribe_link = '';  // @todo: NOT IMPLEMENTED YET!!!
+
 		// Email Content.
 		$vars = array(
 			'STUDENT_FIRST_NAME' => sanitize_text_field( $args['first_name'] ),
@@ -419,11 +522,12 @@ class CoursePress_Helper_Email {
 			'STUDENT_DASHBOARD' => wp_login_url(),
 			'COURSES_ADDRESS' => CoursePress_Core::get_slug( 'course/', true ),
 			'BLOG_NAME' => get_bloginfo( 'name' ),
+			'UNSUBSCRIBE_LINK' => $unsubscribe_link,
 		);
 		/**
 		 * Filter the variables before applying changes.
 		 *
-		 * @param (array) $vars
+		 * @param array $vars
 		 * @param (int) $course_id
 		 **/
 		$vars = apply_filters( 'coursepress_fields_' . self::ENROLLMENT_CONFIRM, $vars, $course_id );
@@ -466,7 +570,7 @@ class CoursePress_Helper_Email {
 		/**
 		 * Filter the variables before applying changes.
 		 *
-		 * @param (array) $vars.
+		 * @param array $vars.
 		 * @param (int) $course_id
 		 **/
 		$vars = apply_filters( 'coursepress_fields_' . self::COURSE_INVITATION, $vars, $course_id );
@@ -536,12 +640,23 @@ class CoursePress_Helper_Email {
 		/**
 		 * Filter the variables before applying changes.
 		 *
-		 * @param (array) $vars
-		 * @param (array) $course_id
+		 * @param array $vars
+		 * @param array $course_id
 		 **/
 		$vars = apply_filters( 'coursepress_fields_' . self::INSTRUCTOR_INVITATION, $vars, $course_id );
+		$message = CoursePress_Helper_Utility::replace_vars( $content, $vars );
 
-		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
+		/**
+		 * Filter the message before sending.
+		 *
+		 * @since 2.0
+		 *
+		 * @param string $message The message to send.
+		 * @param int    $course_id The course_id the message is associated to.
+		 **/
+		$message = apply_filters( 'coursepress_course_invitation_message', $message, $course_id );
+
+		return $message;
 	}
 
 	/**
@@ -556,5 +671,243 @@ class CoursePress_Helper_Email {
 		$vars = array();
 
 		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
+	}
+
+	/**
+	 * Use to send notification message when a course have started.
+	 *
+	 * Expected args:
+	 *  - course_id
+	 *  - first_name
+	 *  - last_name
+	 *  - display_name
+	 *  - email
+	 *
+	 * @since 2.0
+	 *
+	 * @param array  $args An array of email arguments.
+	 * @param string $content The message to send.
+	 **/
+	public static function course_start_notification_message( $args, $content ) {
+		$course_id = (int) $args['course_id'];
+		$post = get_post( $course_id );
+		$course_name = $post->post_title;
+		$course_summary = $post->post_excerpt;
+		$valid_stati = array( 'draft', 'pending', 'auto-draft' );
+
+		if ( in_array( $post->post_status, $valid_stati ) ) {
+			$course_address = CoursePress_Core::get_slug( 'course/', true ) . $post->post_name . '/';
+		} else {
+			$course_address = get_permalink( $course_id );
+		}
+
+		$unsubscribe_link = '';  // @todo: NOT IMPLEMENTED YET!!!
+
+		// Email Content.
+		$vars = array(
+			'COURSE_NAME' => $course_name,
+			'COURSE_OVERVIEW' => $course_summary,
+			'COURSE_ADDRESS' => esc_url( $course_address ),
+			'WEBSITE_ADDRESS' => home_url(),
+			'BLOG_NAME' => get_bloginfo( 'name' ),
+			'STUDENT_FIRST_NAME' => $args['first_name'],
+			'STUDENT_LAST_NAME' => $args['last_name'],
+			'STUDENT_LOGIN' => $args['display_name'],
+			'UNSUBSCRIBE_LINK' => $unsubscribe_link,
+		);
+
+		/**
+		 * Filter the variables before applying changes.
+		 *
+		 * @param array $vars
+		 * @param array $course_id
+		 **/
+		$vars = apply_filters( 'coursepress_fields_' . self::COURSE_START_NOTIFICATION, $vars, $course_id );
+
+		$message = CoursePress_Helper_Utility::replace_vars( $content, $vars );
+
+		/**
+		 * Filter the message before sending.
+		 *
+		 * @since 2.0
+		 *
+		 * @param string $message The message to send.
+		 * @param int    $course_id The course_id the message is associated to.
+		 **/
+		$message = apply_filters( 'coursepress_course_start_notification_message', $message, $course_id );
+
+		return $message;
+	}
+
+	/**
+	 * Use to send notification message to students and instructors.
+	 *
+	 * @since 2.0
+	 *
+	 * @param array  $args An array of email arguments.
+	 * @param string $content The message to send.
+	 **/
+	public static function discussion_notification_message( $args, $content ) {
+		$course_id = (int) $args['course_id'];
+		$post = get_post( $course_id );
+		$course_name = $post->post_title;
+		$course_summary = $post->post_excerpt;
+		$valid_stati = array( 'draft', 'pending', 'auto-draft' );
+
+		if ( in_array( $post->post_status, $valid_stati ) ) {
+			$course_address = CoursePress_Core::get_slug( 'course/', true ) . $post->post_name . '/';
+		} else {
+			$course_address = get_permalink( $course_id );
+		}
+
+		// Email Content.
+		$vars = array(
+			'COURSE_NAME' => $course_name,
+			'COURSE_OVERVIEW' => $course_summary,
+			'COURSE_ADDRESS' => esc_url( $course_address ),
+			'WEBSITE_ADDRESS' => home_url(),
+			'BLOG_NAME' => get_bloginfo( 'name' ),
+			'COMMENT_MESSAGE' => $args['comment'],
+			'COURSE_DISCUSSION_ADDRESS' => $args['discussion_link'],
+			'UNSUBSCRIBE_LINK' => $args['unsubscribe_link'],
+			'COMMENT_AUTHOR' => $args['comment_author'],
+		);
+
+		/**
+		 * Filter the variables before applying changes.
+		 *
+		 * @param array $vars
+		 * @param array $course_id
+		 **/
+		$vars = apply_filters( 'coursepress_fields_' . self::DISCUSSION_NOTIFICATION, $vars, $course_id );
+
+		$message = CoursePress_Helper_Utility::replace_vars( $content, $vars );
+
+		/**
+		 * Filter the message before sending.
+		 *
+		 * @since 2.0
+		 *
+		 * @param string $message The message to send.
+		 * @param (int) $course_id The course_id the message is associated to.
+		 **/
+		$message = apply_filters( 'coursepress_discussion_notification_message', $message, $course_id );
+
+		return $message;
+	}
+
+	/**
+	 * Prepare the email body for the unit-started email notification.
+	 *
+	 * Expected args:
+	 *  - unit_id
+	 *  - first_name
+	 *  - last_name
+	 *  - display_name
+	 *  - email
+	 *
+	 * @since  2.0.0
+	 * @param  array $args List of variables.
+	 * @param  string $content Email body template.
+	 * @return string Parsed email body.
+	 */
+	public static function units_started_notification_message( $args, $content ) {
+		$unit_id = (int) $args['unit_id'];
+		$unit = get_post( $unit_id );
+		$course_id = CoursePress_Data_Unit::get_course_id_by_unit( $unit );
+		$course = get_post( $course_id );
+		$course_name = $course->post_title;
+		$course_summary = $course->post_excerpt;
+		$unit_title = $unit->post_title;
+		$unit_sumary = $unit->post_content;
+		$valid_stati = array( 'draft', 'pending', 'auto-draft' );
+
+		if ( in_array( $course->post_status, $valid_stati ) ) {
+			$course_address = CoursePress_Core::get_slug( 'course/', true ) . $unit->post_name . '/';
+		} else {
+			$course_address = get_permalink( $course_id );
+		}
+
+		$unit_address = $course_address . CoursePress_Core::get_slug( 'units/' ) . $unit->post_name . '/';
+		$unsubscribe_link = '';  // @todo: NOT IMPLEMENTED YET!!!
+
+		// Email Content.
+		$vars = array(
+			'COURSE_NAME' => $course_name,
+			'COURSE_ADDRESS' => esc_url( $course_address ),
+			'WEBSITE_ADDRESS' => home_url(),
+			'BLOG_NAME' => get_bloginfo( 'name' ),
+			'STUDENT_FIRST_NAME' => $args['first_name'],
+			'STUDENT_LAST_NAME' => $args['last_name'],
+			'UNIT_TITLE' => $unit_title,
+			'UNIT_OVERVIEW' => $unit_sumary,
+			'UNIT_ADDRESS' => $unit_address,
+			'UNSUBSCRIBE_LINK' => $unsubscribe_link,
+		);
+
+		/**
+		 * Filter the variables before applying changes.
+		 *
+		 * @param array $vars
+		 * @param array $course_id
+		 **/
+		$vars = apply_filters( 'coursepress_fields_' . self::UNIT_STARTED_NOTIFICATION, $vars, $course_id );
+
+		$message = CoursePress_Helper_Utility::replace_vars( $content, $vars );
+		/**
+		 * Filter the message before sending.
+		 *
+		 * @since 2.0
+		 *
+		 * @param string $message The message to send.
+		 * @param int    $course_id The course_id the message is associated to.
+		 **/
+		$message = apply_filters( 'coursepress_units_started_notification_message', $message, $course_id );
+
+		return $message;
+	}
+
+	/**
+	 * Prepare the email subject for the unit-started email notification.
+	 *
+	 * Expected args:
+	 *  - unit_id
+	 *  - first_name
+	 *  - last_name
+	 *  - display_name
+	 *  - email
+	 *
+	 * @since  2.0.0
+	 * @param  array $args List of variables.
+	 * @param  string $subject Email subject.
+	 * @return string Parsed email subject.
+	 */
+	public static function units_started_notification_subject( $args, $subject ) {
+		$unit_id = (int) $args['unit_id'];
+		$unit = get_post( $unit_id );
+		$course_id = CoursePress_Data_Unit::get_course_id_by_unit( $unit );
+		$course = get_post( $course_id );
+		$course_name = $course->post_title;
+		$unit_title = $unit->post_title;
+
+		// Email Content.
+		$vars = array(
+			'COURSE_NAME' => $course_name,
+			'UNIT_TITLE' => $unit_title,
+		);
+
+		$subject = CoursePress_Helper_Utility::replace_vars( $subject, $vars );
+
+		/**
+		 * Filter the message before sending.
+		 *
+		 * @since 2.0
+		 *
+		 * @param string $message The message to send.
+		 * @param int    $course_id The course_id the message is associated to.
+		 **/
+		$subject = apply_filters( 'coursepress_units_started_notification_subject', $subject, $course_id );
+
+		return $subject;
 	}
 }

@@ -5,7 +5,7 @@ class CoursePress_Helper_Extension {
 	private static $plugins = array();
 
 	public static function init() {
-		$plugins = array( 'MarketPress' );
+		$plugins = array( 'MarketPress', 'TCPDF' );
 		foreach ( $plugins as $plugin ) {
 			if ( method_exists( 'CoursePress_Helper_Extension_' . $plugin, 'init' ) ) {
 				call_user_func( 'CoursePress_Helper_Extension_' . $plugin . '::init' );
@@ -26,14 +26,14 @@ class CoursePress_Helper_Extension {
 			return $content;
 		}
 
-		$content .= '<h3>' . esc_html__( 'Plugins', 'CP_TD' ) . '</h3>';
+		$content .= '<h3>' . esc_html__( 'Plugins', 'cp' ) . '</h3>';
 		$content .= '<table class="wp-list-table widefat">
 			<thead>
 				<tr>
-					<th>' . esc_html__( 'Plugin', 'CP_TD' ) . '</th>
-					<th>' . esc_html__( 'Source', 'CP_TD' ) . '</th>
-					<th>' . esc_html__( 'Status', 'CP_TD' ) . '</th>
-					<th>' . esc_html__( 'Action', 'CP_TD' ) . '</th>
+					<th>' . esc_html__( 'Plugin', 'cp' ) . '</th>
+					<th>' . esc_html__( 'Source', 'cp' ) . '</th>
+					<th>' . esc_html__( 'Status', 'cp' ) . '</th>
+					<th>' . esc_html__( 'Action', 'cp' ) . '</th>
 				</tr>
 			</thead>
 			<tbody>';
@@ -58,7 +58,7 @@ class CoursePress_Helper_Extension {
 						<input type="hidden" name="location" value="' . $location . '">
 						<input type="hidden" name="base" value="' . $plugin['base_path'] . '">
 						<input type="hidden" name="_wp_nonce" value="' . wp_create_nonce( 'deactivate-plugin' ) . '">
-						<input type="submit" class="button" value="' . esc_attr__( 'De-Activate', 'CP_TD' ) . '" />
+						<input type="submit" class="button" value="' . esc_attr__( 'De-Activate', 'cp' ) . '" />
 					</form>
 					';
 				}
@@ -75,7 +75,7 @@ class CoursePress_Helper_Extension {
 						<input type="hidden" name="location" value="' . $location . '">
 						<input type="hidden" name="base" value="' . $plugin['base_path'] . '">
 						<input type="hidden" name="_wp_nonce" value="' . wp_create_nonce( 'activate-plugin' ) . '">
-						<input type="submit" class="button" value="' . esc_attr__( 'Activate', 'CP_TD' ) . '" />
+						<input type="submit" class="button" value="' . esc_attr__( 'Activate', 'cp' ) . '" />
 					</form>
 					';
 				}
@@ -94,7 +94,7 @@ class CoursePress_Helper_Extension {
 						<input type="hidden" name="external" value="' . $plugin['external'] . '">
 						<input type="hidden" name="protocol" value="' . $plugin['protocol'] . '">
 						<input type="hidden" name="_wp_nonce" value="' . wp_create_nonce( 'install-plugin' ) . '">
-						<input type="submit" class="button" value="' . esc_attr__( 'Install', 'CP_TD' ) . '" />
+						<input type="submit" class="button" value="' . esc_attr__( 'Install', 'cp' ) . '" />
 					</form>
 					';
 				}

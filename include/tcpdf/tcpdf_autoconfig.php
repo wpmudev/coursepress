@@ -72,8 +72,8 @@ if (!defined('K_PATH_MAIN')) {
 	define ('K_PATH_MAIN', dirname(__FILE__).'/');
 }
 
-if (!defined('CP_K_PATH_FONTS')) {
-	define ('CP_K_PATH_FONTS', K_PATH_MAIN.'fonts/');
+if (!defined('K_PATH_FONTS')) {
+	define ('K_PATH_FONTS', K_PATH_MAIN.'fonts/');
 }
 
 if (!defined('K_PATH_URL')) {
@@ -90,11 +90,11 @@ if (!defined('K_PATH_URL')) {
 	define ('K_PATH_URL', $k_path_url);
 }
 
-if (!defined('CP_K_PATH_IMAGES')) {
+if (!defined('K_PATH_IMAGES')) {
 	$tcpdf_images_dirs = array(K_PATH_MAIN.'examples/images/', K_PATH_MAIN.'images/', '/usr/share/doc/php-tcpdf/examples/images/', '/usr/share/doc/tcpdf/examples/images/', '/usr/share/doc/php/tcpdf/examples/images/', '/var/www/tcpdf/images/', '/var/www/html/tcpdf/images/', '/usr/local/apache2/htdocs/tcpdf/images/', K_PATH_MAIN);
 	foreach ($tcpdf_images_dirs as $tcpdf_images_path) {
 		if (@file_exists($tcpdf_images_path)) {
-			define ('CP_K_PATH_IMAGES', $tcpdf_images_path);
+			define ('K_PATH_IMAGES', $tcpdf_images_path);
 			break;
 		}
 	}
@@ -102,7 +102,7 @@ if (!defined('CP_K_PATH_IMAGES')) {
 
 if (!defined('PDF_HEADER_LOGO')) {
 	$tcpdf_header_logo = '';
-	if (@file_exists(CP_K_PATH_IMAGES.'tcpdf_logo.jpg')) {
+	if (@file_exists(K_PATH_IMAGES.'tcpdf_logo.jpg')) {
 		$tcpdf_header_logo = 'tcpdf_logo.jpg';
 	}
 	define ('PDF_HEADER_LOGO', $tcpdf_header_logo);
@@ -116,124 +116,124 @@ if (!defined('PDF_HEADER_LOGO_WIDTH')) {
 	}
 }
 
-if (!defined('CP_K_PATH_CACHE')) {
-	$CP_K_PATH_CACHE = ini_get('upload_tmp_dir') ? ini_get('upload_tmp_dir') : sys_get_temp_dir();
-	if (substr($CP_K_PATH_CACHE, -1) != '/') {
-		$CP_K_PATH_CACHE .= '/';
+if (!defined('K_PATH_CACHE')) {
+	$K_PATH_CACHE = ini_get('upload_tmp_dir') ? ini_get('upload_tmp_dir') : sys_get_temp_dir();
+	if (substr($K_PATH_CACHE, -1) != '/') {
+		$K_PATH_CACHE .= '/';
 	}
-	define ('CP_K_PATH_CACHE', $CP_K_PATH_CACHE);
+	define ('K_PATH_CACHE', $K_PATH_CACHE);
 }
 
-if (!defined('CP_K_BLANK_IMAGE')) {
-	define ('CP_K_BLANK_IMAGE', '_blank.png');
+if (!defined('K_BLANK_IMAGE')) {
+	define ('K_BLANK_IMAGE', '_blank.png');
 }
 
-if (!defined('CP_PDF_PAGE_FORMAT')) {
-	define ('CP_PDF_PAGE_FORMAT', 'A4');
+if (!defined('PDF_PAGE_FORMAT')) {
+	define ('PDF_PAGE_FORMAT', 'A4');
 }
 
-if (!defined('CP_PDF_PAGE_ORIENTATION')) {
-	define ('CP_PDF_PAGE_ORIENTATION', 'P');
+if (!defined('PDF_PAGE_ORIENTATION')) {
+	define ('PDF_PAGE_ORIENTATION', 'P');
 }
 
-if (!defined('CP_PDF_CREATOR')) {
-	define ('CP_PDF_CREATOR', 'TCPDF');
+if (!defined('PDF_CREATOR')) {
+	define ('PDF_CREATOR', 'TCPDF');
 }
 
-if (!defined('CP_PDF_AUTHOR')) {
-	define ('CP_PDF_AUTHOR', 'TCPDF');
+if (!defined('PDF_AUTHOR')) {
+	define ('PDF_AUTHOR', 'TCPDF');
 }
 
-if (!defined('CP_PDF_HEADER_TITLE')) {
-	define ('CP_PDF_HEADER_TITLE', 'TCPDF Example');
+if (!defined('PDF_HEADER_TITLE')) {
+	define ('PDF_HEADER_TITLE', 'TCPDF Example');
 }
 
-if (!defined('CP_PDF_HEADER_STRING')) {
-	define ('CP_PDF_HEADER_STRING', "by Nicola Asuni - Tecnick.com\nwww.tcpdf.org");
+if (!defined('PDF_HEADER_STRING')) {
+	define ('PDF_HEADER_STRING', "by Nicola Asuni - Tecnick.com\nwww.tcpdf.org");
 }
 
 if (!defined('PDF_UNIT')) {
 	define ('PDF_UNIT', 'mm');
 }
 
-if (!defined('CP_PDF_MARGIN_HEADER')) {
-	define ('CP_PDF_MARGIN_HEADER', 5);
+if (!defined('PDF_MARGIN_HEADER')) {
+	define ('PDF_MARGIN_HEADER', 5);
 }
 
-if (!defined('CP_PDF_MARGIN_FOOTER')) {
-	define ('CP_PDF_MARGIN_FOOTER', 10);
+if (!defined('PDF_MARGIN_FOOTER')) {
+	define ('PDF_MARGIN_FOOTER', 10);
 }
 
-if (!defined('CP_PDF_MARGIN_TOP')) {
-	define ('CP_PDF_MARGIN_TOP', 27);
+if (!defined('PDF_MARGIN_TOP')) {
+	define ('PDF_MARGIN_TOP', 27);
 }
 
-if (!defined('CP_PDF_MARGIN_BOTTOM')) {
-	define ('CP_PDF_MARGIN_BOTTOM', 25);
+if (!defined('PDF_MARGIN_BOTTOM')) {
+	define ('PDF_MARGIN_BOTTOM', 25);
 }
 
-if (!defined('CP_PDF_MARGIN_LEFT')) {
-	define ('CP_PDF_MARGIN_LEFT', 15);
+if (!defined('PDF_MARGIN_LEFT')) {
+	define ('PDF_MARGIN_LEFT', 15);
 }
 
-if (!defined('CP_PDF_MARGIN_RIGHT')) {
-	define ('CP_PDF_MARGIN_RIGHT', 15);
+if (!defined('PDF_MARGIN_RIGHT')) {
+	define ('PDF_MARGIN_RIGHT', 15);
 }
 
-if (!defined('CP_PDF_FONT_NAME_MAIN')) {
-	define ('CP_PDF_FONT_NAME_MAIN', 'helvetica');
+if (!defined('PDF_FONT_NAME_MAIN')) {
+	define ('PDF_FONT_NAME_MAIN', 'helvetica');
 }
 
-if (!defined('CP_PDF_FONT_SIZE_MAIN')) {
-	define ('CP_PDF_FONT_SIZE_MAIN', 10);
+if (!defined('PDF_FONT_SIZE_MAIN')) {
+	define ('PDF_FONT_SIZE_MAIN', 10);
 }
 
-if (!defined('CP_PDF_FONT_NAME_DATA')) {
-	define ('CP_PDF_FONT_NAME_DATA', 'helvetica');
+if (!defined('PDF_FONT_NAME_DATA')) {
+	define ('PDF_FONT_NAME_DATA', 'helvetica');
 }
 
-if (!defined('CP_PDF_FONT_SIZE_DATA')) {
-	define ('CP_PDF_FONT_SIZE_DATA', 8);
+if (!defined('PDF_FONT_SIZE_DATA')) {
+	define ('PDF_FONT_SIZE_DATA', 8);
 }
 
-if (!defined('CP_PDF_FONT_MONOSPACED')) {
-	define ('CP_PDF_FONT_MONOSPACED', 'courier');
+if (!defined('PDF_FONT_MONOSPACED')) {
+	define ('PDF_FONT_MONOSPACED', 'courier');
 }
 
-if (!defined('CP_PDF_IMAGE_SCALE_RATIO')) {
-	define ('CP_PDF_IMAGE_SCALE_RATIO', 1.25);
+if (!defined('PDF_IMAGE_SCALE_RATIO')) {
+	define ('PDF_IMAGE_SCALE_RATIO', 1.25);
 }
 
-if (!defined('CP_CP_HEAD_MAGNIFICATION')) {
-	define('CP_CP_HEAD_MAGNIFICATION', 1.1);
+if (!defined('HEAD_MAGNIFICATION')) {
+	define('HEAD_MAGNIFICATION', 1.1);
 }
 
-if (!defined('CP_K_CELL_HEIGHT_RATIO')) {
-	define('CP_K_CELL_HEIGHT_RATIO', 1.25);
+if (!defined('K_CELL_HEIGHT_RATIO')) {
+	define('K_CELL_HEIGHT_RATIO', 1.25);
 }
 
-if (!defined('CP_K_TITLE_MAGNIFICATION')) {
-	define('CP_K_TITLE_MAGNIFICATION', 1.3);
+if (!defined('K_TITLE_MAGNIFICATION')) {
+	define('K_TITLE_MAGNIFICATION', 1.3);
 }
 
-if (!defined('CP_K_SMALL_RATIO')) {
-	define('CP_K_SMALL_RATIO', 2/3);
+if (!defined('K_SMALL_RATIO')) {
+	define('K_SMALL_RATIO', 2/3);
 }
 
-if (!defined('CP_K_THAI_TOPCHARS')) {
-	define('CP_K_THAI_TOPCHARS', true);
+if (!defined('K_THAI_TOPCHARS')) {
+	define('K_THAI_TOPCHARS', true);
 }
 
-if (!defined('CP_K_TCPDF_CALLS_IN_HTML')) {
-	define('CP_K_TCPDF_CALLS_IN_HTML', false);
+if (!defined('K_TCPDF_CALLS_IN_HTML')) {
+	define('K_TCPDF_CALLS_IN_HTML', false);
 }
 
-if (!defined('CP_CP_TCPDF_THROW_EXCEPTION_ERROR')) {
-	define('CP_CP_TCPDF_THROW_EXCEPTION_ERROR', false);
+if (!defined('K_TCPDF_THROW_EXCEPTION_ERROR')) {
+	define('K_TCPDF_THROW_EXCEPTION_ERROR', false);
 }
 
-if (!defined('CP_K_TIMEZONE')) {
-	define('CP_K_TIMEZONE', @date_default_timezone_get());
+if (!defined('K_TIMEZONE')) {
+	define('K_TIMEZONE', @date_default_timezone_get());
 }
 
 //============================================================+

@@ -26,7 +26,7 @@ class CoursePress_Template_Communication {
 					</div>
 			';
 
-			$author = sprintf( __( 'by <span>%s</span>', 'CP_TD' ), CoursePress_Helper_Utility::get_user_name( $notification->post_author ) );
+			$author = sprintf( __( 'by <span>%s</span>', 'cp' ), CoursePress_Helper_Utility::get_user_name( $notification->post_author ) );
 			// $author = get_user_option( 'display_name', $notification->post_author );
 			$content .= '
 					<div class="notification-archive-single">
@@ -59,7 +59,7 @@ class CoursePress_Template_Communication {
 		$new_discussion_link = CoursePress_Core::get_slug( 'course/', true ) . $course->post_name . '/' . CoursePress_Core::get_slug( 'discussions/' ) . CoursePress_Core::get_slug( 'discussion_new' );
 		$content .= '
 			<div class="discussion-new">
-				<a href="' . esc_url( $new_discussion_link ) . '" class="button">' . esc_html( 'Start a new discussion', 'CP_TD' ) . '</a>
+				<a href="' . esc_url( $new_discussion_link ) . '" class="button">' . esc_html( 'Start a new discussion', 'cp' ) . '</a>
 			</div>
 		';
 
@@ -100,7 +100,7 @@ class CoursePress_Template_Communication {
 							' . CoursePress_Helper_Utility::truncate_html( CoursePress_Helper_Utility::filter_content( $discussion->post_content ), 100 ) . '
 						</div>
 						<hr />
-						<div class="meta">' . esc_html( $author ) . ' | ' . esc_html( $date ) . ' | ' . esc_html__( 'Applies to:', 'CP_TD' ) . ' ' . $applies_to . '</div>
+						<div class="meta">' . esc_html( $author ) . ' | ' . esc_html( $date ) . ' | ' . esc_html__( 'Applies to:', 'cp' ) . ' ' . $applies_to . '</div>
 					</div>
 			';
 
@@ -131,8 +131,8 @@ class CoursePress_Template_Communication {
 			$post_content = $discussion->post_content;
 			$author = $discussion->post_author;
 		} else {
-			$title = __( 'Unknown Discussion', 'CP_TD' );
-			$post_content = __( 'The discussion you were looking for could not be found.', 'CP_TD' );
+			$title = __( 'Unknown Discussion', 'cp' );
+			$post_content = __( 'The discussion you were looking for could not be found.', 'cp' );
 		}
 
 		$content = do_shortcode( '[course_unit_submenu]' );
@@ -140,24 +140,20 @@ class CoursePress_Template_Communication {
 		$content .= '<div class="course-discussion-wrapper">';
 
 		$content .= '<div class="course-discussion-page course-discussion-content">';
-		$content .= '<h3 class="title course-discussion-title">' . esc_html__( 'Discussion', 'CP_TD' ) . ': ' . esc_html( $title ) . '</h3>';
+		$content .= '<h3 class="title course-discussion-title">' . esc_html__( 'Discussion', 'cp' ) . ': ' . esc_html( $title ) . '</h3>';
 		$content .= CoursePress_Helper_Utility::filter_content( $post_content );
 
 		if ( get_current_user_id() == (int) $author ) {
 			$edit_discussion_link = CoursePress_Core::get_slug( 'course/', true ) . get_post_field( 'post_name', $course_id ) . '/' . CoursePress_Core::get_slug( 'discussions/' ) . CoursePress_Core::get_slug( 'discussion_new' );
 			$edit_discussion_link .= '?id=' . $discussion->ID;
-			$content .= '<div class="edit-link"><a href="' . esc_url( $edit_discussion_link ) . '">' . esc_html__( 'Edit', 'CP_TD' ) . '</a>';
+			$content .= '<div class="edit-link"><a href="' . esc_url( $edit_discussion_link ) . '">' . esc_html__( 'Edit', 'cp' ) . '</a>';
 		}
 		$content .= '</div>';
 
 		if ( ! empty( $discussion ) ) {
-			wp_enqueue_script( 'comment-reply' );
-			global $post;
 			ob_start();
-			$post = $discussion;
 			comments_template();
 			$content .= ob_get_clean();
-			wp_reset_postdata();
 		}
 
 		$content .= '</div>';
@@ -172,7 +168,7 @@ class CoursePress_Template_Communication {
 
 		$content .= '<div class="course-discussion-wrapper">';
 		$content .= '<div class="course-discussion-page new course-discussion-content">';
-		$content .= '<h3 class="title course-discussion-title">' . esc_html__( 'New Discussion', 'CP_TD' ) . '</h3>';
+		$content .= '<h3 class="title course-discussion-title">' . esc_html__( 'New Discussion', 'cp' ) . '</h3>';
 
 		$title = '';
 		$body = '';
@@ -190,20 +186,20 @@ class CoursePress_Template_Communication {
 
 		// Form.
 		$content .= '
-		<form method="POST" class="comment-form">';
+		<form method="POST">';
 
 		// Course Area
 		$options_unit = array();
 		$options_unit['value'] = $course_section;
 		$options_unit['first_option'] = array(
-			'text' => sprintf( '%s: %s', __( 'Course', 'CP_TD' ), get_post_field( 'post_title', $course_id ) ),
+			'text' => sprintf( '%s: %s', __( 'Course', 'cp' ), get_post_field( 'post_title', $course_id ) ),
 			'value' => 'course',
 		);
 		$content .= '<div class="discussion-section">
-				<p class="comment-form-comment"><label><span>' .
-				esc_html( 'This discussion is about ', 'CP_TD' ) . '<br />'.
+				<label><span>' .
+				esc_html( 'This discussion is about ', 'cp' ) .
 				CoursePress_Helper_UI::get_unit_dropdown( 'unitID', 'unit_id', $course_id, false, $options_unit ) .
-				'</span></label></p>
+				'</span></label>
 			</div>
 		';
 
@@ -214,15 +210,14 @@ class CoursePress_Template_Communication {
 			$content .= '<input type="hidden" name="id" value="' . $id . '" />';
 		}
 
-		$add_edit = $edit ? esc_html__( 'Update discussion', 'CP_TD' ) : esc_html__( 'Add discussion', 'CP_TD' );
+		$add_edit = $edit ? esc_html__( 'Update discussion', 'cp' ) : esc_html__( 'Add discussion', 'cp' );
 
 		$content .= '<input type="hidden" value="add_new_discussion" name="action" /><input type="hidden" value="' . esc_attr( $course_id ) . '" name="course_id" />
-            <p class="comment-form-comment"><label for="discussion_title">' . __( 'Title', 'CP_TD' ) . '</label> <input name="discussion_title" type="text" placeholder="' . esc_attr__( 'Title of the discussion', 'CP_TD' ) . '" value="' . esc_attr( $title ) . '" />
-
-            <p class="comment-form-comment"><label for="discussion_content">' . __( 'Description', 'CP_TD' ) . '</label> <textarea name="discussion_content" placeholder="' . esc_attr__( 'Type your discussion or question here…', 'CP_TD' ) . '">' . CoursePress_Helper_Utility::filter_content( $body ) . '</textarea></p>
+			<input name="discussion_title" type="text" placeholder="' . esc_attr__( 'Title of the discussion', 'cp' ) . '" value="' . esc_attr( $title ) . '" />
+			<textarea name="discussion_content" placeholder="' . esc_attr__( 'Type your discussion or question here…', 'cp' ) . '">' . CoursePress_Helper_Utility::filter_content( $body ) . '</textarea>
 			<div class="button-links">
-				<a href="' . esc_url( $cancel_link ) . '">' . esc_html__( 'Cancel', 'CP_TD' ) . '</a>
-				<button class="submit-discussion">' . esc_html( $add_edit ) . '</button>
+				<a href="' . esc_url( $cancel_link ) . '">' . esc_html__( 'Cancel', 'cp' ) . '</a>
+				<a class="submit-discussion">' . esc_html( $add_edit ) . '</a>
 			</div>
 		</form>
 		';

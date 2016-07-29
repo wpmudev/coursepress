@@ -15,7 +15,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 		// Cap checking here...
 		$nonce = wp_create_nonce( 'unit_builder' );
 
-		$content .= '<div id="unit-builder" data-nonce="' . $nonce . '"><div class="loading">' . esc_html__( 'Unit Builder is loading...', 'CP_TD' ) . '</div></div>';
+		$content .= '<div id="unit-builder" data-nonce="' . $nonce . '"><div class="loading">' . esc_html__( 'Unit Builder is loading...', 'cp' ) . '</div></div>';
 
 		return $content;
 	}
@@ -50,13 +50,13 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 						<div id="sticky-wrapper" class="sticky-wrapper sticky-wrapper-tabs">
 							<div class="tabs"></div>' .
 							( $can_create_units ?
-							'<div class="sticky-buttons"><div class="button button-add-new-unit"><i class="fa fa-plus-square"></i> ' . esc_html__( 'Add New Unit', 'CP_TD' ) . '</div></div>' : '' )
+							'<div class="sticky-buttons"><div class="button button-add-new-unit"><i class="fa fa-plus-square"></i> ' . esc_html__( 'Add New Unit', 'cp' ) . '</div></div>' : '' )
 						. '</div>
 					</div>
 					<div class="tab-content tab-content-vertical unit-builder-content">
 						<div class="section static unit-builder-header"></div>
 						<div class="section static unit-builder-body"></div>
-						<div class="section static unit-builder-no-access" style="display:none;">'. __( 'You do not have sufficient access to edit this unit!', 'CP_TD' ) . '</div>
+						<div class="section static unit-builder-no-access" style="display:none;">'. __( 'You do not have sufficient access to edit this unit!', 'cp' ) . '</div>
 					</div>
 					</div>
 				</script>
@@ -69,71 +69,71 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 			'unit_builder_header' => '
 				<script type="text/template" id="unit-builder-header-template">
 				<div class="unit-detail" data-cid="<%- unit_cid %>">
-					<h3><i class="fa fa-cog"></i>' . esc_html__( 'Unit Settings', 'CP_TD' ) . '<div class="unit-state">' .
+					<h3><i class="fa fa-cog"></i>' . esc_html__( 'Unit Settings', 'cp' ) . '<div class="unit-state">' .
 						CoursePress_Helper_UI::toggle_switch(
 							'unit-live-toggle',
 							'unit-live-toggle',
 							array(
-								'left' => __( 'Draft', 'CP_TD' ),
-								'right' => __( 'Live', 'CP_TD' ),
+								'left' => __( 'Draft', 'cp' ),
+								'right' => __( 'Live', 'cp' ),
 							)
 						)
 					. '</h3>
 					<label for="unit_name">Unit Title</label>
 					<input id="unit_name" class="wide" type="text" value="<%= unit_title %>" name="post_title" spellcheck="true">
 					<div class="unit-additional-info">
-					<label class="unit-description">' . esc_html__( 'Unit Description', 'CP_TD' ) . '</label>
+					<label class="unit-description">' . esc_html__( 'Unit Description', 'cp' ) . '</label>
 					<textarea name="unit_description" class="widefat" id="unit_description_1_1"><%= unit_content %></textarea>
 					' . CoursePress_Helper_UI::browse_media_field(
 				'unit_feature_image',
 				'unit_feature_image',
 				array(
-					'placeholder' => __( 'Add Image URL or Browse for Image', 'CP_TD' ),
-					'title' => __( 'Unit Feature Image', 'CP_TD' ),
+					'placeholder' => __( 'Add Image URL or Browse for Image', 'cp' ),
+					'title' => __( 'Unit Feature Image', 'cp' ),
 					'value' => '<%= unit_feature_image %>', // Add _s template
 				)
 			) . '
 					</div>
 					<div class="unit-availability">
-						<label for="unit_availability">'. esc_html__( 'Unit Availability', 'CP_TD' ) . '</label>
+						<label for="unit_availability">'. esc_html__( 'Unit Availability', 'cp' ) . '</label>
 						<select id="unit_availability" class="narrow" name="meta_unit_availability">
-							<option value="instant"<%= unit_availability == "instant" ? " selected=\"selected\"" : "" %>>'. __( 'Instantly available', 'CP_TD' ) . '</option>
-							<option value="on_date"<%= unit_availability == "on_date" ? " selected=\"selected\"" : "" %>>'. __( 'Available on', 'CP_TD' ) . '</option>
-							<option value="after_delay"<%= unit_availability == "after_delay" ? " selected=\"selected\"" : "" %>>'. __( 'Available after', 'CP_TD' ) . '</option>
+							<option value="instant"<%= unit_availability == "instant" ? " selected=\"selected\"" : "" %>>'. __( 'Instantly available', 'cp' ) . '</option>
+							<option value="on_date"<%= unit_availability == "on_date" ? " selected=\"selected\"" : "" %>>'. __( 'Available on', 'cp' ) . '</option>
+							<option value="after_delay"<%= unit_availability == "after_delay" ? " selected=\"selected\"" : "" %>>'. __( 'Available after', 'cp' ) . '</option>
 						</select>
 						<div class="div-inline ua-div div-on_date" style="display:none;">
-							<div class="date"><input id="dpinputavailability" class="dateinput" type="text" value="<%= unit_date_availability %>" name="meta_unit_date_availability" placeholder="'. __( 'instantly', 'CP_TD' ) . '" spellcheck="true" /></div>
+							<div class="date"><input id="dpinputavailability" class="dateinput" type="text" value="<%= unit_date_availability %>" name="meta_unit_date_availability" placeholder="'. __( 'instantly', 'cp' ) . '" spellcheck="true" /></div>
 						</div>
 						<div class="div-inline ua-div div-after_delay" style="display:none;">
-							<input type="number" min="0" max="9999" name="meta_unit_delay_days" value="<%=unit_delay_days%>" placeholder="'. __( 'e.g. 7', 'CP_TD' ) . '" /> <span>'. __( 'Day(s)', 'CP_TD' ) . '</span>
+							<input type="number" min="0" max="9999" name="meta_unit_delay_days" value="<%=unit_delay_days%>" placeholder="'. __( 'e.g. 7', 'cp' ) . '" /> <span>'. __( 'Day(s)', 'cp' ) . '</span>
 						</div>
 					</div>
 					<div class="progress-next-unit">
-						<label>'. esc_html__( 'Progress to next unit', 'CP_TD' ) . '</label>
+						<label>'. esc_html__( 'Progress to next unit', 'cp' ) . '</label>
 						<label><input id="force_current_unit_completion" type="checkbox" value="on" name="meta_force_current_unit_completion" <%= unit_force_completion_checked %> /><span>'.
 				sprintf( '%s <em>%s</em> %s',
-					esc_html__( 'User needs to', 'CP_TD' ),
-					esc_html__( 'answer', 'CP_TD' ),
-					esc_html__( 'all mandatory assessments and view all pages in order to access the next unit', 'CP_TD' )
+					esc_html__( 'User needs to', 'cp' ),
+					esc_html__( 'answer', 'cp' ),
+					esc_html__( 'all required assessments and view all pages in order to access the next unit', 'cp' )
 				) . '</span></label>
 						<label><input id="force_current_unit_successful_completion" type="checkbox" value="on" name="meta_force_current_unit_successful_completion" <%= unit_force_successful_completion_checked %>><span>'.
 			sprintf( '%s <em>%s</em> %s',
-				esc_html__( 'User also needs to', 'CP_TD' ),
-				esc_html__( 'pass', 'CP_TD' ),
-				esc_html__( 'all mandatory assessments', 'CP_TD' )
+				esc_html__( 'User also needs to', 'cp' ),
+				esc_html__( 'pass', 'cp' ),
+				esc_html__( 'all required assessments', 'cp' )
 			) . '</span></label>
 					</div>
 				</div>
 				<div class="unit-buttons">
-					<div class="button unit-save-button">' . __( 'Save Whole Units', 'CP_TD' ) . '</div>
-					<a href="#" data-href="'. esc_attr( CoursePress_Data_Course::get_course_url( $course_id ) ) . CoursePress_Core::get_slug( 'units/' ) . '" class="button button-preview" target="_blank">'. __( 'Preview', 'CP_TD' ) . '</a>
-					<div class="button unit-delete-button"><i class="fa fa-trash-o"></i> ' . __( 'Delete Unit', 'CP_TD' ) . '</div></div>
+					<div class="button unit-save-button">' . __( 'Save Whole Units', 'cp' ) . '</div>
+					<a href="#" data-href="'. esc_attr( CoursePress_Data_Course::get_course_url( $course_id ) ) . CoursePress_Core::get_slug( 'units/' ) . '" class="button button-preview" target="_blank">'. __( 'Preview', 'cp' ) . '</a>
+					<div class="button unit-delete-button"><i class="fa fa-trash-o"></i> ' . __( 'Delete Unit', 'cp' ) . '</div></div>
 				</script>
 			',
 			'unit_builder_content_placeholder' => '
 				<script type="text/template" id="unit-builder-content-placeholder">
 				<div class="loading">
-				' . esc_html__( 'Loading modules...', 'CP_TD' ) . '
+				' . esc_html__( 'Loading modules...', 'cp' ) . '
 				</div>
 				</script>
 			',
@@ -148,12 +148,13 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 			',
 			'unit_builder_content_pager' => '
 				<script type="text/template" id="unit-builder-pager-template">
-					<label>' . esc_html__( 'Unit Sections', 'CP_TD' ) . '</label>
+					<label>' . esc_html__( 'Unit Sections', 'cp' ) . '</label>
 					<ul>
 						<% for ( var i = 1; i <= unit_page_count; i++ ) { %>
-							<li data-page="<%- i %>">
-								<%- i %>
-							</li>
+							<% key = "page_" + i %>
+							<% label =  ( key in pages_titles && "" != pages_titles[ key ] ) ? pages_titles[ key ] : i %>
+							<% label = ( label.length > 19 ) ? label.substr( 0, 19 ) + "…" : label %>
+							<li data-page="<%- i %>" data-key="<%- key %>"><%- label %></li>
 						<% }; %>
 						<li>+</li>
 					</ul>
@@ -162,42 +163,42 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 			'unit_builder_content_pager_info' => '
 				<script type="text/template" id="unit-builder-pager-info-template">
 					<div class="page-info-holder">
-					<div class="unit-buttons"><div class="button unit-delete-page-button hidden"><i class="fa fa-trash-o"></i> ' . esc_html__( 'Delete Section', 'CP_TD' ) . '</div></div>
-					<label>' . esc_html__( 'Section Title', 'CP_TD' ) . '</label>
-					<p class="description">' . esc_html__( 'The label will be displayed on the Course Overview and Unit page', 'CP_TD' ) . '</p>
+					<div class="unit-buttons"><div class="button unit-delete-page-button hidden"><i class="fa fa-trash-o"></i> ' . esc_html__( 'Delete Section', 'cp' ) . '</div></div>
+					<label>' . esc_html__( 'Section Title', 'cp' ) . '</label>
+					<p class="description">' . esc_html__( 'The label will be displayed on the Course Overview and Unit page', 'cp' ) . '</p>
 					<input type="text" value="<%= page_label_text %>" name="page_title" class="wide" />
-					<label class="page-description">' . esc_html__( 'Section Description', 'CP_TD' ) . '</label>
+					<label class="page-description">' . esc_html__( 'Section Description', 'cp' ) . '</label>
 					<textarea name="page_description" id="page_description_1_1"><%= page_description %></textarea>
 					' . CoursePress_Helper_UI::browse_media_field(
 				'page_feature_image',
 				'page_feature_image',
 				array(
-					'placeholder' => __( 'Add Image URL or Browse for Image', 'CP_TD' ),
-					'title' => __( 'Section Image', 'CP_TD' ),
+					'placeholder' => __( 'Add Image URL or Browse for Image', 'cp' ),
+					'title' => __( 'Section Image', 'cp' ),
 					'value' => '<%= page_feature_image %>', // Add _s template
 				)
 			) . '
-					<label><input type="checkbox" value="on" name="show_page_title" <%= page_label_checked %> /><span>' . esc_html__( 'Show section header as part of unit', 'CP_TD' ) . '</span></label>
+					<label><input type="checkbox" value="on" name="show_page_title" <%= page_label_checked %> /><span>' . esc_html__( 'Show section header as part of unit', 'cp' ) . '</span></label>
 					</div>
 				</script>
 			',
 			'unit_builder_modules' => '
 				<script type="text/template" id="unit-builder-modules-template">
-					'. __( 'Modules! This template wont be used... its just here for testing.', 'CP_TD' ) . '
+					'. __( 'Modules! This template wont be used... its just here for testing.', 'cp' ) . '
 				</script>
 			',
 			'unit_builder_footer' => '
 				<script type="text/template" id="unit-builder-footer-template">
-				<div class="button unit-save-button">' . __( 'Save Whole Units', 'CP_TD' ) . '</div>
-				<a href="#" data-href="'. esc_attr( CoursePress_Data_Course::get_course_url( $course_id ) ) . CoursePress_Core::get_slug( 'units/' ) . '" class="button button-preview" target="_blank">'. __( 'Preview', 'CP_TD' ) . '</a>
-				<!-- <a class="button button-preview" href="#">'. __( 'Preview', 'CP_TD' ) . '</a> -->
+				<div class="button unit-save-button">' . __( 'Save Whole Units', 'cp' ) . '</div>
+				<a href="#" data-href="'. esc_attr( CoursePress_Data_Course::get_course_url( $course_id ) ) . CoursePress_Core::get_slug( 'units/' ) . '" class="button button-preview" target="_blank">'. __( 'Preview', 'cp' ) . '</a>
+				<!-- <a class="button button-preview" href="#">'. __( 'Preview', 'cp' ) . '</a> -->
 				' .
 					CoursePress_Helper_UI::toggle_switch(
 						'unit-live-toggle-2',
 						'unit-live-toggle-2',
 						array(
-							'left' => __( 'Draft', 'CP_TD' ),
-							'right' => __( 'Live', 'CP_TD' ),
+							'left' => __( 'Draft', 'cp' ),
+							'right' => __( 'Live', 'cp' ),
 						)
 					) .
 					'</script>',
@@ -205,8 +206,8 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 
 		$templates['unit_builder_content_components'] = '
 				<script type="text/template" id="unit-builder-components-template">
-					<label class="bigger">' . esc_html__( 'Modules', 'CP_TD' ) . '</label>
-					<p class="description">' . esc_html__( 'Click to add module elements to the unit', 'CP_TD' ) . '</p>';
+					<label class="bigger">' . esc_html__( 'Modules', 'cp' ) . '</label>
+					<p class="description">' . esc_html__( 'Click to add module elements to the unit', 'cp' ) . '</p>';
 
 		$ouputs = CoursePress_Helper_UI_Module::get_output_types();
 		foreach ( $ouputs as $key => $output ) {
@@ -281,7 +282,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 				if ( empty( $units ) ) {
 					// Give the user something to work on to.
 					$unit = array(
-						'post_title' => __( 'Untitled Unit', 'CP_TD' ),
+						'post_title' => __( 'Untitled Unit', 'cp' ),
 						'post_type' => CoursePress_Data_Unit::get_post_type_name(),
 						'post_status' => 'draft',
 						'post_parent' => $course_id,
@@ -299,6 +300,16 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					foreach ( $unit['meta'] as $key => $value ) {
 						update_post_meta( $unit_id, $key, $value );
 					}
+
+					/**
+					 * Action called after we add new unit.
+					 *
+					 * @since 2.0.0
+					 *
+					 * @param integer $unit_id Unit ID.
+					 * @param array $meta Unit meta data.
+					 */
+					do_action( 'coursepress_unit_added', $unit_id, $course_id, $meta );
 
 					// Let's add unit capabilities
 					$user_cap = array();
@@ -323,12 +334,28 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 				$modules = CoursePress_Data_Course::get_unit_modules( (int) $_REQUEST['unit_id'], 'any', false, false, array( 'page' => (int) $_REQUEST['page'] ) );
 
 				foreach ( $modules as $module ) {
+					$module_type = $attributes['module_type'];
+
 					$meta = get_post_meta( $module->ID );
 					foreach ( $meta as $key => $value ) {
+						// Escape questions and answers before rendering
+						if ( 'questions' === $key ) {
+							$value[0] = maybe_unserialize( $value[0] );
+							foreach ( $value[0] as $i => $q ) {
+								$value[0][$i]['question'] = esc_html( $q['question'] );
+								if ( ! empty( $q['options'] ) ) {
+									foreach ( $q['options']['answers'] as $ii => $answer ) {
+										$value[0][$i]['options']['answers'][$ii] = esc_html( $answer );
+									}
+								}
+							}
+						}
+
 						$meta[ $key ] = is_array( $value )  ? maybe_unserialize( $value[0] ) : $value;
 					}
 					// Temp for reordering
 					$module->module_order = isset( $meta['module_order'] ) ? $meta['module_order'] : 0;
+					$module->post_content = apply_filters( 'format_for_editor', $module->post_content );
 					$module->meta = $meta;
 				}
 
@@ -381,12 +408,30 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 							$id = wp_insert_post( $unit );
 							$units[] = $id;
 
+							/**
+							 * check new pages
+							 */
+							if ( ! $new_unit ) {
+								CoursePress_Data_Unit::show_new_pages( $id, $meta );
+							}
+
 							// Have pages been removed?
 							// $pages =
 							foreach ( $meta as $key => $value ) {
 								update_post_meta( $id, $key, $value );
 							}
 
+							/**
+							 * Action called after we add new unit.
+							 *
+							 * @since 2.0.0
+							 *
+							 * @param integer $unit_id Unit ID.
+							 * @param array $meta Unit meta data.
+							 */
+							if ( $new_unit ) {
+								do_action( 'coursepress_unit_added', $id, $course_id, $meta );
+							}
 							do_action( 'coursepress_unit_updated', $id );
 
 							$json_data['unit_id'] = $id;
@@ -543,7 +588,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 						update_post_meta( $id, $key, $value );
 					}
 
-					do_action( 'coursepress_module_added', $id );
+					do_action( 'coursepress_module_added', $id, $data['post_parent'], $meta );
 
 					$json_data['nonce'] = wp_create_nonce( 'unit_builder' );
 

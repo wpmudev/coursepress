@@ -9,7 +9,8 @@ class CoursePress_Upgrade {
 	public static function init() {
 		// If this setting does not exist, then default to last 1.0 release
 		$last_version = CoursePress_Core::get_network_setting( 'general/version', '1.2.5.8' );
-		$last_version = '1.2.5.8';
+
+		$last_version = '1.2.5.8'; // DEBUG VALUE, TO ALWAYS RUN THIS SCRIPT!
 
 		foreach ( self::$map as $v => $f ) {
 			if ( version_compare( $last_version, $v ) < 0 ) {

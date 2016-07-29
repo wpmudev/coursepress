@@ -56,61 +56,52 @@ class CoursePress_Helper_Tabs {
 		$content .= '</ul></div>';
 
 		// Render the Content
-		if ( array_key_exists( $active, $tabs ) ) {
-			$content .= '<div class="tab-content tab-content-' . $mode . '">';
-			if ( $tabs[ $active ]['is_form'] ) {
-				$content .= '<form method="post">';
+		$content .= '<div class="tab-content tab-content-' . $mode . '">';
+		if ( $tabs[ $active ]['is_form'] ) {
+			$content .= '<form method="post">';
 
-				// Add hidden arguments
-				if ( ! empty( $hidden_args ) ) {
-					foreach ( $hidden_args as $arg_key => $arg_value ) {
-						$content .= '<input type="hidden" name="' . $arg_key . '" value="' . $arg_value . '" />';
-					}
+			// Add hidden arguments
+			if ( ! empty( $hidden_args ) ) {
+				foreach ( $hidden_args as $arg_key => $arg_value ) {
+					$content .= '<input type="hidden" name="' . $arg_key . '" value="' . $arg_value . '" />';
 				}
 			}
+		}
 
-			// Add top buttons
-			if ( 'both' === $tabs[ $active ]['buttons'] || 'top' === $tabs[ $active ]['buttons'] ) {
-				$content .= '<p class="header-save-button">
-					<input class="button-primary" type="submit" value="' . esc_attr__( 'Save Settings', 'CP_TD' ) . '" name="submit_settings_header">
-					</p>';
-			}
+		// Add top buttons
+		if ( 'both' === $tabs[ $active ]['buttons'] || 'top' === $tabs[ $active ]['buttons'] ) {
+			$content .= '<p class="header-save-button">
+				<input class="button-primary" type="submit" value="' . esc_attr__( 'Save Settings', 'cp' ) . '" name="submit_settings_header">
+			</p>';
+		}
 
-			// Add content header
-			if ( array_key_exists( $active, $tabs ) ) {
-				if ( 'horizontal' !== $mode ) {
-					$allowed_tags = wp_kses_allowed_html( 'post' );
-					$content .= '<div class="header">
-						<h2>' . esc_html( $tabs[ $active ]['title'] ) . '</h2>
-						<p class="description">' . wp_kses( $tabs[ $active ]['description'], $allowed_tags ) . '</p>
-						</div>';
-				}
+		// Add content header
+		if ( 'horizontal' !== $mode ) {
+			$content .= '<div class="header">
+				<h3>' . esc_html( $tabs[ $active ]['title'] ) . '</h3>
+				<p class="description">' . esc_html( $tabs[ $active ]['description'] ) . '</p>
+			</div>';
+		}
 
-				// Wrap it all in a form if its a form
-				// if ( $tabs[ $active ]['is_form'] === true ) {
-				// $content .= '<form method="post">' . $tab_content . '</form>';
-				// } else {
-				$content .= '<div class="body">' . $tab_content . '</div>';
-				// }
-				// Add bottom buttons
-				if ( 'both' === $tabs[ $active ]['buttons'] || 'bottom' === $tabs[ $active ]['buttons'] ) {
-					$content .= '<hr /><p class="section-save-button">
-						<input class="button-primary" type="submit" value="' . esc_attr__( 'Save Settings', 'CP_TD' ) . '" name="submit_settings_section">
-						</p>';
-				}
-			}
+		// Wrap it all in a form if its a form
+		// if ( $tabs[ $active ]['is_form'] === true ) {
+			// $content .= '<form method="post">' . $tab_content . '</form>';
+		// } else {
+			$content .= '<div class="body">' . $tab_content . '</div>';
+		// }
+		// Add bottom buttons
+		if ( 'both' === $tabs[ $active ]['buttons'] || 'bottom' === $tabs[ $active ]['buttons'] ) {
+			$content .= '<hr /><p class="section-save-button">
+				<input class="button-primary" type="submit" value="' . esc_attr__( 'Save Settings', 'cp' ) . '" name="submit_settings_section">
+			</p>';
+		}
 
-			// .tab-content
-			$content .= '</div>';
+		// .tab-content
+		$content .= '</div>';
 
-			// </form>
-			if ( $tabs[ $active ]['is_form'] ) {
-				$content .= '</form>';
-			}
-		} else {
-			$content .= '<div class="notice notice-error"><p>';
-			$content .= __( 'Something went wrong. Please choose another tab.', 'CP_TD' );
-			$content .= '</p></div>';
+		// </form>
+		if ( $tabs[ $active ]['is_form'] ) {
+			$content .= '</form>';
 		}
 
 		// Wrap the content in a container

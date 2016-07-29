@@ -13,9 +13,12 @@ class CoursePress_View_Admin_Course_Student {
 		$list_course->set_add_new( true );
 		$list_course->prepare_items();
 
-		$content = '<div class="coursepress_Course_Student_wrapper">';
+		$content = '<div class="coursepress_course_student_wrapper">';
 
 		ob_start();
+		echo '<div class="coursepress_student_searchbox">';
+		$list_course->search_box( __( 'Search', 'cp' ), 'student' );
+		echo '</div>';
 		$list_course->display();
 		$content .= ob_get_clean();
 
@@ -32,11 +35,11 @@ class CoursePress_View_Admin_Course_Student {
 
 			if ( ! empty( $invited_students ) ) {
 				$content .= '<div class="coursepress_course_invite_student_wrapper invited-students">';
-				$content .= '<h3>'. esc_html__( 'Invited Students', 'CP_TD' ) . '</h3>';
-				$content .= '<p class="description">' . esc_html__( 'List of invited students.', 'CP_TD' ) . '</p>';
+				$content .= '<h2>'. esc_html__( 'Invited Students', 'cp' ) . '</h2>';
+				$content .= '<p class="description">' . esc_html__( 'List of invited students.', 'cp' ) . '</p>';
 				$content .= '<table class="wp-list-table widefat fixed striped">';
-				$content .= '<thead><tr><th>' . __( 'First Name', 'CP_TD' ) . '</th>';
-				$content .= '<th>'. __( 'Last Name', 'CP_TD' ) . '</th><th>' . __( 'Email', 'CP_TD' ) . '</th><th></th></tr></thead>';
+				$content .= '<thead><tr><th>' . __( 'First Name', 'cp' ) . '</th>';
+				$content .= '<th>'. __( 'Last Name', 'cp' ) . '</th><th>' . __( 'Email', 'cp' ) . '</th><th></th></tr></thead>';
 				foreach ( $invited_students as $student_email => $student_data ) {
 					$content .= '<tr class="invited-list">';
 					$content .= '<td>' . $student_data['first_name'] . '</td>';
@@ -46,7 +49,7 @@ class CoursePress_View_Admin_Course_Student {
 					$content .= sprintf(
 						'<a href="%s" title="%s" class="resend-invite" data-firstname="%s" data-lastname="%s" data-email="%s"><i class="fa fa-send"></i></a> ',
 						'',
-						esc_attr( __( 'Resend Invitation', 'CP_TD' ) ),
+						esc_attr( __( 'Resend Invitation', 'cp' ) ),
 						esc_attr( $student_data['first_name'] ),
 						esc_attr( $student_data['last_name'] ),
 						esc_attr( $student_data['email'] )
@@ -54,7 +57,7 @@ class CoursePress_View_Admin_Course_Student {
 					$content .= sprintf(
 						'<a href="%s" title="%s" data-email="%s" data-nonce="%s" class="remove-invite"><i class="fa fa-times-circle remove-btn"></i></a>',
 						'',
-						esc_attr( __( 'Remove Invitation', 'CP_TD' ) ),
+						esc_attr( __( 'Remove Invitation', 'cp' ) ),
 						esc_attr( $student_email ),
 						esc_attr( $student_invite_nonce )
 					);
@@ -65,14 +68,81 @@ class CoursePress_View_Admin_Course_Student {
 			}
 
 			$nonce = wp_create_nonce( 'invite_student' );
-			$content .= '<div class="coursepress_course_invite_student_wrapper">';
-			$content .= '<h3>' . esc_html__( 'Invite Student', 'CP_TD' ) .'</h3>';
-			$content .= '<label class="invite-firstname"><span>' . esc_html__( 'First Name', 'CP_TD' ) . '</span><input type="text" name="invite-firstname"></label>';
-			$content .= '<label class="invite-lastname"><span>' . esc_html__( 'Last Name', 'CP_TD' ) . '</span><input type="text" name="invite-lastname"></label>';
-			$content .= '<label class="invite-email"><span>' . esc_html__( 'E-mail', 'CP_TD' ) . '</span><input type="text" name="invite-email"></label>';
-			$content .= '<div class="invite-submit button button-primary" name="invite-submit" data-nonce="' . $nonce . '">' . esc_html__( 'Invite', 'CP_TD' ) . '</div>';
+			$content .= '<hr /><div class="coursepress_course_invite_student_wrapper">';
+			$content .= '<h2>' . esc_html__( 'Invite Student', 'cp' ) .'</h2>';
+			$content .= '<label class="invite-firstname"><span>' . esc_html__( 'First Name', 'cp' ) . '</span><input type="text" name="invite-firstname"></label>';
+			$content .= '<label class="invite-lastname"><span>' . esc_html__( 'Last Name', 'cp' ) . '</span><input type="text" name="invite-lastname"></label>';
+			$content .= '<label class="invite-email"><span>' . esc_html__( 'E-mail', 'cp' ) . '</span><input type="text" name="invite-email"></label>';
+			$content .= '<div class="invite-submit button button-primary" name="invite-submit" data-nonce="' . $nonce . '">' . esc_html__( 'Invite', 'cp' ) . '</div>';
 			$content .= '</div>';
 		}
+
+		$content .= '<hr /><div class="coursepress_course_email_enroled_students_wrapper">';
+		$content .= '<h2>' . esc_html__( 'Send email to enrolled students', 'cp' ) .'</h2>';
+		if ( count( $list_course->items ) ) {
+			$nonce = wp_create_nonce( 'send_email_to_enroled_students' );
+			$content .= '<table class="form-table" id="send-email-to-enroled-students">';
+			$content .= '<tbody>';
+			/**
+			 * status
+			 */
+			$content .= '<tr class="coursepress-email-sending hidden">';
+			$content .= sprintf(
+				'<th scope="row">%s</th>',
+				__( 'Status', 'cp' )
+			);
+			$content .= sprintf(
+				'<td><i class="fa fa-spinner fa-spin invite-progress"></i> %s</td>',
+				__( 'Sending message.', 'cp' )
+			);
+			$content .= '</tr>';
+
+			/**
+			 * message subject
+			 */
+			$content .= '<tr class="coursepress-email-field coursepress-email-field-subject">';
+			$content .= '<th scope="row"><label class="coursepress-email-subject"><span>' . esc_html__( 'Email subject', 'cp' ) . '</span></label></th>';
+			$content .= sprintf(
+				'<td><input type="text" name="email-subject" class="large-text" id="coursepress-email-subject" /></td>',
+				__( 'Enter email subject', 'cp' )
+			);
+			$content .= '</tr>';
+
+			/**
+			 * message body
+			 */
+			$content .= '<tr class="coursepress-email-field coursepress-email-field-body">';
+			$content .= '<th scope="row"><label class="coursepress-email-body"><span>' . esc_html__( 'Email body', 'cp' ) . '</span></label></th>';
+			$content .= '<td>';
+			$content .= sprintf(
+				'<p class="description">%s</p>',
+				__( 'These codes will be replaced with actual data: STUDENT_FIRST_NAME, STUDENT_LAST_NAME, STUDENT_LOGIN, BLOG_NAME, WEBSITE_NAME, WEBSITE_ADDRESS, LOGIN_ADDRESS, COURSE_ADDRESS, COURSE_EXCERPT, COURSE_NAME, COURSE_OVERVIEW, COURSES_ADDRESS', 'cp' )
+			);
+			$editor_id = 'email-body';
+			$args = array(
+				'media_buttons' => false,
+				'tinymce' => false,
+			);
+			ob_start();
+			wp_editor( $editor_content, $editor_id, $args );
+			$content .= ob_get_clean();
+			$content .= '</td>';
+			$content .= '</tr>';
+			$content .= '</tbody>';
+			$content .= '</table>';
+			$content .= sprintf(
+				'<div class="send-submit button button-primary" name="send-submit" data-nonce="%s">%s</div>',
+				esc_attr( $nonce ),
+				esc_html__( 'Send', 'cp' )
+			);
+
+		} else {
+			$content .= sprintf(
+				'<p>%s</p>',
+				__( 'You can not send email, there is no enroled studens in this course.', 'cp' )
+			);
+		}
+		$content .= '</div>';
 
 		return $content;
 	}
@@ -88,22 +158,22 @@ class CoursePress_View_Admin_Course_Student {
 		if ( ! isset( $_GET['courses'] ) || 'show' != $_GET['courses'] ) {
 			return;
 		}
-		printf( '<h2 id="courses">%s</h2>', __( 'Courses', 'CP_TD' ) );
+		printf( '<h2 id="courses">%s</h2>', __( 'Courses', 'cp' ) );
 		$enrolled_courses = CoursePress_Data_Student::get_enrolled_courses_ids( $student->ID );
 		if ( empty( $enrolled_courses ) ) {
-			echo wpautop( __( 'No enrolled courses.', 'CP_TD' ) );
+			echo wpautop( __( 'No enrolled courses.', 'cp' ) );
 			return;
 		}
 		echo '<table class="wp-list-table widefat fixed striped">';
 ?>
 <thead>
 	<tr>
-		<th scope="col" class="column-slug"><span><?php _e( 'Title', 'CP_TD' ); ?></span></th>
-		<th scope="col"><span><?php _e( 'Excerpt', 'CP_TD' ); ?></span></th>
-		<th scope="col" class="column-rating"><span class="dashicons dashicons-calendar-alt"></span> <span><?php _e( 'Enrolled', 'CP_TD' ); ?></span></th>
-		<th scope="col" class="column-rating"><span class="dashicons dashicons-calendar-alt"></span> <span><?php _e( 'Start', 'CP_TD' ); ?></span></th>
-		<th scope="col" class="column-rating"><span class="dashicons dashicons-calendar-alt"></span> <span><?php _e( 'End', 'CP_TD' ); ?></span></th>
-		<th scope="col" class="column-rating"><span class="dashicons dashicons-clock"></span> <span><?php _e( 'Duration', 'CP_TD' ); ?></span></th>
+		<th scope="col" class="column-slug"><span><?php _e( 'Title', 'cp' ); ?></span></th>
+		<th scope="col"><span><?php _e( 'Excerpt', 'cp' ); ?></span></th>
+		<th scope="col" class="column-rating"><span class="dashicons dashicons-calendar-alt"></span> <span><?php _e( 'Enrolled', 'cp' ); ?></span></th>
+		<th scope="col" class="column-rating"><span class="dashicons dashicons-calendar-alt"></span> <span><?php _e( 'Start', 'cp' ); ?></span></th>
+		<th scope="col" class="column-rating"><span class="dashicons dashicons-calendar-alt"></span> <span><?php _e( 'End', 'cp' ); ?></span></th>
+		<th scope="col" class="column-rating"><span class="dashicons dashicons-clock"></span> <span><?php _e( 'Duration', 'cp' ); ?></span></th>
 	</tr>
 </thead>
 <?php
@@ -120,23 +190,23 @@ foreach ( $enrolled_courses as $course_id ) {
 	<td class="title">
 	<strong class="edit"><a href="<?php echo admin_url( 'admin.php?page=course_details&course_id=' . $course_id ); ?>"><?php echo $course->post_title; ?></a></strong>
 	<div class="row-actions">
-		<span class="edit"><a href="<?php echo  admin_url( 'admin.php?page=course_details&course_id=' . $course_id ); ?>" target="_blank"><?php _e( 'Edit', 'CP_TD' ); ?></a> | </span>
-		<span class="view"><a href="<?php echo get_permalink( $course_id ); ?>" target="_blank"><?php _e( 'View', 'CP_TD' ); ?></a></span>
+		<span class="edit"><a href="<?php echo  admin_url( 'admin.php?page=course_details&course_id=' . $course_id ); ?>" target="_blank"><?php _e( 'Edit', 'cp' ); ?></a> | </span>
+		<span class="view"><a href="<?php echo get_permalink( $course_id ); ?>" target="_blank"><?php _e( 'View', 'cp' ); ?></a></span>
 	</td>
 	<td><?php echo $course->post_excerpt; ?></td>
 	<td><?php echo date_i18n( $date_format, strtotime( get_user_meta( $student->id, sprintf( 'enrolled_course_date_%d', $course_id ), true ) ) ); ?></td>
 	<td><?php echo date_i18n( $date_format, strtotime( CoursePress_Data_Course::get_setting( $course_id, 'course_start_date', true ) ) ); ?></td>
-	<td><?php echo $is_open_end_course? __( 'Open-ended', 'CP_TD' ) : date_i18n( $date_format, strtotime( CoursePress_Data_Course::get_setting( $course_id, 'course_end_date', true ) ) ); ?></td>
+	<td><?php echo $is_open_end_course? __( 'Open-ended', 'cp' ) : date_i18n( $date_format, strtotime( CoursePress_Data_Course::get_setting( $course_id, 'course_end_date', true ) ) ); ?></td>
 	<td><?php
 	if ( $is_open_end_course ) {
-		_e( '&infin; Days', 'CP_TD' );
+		_e( '&infin; Days', 'cp' );
 	} else {
 		$start = strtotime( CoursePress_Data_Course::get_setting( $course_id, 'course_start_date', true ) );
 		$end = strtotime( CoursePress_Data_Course::get_setting( $course_id, 'course_end_date', true ) );
 		$diff = abs( $end - $start );
 		$days = $diff / DAY_IN_SECONDS;
 		$days = intval( $days );
-		printf( _n( '%s Day', '%s Days', $days, 'CP_TD' ), $days );
+		printf( _n( '%s Day', '%s Days', $days, 'cp' ), $days );
 	}
 	?></td>
 	</tr>

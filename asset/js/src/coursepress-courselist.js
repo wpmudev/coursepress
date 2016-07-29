@@ -73,6 +73,18 @@ var CoursePress = CoursePress || {};
 				proceed = window.confirm( _coursepress.courselist_bulk_delete );
 			}
 
+			/**
+			 * export
+			 */
+			if ( 'export' === action ) {
+				if ( 0 === courses.length ) {
+					alert( _coursepress.courselist_export );
+					return false;
+				}
+				window.location = './admin.php?page=coursepress_export_import&courses='+courses.join()+'&_wpnonce='+nonce+'&source=list';
+				return false;
+			}
+
 			if ( action.length > 0 && proceed ) {
 				CoursePress.Course.set( 'action', 'bulk_actions' );
 
@@ -100,6 +112,10 @@ var CoursePress = CoursePress || {};
 			e.stopImmediatePropagation();
 			e.preventDefault();
 
+			var link = $(this),
+				parentTR = link.parents( 'tr' ).first()
+			;
+
 			if ( window.confirm( _coursepress.courselist_delete_course ) ) {
 				CoursePress.Course.set( 'action', 'delete_course' );
 
@@ -108,11 +124,18 @@ var CoursePress = CoursePress || {};
 					course_id: $( this ).attr('data-id')
 				};
 
+				parentTR.slideUp();
+
 				CoursePress.Course.set( 'data', data );
-				CoursePress.Course.save( null, {
-					success: function() {
-						window.location.reload();
-					}
+				CoursePress.Course.save();
+				CoursePress.Course.off( 'coursepress:delete_course_success' );
+				CoursePress.Course.on( 'coursepress:delete_course_success', function() {
+					parentTR.remove();
+				});
+				// In case something went wrong while deleting, tell the user.
+				CoursePress.Course.on( 'coursepress:delete_course_error', function() {
+					parentTR.slideUp();
+					alert( _coursepress.server_error );
 				});
 
 			}
@@ -122,6 +145,10 @@ var CoursePress = CoursePress || {};
 			e.stopImmediatePropagation();
 			e.preventDefault();
 
+			var link = $(this),
+				parentTR = link.parents( 'tr' ).first()
+			;
+
 			if ( window.confirm( _coursepress.courselist_duplicate_course ) ) {
 				CoursePress.Course.set( 'action', 'duplicate_course' );
 
@@ -130,12 +157,15 @@ var CoursePress = CoursePress || {};
 					course_id: $( this ).attr('data-id')
 				};
 
+				parentTR.addClass( 'duplicating' );
+
 				CoursePress.Course.set( 'data', data );
-				CoursePress.Course.save( null, {
-					success: function() {
-						window.location.reload();
-					}
+				CoursePress.Course.save();
+				CoursePress.Course.off( 'coursepress:duplicate_course_success' );
+				CoursePress.Course.on( 'coursepress:duplicate_course_success', function() {
+					window.location.reload();
 				});
+
 			}
 		});
 

@@ -1,9 +1,6 @@
-/*!  - v2.0.0
- * 
- * Copyright (c) 2016; * Licensed GPLv2+ */
+/*global wp*/
 /*global _coursepress*/
 /*global pwsL10n*/
-
 
 var CoursePress = CoursePress || {};
 
@@ -12,6 +9,7 @@ var CoursePress = CoursePress || {};
 	CoursePress.Models = CoursePress.Models || {};
 	CoursePress.UI = CoursePress.UI || {};
 	CoursePress.utility = CoursePress.utility || {};
+	CoursePress.Events = CoursePress.Events || {};
 
 	CoursePress.utility.timer_validate = function( s, ref ) {
 		var time = 'ref_' + (CoursePress.utility.hashcode( '' + s ) + '').split('').reverse().join('');
@@ -70,59 +68,6 @@ var CoursePress = CoursePress || {};
 
 		return strength;
 	};
-
-	// Copied from comment-reply.js
-	CoursePress.utility.addComment = {
-		moveForm : function(commId, parentId, respondId, postId) {
-			var t = this, div, comm = t.I(commId), respond = t.I(respondId), cancel = t.I('cancel-comment-reply-link'), parent = t.I('comment_parent'), post = t.I('comment_post_ID');
-
-			if ( ! comm || ! respond || ! cancel || ! parent ) {
-				return;
-			}
-
-			t.respondId = respondId;
-			postId = postId || false;
-
-			if ( ! t.I('wp-temp-form-div') ) {
-				div = document.createElement('div');
-				div.id = 'wp-temp-form-div';
-				div.style.display = 'none';
-				respond.parentNode.insertBefore(div, respond);
-			}
-
-			comm.parentNode.insertBefore(respond, comm.nextSibling);
-			if ( post && postId ) {
-				post.value = postId;
-			}
-			parent.value = parentId;
-			cancel.style.display = '';
-
-			cancel.onclick = function() {
-				var t = CoursePress.utility.addComment, temp = t.I('wp-temp-form-div'), respond = t.I(t.respondId);
-
-				if ( ! temp || ! respond ) {
-					return;
-				}
-
-				t.I('comment_parent').value = '0';
-				temp.parentNode.insertBefore(respond, temp);
-				temp.parentNode.removeChild(temp);
-				this.style.display = 'none';
-				this.onclick = null;
-				return false;
-			};
-
-			try { t.I('comment').focus(); }
-			catch(e) {}
-
-			return false;
-		},
-
-		I : function(e) {
-			return document.getElementById(e);
-		}
-	};
-
 	// Actions and Filters
 	CoursePress.actions = CoursePress.actions || {}; // Registered actions
 	CoursePress.filters = CoursePress.filters || {}; // Registered filters
@@ -367,6 +312,9 @@ var CoursePress = CoursePress || {};
 				// DEBUG code. remove it.
 				window.console.log( options );
 				this.trigger( 'modal:updated', { view: this, options: options } );
+			},
+			cancel: function() {
+				$('.enrolment-container-div' ).detach();
 			}
 		} );
 
@@ -828,16 +776,18 @@ var CoursePress = CoursePress || {};
 		$( '.unit-archive-list-wrapper .section-title' ).on( 'click', function() {
 			var link = $( $( $( this ).parents( '.unit-archive-single' )[0] ).find('a.unit-archive-single-title')[0] ).attr('href');
 			var section_hash = 'section-' + $(this).attr('data-id');
+			var has_link = $( this ).find( 'a.unit-archive-single-title').length > 0;
 
-			window.location.href = link + '#' + section_hash;
+			if ( has_link ) { window.location.href = link + '#' + section_hash; }
 		} );
 
 		// Module Title Click
 		$( '.unit-archive-list-wrapper .module-title' ).on( 'click', function() {
 			var link = $( $( $( this ).parents( '.unit-archive-single' )[0] ).find('a.unit-archive-single-title')[0] ).attr('href');
 			var mod_hash = 'module-' + $(this).attr('data-id');
+			var has_link = $( this ).find( 'a.unit-archive-single-title').length > 0;
 
-			window.location.href = link + '#' + mod_hash;
+			if ( has_link ) { window.location.href = link + '#' + mod_hash; }
 		} );
 
 		$( '.apply-button.signup, .apply-button.enroll' ).on( 'click', function( ev ) {
@@ -885,6 +835,130 @@ var CoursePress = CoursePress || {};
 		$( '.workbook-table .view-response' ).link_popup( { link_text:  '<span class="dashicons dashicons-visibility"></span>', offset_x: -160 });
 		$( '.workbook-table .feedback' ).link_popup( { link_text:  '<span class="dashicons dashicons-admin-comments"></span>' });
 		bind_marketpress_add_to_cart_button();
+
+		/**
+		 * close message
+		 */
+		$('.course-message-container .course-message-close').on( 'click', function() {
+			$(this).parent().slideUp();
+		});
+
+		/**
+		 * fold/unfold list
+		 */
+		$('.unit-archive-single .fold').on('click', function() {
+			var target = $('>ul', $(this).parent() );
+			var unit = $('.unit-archive-single-title', $(this).parent());
+			var modules_container = $('.unit-archive-module-wrapper', $(this).parent());
+			var container = $(this);
+			if ( container.hasClass('folded') ) {
+				target.slideDown( function() {
+					container.removeClass('folded');
+					container.closest('li').removeClass('folded').addClass('unfolded');
+					unit.attr('href', unit.data('original-href'));
+					unit.off('click');
+				});
+			} else {
+				target.slideUp(function() {
+					container.addClass('folded');
+					container.closest('li').removeClass('unfolded').addClass('folded');
+					if ( "undefined" == typeof( unit.data('href') ) ) {
+						/**
+						 * find last seen module
+						 */
+						var module = $('.module-seen', modules_container).last();
+						if ( module.length ) {
+							module = $('.module-title', module );
+							if ( module.length ) {
+								unit.attr('href', unit.attr('href') + '#module-'+ module.data('id') );
+								return false;
+							}
+						}
+						/**
+						 * find last seen section
+						 */
+						var section = $('.section-seen', modules_container).last();
+						if ( section.length ) {
+							section = $('.section-title', section );
+							if ( section.length ) {
+								unit.attr('href', unit.attr('href') + '#section-'+ section.data('id') );
+								return false;
+							}
+						}
+					}
+				});
+			}
+			return false;
+		});
+
+		// Course structure folded
+		$( '.course-structure .unit .fold' ).on( 'click', function() {
+			var span = $(this),
+				container = span.parents( 'li' ).first(),
+				module_wrapper = container.find( '.unit-structure-modules' ),
+				is_open = container.is( '.folded' )
+			;
+
+			if ( is_open ) {
+				container.removeClass( 'folded' ).addClass( 'unfolded' );
+				span.removeClass( 'folded' );
+				module_wrapper.slideDown();
+			} else {
+				container.removeClass( 'unfolded' ).addClass( 'folded' );
+				span.addClass( 'folded' );
+				module_wrapper.slideUp();
+			}
+		});
+
+		/*
+		 * Comments
+		 */
+		$( '.coursepress-focus-view #commentform #submit' ).on( 'click', function() {
+			var form = $(this).closest('form'), mask;
+			$('#respond #cancel-comment-reply-link').hide();
+			form.append('<div class="mask"><span><i class="fa fa-spinner fa-pulse"></i></span></div>');
+			mask = $('.mask', form );
+			mask.css({
+				width: form.width()+"px",
+				height: form.height()+"px",
+			});
+			$('span', mask).css({
+				marginTop: ( form.height() / 2 - 20 ) +"px"
+			});
+			var model = new CoursePress.Models.CourseFront();
+			model.set( 'action', 'comment_add_new' );
+			model.set( 'comment_parent', $( '#comment_parent', form ).val() );
+			model.set( 'comment_post_ID', $( '#comment_post_ID', form ).val() );
+			model.set( 'comment_content', $( '#comment', form ).val() );
+			model.set( 'coursepress_subscribe', $( '[name=coursepress_subscribe]', form ).val() );
+			model.set( 'nonce', $( '#coursepress-add-commment-nonce', form ).val() );
+			model.save();
+			model.on( 'coursepress:comment_add_new_success', function( data ) {
+				var focus_nav_next = $( '.focus-nav-next.module-is-not-done' );
+
+				if ( focus_nav_next.length > 0 ) {
+					// Reload the module
+					CoursePress.FocusMode.init_focus_mode();
+				} else {
+					$('#comments .comments-list-container').html( data.data.html );
+					bind_buttons();
+				}
+
+				/**
+				 * Notify others that the module is change.
+				 **/
+				CoursePress.Events.trigger( 'coursepress:module_change', data );
+			});
+			model.on( 'coursepress:comment_add_new_error', function() {
+				/**
+				 * detach last mask
+				 */
+				mask.detach();
+				$('#respond #cancel-comment-reply-link').show();
+			});
+			return false;
+		});
+
 	}
 
 	/**
@@ -934,11 +1008,15 @@ var CoursePress = CoursePress || {};
 			var allowed_string = allowed_extensions.join( ', ' );
 			var progress = $( parent ).find( '.upload-progress' );
 			var allowed = _.contains( allowed_extensions, extension );
+			var submit_button_container = $( '.module-submit-action', $(this).closest('.module-elements')).parent();
 
 			$( progress ).find( '.invalid-extension' ).detach();
 
-			if ( !allowed ) {
+			if ( allowed ) {
+				submit_button_container.addClass('is-valid-file');
+			} else {
 				$( progress ).append( '<span class="invalid-extension">' + _coursepress.invalid_upload_message + allowed_string + '</span>' );
+				submit_button_container.removeClass('is-valid-file');
 			}
 		} );
 
@@ -1011,6 +1089,11 @@ var CoursePress = CoursePress || {};
 
 						var file = $( parent ).find( '[name=module-' + module_id + ']' )[ 0 ].files[ 0 ];
 
+						// Exit if no file is selected
+						if ( ! file || ! file.name ) {
+							return;
+						}
+
 						// Exit if extension not supported
 						var extension = file.name.split( '.' ).pop();
 						var allowed_extensions = _.keys( _coursepress.allowed_student_extensions );
@@ -1071,7 +1154,9 @@ var CoursePress = CoursePress || {};
 								data = JSON.parse( e.target.responseText );
 							} catch( err ) {}
 
+							// Upload completed!
 							if ( readyState === 4 && parseInt( status ) === 200 && data.success ) {
+								// Completed with success :)
 
 								$( parent ).find( '.upload-percent' ).detach();
 								$( parent ).find( '.upload-progress .spinner' ).detach();
@@ -1083,7 +1168,17 @@ var CoursePress = CoursePress || {};
 									'</div>'
 								);
 
+								// Update the navigation links.
+								if ( data.html && data.html.length ) {
+									var module = jQuery( data.html );
+									var new_nav = module.find( '.focus-nav' );
+									$('.coursepress-focus-view .focus-nav').replaceWith( new_nav );
+									CoursePress.FocusMode.bind_focus_nav();
+								}
+
 							} else if ( readyState === 4 ) {
+								// Completed with error...
+
 								$( parent ).find( '.upload-percent' ).detach();
 								$( parent ).find( '.upload-progress .spinner' ).detach();
 								$( result ).detach();
@@ -1156,14 +1251,42 @@ var CoursePress = CoursePress || {};
 
 					html = data.quiz_result_screen;
 
-					if ( data.results.attributes.mandatory && ! data.results.passed ) {
+					if (
+							( 'boolean' === typeof( data.results ) && false === data.results ) ||
+							( data.results.attributes.mandatory && ! data.results.passed )
+					   ){
 						$('.coursepress-focus-view .focus-nav-next').addClass('not-active');
 					}
 
+					// Hide not passed message
+					var not_passed_div = $( '.not-passed-message' );
+
+					if ( not_passed_div.length > 0 ) { 
+						not_passed_div.hide();
+					}
 				} else {
 					html = '<div class="module-response">' +
 						'<p class="file_holder">' + _coursepress.response_saved_message + '</p>' +
 						'</div>';
+				}
+
+				/**
+				 * message for quiz
+				 */
+				if ( 'input-quiz' === data.module_type ) {
+					var not_passed_message = $('.not-passed-message');
+					if ( 'undefined' !== typeof( data.results.message ) ) {
+						if ( 'boolean' === typeof( data.results.message.hide ) && data.results.message.hide ) {
+							not_passed_message.detach();
+						} else {
+							if ( ! not_passed_message.length ) {
+								not_passed_message = '<div class="not-passed-message"></div>';
+								$('.module-content').after(not_passed_message);
+								not_passed_message = $('.not-passed-message');
+							}
+							not_passed_message.html(data.results.message.text);
+						}
+					}
 				}
 
 				if ( 0 === response.length ) {
@@ -1171,6 +1294,19 @@ var CoursePress = CoursePress || {};
 				} else {
 					$( response ).replaceWith( html );
 				}
+
+				// Update the navigation links.
+				if ( data.html && data.html.length ) {
+					var module = jQuery( data.html );
+					var new_nav = module.find( '.focus-nav' );
+					$('.coursepress-focus-view .focus-nav').replaceWith( new_nav );
+				}
+				CoursePress.FocusMode.bind_focus_nav();
+
+				/**
+				 * Notify others that the module is change.
+				 **/
+				CoursePress.Events.trigger( 'coursepress:module_change', data );
 			} );
 
 			model.on( 'coursepress:record_module_response_error', function() {
@@ -1228,58 +1364,93 @@ var CoursePress = CoursePress || {};
 	function external() {
 		var a_col = $( 'ul.units-archive-list a' ).css('color');
 		var p_col = $( 'body' ).css('color').replace('rgb(', '' ).replace(')', '' ).split( ',');
-		var init = { color: a_col };
-		var circles = $( '.course-progress-disc' ).circleProgress( { fill: init, emptyFill: 'rgba(' + p_col[0] + ', ' + p_col[1] + ', ' + p_col[2] + ', .1)' });
+		var emptyFill = 'rgba(' + p_col[0] + ', ' + p_col[1] + ', ' + p_col[2] + ', 1)';
 
-		$.each( circles, function( i, item ) {
+		$( '.course-progress-disc' ).each( function () {
+			var item_data = $( this ).data();
+			var text_color = a_col;
+			var text_align = 'center';
+			var text_denominator = 4.5;
+			var text_show = true;
+			var animation = { duration: 1200, easing: "circleProgressEase" };
+			if ( item_data.knobFgColor ) {
+				a_col = item_data.knobFgColor;
+			}
+			if ( item_data.knobEmptyColor) {
+				emptyFill = item_data.knobEmptyColor;
+			}
+			if ( item_data.knobTextColor ) {
+				text_color = item_data.knobTextColor;
+			}
+			if ( item_data.knobTextAlign ) {
+				text_align = item_data.knobTextAlign;
+			}
+			if ( item_data.knobTextDenominator ) {
+				text_denominator = item_data.knobTextDenominator;
+			}
+			if ( 'undefined' !== typeof( item_data.knobTextShow ) ) {
+				text_show = item_data.knobTextShow;
+			}
+			if ( 'undefined' !== typeof( item_data.knobAnimation ) ) {
+				animation = item_data.knobAnimation;
+			}
 
-			var parent = $( item ).parents('ul')[0];
-			var a_col = $( parent ).find('a').css('color');
+			var init = { color: a_col };
+			$( this ).circleProgress( { fill: init, emptyFill: emptyFill, animation: animation } );
 
-			$( item ).on( 'circle-animation-progress', function( e, v ) {
+			var parent = $( this ).parents('ul')[0];
+
+			$( this ).on( 'circle-animation-progress', function( e, v ) {
 				var obj = $( this ).data( 'circle-progress' ),
 					ctx = obj.ctx,
 					s = obj.size,
 					sv = (100 * v).toFixed(),
-					ov = (100 * obj.value ).toFixed(),
-					fill = obj.arcFill;
+					ov = (100 * obj.value ).toFixed();
 				sv = 100 - sv;
 				if ( sv < ov ) {
 					sv = ov;
 				}
 				ctx.save();
-				ctx.font = s / 4.5 + 'px sans-serif';
-				ctx.textAlign = 'center';
-				ctx.textBaseline = 'middle';
-				ctx.fillStyle = fill;
-				ctx.fillText( sv + '%', s / 2 + s / 80, s / 2 );
+				if ( text_show ) {
+					ctx.font = s / text_denominator + 'px sans-serif';
+					ctx.textAlign = text_align;
+					ctx.textBaseline = 'middle';
+					ctx.fillStyle = text_color;
+					ctx.fillText( sv + '%', s / 2 + s / 80, s / 2 );
+				}
 				ctx.restore();
 			} );
 
-			$( item ).on( 'circle-animation-end', function() {
+			$( this ).on( 'circle-animation-end', function() {
 				var obj = $( this ).data( 'circle-progress' ),
 					ctx = obj.ctx,
 					s = obj.size,
 					sv = (100 * obj.value ).toFixed();
 				obj.drawFrame( obj.value );
-				ctx.font = s / 4.5 + 'px sans-serif';
-				ctx.textAlign = 'center';
-				ctx.textBaseline = 'middle';
-				ctx.fillStyle = a_col;
-				ctx.fillText( sv + '%', s / 2, s / 2 );
+				if ( text_show ) {
+					ctx.font = s / text_denominator + 'px sans-serif';
+					ctx.textAlign = text_align;
+					ctx.textBaseline = 'middle';
+					ctx.fillStyle = text_color;
+					ctx.fillText( sv + '%', s / 2, s / 2 );
+				}
 			} );
 
 			// In case animation doesn't run
-			var obj = $( item ).data( 'circle-progress' ),
+			var obj = $( this ).data( 'circle-progress' ),
 				ctx = obj.ctx,
 				s = obj.size,
-				sv = (100 * obj.value ).toFixed(),
-				fill = obj.arcFill;
-			ctx.font = s / 4.5 + 'px sans-serif';
-			ctx.textAlign = 'center';
-			ctx.textBaseline = 'middle';
-			ctx.fillStyle = fill;
-			ctx.fillText( sv + '%', s / 2, s / 2 + s / 80 );
+				sv = (100 * obj.value ).toFixed();
+			if ( text_show ) {
+				ctx.font = s / text_denominator + 'px sans-serif';
+				ctx.textAlign = text_align;
+				ctx.textBaseline = 'middle';
+				ctx.fillStyle = text_color;
+				ctx.fillText( sv + '%', s / 2, s / 2 + s / 80 );
+			}
+			if (  'undefined' !== typeof( item_data.knobTextPrepend ) && item_data.knobTextPrepend ) {
+				$( this ).parent().prepend(  '<span class="progress">'+sv + '%</span>' );
+			}
 		} );
 	}
 
@@ -1292,18 +1463,65 @@ var CoursePress = CoursePress || {};
 	CoursePress.FocusMode = CoursePress.FocusMode || {};
 
 	CoursePress.FocusMode.bind_focus_nav = function() {
+
 		$( '.coursepress-focus-view .focus-nav-prev' ).off('click');
 		$( '.coursepress-focus-view .focus-nav-next' ).off('click');
+		$( '.coursepress-focus-view .focus-nav-reload' ).off('click');
 		$( '.coursepress-focus-view a.breadcrumb-course-unit-section.crumb' ).off('click');
+		$( '.coursepress-focus-view a.nav-go-back-link' ).off('click');
 
-		$( '.coursepress-focus-view .focus-nav-prev, .coursepress-focus-view .focus-nav-next' ).on('click', function() {
+		$( '.coursepress-focus-view a.nav-go-back-link' ).on('click', function( ev ) {
+			ev.preventDefault();
+
+			var url = $( this ).attr( 'href' );
+			window.location.href = url;
+			window.location.reload();
+
+			return false;
+		});
+
+		$( '.coursepress-focus-view .focus-nav-prev, .coursepress-focus-view .focus-nav-next, .coursepress-focus-view .focus-nav-reload' ).on('click', function() {
+
+			if ( $(this).hasClass( 'module-is-not-done' ) ) {
+				create_modal_model();
+				var newDiv = $(document.createElement('div'));
+				$( 'body' ).append( newDiv );
+				$( newDiv ).addClass('enrolment-container-div');
+				$( newDiv ).html(CoursePress.Enrollment.dialog.render().el);
+				CoursePress.Enrollment.dialog.openAtAction( 'mandatory' );
+				return false;
+			}
+
+			var element = $('.coursepress-focus-view' );
 			var type = $( this ).attr('data-type');
 			var item_id = $( this ).attr('data-id');
+			var new_unit_id = $( this ).attr('data-unit');
+			var cur_unit_id = element.attr('data-unit');
+			var url = $( this ).attr('data-url');
+			var offset = 0;
+
+			// Prevent from reloading if there's nothing to load!
+			if ( ! type && ! item_id ) {
+				return;
+			}
 
 			$( '.coursepress-focus-view .loader' ).removeClass('hidden');
 			$( '.coursepress-focus-view .focus-main' ).hide( 'fast');
 
-			var offset = 0;
+			if ( new_unit_id && new_unit_id.length && url ) {
+				if ( cur_unit_id && new_unit_id !== cur_unit_id ) {
+					$( 'body,html' ).animate( { scrollTop: offset, duration: 100 } );
+
+					// Navigation changed to a different Unit:
+					// Need to reload the page to refresh all page elements.
+					window.location.href = url;
+					return false;
+				}
+			}
+			if ( url && url.length ) {
+				element.attr('data-url', url);
+			}
+
 			if ( $('.entry-title' ).length > 0 ) {
 				offset = $('.entry-title' ).offset().top - 32;
 			} else {
@@ -1348,15 +1566,27 @@ var CoursePress = CoursePress || {};
 		}
 
 		var element = $('.coursepress-focus-view' );
-
 		var data = {
-			course_id: $( element ).attr('data-course'),
-			unit_id: $( element ).attr('data-unit'),
+			course_id: element.attr('data-course'),
+			unit_id: element.attr('data-unit'),
 			type: type,
 			item_id: item_id
 		};
+		var new_url = element.attr('data-url');
 
-		$('.coursepress-focus-view' ).load( _coursepress.home_url + '/coursepress_focus/' + data.course_id + '/' + data.unit_id + '/' + data.type + '/' + data.item_id, function() {
+		if ( new_url && new_url.length ) {
+			// Update the browsers Address-Bar to reflect the current module.
+			// This is helpful to make F5/Refresh stay on current module.
+			new_url = new_url.replace( 'http://', '//' ).replace( 'https://', '//' );
+			window.history.replaceState('', 'CoursePress', new_url);
+		}
+
+		$('.coursepress-focus-view' ).load(
+			_coursepress.home_url + '/coursepress_focus/' + data.course_id + '/' + data.unit_id + '/' + data.type + '/' + data.item_id,
+			initialize_module
+		);
+
+		function initialize_module() {
 			CoursePress.FocusMode.bind_focus_nav();
 			CoursePress.Page.init();
 
@@ -1364,10 +1594,6 @@ var CoursePress = CoursePress || {};
 			$( 'audio' ).css( 'visibility', 'visible' );
 			$( 'audio' ).css( 'outline', 'none' );
 
-			// ScrollTop
-			//$( 'body,html' ).scrollTop( $( '.coursepress-focus-view' ).offset().top);
-			//$( 'body,html' ).scrollTop(0);
-			//$( 'body,html' ).animate( { scrollTop: $( '.coursepress-focus-view' ).offset().top - 32, duration: 200 } );
 			$( '.quiz_timer').coursepress_timer( {
 				toggle_element: $('.quiz_timer').siblings('.module-quiz-questions'),
 				seconds: parseInt( $('.quiz_timer').attr('data-time') ),
@@ -1384,12 +1610,38 @@ var CoursePress = CoursePress || {};
 				window.console.log('IT HAS FINISHED!');
 			});
 
-			$( '.coursepress-focus-view .comment-reply-link').on('click', function(e) {
-				e.preventDefault();
-				e.stopImmediatePropagation();
-			});
+			/**
+			 * scroll to comment if it is needed
+			 */
+			if ( location.hash.match(/^#comment-/) !== null ) {
+				$('html, body').animate({
+					scrollTop: $(location.hash).offset().top
+				}, 0 );
+			}
 
-		} );
+			/**
+			 * add class to tree
+			 */
+			var tree = $('.course-structure-block ul.tree');
+			if ( tree.length ) {
+				$('.module', tree ).removeClass( 'current-module' );
+				$('.module-' + data.item_id, tree ).addClass( 'current-module' );
+			}
+
+			/**
+			 * check redirect
+			 */
+			var redirect = $('.course-redirect-data');
+			if ( redirect.length ) {
+				if ( 'unit-not-available' == redirect.data('redirect') ) {
+					var url = _coursepress.course_url_unit_nor_available;
+					url += '&type=' + redirect.data('type');
+					url += '&id=' + redirect.data('id');
+					//window.location.href = url;
+				}
+			}
+
+		}
 
 		//
 		//CoursePress.Post.set( 'data', data );
@@ -1428,13 +1680,41 @@ var CoursePress = CoursePress || {};
 
 	};
 
+	/**
+	 * Reload course structure whenever a new module is loaded or updated.
+	 **/
+	var refresh_course_structure = function() {
+		var course_structure_block = $( '.course-structure-block' );
+
+		if ( course_structure_block.length > 0 ) {
+			var course_nonce = course_structure_block.data( 'nonce' ),
+				course_data = course_structure_block.data(),
+				course_id = course_data.course,
+				url = window.location
+			;
+
+			var data = {
+				data: course_data,
+				course_id: course_id,
+				nonce: course_nonce
+			};
+
+			$.get( url, data, function( response ) {
+				// Reload course structure
+				course_structure_block.replaceWith( response );
+			} );
+		}
+	};
+	CoursePress.Events.on( 'coursepress:module_change', refresh_course_structure );
+
 	CoursePress.FocusMode.init_focus_mode = function() {
 
 		var is_module = location.hash.match(/^#module-/ ) !== null;
 		var is_section = location.hash.match(/^#section-/) !== null;
+		var is_comment = location.hash.match(/^#comment-/) !== null;
 		var item_id;
 
-		if ( ! is_module && ! is_section ) {
+		if ( ! is_module && ! is_section && ! is_comment ) {
 			is_section = true;
 		}
 
@@ -1454,6 +1734,11 @@ var CoursePress = CoursePress || {};
 			item_id = item_id.replace( '#section-', '' );
 
 			CoursePress.FocusMode.load_focus_item( 'section', item_id );
+		}
+
+		if ( is_comment ) {
+			item_id =  location.hash.replace('#comment-', '');
+			CoursePress.FocusMode.load_focus_item( 'comment', item_id );
 		}
 
 	};
@@ -1496,32 +1781,52 @@ var CoursePress = CoursePress || {};
 		bind_focus_mode();
 		course_completion();
 		bind_enrollment_actions();
+
+		var unsubscribe = $( '#cp-unsubscribe-message' );
+
+		if ( unsubscribe.length > 0 ) {
+			$( '<div class="enrolment-container-div">' ).html( CoursePress.Enrollment.dialog.render().el ).appendTo( 'body' );
+			CoursePress.Enrollment.dialog.openAtAction( 'unsubscribe' );
+		}
 	} );
+
+	/**
+	 * bind arrows on course module page
+	 */
+	$(document).keydown( function( e ) {
+		/**
+		 * Avoid to change module if CTRL, ALT, META or Shift is pressed.
+		 */
+		if( e.ctrlKey || e.altKey || e.shiftKey || e.metaKey ) {
+			return;
+		}
+		/**
+		 * avoid when we edit something
+		 */
+		var focus = $(':focus');
+		if( 0 < focus.length ) {
+			if ( focus.is("textarea") ) {
+				return;
+			}
+			if ( focus.is("input") ) {
+				return;
+			}
+		}
+		switch( e.which ) {
+			case 37: // left
+				if ( $('.focus-nav .focus-nav-prev a').length > 0 ) {
+					$('.focus-nav .focus-nav-prev a').trigger('click');
+				}
+				break;
+			case 39: // right
+				if ( $('.focus-nav .focus-nav-next a').length > 0 ) {
+					$('.focus-nav .focus-nav-next a').trigger('click');
+				}
+				break;
+		}
+	});
+
 })( jQuery );
 
 CoursePress.current = CoursePress.current || {};
 
-//function onYouTubeIframeAPIReady() {
-//
-//    var $ = jQuery;
-//
-//    // Course Featured Video
-//    var videoID = $( '#feature-video-div' ).attr( 'data-video' );
-//    var width = $( '#feature-video-div' ).attr( 'data-width' );
-//    var height = $( '#feature-video-div' ).attr( 'data-height' );
-//    CoursePress.current.featuredVideo = new YT.Player( 'feature-video-div',
-//        {
-//            videoId: videoID,
-//            width: width,
-//            height: height,
-//            playerVars: { 'controls': 0, 'modestbranding': 1, 'rel': 0, 'showinfo': 0 },
-//            events: {
-//                //'onReady': function( event ) {}
-//                //'onPlaybackQualityChange': onPlayerPlaybackQualityChange,
-//                //'onStateChange': onPlayerStateChange,
-//                //'onError': onPlayerError
-//            }
-//        }
-//    );
-//
-//}

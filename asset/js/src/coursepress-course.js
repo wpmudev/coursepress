@@ -173,11 +173,27 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			CoursePress.Course.add_array_to_data( data, meta_items );
 		}
 
+		// Step 1 Data
+		if ( 7 <= step ) {
+			course_completion_content = tinyMCE && tinyMCE.get( 'course-completion-editor-content' ) ? tinyMCE.get( 'course-completion-editor-content' ).getContent() : $( '[name="meta_course_completion_content"]' ).val();
+			$( '[name="meta_course_completion_content"]' ).val( course_completion_content );
+			pre_completion_content = tinyMCE && tinyMCE.get( 'pre-completion-content' ) ? tinyMCE.get( 'pre-completion-content' ).getContent() : $( '[name="meta_pre_completion_content"]' ).val();
+			$( '[name="meta_pre_completion_content"]' ).val( pre_completion_content );
+			failed_content = tinyMCE && tinyMCE.get( 'course-failed-content' ) ? tinyMCE.get( 'course-failed-content' ).getContent() : $( '[name="meta_course_failed_content"]' ).val();
+			$( '[name="meta_course_failed_content"]' ).val( failed_content );
+
+			basic_certificate_layout = tinyMCE && tinyMCE.get( 'basic-certificate-layout' ) ? tinyMCE.get( 'basic-certificate-layout' ).getContent() : $( '[name="meta_basic_certificate_layout"]' ).val();
+			$( '[name="meta_basic_certificate_layout"]' ).val( basic_certificate_layout );
+			meta_items = $( '.step-content.step-7 [name^="meta_"]' ).serializeArray();
+			meta_items = CoursePress.Course.fix_step_checkboxes( meta_items, step, '0' );
+			CoursePress.Course.add_array_to_data( data, meta_items );
+		}
+
 		var next_step = step;
 
 		if ( 'next' === action_type ) {
 			data.meta_setup_marker = step;
-			next_step = next_step !== 6 ? next_step + 1 : next_step;
+			next_step = next_step !== 7 ? next_step + 1 : next_step;
 		}
 
 		if ( 'update' === action_type ) {
@@ -398,6 +414,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			step = target.hasClass( 'step-4' ) ? 4 : step;
 			step = target.hasClass( 'step-5' ) ? 5 : step;
 			step = target.hasClass( 'step-6' ) ? 6 : step;
+			step = target.hasClass( 'step-7' ) ? 7 : step;
 
 			// Get the type
 			action_type = target.hasClass( 'prev' ) ? 'prev' : null;
@@ -419,60 +436,114 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		$( '.button.browse-media-field' ).browse_media_field();
 
 		// Handle Course Structure Checkboxes
-		$( '.step-content .course-structure input[type="checkbox"]' ).on( 'click', function( e ) {
-			var checkbox = e.currentTarget;
-			var handled = false;
-			var name = $( checkbox ).attr( 'name' );
-			var type, parent_class, parent_id, parent_selector, page_selector, checked, pages;
-
-			// Units
-			if ( name.match( /meta_structure_.*_units.*/g ) ) {
-				type = name.match( /meta_structure_visible_units.*/g ) ? 'visible' : 'preview';
-				parent_class = $( $( '[name="' + name + '"]' ).parents( 'tr[class*="treegrid-"]' )[ 0 ] ).attr( 'class' ).match( /treegrid-\d{1,10}/g )[ 0 ].trim();
-				parent_id = parent_class.split( '-' ).pop();
-				parent_selector = '.step-content .course-structure .treegrid-parent-' + parent_id;
-				page_selector = parent_selector + ' [name*="meta_structure_' + type + '_pages"]';
-				checked = $( checkbox )[ 0 ].checked;
-
-				pages = $( page_selector );
-
-				$.each( pages, function( index, page ) {
-
-					$( page ).prop( 'checked', checked );
-
-					parent_class = $( $( page ).parents( 'tr[class*="treegrid-"]' )[ 0 ] ).attr( 'class' ).match( /treegrid-\d{1,10}/g )[ 0 ].trim();
-					parent_id = parent_class.split( '-' ).pop();
-					parent_selector = '.step-content .course-structure .treegrid-parent-' + parent_id;
-					var module_selector = parent_selector + ' [name*="meta_structure_' + type + '_modules"]';
-
-					$( module_selector ).prop( 'checked', checked );
-
-				} );
-
-				handled = true;
-			}
+		$( '.step-content .course-structure input[type="checkbox"]' ).on( 'change', function( e ) {
+			var checkbox = $( e.currentTarget ),
+				target_name = checkbox.attr( 'name' ),
+				type = null != target_name.match( /visible/ ) ? 'visible' : 'preview',
+				base_name = 'meta_structure_' + type,
+				treegrid = $( '.course-structure-tree' ),
+				is_true = checkbox.is(':checked'),
+				the_parent = checkbox.parents( 'tr' ).first(),
+				unit_id = the_parent.attr( 'data-unitid' )
+			;
 
 			// Pages
-			if ( ! handled && name.match( /meta_structure_.*_pages.*/g ) ) {
-				type = name.match( /meta_structure_visible_pages.*/g ) ? 'visible' : 'preview';
-				parent_class = $( $( '[name="' + name + '"]' ).parents( 'tr[class*="treegrid-"]' )[ 0 ] ).attr( 'class' ).match( /treegrid-\d{1,10}/g )[ 0 ].trim();
-				parent_id = parent_class.split( '-' ).pop();
-				parent_selector = '.step-content .course-structure .treegrid-parent-' + parent_id;
+			var handle_pages = function( checked ) {
+				var pages = treegrid
+					.find( 'tr[data-unitid="' + unit_id + '"]' )
+					.find( '[name*="' + base_name + '_pages"]' )
+				;
 
-				checked = $( checkbox )[ 0 ].checked;
-				var module_selector = parent_selector + ' [name*="meta_structure_' + type + '_modules"]';
+				pages.each( function() {
+					var page = $(this), is_checked = page.is( ':checked' )
+						page_number = page.parents( 'tr[data-pagenumber]' ).first().attr( 'data-pagenumber' ),
+						old_state = page.data( 'checked' )
+					;
 
-				$( module_selector ).prop( 'checked', checked );
+					if ( ! checked ) {
+						// Remember current state before unchecking
+						page.data( 'checked', is_checked );
+						page.attr( 'checked', false );
+					} else {
+						// Set previous state
+						var old_state = page.data( 'checked' );
+						page.attr( 'checked', old_state );
+					}
+
+					handle_modules( checked, page_number );
+				});
+
+			};
+
+			// Handle modules
+			var handle_modules = function( checked, page_number ) {
+				var modules = treegrid
+					.find( 'tr[data-unitid="' + unit_id + '"][data-pagenumber="' + page_number + '"]' )
+					.find( '[name*="' + base_name + '_modules"]' )
+				;
+
+				modules.each( function() {
+					var module = $(this),
+						is_checked = module.is( ':checked' )
+					;
+
+					if ( ! checked ) {
+						// Remember previous state
+						module.data( 'checked', is_checked );
+						module.attr( 'checked', false );
+					} else {
+						// Set old state
+						var old_state = module.data( 'checked' );
+						module.attr( 'checked', old_state );
+					}
+				} );
 			}
 
-			// Update the toggles
-			course_structure_update();
+			// Handle unit type
+			if ( target_name.match( /_units/ ) ) {
+				handle_pages( is_true );
+			}
+			// Handle page type
+			else if ( target_name.match( /_pages/ ) ) {
+				var page_number = checkbox.parents( 'tr' ).first().attr( 'data-pagenumber' ),
+					unit_item = treegrid.find( '.unit-' + unit_id ).find( '[name*="' + base_name + '_unit"]' )
+				;
+				// Always checked the unit parent
+				if ( is_true ) unit_item.attr( 'checked', true );
+
+				handle_modules( is_true, page_number );
+			}
+			// Handle module type
+			else {
+				var page_number = the_parent.attr( 'data-pagenumber' ),
+					unit_item = treegrid.find( '.unit-' + unit_id ).find( '[name*="' + base_name + '_unit"]' ),
+					page_item = treegrid.find( '.page-' + page_number + '[data-unitid="' + unit_id + '"]' )
+						.find( '[name*="' + base_name + '_page"]' )
+				;
+
+				// Always check the unit and parent section
+				if ( is_true ) {
+					unit_item.attr( 'checked', true );
+					page_item.attr( 'checked', true );
+				}
+			}
 		} );
 
 		// ADD INSTRUCTOR.
 		$( '.button.instructor-assign' ).on( 'click', function() {
-			var instructor_id = parseInt( $( $( 'select[name="instructors"]' )[ 0 ] ).val() );
-			var instructor_name = $( $( 'select[name="instructors"]' )[ 0 ] )[ 0 ].textContent;
+			var instructor = $( 'select[name="instructors"]' ),
+				instructor_id = parseInt( instructor.val() ),
+				instructor_name = instructor.html(),
+				is_done = $( '#instructor_holder_' + instructor_id ).length > 0,
+				dropdown = $( '.select2-selection__rendered' ),
+				container = $( '#instructors-info' )
+			;
+
+			if ( is_done ) {
+				return; // Bail if instructor already exist
+			}
+			dropdown.html( _coursepress.labels.user_dropdown_placeholder );
+			var div = $( '<div class="instructor-avatar-holder empty" id="instructor_holder_' + instructor_id + '"><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span></div>' ).appendTo( container );
 
 			CoursePress.Course.set( 'action', 'add_instructor' );
 
@@ -722,6 +793,86 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			return false;
 		});
 
+		// Add course facilitator
+		$( '.button.facilitator-assign' ).on( 'click', function() {
+			var select = $( '[name="facilitators"]' ),
+				facilitator_id = select.val(),
+				facilitator_name = select.find( ':selected' ).text(),
+				avatar = _coursepress.instructor_avatars['default'],
+				container = $( '.facilitator-info' ),
+				is_done = $( '#facilitator-' + facilitator_id ).length > 0,
+				dropdown = $( '.select2-selection__rendered' )
+
+			if ( is_done ) {
+				return; // Bail if facilitator already exist
+			}
+
+			dropdown.html( _coursepress.labels.user_dropdown_placeholder );
+
+			var data = {
+				facilitator_id: facilitator_id,
+				facilitator_name: facilitator_name,
+				course_id: _coursepress.course_id,
+				nonce: get_setup_nonce()
+			};
+
+			var div = $( '<div class="facilitator-avatar-holder empty" id="facilitator-' + facilitator_id + '"><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span></div>' ).appendTo( container );
+
+			CoursePress.Course.set( 'action', 'add_facilitator' );
+			CoursePress.Course.set( 'data', data );
+			CoursePress.Course.save();
+		});
+
+		// Remove course facilitator
+		CoursePress.remove_facilitator = function() {
+			var div = $( this ).parent(),
+				facilitator_id = div.data( 'id' )
+			;
+
+			// Let's hide the div while sending the request
+			div.hide();
+
+			var data = {
+				facilitator_id: facilitator_id,
+				nonce: get_setup_nonce(),
+				course_id: _coursepress.course_id
+			};
+			CoursePress.Course.set( 'action', 'remove_facilitator' );
+			CoursePress.Course.set( 'data', data );
+			CoursePress.Course.save();
+		};
+		$( '.facilitator-remove' ).on( 'click', CoursePress.remove_facilitator );
+
+		/**
+		 * send email to enroled students
+		 */
+		$( '.coursepress_course_email_enroled_students_wrapper .send-submit' ).on( 'click', function() {
+			// Really basic validation
+			var subject = $( '[name=email-subject]' ).val();
+			var body = $( '[name=email-body]' ).val();
+			var message_container = $('#send-email-to-enroled-students');
+			$( '.coursepress_course_email_enroled_students_wrapper .send-submit' ).hide();
+			$('.coursepress-email-field', message_container).slideUp();
+			$('.coursepress-email-sending', message_container).slideDown();
+
+			CoursePress.Course.set( 'action', 'send_email' );
+			var data = {
+				subject: subject,
+				body: body,
+				course_id: _coursepress.course_id,
+				nonce: $( this ).attr( 'data-nonce' )
+			};
+			CoursePress.Course.set( 'data', data );
+			CoursePress.Course.save();
+
+			CoursePress.Course.on( 'coursepress:send_email_success', function( data ){
+				$('.coursepress-email-sending td', message_container).html(data.message.info);
+				$('.coursepress-email-field-subject td', message_container).html(data.message.subject);;
+				$('.coursepress-email-field-body td', message_container).html(data.message.body);;
+				$('.coursepress-email-field', message_container).slideDown();
+			});
+		} );
+
 	}
 
 	/**
@@ -852,9 +1003,12 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 
 			var avatar = _coursepress.instructor_avatars[ 'default' ];
 
-			if ( _coursepress.instructor_role_defined ) {
-				avatar = _coursepress.instructor_avatars[ data.instructor_id ];
+			if ( data.avatar ) {
+				avatar = data.avatar;
 			}
+
+			// Remove marker
+			$( '#instructor_holder_' + data.instructor_id ).remove();
 
 			if ( remove_buttons ) {
 				content += '<div class="instructor-avatar-holder" id="instructor_holder_' + data.instructor_id + '"><div class="instructor-status"></div><div class="instructor-remove"><a><span class="dashicons dashicons-dismiss"></span></a></div>' + avatar + '<span class="instructor-name">' + data.instructor_name + '</span></div><input type="hidden" id="instructor_' + data.instructor_id + '" name="instructor[]" value="' + data.instructor_id + '" />';
@@ -936,6 +1090,46 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			$( '#instructor_holder_' + data.invite_code ).detach();
 			update_nonce( data );
 		} );
+		// Add facilitator
+		CoursePress.Course.on( 'coursepress:add_facilitator_success', function( data ) {
+			var facilitator_id = data.facilitator_id,
+				avatar = _coursepress.instructor_avatars['default']
+			;
+
+			if ( data.avatar ) {
+				avatar = data.avatar;
+			}
+
+			var div = '<div class="facilitator-avatar-holder" id="facilitator-' + data.facilitator_id + '" data-id="' + data.facilitator_id + '">'
+				+ '<div class="facilitator-remove"><a><span class="dashicons dashicons-dismiss"></span></a></div>'
+				+ avatar
+				+ '<span class="facilitator-name">' + data.facilitator_name + '</span>'
+				+ '</div>';
+
+			$( '#facilitator-' + data.facilitator_id ).replaceWith( div );
+			$( '#facilitator-' + data.facilitator_id ).find( '.facilitator-remove' ).on( 'click', CoursePress.remove_facilitator );
+
+			update_nonce( data );
+		});
+
+		CoursePress.Course.on( 'coursepress:add_facilitator_error', function( data ) {
+			var div = $( '#facilitator-' + data.facilitator_id ).empty();
+			div.html(data.message);
+
+			div.fadeOut(3000, function() {
+				div.remove();
+			});
+
+			update_nonce( data );
+		});
+
+		// Remove facilitator
+		CoursePress.Course.on( 'coursepress:remove_facilitator_success', function( data ) {
+			var div = $( '#facilitator-' + data.facilitator_id );
+			div.remove();
+
+			update_nonce( data );
+		});
 
 		CoursePress.Course.on( 'coursepress:toggle_course_status_success', function( data ) {
 			$( '[name="publish-course-toggle"]' ).attr( 'data-nonce', data.nonce );
@@ -1267,6 +1461,78 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		} );
 	}
 
+	var toggleCertificatePreview = function() {
+		var input = $(this),
+			is_checked = input.is( ':checked' ),
+			preview = $( '.btn-cert' )
+		;
+		preview[ is_checked ? 'addClass' : 'removeClass' ]( 'button-primary' );
+	},
+	testCertificateEmail = function() {
+		var link = $(this),
+			url = link.attr( 'href' )
+		;
+	}
+
+	/**
+	 * Search Users
+	 */
+	var Search_Params = {
+		placeholder: _coursepress.labels.user_dropdown_placeholder,
+		allowClear: true,
+		ajax: {
+			url: _coursepress._ajax_url,
+			dataType: 'json',
+			delay: 250,
+			data: function (params) {
+				return {
+					q: params.term, // search term
+					page: params.page,
+					action: 'coursepress_user_search',
+					course_id: _coursepress.course_id,
+					_wpnonce: $(this).data('nonce-search')
+				};
+			},
+			processResults: function (data, params) {
+				// parse the results into the format expected by Select2
+				// since we are using custom formatting functions we do not need to
+				// alter the remote JSON data, except to indicate that infinite
+				// scrolling can be used
+				params.page = params.page || 1;
+				return {
+					results: data.items,
+					pagination: {
+						more: (params.page * 30) < data.total_count
+					}
+				};
+			},
+			cache: true
+		},
+		escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+		minimumInputLength: 3,
+		templateResult: formatData,
+		templateSelection: formatDataSelection
+	};
+
+	function formatData (data) {
+		if (data.loading) return data.text;
+
+		var markup = '<div class="select2-result-course clearfix">' + data.gravatar + ' <span>' + data.display_name + '</span></div>';
+		return markup;
+	}
+
+	function formatDataSelection (data ) {
+		var markup = '';
+
+		if ( ! data || ( ! data.gravatar && ! data.display_name ) ) {
+			markup = _coursepress.labels.user_dropdown_placeholder;
+		} else {
+			markup = '<div class="select2-result-course clearfix">' + data.gravatar + ' <span>' + data.display_name + '</span></div>';
+		}
+
+		return markup;
+	}
+
 	// Try to keep only one of these blocks and use functions/objects instead
 	$( document ).ready( function() {
 		setup_UI();
@@ -1282,17 +1548,21 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		// Get setup marker and advance accordion.
 		var setup_marker = jQuery( '#course-setup-steps .step-title .status.setup_marker' );
 		setup_marker.click();
+
+		// Trigger basic certificate
+		$( '[name="meta_basic_certificate"]' ).each(toggleCertificatePreview);
+
+		$('#student-add, #facilitators, #instructors').select2( Search_Params );
 	} )
-	// Set course_id param for discussions && notifications
-	.on( 'change', '#course_id', function() {
-		var course_id = $( this ).val(),
-			return_url = $( this ).parents( 'form' ).first().attr( 'action' )
+	// Prevent from opening when inactive
+	.on( 'click', '.btn-cert', function() {
+		var link = $(this),
+			is_active = link.is( '.button-primary' )
 		;
-
-		if ( parseInt( course_id ) > 0 ) {
-			return_url += '&course_id=' + course_id;
+		if ( ! is_active ) {
+			return false;
 		}
+	})
+	.on( 'change', '[name="meta_basic_certificate"]', toggleCertificatePreview );
 
-		window.location.assign( return_url );
-	});
 })( jQuery );

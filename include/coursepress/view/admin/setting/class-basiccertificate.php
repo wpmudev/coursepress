@@ -43,8 +43,8 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 
 	public static function add_tabs( $tabs ) {
 		$tabs['basic_certificate'] = array(
-			'title' => __( 'Basic Certificate', 'CP_TD' ),
-			'description' => __( 'Setup the settings for the certificates issued upon course completion.', 'CP_TD' ),
+			'title' => __( 'Basic Certificate', 'cp' ),
+			'description' => __( 'Setup the settings for the certificates issued upon course completion.', 'cp' ),
 			'order' => 40,
 		);
 
@@ -70,7 +70,7 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 
 		<!-- Enable Checkbox -->
 		<h3 class="hndle" style="cursor:auto;">
-			<span><?php esc_html_e( 'Certificate Options', 'CP_TD' ); ?></span>
+			<span><?php esc_html_e( 'Certificate Options', 'cp' ); ?></span>
 		</h3>
 		<div class="inside">
 			<table class="form-table compressed">
@@ -82,7 +82,7 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 								name="coursepress_settings[basic_certificate][enabled]"
 								class="certificate_enabled"
 								value="1" />
-							<?php esc_html_e( 'Enable Basic Certificate', 'CP_TD' ); ?>
+							<?php esc_html_e( 'Enable Basic Certificate', 'cp' ); ?>
 						</label></td>
 					</tr>
 				</tbody>
@@ -92,10 +92,10 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 		<!-- Certificate Layout -->
 		<div class="certificate-details" style="display: none">
 		<h3 class="hndle" style="cursor:auto;">
-			<span><?php esc_html_e( 'Certificate Layout', 'CP_TD' ); ?></span>
+			<span><?php esc_html_e( 'Certificate Layout', 'cp' ); ?></span>
 		</h3>
 		<p class="description">
-			<?php esc_html_e( 'Use the editor below to create the layout of your certificate.', 'CP_TD' ); ?>
+			<?php esc_html_e( 'Use the editor below to create the layout of your certificate.', 'cp' ); ?>
 		</p>
 		<p class="description">
 			<?php
@@ -111,7 +111,7 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 					null
 				);
 				$field_keys = array_keys( $fields );
-				esc_html_e( 'These codes will be replaced with actual data: ', 'CP_TD' );
+				esc_html_e( 'These codes will be replaced with actual data: ', 'cp' );
 				echo implode( ', ', $field_keys );
 				?>
 		</p>
@@ -142,7 +142,7 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 			</tr>
 
 			<tr>
-				<th><?php esc_html_e( 'Background Image', 'CP_TD' ); ?></th>
+				<th><?php esc_html_e( 'Background Image', 'cp' ); ?></th>
 				<td>
 				<div class="certificate_background_image_holder">
 					<input class="image_url certificate_background_url"
@@ -150,14 +150,14 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 						size="36"
 						name="coursepress_settings[basic_certificate][background_image]"
 						value="<?php echo esc_attr( $cert_background ); ?>"
-						placeholder="<?php esc_attr_e( 'Add Image URL or Browse for Image', 'CP_TD' ); ?>" />
+						placeholder="<?php esc_attr_e( 'Add Image URL or Browse for Image', 'cp' ); ?>" />
 					<input class="certificate_background_button button-secondary"
 						type="button"
-						value="<?php esc_attr_e( 'Browse', 'CP_TD' ); ?>" />
+						value="<?php esc_attr_e( 'Browse', 'cp' ); ?>" />
 					<div class="invalid_extension_message">
 						<?php
 						printf(
-							esc_html__( 'Extension of the file is not valid. Please use one of the following: %s', 'CP_TD' ),
+							esc_html__( 'Extension of the file is not valid. Please use one of the following: %s', 'cp' ),
 							implode( ', ', $allowed_extensions )
 						);
 						?>
@@ -168,10 +168,10 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 
 			<tr>
 				<th>
-					<?php esc_html_e( 'Content Padding', 'CP_TD' ); ?><br />
+					<?php esc_html_e( 'Content Padding', 'cp' ); ?><br />
 				</th>
 				<td>
-					<span><?php esc_html_e( 'Top', 'CP_TD' ); ?></span>
+					<span><?php esc_html_e( 'Top', 'cp' ); ?></span>
 					<input type="text"
 						size="6"
 						style="width: 80px;"
@@ -179,7 +179,7 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 						name="coursepress_settings[basic_certificate][padding][top]"
 						value="<?php echo esc_attr( $cert_padd_top ); ?>" />
 
-					<span><?php esc_html_e( 'Bottom', 'CP_TD' ); ?></span>
+					<span><?php esc_html_e( 'Bottom', 'cp' ); ?></span>
 					<input type="text"
 						size="6"
 						style="width: 80px;"
@@ -187,7 +187,7 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 						name="coursepress_settings[basic_certificate][padding][bottom]
 						" value="<?php echo esc_attr( $cert_padd_bottom ); ?>" />
 
-					<span><?php esc_html_e( 'Left', 'CP_TD' ); ?></span>
+					<span><?php esc_html_e( 'Left', 'cp' ); ?></span>
 					<input type="text"
 						size="6"
 						style="width: 80px;"
@@ -195,7 +195,7 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 						name="coursepress_settings[basic_certificate][padding][left]"
 						value="<?php echo esc_attr( $cert_padd_left ); ?>" />
 
-					<span><?php esc_html_e( 'Right', 'CP_TD' ); ?></span>
+					<span><?php esc_html_e( 'Right', 'cp' ); ?></span>
 					<input type="text"
 						size="6"
 						style="width: 80px;"
@@ -205,24 +205,24 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 					<br />
 
 					<span class="description">
-						<?php esc_html_e( 'Can be any CSS units. E.g. "0.2em"', 'CP_TD' ); ?>
+						<?php esc_html_e( 'Can be any CSS units. E.g. "0.2em"', 'cp' ); ?>
 					</span>
 				</td>
 			</tr>
 
 			<tr>
 				<th>
-					<?php esc_html_e( 'Page Orientation', 'CP_TD' ); ?><br />
+					<?php esc_html_e( 'Page Orientation', 'cp' ); ?><br />
 				</th>
 				<td>
 					<select name="coursepress_settings[basic_certificate][orientation]"
 						style="width: max-width: 200px;"
 						id="cert_field_orientation">
 						<option value="L" <?php selected( $cert_orientation, 'L' ); ?>>
-							<?php esc_html_e( 'Landscape', 'CP_TD' ); ?>
+							<?php esc_html_e( 'Landscape', 'cp' ); ?>
 						</option>
 						<option value="P" <?php selected( $cert_orientation, 'P' ); ?>>
-							<?php esc_html_e( 'Portrait', 'CP_TD' ); ?>
+							<?php esc_html_e( 'Portrait', 'cp' ); ?>
 						</option>
 					</select>
 				</td>
@@ -246,7 +246,7 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 			%3$s
 
 			Date: %4$s
-			Certificate no.: %5$s', 'CP_TD'
+			Certificate no.: %5$s', 'cp'
 		);
 
 		$default_certification_content = sprintf(
@@ -264,7 +264,7 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 
 	public static function default_email_subject() {
 		return sprintf(
-			__( '[%s] Congratulations. You passed your course.', 'CP_TD' ),
+			__( '[%s] Congratulations. You passed your course.', 'cp' ),
 			get_option( 'blogname' )
 		);
 	}
@@ -276,13 +276,26 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 			Congratulations! You have completed the course: %2$s
 
 			Please find attached your certificate of completion.'
-			, 'CP_TD'
+			, 'cp'
+		);
+
+		/**
+		 * download instead attach
+		 */
+		$msg = __(
+			'Hi %1$s,
+
+			Congratulations! You have completed the course: %2$s
+
+			Please <a href="%3$s">download your certificate of completion</a>.'
+			, 'cp'
 		);
 
 		$default_basic_certificate_email = sprintf(
 			$msg,
 			'FIRST_NAME',
-			'COURSE_NAME'
+			'COURSE_NAME',
+			'CERTIFICATE_URL'
 		);
 
 		return get_option(

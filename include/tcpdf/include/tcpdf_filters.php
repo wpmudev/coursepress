@@ -48,7 +48,7 @@
  * @version 1.0.001
  * @author Nicola Asuni - info@tecnick.com
  */
-class CP_TCPDF_FILTERS {
+class TCPDF_FILTERS {
 
 	/**
 	 * Define a list of available filter decoders.

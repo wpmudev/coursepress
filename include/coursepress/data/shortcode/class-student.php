@@ -85,23 +85,23 @@ class CoursePress_Data_Shortcode_Student {
 			array(
 				'course_id' => CoursePress_Helper_Utility::the_course( true ),
 				'unit_id' => false,
-				'module_column_title' => __( 'Element', 'CP_TD' ),
-				'title_column_title' => __( 'Title', 'CP_TD' ),
-				'submission_date_column_title' => __( 'Submitted', 'CP_TD' ),
-				'response_column_title' => __( 'Answer', 'CP_TD' ),
-				'grade_column_title' => __( 'Grade', 'CP_TD' ),
-				'comment_column_title' => __( 'Feedback', 'CP_TD' ),
-				'module_response_description_label' => __( 'Description', 'CP_TD' ),
-				'comment_label' => __( 'Comment', 'CP_TD' ),
-				'view_link_label' => __( 'View', 'CP_TD' ),
+				'module_column_title' => __( 'Element', 'cp' ),
+				'title_column_title' => __( 'Title', 'cp' ),
+				'submission_date_column_title' => __( 'Submitted', 'cp' ),
+				'response_column_title' => __( 'Answer', 'cp' ),
+				'grade_column_title' => __( 'Grade', 'cp' ),
+				'comment_column_title' => __( 'Feedback', 'cp' ),
+				'module_response_description_label' => __( 'Description', 'cp' ),
+				'comment_label' => __( 'Comment', 'cp' ),
+				'view_link_label' => __( 'View', 'cp' ),
 				'view_link_class' => 'assessment-view-response-link button button-units',
 				'comment_link_class' => 'assessment-view-response-link button button-units',
-				'pending_grade_label' => __( 'Pending', 'CP_TD' ),
-				'unit_unread_label' => __( 'Unit Unread', 'CP_TD' ),
-				'unit_read_label' => __( 'Unit Read', 'CP_TD' ),
-				'single_correct_label' => __( 'Correct', 'CP_TD' ),
-				'single_incorrect_label' => __( 'Incorrect', 'CP_TD' ),
-				'no_content_label' => __( 'This unit has no activities.', 'CP_TD' ),
+				'pending_grade_label' => __( 'Pending', 'cp' ),
+				'unit_unread_label' => __( 'Unit Unread', 'cp' ),
+				'unit_read_label' => __( 'Unit Read', 'cp' ),
+				'single_correct_label' => __( 'Correct', 'cp' ),
+				'single_incorrect_label' => __( 'Incorrect', 'cp' ),
+				'no_content_label' => __( 'This unit has no activities.', 'cp' ),
 				'non_assessable_label' => __( '**' ),
 				'table_class' => 'widefat shadow-table assessment-archive-table workbook-table',
 				'table_labels_th_class' => 'manage-column',
@@ -171,7 +171,7 @@ class CoursePress_Data_Shortcode_Student {
 		}
 
 		if ( $show_course_progress && empty( $unit_id ) ) {
-			$content .= '<h3 class="course-completion-progress">' . esc_html__( 'Course completion: ', 'CP_TD' ) . '<small>' . CoursePress_Data_Student::get_course_progress( $student_id, $course_id, $student_progress ) . '%</small>' . '</h3>';
+			$content .= '<h3 class="course-completion-progress">' . esc_html__( 'Course completion: ', 'cp' ) . '<small>' . CoursePress_Data_Student::get_course_progress( $student_id, $course_id, $student_progress ) . '%</small>' . '</h3>';
 		}
 
 		$student_progress_units = ( ! empty( $student_progress['units'] ) ) ? $student_progress['units'] : array();
@@ -184,7 +184,7 @@ class CoursePress_Data_Shortcode_Student {
 			$content .= '<h3 class="unit-title">' . esc_html( $unit['unit']->post_title ) . '</h3>';
 
 			$progress = CoursePress_Data_Student::get_unit_progress( $student_id, $course_id, $unit_id, $student_progress );
-			$content .= '<div class="unit-progress">' . sprintf( __( 'Unit Progress: %s%%', 'CP_TD' ), $progress ) . '</div>';
+			$content .= '<div class="unit-progress">' . sprintf( __( 'Unit Progress: %s%%', 'cp' ), $progress ) . '</div>';
 
 			$content .= '
 			<table cellspacing="0" class="' . $table_class . '">
@@ -288,9 +288,9 @@ class CoursePress_Data_Shortcode_Student {
 								break;
 						}
 
-						$response_date = ! isset( $response['date'] ) ? '' : date_i18n( get_option( 'date_format' ), strtotime( $response['date'] ) );
+						$response_date = ! isset( $response['date'] ) ? '' : date_i18n( get_option( 'date_format' ), CoursePress_Data_Course::strtotime( $response['date'] ) );
 
-						$grade = (-1 == $grade ? __( 'Ungraded', 'CP_TD' ) : $grade );
+						$grade = (-1 == $grade ? __( 'Ungraded', 'cp' ) : $grade );
 
 						$mandatory = cp_is_true( $attributes['mandatory'] ) ? '<span class="dashicons dashicons-star-filled mandatory"></span>' : '';
 						$non_assessable = cp_is_true( $attributes['assessable'] ) ? '' : '<span class="dashicons dashicons-star-filled non-assessable"></span>';
@@ -320,7 +320,7 @@ class CoursePress_Data_Shortcode_Student {
 
 			$content .= '
 				</tbody>
-				<tfoot><tr class="footer-key"><td colspan="5"><span class="dashicons dashicons-star-filled mandatory"></span>' . esc_html__( 'Mandatory answers', 'CP_TD' ) . '&nbsp;&nbsp;<span class="dashicons dashicons-star-filled non-assessable"></span>' . esc_html__( 'Non-assessable elements.', 'CP_TD' ) . '</td></tr></tfoot>
+				<tfoot><tr class="footer-key"><td colspan="5"><span class="dashicons dashicons-star-filled mandatory"></span>' . esc_html__( 'Mandatory answers', 'cp' ) . '&nbsp;&nbsp;<span class="dashicons dashicons-star-filled non-assessable"></span>' . esc_html__( 'Non-assessable elements.', 'cp' ) . '</td></tr></tfoot>
 			';
 
 			$content .= '
@@ -372,7 +372,7 @@ class CoursePress_Data_Shortcode_Student {
 			<div class="bbm-modal-nonce signup" data-nonce="<?php echo wp_create_nonce( 'coursepress_enrollment_action_signup' ); ?>"></div>
 			<div class="bbm-modal__topbar">
 				<h3 class="bbm-modal__title">
-					<?php esc_html_e( 'Create new account', 'CP_TD' ); ?>
+					<?php esc_html_e( 'Create new account', 'cp' ); ?>
 				</h3>
 				<span id="error-messages"></span>
 			</div>
@@ -383,9 +383,9 @@ class CoursePress_Data_Shortcode_Student {
 			</div>
 			<div class="bbm-modal__bottombar">
 			<input type="hidden" name="course_id" value="<?php esc_attr_e( $course_id ); ?>" />
-			<input type="submit" class="bbm-button done signup button cta-button" value="<?php esc_attr_e( 'Create an account', 'CP_TD' ); ?>" />
+			<input type="submit" class="bbm-button done signup button cta-button" value="<?php esc_attr_e( 'Create an account', 'cp' ); ?>" />
 			<a href="#" class="cancel-link">
-				<?php esc_html_e( 'Cancel', 'CP_TD' ); ?>
+				<?php esc_html_e( 'Cancel', 'cp' ); ?>
 			</a>
 			</div>
 		</script>
@@ -396,7 +396,7 @@ class CoursePress_Data_Shortcode_Student {
 			<div class="bbm-modal-nonce login" data-nonce="<?php echo wp_create_nonce( 'coursepress_enrollment_action_login' ); ?>"></div>
 			<div class="bbm-modal__topbar">
 				<h3 class="bbm-modal__title">
-					<?php esc_html_e( 'Login to your account', 'CP_TD' ); ?>
+					<?php esc_html_e( 'Login to your account', 'cp' ); ?>
 				</h3>
 				<span id="error-messages"></span>
 			</div>
@@ -406,8 +406,8 @@ class CoursePress_Data_Shortcode_Student {
 				</div>
 			</div>
 			<div class="bbm-modal__bottombar">
-			<input type="submit" class="bbm-button done button cta-button" value="<?php esc_attr_e( 'Log in', 'CP_TD' ); ?>" />
-			<a href="#" class="cancel-link"><?php esc_html_e( 'Cancel', 'CP_TD' ); ?></a>
+			<input type="submit" class="bbm-button done button cta-button" value="<?php esc_attr_e( 'Log in', 'cp' ); ?>" />
+			<a href="#" class="cancel-link"><?php esc_html_e( 'Cancel', 'cp' ); ?></a>
 			</div>
 		</script>
 		<?php endif; ?>
@@ -416,12 +416,12 @@ class CoursePress_Data_Shortcode_Student {
 		<script type="text/template" id="modal-view3-template" data-type="modal-step" data-modal-action="enrolled">
 			<div class="bbm-modal__topbar">
 				<h3 class="bbm-modal__title">
-					<?php esc_html_e( 'Successfully enrolled.', 'CP_TD' ); ?>
+					<?php esc_html_e( 'Successfully enrolled.', 'cp' ); ?>
 				</h3>
 			</div>
 			<div class="bbm-modal__section">
 				<p>
-					<?php esc_html_e( 'Congratulations! You have successfully enrolled. Click below to get started.', 'CP_TD' ); ?>
+					<?php esc_html_e( 'Congratulations! You have successfully enrolled. Click below to get started.', 'cp' ); ?>
 				</p>
 				<a href="<?php echo get_permalink( CoursePress_Helper_Utility::the_course( true ) ) . CoursePress_Core::get_slug( 'units' ); ?>">Start Learning</a>
 			</div>
@@ -502,9 +502,9 @@ class CoursePress_Data_Shortcode_Student {
 	}
 
 	/**
-	 * Course Mandatory Message.
+	 * Course Required Message.
 	 *
-	 * Text: "x of y mandatory elements completed".
+	 * Text: "x of y required elements completed".
 	 *
 	 * @since 1.0.0
 	 * @param  array $atts Shortcode attributes.
@@ -516,7 +516,7 @@ class CoursePress_Data_Shortcode_Student {
 				array(
 					'course_id' => CoursePress_Helper_Utility::the_course( true ),
 					'unit_id' => CoursePress_Helper_Utility::the_post( true ),
-					'message' => __( '%d of %d mandatory elements completed.', 'CP_TD' ),
+					'message' => __( '%d of %d required elements completed.', 'cp' ),
 				),
 				$atts,
 				'course_mandatory_message'
@@ -560,19 +560,32 @@ class CoursePress_Data_Shortcode_Student {
 	 * @return string Shortcode output.
 	 */
 	public static function course_unit_percent( $atts ) {
-		extract( shortcode_atts( array(
+		$shortcode_atts = shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
 			'unit_id' => CoursePress_Helper_Utility::the_post( true ),
 			'format' => false,
 			'style' => 'flat',
-			'tooltip_alt' => __( 'Percent of the unit completion', 'CP_TD' ),
-			'knob_fg_color' => '#24bde6',
+			'tooltip_alt' => __( 'Percent of the unit completion', 'cp' ),
+			'knob_animation' => '{ "duration": 1200 }',
 			'knob_bg_color' => '#e0e6eb',
+			'knob_data_height' => '60',
 			'knob_data_thickness' => '0.18',
 			'knob_data_width' => '60',
-			'knob_data_height' => '60',
-			'knob_animation' => true,
-		), $atts, 'course_unit_percent' ) );
+			'knob_empty_color' => 'rgba( 20, 20, 20, .1 )',
+			'knob_fg_color' => '#24bde6',
+			'knob_text_align' => 'center',
+			'knob_text_color' => '#222',
+			'knob_text_denominator' => 4.5,
+			'knob_text_show' => true,
+			'knob_text_prepend' => false,
+		), $atts, 'course_unit_percent' );
+
+		/**
+		 * Filter progress_wheel attributes.
+		 **/
+		$shortcode_atts = apply_filters( 'coursepress_unit_progress_wheel_atts', $shortcode_atts );
+
+		extract( $shortcode_atts );
 
 		$course_id = (int) $course_id;
 		$unit_id = (int) $unit_id;
@@ -586,11 +599,10 @@ class CoursePress_Data_Shortcode_Student {
 		$tooltip_alt = sanitize_text_field( $tooltip_alt );
 		$knob_fg_color = sanitize_text_field( $knob_fg_color );
 		$knob_bg_color = sanitize_text_field( $knob_bg_color );
+		$knob_text_color = sanitize_text_field( $knob_text_color );
 		$knob_data_thickness = sanitize_text_field( $knob_data_thickness );
 		$knob_data_width = (int) $knob_data_width;
 		$knob_data_height = (int) $knob_data_height;
-
-		$knob_animation = cp_is_true( $knob_animation );
 
 		if ( empty( $knob_data_width ) && ! empty( $knob_data_height ) ) {
 			$knob_data_width = $knob_data_height;
@@ -601,15 +613,59 @@ class CoursePress_Data_Shortcode_Student {
 		$percent_value = (int) CoursePress_Data_Student::get_unit_progress( get_current_user_id(), $course_id, $unit_id );
 
 		$content = '';
-		if ( 'flat' == $style ) {
-			$content = '<span class="percentage">' . ( $format ? $percent_value . '%' : $percent_value ) . '</span>';
-		} elseif ( 'none' == $style ) {
-			$content = $percent_value;
+
+		/**
+		 * check is unit available?
+		 */
+		$is_unit_available = CoursePress_Data_Unit::is_unit_available( $course_id, $unit_id, null);
+
+		if ( $is_unit_available ) {
+			if ( 'flat' == $style ) {
+				$content = '<span class="percentage">' . ( $format ? $percent_value . '%' : $percent_value ) . '</span>';
+			} elseif ( 'none' == $style ) {
+				$content = $percent_value;
+			} else {
+				$data_value = $percent_value / 100;
+				$content = '<div class="course-progress-disc-container"><a class="tooltip" alt="' . $tooltip_alt . '">';
+				/**
+				 * Knob settings as date fields
+				 */
+				$knob_settings = array();
+				foreach ( $shortcode_atts as $key => $value ) {
+					if ( ! preg_match( '/^knob_/', $key ) ) {
+						continue;
+					}
+					$knob_settings[] = sprintf(
+						'data-%s="%s"',
+						sanitize_text_field( preg_replace( '/_/', '-', $key ) ),
+						esc_attr( $value )
+					);
+				}
+				$content .= sprintf(
+					'<div class="course-progress-disc" data-value="%s" data-start-angle="4.7" data-size="%s" data-thickness="%s" data-animation-start-value="1.0" data-fill="{ &quot;color&quot;: &quot;%s&quot; }" %s></div>',
+					esc_attr( $data_value ),
+					esc_attr( $knob_data_width ),
+					esc_attr( $knob_data_thickness ),
+					esc_attr( $knob_fg_color ),
+					implode( ' ', $knob_settings )
+				);
+				$content .= '</a></div>';
+			}
 		} else {
-			$data_value = $percent_value / 100;
-			$animation = $knob_animation ? '' : ' data-animation="false"';
-			$content = '<div class="course-progress-disc-container"><a class="tooltip" alt="' . $tooltip_alt . '"><div class="course-progress-disc" data-value="' . $data_value . '" data-start-angle="4.7" data-size="' . $knob_data_width . '" data-thickness="' . $knob_data_thickness . '" data-animation-start-value="1.0" data-fill="{ &quot;color&quot;: &quot;' . $knob_fg_color . '&quot; }" ' . $animation . '></div></a></div>';
+			$content .= '<i class="fa fa-lock" aria-hidden="true"></i>';
 		}
+
+		/**
+		 * Filter the progress wheel markup.
+		 *
+		 * @since 2.0
+		 *
+		 * @param (int) $markup
+		 * @param (int) $course_id
+		 * @param (int) $unit_id
+		 * @param (int) $percent_value		The total percent value.
+		 **/
+		$content = apply_filters( 'coursepress_unit_progress_wheel', $content, $course_id, $unit_id, $percent_value );
 
 		return $content;
 	}

@@ -1,3 +1,5 @@
+@import 'colors';
+
 .coursepress-ui-toggle-switch{
   position: relative;
   top: 3px;
@@ -101,7 +103,7 @@
 
 .coursepress-ui-toggle-switch.off .left.green,
 .coursepress-ui-toggle-switch.on .right.green {
-  color: #6BBB1A;
+  color: $colorGreen;
 }
 
 .coursepress-ui-toggle-switch.on .left.red,
@@ -109,6 +111,29 @@
   color: #D4D4D4;
 }
 
+/**
+ * Tooltip
+ **/
+.coursepress-tooltip {
+  position: relative;
+}
+.coursepress-tooltip:after {
+  content: attr(data-title);
+  position: absolute;
+  background-color:#F4F4F4;
+  padding: 10px 15px;
+  border: 1px #DDD solid;
+  font-size: 12px;
+  font-weight: 400;
+  display: none;
+  z-index: 999;
+  font-style: normal;
+  color: #555;
+  margin-top: 5px;
+}
+.coursepress-tooltip:hover:after {
+  display: block;
+}
 
 /* JQUERY UI */
 .link-popup .popup{
@@ -135,4 +160,12 @@
 .link-popup .popup-link {
   text-decoration: none;
   border: none;
+}
+.select2-selection__rendered .select2-result-course {
+  img {
+	height: 25px !important;
+	width: 25px !important;
+	padding: 0 !important;
+	vertical-align: top !important;
+  }
 }

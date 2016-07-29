@@ -30,7 +30,7 @@ class CoursePress_Helper_Extension_MarketPress {
 				'slug' => 'marketpress',
 				'base_path' => self::$base_path['pro'],
 				'source' => CoursePress::$path . 'asset/file/marketpress-pro.zip',
-				'source_message' => __( 'Included in the CoursePress Plugin', 'CP_TD' ),
+				'source_message' => __( 'Included in the CoursePress Plugin', 'cp' ),
 				'external_url' => '', /* http://premium.wpmudev.org/project/e-commerce/ */
 				'external' => 'no',
 				'protocol' => '',
@@ -43,7 +43,7 @@ class CoursePress_Helper_Extension_MarketPress {
 				'slug' => 'wordpress-ecommerce',
 				'base_path' => self::$base_path['free'],
 				'source' => 'downloads.wordpress.org/plugin/wordpress-ecommerce.zip',
-				'source_message' => __( 'WordPress.org Repository', 'CP_TD' ),
+				'source_message' => __( 'WordPress.org Repository', 'cp' ),
 				'external_url' => '', /* https://wordpress.org/plugins/wordpress-ecommerce/ */
 				'external' => 'yes',
 				'protocol' => 'https',

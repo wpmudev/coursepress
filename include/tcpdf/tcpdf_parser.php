@@ -776,9 +776,9 @@ class TCPDF_PARSER {
 		// decode the stream
 		$remaining_filters = array();
 		foreach ($filters as $filter) {
-			if (in_array($filter, CP_TCPDF_FILTERS::getAvailableFilters())) {
+			if (in_array($filter, TCPDF_FILTERS::getAvailableFilters())) {
 				try {
-					$stream = CP_TCPDF_FILTERS::decodeFilter($filter, $stream);
+					$stream = TCPDF_FILTERS::decodeFilter($filter, $stream);
 				} catch (Exception $e) {
 					$emsg = $e->getMessage();
 					if ((($emsg[0] == '~') AND !$this->cfg['ignore_missing_filter_decoders'])

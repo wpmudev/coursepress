@@ -2,33 +2,37 @@
 
 class CoursePress_Helper_Setting {
 
-	private static $page_refs = array();
-	private static $valid_pages = array();
-	private static $pages = array();
-	private static $default_capability;
+	protected static $page_refs = array();
+	protected static $valid_pages = array();
+	protected static $pages = array();
+	protected static $default_capability = null;
+	protected static $message_meta_name = 'coursepress_migration_message';
 
 	public static function init() {
 		add_action( 'plugins_loaded', array( __CLASS__, 'admin_plugins_loaded' ) );
 		add_action( 'admin_menu', array( __CLASS__, 'admin_menu' ) );
 		add_action( 'admin_init', array( __CLASS__, 'admin_init' ) );
+		add_action( 'shutdown', array( __CLASS__, 'update_post_meta' ) );
 		/** This filter is documented in /wp-admin/includes/misc.php */
 		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
 	}
 
 	/**
-	 * allow to get default capability
+	 * Return the default capability required to see the CoursePress menu.
 	 *
 	 * @since 2.0.0
-	 *
 	 * @return string default capability
 	 */
-	private static function get_default_capability() {
-		$userdata = get_userdata( get_current_user_id() );
+	protected static function get_default_capability() {
 		if ( empty( self::$default_capability ) ) {
-			self::$default_capability = 'coursepress_dashboard_cap';
+			$userdata = get_userdata( get_current_user_id() );
+
 			if ( current_user_can( 'manage_options' ) ) {
 				self::$default_capability = 'manage_options';
+			} else {
+				self::$default_capability = 'coursepress_dashboard_cap';
 			}
+
 			/**
 			 * Filer allow to change default capability.
 			 *
@@ -38,31 +42,29 @@ class CoursePress_Helper_Setting {
 			 * @param string $slug CoursePress page slug
 			 *
 			 */
-			self::$default_capability = apply_filters( 'coursepress_capabilities', self::$default_capability );
+			self::$default_capability = apply_filters(
+				'coursepress_default_capability',
+				self::$default_capability
+			);
 		}
 		return self::$default_capability;
 	}
 
 	public static function admin_menu() {
+		if ( ! CoursePress_Data_Capabilities::can_manage_courses() ) {
+			// Admin menu is only available to admin/instructors.
+			return;
+		}
+
 		$parent_handle = 'coursepress';
+		$capability = self::get_default_capability();
+
 		self::$page_refs[ $parent_handle ] = add_menu_page(
 			CoursePress::$name,
 			CoursePress::$name,
-			/**
-			 * Filer allow to change capability.
-			 *
-			 * @since 2.0.0
-			 *
-			 * @param string $capability CoursePress capability.
-			 * @param string $slug CoursePress page slug
-			 *
-			 */
-			apply_filters( 'coursepress_capabilities', self::get_default_capability() ),
+			$capability,
 			$parent_handle,
-			array(
-				__CLASS__,
-				'menu_handler',
-			),
+			array( __CLASS__, 'menu_handler' ),
 			CoursePress::$url . 'asset/img/coursepress-icon.png'
 		);
 
@@ -70,10 +72,11 @@ class CoursePress_Helper_Setting {
 
 		foreach ( $pages as $handle => $page ) {
 			// Use default callback if not defined
-			$callback = empty( $page['callback'] ) ? array(
-				__CLASS__,
-				'menu_handler',
-			) : $page['callback'];
+			if ( empty( $page['callback'] ) ) {
+				$callback = array( __CLASS__, 'menu_handler' );
+			} else {
+				$callback = $page['callback'];
+			}
 
 			// Remove callback to use URL instead
 			if ( 'none' == $callback ) {
@@ -81,7 +84,11 @@ class CoursePress_Helper_Setting {
 			}
 
 			// Use default capability if not defined
-			$capability = empty( $page['cap'] ) ? self::get_default_capability() : $page['cap'];
+			if ( empty( $page['cap'] ) ) {
+				$capability = self::get_default_capability();
+			} else {
+				$capability = $page['cap'];
+			}
 
 			if ( empty( $page['parent'] ) ) {
 				$page['parent'] = $parent_handle;
@@ -91,25 +98,30 @@ class CoursePress_Helper_Setting {
 				$page['handle'] = $handle;
 			}
 
-			if ( CoursePress_Data_Capabilities::can_manage_courses() ) {
-				if ( 'none' != $page['parent'] ) {
-					self::$page_refs[ $handle ] = add_submenu_page( $page['parent'], $page['title'], $page['menu_title'], $capability, $page['handle'], $callback );
-				} else {
-					self::$page_refs[ $handle ] = add_submenu_page( null, $page['title'], $page['menu_title'], $capability, $page['handle'], $callback );
-				}
+			if ( 'none' != $page['parent'] ) {
+				$parent = $page['parent'];
+			} else {
+				$parent = null;
 			}
-		}
 
+			self::$page_refs[ $handle ] = add_submenu_page(
+				$parent,
+				$page['title'],
+				$page['menu_title'],
+				$capability,
+				$page['handle'],
+				$callback
+			);
+		}
 	}
 
 	public static function menu_handler() {
-
 		$page = isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : 'coursepress';
 
 		if ( in_array( $page, self::get_valid_pages() ) ) {
+			do_action( 'coursepress_admin_render_page' );
 			do_action( 'coursepress_admin_' . $page );
 		}
-
 	}
 
 	public static function get_valid_pages() {
@@ -139,7 +151,7 @@ class CoursePress_Helper_Setting {
 		}
 	}
 
-	private static function _get_pages() {
+	protected static function _get_pages() {
 		$pages = apply_filters( 'coursepress_admin_pages', self::$pages );
 		$order = array_map( array( __CLASS__, '_page_order' ), $pages );
 		$max_order = max( $order );
@@ -159,7 +171,6 @@ class CoursePress_Helper_Setting {
 		}
 
 		return $new_pages;
-
 	}
 
 	public static function admin_init() {
@@ -171,6 +182,7 @@ class CoursePress_Helper_Setting {
 
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_style' ) );
 		add_filter( 'coursepress_custom_allowed_extensions', array( __CLASS__, 'allow_zip_extension' ) );
+
 	}
 
 	public static function admin_plugins_loaded() {
@@ -252,106 +264,50 @@ class CoursePress_Helper_Setting {
 	}
 
 	/**
-	 * Function return array of payment options.
+	 * update post meta.
 	 *
-	 * @since 2.0.0
+	 * This is a one-time-upgrade function that converts data in the post-meta
+	 * table to keep it compatible with recent changes.
 	 *
-	 * @return array Array of options.
+	 *	   ****************************************
+	 * @todo  REMOVE IT IN INITIAL 2.0 RELEASE!!!!!
+	 *	   ****************************************
+	 *
+	 * @since 2.0.0.
 	 */
-	public static function get_course_payment_options_array() {
-		$options = array(
-			'none' => array(
-				'label' => __( 'Do not sell courses', 'CP_TD' ),
-			),
-			'marketpress' => array(
-				'label' => __( 'Use MarketPress to sell courses', 'CP_TD' ),
-			),
-			'woocommerce' => array(
-				'label' => __( 'Use WooCommerce to sell courses', 'CP_TD' ),
-			),
+	public static function update_post_meta() {
+
+		/**
+		 * check and if it is done, then do not run
+		 */
+		$update_status = get_option( 'coursepress_update_course_date_status', 'need-patch' );
+		if ( 'done' == $update_status ) {
+			return;
+		}
+
+		$args = array(
+			'post_type' => 'course',
+			'post_status' => 'any',
+			'meta_key' => 'course_start_date',
+			'meta_compare' => 'NOT EXISTS',
+			'fields' => 'ids',
+			'posts_per_page' => 20,
 		);
-		/**
-		 * check MarketPress status
-		 */
-		$installed = CoursePress_Helper_Extension_MarketPress::installed();
-		if ( $installed ) {
-			$activated = CoursePress_Helper_Extension_MarketPress::activated();
-			if ( ! $activated ) {
-				$options['marketpress']['disabled'] = 'disabled';
-				$options['marketpress']['description'] = sprintf(
-					__( 'Please <a href="%s">activate</a> <b>%s</b> plugin first.', 'CP_TD' ),
-					esc_url_raw(
-						add_query_arg(
-							array(
-								'page' => 'coursepress_settings',
-								'tab' => 'extensions',
-							),
-							admin_url( 'admin.php' )
-						)
-					),
-					'MarketPress'
-				);
-			}
-		} else {
-			$options['marketpress']['disabled'] = 'disabled';
-			$options['marketpress']['description'] = sprintf(
-				__( 'Please <b>install</b> %s plugin first.', 'CP_TD' ),
-				'MarketPress'
-			);
-		}
-		/**
-		 * check WooCommerce status
-		 */
-		$installed = CoursePress_Helper_Extension_WooCommerce::installed();
-		if ( $installed ) {
-			$activated = CoursePress_Helper_Extension_WooCommerce::activated();
-			if ( ! $activated ) {
-				$options['woocommerce']['disabled'] = 'disabled';
-				$options['woocommerce']['description'] = sprintf(
-					__( 'Please <a href="%s#woocommerce">activate</a> <b>%s</b> plugin first.', 'CP_TD' ),
-					esc_url_raw(
-						add_query_arg(
-							array(
-								'plugin_status' => 'inactive',
-							),
-							admin_url( 'plugins.php' )
-						)
-					),
-					'WooCommerce'
-				);
-			}
-		} else {
-			$options['woocommerce']['disabled'] = 'disabled';
-			$options['woocommerce']['description'] = sprintf(
-				__( 'Please <b>install</b> %s plugin first.', 'CP_TD' ),
-				'WooCommerce'
-			);
-		}
-		return $options;
 
-	}
+		$ids = get_posts( $args );
 
-	/**
-	 * Function return selected payment option.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param array $options Array of options.
-	 *
-	 * @return string key of current option.
-	 */
-	public static function get_course_payment_options_selected_value( $options ) {
-		$selected = CoursePress_Core::get_setting( 'general/course_payment', 'none' );
-		// sanitize selected value
-		if (
-			! array_key_exists( $selected, $options )
-			|| (
-				isset( $options[ $selected ]['disabled'] )
-				&& 'disabled' == $options[ $selected ]['disabled']
-			)
-		) {
-			return 'none';
+		/**
+		 * whe all posts are updated, then stop doing it
+		 */
+		if ( empty( $ids ) ) {
+			add_option( 'coursepress_update_course_date_status', 'done' );
+			return;
 		}
-		return $selected;
+
+		foreach ( $ids as $course_id ) {
+			$start_date = CoursePress_Data_Course::get_setting( $course_id, 'course_start_date', true );
+			$start_date = intval( strtotime( $start_date ) );
+			update_post_meta( $course_id, 'course_start_date', $start_date );
+		}
 	}
 }

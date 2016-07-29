@@ -14,8 +14,8 @@ class CoursePress_Helper_UI {
 		$args['textbox_class'] = isset( $args['textbox_class'] ) ? sanitize_text_field( $args['textbox_class'] ) : 'medium';
 		$args['title'] = isset( $args['title'] ) ? sanitize_text_field( $args['title'] ) : '';
 		$args['value'] = isset( $args['value'] ) ? sanitize_text_field( $args['value'] ) : '';
-		$args['placeholder'] = isset( $args['placeholder'] ) ? sanitize_text_field( $args['placeholder'] ) : __( 'Add Media URL or Browse for Media', 'CP_TD' );
-		$args['button_text'] = isset( $args['button_text'] ) ? sanitize_text_field( $args['button_text'] ) : __( 'Browse', 'CP_TD' );
+		$args['placeholder'] = isset( $args['placeholder'] ) ? sanitize_text_field( $args['placeholder'] ) : __( 'Add Media URL or Browse for Media', 'cp' );
+		$args['button_text'] = isset( $args['button_text'] ) ? sanitize_text_field( $args['button_text'] ) : __( 'Browse', 'cp' );
 		$args['type'] = isset( $args['type'] ) ? sanitize_text_field( $args['type'] ) : 'image';
 		$args['invalid_message'] = isset( $args['invalid_message'] ) ? sanitize_text_field( $args['invalid_message'] ) : '';
 		$args['description'] = isset( $args['description'] ) ? sanitize_text_field( $args['description'] ) : '';
@@ -43,7 +43,7 @@ class CoursePress_Helper_UI {
 			</label>
 			<input class="' . $args['textbox_class'] . ' ' . $args['type'] . '_url" type="text" name="' . $name . '" id="' . $name . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" value="' . esc_attr( $args['value'] ) . '"/>
 			<input class="button browse-media-field" type="button" name="' . $name . '-button" value="' . esc_attr( $args['button_text'] ) . '"/>
-			<div class="invalid_extension_message">' . sprintf( esc_html__( 'Extension of the file is not valid. Please use one of the following: %s', 'CP_TD' ), $supported_extensions ) . '</div>
+			<div class="invalid_extension_message">' . sprintf( esc_html__( 'Extension of the file is not valid. Please use one of the following: %s', 'cp' ), $supported_extensions ) . '</div>
 		</div>';
 
 		return $content;
@@ -283,22 +283,15 @@ class CoursePress_Helper_UI {
 		$just_count = isset( $options['count'] ) ? $options['count'] : false;
 
 		$content = '';
-
+/**
+ * @todo: Remove this
 		$args = array(
 			'meta_key' => 'course_' . $course_id,
-			// 'meta_value' => $course_id,
+			'meta_value' => $course_id,
 			'meta_compare' => 'EXISTS',
-			'meta_query' => array(),
-			'include' => array(),
-			'exclude' => array(),
 			'orderby' => 'display_name',
 			'order' => 'ASC',
-			'offset' => '',
-			'search' => '',
-			'number' => '',
-			'count_total' => false,
 			'fields' => array( 'display_name', 'ID' ),
-			'who' => '',
 		);
 
 		if ( is_multisite() ) {
@@ -307,6 +300,12 @@ class CoursePress_Helper_UI {
 		}
 
 		$instructors = get_users( $args );
+**/
+
+		$instructors = CoursePress_Data_Course::get_setting( $course_id, 'instructors', array() );
+		$instructors = array_filter( $instructors );
+		$instructors = ! empty( $instructors ) ? array_map( 'get_userdata', $instructors ) : array();
+		$instructors = array_filter( $instructors );
 
 		if ( $just_count ) {
 			return count( $instructors );
@@ -323,13 +322,14 @@ class CoursePress_Helper_UI {
 
 			// Pending from invites
 			if ( $show_pending ) {
-				$instructor_invites = get_post_meta( $course_id, 'instructor_invites', true );
-				if ( $instructor_invites ) {
+				$instructor_invites = (array) get_post_meta( $course_id, 'instructor_invites', true );
+
+				if ( ! empty( $instructor_invites ) ) {
 					foreach ( $instructor_invites as $invite ) {
 						if ( $remove_buttons ) {
-							$content .= '<div class="instructor-avatar-holder pending-invite" id="instructor_holder_' . $invite['code'] . '"><div class="instructor-status">' . esc_html__( 'Pending', 'CP_TD' ) . '</div><div class="invite-remove"><a><span class="dashicons dashicons-dismiss"></span></a></div>' . get_avatar( $invite['email'], 80 ) . '<span class="instructor-name">' . $invite['first_name'] . ' ' . $invite['last_name'] . '</span></div>';
+							$content .= '<div class="instructor-avatar-holder pending-invite" id="instructor_holder_' . $invite['code'] . '"><div class="instructor-status">' . esc_html__( 'Pending', 'cp' ) . '</div><div class="invite-remove"><a><span class="dashicons dashicons-dismiss"></span></a></div>' . get_avatar( $invite['email'], 80 ) . '<span class="instructor-name">' . $invite['first_name'] . ' ' . $invite['last_name'] . '</span></div>';
 						} else {
-							$content .= '<div class="instructor-avatar-holder pending-invite" id="instructor_holder_' . $invite['code'] . '"><div class="instructor-status">' . esc_html__( 'Pending', 'CP_TD' ) . '</div>' . get_avatar( $invite['email'], 80 ) . '<span class="instructor-name">' . $invite['first_name'] . ' ' . $invite['last_name'] . '</span></div>';
+							$content .= '<div class="instructor-avatar-holder pending-invite" id="instructor_holder_' . $invite['code'] . '"><div class="instructor-status">' . esc_html__( 'Pending', 'cp' ) . '</div>' . get_avatar( $invite['email'], 80 ) . '<span class="instructor-name">' . $invite['first_name'] . ' ' . $invite['last_name'] . '</span></div>';
 						}
 					}
 				}
@@ -488,7 +488,7 @@ class CoursePress_Helper_UI {
 	 */
 	public static function get_admin_edit_title_field( $value, $label = '' ) {
 		if ( empty( $label ) ) {
-			$label = __( 'Enter title here.', 'CP_TD' );
+			$label = __( 'Enter title here.', 'cp' );
 		}
 		$content = '<div id="titlediv">';
 		$content .= '<div id="titlewrap">';
@@ -535,5 +535,232 @@ class CoursePress_Helper_UI {
 			}
 		}
 		return $settings;
+	}
+
+	/**
+	 * Get message if module is REQUIRED.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $error_message First line of message.
+	 * @return string Error message.
+	 */
+	public static function get_message_required_modules( $error_message ) {
+		$error_message .= PHP_EOL;
+		$error_message .= PHP_EOL;
+		$error_message .= __( 'Please press the Prev button on the left to continue.', 'cp' );
+		return wpautop( $error_message );
+	}
+
+	/*
+	 * Print admin notice.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $message Message to display.
+	 * @param string $class Class to add.
+	 */
+	public static function admin_notice( $message, $class = 'success' ) {
+		return sprintf(
+			'<div class="notice notice-%s is-dismissible">%s</div>',
+			esc_attr( $class ),
+			wpautop( $message )
+		);
+	}
+
+	/**
+	 * Add form field.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $name Field name.
+	 * @param string $value Field value, default empty string.
+	 * @param string $type Field type, default hidden.
+	 * @param string $id Field id, default empty string.
+	 * @param string $class Field class, default empty string.
+	 * @param boolean $echo Print field or return? Default print.
+	 * @return string/null Form field.
+	 */
+	public function add_form_field( $name, $value = '', $type = 'hidden', $id = '', $class = '', $echo = true ) {
+		$field = $tag = $options = '';
+		switch ( $type ) {
+			case 'hidden':
+				$tag = 'input';
+			break;
+		}
+		if ( empty( $tag ) ) {
+			return;
+		}
+		/**
+		 * id
+		 */
+		if ( ! empty( $id ) ) {
+			$options .= sprintf( ' id="%s"', esc_attr( $id ) );
+		}
+		/**
+		 * class
+		 */
+		if ( ! empty( $class ) ) {
+			$options .= sprintf( ' class="%s"', esc_attr( $class ) );
+		}
+		switch ( $tag ) {
+			case 'input':
+				$field = sprintf(
+					'<%s type="%s" name="%s" value="%s" %s/>',
+					$tag,
+					esc_attr( $type ),
+					esc_attr( $name ),
+					esc_attr( $value ),
+					$options
+				);
+			break;
+		}
+		if ( $echo ) {
+			echo $field;
+			return;
+		}
+			return $field;
+	}
+
+	public static function admin_paginate( $current, $total_items, $per_page = 20, $current_url = '', $type = 'student' ) {
+
+		$current_url = ! empty( $current_url ) ? $current_url : set_url_scheme( 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
+		$total_pages = ceil( $total_items / $per_page );
+		$page_links = array();
+
+		$total_pages_before = '<span class="paging-input">';
+		$total_pages_after  = '</span>';
+		$disable_first = $disable_last = $disable_prev = $disable_next = false;
+
+		if ( $current == 1 ) {
+			$disable_first = true;
+			$disable_prev = true;
+		}
+		if ( $current == 2 ) {
+			$disable_first = true;
+		}
+		if ( $current == $total_pages ) {
+			$disable_last = true;
+			$disable_next = true;
+		}
+		if ( $current == $total_pages - 1 ) {
+			$disable_last = true;
+		}
+
+		$output = '<span class="displaying-num">' . sprintf( _n( '%s %s', '%s %ss', $total_items ), number_format_i18n( $total_items ), $type ) . '</span>';
+
+		if ( $total_items <= $per_page ) { return sprintf( '<div class="tablenav-pages">%s</div>', $output ); }
+
+		if ( $disable_first ) {
+			$page_links[] = '<span class="tablenav-pages-navspan" aria-hidden="true">&laquo;</span>';
+		} else {
+			$page_links[] = sprintf( "<a class='first-page' href='%s' data-paged='1'><span class='screen-reader-text'>%s</span><span class='tablenav-pages-navspan' aria-hidden='true'>%s</span></a>",
+				esc_url( remove_query_arg( 'paged', $current_url ) ),
+				__( 'First page' ),
+				'&laquo;'
+			);
+		}
+
+		if ( $disable_prev ) {
+			$page_links[] = '<span class="tablenav-pages-navspan" aria-hidden="true">&lsaquo;</span>';
+		} else {
+			$page_number = max(1, $current-1);
+			$page_links[] = sprintf( "<a class='prev-page' href='%s' data-paged='%s'><span class='screen-reader-text'>%s</span><span class='tablenav-pages-navspan' aria-hidden='true'>%s</span></a>",
+				esc_url( add_query_arg( 'paged', $page_number, $current_url ) ),
+				$page_number,
+				__( 'Previous page' ),
+				'&lsaquo;'
+			);
+		}
+
+		$html_current_page = sprintf( "%s<input class='current-page' id='current-page-selector' type='text' name='paged' value='%s' size='%d' aria-describedby='table-paging' />",
+			'<label for="current-page-selector" class="screen-reader-text">' . __( 'Current Page' ) . '</label>',
+			$current,
+			strlen( $total_pages )
+		);
+
+		$html_total_pages = sprintf( "<span class='total-pages'>%s</span>", number_format_i18n( $total_pages ) );
+		$page_links[] = $total_pages_before . sprintf( _x( '%1$s of %2$s', 'paging' ), $html_current_page, $html_total_pages ) . $total_pages_after;
+
+		if ( $disable_next ) {
+			$page_links[] = '<span class="tablenav-pages-navspan" aria-hidden="true">&rsaquo;</span>';
+		} else {
+			$page_number = min( $total_pages, $current+1);
+			$page_links[] = sprintf( "<a class='next-page' href='%s' data-paged='%s'><span class='screen-reader-text'>%s</span><span class='tablenav-pages-navspan' aria-hidden='true'>%s</span></a>",
+				esc_url( add_query_arg( 'paged', $page_number, $current_url ) ),
+				$page_number,
+				__( 'Next page' ),
+				'&rsaquo;'
+			);
+		}
+
+		if ( $disable_last ) {
+			$page_links[] = '<span class="tablenav-pages-navspan" aria-hidden="true">&raquo;</span>';
+		} else {
+			$page_links[] = sprintf( "<a class='last-page' href='%s' data-paged='%s'><span class='screen-reader-text'>%s</span><span class='tablenav-pages-navspan' aria-hidden='true'>%s</span></a>",
+				esc_url( add_query_arg( 'paged', $total_pages, $current_url ) ),
+				$total_pages,
+				__( 'Last page' ),
+				'&raquo;'
+			);
+		}
+
+		$pagination_links_class = 'pagination-links';
+		$output .= "\n<span class='$pagination_links_class'>" . join( "\n", $page_links ) . '</span>';
+
+		if ( $total_pages ) {
+			$page_class = $total_pages < 2 ? ' one-page' : '';
+		} else {
+			$page_class = ' no-pages';
+		}
+		$output = "<div class='tablenav-pages{$page_class}'>$output</div>";
+
+		return $output;
+	}
+
+	public static function course_facilitator_avatars( $course_id ) {
+		$facilitators = CoursePress_Data_Facilitator::get_course_facilitators( $course_id, false );
+		$content = '';
+
+		if ( count( $facilitators ) > 0 ) {
+			$can_assigned_facilitator = CoursePress_Data_Capabilities::can_assign_facilitator( $course_id );
+
+			foreach ( $facilitators as $facilitator_id => $userdata ) {
+				$content .= '<div class="facilitator-avatar-holder" id="facilitator-'. $facilitator_id . '" data-id="'. $facilitator_id . '">';
+
+				if ( $can_assigned_facilitator ) {
+					$content .= '<div class="facilitator-remove"><a><span class="dashicons dashicons-dismiss"></span></a></div>';
+				}
+
+				$content .= get_avatar( $userdata->user_email, 80 );
+				$content .= sprintf( '<span class="facilitator-name">%s</span>', $userdata->display_name );
+
+				$content .= '</div>';
+			}
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Check redirect login to avoid 404 if non loged user has no access.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $url Page to check.
+	 * @return string redirect url
+	 */
+	public static function check_logout_redirect( $url = false ) {
+		if ( false === $url ) {
+			$url = esc_url( 'https://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] );
+		}
+		/**
+		 * remove dashboard from redirect url
+		 */
+		$dashbord = CoursePress_Core::get_slug( 'student_dashboard', false );
+		if ( false !== strpos( $url, $dashbord ) ) {
+			return site_url();
+		}
+		return $url;
 	}
 }

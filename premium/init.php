@@ -69,6 +69,13 @@ class CoursePressPro {
 			11
 		);
 
+		// This class should be moved to a different plugin (i.e. wp-academy)!
+		add_action(
+			'plugins_loaded',
+			array( 'CoursePressPro_Wpmudev', 'init' ),
+			11
+		);
+
 		// Include WPMUDev Dashboard.
 		$dash_notifications_file = self::$path . 'external/dashboard/wpmudev-dash-notification.php';
 

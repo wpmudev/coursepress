@@ -50,8 +50,8 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 	 ***************************************************************************/
 	public function __construct() {
 		parent::__construct( array(
-			'singular' => __( 'Student', 'CP_TD' ),
-			'plural' => __( 'Students', 'CP_TD' ),
+			'singular' => __( 'Student', 'cp' ),
+			'plural' => __( 'Students', 'cp' ),
 			'ajax' => false,// should this table support ajax?
 		) );
 
@@ -93,11 +93,12 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 		$course_id = isset( $_GET['id'] ) ? (int) $_GET['id'] : null;
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
-			'ID' => __( 'ID', 'CP_TD' ),
-			'display_name' => __( 'Username', 'CP_TD' ),
-			'first_name' => __( 'First Name', 'CP_TD' ),
-			'last_name' => __( 'Last Name', 'CP_TD' ),
-			'actions' => __( 'Withdraw', 'CP_TD' ),
+			'ID' => __( 'ID', 'cp' ),
+			'display_name' => __( 'Username', 'cp' ),
+			'first_name' => __( 'First Name', 'cp' ),
+			'last_name' => __( 'Last Name', 'cp' ),
+			'certificates' => __( 'Certified', 'cp' ),
+			'actions' => __( 'Withdraw', 'cp' ),
 		);
 
 		if ( ! CoursePress_Data_Capabilities::can_withdraw_students( $course_id ) ) {
@@ -170,8 +171,8 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 		);
 
 		$actions = array(
-			'profile' => sprintf( '<a href="%s">%s</a>', $profile_link, __( 'Student Profile', 'CP_TD' ) ),
-			'workbook' => sprintf( '<a href="%s">%s</a>', $workbook_link, __( 'Workbook', 'CP_TD' ) ),
+			'profile' => sprintf( '<a href="%s">%s</a>', $profile_link, __( 'Student Profile', 'cp' ) ),
+			'workbook' => sprintf( '<a href="%s">%s</a>', $workbook_link, __( 'Workbook', 'cp' ) ),
 		);
 
 		if ( current_user_can( 'edit_users' ) ) {
@@ -185,7 +186,7 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 						get_edit_user_link( $item->ID )
 					)
 				),
-				__( 'Edit User Profile', 'CP_TD' )
+				__( 'Edit User Profile', 'cp' )
 			);
 		}
 
@@ -258,16 +259,29 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 		}
 
 		// Could use the Course Model methods here, but lets try stick to one query
-		$users = new WP_User_Query(
-			array(
-				'meta_key' => $course_meta_key,
-				'meta_compare' => 'EXISTS',
-				'number' => $per_page,
-				'offset' => $offset,
-			)
+		$query_args = array(
+			'meta_key' => $course_meta_key,
+			'meta_compare' => 'EXISTS',
+			'number' => $per_page,
+			'offset' => $offset,
 		);
+		$usersearch = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : '';
 
-		$this->items = $users->get_results();
+		if ( ! empty( $usersearch ) ) {
+			$query_args['search'] = '*' . $usersearch . '*';
+		}
+
+		$users = new WP_User_Query( $query_args );
+
+		/**
+		 * fil certificates
+		 */
+		$certificates = CoursePress_Data_Certificate::get_certificated_students_by_course_id( $this->course_id );
+
+		foreach ( $users->get_results() as $one ) {
+			$one->data->certified = in_array( $one->ID, $certificates )? 'yes' : 'no';
+			$this->items[] = $one;
+		}
 
 		$total_items = $users->get_total();
 		$this->set_pagination_args(
@@ -291,33 +305,64 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 			$withdraw_nonce = wp_create_nonce( 'withdraw_all_students' );
 
 			if ( CoursePress_Data_Capabilities::can_assign_course_student( $course_id ) ) {
-				$name = 'student-add';
-				$id = 'student-add';
-				if ( apply_filters( 'coursepress_use_default_student_selector', true ) ) {
-					$user_selector = CoursePress_Helper_UI::get_user_dropdown(
-						$id,
-						$name,
-						array(
-							'placeholder' => __( 'Choose student...', 'CP_TD' ),
-							'class' => 'chosen-select narrow',
-							'exclude' => $this->students,
-							'context' => 'students',
-						)
-					);
+				$class_limited = CoursePress_Data_Course::get_setting( $course_id, 'class_limited' );
+				$class_limited = cp_is_true( $class_limited );
+				$add_form_to_add_student = false;
+				if ( $class_limited ) {
+					$class_size = (int) CoursePress_Data_Course::get_setting( $course_id, 'class_size' );
+					$total_items = count( $this->items );
+					if ( 0 === $class_size || $class_size > $total_items ) {
+						$add_form_to_add_student = true;
+					} else {
+						$add_form_to_add_student = false;
+						printf(
+							'<span>%s</span>',
+							__( 'You can not add a student, the class limit is reached.', 'cp' )
+						);
+					}
 				} else {
-					$user_selector = '<input type="text" id="' . $id .'" name="' . $name . '" placeholder="' . esc_attr__( 'Enter user ID', 'CP_TD' ) . '" />';
+					$add_form_to_add_student = true;
 				}
-
-				$user_selector = apply_filters( 'coursepress_student_selector', $user_selector, $id, $name );
-				echo $user_selector;
-			?>
-			<input type="button" class="add-new-student-button button" data-nonce="<?php echo $nonce; ?>" value="<?php esc_attr_e( 'Add Student', 'CP_TD' ); ?>" />
-			<?php
+				if ( $add_form_to_add_student ) {
+					$name = 'student-add';
+					$id = 'student-add';
+					if ( apply_filters( 'coursepress_use_default_student_selector', true ) ) {
+						$user_selector = CoursePress_Helper_UI::get_user_dropdown(
+							$id,
+							$name,
+							array(
+								'placeholder' => __( 'Choose student...', 'cp' ),
+								'class' => 'chosen-select narrow',
+								'exclude' => $this->students,
+								'context' => 'students',
+							)
+						);
+					} else if ( apply_filters( 'coursepress_use_select2_student_selector', false ) ) {
+						$nonce_search = CoursePress_View_Admin_Student::get_search_nonce_name( $course_id );
+						$nonce_search = wp_create_nonce( $nonce_search );
+						$user_selector = sprintf(
+							'<select name="%s" id="%s" data-nonce="%s" data-nonce-search="%s"></select>',
+							$name,
+							$id,
+							esc_attr( $nonce ),
+							esc_attr( $nonce_search )
+						);
+					} else {
+						$user_selector = '<input type="text" id="' . $id .'" name="' . $name . '" placeholder="' . esc_attr__( 'Enter user ID', 'cp' ) . '" />';
+					}
+					$user_selector = apply_filters( 'coursepress_student_selector', $user_selector, $id, $name );
+					echo $user_selector;
+					printf(
+						' <input type="button" class="add-new-student-button button" data-nonce="%s" value="%s" >',
+						esc_attr( $nonce ),
+						esc_attr__( 'Add Student', 'cp' )
+					);
+				}
 			}
 
 			if ( CoursePress_Data_Capabilities::can_withdraw_students( $course_id ) ) {
 			?>
-				<a class="withdraw-all-students" data-nonce="<?php echo $withdraw_nonce; ?>" href="#"><?php esc_html_e( 'Withdraw all students', 'CP_TD' ); ?></a>
+				<a class="withdraw-all-students" data-nonce="<?php echo $withdraw_nonce; ?>" href="#"><?php esc_html_e( 'Withdraw all students', 'cp' ); ?></a>
 			<?php
 			}
 			?>
@@ -333,9 +378,22 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 		$course_id = (int) $_GET['id'];
 
 		if ( CoursePress_Data_Capabilities::can_assign_course_student( $course_id ) || CoursePress_Data_Capabilities::can_invite_students( $course_id ) ) {
-			esc_html_e( 'There are no students enrolled in this course. Add them below.', 'CP_TD' );
+			esc_html_e( 'There are no students enrolled in this course. Add them below.', 'cp' );
 		} else {
-			esc_html_e( 'There are no students enrolled in this course.', 'CP_TD' );
+			esc_html_e( 'There are no students enrolled in this course.', 'cp' );
 		}
+	}
+
+	/**
+	 * Column contain number of certified students.
+	 *
+	 * @since 2.0.0
+	 */
+	public function column_certificates( $item ) {
+		$value = 'no';
+		if ( 'yes' == $item->data->certified ) {
+			$value = 'yes';
+		}
+		return sprintf( '<span class="dashicons dashicons-%s"></span>', $value );
 	}
 }

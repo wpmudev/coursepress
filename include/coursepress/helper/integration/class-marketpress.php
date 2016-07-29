@@ -33,22 +33,17 @@ class CoursePress_Helper_Integration_MarketPress {
 
 		// If MarketPress is not activated just exit.
 		if ( ! CoursePress_Helper_Extension_MarketPress::activated() ) {
-			return;
+			return false;
 		}
-
-		/**
-		 * check general Course Payment option
-		 */
-		$course_payments = CoursePress_Core::get_setting( 'general/course_payment', 'none' );
-		if ( 'marketpress' != $course_payments ) {
-			return;
+		if ( ! CoursePress_Core::get_setting( 'marketpress/enabled' ) ) {
+			return false;
 		}
 		self::$is_active = true;
 
 		// Enable Payment Support
 		add_filter(
 			'coursepress_payment_supported',
-			array( __CLASS__, 'is_active' )
+			array( __CLASS__, 'enable_payment' )
 		);
 
 		// Add additional fields to Course Setup Step 6 if paid is checked
@@ -127,7 +122,7 @@ class CoursePress_Helper_Integration_MarketPress {
 		);
 
 		/**
-		 * Enrol upon pay
+		 * Enroll upon pay
 		 *
 		 * Reference to order ID, will need to get the actual product using the MarketPress Order class
 		 */
@@ -348,38 +343,43 @@ class CoursePress_Helper_Integration_MarketPress {
 		}
 	}
 
+	public static function enable_payment( $payment_supported ) {
+		$payment_supported = true; // TODO: Should this be a setting??
+		return $payment_supported;
+	}
+
 	public static function product_settings( $content, $course_id ) {
 		// Prefix fields with meta_ to automatically add it to the course meta!
 		$mp_content = '
 			<div class="wide">
 				<label>' .
-					esc_html__( 'MarketPress Product Settings', 'CP_TD' ) .
+					esc_html__( 'MarketPress Product Settings', 'cp' ) .
 					'</label>
-				<p class="description">' . esc_html__( 'Your course will be a new product in MarketPress. Enter your course\'s payment settings below.', 'CP_TD' ) . '</p>
+				<p class="description">' . esc_html__( 'Your course will be a new product in MarketPress. Enter your course\'s payment settings below.', 'cp' ) . '</p>
 
 				<label class="normal required">
-					' . esc_html__( 'Full Price', 'CP_TD' ) . '
+					' . esc_html__( 'Full Price', 'cp' ) . '
 				</label>
 				<input type="text" name="meta_mp_product_price" value="' . CoursePress_Data_Course::get_setting( $course_id, 'mp_product_price', '' ) . '" />
 
 
 				<label class="normal">
-					' . esc_html__( 'Sale Price', 'CP_TD' ) . '
+					' . esc_html__( 'Sale Price', 'cp' ) . '
 				</label>
 				<input type="text" name="meta_mp_product_sale_price" value="' . CoursePress_Data_Course::get_setting( $course_id, 'mp_product_sale_price', '' ) . '" /><br >
 
 				<label class="checkbox narrow">
 					<input type="checkbox" name="meta_mp_sale_price_enabled" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'mp_sale_price_enabled', false ) ) . ' />
-					<span>' . esc_html__( 'Enable Sale Price', 'CP_TD' ) . '</span>
+					<span>' . esc_html__( 'Enable Sale Price', 'cp' ) . '</span>
 				</label>
 
 				<label class="normal">
-					<span> ' . esc_html__( 'Course SKU:', 'CP_TD' ) . '</span>
+					<span> ' . esc_html__( 'Course SKU:', 'cp' ) . '</span>
 				</label>
-				<input type="text" name="meta_mp_sku" placeholder="' . sprintf( __( 'e.g. %s0001', 'CP_TD' ), apply_filters( 'coursepress_course_sku_prefix', 'CP-' ) ) . '" value="' . CoursePress_Data_Course::get_setting( $course_id, 'mp_sku', '' ) . '" /><br >
+				<input type="text" name="meta_mp_sku" placeholder="' . sprintf( __( 'e.g. %s0001', 'cp' ), apply_filters( 'coursepress_course_sku_prefix', 'CP-' ) ) . '" value="' . CoursePress_Data_Course::get_setting( $course_id, 'mp_sku', '' ) . '" /><br >
 				<label class="checkbox narrow">
 					<input type="checkbox" name="meta_mp_auto_sku" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'mp_auto_sku', false ) ) . ' />
-					<span>' . esc_html__( 'Automatically generate Stock Keeping Units (SKUs)', 'CP_TD' ) . '</span>
+					<span>' . esc_html__( 'Automatically generate Stock Keeping Units (SKUs)', 'cp' ) . '</span>
 				</label>';
 
 		$product_id = self::get_product_id( $course_id );
@@ -387,7 +387,7 @@ class CoursePress_Helper_Integration_MarketPress {
 		if ( $product_id ) {
 			// Add MP product ID as indication.
 			$mp_content .= '
-				<label class="description">' . sprintf( __( 'MarketPress Product ID: %d', 'CP_TD' ), $product_id ) . '</label>
+				<label class="description">' . sprintf( __( 'MarketPress Product ID: %d', 'cp' ), $product_id ) . '</label>
 			';
 		}
 
@@ -753,7 +753,7 @@ class CoursePress_Helper_Integration_MarketPress {
 	}
 
 	/**
-	 * Allow to change enrol button
+	 * Allow to change enroll button
 	 *
 	 * @since 2.0.0
 	 *
@@ -834,7 +834,7 @@ class CoursePress_Helper_Integration_MarketPress {
 	 */
 	public static function order_notification_subject( $subject, $order ) {
 		if ( self::_get_order_course_id( $order->ID ) ) {
-			$subject = get_option( 'mp_order_email_subject', __( 'Order Confirmation', 'CP_TD' ) );
+			$subject = get_option( 'mp_order_email_subject', __( 'Order Confirmation', 'cp' ) );
 		}
 		/**
 		 * Allow to change email subject.
@@ -1009,16 +1009,16 @@ class CoursePress_Helper_Integration_MarketPress {
 		<script type="text/template" id="modal-view-mp-template" data-type="modal-step" data-modal-action="paid_enrollment">
 			<div class="bbm-modal__topbar">
 				<h3 class="bbm-modal__title">
-					<?php esc_html_e( 'Add Course to cart.', 'CP_TD' ); ?>
+					<?php esc_html_e( 'Add Course to cart.', 'cp' ); ?>
 				</h3>
 			</div>
 			<div class="bbm-modal__section">
-				<p><?php esc_html_e( 'You can now add this course to cart.', 'CP_TD' ); ?></p>
+				<p><?php esc_html_e( 'You can now add this course to cart.', 'cp' ); ?></p>
 				<p><?php printf(
 					'<a href="%s">%s</a>',
 					esc_url( get_permalink( $atts['course_id'] ) ),
 					sprintf(
-						esc_html__( 'Show course: %s', 'CP_TD' ),
+						esc_html__( 'Show course: %s', 'cp' ),
 						get_the_title( $atts['course_id'] )
 					)
 				); ?></p>
@@ -1066,7 +1066,7 @@ Please refer to your Order ID (ORDER_ID) whenever contacting us.
 You can track the latest status of your order here: ORDER_STATUS_URL
 
 Yours sincerely,
-%5$s Team', 'CP_TD' ), 'CUSTOMER_NAME', '<a href="COURSE_ADDRESS">COURSE_TITLE</a>', '<a href="STUDENT_DASHBOARD">' . __( 'Dashboard', 'CP_TD' ) . '</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', 'BLOG_NAME' );
+%5$s Team', 'cp' ), 'CUSTOMER_NAME', '<a href="COURSE_ADDRESS">COURSE_TITLE</a>', '<a href="STUDENT_DASHBOARD">' . __( 'Dashboard', 'cp' ) . '</a>', '<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>', 'BLOG_NAME' );
 
 		return get_option( 'mp_order_content_email', $default_mp_order_content_email );
 	}
@@ -1080,7 +1080,7 @@ Yours sincerely,
 	 * @param integer $student_id Student ID.
 	 * @param integer $course_id Course ID.
 	 *
-	 * @return boolean stop or not enrolment process?
+	 * @return boolean stop or not enrollment process?
 	 */
 	public static function allow_student_to_enroll( $enroll_student, $student_id, $course_id ) {
 		if ( ! self::$is_active ) {

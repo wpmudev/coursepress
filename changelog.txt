@@ -1,6 +1,6 @@
-Plugin Name: CoursePress Base
+Plugin Name: CoursePress Pro
 Author:      WPMU DEV (Irene, Marcin, Philipp, Marko, Jose, Rheinard)
-Build Time:  BUILDTIME
+Build Time:  2016-04-07T13:37:59.644Z
 
 CHANGELOG
 =================================================

@@ -8,8 +8,8 @@ class CoursePress_View_Admin_Communication_Notification {
 	private static $the_id = false;
 
 	public static function init() {
-		self::$title = __( 'Notifications', 'CP_TD' );
-		self::$menu_title = __( 'Notifications', 'CP_TD' );
+		self::$title = __( 'Notifications', 'cp' );
+		self::$menu_title = __( 'Notifications', 'cp' );
 
 		add_action( 'coursepress_admin_' . self::$slug, array( __CLASS__, 'render_page' ) );
 		add_filter( 'coursepress_admin_valid_pages', array( __CLASS__, 'add_valid' ) );
@@ -61,7 +61,7 @@ class CoursePress_View_Admin_Communication_Notification {
 			 */
 			if ( ! empty( $id ) ) {
 				if ( ! CoursePress_Data_Capabilities::can_update_notification( $id ) ) {
-					return __( 'You do not have permission to edit this notification.', 'CP_TD' );
+					return __( 'You do not have permission to edit this notification.', 'cp' );
 				}
 			}
 
@@ -105,24 +105,21 @@ class CoursePress_View_Admin_Communication_Notification {
 		if ( empty( $action ) ) {
 			$content .= CoursePress_Helper_UI::get_admin_page_title(
 				self::$menu_title,
-				__( 'New Notification', 'CP_TD' ),
+				__( 'New Notification', 'cp' ),
 				admin_url( 'admin.php?page=' . self::$slug . '&action=edit&id=new' ),
 				CoursePress_Data_Capabilities::can_add_notification( 0 )
 			);
 			$bulk_nonce = wp_create_nonce( 'bulk_action_nonce' );
 			$content .= '<div class="nonce-holder" data-nonce="' . $bulk_nonce . '"></div>';
-
 			ob_start();
-			echo '<form method="post" action="'. remove_query_arg( 'course_id' ) . '">';
 			$list_notification->display();
-			echo '</form>';
 			$content .= ob_get_clean();
 		} else {
 			switch ( $action ) {
 				case 'edit':
-					$title = __( 'Edit Notification', 'CP_TD' );
+					$title = __( 'Edit Notification', 'cp' );
 					if ( isset( $_GET['id'] ) && 'new' == $_GET['id'] ) {
-						$title = __( 'Add New Notification', 'CP_TD' );
+						$title = __( 'Add New Notification', 'cp' );
 					}
 					$content .= CoursePress_Helper_UI::get_admin_page_title( $title );
 					$post_type = CoursePress_Data_Notification::get_post_type_name();
@@ -175,7 +172,7 @@ class CoursePress_View_Admin_Communication_Notification {
 
 		if ( 'new' !== $the_id ) {
 			if ( ! CoursePress_Data_Capabilities::can_update_notification( $the_id ) ) {
-				return __( 'You do not have permission to edit this notification.', 'CP_TD' );
+				return __( 'You do not have permission to edit this notification.', 'cp' );
 			}
 			$post = get_post( $the_id );
 			$attributes = CoursePress_Data_Notification::attributes( $the_id );
@@ -185,7 +182,7 @@ class CoursePress_View_Admin_Communication_Notification {
 			$post_content = $post->post_content;
 		} else {
 			if ( ! CoursePress_Data_Capabilities::can_add_notification( 0 ) ) {
-				return __( 'You do not have permission to add notification.', 'CP_TD' );
+				return __( 'You do not have permission to add notification.', 'cp' );
 			}
 			$course_id = 'all';
 			$post_status = 'publish';
@@ -197,14 +194,14 @@ class CoursePress_View_Admin_Communication_Notification {
 		$options['value'] = $course_id;
 		if ( CoursePress_Data_Capabilities::can_add_notification_to_all() ) {
 			$options['first_option'] = array(
-				'text' => __( 'All courses', 'CP_TD' ),
+				'text' => __( 'All courses', 'cp' ),
 				'value' => 'all',
 			);
 			$courses = false;
 		} else {
 			$courses = self::get_courses();
 			if ( empty( $courses ) ) {
-				return __( 'You do not have permission to add notification.', 'CP_TD' );
+				return __( 'You do not have permission to add notification.', 'cp' );
 			}
 		}
 
@@ -212,7 +209,7 @@ class CoursePress_View_Admin_Communication_Notification {
 		$content .= wp_nonce_field( 'edit_notification', '_wpnonce', true, false );
 		$content .= CoursePress_Helper_UI::get_admin_edit_title_field(
 			$post_title,
-			__( 'Notification Title', 'CP_TD' )
+			__( 'Notification Title', 'cp' )
 		);
 
 		$editor_name = 'post_content';
@@ -246,7 +243,7 @@ class CoursePress_View_Admin_Communication_Notification {
 		$json_data['action'] = $action;
 
 		if ( empty( $data->action ) ) {
-			$json_data['message'] = __( 'Notification Update: No action.', 'CP_TD' );
+			$json_data['message'] = __( 'Notification Update: No action.', 'cp' );
 			wp_send_json_error( $json_data );
 		}
 
@@ -386,7 +383,7 @@ class CoursePress_View_Admin_Communication_Notification {
 	public static function load() {
 		CoursePress_Helper_UI::admin_per_page_add_options(
 			'notifications',
-			__( 'Notifications', 'CP_TD' )
+			__( 'Notifications', 'cp' )
 		);
 	}
 
@@ -404,7 +401,7 @@ class CoursePress_View_Admin_Communication_Notification {
 		$user_settings = CoursePress_Helper_UI::get_user_boxes_settings();
 		add_meta_box(
 			'submitdiv',
-			__( 'Save', 'CP_TD' ),
+			__( 'Save', 'cp' ),
 			array( __CLASS__, 'box_submitdiv' ),
 			CoursePress_Data_Notification::get_post_type_name(),
 			isset( $user_settings['submitdiv'] )? $user_settings['submitdiv'] : 'side',
@@ -412,7 +409,7 @@ class CoursePress_View_Admin_Communication_Notification {
 		);
 		add_meta_box(
 			'related_courses',
-			__( 'Related courses', 'CP_TD' ),
+			__( 'Related courses', 'cp' ),
 			array( __CLASS__, 'box_release_courses' ),
 			CoursePress_Data_Notification::get_post_type_name(),
 			isset( $user_settings['related_courses'] )? $user_settings['related_courses'] : 'side'
@@ -435,7 +432,7 @@ class CoursePress_View_Admin_Communication_Notification {
 			$course_id = 'all';
 		if ( 'new' !== $the_id ) {
 			if ( ! CoursePress_Data_Capabilities::can_update_notification( $the_id ) ) {
-				return __( 'You do not have permission to edit this notification.', 'CP_TD' );
+				return __( 'You do not have permission to edit this notification.', 'cp' );
 			}
 			$post = get_post( $the_id );
 			$attributes = CoursePress_Data_Notification::attributes( $the_id );
@@ -445,13 +442,13 @@ class CoursePress_View_Admin_Communication_Notification {
 		$options['value'] = $course_id;
 		if ( CoursePress_Data_Capabilities::can_add_notification_to_all() ) {
 			$options['first_option'] = array(
-				'text' => __( 'All courses', 'CP_TD' ),
+				'text' => __( 'All courses', 'cp' ),
 				'value' => 'all',
 			);
 		} else {
 			$options['courses'] = self::get_courses();
 			if ( empty( $options['courses'] ) ) {
-				return __( 'You do not have permission to add notification.', 'CP_TD' );
+				return __( 'You do not have permission to add notification.', 'cp' );
 			}
 		}
 		echo CoursePress_Helper_UI::get_course_dropdown( 'course_id', 'meta_course_id', false, $options );
@@ -468,7 +465,7 @@ class CoursePress_View_Admin_Communication_Notification {
 		echo '<div class="submitbox" id="submitpost"><div id="major-publishing-actions"><div id="publishing-action"><span class="spinner"></span>';
 		printf(
 			'<input type="submit" class="button button-primary" value="%s" />',
-			esc_attr__( 'Save Notification', 'CP_TD' )
+			esc_attr__( 'Save Notification', 'cp' )
 		);
 		echo '</div><div class="clear"></div></div></div>';
 	}

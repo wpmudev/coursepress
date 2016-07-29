@@ -8,7 +8,7 @@ class CoursePress_Template_Module {
 		$content = self::render_module_head( $module, $attributes );
 
 		// Content
-		$content .= '<div class="module-content">' . do_shortcode( $module->post_content ) . '</div>';
+		$content .= self::_wrap_content( $module->post_content );
 
 		$content .= '</div>'; // module_footer
 		return str_replace( array( "\n", "\r" ), '', $content );
@@ -24,8 +24,8 @@ class CoursePress_Template_Module {
 			$content .= '<h4 class="module-title">' . $module->post_title . '</h4>';
 		}
 
-		if ( $mandatory && 'input-quiz' != $attributes['module_type'] ) {
-			$content .= '<div class="is-mandatory">' . esc_html__( 'Mandatory', 'CP_TD' ) . '</div>';
+		if ( $mandatory ) {// && 'input-quiz' != $attributes['module_type'] ) {
+			$content .= '<div class="is-mandatory">' . esc_html__( 'Required', 'cp' ) . '</div>';
 		}
 
 		return $content;
@@ -211,13 +211,13 @@ class CoursePress_Template_Module {
 			$url = trailingslashit( home_url() ) . '?fdcpf=' . $url;
 
 			$link_text = isset( $attributes['link_text'] ) ? $attributes['link_text'] : $module->post_title;
-
-			$content .= '<div class="module-content">' . do_shortcode( $module->post_content ) . '
-					<div class="file_holder">
-						<a href="' . esc_url( $url ) . '">' . esc_html( $link_text ) . ' ' . CoursePress_Helper_Utility::filter_content( $filesize ) . '</a>
-					</div>
-				</div>
-			';
+			$after_content = sprintf(
+				'<div class="file_holder"><a href="%s">%s <span class="file-size">%s</span></a></div>',
+				esc_url( $url ),
+				esc_html( $link_text ),
+				CoursePress_Helper_Utility::filter_content( $filesize )
+			);
+			$content .= self::_wrap_content( $module->post_content, $after_content );
 		}
 
 		$content .= '</div>'; // module_footer
@@ -235,12 +235,12 @@ class CoursePress_Template_Module {
 			$url = trailingslashit( home_url() ) . '?oacpf=' . $url . '&module=' . $module->ID . '&file=' . $attributes['primary_file'];
 
 			$link_text = isset( $attributes['link_text'] ) ? $attributes['link_text'] : $module->post_title;
-			$content .= '<div class="module-content">' . do_shortcode( $module->post_content ) . '
-					<div class="zip_holder">
-						<a href="' . esc_url( $url ) . '">' . esc_html( $link_text ) . '</a>
-					</div>
-				</div>
-			';
+			$after_content = sprintf(
+				'<div class="zip_holder"><a href="%s">%s</a></div>',
+				esc_url( $url ),
+				esc_html( $link_text )
+			);
+			$content .= self::_wrap_content( $module->post_content, $after_content );
 		}
 
 		$content .= '</div>'; // module_footer
@@ -258,44 +258,13 @@ class CoursePress_Template_Module {
 		$content = self::render_module_head( $module, $attributes );
 
 		// Content
-		$content .= '<div class="module-content">' . do_shortcode( $module->post_content ) . '</div>';
+		$content .= self::_wrap_content( $module->post_content );
 
 		$content .= '<div id="comments" class="comments-area">';
+		$content .= '<div class="comments-list-container">' . CoursePress_Template_Discussion::get_comments( $module->ID ) . '</div>';
+		//      $content .= '<div class="comments-nav-container">' . CoursePress_Template_Discussion::get_comments_nav( $module->ID, $module->post_parent, 5 ) . '</div>';
 
-		if ( get_comments_number( $module->ID ) > 0 ) {
-
-			if ( 1 == get_comments_number( $module->ID ) ) {
-				/* translators: %s: post title */
-				$content .= sprintf( __( 'One response to %s', 'CP_TD' ), '&#8220;' . get_the_title( $module->ID ) . '&#8221;' );
-			} else {
-				/* translators: 1: number of comments, 2: post title */
-				$content .= sprintf( _n( '%1$s response to %2$s', '%1$s responses to %2$s', get_comments_number( $module->ID ), 'CP_TD' ),
-				number_format_i18n( get_comments_number( $module->ID ) ), '&#8220;' . get_the_title( $module->ID ) . '&#8221;' );
-			}
-		}
-
-		$comments = get_comments( array(
-			'post_id' => $module->ID,
-			'status' => 'all',// Change this to the type of comments to be displayed
-		) );
-
-		// Display the list of comments
-		$content .= '<ul class="comments-list">';
-		$content .= wp_list_comments( array(
-			'per_page' => 10, // Allow comment pagination
-			'reverse_top_level' => false, // Show the latest comments at the top of the list
-			'echo' => false,
-			'style' => 'ul',
-		), $comments );
-		$content .= '</ul>';
-
-		// add_filter( 'comment_post_redirect', array( __CLASS__, 'test2' ), 10, 2 );
-		ob_start();
-		comment_form( array(), $module->ID );
-		$content .= ob_get_clean();
-
-		$content .= '</div>'; // comments-area
-		$content .= '</div>'; // module_footer
+		$content .= '</div>';
 
 		return str_replace( array( "\n", "\r" ), '', $content );
 	}
@@ -340,7 +309,7 @@ class CoursePress_Template_Module {
 		$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id );
 
 		// Content
-		$content .= '<div class="module-content">' . do_shortcode( $module->post_content ) . '</div>';
+		$content .= self::_wrap_content( $module->post_content );
 
 		if ( ! empty( $attributes['answers'] ) ) {
 			$responses = CoursePress_Data_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
@@ -352,7 +321,7 @@ class CoursePress_Template_Module {
 			$disabled = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
 
 			// RESUBMIT LOGIC
-			$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit Answer', 'CP_TD' ) . '</a></div>' : '';
+			$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit Answer', 'cp' ) . '</a></div>' : '';
 
 			$disabled_attr = $disabled ? 'disabled="disabled"' : '';
 			$content .= '<div class="module-elements ' . $element_class . '">';
@@ -368,9 +337,9 @@ class CoursePress_Template_Module {
 			$oddeven = 'odd';
 			$alt = '';
 			foreach ( $attributes['answers'] as $key => $answer ) {
-				$content .= '<li class="' . $oddeven . ' ' . $alt . '">' .
+				$content .= '<li class="' . $oddeven . ' ' . $alt . '"><label>' .
 							'<input type="checkbox" value="' . esc_attr( $key ) . '" name="module-' . $module->ID . '" ' . $disabled_attr . ' /> ' . esc_html( $answer ) .
-							'</li>';
+							'</label></li>';
 				$oddeven = 'odd' === $oddeven ? 'even' : 'odd';
 				$alt = empty( $alt ) ? 'alt' : '';
 			}
@@ -448,20 +417,29 @@ class CoursePress_Template_Module {
 
 		$content .= '<div class="module-result">';
 
+		/**
+		 * grade
+		 */
+		$content .= '<div class="grade">';
 		if ( cp_is_true( $attributes['assessable'] ) ) {
-			if ( $grade > - 1 ) {
-				$content .= '<div class="grade"><strong>' . esc_html__( 'Grade:', 'CP_TD' ) . '</strong> ' . $grade . '%</div>';
-			} else {
-				$content .= '<div class="grade"><strong>' . esc_html__( 'Ungraded', 'CP_TD' ) . '</strong></div>';
+			if ( 'input-upload' == $attributes['module_type'] ) {
+				$content .= '<p>' . esc_html__( 'This file has been successfully uploaded. It will be part of your grade in this course.', 'cp' ) . '</p>';
 			}
-		} else {
-			$content .= '<div class="grade">' . esc_html__( 'Not assessable', 'CP_TD' ) . '</div>';
+			if ( $grade > - 1 ) {
+				$content .= '<p><strong>' . esc_html__( 'Grade:', 'cp' ) . '</strong> ' . $grade . '%</p>';
+			} else {
+				$content .= '<p><strong>' . esc_html__( 'Ungraded', 'cp' ) . '</strong></p>';
+			}
+		} elseif ( 'input-upload' == $attributes['module_type'] ) {
+			$content .= '<p>' . esc_html__( 'This file has been successfully uploaded. It will not be part of your grade in this course.', 'cp' ) . '</p>';
 		}
+		$content .= '</div>';
+
 		if ( ( $attributes['minimum_grade'] > $grade || ( ! cp_is_true( $attributes['assessable'] ) ) && $attributes['minimum_grade'] <= $grade ) && ! $disabled ) {
-			$content .= '<div class="resubmit"><a>' . esc_html__( 'Resubmit', 'CP_TD' ) . '</a></div>';
+			$content .= '<div class="resubmit"><a>' . esc_html__( 'Resubmit', 'cp' ) . '</a></div>';
 		}
 		if ( $feedback && ! empty( $feedback ) ) {
-			$content .= '<div class="feedback"><strong>' . esc_html__( 'Feedback:', 'CP_TD' ) . '</strong><br/> ' . $feedback . '</div>';
+			$content .= '<div class="feedback"><strong>' . esc_html__( 'Feedback:', 'cp' ) . '</strong><br/> ' . $feedback . '</div>';
 		}
 
 		$content .= '</div>';
@@ -478,7 +456,7 @@ class CoursePress_Template_Module {
 		$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id );
 
 		// Content
-		$content .= '<div class="module-content">' . do_shortcode( $module->post_content ) . '</div>';
+		$content .= self::_wrap_content( $module->post_content );
 
 		if ( ! empty( $attributes['answers'] ) ) {
 			$responses = CoursePress_Data_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
@@ -490,7 +468,7 @@ class CoursePress_Template_Module {
 			$disabled = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
 
 			// RESUBMIT LOGIC
-			$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit Answer', 'CP_TD' ) . '</a></div>' : '';
+			$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit Answer', 'cp' ) . '</a></div>' : '';
 
 			$disabled_attr = $disabled ? 'disabled="disabled"' : '';
 			$content .= '<div class="module-elements ' . $element_class . '">';
@@ -504,14 +482,14 @@ class CoursePress_Template_Module {
 			$content .= '<ul style="list-style: none;">';
 
 			// RESUBMIT LOGIC
-			$action = '<a class="module-submit-action">' . esc_html__( 'Submit Answer', 'CP_TD' ) . '</a>';
+			$action = '<a class="module-submit-action">' . esc_html__( 'Submit Answer', 'cp' ) . '</a>';
 
 			$oddeven = 'odd';
 			$alt = '';
 			foreach ( $attributes['answers'] as $key => $answer ) {
-				$content .= '<li class="' . $oddeven . ' ' . $alt . '">' .
+				$content .= '<li class="' . $oddeven . ' ' . $alt . '"><label>' .
 							'<input type="radio" value="' . esc_attr( $key ) . '" name="module-' . $module->ID . '" ' . $disabled_attr . ' /> ' . esc_html( $answer ) .
-							'</li>';
+							'</label></li>';
 
 				$oddeven = 'odd' === $oddeven ? 'even' : 'odd';
 				$alt = empty( $alt ) ? 'alt' : '';
@@ -580,7 +558,7 @@ class CoursePress_Template_Module {
 		$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id );
 
 		// Content.
-		$content .= '<div class="module-content">' . do_shortcode( $module->post_content ) . '</div>';
+		$content .= self::_wrap_content( $module->post_content );
 
 		if ( ! empty( $attributes['answers'] ) ) {
 
@@ -593,7 +571,7 @@ class CoursePress_Template_Module {
 			$disabled = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
 
 			// RESUBMIT LOGIC.
-			$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit Answer', 'CP_TD' ) . '</a></div>' : '';
+			$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit Answer', 'cp' ) . '</a></div>' : '';
 
 			$disabled_attr = $disabled ? 'disabled="disabled"' : '';
 			$content .= '<div class="module-elements ' . $element_class . '">';
@@ -644,7 +622,7 @@ class CoursePress_Template_Module {
 				}
 
 				$content .= '</ul>';
-				// $meh = '<p><span class="label">' . esc_html__( 'Response: ', 'CP_TD' ) . '</span>
+				// $meh = '<p><span class="label">' . esc_html__( 'Response: ', 'cp' ) . '</span>
 				// ' . $attributes['answers'][ (int) $last_response ] . '
 				// </p>';
 				$content .= '</div>';
@@ -677,7 +655,7 @@ class CoursePress_Template_Module {
 		$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id );
 
 		// Content
-		$content .= '<div class="module-content">' . do_shortcode( $module->post_content ) . '</div>';
+		$content .= self::_wrap_content( $module->post_content );
 
 		$responses = CoursePress_Data_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
 
@@ -688,7 +666,7 @@ class CoursePress_Template_Module {
 		$disabled = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
 
 		// RESUBMIT LOGIC
-		$action = ! $disabled ? '<a class="module-submit-action">' . esc_html__( 'Submit Answer', 'CP_TD' ) . '</a>' : '';
+		$action = ! $disabled ? '<a class="module-submit-action">' . esc_html__( 'Submit Answer', 'cp' ) . '</a>' : '';
 
 		$placeholder_text = get_post_meta( $module_id, 'placeholder_text', true );
 		$placeholder_text = ! empty( $placeholder_text ) ? $placeholder_text : '';
@@ -709,7 +687,7 @@ class CoursePress_Template_Module {
 			$response_key = array_pop( $response_key );
 
 			$content .= '<div class="module-response">
-				<p><span class="label">' . esc_html__( 'Response: ', 'CP_TD' ) . '</span>
+				<p><span class="label">' . esc_html__( 'Response: ', 'cp' ) . '</span>
 					' . $last_response . '
 				</p>
 			</div>';
@@ -741,7 +719,7 @@ class CoursePress_Template_Module {
 		$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id );
 
 		// Content
-		$content .= '<div class="module-content">' . do_shortcode( $module->post_content ) . '</div>';
+		$content .= self::_wrap_content( $module->post_content );
 
 		$responses = CoursePress_Data_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
 
@@ -752,7 +730,7 @@ class CoursePress_Template_Module {
 		$disabled = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
 
 		// RESUBMIT LOGIC
-		$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit Answer', 'CP_TD' ) . '</a></div>' : '';
+		$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit Answer', 'cp' ) . '</a></div>' : '';
 
 		$placeholder_text = get_post_meta( $module_id, 'placeholder_text', true );
 		$placeholder_text = ! empty( $placeholder_text ) ? $placeholder_text : '';
@@ -773,7 +751,7 @@ class CoursePress_Template_Module {
 			$response_key = array_pop( $response_key );
 
 			$content .= '<div class="module-response">
-				<p><span class="label">' . esc_html__( 'Response: ', 'CP_TD' ) . '</span>
+				<p><span class="label">' . esc_html__( 'Response: ', 'cp' ) . '</span>
 					' . $last_response . '
 				</p>
 			</div>';
@@ -805,7 +783,7 @@ class CoursePress_Template_Module {
 		$content = self::render_module_head( $module, $attributes );
 
 		// Content
-		$content .= '<div class="module-content">' . do_shortcode( $module->post_content ) . '</div>';
+		$content .= self::_wrap_content( $module->post_content );
 
 		$responses = CoursePress_Data_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
 
@@ -816,7 +794,7 @@ class CoursePress_Template_Module {
 		$disabled = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
 
 		// RESUBMIT LOGIC
-		$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit File', 'CP_TD' ) . '</a></div>' : '';
+		$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit File', 'cp' ) . '</a></div>' : '';
 
 		$disabled_attr = $disabled ? 'disabled="disabled"' : '';
 		$content .= '<div class="module-elements ' . $element_class . '">
@@ -856,7 +834,7 @@ class CoursePress_Template_Module {
 				$file_name = array_pop( $file_name );
 
 				$content .= '<div class="module-response">
-					<p class="file_holder"><span class="label">' . esc_html__( 'Uploaded file: ', 'CP_TD' ) . '</span>
+					<p class="file_holder"><span class="label">' . esc_html__( 'Uploaded file: ', 'cp' ) . '</span>
 						<a href="' . esc_url( $url ) . '">' . esc_html( $file_name ) . ' ' . CoursePress_Helper_Utility::filter_content( $filesize ) . '</a>
 					</p>
 				</div>';
@@ -902,7 +880,7 @@ class CoursePress_Template_Module {
 		$disabled = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
 
 		// Content
-		$content .= '<div class="module-content">' . do_shortcode( $module->post_content ) . '</div>';
+		$content .= self::_wrap_content( $module->post_content );
 
 		if ( ! empty( $attributes['questions'] ) && ! $already_passed && ! $disabled ) {
 
@@ -911,11 +889,19 @@ class CoursePress_Template_Module {
 
 			$unlimited = empty( $attributes['retry_attempts'] );
 			$remaining = ! $unlimited ? (int) $attributes['retry_attempts'] - ( $response_count - 1 ) : 0;
-			$remaining_message = ! $unlimited ? sprintf( __( 'You have %d attempts left.', 'CP_TD' ), $remaining ) : '';
-			$content .= ! empty( $responses ) && ! $already_passed ? '<div class="not-passed-message">' . sprintf( esc_html__( 'Your last attempt was unsuccessful. Try again. %s', 'CP_TD' ), $remaining_message ) . '</div>' : '';
+			$remaining_message = ! $unlimited ? sprintf( __( 'You have %d attempts left.', 'cp' ), $remaining ) : '';
+
+			if ( ! empty( $responses ) && ! $already_passed ) {
+				$remaining_message = sprintf( esc_html__( 'Your last attempt was unsuccessful. Try again. %s', 'cp' ), $remaining_message );
+
+				if ( ! $unlimited && 1 > $remaining ) {
+					$remaining_message = esc_html__( 'Your last attempt was unsuccessful. You can not try anymore.', 'cp' );
+				}
+				$content .= sprintf( '<div class="not-passed-message">%s</div>', $remaining_message );
+			}
 
 			// RESUBMIT LOGIC
-			$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit Answer', 'CP_TD' ) . '</a></div>' : '';
+			$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit Answer', 'cp' ) . '</a></div>' : '';
 
 			$disabled_attr = $disabled ? 'disabled="disabled"' : '';
 			$content .= '<div class="module-elements ' . $element_class . '">';
@@ -939,7 +925,7 @@ class CoursePress_Template_Module {
 			foreach ( $attributes['questions'] as $qi => $question ) {
 
 				$content .= '<div class="module-quiz-question question-' . $qi . '" data-type="' . $question['type'] . '">';
-				$content .= '<p class="question">' . $question['question'] . '</p>';
+				$content .= '<p class="question">' . esc_html( $question['question'] ) . '</p>';
 				foreach ( $question['options']['answers'] as $ai => $answer ) {
 					$type = 'checkbox';
 					switch ( $question['type'] ) {
@@ -950,8 +936,8 @@ class CoursePress_Template_Module {
 							$type = 'radio';
 							break;
 					}
-
-					$content .= '<input type="' . $type . '" name="question-' . $qi . '"><span>' . $answer . '</span><br />';
+					$answer = esc_html( $answer );
+					$content .= '<label><input type="' . $type . '" name="question-' . $qi . '"><span>' . $answer . '</span></label><br />';
 
 				}
 
@@ -959,7 +945,7 @@ class CoursePress_Template_Module {
 			}
 
 			// RESUBMIT LOGIC
-			$action = '<a class="module-submit-action">' . esc_html__( 'Submit Quiz Answers', 'CP_TD' ) . '</a>';
+			$action = '<a class="module-submit-action">' . esc_html__( 'Submit Quiz Answers', 'cp' ) . '</a>';
 			$content .= $action;
 
 			$content .= '</div>'; // module-quiz-questions
@@ -972,5 +958,24 @@ class CoursePress_Template_Module {
 
 		$content .= '</div>'; // module_footer
 		return str_replace( array( "\n", "\r" ), '', $content );
+	}
+
+	/**
+	 * Wrap Content by div, apply filter and shortcodes.
+	 *
+	 * @access private
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $content Content to wrap.
+	 * @param string $after_content String to paste after content, but before * wrapper.
+	 * @return string Wrapped and processed content.
+	 */
+	private static function _wrap_content( $content, $after_content = '' ) {
+		return sprintf(
+			'<div class="module-content">%s%s</div>',
+			do_shortcode( apply_filters( 'the_content', $content ) ),
+			$after_content
+		);
 	}
 }

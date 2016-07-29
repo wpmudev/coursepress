@@ -14,7 +14,7 @@ class CoursePress_View_Admin_Setting_MarketPress {
 		/**
 		 * do not run if integration is not active
 		 */
-		if ( ! CoursePress_Helper_Integration_MarketPress::is_active() ) {
+		if ( ! CoursePress_Helper_Extension_MarketPress::activated() ) {
 			return;
 		}
 
@@ -40,8 +40,8 @@ class CoursePress_View_Admin_Setting_MarketPress {
 
 	public static function add_tabs( $tabs ) {
 		$tabs['marketpress'] = array(
-			'title' => __( 'Course Payments', 'CP_TD' ),
-			'description' => __( 'Allow to integrate MarketPress to sell courses..', 'CP_TD' ),
+			'title' => __( 'MarketPress', 'cp' ),
+			'description' => __( 'Allow to integrate MarketPress to sell courses..', 'cp' ),
 			'order' => 69,
 		);
 
@@ -49,6 +49,7 @@ class CoursePress_View_Admin_Setting_MarketPress {
 	}
 
 	public static function return_content( $content, $slug, $tab ) {
+		$is_enabled = CoursePress_Core::get_setting( 'marketpress/enabled', false );
 		$use_redirect = CoursePress_Core::get_setting( 'marketpress/redirect', false );
 		$unpaid = CoursePress_Core::get_setting( 'marketpress/unpaid', 'change_status' );
 		$delete = CoursePress_Core::get_setting( 'marketpress/delete', 'change_status' );
@@ -65,46 +66,58 @@ class CoursePress_View_Admin_Setting_MarketPress {
 					<tr>
 						<td><label>
 							<input type="checkbox"
+								<?php checked( cp_is_true( $is_enabled ) ); ?>
+								name="coursepress_settings[marketpress][enabled]"
+								class="certificate_enabled"
+								value="1" />
+							<?php esc_html_e( 'Use MarketPress to sell courses', 'cp' ); ?>
+						</label>
+						<p class="description"><?php _e( 'If checked, MarketPress will be use instead of the MarketPress for selling courses', 'cp' ) ?></p>
+</td>
+					</tr>
+					<tr>
+						<td><label>
+							<input type="checkbox"
 								<?php checked( cp_is_true( $use_redirect ) ); ?>
 								name="coursepress_settings[marketpress][redirect]"
 								class="certificate_enabled"
 								value="1" />
-							<?php esc_html_e( 'Redirect MarketPress product post to a parent course post', 'CP_TD' ); ?>
+							<?php esc_html_e( 'Redirect MarketPress product post to a parent course post', 'cp' ); ?>
 						</label>
-							<p class="description"><?php _e( 'If checked, visitors who try to access MarketPress single post will be automatically redirected to a parent course single post.', 'CP_TD' ) ?></p>
+							<p class="description"><?php _e( 'If checked, visitors who try to access MarketPress single post will be automatically redirected to a parent course single post.', 'cp' ) ?></p>
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<h3><?php esc_html_e( 'When the course becomes unpaid, then:', 'CP_TD' ); ?></h3>
+							<h3><?php esc_html_e( 'When the course becomes unpaid, then:', 'cp' ); ?></h3>
 							<ul>
 								<li><label><input type="radio"
 									<?php checked( $unpaid, 'change_status' ); ?>
 									name="coursepress_settings[marketpress][unpaid]"
 									class="certificate_enabled"
-									value="change_status" /> <?php esc_html_e( 'Change to draft related MarketPress product.', 'CP_TD' ); ?></label></li>
+									value="change_status" /> <?php esc_html_e( 'Change to draft related MarketPress product.', 'cp' ); ?></label></li>
 								<li><label><input type="radio"
 									<?php checked( $unpaid, 'delete' ); ?>
 									name="coursepress_settings[marketpress][unpaid]"
 									class="certificate_enabled"
-									value="delete" /> <?php esc_html_e( 'Delete related MarketPress product.', 'CP_TD' ); ?></label></li>
+									value="delete" /> <?php esc_html_e( 'Delete related MarketPress product.', 'cp' ); ?></label></li>
 							</ul>
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<h3><?php esc_html_e( 'When the course is deleted, then:', 'CP_TD' ); ?></h3>
+							<h3><?php esc_html_e( 'When the course is deleted, then:', 'cp' ); ?></h3>
 							<ul>
 								<li><label><input type="radio"
 									<?php checked( $delete, 'change_status' ); ?>
 									name="coursepress_settings[marketpress][delete]"
 									class="certificate_enabled"
-									value="change_status" /> <?php esc_html_e( 'Change to draft related MarketPress product.', 'CP_TD' ); ?></label></li>
+									value="change_status" /> <?php esc_html_e( 'Change to draft related MarketPress product.', 'cp' ); ?></label></li>
 								<li><label><input type="radio"
 									<?php checked( $delete, 'delete' ); ?>
 									name="coursepress_settings[marketpress][delete]"
 									class="certificate_enabled"
-									value="delete" /> <?php esc_html_e( 'Delete related MarketPress product.', 'CP_TD' ); ?></label></li>
+									value="delete" /> <?php esc_html_e( 'Delete related MarketPress product.', 'cp' ); ?></label></li>
 							</ul>
 						</td>
 					</tr>

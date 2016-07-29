@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: CoursePress Base
+ * Plugin Name: CoursePress Pro
  * Version:     2.0.0-BETA3
- * Description: CoursePress Base turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also assess student work, sell your courses and much much more.
+ * Description: CoursePress Pro turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also assess student work, sell your courses and much much more.
  * Author:      WPMU DEV
  * Author URI:  http://premium.wpmudev.org
  * Plugin URI:  http://premium.wpmudev.org/project/coursepress/
@@ -10,7 +10,7 @@
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * TextDomain:  cp
  * Domain Path: /language/
- * Build Time:  BUILDTIME
+ * Build Time:  2016-04-07T13:37:59.644Z
  * WDP ID:      913071
  *
  * @package CoursePress
@@ -56,14 +56,14 @@ class CoursePress {
 	 *
 	 * @var string
 	 */
-	public static $version = '2.0.0-BETA3';
+	public static $version = '2.0.0-BETA3.1.146778832111';
 
 	/**
 	 * Plugin name, this reflects the Pro/Standard version.
 	 *
 	 * @var string
 	 */
-	public static $name = 'CoursePress Base'; // Translated by grunt.
+	public static $name = 'CoursePress Pro'; // Translated by grunt.
 
 	/**
 	 * Absolut path to this file (main plugin file).
@@ -125,6 +125,11 @@ class CoursePress {
 		 */
 		register_activation_hook( __FILE__, array( __CLASS__, 'register_activation_hook' ) );
 
+		/**
+		 * Clean up when this plugin is deactivated.
+		 **/
+		register_deactivation_hook( __FILE__, array( __CLASS__, 'deactivate_coursepress' ) );
+
 	}
 
 	/**
@@ -152,7 +157,7 @@ class CoursePress {
 				'namespace_folder' => 'include/coursepress', // Base folder for classes.
 				'filename_prefix' => 'class-',               // Prefix filenames.
 			),
-			'CP_TCPDF' => array(
+			'TCPDF' => array(
 				'namespace_folder' => 'include/tcpdf', // Base folder for classes.
 				'filename_prefix' => false,            // No prefix for filenames.
 			),
@@ -204,15 +209,43 @@ class CoursePress {
 			} // End of namespace condition.
 		} // End of foreach loop.
 
-		return false;
+		// Check new location
+		$class_path = explode( '_', strtolower( $class ) );
+		$namespace = array_shift( $class_path );
+
+		if ( 'coursepress' == $namespace ) {
+			$class_filename = array_pop( $class_path );
+			$class_location = implode( DIRECTORY_SEPARATOR, $class_path );
+			$class_filename = self::$path . $class_location . DIRECTORY_SEPARATOR . 'class-' . $class_filename . '.php';
+
+			if ( is_readable( $class_filename ) ) {
+				include_once $class_filename;
+				return true;
+			}
+		}
 	}
 
 	/**
-	 * Redirect to Guide page semaphore.
+	 * Redirect to Guide page semaphore and reset schedule.
 	 *
 	 * @since 2.0.0
 	 */
 	public static function register_activation_hook() {
 		add_option( 'coursepress_activate', true );
+
+		// Reset the schedule during activation.
+		wp_clear_scheduled_hook( 'coursepress_schedule-email_task' );
+	}
+
+	/**
+	 * Clean up.
+	 *
+	 * @since 2.0.0
+	 **/
+	public static function deactivate_coursepress() {
+		delete_option( 'coursepress_activate' );
+
+		// Reset the schedule during deactivation.
+		wp_clear_scheduled_hook( 'coursepress_schedule-email_task' );
 	}
 }

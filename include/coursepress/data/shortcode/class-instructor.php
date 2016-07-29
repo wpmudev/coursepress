@@ -64,14 +64,14 @@ class CoursePress_Data_Shortcode_Instructor {
 
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
-			'label' => __( 'Instructor', 'CP_TD' ),
-			'label_plural' => __( 'Instructors', 'CP_TD' ),
+			'label' => __( 'Instructor', 'cp' ),
+			'label_plural' => __( 'Instructors', 'cp' ),
 			'label_delimeter' => ':&nbsp;',
 			'label_tag' => '',
 			'count' => false, // Deprecated.
 			'list' => false, // Deprecated.
 			'link' => false,
-			'link_text' => __( 'View Full Profile', 'CP_TD' ),
+			'link_text' => __( 'View Full Profile', 'cp' ),
 			'show_label' => 'no', // Yes, no.
 			'summary_length' => 50,
 			'style' => 'block', // List, list-flat, block, count.
@@ -95,7 +95,6 @@ class CoursePress_Data_Shortcode_Instructor {
 		$show_label = cp_is_true( sanitize_text_field( $show_label ) );
 		$summary_length = (int) $summary_length;
 		$style = sanitize_html_class( $style );
-		$list_separator = sanitize_text_field( $list_separator );
 		$avatar_size = (int) $avatar_size;
 		$avatar_position = sanitize_text_field( $avatar_position );
 		$show_divider = cp_is_true( sanitize_html_class( $show_divider ) );

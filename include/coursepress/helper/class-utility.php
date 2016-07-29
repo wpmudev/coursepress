@@ -64,6 +64,7 @@ class CoursePress_Helper_Utility {
 	// Sort multi-dimension arrays on 'order' value.
 	public static function sort_on_key( $array, $sort_key, $sort_asc = true ) {
 		self::$sort_key = $sort_key;
+
 		if ( ! $sort_asc ) {
 			uasort( $array, array( __CLASS__, 'sort_desc' ) );
 		} else {
@@ -75,12 +76,6 @@ class CoursePress_Helper_Utility {
 
 	// uasort callback to sort ascending.
 	public static function sort_asc( $x, $y ) {
-		/**
-		 * if key do not exists, do not sort
-		 */
-		if ( ! isset( $x[ self::$sort_key ] ) || ! isset( $y[ self::$sort_key ] ) ) {
-			return 0;
-		}
 		if ( $x[ self::$sort_key ] == $y[ self::$sort_key ] ) {
 			return 0;
 		} else if ( $x[ self::$sort_key ] < $y[ self::$sort_key ] ) {
@@ -92,12 +87,6 @@ class CoursePress_Helper_Utility {
 
 	// uasort callback to sort descending.
 	public static function sort_desc( $x, $y ) {
-		/**
-		 * if key do not exists, do not sort
-		 */
-		if ( ! isset( $x[ self::$sort_key ] ) || ! isset( $y[ self::$sort_key ] ) ) {
-			return 0;
-		}
 		if ( $x[ self::$sort_key ] == $y[ self::$sort_key ] ) {
 			return 0;
 		} else if ( $x[ self::$sort_key ] > $y[ self::$sort_key ] ) {
@@ -594,15 +583,6 @@ class CoursePress_Helper_Utility {
 		$requested_file_obj = wp_check_filetype( $requested_file );
 		$filename = basename( $requested_file );
 
-		header( 'Pragma: public' );
-		header( 'Expires: 0' );
-		header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
-		header( 'Cache-Control: private', false );
-		header( 'Content-Type: ' . $requested_file_obj['type'] );
-		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
-		header( 'Content-Transfer-Encoding: binary' );
-		header( 'Connection: close' );
-
 		/**
 		 * Filter used to alter header params. E.g. removing 'timeout'.
 		 */
@@ -614,7 +594,24 @@ class CoursePress_Helper_Utility {
 			)
 		);
 
-		echo wp_remote_retrieve_body( wp_remote_get( $requested_file ), $force_download_parameters );
+		$body = wp_remote_retrieve_body( wp_remote_get( $requested_file ), $force_download_parameters );
+		if ( empty( $body ) && preg_match( '/^https/', $requested_file ) ) {
+			$requested_file = preg_replace( '/^https/', 'http', $requested_file );
+			$body = wp_remote_retrieve_body( wp_remote_get( $requested_file ), $force_download_parameters );
+		}
+		if ( ! empty( $body ) ) {
+			header( 'Pragma: public' );
+			header( 'Expires: 0' );
+			header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
+			header( 'Cache-Control: private', false );
+			header( 'Content-Type: ' . $requested_file_obj['type'] );
+			header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+			header( 'Content-Transfer-Encoding: binary' );
+			header( 'Connection: close' );
+			echo $body;
+		} else {
+			_e( 'Something went wrong.', 'cp' );
+		}
 		exit();
 	}
 
@@ -660,7 +657,7 @@ class CoursePress_Helper_Utility {
 				$unzipfile = unzip_file( $src_path, $object_dir );
 			}
 
-			echo '<a href="' . esc_url_raw( wp_get_referer() ) . $append_url . '" style="padding: 5px; font-size: 12px; text-decoration: none; opacity: 0.3; background: #3C3C3C; color: #fff; font-family: helvetica, sans-serif; position: absolute; top: 2; left: 2;"> &laquo; ' . esc_html__( 'Back to Course', 'CP_TD' ) . '</a>';
+			echo '<a href="' . esc_url_raw( wp_get_referer() ) . $append_url . '" style="padding: 5px; font-size: 12px; text-decoration: none; opacity: 0.3; background: #3C3C3C; color: #fff; font-family: helvetica, sans-serif; position: absolute; top: 2; left: 2;"> &laquo; ' . esc_html__( 'Back to Course', 'cp' ) . '</a>';
 			echo '<iframe style="margin:0; padding:0; border:none; width: 100%; height: 100vh;" src="' .$file_url . '"></iframe>';
 			exit();
 		}
@@ -674,6 +671,12 @@ class CoursePress_Helper_Utility {
 			if ( strlen( preg_replace( '/<.*?>/', '', $text ) ) <= $length ) {
 				return $text;
 			}
+
+			/**
+			 * add space before HTML end line, to avoid caoncatantion of two
+			 * sentences without space between.
+			 */
+			$text = preg_replace( '@(<\/p>|<br)@', " $1", $text );
 
 			// splits all html-tags to scanable lines.
 			preg_match_all( '/(<.+?>)?([^<>]*)/s', $text, $lines, PREG_SET_ORDER );
@@ -855,21 +858,9 @@ class CoursePress_Helper_Utility {
 	}
 
 	public static function the_course( $id_only = false ) {
-		if ( is_singular() ) {
-			global $post;
-			$post_type = CoursePress_Data_Course::get_post_type_name();
-			if ( $post_type == $post->post_type ) {
-				if ( $id_only ) {
-					return $post->ID;
-				}
-				return $post;
-			}
-		}
 		$id = CoursePress_Data_Course::last_course_id();
 
-		if ( empty( $id ) ) {
-			return '';
-		}
+		if ( empty( $id ) ) { return ''; }
 
 		if ( $id_only ) {
 			return $id;
@@ -1122,5 +1113,13 @@ class CoursePress_Helper_Utility {
 		}
 
 		return str_replace( $keys, $values, $content );
+	}
+
+	public static function serialize_key( $key, $value ) {
+		$meta = maybe_serialize( array( $key => $value ) );
+		$start = strpos( $meta, '{' ) + 1;
+		$end = strpos( $meta, ';}' ) -4;
+
+		return substr( $meta, $start, $end );
 	}
 }

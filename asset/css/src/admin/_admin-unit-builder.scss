@@ -1,3 +1,4 @@
+@import 'colors';
 
 // Loading message...
 #unit-builder .loading {
@@ -35,7 +36,7 @@
 }
 
 .coursepress-ub-tab.unit-live:after {
-  background: none repeat scroll 0 0 #6bbb1a;
+  background: none repeat scroll 0 0 $colorGreen;
   border: 1px solid #61a31e;
 }
 
@@ -230,11 +231,11 @@
 
       ul li {
         height: 2.4em;
-        padding-top: 0.5em;
+        padding: 0.5em 10px 0 10px;
         position: relative;
         text-align: center;
         top: 2px;
-        width: 2.4em;
+        min-width: 2.4em;
         font-weight: bold;
         border: 1px solid #A6B1BB;
         box-sizing: border-box;
@@ -454,19 +455,13 @@
 
       }
 
-      // Duration
-      label.module-duration {
-        position: absolute;
-        right: 18px;
-        top: 4px;
-      }
-
       // Cluster
       label.module-show-title,
       label.module-mandatory,
       label.module-assessable,
       label.module-allow-retries,
       label.module-minimum-grade,
+      label.module-duration,
       label.module-use-timer {
         width: 32%;
 
@@ -496,6 +491,13 @@
       // Assessable Checkbox
       label.module-assessable {
 
+      }
+      label.module-assessable-2 {
+        display: block;
+        margin-top: 10px;
+        .description {
+          display: block;
+        }
       }
 
       // Minimum Grade
@@ -619,5 +621,42 @@
   }
 
 }
+
+.unit-builder-modules {
+  .module-header,
+  .module-components {
+    .label,
+    .description {
+      margin-bottom: 5px;
+    }
+    label {
+      margin-bottom: 10px;
+    }
+  }
+  .module-header {
+    label.module-show-title {
+        float: right;
+        width: auto;
+        margin-bottom: -45px;
+        z-index: 1;
+        position: relative;
+    }
+    lable.module-duration {
+      	position: relative;
+        right: 0;
+        input[type="text"] {
+          	max-width: 150px;
+            display: block;
+        }
+    }
+  }
+}
+.discussion .module-duration,
+.discussion .module-assessable,
+.text .module-duration,
+.video .module-duration {
+  display: none;
+}
+
 
 

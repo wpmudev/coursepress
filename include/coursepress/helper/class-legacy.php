@@ -7,6 +7,39 @@
 
 class CoursePress_Helper_Legacy {
 	public static function init() {
+		// SEt course meta key
+		add_action( 'shutdown', array( __CLASS__, 'reset_course_metas' ) );
+	}
+
+	/**
+	 * Updates old courses meta
+	 **/
+	public static function reset_course_metas() {
+
+		// Check marker
+		$meta_updated = get_option( 'cp_courses_meta_updated' );
+
+		if ( empty( $meta_updated ) ) {
+			$courses = get_posts(
+				array(
+					'post_type' => CoursePress_Data_Course::get_post_type_name(),
+					'meta_key' => 'cp_updated_meta1d',
+					'meta_compare' => 'NOT EXISTS',
+					'fields' => 'ids',
+					'suppress_filtes' => true,
+				)
+			);
+	
+			if ( ! empty( $courses ) ) {
+				foreach ( $courses as $course_id ) {
+					$old_settings = CoursePress_Data_Course::get_setting( $course_id );
+					CoursePress_Data_Course::update_setting( $course_id, true, $old_settings );
+					update_post_meta( $course_id, 'cp_updated_meta1d', true );
+				}
+			} else {
+				update_option( 'cp_courses_meta_updated', true );
+			}
+		}
 	}
 }
 
@@ -316,7 +349,7 @@ if ( ! function_exists( 'cp_instructors_drop_down' ) ) {
 		);
 
 		$content = '';
-		$content .= '<select name="instructors" id="instructors" data-placeholder="' . __( 'Choose a Course Instructor...', 'CP_TD' ) . '" class="' . $class . '">';
+		$content .= '<select name="instructors" id="instructors" data-placeholder="' . __( 'Choose a Course Instructor...', 'cp' ) . '" class="' . $class . '">';
 
 		$args = array(
 			//'role' => 'instructor',
@@ -366,7 +399,7 @@ if ( ! function_exists( 'cp_students_drop_down' ) ) {
 			'2.0'
 		);
 		$content = '';
-		$content .= '<select name="students" data-placeholder="' . __( 'Choose a Student...', 'CP_TD' ) . '" class="chosen-select">';
+		$content .= '<select name="students" data-placeholder="' . __( 'Choose a Student...', 'cp' ) . '" class="chosen-select">';
 
 		$args = array(
 			'role' => '',

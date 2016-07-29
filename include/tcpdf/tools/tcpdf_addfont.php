@@ -134,7 +134,7 @@ if (!is_array($argv)) {
 }
 
 // initialize the array of options
-$options = array('type'=>'', 'enc'=>'', 'flags'=>32, 'outpath'=>CP_K_PATH_FONTS, 'platid'=>3, 'encid'=>1, 'addcbbox'=>false, 'link'=>false);
+$options = array('type'=>'', 'enc'=>'', 'flags'=>32, 'outpath'=>K_PATH_FONTS, 'platid'=>3, 'encid'=>1, 'addcbbox'=>false, 'link'=>false);
 
 // short input options
 $sopt = '';
@@ -247,7 +247,7 @@ $errors = false;
 
 foreach ($options['fonts'] as $font) {
 	$fontfile = realpath($font);
-	$fontname = CP_TCPDF_FONTS::addTTFfont($fontfile, $options['type'], $options['enc'], $options['flags'], $options['outpath'], $options['platid'], $options['encid'], $options['addcbbox'], $options['link']);
+	$fontname = TCPDF_FONTS::addTTFfont($fontfile, $options['type'], $options['enc'], $options['flags'], $options['outpath'], $options['platid'], $options['encid'], $options['addcbbox'], $options['link']);
 	if ($fontname === false) {
 		$errors = true;
 		echo "--- ERROR: can't add ".$font."\n";

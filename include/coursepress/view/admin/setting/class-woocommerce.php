@@ -11,9 +11,6 @@
 class CoursePress_View_Admin_Setting_WooCommerce {
 
 	public static function init() {
-		/**
-		 * do not run if integration is not active
-		 */
 		if ( ! CoursePress_Helper_Integration_WooCommerce::is_active() ) {
 			return;
 		}
@@ -40,8 +37,8 @@ class CoursePress_View_Admin_Setting_WooCommerce {
 
 	public static function add_tabs( $tabs ) {
 		$tabs['woocommerce'] = array(
-			'title' => __( 'Course Payments', 'CP_TD' ),
-			'description' => __( 'Allow to integrate WooCommerce to sell courses.', 'CP_TD' ),
+			'title' => __( 'WooCommerce', 'cp' ),
+			'description' => __( 'Allow to integrate WooCommerce to sell courses.', 'cp' ),
 			'order' => 69,
 		);
 
@@ -49,6 +46,7 @@ class CoursePress_View_Admin_Setting_WooCommerce {
 	}
 
 	public static function return_content( $content, $slug, $tab ) {
+		$is_enabled = CoursePress_Core::get_setting( 'woocommerce/enabled', false );
 		$use_redirect = CoursePress_Core::get_setting( 'woocommerce/redirect', false );
 		$unpaid = CoursePress_Core::get_setting( 'woocommerce/unpaid', 'change_status' );
 		$delete = CoursePress_Core::get_setting( 'woocommerce/delete', 'change_status' );
@@ -65,46 +63,58 @@ class CoursePress_View_Admin_Setting_WooCommerce {
 					<tr>
 						<td><label>
 							<input type="checkbox"
+								<?php checked( cp_is_true( $is_enabled ) ); ?>
+								name="coursepress_settings[woocommerce][enabled]"
+								class="certificate_enabled"
+								value="1" />
+							<?php esc_html_e( 'Use WooCommerce to sell courses', 'cp' ); ?>
+						</label>
+						<p class="description"><?php _e( 'If checked, WooCommerce will be use instead of the MarketPress for selling courses', 'cp' ) ?></p>
+						</td>
+					</tr>
+					<tr>
+						<td><label>
+							<input type="checkbox"
 								<?php checked( cp_is_true( $use_redirect ) ); ?>
 								name="coursepress_settings[woocommerce][redirect]"
 								class="certificate_enabled"
 								value="1" />
-							<?php esc_html_e( 'Redirect WooCommerce product post to a parent course post', 'CP_TD' ); ?>
+							<?php esc_html_e( 'Redirect WooCommerce product post to a parent course post', 'cp' ); ?>
 						</label>
-							<p class="description"><?php _e( 'If checked, visitors who try to access WooCommerce single post will be automatically redirected to a parent course single post.', 'CP_TD' ) ?></p>
+							<p class="description"><?php _e( 'If checked, visitors who try to access WooCommerce single post will be automatically redirected to a parent course single post.', 'cp' ) ?></p>
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<h3><?php esc_html_e( 'When the course becomes unpaid, then:', 'CP_TD' ); ?></h3>
+							<h3><?php esc_html_e( 'When the course becomes unpaid, then:', 'cp' ); ?></h3>
 							<ul>
 								<li><label><input type="radio"
 									<?php checked( $unpaid, 'change_status' ); ?>
 									name="coursepress_settings[woocommerce][unpaid]"
 									class="certificate_enabled"
-									value="change_status" /> <?php esc_html_e( 'Change to draft related WooCommerce product.', 'CP_TD' ); ?></label></li>
+									value="change_status" /> <?php esc_html_e( 'Change to draft related WooCommerce product.', 'cp' ); ?></label></li>
 								<li><label><input type="radio"
 									<?php checked( $unpaid, 'delete' ); ?>
 									name="coursepress_settings[woocommerce][unpaid]"
 									class="certificate_enabled"
-									value="delete" /> <?php esc_html_e( 'Delete related WooCommerce product.', 'CP_TD' ); ?></label></li>
+									value="delete" /> <?php esc_html_e( 'Delete related WooCommerce product.', 'cp' ); ?></label></li>
 							</ul>
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<h3><?php esc_html_e( 'When the course is deleted, then:', 'CP_TD' ); ?></h3>
+							<h3><?php esc_html_e( 'When the course is deleted, then:', 'cp' ); ?></h3>
 							<ul>
 								<li><label><input type="radio"
 									<?php checked( $delete, 'change_status' ); ?>
 									name="coursepress_settings[woocommerce][delete]"
 									class="certificate_enabled"
-									value="change_status" /> <?php esc_html_e( 'Change to draft related WooCommerce product.', 'CP_TD' ); ?></label></li>
+									value="change_status" /> <?php esc_html_e( 'Change to draft related WooCommerce product.', 'cp' ); ?></label></li>
 								<li><label><input type="radio"
 									<?php checked( $delete, 'delete' ); ?>
 									name="coursepress_settings[woocommerce][delete]"
 									class="certificate_enabled"
-									value="delete" /> <?php esc_html_e( 'Delete related WooCommerce product.', 'CP_TD' ); ?></label></li>
+									value="delete" /> <?php esc_html_e( 'Delete related WooCommerce product.', 'cp' ); ?></label></li>
 							</ul>
 						</td>
 					</tr>

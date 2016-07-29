@@ -1,3 +1,7 @@
+#student-add {
+	min-width: 300px;
+}
+
 #course-setup-steps .step-content {
 	padding: 1em 2.2em;
 	position: relative;
@@ -237,6 +241,11 @@
 }
 
 /* Course Structure */
+
+.course-structure table tr:hover td {
+	background-color: #bef;
+}
+
 .course-structure table {
 	width: 100%;
 	margin-top: 20px;
@@ -392,11 +401,14 @@ input.button.button-primary.instructor-assign {
 	top: -2px;
 }
 
-#course-setup-steps .step-content .instructors-info{
+#course-setup-steps .step-content .instructors-info,
+#course-setup-steps .step-content .facilitator-info {
 	overflow: hidden;
 }
 
-#course-setup-steps .step-content .instructor-avatar-holder{
+#course-setup-steps .step-content .instructor-avatar-holder,
+#course-setup-steps .step-content .facilitator-avatar-holder,
+{
 	margin-bottom: 5px;
 	margin-left: 5px;
 	margin-right: 5px;
@@ -408,17 +420,26 @@ input.button.button-primary.instructor-assign {
 	position: relative;
 	z-index: 0;
 }
-
-#course-setup-steps .step-content .instructor-avatar-holder:hover{
+#course-setup-steps .step-content .facilitator-avatar-holder,
+#course-setup-steps .step-content .instructor-avatar-holder {
+	.fa {
+		margin-top: 10px;
+		color: rgb(107, 187, 26);
+	}
+}
+#course-setup-steps .step-content .instructor-avatar-holder:hover,
+#course-setup-steps .step-content .facilitator-avatar-holder:hover {
 	opacity: 0.7;
 }
 
-#course-setup-steps .step-content .instructor-avatar-holder.empty {
+#course-setup-steps .step-content .instructor-avatar-holder.empty,
+#course-setup-steps .step-content .facilitator-avatar-holder.empty {
 	border: 1px dashed #e1e1e1;
 }
 
 #course-setup-steps .step-content .invite-remove a,
-#course-setup-steps .step-content .instructor-remove a{
+#course-setup-steps .step-content .instructor-remove a,
+#course-setup-steps .step-content .facilitator-remove a {
 	display: block;
 	width: 80px;
 	height: 80px;
@@ -433,12 +454,14 @@ input.button.button-primary.instructor-assign {
 }
 
 #course-setup-steps .step-content .invite-remove a:hover,
-#course-setup-steps .step-content .instructor-remove a:hover {
+#course-setup-steps .step-content .instructor-remove a:hover,
+#course-setup-steps .step-content .facilitator-remove a:hover {
 	text-indent: 0;
 }
 
 #course-setup-steps .step-content .invite-remove a span.dashicons-dismiss::before,
-#course-setup-steps .step-content .instructor-remove a span.dashicons-dismiss::before {
+#course-setup-steps .step-content .instructor-remove a span.dashicons-dismiss::before,
+#course-setup-steps .step-content .facilitator-remove a span.dashicons-dismiss::before {
 	font-size: 28px;
 	left: 28px;
 	margin: 0;
@@ -447,7 +470,8 @@ input.button.button-primary.instructor-assign {
 	top: 28px;
 }
 
-#course-setup-steps .step-content .instructor-name{
+#course-setup-steps .step-content .instructor-name,
+#course-setup-steps .step-content .facilitator-name {
 	display: block;
 	float: left;
 	text-align: center;
@@ -455,12 +479,14 @@ input.button.button-primary.instructor-assign {
 	width: 80px;
 }
 
-#course-setup-steps .step-content .instructor-avatar-holder.empty .instructor-name {
+#course-setup-steps .step-content .instructor-avatar-holder.empty .instructor-name,
+#course-setup-steps .step-content .instructor-avatar-holder.empty .facilitator-name {
 	position: relative;
 	top: 40px;
 }
 
-#course-setup-steps .step-content .instructor-status {
+#course-setup-steps .step-content .instructor-status,
+#course-setup-steps .step-content .facilitator-status {
 	background: none repeat scroll 0 0 #0091cd;
 	box-sizing: border-box;
 	color: #fff;
@@ -628,4 +654,42 @@ input.button.button-primary.instructor-assign {
 // FIX Overflow issues with UI
 body[class*="_page_coursepress_course"] .tab-container.horizontal {
 	overflow: visible;
+}
+
+@keyframes progress {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50px 50px;
+  }
+}
+.coursepress_settings_wrapper {
+	.column-units {
+		width: 100px;
+	}
+	.column-students,
+	.column-certificates,
+	.column-actions {
+		width: 60px !important;
+		text-align: center;
+	}
+	.duplicating {
+	  position: relative;
+	}
+	.duplicating:after {
+	  content: "";
+	  position: absolute;
+	  left: 0;
+	  bottom: 0;
+	  width: 100%;
+	  background-color: rgba(0, 0, 0, 0.3);
+	  background-image: -webkit-linear-gradient(-45deg,  rgba(255, 255, 255, .2) 25%,  transparent 25%,  transparent 50%,  rgba(255, 255, 255, .2) 50%,  rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+	  background-image: -moz-linear-gradient(-45deg,  rgba(255, 255, 255, .2) 25%,  transparent 25%,  transparent 50%,  rgba(255, 255, 255, .2) 50%,  rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+	  background-image: -o-linear-gradient(-45deg,  rgba(255, 255, 255, .2) 25%,  transparent 25%,  transparent 50%,  rgba(255, 255, 255, .2) 50%,  rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+	  background-image: linear-gradient(-45deg,  rgba(255, 255, 255, .2) 25%,  transparent 25%,  transparent 50%,  rgba(255, 255, 255, .2) 50%,  rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+	  background-size: 50px 50px;
+	  height: 4px !important;
+	  animation: progress 1s linear infinite;
+	}
 }
