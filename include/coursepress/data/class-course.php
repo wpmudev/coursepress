@@ -325,7 +325,7 @@ class CoursePress_Data_Course {
 	}
 
 	public static function add_instructor( $course_id, $instructor_id ) {
-		if ( empty( $instructor_id ) || (int) $instructor_id == 0 ) {
+		if ( empty( $instructor_id ) || 0 == (int) $instructor_id ) {
 			return; // Bail
 		}
 
@@ -431,7 +431,7 @@ class CoursePress_Data_Course {
 
 					if ( ( true === $course_open_ended && 'course_end_date' == $meta_key )
 						|| ( true === $enrollment_open_ended && 'enrollment_end_date' == $meta_key )
-					   ){
+					) {
 						$meta_value = 0;
 					}
 				}
@@ -662,7 +662,7 @@ class CoursePress_Data_Course {
 
 		// Get units
 		$units = self::get_units( $course_id, $status );
-		
+
 		foreach ( $units as $unit ) {
 			CoursePress_Helper_Utility::set_array_val( $items, $unit->ID . '/order', get_post_meta( $unit->ID, 'unit_order', true ) );
 			CoursePress_Helper_Utility::set_array_val( $items, $unit->ID . '/unit', $unit );
@@ -687,17 +687,17 @@ class CoursePress_Data_Course {
 					CoursePress_Helper_Utility::set_array_val(
 						$items,
 						$page_path . '/' . $page_number . '/description',
-						! empty( $page_description[$page_id] ) ? $page_description[$page_id] : ''
+						! empty( $page_description[ $page_id ] ) ? $page_description[ $page_id ] : ''
 					);
 					CoursePress_Helper_Utility::set_array_val(
 						$items,
 						$page_path . '/' . $page_number . '/feature_image',
-						! empty( $page_feature_image[$page_id] ) ? $page_feature_image[$page_id] : ''
+						! empty( $page_feature_image[ $page_id ] ) ? $page_feature_image[ $page_id ] : ''
 					);
 					CoursePress_Helper_Utility::set_array_val(
 						$items,
 						$page_path . '/' . $page_number . '/visible',
-						isset( $show_page_title[$page_number - 1] ) ? $show_page_title[$page_number-1] : false
+						isset( $show_page_title[ $page_number - 1 ] ) ? $show_page_title[ $page_number - 1 ] : false
 					);
 
 					$modules = self::get_unit_modules( $unit->ID, $status, false, false, array( 'page' => $page_number ) );
@@ -716,10 +716,9 @@ class CoursePress_Data_Course {
 							$module
 						);
 					}
-					ksort( $items[$unit->ID]['pages'], SORT_NUMERIC );
+					ksort( $items[ $unit->ID ]['pages'], SORT_NUMERIC );
 				}
 			}
-
 		}
 
 		// Fix legacy orphaned posts and page titles
@@ -745,7 +744,7 @@ class CoursePress_Data_Course {
 		return $items;
 	}
 
-	//@todo: 
+	//@todo: Removed this
 	public static function get_units_with_modules3( $course_id, $status = array( 'publish' ) ) {
 		self::$last_course_id = $course_id;
 		$combine = array();
@@ -987,19 +986,6 @@ class CoursePress_Data_Course {
 				'compare' => 'EXISTS',
 				'fields' => 'ID',
 			)
-			/*
-			array(
-				'meta_key' => 'last_name',
-				'orderby' => 'meta_value',
-				'meta_query' => array(
-					array(
-						'key' => $course_meta_key,
-						'compare' => 'EXISTS',
-					),
-				),
-				'fields' => 'ID',
-			)
-			*/
 		);
 
 		if ( ! $count ) {
@@ -1609,12 +1595,11 @@ class CoursePress_Data_Course {
 					$valid = true;
 				}
 			}
-
 		}
 
 		if ( $current_module > 0 ) {
 			$valid = false;
-			$new_sequence2 =array();
+			$new_sequence2 = array();
 
 			foreach ( $new_sequence as $ind => $item ) {
 				if ( $valid ) {
@@ -1681,19 +1666,6 @@ class CoursePress_Data_Course {
 					$valid = false;
 				}
 			}
-/*
-			if ( ! $has_required && empty( $item['restricted'] ) ) {
-				$new_sequence[] = $item;
-			}
-
-			if ( 'module' == $item['type'] ) {
-				$is_done = CoursePress_Data_Module::is_module_done_by_student( $item['id'], 0 );
-
-				if ( ! $is_done ) {
-					$has_required = true;
-				}
-			}
-*/
 		}
 		$nav_sequence = $new_sequence;
 
@@ -1717,7 +1689,7 @@ class CoursePress_Data_Course {
 	 * @return array Ordered list of navigation points.
 	 */
 	public static function get_course_navigation_items( $course_id ) {
-		static $Items = array();
+		static $_Items = array();
 
 		if ( ! isset( $Items[ $course_id ] ) ) {
 			$can_update_course = CoursePress_Data_Capabilities::can_update_course( $course_id );

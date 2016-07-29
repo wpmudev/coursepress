@@ -70,7 +70,7 @@ class CoursePress_Widget_Categories extends WP_Widget {
 			);
 			$terms = get_terms( $taxonomies, apply_filters( 'cp_course_categories_args', $args ) );
 
-			foreach ( $terms as $term ) {
+		foreach ( $terms as $term ) {
 				$permalink = get_term_link( $term, 'course_category' );
 				?>
 				<li>
@@ -78,7 +78,7 @@ class CoursePress_Widget_Categories extends WP_Widget {
 					<?php echo $show_course_count ? '('. $term->count . ')' : ''; ?>
 				</li>
 			<?php
-			}
+		}
 			?>
 		</ul>
 		<?php

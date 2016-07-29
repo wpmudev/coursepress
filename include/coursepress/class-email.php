@@ -27,7 +27,6 @@ class CoursePress_Email {
 
 	/**
 	 * Set the default email fields.
-	 * 
 	 * Must be overriden in a sub-class
 	 **/
 	public function default_email_fields() {
@@ -121,7 +120,7 @@ class CoursePress_Email {
 
 		if ( ! empty( $mail_tokens ) ) {
 			$content_help_text .= sprintf( '<p class="description"><strong>%s</strong>: <br />%s', __( 'Mail Tokens', 'cp' ), implode( ', ', $mail_tokens ) );
-			$content_help_text .= '<p class="description">* ' . __( 'These tokens will be replaced with actual data.', 'cp' ) . '</p>'; 
+			$content_help_text .= '<p class="description">* ' . __( 'These tokens will be replaced with actual data.', 'cp' ) . '</p>';
 		}
 
 		$fields .= '<tr><th>' . __( 'Email Body', 'cp' ) . '</th><td>' . $content_help_text;
@@ -223,7 +222,7 @@ class CoursePress_Email {
 	 * @param (array) $email_args				The email arguments.
 	 * @param (array) $tokens					An array of set mail tokens with their actual value.
 	 **/
-	public function send_email( $email_args = array(), $tokens = array() ){
+	public function send_email( $email_args = array(), $tokens = array() ) {
 		$email_fields = $this->email_fields();
 		$message = $email_fields['content'];
 
@@ -240,5 +239,4 @@ class CoursePress_Email {
 
 		CoursePress_Helper_Email::send_email( $this->email_type, $email_args );
 	}
-
 }
