@@ -30,7 +30,9 @@ class CoursePress_Email {
 	 * 
 	 * Must be overriden in a sub-class
 	 **/
-	public function default_email_fields() { return array(); }
+	public function default_email_fields() {
+		return array();
+	}
 
 	/**
 	 * Default mail tokens.
@@ -39,7 +41,8 @@ class CoursePress_Email {
 	 **/
 	public function mail_tokens() {
 		return array(
-			'BLOG_NAME', 'WEBSITE_ADDRESS',
+			'BLOG_NAME',
+			'WEBSITE_ADDRESS',
 		);
 	}
 

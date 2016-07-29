@@ -95,12 +95,30 @@ module.exports = function(grunt) {
 				'./test',
 				'./language/cp.pot',
 				'./premium',
-				'./campus'
+				'./campus',
+				'./node_modules',
+				'./vendor',
+				'./.gitattributes',
+				'./.gitignore',
+				'./composer.json',
+				'./composer.lock',
+				'./Gruntfile.js',
+				'./package.json',
+				'./README.md'
 			],
 			exclude_campus: [
 				'./test',
 				'./readme.txt',
-				'./language/coursepress.pot'
+				'./language/coursepress.pot',
+				'./node_modules',
+				'./vendor',
+				'./.gitattributes',
+				'./.gitignore',
+				'./composer.json',
+				'./composer.lock',
+				'./Gruntfile.js',
+				'./package.json',
+				'./README.md'
 			],
 			base: 'coursepress/2.0-dev',
 			pro: 'coursepress/2-pro',
