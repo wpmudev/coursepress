@@ -523,13 +523,11 @@ if ( ! class_exists( 'Course' ) ) {
 				/**
 				 * try to obtain real thumbnail ID for Woo
 				 */
-				if ( cp_use_woo() ) {
-					if ( is_string( $post_thumbnail_id ) ) {
-						$post_thumbnail_id = preg_replace( '/\-\d+x\d+\./', '.', $post_thumbnail_id );
-						global $wpdb;
-						$sql = $wpdb->prepare( "select ID from {$wpdb->posts} where guid = %s", $post_thumbnail_id );
-						$post_thumbnail_id = $wpdb->get_var( $sql );
-					}
+				if ( cp_use_woo() && is_string( $post_thumbnail_id ) ) {
+					$post_thumbnail_id = preg_replace( '/\-\d+x\d+\./', '.', $post_thumbnail_id );
+					global $wpdb;
+					$sql = $wpdb->prepare( "select ID from {$wpdb->posts} where guid = %s", $post_thumbnail_id );
+					$post_thumbnail_id = $wpdb->get_var( $sql );
 					// Only works if the course actually has a thumbnail.
 					set_post_thumbnail( $post_id, $post_thumbnail_id );
 				}
