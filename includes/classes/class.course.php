@@ -520,6 +520,20 @@ if ( ! class_exists( 'Course' ) ) {
 				// Only works if the course actually has a thumbnail.
 				set_post_thumbnail( $mp_product_id, get_post_thumbnail_id( $course_id ) );
 
+				/**
+				 * try to obtain real thumbnail ID for Woo
+				 */
+				if ( cp_use_woo() ) {
+					if ( is_string( $post_thumbnail_id ) ) {
+						$post_thumbnail_id = preg_replace( '/\-\d+x\d+\./', '.', $post_thumbnail_id );
+						global $wpdb;
+						$sql = $wpdb->prepare( "select ID from {$wpdb->posts} where guid = %s", $post_thumbnail_id );
+						$post_thumbnail_id = $wpdb->get_var( $sql );
+					}
+					// Only works if the course actually has a thumbnail.
+					set_post_thumbnail( $post_id, $post_thumbnail_id );
+				}
+
 				$automatic_sku = $_POST['meta_auto_sku'];
 
 				if ( $automatic_sku == 'on' ) {
