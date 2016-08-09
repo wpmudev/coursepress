@@ -12,7 +12,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 
 	class Student_Completion {
 
-        const CURRENT_VERSION = 2;
+		const CURRENT_VERSION = 2;
 		static $check_version = true;
 
         function __construct() {
