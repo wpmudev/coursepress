@@ -2984,7 +2984,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 					} else {
 						$args = array(
 							'slug'        => $wp->request,
-							'title'       => $unit->details->post_title,
+							'title'       => is_object( $unit->details )? $unit->details->post_title : '',
 							'content'     => __( 'This Unit is not available at the moment. Please check back later.', 'coursepress_base_td' ),
 							'type'        => 'page',
 							'is_page'     => true,

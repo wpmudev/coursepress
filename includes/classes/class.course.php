@@ -370,6 +370,9 @@ if ( ! class_exists( 'Course' ) ) {
 		}
 
 		public static function get_unit( $unit_id, $course_id, $unit_only = false ) {
+			if ( empty( $unit_id ) ) {
+				return false;
+			}
 			$units = self::get_units_with_modules( $course_id );
 			if( array_key_exists( $unit_id, $units ) ) {
 				if( $unit_only ) {

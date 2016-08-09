@@ -5,6 +5,10 @@ CHANGE LOG
 =================================================
 
 == Changelog ==
+
+= 1.3.4.2 =
+* Fixed: Problem preview draft unit.
+
 = 1.3.4.1 =
 * Fixed: Skip search filter if query post types are bbpress types
 
