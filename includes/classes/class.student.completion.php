@@ -12,7 +12,8 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 
 	class Student_Completion {
 
-		const CURRENT_VERSION = 2;
+        const CURRENT_VERSION = 2;
+		static $check_version = true;
 
         function __construct() {
             add_action( 'coursepress_module_completion_criteria_change', array( $this, 'on_coursepress_module_completion_criteria_change' ), 10, 4);
@@ -54,7 +55,7 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 
 		/* ----------------------------- GETTING COMPLETION DATA ----------------------------------- */
 
-		public static function get_completion_data( $student_id, $course_id, $check_version = true ) {
+		public static function get_completion_data( $student_id, $course_id ) {
 			$cache_key = __METHOD__ . '-' . $student_id . '-' . $course_id;
 			if( CoursePress_Cache::cp_cache_get($cache_key) ){
 				return CoursePress_Cache::cp_cache_get($cache_key);
@@ -97,7 +98,8 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 			}
 
 			// Check that we're on the right version or upgrade
-			if ( $check_version && ! self::_check_version( $student_id, $course_id, $course_progress ) ) {
+			if ( self::$check_version && ! self::_check_version( $student_id, $course_id, $course_progress ) ) {
+				self::$check_version = false;
 				$course_progress = self::get_completion_data( $student_id, $course_id, false );
 			};
 
