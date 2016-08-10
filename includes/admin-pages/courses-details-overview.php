@@ -1150,6 +1150,10 @@ $offer_paid = apply_filters( 'coursepress_offer_paid_courses', true );
 											if ( $offer_paid ) {
 												if ( cp_use_woo() ) {
 													//START WOO
+													$woo_product_id = CP_WooCommerce_Integration::woo_product_id( $course_id );
+													$product_exists = 0 != $woo_product_id ? true : false;
+													$paid_course = ! isset( $paid_course ) || $paid_course == 'off' ? 'off' : 'on';
+													$paid_course = ! $product_exists ? 'off' : $paid_course;
 													?>
 													<div class="narrow product">
 
@@ -1164,12 +1168,7 @@ $offer_paid = apply_filters( 'coursepress_offer_paid_courses', true );
 
 														<div>
 															<?php
-															$woo_product_id = CP_WooCommerce_Integration::woo_product_id( $course_id );
 
-															$product_exists = 0 != $woo_product_id ? true : false;
-
-															$paid_course = ! isset( $paid_course ) || $paid_course == 'off' ? 'off' : 'on';
-															$paid_course = ! $product_exists ? 'off' : $paid_course;
 
 															if ( isset( $course_id ) && $course_id !== 0 ) {
 																$woo_product_details = get_post_custom( $woo_product_id ); //$course_id
