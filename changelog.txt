@@ -7,7 +7,7 @@ CHANGE LOG
 == Changelog ==
 
 = 1.3.4.2 =
-* Fixed: Problem with Admin Bar on units list page.
+* Fixed: Problem with units on units list page.
 * Fixed: Mising div bracket in cp_popup_success_message template.
 
 = 1.3.4.1 =
