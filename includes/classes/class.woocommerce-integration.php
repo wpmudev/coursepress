@@ -68,7 +68,7 @@ if ( !class_exists( 'CP_WooCommerce_Integration' ) ) {
 				if ( $purchased_course ) {
 					?>
 					<h2 class="cp_woo_header"><?php _e( 'Course', 'coursepress_base_td' ); ?></h2>
-					<p class="cp_woo_thanks"><?php _e( 'Thank you for signing up for the course. We hope you enjoy your experience.' ); ?></p>
+					<p class="cp_woo_thanks"><?php _e( 'Thank you for signing up for the course. We hope you enjoy your experience.', 'coursepress_base_td' ); ?></p>
 					<?php
 					if ( is_user_logged_in() && $order->post_status == 'wc-completed' ) {
 						?>
