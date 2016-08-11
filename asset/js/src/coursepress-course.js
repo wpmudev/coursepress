@@ -416,6 +416,82 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			step = target.hasClass( 'step-6' ) ? 6 : step;
 			step = target.hasClass( 'step-7' ) ? 7 : step;
 
+			// Prevent from updating, moving forward if required fields are empty
+
+			var required_fields = [];
+
+			if ( 1 <= step ) {
+				// Required fields for step 1
+				required_fields.push( 'course_name', 'course_excerpt' );
+			}
+			if ( 2 <= step ) {
+				required_fields.push( 'course_description' );
+			}
+			if ( 4 <= step ) {
+				required_fields.push( 'meta_course_start_date' );
+
+				// If the course is not open-ended, course end date must not be empty!
+				if ( ! $( '[name="meta_course_open_ended"]' ).is( ':checked' ) ) {
+					required_fields.push( 'meta_course_end_date' );
+				}
+
+				// If enrollment is not open, check the fields!
+				if ( ! $( '[name="meta_enrollment_open_ended"]' ).is( ':checked' ) ) {
+					required_fields.push( 'meta_enrollment_start_date', 'meta_enrollment_end_date' );
+				}
+			}
+			if ( 7 <= step ) {
+				required_fields.push( 'meta_minimum_grade_required', 'meta_pre_completion_title', 'meta_pre_completion_content' );
+				required_fields.push( 'meta_course_completion_title', 'meta_course_completion_content', 'meta_course_failed_title', 'meta_course_failed_content' );
+			}
+
+			if ( required_fields.length > 0 ) {
+				// Check for values
+				var found = 0, mce_helper;
+
+				// Get editor type field
+				mce_helper = function( editor_id, editor ) {
+					var content = tinyMCE && tinyMCE.get( editor_id ) ? tinyMCE.get( editor_id ).getContent() : editor.val();
+
+					return content;
+				};
+
+				_.each( required_fields, function( field_name ) {
+					var field = $( '[name="' + field_name + '"]' ),
+						val = field.val()
+					;
+
+					if ( 'course_excerpt' == field_name ) {
+						val = mce_helper( 'courseExcerpt', field );
+					}
+					if ( 'course_description' == field_name ) {
+						val = mce_helper( 'courseDescription', field );
+					}
+					if ( 'meta_pre_completion_content' == field_name ) {
+						val = mce_helper( 'pre-completion-content', field );
+					}
+					if ( 'meta_course_completion_content' == field_name ) {
+						val = mce_helper( 'course-completion-editor-content', field );
+					}
+					if ( 'meta_course_failed_content' == field_name ) {
+						val = mce_helper( 'course-failed-content', field );
+					}
+
+					if ( ! val || '' == val ) {
+						found += 1;
+					}
+
+				});
+
+				if ( found > 0 ) {
+					// Alert
+					// @todo: Make this message info nicer!
+					alert( _coursepress.labels.required_fields );
+
+					return false;
+				}
+			}
+
 			// Get the type
 			action_type = target.hasClass( 'prev' ) ? 'prev' : null;
 			action_type = target.hasClass( 'next' ) ? 'next' : action_type;
@@ -848,6 +924,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		 */
 		$( '.coursepress_course_email_enroled_students_wrapper .send-submit' ).on( 'click', function() {
 			// Really basic validation
+			var send_to = $( '[name="send_to"]' ).val();
 			var subject = $( '[name=email-subject]' ).val();
 			var body = $( '[name=email-body]' ).val();
 			var message_container = $('#send-email-to-enroled-students');
@@ -857,6 +934,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 
 			CoursePress.Course.set( 'action', 'send_email' );
 			var data = {
+				send_to: send_to,
 				subject: subject,
 				body: body,
 				course_id: _coursepress.course_id,
@@ -864,8 +942,15 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			};
 			CoursePress.Course.set( 'data', data );
 			CoursePress.Course.save();
-
+			CoursePress.Course.off( 'coursepress:send_email_success' );
 			CoursePress.Course.on( 'coursepress:send_email_success', function( data ){
+				$('.coursepress-email-sending td', message_container).html(data.message.info);
+				$('.coursepress-email-field-subject td', message_container).html(data.message.subject);;
+				$('.coursepress-email-field-body td', message_container).html(data.message.body);;
+				$('.coursepress-email-field', message_container).slideDown();
+			});
+			CoursePress.Course.off( 'coursepress:send_email_error' );
+			CoursePress.Course.on( 'coursepress:send_email_error', function( data ) {
 				$('.coursepress-email-sending td', message_container).html(data.message.info);
 				$('.coursepress-email-field-subject td', message_container).html(data.message.subject);;
 				$('.coursepress-email-field-body td', message_container).html(data.message.body);;

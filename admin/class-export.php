@@ -13,8 +13,8 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 
 	public function get_labels() {
 		return array(
-			'title' => __( 'CoursePress Export', 'cp' ),
-			'menu_title' => __( 'Export', 'cp' ),
+			'title' => __( 'CoursePress Export', 'CP_TD' ),
+			'menu_title' => __( 'Export', 'CP_TD' ),
 		);
 	}
 
@@ -106,10 +106,10 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 					$students = CoursePress_Data_Course::get_students( $course_id, -1, 0 );
 
 					foreach ( $students as $student ) {
-						$course_students[$student->ID] = $student->data;
 						// Get student progress
 						$student_progress = CoursePress_Data_Student::get_completion_data( $student->ID, $course_id );
-						$course_students['progress'] = $student_progress;
+						$student->data->progress = $student_progress;
+						$course_students[$student->ID] = $student->data;
 					}
 
 					$courses[$course_id]['students'] = $course_students;
@@ -128,7 +128,7 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 			$date = date( 'Y-m-d' );
 			$wp_filename = $sitename . 'coursepress.' . $date;
 			if ( 1 == count( $course_ids ) ) {
-				$post = get_post( $course_ids[0] );
+				$post = get_post( array_shift( $course_ids ) );
 				if ( $post ) {
 					$wp_filename .= '.'.$post->post_name;
 				}

@@ -23,18 +23,18 @@ class CoursePress_Data_Unit {
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
 				'labels' => array(
-					'name' => __( 'Units', 'cp' ),
-					'singular_name' => __( 'Unit', 'cp' ),
-					'add_new' => __( 'Create New', 'cp' ),
-					'add_new_item' => __( 'Create New Unit', 'cp' ),
-					'edit_item' => __( 'Edit Unit', 'cp' ),
-					'edit' => __( 'Edit', 'cp' ),
-					'new_item' => __( 'New Unit', 'cp' ),
-					'view_item' => __( 'View Unit', 'cp' ),
-					'search_items' => __( 'Search Units', 'cp' ),
-					'not_found' => __( 'No Units Found', 'cp' ),
-					'not_found_in_trash' => __( 'No Units found in Trash', 'cp' ),
-					'view' => __( 'View Unit', 'cp' ),
+					'name' => __( 'Units', 'CP_TD' ),
+					'singular_name' => __( 'Unit', 'CP_TD' ),
+					'add_new' => __( 'Create New', 'CP_TD' ),
+					'add_new_item' => __( 'Create New Unit', 'CP_TD' ),
+					'edit_item' => __( 'Edit Unit', 'CP_TD' ),
+					'edit' => __( 'Edit', 'CP_TD' ),
+					'new_item' => __( 'New Unit', 'CP_TD' ),
+					'view_item' => __( 'View Unit', 'CP_TD' ),
+					'search_items' => __( 'Search Units', 'CP_TD' ),
+					'not_found' => __( 'No Units Found', 'CP_TD' ),
+					'not_found_in_trash' => __( 'No Units found in Trash', 'CP_TD' ),
+					'view' => __( 'View Unit', 'CP_TD' ),
 				),
 				'public' => false,
 				'show_ui' => false,
@@ -338,8 +338,7 @@ class CoursePress_Data_Unit {
 		}
 
 		// Course is active today, so check for unit-specific limitations.
-		if ( $is_available ) {
-			$status_type = get_post_meta( $unit_id, 'unit_availability', true );
+		$status_type = get_post_meta( $unit_id, 'unit_availability', true );
 
 			if ( 'after_delay' == $status_type ) {
 				$delay_val = get_post_meta( $unit_id, 'unit_delay_days', true );
@@ -369,15 +368,9 @@ class CoursePress_Data_Unit {
 					$availability_date = date_i18n( $date_format, $due_date );
 				}
 			}
-		}
 
-		if ( $always_return_date ) {
-			// $return_date is timestamp in UTC.
-			return date_i18n( $date_format, $return_date );
-		} elseif ( ! $is_available ) {
-			return $availability_date;
-		}
-		return '';
+		return $availability_date;
+
 	}
 
 	public static function get_previous_unit_id( $course_id, $unit_id ) {

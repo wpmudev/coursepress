@@ -72,7 +72,7 @@ class CoursePress_Data_Facilitator {
 	 *
 	 * @return (bool) 	Return true if facilitator otherwise false.
 	 **/
-	public function is_course_facilitator( $course_id, $user_id = 0 ) {
+	public static function is_course_facilitator( $course_id, $user_id = 0 ) {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}

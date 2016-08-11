@@ -15,6 +15,7 @@ class CoursePress_Helper_Setting {
 		add_action( 'shutdown', array( __CLASS__, 'update_post_meta' ) );
 		/** This filter is documented in /wp-admin/includes/misc.php */
 		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
+		add_filter( 'screen_settings', array( __CLASS__, 'screen_settings' ), 10, 2 );
 	}
 
 	/**
@@ -59,7 +60,7 @@ class CoursePress_Helper_Setting {
 		$parent_handle = 'coursepress';
 		$capability = self::get_default_capability();
 
-		self::$page_refs[ $parent_handle ] = add_menu_page(
+		$page = self::$page_refs[ $parent_handle ] = add_menu_page(
 			CoursePress::$name,
 			CoursePress::$name,
 			$capability,
@@ -67,6 +68,8 @@ class CoursePress_Helper_Setting {
 			array( __CLASS__, 'menu_handler' ),
 			CoursePress::$url . 'asset/img/coursepress-icon.png'
 		);
+
+		add_action( 'load-' . $page, array( __CLASS__, 'add_screen_options' ) );
 
 		$pages = self::_get_pages();
 
@@ -104,7 +107,7 @@ class CoursePress_Helper_Setting {
 				$parent = null;
 			}
 
-			self::$page_refs[ $handle ] = add_submenu_page(
+			$page = self::$page_refs[ $handle ] = add_submenu_page(
 				$parent,
 				$page['title'],
 				$page['menu_title'],
@@ -112,6 +115,13 @@ class CoursePress_Helper_Setting {
 				$page['handle'],
 				$callback
 			);
+
+			/**
+			 * load callback
+			 */
+			if ( isset( $page['load_action_callback'] ) && is_callable( $page['load_action_callback'] ) ) {
+				add_action( 'load-' . $page, $page['load_action_callback'] );
+			}
 		}
 	}
 
@@ -257,6 +267,19 @@ class CoursePress_Helper_Setting {
 	 * @return mixed value or status.
 	 */
 	public static function set_screen_option( $status, $option, $value ) {
+		if ( 'coursepress_courses_per_page' == $option ) {
+			$columns = array();
+			if ( isset( $_POST['columns'] ) ) {
+				$columns = $_POST['columns'];
+			}
+			$columns_keys = self::courses_get_columns( 'keys-only' );
+			foreach ( $columns_keys as $key ) {
+				$columns_status[ $key ] = array_key_exists( $key, $columns )? 'on':'off';
+			}
+			$user_id = get_current_user_id();
+			update_user_meta( $user_id, 'toplevel_page_coursepress_columns', $columns_status );
+			return $value;
+		}
 		if ( preg_match( '/^coursepress_/', $option ) ) {
 			return $value;
 		}
@@ -309,5 +332,120 @@ class CoursePress_Helper_Setting {
 			$start_date = intval( strtotime( $start_date ) );
 			update_post_meta( $course_id, 'course_start_date', $start_date );
 		}
+	}
+
+	/**
+	 * add screen options for courses list
+	 *
+	 * @since 2.0.0
+	 */
+	public static function add_screen_options() {
+		add_screen_option(
+			'columns',
+			array(
+				'default' => '',
+				'label' => _x( 'Columns', 'courses per page (screen options)', 'CP_TD' ),
+				'option' => 'coursepress_courses_columns',
+			)
+		);
+		add_screen_option(
+			'per_page',
+			array(
+				'default' => 20,
+				'label' => _x( 'Number of items per page:', 'courses per page (screen options)', 'CP_TD' ),
+				'option' => 'coursepress_courses_per_page',
+			)
+		);
+	}
+
+	/**
+	 * get columns names
+	 *
+	 * @since 2.0.0
+	 * @access private
+	 *
+	 * @param string $option Option if we need only keys.
+	 * @return array Array of columns.
+	 */
+	private static function courses_get_columns( $option = '' ) {
+		$columns = array(
+			'ID' => __( 'ID', 'CP_TD' ),
+			'units' => __( 'Units', 'CP_TD' ),
+			'students' => __( 'Students', 'CP_TD' ),
+			'certificates' => __( 'Certified', 'CP_TD' ),
+			'status' => __( 'Status', 'CP_TD' ),
+			'actions' => __( 'Actions', 'CP_TD' ),
+		);
+		if ( 'keys-only' == $option ) {
+			$columns = array_keys( $columns );
+		}
+		return $columns;
+	}
+
+	/**
+	 * get user configuration columns
+	 *
+	 * @since 2.0.0
+	 * @access private
+	 *
+	 * @return array Array of columns.
+	 */
+	private static function courses_get_user_columns() {
+		$user_id = get_current_user_id();
+		$columns = get_user_meta( $user_id, 'toplevel_page_coursepress_columns', true );
+		if ( ! is_array( $columns ) ) {
+			$columns = array();
+		}
+		return $columns;
+	}
+
+	/**
+	 * Based on columns and user columns prepare hidden columns.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return array Array of columns.
+	 */
+	public static function courses_get_hidden_columns() {
+		$columns = self::courses_get_user_columns();
+		if ( empty( $columns ) ) {
+			return $columns;
+		}
+		$out = array();
+		$columns_names = self::courses_get_columns( 'keys-only' );
+		foreach ( $columns_names as $key ) {
+			if ( isset( $columns[ $key ] ) && 'off' != $columns[ $key ] ) {
+				continue;
+			}
+			$out[] = $key;
+		}
+		return $out;
+	}
+
+	/**
+	 * Screen configuration html. For columns.
+	 *
+	 * @since 2.0.0
+	 *
+	 */
+	public static function screen_settings( $content, $args ) {
+		if ( 'toplevel_page_coursepress' == $args->base ) {
+			$columns_names = self::courses_get_columns();
+			$columns = self::courses_get_user_columns();
+			$content .= '<fieldset class="metabox-prefs">';
+			$content .= sprintf( '<legend>%s</legend>', __( 'Columns', 'CP_TD' ) );
+			$content .= '<div class="metabox-prefs">';
+			foreach ( $columns_names as $key => $name ) {
+				$content .= sprintf(
+					'<label><input class="hide-column-tog" type="checkbox" value="%s" name="columns[%s]" %s /> %s</label>',
+					$key,
+					$key,
+					checked( 'on', $columns[ $key ], false ),
+					$name
+				);
+			}
+			$content .= '</fieldset><br class="clear">';
+		}
+		return $content;
 	}
 }

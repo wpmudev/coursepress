@@ -22,7 +22,7 @@ class CoursePress_Core {
 
 		// We speak languages!
 		load_plugin_textdomain(
-			'cp', // Text domain.
+			'CP_TD', // Text domain.
 			false, // Deprecated. Set to false.
 			CoursePress::$dir . '/language'
 		);
@@ -85,6 +85,7 @@ class CoursePress_Core {
 			CoursePress_Helper_PDF::init();
 
 			new CoursePress_Admin_Assessment;
+			new CoursePress_Admin_Certificate;
 			new CoursePress_Admin_Import;
 			new CoursePress_Admin_Export;
 		} else {

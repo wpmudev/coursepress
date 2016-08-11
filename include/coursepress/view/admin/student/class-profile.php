@@ -7,12 +7,12 @@ class CoursePress_View_Admin_Student_Profile extends CoursePress_View_Admin_Stud
 		$date_format = get_option( 'date_format' );
 		?>
 		<div class="wrap student-workbook student-profile">
-			<h2><?php esc_html_e( 'Student Profile', 'cp' ); ?></h2>
+			<h2><?php esc_html_e( 'Student Profile', 'CP_TD' ); ?></h2>
 			<hr />
 			<?php
 				self::profile();
 			?>
-			<h3><?php esc_html_e( 'Courses', 'cp' ); ?></h3>
+			<h3><?php esc_html_e( 'Courses', 'CP_TD' ); ?></h3>
 			<?php
 				$enrolled_courses = CoursePress_Data_Student::get_enrolled_courses_ids( $student_id );
 				$args = array(
@@ -33,7 +33,7 @@ class CoursePress_View_Admin_Student_Profile extends CoursePress_View_Admin_Stud
 						<tr>
 							<td>
 								<a href="<?php echo $workbook_link; ?>" class="button button-units workbook-button">
-									<?php esc_html_e( 'View Workbook', 'cp' ); ?>
+									<?php esc_html_e( 'View Workbook', 'CP_TD' ); ?>
 								</a>
 							</td>
 							<td>
@@ -49,20 +49,20 @@ class CoursePress_View_Admin_Student_Profile extends CoursePress_View_Admin_Stud
 										<div class="course-summary"><?php the_excerpt(); ?></div>
 										<div class="course-info-holder">
 											<span class="info_caption">
-												<?php esc_html_e( 'Start', 'cp' ); ?>
+												<?php esc_html_e( 'Start', 'CP_TD' ); ?>
 												<i class="fa fa-calendar"></i>
 											</span>
 											<span class="info">
 												<?php echo $course->start_date; ?>
 											</span>
 											<span class="info_caption">
-												<?php esc_html_e( 'End', 'cp' ); ?>
+												<?php esc_html_e( 'End', 'CP_TD' ); ?>
 											</span>
 											<span class="info">
 												<?php echo $course->end_date; ?>
 											</span>
 											<span class="info_caption">
-												<?php esc_html_e( 'Duration', 'cp' ); ?>
+												<?php esc_html_e( 'Duration', 'CP_TD' ); ?>
 												<i class="fa fa-clock-o"></i>
 											</span>
 											<span class="info"><?php echo $course->duration; ?></span>

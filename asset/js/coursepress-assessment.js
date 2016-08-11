@@ -159,6 +159,7 @@
 			parentDiv = button.parents( '.cp-grade-editor' ),
 			moduleDiv = button.parents( '.cp-module' ),
 			cancelButton = $( '.cp-cancel', parentDiv ),
+			draftButton = $( '.cp-save-as-draft', moduleDiv ),
 			module = $( '.module-grade', parentDiv ),
 			feedback = $( '.cp_feedback_content', parentDiv ),
 			with_feedback = $( '.edit-no-feedback' ).is( '.disabled' ) ? true : false,
@@ -199,6 +200,8 @@
 		CoursePress.UnitsPost.off( 'coursepress:update_success' );
 		CoursePress.UnitsPost.on( 'coursepress:update_success', function(data){
 			CoursePress.Events.on( 'coursepress:progress:success', function() {
+				module.attr( 'data-grade', grade ).data( 'grade', grade );
+				draftButton.addClass( 'disabled' );
 				cancelButton.trigger( 'click' );
 				currentGrade.html( grade + '%' );
 				gradeInfo.show();
@@ -248,7 +251,8 @@
 		if ( ! has_editor ) {
 			CoursePress.Events.off( 'editor:keyup' );
 			CoursePress.Events.on( 'editor:keyup', function( ed ) {
-				var content = ed.getContent();
+				var content = undefined != typeof ed.getContent && ed.getContent ? ed.getContent() : $( '#' + editor_id ).val();
+
 				if ( content != old_content ) {
 					textbox.val( content );
 					submitButton.removeClass( 'disabled' );
@@ -270,9 +274,13 @@
 		var btn = $(this),
 			parentDiv = btn.parents( '.cp-grade-editor' ).first(),
 			editor_box = $( '.cp-grade-editor-box', parentDiv ),
-			buttons = $( '.cp-assessment-div button' )
+			buttons = $( '.cp-assessment-div button' ),
+			module = $( '.module-grade', parentDiv ),
+			submitButton = $( '.cp-submit-grade', parentDiv )
 		;
 
+		module.val( module.data( 'grade' ) );
+		submitButton.addClass( 'disabled' );
 		editor_box.slideUp();
 		buttons.removeClass( 'disabled' );
 	},
@@ -392,31 +400,56 @@
 			activeUnit = $( '#unit-list' ).val(),
 			grade_type = $( '#ungraded-list' ).val(),
 			course_id = $( '#course-list' ).val(),
-			loader_info = $( '.cp-loader-info' )
+			loader_info = $( '.cp-loader-info' ),
+			search = $( '#search_student_box' ),
+			reset_button = search.siblings( '#search_reset' )
 		;
+
+		if ( '' != search.val() ) {
+			// Enable reset
+			reset_button.removeClass( 'disabled' );
+		} else {
+			reset_button.addClass( 'disabled' );
+		}
 
 		var data = {
 			course_id: course_id,
 			unit_id: activeUnit,
 			student_type: grade_type,
 			paged: currentPage,
-			action: 'table'
+			action: 'table',
+			search: search.val()
 		};
 		container.empty();
 		loader_info.show();
 		updateLocation();
 
 		CoursePress.UnitsPost.save( data );
-		CoursePress.UnitsPost.off( 'coursepress:table_success' );
 		CoursePress.UnitsPost.on( 'coursepress:table_success', function( data ) {
 			container.html( data.html );
 			loader_info.hide();
 			filterStudentRows();
 		});
-		//@todo: Remove debug
-		CoursePress.UnitsPost.on( 'coursepress:table_error', function() {
-			alert( 'Error!');
-		});
+	};
+
+	// Search students
+	var searchStudents = function() {
+		var button = $(this),
+			reset_button = button.siblings( '#search_reset' )
+		;
+
+		reset_button.removeClass( 'disabled' );
+		loadStudentTable();
+	},
+	// Reset table display when search was previously done
+	resetStudentDisplay = function() {
+		var button = $(this),
+			search_box = $( '#search_student_box' )
+		;
+
+		search_box.val( '' );
+		loadStudentTable();
+		button.addClass( 'disabled' );
 	};
 
 	var updateLocation = function() {
@@ -521,6 +554,8 @@
 		.on( 'click', '.modules-answer-wrapper .cp-toggle', toggleTitle )
 		.on( 'click', '.cp-save-as-draft', saveFeedbackAsDraft )
 		.on( 'change', '#grade-type', changeDisplayType )
-		.on( 'change', '#course-list', newCourse );
+		.on( 'change', '#course-list', newCourse )
+		.on( 'click', '#search_student_submit', searchStudents )
+		.on( 'click', '#search_reset', resetStudentDisplay );
 
 })(jQuery);

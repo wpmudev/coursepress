@@ -1,7 +1,7 @@
 <?php
 class CoursePress_Helper_Discussion {
 
-	static private $default_key = 'do-not-subscribe';
+	static private $default_key = 'subscribe-reactions';
 	static private $field_name = 'coursepress_subscribe';
 
 	/**
@@ -61,9 +61,9 @@ class CoursePress_Helper_Discussion {
 	 */
 	public static function get_subscription_statuses_array() {
 		return array(
-			self::$default_key => __( 'Do not notify me of new posts by email', 'cp' ),
-			'subscribe-all' => __( 'Notify me of all new posts by email', 'cp' ),
-			'subscribe-reactions' => __( 'Notify me of new posts in related threads by email', 'cp' ),
+			'subscribe-reactions' => __( 'Notify me of new posts in related threads by email', 'CP_TD' ),
+			'do-not-subscribe' => __( 'Do not notify me of new posts by email', 'CP_TD' ),
+			'subscribe-all' => __( 'Notify me of all new posts by email', 'CP_TD' ),
 		);
 	}
 

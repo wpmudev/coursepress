@@ -14,8 +14,8 @@ class CoursePress_Helper_UI {
 		$args['textbox_class'] = isset( $args['textbox_class'] ) ? sanitize_text_field( $args['textbox_class'] ) : 'medium';
 		$args['title'] = isset( $args['title'] ) ? sanitize_text_field( $args['title'] ) : '';
 		$args['value'] = isset( $args['value'] ) ? sanitize_text_field( $args['value'] ) : '';
-		$args['placeholder'] = isset( $args['placeholder'] ) ? sanitize_text_field( $args['placeholder'] ) : __( 'Add Media URL or Browse for Media', 'cp' );
-		$args['button_text'] = isset( $args['button_text'] ) ? sanitize_text_field( $args['button_text'] ) : __( 'Browse', 'cp' );
+		$args['placeholder'] = isset( $args['placeholder'] ) ? sanitize_text_field( $args['placeholder'] ) : __( 'Add Media URL or Browse for Media', 'CP_TD' );
+		$args['button_text'] = isset( $args['button_text'] ) ? sanitize_text_field( $args['button_text'] ) : __( 'Browse', 'CP_TD' );
 		$args['type'] = isset( $args['type'] ) ? sanitize_text_field( $args['type'] ) : 'image';
 		$args['invalid_message'] = isset( $args['invalid_message'] ) ? sanitize_text_field( $args['invalid_message'] ) : '';
 		$args['description'] = isset( $args['description'] ) ? sanitize_text_field( $args['description'] ) : '';
@@ -43,7 +43,7 @@ class CoursePress_Helper_UI {
 			</label>
 			<input class="' . $args['textbox_class'] . ' ' . $args['type'] . '_url" type="text" name="' . $name . '" id="' . $name . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" value="' . esc_attr( $args['value'] ) . '"/>
 			<input class="button browse-media-field" type="button" name="' . $name . '-button" value="' . esc_attr( $args['button_text'] ) . '"/>
-			<div class="invalid_extension_message">' . sprintf( esc_html__( 'Extension of the file is not valid. Please use one of the following: %s', 'cp' ), $supported_extensions ) . '</div>
+			<div class="invalid_extension_message">' . sprintf( esc_html__( 'Extension of the file is not valid. Please use one of the following: %s', 'CP_TD' ), $supported_extensions ) . '</div>
 		</div>';
 
 		return $content;
@@ -327,9 +327,9 @@ class CoursePress_Helper_UI {
 				if ( ! empty( $instructor_invites ) ) {
 					foreach ( $instructor_invites as $invite ) {
 						if ( $remove_buttons ) {
-							$content .= '<div class="instructor-avatar-holder pending-invite" id="instructor_holder_' . $invite['code'] . '"><div class="instructor-status">' . esc_html__( 'Pending', 'cp' ) . '</div><div class="invite-remove"><a><span class="dashicons dashicons-dismiss"></span></a></div>' . get_avatar( $invite['email'], 80 ) . '<span class="instructor-name">' . $invite['first_name'] . ' ' . $invite['last_name'] . '</span></div>';
+							$content .= '<div class="instructor-avatar-holder pending-invite" id="instructor_holder_' . $invite['code'] . '"><div class="instructor-status">' . esc_html__( 'Pending', 'CP_TD' ) . '</div><div class="invite-remove"><a><span class="dashicons dashicons-dismiss"></span></a></div>' . get_avatar( $invite['email'], 80 ) . '<span class="instructor-name">' . $invite['first_name'] . ' ' . $invite['last_name'] . '</span></div>';
 						} else {
-							$content .= '<div class="instructor-avatar-holder pending-invite" id="instructor_holder_' . $invite['code'] . '"><div class="instructor-status">' . esc_html__( 'Pending', 'cp' ) . '</div>' . get_avatar( $invite['email'], 80 ) . '<span class="instructor-name">' . $invite['first_name'] . ' ' . $invite['last_name'] . '</span></div>';
+							$content .= '<div class="instructor-avatar-holder pending-invite" id="instructor_holder_' . $invite['code'] . '"><div class="instructor-status">' . esc_html__( 'Pending', 'CP_TD' ) . '</div>' . get_avatar( $invite['email'], 80 ) . '<span class="instructor-name">' . $invite['first_name'] . ' ' . $invite['last_name'] . '</span></div>';
 						}
 					}
 				}
@@ -488,7 +488,7 @@ class CoursePress_Helper_UI {
 	 */
 	public static function get_admin_edit_title_field( $value, $label = '' ) {
 		if ( empty( $label ) ) {
-			$label = __( 'Enter title here.', 'cp' );
+			$label = __( 'Enter title here.', 'CP_TD' );
 		}
 		$content = '<div id="titlediv">';
 		$content .= '<div id="titlewrap">';
@@ -548,7 +548,7 @@ class CoursePress_Helper_UI {
 	public static function get_message_required_modules( $error_message ) {
 		$error_message .= PHP_EOL;
 		$error_message .= PHP_EOL;
-		$error_message .= __( 'Please press the Prev button on the left to continue.', 'cp' );
+		$error_message .= __( 'Please press the Prev button on the left to continue.', 'CP_TD' );
 		return wpautop( $error_message );
 	}
 

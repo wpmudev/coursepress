@@ -9,6 +9,16 @@ class CoursePress_Template_Discussion {
 		$course_id = Coursepress_Helper_Utility::the_course( true );
 		$is_focus = 'focus' == CoursePress_Data_Course::get_setting( $course_id, 'course_view' );
 
+		/**
+		 * turn off scripts
+		 *
+		 * @since 2.0.0
+		 *
+		 * Default true, but we can setup it to false to remove scripts from
+		 * AJAX answer. It is used in Academy.
+		 */
+		$use_scripts = apply_filters( 'coursepress_discussion_use_scripts', true );
+
 		// Cheat
 		ob_start();
 
@@ -17,19 +27,28 @@ class CoursePress_Template_Discussion {
 		// Because comments only show at single post, let's pretend it's a single post.
 		$wp_query->is_single = true;
 
-		add_filter( 'comments_open', '__return_true' );
+		// If course ended then discussion are read only.
+		if ( CoursePress_Data_Course::get_course_status( $course_id ) == 'closed' ) {
+			add_filter( 'comments_open', '__return_false' );
+		} else {
+			add_filter( 'comments_open', '__return_true' );
+		}
 		add_filter( 'comment_reply_link', array( __CLASS__, 'comment_reply_link' ), 10, 4 );
 		// Show all comments
 		add_filter( 'parse_comment_query', array( __CLASS__, 'show_all_comments' ) );
 		add_filter( 'comment_form_submit_button', array( __CLASS__, 'add_subscribe_button' ) );
 
-		// Remove all enqueued scripts in focus mode
-		if ( $is_focus ) {
-			remove_all_actions( 'wp_enqueue_scripts' );
-			wp_enqueue_script( 'comment-reply' );
-			wp_print_scripts();
+		if ( $use_scripts ) {
+			// Remove all enqueued scripts in focus mode
+			if ( $is_focus ) {
+				remove_all_actions( 'wp_enqueue_scripts' );
+				wp_enqueue_script( 'comment-reply' );
+				wp_print_scripts();
+			} else {
+				wp_enqueue_script( 'comment-reply' );
+			}
 		} else {
-			wp_enqueue_script( 'comment-reply' );
+			remove_all_actions( 'wp_enqueue_scripts' );
 		}
 
 		setup_postdata( $post );
@@ -68,7 +87,7 @@ class CoursePress_Template_Discussion {
 		return CoursePress_Data_Discussion::is_discussion_subscriber( $user_id, $post_id );
 	}
 
-	public function add_subscribe_button( $submit_button ) {
+	public static function add_subscribe_button( $submit_button ) {
 		global $post;
 		$user_subscribe = CoursePress_Helper_Discussion::get_subscription_status( $post->ID );
 		$options = CoursePress_Helper_Discussion::get_subscription_statuses_array();
@@ -171,5 +190,4 @@ class CoursePress_Template_Discussion {
 			CoursePress_Data_Unit::get_post_type_name(),
 		);
 	}
-
 }

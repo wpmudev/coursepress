@@ -55,7 +55,7 @@ class CoursePress_View_Front_Login {
 			}
 
 			$content = '';
-			$page_title = __( 'Student Login', 'cp' );
+			$page_title = __( 'Student Login', 'CP_TD' );
 
 			$args = array(
 				'slug' => CoursePress_Core::get_slug( 'login' ),
@@ -80,7 +80,7 @@ class CoursePress_View_Front_Login {
 			}
 
 			$content = '';
-			$page_title = __( 'New Signup', 'cp' );
+			$page_title = __( 'New Signup', 'CP_TD' );
 
 			$args = array(
 				'slug' => CoursePress_Core::get_slug( 'signup' ),
@@ -98,7 +98,7 @@ class CoursePress_View_Front_Login {
 	public static function render_student_signup_page() {
 
 		if ( is_user_logged_in() ) {
-			_e( 'You are already logged in.', 'cp' );
+			_e( 'You are already logged in.', 'CP_TD' );
 			return;
 		}
 
@@ -120,7 +120,7 @@ class CoursePress_View_Front_Login {
 	public static function render_student_login_page() {
 
 		if ( is_user_logged_in() ) {
-			_e( 'You are already logged in.', 'cp' );
+			_e( 'You are already logged in.', 'CP_TD' );
 			return;
 		}
 

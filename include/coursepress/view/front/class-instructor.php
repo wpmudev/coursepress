@@ -45,12 +45,12 @@ class CoursePress_View_Front_Instructor {
 			}
 			$content = '';
 			if ( empty( $instructor ) ) {
-				$content = __( 'The requested instuctor does not exists', 'cp' );
+				$content = __( 'The requested instuctor does not exists', 'CP_TD' );
 			}
 
 			self::$last_instructor = empty( $instructor ) ? 0 : $instructor->ID;
 
-			$page_title = ! empty( self::$last_instructor ) ? CoursePress_Helper_Utility::get_user_name( self::$last_instructor, false, false ) : __( 'Instructor not found.', 'cp' );
+			$page_title = ! empty( self::$last_instructor ) ? CoursePress_Helper_Utility::get_user_name( self::$last_instructor, false, false ) : __( 'Instructor not found.', 'CP_TD' );
 			$args = array(
 				'slug' => 'instructor_' . self::$last_instructor,
 				'title' => $page_title,
@@ -104,10 +104,10 @@ class CoursePress_View_Front_Instructor {
 					}
 					$args = array(
 						'show_title' => false,
-						'title' => apply_filters( 'coursepress_instructor_invitation_title', esc_html__( 'Instructor Invitation', 'cp' ) ),
+						'title' => apply_filters( 'coursepress_instructor_invitation_title', esc_html__( 'Instructor Invitation', 'CP_TD' ) ),
 						'content' => apply_filters( 'coursepress_instructor_invitation_content', sprintf(
 							'<p>%s</p>',
-							esc_html__( 'You must log in to confirm this invitation.', 'cp' )
+							esc_html__( 'You must log in to confirm this invitation.', 'CP_TD' )
 						) ),
 					);
 					$vp_args = wp_parse_args( $args, $vp_args );
@@ -124,14 +124,14 @@ class CoursePress_View_Front_Instructor {
 					$main_course = apply_filters( 'coursepress_view_course', CoursePress_View_Front_Course::render_course_main(), $course_invite->course_id, 'main' );
 					$args = array(
 						'show_title' => true,
-						'title' => esc_html__( 'Invitation activated', 'cp' ),
+						'title' => esc_html__( 'Invitation activated', 'CP_TD' ),
 						'content' => sprintf(
 							'<p>%s %s</p>%s',
-							esc_html__( 'Congratulations. You are now an instructor of this course. ', 'cp' ),
+							esc_html__( 'Congratulations. You are now an instructor of this course. ', 'CP_TD' ),
 							sprintf(
 								'<a href="%s" class="blue-button small-button button-a">%s</a>',
 								esc_url( get_permalink( $course_invite->course_id ) ),
-								__( 'Course Details', 'cp' )
+								__( 'Course Details', 'CP_TD' )
 							),
 							$main_course
 						),
@@ -139,11 +139,11 @@ class CoursePress_View_Front_Instructor {
 				} else {
 					$args = array(
 						'show_title' => false,
-						'title' => esc_html__( 'Invalid invitation', 'cp' ),
+						'title' => esc_html__( 'Invalid invitation', 'CP_TD' ),
 						'content' => sprintf(
 							'<p>%s</p><p>%s</p>',
-							esc_html__( 'This invitation link is not associated with your email address.', 'cp' ),
-							esc_html__( 'Please contact your course administator and ask them to send a new invitation to the email address that you have associated with your account.', 'cp' )
+							esc_html__( 'This invitation link is not associated with your email address.', 'CP_TD' ),
+							esc_html__( 'Please contact your course administator and ask them to send a new invitation to the email address that you have associated with your account.', 'CP_TD' )
 						),
 					);
 				}
@@ -153,11 +153,11 @@ class CoursePress_View_Front_Instructor {
 		if ( empty( $args ) ) {
 			$args = array(
 				'show_title' => false,
-				'title' => esc_html__( 'Invitation not found', 'cp' ),
+				'title' => esc_html__( 'Invitation not found', 'CP_TD' ),
 				'content' => sprintf(
 					'<p>%s</p><p>%s</p>',
-					esc_html__( 'This invitation could not be found or is no longer available.', 'cp' ),
-					esc_html__( 'Please contact us if you believe this to be an error.', 'cp' )
+					esc_html__( 'This invitation could not be found or is no longer available.', 'CP_TD' ),
+					esc_html__( 'Please contact us if you believe this to be an error.', 'CP_TD' )
 				),
 			);
 		}
@@ -172,26 +172,26 @@ class CoursePress_View_Front_Instructor {
 		?>
 		<script type="text/template" id="modal-view4-template" data-type="modal-step" data-modal-action="instructor-verified">
 			<div class="bbm-modal__topbar">
-				<h3 class="bbm-modal__title"><?php esc_html_e( 'Invitation activated.', 'cp' ); ?></h3>
+				<h3 class="bbm-modal__title"><?php esc_html_e( 'Invitation activated.', 'CP_TD' ); ?></h3>
 			</div>
 			<div class="bbm-modal__section">
-				<p><?php esc_html_e( 'Congratulations. You are now an instructor of this course. ', 'cp' ); ?></p>
+				<p><?php esc_html_e( 'Congratulations. You are now an instructor of this course. ', 'CP_TD' ); ?></p>
 			</div>
 			<div class="bbm-modal__bottombar">
-				<a href="<?php echo esc_url( get_permalink( $invite_data->course_id ) ); ?>" class="bbm-button button"><?php esc_html_e( 'Continue...', 'cp' ); ?></a>
+				<a href="<?php echo esc_url( get_permalink( $invite_data->course_id ) ); ?>" class="bbm-button button"><?php esc_html_e( 'Continue...', 'CP_TD' ); ?></a>
 			</div>
 		</script>
 
 		<script type="text/template" id="modal-view5-template" data-type="modal-step" data-modal-action="verification-failed">
 			<div class="bbm-modal__topbar">
-				<h3 class="bbm-modal__title"><?php esc_html_e( 'Invalid invitation.', 'cp' ); ?></h3>
+				<h3 class="bbm-modal__title"><?php esc_html_e( 'Invalid invitation.', 'CP_TD' ); ?></h3>
 			</div>
 			<div class="bbm-modal__section">
-				<p><?php esc_html_e( 'This invitation link is not associated with your email address.', 'cp' ); ?></p>
-				<p><?php esc_html_e( 'Please contact your course administator and ask them to send a new invitation to the email address that you have associated with your account.', 'cp' ); ?></p>
+				<p><?php esc_html_e( 'This invitation link is not associated with your email address.', 'CP_TD' ); ?></p>
+				<p><?php esc_html_e( 'Please contact your course administator and ask them to send a new invitation to the email address that you have associated with your account.', 'CP_TD' ); ?></p>
 			</div>
 			<div class="bbm-modal__bottombar">
-				<a href="<?php echo esc_url( get_permalink( $invite_data->course_id ) ); ?>" class="bbm-button button"><?php esc_html_e( 'Continue...', 'cp' ); ?></a>
+				<a href="<?php echo esc_url( get_permalink( $invite_data->course_id ) ); ?>" class="bbm-button button"><?php esc_html_e( 'Continue...', 'CP_TD' ); ?></a>
 			</div>
 		</script>
 		<?php

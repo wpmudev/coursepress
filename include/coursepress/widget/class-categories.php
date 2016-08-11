@@ -12,10 +12,10 @@ class CoursePress_Widget_Categories extends WP_Widget {
 	public function __construct() {
 		$widget_ops = array(
 			'classname' => 'cp_course_categories',
-			'description' => __( 'A list or dropdown of course categories.', 'cp' ),
+			'description' => __( 'A list or dropdown of course categories.', 'CP_TD' ),
 		);
 
-		parent::__construct( 'CP_Widget_Categories', __( 'Course Categories', 'cp' ), $widget_ops );
+		parent::__construct( 'CP_Widget_Categories', __( 'Course Categories', 'CP_TD' ), $widget_ops );
 
 	}
 
@@ -26,12 +26,12 @@ class CoursePress_Widget_Categories extends WP_Widget {
 		$count = isset( $instance['count'] ) ? (bool) $instance['count'] : false;
 		?>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'cp' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'CP_TD' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>"/>
 		</p>
 		<p>
 			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'count' ); ?>" name="<?php echo $this->get_field_name( 'count' ); ?>"<?php checked( $count ); ?> />
-			<label for="<?php echo $this->get_field_id( 'count' ); ?>"><?php _e( 'Show course counts', 'cp' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'count' ); ?>"><?php _e( 'Show course counts', 'CP_TD' ); ?></label>
 		</p>
 		<?php
 	}
@@ -48,7 +48,7 @@ class CoursePress_Widget_Categories extends WP_Widget {
 	public function widget( $args, $instance ) {
 		extract( $args, EXTR_SKIP );
 
-		$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Course Categories', 'cp' ) : $instance['title'], $instance, $this->id_base );
+		$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Course Categories', 'CP_TD' ) : $instance['title'], $instance, $this->id_base );
 		$show_course_count = isset( $instance['count'] ) ? true : false;
 
 		echo $before_widget;
@@ -70,7 +70,7 @@ class CoursePress_Widget_Categories extends WP_Widget {
 			);
 			$terms = get_terms( $taxonomies, apply_filters( 'cp_course_categories_args', $args ) );
 
-		foreach ( $terms as $term ) {
+			foreach ( $terms as $term ) {
 				$permalink = get_term_link( $term, 'course_category' );
 				?>
 				<li>
@@ -78,7 +78,7 @@ class CoursePress_Widget_Categories extends WP_Widget {
 					<?php echo $show_course_count ? '('. $term->count . ')' : ''; ?>
 				</li>
 			<?php
-		}
+			}
 			?>
 		</ul>
 		<?php

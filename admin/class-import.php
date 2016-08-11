@@ -16,8 +16,8 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 
 	public function get_labels() {
 		return array(
-			'title' => __( 'CoursePress Import', 'cp' ),
-			'menu_title' => __( 'Import', 'cp' ),
+			'title' => __( 'CoursePress Import', 'CP_TD' ),
+			'menu_title' => __( 'Import', 'CP_TD' ),
 		);
 	}
 
@@ -60,7 +60,7 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 				$with_students = ! empty( $_REQUEST['students'] );
 
 				if ( ! empty( $courses ) ) {
-					$courses = (object) $courses;
+					$courses = json_encode( json_decode( $courses ) );
 					self::course_importer( $courses, $_REQUEST['import_id'], $is_replace, $with_students );
 				} else {
 					self::clear_courses();
@@ -85,7 +85,7 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 	 **/
 	public static function import_completed() {
 		printf( '<div class="notice notice-info is-dismissible"><p>%s</p></div>',
-			__( 'Courses successfully imported!', 'cp' )
+			__( 'Courses successfully imported!', 'CP_TD' )
 		);
 	}
 
@@ -103,6 +103,7 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 		$execution_limit = $execution_limit - ( 1000000 * 6 );
 
 		if ( $time_now >= $execution_limit ) {
+			usleep(2000);
 			return false;
 		}
 
@@ -119,6 +120,25 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 	 **/
 	public static function course_importer( $courses, $import_id, $replace, $with_students ) {
 		self::$start_time = microtime(true);
+		$actions = array(
+			'pre_post_update',
+			'edit_post',
+			'post_updated',
+			'save_post',
+			'wp_insert_post',
+			'update_post_meta',
+			'updated_post_meta',
+		);
+		$filters = array(
+			'pre_user_login',
+			'insert_user_meta',
+			'profile_update',
+			'user_register',
+		);
+
+		// Remove all hooks
+		array_map( 'remove_all_actions', $actions );
+		array_map( 'remove_all_filters', $filters );
 
 		foreach ( $courses as $course_id => $course ) {
 
@@ -177,49 +197,26 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 
 			if ( false === self::check_memory() ) { break; }
 
-			// Import course students
-			if ( $with_students && isset( $course->students ) && is_object( $course->students ) ) {
-				foreach ( $course->students as $student_id => $student ) {
-					if ( false === self::check_memory() ) { break; }
-
-					if ( ! isset( $student->student_id ) ) {
-						$student_data = $student;
-						unset( $student_data->progress );
-						$new_student_id = self::maybe_add_user( $student_data );
-						$course->students->$student_id->student_id = $new_student_id;
-					} else {
-						$new_student_id = $student->student_id;
-					}
-
-					if ( false === self::check_memory() ) { break; }
-
-					// Enroll student
-					CoursePress_Data_Course::enroll_student( $new_student_id, $new_course_id );
-
-					if ( false === self::check_memory() ) { break; }
-
-					if ( isset( $student->progress ) ) {
-						$student_progress = get_object_vars( $student->student_progress );
-						CoursePress_Data_Student::update_completion_data( $new_student_id, $new_course_id, maybe_unserialize( $student_progress ) );
-						unset( $course->students->$student_id->progress );
-					}
-
-					unset( $courses->students->$student_id );
+			$course_settings = CoursePress_Data_Course::get_setting( $new_course_id );
+			$visible_units = $preview_units = $visible_pages = $preview_pages = $visible_modules = $preview_modules = array();
+			$setting_keys = array(
+				'structure_visible_units',
+				'structure_preview_units',
+				'structure_visible_pages',
+				'structure_preview_pages',
+				'structure_visible_modules',
+				'structure_preview_modules',
+			);
+			// Get structure values
+			foreach ( $course_settings as $setting_key => $setting_value ) {
+				if ( in_array( $setting_key, $setting_keys ) && ! empty( $setting_value ) ) {
+					$key = str_replace( 'structure_', '', $setting_key );
+					$$key = $setting_value;
 				}
-
-				unset( $courses->students );
 			}
 
-			if ( false === self::check_memory() ) { break; }
-
-			$visible_units = CoursePress_Data_Course::get_setting( $new_course_id, 'structure_visible_units', array() );
-			$preview_units = CoursePress_Data_Course::get_setting( $new_course_id, 'structure_preview_units', array() );
-			$visible_pages = CoursePress_Data_Course::get_setting( $new_course_id, 'structure_visible_pages', array() );
-			$preview_pages = CoursePress_Data_Course::get_setting( $new_course_id, 'structure_preview_pages', array() );
-			$visible_modules = CoursePress_Data_Course::get_setting( $new_course_id, 'structure_visible_modules', array() );
-			$preview_modules = CoursePress_Data_Course::get_setting( $new_course_id, 'structure_preview_modules', array() );
-
 			// Import units
+			$new_units = array();
 			if ( isset( $course->units ) ) {
 				foreach ( $course->units as $unit_id => $unit ) {
 					// Check memory
@@ -233,6 +230,9 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 					} else {
 						$new_unit_id = $unit->unit_id;
 					}
+
+					// Set new unit id
+					$new_units[$unit_id] = array( 'new_unit_id' => $new_unit_id, 'modules' => array() );
 
 					// Update visible units
 					$visible_units[$new_unit_id] = $visible_units[$unit_id];
@@ -275,6 +275,9 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 										$new_module_id = $module->_module_id;
 									}
 
+									// Cache modules
+									$new_units[$unit_id]['modules'][$module_id] = $new_module_id;
+
 									// Update visible module
 									$old_module_key = $unit_id . '_' . $page_number . '_' . $module_id;
 									$new_module_key = $new_unit_id . '_' . $page_number . '_' . $new_module_id;
@@ -300,7 +303,6 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 									// If it reached this far, unset module
 									unset( $page->modules->$module_id );
 								}
-
 							}
 
 							// If it reached this far, remove the page
@@ -314,19 +316,63 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 			}
 
 			// Update course meta
-			CoursePress_Data_Course::update_setting( $new_course_id, 'structure_visible_units', $visible_units );
-			CoursePress_Data_Course::update_setting( $new_course_id, 'structure_preview_units', $preview_units );
-			CoursePress_Data_Course::update_setting( $new_course_id, 'structure_visible_pages', $visible_pages );
-			CoursePress_Data_Course::update_setting( $new_course_id, 'structure_preview_pages', $preview_pages );
-			CoursePress_Data_Course::update_setting( $new_course_id, 'structure_visible_modules', $visible_modules );
-			CoursePress_Data_Course::update_setting( $new_course_id, 'structure_preview_modules', $preview_modules );
+			CoursePress_Helper_Utility::set_array_val( $course_settings, 'structure_visible_units', $visible_units );
+			CoursePress_Helper_Utility::set_array_val( $course_settings, 'structure_preview_units', $preview_units );
+			CoursePress_Helper_Utility::set_array_val( $course_settings, 'structure_visible_pages', $visible_pages );
+			CoursePress_Helper_Utility::set_array_val( $course_settings, 'structure_preview_pages', $preview_pages );
+			CoursePress_Helper_Utility::set_array_val( $course_settings, 'structure_visible_modules', $visible_modules );
+			CoursePress_Helper_Utility::set_array_val( $course_settings, 'structure_preview_modules', $preview_modules );
+			CoursePress_Data_Course::update_setting( $new_course_id, true, $course_settings );
+
+			if ( false === self::check_memory() ) { break; }
+			// Import course students
+			if ( $with_students && isset( $course->students ) && is_object( $course->students ) ) {
+				// Tell coursepress not to send enrollment notification
+				add_filter( 'coursepress_notify_student', '__return_false' );
+
+				foreach ( $course->students as $student_id => $student ) {
+					if ( false === self::check_memory() ) { break; }
+
+					$student_progress = array();
+
+					if ( ! isset( $student->student_id ) ) {
+						$student_data = $student;
+						$student_progress = $student_data->progress;
+						unset( $student_data->progress );
+						$new_student_id = self::maybe_add_user( $student_data );
+						$course->students->$student_id = array( 'student_id' => $new_student_id, 'progress' => $student_progress );
+					} else {
+						$new_student_id = $student->student_id;
+					}
+
+					if ( false === self::check_memory() ) { break; }
+
+					// Enroll student
+					CoursePress_Data_Course::enroll_student( $new_student_id, $new_course_id );
+
+					if ( false === self::check_memory() ) { break; }
+
+					if ( ! empty( $student_progress ) && $new_student_id > 0 ) {
+						$student_progress = CoursePress_Helper_Utility::object_to_array( $student_progress );
+						$student_progress = self::replace_student_progress( $student_progress, $new_units );
+						if ( false === self::check_memory() ) { break; }
+						CoursePress_Data_Student::update_completion_data( $new_student_id, $new_course_id, $student_progress );
+						unset( $course->students->$student_id->progress );
+					}
+					unset( $courses->students->$student_id );
+
+					if ( false === self::check_memory() ) { break; }
+				}
+
+				unset( $courses->students );
+			}
 
 			// If it reached this far, remove the course
 			unset( $courses->$course_id );
 		}
 
 		// Save the remaining courses to db
-		$courses = get_object_vars( $courses );
+		$courses = CoursePress_Helper_Utility::object_to_array( $courses );
 		$courses = array_filter( $courses );
 
 		if ( ! empty( $courses ) ) {
@@ -415,16 +461,118 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 	 * @param (object)	$user_data
 	 **/
 	public static function maybe_add_user( $user_data ) {
-		$user = get_user_by( 'email', $user_data->user_email );
+		$add = true;
 
-		if ( is_wp_error( $user ) ) {
+		if ( ! empty( $user_data->user_email ) && email_exists( $user_data->user_email ) ) {
+			$add = false;
+			$user = get_user_by( 'email', $user_data->user_email );
+		}
+		if ( ! empty( $user_data->user_login ) && username_exists( $user_data->user_login ) ) {
+			$add = false;
+			$user = get_user_by( 'login', $user_data->user_login );
+		}
+
+		if ( $add || empty( $user ) ) {
 			// User doesn't exist, insert
 			unset( $user_data->ID );
 			$user_id = wp_insert_user( get_object_vars( $user_data ) );
+			if ( ! is_wp_error( $user_id ) ) {
+				return $user_id;
+			}
 		} else {
-			$user_id = $user->ID;
+			return $user->ID;
 		}
 
-		return $user_id;
+		return 0;
+	}
+
+	/**
+	 * Helper function to replace unit and module IDs to newly created unit and modules ID.
+	 **/
+	public static function replace_student_progress( $student_progress, $new_units ) {
+		foreach ( $new_units as $unit_id => $unit ) {
+			$new_unit_id = $unit['new_unit_id'];
+			$unit_data = CoursePress_Helper_Utility::get_array_val(
+				$student_progress,
+				'units/' . $unit_id
+			);
+			$unit_completion = CoursePress_Helper_Utility::get_array_val(
+				$student_progress,
+				'completion/' . $unit_id
+			);
+
+			if ( ! empty( $unit['modules'] ) ) {
+				foreach ( $unit['modules'] as $module_id => $new_module_id ) {
+					$module_progress = CoursePress_Helper_Utility::get_array_val(
+						$unit_data,
+						'responses/' . $module_id
+					);
+
+					if ( ! empty(  $module_progress ) ) {
+						CoursePress_Helper_Utility::set_array_val(
+							$unit_data,
+							'responses/' . $new_module_id,
+							$module_progress
+						);
+					}
+
+					$module_seen = CoursePress_Helper_Utility::get_array_val(
+						$unit_completion,
+						'modules_seen/' . $module_id
+					);
+					if ( ! empty( $module_seen ) ) {
+						CoursePress_Helper_Utility::set_array_val(
+							$unit_completion,
+							'modules_seen/' . $new_module_id,
+							1
+						);
+						CoursePress_Helper_Utility::unset_array_val(
+							$unit_completion,
+							'modules_seen/' . $module_id
+						);
+					}
+					$module_answered = CoursePress_Helper_Utility::get_array_val(
+						$unit_completion,
+						'answered/' . $module_id
+					);
+					if ( ! empty( $module_answered ) ) {
+						CoursePress_Helper_Utility::set_array_val(
+							$unit_completion,
+							'answered/' . $new_module_id,
+							1
+						);
+						CoursePress_Helper_Utility::unset_array_val(
+							$unit_completion,
+							'answered/' . $module_id
+						);
+					}
+				}
+			}
+
+			if ( ! empty( $unit_data ) ) {
+				CoursePress_Helper_Utility::set_array_val(
+					$student_progress,
+					'units/' . $new_unit_id,
+					$unit_data
+				);
+				CoursePress_Helper_Utility::unset_array_val(
+					$student_progress,
+					'units/' . $unit_id
+				);
+			}
+			if ( ! empty( $unit_completion ) ) {
+				CoursePress_Helper_Utility::set_array_val(
+					$student_progress,
+					'completion/' . $new_unit_id,
+					$unit_completion
+				);
+				CoursePress_Helper_Utility::unset_array_val(
+					$student_progress,
+					'completion/' . $unit_id
+				);
+			}
+		}
+
+		return $student_progress;
 	}
 }

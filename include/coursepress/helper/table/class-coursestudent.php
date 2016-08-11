@@ -50,8 +50,8 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 	 ***************************************************************************/
 	public function __construct() {
 		parent::__construct( array(
-			'singular' => __( 'Student', 'cp' ),
-			'plural' => __( 'Students', 'cp' ),
+			'singular' => __( 'Student', 'CP_TD' ),
+			'plural' => __( 'Students', 'CP_TD' ),
 			'ajax' => false,// should this table support ajax?
 		) );
 
@@ -93,12 +93,12 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 		$course_id = isset( $_GET['id'] ) ? (int) $_GET['id'] : null;
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
-			'ID' => __( 'ID', 'cp' ),
-			'display_name' => __( 'Username', 'cp' ),
-			'first_name' => __( 'First Name', 'cp' ),
-			'last_name' => __( 'Last Name', 'cp' ),
-			'certificates' => __( 'Certified', 'cp' ),
-			'actions' => __( 'Withdraw', 'cp' ),
+			'ID' => __( 'ID', 'CP_TD' ),
+			'display_name' => __( 'Username', 'CP_TD' ),
+			'first_name' => __( 'First Name', 'CP_TD' ),
+			'last_name' => __( 'Last Name', 'CP_TD' ),
+			'certificates' => __( 'Certified', 'CP_TD' ),
+			'actions' => __( 'Withdraw', 'CP_TD' ),
 		);
 
 		if ( ! CoursePress_Data_Capabilities::can_withdraw_students( $course_id ) ) {
@@ -171,8 +171,8 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 		);
 
 		$actions = array(
-			'profile' => sprintf( '<a href="%s">%s</a>', $profile_link, __( 'Student Profile', 'cp' ) ),
-			'workbook' => sprintf( '<a href="%s">%s</a>', $workbook_link, __( 'Workbook', 'cp' ) ),
+			'profile' => sprintf( '<a href="%s">%s</a>', $profile_link, __( 'Student Profile', 'CP_TD' ) ),
+			'workbook' => sprintf( '<a href="%s">%s</a>', $workbook_link, __( 'Workbook', 'CP_TD' ) ),
 		);
 
 		if ( current_user_can( 'edit_users' ) ) {
@@ -186,7 +186,7 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 						get_edit_user_link( $item->ID )
 					)
 				),
-				__( 'Edit User Profile', 'cp' )
+				__( 'Edit User Profile', 'CP_TD' )
 			);
 		}
 
@@ -317,7 +317,7 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 						$add_form_to_add_student = false;
 						printf(
 							'<span>%s</span>',
-							__( 'You can not add a student, the class limit is reached.', 'cp' )
+							__( 'You can not add a student, the class limit is reached.', 'CP_TD' )
 						);
 					}
 				} else {
@@ -331,7 +331,7 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 							$id,
 							$name,
 							array(
-								'placeholder' => __( 'Choose student...', 'cp' ),
+								'placeholder' => __( 'Choose student...', 'CP_TD' ),
 								'class' => 'chosen-select narrow',
 								'exclude' => $this->students,
 								'context' => 'students',
@@ -348,21 +348,21 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 							esc_attr( $nonce_search )
 						);
 					} else {
-						$user_selector = '<input type="text" id="' . $id .'" name="' . $name . '" placeholder="' . esc_attr__( 'Enter user ID', 'cp' ) . '" />';
+						$user_selector = '<input type="text" id="' . $id .'" name="' . $name . '" placeholder="' . esc_attr__( 'Enter user ID', 'CP_TD' ) . '" />';
 					}
 					$user_selector = apply_filters( 'coursepress_student_selector', $user_selector, $id, $name );
 					echo $user_selector;
 					printf(
 						' <input type="button" class="add-new-student-button button" data-nonce="%s" value="%s" >',
 						esc_attr( $nonce ),
-						esc_attr__( 'Add Student', 'cp' )
+						esc_attr__( 'Add Student', 'CP_TD' )
 					);
 				}
 			}
 
 			if ( CoursePress_Data_Capabilities::can_withdraw_students( $course_id ) ) {
 			?>
-				<a class="withdraw-all-students" data-nonce="<?php echo $withdraw_nonce; ?>" href="#"><?php esc_html_e( 'Withdraw all students', 'cp' ); ?></a>
+				<a class="withdraw-all-students" data-nonce="<?php echo $withdraw_nonce; ?>" href="#"><?php esc_html_e( 'Withdraw all students', 'CP_TD' ); ?></a>
 			<?php
 			}
 			?>
@@ -378,9 +378,9 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 		$course_id = (int) $_GET['id'];
 
 		if ( CoursePress_Data_Capabilities::can_assign_course_student( $course_id ) || CoursePress_Data_Capabilities::can_invite_students( $course_id ) ) {
-			esc_html_e( 'There are no students enrolled in this course. Add them below.', 'cp' );
+			esc_html_e( 'There are no students enrolled in this course. Add them below.', 'CP_TD' );
 		} else {
-			esc_html_e( 'There are no students enrolled in this course.', 'cp' );
+			esc_html_e( 'There are no students enrolled in this course.', 'CP_TD' );
 		}
 	}
 

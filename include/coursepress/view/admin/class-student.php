@@ -7,8 +7,8 @@ class CoursePress_View_Admin_Student {
 	private static $table_manager = null;
 
 	public static function init() {
-		self::$title = __( 'Courses/Students', 'cp' );
-		self::$menu_title = __( 'Students', 'cp' );
+		self::$title = __( 'Courses/Students', 'CP_TD' );
+		self::$menu_title = __( 'Students', 'CP_TD' );
 
 		add_filter(
 			'coursepress_admin_valid_pages',
@@ -167,6 +167,25 @@ class CoursePress_View_Admin_Student {
 		}
 
 		$user_query = new WP_User_Query( $args );
+
+		// Search by last name
+		$args['meta_query'] = array(
+			'relation' => 'AND',
+			array(
+				'key' => 'last_name',
+				'value' => $q[0],
+				'compare' => 'LIKE',
+			)
+		);
+		$query = new WP_User_Query( $args );
+
+		if ( ! empty( $query->results ) ) {
+			if ( ! empty( $user_query->results ) ) {
+				$user_query->results += $query->results;
+			} else {
+				$user_query = $query;
+			}
+		}
 
 		// Search using other keys
 		$args2 = array(

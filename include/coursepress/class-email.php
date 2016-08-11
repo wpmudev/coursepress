@@ -27,11 +27,10 @@ class CoursePress_Email {
 
 	/**
 	 * Set the default email fields.
+	 * 
 	 * Must be overriden in a sub-class
 	 **/
-	public function default_email_fields() {
-		return array();
-	}
+	public function default_email_fields() { return array(); }
 
 	/**
 	 * Default mail tokens.
@@ -40,8 +39,7 @@ class CoursePress_Email {
 	 **/
 	public function mail_tokens() {
 		return array(
-			'BLOG_NAME',
-			'WEBSITE_ADDRESS',
+			'BLOG_NAME', 'WEBSITE_ADDRESS',
 		);
 	}
 
@@ -54,7 +52,7 @@ class CoursePress_Email {
 			array(
 				'from' => get_option( 'blogname' ),
 				'email' => get_option( 'admin_email' ),
-				'subject' => __( 'Subject line here...', 'cp' ),
+				'subject' => __( 'Subject line here...', 'CP_TD' ),
 				'content' => 'The content goes here...',
 		) );
 
@@ -87,7 +85,7 @@ class CoursePress_Email {
 		// From Name
 		$fields = sprintf(
 			$block,
-			__( 'From Name', 'cp' ),
+			__( 'From Name', 'CP_TD' ),
 			isset( $email_settings['from_sub'] ) ? $email_settings['from_sub'] : '', // Allow description
 			$this->email_type,
 			'from',
@@ -97,7 +95,7 @@ class CoursePress_Email {
 		// From Email
 		$fields .= sprintf(
 			$block,
-			__( 'From Email', 'cp' ),
+			__( 'From Email', 'CP_TD' ),
 			isset( $email_settings['email_sub'] ) ? $email_settings['email_sub'] : '', // Allow description
 			$this->email_type,
 			'email',
@@ -107,7 +105,7 @@ class CoursePress_Email {
 		// Subject
 		$fields .= sprintf(
 			$block,
-			__( 'Subject', 'cp' ),
+			__( 'Subject', 'CP_TD' ),
 			isset( $email_settings['subject_sub'] ) ? $email_settings['email_sub'] : '',
 			$this->email_type,
 			'subject',
@@ -119,11 +117,11 @@ class CoursePress_Email {
 		$mail_tokens = $this->mail_tokens();
 
 		if ( ! empty( $mail_tokens ) ) {
-			$content_help_text .= sprintf( '<p class="description"><strong>%s</strong>: <br />%s', __( 'Mail Tokens', 'cp' ), implode( ', ', $mail_tokens ) );
-			$content_help_text .= '<p class="description">* ' . __( 'These tokens will be replaced with actual data.', 'cp' ) . '</p>';
+			$content_help_text .= sprintf( '<p class="description"><strong>%s</strong>: <br />%s', __( 'Mail Tokens', 'CP_TD' ), implode( ', ', $mail_tokens ) );
+			$content_help_text .= '<p class="description">* ' . __( 'These tokens will be replaced with actual data.', 'CP_TD' ) . '</p>'; 
 		}
 
-		$fields .= '<tr><th>' . __( 'Email Body', 'cp' ) . '</th><td>' . $content_help_text;
+		$fields .= '<tr><th>' . __( 'Email Body', 'CP_TD' ) . '</th><td>' . $content_help_text;
 
 		ob_start();
 		$editor_settings = array(
@@ -131,15 +129,17 @@ class CoursePress_Email {
 			'media_buttons' => false,
 			'teeny' => true,
 		);
-		$editor_id = 'coursepress-editor-' . $this->email_type;
-		$content = stripcslashes( $email_settings['content'] );
-		wp_editor( $content, $editor_id, $editor_settings );
-		$fields .= ob_get_clean();
-		$fields .= '</td></tr>';
+		$editor_id = 'cp-wp-email-editor-' . $this->email_type;
+		$editor_content = stripcslashes( $email_settings['content'] );
+		wp_editor( $editor_content, $editor_id, $editor_settings );
 
-		$content .= sprintf( '<table class="form-table compressed email-fields"><tbody>%s</tbody></table>', $fields );
+		$editor = ob_get_clean();
 
-		return $content;
+		$fields .= $editor . '<br /></td></tr>';
+
+		$content .= sprintf( '<table id="email-setting-fields" class="form-table compressed email-fields"><tbody>%s</tbody></table>', $fields );
+
+		return '<div class="cp-email-setting-fields email-setting-'. $this->email_type . '">' . $content . '</div>';
 	}
 
 	/**
@@ -151,7 +151,7 @@ class CoursePress_Email {
 	 * @return (array) 					An array of `key=value` where value is the actual course data.
 	 **/
 	public function prepare_course_tokens( $course_id = 0 ) {
-		$vars = array( 'COURSE_NAME', 'COURSE_ADDRESS' );
+		$vars = array( 'COURSE_NAME' => '', 'COURSE_ADDRESS' => '' );
 
 		if ( ! empty( $course_id ) ) {
 			$course = get_post( $course_id );
@@ -174,13 +174,13 @@ class CoursePress_Email {
 	 **/
 	public function prepare_user_tokens( $user_id ) {
 		$vars = array(
-			'FIRST_NAME',
-			'LAST_NAME',
-			'EMAIL',
-			'STUDENT_FIRST_NAME',
-			'STUDENT_LAST_NAME',
-			'INSTRUCTOR_FIRST_NAME',
-			'INSTRUCTOR_LAST_NAME',
+			'FIRST_NAME' => '',
+			'LAST_NAME' => '',
+			'EMAIL' => '',
+			'STUDENT_FIRST_NAME' => '',
+			'STUDENT_LAST_NAME' => '',
+			'INSTRUCTOR_FIRST_NAME' => '',
+			'INSTRUCTOR_LAST_NAME' => '',
 		);
 
 		if ( ! empty( $user_id ) ) {
@@ -204,12 +204,9 @@ class CoursePress_Email {
 	public function prepare_tokens() {
 		$vars = array_fill_keys( array_values( $this->mail_tokens() ), '' );
 
-		if ( isset( $vars['BLOG_NAME'] ) ) {
-			$vars['BLOG_NAME'] = get_bloginfo( 'name' );
-		}
-		if ( isset( $vars['WEBSITE_ADDRESS'] ) ) {
-			$vars['WEBSITE_ADDRESS'] = site_url();
-		}
+		$vars['BLOG_NAME'] = get_bloginfo( 'name' );
+		$vars['WEBSITE_ADDRESS'] = site_url();
+		$vars['BLOG_ADDRESS'] = site_url();
 
 		return $vars;
 	}
@@ -222,7 +219,7 @@ class CoursePress_Email {
 	 * @param (array) $email_args				The email arguments.
 	 * @param (array) $tokens					An array of set mail tokens with their actual value.
 	 **/
-	public function send_email( $email_args = array(), $tokens = array() ) {
+	public function send_email( $email_args = array(), $tokens = array() ){
 		$email_fields = $this->email_fields();
 		$message = $email_fields['content'];
 
