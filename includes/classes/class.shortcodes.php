@@ -3411,7 +3411,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 				$class_name = $mod->module_type;
 
 				if ( class_exists( $class_name ) ) {
-					if ( constant( $class_name . '::FRONT_SAVE' ) ) {
+					if ( defined( $class_name.'::FRONT_SAVE' ) && constant( $class_name . '::FRONT_SAVE' ) ) {
 						$front_save_count ++;
 					}
 				}
@@ -4768,4 +4768,4 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 }
 
 CoursePress_Shortcodes::instance( new CoursePress_Shortcodes() );
-?>
+
