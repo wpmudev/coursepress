@@ -1,7 +1,9 @@
 
 (function( $ ) {
 	// Make the left menu sticky.
-	$( '.sticky-tabs' ).sticky( { topSpacing: 45 } );
+	if ( $.fn.sticky ) {
+		$( '.sticky-tabs' ).sticky( { topSpacing: 45 } );
+	}
 
 	/*
 	***** General Admin Patterns *****
