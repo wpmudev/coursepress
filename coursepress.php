@@ -5302,6 +5302,11 @@ if ( ! class_exists( 'CoursePress' ) ) {
 		function create_virtual_pages() {
 
 			$full_url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+			if ( is_ssl() ) {
+				$full_url = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+			}
+
 			$site_url = site_url();
 
 			$uri = untrailingslashit( trim( ltrim( str_replace( $site_url, '', $full_url ), '/' ) ) );
@@ -5317,7 +5322,6 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				$site_uri     = ltrim( $blog_details->path, '/' );
 				$match_uri    = str_replace( $site_uri, '', $uri );
 			}
-
 
 			$args = array(
 				'name'        => $uri,
