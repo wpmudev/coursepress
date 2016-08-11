@@ -82,7 +82,7 @@ var CoursePress = CoursePress || {};
 				 * Downside: this will be triggered *a lot*. The overall performance might
 				 * benefit from debouncing the actual listeners.
 				 */
-				ed.on("NodeChange", function () {
+				ed.on('NodeChange', function () {
 					CoursePress.Events.trigger('editor:keyup',ed);
 				});
 				// End of hack

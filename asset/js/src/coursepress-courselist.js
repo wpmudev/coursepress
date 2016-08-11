@@ -78,7 +78,7 @@ var CoursePress = CoursePress || {};
 			 */
 			if ( 'export' === action ) {
 				if ( 0 === courses.length ) {
-					alert( _coursepress.courselist_export );
+					window.alert( _coursepress.courselist_export );
 					return false;
 				}
 				window.location = './admin.php?page=coursepress_export_import&courses='+courses.join()+'&_wpnonce='+nonce+'&source=list';
@@ -135,7 +135,7 @@ var CoursePress = CoursePress || {};
 				// In case something went wrong while deleting, tell the user.
 				CoursePress.Course.on( 'coursepress:delete_course_error', function() {
 					parentTR.slideUp();
-					alert( _coursepress.server_error );
+					window.alert( _coursepress.server_error );
 				});
 
 			}

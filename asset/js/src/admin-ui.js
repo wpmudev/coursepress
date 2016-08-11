@@ -1,7 +1,7 @@
-+function( $ ){
-	CoursePress = CoursePress || {};
-	CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
+var CoursePress = CoursePress || {};
+CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 
+(function( $ ){
 	// Toggle the state of a form's submit button
 	var canSubmit = function() {
 		var form = $(this).parents( 'form' ).first(),
@@ -15,18 +15,18 @@
 
 			var input_type = input.attr( 'type' );
 
-			if ( ( 'checkbox' == input_type || 'radio' == input_type ) ) {
+			if ( ( 'checkbox' === input_type || 'radio' === input_type ) ) {
 				if ( input.is( ':checked' ) ) {
 					found += 1;
 				}
 			} else {
-				if ( '' != input.val().trim() ) {
+				if ( '' !== input.val().trim() ) {
 					found += 1;
 				}
 			}
 		});
 
-		submit_button[ 0 == found ? 'addClass' : 'removeClass' ]('disabled');
+		submit_button[ 0 === found ? 'addClass' : 'removeClass' ]('disabled');
 	};
 
 	// Prevent a form from submitting if submit button is disabled
@@ -34,6 +34,7 @@
 		var form = $(this),
 			submitButton = $( '[type="submit"]', form ),
 			can_submit = ! submitButton.is( '.disabled' )
+		;
 
 		if ( ! can_submit ) {
 			e.stopImmediatePropagation();
@@ -78,4 +79,4 @@
 		.on( 'change', '.input-key', canSubmit )
 		.on( 'submit', '.has-disabled', formSubmission );
 
-}(jQuery);
+})(jQuery);
