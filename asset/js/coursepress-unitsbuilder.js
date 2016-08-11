@@ -1,4 +1,6 @@
-/*global tinyMCE*/
+/*!  - v2.0.0
+ * 
+ * Copyright (c) 2016; * Licensed GPLv2+ */
 /*global tinyMCEPreInit*/
 /*global _coursepress*/
 
@@ -853,7 +855,10 @@ var CoursePress = CoursePress || {};
 
 			var input = 'single' === type || 'selectable' === type ? 'radio' : 'checkbox';
 			var css_class = 'single' === type ? 'component-radio-answer wide' : 'component-checkbox-answer wide';
-			if('selectable' === type) css_class = 'component-select-answer wide'
+
+			if('selectable' === type) {
+				css_class = 'component-select-answer wide';
+			}
 
 			var input_name = $( question).attr('data-type') + '-' + $( question).attr('data-id');
 
@@ -1136,11 +1141,11 @@ var CoursePress = CoursePress || {};
 
 			if ( 'input-upload' === module_type ) {
 
-					content += '<label class="module-assessable-2">'
-						+ '<input type="checkbox" name="meta_instructor_assessable[' + module.cid + ']" value="1" ' + CoursePress.utility.checked(data['instructor_assessable'], 1) + ' />'
-						+ '<span class="label">' + labels.module_instructor_assessable + '</span><br />'
-						+ '<span class="description">' + labels.module_instructor_assessable_desc + '</span>'
-						+ '</label>';
+					content += '<label class="module-assessable-2">' +
+						'<input type="checkbox" name="meta_instructor_assessable[' + module.cid + ']" value="1" ' + CoursePress.utility.checked(data['instructor_assessable'], 1) + ' />' +
+						'<span class="label">' + labels.module_instructor_assessable + '</span><br />' +
+						'<span class="description">' + labels.module_instructor_assessable_desc + '</span>' +
+						'</label>';
 			}
 
 			// Excerpt
@@ -2364,8 +2369,8 @@ var CoursePress = CoursePress || {};
 			 * bind page title change
 			 */
 			$('.page-info-holder input[name=page_title]').on('keyup', function() {
-				label = $( this ).val();
-				label = ( label.length > 19 ) ? label.substr( 0, 19 ) + "…" : label;
+				var label = $( this ).val();
+				label = ( label.length > 19 ) ? label.substr( 0, 19 ) + '…' : label;
 				$( '.unit-builder-pager li.active' ).html( label ) ;
 			});
 			return this;

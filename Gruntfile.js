@@ -35,8 +35,10 @@ module.exports = function(grunt) {
 			'{js}coursepress-course.js':       ['{js}src/coursepress-course.js'],
 			'{js}coursepress-courselist.js':   ['{js}src/coursepress-courselist.js'],
 			'{js}coursepress-front.js':        ['{js}src/coursepress-front.js'],
-			'{js}coursepress-unitsbuilder.js': ['{js}src/coursepress-UnitsBuilder.js'],
-			'{js}coursepress-calendar.js': ['{js}src/coursepress-calendar.js']
+			'{js}coursepress-unitsbuilder.js': ['{js}src/coursepress-unitsBuilder.js'],
+			'{js}coursepress-calendar.js':		['{js}src/coursepress-calendar.js'],
+			'{js}coursepress-assessment.js':	['{js}/src/coursepress-assessment.js'],
+			'{js}admin-ui.js':					['{js}/src/admin-ui.js']
 		},
 
 		// SASS files to process. Resulting CSS files will be minified as well.
@@ -45,7 +47,8 @@ module.exports = function(grunt) {
 			'{css}admin-global.css':      '{css}src/admin/admin-global.scss',
 			'{css}coursepress_front.css': '{css}src/coursepress_front.scss',
 			'{css}bbm.modal.css':         '{css}src/bbm.modal.scss',
-			'{css}editor.css':            '{css}src/editor.scss'
+			'{css}editor.css':            '{css}src/editor.scss',
+			'{css}admin-ui.css':           '{css}/admin/admin-ui.scss'
 		},
 
 		// PHP files to validate.
@@ -262,7 +265,7 @@ module.exports = function(grunt) {
 		uglify: {
 			all: {
 				files: [{
-					expand: true,
+					expand: false,
 					src: ['*.js', '!*.min.js'],
 					cwd: conf.js_folder,
 					dest: conf.js_folder,

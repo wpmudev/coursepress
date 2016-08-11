@@ -1,4 +1,6 @@
-/*global tinyMCE*/
+/*!  - v2.0.0
+ * 
+ * Copyright (c) 2016; * Licensed GPLv2+ */
 /*global _coursepress*/
 
 var CoursePress = CoursePress || {};
@@ -173,6 +175,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			CoursePress.Course.add_array_to_data( data, meta_items );
 		}
 
+		var course_completion_content, pre_completion_content, failed_content, basic_certificate_layout;
 		// Step 1 Data
 		if ( 7 <= step ) {
 			course_completion_content = tinyMCE && tinyMCE.get( 'course-completion-editor-content' ) ? tinyMCE.get( 'course-completion-editor-content' ).getContent() : $( '[name="meta_course_completion_content"]' ).val();
@@ -215,63 +218,6 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		CoursePress.Course.set( 'action', 'update_course' );
 		CoursePress.Course.set( 'next_step', next_step );
 	};
-
-	function course_structure_update () {
-		$.each( $( '.step-content .course-structure tr.unit' ), function( uidx, unit ) {
-
-			// Make sure its a tree node
-			var match;
-
-			if ( match = $( unit ).attr( 'class' ).match( /treegrid-\d{1,10}/g )[ 0 ] ) {
-				var unit_id = match.trim().split( '-' ).pop();
-
-				var pages_selector = '.step-content .course-structure tr.page.treegrid-parent-' + unit_id;
-				var pages = $( pages_selector );
-
-				// Do pages first
-				$.each( pages, function( pidx, page ) {
-					var page_id = $( page ).attr( 'class' ).match( /treegrid-\d{1,10}/g )[ 0 ].trim().split( '-' ).pop();
-					var modules_selector = '.step-content .course-structure tr.module.treegrid-parent-' + page_id;
-					var modules_visible_boxes = modules_selector + ' [name*="meta_structure_visible_modules"]';
-					var modules_visible_count = $( modules_visible_boxes ).length;
-					var modules_visible_checked = $( modules_visible_boxes + ':checked' ).length;
-
-					$( '.step-content .course-structure .treegrid-' + page_id + ' [name*=meta_structure_visible_pages]' ).prop(
-						'checked',
-						modules_visible_count === modules_visible_checked && modules_visible_checked > 0
-					);
-
-					var modules_preview_boxes = modules_selector + ' [name*="meta_structure_preview_modules"]';
-					var modules_preview_count = $( modules_preview_boxes ).length;
-					var modules_preview_checked = $( modules_preview_boxes + ':checked' ).length;
-
-					$( '.step-content .course-structure .treegrid-' + page_id + ' [name*=meta_structure_preview_pages]' ).prop(
-						'checked',
-						modules_preview_count === modules_preview_checked && modules_preview_checked > 0
-					);
-				} );
-
-				// Then do units
-				var pages_visible_boxes = pages_selector + ' [name*="meta_structure_visible_pages"]';
-				var pages_visible_count = $( pages_visible_boxes ).length;
-				var pages_visible_checked = $( pages_visible_boxes + ':checked' ).length;
-
-				$( '.step-content .course-structure .treegrid-' + unit_id + ' [name*=meta_structure_visible_units]' ).prop(
-					'checked',
-					pages_visible_count === pages_visible_checked && pages_visible_checked > 0
-				);
-
-				var pages_preview_boxes = pages_selector + ' [name*="meta_structure_preview_pages"]';
-				var pages_preview_count = $( pages_preview_boxes ).length;
-				var pages_preview_checked = $( pages_preview_boxes + ':checked' ).length;
-
-				$( '.step-content .course-structure .treegrid-' + unit_id + ' [name*=meta_structure_preview_units]' ).prop(
-					'checked',
-					pages_preview_count === pages_preview_checked && pages_preview_checked > 0
-				);
-			}
-		} );
-	}
 
 	function setup_UI() {
 		// Setup Accordion.
@@ -461,23 +407,23 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 						val = field.val()
 					;
 
-					if ( 'course_excerpt' == field_name ) {
+					if ( 'course_excerpt' === field_name ) {
 						val = mce_helper( 'courseExcerpt', field );
 					}
-					if ( 'course_description' == field_name ) {
+					if ( 'course_description' === field_name ) {
 						val = mce_helper( 'courseDescription', field );
 					}
-					if ( 'meta_pre_completion_content' == field_name ) {
+					if ( 'meta_pre_completion_content' === field_name ) {
 						val = mce_helper( 'pre-completion-content', field );
 					}
-					if ( 'meta_course_completion_content' == field_name ) {
+					if ( 'meta_course_completion_content' === field_name ) {
 						val = mce_helper( 'course-completion-editor-content', field );
 					}
-					if ( 'meta_course_failed_content' == field_name ) {
+					if ( 'meta_course_failed_content' === field_name ) {
 						val = mce_helper( 'course-failed-content', field );
 					}
 
-					if ( ! val || '' == val ) {
+					if ( ! val || '' === val ) {
 						found += 1;
 					}
 
@@ -486,7 +432,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 				if ( found > 0 ) {
 					// Alert
 					// @todo: Make this message info nicer!
-					alert( _coursepress.labels.required_fields );
+					window.alert( _coursepress.labels.required_fields );
 
 					return false;
 				}
@@ -515,12 +461,13 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		$( '.step-content .course-structure input[type="checkbox"]' ).on( 'change', function( e ) {
 			var checkbox = $( e.currentTarget ),
 				target_name = checkbox.attr( 'name' ),
-				type = null != target_name.match( /visible/ ) ? 'visible' : 'preview',
+				type = null !== target_name.match( /visible/ ) ? 'visible' : 'preview',
 				base_name = 'meta_structure_' + type,
 				treegrid = $( '.course-structure-tree' ),
 				is_true = checkbox.is(':checked'),
 				the_parent = checkbox.parents( 'tr' ).first(),
-				unit_id = the_parent.attr( 'data-unitid' )
+				unit_id = the_parent.attr( 'data-unitid' ),
+				page_number, unit_item
 			;
 
 			// Pages
@@ -531,10 +478,11 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 				;
 
 				pages.each( function() {
-					var page = $(this), is_checked = page.is( ':checked' )
-						page_number = page.parents( 'tr[data-pagenumber]' ).first().attr( 'data-pagenumber' ),
+					var page = $(this),
+						is_checked = page.is( ':checked' ),
 						old_state = page.data( 'checked' )
 					;
+					page_number = page.parents( 'tr[data-pagenumber]' ).first().attr( 'data-pagenumber' );
 
 					if ( ! checked ) {
 						// Remember current state before unchecking
@@ -542,7 +490,6 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 						page.attr( 'checked', false );
 					} else {
 						// Set previous state
-						var old_state = page.data( 'checked' );
 						page.attr( 'checked', old_state );
 					}
 
@@ -572,8 +519,8 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 						var old_state = module.data( 'checked' );
 						module.attr( 'checked', old_state );
 					}
-				} );
-			}
+				});
+			};
 
 			// Handle unit type
 			if ( target_name.match( /_units/ ) ) {
@@ -581,21 +528,23 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			}
 			// Handle page type
 			else if ( target_name.match( /_pages/ ) ) {
-				var page_number = checkbox.parents( 'tr' ).first().attr( 'data-pagenumber' ),
-					unit_item = treegrid.find( '.unit-' + unit_id ).find( '[name*="' + base_name + '_unit"]' )
-				;
+				page_number = checkbox.parents( 'tr' ).first().attr( 'data-pagenumber' );
+				unit_item = treegrid.find( '.unit-' + unit_id ).find( '[name*="' + base_name + '_unit"]' );
+
 				// Always checked the unit parent
-				if ( is_true ) unit_item.attr( 'checked', true );
+				if ( is_true ) {
+					unit_item.attr( 'checked', true );
+				}
 
 				handle_modules( is_true, page_number );
 			}
 			// Handle module type
 			else {
-				var page_number = the_parent.attr( 'data-pagenumber' ),
-					unit_item = treegrid.find( '.unit-' + unit_id ).find( '[name*="' + base_name + '_unit"]' ),
-					page_item = treegrid.find( '.page-' + page_number + '[data-unitid="' + unit_id + '"]' )
-						.find( '[name*="' + base_name + '_page"]' )
-				;
+				page_number = the_parent.attr( 'data-pagenumber' );
+				unit_item = treegrid.find( '.unit-' + unit_id ).find( '[name*="' + base_name + '_unit"]' );
+
+				var page_item = treegrid.find( '.page-' + page_number + '[data-unitid="' + unit_id + '"]' )
+					.find( '[name*="' + base_name + '_page"]' );
 
 				// Always check the unit and parent section
 				if ( is_true ) {
@@ -619,7 +568,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 				return; // Bail if instructor already exist
 			}
 			dropdown.html( _coursepress.labels.user_dropdown_placeholder );
-			var div = $( '<div class="instructor-avatar-holder empty" id="instructor_holder_' + instructor_id + '"><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span></div>' ).appendTo( container );
+			$( '<div class="instructor-avatar-holder empty" id="instructor_holder_' + instructor_id + '"><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span></div>' ).appendTo( container );
 
 			CoursePress.Course.set( 'action', 'add_instructor' );
 
@@ -874,10 +823,10 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			var select = $( '[name="facilitators"]' ),
 				facilitator_id = select.val(),
 				facilitator_name = select.find( ':selected' ).text(),
-				avatar = _coursepress.instructor_avatars['default'],
 				container = $( '.facilitator-info' ),
 				is_done = $( '#facilitator-' + facilitator_id ).length > 0,
 				dropdown = $( '.select2-selection__rendered' )
+			;
 
 			if ( is_done ) {
 				return; // Bail if facilitator already exist
@@ -892,7 +841,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 				nonce: get_setup_nonce()
 			};
 
-			var div = $( '<div class="facilitator-avatar-holder empty" id="facilitator-' + facilitator_id + '"><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span></div>' ).appendTo( container );
+			$( '<div class="facilitator-avatar-holder empty" id="facilitator-' + facilitator_id + '"><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span></div>' ).appendTo( container );
 
 			CoursePress.Course.set( 'action', 'add_facilitator' );
 			CoursePress.Course.set( 'data', data );
@@ -945,15 +894,15 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			CoursePress.Course.off( 'coursepress:send_email_success' );
 			CoursePress.Course.on( 'coursepress:send_email_success', function( data ){
 				$('.coursepress-email-sending td', message_container).html(data.message.info);
-				$('.coursepress-email-field-subject td', message_container).html(data.message.subject);;
-				$('.coursepress-email-field-body td', message_container).html(data.message.body);;
+				$('.coursepress-email-field-subject td', message_container).html(data.message.subject);
+				$('.coursepress-email-field-body td', message_container).html(data.message.body);
 				$('.coursepress-email-field', message_container).slideDown();
 			});
 			CoursePress.Course.off( 'coursepress:send_email_error' );
 			CoursePress.Course.on( 'coursepress:send_email_error', function( data ) {
 				$('.coursepress-email-sending td', message_container).html(data.message.info);
-				$('.coursepress-email-field-subject td', message_container).html(data.message.subject);;
-				$('.coursepress-email-field-body td', message_container).html(data.message.body);;
+				$('.coursepress-email-field-subject td', message_container).html(data.message.subject);
+				$('.coursepress-email-field-body td', message_container).html(data.message.body);
 				$('.coursepress-email-field', message_container).slideDown();
 			});
 		} );
@@ -1177,19 +1126,17 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		} );
 		// Add facilitator
 		CoursePress.Course.on( 'coursepress:add_facilitator_success', function( data ) {
-			var facilitator_id = data.facilitator_id,
-				avatar = _coursepress.instructor_avatars['default']
-			;
+			var avatar = _coursepress.instructor_avatars['default'];
 
 			if ( data.avatar ) {
 				avatar = data.avatar;
 			}
 
-			var div = '<div class="facilitator-avatar-holder" id="facilitator-' + data.facilitator_id + '" data-id="' + data.facilitator_id + '">'
-				+ '<div class="facilitator-remove"><a><span class="dashicons dashicons-dismiss"></span></a></div>'
-				+ avatar
-				+ '<span class="facilitator-name">' + data.facilitator_name + '</span>'
-				+ '</div>';
+			var div = '<div class="facilitator-avatar-holder" id="facilitator-' + data.facilitator_id + '" data-id="' + data.facilitator_id + '">' +
+				'<div class="facilitator-remove"><a><span class="dashicons dashicons-dismiss"></span></a></div>' +
+				avatar +
+				'<span class="facilitator-name">' + data.facilitator_name + '</span>' +
+				'</div>';
 
 			$( '#facilitator-' + data.facilitator_id ).replaceWith( div );
 			$( '#facilitator-' + data.facilitator_id ).find( '.facilitator-remove' ).on( 'click', CoursePress.remove_facilitator );
@@ -1552,16 +1499,32 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			preview = $( '.btn-cert' )
 		;
 		preview[ is_checked ? 'addClass' : 'removeClass' ]( 'button-primary' );
-	},
-	testCertificateEmail = function() {
-		var link = $(this),
-			url = link.attr( 'href' )
-		;
-	}
+	};
 
 	/**
 	 * Search Users
 	 */
+	function formatData (data) {
+		if (data.loading) {
+			return data.text;
+		}
+
+		var markup = '<div class="select2-result-course clearfix">' + data.gravatar + ' <span>' + data.display_name + '</span></div>';
+		return markup;
+	}
+
+	function formatDataSelection (data ) {
+		var markup = '';
+
+		if ( ! data || ( ! data.gravatar && ! data.display_name ) ) {
+			markup = _coursepress.labels.user_dropdown_placeholder;
+		} else {
+			markup = '<div class="select2-result-course clearfix">' + data.gravatar + ' <span>' + data.display_name + '</span></div>';
+		}
+
+		return markup;
+	}
+
 	var Search_Params = {
 		placeholder: _coursepress.labels.user_dropdown_placeholder,
 		allowClear: true,
@@ -1598,25 +1561,6 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		templateResult: formatData,
 		templateSelection: formatDataSelection
 	};
-
-	function formatData (data) {
-		if (data.loading) return data.text;
-
-		var markup = '<div class="select2-result-course clearfix">' + data.gravatar + ' <span>' + data.display_name + '</span></div>';
-		return markup;
-	}
-
-	function formatDataSelection (data ) {
-		var markup = '';
-
-		if ( ! data || ( ! data.gravatar && ! data.display_name ) ) {
-			markup = _coursepress.labels.user_dropdown_placeholder;
-		} else {
-			markup = '<div class="select2-result-course clearfix">' + data.gravatar + ' <span>' + data.display_name + '</span></div>';
-		}
-
-		return markup;
-	}
 
 	// Try to keep only one of these blocks and use functions/objects instead
 	$( document ).ready( function() {
