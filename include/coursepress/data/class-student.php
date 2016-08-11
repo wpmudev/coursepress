@@ -1616,6 +1616,22 @@ class CoursePress_Data_Student {
 		return $completed;
 	}
 
+	/**
+	 * Get student data and create substitutions array.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $student_id Student ID.
+	 * @return array Array of substitutions.
+	 */
+	public static function get_vars( $student_id ) {
+		$user = get_userdata( $student_id );
+		$vars = array(
+			'FIRST_NAME' => get_user_meta( $student_id, 'first_name', true ),
+			'LAST_NAME' => get_user_meta( $student_id, 'last_name', true ),
+		);
+		return $vars;
+	}
 
 	public static function my_courses( $student_id = 0, $courses = array() ) {
 		if ( empty( $student_id ) ) {

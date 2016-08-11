@@ -9,7 +9,7 @@ class CoursePress_Admin_FeedbackEmail extends CoursePress_Email {
 
 	public function default_email_fields() {
 		return array(
-			'subject' => __( 'New Feedback', 'cp' ),
+			'subject' => __( 'New Feedback', 'CP_TD' ),
 			'content' => sprintf( __(
 				'
 				Howdy %s %s,
@@ -22,7 +22,7 @@ class CoursePress_Admin_FeedbackEmail extends CoursePress_Email {
 				Cheers,
 				%s
 				%s
-				', 'cp' ),
+				', 'CP_TD' ),
 				'FIRST_NAME',
 				'LAST_NAME',
 				'COURSE_NAME',
@@ -38,8 +38,8 @@ class CoursePress_Admin_FeedbackEmail extends CoursePress_Email {
 
 	public function email_settings() {
 		return array(
-			'title' => __( 'Instructor Feedback', 'cp' ),
-			'description' => __( 'Template for sending instructor feedback to students.', 'cp' )
+			'title' => __( 'Instructor Feedback', 'CP_TD' ),
+			'description' => __( 'Template for sending instructor feedback to students.', 'CP_TD' )
 		);
 	}
 
@@ -48,6 +48,7 @@ class CoursePress_Admin_FeedbackEmail extends CoursePress_Email {
 		$mail_tokens += array(
 			'COURSE_NAME', 'COURSE_ADDRESS', 'CURRENT_UNIT', 'CURRENT_MODULE',
 			'INSTRUCTOR_FIRST_NAME', 'INSTRUCTOR_LAST_NAME', 'INSTRUCTOR_FEEDBACK',
+			'COURSE_GRADE'
 		);
 
 		return $mail_tokens;
@@ -67,6 +68,14 @@ class CoursePress_Admin_FeedbackEmail extends CoursePress_Email {
 		// Generate module object
 		$module = get_post( $module_id );
 		$vars['CURRENT_MODULE'] = $module->post_title;
+
+		// Get course grade
+		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
+		$course_grade = CoursePress_Helper_Utility::get_array_val(
+			$student_progress,
+			'completion/average'
+		);
+		$vars['COURSE_GRADE'] = $course_grade;
 
 		// Instructor
 		$instructor = get_userdata( get_current_user_id() );

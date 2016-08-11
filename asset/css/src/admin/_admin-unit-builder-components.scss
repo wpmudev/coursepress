@@ -11,7 +11,8 @@
 .module-input-textarea a,
 .module-input-text a,
 .module-input-select a,
-.quiz-action-button a{
+.quiz-action-button a,
+.form-action-button a{
 
   background: url( '#{$imagePath}components.svg' ) no-repeat;
 
@@ -31,12 +32,16 @@
 .quiz-action-button.single a,
 .module-input-radio a { background-position: -120px -40px; }
 
+.form-action-button.selectable a,
 .module-input-select a { background-position: -80px -40px; }
 
 .quiz-action-button.short a,
+.quiz-action-button.multiple a,
+.form-action-button.short a,
 .module-input-text a { background-position: 0px -40px; }
 
 .quiz-action-button.long a,
+.form-action-button.long a,
 .module-input-textarea a { background-position: -40px -40px; }
 
 .module-input-upload a { background-position: -200px -40px; }
@@ -45,14 +50,18 @@
 .quiz-action-button.single,
 .quiz-action-button.multiple,
 .quiz-action-button.short,
-.quiz-action-button.long {
+.quiz-action-button.long,
+.form-action-button.short,
+.form-action-button.long,
+.form-action-button.selectable {
   display: inline-block;
   margin-right: 10px;
   width: 30px;
   height: 30px;
 }
 
-.quiz-action-button a {
+.quiz-action-button a,
+.form-action-button a {
   width: 30px;
   height: 30px;
   display: block;
@@ -76,14 +85,20 @@
 }
 
 
-.quiz-question textarea {
+.quiz-question textarea,
+.form-question textarea {
 
   width: 100%;
 
 }
 
-.quiz-question input[type='text'] {
-
-  width: 80%;
-
+.quiz-question,
+.form-question {
+	.question-answer{
+		margin-top: 10px;
+	}
+	input[type='text']{
+		width: 100%;
+	}
 }
+

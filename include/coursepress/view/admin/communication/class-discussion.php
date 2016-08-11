@@ -8,8 +8,8 @@ class CoursePress_View_Admin_Communication_Discussion {
 	private static $the_id = false;
 
 	public static function init() {
-		self::$title = __( 'Forums', 'cp' );
-		self::$menu_title = __( 'Forums', 'cp' );
+		self::$title = __( 'Forums', 'CP_TD' );
+		self::$menu_title = __( 'Forums', 'CP_TD' );
 
 		add_action( 'coursepress_admin_' . self::$slug, array( __CLASS__, 'render_page' ) );
 		add_filter( 'coursepress_admin_valid_pages', array( __CLASS__, 'add_valid' ) );
@@ -60,7 +60,7 @@ class CoursePress_View_Admin_Communication_Discussion {
 			 */
 			if ( ! empty( $id ) ) {
 				if ( ! CoursePress_Data_Capabilities::can_update_discussion( $id ) ) {
-					return __( 'You do not have permission to edit this discussion.', 'cp' );
+					return __( 'You do not have permission to edit this discussion.', 'CP_TD' );
 				}
 			}
 
@@ -105,7 +105,7 @@ class CoursePress_View_Admin_Communication_Discussion {
 		if ( empty( $action ) ) {
 			$content .= CoursePress_Helper_UI::get_admin_page_title(
 				self::$menu_title,
-				__( 'New Thread', 'cp' ),
+				__( 'New Thread', 'CP_TD' ),
 				admin_url( 'admin.php?page=' . self::$slug . '&action=edit&id=new' ),
 				CoursePress_Data_Capabilities::can_add_discussion( 0 )
 			);
@@ -117,9 +117,9 @@ class CoursePress_View_Admin_Communication_Discussion {
 		} else {
 			switch ( $action ) {
 				case 'edit':
-					$title = __( 'Edit Thread', 'cp' );
+					$title = __( 'Edit Thread', 'CP_TD' );
 					if ( isset( $_GET['id'] ) && 'new' == $_GET['id'] ) {
-						$title = __( 'Add New Thread', 'cp' );
+						$title = __( 'Add New Thread', 'CP_TD' );
 					}
 					$content .= CoursePress_Helper_UI::get_admin_page_title( $title );
 					$post_type = CoursePress_Data_Discussion::get_post_type_name();
@@ -171,7 +171,7 @@ class CoursePress_View_Admin_Communication_Discussion {
 		$content .= '<div id="post-body-content">';
 		if ( 'new' !== $the_id ) {
 			if ( ! CoursePress_Data_Capabilities::can_update_discussion( $the_id ) ) {
-				return __( 'You do not have permission to edit this discussion.', 'cp' );
+				return __( 'You do not have permission to edit this discussion.', 'CP_TD' );
 			}
 			$post = get_post( $the_id );
 			$attributes = CoursePress_Data_Discussion::attributes( $the_id );
@@ -182,7 +182,7 @@ class CoursePress_View_Admin_Communication_Discussion {
 			$post_content = $post->post_content;
 		} else {
 			if ( ! CoursePress_Data_Capabilities::can_add_discussion( 0 ) ) {
-				return __( 'You do not have permission to add discussion.', 'cp' );
+				return __( 'You do not have permission to add discussion.', 'CP_TD' );
 			}
 			$course_id = 'all';
 			$unit_id = 'course';
@@ -199,7 +199,7 @@ class CoursePress_View_Admin_Communication_Discussion {
 		} else {
 			$courses = self::get_courses();
 			if ( empty( $courses ) ) {
-				return __( 'You do not have permission to add discussion.', 'cp' );
+				return __( 'You do not have permission to add discussion.', 'CP_TD' );
 			}
 		}
 
@@ -210,7 +210,7 @@ class CoursePress_View_Admin_Communication_Discussion {
 		$options_unit['value'] = $unit_id;
 		$options_unit['class'] = 'medium';
 		$options_unit['first_option'] = array(
-			'text' => __( 'All units', 'cp' ),
+			'text' => __( 'All units', 'CP_TD' ),
 			'value' => 'course',
 		);
 
@@ -218,7 +218,7 @@ class CoursePress_View_Admin_Communication_Discussion {
 		$content .= wp_nonce_field( 'edit_discussion', '_wpnonce', true, false );
 		$content .= CoursePress_Helper_UI::get_admin_edit_title_field(
 			$post_title,
-			__( 'Thread Title', 'cp' )
+			__( 'Thread Title', 'CP_TD' )
 		);
 
 		$editor_name = 'post_content';
@@ -252,7 +252,7 @@ class CoursePress_View_Admin_Communication_Discussion {
 		$json_data['action'] = $action;
 
 		if ( empty( $data->action ) ) {
-			$json_data['message'] = __( 'Thread Update: No action.', 'cp' );
+			$json_data['message'] = __( 'Thread Update: No action.', 'CP_TD' );
 			wp_send_json_error( $json_data );
 		}
 
@@ -416,7 +416,7 @@ class CoursePress_View_Admin_Communication_Discussion {
 	public static function load() {
 		CoursePress_Helper_UI::admin_per_page_add_options(
 			'discussions',
-			__( 'Forums', 'cp' )
+			__( 'Forums', 'CP_TD' )
 		);
 	}
 
@@ -434,7 +434,7 @@ class CoursePress_View_Admin_Communication_Discussion {
 		$user_settings = CoursePress_Helper_UI::get_user_boxes_settings();
 		add_meta_box(
 			'submitdiv',
-			__( 'Save', 'cp' ),
+			__( 'Save', 'CP_TD' ),
 			array( __CLASS__, 'box_submitdiv' ),
 			CoursePress_Data_Discussion::get_post_type_name(),
 			isset( $user_settings['submitdiv'] )? $user_settings['submitdiv'] : 'side',
@@ -442,7 +442,7 @@ class CoursePress_View_Admin_Communication_Discussion {
 		);
 		add_meta_box(
 			'related_courses',
-			__( 'Related courses', 'cp' ),
+			__( 'Related courses', 'CP_TD' ),
 			array( __CLASS__, 'box_related' ),
 			CoursePress_Data_Discussion::get_post_type_name(),
 			isset( $user_settings['related_courses'] )? $user_settings['related_courses'] : 'side'
@@ -466,7 +466,7 @@ class CoursePress_View_Admin_Communication_Discussion {
 		$unit_id = 'course';
 		if ( 'new' !== $the_id ) {
 			if ( ! CoursePress_Data_Capabilities::can_update_discussion( $the_id ) ) {
-				_e( 'You do not have permission to edit this discussion.', 'cp' );
+				_e( 'You do not have permission to edit this discussion.', 'CP_TD' );
 				return;
 			}
 			$post = get_post( $the_id );
@@ -475,7 +475,7 @@ class CoursePress_View_Admin_Communication_Discussion {
 			$unit_id = $attributes['unit_id'];
 		} else {
 			if ( ! CoursePress_Data_Capabilities::can_add_discussion( 0 ) ) {
-				_e( 'You do not have permission to add discussion.', 'cp' );
+				_e( 'You do not have permission to add discussion.', 'CP_TD' );
 				return;
 			}
 		}
@@ -484,11 +484,11 @@ class CoursePress_View_Admin_Communication_Discussion {
 		if ( ! CoursePress_Data_Capabilities::can_add_discussion_to_all() ) {
 			$options['courses'] = self::get_courses();
 			if ( empty( $options['courses'] ) ) {
-				_e( 'You do not have permission to add discussion.', 'cp' );
+				_e( 'You do not have permission to add discussion.', 'CP_TD' );
 				return;
 			}
 		}
-		printf( '<h4>%s</h4>', esc_html__( 'Related Course', 'cp' ) );
+		printf( '<h4>%s</h4>', esc_html__( 'Related Course', 'CP_TD' ) );
 		echo CoursePress_Helper_UI::get_course_dropdown( 'course_id', 'meta_course_id', false, $options );
 		/**
 		 * units
@@ -496,10 +496,10 @@ class CoursePress_View_Admin_Communication_Discussion {
 		$options_unit = array();
 		$options_unit['value'] = $unit_id;
 		$options_unit['first_option'] = array(
-			'text' => __( 'All units', 'cp' ),
+			'text' => __( 'All units', 'CP_TD' ),
 			'value' => 'course',
 		);
-		printf( '<h4>%s</h4>', esc_html__( 'Related Unit', 'cp' ) );
+		printf( '<h4>%s</h4>', esc_html__( 'Related Unit', 'CP_TD' ) );
 		echo CoursePress_Helper_UI::get_unit_dropdown( 'unit_id', 'meta_unit_id', $course_id, false, $options_unit );
 	}
 
@@ -514,7 +514,7 @@ class CoursePress_View_Admin_Communication_Discussion {
 		echo '<div class="submitbox" id="submitpost"><div id="major-publishing-actions"><div id="publishing-action"><span class="spinner"></span>';
 		printf(
 			'<input type="submit" class="button button-primary" value="%s" />',
-			esc_attr__( 'Save Thread', 'cp' )
+			esc_attr__( 'Save Thread', 'CP_TD' )
 		);
 		echo '</div><div class="clear"></div></div></div>';
 	}

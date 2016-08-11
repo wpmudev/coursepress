@@ -11,18 +11,18 @@ class CoursePress_Data_Discussion {
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
 				'labels' => array(
-					'name' => __( 'Forums', 'cp' ),
-					'singular_name' => __( 'Forum', 'cp' ),
-					'add_new' => __( 'Create New', 'cp' ),
-					'add_new_item' => __( 'Create New Thread', 'cp' ),
-					'edit_item' => __( 'Edit Thread', 'cp' ),
-					'edit' => __( 'Edit', 'cp' ),
-					'new_item' => __( 'New Thread', 'cp' ),
-					'view_item' => __( 'View Thread', 'cp' ),
-					'search_items' => __( 'Search Threads', 'cp' ),
-					'not_found' => __( 'No Threads Found', 'cp' ),
-					'not_found_in_trash' => __( 'No Threads found in Trash', 'cp' ),
-					'view' => __( 'View Thread', 'cp' ),
+					'name' => __( 'Forums', 'CP_TD' ),
+					'singular_name' => __( 'Forum', 'CP_TD' ),
+					'add_new' => __( 'Create New', 'CP_TD' ),
+					'add_new_item' => __( 'Create New Thread', 'CP_TD' ),
+					'edit_item' => __( 'Edit Thread', 'CP_TD' ),
+					'edit' => __( 'Edit', 'CP_TD' ),
+					'new_item' => __( 'New Thread', 'CP_TD' ),
+					'view_item' => __( 'View Thread', 'CP_TD' ),
+					'search_items' => __( 'Search Threads', 'CP_TD' ),
+					'not_found' => __( 'No Threads Found', 'CP_TD' ),
+					'not_found_in_trash' => __( 'No Threads found in Trash', 'CP_TD' ),
+					'view' => __( 'View Thread', 'CP_TD' ),
 				),
 				'public' => false,
 				'show_ui' => true,
@@ -51,11 +51,11 @@ class CoursePress_Data_Discussion {
 		}
 
 		$course_id = (int) get_post_meta( $n_id, 'course_id', true );
-		$course_title = ! empty( $course_id ) ? get_the_title( $course_id ) : __( 'All courses', 'cp' );
+		$course_title = ! empty( $course_id ) ? get_the_title( $course_id ) : __( 'All courses', 'CP_TD' );
 		$course_id = ! empty( $course_id ) ? $course_id : 'all';
 
 		$unit_id = (int) get_post_meta( $n_id, 'unit_id', true );
-		$unit_title = ! empty( $unit_id ) ? get_the_title( $unit_id ) : __( 'All units', 'cp' );
+		$unit_title = ! empty( $unit_id ) ? get_the_title( $unit_id ) : __( 'All units', 'CP_TD' );
 		$unit_id = ! empty( $unit_id ) ? $unit_id : 'course';
 		$unit_id = 'all' === $course_id ? 'course' : $unit_id;
 
@@ -360,8 +360,8 @@ class CoursePress_Data_Discussion {
 					delete_user_meta( $user_id, 'cp_subscribe_to_' . $post_id );
 
 					// Hooked to the content to show unsubscribe message.
-					$message = sprintf( '<h3 class="cp-unsubscribe-title">%s</h3>', __( 'Unsubscribe Successful', 'cp' ) );
-					$message .= '<p>' . sprintf( __( 'You have been removed from "%s" discussion.', 'cp' ), get_the_title( $post_id ) ) . '</p>';
+					$message = sprintf( '<h3 class="cp-unsubscribe-title">%s</h3>', __( 'Unsubscribe Successful', 'CP_TD' ) );
+					$message .= '<p>' . sprintf( __( 'You have been removed from "%s" discussion.', 'CP_TD' ), get_the_title( $post_id ) ) . '</p>';
 
 					/**
 					 * Filter the unsubscribe message before printing.
@@ -431,6 +431,14 @@ class CoursePress_Data_Discussion {
 		);
 		$json_data['success'] = true;
 		$json_data['data'] = $commentdata;
+		/**
+		 * Answer mode, possible values, but 'single-comment' only when we
+		 * define single comment callback.
+		 *
+		 * - 'single-comment' - return only one comment
+		 * - 'full-list'	  - return full list of comments
+		 */
+		$json_data['answer_mode'] = 'full-list';
 		$comment_id = $json_data['data']['comment_id'] = wp_new_comment( $commentdata );
 		/**
 		 * update user subscribtion
@@ -443,7 +451,27 @@ class CoursePress_Data_Discussion {
 		 */
 		$course_id = CoursePress_Data_Module::get_course_id_by_module( $data->comment_post_ID );
 		CoursePress_Data_Course::set_last_course_id( $course_id );
-		$json_data['data']['html'] = CoursePress_Template_Discussion::get_comments( $data->comment_post_ID );
+
+		/**
+		 * Allow to create single comment answer. It speed up comments, but
+		 * this is advance settings and HTML classes must match standard WP
+		 * classes. In other way it will be not work. Default it is not used.
+		 * It is used by Academy site.
+		 *
+		 * @since 2.0.0
+		 * @param mixed $content Default false.
+		 * @param integer $comment_id Comment ID.
+		 * @param array $data Request data.
+		 */
+		$single_comment_output = apply_filters( 'coursepress_discussion_single_comment', false, $comment_id, $data );
+
+		if ( ! empty( $single_comment_output ) ) {
+			$json_data['data']['html'] = $single_comment_output;
+			$json_data['answer_mode'] = 'single-comment';
+			$json_data['comment_parent'] = $data->comment_parent;
+		} else {
+			$json_data['data']['html'] = CoursePress_Template_Discussion::get_comments( $data->comment_post_ID );
+		}
 
 		// Update course progress
 		CoursePress_Data_Student::get_calculated_completion_data( $user_id, $course_id );
@@ -451,7 +479,6 @@ class CoursePress_Data_Discussion {
 		/**
 		 * notify users
 		 */
-		$post = get_post( $data->comment_post_ID );
 		CoursePress_Data_Discussion_Cron::add_comment_id( $comment_id );
 
 		return $json_data;

@@ -913,8 +913,12 @@ var CoursePress = CoursePress || {};
 		/*
 		 * Comments
 		 */
-		$( '.coursepress-focus-view #commentform #submit' ).on( 'click', function() {
+		$( '.coursepress-focus-view #commentform #submit' ).unbind( 'click' ).on( 'click', function() {
 			var form = $(this).closest('form'), mask;
+			if ( '' == $( '#comment', form ).val() ) {
+				alert(_coursepress.comments.require_valid_comment);
+				return false;
+			}
 			$('#respond #cancel-comment-reply-link').hide();
 			form.append('<div class="mask"><span><i class="fa fa-spinner fa-pulse"></i></span></div>');
 			mask = $('.mask', form );
@@ -933,17 +937,52 @@ var CoursePress = CoursePress || {};
 			model.set( 'coursepress_subscribe', $( '[name=coursepress_subscribe]', form ).val() );
 			model.set( 'nonce', $( '#coursepress-add-commment-nonce', form ).val() );
 			model.save();
+			model.off( 'coursepress:comment_add_new_success' );
 			model.on( 'coursepress:comment_add_new_success', function( data ) {
 				var focus_nav_next = $( '.focus-nav-next.module-is-not-done' );
-
 				if ( focus_nav_next.length > 0 ) {
 					// Reload the module
 					CoursePress.FocusMode.init_focus_mode();
 				} else {
-					$('#comments .comments-list-container').html( data.data.html );
+					/**
+					 * Single-comment answer.
+					 */
+					if ( "single-comment" == data.answer_mode ) {
+						/**
+						 * parent comment
+						 */
+
+						if ( 0 == data.data.comment_parent ) {
+							$('#comments .comments-list').prepend( data.data.html );
+						} else {
+							/**
+							 * nested comment
+							 */
+							comment_parent = $('#comment-'+data.data.comment_parent);
+							if ( 0 == $('.children', comment_parent ).length ) {
+								comment_parent.append('<ul class="children"></ul>');
+							}
+							$('.children', comment_parent).first().append(data.data.html);
+							$('.comments-list').before($('#respond'));
+						}
+
+						/**
+						 * reset form
+						 */
+						$('#comment').val('');
+						$('#comment_parent').val(0);
+
+						// Focus to the last inserted comment
+						var last_inserted_comment = $( '#comment-' + data.data.comment_id ),
+							top = last_inserted_comment.offset().top
+						;
+						$(window).scrollTop( top );
+					} else {
+						$('#comments .comments-list-container').html( data.data.html );
+					}
 					bind_buttons();
 				}
-
+				$('.mask', form ).detach();
 				/**
 				 * Notify others that the module is change.
 				 **/
@@ -1082,6 +1121,23 @@ var CoursePress = CoursePress || {};
 						});
 					});
 					break;
+
+				case 'input-form':
+					value = [];
+					var questions = $( parent ).find( '.module-form-question' );
+
+					$.each( questions, function( qi, question) {
+						var answers = $( question).find('textarea,select,[type="text"],[type="checkbox"],[type="radio"]');
+						value[qi] = [];
+						$.each( answers, function( ai, answer ) {
+							if( $( answer ).is( '[type="text"]' ) || $( answer ).is( 'textarea' ) || $( answer ).is( 'select' ) ){
+								value[qi][ai] = $( answer ).val();
+							} else {
+								value[qi][ai]= $( answer ).is( ':checked' );
+							}
+						});
+					});
+					break;					
 
 				case 'input-upload':
 					if ( supportAjaxUploadWithProgress() ) {

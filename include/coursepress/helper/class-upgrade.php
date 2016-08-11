@@ -30,7 +30,7 @@ class CoursePress_Helper_Upgrade {
 			/**
 			 * Message: migration is ended.
 			 */
-			$message = __( 'Migration was done. There is no more students to migrate.', 'cp' );
+			$message = __( 'Migration was done. There is no more students to migrate.', 'CP_TD' );
 			add_user_meta( $user_id, self::$message_meta_name, $message, false );
 			return;
 		}
@@ -43,7 +43,7 @@ class CoursePress_Helper_Upgrade {
 				'Found %d course to migrate. Course id: %s.',
 				'Found %d courses to migrate. Course ids: %s.',
 				$count,
-				'cp'
+				'CP_TD'
 			),
 			$count,
 			implode( ', ', $ids )
@@ -60,7 +60,7 @@ class CoursePress_Helper_Upgrade {
 		$message = '';
 		if ( ! empty( $results ) ) {
 			$message = sprintf(
-				__( 'Update students (%d) data in course: %d.', 'cp' ),
+				__( 'Update students (%d) data in course: %d.', 'CP_TD' ),
 				count( $results ),
 				$course_id
 			);
@@ -69,7 +69,7 @@ class CoursePress_Helper_Upgrade {
 			}
 		} else {
 			$message = sprintf(
-				__( 'Try to update students data in course: %d, but there was no students enroled to this course.', 'cp' ),
+				__( 'Try to update students data in course: %d, but there was no students enroled to this course.', 'CP_TD' ),
 				$course_id
 			);
 		}
@@ -88,7 +88,7 @@ class CoursePress_Helper_Upgrade {
 					'There is %d course to migrate. Course id: %s.',
 					'There are %d courses to migrate. Course ids: %s.',
 					$count,
-					'cp'
+					'CP_TD'
 				),
 				$count,
 				implode( ', ', $ids )

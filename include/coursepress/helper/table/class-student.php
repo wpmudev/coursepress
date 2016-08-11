@@ -40,9 +40,9 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 				)
 		);
 		$actions = array(
-			'profile' => sprintf( '<a href="%s">%s</a>', $profile_link, __( 'Profile', 'cp' ) ),
-			'workbook' => sprintf( '<a href="%s">%s</a>', $workbook_link, __( 'Workbook', 'cp' ) ),
-			'delete' => sprintf( '<a href="%s">%s</a>', $delete_link, __( 'Remove', 'cp' ) ),
+			'profile' => sprintf( '<a href="%s">%s</a>', $profile_link, __( 'Profile', 'CP_TD' ) ),
+			'workbook' => sprintf( '<a href="%s">%s</a>', $workbook_link, __( 'Workbook', 'CP_TD' ) ),
+			'delete' => sprintf( '<a href="%s">%s</a>', $delete_link, __( 'Remove', 'CP_TD' ) ),
 		);
 
 		return $actions;
@@ -78,11 +78,11 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
-			'username' => __( 'Username', 'cp' ),
-			'name' => __( 'Name', 'cp' ),
-			'registered' => __( 'Registered', 'cp' ),
-			'last_activity' => __( 'Last Activity', 'cp' ),
-			'courses' => __( 'Courses', 'cp' ),
+			'username' => __( 'Username', 'CP_TD' ),
+			'name' => __( 'Name', 'CP_TD' ),
+			'registered' => __( 'Registered', 'CP_TD' ),
+			'last_activity' => __( 'Last Activity', 'CP_TD' ),
+			'courses' => __( 'Courses', 'CP_TD' ),
 		);
 
 		if ( ! CoursePress_Data_Capabilities::can_delete_student() ) {
@@ -129,7 +129,7 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 	}
 
 	public function no_items() {
-		esc_html_e( 'No students found.', 'cp' );
+		esc_html_e( 'No students found.', 'CP_TD' );
 	}
 
 	public function display() {
@@ -137,13 +137,13 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 		<div class="wrap">
 			<h2>
 				<?php
-				esc_html_e( 'Students', 'cp' );
+				esc_html_e( 'Students', 'CP_TD' );
 
 				if ( CoursePress_Data_Capabilities::can_create_student() ) {
 					$add_link = admin_url( 'user-new.php' );
 					?>
 					<a href="<?php echo $add_link; ?>" class="add-new-h2">
-						<?php esc_html_e( 'Add New', 'cp' ); ?>
+						<?php esc_html_e( 'Add New', 'CP_TD' ); ?>
 					</a>
 				<?php
 				}
@@ -152,7 +152,7 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 			<hr />
 			<form method="post">
 				<?php
-					$this->search_box( __( 'Search', 'cp' ), 'student' );
+					$this->search_box( __( 'Search', 'CP_TD' ), 'student' );
 					parent::display();
 				?>
 			</form>
