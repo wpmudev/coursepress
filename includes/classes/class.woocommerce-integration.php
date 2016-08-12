@@ -26,6 +26,10 @@ if ( !class_exists( 'CP_WooCommerce_Integration' ) ) {
 				add_action( 'woocommerce_order_details_after_order_table', array( &$this, 'show_course_message_woocommerce_order_details_after_order_table' ), 10, 2 );
 				add_filter( 'woocommerce_cart_item_name', array( &$this, 'change_cp_item_name' ), 10, 3 );
 				add_filter( 'woocommerce_order_item_name', array( &$this, 'change_cp_order_item_name' ), 10, 2 );
+
+				// Replace feature image when applicable
+				add_filter( 'woocommerce_placeholder_img', array( &$this, 'feature_image' ), 20, 2 );
+				add_filter( 'post_thumbnail_html', array( &$this, 'feature_image' ), 20, 2 );
 			}
 
 			function add_post_parent_metaboxe() {
@@ -199,6 +203,21 @@ if ( !class_exists( 'CP_WooCommerce_Integration' ) ) {
 					// if no products in cart, add it
 					$woocommerce->cart->add_to_cart( $product_id );
 				}
+			}
+
+			public function feature_image( $image_data ) {
+				$post = get_post();
+				$course_id = $post->post_parent;
+
+				if ( $course_id > 0 && 'course' == get_post_type( $course_id ) ) {
+					// We'll only repace the src
+					$thumbnail_id = get_post_meta( $course_id, '_thumbnail_id', true );
+
+					if ( ! empty( $thumbnail_id ) && is_string( $thumbnail_id ) ) {
+						$image_data = preg_replace( '%src=[\'"](.*)[\'"]%', 'src="' . esc_url( $thumbnail_id ) . '"', $image_data );
+					}
+				}
+				return $image_data;
 			}
 
 		}
