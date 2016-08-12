@@ -10,6 +10,7 @@ CHANGE LOG
 * Fixed: Copy feature image from course to WooCommerce product.
 * Fixed: Problem with units on units list page.
 * Fixed: Mising div bracket in cp_popup_success_message template.
+* Fixed: Missing translatin domain in Woo integration.
 * Fixed: Wrong instructor id used by course_list shortcode.
 * Fixed: Redirect from WooCommerce shop main page.
 * Fixed: Problem with Virtual Pages when site use SSL.
