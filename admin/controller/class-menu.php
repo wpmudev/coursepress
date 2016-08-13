@@ -197,14 +197,14 @@ class CoursePress_Admin_Controller_Menu {
 						'allowed_image_extensions' => CoursePress_Helper_Utility::get_image_extensions(),
 						'allowed_extensions' => apply_filters( 'coursepress_custom_allowed_extensions', false ),
 						'date_format' => get_option( 'date_format' ),
-						'editor_visual' => __( 'Visual', 'cp' ),
-						'editor_text' => _x( 'Text', 'Name for the Text editor tab (formerly HTML)', 'cp' ),
-						'invalid_extension_message' => __( 'Extension of the file is not valid. Please use one of the following:', 'cp' ),
+						'editor_visual' => __( 'Visual', 'CP_TD' ),
+						'editor_text' => _x( 'Text', 'Name for the Text editor tab (formerly HTML)', 'CP_TD' ),
+						'invalid_extension_message' => __( 'Extension of the file is not valid. Please use one of the following:', 'CP_TD' ),
 						'is_super_admin' => current_user_can( 'manage_options' ),
 						'user_caps' => CoursePress_Data_Capabilities::get_user_capabilities(),
-						'server_error' => __( 'An error occur while processing your request. Please try again later!', 'cp' ),
+						'server_error' => __( 'An error occur while processing your request. Please try again later!', 'CP_TD' ),
 						'labels' => array(
-							'user_dropdown_placeholder' => __( 'Enter username, first name and last name, or email', 'cp' ),
+							'user_dropdown_placeholder' => __( 'Enter username, first name and last name, or email', 'CP_TD' ),
 						)
 					),
 					$this->localize_array

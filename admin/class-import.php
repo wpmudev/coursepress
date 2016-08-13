@@ -16,8 +16,8 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 
 	public function get_labels() {
 		return array(
-			'title' => __( 'CoursePress Import', 'cp' ),
-			'menu_title' => __( 'Import', 'cp' ),
+			'title' => __( 'CoursePress Import', 'CP_TD' ),
+			'menu_title' => __( 'Import', 'CP_TD' ),
 		);
 	}
 
@@ -85,7 +85,7 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 	 **/
 	public static function import_completed() {
 		printf( '<div class="notice notice-info is-dismissible"><p>%s</p></div>',
-			__( 'Courses successfully imported!', 'cp' )
+			__( 'Courses successfully imported!', 'CP_TD' )
 		);
 	}
 

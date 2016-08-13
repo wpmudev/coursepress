@@ -8,12 +8,12 @@ class CoursePress_View_Front_Student {
 	public static function render_enrollment_process_page() {
 
 		if ( ! is_user_logged_in() ) {
-			_e( 'You must be logged in in order to complete the action', 'cp' );
+			_e( 'You must be logged in in order to complete the action', 'CP_TD' );
 			return;
 		}
 
 		if ( ! isset( $_POST['course_id'] ) || ! is_numeric( $_POST['course_id'] ) ) {
-			_e( 'Please select a course first you want to enroll in.', 'cp' );
+			_e( 'Please select a course first you want to enroll in.', 'CP_TD' );
 			return;
 		}
 
@@ -49,25 +49,25 @@ class CoursePress_View_Front_Student {
 				if ( 0 == $course_price ) {//Course is FREE
 					//Enroll student in
 					if ( CoursePress_Data_Course::enroll_student( $student_id, $course_id ) ) {
-						printf( __( 'Congratulations, you have successfully enrolled in "%s" course! Check your %s for more info.', 'cp' ), '<strong>' . $course->details->post_title . '</strong>', '<a href="' . $this->get_student_dashboard_slug( true ) . '">' . __( 'Dashboard', 'cp' ) . '</a>' );
+						printf( __( 'Congratulations, you have successfully enrolled in "%s" course! Check your %s for more info.', 'CP_TD' ), '<strong>' . $course->details->post_title . '</strong>', '<a href="' . $this->get_student_dashboard_slug( true ) . '">' . __( 'Dashboard', 'CP_TD' ) . '</a>' );
 
 					} else {
-						_e( 'Something went wrong during the enrollment process. Please try again later.', 'cp' );
+						_e( 'Something went wrong during the enrollment process. Please try again later.', 'CP_TD' );
 					}
 				} else {
 					if ( $course->is_user_purchased_course( $course->details->marketpress_product, $student_id ) ) {
 						//Enroll student in
 						if ( CoursePress_Data_Course::enroll_student( $student_id, $course_id ) ) {
-							printf( __( 'Congratulations, you have successfully enrolled in "%s" course! Check your %s for more info.', 'cp' ), '<strong>' . $course->details->post_title . '</strong>', '<a href="' . $this->get_student_dashboard_slug( true ) . '">' . __( 'Dashboard', 'cp' ) . '</a>' );
+							printf( __( 'Congratulations, you have successfully enrolled in "%s" course! Check your %s for more info.', 'CP_TD' ), '<strong>' . $course->details->post_title . '</strong>', '<a href="' . $this->get_student_dashboard_slug( true ) . '">' . __( 'Dashboard', 'CP_TD' ) . '</a>' );
 						} else {
-							_e( 'Something went wrong during the enrollment process. Please try again later.', 'cp' );
+							_e( 'Something went wrong during the enrollment process. Please try again later.', 'CP_TD' );
 						}
 					} else {
 						$course->show_purchase_form( $course->details->marketpress_product );
 					}
 				}
 			} else {
-				printf( __( 'Passcode is not valid. Please %s and try again.', 'cp' ), '<a href="' . esc_url( $course->get_permalink() ) . '">' . __( 'go back', 'cp' ) . '</a>' );
+				printf( __( 'Passcode is not valid. Please %s and try again.', 'CP_TD' ), '<a href="' . esc_url( $course->get_permalink() ) . '">' . __( 'go back', 'CP_TD' ) . '</a>' );
 
 			}
 		} else {
@@ -87,7 +87,7 @@ class CoursePress_View_Front_Student {
 	public static function render_student_dashboard_page() {
 
 		if ( ! is_user_logged_in() ) {
-			_e( 'You must be logged in in order to complete the action', 'cp' );
+			_e( 'You must be logged in in order to complete the action', 'CP_TD' );
 			exit;
 		}
 
@@ -105,7 +105,7 @@ class CoursePress_View_Front_Student {
 
 		if ( ! empty( $course_list ) ) {
 			echo '<div class="dashboard-managed-courses-list">';
-			echo '<h1 class="title managed-courses-title">' . __( 'Courses you manage:', 'cp' ) . '</h1>';
+			echo '<h1 class="title managed-courses-title">' . __( 'Courses you manage:', 'CP_TD' ) . '</h1>';
 			echo '<div class="course-list course-list-managed course course-student-dashboard">';
 			echo $course_list;
 			echo '</div>';
@@ -120,15 +120,15 @@ class CoursePress_View_Front_Student {
 
 			//Random Courses
 			echo '<div class="dashboard-random-courses-list">';
-			echo '<h3 class="title suggested-courses">' . __( 'You are not enrolled in any courses.', 'cp' ) . '</h3>';
-			_e( 'Here are a few to help you get started:', 'cp' );
+			echo '<h3 class="title suggested-courses">' . __( 'You are not enrolled in any courses.', 'CP_TD' ) . '</h3>';
+			_e( 'Here are a few to help you get started:', 'CP_TD' );
 			echo '<hr />';
 			echo '<div class="dashboard-random-courses">' . do_shortcode( '[course_random number="3" featured_title="" media_type="image"]' ) . '</div>';
 			echo '</div>';
 		} else {
 			// Course List
 			echo '<div class="dashboard-current-courses-list">';
-			echo '<h1 class="title enrolled-courses-title current-courses-title">' . __( 'Your current courses:', 'cp' ) . '</h1>';
+			echo '<h1 class="title enrolled-courses-title current-courses-title">' . __( 'Your current courses:', 'CP_TD' ) . '</h1>';
 			echo '<div class="course-list course-list-current course course-student-dashboard">';
 			echo $course_list;
 			echo '</div>';
@@ -143,7 +143,7 @@ class CoursePress_View_Front_Student {
 		if ( ! empty( $course_list ) ) {
 			// Course List
 			echo '<div class="dashboard-completed-courses-list">';
-			echo '<h1 class="title completed-courses-title">' . __( 'Completed courses:', 'cp' ) . '</h1>';
+			echo '<h1 class="title completed-courses-title">' . __( 'Completed courses:', 'CP_TD' ) . '</h1>';
 			echo '<div class="course-list course-list-completed course course-student-dashboard">';
 			echo $course_list;
 			echo '</div>';
@@ -158,7 +158,7 @@ class CoursePress_View_Front_Student {
 	public static function render_student_settings_page() {
 
 		if ( ! is_user_logged_in() ) {
-			_e( 'You must be logged in in order to complete the action', 'cp' );
+			_e( 'You must be logged in in order to complete the action', 'CP_TD' );
 			exit;
 		}
 
@@ -169,7 +169,7 @@ class CoursePress_View_Front_Student {
 
 			if ( ! isset( $_POST['student_settings_nonce'] ) || ! wp_verify_nonce( $_POST['student_settings_nonce'], 'student_settings_save' )
 			) {
-				_e( "Changed can't be saved because nonce didn't verify.", 'cp' );
+				_e( "Changed can't be saved because nonce didn't verify.", 'CP_TD' );
 			} else {
 				$student_data = array();
 				$student_data['ID'] = get_current_user_id();
@@ -181,7 +181,7 @@ class CoursePress_View_Front_Student {
 					if ( $_POST['password'] == $_POST['password_confirmation'] ) {
 						$student_data['user_pass'] = $_POST['password'];
 					} else {
-						$form_message = __( "Passwords don't match", 'cp' );
+						$form_message = __( "Passwords don't match", 'CP_TD' );
 						$form_message_class = 'red';
 						$form_errors ++;
 					}
@@ -192,17 +192,17 @@ class CoursePress_View_Front_Student {
 				$student_data['last_name'] = $_POST['last_name'];
 
 				if ( ! is_email( $_POST['email'] ) ) {
-					$form_message = __( 'E-mail address is not valid.', 'cp' );
+					$form_message = __( 'E-mail address is not valid.', 'CP_TD' );
 					$form_message_class = 'red';
 					$form_errors ++;
 				}
 
 				if ( 0 == $form_errors ) {
 					if ( CoursePress_Data_Student::update_student_data( get_current_user_id(), $student_data ) ) {
-						$form_message = __( 'Profile has been updated successfully.', 'cp' );
+						$form_message = __( 'Profile has been updated successfully.', 'CP_TD' );
 						$form_message_class = 'regular';
 					} else {
-						$form_message = __( 'An error occured while updating. Please check the form and try again.', 'cp' );
+						$form_message = __( 'An error occured while updating. Please check the form and try again.', 'CP_TD' );
 						$form_message_class = 'red';
 					}
 				}
@@ -215,49 +215,49 @@ class CoursePress_View_Front_Student {
 	<form id="student-settings" name="student-settings" method="post" class="student-settings">
 	<?php wp_nonce_field( 'student_settings_save', 'student_settings_nonce' ); ?>
 	<label>
-		<?php _e( 'First Name', 'cp' ); ?>:
+		<?php _e( 'First Name', 'CP_TD' ); ?>:
 		<input type="text" name="first_name" value="<?php esc_attr_e( $student->user_firstname ); ?>"/>
 	</label>
 
 	<?php do_action( 'coursepress_after_settings_first_name' ); ?>
 
 	<label>
-		<?php _e( 'Last Name', 'cp' ); ?>:
+		<?php _e( 'Last Name', 'CP_TD' ); ?>:
 		<input type="text" name="last_name" value="<?php esc_attr_e( $student->user_lastname ); ?>"/>
 	</label>
 
 	<?php do_action( 'coursepress_after_settings_last_name' ); ?>
 
 	<label>
-		<?php _e( 'E-mail', 'cp' ); ?>:
+		<?php _e( 'E-mail', 'CP_TD' ); ?>:
 		<input type="text" name="email" value="<?php esc_attr_e( $student->user_email ); ?>"/>
 	</label>
 
 	<?php do_action( 'coursepress_after_settings_email' ); ?>
 
 	<label>
-		<?php _e( 'Username', 'cp' ); ?>:
+		<?php _e( 'Username', 'CP_TD' ); ?>:
 		<input type="text" name="username" value="<?php esc_attr_e( $student->user_login ); ?>" disabled="disabled"/>
 	</label>
 
 	<?php do_action( 'coursepress_after_settings_username' ); ?>
 
 	<label>
-		<?php _e( 'Password', 'cp' ); ?>:
-		<input type="password" name="password" value="" placeholder="<?php _e( "Won't change if empty.", 'cp' ); ?>"/>
+		<?php _e( 'Password', 'CP_TD' ); ?>:
+		<input type="password" name="password" value="" placeholder="<?php _e( "Won't change if empty.", 'CP_TD' ); ?>"/>
 	</label>
 
 	<?php do_action( 'coursepress_after_settings_passwordon' ); ?>
 
 	<label>
-		<?php _e( 'Confirm Password', 'cp' ); ?>:
+		<?php _e( 'Confirm Password', 'CP_TD' ); ?>:
 		<input type="password" name="password_confirmation" value=""/>
 	</label>
 
 	<?php do_action( 'coursepress_after_settings_pasword' ); ?>
 
 	<label class="full">
-		<input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php _e( 'Save Changes', 'cp' ); ?>"/>
+		<input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php _e( 'Save Changes', 'CP_TD' ); ?>"/>
 	</label>
 	</form><?php
 		do_action( 'coursepress_after_settings_form' );

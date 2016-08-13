@@ -18,18 +18,18 @@ class CoursePress_Data_Course {
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
 				'labels' => array(
-					'name' => __( 'Courses', 'cp' ),
-					'singular_name' => __( 'Course', 'cp' ),
-					'add_new' => __( 'Create New', 'cp' ),
-					'add_new_item' => __( 'Create New Course', 'cp' ),
-					'edit_item' => __( 'Edit Course', 'cp' ),
-					'edit' => __( 'Edit', 'cp' ),
-					'new_item' => __( 'New Course', 'cp' ),
-					'view_item' => __( 'View Course', 'cp' ),
-					'search_items' => __( 'Search Courses', 'cp' ),
-					'not_found' => __( 'No Courses Found', 'cp' ),
-					'not_found_in_trash' => __( 'No Courses found in Trash', 'cp' ),
-					'view' => __( 'View Course', 'cp' ),
+					'name' => __( 'Courses', 'CP_TD' ),
+					'singular_name' => __( 'Course', 'CP_TD' ),
+					'add_new' => __( 'Create New', 'CP_TD' ),
+					'add_new_item' => __( 'Create New Course', 'CP_TD' ),
+					'edit_item' => __( 'Edit Course', 'CP_TD' ),
+					'edit' => __( 'Edit', 'CP_TD' ),
+					'new_item' => __( 'New Course', 'CP_TD' ),
+					'view_item' => __( 'View Course', 'CP_TD' ),
+					'search_items' => __( 'Search Courses', 'CP_TD' ),
+					'not_found' => __( 'No Courses Found', 'CP_TD' ),
+					'not_found_in_trash' => __( 'No Courses found in Trash', 'CP_TD' ),
+					'view' => __( 'View Course', 'CP_TD' ),
 				),
 				'public' => false,
 				'exclude_from_search' => false,
@@ -58,15 +58,15 @@ class CoursePress_Data_Course {
 				'coursepress_register_course_category',
 				array(
 					'labels' => array(
-						'name' => __( 'Course Categories', 'cp' ),
-						'singular_name' => __( 'Course Category', 'cp' ),
-						'search_items' => __( 'Search Course Categories', 'cp' ),
-						'all_items' => __( 'All Course Categories', 'cp' ),
-						'edit_item' => __( 'Edit Course Categories', 'cp' ),
-						'update_item' => __( 'Update Course Category', 'cp' ),
-						'add_new_item' => __( 'Add New Course Category', 'cp' ),
-						'new_item_name' => __( 'New Course Category Name', 'cp' ),
-						'menu_name' => __( 'Course Category', 'cp' ),
+						'name' => __( 'Course Categories', 'CP_TD' ),
+						'singular_name' => __( 'Course Category', 'CP_TD' ),
+						'search_items' => __( 'Search Course Categories', 'CP_TD' ),
+						'all_items' => __( 'All Course Categories', 'CP_TD' ),
+						'edit_item' => __( 'Edit Course Categories', 'CP_TD' ),
+						'update_item' => __( 'Update Course Category', 'CP_TD' ),
+						'add_new_item' => __( 'Add New Course Category', 'CP_TD' ),
+						'new_item_name' => __( 'New Course Category Name', 'CP_TD' ),
+						'menu_name' => __( 'Course Category', 'CP_TD' ),
 					),
 					'hierarchical' => true,
 					'sort' => true,
@@ -103,19 +103,19 @@ class CoursePress_Data_Course {
 		return apply_filters(
 			'coursepress_course_messages',
 			array(
-				'ca' => __( 'New Course added successfully!', 'cp' ),
-				'cu' => __( 'Course updated successfully.', 'cp' ),
-				'usc' => __( 'Unit status changed successfully', 'cp' ),
-				'ud' => __( 'Unit deleted successfully', 'cp' ),
-				'ua' => __( 'New Unit added successfully!', 'cp' ),
-				'uu' => __( 'Unit updated successfully.', 'cp' ),
-				'as' => __( 'Student added to the class successfully.', 'cp' ),
-				'ac' => __( 'New class has been added successfully.', 'cp' ),
-				'dc' => __( 'Selected class has been deleted successfully.', 'cp' ),
-				'us' => __( 'Selected student has been withdrawed successfully from the course.', 'cp' ),
-				'usl' => __( 'Selected students has been withdrawed successfully from the course.', 'cp' ),
-				'is' => __( 'Invitation sent sucessfully.', 'cp' ),
-				'ia' => __( 'Successfully added as instructor.', 'cp' ),
+				'ca' => __( 'New Course added successfully!', 'CP_TD' ),
+				'cu' => __( 'Course updated successfully.', 'CP_TD' ),
+				'usc' => __( 'Unit status changed successfully', 'CP_TD' ),
+				'ud' => __( 'Unit deleted successfully', 'CP_TD' ),
+				'ua' => __( 'New Unit added successfully!', 'CP_TD' ),
+				'uu' => __( 'Unit updated successfully.', 'CP_TD' ),
+				'as' => __( 'Student added to the class successfully.', 'CP_TD' ),
+				'ac' => __( 'New class has been added successfully.', 'CP_TD' ),
+				'dc' => __( 'Selected class has been deleted successfully.', 'CP_TD' ),
+				'us' => __( 'Selected student has been withdrawed successfully from the course.', 'CP_TD' ),
+				'usl' => __( 'Selected students has been withdrawed successfully from the course.', 'CP_TD' ),
+				'is' => __( 'Invitation sent sucessfully.', 'CP_TD' ),
+				'ia' => __( 'Successfully added as instructor.', 'CP_TD' ),
 			),
 			$key
 		);
@@ -1961,7 +1961,7 @@ class CoursePress_Data_Course {
 
 		$course->start_date = date_i18n( $date_format, CoursePress_Data_Course::strtotime( $start_date ) );
 		$course->end_date = $duration > 0 ? date_i18n( $date_format, CoursePress_Data_Course::strtotime( $end_date ) ) : '--';
-		$course->duration = $duration > 0 ? sprintf( _n( '%s Day', '%s Days', $duration, 'cp' ), $duration ) : __( 'Open-ended', 'cp' );
+		$course->duration = $duration > 0 ? sprintf( _n( '%s Day', '%s Days', $duration, 'CP_TD' ), $duration ) : __( 'Open-ended', 'CP_TD' );
 
 		// Links
 		$course->permalink = get_permalink( $course_id );
@@ -2000,7 +2000,7 @@ class CoursePress_Data_Course {
 		$the_course['post_author'] = get_current_user_id();
 		$the_course['comment_count'] = 0;
 		$the_course['post_title'] = sprintf(
-			_x( '%s Copy', 'Default title for a duplicated course. Variable is original title.', 'cp' ),
+			_x( '%s Copy', 'Default title for a duplicated course. Variable is original title.', 'CP_TD' ),
 			$the_course['post_title']
 		);
 		$the_course['post_status'] = 'draft';
@@ -2297,7 +2297,7 @@ class CoursePress_Data_Course {
 			$start_date = self::strtotime( $start_date );
 
 			if ( $start_date > $now ) {
-				$status = sprintf( __( 'This course will open on %s', 'cp' ), date_i18n( $date_format, $start_date ) );
+				$status = sprintf( __( 'This course will open on %s', 'CP_TD' ), date_i18n( $date_format, $start_date ) );
 			} else {
 				// Check if it has end date
 				$is_open_ended = self::get_setting( $course_id, 'course_open_ended' );
@@ -2308,7 +2308,7 @@ class CoursePress_Data_Course {
 					$end_date = self::strtotime( $end_date );
 
 					if ( $end_date < $now ) {
-						$status = __( 'This course is already closed.', 'cp' );
+						$status = __( 'This course is already closed.', 'CP_TD' );
 					}
 				}
 			}
@@ -2361,7 +2361,7 @@ class CoursePress_Data_Course {
 					$unit_availability_date = CoursePress_Data_Unit::get_unit_availability_date( $unit_id, $course_id );
 
 					if ( ! empty( $unit_availability_date ) ) {
-						$error_message = sprintf( __( 'This unit will be available on %s', 'cp' ), date_i18n( $date_format, self::strtotime( $unit_availability_date ) ) );
+						$error_message = sprintf( __( 'This unit will be available on %s', 'CP_TD' ), date_i18n( $date_format, self::strtotime( $unit_availability_date ) ) );
 					} else {
 						if ( $previous_unit_id > 0 ) {
 							$shortcode = sprintf( '[module_status unit_id="%s" previous_unit="%s"]', $unit_id, $previous_unit_id );
@@ -2386,7 +2386,7 @@ class CoursePress_Data_Course {
 							$is_done = CoursePress_Data_Module::is_module_done_by_student( $_module_id, $student_id );
 
 							if ( ! $is_done ) {
-								$first_line = __( 'You need to complete all the REQUIRED modules before this unit.', 'cp' );
+								$first_line = __( 'You need to complete all the REQUIRED modules before this unit.', 'CP_TD' );
 								$error_message = CoursePress_Helper_UI::get_message_required_modules( $first_line );
 								continue;
 							}
@@ -2416,7 +2416,7 @@ class CoursePress_Data_Course {
 						$is_done = CoursePress_Data_Module::is_module_done_by_student( $_module_id, $student_id );
 
 						if ( ! $is_done ) {
-							$first_line = __( 'You need to complete all the REQUIRED modules before this section.', 'cp' );
+							$first_line = __( 'You need to complete all the REQUIRED modules before this section.', 'CP_TD' );
 							$error_message = CoursePress_Helper_UI::get_message_required_modules( $first_line );
 							continue;
 						}
@@ -2450,7 +2450,7 @@ class CoursePress_Data_Course {
 						$title = get_the_title( $_module_id );
 
 						if ( ! $is_done ) {
-							$first_line = __( 'You need to complete all the REQUIRED modules before this module.', 'cp' );
+							$first_line = __( 'You need to complete all the REQUIRED modules before this module.', 'CP_TD' );
 							$error_message = CoursePress_Helper_UI::get_message_required_modules( $first_line );
 							continue;
 						} else {
@@ -2473,7 +2473,7 @@ class CoursePress_Data_Course {
 								);
 
 								if ( ! $pass && ! in_array( $module_type, $excluded_modules ) ) {
-									$first_line = __( 'You need to complete all the REQUIRED modules before this module.', 'cp' );
+									$first_line = __( 'You need to complete all the REQUIRED modules before this module.', 'CP_TD' );
 									$error_message = CoursePress_Helper_UI::get_message_required_modules( $first_line );
 									continue;
 								}
