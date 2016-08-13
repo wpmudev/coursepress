@@ -11,18 +11,18 @@ class CoursePress_Data_Discussion {
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
 				'labels' => array(
-					'name' => __( 'Forums', 'CP_TD' ),
-					'singular_name' => __( 'Forum', 'CP_TD' ),
-					'add_new' => __( 'Create New', 'CP_TD' ),
-					'add_new_item' => __( 'Create New Thread', 'CP_TD' ),
-					'edit_item' => __( 'Edit Thread', 'CP_TD' ),
-					'edit' => __( 'Edit', 'CP_TD' ),
-					'new_item' => __( 'New Thread', 'CP_TD' ),
-					'view_item' => __( 'View Thread', 'CP_TD' ),
-					'search_items' => __( 'Search Threads', 'CP_TD' ),
-					'not_found' => __( 'No Threads Found', 'CP_TD' ),
-					'not_found_in_trash' => __( 'No Threads found in Trash', 'CP_TD' ),
-					'view' => __( 'View Thread', 'CP_TD' ),
+					'name' => __( 'Forums', 'cp' ),
+					'singular_name' => __( 'Forum', 'cp' ),
+					'add_new' => __( 'Create New', 'cp' ),
+					'add_new_item' => __( 'Create New Thread', 'cp' ),
+					'edit_item' => __( 'Edit Thread', 'cp' ),
+					'edit' => __( 'Edit', 'cp' ),
+					'new_item' => __( 'New Thread', 'cp' ),
+					'view_item' => __( 'View Thread', 'cp' ),
+					'search_items' => __( 'Search Threads', 'cp' ),
+					'not_found' => __( 'No Threads Found', 'cp' ),
+					'not_found_in_trash' => __( 'No Threads found in Trash', 'cp' ),
+					'view' => __( 'View Thread', 'cp' ),
 				),
 				'public' => false,
 				'show_ui' => true,
@@ -51,11 +51,11 @@ class CoursePress_Data_Discussion {
 		}
 
 		$course_id = (int) get_post_meta( $n_id, 'course_id', true );
-		$course_title = ! empty( $course_id ) ? get_the_title( $course_id ) : __( 'All courses', 'CP_TD' );
+		$course_title = ! empty( $course_id ) ? get_the_title( $course_id ) : __( 'All courses', 'cp' );
 		$course_id = ! empty( $course_id ) ? $course_id : 'all';
 
 		$unit_id = (int) get_post_meta( $n_id, 'unit_id', true );
-		$unit_title = ! empty( $unit_id ) ? get_the_title( $unit_id ) : __( 'All units', 'CP_TD' );
+		$unit_title = ! empty( $unit_id ) ? get_the_title( $unit_id ) : __( 'All units', 'cp' );
 		$unit_id = ! empty( $unit_id ) ? $unit_id : 'course';
 		$unit_id = 'all' === $course_id ? 'course' : $unit_id;
 
@@ -360,8 +360,8 @@ class CoursePress_Data_Discussion {
 					delete_user_meta( $user_id, 'cp_subscribe_to_' . $post_id );
 
 					// Hooked to the content to show unsubscribe message.
-					$message = sprintf( '<h3 class="cp-unsubscribe-title">%s</h3>', __( 'Unsubscribe Successful', 'CP_TD' ) );
-					$message .= '<p>' . sprintf( __( 'You have been removed from "%s" discussion.', 'CP_TD' ), get_the_title( $post_id ) ) . '</p>';
+					$message = sprintf( '<h3 class="cp-unsubscribe-title">%s</h3>', __( 'Unsubscribe Successful', 'cp' ) );
+					$message .= '<p>' . sprintf( __( 'You have been removed from "%s" discussion.', 'cp' ), get_the_title( $post_id ) ) . '</p>';
 
 					/**
 					 * Filter the unsubscribe message before printing.

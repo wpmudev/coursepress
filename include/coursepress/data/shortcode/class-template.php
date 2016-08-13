@@ -194,7 +194,7 @@ class CoursePress_Data_Shortcode_Template {
 		$a = shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
 			'clickable' => false,
-			'clickable_label' => __( 'Course Details', 'CP_TD' ),
+			'clickable_label' => __( 'Course Details', 'cp' ),
 			'override_button_text' => '',
 			'override_button_link' => '',
 			'echo' => false,
@@ -283,7 +283,7 @@ class CoursePress_Data_Shortcode_Template {
 			[course_social_links course_id="' . $course_id . '"]
 			[course_enroll_box course_id="' . $course_id . '"]
 			[course_instructors course_id="' . $course_id . '" avatar_position="top" summary_length="50" link_all="yes" link_text=""]
-			[course_description label="' . __( 'About this course', 'CP_TD' ) . '" course_id="' . $course_id . '"]
+			[course_description label="' . __( 'About this course', 'cp' ) . '" course_id="' . $course_id . '"]
 			[course_structure course_id="' . $course_id . '"]
 		</div>
 		';
@@ -323,7 +323,7 @@ class CoursePress_Data_Shortcode_Template {
 		$schema = apply_filters( 'coursepress_schema', '', 'description' );
 
 		$template .= '<div class="instructor-bio"'.$schema.'>' . CoursePress_Helper_Utility::filter_content( get_user_meta( $instructor_id, 'description', true ) ) . '</div>
-			<h3 class="courses-title">' . esc_html__( 'Courses', 'CP_TD' ) . '</h3>
+			<h3 class="courses-title">' . esc_html__( 'Courses', 'cp' ) . '</h3>
 			[course_list instructor="' . $instructor_id . '" class="course" left_class="enroll-box-left" right_class="enroll-box-right" course_class="enroll-box" title_link="yes" show_media="yes"]
 		</div>
 		';
@@ -377,11 +377,11 @@ class CoursePress_Data_Shortcode_Template {
 				'unit' => '',
 				'type' => '',
 				'item_id' => 0,
-				'pre_text' => __( '&laquo; Previous', 'CP_TD' ),
-				'next_text' => __( 'Next &raquo;', 'CP_TD' ),
-				'next_section_title' => __( 'Proceed to the next section', 'CP_TD' ),
-				'next_module_title' => __( 'Proceed to the next module', 'CP_TD' ),
-				'next_section_text' => __( 'Next Section', 'CP_TD' ),
+				'pre_text' => __( '&laquo; Previous', 'cp' ),
+				'next_text' => __( 'Next &raquo;', 'cp' ),
+				'next_section_title' => __( 'Proceed to the next section', 'cp' ),
+				'next_module_title' => __( 'Proceed to the next module', 'cp' ),
+				'next_section_text' => __( 'Next Section', 'cp' ),
 				'echo' => false,
 			),
 			$a,
@@ -487,7 +487,7 @@ class CoursePress_Data_Shortcode_Template {
 			$u_link = $a_link . ( ! $u_post_name ? $unit_id : $u_post_name );
 
 			$c_link = '<a href="' . esc_url( $c_link ) . '" class="breadcrumb-course crumb">' . get_post_field( 'post_title', $course_id ) . '</a>';
-			$a_link = '<a href="' . esc_url( $a_link ) . '" class="breadcrumb-course-units crumb">' . esc_html__( 'Units', 'CP_TD' ) . '</a>';
+			$a_link = '<a href="' . esc_url( $a_link ) . '" class="breadcrumb-course-units crumb">' . esc_html__( 'Units', 'cp' ) . '</a>';
 			$u_link_url = $u_link;
 			$u_link = '<a href="' . esc_url( $u_link ) . '#section-1" class="breadcrumb-course-unit crumb" data-id="1">' . get_post_field( 'post_title', $unit_id ) . '</a>';
 
@@ -740,7 +740,7 @@ class CoursePress_Data_Shortcode_Template {
 					// Student has to complete current module first...
 					$next_module_class[] = 'module-is-not-done';
 					$content .= self::tpl_mandatory_not_completed();
-					$title = __( 'You need to complete this REQUIRED module before you can continue.', 'CP_TD' );
+					$title = __( 'You need to complete this REQUIRED module before you can continue.', 'cp' );
 				}
 
 				$content .= self::show_nav_button(
@@ -761,7 +761,7 @@ class CoursePress_Data_Shortcode_Template {
 				$content .= '<div class="focus-wrapper">';
 				$content .= '<div class="focus-main section">';
 
-				$content .= '<div class="no-access-message">' . __( 'You do not currently have access to this part of the course. Signup now to get full access to the course.', 'CP_TD' ) . '</div>';
+				$content .= '<div class="no-access-message">' . __( 'You do not currently have access to this part of the course. Signup now to get full access to the course.', 'cp' ) . '</div>';
 				$content .= do_shortcode( '[course_join_button course_id="' . $course_id . '"]' );
 
 				$content .= '</div>'; // .focus-main
@@ -776,12 +776,12 @@ class CoursePress_Data_Shortcode_Template {
 				$content .= '<div class="focus-wrapper">';
 				$content .= '<div class="focus-main section">';
 
-				$content .= '<div class="no-access-message">' . __( 'This unit does not exist.', 'CP_TD' ) . '</div>';
+				$content .= '<div class="no-access-message">' . __( 'This unit does not exist.', 'cp' ) . '</div>';
 				$content .= do_shortcode(
 					sprintf(
 						'[course_join_button course_id="%s" details_text="%s"]',
 						esc_attr( $course_id ),
-						esc_attr__( 'Show course details', 'CP_TD' )
+						esc_attr__( 'Show course details', 'cp' )
 					)
 				);
 				$content .= '</div>'; // .focus-main
@@ -819,15 +819,15 @@ class CoursePress_Data_Shortcode_Template {
 		</script>
 		<script type="text/template" id="modal-next-step-is-mandatory" data-type="modal-step" data-modal-action="mandatory">
 			<div class="bbm-modal__topbar">
-				<h3 class="bbm-modal__title"><?php _e( 'This is a REQUIRED module.', 'CP_TD' ); ?></h3>
+				<h3 class="bbm-modal__title"><?php _e( 'This is a REQUIRED module.', 'cp' ); ?></h3>
 			</div>
 			<div class="bbm-modal__section">
 <?php
-		$first_line = __( 'You need to complete this REQUIRED module before you can continue.', 'CP_TD' );
+		$first_line = __( 'You need to complete this REQUIRED module before you can continue.', 'cp' );
 		echo CoursePress_Helper_UI::get_message_required_modules( $first_line );
 ?>
 			</div>
-			<div class="bbm-modal__bottombar"><a class="cancel-link"><?php _e( 'Close', 'CP_TD' ); ?></a></div>
+			<div class="bbm-modal__bottombar"><a class="cancel-link"><?php _e( 'Close', 'cp' ); ?></a></div>
 		</script>
 		<?php
 		return ob_get_clean();
@@ -944,7 +944,7 @@ class CoursePress_Data_Shortcode_Template {
 				break;
 
 			default:
-				_e( 'Page cannot be found', 'CP_TD' );
+				_e( 'Page cannot be found', 'cp' );
 		}
 
 		$content = wpautop( ob_get_clean(), apply_filters( 'coursepress_pages_content_preserve_line_breaks', true ) );
@@ -994,18 +994,18 @@ class CoursePress_Data_Shortcode_Template {
 				<li class="submenu-item submenu-inbox <?php echo esc_attr( $class_inbox ); ?>">
 					<a href="<?php echo esc_url( $url_inbox ); ?>">
 						<?php
-						esc_html_e( 'Inbox', 'CP_TD' );
+						esc_html_e( 'Inbox', 'cp' );
 						echo $unread_display;
 						?>
 					</a></li>
 				<li class="submenu-item submenu-sent-messages <?php echo esc_attr( $class_messages ); ?>">
 					<a href="<?php echo esc_url( $url_messages ); ?>">
-					<?php esc_html_e( 'Sent', 'CP_TD' ); ?>
+					<?php esc_html_e( 'Sent', 'cp' ); ?>
 					</a>
 				</li>
 				<li class="submenu-item submenu-new-message <?php echo esc_attr( $class_compose ); ?>">
 					<a href="<?php echo esc_url( $url_compose ); ?>">
-					<?php esc_html_e( 'New Message', 'CP_TD' ); ?>
+					<?php esc_html_e( 'New Message', 'cp' ); ?>
 					</a>
 				</li>
 			</ul>
@@ -1020,7 +1020,7 @@ class CoursePress_Data_Shortcode_Template {
 	public static function course_signup( $atts ) {
 
 		if ( is_user_logged_in() ) {
-			return __( 'You are already logged in.', 'CP_TD' );
+			return __( 'You are already logged in.', 'cp' );
 		}
 
 		$allowed = array( 'signup', 'login' );
@@ -1029,13 +1029,13 @@ class CoursePress_Data_Shortcode_Template {
 			shortcode_atts(
 				array(
 					'page' => isset( $_REQUEST['page'] ) ? $_REQUEST['page'] : '',
-					'failed_login_text' => __( 'Invalid login.', 'CP_TD' ),
+					'failed_login_text' => __( 'Invalid login.', 'cp' ),
 					'failed_login_class' => 'red',
 					'logout_url' => '',
 					'signup_tag' => 'h3',
-					'signup_title' => __( 'Signup', 'CP_TD' ),
+					'signup_title' => __( 'Signup', 'cp' ),
 					'login_tag' => 'h3',
-					'login_title' => __( 'Login', 'CP_TD' ),
+					'login_title' => __( 'Login', 'cp' ),
 					'signup_url' => '',
 					'login_url' => '',
 					'redirect_url' => '', // Redirect on successful login or signup.
@@ -1132,7 +1132,7 @@ class CoursePress_Data_Shortcode_Template {
 									if ( ! email_exists( $email ) ) {
 										if ( $passwd == $passwd2 ) {
 											if ( ! preg_match( '#[0-9a-z]+#i', $passwd ) || strlen( $passwd ) < $min_password_length ) {
-												$form_message = sprintf( __( 'Your password must be at least %d characters long and have at least one letter and one number in it.', 'CP_TD' ), $min_password_length );
+												$form_message = sprintf( __( 'Your password must be at least %d characters long and have at least one letter and one number in it.', 'cp' ), $min_password_length );
 												$form_message_class = 'red';
 												$form_errors++;
 											} else {
@@ -1140,13 +1140,13 @@ class CoursePress_Data_Shortcode_Template {
 												if ( $_POST['password_confirmation'] ) {
 													$student_data['user_pass'] = $_POST['password'];
 												} else {
-													$form_message = __( "Passwords don't match", 'CP_TD' );
+													$form_message = __( "Passwords don't match", 'cp' );
 													$form_message_class = 'red';
 													$form_errors++;
 												}
 											}
 										} else {
-											$form_message = __( 'Passwords don\'t match', 'CP_TD' );
+											$form_message = __( 'Passwords don\'t match', 'cp' );
 											$form_message_class = 'red';
 											$form_errors++;
 										}
@@ -1158,14 +1158,14 @@ class CoursePress_Data_Shortcode_Template {
 										$student_data['last_name'] = $_POST['last_name'];
 
 										if ( ! is_email( $_POST['email'] ) ) {
-											$form_message = __( 'E-mail address is not valid.', 'CP_TD' );
+											$form_message = __( 'E-mail address is not valid.', 'cp' );
 											$form_message_class = 'red';
 											$form_errors++;
 										}
 
 										if ( isset( $_POST['tos_agree'] ) ) {
 											if ( ! cp_is_true( $_POST['tos_agree'] ) ) {
-												$form_message = __( 'You must agree to the Terms of Service in order to signup.', 'CP_TD' );
+												$form_message = __( 'You must agree to the Terms of Service in order to signup.', 'cp' );
 												$form_message_class = 'red';
 												$form_errors++;
 											}
@@ -1204,24 +1204,24 @@ class CoursePress_Data_Shortcode_Template {
 												}
 												exit;
 											} else {
-												$form_message = __( 'An error occurred while creating the account. Please check the form and try again.', 'CP_TD' );
+												$form_message = __( 'An error occurred while creating the account. Please check the form and try again.', 'cp' );
 												$form_message_class = 'red';
 											}
 										}
 									} else {
-										$form_message = __( 'Sorry, that email address is already used!', 'CP_TD' );
+										$form_message = __( 'Sorry, that email address is already used!', 'cp' );
 										$form_message_class = 'error';
 									}
 								} else {
-									$form_message = __( 'Username already exists. Please choose another one.', 'CP_TD' );
+									$form_message = __( 'Username already exists. Please choose another one.', 'cp' );
 									$form_message_class = 'red';
 								}
 							} else {
-								$form_message = __( 'All fields are required.', 'CP_TD' );
+								$form_message = __( 'All fields are required.', 'cp' );
 								$form_message_class = 'red';
 							}
 						} else {
-							$form_message = __( 'All fields are required.', 'CP_TD' );
+							$form_message = __( 'All fields are required.', 'cp' );
 						}
 
 						if ( ! empty( $signup_title ) ) {
@@ -1249,7 +1249,7 @@ class CoursePress_Data_Shortcode_Template {
 							<input type="hidden" name="course_id" value="' . esc_attr( isset( $_GET['course_id'] ) ? $_GET['course_id'] : ' ' ) . '"/>
 							<input type="hidden" name="redirect_url" value="' . esc_url( $redirect_url ) . '"/>
 							<label class="firstname">
-								<span>' . esc_html__( 'First Name', 'CP_TD' ) . ':</span>
+								<span>' . esc_html__( 'First Name', 'cp' ) . ':</span>
 								<input type="text" name="first_name" value="' . ( isset( $_POST['first_name'] ) ? esc_html( $_POST['first_name'] ) : '' ) . '"/>
 							</label>
 						';
@@ -1260,7 +1260,7 @@ class CoursePress_Data_Shortcode_Template {
 						// Last name
 						$content .= '
 							<label class="lastname">
-								<span>' . esc_html__( 'Last Name', 'CP_TD' ) . ':</span>
+								<span>' . esc_html__( 'Last Name', 'cp' ) . ':</span>
 								<input type="text" name="last_name" value="' . ( isset( $_POST['last_name'] ) ? esc_attr( $_POST['last_name'] ) : '' ) . '"/>
 							</label>
 						';
@@ -1271,7 +1271,7 @@ class CoursePress_Data_Shortcode_Template {
 						// Username.
 						$content .= '
 							<label class="username">
-								<span>' . esc_html__( 'Username', 'CP_TD' ) . ':</span>
+								<span>' . esc_html__( 'Username', 'cp' ) . ':</span>
 								<input type="text" name="username" value="' . ( isset( $_POST['username'] ) ? esc_attr( $_POST['username'] ) : '' ) . '"/>
 							</label>
 						';
@@ -1282,7 +1282,7 @@ class CoursePress_Data_Shortcode_Template {
 						// Email.
 						$content .= '
 							<label class="email">
-								<span>' . esc_html__( 'E-mail', 'CP_TD' ) . ':</span>
+								<span>' . esc_html__( 'E-mail', 'cp' ) . ':</span>
 								<input type="text" name="email" value="' . ( isset( $_POST['email'] ) ? esc_attr( $_POST['email'] ) : '' ) . '"/>
 							</label>
 						';
@@ -1293,7 +1293,7 @@ class CoursePress_Data_Shortcode_Template {
 						// Password.
 						$content .= '
 							<label class="password">
-								<span>' . esc_html__( 'Password', 'CP_TD' ) . ':</span>
+								<span>' . esc_html__( 'Password', 'cp' ) . ':</span>
 								<input type="password" name="password" value=""/>
 							</label>
 						';
@@ -1304,7 +1304,7 @@ class CoursePress_Data_Shortcode_Template {
 						// Confirm.
 						$content .= '
 							<label class="password-confirm right">
-								<span>' . esc_html__( 'Confirm Password', 'CP_TD' ) . ':</span>
+								<span>' . esc_html__( 'Confirm Password', 'cp' ) . ':</span>
 								<input type="password" name="password_confirmation" value=""/>
 							</label>
 						';
@@ -1325,10 +1325,10 @@ class CoursePress_Data_Shortcode_Template {
 
 						$content .= '
 							<label class="existing-link full">
-								' . sprintf( __( 'Already have an account? %s%s%s!', 'CP_TD' ), '<a href="' . esc_url( $login_url ) . '">', __( 'Login to your account', 'CP_TD' ), '</a>' ) . '
+								' . sprintf( __( 'Already have an account? %s%s%s!', 'cp' ), '<a href="' . esc_url( $login_url ) . '">', __( 'Login to your account', 'cp' ), '</a>' ) . '
 							</label>
 							<label class="submit-link full-right">
-								<input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="' . esc_attr__( 'Create an Account', 'CP_TD' ) . '"/>
+								<input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="' . esc_attr__( 'Create an Account', 'cp' ) . '"/>
 							</label>
 						';
 
@@ -1347,7 +1347,7 @@ class CoursePress_Data_Shortcode_Template {
 						$content .= ob_get_clean();
 
 					} else {
-						$content .= __( 'Registrations are not allowed.', 'CP_TD' );
+						$content .= __( 'Registrations are not allowed.', 'cp' );
 					}
 				} else {
 
@@ -1382,11 +1382,11 @@ class CoursePress_Data_Shortcode_Template {
 
 				$content .= '
 						<label class="username">
-							<span>' . esc_html__( 'Username', 'CP_TD' ) . '</span>
+							<span>' . esc_html__( 'Username', 'cp' ) . '</span>
 							<input type="text" name="log" value="' . ( isset( $_POST['log'] ) ? esc_attr( $_POST['log'] ) : '' ) . '"/>
 						</label>
 						<label class="password">
-							<span>' . esc_html__( 'Password', 'CP_TD' ) . '</span>
+							<span>' . esc_html__( 'Password', 'cp' ) . '</span>
 							<input type="password" name="pwd" value="' . ( isset( $_POST['pwd'] ) ? esc_attr( $_POST['pwd'] ) : '' ) . '"/>
 						</label>
 
@@ -1398,13 +1398,13 @@ class CoursePress_Data_Shortcode_Template {
 
 				$content .= '
 						<label class="signup-link full">
-						' . ( CoursePress_Helper_Utility::users_can_register() ? sprintf( __( 'Don\'t have an account? %s%s%s now!', 'CP_TD' ), '<a href="' . $signup_url . '">', __( 'Create an Account', 'CP_TD' ), '</a>' ) : '' ) . '
+						' . ( CoursePress_Helper_Utility::users_can_register() ? sprintf( __( 'Don\'t have an account? %s%s%s now!', 'cp' ), '<a href="' . $signup_url . '">', __( 'Create an Account', 'cp' ), '</a>' ) : '' ) . '
 						</label>
 						<label class="forgot-link half-left">
-							<a href="' . esc_url( wp_lostpassword_url() ) . '">' . esc_html__( 'Forgot Password?', 'CP_TD' ) . '</a>
+							<a href="' . esc_url( wp_lostpassword_url() ) . '">' . esc_html__( 'Forgot Password?', 'cp' ) . '</a>
 						</label>
 						<label class="submit-link half-right">
-							<input type="submit" name="wp-submit" id="wp-submit" class="apply-button-enrolled" value="' . esc_attr__( 'Log In', 'CP_TD' ) . '"><br>
+							<input type="submit" name="wp-submit" id="wp-submit" class="apply-button-enrolled" value="' . esc_attr__( 'Log In', 'cp' ) . '"><br>
 						</label>
 						<input name="redirect_to" value="' . esc_url( CoursePress_Core::get_slug( 'student_dashboard', true ) ) . '" type="hidden">
 						<input name="testcookie" value="1" type="hidden">
@@ -1438,12 +1438,12 @@ class CoursePress_Data_Shortcode_Template {
 				'login_link_url' => '#',
 				'login_link_id' => '',
 				'login_link_class' => '',
-				'login_link_label' => __( 'Already have an account? <a href="%s" class="%s" id="%s">Login to your account</a>!', 'CP_TD' ),
+				'login_link_label' => __( 'Already have an account? <a href="%s" class="%s" id="%s">Login to your account</a>!', 'cp' ),
 				'signup_link_url' => '#',
 				'signup_link_id' => '',
 				'signup_link_class' => '',
-				'signup_link_label' => __( 'Don’t have an account? <a href="%s" class="%s" id="%s">Create an Account</a> now!', 'CP_TD' ),
-				'forgot_password_label' => __( 'Forgot Password?', 'CP_TD' ),
+				'signup_link_label' => __( 'Don’t have an account? <a href="%s" class="%s" id="%s">Create an Account</a> now!', 'cp' ),
+				'forgot_password_label' => __( 'Forgot Password?', 'cp' ),
 				'submit_button_class' => '',
 				'submit_button_attributes' => '',
 				'submit_button_label' => '',
@@ -1518,7 +1518,7 @@ class CoursePress_Data_Shortcode_Template {
 						$content .= '
 							<input type="hidden" name="course_id" value="' . esc_attr( $course_id ) . '"/>
 							<label class="firstname">
-								<span>' . esc_html__( 'First Name', 'CP_TD' ) . ':</span>
+								<span>' . esc_html__( 'First Name', 'cp' ) . ':</span>
 								<input type="text" name="first_name" />
 							</label>
 						';
@@ -1529,7 +1529,7 @@ class CoursePress_Data_Shortcode_Template {
 						// Last name.
 						$content .= '
 							<label class="lastname">
-								<span>' . esc_html__( 'Last Name', 'CP_TD' ) . ':</span>
+								<span>' . esc_html__( 'Last Name', 'cp' ) . ':</span>
 								<input type="text" name="last_name" />
 							</label>
 						';
@@ -1540,7 +1540,7 @@ class CoursePress_Data_Shortcode_Template {
 						// Username.
 						$content .= '
 							<label class="username">
-								<span>' . esc_html__( 'Username', 'CP_TD' ) . ':</span>
+								<span>' . esc_html__( 'Username', 'cp' ) . ':</span>
 								<input type="text" name="username" />
 							</label>
 						';
@@ -1551,7 +1551,7 @@ class CoursePress_Data_Shortcode_Template {
 						// Email.
 						$content .= '
 							<label class="email">
-								<span>' . esc_html__( 'E-mail', 'CP_TD' ) . ':</span>
+								<span>' . esc_html__( 'E-mail', 'cp' ) . ':</span>
 								<input type="text" name="email" />
 							</label>
 						';
@@ -1562,7 +1562,7 @@ class CoursePress_Data_Shortcode_Template {
 						// Password.
 						$content .= '
 							<label class="password">
-								<span>' . esc_html__( 'Password', 'CP_TD' ) . ':</span>
+								<span>' . esc_html__( 'Password', 'cp' ) . ':</span>
 								<input type="password" name="password" value=""/>
 							</label>
 						';
@@ -1573,7 +1573,7 @@ class CoursePress_Data_Shortcode_Template {
 						// Confirm.
 						$content .= '
 							<label class="password-confirm right">
-								<span>' . esc_html__( 'Confirm Password', 'CP_TD' ) . ':</span>
+								<span>' . esc_html__( 'Confirm Password', 'cp' ) . ':</span>
 								<input type="password" name="password_confirmation" value=""/>
 							</label>
 						';
@@ -1625,7 +1625,7 @@ class CoursePress_Data_Shortcode_Template {
 						$content .= ob_get_clean();
 
 					} else {
-						$content .= __( 'Registrations are not allowed.', 'CP_TD' );
+						$content .= __( 'Registrations are not allowed.', 'cp' );
 					}
 				}
 				break;
@@ -1645,11 +1645,11 @@ class CoursePress_Data_Shortcode_Template {
 
 				$content .= '
 					<label class="username">
-						<span>' . esc_html__( 'Username', 'CP_TD' ) . '</span>
+						<span>' . esc_html__( 'Username', 'cp' ) . '</span>
 						<input type="text" name="log" />
 					</label>
 					<label class="password">
-						<span>' . esc_html__( 'Password', 'CP_TD' ) . '</span>
+						<span>' . esc_html__( 'Password', 'cp' ) . '</span>
 						<input type="password" name="pwd" />
 					</label>';
 
@@ -1663,7 +1663,7 @@ class CoursePress_Data_Shortcode_Template {
 							' . $signup_link_label . '
 						</label>
 						<label class="forgot-link half-left">
-							<a href="' . esc_url( wp_lostpassword_url() ) . '">' . esc_html__( 'Forgot Password?', 'CP_TD' ) . '</a>
+							<a href="' . esc_url( wp_lostpassword_url() ) . '">' . esc_html__( 'Forgot Password?', 'cp' ) . '</a>
 						</label>';
 				}
 

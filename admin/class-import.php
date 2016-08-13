@@ -16,8 +16,8 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 
 	public function get_labels() {
 		return array(
-			'title' => __( 'CoursePress Import', 'CP_TD' ),
-			'menu_title' => __( 'Import', 'CP_TD' ),
+			'title' => __( 'CoursePress Import', 'cp' ),
+			'menu_title' => __( 'Import', 'cp' ),
 		);
 	}
 
@@ -85,7 +85,7 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 	 **/
 	public static function import_completed() {
 		printf( '<div class="notice notice-info is-dismissible"><p>%s</p></div>',
-			__( 'Courses successfully imported!', 'CP_TD' )
+			__( 'Courses successfully imported!', 'cp' )
 		);
 	}
 
@@ -235,14 +235,9 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 					$new_units[$unit_id] = array( 'new_unit_id' => $new_unit_id, 'modules' => array() );
 
 					// Update visible units
-					if ( ! empty( $visible_units[ $unit_id ] ) ) {
-						$visible_units[ $new_unit_id ] = $visible_units[ $unit_id ];
-						unset( $visible_units[ $unit_id ] );
-					}
-					if ( ! empty( $preview_units[ $unit_id ] ) ) {
-						$preview_units[ $new_unit_id ] = $preview_units[ $unit_id ];
-						unset( $preview_units[ $unit_id ] );
-					}
+					$visible_units[$new_unit_id] = $visible_units[$unit_id];
+					$preview_units[$new_unit_id] = $preview_units[$unit_id];
+					unset( $visible_units[$unit_id], $preview_units[$unit_id] );
 
 					if ( false === self::check_memory() ) {	break; }
 
@@ -260,15 +255,9 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 							// Update visible pages
 							$old_page_key = $unit_id . '_' . $page_number;
 							$new_page_key = $new_unit_id . '_' . $page_number;
-
-							if ( ! empty( $visible_pages[ $old_page_key ] ) ) {
-								$visible_pages[ $new_page_key ] = $visible_pages[ $old_page_key ];
-								unset( $visible_pages[ $old_page_key ] );
-							}
-							if ( ! empty( $preview_pages[ $old_page_key ] ) ) {
-								$preview_pages[ $new_page_key ] = $preview_pages[ $old_page_key ];
-								unset( $preview_pages[ $old_page_key ] );
-							}
+							$visible_pages[$new_page_key] = $visible_pages[$old_page_key];
+							$preview_pages[$new_page_key] = $preview_pages[$old_page_key];
+							unset( $visible_pages[$old_page_key], $preview_pages[$old_page_key] );
 
 							if ( isset( $page->modules ) ) {
 
@@ -293,15 +282,15 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 									$old_module_key = $unit_id . '_' . $page_number . '_' . $module_id;
 									$new_module_key = $new_unit_id . '_' . $page_number . '_' . $new_module_id;
 
-									$visible_modules[ $new_module_key ] = isset( $visible_modules[ $old_module_key ] ) ? $visible_modules[ $old_module_key ] : '';
-									$preview_modules[ $new_module_key ] = isset( $preview_modules[ $old_module_key ] ) ? $preview_modules[ $old_module_key ] : '';
+									$visible_modules[$new_module_key] = isset( $visible_modules[$old_module_key] ) ? $visible_modules[$old_module_key] : '';
+									$preview_modules[$new_module_key] = isset( $preview_modules[$old_module_key] ) ? $preview_modules[$old_module_key] : '';
 
-									if ( ! empty( $visible_modules[ $old_module_key ] ) ) {
-										unset( $visible_modules[ $old_module_key ] );
+									if ( ! empty( $visible_modules[$old_module_key] ) ) {
+										unset( $visible_modules[$old_module_key] );
 									}
 
-									if ( ! empty( $preview_modules[ $old_module_key ] ) ) {
-										unset( $preview_modules[ $old_module_key ] );
+									if ( ! empty( $preview_modules[$old_module_key] ) ) {
+										unset( $preview_modules[$old_module_key] );
 									}
 
 									if ( false === self::check_memory() ) { break; }

@@ -9,7 +9,7 @@ class CoursePress_Admin_FeedbackEmail extends CoursePress_Email {
 
 	public function default_email_fields() {
 		return array(
-			'subject' => __( 'New Feedback', 'CP_TD' ),
+			'subject' => __( 'New Feedback', 'cp' ),
 			'content' => sprintf( __(
 				'
 				Howdy %s %s,
@@ -22,7 +22,7 @@ class CoursePress_Admin_FeedbackEmail extends CoursePress_Email {
 				Cheers,
 				%s
 				%s
-				', 'CP_TD' ),
+				', 'cp' ),
 				'FIRST_NAME',
 				'LAST_NAME',
 				'COURSE_NAME',
@@ -38,8 +38,8 @@ class CoursePress_Admin_FeedbackEmail extends CoursePress_Email {
 
 	public function email_settings() {
 		return array(
-			'title' => __( 'Instructor Feedback', 'CP_TD' ),
-			'description' => __( 'Template for sending instructor feedback to students.', 'CP_TD' )
+			'title' => __( 'Instructor Feedback', 'cp' ),
+			'description' => __( 'Template for sending instructor feedback to students.', 'cp' )
 		);
 	}
 

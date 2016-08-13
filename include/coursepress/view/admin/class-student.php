@@ -7,8 +7,8 @@ class CoursePress_View_Admin_Student {
 	private static $table_manager = null;
 
 	public static function init() {
-		self::$title = __( 'Courses/Students', 'CP_TD' );
-		self::$menu_title = __( 'Students', 'CP_TD' );
+		self::$title = __( 'Courses/Students', 'cp' );
+		self::$menu_title = __( 'Students', 'cp' );
 
 		add_filter(
 			'coursepress_admin_valid_pages',

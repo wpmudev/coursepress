@@ -1,19 +1,17 @@
-/*global _coursepress*/
++(function($){
+	CoursePress = CoursePress || {};
+	CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 
-var CoursePress = CoursePress || {};
-CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
-
-(function( $ ){
 	CoursePress.Models.Units = CoursePress.Models.Post.extend({
 		url: _coursepress._ajax_url + '?action=coursepress_assessments',
 		parse: function( response ) {
 			var action = this.get( 'action' );
 
-			if ( true === response.success ) {
+			if ( true == response.success ) {
 				this.trigger( 'coursepress:' + action + '_success', response.data );
 			} else {
 				this.trigger( 'coursepress:' + action + '_error', response.data );
-			}
+			};
 
 			this.set( 'action', '' );
 		}
@@ -27,15 +25,16 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		var unitDiv = $( '.cp-unit-div' ).filter(function(){
 				var data = $(this).data();
 
-				return data.unit === unit_id && data.student === student_id;
+				return data.unit == unit_id && data.student == student_id;
 			}),
 			modules = $( '.module-grade', unitDiv ),
 			assessable_modules = $( '.module-assessable .module-grade', unitDiv ),
 			unitGrade = 0,
+			unitAssessableGrade = 0,
 			module_length = $( '.cp-total-unit-modules[data-unit="' + unit_id + '"]' ).first().val()
 		;
 
-		if ( 'all' !== activeUnit ) {
+		if ( 'all' != activeUnit ) {
 			modules = assessable_modules;
 		}
 
@@ -44,24 +43,58 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 
 			var grade = module.val();
 
-			grade = ! grade || null === grade ? 0 : parseInt( grade );
+			grade = ! grade || null == grade ? 0 : parseInt( grade );
 			unitGrade += grade;
 		});
 
 		unitGrade = unitGrade > 0 && module_length > 0 ? Math.ceil( unitGrade / module_length ) : 0;
 
 		return unitGrade;
+
+	},
+	calculateUnitPassingGrade = function( unit_id, student_id ) {
+		var unitDiv = $( '.cp-unit-div[data-unit="' + unit_id + '"][data-student="' + student_id + '"]' ),
+			modules = $( '.module-grade', unitDiv ),
+			assessable_modules = $( '.module-assessable .module-grade', unitDiv )
+			passingGrade = 0,
+			isfull = $( '.modules-answer-wrapper' ).length > 0
+		;
+
+		if ( ! isfull ) {
+			modules.parents( '.cp-module' ).hide();
+		}
+
+		if ( ! isfull && 'all' != activeUnit ) {
+			modules = assessable_modules;
+		}
+
+		_.each(modules, function( module ) {
+			module = $(module);
+
+			var data = module.data(),
+				minimum_grade = data.minimum
+			;
+
+			minimum_grade = ! minimum_grade || minimum_grade <= 0 ? 0 : parseInt( minimum_grade );
+			passingGrade += minimum_grade;
+			module.parents( '.cp-module' ).show();
+		});
+
+		passingGrade = passingGrade > 0 ? Math.ceil( passingGrade / modules.length ) : 0;
+
+		return passingGrade;
 	},
 	calculateFinalGrade = function( student_id ) {
 		var units = $( '.cp-unit-div[data-student="' + student_id + '"]' ),
 			total = 0,
 			modules = $( '.module-grade', units ),
+			totalPassingGrade = 0,
 			finalDiv = $( '.final-grade[data-student="' + student_id + '"], [data-student="' + student_id + '"] .final-grade' ),
 			modules_length = 0,
 			container = units.parents( '.cp-responses' ).first()
 		;
 
-		if ( 'all' !== activeUnit ) {
+		if ( 'all' != activeUnit ) {
 			modules = $( '.module-assessable .module-grade', units );
 		}
 
@@ -69,7 +102,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			module = $(module);
 
 			var grade = module.val();
-			grade = ! grade || null === grade ? 0 : grade;
+			grade = ! grade || null == grade ? 0 : grade;
 			total += parseInt( grade );
 		});
 
@@ -77,7 +110,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			var counter = $(this),
 				count = counter.val()
 			;
-			count = ! count || null === count ? 0 : parseInt( count );
+			count = ! count || null == count ? 0 : parseInt( count );
 			modules_length += count;
 		});
 
@@ -98,12 +131,11 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			editor_container = $( '.cp-feedback-editor', parentDiv ).hide(),
 			editor_id = 'cp_editor_' + grade_box.data( 'module' ) + '_' + grade_box.data( 'student' ),
 			editor_box = $( '.cp-grade-editor-box', parentDiv ),
-			unitDiv = parentDiv.parents( '.cp-unit-div' ),
+			unitDiv = parentDiv.parents( '.cp-unit-div' ).first(),
 			edit_grade_box = $( '.cp-edit-grade-box', parentDiv ),
 			save_as_draft = $( '.cp-save-as-draft', parentDiv )
 		;
 
-		unitDiv = unitDiv.first();
 		if ( btn.is( '.disabled' ) ) {
 			// Don't process anything if button is disabled
 			return;
@@ -182,10 +214,11 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 				withFeedbackButton.html( _coursepress.assessment_labels.edit_with_feedback );
 				noFeedbackButton.html( _coursepress.assessment_labels.edit_no_feedback );
 
-				var totalUnitGrade = calculateUnitGrade( unit_id, student_id );
+				var totalUnitGrade = calculateUnitGrade( unit_id, student_id ),
+					totalCourseGrade = calculateFinalGrade( student_id );
 				unitGrade.html( totalUnitGrade + '%' );
 
-				if ( with_feedback && '' !== param.feedback_content.trim() ) {
+				if ( with_feedback && '' != param.feedback_content.trim() ) {
 					var feedback_editor = $( '.cp-instructor-feedback', moduleDiv ).show(),
 						draft_icon = $( '.cp-draft-icon', feedback_editor )
 					;
@@ -218,9 +251,9 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		if ( ! has_editor ) {
 			CoursePress.Events.off( 'editor:keyup' );
 			CoursePress.Events.on( 'editor:keyup', function( ed ) {
-				var content = typeof ed.getContent !== undefined && ed.getContent ? ed.getContent() : $( '#' + editor_id ).val();
+				var content = undefined != typeof ed.getContent && ed.getContent ? ed.getContent() : $( '#' + editor_id ).val();
 
-				if ( content !== old_content ) {
+				if ( content != old_content ) {
 					textbox.val( content );
 					submitButton.removeClass( 'disabled' );
 					save_as_draft.removeClass( 'disabled' );
@@ -235,7 +268,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			submitButton = module.siblings( '.cp-submit-grade' )
 		;
 
-		submitButton[ '' !== module.val() ? 'removeClass' : 'addClass' ]('disabled');
+		submitButton[ '' != module.val() ? 'removeClass' : 'addClass' ]('disabled');
 	},
 	cancelEdit = function() {
 		var btn = $(this),
@@ -288,10 +321,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			CoursePress.Events.on( 'coursepress:progress:success', function() {
 				btn.addClass( 'disabled' );
 				var feedback_editor = $( '.cp-instructor-feedback', moduleDiv ).show(),
-					draft_icon = $( '.cp-draft-icon', feedback_editor )
-				;
-				draft_icon.show();
-
+					draft_icon = $( '.cp-draft-icon', feedback_editor ).show();
 				$( '.description', feedback_editor ).hide(); // Hide no feedback info
 				$( '.cp-feedback-details', feedback_editor ).html( param.feedback_content );
 				$( 'cite', feedback_editor ).html( '- ' + _coursepress.instructor_name );
@@ -308,13 +338,14 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 	var filterStudentRows = function() {
 		// Set the templates
 		$( '.cp-content script' ).each(function() {
-			var template_script = $( this ),
+			var template_script = $( this )
 				template = template_script.html()
 			;
 			template_script.replaceWith( template );
 		});
 
 		var units = $( '.cp-unit-div' ),
+			table = $( '.cp-table' ),
 			rows = $( '.student-row' ),
 			unit_type = $( '#unit-list' ).val()
 		;
@@ -347,19 +378,16 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 	var updateGradeView = function( unit_id, student_id ) {
 		var unitGrade = calculateUnitGrade( unit_id, student_id ),
 			divs = $( '.cp-unit-div .unit-grade' ),
-			pass_label = $( '<span class="cp-check green">' ),
-			fail_label = $( '<span class="cp-check red">' )
+			pass_label = $( '<span class="cp-check green">' ).html( _coursepress.assessment_labels.pass ),
+			fail_label = $( '<span class="cp-check red">' ).html( _coursepress.assessment_labels.fail )
 		;
-
-		pass_label.html( _coursepress.assessment_labels.pass );
-		fail_label.html( _coursepress.assessment_labels.fail );
 
 		_.each( divs, function( div ) {
 			div = $(div);
 
 			var data = div.data();
 
-			if ( data.unit === unit_id && data.student === student_id ) {
+			if ( data.unit == unit_id && data.student == student_id ) {
 				div.show().html( unitGrade + '%' );
 			}
 		});
@@ -377,7 +405,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			reset_button = search.siblings( '#search_reset' )
 		;
 
-		if ( '' !== search.val() ) {
+		if ( '' != search.val() ) {
 			// Enable reset
 			reset_button.removeClass( 'disabled' );
 		} else {
@@ -440,6 +468,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 	},
 	updateNav = function() {
 		var nav = $(this),
+			href = nav.attr( 'href', 'javascript:;' ),
 			paged = nav.data( 'paged' )
 		;
 

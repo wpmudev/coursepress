@@ -344,7 +344,7 @@ class CoursePress_Helper_Setting {
 			'columns',
 			array(
 				'default' => '',
-				'label' => _x( 'Columns', 'courses per page (screen options)', 'CP_TD' ),
+				'label' => _x( 'Columns', 'courses per page (screen options)', 'cp' ),
 				'option' => 'coursepress_courses_columns',
 			)
 		);
@@ -352,7 +352,7 @@ class CoursePress_Helper_Setting {
 			'per_page',
 			array(
 				'default' => 20,
-				'label' => _x( 'Number of items per page:', 'courses per page (screen options)', 'CP_TD' ),
+				'label' => _x( 'Number of items per page:', 'courses per page (screen options)', 'cp' ),
 				'option' => 'coursepress_courses_per_page',
 			)
 		);
@@ -369,12 +369,12 @@ class CoursePress_Helper_Setting {
 	 */
 	private static function courses_get_columns( $option = '' ) {
 		$columns = array(
-			'ID' => __( 'ID', 'CP_TD' ),
-			'units' => __( 'Units', 'CP_TD' ),
-			'students' => __( 'Students', 'CP_TD' ),
-			'certificates' => __( 'Certified', 'CP_TD' ),
-			'status' => __( 'Status', 'CP_TD' ),
-			'actions' => __( 'Actions', 'CP_TD' ),
+			'ID' => __( 'ID', 'cp' ),
+			'units' => __( 'Units', 'cp' ),
+			'students' => __( 'Students', 'cp' ),
+			'certificates' => __( 'Certified', 'cp' ),
+			'status' => __( 'Status', 'cp' ),
+			'actions' => __( 'Actions', 'cp' ),
 		);
 		if ( 'keys-only' == $option ) {
 			$columns = array_keys( $columns );
@@ -433,7 +433,7 @@ class CoursePress_Helper_Setting {
 			$columns_names = self::courses_get_columns();
 			$columns = self::courses_get_user_columns();
 			$content .= '<fieldset class="metabox-prefs">';
-			$content .= sprintf( '<legend>%s</legend>', __( 'Columns', 'CP_TD' ) );
+			$content .= sprintf( '<legend>%s</legend>', __( 'Columns', 'cp' ) );
 			$content .= '<div class="metabox-prefs">';
 			foreach ( $columns_names as $key => $name ) {
 				$content .= sprintf(

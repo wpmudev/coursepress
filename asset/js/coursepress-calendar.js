@@ -1,6 +1,3 @@
-/*!  - v2.0.0
- * 
- * Copyright (c) 2016; * Licensed GPLv2+ */
 (function( $ ){
     function update_calendar( date, course_calendar ) {
         var wpajaxurl = window.wpajaxurl ? window.wpajaxurl : '';

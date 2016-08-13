@@ -16,55 +16,55 @@ class CoursePress_Helper_Setting_Email {
 				CoursePress_Helper_Email::REGISTRATION => array(
 					'from' => get_option( 'blogname' ),
 					'email' => get_option( 'admin_email' ),
-					'subject' => __( 'Registration Status', 'CP_TD' ),
+					'subject' => __( 'Registration Status', 'cp' ),
 					'content' => self::_registration_email(),
 				),
 				CoursePress_Helper_Email::ENROLLMENT_CONFIRM => array(
 					'from' => get_option( 'blogname' ),
 					'email' => get_option( 'admin_email' ),
-					'subject' => __( 'Enrollment Confirmation', 'CP_TD' ),
+					'subject' => __( 'Enrollment Confirmation', 'cp' ),
 					'content' => self::_enrollment_confirmation_email(),
 				),
 				CoursePress_Helper_Email::COURSE_INVITATION => array(
 					'from' => get_option( 'blogname' ),
 					'email' => get_option( 'admin_email' ),
-					'subject' => __( 'Invitation to a Course', 'CP_TD' ),
+					'subject' => __( 'Invitation to a Course', 'cp' ),
 					'content' => self::_course_invitation_email(),
 				),
 				CoursePress_Helper_Email::COURSE_INVITATION_PASSWORD => array(
 					'from' => get_option( 'blogname' ),
 					'email' => get_option( 'admin_email' ),
-					'subject' => __( 'Invitation to a Course ( Psss...for selected ones only )', 'CP_TD' ),
+					'subject' => __( 'Invitation to a Course ( Psss...for selected ones only )', 'cp' ),
 					'content' => self::_course_invitation_passcode_email(),
 				),
 				CoursePress_Helper_Email::INSTRUCTOR_INVITATION => array(
 					'from' => get_option( 'blogname' ),
 					'email' => get_option( 'admin_email' ),
-					'subject' => sprintf( __( 'Invitation to be an instructor at %s', 'CP_TD' ), get_option( 'blogname' ) ),
+					'subject' => sprintf( __( 'Invitation to be an instructor at %s', 'cp' ), get_option( 'blogname' ) ),
 					'content' => self::_instructor_invitation_email(),
 				),
 				CoursePress_Helper_Email::NEW_ORDER => array(
 					'from' => get_option( 'blogname' ),
 					'email' => get_option( 'admin_email' ),
-					'subject' => __( 'Order Confirmation', 'CP_TD' ),
+					'subject' => __( 'Order Confirmation', 'cp' ),
 					'content' => self::_new_order_email(),
 				),
 				CoursePress_Helper_Email::COURSE_START_NOTIFICATION => array(
 					'from' => get_option( 'blogname' ),
 					'email' => get_option( 'admin_email' ),
-					'subject' => __( 'Course Start Notfication', 'CP_TD' ),
+					'subject' => __( 'Course Start Notfication', 'cp' ),
 					'content' => self::course_start_defaults(),
 				),
 				CoursePress_Helper_Email::DISCUSSION_NOTIFICATION => array(
 					'from' => get_option( 'blogname' ),
 					'email' => get_option( 'admin_email' ),
-					'subject' => __( 'Discussion Notfication', 'CP_TD' ),
+					'subject' => __( 'Discussion Notfication', 'cp' ),
 					'content' => self::discussion_defaults(),
 				),
 				CoursePress_Helper_Email::UNIT_STARTED_NOTIFICATION => array(
 					'from' => get_option( 'blogname' ),
 					'email' => get_option( 'admin_email' ),
-					'subject' => __( '[UNIT_TITLE] is now available', 'CP_TD' ),
+					'subject' => __( '[UNIT_TITLE] is now available', 'cp' ),
 					'content' => self::unit_started_defaults(),
 				),
 			)
@@ -194,64 +194,64 @@ class CoursePress_Helper_Setting_Email {
 			'coursepress_default_email_settings_sections',
 			array(
 				CoursePress_Helper_Email::BASIC_CERTIFICATE => array(
-					'title' => __( 'Basic Certificate E-mail', 'CP_TD' ),
-					'description' => __( 'Settings for emails when using basic certificate functionality (when course completed).', 'CP_TD' ),
-					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'CP_TD' ) . implode( ', ', $basic_certificate_fields ),
+					'title' => __( 'Basic Certificate E-mail', 'cp' ),
+					'description' => __( 'Settings for emails when using basic certificate functionality (when course completed).', 'cp' ),
+					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'cp' ) . implode( ', ', $basic_certificate_fields ),
 					'order' => 7,
 				),
 				CoursePress_Helper_Email::REGISTRATION => array(
-					'title' => __( 'User Registration E-mail', 'CP_TD' ),
-					'description' => __( 'Settings for an e-mail student get upon account registration.', 'CP_TD' ),
-					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'CP_TD' ) . implode( ', ', $registration_fields ),
+					'title' => __( 'User Registration E-mail', 'cp' ),
+					'description' => __( 'Settings for an e-mail student get upon account registration.', 'cp' ),
+					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'cp' ) . implode( ', ', $registration_fields ),
 					'order' => 1,
 				),
 				CoursePress_Helper_Email::ENROLLMENT_CONFIRM => array(
-					'title' => __( 'Course Enrollment Confirmation E-mail', 'CP_TD' ),
-					'description' => __( 'Settings for an e-mail student get upon enrollment.', 'CP_TD' ),
-					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'CP_TD' ) . implode( ', ', $enrollment_confirm ),
+					'title' => __( 'Course Enrollment Confirmation E-mail', 'cp' ),
+					'description' => __( 'Settings for an e-mail student get upon enrollment.', 'cp' ),
+					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'cp' ) . implode( ', ', $enrollment_confirm ),
 					'order' => 2,
 				),
 				CoursePress_Helper_Email::COURSE_INVITATION => array(
-					'title' => __( 'Student Invitation to a Course E-mail', 'CP_TD' ),
-					'description' => __( 'Settings for an e-mail student get upon receiving an invitation to a course.', 'CP_TD' ),
-					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'CP_TD' ) . implode( ', ', $course_invitation_fields ),
+					'title' => __( 'Student Invitation to a Course E-mail', 'cp' ),
+					'description' => __( 'Settings for an e-mail student get upon receiving an invitation to a course.', 'cp' ),
+					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'cp' ) . implode( ', ', $course_invitation_fields ),
 					'order' => 3,
 				),
 				CoursePress_Helper_Email::COURSE_INVITATION_PASSWORD => array(
-					'title' => __( 'Student Invitation to a Course E-mail (with passcode)', 'CP_TD' ),
-					'description' => __( 'Settings for an e-mail student get upon receiving an invitation (with passcode) to a course.', 'CP_TD' ),
-					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'CP_TD' ) . implode( ', ', $course_invitation_fields ),
+					'title' => __( 'Student Invitation to a Course E-mail (with passcode)', 'cp' ),
+					'description' => __( 'Settings for an e-mail student get upon receiving an invitation (with passcode) to a course.', 'cp' ),
+					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'cp' ) . implode( ', ', $course_invitation_fields ),
 					'order' => 4,
 				),
 				CoursePress_Helper_Email::INSTRUCTOR_INVITATION => array(
-					'title' => __( 'Instructor Invitation Email', 'CP_TD' ),
-					'description' => __( 'Settings for an e-mail an instructor will get upon receiving an invitation.', 'CP_TD' ),
-					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'CP_TD' ) . implode( ', ', $instructor_invitation_fields ),
+					'title' => __( 'Instructor Invitation Email', 'cp' ),
+					'description' => __( 'Settings for an e-mail an instructor will get upon receiving an invitation.', 'cp' ),
+					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'cp' ) . implode( ', ', $instructor_invitation_fields ),
 					'order' => 5,
 				),
 				CoursePress_Helper_Email::NEW_ORDER => array(
-					'title' => __( 'New Order E-mail', 'CP_TD' ),
-					'description' => __( 'Settings for an e-mail student get upon placing an order.', 'CP_TD' ),
-					'content_help_text' => __( 'These codes will be replaced with actual data: CUSTOMER_NAME, BLOG_NAME, LOGIN_ADDRESS, COURSES_ADDRESS, WEBSITE_ADDRESS, COURSE_ADDRESS, ORDER_ID, ORDER_STATUS_URL', 'CP_TD' ),
+					'title' => __( 'New Order E-mail', 'cp' ),
+					'description' => __( 'Settings for an e-mail student get upon placing an order.', 'cp' ),
+					'content_help_text' => __( 'These codes will be replaced with actual data: CUSTOMER_NAME, BLOG_NAME, LOGIN_ADDRESS, COURSES_ADDRESS, WEBSITE_ADDRESS, COURSE_ADDRESS, ORDER_ID, ORDER_STATUS_URL', 'cp' ),
 					'order' => 6,
 				),
 				CoursePress_Helper_Email::COURSE_START_NOTIFICATION => array(
-					'title' => __( 'Course Notfication E-mail', 'CP_TD' ),
-					'description' => __( 'Settings for an e-mail to send to students when a course started.', 'CP_TD' ),
-					'content_help_text' => __( 'These codes will be relaced with actual data: ', 'CP_TD' ) . implode( ', ', $course_start_fields ),
+					'title' => __( 'Course Notfication E-mail', 'cp' ),
+					'description' => __( 'Settings for an e-mail to send to students when a course started.', 'cp' ),
+					'content_help_text' => __( 'These codes will be relaced with actual data: ', 'cp' ) . implode( ', ', $course_start_fields ),
 					'order' => 7,
 				),
 				CoursePress_Helper_Email::DISCUSSION_NOTIFICATION => array(
-					'title' => __( 'Discussion Notfication E-mail', 'CP_TD' ),
-					'description' => __( 'Settings for an e-mail to send to students and instructors.', 'CP_TD' ),
-					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'CP_TD' ) . implode( ', ', $discussion_fields ),
+					'title' => __( 'Discussion Notfication E-mail', 'cp' ),
+					'description' => __( 'Settings for an e-mail to send to students and instructors.', 'cp' ),
+					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'cp' ) . implode( ', ', $discussion_fields ),
 					'order' => 7,
 				),
 				CoursePress_Helper_Email::UNIT_STARTED_NOTIFICATION => array(
-					'title' => __( 'Course Unit Started E-mail', 'CP_TD' ),
-					'description' => __( 'Settings for an e-mail to send to students whenever a unit have started.', 'CP_TD' ),
-					'content_help_text' => sprintf( __( '* You may use %s mail token to your subject line. ', 'CP_TD' ), 'UNIT_TITLE' ) .
-						__( 'These codes will be replaced with actual data: ', 'CP_TD' ) . implode( ', ', $units_started ),
+					'title' => __( 'Course Unit Started E-mail', 'cp' ),
+					'description' => __( 'Settings for an e-mail to send to students whenever a unit have started.', 'cp' ),
+					'content_help_text' => sprintf( __( '* You may use %s mail token to your subject line. ', 'cp' ), 'UNIT_TITLE' ) .
+						__( 'These codes will be replaced with actual data: ', 'cp' ) . implode( ', ', $units_started ),
 					'order' => 8,
 				),
 			)
@@ -273,7 +273,7 @@ Get started by exploring our courses:
 %5$s
 
 best wishes,
-%6$s Team', 'CP_TD' ),
+%6$s Team', 'cp' ),
 				'STUDENT_FIRST_NAME',
 				'STUDENT_LAST_NAME',
 				'BLOG_NAME',
@@ -297,11 +297,11 @@ You may check all courses you are enrolled in here: %4$s.
 Or you can explore other courses in your %5$s
 
 best wishes,
-%6$s Team', 'CP_TD' ),
+%6$s Team', 'cp' ),
 				'STUDENT_FIRST_NAME',
 				'STUDENT_LAST_NAME',
 				'<a href="COURSE_ADDRESS">COURSE_TITLE</a>',
-				'<a href="STUDENT_DASHBOARD">' . __( 'Dashboard', 'CP_TD' ) . '</a>',
+				'<a href="STUDENT_DASHBOARD">' . __( 'Dashboard', 'cp' ) . '</a>',
 				'<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>',
 				'BLOG_NAME'
 			)
@@ -324,7 +324,7 @@ Check this page for more info on the course: %5$s
 If you have any question feel free to contact us.
 
 best wishes,
-%6$s Team', 'CP_TD' ),
+%6$s Team', 'cp' ),
 				'STUDENT_FIRST_NAME',
 				'STUDENT_LAST_NAME',
 				'COURSE_NAME',
@@ -353,7 +353,7 @@ Check this page for more info on the course: %5$s
 If you have any question feel free to contact us.
 
 best wishes,
-%6$s Team', 'CP_TD' ),
+%6$s Team', 'cp' ),
 				'STUDENT_FIRST_NAME',
 				'STUDENT_LAST_NAME',
 				'COURSE_NAME',
@@ -380,7 +380,7 @@ Click on the link below to confirm:
 If you haven\'t yet got a username you will need to create one.
 
 %5$s
-	', 'CP_TD' ),
+	', 'cp' ),
 				'INSTRUCTOR_FIRST_NAME',
 				'INSTRUCTOR_LAST_NAME',
 				'COURSE_NAME',
@@ -403,10 +403,10 @@ Please refer to your Order ID (ORDER_ID) whenever contacting us.
 You can track the latest status of your order here: ORDER_STATUS_URL
 
 best wishes,
-%5$s Team', 'CP_TD' ),
+%5$s Team', 'cp' ),
 				'CUSTOMER_NAME',
 				'<a href="COURSE_ADDRESS">COURSE_TITLE</a>',
-				'<a href="STUDENT_DASHBOARD">' . __( 'Dashboard', 'CP_TD' ) . '</a>',
+				'<a href="STUDENT_DASHBOARD">' . __( 'Dashboard', 'cp' ) . '</a>',
 				'<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>',
 				'BLOG_NAME'
 			)

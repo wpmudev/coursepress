@@ -349,7 +349,7 @@ if ( ! function_exists( 'cp_instructors_drop_down' ) ) {
 		);
 
 		$content = '';
-		$content .= '<select name="instructors" id="instructors" data-placeholder="' . __( 'Choose a Course Instructor...', 'CP_TD' ) . '" class="' . $class . '">';
+		$content .= '<select name="instructors" id="instructors" data-placeholder="' . __( 'Choose a Course Instructor...', 'cp' ) . '" class="' . $class . '">';
 
 		$args = array(
 			//'role' => 'instructor',
@@ -399,7 +399,7 @@ if ( ! function_exists( 'cp_students_drop_down' ) ) {
 			'2.0'
 		);
 		$content = '';
-		$content .= '<select name="students" data-placeholder="' . __( 'Choose a Student...', 'CP_TD' ) . '" class="chosen-select">';
+		$content .= '<select name="students" data-placeholder="' . __( 'Choose a Student...', 'cp' ) . '" class="chosen-select">';
 
 		$args = array(
 			'role' => '',

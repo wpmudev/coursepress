@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: CoursePress Base
+ * Plugin Name: CoursePress Pro
  * Version:     2.0.0-BETA3
  * Description: CoursePress Pro turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also assess student work, sell your courses and much much more.
  * Author:      WPMU DEV

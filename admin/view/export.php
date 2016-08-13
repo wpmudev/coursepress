@@ -1,7 +1,7 @@
 <div class="wrap coursepress_wrapper coursepress-export">
-	<h2><?php esc_html_e( 'Export', 'CP_TD' ); ?></h2>
+	<h2><?php esc_html_e( 'Export', 'cp' ); ?></h2>
 	<p class="description page-tagline">
-		<?php esc_html_e( 'Select courses to export to another site.', 'CP_TD' ); ?>
+		<?php esc_html_e( 'Select courses to export to another site.', 'cp' ); ?>
 	</p>
 	<form method="post" class="has-disabled">
 		<?php wp_nonce_field( 'coursepress_export', 'coursepress_export' ); ?>
@@ -9,7 +9,7 @@
 			<p>
 				<label>
 					<input type="checkbox" class="input-key" name="coursepress[all]" value="1" />
-					<?php esc_html_e( 'All courses', 'CP_TD' ); ?>
+					<?php esc_html_e( 'All courses', 'cp' ); ?>
 				</label>
 			</p>
 			<?php
@@ -40,35 +40,35 @@
 			?>
 		</div>
 		<div>
-			<h3><?php esc_html_e( 'Export Options', 'CP_TD' ); ?></h3>
+			<h3><?php esc_html_e( 'Export Options', 'cp' ); ?></h3>
 			<div>
 				<label>
 					<input type="checkbox" name="coursepress[students]" value="1" />
-					<?php esc_html_e( 'Include students', 'CP_TD' ); ?>
+					<?php esc_html_e( 'Include students', 'cp' ); ?>
 				</label>
 				<p class="description">
-					<?php esc_html_e( 'Will include course students and their course submission progress.', 'CP_TD' ); ?>
+					<?php esc_html_e( 'Will include course students and their course submission progress.', 'cp' ); ?>
 				</p>
 			</div><br />
 			<!-- @todo: Enable this option -->
 			<div style="display:none;">
 				<label>
 					<input type="checkbox" name="coursepress[comments]" value="1" />
-					<?php esc_html_e( 'Include thread/comments', 'CP_TD' ); ?>
+					<?php esc_html_e( 'Include thread/comments', 'cp' ); ?>
 				</label>
 				<p class="description">
-					<?php esc_html_e( 'Will include comments from Course forum and discussion modules.', 'CP_TD' ); ?>
+					<?php esc_html_e( 'Will include comments from Course forum and discussion modules.', 'cp' ); ?>
 				</p>
 			</div>
 		</div>
 		<div class="cp-right">
 		<?php
 			// Show paginate
-			echo CoursePress_Helper_UI::admin_paginate( $paged, $courses->found_posts, $per_page, '', __( 'Course', 'CP_TD' ) );
+			echo CoursePress_Helper_UI::admin_paginate( $paged, $courses->found_posts, $per_page, '', __( 'Course', 'cp' ) );
 		?>
 		</div>
 		<div class="clear cp-submit">
-			<?php submit_button( __( 'Export Courses', 'CP_TD' ), 'button-primary disabled' ); ?>
+			<?php submit_button( __( 'Export Courses', 'cp' ), 'button-primary disabled' ); ?>
 		</div>
 	</form>
 </div>

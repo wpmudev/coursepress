@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,YAAa,CACX,QAAQ,CAAE,QAAQ,CAClB,GAAG,CAAE,IAAI,CACT,KAAK,CAAE,IAAI,CAGb,2BAA4B,CAC1B,UAAU,CAAE,4BAA4B,CACxC,MAAM,CAAE,iBAAiB,CACzB,MAAM,CAAE,CAAC,CACT,OAAO,CAAE,IAAI,CACb,aAAa,CAAE,IAAI,CAGrB,iDAAkD,CAChD,OAAO,CAAE,UAAU",
+"sources": ["src/bbm.modal.scss"],
+"names": [],
+"file": "bbm.modal.css"
+}

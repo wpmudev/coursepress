@@ -65,7 +65,7 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 
 	/** No items */
 	public function no_items() {
-		echo __( 'No notifications found.', 'CP_TD' );
+		echo __( 'No notifications found.', 'cp' );
 	}
 
 	/** ************************************************************************
@@ -84,10 +84,10 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
-			'notification' => __( 'Notification', 'CP_TD' ),
-			'course' => __( 'Course', 'CP_TD' ),
-			'status' => __( 'Status', 'CP_TD' ),
-			'actions' => __( 'Actions', 'CP_TD' ),
+			'notification' => __( 'Notification', 'cp' ),
+			'course' => __( 'Course', 'cp' ),
+			'status' => __( 'Status', 'cp' ),
+			'actions' => __( 'Actions', 'cp' ),
 		);
 
 		return $columns;
@@ -157,7 +157,7 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 						admin_url( 'admin.php' )
 					)
 				),
-				__( 'Edit', 'CP_TD' )
+				__( 'Edit', 'cp' )
 			);
 		}
 
@@ -180,9 +180,9 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 	 **************************************************************************/
 	function get_bulk_actions() {
 		$actions = array(
-			'publish' => __( 'Visible', 'CP_TD' ),
-			'unpublish' => __( 'Private', 'CP_TD' ),
-			'delete' => __( 'Delete', 'CP_TD' ),
+			'publish' => __( 'Visible', 'cp' ),
+			'unpublish' => __( 'Private', 'cp' ),
+			'delete' => __( 'Delete', 'cp' ),
 		);
 		return $actions;
 	}
@@ -452,18 +452,18 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 		echo '<form method="GET">';
 		echo '<input type="hidden" name="page" value="' . $page . '" />';
 		echo '<input type="hidden" name="s" value="' . $s . '" />';
-		echo "<label for='course-category-selector-" . esc_attr( $which ) . "' class='screen-reader-text'>" . __( 'Select course category', 'CP_TD' ) . '</label>';
+		echo "<label for='course-category-selector-" . esc_attr( $which ) . "' class='screen-reader-text'>" . __( 'Select course category', 'cp' ) . '</label>';
 
 		$options = array();
 		$options['value'] = $course_id;
 		$options['first_option'] = array(
-			'text' => __( 'All courses', 'CP_TD' ),
+			'text' => __( 'All courses', 'cp' ),
 			'value' => 'all',
 		);
 		$courses = CoursePress_Data_Capabilities::can_add_notification_to_all() ? false : CoursePress_View_Admin_Communication_Notification::get_courses();
 		echo CoursePress_Helper_UI::get_course_dropdown( 'course_id' . $two, 'course_id' . $two, $courses, $options );
 
-		submit_button( __( 'Filter', 'CP_TD' ), 'category-filter', '', false, array( 'id' => "filter-courses$two" ) );
+		submit_button( __( 'Filter', 'cp' ), 'category-filter', '', false, array( 'id' => "filter-courses$two" ) );
 		echo '</form>';
 		echo "\n";
 	}
@@ -490,7 +490,7 @@ class CoursePress_Helper_Table_NotificationList extends WP_List_Table {
 					<input type="hidden" name="page" value="coursepress_notifications"/>
 					<?php
 					$this->search_box(
-						__( 'Search Notifications', 'CP_TD' ),
+						__( 'Search Notifications', 'cp' ),
 						'search_notifications'
 					);
 					?>
