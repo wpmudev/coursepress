@@ -16,7 +16,7 @@ class CoursePressPro_Wpmudev {
 	 * @since  2.0.0
 	 */
 	public static function init() {
-		if ( ! CP_IS_WPMUDEV ) { return; }
+		if ( ! defined( 'CP_IS_WPMUDEV' ) || ! CP_IS_WPMUDEV ) { return; }
 
 		// WP-Academy does ues the custom signup option.
 		add_filter( 'coursepress_custom_signup', '__return_true' );
