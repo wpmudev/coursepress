@@ -198,16 +198,18 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			/**
 			 * single course export
 			 */
+			$action = 'coursepress_export';
+			$nonce = wp_create_nonce( $action );
 			$url = add_query_arg(
 				array(
-					'page' => CoursePress_View_Admin_Course_Export::get_slug(),
-					'source' => 'list',
-					'id' => absint( $item->ID ),
+					'page' => $action,
+					'coursepress' => array( 'courses' => array( absint( $item->ID ) ) ),
+					'coursepress_export' => $nonce
 				),
 				admin_url( 'admin.php' )
 			);
-			$nonce = sprintf( 'course_export_%d', $item->ID );
-			$url = wp_nonce_url( $url, $nonce );
+			
+			$url = wp_nonce_url( $url, $action, $nonce );
 			$actions['export'] = sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( $url ),

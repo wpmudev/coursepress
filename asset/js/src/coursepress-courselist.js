@@ -78,10 +78,15 @@ var CoursePress = CoursePress || {};
 			 */
 			if ( 'export' === action ) {
 				if ( 0 === courses.length ) {
-					window.alert( _coursepress.courselist_export );
+					alert( _coursepress.courselist_export );
 					return false;
 				}
-				window.location = './admin.php?page=coursepress_export_import&courses='+courses.join()+'&_wpnonce='+nonce+'&source=list';
+				var courses_param = '&';
+				$.each( courses , function( index, item ) {
+					courses_param += 'coursepress[courses]['+item+']='+item+'&';
+				} );
+				var export_nonce = $('.export-nonce-holder').attr( 'data-nonce' );
+				window.location = './admin.php?page=coursepress_export'+courses_param+'coursepress_export='+export_nonce;
 				return false;
 			}
 
@@ -135,7 +140,7 @@ var CoursePress = CoursePress || {};
 				// In case something went wrong while deleting, tell the user.
 				CoursePress.Course.on( 'coursepress:delete_course_error', function() {
 					parentTR.slideUp();
-					window.alert( _coursepress.server_error );
+					alert( _coursepress.server_error );
 				});
 
 			}

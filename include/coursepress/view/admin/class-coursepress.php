@@ -127,6 +127,7 @@ class CoursePress_View_Admin_CoursePress {
 					?>
 				</h2>
 				<div class="nonce-holder" data-nonce="<?php echo wp_create_nonce( 'bulk_action_nonce' ); ?>"></div>
+				<div class="export-nonce-holder" data-nonce="<?php echo wp_create_nonce( 'coursepress_export' ); ?>"></div>
 				<?php $list_course->display(); ?>
 			</div>
 		<?php
