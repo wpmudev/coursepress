@@ -133,7 +133,7 @@ class text_input_module extends Unit_Module {
 				<?php } else {
 					?>
 					<div class="module_textarea_input">
-						<input <?php echo ( $data->mandatory_answer == 'yes' ) ? 'data-mandatory="yes"' : 'data-mandatory="no"'; ?> type="text" name="<?php echo $data->name . '_front_' . $data->ID; ?>" id="<?php echo $data->name . '_front_' . $data->ID; ?>" placeholder="<?php echo(isset($data->placeholder_text) && $data->placeholder_text !== '' ? esc_attr($data->placeholder_text) : ' ' ); ?>" value="<?php echo ( is_object($response) && count($response >= 1) ? esc_attr($response->post_content) : '' ); ?>" <?php echo $enabled; ?> />
+						<input <?php echo ( $data->mandatory_answer == 'yes' ) ? 'data-mandatory="yes"' : 'data-mandatory="no"'; ?> type="text" name="<?php echo $data->name . '_front_' . $data->ID; ?>" id="<?php echo $data->name . '_front_' . $data->ID; ?>" placeholder="<?php echo(isset($data->placeholder_text) && $data->placeholder_text !== '' ? esc_attr($data->placeholder_text) : ' ' ); ?>" value="<?php echo ( is_object($response) && ! empty( $response ) ? esc_attr($response->post_content) : '' ); ?>" <?php echo $enabled; ?> />
 					</div>
 				<?php } ?>
 

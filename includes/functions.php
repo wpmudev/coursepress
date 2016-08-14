@@ -106,14 +106,17 @@ function cp_get_id_by_post_name( $post_name, $post_parent = 0, $type = 'unit' ) 
 		array(
 			'name' => $post_name,
 			'post_type' => $type,
-			'post_parent' => $post_parent
+			'post_parent' => $post_parent,
+			'post_status' => cp_can_see_unit_draft() ? 'any' : 'publish',
+			'suppress_filters' => cp_can_see_unit_draft(),
+			'nopaging' => true,
+			'posts_per_page' => 1,
+			'fields' => 'ids',
 		)
 	);
-
 	if ( ! empty( $posts ) ) {
-		return $posts[0]->ID;
+		return $posts[0];
 	}
-
 	return false;
 }
 

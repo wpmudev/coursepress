@@ -370,6 +370,9 @@ if ( ! class_exists( 'Course' ) ) {
 		}
 
 		public static function get_unit( $unit_id, $course_id, $unit_only = false ) {
+			if ( empty( $unit_id ) ) {
+				return false;
+			}
 			$units = self::get_units_with_modules( $course_id );
 			if( array_key_exists( $unit_id, $units ) ) {
 				if( $unit_only ) {
@@ -518,7 +521,26 @@ if ( ! class_exists( 'Course' ) ) {
 				$post_id = wp_insert_post( $post );
 
 				// Only works if the course actually has a thumbnail.
-				set_post_thumbnail( $mp_product_id, get_post_thumbnail_id( $course_id ) );
+				$post_thumbnail_id = get_post_thumbnail_id( $course_id );
+				set_post_thumbnail( $mp_product_id, $post_thumbnail_id );
+
+				/**
+				 * try to obtain real thumbnail ID for Woo
+				 */
+				if ( cp_use_woo() && is_string( $post_thumbnail_id ) ) {
+					$post_thumbnail_id = get_post_meta( $course_id, '_thumbnail_id_numeric', true );
+					/**
+					 * try guess
+					 */
+					if ( empty( $post_thumbnail_id ) ) {
+						$post_thumbnail_id = preg_replace( '/\-\d+x\d+\./', '.', $post_thumbnail_id );
+						global $wpdb;
+						$sql = $wpdb->prepare( "select ID from {$wpdb->posts} where guid = %s", $post_thumbnail_id );
+						$post_thumbnail_id = $wpdb->get_var( $sql );
+					}
+					// Only works if the course actually has a thumbnail.
+					set_post_thumbnail( $post_id, $post_thumbnail_id );
+				}
 
 				$automatic_sku = $_POST['meta_auto_sku'];
 
@@ -682,6 +704,12 @@ if ( ! class_exists( 'Course' ) ) {
 						} // meta_course_category
 					}
 
+					/**
+					 * save original
+					 */
+					if ( isset( $_POST['_thumbnail_id'] ) && is_numeric( $_POST['_thumbnail_id'] ) ) {
+						update_post_meta( $post_id, '_thumbnail_id_numeric', $_POST['_thumbnail_id'] );
+					}
 
 					//Add featured image
 					if ( ( 'meta_featured_url' == $key || '_thumbnail_id' == $key ) && ( ( isset( $_POST['_thumbnail_id'] ) && is_numeric( $_POST['_thumbnail_id'] ) ) || ( isset( $_POST['meta_featured_url'] ) && $_POST['meta_featured_url'] !== '' ) ) ) {
