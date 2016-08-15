@@ -88,6 +88,7 @@ module.exports = function(grunt) {
 				'./vendor',
 				'./.gitattributes',
 				'./.gitignore',
+				'./.gitmodules',
 				'./composer.json',
 				'./composer.lock',
 				'./Gruntfile.js',
@@ -124,9 +125,9 @@ module.exports = function(grunt) {
 				'./README.md'
 			],
 			base: 'coursepress/2.0-dev',
-			pro: 'coursepress/2-pro',
-			free: 'coursepress/2-free',
-			campus: 'coursepress/2-campus'
+			pro: 'coursepress/2.0-pro-test',
+			free: 'coursepress/2.0-free-test',
+			campus: 'coursepress/2.0-campus-test'
 		},
 
 		// BUILD patterns to exclude code for specific builds.
@@ -208,6 +209,17 @@ module.exports = function(grunt) {
 
 		// JS: Validate JS files (1).
 		jsvalidate: {
+			all: [
+				'Gruntfile.js',
+				conf.js_folder + 'src/*.js'
+			]
+		},
+
+		fixmyjs: {
+			options: {
+				config: '.jshintrc',
+				indentPref: 'tabs'
+			},
 			all: [
 				'Gruntfile.js',
 				conf.js_folder + 'src/*.js'
@@ -453,6 +465,75 @@ module.exports = function(grunt) {
 			}
 		},
 
+		phpcbf: {
+			options: {
+				noPatch: true,
+				bin: 'vendor/bin/phpcbf',
+				standard: 'WordPress-Core'
+			},
+			main: {
+				src: [ '*.php', 'include/coursepress/*.php' ]
+			},
+			admin: {
+				src: [
+					'admin/*.php',
+					'admin/controller/*.php',
+					'admin/view/*.php'
+				]
+			},
+			data: {
+				src: [
+					'include/coursepress/data/*.php',
+					'include/coursepress/data/discussion/*.php',
+					'include/coursepress/data/shortcode/*.php'
+				]
+			},
+			helper: {
+				src: [
+					'include/coursepress/helper/*.php',
+					'include/coursepress/helper/extension/*.php',
+					'include/coursepress/helper/integration/*.php',
+					'include/coursepress/helper/query/*.php',
+					'include/coursepress/helper/setting/*.php',
+					'include/coursepress/helper/table/*.php',
+					'include/coursepress/helper/ui/*.php'
+				]
+			},
+			template: {
+				src: [
+					'include/coursepress/template/*.php'
+				]
+			},
+			view: {
+				src: [
+					'include/coursepress/view/admin/*.php',
+					'include/coursepress/view/admin/assessment/*.php',
+					'include/courseperss/view/admin/communication/*.php',
+					'include/coursepress/view/admin/course/*.php',
+					'include/coursepress/view/admin/setting/*.php',
+					'include/coursepress/view/admin/student/*.php',
+					'include/coursepress/view/front/*.php'
+				]
+			},
+			widget: {
+				src: [
+					'include/coursepress/widget/*.php'
+				]
+			},
+			campus: {
+				src: [
+					'campus/*.php',
+					'campus/include/*.php'
+				]
+			},
+			premium: {
+				src: [
+					'premium/*.php',
+					'premium/include/*.php'
+				]
+			}
+		},
+
 		// PHP: Unit tests.
 		phpunit: {
 			classes: {
@@ -606,10 +687,10 @@ module.exports = function(grunt) {
 		}
 
 		// Run the default tasks (js/css/php validation)
-		grunt.task.run( 'default' );
+		//HIDE:grunt.task.run( 'default' );
 
 		// Generate all translation files (pro and free)
-		grunt.task.run( 'lang' );
+		//Hide: grunt.task.run( 'lang' );
 
 		for ( i in build ) {
 			branch = build[i];
@@ -627,9 +708,9 @@ module.exports = function(grunt) {
 			grunt.task.run( 'gitcommit:' + branch );
 
 			// Create a distributable zip-file of the plugin branch.
-			grunt.task.run( 'clean:release_' + branch );
-			grunt.task.run( 'copy:' + branch );
-			grunt.task.run( 'compress:' + branch );
+			///grunt.task.run( 'clean:release_' + branch );
+			///grunt.task.run( 'copy:' + branch );
+			//grunt.task.run( 'compress:' + branch );
 
 			grunt.task.run( 'gitcheckout:base');
 		}
@@ -644,11 +725,11 @@ module.exports = function(grunt) {
 	grunt.task.run( 'clear' );
 
 	// Define default tasks.
-	grunt.registerTask( 'js', ['jsvalidate', 'jshint', 'concat', 'uglify'] );
+	grunt.registerTask( 'js', ['jsvalidate', 'fixmyjs', 'jshint', 'concat', 'uglify'] );
 	grunt.registerTask( 'css', ['sass', 'autoprefixer', 'cssmin'] );
 
 	grunt.registerTask( 'test', ['phpunit'] );
-	grunt.registerTask( 'php', ['phplint', 'phpcs:sniff'] );
+	grunt.registerTask( 'php', ['phplint', 'phpcbf', 'phpcs:sniff'] );
 
 	grunt.registerTask( 'default', ['php', 'test', 'js', 'css'] );
 };

@@ -33,12 +33,14 @@
 		"grunt-phpcs": "~0.4.0",
 		"grunt-phpunit": "~0.3.5",
 		"grunt-jsvalidate": "~0.2.2",
-		"grunt-contrib-jshint": "~0.10.0",
+		"grunt-contrib-jshint": "~1.0.0",
 		"grunt-contrib-concat": "~0.1.2",
-		"grunt-contrib-uglify": "~0.1.1",
+		"grunt-contrib-uglify": "~0.5.1",
 		"grunt-autoprefixer": "~0.7.2",
-		"grunt-contrib-sass": "~0.4.0",
-		"grunt-contrib-cssmin": "~0.6.0",
-		"grunt-contrib-watch": "~0.2.0"
+		"grunt-contrib-sass": "~0.8.1",
+		"grunt-contrib-cssmin": "~0.10.0",
+		"grunt-contrib-watch": "~0.6.1",
+		"grunt-fixmyjs": "~0.1.0",
+		"grunt-phpcbf": "^0.1.0"
 	}
 }
