@@ -11,6 +11,7 @@ CHANGE LOG
 * Fixed: Copy feature image from course to WooCommerce product.
 * Fixed: Problem with units on units list page.
 * Fixed: Mising div bracket in cp_popup_success_message template.
+* Fixed: Paid course flag when we change MarketPress to WooCommerce.
 * Fixed: Missing translatin domain in Woo integration.
 * Fixed: Wrong instructor id used by course_list shortcode.
 * Fixed: Redirect from WooCommerce shop main page.
