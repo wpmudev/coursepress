@@ -378,7 +378,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 				'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
 				'date_format'     => get_option( 'date_format' ),
-				'label'           => __( 'Course Start Date: ', 'coursepress_base_td' ),
+				'label'           => __( 'Course Start Date: ', 'cp' ),
 				'label_tag'       => 'strong',
 				'label_delimeter' => ':',
 				'class'           => '',
@@ -422,10 +422,10 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 				'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
 				'date_format'     => get_option( 'date_format' ),
-				'label'           => __( 'Course End Date: ', 'coursepress_base_td' ),
+				'label'           => __( 'Course End Date: ', 'cp' ),
 				'label_tag'       => 'strong',
 				'label_delimeter' => ':',
-				'no_date_text'    => __( 'No End Date', 'coursepress_base_td' ),
+				'no_date_text'    => __( 'No End Date', 'cp' ),
 				'class'           => '',
 			), $atts, 'course_end' ) );
 
@@ -469,11 +469,11 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 				'course_id'        => in_the_loop() ? get_the_ID() : '',
 				'course'           => false,
 				'date_format'      => get_option( 'date_format' ),
-				'label'            => __( 'Course Dates: ', 'coursepress_base_td' ),
+				'label'            => __( 'Course Dates: ', 'cp' ),
 				'label_tag'        => 'strong',
 				'label_delimeter'  => ':',
-				'no_date_text'     => __( 'No End Date', 'coursepress_base_td' ),
-				'alt_display_text' => __( 'Open-ended', 'coursepress_base_td' ),
+				'no_date_text'     => __( 'No End Date', 'cp' ),
+				'alt_display_text' => __( 'Open-ended', 'cp' ),
 				'show_alt_display' => 'no',
 				'class'            => '',
 			), $atts, 'course_dates' ) );
@@ -521,10 +521,10 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 				'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
 				'date_format'     => get_option( 'date_format' ),
-				'label'           => __( 'Enrollment Start Date: ', 'coursepress_base_td' ),
+				'label'           => __( 'Enrollment Start Date: ', 'cp' ),
 				'label_tag'       => 'strong',
 				'label_delimeter' => ':',
-				'no_date_text'    => __( 'Enroll Anytime', 'coursepress_base_td' ),
+				'no_date_text'    => __( 'Enroll Anytime', 'cp' ),
 				'class'           => '',
 			), $atts, 'course_enrollment_start' ) );
 
@@ -570,10 +570,10 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 				'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
 				'date_format'     => get_option( 'date_format' ),
-				'label'           => __( 'Enrollment End Date: ', 'coursepress_base_td' ),
+				'label'           => __( 'Enrollment End Date: ', 'cp' ),
 				'label_tag'       => 'strong',
 				'label_delimeter' => ':',
-				'no_date_text'    => __( 'Enroll Anytime: ', 'coursepress_base_td' ),
+				'no_date_text'    => __( 'Enroll Anytime: ', 'cp' ),
 				'show_all_dates'  => 'no',
 				'class'           => '',
 			), $atts, 'course_enrollment_end' ) );
@@ -624,13 +624,13 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 				'course_id'             => in_the_loop() ? get_the_ID() : '',
 				'course'                => false,
 				'date_format'           => get_option( 'date_format' ),
-				'label'                 => __( 'Enrollment Dates: ', 'coursepress_base_td' ),
-				'label_enrolled'        => __( 'You Enrolled on: ', 'coursepress_base_td' ),
+				'label'                 => __( 'Enrollment Dates: ', 'cp' ),
+				'label_enrolled'        => __( 'You Enrolled on: ', 'cp' ),
 				'show_enrolled_display' => 'yes',
 				'label_tag'             => 'strong',
 				'label_delimeter'       => ':',
-				'no_date_text'          => __( 'Enroll Anytime', 'coursepress_base_td' ),
-				'alt_display_text'      => __( 'Open-ended', 'coursepress_base_td' ),
+				'no_date_text'          => __( 'Enroll Anytime', 'cp' ),
+				'alt_display_text'      => __( 'Open-ended', 'cp' ),
 				'show_alt_display'      => 'false',
 				'class'                 => '',
 			), $atts, 'course_enrollment_dates' ) );
@@ -711,11 +711,11 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 				'course'          => false,
 				'show_no_limit'   => 'no',
 				'show_remaining'  => 'yes',
-				'label'           => __( 'Class Size: ', 'coursepress_base_td' ),
+				'label'           => __( 'Class Size: ', 'cp' ),
 				'label_tag'       => 'strong',
 				'label_delimeter' => ':',
-				'no_limit_text'   => __( 'Unlimited', 'coursepress_base_td' ),
-				'remaining_text'  => __( '(%d places left)', 'coursepress_base_td' ),
+				'no_limit_text'   => __( 'Unlimited', 'cp' ),
+				'remaining_text'  => __( '(%d places left)', 'cp' ),
 				'class'           => '',
 			), $atts, 'course_class_size' ) );
 
@@ -778,10 +778,10 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			extract( shortcode_atts( array(
 				'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
-				'label'           => __( 'Price:&nbsp;', 'coursepress_base_td' ),
+				'label'           => __( 'Price:&nbsp;', 'cp' ),
 				'label_tag'       => 'strong',
 				'label_delimeter' => ': ',
-				'no_cost_text'    => __( 'FREE', 'coursepress_base_td' ),
+				'no_cost_text'    => __( 'FREE', 'cp' ),
 				'show_icon'       => 'false',
 				'class'           => '',
 			), $atts, 'course_cost' ) );
@@ -856,7 +856,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			extract( shortcode_atts( array(
 				'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
-				'label'           => __( 'Course Language: ', 'coursepress_base_td' ),
+				'label'           => __( 'Course Language: ', 'cp' ),
 				'label_tag'       => 'strong',
 				'label_delimeter' => ':',
 				'class'           => '',
@@ -899,10 +899,10 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			extract( shortcode_atts( array(
 				'course_id'        => in_the_loop() ? get_the_ID() : '',
 				'course'           => false,
-				'label'            => __( 'Course Category: ', 'coursepress_base_td' ),
+				'label'            => __( 'Course Category: ', 'cp' ),
 				'label_tag'        => 'strong',
 				'label_delimeter'  => ':',
-				'no_category_test' => __( 'None', 'coursepress_base_td' ),
+				'no_category_test' => __( 'None', 'cp' ),
 				'class'            => '',
 			), $atts, 'course_category' ) );
 
@@ -955,7 +955,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			extract( shortcode_atts( array(
 				'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
-				'label'           => __( 'Estimated Duration:&nbsp;', 'coursepress_base_td' ),
+				'label'           => __( 'Estimated Duration:&nbsp;', 'cp' ),
 				'label_tag'       => 'strong',
 				'label_delimeter' => ': ',
 				'wrapper'         => 'no',
@@ -1003,14 +1003,14 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			extract( shortcode_atts( array(
 				'course_id'         => in_the_loop() ? get_the_ID() : '',
 				'course'            => false,
-				'label'             => __( 'Who can Enroll: ', 'coursepress_base_td' ),
+				'label'             => __( 'Who can Enroll: ', 'cp' ),
 				'label_tag'         => 'strong',
 				'label_delimeter'   => ':',
-				'manual_text'       => __( 'Students are added by instructors.', 'coursepress_base_td' ),
-				'prerequisite_text' => __( 'Students need to complete "%s" first.', 'coursepress_base_td' ),
-				'passcode_text'     => __( 'A passcode is required to enroll.', 'coursepress_base_td' ),
-				'anyone_text'       => __( 'Anyone', 'coursepress_base_td' ),
-				'registered_text'   => __( 'Registered users', 'coursepress_base_td' ),
+				'manual_text'       => __( 'Students are added by instructors.', 'cp' ),
+				'prerequisite_text' => __( 'Students need to complete "%s" first.', 'cp' ),
+				'passcode_text'     => __( 'A passcode is required to enroll.', 'cp' ),
+				'anyone_text'       => __( 'Anyone', 'cp' ),
+				'registered_text'   => __( 'Registered users', 'cp' ),
 				'class'             => '',
 			), $atts, 'course_enrollment_type' ) );
 
@@ -1193,18 +1193,18 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			extract( shortcode_atts( array(
 				'course_id'                => in_the_loop() ? get_the_ID() : '',
 				'course'                   => false,
-				'course_full_text'         => __( 'Course Full', 'coursepress_base_td' ),
-				'course_expired_text'      => __( 'Not available', 'coursepress_base_td' ),
-				'enrollment_finished_text' => __( 'Enrollments Finished', 'coursepress_base_td' ),
-				'enrollment_closed_text'   => __( 'Enrollments Closed', 'coursepress_base_td' ),
-				'enroll_text'              => __( 'Enroll now', 'coursepress_base_td' ),
-				'signup_text'              => __( 'Signup!', 'coursepress_base_td' ),
-				'details_text'             => __( 'Details', 'coursepress_base_td' ),
-				'prerequisite_text'        => __( 'Pre-requisite Required', 'coursepress_base_td' ),
-				'passcode_text'            => __( 'Passcode Required', 'coursepress_base_td' ),
-				'not_started_text'         => __( 'Not Available', 'coursepress_base_td' ),
-				'access_text'              => __( 'Start Learning', 'coursepress_base_td' ),
-				'continue_learning_text'   => __( 'Continue Learning', 'coursepress_base_td' ),
+				'course_full_text'         => __( 'Course Full', 'cp' ),
+				'course_expired_text'      => __( 'Not available', 'cp' ),
+				'enrollment_finished_text' => __( 'Enrollments Finished', 'cp' ),
+				'enrollment_closed_text'   => __( 'Enrollments Closed', 'cp' ),
+				'enroll_text'              => __( 'Enroll now', 'cp' ),
+				'signup_text'              => __( 'Signup!', 'cp' ),
+				'details_text'             => __( 'Details', 'cp' ),
+				'prerequisite_text'        => __( 'Pre-requisite Required', 'cp' ),
+				'passcode_text'            => __( 'Passcode Required', 'cp' ),
+				'not_started_text'         => __( 'Not Available', 'cp' ),
+				'access_text'              => __( 'Start Learning', 'cp' ),
+				'continue_learning_text'   => __( 'Continue Learning', 'cp' ),
 				'list_page'                => false,
 				'class'                    => '',
 			), $atts, 'course_join_button' ) );
@@ -1533,14 +1533,14 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			extract( shortcode_atts( array(
 				'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
-				'free_text'       => __( 'Free', 'coursepress_base_td' ),
+				'free_text'       => __( 'Free', 'cp' ),
 				'free_show'       => 'true',
 				'show_title'      => 'no',
 				'show_label'      => 'no',
 				'label_delimeter' => ': ',
 				'label_tag'       => 'h2',
 				'show_divider'    => 'yes',
-				'label'           => __( 'Course Structure', 'coursepress_base_td' ),
+				'label'           => __( 'Course Structure', 'cp' ),
 				'class'           => '',
 			), $atts, 'course_structure' ) );
 
@@ -1657,10 +1657,10 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 																<?php
 																$title = '';
 																if ( $existing_student && $enable_links ) {
-																	$p_title = isset( $page_title ) && $page_title !== '' ? $page_title : __( 'Untitled Page', 'coursepress_base_td' );
+																	$p_title = isset( $page_title ) && $page_title !== '' ? $page_title : __( 'Untitled Page', 'cp' );
 																	$title   = '<a href="' . trailingslashit( $unit_permalink ) . trailingslashit( 'page' ) . trailingslashit( $i ) . '">' . $p_title . '</a>';
 																} else {
-																	$title = isset( $page_title ) && $page_title !== '' ? $page_title : __( 'Untitled Page', 'coursepress_base_td' );
+																	$title = isset( $page_title ) && $page_title !== '' ? $page_title : __( 'Untitled Page', 'cp' );
 																}
 																?>
 
@@ -1723,8 +1723,8 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 		function course_featured( $atts ) {
 			extract( shortcode_atts( array(
 				'course_id'      => '',
-				'featured_title' => __( 'Featured Course', 'coursepress_base_td' ),
-				'button_title'   => __( 'Find out more.', 'coursepress_base_td' ),
+				'featured_title' => __( 'Featured Course', 'cp' ),
+				'button_title'   => __( 'Find out more.', 'cp' ),
 				'media_type'     => '', // video, image, thumbnail
 				'media_priority' => 'video', // video, image
 				'class'          => '',
@@ -1905,13 +1905,13 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			$content = '<div class="apply-links course-action-links course-action-links-' . $course_id . ' ' . $class . '">';
 
 			if ( $withdraw_link_visible === true ) {
-				$content .= '<a href="' . wp_nonce_url( '?withdraw=' . $course_id, 'withdraw_from_course_' . $course_id, 'course_nonce' ) . '" onClick="return withdraw();">' . __( 'Withdraw', 'coursepress_base_td' ) . '</a> | ';
+				$content .= '<a href="' . wp_nonce_url( '?withdraw=' . $course_id, 'withdraw_from_course_' . $course_id, 'course_nonce' ) . '" onClick="return withdraw();">' . __( 'Withdraw', 'cp' ) . '</a> | ';
 			}
-			$content .= '<a href="' . get_permalink( $course_id ) . '">' . __( 'Course Details', 'coursepress_base_td' ) . '</a>';
+			$content .= '<a href="' . get_permalink( $course_id ) . '">' . __( 'Course Details', 'cp' ) . '</a>';
 
 			// Add certificate link
 			if ( CoursePress_Capabilities::is_pro() ) {
-				$content .= CP_Basic_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'coursepress_base_td' ), ' | ' );
+				$content .= CP_Basic_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'cp' ), ' | ' );
 			}
 
 			$content .= '</div>';
@@ -1993,8 +1993,8 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 				'course_id'      => in_the_loop() ? get_the_ID() : false,
 				'month'          => false,
 				'year'           => false,
-				'pre'            => __( 'Â« Previous', 'coursepress_base_td' ),
-				'next'           => __( 'Next Â»', 'coursepress_base_td' ),
+				'pre'            => __( 'Â« Previous', 'cp' ),
+				'next'           => __( 'Next Â»', 'cp' ),
 				'date_indicator' => 'indicator_light_block',
 			), $atts, 'course_calendar' ) );
 
@@ -2045,10 +2045,10 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 				'status'                    => 'publish',
 				'instructor'                => '',
 				// Note, one or the other
-				'instructor_msg'            => __( 'The Instructor does not have any courses assigned yet.', 'coursepress_base_td' ),
+				'instructor_msg'            => __( 'The Instructor does not have any courses assigned yet.', 'cp' ),
 				'student'                   => '',
 				// If both student and instructor is specified only student will be used
-				'student_msg'               => __( 'You have not yet enrolled in a course. Browse courses %s', 'coursepress_base_td' ),
+				'student_msg'               => __( 'You have not yet enrolled in a course. Browse courses %s', 'cp' ),
 				'two_column'                => 'yes',
 				'title_column'              => 'none',
 				'left_class'                => '',
@@ -2071,8 +2071,8 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 				'media_priority'            => get_option( 'listings_media_priority', 'image' ),
 				// image, video
 				'admin_links'               => 'false',
-				'manage_link_title'         => __( 'Manage Course', 'coursepress_base_td' ),
-				'finished_link_title'       => __( 'View Course', 'coursepress_base_td' ),
+				'manage_link_title'         => __( 'Manage Course', 'cp' ),
+				'finished_link_title'       => __( 'View Course', 'cp' ),
 				'limit'                     => - 1,
 				'order'                     => 'ASC',
 				'class'                     => '',
@@ -2273,7 +2273,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			}
 
 			if ( ( ! $courses || 0 == count( $courses ) ) && ! empty( $student ) ) {
-				$content .= sprintf( $student_msg, '<a href="' . trailingslashit( home_url() . '/' . CoursePress::instance()->get_course_slug() ) . '">' . __( 'here', 'coursepress_base_td' ) . '</a>' );
+				$content .= sprintf( $student_msg, '<a href="' . trailingslashit( home_url() . '/' . CoursePress::instance()->get_course_slug() ) . '">' . __( 'here', 'cp' ) . '</a>' );
 			}
 
 			// </div> course-list
@@ -2346,7 +2346,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			extract( shortcode_atts( array(
 				'course_id' => in_the_loop() ? get_the_ID() : '',
 				'unit_id'   => false,
-				'message'   => __( '%d of %d mandatory elements completed.', 'coursepress_base_td' ),
+				'message'   => __( '%d of %d mandatory elements completed.', 'cp' ),
 			), $atts, 'course_mandatory_message' ) );
 
 			if ( ! empty( $course_id ) ) {
@@ -2379,7 +2379,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 				'format'              => false,
 				'style'               => 'flat',
 				'decimal_places'      => '0',
-				'tooltip_alt'         => __( 'Percent of the unit completion', 'coursepress_base_td' ),
+				'tooltip_alt'         => __( 'Percent of the unit completion', 'cp' ),
 				'knob_fg_color'       => '#24bde6',
 				'knob_bg_color'       => '#e0e6eb',
 				'knob_data_thickness' => '.35',
@@ -2447,14 +2447,14 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			extract( shortcode_atts( array(
 				'course_id'       => in_the_loop() ? get_the_ID() : '',
 				'course'          => false,
-				'label'           => __( 'Instructor', 'coursepress_base_td' ),
-				'label_plural'    => __( 'Instructors', 'coursepress_base_td' ),
+				'label'           => __( 'Instructor', 'cp' ),
+				'label_plural'    => __( 'Instructors', 'cp' ),
 				'label_delimeter' => ':&nbsp;',
 				'label_tag'       => '',
 				'count'           => false, // deprecated
 				'list'            => false, // deprecated
 				'link'            => 'false',
-				'link_text'       => __( 'View Full Profile', 'coursepress_base_td' ),
+				'link_text'       => __( 'View Full Profile', 'cp' ),
 				'show_label'      => 'no', // yes, no
 				'summary_length'  => 50,
 				'style'           => 'block', //list, list-flat, block, count
@@ -2689,11 +2689,11 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			<div class="submenu-main-container submenu-messaging">
 				<ul id="submenu-main" class="submenu nav-submenu">
 					<li class="submenu-item submenu-inbox <?php echo( isset( $subpage ) && $subpage == 'inbox' ? 'submenu-active' : '' ); ?>"><a href="<?php echo $coursepress->get_inbox_slug( true ); ?>"><?php
-							_e( 'Inbox', 'coursepress_base_td' );
+							_e( 'Inbox', 'cp' );
 							echo $unread_count;
 							?></a></li>
-					<li class="submenu-item submenu-sent-messages <?php echo( isset( $subpage ) && $subpage == 'sent_messages' ? 'submenu-active' : '' ); ?>"><a href="<?php echo $coursepress->get_sent_messages_slug( true ); ?>"><?php _e( 'Sent', 'coursepress_base_td' ); ?></a></li>
-					<li class="submenu-item submenu-new-message <?php echo( isset( $subpage ) && $subpage == 'new_message' ? 'submenu-active' : '' ); ?>"><a href="<?php echo $coursepress->get_new_message_slug( true ); ?>"><?php _e( 'New Message', 'coursepress_base_td' ); ?></a></li>
+					<li class="submenu-item submenu-sent-messages <?php echo( isset( $subpage ) && $subpage == 'sent_messages' ? 'submenu-active' : '' ); ?>"><a href="<?php echo $coursepress->get_sent_messages_slug( true ); ?>"><?php _e( 'Sent', 'cp' ); ?></a></li>
+					<li class="submenu-item submenu-new-message <?php echo( isset( $subpage ) && $subpage == 'new_message' ? 'submenu-active' : '' ); ?>"><a href="<?php echo $coursepress->get_new_message_slug( true ); ?>"><?php _e( 'New Message', 'cp' ); ?></a></li>
 				</ul><!--submenu-main-->
 			</div><!--submenu-main-container-->
 			<br clear="all"/>
@@ -2733,26 +2733,26 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			?>
 			<div class="submenu-main-container">
 				<ul id="submenu-main" class="submenu nav-submenu">
-					<li class="submenu-item submenu-units <?php echo( isset( $subpage ) && $subpage == 'units' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink( $course_id ) . $coursepress->get_units_slug(); ?>/"><?php _e( 'Units', 'coursepress_base_td' ); ?></a></li>
-					<li class="submenu-item submenu-notifications <?php echo( isset( $subpage ) && $subpage == 'notifications' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink( $course_id ) . $coursepress->get_notifications_slug(); ?>/"><?php _e( 'Notifications', 'coursepress_base_td' ); ?></a></li>
+					<li class="submenu-item submenu-units <?php echo( isset( $subpage ) && $subpage == 'units' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink( $course_id ) . $coursepress->get_units_slug(); ?>/"><?php _e( 'Units', 'cp' ); ?></a></li>
+					<li class="submenu-item submenu-notifications <?php echo( isset( $subpage ) && $subpage == 'notifications' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink( $course_id ) . $coursepress->get_notifications_slug(); ?>/"><?php _e( 'Notifications', 'cp' ); ?></a></li>
 					<?php
 					$pages = Course::get_allowed_pages( $course_id );
 
 					if ( $pages['course_discussion'] == 'on' ) {
 						?>
-						<li class="submenu-item submenu-discussions <?php echo( isset( $subpage ) && $subpage == 'discussions' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink( $course_id ) . $coursepress->get_discussion_slug(); ?>/"><?php _e( 'Discussions', 'coursepress_base_td' ); ?></a></li>
+						<li class="submenu-item submenu-discussions <?php echo( isset( $subpage ) && $subpage == 'discussions' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink( $course_id ) . $coursepress->get_discussion_slug(); ?>/"><?php _e( 'Discussions', 'cp' ); ?></a></li>
 					<?php
 					}
 					/* if ( $course->allow_course_grades_page == 'on' ) {
 					  ?>
-					  <li class="submenu-item submenu-grades <?php echo( isset( $subpage ) && $subpage == 'grades' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink( $course_id ) . $coursepress->get_grades_slug(); ?>/"><?php _e( 'Grades', 'coursepress_base_td' ); ?></a></li>
+					  <li class="submenu-item submenu-grades <?php echo( isset( $subpage ) && $subpage == 'grades' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink( $course_id ) . $coursepress->get_grades_slug(); ?>/"><?php _e( 'Grades', 'cp' ); ?></a></li>
 					  <?php
 					  } */
 					if ( $pages['workbook'] == 'on' ) {
 						?>
-						<li class="submenu-item submenu-workbook <?php echo( isset( $subpage ) && $subpage == 'workbook' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink( $course_id ) . $coursepress->get_workbook_slug(); ?>/"><?php _e( 'Workbook', 'coursepress_base_td' ); ?></a></li>
+						<li class="submenu-item submenu-workbook <?php echo( isset( $subpage ) && $subpage == 'workbook' ? 'submenu-active' : '' ); ?>"><a href="<?php echo get_permalink( $course_id ) . $coursepress->get_workbook_slug(); ?>/"><?php _e( 'Workbook', 'cp' ); ?></a></li>
 					<?php } ?>
-					<li class="submenu-item submenu-info"><a href="<?php echo get_permalink( $course_id ); ?>"><?php _e( 'Course Details', 'coursepress_base_td' ); ?></a></li>
+					<li class="submenu-item submenu-info"><a href="<?php echo get_permalink( $course_id ); ?>"><?php _e( 'Course Details', 'cp' ); ?></a></li>
 					<?php
 					$show_link = false;
 					if ( CoursePress_Capabilities::is_pro() ) {
@@ -2762,7 +2762,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 					if ( is_user_logged_in() && $show_link ) {
 
 						if ( Student_Completion::is_course_complete( get_current_user_id(), $course_id ) ) {
-							$certificate = CP_Basic_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'coursepress_base_td' ) );
+							$certificate = CP_Basic_Certificate::get_certificate_link( get_current_user_id(), $course_id, __( 'Certificate', 'cp' ) );
 							?>
 							<li class="submenu-item submenu-certificate <?php echo( isset( $subpage ) && $subpage == 'certificate' ? 'submenu-active' : '' ); ?>"><?php echo $certificate; ?></li>
 						<?php
@@ -2814,7 +2814,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			$dropdown = '<div class="units_dropdown_holder"><select name="units_dropdown" class="units_dropdown">';
 			if ( $include_general ) {
 				if ( $general_title == '' ) {
-					$general_title = __( '-- General --', 'coursepress_base_td' );
+					$general_title = __( '-- General --', 'cp' );
 				}
 
 				$dropdown .= '<option value="">' . esc_html( $general_title ) . '</option>';
@@ -2863,17 +2863,17 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 				$course->action_links = '<div class="apply-links">';
 
 				if ( $withdraw_link_visible === true ) {
-					$course->action_links .= '<a href="?withdraw=' . $course->ID . '" onClick="return withdraw();">' . __( 'Withdraw', 'coursepress_base_td' ) . '</a> | ';
+					$course->action_links .= '<a href="?withdraw=' . $course->ID . '" onClick="return withdraw();">' . __( 'Withdraw', 'cp' ) . '</a> | ';
 				}
-				$course->action_links .= '<a href="' . get_permalink( $course->ID ) . '">' . __( 'Course Details', 'coursepress_base_td' ) . '</a></div>';
+				$course->action_links .= '<a href="' . get_permalink( $course->ID ) . '">' . __( 'Course Details', 'cp' ) . '</a></div>';
 			}
 
 			if ( $field == 'class_size' ) {
 				if ( $course->class_size == '0' || $course->class_size == '' ) {
-					$course->class_size = __( 'Infinite', 'coursepress_base_td' );
+					$course->class_size = __( 'Infinite', 'cp' );
 				} else {
 					$count_left         = $course->class_size - $course_obj->get_number_of_students();
-					$course->class_size = $course->class_size . ' ' . sprintf( __( '( %d left )', 'coursepress_base_td' ), $count_left );
+					$course->class_size = $course->class_size . ' ' . sprintf( __( '( %d left )', 'cp' ), $count_left );
 				}
 			}
 
@@ -2883,35 +2883,35 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 				$course->enroll_type = 'anyone';
 			} else {
 				if ( $course->enroll_type == 'passcode' ) {
-					$course->enroll_type  = __( 'Anyone with a Passcode', 'coursepress_base_td' );
+					$course->enroll_type  = __( 'Anyone with a Passcode', 'cp' );
 					$passcode_box_visible = true;
 				}
 
 				if ( $course->enroll_type == 'prerequisite' ) {
 					$course->init_enroll_type = 'prerequisite';
-					$course->enroll_type      = sprintf( __( 'Anyone who attanded to the %1s', 'coursepress_base_td' ), '<a href="' . get_permalink( $course->prerequisite ) . '">' . __( 'prerequisite course', 'coursepress_base_td' ) . '</a>' ); //__( 'Anyone who attended to the ', 'coursepress_base_td' );
+					$course->enroll_type      = sprintf( __( 'Anyone who attanded to the %1s', 'cp' ), '<a href="' . get_permalink( $course->prerequisite ) . '">' . __( 'prerequisite course', 'cp' ) . '</a>' ); //__( 'Anyone who attended to the ', 'cp' );
 				}
 			}
 
 			if ( $field == 'enroll_type' ) {
 
 				if ( $course->enroll_type == 'anyone' ) {
-					$course->enroll_type = __( 'Anyone', 'coursepress_base_td' );
+					$course->enroll_type = __( 'Anyone', 'cp' );
 				}
 
 
 				if ( $course->enroll_type == 'manually' ) {
-					$course->enroll_type = __( 'Public enrollments are disabled', 'coursepress_base_td' );
+					$course->enroll_type = __( 'Public enrollments are disabled', 'cp' );
 				}
 			}
 
 			if ( $field == 'course_start_date' or $field == 'course_end_date' or $field == 'enrollment_start_date' or $field == 'enrollment_end_date' ) {
 				$date_format = get_option( 'date_format' );
 				if ( $course->open_ended_course == 'on' ) {
-					$course->$field = __( 'Open-ended', 'coursepress_base_td' );
+					$course->$field = __( 'Open-ended', 'cp' );
 				} else {
 					if ( $course->$field == '' ) {
-						$course->$field = __( 'N/A', 'coursepress_base_td' );
+						$course->$field = __( 'N/A', 'cp' );
 					} else {
 						$course->$field = cp_sp2nbsp( date_i18n( $date_format, strtotime( $course->$field ) ) );
 					}
@@ -2926,7 +2926,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 				if ( $is_paid && isset( $course->marketpress_product ) && $course->marketpress_product != '' && ( $coursepress->marketpress_active ) ) {
 					echo do_shortcode( '[mp_product_price product_id="' . $course->marketpress_product . '" label=""]' );
 				} else {
-					$course->price = __( 'FREE', 'coursepress_base_td' );
+					$course->price = __( 'FREE', 'cp' );
 				}
 			}
 
@@ -2940,20 +2940,20 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 						if ( ! $course_obj->is_populated() ) {
 							if ( $course->enroll_type != 'manually' ) {
 								if ( strtotime( $course->course_end_date ) <= current_time( 'timestamp', 0 ) && $course->open_ended_course == 'off' ) {//Course is no longer active
-									$course->button .= '<span class="apply-button-finished">' . __( 'Finished', 'coursepress_base_td' ) . '</span>';
+									$course->button .= '<span class="apply-button-finished">' . __( 'Finished', 'cp' ) . '</span>';
 								} else {
 									if ( ( $course->enrollment_start_date !== '' && $course->enrollment_end_date !== '' && strtotime( $course->enrollment_start_date ) <= current_time( 'timestamp', 0 ) && strtotime( $course->enrollment_end_date ) >= current_time( 'timestamp', 0 ) ) || $course->open_ended_course == 'on' ) {
 										if ( ( $course->init_enroll_type == 'prerequisite' && $student->user_enrolled_in_course( $course->prerequisite ) ) || $course->init_enroll_type !== 'prerequisite' ) {
-											$course->button .= '<input type="submit" class="apply-button" value="' . __( 'Enroll Now', 'coursepress_base_td' ) . '" />';
+											$course->button .= '<input type="submit" class="apply-button" value="' . __( 'Enroll Now', 'cp' ) . '" />';
 											$course->button .= '<div class="passcode-box">' . do_shortcode( '[course_details field="passcode_input"]' ) . '</div>';
 										} else {
-											$course->button .= '<span class="apply-button-finished">' . __( 'Prerequisite Required', 'coursepress_base_td' ) . '</span>';
+											$course->button .= '<span class="apply-button-finished">' . __( 'Prerequisite Required', 'cp' ) . '</span>';
 										}
 									} else {
 										if ( strtotime( $course->enrollment_end_date ) <= current_time( 'timestamp', 0 ) ) {
-											$course->button .= '<span class="apply-button-finished">' . __( 'Not available', 'coursepress_base_td' ) . '</span>';
+											$course->button .= '<span class="apply-button-finished">' . __( 'Not available', 'cp' ) . '</span>';
 										} else {
-											$course->button .= '<span class="apply-button-finished">' . __( 'Not available', 'coursepress_base_td' ) . '</span>';
+											$course->button .= '<span class="apply-button-finished">' . __( 'Not available', 'cp' ) . '</span>';
 										}
 									}
 								}
@@ -2961,23 +2961,23 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 								//don't show any button because public enrollments are disabled with manuall enroll type
 							}
 						} else {
-							$course->button .= '<span class="apply-button-finished">' . __( 'Populated', 'coursepress_base_td' ) . '</span>';
+							$course->button .= '<span class="apply-button-finished">' . __( 'Populated', 'cp' ) . '</span>';
 						}
 					} else {
 						if ( ( $course->course_start_date !== '' && $course->course_end_date !== '' ) || $course->open_ended_course == 'on' ) {//Course is currently active
 							if ( ( strtotime( $course->course_start_date ) <= current_time( 'timestamp', 0 ) && strtotime( $course->course_end_date ) >= current_time( 'timestamp', 0 ) ) || $course->open_ended_course == 'on' ) {//Course is currently active
-								$course->button .= '<a href="' . trailingslashit( get_permalink( $course->ID ) ) . trailingslashit( $coursepress->get_units_slug() ) . '" class="apply-button-enrolled">' . __( 'Go to Class', 'coursepress_base_td' ) . '</a>';
+								$course->button .= '<a href="' . trailingslashit( get_permalink( $course->ID ) ) . trailingslashit( $coursepress->get_units_slug() ) . '" class="apply-button-enrolled">' . __( 'Go to Class', 'cp' ) . '</a>';
 							} else {
 
 								if ( strtotime( $course->course_start_date ) >= current_time( 'timestamp', 0 ) ) {//Waiting for a course to start
-									$course->button .= '<span class="apply-button-pending">' . __( 'You are enrolled', 'coursepress_base_td' ) . '</span>';
+									$course->button .= '<span class="apply-button-pending">' . __( 'You are enrolled', 'cp' ) . '</span>';
 								}
 								if ( strtotime( $course->course_end_date ) <= current_time( 'timestamp', 0 ) ) {//Course is no longer active
-									$course->button .= '<span class="apply-button-finished">' . __( 'Finished', 'coursepress_base_td' ) . '</span>';
+									$course->button .= '<span class="apply-button-finished">' . __( 'Finished', 'cp' ) . '</span>';
 								}
 							}
 						} else {//Course is inactive or pending
-							$course->button .= '<span class="apply-button-finished">' . __( 'Not available', 'coursepress_base_td' ) . '</span>';
+							$course->button .= '<span class="apply-button-finished">' . __( 'Not available', 'cp' ) . '</span>';
 						}
 					}
 				} else {
@@ -2985,20 +2985,20 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 					if ( $course->enroll_type != 'manually' ) {
 						if ( ! $course_obj->is_populated() ) {
 							if ( ( strtotime( $course->course_end_date ) <= current_time( 'timestamp', 0 ) ) && $course->open_ended_course == 'off' ) {//Course is no longer active
-								$course->button .= '<span class="apply-button-finished">' . __( 'Finished', 'coursepress_base_td' ) . '</span>';
+								$course->button .= '<span class="apply-button-finished">' . __( 'Finished', 'cp' ) . '</span>';
 							} else if ( ( $course->course_start_date == '' || $course->course_end_date == '' ) && $course->open_ended_course == 'off' ) {
-								$course->button .= '<span class="apply-button-finished">' . __( 'Not available', 'coursepress_base_td' ) . '</span>';
+								$course->button .= '<span class="apply-button-finished">' . __( 'Not available', 'cp' ) . '</span>';
 							} else {
 
 
 								if ( ( strtotime( $course->enrollment_end_date ) <= current_time( 'timestamp', 0 ) ) && $course->open_ended_course == 'off' ) {
-									$course->button .= '<span class="apply-button-finished">' . __( 'Not available', 'coursepress_base_td' ) . '</span>';
+									$course->button .= '<span class="apply-button-finished">' . __( 'Not available', 'cp' ) . '</span>';
 								} else {
-									$course->button .= '<a href="' . $signup_url . '?course_id=' . $course->ID . '" class="apply-button">' . __( 'Signup', 'coursepress_base_td' ) . '</a>';
+									$course->button .= '<a href="' . $signup_url . '?course_id=' . $course->ID . '" class="apply-button">' . __( 'Signup', 'cp' ) . '</a>';
 								}
 							}
 						} else {
-							$course->button .= '<span class="apply-button-finished">' . __( 'Populated', 'coursepress_base_td' ) . '</span>';
+							$course->button .= '<span class="apply-button-finished">' . __( 'Populated', 'cp' ) . '</span>';
 						}
 					}
 				}
@@ -3010,7 +3010,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 
 			if ( $field == 'passcode_input' ) {
 				if ( $passcode_box_visible ) {
-					$course->passcode_input = '<label>' . __( "Passcode: ", "coursepress_base_td" ) . '<input type="password" name="passcode" /></label>';
+					$course->passcode_input = '<label>' . __( "Passcode: ", "cp" ) . '<input type="password" name="passcode" /></label>';
 				}
 			}
 
@@ -3287,7 +3287,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			}
 
 			if ( count( $units ) == 0 ) {
-				$content = __( '0 course units prepared yet. Please check back later.', 'coursepress_base_td' );
+				$content = __( '0 course units prepared yet. Please check back later.', 'cp' );
 			}
 
 			if ( count( $units ) == 1 ) {
@@ -3311,7 +3311,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 					'additional'                      => '2',
 					'style'                           => 'flat',
 					'class'                           => 'course-name-content',
-					'tooltip_alt'                     => __( 'Percent of the unit completion', 'coursepress_base_td' ),
+					'tooltip_alt'                     => __( 'Percent of the unit completion', 'cp' ),
 					'knob_fg_color'                   => '#24bde6',
 					'knob_bg_color'                   => '#e0e6eb',
 					'knob_data_thickness'             => '.35',
@@ -3321,7 +3321,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 					'unit_page_title_tag'             => 'h3',
 					'unit_page_title_tag_class'       => '',
 					'last_visited'                    => 'false',
-					'parent_course_preceding_content' => __( 'Course: ', 'coursepress_base_td' ),
+					'parent_course_preceding_content' => __( 'Course: ', 'cp' ),
 					'student_id'                      => get_current_user_ID(),
 					'decimal_places'      			  => '0',
 				) ), $atts ) );
@@ -3759,11 +3759,11 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			$course = new Course( $course_id );
 
 			if ( $type == 'unit_archive' ) {
-				$units_breadcrumbs = '<div class="units-breadcrumbs"><a href="' . trailingslashit( get_option( 'home' ) ) . $course_slug . '/">' . __( 'Courses', 'coursepress_base_td' ) . '</a> Â» <a href="' . $course->get_permalink() . '">' . $course->details->post_title . '</a></div>';
+				$units_breadcrumbs = '<div class="units-breadcrumbs"><a href="' . trailingslashit( get_option( 'home' ) ) . $course_slug . '/">' . __( 'Courses', 'cp' ) . '</a> Â» <a href="' . $course->get_permalink() . '">' . $course->details->post_title . '</a></div>';
 			}
 
 			if ( $type == 'unit_single' ) {
-				$units_breadcrumbs = '<div class="units-breadcrumbs"><a href="' . trailingslashit( get_option( 'home' ) ) . $course_slug . '/">' . __( 'Courses', 'coursepress_base_td' ) . '</a> Â» <a href="' . $course->get_permalink() . '">' . $course->details->post_title . '</a> Â» <a href="' . $course->get_permalink() . $units_slug . '/">' . __( 'Units', 'coursepress_base_td' ) . '</a></div>';
+				$units_breadcrumbs = '<div class="units-breadcrumbs"><a href="' . trailingslashit( get_option( 'home' ) ) . $course_slug . '/">' . __( 'Courses', 'cp' ) . '</a> Â» <a href="' . $course->get_permalink() . '">' . $course->details->post_title . '</a> Â» <a href="' . $course->get_permalink() . $units_slug . '/">' . __( 'Units', 'cp' ) . '</a></div>';
 			}
 
 			if ( $position == 'shortcode' ) {
@@ -3786,9 +3786,9 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 
 				$comments_args = array(
 					// change the title of send button
-					'label_submit'        => __( 'Send', 'coursepress_base_td' ),
+					'label_submit'        => __( 'Send', 'cp' ),
 					// change the title of the reply section
-					'title_reply'         => __( 'Write a Reply or Comment', 'coursepress_base_td' ),
+					'title_reply'         => __( 'Write a Reply or Comment', 'cp' ),
 					// remove "Text or HTML to be displayed after the set of comment fields"
 					'comment_notes_after' => '',
 					// redefine your own textarea ( the comment body )
@@ -3827,7 +3827,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 					'callback'          => null,
 					'end-callback'      => null,
 					'type'              => 'all',
-					'reply_text'        => __( 'Reply', 'coursepress_base_td' ),
+					'reply_text'        => __( 'Reply', 'cp' ),
 					'page'              => '',
 					'per_page'          => '',
 					'avatar_size'       => 32,
@@ -3933,7 +3933,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 					break;
 
 				default:
-					_e( 'Page cannot be found', 'coursepress_base_td' );
+					_e( 'Page cannot be found', 'cp' );
 			}
 
 			$content = wpautop( ob_get_clean(), apply_filters( 'coursepress_pages_content_preserve_line_breaks', true ) );
@@ -3947,13 +3947,13 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 
 			extract( shortcode_atts( array(
 				'page'               => isset( $_REQUEST['page'] ) ? $_REQUEST['page'] : '',
-				'failed_login_text'  => __( 'Invalid login.', 'coursepress_base_td' ),
+				'failed_login_text'  => __( 'Invalid login.', 'cp' ),
 				'failed_login_class' => 'red',
 				'logout_url'         => '',
 				'signup_tag'         => 'h3',
-				'signup_title'       => __( 'Signup', 'coursepress_base_td' ),
+				'signup_title'       => __( 'Signup', 'cp' ),
 				'login_tag'          => 'h3',
-				'login_title'        => __( 'Login', 'coursepress_base_td' ),
+				'login_title'        => __( 'Login', 'cp' ),
 				'signup_url'         => '',
 				'login_url'          => '',
 				'redirect_url'       => '', // redirect on successful login or signup
@@ -4054,7 +4054,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 											if ( $_POST['password'] == $_POST['password_confirmation'] ) {
 
 												if ( ! preg_match( "#[0-9]+#", $_POST['password'] ) || ! preg_match( "#[a-zA-Z]+#", $_POST['password'] ) || strlen( $_POST['password'] ) < $min_password_length ) {
-													$form_message       = sprintf( __( 'Your password must be at least %d characters long and have at least one letter and one number in it.', 'coursepress_base_td' ), $min_password_length );
+													$form_message       = sprintf( __( 'Your password must be at least %d characters long and have at least one letter and one number in it.', 'cp' ), $min_password_length );
 													$form_message_class = 'red';
 													$form_errors ++;
 												} else {
@@ -4062,13 +4062,13 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 													if ( $_POST['password_confirmation'] ) {
 														$student_data['user_pass'] = $_POST['password'];
 													} else {
-														$form_message       = __( "Passwords don't match", 'coursepress_base_td' );
+														$form_message       = __( "Passwords don't match", 'cp' );
 														$form_message_class = 'red';
 														$form_errors ++;
 													}
 												}
 											} else {
-												$form_message       = __( 'Passwords don\'t match', 'coursepress_base_td' );
+												$form_message       = __( 'Passwords don\'t match', 'cp' );
 												$form_message_class = 'red';
 												$form_errors ++;
 											}
@@ -4080,14 +4080,14 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 											$student_data['last_name']  = $_POST['last_name'];
 
 											if ( ! is_email( $_POST['email'] ) ) {
-												$form_message       = __( 'E-mail address is not valid.', 'coursepress_base_td' );
+												$form_message       = __( 'E-mail address is not valid.', 'cp' );
 												$form_message_class = 'red';
 												$form_errors ++;
 											}
 
 											if ( isset( $_POST['tos_agree'] ) ) {
 												if ( $_POST['tos_agree'] == '0' ) {
-													$form_message       = __( 'You must agree to the Terms of Service in order to signup.', 'coursepress_base_td' );
+													$form_message       = __( 'You must agree to the Terms of Service in order to signup.', 'cp' );
 													$form_message_class = 'red';
 													$form_errors ++;
 												}
@@ -4095,7 +4095,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 
 											if ( $form_errors == 0 ) {
 												if ( $student_id = $student->add_student( $student_data ) !== 0 ) {
-													//$form_message = __( 'Account created successfully! You may now <a href="' . ( get_option( 'use_custom_login_form', 1 ) ? trailingslashit( site_url() . '/' . $this->get_login_slug() ) : wp_login_url() ) . '">log into your account</a>.', 'coursepress_base_td' );
+													//$form_message = __( 'Account created successfully! You may now <a href="' . ( get_option( 'use_custom_login_form', 1 ) ? trailingslashit( site_url() . '/' . $this->get_login_slug() ) : wp_login_url() ) . '">log into your account</a>.', 'cp' );
 													//$form_message_class = 'regular';
 													$email_args['email_type']         = 'student_registration';
 													$email_args['student_id']         = $student_id;
@@ -4131,24 +4131,24 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 													}
 													exit;
 												} else {
-													$form_message       = __( 'An error occurred while creating the account. Please check the form and try again.', 'coursepress_base_td' );
+													$form_message       = __( 'An error occurred while creating the account. Please check the form and try again.', 'cp' );
 													$form_message_class = 'red';
 												}
 											}
 										} else {
-											$form_message       = __( 'Sorry, that email address is already used!', 'coursepress_base_td' );
+											$form_message       = __( 'Sorry, that email address is already used!', 'cp' );
 											$form_message_class = 'error';
 										}
 									} else {
-										$form_message       = __( 'Username already exists. Please choose another one.', 'coursepress_base_td' );
+										$form_message       = __( 'Username already exists. Please choose another one.', 'cp' );
 										$form_message_class = 'red';
 									}
 								} else {
-									$form_message       = __( 'All fields are required.', 'coursepress_base_td' );
+									$form_message       = __( 'All fields are required.', 'cp' );
 									$form_message_class = 'red';
 								}
 							} else {
-								$form_message = __( 'All fields are required.', 'coursepress_base_td' );
+								$form_message = __( 'All fields are required.', 'cp' );
 							}
 							?>
 							<?php
@@ -4170,42 +4170,42 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 								<input type="hidden" name="redirect_url" value="<?php echo $redirect_url; ?>"/>
 
 								<label>
-									<?php _e( 'First Name', 'coursepress_base_td' ); ?>:
+									<?php _e( 'First Name', 'cp' ); ?>:
 									<input type="text" name="first_name" value="<?php echo( isset( $_POST['first_name'] ) ? $_POST['first_name'] : '' ); ?>"/>
 								</label>
 
 								<?php do_action( 'coursepress_after_signup_first_name' ); ?>
 
 								<label>
-									<?php _e( 'Last Name', 'coursepress_base_td' ); ?>:
+									<?php _e( 'Last Name', 'cp' ); ?>:
 									<input type="text" name="last_name" value="<?php echo( isset( $_POST['last_name'] ) ? $_POST['last_name'] : '' ); ?>"/>
 								</label>
 
 								<?php do_action( 'coursepress_after_signup_last_name' ); ?>
 
 								<label>
-									<?php _e( 'Username', 'coursepress_base_td' ); ?>:
+									<?php _e( 'Username', 'cp' ); ?>:
 									<input type="text" name="username" value="<?php echo( isset( $_POST['username'] ) ? $_POST['username'] : '' ); ?>"/>
 								</label>
 
 								<?php do_action( 'coursepress_after_signup_username' ); ?>
 
 								<label>
-									<?php _e( 'E-mail', 'coursepress_base_td' ); ?>:
+									<?php _e( 'E-mail', 'cp' ); ?>:
 									<input type="text" name="email" value="<?php echo( isset( $_POST['email'] ) ? $_POST['email'] : '' ); ?>"/>
 								</label>
 
 								<?php do_action( 'coursepress_after_signup_email' ); ?>
 
 								<label>
-									<?php _e( 'Password', 'coursepress_base_td' ); ?>:
+									<?php _e( 'Password', 'cp' ); ?>:
 									<input type="password" name="password" value=""/>
 								</label>
 
 								<?php do_action( 'coursepress_after_signup_password' ); ?>
 
 								<label class="right">
-									<?php _e( 'Confirm Password', 'coursepress_base_td' ); ?>:
+									<?php _e( 'Confirm Password', 'cp' ); ?>:
 									<input type="password" name="password_confirmation" value=""/>
 								</label>
 								<br clear="both"/><br/>
@@ -4223,11 +4223,11 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 								<?php do_action( 'coursepress_after_all_signup_fields' ); ?>
 
 								<label class="full">
-									<?php printf( __( 'Already have an account? %s%s%s!', 'coursepress_base_td' ), '<a href="' . $login_url . '">', __( 'Login to your account', 'coursepress_base_td' ), '</a>' ); ?>
+									<?php printf( __( 'Already have an account? %s%s%s!', 'cp' ), '<a href="' . $login_url . '">', __( 'Login to your account', 'cp' ), '</a>' ); ?>
 								</label>
 
 								<label class="full-right">
-									<input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php _e( 'Create an Account', 'coursepress_base_td' ); ?>"/>
+									<input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php _e( 'Create an Account', 'cp' ); ?>"/>
 								</label>
 
 								<?php do_action( 'coursepress_after_submit' ); ?>
@@ -4242,7 +4242,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 							// Return the html in the buffer.
 							//return $content;
 						} else {
-							_e( 'Registrations are not allowed.', 'coursepress_base_td' );
+							_e( 'Registrations are not allowed.', 'cp' );
 						}
 					} else {
 
@@ -4269,12 +4269,12 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 						<?php do_action( 'coursepress_after_start_form_fields' ); ?>
 
 						<label>
-							<?php _e( 'Username', 'coursepress_base_td' ); ?>:
+							<?php _e( 'Username', 'cp' ); ?>:
 							<input type="text" name="log" value="<?php echo( isset( $_POST['log'] ) ? sanitize_user( $_POST['log'] ) : '' ); ?>"/>
 						</label>
 
 						<label>
-							<?php _e( 'Password', 'coursepress_base_td' ); ?>:
+							<?php _e( 'Password', 'cp' ); ?>:
 							<input type="password" name="pwd" value=""/>
 						</label>
 
@@ -4283,16 +4283,16 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 						<label class="full">
 							<?php
 							if ( cp_user_can_register() ) {
-								printf( __( 'Don\'t have an account? %s%s%s now!', 'coursepress_base_td' ), '<a href="' . $signup_url . '">', __( 'Create an Account', 'coursepress_base_td' ), '</a>' );
+								printf( __( 'Don\'t have an account? %s%s%s now!', 'cp' ), '<a href="' . $signup_url . '">', __( 'Create an Account', 'cp' ), '</a>' );
 							}
 							?>
 						</label>
 
 						<label class="half-left">
-							<a href="<?php echo wp_lostpassword_url(); ?>"><?php _e( 'Forgot Password?', 'coursepress_base_td' ); ?></a>
+							<a href="<?php echo wp_lostpassword_url(); ?>"><?php _e( 'Forgot Password?', 'cp' ); ?></a>
 						</label>
 						<label class="half-right">
-							<input type="submit" name="wp-submit" id="wp-submit" class="apply-button-enrolled" value="<?php _e( 'Log In', 'coursepress_base_td' ); ?>"><br>
+							<input type="submit" name="wp-submit" id="wp-submit" class="apply-button-enrolled" value="<?php _e( 'Log In', 'cp' ); ?>"><br>
 						</label>
 						<br clear="all"/>
 
@@ -4317,7 +4317,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			extract( shortcode_atts( array(
 				'course_id' => in_the_loop() ? get_the_ID() : '',
 				'unit_id'   => false,
-				'message'   => __( '%d of %d mandatory elements completed.', 'coursepress_base_td' ),
+				'message'   => __( '%d of %d mandatory elements completed.', 'cp' ),
 				'format'    => 'true',
 			), $atts, 'module_status' ) );
 
@@ -4362,27 +4362,27 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 						}
 					} else {
 						if ( isset( $unit->status ) && $unit->status['mandatory_required']['enabled'] && ! $unit->status['mandatory_required']['result'] && ! $unit->status['completion_required']['enabled'] ) {
-							esc_html_e( 'All mandatory answers are required in previous unit.', 'coursepress_base_td' );
+							esc_html_e( 'All mandatory answers are required in previous unit.', 'cp' );
 						} elseif ( isset( $unit->status ) && $unit->status['completion_required']['enabled'] && ! $unit->status['completion_required']['result'] ) {
-							esc_html_e( 'Previous unit must be completed successfully.', 'coursepress_base_td' );
+							esc_html_e( 'Previous unit must be completed successfully.', 'cp' );
 						}
 						if ( isset( $unit->status ) && ! $unit->status['date_restriction']['result'] ) {
-							echo __( 'Available', 'coursepress_base_td' ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( do_shortcode( '[course_unit_details field="unit_availability" unit_id="' . $unit_id . '"]' ) ) );
+							echo __( 'Available', 'cp' ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( do_shortcode( '[course_unit_details field="unit_availability" unit_id="' . $unit_id . '"]' ) ) );
 						}
 					}
 					?></span>
 			<?php } else { ?>
 				<span class="unit-archive-single-module-status"><?php
 					if ( $unit_available ) {
-						//						 _e('Read-only','coursepress_base_td');
+						//						 _e('Read-only','cp');
 					} else {
 						if ( isset( $unit->status ) && $unit->status['mandatory_required']['enabled'] && ! $unit->status['mandatory_required']['result'] && ! $unit->status['completion_required']['enabled'] ) {
-							esc_html_e( 'All mandatory answers are required in previous unit.', 'coursepress_base_td' );
+							esc_html_e( 'All mandatory answers are required in previous unit.', 'cp' );
 						} elseif ( isset( $unit->status ) && $unit->status['completion_required']['enabled'] && ! $unit->status['completion_required']['result'] ) {
-							esc_html_e( 'Previous unit must be completed successfully.', 'coursepress_base_td' );
+							esc_html_e( 'Previous unit must be completed successfully.', 'cp' );
 						}
 						if ( isset( $unit->status ) && ! empty( $unit->status ) && ! $unit->status['date_restriction']['result'] ) {
-							echo __( 'Available', 'coursepress_base_td' ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( do_shortcode( '[course_unit_details field="unit_availability" unit_id="' . $unit_id . '"]' ) ) );
+							echo __( 'Available', 'cp' ) . ' ' . date_i18n( get_option( 'date_format' ), strtotime( do_shortcode( '[course_unit_details field="unit_availability" unit_id="' . $unit_id . '"]' ) ) );
 						}
 					}
 					?></span>
@@ -4397,22 +4397,22 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			ob_start();
 			extract( shortcode_atts(
 				array(
-					'module_column_title'               => __( 'Element', 'coursepress_base_td' ),
-					'title_column_title'                => __( 'Title', 'coursepress_base_td' ),
-					'submission_date_column_title'      => __( 'Submitted', 'coursepress_base_td' ),
-					'response_column_title'             => __( 'Answer', 'coursepress_base_td' ),
-					'grade_column_title'                => __( 'Grade', 'coursepress_base_td' ),
-					'comment_column_title'              => __( 'Comment', 'coursepress_base_td' ),
-					'module_response_description_label' => __( 'Description', 'coursepress_base_td' ),
-					'comment_label'                     => __( 'Comment', 'coursepress_base_td' ),
-					'view_link_label'                   => __( 'View', 'coursepress_base_td' ),
+					'module_column_title'               => __( 'Element', 'cp' ),
+					'title_column_title'                => __( 'Title', 'cp' ),
+					'submission_date_column_title'      => __( 'Submitted', 'cp' ),
+					'response_column_title'             => __( 'Answer', 'cp' ),
+					'grade_column_title'                => __( 'Grade', 'cp' ),
+					'comment_column_title'              => __( 'Comment', 'cp' ),
+					'module_response_description_label' => __( 'Description', 'cp' ),
+					'comment_label'                     => __( 'Comment', 'cp' ),
+					'view_link_label'                   => __( 'View', 'cp' ),
 					'view_link_class'                   => 'assessment-view-response-link button button-units',
 					'comment_link_class'                => 'assessment-view-response-link button button-units',
-					'pending_grade_label'               => __( 'Pending', 'coursepress_base_td' ),
-					'unit_unread_label'                 => __( 'Unit Unread', 'coursepress_base_td' ),
-					'unit_read_label'                   => __( 'Unit Read', 'coursepress_base_td' ),
-					'single_correct_label'              => __( 'Correct', 'coursepress_base_td' ),
-					'single_incorrect_label'            => __( 'Incorrect', 'coursepress_base_td' ),
+					'pending_grade_label'               => __( 'Pending', 'cp' ),
+					'unit_unread_label'                 => __( 'Unit Unread', 'cp' ),
+					'unit_read_label'                   => __( 'Unit Read', 'cp' ),
+					'single_correct_label'              => __( 'Correct', 'cp' ),
+					'single_incorrect_label'            => __( 'Incorrect', 'cp' ),
 					'non_assessable_label'              => __( '**' ),
 					'table_class'                       => 'widefat shadow-table assessment-archive-table',
 					'table_labels_th_class'             => 'manage-column'
@@ -4531,7 +4531,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 									</td>
 
 									<td class="<?php echo $style . ' ' . $visibility_class; ?>">
-										<?php echo( count( $response ) >= 1 ? date_i18n( 'M d, Y', strtotime( $response->post_date ) ) : __( 'Not submitted', 'coursepress_base_td' ) ); ?>
+										<?php echo( count( $response ) >= 1 ? date_i18n( 'M d, Y', strtotime( $response->post_date ) ) : __( 'Not submitted', 'cp' ) ); ?>
 									</td>
 
 									<td class="<?php echo $style . ' ' . $visibility_class; ?>">
@@ -4637,7 +4637,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 						<td colspan="7">
 							<?php
 							$unit_grade = do_shortcode( '[course_unit_details field="student_unit_grade" unit_id="' . get_the_ID() . '"]' );
-							_e( '0 input elements in the selected unit.', 'coursepress_base_td' );
+							_e( '0 input elements in the selected unit.', 'cp' );
 							?>
 							<?php
 							if ( $unit_grade == 0 ) {
@@ -4652,7 +4652,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 				}
 				?>
 				<?php if ( 0 < $current_row ) : ?>
-					<tfoot><tr><td colspan="6">** <?php _e( 'Non-assessable elements.', 'coursepress_base_td' ); ?></td></tr></tfoot>
+					<tfoot><tr><td colspan="6">** <?php _e( 'Non-assessable elements.', 'cp' ); ?></td></tr></tfoot>
 				<?php endif; ?>
 			</table>
 			<?php

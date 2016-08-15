@@ -11,7 +11,7 @@ if ( isset( $_GET['course_id'] ) && is_numeric( $_GET['course_id'] ) ) {
 }
 
 if ( ! empty( $course_id ) && ! CoursePress_Capabilities::can_view_course_units( $_GET['course_id'] ) ) {
-	die( __( 'You do not have required permissions to access this page.', 'coursepress_base_td' ) );
+	die( __( 'You do not have required permissions to access this page.', 'cp' ) );
 }
 
 if ( isset( $_GET['unit_id'] ) ) {
@@ -79,9 +79,9 @@ if ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new_unit' || ( isset( $
 				<?php } ?>
 
 				<div class="unit-buttons unit-control-buttons">
-					<a href="<?php echo admin_url( 'admin.php?page=course_details&tab=units&course_id=' . $course_id . '&unit_id=' . $unit_object->ID . '&action=edit' ); ?>" class="button button-units save-unit-button"><?php _e( 'Settings', 'coursepress_base_td' ); ?></a>
+					<a href="<?php echo admin_url( 'admin.php?page=course_details&tab=units&course_id=' . $course_id . '&unit_id=' . $unit_object->ID . '&action=edit' ); ?>" class="button button-units save-unit-button"><?php _e( 'Settings', 'cp' ); ?></a>
 					<?php if ( CoursePress_Capabilities::can_change_course_unit_status( $course_id, $unit_object->ID ) ) { ?>
-						<a href="<?php echo admin_url( 'admin.php?page=course_details&tab=units&course_id=' . $course_id . '&unit_id=' . $unit_object->ID . '&action=change_status&new_status=' . ( $unit_object->post_status == 'unpublished' ) ? 'publish' : 'private' ); ?>" class="button button-<?php echo ( $unit_object->post_status == 'unpublished' ) ? 'publish' : 'unpublished'; ?>"><?php echo ( $unit_object->post_status == 'unpublished' ) ? __( 'Publish', 'coursepress_base_td' ) : __( 'Unpublish', 'coursepress_base_td' ); ?></a>
+						<a href="<?php echo admin_url( 'admin.php?page=course_details&tab=units&course_id=' . $course_id . '&unit_id=' . $unit_object->ID . '&action=change_status&new_status=' . ( $unit_object->post_status == 'unpublished' ) ? 'publish' : 'private' ); ?>" class="button button-<?php echo ( $unit_object->post_status == 'unpublished' ) ? 'publish' : 'unpublished'; ?>"><?php echo ( $unit_object->post_status == 'unpublished' ) ? __( 'Publish', 'cp' ) : __( 'Unpublish', 'cp' ); ?></a>
 					<?php } ?>
 				</div>
 
@@ -97,7 +97,7 @@ if ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new_unit' || ( isset( $
 		<ul>
 			<li class="postbox ui-state-fixed ui-state-highlight add-new-unit-box">
 				<div class="add-new-unit-title">
-					<span class="plusTitle"><a href="<?php echo admin_url( 'admin.php?page=course_details&tab=units&course_id=' . $course_id . '&action=add_new_unit' ); ?>"><?php _e( 'Add new Unit', 'coursepress_base_td' ); ?></a></span>
+					<span class="plusTitle"><a href="<?php echo admin_url( 'admin.php?page=course_details&tab=units&course_id=' . $course_id . '&action=add_new_unit' ); ?>"><?php _e( 'Add new Unit', 'cp' ); ?></a></span>
 				</div>
 			</li>
 		</ul>
