@@ -66,7 +66,7 @@ class radio_input_module extends Unit_Module {
 			'author'         => $user_ID,
 			'post_type'      => 'module_response',
 			'post_parent'    => $response_request_ID,
-			'post_status'    => $status
+			'post_status'    => $status,
 		);
 
 		if ( $ids_only ) {
@@ -85,7 +85,6 @@ class radio_input_module extends Unit_Module {
 			$response = $already_respond_posts;
 		}
 
-
 		return $response;
 	}
 
@@ -94,7 +93,7 @@ class radio_input_module extends Unit_Module {
 
 		$preview_data = CoursePress::instance()->preview_data;
 		$preview = false;
-		if( isset( $preview_data ) && ! empty( $preview_data ) ) {
+		if ( isset( $preview_data ) && ! empty( $preview_data ) ) {
 			$response = array();
 			$all_responses = array();
 			$preview = true;
@@ -131,11 +130,16 @@ class radio_input_module extends Unit_Module {
 				if ( ! empty( $data ) && ! empty( $data->checked_answer ) && ! empty( $data->answers ) ) {
 					if ( ! empty( $response ) ) {
 						$student_answer = array_search( $response->post_content, $data->answers );
+						/**
+						 * If fail, try to html decode!
+						 */
+						if ( empty( $student_answer ) ) {
+							$decoded_response = html_entity_decode( $response->post_content );
+							$student_answer = array_search( $decoded_response, $data->answers );
+						}
 					}
 					$correct_answer = array_search( $data->checked_answer, $data->answers );
-
 					foreach ( $data->answers as $key => $answer ) {
-
 						$correct = 'unanswered';
 						if ( - 1 != $student_answer && $key == $student_answer && $key == $correct_answer ) {
 							// $correct = $answer == $response->post_content ? 'correct' : 'unanswered';
@@ -146,7 +150,7 @@ class radio_input_module extends Unit_Module {
 						?>
 						<li>
 							<div class="<?php echo $correct; ?>">
-								<input class="radio_answer_check" type="radio" name="<?php echo $data->name . '_front_' . $data->ID; ?>" value='<?php echo esc_attr( $answer ); ?>' <?php echo $enabled; ?> <?php echo( isset( $response->post_content ) && trim( $response->post_content ) == $answer ? 'checked' : '' ); ?> /><?php echo $answer; ?>
+								<input class="radio_answer_check" type="radio" name="<?php echo $data->name . '_front_' . $data->ID; ?>" value='<?php echo esc_attr( $answer ); ?>' <?php echo $enabled; ?> <?php checked( 'correct', $correct ); ?> /><?php echo $answer; ?>
 							</div>
 						</li>
 					<?php
@@ -185,8 +189,8 @@ class radio_input_module extends Unit_Module {
 				<input type="hidden" class="element_id" value="<?php echo esc_attr( isset( $data->ID ) ? $data->ID : '' ); ?>" />
 
 				<label class="bold-label"><?php
-		_e( 'Element Title', 'coursepress_base_td' );
-		$this->time_estimation( $data );
+				_e( 'Element Title', 'coursepress_base_td' );
+				$this->time_estimation( $data );
 		?></label>
 					<?php echo $this->element_title_description(); ?>
 				<input type="text" class="element_title" name="<?php echo $this->name; ?>_title[]" value="<?php echo esc_attr( isset( $data->post_title ) ? $data->post_title : '' ); ?>" />
@@ -206,7 +210,7 @@ class radio_input_module extends Unit_Module {
 
 			<div class="editor_in_place">
 		<?php
-		$editor_name    = $this->name . "_content[]";
+		$editor_name    = $this->name . '_content[]';
 		$editor_id      = ( esc_attr( isset( $data->ID ) ? 'editor_' . $data->ID : rand( 1, 9999 ) ) );
 		$editor_content = htmlspecialchars_decode( ( isset( $data->post_content ) ? $data->post_content : '' ) );
 
@@ -325,7 +329,6 @@ class radio_input_module extends Unit_Module {
 					$answers[] = $post_answers;
 				}
 
-
 				foreach ( array_keys( $_POST['module_type'] ) as $module_type => $module_value ) {
 					if ( $module_value == $this->name ) {
 						$data                       = new stdClass();
@@ -381,7 +384,6 @@ class radio_input_module extends Unit_Module {
 							// }
 							$data->metas['limit_attempts'] = $_POST[ $this->name . '_limit_attempts_field' ][ $key ];
 
-
 							parent::update_module( $data );
 						}
 					}
@@ -429,7 +431,6 @@ class radio_input_module extends Unit_Module {
 
 						$data->auto_grade = $response_grade;
 
-
 						// Record mandatory question answered
 						$mandatory_answer = get_post_meta( $response_id, 'mandatory_answer', true );
 						$unit_id          = (int) $_POST['unit_id'];
@@ -444,7 +445,6 @@ class radio_input_module extends Unit_Module {
 			}
 		}
 	}
-
 }
 
 cp_register_module( 'radio_input_module', 'radio_input_module', 'input' );
