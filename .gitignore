@@ -17,8 +17,13 @@ coursepress-files/pdf-cache/
 
 # Grunt folders
 .sass-cache
+.gitignore
+/asset/css/src/.sass-cache
 /vendor
 /composer.lock
 /composer
 /release
 composer.json
+Gruntfile.js
+/node_modules
+/vendor
