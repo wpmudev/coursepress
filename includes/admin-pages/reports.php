@@ -35,8 +35,8 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 
 	$report_title = $report_title .= ' | ' . $report_classes;
 
-    ob_end_clean();
-    ob_start();
+	ob_end_clean();
+	ob_start();
 	?>
 	<h1 style="text-align:center;"><?php echo $course_details->post_title; ?></h1>
 	<hr/><br/>
@@ -56,12 +56,12 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 			?>
 			<table cellspacing="0" cellpadding="5">
 				<tr>
-					<td colspan="4" style="background-color:#f5f5f5;"><?php echo $course_unit->post_title; ?></td>
+					<td colspan="4" style="background-color:#f5f5f5;"><?php echo $course_unit['post']->post_title; ?></td>
 				</tr>
 			</table>
 			<?php
 
-			$modules = Unit_Module::get_modules( $course_unit->ID );
+			$modules = Unit_Module::get_modules( $course_unit['post']->ID );
 
 			$input_modules_count = 0;
 
@@ -205,8 +205,7 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 		$users_num ++;
 	}//post users
 
-    $report_content = apply_filters('cp_report_content_output', ob_get_clean());
-
+	$report_content = apply_filters( 'cp_report_content_output', ob_get_clean() );
 
 	if ( $users_num == 1 ) {
 		$report_title = $report_title .= ' | ' . $user_object->first_name . ' ' . $user_object->last_name;
@@ -291,7 +290,7 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 					$args = array(
 						'post_type'      => 'course',
 						'post_status'    => 'any',
-						'posts_per_page' => - 1
+						'posts_per_page' => - 1,
 					);
 
 					$courses               = get_posts( $args );
@@ -374,13 +373,13 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 
 	<?php
 	$columns = array(
-		"ID"             => __( 'ID', 'coursepress_base_td' ),
-		"user_fullname"  => __( 'Full Name', 'coursepress_base_td' ),
-		"user_firstname" => __( 'First Name', 'coursepress_base_td' ),
-		"user_lastname"  => __( 'Surname', 'coursepress_base_td' ),
-		"responses"      => __( 'Responses', 'coursepress_base_td' ),
-		"average_grade"  => __( 'Average Grade', 'coursepress_base_td' ),
-		"report"         => __( 'Report', 'coursepress_base_td' ),
+		'ID'             => __( 'ID', 'coursepress_base_td' ),
+		'user_fullname'  => __( 'Full Name', 'coursepress_base_td' ),
+		'user_firstname' => __( 'First Name', 'coursepress_base_td' ),
+		'user_lastname'  => __( 'Surname', 'coursepress_base_td' ),
+		'responses'      => __( 'Responses', 'coursepress_base_td' ),
+		'average_grade'  => __( 'Average Grade', 'coursepress_base_td' ),
+		'report'         => __( 'Report', 'coursepress_base_td' ),
 	);
 
 	$col_sizes = array(
@@ -389,7 +388,7 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 		'10',
 		'10',
 		'10',
-		'5'
+		'5',
 	);
 
 	$class_meta_query_key = '';
@@ -436,16 +435,16 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 						array(
 							'key'   => $class_meta_query_key,
 							'value' => $classes,
-						)
-					)
+						),
+					),
 				);
 			} else {
 				$args = array(
 					'meta_query' => array(
 						array(
-							'key' => $class_meta_query_key
-						)
-					)
+							'key' => $class_meta_query_key,
+						),
+					),
 				);
 			}
 
@@ -510,7 +509,7 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 					$course_units = $course->get_units();
 					foreach ( $course_units as $course_unit ) {
 						?>
-						<option value="<?php echo $course_unit->ID; ?>"><?php echo $course_unit->post_title; ?></option>
+						<option value="<?php echo $course_unit['post']->ID; ?>"><?php echo $course_unit['post']->post_title; ?></option>
 					<?php
 					}
 					?>
