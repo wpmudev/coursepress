@@ -56,12 +56,12 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 			?>
 			<table cellspacing="0" cellpadding="5">
 				<tr>
-					<td colspan="4" style="background-color:#f5f5f5;"><?php echo $course_unit->post_title; ?></td>
+					<td colspan="4" style="background-color:#f5f5f5;"><?php echo $course_unit['post']->post_title; ?></td>
 				</tr>
 			</table>
 			<?php
 
-			$modules = Unit_Module::get_modules( $course_unit->ID );
+			$modules = Unit_Module::get_modules( $course_unit['post']->ID );
 
 			$input_modules_count = 0;
 
