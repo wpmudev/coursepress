@@ -30,11 +30,11 @@ class CoursePress_Helper_Message {
 	 *
 	 */
 	public static function set_message_key() {
-		if ( !isset( $_REQUEST[ self::$slug ] ) ) {
+		if ( ! isset( $_REQUEST[ self::$slug ] ) ) {
 			return;
 		}
 		$key = $_REQUEST[ self::$slug ];
-		if ( !self::sanitize_key( $key ) ) {
+		if ( ! self::sanitize_key( $key ) ) {
 			return;
 		}
 		self::$message_code = apply_filters( 'coursepress_helper_message_get_message_code', $key );
@@ -94,22 +94,22 @@ class CoursePress_Helper_Message {
 			'course-message',
 			sprintf( 'course-message-%s', self::$message_code ),
 		);
-		switch( self::$message_code ) {
+		switch ( self::$message_code ) {
 
-		case 'no-access':
-			$message = __( 'You need a membership account to access this course.', 'CP_TD' );
-			$classes[] = 'course-message-alert';
+			case 'no-access':
+				$message = __( 'You need a membership account to access this course.', 'cp' );
+				$classes[] = 'course-message-alert';
 			break;
 
-		case 'only-enroled':
-			$message = __( 'Only enrolled students can access this course material.', 'CP_TD' );
+			case 'only-enroled':
+				$message = __( 'Only enrolled students can access this course material.', 'cp' );
 			break;
 
-		case 'unit-not-available':
-			$message = self::_get_not_available_message();
+			case 'unit-not-available':
+				$message = self::_get_not_available_message();
 			break;
 
-		default:
+			default:
 			return '';
 		}
 
@@ -154,14 +154,13 @@ class CoursePress_Helper_Message {
 			$when = date( 'M d', CoursePress_Data_Course::strtotime( $unit_availability_date ) );
 
 			return sprintf(
-				__( 'This unit will be available on %s', 'CP_TD' ),
+				__( 'This unit will be available on %s', 'cp' ),
 				sprintf(
 					'<span class="unit-delay-date">%s</span>',
 					$when
 				)
 			);
 		}
-		return __( 'This unit is not available.', 'CP_TD' );
+		return __( 'This unit is not available.', 'cp' );
 	}
-
 }

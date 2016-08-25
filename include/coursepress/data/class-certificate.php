@@ -16,6 +16,7 @@ class CoursePress_Data_Certificate {
 	 * @var string
 	 */
 	private static $post_type = 'cp_certificate';
+	private static $custom_field_name_for_pdf_file = 'certificate_file';
 
 	/**
 	 * If the certificate module is enabled or not.
@@ -44,18 +45,18 @@ class CoursePress_Data_Certificate {
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
 				'labels' => array(
-					'name' => __( 'Certificates', 'CP_TD' ),
-					'singular_name' => __( 'Certificate', 'CP_TD' ),
-					'add_new' => __( 'Create New', 'CP_TD' ),
-					'add_new_item' => __( 'Create New Certificate', 'CP_TD' ),
-					'edit_item' => __( 'Edit Certificate', 'CP_TD' ),
-					'edit' => __( 'Edit', 'CP_TD' ),
-					'new_item' => __( 'New Certificate', 'CP_TD' ),
-					'view_item' => __( 'View Certificate', 'CP_TD' ),
-					'search_items' => __( 'Search Certificates', 'CP_TD' ),
-					'not_found' => __( 'No Certificates Found', 'CP_TD' ),
-					'not_found_in_trash' => __( 'No Certificates found in Trash', 'CP_TD' ),
-					'view' => __( 'View Certificate', 'CP_TD' ),
+					'name' => __( 'Certificates', 'cp' ),
+					'singular_name' => __( 'Certificate', 'cp' ),
+					'add_new' => __( 'Create New', 'cp' ),
+					'add_new_item' => __( 'Create New Certificate', 'cp' ),
+					'edit_item' => __( 'Edit Certificate', 'cp' ),
+					'edit' => __( 'Edit', 'cp' ),
+					'new_item' => __( 'New Certificate', 'cp' ),
+					'view_item' => __( 'View Certificate', 'cp' ),
+					'search_items' => __( 'Search Certificates', 'cp' ),
+					'not_found' => __( 'No Certificates Found', 'cp' ),
+					'not_found_in_trash' => __( 'No Certificates found in Trash', 'cp' ),
+					'view' => __( 'View Certificate', 'cp' ),
 				),
 				'public' => false,
 				'show_ui' => false,
@@ -254,7 +255,7 @@ class CoursePress_Data_Certificate {
 			'post_title' => 'Basic Certificate',
 			'ping_status' => 'closed',
 			'meta_input' => array(
-				'certificate_file' => self::get_pdf_file_name( $course_id, $student_id ),
+				self::$custom_field_name_for_pdf_file => self::get_pdf_file_name( $course_id, $student_id ),
 			),
 		);
 
@@ -425,7 +426,7 @@ class CoursePress_Data_Certificate {
 			 **/
 			$html = apply_filters( 'coursepress_basic_certificate_html', $html, $course_id, $student_id );
 
-			$certificate_title = apply_filters( 'coursepress_certificate_title', __( 'Certificate of Completion', 'CP_TD' ) );
+			$certificate_title = apply_filters( 'coursepress_certificate_title', __( 'Certificate of Completion', 'cp' ) );
 			$args = array(
 				'title' => $certificate_title,
 				'orientation' => $orientation,
@@ -490,7 +491,7 @@ class CoursePress_Data_Certificate {
 		 */
 		$certificate_id = self::get_certificate_id( $student_id, $course_id );
 		if ( ! empty( $certificate_id ) ) {
-			$file = get_post_meta( $certificate_id, 'certificate_file', true );
+			$file = get_post_meta( $certificate_id, self::$custom_field_name_for_pdf_file, true );
 			$url = self::url_prepare( $file );
 			if ( ! empty( $url ) ) {
 				return $url;
@@ -564,7 +565,7 @@ class CoursePress_Data_Certificate {
 			$vars['CERTIFICATE_BUTTON'] = sprintf(
 				'<p class="buttons"><a href="%s" class="button blue-button light-blue-button">%s</a></p>',
 				esc_url( $vars['CERTIFICATE_URL'] ),
-				__( 'Download your certificate', 'CP_TD' )
+				__( 'Download your certificate', 'cp' )
 			);
 		}
 		return $vars;
@@ -602,5 +603,22 @@ class CoursePress_Data_Certificate {
 		global $wpdb;
 		$sql = $wpdb->prepare( "select post_author from {$wpdb->posts} where post_type = %s and post_parent = %d", self::get_post_type_name(), $course_id );
 		return $wpdb->get_col( $sql );
+	}
+
+	/**
+	 * Delete certificate:
+	 * - delete certificate PDF file,
+	 * - delete custom post with certificate data.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $certificate_id certificate ID.
+	 */
+	public static function delete_certificate( $certificate_id ) {
+		$file = get_post_meta( $certificate_id, self::$custom_field_name_for_pdf_file, true );
+		if ( is_file( $file ) && is_writable( $file ) ) {
+			unlink( $file );
+		}
+		wp_delete_post( $certificate_id, true );
 	}
 }

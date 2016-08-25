@@ -34,7 +34,7 @@ class CoursePress_View_Front_General {
 
 			$courses = new stdClass();
 
-			$courses->title = __( 'Courses', 'CP_TD' );
+			$courses->title = __( 'Courses', 'cp' );
 			$courses->description = '';
 			$courses->menu_item_parent = 0;
 			$courses->ID = 'cp-courses';
@@ -50,7 +50,7 @@ class CoursePress_View_Front_General {
 			if ( $is_in ) {
 				$dashboard = new stdClass();
 
-				$dashboard->title = __( 'Dashboard', 'CP_TD' );
+				$dashboard->title = __( 'Dashboard', 'cp' );
 				$dashboard->description = '';
 				$dashboard->menu_item_parent = 0;
 				$dashboard->ID = 'cp-dashboard';
@@ -68,7 +68,7 @@ class CoursePress_View_Front_General {
 
 				$dashboard_courses = new stdClass();
 
-				$dashboard_courses->title = __( 'My Courses', 'CP_TD' );
+				$dashboard_courses->title = __( 'My Courses', 'cp' );
 				$dashboard_courses->description = '';
 				$dashboard_courses->menu_item_parent = - 9998;
 				$dashboard_courses->ID = 'cp-dashboard-courses';
@@ -83,7 +83,7 @@ class CoursePress_View_Front_General {
 
 				$settings_profile = new stdClass();
 
-				$settings_profile->title = __( 'My Profile', 'CP_TD' );
+				$settings_profile->title = __( 'My Profile', 'cp' );
 				$settings_profile->description = '';
 				$settings_profile->menu_item_parent = - 9998;
 				$settings_profile->ID = 'cp-dashboard-settings';
@@ -105,7 +105,7 @@ class CoursePress_View_Front_General {
 				// }
 				// $settings_inbox = new stdClass;
 				//
-				// $settings_inbox->title = __( 'Inbox', 'CP_TD' ) . $unread_count;
+				// $settings_inbox->title = __( 'Inbox', 'cp' ) . $unread_count;
 				// $settings_inbox->description = '';
 				// $settings_inbox->menu_item_parent = - 9998;
 				// $settings_inbox->ID = 'cp-dashboard-inbox';
@@ -121,9 +121,9 @@ class CoursePress_View_Front_General {
 			/* Log in / Log out links */
 			$login = new stdClass();
 			if ( $is_in ) {
-				$login->title = __( 'Log Out', 'CP_TD' );
+				$login->title = __( 'Log Out', 'cp' );
 			} else {
-				$login->title = __( 'Log In', 'CP_TD' );
+				$login->title = __( 'Log In', 'cp' );
 			}
 			$login->description = '';
 			$login->menu_item_parent = 0;

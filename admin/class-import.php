@@ -16,8 +16,8 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 
 	public function get_labels() {
 		return array(
-			'title' => __( 'CoursePress Import', 'CP_TD' ),
-			'menu_title' => __( 'Import', 'CP_TD' ),
+			'title' => __( 'CoursePress Import', 'cp' ),
+			'menu_title' => __( 'Import', 'cp' ),
 		);
 	}
 
@@ -32,11 +32,13 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 				$file = $_FILES['import'];
 				$is_replace = false;
 				$with_students = false;
+				$with_comments = false;
 
 				if ( isset( $_REQUEST['coursepress'] ) ) {
 					$options = $_REQUEST['coursepress'];
 					$is_replace = ! empty( $options['replace'] );
 					$with_students = ! empty( $options['students'] );
+					$with_comments = ! empty( $options['comments'] ) && $with_students;
 				}
 
 				if ( empty( $file['error'] ) ) {
@@ -51,22 +53,22 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 						$courses = json_decode( $courses );
 					}
 
-					self::course_importer( $courses, $import_id, $is_replace, $with_students );
+					self::course_importer( $courses, $import_id, $is_replace, $with_students, $with_comments );
 				}
 			} else {
 				$user_id = get_current_user_id();
 				$courses = get_option( 'coursepress_import_' . $user_id, array() );
 				$is_replace = ! empty( $_REQUEST['replace'] );
 				$with_students = ! empty( $_REQUEST['students'] );
+				$with_comments = ! empty( $_REQUEST['comments'] ) && $with_students;
 
 				if ( ! empty( $courses ) ) {
 					$courses = json_encode( json_decode( $courses ) );
-					self::course_importer( $courses, $_REQUEST['import_id'], $is_replace, $with_students );
+					self::course_importer( $courses, $_REQUEST['import_id'], $is_replace, $with_students, $with_comments );
 				} else {
 					self::clear_courses();
 				}
 			}
-
 		}
 	}
 
@@ -85,7 +87,7 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 	 **/
 	public static function import_completed() {
 		printf( '<div class="notice notice-info is-dismissible"><p>%s</p></div>',
-			__( 'Courses successfully imported!', 'CP_TD' )
+			__( 'Courses successfully imported!', 'cp' )
 		);
 	}
 
@@ -96,14 +98,14 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 		$time_limit = (int) ini_get( 'max_execution_time' );
 		$time_limit = $time_limit * 1000000;
 
-		$time_now = microtime(true);
+		$time_now = microtime( true );
 		$execution_limit = self::$start_time + $time_limit;
 
 		// Less 6 seconds to avoid PHP warning error
 		$execution_limit = $execution_limit - ( 1000000 * 6 );
 
 		if ( $time_now >= $execution_limit ) {
-			usleep(2000);
+			usleep( 2000 );
 			return false;
 		}
 
@@ -117,9 +119,10 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 	 * @param (int) $import_id				An import ID assigned to the uploaded file
 	 * @param (bool) $replace				Whether to replace existing course or not.
 	 * @param (bool) $with_students			Whether to import students of the course
+	 * @param (bool) $with_comments         Whether to import comments of the course
 	 **/
-	public static function course_importer( $courses, $import_id, $replace, $with_students ) {
-		self::$start_time = microtime(true);
+	public static function course_importer( $courses, $import_id, $replace, $with_students, $with_comments ) {
+		self::$start_time = microtime( true );
 		$actions = array(
 			'pre_post_update',
 			'edit_post',
@@ -128,12 +131,15 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 			'wp_insert_post',
 			'update_post_meta',
 			'updated_post_meta',
+			'comment_post',
+			'wp_insert_comment',
 		);
 		$filters = array(
 			'pre_user_login',
 			'insert_user_meta',
 			'profile_update',
 			'user_register',
+			'preprocess_comment',
 		);
 
 		// Remove all hooks
@@ -232,12 +238,12 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 					}
 
 					// Set new unit id
-					$new_units[$unit_id] = array( 'new_unit_id' => $new_unit_id, 'modules' => array() );
+					$new_units[ $unit_id ] = array( 'new_unit_id' => $new_unit_id, 'modules' => array() );
 
 					// Update visible units
-					$visible_units[$new_unit_id] = $visible_units[$unit_id];
-					$preview_units[$new_unit_id] = $preview_units[$unit_id];
-					unset( $visible_units[$unit_id], $preview_units[$unit_id] );
+					if ( isset( $visible_units[ $unit_id ] ) ) { $visible_units[ $new_unit_id ] = $visible_units[ $unit_id ]; }
+					if ( isset( $preview_units[ $unit_id ] ) ) { $preview_units[ $new_unit_id ] = $preview_units[ $unit_id ]; }
+					unset( $visible_units[ $unit_id ], $preview_units[ $unit_id ] );
 
 					if ( false === self::check_memory() ) {	break; }
 
@@ -255,9 +261,9 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 							// Update visible pages
 							$old_page_key = $unit_id . '_' . $page_number;
 							$new_page_key = $new_unit_id . '_' . $page_number;
-							$visible_pages[$new_page_key] = $visible_pages[$old_page_key];
-							$preview_pages[$new_page_key] = $preview_pages[$old_page_key];
-							unset( $visible_pages[$old_page_key], $preview_pages[$old_page_key] );
+							if ( isset( $visible_pages[ $old_page_key ] ) ) { $visible_pages[ $new_page_key ] = $visible_pages[ $old_page_key ]; }
+							if ( isset( $preview_pages[ $old_page_key ] ) ) { $preview_pages[ $new_page_key ] = $preview_pages[ $old_page_key ]; }
+							unset( $visible_pages[ $old_page_key ], $preview_pages[ $old_page_key ] );
 
 							if ( isset( $page->modules ) ) {
 
@@ -276,21 +282,21 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 									}
 
 									// Cache modules
-									$new_units[$unit_id]['modules'][$module_id] = $new_module_id;
+									$new_units[ $unit_id ]['modules'][ $module_id ] = $new_module_id;
 
 									// Update visible module
 									$old_module_key = $unit_id . '_' . $page_number . '_' . $module_id;
 									$new_module_key = $new_unit_id . '_' . $page_number . '_' . $new_module_id;
 
-									$visible_modules[$new_module_key] = isset( $visible_modules[$old_module_key] ) ? $visible_modules[$old_module_key] : '';
-									$preview_modules[$new_module_key] = isset( $preview_modules[$old_module_key] ) ? $preview_modules[$old_module_key] : '';
+									$visible_modules[ $new_module_key ] = isset( $visible_modules[ $old_module_key ] ) ? $visible_modules[ $old_module_key ] : '';
+									$preview_modules[ $new_module_key ] = isset( $preview_modules[ $old_module_key ] ) ? $preview_modules[ $old_module_key ] : '';
 
-									if ( ! empty( $visible_modules[$old_module_key] ) ) {
-										unset( $visible_modules[$old_module_key] );
+									if ( ! empty( $visible_modules[ $old_module_key ] ) ) {
+										unset( $visible_modules[ $old_module_key ] );
 									}
 
-									if ( ! empty( $preview_modules[$old_module_key] ) ) {
-										unset( $preview_modules[$old_module_key] );
+									if ( ! empty( $preview_modules[ $old_module_key ] ) ) {
+										unset( $preview_modules[ $old_module_key ] );
 									}
 
 									if ( false === self::check_memory() ) { break; }
@@ -367,6 +373,77 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 				unset( $courses->students );
 			}
 
+			// Import course comments
+			if ( $with_comments && isset( $course->comments ) && is_object( $course->comments ) && isset( $course->comments->course ) && is_array( $course->comments->course ) ) {
+
+				$new_comments = array();
+
+				foreach ( array_reverse( $course->comments->course ) as $comment_id => $comment ) {
+
+					if ( false === self::check_memory() ) { break; }
+
+					// Create user if needed and replace maybe-new user id
+					$user_id = self::maybe_add_user( $comment->user );
+					$comment->user_id = $user_id;
+
+					// Replace comment post id with new course id
+					$comment->comment_post_ID = $new_course_id;
+
+					// Replace comment parent id with new id
+					if ( $comment->comment_parent !== '0' && isset( $new_comments[ $comment->comment_parent ] ) ) {
+						$comment->comment_parent = $new_comments[ $comment->comment_parent ];
+					}
+
+					// Insert comment
+					$new_comments[ $comment->comment_ID ] = wp_insert_comment( CoursePress_Helper_Utility::object_to_array( $comment ) );
+
+					unset( $course->comments->course->$comment_id );
+
+					if ( false === self::check_memory() ) { break; }
+				}
+				unset( $course->comments->course );
+			}
+
+			// Import module comments
+			if ( $with_comments && isset( $course->comments ) && is_object( $course->comments ) && isset( $course->comments->modules ) && is_object( $course->comments->modules ) && isset( $course->comments->modules ) ) {
+
+				$new_comments = array();
+
+				foreach ( $course->comments->modules as $module_id => $modules ) {
+
+					if ( false === self::check_memory() ) { break; }
+
+					foreach ( array_reverse( $modules ) as $comment_id => $comment ) {
+
+						// Replace comment post id with new module id
+						if ( isset( $new_units[ $comment->unit_id ] )
+							&& is_array( $new_units[ $comment->unit_id ]['modules'] )
+							&& isset( $new_units[ $comment->unit_id ]['modules'][ $comment->module_id ] ) ) {
+							 $comment->comment_post_ID = $new_units[ $comment->unit_id ]['modules'][ $comment->module_id ];
+						}
+
+						// Replace comment parent id with new id
+						if ( $comment->comment_parent !== '0' && isset( $new_comments[ $comment->comment_parent ] ) ) {
+							$comment->comment_parent = $new_comments[ $comment->comment_parent ];
+						}
+
+						if ( false === self::check_memory() ) { break; }
+
+						// Create user if needed and replace maybe-new user id
+						$user_id = self::maybe_add_user( $comment->user );
+						$comment->user_id = $user_id;
+
+						// Insert comment
+						$new_comments[ $comment->comment_ID ] = wp_insert_comment( CoursePress_Helper_Utility::object_to_array( $comment ) );
+
+						if ( false === self::check_memory() ) { break; }
+					}
+				}
+				unset( $new_comments );
+			}
+
+			unset( $course->comments->modules );
+
 			// If it reached this far, remove the course
 			unset( $courses->$course_id );
 		}
@@ -419,7 +496,7 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 			// We'll use custom SQL to get existing post
 			$sql = $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE `post_title`='%s' AND post_type='%s' LIMIT 0, 1", $post_title, $post_type );
 			$new_post_id = $wpdb->get_var( $sql );
-			$new_post_id = max(0, (int) $new_post_id );
+			$new_post_id = max( 0, (int) $new_post_id );
 		}
 
 		$post->ID = $new_post_id;
@@ -508,7 +585,7 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 						'responses/' . $module_id
 					);
 
-					if ( ! empty(  $module_progress ) ) {
+					if ( ! empty( $module_progress ) ) {
 						CoursePress_Helper_Utility::set_array_val(
 							$unit_data,
 							'responses/' . $new_module_id,

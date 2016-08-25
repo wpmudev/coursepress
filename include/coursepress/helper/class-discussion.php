@@ -61,9 +61,9 @@ class CoursePress_Helper_Discussion {
 	 */
 	public static function get_subscription_statuses_array() {
 		return array(
-			'subscribe-reactions' => __( 'Notify me of new posts in this threads', 'CP_TD' ),
-			'do-not-subscribe' => __( 'Do not notify me of new posts by email', 'CP_TD' ),
-			'subscribe-all' => __( 'Notify me of all new posts by email', 'CP_TD' ),
+			'subscribe-reactions' => __( 'Notify me of new posts in this thread', 'cp' ),
+			'do-not-subscribe' => __( 'Do not notify me of new posts', 'cp' ),
+			'subscribe-all' => __( 'Notify me of all new posts', 'cp' ),
 		);
 	}
 
@@ -186,5 +186,4 @@ class CoursePress_Helper_Discussion {
 			get_current_user_id()
 		);
 	}
-
 }

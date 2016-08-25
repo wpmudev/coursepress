@@ -52,7 +52,7 @@ class CoursePress_Email {
 			array(
 				'from' => get_option( 'blogname' ),
 				'email' => get_option( 'admin_email' ),
-				'subject' => __( 'Subject line here...', 'CP_TD' ),
+				'subject' => __( 'Subject line here...', 'cp' ),
 				'content' => 'The content goes here...',
 		) );
 
@@ -77,7 +77,8 @@ class CoursePress_Email {
 	public function email_settings_view() {
 		$email_settings = wp_parse_args( $this->email_settings(), $this->email_fields() );
 
-		$content = sprintf( '<h3>%s</h3>', $email_settings['title'] );
+		$content = sprintf( '<h3 class="hndle">%s</h3>', $email_settings['title'] );
+		$content .= '<div class="inside">';
 		$content .= sprintf( '<p class="description">%s</p>', $email_settings['description'] );
 
 		$block = '<tr><th>%s</th><td>%s<input type="text" class="widefat" name="coursepress_settings[email][%s][%s]" value="%s" /></td></tr>';
@@ -85,7 +86,7 @@ class CoursePress_Email {
 		// From Name
 		$fields = sprintf(
 			$block,
-			__( 'From Name', 'CP_TD' ),
+			__( 'From Name', 'cp' ),
 			isset( $email_settings['from_sub'] ) ? $email_settings['from_sub'] : '', // Allow description
 			$this->email_type,
 			'from',
@@ -95,7 +96,7 @@ class CoursePress_Email {
 		// From Email
 		$fields .= sprintf(
 			$block,
-			__( 'From Email', 'CP_TD' ),
+			__( 'From Email', 'cp' ),
 			isset( $email_settings['email_sub'] ) ? $email_settings['email_sub'] : '', // Allow description
 			$this->email_type,
 			'email',
@@ -105,7 +106,7 @@ class CoursePress_Email {
 		// Subject
 		$fields .= sprintf(
 			$block,
-			__( 'Subject', 'CP_TD' ),
+			__( 'Subject', 'cp' ),
 			isset( $email_settings['subject_sub'] ) ? $email_settings['email_sub'] : '',
 			$this->email_type,
 			'subject',
@@ -117,11 +118,11 @@ class CoursePress_Email {
 		$mail_tokens = $this->mail_tokens();
 
 		if ( ! empty( $mail_tokens ) ) {
-			$content_help_text .= sprintf( '<p class="description"><strong>%s</strong>: <br />%s', __( 'Mail Tokens', 'CP_TD' ), implode( ', ', $mail_tokens ) );
-			$content_help_text .= '<p class="description">* ' . __( 'These tokens will be replaced with actual data.', 'CP_TD' ) . '</p>'; 
+			$content_help_text .= sprintf( '<p class="description"><strong>%s</strong>: <br />%s', __( 'Mail Tokens', 'cp' ), implode( ', ', $mail_tokens ) );
+			$content_help_text .= '<p class="description">* ' . __( 'These tokens will be replaced with actual data.', 'cp' ) . '</p>'; 
 		}
 
-		$fields .= '<tr><th>' . __( 'Email Body', 'CP_TD' ) . '</th><td>' . $content_help_text;
+		$fields .= '<tr><th>' . __( 'Email Body', 'cp' ) . '</th><td>' . $content_help_text;
 
 		ob_start();
 		$editor_settings = array(
@@ -139,7 +140,9 @@ class CoursePress_Email {
 
 		$content .= sprintf( '<table id="email-setting-fields" class="form-table compressed email-fields"><tbody>%s</tbody></table>', $fields );
 
-		return '<div class="cp-email-setting-fields email-setting-'. $this->email_type . '">' . $content . '</div>';
+		$content .= '</div>';
+
+		return '<div class="email-template cp-content-box collapsed cp-email-setting-fields email-setting-'. $this->email_type . '">' . $content . '</div>';
 	}
 
 	/**

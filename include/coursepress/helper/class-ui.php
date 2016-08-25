@@ -14,8 +14,8 @@ class CoursePress_Helper_UI {
 		$args['textbox_class'] = isset( $args['textbox_class'] ) ? sanitize_text_field( $args['textbox_class'] ) : 'medium';
 		$args['title'] = isset( $args['title'] ) ? sanitize_text_field( $args['title'] ) : '';
 		$args['value'] = isset( $args['value'] ) ? sanitize_text_field( $args['value'] ) : '';
-		$args['placeholder'] = isset( $args['placeholder'] ) ? sanitize_text_field( $args['placeholder'] ) : __( 'Add Media URL or Browse for Media', 'CP_TD' );
-		$args['button_text'] = isset( $args['button_text'] ) ? sanitize_text_field( $args['button_text'] ) : __( 'Browse', 'CP_TD' );
+		$args['placeholder'] = isset( $args['placeholder'] ) ? sanitize_text_field( $args['placeholder'] ) : __( 'Add Media URL or Browse for Media', 'cp' );
+		$args['button_text'] = isset( $args['button_text'] ) ? sanitize_text_field( $args['button_text'] ) : __( 'Browse', 'cp' );
 		$args['type'] = isset( $args['type'] ) ? sanitize_text_field( $args['type'] ) : 'image';
 		$args['invalid_message'] = isset( $args['invalid_message'] ) ? sanitize_text_field( $args['invalid_message'] ) : '';
 		$args['description'] = isset( $args['description'] ) ? sanitize_text_field( $args['description'] ) : '';
@@ -43,7 +43,7 @@ class CoursePress_Helper_UI {
 			</label>
 			<input class="' . $args['textbox_class'] . ' ' . $args['type'] . '_url" type="text" name="' . $name . '" id="' . $name . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" value="' . esc_attr( $args['value'] ) . '"/>
 			<input class="button browse-media-field" type="button" name="' . $name . '-button" value="' . esc_attr( $args['button_text'] ) . '"/>
-			<div class="invalid_extension_message">' . sprintf( esc_html__( 'Extension of the file is not valid. Please use one of the following: %s', 'CP_TD' ), $supported_extensions ) . '</div>
+			<div class="invalid_extension_message">' . sprintf( esc_html__( 'Extension of the file is not valid. Please use one of the following: %s', 'cp' ), $supported_extensions ) . '</div>
 		</div>';
 
 		return $content;
@@ -115,8 +115,9 @@ class CoursePress_Helper_UI {
 
 		foreach ( $courses as $course ) {
 			$selected = false !== $value ? selected( $value, $course->ID, false ) : '';
-
-			$content .= '<option value="' . $course->ID . '" ' . $selected . '>' . $course->post_title . '</option>';
+			$content .= '<option value="' . $course->ID . '" ' . $selected . '>';
+			$content .= apply_filters( 'the_title', $course->post_title, $course->ID );
+			$content .= '</option>';
 		}
 
 		$content .= '</select>';
@@ -283,7 +284,7 @@ class CoursePress_Helper_UI {
 		$just_count = isset( $options['count'] ) ? $options['count'] : false;
 
 		$content = '';
-/**
+		/**
  * @todo: Remove this
 		$args = array(
 			'meta_key' => 'course_' . $course_id,
@@ -327,9 +328,9 @@ class CoursePress_Helper_UI {
 				if ( ! empty( $instructor_invites ) ) {
 					foreach ( $instructor_invites as $invite ) {
 						if ( $remove_buttons ) {
-							$content .= '<div class="instructor-avatar-holder pending-invite" id="instructor_holder_' . $invite['code'] . '"><div class="instructor-status">' . esc_html__( 'Pending', 'CP_TD' ) . '</div><div class="invite-remove"><a><span class="dashicons dashicons-dismiss"></span></a></div>' . get_avatar( $invite['email'], 80 ) . '<span class="instructor-name">' . $invite['first_name'] . ' ' . $invite['last_name'] . '</span></div>';
+							$content .= '<div class="instructor-avatar-holder pending-invite" id="instructor_holder_' . $invite['code'] . '"><div class="instructor-status">' . esc_html__( 'Pending', 'cp' ) . '</div><div class="invite-remove"><a><span class="dashicons dashicons-dismiss"></span></a></div>' . get_avatar( $invite['email'], 80 ) . '<span class="instructor-name">' . $invite['first_name'] . ' ' . $invite['last_name'] . '</span></div>';
 						} else {
-							$content .= '<div class="instructor-avatar-holder pending-invite" id="instructor_holder_' . $invite['code'] . '"><div class="instructor-status">' . esc_html__( 'Pending', 'CP_TD' ) . '</div>' . get_avatar( $invite['email'], 80 ) . '<span class="instructor-name">' . $invite['first_name'] . ' ' . $invite['last_name'] . '</span></div>';
+							$content .= '<div class="instructor-avatar-holder pending-invite" id="instructor_holder_' . $invite['code'] . '"><div class="instructor-status">' . esc_html__( 'Pending', 'cp' ) . '</div>' . get_avatar( $invite['email'], 80 ) . '<span class="instructor-name">' . $invite['first_name'] . ' ' . $invite['last_name'] . '</span></div>';
 						}
 					}
 				}
@@ -488,7 +489,7 @@ class CoursePress_Helper_UI {
 	 */
 	public static function get_admin_edit_title_field( $value, $label = '' ) {
 		if ( empty( $label ) ) {
-			$label = __( 'Enter title here.', 'CP_TD' );
+			$label = __( 'Enter title here.', 'cp' );
 		}
 		$content = '<div id="titlediv">';
 		$content .= '<div id="titlewrap">';
@@ -548,7 +549,7 @@ class CoursePress_Helper_UI {
 	public static function get_message_required_modules( $error_message ) {
 		$error_message .= PHP_EOL;
 		$error_message .= PHP_EOL;
-		$error_message .= __( 'Please press the Prev button on the left to continue.', 'CP_TD' );
+		$error_message .= __( 'Please press the Prev button on the left to continue.', 'cp' );
 		return wpautop( $error_message );
 	}
 
@@ -664,7 +665,7 @@ class CoursePress_Helper_UI {
 		if ( $disable_prev ) {
 			$page_links[] = '<span class="tablenav-pages-navspan" aria-hidden="true">&lsaquo;</span>';
 		} else {
-			$page_number = max(1, $current-1);
+			$page_number = max( 1, $current -1 );
 			$page_links[] = sprintf( "<a class='prev-page' href='%s' data-paged='%s'><span class='screen-reader-text'>%s</span><span class='tablenav-pages-navspan' aria-hidden='true'>%s</span></a>",
 				esc_url( add_query_arg( 'paged', $page_number, $current_url ) ),
 				$page_number,
@@ -685,7 +686,7 @@ class CoursePress_Helper_UI {
 		if ( $disable_next ) {
 			$page_links[] = '<span class="tablenav-pages-navspan" aria-hidden="true">&rsaquo;</span>';
 		} else {
-			$page_number = min( $total_pages, $current+1);
+			$page_number = min( $total_pages, $current + 1 );
 			$page_links[] = sprintf( "<a class='next-page' href='%s' data-paged='%s'><span class='screen-reader-text'>%s</span><span class='tablenav-pages-navspan' aria-hidden='true'>%s</span></a>",
 				esc_url( add_query_arg( 'paged', $page_number, $current_url ) ),
 				$page_number,

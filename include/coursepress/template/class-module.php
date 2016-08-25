@@ -25,7 +25,7 @@ class CoursePress_Template_Module {
 		}
 
 		if ( $mandatory ) {// && 'input-quiz' != $attributes['module_type'] ) {
-			$content .= '<div class="is-mandatory">' . esc_html__( 'Required', 'CP_TD' ) . '</div>';
+			$content .= '<div class="is-mandatory">' . esc_html__( 'Required', 'cp' ) . '</div>';
 		}
 
 		return $content;
@@ -320,12 +320,12 @@ class CoursePress_Template_Module {
 			$disabled = ! $attributes['allow_retries'] && $response_count > 0;
 			$disabled = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
 			//Force disabled to true if the course is closed
-			$course_status = CoursePress_Data_Course::get_course_status($course_id) == 'closed';
-			if ( $course_status ){
+			$course_status = CoursePress_Data_Course::get_course_status( $course_id ) == 'closed';
+			if ( $course_status ) {
 				$disabled = true;
-			}		
+			}
 			// RESUBMIT LOGIC
-			$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit Answer', 'CP_TD' ) . '</a></div>' : '';
+			$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit Answer', 'cp' ) . '</a></div>' : '';
 
 			$disabled_attr = $disabled ? 'disabled="disabled"' : '';
 			$content .= '<div class="module-elements ' . $element_class . '">';
@@ -397,7 +397,7 @@ class CoursePress_Template_Module {
 
 			}
 		}
-		$content .= $course_status ? apply_filters('coursepress_course_readonly_message', '<div class="module-warning"><p>' . esc_html__( 'This course is completed, you can not submit answers anymore.', 'CP_TD' ) . '</p></div>') : '';
+		$content .= $course_status ? apply_filters( 'coursepress_course_readonly_message', '<div class="module-warning"><p>' . esc_html__( 'This course is completed, you can not submit answers anymore.', 'cp' ) . '</p></div>' ) : '';
 
 		$content .= '</div>'; // module_footer
 		return str_replace( array( "\n", "\r" ), '', $content );
@@ -428,23 +428,23 @@ class CoursePress_Template_Module {
 		$content .= '<div class="grade">';
 		if ( cp_is_true( $attributes['assessable'] ) ) {
 			if ( 'input-upload' == $attributes['module_type'] ) {
-				$content .= '<p>' . esc_html__( 'This file has been successfully uploaded. It will be part of your grade in this course.', 'CP_TD' ) . '</p>';
+				$content .= '<p>' . esc_html__( 'This file has been successfully uploaded. It will be part of your grade in this course.', 'cp' ) . '</p>';
 			}
 			if ( $grade > - 1 ) {
-				$content .= '<p><strong>' . esc_html__( 'Grade:', 'CP_TD' ) . '</strong> ' . $grade . '%</p>';
+				$content .= '<p><strong>' . esc_html__( 'Grade:', 'cp' ) . '</strong> ' . $grade . '%</p>';
 			} else {
-				$content .= '<p><strong>' . esc_html__( 'Ungraded', 'CP_TD' ) . '</strong></p>';
+				$content .= '<p><strong>' . esc_html__( 'Ungraded', 'cp' ) . '</strong></p>';
 			}
 		} elseif ( 'input-upload' == $attributes['module_type'] ) {
-			$content .= '<p>' . esc_html__( 'This file has been successfully uploaded. It will not be part of your grade in this course.', 'CP_TD' ) . '</p>';
+			$content .= '<p>' . esc_html__( 'This file has been successfully uploaded. It will not be part of your grade in this course.', 'cp' ) . '</p>';
 		}
 		$content .= '</div>';
 
 		if ( ( $attributes['minimum_grade'] > $grade || ( ! cp_is_true( $attributes['assessable'] ) ) && $attributes['minimum_grade'] <= $grade ) && ! $disabled ) {
-			$content .= '<div class="resubmit"><a>' . esc_html__( 'Resubmit', 'CP_TD' ) . '</a></div>';
+			$content .= '<div class="resubmit"><a>' . esc_html__( 'Resubmit', 'cp' ) . '</a></div>';
 		}
 		if ( $feedback && ! empty( $feedback ) ) {
-			$content .= '<div class="feedback"><strong>' . esc_html__( 'Feedback:', 'CP_TD' ) . '</strong><br/> ' . $feedback . '</div>';
+			$content .= '<div class="feedback"><strong>' . esc_html__( 'Feedback:', 'cp' ) . '</strong><br/> ' . $feedback . '</div>';
 		}
 
 		$content .= '</div>';
@@ -472,12 +472,12 @@ class CoursePress_Template_Module {
 			$disabled = ! $attributes['allow_retries'] && $response_count > 0;
 			$disabled = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
 			//Force disabled to true if the course is closed
-			$course_status = CoursePress_Data_Course::get_course_status($course_id) == 'closed';
-			if ( $course_status ){
+			$course_status = CoursePress_Data_Course::get_course_status( $course_id ) == 'closed';
+			if ( $course_status ) {
 				$disabled = true;
-			}		
+			}
 			// RESUBMIT LOGIC
-			$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit Answer', 'CP_TD' ) . '</a></div>' : '';
+			$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit Answer', 'cp' ) . '</a></div>' : '';
 
 			$disabled_attr = $disabled ? 'disabled="disabled"' : '';
 			$content .= '<div class="module-elements ' . $element_class . '">';
@@ -491,7 +491,7 @@ class CoursePress_Template_Module {
 			$content .= '<ul style="list-style: none;">';
 
 			// RESUBMIT LOGIC
-			$action = ! $disabled ? '<a class="module-submit-action">' . esc_html__( 'Submit Answer', 'CP_TD' ) . '</a>' : '';
+			$action = ! $disabled ? '<a class="module-submit-action">' . esc_html__( 'Submit Answer', 'cp' ) . '</a>' : '';
 
 			$oddeven = 'odd';
 			$alt = '';
@@ -553,7 +553,7 @@ class CoursePress_Template_Module {
 			}
 		}
 
-		$content .= $course_status ? apply_filters('coursepress_course_readonly_message', '<div class="module-warning"><p>' . esc_html__( 'This course is completed, you can not submit answers anymore.', 'CP_TD' ) . '</p></div>') : '';
+		$content .= $course_status ? apply_filters( 'coursepress_course_readonly_message', '<div class="module-warning"><p>' . esc_html__( 'This course is completed, you can not submit answers anymore.', 'cp' ) . '</p></div>' ) : '';
 		$content .= '</div>'; // module_footer.
 		return str_replace( array( "\n", "\r" ), '', $content );
 	}
@@ -580,13 +580,13 @@ class CoursePress_Template_Module {
 			$disabled = ! $attributes['allow_retries'] && $response_count > 0;
 			$disabled = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
 
-			$course_status = CoursePress_Data_Course::get_course_status($course_id) == 'closed';
-			if ( $course_status ){
+			$course_status = CoursePress_Data_Course::get_course_status( $course_id ) == 'closed';
+			if ( $course_status ) {
 				$disabled = true;
-			}		
+			}
 
 			// RESUBMIT LOGIC.
-			$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit Answer', 'CP_TD' ) . '</a></div>' : '';
+			$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit Answer', 'cp' ) . '</a></div>' : '';
 
 			$disabled_attr = $disabled ? 'disabled="disabled"' : '';
 			$content .= '<div class="module-elements ' . $element_class . '">';
@@ -637,7 +637,7 @@ class CoursePress_Template_Module {
 				}
 
 				$content .= '</ul>';
-				// $meh = '<p><span class="label">' . esc_html__( 'Response: ', 'CP_TD' ) . '</span>
+				// $meh = '<p><span class="label">' . esc_html__( 'Response: ', 'cp' ) . '</span>
 				// ' . $attributes['answers'][ (int) $last_response ] . '
 				// </p>';
 				$content .= '</div>';
@@ -656,7 +656,7 @@ class CoursePress_Template_Module {
 
 			}
 		}
-		$content .= $course_status ? apply_filters('coursepress_course_readonly_message', '<div class="module-warning"><p>' . esc_html__( 'This course is completed, you can not submit answers anymore.', 'CP_TD' ) . '</p></div>') : '';
+		$content .= $course_status ? apply_filters( 'coursepress_course_readonly_message', '<div class="module-warning"><p>' . esc_html__( 'This course is completed, you can not submit answers anymore.', 'cp' ) . '</p></div>' ) : '';
 		$content .= '</div>'; // module_footer
 		return str_replace( array( "\n", "\r" ), '', $content );
 	}
@@ -680,13 +680,13 @@ class CoursePress_Template_Module {
 		$disabled = ! $attributes['allow_retries'] && $response_count > 0;
 		$disabled = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
 
-		$course_status = CoursePress_Data_Course::get_course_status($course_id) == 'closed';
-		if ( $course_status ){
+		$course_status = CoursePress_Data_Course::get_course_status( $course_id ) == 'closed';
+		if ( $course_status ) {
 			$disabled = true;
-		}		
+		}
 
 		// RESUBMIT LOGIC
-		$action = ! $disabled ? '<a class="module-submit-action">' . esc_html__( 'Submit Answer', 'CP_TD' ) . '</a>' : '';
+		$action = ! $disabled ? '<a class="module-submit-action">' . esc_html__( 'Submit Answer', 'cp' ) . '</a>' : '';
 
 		$placeholder_text = get_post_meta( $module_id, 'placeholder_text', true );
 		$placeholder_text = ! empty( $placeholder_text ) ? $placeholder_text : '';
@@ -707,7 +707,7 @@ class CoursePress_Template_Module {
 			$response_key = array_pop( $response_key );
 
 			$content .= '<div class="module-response">
-				<p><span class="label">' . esc_html__( 'Response: ', 'CP_TD' ) . '</span>
+				<p><span class="label">' . esc_html__( 'Response: ', 'cp' ) . '</span>
 					' . $last_response . '
 				</p>
 			</div>';
@@ -725,7 +725,7 @@ class CoursePress_Template_Module {
 			$content .= self::render_module_result( $module, $attributes, $args );
 
 		}
-		$content .= $course_status ? apply_filters('coursepress_course_readonly_message', '<div class="module-warning"><p>' . esc_html__( 'This course is completed, you can not submit answers anymore.', 'CP_TD' ) . '</p></div>') : '';
+		$content .= $course_status ? apply_filters( 'coursepress_course_readonly_message', '<div class="module-warning"><p>' . esc_html__( 'This course is completed, you can not submit answers anymore.', 'cp' ) . '</p></div>' ) : '';
 		$content .= '</div>'; // module_footer
 		return str_replace( array( "\n", "\r" ), '', $content );
 	}
@@ -749,13 +749,13 @@ class CoursePress_Template_Module {
 		$disabled = ! $attributes['allow_retries'] && $response_count > 0;
 		$disabled = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
 
-		$course_status = CoursePress_Data_Course::get_course_status($course_id) == 'closed';
-		if ( $course_status ){
+		$course_status = CoursePress_Data_Course::get_course_status( $course_id ) == 'closed';
+		if ( $course_status ) {
 			$disabled = true;
-		}		
+		}
 
 		// RESUBMIT LOGIC
-		$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit Answer', 'CP_TD' ) . '</a></div>' : '';
+		$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit Answer', 'cp' ) . '</a></div>' : '';
 
 		$placeholder_text = get_post_meta( $module_id, 'placeholder_text', true );
 		$placeholder_text = ! empty( $placeholder_text ) ? $placeholder_text : '';
@@ -776,7 +776,7 @@ class CoursePress_Template_Module {
 			$response_key = array_pop( $response_key );
 
 			$content .= '<div class="module-response">
-				<p><span class="label">' . esc_html__( 'Response: ', 'CP_TD' ) . '</span>
+				<p><span class="label">' . esc_html__( 'Response: ', 'cp' ) . '</span>
 					' . $last_response . '
 				</p>
 			</div>';
@@ -794,7 +794,7 @@ class CoursePress_Template_Module {
 			$content .= self::render_module_result( $module, $attributes, $args );
 
 		}
-		$content .= $course_status ? apply_filters('coursepress_course_readonly_message', '<div class="module-warning"><p>' . esc_html__( 'This course is completed, you can not submit answers anymore.', 'CP_TD' ) . '</p></div>') : '';
+		$content .= $course_status ? apply_filters( 'coursepress_course_readonly_message', '<div class="module-warning"><p>' . esc_html__( 'This course is completed, you can not submit answers anymore.', 'cp' ) . '</p></div>' ) : '';
 		$content .= '</div>'; // module_footer
 		return str_replace( array( "\n", "\r" ), '', $content );
 	}
@@ -818,13 +818,13 @@ class CoursePress_Template_Module {
 		$disabled = ! $attributes['allow_retries'] && $response_count > 0;
 		$disabled = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
 
-		$course_status = CoursePress_Data_Course::get_course_status($course_id) == 'closed';
-		if ( $course_status ){
+		$course_status = CoursePress_Data_Course::get_course_status( $course_id ) == 'closed';
+		if ( $course_status ) {
 			$disabled = true;
-		}		
+		}
 
 		// RESUBMIT LOGIC
-		$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit File', 'CP_TD' ) . '</a></div>' : '';
+		$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit File', 'cp' ) . '</a></div>' : '';
 
 		$disabled_attr = $disabled ? 'disabled="disabled"' : '';
 		$content .= '<div class="module-elements ' . $element_class . '">
@@ -834,7 +834,10 @@ class CoursePress_Template_Module {
 						<input type="hidden" name="unit_id" value="' . $unit_id . '" />
 						<input type="hidden" name="module_id" value="' . $module_id . '" />
 						<input type="hidden" name="student_id" value="' . get_current_user_id() . '" />
-						<input type="file" name="module-' . $module_id . '" ' . $disabled_attr . ' />
+						<label class="file">
+							<input type="file" name="module-' . $module_id . '" ' . $disabled_attr . ' />
+							<span class="button" data-change="'.esc_attr__( 'Change File', 'cp' ).'" data-upload="'.esc_attr__( 'Upload File', 'cp' ).'">'.esc_attr__( 'Upload File', 'cp' ).'</span>
+						</label>
 						' . $action . ' <span class="upload-progress"></span>
 						</form>
 					</div>';
@@ -864,7 +867,7 @@ class CoursePress_Template_Module {
 				$file_name = array_pop( $file_name );
 
 				$content .= '<div class="module-response">
-					<p class="file_holder"><span class="label">' . esc_html__( 'Uploaded file: ', 'CP_TD' ) . '</span>
+					<p class="file_holder"><span class="label">' . esc_html__( 'Uploaded file: ', 'cp' ) . '</span>
 						<a href="' . esc_url( $url ) . '">' . esc_html( $file_name ) . ' ' . CoursePress_Helper_Utility::filter_content( $filesize ) . '</a>
 					</p>
 				</div>';
@@ -883,7 +886,7 @@ class CoursePress_Template_Module {
 			$content .= self::render_module_result( $module, $attributes, $args );
 
 		}
-		$content .= $course_status ? apply_filters('coursepress_course_readonly_message', '<div class="module-warning"><p>' . esc_html__( 'This course is completed, you can not submit answers anymore.', 'CP_TD' ) . '</p></div>') : '';
+		$content .= $course_status ? apply_filters( 'coursepress_course_readonly_message', '<div class="module-warning"><p>' . esc_html__( 'This course is completed, you can not submit answers anymore.', 'cp' ) . '</p></div>' ) : '';
 		$content .= '</div>'; // module_footer
 		return str_replace( array( "\n", "\r" ), '', $content );
 
@@ -909,8 +912,8 @@ class CoursePress_Template_Module {
 		$disabled = ! $attributes['allow_retries'] && $response_count > 0;
 		$disabled = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
 
-		$course_status = CoursePress_Data_Course::get_course_status($course_id) == 'closed';
-		if ( $course_status ){
+		$course_status = CoursePress_Data_Course::get_course_status( $course_id ) == 'closed';
+		if ( $course_status ) {
 			$disabled = true;
 		}
 		// Content
@@ -923,19 +926,19 @@ class CoursePress_Template_Module {
 
 			$unlimited = empty( $attributes['retry_attempts'] );
 			$remaining = ! $unlimited ? (int) $attributes['retry_attempts'] - ( $response_count - 1 ) : 0;
-			$remaining_message = ! $unlimited ? sprintf( __( 'You have %d attempts left.', 'CP_TD' ), $remaining ) : '';
+			$remaining_message = ! $unlimited ? sprintf( __( 'You have %d attempts left.', 'cp' ), $remaining ) : '';
 
 			if ( ! empty( $responses ) && ! $already_passed ) {
-				$remaining_message = sprintf( esc_html__( 'Your last attempt was unsuccessful. Try again. %s', 'CP_TD' ), $remaining_message );
+				$remaining_message = sprintf( esc_html__( 'Your last attempt was unsuccessful. Try again. %s', 'cp' ), $remaining_message );
 
 				if ( ! $unlimited && 1 > $remaining ) {
-					$remaining_message = esc_html__( 'Your last attempt was unsuccessful. You can not try anymore.', 'CP_TD' );
+					$remaining_message = esc_html__( 'Your last attempt was unsuccessful. You can not try anymore.', 'cp' );
 				}
 				$content .= sprintf( '<div class="not-passed-message">%s</div>', $remaining_message );
 			}
 
 			// RESUBMIT LOGIC
-			$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit Answer', 'CP_TD' ) . '</a></div>' : '';
+			$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit Answer', 'cp' ) . '</a></div>' : '';
 
 			$disabled_attr = $disabled ? 'disabled="disabled"' : '';
 			$content .= '<div class="module-elements ' . $element_class . '">';
@@ -979,7 +982,7 @@ class CoursePress_Template_Module {
 			}
 
 			// RESUBMIT LOGIC
-			$action = '<a class="module-submit-action">' . esc_html__( 'Submit Quiz Answers', 'CP_TD' ) . '</a>';
+			$action = '<a class="module-submit-action">' . esc_html__( 'Submit Quiz Answers', 'cp' ) . '</a>';
 			$content .= $action;
 
 			$content .= '</div>'; // module-quiz-questions
@@ -989,7 +992,7 @@ class CoursePress_Template_Module {
 				$content .= $quiz_result_content;
 			}
 		}
-		$content .= $course_status ? apply_filters('coursepress_course_readonly_message', '<div class="module-warning"><p>' . esc_html__( 'This course is completed, you can not submit answers anymore.', 'CP_TD' ) . '</p></div>') : '';
+		$content .= $course_status ? apply_filters( 'coursepress_course_readonly_message', '<div class="module-warning"><p>' . esc_html__( 'This course is completed, you can not submit answers anymore.', 'cp' ) . '</p></div>' ) : '';
 		$content .= '</div>'; // module_footer
 		return str_replace( array( "\n", "\r" ), '', $content );
 	}
@@ -1016,13 +1019,12 @@ class CoursePress_Template_Module {
 
 		$unlimited = empty( $attributes['retry_attempts'] );
 		$remaining = ! $unlimited ? (int) $attributes['retry_attempts'] - ( $response_count - 1 ) : 0;
-		$remaining_message = ! $unlimited ? sprintf( __( 'You have %d attempts left.', 'CP_TD' ), $remaining ) : '';
+		$remaining_message = ! $unlimited ? sprintf( __( 'You have %d attempts left.', 'cp' ), $remaining ) : '';
 
-		$content .= ! empty($remaining_message) ? sprintf( '<div class="not-passed-message">%s</div>', $remaining_message ) : '';
-		
+		$content .= ! empty( $remaining_message ) ? sprintf( '<div class="not-passed-message">%s</div>', $remaining_message ) : '';
 
 		// RESUBMIT LOGIC
-		$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit Answer', 'CP_TD' ) . '</a></div>' : '';
+		$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit Answer', 'cp' ) . '</a></div>' : '';
 
 		$disabled_attr = $disabled ? 'disabled="disabled"' : '';
 		$content .= '<div class="module-elements ' . $element_class . '">';
@@ -1057,9 +1059,9 @@ class CoursePress_Template_Module {
 						break;
 				case 'selectable':
 						$content .= '<label><select name="question-' . $qi . '">';
-						foreach ( $question['options']['answers'] as $ai => $answer ) {
-							$content .= '<option value="' . $answer . '" >'. $answer . '</option>';
-						}
+					foreach ( $question['options']['answers'] as $ai => $answer ) {
+						$content .= '<option value="' . $answer . '" >'. $answer . '</option>';
+					}
 						$content .= '</select></label><br />';
 						break;
 			}
@@ -1068,7 +1070,7 @@ class CoursePress_Template_Module {
 		}
 
 		// RESUBMIT LOGIC
-		$action = '<a class="module-submit-action">' . esc_html__( 'Submit', 'CP_TD' ) . '</a>';
+		$action = '<a class="module-submit-action">' . esc_html__( 'Submit', 'cp' ) . '</a>';
 		$content .= $action;
 
 		$content .= '</div>'; // module-form-questions
@@ -1076,13 +1078,12 @@ class CoursePress_Template_Module {
 
 		if ( ! empty( $responses ) ) {
 
-
 			$last_response = $responses[ $response_count - 1 ];
 
 			$content .= '<div class="module-response">';
 			foreach ( $attributes['questions'] as $qi => $question ) {
 				$content .= '<p class="question">' . esc_html( $question['question'] ) . '</p>';
-				$content .= '<p><span class="label">Response: </span>'. $last_response[$qi][0] .'</p><br />';
+				$content .= '<p><span class="label">Response: </span>'. $last_response[ $qi ][0] .'</p><br />';
 			}
 			$content .= '</div>';
 

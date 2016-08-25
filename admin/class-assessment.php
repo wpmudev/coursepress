@@ -16,8 +16,8 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 
 	public function get_labels() {
 		return array(
-			'title' => __( 'CoursePress Assessments', 'CP_TD' ),
-			'menu_title' => __( 'Assessments', 'CP_TD' ),
+			'title' => __( 'CoursePress Assessments', 'cp' ),
+			'menu_title' => __( 'Assessments', 'cp' ),
 		);
 	}
 
@@ -41,19 +41,19 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 		$this->localize_array['courseinstructor_id'] = get_current_user_id();
 		$this->localize_array['instructor_name'] = CoursePress_Helper_Utility::get_user_name( get_current_user_id() );
 		$this->localize_array['assessment_labels'] = array(
-			'pass' => __( 'Pass', 'CP_TD' ),
-			'fail' => __( 'Fail', 'CP_TD' ),
-			'add_feedback' => __( 'Add Feedback', 'CP_TD' ),
-			'edit_feedback' => __( 'Edit Feedback', 'CP_TD' ),
-			'cancel_feedback' => __( 'Cancel', 'CP_TD' ),
-			'success' => __( 'Success', 'CP_TD' ),
-			'error' => __( 'Unable to save feedback!', 'CP_TD' ),
-			'help_tooltip' => __( 'If the submission of this grade makes a student completes the course, an email with certificate will be automatically sent.', 'CP_TD' ),
-			'minimum_help' => __( 'You may change this minimum grade from course setting.', 'CP_TD' ),
-			'submit_with_feedback' => __( 'Submit grade with feedback', 'CP_TD' ),
-			'submit_no_feedback' => __( 'Submit grade without feedback', 'CP_TD' ),
-			'edit_with_feedback' => __( 'Edit grade with feedback', 'CP_TD' ),
-			'edit_no_feedback' => __( 'Edit grade without feedback', 'CP_TD' ),
+			'pass' => __( 'Pass', 'cp' ),
+			'fail' => __( 'Fail', 'cp' ),
+			'add_feedback' => __( 'Add Feedback', 'cp' ),
+			'edit_feedback' => __( 'Edit Feedback', 'cp' ),
+			'cancel_feedback' => __( 'Cancel', 'cp' ),
+			'success' => __( 'Success', 'cp' ),
+			'error' => __( 'Unable to save feedback!', 'cp' ),
+			'help_tooltip' => __( 'If the submission of this grade makes a student completes the course, an email with certificate will be automatically sent.', 'cp' ),
+			'minimum_help' => __( 'You may change this minimum grade from course setting.', 'cp' ),
+			'submit_with_feedback' => __( 'Submit grade with feedback', 'cp' ),
+			'submit_no_feedback' => __( 'Submit grade without feedback', 'cp' ),
+			'edit_with_feedback' => __( 'Edit grade with feedback', 'cp' ),
+			'edit_no_feedback' => __( 'Edit grade without feedback', 'cp' ),
 		);
 
 		// We will not need media buttons and we only need teeny editor for our feedback
@@ -95,11 +95,11 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 	public function ajax_request() {
 		$data = json_decode( file_get_contents( 'php://input' ) );
 		$json_data = array(
-			'action' => $data->action
+			'action' => $data->action,
 		);
 		$success = false;
 
-		switch( $data->action ) {
+		switch ( $data->action ) {
 			case 'update':
 				$course_id = $data->course_id;
 				$unit_id = $data->unit_id;
@@ -114,7 +114,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 				$feedback = CoursePress_Data_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
 				$old_feedback = '';
 				$draft_feedback = ! empty( $feedback['draft'] );
-				if ( ! empty( $feedback['feedback'] ) ){ $old_feedback = $feedback['feedback']; }
+				if ( ! empty( $feedback['feedback'] ) ) {  $old_feedback = $feedback['feedback']; }
 
 				// Record new grade and get the progress back
 				$student_progress = CoursePress_Data_Student::record_grade(
@@ -347,10 +347,10 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 						$now_answer = 0 == count( $response );
 
 						if ( $is_assessable ) {
-							$assessable[$module_id] = $module_id;
+							$assessable[ $module_id ] = $module_id;
 						}
 
-						$module_count[$module_id] = $module_id;
+						$module_count[ $module_id ] = $module_id;
 
 						if ( ( 'all_submitted' == $unit_id || $unit_id == $_unit_id ) && false === $is_assessable ) {
 							continue;
@@ -374,7 +374,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 							$graded_by = CoursePress_Helper_Utility::get_array_val(
 								$grades,
 								'graded_by'
-								);
+							);
 							if ( 'auto' === $graded_by ) {
 								// Set 0 as grade if it is auto-graded
 								$grade = 0;
@@ -401,11 +401,11 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 				$passed = $student_grade > 0 && $minimum_grade > 0 && $student_grade >= $minimum_grade;
 
 				if ( 'all' === $type ) {
-					$found_students[$student_id] = $student_id;
+					$found_students[ $student_id ] = $student_id;
 				} elseif ( 'ungraded' === $type && $student_grade < $minimum_grade ) {
-					$found_students[$student_id] = $student_id;
+					$found_students[ $student_id ] = $student_id;
 				} elseif ( 'graded' === $type && true === $passed ) {
-					$found_students[$student_id] = $student_id;
+					$found_students[ $student_id ] = $student_id;
 				}
 			}
 		}
@@ -423,7 +423,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 	/**
 	 * Search students of the given course ID
 	 **/
-	public static function search_students( $course_id, $search_key) {
+	public static function search_students( $course_id, $search_key ) {
 		global $wpdb;
 
 		if ( is_multisite() ) {
@@ -520,7 +520,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 			$user_args['search_columns'] = array(
 				'user_login',
 				'user_nicename',
-				'user_email'
+				'user_email',
 			);
 			$query = new WP_User_Query( $user_args );
 
@@ -560,34 +560,34 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 		$content = '';
 
 		if ( empty( $total ) ) {
-			return sprintf( '<br><br><p class="description">%s</p>', __( 'There are no students found..', 'CP_TD' ) );
+			return sprintf( '<br><br><p class="description">%s</p>', __( 'There are no students found..', 'cp' ) );
 		}
 
-		$grading_system = __( 'total acquired grade % total number of gradable modules', 'CP_TD' );
+		$grading_system = __( 'total acquired grade % total number of gradable modules', 'cp' );
 
 		if ( 'all' != $the_unit ) {
-			$grading_system = __( 'total acquired assessable grade % total number of assessable modules', 'CP_TD' );
+			$grading_system = __( 'total acquired assessable grade % total number of assessable modules', 'cp' );
 		}
 
 		$grading_system = '<em>' . $grading_system . '</em>';
 		$table = '
 			<table class="cp-result-details">
 			<tr>
-				<td>' . __( 'Students Found:', 'CP_TD' ) . ' ' . $total . '</td>
-				<td>' . __( 'Modules:', 'CP_TD' ) . ' <span class="cp-total-assessable">' . $results['assessable'] . '</span></td>
-				<td>' . __( 'Passing Grade: ', 'CP_TD' ) . ' <span class="cp-pasing-grade">' . $results['passing_grade'] . '%</span></td>
-				<td>'. __( 'Grade System: ', 'CP_TD' ) . $grading_system . '</td>
+				<td>' . __( 'Students Found:', 'cp' ) . ' ' . $total . '</td>
+				<td>' . __( 'Modules:', 'cp' ) . ' <span class="cp-total-assessable">' . $results['assessable'] . '</span></td>
+				<td>' . __( 'Passing Grade: ', 'cp' ) . ' <span class="cp-pasing-grade">' . $results['passing_grade'] . '%</span></td>
+				<td>'. __( 'Grade System: ', 'cp' ) . $grading_system . '</td>
 			</tr>
 			</table>
 		';
 
 		$table .= '<table class="wp-list-table widefat fixed striped cp-table">
 			<thead>
-				<th>' . esc_html__( 'Student', 'CP_TD' ) . '</th>
-				<th>' . esc_html__( 'Last Active', 'CP_TD' ) . '</th>
-				<th class="unit-grade">' . esc_html__( 'Grade', 'CP_TD' ) . '</th>
-				<th width="5%">' . esc_html__( 'Modules', 'CP_TD' ) . '</th>
-				<th width="5%">' . esc_html__( 'View All', 'CP_TD' ) . '</th>
+				<th>' . esc_html__( 'Student', 'cp' ) . '</th>
+				<th>' . esc_html__( 'Last Active', 'cp' ) . '</th>
+				<th class="unit-grade">' . esc_html__( 'Grade', 'cp' ) . '</th>
+				<th width="5%">' . esc_html__( 'Modules', 'cp' ) . '</th>
+				<th width="5%">' . esc_html__( 'View All', 'cp' ) . '</th>
 			</thead>
 			<tbody>
 		';
@@ -621,8 +621,8 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 				$units = (array) $student_progress['units'];
 
 				foreach ( $units as $unit_id => $unit ) {
-					if ( ! empty( $units[$unit_id]['responses'] ) ) {
-						$responses = $units[$unit_id]['responses'];
+					if ( ! empty( $units[ $unit_id ]['responses'] ) ) {
+						$responses = $units[ $unit_id ]['responses'];
 
 						foreach ( $responses as $module_id => $response ) {
 							$last = array_pop( $response );
@@ -645,7 +645,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 						<td class="unit-last-active">' . $last_active . '</td>
 						<td data-student="' . $student_id . '">
 							<span class="final-grade"></span>
-							<span class="cp-certified" ' . $certified . '>'. esc_html__( 'Certified', 'CP_TD' ) . '</span>
+							<span class="cp-certified" ' . $certified . '>'. esc_html__( 'Certified', 'cp' ) . '</span>
 						</td>
 						<td class="cp-actions">
 							<span class="cp-edit-grade" data-student="' . $student_id . '">
@@ -669,10 +669,10 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 		$table .= '</tbody></table>';
 
 		$table .= '<br><br><div class="no-student-info" style="display: none;">
-			<p class="description">' . esc_html__( '0 students found under this unit', 'CP_TD' ) . '</p>
+			<p class="description">' . esc_html__( '0 students found under this unit', 'cp' ) . '</p>
 		</div>
 		<div class="no-assessable-info" style="display: none;">
-			<p class="description">' . esc_html__( 'There are no assessable students found!', 'CP_TD' ) . '</p>
+			<p class="description">' . esc_html__( 'There are no assessable students found!', 'cp' ) . '</p>
 		</div>';
 
 		$url = add_query_arg(
@@ -684,7 +684,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 		);
 
 		if ( $total > $per_page ) {
-			$table .= CoursePress_Helper_UI::admin_paginate( $paged, $total, $per_page, $url, __( 'student', 'CP_TD' ) );
+			$table .= CoursePress_Helper_UI::admin_paginate( $paged, $total, $per_page, $url, __( 'student', 'cp' ) );
 		}
 
 		return $table;
@@ -744,105 +744,105 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 			$unit_grade = 0;
 			$unit_module_found = 0;
 
-				foreach ( $unit['pages'] as $page_number => $page ) {
-					$short_title = wp_trim_words( $page['title'], 4, '...' );
-					$page_title = sprintf( '<h4 class="cp-page-title">%s</h4>', $page['title'] );
+			foreach ( $unit['pages'] as $page_number => $page ) {
+				$short_title = wp_trim_words( $page['title'], 4, '...' );
+				$page_title = sprintf( '<h4 class="cp-page-title">%s</h4>', $page['title'] );
 
-					$inner_page = sprintf( '<div class="cp-page-modules page-number-%s">', $page_number );
-					$page_content = '';
-					$first_page = false; // Hide the rest of the pages
-					$found_module = 0;
+				$inner_page = sprintf( '<div class="cp-page-modules page-number-%s">', $page_number );
+				$page_content = '';
+				$first_page = false; // Hide the rest of the pages
+				$found_module = 0;
 
-						foreach ( $page['modules'] as $module_id => $module ) {
-							$attributes = CoursePress_Data_Module::attributes( $module_id );
-							$module_type = $attributes['module_type'];
-							$is_answerable = preg_match( '%input%', $module_type );
-							$is_required = cp_is_true( $attributes['mandatory'] );
-							$is_assessable = ! empty( $attributes['assessable'] ) && cp_is_true( $attributes['assessable'] );
-							$require_instructor_assessment = ! empty( $attributes['instructor_assessable'] ) && cp_is_true( $attributes['instructor_assessable'] );
-							$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
-							$response = $response['response'];
-							$is_assessable = $is_assessable || $require_instructor_assessment;
-							$min_grade = empty( $attributes['minimum_grade'] ) ? 0 : (int) $attributes['minimum_grade'];
+				foreach ( $page['modules'] as $module_id => $module ) {
+					$attributes = CoursePress_Data_Module::attributes( $module_id );
+					$module_type = $attributes['module_type'];
+					$is_answerable = preg_match( '%input%', $module_type );
+					$is_required = cp_is_true( $attributes['mandatory'] );
+					$is_assessable = ! empty( $attributes['assessable'] ) && cp_is_true( $attributes['assessable'] );
+					$require_instructor_assessment = ! empty( $attributes['instructor_assessable'] ) && cp_is_true( $attributes['instructor_assessable'] );
+					$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
+					$response = $response['response'];
+					$is_assessable = $is_assessable || $require_instructor_assessment;
+					$min_grade = empty( $attributes['minimum_grade'] ) ? 0 : (int) $attributes['minimum_grade'];
 
-							if ( ! cp_is_true( $is_answerable ) ) {
-								continue;
-							}
+					if ( ! cp_is_true( $is_answerable ) ) {
+						continue;
+					}
 
-							$no_anwer = 0 === count( $response );
+					$no_anwer = 0 === count( $response );
 
-							if ( $assess && false === $is_assessable ) {
-								continue;
-							}
+					if ( $assess && false === $is_assessable ) {
+						continue;
+					}
 
-							$unit_module_found += 1;
+					$unit_module_found += 1;
 
-							if ( false === $assess && 0 === count( $response ) && $filter ) {
-								//continue;
-							}
+					if ( false === $assess && 0 === count( $response ) && $filter ) {
+						//continue;
+					}
 
-							$found_module += 1;
+					$found_module += 1;
 
-							$feedback = CoursePress_Data_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
-							$has_feedback = ! empty( $feedback['feedback'] );
-							$feedback_class = $has_feedback ? ' cp-active' : '';
-							$feedback_text = $has_feedback ? $feedback['feedback'] : '';
-							$feedback_by = $has_feedback ? '- ' . CoursePress_Helper_Utility::get_user_name( $feedback['feedback_by'] ) : '';
+					$feedback = CoursePress_Data_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
+					$has_feedback = ! empty( $feedback['feedback'] );
+					$feedback_class = $has_feedback ? ' cp-active' : '';
+					$feedback_text = $has_feedback ? $feedback['feedback'] : '';
+					$feedback_by = $has_feedback ? '- ' . CoursePress_Helper_Utility::get_user_name( $feedback['feedback_by'] ) : '';
 
-							$grades = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
-							$grade = empty( $grades['grade'] ) ? 0 : (int) $grades['grade'];
+					$grades = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
+					$grade = empty( $grades['grade'] ) ? 0 : (int) $grades['grade'];
 
-							$excluded_modules = array( 'input-textarea', 'input-text' );
+					$excluded_modules = array( 'input-textarea', 'input-text' );
 
-							// Check if the grade came from an instructor
-							$graded_by = CoursePress_Helper_Utility::get_array_val(
-								$grades,
-								'graded_by'
-							);
+					// Check if the grade came from an instructor
+					$graded_by = CoursePress_Helper_Utility::get_array_val(
+						$grades,
+						'graded_by'
+					);
 
-							if ( $require_instructor_assessment || in_array( $module_type, $excluded_modules ) ) {
-								if ( 'auto' === $graded_by ) {
-									// Set 0 as grade if it is auto-graded
-									$grade = 0;
-								}
-							}
+					if ( $require_instructor_assessment || in_array( $module_type, $excluded_modules ) ) {
+						if ( 'auto' === $graded_by ) {
+							// Set 0 as grade if it is auto-graded
+							$grade = 0;
+						}
+					}
 
-							$unit_grade += $grade;
-							$is_pass = $grade > 0 && $grade >= $min_grade;
-							$pass_class = $is_pass ? ' green' : ' red';
-							$no_anwer_class = 0 == count( $response ) ? ' cp-no-answer' : '';
+					$unit_grade += $grade;
+					$is_pass = $grade > 0 && $grade >= $min_grade;
+					$pass_class = $is_pass ? ' green' : ' red';
+					$no_anwer_class = 0 == count( $response ) ? ' cp-no-answer' : '';
 
-							if ( $is_assessable || $require_instructor_assessment ) {
-								$no_anwer_class .= ' module-assessable';
-							}
+					if ( $is_assessable || $require_instructor_assessment ) {
+						$no_anwer_class .= ' module-assessable';
+					}
 
-							$page_content .= '<div class="cp-module '. $no_anwer_class . '" id="unit-' . $unit_id . '-module-' . $module_id . '">';
+					$page_content .= '<div class="cp-module '. $no_anwer_class . '" id="unit-' . $unit_id . '-module-' . $module_id . '">';
 
-							// Will only allow feedback for 'Short', 'Long', and 'Upload' modules.
-							$allowed_for_feedback = array( 'input-text', 'input-textarea', 'input-upload' );
+					// Will only allow feedback for 'Short', 'Long', and 'Upload' modules.
+					$allowed_for_feedback = array( 'input-text', 'input-textarea', 'input-upload' );
 
-							if ( false === $no_anwer && ( $is_assessable || $require_instructor_assessment ) && in_array( $module_type, $allowed_for_feedback ) ) {
-								$no_feedback_button_label = __( 'Submit Grade without Feedback', 'CP_TD' );
-								$with_feedback_button_label = __( 'Submit Grade with Feedback', 'CP_TD' );
-								$pass_label = sprintf( __( 'The minimum grade to pass: %s', 'CP_TD' ), $min_grade );
-								$pass_label .= '<br />';
-								$pass_label .= __( 'You can change this minimum score from course settings.', 'CP_TD' );
-								$module_status = $is_pass ? __( 'Pass', 'CP_TD' ) : __( 'Fail', 'CP_TD' );
+					if ( false === $no_anwer && ( $is_assessable || $require_instructor_assessment ) && in_array( $module_type, $allowed_for_feedback ) ) {
+						$no_feedback_button_label = __( 'Submit Grade without Feedback', 'cp' );
+						$with_feedback_button_label = __( 'Submit Grade with Feedback', 'cp' );
+						$pass_label = sprintf( __( 'The minimum grade to pass: %s', 'cp' ), $min_grade );
+						$pass_label .= '<br />';
+						$pass_label .= __( 'You can change this minimum score from course settings.', 'cp' );
+						$module_status = $is_pass ? __( 'Pass', 'cp' ) : __( 'Fail', 'cp' );
 
-								if ( false === $is_pass && ( empty( $graded_by ) || 'auto' === $graded_by ) ) {
-									$module_status = __( 'Pending', 'CP_TD' );
-								}
+						if ( false === $is_pass && ( empty( $graded_by ) || 'auto' === $graded_by ) ) {
+							$module_status = __( 'Pending', 'cp' );
+						}
 
-								if ( ! empty( $graded_by ) && 'auto' != $graded_by ) {
-									$no_feedback_button_label = __( 'Edit Grade without Feedback', 'CP_TD' );
-									$with_feedback_button_label = __( 'Edit Grade with Feedback', 'CP_TD' );
-								}
+						if ( ! empty( $graded_by ) && 'auto' != $graded_by ) {
+							$no_feedback_button_label = __( 'Edit Grade without Feedback', 'cp' );
+							$with_feedback_button_label = __( 'Edit Grade with Feedback', 'cp' );
+						}
 
-								$page_content .= '<div class="cp-grade-editor">
+						$page_content .= '<div class="cp-grade-editor">
 									<div class="cp-right cp-assessment-div">
 										<div>
 											<div class="cp-module-grade-info">
-												<label class="cp-assess-label">' . __( 'Assessment Result: ', 'CP_TD' ) . '</label>
+												<label class="cp-assess-label">' . __( 'Assessment Result: ', 'cp' ) . '</label>
 												<span class="cp-current-grade">'. $grade . '%</span>
 												<span class="cp-check ' . $pass_class . '">' . $module_status . '</span>
 											</div>
@@ -853,216 +853,213 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 									<textarea class="cp_feedback_content" style="display:none;">'. esc_textarea( $feedback_text ) . '</textarea>
 									<div class="cp-grade-editor-box" style="display:none;">
 										<div class="coursepress-tooltip cp-right cp-edit-grade-box">
-											<label class="cp-assess-label">'. __( 'Grade', 'CP_TD' ) . '</label>
+											<label class="cp-assess-label">'. __( 'Grade', 'cp' ) . '</label>
 											<input type="text" name="module-grade" data-courseid="' . $course_id . '" data-unit="' . $unit_id . '" data-module="' . $module_id . '" data-minimum="' . esc_attr( $min_grade ) . '" data-student="' . $student_id . '" class="module-grade" data-grade="'. esc_attr( $grade ) . '" value="' . esc_attr( $grade ) . '" />
-											<button type="button" class="button-primary cp-right cp-save-as-draft disabled">'. __( 'Save Feeback as Draft', 'CP_TD' ) . '</button>
-											<button type="button" class="button-primary cp-submit-grade disabled">' . __( 'Submit Grade', 'CP_TD' ) . '</button>
-											<button type="button" class="button cp-cancel">' . __( 'Cancel', 'CP_TD' ) . '</button>
+											<button type="button" class="button-primary cp-right cp-save-as-draft disabled">'. __( 'Save Feeback as Draft', 'cp' ) . '</button>
+											<button type="button" class="button-primary cp-submit-grade disabled">' . __( 'Submit Grade', 'cp' ) . '</button>
+											<button type="button" class="button cp-cancel">' . __( 'Cancel', 'cp' ) . '</button>
 											<p class="description">' . $pass_label . '</p>
 										</div>
 										<div class="cp-feedback-editor">
-											<label class="cp-feedback-title">' . __( 'Feedback', 'CP_TD' ) . '</label>
-											<p class="description">'. __( 'Your feedback will be emailed to the student after submission.', 'CP_TD' ) . '</p>
+											<label class="cp-feedback-title">' . __( 'Feedback', 'cp' ) . '</label>
+											<p class="description">'. __( 'Your feedback will be emailed to the student after submission.', 'cp' ) . '</p>
 										</div>
 									</div>
 								</div>
 								';
 
-							} else {
-								$page_content .= '<input type="hidden" data-courseid="' . $course_id . '" data-unit="' . $unit_id . '" data-module="' . $module_id . '" data-minimum="' . esc_attr( $min_grade ) . '" data-student="'. $student_id . '" class="module-grade" name="module-grade" value="'. esc_attr( $grade ) . '" />';
+					} else {
+						$page_content .= '<input type="hidden" data-courseid="' . $course_id . '" data-unit="' . $unit_id . '" data-module="' . $module_id . '" data-minimum="' . esc_attr( $min_grade ) . '" data-student="'. $student_id . '" class="module-grade" name="module-grade" value="'. esc_attr( $grade ) . '" />';
 
-								if ( ( $is_assessable || $require_instructor_assessment ) && in_array( $module_type, $allowed_for_feedback ) ) {
-									// Allow instructors to add answer
-									$page_content .= '<div class="cp-right cp-instructor-edit">';
+						if ( ( $is_assessable || $require_instructor_assessment ) && in_array( $module_type, $allowed_for_feedback ) ) {
+							// Allow instructors to add answer
+							$page_content .= '<div class="cp-right cp-instructor-edit">';
 
-									if ( 'input-upload' === $module_type ) {
-										$action_url = add_query_arg(
-											array(
-												'page' => 'coursepress_assessments',
-												'course_id' => $course_id,
-												'unit' => $activeUnit,
-												'type' => ! empty( $_REQUEST['type'] ) ? $_REQUEST['type'] : 'all',
-												'student_id' => $student_id,
-												'course_action' => 'upload-file',
-												'src' => 'ajax',
-											),
-											admin_url( 'admin.php' )
-										);
-										$action_url .= '&view_answer#unit-' . $unit_id . '-module-' . $module_id;
-										$page_content .= '<form method="post" action="' . $action_url . '" enctype="multipart/form-data" class="has-disabled">';
-										$page_content .= sprintf( '<label class="cp-assess-label">%s</label>', __( 'Upload File', 'CP_TD' ) );
-										$page_content .= '<input type="file" name="module-' . $module_id .'" class="input-key" />';
-										$page_content .= '<input type="hidden" name="module_id" value="' . $module_id . '" />';
-										$page_content .= '<input type="hidden" name="course_id" value="' . $course_id . '" />';
-										$page_content .= '<input type="hidden" name="student_id" value="' . $student_id . '" />';
-										$page_content .= '<input type="hidden" name="unit_id" value="' . $unit_id . '" />';
-										$page_content .= '<input type="submit" class="button-primary disabled" value="' . __( 'Submit', 'CP_TD' ) . '" />';
-										$page_content .= '</form>';
-									}
+							if ( 'input-upload' === $module_type ) {
+								$action_url = add_query_arg(
+									array(
+										'page' => 'coursepress_assessments',
+										'course_id' => $course_id,
+										'unit' => $activeUnit,
+										'type' => ! empty( $_REQUEST['type'] ) ? $_REQUEST['type'] : 'all',
+										'student_id' => $student_id,
+										'course_action' => 'upload-file',
+										'src' => 'ajax',
+									),
+									admin_url( 'admin.php' )
+								);
+								$action_url .= '&view_answer#unit-' . $unit_id . '-module-' . $module_id;
+								$page_content .= '<form method="post" action="' . $action_url . '" enctype="multipart/form-data" class="has-disabled">';
+								$page_content .= sprintf( '<label class="cp-assess-label">%s</label>', __( 'Upload File', 'cp' ) );
+								$page_content .= '<input type="file" name="module-' . $module_id .'" class="input-key" />';
+								$page_content .= '<input type="hidden" name="module_id" value="' . $module_id . '" />';
+								$page_content .= '<input type="hidden" name="course_id" value="' . $course_id . '" />';
+								$page_content .= '<input type="hidden" name="student_id" value="' . $student_id . '" />';
+								$page_content .= '<input type="hidden" name="unit_id" value="' . $unit_id . '" />';
+								$page_content .= '<input type="submit" class="button-primary disabled" value="' . __( 'Submit', 'cp' ) . '" />';
+								$page_content .= '</form>';
+							}
 
-									$page_content .= '</div>';
-								} else {
-									$page_content .= '<div class="cp-right cp-assessment-div">
+							$page_content .= '</div>';
+						} else {
+							$page_content .= '<div class="cp-right cp-assessment-div">
 											<div>
 												<div class="cp-module-grade-info">
-													<label class="cp-assess-label">' . __( 'Module Grade: ', 'CP_TD' ) . '</label>
+													<label class="cp-assess-label">' . __( 'Module Grade: ', 'cp' ) . '</label>
 													<span class="cp-current-grade">'. $grade . '%</span>
-													<span class="cp-check ' . $pass_class . '">' . ( 'green' === trim( $pass_class ) ? __( 'Pass', 'CP_TD' ) : __( 'Fail', 'CP_TD' ) ) . '</span>
+													<span class="cp-check ' . $pass_class . '">' . ( 'green' === trim( $pass_class ) ? __( 'Pass', 'cp' ) : __( 'Fail', 'cp' ) ) . '</span>
 												</div>
 											</div>
 										</div>
 									';
-								}
-							}
+						}
+					}
 
-							$page_content .= sprintf( '<h4>%s</h4>', $module->post_title );
+					$page_content .= sprintf( '<h4>%s</h4>', $module->post_title );
 
-							if ( false === $no_anwer ) {
+					if ( false === $no_anwer ) {
 
-								$page_content .= '<div class="cp-response">';
+						$page_content .= '<div class="cp-response">';
 
-									switch ( $module_type ) {
-										case 'input-checkbox': case 'input-select': case 'input-radio':
-											$answers = $attributes['answers'];
-											$selected = (array) $attributes['answers_selected'];
+						switch ( $module_type ) {
+							case 'input-checkbox': case 'input-select': case 'input-radio':
+										$answers = $attributes['answers'];
+										$selected = (array) $attributes['answers_selected'];
 
-											$page_content .= '<ul class="cp-answers">';
+										$page_content .= '<ul class="cp-answers">';
 
-											foreach ( $answers as $key => $answer ) {
-												$the_answer = in_array( $key, $selected );
-												$student_answer = is_array( $response ) ? in_array( $key, $response ) : $response == $key;
-	
-												if ( 'input-radio' === $module_type ) {
-													$student_answer = $response == $key;
+										foreach ( $answers as $key => $answer ) {
+											$the_answer = in_array( $key, $selected );
+											$student_answer = is_array( $response ) ? in_array( $key, $response ) : $response == $key;
+
+											if ( 'input-radio' === $module_type ) {
+												$student_answer = $response == $key;
+											}
+
+											if ( $student_answer ) {
+												if ( $the_answer ) {
+													$answer = '<span class="chosen-answer correct"></span>' . $answer;
+												} else {
+													$answer = '<span class="chosen-answer incorrect"></span>' . $answer;
 												}
-
-												if ( $student_answer ) {
-													if ( $the_answer ) {
-														$answer = '<span class="chosen-answer correct"></span>' . $answer;
-													} else {
-														$answer = '<span class="chosen-answer incorrect"></span>' . $answer;
-													}
-													$page_content .= sprintf( '<li>%s</li>', $answer );
-												}
-
+												$page_content .= sprintf( '<li>%s</li>', $answer );
 											}
-											$page_content .= '</ul>';
-	
-											break;
+										}
+										$page_content .= '</ul>';
 
-										case 'input-textarea': case 'input-text':
-											if ( ! empty( $response ) ) {
-												$page_content .= sprintf( '<div class="cp-answer-box">%s</div>', $response );
-											}
-											break;
-										case 'input-upload':
-											if ( ! empty( $response['url'] ) ) {
-												$url = $response['url'];
-												$filename = basename( $url );
-												$url = CoursePress_Helper_Utility::encode( $url );
-												$url = trailingslashit( home_url() ) . '?fdcpf=' . $url;
+										break;
 
-												$page_content .= sprintf( '<a href="%s" class="button-primary cp-download">%s</a>', esc_url( $url ), $filename );
-											}
-											break;
-										case 'input-quiz':
-											if ( ! empty( $attributes['questions'] ) ) {
-												$questions = $attributes['questions'];
-
-												foreach ( $questions as $q_index => $question ) {
-													$options = (array) $question['options'];
-													$checked = (array) $options['checked'];
-													$checked = array_filter( $checked );
-													$student_response = $response[$q_index];
-
-													$page_content .= '<div class="cp-q"><hr />
-														<p class="description cp-question">' . esc_html( $question['question']  ) . '</p>
-														<ul>';
-
-															foreach ( $options['answers'] as $p_index => $answer ) {
-																$the_answer = isset( $checked[$p_index] ) ? $checked[$p_index] : false;
-																$student_answer = '';
-
-																if ( isset( $student_response[$p_index] ) && $student_response[$p_index] ) {
-																	$student_answer = $student_response[$p_index];
-
-																	if ( $the_answer ) {
-																		$student_answer = '<span class="chosen-answer correct"></span>';
-																	} else {
-																		$student_answer = '<span class="chosen-answer incorrect"></span>';
-																	}
-																	$page_content .= '<li>' . $student_answer . esc_html( $answer ) . '</li>';
-																}
-
-															}
-
-													$page_content .= '</ul></div>';
-
-												}
-											}
-											break;
-										case 'input-form':
-											if ( ! empty( $attributes['questions'] ) ) {
-												$questions = $attributes['questions'];
-
-												foreach ( $questions as $q_index => $question ) {
-													$student_response = $response[$q_index];
-
-													$page_content .= '<div class="cp-q"><hr />
-														<p class="description cp-question">' . esc_html( $question['question']  ) . '</p>
-														<ul>';
-															foreach ( $response[$q_index] as $p_index => $answer ) {
-																	$page_content .= '<li>' . esc_html( $answer ) . '</li>';
-																}
-													$page_content .= '</ul></div>';
-
-												}
-											}
-											break;
-											
+							case 'input-textarea': case 'input-text':
+									if ( ! empty( $response ) ) {
+										$page_content .= sprintf( '<div class="cp-answer-box">%s</div>', $response );
 									}
+									break;
+							case 'input-upload':
+								if ( ! empty( $response['url'] ) ) {
+									$url = $response['url'];
+									$filename = basename( $url );
+									$url = CoursePress_Helper_Utility::encode( $url );
+									$url = trailingslashit( home_url() ) . '?fdcpf=' . $url;
+
+									$page_content .= sprintf( '<a href="%s" class="button-primary cp-download">%s</a>', esc_url( $url ), $filename );
+								}
+								break;
+							case 'input-quiz':
+								if ( ! empty( $attributes['questions'] ) ) {
+									$questions = $attributes['questions'];
+
+									foreach ( $questions as $q_index => $question ) {
+										$options = (array) $question['options'];
+										$checked = (array) $options['checked'];
+										$checked = array_filter( $checked );
+										$student_response = $response[ $q_index ];
+
+										$page_content .= '<div class="cp-q"><hr />
+														<p class="description cp-question">' . esc_html( $question['question'] ) . '</p>
+														<ul>';
+
+										foreach ( $options['answers'] as $p_index => $answer ) {
+											$the_answer = isset( $checked[ $p_index ] ) ? $checked[ $p_index ] : false;
+											$student_answer = '';
+
+											if ( isset( $student_response[ $p_index ] ) && $student_response[ $p_index ] ) {
+												$student_answer = $student_response[ $p_index ];
+
+												if ( $the_answer ) {
+													$student_answer = '<span class="chosen-answer correct"></span>';
+												} else {
+													$student_answer = '<span class="chosen-answer incorrect"></span>';
+												}
+													$page_content .= '<li>' . $student_answer . esc_html( $answer ) . '</li>';
+											}
+										}
+
+													$page_content .= '</ul></div>';
+
+									}
+								}
+									break;
+							case 'input-form':
+								if ( ! empty( $attributes['questions'] ) ) {
+									$questions = $attributes['questions'];
+
+									foreach ( $questions as $q_index => $question ) {
+										$student_response = $response[ $q_index ];
+
+										$page_content .= '<div class="cp-q"><hr />
+														<p class="description cp-question">' . esc_html( $question['question'] ) . '</p>
+														<ul>';
+										foreach ( $response[ $q_index ] as $p_index => $answer ) {
+												$page_content .= '<li>' . esc_html( $answer ) . '</li>';
+										}
+												$page_content .= '</ul></div>';
+
+									}
+								}
+									break;
+
+						}
 
 								$page_content .= '</div>';
-							}
+					}
 
-							if ( 0 === count( $response ) ) {
-								$page_content .= sprintf( '<div class="cp-answer-box"><span class="dashicons dashicons-no"></span> %s</div>', __( 'No answer!', 'CP_TD' ) );
-							} else {
-								if ( false === $no_anwer && ( $is_assessable || $require_instructor_assessment ) && in_array( $module_type, $allowed_for_feedback ) ) {
+					if ( 0 === count( $response ) ) {
+						$page_content .= sprintf( '<div class="cp-answer-box"><span class="dashicons dashicons-no"></span> %s</div>', __( 'No answer!', 'cp' ) );
+					} else {
+						if ( false === $no_anwer && ( $is_assessable || $require_instructor_assessment ) && in_array( $module_type, $allowed_for_feedback ) ) {
 
-									$is_draft = $has_feedback && ! empty( $feedback['draft'] );
+							$is_draft = $has_feedback && ! empty( $feedback['draft'] );
 
-									$page_content .= '<div class="cp-instructor-feedback" style="display: '. ( ! empty( $feedback ) ? 'block' : 'none' ) . '">
-										<h4>' . __( 'Instructor Feedback', 'CP_TD' ) . ' <span class="cp-draft-icon" style="display: '. ( $is_draft ? 'inline-block' : 'none' ) . ';">['. __( 'Draft', 'CP_TD' ) . ']</span></h4>
+							$page_content .= '<div class="cp-instructor-feedback" style="display: '. ( ! empty( $feedback ) ? 'block' : 'none' ) . '">
+										<h4>' . __( 'Instructor Feedback', 'cp' ) . ' <span class="cp-draft-icon" style="display: '. ( $is_draft ? 'inline-block' : 'none' ) . ';">['. __( 'Draft', 'cp' ) . ']</span></h4>
 									';
-									$page_content .= sprintf( '<div class="cp-feedback-details%s">%s</div><cite>%s</cite>', empty( $feedback_text ) ? ' empty' : '', $feedback_text, $feedback_by );
-									$page_content .= sprintf( '<p class="description" %s>%s</p>', empty( $feedback_text ) ? '' : $hide, __( 'Write your feedback!', 'CP_TD' ) );
-									$page_content .= '</div>';
-								}
-
-							}
-
+							$page_content .= sprintf( '<div class="cp-feedback-details%s">%s</div><cite>%s</cite>', empty( $feedback_text ) ? ' empty' : '', $feedback_text, $feedback_by );
+							$page_content .= sprintf( '<p class="description" %s>%s</p>', empty( $feedback_text ) ? '' : $hide, __( 'Write your feedback!', 'cp' ) );
 							$page_content .= '</div>';
 						}
+					}
 
-						if ( $found_module > 0 ) {
-							$unit_content .= $page_title . $inner_page . $page_content . '</div>';
-						}
+						$page_content .= '</div>';
 				}
 
-				if ( '' != $unit_content ) {
-					$content .= $unit_wrapper . $unit_title;
-					$content .= sprintf( '<div class="cp-modules">%s</div>', $unit_content );
-					$content .= '</div>';
+				if ( $found_module > 0 ) {
+					$unit_content .= $page_title . $inner_page . $page_content . '</div>';
 				}
+			}
 
-				if ( $unit_module_found > 0 ) {
-					$hidden_fields[$unit_id] = sprintf( '<input type="hidden" class="cp-total-unit-modules" data-unit="%s" value="%s" />', $unit_id, $unit_module_found );
-				}
+			if ( '' != $unit_content ) {
+				$content .= $unit_wrapper . $unit_title;
+				$content .= sprintf( '<div class="cp-modules">%s</div>', $unit_content );
+				$content .= '</div>';
+			}
+
+			if ( $unit_module_found > 0 ) {
+				$hidden_fields[ $unit_id ] = sprintf( '<input type="hidden" class="cp-total-unit-modules" data-unit="%s" value="%s" />', $unit_id, $unit_module_found );
+			}
 		}
 
 		if ( empty( $content ) ) {
-			$content .= sprintf( '<p class="div-info description">%s</p>', __( 'There are no assessable items!', 'CP_TD' ) );
+			$content .= sprintf( '<p class="div-info description">%s</p>', __( 'There are no assessable items!', 'cp' ) );
 		}
 
 		$content .= implode( ' ', $hidden_fields );

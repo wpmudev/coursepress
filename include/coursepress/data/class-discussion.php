@@ -11,18 +11,18 @@ class CoursePress_Data_Discussion {
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
 				'labels' => array(
-					'name' => __( 'Forums', 'CP_TD' ),
-					'singular_name' => __( 'Forum', 'CP_TD' ),
-					'add_new' => __( 'Create New', 'CP_TD' ),
-					'add_new_item' => __( 'Create New Thread', 'CP_TD' ),
-					'edit_item' => __( 'Edit Thread', 'CP_TD' ),
-					'edit' => __( 'Edit', 'CP_TD' ),
-					'new_item' => __( 'New Thread', 'CP_TD' ),
-					'view_item' => __( 'View Thread', 'CP_TD' ),
-					'search_items' => __( 'Search Threads', 'CP_TD' ),
-					'not_found' => __( 'No Threads Found', 'CP_TD' ),
-					'not_found_in_trash' => __( 'No Threads found in Trash', 'CP_TD' ),
-					'view' => __( 'View Thread', 'CP_TD' ),
+					'name' => __( 'Forums', 'cp' ),
+					'singular_name' => __( 'Forum', 'cp' ),
+					'add_new' => __( 'Create New', 'cp' ),
+					'add_new_item' => __( 'Create New Thread', 'cp' ),
+					'edit_item' => __( 'Edit Thread', 'cp' ),
+					'edit' => __( 'Edit', 'cp' ),
+					'new_item' => __( 'New Thread', 'cp' ),
+					'view_item' => __( 'View Thread', 'cp' ),
+					'search_items' => __( 'Search Threads', 'cp' ),
+					'not_found' => __( 'No Threads Found', 'cp' ),
+					'not_found_in_trash' => __( 'No Threads found in Trash', 'cp' ),
+					'view' => __( 'View Thread', 'cp' ),
 				),
 				'public' => false,
 				'show_ui' => true,
@@ -51,11 +51,11 @@ class CoursePress_Data_Discussion {
 		}
 
 		$course_id = (int) get_post_meta( $n_id, 'course_id', true );
-		$course_title = ! empty( $course_id ) ? get_the_title( $course_id ) : __( 'All courses', 'CP_TD' );
+		$course_title = ! empty( $course_id ) ? get_the_title( $course_id ) : __( 'All courses', 'cp' );
 		$course_id = ! empty( $course_id ) ? $course_id : 'all';
 
 		$unit_id = (int) get_post_meta( $n_id, 'unit_id', true );
-		$unit_title = ! empty( $unit_id ) ? get_the_title( $unit_id ) : __( 'All units', 'CP_TD' );
+		$unit_title = ! empty( $unit_id ) ? get_the_title( $unit_id ) : __( 'All units', 'cp' );
 		$unit_id = ! empty( $unit_id ) ? $unit_id : 'course';
 		$unit_id = 'all' === $course_id ? 'course' : $unit_id;
 
@@ -360,8 +360,8 @@ class CoursePress_Data_Discussion {
 					delete_user_meta( $user_id, 'cp_subscribe_to_' . $post_id );
 
 					// Hooked to the content to show unsubscribe message.
-					$message = sprintf( '<h3 class="cp-unsubscribe-title">%s</h3>', __( 'Unsubscribe Successful', 'CP_TD' ) );
-					$message .= '<p>' . sprintf( __( 'You have been removed from "%s" discussion.', 'CP_TD' ), get_the_title( $post_id ) ) . '</p>';
+					$message = sprintf( '<h3 class="cp-unsubscribe-title">%s</h3>', __( 'Unsubscribe Successful', 'cp' ) );
+					$message .= '<p>' . sprintf( __( 'You have been removed from "%s" discussion.', 'cp' ), get_the_title( $post_id ) ) . '</p>';
 
 					/**
 					 * Filter the unsubscribe message before printing.
@@ -474,7 +474,48 @@ class CoursePress_Data_Discussion {
 		}
 
 		// Update course progress
-		CoursePress_Data_Student::get_calculated_completion_data( $user_id, $course_id );
+		$student_data = CoursePress_Data_Student::get_calculated_completion_data( $user_id, $course_id );
+		if ( ! isset( $student_data['units'] ) && ! isset( $student_data['units'][ $data->comment_post_ID ] ) ) {
+			CoursePress_Helper_Utility::set_array_val( $student_data, 'units/' . $data->comment_post_ID, array() );
+			$student_data = CoursePress_Data_Student::get_calculated_completion_data( $user_id, $course_id, $student_data );
+		}
+
+		$module = get_post( $data->comment_post_ID );
+		$unit_id = $module->post_parent;
+		$page = CoursePress_Data_Shortcode_Template::get_module_page( $course_id, $unit_id, $module->ID );
+
+		// Generate next nav
+		$next = CoursePress_Data_Course::get_next_accessible_module(
+			$course_id,
+			$unit_id,
+			$page,
+			$data->comment_post_ID
+		);
+		$next_module_class = array( 'focus-nav-next' );
+		$labels = array(
+			'pre_text' => __( '&laquo; Previous', 'cp' ),
+			'next_text' => __( 'Next &raquo;', 'cp' ),
+			'next_section_title' => __( 'Proceed to the next section', 'cp' ),
+			'next_module_title' => __( 'Proceed to the next module', 'cp' ),
+			'next_section_text' => __( 'Next Section', 'cp' ),
+		);
+		extract( $labels );
+
+		if ( 'section' == $next['type'] ) {
+			$next_module_class[] = 'next-section';
+			$title = '';
+			$text = $next_section_text;
+		} else {
+			$title = $next_module_title;
+			$text = $next_text;
+		}
+
+		$json_data['data']['next_nav'] = CoursePress_Data_Shortcode_Template::show_nav_button(
+			$next,
+			$text,
+			$next_module_class,
+			$title
+		);
 
 		/**
 		 * notify users

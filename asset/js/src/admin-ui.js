@@ -29,6 +29,32 @@
 		submit_button[ 0 == found ? 'addClass' : 'removeClass' ]('disabled');
 	};
 
+	// Toggle the state of a form element if require another element
+	var enableInput = function() {
+		var input = $(this),
+			form = input.parents( 'form' ).first(),
+			childInput = $( 'input[data-required-imput="'+ input.attr("name") +'"]', form ),
+			found = 0
+		;
+
+		if( childInput.length == 0 )
+			return;
+
+		var input_type = input.attr( 'type' );
+
+		if ( ( 'checkbox' == input_type || 'radio' == input_type ) ) {
+			if ( input.is( ':checked' ) ) {
+				found += 1;
+			}
+		} else {
+			if ( '' != input.val().trim() ) {
+				found += 1;
+			}
+		}
+
+		childInput.attr( 'disabled' , 0 == found );
+	};
+
 	// Prevent a form from submitting if submit button is disabled
 	var formSubmission = function(e) {
 		var form = $(this),
@@ -76,6 +102,8 @@
 			$( 'select.dropdown' ).select2();
 		})
 		.on( 'change', '.input-key', canSubmit )
+		.on( 'change', '.input-requiredby', enableInput )
 		.on( 'submit', '.has-disabled', formSubmission );
+
 
 }(jQuery);

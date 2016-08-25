@@ -179,7 +179,7 @@ class CoursePress_Data_Instructor {
 				$can_update = CoursePress_Data_Capabilities::can_update_course( $post->ID );
 
 				if ( false === $can_update ) {
-					unset( $posts[$index] );
+					unset( $posts[ $index ] );
 				}
 			}
 		}
@@ -374,7 +374,7 @@ class CoursePress_Data_Instructor {
 					array( 'CoursePress_Data_Instructor', 'filter_course_meta_array' ),
 					$meta_keys
 				);
-				$course_ids = array_filter( $course_ids ); 
+				$course_ids = array_filter( $course_ids );
 				$count = count( $course_ids );
 
 				// Save counted courses.
@@ -418,7 +418,10 @@ class CoursePress_Data_Instructor {
 		delete_user_option( $instructor_id, 'course_' . $course_id, $global_option );
 
 		// Other associated actions
-		self::unassign_from_course( $instructor_id, $course_id );
+		// Unroll user from course only if he is not a student
+		if ( ! CoursePress_Data_Student::is_enrolled_in_course( $instructor_id, $course_id ) ) {
+			self::unassign_from_course( $instructor_id, $course_id );
+		}
 
 		$instructor = get_userdata( $instructor_id );
 		$assigned_courses_ids = self::get_assigned_courses_ids( $instructor );
@@ -470,7 +473,7 @@ class CoursePress_Data_Instructor {
 		$email_args['first_name'] = $first_name;
 		$email_args['last_name'] = $last_name;
 
-		$invite_data = self::_create_invite_code_hash( $email_args );
+		$invite_data = self::create_invite_code_hash( $email_args );
 		$email_args['invite_code'] = $invite_data['code'];
 		$email_args['invite_hash'] = $invite_data['hash'];
 
@@ -528,7 +531,7 @@ class CoursePress_Data_Instructor {
 				CoursePress_Helper_Utility::set_array_val(
 					$return_data,
 					'message/sent',
-					__( 'Invitation successfully sent.', 'CP_TD' )
+					__( 'Invitation successfully sent.', 'cp' )
 				);
 
 			} else {
@@ -538,7 +541,7 @@ class CoursePress_Data_Instructor {
 				CoursePress_Helper_Utility::set_array_val(
 					$return_data,
 					'message/exists',
-					__( 'Invitation already exists. Invitation was re-sent.', 'CP_TD' )
+					__( 'Invitation already exists. Invitation was re-sent.', 'cp' )
 				);
 			}
 		} else {
@@ -547,14 +550,14 @@ class CoursePress_Data_Instructor {
 			CoursePress_Helper_Utility::set_array_val(
 				$return_data,
 				'message/send_error',
-				__( 'Email failed to send.', 'CP_TD' )
+				__( 'Email failed to send.', 'cp' )
 			);
 		};
 
 		return $return_data;
 	}
 
-	private static function _create_invite_code_hash( $args ) {
+	public static function create_invite_code_hash( $args ) {
 		// Generate invite code.
 		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		$invite_code = '';

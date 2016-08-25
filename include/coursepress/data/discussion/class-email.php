@@ -78,7 +78,7 @@ class CoursePress_Data_Discussion_Email {
 		$post_id = self::_get_post_id( $post );
 		$course_id = CoursePress_Data_Module::get_course_id_by_module( $post_id );
 		$course = get_post( $course_id );
-		$subject = __( 'New Comment: ', 'CP_TD' );
+		$subject = __( 'New Comment: ', 'cp' );
 		$subject .= substr( $course->post_title . ' at ' . $post->post_title , 0, 50 );
 
 		/**
@@ -169,9 +169,12 @@ class CoursePress_Data_Discussion_Email {
 		);
 		$receipients = self::_get_receipients_by_sql( $sql );
 		/**
-		 * get instructors
+		 * get course ID
 		 */
 		$course_id = CoursePress_Data_Module::get_course_id_by_module( $post_id );
+		/**
+		 * get instructors
+		 */
 		$instructors = CoursePress_Data_Course::get_instructors( $course_id, true );
 		if ( ! empty( $instructors ) ) {
 			foreach ( $instructors as $instructor ) {
@@ -179,6 +182,18 @@ class CoursePress_Data_Discussion_Email {
 					continue;
 				}
 				$receipients[ $instructor->ID ] = $instructor->user_email;
+			}
+		}
+		/**
+		 * get facilitators
+		 */
+		$facilitators = CoursePress_Data_Course::get_facilitators( $course_id, true );
+		if ( ! empty( $facilitators ) ) {
+			foreach ( $facilitators as $facilitator ) {
+				if ( $current_user == $facilitator->ID ) {
+					continue;
+				}
+				$receipients[ $facilitator->ID ] = $facilitator->user_email;
 			}
 		}
 		if ( empty( $receipients ) ) {
@@ -264,5 +279,4 @@ class CoursePress_Data_Discussion_Email {
 		wp_cache_set( $comment_id, $users, '_get_comment_ancestors_users', 3600 );
 		return self::_get_comment_ancestors_users( $comment->comment_parent, $users );
 	}
-
 }

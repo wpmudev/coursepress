@@ -14,8 +14,8 @@ class CoursePress_View_Admin_CoursePress {
 	);
 
 	public static function init() {
-		self::$title = __( 'Courses/CoursePress', 'CP_TD' );
-		self::$menu_title = __( 'Courses', 'CP_TD' );
+		self::$title = __( 'Courses/CoursePress', 'cp' );
+		self::$menu_title = __( 'Courses', 'cp' );
 
 		add_filter(
 			'coursepress_admin_valid_pages',
@@ -94,8 +94,8 @@ class CoursePress_View_Admin_CoursePress {
 			$category = CoursePress_Data_Course::get_post_category_name();
 			$cpt = CoursePress_Data_Course::get_post_type_name();
 			$pages['course_categories'] = array(
-				'title' => __( 'Edit Course Categories', 'CP_TD' ),
-				'menu_title' => __( 'Course Categories', 'CP_TD' ),
+				'title' => __( 'Edit Course Categories', 'cp' ),
+				'menu_title' => __( 'Course Categories', 'cp' ),
 				'handle' => 'edit-tags.php?taxonomy=' . $category . '&post_type=' . $cpt,
 				'callback' => 'none',
 				'order' => 15,
@@ -108,34 +108,49 @@ class CoursePress_View_Admin_CoursePress {
 	public static function render_page() {
 		$list_course = new CoursePress_Helper_Table_CourseList();
 		$list_course->prepare_items();
-
 		ob_start();
 		?>
 			<div class="coursepress_settings_wrapper wrap">
-				<h2>
+				<h1>
 					<?php
 					echo esc_html( CoursePress::$name );
 					$create_link = add_query_arg( 'page', CoursePress_View_Admin_Course_Edit::$slug, admin_url( 'admin.php' ) );
-
 					if ( CoursePress_Data_Capabilities::can_create_course() ) :
 					?>
 						<a href="<?php echo esc_url( $create_link ); ?>" class="add-new-h2">
-							<?php esc_html_e( 'New Course', 'CP_TD' ); ?>
+							<?php esc_html_e( 'New Course', 'cp' ); ?>
 						</a>
 					<?php
 					endif;
 					?>
-				</h2>
+				</h1>
 				<div class="nonce-holder" data-nonce="<?php echo wp_create_nonce( 'bulk_action_nonce' ); ?>"></div>
 				<div class="export-nonce-holder" data-nonce="<?php echo wp_create_nonce( 'coursepress_export' ); ?>"></div>
 				<?php $list_course->display(); ?>
 			</div>
+			<script type="text/html" id="tmpl-coursepress-courses-delete-one">
+				<div class="notice notice-warning">
+					<p><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span> <?php _e( 'Deleting course <b>{{{data.names}}}</b>, please wait!', 'cp' ); ?></p>
+					<p><?php _e( 'This page will be reloaded shortly.', 'cp' ); ?></p>
+				</div>
+			</script>
+			<script type="text/html" id="tmpl-coursepress-courses-delete-more">
+				<div class="notice notice-warning">
+					<p><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span><?php _e( 'Deleting {{{data.size}}} courses, please wait!', 'cp' ); ?></p>
+					<p><?php _e( 'This page will be reloaded shortly.', 'cp' ); ?></p>
+					<p><?php _e( 'Deleted courses:', 'cp' ) ?></p>
+					{{{data.names}}}
+				</div>
+			</script>
+			<script type="text/html" id="tmpl-coursepress-courses-duplicate">
+				<div class="notice notice-warning">
+					<p><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span> <?php _e( 'Duplicating course <b>{{{data.names}}}</b>, please wait!', 'cp' ); ?></p>
+					<p><?php _e( 'This page will be reloaded shortly.', 'cp' ); ?></p>
+				</div>
+			</script>
 		<?php
-
 		$content = ob_get_clean();
-
 		echo apply_filters( 'coursepress_admin_page_main', $content );
-
 	}
 
 	public static function init_tiny_mce_listeners( $init_array ) {
@@ -171,7 +186,7 @@ class CoursePress_View_Admin_CoursePress {
 	public static function load() {
 		CoursePress_Helper_UI::admin_per_page_add_options(
 			'courses',
-			__( 'Courses', 'CP_TD' )
+			__( 'Courses', 'cp' )
 		);
 	}
 
@@ -185,5 +200,4 @@ class CoursePress_View_Admin_CoursePress {
 	public static function get_slug() {
 		return self::$slug;
 	}
-
 }

@@ -499,24 +499,31 @@ input.button.button-primary.instructor-assign {
 #course-setup-steps .step-content .instructor-invite {
 	overflow: hidden;
 	margin-top: 2em;
-}
 
-#course-setup-steps .step-content .instructor-invite label {
-	clear: both;
-	display: block;
-	float: left;
-	font-weight: normal;
-	width: 100px;
-	margin: 0;
-}
-
-#course-setup-steps .step-content .instructor-invite input[type="text"],
-#course-setup-steps .step-content .instructor-invite input[type="email"] {
-	clear: right;
-	display: block;
-	float: left;
-	margin-bottom: 10px;
-	max-width: 280px;
+	label {
+		clear: both;
+		display: block;
+		float: left;
+		font-weight: normal;
+		width: 100px;
+		margin: 0;
+	}
+	ul {
+		margin: 0;
+		li {
+			height: 1.3em;
+		}
+	}
+	input[type="text"],
+	input[type="email"],
+	ul
+	{
+		clear: right;
+		display: block;
+		float: left;
+		margin-bottom: 10px;
+		max-width: 280px;
+	}
 }
 
 #course-setup-steps .step-content .instructor-invite .submit-message {
@@ -674,22 +681,7 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 		width: 60px !important;
 		text-align: center;
 	}
-	.duplicating {
-	  position: relative;
-	}
-	.duplicating:after {
-	  content: "";
-	  position: absolute;
-	  left: 0;
-	  bottom: 0;
-	  width: 100%;
-	  background-color: rgba(0, 0, 0, 0.3);
-	  background-image: -webkit-linear-gradient(-45deg,  rgba(255, 255, 255, .2) 25%,  transparent 25%,  transparent 50%,  rgba(255, 255, 255, .2) 50%,  rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
-	  background-image: -moz-linear-gradient(-45deg,  rgba(255, 255, 255, .2) 25%,  transparent 25%,  transparent 50%,  rgba(255, 255, 255, .2) 50%,  rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
-	  background-image: -o-linear-gradient(-45deg,  rgba(255, 255, 255, .2) 25%,  transparent 25%,  transparent 50%,  rgba(255, 255, 255, .2) 50%,  rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
-	  background-image: linear-gradient(-45deg,  rgba(255, 255, 255, .2) 25%,  transparent 25%,  transparent 50%,  rgba(255, 255, 255, .2) 50%,  rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
-	  background-size: 50px 50px;
-	  height: 4px !important;
-	  animation: progress 1s linear infinite;
+	.notice span.fa {
+		font-size: 1em;
 	}
 }

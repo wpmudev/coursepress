@@ -65,3 +65,23 @@
 .coursepress_settings_wrapper + h3 + .wrap h2 {
   display: none;
 }
+
+.cp-content-box {
+	.hndle {
+		&:after {
+			float: right;
+			font-family: dashicons;
+			content: "\f140";
+		}
+	}
+}
+
+.cp-content-box.collapsed {
+	margin-bottom: 1em;
+	.hndle {
+		&:after {
+			content: "\f142";
+		}
+	}
+}
+

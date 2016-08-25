@@ -393,6 +393,11 @@ class CoursePress_Helper_EmailAlert {
 			$course_start_stamp = CoursePress_Data_Course::strtotime( $course_start_date ); // UTC.
 			$course_start_date = date_i18n( 'Y-m-d', $course_start_stamp );
 
+			// Check the date is in timestamp format
+			if ( (int) $start_date > 0 ) {
+				$start_date = date_i18n( 'Y-m-d', $start_date );
+			}
+
 			// Ignore units that start on same date as course.
 			if ( $start_date == $course_start_date ) {
 				continue;

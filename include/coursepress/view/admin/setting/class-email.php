@@ -21,8 +21,8 @@ class CoursePress_View_Admin_Setting_Email {
 
 	public static function add_tabs( $tabs ) {
 		$tabs['email'] = array(
-			'title' => __( 'E-mail Settings', 'CP_TD' ),
-			'description' => __( 'Setup the e-mail templates to be sent to users.', 'CP_TD' ),
+			'title' => __( 'E-mail Settings', 'cp' ),
+			'description' => __( 'Setup the e-mail templates to be sent to users.', 'cp' ),
 			'order' => 10,
 		);
 
@@ -43,38 +43,40 @@ class CoursePress_View_Admin_Setting_Email {
 
 		$default_settings = CoursePress_Helper_Setting_Email::get_defaults();
 
+		$content .= '<div class="cp-content">';
 		foreach ( $email_sections as $key => $section ) {
-			$content .= '<h3>' . esc_html( $section['title'] ) . '</h3>';
+			$content .= '<div class="email-template cp-content-box collapsed">';
+			$content .= '<h3 class="hndle">' . esc_html( $section['title'] ) . '</h3>';
+			$content .= '<div class="inside">';
 			if ( ! empty( $section['description'] ) ) {
 				$content .= '<p class="description">' . esc_html( $section['description'] ) . '</p>';
 			}
 			$content .= '
-				<div class="inside">
 					<table class="form-table compressed email-fields">
 						<tbody id="items">';
 
 			$content .= '
 							<tr>
-								<th>' . esc_html__( 'From Name', 'CP_TD' ) . '</th>
-								<td><input type="text" class="widefat" name="coursepress_settings[email][' . $key . '][from]" value="' . CoursePress_Core::get_setting( 'email/' . $key . '/from', $default_settings[ $key ]['from'] ) . '"/></td>
+								<th>' . esc_html__( 'From Name', 'cp' ) . '</th>
+								<td><input type="text" class="widefat" name="coursepress_settings[email][' . $key . '][from]" value="' . esc_attr( CoursePress_Core::get_setting( 'email/' . $key . '/from', $default_settings[ $key ]['from'] ) ) . '"/></td>
 							</tr>
 			';
 			$content .= '
 							<tr>
-								<th>' . esc_html__( 'From Email', 'CP_TD' ) . '</th>
-								<td><input type="text" class="widefat" name="coursepress_settings[email][' . $key . '][email]" value="' . CoursePress_Core::get_setting( 'email/' . $key . '/email', $default_settings[ $key ]['email'] ) . '"/></td>
+								<th>' . esc_html__( 'From Email', 'cp' ) . '</th>
+								<td><input type="text" class="widefat" name="coursepress_settings[email][' . $key . '][email]" value="' . esc_attr( CoursePress_Core::get_setting( 'email/' . $key . '/email', $default_settings[ $key ]['email'] ) ) . '"/></td>
 							</tr>
 			';
 			$content .= '
 							<tr>
-								<th>' . esc_html__( 'Subject', 'CP_TD' ) . '</th>
-								<td><input type="text" class="widefat" name="coursepress_settings[email][' . $key . '][subject]" value="' . CoursePress_Core::get_setting( 'email/' . $key . '/subject', $default_settings[ $key ]['subject'] ) . '"/></td>
+								<th>' . esc_html__( 'Subject', 'cp' ) . '</th>
+								<td><input type="text" class="widefat" name="coursepress_settings[email][' . $key . '][subject]" value="' . esc_attr( CoursePress_Core::get_setting( 'email/' . $key . '/subject', $default_settings[ $key ]['subject'] ) ) . '"/></td>
 							</tr>
 			';
 			$content .= '
 							<tr>
 								<th>
-								' . esc_html__( 'Email Body', 'CP_TD' ) . '</th>
+								' . esc_html__( 'Email Body', 'cp' ) . '</th>
 								<td>
 								<p class="description">' . esc_html( $section['content_help_text'] ) . '</p>';
 
@@ -89,20 +91,20 @@ class CoursePress_View_Admin_Setting_Email {
 
 			$content .= ob_get_clean();
 
-			$content .= '       <br /></td>
+			$content .= '	   <br /></td>
 							</tr>
 			';
 			$content .= '
 						</tbody>
 					</table>
-				</div>
-			';
+				</div>';
+			$content .= '</div>';
 		}
-
 		/**
 		 * Add this hook for now until layout is fixed.
 		 **/
 		$content .= apply_filters( 'coursepress_email_settings_sections', $email_sections );
+		$content .= '</div>';
 
 		return $content;
 	}
@@ -117,6 +119,7 @@ class CoursePress_View_Admin_Setting_Email {
 		$settings = CoursePress_Core::get_setting( false );
 		$post_settings = (array) $_POST['coursepress_settings'];
 		$post_settings = CoursePress_Helper_Utility::sanitize_recursive( $post_settings );
+		$post_settings = stripslashes_deep( $post_settings );
 
 		// Don't replace settings if there is nothing to replace.
 		if ( ! empty( $post_settings ) ) {

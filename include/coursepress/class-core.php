@@ -22,7 +22,7 @@ class CoursePress_Core {
 
 		// We speak languages!
 		load_plugin_textdomain(
-			'CP_TD', // Text domain.
+			'cp', // Text domain.
 			false, // Deprecated. Set to false.
 			CoursePress::$dir . '/language'
 		);
@@ -92,6 +92,7 @@ class CoursePress_Core {
 			// Now we're in the front.
 			CoursePress_View_Front_General::init();
 			CoursePress_View_Front_Instructor::init();
+			CoursePress_View_Front_Facilitator::init();
 			CoursePress_View_Front_Dashboard::init();
 			CoursePress_View_Front_Settings::init();
 			CoursePress_View_Front_Student::init();

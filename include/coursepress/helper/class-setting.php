@@ -16,6 +16,7 @@ class CoursePress_Helper_Setting {
 		/** This filter is documented in /wp-admin/includes/misc.php */
 		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
 		add_filter( 'screen_settings', array( __CLASS__, 'screen_settings' ), 10, 2 );
+		add_filter( 'the_title', array( 'CoursePress_Data_Course', 'add_numeric_identifier_to_course_name' ), 10, 2 );
 	}
 
 	/**
@@ -192,7 +193,7 @@ class CoursePress_Helper_Setting {
 
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_style' ) );
 		add_filter( 'coursepress_custom_allowed_extensions', array( __CLASS__, 'allow_zip_extension' ) );
-
+		add_action( 'before_delete_post', array( 'CoursePress_Data_Course', 'delete_course_number' ) );
 	}
 
 	public static function admin_plugins_loaded() {
@@ -344,7 +345,7 @@ class CoursePress_Helper_Setting {
 			'columns',
 			array(
 				'default' => '',
-				'label' => _x( 'Columns', 'courses per page (screen options)', 'CP_TD' ),
+				'label' => _x( 'Columns', 'courses per page (screen options)', 'cp' ),
 				'option' => 'coursepress_courses_columns',
 			)
 		);
@@ -352,7 +353,7 @@ class CoursePress_Helper_Setting {
 			'per_page',
 			array(
 				'default' => 20,
-				'label' => _x( 'Number of items per page:', 'courses per page (screen options)', 'CP_TD' ),
+				'label' => _x( 'Number of items per page:', 'courses per page (screen options)', 'cp' ),
 				'option' => 'coursepress_courses_per_page',
 			)
 		);
@@ -369,12 +370,12 @@ class CoursePress_Helper_Setting {
 	 */
 	private static function courses_get_columns( $option = '' ) {
 		$columns = array(
-			'ID' => __( 'ID', 'CP_TD' ),
-			'units' => __( 'Units', 'CP_TD' ),
-			'students' => __( 'Students', 'CP_TD' ),
-			'certificates' => __( 'Certified', 'CP_TD' ),
-			'status' => __( 'Status', 'CP_TD' ),
-			'actions' => __( 'Actions', 'CP_TD' ),
+			'ID' => __( 'ID', 'cp' ),
+			'units' => __( 'Units', 'cp' ),
+			'students' => __( 'Students', 'cp' ),
+			'certificates' => __( 'Certified', 'cp' ),
+			'status' => __( 'Status', 'cp' ),
+			'actions' => __( 'Actions', 'cp' ),
 		);
 		if ( 'keys-only' == $option ) {
 			$columns = array_keys( $columns );
@@ -433,7 +434,7 @@ class CoursePress_Helper_Setting {
 			$columns_names = self::courses_get_columns();
 			$columns = self::courses_get_user_columns();
 			$content .= '<fieldset class="metabox-prefs">';
-			$content .= sprintf( '<legend>%s</legend>', __( 'Columns', 'CP_TD' ) );
+			$content .= sprintf( '<legend>%s</legend>', __( 'Columns', 'cp' ) );
 			$content .= '<div class="metabox-prefs">';
 			foreach ( $columns_names as $key => $name ) {
 				$content .= sprintf(

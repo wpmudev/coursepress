@@ -57,12 +57,18 @@ var CoursePress = CoursePress || {};
 		$( '.bulkactions .button.action' ).on( 'click', function() {
 			var nonce = $('.nonce-holder').attr( 'data-nonce' );
 			var courses = [];
+			var courses_titles = [];
 
 			$.each( $( '[name="bulk-actions[]"]' ), function( index, item ) {
 				if ( $( item ).is( ':checked' ) ) {
 					courses.push( $( item ).val() );
+					courses_titles.push( $('.post_title strong', $(item).closest('tr')).html() );
 				}
 			} );
+
+			if ( 0 === courses.length ) {
+				return false;
+			}
 
 			var action = $( this ).siblings('select' ).val();
 			action = action === '-1' ? '' : action;
@@ -71,6 +77,21 @@ var CoursePress = CoursePress || {};
 
 			if ( 'delete' === action ) {
 				proceed = window.confirm( _coursepress.courselist_bulk_delete );
+				var template;
+				var template_name = 'coursepress-courses-delete-one';
+				var data = {
+					names: "",
+					size: courses.length
+				};
+
+				if ( 1 == courses.length ) {
+					data.names = courses_titles.join();
+				} else {
+					template_name = 'coursepress-courses-delete-more';
+					data.names = "<ul><li>"+courses_titles.join( "</li><li>" )+ "</ul>";
+				}
+				template = wp.template( template_name );
+				$('#wpbody-content h1').after( template( data ) );
 			}
 
 			/**
@@ -122,6 +143,11 @@ var CoursePress = CoursePress || {};
 			;
 
 			if ( window.confirm( _coursepress.courselist_delete_course ) ) {
+				data = {
+					names: $('.post_title strong', parentTR).html()
+				};
+				template = wp.template( 'coursepress-courses-delete-one' );
+				$('#wpbody-content h1').after( template( data ) );
 				CoursePress.Course.set( 'action', 'delete_course' );
 
 				var data = {
@@ -129,17 +155,14 @@ var CoursePress = CoursePress || {};
 					course_id: $( this ).attr('data-id')
 				};
 
-				parentTR.slideUp();
-
 				CoursePress.Course.set( 'data', data );
 				CoursePress.Course.save();
 				CoursePress.Course.off( 'coursepress:delete_course_success' );
 				CoursePress.Course.on( 'coursepress:delete_course_success', function() {
-					parentTR.remove();
+					window.location.reload();
 				});
 				// In case something went wrong while deleting, tell the user.
 				CoursePress.Course.on( 'coursepress:delete_course_error', function() {
-					parentTR.slideUp();
 					alert( _coursepress.server_error );
 				});
 
@@ -147,17 +170,22 @@ var CoursePress = CoursePress || {};
 		});
 
 		$('.duplicate-course-link' ).on( 'click', function( e ) {
+			var data;
 			e.stopImmediatePropagation();
 			e.preventDefault();
 
-			var link = $(this),
-				parentTR = link.parents( 'tr' ).first()
-			;
+			var link = $(this);
+			var parentTR = link.parents( 'tr' ).first();
 
 			if ( window.confirm( _coursepress.courselist_duplicate_course ) ) {
+				data = {
+					names: $('.post_title strong', parentTR).html()
+				};
+				template = wp.template( 'coursepress-courses-duplicate' );
+				$('#wpbody-content h1').after( template( data ) );
 				CoursePress.Course.set( 'action', 'duplicate_course' );
 
-				var data = {
+				data = {
 					nonce: $( this ).attr('data-nonce'),
 					course_id: $( this ).attr('data-id')
 				};

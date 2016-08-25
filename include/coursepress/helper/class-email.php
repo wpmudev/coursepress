@@ -40,6 +40,12 @@ class CoursePress_Helper_Email {
 
 	/**
 	 * Email type.
+	 * Used by CoursePress_Data_Facilitator::send_invitation().
+	 */
+	const FACILITATOR_INVITATION = 'facilitator_invitation';
+
+	/**
+	 * Email type.
 	 * (not used anywhere yet)
 	 */
 	const NEW_ORDER = 'new_order';
@@ -156,6 +162,13 @@ class CoursePress_Helper_Email {
 					);
 					break;
 
+				case self::FACILITATOR_INVITATION:
+					$args['message'] = self::facilitator_invitation_message(
+						$args,
+						$email_settings['content']
+					);
+					break;
+
 				case self::NEW_ORDER:
 					// (not used anywhere yet)
 					$args['message'] = self::new_order_message(
@@ -259,7 +272,7 @@ class CoursePress_Helper_Email {
 			'attachments' => apply_filters(
 				'coursepress_email_attachments',
 				isset( $args['attachments'] ) ? $args['attachments'] : array()
-			)
+			),
 		);
 
 		$email = apply_filters(
@@ -644,6 +657,70 @@ class CoursePress_Helper_Email {
 		 * @param array $course_id
 		 **/
 		$vars = apply_filters( 'coursepress_fields_' . self::INSTRUCTOR_INVITATION, $vars, $course_id );
+		$message = CoursePress_Helper_Utility::replace_vars( $content, $vars );
+
+		/**
+		 * Filter the message before sending.
+		 *
+		 * @since 2.0
+		 *
+		 * @param string $message The message to send.
+		 * @param int    $course_id The course_id the message is associated to.
+		 **/
+		$message = apply_filters( 'coursepress_course_invitation_message', $message, $course_id );
+
+		return $message;
+	}
+
+	/**
+	 * Email body for facilitator Invitation Emails.
+	 * Triggered by CoursePress_Data_facilitator::send_invitation()
+	 *
+	 * @since  2.0.0
+	 * @param  array $args Email params.
+	 * @param  string $content Default email content, with placeholders.
+	 * @return string Finished email content.
+	 */
+	protected static function facilitator_invitation_message( $args, $content ) {
+		$course_id = (int) $args['course_id'];
+		$post = get_post( $course_id );
+		$course_name = $post->post_title;
+		$course_summary = $post->post_excerpt;
+		$valid_stati = array( 'draft', 'pending', 'auto-draft' );
+
+		if ( in_array( $post->post_status, $valid_stati ) ) {
+			$course_address = CoursePress_Core::get_slug( 'course/', true ) . $post->post_name . '/';
+		} else {
+			$course_address = get_permalink( $course_id );
+		}
+
+		$confirm_link = sprintf(
+			'%s?action=course_invite_facilitator&course_id=%s&c=%s&h=%s',
+			$course_address,
+			$course_id,
+			$args['invite_code'],
+			$args['invite_hash']
+		);
+
+		// Email Content.
+		$vars = array(
+			'INSTRUCTOR_FIRST_NAME' => sanitize_text_field( $args['first_name'] ),
+			'INSTRUCTOR_LAST_NAME' => sanitize_text_field( $args['last_name'] ),
+			'INSTRUCTOR_EMAIL' => sanitize_email( $args['email'] ),
+			'CONFIRMATION_LINK' => esc_url( $confirm_link ),
+			'COURSE_NAME' => $course_name,
+			'COURSE_EXCERPT' => $course_summary,
+			'COURSE_ADDRESS' => esc_url( $course_address ),
+			'WEBSITE_ADDRESS' => home_url(),
+			'WEBSITE_NAME' => get_bloginfo( 'name' ),
+		);
+		/**
+		 * Filter the variables before applying changes.
+		 *
+		 * @param array $vars
+		 * @param array $course_id
+		 **/
+		$vars = apply_filters( 'coursepress_fields_' . self::FACILITATOR_INVITATION, $vars, $course_id );
 		$message = CoursePress_Helper_Utility::replace_vars( $content, $vars );
 
 		/**

@@ -322,7 +322,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		// Tree for course structure
 		$( 'table.course-structure-tree' ).treegrid( { initialState: 'expanded' } );
 
-		// ===== DATE PICKERS =====
+		// ----- DATE PICKERS -----
 		$( '.dateinput' ).datepicker( {
 			dateFormat: 'yy-mm-dd'
 			//firstDay: coursepress.start_of_week
@@ -357,7 +357,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 				$( this ).parents( '.course-dates' ).find( '.end-date input' ).removeAttr( 'disabled' );
 			}
 		} );
-		// ===== END DATE PICKERS =====
+		// ----- END DATE PICKERS -----
 
 		// Spinners
 		$( '.spinners' ).spinner();
@@ -379,7 +379,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			}
 		} );
 
-		// ====== COURSEPRESS UI TOGGLES =====
+		// ------ COURSEPRESS UI TOGGLES -----
 		$( '.coursepress-ui-toggle-switch' ).coursepress_ui_toggle();
 	}
 
@@ -666,6 +666,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			var email = $( '[name=invite_instructor_email]' ).val();
 			var first_name = $( '[name=invite_instructor_first_name]' ).val();
 			var last_name = $( '[name=invite_instructor_last_name]' ).val();
+			var type = $( '[name=invite_instructor_type]:checked' ).val();
 			var email_valid = email.match( _coursepress.email_validation_pattern ) !== null;
 
 			if ( email_valid ) {
@@ -673,6 +674,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 				var data = {
 					first_name: first_name,
 					last_name: last_name,
+					who: type,
 					email: email,
 					course_id: _coursepress.course_id,
 					nonce: get_setup_nonce()
@@ -992,8 +994,13 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 					CoursePress.Course.save();
 				}
 			} else {
-				var invite_code = $( $( target ).parents( '.instructor-avatar-holder' )[ 0 ] ).attr( 'id' ).replace( 'instructor_holder_', '' );
-
+				var who = 'instructor';
+				var invite_code =  $( target ).parents( '.instructor-avatar-holder' );
+				if ( invite_code.length < 1 ) {
+					invite_code =  $( target ).parents( '.facilitator-avatar-holder' );
+					who = 'facilitator';
+				}
+				invite_code = $( invite_code[ 0 ] ).attr( 'id' ).replace( who + '_holder_', '' );
 				// Confirm before deleting
 				if ( window.confirm( _coursepress.instructor_delete_invite_confirm ) ) {
 
@@ -1002,6 +1009,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 
 					CoursePress.Course.set( 'action', 'delete_instructor_invite' );
 					data = {
+						who: who,
 						invite_code: invite_code,
 						course_id: _coursepress.course_id,
 						nonce: get_setup_nonce()
@@ -1135,20 +1143,28 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			var remove_buttons = true; // permission required
 			var content = '';
 			var message = '';
+			var who = 'instructor';
+			var parent = '';
+
+			if ( "undefined" != typeof( data.data.who ) ) {
+				who = data.data.who;
+			}
+
+			parent = $(who + '-info' );
 
 			if ( remove_buttons ) {
-				content += '<div class="instructor-avatar-holder pending-invite" id="instructor_holder_' + invite_code + '"><div class="instructor-status">' + _coursepress.instructor_pednding_status + '</div><div class="invite-remove"><a><span class="dashicons dashicons-dismiss"></span></a></div>' + img + '<span class="instructor-name">' + data.data.first_name + ' ' + data.data.last_name + '</span></div>';
+				content += '<div class="' + who + '-avatar-holder pending-invite" id="' + who + '_holder_' + invite_code + '"><div class="' + who + '-status">' + _coursepress.instructor_pednding_status + '</div><div class="invite-remove"><a><span class="dashicons dashicons-dismiss"></span></a></div>' + img + '<span class="' + who + '-name">' + data.data.first_name + ' ' + data.data.last_name + '</span></div>';
 			} else {
-				content += '<div class="instructor-avatar-holder pending-invite" id="instructor_holder_' + invite_code + '"><div class="instructor-status">' + _coursepress.instructor_pednding_status + '</div>' + img + '<span class="instructor-name">' + data.data.first_name + ' ' + data.data.last_name + '</span></div>';
+				content += '<div class="' + who + '-avatar-holder pending-invite" id="' + who + '_holder_' + invite_code + '"><div class="' + who + '-status">' + _coursepress.instructor_pednding_status + '</div>' + img + '<span class="' + who + '-name">' + data.data.first_name + ' ' + data.data.last_name + '</span></div>';
 			}
 
-			if ( $( '.instructor-avatar-holder.empty' ).length > 0 ) {
-				$( '.instructor-avatar-holder.empty' ).detach();
+			if ( $( '.instructor-avatar-holder.empty', parent ).length > 0 ) {
+				$( '.instructor-avatar-holder.empty', parent ).detach();
 			}
 
-			if ( $( '#instructor_holder_' + invite_code ).length === 0 ) {
-				$( '#instructors-info' ).append( content );
-				bind_remove_button( '#instructor_holder_' + invite_code + ' .invite-remove a', true );
+			if ( $( '#' + who + '_holder_' + invite_code ).length === 0 ) {
+				$( '#' + who + 's-info' ).append( content );
+				bind_remove_button( '#' + who + '_holder_' + invite_code + ' .invite-remove a', true );
 
 				message = ' <span class="message"><span class="dashicons dashicons-yes"></span> ' + data.message[ 'sent' ] + '</span>';
 
@@ -1172,7 +1188,11 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		} );
 
 		CoursePress.Course.on( 'coursepress:delete_instructor_invite_success', function( data ) {
-			$( '#instructor_holder_' + data.invite_code ).detach();
+			var who = 'instructor';
+			if ( "undefined" != typeof( data.who ) ) {
+				who = data.who;
+			}
+			$( '#' + who + '_holder_' + data.invite_code ).detach();
 			update_nonce( data );
 		} );
 		// Add facilitator

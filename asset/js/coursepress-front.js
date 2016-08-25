@@ -551,9 +551,6 @@ var CoursePress = CoursePress || {};
 				course_id = $(temp).attr('data-course');
 			}
 
-			// DEBUG code. remove it.
-			window.console.log('-------=======------=======------========--------');
-
 			CoursePress.Post.prepare( 'course_enrollment', 'enrollment:' );
 			CoursePress.Post.set( 'action', 'enroll_student' );
 
@@ -940,10 +937,7 @@ var CoursePress = CoursePress || {};
 			model.off( 'coursepress:comment_add_new_success' );
 			model.on( 'coursepress:comment_add_new_success', function( data ) {
 				var focus_nav_next = $( '.focus-nav-next.module-is-not-done' );
-				if ( focus_nav_next.length > 0 ) {
-					// Reload the module
-					CoursePress.FocusMode.init_focus_mode();
-				} else {
+
 					/**
 					 * Single-comment answer.
 					 */
@@ -988,8 +982,15 @@ var CoursePress = CoursePress || {};
 						$('#comments .comments-list-container').html( data.data.html );
 					}
 					bind_buttons();
-				}
+
 				$('.mask', form ).detach();
+
+				// Update the navigation links.
+				if ( 0 < focus_nav_next.length ) {
+					$('.coursepress-focus-view .focus-nav-next').replaceWith( data.data.next_nav );
+					CoursePress.FocusMode.bind_focus_nav();
+				}
+
 				/**
 				 * Notify others that the module is change.
 				 **/
@@ -1005,6 +1006,18 @@ var CoursePress = CoursePress || {};
 			return false;
 		});
 
+		/**
+		 * bind file uploads
+		 */
+		$('label.file').on( 'change', 'input[type=file]', function() {
+			var target = $('span', $(this).parent() );
+			if ( $(this).val().length) {
+				target.html( target.data('change') );
+			} else {
+				target.html( target.data('upload') );
+			}
+			return true;
+		});
 	}
 
 	/**
@@ -1059,10 +1072,10 @@ var CoursePress = CoursePress || {};
 			$( progress ).find( '.invalid-extension' ).detach();
 
 			if ( allowed ) {
-				submit_button_container.addClass('is-valid-file');
+				submit_button_container.closest('form').addClass('is-valid-file');
 			} else {
 				$( progress ).append( '<span class="invalid-extension">' + _coursepress.invalid_upload_message + allowed_string + '</span>' );
-				submit_button_container.removeClass('is-valid-file');
+				submit_button_container.closest('form').removeClass('is-valid-file');
 			}
 		} );
 

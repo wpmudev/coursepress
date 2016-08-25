@@ -20,18 +20,18 @@
 	wp_nonce_field( 'student-grade-feedback' );
 ?>
 <div class="wrap coursepress_wrapper coursepress-assessment">
-	<h2><?php esc_html_e( 'Assessments', 'CP_TD' ); ?></h2>
+	<h2><?php esc_html_e( 'Assessments', 'cp' ); ?></h2>
 
 	<input type="hidden" id="cp_student_id" value="<?php echo $student_id; ?>" />
 	<div class="cp-actions">
-		<button style="display: none;" type="button" title="<?php esc_attr_e( 'Revalidate user submission', 'CP_TD' ); ?>" class="button cp-right cp-refresh-progress" data-course="<?php echo $course_id; ?>" data-student="<?php echo $student_id; ?>">
-			<span class="fa fa-refresh"></span> <?php esc_html_e( 'Refresh', 'CP_TD' ); ?>
+		<button style="display: none;" type="button" title="<?php esc_attr_e( 'Revalidate user submission', 'cp' ); ?>" class="button cp-right cp-refresh-progress" data-course="<?php echo $course_id; ?>" data-student="<?php echo $student_id; ?>">
+			<span class="fa fa-refresh"></span> <?php esc_html_e( 'Refresh', 'cp' ); ?>
 		</button>
 		<div class="cp-box">
-			<label><?php esc_html_e( 'Select Display', 'CP_TD' ); ?></label>
+			<label><?php esc_html_e( 'Select Display', 'cp' ); ?></label>
 			<select id="grade-type" class="medium dropdown">
-				<option value="all" <?php selected( 'all', $display_type ); ?>><?php esc_html_e( 'Show all modules', 'CP_TD' ); ?></option>
-				<option value="all_assessable" <?php selected( 'all_assessable', $display_type ); ?>><?php esc_html_e( 'Show all assessable modules', 'CP_TD' ); ?></option>
+				<option value="all" <?php selected( 'all', $display_type ); ?>><?php esc_html_e( 'Show all modules', 'cp' ); ?></option>
+				<option value="all_assessable" <?php selected( 'all_assessable', $display_type ); ?>><?php esc_html_e( 'Show all assessable modules', 'cp' ); ?></option>
 			</select>
 		</div>
 	</div>
@@ -49,7 +49,7 @@
 					<td align="right">
 						<span class="cp-course-grade final-grade" data-student="<?php echo $student_id; ?>"><?php echo $course_grade; ?>%</span>
 						<span class="cp-certified" <?php echo $certified; ?>>
-							<?php esc_html_e( 'Certified', 'CP_TD' ); ?>
+							<?php esc_html_e( 'Certified', 'cp' ); ?>
 						</span>
 					</td>
 				</tr>

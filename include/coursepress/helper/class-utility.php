@@ -610,7 +610,7 @@ class CoursePress_Helper_Utility {
 			header( 'Connection: close' );
 			echo $body;
 		} else {
-			_e( 'Something went wrong.', 'CP_TD' );
+			_e( 'Something went wrong.', 'cp' );
 		}
 		exit();
 	}
@@ -657,7 +657,7 @@ class CoursePress_Helper_Utility {
 				$unzipfile = unzip_file( $src_path, $object_dir );
 			}
 
-			echo '<a href="' . esc_url_raw( wp_get_referer() ) . $append_url . '" style="padding: 5px; font-size: 12px; text-decoration: none; opacity: 0.3; background: #3C3C3C; color: #fff; font-family: helvetica, sans-serif; position: absolute; top: 2; left: 2;"> &laquo; ' . esc_html__( 'Back to Course', 'CP_TD' ) . '</a>';
+			echo '<a href="' . esc_url_raw( wp_get_referer() ) . $append_url . '" style="padding: 5px; font-size: 12px; text-decoration: none; opacity: 0.3; background: #3C3C3C; color: #fff; font-family: helvetica, sans-serif; position: absolute; top: 2; left: 2;"> &laquo; ' . esc_html__( 'Back to Course', 'cp' ) . '</a>';
 			echo '<iframe style="margin:0; padding:0; border:none; width: 100%; height: 100vh;" src="' .$file_url . '"></iframe>';
 			exit();
 		}
@@ -676,7 +676,7 @@ class CoursePress_Helper_Utility {
 			 * add space before HTML end line, to avoid caoncatantion of two
 			 * sentences without space between.
 			 */
-			$text = preg_replace( '@(<\/p>|<br)@', " $1", $text );
+			$text = preg_replace( '@(<\/p>|<br)@', ' $1', $text );
 
 			// splits all html-tags to scanable lines.
 			preg_match_all( '/(<.+?>)?([^<>]*)/s', $text, $lines, PREG_SET_ORDER );

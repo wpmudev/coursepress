@@ -14,7 +14,7 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 	 * Message to be displayed when there are no items
 	 */
 	public function no_items() {
-		return __( 'No items found.', 'CP_TD' );
+		return __( 'No items found.', 'cp' );
 	}
 
 	/**
@@ -94,9 +94,9 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 
 		$content = '';
 
-		$content .= "<label for='bulk-action-selector-" . esc_attr( $which ) . "' class='screen-reader-text'>" . __( 'Select bulk action', 'CP_TD' ) . '</label>';
+		$content .= "<label for='bulk-action-selector-" . esc_attr( $which ) . "' class='screen-reader-text'>" . __( 'Select bulk action', 'cp' ) . '</label>';
 		$content .= "<select name='action$two' id='bulk-action-selector-" . esc_attr( $which ) . "'>";
-		$content .= "<option value='-1' selected='selected'>" . __( 'Bulk Actions', 'CP_TD' ) . '</option>';
+		$content .= "<option value='-1' selected='selected'>" . __( 'Bulk Actions', 'cp' ) . '</option>';
 
 		foreach ( $this->_actions as $name => $title ) {
 			$class = 'edit' == $name ? ' class="hide-if-no-js"' : '';
@@ -106,7 +106,7 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 
 		$content .= '</select>';
 
-		$content .= get_submit_button( __( 'Apply', 'CP_TD' ), 'action', '', false, array( 'id' => "doaction$two" ) );
+		$content .= get_submit_button( __( 'Apply', 'cp' ), 'action', '', false, array( 'id' => "doaction$two" ) );
 
 		return $content;
 	}
@@ -138,9 +138,9 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 		$m = isset( $_GET['m'] ) ? (int) $_GET['m'] : 0;
 
 		$content = '
-			<label for="filter-by-date" class="screen-reader-text">' . esc_html__( 'Filter by date', 'CP_TD' ) . '</label>
+			<label for="filter-by-date" class="screen-reader-text">' . esc_html__( 'Filter by date', 'cp' ) . '</label>
 			<select name="m" id="filter-by-date">
-			<option ' . selected( $m, 0, false ) . ' value="0">'. esc_html__( 'All dates', 'CP_TD' ) . '</option>
+			<option ' . selected( $m, 0, false ) . ' value="0">'. esc_html__( 'All dates', 'cp' ) . '</option>
 		';
 
 		foreach ( $months as $arc_row ) {
@@ -154,7 +154,7 @@ class CoursePress_Helper_UI_ListTable extends WP_List_Table {
 				selected( $m, $year . $month, false ),
 				esc_attr( $arc_row->year . $month ),
 				/* translators: 1: month name, 2: 4-digit year */
-				sprintf( __( '%1$s %2$d', 'CP_TD' ), $wp_locale->get_month( $month ), $year )
+				sprintf( __( '%1$s %2$d', 'cp' ), $wp_locale->get_month( $month ), $year )
 			);
 		}
 

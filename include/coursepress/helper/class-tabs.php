@@ -70,9 +70,9 @@ class CoursePress_Helper_Tabs {
 
 		// Add top buttons
 		if ( 'both' === $tabs[ $active ]['buttons'] || 'top' === $tabs[ $active ]['buttons'] ) {
-			$content .= '<p class="header-save-button">
-				<input class="button-primary" type="submit" value="' . esc_attr__( 'Save Settings', 'CP_TD' ) . '" name="submit_settings_header">
-			</p>';
+			$content .= '<p class="header-save-button">';
+			$content .= apply_filters( 'coursepress_admin_setting_before_top_save', '', $active, $tabs );
+			$content .= '<input class="button-primary" type="submit" value="' . esc_attr__( 'Save Settings', 'cp' ) . '" name="submit_settings_header"></p>';
 		}
 
 		// Add content header
@@ -92,7 +92,7 @@ class CoursePress_Helper_Tabs {
 		// Add bottom buttons
 		if ( 'both' === $tabs[ $active ]['buttons'] || 'bottom' === $tabs[ $active ]['buttons'] ) {
 			$content .= '<hr /><p class="section-save-button">
-				<input class="button-primary" type="submit" value="' . esc_attr__( 'Save Settings', 'CP_TD' ) . '" name="submit_settings_section">
+				<input class="button-primary" type="submit" value="' . esc_attr__( 'Save Settings', 'cp' ) . '" name="submit_settings_section">
 			</p>';
 		}
 

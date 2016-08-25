@@ -160,3 +160,43 @@ if ( ! function_exists( 'cp_can_access_course' ) ) {
 	}
 }
 
+/**
+ * Template Tag is academy page
+ */
+if ( ! function_exists( 'cp_is_academy_page' ) ) {
+	function cp_is_academy_page() {
+		$post_types = array(
+			'course',
+			'course_archive',
+			'course_discussion',
+			'course_discussion_archive',
+			'course_notifications_archive',
+			'coursepress_instructor',
+			'coursepress_student_dashboard',
+			'course_student_dashboard',
+			'course_workbook',
+			'discussions',
+			'module',
+			'notifications',
+			'unit',
+			'unit_archive',
+		);
+		if ( is_singular( $post_types ) ) {
+			return true;
+		}
+		/**
+		 * custom pages from CoursePress
+		 */
+		if ( is_page() ) {
+			$pages = CoursePress_Core::get_setting( 'pages' );
+			foreach ( $pages as $key => $id ) {
+				if ( 0 == $id ) {
+					continue;
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+}
+
