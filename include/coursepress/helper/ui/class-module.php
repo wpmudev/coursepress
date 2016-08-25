@@ -951,7 +951,7 @@ class CoursePress_Helper_UI_Module {
 					"components": [
 						{
 							"label": "' . __( 'Form elements', 'cp' ) . '",
-							"description": "' . __( 'Add all the elements for your form here', 'cp' ) .,'",
+							"description": "' . __( 'Add all the elements for your form here', 'cp' ) . '",
 							"class": "wide",
 							"items": [
 								{
