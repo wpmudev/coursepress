@@ -1,6 +1,9 @@
 # Development Libraries
 /node_modules
 
+# SASS map files:
+*.map
+
 # Logs
 *.log
 
