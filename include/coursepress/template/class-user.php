@@ -9,4 +9,5 @@ class CoursePress_Template_User {
 	public static function render_facilitator_page() {
 		return do_shortcode( '[facilitator_page]' );
 	}
+
 }

@@ -351,12 +351,12 @@ var CoursePress = CoursePress || {};
 			var el = this;
 			var container = $( el ).parents('.module-components')[0];
 			var mod_el = $( el).parents('.module-holder')[0];
-			var el_all = $( container).find( '.form-question' );
+			var el_all = $( container).find( '.quiz-question' );
 			var total = el_all.length;
 			var type = $( el).attr('data-type');
 
-			var content = '<div class="form-question question-' + ( total + 1 ) + '" data-id="' + (total + 1) + '" data-type="' + type + '" style="position: relative; border: 1px solid rgba(0,0,0,0.2); margin-top: 10px; padding: 5px;">';
-			content += '<div class="form-question-remove" style="position: absolute; top:5px; right:5px; font-weight: bolder; font-size: 1.2em; cursor: pointer;">X</div>';
+			var content = '<div class="quiz-question question-' + ( total + 1 ) + '" data-id="' + (total + 1) + '" data-type="' + type + '" style="position: relative; border: 1px solid rgba(0,0,0,0.2); margin-top: 10px; padding: 5px;">';
+			content += '<div class="quiz-question-remove" style="position: absolute; top:5px; right:5px; font-weight: bolder; font-size: 1.2em; cursor: pointer;">X</div>';
 
 			var question_type = '';
 			var question_content = '<div class="question-answer">';
@@ -564,8 +564,6 @@ var CoursePress = CoursePress || {};
 					questions[index].options['answers'] = [];
 					questions[index].options['checked'] = [];
 					answers = $( item).find('.answer-group .answer');
-					// DEBUG code. remove it.
-					window.console.log( answers );
 					$.each( answers, function( a_idx, a_item ) {
 						questions[index].options['answers'][a_idx] = $( a_item).find('[type="text"]').val();
 						questions[index].options['checked'][a_idx] = $( a_item).find('[type="radio"]').is( ':checked' );
@@ -665,9 +663,6 @@ var CoursePress = CoursePress || {};
 			var questions = $( parent).siblings('.quiz-question');
 			var mod_el = $( this).parents('.module-holder')[0];
 
-			// DEBUG code. remove it.
-			window.console.log( questions);
-
 			$.each( questions, function( index, item ) {
 				$( item).attr('class', '');
 				$( item).addClass('quiz-question');
@@ -702,8 +697,8 @@ var CoursePress = CoursePress || {};
 
 		$.each( form, function( index, item ) {
 
-			content += '<div class="form-question question-' + ( index + 1 ) + '" data-id="' + (index + 1) + '" data-type="' + item.type + '" style="position: relative; border: 1px solid rgba(0,0,0,0.2); margin-top: 10px; padding: 5px;">';
-			content += '<div class="form-question-remove" style="position: absolute; top:5px; right:5px; font-weight: bolder; font-size: 1.2em; cursor: pointer;">X</div>';
+			content += '<div class="quiz-question question-' + ( index + 1 ) + '" data-id="' + (index + 1) + '" data-type="' + item.type + '" style="position: relative; border: 1px solid rgba(0,0,0,0.2); margin-top: 10px; padding: 5px;">';
+			content += '<div class="quiz-question-remove" style="position: absolute; top:5px; right:5px; font-weight: bolder; font-size: 1.2em; cursor: pointer;">X</div>';
 
 			var question_type = '';
 			var question_content = '<div class="question-answer">';
@@ -780,7 +775,7 @@ var CoursePress = CoursePress || {};
 
 		var module = CoursePress.UnitBuilder.module_collection._byId[ cid ];
 
-		var el_questions = $( form_el).find('.form-question');
+		var el_questions = $( form_el).find('.quiz-question');
 
 		$.each( el_questions, function( index, item ) {
 
@@ -845,10 +840,10 @@ var CoursePress = CoursePress || {};
 	};
 
 	CoursePress.Helpers.Module.form.bind_add_item = function() {
-		$('.form-question .add-form-item').off( 'click' );
-		$('.form-question .add-form-item').on( 'click', function() {
+		$('.quiz-question .add-form-item').off( 'click' );
+		$('.quiz-question .add-form-item').on( 'click', function() {
 			var el = this;
-			var question = $( el).parents('.form-question')[0];
+			var question = $( el).parents('.quiz-question')[0];
 			var type = $( question).attr('data-type');
 
 			var input = 'single' === type || 'selectable' === type ? 'radio' : 'checkbox';
@@ -871,24 +866,24 @@ var CoursePress = CoursePress || {};
 	};
 
 	CoursePress.Helpers.Module.form.bind_checkboxes = function() {
-		$('.form-question [type="checkbox"], .form-question [type="radio"]').off( 'change' );
-		$('.form-question [type="checkbox"], .form-question [type="radio"]').on( 'change', function() {
+		$('.quiz-question [type="checkbox"], .quiz-question [type="radio"]').off( 'change' );
+		$('.quiz-question [type="checkbox"], .quiz-question [type="radio"]').on( 'change', function() {
 			var mod_el = $( this).parents('.module-holder')[0];
 			CoursePress.Helpers.Module.form.update_meta( mod_el );
 		} );
 	};
 
 	CoursePress.Helpers.Module.form.bind_textboxes = function() {
-		$('.form-question [type="text"], .form-question textarea').off( 'keyup' );
-		$('.form-question [type="text"], .form-question textarea').on( 'keyup', function() {
+		$('.quiz-question [type="text"], .quiz-question textarea').off( 'keyup' );
+		$('.quiz-question [type="text"], .quiz-question textarea').on( 'keyup', function() {
 			var mod_el = $( this).parents('.module-holder')[0];
 			CoursePress.Helpers.Module.form.update_meta( mod_el );
 		} );
 	};
 
 	CoursePress.Helpers.Module.form.bind_remove_item = function() {
-		$('.form-question .remove-form-item').off( 'click' );
-		$('.form-question .remove-form-item').on( 'click', function() {
+		$('.quiz-question .remove-form-item').off( 'click' );
+		$('.quiz-question .remove-form-item').on( 'click', function() {
 			var el = this;
 			var parent = $( el).parents('.answer')[0];
 
@@ -902,20 +897,18 @@ var CoursePress = CoursePress || {};
 
 	CoursePress.Helpers.Module.form.bind_remove_question = function() {
 		// Remove Quiz
-		$('.form-question .form-question-remove').off( 'click' );
-		$('.form-question .form-question-remove').on( 'click', function() {
+		$('.quiz-question .quiz-question-remove').off( 'click' );
+		$('.quiz-question .quiz-question-remove').on( 'click', function() {
 
 			var el = this;
-			var parent = $( el).parents( '.form-question')[0];
-			var questions = $( parent).siblings('.form-question');
+			var parent = $( el).parents( '.quiz-question')[0];
+			var questions = $( parent).siblings('.quiz-question');
 			var mod_el = $( this).parents('.module-holder')[0];
 
-			// DEBUG code. remove it.
-			window.console.log( questions);
-
-			$.each( questions, function( index, item ) {
+			tion
+                .each( questimns, function( index, item ) {
 				$( item).attr('class', '');
-				$( item).addClass('form-question');
+				$( item).addClass('quiz-question');
 				$( item).addClass('question-' + (index+1));
 				$( item).attr('data-id', (index+1));
 			} );
@@ -941,7 +934,7 @@ var CoursePress = CoursePress || {};
 		var nonce = $( '#unit-builder' ).attr( 'data-nonce' );
 
 		// Save modules first... just in case the unit is deleted to avoid orphans
-		CoursePress.UnitBuilder.module_collection.url = _coursepress._ajax_url + '?action=unit_builder&task=modules_update&course_id=' + _coursepress.course_id + '&unit_id=' + CoursePress.UnitBuilder.activeUnitID + '&page=' + CoursePress.UnitBuilder.activePage + '&wp_nonce=' + nonce;
+		CoursePress.UnitBuilder.module_collection.url = _coursepress._ajax_url + '?action=unit_builder&task=modules_update&course_id=' + _coursepress.course_id + '&unit_id=' + CoursePress.UnitBuilder.activeUnitID + '&page=' + CoursePress.UnitBuilder.activePage + '&wp_nonce=' + nonce + '&x=1';
 		Backbone.sync( 'update', CoursePress.UnitBuilder.module_collection, {
 			success: function( response ) {
 				$( '#unit-builder' ).attr( 'data-nonce', response[ 'nonce' ] );
@@ -2693,10 +2686,6 @@ var CoursePress = CoursePress || {};
 				var el_val = CoursePress.editor.content( the_id );
 				var parent = $( $( el ).parents( '.unit-builder-content' )[ 0 ] ).find( '.unit-detail' )[0];
 				var unit = this.parentView.parentView.unit_collection._byId[ $( parent ).attr( 'data-cid' ) ];
-
-				// DEBUG code. remove it.
-				window.console.log( unit );
-
 				unit.set_page_description( page, el_val );
 				//unit.set_meta( '', el_val );
 			}

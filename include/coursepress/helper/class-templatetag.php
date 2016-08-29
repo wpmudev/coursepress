@@ -163,7 +163,7 @@ if ( ! function_exists( 'cp_can_access_course' ) ) {
 /**
  * Template Tag is academy page
  */
-if ( ! function_exists( 'cp_is_academy_page' ) ) {
+if ( !function_exists( 'cp_is_academy_page' ) ) {
 	function cp_is_academy_page() {
 		$post_types = array(
 			'course',
@@ -187,9 +187,9 @@ if ( ! function_exists( 'cp_is_academy_page' ) ) {
 		/**
 		 * custom pages from CoursePress
 		 */
-		if ( is_page() ) {
-			$pages = CoursePress_Core::get_setting( 'pages' );
-			foreach ( $pages as $key => $id ) {
+		if( is_page() ) {
+			$pages = CoursePress_Core::get_setting('pages');
+			foreach( $pages as $key => $id ) {
 				if ( 0 == $id ) {
 					continue;
 				}
@@ -198,5 +198,6 @@ if ( ! function_exists( 'cp_is_academy_page' ) ) {
 		}
 		return false;
 	}
+
 }
 

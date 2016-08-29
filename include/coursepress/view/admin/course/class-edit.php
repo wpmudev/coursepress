@@ -477,10 +477,10 @@ class CoursePress_View_Admin_Course_Edit {
 
 				$page_key = (int) $unit['unit']->ID . '_' . (int) $key;
 
-				$page_view_checked = isset( $visible_pages[ $page_key ] ) && '' !== $visible_pages[ $page_key ] ? CoursePress_Helper_Utility::checked( $visible_pages[ $page_key ] ) : '';
-				$page_preview_checked = isset( $preview_pages[ $page_key ] ) && '' != $preview_pages[ $page_key ] ? CoursePress_Helper_Utility::checked( $preview_pages[ $page_key ] ) : '';
+				$page_view_checked = isset( $visible_pages[ $page_key ] ) && '' !== $visible_pages[$page_key] ? CoursePress_Helper_Utility::checked( $visible_pages[ $page_key ] ) : '';
+				$page_preview_checked = isset( $preview_pages[ $page_key ] ) && '' != $preview_pages[$page_key] ? CoursePress_Helper_Utility::checked( $preview_pages[ $page_key ] ) : '';
 				$alt = $count % 2 ? 'even' : 'odd';
-				$duration = ! empty( $estimations['pages'][ $key ]['estimation'] ) ? $estimations['pages'][ $key ]['estimation'] : '';
+				$duration = ! empty( $estimations['pages'][$key]['estimation'] ) ? $estimations['pages'][$key]['estimation'] : '';
 				$content .= '
 								<tr class="page page-' . $key . ' treegrid-' . $count . ' treegrid-parent-' . $unit_parent . ' ' . $draft_class . ' ' . $alt . '" data-unitid="'. $unit['unit']->ID . '" data-pagenumber="'. $key . '">
 									<td>' . $page_title . '</td>
@@ -671,10 +671,10 @@ class CoursePress_View_Admin_Course_Edit {
 						</label>
 						<div class="instructor-invite">';
 			if ( $can_assign_instructor && $can_assign_facilitator ) {
-				$content .= '<label>'.__( 'Instructor or Facilitator', 'cp' ).'</label>
+				$content .= '<label>'.__('Instructor or Facilitator', 'cp' ).'</label>
 							<ul>
-<li><label><input type="radio" name="invite_instructor_type" value="instructor" checked="checked" /> ' . __( 'Instructor', 'cp' ) . '</label></li>
-<li><label><input type="radio" name="invite_instructor_type" value="facilitator" /> ' . __( 'Facilitator', 'cp' ) . '</label></li>
+<li><label><input type="radio" name="invite_instructor_type" value="instructor" checked="checked" /> ' . __('Instructor', 'cp' ) . '</label></li>
+<li><label><input type="radio" name="invite_instructor_type" value="facilitator" /> ' . __('Facilitator', 'cp' ) . '</label></li>
 							</ul>';
 			} else if ( $can_assign_instructor ) {
 				$content .= '<input type="hidden" name="invite_instructor_type="instructor" />';
@@ -695,6 +695,7 @@ class CoursePress_View_Admin_Course_Edit {
 					</div>
 					';
 		}
+
 
 		/**
 		 * Add additional fields.
@@ -743,7 +744,7 @@ class CoursePress_View_Admin_Course_Edit {
 							<label for="meta_course_start_date" class="start-date-label required">' . esc_html__( 'Start Date', 'cp' ) . '</label>
 
 							<div class="date">
-								<input type="text" class="dateinput" name="meta_course_start_date" value="' . CoursePress_Data_Course::get_setting( $course_id, 'course_start_date', '' ) . '"/><i class="calendar"></i>
+								<input type="text" class="dateinput timeinput" name="meta_course_start_date" value="' . CoursePress_Data_Course::get_setting( $course_id, 'course_start_date', '' ) . '"/><i class="calendar"></i>
 							</div>
 						</div>
 						<div class="end-date ' . ( $open_ended_course ? 'disabled' : '' ) . '">
@@ -1098,7 +1099,7 @@ class CoursePress_View_Admin_Course_Edit {
 			'media_buttons' => false,
 			'tinymce' => array(
 				'height' => '300',
-			),
+			)
 		);
 
 		// Course completion
@@ -1142,7 +1143,7 @@ class CoursePress_View_Admin_Course_Edit {
 			'media_buttons' => false,
 			'tinymce' => array(
 				'height' => '300',
-			),
+			)
 		);
 		$content .= '<div class="wide class-size">'
 			. '<label>' . __( 'Course Completion Page', 'cp' ) . '</label>'
@@ -1151,7 +1152,7 @@ class CoursePress_View_Admin_Course_Edit {
 			. '<input type="text" class="widefat" name="meta_course_completion_title" value="'. esc_attr( $completion_title ) . '" />'
 		;
 
-		$content .= '<label for="meta_course_completion_content" class="required">' . __( 'Page Content', 'cp' ) . '</label>' . $token_info;
+		$content .=  '<label for="meta_course_completion_content" class="required">' . __( 'Page Content', 'cp' ) . '</label>' . $token_info;
 		ob_start();
 		wp_editor( $completion_content, 'course-completion-editor-content', $editor_args );
 
@@ -1159,7 +1160,7 @@ class CoursePress_View_Admin_Course_Edit {
 		$content .= '</div>';
 
 		// Fail info
-		$failed_title = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_title', __( 'Sorry, you did not pass this course!', 'cp' ) );
+		$failed_title = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_title', __( 'Sorry, you did not pass this course!', 'cp') );
 		$failed_content = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_content', '' );
 		$failed_content = htmlspecialchars_decode( $failed_content );
 
@@ -1177,7 +1178,7 @@ class CoursePress_View_Admin_Course_Edit {
 			'media_buttons' => false,
 			'tinymce' => array(
 				'height' => '300',
-			),
+			)
 		);
 		ob_start();
 		wp_editor( $failed_content, 'course-failed-content', $editor_args );
@@ -1202,13 +1203,13 @@ class CoursePress_View_Admin_Course_Edit {
 		$certficate_content = htmlspecialchars_decode( $certficate_content );
 		$certificate_link = add_query_arg(
 			array(
-				'nonce' => wp_create_nonce( 'cp_certificate_preview' ),
+				'nonce'=> wp_create_nonce( 'cp_certificate_preview' ),
 				'course_id' => $course_id,
 			)
 		);
 		$test_mail_link = add_query_arg(
 			array(
-				'nonce' => wp_create_nonce( 'cp_certificate_mail' ),
+				'nonce'=> wp_create_nonce( 'cp_certificate_mail' ),
 				'course_id' => $course_id,
 			)
 		);
@@ -1217,7 +1218,7 @@ class CoursePress_View_Admin_Course_Edit {
 			//. '<a href="'. esc_url( $test_mail_link ) . '" target="_blank" class="button button-default btn-cert" style="float:right;margin-top:-35px;margin-right: 70px;">' . __( 'Test Mail', 'cp' ) . '</a>'
 			. '<a href="'. esc_url( $certificate_link ) . '" target="_blank" class="button button-default btn-cert" style="float:right;margin-top:-35px;">' . __( 'Preview', 'cp' ) . '</a>'
 			. '<label>
-				<input type="checkbox" name="meta_basic_certificate" value="1" '. checked( 1, CoursePress_Data_Course::get_setting( $course_id, 'basic_certificate' ), false ) . ' /> '. __( 'Override course certificate.', 'cp' )
+				<input type="checkbox" name="meta_basic_certificate" value="1" '. checked(1, CoursePress_Data_Course::get_setting( $course_id, 'basic_certificate' ), false ) . ' /> '. __( 'Override course certificate.', 'cp' )
 			. '</label>'
 			. '<p class="description">' . __( 'Use this field to override general course certificate setting.', 'cp' ) . '</p>'
 			. '<label for="meta_basic_certificate_layout">' . __( 'Certificate Content', 'cp' ) . '</label>'
@@ -1230,7 +1231,7 @@ class CoursePress_View_Admin_Course_Edit {
 			'media_buttons' => false,
 			'tinymce' => array(
 				'height' => '300',
-			),
+			)
 		);
 		ob_start();
 		wp_editor( $certficate_content, 'basic-certificate-layout', $editor_args2 );
@@ -1244,7 +1245,7 @@ class CoursePress_View_Admin_Course_Edit {
 			array(
 				'placeholder' => __( 'Choose background image', 'cp' ),
 				'type' => 'image',
-				'value' => CoursePress_Data_Course::get_setting( $course_id, 'certificate_background', '' ),
+				'value' => CoursePress_Data_Course::get_setting( $course_id, 'certificate_background', '' )
 			)
 		);
 		$content .= '</td></tr>';
@@ -1260,8 +1261,8 @@ class CoursePress_View_Admin_Course_Edit {
 		$content .= __( 'Right', 'cp' ) . ': <input type="text" size="10" name="meta_cert_padding[right]" value="'. esc_attr( $padding_right ) . '" />';
 		$content .= '</td></tr>';
 		$content .= '<tr><td><label>' . __( 'Page Orientation', 'cp' ) . '</label></td><td>';
-		$content .= '<label style="float:left;margin-right:25px;"><input type="radio" name="meta_page_orientation" value="L" '. checked( 'L', CoursePress_Data_Course::get_setting( $course_id, 'page_orientation', 'L' ), false ) .' /> ' . __( 'Landscape', 'cp' ) . '</label>';
-		$content .= '<label style="float:left;"><input type="radio" name="meta_page_orientation" value="P" '. checked( 'P', CoursePress_Data_Course::get_setting( $course_id, 'page_orientation', '' ), false ) .'/>' . __( 'Portrait', 'cp' ) . '</label>';
+		$content .= '<label style="float:left;margin-right:25px;"><input type="radio" name="meta_page_orientation" value="L" '. checked('L', CoursePress_Data_Course::get_setting( $course_id, 'page_orientation', 'L' ), false ) .' /> ' . __( 'Landscape', 'cp' ) . '</label>';
+		$content .= '<label style="float:left;"><input type="radio" name="meta_page_orientation" value="P" '. checked('P', CoursePress_Data_Course::get_setting( $course_id, 'page_orientation', '' ), false ) .'/>' . __( 'Portrait', 'cp' ) . '</label>';
 		$content .= '</td></tr>';
 		$content .= '</table></div>';
 
@@ -1939,7 +1940,7 @@ class CoursePress_View_Admin_Course_Edit {
 					'filename' => $filename,
 					'format' => 'F',
 					'uid' => '12345',
-					'style' => '<style>' . $styles . '</style>',
+					'style' => '<style>' . $styles . '</style>'
 				);
 				CoursePress_Helper_PDF::make_pdf( $html, $args );
 				// Print preview

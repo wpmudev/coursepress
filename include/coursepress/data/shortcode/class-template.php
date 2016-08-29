@@ -536,21 +536,21 @@ class CoursePress_Data_Shortcode_Template {
 
 					$template = '<div class="focus-item focus-item-' . esc_attr( $type ) . '">';
 
-				if ( empty( $error_message ) ) {
-					if ( ! empty( $page_info['feature_image'] ) ) {
-						$feature_image = sprintf( '<img src="%s" alt="%s" />', esc_url( $page_info['feature_image'] ), esc_attr( basename( $page_info['feature_image'] ) ) );
-						$template .= '<div class="section-thumbnail">' . $feature_image . '</div>';
-					}
+					if ( empty( $error_message ) ) {
+						if ( ! empty( $page_info['feature_image'] ) ) {
+							$feature_image = sprintf( '<img src="%s" alt="%s" />', esc_url( $page_info['feature_image'] ), esc_attr( basename( $page_info['feature_image'] ) ) );
+							$template .= '<div class="section-thumbnail">' . $feature_image . '</div>';
+						}
 
-					$template .= '<h3>'. $page_info['title'] . '</h3>';
+						$template .= '<h3>'. $page_info['title'] . '</h3>';
 
-					if ( ! empty( $page_info['description'] ) ) {
-						$template .= $page_info['description'];
+						if ( ! empty( $page_info['description'] ) ) {
+							$template .= $page_info['description'];
+						}
+					} else {
+						// Show restriction message
+						$content .= sprintf( '<div class="focus-item focus-item-'. esc_attr( $type ) . '">%s</div>', $error_message );
 					}
-				} else {
-					// Show restriction message
-					$content .= sprintf( '<div class="focus-item focus-item-'. esc_attr( $type ) . '">%s</div>', $error_message );
-				}
 
 					$template .= '</div>';
 
@@ -580,26 +580,26 @@ class CoursePress_Data_Shortcode_Template {
 						);
 					}
 
-					$content .= '<div class="focus-nav">';
-					// Previous Navigation
-					$content .= self::show_nav_button(
-						$prev,
-						$pre_text,
-						array( 'focus-nav-prev' )
-					);
+				$content .= '<div class="focus-nav">';
+				// Previous Navigation
+				$content .= self::show_nav_button(
+					$prev,
+					$pre_text,
+					array( 'focus-nav-prev' )
+				);
 
-					// Next Navigation
-					$content .= self::show_nav_button(
-						$next,
-						$next_text,
-						array( 'focus-nav-next' ),
-						$next_section_title
-					);
+				// Next Navigation
+				$content .= self::show_nav_button(
+					$next,
+					$next_text,
+					array( 'focus-nav-next' ),
+					$next_section_title
+				);
 
-					$content .= '</div>'; // .focus-nav
-					$content .= '</div>'; // .focus-wrapper
+				$content .= '</div>'; // .focus-nav
+				$content .= '</div>'; // .focus-wrapper
 
-					$template = $content;
+				$template = $content;
 				break;
 
 			case 'module':

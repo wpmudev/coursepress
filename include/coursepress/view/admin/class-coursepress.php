@@ -200,4 +200,5 @@ class CoursePress_View_Admin_CoursePress {
 	public static function get_slug() {
 		return self::$slug;
 	}
+
 }

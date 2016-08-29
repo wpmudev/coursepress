@@ -68,14 +68,14 @@ class CoursePress_Admin_Controller_Menu {
 
 	/**
 	 * Receives form submission
-	 *
+	 * 
 	 * Must be overriden in a sub-class
 	 **/
 	public function process_form() {}
 	public function ajax_request() {}
 
 	public function is_valid_page() {
-		return isset( $_REQUEST[ $this->slug ] ) && wp_verify_nonce( $_REQUEST[ $this->slug ], $this->slug );
+		return isset( $_REQUEST[$this->slug] ) && wp_verify_nonce( $_REQUEST[$this->slug], $this->slug );
 	}
 
 	public static function init_tiny_mce_listeners( $init_array ) {
@@ -141,9 +141,9 @@ class CoursePress_Admin_Controller_Menu {
 
 			// Print the css required for this page
 			foreach ( $this->css as $css_id => $css_path ) {
-				if ( isset( $core_css[ $css_id ] ) ) {
+				if ( isset( $core_css[$css_id] ) ) {
 					wp_deregister_style( $css_id );
-					wp_enqueue_style( $css_id, $core_css[ $css_id ] );
+					wp_enqueue_style( $css_id, $core_css[$css_id] );
 				} else {
 					wp_enqueue_style( "coursepress_{$css_id}", $css_path, array(), $version );
 				}
@@ -180,9 +180,9 @@ class CoursePress_Admin_Controller_Menu {
 
 			// Print the script required for this page
 			foreach ( $this->scripts as $script_id => $script_path ) {
-				if ( isset( $core_scripts[ $script_id ] ) ) {
+				if ( isset( $core_scripts[$script_id] ) ) {
 					wp_deregister_script( $script_id );
-					wp_enqueue_script( $script_id, $core_scripts[ $script_id ], array( 'jquery' ) );
+					wp_enqueue_script( $script_id, $core_scripts[$script_id], array( 'jquery' ) );
 				} else {
 					wp_enqueue_script( "coursepress_{$script_id}", $script_path, false, $version );
 				}
@@ -205,7 +205,7 @@ class CoursePress_Admin_Controller_Menu {
 						'server_error' => __( 'An error occur while processing your request. Please try again later!', 'cp' ),
 						'labels' => array(
 							'user_dropdown_placeholder' => __( 'Enter username, first name and last name, or email', 'cp' ),
-						),
+						)
 					),
 					$this->localize_array
 				);
@@ -224,11 +224,11 @@ class CoursePress_Admin_Controller_Menu {
 		// Create a single wp-editor instance
 		$this->wp_editor_settings = wp_parse_args(
 			$this->wp_editor_settings,
-			array(
+				array(
 					'textarea_name' => 'dummy_editor_name',
 					'wpautop' => true,
 				)
-		);
+			);
 		echo '<script type="text/template" id="cp-wp-editor">';
 			wp_editor( 'dummy_editor_content', 'dummy_editor_id', $this->wp_editor_settings );
 		echo '</script>';

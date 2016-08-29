@@ -186,4 +186,5 @@ class CoursePress_Helper_Discussion {
 			get_current_user_id()
 		);
 	}
+
 }

@@ -272,7 +272,7 @@ class CoursePress_Helper_Email {
 			'attachments' => apply_filters(
 				'coursepress_email_attachments',
 				isset( $args['attachments'] ) ? $args['attachments'] : array()
-			),
+			)
 		);
 
 		$email = apply_filters(

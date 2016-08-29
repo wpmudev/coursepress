@@ -323,10 +323,20 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		$( 'table.course-structure-tree' ).treegrid( { initialState: 'expanded' } );
 
 		// ----- DATE PICKERS -----
-		$( '.dateinput' ).datepicker( {
-			dateFormat: 'yy-mm-dd'
-			//firstDay: coursepress.start_of_week
-		} );
+		if ( "function" === typeof( $(document).datetimepicker ) ) {
+			$( '.dateinput.timeinput' ).datetimepicker( {
+				dateFormat: 'yy-mm-dd',
+				timeFormat: 'HH:mm',
+				showButtonPanel: false,
+				timeInput: true,
+				controlType: 'select',
+				oneLine: true,
+			} );
+			$( '.dateinput' ).datepicker( {
+				dateFormat: 'yy-mm-dd'
+					//firstDay: coursepress.start_of_week
+			} );
+		}
 
 		$( '.date' ).click( function() {
 			if ( !$( this ).parents( 'div' ).hasClass( 'disabled' ) ) {

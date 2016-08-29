@@ -676,7 +676,7 @@ class CoursePress_Helper_Utility {
 			 * add space before HTML end line, to avoid caoncatantion of two
 			 * sentences without space between.
 			 */
-			$text = preg_replace( '@(<\/p>|<br)@', ' $1', $text );
+			$text = preg_replace( '@(<\/p>|<br)@', " $1", $text );
 
 			// splits all html-tags to scanable lines.
 			preg_match_all( '/(<.+?>)?([^<>]*)/s', $text, $lines, PREG_SET_ORDER );

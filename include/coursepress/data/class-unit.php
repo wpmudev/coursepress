@@ -456,7 +456,7 @@ class CoursePress_Data_Unit {
 	 */
 	public static function get_course_id_by_unit( $unit ) {
 		$post_type = self::get_post_type_name();
-		if ( ! is_object( $unit ) && preg_match( '/^\d+$/', $unit ) ) {
+		if ( !is_object( $unit ) && preg_match( '/^\d+$/', $unit ) ) {
 			$unit = get_post( $unit );
 		}
 		if ( $unit->post_type == $post_type ) {

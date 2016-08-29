@@ -199,7 +199,8 @@ class CoursePress_Data_Capabilities {
 	public static function fix_admin_capabilities() {
 		$user_id = get_current_user_id();
 		if ( user_can( $user_id, 'manage_options' )
-			&& false === user_can( $user_id, 'coursepress_settings_cap' ) ) {
+			&& false === user_can( $user_id, 'coursepress_settings_cap' ) )
+		{
 			self::assign_admin_capabilities( $user_id );
 		}
 	}
@@ -1568,7 +1569,7 @@ class CoursePress_Data_Capabilities {
 	 *
 	 * Facilitators have similar capabilites with instructors.
 	 * @todo: Add new set of capabilities for facilitators.
-	 *
+	 * 
 	 * @since 2.0
 	 *
 	 * @param (int) $user		The user ID.

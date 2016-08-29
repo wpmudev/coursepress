@@ -943,6 +943,7 @@ class CoursePress_View_Front_Course {
 					'type' => CoursePress_Data_Course::get_post_type_name(),
 				);
 			}
+
 		} elseif ( $cp->is_category ) {
 			// Course Category Overview.
 			CoursePress_Helper_Utility::set_the_course_category( $cp->cp_category );
@@ -1318,10 +1319,10 @@ class CoursePress_View_Front_Course {
 				$response = $data->response;
 				$module_type = $data->module_type;
 
-				if ( CoursePress_Data_Course::get_course_status( $course_id ) == 'closed' ) {
+				if ( CoursePress_Data_Course::get_course_status($course_id) == 'closed' ){
 					$json_data['message'] = __( 'This course is completed, you can not submit answers anymore.', 'cp' );
 					wp_send_json_error( $json_data );
-				}
+				}				
 
 				CoursePress_Data_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $response );
 
@@ -1632,7 +1633,7 @@ class CoursePress_View_Front_Course {
 							$module_list .= sprintf( '<li><span>%s</li>', $module->post_title );
 						}
 
-						if ( ! empty( $module_list ) ) {
+						if ( ! empty( $module_list) ) {
 							$page_list .= sprintf( '<ol>%s</ol>', $module_list );
 						}
 					}
@@ -1666,7 +1667,7 @@ class CoursePress_View_Front_Course {
 				'course_id' => $course_id,
 				'student_id' => $student_id,
 				'action' => 'certificate',
-				'nonce' => wp_create_nonce( 'coursepress_download_certificate' ),
+				'nonce' => wp_create_nonce( 'coursepress_download_certificate' )
 			),
 			site_url( '/' )
 		);

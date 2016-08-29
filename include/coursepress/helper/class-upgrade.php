@@ -116,4 +116,5 @@ class CoursePress_Helper_Upgrade {
 		echo '</li></ul></div>';
 		delete_user_meta( $user_id, self::$message_meta_name );
 	}
+
 }

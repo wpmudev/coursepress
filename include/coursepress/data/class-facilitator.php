@@ -55,11 +55,12 @@ class CoursePress_Data_Facilitator {
 
 		if ( ! $ids_only ) {
 			foreach ( $facilitators as $pos => $user_id ) {
-				$facilitators[ $user_id ] = get_userdata( $user_id );
-				unset( $facilitators[ $pos ] );
+				$facilitators[$user_id] = get_userdata( $user_id );
+				unset( $facilitators[$pos] );
 			}
 			$facilitators = array_filter( $facilitators );
 		}
+
 
 		return $facilitators;
 	}
@@ -247,7 +248,7 @@ class CoursePress_Data_Facilitator {
 			);
 		};
 
-		if ( ! isset( $return_data['message']['exists'] ) ) {
+		if ( !isset( $return_data['message']['exists'] ) ) {
 			$return_data['message']['exists'] = __( 'Invitation already exists.', 'cp' );
 		}
 
@@ -355,4 +356,5 @@ class CoursePress_Data_Facilitator {
 			$instructor_invites
 		);
 	}
+
 }

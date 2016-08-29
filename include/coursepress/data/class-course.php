@@ -48,7 +48,6 @@ class CoursePress_Data_Course {
 				'taxonomies' => array( 'course_category' ),
 			),
 		);
-
 	}
 
 	public static function get_taxonomy() {
@@ -92,11 +91,9 @@ class CoursePress_Data_Course {
 
 	public static function get_message( $key, $alternate = '' ) {
 		$message_keys = array_keys( self::$messages );
-
 		if ( ! in_array( $key, $message_keys ) ) {
 			self::$messages = self::get_default_messages( $key );
 		}
-
 		return ! empty( self::$messages[ $key ] ) ? CoursePress_Helper_Utility::filter_content( self::$messages[ $key ] ) : CoursePress_Helper_Utility::filter_content( $alternate );
 	}
 
@@ -415,7 +412,7 @@ class CoursePress_Data_Course {
 		 **/
 		if ( is_array( $settings ) ) {
 
-			if ( is_array( $old_settings ) ) {
+			if ( isset( $old_settings ) && is_array( $old_settings ) ) {
 				foreach ( $old_settings as $old_key => $old_value ) {
 					delete_post_meta( $course_id, "cp_{$old_key}" );
 				}
@@ -994,19 +991,6 @@ class CoursePress_Data_Course {
 				'compare' => 'EXISTS',
 				'fields' => 'ID',
 			)
-			/*
-			array(
-            'meta_key' => 'last_name',
-            'orderby' => 'meta_value',
-            'meta_query' => array(
-            array(
-            'key' => $course_meta_key,
-            'compare' => 'EXISTS',
-            ),
-            ),
-            'fields' => 'ID',
-			)
-			*/
 		);
 
 		if ( ! $count ) {

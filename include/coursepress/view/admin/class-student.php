@@ -35,6 +35,9 @@ class CoursePress_View_Admin_Student {
 
 		// Search Users
 		add_action( 'wp_ajax_coursepress_user_search', array( __CLASS__, 'search_user' ) );
+
+		/** Send certificate manually **/
+		add_action( 'wp_ajax_certificate_send', array( __CLASS__, 'certificate_send' ) );
 	}
 
 	public static function add_valid( $valid_pages ) {
@@ -238,5 +241,50 @@ class CoursePress_View_Admin_Student {
 			'search-student-%d',
 			$course_id
 		);
+	}
+
+	public static function certificate_send() {
+		$results = array(
+			'success' => false,
+			'message' => __( 'Something went wrong. Sending failed.', 'cp' ),
+			'step' => 'init',
+		);
+		/**
+		 * Check data
+		 */
+		if (
+			! isset( $_POST['id'] )
+			|| empty( $_POST['id'] )
+			|| ! isset( $_POST['_wpnonce'] )
+			|| empty( $_POST['_wpnonce'] )
+		) {
+			$results['step'] = 'params';
+			echo json_encode( $results );
+			die;
+		}
+		/**
+		 * verify nonce
+		 */
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'send-certificate-'.$_POST['id'] ) ) {
+			$results['step'] = 'nonce';
+			echo json_encode( $results );
+			die;
+		}
+		$result = CoursePress_Data_Certificate::send_certificate( $_POST['id'] );
+		if ( $result ) {
+			$parent_id = wp_get_post_parent_id( $_POST['id'] );
+			$results = array(
+				'success' => true,
+				'message' => sprintf(
+					'<div class="notice notice-success certificate-send"><p>%s</p></div>',
+					sprintf(
+						__( 'Certificate of <b>%s</b> has been sent.', 'cp' ),
+						get_the_title( $parent_id )
+					)
+				),
+			);
+		}
+		echo json_encode( $results );
+		die;
 	}
 }

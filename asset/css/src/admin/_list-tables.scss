@@ -2,17 +2,34 @@
 
 /* Course List Table */
 .wp-list-table.courses {
-    th.manage-column.column-post_title {
-        width: 60%;
-    }
-    .column-units {
-        p {
-            word-wrap: normal;
-        }
-    }
-    th.manage-column.column-ID {
-        width: 4em;
-    }
+	th.manage-column.column-post_title {
+		min-width: 50%;
+	}
+	.column-units {
+		p {
+			word-wrap: normal;
+		}
+	}
+	th.manage-column.column-ID {
+		width: 6em;
+	}
+	thead {
+		.manage-column.column-date_start,
+		.manage-column.column-date_end,
+		.manage-column.column-date_enrollment_end,
+		.manage-column.column-date_enrollment_start {
+			width: 7em;
+		}
+	}
+	tbody {
+
+		.date_start,
+		.date_end,
+		.date_enrollment_end,
+		.date_enrollment_start {
+			width: 7em;
+		}
+	}
 }
 
 .wp-list-table .manage-column.column-status {

@@ -29,7 +29,7 @@ class CoursePress_Helper_Legacy {
 					'suppress_filtes' => true,
 				)
 			);
-
+	
 			if ( ! empty( $courses ) ) {
 				foreach ( $courses as $course_id ) {
 					$old_settings = CoursePress_Data_Course::get_setting( $course_id );

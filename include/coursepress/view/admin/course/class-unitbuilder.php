@@ -342,10 +342,10 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 						if ( 'questions' === $key ) {
 							$value[0] = maybe_unserialize( $value[0] );
 							foreach ( $value[0] as $i => $q ) {
-								$value[0][ $i ]['question'] = esc_html( $q['question'] );
+								$value[0][$i]['question'] = esc_html( $q['question'] );
 								if ( ! empty( $q['options'] ) ) {
 									foreach ( $q['options']['answers'] as $ii => $answer ) {
-										$value[0][ $i ]['options']['answers'][ $ii ] = esc_html( $answer );
+										$value[0][$i]['options']['answers'][$ii] = esc_html( $answer );
 									}
 								}
 							}

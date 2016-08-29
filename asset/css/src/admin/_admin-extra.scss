@@ -117,4 +117,16 @@ body[class*="_page_coursepress_course"] {
 	.ui-datepicker .ui-state-default.ui-state-highlight {
 		border: 1px solid rgba(0, 145, 205, 0.30);
 	}
+	
+	.ui-datepicker {
+		.ui-state-default.ui-timepicker-select,
+	    .ui_tpicker_timezone select{
+		    display: inherit;
+		    width: inherit;
+		    padding: 0;
+		    height: inherit;
+		    line-height: normal;
+		    vertical-align: inherit;
+	    }
+	}
 }

@@ -18,7 +18,7 @@ class CoursePress_Helper_UI_Module {
 	const INPUT_UPLOAD = 'input-upload';
 	const INPUT_ADVANCED = 'input-mixed';
 	const INPUT_QUIZ = 'input-quiz';
-	const INPUT_FORM = 'input-form';
+	const INPUT_FORM= 'input-form';
 
 	public static function render( $data = 'TODO' ) {
 		$content = '';

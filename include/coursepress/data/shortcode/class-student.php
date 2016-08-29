@@ -617,7 +617,7 @@ class CoursePress_Data_Shortcode_Student {
 		/**
 		 * check is unit available?
 		 */
-		$is_unit_available = CoursePress_Data_Unit::is_unit_available( $course_id, $unit_id, null );
+		$is_unit_available = CoursePress_Data_Unit::is_unit_available( $course_id, $unit_id, null);
 
 		if ( $is_unit_available ) {
 			if ( 'flat' == $style ) {

@@ -434,7 +434,7 @@ class CoursePress_Data_Student {
 		if ( ! $response_index ) {
 			$response_index = ( count( $responses ) - 1 );
 
-			if ( $response_index < 0 ) { $response_index = 0; }
+			if ( $response_index < 0 ) $response_index = 0;
 		}
 
 		$grade_data = array(
@@ -450,7 +450,7 @@ class CoursePress_Data_Student {
 		);
 
 		self::get_calculated_completion_data( $student_id, $course_id, $data );
-		//      self::update_completion_data( $student_id, $course_id, $data );
+//		self::update_completion_data( $student_id, $course_id, $data );
 		return $data;
 	}
 
@@ -713,7 +713,7 @@ class CoursePress_Data_Student {
 										$unit_completed_required_modules += 1;
 
 										if ( $is_module_structure_visible ) { $valid_items += 1; }
-										continue;
+										continue; 
 									}
 
 									// Get the last grade and see if the student pass
@@ -726,7 +726,7 @@ class CoursePress_Data_Student {
 									// Set grade for input-textarea, input-text
 									$excluded_modules = array(
 										'input-textarea',
-										'input-text',
+										'input-text'
 									);
 
 									if ( in_array( $module_type, $excluded_modules ) && 0 == $grade ) {
@@ -744,7 +744,7 @@ class CoursePress_Data_Student {
 
 										if ( 'auto' === $graded_by ) {
 											// Set 0 as grade if it is auto-graded
-											$grade = 0;
+											$grade = 0; 
 										}
 									}
 
@@ -801,7 +801,7 @@ class CoursePress_Data_Student {
 									$last_seen_index = $index;
 									if ( $is_module_structure_visible ) { $valid_items += 1; }
 								} else {
-									$unseen_modules[ $module_id ] = $module_id;
+									$unseen_modules[$module_id] = $module_id;
 								}
 							}
 						}
@@ -813,12 +813,13 @@ class CoursePress_Data_Student {
 						'units/' . $unit_id . '/visited_pages'
 					);
 
-					if ( $is_page_structure_visible && ( (is_array( $pages_seen ) && isset( $pages_seen[ $page_number ] ) )
+					if ( $is_page_structure_visible && ( (is_array( $pages_seen ) && isset( $pages_seen[$page_number] ) )
 						|| ( $seen_modules > 0 ) )
 						) {
-						//	$valid_items += 1;
+					//	$valid_items += 1;
 					}
 				}
+
 			}
 
 			// Validate unseen modules if it is not required and assessable if the preceding modules are seen
@@ -1585,7 +1586,7 @@ class CoursePress_Data_Student {
 
 				$excluded_modules = array(
 					'input-textarea',
-					'input-text',
+					'input-text'
 				);
 
 				if ( ! empty( $last_answer ) ) {
@@ -1684,6 +1685,7 @@ class CoursePress_Data_Student {
 					$found_courses['future'][] = $course;
 				}
 			}
+
 		}
 
 		return $found_courses;

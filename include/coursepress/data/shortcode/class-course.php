@@ -492,12 +492,13 @@ class CoursePress_Data_Shortcode_Course {
 
 		$course_id = (int) $course_id;
 		if ( empty( $course_id ) ) { return ''; }
-		$date_format = sanitize_text_field( $date_format );
+		$date_format = apply_filters( 'coursepress_course_courses_list_date_format', sanitize_text_field( $date_format ) );
+		$time_format = apply_filters( 'coursepress_course_courses_list_time_format', get_option( 'time_format' ) );		
 		$label = sanitize_text_field( $label );
 		$label_tag = sanitize_html_class( $label_tag );
 		$label_delimeter = sanitize_text_field( $label_delimeter );
 		$class = sanitize_html_class( $class );
-
+ 
 		$start_date = CoursePress_Data_Course::get_setting( $course_id, 'course_start_date' );
 
 		$content = '<div class="course-start-date course-start-date-' . $course_id . ' ' . $class . '">';
@@ -510,6 +511,8 @@ class CoursePress_Data_Shortcode_Course {
 			$content .= __( 'already started', 'cp' );
 		} else {
 			$content .= str_replace( ' ', '&nbsp;', date_i18n( $date_format, CoursePress_Data_Course::strtotime( $start_date ) ) );
+			// Add time if different to '00:00:00'
+			$content .= ( date('H:i:s', CoursePress_Data_Course::strtotime( $start_date ) ) != '00:00:00' ) ? str_replace( ' ', '&nbsp;', ' / ' . date_i18n( $time_format , CoursePress_Data_Course::strtotime( $start_date ) ) ) : '';
 		}
 		$content .= '</div>';
 

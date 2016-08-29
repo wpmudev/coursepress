@@ -284,7 +284,7 @@ class CoursePress_Helper_UI {
 		$just_count = isset( $options['count'] ) ? $options['count'] : false;
 
 		$content = '';
-		/**
+/**
  * @todo: Remove this
 		$args = array(
 			'meta_key' => 'course_' . $course_id,
@@ -665,7 +665,7 @@ class CoursePress_Helper_UI {
 		if ( $disable_prev ) {
 			$page_links[] = '<span class="tablenav-pages-navspan" aria-hidden="true">&lsaquo;</span>';
 		} else {
-			$page_number = max( 1, $current -1 );
+			$page_number = max(1, $current-1);
 			$page_links[] = sprintf( "<a class='prev-page' href='%s' data-paged='%s'><span class='screen-reader-text'>%s</span><span class='tablenav-pages-navspan' aria-hidden='true'>%s</span></a>",
 				esc_url( add_query_arg( 'paged', $page_number, $current_url ) ),
 				$page_number,
@@ -686,7 +686,7 @@ class CoursePress_Helper_UI {
 		if ( $disable_next ) {
 			$page_links[] = '<span class="tablenav-pages-navspan" aria-hidden="true">&rsaquo;</span>';
 		} else {
-			$page_number = min( $total_pages, $current + 1 );
+			$page_number = min( $total_pages, $current+1);
 			$page_links[] = sprintf( "<a class='next-page' href='%s' data-paged='%s'><span class='screen-reader-text'>%s</span><span class='tablenav-pages-navspan' aria-hidden='true'>%s</span></a>",
 				esc_url( add_query_arg( 'paged', $page_number, $current_url ) ),
 				$page_number,

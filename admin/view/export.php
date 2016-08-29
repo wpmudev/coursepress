@@ -25,8 +25,8 @@
 			);
 			$courses = new WP_Query( $args );
 
-			if ( $courses->have_posts() ) :
-				while ( $courses->have_posts() ) :  $courses->the_post();
+			if ( $courses->have_posts() ):
+				while( $courses->have_posts() ): $courses->the_post();
 			?>
 				<p>
 					<label>

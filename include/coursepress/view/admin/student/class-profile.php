@@ -7,12 +7,12 @@ class CoursePress_View_Admin_Student_Profile extends CoursePress_View_Admin_Stud
 		$date_format = get_option( 'date_format' );
 		?>
 		<div class="wrap student-workbook student-profile">
-			<h2><?php esc_html_e( 'Student Profile', 'cp' ); ?></h2>
+			<h1><?php esc_html_e( 'Student Profile', 'cp' ); ?></h1>
 			<hr />
 			<?php
 				self::profile();
 			?>
-			<h3><?php esc_html_e( 'Courses', 'cp' ); ?></h3>
+			<h2><?php esc_html_e( 'Courses', 'cp' ); ?></h2>
 			<?php
 				$enrolled_courses = CoursePress_Data_Student::get_enrolled_courses_ids( $student_id );
 				$args = array(
@@ -32,9 +32,30 @@ class CoursePress_View_Admin_Student_Profile extends CoursePress_View_Admin_Stud
 						?>
 						<tr>
 							<td>
-								<a href="<?php echo $workbook_link; ?>" class="button button-units workbook-button">
+<ul>
+<li><a href="<?php echo $workbook_link; ?>" class="button button-units workbook-button">
 									<?php esc_html_e( 'View Workbook', 'cp' ); ?>
-								</a>
+								</a></li>
+<?php
+							/**
+							 * Insert send button only when user has
+							 * Certificate.
+							 */
+							$certificate_id = CoursePress_Data_Certificate::get_certificate_id( $student_id, $course->ID );
+if ( ! empty( $certificate_id ) ) {
+	echo '<li>';
+	printf(
+		'<a href="#" data-certificate-id="%s" data-nonce="%s" class="button button-certificate-send" data-label-default="%s" data-label-sending="%s">%s</a>',
+		esc_attr( $certificate_id ),
+		esc_attr( wp_create_nonce( 'send-certificate-'.$certificate_id ) ),
+		esc_attr__( 'Send Certificate', 'cp' ),
+		esc_attr__( 'Sending...', 'cp' ),
+		__( 'Send Certificate', 'cp' )
+	);
+	echo '</li>';
+}
+?>
+</ul>
 							</td>
 							<td>
 								<div class="student-course">

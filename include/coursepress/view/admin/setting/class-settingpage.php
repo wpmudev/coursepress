@@ -4,7 +4,7 @@ class CoursePress_View_Admin_Setting_SettingPage {
 	static $_instance = null;
 
 	public static function init() {
-		if ( ! self::$_instance ) {
+		if( ! self::$_instance ) {
 			self::$_instance = new self;
 		}
 	}

@@ -179,7 +179,7 @@ class CoursePress_Data_Instructor {
 				$can_update = CoursePress_Data_Capabilities::can_update_course( $post->ID );
 
 				if ( false === $can_update ) {
-					unset( $posts[ $index ] );
+					unset( $posts[$index] );
 				}
 			}
 		}
@@ -374,7 +374,7 @@ class CoursePress_Data_Instructor {
 					array( 'CoursePress_Data_Instructor', 'filter_course_meta_array' ),
 					$meta_keys
 				);
-				$course_ids = array_filter( $course_ids );
+				$course_ids = array_filter( $course_ids ); 
 				$count = count( $course_ids );
 
 				// Save counted courses.
@@ -419,9 +419,10 @@ class CoursePress_Data_Instructor {
 
 		// Other associated actions
 		// Unroll user from course only if he is not a student
-		if ( ! CoursePress_Data_Student::is_enrolled_in_course( $instructor_id, $course_id ) ) {
-			self::unassign_from_course( $instructor_id, $course_id );
+		if( ! CoursePress_Data_Student::is_enrolled_in_course( $instructor_id, $course_id ) ){
+			self::unassign_from_course( $instructor_id, $course_id );	
 		}
+		
 
 		$instructor = get_userdata( $instructor_id );
 		$assigned_courses_ids = self::get_assigned_courses_ids( $instructor );

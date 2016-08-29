@@ -49,4 +49,44 @@
 		} );
 	}());
 
+	jQuery(document).ready( function($) {
+		/**
+		 * Send certificate manually
+		 */
+		$('.student-profile').on( 'click', '.button.button-certificate-send', function() {
+			var $thiz = $(this);
+			if ( $thiz.hasClass('disabled') ) {
+				return false;
+			}
+			data = {
+				name: $('.course-title a', $thiz.closest('tr')).html(),
+				id: $thiz.data('certificate-id')
+			};
+			$thiz.addClass('disabled').html( '<span><i class="fa fa-spinner fa-pulse"></i></span> ' + $thiz.data('label-sending') );
+			$.ajax({
+				type: "POST",
+				url: ajaxurl,
+				data: {
+					action: "certificate_send",
+					id: $thiz.data("certificate-id"),
+					_wpnonce: $thiz.data("nonce")
+				},
+				dataType: "json"
+			}).done( function(data) {
+				/**
+				 * add message
+				 */
+				$('.notice.certificate-send').detach();
+				$('.student-profile h1').after(data.message);
+				/**
+				 * remove display changes
+				 */
+				$('span', $thiz).detach();
+				$thiz.removeClass('disabled').html($thiz.data('label-default'));
+				window.setTimeout( function() { $('.notice.certificate-send').slideUp(); }, 3000 );
+			});
+			return false;
+		});
+	});
+
 }));

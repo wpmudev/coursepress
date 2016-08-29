@@ -335,4 +335,5 @@ class CoursePress_Template_Unit {
 
 		return $content;
 	}
+
 }

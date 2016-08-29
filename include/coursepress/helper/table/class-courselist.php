@@ -44,6 +44,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 	private $post_type;
 	private $_categories;
 	private $columns_config;
+	private $date_format;
 
 	/** ************************************************************************
 	 * REQUIRED. Set up a constructor that references the parent constructor. We
@@ -52,6 +53,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 	public function __construct() {
 
 		$post_format = CoursePress_Data_Course::get_format();
+		$this->date_format = get_option( 'date_format' );
 
 		parent::__construct( array(
 			'singular' => $post_format['post_args']['labels']['singular_name'],
@@ -65,6 +67,10 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			'cb' => '<input type="checkbox" />',
 			'ID' => __( 'ID', 'cp' ),
 			'post_title' => __( 'Title', 'cp' ),
+			'date_start' => __( 'Start Date', 'cp' ),
+			'date_end' => __( 'End Date', 'cp' ),
+			'date_enrollment_start' => __( 'Enrollment Start', 'cp' ),
+			'date_enrollment_end' => __( 'Enrollment End', 'cp' ),
 			'units' => __( 'Units', 'cp' ),
 			'students' => __( 'Students', 'cp' ),
 			'certificates' => __( 'Certified', 'cp' ),
@@ -106,7 +112,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 	}
 
 	public function get_hidden_columns() {
-		return CoursePress_Helper_Setting::courses_get_hidden_columns();
+		return CoursePress_Helper_Setting::get_hidden_columns();
 	}
 
 	/** ************************************************************************
@@ -124,7 +130,13 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 	 * @return array An associative array containing all the columns that should be sortable: 'slugs'=>array('data_values',bool)
 	 **************************************************************************/
 	public function get_sortable_columns() {
-		return array( 'title' => array( 'title', false ) );
+		$sortable_columns = array(
+			'ID' => array( 'id' ),
+			'post_title' => array( 'title', true ),
+			'date_start' => array( 'date_start', true ),
+			'date_enrollment_start' => array( 'date_enrollment_start', true ),
+		);
+		return $sortable_columns;
 	}
 
 	/** ************************************************************************
@@ -140,6 +152,45 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		return sprintf(
 			'<input type="checkbox" name="bulk-actions[]" value="%s" />', $item->ID
 		);
+	}
+
+	private function _get_course_meta_date( $name, $item ) {
+		$meta_key = sprintf( 'cp_%s_date', $name );
+		$date = get_post_meta( $item->ID, $meta_key, true );
+		if ( empty( $date ) ) {
+			return '-';
+		} else {
+			$date = date_i18n( $this->date_format, $date );
+		}
+		return $date;
+	}
+
+	/**
+	 * Start date
+	 */
+	public function column_date_start( $item ) {
+		return $this->_get_course_meta_date( 'course_start', $item );
+	}
+
+	/**
+	 * end date
+	 */
+	public function column_date_end( $item ) {
+		return $this->_get_course_meta_date( 'course_end', $item );
+	}
+
+	/**
+	 * enrollment_end date
+	 */
+	public function column_date_enrollment_end( $item ) {
+		return $this->_get_course_meta_date( 'enrollment_end', $item );
+	}
+
+	/**
+	 * enrollment_start date
+	 */
+	public function column_date_enrollment_start( $item ) {
+		return $this->_get_course_meta_date( 'enrollment_start', $item );
 	}
 
 	// column_{key}
@@ -442,22 +493,66 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		 */
 		$s = isset( $_POST['s'] )? mb_strtolower( trim( $_POST['s'] ) ):false;
 
+		/**
+		 * order by
+		 */
+		$orderby = 'title';
+		if ( isset( $_GET['orderby'] ) && is_string( $_GET['orderby'] ) ) {
+			switch ( $_GET['orderby'] ) {
+				case 'ID':
+					$orderby = 'ID';
+				break;
+				case 'date_start':
+				case 'date_enrollment_start':
+					$orderby = 'meta_value_num';
+				break;
+			}
+		}
+		$order = isset( $_GET['order'] ) && 'asc' == $_GET['order']? 'asc' : 'desc';
+		if ( ! isset( $_GET['order'] ) && 'title' == $orderby ) {
+			$order = 'asc';
+		}
+
+		/**
+		 * Build args for WP_Query
+		 */
 		$post_args = array(
 			'post_type' => $this->post_type,
 			'post_status' => $post_status,
 			'posts_per_page' => $per_page,
 			'offset' => $offset,
 			's' => $s,
+			'orderby' => $orderby,
+			'order' => $order,
 		);
+
+		/**
+		 * If date sort, then add meta_query!
+		 */
+		if ( 'meta_value_num' == $orderby ) {
+			$key = 'cp_course_start_date';
+			if ( isset( $_GET['orderby'] ) && 'date_enrollment_start' == $_GET['orderby'] ) {
+				$key = 'cp_enrollment_start_date';
+			}
+			$post_args['meta_query'] = array(
+				'relation' => 'OR',
+				array(
+					'key' => $key,
+					'compare' => 'EXISTS',
+				),
+				array(
+					'key' => $key,
+					'compare' => 'NOT EXISTS',
+				),
+			);
+		}
 
 		if ( ! CoursePress_Data_Capabilities::can_view_others_course() ) {
 			$user_id = get_current_user_id();
 			$post_args['author'] = $user_id;
 
 			if ( user_can( $user_id, 'coursepress_update_course_cap' ) ) {
-
 				$assigned_courses = CoursePress_Data_Instructor::get_assigned_courses_ids( $user_id );
-
 				if ( ! empty( $assigned_courses ) ) {
 					$post_args['post__in'] = $assigned_courses;
 					unset( $post_args['author'] );

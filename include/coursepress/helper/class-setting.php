@@ -16,6 +16,7 @@ class CoursePress_Helper_Setting {
 		/** This filter is documented in /wp-admin/includes/misc.php */
 		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
 		add_filter( 'screen_settings', array( __CLASS__, 'screen_settings' ), 10, 2 );
+		add_filter( 'default_hidden_columns', array( __CLASS__, 'default_hidden_columns' ), 10, 2 );
 		add_filter( 'the_title', array( 'CoursePress_Data_Course', 'add_numeric_identifier_to_course_name' ), 10, 2 );
 	}
 
@@ -239,6 +240,15 @@ class CoursePress_Helper_Setting {
 				$student_css = CoursePress::$url . 'asset/css/admin-student.css';
 				wp_enqueue_style( 'coursepress_admin_student', $student_css, false, CoursePress::$version );
 			}
+
+			// Add timepicker
+			$slug = CoursePress_View_Admin_Course_Edit::get_slug();
+			if ( $slug == $page ) {
+				$timepicker_css = CoursePress::$url . 'asset/css/external/jquery-ui-timepicker-addon.min.css';
+				$timepicker_js = CoursePress::$url . 'asset/js/external/jquery-ui-timepicker-addon.min.js';		
+				wp_enqueue_style( 'coursepress_admin_timepicker', $timepicker_css, false, CoursePress::$version );
+				wp_enqueue_script( 'coursepress_admin_timepicker', $timepicker_js, array( 'jquery-ui-slider' , 'jquery-ui-datepicker' ), CoursePress::$version, true );
+			}
 		}
 
 		wp_enqueue_style( 'coursepress_admin_global', $style_global, array(), CoursePress::$version );
@@ -269,16 +279,6 @@ class CoursePress_Helper_Setting {
 	 */
 	public static function set_screen_option( $status, $option, $value ) {
 		if ( 'coursepress_courses_per_page' == $option ) {
-			$columns = array();
-			if ( isset( $_POST['columns'] ) ) {
-				$columns = $_POST['columns'];
-			}
-			$columns_keys = self::courses_get_columns( 'keys-only' );
-			foreach ( $columns_keys as $key ) {
-				$columns_status[ $key ] = array_key_exists( $key, $columns )? 'on':'off';
-			}
-			$user_id = get_current_user_id();
-			update_user_meta( $user_id, 'toplevel_page_coursepress_columns', $columns_status );
 			return $value;
 		}
 		if ( preg_match( '/^coursepress_/', $option ) ) {
@@ -371,6 +371,10 @@ class CoursePress_Helper_Setting {
 	private static function courses_get_columns( $option = '' ) {
 		$columns = array(
 			'ID' => __( 'ID', 'cp' ),
+			'date_start' => __( 'Start date', 'cp' ),
+			'date_end' => __( 'End Date', 'cp' ),
+			'date_enrollment_start' => __( 'Enrollment Start', 'cp' ),
+			'date_enrollment_end' => __( 'Enrollment End', 'cp' ),
 			'units' => __( 'Units', 'cp' ),
 			'students' => __( 'Students', 'cp' ),
 			'certificates' => __( 'Certified', 'cp' ),
@@ -384,43 +388,16 @@ class CoursePress_Helper_Setting {
 	}
 
 	/**
-	 * get user configuration columns
-	 *
-	 * @since 2.0.0
-	 * @access private
-	 *
-	 * @return array Array of columns.
-	 */
-	private static function courses_get_user_columns() {
-		$user_id = get_current_user_id();
-		$columns = get_user_meta( $user_id, 'toplevel_page_coursepress_columns', true );
-		if ( ! is_array( $columns ) ) {
-			$columns = array();
-		}
-		return $columns;
-	}
-
-	/**
 	 * Based on columns and user columns prepare hidden columns.
 	 *
 	 * @since 2.0.0
 	 *
 	 * @return array Array of columns.
 	 */
-	public static function courses_get_hidden_columns() {
-		$columns = self::courses_get_user_columns();
-		if ( empty( $columns ) ) {
-			return $columns;
-		}
-		$out = array();
-		$columns_names = self::courses_get_columns( 'keys-only' );
-		foreach ( $columns_names as $key ) {
-			if ( isset( $columns[ $key ] ) && 'off' != $columns[ $key ] ) {
-				continue;
-			}
-			$out[] = $key;
-		}
-		return $out;
+	public static function get_hidden_columns() {
+		$screen = get_current_screen();
+		$hidden = get_hidden_columns( $screen );
+		return $hidden;
 	}
 
 	/**
@@ -432,21 +409,47 @@ class CoursePress_Helper_Setting {
 	public static function screen_settings( $content, $args ) {
 		if ( 'toplevel_page_coursepress' == $args->base ) {
 			$columns_names = self::courses_get_columns();
-			$columns = self::courses_get_user_columns();
+			$hidden = self::get_hidden_columns();
 			$content .= '<fieldset class="metabox-prefs">';
 			$content .= sprintf( '<legend>%s</legend>', __( 'Columns', 'cp' ) );
 			$content .= '<div class="metabox-prefs">';
 			foreach ( $columns_names as $key => $name ) {
+				$check = in_array( $key, $hidden ) ? 'off' : 'on';
 				$content .= sprintf(
 					'<label><input class="hide-column-tog" type="checkbox" value="%s" name="columns[%s]" %s /> %s</label>',
 					$key,
 					$key,
-					checked( 'on', $columns[ $key ], false ),
+					checked( 'on', $check, false ),
 					$name
 				);
 			}
 			$content .= '</fieldset><br class="clear">';
 		}
 		return $content;
+	}
+
+	/**
+	 * Get default hidden columns.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $hidden Array of hidden columns.
+	 * @param WP_Screen $screen The current screen object.
+	 */
+	public static function default_hidden_columns( $hidden, $screen ) {
+
+		if ( 'toplevel_page_coursepress' == $screen->id ) {
+			$hidden = array(
+				'certificates',
+				'date_end',
+				'date_enrollment_end',
+				'date_enrollment_start',
+				'date_start',
+				'ID',
+				'students',
+			);
+		}
+
+		return $hidden;
 	}
 }
