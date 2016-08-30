@@ -3730,6 +3730,19 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 				$unit->details->$field = $graded;
 			}
 
+			/**
+			 * Check course available and if is after unit, then replace unit
+			 * available date.
+			 */
+			if ( 'unit_availability' == $field ) {
+				if ( isset( $unit->details->$field ) ) {
+					$course_start_date = get_post_meta( $unit->course_id, 'course_start_date', true );
+					if ( $course_start_date > $unit->details->$field ) {
+						$unit->details->$field = $course_start_date;
+					}
+				}
+			}
+
 			if ( isset( $unit->details->$field ) ) {
 				return $unit->details->$field;
 			}

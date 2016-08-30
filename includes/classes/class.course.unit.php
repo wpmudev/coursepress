@@ -121,7 +121,9 @@ if ( ! class_exists( 'Unit' ) ) {
 			$available = $unit_status['mandatory_required']['enabled'] ? $unit_status['mandatory_required']['result'] : $available;
 			$available = $unit_status['completion_required']['enabled'] ? $unit_status['completion_required']['result'] : $available;
 
-			$unit_status['date_restriction']['result'] = $current_date >= $unit_available_date;
+			$course_start_date = get_post_meta( $course_id, 'course_start_date', true );
+
+			$unit_status['date_restriction']['result'] = $current_date >= $unit_available_date && $current_date >= $course_start_date;
 
 			if ( ! $unit_status['date_restriction']['result'] || ! $available ) {
 				$available = false;
