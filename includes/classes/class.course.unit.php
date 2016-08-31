@@ -121,7 +121,16 @@ if ( ! class_exists( 'Unit' ) ) {
 			$available = $unit_status['mandatory_required']['enabled'] ? $unit_status['mandatory_required']['result'] : $available;
 			$available = $unit_status['completion_required']['enabled'] ? $unit_status['completion_required']['result'] : $available;
 
+
 			$unit_status['date_restriction']['result'] = $current_date >= $unit_available_date;
+
+			/**
+			 * Check course available date too.
+			 */
+			if ( $unit_status['date_restriction']['result'] ) {
+				$course_start_date = get_post_meta( $course_id, 'course_start_date', true );
+				$unit_status['date_restriction']['result'] = $current_date >= $course_start_date;
+			}
 
 			if ( ! $unit_status['date_restriction']['result'] || ! $available ) {
 				$available = false;
@@ -310,7 +319,7 @@ if ( ! class_exists( 'Unit' ) ) {
 
 		function delete_all_unit_auto_drafts( $course_id = false ) {
 			global $wpdb;
-			
+
 			$course_id = (int) $course_id;
 
 			$drafts = get_posts( array(
