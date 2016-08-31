@@ -358,6 +358,19 @@ if ( ! class_exists( 'Course' ) ) {
 
 		}
 
+		public static function get_published_units_count( $course_id = '' ) {
+			$args = array(
+				'post_type' => 'unit',
+				'post_status' => 'publish',
+				'fields' => 'ids',
+				'posts_per_page' => -1,
+				'post_parent' => $course_id,
+			);
+			$units = get_posts( $args );
+
+			return count( $units );
+		}
+
 		public static function filter_units( $status, $units ) {
 
 			foreach( $units as $key => $unit ) {
