@@ -8,6 +8,7 @@ CHANGE LOG
 
 = 1.3.4.3 =
 * Fixed: Problem with wrong units presentation on the reports page.
+* Fixed: Problem with missing class in shortcode course_list.
 * Fixed: Problem with unit availability if unit is available before course.
 
 = 1.3.4.2 =
