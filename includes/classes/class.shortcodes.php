@@ -2059,7 +2059,7 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 				'title_tag'                 => 'h3',
 				'course_status'             => 'all',
 				'list_wrapper_before'       => 'div',
-				'list_wrapper_before_class' => 'course-list %s',
+				'list_wrapper_before_class' => 'course-list',
 				'list_wrapper_after'        => 'div',
 				'show'                      => 'dates,enrollment_dates,class_size,cost',
 				'show_button'               => 'yes',
@@ -2192,7 +2192,14 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			}
 
 			//<div class="course-list %s">
-			$content .= 0 < count( $courses ) && ! empty( $list_wrapper_before ) ? '<' . $list_wrapper_before . ' class=' . $list_wrapper_before_class . '>' : '';
+			if ( 0 < count( $courses ) && ! empty( $list_wrapper_before ) ) {
+				$content .= sprintf(
+					'<%s class="%s %s">',
+					$list_wrapper_before,
+					$list_wrapper_before_class,
+					$class
+				);
+			}
 
 			foreach ( $courses as $course ) {
 
@@ -3728,6 +3735,19 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 				}
 
 				$unit->details->$field = $graded;
+			}
+
+			/**
+			 * Check course available and if is after unit, then replace unit
+			 * available date.
+			 */
+			if ( 'unit_availability' == $field ) {
+				if ( isset( $unit->details->$field ) ) {
+					$course_start_date = get_post_meta( $unit->course_id, 'course_start_date', true );
+					if ( $course_start_date > $unit->details->$field ) {
+						$unit->details->$field = $course_start_date;
+					}
+				}
 			}
 
 			if ( isset( $unit->details->$field ) ) {
