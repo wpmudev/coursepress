@@ -6,7 +6,7 @@ Description: CoursePress Base turns WordPress into a powerful online learning pl
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org
 Developers: Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
-Version: 1.3.4.1
+Version: 1.3.4.2
 TextDomain: coursepress_base_td
 Domain Path: /languages/
 WDP ID: 913071
@@ -67,7 +67,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 		 * @since 1.0.0
 		 * @var string
 		 */
-		public $version = '1.3.4.1';
+		public $version = '1.3.4.2';
 
 		/**
 		 * Plugin friendly name.
@@ -1300,13 +1300,13 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			// Get post types
 			if ( $query->is_search ) {
 				if ( ! is_admin() ) {
-
-					// Bail if it is a bbpress topic-reply query.
-					if ( function_exists('bbp_get_topic_post_type') &&
-						( array( bbp_get_topic_post_type(), bbp_get_reply_post_type() ) === $query->get( 'post_type' ) ) ) {
-						return $query;
-					}
-
+                    // Bail if it is a bbpress topic-reply query.
+                    if ( function_exists('bbp_get_topic_post_type') ) {
+                        $bbp_post_types = array( bbp_get_topic_post_type(), bbp_get_reply_post_type() );
+                        if ( in_array(  $query->get( 'post_type' ), $bbp_post_types ) ) {
+                            return $query;
+                        }
+                    }
 					$post_types = get_post_types( array( 'public' => true ), 'objects' );
 
 					$searchable_types = array();
