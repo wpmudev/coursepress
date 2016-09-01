@@ -1012,9 +1012,6 @@ var CoursePress = CoursePress || {};
 					action: 'none'
 				};
 
-			// DEBUG code, remove this.
-			window.console.log( options );
-
 			var seconds = options.seconds;
 			var elapsed = 0;
 			var self = jQuery( this );

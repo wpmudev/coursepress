@@ -309,8 +309,6 @@ var CoursePress = CoursePress || {};
 				$('.enrolment-container-div' ).detach();
 			},
 			setActive: function( options ) {
-				// DEBUG code. remove it.
-				window.console.log( options );
 				this.trigger( 'modal:updated', { view: this, options: options } );
 			},
 			cancel: function() {
@@ -560,8 +558,6 @@ var CoursePress = CoursePress || {};
 				course_id: course_id,
 				step: ''
 			};
-			// DEBUG code. remove it.
-			window.console.log(data);
 			CoursePress.Post.set( 'data', data );
 			CoursePress.Post.save();
 
@@ -570,13 +566,10 @@ var CoursePress = CoursePress || {};
 			CoursePress.Post.on( 'coursepress:enrollment:enroll_student_success', function( data ) {
 				// Update nonce
 				$( '.enrollment-modal-container.bbm-modal__views' ).attr('data-nonce', data['nonce'] );
-				// DEBUG code. remove it.
-				window.console.log(data);
+
 				if ( undefined !== data['callback'] ) {
 					var fn = CoursePress.Enrollment.dialog[ data['callback'] ];
 					if ( typeof fn === 'function' ) {
-						// DEBUG code. remove it.
-						window.console.log('callback is next....' + data['callback'] );
 						fn( data );
 						return;
 					}
@@ -661,14 +654,10 @@ var CoursePress = CoursePress || {};
 		$( 'body' ).append( newDiv );
 		$( newDiv ).addClass('enrolment-container-div');
 
-		// DEBUG code. remove it.
-		window.console.log('student: ' + _coursepress.current_student );
 		if ( _coursepress.current_student > 0 ) {
 
 			// Is paid course?
 			if ( 'yes' === _coursepress.current_course_is_paid ) {
-				// DEBUG code. remove it.
-				window.console.log('open at paid_enrollment');
 				$(newDiv).html(CoursePress.Enrollment.dialog.render().el);
 				CoursePress.Enrollment.dialog.openAtAction('paid_enrollment');
 			} else {
@@ -731,13 +720,10 @@ var CoursePress = CoursePress || {};
 
 			// Update nonce
 			$( '.enrollment-modal-container.bbm-modal__views' ).attr('data-nonce', data['nonce'] );
-			// DEBUG code. remove it.
-			window.console.log(data);
+
 			if ( undefined !== data['callback'] ) {
 				fn = CoursePress.Enrollment.dialog[ data['callback'] ];
 				if ( typeof fn === 'function' ) {
-					// DEBUG code. remove it.
-					window.console.log('callback is next....' + data['callback'] );
 					fn( data );
 					return;
 				}
@@ -1428,7 +1414,6 @@ var CoursePress = CoursePress || {};
 
 
 	function course_completion() {
-
 		var model = new CoursePress.Models.CourseFront();
 
 		model.set( 'action', 'calculate_completion' );
@@ -1676,14 +1661,11 @@ var CoursePress = CoursePress || {};
 				action: 'none',
 				running: false
 			} );
+
 			$( '.quiz_timer').on('timer_started', function() {
-				// DEBUG code. remove it.
-				window.console.log('IT HAS STARTED!');
 			});
 
 			$( '.quiz_timer').on('timer_ended', function() {
-				// DEBUG code. remove it.
-				window.console.log('IT HAS FINISHED!');
 			});
 
 			/**
@@ -1839,13 +1821,9 @@ var CoursePress = CoursePress || {};
 		if ( ! is_focus_mode ) {
 			$( '.quiz_timer').coursepress_timer();
 			$( '.quiz_timer').on('timer_started', function() {
-				// DEBUG code. remove it.
-				window.console.log('IT HAS STARTED!');
 			});
 
 			$( '.quiz_timer').on('timer_ended', function() {
-				// DEBUG code. remove it.
-				window.console.log('IT HAS FINISHED!');
 			});
 		}
 
@@ -1855,7 +1833,6 @@ var CoursePress = CoursePress || {};
 		CoursePress.Page.init();
 		create_modal_model();
 		bind_focus_mode();
-		course_completion();
 		bind_enrollment_actions();
 
 		var unsubscribe = $( '#cp-unsubscribe-message' );

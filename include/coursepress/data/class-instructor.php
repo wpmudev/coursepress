@@ -410,7 +410,6 @@ class CoursePress_Data_Instructor {
 		self::count_courses( $instructor_id, true );
 	}
 
-
 	public static function removed_from_course( $instructor_id, $course_id ) {
 
 		$global_option = ! is_multisite();

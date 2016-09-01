@@ -471,6 +471,8 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 						val = field.val()
 					;
 
+					field.removeClass('error');
+
 					if ( 'course_excerpt' == field_name ) {
 						val = mce_helper( 'courseExcerpt', field );
 					}
@@ -488,6 +490,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 					}
 
 					if ( ! val || '' == val ) {
+						field.addClass('error');
 						found += 1;
 					}
 
@@ -542,18 +545,18 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 
 				pages.each( function() {
 					var page = $(this), is_checked = page.is( ':checked' )
-						page_number = page.parents( 'tr[data-pagenumber]' ).first().attr( 'data-pagenumber' ),
-						old_state = page.data( 'checked' )
+						page_number = page.parents( 'tr[data-pagenumber]' ).first().attr( 'data-pagenumber' )//,
+						//old_state = page.data( 'checked' )
 					;
 
 					if ( ! checked ) {
 						// Remember current state before unchecking
-						page.data( 'checked', is_checked );
+						// page.data( 'checked', is_checked );
 						page.attr( 'checked', false );
 					} else {
 						// Set previous state
-						var old_state = page.data( 'checked' );
-						page.attr( 'checked', old_state );
+						// var old_state = page.data( 'checked' );
+						page.attr( 'checked', true );
 					}
 
 					handle_modules( checked, page_number );
@@ -575,12 +578,12 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 
 					if ( ! checked ) {
 						// Remember previous state
-						module.data( 'checked', is_checked );
+						// module.data( 'checked', is_checked );
 						module.attr( 'checked', false );
 					} else {
 						// Set old state
-						var old_state = module.data( 'checked' );
-						module.attr( 'checked', old_state );
+						// var old_state = module.data( 'checked' );
+						module.attr( 'checked', true );
 					}
 				} );
 			}
@@ -592,11 +595,12 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			// Handle page type
 			else if ( target_name.match( /_pages/ ) ) {
 				var page_number = checkbox.parents( 'tr' ).first().attr( 'data-pagenumber' ),
-					unit_item = treegrid.find( '.unit-' + unit_id ).find( '[name*="' + base_name + '_unit"]' )
+					unit_item = treegrid.find( '.unit-' + unit_id ).find( '[name*="' + base_name + '_unit"]' ),
+					all_pages = treegrid.find( '.page[data-unitid="' + unit_id + '"]' )
+						.find( '[name*="' + base_name + '_pages"]:checked' )
 				;
 				// Always checked the unit parent
-				if ( is_true ) unit_item.attr( 'checked', true );
-
+				unit_item.attr( 'checked', all_pages.length > 0 );
 				handle_modules( is_true, page_number );
 			}
 			// Handle module type
@@ -604,14 +608,16 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 				var page_number = the_parent.attr( 'data-pagenumber' ),
 					unit_item = treegrid.find( '.unit-' + unit_id ).find( '[name*="' + base_name + '_unit"]' ),
 					page_item = treegrid.find( '.page-' + page_number + '[data-unitid="' + unit_id + '"]' )
-						.find( '[name*="' + base_name + '_page"]' )
+						.find( '[name*="' + base_name + '_page"]' ),
+					all_modules = treegrid.find( 'tr[data-unitid="' + unit_id + '"][data-pagenumber="' + page_number + '"]' )
+						.find( '[name*="' + base_name + '_modules"]:checked' )
 				;
 
 				// Always check the unit and parent section
-				if ( is_true ) {
-					unit_item.attr( 'checked', true );
-					page_item.attr( 'checked', true );
-				}
+				page_item.attr( 'checked', all_modules.length > 0 );
+				var all_pages = treegrid.find( '.page[data-unitid="' + unit_id + '"]' )
+						.find( '[name*="' + base_name + '_pages"]:checked' );
+				unit_item.attr( 'checked', all_pages.length > 0 );								
 			}
 		} );
 

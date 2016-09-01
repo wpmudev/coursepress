@@ -1322,7 +1322,7 @@ class CoursePress_View_Front_Course {
 				if ( CoursePress_Data_Course::get_course_status($course_id) == 'closed' ){
 					$json_data['message'] = __( 'This course is completed, you can not submit answers anymore.', 'cp' );
 					wp_send_json_error( $json_data );
-				}				
+				}
 
 				CoursePress_Data_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $response );
 
@@ -1379,10 +1379,9 @@ class CoursePress_View_Front_Course {
 				$course_id = (int) $data->course_id;
 				$student_id = (int) $data->student_id;
 
-				if ( $student_id > 0 ) {
-					$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
-					CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course_id, $student_progress );
-					CoursePress_Data_Student::update_completion_data( $student_id, $course_id, $student_progress );
+				if ( $student_id > 0 && $course_id > 0 ) {
+					CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course_id );
+					CoursePress_Debugger::log( sprintf( 'Course progress updated via ajax ID: %d, STUDENT: %d', $course_id, $student_id ) );
 				}
 
 				$success = true;

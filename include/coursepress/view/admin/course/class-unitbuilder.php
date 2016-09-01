@@ -209,27 +209,17 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					<label class="bigger">' . esc_html__( 'Modules', 'cp' ) . '</label>
 					<p class="description">' . esc_html__( 'Click to add module elements to the unit', 'cp' ) . '</p>';
 
-		$ouputs = CoursePress_Helper_UI_Module::get_output_types();
-		foreach ( $ouputs as $key => $output ) {
-			$templates['unit_builder_content_components'] .= '
-			<div class="output-element module-' . $key . '" data-type="' . $key . '">
-				<a></a>
-				<span class="element-label">' . $output['title'] . '</span>
-			</div>
-			';
-		}
-
+		/**
+		 * Output elements.
+		 */
+		$outputs = CoursePress_Helper_UI_Module::get_output_types();
+		$templates['unit_builder_content_components'] .= self::get_elements( 'output', $outputs );
 		$templates['unit_builder_content_components'] .= '<div class="elements-separator"></div>';
-
+		/**
+		 * Input elements.
+		 */
 		$inputs = CoursePress_Helper_UI_Module::get_input_types();
-		foreach ( $inputs as $key => $input ) {
-			$templates['unit_builder_content_components'] .= '
-			<div class="input-element module-' . $key . '" data-type="' . $key . '">
-				<a id="text_module" class="add-element"></a>
-				<span class="element-label">' . $input['title'] . '</span>
-			</div>
-			';
-		}
+		$templates['unit_builder_content_components'] .= self::get_elements( 'input', $inputs, 'add-element' );
 
 		$templates['unit_builder_content_components'] .= '
 				</script>
@@ -342,10 +332,10 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 						if ( 'questions' === $key ) {
 							$value[0] = maybe_unserialize( $value[0] );
 							foreach ( $value[0] as $i => $q ) {
-								$value[0][$i]['question'] = esc_html( $q['question'] );
+								$value[0][ $i ]['question'] = esc_html( $q['question'] );
 								if ( ! empty( $q['options'] ) ) {
 									foreach ( $q['options']['answers'] as $ii => $answer ) {
-										$value[0][$i]['options']['answers'][$ii] = esc_html( $answer );
+										$value[0][ $i ]['options']['answers'][ $ii ] = esc_html( $answer );
 									}
 								}
 							}
@@ -602,5 +592,35 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 			$json_data['success'] = false;
 			CoursePress_Helper_Utility::send_bb_json( $json_data );
 		}
+	}
+
+	/**
+	 * Produce row with icons for output and input elements.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $type Type of elements, valid 'output' or 'input'.
+	 * @param array $elements Arary of elements.
+	 * @param string $a_class String with class for a html element.
+	 * @return string Icons with elements.
+	 */
+	private static function get_elements( $type, $elements, $a_class = '' ) {
+		$content = '';
+		foreach ( $elements as $key => $element ) {
+			$dashicon = '';
+			if ( isset( $element['dashicon'] ) ) {
+				$dashicon = sprintf( '<span class="dashicons dashicons-%s"></span>', esc_attr( $element['dashicon'] ) );
+			}
+			$content .= sprintf(
+				'<div class="%s-element module-%s" data-type="%s"><a class="%s">%s</a><span class="element-label">%s</span></div>',
+				esc_attr( $type ),
+				esc_attr( $key ),
+				esc_attr( $key ),
+				esc_attr( $a_class ),
+				$dashicon,
+				$element['title']
+			);
+		}
+		return $content;
 	}
 }

@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * CoursePress Student Data Class
+ *
+ * Use to manage the student's course information/data.
+ *
+ * @package WordPress
+ * @subpackage CoursePress
+ **/
 class CoursePress_Data_Student {
 
 	/**
@@ -104,6 +111,14 @@ class CoursePress_Data_Student {
 		}
 	}
 
+	/**
+	 * Count the number of enrolled courses.
+	 *
+	 * @param (int) $student_id						The user ID to get the courses to.
+	 * @param (bool) $refresh						If true, will recount the number of courses of the student.
+	 *
+	 * @return (int) Returns the total number of courses the user is enrolled at.
+	 **/
 	public static function count_enrolled_courses_ids( $student_id, $refresh = false ) {
 		$count = get_user_meta( $student_id, 'cp_course_count', true );
 
@@ -131,6 +146,9 @@ class CoursePress_Data_Student {
 		return $count;
 	}
 
+	/**
+	 * A helper function to get the meta_key of the user metas.
+	 **/
 	public static function meta_key( $key ) {
 		return $key['meta_key'];
 	}
@@ -186,7 +204,16 @@ class CoursePress_Data_Student {
 		}
 	}
 
+	/**
+	 * Initialize student completion.
+	 *
+	 * @param (int) $student_id				WP_User ID.
+	 * @param (int) $course_id				The course ID the student completion belongs to.
+	 *
+	 * @return (array)						An array of course completion data.
+	 **/
 	public static function init_completion_data( $student_id, $course_id ) {
+
 		$data = array();
 		CoursePress_Helper_Utility::set_array_val( $data, 'version', '2.0' );
 
@@ -195,6 +222,14 @@ class CoursePress_Data_Student {
 		return $data;
 	}
 
+	/**
+	 * Retrieve the student's course completion data.
+	 *
+	 * @param (int) $student_id				The ID of the user the completion data to get to.
+	 * @param (int) $course_id				The course ID the completion data belongs to.
+	 *
+	 * @return (associative_array)			An array of course completion data, including responses, visited pages etc.
+	 **/
 	public static function get_completion_data( $student_id, $course_id ) {
 
 		if ( ! function_exists( 'get_userdata' ) ) {
@@ -210,13 +245,42 @@ class CoursePress_Data_Student {
 		return $data;
 	}
 
-	public static function update_completion_data( $student_id, $course_id, $data ) {
+	/**
+	 * Update the student's course completion data.
+	 *
+	 * @param (int) $student_id				The ID of the user to save data to.
+	 * @param (int) $course_id				The course ID of the data belongs to.
+	 * @param (array) $data					An array of course completion data.
+	 *
+	 * @return null
+	 **/
+	public static function update_completion_data( $student_id, $course_id, $data = array() ) {
+		// @todo: Remove debugger code!
 
-		$global_setting = ! is_multisite();
-		update_user_option( $student_id, 'course_' . $course_id . '_progress', $data, $global_setting );
+		if ( ! empty( $data ) ) {
+			if ( (int) $course_id > 0 ) {
+				$global_setting = ! is_multisite();
 
+				update_user_option( $student_id, 'course_' . $course_id . '_progress', $data, $global_setting );
+			} else {
+				CoursePress_Debugger::log( 'Invalid course ID!' );
+			}
+		} else {
+			CoursePress_Debugger::log( 'Attempting to save an empty data!' );
+		}
 	}
 
+	/**
+	 * Record the visited pages in course completion data.
+	 *
+	 * @param (int) $student_id				The user ID.
+	 * @param (int) $course_id				The course ID.
+	 * @param (int) $unit_id				The unit ID of the course.
+	 * @param (int) $page					The page number of the page currently visited.
+	 * @param (array) $data					Optional. If null, we'll retrieve the course completion data in the database.
+	 *
+	 * @return (array) $data				Returns the complete list of course completion data.
+	 **/
 	public static function visited_page( $student_id, $course_id, $unit_id, $page, &$data = false ) {
 
 		if ( empty( $data ) ) {
@@ -228,9 +292,18 @@ class CoursePress_Data_Student {
 		self::update_completion_data( $student_id, $course_id, $data );
 
 		return $data;
-
 	}
 
+	/**
+	 * Record the visited module in course completion data.
+	 *
+	 * @param (int) $student_id					The user ID.
+	 * @param (int) $course_id					The course ID.
+	 * @param (int) $unit_id					The unit ID of the current module belongs to.
+	 * @param (int) $module_id					The module ID currently visited.
+	 *
+	 * @return (array) $data					Returns an array of course completion data.
+	 **/
 	public static function visited_module( $student_id, $course_id, $unit_id, $module_id, &$data = false ) {
 
 		if ( empty( $data ) ) {
@@ -241,9 +314,20 @@ class CoursePress_Data_Student {
 		self::update_completion_data( $student_id, $course_id, $data );
 
 		return $data;
-
 	}
 
+	/**
+	 * Record the student's responses.
+	 *
+	 * @param (int) $student_id					The user ID.
+	 * @param (int) $course_id					The course ID.
+	 * @param (int) $unit_id					The unit ID the current module belongs to.
+	 * @param (int) $module_id					The module ID the responses will be recorded to.
+	 * @param (array) $response					An array of previously fetch responses.
+	 * @param (array) $data						Optional. If null, we'll get the course completion data from DB.
+	 *
+	 * @return (array) $data					Returns an array of course completion data.
+	 **/
 	public static function module_response( $student_id, $course_id, $unit_id, $module_id, $response, &$data = false ) {
 
 		$attributes = CoursePress_Data_Module::attributes( $module_id );
@@ -329,15 +413,22 @@ class CoursePress_Data_Student {
 
 		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/responses/' . $module_id . '/', $response_data );
 		self::get_calculated_completion_data( $student_id, $course_id, $data );
-		self::update_completion_data( $student_id, $course_id, $data );
-
-		// Might as well do it on an AJAX call to make the experience a bit better.
-		//self::calculate_completion( $student_id, $course_id );
 
 		return $data;
-
 	}
 
+	/**
+	 * Retrieve the student's response to a module.
+	 *
+	 * @param (int) $student_id					The user ID.
+	 * @param (int) $course_id					The course ID.
+	 * @param (int) $unit_id					The unit ID the module belongs to.
+	 * @param (int) $module_id					The module ID the response to get from.
+	 * @param (bool) $response_only				If true, will return the response of the set module_id, otherwise will return the whole list of responses.
+	 * @param (array) $data						An array of previously fetch course completion data.
+	 *
+	 * @return (mixed) $responses				Returns the response or responses.
+	 **/
 	public static function get_responses( $student_id, $course_id, $unit_id, $module_id, $response_only = false, &$data = false ) {
 
 		if ( false === $data ) {
@@ -357,13 +448,24 @@ class CoursePress_Data_Student {
 			}
 
 			return $result;
-
 		}
 
 		return empty( $responses ) ? array() : $responses;
-
 	}
 
+	/**
+	 * Retrieve the grade of a module.
+	 *
+	 * @param (int) $student_id						The user ID.
+	 * @param (int) $course_id						The course ID.
+	 * @param (int) $unit_id						The unit ID the module belongs to.
+	 * @param (int) $module_id						The module ID to get the grade from.
+	 * @param (mixed) $response_index				The array key of the response to get to.
+	 * @param (mixed) $grade_index					The key position of the grade to get to.
+	 * @param (array) $data							An array of previously fetch course completion data.
+	 *
+	 * @return (array) Returns the grade or grades array.
+	 **/
 	public static function get_grade(
 		$student_id, $course_id, $unit_id, $module_id, $response_index = false, $grade_index = false, &$data = false
 	) {
@@ -408,6 +510,19 @@ class CoursePress_Data_Student {
 		return $grade;
 	}
 
+	/**
+	 * Records the grade of the student.
+	 *
+	 * @param (int) $student_id						The user ID.
+	 * @param (int) $course_id						The course ID.
+	 * @param (int) $unit_id						The unit ID the module to grade for belongs.
+	 * @param (int) $module_id						The module ID the grade given/acquired from.
+	 * @param (int) $grade							The new module grade of the student.
+	 * @param (int) $response_index					The array key index the grade will be save at.
+	 * @param (array) $data							An array of previously fetch course completion data.
+	 *
+	 * @return (array) Returns an array of course completion data.
+	 **/
 	public static function record_grade(
 		$student_id, $course_id, $unit_id, $module_id, $grade, $response_index = false, &$data = false
 	) {
@@ -427,7 +542,6 @@ class CoursePress_Data_Student {
 				'units/' . $unit_id . '/responses/' . $module_id,
 				$responses
 			);
-
 		}
 
 		// Get last grade
@@ -450,10 +564,13 @@ class CoursePress_Data_Student {
 		);
 
 		self::get_calculated_completion_data( $student_id, $course_id, $data );
-//		self::update_completion_data( $student_id, $course_id, $data );
+
 		return $data;
 	}
 
+	/**
+	 * Get the response of module.
+	 **/
 	public static function get_response(
 		$student_id, $course_id, $unit_id, $module_id, $response_index = false, &$data = false
 	) {
@@ -474,6 +591,19 @@ class CoursePress_Data_Student {
 		return ! empty( $responses ) && isset( $responses[ $response_index ] ) ? $responses[ $response_index ] : false;
 	}
 
+	/**
+	 * Get an instructor feedback.
+	 *
+	 * @param (int) $student_id					The user ID.
+	 * @param (int) $course_id					The course ID.
+	 * @param (int) $unit_id					The unit ID the module belongs to.
+	 * @param (int) $module_id					The module ID the feedback belongs to.
+	 * @param (int) $response_index				The array key position of the response the feedback is given to.
+	 * @param (int) $feedback_index				The array key position of the feedback in the feedback list.
+	 * @param (array) $data						Optional. An array of previously fetch course completion data.
+	 * 
+	 * @return Returns the feedback given if not empty, otherwise false.
+	 **/
 	public static function get_feedback(
 		$student_id, $course_id, $unit_id, $module_id, $response_index = false, $feedback_index = false, &$data = false
 	) {
@@ -499,6 +629,20 @@ class CoursePress_Data_Student {
 		return ! empty( $feedback ) && isset( $feedback[ $feedback_index ] ) ? $feedback[ $feedback_index ] : false;
 	}
 
+	/**
+	 * Record the feedback and save to DB.
+	 *
+	 * @param (int) $student_id					The user ID.
+	 * @param (int) $course_id					The course ID.
+	 * @param (int) $unit_id					The unit ID the module belongs to.
+	 * @param (int) $module_id					The module ID the feedback belongs to.
+	 * @param (string) $feedback_new			The new feedback to record.
+	 * @param (int) $response_index				The array key position of the response the feedback is given for.
+	 * @param (array) $data						An array of previously fetch course completion data.
+	 * @param (bool) $is_draft					Whether the feedback is save as draft or published.
+	 *
+	 * @return Returns an array of course completion data including the new inserted feedback.
+	 **/
 	public static function record_feedback(
 		$student_id, $course_id, $unit_id, $module_id, $feedback_new, $response_index = false, &$data = false, $is_draft = false
 	) {

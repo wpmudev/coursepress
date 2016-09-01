@@ -18,7 +18,7 @@ class CoursePress_Helper_UI_Module {
 	const INPUT_UPLOAD = 'input-upload';
 	const INPUT_ADVANCED = 'input-mixed';
 	const INPUT_QUIZ = 'input-quiz';
-	const INPUT_FORM= 'input-form';
+	const INPUT_FORM = 'input-form';
 
 	public static function render( $data = 'TODO' ) {
 		$content = '';
@@ -245,11 +245,13 @@ class CoursePress_Helper_UI_Module {
 				'title' => __( 'Quiz', 'cp' ),
 				'mode' => 'input',
 				'icon' => 'default',
+				'dashicon' => 'forms',
 			),
 			self::INPUT_FORM => array(
 				'title' => __( 'Form', 'cp' ),
 				'mode' => 'input',
 				'icon' => 'default',
+				'dashicon' => 'feedback',
 			),
 
 			// self::INPUT_ADVANCED => array(
@@ -311,6 +313,7 @@ class CoursePress_Helper_UI_Module {
 				'title' => __( 'Discussion', 'cp' ),
 				'mode' => 'output',
 				'icon' => 'default',
+				'dashicon' => 'testimonial',
 			),
 		);
 
@@ -951,7 +954,7 @@ class CoursePress_Helper_UI_Module {
 					"components": [
 						{
 							"label": "' . __( 'Form elements', 'cp' ) . '",
-							"description": "' . __( 'Add all the elements for your form here', 'cp' ) . '",
+							"description": "' . __( 'Add all the elements for your form here', 'cp' ) .'",
 							"class": "wide",
 							"items": [
 								{

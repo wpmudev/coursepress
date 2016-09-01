@@ -102,3 +102,18 @@
 	}
 }
 
+.module-discussion {
+	.dashicons {
+		color: #959595;
+	}
+}
+.module-discussion,
+.module-input-quiz,
+.module-input-form {
+	.dashicons {
+		font-size: 30px;
+		padding-top: 6px;
+		height: 40px;
+		width: 40px;
+	}
+}

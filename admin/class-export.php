@@ -132,7 +132,6 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 						$courses[$course_id]['comments']['course'][] = $comment;
 					}
 				}
-
 			}
 
 			$sitename = sanitize_key( get_bloginfo( 'name' ) );
