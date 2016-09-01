@@ -148,7 +148,7 @@ class CoursePress_View_Admin_Course_Student {
 				'tinymce' => false,
 			);
 			ob_start();
-			wp_editor( $editor_content, $editor_id, $args );
+			wp_editor( '', $editor_id, $args );
 			$content .= ob_get_clean();
 			$content .= '</td>';
 			$content .= '</tr>';
