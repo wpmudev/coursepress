@@ -16,8 +16,9 @@ class CoursePress_Template_Module {
 
 	public static function template( $module_id = 0 ) {
 		if ( empty( $module_id ) ) {
-			return ''; // Nothing to process
+			return ''; // Nothing to process, bail!
 		}
+
 		$attributes = self::attributes( $module_id );
 		$module_type = $attributes['module_type'];
 		$method = 'render_' . str_replace( '-', '_', $module_type );
@@ -25,6 +26,9 @@ class CoursePress_Template_Module {
 		$unit_id = $module->post_parent;
 		$course_id = get_post_field( 'post_parent', $unit_id );
 		$course_status = CoursePress_Data_Course::get_course_status( $course_id );
+		$is_module_asnwerable = preg_match( '%input-%', $module_type );
+		$disabled = false;
+		$element_class = '';
 
 		// Module header
 		$content = self::render_module_head( $module, $attributes );
@@ -39,17 +43,24 @@ class CoursePress_Template_Module {
 				$student_progress = self::$student_progress;
 			}
 
-			$responses = CoursePress_Data_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
-			$element_class = ! empty( $responses ) ? 'hide' : '';
-			$response_count = ! empty( $responses ) ? count( $responses ) : 0;
+			if ( $is_module_asnwerable ) {
+				$responses = CoursePress_Data_Student::get_responses( get_current_user_id(), $course_id, $unit_id, $module_id, true, $student_progress );
+				$element_class = ! empty( $responses ) ? 'hide' : '';
+				$response_count = ! empty( $responses ) ? count( $responses ) : 0;
 
-			$disabled = false === $attributes['allow_retries'] && 0 < $response_count;
-			$disabled = ! ( ( false === $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
-			//Force disabled to true if the course is closed
-			$course_status = CoursePress_Data_Course::get_course_status($course_id) == 'closed';
+				// Check if retry is enable
+				if ( ! empty( $attributes['allow_retries'] ) && 0 < $response_count ) {
+					$attempts = (int) $attributes['retry_attempts'];
+					if ( $attempts >= $reponse_count ) {
+						$disabled = true;
+					}
+				}
+			}
+
 			if ( $course_status ){
 				$disabled = true;
 			}
+
 			// RESUBMIT LOGIC
 			$action = false === $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit Answer', 'cp' ) . '</a></div>' : '';
 
@@ -59,7 +70,8 @@ class CoursePress_Template_Module {
 			$module_elements = sprintf( '<div class="module-elements %s">%s</div>', $element_class, $module_elements, $disabled );
 
 			if ( 'closed' == $course_status ) {
-				$module_warning = sprintf( '<div class="module-warnings"><p>%s</p></div>', esc_html__( 'This course is completed, you can not submit answers anymore.', 'cp' ) );
+				$format = '<div class="module-warnings"><p>%s</p></div>';
+				$module_warning = sprintf( $format, esc_html__( 'This course is completed, you can not submit answers anymore.', 'cp' ) );
 
 				/**
 				 * Filter the warning message.
@@ -270,7 +282,7 @@ class CoursePress_Template_Module {
 			$content .= '<ul style="list-style:none;">';
 
 			foreach ( $attributes['answers'] as $key => $answer ) {
-				$format = '<li class="%1$s %2$s"><label for="module-%3$s-%5$s">%4$s</label> <input type="checkbox" value="%5$s" name="module-%3$s" id="module-%3$s-%5$s" %6$s /></li>';
+				$format = '<li class="%1$s %2$s"><label for="module-%3$s-%5$s">%4$s</label> <input type="checkbox" value="%5$s" name="module[%3$s]" id="module-%3$s-%5$s" %6$s /></li>';
 				$content .= sprintf( $format, $oddeven, $alt, $module->ID, esc_html__( $answer ), esc_attr( $key ), $disabled_attr );
 
 				$oddeven = 'odd' === $oddeven ? 'even' : 'odd';
@@ -295,7 +307,7 @@ class CoursePress_Template_Module {
 			$content .= '<ul style="list-style:none;">';
 
 			foreach ( $attributes['answers'] as $key => $answer ) {
-				$format = '<li class="%1$s %2$s"><label for="module-%3$s-%5$s">%4$s</label> <input type="radio" value="%5$s" name="module-%3$s" id="module-%3$s-%5$s" %6$s /></li>';
+				$format = '<li class="%1$s %2$s"><label for="module-%3$s-%5$s">%4$s</label> <input type="radio" value="%5$s" name="module[%3$s]" id="module-%3$s-%5$s" %6$s /></li>';
 				$content .= sprintf( $format, $oddeven, $alt, $module->ID, esc_html__( $answer ), esc_attr( $key ), $disabled_attr );
 
 				$oddeven = 'odd' === $oddeven ? 'even' : 'odd';
@@ -320,7 +332,7 @@ class CoursePress_Template_Module {
 			foreach ( $attributes['answers'] as $key => $answer ) {
 				$options .= sprintf( '<option value="%s">%s</option>', esc_attr( $key ), esc_html( $answer ) );
 			}
-			$content .= sprintf( '<select class="wide" name="module-%s" %s>%s</select>', $module->ID, $disabled_attr, $options );
+			$content .= sprintf( '<select class="wide" name="module[%s]" %s>%s</select>', $module->ID, $disabled_attr, $options );
 		}
 
 		return $content;
@@ -332,7 +344,7 @@ class CoursePress_Template_Module {
 		$placeholder_text = get_post_meta( $module->ID, 'placeholder_text', true );
 		$placeholder_text = ! empty( $placeholder_text ) ? $placeholder_text : '';
 		$disabled_attr = $disabled ? 'disabled="disabled"' : '';
-		$format = '<input type="text" name="module-%s" placeholder="%s" %s />';
+		$format = '<input type="text" name="module[%s]" placeholder="%s" %s />';
 
 		$content = sprintf( $format, $module->ID, esc_attr( $placeholder_text ), $disabled_attr );
 
@@ -345,7 +357,7 @@ class CoursePress_Template_Module {
 		$placeholder_text = get_post_meta( $module->ID, 'placeholder_text', true );
 		$placeholder_text = ! empty( $placeholder_text ) ? $placeholder_text : '';
 		$disabled_attr = $disabled ? 'disabled="disabled"' : '';
-		$format = '<textarea name="module-%s" placeholder="%s" %s rows="3"></textarea>';
+		$format = '<textarea name="module[%s]" placeholder="%s" %s rows="3"></textarea>';
 
 		$content = sprintf( $format, $module->ID, esc_attr( $placeholder_text ), $disabled_attr );
 
@@ -357,7 +369,7 @@ class CoursePress_Template_Module {
 		$student_progress = false === $student_progress ? self::$student_progress : $student_progress;
 		$disabled_attr = $disabled ? 'disabled="disabled"' : '';
 
-		$format = '<label class="file"><input type="file" name="module-%s" %s /><span class="button" data-change="%s" data-upload="%s">%s</label>';
+		$format = '<label class="file"><input type="file" name="module[%s]" %s /><span class="button" data-change="%s" data-upload="%s">%s</label>';
 		$content = sprintf( $format, $module->ID, $disabled_attr, __( 'Change File', 'cp' ), __( 'Upload File', 'cp' ), __( 'Upload File', 'cp' ) );
 
 		return $content;
@@ -374,14 +386,17 @@ class CoursePress_Template_Module {
 				$questions = '<ul style="list-style: none;">';
 
 				foreach ( $question['options']['answers'] as $ai => $answer ) {
-					$type = 'checkbox';
-
-					if ( 'single' == $question['type'] ) {
-						$type = 'radio';
-					}
+					$module_name = sprintf( 'module[%s][%s]', $module->ID, $qi );
 					$quiz_id = 'quiz-module-' . $module->ID . '-' . $qi . '-' . $ai;
-					$format = '<li><label for="%s">%s</label> <input type="%s" id="%s" name="question-%s" value="%s" %s/></li>';
-					$questions .= sprintf( $format, $quiz_id, esc_html( $answer ), $type, $quiz_id, $qi, $ai, $disabled_attr );
+					$type = 'radio';
+
+					if ( 'multiple' == $question['type'] ) {
+						$type = 'checkbox';
+						$module_name .= '[]';
+					}
+
+					$format = '<li><label for="%1$s">%2$s</label> <input type="%3$s" id="%1$s" name="module[%4$s]" value="%5$s" %6$s/></li>';
+					$questions .= sprintf( $format, $quiz_id, esc_html( $answer ), $type, $module_name, $ai, $disabled_attr );
 				}
 
 				$questions .= '</ul>';
@@ -406,7 +421,7 @@ class CoursePress_Template_Module {
 
 			switch ( $question['type'] ) {
 				case 'short':
-					$field = '<input type="text" name="form_module[%s][%s]" placeholder="%s" id="%s" %s />';
+					$field = '<input type="text" name="module[%s][%s]" placeholder="%s" id="%s" %s />';
 					$field = sprintf( $field, $module->ID, $qi, esc_attr( $question['placeholder'] ), $field_id, $disabled_attr );
 					break;
 

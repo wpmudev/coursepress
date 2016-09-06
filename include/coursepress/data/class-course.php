@@ -2163,7 +2163,19 @@ class CoursePress_Data_Course {
 
 	}
 
-	public static function get_course_url( $course_id ) {
+	public static function get_course_url( $course_id = 0 ) {
+		$url = '';
+
+		if ( ! empty( $course_id ) ) {
+			$course_slug = get_post_field( 'post_name', $course_id );
+			$course_url = CoursePress_Core::get_slug( 'course/', true );
+			$course_url .= trailingslashit( $course_slug );
+
+			$url = $course_url;
+		}
+
+		return $url;
+/*
 		$course = get_post( $course_id );
 
 		if ( $course ) {
@@ -2174,6 +2186,7 @@ class CoursePress_Data_Course {
 				return get_permalink( $course_id );
 			}
 		}
+*/
 	}
 
 	public static function is_course_preview( $course_id ) {
