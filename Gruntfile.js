@@ -725,11 +725,11 @@ module.exports = function(grunt) {
 	grunt.task.run( 'clear' );
 
 	// Define default tasks.
-	grunt.registerTask( 'js', ['jsvalidate', 'fixmyjs', 'jshint', 'concat', 'uglify'] );
+	grunt.registerTask( 'js', ['jsvalidate', 'jshint', 'concat', 'uglify'] );
 	grunt.registerTask( 'css', ['sass', 'autoprefixer', 'cssmin'] );
 
 	grunt.registerTask( 'test', ['phpunit'] );
-	grunt.registerTask( 'php', ['phplint', 'phpcbf', 'phpcs:sniff'] );
+	grunt.registerTask( 'php', ['phplint', 'phpcs:sniff'] );
 
 	grunt.registerTask( 'default', ['php', 'test', 'js', 'css'] );
 };
