@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Units Builder Class
+ **/
 class CoursePress_View_Admin_Course_UnitBuilder {
 
 	private static $options = array();
@@ -323,7 +325,8 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 			case 'modules':
 				$modules = CoursePress_Data_Course::get_unit_modules( (int) $_REQUEST['unit_id'], 'any', false, false, array( 'page' => (int) $_REQUEST['page'] ) );
 
-				foreach ( $modules as $module ) {
+				foreach ( $modules as $module_id => $module ) {
+					$attributes = CoursePress_Data_Module::attributes( $module_id );
 					$module_type = $attributes['module_type'];
 
 					$meta = get_post_meta( $module->ID );
