@@ -104,7 +104,7 @@ class CoursePress_Helper_JavaScript {
 				'backbone',
 			);
 
-			if ( apply_filters( 'coursepress_use_select2_student_selector', false ) ) {
+			if ( apply_filters( 'coursepress_use_select2_student_selector', true ) ) {
 				/**
 				 * Deregister script to avoid conflicts, we can do it,we just
 				 * load this on CP related pages.
