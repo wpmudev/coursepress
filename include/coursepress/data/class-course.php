@@ -2163,6 +2163,11 @@ class CoursePress_Data_Course {
 
 	}
 
+	/**
+	 * Generate course url
+	 *
+	 * @param (int) $course_id
+	 **/
 	public static function get_course_url( $course_id = 0 ) {
 		$url = '';
 
@@ -2175,18 +2180,6 @@ class CoursePress_Data_Course {
 		}
 
 		return $url;
-/*
-		$course = get_post( $course_id );
-
-		if ( $course ) {
-			// Check if current course is not yet live.
-			if ( 'publish' != $course->post_status ) {
-				return CoursePress_Core::get_slug( 'courses', true ) . $course->post_name . '/';
-			} else {
-				return get_permalink( $course_id );
-			}
-		}
-*/
 	}
 
 	public static function is_course_preview( $course_id ) {

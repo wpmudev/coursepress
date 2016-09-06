@@ -186,6 +186,8 @@ class CoursePress_Template_Unit {
 
 			if ( $enrolled || $is_instructor || $can_update_course || 'output' == $attributes['mode'] ) {
 				$module_template .= CoursePress_Template_Module::template( $module->ID );
+				// Modules seen here!
+
 			}
 		}
 

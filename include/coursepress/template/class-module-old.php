@@ -881,9 +881,10 @@ class CoursePress_Template_Module {
 		$disabled = ! ( ( ! $disabled ) && ( 0 === (int) $attributes['retry_attempts'] || (int) $attributes['retry_attempts'] >= $response_count ) );
 
 		$course_status = CoursePress_Data_Course::get_course_status($course_id) == 'closed';
+
 		if ( $course_status ){
 			$disabled = true;
-		}		
+		}
 
 		// RESUBMIT LOGIC
 		$action = ! $disabled ? '<div><a class="module-submit-action">' . esc_html__( 'Submit Answer', 'cp' ) . '</a></div>' : '';
