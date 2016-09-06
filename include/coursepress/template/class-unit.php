@@ -181,7 +181,8 @@ class CoursePress_Template_Unit {
 			}
 
 			if ( $enrolled || $is_instructor || $can_update_course || 'output' == $attributes['mode'] ) {
-
+				$content .= CoursePress_Template_Module::template( $module->ID );
+/*
 				if ( method_exists( $template, $method ) ) {
 					$content .= call_user_func(
 						array( $template, $method ),
@@ -189,6 +190,7 @@ class CoursePress_Template_Unit {
 						$attributes
 					);
 				}
+*/
 			}
 		}
 
@@ -327,10 +329,6 @@ class CoursePress_Template_Unit {
 			</div>
 		';
 
-		// COMPLETION LOGIC
-		// if ( 100 == (int) $progress ) {
-		// echo sprintf( '<div class="unit-archive-course-complete">%s %s</div>', '<i class="fa fa-check-circle"></i>', __( 'Course Complete', 'cp' ) );
-		// }
 		$content .= do_shortcode( '[unit_archive_list description="true"]' );
 
 		return $content;
