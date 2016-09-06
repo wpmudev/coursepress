@@ -39,8 +39,6 @@
 		"grunt-autoprefixer": "~0.7.2",
 		"grunt-contrib-sass": "~0.8.1",
 		"grunt-contrib-cssmin": "~0.10.0",
-		"grunt-contrib-watch": "~0.6.1",
-		"grunt-fixmyjs": "~0.1.0",
-		"grunt-phpcbf": "^0.1.0"
+		"grunt-contrib-watch": "~0.6.1"
 	}
 }
