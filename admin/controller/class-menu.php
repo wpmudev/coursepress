@@ -174,7 +174,9 @@ class CoursePress_Admin_Controller_Menu {
 				wp_enqueue_script( 'coursepress_object', $url . 'asset/js/coursepress.js', array( 'jquery', 'backbone', 'underscore' ), $version );
 				wp_enqueue_script( 'chosen', $url . 'asset/js/external/chosen.jquery.min.js' );
 				wp_enqueue_script( 'coursepress_course', $url . 'asset/js/coursepress-course.js', $course_dependencies, $version );
-				wp_enqueue_script( 'coursepress_ui', $url . 'asset/js/coursepress-ui.js', false, $version );
+
+				// @todo: Investigate why the script is missing and it's contents!
+				//wp_enqueue_script( 'coursepress_ui', $url . 'asset/js/coursepress-ui.js', false, $version );
 				wp_enqueue_script( 'jquery-treegrid', $url . 'asset/js/external/jquery.treegrid.min.js' );
 			}
 

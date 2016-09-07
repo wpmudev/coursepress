@@ -109,7 +109,7 @@ class CoursePress_Helper_Setting {
 				$parent = null;
 			}
 
-			$add_page_handler = self::$page_refs[ $handle ] = add_submenu_page(
+			$page = self::$page_refs[ $handle ] = add_submenu_page(
 				$parent,
 				$page['title'],
 				$page['menu_title'],
@@ -122,7 +122,7 @@ class CoursePress_Helper_Setting {
 			 * load callback
 			 */
 			if ( isset( $page['load_action_callback'] ) && is_callable( $page['load_action_callback'] ) ) {
-				add_action( 'load-' . $add_page_handler, $page['load_action_callback'] );
+				add_action( 'load-' . $page, $page['load_action_callback'] );
 			}
 		}
 	}
