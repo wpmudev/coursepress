@@ -126,7 +126,8 @@ class CoursePress_Template_Unit {
 			array( 'page' => $page )
 		);
 
-		$content .= '<div class="unit-wrapper unit-' . $unit->ID . ' course-' . $course_id . '">';
+		$content .= do_action( 'coursepress_before_unit_modules' );
+		$content .= '<div class="cp unit-wrapper unit-' . $unit->ID . ' course-' . $course_id . '">';
 
 		// Page Title.
 		if ( isset( $show_page_titles[ $page - 1 ] ) ) {
@@ -159,7 +160,9 @@ class CoursePress_Template_Unit {
 		}
 
 		// Modules.
-		$module_template = '';
+		$module_template = wp_nonce_field( 'coursepress_submit_modules', '_wpnonce', true, false );
+		$module_template .= sprintf( '<input type="hidden" name="course_id" value="%s" />', $course_id );
+		$module_template .= sprintf( '<input type="hidden" name="unit_id" value="%s" />', $unit_id );
 		foreach ( $modules as $module ) {
 			$preview_modules = array();
 			$can_preview_module = false;
@@ -187,13 +190,7 @@ class CoursePress_Template_Unit {
 			if ( $enrolled || $is_instructor || $can_update_course || 'output' == $attributes['mode'] ) {
 				$module_template .= CoursePress_Template_Module::template( $module->ID );
 				// Modules seen here!
-
 			}
-		}
-
-		if ( ! empty( $module_template ) ) {
-			$format = '<form method="post" enctype="multipart/form-data" class="cp-form">%s</form>';
-			$content .= sprintf( $format, $module_template );
 		}
 
 		// Pager.
@@ -204,8 +201,9 @@ class CoursePress_Template_Unit {
 
 		$url_path = CoursePress_Data_Unit::get_unit_url( $unit->ID );
 		$url_path .= trailingslashit( 'page' );
+		$has_submit_button = false;
 
-		$content .= '<div class="pager unit-pager">';
+		$unit_pager = '<div class="pager unit-pager">';
 
 		// Show pager only if there's more than 1 pages.
 		if ( $total_pages > 1 ) {
@@ -214,7 +212,7 @@ class CoursePress_Template_Unit {
 
 				if ( $enrolled || $can_update_course || ( ! empty( $preview_pages ) && in_array( $i, $preview_pages ) ) ) {
 					$format = '<span class="page page-%s"><a href="%s">%s</a></span> ';
-					$content .= sprintf( $format, $i, esc_url_raw( $unit_url ), $i );
+					$unit_pager .= sprintf( $format, $i, esc_url_raw( $unit_url ), $i );
 				}
 			}
 
@@ -241,8 +239,9 @@ class CoursePress_Template_Unit {
 
 			if ( (int) $next_page > 0 ) {
 				$unit_url = $url_path . $next_page;
-				$format = '<span class="next-button page page-%s"><a href="%s"><button>%s</button></a></span> ';
-				$content .= sprintf( $format, $next_page, esc_url_raw( $unit_url ), $next_page );
+				$has_submit_button = true;
+				$format = '<input type="submit" name="next_page" value="%1$s" class="next-button page page-%1$s" />';
+				$unit_pager .= sprintf( $format, $next_page );
 			}
 		}
 
@@ -288,13 +287,27 @@ class CoursePress_Template_Unit {
 			}
 		}
 
-		if ( ! empty( $next_unit ) && empty( $next_page ) ) {
-			$unit_url = CoursePress_Data_Unit::get_unit_url( $next_unit );
-			$format = '<span class="next-button unit unit-%s"><a href="%s"><button>%s</button></a></span> ';
-			$content .= sprintf( $format, $next_unit, esc_url_raw( $unit_url ), __( 'Next Unit', 'cp' ) );
+		if ( 0 < (int) $previous_unit_id ) {
+			$unit_url = CoursePress_Data_Unit::get_unit_url( $previous_unit_id );
+			$page_titles = get_post_meta( $previous_unit_id, 'page_title', true );
+
+			if ( 1 < count( $page_titles ) ) {
+				$unit_url .= trailingslashit( 'page' ) . count( $page_titles );
+			}
+			$format = '<a href="%s" class="button prev-button unit unit-%s">%s</a>';
+
+			$unit_pager .= sprintf( $format, esc_url( $unit_url ), $previous_unit_id, __( 'Previous Unit', 'cp' ) );
 		}
 
-		$content .= '</div>'; // .pager
+		if ( ! empty( $next_unit ) && empty( $next_page ) ) {
+			$unit_url = CoursePress_Data_Unit::get_unit_url( $next_unit );
+			$format = '<button type="submit" name="next_unit" value="%1$s" class="next-button unit unit-%1$s">%2$s</button>';
+			$unit_pager .= sprintf( $format, $next_unit, __( 'Next Unit', 'cp' ) );
+		}
+
+		$unit_pager .= '</div>'; // .pager
+		$format = '<form method="post" enctype="multipart/form-data" class="cp-form">%s</form>';
+		$content .= sprintf( $format, $module_template . $unit_pager );
 		$content .= '</div>'; // .unit-wrapper
 
 		// Student Tracking:

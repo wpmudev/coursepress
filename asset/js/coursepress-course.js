@@ -1,4 +1,6 @@
-/*global tinyMCE*/
+/*!  - v2.0.0
+ * 
+ * Copyright (c) 2016; * Licensed GPLv2+ */
 /*global _coursepress*/
 
 var CoursePress = CoursePress || {};
@@ -1673,7 +1675,12 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		// Trigger basic certificate
 		$( '[name="meta_basic_certificate"]' ).each(toggleCertificatePreview);
 
-		$('#student-add, #facilitators, #instructors').select2( Search_Params );
+		/**
+		 * Check select2 exist first!
+		 */
+		if ( "function" == typeof($().select2) ) {
+			$('#student-add, #facilitators, #instructors').select2( Search_Params );
+		}
 	} )
 	// Prevent from opening when inactive
 	.on( 'click', '.btn-cert', function() {

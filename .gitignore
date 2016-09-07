@@ -1,9 +1,6 @@
 # Development Libraries
 /node_modules
 
-# SASS map files:
-*.map
-
 # Logs
 *.log
 
@@ -20,13 +17,11 @@ coursepress-files/pdf-cache/
 
 # Grunt folders
 .sass-cache
-.gitignore
-/asset/css/src/.sass-cache
 /vendor
 /composer.lock
 /composer
 /release
 composer.json
-Gruntfile.js
-/node_modules
-/vendor
+/asset/css/src/.sass-cache
+/asset/css/src/admin/.sass-cache
+/asset/css/src/front/.sass-cache

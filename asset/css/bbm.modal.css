@@ -1,2 +1,17 @@
-.bbm-wrapper{position:absolute;top:65px;width:100%}.enrollment-modal-container{background:white none repeat scroll 0 0;border:1px solid #e6e6e6;margin:0;padding:20px;border-radius:15px}.enrollment-modal-container .bbm-modal__bottombar{padding:20px 0 0 0}
-/*# sourceMappingURL=bbm.modal.css.map */
+.bbm-wrapper {
+  position: absolute;
+  top: 65px;
+  width: 100%;
+}
+
+.enrollment-modal-container {
+  background: white none repeat scroll 0 0;
+  border: 1px solid #e6e6e6;
+  margin: 0;
+  padding: 20px;
+  border-radius: 15px;
+}
+
+.enrollment-modal-container .bbm-modal__bottombar {
+  padding: 20px 0 0 0;
+}
