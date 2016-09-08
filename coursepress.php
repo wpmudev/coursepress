@@ -56,7 +56,7 @@ class CoursePress {
 	 *
 	 * @var string
 	 */
-	public static $version = '2.0.0-BETA3.1.1472718594';
+	public static $version = '2.0.0-BETA3.1.1472556110';
 
 	/**
 	 * Plugin name, this reflects the Pro/Standard version.
