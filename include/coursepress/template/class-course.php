@@ -80,6 +80,9 @@ class CoursePress_Template_Course {
 	 */
 	public static function course_edit_avatar_pending_invite( $invite, $remove_buttons = false, $type = 'instructor' ) {
 		$content = '';
+		if ( empty( $invite ) ) {
+			return $content;
+		}
 		/**
 		 * check type!
 		 */

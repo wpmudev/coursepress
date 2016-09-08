@@ -164,7 +164,7 @@ class CoursePress_Data_Course {
 		/**
 		 * update post counter for posts with the same title
 		 */
-		self::save_course_number( $course_id, $post_type['title'] );
+		self::save_course_number( $course_id, $post['post_title'] );
 
 		// Course Settings
 		$settings = self::get_setting( $course_id, true );
