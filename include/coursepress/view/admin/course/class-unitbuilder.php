@@ -1,15 +1,11 @@
 <?php
-/**
- * Units Builder Class
- **/
+
 class CoursePress_View_Admin_Course_UnitBuilder {
 
 	private static $options = array();
 
-	/**
-	 * Render the units UI
-	 **/
 	public static function render() {
+
 		$content = '';
 
 		foreach ( self::view_templates() as $key => $template ) {
@@ -18,8 +14,8 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 
 		// Cap checking here...
 		$nonce = wp_create_nonce( 'unit_builder' );
-		$info_text = __( 'Unit Builder is loading...', 'cp' );
-		$content .= sprintf( '<div id="unit-builder" data-nonce="%s"><div class="loading">%s</div></div>', $nonce, $info_text );
+
+		$content .= '<div id="unit-builder" data-nonce="' . $nonce . '"><div class="loading">' . esc_html__( 'Unit Builder is loading...', 'cp' ) . '</div></div>';
 
 		return $content;
 	}
@@ -46,6 +42,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 		$can_create_units = CoursePress_Data_Capabilities::can_create_course_unit( $course_id );
 
 		$templates = array(
+
 			'unit_builder' => '
 				<script type="text/template" id="unit-builder-template">
 					<div class="tab-container vertical unit-builder-container">
@@ -53,7 +50,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 						<div id="sticky-wrapper" class="sticky-wrapper sticky-wrapper-tabs">
 							<div class="tabs"></div>' .
 							( $can_create_units ?
-							'<div class="sticky-buttons"><div class="button button-add-new-unit"><i class="fa fa-plus-square"></i> ' . __( 'Add New Unit', 'cp' ) . '</div></div>' : '' )
+							'<div class="sticky-buttons"><div class="button button-add-new-unit"><i class="fa fa-plus-square"></i> ' . esc_html__( 'Add New Unit', 'cp' ) . '</div></div>' : '' )
 						. '</div>
 					</div>
 					<div class="tab-content tab-content-vertical unit-builder-content">
@@ -72,7 +69,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 			'unit_builder_header' => '
 				<script type="text/template" id="unit-builder-header-template">
 				<div class="unit-detail" data-cid="<%- unit_cid %>">
-					<h3><i class="fa fa-cog"></i>' . __( 'Unit Settings', 'cp' ) . '<div class="unit-state">' .
+					<h3><i class="fa fa-cog"></i>' . esc_html__( 'Unit Settings', 'cp' ) . '<div class="unit-state">' .
 						CoursePress_Helper_UI::toggle_switch(
 							'unit-live-toggle',
 							'unit-live-toggle',
@@ -85,7 +82,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					<label for="unit_name">Unit Title</label>
 					<input id="unit_name" class="wide" type="text" value="<%= unit_title %>" name="post_title" spellcheck="true">
 					<div class="unit-additional-info">
-					<label class="unit-description">' . __( 'Unit Description', 'cp' ) . '</label>
+					<label class="unit-description">' . esc_html__( 'Unit Description', 'cp' ) . '</label>
 					<textarea name="unit_description" class="widefat" id="unit_description_1_1"><%= unit_content %></textarea>
 					' . CoursePress_Helper_UI::browse_media_field(
 				'unit_feature_image',
@@ -98,7 +95,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 			) . '
 					</div>
 					<div class="unit-availability">
-						<label for="unit_availability">'. __( 'Unit Availability', 'cp' ) . '</label>
+						<label for="unit_availability">'. esc_html__( 'Unit Availability', 'cp' ) . '</label>
 						<select id="unit_availability" class="narrow" name="meta_unit_availability">
 							<option value="instant"<%= unit_availability == "instant" ? " selected=\"selected\"" : "" %>>'. __( 'Instantly available', 'cp' ) . '</option>
 							<option value="on_date"<%= unit_availability == "on_date" ? " selected=\"selected\"" : "" %>>'. __( 'Available on', 'cp' ) . '</option>
@@ -235,10 +232,8 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 	public static function unit_builder_ajax() {
 		$json_data = array();
 		$skip_empty = false;
-		$task = $_REQUEST['task'];
-		$is_valid = defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $_REQUEST['wp_nonce'] ) && wp_verify_nonce( $_REQUEST['wp_nonce'], 'unit_builder' );
 
-		switch ( $task ) {
+		switch ( $_REQUEST['task'] ) {
 			case 'units':
 				$course_id = (int) $_REQUEST['course_id'];
 				$user_id = get_current_user_id();
@@ -307,11 +302,16 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					do_action( 'coursepress_unit_added', $unit_id, $course_id, $meta );
 
 					// Let's add unit capabilities
-					$user_cap = array(
-						'coursepress_change_unit_status_cap' => true,
-						'coursepress_delete_course_units_cap' => true,
-						'coursepress_update_course_unit_cap' => true,
-					);
+					$user_cap = array();
+					if ( CoursePress_Data_Capabilities::can_change_course_unit_status( $course_id, $unit_id, $user_id ) ) {
+						$user_cap['coursepress_change_unit_status_cap'] = true;
+					}
+					if ( CoursePress_Data_Capabilities::can_delete_course_unit( $course_id, $unit_id, $user_id ) ) {
+						$user_cap['coursepress_delete_course_units_cap'] = true;
+					}
+					if ( CoursePress_Data_Capabilities::can_update_course_unit( $course_id, $unit_id, $user_id ) ) {
+						$user_cap['coursepress_update_course_unit_cap'] = true;
+					}
 					$unit['user_cap'] = $user_cap;
 					$units[] = $unit;
 					$json_data[] = $unit;
@@ -321,15 +321,12 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 				break;
 
 			case 'modules':
-				$unit_id = (int) $_REQUEST['unit_id'];
-				$page = (int) $_REQUEST['page'];
-				$modules = CoursePress_Data_Course::get_unit_modules( $unit_id, 'any', false, false, array( 'page' => $page ) );
+				$modules = CoursePress_Data_Course::get_unit_modules( (int) $_REQUEST['unit_id'], 'any', false, false, array( 'page' => (int) $_REQUEST['page'] ) );
 
-				foreach ( $modules as $module_id => $module ) {
-					$attributes = CoursePress_Data_Module::attributes( $module_id );
+				foreach ( $modules as $module ) {
 					$module_type = $attributes['module_type'];
-					$meta = get_post_meta( $module->ID );
 
+					$meta = get_post_meta( $module->ID );
 					foreach ( $meta as $key => $value ) {
 						// Escape questions and answers before rendering
 						if ( 'questions' === $key ) {
@@ -363,9 +360,11 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 				break;
 
 			case 'units_update':
-				if ( true === $is_valid ) {
+				if ( defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $_REQUEST['wp_nonce'] ) && wp_verify_nonce( $_REQUEST['wp_nonce'], 'unit_builder' ) ) {
+
 					$data = json_decode( file_get_contents( 'php://input' ) );
 					$data = CoursePress_Helper_Utility::object_to_array( $data );
+
 					$units = array();
 
 					foreach ( $data as $unit ) {
@@ -447,10 +446,13 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 				break;
 
 			case 'modules_update':
-				if ( true === $is_valid ) {
+				if ( defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $_REQUEST['wp_nonce'] ) && wp_verify_nonce( $_REQUEST['wp_nonce'], 'unit_builder' ) ) {
+
 					$data = json_decode( file_get_contents( 'php://input' ) );
 					$data = CoursePress_Helper_Utility::object_to_array( $data );
+
 					$unit_id = (int) $_REQUEST['unit_id'];
+
 					$modules = array();
 
 					foreach ( $data as $module ) {
@@ -465,7 +467,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 						$new_module = false;
 						$module_id = isset( $module['ID'] ) ? (int) $module['ID'] : 0;
 
-						if ( empty( $module_id ) ) {
+						if ( ! $module_id ) {
 							$new_module = true;
 							unset( $module['ID'] );
 						}
@@ -487,7 +489,6 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 
 							$id = wp_insert_post( $module );
 							$modules[] = $id;
-
 							foreach ( $meta as $key => $value ) {
 								update_post_meta( $id, $key, $value );
 							}
@@ -517,37 +518,48 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					}
 
 					$json_data['nonce'] = wp_create_nonce( 'unit_builder' );
+
 				}
 				break;
+
+			/*
+			case 'unit_update':
+				$data = json_decode( file_get_contents( 'php://input' ) );
+				$data = CoursePress_Helper_Utility::object_to_array( $data );
+				break;
+			*/
 
 			case 'unit_toggle':
 				$unit_id = (int) $_REQUEST['unit_id'];
 
-				if ( true === $is_valid ) {
+				if ( defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $_REQUEST['wp_nonce'] ) && wp_verify_nonce( $_REQUEST['wp_nonce'], 'unit_builder' ) ) {
+
 					$state = sanitize_text_field( $_REQUEST['state'] );
+
 					$response = wp_update_post( array(
 						'ID' => $unit_id,
 						'post_status' => $state,
 					) );
+
 					do_action( 'coursepress_unit_updated', $unit_id );
+
 					$json_data['nonce'] = wp_create_nonce( 'unit_builder' );
 				}
 
 				$post = get_post( $unit_id );
 				$json_data['post_status'] = $post->post_status;
+
 				break;
 
 			case 'module_add':
-				if ( true === $is_valid ) {
+
+				if ( defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $_REQUEST['wp_nonce'] ) && wp_verify_nonce( $_REQUEST['wp_nonce'], 'unit_builder' ) ) {
 					$data = json_decode( file_get_contents( 'php://input' ) );
 					$data = CoursePress_Helper_Utility::object_to_array( $data );
-					$new_module = false;
-					$meta = array();
 
-					if ( ! empty( $data['meta'] ) ) {
-						$meta = $data['meta'];
-						unset( $data['meta'] );
-					}
+					$new_module = false;
+					$meta = ! empty( $data['meta'] ) ? $data['meta'] : array();
+					unset( $data['meta'] );
 
 					if ( ! (int) $data['ID'] ) {
 						$new_module = true;
@@ -566,9 +578,10 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 						update_post_meta( $id, $key, $value );
 					}
 
+					do_action( 'coursepress_module_added', $id, $data['post_parent'], $meta );
+
 					$json_data['nonce'] = wp_create_nonce( 'unit_builder' );
 
-					do_action( 'coursepress_module_added', $id, $data['post_parent'], $meta );
 				}
 				break;
 		}
