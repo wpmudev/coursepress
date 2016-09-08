@@ -334,7 +334,10 @@ class CoursePress_View_Front_EnrollmentPopup {
 						$course_meta = get_post_meta( $course_id );
 						foreach ( $course_meta as $key => $value ) {
 							if ( ! preg_match( '/^_/', $key ) ) {
-								update_post_meta( $new_course_id, $key, maybe_unserialize( $value[0] ) );
+								$success = add_post_meta( $new_course_id, $key, maybe_unserialize( $value[0] ), true );
+								if ( ! $success ) {
+									update_post_meta( $new_course_id, $key, maybe_unserialize( $value[0] ) );
+								}
 							}
 						}
 
@@ -364,7 +367,10 @@ class CoursePress_View_Front_EnrollmentPopup {
 							$unit_meta = get_post_meta( $unit_id );
 							foreach ( $unit_meta as $key => $value ) {
 								if ( ! preg_match( '/^_/', $key ) ) {
-									update_post_meta( $new_unit_id, $key, maybe_unserialize( $value[0] ) );
+									$success = add_post_meta( $new_unit_id, $key, maybe_unserialize( $value[0] ), true );
+									if ( ! $success ) {
+										update_post_meta( $new_unit_id, $key, maybe_unserialize( $value[0] ) );
+									}
 								}
 							}
 
@@ -390,7 +396,10 @@ class CoursePress_View_Front_EnrollmentPopup {
 									$module_meta = get_post_meta( $module_id );
 									foreach ( $module_meta as $key => $value ) {
 										if ( ! preg_match( '/^_/', $key ) ) {
-											update_post_meta( $new_module_id, $key, maybe_unserialize( $value[0] ) );
+											$success = add_post_meta( $new_module_id, $key, maybe_unserialize( $value[0] ), true );
+											if ( ! $success ) {
+												update_post_meta( $new_module_id, $key, maybe_unserialize( $value[0] ) );
+											}
 										}
 									}
 								}

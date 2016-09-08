@@ -83,8 +83,21 @@ class CoursePress_View_Admin_Communication_Discussion {
 
 			$id = wp_insert_post( $args );
 
-			update_post_meta( $id, 'course_id', $course_id );
-			update_post_meta( $id, 'unit_id', $unit_id );
+			/**
+			 * Try to add course_id - it should be unique post meta.
+			 */
+			$success == add_post_meta( $id, 'course_id', $course_id, true );
+			if ( ! $success ) {
+				update_post_meta( $id, 'course_id', $course_id );
+			}
+
+			/**
+			 * Try to add unit_id - it should be unique post meta.
+			 */
+			$success = add_post_meta( $id, 'unit_id', $unit_id, true );
+			if ( ! $success ) {
+				update_post_meta( $id, 'unit_id', $unit_id );
+			}
 
 			$url = admin_url( 'admin.php?page=' . self::$slug );
 			wp_redirect( esc_url_raw( $url ) );

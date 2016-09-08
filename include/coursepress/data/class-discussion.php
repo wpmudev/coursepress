@@ -130,8 +130,21 @@ class CoursePress_Data_Discussion {
 				$unit_id = $_POST['units_dropdown'];
 			}
 
-			update_post_meta( $post_id, 'course_id', $course_id );
-			update_post_meta( $post_id, 'unit_id', $unit_id );
+			/**
+			 * Try to add course_id - it should be unique post meta.
+			 */
+			$success == add_post_meta( $post_id, 'course_id', $course_id, true );
+			if ( ! $success ) {
+				update_post_meta( $post_id, 'course_id', $course_id );
+			}
+
+			/**
+			 * Try to add unit_id - it should be unique post meta.
+			 */
+			$success = add_post_meta( $post_id, 'unit_id', $unit_id, true );
+			if ( ! $success ) {
+				update_post_meta( $post_id, 'unit_id', $unit_id );
+			}
 
 			foreach ( $_POST as $key => $value ) {
 				if ( preg_match( '/meta_/i', $key ) ) {//every field name with prefix "meta_" will be saved as post meta automatically
