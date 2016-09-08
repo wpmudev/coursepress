@@ -163,4 +163,5 @@ class CoursePress_Template_Course {
 		$content .= '</script>';
 		return $content;
 	}
+
 }

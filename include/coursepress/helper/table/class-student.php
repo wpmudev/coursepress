@@ -82,7 +82,6 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 			'name' => __( 'Name', 'cp' ),
 			'registered' => __( 'Registered', 'cp' ),
 			'last_activity' => __( 'Last Activity', 'cp' ),
-			'last_activity' => __( 'Last Login', 'cp' ),
 			'courses' => __( 'Courses', 'cp' ),
 		);
 
@@ -109,15 +108,6 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 
 			case 'last_activity':
 				$last_activity = get_user_meta( $user_id, 'latest_activity', true );
-				if ( empty( $last_activity ) ) {
-					$last_activity = get_user_meta( $user_id, 'last_login', true );
-					if ( ! empty( $last_activity ) ) {
-						$last_activity = $last_activity['time'];
-					}
-				}
-				if ( empty( $last_activity ) ) {
-					return sprintf( '<small>%s</small>', __( '[never]', 'cp' ) );
-				}
 				$return = date_i18n( $date_format . ' ' . $time_format, CoursePress_Data_Course::strtotime( $last_activity ) );
 				break;
 

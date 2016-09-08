@@ -239,7 +239,7 @@ class CoursePress_Helper_Setting_Email {
 				CoursePress_Helper_Email::FACILITATOR_INVITATION => array(
 					'title' => __( 'Facilitator Invitation Email', 'cp' ),
 					'description' => __( 'Settings for an e-mail a facilitator will get upon receiving an invitation.', 'cp' ),
-					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'cp' ) . implode( ', ', $instructor_invitation_fields ),
+					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'cp' ) . implode( ', ', $facilitator_invitation_fields ),
 					'order' => 5,
 				),
 				CoursePress_Helper_Email::NEW_ORDER => array(

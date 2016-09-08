@@ -1377,7 +1377,6 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					'facilitator_label' => __( 'Courses you facilitated', 'cp' ),
 					'suggested_msg' => __( 'You are not enrolled in any courses.<br />Here are a few you might like, or <a href="%s">see all available courses.</a>', 'cp' ),
 					'show_labels' => false,
-					'class' => '',
 				),
 				$atts,
 				'course_page'
@@ -1388,7 +1387,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$student_list = false;
 		$atts['dashboard'] = cp_is_true( $atts['dashboard'] );
 		$courses = array();
-		$content = sprintf( '<div class="course-list %s">', esc_attr( $atts['class'] ) );
+		$content = '';
 		$student = 0;
 
 		if ( ! empty( $atts['instructor'] ) ) {
@@ -1503,7 +1502,6 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				}
 			}
 		}
-		$content .= '</div>';
 
 /***
  * Hide this for reference
