@@ -550,6 +550,11 @@ class CoursePress_Core {
 		 */
 		$new_rules[ '^' . self::get_slug( 'student_settings' ) . '/?$' ] = 'index.php?page_id=-1&pagename='.self::get_slug( 'student_settings' );
 
+		/**
+		 * Student Dashboard
+		 */
+		$new_rules[ '^' . self::get_slug( 'student_dashboard' ) . '/?$' ] = 'index.php?page_id=-1&pagename='.self::get_slug( 'student_dashboard' );
+
 		$upload_dir = wp_upload_dir();
 		$upload_path = trailingslashit( str_replace( home_url(), '', $upload_dir['baseurl'] ) );
 		$new_rules[ '^' . self::get_slug( 'course' ) . '/file/([^/]*)/'  ] = 'wp-content/uploads/$matches[1]';
