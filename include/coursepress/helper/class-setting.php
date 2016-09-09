@@ -245,9 +245,9 @@ class CoursePress_Helper_Setting {
 			$slug = CoursePress_View_Admin_Course_Edit::get_slug();
 			if ( $slug == $page ) {
 				$timepicker_css = CoursePress::$url . 'asset/css/external/jquery-ui-timepicker-addon.min.css';
-				$timepicker_js = CoursePress::$url . 'asset/js/external/jquery-ui-timepicker-addon.min.js';		
+				$timepicker_js = CoursePress::$url . 'asset/js/external/jquery-ui-timepicker-addon.min.js';
 				wp_enqueue_style( 'coursepress_admin_timepicker', $timepicker_css, false, CoursePress::$version );
-				wp_enqueue_script( 'coursepress_admin_timepicker', $timepicker_js, array( 'jquery-ui-slider' , 'jquery-ui-datepicker' ), CoursePress::$version, true );
+				wp_enqueue_script( 'coursepress_admin_timepicker', $timepicker_js, array( 'jquery-ui-slider', 'jquery-ui-datepicker' ), CoursePress::$version, true );
 			}
 		}
 
@@ -371,6 +371,7 @@ class CoursePress_Helper_Setting {
 	private static function courses_get_columns( $option = '' ) {
 		$columns = array(
 			'ID' => __( 'ID', 'cp' ),
+			'categories' => __( 'Categories', 'cp' ),
 			'date_start' => __( 'Start date', 'cp' ),
 			'date_end' => __( 'End Date', 'cp' ),
 			'date_enrollment_start' => __( 'Enrollment Start', 'cp' ),

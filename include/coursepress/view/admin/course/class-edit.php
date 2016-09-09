@@ -220,25 +220,8 @@ class CoursePress_View_Admin_Course_Edit {
 		$content .= apply_filters( 'coursepress_course_setup_step_1_after_title', '', $course_id );
 
 		// Course Excerpt / Short Overview
-		$editor_name = 'course_excerpt';
-		$editor_id = 'courseExcerpt';
 		$editor_content = ! empty( self::$current_course ) ? htmlspecialchars_decode( self::$current_course->post_excerpt ) : '';
-		// $editor_content = htmlspecialchars_decode( ( isset( $_GET[ 'course_id' ] ) ? $course_details->post_excerpt : '' ) );
-		// $editor_content = "whatup!";
-		$args = array(
-			'textarea_name' => $editor_name,
-			'editor_class' => 'cp-editor cp-course-overview',
-			'textarea_rows' => 4,
-			'media_buttons' => false,
-			// "quicktags" => false,
-		);
-
-		// Filter $args
-		$args = apply_filters( 'coursepress_element_editor_args', $args, $editor_name, $editor_id );
-
-		ob_start();
-		wp_editor( $editor_content, $editor_id, $args );
-		$editor_html = ob_get_clean();
+		$editor_html = self::get_wp_editor( 'courseExcerpt', 'course_excerpt', $editor_content );
 
 		$content .= '
 				<div class="wide">
@@ -352,23 +335,11 @@ class CoursePress_View_Admin_Course_Edit {
 		);
 
 		// Course Description
-		$editor_name = 'course_description';
-		$editor_id = 'courseDescription';
 		$editor_content = ! empty( self::$current_course ) ? htmlspecialchars_decode( self::$current_course->post_content ) : '';
-
 		$args = array(
-			'textarea_name' => $editor_name,
-			'editor_class' => 'cp-editor cp-course-overview',
-			'textarea_rows' => 10,
 			'media_buttons' => true,
 		);
-
-		// Filter $args
-		$args = apply_filters( 'coursepress_element_editor_args', $args, $editor_name, $editor_id );
-
-		ob_start();
-		wp_editor( $editor_content, $editor_id, $args );
-		$editor_html = ob_get_clean();
+		$editor_html = self::get_wp_editor( 'courseDescription', 'course_description', $editor_content, $args );
 
 		$content .= '
 				<div class="wide">
@@ -1102,15 +1073,6 @@ class CoursePress_View_Admin_Course_Edit {
 		$content .= '<div class="step-content step-7">
 			<input type="hidden" name="meta_setup_step_7" value="saved" />';
 
-		$args = array(
-			'textarea_name' => 'meta_pre_completion_content',
-			'editor_class' => 'cp-editor cp-course-overview',
-			'media_buttons' => false,
-			'tinymce' => array(
-				'height' => '300',
-			),
-		);
-
 		// Course completion
 		$minimum_grade = CoursePress_Data_Course::get_setting( $course_id, 'minimum_grade_required', 100 );
 		$content .= '<div class="wide class-size">';
@@ -1142,21 +1104,9 @@ class CoursePress_View_Admin_Course_Edit {
 			. '<label for="meta_pre_completion_content" class="required">' . __( 'Page Content', 'cp' ) . '</label>'
 			. $token_info
 		;
-
-		ob_start();
-		wp_editor( $pre_completion_content, 'pre-completion-content', $args );
-		$content .= ob_get_clean();
+		$content .= self::get_wp_editor( 'pre-completion-content', 'meta_pre_completion_content', $pre_completion_content );
 		$content .= '</div>';
 
-		// Completion page
-		$editor_args = array(
-			'textarea_name' => 'meta_course_completion_content',
-			'editor_class' => 'cp-editor cp-course-overview',
-			'media_buttons' => false,
-			'tinymce' => array(
-				'height' => '300',
-			),
-		);
 		$content .= '<div class="wide class-size">'
 			. '<label>' . __( 'Course Completion Page', 'cp' ) . '</label>'
 			. '<p class="description">' . __( 'Use the fields below to show a custom page after successfull course completion.', 'cp' ) . '</p>'
@@ -1165,10 +1115,7 @@ class CoursePress_View_Admin_Course_Edit {
 		;
 
 		$content .= '<label for="meta_course_completion_content" class="required">' . __( 'Page Content', 'cp' ) . '</label>' . $token_info;
-		ob_start();
-		wp_editor( $completion_content, 'course-completion-editor-content', $editor_args );
-
-		$content .= ob_get_clean();
+		$content .= self::get_wp_editor( 'course-completion-editor-content', 'meta_course_completion_content', $completion_content );
 		$content .= '</div>';
 
 		// Fail info
@@ -1184,18 +1131,7 @@ class CoursePress_View_Admin_Course_Edit {
 			<input type="text" class="widefat" name="meta_course_failed_title" value="'. esc_attr__( $failed_title ) . '" />
 			<label for="meta_course_field_content" class="required">'. __( 'Page Content', 'cp' ) . '</label>'
 			. $token_info;
-
-		$editor_args = array(
-			'textarea_name' => 'meta_course_failed_content',
-			'editor_class' => 'cp-editor cp-course-overview',
-			'media_buttons' => false,
-			'tinymce' => array(
-				'height' => '300',
-			),
-		);
-		ob_start();
-		wp_editor( $failed_content, 'course-failed-content', $editor_args );
-		$content .= ob_get_clean();
+		$content .= self::get_wp_editor( 'course-failed-content', 'meta_course_failed_content', $failed_content );
 		$content .= '</div>';
 
 		// Basic certificate
@@ -1237,18 +1173,7 @@ class CoursePress_View_Admin_Course_Edit {
 			. '<label for="meta_basic_certificate_layout">' . __( 'Certificate Content', 'cp' ) . '</label>'
 			. '<p class="description" style="float:left;">' . __( 'Useful tokens: ', 'cp' ) . implode( ', ', $field_keys ) . '</p>'
 		;
-
-		$editor_args2 = array(
-			'textarea_name' => 'meta_basic_certificate_layout',
-			'editor_class' => 'cp-editor cp-course-overview',
-			'media_buttons' => false,
-			'tinymce' => array(
-				'height' => '300',
-			),
-		);
-		ob_start();
-		wp_editor( $certficate_content, 'basic-certificate-layout', $editor_args2 );
-		$content .= ob_get_clean();
+		$content .= self::get_wp_editor( 'basic-certificate-layout', 'meta_basic_certificate', $certficate_content );
 		$content .= '<table class="wide"><tr><td style="width:20%;">'
 			. '<label>' . __( 'Background Image', 'cp' ) . '</label>'
 			. '</td><td>';
@@ -2015,7 +1940,37 @@ class CoursePress_View_Admin_Course_Edit {
 		if ( self::$certificate ) {
 			$mail_atts['attachments'] = array( self::$certificate );
 		}
-
 		return $mail_atts;
 	}
+
+	/**
+	 * Get Wp Editor.
+	 *
+	 * @since 2.0.0
+	 * @access private
+	 *
+	 * @param string $editor_id WP Editor ID
+	 * @param string $editor_name WP Editor name
+	 * @param string $editor_content Edited content.
+	 * @param array $args WP Editor args, see
+	 * https://codex.wordpress.org/Function_Reference/wp_editor#Parameters
+	 * @return string WP Editor.
+	 */
+	private static function get_wp_editor( $editor_id, $editor_name, $editor_content = '', $args = array() ) {
+		$defaults = array(
+			'textarea_name' => $editor_name,
+			'editor_class' => 'cp-editor cp-course-overview',
+			'media_buttons' => false,
+			'tinymce' => array(
+				'height' => '300',
+			),
+		);
+		$args = wp_parse_args( $args, $defaults );
+		$args = apply_filters( 'coursepress_element_editor_args', $args, $editor_name, $editor_id );
+		ob_start();
+		wp_editor( $editor_content, $editor_id, $args );
+		$editor_html = ob_get_clean();
+		return $editor_html;
+	}
+
 }
