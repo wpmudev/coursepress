@@ -4,7 +4,7 @@ class CoursePress_View_Admin_Communication {
 
 	private static $admin_pages = array(
 		'Discussion',
-		'Notification',
+		//'Notification',
 	);
 
 	public static function init() {

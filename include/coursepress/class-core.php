@@ -85,7 +85,8 @@ class CoursePress_Core {
 			CoursePress_Helper_PDF::init();
 
 			new CoursePress_Admin_Assessment;
-			new CoursePress_Admin_Certificate;
+			new CoursePress_Admin_Notifications;
+			//new CoursePress_Admin_Certificate;
 			new CoursePress_Admin_Import;
 			new CoursePress_Admin_Export;
 		} else {
