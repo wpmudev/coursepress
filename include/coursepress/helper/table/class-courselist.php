@@ -67,6 +67,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			'cb' => '<input type="checkbox" />',
 			'ID' => __( 'ID', 'cp' ),
 			'post_title' => __( 'Title', 'cp' ),
+			'categories' => __( 'Categories', 'cp' ),
 			'date_start' => __( 'Start Date', 'cp' ),
 			'date_end' => __( 'End Date', 'cp' ),
 			'date_enrollment_start' => __( 'Enrollment Start', 'cp' ),
@@ -163,6 +164,34 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 			$date = date_i18n( $this->date_format, $date );
 		}
 		return $date;
+	}
+
+	/**
+	 * Course Categories
+	 *
+	 * @since 2.0.0
+	 */
+	public function column_categories( $item ) {
+		$taxonomy = CoursePress_Data_Course::get_post_category_name();
+		$taxonomy_object = get_taxonomy( $taxonomy );
+		$terms = CoursePress_Data_Course::get_course_terms( $item->ID );
+		if ( is_array( $terms ) && ! empty( $terms ) ) {
+			$out = array();
+			$args = array();
+			$args['page'] = CoursePress_View_Admin_CoursePress::get_slug();
+			foreach ( $terms as $t ) {
+				$args['category'] = $t->term_id;
+				$url = add_query_arg( $args, 'admin.php' );
+				$out[] = sprintf(
+					'<a href="%s">%s</a>',
+					esc_url( $url ),
+					esc_html( sanitize_term_field( 'name', $t->name, $t->term_id, $taxonomy, 'display' ) )
+				);
+			}
+			echo join( __( ', ', 'cp' ), $out );
+		} else {
+			echo '<span aria-hidden="true">&#8212;</span><span class="screen-reader-text">' . $taxonomy_object->labels->no_terms . '</span>';
+		}
 	}
 
 	/**
