@@ -214,8 +214,21 @@ class CoursePress_View_Front_Course {
 
 		$id = wp_insert_post( $args );
 
-		update_post_meta( $id, 'course_id', $course_id );
-		update_post_meta( $id, 'unit_id', $unit_id );
+		/**
+		 * Try to add course_id - it should be unique post meta.
+		 */
+		$success == add_post_meta( $id, 'course_id', $course_id, true );
+		if ( ! $success ) {
+			update_post_meta( $id, 'course_id', $course_id );
+		}
+
+		/**
+		 * Try to add unit_id - it should be unique post meta.
+		 */
+		$success = add_post_meta( $id, 'unit_id', $unit_id, true );
+		if ( ! $success ) {
+			update_post_meta( $id, 'unit_id', $unit_id );
+		}
 
 		$url = CoursePress_Core::get_slug( 'course/', true ) .
 			get_post_field( 'post_name', $course_id ) . '/' .
@@ -943,7 +956,6 @@ class CoursePress_View_Front_Course {
 					'type' => CoursePress_Data_Course::get_post_type_name(),
 				);
 			}
-
 		} elseif ( $cp->is_category ) {
 			// Course Category Overview.
 			CoursePress_Helper_Utility::set_the_course_category( $cp->cp_category );
@@ -1319,7 +1331,7 @@ class CoursePress_View_Front_Course {
 				$response = $data->response;
 				$module_type = $data->module_type;
 
-				if ( CoursePress_Data_Course::get_course_status($course_id) == 'closed' ){
+				if ( CoursePress_Data_Course::get_course_status( $course_id ) == 'closed' ) {
 					$json_data['message'] = __( 'This course is completed, you can not submit answers anymore.', 'cp' );
 					wp_send_json_error( $json_data );
 				}
@@ -1632,7 +1644,7 @@ class CoursePress_View_Front_Course {
 							$module_list .= sprintf( '<li><span>%s</li>', $module->post_title );
 						}
 
-						if ( ! empty( $module_list) ) {
+						if ( ! empty( $module_list ) ) {
 							$page_list .= sprintf( '<ol>%s</ol>', $module_list );
 						}
 					}
@@ -1666,7 +1678,7 @@ class CoursePress_View_Front_Course {
 				'course_id' => $course_id,
 				'student_id' => $student_id,
 				'action' => 'certificate',
-				'nonce' => wp_create_nonce( 'coursepress_download_certificate' )
+				'nonce' => wp_create_nonce( 'coursepress_download_certificate' ),
 			),
 			site_url( '/' )
 		);

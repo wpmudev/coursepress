@@ -2037,13 +2037,19 @@ class CoursePress_Data_Course {
 		/**
 		 * update post counter for posts with the same title
 		 */
-		self::save_course_number( $new_course_id, $post_type['title'] );
+		self::save_course_number( $new_course_id, $the_course['post_title'] );
 
 		$course_meta = get_post_meta( $course_id );
 		foreach ( $course_meta as $key => $value ) {
+			/**
+			 * do not copy students to new course
+			 */
+			if ( 'course_enrolled_student_id' == $key ) {
+				continue;
+			}
 			if ( ! preg_match( '/^_/', $key ) ) {
 				foreach ( $value as $key_value ) {
-					add_post_meta( $new_course_id, $key, maybe_unserialize( $key_value ) );
+					add_post_meta( $new_course_id, $key, maybe_unserialize( $key_value ), true );
 				}
 			}
 		}
@@ -2091,14 +2097,22 @@ class CoursePress_Data_Course {
 			$unit_meta = get_post_meta( $unit_id );
 			foreach ( $unit_meta as $key => $value ) {
 				if ( ! preg_match( '/^_/', $key ) ) {
-					update_post_meta( $new_unit_id, $key, maybe_unserialize( $value[0] ) );
+					$success = add_post_meta( $new_unit_id, $key, maybe_unserialize( $value[0] ), true );
+					if ( ! $success ) {
+						update_post_meta( $new_unit_id, $key, maybe_unserialize( $value[0] ) );
+					}
 				}
 			}
 
 			// Update visible units
-			$visible_units[ $new_unit_id ] = $visible_units[ $unit_id ];
-			$preview_units[ $new_unit_id ] = $preview_units[ $unit_id ];
-			unset( $visible_units[ $unit_id ], $preview_units[ $unit_id ] );
+			if ( isset( $visible_units[ $unit_id ] ) ) {
+				$visible_units[ $new_unit_id ] = $visible_units[ $unit_id ];
+				unset( $visible_units[ $unit_id ] );
+			}
+			if ( isset( $preview_units[ $unit_id ] ) ) {
+				$preview_units[ $new_unit_id ] = $preview_units[ $unit_id ];
+				unset( $preview_units[ $unit_id ] );
+			}
 
 			$pages = isset( $unit_schema['pages'] ) ? $unit_schema['pages'] : array();
 			foreach ( $pages as $page_number => $page ) {
@@ -2106,9 +2120,14 @@ class CoursePress_Data_Course {
 				$old_page_key = $unit_id . '_' . $page_number;
 				$new_page_key = $new_unit_id . '_' . $page_number;
 
-				$visible_pages[ $new_page_key ] = $visible_pages[ $old_page_key ];
-				$preview_pages[ $new_page_key ] = $preview_pages[ $old_page_key ];
-				unset( $visible_pages[ $old_page_key ], $preview_pages[ $old_page_key ] );
+				if ( isset( $visible_pages[ $old_page_key ] ) ) {
+					$visible_pages[ $new_page_key ] = $visible_pages[ $old_page_key ];
+					unset( $visible_pages[ $old_page_key ] );
+				}
+				if ( isset( $preview_pages[ $old_page_key ] ) ) {
+					$preview_pages[ $new_page_key ] = $preview_pages[ $old_page_key ];
+					unset( $preview_pages[ $old_page_key ] );
+				}
 
 				$modules = $page['modules'];
 				foreach ( $modules as $module_id => $module ) {
@@ -2136,9 +2155,14 @@ class CoursePress_Data_Course {
 					$old_module_key = $unit_id . '_' . $page_number . '_' . $module_id;
 					$new_module_key = $new_unit_id . '_' . $page_number . '_' . $new_module_id;
 
-					$visible_modules[ $new_module_key ] = $visible_modules[ $old_module_key ];
-					$preview_modules[ $new_module_key ] = $preview_modules[ $old_module_key ];
-					unset( $visible_modules[ $old_module_key ], $preview_modules[ $old_module_key ] );
+					if ( isset( $visible_modules[ $old_module_key ] ) ) {
+						$visible_modules[ $new_module_key ] = $visible_modules[ $old_module_key ];
+						unset( $visible_modules[ $old_module_key ] );
+					}
+					if ( isset( $preview_modules[ $old_module_key ] ) ) {
+						$preview_modules[ $new_module_key ] = $preview_modules[ $old_module_key ];
+						unset( $preview_modules[ $old_module_key ] );
+					}
 				}
 			}
 		}
