@@ -24,7 +24,7 @@ class CoursePress_Data_Notification {
 					'view' => __( 'View Notification', 'cp' ),
 				),
 				'public' => false,
-				'show_ui' => true,
+				'show_ui' => false,
 				'publicly_queryable' => false,
 				'capability_type' => 'notification',
 				'map_meta_cap' => true,
