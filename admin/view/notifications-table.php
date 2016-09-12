@@ -10,7 +10,6 @@ $new_notification_url = add_query_arg( 'action', 'edit' );
 		<?php
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false, false );
 		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false, false );
-		$this->list_notification->search_box( __( 'Search Notifications', 'cp' ), 'search_notifications' );
 		?>
 		<div class="nonce-holder" data-nonce="<?php echo $bulk_nonce; ?>"></div>
 		<?php $this->list_notification->display(); ?>

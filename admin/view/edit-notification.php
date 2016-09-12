@@ -27,7 +27,6 @@ if ( wp_is_mobile() ) {
 include_once ABSPATH.'/wp-admin/includes/meta-boxes.php';
 
 wp_enqueue_script( 'post' );
-wp_enqueue_script('editor-expand');
 
 // Add meta boxes
 add_meta_box(

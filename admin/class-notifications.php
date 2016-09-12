@@ -29,6 +29,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 			// Prepare items
 			$this->list_notification = new CoursePress_Admin_Table_Notifications();
 			$this->list_notification->prepare_items();
+			add_screen_option( 'per_page', array( 'default' => 20 ) );
 
 		} elseif ( 'edit' == $_REQUEST['action'] ) {
 			$this->slug = 'coursepress_edit-notification';
@@ -44,18 +45,21 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 
 			// Update the notification
 			$id = isset( $_REQUEST['id'] ) ? (int) $_REQUEST['id'] : false;
-
-			/**
-			 * check permissions
-			 */
-			if ( ! empty( $id ) ) {
-				if ( ! CoursePress_Data_Capabilities::can_update_notification( $id ) ) {
-					return __( 'You do not have permission to edit this notification.', 'cp' );
-				}
-			}
-
 			$content = CoursePress_Helper_Utility::filter_content( $_POST['post_content'] );
 			$title = CoursePress_Helper_Utility::filter_content( $_POST['post_title'] );
+
+			// Validate
+			if ( empty( $title ) ) {
+				self::$error_message = __( 'No notification title!', 'cp' );
+				return;
+			} elseif ( empty( $_POST['content'] ) ) {
+				self::$error_message = __( 'No notification content!', 'cp' );
+				return;
+			} elseif ( ! empty( $id ) && ! CoursePress_Capabilities::can_delete_notification( $id ) ) {
+				self::$error_message = __( 'You do not have permission to edit this notification.', 'cp' );
+				return;
+			}
+
 			$course_id = 'all' === $_POST['meta_course_id'] ? $_POST['meta_course_id'] : (int) $_POST['meta_course_id'];
 			$post_status = isset( $_POST['post_status'] ) ? $_POST['post_status'] : 'draft';
 
@@ -88,17 +92,25 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 			'publish',
 			'delete',
 			'delete2',
+			'filter',
 		);
 
-		if ( empty( $_REQUEST['action'] ) || ! in_array( $_REQUEST['action'], $actions ) ) {
+		if ( empty( $_REQUEST['action'] ) || ! in_array( strtolower( $_REQUEST['action'] ), $actions ) ) {
 			return;
 		}
 
-		$action = $_REQUEST['action'];
+		$action = strtolower( trim( $_REQUEST['action'] ) );
 		$json_data = array();
 		$success = false;
 
 		switch ( $action ) {
+			case 'filter':
+				if ( ! empty( $_POST['course_id'] ) ) {
+					$course_id = (int) $_POST['course_id'];
+					$url = add_query_arg( 'course_id', $course_id );
+					wp_safe_redirect( $url );
+				}
+				break;
 			case 'publish': case 'unpublish': case 'delete':
 				if ( ! empty( $_REQUEST['bulk-actions'] ) ) {
 					$notification_ids = $_REQUEST['bulk-actions'];
