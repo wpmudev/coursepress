@@ -107,7 +107,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 			case 'filter':
 				if ( ! empty( $_POST['course_id'] ) ) {
 					$course_id = (int) $_POST['course_id'];
-					$url = add_query_arg( 'course_id', $course_id );
+					$url = 0 == $course_id ? remove_query_arg( 'course_id' ) : add_query_arg( 'course_id', $course_id );
 					wp_safe_redirect( $url );
 				}
 				break;
