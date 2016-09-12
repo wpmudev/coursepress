@@ -112,8 +112,10 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 		return $columns;
 	}
 
-	public function column_title( $item ) {
-		$title = $item->post_title;
+	protected function handle_row_actions( $item, $column_name, $primary ) {
+		if ( 'title' !== $column_name ) {
+			return '';
+		}
 
 		$row_actions = array();
 
@@ -136,7 +138,13 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 		);
 		$row_actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $delete_url ), __( 'Delete', 'cp' ) );
 
-		return $title . $this->row_actions( $row_actions );
+		return $this->row_actions( $row_actions );
+	}
+
+	public function column_title( $item ) {
+		$title = $item->post_title;
+
+		return $title;
 	}
 
 	public function extra_tablenav( $which ) {
