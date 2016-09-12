@@ -10,7 +10,7 @@ class CoursePress_View_Admin_CoursePress {
 	private static $admin_pages = array(
 		'Course_Edit',
 		//'Assessment_List',
-		'Assessment_Report',
+		//'Assessment_Report',
 	);
 
 	public static function init() {
