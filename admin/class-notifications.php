@@ -52,7 +52,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 			if ( empty( $title ) ) {
 				self::$error_message = __( 'No notification title!', 'cp' );
 				return;
-			} elseif ( empty( $_POST['content'] ) ) {
+			} elseif ( empty( $_POST['post_content'] ) ) {
 				self::$error_message = __( 'No notification content!', 'cp' );
 				return;
 			} elseif ( ! empty( $id ) && ! CoursePress_Capabilities::can_delete_notification( $id ) ) {
