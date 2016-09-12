@@ -180,7 +180,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 		if ( empty( $the_id ) ) {
 			return '';
 		}
-			$course_id = 'all';
+		$course_id = 'all';
 		if ( 'new' !== $the_id ) {
 			if ( ! CoursePress_Data_Capabilities::can_update_notification( $the_id ) ) {
 				return __( 'You do not have permission to edit this notification.', 'cp' );
@@ -203,6 +203,42 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 			}
 		}
 		echo CoursePress_Helper_UI::get_course_dropdown( 'course_id', 'meta_course_id', false, $options );
+	}
+
+	/**
+	 * Get courses list if curen user do not have 'manage_options'
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return array $courses Array of WP_Post objects
+	 */
+	public static function get_courses() {
+
+		$user_id = get_current_user_id();
+		if ( empty( $user_id ) ) {
+			return array();
+		}
+
+		$courses = CoursePress_Data_Instructor::get_accessable_courses();
+
+		if ( ! empty( $courses ) ) {
+			/** This filter is documented in include/coursepress/helper/class-setting.php */
+			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_assigned_notification_cap' );
+			$is_instructor = user_can( $user_id, $capability );
+			$capability2 = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_notification_cap' );
+			$is_author = user_can( $user_id, $capability2 );
+
+			foreach ( $courses as $index => $course ) {
+				if ( CoursePress_Data_Capabilities::is_course_instructor( $course ) && ! $is_instructor ) {
+					unset( $courses[ $index ] );
+				}
+				if ( $user_id == $course->post_author && ! $is_author ) {
+					unset( $courses[ $index ] );
+				}
+			}
+		}
+
+		return $courses;
 	}
 
 	/**

@@ -27,7 +27,6 @@ if ( wp_is_mobile() ) {
 include_once ABSPATH.'/wp-admin/includes/meta-boxes.php';
 
 wp_enqueue_script( 'post' );
-wp_enqueue_script('editor-expand');
 
 // Add meta boxes
 add_meta_box(
@@ -53,7 +52,8 @@ add_meta_box(
 	<form method="post" class="edit">
 		<?php
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false, false );
-		wp_nonce_field( 'edit_forum' ); ?>
+		wp_nonce_field( 'edit_discussion' );
+		?>
 		<input type="hidden" name="post_status" value="<?Php echo esc_attr( $post_status ); ?>" />
 		<input type="hidden" id="post_ID" name="post_ID" value="<?php echo esc_attr( $the_id ); ?>" />
 		<div id="poststuff">

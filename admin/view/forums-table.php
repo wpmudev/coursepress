@@ -15,6 +15,8 @@ $new_url = add_query_arg( 'action', 'edit', $reset_url );
 	<hr />
 
 	<form method="post">
-		<?php $this->list_forums->display(); ?>
+		<?php
+		wp_nonce_field( 'coursepress_discussion_list' );
+		$this->list_forums->display(); ?>
 	</form>
 </div>

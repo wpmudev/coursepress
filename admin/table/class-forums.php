@@ -6,6 +6,10 @@
  * @subpackage CoursePress
  **/
 class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notifications {
+	private $count = array();
+	private $post_type;
+	private $_categories;
+
 	public function __construct() {
 		$post_format = CoursePress_Data_Discussion::get_format();
 		parent::__construct( array(
@@ -22,7 +26,7 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 		global $wp_query;
 
 		$post_status = 'any';
-		$per_page = $this->get_items_per_page( 'coursepress_notifications_per_page', 20 );
+		$per_page = $this->get_items_per_page( 'coursepress_discussions_per_page', 20 );
 		$current_page = $this->get_pagenum();
 		$offset = ( $current_page - 1 ) * $per_page;
 		$s = isset( $_POST['s'] )? mb_strtolower( trim( $_POST['s'] ) ):false;
@@ -31,12 +35,24 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 			'post_type' => $this->post_type,
 			'post_status' => $post_status,
 			'posts_per_page' => $per_page,
-			'offset' => $offset,
+			'paged' => $current_page,
 			's' => $s,
 		);
 
 		$course_id = isset( $_GET['course_id'] ) ? sanitize_text_field( $_GET['course_id'] ) : '';
 
+		if ( ! empty( $course_id ) ) {
+			$post_args['meta_query'] = array(
+				'relation' => 'AND',
+				array(
+					'key' => 'course_id',
+					'value' => (int) $course_id,
+				)
+			);
+		}
+
+		// @todo: Validate per course
+/*
 		if ( ! empty( $course_id ) && 'all' !== $course_id ) {
 			$post_args['meta_query'] = array(
 				array(
@@ -46,7 +62,7 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 			);
 		} else {
 			// Only show notifications where the current user have access with.
-			$courses = CoursePress_View_Admin_Communication_Notification::get_courses();
+			$courses = array();
 			$courses_ids = array_map( array( __CLASS__, 'get_course_id' ), $courses );
 			// Include notification for all courses
 			$courses_ids[] = 'all';
@@ -58,6 +74,7 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 				),
 			);
 		}
+*/
 
 		// @todo: Add permissions
 		$wp_query = new WP_Query( $post_args );
@@ -87,11 +104,52 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 	public function get_columns() {
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
-			'discussion' => __( 'Topic', 'cp' ),
+			'title' => __( 'Topic', 'cp' ),
 			'course' => __( 'Course', 'cp' ),
 			'status' => __( 'Status', 'cp' ),
 		);
 
 		return $columns;
+	}
+
+	public function column_title( $item ) {
+		$title = $item->post_title;
+
+		$row_actions = array();
+
+		// @todo: Add validation
+		$edit_url = add_query_arg(
+			array(
+				'action' => 'edit',
+				'id' => $item->ID,
+			)
+		);
+		$row_actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'cp' ) );
+
+		// @todo: Validate delete cap
+		$delete_url = add_query_arg(
+			array(
+				'_wpnonce' => wp_create_nonce( 'coursepress_delete_discussion' ),
+				'id' => $item->ID,
+				'action' => 'delete'
+			)
+		);
+		$row_actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $delete_url ), __( 'Delete', 'cp' ) );
+
+		return $title . $this->row_actions( $row_actions );
+	}
+
+	public function extra_tablenav( $which ) {
+		if ( 'top' !== $which ) {
+			return;
+		}
+
+		?>
+		<div class="alignleft actions category-filter">
+			<?php $this->course_filter( $which ); ?>
+			<input type="submit" class="button" name="action" value="<?php esc_attr_e( 'Filter', 'cp' ); ?>" />
+		</div>
+		<?php
+		$this->search_box( __( 'Search Forums', 'cp' ), 'search_discussions' );
 	}
 }
