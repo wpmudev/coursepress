@@ -1163,6 +1163,11 @@ class CoursePress_Data_Course {
 		// Update course count
 		CoursePress_Data_Student::count_enrolled_courses_ids( $student_id, true );
 
+		/**
+		 * Log student activity
+		 */
+		CoursePress_Data_Student::log_student_activity( 'enrolled', $student_id );
+
 		// Reset students count
 		CoursePress_Data_Instructor::reset_students_count( $instructors );
 		return true;

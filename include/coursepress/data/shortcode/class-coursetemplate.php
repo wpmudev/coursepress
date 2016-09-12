@@ -725,7 +725,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 						/**
 						 * do not show title
 						 */
-						$show_title = cp_is_true( $attributes['show_title'] );
+						$show_title = isset( $attributes['show_title'] ) && cp_is_true( $attributes['show_title'] );
 						if ( ! $show_title ) {
 							continue;
 						}
@@ -817,6 +817,8 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			'knob_bg_color' => '#e0e6eb',
 			'knob_data_thickness' => '0.18',
 		), $atts, 'unit_archive_list' ) );
+
+		CoursePress_Data_Student::log_student_activity( 'course_unit_seen' );
 
 		$course_id = (int) $course_id;
 		if ( empty( $course_id ) ) { return ''; }
@@ -1121,7 +1123,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 						if ( ! $is_module_structure_visible ) { continue; }
 
 						$attributes = CoursePress_Data_Module::attributes( $module->ID );
-						$is_required = cp_is_true( $attributes['mandatory'] );
+						$is_required = isset( $attributes['mandatory'] ) && cp_is_true( $attributes['mandatory'] );
 
 						if ( ! CoursePress_Data_Course::can_view_module( $course_id, $unit_id, $module->ID, $page_number ) ) {
 							continue;
@@ -1459,7 +1461,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			'post_status' => $atts['status'],
 			'posts_per_page' => (int) $atts['limit'],
 			'suppress_filters' => true,
-			'meta_key'=> 'cp_course_start_date',
+			'meta_key' => 'cp_course_start_date',
 			'orderby' => 'meta_value_num',
 		);
 
@@ -1483,15 +1485,14 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				$my_courses = CoursePress_Data_Student::my_courses( $student, $courses );
 				$context = $atts['context'];
 
-				if ( isset( $my_courses[$context] ) ) {
-					$courses = $my_courses[$context];
+				if ( isset( $my_courses[ $context ] ) ) {
+					$courses = $my_courses[ $context ];
 				}
 
 				foreach ( $courses as $course ) {
 					$content .= do_shortcode( '[course_list_box course_id="' . $course->ID . '"]' );
 					$counter += 1;
 				}
-
 			} else {
 				foreach ( $courses as $course ) {
 					$edit_page = CoursePress_View_Admin_Course_Edit::$slug;
@@ -1503,8 +1504,8 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			}
 		}
 
-/***
- * Hide this for reference
+		/***
+		* Hide this for reference
 		foreach ( $courses as $course ) {
 			if ( ! $atts['dashboard'] ) {
 				$content .= do_shortcode( '[course_list_box course_id="' . $course->ID . '"]' );
@@ -1539,7 +1540,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				}
 			}
 		}
-*/
+		*/
 		$context = $atts['dashboard'] && $instructor_list ? 'manage' : $atts['context'];
 
 		if ( $atts['dashboard'] && ! empty( $counter ) ) {
@@ -1547,7 +1548,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 			switch ( $context ) {
 				case 'enrolled': case 'current':
-					$label = $atts['current_label'];
+						$label = $atts['current_label'];
 					break;
 				case 'future':
 					$label = $atts['future_label'];
