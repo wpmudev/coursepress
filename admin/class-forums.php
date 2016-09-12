@@ -1,0 +1,245 @@
+<?php
+/**
+ * Forum admin controller
+ *
+ * @package WordPress
+ * @subpackage CoursePress
+ **/
+class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
+	var $parent_slug = 'coursepress';
+	var $slug = 'coursepress_discussions';
+	var $with_editor = false;
+	protected $cap = 'coursepress_discussions_cap';
+	protected $list_forums;
+
+	public function get_labels() {
+		return array(
+			'title' => __( 'CoursePress Forums', 'cp' ),
+			'menu_title' => __( 'Forums', 'cp' ),
+		);
+	}
+
+	public function process_form() {
+		self::update_discussion();
+
+		if ( empty( $_REQUEST['action'] ) || 'edit' !== $_REQUEST['action'] ) {
+			$this->slug = 'coursepress_forums-table';
+
+			// Prepare items
+			$this->list_forums = new CoursePress_Admin_Table_Forums();
+			$this->list_forums->prepare_items();
+			add_screen_option( 'per_page', array( 'default' => 20 ) );
+
+		} elseif ( 'edit' == $_REQUEST['action'] ) {
+			$this->slug = 'coursepress_edit-forum';
+
+			// Set before the page
+			add_screen_option( 'layout_columns', array( 'max' => 2, 'default' => 2 ) );
+		}
+	}
+
+	public static function update_discussion() {
+		// Add or edit discussion
+		if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'edit_discussion' ) ) {
+
+			// Update the discussion
+			$id = isset( $_REQUEST['id'] ) ? (int) $_REQUEST['id'] : false;
+			$content = CoursePress_Helper_Utility::filter_content( $_POST['post_content'] );
+			$title = CoursePress_Helper_Utility::filter_content( $_POST['post_title'] );
+
+			// Validate
+			if ( empty( $title ) ) {
+				self::$error_message = __( 'The topic title is required!', 'cp' );
+				return;
+			} elseif ( empty( $_POST['post_content'] ) ) {
+				self::$error_message = __( 'The topic description is required!', 'cp' );
+				return;
+			} elseif ( ! empty( $id ) && ! CoursePress_Data_Capabilities::can_update_discussion( $id ) ) {
+				self::$error_message = __( 'You have no permission to edit this topic!', 'cp' );
+				return;
+			}
+
+			$course_id = 'all' === $_POST['meta_course_id'] ? $_POST['meta_course_id'] : (int) $_POST['meta_course_id'];
+			$unit_id = 'course' === $_POST['meta_unit_id'] ? $_POST['meta_unit_id'] : (int) $_POST['meta_unit_id'];
+			$post_status = isset( $_POST['post_status'] ) ? $_POST['post_status'] : 'draft';
+
+			$args = array(
+				'post_title' => $title,
+				'post_content' => $content,
+				'post_type' => CoursePress_Data_Discussion::get_post_type_name(),
+				'post_status' => $post_status,
+			);
+
+			if ( empty( $id ) || 'new' == $id ) {
+				$id = wp_insert_post( $args );
+			} else {
+				$args['ID'] = $id;
+				wp_update_post( $args );
+			}
+
+			$success == add_post_meta( $id, 'course_id', $course_id, true );
+			if ( ! $success ) {
+				update_post_meta( $id, 'course_id', $course_id );
+			}
+
+			/**
+			 * Try to add unit_id - it should be unique post meta.
+			 */
+			$success = add_post_meta( $id, 'unit_id', $unit_id, true );
+			if ( ! $success ) {
+				update_post_meta( $id, 'unit_id', $unit_id );
+			}
+
+			$url = add_query_arg( 'id', $id );
+			wp_redirect( esc_url_raw( $url ) );
+			exit;
+		}
+
+		// Discussion actions
+		if ( ! empty( $_REQUEST['action'] ) ) {
+			$actions = array(
+				'delete',
+				'delete2',
+				'filter',
+			);
+			$action = strtolower( trim( $_REQUEST['action'] ) );
+
+			if ( in_array( $action, $actions ) ) {
+				switch ( $action ) {
+					case 'delete' && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_delete_discussion' ) :
+						$id = (int) $_REQUEST['id'];
+
+						// @todo: Add vlidation
+						wp_delete_post( $id );
+
+						$url = remove_query_arg(
+							array(
+								'id',
+								'action',
+								'_wpnonce',
+							)
+						);
+						wp_safe_redirect( $url ); exit;
+						break;
+
+					case 'filter':
+						$id = (int) $_REQUEST['course_id'];
+
+						if ( 0 < $id ) {
+							$url = add_query_arg( 'course_id', $id );
+						} else {
+							$url = remove_query_arg( 'course_id' );
+						}
+						wp_safe_redirect( $url ); exit;
+						break;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Content of box related courses
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return string Content of related courses.
+	 */
+	public static function box_release_courses( $post ) {
+		$the_id = isset( $post->ID ) ? $post->ID : 'new';
+
+		if ( empty( $the_id ) ) {
+			return '';
+		}
+		$course_id = 'all';
+		$unit_id = 'course';
+		if ( 'new' !== $the_id ) {
+			if ( ! CoursePress_Data_Capabilities::can_update_discussion( $the_id ) ) {
+				_e( 'You do not have permission to edit this discussion.', 'cp' );
+				return;
+			}
+			$post = get_post( $the_id );
+			$attributes = CoursePress_Data_Discussion::attributes( $the_id );
+			$course_id = $attributes['course_id'];
+			$unit_id = $attributes['unit_id'];
+		} else {
+			if ( ! CoursePress_Data_Capabilities::can_add_discussion( 0 ) ) {
+				_e( 'You do not have permission to add discussion.', 'cp' );
+				return;
+			}
+		}
+		$options = array();
+		$options['value'] = $course_id;
+		if ( ! CoursePress_Data_Capabilities::can_add_discussion_to_all() ) {
+			$options['courses'] = self::get_courses();
+			if ( empty( $options['courses'] ) ) {
+				_e( 'You do not have permission to add discussion.', 'cp' );
+				return;
+			}
+		}
+
+		printf( '<h4>%s</h4>', __( 'Select Course', 'unit' ) );
+		echo CoursePress_Helper_UI::get_course_dropdown( 'course_id', 'meta_course_id', false, $options );
+		/**
+		 * units
+		 */
+		$options_unit = array();
+		$options_unit['value'] = $unit_id;
+		$options_unit['first_option'] = array(
+			'text' => __( 'All units', 'cp' ),
+			'value' => 'course',
+		);
+		printf( '<h4>%s</h4>', esc_html__( 'Select Unit', 'cp' ) );
+		echo CoursePress_Helper_UI::get_unit_dropdown( 'unit_id', 'meta_unit_id', $course_id, false, $options_unit );
+	}
+
+	/**
+	 * Get courses list if curen user do not have 'manage_options'
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return array $courses Array of WP_Post objects
+	 */
+	public static function get_courses() {
+		$user_id = get_current_user_id();
+		if ( empty( $user_id ) ) {
+			return array();
+		}
+
+		$courses = CoursePress_Data_Instructor::get_accessable_courses();
+
+		if ( ! empty( $courses ) ) {
+			/** This filter is documented in include/coursepress/helper/class-setting.php */
+			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_discussion_cap' );
+			$is_author = user_can( $user_id, $capability );
+			$capability2 = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_assigned_discussion_cap' );
+			$is_instructor = user_can( $user_id, $capability2 );
+
+			foreach ( $courses as $index => $course ) {
+				if ( $course->post_author == $user_id && ! $is_author ) {
+					unset( $courses[ $index ] );
+				}
+				if ( CoursePress_Data_Capabilities::is_course_instructor( $course ) && ! $is_instructor ) {
+					unset( $courses[ $index ] );
+				}
+			}
+		}
+
+		return $courses;
+	}
+
+	/**
+	 * Content of box submitbox
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return string Content of submitbox.
+	 */
+	public static function box_submitdiv() {
+		echo '<div class="submitbox" id="submitpost"><div id="major-publishing-actions"><div id="publishing-action"><span class="spinner"></span>';
+		printf(
+			'<input type="submit" class="button button-primary" value="%s" />',
+			esc_attr__( 'Publish', 'cp' )
+		);
+		echo '</div><div class="clear"></div></div></div>';
+	}
+}

@@ -25,7 +25,7 @@ class CoursePress_Data_Discussion {
 					'view' => __( 'View Thread', 'cp' ),
 				),
 				'public' => false,
-				'show_ui' => true,
+				'show_ui' => false,
 				'publicly_queryable' => false,
 				'capability_type' => 'discussion',
 				'map_meta_cap' => true,

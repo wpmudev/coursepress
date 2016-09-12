@@ -23,7 +23,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 		) );
 
 		$this->post_type = CoursePress_Data_Notification::get_post_type_name();
-		$this->count = wp_count_posts( CoursePress_Data_Notification::get_post_type_name() );
+		$this->count = wp_count_posts( $this->post_type );
 	}
 
 	public function prepare_items() {
@@ -81,6 +81,18 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 		);
 	}
 
+	protected function can_update( $item_id ) {
+		return CoursePress_Data_Capabilities::can_update_notification( $item_id );
+	}
+
+	protected function can_delete( $item_id ) {
+		return CoursePress_Data_Capabilities::can_delete_notification( $item_id );
+	}
+
+	protected function can_change_status( $item_id ) {
+		return CoursePress_Data_Capabilities::can_change_status_notification( $item_id );
+	}
+
 	/** No items */
 	public function no_items() {
 		echo __( 'No notifications found.', 'cp' );
@@ -103,20 +115,17 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 		return $columns;
 	}
 
-	public function column_notification( $item ) {
-		// create a nonce
-		// $duplicate_nonce = wp_create_nonce( 'duplicate_course' );
-		$title = '<strong>' . $item->post_title . '</strong>';
-		$excerpt = CoursePress_Helper_Utility::truncate_html( $item->post_content );
-
-		$edit_page = CoursePress_View_Admin_Communication_Notification::$slug;
+	protected function handle_row_actions( $item, $column_name, $primary ) {
+		if ( 'notification' !== $column_name ) {
+			return '';
+		}
 
 		$actions = array();
 
 		/**
 		 * check current_user_can update?
 		 */
-		if ( CoursePress_Data_Capabilities::can_update_notification( $item ) ) {
+		if ( $this->can_update( $item ) ) {
 			$edit_url = add_query_arg(
 				array(
 					'action' => 'edit',
@@ -126,7 +135,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 			$actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'cp' ) );
 		}
 
-		if ( CoursePress_Data_Capabilities::can_delete_notification( $item ) ) {
+		if ( $this->can_delete( $item ) ) {
 			$delete_url = add_query_arg(
 				array(
 					'action' => 'delete2',
@@ -136,7 +145,18 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 			$actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $delete_url ), __( 'Delete', 'cp' ) );
 		}
 
-		return $title . '<br />' . $excerpt . $this->row_actions( $actions );
+		return $this->row_actions( $actions );
+	}
+
+	public function column_notification( $item ) {
+		// create a nonce
+		// $duplicate_nonce = wp_create_nonce( 'duplicate_course' );
+		$title = '<strong>' . $item->post_title . '</strong>';
+		$excerpt = CoursePress_Helper_Utility::truncate_html( $item->post_content );
+
+		$edit_page = CoursePress_View_Admin_Communication_Notification::$slug;
+
+		return $title;
 	}
 
 	protected function get_bulk_actions() {
@@ -163,7 +183,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 		/**
 		 * check permissions
 		 */
-		if ( ! CoursePress_Data_Capabilities::can_change_status_notification( $item ) ) {
+		if ( ! $this->can_change_status( $item ) ) {
 			return ucfirst( $item->post_status );
 		}
 		// Publish Course Toggle
@@ -212,11 +232,6 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 		$s = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '';
 		$course_id = isset( $_GET['course_id'] ) ? sanitize_text_field( $_GET['course_id'] ) : '';
 
-		echo '<form method="GET">';
-		echo '<input type="hidden" name="page" value="' . $page . '" />';
-		echo '<input type="hidden" name="s" value="' . $s . '" />';
-		echo "<label for='course-category-selector-" . esc_attr( $which ) . "' class='screen-reader-text'>" . __( 'Select course category', 'cp' ) . '</label>';
-
 		$options = array();
 		$options['value'] = $course_id;
 		$options['first_option'] = array(
@@ -225,10 +240,13 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 		);
 		$courses = CoursePress_Data_Capabilities::can_add_notification_to_all() ? false : CoursePress_View_Admin_Communication_Notification::get_courses();
 		echo CoursePress_Helper_UI::get_course_dropdown( 'course_id' . $two, 'course_id' . $two, $courses, $options );
+	}
 
-		submit_button( __( 'Filter', 'cp' ), 'category-filter', '', false, array( 'id' => "filter-courses$two" ) );
-		echo '</form>';
-		echo "\n";
+	protected function pagination( $which ) {
+		// Show pagination only at the bottom
+		if ( 'top' !== $which ) {
+			parent::pagination( $which );
+		}
 	}
 
 	public function extra_tablenav( $which ) {
@@ -238,8 +256,10 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 
 		?>
 		<div class="alignleft actions category-filter">
-			
+			<?php $this->course_filter( $which ); ?>
+			<input type="submit" class="button" name="action" value="<?php esc_attr_e( 'Filter', 'cp' ); ?>" />
 		</div>
 		<?php
+		$this->search_box( __( 'Search Notifications', 'cp' ), 'search_notifications' );
 	}
 }
