@@ -23,14 +23,16 @@ class CoursePress_Admin_Controller_Menu {
 	var $localize_array				= array();
 	/** @var (associative_array)	Use to change the wp_editor settings. **/
 	var $wp_editor_settings 		= array();
+	static $notice_called			= false;
+	static $error_message			= '';
+	static $warning_message 		= '';
+	static $success_message			= '';
 
 	public function __construct() {
 		// Setup menu
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		// Set ajax callback
 		add_action( 'wp_ajax_' . $this->slug, array( $this, 'ajax_request' ) );
-		// Set assets
-		add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
 	}
 
 	public function get_labels() {
@@ -63,6 +65,15 @@ class CoursePress_Admin_Controller_Menu {
 	}
 
 	public function before_page_load() {
+		if ( ! current_user_can( $this->cap ) ) {
+			wp_die( __( 'You have no permission to access this page!', 'cp' ) );
+		}
+
+		// Set assets
+		add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
+		// Admin notices
+		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
+
 		$this->is_page_loaded = true;
 	}
 
@@ -215,7 +226,6 @@ class CoursePress_Admin_Controller_Menu {
 				}
 
 				wp_localize_script( 'coursepress_object', '_coursepress', $this->localize_array );
-
 			}
 		}
 	}
@@ -232,5 +242,19 @@ class CoursePress_Admin_Controller_Menu {
 		echo '<script type="text/template" id="cp-wp-editor">';
 			wp_editor( 'dummy_editor_content', 'dummy_editor_id', $this->wp_editor_settings );
 		echo '</script>';
+	}
+
+	public function admin_notices() {
+		$format = '<div class="notice notice-%s is-dismissible"><p>%s</p></div>';
+
+		if ( ! empty( self::$error_message ) ) {
+			printf( $format, 'error', self::$error_message );
+		}
+		if ( ! empty( self::$warning_message ) ) {
+			printf( $format, 'warning', self::$warning_message );
+		}
+		if ( ! empty( self::$success_message ) ) {
+			printf( $format, 'success', self::$success_message );
+		}
 	}
 }
