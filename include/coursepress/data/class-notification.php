@@ -77,6 +77,5 @@ class CoursePress_Data_Notification {
 		);
 
 		return get_posts( $args );
-
 	}
 }

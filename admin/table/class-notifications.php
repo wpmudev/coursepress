@@ -115,13 +115,10 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 		return $columns;
 	}
 
-	public function column_notification( $item ) {
-		// create a nonce
-		// $duplicate_nonce = wp_create_nonce( 'duplicate_course' );
-		$title = '<strong>' . $item->post_title . '</strong>';
-		$excerpt = CoursePress_Helper_Utility::truncate_html( $item->post_content );
-
-		$edit_page = CoursePress_View_Admin_Communication_Notification::$slug;
+	protected function handle_row_actions( $item, $column_name, $primary ) {
+		if ( 'notification' !== $column_name ) {
+			return '';
+		}
 
 		$actions = array();
 
@@ -148,7 +145,18 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 			$actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $delete_url ), __( 'Delete', 'cp' ) );
 		}
 
-		return $title . '<br />' . $excerpt . $this->row_actions( $actions );
+		return $this->row_actions( $actions );
+	}
+
+	public function column_notification( $item ) {
+		// create a nonce
+		// $duplicate_nonce = wp_create_nonce( 'duplicate_course' );
+		$title = '<strong>' . $item->post_title . '</strong>';
+		$excerpt = CoursePress_Helper_Utility::truncate_html( $item->post_content );
+
+		$edit_page = CoursePress_View_Admin_Communication_Notification::$slug;
+
+		return $title;
 	}
 
 	protected function get_bulk_actions() {
