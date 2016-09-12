@@ -234,10 +234,12 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 
 		$options = array();
 		$options['value'] = $course_id;
+		$options['class'] = 'medium dropdown';
 		$options['first_option'] = array(
 			'text' => __( 'All courses', 'cp' ),
 			'value' => 'all',
 		);
+		//@todo: Change this
 		$courses = CoursePress_Data_Capabilities::can_add_notification_to_all() ? false : CoursePress_View_Admin_Communication_Notification::get_courses();
 		echo CoursePress_Helper_UI::get_course_dropdown( 'course_id' . $two, 'course_id' . $two, $courses, $options );
 	}

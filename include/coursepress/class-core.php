@@ -86,8 +86,8 @@ class CoursePress_Core {
 
 			//new CoursePress_Admin_Students;
 			//new CoursePress_Admin_Instructors;
-			//new CoursePress_Admin_Reports;
 			new CoursePress_Admin_Assessment;
+			new CoursePress_Admin_Reports;
 			new CoursePress_Admin_Notifications;
 			new CoursePress_Admin_Forums;
 			//new CoursePress_Admin_Certificate;
