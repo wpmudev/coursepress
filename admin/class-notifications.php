@@ -55,7 +55,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 			} elseif ( empty( $_POST['post_content'] ) ) {
 				self::$error_message = __( 'No notification content!', 'cp' );
 				return;
-			} elseif ( ! empty( $id ) && ! CoursePress_Capabilities::can_delete_notification( $id ) ) {
+			} elseif ( ! empty( $id ) && ! CoursePress_Data_Capabilities::can_delete_notification( $id ) ) {
 				self::$error_message = __( 'You do not have permission to edit this notification.', 'cp' );
 				return;
 			}
@@ -165,16 +165,67 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 
 				break;
 		}
-	}
+    }
+
+    private static function get_statuses( $post ) {
+        $allowed_statuses = array(
+            'draft'         => __('Draft', 'cp'),
+            'publish'       => __('Published', 'cp')
+        );
+?>
+<div class="misc-pub-section misc-pub-post-status"><label for="post_status"><?php _e('Status:') ?></label>
+<span id="post-status-display">
+<?php
+switch ( $post->post_status ) {
+	case 'private':
+		_e('Privately Published');
+		break;
+	case 'publish':
+		_e('Published');
+		break;
+	case 'future':
+		_e('Scheduled');
+		break;
+	case 'pending':
+		_e('Pending Review');
+		break;
+	case 'draft':
+	case 'auto-draft':
+		_e('Draft');
+		break;
+}
+?>
+</span>
+<a href="#post_status" <?php if ( 'private' == $post->post_status ) { ?>style="display:none;" <?php } ?>class="edit-post-status hide-if-no-js"><span aria-hidden="true"><?php _e( 'Edit' ); ?></span> <span class="screen-reader-text"><?php _e( 'Edit status' ); ?></span></a>
+
+<div id="post-status-select" class="hide-if-js">
+<input type="hidden" name="hidden_post_status" id="hidden_post_status" value="<?php echo esc_attr( ('auto-draft' == $post->post_status ) ? 'draft' : $post->post_status); ?>" />
+<select name='post_status' id='post_status'>
+<?php
+foreach( $allowed_statuses as $status => $label ) {
+    printf(
+        '<option %s value="%s">%s</option>',
+        selected( $post->post_status, $status ),
+        esc_attr( $status ),
+        $label
+    );
+}
+?>
+</select>
+ <a href="#post_status" class="save-post-status hide-if-no-js button"><?php _e('OK'); ?></a>
+ <a href="#post_status" class="cancel-post-status hide-if-no-js button-cancel"><?php _e('Cancel'); ?></a>
+</div>
+<?php
+    }
 
 	/**
-	 * Content of box related courses
+	 * Content of related courses
 	 *
 	 * @since 2.0.0
 	 *
 	 * @return string Content of related courses.
 	 */
-	public static function box_release_courses( $post ) {
+	private static function get_release_courses( $post ) {
 		$the_id = ! empty( $post->ID ) ? $post->ID : 'new';
 
 		if ( empty( $the_id ) ) {
@@ -203,6 +254,62 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 			}
 		}
 		echo CoursePress_Helper_UI::get_course_dropdown( 'course_id', 'meta_course_id', false, $options );
+
+		/**
+		 * an option next to 'Course' dropdown to allow admin/instructors to
+		 * select which group of students can see/receive the notification
+		 */
+
+		echo '<div class="misc-pub-section misc-pub-visibility" id="visibility">';
+		_e('Receivers:', 'cp');
+
+		if ( is_numeric( $course_id ) ) {
+
+			$receivers = get_post_meta( $post->ID, 'receivers', true );
+			if ( empty ( $receivers ) ) {
+				$receivers = 'all';
+			}
+
+			$allowed_options = array(
+				'all' => __('All students of this course', 'cp' ),
+				'passed' => __('All students who pass this course', 'cp' ),
+				'failed' => __('All students who failed this course', 'cp' ),
+			);
+			$units = CoursePress_Data_Course::get_units( $course_id );
+			foreach( $units as $unit_id => $unit ) {
+				$allowed_options['unit-'.$unit_id] = apply_filters( 'the_title', $unit->post_title );
+			}
+?>
+	<span id="post-visibility-display"><?php
+
+			echo esc_html( $visibility_trans ); ?></span>
+<a href="#visibility" class="edit-visibility hide-if-no-js"><span aria-hidden="true"><?php _e( 'Edit' ); ?></span> <span class="screen-reader-text"><?php _e( 'Edit visibility' ); ?></span></a>
+
+<div id="post-visibility-select" class="hide-if-js">
+<input type="hidden" name="hidden_post_visibility" id="hidden-post-visibility" value="<?php echo esc_attr( $visibility ); ?>" />
+<?php
+				foreach( $allowed_options as $key => $label ) {
+					printf(
+						'<input type="radio" name="visibility" id="visibility-radio-%s" value="%s" %s /> <label for="visibility-radio-%s">%s</label><br />',
+						$key,
+						$key,
+						checked( $receivers, $key, false ),
+						$key,
+						$label
+					);
+				}
+?>
+<p>
+ <a href="#visibility" class="save-post-visibility hide-if-no-js button"><?php _e('OK'); ?></a>
+ <a href="#visibility" class="cancel-post-visibility hide-if-no-js button-cancel"><?php _e('Cancel'); ?></a>
+</p>
+<?php
+		} else {
+			echo '<div class="placeholder">';
+			_e('Please choose a course first.', 'cp' );
+			echo '</div>';
+		}
+		echo '</div>';
 	}
 
 	/**
@@ -248,12 +355,21 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 	 *
 	 * @return string Content of submitbox.
 	 */
-	public static function box_submitdiv() {
-		echo '<div class="submitbox" id="submitpost"><div id="major-publishing-actions"><div id="publishing-action"><span class="spinner"></span>';
+	public static function box_submitdiv( $post ) {
+		echo '<div class="submitbox" id="submitpost">';
+		echo '<div id="misc-publishing-actions">';
+		self::get_statuses($post );
+		printf( '<h4>%s</h4>', __('Course', 'cp' ) );
+        self::get_release_courses( $post );
+		echo '</div>';
+		echo '<div id="major-publishing-actions"><div id="publishing-action"><span class="spinner"></span>';
 		printf(
 			'<input type="submit" class="button button-primary" value="%s" />',
 			esc_attr__( 'Save Notification', 'cp' )
 		);
-		echo '</div><div class="clear"></div></div></div>';
+		echo '</div>';
+		echo '<div class="clear"></div>';
+		echo '</div>';
+		echo '</div>';
 	}
 }

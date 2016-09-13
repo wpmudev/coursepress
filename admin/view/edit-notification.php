@@ -37,13 +37,6 @@ add_meta_box(
 	'side',
 	'high'
 );
-add_meta_box(
-	'related_courses',
-	__( 'Related courses', 'cp' ),
-	array( $this, 'box_release_courses' ),
-	$post_type,
-	'side'
-);
 ?>
 <div class="wrap coursepress_wrapper course-edit-notification">
 	<h2><?php echo $title; ?></h2>

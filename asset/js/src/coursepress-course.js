@@ -1679,6 +1679,13 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		if ( "function" == typeof($().select2) ) {
 			$('#student-add, #facilitators, #instructors').select2( Search_Params );
 		}
+
+        /**
+         * Notification status
+         */
+        $('.course-edit-notification .save-post-status' ).click( function( event ) {
+            $('#post-status-display').html($('option:selected', $('#post-status-select') ).text());
+        });
 	} )
 	// Prevent from opening when inactive
 	.on( 'click', '.btn-cert', function() {
