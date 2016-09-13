@@ -331,7 +331,11 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 							<div class="column-course-units visible-small visible-extra-small">
 								<strong><?php _e( 'Units', 'cp' ); ?>:</strong>
 								<?php echo $course_obj->get_units( '', 'any', true ); ?> <?php _e( 'Units', 'cp' ); ?>,
+<<<<<<< HEAD
 								<?php echo $published_units_count; ?> Published
+=======
+								<?php echo $course_obj->get_units( '', 'publish', true ); ?> Published
+>>>>>>> bcb90c348a80b6b835c28407a12814bc0274d0f5
 							</div>
 							<div class="column-course-students visible-small visible-extra-small">
 								<strong><?php _e( 'Students', 'cp' ); ?>:</strong>
@@ -373,7 +377,11 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 						</td>
 						<td class="column-units <?php echo $style; ?>">
 							<?php echo $course_obj->get_units( '', 'any', true ); ?> <?php _e( 'Units', 'cp' ); ?><br/>
+<<<<<<< HEAD
 							<?php echo $published_units_count; ?> <?php _e( 'Published', 'cp' ); ?>
+=======
+							<?php echo $course_obj->get_units( '', 'publish', true ); ?> <?php _e( 'Published', 'cp' ); ?>
+>>>>>>> bcb90c348a80b6b835c28407a12814bc0274d0f5
 						</td>
 						<td class="center column-students <?php echo $style; ?>"><?php if ( $can_update || $my_course ) { ?>
 								<a href="<?php echo admin_url( 'admin.php?page=course_details&tab=students&course_id=' . $course_object->ID ); ?>"><?php } ?><?php echo $course_obj->get_number_of_students(); ?><?php if ( $can_update || $my_course ) { ?></a> <?php } ?>

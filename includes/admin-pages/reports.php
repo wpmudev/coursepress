@@ -373,6 +373,7 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 
 	<?php
 	$columns = array(
+<<<<<<< HEAD
 		'ID'             => __( 'ID', 'cp' ),
 		'user_fullname'  => __( 'Full Name', 'cp' ),
 		'user_firstname' => __( 'First Name', 'cp' ),
@@ -380,6 +381,15 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 		'responses'      => __( 'Responses', 'cp' ),
 		'average_grade'  => __( 'Average Grade', 'cp' ),
 		'report'         => __( 'Report', 'cp' ),
+=======
+		"ID"             => __( 'ID', 'cp' ),
+		"user_fullname"  => __( 'Full Name', 'cp' ),
+		"user_firstname" => __( 'First Name', 'cp' ),
+		"user_lastname"  => __( 'Surname', 'cp' ),
+		"responses"      => __( 'Responses', 'cp' ),
+		"average_grade"  => __( 'Average Grade', 'cp' ),
+		"report"         => __( 'Report', 'cp' ),
+>>>>>>> bcb90c348a80b6b835c28407a12814bc0274d0f5
 	);
 
 	$col_sizes = array(
