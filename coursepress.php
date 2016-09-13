@@ -159,10 +159,10 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			// Setup CoursePress properties
 			$this->init_vars();
 
-			
+
 			$this->mp_file = '128762_marketpress-ecommerce-3.0.0.2.zip';
-			
-			
+
+
 
 			/**
 			 * CoursePress Sessions
@@ -215,7 +215,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.coursepress-integration.php' );
 
-			
+
 			if ( CoursePress_Capabilities::is_pro() && ! CoursePress_Capabilities::is_campus() ) {
 				// Prepare WPMUDev Dashboard Notifications
 				global $wpmudev_notices;
@@ -240,7 +240,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				 */
 				include_once( $this->plugin_dir . 'includes/external/dashboard/wpmudev-dash-notification.php' );
 			}
-			
+
 
 			// Define custom theme directory for CoursePress theme
 			if ( ! CoursePress_Capabilities::is_campus() ) {
@@ -261,7 +261,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			 */
 			require_once( $this->plugin_dir . 'includes/classes/class.coursepress-campus.php' );
 
-			
+
 			/**
 			 * Basic certificates
 			 * This is Pro only, by changing this flag in the free version you will break it!
@@ -269,7 +269,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			if ( CoursePress_Capabilities::is_pro() ) {
 				require_once( $this->plugin_dir . 'includes/classes/class.basic.certificate.php' );
 			}
-			
+
 
 			//Administration area
 			if ( is_admin() ) {
