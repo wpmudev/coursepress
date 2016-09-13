@@ -46,13 +46,13 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 					case 'publish':
 						if ( CoursePress_Capabilities::can_change_course_status( $course_id ) ) {
 							$course->change_status( 'publish' );
-							$message		 = __( 'Selected courses have been published successfully.', 'coursepress_base_td' );
+							$message		 = __( 'Selected courses have been published successfully.', 'cp' );
 							$some_success	 = true;
 						} else {
 							if ( $some_success ) {
-								$message = __( "Your selected courses have been published successfully. Courses where you don't have access remain unchaged.", 'coursepress_base_td' );
+								$message = __( "Your selected courses have been published successfully. Courses where you don't have access remain unchaged.", 'cp' );
 							} else {
-								$message = __( "You don't have right permissions to change course status.", 'coursepress_base_td' );
+								$message = __( "You don't have right permissions to change course status.", 'cp' );
 							}
 						}
 						break;
@@ -60,13 +60,13 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 					case 'unpublish':
 						if ( CoursePress_Capabilities::can_change_course_status( $course_id ) ) {
 							$course->change_status( 'private' );
-							$message		 = __( 'Selected courses have been unpublished successfully.', 'coursepress_base_td' );
+							$message		 = __( 'Selected courses have been unpublished successfully.', 'cp' );
 							$some_success	 = true;
 						} else {
 							if ( $some_success ) {
-								$message = __( "Your selected courses have been unpublished successfully. Courses where you don't have access remain unchaged.", 'coursepress_base_td' );
+								$message = __( "Your selected courses have been unpublished successfully. Courses where you don't have access remain unchaged.", 'cp' );
 							} else {
-								$message = __( "You don't have right permissions to change course status.", 'coursepress_base_td' );
+								$message = __( "You don't have right permissions to change course status.", 'cp' );
 							}
 						}
 						break;
@@ -74,13 +74,13 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 					case 'delete':
 						if ( CoursePress_Capabilities::can_delete_course( $course_id ) ) {
 							$course->delete_course();
-							$message		 = __( 'Selected courses have been deleted successfully.', 'coursepress_base_td' );
+							$message		 = __( 'Selected courses have been deleted successfully.', 'cp' );
 							$some_success	 = true;
 						} else {
 							if ( $some_success ) {
-								$message = __( "Your selected courses have been deleted successfully. Courses where you don't have access remain unchaged.", 'coursepress_base_td' );
+								$message = __( "Your selected courses have been deleted successfully. Courses where you don't have access remain unchaged.", 'cp' );
 							} else {
-								$message = __( "You don't have right permissions to delete the course.", 'coursepress_base_td' );
+								$message = __( "You don't have right permissions to delete the course.", 'cp' );
 							}
 						}
 						break;
@@ -112,41 +112,41 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 
 	if ( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] == 'delete' && isset( $_GET[ 'course_id' ] ) && is_numeric( $_GET[ 'course_id' ] ) ) {
 		if ( !isset( $_GET[ 'cp_nonce' ] ) || !wp_verify_nonce( $_GET[ 'cp_nonce' ], 'delete_course_' . $_GET[ 'course_id' ] ) ) {
-			die( __( 'Cheating huh?', 'coursepress_base_td' ) );
+			die( __( 'Cheating huh?', 'cp' ) );
 		}
 		$course_object = $course->get_course();
 		if ( CoursePress_Capabilities::can_delete_course( $_GET[ 'course_id' ] ) ) {
 			$course->delete_course( $force_delete	 = true );
-			$message		 = __( 'Selected course has been deleted successfully.', 'coursepress_base_td' );
+			$message		 = __( 'Selected course has been deleted successfully.', 'cp' );
 		} else {
-			$message = __( "You don't have right permissions to delete the course.", 'coursepress_base_td' );
+			$message = __( "You don't have right permissions to delete the course.", 'cp' );
 		}
 	}
 
 	if ( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] == 'change_status' && isset( $_GET[ 'course_id' ] ) && is_numeric( $_GET[ 'course_id' ] ) ) {
 		if ( !isset( $_GET[ 'cp_nonce' ] ) || !wp_verify_nonce( $_GET[ 'cp_nonce' ], 'change_course_status_' . $_GET[ 'course_id' ] ) ) {
-			die( __( 'Cheating huh?', 'coursepress_base_td' ) );
+			die( __( 'Cheating huh?', 'cp' ) );
 		}
 		$course->change_status( $_GET[ 'new_status' ] );
-		$message = __( 'Status for the selected course has been changed successfully.', 'coursepress_base_td' );
+		$message = __( 'Status for the selected course has been changed successfully.', 'cp' );
 	}
 	?>
 	<div class="wrap nosubsub cp-wrap">
 		<input type="hidden" name="course_page_number" id="course_page_number" value="<?php echo (int) $page_num; ?>"/>
 
 		<div class="icon32" id="icon-themes"><br></div>
-		<h2><?php _e( 'Courses', 'coursepress_base_td' ); ?>
+		<h2><?php _e( 'Courses', 'cp' ); ?>
 			<?php
 			if ( CoursePress_Capabilities::can_create_course() ) {
 				if ( $wp_course_search->is_light ) {
 					if ( $wp_course_search->get_count_of_all_courses() < $wp_course_search->courses_per_page ) {
 						?>
-						<a class="add-new-h2" href="<?php echo admin_url( 'admin.php?page=course_details' ); ?>"><?php _e( 'Add New', 'coursepress_base_td' ); ?></a>
+						<a class="add-new-h2" href="<?php echo admin_url( 'admin.php?page=course_details' ); ?>"><?php _e( 'Add New', 'cp' ); ?></a>
 						<?php
 					}
 				} else {
 					?>
-					<a class="add-new-h2" href="<?php echo admin_url( 'admin.php?page=course_details' ); ?>"><?php _e( 'Add New', 'coursepress_base_td' ); ?></a>
+					<a class="add-new-h2" href="<?php echo admin_url( 'admin.php?page=course_details' ); ?>"><?php _e( 'Add New', 'cp' ); ?></a>
 					<?php
 				}
 			}
@@ -166,9 +166,9 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 				<form method="get" action="<?php echo admin_url( 'admin.php?page=' . $page ); ?>" class="search-form">
 					<p class="search-box">
 						<input type='hidden' name='page' value='<?php echo esc_attr( $page ); ?>'/>
-						<label class="screen-reader-text"><?php _e( 'Search Courses', 'coursepress_base_td' ); ?>:</label>
+						<label class="screen-reader-text"><?php _e( 'Search Courses', 'cp' ); ?>:</label>
 						<input type="text" value="<?php echo esc_attr( $s ); ?>" name="s">
-						<input type="submit" class="button" value="<?php _e( 'Search Courses', 'coursepress_base_td' ); ?>">
+						<input type="submit" class="button" value="<?php _e( 'Search Courses', 'cp' ); ?>">
 					</p>
 				</form>
 			</div>
@@ -179,18 +179,18 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 				<?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_change_course_status_cap' ) || current_user_can( 'coursepress_delete_course_cap' ) ) { ?>
 					<div class="alignleft actions">
 						<select name="action">
-							<option selected="selected" value=""><?php _e( 'Bulk Actions', 'coursepress_base_td' ); ?></option>
+							<option selected="selected" value=""><?php _e( 'Bulk Actions', 'cp' ); ?></option>
 							<?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_change_course_status_cap' ) ) { ?>
-								<option value="publish"><?php _e( 'Publish', 'coursepress_base_td' ); ?></option>
-								<option value="unpublish"><?php _e( 'Unpublish', 'coursepress_base_td' ); ?></option>
+								<option value="publish"><?php _e( 'Publish', 'cp' ); ?></option>
+								<option value="unpublish"><?php _e( 'Unpublish', 'cp' ); ?></option>
 							<?php } ?>
 							<?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_course_cap' ) ) { ?>
-								<option value="delete"><?php _e( 'Delete', 'coursepress_base_td' ); ?></option>
+								<option value="delete"><?php _e( 'Delete', 'cp' ); ?></option>
 							<?php } ?>
 						</select>
 						<input type="hidden" name="bulk_courses" id="bulk_courses_values" value="" />
 						<?php wp_nonce_field( 'bulk-courses' ); ?>
-						<input type="submit" class="button-secondary action" id="doaction_bulk_courses" name="doaction" value="<?php _e( 'Apply', 'coursepress_base_td' ); ?>"/>
+						<input type="submit" class="button-secondary action" id="doaction_bulk_courses" name="doaction" value="<?php _e( 'Apply', 'cp' ); ?>"/>
 					</div>
 				<?php } ?>
 			</form>
@@ -215,7 +215,7 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 						$category_filter	 = (!isset( $_GET[ 'course_category_filter' ] ) || ( isset( $_GET[ 'course_category_filter' ] ) && $_GET[ 'course_category_filter' ] == '0' ) ) ? false : true;
 						$category_filter_val = (!$category_filter ) ? 0 : (int) $_GET[ 'course_category_filter' ];
 						?>
-						<option value="0" <?php selected( $category_filter_val, 0, true ); ?>><?php _e( 'View all categories', 'coursepress_base_td' ); ?></option>
+						<option value="0" <?php selected( $category_filter_val, 0, true ); ?>><?php _e( 'View all categories', 'cp' ); ?></option>
 						<?php
 						foreach ( $terms as $terms ) {
 							?>
@@ -224,7 +224,7 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 						}
 						?>
 					</select>
-					<input type="submit" name="filter_action" id="post-query-submit" class="button" value="<?php _e( 'Filter', 'coursepress_base_td' ); ?>">
+					<input type="submit" name="filter_action" id="post-query-submit" class="button" value="<?php _e( 'Filter', 'cp' ); ?>">
 				</div>
 			</form>
 
@@ -239,11 +239,11 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 		wp_nonce_field( 'bulk-courses' );
 
 		$columns = array(
-			"course"	 => __( 'Course', 'coursepress_base_td' ),
-			"units"		 => __( 'Units', 'coursepress_base_td' ),
-			"students"	 => __( 'Students', 'coursepress_base_td' ),
-			"status"	 => __( 'Published', 'coursepress_base_td' ),
-		//"actions" => __('Actions', 'coursepress_base_td'),
+			"course"	 => __( 'Course', 'cp' ),
+			"units"		 => __( 'Units', 'cp' ),
+			"students"	 => __( 'Students', 'cp' ),
+			"status"	 => __( 'Published', 'cp' ),
+		//"actions" => __('Actions', 'cp'),
 		);
 
 
@@ -255,7 +255,7 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 			'10'
 		);
 
-		$columns[ "remove" ] = __( 'Delete', 'coursepress_base_td' );
+		$columns[ "remove" ] = __( 'Delete', 'cp' );
 		$col_sizes[]		 = '7';
 		?>
 
@@ -329,28 +329,28 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 					<!-- <div class="course-thumbnail"><img src="<?php echo Course::get_course_thumbnail( $course->ID ); ?>" alt="<?php echo esc_attr( $course_object->post_title ); ?>" /></div> -->
 							<div class="course_excerpt"><?php echo cp_get_the_course_excerpt( $course_object->ID, apply_filters( 'course_admin_excerpt_length', 55 ) ); ?></div>
 							<div class="column-course-units visible-small visible-extra-small">
-								<strong><?php _e( 'Units', 'coursepress_base_td' ); ?>:</strong>
-								<?php echo $course_obj->get_units( '', 'any', true ); ?> <?php _e( 'Units', 'coursepress_base_td' ); ?>,
+								<strong><?php _e( 'Units', 'cp' ); ?>:</strong>
+								<?php echo $course_obj->get_units( '', 'any', true ); ?> <?php _e( 'Units', 'cp' ); ?>,
 								<?php echo $published_units_count; ?> Published
 							</div>
 							<div class="column-course-students visible-small visible-extra-small">
-								<strong><?php _e( 'Students', 'coursepress_base_td' ); ?>:</strong>
+								<strong><?php _e( 'Students', 'cp' ); ?>:</strong>
 								<a href="<?php echo admin_url( 'admin.php?page=course_details&tab=students&course_id=' . $course_object->ID ); ?>"><?php echo $course_obj->get_number_of_students(); ?></a>
 							</div>
 							<div class="row-actions hide-small hide-extra-small">
 								<?php if ( $can_update ) { ?>
-									<span class="edit_course"><a href="<?php echo admin_url( 'admin.php?page=course_details&course_id=' . $course_object->ID ); ?>"><?php _e( 'Edit', 'coursepress_base_td' ); ?></a> | </span>
+									<span class="edit_course"><a href="<?php echo admin_url( 'admin.php?page=course_details&course_id=' . $course_object->ID ); ?>"><?php _e( 'Edit', 'cp' ); ?></a> | </span>
 								<?php } ?>
 								<?php if ( $can_view_unit || $my_course ) { ?>
-									<span class="course_units"><a href="<?php echo admin_url( 'admin.php?page=course_details&tab=units&course_id=' . $course_object->ID ); ?>"><?php _e( 'Units', 'coursepress_base_td' ); ?></a> | </span>
+									<span class="course_units"><a href="<?php echo admin_url( 'admin.php?page=course_details&tab=units&course_id=' . $course_object->ID ); ?>"><?php _e( 'Units', 'cp' ); ?></a> | </span>
 								<?php } ?>
 								<?php if ( $can_update || $my_course ) { ?>
-									<span class="course_students"><a href="<?php echo admin_url( 'admin.php?page=course_details&tab=students&course_id=' . $course_object->ID ); ?>"><?php _e( 'Students', 'coursepress_base_td' ); ?></a> | </span>
+									<span class="course_students"><a href="<?php echo admin_url( 'admin.php?page=course_details&tab=students&course_id=' . $course_object->ID ); ?>"><?php _e( 'Students', 'cp' ); ?></a> | </span>
 								<?php } ?>
-								<span class="view_course"><a href="<?php echo get_permalink( $course->ID ); ?>" rel="permalink"><?php _e( 'View Course', 'coursepress_base_td' ) ?></a>
+								<span class="view_course"><a href="<?php echo get_permalink( $course->ID ); ?>" rel="permalink"><?php _e( 'View Course', 'cp' ) ?></a>
 									<?php if ( $can_view_unit || $my_course || $can_update ) { ?> | <?php } ?></span>
 								<?php if ( $can_view_unit || $my_course || $can_update ) { ?>
-									<span class="units"><a href="<?php echo trailingslashit( get_permalink( $course->ID ) ) . trailingslashit( $coursepress->get_units_slug() ); ?>" rel="permalink"><?php _e( 'View Units', 'coursepress_base_td' ) ?></a></span>
+									<span class="units"><a href="<?php echo trailingslashit( get_permalink( $course->ID ) ) . trailingslashit( $coursepress->get_units_slug() ); ?>" rel="permalink"><?php _e( 'View Units', 'cp' ) ?></a></span>
 								<?php } ?>
 								<?php
 								if ( CoursePress_Capabilities::can_create_course() ) {
@@ -358,13 +358,13 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 										if ( $wp_course_search->get_count_of_all_courses() < $wp_course_search->courses_per_page ) {
 											?>
 											|
-											<span class="units"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=courses&course_action=duplicate&course_id=' . $course_object->ID ), 'duplicating_course', 'duplicating_nonce' ); ?>"><?php _e( 'Duplicate Course', 'coursepress_base_td' ) ?></a></span>
+											<span class="units"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=courses&course_action=duplicate&course_id=' . $course_object->ID ), 'duplicating_course', 'duplicating_nonce' ); ?>"><?php _e( 'Duplicate Course', 'cp' ) ?></a></span>
 											<?php
 										}
 									} else {
 										?>
 										|
-										<span class="units"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=courses&course_action=duplicate&course_id=' . $course_object->ID ), 'duplicating_course', 'duplicating_nonce' ); ?>"><?php _e( 'Duplicate Course', 'coursepress_base_td' ) ?></a></span>
+										<span class="units"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=courses&course_action=duplicate&course_id=' . $course_object->ID ), 'duplicating_course', 'duplicating_nonce' ); ?>"><?php _e( 'Duplicate Course', 'cp' ) ?></a></span>
 										<?php
 									}
 								}
@@ -372,8 +372,8 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 							</div>
 						</td>
 						<td class="column-units <?php echo $style; ?>">
-							<?php echo $course_obj->get_units( '', 'any', true ); ?> <?php _e( 'Units', 'coursepress_base_td' ); ?><br/>
-							<?php echo $published_units_count; ?> <?php _e( 'Published', 'coursepress_base_td' ); ?>
+							<?php echo $course_obj->get_units( '', 'any', true ); ?> <?php _e( 'Units', 'cp' ); ?><br/>
+							<?php echo $published_units_count; ?> <?php _e( 'Published', 'cp' ); ?>
 						</td>
 						<td class="center column-students <?php echo $style; ?>"><?php if ( $can_update || $my_course ) { ?>
 								<a href="<?php echo admin_url( 'admin.php?page=course_details&tab=students&course_id=' . $course_object->ID ); ?>"><?php } ?><?php echo $course_obj->get_number_of_students(); ?><?php if ( $can_update || $my_course ) { ?></a> <?php } ?>
@@ -413,7 +413,7 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 				?>
 				<tr>
 					<td colspan="6">
-						<div class="zero-courses"><?php _e( 'No courses found.', 'coursepress_base_td' ) ?></div>
+						<div class="zero-courses"><?php _e( 'No courses found.', 'cp' ) ?></div>
 					</td>
 				</tr>
 				<?php
@@ -423,7 +423,7 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 				?>
 				<tr>
 					<td colspan="6">
-						<div class="zero-courses"><?php _e( 'No courses found.', 'coursepress_base_td' ) ?></div>
+						<div class="zero-courses"><?php _e( 'No courses found.', 'cp' ) ?></div>
 					</td>
 				</tr>
 				<?php
@@ -440,18 +440,18 @@ if ( isset( $_GET[ 'quick_setup' ] ) ) {
 					<input type="hidden" name="page" value="courses"/>
 					<input type="hidden" name="page_num" value="<?php echo esc_attr( $page_num ); ?>"/>
 					<select name="courses_per_page" id="courses_per_page">
-						<option value="10" <?php selected( $show_courses_per_page, 10, true ); ?>><?php _e( 'Show 10 rows', 'coursepress_base_td' ); ?></option>
-						<option value="20" <?php selected( $show_courses_per_page, 20, true ); ?>><?php _e( 'Show 20 rows', 'coursepress_base_td' ); ?></option>
-						<option value="30" <?php selected( $show_courses_per_page, 30, true ); ?>><?php _e( 'Show 30 rows', 'coursepress_base_td' ); ?></option>
-						<option value="40" <?php selected( $show_courses_per_page, 40, true ); ?>><?php _e( 'Show 40 rows', 'coursepress_base_td' ); ?></option>
-						<option value="50" <?php selected( $show_courses_per_page, 50, true ); ?>><?php _e( 'Show 50 rows', 'coursepress_base_td' ); ?></option>
-						<option value="60" <?php selected( $show_courses_per_page, 60, true ); ?>><?php _e( 'Show 60 rows', 'coursepress_base_td' ); ?></option>
-						<option value="70" <?php selected( $show_courses_per_page, 70, true ); ?>><?php _e( 'Show 70 rows', 'coursepress_base_td' ); ?></option>
-						<option value="80" <?php selected( $show_courses_per_page, 80, true ); ?>><?php _e( 'Show 80 rows', 'coursepress_base_td' ); ?></option>
-						<option value="90" <?php selected( $show_courses_per_page, 90, true ); ?>><?php _e( 'Show 90 rows', 'coursepress_base_td' ); ?></option>
-						<option value="100" <?php selected( $show_courses_per_page, 100, true ); ?>><?php _e( 'Show 100 rows', 'coursepress_base_td' ); ?></option>
+						<option value="10" <?php selected( $show_courses_per_page, 10, true ); ?>><?php _e( 'Show 10 rows', 'cp' ); ?></option>
+						<option value="20" <?php selected( $show_courses_per_page, 20, true ); ?>><?php _e( 'Show 20 rows', 'cp' ); ?></option>
+						<option value="30" <?php selected( $show_courses_per_page, 30, true ); ?>><?php _e( 'Show 30 rows', 'cp' ); ?></option>
+						<option value="40" <?php selected( $show_courses_per_page, 40, true ); ?>><?php _e( 'Show 40 rows', 'cp' ); ?></option>
+						<option value="50" <?php selected( $show_courses_per_page, 50, true ); ?>><?php _e( 'Show 50 rows', 'cp' ); ?></option>
+						<option value="60" <?php selected( $show_courses_per_page, 60, true ); ?>><?php _e( 'Show 60 rows', 'cp' ); ?></option>
+						<option value="70" <?php selected( $show_courses_per_page, 70, true ); ?>><?php _e( 'Show 70 rows', 'cp' ); ?></option>
+						<option value="80" <?php selected( $show_courses_per_page, 80, true ); ?>><?php _e( 'Show 80 rows', 'cp' ); ?></option>
+						<option value="90" <?php selected( $show_courses_per_page, 90, true ); ?>><?php _e( 'Show 90 rows', 'cp' ); ?></option>
+						<option value="100" <?php selected( $show_courses_per_page, 100, true ); ?>><?php _e( 'Show 100 rows', 'cp' ); ?></option>
 					</select>
-					<input type="submit" name="" class="button action" value="<?php esc_attr_e( 'Apply', 'coursepress_base_td' ); ?>">
+					<input type="submit" name="" class="button action" value="<?php esc_attr_e( 'Apply', 'cp' ); ?>">
 				</div>
 			</form>
 
