@@ -151,7 +151,7 @@ class CoursePress_PDF extends TCPDF {
 	function make_pdf( $html, $args = array() ) {
 
 		if( ! isset( $args['title'] ) || empty( $args['title'] ) ) {
-			$args['title'] = __( 'CoursePress Report', 'coursepress_base_td' );
+			$args['title'] = __( 'CoursePress Report', 'cp' );
 		}
 
 		$page_orientation = isset( $args['orientation'] ) ? $args['orientation'] : PDF_PAGE_ORIENTATION;
