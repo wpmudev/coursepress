@@ -7,15 +7,17 @@ if ( ! CoursePress_Data_Capabilities::can_add_notifications() ) {
 wp_reset_vars( array( 'action' ) );
 $post_type = CoursePress_Data_Notification::get_post_type_name();
 $the_id = ! empty( $_REQUEST['id'] ) ? (int) $_REQUEST['id'] : 0;
+$notification_type_object = get_post_type_object( $post_type );
+$labels = get_post_type_labels( $notification_type_object );
 
-$title = __( 'Add New Notification', 'cp' );
+$title = $labels->add_new_item;
 $post = null;
 $post_title = '';
 $post_content = '';
 $post_status = 'publish';
 
 if ( 0 < $the_id ) {
-	$title = __( 'Edit Notification', 'cp' );
+	$title = $labels->edit_item;
 	$post = get_post( $the_id );
 	$post_title = $post->post_title;
 	$post_content = $post->post_content;
