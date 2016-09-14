@@ -1,4 +1,9 @@
 <?php
+
+if ( ! CoursePress_Data_Capabilities::can_add_notifications() ) {
+	wp_die( __( 'Sorry, you are not allowed to access this page.' ), 403 );
+}
+
 wp_reset_vars( array( 'action' ) );
 $post_type = CoursePress_Data_Notification::get_post_type_name();
 $the_id = ! empty( $_REQUEST['id'] ) ? (int) $_REQUEST['id'] : 0;
@@ -37,6 +42,22 @@ add_meta_box(
 	'side',
 	'high'
 );
+
+/**
+ * Notification box
+ * /
+$add_box_notify_students = apply_filters( 'coursepress_notifications_send_notify_to_students', true );
+if ( $add_box_notify_students ) {
+	add_meta_box(
+		'notify-students',
+		__( 'Notify Students', 'cp' ),
+		array( $this, 'box_notify_students' ),
+		$post_type,
+		'side'
+	);
+}
+ */
+
 ?>
 <div class="wrap coursepress_wrapper course-edit-notification">
 	<h2><?php echo $title; ?></h2>
@@ -63,7 +84,7 @@ add_meta_box(
 						'textarea_rows' => 10,
 						'tinymce' => array(
 							'height' => 350,
-						)
+						),
 					);
 					// Filter $args
 					$args = apply_filters( 'coursepress_element_editor_args', $args, $editor_name, $editor_id );
@@ -73,7 +94,7 @@ add_meta_box(
 				</div>
 			</div>
 			<div id="postbox-container-1" class="postbox-container">
-				<?php do_meta_boxes($post_type, 'side', $post); ?>
+				<?php do_meta_boxes( $post_type, 'side', $post ); ?>
 			</div>
 		</div>
 	</form>

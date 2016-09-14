@@ -676,7 +676,7 @@ class CoursePress_Helper_Utility {
 			 * add space before HTML end line, to avoid caoncatantion of two
 			 * sentences without space between.
 			 */
-			$text = preg_replace( '@(<\/p>|<br)@', " $1", $text );
+			$text = preg_replace( '@(<\/p>|<br)@', ' $1', $text );
 
 			// splits all html-tags to scanable lines.
 			preg_match_all( '/(<.+?>)?([^<>]*)/s', $text, $lines, PREG_SET_ORDER );
@@ -1121,5 +1121,21 @@ class CoursePress_Helper_Utility {
 		$end = strpos( $meta, ';}' ) -4;
 
 		return substr( $meta, $start, $end );
+	}
+
+	/**
+	 * Add post meta as unique field.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $post_id Post ID.
+	 * @param string $meta_key Meta field key.
+	 * @param any $meta_value Meta field value.
+	 */
+	public static function add_meta_unique( $post_id, $meta_key, $meta_value ) {
+		$success = add_post_meta( $post_id, $meta_key, $meta_value, true );
+		if ( ! $success ) {
+			update_post_meta( $post_id, $meta_key, $meta_value );
+		}
 	}
 }

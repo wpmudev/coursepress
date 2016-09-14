@@ -1680,12 +1680,29 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			$('#student-add, #facilitators, #instructors').select2( Search_Params );
 		}
 
-        /**
-         * Notification status
-         */
-        $('.course-edit-notification .save-post-status' ).click( function( event ) {
-            $('#post-status-display').html($('option:selected', $('#post-status-select') ).text());
-        });
+		/**
+		 * Notification status
+		 */
+		$( ".course-edit-notification .save-post-status" ).click( function( event ) {
+			$( "#post-status-display" ).html( $( "option:selected", $( "#post-status-select" ) ).text() );
+		});
+
+		/**
+		 * Visibility aka reciever
+		 */
+		$( "#course_id" ).change( function( event ) {
+			if ( "all" === $( "option:selected", $(this) ).val() ) {
+				$( "#post-visibility-display" ).html( $("#misc-publishing-actions").data("no-options") );
+				$( "#visibility a.edit-visibility" ).hide();
+			} else {
+				$( "#post-visibility-display" ).html( $( "input:checked", $( "#visibility" ) ).data( "info" ) );
+				$( "#visibility a.edit-visibility" ).show();
+			}
+		});
+		$( ".course-edit-notification .save-post-visibility" ).click( function( event ) {
+			$( "#post-visibility-display" ).html( $( "input:checked", $( "#visibility" ) ).data( "info" ) );
+		});
+
 	} )
 	// Prevent from opening when inactive
 	.on( 'click', '.btn-cert', function() {
