@@ -136,9 +136,8 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 
 							foreach ( $notification_ids as $id ) {
 								if ( 'delete' != $action ) {
-									$post_status = 'unpublish' == $action ? 'draft' : $action;
-
-									if ( CoursePress_Data_Capabilities::can_update_notification( $id ) ) {
+									if ( CoursePress_Data_Capabilities::can_change_status_notification( $id ) ) {
+										$post_status = 'unpublish' == $action ? 'draft' : $action;
 										wp_update_post( array(
 											'ID' => $id,
 											'post_status' => $post_status,
@@ -169,14 +168,14 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 				$notification_id = $data->data->notification_id;
 
 				if ( wp_verify_nonce( $data->data->nonce, 'publish-notification' ) ) {
-
-					wp_update_post( array(
-						'ID' => $notification_id,
-						'post_status' => $data->data->status,
-					) );
-
+					if ( CoursePress_Data_Capabilities::can_change_status_notification( $notification_id ) ) {
+						wp_update_post( array(
+							'ID' => $notification_id,
+							'post_status' => $data->data->status,
+						) );
+						$success = true;
+					}
 					$json_data['nonce'] = wp_create_nonce( 'publish-notification' );
-					$success = true;
 				}
 
 				$json_data['notification_id'] = $notification_id;
@@ -228,6 +227,9 @@ switch ( $post->post_status ) {
 
 ?>
 </span>
+<?php
+if ( CoursePress_Data_Capabilities::can_change_status_notification( $post->ID ) ) {
+?>
 <a href="#post_status" <?php if ( 'private' == $post->post_status ) { ?>style="display:none;" <?php } ?>class="edit-post-status hide-if-no-js"><span aria-hidden="true"><?php _e( 'Edit' ); ?></span> <span class="screen-reader-text"><?php _e( 'Edit status' ); ?></span></a>
 
 <div id="post-status-select" class="hide-if-js">
@@ -247,6 +249,7 @@ foreach ( $allowed_statuses as $status => $label ) {
  <a href="#post_status" class="save-post-status hide-if-no-js button"><?php _e( 'OK' ); ?></a>
  <a href="#post_status" class="cancel-post-status hide-if-no-js button-cancel"><?php _e( 'Cancel' ); ?></a>
 </div>
+<?php } ?>
 </div>
 <?php
 	}
