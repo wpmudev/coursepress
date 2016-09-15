@@ -307,7 +307,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					 * @param integer $unit_id Unit ID.
 					 * @param array $meta Unit meta data.
 					 */
-					do_action( 'coursepress_unit_added', $unit_id, $course_id, $meta );
+					do_action( 'coursepress_unit_added', $unit_id, $course_id );
 
 					// Let's add unit capabilities
 					$user_cap = array(
