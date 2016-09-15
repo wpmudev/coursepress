@@ -11,11 +11,52 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 	var $with_editor = false;
 	protected $cap = 'coursepress_notifications_cap';
 	protected $list_notification;
+	protected static $labels;
+	protected static $post_type;
+
+	public static function init_edit() {
+		if ( ! CoursePress_Data_Capabilities::can_add_notifications() ) {
+			wp_die( __( 'Sorry, you are not allowed to access this page.' ), 403 );
+		}
+		if ( wp_is_mobile() ) {
+			wp_enqueue_script( 'jquery-touch-punch' );
+		}
+		include_once ABSPATH.'/wp-admin/includes/meta-boxes.php';
+		wp_enqueue_script( 'post' );
+		self::$post_type = CoursePress_Data_Notification::get_post_type_name();
+		self::set_labels();
+		/**
+		 * Add meta boxe save
+		 */
+		add_meta_box(
+			'submitdiv',
+			__( 'Save', 'cp' ),
+			array( __CLASS__, 'box_submitdiv' ),
+			self::$post_type,
+			'side',
+			'high'
+		);
+		/**
+		 * Notification box
+		 * /
+		 $add_box_notify_students = apply_filters( 'coursepress_notifications_send_notify_to_students', true );
+		if ( $add_box_notify_students ) {
+			add_meta_box(
+				'notify-students',
+				__( 'Notify Students', 'cp' ),
+				array( $this, 'box_notify_students' ),
+				$post_type,
+				'side'
+			);
+		}
+		 */
+	}
 
 	public function get_labels() {
+		self::set_labels();
 		return array(
 			'title' => __( 'CoursePress Notifications', 'cp' ),
-			'menu_title' => __( 'Notifications', 'cp' ),
+			'menu_title' => self::$labels->name,
 		);
 	}
 
@@ -61,7 +102,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 		} elseif ( empty( $_POST['post_content'] ) ) {
 			self::$error_message = __( 'No notification content!', 'cp' );
 			return;
-		} elseif ( ! empty( $id ) && ! CoursePress_Data_Capabilities::can_delete_notification( $id ) ) {
+		} elseif ( ! empty( $id ) && ! CoursePress_Data_Capabilities::can_update_notification( $id ) ) {
 			self::$error_message = __( 'You do not have permission to edit this notification.', 'cp' );
 			return;
 		}
@@ -104,6 +145,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 	}
 
 	public static function update_notification() {
+
 		$actions = array(
 			'delete',
 			'toggle',
@@ -197,6 +239,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 		} else {
 			if ( ! is_object( $post ) ) {
 				$post = new stdClass();
+				$post->ID = 0;
 			}
 			$post->post_status = 'draft';
 		}
@@ -396,6 +439,20 @@ foreach ( $allowed_options as $key => $data ) {
 	 * @return string Content of submitbox.
 	 */
 	public static function box_submitdiv( $post ) {
+		if ( ! is_object( $post ) || ! isset( $post->post_status ) || empty( $post->post_status ) || 'draft' == $post->post_status ) {
+			$post_id = is_object( $post )? $post->ID : 0;
+			if ( CoursePress_Data_Capabilities::can_change_status_notification( $post_id ) ) {
+?>
+<div id="minor-publishing-actions">
+<div id="save-action">
+<input type="submit" name="save" id="save-post" value="<?php esc_attr_e( 'Save Draft', 'cp' ); ?>" class="button">
+<span class="spinner"></span>
+</div>
+<div class="clear"></div>
+</div>
+<?php
+			}
+		}
 		/**
 		 * misc actions
 		 */
@@ -407,28 +464,31 @@ foreach ( $allowed_options as $key => $data ) {
 		 * major actions
 		 */
 		echo '<div id="major-publishing-actions"><div id="publishing-action"><span class="spinner"></span>';
+		$label = __( 'Publish', 'cp' );
+		if ( is_object( $post ) && 'publish' == $post->post_status ) {
+			$label = __( 'Update', 'cp' );
+		}
 		printf(
 			'<input type="submit" class="button button-primary" value="%s" />',
-			esc_attr__( 'Save Notification', 'cp' )
+			esc_attr( $label )
 		);
 		echo '</div>';
-
 		echo '<div class="clear"></div>';
 		echo '</div>';
 	}
 
-	private static function get_allowed_options( $course_id ) {
+	public static function get_allowed_options( $course_id ) {
 		$allowed_options = array(
 			'all' => array(
-				'label' => __( 'All students of this course', 'cp' ),
+				'label' => __( 'All students of this course.', 'cp' ),
 				'info' => __( 'All', 'cp' ),
 			),
 			'passed' => array(
-				'label' => __( 'All students who pass this course', 'cp' ),
+				'label' => __( 'All students who pass this course.', 'cp' ),
 				'info' => __( 'Passed', 'cp' ),
 			),
 			'failed' => array(
-				'label' => __( 'All students who failed this course', 'cp' ),
+				'label' => __( 'All students who failed this course.', 'cp' ),
 				'info' => __( 'Failed', 'cp' ),
 			),
 		);
@@ -443,5 +503,46 @@ foreach ( $allowed_options as $key => $data ) {
 			}
 		}
 		return $allowed_options;
+	}
+
+	/**
+	 * Add button "Add new Notification".
+	 *
+	 * @since 2.0.0
+	 */
+	public static function add_button_add_new() {
+		if ( CoursePress_Data_Capabilities::can_add_notifications() ) {
+			$url = remove_query_arg( 'id' );
+			$url = add_query_arg( 'action', 'edit', $url );
+			printf(
+				'<a href="%s" class="page-title-action">%s</a>',
+				esc_url( $url ),
+				self::get_label_by_name( 'add_new' )
+			);
+		}
+	}
+
+	/**
+	 * Get label
+	 *
+	 * @since @2.0.0
+	 *
+	 * @param string $label Label Name.
+	 * @return string Label value.
+	 */
+	public static function get_label_by_name( $label ) {
+		self::set_labels();
+		if ( isset( self::$labels->$label ) ) {
+			return self::$labels->$label;
+		}
+		return '';
+	}
+
+	protected static function set_labels() {
+		self::$post_type = CoursePress_Data_Notification::get_post_type_name();
+		if ( empty( self::$labels ) ) {
+			$notification_type_object = get_post_type_object( self::$post_type );
+			self::$labels = get_post_type_labels( $notification_type_object );
+		}
 	}
 }

@@ -13,6 +13,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 	private $count = array();
 	private $post_type;
 	private $_categories;
+	private $recivers_allowed_options;
 
 	public function __construct() {
 		$post_format = CoursePress_Data_Notification::get_format();
@@ -119,6 +120,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 			'cb' => '<input type="checkbox" />',
 			'notification' => __( 'Notification', 'cp' ),
 			'course' => __( 'Course', 'cp' ),
+			'receivers' => __( 'Receivers', 'cp' ),
 			'status' => __( 'Status', 'cp' ),
 		);
 
@@ -167,6 +169,37 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 		$edit_page = CoursePress_View_Admin_Communication_Notification::$slug;
 
 		return $title;
+	}
+
+	/**
+	 * Coulmn Notifications Receivers
+	 *
+	 * @since 2.0.0
+	 */
+	public function column_receivers( $item ) {
+		$receivers = get_post_meta( $item->ID, 'receivers', true );
+		if ( empty( $receivers ) ) {
+			$receivers = 'all';
+		}
+		$attributes = CoursePress_Data_Notification::attributes( $item->ID );
+		$course_id = $attributes['course_id'];
+		if ( 'all' == $course_id ) {
+			return sprintf(
+				'<span aria-hidden="true">&#8212;</span><span class="screen-reader-text">%s</span>',
+				__( 'Option not available for all courses.', 'cp' )
+			);
+		}
+		$recivers_allowed_options = array();
+		if ( isset( $this->recivers_allowed_options[ $course_id ] ) ) {
+			$recivers_allowed_options = $this->recivers_allowed_options[ $course_id ];
+		} else {
+			$recivers_allowed_options = CoursePress_Admin_Notifications::get_allowed_options( $course_id );
+			$this->recivers_allowed_options[ $course_id ] = $recivers_allowed_options;
+		}
+		if ( isset( $recivers_allowed_options[ $receivers ] ) ) {
+			return $recivers_allowed_options[ $receivers ]['label'];
+		}
+		return __( 'Wrong receivers!', 'cp' );
 	}
 
 	protected function get_bulk_actions() {

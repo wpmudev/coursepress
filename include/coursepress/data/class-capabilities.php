@@ -1011,6 +1011,9 @@ class CoursePress_Data_Capabilities {
 		/**
 		 * change_status own notifications
 		 */
+		if ( empty( $notification ) ) {
+			return false;
+		}
 		$notification_id = is_object( $notification )? $notification->ID : $notification;
 		if ( self::is_notification_creator( $notification, $user_id ) ) {
 			/** This filter is documented in include/coursepress/helper/class-setting.php */
