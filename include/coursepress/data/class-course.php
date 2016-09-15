@@ -2703,7 +2703,7 @@ class CoursePress_Data_Course {
 	 * @param integer $course_id Course ID.
 	 * @return string Unit list.
 	 */
-	public function get_units_html_list( $course_id ) {
+	public static function get_units_html_list( $course_id ) {
 		$units_list = '';
 		$units = CoursePress_Data_Course::get_units( $course_id );
 
