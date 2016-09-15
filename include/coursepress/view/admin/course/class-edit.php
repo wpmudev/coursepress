@@ -1311,7 +1311,7 @@ class CoursePress_View_Admin_Course_Edit {
 					/**
 					 * save enrollment_end_date
 					 */
-					$course_open_ended = cp_is_true( $settings['course_open_ended'] );
+					$course_open_ended = isset( $settings['course_open_ended'] ) && cp_is_true( $settings['course_open_ended'] );
 					if ( $course_open_ended ) {
 						delete_post_meta( $course_id, 'course_enrollment_end_date' );
 					} else {
