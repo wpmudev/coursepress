@@ -131,10 +131,10 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 		if ( 'all' == $course_id ) {
 			delete_post_meta( $id, 'receivers' );
 		} else {
-			$receivers = isset( $_POST['visibility'] )? $_POST['visibility']:'all';
+			$receivers = isset( $_POST['visibility'] )? $_POST['visibility']:'enrolled';
 			$allowed_options = self::get_allowed_options( $course_id );
 			if ( ! isset( $allowed_options[ $receivers ] ) ) {
-				$receivers = 'all';
+				$receivers = 'enrolled';
 			}
 			CoursePress_Helper_Utility::add_meta_unique( $id, 'receivers', $receivers );
 		}
@@ -479,9 +479,9 @@ foreach ( $allowed_options as $key => $data ) {
 
 	public static function get_allowed_options( $course_id ) {
 		$allowed_options = array(
-			'all' => array(
-				'label' => __( 'All students of this course.', 'cp' ),
-				'info' => __( 'All', 'cp' ),
+			'enrolled' => array(
+				'label' => __( 'Enrolled students of this course.', 'cp' ),
+				'info' => __( 'Enrolled', 'cp' ),
 			),
 			'passed' => array(
 				'label' => __( 'All students who pass this course.', 'cp' ),
