@@ -1,4 +1,6 @@
-/*global tinyMCE*/
+/*!  - v2.0.0
+ * 
+ * Copyright (c) 2016; * Licensed GPLv2+ */
 /*global _coursepress*/
 
 var CoursePress = CoursePress || {};
@@ -1673,7 +1675,63 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		// Trigger basic certificate
 		$( '[name="meta_basic_certificate"]' ).each(toggleCertificatePreview);
 
-		$('#student-add, #facilitators, #instructors').select2( Search_Params );
+		/**
+		 * Check select2 exist first!
+		 */
+		if ( "function" == typeof($().select2) ) {
+			$('#student-add, #facilitators, #instructors').select2( Search_Params );
+		}
+
+		/**
+		 * Notification
+		 */
+		$( ".course-edit-notification .save-post-status" ).click( function( event ) {
+			$( "#post-status-display" ).html( $( "option:selected", $( "#post-status-select" ) ).text() );
+		});
+		$( ".course-edit-notification input[type=submit]" ).click( function( event ) {
+			var errors = [];
+			/**
+			 * Check title
+			 */
+			if ( '' === $('#titlewrap input[name=post_title]').val() ) {
+				errors.push( _coursepress.messages.notification.empty_title );
+			}
+			/**
+			 * Check content
+			 */
+			if ( $(".wp-editor-wrap").hasClass("tmce-active" ) ) {
+				var body = tinymce.activeEditor.getBody(), text = tinymce.trim(body.innerText || body.textContent);
+				if ( 0 === text.length ) {
+					errors.push( _coursepress.messages.notification.empty_content );
+				}
+			} else {
+				if ( '' === $(".wp-editor-wrap .wp-editor-area").val() ) {
+					errors.push( _coursepress.messages.notification.empty_content );
+				}
+			}
+			if ( errors.length ) {
+				alert( errors.join( "\n" ) );
+				return false;
+			}
+			return true;
+		});
+
+		/**
+		 * Visibility aka reciever
+		 */
+		$( "#course_id" ).change( function( event ) {
+			if ( "all" === $( "option:selected", $(this) ).val() ) {
+				$( "#post-visibility-display" ).html( $("#misc-publishing-actions").data("no-options") );
+				$( "#visibility a.edit-visibility" ).hide();
+			} else {
+				$( "#post-visibility-display" ).html( $( "input:checked", $( "#visibility" ) ).data( "info" ) );
+				$( "#visibility a.edit-visibility" ).show();
+			}
+		});
+		$( ".course-edit-notification .save-post-visibility" ).click( function( event ) {
+			$( "#post-visibility-display" ).html( $( "input:checked", $( "#visibility" ) ).data( "info" ) );
+		});
+
 	} )
 	// Prevent from opening when inactive
 	.on( 'click', '.btn-cert', function() {
@@ -1687,3 +1745,4 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 	.on( 'change', '[name="meta_basic_certificate"]', toggleCertificatePreview );
 
 })( jQuery );
+

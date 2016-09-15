@@ -1681,10 +1681,37 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		}
 
 		/**
-		 * Notification status
+		 * Notification
 		 */
 		$( ".course-edit-notification .save-post-status" ).click( function( event ) {
 			$( "#post-status-display" ).html( $( "option:selected", $( "#post-status-select" ) ).text() );
+		});
+		$( ".course-edit-notification input[type=submit]" ).click( function( event ) {
+			var errors = [];
+			/**
+			 * Check title
+			 */
+			if ( '' === $('#titlewrap input[name=post_title]').val() ) {
+				errors.push( _coursepress.messages.notification.empty_title );
+			}
+			/**
+			 * Check content
+			 */
+			if ( $(".wp-editor-wrap").hasClass("tmce-active" ) ) {
+				var body = tinymce.activeEditor.getBody(), text = tinymce.trim(body.innerText || body.textContent);
+				if ( 0 === text.length ) {
+					errors.push( _coursepress.messages.notification.empty_content );
+				}
+			} else {
+				if ( '' === $(".wp-editor-wrap .wp-editor-area").val() ) {
+					errors.push( _coursepress.messages.notification.empty_content );
+				}
+			}
+			if ( errors.length ) {
+				alert( errors.join( "\n" ) );
+				return false;
+			}
+			return true;
 		});
 
 		/**
@@ -1716,3 +1743,4 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 	.on( 'change', '[name="meta_basic_certificate"]', toggleCertificatePreview );
 
 })( jQuery );
+

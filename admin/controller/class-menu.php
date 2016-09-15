@@ -216,6 +216,12 @@ class CoursePress_Admin_Controller_Menu {
 						'labels' => array(
 							'user_dropdown_placeholder' => __( 'Enter username, first name and last name, or email', 'cp' ),
 						),
+						'messages' => array(
+							'notification' => array(
+								'empty_content' => __( 'No notification content!', 'cp' ),
+								'empty_title' => __( 'No notification title!', 'cp' ),
+							),
+						),
 					),
 					$this->localize_array
 				);
