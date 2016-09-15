@@ -2952,7 +2952,7 @@ class CoursePress_Data_Course {
 	 */
 	public static function add_numeric_identifier_to_course_name( $post_title, $post_id = 0 ) {
 		if ( empty( $post_id ) ) {
-			return $title;
+			return $post_title;
 		}
 		if ( ! is_admin() ) {
 			return $post_title;
