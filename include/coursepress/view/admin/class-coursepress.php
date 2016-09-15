@@ -61,6 +61,8 @@ class CoursePress_View_Admin_CoursePress {
 		add_action( 'show_user_profile', array( 'CoursePress_View_Admin_Course_Student', 'render_student_courses' ) );
 		add_action( 'edit_user_profile', array( 'CoursePress_View_Admin_Course_Student', 'render_student_courses' ) );
 
+		// Update Notification
+		add_action( 'wp_ajax_update_notification', array( 'CoursePress_Data_Notification', 'update_notification' ) );
 	}
 
 	public static function add_valid( $valid_pages ) {
@@ -200,5 +202,4 @@ class CoursePress_View_Admin_CoursePress {
 	public static function get_slug() {
 		return self::$slug;
 	}
-
 }

@@ -176,4 +176,111 @@ class CoursePress_Data_Notification {
 		 */
 		return get_posts( $args );
 	}
+
+	public static function update_notification() {
+		$data = json_decode( file_get_contents( 'php://input' ) );
+
+		$json_data = array();
+		$success = false;
+
+		$action = isset( $data->action ) ? $data->action : '';
+		$json_data['action'] = $action;
+
+		if ( empty( $data->action ) ) {
+			$json_data['message'] = __( 'Notification Update: No action.', 'cp' );
+			wp_send_json_error( $json_data );
+		}
+
+		switch ( $action ) {
+
+			case 'delete':
+
+				if ( wp_verify_nonce( $data->data->nonce, 'delete-notification' ) ) {
+
+					$notification_id = $data->data->notification_id;
+
+					wp_delete_post( $notification_id );
+
+					$json_data['notification_id'] = $notification_id;
+					$json_data['nonce'] = wp_create_nonce( 'delete-notification' );
+					$success = true;
+				}
+
+				break;
+
+			case 'toggle':
+
+				$notification_id = $data->data->notification_id;
+
+				l( $notification_id );
+
+				if ( wp_verify_nonce( $data->data->nonce, 'publish-notification' ) ) {
+
+					wp_update_post( array(
+						'ID' => $notification_id,
+						'post_status' => $data->data->status,
+					) );
+
+					$json_data['nonce'] = wp_create_nonce( 'publish-notification' );
+					$success = true;
+
+				}
+
+				$json_data['notification_id'] = $notification_id;
+				$json_data['state'] = $data->data->state;
+
+				break;
+
+			case 'bulk_unpublish':
+			case 'bulk_publish':
+			case 'bulk_delete':
+
+				$ids = $data->data->ids;
+
+				if ( wp_verify_nonce( $data->data->nonce, 'bulk_action_nonce' ) ) {
+
+					foreach ( $ids as $id ) {
+
+						if ( 'bulk_unpublish' === $action ) {
+							if ( CoursePress_Data_Capabilities::can_update_notification( $id ) ) {
+								wp_update_post( array(
+									'ID' => $id,
+									'post_status' => 'draft',
+								) );
+							}
+						}
+
+						if ( 'bulk_publish' === $action ) {
+							if ( CoursePress_Data_Capabilities::can_update_notification( $id ) ) {
+								wp_update_post( array(
+									'ID' => $id,
+									'post_status' => 'publish',
+								) );
+							}
+						}
+
+						if ( 'bulk_delete' === $action ) {
+							if ( CoursePress_Data_Capabilities::can_delete_notification( $id ) ) {
+								wp_delete_post( $id );
+							}
+						}
+					}
+
+					$success = true;
+
+				}
+
+				$json_data['ids'] = $ids;
+
+				break;
+
+		}
+
+		if ( $success ) {
+			wp_send_json_success( $json_data );
+		} else {
+			wp_send_json_error( $json_data );
+		}
+
+	}
 }
