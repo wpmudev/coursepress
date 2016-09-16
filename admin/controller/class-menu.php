@@ -10,6 +10,8 @@ class CoursePress_Admin_Controller_Menu {
 	protected $cap 					= 'manage_options'; // Default to admin cap
 	var $description 				= '';
 	var $with_editor 				= false;
+	protected static $labels;
+	protected static $post_type;
 
 	/**
 	 * @var (bool)		A helper var to identify if current page is the page set for this menu.
@@ -262,4 +264,32 @@ class CoursePress_Admin_Controller_Menu {
 			printf( $format, 'success', self::$success_message );
 		}
 	}
+
+	/**
+	 * Set label properites.
+	 *
+	 * @since @2.0.0
+	 */
+	protected static function set_labels() {
+		if ( !isset( self::$labels[self::$post_type] ) || empty( self::$labels[self::$post_type] ) ) {
+			$type_object = get_post_type_object( self::$post_type );
+			self::$labels[self::$post_type] = get_post_type_labels( $type_object );
+		}
+	}
+
+	/**
+	 * Add new item button - only code, indepened on type
+	 *
+	 * @since @2.0.0
+	 */
+	protected static function button_add( $label ) {
+		$url = remove_query_arg( 'id' );
+		$url = add_query_arg( 'action', 'edit', $url );
+		printf(
+			'<a href="%s" class="page-title-action">%s</a>',
+			esc_url( $url ),
+			$label
+		);
+	}
+
 }

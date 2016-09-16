@@ -11,8 +11,11 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 	var $with_editor = false;
 	protected $cap = 'coursepress_notifications_cap';
 	protected $list_notification;
-	protected static $labels;
-	protected static $post_type;
+
+    public function init() {
+		self::$post_type = CoursePress_Data_Notification::get_post_type_name();
+		self::set_labels();
+    }
 
 	public static function init_edit() {
 		if ( ! CoursePress_Data_Capabilities::can_add_notifications() ) {
@@ -23,8 +26,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 		}
 		include_once ABSPATH.'/wp-admin/includes/meta-boxes.php';
 		wp_enqueue_script( 'post' );
-		self::$post_type = CoursePress_Data_Notification::get_post_type_name();
-		self::set_labels();
+		self::init();
 		/**
 		 * Add meta boxe save
 		 */
@@ -53,10 +55,10 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 	}
 
 	public function get_labels() {
-		self::set_labels();
+		self::init();
 		return array(
 			'title' => __( 'CoursePress Notifications', 'cp' ),
-			'menu_title' => self::$labels->name,
+			'menu_title' => self::get_label_by_name('name'),
 		);
 	}
 
@@ -511,15 +513,11 @@ foreach ( $allowed_options as $key => $data ) {
 	 * @since 2.0.0
 	 */
 	public static function add_button_add_new() {
-		if ( CoursePress_Data_Capabilities::can_add_notifications() ) {
-			$url = remove_query_arg( 'id' );
-			$url = add_query_arg( 'action', 'edit', $url );
-			printf(
-				'<a href="%s" class="page-title-action">%s</a>',
-				esc_url( $url ),
-				self::get_label_by_name( 'add_new' )
-			);
+		if ( !CoursePress_Data_Capabilities::can_add_notifications() ) {
+			return;
 		}
+		$label = self::get_label_by_name( 'add_new' );
+		self::button_add( $label );
 	}
 
 	/**
@@ -532,17 +530,10 @@ foreach ( $allowed_options as $key => $data ) {
 	 */
 	public static function get_label_by_name( $label ) {
 		self::set_labels();
-		if ( isset( self::$labels->$label ) ) {
-			return self::$labels->$label;
+		if ( isset( self::$labels[self::$post_type]->$label ) ) {
+			return self::$labels[self::$post_type]->$label;
 		}
 		return '';
 	}
 
-	protected static function set_labels() {
-		self::$post_type = CoursePress_Data_Notification::get_post_type_name();
-		if ( empty( self::$labels ) ) {
-			$notification_type_object = get_post_type_object( self::$post_type );
-			self::$labels = get_post_type_labels( $notification_type_object );
-		}
-	}
 }

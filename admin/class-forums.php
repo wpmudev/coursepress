@@ -10,7 +10,19 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 	var $slug = 'coursepress_discussions';
 	var $with_editor = false;
 	protected $cap = 'coursepress_discussions_cap';
-	protected $list_forums;
+    protected $list_forums;
+
+    public function init() {
+        self::$post_type = CoursePress_Data_Discussion::get_post_type_name();
+        self::set_labels();
+    }
+
+    public static function init_edit() {
+        //		if ( ! CoursePress_Data_Capabilities::can_add_notifications() ) {
+        wp_die( __( 'Sorry, you are not allowed to access this page.' ), 403 );
+        //		}
+		self::init();
+    }
 
 	public function get_labels() {
 		return array(
@@ -66,7 +78,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 			$args = array(
 				'post_title' => $title,
 				'post_content' => $content,
-				'post_type' => CoursePress_Data_Discussion::get_post_type_name(),
+				'post_type' => self::$post_type,
 				'post_status' => $post_status,
 			);
 
@@ -228,18 +240,32 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 	}
 
 	/**
-	 * Content of box submitbox
+	 * Add button "Add new Notification".
 	 *
 	 * @since 2.0.0
-	 *
-	 * @return string Content of submitbox.
 	 */
-	public static function box_submitdiv() {
-		echo '<div class="submitbox" id="submitpost"><div id="major-publishing-actions"><div id="publishing-action"><span class="spinner"></span>';
-		printf(
-			'<input type="submit" class="button button-primary" value="%s" />',
-			esc_attr__( 'Publish', 'cp' )
-		);
-		echo '</div><div class="clear"></div></div></div>';
+	public static function add_button_add_new() {
+		if ( !CoursePress_Data_Capabilities::can_add_notifications() ) {
+			return;
+		}
+		$label = self::get_label_by_name( 'add_new' );
+		self::button_add( $label );
 	}
+
+	/**
+	 * Get label
+	 *
+	 * @since @2.0.0
+	 *
+	 * @param string $label Label Name.
+	 * @return string Label value.
+	 */
+	public static function get_label_by_name( $label ) {
+		self::set_labels();
+		if ( isset( self::$labels[self::$post_type]->$label ) ) {
+			return self::$labels[self::$post_type]->$label;
+		}
+		return '';
+	}
+
 }
