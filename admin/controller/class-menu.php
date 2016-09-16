@@ -224,6 +224,14 @@ class CoursePress_Admin_Controller_Menu {
 								'empty_content' => __( 'No notification content!', 'cp' ),
 								'empty_title' => __( 'No notification title!', 'cp' ),
 							),
+							'discussion' => array(
+								'empty_content' => __( 'No thread content!', 'cp' ),
+								'empty_title' => __( 'No thread title!', 'cp' ),
+							),
+							'general' => array(
+								'empty_content' => __( 'No content!', 'cp' ),
+								'empty_title' => __( 'No title!', 'cp' ),
+							),
 						),
 					),
 					$this->localize_array
