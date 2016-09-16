@@ -70,6 +70,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 	}
 
 	public function process_form() {
+		self::init();
 		self::save_notification();
 		self::update_notification();
 

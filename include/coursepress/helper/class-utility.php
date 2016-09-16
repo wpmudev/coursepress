@@ -1150,6 +1150,7 @@ class CoursePress_Helper_Utility {
 			$post = new stdClass();
 			$post = new WP_Post( $post );
 			$post->post_type = $post_type;
+			$post->post_status = 'draft';
 			return $post;
 		}
 		/**

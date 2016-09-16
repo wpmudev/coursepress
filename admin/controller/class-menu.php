@@ -305,7 +305,7 @@ class CoursePress_Admin_Controller_Menu {
 	 * submitbox content
 	 */
 	protected static function submitbox( $post, $can_change_function ) {
-		if ( ! is_object( $post ) || ! isset( $post->post_status ) || empty( $post->post_status ) || 'draft' == $post->post_status ) {
+		if ( 'draft' == $post->post_status ) {
 			$post_id = is_object( $post )? $post->ID : 0;
 			$can = call_user_func( array( 'CoursePress_Data_Capabilities', $can_change_function ), $post_id );
 			if ( $can ) {

@@ -52,6 +52,14 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 			self::$post_type,
 			'side'
 		);
+		add_meta_box(
+			'settings',
+			__( 'Settings', 'cp' ),
+			array( __class__, 'box_settings' ),
+			self::$post_type,
+			'side'
+		);
+
 	}
 
 	public function get_labels() {
@@ -62,6 +70,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 	}
 
 	public function process_form() {
+		self::init();
 		self::update_discussion();
 
 		if ( empty( $_REQUEST['action'] ) || 'edit' !== $_REQUEST['action'] ) {
@@ -119,18 +128,52 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 				wp_update_post( $args );
 			}
 
-			$success == add_post_meta( $id, 'course_id', $course_id, true );
-			if ( ! $success ) {
-				update_post_meta( $id, 'course_id', $course_id );
-			}
+			CoursePress_Helper_Utility::add_meta_unique( $id, 'course_id', $course_id );
 
 			/**
 			 * Try to add unit_id - it should be unique post meta.
 			 */
-			$success = add_post_meta( $id, 'unit_id', $unit_id, true );
-			if ( ! $success ) {
-				update_post_meta( $id, 'unit_id', $unit_id );
+			CoursePress_Helper_Utility::add_meta_unique( $id, 'unit_id', $unit_id );
+
+			/**
+			 * email_notification
+			 */
+			$name = 'email_notification';
+			$value = isset( $_POST[ $name ] )? $_POST[ $name ]:'no';
+			if ( ! preg_match( '/^(yes|no)$/', $value ) ) {
+				$value = 'no';
 			}
+			CoursePress_Helper_Utility::add_meta_unique( $id, $name, $value );
+
+			/**
+			 * thread_comments_depth
+			 */
+			$name = 'thread_comments_depth';
+			$value = isset( $_POST[ $name ] )? intval( $_POST[ $name ] ):get_option( 'thread_comments_depth', 5 );
+			if ( ! is_numeric( $value ) || 0 > $value ) {
+				$value = 0;
+			}
+			CoursePress_Helper_Utility::add_meta_unique( $id, $name, $value );
+
+			/**
+			 * comments_per_page
+			 */
+			$name = 'comments_per_page';
+			$value = isset( $_POST[ $name ] )? intval( $_POST[ $name ] ):get_option( 'comments_per_page', 20 );
+			if ( ! is_numeric( $value ) || 1 > $value ) {
+				$value = 1;
+			}
+			CoursePress_Helper_Utility::add_meta_unique( $id, $name, $value );
+
+			/**
+			 * comments_order
+			 */
+			$name = 'comments_order';
+			$value = isset( $_POST[ $name ] )? $_POST[ $name ]:'newer';
+			if ( ! preg_match( '/^(older|newer)$/', $value ) ) {
+				$value = 'newer';
+			}
+			CoursePress_Helper_Utility::add_meta_unique( $id, $name, $value );
 
 			$url = add_query_arg( 'id', $id );
 			wp_redirect( esc_url_raw( $url ) );
@@ -194,7 +237,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 		}
 		$course_id = 'all';
 		$unit_id = 'course';
-		if ( 'new' !== $the_id ) {
+		if ( 'new' !== $the_id && ! empty( $the_id ) ) {
 			if ( ! CoursePress_Data_Capabilities::can_update_discussion( $the_id ) ) {
 				_e( 'You do not have permission to edit this discussion.', 'cp' );
 				return;
@@ -275,7 +318,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 	 *
 	 * @return string Content of submitbox.
 	 */
-	public static function box_submitdiv() {
+	public static function box_submitdiv( $post ) {
 		self::submitbox( $post, 'can_change_status_discussion' );
 	}
 
@@ -306,5 +349,62 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 			return self::$labels[ self::$post_type ]->$label;
 		}
 		return '';
+	}
+
+	/**
+	 * 'Settings' metabox. This metabox must contain the following options.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param WP_Post $post Current post or empty post object.
+	 */
+	public static function box_settings( $post ) {
+		/**
+		 * email_notification
+		 */
+		$email_notification = get_post_meta( $post->ID, 'email_notification', true );
+		printf( '<h4>%s</h4>', __( 'Enable email notification', 'cp' ) );
+		printf( '<input type="checkbox" name="email_notification" value="yes" %s id="meta_email_notification" />', checked( $email_notification, 'yes', false ) );
+		printf( ' <label for="meta_email_notification">%s</label>', __( 'Enable email notification', 'cp' ) );
+		/**
+		 * thread_comments_depth
+		 */
+		$thread_comments_depth = get_post_meta( $post->ID, 'thread_comments_depth', true );
+		if ( empty( $thread_comments_depth ) ) {
+			$thread_comments_depth = get_option( 'thread_comments_depth', 5 );
+		}
+		printf( '<h4>%s</h4>', __( 'Threaded comments level', 'cp' ) );
+		printf( '<input type="number" min="0" value="%d" name="thread_comments_depth" class="small-text" />', $thread_comments_depth );
+		/**
+		 * comments_per_page
+		 */
+		$comments_per_page = get_post_meta( $post->ID, 'comments_per_page', true );
+		if ( empty( $comments_per_page ) ) {
+			$comments_per_page = get_option( 'comments_per_page', 20 );
+		}
+		printf( '<h4>%s</h4>', __( 'Number of comments per page', 'cp' ) );
+		printf( '<input type="number" min="0" value="%d" name="comments_per_page" class="small-text" />', $comments_per_page );
+		/**
+		 * comments_order
+		 */
+		$attr = array(
+			'older' => __( 'Older first', 'cp' ),
+			'newer' => __( 'Newer first', 'cp' ),
+		);
+		$comments_order = get_post_meta( $post->ID, 'comments_order', true );
+		if ( empty( $comments_order ) || ! array_key_exists( $comments_order, $attr ) ) {
+			$comments_order = 'newer';
+		}
+		printf( '<h4>%s</h4>', __( 'Comments order', 'cp' ) );
+		echo '<ul>';
+		foreach ( $attr as $key => $label ) {
+			printf(
+				'<li><label><input type="radio" name="comments_order" value="%s" %s /> %s</label></li>',
+				esc_attr( $key ),
+				checked( $comments_order, $key, false ),
+				$label
+			);
+		}
+		echo '</ul>';
 	}
 }
