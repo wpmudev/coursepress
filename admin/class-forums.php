@@ -10,19 +10,49 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 	var $slug = 'coursepress_discussions';
 	var $with_editor = false;
 	protected $cap = 'coursepress_discussions_cap';
-    protected $list_forums;
+	protected $list_forums;
 
-    public function init() {
-        self::$post_type = CoursePress_Data_Discussion::get_post_type_name();
-        self::set_labels();
-    }
+	/**
+	 * Class init
+	 */
+	public static function init() {
+		self::$post_type = CoursePress_Data_Discussion::get_post_type_name();
+		self::set_labels();
+	}
 
-    public static function init_edit() {
-        //		if ( ! CoursePress_Data_Capabilities::can_add_notifications() ) {
-        wp_die( __( 'Sorry, you are not allowed to access this page.' ), 403 );
-        //		}
+	/**
+	 * Edit screen init
+	 */
+	public static function init_edit() {
+		if ( ! CoursePress_Data_Capabilities::can_add_discussions() ) {
+			wp_die( __( 'Sorry, you are not allowed to access this page.' ), 403 );
+		}
+		wp_reset_vars( array( 'action' ) );
+		if ( wp_is_mobile() ) {
+			wp_enqueue_script( 'jquery-touch-punch' );
+		}
+		include_once ABSPATH.'/wp-admin/includes/meta-boxes.php';
+		wp_enqueue_script( 'post' );
 		self::init();
-    }
+		/**
+		 * Add meta boxe save
+		 */
+		add_meta_box(
+			'submitdiv',
+			__( 'Save', 'cp' ),
+			array( __CLASS__, 'box_submitdiv' ),
+			self::$post_type,
+			'side',
+			'high'
+		);
+		add_meta_box(
+			'related_courses',
+			__( 'Related Courses', 'cp' ),
+			array( __CLASS__, 'box_release_courses' ),
+			self::$post_type,
+			'side'
+		);
+	}
 
 	public function get_labels() {
 		return array(
@@ -238,6 +268,16 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 
 		return $courses;
 	}
+	/**
+	 * Content of box submitbox
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return string Content of submitbox.
+	 */
+	public static function box_submitdiv() {
+		self::submitbox( $post, 'can_change_status_discussion' );
+	}
 
 	/**
 	 * Add button "Add new Notification".
@@ -245,7 +285,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 	 * @since 2.0.0
 	 */
 	public static function add_button_add_new() {
-		if ( !CoursePress_Data_Capabilities::can_add_notifications() ) {
+		if ( ! CoursePress_Data_Capabilities::can_add_notifications() ) {
 			return;
 		}
 		$label = self::get_label_by_name( 'add_new' );
@@ -262,10 +302,9 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 	 */
 	public static function get_label_by_name( $label ) {
 		self::set_labels();
-		if ( isset( self::$labels[self::$post_type]->$label ) ) {
-			return self::$labels[self::$post_type]->$label;
+		if ( isset( self::$labels[ self::$post_type ]->$label ) ) {
+			return self::$labels[ self::$post_type ]->$label;
 		}
 		return '';
 	}
-
 }

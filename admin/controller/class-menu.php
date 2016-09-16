@@ -35,6 +35,7 @@ class CoursePress_Admin_Controller_Menu {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		// Set ajax callback
 		add_action( 'wp_ajax_' . $this->slug, array( $this, 'ajax_request' ) );
+		add_action( 'coursepress_submitbox_misc_actions', array( __CLASS__, 'get_statuses' ), 10 );
 	}
 
 	public function get_labels() {
@@ -271,9 +272,9 @@ class CoursePress_Admin_Controller_Menu {
 	 * @since @2.0.0
 	 */
 	protected static function set_labels() {
-		if ( !isset( self::$labels[self::$post_type] ) || empty( self::$labels[self::$post_type] ) ) {
+		if ( ! isset( self::$labels[ self::$post_type ] ) || empty( self::$labels[ self::$post_type ] ) ) {
 			$type_object = get_post_type_object( self::$post_type );
-			self::$labels[self::$post_type] = get_post_type_labels( $type_object );
+			self::$labels[ self::$post_type ] = get_post_type_labels( $type_object );
 		}
 	}
 
@@ -292,4 +293,115 @@ class CoursePress_Admin_Controller_Menu {
 		);
 	}
 
+	/**
+	 * submitbox content
+	 */
+	protected static function submitbox( $post, $can_change_function ) {
+		if ( ! is_object( $post ) || ! isset( $post->post_status ) || empty( $post->post_status ) || 'draft' == $post->post_status ) {
+			$post_id = is_object( $post )? $post->ID : 0;
+			$can = call_user_func( array( 'CoursePress_Data_Capabilities', $can_change_function ), $post_id );
+			if ( $can ) {
+?>
+<div id="minor-publishing-actions">
+<div id="save-action">
+<input type="submit" name="save" id="save-post" value="<?php esc_attr_e( 'Save Draft', 'cp' ); ?>" class="button">
+<span class="spinner"></span>
+</div>
+<div class="clear"></div>
+</div>
+<?php
+			}
+		}
+		/**
+		 * misc actions
+		 */
+		printf( '<div id="misc-publishing-actions" data-no-options="%s">', esc_attr__( 'no option available', 'cp' ) );
+		do_action( 'coursepress_submitbox_misc_actions', $post );
+		echo '</div>';
+		/**
+		 * major actions
+		 */
+		echo '<div id="major-publishing-actions"><div id="publishing-action"><span class="spinner"></span>';
+		$label = __( 'Publish', 'cp' );
+		if ( is_object( $post ) && 'publish' == $post->post_status ) {
+			$label = __( 'Update', 'cp' );
+		}
+		printf(
+			'<input type="submit" class="button button-primary" value="%s" />',
+			esc_attr( $label )
+		);
+		echo '</div>';
+		echo '<div class="clear"></div>';
+		echo '</div>';
+	}
+
+	public static function get_statuses( $post ) {
+		$allowed_statuses = array(
+			'draft'		 => __( 'Draft', 'cp' ),
+			'publish'	   => __( 'Published', 'cp' ),
+		);
+		if ( isset( $post ) ) {
+			if ( ! array_key_exists( $post->post_status, $allowed_statuses ) ) {
+				$post->post_status = 'draft';
+			}
+		} else {
+			if ( ! is_object( $post ) ) {
+				$post = new stdClass();
+				$post->ID = 0;
+			}
+			$post->post_status = 'draft';
+		}
+?>
+<div class="misc-pub-section misc-pub-post-status">
+<label for="post_status"><?php _e( 'Status:' ) ?></label>
+<span id="post-status-display">
+<?php
+switch ( $post->post_status ) {
+	case 'private':
+		_e( 'Privately Published' );
+		break;
+	case 'publish':
+		_e( 'Published' );
+		break;
+	case 'future':
+		_e( 'Scheduled' );
+		break;
+	case 'pending':
+		_e( 'Pending Review' );
+		break;
+	case 'draft':
+	case 'auto-draft':
+	default:
+		_e( 'Draft' );
+		break;
+}
+
+?>
+</span>
+<?php
+if ( CoursePress_Data_Capabilities::can_change_status_notification( $post->ID ) ) {
+?>
+<a href="#post_status" <?php if ( 'private' == $post->post_status ) { ?>style="display:none;" <?php } ?>class="edit-post-status hide-if-no-js"><span aria-hidden="true"><?php _e( 'Edit' ); ?></span> <span class="screen-reader-text"><?php _e( 'Edit status' ); ?></span></a>
+
+<div id="post-status-select" class="hide-if-js">
+<input type="hidden" name="hidden_post_status" id="hidden_post_status" value="<?php echo esc_attr( ('auto-draft' == $post->post_status ) ? 'draft' : $post->post_status ); ?>" />
+<select name='post_status' id='post_status'>
+<?php
+foreach ( $allowed_statuses as $status => $label ) {
+	printf(
+		'<option %s value="%s">%s</option>',
+		selected( $post->post_status, $status ),
+		esc_attr( $status ),
+		$label
+	);
+}
+?>
+</select>
+ <a href="#post_status" class="save-post-status hide-if-no-js button"><?php _e( 'OK' ); ?></a>
+ <a href="#post_status" class="cancel-post-status hide-if-no-js button-cancel"><?php _e( 'Cancel' ); ?></a>
+</div>
+<?php } ?>
+</div>
+<?php
+	}
 }

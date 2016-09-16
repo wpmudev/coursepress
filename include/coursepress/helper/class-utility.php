@@ -1138,4 +1138,27 @@ class CoursePress_Helper_Utility {
 			update_post_meta( $post_id, $meta_key, $meta_value );
 		}
 	}
+
+	/**
+	 * get post or empty post type object
+	 */
+	public static function get_post_by_post_type( $post_type, $post_id = 0 ) {
+		/**
+		 * Create empty post object.
+		 */
+		if ( empty( $post_id ) ) {
+			$post = new stdClass();
+			$post = new WP_Post( $post );
+			$post->post_type = $post_type;
+			return $post;
+		}
+		/**
+		 * try to get post and sanitize post_type
+		 */
+		$post = get_post( $post_id );
+		if ( $post_type !== $post->post_type ) {
+			wp_die( __( 'Sorry, you are not allowed to access this page.' ), 403 );
+		}
+		return $post;
+	}
 }
