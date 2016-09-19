@@ -305,10 +305,9 @@ class CoursePress_Admin_Controller_Menu {
 	 * submitbox content
 	 */
 	protected static function submitbox( $post, $can_change_function ) {
-		if ( 'draft' == $post->post_status ) {
-			$post_id = is_object( $post )? $post->ID : 0;
-			$can = call_user_func( array( 'CoursePress_Data_Capabilities', $can_change_function ), $post_id );
-			if ( $can ) {
+		$post_id = is_object( $post )? $post->ID : 0;
+		$post->can_change_status = call_user_func( array( 'CoursePress_Data_Capabilities', $can_change_function ), $post_id );
+		if ( 'draft' == $post->post_status && $post->can_change_status ) {
 ?>
 <div id="minor-publishing-actions">
 <div id="save-action">
@@ -318,7 +317,6 @@ class CoursePress_Admin_Controller_Menu {
 <div class="clear"></div>
 </div>
 <?php
-			}
 		}
 		/**
 		 * misc actions
@@ -331,11 +329,14 @@ class CoursePress_Admin_Controller_Menu {
 		 */
 		echo '<div id="major-publishing-actions"><div id="publishing-action"><span class="spinner"></span>';
 		$label = __( 'Publish', 'cp' );
+		$class = 'force-publish';
 		if ( is_object( $post ) && 'publish' == $post->post_status ) {
 			$label = __( 'Update', 'cp' );
+			$class = '';
 		}
 		printf(
-			'<input type="submit" class="button button-primary" value="%s" />',
+			'<input type="submit" class="button button-primary %s" value="%s" />',
+			$class,
 			esc_attr( $label )
 		);
 		echo '</div>';
@@ -387,7 +388,7 @@ switch ( $post->post_status ) {
 ?>
 </span>
 <?php
-if ( CoursePress_Data_Capabilities::can_change_status_notification( $post->ID ) ) {
+if ( $post->can_change_status ) {
 ?>
 <a href="#post_status" <?php if ( 'private' == $post->post_status ) { ?>style="display:none;" <?php } ?>class="edit-post-status hide-if-no-js"><span aria-hidden="true"><?php _e( 'Edit' ); ?></span> <span class="screen-reader-text"><?php _e( 'Edit status' ); ?></span></a>
 

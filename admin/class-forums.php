@@ -71,6 +71,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 
 	public function process_form() {
 		self::init();
+		self::save_discussion();
 		self::update_discussion();
 
 		if ( empty( $_REQUEST['action'] ) || 'edit' !== $_REQUEST['action'] ) {
@@ -89,136 +90,138 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 		}
 	}
 
-	public static function update_discussion() {
+	public static function save_discussion() {
 		// Add or edit discussion
-		if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'edit_discussion' ) ) {
-
-			// Update the discussion
-			$id = isset( $_REQUEST['id'] ) ? (int) $_REQUEST['id'] : false;
-			$content = CoursePress_Helper_Utility::filter_content( $_POST['post_content'] );
-			$title = CoursePress_Helper_Utility::filter_content( $_POST['post_title'] );
-
-			// Validate
-			if ( empty( $title ) ) {
-				self::$error_message = __( 'The topic title is required!', 'cp' );
-				return;
-			} elseif ( empty( $_POST['post_content'] ) ) {
-				self::$error_message = __( 'The topic description is required!', 'cp' );
-				return;
-			} elseif ( ! empty( $id ) && ! CoursePress_Data_Capabilities::can_update_discussion( $id ) ) {
-				self::$error_message = __( 'You have no permission to edit this topic!', 'cp' );
-				return;
-			}
-
-			$course_id = 'all' === $_POST['meta_course_id'] ? $_POST['meta_course_id'] : (int) $_POST['meta_course_id'];
-			$unit_id = 'course' === $_POST['meta_unit_id'] ? $_POST['meta_unit_id'] : (int) $_POST['meta_unit_id'];
-			$post_status = isset( $_POST['post_status'] ) ? $_POST['post_status'] : 'draft';
-
-			$args = array(
-				'post_title' => $title,
-				'post_content' => $content,
-				'post_type' => self::$post_type,
-				'post_status' => $post_status,
-			);
-
-			if ( empty( $id ) || 'new' == $id ) {
-				$id = wp_insert_post( $args );
-			} else {
-				$args['ID'] = $id;
-				wp_update_post( $args );
-			}
-
-			CoursePress_Helper_Utility::add_meta_unique( $id, 'course_id', $course_id );
-
-			/**
-			 * Try to add unit_id - it should be unique post meta.
-			 */
-			CoursePress_Helper_Utility::add_meta_unique( $id, 'unit_id', $unit_id );
-
-			/**
-			 * email_notification
-			 */
-			$name = 'email_notification';
-			$value = isset( $_POST[ $name ] )? $_POST[ $name ]:'no';
-			if ( ! preg_match( '/^(yes|no)$/', $value ) ) {
-				$value = 'no';
-			}
-			CoursePress_Helper_Utility::add_meta_unique( $id, $name, $value );
-
-			/**
-			 * thread_comments_depth
-			 */
-			$name = 'thread_comments_depth';
-			$value = isset( $_POST[ $name ] )? intval( $_POST[ $name ] ):get_option( 'thread_comments_depth', 5 );
-			if ( ! is_numeric( $value ) || 0 > $value ) {
-				$value = 0;
-			}
-			CoursePress_Helper_Utility::add_meta_unique( $id, $name, $value );
-
-			/**
-			 * comments_per_page
-			 */
-			$name = 'comments_per_page';
-			$value = isset( $_POST[ $name ] )? intval( $_POST[ $name ] ):get_option( 'comments_per_page', 20 );
-			if ( ! is_numeric( $value ) || 1 > $value ) {
-				$value = 1;
-			}
-			CoursePress_Helper_Utility::add_meta_unique( $id, $name, $value );
-
-			/**
-			 * comments_order
-			 */
-			$name = 'comments_order';
-			$value = isset( $_POST[ $name ] )? $_POST[ $name ]:'newer';
-			if ( ! preg_match( '/^(older|newer)$/', $value ) ) {
-				$value = 'newer';
-			}
-			CoursePress_Helper_Utility::add_meta_unique( $id, $name, $value );
-
-			$url = add_query_arg( 'id', $id );
-			wp_redirect( esc_url_raw( $url ) );
-			exit;
+		if ( ! isset( $_POST['_wpnonce'] ) ) {
+			return;
 		}
 
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'edit_discussion' ) ) {
+			return;
+		}
+
+		// Update the discussion
+		$id = isset( $_REQUEST['id'] ) ? (int) $_REQUEST['id'] : false;
+		$content = CoursePress_Helper_Utility::filter_content( $_POST['post_content'] );
+		$title = CoursePress_Helper_Utility::filter_content( $_POST['post_title'] );
+
+		// Validate
+		if ( empty( $title ) ) {
+			self::$error_message = __( 'The topic title is required!', 'cp' );
+			return;
+		} elseif ( empty( $_POST['post_content'] ) ) {
+			self::$error_message = __( 'The topic description is required!', 'cp' );
+			return;
+		} elseif ( ! empty( $id ) && ! CoursePress_Data_Capabilities::can_update_discussion( $id ) ) {
+			self::$error_message = __( 'You have no permission to edit this topic!', 'cp' );
+			return;
+		}
+
+		$course_id = 'all' === $_POST['meta_course_id'] ? $_POST['meta_course_id'] : (int) $_POST['meta_course_id'];
+		$unit_id = 'course' === $_POST['meta_unit_id'] ? $_POST['meta_unit_id'] : (int) $_POST['meta_unit_id'];
+		$post_status = isset( $_POST['post_status'] ) ? $_POST['post_status'] : 'draft';
+
+		$args = array(
+			'post_title' => $title,
+			'post_content' => $content,
+			'post_type' => self::$post_type,
+			'post_status' => $post_status,
+		);
+
+		if ( empty( $id ) || 'new' == $id ) {
+			$id = wp_insert_post( $args );
+		} else {
+			$args['ID'] = $id;
+			wp_update_post( $args );
+		}
+
+		CoursePress_Helper_Utility::add_meta_unique( $id, 'course_id', $course_id );
+
+		/**
+		 * Try to add unit_id - it should be unique post meta.
+		 */
+		CoursePress_Helper_Utility::add_meta_unique( $id, 'unit_id', $unit_id );
+
+		/**
+		 * email_notification
+		 */
+		$name = 'email_notification';
+		$value = isset( $_POST[ $name ] )? $_POST[ $name ]:'no';
+		if ( ! preg_match( '/^(yes|no)$/', $value ) ) {
+			$value = 'no';
+		}
+		CoursePress_Helper_Utility::add_meta_unique( $id, $name, $value );
+
+		/**
+		 * thread_comments_depth
+		 */
+		$name = 'thread_comments_depth';
+		$value = isset( $_POST[ $name ] )? intval( $_POST[ $name ] ):get_option( 'thread_comments_depth', 5 );
+		if ( ! is_numeric( $value ) || 0 > $value ) {
+			$value = 0;
+		}
+		CoursePress_Helper_Utility::add_meta_unique( $id, $name, $value );
+
+		/**
+		 * comments_per_page
+		 */
+		$name = 'comments_per_page';
+		$value = isset( $_POST[ $name ] )? intval( $_POST[ $name ] ):get_option( 'comments_per_page', 20 );
+		if ( ! is_numeric( $value ) || 1 > $value ) {
+			$value = 1;
+		}
+		CoursePress_Helper_Utility::add_meta_unique( $id, $name, $value );
+
+		/**
+		 * comments_order
+		 */
+		$name = 'comments_order';
+		$value = isset( $_POST[ $name ] )? $_POST[ $name ]:'newer';
+		if ( ! preg_match( '/^(older|newer)$/', $value ) ) {
+			$value = 'newer';
+		}
+		CoursePress_Helper_Utility::add_meta_unique( $id, $name, $value );
+
+		$url = add_query_arg( 'id', $id );
+		wp_redirect( esc_url_raw( $url ) );
+		exit;
+	}
+
+	public static function update_discussion() {
 		// Discussion actions
-		if ( ! empty( $_REQUEST['action'] ) ) {
-			$actions = array(
-				'delete',
-				'delete2',
-				'filter',
-			);
-			$action = strtolower( trim( $_REQUEST['action'] ) );
+		if ( empty( $_REQUEST['action'] ) ) {
+			return;
+		}
+		$actions = array(
+			'delete',
+			'delete2',
+			'filter',
+		);
+		$action = strtolower( trim( $_REQUEST['action'] ) );
+		switch ( $action ) {
+			case 'delete' && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_delete_discussion' ) :
+				$id = (int) $_REQUEST['id'];
+				// @todo: Add vlidation
+				wp_delete_post( $id );
+				$url = remove_query_arg(
+					array(
+					'id',
+					'action',
+					'_wpnonce',
+					)
+				);
+				wp_safe_redirect( $url ); exit;
+			break;
 
-			if ( in_array( $action, $actions ) ) {
-				switch ( $action ) {
-					case 'delete' && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_delete_discussion' ) :
-						$id = (int) $_REQUEST['id'];
-
-						// @todo: Add vlidation
-						wp_delete_post( $id );
-
-						$url = remove_query_arg(
-							array(
-								'id',
-								'action',
-								'_wpnonce',
-							)
-						);
-						wp_safe_redirect( $url ); exit;
-						break;
-
-					case 'filter':
-						$id = (int) $_REQUEST['course_id'];
-
-						if ( 0 < $id ) {
-							$url = add_query_arg( 'course_id', $id );
-						} else {
-							$url = remove_query_arg( 'course_id' );
-						}
-						wp_safe_redirect( $url ); exit;
-						break;
+			case 'filter':
+				$id = (int) $_REQUEST['course_id'];
+				if ( 0 < $id ) {
+					$url = add_query_arg( 'course_id', $id );
+				} else {
+					$url = remove_query_arg( 'course_id' );
 				}
-			}
+				wp_safe_redirect( $url ); exit;
+			break;
 		}
 	}
 

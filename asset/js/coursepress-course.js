@@ -1746,8 +1746,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 				alert( errors.join( "\n" ) );
 				return false;
 			}
-			if ( $(this).hasClass('button-primary') ) {
-				console.log('aaaa');
+			if ( $(this).hasClass('button-primary') && $(this).hasClass('force-publish' ) ) {
 				$('#post_status').val('publish');
 			}
 			return true;
