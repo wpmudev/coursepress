@@ -1418,8 +1418,15 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 
 		// Could add these events, but won't need it
 		//CoursePress.Post.on( 'coursepress:notification:delete_error', function( data ) {} );
-		//CoursePress.Post.on( 'coursepress:notification:toggle_success', function( data ) {} );
-		//CoursePress.Post.on( 'coursepress:notification:toggle_error', function( data ) {} );
+		//CoursePress.Post.on( 'coursepress:notification:toggle_success', function( data ) { } );
+		CoursePress.Post.on( 'coursepress:notification:toggle_error', function( data ) {
+			var element = $( '#publish-notification-toggle-' + data.ID );
+			if ( element.hasClass( 'on' ) ) {
+				element.removeClass( 'on' ).addClass( 'off' );
+			} else {
+				element.removeClass( 'off' ).addClass( 'on' );
+			}
+		} );
 
 		$( '.coursepress_communications_wrapper.notifications [id*="doaction"]' ).on( 'click', function() {
 			var action = $( this ).siblings( '[id*="bulk-action-selector"]' ).val();

@@ -194,41 +194,34 @@ class CoursePress_Data_Notification {
 		switch ( $action ) {
 
 			case 'delete':
-
 				if ( wp_verify_nonce( $data->data->nonce, 'delete-notification' ) ) {
-
 					$notification_id = $data->data->notification_id;
-
-					wp_delete_post( $notification_id );
-
-					$json_data['notification_id'] = $notification_id;
-					$json_data['nonce'] = wp_create_nonce( 'delete-notification' );
-					$success = true;
+					if ( self::is_correct_post_type( $notification_id ) ) {
+						wp_delete_post( $notification_id );
+						$json_data['notification_id'] = $notification_id;
+						$json_data['nonce'] = wp_create_nonce( 'delete-notification' );
+						$success = true;
+					}
 				}
-
 				break;
 
 			case 'toggle':
-
-				$notification_id = $data->data->notification_id;
-
-				l( $notification_id );
-
 				if ( wp_verify_nonce( $data->data->nonce, 'publish-notification' ) ) {
-
-					wp_update_post( array(
-						'ID' => $notification_id,
-						'post_status' => $data->data->status,
-					) );
-
-					$json_data['nonce'] = wp_create_nonce( 'publish-notification' );
-					$success = true;
-
+					$notification_id = $data->data->notification_id;
+					if ( self::is_correct_post_type( $notification_id ) ) {
+						wp_update_post( array(
+							'ID' => $notification_id,
+							'post_status' => $data->data->status,
+						) );
+						$json_data['nonce'] = wp_create_nonce( 'publish-notification' );
+						$json_data['notification_id'] = $notification_id;
+						$json_data['state'] = $data->data->state;
+						$success = true;
+					} else {
+						$json_data['message'] = __( 'Notification update failed.', 'cp' );
+						$json_data['ID'] = $notification_id;
+					}
 				}
-
-				$json_data['notification_id'] = $notification_id;
-				$json_data['state'] = $data->data->state;
-
 				break;
 
 			case 'bulk_unpublish':
@@ -240,6 +233,10 @@ class CoursePress_Data_Notification {
 				if ( wp_verify_nonce( $data->data->nonce, 'bulk_action_nonce' ) ) {
 
 					foreach ( $ids as $id ) {
+
+						if ( ! self::is_correct_post_type( $id ) ) {
+							continue;
+						}
 
 						if ( 'bulk_unpublish' === $action ) {
 							if ( CoursePress_Data_Capabilities::can_update_notification( $id ) ) {
@@ -283,4 +280,18 @@ class CoursePress_Data_Notification {
 		}
 
 	}
+
+	/**
+	 * Check is post type match?
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param int|WP_Post Post ID or post object.
+	 * @return boolean True on success, false on failure.
+	 */
+	public static function is_correct_post_type( $post ) {
+		$post_type = get_post_type( $post );
+		return self::$post_type == $post_type;
+	}
+
 }
