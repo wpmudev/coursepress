@@ -52,7 +52,7 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 		}
 
 		// @todo: Validate per course
-/*
+		/*
 		if ( ! empty( $course_id ) && 'all' !== $course_id ) {
 			$post_args['meta_query'] = array(
 				array(
@@ -74,11 +74,18 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 				),
 			);
 		}
-*/
+		*/
 
 		// @todo: Add permissions
 		$wp_query = new WP_Query( $post_args );
-		$this->items = $wp_query->posts;
+		$this->items = array();
+		foreach ( $wp_query->posts as $post ) {
+			$post->user_can_edit = CoursePress_Data_Capabilities::can_update_discussion( $post->ID );
+			$post->user_can_delete  = CoursePress_Data_Capabilities::can_delete_discussion( $post->ID );
+			$post->user_can_change_status = CoursePress_Data_Capabilities::can_change_status_discussion( $post->ID );
+			$post->user_can_change = $post->user_can_edit || $post->user_can_delete || $post->user_can_change_status;
+			$this->items[] = $post;
+		}
 		$total_items = $wp_query->found_posts;
 
 		$this->set_pagination_args(
@@ -133,7 +140,7 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 			array(
 				'_wpnonce' => wp_create_nonce( 'coursepress_delete_discussion' ),
 				'id' => $item->ID,
-				'action' => 'delete'
+				'action' => 'delete',
 			)
 		);
 		$row_actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $delete_url ), __( 'Delete', 'cp' ) );
@@ -160,4 +167,36 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 		<?php
 		$this->search_box( __( 'Search Forums', 'cp' ), 'search_discussions' );
 	}
+
+	/**
+	 * Column Status
+	 *
+	 * @since 2.0.0
+	 */
+	public function column_status( $item ) {
+		/**
+		 * check permissions
+		 */
+		if ( ! $item->user_can_change_status ) {
+			return ucfirst( $item->post_status );
+		}
+		// Publish Course Toggle
+		$item->ID = $item->ID;
+		$status = get_post_status( $item->ID );
+		$ui = array(
+			'label' => '',
+			'left' => '<i class="fa fa-key"></i>',
+			'left_class' => '',
+			'right' => '<i class="fa fa-globe"></i>',
+			'right_class' => '',
+			'state' => 'publish' === $status ? 'on' : 'off',
+			'data' => array(
+				'nonce' => wp_create_nonce( 'publish-discussion-' . $item->ID ),
+			),
+		);
+		$ui['class'] = 'discussion-' . $item->ID;
+		$publish_toggle = ! empty( $item->ID ) ? CoursePress_Helper_UI::toggle_switch( 'publish-discussion-toggle-' . $item->ID, 'publish-discussion-toggle-' . $item->ID, $ui ) : '';
+		return $publish_toggle;
+	}
+
 }

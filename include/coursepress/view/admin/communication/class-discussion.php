@@ -16,9 +16,6 @@ class CoursePress_View_Admin_Communication_Discussion {
 		add_filter( 'coursepress_admin_pages', array( __CLASS__, 'add_page' ) );
 		add_action( 'coursepress_settings_page_pre_render_' . self::$slug, array( __CLASS__, 'process_form' ) );
 
-		// Update Discussion
-		add_action( 'wp_ajax_update_discussion', array( __CLASS__, 'update_discussion' ) );
-
 		/**
 		 * load admin page hook
 		 *

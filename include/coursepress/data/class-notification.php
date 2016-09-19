@@ -177,7 +177,8 @@ class CoursePress_Data_Notification {
 		return get_posts( $args );
 	}
 
-	public static function update_notification() {
+	public static function ajax_update() {
+
 		$data = json_decode( file_get_contents( 'php://input' ) );
 
 		$json_data = array();
@@ -293,5 +294,4 @@ class CoursePress_Data_Notification {
 		$post_type = get_post_type( $post );
 		return self::$post_type == $post_type;
 	}
-
 }
