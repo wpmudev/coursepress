@@ -103,9 +103,12 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 	}
 
 	public function column_cb( $item ) {
-		return sprintf(
-			'<input type="checkbox" name="bulk-actions[]" value="%s" />', $item->ID
-		);
+		if ( $item->user_can_change) {
+			return sprintf(
+				'<input type="checkbox" name="bulk-actions[]" value="%s" />', $item->ID
+			);
+		}
+		return '';
 	}
 
 	public function get_columns() {
@@ -119,32 +122,33 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 		return $columns;
 	}
 
+	/**
+	 * Row actions
+	 */
 	protected function handle_row_actions( $item, $column_name, $primary ) {
 		if ( 'title' !== $column_name ) {
 			return '';
 		}
-
-		$row_actions = array();
-
-		// @todo: Add validation
-		$edit_url = add_query_arg(
-			array(
-				'action' => 'edit',
-				'id' => $item->ID,
-			)
-		);
-		$row_actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'cp' ) );
-
-		// @todo: Validate delete cap
-		$delete_url = add_query_arg(
-			array(
-				'_wpnonce' => wp_create_nonce( 'coursepress_delete_discussion' ),
-				'id' => $item->ID,
-				'action' => 'delete',
-			)
-		);
-		$row_actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $delete_url ), __( 'Delete', 'cp' ) );
-
+        $row_actions = array();
+		if ( $item->user_can_edit ) {
+			$edit_url = add_query_arg(
+				array(
+					'action' => 'edit',
+					'id' => $item->ID,
+				)
+			);
+			$row_actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'cp' ) );
+		}
+		if ( $item->user_can_delete ) {
+			$delete_url = add_query_arg(
+				array(
+					'_wpnonce' => wp_create_nonce( 'coursepress_delete_discussion' ),
+					'id' => $item->ID,
+					'action' => 'delete',
+				)
+			);
+			$row_actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $delete_url ), __( 'Delete', 'cp' ) );
+		}
 		return $this->row_actions( $row_actions );
 	}
 

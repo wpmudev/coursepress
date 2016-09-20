@@ -24,8 +24,21 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 	 * Edit screen init
 	 */
 	public static function init_edit() {
-		if ( ! CoursePress_Data_Capabilities::can_add_discussions() ) {
-			wp_die( __( 'Sorry, you are not allowed to access this page.' ), 403 );
+		$id = intval( isset( $_REQUEST['id'] ) ? $_REQUEST['id'] : 0 );
+		if ( empty( $id ) ) {
+			/**
+			 * Check if user can not add new discussion
+			 */
+			if ( ! CoursePress_Data_Capabilities::can_add_discussions() ) {
+				wp_die( __( 'Sorry, you are not allowed to access this page.' ), 403 );
+			}
+		} else {
+			/**
+			 * Check if user can not update this discussion
+			 */
+			if ( ! CoursePress_Data_Capabilities::can_update_discussion( $id ) ) {
+				wp_die( __( 'Sorry, you are not allowed to access this page.' ), 403 );
+			}
 		}
 		wp_reset_vars( array( 'action' ) );
 		if ( wp_is_mobile() ) {
@@ -59,7 +72,6 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 			self::$post_type,
 			'side'
 		);
-
 	}
 
 	public function get_labels() {
@@ -331,7 +343,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 	 * @since 2.0.0
 	 */
 	public static function add_button_add_new() {
-		if ( ! CoursePress_Data_Capabilities::can_add_notifications() ) {
+		if ( ! CoursePress_Data_Capabilities::can_add_discussions() ) {
 			return;
 		}
 		$label = self::get_label_by_name( 'add_new' );
