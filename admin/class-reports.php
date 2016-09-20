@@ -23,9 +23,9 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Controller_Menu {
 		self::process_request();
 
 		if ( empty( $_REQUEST['view'] ) ) {
+			add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_reports_per_page' ) );
 			$this->reports_table = new CoursePress_Admin_Table_Reports;
 			$this->reports_table->prepare_items();
-			add_screen_option( 'per_page', array( 'default' => 20 ) );
 		}
 	}
 
