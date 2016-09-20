@@ -24,9 +24,23 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 
 	public function prepare_items() {
 		global $wp_query;
-
+		$screen = get_current_screen();
+		/**
+		 * Per Page
+		 */
+		$option = $screen->get_option( 'per_page', 'option' );
+		$per_page = (int) get_user_option( $option );
+		if ( empty( $per_page ) || $per_page < 1 ) {
+			$per_page = $this->get_option( 'per_page', 'default' );
+			if ( ! $per_page ) {
+				$per_page = 20;
+			}
+		}
+		$per_page = $this->get_items_per_page( 'coursepress_discussions_per_page', $per_page );
+		/**
+		 * Post statsu
+		 */
 		$post_status = 'any';
-		$per_page = $this->get_items_per_page( 'coursepress_discussions_per_page', 20 );
 		$current_page = $this->get_pagenum();
 		$offset = ( $current_page - 1 ) * $per_page;
 		$s = isset( $_POST['s'] )? mb_strtolower( trim( $_POST['s'] ) ):false;
@@ -74,7 +88,7 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 				),
 			);
 		}
-		*/
+		 */
 
 		// @todo: Add permissions
 		$wp_query = new WP_Query( $post_args );
@@ -90,9 +104,9 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 
 		$this->set_pagination_args(
 			array(
-			'total_items' => $total_items,
-			'per_page'	=> $per_page,
-			'total_pages' => ceil( $total_items / $per_page ),
+				'total_items' => $total_items,
+				'per_page'	=> $per_page,
+				'total_pages' => ceil( $total_items / $per_page ),
 			)
 		);
 	}
@@ -103,7 +117,7 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 	}
 
 	public function column_cb( $item ) {
-		if ( $item->user_can_change) {
+		if ( $item->user_can_change ) {
 			return sprintf(
 				'<input type="checkbox" name="bulk-actions[]" value="%s" />', $item->ID
 			);
@@ -129,7 +143,7 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 		if ( 'title' !== $column_name ) {
 			return '';
 		}
-        $row_actions = array();
+		$row_actions = array();
 		if ( $item->user_can_edit ) {
 			$edit_url = add_query_arg(
 				array(
@@ -163,12 +177,12 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 			return;
 		}
 
-		?>
+?>
 		<div class="alignleft actions category-filter">
 			<?php $this->course_filter( $which ); ?>
 			<input type="submit" class="button" name="action" value="<?php esc_attr_e( 'Filter', 'cp' ); ?>" />
 		</div>
-		<?php
+<?php
 		$this->search_box( __( 'Search Forums', 'cp' ), 'search_discussions' );
 	}
 
@@ -202,5 +216,4 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 		$publish_toggle = ! empty( $item->ID ) ? CoursePress_Helper_UI::toggle_switch( 'publish-discussion-toggle-' . $item->ID, 'publish-discussion-toggle-' . $item->ID, $ui ) : '';
 		return $publish_toggle;
 	}
-
 }

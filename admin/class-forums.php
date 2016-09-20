@@ -90,9 +90,9 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 			$this->slug = 'coursepress_forums-table';
 
 			// Prepare items
+			add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_forum_per_page' ) );
 			$this->list_forums = new CoursePress_Admin_Table_Forums();
 			$this->list_forums->prepare_items();
-			add_screen_option( 'per_page', array( 'default' => 20 ) );
 
 		} elseif ( 'edit' == $_REQUEST['action'] ) {
 			$this->slug = 'coursepress_edit-forum';
