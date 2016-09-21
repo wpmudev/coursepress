@@ -293,7 +293,10 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					);
 
 					foreach ( $unit['meta'] as $key => $value ) {
-						update_post_meta( $unit_id, $key, $value );
+						$success = add_post_meta( $unit_id, $key, $value, true );
+						if ( ! $success ) {
+							update_post_meta( $unit_id, $key, $value );
+						}
 					}
 
 					/**
@@ -304,7 +307,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					 * @param integer $unit_id Unit ID.
 					 * @param array $meta Unit meta data.
 					 */
-					do_action( 'coursepress_unit_added', $unit_id, $course_id, $meta );
+					do_action( 'coursepress_unit_added', $unit_id, $course_id );
 
 					// Let's add unit capabilities
 					$user_cap = array(
@@ -407,9 +410,11 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 							}
 
 							// Have pages been removed?
-							// $pages =
 							foreach ( $meta as $key => $value ) {
-								update_post_meta( $id, $key, $value );
+								$success = add_post_meta( $id, $key, $value, true );
+								if ( ! $success ) {
+									update_post_meta( $id, $key, $value );
+								}
 							}
 
 							/**
@@ -489,7 +494,10 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 							$modules[] = $id;
 
 							foreach ( $meta as $key => $value ) {
-								update_post_meta( $id, $key, $value );
+								$success = add_post_meta( $id, $key, $value, true );
+								if ( ! $success ) {
+									update_post_meta( $id, $key, $value );
+								}
 							}
 
 							do_action( 'coursepress_module_updated', $id );
@@ -563,7 +571,10 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					$id = wp_insert_post( $data );
 
 					foreach ( $meta as $key => $value ) {
-						update_post_meta( $id, $key, $value );
+						$success = add_post_meta( $id, $key, $value, true );
+						if ( ! $success ) {
+							update_post_meta( $id, $key, $value );
+						}
 					}
 
 					$json_data['nonce'] = wp_create_nonce( 'unit_builder' );

@@ -155,7 +155,7 @@ class CoursePress_View_Admin_Setting_Capabilities {
 			'coursepress_assessment_cap' => __( 'Access the Assessment submenu', 'cp' ),
 			'coursepress_reports_cap' => __( 'Access the Reports submenu', 'cp' ),
 			'coursepress_notifications_cap' => __( 'Access the Notifications submenu', 'cp' ),
-			'coursepress_discussions_cap' => __( 'Access the Discussions submenu', 'cp' ),
+			'coursepress_discussions_cap' => __( 'Access the Forum submenu', 'cp' ),
 			'coursepress_settings_cap' => __( 'Access the Settings submenu', 'cp' ),
 		);
 	}

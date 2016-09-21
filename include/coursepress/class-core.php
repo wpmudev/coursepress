@@ -79,13 +79,18 @@ class CoursePress_Core {
 			CoursePress_View_Admin_CoursePress::init();
 			CoursePress_View_Admin_Instructor::init();
 			CoursePress_View_Admin_Student::init();
-			CoursePress_View_Admin_Communication::init();
+			//CoursePress_View_Admin_Communication::init();
 			CoursePress_View_Admin_Setting::init();
-			CoursePress_View_Admin_Course_Export::init();
+			//CoursePress_View_Admin_Course_Export::init();
 			CoursePress_Helper_PDF::init();
 
+			//new CoursePress_Admin_Students;
+			//new CoursePress_Admin_Instructors;
 			new CoursePress_Admin_Assessment;
-			new CoursePress_Admin_Certificate;
+			new CoursePress_Admin_Reports;
+			new CoursePress_Admin_Notifications;
+			new CoursePress_Admin_Forums;
+			//new CoursePress_Admin_Certificate;
 			new CoursePress_Admin_Import;
 			new CoursePress_Admin_Export;
 		} else {
@@ -548,6 +553,11 @@ class CoursePress_Core {
 		 * account settings
 		 */
 		$new_rules[ '^' . self::get_slug( 'student_settings' ) . '/?$' ] = 'index.php?page_id=-1&pagename='.self::get_slug( 'student_settings' );
+
+		/**
+		 * Student Dashboard
+		 */
+		$new_rules[ '^' . self::get_slug( 'student_dashboard' ) . '/?$' ] = 'index.php?page_id=-1&pagename='.self::get_slug( 'student_dashboard' );
 
 		$upload_dir = wp_upload_dir();
 		$upload_path = trailingslashit( str_replace( home_url(), '', $upload_dir['baseurl'] ) );

@@ -1,4 +1,4 @@
-.coursepress_settings_wrapper.reports{
+.coursepress_wrapper.coursepress-reports{
 
   .column-report .pdf {
     background-image: url( '#{$imagePath}pdf_document.png' );
@@ -8,7 +8,10 @@
     display: block;
     cursor: pointer;
   }
-
+  td.column-responses,
+  td.column-average {
+    text-indent: 15px;
+  }
   .help-tooltip {
     display: inline-block;
   }

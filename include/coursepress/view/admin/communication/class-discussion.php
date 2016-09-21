@@ -16,9 +16,6 @@ class CoursePress_View_Admin_Communication_Discussion {
 		add_filter( 'coursepress_admin_pages', array( __CLASS__, 'add_page' ) );
 		add_action( 'coursepress_settings_page_pre_render_' . self::$slug, array( __CLASS__, 'process_form' ) );
 
-		// Update Discussion
-		add_action( 'wp_ajax_update_discussion', array( __CLASS__, 'update_discussion' ) );
-
 		/**
 		 * load admin page hook
 		 *
@@ -83,8 +80,21 @@ class CoursePress_View_Admin_Communication_Discussion {
 
 			$id = wp_insert_post( $args );
 
-			update_post_meta( $id, 'course_id', $course_id );
-			update_post_meta( $id, 'unit_id', $unit_id );
+			/**
+			 * Try to add course_id - it should be unique post meta.
+			 */
+			$success == add_post_meta( $id, 'course_id', $course_id, true );
+			if ( ! $success ) {
+				update_post_meta( $id, 'course_id', $course_id );
+			}
+
+			/**
+			 * Try to add unit_id - it should be unique post meta.
+			 */
+			$success = add_post_meta( $id, 'unit_id', $unit_id, true );
+			if ( ! $success ) {
+				update_post_meta( $id, 'unit_id', $unit_id );
+			}
 
 			$url = admin_url( 'admin.php?page=' . self::$slug );
 			wp_redirect( esc_url_raw( $url ) );

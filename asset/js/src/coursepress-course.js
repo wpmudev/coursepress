@@ -1418,8 +1418,15 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 
 		// Could add these events, but won't need it
 		//CoursePress.Post.on( 'coursepress:notification:delete_error', function( data ) {} );
-		//CoursePress.Post.on( 'coursepress:notification:toggle_success', function( data ) {} );
-		//CoursePress.Post.on( 'coursepress:notification:toggle_error', function( data ) {} );
+		//CoursePress.Post.on( 'coursepress:notification:toggle_success', function( data ) { } );
+		CoursePress.Post.on( 'coursepress:notification:toggle_error', function( data ) {
+			var element = $( '#publish-notification-toggle-' + data.ID );
+			if ( element.hasClass( 'on' ) ) {
+				element.removeClass( 'on' ).addClass( 'off' );
+			} else {
+				element.removeClass( 'off' ).addClass( 'on' );
+			}
+		} );
 
 		$( '.coursepress_communications_wrapper.notifications [id*="doaction"]' ).on( 'click', function() {
 			var action = $( this ).siblings( '[id*="bulk-action-selector"]' ).val();
@@ -1509,7 +1516,14 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		// Could add these events, but won't need it
 		//CoursePress.Post.on( 'coursepress:discussion:delete_error', function( data ) {} );
 		//CoursePress.Post.on( 'coursepress:discussion:toggle_success', function( data ) {} );
-		//CoursePress.Post.on( 'coursepress:discussion:toggle_error', function( data ) {} );
+		CoursePress.Post.on( 'coursepress:discussion:toggle_error', function( data ) {
+			var element = $( '#publish-discussion-toggle-' + data.ID );
+			if ( element.hasClass( 'on' ) ) {
+				element.removeClass( 'on' ).addClass( 'off' );
+			} else {
+				element.removeClass( 'off' ).addClass( 'on' );
+			}
+		} );
 
 		$( '.coursepress_communications_wrapper.discussions [id*="doaction"]' ).on( 'click', function() {
 			var action = $( this ).siblings( '[id*="bulk-action-selector"]' ).val();
@@ -1679,6 +1693,79 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		if ( "function" == typeof($().select2) ) {
 			$('#student-add, #facilitators, #instructors').select2( Search_Params );
 		}
+
+		/**
+		 * Notification & Forum
+		 */
+		$( ".course-edit-notification .save-post-status, .course-edit-forums .save-post-status").click( function( event ) {
+			$( "#post-status-display" ).html( $( "option:selected", $( "#post-status-select" ) ).text() );
+		});
+		$( ".course-edit-notification input[type=submit], .course-edit-forums input[type=submit]" ).click( function( event ) {
+			var is_notification = $('.course-edit-notification').length > 0;
+			var is_forum = $('.course-edit-forums').length > 0;
+			var errors = [];
+			var show_content_alert = false;
+			/**
+			 * Check title
+			 */
+			if ( '' === $('#titlewrap input[name=post_title]').val() ) {
+				if ( is_notification ) {
+					errors.push( _coursepress.messages.notification.empty_title );
+				} else if ( is_forum ) {
+					errors.push( _coursepress.messages.discussion.empty_title );
+				} else {
+					errors.push( _coursepress.messages.general.empty_title );
+				}
+			}
+			/**
+			 * Check content
+			 */
+
+			if ( $(".wp-editor-wrap").hasClass("tmce-active" ) ) {
+				var body = tinymce.activeEditor.getBody(), text = tinymce.trim(body.innerText || body.textContent);
+				if ( 0 === text.length ) {
+					show_content_alert = true;
+				}
+			} else {
+				if ( '' === $(".wp-editor-wrap .wp-editor-area").val() ) {
+					show_content_alert = true;
+				}
+			}
+			if ( show_content_alert ) {
+				if ( is_notification ) {
+					errors.push( _coursepress.messages.notification.empty_content );
+				} else if ( is_forum ) {
+					errors.push( _coursepress.messages.discussion.empty_content );
+				} else {
+					errors.push( _coursepress.messages.general.empty_content );
+				}
+			}
+			if ( errors.length ) {
+				alert( errors.join( "\n" ) );
+				return false;
+			}
+			if ( $(this).hasClass('button-primary') && $(this).hasClass('force-publish' ) ) {
+				$('#post_status').val('publish');
+			}
+			return true;
+		});
+
+		/**
+		 * Visibility aka reciever
+		 */
+		$( "#course_id" ).change( function( event ) {
+			if ( "all" === $( "option:selected", $(this) ).val() ) {
+				$( "#post-visibility-display" ).html( $("#misc-publishing-actions").data("no-options") );
+				$( "#visibility a.edit-visibility" ).hide();
+			} else {
+				$( "#post-visibility-display" ).html( $( "input:checked", $( "#visibility" ) ).data( "info" ) );
+				$( "#visibility a.edit-visibility" ).show();
+			}
+		});
+		$( ".course-edit-notification .save-post-visibility" ).click( function( event ) {
+			$( "#post-visibility-display" ).html( $( "input:checked", $( "#visibility" ) ).data( "info" ) );
+		});
+
 	} )
 	// Prevent from opening when inactive
 	.on( 'click', '.btn-cert', function() {
@@ -1692,3 +1779,4 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 	.on( 'change', '[name="meta_basic_certificate"]', toggleCertificatePreview );
 
 })( jQuery );
+
