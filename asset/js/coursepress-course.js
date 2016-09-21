@@ -1768,7 +1768,6 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			$( "#post-visibility-display" ).html( $( "input:checked", $( "#visibility" ) ).data( "info" ) );
 		});
 
->>>>>>> coursepress/2.0-dev
 	} )
 	// Prevent from opening when inactive
 	.on( 'click', '.btn-cert', function() {
