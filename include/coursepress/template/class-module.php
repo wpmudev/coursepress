@@ -85,7 +85,7 @@ class CoursePress_Template_Module {
 				if ( is_admin() ) {
 					if ( ! empty( $attributes['questions'] ) ) {
 						$questions = $attributes['questions'];
-	
+
 						foreach ( $questions as $q_index => $question ) {
 							$options = (array) $question['options'];
 							$checked = (array) $options['checked'];

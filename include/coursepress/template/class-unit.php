@@ -76,9 +76,9 @@ class CoursePress_Template_Unit {
 			$item_id = $page;
 			$type = 'section';
 
-			if ( ! empty( $wp->query_vars['module'] ) ) {
+			if ( ! empty( $wp->query_vars['module_id'] ) ) {
 				$type = 'module';
-				$item_id = $wp->query_vars['module'];
+				$item_id = $wp->query_vars['module_id'];
 			} elseif ( $_POST && ! empty( $_POST['module_id'] ) ) {
 				// Check for $_POST submission
 				$type = 'module';

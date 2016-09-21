@@ -58,6 +58,9 @@ class CoursePress_Module {
 				$has_error = true;
 				self::$error_message = __( 'You need to complete the required module(s)!', 'cp' );
 			} else {
+				// Attempt to record the submission
+				CoursePress_Data_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $response );
+
 				$excluded_modules = array(
 					'input-textarea',
 					'input-text',
@@ -65,7 +68,7 @@ class CoursePress_Module {
 
 				if ( true === $is_assessable && ! in_array( $module_type, $excluded_modules ) ) {
 					$minimum_grade = $attributes['minimum_grade'];
-					$grades = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $_module_id );
+					$grades = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $module_id );
 					$grade = CoursePress_Helper_Utility::get_array_val( $grades, 'grade' );
 					$pass = (int) $grade >= (int) $minimum_grade;
 
@@ -147,7 +150,6 @@ class CoursePress_Module {
 							CoursePress_Data_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $response );
 						}
 					} else {
-						self::$error_message = __( 'You need to complete the required module(s)!2', 'cp' );
 						$has_error = true;
 						break;
 					}

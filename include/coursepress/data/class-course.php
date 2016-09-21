@@ -1814,7 +1814,7 @@ class CoursePress_Data_Course {
 						);
 
 						foreach ( $page['modules'] as $module_id => $module ) {
-							$module_link = sprintf( '%spage/%s/module/%s', $unit_link, $page_id, $module_id );//sprintf( '%s#module-%s', $page_link, $module_id );
+							$module_link = sprintf( '%spage/%s/module_id/%s', $unit_link, $page_id, $module_id );//sprintf( '%s#module-%s', $page_link, $module_id );
 
 							$items[] = array(
 								'id' => $module_id,

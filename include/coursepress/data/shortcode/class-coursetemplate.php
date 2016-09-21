@@ -1179,7 +1179,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 								$title
 							);
 						} else {
-							$module_link = $unit_url . 'page/'. $page_number . '/module/' . $module->ID;
+							$module_link = $unit_url . 'page/'. $page_number . '/module_id/' . $module->ID;
 							$module_link = sprintf( '<a href="%s">%s</a>', $module_link, $title );
 							if ( ! $clickable && ! $can_update_course ) {
 								$module_link = sprintf( '<span>%s</span>', $title );

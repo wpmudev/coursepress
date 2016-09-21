@@ -753,7 +753,7 @@ class CoursePress_Data_Shortcode_Template {
 				$content .= '</div>'; // .focus-nav
 				$content .= '</div>'; // .focus-wrapper
 
-				$template = sprintf( '<form method="post" enctype="multipart/form-data">%s</form>', $content );
+				$template = sprintf( '<form method="post">%s</form>', $content );
 				break;
 
 			case 'no_access':
@@ -848,7 +848,7 @@ class CoursePress_Data_Shortcode_Template {
 
 		if ( $button['id'] ) {
 			if ( $next ) {
-				$format = '<button type="submit" name="%s" class="%s" title="%s">%s</button>';
+				$format = '<button type="submit" name="type-%s" class="%s" title="%s">%s</button>';
 				$res = sprintf( $format, $button['type'], esc_attr( implode( ' ', $classes ) ), esc_attr( $link_title ), $title );
 			} else {
 				$res = sprintf(
