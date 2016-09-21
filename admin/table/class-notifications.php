@@ -13,6 +13,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 	private $count = array();
 	private $post_type;
 	private $_categories;
+	private $recivers_allowed_options;
 
 	public function __construct() {
 		$post_format = CoursePress_Data_Notification::get_format();
@@ -69,7 +70,14 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 
 		// @todo: Add permissions
 		$wp_query = new WP_Query( $post_args );
-		$this->items = $wp_query->posts;
+		$this->items = array();
+		foreach ( $wp_query->posts as $post ) {
+			$post->user_can_edit = CoursePress_Data_Capabilities::can_update_notification( $post->ID );
+			$post->user_can_delete  = CoursePress_Data_Capabilities::can_delete_notification( $post->ID );
+			$post->user_can_change_status = CoursePress_Data_Capabilities::can_change_status_notification( $post->ID );
+			$post->user_can_change = $post->user_can_edit || $post->user_can_delete || $post->user_can_change_status;
+			$this->items[] = $post;
+		}
 		$total_items = $wp_query->found_posts;
 
 		$this->set_pagination_args(
@@ -99,9 +107,12 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 	}
 
 	public function column_cb( $item ) {
-		return sprintf(
-			'<input type="checkbox" name="bulk-actions[]" value="%s" />', $item->ID
-		);
+		if ( $item->user_can_edit ) {
+			return sprintf(
+				'<input type="checkbox" name="bulk-actions[]" value="%s" />', $item->ID
+			);
+		}
+		return '';
 	}
 
 	public function get_columns() {
@@ -109,6 +120,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 			'cb' => '<input type="checkbox" />',
 			'notification' => __( 'Notification', 'cp' ),
 			'course' => __( 'Course', 'cp' ),
+			'receivers' => __( 'Receivers', 'cp' ),
 			'status' => __( 'Status', 'cp' ),
 		);
 
@@ -159,6 +171,37 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 		return $title;
 	}
 
+	/**
+	 * Coulmn Notifications Receivers
+	 *
+	 * @since 2.0.0
+	 */
+	public function column_receivers( $item ) {
+		$receivers = get_post_meta( $item->ID, 'receivers', true );
+		if ( empty( $receivers ) ) {
+			$receivers = 'all';
+		}
+		$attributes = CoursePress_Data_Notification::attributes( $item->ID );
+		$course_id = $attributes['course_id'];
+		if ( 'all' == $course_id ) {
+			return sprintf(
+				'<span aria-hidden="true">&#8212;</span><span class="screen-reader-text">%s</span>',
+				__( 'Option not available for all courses.', 'cp' )
+			);
+		}
+		$recivers_allowed_options = array();
+		if ( isset( $this->recivers_allowed_options[ $course_id ] ) ) {
+			$recivers_allowed_options = $this->recivers_allowed_options[ $course_id ];
+		} else {
+			$recivers_allowed_options = CoursePress_Admin_Notifications::get_allowed_options( $course_id );
+			$this->recivers_allowed_options[ $course_id ] = $recivers_allowed_options;
+		}
+		if ( isset( $recivers_allowed_options[ $receivers ] ) ) {
+			return $recivers_allowed_options[ $receivers ]['label'];
+		}
+		return __( 'Wrong receivers!', 'cp' );
+	}
+
 	protected function get_bulk_actions() {
 		$actions = array(
 			'publish' => __( 'Visible', 'cp' ),
@@ -170,7 +213,6 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 
 	public function column_course( $item ) {
 		$attributes = CoursePress_Data_Notification::attributes( $item->ID );
-
 		$output = sprintf( '<div data-course="%s">%s</div>',
 			$attributes['course_id'],
 			$attributes['course_title']
@@ -183,7 +225,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 		/**
 		 * check permissions
 		 */
-		if ( ! $this->can_change_status( $item ) ) {
+		if ( ! $item->user_can_change_status ) {
 			return ucfirst( $item->post_status );
 		}
 		// Publish Course Toggle

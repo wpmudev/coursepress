@@ -1,52 +1,33 @@
 <?php
+
+CoursePress_Admin_Notifications::init_edit();
+
 wp_reset_vars( array( 'action' ) );
 $post_type = CoursePress_Data_Notification::get_post_type_name();
 $the_id = ! empty( $_REQUEST['id'] ) ? (int) $_REQUEST['id'] : 0;
 
-$title = __( 'Add New Notification', 'cp' );
+$title = CoursePress_Admin_Notifications::get_label_by_name( 'add_new_item' );
 $post = null;
 $post_title = '';
 $post_content = '';
 $post_status = 'publish';
 
 if ( 0 < $the_id ) {
-	$title = __( 'Edit Notification', 'cp' );
+	$title = CoursePress_Admin_Notifications::get_label_by_name( 'edit_item' );
 	$post = get_post( $the_id );
 	$post_title = $post->post_title;
 	$post_content = $post->post_content;
 }
 
 do_action( 'add_meta_boxes', $post_type, $post );
-
 do_action( 'do_meta_boxes', $post_type, 'side', $post );
 
-if ( wp_is_mobile() ) {
-	wp_enqueue_script( 'jquery-touch-punch' );
-}
-
-include_once ABSPATH.'/wp-admin/includes/meta-boxes.php';
-
-wp_enqueue_script( 'post' );
-
-// Add meta boxes
-add_meta_box(
-	'submitdiv',
-	__( 'Save', 'cp' ),
-	array( $this, 'box_submitdiv' ),
-	$post_type,
-	'side',
-	'high'
-);
-add_meta_box(
-	'related_courses',
-	__( 'Related courses', 'cp' ),
-	array( $this, 'box_release_courses' ),
-	$post_type,
-	'side'
-);
 ?>
 <div class="wrap coursepress_wrapper course-edit-notification">
-	<h2><?php echo $title; ?></h2>
+<h2><?php
+echo $title;
+CoursePress_Admin_Notifications::add_button_add_new();
+?></h2>
 	<hr />
 
 	<form method="post" class="edit">
@@ -70,7 +51,7 @@ add_meta_box(
 						'textarea_rows' => 10,
 						'tinymce' => array(
 							'height' => 350,
-						)
+						),
 					);
 					// Filter $args
 					$args = apply_filters( 'coursepress_element_editor_args', $args, $editor_name, $editor_id );
@@ -80,7 +61,7 @@ add_meta_box(
 				</div>
 			</div>
 			<div id="postbox-container-1" class="postbox-container">
-				<?php do_meta_boxes($post_type, 'side', $post); ?>
+				<?php do_meta_boxes( $post_type, 'side', $post ); ?>
 			</div>
 		</div>
 	</form>

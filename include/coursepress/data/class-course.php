@@ -2703,7 +2703,7 @@ class CoursePress_Data_Course {
 	 * @param integer $course_id Course ID.
 	 * @return string Unit list.
 	 */
-	public function get_units_html_list( $course_id ) {
+	public static function get_units_html_list( $course_id ) {
 		$units_list = '';
 		$units = CoursePress_Data_Course::get_units( $course_id );
 
@@ -2950,7 +2950,10 @@ class CoursePress_Data_Course {
 	 * @param integer $post_id Post ID.
 	 * @return string Post title.
 	 */
-	public static function add_numeric_identifier_to_course_name( $post_title, $post_id ) {
+	public static function add_numeric_identifier_to_course_name( $post_title, $post_id = 0 ) {
+		if ( empty( $post_id ) ) {
+			return $post_title;
+		}
 		if ( ! is_admin() ) {
 			return $post_title;
 		}
