@@ -538,4 +538,125 @@ class CoursePress_Data_Discussion {
 
 		return $json_data;
 	}
+
+	/**
+	 * Update discusssion
+	 *
+	 * @since 2.0.0
+	 */
+	public static function ajax_update() {
+
+		$data = json_decode( file_get_contents( 'php://input' ) );
+
+		$json_data = array();
+		$success = false;
+
+		$action = isset( $data->action ) ? $data->action : '';
+		$json_data['action'] = $action;
+
+		if ( empty( $data->action ) ) {
+			$json_data['message'] = __( 'Discussion Update: No action.', 'cp' );
+			wp_send_json_error( $json_data );
+		}
+
+		switch ( $action ) {
+
+			case 'delete':
+				if ( wp_verify_nonce( $data->data->nonce, 'delete-discussion' ) ) {
+					$discussion_id = $data->data->discussion_id;
+					if ( self::is_correct_post_type( $discussion_id ) ) {
+						wp_delete_post( $discussion_id );
+						$json_data['discussion_id'] = $discussion_id;
+						$json_data['nonce'] = wp_create_nonce( 'delete-discussion' );
+						$success = true;
+					}
+				}
+				break;
+
+			case 'toggle':
+				$discussion_id = $data->data->discussion_id;
+				$json_data['ID'] = $discussion_id;
+				$nounce_name = sprintf( 'publish-discussion-%d', $discussion_id );
+				if ( wp_verify_nonce( $data->data->nonce, $nounce_name ) ) {
+					if ( self::is_correct_post_type( $discussion_id ) ) {
+						wp_update_post( array(
+							'ID' => $discussion_id,
+							'post_status' => $data->data->status,
+						) );
+						$json_data['nonce'] = wp_create_nonce( 'publish-discussion' );
+						$json_data['discussion_id'] = $discussion_id;
+						$json_data['state'] = $data->data->state;
+						$success = true;
+					} else {
+						$json_data['message'] = __( 'Discussion update failed: post type missmatch.', 'cp' );
+					}
+				} else {
+					$json_data['message'] = __( 'Discussion update failed: wrong nounce.', 'cp' );
+				}
+				break;
+
+			case 'bulk_unpublish':
+			case 'bulk_publish':
+			case 'bulk_delete':
+
+				$ids = $data->data->ids;
+
+				if ( wp_verify_nonce( $data->data->nonce, 'bulk_action_nonce' ) ) {
+
+					foreach ( $ids as $id ) {
+
+						if ( ! self::is_correct_post_type( $id ) ) {
+							continue;
+						}
+
+						if ( 'bulk_unpublish' === $action ) {
+							if ( CoursePress_Data_Capabilities::can_update_discussion( $id ) ) {
+								wp_update_post( array(
+									'ID' => $id,
+									'post_status' => 'draft',
+								) );
+							}
+						}
+
+						if ( 'bulk_publish' === $action ) {
+							if ( CoursePress_Data_Capabilities::can_update_discussion( $id ) ) {
+								wp_update_post( array(
+									'ID' => $id,
+									'post_status' => 'publish',
+								) );
+							}
+						}
+
+						if ( 'bulk_delete' === $action ) {
+							if ( CoursePress_Data_Capabilities::can_delete_discussion( $id ) ) {
+								wp_delete_post( $id );
+							}
+						}
+					}
+					$success = true;
+				}
+				$json_data['ids'] = $ids;
+				break;
+
+		}
+
+		if ( $success ) {
+			wp_send_json_success( $json_data );
+		} else {
+			wp_send_json_error( $json_data );
+		}
+	}
+
+	/**
+	 * Check is post type match?
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param int|WP_Post Post ID or post object.
+	 * @return boolean True on success, false on failure.
+	 */
+	public static function is_correct_post_type( $post ) {
+		$post_type = get_post_type( $post );
+		return self::$post_type == $post_type;
+	}
 }

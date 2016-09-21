@@ -1032,6 +1032,28 @@ class CoursePress_Data_Capabilities {
 	 */
 
 	/**
+	 * Can edit "some" discussion?
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer/null $user_id User ID
+	 */
+	public static function can_add_discussions( $user_id = null ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		$can = self::can_add_discussion_to_all( $user_id );
+		if ( $can ) {
+			return true;
+		}
+		$courses = CoursePress_Data_Instructor::get_assigned_courses_ids( $user_id );
+		if ( empty( $courses ) ) {
+			return false;
+		}
+		return self::can_add_discussion( $courses[0], $user_id );
+	}
+
+	/**
 	 * Can withdraw student
 	 *
 	 * @since 2.0.0
