@@ -675,7 +675,7 @@ class CoursePress_Data_Shortcode_Template {
 				// Main content
 				$content .= '<div class="focus-main ' . implode( ' ', $focus_class ) . '">';
 
-				$method = 'render_' . str_replace( '-', '_', $attributes['module_type'] );
+				$method = 'template';
 				$template = 'CoursePress_Template_Module';
 				$next_module_class = array( 'focus-nav-next' );
 
@@ -712,7 +712,7 @@ class CoursePress_Data_Shortcode_Template {
 						'not_done' => true,
 					);
 				} else {
-					$content .= call_user_func( array( $template, $method ), $module, $attributes );
+					$content .= call_user_func( array( $template, $method ), $module->ID, true );
 				}
 
 				$content .= '</div>'; // .focus-main
@@ -726,7 +726,7 @@ class CoursePress_Data_Shortcode_Template {
 				);
 
 				// Next Navigation
-				if ( 'section' == $next['type'] ) {
+				if ( ! empty( $next['type'] ) && 'section' == $next['type'] ) {
 					$next_module_class[] = 'next-section';
 					$title = '';
 					$text = $next_section_text;
@@ -746,13 +746,14 @@ class CoursePress_Data_Shortcode_Template {
 					$next,
 					$text,
 					$next_module_class,
-					$title
+					$title,
+					true
 				);
 
 				$content .= '</div>'; // .focus-nav
 				$content .= '</div>'; // .focus-wrapper
 
-				$template = $content;
+				$template = sprintf( '<form method="post" enctype="multipart/form-data">%s</form>', $content );
 				break;
 
 			case 'no_access':
@@ -842,20 +843,26 @@ class CoursePress_Data_Shortcode_Template {
 	 * @param  string $link_title Tooltip title of the link.
 	 * @return string HTML code of the button.
 	 */
-	public static function show_nav_button( $button, $title, $classes, $link_title = '' ) {
+	public static function show_nav_button( $button, $title, $classes, $link_title = '', $next = false ) {
 		$res = '';
 
 		if ( $button['id'] ) {
-			$res = sprintf(
-				'<div class="%5$s" data-id="%1$s" data-type="%2$s" data-unit="%4$s" data-title="%6$s" data-url="%7$s"><a href="#%2$s-%1$s" title="%6$s">%3$s</a></div>',
-				esc_attr( $button['id'] ),
-				esc_attr( $button['type'] ),
-				$title,
-				esc_attr( $button['unit'] ),
-				esc_attr( implode( ' ', $classes ) ),
-				esc_attr( $link_title ),
-				esc_url( $button['url'] )
-			);
+			if ( $next ) {
+				$format = '<button type="submit" name="%s" class="%s" title="%s">%s</button>';
+				$res = sprintf( $format, $button['type'], esc_attr( implode( ' ', $classes ) ), esc_attr( $link_title ), $title );
+			} else {
+				$res = sprintf(
+					'<div class="%5$s" data-id="%1$s" data-type="%2$s" data-unit="%4$s" data-title="%6$s" data-url="%7$s"><a href="#%2$s-%1$s" title="%6$s">%3$s</a></div>',
+					esc_attr( $button['id'] ),
+					esc_attr( $button['type'] ),
+					$title,
+					esc_attr( $button['unit'] ),
+					esc_attr( implode( ' ', $classes ) ),
+					esc_attr( $link_title ),
+					esc_url( $button['url'] )
+				);
+			}
+
 		} else {
 			$res = sprintf(
 				'<div class="%2$s" data-title="%3$s"><span title="%3$s">%1$s</span></div>',

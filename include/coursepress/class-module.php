@@ -5,6 +5,51 @@
 class CoursePress_Module {
 	public static $error_message = '';
 
+	/**
+	 * Check if it is a valid submission.
+	 **/
+	public static function is_valid() {
+		return ( ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_submit_modules' ) );
+	}
+
+	/**
+	 * First level validation.
+	 **/
+	public function validate_course( $input ) {
+		$has_error = false;
+
+		if ( empty( $input['course_id'] ) ) {
+			$has_error = true;
+			self::$error_message = __( 'Invalid course ID!', 'cp' );
+		} elseif ( false === CoursePress_Data_Course::student_enrolled( $student_id, $input['course_id'] ) ) {
+			$has_error = true;
+			self::$error_message = __( 'You are currently not enrolled to this course!', 'cp' );
+		} elseif ( 'closed' == ( $course_status = CoursePress_Data_Course::get_course_status( $input['course_id'] ) ) ) {
+			$has_error = true;
+			self::$error_message = __( 'This course is completed, you can not submit answers anymore.', 'cp' );
+		} elseif ( empty( $input['unit_id'] ) ) {
+			$has_error = true;
+			self::$error_message = __( 'Invalid unit!', 'cp' );
+		}
+
+		return $has_error;
+	}
+
+	public static function validate_module( $module_id, $response = '' ) {
+		$attributes = CoursePress_Data_Module::attributes( $module_id );
+		$module_type = $attributes['module_type'];
+		$mandatory = ! empty( $attributes['mandatory'] );
+		$is_assessable = ! empty( $attributes['assessable'] );
+		$has_error = false;
+
+		if ( true === $mandatory && '' == $response ) {
+			$has_error = true;
+			self::$error_message = __( 'This module is required!', 'cp' );
+		}
+
+		return $has_error;
+	}
+
 	public static function process_submission() {
 		if ( ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_submit_modules' ) ) {
 			$input = $_POST;

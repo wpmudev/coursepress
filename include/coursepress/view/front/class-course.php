@@ -742,6 +742,14 @@ class CoursePress_View_Front_Course {
 		CoursePress_Helper_Utility::$is_singular = false;
 		CoursePress_Helper_Utility::set_the_course_subpage( '' );
 		$is_other_cp_page = false;
+		$is_focus = false;
+
+		if ( ! empty( $wp->query_vars['coursename'] ) ) {
+			$course_name = $wp->query_vars['coursename'];
+			$cp->course_id = CoursePress_Data_Course::by_name( $cp->cp_course, true );
+			$mode = get_post_meta( $cp->course_id, 'cp_course_view', true );
+			$is_focus = 'focus' == $mode;
+		}
 
 		if ( array_key_exists( 'coursepress_focus', $wp->query_vars ) ) {
 			$cp->is_focus = (1 == $wp->query_vars['coursepress_focus']);

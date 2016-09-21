@@ -188,7 +188,7 @@ class CoursePress_Template_Module {
 		return $status;
 	}
 
-	public static function template( $module_id = 0 ) {
+	public static function template( $module_id = 0, $is_focus = false ) {
 		if ( empty( $module_id ) ) {
 			return ''; // Nothing to process, bail!
 		}
@@ -209,6 +209,12 @@ class CoursePress_Template_Module {
 		$content = self::render_module_head( $module, $attributes );
 		// The question or text content
 		$content .= self::_wrap_content( $module->post_content );
+
+		if ( $is_focus ) {
+			$content .= sprintf( '<input type="hidden" name="course_id" value="%s" />', $course_id );
+			$content .= sprintf( '<input type="hidden" name="unit_id" value="%s" />', $unit_id );
+			$content .= wp_nonce_field( 'coursepress_submit_modules', '_wpnonce', false, false );
+		}
 
 		if ( method_exists( __CLASS__, $method ) ) {
 			// Get student progress if it is not retrieve yet

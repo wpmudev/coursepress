@@ -1000,7 +1000,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			}
 
 			if ( $is_unit_available || $can_update_course ) {
-				$unit_url = $course_base_url . CoursePress_Core::get_slug( 'unit/' ) . $post_name;
+				$unit_url = CoursePress_Data_Unit::get_unit_url( $unit_id );
 			} else {
 				$unit_url = remove_query_arg( 'dummy-query' );
 			}
@@ -1092,8 +1092,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 						if ( 'normal' == $view_mode ) {
 							$module_table .= '<div class="'. $section_class . '" data-id="' . $page_number . '"'. $section_data .'>' . ( ! empty( $page['title'] ) ? esc_html( $page['title'] ) : esc_html__( 'Untitled', 'cp' ) ) . '</div>';
 						} else {
-							$section_link = $base_link . CoursePress_Core::get_slug( 'units/' );
-							$section_link .= '#section-' . $page_number;
+							$section_link = $unit_url . '#section-' . $page_number;
 							$module_table .= '<div class="'. $section_class . '" data-id="' . $page_number . '"'. $section_data . '>';
 
 							if ( $clickable || $can_update_course ) {
@@ -1180,8 +1179,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 								$title
 							);
 						} else {
-							$module_link = $base_link . CoursePress_Core::get_slug( 'units/' );
-							$module_link .= '#module-' . $module->ID;
+							$module_link = $unit_url . 'page/'. $page_number . '/#module-' . $module->ID;
 							$module_link = sprintf( '<a href="%s">%s</a>', $module_link, $title );
 							if ( ! $clickable && ! $can_update_course ) {
 								$module_link = sprintf( '<span>%s</span>', $title );
