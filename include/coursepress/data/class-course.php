@@ -1706,24 +1706,10 @@ class CoursePress_Data_Course {
 					$valid = false;
 				}
 			}
-			/*
-			if ( ! $has_required && empty( $item['restricted'] ) ) {
-				$new_sequence[] = $item;
-			}
-
-			if ( 'module' == $item['type'] ) {
-				$is_done = CoursePress_Data_Module::is_module_done_by_student( $item['id'], 0 );
-
-				if ( ! $is_done ) {
-					$has_required = true;
-				}
-			}
-			*/
 		}
 		$nav_sequence = $new_sequence;
 
 		if ( 1 > $current_index || $current_index > count( $nav_sequence ) ) {
-			//return array( 'id' => false );
 			$current_index = count( $nav_sequence );
 		}
 
@@ -1770,13 +1756,7 @@ class CoursePress_Data_Course {
 			// 2. Generate the list of navigation items.
 			//
 			$items = array();
-
-			$course_slug = get_post_field( 'post_name', $course_id );
-			$course_link = sprintf(
-				'%s%s',
-				CoursePress_Core::get_slug( 'courses/', true ),
-				$course_slug
-			);
+			$course_link = self::get_course_url( $course_id );
 
 			// First node always is the course overview (clicking prev on first page).
 			$items[] = array(
@@ -1816,19 +1796,14 @@ class CoursePress_Data_Course {
 						if ( ! $is_available ) { continue; }
 					}
 
-					$unit_link = sprintf(
-						'%s/%s%s',
-						$course_link,
-						CoursePress_Core::get_slug( 'unit/' ),
-						$unit['unit']->post_name
-					);
+					$unit_link = CoursePress_Data_Unit::get_url( $unit_id );
 
 					if ( empty( $unit['pages'] ) ) {
 						$unit['pages'] = array();
 					}
 
 					foreach ( $unit['pages'] as $page_id => $page ) {
-						$page_link = sprintf( '%s/page/%s', $unit_link, $page_id );
+						$page_link = sprintf( '%spage/%s', $unit_link, $page_id );
 
 						$items[] = array(
 							'id' => $page_id,
@@ -1839,7 +1814,7 @@ class CoursePress_Data_Course {
 						);
 
 						foreach ( $page['modules'] as $module_id => $module ) {
-							$module_link = sprintf( '%s#module-%s', $page_link, $module_id );
+							$module_link = sprintf( '%spage/%s/module/%s', $unit_link, $page_id, $module_id );//sprintf( '%s#module-%s', $page_link, $module_id );
 
 							$items[] = array(
 								'id' => $module_id,
@@ -1853,12 +1828,13 @@ class CoursePress_Data_Course {
 					}
 				}
 
+				$completion_url = $course_link . trailingslashit( 'completion' );
 				$completion_page = array(
 					'id' => 'completion_page',
 					'type' => 'section',
 					'section' => null,
 					'unit' => true,
-					'url' => CoursePress_Core::get_slug( 'courses/', true ) . $course_slug . '/' . CoursePress_Core::get_slug( 'completion' ),
+					'url' => $completion_url, //CoursePress_Core::get_slug( 'courses/', true ) . $course_slug . '/' . CoursePress_Core::get_slug( 'completion' ),
 				);
 				array_push( $items, $completion_page );
 			} else {

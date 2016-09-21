@@ -71,13 +71,19 @@ class CoursePress_Template_Unit {
 
 		// Let BackboneJS take over if its in Focus mode.
 		if ( 'focus' == $view_mode ) {
-			//$format = '<div class="coursepress-focus-view" data-course="%s" data-unit="%s" data-page="%s"><span class="loader hidden"><i class="fa fa-spinner fa-pulse"></i></span></div>';
+			global $wp;
 
-			$item_id = get_query_var( 'item' );
-			$type = empty( $item_id ) ? 'section' : 'module';
+			$item_id = $page;
+			$type = 'section';
+
+			if ( ! empty( $wp->query_vars['module'] ) ) {
+				$type = 'module';
+				$item_id = $wp->query_vars['module'];
+			}
 
 			$format = '<div class="coursepress-focus-view">[coursepress_focus_item course="%s" unit="%s" type="%s" item_id="%s"]</div>';
 			$shortcode = sprintf( $format, $course_id, $unit_id, $type, $item_id );
+
 			return do_shortcode( $shortcode );
 		}
 

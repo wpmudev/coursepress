@@ -852,7 +852,7 @@ class CoursePress_Data_Shortcode_Template {
 				$res = sprintf( $format, $button['type'], esc_attr( implode( ' ', $classes ) ), esc_attr( $link_title ), $title );
 			} else {
 				$res = sprintf(
-					'<div class="%5$s" data-id="%1$s" data-type="%2$s" data-unit="%4$s" data-title="%6$s" data-url="%7$s"><a href="#%2$s-%1$s" title="%6$s">%3$s</a></div>',
+					'<div class="%5$s" data-id="%1$s" data-type="%2$s" data-unit="%4$s" data-title="%6$s" data-url="%7$s"><a href="%7$s" title="%6$s">%3$s</a></div>',
 					esc_attr( $button['id'] ),
 					esc_attr( $button['type'] ),
 					$title,
