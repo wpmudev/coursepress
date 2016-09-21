@@ -2316,7 +2316,11 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 /*--------------------------------------------------------------
 # 8. Assessments
 --------------------------------------------------------------*/
+<<<<<<< HEAD
+.coursepress_settings_wrapper.reports .column-report .pdf {
+=======
 .coursepress_wrapper.coursepress-reports .column-report .pdf {
+>>>>>>> coursepress/2.0-dev
   background-image: url("../img/pdf_document.png");
   background-size: 100% 100%;
   width: 16px;
@@ -2324,11 +2328,15 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   display: block;
   cursor: pointer;
 }
+<<<<<<< HEAD
+.coursepress_settings_wrapper.reports .help-tooltip {
+=======
 .coursepress_wrapper.coursepress-reports td.column-responses,
 .coursepress_wrapper.coursepress-reports td.column-average {
   text-indent: 15px;
 }
 .coursepress_wrapper.coursepress-reports .help-tooltip {
+>>>>>>> coursepress/2.0-dev
   display: inline-block;
 }
 

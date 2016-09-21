@@ -1,0 +1,21 @@
+/** Global **/
+.cp .hide {
+  display: none;
+}
+.cp ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.cp .cp-download {
+  text-decoration: none;
+}
+
+/** Modules **/
+.cp .module-elements {
+  border: 1px red solid;
+  margin: 15px 0;
+}
+.cp .module-response {
+  border: 1px green solid;
+}

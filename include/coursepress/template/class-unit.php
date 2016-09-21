@@ -67,27 +67,32 @@ class CoursePress_Template_Unit {
 			return __( 'Sorry. You are not permitted to view this part of the course.', 'cp' );
 		}
 
-		$view_mode = CoursePress_Data_Course::get_setting(
-			$course_id,
-			'course_view',
-			'normal'
-		);
+		$view_mode = CoursePress_Data_Course::get_setting( $course_id, 'course_view', 'normal' );
 
 		// Let BackboneJS take over if its in Focus mode.
 		if ( 'focus' == $view_mode ) {
-			return '<div class="coursepress-focus-view" data-course="' . $course_id . '" data-unit="' . $unit_id . '" data-page="' . $page . '"><span class="loader hidden"><i class="fa fa-spinner fa-pulse"></i></span></div>';
+			$format = '<div class="coursepress-focus-view" data-course="%s" data-unit="%s" data-page="%s"><span class="loader hidden"><i class="fa fa-spinner fa-pulse"></i></span></div>';
+
+			return sprintf( $format, $course_id, $unit_id, $page );
 		}
 
 		$page_titles = get_post_meta( $unit->ID, 'page_title', true );
 		$show_page_titles = get_post_meta( $unit->ID, 'show_page_title', true );
-
 		$total_pages = count( $page_titles );
 
 		// Can't exceed total pages, so do the last one.
 		$page = min( $total_pages, $page );
 
-		// Sub Menu.
-		$content = do_shortcode( '[course_unit_submenu]' );
+		/**
+		 * Filter the visibility of submenu.
+		 *
+		 * @since 2.0
+		 **/
+		$show_submenu = apply_filters( 'coursepress_show_submenu', true );
+
+		if ( true === $show_submenu ) {
+			$content = do_shortcode( '[course_unit_submenu]' );
+		}
 
 		// Check if available
 		$previous_unit_id = CoursePress_Data_Unit::get_previous_unit_id( $course_id, $unit_id );
@@ -104,11 +109,9 @@ class CoursePress_Template_Unit {
 			$content .= sprintf( '<p><em>%s</em></p>', $message );
 
 			if ( $previous_unit_id ) {
-				$unit_url = CoursePress_Core::get_slug( 'course/', true ) .
-					trailingslashit( $course->post_name ) .
-					CoursePress_Core::get_slug( 'unit/' ) . get_post_field( 'post_name', $previous_unit_id );
-
-				$content .= '<span class="next-button unit unit-' . $previous_unit_id .'"><a href="' . esc_url_raw( $unit_url ) . '"><button>' . esc_html( 'Previous Unit', 'cp' ) . '</button></a></span> ';
+				$unit_url = CoursePress_Data_Unit::get_unit_url( $previous_unit_id );
+				$format = '<span class="next-button unit unit-%s"><a href="%s"><button>%s</button></a></span> ';
+				$content .= sprintf( $format, $previous_unit_id, esc_url_raw( $unit_url ), __( 'Previous Unit', 'cp' ) );
 			}
 
 			return $content;
@@ -123,7 +126,8 @@ class CoursePress_Template_Unit {
 			array( 'page' => $page )
 		);
 
-		$content .= '<div class="unit-wrapper unit-' . $unit->ID . ' course-' . $course_id . '">';
+		$content .= do_action( 'coursepress_before_unit_modules' );
+		$content .= '<div class="cp unit-wrapper unit-' . $unit->ID . ' course-' . $course_id . '">';
 
 		// Page Title.
 		if ( isset( $show_page_titles[ $page - 1 ] ) ) {
@@ -156,6 +160,9 @@ class CoursePress_Template_Unit {
 		}
 
 		// Modules.
+		$module_template = wp_nonce_field( 'coursepress_submit_modules', '_wpnonce', true, false );
+		$module_template .= sprintf( '<input type="hidden" name="course_id" value="%s" />', $course_id );
+		$module_template .= sprintf( '<input type="hidden" name="unit_id" value="%s" />', $unit_id );
 		foreach ( $modules as $module ) {
 			$preview_modules = array();
 			$can_preview_module = false;
@@ -181,42 +188,42 @@ class CoursePress_Template_Unit {
 			}
 
 			if ( $enrolled || $is_instructor || $can_update_course || 'output' == $attributes['mode'] ) {
-
-				if ( method_exists( $template, $method ) ) {
-					$content .= call_user_func(
-						array( $template, $method ),
-						$module,
-						$attributes
-					);
-				}
+				$module_template .= CoursePress_Template_Module::template( $module->ID );
+				// Modules seen here!
 			}
 		}
 
 		// Pager.
+		$preview_pages = array();
 		if ( isset( $preview['structure'][ $unit->ID ] ) ) {
 			$preview_pages = array_keys( $preview['structure'][ $unit->ID ] );
 		}
 
-		$url_path = CoursePress_Core::get_slug( 'course/', true ) . trailingslashit( $course->post_name ) .
-					CoursePress_Core::get_slug( 'unit/' ) . $unit->post_name . '/page/';
+		$url_path = CoursePress_Data_Unit::get_unit_url( $unit->ID );
+		$url_path .= trailingslashit( 'page' );
+		$has_submit_button = false;
 
-		$content .= '<div class="pager unit-pager">';
+		$unit_pager = '<div class="pager unit-pager">';
+
 		// Show pager only if there's more than 1 pages.
 		if ( $total_pages > 1 ) {
 			for ( $i = 1; $i <= $total_pages; $i++ ) {
 				$unit_url = $url_path . $i;
 
-				if ( $enrolled
-					|| $is_instructor
-					|| in_array( $i, $preview_pages )
-					|| ! is_array( $preview['structure'][ $unit->ID ] )
-				) {
-					$content .= '<span class="page page-' . $i . '"><a href="' . esc_url_raw( $unit_url ) . '">' . $i . '</a></span> ';
+				if ( $enrolled || $can_update_course || ( ! empty( $preview_pages ) && in_array( $i, $preview_pages ) ) ) {
+
+					// Disable anchor if it is the current page
+					if ( $page == $i ) {
+						$format = '<span class="page page-%1$s">%1$s</span>';
+					} else {
+						$format = '<input type="submit" name="next_page" value="%1$s" class="page page-%1$s" />';
+					}
+					$unit_pager .= sprintf( $format, $i );
 				}
 			}
 
 			// Next Page.
-			if ( ! $enrolled && ! $is_instructor ) {
+			if ( false === $enrolled && false === $can_update_course ) {
 				for ( $i = $page + 1; $i <= $total_pages; $i++ ) {
 					if ( in_array( $i, $preview_pages ) ) {
 						$next_page = $i;
@@ -229,14 +236,18 @@ class CoursePress_Template_Unit {
 					}
 				}
 			} else {
-				if ( 1 != $total_pages && $total_pages != $page ) {
-					$next_page = $page + 1;
+				$next_page = $page + 1;
+
+				if ( $next_page > $total_pages ) {
+					$next_page = false;
 				}
 			}
 
-			if ( $next_page ) {
+			if ( (int) $next_page > 0 ) {
 				$unit_url = $url_path . $next_page;
-				$content .= '<span class="next-button page page-' . $i .'"><a href="' . esc_url_raw( $unit_url ) . '"><button>' . esc_html( 'Next', 'cp' ) . '</button></a></span> ';
+				$has_submit_button = true;
+				$format = '<input type="submit" name="next_page" value="%1$s" class="next-button page page-%1$s" />';
+				$unit_pager .= sprintf( $format, $next_page );
 			}
 		}
 
@@ -282,14 +293,27 @@ class CoursePress_Template_Unit {
 			}
 		}
 
-		if ( ! empty( $next_unit ) && empty( $next_page ) ) {
-			$unit_url = CoursePress_Core::get_slug( 'course/', true ) . trailingslashit( $course->post_name ) .
-						CoursePress_Core::get_slug( 'unit/' ) . get_post_field( 'post_name', $next_unit );
+		if ( 0 < (int) $previous_unit_id ) {
+			$unit_url = CoursePress_Data_Unit::get_unit_url( $previous_unit_id );
+			$page_titles = get_post_meta( $previous_unit_id, 'page_title', true );
 
-			$content .= '<span class="next-button unit unit-' . $next_unit .'"><a href="' . esc_url_raw( $unit_url ) . '"><button>' . esc_html( 'Next Unit', 'cp' ) . '</button></a></span> ';
+			if ( 1 < count( $page_titles ) ) {
+				$unit_url .= trailingslashit( 'page' ) . count( $page_titles );
+			}
+			$format = '<a href="%s" class="button prev-button unit unit-%s">%s</a>';
+
+			$unit_pager .= sprintf( $format, esc_url( $unit_url ), $previous_unit_id, __( 'Previous Unit', 'cp' ) );
 		}
 
-		$content .= '</div>'; // .pager
+		if ( ! empty( $next_unit ) && empty( $next_page ) ) {
+			$unit_url = CoursePress_Data_Unit::get_unit_url( $next_unit );
+			$format = '<button type="submit" name="next_unit" value="%1$s" class="next-button unit unit-%1$s">%2$s</button>';
+			$unit_pager .= sprintf( $format, $next_unit, __( 'Next Unit', 'cp' ) );
+		}
+
+		$unit_pager .= '</div>'; // .pager
+		$format = '<form method="post" enctype="multipart/form-data" class="cp-form">%s</form>';
+		$content .= sprintf( $format, $module_template . $unit_pager );
 		$content .= '</div>'; // .unit-wrapper
 
 		// Student Tracking:
@@ -327,10 +351,6 @@ class CoursePress_Template_Unit {
 			</div>
 		';
 
-		// COMPLETION LOGIC
-		// if ( 100 == (int) $progress ) {
-		// echo sprintf( '<div class="unit-archive-course-complete">%s %s</div>', '<i class="fa fa-check-circle"></i>', __( 'Course Complete', 'cp' ) );
-		// }
 		$content .= do_shortcode( '[unit_archive_list description="true"]' );
 
 		return $content;

@@ -9,3 +9,7 @@ README.md export-ignore
 phpunit.xml export-ignore
 /tests export-ignore
 /coursepress-files/styles/sass export-ignore
+.sass-cache export-ignore
+/asset/css/src/.sass-cache export-ignore
+/asset/css/src/admin/.sass-cache export-ignore
+/asset/css/src/front/.sass-cache export-ignore

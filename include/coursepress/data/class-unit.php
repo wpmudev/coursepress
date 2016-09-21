@@ -654,4 +654,22 @@ class CoursePress_Data_Unit {
 			self::show_page( $unit_id, $page_id );
 		}
 	}
+
+	/**
+	 * Generate the unit url
+	 *
+	 * @param (int) $unit_id
+	 **/
+	public static function get_unit_url( $unit_id = 0 ) {
+		if ( ! empty( $unit_id ) ) {
+			$course_id = get_post_field( 'post_parent', $unit_id );
+			$course_url = CoursePress_Data_Course::get_course_url( $course_id );
+			$unit_url = CoursePress_Core::get_slug( 'unit/' );
+			$unit_slug = get_post_field( 'post_name', $unit_id );
+
+			return $course_url . $unit_url . trailingslashit( $unit_slug );
+		}
+
+		return '';
+	}
 }
