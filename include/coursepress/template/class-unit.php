@@ -211,8 +211,14 @@ class CoursePress_Template_Unit {
 				$unit_url = $url_path . $i;
 
 				if ( $enrolled || $can_update_course || ( ! empty( $preview_pages ) && in_array( $i, $preview_pages ) ) ) {
-					$format = '<span class="page page-%s"><a href="%s">%s</a></span> ';
-					$unit_pager .= sprintf( $format, $i, esc_url_raw( $unit_url ), $i );
+
+					// Disable anchor if it is the current page
+					if ( $page == $i ) {
+						$format = '<span class="page page-%1$s">%1$s</span>';
+					} else {
+						$format = '<input type="submit" name="next_page" value="%1$s" class="page page-%1$s" />';
+					}
+					$unit_pager .= sprintf( $format, $i );
 				}
 			}
 

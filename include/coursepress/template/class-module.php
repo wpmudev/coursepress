@@ -319,6 +319,9 @@ class CoursePress_Template_Module {
 	}
 
 	public static function render_image( $module, $attributes = false ) {
+		$content = self::do_caption_media( $attributes );
+
+		return $content;
 	}
 
 	private static function do_caption_media( $data ) {
@@ -442,15 +445,84 @@ class CoursePress_Template_Module {
 	}
 
 	public static function render_video( $module, $attributes = false ) {
+		$content = self::do_caption_media( $attributes );
+
+		return $content;
 	}
 
 	public static function render_audio( $module, $attributes = false ) {
+		$content = '';
+
+		if ( isset( $attributes['audio_url'] ) ) {
+			$loop = isset( $attributes['loop'] ) ? cp_is_true( $attributes['loop'] ) : false;
+			$autoplay = isset( $attributes['autoplay'] ) ? cp_is_true( $attributes['autoplay'] ) : false;
+			$attr = array(
+				'src' => $attributes['audio_url'],
+				'loop' => $loop,
+				'autoplay' => $autoplay,
+			);
+			$content .= '<div class="module-content">
+					<div class="audio_player">
+						' . wp_audio_shortcode( $attr ) . '
+					</div>
+				</div>
+			';
+		}
+
+		return $content;
 	}
 
 	public static function render_download( $module, $attributes = false ) {
+		$content = '';
+
+		if ( isset( $attributes['file_url'] ) ) {
+
+			$url = $attributes['file_url'];
+
+			$file_size = CoursePress_Helper_Utility::get_file_size( $url );
+
+			if ( $file_size > 0 ) {
+				$filesize = '<small>(' . esc_html( $file_size ) . ')</small>';
+			} else {
+				$filesize = '';
+			}
+
+			$url = CoursePress_Helper_Utility::encode( $url );
+			$url = trailingslashit( home_url() ) . '?fdcpf=' . $url;
+
+			$link_text = isset( $attributes['link_text'] ) ? $attributes['link_text'] : $module->post_title;
+			$after_content = sprintf(
+				'<div class="file_holder"><a href="%s">%s <span class="file-size">%s</span></a></div>',
+				esc_url( $url ),
+				esc_html( $link_text ),
+				CoursePress_Helper_Utility::filter_content( $filesize )
+			);
+			$content .= self::_wrap_content( $module->post_content, $after_content );
+		}
+
+		return $content;
 	}
 
 	public static function render_zipped( $module, $attributes = false ) {
+		$content = '';
+
+		if ( isset( $attributes['zip_url'] ) && ! empty( $attributes['primary_file'] ) ) {
+
+			$url = $attributes['zip_url'];
+
+			$url = CoursePress_Helper_Utility::encode( $url );
+			$url = trailingslashit( home_url() ) . '?oacpf=' . $url . '&module=' . $module->ID . '&file=' . $attributes['primary_file'];
+
+			$link_text = isset( $attributes['link_text'] ) ? $attributes['link_text'] : $module->post_title;
+			$after_content = sprintf(
+				'<div class="zip_holder"><a href="%s">%s</a></div>',
+				esc_url( $url ),
+				esc_html( $link_text )
+			);
+			$content .= self::_wrap_content( $module->post_content, $after_content );
+		}
+
+		return $content;
 	}
 
 	public static function render_section( $module, $attributes = false ) {
@@ -458,6 +530,7 @@ class CoursePress_Template_Module {
 	}
 
 	public static function render_discussion( $module, $attributes = false ) {
+
 	}
 
 	public static function render_input_checkbox( $module, $attributes = false, $student_progress = false, $disabled = false ) {
