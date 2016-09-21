@@ -1,4 +1,6 @@
-/*global wp*/
+/*!  - v2.0.0
+ * 
+ * Copyright (c) 2016; * Licensed GPLv2+ */
 /*global _coursepress*/
 /*global pwsL10n*/
 
@@ -769,8 +771,17 @@ var CoursePress = CoursePress || {};
 			var link = $( $( $( this ).parents( '.unit-archive-single' )[0] ).find('a.unit-archive-single-title')[0] ).attr('href');
 			var mod_hash = 'module-' + $(this).attr('data-id');
 			var has_link = $( this ).find( 'a.unit-archive-single-title').length > 0;
-
-			if ( has_link ) { window.location.href = link + '#' + mod_hash; }
+			if ( has_link ) {
+				window.location.href = link + '#' + mod_hash;
+			}
+			/**
+			 * "focus" view mode
+			 */
+			if ( 'focus' == $( '.unit-archive-list-wrapper' ).data( 'view-mode' ) ) {
+				var module = $('a', $(this)).attr("href").split("#");
+				var link = $( $( $( this ).parents( '.unit-archive-single' )[0] ).find('a.unit-archive-single-title')[0] ).attr('href') + '#' + module[1];
+				window.location.href = link;
+			}
 		} );
 
 		$( '.apply-button.signup, .apply-button.enroll' ).on( 'click', function( ev ) {

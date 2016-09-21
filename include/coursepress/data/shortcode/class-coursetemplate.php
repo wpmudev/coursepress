@@ -860,7 +860,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			$units = CoursePress_Helper_Utility::sort_on_key( $units, 'order' );
 		}
 
-		$content .= '<div class="unit-archive-list-wrapper">';
+		$content .= sprintf( '<div class="unit-archive-list-wrapper" data-view-mode="%s">', esc_attr( $view_mode ) );
 		$content .= count( $units ) > 0 ? '<ul class="units-archive-list">' : '';
 		$counter = 0;
 
@@ -1459,7 +1459,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			'post_status' => $atts['status'],
 			'posts_per_page' => (int) $atts['limit'],
 			'suppress_filters' => true,
-			'meta_key'=> 'cp_course_start_date',
+			'meta_key' => 'cp_course_start_date',
 			'orderby' => 'meta_value_num',
 		);
 
@@ -1483,15 +1483,14 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				$my_courses = CoursePress_Data_Student::my_courses( $student, $courses );
 				$context = $atts['context'];
 
-				if ( isset( $my_courses[$context] ) ) {
-					$courses = $my_courses[$context];
+				if ( isset( $my_courses[ $context ] ) ) {
+					$courses = $my_courses[ $context ];
 				}
 
 				foreach ( $courses as $course ) {
 					$content .= do_shortcode( '[course_list_box course_id="' . $course->ID . '"]' );
 					$counter += 1;
 				}
-
 			} else {
 				foreach ( $courses as $course ) {
 					$edit_page = CoursePress_View_Admin_Course_Edit::$slug;
@@ -1503,8 +1502,8 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			}
 		}
 
-/***
- * Hide this for reference
+		/***
+		* Hide this for reference
 		foreach ( $courses as $course ) {
 			if ( ! $atts['dashboard'] ) {
 				$content .= do_shortcode( '[course_list_box course_id="' . $course->ID . '"]' );
@@ -1539,7 +1538,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				}
 			}
 		}
-*/
+		*/
 		$context = $atts['dashboard'] && $instructor_list ? 'manage' : $atts['context'];
 
 		if ( $atts['dashboard'] && ! empty( $counter ) ) {
@@ -1547,7 +1546,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 			switch ( $context ) {
 				case 'enrolled': case 'current':
-					$label = $atts['current_label'];
+						$label = $atts['current_label'];
 					break;
 				case 'future':
 					$label = $atts['future_label'];
