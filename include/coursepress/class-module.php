@@ -15,13 +15,13 @@ class CoursePress_Module {
 	/**
 	 * First level validation.
 	 **/
-	public function validate_course( $input ) {
+	public static function validate_course( $input ) {
 		$has_error = false;
 
 		if ( empty( $input['course_id'] ) ) {
 			$has_error = true;
 			self::$error_message = __( 'Invalid course ID!', 'cp' );
-		} elseif ( false === CoursePress_Data_Course::student_enrolled( $student_id, $input['course_id'] ) ) {
+		} elseif ( false === CoursePress_Data_Course::student_enrolled( $input['student_id'], $input['course_id'] ) ) {
 			$has_error = true;
 			self::$error_message = __( 'You are currently not enrolled to this course!', 'cp' );
 		} elseif ( 'closed' == ( $course_status = CoursePress_Data_Course::get_course_status( $input['course_id'] ) ) ) {
@@ -35,22 +35,132 @@ class CoursePress_Module {
 		return $has_error;
 	}
 
-	public static function validate_module( $module_id, $response = '' ) {
+	/**
+	 * Validate per module.
+	 *
+	 * @since 2.0
+	 *
+	 * @param (int) $module_id
+	 * @param (mixed) $submitted response
+	 * @return (bool) Returns true if an error found, otherwise false.
+	 **/
+	public static function validate_module( $module_id, $response = '', $student_id = 0 ) {
+		$unit_id = get_post_field( 'post_parent', $module_id );
+		$course_id = get_post_field( 'post_parent', $unit_id );
 		$attributes = CoursePress_Data_Module::attributes( $module_id );
 		$module_type = $attributes['module_type'];
 		$mandatory = ! empty( $attributes['mandatory'] );
 		$is_assessable = ! empty( $attributes['assessable'] );
 		$has_error = false;
 
-		if ( true === $mandatory && '' == $response ) {
-			$has_error = true;
-			self::$error_message = __( 'This module is required!', 'cp' );
+		if ( true === $mandatory ) {
+			if ( '' == $response ) {
+				$has_error = true;
+				self::$error_message = __( 'You need to complete the required module(s)!', 'cp' );
+			} else {
+				$excluded_modules = array(
+					'input-textarea',
+					'input-text',
+				);
+
+				if ( true === $is_assessable && ! in_array( $module_type, $excluded_modules ) ) {
+					$minimum_grade = $attributes['minimum_grade'];
+					$grades = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $_module_id );
+					$grade = CoursePress_Helper_Utility::get_array_val( $grades, 'grade' );
+					$pass = (int) $grade >= (int) $minimum_grade;
+
+					if ( false === $pass ) {
+						$has_error = true;
+						self::$error_message = __( 'You did not pass the required minimum grade!', 'cp' );
+					}
+				}
+			}
 		}
 
 		return $has_error;
 	}
 
+	/**
+	 * Validate modules submission.
+	 **/
 	public static function process_submission() {
+		if ( self::is_valid() ) {
+			$input = $_POST;
+			$course_id = (int) $input['course_id'];
+			$unit_id = (int) $input['unit_id'];
+			$module = (array) $input['module'];
+			$student_id = (int) $input['student_id'];
+			$has_error = false;
+
+			// Validate the course
+			$error = CoursePress_Data_Course::can_access( $course_id, $unit_id );
+			if ( ! empty( $error ) ) {
+				$has_error = true;
+				self::$error_message = $error;
+			} elseif ( true === self::validate_course( $input ) ) {
+				$has_error = true;
+			} else {
+
+				if ( ! empty( $input['module_id'] ) && ! is_array( $module ) ) {
+					$module = array_filter( $module );
+					// Check for module_id
+					if ( empty( $module ) ) {
+						$error = CoursePress_Data_Course::can_access( $course_id, $unit_id, (int) $input['module_id'] );
+
+						if ( empty( $error ) && self::validate_module( (int) $input['module_id'], $student_id ) ) {
+							$has_error = true;
+						}
+
+						if ( ! empty( $error ) ) {
+							$has_error = true;
+							self::$error_message = $error;
+						}
+					}
+				}
+
+				foreach ( $module as $module_id => $response ) {
+					$attributes = CoursePress_Data_Module::attributes( $module_id );
+					$module_type = $attributes['module_type'];
+
+					if ( 'input-quiz' == $module_type ) {
+						foreach ( $attributes['questions'] as $qi => $question ) {
+							if ( ! empty( $response[ $qi ] ) ) {
+								if ( 'multiple' == $question['type'] ) {
+									$values = array_values( $response[ $qi ] );
+									$values = array_fill_keys( $values, 1 );
+									$response[ $qi ] = $values;
+								} else {
+									$response[ $qi ] = array( $response[ $qi ] => 1 );
+								}
+							}
+						}
+					}
+
+					if ( false === self::validate_module( $module_id, $response, $student_id ) ) {
+						$record = true;
+
+						if ( empty( $response ) && ( 'input-textarea' == $module_type || 'input-text' == $module_type ) ) {
+							$record = false;
+						}
+
+						if ( $record ) {
+							CoursePress_Data_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $response );
+						}
+					} else {
+						self::$error_message = __( 'You need to complete the required module(s)!2', 'cp' );
+						$has_error = true;
+						break;
+					}
+				}
+			}
+
+			if ( $has_error ) {
+				add_filter( 'coursepress_before_unit_modules', array( __CLASS__, 'show_error_message' ) );
+			}
+		}
+	}
+
+	public static function process_submission555() {
 		if ( ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_submit_modules' ) ) {
 			$input = $_POST;
 			$has_error = false;

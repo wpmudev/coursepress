@@ -1615,8 +1615,8 @@ class CoursePress_Data_Course {
 			if ( $current_module && ! $current_module_done ) {
 				// Student did not complete the current module. Do not allow to
 				// navigate to next page.
-				$next['not_done'] = true;
-				return $next;
+				//$next['not_done'] = true;
+				//return $next;
 			}
 		}
 
@@ -2365,7 +2365,7 @@ class CoursePress_Data_Course {
 	 *
 	 * @since 2.0
 	 **/
-	public static function can_access( $course_id, $unit_id = 0, $module_id = 0, $student_id = 0, $page = 1, $type ) {
+	public static function can_access( $course_id, $unit_id = 0, $module_id = 0, $student_id = 0, $page = 1 ) {
 		if ( empty( $student_id ) ) {
 			$student_id = get_current_user_id();
 		}

@@ -79,6 +79,10 @@ class CoursePress_Template_Unit {
 			if ( ! empty( $wp->query_vars['module'] ) ) {
 				$type = 'module';
 				$item_id = $wp->query_vars['module'];
+			} elseif ( $_POST && ! empty( $_POST['module_id'] ) ) {
+				// Check for $_POST submission
+				$type = 'module';
+				$item_id = (int) $_POST['module_id'];
 			}
 
 			$format = '<div class="coursepress-focus-view">[coursepress_focus_item course="%s" unit="%s" type="%s" item_id="%s"]</div>';

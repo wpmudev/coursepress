@@ -204,17 +204,22 @@ class CoursePress_Template_Module {
 		$disabled = false;
 		$element_class = '';
 		$student_id = get_current_user_id();
-
-		// Module header
-		$content = self::render_module_head( $module, $attributes );
-		// The question or text content
-		$content .= self::_wrap_content( $module->post_content );
+		$content = '';
 
 		if ( $is_focus ) {
 			$content .= sprintf( '<input type="hidden" name="course_id" value="%s" />', $course_id );
 			$content .= sprintf( '<input type="hidden" name="unit_id" value="%s" />', $unit_id );
-			$content .= wp_nonce_field( 'coursepress_submit_modules', '_wpnonce', false, false );
+			$content .= sprintf( '<input type="hidden" name="student_id" value="%s" />', $student_id );
+			$content .= sprintf( '<input type="hidden" name="module_id" value="%s" />', $module_id );
+			$content .= wp_nonce_field( 'coursepress_submit_modules', '_wpnonce', true, false );
+
+			$content .= apply_filters( 'coursepress_before_unit_modules', '' );
 		}
+
+		// Module header
+		$content .= self::render_module_head( $module, $attributes );
+		// The question or text content
+		$content .= self::_wrap_content( $module->post_content );
 
 		if ( method_exists( __CLASS__, $method ) ) {
 			// Get student progress if it is not retrieve yet
