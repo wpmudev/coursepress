@@ -413,9 +413,7 @@ input.button.button-primary.instructor-assign {
 	overflow: hidden;
 }
 
-#course-setup-steps .step-content .instructor-avatar-holder,
-#course-setup-steps .step-content .facilitator-avatar-holder,
-{
+#course-setup-steps .step-content .avatar-holder {
 	margin-bottom: 5px;
 	margin-left: 5px;
 	margin-right: 5px;
@@ -427,26 +425,21 @@ input.button.button-primary.instructor-assign {
 	position: relative;
 	z-index: 0;
 }
-#course-setup-steps .step-content .facilitator-avatar-holder,
-#course-setup-steps .step-content .instructor-avatar-holder {
+#course-setup-steps .step-content .avatar-holder {
 	.fa {
 		margin-top: 10px;
 		color: rgb(107, 187, 26);
 	}
 }
-#course-setup-steps .step-content .instructor-avatar-holder:hover,
-#course-setup-steps .step-content .facilitator-avatar-holder:hover {
+#course-setup-steps .step-content .avatar-holder:hover {
 	opacity: 0.7;
 }
 
-#course-setup-steps .step-content .instructor-avatar-holder.empty,
-#course-setup-steps .step-content .facilitator-avatar-holder.empty {
+#course-setup-steps .step-content .avatar-holder.empty {
 	border: 1px dashed #e1e1e1;
 }
 
-#course-setup-steps .step-content .invite-remove a,
-#course-setup-steps .step-content .instructor-remove a,
-#course-setup-steps .step-content .facilitator-remove a {
+#course-setup-steps .step-content .remove a {
 	display: block;
 	width: 80px;
 	height: 80px;
@@ -460,15 +453,21 @@ input.button.button-primary.instructor-assign {
 	z-index: 9999;
 }
 
-#course-setup-steps .step-content .invite-remove a:hover,
-#course-setup-steps .step-content .instructor-remove a:hover,
-#course-setup-steps .step-content .facilitator-remove a:hover {
+#course-setup-steps .step-content .remove.removing-process {
+	a {
+		text-indent: 0;
+		padding-top: 20px;
+		span {
+			font-size: 30px;
+		}
+	}
+}
+
+#course-setup-steps .step-content .remove a:hover {
 	text-indent: 0;
 }
 
-#course-setup-steps .step-content .invite-remove a span.dashicons-dismiss::before,
-#course-setup-steps .step-content .instructor-remove a span.dashicons-dismiss::before,
-#course-setup-steps .step-content .facilitator-remove a span.dashicons-dismiss::before {
+#course-setup-steps .step-content .remove a span.dashicons-dismiss::before {
 	font-size: 28px;
 	left: 28px;
 	margin: 0;
