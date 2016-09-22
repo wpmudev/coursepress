@@ -22,6 +22,7 @@ $assigned_courses = array_map( 'get_post', $assigned_courses );
 		<thead>
 			<tr>
 				<th><?php esc_html_e( 'Course', 'cp' ); ?></th>
+				<th><?php esc_html_e( 'Start Date', 'cp' ); ?></th>
 			</tr>
 		</thead>
 		<tbody>
