@@ -38,7 +38,11 @@ module.exports = function(grunt) {
 			'{js}coursepress-unitsbuilder.js': ['{js}src/coursepress-unitsBuilder.js'],
 			'{js}coursepress-calendar.js':		['{js}src/coursepress-calendar.js'],
 			'{js}coursepress-assessment.js':	['{js}/src/coursepress-assessment.js'],
-			'{js}admin-ui.js':					['{js}/src/admin-ui.js']
+			'{js}admin-ui.js':					['{js}/src/admin-ui.js'],
+			'{js}front.js':						[
+				'{js}/src/front-core.js',
+				'{js}/src/front-modules.js'
+			]
 		},
 
 		// SASS files to process. Resulting CSS files will be minified as well.
@@ -363,7 +367,7 @@ module.exports = function(grunt) {
 				files: [
 					conf.js_folder + 'src/**/*.js'
 				],
-				tasks: ['clear', 'jshint', 'concat'],
+				tasks: ['clear', 'concat'],
 				options: {
 					debounceDelay: 500
 				}

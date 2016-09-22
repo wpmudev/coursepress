@@ -753,7 +753,9 @@ class CoursePress_Data_Shortcode_Template {
 				$content .= '</div>'; // .focus-nav
 				$content .= '</div>'; // .focus-wrapper
 
-				$template = sprintf( '<form method="post">%s</form>', $content );
+				$template = sprintf( '<form method="post" class="cp cp-form">%s</form>', $content );
+				$template = apply_filters( 'coursepress_focus_mode_module_template', $template, $content, $item_id );
+
 				break;
 
 			case 'no_access':
@@ -852,14 +854,15 @@ class CoursePress_Data_Shortcode_Template {
 				$res = sprintf( $format, $button['type'], esc_attr( implode( ' ', $classes ) ), esc_attr( $link_title ), $title );
 			} else {
 				$res = sprintf(
-					'<div class="%5$s" data-id="%1$s" data-type="%2$s" data-unit="%4$s" data-title="%6$s" data-url="%7$s"><a href="%7$s" title="%6$s">%3$s</a></div>',
+					'<div class="%5$s" data-course="%8$s" data-id="%1$s" data-type="%2$s" data-unit="%4$s" data-title="%6$s" data-url="%7$s"><a href="%7$s" title="%6$s">%3$s</a></div>',
 					esc_attr( $button['id'] ),
 					esc_attr( $button['type'] ),
 					$title,
 					esc_attr( $button['unit'] ),
 					esc_attr( implode( ' ', $classes ) ),
 					esc_attr( $link_title ),
-					esc_url( $button['url'] )
+					esc_url( $button['url'] ),
+					$button['course_id']
 				);
 			}
 

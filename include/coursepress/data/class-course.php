@@ -1765,6 +1765,7 @@ class CoursePress_Data_Course {
 				'section' => 0,
 				'unit' => 0,
 				'url' => trailingslashit( $course_link ),
+				'course_id' => $course_id,
 			);
 
 			if ( $has_full_access ) {
@@ -1796,7 +1797,7 @@ class CoursePress_Data_Course {
 						if ( ! $is_available ) { continue; }
 					}
 
-					$unit_link = CoursePress_Data_Unit::get_url( $unit_id );
+					$unit_link = CoursePress_Data_Unit::get_unit_url( $unit_id );
 
 					if ( empty( $unit['pages'] ) ) {
 						$unit['pages'] = array();
@@ -1811,12 +1812,14 @@ class CoursePress_Data_Course {
 							'unit' => $unit_id,
 							'url' => $page_link,
 							'restricted' => $unit_restricted,
+							'course_id' => $course_id,
 						);
 
 						foreach ( $page['modules'] as $module_id => $module ) {
 							$module_link = sprintf( '%spage/%s/module_id/%s', $unit_link, $page_id, $module_id );//sprintf( '%s#module-%s', $page_link, $module_id );
 
 							$items[] = array(
+								'course_id' => $course_id,
 								'id' => $module_id,
 								'type' => 'module',
 								'section' => $page_id,

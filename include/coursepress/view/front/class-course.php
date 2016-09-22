@@ -128,9 +128,6 @@ class CoursePress_View_Front_Course {
 		 * admin_bar_menu
 		 */
 		add_action( 'admin_bar_menu', array( __CLASS__, 'add_edit_to_admin_bar_menu' ), 199 );
-
-		// MODULE SUBMISSION===
-		add_action( 'init', array( 'CoursePress_Module', 'process_submission' ) );
 	}
 
 	/**

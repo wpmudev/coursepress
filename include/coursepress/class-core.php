@@ -2,7 +2,8 @@
 /**
  * Core plugin file.
  *
- * @package CoursePress
+ * @package WordPress
+ * @subpackage CoursePress
  */
 
 /**
@@ -45,6 +46,8 @@ class CoursePress_Core {
 
 		// Initialise the rewrite tules.
 		add_filter( 'rewrite_rules_array', array( __CLASS__, 'add_rewrite_rules' ) );
+
+		CoursePress_Hooks::init();
 
 		// Initialize JavaScript Object Helper.
 		CoursePress_Helper_JavaScript::init();

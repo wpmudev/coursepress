@@ -211,9 +211,10 @@ class CoursePress_Template_Module {
 			$content .= sprintf( '<input type="hidden" name="unit_id" value="%s" />', $unit_id );
 			$content .= sprintf( '<input type="hidden" name="student_id" value="%s" />', $student_id );
 			$content .= sprintf( '<input type="hidden" name="module_id" value="%s" />', $module_id );
+
 			$content .= wp_nonce_field( 'coursepress_submit_modules', '_wpnonce', true, false );
 
-			$content .= apply_filters( 'coursepress_before_unit_modules', '' );
+			$content .= sprintf( '<div class="cp-error">%s</div>', apply_filters( 'coursepress_before_unit_modules', '' ) );
 		}
 
 		// Module header
@@ -288,6 +289,9 @@ class CoursePress_Template_Module {
 			 * @since 2.0
 			 **/
 			$content .= apply_filters( 'coursepress_module_template', $module_elements, $module_type, $module_id );
+
+			$format = '<div class="cp-module-content" data-type="%1$s" data-id="%2$s" id="cp-module-%2$s">%3$s</div>';
+			$content = sprintf( $format, $module_type, $module_id, $content );
 		}
 
 		return $content;
