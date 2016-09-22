@@ -11,6 +11,8 @@ if ( ! class_exists( 'WP_Users_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-users-list-table.php';
 }
 class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
+	var $course_id = 0;
+
 	public function __construct() {
 		parent::__construct();
 
@@ -18,7 +20,7 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 		add_filter( 'manage_users_custom_column', array( $this, 'set_custom_columns' ), 10, 3 );
 	}
 
-	public function prepare_items33() {
+	public function prepare_items() {
 		$usersearch = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : '';
 		$per_page = ( $this->is_site_users ) ? 'site_users_network_per_page' : 'users_per_page';
 		$users_per_page = $this->get_items_per_page( $per_page );
@@ -30,7 +32,11 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 			'meta_key' => 'role_ins',
 			'meta_value' => 'instructor',
 			'fields' => 'all_with_meta',
+			'search' => $usersearch,
 		);
+
+		if ( '' !== $args['search'] )
+			$args['search'] = '*' . $args['search'] . '*';
 
 		if ( $this->is_site_users )
 			$args['blog_id'] = $this->site_id;
@@ -64,6 +70,45 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 		);
 
 		return $columns;
+	}
+
+	public function extra_tablenav( $which ) {
+		if ( 'top' !== $which ) {
+			return;
+		}
+
+		$options = array();
+		$options['value'] = $this->course_id;
+		$options['class'] = 'medium dropdown';
+		$options['first_option'] = array(
+			'text' => __( 'All courses', 'cp' ),
+			'value' => 'all',
+		);
+
+		if ( current_user_can( 'manage_options' ) ) {
+			$assigned_courses = false;
+		} else {
+			$assigned_courses = CoursePress_Data_Instructor::get_assigned_courses_ids( get_current_user_id() );
+			$assigned_courses = array_filter( $assigned_courses );
+			$assigned_courses = array_map( 'get_post', $assigned_courses );
+		}
+
+		$courses = CoursePress_Helper_UI::get_course_dropdown( 'course_id', 'course_id', $assigned_courses, $options );
+		?>
+		<div class="alignleft actions category-filter">
+			<?php echo $courses; ?>
+			<input type="submit" class="button" name="action" value="<?php esc_attr_e( 'Filter', 'cp' ); ?>" />
+		</div>
+		<?php
+	}
+
+	protected function pagination( $which ) {
+		// Show pagination only at the bottom
+		if ( 'top' !== $which ) {
+			parent::pagination( $which );
+		} else {
+			$this->search_box( __( 'Search Instructors', 'cp' ), 'search' );
+		}
 	}
 
 	// Remove row actions on any other columns.
