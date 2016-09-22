@@ -1,4 +1,4 @@
-<div class="wrap courseperss_wrapper coursepress-instructors">
+<div class="wrap coursepress_wrapper coursepress-instructors">
 	<h2><?php esc_html_e( 'Instructors', 'cp' ); ?></h2>
 	<hr />
 

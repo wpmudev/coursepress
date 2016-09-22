@@ -121,6 +121,7 @@ class CoursePress_Admin_Controller_Menu {
 		$this->scripts['core'] = true;
 		$this->scripts['jquery-select2'] = true;
 		$this->css['admin-ui'] = true;
+		$this->css['select2'] = true;
 	}
 
 	/**
