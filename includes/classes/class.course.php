@@ -276,7 +276,7 @@ if ( ! class_exists( 'Course' ) ) {
 					$status = array( $status );
 				};
 
-
+/*
 				$sql = 'AND ( ';
 				foreach ( $status as $filter ) {
 					$sql .= '%1$s.post_status = \'' . $filter . '\' OR ';
@@ -287,7 +287,7 @@ if ( ! class_exists( 'Course' ) ) {
 				self::$where_post_status = $sql;
 
 				add_filter( 'posts_where', array( __CLASS__, 'filter_unit_module_where' ) );
-
+*/
 				$post_args = array(
 					'post_type'      => array(
 						'unit',
@@ -297,6 +297,7 @@ if ( ! class_exists( 'Course' ) ) {
 					'posts_per_page' => - 1,
 					'order'          => 'ASC',
 					'orderby'        => 'menu_order',
+					'post_status' 	 => $status,
 				);
 
 				$query = new WP_Query( $post_args );
@@ -344,13 +345,13 @@ if ( ! class_exists( 'Course' ) ) {
 					}
 				}
 
-				remove_filter( 'posts_where', array( __CLASS__, 'filter_unit_module_where' ) );
+				//remove_filter( 'posts_where', array( __CLASS__, 'filter_unit_module_where' ) );
 
 				// Cache the course object
 				self::cache( self::TYPE_UNIT_MODULES_PERF, $course_id, $units );
 			};
 
-			if( ! current_user_can( 'manage_options' ) ) {
+			if( ! current_user_can( 'manage_options' ) && false === Instructor::is_assigned_to_course( $course_id, get_current_user_id() ) ) {
 				return self::filter_units( 'publish', $units );
 			} else {
 				return $units;
