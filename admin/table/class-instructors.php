@@ -103,7 +103,7 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 		$courses_url = add_query_arg(
 			array(
 				'view' => 'courses',
-				'instructor_id' => '',
+				'instructor_id' => $user_id,
 			)
 		);
 		$actions['courses'] = sprintf( '<a href="%s">%s</a>', esc_url( $courses_url ), __( 'View Courses', 'cp' ) );

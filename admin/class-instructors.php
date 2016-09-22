@@ -26,6 +26,9 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Controller_Menu {
 			$this->instructors_list->prepare_items();
 
 			add_screen_option( 'per_page', array( 'default' => 20 ) );
+		} else {
+			$view = $_REQUEST['view'];
+			$this->slug = 'instructor-' . $view;
 		}
 	}
 }
