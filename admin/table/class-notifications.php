@@ -265,21 +265,6 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 			return;
 		}
 
-		if ( is_null( $this->_categories ) ) {
-			$this->_categories = CoursePress_Data_Course::get_course_categories();
-
-			$two = '';
-		} else {
-			$two = '2';
-		}
-
-		if ( empty( $this->_categories ) ) {
-			return;
-		}
-
-		$page = get_query_var( 'page', 'coursepress_notifications' );
-
-		$s = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '';
 		$course_id = isset( $_GET['course_id'] ) ? sanitize_text_field( $_GET['course_id'] ) : '';
 
 		$options = array();
@@ -289,9 +274,14 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 			'text' => __( 'All courses', 'cp' ),
 			'value' => 'all',
 		);
-		//@todo: Change this
-		$courses = CoursePress_Data_Capabilities::can_add_notification_to_all() ? false : CoursePress_Data_Notification::get_courses();
-		echo CoursePress_Helper_UI::get_course_dropdown( 'course_id' . $two, 'course_id' . $two, $courses, $options );
+
+		if ( current_user_can( 'manage_options' ) ) {
+			$courses = false;
+		} elseif ( CoursePress_Data_Capabilities::can_add_notification_to_all() ) {
+			$courses =  CoursePress_Data_Notification::get_courses();
+		}
+
+		echo CoursePress_Helper_UI::get_course_dropdown( 'course_id', 'course_id', $courses, $options );
 	}
 
 	protected function pagination( $which ) {
