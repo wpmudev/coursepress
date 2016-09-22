@@ -1,19 +1,19 @@
-.coursepress_wrapper.coursepress-reports{
-
-  .column-report .pdf {
-    background-image: url( '#{$imagePath}pdf_document.png' );
-    background-size: 100% 100%;
-    width: 16px;
-    height: 16px;
-    display: block;
-    cursor: pointer;
-  }
-  td.column-responses,
-  td.column-average {
-    text-indent: 15px;
-  }
-  .help-tooltip {
-    display: inline-block;
-  }
-
+.coursepress_wrapper.coursepress-reports {
+	.column-report .pdf {
+		background-image: url( '#{$imagePath}pdf_document.png' );
+		background-size: 100% 100%;
+		width: 32px;
+		height: 32px;
+		display: block;
+		cursor: pointer;
+	}
+	td {
+		&.column-responses,
+		&.column-average {
+			text-indent: 15px;
+		}
+	}
+	.help-tooltip {
+		display: inline-block;
+	}
 }
