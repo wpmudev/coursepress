@@ -293,7 +293,7 @@ class CoursePress_Data_Notification {
 	public static function is_correct_post_type( $post ) {
 		$post_type = get_post_type( $post );
 		return self::$post_type == $post_type;
-    }
+	}
 
 	/**
 	 * Get courses list if curen user do not have 'manage_options'
@@ -325,5 +325,4 @@ class CoursePress_Data_Notification {
 		}
 		return $courses;
 	}
-
 }
