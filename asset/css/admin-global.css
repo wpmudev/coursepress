@@ -196,12 +196,15 @@
   vertical-align: top !important;
 }
 
+<<<<<<< HEAD
+=======
 .wp-list-table .avatar {
   margin-right: 10px;
   display: inline-block;
   vertical-align: middle;
 }
 
+>>>>>>> coursepress/2.0-dev
 /**
 * CoursePress Icon (admin side)
 */
@@ -229,6 +232,9 @@
   content: "\e600";
 }
 
+<<<<<<< HEAD
+#adminmenu #toplevel_page_coursepress div.wp-menu-image:before {
+=======
 #post-body .misc-pub-post-course:before {
   font: normal 20px/1 dashicons;
   speak: none;
@@ -246,6 +252,7 @@
 
 #adminmenu #toplevel_page_coursepress div.wp-menu-image:before,
 #post-body .misc-pub-post-course:before {
+>>>>>>> coursepress/2.0-dev
   font-family: 'ico-cp' !important;
   content: "\e600";
 }

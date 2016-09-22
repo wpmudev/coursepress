@@ -1,7 +1,8 @@
 <?php
-
+/**
+ * Course Template
+ **/
 class CoursePress_Template_Course {
-
 	public static function course_instructors() {
 		$content = '[COURSE INSTRUCTORS]';
 

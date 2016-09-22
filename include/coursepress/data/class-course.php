@@ -2187,17 +2187,23 @@ class CoursePress_Data_Course {
 
 	}
 
-	public static function get_course_url( $course_id ) {
-		$course = get_post( $course_id );
+	/**
+	 * Generate course url
+	 *
+	 * @param (int) $course_id
+	 **/
+	public static function get_course_url( $course_id = 0 ) {
+		$url = '';
 
-		if ( $course ) {
-			// Check if current course is not yet live.
-			if ( 'publish' != $course->post_status ) {
-				return CoursePress_Core::get_slug( 'courses', true ) . $course->post_name . '/';
-			} else {
-				return get_permalink( $course_id );
-			}
+		if ( ! empty( $course_id ) ) {
+			$course_slug = get_post_field( 'post_name', $course_id );
+			$course_url = CoursePress_Core::get_slug( 'course/', true );
+			$course_url .= trailingslashit( $course_slug );
+
+			$url = $course_url;
 		}
+
+		return $url;
 	}
 
 	public static function is_course_preview( $course_id ) {
