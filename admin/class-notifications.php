@@ -80,7 +80,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 			// Prepare items
 			$this->list_notification = new CoursePress_Admin_Table_Notifications();
 			$this->list_notification->prepare_items();
-			add_screen_option( 'per_page', array( 'default' => 20 ) );
+			add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_notifications_per_page' ) );
 
 		} elseif ( 'edit' == $_REQUEST['action'] ) {
 			$this->slug = 'coursepress_edit-notification';

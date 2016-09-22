@@ -29,9 +29,23 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 
 	public function prepare_items() {
 		global $wp_query;
-
+		$screen = get_current_screen();
+		/**
+		 * Per Page
+		 */
+		$option = $screen->get_option( 'per_page', 'option' );
+		$per_page = (int) get_user_option( $option );
+		if ( empty( $per_page ) || $per_page < 1 ) {
+			$per_page = $this->get_option( 'per_page', 'default' );
+			if ( ! $per_page ) {
+				$per_page = 20;
+			}
+		}
+		$per_page = $this->get_items_per_page( 'coursepress_notifications_per_page', $per_page );
+		/**
+		 * Post statsu
+		 */
 		$post_status = 'any';
-		$per_page = $this->get_items_per_page( 'coursepress_notifications_per_page', 20 );
 		$current_page = $this->get_pagenum();
 		$offset = ( $current_page - 1 ) * $per_page;
 		$s = isset( $_POST['s'] )? mb_strtolower( trim( $_POST['s'] ) ):false;
@@ -55,7 +69,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 			);
 		} else {
 			// Only show notifications where the current user have access with.
-			$courses = CoursePress_View_Admin_Communication_Notification::get_courses();
+			$courses = CoursePress_Data_Notification::get_courses();
 			$courses_ids = array_map( array( __CLASS__, 'get_course_id' ), $courses );
 			// Include notification for all courses
 			$courses_ids[] = 'all';
@@ -161,13 +175,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 	}
 
 	public function column_notification( $item ) {
-		// create a nonce
-		// $duplicate_nonce = wp_create_nonce( 'duplicate_course' );
-		$title = '<strong>' . $item->post_title . '</strong>';
-		$excerpt = CoursePress_Helper_Utility::truncate_html( $item->post_content );
-
-		$edit_page = CoursePress_View_Admin_Communication_Notification::$slug;
-
+		$title = '<strong>' . apply_filters( 'the_title', $item->post_title ) . '</strong>';
 		return $title;
 	}
 
@@ -282,7 +290,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 			'value' => 'all',
 		);
 		//@todo: Change this
-		$courses = CoursePress_Data_Capabilities::can_add_notification_to_all() ? false : CoursePress_View_Admin_Communication_Notification::get_courses();
+		$courses = CoursePress_Data_Capabilities::can_add_notification_to_all() ? false : CoursePress_Data_Notification::get_courses();
 		echo CoursePress_Helper_UI::get_course_dropdown( 'course_id' . $two, 'course_id' . $two, $courses, $options );
 	}
 
