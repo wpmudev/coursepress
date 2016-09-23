@@ -273,6 +273,26 @@ class CoursePress_Helper_UI {
 		return $content;
 	}
 
+	/**
+	 * Get pending instructors invites
+	 */
+	public static function course_pendings_instructors_avatars( $course_id, $options = array() ) {
+		$content = '';
+		$remove_buttons = false;
+		if ( CoursePress_Data_Capabilities::can_assign_course_instructor( $course_id ) ) {
+			$remove_buttons = isset( $options['remove_buttons'] ) ? $options['remove_buttons'] : true;
+		}
+		$instructor_invites = (array) get_post_meta( $course_id, 'instructor_invites', true );
+
+		if ( empty( $instructor_invites ) ) {
+			return $content;
+		}
+		foreach ( $instructor_invites as $invite ) {
+			$content .= CoursePress_Template_Course::course_edit_avatar_pending_invite( $invite, $remove_buttons, 'instructor' );
+		}
+		return $content;
+	}
+
 	public static function course_instructors_avatars( $course_id, $options = array(), $show_pending = false ) {
 		global $post_id, $wpdb;
 
@@ -284,24 +304,6 @@ class CoursePress_Helper_UI {
 		$just_count = isset( $options['count'] ) ? $options['count'] : false;
 
 		$content = '';
-/**
- * @todo: Remove this
-		$args = array(
-			'meta_key' => 'course_' . $course_id,
-			'meta_value' => $course_id,
-			'meta_compare' => 'EXISTS',
-			'orderby' => 'display_name',
-			'order' => 'ASC',
-			'fields' => array( 'display_name', 'ID' ),
-		);
-
-		if ( is_multisite() ) {
-			$args['blog_id'] = get_current_blog_id();
-			$args['meta_key'] = $wpdb->prefix . 'course_' . $course_id;
-		}
-
-		$instructors = get_users( $args );
-**/
 
 		$instructors = CoursePress_Data_Course::get_setting( $course_id, 'instructors', array() );
 		$instructors = array_filter( $instructors );
@@ -310,34 +312,16 @@ class CoursePress_Helper_UI {
 
 		if ( $just_count ) {
 			return count( $instructors );
-		} else {
-			foreach ( $instructors as $instructor ) {
-				if ( $remove_buttons ) {
-					// $content .= '<div class="instructor-avatar-holder" id="instructor_holder_' . $instructor->ID . '"><div class="instructor-status"></div><div class="instructor-remove"><a href="javascript:removeInstructor( ' . $instructor->ID . ' );"><span class="dashicons dashicons-dismiss"></span></a></div>' . get_avatar( $instructor->ID, 80 ) . '<span class="instructor-name">' . $instructor->display_name . '</span></div><input type="hidden" id="instructor_' . $instructor->ID . '" name="instructor[]" value="' . $instructor->ID . '" />';
-					$content .= '<div class="instructor-avatar-holder" id="instructor_holder_' . $instructor->ID . '"><div class="instructor-status"></div><div class="instructor-remove"><a><span class="dashicons dashicons-dismiss"></span></a></div>' . get_avatar( $instructor->ID, 80 ) . '<span class="instructor-name">' . $instructor->display_name . '</span></div><input type="hidden" id="instructor_' . $instructor->ID . '" name="instructor[]" value="' . $instructor->ID . '" />';
-				} else {
-					// $content .= '<div class="instructor-avatar-holder" id="instructor_holder_' . $instructor->ID . '"><div class="instructor-status"></div><div class="instructor-remove"></div>' . get_avatar( $instructor->ID, 80 ) . '<span class="instructor-name">' . $instructor->display_name . '</span></div><input type="hidden" id="instructor_' . $instructor->ID . '" name="instructor[]" value="' . $instructor->ID . '" />';
-					$content .= '<div class="instructor-avatar-holder" id="instructor_holder_' . $instructor->ID . '"><div class="instructor-status"></div>' . get_avatar( $instructor->ID, 80 ) . '<span class="instructor-name">' . $instructor->display_name . '</span></div><input type="hidden" id="instructor_' . $instructor->ID . '" name="instructor[]" value="' . $instructor->ID . '" />';
-				}
-			}
-
-			// Pending from invites
-			if ( $show_pending ) {
-				$instructor_invites = (array) get_post_meta( $course_id, 'instructor_invites', true );
-
-				if ( ! empty( $instructor_invites ) ) {
-					foreach ( $instructor_invites as $invite ) {
-						if ( $remove_buttons ) {
-							$content .= '<div class="instructor-avatar-holder pending-invite" id="instructor_holder_' . $invite['code'] . '"><div class="instructor-status">' . esc_html__( 'Pending', 'cp' ) . '</div><div class="invite-remove"><a><span class="dashicons dashicons-dismiss"></span></a></div>' . get_avatar( $invite['email'], 80 ) . '<span class="instructor-name">' . $invite['first_name'] . ' ' . $invite['last_name'] . '</span></div>';
-						} else {
-							$content .= '<div class="instructor-avatar-holder pending-invite" id="instructor_holder_' . $invite['code'] . '"><div class="instructor-status">' . esc_html__( 'Pending', 'cp' ) . '</div>' . get_avatar( $invite['email'], 80 ) . '<span class="instructor-name">' . $invite['first_name'] . ' ' . $invite['last_name'] . '</span></div>';
-						}
-					}
-				}
-			}
-
-			return $content;
 		}
+		foreach ( $instructors as $instructor ) {
+			$content .= CoursePress_Template_Course::course_edit_avatar( $instructor, $remove_buttons, 'instructor' );
+		}
+
+		// Pending from invites
+		if ( $show_pending ) {
+			$content .= self::course_pendings_instructors_avatars( $course_id, $options );
+		}
+		return $content;
 	}
 
 	public static function toggle_switch( $id, $name, $options = array() ) {
@@ -665,7 +649,7 @@ class CoursePress_Helper_UI {
 		if ( $disable_prev ) {
 			$page_links[] = '<span class="tablenav-pages-navspan" aria-hidden="true">&lsaquo;</span>';
 		} else {
-			$page_number = max(1, $current-1);
+			$page_number = max( 1, $current -1 );
 			$page_links[] = sprintf( "<a class='prev-page' href='%s' data-paged='%s'><span class='screen-reader-text'>%s</span><span class='tablenav-pages-navspan' aria-hidden='true'>%s</span></a>",
 				esc_url( add_query_arg( 'paged', $page_number, $current_url ) ),
 				$page_number,
@@ -686,7 +670,7 @@ class CoursePress_Helper_UI {
 		if ( $disable_next ) {
 			$page_links[] = '<span class="tablenav-pages-navspan" aria-hidden="true">&rsaquo;</span>';
 		} else {
-			$page_number = min( $total_pages, $current+1);
+			$page_number = min( $total_pages, $current + 1 );
 			$page_links[] = sprintf( "<a class='next-page' href='%s' data-paged='%s'><span class='screen-reader-text'>%s</span><span class='tablenav-pages-navspan' aria-hidden='true'>%s</span></a>",
 				esc_url( add_query_arg( 'paged', $page_number, $current_url ) ),
 				$page_number,
@@ -719,24 +703,22 @@ class CoursePress_Helper_UI {
 		return $output;
 	}
 
-	public static function course_facilitator_avatars( $course_id ) {
+	public static function course_facilitator_avatars( $course_id, $options = array(), $show_pending = false ) {
 		$facilitators = CoursePress_Data_Facilitator::get_course_facilitators( $course_id, false );
 		$content = '';
-
+		$can_assigned_facilitator = CoursePress_Data_Capabilities::can_assign_facilitator( $course_id );
 		if ( count( $facilitators ) > 0 ) {
-			$can_assigned_facilitator = CoursePress_Data_Capabilities::can_assign_facilitator( $course_id );
-
 			foreach ( $facilitators as $facilitator_id => $userdata ) {
-				$content .= '<div class="facilitator-avatar-holder" id="facilitator-'. $facilitator_id . '" data-id="'. $facilitator_id . '">';
-
-				if ( $can_assigned_facilitator ) {
-					$content .= '<div class="facilitator-remove"><a><span class="dashicons dashicons-dismiss"></span></a></div>';
+				$content .= CoursePress_Template_Course::course_edit_avatar( $userdata, $can_assigned_facilitator, 'facilitator' );
+			}
+		}
+		// Pending from invites
+		if ( $show_pending ) {
+			$invites = CoursePress_Data_Facilitator::get_invitations_by_course_id( $course_id );
+			if ( ! empty( $invites ) ) {
+				foreach ( $invites as $invite ) {
+					$content .= CoursePress_Template_Course::course_edit_avatar_pending_invite( $invite, $can_assigned_facilitator, 'facilitator' );
 				}
-
-				$content .= get_avatar( $userdata->user_email, 80 );
-				$content .= sprintf( '<span class="facilitator-name">%s</span>', $userdata->display_name );
-
-				$content .= '</div>';
 			}
 		}
 
