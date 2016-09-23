@@ -97,6 +97,7 @@ class CoursePress_Admin_Table_Reports extends WP_List_Table {
 	public function get_bulk_actions() {
 		$actions = array(
 			'download' => __( 'Download', 'cp' ),
+			'download_summary' => __( 'Download Summary', 'cp' ),
 		);
 
 		return $actions;

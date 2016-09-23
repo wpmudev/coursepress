@@ -64,6 +64,16 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Controller_Menu {
 				if ( ! empty( $_REQUEST['students'] ) ) {
 					$students = (array) $_REQUEST['students'];
 					$course_id = (int) $_REQUEST['course_id'];
+					self::report_content( $students, $course_id );
+					exit;
+				} else {
+					self::$warning_message = __( 'Select students to generate the report!', 'cp' );
+				}
+			break;
+			case 'download_summary':
+				if ( ! empty( $_REQUEST['students'] ) ) {
+					$students = (array) $_REQUEST['students'];
+					$course_id = (int) $_REQUEST['course_id'];
 					self::report_content_multi( $students, $course_id );
 					exit;
 				} else {
@@ -100,11 +110,32 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Controller_Menu {
 			$unit_file_part = $units[ (int) $unit_id ]['unit']->post_name;
 		}
 
+		if ( 1 < count( $students ) ) {
+			$html .= '<br />';
+			$html .= sprintf( '<h2>%s</h2>', __( 'Units list', 'cp' ) );
+			$html .= CoursePress_Data_Course::get_units_html_list( $course_id );
+			$html .= '<br />';
+			$html .= sprintf( '<h2>%s</h2>', __( 'Student list', 'cp' ) );
+			$html .= '<ul>';
+			foreach ( $students as $student_id ) {
+				$student_name = CoursePress_Helper_Utility::get_user_name( $student_id );
+				$html .= sprintf( '<li>%s</li>', esc_html( $student_name ) );
+			}
+			$html .= '</ul>';
+		}
+
 		$last_student = false;
 
 		foreach ( $students as $student_id ) {
 			$student_name = CoursePress_Helper_Utility::get_user_name( $student_id );
 			$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
+
+			/**
+			 * Add page break here.
+			 */
+			if ( 1 < count( $students ) ) {
+				$html .= '<br pagebreak="true" />';
+			}
 
 			$html .= '
 				<table style="padding: 1mm">
@@ -254,37 +285,16 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Controller_Menu {
 		/**
 		 * Header
 		 */
-
-		$html_units = $html_modules = '<td>&nbsp;</td>';
-		foreach ( $units as $unit_id => $unit_obj ) {
-			$count = 0;
-			foreach ( $unit_obj['pages'] as $page ) {
-				foreach ( $page['modules'] as $module_id => $module ) {
-					$attributes = CoursePress_Data_Module::attributes( $module_id );
-
-					if ( false === $attributes || 'output' === $attributes['mode'] || ! $attributes['assessable'] ) {
-						continue;
-					}
-					$count++;
-					$html_modules .= sprintf( '<th>%s</th>', apply_filters( 'the_title', $module->post_title ) );
-				}
-			}
-			$unit = $unit_obj['unit'];
-			$html_units .= sprintf(
-				'<th colspan="%d">%s</th>',
-				$count,
-				apply_filters( 'the_title', $unit->post_title )
-			);
-		}
-
+		$style = sprintf(
+			'font-size: 4mm; background-color:%s;color:%s;',
+			$colors['footer_bg'],
+			$colors['footer']
+		);
 		$html .= '<tr>';
-		$html .= $html_units;
-		$html .= sprintf( '<th colspan="2">%s</th>', __( 'Average', 'cp' ) );
-		$html .= '</tr>';
-		$html .= '<tr>';
-		$html .= $html_modules;
-		$html .= sprintf( '<th>%s</th>', __( 'response grade', 'cp' ) );
-		$html .= sprintf( '<th>%s</th>', __( 'total', 'cp' ) );
+		$html .= sprintf( '<th style="%s">%s</th>', esc_attr( $style ), __( 'Student', 'cp' ) );
+		$html .= sprintf( '<th style="%s">%s</th>', esc_attr( $style ), __( 'Responses', 'cp' ) );
+		$html .= sprintf( '<th style="%s">%s</th>', esc_attr( $style ), __( 'Average response grade', 'cp' ) );
+		$html .= sprintf( '<th style="%s">%s</th>', esc_attr( $style ), __( 'Total Average', 'cp' ) );
 		$html .= '</tr>';
 
 		$i = 0;
@@ -321,20 +331,9 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Controller_Menu {
 						$total += false !== $grade && isset( $grade['grade'] ) ? (int) $grade['grade'] : 0;
 						$grade_display = false !== $grade && isset( $grade['grade'] ) ? (int) $grade['grade'] . '%' : '--';
 						$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
-						$date_display = false !== $response && isset( $response['date'] ) ? esc_html( $response['date'] ) : sprintf( '<small>%s</small>', __( 'Not yet submitted', 'cp' ) );
 						$answered += false !== $response && isset( $response['date'] ) ? 1 : 0;
 
-						$html .= '
-								<td style="border-bottom: 0.5mm solid ' . esc_attr( $colors['item_line'] ) . ';">' . $date_display . '<br />' . esc_html( $grade_display ) . '</td>
-						';
-
 					}
-				}
-
-				if ( empty( $assessable_modules ) ) {
-					$html .= '
-								<td colspan="3"><em>' . esc_html__( 'No assessable items.', 'cp' ) . '</em></td>
-						';
 				}
 
 				$course_assessable_modules += $assessable_modules;
@@ -345,16 +344,13 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Controller_Menu {
 			$average = $course_answered > 0 ? (int) ( $course_total / $course_answered ) : 0;
 			$average_display = ! $course_answered && ! $assessable_modules ? '' : sprintf( '%d%%', $average );
 			$course_average = $assessable_modules > 0 ? (int) ( $course_total / $course_assessable_modules ) : 0;
-			$course_average_display = ! $assessable_modules ? __( 'No assessable items in this course.', 'cp' ) : sprintf( '%d%%', $course_average );
+			$course_average_display = sprintf( '%d%%', $course_average );
 
-			$html .= '
-							<td style="border-bottom: 0.5mm solid ' . esc_attr( $colors['item_line'] ) . ';text-align:right">' . esc_html( $average_display ) . '</td>
-							<td style="border-bottom: 0.5mm solid ' . esc_attr( $colors['item_line'] ) . ';text-align:right">' . esc_html( $course_average_display ) . '</td>
-						</tr>
-			';
-
+			$html .= '<td style="border-bottom: 0.5mm solid ' . esc_attr( $colors['item_line'] ) . ';text-align:center;">' . esc_html( $course_answered ) . '</td>';
+			$html .= '<td style="border-bottom: 0.5mm solid ' . esc_attr( $colors['item_line'] ) . ';text-align:center;">' . esc_html( $average_display ) . '</td>';
+			$html .= '<td style="border-bottom: 0.5mm solid ' . esc_attr( $colors['item_line'] ) . ';text-align:center;">' . esc_html( $course_average_display ) . '</td>';
+			$html .= '</tr>';
 			$last_student = $student_id;
-
 		}
 		$html .= '</table>';
 
