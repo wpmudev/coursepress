@@ -1601,7 +1601,13 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			is_checked = input.is( ':checked' ),
 			preview = $( '.btn-cert' )
 		;
+		var parent = $(this).closest( '.wide');
 		preview[ is_checked ? 'addClass' : 'removeClass' ]( 'button-primary' );
+		if ( is_checked ) {
+			$( '.options, .btn-cert', parent).slideDown();
+		} else {
+			$( '.options, .btn-cert', parent).slideUp();
+		}
 	},
 	testCertificateEmail = function() {
 		var link = $(this),
