@@ -79,7 +79,6 @@ class CoursePress_Core {
 			CoursePress_View_Admin_CoursePress::init();
 			//CoursePress_View_Admin_Instructor::init();
 			CoursePress_View_Admin_Student::init();
-			//CoursePress_View_Admin_Communication::init();
 			CoursePress_View_Admin_Setting::init();
 			//CoursePress_View_Admin_Course_Export::init();
 			CoursePress_Helper_PDF::init();
