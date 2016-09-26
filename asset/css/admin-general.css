@@ -281,28 +281,27 @@ A. Responsive
  * colors
  */
 /* Course List Table */
-.wp-list-table.courses th.manage-column.column-post_title {
+.wp-list-table .courses th.manage-column.column-post_title {
   min-width: 50%;
 }
-.wp-list-table.courses .column-units p {
+.wp-list-table .courses .column-units p {
   word-wrap: normal;
 }
-.wp-list-table.courses th.manage-column.column-ID {
+.wp-list-table .courses th.manage-column.column-ID {
   width: 6em;
 }
-.wp-list-table.courses thead .manage-column.column-date_start,
-.wp-list-table.courses thead .manage-column.column-date_end,
-.wp-list-table.courses thead .manage-column.column-date_enrollment_end,
-.wp-list-table.courses thead .manage-column.column-date_enrollment_start {
+.wp-list-table .courses thead .manage-column.column-date_start,
+.wp-list-table .courses thead .manage-column.column-date_end,
+.wp-list-table .courses thead .manage-column.column-date_enrollment_end,
+.wp-list-table .courses thead .manage-column.column-date_enrollment_start {
   width: 7em;
 }
-.wp-list-table.courses tbody .date_start,
-.wp-list-table.courses tbody .date_end,
-.wp-list-table.courses tbody .date_enrollment_end,
-.wp-list-table.courses tbody .date_enrollment_start {
+.wp-list-table .courses tbody .date_start,
+.wp-list-table .courses tbody .date_end,
+.wp-list-table .courses tbody .date_enrollment_end,
+.wp-list-table .courses tbody .date_enrollment_start {
   width: 7em;
 }
-
 .wp-list-table .manage-column.column-status {
   width: 90px;
 }
@@ -2317,13 +2316,12 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 .coursepress_wrapper.coursepress-reports .column-report .pdf {
   background-image: url("../img/pdf_document.png");
   background-size: 100% 100%;
-  width: 16px;
-  height: 16px;
+  width: 32px;
+  height: 32px;
   display: block;
   cursor: pointer;
 }
-.coursepress_wrapper.coursepress-reports td.column-responses,
-.coursepress_wrapper.coursepress-reports td.column-average {
+.coursepress_wrapper.coursepress-reports td.column-responses, .coursepress_wrapper.coursepress-reports td.column-average {
   text-indent: 15px;
 }
 .coursepress_wrapper.coursepress-reports .help-tooltip {
