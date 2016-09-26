@@ -8,7 +8,7 @@ class CoursePress_Helper_JavaScript {
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_admin_scripts' ) );
 
 		add_action( 'admin_footer', array( __CLASS__, 'enqueue_scripts' ) );
-		add_action( 'wp_footer', array( __CLASS__, 'enqueue_front_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_front_scripts' ) );
 	}
 
 	/**
@@ -28,7 +28,7 @@ class CoursePress_Helper_JavaScript {
 			'coursepress',
 		) );
 
-		if ( isset( $_GET['page']) && in_array( $_GET['page'], $valid_pages ) ) {
+		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], $valid_pages ) ) {
 			return true;
 		}
 
@@ -86,7 +86,7 @@ class CoursePress_Helper_JavaScript {
 			'server_error' => __( 'An error occur while processing your request. Please try again later!', 'cp' ),
 			'labels' => array(
 				'user_dropdown_placeholder' => __( 'Enter username, first name and last name, or email', 'cp' ),
-				'required_fields' => __( 'Required fields must not be empty!', 'cp' )
+				'required_fields' => __( 'Required fields must not be empty!', 'cp' ),
 			),
 		);
 
@@ -146,6 +146,8 @@ class CoursePress_Helper_JavaScript {
 			$localize_array['instructor_avatars'] = CoursePress_Helper_UI::get_user_avatar_array();
 			$localize_array['instructor_delete_confirm'] = __( 'Please confirm that you want to remove the instructor from this course.', 'cp' );
 			$localize_array['instructor_delete_invite_confirm'] = __( 'Please confirm that you want to remove the instructor invitation from this course.', 'cp' );
+			$localize_array['facilitator_delete_confirm'] = __( 'Please confirm that you want to remove the facilitator from this course.', 'cp' );
+			$localize_array['facilitator_delete_invite_confirm'] = __( 'Please confirm that you want to remove the facilitator invitation from this course.', 'cp' );
 			$localize_array['instructor_empty_message'] = __( 'Please Assign Instructor', 'cp' );
 			$localize_array['facilitator_empty_message'] = __( 'Assign Facilitator', 'cp' );
 			$localize_array['instructor_pednding_status'] = __( 'Pending', 'cp' );
@@ -184,7 +186,7 @@ class CoursePress_Helper_JavaScript {
 			$localize_array['unit_builder_add_answer_label'] = __( 'Add Answer', 'cp' );
 			$localize_array['unit_builder_form_pleaceholder_label'] = __( 'Placeholder Text', 'cp' );
 			$localize_array['unit_builder_form_pleaceholder_desc'] = __( 'Placeholder text to put inside the textbox (additional information)', 'cp' );
-			
+
 		}
 
 		/** COURSE LIST */
@@ -211,7 +213,7 @@ class CoursePress_Helper_JavaScript {
 			wp_enqueue_script( 'coursepress_assessment',
 				$script,
 				null,
-				CoursePress::$version );
+			CoursePress::$version );
 			$localize_array['courseinstructor_id'] = get_current_user_id();
 			$localize_array['instructor_name'] = CoursePress_Helper_Utility::get_user_name( get_current_user_id(), true );
 			$localize_array['assessment_labels'] = array(
@@ -372,5 +374,7 @@ class CoursePress_Helper_JavaScript {
 			CoursePress::$version
 		);
 
+		$front_css = CoursePress::$url . 'asset/css/front.css';
+		wp_enqueue_style( 'coursepress-front', $front_css, array(), CoursePress::$version );
 	}
 }

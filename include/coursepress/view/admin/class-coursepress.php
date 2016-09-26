@@ -10,7 +10,7 @@ class CoursePress_View_Admin_CoursePress {
 	private static $admin_pages = array(
 		'Course_Edit',
 		//'Assessment_List',
-		'Assessment_Report',
+		//'Assessment_Report',
 	);
 
 	public static function init() {
@@ -61,6 +61,9 @@ class CoursePress_View_Admin_CoursePress {
 		add_action( 'show_user_profile', array( 'CoursePress_View_Admin_Course_Student', 'render_student_courses' ) );
 		add_action( 'edit_user_profile', array( 'CoursePress_View_Admin_Course_Student', 'render_student_courses' ) );
 
+		// Update Communication
+		add_action( 'wp_ajax_update_notification', array( 'CoursePress_Data_Notification', 'ajax_update' ) );
+		add_action( 'wp_ajax_update_discussion', array( 'CoursePress_Data_Discussion', 'ajax_update' ) );
 	}
 
 	public static function add_valid( $valid_pages ) {
@@ -200,5 +203,4 @@ class CoursePress_View_Admin_CoursePress {
 	public static function get_slug() {
 		return self::$slug;
 	}
-
 }

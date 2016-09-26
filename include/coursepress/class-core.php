@@ -77,15 +77,18 @@ class CoursePress_Core {
 
 			// Initialize Admin Views.
 			CoursePress_View_Admin_CoursePress::init();
-			CoursePress_View_Admin_Instructor::init();
+			//CoursePress_View_Admin_Instructor::init();
 			CoursePress_View_Admin_Student::init();
-			CoursePress_View_Admin_Communication::init();
 			CoursePress_View_Admin_Setting::init();
-			CoursePress_View_Admin_Course_Export::init();
+			//CoursePress_View_Admin_Course_Export::init();
 			CoursePress_Helper_PDF::init();
 
+			//new CoursePress_Admin_Students;
+			new CoursePress_Admin_Instructors;
 			new CoursePress_Admin_Assessment;
+			new CoursePress_Admin_Reports;
 			new CoursePress_Admin_Notifications;
+			new CoursePress_Admin_Forums;
 			//new CoursePress_Admin_Certificate;
 			new CoursePress_Admin_Import;
 			new CoursePress_Admin_Export;

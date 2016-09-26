@@ -11,28 +11,28 @@
 }
 
 
-.shadow-table:before, .shadow-table:after 
+.shadow-table:before, .shadow-table:after
 {
-    z-index: -1; 
-    position: absolute; 
+    z-index: -1;
+    position: absolute;
     content: "";
     bottom: 15px;
     left: 10px;
-    width: 50%; 
+    width: 50%;
     top: 80%;
     max-width:300px;
-    background: rgba( 0, 0, 0, 0.7 ); 
-    -webkit-box-shadow: 0 15px 10px rgba( 0,0,0, 0.7 );   
+    background: rgba( 0, 0, 0, 0.7 );
+    -webkit-box-shadow: 0 15px 10px rgba( 0,0,0, 0.7 );
     -moz-box-shadow: 0 15px 10px rgba( 0, 0, 0, 0.7 );
     box-shadow: 0 15px 10px rgba( 0, 0, 0, 0.7 );
-    -webkit-transform: rotate( -3deg );    
-    -moz-transform: rotate( -3deg );   
+    -webkit-transform: rotate( -3deg );
+    -moz-transform: rotate( -3deg );
     -o-transform: rotate( -3deg );
     -ms-transform: rotate( -3deg );
     transform: rotate( -3deg );
 }
 
-.shadow-table:after 
+.shadow-table:after
 {
     -webkit-transform: rotate( 3deg );
     -moz-transform: rotate( 3deg );
@@ -142,7 +142,7 @@ input.wide {
 
 div.level-details select {
     display: block;
-    margin-top: 5px;	
+    margin-top: 5px;
 }
 
 .level-holder h3 {
@@ -496,7 +496,7 @@ div.buttons a.cancellink {
     opacity: 0.7;
 }
 
-.instructor-avatar-holder{
+.avatar-holder{
     margin-bottom: 5px;
     margin-left: 5px;
     margin-right: 5px;
@@ -506,40 +506,38 @@ div.buttons a.cancellink {
     border: 1px solid #f5f5f5;
     text-align: center;
     position: relative;
+    &:hover {
+        /* IE 8 */
+        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha( Opacity=50 )";
+
+        /* IE 5-7 */
+        filter: alpha( opacity=70 );
+
+        /* Netscape */
+        -moz-opacity: 0.7;
+
+        /* Safari 1.x */
+        -khtml-opacity: 0.7;
+
+        /* Good browsers */
+        opacity: 0.7;
+    }
 }
 
-.instructor-avatar-holder:hover{
-    /* IE 8 */
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha( Opacity=50 )";
-
-    /* IE 5-7 */
-    filter: alpha( opacity=70 );
-
-    /* Netscape */
-    -moz-opacity: 0.7;
-
-    /* Safari 1.x */
-    -khtml-opacity: 0.7;
-
-    /* Good browsers */
-    opacity: 0.7;
-}
-
-.instructor-remove a:hover{
-    background-image: url( "../images/delete.png" );
-    background-position: 30px 31px;
-    background-repeat: no-repeat;
-    height: 80px;
-    position: absolute;
-    width: 80px;
-    display: block;
-}
-
-.instructor-remove a{
+.remove a {
     display: block;
     width: 80px;
     height: 80px;
     position: absolute;
+    &:hover {
+        background-image: url( "../images/delete.png" );
+        background-position: 30px 31px;
+        background-repeat: no-repeat;
+        height: 80px;
+        position: absolute;
+        width: 80px;
+        display: block;
+    }
 }
 
 .instructor-name{
@@ -969,7 +967,7 @@ a .remove-btn{
 
 .instructors .column-user-fullname {
     display: none;
-}	
+}
 
 .instructors th{
     text-overflow:ellipsis;

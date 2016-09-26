@@ -424,6 +424,7 @@ class CoursePress_Helper_PDF extends TCPDF {
 		if ( empty( $cache_path ) ) {
 			$cache_path = self::cache_path();
 		}
+
 		$is_writable = is_dir( $cache_path ) && is_writable( $cache_path );
 		if ( ! $is_writable ) {
 			// Attempt to write locally
@@ -439,6 +440,7 @@ class CoursePress_Helper_PDF extends TCPDF {
 				$is_writable = $wp_filesystem->mkdir( $cache_path, 0775 );
 			}
 		}
+
 		return $is_writable;
 	}
 

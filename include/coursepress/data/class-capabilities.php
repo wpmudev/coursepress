@@ -199,8 +199,7 @@ class CoursePress_Data_Capabilities {
 	public static function fix_admin_capabilities() {
 		$user_id = get_current_user_id();
 		if ( user_can( $user_id, 'manage_options' )
-			&& false === user_can( $user_id, 'coursepress_settings_cap' ) )
-		{
+			&& false === user_can( $user_id, 'coursepress_settings_cap' ) ) {
 			self::assign_admin_capabilities( $user_id );
 		}
 	}
@@ -823,6 +822,28 @@ class CoursePress_Data_Capabilities {
 	 */
 
 	/**
+	 * Can edit "some" notification?
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer/null $user_id User ID
+	 */
+	public static function can_add_notifications( $user_id = null ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		$can = self::can_add_notification_to_all( $user_id );
+		if ( $can ) {
+			return true;
+		}
+		$courses = CoursePress_Data_Instructor::get_assigned_courses_ids( $user_id );
+		if ( empty( $courses ) ) {
+			return false;
+		}
+		return self::can_add_notification( $courses[0], $user_id );
+	}
+
+	/**
 	 * Can withdraw student
 	 *
 	 * @since 2.0.0
@@ -990,6 +1011,9 @@ class CoursePress_Data_Capabilities {
 		/**
 		 * change_status own notifications
 		 */
+		if ( empty( $notification ) ) {
+			return false;
+		}
 		$notification_id = is_object( $notification )? $notification->ID : $notification;
 		if ( self::is_notification_creator( $notification, $user_id ) ) {
 			/** This filter is documented in include/coursepress/helper/class-setting.php */
@@ -1006,6 +1030,28 @@ class CoursePress_Data_Capabilities {
 	 * DISCUSSIONS
 	 *
 	 */
+
+	/**
+	 * Can edit "some" discussion?
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer/null $user_id User ID
+	 */
+	public static function can_add_discussions( $user_id = null ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		$can = self::can_add_discussion_to_all( $user_id );
+		if ( $can ) {
+			return true;
+		}
+		$courses = CoursePress_Data_Instructor::get_assigned_courses_ids( $user_id );
+		if ( empty( $courses ) ) {
+			return false;
+		}
+		return self::can_add_discussion( $courses[0], $user_id );
+	}
 
 	/**
 	 * Can withdraw student
@@ -1569,7 +1615,7 @@ class CoursePress_Data_Capabilities {
 	 *
 	 * Facilitators have similar capabilites with instructors.
 	 * @todo: Add new set of capabilities for facilitators.
-	 * 
+	 *
 	 * @since 2.0
 	 *
 	 * @param (int) $user		The user ID.

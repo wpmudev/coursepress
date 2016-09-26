@@ -197,7 +197,7 @@ class CoursePress_Data_Certificate {
 		 * subdirectory to avoid mass file storage in one directory
 		 */
 		$dir = substr( $filename, 0, 2 );
-		$subdirectory .= sprintf( '%s/', $dir );
+		$subdirectory = sprintf( '%s/', $dir );
 		$dir = substr( $filename, 2, 2 );
 		$subdirectory .= sprintf( '%s/', $dir );
 		$filename = substr( $filename, 4 );

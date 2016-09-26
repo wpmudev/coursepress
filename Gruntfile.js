@@ -48,7 +48,8 @@ module.exports = function(grunt) {
 			'{css}coursepress_front.css': '{css}src/coursepress_front.scss',
 			'{css}bbm.modal.css':         '{css}src/bbm.modal.scss',
 			'{css}editor.css':            '{css}src/editor.scss',
-			'{css}admin-ui.css':           '{css}/admin/admin-ui.scss'
+			'{css}admin-ui.css':           '{css}/admin/admin-ui.scss',
+			'{css}front.css':				'{css}src/front.scss'
 		},
 
 		// PHP files to validate.
@@ -725,7 +726,8 @@ module.exports = function(grunt) {
 	grunt.task.run( 'clear' );
 
 	// Define default tasks.
-	grunt.registerTask( 'js', ['jsvalidate', 'jshint', 'concat', 'uglify'] );
+	//grunt.registerTask( 'js', ['jsvalidate', 'jshint', 'concat', 'uglify'] );
+	grunt.registerTask( 'js', ['concat', 'uglify'] );
 	grunt.registerTask( 'css', ['sass', 'autoprefixer', 'cssmin'] );
 
 	grunt.registerTask( 'test', ['phpunit'] );
