@@ -230,6 +230,7 @@ class CoursePress_Data_Discussion {
 		// Unsubscribe message
 		add_action( 'the_content', array( __CLASS__, 'unsubscribe_from_discussion' ) );
 
+        add_filter( 'wp_list_comments_args', array( __CLASS__, 'wp_list_comments_args' ) );
 	}
 
 	public static function approved_discussion_comment( $is_approved, $commentdata ) {
@@ -659,4 +660,41 @@ class CoursePress_Data_Discussion {
 		$post_type = get_post_type( $post );
 		return self::$post_type == $post_type;
 	}
+
+	/**
+	 * Setup comments thread data.
+	 *
+	 * @since 2.0.0
+	 */
+	public static function wp_list_comments_args( $args ) {
+		global $post;
+		/**
+		 * No post? return!
+		 */
+		if ( !is_object( $post ) ) {
+			return $args;
+		}
+		/**
+		 * Wrong post type? return!
+		 */
+		if ( 'course_discussion' != $post->post_type ) {
+			return $args;
+		}
+		/**
+		 * How deep (in comment replies) should the comments be fetched.
+		 */
+		$value = get_post_meta( $post->ID, 'thread_comments_depth', true );
+		if ( ! empty( $value ) ) {
+			$args['max_depth'] = $value;
+		}
+		/**
+		 * The number of items to show for each page of comments.
+		 */
+		$value = get_post_meta( $post->ID, 'comments_per_page', true );
+		if ( ! empty( $value ) ) {
+			$args['per_page'] = $value;
+		}
+		return $args;
+	}
+
 }
