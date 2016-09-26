@@ -56,7 +56,7 @@ class CoursePress_Module {
 		if ( true === $mandatory ) {
 			if ( '' == $response ) {
 				$has_error = true;
-				self::$error_message = __( 'You need to complete the required module(s)!', 'cp' );
+				self::$error_message = __( 'You need to complete the required module!', 'cp' );
 			} else {
 				// Attempt to record the submission
 				CoursePress_Data_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $response );
@@ -92,120 +92,166 @@ class CoursePress_Module {
 		}
 	}
 	public static function submit( $input ) {
-		//if ( self::is_valid() ) {
+		$course_id = (int) $input['course_id'];
+		$unit_id = (int) $input['unit_id'];
+		$module = isset( $input['module'] ) ? (array) $input['module'] : false;
+		$module_id = 0;
+		$page = 1;
+		$student_id = (int) $input['student_id'];
+		$has_error = false;
+		$course_mode = get_post_meta( $course_id, 'cp_course_view', true );
+		$is_focus = 'focus' == $course_mode;
 
-			$course_id = (int) $input['course_id'];
-			$unit_id = (int) $input['unit_id'];
-			$module = isset( $input['module'] ) ? (array) $input['module'] : false;
-			$module_id = 0;
-			$page = 1;
-			$student_id = (int) $input['student_id'];
-			$has_error = false;
-			$course_mode = get_post_meta( $course_id, 'cp_course_view', true );
-			$is_focus = 'focus' == $course_mode;
+		// Validate the course
+		$error = CoursePress_Data_Course::can_access( $course_id, $unit_id );
 
-			// Validate the course
-			$error = CoursePress_Data_Course::can_access( $course_id, $unit_id );
-			if ( ! empty( $error ) ) {
-				$has_error = true;
-				self::$error_message = $error;
-			} elseif ( true === self::validate_course( $input ) ) {
-				$has_error = true;
-			} else {
+		if ( ! empty( $error ) ) {
+			$has_error = true;
+			self::$error_message = $error;
+		} elseif ( true === self::validate_course( $input ) ) {
+			$has_error = true;
+		} else {
 
-				if ( ! empty( $input['module_id'] ) && ! is_array( $module ) ) {
-					$module = array();
-					$module_id = (int) $input['module_id'];
+			if ( ! empty( $input['module_id'] ) && ! is_array( $module ) ) {
+				$module = array();
+				$module_id = (int) $input['module_id'];
 
-					// Check if the module is accesible
-					$error = CoursePress_Data_Course::can_access( $course_id, $unit_id, $module_id );
+				// Check if the module is accesible
+				$error = CoursePress_Data_Course::can_access( $course_id, $unit_id, $module_id );
 
-					// Validate the module
-					if ( empty( $error ) && self::validate_module( $module_id, '', $student_id ) ) {
-						$has_error = true;
-					}
-
-					if ( ! empty( $error ) ) {
-						$has_error = true;
-						self::$error_message = $error;
-					}
+				// Validate the module
+				if ( empty( $error ) && self::validate_module( $module_id, '', $student_id ) ) {
+					$has_error = true;
 				}
 
-				foreach ( $module as $module_id => $response ) {
-					$attributes = CoursePress_Data_Module::attributes( $module_id );
-					$module_type = $attributes['module_type'];
+				if ( ! empty( $error ) ) {
+					$has_error = true;
+					self::$error_message = $error;
+				}
+			}
 
-					if ( 'input-quiz' == $module_type ) {
-						foreach ( $attributes['questions'] as $qi => $question ) {
-							if ( ! empty( $response[ $qi ] ) ) {
-								if ( 'multiple' == $question['type'] ) {
-									$values = array_values( $response[ $qi ] );
-									$values = array_fill_keys( $values, 1 );
-									$response[ $qi ] = $values;
-								} else {
-									$response[ $qi ] = array( $response[ $qi ] => 1 );
-								}
+			foreach ( $module as $module_id => $response ) {
+				$attributes = CoursePress_Data_Module::attributes( $module_id );
+				$module_type = $attributes['module_type'];
+
+				if ( 'input-quiz' == $module_type ) {
+					foreach ( $attributes['questions'] as $qi => $question ) {
+						if ( ! empty( $response[ $qi ] ) ) {
+							if ( 'multiple' == $question['type'] ) {
+								$values = array_values( $response[ $qi ] );
+								$values = array_fill_keys( $values, 1 );
+								$response[ $qi ] = $values;
+							} else {
+								$response[ $qi ] = array( $response[ $qi ] => 1 );
 							}
 						}
 					}
-
-					if ( false === self::validate_module( $module_id, $response, $student_id ) ) {
-						$record = true;
-
-						if ( empty( $response ) && ( 'input-textarea' == $module_type || 'input-text' == $module_type ) ) {
-							$record = false;
-						}
-
-						if ( $record ) {
-							CoursePress_Data_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $response );
-						}
-					} else {
-						$has_error = true;
-						break;
-					}
 				}
-			}
 
-			// Check for upload submission
+				if ( false === self::validate_module( $module_id, $response, $student_id ) ) {
+					$record = true;
 
-			if ( ! empty( $input['is_cp_ajax'] ) ) {
-				if ( $has_error ) {
-					$json_data = array(
-						'error' => true,
-						'error_message' => self::$error_message,
-					);
+					if ( empty( $response ) && ( 'input-textarea' == $module_type || 'input-text' == $module_type ) ) {
+						$record = false;
+					}
 
-					wp_send_json_error( $json_data );
+					if ( $record ) {
+						CoursePress_Data_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $response );
+					}
 				} else {
-					$next = CoursePress_Data_Course::get_next_accessible_module( $course_id, $unit_id, $page, $module_id );
-
-					if ( $is_focus ) {
-						$item_id = $next['id'];
-
-						if ( 'section' == $next['type'] ) {
-							$unit_id = $next['id'];
-							$item_id = 1;
-						} else {
-							$item_id = $next['id'];
-						}
-
-						$html = '[coursepress_focus_item course="%s" unit="%s" type="%s" item_id="%s"]';
-						$html = do_shortcode( sprintf( $html, $course_id, $unit_id, $next['type'], $item_id ) );
-					}
-
-					$json_data = array(
-						'success' => true,
-						'html' => $html,
-					);
-					wp_send_json_success( $json_data );
-				}
-				exit;
-			} else {
-				if ( $has_error ) {
-					add_filter( 'coursepress_before_unit_modules', array( __CLASS__, 'show_error_message' ) );
+					$has_error = true;
+					break;
 				}
 			}
-		//}
+		}
+
+		// Check for upload submission
+		if ( ! empty( $_FILES['module'] ) ) {
+			if ( ! function_exists( 'wp_handle_upload' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/file.php';
+			}
+			$upload_overrides = array(
+				'test_form' => false,
+				'mimes' => CoursePress_Helper_Utility::allowed_student_mimes(),
+			);
+			$files = $_FILES['module'];
+
+			foreach ( $files['name'] as $module_id => $filename ) {
+				$attributes = CoursePress_Data_Module::attributes( $module_id );
+				$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id );
+				$required = ! empty( $attributes['mandatory'] );
+
+				if ( true === $required ) {
+					if ( ! empty( $response ) && empty( $filename ) ) {
+						continue;
+					}
+				} else {
+					// If it is not required and no submission, break
+					if ( empty( $filename ) ) {
+						continue;
+					}
+				}
+
+				$file = array(
+					'name' => $filename,
+					'size' => $files['size'][ $module_id ],
+					'error' => $files['error'][ $module_id ],
+					'type' => $files['type'][ $module_id ],
+					'tmp_name' => $files['tmp_name'][ $module_id ]
+				);
+				$response = wp_handle_upload( $file, $upload_overrides );
+				$response['size'] = $file['size'];
+
+				if ( ! empty( $response['error'] ) ) {
+					$has_error = true;
+					self::$error_message = $response['error'];
+					add_action( 'coursepress_before_unit_modules', array( __CLASS__, 'show_error_message' ) );
+				} else {
+					CoursePress_Data_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $response );
+				}
+			}
+		}
+
+		if ( ! empty( $input['is_cp_ajax'] ) ) {
+			if ( $has_error ) {
+				$json_data = array(
+					'error' => true,
+					'error_message' => sprintf( '<p>%s</p>', self::$error_message ),
+				);
+
+				wp_send_json_error( $json_data );
+			} else {
+				$next = CoursePress_Data_Course::get_next_accessible_module( $course_id, $unit_id, $page, $module_id );
+
+				if ( $is_focus ) {
+					$item_id = $next['id'];
+
+					if ( 'section' == $next['type'] ) {
+						$unit_id = $next['id'];
+						$item_id = 1;
+					} else {
+						$item_id = $next['id'];
+					}
+
+					$html = '[coursepress_focus_item course="%s" unit="%s" type="%s" item_id="%s"]';
+					$html = do_shortcode( sprintf( $html, $course_id, $unit_id, $next['type'], $item_id ) );
+				}
+
+				$type = 'completion_page' == $next['id'] ? 'completion' : $next['type'];
+				$json_data = array(
+					'success' => true,
+					'html' => $html,
+					'url' => ! empty( $next['url'] ) ? $next['url'] : false,
+					'type' => $type,
+				);
+				wp_send_json_success( $json_data );
+			}
+			exit;
+		} else {
+			if ( $has_error ) {
+				add_filter( 'coursepress_before_unit_modules', array( __CLASS__, 'show_error_message' ) );
+			}
+		}
 	}
 
 	public static function process_submission555() {

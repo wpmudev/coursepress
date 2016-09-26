@@ -1831,13 +1831,13 @@ class CoursePress_Data_Course {
 					}
 				}
 
-				$completion_url = $course_link . trailingslashit( 'completion' );
+				$completion_url = $course_link . trailingslashit( CoursePress_Core::get_slug( 'completion' ) );
 				$completion_page = array(
 					'id' => 'completion_page',
 					'type' => 'section',
 					'section' => null,
 					'unit' => true,
-					'url' => $completion_url, //CoursePress_Core::get_slug( 'courses/', true ) . $course_slug . '/' . CoursePress_Core::get_slug( 'completion' ),
+					'url' => $completion_url,
 				);
 				array_push( $items, $completion_page );
 			} else {

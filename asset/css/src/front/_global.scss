@@ -10,4 +10,20 @@
 	.cp-download {
 		text-decoration: none;
 	}
+	.button {
+		padding: 5px 12px;
+		text-decoration: none;
+		text-decoration-style: none;
+		border: 1px solid rgba(0, 0, 0, 0.02);
+		cursor: pointer;
+
+		&:hover {
+			text-decoration: none;
+		}
+		a {
+			text-decoration: none;
+			border: 0;
+			color: inherit;
+		}
+	}
 }

@@ -23,7 +23,7 @@ class CoursePress_Template_Module {
 
 		$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id );
 
-		if ( false === $all && ! empty( $response['response'] ) ) {
+		if ( false === $all && isset( $response['response'] ) ) {
 			$response = $response['response'];
 		}
 
@@ -39,7 +39,7 @@ class CoursePress_Template_Module {
 		$response = self::get_response( $module_id, $student_id );
 
 		switch( $module_type ) {
-			case 'input-checkbox': case 'input-radio':
+			case 'input-checkbox': case 'input-radio': case 'input-select':
 				$answers = $attributes['answers'];
 				$selected = (array) $attributes['answers_selected'];
 				$content .= '<ul class="cp-answers">';
@@ -151,7 +151,7 @@ class CoursePress_Template_Module {
 						$content .= '</ul></div>';
 					}
 				}
-			break;
+				break;
 		}
 
 		/**
@@ -165,22 +165,26 @@ class CoursePress_Template_Module {
 	public static function get_module_status( $module_id, $student_id ) {
 		$attributes = self::attributes( $module_id );
 		$module_type = $attributes['module_type'];
-		$assessables = array( 'input-text', 'input-textarea', 'input-upload' );
+		$assessables = array( 'input-text', 'input-textarea' );
 		$response = self::get_response( $module_id, $student_id, true );
 		$grades = CoursePress_Helper_Utility::get_array_val( $response, 'grades' );
 		$grades = array_pop( $grades );
 		$grade = (int) CoursePress_Helper_Utility::get_array_val( $grades, 'grade' );
 		$minimum_grade = (int) $attributes['minimum_grade'];
 		$require_assessment = false;
+		$status = '';
 
-		if ( ! empty( $attributes['assessable'] ) || ! empty( $attributes['instructor_assessable'] ) ) {
-			$graded_by = CoursePress_Helper_Utility::get_array_val( $grades, 'graded_by' );
+		if ( ! empty( $attributes['assessable'] ) ) {
+			if ( in_array( $module_type, $assessables ) || ! empty( $attributes['instructor_assessable'] ) ) {
+				$graded_by = CoursePress_Helper_Utility::get_array_val( $grades, 'graded_by' );
 
-			if ( 'auto' == $graded_by ) {
-				$grade = 0;
-				$require_assessment = true;
+				if ( 'auto' == $graded_by ) {
+					$grade = 0;
+					$require_assessment = true;
+				}
 			}
 		}
+
 		$pass = $grade >= $minimum_grade;
 		$status = $pass ? __( 'Pass', 'cp' ) : __( 'Fail', 'cp' );
 		$status = $require_assessment ? __( 'Pending', 'cp' ) : $status;
@@ -236,10 +240,11 @@ class CoursePress_Template_Module {
 			$retry = 'TRY';
 			if ( $is_module_answerable ) {
 				$responses = CoursePress_Data_Student::get_responses( $student_id, $course_id, $unit_id, $module_id, true, $student_progress );
+				$last_response = self::get_response( $module_id, $student_id );
 				$element_class = ! empty( $responses ) ? 'hide' : '';
 				$response_count = ! empty( $responses ) ? count( $responses ) : 0;
 
-				$retry = sprintf( '<a data-module="%s" class="module-submit-action button-reload-module">%s</a>', $module_id, __( 'Try again', 'cp' ) );
+				$retry = sprintf( '<a data-module="%s" class="button module-submit-action button-reload-module">%s</a>', $module_id, __( 'Try again', 'cp' ) );
 
 				// Check if retry is disabled
 				if ( ! empty( $attributes['allow_retries'] ) && 0 < $response_count ) {
@@ -264,7 +269,12 @@ class CoursePress_Template_Module {
 			if ( $is_module_answerable && ! empty( $responses ) ) {
 
 				$status = self::get_module_status( $module->ID, $student_id );
-				$student_answers = sprintf( '<span class="cp-status">%s</span>', $status );
+
+				if ( 'Pass' == $status ) {
+					$retry = '';
+				}
+
+				$student_answers = sprintf( '<span class="cp-status status-%s">%s</span>', strtolower( $status ), $status );
 				$student_answers = sprintf( '<div class="cp-student-status">%s</div>', $student_answers . $retry );
 				$student_answers .= self::get_student_answer( $module->ID, $student_id );
 
@@ -588,7 +598,7 @@ class CoursePress_Template_Module {
 			$content .= '<ul style="list-style:none;">';
 
 			foreach ( $attributes['answers'] as $key => $answer ) {
-				$checked = ' ' . checked( 1, ! empty( $response ) && $response == $key, false );
+				$checked = ' ' . checked( 1, $response == $key, false );
 
 				$format = '<li class="%1$s %2$s"><label for="module-%3$s-%5$s">%4$s</label> <input type="radio" value="%5$s" name="module[%3$s]" id="module-%3$s-%5$s" %6$s /></li>';
 				$content .= sprintf( $format, $oddeven, $alt, $module->ID, esc_html__( $answer ), esc_attr( $key ), $disabled_attr . $checked );
@@ -659,6 +669,16 @@ class CoursePress_Template_Module {
 		$format = '<label class="file"><input type="file" name="module[%s]" %s /><span class="button" data-change="%s" data-upload="%s">%s</label>';
 		$content = sprintf( $format, $module->ID, $disabled_attr, __( 'Change File', 'cp' ), __( 'Upload File', 'cp' ), __( 'Upload File', 'cp' ) );
 
+		$upload_types = CoursePress_Helper_Utility::allowed_student_mimes();
+		$upload_types = array_map( 'strtoupper', array_keys( $upload_types ) );
+		$format = '<div class="cp-sub"><p>%s %s</p><p>%s %s</p></div>';
+
+		$content .= sprintf( $format,
+			__( 'Accepted File Format: ', 'cp' ),
+			implode( ' ', $upload_types ),
+			__( 'Max File Size:', 'cp' ),
+			ini_get( 'upload_max_filesize' )
+		);
 		return $content;
 	}
 

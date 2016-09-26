@@ -1,9 +1,85 @@
 .cp {
+	.cp-error {
+		p {
+			margin: 15px 0;
+			font-size: 0.9em;
+			border: 1px solid rgba(0,0, 0, 0.05);
+			padding: 5px 15px;
+			&:before {
+				content: "\F534";
+				font-family: Dashicons;
+				font-size: 1.2em;
+				margin-right: 5px;
+				color: red;
+			}
+		}
+	}
+	.module-header {
+		margin: 15px 0;
+		.is-mandatory {
+			float: right;
+			font-size: 0.8em;
+			text-transform: uppercase;
+			&:before {
+				content: '*';
+				display: inline-block;
+				vertical-align: middle;
+				padding: 2px 4px;
+			}
+		}
+	}
 	.module-elements {
-		border: 1px red solid;
 		margin: 15px 0;
 	}
 	.module-response {
-		border: 1px green solid;
+		margin-bottom: 20px;
+
+		.cp-student-status {
+			display: block;
+			text-align: right;
+
+			.cp-status {
+				padding: 4px 12px;
+				font-size: 0.8em;
+				border: 1px solid rgba(0, 0, 0, 0.02);
+				border-radius: 50%;
+				text-transform: uppercase;
+				background-color: rgba(0, 0, 0, 0.01);
+
+				&.status-pass {
+					background-color: rgba(147, 147, 0, 0.01);
+				}
+				&.status-fail {
+					background-color: red;
+				}
+			}
+		}
+		.cp-answers {
+			.chosen-answer {
+				display: inline-block;
+				vertical-align: middle;
+				width: 30px;
+
+				&:before {
+					content: "\f335";
+					font-family: Dashicons;
+					text-align: center;
+				}
+				&.correct:before {
+					content: "\f147";
+				}
+			}
+		}
+	}
+	.cp-sub {
+		margin: 15px 0;
+		p {
+			float: left;
+			width: 50%;
+			font-size: 0.8em;
+			text-transform: uppercase;
+			text-align: center;
+			padding: 5px 0;
+		}
 	}
 }

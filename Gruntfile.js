@@ -53,7 +53,7 @@ module.exports = function(grunt) {
 			'{css}bbm.modal.css':         '{css}src/bbm.modal.scss',
 			'{css}editor.css':            '{css}src/editor.scss',
 			'{css}admin-ui.css':           '{css}/admin/admin-ui.scss',
-			'{css}front.css':				'{css}src/front.scss'
+			'{css}front.css':			   '{css}src/front.scss'
 		},
 
 		// PHP files to validate.

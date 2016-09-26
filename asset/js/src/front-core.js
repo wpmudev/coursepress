@@ -18,3 +18,11 @@ CoursePress.SendRequest = Backbone.Model.extend( {
 		}
 	}
 } );
+
+/** Reset browser URL **/
+CoursePress.resetBrowserURL = function( url ) {
+	if ( window.history.pushState ) {
+		// Reset browser url
+		window.history.pushState( {}, null, url );
+	}
+};

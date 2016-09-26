@@ -385,6 +385,8 @@ class CoursePress_Helper_JavaScript {
 		$css_url = CoursePress::$url . 'asset/css/';
 		$version = CoursePress::$version;
 
+		wp_enqueue_style( 'coursepress-front-css', $css_url . 'front.css', array( 'dashicons' ), $version );
+
 		wp_enqueue_script( 'coursepress-front-js', $script_url . 'front.js', array( 'jquery', 'backbone', 'underscore' ), $version );
 
 		$localize_array = array(

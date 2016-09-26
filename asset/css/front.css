@@ -10,12 +10,96 @@
 .cp .cp-download {
   text-decoration: none;
 }
+.cp .button {
+  padding: 5px 12px;
+  text-decoration: none;
+  -webkit-text-decoration-style: none;
+  text-decoration-style: none;
+  border: 1px solid rgba(0, 0, 0, 0.02);
+  cursor: pointer;
+}
+.cp .button:hover {
+  text-decoration: none;
+}
+.cp .button a {
+  text-decoration: none;
+  border: 0;
+  color: inherit;
+}
 
 /** Modules **/
+.cp .cp-error p {
+  margin: 15px 0;
+  font-size: 0.9em;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 5px 15px;
+}
+.cp .cp-error p:before {
+  content: "\F534";
+  font-family: Dashicons;
+  font-size: 1.2em;
+  margin-right: 5px;
+  color: red;
+}
+.cp .module-header {
+  margin: 15px 0;
+}
+.cp .module-header .is-mandatory {
+  float: right;
+  font-size: 0.8em;
+  text-transform: uppercase;
+}
+.cp .module-header .is-mandatory:before {
+  content: '*';
+  display: inline-block;
+  vertical-align: middle;
+  padding: 2px 4px;
+}
 .cp .module-elements {
-  border: 1px red solid;
   margin: 15px 0;
 }
 .cp .module-response {
-  border: 1px green solid;
+  margin-bottom: 20px;
+}
+.cp .module-response .cp-student-status {
+  display: block;
+  text-align: right;
+}
+.cp .module-response .cp-student-status .cp-status {
+  padding: 4px 12px;
+  font-size: 0.8em;
+  border: 1px solid rgba(0, 0, 0, 0.02);
+  border-radius: 50%;
+  text-transform: uppercase;
+  background-color: rgba(0, 0, 0, 0.01);
+}
+.cp .module-response .cp-student-status .cp-status.status-pass {
+  background-color: rgba(147, 147, 0, 0.01);
+}
+.cp .module-response .cp-student-status .cp-status.status-fail {
+  background-color: red;
+}
+.cp .module-response .cp-answers .chosen-answer {
+  display: inline-block;
+  vertical-align: middle;
+  width: 30px;
+}
+.cp .module-response .cp-answers .chosen-answer:before {
+  content: "\f335";
+  font-family: Dashicons;
+  text-align: center;
+}
+.cp .module-response .cp-answers .chosen-answer.correct:before {
+  content: "\f147";
+}
+.cp .cp-sub {
+  margin: 15px 0;
+}
+.cp .cp-sub p {
+  float: left;
+  width: 50%;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 5px 0;
 }

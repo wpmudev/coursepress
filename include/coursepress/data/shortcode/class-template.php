@@ -849,17 +849,27 @@ class CoursePress_Data_Shortcode_Template {
 		$res = '';
 
 		if ( $button['id'] ) {
-			if ( $next ) {
-				$format = '<button type="submit" name="type-%s" class="%s" title="%s">%s</button>';
-				$res = sprintf( $format, $button['type'], esc_attr( implode( ' ', $classes ) ), esc_attr( $link_title ), $title );
+			$classes = is_array( $classes ) ? implode( ' ', $classes ) : $classes;
+			if ( $next) {
+				if ( 'completion_page' == $button['id'] ) {
+					$title = __( 'Finish', 'cp' );
+				}
+				$format = '<button type="submit" name="type-%s" class="button %s" title="%s" data-url="%s">%s</button>';
+				$res = sprintf( $format,
+					$button['type'],
+					esc_attr( $classes ),
+					esc_attr( $link_title ),
+					esc_url( $button['url'] ),
+					$title
+				);
 			} else {
 				$res = sprintf(
-					'<div class="%5$s" data-course="%8$s" data-id="%1$s" data-type="%2$s" data-unit="%4$s" data-title="%6$s" data-url="%7$s"><a href="%7$s" title="%6$s">%3$s</a></div>',
+					'<button type="button" class="button %5$s" data-course="%8$s" data-id="%1$s" data-type="%2$s" data-unit="%4$s" data-title="%6$s" data-url="%7$s"><a href="%7$s" title="%6$s">%3$s</a></button>',
 					esc_attr( $button['id'] ),
 					esc_attr( $button['type'] ),
 					$title,
 					esc_attr( $button['unit'] ),
-					esc_attr( implode( ' ', $classes ) ),
+					esc_attr( $classes ),
 					esc_attr( $link_title ),
 					esc_url( $button['url'] ),
 					$button['course_id']
