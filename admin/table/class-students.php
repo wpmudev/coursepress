@@ -45,6 +45,7 @@ class CoursePress_Admin_Table_Students extends CoursePress_Admin_Table_Instructo
 	public function get_columns() {
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
+			'user_id' => __( 'ID', 'cp' ),
 			'student_name' => __( 'Name', 'cp' ),
 			'last_login' => __( 'Last Login', 'cp' ),
 			'courses' => __( 'Courses', 'cp' ),
@@ -75,6 +76,10 @@ class CoursePress_Admin_Table_Students extends CoursePress_Admin_Table_Instructo
 		} else {
 			$this->search_box( __( 'Search Students', 'cp' ), 'search' );
 		}
+	}
+
+	public function column_user_id( $user_id ) {
+		return $user_id;
 	}
 
 	public function column_courses( $user_id ) {

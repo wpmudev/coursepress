@@ -161,6 +161,12 @@ class CoursePress_Admin_Table_Courses extends WP_Posts_List_Table {
 	}
 
 	public function extra_tablenav( $which ) {
-		
+	}
+
+	protected function pagination( $which ) {
+		// Show pagination only at the bottom
+		if ( 'top' !== $which ) {
+			parent::pagination( $which );
+		}
 	}
 }
