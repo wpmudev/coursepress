@@ -230,7 +230,15 @@ class CoursePress_Data_Discussion {
 		// Unsubscribe message
 		add_action( 'the_content', array( __CLASS__, 'unsubscribe_from_discussion' ) );
 
-        add_filter( 'wp_list_comments_args', array( __CLASS__, 'wp_list_comments_args' ) );
+		/**
+		 * Modifi args for thread
+		 */
+		add_filter( 'wp_list_comments_args', array( __CLASS__, 'wp_list_comments_args' ) );
+
+		/**
+		 * Avoid comments on add new thread page
+		 */
+		add_filter( 'comments_template_query_args', array( __CLASS__, 'comments_template_query_args' ), 10, 2 );
 	}
 
 	public static function approved_discussion_comment( $is_approved, $commentdata ) {
@@ -673,7 +681,7 @@ class CoursePress_Data_Discussion {
 		/**
 		 * No post? return!
 		 */
-		if ( !is_object( $post ) ) {
+		if ( ! is_object( $post ) ) {
 			return $args;
 		}
 		/**
@@ -699,4 +707,20 @@ class CoursePress_Data_Discussion {
 		return $args;
 	}
 
+	/**
+	 * Disable comments on add new thread page.
+	 *
+	 * @since 2.0.0
+	 */
+	public static function comments_template_query_args( $comments_flat, $post_ID ) {
+		$discussion_name = get_query_var( 'discussion_name' );
+		if ( empty( $discussion_name ) ) {
+			return $comments_flat;
+		}
+		$add_new = CoursePress_Core::get_setting( 'slugs/discussions_new', 'add_new_discussion' );
+		if ( $add_new == $discussion_name ) {
+			$comments_flat['post_id'] = -1;
+		}
+		return $comments_flat;
+	}
 }
