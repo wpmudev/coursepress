@@ -53,15 +53,26 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 		<h2 style="text-align:center; color:#2396A0;"><?php echo $user_object->first_name . ' ' . $user_object->last_name; ?></h2>
 		<?php
 		foreach ( $course_units as $course_unit ) {
+			if ( is_object( $course_unit ) ) {
+				$unit_title = $course_unit->post_title;
+				$unit_id = $course_unit->ID;
+			} else {
+				if ( ! empty( $course_unit['post'] ) ) {
+					$unit_title = $course_unit['post']->post_title;
+					$unit_id = $course_unit['post']->ID;
+				} else {
+					break; // Don't bother printing
+				}
+			}
 			?>
 			<table cellspacing="0" cellpadding="5">
 				<tr>
-					<td colspan="4" style="background-color:#f5f5f5;"><?php echo $course_unit['post']->post_title; ?></td>
+					<td colspan="4" style="background-color:#f5f5f5;"><?php echo $unit_title; ?></td>
 				</tr>
 			</table>
 			<?php
 
-			$modules = Unit_Module::get_modules( $course_unit['post']->ID );
+			$modules = Unit_Module::get_modules( $unit_id );
 
 			$input_modules_count = 0;
 
