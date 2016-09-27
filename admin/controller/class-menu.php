@@ -140,7 +140,6 @@ class CoursePress_Admin_Controller_Menu {
 			// Print styles
 			$core_css = array(
 				'select2' => $css_url . 'external/select2.min.css',
-//				'admin-ui' => $css_url . 'admin-ui.css',
 			);
 
 			wp_enqueue_style( 'coursepress-admin-ui', $css_url . 'admin-ui.css', array(), $version );

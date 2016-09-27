@@ -59,6 +59,15 @@ class CoursePress_Admin_Table_Students extends CoursePress_Admin_Table_Instructo
 		return $columns;
 	}
 
+	public function get_bulk_actions() {
+		$actions = array();
+
+		// @todo: add sanity check
+		$actions['withdraw'] = __( 'Withdraw', 'cp' );
+
+		return $actions;
+	}
+
 	protected function pagination( $which ) {
 		// Show pagination only at the bottom
 		if ( 'top' !== $which ) {
