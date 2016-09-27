@@ -207,7 +207,7 @@ module.exports = function(grunt) {
 	// Define grunt tasks.
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
-
+		conf: conf,
 		// JS: Validate JS files (1).
 		jsvalidate: {
 			all: [
@@ -278,7 +278,7 @@ module.exports = function(grunt) {
 		uglify: {
 			all: {
 				files: [{
-					expand: false,
+					expand: true,
 					src: ['*.js', '!*.min.js'],
 					cwd: conf.js_folder,
 					dest: conf.js_folder,

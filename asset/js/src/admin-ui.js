@@ -95,6 +95,16 @@
 	};
 	CoursePress.ProgressIndicator = progressIndicator;
 
+	var reloadPageByCourse = function() {
+		var select = $(this),
+			course_id = select.val(),
+			url = window.location.toString()
+		;
+
+		url += '&course_id=' + course_id;
+		window.location = url;
+	};
+
 	// Hooked events
 	$(document)
 		.ready( function() {
@@ -103,7 +113,6 @@
 		})
 		.on( 'change', '.input-key', canSubmit )
 		.on( 'change', '.input-requiredby', enableInput )
-		.on( 'submit', '.has-disabled', formSubmission );
-
-
+		.on( 'submit', '.has-disabled', formSubmission )
+		.on( 'change', '.course-reload', reloadPageByCourse );
 }(jQuery);
