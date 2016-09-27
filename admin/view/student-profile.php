@@ -62,16 +62,16 @@ $time_format = get_option( 'time_format' );
 				$download_certificate = __( 'Not available', 'cp' );
 
 				if ( $completed ) {
-					$download_certificate = __( 'Download', 'cp' );
+					$certificate_link = CoursePress_Data_Certificate::get_encoded_url( $course->ID, $student_id );
+					$download_certificate = sprintf( '<a href="%s" class="button-primary">%s</a>', $certificate_link, __( 'Download', 'cp' ) );
 				}
 			?>
 			<tr>
 				<td>
 					<strong><?php echo $course->post_title; ?></strong>
-					<div class="row-actions">
+					<div class="row-actions cp-row-actions">
 						<a href="<?php echo esc_url( $course->permalink ); ?>" target="_blank"><?php esc_html_e( 'View Course', 'cp' ); ?></a> |
 						<a href="<?php echo $workbook_url; ?>"><?php esc_html_e( 'View Workbook', 'cp' ); ?></a> |
-						
 					</div>
 				</td>
 				<td><?php echo $date_enrolled; ?></td>
