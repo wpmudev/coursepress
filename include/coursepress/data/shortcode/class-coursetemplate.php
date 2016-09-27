@@ -841,7 +841,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 		$student_id = get_current_user_id();
 		$instructors = CoursePress_Data_Course::get_instructors( $course_id );
-		$is_instructor = in_array( $student_id, $instructors );
+		$is_instructor = is_array( $instructors ) && in_array( $student_id, $instructors );
 
 		$content = '';
 

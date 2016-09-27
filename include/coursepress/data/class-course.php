@@ -1540,7 +1540,10 @@ class CoursePress_Data_Course {
 		$instructors = CoursePress_Data_Course::get_instructors( $course_id );
 		$is_instructor = in_array( $student_id, $instructors );
 
-		$preview_modules = isset( $preview['structure'][ $unit_id ][ $page ] ) ? array_keys( $preview['structure'][ $unit_id ][ $page ] ) : array();
+		$preview_modules = array();
+		if ( isset( $preview['structure'][ $unit_id ][ $page ] ) && is_array( $preview['structure'][ $unit_id ][ $page ] ) ) {
+			$preview_modules = array_keys( $preview['structure'][ $unit_id ][ $page ] );
+		}
 		$can_preview_module = in_array( $module_id, $preview_modules ) || ( isset( $preview['structure'][ $unit_id ] ) && ! is_array( $preview['structure'][ $unit_id ] ) );
 
 		if ( ! $enrolled && ! $can_preview_module && ! $is_instructor ) {
