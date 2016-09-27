@@ -293,11 +293,13 @@ class CoursePress_Data_Discussion {
 	 **/
 	public static function redirect_back( $location, $comment ) {
 		$post_id = $comment->comment_post_ID;
-
+		$post_type = get_post_type( $post_id );
+		if ( $post_type == self::$post_type ) {
+			$post_id = get_post_meta( $post_id, 'course_id', true );
+		}
 		if ( self::is_comment_in_discussion( $post_id ) ) {
 			$location = CoursePress_Template_Discussion::discussion_url( $post_id );
 		}
-
 		return $location;
 	}
 
