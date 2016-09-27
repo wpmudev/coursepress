@@ -238,7 +238,7 @@ class CoursePress_Data_Discussion {
 		/**
 		 * Avoid comments on add new thread page
 		 */
-		add_filter( 'comments_template_query_args', array( __CLASS__, 'comments_template_query_args' ), 10, 2 );
+		add_filter( 'comments_template_query_args', array( __CLASS__, 'comments_template_query_args' ) );
 	}
 
 	public static function approved_discussion_comment( $is_approved, $commentdata ) {
@@ -712,15 +712,48 @@ class CoursePress_Data_Discussion {
 	 *
 	 * @since 2.0.0
 	 */
-	public static function comments_template_query_args( $comments_flat, $post_ID ) {
+	public static function comments_template_query_args( $args ) {
 		$discussion_name = get_query_var( 'discussion_name' );
 		if ( empty( $discussion_name ) ) {
-			return $comments_flat;
+			return $args;
 		}
 		$add_new = CoursePress_Core::get_setting( 'slugs/discussions_new', 'add_new_discussion' );
 		if ( $add_new == $discussion_name ) {
-			$comments_flat['post_id'] = -1;
+			$args['post_id'] = -1;
 		}
-		return $comments_flat;
+		global $post;
+		/**
+		 * No post? return!
+		 */
+		if ( ! is_object( $post ) ) {
+			return $args;
+		}
+		/**
+		 * Wrong post type? return!
+		 */
+		if ( 'course_discussion' != $post->post_type ) {
+			return $args;
+		}
+		/**
+		 * The number of items to show for each page of comments.
+		 */
+		$value = get_post_meta( $post->ID, 'comments_per_page', true );
+		if ( ! empty( $value ) ) {
+			$args['number'] = $value;
+		}
+		/**
+		 * (string) Order of results. Accepts 'ASC' or 'DESC'.
+		 */
+		$value = get_post_meta( $post->ID, 'comments_order', true );
+		if ( ! empty( $value ) && 'older' == $value ) {
+//			$args['number'] = 'DESC';
+		}
+		/**
+		 * Page (offset)
+		 */
+		$cpage = intval( get_query_var( 'cpage' ) );
+		$args['offset'] = $args['number'] * $cpage;
+		return $args;
 	}
+
 }
