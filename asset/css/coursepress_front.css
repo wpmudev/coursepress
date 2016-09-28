@@ -1157,3 +1157,18 @@ ul.notification-archive-list {
   height: 1em;
   font-size: 1em;
 }
+
+.post-type-archive-course .nav-links {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  width: 100%;
+  -ms-flex-pack: center;
+  justify-content: center;
+  margin-top: 2em;
+}
+.post-type-archive-course .nav-links a, .post-type-archive-course .nav-links span {
+  padding: 0 15px;
+  margin: 0 2px;
+}

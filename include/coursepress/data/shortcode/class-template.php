@@ -78,7 +78,7 @@ class CoursePress_Data_Shortcode_Template {
 
 		$a = shortcode_atts( array(
 			'category' => CoursePress_Helper_Utility::the_course_category(),
-			'posts_per_page' => 10,
+			'posts_per_page' => apply_filters( 'coursepress_courses_per_page', 10 ),
 			'show_pager' => true,
 			'echo' => false,
 			'courses_type' => 'any',
@@ -133,12 +133,16 @@ class CoursePress_Data_Shortcode_Template {
 		// Pager.
 		if ( $show_pager ) {
 			$big = 999999999; // need an unlikely integer.
-			$content .= paginate_links( array(
+			$args = array(
 				'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
 				'format' => '?paged=%#%',
 				'current' => $paged,
 				'total' => $query->max_num_pages,
-			) );
+			);
+			$pager = paginate_links( $args );
+			if ( $pager ) {
+				$content .= sprintf( '<div class="nav-links">%s</div>', $pager );
+			}
 		}
 
 		$content = apply_filters( 'coursepress_course_archive_content', $content, $a );
@@ -1071,12 +1075,6 @@ class CoursePress_Data_Shortcode_Template {
 			$login_url = $login_url . '?redirect_url=' . $_POST['redirect_url'];
 		}
 
-		// Set a cookie now to see if they are supported by the browser.
-		setcookie( TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN );
-		if ( SITECOOKIEPATH != COOKIEPATH ) {
-			setcookie( TEST_COOKIE, 'WP Cookie check', 0, SITECOOKIEPATH, COOKIE_DOMAIN );
-		};
-
 		$form_message = '';
 		$form_message_class = '';
 
@@ -1482,12 +1480,6 @@ class CoursePress_Data_Shortcode_Template {
 		$signup_url = CoursePress_Core::get_slug( 'signup', true );
 		$login_url = CoursePress_Core::get_slug( 'login', true );
 		$forgot_url = wp_lostpassword_url();
-
-		// Set a cookie now to see if they are supported by the browser.
-		setcookie( TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN );
-		if ( SITECOOKIEPATH != COOKIEPATH ) {
-			setcookie( TEST_COOKIE, 'WP Cookie check', 0, SITECOOKIEPATH, COOKIE_DOMAIN );
-		};
 
 		$content = '';
 		switch ( $page ) {
