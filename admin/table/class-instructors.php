@@ -18,6 +18,10 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 
 		// Set our custom columns
 		add_filter( 'manage_users_custom_column', array( $this, 'set_custom_columns' ), 10, 3 );
+
+		if ( ! empty( $_GET['course_id'] ) ) {
+			$this->course_id = (int) $_GET['course_id'];
+		}
 	}
 
 	public function prepare_items() {
