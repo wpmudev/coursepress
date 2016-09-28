@@ -744,9 +744,11 @@ class CoursePress_Data_Discussion {
 		/**
 		 * (string) Order of results. Accepts 'ASC' or 'DESC'.
 		 */
+		$args['order'] = 'ASC';
+		$args['orderby'] = 'comment_date';
 		$value = get_post_meta( $post->ID, 'comments_order', true );
 		if ( ! empty( $value ) && 'older' == $value ) {
-//			$args['number'] = 'DESC';
+			$args['order'] = 'DESC';
 		}
 		/**
 		 * Page (offset)
