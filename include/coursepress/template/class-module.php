@@ -318,6 +318,14 @@ class CoursePress_Template_Module {
 		return $content;
 	}
 
+	public static function render_text( $module, $attributes = false ) {
+		$content = self::render_module_head( $module, $attributes );
+		// Content
+		$content .= self::_wrap_content( $module->post_content );
+		$content .= '</div>'; // module_footer
+		return str_replace( array( "\n", "\r" ), '', $content );
+	}
+
 	public static function render_image( $module, $attributes = false ) {
 		$content = self::do_caption_media( $attributes );
 
