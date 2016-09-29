@@ -66,6 +66,10 @@ class CoursePress_Data_Shortcode_Template {
 				array( __CLASS__, 'course_signup' )
 			);
 		}
+		add_shortcode(
+			'course_categories',
+			array( __CLASS__, '_the_categories' )
+		);
 
 		add_shortcode(
 			'messaging_submenu',
@@ -249,6 +253,7 @@ class CoursePress_Data_Shortcode_Template {
 					[course_start label="" course_id="' . $course_id . '"]
 					[course_language label="" course_id="' . $course_id . '"]
 					[course_cost label="" course_id="' . $course_id . '"]
+					[course_categories course_id="' . $course_id . '"]
 				</div>' .
 					$button_text . $clickable_text . '
 			</div>
@@ -264,6 +269,47 @@ class CoursePress_Data_Shortcode_Template {
 		}
 
 		return $content;
+	}
+
+	public static function _the_categories( $atts ) {
+		$atts = shortcode_atts(
+			array(
+				'course_id' => CoursePress_Helper_Utility::the_course( true ),
+				'before' => '',
+				'after' => '',
+				'icon' => '<span class="dashicons dashicons-category"></span>'
+			),
+			$atts,
+			'course_categories'
+		);
+
+		$categories = self::the_categories( $atts['course_id'], $atts['before'], $atts['after'] );
+
+		if ( ! empty( $categories ) ) {
+			$format = '<div class="course-category course-category-%s">%s %s</div>';
+			$categories = sprintf( $format, $atts['course_id'], $atts['icon'], $categories );
+		}
+		return $categories;
+	}
+
+	public static function the_categories( $course_id, $before = '', $after = '' ) {
+		$taxonomy = CoursePress_Data_Course::get_post_category_name();
+		$terms = wp_get_object_terms( (int) $course_id, array( $taxonomy ) );
+
+		if ( ! empty( $terms ) ) {
+			$links = array();
+
+			foreach ( $terms as $term ) {
+				$link = get_term_link( $term->term_id, $taxonomy );
+				$links[] = sprintf( '<a href="%s">%s</a>', esc_url( $link ), $term->name );
+			}
+
+			$links = $before . implode( $after . $before, $links );
+
+			return $links;
+		}
+
+		return '';
 	}
 
 	public static function course_page( $a ) {
