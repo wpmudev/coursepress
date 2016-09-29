@@ -204,7 +204,7 @@ class CoursePress_Data_Shortcode_Template {
 		$clickable_label = sanitize_text_field( $a['clickable_label'] );
 		$echo = cp_is_true( $a['echo'] );
 		$clickable = cp_is_true( $a['clickable'] );
-		$url = CoursePress_Core::get_slug( 'courses/', true ) . get_post_field( 'post_name', $course_id );
+		$url = CoursePress_Data_Course::get_course_url( $course_id );
 
 		$course_image = CoursePress_Data_Course::get_setting( $course_id, 'listing_image' );
 		$has_thumbnail = ! empty( $course_image );
@@ -236,11 +236,13 @@ class CoursePress_Data_Shortcode_Template {
 		 * schema.org
 		 */
 		$schema = apply_filters( 'coursepress_schema', '', 'itemscope' );
+		$course_title = do_shortcode( sprintf( '[course_title course_id="%s"]', $course_id ) );
+		$course_title = sprintf( '<a href="%s" rel="bookmark">%s</a>', esc_url( $url ), $course_title );
 
 		$template = '<div class="course course_list_box_item course_' . $course_id . ' ' . $clickable_class . ' ' . $completion_class . ' ' . $thumbnail_class . '" ' . $clickable_link . ' ' . $schema .'>
 			[course_thumbnail course_id="' . $course_id . '"]
 			<div class="course-information">
-				[course_title course_id="' . $course_id . '"]
+				' . $course_title . '
 				[course_summary course_id="' . $course_id . '"]
 				[course_instructors style="list-flat" link="' . $instructor_link . '" course_id="' . $course_id . '"]
 				<div class="course-meta-information">
