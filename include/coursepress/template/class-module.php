@@ -174,20 +174,20 @@ class CoursePress_Template_Module {
 		$require_assessment = false;
 		$status = '';
 
-		if ( ! empty( $attributes['assessable'] ) ) {
-			if ( in_array( $module_type, $assessables ) ) {
+		if ( in_array( $module_type, $assessables ) ) {
+			if ( ! empty( $attributes['assessable'] ) ) {
 				$graded_by = CoursePress_Helper_Utility::get_array_val( $grades, 'graded_by' );
 
-				if ( 'auto' === $graded_by ) {
-					$grade = 0;
-					$require_assessment = true;
+				if ( 'auto' === $graded_by || empty( $grades ) ) {
+					$status = __( 'Pending', 'cp' );
 				}
+			} else {
+				$status = __( 'Non Gradable', 'cp' );
 			}
+		} else {
+			$pass = $grade >= $minimum_grade;
+			$status = $pass ? __( 'Pass', 'cp' ) : __( 'Fail', 'cp' );
 		}
-
-		$pass = $grade >= $minimum_grade;
-		$status = $pass ? __( 'Pass', 'cp' ) : __( 'Fail', 'cp' );
-		$status = $require_assessment ? __( 'Pending', 'cp' ) : $status;
 
 		return $status;
 	}
@@ -214,12 +214,11 @@ class CoursePress_Template_Module {
 			$content .= sprintf( '<input type="hidden" name="course_id" value="%s" />', $course_id );
 			$content .= sprintf( '<input type="hidden" name="unit_id" value="%s" />', $unit_id );
 			$content .= sprintf( '<input type="hidden" name="student_id" value="%s" />', $student_id );
-			$content .= sprintf( '<input type="hidden" name="module_id" value="%s" />', $module_id );
-
 			$content .= wp_nonce_field( 'coursepress_submit_modules', '_wpnonce', true, false );
 
 			$content .= sprintf( '<div class="cp-error">%s</div>', apply_filters( 'coursepress_before_unit_modules', '' ) );
 		}
+		$content .= sprintf( '<input type="hidden" name="module_id[]" value="%s" />', $module_id );
 
 		// Module header
 		$content .= self::render_module_head( $module, $attributes );

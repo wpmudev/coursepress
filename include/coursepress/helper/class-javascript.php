@@ -387,7 +387,7 @@ class CoursePress_Helper_JavaScript {
 
 		wp_enqueue_style( 'coursepress-front-css', $css_url . 'front.css', array( 'dashicons' ), $version );
 
-		//wp_enqueue_script( 'coursepress-front-js', $script_url . 'front.js', array( 'jquery', 'backbone', 'underscore' ), $version );
+		wp_enqueue_script( 'coursepress-front-js', $script_url . 'front.js', array( 'jquery', 'backbone', 'underscore' ), $version );
 
 		$localize_array = array(
 			'_ajax_url' => CoursePress_Helper_Utility::get_ajax_url(),

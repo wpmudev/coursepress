@@ -9,7 +9,6 @@
  * Template data to display a single course unit in front-end.
  */
 class CoursePress_Template_Unit {
-
 	/**
 	 * Render the complete contents of a single course unit.
 	 *
@@ -21,14 +20,28 @@ class CoursePress_Template_Unit {
 	 * @since  2.0.0
 	 * @return string HTML Content of the page.
 	 */
-	public static function unit_with_modules() {
-		$course = CoursePress_Helper_Utility::the_course();
-		$course_id = $course->ID;
-		$unit = CoursePress_Helper_Utility::the_post();
-		$unit_id = $unit->ID;
-		$page = (int) CoursePress_Helper_Utility::the_pagination();
+	public static function unit_with_modules( $course_id = 0, $unit_id = 0, $page = 0, $student_id = 0 ) {
+		if ( empty( $course_id ) ) {
+			$course = CoursePress_Helper_Utility::the_course();
+			$course_id = $course->ID;
+		} else {
+			$course = get_post( $course_id );
+		}
 
-		$student_id = get_current_user_id();
+		if ( empty( $unit_id ) ) {
+			$unit = CoursePress_Helper_Utility::the_post();
+			$unit_id = $unit->ID;
+		} else {
+			$unit = get_post( $unit_id );
+		}
+
+		if ( empty( $page ) ) {
+			$page = (int) CoursePress_Helper_Utility::the_pagination();
+		}
+		if ( empty( $student_id ) ) {
+			$student_id = get_current_user_id();
+		}
+
 		$is_instructor = false;
 		$student_progress = 0;
 		$enrolled = false;
