@@ -492,7 +492,6 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		if ( 1 > $per_page ) {
 			$per_page = 10;
 		}
-		$per_page = $this->get_items_per_page( 'coursepress_courses_per_page', $per_page );
 
 		/**
 		 * REQUIRED for pagination. Let's figure out what page the user is currently
