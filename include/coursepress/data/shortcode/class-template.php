@@ -66,6 +66,10 @@ class CoursePress_Data_Shortcode_Template {
 				array( __CLASS__, 'course_signup' )
 			);
 		}
+		add_shortcode(
+			'course_categories',
+			array( __CLASS__, '_the_categories' )
+		);
 
 		add_shortcode(
 			'messaging_submenu',
@@ -204,7 +208,7 @@ class CoursePress_Data_Shortcode_Template {
 		$clickable_label = sanitize_text_field( $a['clickable_label'] );
 		$echo = cp_is_true( $a['echo'] );
 		$clickable = cp_is_true( $a['clickable'] );
-		$url = CoursePress_Core::get_slug( 'courses/', true ) . get_post_field( 'post_name', $course_id );
+		$url = CoursePress_Data_Course::get_course_url( $course_id );
 
 		$course_image = CoursePress_Data_Course::get_setting( $course_id, 'listing_image' );
 		$has_thumbnail = ! empty( $course_image );
@@ -236,17 +240,20 @@ class CoursePress_Data_Shortcode_Template {
 		 * schema.org
 		 */
 		$schema = apply_filters( 'coursepress_schema', '', 'itemscope' );
+		$course_title = do_shortcode( sprintf( '[course_title course_id="%s"]', $course_id ) );
+		$course_title = sprintf( '<a href="%s" rel="bookmark">%s</a>', esc_url( $url ), $course_title );
 
 		$template = '<div class="course course_list_box_item course_' . $course_id . ' ' . $clickable_class . ' ' . $completion_class . ' ' . $thumbnail_class . '" ' . $clickable_link . ' ' . $schema .'>
 			[course_thumbnail course_id="' . $course_id . '"]
 			<div class="course-information">
-				[course_title course_id="' . $course_id . '"]
+				' . $course_title . '
 				[course_summary course_id="' . $course_id . '"]
 				[course_instructors style="list-flat" link="' . $instructor_link . '" course_id="' . $course_id . '"]
 				<div class="course-meta-information">
 					[course_start label="" course_id="' . $course_id . '"]
 					[course_language label="" course_id="' . $course_id . '"]
 					[course_cost label="" course_id="' . $course_id . '"]
+					[course_categories course_id="' . $course_id . '"]
 				</div>' .
 					$button_text . $clickable_text . '
 			</div>
@@ -262,6 +269,47 @@ class CoursePress_Data_Shortcode_Template {
 		}
 
 		return $content;
+	}
+
+	public static function _the_categories( $atts ) {
+		$atts = shortcode_atts(
+			array(
+				'course_id' => CoursePress_Helper_Utility::the_course( true ),
+				'before' => '',
+				'after' => '',
+				'icon' => '<span class="dashicons dashicons-category"></span>'
+			),
+			$atts,
+			'course_categories'
+		);
+
+		$categories = self::the_categories( $atts['course_id'], $atts['before'], $atts['after'] );
+
+		if ( ! empty( $categories ) ) {
+			$format = '<div class="course-category course-category-%s">%s %s</div>';
+			$categories = sprintf( $format, $atts['course_id'], $atts['icon'], $categories );
+		}
+		return $categories;
+	}
+
+	public static function the_categories( $course_id, $before = '', $after = '' ) {
+		$taxonomy = CoursePress_Data_Course::get_post_category_name();
+		$terms = wp_get_object_terms( (int) $course_id, array( $taxonomy ) );
+
+		if ( ! empty( $terms ) ) {
+			$links = array();
+
+			foreach ( $terms as $term ) {
+				$link = get_term_link( $term->term_id, $taxonomy );
+				$links[] = sprintf( '<a href="%s">%s</a>', esc_url( $link ), $term->name );
+			}
+
+			$links = $before . implode( $after . $before, $links );
+
+			return $links;
+		}
+
+		return '';
 	}
 
 	public static function course_page( $a ) {
