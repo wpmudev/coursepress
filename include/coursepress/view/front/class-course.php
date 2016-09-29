@@ -404,16 +404,19 @@ class CoursePress_View_Front_Course {
 	 * @see    self::parse_request()
 	 * @return string The HTML code.
 	 */
-	public static function render_course_main() {
+	public static function render_course_main( $course_id = 0 ) {
+		$content = '';
 		$theme_file = locate_template( array( 'single-course.php' ) );
-
 		if ( $theme_file ) {
 			self::$template = $theme_file;
-			$content = '';
+			if ( CoursePress_Data_Course::is_course( $course_id ) ) {
+				$content = get_post( $course_id );
+				$content = $content->post_content;
+				$content = apply_filters( 'the_content', $content );
+			}
 		} else {
 			$content = CoursePress_Template_Course::course();
 		}
-
 		return $content;
 	}
 
@@ -907,7 +910,7 @@ class CoursePress_View_Front_Course {
 				'show_title' => $show_title,
 				'content' => apply_filters(
 					'coursepress_view_course',
-					self::render_course_main(),
+					self::render_course_main( $cp->course_id ),
 					$cp->course_id,
 					'main'
 				),

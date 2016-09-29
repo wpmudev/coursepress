@@ -1158,7 +1158,7 @@ ul.notification-archive-list {
   font-size: 1em;
 }
 
-.post-type-archive-course .nav-links {
+.coursepress-page .nav-links {
   display: -ms-flexbox;
   display: flex;
   -ms-flex-wrap: nowrap;
@@ -1168,7 +1168,7 @@ ul.notification-archive-list {
   justify-content: center;
   margin-top: 2em;
 }
-.post-type-archive-course .nav-links a, .post-type-archive-course .nav-links span {
+.coursepress-page .nav-links a, .coursepress-page .nav-links span {
   padding: 0 15px;
   margin: 0 2px;
 }
