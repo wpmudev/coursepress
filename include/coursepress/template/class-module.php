@@ -165,7 +165,7 @@ class CoursePress_Template_Module {
 	public static function get_module_status( $module_id, $student_id ) {
 		$attributes = self::attributes( $module_id );
 		$module_type = $attributes['module_type'];
-		$assessables = array( 'input-text', 'input-textarea' );
+		$assessables = array( 'input-text', 'input-textarea', 'input-upload' );
 		$response = self::get_response( $module_id, $student_id, true );
 		$grades = CoursePress_Helper_Utility::get_array_val( $response, 'grades' );
 		$grades = array_pop( $grades );
@@ -175,10 +175,10 @@ class CoursePress_Template_Module {
 		$status = '';
 
 		if ( ! empty( $attributes['assessable'] ) ) {
-			if ( in_array( $module_type, $assessables ) || ! empty( $attributes['instructor_assessable'] ) ) {
+			if ( in_array( $module_type, $assessables ) ) {
 				$graded_by = CoursePress_Helper_Utility::get_array_val( $grades, 'graded_by' );
 
-				if ( 'auto' == $graded_by ) {
+				if ( 'auto' === $graded_by ) {
 					$grade = 0;
 					$require_assessment = true;
 				}
@@ -573,7 +573,7 @@ class CoursePress_Template_Module {
 			foreach ( $attributes['answers'] as $key => $answer ) {
 				$checked = ' ' . checked( 1, is_array( $response ) && in_array( $key, $response ), false );
 
-				$format = '<li class="%1$s %2$s"><label for="module-%3$s-%5$s">%4$s</label> <input type="checkbox" value="%5$s" name="module[%3$s][]" id="module-%3$s-%5$s" %6$s /></li>';
+				$format = '<li class="%1$s %2$s"><input type="checkbox" value="%5$s" name="module[%3$s][]" id="module-%3$s-%5$s" %6$s /> <label for="module-%3$s-%5$s">%4$s</label></li>';
 				$content .= sprintf( $format, $oddeven, $alt, $module->ID, esc_html__( $answer ), esc_attr( $key ), $disabled_attr . $checked );
 
 				$oddeven = 'odd' === $oddeven ? 'even' : 'odd';
@@ -600,7 +600,7 @@ class CoursePress_Template_Module {
 			foreach ( $attributes['answers'] as $key => $answer ) {
 				$checked = ' ' . checked( 1, $response == $key, false );
 
-				$format = '<li class="%1$s %2$s"><label for="module-%3$s-%5$s">%4$s</label> <input type="radio" value="%5$s" name="module[%3$s]" id="module-%3$s-%5$s" %6$s /></li>';
+				$format = '<li class="%1$s %2$s"><input type="radio" value="%5$s" name="module[%3$s]" id="module-%3$s-%5$s" %6$s /> <label for="module-%3$s-%5$s">%4$s</label> </li>';
 				$content .= sprintf( $format, $oddeven, $alt, $module->ID, esc_html__( $answer ), esc_attr( $key ), $disabled_attr . $checked );
 
 				$oddeven = 'odd' === $oddeven ? 'even' : 'odd';

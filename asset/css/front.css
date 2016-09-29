@@ -41,6 +41,12 @@
   margin-right: 5px;
   color: red;
 }
+.cp .cp-module-content {
+  position: relative;
+  display: block;
+  margin: 15px 0 25px 0;
+  clear: both;
+}
 .cp .module-header {
   margin: 15px 0;
 }
@@ -57,6 +63,12 @@
 }
 .cp .module-elements {
   margin: 15px 0;
+}
+.cp .module-elements select {
+  width: 100%;
+}
+.cp .module-elements select option {
+  padding: 4px 12px;
 }
 .cp .module-response {
   margin-bottom: 20px;

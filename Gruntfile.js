@@ -52,8 +52,8 @@ module.exports = function(grunt) {
 			'{css}coursepress_front.css': '{css}src/coursepress_front.scss',
 			'{css}bbm.modal.css':         '{css}src/bbm.modal.scss',
 			'{css}editor.css':            '{css}src/editor.scss',
-			'{css}admin-ui.css':           '{css}/admin/admin-ui.scss',
-			'{css}front.css':			   '{css}src/front.scss'
+			'{css}admin-ui.css':           '{css}src/admin/admin-ui.scss',
+			'{css}front.css':				'{css}src/front.scss'
 		},
 
 		// PHP files to validate.
@@ -211,7 +211,7 @@ module.exports = function(grunt) {
 	// Define grunt tasks.
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
-
+		conf: conf,
 		// JS: Validate JS files (1).
 		jsvalidate: {
 			all: [
@@ -282,7 +282,7 @@ module.exports = function(grunt) {
 		uglify: {
 			all: {
 				files: [{
-					expand: false,
+					expand: true,
 					src: ['*.js', '!*.min.js'],
 					cwd: conf.js_folder,
 					dest: conf.js_folder,

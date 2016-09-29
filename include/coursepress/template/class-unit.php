@@ -48,6 +48,7 @@ class CoursePress_Template_Unit {
 
 		$preview = CoursePress_Data_Course::previewability( $course_id );
 		$can_update_course = CoursePress_Data_Capabilities::can_update_course( $course_id );
+		$course_url = CoursePress_Data_Course::get_course_url( $course_id );
 
 		if ( ! isset( $preview['has_previews'] ) ) {
 			$can_preview_page = false;
@@ -141,7 +142,9 @@ class CoursePress_Template_Unit {
 			array( 'page' => $page )
 		);
 
-		$content .= do_action( 'coursepress_before_unit_modules' );
+		$before_html = apply_filters( 'coursepress_before_unit_modules', '' );
+
+		$content .= sprintf( '<div class="cp-error">%s</div>', $before_html );
 		$content .= '<div class="cp unit-wrapper unit-' . $unit->ID . ' course-' . $course_id . '">';
 
 		// Page Title.
@@ -178,6 +181,8 @@ class CoursePress_Template_Unit {
 		$module_template = wp_nonce_field( 'coursepress_submit_modules', '_wpnonce', true, false );
 		$module_template .= sprintf( '<input type="hidden" name="course_id" value="%s" />', $course_id );
 		$module_template .= sprintf( '<input type="hidden" name="unit_id" value="%s" />', $unit_id );
+		$module_template .= sprintf( '<input type="hidden" name="student_id" value="%s" />', get_current_user_id() );
+
 		foreach ( $modules as $module ) {
 			$preview_modules = array();
 			$can_preview_module = false;
@@ -324,6 +329,10 @@ class CoursePress_Template_Unit {
 			$unit_url = CoursePress_Data_Unit::get_unit_url( $next_unit );
 			$format = '<button type="submit" name="next_unit" value="%1$s" class="next-button unit unit-%1$s">%2$s</button>';
 			$unit_pager .= sprintf( $format, $next_unit, __( 'Next Unit', 'cp' ) );
+		}
+
+		if ( false === $has_submit_button ) {
+			$unit_pager .= sprintf( '<button type="submit" name="finish" class="next-button">%s</button>', __( 'Submit', 'cp' ) );
 		}
 
 		$unit_pager .= '</div>'; // .pager

@@ -1725,4 +1725,16 @@ class CoursePress_Data_Capabilities {
 
 		return 'facilitator' === $is_facilitator;
 	}
+
+	public static function course_capabilities() {
+		global $wp_post_types;
+
+		$post_type = CoursePress_Data_Course::get_post_type_name();
+
+		if ( isset( $wp_post_types[ $post_type ] ) ) {
+			$caps = $wp_post_types['post']->cap;
+
+			$wp_post_types[ $post_type ]->cap = $caps;
+		}
+	}
 }

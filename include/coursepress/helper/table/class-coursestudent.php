@@ -326,7 +326,7 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 				if ( $add_form_to_add_student ) {
 					$name = 'student-add';
 					$id = 'student-add';
-					if ( apply_filters( 'coursepress_use_default_student_selector', true ) ) {
+					if ( apply_filters( 'coursepress_use_default_student_selector', false ) ) {
 						$user_selector = CoursePress_Helper_UI::get_user_dropdown(
 							$id,
 							$name,
@@ -337,8 +337,8 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 								'context' => 'students',
 							)
 						);
-					} else if ( apply_filters( 'coursepress_use_select2_student_selector', false ) ) {
-						$nonce_search = CoursePress_View_Admin_Student::get_search_nonce_name( $course_id );
+					} else if ( apply_filters( 'coursepress_use_select2_student_selector', true ) ) {
+						$nonce_search = CoursePress_Admin_Students::get_search_nonce_name( $course_id );
 						$nonce_search = wp_create_nonce( $nonce_search );
 						$user_selector = sprintf(
 							'<select name="%s" id="%s" data-nonce="%s" data-nonce-search="%s"></select>',

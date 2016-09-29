@@ -14,6 +14,12 @@
 			}
 		}
 	}
+	.cp-module-content {
+		position: relative;
+		display: block;
+		margin: 15px 0 25px 0;
+		clear: both;
+	}
 	.module-header {
 		margin: 15px 0;
 		.is-mandatory {
@@ -30,6 +36,12 @@
 	}
 	.module-elements {
 		margin: 15px 0;
+		select {
+			width: 100%;
+			option {
+				padding: 4px 12px;
+			}
+		}
 	}
 	.module-response {
 		margin-bottom: 20px;

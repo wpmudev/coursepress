@@ -659,6 +659,7 @@ class CoursePress_Data_Unit {
 	 * Generate the unit url
 	 *
 	 * @param (int) $unit_id
+	 * @return Returns unit url structure.
 	 **/
 	public static function get_unit_url( $unit_id = 0 ) {
 		if ( ! empty( $unit_id ) ) {

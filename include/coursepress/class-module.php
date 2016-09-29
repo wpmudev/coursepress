@@ -182,8 +182,15 @@ class CoursePress_Module {
 				$required = ! empty( $attributes['mandatory'] );
 
 				if ( true === $required ) {
-					if ( ! empty( $response ) && empty( $filename ) ) {
-						continue;
+					if ( empty( $filename ) ) {
+						if ( empty( $response ) ) {
+							self::$error_message = __( 'You need to complete the required module!', 'cp' );
+							$has_error = true;
+							continue;
+						} else {
+							// There's an old submission, exclude!
+							continue;
+						}
 					}
 				} else {
 					// If it is not required and no submission, break
@@ -205,7 +212,6 @@ class CoursePress_Module {
 				if ( ! empty( $response['error'] ) ) {
 					$has_error = true;
 					self::$error_message = $response['error'];
-					add_action( 'coursepress_before_unit_modules', array( __CLASS__, 'show_error_message' ) );
 				} else {
 					CoursePress_Data_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $response );
 				}
@@ -250,6 +256,24 @@ class CoursePress_Module {
 		} else {
 			if ( $has_error ) {
 				add_filter( 'coursepress_before_unit_modules', array( __CLASS__, 'show_error_message' ) );
+			} else {
+				$wp_referer = $_REQUEST['_wp_http_referer'];
+
+				if ( ! empty( $input['next_page'] ) ) {
+					$url_path = CoursePress_Data_Unit::get_unit_url( $unit_id );
+					$url_path .= trailingslashit( 'page' ) . $input['next_page'];
+					$wp_referer = $url_path;
+				} elseif ( ! empty( $input['next_unit'] ) ) {
+					$url_path = CoursePress_Data_Unit::get_unit_url( $input['next_unit'] );
+					$wp_referer = $url_path;
+				} elseif ( ! empty( $input['finish'] ) ) {
+					$course_url = CoursePress_Data_Course::get_course_url( $course_id );
+					$course_url .= trailingslashit( CoursePress_Core::get_slug( 'completion' ) );
+
+					$wp_referer = $course_url;
+				}
+
+				wp_save_redirect( $wp_referer ); exit;
 			}
 		}
 	}

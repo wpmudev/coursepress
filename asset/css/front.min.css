@@ -2,4 +2,8 @@
  * 
  * Copyright (c) 2016; * Licensed GPLv2+ */
 
+<<<<<<< HEAD
 .cp .hide{display:none}.cp ul{list-style-type:none;margin:0;padding:0}.cp .cp-download{text-decoration:none}.cp .button,.cp a.button{padding:5px 12px;text-decoration:none;border:1px solid rgba(0,0,0,.02);cursor:pointer}.cp .button:hover,.cp a.button:hover{text-decoration:none}.cp .module-header{margin:15px 0}.cp .module-header .is-mandatory{float:right;font-size:.8em;text-transform:uppercase}.cp .module-header .is-mandatory:before{content:'*';display:inline-block;vertical-align:middle;padding:2px 4px}.cp .module-elements{margin:15px 0}.cp .module-response{border:1px solid rgba(0,0,0,.05)}.cp .module-response .cp-student-status{display:block;text-align:right}.cp .module-response .cp-student-status .button-reload-module,.cp .module-response .cp-student-status .cp-status{padding:4px 10px;font-size:.9em}.cp .module-response .cp-answers .chosen-answer{display:inline-block;vertical-align:middle;width:30px}.cp .module-response .cp-answers .chosen-answer:before{content:"\f335";font-family:Dashicons;text-align:center}.cp .module-response .cp-answers .chosen-answer.correct:before{content:"\f147"}
+=======
+.cp .hide{display:none}.cp ul{list-style-type:none;margin:0;padding:0}.cp .cp-download{text-decoration:none}.cp .module-elements{border:1px solid red;margin:15px 0}.cp .module-response{border:1px solid green}
+>>>>>>> coursepress/2.0-dev
