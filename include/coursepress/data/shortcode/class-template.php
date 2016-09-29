@@ -730,7 +730,7 @@ class CoursePress_Data_Shortcode_Template {
 				);
 
 				// Next Navigation
-				if ( 'section' == $next['type'] ) {
+				if ( isset( $next['type'] ) && 'section' == $next['type'] ) {
 					$next_module_class[] = 'next-section';
 					$title = '';
 					$text = $next_section_text;
