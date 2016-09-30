@@ -6,9 +6,14 @@
  * @subpackage CoursePress
  **/
 class CoursePress_Hooks {
+	static $warning_message = '';
+
 	public static function init() {
 		// Listen to module submission
 		add_action( 'init', array( 'CoursePress_Module', 'process_submission' ), 1 );
+
+		// Listen to enrollment request
+		add_action( 'init', array( 'CoursePress_Template_Student', 'process_enrollment' ) );
 
 		// Hook to admin ajax request
 		add_action( 'wp_ajax_coursepress_request', array( __CLASS__, 'process_request' ) );

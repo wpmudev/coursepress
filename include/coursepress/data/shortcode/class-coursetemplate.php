@@ -108,7 +108,8 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 		// Don't show the button to administrators/instructor
 		if ( $can_update_course ) {
-			return '';
+
+			//return '';
 		}
 
 		$now = CoursePress_Data_Course::time_now();
@@ -230,7 +231,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 						'class' => 'apply-button apply-button-enrolled apply-button-first-time ' . $class,
 						'data-link' => esc_url( trailingslashit( get_permalink( $course_id ) ) . trailingslashit( CoursePress_Core::get_setting( 'slugs/units', 'units' ) ) ),
 					),
-					'type' => 'button',
+					'type' => 'link',
 				),
 				'continue' => array(
 					'label' => ! $is_instructor ? sanitize_text_field( $continue_learning_text ) : sanitize_text_field( $instructor_text ),
@@ -238,7 +239,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 						'class' => 'apply-button apply-button-enrolled ' . $class,
 						'data-link' => esc_url( trailingslashit( get_permalink( $course_id ) ) . trailingslashit( CoursePress_Core::get_setting( 'slugs/units', 'units' ) ) ),
 					),
-					'type' => 'button',
+					'type' => 'link',
 				),
 			),
 			$course_id
@@ -414,6 +415,11 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 				case 'button':
 					$button = '<button ' . $button_attributes . '>' . esc_html( $buttons[ $button_option ]['label'] ) . '</button>';
+					break;
+				case 'link':
+					$url = $buttons[ $button_option ]['attr']['data-link'];
+					$format = '<a href="%s" %s>%s</a>';
+					$button = sprintf( $format, $url, $button_attributes, $buttons[ $button_option ]['label'] );
 					break;
 			}
 

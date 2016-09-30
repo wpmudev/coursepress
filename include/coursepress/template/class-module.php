@@ -689,7 +689,7 @@ class CoursePress_Template_Module {
 
 		if ( ! empty( $attributes['questions'] ) ) {
 			$response = self::get_response( $module->ID, get_current_user_id() );
-
+$content .= print_r( $response, true );
 			foreach ( $attributes['questions'] as $qi => $question ) {
 				$questions = '<ul style="list-style: none;">';
 

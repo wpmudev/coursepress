@@ -61,6 +61,10 @@ CoursePress.resetBrowserURL = function( url ) {
 			timer = false
 		;
 
+		if ( 0 === error_box.length ) {
+			error_box = $( '<div class="cp-error">' ).prependTo( form );
+		}
+
 		// Insert ajax marker
 		form.append( '<input type="hidden" name="is_cp_ajax" value="1" />' );
 
@@ -96,7 +100,6 @@ CoursePress.resetBrowserURL = function( url ) {
 					} else {
 						// Print error message
 						error_box.empty().append( data.data.error_message );
-						focus_box.html( data.data.html );
 					}
 				}
 			}, 100 );

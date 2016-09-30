@@ -33,6 +33,10 @@
 			timer = false
 		;
 
+		if ( 0 === error_box.length ) {
+			error_box = $( '<div class="cp-error">' ).prependTo( form );
+		}
+
 		// Insert ajax marker
 		form.append( '<input type="hidden" name="is_cp_ajax" value="1" />' );
 
