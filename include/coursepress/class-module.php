@@ -126,6 +126,10 @@ class CoursePress_Module {
 					$is_answerable = preg_match( '%input-%', $module_type );
 
 					if ( 'input-upload' == $module_type ) {
+						if ( empty( $_FILES ) ) {
+							self::$error_message = __( 'You need to complete the required module!', 'cp' );
+							$has_error = true;
+						}
 						continue; // Upload validation is at the bottom
 					}
 
@@ -133,7 +137,7 @@ class CoursePress_Module {
 						if ( '' === ( $module[ $module_id ] ) ) {
 							// Check if module is mandatory
 							if ( $is_mandatory ) {
-								self::$error_message .= $module_type . __( 'You need to complete the required module!', 'cp' );
+								self::$error_message = __( 'You need to complete the required module!', 'cp' );
 								$has_error = true;
 							}
 							continue;

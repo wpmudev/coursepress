@@ -801,7 +801,7 @@ class CoursePress_Data_Shortcode_Template {
 				$content .= '</div>'; // .focus-nav
 				$content .= '</div>'; // .focus-wrapper
 
-				$template = sprintf( '<form method="post" enctype="multipart/-form-data" class="cp cp-form">%s</form>', $content );
+				$template = sprintf( '<form method="post" enctype="multipart/form-data" class="cp cp-form">%s</form>', $content );
 				$template = apply_filters( 'coursepress_focus_mode_module_template', $template, $content, $item_id );
 
 				break;

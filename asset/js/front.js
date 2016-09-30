@@ -96,6 +96,7 @@ CoursePress.resetBrowserURL = function( url ) {
 					} else {
 						// Print error message
 						error_box.empty().append( data.data.error_message );
+						focus_box.html( data.data.html );
 					}
 				}
 			}, 100 );
