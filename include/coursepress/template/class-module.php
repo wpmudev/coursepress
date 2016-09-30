@@ -397,8 +397,8 @@ class CoursePress_Template_Module {
 
 		if ( 'image' === $type ) {
 			if ( $show_caption ) {
-				$html .= '<div class="image_holder">';
-				$img = '<img src="' . esc_url( $url ) . '" alt="' . esc_attr( $alt_text ) . '" />';
+				$html .= '<div class="image_holder caption">';
+				$img = '<img src="' . esc_url( $url ) . '" alt="' . esc_attr( $alt_text ) . '" caption="1" />';
 				$html .= do_shortcode( '[caption width="' . $media_width . '"' . $attachment_id . ']' . $img . ' ' . $the_caption . '[/caption]' );
 				$html .= '</div>';
 			} else {
@@ -432,7 +432,7 @@ class CoursePress_Template_Module {
 			}
 
 			if ( $show_caption ) {
-				$html .= '<div class="video_holder">';
+				$html .= '<div class="video_holder caption">';
 				$html .= '<figure ' . $attachment_id . ' class="wp-caption" style="width: ' . $media_width . 'px;">';
 				$html .= '<div class="video_player">';
 				$html .= $video;
