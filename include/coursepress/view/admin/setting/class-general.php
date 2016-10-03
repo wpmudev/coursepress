@@ -543,13 +543,12 @@ class CoursePress_View_Admin_Setting_General {
 <!-- Default course Enrollment Restrictions -->
 							<tr valign="top" class="break">
 								<th scope="row">' . esc_html__( 'Enrollment Restrictions', 'cp' ) . '</th>
-								<td><p class="description">';
-		$content .= __('Select the default limitations on accessing and enrolling in this course.', 'cp' );
-		$content .= '</p>';
+								<td>';
 		$enrollment_types = CoursePress_Data_Course::get_enrollment_types_array( $course_id );
 		$enrollment_type_default = CoursePress_Data_Course::get_enrollment_type_default();
 		$selected = CoursePress_Core::get_setting( 'course/enrollment_type_default', $enrollment_type_default );
 		$content .= CoursePress_Helper_UI::select( 'coursepress_settings[course][enrollment_type_default]', $enrollment_types, $selected, 'chosen-select medium' );
+		$content .= sprintf( '<p class="description">%s</p>', __('Select the default limitations on accessing and enrolling in this course.', 'cp' ) );
 		$content .= '
 								</td>
 							</tr>
