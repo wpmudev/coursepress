@@ -4,6 +4,7 @@
 var CoursePress = {};
 CoursePress.Events = _.extend( {}, Backbone.Events );
 
+(function( $ ) {
 CoursePress.SendRequest = Backbone.Model.extend( {
 	url: _coursepress._ajax_url + '?action=coursepress_request',
 	parse: function( response ) {
@@ -27,6 +28,38 @@ CoursePress.resetBrowserURL = function( url ) {
 		window.history.pushState( {}, null, url );
 	}
 };
+
+/** Error Box **/
+CoursePress.showError = function( error_message, container ) {
+	var error_box = $( '<div class="cp-error-box"></div>' ),
+		error = $( '<p>' ),
+		closed = $( '<a class="cp-closed">&times;</a>' ),
+		removeError
+	;
+
+	removeError = function() {
+		error_box.remove();
+	};
+
+	error.html( error_message ).appendTo( error_box );
+	closed.prependTo( error_box ).on( 'click', removeError );
+
+	container.prepend( error_box );
+};
+
+/** Focus to the element **/
+CoursePress.Focus = function( selector ) {
+	var el = $( selector ), top;
+
+	if ( 0 < el.length ) {
+		top = el.offset().top;
+		$(window).scrollTop( top );
+	}
+
+	return false;
+};
+
+})(jQuery);
 (function( $ ) {
 	CoursePress.LoadFocusModule = function() {
 		var nav = $(this),
@@ -119,9 +152,148 @@ CoursePress.resetBrowserURL = function( url ) {
 		return false;
 	};
 
+	// Recreate comment-reply js
+	CoursePress.commentReplyLink = function() {
+		var link = $(this),
+			datacom = link.parents( '[data-comid]' ).first(),
+			com_id = datacom.data( 'comid' ),
+			module_content = link.parents( '.cp-module-content' ).first(),
+			form = $( '#respond', module_content ),
+			comment_div = $( '#comment-' + com_id ),
+			comment_parent = $( '[name="comment_parent"]', form ),
+			tempDiv = $( '.cp-temp-div' ),
+			cancel_link = form.find( '#cancel-comment-reply-link' )
+		;
+
+		// Add marker to the original form position
+		if ( 0 === tempDiv.length ) {
+			tempDiv = $( '<div class="cp-temp-div">HERE</div>' ).insertAfter( form );
+		}
+
+		comment_parent.val( com_id );
+		comment_div.append( form );
+
+		cancel_link.show().on( 'click', function() {
+			form.insertBefore( tempDiv );
+			cancel_link.hide();
+			tempDiv.remove();
+
+			return false;
+		});
+
+		// Focus to the form
+		CoursePress.Focus( form );
+
+		return false;
+	};
+
+	CoursePress.addComment = function(ev) {
+		var button = $(this),
+			module_content = button.parents( '.cp-module-content' ).first(),
+			form = $( '#respond', module_content ),
+			cp_form = $( '.cp-comment-form', module_content ),
+			comment = $( '[name="comment"]', form ),
+			comment_parent = $( '[name="comment_parent"]', form ),
+			comment_post_ID = $( '[name="comment_post_ID"]', form ),
+			subscribe = $( '[name="coursepress_subscribe"]', form ),
+			student_id = $( '[name="student_id"]', module_content ),
+			course_id = $( '[name="course_id"]', module_content ),
+			unit_id = $( '[name="module_content"]', module_content ),
+			cp_error = $( '.cp-error-box', form ),
+			comment_list = $( '.comment-list', module_content ),
+			params = {},
+			is_reply = 0 < parseInt( comment_parent.val() ),
+			request = new CoursePress.SendRequest(),
+			restore_form
+		;
+
+		// Remove previous error box
+		cp_error.remove();
+
+		if ( '' === comment.val() ) {
+			// Alert the user
+			CoursePress.showError( _coursepress.comments.require_valid_comment, form );
+
+			// Prevent the form from submitting
+			ev.stopImmediatePropagation();
+			return false;
+		}
+
+		params = {
+			comment: comment.val(),
+			comment_parent: comment_parent.val(),
+			comment_post_ID: comment_post_ID.val(),
+			subscribe: subscribe.val(),
+			cpnonce: _coursepress.cpnonce,
+			method: 'add_single_comment',
+			className: 'CoursePress_Module',
+			course_id: course_id,
+			unit_id: unit_id,
+			student_id: student_id,
+			action: 'add_single_comment'
+		};
+
+		restore_form = function() {
+			var cancel_link = form.find( '#cancel-comment-reply-link' );
+
+			comment.val( '' );
+			comment_parent.val( '' );
+
+			if ( cancel_link.is( ':visible' ) ) {
+				cancel_link.trigger( 'click' );
+			}
+		};
+
+		request.set( params );
+		request.off( 'coursepress:add_single_comment_success' );
+		request.on( 'coursepress:add_single_comment_success', function( data ) {
+			// Restore the form to it's orig position
+			restore_form();
+
+			if ( 0 < comment_list ) {
+				comment_list = $( '<ol class="comment-list"></ol>' ).insertAfter( form );
+			}
+
+			var current_parent = comment_list,
+				insert_type = cp_form.is( '.comment-form-desc' ) ? 'append' : 'prepend',
+				child_list;
+
+			if ( true === is_reply ) {
+				current_parent = $( '#comment-' + params.comment_parent );
+				child_list = current_parent.find( '.children' );
+
+				if ( 0 < child_list.length ) {
+					// Create a new .children ul
+					current_parent[ insert_type ]( '<ul class="children"></ul>' );
+					child_list = current_parent.find( '.children' );
+				} else {
+					child_list = 'append' === insert_type ? child_list.first() : child_list.last();
+				}
+				child_list[ insert_type ]( data.html );
+			} else {
+				current_parent[ insert_type ]( data.html );
+			}
+
+			// Focus to the last inserted comment
+			CoursePress.Focus( '#comment-' + data.comment_id );
+		} );
+		request.on( 'coursepress:add_single_comment_error', function() {
+			window.alert('error');
+		});
+		request.save();
+		//request.save(null, {error:function() { window.alert('error') } } );
+
+		// Prevent the form from submitting
+		ev.stopImmediatePropagation();
+
+		return false;
+	};
+
 	$( document )
 		.on( 'submit', '.cp-form', CoursePress.ModuleSubmit )
 		.on( 'click', '.focus-nav-prev, .focus-nav-next', CoursePress.LoadFocusModule )
-		.on( 'click', '.button-reload-module', CoursePress.toggleModuleState );
+		.on( 'click', '.button-reload-module', CoursePress.toggleModuleState )
+		.on( 'click', '.cp-module-content .comment-reply-link', CoursePress.commentReplyLink )
+		.on( 'click', '.cp-comment-submit', CoursePress.addComment );
 
 })(jQuery);

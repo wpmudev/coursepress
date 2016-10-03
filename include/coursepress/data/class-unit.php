@@ -666,7 +666,8 @@ class CoursePress_Data_Unit {
 			$course_id = get_post_field( 'post_parent', $unit_id );
 			$course_url = CoursePress_Data_Course::get_course_url( $course_id );
 			$unit_url = CoursePress_Core::get_slug( 'unit/' );
-			$unit_slug = get_post_field( 'post_name', $unit_id );
+			$unit = get_post( $unit_id );
+			$unit_slug = $unit->post_name;
 
 			return $course_url . $unit_url . trailingslashit( $unit_slug );
 		}

@@ -553,8 +553,111 @@ class CoursePress_Template_Module {
 		return '<hr />';
 	}
 
-	public static function render_discussion( $module, $attributes = false ) {
+	private static function comment_form( $post_id ) {
+		ob_start();
 
+		$form_class = array(  'comment-form', 'cp-comment-form' );
+		$comment_order = get_option( 'comment_order' );
+		$form_class[] = 'comment-form-' . $comment_order;
+
+		$args = array(
+			'class_form' => implode( ' ', $form_class ),
+			'title_reply' => __( 'Post Here', 'cp' ),
+			'label_submit' => __( 'Post', 'cp' ),
+			'must_log_in' => '',
+			'logged_in_as' => '',
+			'action' => '',
+			'class_submit' => 'submit cp-comment-submit',
+			'comment_field' => '<p class="comment-form-comment"><label for="comment">' . _x( 'Comment', 'noun' ) . '</label> <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525"></textarea></p>',
+		);
+
+		add_filter( 'comment_form_submit_button', array( 'CoursePress_Template_Discussion', 'add_subscribe_button' ) );
+
+		comment_form( $args, $post_id );
+		$comment_form = ob_get_clean();
+
+		$comment_form = str_replace(
+			array(
+				'<form',
+				'</form>'
+			),
+			array(
+				'<div',
+				'</div>'
+			),
+			$comment_form
+		);
+
+		remove_filter( 'comment_form_submit_button', array( 'CoursePress_Template_Discussion', 'add_subscribe_button' ) );
+
+		return $comment_form;
+	}
+
+	public static function comment_list( $module_id ) {
+		ob_start();
+
+		$comments = get_comments(
+			array(
+				'post_id' => $module_id,
+			)
+		);
+
+		?>
+		<ol class="comment-list">
+			<?php
+				wp_list_comments( array(
+					'style'       => 'ol',
+					'short_ping'  => true,
+					'avatar_size' => 42,
+				), $comments );
+			?>
+		</ol><!-- .comment-list -->
+
+		<?php
+		$comment_list = ob_get_clean();
+
+		return $comment_list;
+	}
+
+	public static function discussion_url( $post_id ) {
+		$unit_id = get_post_field( 'post_parent', $post_id );
+		$unit_url = CoursePress_Data_Unit::get_unit_url( $unit_id );
+		$page_number = get_post_meta( $post_id, 'page_number', true );
+		$page_number = max( $page_number, 1 );
+
+		$url = sprintf( '%spage/%s/module_id/%s', $unit_url, $page_number, $post_id );
+
+		return $url;
+	}
+
+	public static function comment_reply_link( $link, $args, $comment, $post ) {
+		$discussion_link = self::discussion_url( $post->ID );
+		$discussion_link = add_query_arg( 'replytocom', $comment->comment_ID, $discussion_link );
+		$discussion_link .= '#respond';
+		$link = preg_replace( '%href=([\'"])(.*?)([\'"])%', 'href=$1' . $discussion_link . '$3', $link );
+		$link = sprintf( '<span data-comid="%s" data-parentid="%s">%s</span>', $comment->comment_ID, $post->ID, $link );
+
+		return $link;
+	}
+
+	public static function render_discussion( $module, $attributes = false ) {
+		global $post;
+
+		$post = $module;
+		// Add comment filters
+		add_filter( 'comments_open', '__return_true' );
+		add_filter( 'comment_reply_link', array( __CLASS__, 'comment_reply_link' ), 10, 4 );
+		setup_postdata( $module );
+
+		$content = self::comment_form( $module->ID );
+		$content .= self::comment_list( $module->ID );
+
+		// Remove comment filters, etc
+		wp_reset_postdata();
+		remove_filter( 'comments_open', '__return_true' );
+		remove_filter( 'comment_reply_link', array( __CLASS__, 'comment_reply_link' ), 10, 4 );
+
+		return $content;
 	}
 
 	public static function render_input_checkbox( $module, $attributes = false, $student_progress = false, $disabled = false ) {
@@ -689,7 +792,7 @@ class CoursePress_Template_Module {
 
 		if ( ! empty( $attributes['questions'] ) ) {
 			$response = self::get_response( $module->ID, get_current_user_id() );
-$content .= print_r( $response, true );
+
 			foreach ( $attributes['questions'] as $qi => $question ) {
 				$questions = '<ul style="list-style: none;">';
 
@@ -706,7 +809,6 @@ $content .= print_r( $response, true );
 					$checked = ' ';
 					if ( is_array( $response ) && ! empty( $response[ $qi ] ) ) {
 						$checked .= checked( 1, ! empty( $response[ $qi ][ $ai ] ), false );
-						
 					}
 
 					$format = '<li><label for="%1$s">%2$s</label> <input type="%3$s" id="%1$s" name="%4$s" value="%5$s" %6$s/></li>';

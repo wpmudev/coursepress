@@ -19,6 +19,17 @@
 		display: block;
 		margin: 15px 0 25px 0;
 		clear: both;
+
+		.comment-reply-title {
+			margin-bottom: 0;
+		}
+		.comment-notification {
+			display: inline-block;
+			margin-left: 20px;
+		}
+		.comment-list {
+			margin: 25px 0;
+		}
 	}
 	.module-header {
 		margin: 15px 0;

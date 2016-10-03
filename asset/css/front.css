@@ -44,6 +44,16 @@
   margin: 15px 0 25px 0;
   clear: both;
 }
+.cp .cp-module-content .comment-reply-title {
+  margin-bottom: 0;
+}
+.cp .cp-module-content .comment-notification {
+  display: inline-block;
+  margin-left: 20px;
+}
+.cp .cp-module-content .comment-list {
+  margin: 25px 0;
+}
 .cp .module-header {
   margin: 15px 0;
 }

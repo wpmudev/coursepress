@@ -382,7 +382,6 @@ class CoursePress_Data_Module {
 					$correct_responses = 0;
 
 					if ( is_array( $response[ $key ] ) ) {
-
 						foreach ( $response[ $key ] as $a_key => $answer ) {
 							if ( $answer === $correct_answers[ $a_key ] ) {
 								$correct_responses += 1;
@@ -393,7 +392,6 @@ class CoursePress_Data_Module {
 					$result = (int) ( $correct_responses / $total_answers * 100 );
 					// If multiple choice passed, add it to the total
 					$gross_correct = 100 === $result ? $gross_correct + 1 : $gross_correct;
-
 					break;
 
 				case 'single1':

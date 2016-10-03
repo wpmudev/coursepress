@@ -659,4 +659,17 @@ class CoursePress_Data_Discussion {
 		$post_type = get_post_type( $post );
 		return self::$post_type == $post_type;
 	}
+
+	public static function have_comments( $student_id, $post_id ) {
+		$args = array(
+			'post_id' => $post_id,
+			'user_id' => $student_id,
+			'order' => 'ASC',
+			'number' => 1, // We only need one to verify if current user posted a comment.
+			'fields' => 'ids',
+		);
+		$comments = get_comments( $args );
+
+		return count( $comments ) > 0;
+	}
 }
