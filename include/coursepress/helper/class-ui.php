@@ -746,4 +746,28 @@ class CoursePress_Helper_UI {
 		}
 		return $url;
 	}
+
+	/**
+	 * Build select!
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $name element name
+	 * @param array $options Array options, option_key => option_label
+	 * @param string $selected selected value.
+	 * @param string $class element class
+	 * @return string Valid html select element.
+	 */
+	public static function select( $name, $options, $selected = '', $class = '' ) {
+		$content = sprintf(
+			'<select name="%s" class="%s">',
+			esc_attr( $name ),
+			esc_attr( $class )
+		);
+		foreach ( $options as $key => $label ) {
+			$content .= '<option value="' . $key . '" ' . selected( $selected, $key, false ) . '>' . esc_html( $label ) . '</option>';
+		}
+		$content .= '</select>';
+		return $content;
+	}
 }

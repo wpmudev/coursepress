@@ -95,14 +95,14 @@ class CoursePress_Template_Course {
 			$id = sprintf(
 				'id="%s_holder_%s"',
 				esc_attr( $type ),
-				esc_attr( $invite['code'] )
+				isset( $invite['code'] )? esc_attr( $invite['code'] ) : ''
 			);
 		}
 			$content = sprintf(
 				'<div class="avatar-holder %s-avatar-holder pending-invite" data-who="%s" data-code="%s" data-status="pending" %s>',
 				esc_attr( $type ),
 				esc_attr( $type ),
-				esc_attr( $invite['code'] ),
+				isset( $invite['code'] )? esc_attr( $invite['code'] ):'',
 				$id
 			);
 			$content .= sprintf(
@@ -113,16 +113,18 @@ class CoursePress_Template_Course {
 			if ( $remove_buttons ) {
 				$content .= '<div class="remove"><a><span class="dashicons dashicons-dismiss"></span></a></div>';
 			}
-			if ( '{{{data.avatar}}}' == $invite['email'] ) {
-				$content .= $invite['email'];
-			} else {
-				$content .= get_avatar( $invite['email'], 80 );
+			if ( isset( $invite['email'] ) ) {
+				if ( '{{{data.avatar}}}' == $invite['email'] ) {
+					$content .= $invite['email'];
+				} else {
+					$content .= get_avatar( $invite['email'], 80 );
+				}
 			}
 			$content .= sprintf(
 				'<span class="%s-name">%s %s</span>',
 				esc_attr( $type ),
-				$invite['first_name'],
-				$invite['last_name']
+				isset( $invite['first_name'] )? $invite['first_name']:'',
+				isset( $invite['last_name'] )? $invite['last_name']:''
 			);
 			$content .= '</div>';
 			return $content;

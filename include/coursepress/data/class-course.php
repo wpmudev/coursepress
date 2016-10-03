@@ -2996,4 +2996,51 @@ class CoursePress_Data_Course {
 		}
 		self::save_course_number( $post_id, $post_type, array( $post_id ) );
 	}
+
+	/**
+	 * return array of allowed enrollment restrictions.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $course_id Course ID
+	 *
+	 * @return string
+	 */
+	public static function get_enrollment_types_array( $course_id = 0 ) {
+		$enrollment_types = array(
+			'manually' => __( 'Manually added only', 'cp' ),
+		);
+		if ( CoursePress_Helper_Utility::users_can_register() ) {
+			$enrollment_types = array_merge( $enrollment_types, array(
+				'anyone' => __( 'Any registered users', 'cp' ),
+				'passcode' => __( 'Any registered users with a pass code', 'cp' ),
+				'prerequisite' => __( 'Registered users who completed the prerequisite course(s)', 'cp' ),
+			) );
+		} else {
+			$enrollment_types = array_merge( $enrollment_types, array(
+				'registered' => __( 'Any registered users', 'cp' ),
+				'passcode' => __( 'Any registered users with a pass code', 'cp' ),
+				'prerequisite' => __( 'Registered users who completed the prerequisite course(s)', 'cp' ),
+			) );
+		}
+		$enrollment_types = apply_filters( 'coursepress_course_enrollment_types', $enrollment_types, $course_id );
+		return $enrollment_types;
+	}
+
+	/**
+	 * Get enrollment type default.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param $integer $course_id Course ID
+	 */
+	public static function get_enrollment_type_default( $course_id = 0 ) {
+		$default = 'registered';
+		if ( CoursePress_Helper_Utility::users_can_register() ) {
+			$default = 'anyone';
+		}
+		$default = CoursePress_Core::get_setting( 'course/enrollment_type_default', $default );
+		return apply_filters( 'coursepress_course_enrollment_type_default', $default, $course_id );
+	}
+
 }
