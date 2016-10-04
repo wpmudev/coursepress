@@ -1982,7 +1982,7 @@ class CoursePress_Data_Course {
 		$course->duration = $duration > 0 ? sprintf( _n( '%s Day', '%s Days', $duration, 'cp' ), $duration ) : __( 'Open-ended', 'cp' );
 
 		// Links
-		$course->permalink = get_permalink( $course_id );
+		$course->permalink = self::get_course_url( $course_id );
 		$course->edit_link = add_query_arg(
 			array(
 				'page' => CoursePress_View_Admin_Course_Edit::$slug,
