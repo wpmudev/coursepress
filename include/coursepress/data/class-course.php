@@ -194,7 +194,8 @@ class CoursePress_Data_Course {
 				// update_post_meta( $course_id, $key, cp_filter_content( $value ) );
 				// }
 				// Add taxonomy terms
-				if ( 'course_category' == $key || 'meta_course_category' == $key ) {
+				$can_manage_categories = CoursePress_Data_Capabilities::can_manage_categories();
+				if ( $can_manage_categories && ( 'course_category' == $key || 'meta_course_category' == $key ) ) {
 					if ( isset( $data->meta_course_category ) ) {
 						self::set_setting(
 							$settings,
