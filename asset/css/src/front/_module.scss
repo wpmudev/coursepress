@@ -32,7 +32,7 @@
 		}
 	}
 	.module-header {
-		margin: 15px 0;
+		margin: 25px 0;
 		.is-mandatory {
 			float: right;
 			font-size: 0.8em;
@@ -103,6 +103,56 @@
 			text-transform: uppercase;
 			text-align: center;
 			padding: 5px 0;
+		}
+	}
+}
+.coursepress-focus-view {
+	.coursepress-breadcrumbs {
+		border-bottom: 3px solid rgba(0, 0, 0, 0.2);
+		margin-bottom: 10px;
+		font-size: 0.9em;
+		a.crumb {
+			@include reset_a;
+		}
+	}
+	.breadcrumb-milestone {
+		display: inline-block;
+		&:after {
+			font-family: dashicons;
+			content: "\f139";
+			vertical-align: bottom;
+			position: relative;
+			top: 1px;
+		}
+	}
+	.focus-nav {
+		clear: both;
+		display: block;
+	}
+	.focus-nav-prev,
+	.focus-nav-next {
+		display: inline-block;
+		cursor: pointer;
+		margin-top: 10px;
+		a {
+			@include reset_a;
+			color: inherit;
+		}
+	}
+	.focus-nav-next {
+		float: right;
+	}
+	.loader {
+		width: 100%;
+		text-align: center;
+		padding: 20px;
+		display: block;
+		.fa {
+			margin: 0 auto;
+			font-size: 2em;
+		}
+		&.hidden {
+			display: none;
 		}
 	}
 }

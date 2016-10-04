@@ -531,7 +531,7 @@ class CoursePress_Data_Shortcode_Unit {
 		$course_base_url = CoursePress_Data_Course::get_course_url( $course_id );
 
 		$content = '
-		<div class="submenu-main-container">
+		<div class="submenu-main-container cp-submenu">
 			<ul id="submenu-main" class="submenu nav-submenu">
 				<li class="submenu-item submenu-units ' . ( 'units' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( $course_base_url . CoursePress_Core::get_slug( 'unit/' ) ) . '" class="course-units-link">' . esc_html__( 'Units', 'cp' ) . '</a></li>
 		';

@@ -1,6 +1,27 @@
+@mixin reset_a {
+	text-decoration: none;
+	outline: 0;
+	border: 0;
+	box-shadow: none;
+}
+@mixin nolist {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+@mixin locked {
+	position: relative;
+	&:before {
+		content: "\f160";
+		font-family: Dashicons;
+		float: right;
+		font-size: 1.2em;
+		line-height: 1.4em;
+	}
+}
 .cp {
 	.hide {
-		
+		display: none;
 	}
 	ul {
 		list-style-type: none;
@@ -51,4 +72,92 @@
 	left: 0;
 	z-index: 9999;
 	background-color: rgba(0, 0, 0, 0.04);
+}
+.cp-submenu {
+	margin: 0 0 25px 0;
+	display: block;
+
+	.submenu {
+		list-style: outside none none;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+		overflow: hidden;
+		margin: 0;
+		padding: 0 0 5px 0;
+	}
+	.submenu-item {
+		display: table-cell;
+		margin: 0 5px 0 0;
+		padding: 0;
+
+		a {
+			padding: 4px 12px;
+			@include reset_a;
+		}
+	}
+}
+.course_list_box_item {
+	margin: 10px 10px 0 0;
+	position: relative;
+	transform-style: preserve-3d;
+	overflow: hidden;
+	clear: both;
+	* {
+		box-sizing: border-box;
+	}
+	.course-title {
+		margin: 0;
+		padding: 0;
+	}
+	.course-summary p:last-child {
+		margin-bottom: 0;
+	}
+	.course-information {
+		padding: 0 10px;
+		border: 1px solid rgba(0, 0, 0, 0.2);
+		border-left: 5px solid rgba(0, 0, 0, 0.2);
+	}
+	&.has-thumbnail {
+		.course-thumbnail {
+			width: 40%;
+			float: left;
+			padding-right: 2px;
+			position: absolute;
+			top: 0;
+			bottom: 0;
+		}
+		.course-information {
+			width: 60%;
+			float: right;
+		}
+	}
+	button {
+		position: absolute;
+		bottom: 5px;
+		right: 5px;
+		float: right;
+	}
+	.course-meta-information {
+		.course-language,
+		.course-start-date,
+		.course-category,
+		.course-cost {
+			&:before {
+				font-family: fontawesome;
+				display: inline-block;
+				margin-right: 5px;
+			}
+		}
+		.course-start-date:before {
+			content: '\f017';
+		}
+		.course-language:before {
+			content: '\f0ac';
+		}
+		.course-cost:before {
+			content: '\f0d6';
+		}
+		&.clickable {
+			cursor: pointer;
+		}
+	}
 }
