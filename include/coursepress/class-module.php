@@ -146,12 +146,22 @@ class CoursePress_Module {
 			}
 			CoursePress_Data_Discussion::update_user_subscription( $student_id, $module_id, $value );
 
+			// Add comment filters
+			add_filter( 'comments_open', '__return_true' );
+			add_filter( 'comment_reply_link', array( 'CoursePress_Template_Module', 'comment_reply_link' ), 10, 4 );
+
 			$json_data = array(
 				'success' => true,
 				'html' => CoursePress_Template_Discussion::get_single_comment( $comment_id ),
 				'comment_parent' => $comments['comment_parent'],
 				'comment_id' => $comment_id,
 			);
+
+			// Remove comment filters, etc
+			remove_filter( 'comments_open', '__return_true' );
+			remove_filter( 'comment_reply_link', array( 'CoursePress_Template_Module', 'comment_reply_link' ), 10, 4 );
+
+			// Print result
 			wp_send_json_success( $json_data );
 
 			return;

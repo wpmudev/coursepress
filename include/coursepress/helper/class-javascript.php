@@ -420,6 +420,7 @@ class CoursePress_Helper_JavaScript {
 			'comments' => array(
 				'require_valid_comment' => __( 'Please type a comment.', 'cp' ),
 			),
+			'server_error' => __( 'An unexpected error occur while processing. Please try again.', 'cp' )
 		);
 
 		wp_localize_script( 'coursepress-front-js', '_coursepress', $localize_array );

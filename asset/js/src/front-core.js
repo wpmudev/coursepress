@@ -28,6 +28,20 @@ CoursePress.resetBrowserURL = function( url ) {
 	}
 };
 
+/** Focus to the element **/
+CoursePress.Focus = function( selector ) {
+	var el = $( selector ), top;
+
+	if ( 0 < el.length ) {
+		top = el.offset().top;
+		top -= 100;
+
+		$(window).scrollTop( top );
+	}
+
+	return false;
+};
+
 /** Error Box **/
 CoursePress.showError = function( error_message, container ) {
 	var error_box = $( '<div class="cp-error-box"></div>' ),
@@ -44,18 +58,24 @@ CoursePress.showError = function( error_message, container ) {
 	closed.prependTo( error_box ).on( 'click', removeError );
 
 	container.prepend( error_box );
+
+	// Focus on the error box
+	CoursePress.Focus( '.cp-error-box' );
 };
 
-/** Focus to the element **/
-CoursePress.Focus = function( selector ) {
-	var el = $( selector ), top;
+/** Loader Mask **/
+CoursePress.Mask = function( selector ) {
+	selector = ! selector ? 'body' : selector;
 
-	if ( 0 < el.length ) {
-		top = el.offset().top;
-		$(window).scrollTop( top );
-	}
+	var mask = $( '<div class="cp-mask mask"></div>' );
+	mask.appendTo( selector );
 
-	return false;
+	return {
+		mask: mask,
+		done: function() {
+			mask.remove();
+		}
+	};
 };
 
 })(jQuery);

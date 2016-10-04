@@ -106,7 +106,7 @@
 
 		// Add marker to the original form position
 		if ( 0 === tempDiv.length ) {
-			tempDiv = $( '<div class="cp-temp-div">HERE</div>' ).insertAfter( form );
+			tempDiv = $( '<div class="cp-temp-div"></div>' ).insertAfter( form );
 		}
 
 		comment_parent.val( com_id );
@@ -143,7 +143,8 @@
 			params = {},
 			is_reply = 0 < parseInt( comment_parent.val() ),
 			request = new CoursePress.SendRequest(),
-			restore_form
+			restore_form,
+			mask
 		;
 
 		// Remove previous error box
@@ -172,6 +173,7 @@
 			action: 'add_single_comment'
 		};
 
+		mask = CoursePress.Mask();
 		restore_form = function() {
 			var cancel_link = form.find( '#cancel-comment-reply-link' );
 
@@ -181,7 +183,11 @@
 			if ( cancel_link.is( ':visible' ) ) {
 				cancel_link.trigger( 'click' );
 			}
+
+			// Remove cover mask
+			mask.done();
 		};
+
 
 		request.set( params );
 		request.off( 'coursepress:add_single_comment_success' );
@@ -201,12 +207,12 @@
 				current_parent = $( '#comment-' + params.comment_parent );
 				child_list = current_parent.find( '.children' );
 
-				if ( 0 < child_list.length ) {
+				if ( 0 === child_list.length ) {
 					// Create a new .children ul
-					current_parent[ insert_type ]( '<ul class="children"></ul>' );
+					current_parent.append( '<ul class="children"></ul>' );
 					child_list = current_parent.find( '.children' );
 				} else {
-					child_list = 'append' === insert_type ? child_list.first() : child_list.last();
+					child_list = 'append' === insert_type ? child_list.last() : child_list.first();
 				}
 				child_list[ insert_type ]( data.html );
 			} else {
@@ -217,10 +223,12 @@
 			CoursePress.Focus( '#comment-' + data.comment_id );
 		} );
 		request.on( 'coursepress:add_single_comment_error', function() {
-			window.alert('error');
+			// Remove cover mask
+			mask.done();
+			// Alert the user
+			CoursePress.showError( _coursepress.server_error, form );
 		});
 		request.save();
-		//request.save(null, {error:function() { window.alert('error') } } );
 
 		// Prevent the form from submitting
 		ev.stopImmediatePropagation();
