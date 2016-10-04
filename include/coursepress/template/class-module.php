@@ -538,7 +538,13 @@ class CoursePress_Template_Module {
 	}
 
 	public static function render_discussion( $module, $attributes = false ) {
-
+		$content = self::render_module_head( $module, $attributes );
+		// Content
+		$content .= self::_wrap_content( $module->post_content );
+		$content .= '<div id="comments" class="comments-area">';
+		$content .= '<div class="comments-list-container">' . CoursePress_Template_Discussion::get_comments( $module->ID ) . '</div>';
+		$content .= '</div>';
+		return $content;
 	}
 
 	public static function render_input_checkbox( $module, $attributes = false, $student_progress = false, $disabled = false ) {

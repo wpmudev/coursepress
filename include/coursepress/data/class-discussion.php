@@ -424,7 +424,7 @@ class CoursePress_Data_Discussion {
 	 * @param array $json_data Data to send back.
 	 * @param array Data to send back.
 	 */
-	public function comment_add_new( $data, $json_data ) {
+	public static function comment_add_new( $data, $json_data ) {
 		$json_data['success'] = false;
 		if ( ! isset( $data->nonce ) ) {
 			$json_data['html'] = 'no nonce';
@@ -436,10 +436,15 @@ class CoursePress_Data_Discussion {
 			return $json_data;
 		}
 		$user_id = get_current_user_id();
+		$user = get_userdata( $user_id );
 		$commentdata = array(
-			'comment_post_ID' => $data->comment_post_ID,
+			'comment_author_email' => $user->user_email,
+			'comment_author_url' => $user->user_url,
+			'comment_author' => $user->display_name,
 			'comment_content' => $data->comment_content,
 			'comment_parent' => $data->comment_parent,
+			'comment_post_ID' => $data->comment_post_ID,
+			'comment_type' => '',
 			'user_id' => $user_id,
 		);
 		$json_data['success'] = true;
