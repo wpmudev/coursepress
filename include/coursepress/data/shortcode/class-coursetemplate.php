@@ -429,7 +429,14 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		// Wrap button in form if needed.
 		if ( $is_form ) {
 			$button = '<form name="enrollment-process" method="post" action="' . $button_url . '">' . $button;
-			$button .= wp_nonce_field( 'enrollment_process', '_wpnonce', true, false );
+			$button .= sprintf( '<input type="hidden" name="student_id" value="%s" />', get_current_user_id() );
+
+			if ( 'enroll' == $button_option ) {
+				$button .= wp_nonce_field( 'enrollment_process', '_wpnonce', true, false );
+			} elseif ( 'signup' == $button_option ) {
+				
+			}
+
 			$button .= '<input type="hidden" name="course_id" value="' . $course_id . '" />';
 			$button .= '</form>';
 		}

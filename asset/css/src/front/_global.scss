@@ -156,8 +156,50 @@
 		.course-cost:before {
 			content: '\f0d6';
 		}
-		&.clickable {
-			cursor: pointer;
+	}
+	.clickable {
+		cursor: pointer;
+
+		.clickable-label {
+			display: none;
+			font-size: 1em;
+			margin: 0;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+		&:hover {
+			.course-information {
+				*:not([class*="clickable-label"]) {
+					filter: blur(2px);
+				}
+			}
+			.clickable-label {
+				display: block;
+				font-weight: bold;
+				color: #ffffff;
+				z-index: 2;
+				&:after {
+					font-family: fontawesome;
+					display: inline-block;
+					margin-left: 5px;
+					content: '\f090';
+				}
+			}
+			&:before {
+				top: 0;
+				right: 0;
+				left: 0;
+				bottom: 0;
+				width: 100%;
+				height: 100%;
+				display: block;
+				position: absolute;
+				background: rgba(0, 0, 0, 0.7);
+				content: '';
+				z-index: 1;
+			}
 		}
 	}
 }

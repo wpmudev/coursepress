@@ -133,8 +133,47 @@
 .course_list_box_item .course-meta-information .course-cost:before {
   content: '\f0d6';
 }
-.course_list_box_item .course-meta-information.clickable {
+.course_list_box_item .clickable {
   cursor: pointer;
+}
+.course_list_box_item .clickable .clickable-label {
+  display: none;
+  font-size: 1em;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+.course_list_box_item .clickable:hover .course-information *:not([class*="clickable-label"]) {
+  -webkit-filter: blur(2px);
+  filter: blur(2px);
+}
+.course_list_box_item .clickable:hover .clickable-label {
+  display: block;
+  font-weight: bold;
+  color: #ffffff;
+  z-index: 2;
+}
+.course_list_box_item .clickable:hover .clickable-label:after {
+  font-family: fontawesome;
+  display: inline-block;
+  margin-left: 5px;
+  content: '\f090';
+}
+.course_list_box_item .clickable:hover:before {
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.7);
+  content: '';
+  z-index: 1;
 }
 
 /** Course Overview **/
@@ -158,6 +197,8 @@
   overflow: hidden;
   border-top: 1px solid rgba(0, 0, 0, 0.2);
   position: relative;
+  margin: 15px 0;
+  padding-top: 15px;
 }
 .course-wrapper .enroll-box:after {
   display: block;
@@ -240,6 +281,39 @@
   position: absolute;
   top: 2px;
   right: 0;
+}
+.course-wrapper .unit-page-estimate {
+  position: absolute;
+  top: 2px;
+  right: 0;
+}
+.course-wrapper .course-description {
+  margin: 15px 0;
+  padding: 15px 0;
+}
+.course-wrapper .course-structure-block li {
+  clear: both;
+}
+.course-wrapper .instructor-block {
+  padding: 15px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
+  border-bottom: 3px solid rgba(0, 0, 0, 0.2);
+}
+
+.coursepress-course-share {
+  display: block;
+  margin: 15px 0;
+}
+.coursepress-course-share a, .coursepress-course-share a[href] {
+  text-decoration: none;
+  outline: 0;
+  border: 0;
+  box-shadow: none;
+  margin-left: 5px;
+}
+.coursepress-course-share a *, .coursepress-course-share a[href] * {
+  padding: 0 0 0.4em 0;
+  vertical-align: middle;
 }
 
 /** Units Archive **/

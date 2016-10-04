@@ -13,6 +13,8 @@
 		overflow: hidden;
 		border-top: 1px solid rgba(0, 0, 0, 0.2);
 		position: relative;
+		margin: 15px 0;
+		padding-top: 15px;
 		&:after {
 			display: block;
 			content: '';
@@ -90,5 +92,34 @@
 		position: absolute;
 		top: 2px;
 		right: 0;
+	}
+	.unit-page-estimate {
+		position: absolute;
+		top: 2px;
+		right: 0;
+	}
+	.course-description {
+		margin: 15px 0;
+		padding: 15px 0;
+	}
+	.course-structure-block li {
+		clear: both;
+	}
+	.instructor-block {
+		padding: 15px 0;
+		border-top: 1px solid rgba(0, 0, 0, 0.2);
+		border-bottom: 3px solid rgba(0, 0, 0, 0.2);
+	}
+}
+.coursepress-course-share {
+	display: block;
+	margin: 15px 0;
+	a, a[href] {
+		@include reset_a;
+		margin-left: 5px;
+		* {
+			padding: 0 0 0.4em 0;
+			vertical-align: middle;
+		}
 	}
 }

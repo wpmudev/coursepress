@@ -179,7 +179,63 @@ CoursePress.UnitProgressIndicator = function() {
 
 /** Modal Dialog **/
 CoursePress.Modal = Backbone.Model.extend( {
-	
+	template: _.template( $( '#modal-template' ).html() ),
+	viewContainer: '.enrollment-modal-container',
+	submitEl: '.done',
+	cancelEl: '.cancel',
+	options: 'meh',
+	// Dynamically create the views from the templates.
+	// This allows for WP filtering to add/remove steps
+	views: (function() {
+		var object = {},
+			steps = $( '[data-type="modal-step"]' );
+
+		if ( 0 === steps.length ) {
+			return;
+		}
+
+		$.each( steps, function( index, item ) {
+			var step = index + 1;
+			var id = $( item ).attr( 'id' );
+
+			if ( undefined !== id ) {
+				object['click #step' + step] = {
+					view: _.template( $( '#' + id ).html() ),
+					onActive: 'setActive'
+				};
+			}
+		} );
+
+		return object;
+	})(),
+	events: {
+		'click .previous': 'previousStep',
+		'click .next': 'nextStep',
+		'click .cancel-link': 'closeDialog'
+	},
+	previousStep: function( e ) {
+		e.preventDefault();
+		this.previous();
+		if ( typeof this.onPrevious === 'function' ) {
+			this.onPrevious();
+		}
+	},
+	nextStep: function( e ) {
+		e.preventDefault();
+		this.next();
+		if ( typeof this.onNext === 'function' ) {
+			this.onNext();
+		}
+	},
+	closeDialog: function() {
+		$('.enrolment-container-div' ).detach();
+	},
+	setActive: function( options ) {
+		this.trigger( 'modal:updated', { view: this, options: options } );
+	},
+	cancel: function() {
+		$('.enrolment-container-div' ).detach();
+	}
 } );
 
 // Hook into document
