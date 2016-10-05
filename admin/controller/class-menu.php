@@ -335,11 +335,11 @@ class CoursePress_Admin_Controller_Menu {
 		 */
 		echo '<div id="major-publishing-actions"><div id="publishing-action"><span class="spinner"></span>';
 		$label = __( 'Publish', 'cp' );
-		if ( ! $post->can_change_status &&  empty( $post->ID ) ) {
+		if ( ! $post->can_change_status && empty( $post->ID ) ) {
 			$label = __( 'Save', 'cp' );
 		}
 		$class = 'force-publish';
-		if ( 'publish' == $post->post_status ) {
+		if ( 'publish' == $post->post_status || ! $post->can_change_status ) {
 			$label = __( 'Update', 'cp' );
 			$class = '';
 		}
