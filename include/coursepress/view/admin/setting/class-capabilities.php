@@ -249,7 +249,7 @@ class CoursePress_View_Admin_Setting_Capabilities {
 		return array(
 			'coursepress_create_my_discussion_cap' => __( 'Create new discussions for own courses', 'cp' ),
 			'coursepress_create_my_assigned_discussion_cap' => __( 'Create new discussions for assigned courses', 'cp' ),
-			'coursepress_update_my_discussion_cap' => __( 'Update own discussions', 'cp' ),
+			'coursepress_update_my_discussion_cap' => __( 'Update own published discussions', 'cp' ),
 			'coursepress_update_discussion_cap' => __( 'Update every discussion', 'cp' ),
 			'coursepress_delete_my_discussion_cap' => __( 'Delete own discussions', 'cp' ),
 			'coursepress_delete_discussion_cap' => __( 'Delete every discussion', 'cp' ),
