@@ -102,7 +102,7 @@ class CoursePress_View_Admin_Setting_Capabilities {
 	}
 
 	private static function _capability_boxes() {
-		return array(
+		$options = array(
 			'general' => array(
 				'title' => __( 'General', 'cp' ),
 				'items' => self::_instructor_capabilities_general(),
@@ -139,11 +139,18 @@ class CoursePress_View_Admin_Setting_Capabilities {
 				'title' => __( 'Discussions', 'cp' ),
 				'items' => self::_instructor_capabilities_discussions(),
 			),
-			'wordpress' => array(
+		);
+		/**
+		 * Add this capabilities only when MarketPress is acctive.
+		 */
+		$is_marketpress_active = apply_filters( 'coursepress_is_marketpress_active', false );
+		if ( $is_marketpress_active ) {
+			$options['wordpress'] = array(
 				'title' => __( 'Grant default WordPress capabilities', 'cp' ),
 				'items' => self::_instructor_capabilities_posts_and_pages(),
-			),
-		);
+			);
+		}
+		return $options;
 	}
 
 	private static function _instructor_capabilities_general() {
