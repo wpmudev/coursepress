@@ -236,7 +236,7 @@ class CoursePress_View_Admin_Setting_Capabilities {
 		return array(
 			'coursepress_create_my_notification_cap' => __( 'Create new notifications for own courses', 'cp' ),
 			'coursepress_create_my_assigned_notification_cap' => __( 'Create new notifications for assigned courses', 'cp' ),
-			'coursepress_update_my_notification_cap' => __( 'Update own notifications', 'cp' ),
+			'coursepress_update_my_notification_cap' => __( 'Update own published notification', 'cp' ),
 			'coursepress_update_notification_cap' => __( 'Update every notification', 'cp' ),
 			'coursepress_delete_my_notification_cap' => __( 'Delete own notifications', 'cp' ),
 			'coursepress_delete_notification_cap' => __( 'Delete every notification', 'cp' ),
