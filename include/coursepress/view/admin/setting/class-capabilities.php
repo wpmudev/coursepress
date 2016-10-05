@@ -247,7 +247,6 @@ class CoursePress_View_Admin_Setting_Capabilities {
 
 	private static function _instructor_capabilities_discussions() {
 		return array(
-			'coursepress_create_discussion_cap' => __( 'Create new discussions', 'cp' ),
 			'coursepress_create_my_discussion_cap' => __( 'Create new discussions for own courses', 'cp' ),
 			'coursepress_create_my_assigned_discussion_cap' => __( 'Create new discussions for assigned courses', 'cp' ),
 			'coursepress_update_my_discussion_cap' => __( 'Update own discussions', 'cp' ),

@@ -88,7 +88,6 @@ class CoursePress_Data_Capabilities {
 			'coursepress_change_notification_status_cap' => 0,
 			'coursepress_change_my_notification_status_cap' => 1,
 			/* Discussions */
-			'coursepress_create_discussion_cap' => 1,
 			'coursepress_create_my_assigned_discussion_cap' => 1,
 			'coursepress_create_my_discussion_cap' => 1,
 			'coursepress_update_discussion_cap' => 0,
@@ -1053,14 +1052,6 @@ class CoursePress_Data_Capabilities {
 		if ( user_can( $user_id, 'manage_options' ) ) {
 			return true;
 		}
-		/**
-		 * Create new discussions
-		 */
-		/** This filter is documented in include/coursepress/helper/class-setting.php */
-		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_discussion_cap' );
-		if ( user_can( $user_id, $capability ) ) {
-			return true;
-		}
 		return false;
 	}
 
@@ -1086,14 +1077,6 @@ class CoursePress_Data_Capabilities {
 					user_can( $user_id, 'coursepress_create_my_assigned_discussion_cap' ) );
 		}
 
-		/**
-		 * Create new discussions
-		 */
-		/** This filter is documented in include/coursepress/helper/class-setting.php */
-		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_discussion_cap' );
-		if ( user_can( $user_id, $capability ) ) {
-			return true;
-		}
 		/**
 		 * Create new discussions for own courses
 		 */
