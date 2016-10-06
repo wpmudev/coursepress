@@ -50,7 +50,7 @@
 	top: 0;
 	left: 0;
 	z-index: 9999;
-	background-color: rgba(0, 0, 0, 0.04);
+	background-color: rgba(0, 0, 0, 0.5);
 }
 .cp-submenu {
 	margin: 0 0 25px 0;
@@ -71,6 +71,18 @@
 		a {
 			padding: 4px 12px;
 			@include reset_a;
+		}
+	}
+}
+.enrolment-container-div {
+	.bbm-modal {
+		max-width: 95%;
+		max-height: 80%;
+		margin: 0 auto;
+		overflow: auto;
+		label {
+			margin: 15px 0;
+			display: block;
 		}
 	}
 }

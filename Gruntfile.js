@@ -41,7 +41,8 @@ module.exports = function(grunt) {
 			'{js}admin-ui.js':					['{js}/src/admin-ui.js'],
 			'{js}front.js':						[
 				'{js}/src/front-core.js',
-				'{js}/src/front-modules.js'
+				'{js}/src/front-modules.js',
+				'{js}/src/front-enrollment.js'
 			]
 		},
 

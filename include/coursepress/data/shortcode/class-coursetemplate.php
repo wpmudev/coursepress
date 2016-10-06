@@ -140,14 +140,14 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$student_enrolled = false;
 		$student_id = false;
 		$is_instructor = false;
+		$is_custom_login = ! empty( $general_settings['use_custom_login'] );
 
 		if ( is_user_logged_in() ) {
 			$student_id = get_current_user_id();
 			$student_enrolled = CoursePress_Data_Course::student_enrolled( $student_id, $course_id );
 			$is_instructor = CoursePress_Data_Instructor::is_assigned_to_course( $course_id, $student_id );
 		} else {
-
-			if ( empty( $general_settings['use_custom_login'] ) ) {
+			if ( false === $is_custom_login ) {
 				$signup_url = wp_login_url( $course_url );
 			} else {
 				$signup_url = CoursePress_Core::get_slug( 'login/', true );
@@ -199,7 +199,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				'signup' => array(
 					'label' => sanitize_text_field( $signup_text ),
 					'attr' => array(
-						'class' => 'apply-button signup ' . $class,
+						'class' => 'apply-button signup ' . ( $is_custom_login ? 'cp-custom-login ' : '' ) . $class,
 						'data-link-old' => $signup_url,//esc_url( $signup_url . '?course_id=' . $course_id ),
 						'data-course-id' => $course_id,
 						'data-link' => $signup_url,

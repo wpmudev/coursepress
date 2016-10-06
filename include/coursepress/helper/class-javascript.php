@@ -384,19 +384,22 @@ class CoursePress_Helper_JavaScript {
 		$css_url = CoursePress::$url . 'asset/css/';
 		$version = CoursePress::$version;
 
+		// Fontawesome
+		$fontawesome = $css_url . 'external/font-awesome.min.css';
+		wp_enqueue_style( 'fontawesome', $fontawesome, array(), $version );
+		$bbm_modal_css = $css_url . 'bbm.modal.css';
+		wp_enqueue_style( 'coursepress-modal-css', $bbm_modal_css, array(), $version );
+		// Front CSS
+		wp_enqueue_style( 'coursepress-front-css', $css_url . 'front.css', array( 'dashicons' ), $version );
+
 		wp_enqueue_script( 'comment-reply' );
 
 		$script = $script_url . 'external/circle-progress.min.js';
 		wp_enqueue_script( 'circle-progress', $script, array( 'jquery' ), $version );
+
+		$modal_script_url = $script_url . 'external/backbone.modal-min.js';
+		wp_enqueue_script( 'coursepress-backbone-modal', $modal_script_url, array( 'jquery', 'backbone', 'underscore' ) );
 		wp_enqueue_script( 'coursepress-front-js', $script_url . 'front.js', array( 'jquery', 'backbone', 'underscore' ), $version );
-
-
-		// Fontawesome
-		$fontawesome = $css_url . 'external/font-awesome.min.css';
-		wp_enqueue_style( 'fontawesome', $fontawesome, array(), $version );
-		// Front CSS
-		wp_enqueue_style( 'coursepress-front-css', $css_url . 'front.css', array( 'dashicons' ), $version );
-
 
 		$localize_array = array(
 			'_ajax_url' => CoursePress_Helper_Utility::get_ajax_url(),

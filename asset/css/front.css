@@ -49,7 +49,7 @@
   top: 0;
   left: 0;
   z-index: 9999;
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .cp-submenu {
@@ -74,6 +74,17 @@
   outline: 0;
   border: 0;
   box-shadow: none;
+}
+
+.enrolment-container-div .bbm-modal {
+  max-width: 95%;
+  max-height: 80%;
+  margin: 0 auto;
+  overflow: auto;
+}
+.enrolment-container-div .bbm-modal label {
+  margin: 15px 0;
+  display: block;
 }
 
 .course_list_box_item {
@@ -581,4 +592,13 @@
 }
 .coursepress-focus-view .loader.hidden {
   display: none;
+}
+
+/** Media Queries **/
+@media screen and (min-width: 768px) {
+  .enrolment-container-div .bbm-modal {
+    max-width: 450px;
+    max-height: 450px;
+    margin: 0 auto;
+  }
 }
