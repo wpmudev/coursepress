@@ -316,6 +316,21 @@ class CoursePress_Data_Student {
 		}
 
 		CoursePress_Helper_Utility::set_array_val( $data, 'completion/' . $unit_id . '/modules_seen/' . $module_id, true );
+/*
+		$units = CoursePress_Helper_Utility::get_array_val(
+			$data,
+			'units/' . $unit_id
+		);
+
+		if ( empty( $units ) ) {
+			// Initialize units
+			CoursePress_Helper_Utility::set_array_val(
+				$data,
+				'units/' . $unit_id,
+				array()
+			);
+		}
+*/
 		self::update_completion_data( $student_id, $course_id, $data );
 
 		return $data;
@@ -713,6 +728,8 @@ class CoursePress_Data_Student {
 		$course_mandatory_steps = 0;
 		$course_completed_mandatory_steps = 0;
 		$course_status = CoursePress_Data_Course::get_course_status( $course_id );
+		$course_mode = CoursePress_Data_Course::get_setting( 'course_view' );
+		$is_normal_mode = 'focus' != $course_mode;
 		$require_assessment = 0;
 
 		foreach ( $units as $unit_id => $unit ) {
@@ -735,6 +752,7 @@ class CoursePress_Data_Student {
 			$unit_grade = 0;
 			$unit_gradable_modules = 0;
 			$unit_passing_grade = 0;
+			$unit_progress_counter = 0;
 
 			if ( false === $is_unit_available ) {
 				// Let's not check unavailable unit
@@ -748,8 +766,8 @@ class CoursePress_Data_Student {
 					// Include pages only that is set to be visible to avoid progress rate confusion
 					$is_page_structure_visible = CoursePress_Data_Unit::is_page_structure_visible( $course_id, $unit_id, $page_number, $student_id );
 
-					if ( $is_page_structure_visible ) {
-						//$total_valid_items += 1;
+					if ( $is_page_structure_visible || $is_normal_mode ) {
+						$unit_progress_counter += 1;
 					}
 
 					if ( ! empty( $modules['modules'] ) ) {
@@ -761,6 +779,13 @@ class CoursePress_Data_Student {
 							$is_answerable = preg_match( '%input-%', $attributes['module_type'] );
 							$require_instructor_assessment = ! empty( $attributes['instructor_assessable'] ) && cp_is_true( $attributes['instructor_assessable'] );
 							$is_module_structure_visible = CoursePress_Data_Unit::is_module_structure_visible( $course_id, $unit_id, $module_id, $student_id );
+
+							if ( $is_module_structure_visible || $is_normal_mode ) {
+								$is_module_structure_visible = true;
+								$unit_progress_counter += 1;
+								$total_valid_items += 1;
+							}
+
 							$minimum_grade = isset( $attributes['minimum_grade'] ) ? (int) $attributes['minimum_grade'] : 0;
 							$gradable = false;
 
@@ -769,7 +794,7 @@ class CoursePress_Data_Student {
 
 							// Count only modules that are set to be visible to avoid progress rating confusion
 							if ( $is_module_structure_visible ) {
-								$total_valid_items += 1;
+							//	$total_valid_items += 1;
 							}
 
 							if ( $is_mandatory ) {
@@ -832,7 +857,7 @@ class CoursePress_Data_Student {
 
 								$previous_module_done = self::is_module_completed( $course_id, $unit_id, $module_id, $student_id );
 
-								if ( false === $previous_module_done ) {
+								if ( false === $is_normal_mode && false === $previous_module_done ) {
 									$valid = false;
 								}
 
@@ -984,7 +1009,6 @@ class CoursePress_Data_Student {
 						}
 					}
 				}
-
 			}
 
 			// Validate unseen modules if it is not required and assessable if the preceding modules are seen

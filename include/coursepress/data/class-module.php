@@ -52,7 +52,6 @@ class CoursePress_Data_Module {
 				'query_var' => true,
 			),
 		);
-
 	}
 
 	public static function get_post_type_name() {

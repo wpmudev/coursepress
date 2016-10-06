@@ -13,7 +13,7 @@ class CoursePress_Hooks {
 		add_action( 'init', array( 'CoursePress_Data_Student', 'withdraw_from_course' ) );
 
 		// Listen to module submission
-		add_action( 'init', array( 'CoursePress_Module', 'process_submission' ), 1 );
+		add_action( 'init', array( 'CoursePress_Module', 'process_submission' ) );
 
 		// Listen to enrollment request
 		add_action( 'init', array( 'CoursePress_Template_Student', 'process_enrollment' ) );
@@ -22,7 +22,7 @@ class CoursePress_Hooks {
 		add_action( 'init', array( 'CoursePress_Data_Discussion', 'init' ), 100 );
 
 		// Map course capabilities
-		add_action( 'init', array( 'CoursePress_Data_Capabilities', 'course_capabilities' ), 110 );
+//		add_action( 'init', array( 'CoursePress_Data_Capabilities', 'course_capabilities' ) );
 
 		// Hook to admin ajax request
 		add_action( 'wp_ajax_coursepress_request', array( __CLASS__, 'process_request' ) );

@@ -509,6 +509,23 @@
   text-align: center;
   padding: 5px 0;
 }
+.cp .prev-button,
+.cp .next-button {
+  display: inline-block;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.cp .prev-button a,
+.cp .next-button a {
+  text-decoration: none;
+  outline: 0;
+  border: 0;
+  box-shadow: none;
+  color: inherit;
+}
+.cp .next-button {
+  float: right;
+}
 
 .coursepress-focus-view .coursepress-breadcrumbs {
   border-bottom: 3px solid rgba(0, 0, 0, 0.2);

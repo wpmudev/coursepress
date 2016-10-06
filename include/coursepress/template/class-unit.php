@@ -351,6 +351,7 @@ class CoursePress_Template_Unit {
 			$unit_url = CoursePress_Data_Unit::get_unit_url( $next_unit );
 			$format = '<button type="submit" name="next_unit" value="%1$s" class="next-button unit unit-%1$s">%2$s</button>';
 			$unit_pager .= sprintf( $format, $next_unit, __( 'Next Unit', 'cp' ) );
+			$has_submit_button = true;
 		}
 
 		if ( false === $has_submit_button ) {
