@@ -76,8 +76,10 @@
   box-shadow: none;
 }
 
+.enrolment-container-div {
+  overflow: hidden;
+}
 .enrolment-container-div .bbm-modal {
-  max-width: 95%;
   max-height: 80%;
   margin: 0 auto;
   overflow: auto;
@@ -85,6 +87,32 @@
 .enrolment-container-div .bbm-modal label {
   margin: 15px 0;
   display: block;
+}
+.enrolment-container-div .bbm-wrapper {
+  position: relative;
+  margin: 0 auto;
+  max-width: 480px;
+  width: 100%;
+  background: #ffffff;
+  padding: 0;
+  border: 0;
+  border-radius: 15px;
+  box-shadow: 3px 3px 10px 0px rgba(0, 0, 0, 0.75);
+}
+.enrolment-container-div .bbm-wrapper a {
+  text-decoration: underline;
+}
+.enrolment-container-div .bbm-wrapper #error-messages,
+.enrolment-container-div .bbm-wrapper #password-strength {
+  display: block;
+  font-style: italic;
+  margin: 0 15px;
+}
+.enrolment-container-div .bbm-wrapper #error-messages {
+  color: #d92e23;
+}
+.enrolment-container-div .bbm-wrapper #error-messages ul {
+  margin: 0;
 }
 
 .course_list_box_item {
@@ -597,7 +625,6 @@
 /** Media Queries **/
 @media screen and (min-width: 768px) {
   .enrolment-container-div .bbm-modal {
-    max-width: 450px;
     max-height: 450px;
     margin: 0 auto;
   }

@@ -74,9 +74,10 @@
 		}
 	}
 }
+
 .enrolment-container-div {
+	overflow: hidden;
 	.bbm-modal {
-		max-width: 95%;
 		max-height: 80%;
 		margin: 0 auto;
 		overflow: auto;
@@ -84,5 +85,34 @@
 			margin: 15px 0;
 			display: block;
 		}
+	}
+	.bbm-wrapper {
+		position: relative;
+		margin: 0 auto;
+		max-width: 480px;
+		width: 100%;
+		background: #ffffff;
+		padding: 0;
+		border: 0;
+		border-radius: 15px;
+		box-shadow: 3px 3px 10px 0px rgba(0, 0, 0, 0.75);
+	}
+
+	.bbm-wrapper a {
+		text-decoration: underline;
+	}
+
+	.bbm-wrapper #error-messages,
+	.bbm-wrapper #password-strength {
+		display: block;
+		font-style: italic;
+		margin: 0 15px;
+	}
+
+	.bbm-wrapper #error-messages {
+		color: #d92e23;
+	}
+	.bbm-wrapper #error-messages ul {
+		margin: 0;
 	}
 }
