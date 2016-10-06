@@ -2996,4 +2996,29 @@ class CoursePress_Data_Course {
 		}
 		self::save_course_number( $post_id, $post_type, array( $post_id ) );
 	}
+
+	/**
+	 * Check entry - is this course?
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param WP_Post|integer|null $course Variable to check.
+	 * @return boolean Answer is that course or not?
+	 */
+	public static function is_course( $course = null ) {
+		$course_id = 0;
+		if ( empty( $course ) ) {
+			global $post;
+			if ( ! is_object( $post ) ) {
+				return false;
+			}
+			$course = $post;
+		}
+		$post_type = get_post_type( $course );
+		if ( $post_type == self::$post_type ) {
+			return true;
+		}
+		return false;
+	}
+
 }

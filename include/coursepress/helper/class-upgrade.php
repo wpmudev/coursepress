@@ -2,11 +2,22 @@
 
 class CoursePress_Helper_Upgrade {
 
+	private static $message_meta_name = 'course_upgrade_messsage';
+
+	public static function init() {
+		add_action( 'wp_ajax_coursepress_upgrade_update', array( __CLASS__, 'ajax_courses_upgrade' ) );
+	}
+
 	public static function admin_init() {
 		/**
 		 * show migration message
 		 */
 		add_action( 'admin_notices', array( __CLASS__, 'show_migration_messages' ) );
+	}
+
+	public static function add_message( $message ) {
+		$user_id = get_current_user_id();
+		add_user_meta( $user_id, self::$message_meta_name, $message, false );
 	}
 
 	/**
@@ -115,6 +126,132 @@ class CoursePress_Helper_Upgrade {
 		echo implode( '</li><li>', $messages );
 		echo '</li></ul></div>';
 		delete_user_meta( $user_id, self::$message_meta_name );
+	}
+
+	/**
+	 * Is an upgrade nessarry?
+	 *
+	 * @since 2.0.0
+	 */
+	public static function maybe_upgrade() {
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			return;
+		}
+		$plugin_version = get_option( 'coursepress_version', '1.3' );
+		if ( 0 > version_compare( $plugin_version, CoursePress::$version ) ) {
+			update_option( 'coursepress_courses_need_update', true );
+			update_option( 'coursepress_version', CoursePress::$version, 'no' );
+		}
+		$coursepress_courses_need_update = get_option( 'coursepress_courses_need_update', false );
+		if ( $coursepress_courses_need_update ) {
+			$slug = CoursePress_View_Admin_Upgrade::get_slug();
+			$hide = isset( $_GET['page'] ) && $_GET['page'] == $slug;
+			if ( ! $hide ) {
+				CoursePress_Helper_Upgrade::add_message(
+					sprintf(
+						'Courses needs an upgrade. Please go to <a href="%s">Upgrade Courses</a> page.',
+						esc_url( add_query_arg( 'page', CoursePress_View_Admin_Upgrade::get_slug(), admin_url( 'admin.php' ) ) )
+					)
+				);
+			}
+			CoursePress_Helper_Upgrade::admin_init();
+		}
+	}
+
+	public static function get_update_nonce( $user_id = null ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		return sprintf( 'coursepress_update_by_%d', $user_id );
+	}
+
+	/**
+	 * Upgrade course - main function for upgrade!
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param WP_Post $course Course object.
+	 * @return status of upgrade true/false.
+	 */
+	public static function course_upgrade( $course ) {
+		// _cp_updated_to_version_2
+		return true;
+	}
+
+	/**
+	 * Ajax function to handla courses upgrades.
+	 *
+	 * @since 2.0.0
+	 *
+	 */
+	public static function ajax_courses_upgrade() {
+		/**
+		 * check data
+		 */
+		if (
+			!isset( $_POST['user_id'])
+			|| ! isset( $_POST['_wpnonce'] )
+			|| ! isset( $_POST['course_id'] )
+		) {
+			$message = __( 'Course update fail: wrong data!', 'cp' );
+			self::print_json_and_die( $message );
+		}
+		/**
+		 * Check nonce
+		 */
+		$user_id = intval( $_POST['user_id'] );
+		$nonce_name = self::get_update_nonce( $user_id );
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], $nonce_name ) ) {
+			$message = __( 'Course update fail: security check!', 'cp' );
+			self::print_json_and_die( $message );
+		}
+		/**
+		 * check is a course?
+		 */
+		$course_id = intval( $_POST['course_id'] );
+		if ( ! CoursePress_Data_Course::is_course( $course_id ) ) {
+			$message = __( 'Course update fail: wrong course ID!', 'cp' );
+			self::print_json_and_die( $message );
+		}
+		/**
+		 * get course
+		 */
+		$course = get_post( $course_id );
+		if ( empty( $course ) ) {
+			$message = __( 'Course update fail: wrong course!', 'cp' );
+			self::print_json_and_die( $message );
+		}
+		/**
+		 * upgrade course
+		 */
+		$success = self::course_upgrade( $course );
+		if ( ! $success ) {
+			$message = __( 'Course update fail: someting went wrong!', 'cp' );
+			self::print_json_and_die( $message );
+		}
+		/**
+		 * return data
+		 */
+		$title = sprintf( '<b>%s</b>', apply_filters( 'the_title', $course->post_title ) );
+		$message = sprintf( __( 'Course %s was successful updated.', 'cp' ), $title );
+		self::print_json_and_die( $message, true );
+	}
+
+	/**
+	 * Print json and die - short helper function for ajax call.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $message Message to add.
+	 * @param boolean $success Information about status of operation.
+	 */
+	private static function print_json_and_die( $message, $success = false ) {
+		$json = array(
+			'success' => $success,
+			'message' => $message,
+		);
+		echo json_encode( $json );
+		wp_die();
 	}
 
 }

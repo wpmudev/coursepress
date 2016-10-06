@@ -114,6 +114,11 @@ class CoursePress_Core {
 		// Always initialize the Front-End; needed in is_admin() for ajax calls!
 		CoursePress_View_Front_Course::init();
 
+		/**
+		 * Add upgrade ajax calls
+		 */
+		CoursePress_Helper_Upgrade::init();
+
 		// Initialize Utility actions.
 		CoursePress_Helper_Utility::init();
 
@@ -144,6 +149,11 @@ class CoursePress_Core {
 
 		//
 		CoursePress_Data_Discussion::init();
+
+		/**
+		 * Check version
+		 */
+		add_action( 'admin_init', array( 'CoursePress_Helper_Upgrade', 'maybe_upgrade' ) );
 
 		/**
 		 * show guide page?
@@ -616,4 +626,5 @@ class CoursePress_Core {
 		);
 		exit();
 	}
+
 }

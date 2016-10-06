@@ -9,6 +9,7 @@ class CoursePress_View_Admin_CoursePress {
 
 	private static $admin_pages = array(
 		'Course_Edit',
+		'Upgrade',
 		//'Assessment_List',
 		//'Assessment_Report',
 	);
@@ -38,7 +39,6 @@ class CoursePress_View_Admin_CoursePress {
 		// Init CoursePress Admin Views
 		foreach ( self::$admin_pages as $page ) {
 			$class = 'CoursePress_View_Admin_' . $page;
-
 			if ( method_exists( $class, 'init' ) ) {
 				call_user_func( $class . '::init' );
 			}
