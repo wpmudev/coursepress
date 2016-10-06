@@ -39,6 +39,7 @@ class CoursePress_Helper_Integration_MarketPress {
 			return false;
 		}
 		self::$is_active = true;
+		add_filter( 'coursepress_is_marketpress_active', '__return_true' );
 
 		// Enable Payment Support
 		add_filter(
