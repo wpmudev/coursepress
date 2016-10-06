@@ -456,16 +456,9 @@ class CoursePress_Data_Certificate {
 	 * @return (mixed) A link to pdf certificate or null.
 	 */
 	public static function get_certificate_link( $student_id, $course_id, $link_title ) {
-		$filename = 'certificate-' . $course_id . '-' . $student_id . '.pdf';
-		$pdf_link = CoursePress_Helper_PDF::cache_url() . $filename;
-		if ( ! is_readable( $pdf_link ) ) {
-			// Attempt to generate the PDF
-			if ( ! self::generate_pdf_certificate( $course_id, $student_id, false ) ) {
-				return '';
-			}
-		}
+		$certificate_link = self::get_encoded_url( $course_id, $student_id );
 
-		return sprintf( '<a href="%s">%s</a>', $pdf_link, $link_title );
+		return sprintf( '<a href="%s">%s</a>', $certificate_link, $link_title );
 	}
 
 	public static function background_image( $image_url ) {
