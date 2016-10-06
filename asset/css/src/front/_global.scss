@@ -10,4 +10,67 @@
 	.cp-download {
 		text-decoration: none;
 	}
+	.button {
+		padding: 5px 12px;
+		text-decoration: none;
+		text-decoration-style: none;
+		border: 1px solid rgba(0, 0, 0, 0.02);
+		cursor: pointer;
+
+		&:hover {
+			text-decoration: none;
+		}
+		a {
+			text-decoration: none;
+			border: 0;
+			color: inherit;
+		}
+	}
+	.cp-error-box {
+		display: block;
+		padding: 15px 15px 0 15px;
+		border: 1px solid rgba(0, 0, 0, 0.05);
+
+		p {
+			margin-top: 0;
+		}
+		.cp-closed {
+			text-decoration: none;
+			float: right;
+			width: 25px;
+			text-align: center;
+			cursor: pointer;
+		}
+	}
+}
+.cp-mask {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	z-index: 9999;
+	background-color: rgba(0, 0, 0, 0.04);
+}
+.cp-submenu {
+	margin: 0 0 25px 0;
+	display: block;
+
+	.submenu {
+		list-style: outside none none;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+		overflow: hidden;
+		margin: 0;
+		padding: 0 0 5px 0;
+	}
+	.submenu-item {
+		display: table-cell;
+		margin: 0 5px 0 0;
+		padding: 0;
+
+		a {
+			padding: 4px 12px;
+			@include reset_a;
+		}
+	}
 }

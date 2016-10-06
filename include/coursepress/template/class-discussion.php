@@ -190,4 +190,25 @@ class CoursePress_Template_Discussion {
 			CoursePress_Data_Unit::get_post_type_name(),
 		);
 	}
+
+	public static function get_single_comment( $comment_id ) {
+		$comments = get_comments(
+			array(
+				'ID' => $comment_id,
+				'number' => 1
+			)
+		);
+
+		ob_start();
+
+		wp_list_comments( array(
+			'style'       => 'ol',
+			'short_ping'  => true,
+			'avatar_size' => 42,
+		), $comments );
+
+		$comment_output = ob_get_clean();
+
+		return $comment_output;
+	}
 }

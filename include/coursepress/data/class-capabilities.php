@@ -1729,12 +1729,27 @@ class CoursePress_Data_Capabilities {
 	public static function course_capabilities() {
 		global $wp_post_types;
 
-		$post_type = CoursePress_Data_Course::get_post_type_name();
+		$course_type = CoursePress_Data_Course::get_post_type_name();
+		$module_type = CoursePress_Data_Module::get_post_type_name();
+		$unit_type = CoursePress_Data_Unit::get_post_type_name();
 
-		if ( isset( $wp_post_types[ $post_type ] ) ) {
-			$caps = $wp_post_types['post']->cap;
+		$coursepress_post_types = compact( $course_type, $unit_type, $module_type );
 
-			$wp_post_types[ $post_type ]->cap = $caps;
+		foreach ( $coursepress_post_types as $post_type ) {
+
+			if ( isset( $wp_post_types[ $post_type ] ) ) {
+				$caps = $wp_post_types['post']->cap;
+
+				foreach ( $caps as $cap_key => $cap_value ) {
+					unset( $caps[ $cap_key] );
+
+					$cap_key = str_replace( 'post', $post_type, $cap_key );
+					$cap_value = str_replace( 'post', $post_type, $cap_value );
+					$caps[ $cap_key ] = $cap_value;
+				}
+
+				$wp_post_types[ $post_type ]->cap = $caps;
+			}
 		}
 	}
 }
