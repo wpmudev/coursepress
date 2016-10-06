@@ -46,11 +46,16 @@ CoursePress.Focus = function( selector ) {
 
 /** Error Box **/
 CoursePress.showError = function( error_message, container ) {
-	var error_box = $( '<div class="cp-error-box"></div>' ),
+	var error_box = $( '<div class="cp-error cp-error-box"></div>' ),
 		error = $( '<p>' ),
 		closed = $( '<a class="cp-closed">&times;</a>' ),
+		old_error_box = $( '.cp-error-box' ),
 		removeError
 	;
+
+	if ( 0 < old_error_box.length ) {
+		old_error_box.remove();
+	}
 
 	removeError = function() {
 		error_box.remove();
@@ -177,10 +182,83 @@ CoursePress.UnitProgressIndicator = function() {
 		$( this ).parent().prepend(  '<span class="progress">'+sv + '%</span>' );
 	}
 };
+// Initialize unit progress
+CoursePress.unitProgressInit = function() {
+	var discs = $( '.course-progress-disc' );
+
+	if ( 0 < discs.length ) {
+		discs.each( CoursePress.UnitProgressIndicator );
+	}
+};
+
+/** Modal Dialog **/
+CoursePress.Modal = Backbone.Model.extend( {
+	template: _.template,//_.template( $( '#modal-template' ).html() ),
+	viewContainer: '.enrollment-modal-container',
+	submitEl: '.done',
+	cancelEl: '.cancel',
+	options: 'meh',
+	initialized: function( options ) {
+		this._template = _.template( $( '#modal-template' ).html() );
+	},
+	// Dynamically create the views from the templates.
+	// This allows for WP filtering to add/remove steps
+	views: (function() {
+		var object = {},
+			steps = $( '[data-type="modal-step"]' );
+
+		if ( 0 === steps.length ) {
+			return;
+		}
+
+		$.each( steps, function( index, item ) {
+			var step = index + 1;
+			var id = $( item ).attr( 'id' );
+
+			if ( undefined !== id ) {
+				object['click #step' + step] = {
+					view: _.template( $( '#' + id ).html() ),
+					onActive: 'setActive'
+				};
+			}
+		} );
+
+		return object;
+	})(),
+	events: {
+		'click .previous': 'previousStep',
+		'click .next': 'nextStep',
+		'click .cancel-link': 'closeDialog'
+	},
+	previousStep: function( e ) {
+		e.preventDefault();
+		this.previous();
+		if ( typeof this.onPrevious === 'function' ) {
+			this.onPrevious();
+		}
+	},
+	nextStep: function( e ) {
+		e.preventDefault();
+		this.next();
+		if ( typeof this.onNext === 'function' ) {
+			this.onNext();
+		}
+	},
+	closeDialog: function() {
+		$('.enrolment-container-div' ).detach();
+	},
+	setActive: function( options ) {
+		this.trigger( 'modal:updated', { view: this, options: options } );
+	},
+	cancel: function() {
+		$('.enrolment-container-div' ).detach();
+	}
+} );
 
 // Hook into document
 $(document).ready(function() {
-	$('.course-progress-disc' ).each( CoursePress.UnitProgressIndicator );
+	// Call unit progress init
+	CoursePress.unitProgressInit();
 });
 
 })(jQuery);
@@ -255,8 +333,8 @@ $(document).ready(function() {
 							}
 						}
 					} else {
-						// Print error message
-						error_box.empty().append( data.data.error_message );
+						// Focus on the error box
+						CoursePress.showError( data.data.error_message, form );
 					}
 				}
 			}, 100 );
@@ -354,7 +432,7 @@ $(document).ready(function() {
 			className: 'CoursePress_Module',
 			course_id: course_id,
 			unit_id: unit_id,
-			student_id: student_id,
+			student_id: student_id.val(),
 			action: 'add_single_comment'
 		};
 

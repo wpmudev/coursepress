@@ -239,7 +239,12 @@ class CoursePress_Data_Student {
 		$data = get_user_option( 'course_' . $course_id . '_progress', $student_id );
 
 		if ( empty( $data ) ) {
-			$data = self::init_completion_data( $student_id, $course_id );
+			$data = apply_filters( 'coursepress_get_student_progress', array(), $student_id, $course_id );
+			//$data = self::init_completion_data( $student_id, $course_id );
+		} elseif ( empty( $data['version'] ) ) {
+			// Add version control
+			$version = self::init_completion_data( $student_id, $course_id );
+			$data = wp_parse_args( $data, $version );
 		}
 
 		return $data;
@@ -1293,6 +1298,13 @@ class CoursePress_Data_Student {
 		return $sent;
 	}
 
+	public static function get_workbook_url( $course_id ) {
+		$course_url = CoursePress_Data_Course::get_course_url( $course_id );
+		$workbook_url = $course_url . trailingslashit( CoursePress_Core::get_slug( 'workbook' ) );
+
+		return $workbook_url;
+	}
+
 	public static function get_admin_workbook_link( $student_id, $course_id ) {
 		$workbook_link = add_query_arg(
 			array(
@@ -1608,5 +1620,24 @@ class CoursePress_Data_Student {
 		}
 
 		return $return;
+	}
+
+	public static function withdraw_from_course() {
+		if ( ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_student_withdraw' ) ) {
+			$course_id = (int) $_REQUEST['course_id'];
+			$student_id = (int) $_REQUEST['student_id'];
+
+			CoursePress_Data_Course::withdraw_student( $student_id, $course_id );
+
+			$return_url = remove_query_arg(
+				array(
+					'_wponce',
+					'course_id',
+					'student_id',
+				)
+			);
+
+			wp_safe_redirect( $return_url ); exit;
+		}
 	}
 }

@@ -528,7 +528,7 @@ class CoursePress_Data_Certificate {
 	 * @param string $file full path to certificate file.
 	 * @return string/boolean Returns encoded URL or false if file do not * exists.
 	 */
-	public function url_prepare( $file ) {
+	public static function url_prepare( $file ) {
 		if ( is_file( $file ) && is_readable( $file ) ) {
 			$upload_dir = wp_upload_dir();
 			$url = str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $file );

@@ -214,12 +214,52 @@ class CoursePress_Data_Discussion {
 		return $post;
 	}
 
-	public static function init() {
+	public static function before_add_comment( $comment_post_ID, $course_id ) {
+		// Let's re-register module post type
+		$post_format = CoursePress_Data_Module::get_format();
+		register_post_type( $post_format['post_type'], $post_format['post_args'] );
+
+		// Add comment filters
+		add_filter( 'comments_open', '__return_true' );
 		// Auto-approved discussion comment
 		add_filter( 'pre_comment_approved', array( __CLASS__, 'approved_discussion_comment' ), 100, 2 );
-
 		// Alter comments before saving to DB.
 		add_filter( 'preprocess_comment', array( __CLASS__, 'preprocess_discussion_comment' ), 100 );
+	}
+
+	public static function after_add_comment( $comment_id, $student_id, $comment_post_ID, $course_id ) {
+		// Approved this comment
+		wp_set_comment_status( $comment_id, 'approve' );
+
+		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
+
+		// Record visit action
+		if ( ! isset( $student_progress['units'] ) && ! isset( $student_progress['units'][ $comment_id] ) ) {
+			CoursePress_Helper_Utility::set_array_val( $student_progress, 'units/' . $comment_id, array() );
+			CoursePress_Data_Student::update_completion_data( $student_id, $course_id, $student_progress );
+		}
+
+		/** notify users */
+		CoursePress_Data_Discussion_Cron::add_comment_id( $comment_id );
+
+		remove_filter( 'comments_open', '__return_true' );
+		// Auto-approved discussion comment
+		remove_filter( 'pre_comment_approved', array( __CLASS__, 'approved_discussion_comment' ), 100, 2 );
+		// Alter comments before saving to DB.
+		remove_filter( 'preprocess_comment', array( __CLASS__, 'preprocess_discussion_comment' ), 100 );
+	}
+
+	public static function init() {
+		// Trigger hooks before adding comment
+		add_action( 'coursepress_before_add_comment', array( __CLASS__, 'before_add_comment' ), 10, 2 );
+		// Trigger hooks after adding comment
+		add_action( 'coursepress_after_add_comment', array( __CLASS__, 'after_add_comment' ), 10, 4 );
+
+		// Auto-approved discussion comment
+		//add_filter( 'pre_comment_approved', array( __CLASS__, 'approved_discussion_comment' ), 100, 2 );
+
+		// Alter comments before saving to DB.
+		//add_filter( 'preprocess_comment', array( __CLASS__, 'preprocess_discussion_comment' ), 100 );
 
 		// Redirect back
 		add_filter( 'comment_post_redirect', array( __CLASS__, 'redirect_back' ), 10, 2 );
@@ -660,11 +700,20 @@ class CoursePress_Data_Discussion {
 		return self::$post_type == $post_type;
 	}
 
+	/**
+	 * Check current user submitted at least 1 comment/reply
+	 *
+	 * @since 2.0
+	 * @param (int) $student_id			User ID.
+	 * @param (int) $post_id			Course, unit or module ID.
+	 * @return (bool) Returns true if there's at least 1 reply found.
+	 **/
 	public static function have_comments( $student_id, $post_id ) {
 		$args = array(
 			'post_id' => $post_id,
 			'user_id' => $student_id,
 			'order' => 'ASC',
+			'offset' => 0,
 			'number' => 1, // We only need one to verify if current user posted a comment.
 			'fields' => 'ids',
 		);

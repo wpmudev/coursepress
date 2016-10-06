@@ -70,8 +70,8 @@
 							}
 						}
 					} else {
-						// Print error message
-						error_box.empty().append( data.data.error_message );
+						// Focus on the error box
+						CoursePress.showError( data.data.error_message, form );
 					}
 				}
 			}, 100 );
@@ -169,7 +169,7 @@
 			className: 'CoursePress_Module',
 			course_id: course_id,
 			unit_id: unit_id,
-			student_id: student_id,
+			student_id: student_id.val(),
 			action: 'add_single_comment'
 		};
 

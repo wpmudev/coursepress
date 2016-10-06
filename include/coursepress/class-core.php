@@ -145,9 +145,6 @@ class CoursePress_Core {
 		// Init Featured Course widget
 		CoursePress_Widget_FeaturedCourse::init();
 
-		//
-		CoursePress_Data_Discussion::init();
-
 		/**
 		 * show guide page?
 		 */

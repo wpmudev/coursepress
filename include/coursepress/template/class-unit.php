@@ -52,11 +52,12 @@ class CoursePress_Template_Unit {
 		$next_page = false;
 		$next_unit = false;
 
-		if ( $student_id ) {
+		$enrolled = CoursePress_Data_Course::student_enrolled( $student_id, $course_id );
+
+		if ( $student_id && $enrolled ) {
 			$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
 			$instructors = CoursePress_Data_Course::get_instructors( $course_id );
 			$is_instructor = in_array( $student_id, $instructors );
-			$enrolled = CoursePress_Data_Course::student_enrolled( $student_id, $course_id );
 		}
 
 		$preview = CoursePress_Data_Course::previewability( $course_id );
@@ -222,7 +223,15 @@ class CoursePress_Template_Unit {
 
 			if ( $enrolled || $is_instructor || $can_update_course || 'output' == $attributes['mode'] ) {
 				$module_template .= CoursePress_Template_Module::template( $module->ID );
+
 				// Modules seen here!
+				CoursePress_Data_Student::visited_module(
+					$student_id,
+					$course_id,
+					$unit_id,
+					$module->ID,
+					$student_progress
+				);
 			}
 		}
 

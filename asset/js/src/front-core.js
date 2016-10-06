@@ -45,11 +45,16 @@ CoursePress.Focus = function( selector ) {
 
 /** Error Box **/
 CoursePress.showError = function( error_message, container ) {
-	var error_box = $( '<div class="cp-error-box"></div>' ),
+	var error_box = $( '<div class="cp-error cp-error-box"></div>' ),
 		error = $( '<p>' ),
 		closed = $( '<a class="cp-closed">&times;</a>' ),
+		old_error_box = $( '.cp-error-box' ),
 		removeError
 	;
+
+	if ( 0 < old_error_box.length ) {
+		old_error_box.remove();
+	}
 
 	removeError = function() {
 		error_box.remove();
@@ -176,14 +181,25 @@ CoursePress.UnitProgressIndicator = function() {
 		$( this ).parent().prepend(  '<span class="progress">'+sv + '%</span>' );
 	}
 };
+// Initialize unit progress
+CoursePress.unitProgressInit = function() {
+	var discs = $( '.course-progress-disc' );
+
+	if ( 0 < discs.length ) {
+		discs.each( CoursePress.UnitProgressIndicator );
+	}
+};
 
 /** Modal Dialog **/
 CoursePress.Modal = Backbone.Model.extend( {
-	template: _.template( $( '#modal-template' ).html() ),
+	template: _.template,//_.template( $( '#modal-template' ).html() ),
 	viewContainer: '.enrollment-modal-container',
 	submitEl: '.done',
 	cancelEl: '.cancel',
 	options: 'meh',
+	initialized: function( options ) {
+		this._template = _.template( $( '#modal-template' ).html() );
+	},
 	// Dynamically create the views from the templates.
 	// This allows for WP filtering to add/remove steps
 	views: (function() {
@@ -240,7 +256,8 @@ CoursePress.Modal = Backbone.Model.extend( {
 
 // Hook into document
 $(document).ready(function() {
-	$('.course-progress-disc' ).each( CoursePress.UnitProgressIndicator );
+	// Call unit progress init
+	CoursePress.unitProgressInit();
 });
 
 })(jQuery);

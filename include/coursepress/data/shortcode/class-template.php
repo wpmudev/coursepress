@@ -201,6 +201,7 @@ class CoursePress_Data_Shortcode_Template {
 			'clickable_label' => __( 'Course Details', 'cp' ),
 			'override_button_text' => '',
 			'override_button_link' => '',
+			'button_label' => __( 'Details', 'cp' ),
 			'echo' => false,
 		), $a, 'course_list_box' );
 
@@ -216,14 +217,21 @@ class CoursePress_Data_Shortcode_Template {
 		$clickable_link = $clickable ? 'data-link="' . esc_url( $url ) . '"' : '';
 		$clickable_class = $clickable ? 'clickable' : '';
 		$clickable_text = $clickable ? '<div class="clickable-label">' . $clickable_label . '</div>' : '';
-		$button_text = ! $clickable ? '[course_join_button list_page="yes" course_id="' . $course_id . '"]' : '';
+		$button_label = $a['button_label'];
+		$button_link = $url;
+
+		if ( ! empty( $a['override_button_link'] ) ) {
+			$button_link = $a['override_button_link'];
+		}
+
+		$button_text = sprintf( '<a href="%s" rel="bookmark" class="button apply-button apply-button-details">%s</a>', esc_url( $button_link ), $button_label );
 		$instructor_link = $clickable ? 'no' : 'yes';
 		$thumbnail_class = $has_thumbnail ? 'has-thumbnail' : '';
 
 		$completed = false;
 		$student_progress = false;
 		if ( is_user_logged_in() ) {
-			$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id ); //CoursePress_Data_Student::calculate_completion( get_current_user_id(), $course_id );
+			$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id );
 			$completed = isset( $student_progress['completion']['completed'] ) && ! empty( $student_progress['completion']['completed'] );
 		}
 		$completion_class = CoursePress_Data_Course::course_class( $course_id );
@@ -735,7 +743,7 @@ class CoursePress_Data_Shortcode_Template {
 						$unit_id,
 						$module->ID
 					);
-
+/*
 					if ( ! $can_update_course &&
 						(
 						( ! $is_assessable && empty( $quiz_result ) )
@@ -748,6 +756,7 @@ class CoursePress_Data_Shortcode_Template {
 							'not_done' => true,
 						);
 					}
+*/
 				}
 
 				$preview_modules = isset( $preview['structure'][ $unit_id ][ $page ] ) ? array_keys( $preview['structure'][ $unit_id ][ $page ] ) : array();

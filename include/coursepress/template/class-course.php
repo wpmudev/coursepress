@@ -17,6 +17,117 @@ class CoursePress_Template_Course {
 		return do_shortcode( '[course_page]' );
 	}
 
+	public static function course_list_table( $courses = array() ) {
+		if ( ! is_array( $courses ) || empty( $courses ) ) {
+			return '';
+		}
+
+		$content = '';
+		$student_id = get_current_user_id();
+		$courses = array_filter( $courses );
+
+		if ( ! empty( $courses ) ) {
+			$date_format = get_option( 'date_format' );
+			$time_format = get_option( 'time_format' );
+
+			$table_header = '';
+			$table_body = '';
+
+			$table_columns = array(
+				'name' => __( 'Course', 'cp' ),
+				'date_enrolled' => __( 'Date Enrolled', 'cp' ),
+				'average' => __( 'Average', 'cp' ),
+				'certificate' => __( 'Certificate', 'cp' ),
+			);
+
+			foreach ( $table_columns as $column => $column_label ) {
+				$table_header .= sprintf( '<th class="column-%s">%s</th>', $column, $column_label );
+			}
+
+			$column_keys = array_keys( $table_columns );
+
+			foreach ( $courses as $course ) {
+				$course_url = CoursePress_Data_Course::get_course_url( $course->ID );
+				$course_completed = CoursePress_Data_Student::is_course_complete( $student_id, $course->ID );
+
+				$table_body .= '<tr>';
+
+				foreach ( $column_keys as $column_key ) {
+					switch ( $column_key ) {
+						case 'name':
+							$workbook_url = CoursePress_Data_Student::get_workbook_url( $course->ID );
+							$workbook_link = sprintf( '<a href="%s">%s</a>', esc_url( $workbook_url ), __( 'Workbook', 'cp' ) );
+
+							$row_actions = array(
+								'workbook' => $workbook_link,
+								'view' => sprintf( '<a href="%s">%s</a>', esc_attr( $course_url ), __( 'View Course', 'cp' ) ),
+							);
+
+							if ( CoursePress_Data_Capabilities::can_update_course( $course->ID, $student_id ) ) {
+								$edit_link = add_query_arg(
+									array(
+										'page' => 'coursepress_course',
+										'action' => 'edit',
+										'id' => $course->ID,
+									)
+								);
+								$edit_link = sprintf( '<a href="%s">%s</a>', esc_url( $edit_link ), __( 'Edit', 'cp' ) );
+								array_unshift( $row_actions, $edit_link );
+							}
+
+							$withdraw_link = add_query_arg( array(
+								'_wpnonce' => wp_create_nonce( 'coursepress_student_withdraw' ),
+								'course_id' => $course->ID,
+								'student_id' => $student_id,
+							) );
+							$withdraw_link = sprintf( '<a href="%s">%s</a>', esc_url( $withdraw_link ), __( 'Withdraw', 'cp' ) );
+							$row_actions['withdraw'] = $withdraw_link;
+
+							$row_actions = sprintf( '<div class="row-actions">%s</div>', implode( ' | ', $row_actions ) );
+
+							$table_body = sprintf( '<td><a href="%s">%s</a>%s</td>', esc_url( $course_url ), $course->post_title, $row_actions );
+							break;
+
+						case 'date_enrolled':
+							$date_enrolled = get_user_meta( $student_id, 'enrolled_course_date_' . $course->ID );
+
+							if ( is_array( $date_enrolled ) ) {
+								$date_enrolled = array_pop( $date_enrolled );
+							}
+							$date_enrolled = date_i18n( $date_format, CoursePress_Data_Course::strtotime( $date_enrolled ) );
+
+							$table_body .= sprintf( '<td>%s</td>', $date_enrolled );
+							break;
+
+						case 'average':
+							$average = CoursePress_Data_Student::average_course_responses( $student_id, $course->ID );
+							$table_body .= sprintf( '<td>%s%s</td>', $average, '%' );
+							break;
+
+						case 'certificate':
+							$download_certificate = __( 'Not available', 'cp' );
+
+							if ( $course_completed ) {
+								$certificate_link = CoursePress_Data_Certificate::get_encoded_url( $course->ID, $student_id );
+								$download_certificate = sprintf( '<a href="%s" class="button-primary">%s</a>', $certificate_link, __( 'Download', 'cp' ) );
+							}
+
+							$table_body .= sprintf( '<td>%s</td>', $download_certificate );
+							break;
+					}
+				}
+
+				$table_body .= '</tr>';
+			}
+
+			$table_format = '<table><thead><tr>%s</tr></thead><tbody>%s</tbody></table>';
+
+			$content .= sprintf( $table_format, $table_header, $table_body );
+		}
+
+		return $content;
+	}
+
 	/**
 	 * Template for instructor of facilitator pending avatar.
 	 *

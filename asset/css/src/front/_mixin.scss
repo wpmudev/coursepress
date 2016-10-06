@@ -1,0 +1,25 @@
+@mixin reset_a {
+	text-decoration: none;
+	outline: 0;
+	border: 0;
+	box-shadow: none;
+}
+@mixin nolist {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+@mixin locked {
+	position: relative;
+	&:before {
+		content: "\f160";
+		font-family: Dashicons;
+		float: right;
+		font-size: 1.2em;
+		line-height: 1.4em;
+	}
+}
+@mixin button {
+	padding: 5px 15px;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+}

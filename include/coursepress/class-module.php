@@ -84,9 +84,21 @@ class CoursePress_Module {
 	}
 
 	public static function add_comment( $comments, $student_id ) {
-		// Let's re-register module post type
-		$post_format = CoursePress_Data_Module::get_format();
-		register_post_type( $post_format['post_type'], $post_format['post_args'] );
+		if ( empty( $student_id ) ) {
+			// Assume current user ID
+			$student_id = get_current_user_id();
+		}
+
+		$module_id = $comments['comment_post_ID'];
+		$unit_id = get_post_field( 'post_parent', $module_id );
+		$course_id = get_post_field( 'post_parent', $unit_id );
+
+		/**
+		 * Trigger CP action hooks before inserting a new comment
+		 *
+		 * @since 2.0
+		 **/
+		do_action( 'coursepress_before_add_comment', $module_id, $course_id );
 
 		$comments = wp_parse_args(
 			$comments,
@@ -94,24 +106,16 @@ class CoursePress_Module {
 				'comment_author' => '',
 				'comment_author_url' => '',
 				'comment_author_email' => '',
+				'comment_type' => '',
+				'user_id' => $student_id,
 			)
 		);
 		$comment_id = wp_new_comment( $comments );
 
-		$module_id = $comments['comment_post_ID'];
-		$unit_id = get_post_field( 'post_parent', $module_id );
-		$course_id = get_post_field( 'post_parent', $unit_id );
-		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
-
-		if ( ! isset( $student_progress['units'] ) && ! isset( $student_progress['units'][ $comment_id] ) ) {
-			CoursePress_Helper_Utility::set_array_val( $student_progress, 'units/' . $comment_id, array() );
-			CoursePress_Data_Student::update_completion_data( $student_id, $course_id, $student_progress );
-		}
-
 		/**
-		 * notify users
-		 */
-		CoursePress_Data_Discussion_Cron::add_comment_id( $comment_id );
+		 * Trigger CP action hooks after inserting comment to DB
+		 **/
+		do_action( 'coursepress_after_add_comment', $comment_id, $student_id, $module_id, $course_id );
 
 		return $comment_id;
 	}
@@ -132,13 +136,16 @@ class CoursePress_Module {
 		);
 
 		// Add new comment
-		
 		$comment_id = self::add_comment( $comments, $student_id );
 
 		if ( 0 < $comment_id ) {
 			// Update subscribers list
 			$value = $input['subscribe'];
 			$post = get_post( $module_id );
+
+			// Update student progres
+			CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course_id );
+
 			setup_postdata( $post );
 
 			if ( empty( $value ) ) {
@@ -147,7 +154,6 @@ class CoursePress_Module {
 			CoursePress_Data_Discussion::update_user_subscription( $student_id, $module_id, $value );
 
 			// Add comment filters
-			add_filter( 'comments_open', '__return_true' );
 			add_filter( 'comment_reply_link', array( 'CoursePress_Template_Module', 'comment_reply_link' ), 10, 4 );
 
 			$json_data = array(
@@ -158,7 +164,6 @@ class CoursePress_Module {
 			);
 
 			// Remove comment filters, etc
-			remove_filter( 'comments_open', '__return_true' );
 			remove_filter( 'comment_reply_link', array( 'CoursePress_Template_Module', 'comment_reply_link' ), 10, 4 );
 
 			// Print result
@@ -256,7 +261,7 @@ class CoursePress_Module {
 					}
 
 					if ( $is_answerable ) {
-						if ( '' === ( $module[ $module_id ] ) ) {
+						if ( ! isset( $module[ $module_id ] ) || '' === ( $module[ $module_id ] ) ) {
 							// Check if module is mandatory
 							if ( $is_mandatory ) {
 								self::$error_message = __( 'You need to complete the required module!', 'cp' );
@@ -370,7 +375,7 @@ class CoursePress_Module {
 			if ( $via_ajax ) {
 				$json_data = array(
 					'error' => true,
-					'error_message' => sprintf( '<p>%s</p>', self::$error_message ),
+					'error_message' => self::$error_message,
 				);
 
 				wp_send_json_error( $json_data );

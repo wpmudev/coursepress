@@ -210,6 +210,8 @@ class CoursePress_Template_Module {
 		$student_id = get_current_user_id();
 		$content = '';
 
+		do_action( 'coursepress_module_view', $module_id, $student_id );
+
 		if ( $is_focus ) {
 			$content .= sprintf( '<input type="hidden" name="course_id" value="%s" />', $course_id );
 			$content .= sprintf( '<input type="hidden" name="unit_id" value="%s" />', $unit_id );

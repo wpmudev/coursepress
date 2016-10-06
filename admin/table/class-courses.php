@@ -23,9 +23,6 @@ class CoursePress_Admin_Table_Courses extends WP_Posts_List_Table {
 			'plural' => $post_format['post_args']['labels']['name'],
 			'ajax' => false,
 		) );
-
-		// Course caps
-		CoursePress_Data_Capabilities::course_capabilities();
 	}
 
 	public function prepare_items() {

@@ -9,11 +9,20 @@ class CoursePress_Hooks {
 	static $warning_message = '';
 
 	public static function init() {
+		// Listen to course withdrawal request
+		add_action( 'init', array( 'CoursePress_Data_Student', 'withdraw_from_course' ) );
+
 		// Listen to module submission
 		add_action( 'init', array( 'CoursePress_Module', 'process_submission' ), 1 );
 
 		// Listen to enrollment request
 		add_action( 'init', array( 'CoursePress_Template_Student', 'process_enrollment' ) );
+
+		// Listen to comment submission
+		add_action( 'init', array( 'CoursePress_Data_Discussion', 'init' ), 100 );
+
+		// Map course capabilities
+		add_action( 'init', array( 'CoursePress_Data_Capabilities', 'course_capabilities' ), 110 );
 
 		// Hook to admin ajax request
 		add_action( 'wp_ajax_coursepress_request', array( __CLASS__, 'process_request' ) );
