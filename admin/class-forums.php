@@ -266,7 +266,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 				_e( 'You do not have permission to add discussion.', 'cp' );
 				return;
 			}
-		}
+        }
 		$options = array();
 		$options['value'] = $course_id;
 		if ( ! CoursePress_Data_Capabilities::can_add_discussion_to_all() ) {
@@ -305,7 +305,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 			return array();
 		}
 
-		$courses = CoursePress_Data_Instructor::get_accessable_courses();
+		$courses = self::get_accessable_courses();
 
 		if ( ! empty( $courses ) ) {
 			/** This filter is documented in include/coursepress/helper/class-setting.php */
@@ -422,4 +422,50 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 		}
 		echo '</ul>';
 	}
+
+	/**
+	 * Get courses depend on discussions capabilities.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer|null Checked user ID.
+	 * @param string|null Course status.
+	 * @return array Array of courses.
+	 */
+	public static function get_accessable_courses( $user_id = '', $post_status = 'publish' ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		} elseif ( is_object( $user_id ) ) {
+			$user_id = $user_id->ID;
+		}
+		$args = array(
+			'post_type' => CoursePress_Data_Course::get_post_type_name(),
+			'post_status' => $post_status,
+			'posts_per_page' => -1,
+		);
+		if ( ! user_can( $user_id, 'manage_options' ) ) {
+			$can_search = false;
+			if ( user_can( $user_id, 'coursepress_create_my_discussion_cap' ) ) {
+				$args['author'] = $user_id;
+				$can_search = true;
+			}
+			if ( user_can( $user_id, 'coursepress_create_my_assigned_discussion_cap' ) ) {
+				$assigned_courses = CoursePress_Data_Instructor::get_assigned_courses_ids( $user_id );
+				$args['include'] = $assigned_courses;
+				if ( $can_search ) {
+					// Let's add the author param via filter hooked.
+					unset( $args['author'] );
+					add_filter( 'posts_where', array( __CLASS__, 'filter_by_where' ) );
+				}
+				$can_search = true;
+			}
+			if ( ! $can_search ) {
+				// Bail early
+				return array();
+			}
+		}
+		$posts = get_posts( $args );
+		return $posts;
+	}
+
 }

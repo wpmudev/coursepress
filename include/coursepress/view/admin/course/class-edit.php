@@ -254,13 +254,14 @@ class CoursePress_View_Admin_Course_Edit {
 
 		$class_extra = is_rtl() ? 'chosen-rtl' : '';
 		$manage_category_link = '';
+		$can_manage_categories = CoursePress_Data_Capabilities::can_manage_categories();
 
-		if ( CoursePress_Data_Capabilities::can_manage_categories() ) {
+		if ( $can_manage_categories ) {
 			$manage_category_link = sprintf( '<a href="%s" class="context-link">%s</a>', esc_url_raw( $url ), esc_html__( 'Manage Categories', 'cp' ) );
 		}
 
+        $content .= sprintf( '<div class="wide %s">', $can_manage_categories ? '' : 'hidden' );
 		$content .= '
-				<div class="wide">
 					<label for="meta_course_category" class="medium">' .
 					esc_html__( 'Course Category', 'cp' ) . $manage_category_link . '
 					</label>

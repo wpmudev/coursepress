@@ -102,7 +102,7 @@ class CoursePress_View_Admin_Setting_Capabilities {
 	}
 
 	private static function _capability_boxes() {
-		return array(
+		$options = array(
 			'general' => array(
 				'title' => __( 'General', 'cp' ),
 				'items' => self::_instructor_capabilities_general(),
@@ -139,11 +139,18 @@ class CoursePress_View_Admin_Setting_Capabilities {
 				'title' => __( 'Discussions', 'cp' ),
 				'items' => self::_instructor_capabilities_discussions(),
 			),
-			'wordpress' => array(
+		);
+		/**
+		 * Add this capabilities only when MarketPress is acctive.
+		 */
+		$is_marketpress_active = apply_filters( 'coursepress_is_marketpress_active', false );
+		if ( $is_marketpress_active ) {
+			$options['wordpress'] = array(
 				'title' => __( 'Grant default WordPress capabilities', 'cp' ),
 				'items' => self::_instructor_capabilities_posts_and_pages(),
-			),
-		);
+			);
+		}
+		return $options;
 	}
 
 	private static function _instructor_capabilities_general() {
@@ -236,8 +243,7 @@ class CoursePress_View_Admin_Setting_Capabilities {
 		return array(
 			'coursepress_create_my_notification_cap' => __( 'Create new notifications for own courses', 'cp' ),
 			'coursepress_create_my_assigned_notification_cap' => __( 'Create new notifications for assigned courses', 'cp' ),
-			'coursepress_create_notification_cap' => __( 'Create new notifications', 'cp' ),
-			'coursepress_update_my_notification_cap' => __( 'Update own notifications', 'cp' ),
+			'coursepress_update_my_notification_cap' => __( 'Update own published notification', 'cp' ),
 			'coursepress_update_notification_cap' => __( 'Update every notification', 'cp' ),
 			'coursepress_delete_my_notification_cap' => __( 'Delete own notifications', 'cp' ),
 			'coursepress_delete_notification_cap' => __( 'Delete every notification', 'cp' ),
@@ -248,10 +254,9 @@ class CoursePress_View_Admin_Setting_Capabilities {
 
 	private static function _instructor_capabilities_discussions() {
 		return array(
-			'coursepress_create_discussion_cap' => __( 'Create new discussions', 'cp' ),
 			'coursepress_create_my_discussion_cap' => __( 'Create new discussions for own courses', 'cp' ),
 			'coursepress_create_my_assigned_discussion_cap' => __( 'Create new discussions for assigned courses', 'cp' ),
-			'coursepress_update_my_discussion_cap' => __( 'Update own discussions', 'cp' ),
+			'coursepress_update_my_discussion_cap' => __( 'Update own published discussions', 'cp' ),
 			'coursepress_update_discussion_cap' => __( 'Update every discussion', 'cp' ),
 			'coursepress_delete_my_discussion_cap' => __( 'Delete own discussions', 'cp' ),
 			'coursepress_delete_discussion_cap' => __( 'Delete every discussion', 'cp' ),
