@@ -171,10 +171,23 @@ class CoursePress_Helper_Upgrade {
 	 * @since 2.0.0
 	 *
 	 * @param WP_Post $course Course object.
-	 * @return status of upgrade true/false.
+	 * @return boolean|string status of upgrade true or message.
 	 */
 	public static function course_upgrade( $course ) {
-		// _cp_updated_to_version_2
+        $already_upgraded = get_post_meta( $course->ID, '_cp_updated_to_version_2', true );
+        if ( $already_upgraded ) {
+            return __( 'This course was already updated.', 'cp' );
+        }
+        $updates = array(
+            'categories',
+        );
+        foreach( $updates as $function_sufix ) {
+            $result = call_user_func( array( __CLASS__, 'course_upgrade_'.$function_sufix ), $course );
+            if ( is_string( $result ) ) {
+                return $result;
+            }
+        }
+
 		return true;
 	}
 
@@ -225,8 +238,8 @@ class CoursePress_Helper_Upgrade {
 		 * upgrade course
 		 */
 		$success = self::course_upgrade( $course );
-		if ( ! $success ) {
-			$message = __( 'Course update fail: someting went wrong!', 'cp' );
+		if ( is_string( $success ) ) {
+			$message = sprintf( __( 'Course update fail: %s!', 'cp' ), $success );
 			self::print_json_and_die( $message );
 		}
 		/**
@@ -253,5 +266,12 @@ class CoursePress_Helper_Upgrade {
 		echo json_encode( $json );
 		wp_die();
 	}
+
+        /**
+         * Course Categories
+         */
+    private static function course_upgrade_categories( $course ) {
+        $categories = get_post_meta( $course->ID, 'course_category', true );
+    }
 
 }
