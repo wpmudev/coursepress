@@ -7,6 +7,12 @@
 		var $form = $('form#coursepress-update-courses-form');
 		var $holder = $('#coursepress-updater-holder');
 		/**
+		 * Do not process if ther is no upgrade form.
+		 */
+		if ( 0 === $form.length ) {
+			return;
+		}
+		/**
 		 * Send certificate manually
 		 */
 		$('.button').on( 'click', $form, function() {
