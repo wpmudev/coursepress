@@ -2,7 +2,7 @@
 
 class CoursePress_Helper_Upgrade {
 
-	private static $message_meta_name = 'course_upgrade_messsage';
+    private static $message_meta_name = 'course_upgrade_messsage';
 
 	public static function init() {
 		add_action( 'wp_ajax_coursepress_upgrade_update', array( __CLASS__, 'ajax_courses_upgrade' ) );
@@ -138,11 +138,21 @@ class CoursePress_Helper_Upgrade {
 			return;
 		}
 		$plugin_version = get_option( 'coursepress_version', '1.3' );
+		$coursepress_courses_need_update = false;
 		if ( 0 > version_compare( $plugin_version, CoursePress::$version ) ) {
-			update_option( 'coursepress_courses_need_update', true );
 			update_option( 'coursepress_version', CoursePress::$version, 'no' );
-		}
-		$coursepress_courses_need_update = get_option( 'coursepress_courses_need_update', false );
+			/**
+			 * Counts posts and decide.
+			 */
+			$post_type = CoursePress_Data_Course::get_post_type_name();
+			$count_courses = (array)wp_count_posts( $post_type );
+			$count_courses = array_sum( $count_courses );
+			if ( ! empty( $count_courses ) ) {
+				$coursepress_courses_need_update = true;
+			}
+			update_option( 'coursepress_courses_need_update', $coursepress_courses_need_update );
+        }
+        $coursepress_courses_need_update = get_option( 'coursepress_courses_need_update', $coursepress_courses_need_update );
 		if ( $coursepress_courses_need_update ) {
 			$slug = CoursePress_View_Admin_Upgrade::get_slug();
 			$hide = isset( $_GET['page'] ) && $_GET['page'] == $slug;
@@ -179,14 +189,19 @@ class CoursePress_Helper_Upgrade {
             return __( 'This course was already updated.', 'cp' );
         }
         $updates = array(
-            'categories',
+            'course_details_video',
+            'course_details_structure',
+            'course_dates',
         );
         foreach( $updates as $function_sufix ) {
-            $result = call_user_func( array( __CLASS__, 'course_upgrade_'.$function_sufix ), $course );
-            if ( is_string( $result ) ) {
-                return $result;
-            }
+            call_user_func( array( __CLASS__, 'course_upgrade_'.$function_sufix ), $course );
         }
+
+        CoursePress_Data_Course::update_setting( $course->ID, 'course_view', 'normal' );
+
+
+
+//l(CoursePress_Data_Course::get_setting( $course->ID ));
 
 		return true;
 	}
@@ -267,11 +282,132 @@ class CoursePress_Helper_Upgrade {
 		wp_die();
 	}
 
-        /**
-         * Course Categories
-         */
-    private static function course_upgrade_categories( $course ) {
-        $categories = get_post_meta( $course->ID, 'course_category', true );
+	/**
+	 * Course Details: Course Video
+	 */
+	private static function course_upgrade_course_details_video( $course ) {
+		$value = self::rename_post_meta( $course->ID, 'course_video_url', 'cp_featured_video' );
+		if ( empty( $value ) ) {
+			return;
+		}
+		CoursePress_Data_Course::update_setting( $course->ID, 'featured_video', $value );
     }
+
+	/**
+	 * Course Details: Course Structure
+	 */
+	private static function course_upgrade_course_details_structure( $course ) {
+		$value = self::rename_post_meta( $course->ID, 'course_structure_options', 'meta_structure_visible' );
+		if ( empty( $value ) ) {
+			return;
+		}
+    }
+
+	/**
+	 * Course Dataes
+	 */
+    private static function course_upgrade_course_dates( $course ) {
+        $dates = array(
+            array(
+                'meta_key_old' => 'course_end_date',
+                'meta_key_new' => 'cp_course_end_date',
+                'settings' => 'course_end_date',
+            ),
+            array(
+                'meta_key_old' => 'course_start_date',
+                'meta_key_new' => 'cp_course_start_date',
+                'settings' => 'course_start_date',
+            ),
+            array(
+                'meta_key_old' => 'enrollment_end_date',
+                'meta_key_new' => 'cp_enrollment_end_date',
+                'settings' => 'enrollment_end_date',
+            ),
+            array(
+                'meta_key_old' => 'enrollment_start_date',
+                'meta_key_new' => 'cp_enrollment_start_date',
+                'settings' => 'enrollment_start_date',
+            ),
+            array(
+                'meta_key_old' => 'open_ended_course',
+                'meta_key_new' => 'cp_course_open_ended',
+                'settings' => 'course_open_ended',
+            ),
+            array(
+                'meta_key_old' => 'open_ended_enrollment',
+                'meta_key_new' => 'cp_enrollment_open_ended',
+                'settings' => 'open_ended_enrollment',
+            ),
+        );
+        $options = array(
+            'value_convert_function' => 'strtotime',
+            'save_old_meta' => true,
+        );
+        foreach ( $dates as $data ) {
+            $value = self::rename_post_meta( $course->ID, $data['meta_key_old'], $data['meta_key_new'], $options );
+            if ( empty( $value ) ) {
+                continue;
+            }
+            CoursePress_Data_Course::update_setting( $course->ID, $data['settings'], $value );
+        }
+        /**
+         * do not convert
+         */
+        $options = array();
+        $dates = array(
+            array(
+                'meta_key_old' => 'open_ended_course',
+                'meta_key_new' => 'cp_open_ended_course',
+                'settings' => 'course_open_ended',
+            ),
+            array(
+                'meta_key_old' => 'open_ended_enrollment',
+                'meta_key_new' => 'cp_enrollment_open_ended',
+                'settings' => 'enrollment_open_ended',
+            ),
+        );
+        foreach ( $dates as $data ) {
+            $value = self::rename_post_meta( $course->ID, $data['meta_key_old'], $data['meta_key_new'], $options );
+            if ( empty( $value ) ) {
+                continue;
+            }
+            CoursePress_Data_Course::update_setting( $course->ID, $data['settings'], $value );
+        }
+    }
+
+	private static function rename_post_meta( $course_id, $meta_key_old, $meta_key_new, $options = array() ) {
+		$value = get_post_meta( $course_id, $meta_key_old, true );
+		if ( empty( $value ) ) {
+			return;
+        }
+        /**
+         * convert value if is nessarry
+         */
+        if (
+            isset( $options['value_convert_function'] )
+            && $options['value_convert_function'] 
+            && is_callable( $options['value_convert_function'] )
+        ) {
+            $value = call_user_func( $options['value_convert_function'], $value );
+        }
+        l(array( $course_id, $meta_key_old, $meta_key_new, $options, $value ) );
+        /**
+         * Add post meta
+         */
+        CoursePress_Helper_Utility::add_meta_unique( $course_id, $meta_key_new, $value );
+        /**
+         * resave old with new value
+         */
+        if ( isset( $options['save_old_meta'] ) && $options['save_old_meta'] ) {
+            update_post_meta( $course_id, $meta_key_old, $value );
+        }
+        /**
+         * delete old meta
+         */
+		if ( isset( $options['delete_old_meta'] ) && $options['delete_old_meta'] ) {
+			delete_post_meta( $course_id, $meta_key_old );
+		}
+		return $value;
+	}
 
 }

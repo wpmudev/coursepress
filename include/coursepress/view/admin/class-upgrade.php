@@ -90,11 +90,22 @@ class CoursePress_View_Admin_Upgrade {
 		echo '</div>';
 	}
 
+	/**
+	 * Get page slug
+	 */
 	public static function get_slug() {
 		return self::$slug;
 	}
 
+	/**
+	 * Enqueue script, but only on upgrade page.
+	 */
 	public static function admin_enqueue_scripts() {
+		$screen = get_current_screen();
+		$re = sprintf( '/_page_%s$/', self::$slug );
+		if ( ! preg_match( $re, $screen->id ) ) {
+			return;
+		}
 		$script = CoursePress::$url . 'asset/js/admin-upgrade.js';
 		wp_enqueue_script( 'coursepress_admin_upgrade_js', $script, array( 'jquery' ), CoursePress::$version, true );
 	}
