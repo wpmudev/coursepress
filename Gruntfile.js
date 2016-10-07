@@ -39,7 +39,7 @@ module.exports = function(grunt) {
 			'{js}coursepress-unitsbuilder.js': ['{js}src/coursepress-unitsBuilder.js'],
 			'{js}coursepress-calendar.js':     ['{js}src/coursepress-calendar.js'],
 			'{js}coursepress-assessment.js':   ['{js}src/coursepress-assessment.js'],
-			'{js}admin-ui.js':                 ['{js}src/admin-ui.js']
+			'{js}admin-ui.js':                 ['{js}src/admin-ui.js'],
 			'{js}front.js':                    ['{js}src/front-core.js', '{js}src/front-modules.js']
 		},
 
