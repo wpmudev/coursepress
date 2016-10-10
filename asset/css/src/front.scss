@@ -15,7 +15,10 @@
 @import 'front/_module.scss';
 
 /** Workbook **/
-@import 'front/workbook.scss';
+@import 'front/_workbook.scss';
+
+/** Discussion **/
+@import 'front/_discussion.scss';
 
 /** Media Queries **/
 @import 'front/media-query.scss';

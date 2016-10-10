@@ -753,6 +753,11 @@ class CoursePress_Data_Discussion {
 	 * @since 2.0.0
 	 */
 	public static function comments_template_query_args( $args ) {
+		// Set default arguments
+		$args = wp_parse_args( $args, array(
+			'number' => 20,
+		) );
+
 		$discussion_name = get_query_var( 'discussion_name' );
 		if ( empty( $discussion_name ) ) {
 			return $args;
