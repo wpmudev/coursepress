@@ -759,7 +759,10 @@ class CoursePress_Data_Shortcode_Template {
 */
 				}
 
-				$preview_modules = isset( $preview['structure'][ $unit_id ][ $page ] ) ? array_keys( $preview['structure'][ $unit_id ][ $page ] ) : array();
+				$preview_modules = array();
+				if ( isset( $preview['structure'][ $unit_id ][ $page ] ) && is_array( $preview['structure'][ $unit_id ][ $page ] ) ) {
+					$preview_modules = array_keys( $preview['structure'][ $unit_id ][ $page ] );
+				}
 				$can_preview_module = in_array( $module->ID, $preview_modules ) || ( isset( $preview['structure'][ $unit_id ] ) && ! is_array( $preview['structure'][ $unit_id ] ) );
 
 				if ( ! empty( $error_message ) ) {
