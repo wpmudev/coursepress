@@ -1258,6 +1258,9 @@ class CoursePress_View_Front_Course {
 
 		// Finally set up the virtual page, if we found a special CP page.
 		if ( $cp->vp_args ) {
+			// Marked the current page is CP page
+			CoursePress_Core::$is_cp_page = true;
+
 			$pg = new CoursePress_Data_VirtualPage( $cp->vp_args );
 			self::$title = $cp->title;
 

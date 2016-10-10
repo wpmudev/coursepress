@@ -10,6 +10,7 @@
  * Plugin initialization for the CoursePress core plugin.
  */
 class CoursePress_Core {
+	public static $is_cp_page = false;
 
 	/**
 	 * Initialize CoursePress Core.
@@ -48,9 +49,6 @@ class CoursePress_Core {
 		add_filter( 'rewrite_rules_array', array( __CLASS__, 'add_rewrite_rules' ) );
 
 		CoursePress_Hooks::init();
-
-		// Initialize JavaScript Object Helper.
-		CoursePress_Helper_JavaScript::init();
 
 		// Initialize Plugin Integrations.
 		CoursePress_Helper_Integration::init();

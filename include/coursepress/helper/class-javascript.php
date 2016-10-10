@@ -1,16 +1,12 @@
 <?php
 class CoursePress_Helper_JavaScript {
+	protected static $is_cp_called = false;
+
 	public static $scripts = array();
 	public static $styles = array();
 
-	public static function init() {
-		// These don't work here because of core using wp_print_styles()
-		// add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
-		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_admin_scripts' ) );
-
-		add_action( 'admin_footer', array( __CLASS__, 'enqueue_scripts' ) );
-		//add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_front_scripts' ) );
-	}
+	// Depracated!!!
+	public static function init() {}
 
 	/**
 	 * Check if current page is CP page.
@@ -379,7 +375,18 @@ class CoursePress_Helper_JavaScript {
 		wp_enqueue_style( 'coursepress-front', $front_css, array(), CoursePress::$version );
 	}
 
+	public static function maybe_print_assets() {
+		if( false === self::$is_cp_called && CoursePress_Core::$is_cp_page ) {
+			self::front_assets();
+		}
+	}
+
 	public static function front_assets() {
+		if ( false === CoursePress_Core::$is_cp_page ) {
+			return;
+		}
+
+		self::$is_cp_called = true;
 		$script_url = CoursePress::$url . 'asset/js/';
 		$css_url = CoursePress::$url . 'asset/css/';
 		$version = CoursePress::$version;
