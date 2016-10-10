@@ -29,17 +29,44 @@
 .cp .cp-error-box {
   display: block;
   padding: 15px 15px 0 15px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  background-color: rgba(255, 0, 0, 0.05);
+  border: 1px solid rgba(255, 0, 0, 0.09);
+  font-size: 0.9em;
+}
+.cp .cp-error-box:before {
+  content: "\F534";
+  font-family: Dashicons;
+  font-size: 2.5em;
+  line-height: 1;
+  float: left;
+  margin-right: 5px;
+  color: #999;
 }
 .cp .cp-error-box p {
   margin-top: 0;
+  border: 0;
+  padding: 5px 15px;
 }
 .cp .cp-error-box .cp-closed {
   text-decoration: none;
   float: right;
-  width: 25px;
   text-align: center;
   cursor: pointer;
+  font-size: 1.5em;
+  line-height: 23px;
+  height: 25px;
+  width: 25px;
+  background-color: rgba(255, 0, 0, 0.5);
+  color: #FFF;
+  border-radius: 50%;
+  text-decoration: none;
+  outline: 0;
+  border: 0;
+  box-shadow: none;
+}
+.cp .cp-error-box .cp-closed:hover {
+  background-color: red;
+  color: #FFF;
 }
 
 .cp-mask {
@@ -451,19 +478,6 @@
 }
 
 /** Modules **/
-.cp .cp-error p {
-  margin: 15px 0;
-  font-size: 0.9em;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  padding: 5px 15px;
-}
-.cp .cp-error p:before {
-  content: "\F534";
-  font-family: Dashicons;
-  font-size: 1.2em;
-  margin-right: 5px;
-  color: red;
-}
 .cp .cp-module-content {
   position: relative;
   display: block;

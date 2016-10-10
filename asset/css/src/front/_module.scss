@@ -1,19 +1,4 @@
 .cp {
-	.cp-error {
-		p {
-			margin: 15px 0;
-			font-size: 0.9em;
-			border: 1px solid rgba(0,0, 0, 0.05);
-			padding: 5px 15px;
-			&:before {
-				content: "\F534";
-				font-family: Dashicons;
-				font-size: 1.2em;
-				margin-right: 5px;
-				color: red;
-			}
-		}
-	}
 	.cp-module-content {
 		position: relative;
 		display: block;
