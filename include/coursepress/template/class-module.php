@@ -770,7 +770,7 @@ class CoursePress_Template_Module {
 		$disabled_attr = $disabled ? 'disabled="disabled"' : '';
 		$response = self::get_response( $module->ID, get_current_user_id() );
 
-		$format = '<label class="file"><input type="file" name="module[%s]" %s /><span class="button" data-change="%s" data-upload="%s">%s</label>';
+		$format = '<label class="file"><input type="file" name="module[%s]" %s /><span class="button" data-change="%s" data-upload="%s">%s <span class="upload-progress"></span></label>';
 		$content = sprintf( $format, $module->ID, $disabled_attr, __( 'Change File', 'cp' ), __( 'Upload File', 'cp' ), __( 'Upload File', 'cp' ) );
 
 		$upload_types = CoursePress_Helper_Utility::allowed_student_mimes();

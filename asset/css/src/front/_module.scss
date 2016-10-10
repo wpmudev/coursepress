@@ -98,6 +98,15 @@
 			}
 		}
 	}
+	.invalid-extension {
+		margin: 25px 0 0 0;
+		font-style: italic;
+		font-size: 14px;
+		padding: 5px 12px;
+		clear: both;
+		background-color: $warning_bg;
+		border: $warning_border;
+	}
 	.cp-sub {
 		margin: 15px 0;
 		p {

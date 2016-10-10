@@ -410,7 +410,7 @@ class CoursePress_Helper_JavaScript {
 			'allowed_extensions' => apply_filters( 'coursepress_custom_allowed_extensions', false ),
 			'allowed_student_extensions' => CoursePress_Helper_Utility::allowed_student_mimes(),
 			'no_browser_upload' => __( 'Please try a different browser to upload your file.', 'cp' ),
-			'invalid_upload_message' => __( 'Please only upload any of the following files: ', 'cp' ),
+			'invalid_upload_message' => __( 'Invalid file format!', 'cp' ),
 			'file_uploaded_message' => __( 'Your file has been submitted successfully.', 'cp' ),
 			'file_upload_fail_message' => __( 'There was a problem processing your file.', 'cp' ),
 			'response_saved_message' => __( 'Your response was recorded successfully.', 'cp' ),

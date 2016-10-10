@@ -572,6 +572,15 @@
 .cp .module-response .cp-answers .chosen-answer.correct:before {
   content: "\f147";
 }
+.cp .invalid-extension {
+  margin: 25px 0 0 0;
+  font-style: italic;
+  font-size: 14px;
+  padding: 5px 12px;
+  clear: both;
+  background-color: rgba(255, 0, 0, 0.05);
+  border: 1px solid rgba(255, 0, 0, 0.09);
+}
 .cp .cp-sub {
   margin: 15px 0;
 }
