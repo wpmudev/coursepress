@@ -140,9 +140,9 @@ class CoursePress_Admin_Controller_Menu {
 			// Print styles
 			$core_css = array(
 				'select2' => $css_url . 'external/select2.min.css',
-				'admin-ui' => $css_url . 'admin-ui.css',
 			);
 
+			wp_enqueue_style( 'coursepress-admin-ui', $css_url . 'admin-ui.css', array(), $version );
 			if ( $include_core ) {
 				// Chosen
 				wp_enqueue_style( 'cp_chosen_css', $css_url . 'external/chosen.css' );
@@ -306,7 +306,12 @@ class CoursePress_Admin_Controller_Menu {
 	 * submitbox content
 	 */
 	protected static function submitbox( $post, $can_change_function ) {
-		$post_id = is_object( $post )? $post->ID : 0;
+		$post_id = 0;
+		if ( is_object( $post ) ) {
+			$post_id = $post->ID;
+		} else {
+			$post = new stdClass;
+		}
 		$post->can_change_status = call_user_func( array( 'CoursePress_Data_Capabilities', $can_change_function ), $post_id );
 		if ( 'draft' == $post->post_status && $post->can_change_status ) {
 ?>
@@ -330,8 +335,11 @@ class CoursePress_Admin_Controller_Menu {
 		 */
 		echo '<div id="major-publishing-actions"><div id="publishing-action"><span class="spinner"></span>';
 		$label = __( 'Publish', 'cp' );
+		if ( ! $post->can_change_status && empty( $post->ID ) ) {
+			$label = __( 'Save', 'cp' );
+		}
 		$class = 'force-publish';
-		if ( is_object( $post ) && 'publish' == $post->post_status ) {
+		if ( 'publish' == $post->post_status || ! $post->can_change_status ) {
 			$label = __( 'Update', 'cp' );
 			$class = '';
 		}

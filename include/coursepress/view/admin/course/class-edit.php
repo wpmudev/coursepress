@@ -254,13 +254,14 @@ class CoursePress_View_Admin_Course_Edit {
 
 		$class_extra = is_rtl() ? 'chosen-rtl' : '';
 		$manage_category_link = '';
+		$can_manage_categories = CoursePress_Data_Capabilities::can_manage_categories();
 
-		if ( CoursePress_Data_Capabilities::can_manage_categories() ) {
+		if ( $can_manage_categories ) {
 			$manage_category_link = sprintf( '<a href="%s" class="context-link">%s</a>', esc_url_raw( $url ), esc_html__( 'Manage Categories', 'cp' ) );
 		}
 
+        $content .= sprintf( '<div class="wide %s">', $can_manage_categories ? '' : 'hidden' );
 		$content .= '
-				<div class="wide">
 					<label for="meta_course_category" class="medium">' .
 					esc_html__( 'Course Category', 'cp' ) . $manage_category_link . '
 					</label>
@@ -864,39 +865,19 @@ class CoursePress_View_Admin_Course_Edit {
 			';
 
 		// Enrollment Options
-		$enrollment_types = array(
-			'manually' => __( 'Manually added only', 'cp' ),
-		);
-		if ( CoursePress_Helper_Utility::users_can_register() ) {
-			$enrollment_types = array_merge( $enrollment_types, array(
-				'anyone' => __( 'Anyone', 'cp' ),
-				'passcode' => __( 'Anyone with a pass code', 'cp' ),
-				'prerequisite' => __( 'Anyone who completed the prerequisite course(s)', 'cp' ),
-			) );
-		} else {
-			$enrollment_types = array_merge( $enrollment_types, array(
-				'registered' => __( 'Registered users', 'cp' ),
-				'passcode' => __( 'Registered users with a pass code', 'cp' ),
-				'prerequisite' => __( 'Registered users who completed the prerequisite course(s)', 'cp' ),
-			) );
-		}
-		$enrollment_types = apply_filters( 'coursepress_course_enrollment_types', $enrollment_types, $course_id );
+		$enrollment_types = CoursePress_Data_Course::get_enrollment_types_array( $course_id );
 
-		$content .= '
-				<div class="wide">
-					<label>' .
-					esc_html__( 'Enrollment Restrictions', 'cp' ) . '
-					</label>
-					<p class="description">' . esc_html__( 'Select the limitations on accessing and enrolling in this course.', 'cp' ) . '</p>
-					<select name="meta_enrollment_type" class="chosen-select medium">';
+		$content .= '<div class="wide">';
+		$content .= sprintf( '<label>%s</label>', esc_html__( 'Enrollment Restrictions', 'cp' ) );
 
-		$selected = CoursePress_Data_Course::get_setting( $course_id, 'enrollment_type', 'manually' );
-		foreach ( $enrollment_types as $key => $type ) {
-			$content .= '<option value="' . $key . '" ' . selected( $selected, $key, false ) . '>' . esc_html( $type ) . '</option>';
-		}
-		$content .= '
-					</select>
-				</div>';
+		$content .= '<p class="description">' . esc_html__( 'Select the limitations on accessing and enrolling in this course.', 'cp' ) . '</p>';
+		/**
+		 * select
+		 */
+		$enrollment_type_default = CoursePress_Data_Course::get_enrollment_type_default( $course_id );
+		$selected = CoursePress_Data_Course::get_setting( $course_id, 'enrollment_type', $enrollment_type_default );
+		$content .= CoursePress_Helper_UI::select( 'meta_enrollment_type', $enrollment_types, $selected, 'chosen-select medium' );
+		$content .= '</div>';
 
 		$class = 'prerequisite' === $selected ? '' : 'hidden';
 		$content .= '
@@ -995,7 +976,7 @@ class CoursePress_View_Admin_Course_Edit {
 					<h3>Sell your courses online with MarketPress.</h3>
 					%s
 					%s
-					<p>Other supported plugins:  WooCommerce</p>
+					<p>Other supported plugins: WooCommerce</p>
 				</div>
 			', 'cp' ), $class, $version_message, $install_message ), $course_id );
 

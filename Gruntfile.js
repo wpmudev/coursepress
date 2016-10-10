@@ -38,7 +38,12 @@ module.exports = function(grunt) {
 			'{js}coursepress-unitsbuilder.js': ['{js}src/coursepress-unitsBuilder.js'],
 			'{js}coursepress-calendar.js':		['{js}src/coursepress-calendar.js'],
 			'{js}coursepress-assessment.js':	['{js}/src/coursepress-assessment.js'],
-			'{js}admin-ui.js':					['{js}/src/admin-ui.js']
+			'{js}admin-ui.js':					['{js}/src/admin-ui.js'],
+			'{js}front.js':						[
+				'{js}/src/front-core.js',
+				'{js}/src/front-modules.js',
+				'{js}/src/front-enrollment.js'
+			]
 		},
 
 		// SASS files to process. Resulting CSS files will be minified as well.
@@ -48,7 +53,7 @@ module.exports = function(grunt) {
 			'{css}coursepress_front.css': '{css}src/coursepress_front.scss',
 			'{css}bbm.modal.css':         '{css}src/bbm.modal.scss',
 			'{css}editor.css':            '{css}src/editor.scss',
-			'{css}admin-ui.css':           '{css}/admin/admin-ui.scss',
+			'{css}admin-ui.css':           '{css}src/admin/admin-ui.scss',
 			'{css}front.css':				'{css}src/front.scss'
 		},
 
@@ -207,7 +212,7 @@ module.exports = function(grunt) {
 	// Define grunt tasks.
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
-
+		conf: conf,
 		// JS: Validate JS files (1).
 		jsvalidate: {
 			all: [
@@ -278,7 +283,7 @@ module.exports = function(grunt) {
 		uglify: {
 			all: {
 				files: [{
-					expand: false,
+					expand: true,
 					src: ['*.js', '!*.min.js'],
 					cwd: conf.js_folder,
 					dest: conf.js_folder,
@@ -363,7 +368,7 @@ module.exports = function(grunt) {
 				files: [
 					conf.js_folder + 'src/**/*.js'
 				],
-				tasks: ['clear', 'jshint', 'concat'],
+				tasks: ['clear', 'concat'],
 				options: {
 					debounceDelay: 500
 				}

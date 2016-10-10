@@ -23,7 +23,7 @@ class CoursePress_Template_Module {
 
 		$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id );
 
-		if ( false === $all && ! empty( $response['response'] ) ) {
+		if ( false === $all && isset( $response['response'] ) ) {
 			$response = $response['response'];
 		}
 
@@ -39,7 +39,7 @@ class CoursePress_Template_Module {
 		$response = self::get_response( $module_id, $student_id );
 
 		switch( $module_type ) {
-			case 'input-checkbox': case 'input-radio':
+			case 'input-checkbox': case 'input-radio': case 'input-select':
 				$answers = $attributes['answers'];
 				$selected = (array) $attributes['answers_selected'];
 				$content .= '<ul class="cp-answers">';
@@ -85,7 +85,7 @@ class CoursePress_Template_Module {
 				if ( is_admin() ) {
 					if ( ! empty( $attributes['questions'] ) ) {
 						$questions = $attributes['questions'];
-	
+
 						foreach ( $questions as $q_index => $question ) {
 							$options = (array) $question['options'];
 							$checked = (array) $options['checked'];
@@ -151,7 +151,7 @@ class CoursePress_Template_Module {
 						$content .= '</ul></div>';
 					}
 				}
-			break;
+				break;
 		}
 
 		/**
@@ -172,29 +172,34 @@ class CoursePress_Template_Module {
 		$grade = (int) CoursePress_Helper_Utility::get_array_val( $grades, 'grade' );
 		$minimum_grade = (int) $attributes['minimum_grade'];
 		$require_assessment = false;
+		$status = '';
 
-		if ( ! empty( $attributes['assessable'] ) || ! empty( $attributes['instructor_assessable'] ) ) {
-			$graded_by = CoursePress_Helper_Utility::get_array_val( $grades, 'graded_by' );
+		if ( in_array( $module_type, $assessables ) ) {
+			if ( ! empty( $attributes['assessable'] ) ) {
+				$graded_by = CoursePress_Helper_Utility::get_array_val( $grades, 'graded_by' );
 
-			if ( 'auto' == $graded_by ) {
-				$grade = 0;
-				$require_assessment = true;
+				if ( 'auto' === $graded_by || empty( $grades ) ) {
+					$status = __( 'Pending', 'cp' );
+				}
+			} else {
+				$status = __( 'Non Gradable', 'cp' );
 			}
+		} else {
+			$pass = $grade >= $minimum_grade;
+			$status = $pass ? __( 'Pass', 'cp' ) : __( 'Fail', 'cp' );
 		}
-		$pass = $grade >= $minimum_grade;
-		$status = $pass ? __( 'Pass', 'cp' ) : __( 'Fail', 'cp' );
-		$status = $require_assessment ? __( 'Pending', 'cp' ) : $status;
 
 		return $status;
 	}
 
-	public static function template( $module_id = 0 ) {
+	public static function template( $module_id = 0, $is_focus = false ) {
 		if ( empty( $module_id ) ) {
 			return ''; // Nothing to process, bail!
 		}
 
 		$attributes = self::attributes( $module_id );
 		$module_type = $attributes['module_type'];
+		$is_required = ! empty( $attributes['mandatory'] );
 		$method = 'render_' . str_replace( '-', '_', $module_type );
 		$module = get_post( $module_id );
 		$unit_id = $module->post_parent;
@@ -204,9 +209,22 @@ class CoursePress_Template_Module {
 		$disabled = false;
 		$element_class = '';
 		$student_id = get_current_user_id();
+		$content = '';
+
+		do_action( 'coursepress_module_view', $module_id, $student_id );
+
+		if ( $is_focus ) {
+			$content .= sprintf( '<input type="hidden" name="course_id" value="%s" />', $course_id );
+			$content .= sprintf( '<input type="hidden" name="unit_id" value="%s" />', $unit_id );
+			$content .= sprintf( '<input type="hidden" name="student_id" value="%s" />', $student_id );
+			$content .= wp_nonce_field( 'coursepress_submit_modules', '_wpnonce', true, false );
+
+			$content .= sprintf( '<div class="cp-error">%s</div>', apply_filters( 'coursepress_before_unit_modules', '' ) );
+		}
+		$content .= sprintf( '<input type="hidden" name="module_id[]" value="%s" />', $module_id );
 
 		// Module header
-		$content = self::render_module_head( $module, $attributes );
+		$content .= self::render_module_head( $module, $attributes );
 		// The question or text content
 		$content .= self::_wrap_content( $module->post_content );
 
@@ -224,10 +242,11 @@ class CoursePress_Template_Module {
 			$retry = 'TRY';
 			if ( $is_module_answerable ) {
 				$responses = CoursePress_Data_Student::get_responses( $student_id, $course_id, $unit_id, $module_id, true, $student_progress );
+				$last_response = self::get_response( $module_id, $student_id );
 				$element_class = ! empty( $responses ) ? 'hide' : '';
 				$response_count = ! empty( $responses ) ? count( $responses ) : 0;
 
-				$retry = sprintf( '<a data-module="%s" class="module-submit-action button-reload-module">%s</a>', $module_id, __( 'Try again', 'cp' ) );
+				$retry = sprintf( '<a data-module="%s" class="button module-submit-action button-reload-module">%s</a>', $module_id, __( 'Try again', 'cp' ) );
 
 				// Check if retry is disabled
 				if ( ! empty( $attributes['allow_retries'] ) && 0 < $response_count ) {
@@ -247,12 +266,17 @@ class CoursePress_Template_Module {
 			$disabled_attr = $disabled ? 'disabled="disabled"' : '';
 			$module_elements = call_user_func( array( __CLASS__, $method ), $module, $attributes, $student_progress );
 
-			$module_elements = sprintf( '<div id="cp-element-%s" class="module-elements %s">%s</div>', $module_id, $element_class, $module_elements, $disabled );
+			$module_elements = sprintf( '<div id="cp-element-%s" class="module-elements %s" data-type="%s" data-required="%s">%s</div>', $module_id, $element_class, $module_type, $is_required, $module_elements );
 
 			if ( $is_module_answerable && ! empty( $responses ) ) {
 
 				$status = self::get_module_status( $module->ID, $student_id );
-				$student_answers = sprintf( '<span class="cp-status">%s</span>', $status );
+
+				if ( 'Pass' == $status ) {
+					$retry = '';
+				}
+
+				$student_answers = sprintf( '<span class="cp-status status-%s">%s</span>', strtolower( $status ), $status );
 				$student_answers = sprintf( '<div class="cp-student-status">%s</div>', $student_answers . $retry );
 				$student_answers .= self::get_student_answer( $module->ID, $student_id );
 
@@ -277,6 +301,9 @@ class CoursePress_Template_Module {
 			 * @since 2.0
 			 **/
 			$content .= apply_filters( 'coursepress_module_template', $module_elements, $module_type, $module_id );
+
+			$format = '<div class="cp-module-content" data-type="%1$s" data-id="%2$s" id="cp-module-%2$s">%3$s</div>';
+			$content = sprintf( $format, $module_type, $module_id, $content );
 		}
 
 		return $content;
@@ -529,8 +556,111 @@ class CoursePress_Template_Module {
 		return '<hr />';
 	}
 
-	public static function render_discussion( $module, $attributes = false ) {
+	private static function comment_form( $post_id ) {
+		ob_start();
 
+		$form_class = array(  'comment-form', 'cp-comment-form' );
+		$comment_order = get_option( 'comment_order' );
+		$form_class[] = 'comment-form-' . $comment_order;
+
+		$args = array(
+			'class_form' => implode( ' ', $form_class ),
+			'title_reply' => __( 'Post Here', 'cp' ),
+			'label_submit' => __( 'Post', 'cp' ),
+			'must_log_in' => '',
+			'logged_in_as' => '',
+			'action' => '',
+			'class_submit' => 'submit cp-comment-submit',
+			'comment_field' => '<p class="comment-form-comment"><label for="comment">' . _x( 'Comment', 'noun' ) . '</label> <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525"></textarea></p>',
+		);
+
+		add_filter( 'comment_form_submit_button', array( 'CoursePress_Template_Discussion', 'add_subscribe_button' ) );
+
+		comment_form( $args, $post_id );
+		$comment_form = ob_get_clean();
+
+		$comment_form = str_replace(
+			array(
+				'<form',
+				'</form>'
+			),
+			array(
+				'<div',
+				'</div>'
+			),
+			$comment_form
+		);
+
+		remove_filter( 'comment_form_submit_button', array( 'CoursePress_Template_Discussion', 'add_subscribe_button' ) );
+
+		return $comment_form;
+	}
+
+	public static function comment_list( $module_id ) {
+		ob_start();
+
+		$comments = get_comments(
+			array(
+				'post_id' => $module_id,
+			)
+		);
+
+		?>
+		<ol class="comment-list">
+			<?php
+				wp_list_comments( array(
+					'style'       => 'ol',
+					'short_ping'  => true,
+					'avatar_size' => 42,
+				), $comments );
+			?>
+		</ol><!-- .comment-list -->
+
+		<?php
+		$comment_list = ob_get_clean();
+
+		return $comment_list;
+	}
+
+	public static function discussion_url( $post_id ) {
+		$unit_id = get_post_field( 'post_parent', $post_id );
+		$unit_url = CoursePress_Data_Unit::get_unit_url( $unit_id );
+		$page_number = get_post_meta( $post_id, 'page_number', true );
+		$page_number = max( $page_number, 1 );
+
+		$url = sprintf( '%spage/%s/module_id/%s', $unit_url, $page_number, $post_id );
+
+		return $url;
+	}
+
+	public static function comment_reply_link( $link, $args, $comment, $post ) {
+		$discussion_link = self::discussion_url( $post->ID );
+		$discussion_link = add_query_arg( 'replytocom', $comment->comment_ID, $discussion_link );
+		$discussion_link .= '#respond';
+		$link = preg_replace( '%href=([\'"])(.*?)([\'"])%', 'href=$1' . $discussion_link . '$3', $link );
+		$link = sprintf( '<span data-comid="%s" data-parentid="%s">%s</span>', $comment->comment_ID, $post->ID, $link );
+
+		return $link;
+	}
+
+	public static function render_discussion( $module, $attributes = false ) {
+		global $post;
+
+		$post = $module;
+		// Add comment filters
+		add_filter( 'comments_open', '__return_true' );
+		add_filter( 'comment_reply_link', array( __CLASS__, 'comment_reply_link' ), 10, 4 );
+		setup_postdata( $module );
+
+		$content = self::comment_form( $module->ID );
+		$content .= self::comment_list( $module->ID );
+
+		// Remove comment filters, etc
+		wp_reset_postdata();
+		remove_filter( 'comments_open', '__return_true' );
+		remove_filter( 'comment_reply_link', array( __CLASS__, 'comment_reply_link' ), 10, 4 );
+
+		return $content;
 	}
 
 	public static function render_input_checkbox( $module, $attributes = false, $student_progress = false, $disabled = false ) {
@@ -548,7 +678,7 @@ class CoursePress_Template_Module {
 			foreach ( $attributes['answers'] as $key => $answer ) {
 				$checked = ' ' . checked( 1, is_array( $response ) && in_array( $key, $response ), false );
 
-				$format = '<li class="%1$s %2$s"><label for="module-%3$s-%5$s">%4$s</label> <input type="checkbox" value="%5$s" name="module[%3$s][]" id="module-%3$s-%5$s" %6$s /></li>';
+				$format = '<li class="%1$s %2$s"><input type="checkbox" value="%5$s" name="module[%3$s][]" id="module-%3$s-%5$s" %6$s /> <label for="module-%3$s-%5$s">%4$s</label></li>';
 				$content .= sprintf( $format, $oddeven, $alt, $module->ID, esc_html__( $answer ), esc_attr( $key ), $disabled_attr . $checked );
 
 				$oddeven = 'odd' === $oddeven ? 'even' : 'odd';
@@ -573,9 +703,9 @@ class CoursePress_Template_Module {
 			$content .= '<ul style="list-style:none;">';
 
 			foreach ( $attributes['answers'] as $key => $answer ) {
-				$checked = ' ' . checked( 1, ! empty( $response ) && $response == $key, false );
+				$checked = ' ' . checked( 1, $response == $key, false );
 
-				$format = '<li class="%1$s %2$s"><label for="module-%3$s-%5$s">%4$s</label> <input type="radio" value="%5$s" name="module[%3$s]" id="module-%3$s-%5$s" %6$s /></li>';
+				$format = '<li class="%1$s %2$s"><input type="radio" value="%5$s" name="module[%3$s]" id="module-%3$s-%5$s" %6$s /> <label for="module-%3$s-%5$s">%4$s</label> </li>';
 				$content .= sprintf( $format, $oddeven, $alt, $module->ID, esc_html__( $answer ), esc_attr( $key ), $disabled_attr . $checked );
 
 				$oddeven = 'odd' === $oddeven ? 'even' : 'odd';
@@ -641,9 +771,19 @@ class CoursePress_Template_Module {
 		$disabled_attr = $disabled ? 'disabled="disabled"' : '';
 		$response = self::get_response( $module->ID, get_current_user_id() );
 
-		$format = '<label class="file"><input type="file" name="module[%s]" %s /><span class="button" data-change="%s" data-upload="%s">%s</label>';
+		$format = '<label class="file"><input type="file" name="module[%s]" %s /><span class="button" data-change="%s" data-upload="%s">%s <span class="upload-progress"></span></label>';
 		$content = sprintf( $format, $module->ID, $disabled_attr, __( 'Change File', 'cp' ), __( 'Upload File', 'cp' ), __( 'Upload File', 'cp' ) );
 
+		$upload_types = CoursePress_Helper_Utility::allowed_student_mimes();
+		$upload_types = array_map( 'strtoupper', array_keys( $upload_types ) );
+		$format = '<div class="cp-sub"><p>%s %s</p><p>%s %s</p></div>';
+
+		$content .= sprintf( $format,
+			__( 'Accepted File Format: ', 'cp' ),
+			implode( ' ', $upload_types ),
+			__( 'Max File Size:', 'cp' ),
+			ini_get( 'upload_max_filesize' )
+		);
 		return $content;
 	}
 
@@ -672,15 +812,14 @@ class CoursePress_Template_Module {
 					$checked = ' ';
 					if ( is_array( $response ) && ! empty( $response[ $qi ] ) ) {
 						$checked .= checked( 1, ! empty( $response[ $qi ][ $ai ] ), false );
-						
 					}
 
-					$format = '<li><label for="%1$s">%2$s</label> <input type="%3$s" id="%1$s" name="%4$s" value="%5$s" %6$s/></li>';
+					$format = '<li><input type="%3$s" id="%1$s" name="%4$s" value="%5$s" %6$s/> <label for="%1$s">%2$s</label></li>';
 					$questions .= sprintf( $format, $quiz_id, esc_html( $answer ), $type, $module_name, $ai, $disabled_attr . $checked );
 				}
 
 				$questions .= '</ul>';
-				$questions = sprintf('<p class"question">%s</p>%s', esc_html( $question['question'] ), $questions );
+				$questions = sprintf('<p class="question">%s</p>%s', esc_html( $question['question'] ), $questions );
 				$container_format = '<div class="module-quiz-question question-%s" data-type="%s">%s</div>';
 				$content .= sprintf( $container_format, $qi, $question['type'], $questions );
 			}

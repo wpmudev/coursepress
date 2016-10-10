@@ -128,9 +128,6 @@ class CoursePress_View_Front_Course {
 		 * admin_bar_menu
 		 */
 		add_action( 'admin_bar_menu', array( __CLASS__, 'add_edit_to_admin_bar_menu' ), 199 );
-
-		// MODULE SUBMISSION===
-		add_action( 'init', array( 'CoursePress_Module', 'process_submission' ) );
 	}
 
 	/**
@@ -742,6 +739,14 @@ class CoursePress_View_Front_Course {
 		CoursePress_Helper_Utility::$is_singular = false;
 		CoursePress_Helper_Utility::set_the_course_subpage( '' );
 		$is_other_cp_page = false;
+		$is_focus = false;
+
+		if ( ! empty( $wp->query_vars['coursename'] ) ) {
+			$course_name = $wp->query_vars['coursename'];
+			$cp->course_id = CoursePress_Data_Course::by_name( $cp->cp_course, true );
+			$mode = get_post_meta( $cp->course_id, 'cp_course_view', true );
+			$is_focus = 'focus' == $mode;
+		}
 
 		if ( array_key_exists( 'coursepress_focus', $wp->query_vars ) ) {
 			$cp->is_focus = (1 == $wp->query_vars['coursepress_focus']);
@@ -890,6 +895,17 @@ class CoursePress_View_Front_Course {
 		if ( $cp->is_course ) {
 			// This is a single course page!
 			CoursePress_Helper_Utility::$is_singular = true;
+
+			$user_id = get_current_user_id();
+			$can_update_course = CoursePress_Data_Capabilities::can_update_course( $cp->course_id );
+			$course_url = CoursePress_Data_Course::get_course_url( $cp->course_id );
+
+			// Redirect user to units overview
+			if ( false === $can_update_course && CoursePress_Data_Course::student_enrolled( $user_id, $cp->course_id ) ) {
+				$units_overview = $course_url . 'units';
+
+			//	wp_safe_redirect( $units_overview ); exit;???
+			}
 
 			/**
 			 * Filter whether to display the course title.
@@ -1293,10 +1309,10 @@ class CoursePress_View_Front_Course {
 		// Only enqueue when needed.
 		if ( in_array( $post_type, $valid_types ) ) {
 			$style = CoursePress::$url . 'asset/css/coursepress_front.css';
-			wp_enqueue_style( 'coursepress_general', $style, array( 'dashicons' ), CoursePress::$version );
+			//wp_enqueue_style( 'coursepress_general', $style, array( 'dashicons' ), CoursePress::$version );
 
 			$style = CoursePress::$url . 'asset/css/bbm.modal.css';
-			wp_enqueue_style( 'coursepress_bbm_modal', $style, array(), CoursePress::$version );
+			//wp_enqueue_style( 'coursepress_bbm_modal', $style, array(), CoursePress::$version );
 		}
 	}
 

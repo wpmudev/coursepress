@@ -10,4 +10,145 @@
 	.cp-download {
 		text-decoration: none;
 	}
+	.button {
+		@include button;
+	}
+	.cp-error-box {
+		display: block;
+		padding: 15px 15px 0 15px;
+		background-color: rgba(255, 0, 0, 0.05);
+		border: 1px solid rgba(255, 0, 0, 0.09);
+		font-size: 0.9em;
+
+		&:before {
+			content: "\F534";
+			font-family: Dashicons;
+			font-size: 2.5em;
+			line-height: 1;
+			float: left;
+			margin-right: 5px;
+			color: $color1;
+		}
+		p {
+			margin-top: 0;
+			border: 0;
+			padding: 5px 15px;
+		}
+		.cp-closed {
+			text-decoration: none;
+			float: right;
+			text-align: center;
+			cursor: pointer;
+			font-size: 1.5em;
+			line-height: 23px;
+			height: 25px;
+			width: 25px;
+			background-color: rgba(255, 0, 0, 0.5);
+			color: #FFF;
+			border-radius: 50%;
+			@include reset_a;
+
+			&:hover {
+				background-color: red;
+				color: #FFF;
+			}
+		}
+	}
+	.has-error {
+		border: 1px solid rgba(255, 0, 0, 0.5);
+		box-shadow: inset 4px 4px 4px rgba(255, 0, 0, 0.2);
+	}
+}
+
+.cp-mask {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	z-index: 9999;
+	background-color: rgba(0, 0, 0, 0.5);
+	.has-error {
+		border: 1px solid rgba(255, 0, 0, 0.5) !important;
+		box-shadow: inset 4px 4px 4px rgba(255, 0, 0, 0.2);
+	}
+	&.loading {
+		background-image: url(../img/loader.gif);
+		background-repeat: no-repeat;
+		background-position: center center;
+		.bbm-modal {
+			display: none;
+		}
+	}
+}
+.cp-submenu {
+	margin: 0 0 25px 0;
+	display: block;
+
+	.submenu {
+		list-style: outside none none;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+		overflow: hidden;
+		margin: 0;
+		padding: 0 0 5px 0;
+	}
+	.submenu-item {
+		display: table-cell;
+		margin: 0 5px 0 0;
+		padding: 0;
+
+		a {
+			padding: 4px 12px;
+			@include reset_a;
+		}
+	}
+}
+.apply-button {
+	@include button;
+}
+.enrolment-container-div {
+	overflow: hidden;
+	.bbm-modal {
+		max-height: 80%;
+		margin: 0 auto;
+		overflow: auto;
+		label {
+			margin: 15px 0;
+			display: block;
+		}
+	}
+	.bbm-wrapper {
+		position: relative;
+		margin: 0 auto;
+		max-width: 480px;
+		width: 100%;
+		background: #ffffff;
+		padding: 0;
+		border: 0;
+		border-radius: 15px;
+		box-shadow: 3px 3px 10px 0px rgba(0, 0, 0, 0.75);
+	}
+
+	.bbm-wrapper a {
+		text-decoration: underline;
+	}
+
+	.bbm-wrapper #error-messages,
+	.bbm-wrapper #password-strength {
+		display: block;
+		font-style: italic;
+		margin: 0 15px;
+	}
+
+	.bbm-wrapper #error-messages {
+		/* color: #d92e23; */
+		margin: 0;
+	}
+	.bbm-wrapper #error-messages ul {
+		list-style-type: none;
+		background-color: $warning_bg;
+		border: $warning_border;
+		padding: 5px 10px;
+		margin: 10px 0;
+	}
 }
