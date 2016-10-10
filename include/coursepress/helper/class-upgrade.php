@@ -192,10 +192,10 @@ class CoursePress_Helper_Upgrade {
 			'course_details_video',
 			'course_details_structure',
 			'course_instructors',
-		);
-		$updates = array(
 			'course_dates',
+			'course_classes_discusion_and_workbook',
 		);
+//		$updates = array();
 		foreach ( $updates as $function_sufix ) {
 			$function = 'course_upgrade_'.$function_sufix;
 			if ( is_callable( array( __CLASS__, $function ) ) ) {
@@ -484,6 +484,31 @@ class CoursePress_Helper_Upgrade {
 	}
 
 	/**
+	 * Step 3 – Instructors and Facilitators
+	 */
+	private static function course_upgrade_course_classes_discusion_and_workbook( $course ) {
+		$fields = array(
+			array(
+				'meta_key_old' => 'allow_course_discussion',
+				'settings' => 'allow_discussion',
+			),
+			array(
+				'meta_key_old' => 'allow_workbook_page',
+				'settings' => 'allow_workbook',
+			),
+			array(
+				'meta_key_old' => 'class_size',
+				'settings' => 'class_size',
+			),
+			array(
+				'meta_key_old' => 'limit_class_size',
+				'settings' => 'class_limited',
+			),
+		);
+		self::update_array( $course->ID, $fields );
+	}
+
+	/**
 	 * Rename post meta
 	 */
 	private static function rename_post_meta( $course_id, $meta_key_old, $meta_key_new ) {
@@ -503,7 +528,12 @@ class CoursePress_Helper_Upgrade {
 
 	private static function update_array( $course_id, $fields ) {
 		foreach ( $fields as $data ) {
-			$value = self::rename_post_meta( $course_id, $data['meta_key_old'], $data['meta_key_new'] );
+			$value = false;
+			if ( isset( $data['meta_key_new'] ) ) {
+				$value = self::rename_post_meta( $course_id, $data['meta_key_old'], $data['meta_key_new'] );
+			} else {
+				$value = get_post_meta( $course_id, $data['meta_key_old'], true );
+			}
 			if ( empty( $value ) ) {
 				continue;
 			}
