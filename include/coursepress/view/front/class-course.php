@@ -217,7 +217,7 @@ class CoursePress_View_Front_Course {
 		/**
 		 * Try to add course_id - it should be unique post meta.
 		 */
-		$success == add_post_meta( $id, 'course_id', $course_id, true );
+		$success = add_post_meta( $id, 'course_id', $course_id, true );
 		if ( ! $success ) {
 			update_post_meta( $id, 'course_id', $course_id );
 		}

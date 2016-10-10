@@ -113,7 +113,7 @@ class CoursePress_Template_Discussion {
 		if ( CoursePress_Data_Discussion::is_comment_in_discussion( $post_id ) ) {
 			$post_type = get_post_type( $post_id );
 
-			if ( CoursePress_Data_Module::get_post_type_name() == $post_type ) {
+			if ( CoursePress_Data_Discussion::get_post_type_name() == $post_type ) {
 				$unit_id = get_post_field( 'post_parent', $post_id );
 				$course_id = get_post_field( 'post_parent', $unit_id );
 
