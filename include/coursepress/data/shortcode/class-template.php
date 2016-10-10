@@ -85,7 +85,7 @@ class CoursePress_Data_Shortcode_Template {
 			'posts_per_page' => 10,
 			'show_pager' => true,
 			'echo' => false,
-			'courses_type' => 'any',
+			'courses_type' => 'current_and_upcoming',
 		), $a, 'course_archive' );
 
 		$category = sanitize_text_field( $a['category'] );

@@ -22,6 +22,23 @@
 @mixin button {
 	padding: 5px 15px;
 	border: 1px solid rgba(0, 0, 0, 0.1);
+
+	padding: 5px 12px;
+	text-decoration: none;
+	text-decoration-style: none;
+	border: 1px solid $border_color;
+	background-color: $button_bg;
+	cursor: pointer;
+	color: inherit;
+
+	&:hover {
+		text-decoration: none;
+	}
+	a {
+		text-decoration: none;
+		border: 0;
+		color: inherit;
+	}
 }
 
 /** Color Scheme **/
