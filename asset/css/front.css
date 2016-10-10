@@ -70,6 +70,10 @@
   background-color: red;
   color: #FFF;
 }
+.cp .has-error {
+  border: 1px solid rgba(255, 0, 0, 0.5);
+  box-shadow: inset 4px 4px 4px rgba(255, 0, 0, 0.2);
+}
 
 .cp-mask {
   position: fixed;
@@ -79,6 +83,18 @@
   left: 0;
   z-index: 9999;
   background-color: rgba(0, 0, 0, 0.5);
+}
+.cp-mask .has-error {
+  border: 1px solid rgba(255, 0, 0, 0.5) !important;
+  box-shadow: inset 4px 4px 4px rgba(255, 0, 0, 0.2);
+}
+.cp-mask.loading {
+  background-image: url(../img/loader.gif);
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.cp-mask.loading .bbm-modal {
+  display: none;
 }
 
 .cp-submenu {
@@ -138,10 +154,15 @@
   margin: 0 15px;
 }
 .enrolment-container-div .bbm-wrapper #error-messages {
-  color: #d92e23;
+  /* color: #d92e23; */
+  margin: 0;
 }
 .enrolment-container-div .bbm-wrapper #error-messages ul {
-  margin: 0;
+  list-style-type: none;
+  background-color: rgba(255, 0, 0, 0.05);
+  border: 1px solid rgba(255, 0, 0, 0.09);
+  padding: 5px 10px;
+  margin: 10px 0;
 }
 
 .course_list_box_item {

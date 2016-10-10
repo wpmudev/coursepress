@@ -68,7 +68,12 @@
 			}
 		}
 	}
+	.has-error {
+		border: 1px solid rgba(255, 0, 0, 0.5);
+		box-shadow: inset 4px 4px 4px rgba(255, 0, 0, 0.2);
+	}
 }
+
 .cp-mask {
 	position: fixed;
 	width: 100%;
@@ -77,6 +82,18 @@
 	left: 0;
 	z-index: 9999;
 	background-color: rgba(0, 0, 0, 0.5);
+	.has-error {
+		border: 1px solid rgba(255, 0, 0, 0.5) !important;
+		box-shadow: inset 4px 4px 4px rgba(255, 0, 0, 0.2);
+	}
+	&.loading {
+		background-image: url(../img/loader.gif);
+		background-repeat: no-repeat;
+		background-position: center center;
+		.bbm-modal {
+			display: none;
+		}
+	}
 }
 .cp-submenu {
 	margin: 0 0 25px 0;
@@ -136,9 +153,14 @@
 	}
 
 	.bbm-wrapper #error-messages {
-		color: #d92e23;
+		/* color: #d92e23; */
+		margin: 0;
 	}
 	.bbm-wrapper #error-messages ul {
-		margin: 0;
+		list-style-type: none;
+		background-color: $warning_bg;
+		border: $warning_border;
+		padding: 5px 10px;
+		margin: 10px 0;
 	}
 }

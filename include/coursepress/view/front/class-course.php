@@ -896,6 +896,17 @@ class CoursePress_View_Front_Course {
 			// This is a single course page!
 			CoursePress_Helper_Utility::$is_singular = true;
 
+			$user_id = get_current_user_id();
+			$can_update_course = CoursePress_Data_Capabilities::can_update_course( $cp->course_id );
+			$course_url = CoursePress_Data_Course::get_course_url( $cp->course_id );
+
+			// Redirect user to units overview
+			if ( false === $can_update_course && CoursePress_Data_Course::student_enrolled( $user_id, $cp->course_id ) ) {
+				$units_overview = $course_url . 'units';
+
+			//	wp_safe_redirect( $units_overview ); exit;???
+			}
+
 			/**
 			 * Filter whether to display the course title.
 			 *

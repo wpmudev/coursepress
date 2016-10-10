@@ -399,7 +399,7 @@ class CoursePress_Helper_JavaScript {
 		wp_enqueue_script( 'circle-progress', $script, array( 'jquery' ), $version );
 
 		$modal_script_url = $script_url . 'external/backbone.modal-min.js';
-		wp_enqueue_script( 'coursepress-backbone-modal', $modal_script_url, array( 'jquery', 'backbone', 'underscore' ) );
+		wp_enqueue_script( 'coursepress-backbone-modal', $modal_script_url, array( 'jquery', 'backbone', 'underscore', 'password-strength-meter' ) );
 		wp_enqueue_script( 'coursepress-front-js', $script_url . 'front.js', array( 'jquery', 'backbone', 'underscore' ), $version );
 
 		$localize_array = array(
@@ -423,12 +423,15 @@ class CoursePress_Helper_JavaScript {
 			'workbook_view_answer' => __( 'View', 'cp' ),
 			'labels' => CoursePress_Helper_UI_Module::get_labels(),
 			'signup_errors' => array(
-				'all_fields' => __( 'All fields required.', 'cp' ),
+				'all_fields' => __( 'All fields are required.', 'cp' ),
 				'email_invalid' => __( 'Invalid e-mail address.', 'cp' ),
 				'email_exists' => __( 'That e-mail address is already taken.', 'cp' ),
 				'user_exists' => __( 'That usernam is already taken.', 'cp' ),
 				'weak_password' => __( 'Weak passwords not allowed.', 'cp' ),
 				'mismatch_password' => __( 'Passwords do not match.', 'cp' ),
+			),
+			'login_errors' => array(
+				'required' => __( 'Your username and/or password is required!', 'cp' ),
 			),
 			'comments' => array(
 				'require_valid_comment' => __( 'Please type a comment.', 'cp' ),

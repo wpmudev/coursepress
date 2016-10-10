@@ -1,7 +1,10 @@
 /* global _coursepress */
 
 var CoursePress = {};
+CoursePress.Models = CoursePress.Models || {};
 CoursePress.Events = _.extend( {}, Backbone.Events );
+CoursePress.UI = CoursePress.UI || {};
+CoursePress.utility = CoursePress.utility || {};
 
 (function( $ ) {
 
@@ -257,7 +260,143 @@ CoursePress.Modal = Backbone.Modal.extend( {
 	}
 } );
 
+CoursePress.removeErrorHint = function() {
+	$( this ).removeClass( 'has-error' );
+};
+
+// OlD COURSEPRESS-FRONT
+
+	// Actions and Filters
+	CoursePress.actions = CoursePress.actions || {}; // Registered actions
+	CoursePress.filters = CoursePress.filters || {}; // Registered filters
+
+	/**
+	 * Add a new Action callback to CoursePress.actions
+	 *
+	 * @param tag The tag specified by do_action()
+	 * @param callback The callback function to call when do_action() is called
+	 * @param priority The order in which to call the callbacks. Default: 10 (like WordPress)
+	 */
+	CoursePress.add_action = function( tag, callback, priority ) {
+		if ( undefined === priority ) {
+			priority = 10;
+		}
+
+		// If the tag doesn't exist, create it.
+		CoursePress.actions[ tag ] = CoursePress.actions[ tag ] || [];
+		CoursePress.actions[ tag ].push( { priority: priority, callback: callback } );
+	};
+
+	/**
+	 * Add a new Filter callback to CoursePress.filters
+	 *
+	 * @param tag The tag specified by apply_filters()
+	 * @param callback The callback function to call when apply_filters() is called
+	 * @param priority Priority of filter to apply. Default: 10 (like WordPress)
+	 */
+	CoursePress.add_filter = function( tag, callback, priority ) {
+		if ( undefined === priority ) {
+			priority = 10;
+		}
+
+		// If the tag doesn't exist, create it.
+		CoursePress.filters[ tag ] = CoursePress.filters[ tag ] || [];
+		CoursePress.filters[ tag ].push( { priority: priority, callback: callback } );
+	};
+
+	/**
+	 * Remove an Anction callback from CoursePress.actions
+	 *
+	 * Must be the exact same callback signature.
+	 * Warning: Anonymous functions can not be removed.
+
+	 * @param tag The tag specified by do_action()
+	 * @param callback The callback function to remove
+	 */
+	CoursePress.remove_action = function( tag, callback ) {
+		CoursePress.filters[ tag ] = CoursePress.filters[ tag ] || [];
+
+		CoursePress.filters[ tag ].forEach( function( filter, i ) {
+			if ( filter.callback === callback ) {
+				CoursePress.filters[ tag ].splice(i, 1);
+			}
+		} );
+	};
+
+	/**
+	 * Remove a Filter callback from CoursePress.filters
+	 *
+	 * Must be the exact same callback signature.
+	 * Warning: Anonymous functions can not be removed.
+
+	 * @param tag The tag specified by apply_filters()
+	 * @param callback The callback function to remove
+	 */
+	CoursePress.remove_filter = function( tag, callback ) {
+		CoursePress.filters[ tag ] = CoursePress.filters[ tag ] || [];
+
+		CoursePress.filters[ tag ].forEach( function( filter, i ) {
+			if ( filter.callback === callback ) {
+				CoursePress.filters[ tag ].splice(i, 1);
+			}
+		} );
+	};
+
+	/**
+	 * Calls actions that are stored in CoursePress.actions for a specific tag or nothing
+	 * if there are no actions to call.
+	 *
+	 * @param tag A registered tag in Hook.actions
+	 * @options Optional JavaScript object to pass to the callbacks
+	 */
+	CoursePress.do_action = function( tag, options ) {
+		var actions = [];
+
+		if ( undefined !== CoursePress.actions[ tag ] && CoursePress.actions[ tag ].length > 0 ) {
+			CoursePress.actions[ tag ].forEach( function( hook ) {
+				actions[ hook.priority ] = actions[ hook.priority ] || [];
+				actions[ hook.priority ].push( hook.callback );
+			} );
+
+			actions.forEach( function( hooks ) {
+				hooks.forEach( function( callback ) {
+					callback( options );
+				} );
+			} );
+		}
+	};
+
+	/**
+	 * Calls filters that are stored in CoursePress.filters for a specific tag or return
+	 * original value if no filters exist.
+	 *
+	 * @param tag A registered tag in Hook.filters
+	 * @options Optional JavaScript object to pass to the callbacks
+	 */
+	CoursePress.apply_filters = function( tag, value, options ) {
+
+		var filters = [];
+
+		if ( undefined !== CoursePress.filters[ tag ] && CoursePress.filters[ tag ].length > 0 ) {
+
+			CoursePress.filters[ tag ].forEach( function( hook ) {
+				filters[ hook.priority ] = filters[ hook.priority ] || [];
+				filters[ hook.priority ].push( hook.callback );
+			} );
+
+			filters.forEach( function( hooks ) {
+				hooks.forEach( function( callback ) {
+					value = callback( value, options );
+				} );
+			} );
+		}
+
+		return value;
+	};
+
 // Hook into document
-$(document).ready( CoursePress.unitProgressInit ); // Call unit progress init
+$(document)
+	.ready( CoursePress.unitProgressInit ) // Call unit progress init
+	.on( 'focus', '.cp-mask .has-error, .cp .has-error', CoursePress.removeErrorHint );
 
 })(jQuery);

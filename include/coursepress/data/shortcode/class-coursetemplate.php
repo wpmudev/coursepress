@@ -190,7 +190,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				'enroll' => array(
 					'label' => sanitize_text_field( $enroll_text ),
 					'attr' => array(
-						'class' => 'apply-button enroll ' . $class,
+						'class' => $can_update_course ? 'apply-button' : 'apply-button enroll ' . $class,
 						'data-link' => esc_url( $signup_url . '?course_id=' . $course_id ),
 						'data-course-id' => $course_id,
 					),
@@ -444,8 +444,6 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 			if ( 'enroll' == $button_option ) {
 				$button .= wp_nonce_field( 'enrollment_process', '_wpnonce', true, false );
-			} elseif ( 'signup' == $button_option ) {
-				
 			}
 
 			$button .= '<input type="hidden" name="course_id" value="' . $course_id . '" />';

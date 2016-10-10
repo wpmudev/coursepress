@@ -406,7 +406,7 @@ class CoursePress_Data_Shortcode_Student {
 				</div>
 			</div>
 			<div class="bbm-modal__bottombar">
-			<input type="submit" class="bbm-button done button cta-button" value="<?php esc_attr_e( 'Log in', 'cp' ); ?>" />
+			<input type="submit" class="bbm-button done login button cta-button" value="<?php esc_attr_e( 'Log in', 'cp' ); ?>" />
 			<a href="#" class="cancel-link"><?php esc_html_e( 'Cancel', 'cp' ); ?></a>
 			</div>
 		</script>
