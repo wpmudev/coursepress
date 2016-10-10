@@ -198,6 +198,7 @@ class CoursePress_Helper_Upgrade {
         }
 
         CoursePress_Data_Course::update_setting( $course->ID, 'course_view', 'normal' );
+        CoursePress_Data_Course::update_setting( $course->ID, 'setup_marker', 2 );
 
 
 
@@ -338,34 +339,73 @@ l(CoursePress_Data_Course::get_setting( $course->ID ));
         );
         self::update_array( $course->ID, $fields );
         /**
-         * publish all modules on published pages
+         * show & preview all modules
          */
-        $published_pages = CoursePress_Data_Course::get_setting( $course->ID, 'structure_visible_pages' );
-        $pages = array();
-        foreach( $published_pages as $page => $status ) {
+        $visible_pages = CoursePress_Data_Course::get_setting( $course->ID, 'structure_visible_pages' );
+        $cp1_visible_pages = array();
+        foreach( $visible_pages as $page => $status ) {
             if ( cp_is_true( $status ) && preg_match( '/^(\d+)_(\d+)$/', $page, $matches ) ) {
-                $pages[$matches[1]] = $matches[2];
-
-            }
-
-        }
-        l($pages);
-        $structure_visible_modules = array();
-        foreach( $pages as $page_id => $page ) {
-            $args = array(
-                'post_type' => CoursePress_Data_Module::get_post_type_name(),
-                'post_status' => 'any',
-                'fields' => 'ids',
-                'posts_per_page' => -1,
-                'post_parent' => $page_id
-            );
-            $ids = get_posts( $args );
-            foreach( $ids as $module_id ) {
-                $key = sprintf( '%d_%d_%d', $page_id, 0, $module_id );
-                $structure_visible_modules[ $key ] = 'on';
+                $cp1_visible_pages[] = sprintf( '%d_%d', $matches[1], $matches[2] - 1 );
             }
         }
-        CoursePress_Data_Course::update_setting( $course->ID, 'structure_visible_modules', $structure_visible_modules );
+
+        $preview_pages = CoursePress_Data_Course::get_setting( $course->ID, 'structure_preview_pages' );
+        $cp1_preview_pages = array();
+        foreach( $preview_pages as $page => $status ) {
+            if ( cp_is_true( $status ) && preg_match( '/^(\d+)_(\d+)$/', $page, $matches ) ) {
+                $cp1_preview_pages[] = sprintf( '%d_%d', $matches[1], $matches[2] - 1 );
+            }
+        }
+
+        $keys = array(
+            'structure_preview_modules',
+            'structure_preview_pages',
+            'structure_visible_modules',
+            'structure_visible_pages',
+        );
+        foreach( $keys as $key ) {
+            $$key = array();
+        }
+        /**
+         * get units
+         */
+        $units = CoursePress_Data_Course::get_units_with_modules( $course->ID, array( 'publish', 'draft' ) );
+        $units = CoursePress_Helper_Utility::sort_on_key( $units, 'order' );
+        /**
+         * Update pages and try to update modules too.
+         */
+        foreach ( $units as $unit ) {
+            if ( ! isset( $unit['pages'] ) ) {
+                continue;
+            }
+            foreach ( $unit['pages'] as $key => $page ) {
+                $page_key = (int) $unit['unit']->ID . '_' . (int) $key;
+                /**
+                 * Visible
+                 */
+                if ( in_array( $page_key, $cp1_visible_pages) ) {
+                    $structure_visible_pages[ $page_key ] = true;
+                    foreach ( $page['modules'] as $module ) {
+                        $mod_key = $page_key . '_' . (int) $module->ID;
+                        $structure_visible_modules[ $mod_key ] = true;
+                    }
+                }
+                /**
+                 * Preview
+                 */
+                if ( in_array( $page_key, $cp1_preview_pages) ) {
+                    $structure_preview_pages[ $page_key ] = true;
+                    foreach ( $page['modules'] as $module ) {
+                        $mod_key = $page_key . '_' . (int) $module->ID;
+                        $structure_preview_modules[ $mod_key ] = true;
+                    }
+                }
+            }
+        }
+        foreach( $keys as $key ) {
+            CoursePress_Data_Course::update_setting( $course->ID, $key, $$key );
+        }
+
     }
 
 	/**
