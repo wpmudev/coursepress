@@ -245,7 +245,7 @@ class CoursePress_View_Admin_Setting_General {
 
 		$checked = cp_is_true( CoursePress_Core::get_setting( 'general/show_coursepress_menu', 1 ) ) ? 'checked' : '';
 		$content .= '
-									<input type="checkbox" name="coursepress_settings[general][show_coursepress_menu]" ' . $checked  . ' />
+									<input type="checkbox" name="coursepress_settings[general][show_coursepress_menu]" ' . $checked . ' />
 									';
 
 		if ( current_user_can( 'manage_options' ) ) {
@@ -298,7 +298,7 @@ class CoursePress_View_Admin_Setting_General {
 
 		$checked = cp_is_true( CoursePress_Core::get_setting( 'general/use_custom_login', 1 ) ) ? 'checked' : '';
 		$content .= '
-									<input type="checkbox" name="coursepress_settings[general][use_custom_login]" ' . $checked  . ' />
+									<input type="checkbox" name="coursepress_settings[general][use_custom_login]" ' . $checked . ' />
 								</td>
 							</tr>
 						</tbody>
@@ -326,7 +326,7 @@ class CoursePress_View_Admin_Setting_General {
 
 		$checked = cp_is_true( CoursePress_Core::get_setting( 'general/redirect_after_login', 1 ) ) ? 'checked' : '';
 		$content .= '
-									<input type="checkbox" name="coursepress_settings[general][redirect_after_login]" ' . $checked  . ' />
+									<input type="checkbox" name="coursepress_settings[general][redirect_after_login]" ' . $checked . ' />
 								</td>
 							</tr>
 						</tbody>
@@ -354,7 +354,7 @@ class CoursePress_View_Admin_Setting_General {
 
 		$checked = cp_is_true( CoursePress_Core::get_setting( 'instructor/show_username', 1 ) ) ? 'checked' : '';
 		$content .= '
-									<input type="checkbox" name="coursepress_settings[instructor][show_username]" ' . $checked  . ' />
+									<input type="checkbox" name="coursepress_settings[instructor][show_username]" ' . $checked . ' />
 								</td>
 							</tr>
 						</tbody>
@@ -532,6 +532,26 @@ class CoursePress_View_Admin_Setting_General {
 									</select>
 								</td>
 							</tr>
+							<tr valign="top">
+								<th scope="row">' . esc_html__( 'Login Page', 'cp' ) . '</th>
+								<td>' .
+									$page_dropdowns['login'] .
+									'<p class="description">' . sprintf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'cp' ), '<strong>[cp_pages page="student_login"]</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET['page'] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'cp' ) . '</a>' ) . '</p>
+								</td>
+							</tr>
+
+<!-- Default course Enrollment Restrictions -->
+							<tr valign="top" class="break">
+								<th scope="row">' . esc_html__( 'Enrollment Restrictions', 'cp' ) . '</th>
+								<td>';
+		$enrollment_types = CoursePress_Data_Course::get_enrollment_types_array( $course_id );
+		$enrollment_type_default = CoursePress_Data_Course::get_enrollment_type_default();
+		$selected = CoursePress_Core::get_setting( 'course/enrollment_type_default', $enrollment_type_default );
+		$content .= CoursePress_Helper_UI::select( 'coursepress_settings[course][enrollment_type_default]', $enrollment_types, $selected, 'chosen-select medium' );
+		$content .= sprintf( '<p class="description">%s</p>', __('Select the default limitations on accessing and enrolling in this course.', 'cp' ) );
+		$content .= '
+								</td>
+							</tr>
 						</tbody>
 					</table>
 				</div>
@@ -591,7 +611,7 @@ class CoursePress_View_Admin_Setting_General {
 								<td>';
 		$checked = cp_is_true( CoursePress_Core::get_setting( 'general/add_structure_data', 1 ) ) ? 'checked' : '';
 		$content .= '
-									<input type="checkbox" name="coursepress_settings[general][add_structure_data]" ' . $checked  . ' />
+									<input type="checkbox" name="coursepress_settings[general][add_structure_data]" ' . $checked . ' />
 				<p class="description">' . esc_html__( 'Add structure data to courses.', 'cp' ) . '</p>
 								</td>
 							</tr>
