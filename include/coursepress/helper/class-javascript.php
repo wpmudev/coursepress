@@ -383,6 +383,7 @@ class CoursePress_Helper_JavaScript {
 		$script_url = CoursePress::$url . 'asset/js/';
 		$css_url = CoursePress::$url . 'asset/css/';
 		$version = CoursePress::$version;
+		$course_id = CoursePress_Helper_Utility::the_course( true );
 
 		// Fontawesome
 		$fontawesome = $css_url . 'external/font-awesome.min.css';
@@ -415,7 +416,7 @@ class CoursePress_Helper_JavaScript {
 			'file_upload_fail_message' => __( 'There was a problem processing your file.', 'cp' ),
 			'response_saved_message' => __( 'Your response was recorded successfully.', 'cp' ),
 			'response_fail_message' => __( 'There was a problem saving your response. Please reload this page and try again.', 'cp' ),
-		//	'current_course_is_paid' => CoursePress_Data_Course::is_paid_course( $course_id )? 'yes':'no',
+			'current_course_is_paid' => CoursePress_Data_Course::is_paid_course( $course_id )? 'yes':'no',
 			'course_url' => get_permalink( CoursePress_Helper_Utility::the_course( true ) ),
 			'home_url' => home_url(),
 			'current_student' => get_current_user_id(),

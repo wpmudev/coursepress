@@ -199,6 +199,7 @@ class CoursePress_Template_Module {
 
 		$attributes = self::attributes( $module_id );
 		$module_type = $attributes['module_type'];
+		$is_required = ! empty( $attributes['mandatory'] );
 		$method = 'render_' . str_replace( '-', '_', $module_type );
 		$module = get_post( $module_id );
 		$unit_id = $module->post_parent;
@@ -265,7 +266,7 @@ class CoursePress_Template_Module {
 			$disabled_attr = $disabled ? 'disabled="disabled"' : '';
 			$module_elements = call_user_func( array( __CLASS__, $method ), $module, $attributes, $student_progress );
 
-			$module_elements = sprintf( '<div id="cp-element-%s" class="module-elements %s">%s</div>', $module_id, $element_class, $module_elements, $disabled );
+			$module_elements = sprintf( '<div id="cp-element-%s" class="module-elements %s" data-type="%s" data-required="%s">%s</div>', $module_id, $element_class, $module_type, $is_required, $module_elements );
 
 			if ( $is_module_answerable && ! empty( $responses ) ) {
 

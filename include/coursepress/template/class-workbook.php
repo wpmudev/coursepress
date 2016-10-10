@@ -9,7 +9,7 @@ class CoursePress_Template_Workbook {
 		$content = '';
 		$content .= do_shortcode( '[course_unit_submenu]' );
 
-		$content .= do_shortcode( '[student_workbook_table]' );
+		$content .= sprintf( '<div class="cp-student-workbook">%s</div>', do_shortcode( '[student_workbook_table]' ) );
 
 		return $content;
 	}

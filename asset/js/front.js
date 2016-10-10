@@ -311,7 +311,7 @@ $(document).ready( CoursePress.unitProgressInit ); // Call unit progress init
 	CoursePress.ModuleSubmit = function() {
 		var form = $(this),
 			error_box = form.find( '.cp-error' ),
-			focus_box = form.parents( '.coursepress-focus-view' ),
+			focus_box = form.parents( '.coursepress-focus-view, .cp.unit-wrapper' ),
 			iframe = false,
 			timer = false
 		;

@@ -664,6 +664,15 @@
   display: none;
 }
 
+/** Workbook **/
+.cp-student-workbook .course-completion-progress small {
+  float: right;
+  font-size: 1.6em;
+}
+.cp-student-workbook .mandatory {
+  color: rgba(255, 0, 0, 0.09);
+}
+
 /** Media Queries **/
 @media screen and (min-width: 768px) {
   .enrolment-container-div .bbm-modal {
