@@ -63,6 +63,14 @@ class CoursePress_View_Admin_Upgrade {
 		}
 
 		$count = count( $query->posts );
+		if ( 0 == $count ) {
+			delete_option( 'coursepress_courses_need_update' );
+			printf(
+				'<p>%s</p>',
+				__( 'There is no courses to update.', 'cp' )
+			);
+			return;
+		}
 		printf(
 			'<p>%s</p>',
 			sprintf( _n( 'You have %d course to update.', 'You have %d courses to update.', $count, 'cp'), $count )
