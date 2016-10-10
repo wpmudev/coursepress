@@ -21,15 +21,18 @@ class CoursePress_Hooks {
 		// Listen to comment submission
 		add_action( 'init', array( 'CoursePress_Data_Discussion', 'init' ), 100 );
 
-		// Map course capabilities
-//		add_action( 'init', array( 'CoursePress_Data_Capabilities', 'course_capabilities' ) );
-
 		// Hook to admin ajax request
 		add_action( 'wp_ajax_coursepress_request', array( __CLASS__, 'process_request' ) );
 		add_action( 'wp_ajax_nopriv_coursepress_request', array( __CLASS__, 'process_request' ) );
 
 		// Set front scripts
 		add_action( 'wp_enqueue_scripts', array( 'CoursePress_Helper_Javascript', 'front_assets' ) );
+		// Print assets at wp_footer if CP shortcode is used!
+		add_action( 'wp_footer', array( 'CoursePress_Helper_Javascript', 'maybe_print_assets' ) );
+
+		// Set admin scripts
+		add_action( 'admin_enqueue_scripts', array( 'CoursePress_Helper_Javascript', 'enqueue_admin_scripts' ) );
+		add_action( 'admin_footer', array( 'CoursePress_Helper_Javascript', 'enqueue_scripts' ) );
 	}
 
 	/**
