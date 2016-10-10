@@ -58,6 +58,22 @@
 			}
 		}
 	}
+	.module-quiz-question {
+		.question {
+			font-size: 110%;
+			font-weight: 600;
+		}
+		ul {
+			margin-bottom: 25px;
+		}
+		li {
+			label {
+				display: block;
+				padding-left: 25px;
+				margin-top: -28px;
+			}
+		}
+	}
 	.module-response {
 		margin-bottom: 20px;
 

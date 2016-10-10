@@ -1084,12 +1084,6 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					$module_table .= '<li>';
 
 					if ( $heading_visible ) {
-						// Set featured image
-						if ( ! empty( $page['feature_image'] ) ) {
-							$page_featured_image = sprintf( '<img src="%s" alt="%s" />', esc_url( $page['feature_image'] ), esc_attr( basename( $page['feature_image'] ) ) );
-							$module_table .= '<div class="section-thumbnail">' . $page_featured_image . '</div>';
-						}
-
 						$section_class = 'section-title';
 						$is_section_seen = CoursePress_Data_Student::is_section_seen( $course_id, $unit_id, $page_number );
 						$section_data = '';
@@ -1124,6 +1118,11 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 							}
 
 							$module_table .= '</div>';
+						}
+						// Set featured image
+						if ( ! empty( $page['feature_image'] ) ) {
+							$page_featured_image = sprintf( '<img src="%s" alt="%s" />', esc_url( $page['feature_image'] ), esc_attr( basename( $page['feature_image'] ) ) );
+							$module_table .= '<div class="section-thumbnail">' . $page_featured_image . '</div>';
 						}
 					}
 
@@ -1236,9 +1235,10 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			}
 
 			$content .= '<li class="' . esc_attr( $additional_li_class ) . '"'. $unit_data . '>' .
+				$unit_image .
 				'<div class="unit-archive-single">' .
 				$unit_progress .
-				$unit_image .
+				//$unit_image .
 				$unit_link;
 
 			$content .= $module_table;

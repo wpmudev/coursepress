@@ -814,12 +814,12 @@ class CoursePress_Template_Module {
 						$checked .= checked( 1, ! empty( $response[ $qi ][ $ai ] ), false );
 					}
 
-					$format = '<li><label for="%1$s">%2$s</label> <input type="%3$s" id="%1$s" name="%4$s" value="%5$s" %6$s/></li>';
+					$format = '<li><input type="%3$s" id="%1$s" name="%4$s" value="%5$s" %6$s/> <label for="%1$s">%2$s</label></li>';
 					$questions .= sprintf( $format, $quiz_id, esc_html( $answer ), $type, $module_name, $ai, $disabled_attr . $checked );
 				}
 
 				$questions .= '</ul>';
-				$questions = sprintf('<p class"question">%s</p>%s', esc_html( $question['question'] ), $questions );
+				$questions = sprintf('<p class="question">%s</p>%s', esc_html( $question['question'] ), $questions );
 				$container_format = '<div class="module-quiz-question question-%s" data-type="%s">%s</div>';
 				$content .= sprintf( $container_format, $qi, $question['type'], $questions );
 			}

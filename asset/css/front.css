@@ -599,6 +599,18 @@
   font-size: 1.4em;
   line-height: 1;
 }
+.cp .module-quiz-question .question {
+  font-size: 110%;
+  font-weight: 600;
+}
+.cp .module-quiz-question ul {
+  margin-bottom: 25px;
+}
+.cp .module-quiz-question li label {
+  display: block;
+  padding-left: 25px;
+  margin-top: -28px;
+}
 .cp .module-response {
   margin-bottom: 20px;
 }
