@@ -40,6 +40,23 @@
 				padding: 4px 12px;
 			}
 		}
+		.file {
+			position: relative;
+			display: inline-block;
+			.button {
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 100%;
+				&:after {
+					content: '\f317';
+					font-family: Dashicons;
+					float: right;
+					font-size: 1.4em;
+					line-height: 1;
+				}
+			}
+		}
 	}
 	.module-response {
 		margin-bottom: 20px;

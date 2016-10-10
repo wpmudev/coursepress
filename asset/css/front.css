@@ -1,3 +1,4 @@
+/** Color Scheme **/
 /** Global **/
 .cp .hide {
   display: none;
@@ -16,7 +17,7 @@
   -webkit-text-decoration-style: none;
   text-decoration-style: none;
   border: 1px solid rgba(0, 0, 0, 0.3);
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: #F4F4F4;
   cursor: pointer;
 }
 .cp .button:hover {
@@ -519,6 +520,23 @@
 }
 .cp .module-elements select option {
   padding: 4px 12px;
+}
+.cp .module-elements .file {
+  position: relative;
+  display: inline-block;
+}
+.cp .module-elements .file .button {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+}
+.cp .module-elements .file .button:after {
+  content: '\f317';
+  font-family: Dashicons;
+  float: right;
+  font-size: 1.4em;
+  line-height: 1;
 }
 .cp .module-response {
   margin-bottom: 20px;
