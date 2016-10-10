@@ -335,21 +335,37 @@ l(CoursePress_Data_Course::get_setting( $course->ID ));
                 'meta_key_new' => 'cp_structure_visible_units',
                 'settings' => 'structure_visible_units',
             ),
-            /**
-             * modules
-             */
-            array(
-                'meta_key_old' => 'preview_module_boxes',
-                'meta_key_new' => 'cp_structure_preview_modules',
-                'settings' => 'structure_preview_modules',
-            ),
-            array(
-                'meta_key_old' => 'show_module_boxes',
-                'meta_key_new' => 'cp_structure_visible_modules',
-                'settings' => 'structure_visible_modules',
-            ),
         );
         self::update_array( $course->ID, $fields );
+        /**
+         * publish all modules on published pages
+         */
+        $published_pages = CoursePress_Data_Course::get_setting( $course->ID, 'structure_visible_pages' );
+        $pages = array();
+        foreach( $published_pages as $page => $status ) {
+            if ( cp_is_true( $status ) && preg_match( '/^(\d+)_(\d+)$/', $page, $matches ) ) {
+                $pages[$matches[1]] = $matches[2];
+
+            }
+
+        }
+        l($pages);
+        $structure_visible_modules = array();
+        foreach( $pages as $page_id => $page ) {
+            $args = array(
+                'post_type' => CoursePress_Data_Module::get_post_type_name(),
+                'post_status' => 'any',
+                'fields' => 'ids',
+                'posts_per_page' => -1,
+                'post_parent' => $page_id
+            );
+            $ids = get_posts( $args );
+            foreach( $ids as $module_id ) {
+                $key = sprintf( '%d_%d_%d', $page_id, 0, $module_id );
+                $structure_visible_modules[ $key ] = 'on';
+            }
+        }
+        CoursePress_Data_Course::update_setting( $course->ID, 'structure_visible_modules', $structure_visible_modules );
     }
 
 	/**
