@@ -15,7 +15,8 @@
   text-decoration: none;
   -webkit-text-decoration-style: none;
   text-decoration-style: none;
-  border: 1px solid rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.04);
   cursor: pointer;
 }
 .cp .button:hover {
@@ -483,6 +484,7 @@
   display: block;
   margin: 15px 0 25px 0;
   clear: both;
+  border: 1px solid transparent;
 }
 .cp .cp-module-content .comment-reply-title {
   margin-bottom: 0;
@@ -501,6 +503,7 @@
   float: right;
   font-size: 0.8em;
   text-transform: uppercase;
+  color: rgba(255, 0, 0, 0.5);
 }
 .cp .module-header .is-mandatory:before {
   content: '*';
@@ -555,12 +558,10 @@
   margin: 15px 0;
 }
 .cp .cp-sub p {
-  float: left;
-  width: 50%;
-  font-size: 0.8em;
-  text-transform: uppercase;
-  text-align: center;
-  padding: 5px 0;
+  margin: 0;
+  font-style: italic;
+  font-size: 14px;
+  opacity: 0.8;
 }
 .cp .prev-button,
 .cp .next-button {

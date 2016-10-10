@@ -4,6 +4,7 @@
 		display: block;
 		margin: 15px 0 25px 0;
 		clear: both;
+		border: 1px solid transparent;
 
 		.comment-reply-title {
 			margin-bottom: 0;
@@ -22,6 +23,7 @@
 			float: right;
 			font-size: 0.8em;
 			text-transform: uppercase;
+			color: $color2;
 			&:before {
 				content: '*';
 				display: inline-block;
@@ -82,12 +84,10 @@
 	.cp-sub {
 		margin: 15px 0;
 		p {
-			float: left;
-			width: 50%;
-			font-size: 0.8em;
-			text-transform: uppercase;
-			text-align: center;
-			padding: 5px 0;
+			margin: 0;
+			font-style: italic;
+			font-size: 14px;
+			opacity: 0.8;
 		}
 	}
 	.prev-button,
