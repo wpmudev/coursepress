@@ -86,7 +86,7 @@ class CoursePress_Data_Shortcode_Student {
 				'course_id' => CoursePress_Helper_Utility::the_course( true ),
 				'unit_id' => false,
 				'module_column_title' => __( 'Element', 'cp' ),
-				'title_column_title' => __( 'Title', 'cp' ),
+				'title_column_title' => __( 'Module', 'cp' ),
 				'submission_date_column_title' => __( 'Submitted', 'cp' ),
 				'response_column_title' => __( 'Answer', 'cp' ),
 				'grade_column_title' => __( 'Grade', 'cp' ),
@@ -292,7 +292,7 @@ class CoursePress_Data_Shortcode_Student {
 
 						$grade = (-1 == $grade ? __( 'Ungraded', 'cp' ) : $grade );
 
-						$mandatory = cp_is_true( $attributes['mandatory'] ) ? '<span class="dashicons dashicons-star-filled mandatory"></span>' : '';
+						$mandatory = cp_is_true( $attributes['mandatory'] ) ? '<span class="dashicons dashicons-flag mandatory"></span>' : '';
 						$non_assessable = cp_is_true( $attributes['assessable'] ) ? '' : '<span class="dashicons dashicons-star-filled non-assessable"></span>';
 
 						$extra = $mandatory . $non_assessable;
@@ -303,7 +303,7 @@ class CoursePress_Data_Shortcode_Student {
 
 						$grade_display = ! empty( $grade['grade'] ) || '0' == $grade['grade'] ? $grade['grade'] . '%' : '';
 						$content .= '<tr>
-							<td class="title">' . $title . ' ' . $extra . '</td>
+							<td class="title">' . $title . '</td>
 							<td class="submit-date">' . $response_date . '</td>
 							<td class="view-response ' . $attributes['module_type'] . '">' . $response_display . '</td>
 							<td class="grade">' . $grade_display . '</td>
@@ -320,7 +320,7 @@ class CoursePress_Data_Shortcode_Student {
 
 			$content .= '
 				</tbody>
-				<tfoot><tr class="footer-key"><td colspan="5"><span class="dashicons dashicons-star-filled mandatory"></span>' . esc_html__( 'Mandatory answers', 'cp' ) . '&nbsp;&nbsp;<span class="dashicons dashicons-star-filled non-assessable"></span>' . esc_html__( 'Non-assessable elements.', 'cp' ) . '</td></tr></tfoot>
+				<tfoot><tr class="footer-key"><td colspan="5"><span class="dashicons dashicons-flag mandatory"></span>' . esc_html__( 'Mandatory answers', 'cp' ) . '&nbsp;&nbsp;<span class="dashicons dashicons-star-filled non-assessable"></span>' . esc_html__( 'Non-assessable elements.', 'cp' ) . '</td></tr></tfoot>
 			';
 
 			$content .= '
@@ -406,7 +406,7 @@ class CoursePress_Data_Shortcode_Student {
 				</div>
 			</div>
 			<div class="bbm-modal__bottombar">
-			<input type="submit" class="bbm-button done button cta-button" value="<?php esc_attr_e( 'Log in', 'cp' ); ?>" />
+			<input type="submit" class="bbm-button done login button cta-button" value="<?php esc_attr_e( 'Log in', 'cp' ); ?>" />
 			<a href="#" class="cancel-link"><?php esc_html_e( 'Cancel', 'cp' ); ?></a>
 			</div>
 		</script>

@@ -383,20 +383,24 @@ class CoursePress_Helper_JavaScript {
 		$script_url = CoursePress::$url . 'asset/js/';
 		$css_url = CoursePress::$url . 'asset/css/';
 		$version = CoursePress::$version;
+		$course_id = CoursePress_Helper_Utility::the_course( true );
+
+		// Fontawesome
+		$fontawesome = $css_url . 'external/font-awesome.min.css';
+		wp_enqueue_style( 'fontawesome', $fontawesome, array(), $version );
+		$bbm_modal_css = $css_url . 'bbm.modal.css';
+		wp_enqueue_style( 'coursepress-modal-css', $bbm_modal_css, array(), $version );
+		// Front CSS
+		wp_enqueue_style( 'coursepress-front-css', $css_url . 'front.css', array( 'dashicons' ), $version );
 
 		wp_enqueue_script( 'comment-reply' );
 
 		$script = $script_url . 'external/circle-progress.min.js';
 		wp_enqueue_script( 'circle-progress', $script, array( 'jquery' ), $version );
+
+		$modal_script_url = $script_url . 'external/backbone.modal-min.js';
+		wp_enqueue_script( 'coursepress-backbone-modal', $modal_script_url, array( 'jquery', 'backbone', 'underscore', 'password-strength-meter' ) );
 		wp_enqueue_script( 'coursepress-front-js', $script_url . 'front.js', array( 'jquery', 'backbone', 'underscore' ), $version );
-
-
-		// Fontawesome
-		$fontawesome = $css_url . 'external/font-awesome.min.css';
-		wp_enqueue_style( 'fontawesome', $fontawesome, array(), $version );
-		// Front CSS
-		wp_enqueue_style( 'coursepress-front-css', $css_url . 'front.css', array( 'dashicons' ), $version );
-
 
 		$localize_array = array(
 			'_ajax_url' => CoursePress_Helper_Utility::get_ajax_url(),
@@ -407,24 +411,27 @@ class CoursePress_Helper_JavaScript {
 			'allowed_extensions' => apply_filters( 'coursepress_custom_allowed_extensions', false ),
 			'allowed_student_extensions' => CoursePress_Helper_Utility::allowed_student_mimes(),
 			'no_browser_upload' => __( 'Please try a different browser to upload your file.', 'cp' ),
-			'invalid_upload_message' => __( 'Please only upload any of the following files: ', 'cp' ),
+			'invalid_upload_message' => __( 'Invalid file format!', 'cp' ),
 			'file_uploaded_message' => __( 'Your file has been submitted successfully.', 'cp' ),
 			'file_upload_fail_message' => __( 'There was a problem processing your file.', 'cp' ),
 			'response_saved_message' => __( 'Your response was recorded successfully.', 'cp' ),
 			'response_fail_message' => __( 'There was a problem saving your response. Please reload this page and try again.', 'cp' ),
-		//	'current_course_is_paid' => CoursePress_Data_Course::is_paid_course( $course_id )? 'yes':'no',
+			'current_course_is_paid' => CoursePress_Data_Course::is_paid_course( $course_id )? 'yes':'no',
 			'course_url' => get_permalink( CoursePress_Helper_Utility::the_course( true ) ),
 			'home_url' => home_url(),
 			'current_student' => get_current_user_id(),
 			'workbook_view_answer' => __( 'View', 'cp' ),
 			'labels' => CoursePress_Helper_UI_Module::get_labels(),
 			'signup_errors' => array(
-				'all_fields' => __( 'All fields required.', 'cp' ),
+				'all_fields' => __( 'All fields are required.', 'cp' ),
 				'email_invalid' => __( 'Invalid e-mail address.', 'cp' ),
 				'email_exists' => __( 'That e-mail address is already taken.', 'cp' ),
 				'user_exists' => __( 'That usernam is already taken.', 'cp' ),
 				'weak_password' => __( 'Weak passwords not allowed.', 'cp' ),
 				'mismatch_password' => __( 'Passwords do not match.', 'cp' ),
+			),
+			'login_errors' => array(
+				'required' => __( 'Your username and/or password is required!', 'cp' ),
 			),
 			'comments' => array(
 				'require_valid_comment' => __( 'Please type a comment.', 'cp' ),

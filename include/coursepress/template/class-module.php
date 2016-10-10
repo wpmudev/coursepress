@@ -199,6 +199,7 @@ class CoursePress_Template_Module {
 
 		$attributes = self::attributes( $module_id );
 		$module_type = $attributes['module_type'];
+		$is_required = ! empty( $attributes['mandatory'] );
 		$method = 'render_' . str_replace( '-', '_', $module_type );
 		$module = get_post( $module_id );
 		$unit_id = $module->post_parent;
@@ -265,7 +266,7 @@ class CoursePress_Template_Module {
 			$disabled_attr = $disabled ? 'disabled="disabled"' : '';
 			$module_elements = call_user_func( array( __CLASS__, $method ), $module, $attributes, $student_progress );
 
-			$module_elements = sprintf( '<div id="cp-element-%s" class="module-elements %s">%s</div>', $module_id, $element_class, $module_elements, $disabled );
+			$module_elements = sprintf( '<div id="cp-element-%s" class="module-elements %s" data-type="%s" data-required="%s">%s</div>', $module_id, $element_class, $module_type, $is_required, $module_elements );
 
 			if ( $is_module_answerable && ! empty( $responses ) ) {
 
@@ -770,7 +771,7 @@ class CoursePress_Template_Module {
 		$disabled_attr = $disabled ? 'disabled="disabled"' : '';
 		$response = self::get_response( $module->ID, get_current_user_id() );
 
-		$format = '<label class="file"><input type="file" name="module[%s]" %s /><span class="button" data-change="%s" data-upload="%s">%s</label>';
+		$format = '<label class="file"><input type="file" name="module[%s]" %s /><span class="button" data-change="%s" data-upload="%s">%s <span class="upload-progress"></span></label>';
 		$content = sprintf( $format, $module->ID, $disabled_attr, __( 'Change File', 'cp' ), __( 'Upload File', 'cp' ), __( 'Upload File', 'cp' ) );
 
 		$upload_types = CoursePress_Helper_Utility::allowed_student_mimes();
@@ -813,12 +814,12 @@ class CoursePress_Template_Module {
 						$checked .= checked( 1, ! empty( $response[ $qi ][ $ai ] ), false );
 					}
 
-					$format = '<li><label for="%1$s">%2$s</label> <input type="%3$s" id="%1$s" name="%4$s" value="%5$s" %6$s/></li>';
+					$format = '<li><input type="%3$s" id="%1$s" name="%4$s" value="%5$s" %6$s/> <label for="%1$s">%2$s</label></li>';
 					$questions .= sprintf( $format, $quiz_id, esc_html( $answer ), $type, $module_name, $ai, $disabled_attr . $checked );
 				}
 
 				$questions .= '</ul>';
-				$questions = sprintf('<p class"question">%s</p>%s', esc_html( $question['question'] ), $questions );
+				$questions = sprintf('<p class="question">%s</p>%s', esc_html( $question['question'] ), $questions );
 				$container_format = '<div class="module-quiz-question question-%s" data-type="%s">%s</div>';
 				$content .= sprintf( $container_format, $qi, $question['type'], $questions );
 			}

@@ -140,14 +140,14 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$student_enrolled = false;
 		$student_id = false;
 		$is_instructor = false;
+		$is_custom_login = ! empty( $general_settings['use_custom_login'] );
 
 		if ( is_user_logged_in() ) {
 			$student_id = get_current_user_id();
 			$student_enrolled = CoursePress_Data_Course::student_enrolled( $student_id, $course_id );
 			$is_instructor = CoursePress_Data_Instructor::is_assigned_to_course( $course_id, $student_id );
 		} else {
-
-			if ( empty( $general_settings['use_custom_login'] ) ) {
+			if ( false === $is_custom_login ) {
 				$signup_url = wp_login_url( $course_url );
 			} else {
 				$signup_url = CoursePress_Core::get_slug( 'login/', true );
@@ -190,7 +190,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				'enroll' => array(
 					'label' => sanitize_text_field( $enroll_text ),
 					'attr' => array(
-						'class' => 'apply-button enroll ' . $class,
+						'class' => $can_update_course ? 'apply-button' : 'apply-button enroll ' . $class,
 						'data-link' => esc_url( $signup_url . '?course_id=' . $course_id ),
 						'data-course-id' => $course_id,
 					),
@@ -199,7 +199,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				'signup' => array(
 					'label' => sanitize_text_field( $signup_text ),
 					'attr' => array(
-						'class' => 'apply-button signup ' . $class,
+						'class' => 'apply-button signup ' . ( $is_custom_login ? 'cp-custom-login ' : '' ) . $class,
 						'data-link-old' => $signup_url,//esc_url( $signup_url . '?course_id=' . $course_id ),
 						'data-course-id' => $course_id,
 						'data-link' => $signup_url,
@@ -444,8 +444,6 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 			if ( 'enroll' == $button_option ) {
 				$button .= wp_nonce_field( 'enrollment_process', '_wpnonce', true, false );
-			} elseif ( 'signup' == $button_option ) {
-				
 			}
 
 			$button .= '<input type="hidden" name="course_id" value="' . $course_id . '" />';
@@ -1086,12 +1084,6 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					$module_table .= '<li>';
 
 					if ( $heading_visible ) {
-						// Set featured image
-						if ( ! empty( $page['feature_image'] ) ) {
-							$page_featured_image = sprintf( '<img src="%s" alt="%s" />', esc_url( $page['feature_image'] ), esc_attr( basename( $page['feature_image'] ) ) );
-							$module_table .= '<div class="section-thumbnail">' . $page_featured_image . '</div>';
-						}
-
 						$section_class = 'section-title';
 						$is_section_seen = CoursePress_Data_Student::is_section_seen( $course_id, $unit_id, $page_number );
 						$section_data = '';
@@ -1126,6 +1118,11 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 							}
 
 							$module_table .= '</div>';
+						}
+						// Set featured image
+						if ( ! empty( $page['feature_image'] ) ) {
+							$page_featured_image = sprintf( '<img src="%s" alt="%s" />', esc_url( $page['feature_image'] ), esc_attr( basename( $page['feature_image'] ) ) );
+							$module_table .= '<div class="section-thumbnail">' . $page_featured_image . '</div>';
 						}
 					}
 
@@ -1238,9 +1235,10 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			}
 
 			$content .= '<li class="' . esc_attr( $additional_li_class ) . '"'. $unit_data . '>' .
+				$unit_image .
 				'<div class="unit-archive-single">' .
 				$unit_progress .
-				$unit_image .
+				//$unit_image .
 				$unit_link;
 
 			$content .= $module_table;

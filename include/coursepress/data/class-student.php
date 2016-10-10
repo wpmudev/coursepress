@@ -1563,6 +1563,10 @@ class CoursePress_Data_Student {
 			$courses = array_map( 'get_post', $course_ids );
 		}
 
+		if ( empty( $courses ) ) {
+			return;
+		}
+
 		$found_courses = array(
 			'current' => array(),
 			'completed' => array(),
