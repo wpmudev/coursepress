@@ -83,8 +83,8 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			'course_expired_text' => __( 'Not available', 'cp' ),
 			'enrollment_finished_text' => __( 'Enrollments Finished', 'cp' ),
 			'enrollment_closed_text' => __( 'Enrollments Closed', 'cp' ),
-			'enroll_text' => __( 'Enroll', 'cp' ),
-			'signup_text' => __( 'Enroll', 'cp' ),
+			'enroll_text' => __( 'Enroll Now!', 'cp' ),
+			'signup_text' => __( 'Enroll Now!', 'cp' ),
 			'details_text' => __( 'Details', 'cp' ),
 			'prerequisite_text' => __( 'Pre-requisite Required', 'cp' ),
 			'passcode_text' => __( 'Passcode Required', 'cp' ),
@@ -107,10 +107,8 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$course_url = CoursePress_Data_Course::get_course_url( $course_id );
 		$can_update_course = CoursePress_Data_Capabilities::can_update_course( $course_id );
 
-		// Don't show the button to administrators/instructor
 		if ( $can_update_course ) {
-
-			//return '';
+			$enroll_text = __( 'Enroll', 'cp' );
 		}
 
 		$now = CoursePress_Data_Course::time_now();

@@ -928,6 +928,8 @@ class CoursePress_View_Front_Course {
 					'main'
 				),
 				'type' => CoursePress_Data_Course::get_post_type_name(),
+				'is_singular' => true,
+				'ID' => $cp->course_id,
 			);
 			// -----------------------------------------------------------------
 		} elseif ( $cp->is_completion_page ) {
