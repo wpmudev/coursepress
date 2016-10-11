@@ -137,7 +137,7 @@ class CoursePress_Helper_Upgrade {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			return;
 		}
-		$plugin_version = get_option( 'coursepress_version', '1.3' );
+		$plugin_version = get_option( 'coursepress_version', '0' );
 		$coursepress_courses_need_update = false;
 		if ( 0 > version_compare( $plugin_version, CoursePress::$version ) ) {
 			update_option( 'coursepress_version', CoursePress::$version, 'no' );
@@ -195,7 +195,12 @@ class CoursePress_Helper_Upgrade {
 			'course_dates',
 			'course_classes_discusion_and_workbook',
 			'course_enrollment_and_cost',
-		);
+        );
+
+        $updates = array(
+            'student_progress',
+        );
+
 		foreach ( $updates as $function_sufix ) {
 			$function = 'course_upgrade_'.$function_sufix;
 			if ( is_callable( array( __CLASS__, $function ) ) ) {
@@ -206,9 +211,9 @@ class CoursePress_Helper_Upgrade {
 		CoursePress_Data_Course::update_setting( $course->ID, 'course_view', 'normal' );
 		for ( $i = 1; $i < 8; $i++ ) {
 			CoursePress_Data_Course::update_setting( $course->ID, 'setup_step_'.$i, 'saved' );
-		}
-
+        }
 		//l(CoursePress_Data_Course::get_setting( $course->ID ));
+
 
 		return true;
 	}
@@ -531,6 +536,27 @@ class CoursePress_Helper_Upgrade {
 			),
 		);
 		self::update_array( $course->ID, $fields );
+	}
+
+	/**
+	 * Rename progress
+	 */
+	private static function course_upgrade_student_progress( $course ) {
+		global $wpdb;
+		$sql = $wpdb->prepare(
+			'update %s set meta_key = %s where meta_key = %s',
+			$wpdb->usermeta,
+			sprintf( '_course_%d_progress', $course->ID ),
+			sprintf( 'course_%d_progress', $course->ID )
+		);
+		$wpdb->query( $sql );
+		$sql = $wpdb->prepare(
+			'update %s set meta_key = %s where meta_key = %s',
+			$wpdb->usermeta,
+			sprintf( '_course_%d_completed', $course->ID ),
+			sprintf( 'course_%d_completed', $course->ID )
+		);
+		$wpdb->query( $sql );
 	}
 
 	/**
