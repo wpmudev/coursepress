@@ -336,6 +336,18 @@
   content: '';
   clear: both;
 }
+.course-wrapper .enroll-box .course-completed-button {
+  position: relative;
+  padding-left: 35px !important;
+}
+.course-wrapper .enroll-box .course-completed-button:before {
+  content: '\f147';
+  position: absolute;
+  left: 0;
+  font-family: Dashicons;
+  font-size: 1.7em;
+  line-height: 115%;
+}
 .course-wrapper .enroll-box-left {
   float: left;
 }
