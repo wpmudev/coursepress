@@ -430,7 +430,7 @@ $(document)
 	CoursePress.validateUploadModule = function() {
 		var input_file = $(this),
 			parentDiv = input_file.parents( '.module-elements' ).first(),
-			warningDiv = parentDiv.find( '.invalid-extension' ),
+			warningDiv = parentDiv.find( '.invalid-extension, .current-file' ),
 			filename = input_file.val(),
 			extension = filename.split( '.' ).pop(),
 			allowed_extensions = _.keys( _coursepress.allowed_student_extensions )
@@ -444,19 +444,22 @@ $(document)
 		if ( ! _.contains( allowed_extensions, extension ) ) {
 			warningDiv = $( '<div class="invalid-extension">' ).insertAfter( input_file.parent() );
 			warningDiv.html( _coursepress.invalid_upload_message )
+		} else {
+			warningDiv = $( '<div class="current-file"></div>' ).html( filename );
+			warningDiv.insertAfter( input_file.parent() );
 		}
 	};
 
 	CoursePress.ModuleSubmit = function() {
 		var form = $(this),
-			error_box = form.find( '.cp-error' ),
+			error_box = form.find( '.cp-error-box' ),
 			focus_box = form.parents( '.coursepress-focus-view, .cp.unit-wrapper' ),
 			iframe = false,
 			timer = false
 		;
 
 		if ( 0 === error_box.length ) {
-			error_box = $( '<div class="cp-error">' ).prependTo( form );
+			error_box = $( '<div class="cp-error-box">' ).prependTo( form );
 		}
 
 		// Insert ajax marker
@@ -493,7 +496,11 @@ $(document)
 						}
 					} else {
 						// Focus on the error box
-						CoursePress.showError( data.data.error_message, form );
+						if ( data.data.html ) {
+							focus_box.html( data.data.html );
+						}
+						error_box = $( '.cp-form' );
+						CoursePress.showError( data.data.error_message, error_box );
 					}
 				}
 			}, 100 );

@@ -158,7 +158,7 @@ class CoursePress_Template_Unit {
 
 		$before_html = apply_filters( 'coursepress_before_unit_modules', '' );
 
-		$content .= sprintf( '<div class="cp-error">%s</div>', $before_html );
+		$content .= sprintf( '<div class="cp-error-box">%s</div>', $before_html );
 		$content .= '<div class="cp unit-wrapper unit-' . $unit->ID . ' course-' . $course_id . '">';
 
 		// Page Title.
