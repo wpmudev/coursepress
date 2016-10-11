@@ -711,7 +711,7 @@ class CoursePress_View_Admin_Course_Edit {
 							<label for="meta_course_start_date" class="start-date-label required">' . esc_html__( 'Start Date', 'cp' ) . '</label>
 
 							<div class="date">
-								<input type="text" class="dateinput timeinput" name="meta_course_start_date" value="' . CoursePress_Data_Course::get_setting( $course_id, 'course_start_date', '' ) . '"/><i class="calendar"></i>
+								<input type="text" class="dateinput timeinput" name="meta_course_start_date" value="' . CoursePress_Data_Course::get_setting( $course_id, 'course_start_date', date( 'Y-m-d' ) ) . '"/><i class="calendar"></i>
 							</div>
 						</div>
 						<div class="end-date ' . ( $open_ended_course ? 'disabled' : '' ) . '">
@@ -1025,11 +1025,21 @@ class CoursePress_View_Admin_Course_Edit {
 		$setup_class = CoursePress_Data_Course::get_setting( $course_id, 'setup_step_7', '' );
 		$setup_class = (int) CoursePress_Data_Course::get_setting( $course_id, 'setup_marker', 0 ) === 7 ? $setup_class . ' setup_marker' : $setup_class;
 
-		$pre_completion_title = CoursePress_Data_Course::get_setting( $course_id, 'pre_completion_title' );
-		$pre_completion_content = CoursePress_Data_Course::get_setting( $course_id, 'pre_completion_content' );
+		/**
+		 * Pre-Completion Page
+		 */
+		$pre_completion_title = CoursePress_Data_Course::get_setting( $course_id, 'pre_completion_title', __( 'Almost there!', 'cp' ) );
+		$pre_completion_content = sprintf( '<h3>%s</h3>', __( 'You have completed the course!', 'cp' ) );
+		$pre_completion_content .= sprintf( '<p>%s</p>', __( 'Your submitted business plan will be reviewed, and you\'ll hear back from me on whether you pass or fail.', 'cp' ) );
+		$pre_completion_content = CoursePress_Data_Course::get_setting( $course_id, 'pre_completion_content', $pre_completion_content );
 		$pre_completion_content = htmlspecialchars_decode( $pre_completion_content );
-		$completion_title = CoursePress_Data_Course::get_setting( $course_id, 'course_completion_title' );
-		$completion_content = CoursePress_Data_Course::get_setting( $course_id, 'course_completion_content' );
+
+		/**
+		 * Course Completion Page
+		 */
+		$completion_title = CoursePress_Data_Course::get_setting( $course_id, 'course_completion_title', __( 'Congratulations, You Passed!', 'cp' ) );
+		$completion_content = sprintf( '<p>%s</p>', __( 'Woohoo! You\'ve passed COURSE_NAME!', 'cp' ) );
+		$completion_content = CoursePress_Data_Course::get_setting( $course_id, 'course_completion_content', $completion_content );
 		$completion_content = htmlspecialchars_decode( $completion_content );
 
 		$content = '<div class="step-title step-7">'
@@ -1042,11 +1052,15 @@ class CoursePress_View_Admin_Course_Edit {
 
 		// Course completion
 		$minimum_grade = CoursePress_Data_Course::get_setting( $course_id, 'minimum_grade_required', 100 );
-		$content .= '<div class="wide minimum-grade">
-			<label class="required">' . __( 'Minimum Grade Required', 'cp' ) . '</label> <input type="text" name="meta_minimum_grade_required" value="'. esc_attr__( $minimum_grade ) . '" />
-			<p class="description">'. __( 'The minimum grade required to marked course completion and send course certficates.', 'cp' ) . '</p>
-			</div>
-		';
+
+		$content .= '<div class="wide minimum-grade">';
+		$content .= sprintf( '<label class="required" for="meta_minimum_grade_required">%s</label> ', __( 'Minimum Grade Required', 'cp' ) );
+		$content .= sprintf( '<input type="number" id="meta_minimum_grade_required" name="meta_minimum_grade_required" value="%d" min="0" max="100" class="text-small" />', esc_attr__( $minimum_grade ) );
+		$content .= sprintf(
+			'<p class="description">%s</p>',
+			__( 'The minimum grade required to marked course completion and send course certficates.', 'cp' )
+		);
+		$content .= '</div>';
 
 		$tokens = array(
 			'COURSE_NAME',
@@ -1084,7 +1098,8 @@ class CoursePress_View_Admin_Course_Edit {
 
 		// Fail info
 		$failed_title = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_title', __( 'Sorry, you did not pass this course!', 'cp' ) );
-		$failed_content = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_content', '' );
+		$failed_content = __( 'I\'m sorry to say you didn\'t pass JavaScript for COURSE_NAME. Better luck next time!', 'cp' );
+		$failed_content = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_content', $failed_content );
 		$failed_content = htmlspecialchars_decode( $failed_content );
 
 		$content .= '<div class="wide page-failed">
