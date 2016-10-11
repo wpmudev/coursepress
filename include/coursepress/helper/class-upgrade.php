@@ -194,8 +194,8 @@ class CoursePress_Helper_Upgrade {
 			'course_instructors',
 			'course_dates',
 			'course_classes_discusion_and_workbook',
+			'course_enrollment_and_cost',
 		);
-//		$updates = array();
 		foreach ( $updates as $function_sufix ) {
 			$function = 'course_upgrade_'.$function_sufix;
 			if ( is_callable( array( __CLASS__, $function ) ) ) {
@@ -509,6 +509,31 @@ class CoursePress_Helper_Upgrade {
 	}
 
 	/**
+	 * Step 6 – Enrollment & Course Cost
+	 */
+	private static function course_upgrade_course_enrollment_and_cost( $course ) {
+		$fields = array(
+			array(
+				'meta_key_old' => 'enroll_type',
+				'settings' => 'enrollment_type',
+			),
+			array(
+				'meta_key_old' => 'paid_course',
+				'settings' => 'payment_paid_course',
+			),
+			array(
+				'meta_key_old' => 'passcode',
+				'settings' => 'enrollment_passcode',
+			),
+			array(
+				'meta_key_old' => 'prerequisite',
+				'settings' => 'enrollment_prerequisite',
+			),
+		);
+		self::update_array( $course->ID, $fields );
+	}
+
+	/**
 	 * Rename post meta
 	 */
 	private static function rename_post_meta( $course_id, $meta_key_old, $meta_key_new ) {
@@ -526,6 +551,9 @@ class CoursePress_Helper_Upgrade {
 		return $value;
 	}
 
+	/**
+	 * Update array of post meta fields.
+	 */
 	private static function update_array( $course_id, $fields ) {
 		foreach ( $fields as $data ) {
 			$value = false;
