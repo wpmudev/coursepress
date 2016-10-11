@@ -1342,6 +1342,8 @@ class CoursePress_View_Front_Course {
 		$action = sanitize_text_field( $data->action );
 		$json_data['action'] = $action;
 
+		l( $action, __FUNCTION__ );
+
 		switch ( $action ) {
 			case 'record_module_response':
 				// Update Course.
@@ -1427,6 +1429,7 @@ class CoursePress_View_Front_Course {
 		}
 
 		if ( $success ) {
+			CoursePress_Data_Student::log_student_activity( 'module_answered', $json_data['student_id'] );
 			wp_send_json_success( $json_data );
 		} else {
 			wp_send_json_error( $json_data );

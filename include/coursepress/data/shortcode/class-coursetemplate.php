@@ -747,7 +747,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 						/**
 						 * do not show title
 						 */
-						$show_title = cp_is_true( $attributes['show_title'] );
+						$show_title = isset( $attributes['show_title'] ) && cp_is_true( $attributes['show_title'] );
 						if ( ! $show_title ) {
 							continue;
 						}
@@ -839,6 +839,8 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			'knob_bg_color' => '#e0e6eb',
 			'knob_data_thickness' => '0.18',
 		), $atts, 'unit_archive_list' ) );
+
+		CoursePress_Data_Student::log_student_activity( 'course_unit_seen' );
 
 		$course_id = (int) $course_id;
 		if ( empty( $course_id ) ) { return ''; }
@@ -1141,7 +1143,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 						if ( ! $is_module_structure_visible ) { continue; }
 
 						$attributes = CoursePress_Data_Module::attributes( $module->ID );
-						$is_required = cp_is_true( $attributes['mandatory'] );
+						$is_required = isset( $attributes['mandatory'] ) && cp_is_true( $attributes['mandatory'] );
 
 						if ( ! CoursePress_Data_Course::can_view_module( $course_id, $unit_id, $module->ID, $page_number ) ) {
 							continue;

@@ -695,6 +695,7 @@ class CoursePress_Template_Module {
 		$content = '';
 
 		if ( ! empty( $attributes['answers'] ) ) {
+
 			$disabled_attr = $disabled ? 'disabled="disabled"' : '';
 			$oddeven = 'odd';
 			$alt = '';
@@ -757,6 +758,7 @@ class CoursePress_Template_Module {
 		$placeholder_text = get_post_meta( $module->ID, 'placeholder_text', true );
 		$placeholder_text = ! empty( $placeholder_text ) ? $placeholder_text : '';
 		$disabled_attr = $disabled ? 'disabled="disabled"' : '';
+
 		$response = self::get_response( $module->ID, get_current_user_id() );
 		$format = '<textarea name="module[%s]" placeholder="%s" %s rows="3">%s</textarea>';
 

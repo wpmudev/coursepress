@@ -25,6 +25,9 @@ class CoursePress_Hooks {
 		add_action( 'wp_ajax_coursepress_request', array( __CLASS__, 'process_request' ) );
 		add_action( 'wp_ajax_nopriv_coursepress_request', array( __CLASS__, 'process_request' ) );
 
+		// Log student visit on modules
+		add_action( 'coursepress_module_view', array( 'CoursePress_Data_Student', 'log_student_activity' ), 10, 2 );
+
 		// Set front scripts
 		add_action( 'wp_enqueue_scripts', array( 'CoursePress_Helper_Javascript', 'front_assets' ) );
 		// Print assets at wp_footer if CP shortcode is used!
