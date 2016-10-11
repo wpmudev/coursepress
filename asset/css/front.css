@@ -1,5 +1,9 @@
 /** Color Scheme **/
 /** Global **/
+tester {
+  position: absolute !important;
+}
+
 .cp .hide {
   display: none;
 }
@@ -156,6 +160,26 @@
 .enrolment-container-div .bbm-modal label {
   margin: 15px 0;
   display: block;
+}
+.enrolment-container-div .bbm-modal .cancel-link {
+  padding: 5px 15px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 5px 12px;
+  text-decoration: none;
+  -webkit-text-decoration-style: none;
+  text-decoration-style: none;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  background-color: #F4F4F4;
+  cursor: pointer;
+  color: inherit;
+}
+.enrolment-container-div .bbm-modal .cancel-link:hover {
+  text-decoration: none;
+}
+.enrolment-container-div .bbm-modal .cancel-link a {
+  text-decoration: none;
+  border: 0;
+  color: inherit;
 }
 .enrolment-container-div .bbm-wrapper {
   position: relative;

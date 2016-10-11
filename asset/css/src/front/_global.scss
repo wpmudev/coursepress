@@ -1,3 +1,6 @@
+tester {
+	position: absolute !important;
+}
 .cp {
 	.hide {
 		display: none;
@@ -115,6 +118,9 @@
 		label {
 			margin: 15px 0;
 			display: block;
+		}
+		.cancel-link {
+			@include button;
 		}
 	}
 	.bbm-wrapper {
