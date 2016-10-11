@@ -1661,7 +1661,7 @@ class CoursePress_Data_Student {
 			);
 
 			if ( ! empty( $failed ) ) {
-				$status = __( 'Failed', 'cp' );
+				$return = __( 'Failed', 'cp' );
 			} else {
 				if ( 'open' == $course_status ) {
 					$return = __( 'Ongoing', 'cp' );
