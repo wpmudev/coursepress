@@ -626,17 +626,8 @@ class CoursePress_View_Admin_Setting_General {
 
 				CoursePress_Core::update_setting( false, $new_settings ); // false will replace all settings
 
-				// Flush WordPress rewrite rules if any slug setting has been changed
-				if( is_array( $post_settings['slugs']) ){
-					foreach ($post_settings['slugs'] as $slug_key => $slug_value ) {
-						if( isset( $settings['slugs'][$slug_key] ) && $settings['slugs'][$slug_key] !== $slug_value ){
-							flush_rewrite_rules();
-							// Break after first Flush, no need to test anymore.
-							break;
-						}
-					}
-				}
-				
+				// Flush rewrite rules
+				flush_rewrite_rules();
 			}
 		}
 
