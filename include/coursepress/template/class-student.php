@@ -46,7 +46,6 @@ class CoursePress_Template_Student {
 	}
 
 	public static function dashboard() {
-
 		if ( is_user_logged_in() ) {
 
 			$student_id = get_current_user_id();

@@ -1547,6 +1547,7 @@ class CoursePress_Data_Student {
 			$course_ids = CoursePress_Data_Student::get_enrolled_courses_ids( $student_id );
 			$courses = array_map( 'get_post', $course_ids );
 		}
+		$courses = array_filter( $courses );
 
 		if ( empty( $courses ) ) {
 			return;
@@ -1683,7 +1684,7 @@ class CoursePress_Data_Student {
 
 			$return_url = remove_query_arg(
 				array(
-					'_wponce',
+					'_wpnonce',
 					'course_id',
 					'student_id',
 				)

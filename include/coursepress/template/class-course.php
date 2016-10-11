@@ -58,34 +58,7 @@ class CoursePress_Template_Course {
 							$workbook_url = CoursePress_Data_Student::get_workbook_url( $course->ID );
 							$workbook_link = sprintf( '<a href="%s">%s</a>', esc_url( $workbook_url ), __( 'Workbook', 'cp' ) );
 
-							$row_actions = array(
-								'workbook' => $workbook_link,
-								'view' => sprintf( '<a href="%s">%s</a>', esc_attr( $course_url ), __( 'View Course', 'cp' ) ),
-							);
-
-							if ( CoursePress_Data_Capabilities::can_update_course( $course->ID, $student_id ) ) {
-								$edit_link = add_query_arg(
-									array(
-										'page' => 'coursepress_course',
-										'action' => 'edit',
-										'id' => $course->ID,
-									)
-								);
-								$edit_link = sprintf( '<a href="%s">%s</a>', esc_url( $edit_link ), __( 'Edit', 'cp' ) );
-								array_unshift( $row_actions, $edit_link );
-							}
-
-							$withdraw_link = add_query_arg( array(
-								'_wpnonce' => wp_create_nonce( 'coursepress_student_withdraw' ),
-								'course_id' => $course->ID,
-								'student_id' => $student_id,
-							) );
-							$withdraw_link = sprintf( '<a href="%s">%s</a>', esc_url( $withdraw_link ), __( 'Withdraw', 'cp' ) );
-							$row_actions['withdraw'] = $withdraw_link;
-
-							$row_actions = sprintf( '<div class="row-actions">%s</div>', implode( ' | ', $row_actions ) );
-
-							$table_body = sprintf( '<td><a href="%s">%s</a>%s</td>', esc_url( $course_url ), $course->post_title, $row_actions );
+							$table_body .= sprintf( '<td><a href="%s">%s</a></td>', esc_url( $course_url ), $course->post_title );
 							break;
 
 						case 'date_enrolled':
@@ -117,6 +90,31 @@ class CoursePress_Template_Course {
 					}
 				}
 
+				// Row actions
+				$row_actions = array(
+					'workbook' => $workbook_link,
+					'view' => sprintf( '<a href="%s">%s</a>', esc_attr( $course_url ), __( 'View Course', 'cp' ) ),
+				);
+
+				if ( CoursePress_Data_Capabilities::can_update_course( $course->ID, $student_id ) ) {
+					$edit_link = add_query_arg( array(
+						'page' => 'coursepress_course',
+						'action' => 'edit',
+						'id' => $course->ID,
+					) );
+					$edit_link = sprintf( '<a href="%s">%s</a>', esc_url( $edit_link ), __( 'Edit', 'cp' ) );
+					array_unshift( $row_actions, $edit_link );
+				}
+
+				$withdraw_link = add_query_arg( array(
+					'_wpnonce' => wp_create_nonce( 'coursepress_student_withdraw' ),
+					'course_id' => $course->ID,
+					'student_id' => $student_id,
+				) );
+				$withdraw_link = sprintf( '<a href="%s">%s</a>', esc_url( $withdraw_link ), __( 'Withdraw', 'cp' ) );
+				$row_actions['withdraw'] = $withdraw_link;
+
+				$table_body .= sprintf( '<td class="row-actions">%s</td>', implode( ' | ', $row_actions ) );
 				$table_body .= '</tr>';
 			}
 
