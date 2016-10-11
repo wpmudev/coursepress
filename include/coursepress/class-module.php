@@ -373,9 +373,17 @@ class CoursePress_Module {
 
 		if ( $has_error ) {
 			if ( $via_ajax ) {
+				if ( $is_focus ) {
+					//$html = '[coursepress_focus_item course="%s" unit="%s" type="%s" item_id="%s"]';
+					//$html = do_shortcode( sprintf( $html, $course_id, $unit_id, '', $item_id ) );
+				} else {
+					$html = CoursePress_Template_Unit::unit_with_modules( $course_id, $unit_id, $page, $student_id );
+				}
+
 				$json_data = array(
 					'error' => true,
 					'error_message' => self::$error_message,
+					'html' => $html,
 				);
 
 				wp_send_json_error( $json_data );

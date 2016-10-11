@@ -349,7 +349,6 @@ class CoursePress_Data_Module {
 	}
 
 	public static function get_quiz_results( $student_id, $course_id, $unit_id, $module_id, $response = false, $data = false ) {
-
 		$attributes = self::attributes( $module_id );
 
 		if ( false === $data ) {
@@ -458,6 +457,7 @@ class CoursePress_Data_Module {
 
 	}
 
+	// DEPRACATED!!!
 	public static function quiz_result_content( $student_id, $course_id, $unit_id, $module_id, $quiz_result = false ) {
 
 		// Get last submitted result

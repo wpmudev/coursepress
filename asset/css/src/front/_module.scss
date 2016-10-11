@@ -43,6 +43,7 @@
 		.file {
 			position: relative;
 			display: inline-block;
+			max-width: 100%;
 			.button {
 				position: absolute;
 				left: 0;
@@ -57,6 +58,15 @@
 				}
 			}
 		}
+		.current-file {
+			display: block;
+			margin-top: 25px;
+			border: 1px solid $border_color;
+			padding: 5px 10px;
+		}
+	}
+	.cp-try-again {
+		margin-top: 15px;
 	}
 	.module-quiz-question {
 		.question {
