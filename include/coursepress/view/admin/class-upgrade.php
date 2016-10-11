@@ -71,6 +71,13 @@ class CoursePress_View_Admin_Upgrade {
 			);
 			return;
 		}
+		/**
+		 * Flush rewrites
+		 */
+		flush_rewrite_rules();
+		/**
+		 * Comunicate how many courses we have to upgrade.
+		 */
 		printf(
 			'<p>%s</p>',
 			sprintf( _n( 'You have %d course to update.', 'You have %d courses to update.', $count, 'cp'), $count )
