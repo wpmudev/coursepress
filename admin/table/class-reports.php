@@ -35,7 +35,20 @@ class CoursePress_Admin_Table_Reports extends WP_List_Table {
 	}
 
 	public function prepare_items() {
-		$per_page = $this->get_items_per_page( 'coursepress_reports_per_page', 5 );
+		$screen = get_current_screen();
+		/**
+		 * Per Page
+		 */
+		$option = $screen->get_option( 'per_page', 'option' );
+		$per_page = (int) get_user_option( $option );
+		if ( empty( $per_page ) || $per_page < 1 ) {
+			$per_page = $this->get_option( 'per_page', 'default' );
+			if ( ! $per_page ) {
+				$per_page = 20;
+			}
+		}
+		$per_page = $this->get_items_per_page( 'coursepress_reports_per_page', $per_page );
+
 		$current_page = $this->get_pagenum();
 		$offset = ( $current_page - 1 ) * $per_page;
 		$s = isset( $_POST['s'] )? mb_strtolower( trim( $_POST['s'] ) ):false;
@@ -84,6 +97,7 @@ class CoursePress_Admin_Table_Reports extends WP_List_Table {
 	public function get_bulk_actions() {
 		$actions = array(
 			'download' => __( 'Download', 'cp' ),
+			'download_summary' => __( 'Download Summary', 'cp' ),
 		);
 
 		return $actions;

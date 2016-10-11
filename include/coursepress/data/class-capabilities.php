@@ -79,7 +79,6 @@ class CoursePress_Data_Capabilities {
 			'coursepress_settings_groups_page_cap' => 0,
 			// 'coursepress_settings_shortcode_page_cap' => 0,
 			/* Notifications */
-			'coursepress_create_notification_cap' => 1,
 			'coursepress_create_my_assigned_notification_cap' => 1,
 			'coursepress_create_my_notification_cap' => 1,
 			'coursepress_update_notification_cap' => 0,
@@ -89,7 +88,6 @@ class CoursePress_Data_Capabilities {
 			'coursepress_change_notification_status_cap' => 0,
 			'coursepress_change_my_notification_status_cap' => 1,
 			/* Discussions */
-			'coursepress_create_discussion_cap' => 1,
 			'coursepress_create_my_assigned_discussion_cap' => 1,
 			'coursepress_create_my_discussion_cap' => 1,
 			'coursepress_update_discussion_cap' => 0,
@@ -199,8 +197,7 @@ class CoursePress_Data_Capabilities {
 	public static function fix_admin_capabilities() {
 		$user_id = get_current_user_id();
 		if ( user_can( $user_id, 'manage_options' )
-			&& false === user_can( $user_id, 'coursepress_settings_cap' ) )
-		{
+			&& false === user_can( $user_id, 'coursepress_settings_cap' ) ) {
 			self::assign_admin_capabilities( $user_id );
 		}
 	}
@@ -823,6 +820,28 @@ class CoursePress_Data_Capabilities {
 	 */
 
 	/**
+	 * Can edit "some" notification?
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer/null $user_id User ID
+	 */
+	public static function can_add_notifications( $user_id = null ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		$can = self::can_add_notification_to_all( $user_id );
+		if ( $can ) {
+			return true;
+		}
+		$courses = CoursePress_Data_Instructor::get_assigned_courses_ids( $user_id );
+		if ( empty( $courses ) ) {
+			return false;
+		}
+		return self::can_add_notification( $courses[0], $user_id );
+	}
+
+	/**
 	 * Can withdraw student
 	 *
 	 * @since 2.0.0
@@ -835,14 +854,6 @@ class CoursePress_Data_Capabilities {
 			$user_id = get_current_user_id();
 		}
 		if ( user_can( $user_id, 'manage_options' ) ) {
-			return true;
-		}
-		/**
-		 * Create new notifications
-		 */
-		/** This filter is documented in include/coursepress/helper/class-setting.php */
-		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_notification_cap' );
-		if ( user_can( $user_id, $capability ) ) {
 			return true;
 		}
 		return false;
@@ -861,32 +872,26 @@ class CoursePress_Data_Capabilities {
 			$user_id = get_current_user_id();
 		}
 		$return = user_can( $user_id, 'manage_options' );
+		if ( $return ) {
+			return true;
+		}
 		$course_id = is_object( $course ) ? $course->ID : $course;
-
-		if ( ! $return ) {
-			/**
-			* Create new notifications
-			*/
-			/** This filter is documented in include/coursepress/helper/class-setting.php */
-			$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_notification_cap' );
-			$capability2 = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_notification_cap' );
-			$capability3 = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_assigned_notification_cap' );
-			$is_facilitator = CoursePress_Data_Facilitator::is_course_facilitator( $course_id, $user_id );
-			$return = user_can( $user_id, $capability );
-
-			if ( ! $return ) {
-				if ( ! is_object( $course ) ) {
-					$return = user_can( $user_id, $capability2 ) || user_can( $user_id, $capability3 );
-				} else {
-					if ( self::is_course_creator( $course, $user_id ) ) {
-						$return = user_can( $user_id, $capability2 );
-					} elseif ( self::is_course_instructor( $course, $user_id ) ) {
-						$return = user_can( $user_id, $capability3 );
-					}
-				}
+		/**
+		 * Create new notifications
+		 */
+		/** This filter is documented in include/coursepress/helper/class-setting.php */
+		$capability_my = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_notification_cap' );
+		$capability_assigned = apply_filters( 'coursepress_capabilities', 'coursepress_create_my_assigned_notification_cap' );
+		$is_facilitator = CoursePress_Data_Facilitator::is_course_facilitator( $course_id, $user_id );
+		if ( ! is_object( $course ) ) {
+			$return = user_can( $user_id, $capability_my ) || user_can( $user_id, $capability_assigned );
+		} else {
+			if ( self::is_course_creator( $course, $user_id ) ) {
+				$return = user_can( $user_id, $capability_my );
+			} elseif ( self::is_course_instructor( $course, $user_id ) ) {
+				$return = user_can( $user_id, $capability_assigned );
 			}
 		}
-
 		return $return;
 	}
 
@@ -990,6 +995,9 @@ class CoursePress_Data_Capabilities {
 		/**
 		 * change_status own notifications
 		 */
+		if ( empty( $notification ) ) {
+			return false;
+		}
 		$notification_id = is_object( $notification )? $notification->ID : $notification;
 		if ( self::is_notification_creator( $notification, $user_id ) ) {
 			/** This filter is documented in include/coursepress/helper/class-setting.php */
@@ -1008,6 +1016,28 @@ class CoursePress_Data_Capabilities {
 	 */
 
 	/**
+	 * Can edit "some" discussion?
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer/null $user_id User ID
+	 */
+	public static function can_add_discussions( $user_id = null ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		$can = self::can_add_discussion_to_all( $user_id );
+		if ( $can ) {
+			return true;
+		}
+		$courses = CoursePress_Data_Instructor::get_assigned_courses_ids( $user_id );
+		if ( empty( $courses ) ) {
+			return false;
+		}
+		return self::can_add_discussion( $courses[0], $user_id );
+	}
+
+	/**
 	 * Can withdraw student
 	 *
 	 * @since 2.0.0
@@ -1020,14 +1050,6 @@ class CoursePress_Data_Capabilities {
 			$user_id = get_current_user_id();
 		}
 		if ( user_can( $user_id, 'manage_options' ) ) {
-			return true;
-		}
-		/**
-		 * Create new discussions
-		 */
-		/** This filter is documented in include/coursepress/helper/class-setting.php */
-		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_discussion_cap' );
-		if ( user_can( $user_id, $capability ) ) {
 			return true;
 		}
 		return false;
@@ -1055,14 +1077,6 @@ class CoursePress_Data_Capabilities {
 					user_can( $user_id, 'coursepress_create_my_assigned_discussion_cap' ) );
 		}
 
-		/**
-		 * Create new discussions
-		 */
-		/** This filter is documented in include/coursepress/helper/class-setting.php */
-		$capability = apply_filters( 'coursepress_capabilities', 'coursepress_create_discussion_cap' );
-		if ( user_can( $user_id, $capability ) ) {
-			return true;
-		}
 		/**
 		 * Create new discussions for own courses
 		 */
@@ -1443,10 +1457,18 @@ class CoursePress_Data_Capabilities {
 		$global_option = ! is_multisite();
 		update_user_option( $user_id, 'role_ins', 'instructor', $global_option );
 
-		self::reset_user_capabilities( $user_obj );
-
-		$user_obj->add_cap( 'read' );
-		$user_obj->add_cap( 'upload_files' );
+		// do not use reset_user_capabilities()
+		// very dangerous and needs to be rewritten, destroys WP capabilites which we shouldn't be touching
+		// self::reset_user_capabilities( $user_obj );
+	
+		// no need to add READ capability as all WP users have this up to Subscriber level
+		// $user_obj->add_cap( 'read' );
+		
+		// only add `upload_files` cap to Contributor and Subscriber because the rest already have it
+		// refer to https://codex.wordpress.org/Roles_and_Capabilities#upload_files
+		if ( $user_obj->roles && ( in_array( 'contributor', $user_obj->roles ) || in_array( 'subscriber', $user_obj->roles ) ) ) {
+			$user_obj->add_cap( 'upload_files' );
+		}
 
 		foreach ( $instructor_capabilities as $capability_name => $capability_status ) {
 			if ( $capability_status ) {
@@ -1475,13 +1497,38 @@ class CoursePress_Data_Capabilities {
 		$global_option = ! is_multisite();
 		delete_user_option( $user_id, 'role_ins', $global_option );
 
-		self::reset_user_capabilities( $user_obj );
+		// do not use reset_user_capabilities()
+		// very dangerous and needs to be rewritten, destroys WP capabilites which we shouldn't be touching
+		// self::reset_user_capabilities( $user_obj );
+		
+		self::remove_cp_instructor_capabilities( $user_obj );
 		self::grant_private_caps( $user_id );
 
 		// Add facilitator role
 		$facilitated_courses = CoursePress_Data_Facilitator::get_facilitated_courses( $user_id, array( 'any' ), true, 0, 1 );
 		if ( ! empty( $facilitated_courses ) ) {
 			self::assign_facilitator_capabilities( $user_id );
+		} else {
+			// only remove `upload_files` cap to Contributor and Subscriber, don't ever remove for other User Roles
+			// refer to: https://codex.wordpress.org/Roles_and_Capabilities#upload_files
+			if ( $user_obj->roles && ( in_array( 'contributor', $user_obj->roles ) || in_array( 'subscriber', $user_obj->roles ) ) ) {
+				$user_obj->remove_cap( 'upload_files' );
+			}
+		}
+	}
+	
+	/**
+	 * Removes all special CoursePress capabilites for an instructor
+	 *
+	 * @since  2.0.0
+	 * @param  WP_User $user The user to modify.
+	 */
+	private static function remove_cp_instructor_capabilities ( $user ) {
+		if ( $user && is_object( $user ) && $user instanceof WP_User ) {
+			$instructor_capabilities = self::get_instructor_capabilities();
+			foreach ( $instructor_capabilities as $capability_name => $capability_status ) {
+				if ( $user->has_cap($capability_name) ) $user->remove_cap($capability_name);
+			}
 		}
 	}
 
@@ -1569,7 +1616,7 @@ class CoursePress_Data_Capabilities {
 	 *
 	 * Facilitators have similar capabilites with instructors.
 	 * @todo: Add new set of capabilities for facilitators.
-	 * 
+	 *
 	 * @since 2.0
 	 *
 	 * @param (int) $user		The user ID.
@@ -1589,10 +1636,18 @@ class CoursePress_Data_Capabilities {
 		update_user_option( $user_id, 'cp_role', 'facilitator', $global_option );
 		add_user_meta( $user_id, 'cp_role', 'facilitator' );
 
-		self::reset_user_capabilities( $user_obj );
-
-		$user_obj->add_cap( 'read' );
-		$user_obj->add_cap( 'upload_files' );
+		// do not use reset_user_capabilities()
+		// very dangerous and needs to be rewritten, destroys WP capabilites which we shouldn't be touching
+		// self::reset_user_capabilities( $user_obj );
+	
+		// no need to add READ capability as all WP users have this up to Subscriber level
+		// $user_obj->add_cap( 'read' );
+		
+		// only add `upload_files` cap to Contributor and Subscriber because the rest already have it
+		// refer to https://codex.wordpress.org/Roles_and_Capabilities#upload_files
+		if ( $user_obj->roles && ( in_array( 'contributor', $user_obj->roles ) || in_array( 'subscriber', $user_obj->roles ) ) ) {
+			$user_obj->add_cap( 'upload_files' );
+		}
 
 		foreach ( $instructor_capabilities as $capability_name => $capability_status ) {
 			if ( $capability_status ) {
@@ -1627,9 +1682,15 @@ class CoursePress_Data_Capabilities {
 		delete_user_option( $user_id, 'cp_role', $global_option );
 		delete_user_meta( $user_id, 'cp_role' );
 
-		$user_obj->remove_cap( 'upload_files' );
+		// only remove `upload_files` cap to Contributor and Subscriber, don't ever remove for other User Roles
+		// refer to: https://codex.wordpress.org/Roles_and_Capabilities#upload_files
+		if ( $user_obj->roles && ( in_array( 'contributor', $user_obj->roles ) || in_array( 'subscriber', $user_obj->roles ) ) ) {
+			$user_obj->remove_cap( 'upload_files' );
+		}
 
-		self::reset_user_capabilities( $user_obj );
+		// do not use reset_user_capabilities()
+		// very dangerous and needs to be rewritten, destroys WP capabilites which we shouldn't be touching
+		// self::reset_user_capabilities( $user_obj );
 		self::grant_private_caps( $user_id );
 	}
 
@@ -1678,5 +1739,32 @@ class CoursePress_Data_Capabilities {
 		$is_facilitator = get_user_meta( $user_id, 'cp_role', true );
 
 		return 'facilitator' === $is_facilitator;
+	}
+
+	public static function course_capabilities() {
+		global $wp_post_types;
+
+		$course_type = CoursePress_Data_Course::get_post_type_name();
+		$module_type = CoursePress_Data_Module::get_post_type_name();
+		$unit_type = CoursePress_Data_Unit::get_post_type_name();
+
+		$coursepress_post_types = compact( $course_type, $unit_type, $module_type );
+
+		foreach ( $coursepress_post_types as $post_type ) {
+
+			if ( isset( $wp_post_types[ $post_type ] ) ) {
+				$caps = $wp_post_types['post']->cap;
+
+				foreach ( $caps as $cap_key => $cap_value ) {
+					unset( $caps[ $cap_key] );
+
+					$cap_key = str_replace( 'post', $post_type, $cap_key );
+					$cap_value = str_replace( 'post', $post_type, $cap_value );
+					$caps[ $cap_key ] = $cap_value;
+				}
+
+				$wp_post_types[ $post_type ]->cap = $caps;
+			}
+		}
 	}
 }

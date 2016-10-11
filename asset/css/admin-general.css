@@ -281,28 +281,27 @@ A. Responsive
  * colors
  */
 /* Course List Table */
-.wp-list-table.courses th.manage-column.column-post_title {
+.wp-list-table .courses th.manage-column.column-post_title {
   min-width: 50%;
 }
-.wp-list-table.courses .column-units p {
+.wp-list-table .courses .column-units p {
   word-wrap: normal;
 }
-.wp-list-table.courses th.manage-column.column-ID {
+.wp-list-table .courses th.manage-column.column-ID {
   width: 6em;
 }
-.wp-list-table.courses thead .manage-column.column-date_start,
-.wp-list-table.courses thead .manage-column.column-date_end,
-.wp-list-table.courses thead .manage-column.column-date_enrollment_end,
-.wp-list-table.courses thead .manage-column.column-date_enrollment_start {
+.wp-list-table .courses thead .manage-column.column-date_start,
+.wp-list-table .courses thead .manage-column.column-date_end,
+.wp-list-table .courses thead .manage-column.column-date_enrollment_end,
+.wp-list-table .courses thead .manage-column.column-date_enrollment_start {
   width: 7em;
 }
-.wp-list-table.courses tbody .date_start,
-.wp-list-table.courses tbody .date_end,
-.wp-list-table.courses tbody .date_enrollment_end,
-.wp-list-table.courses tbody .date_enrollment_start {
+.wp-list-table .courses tbody .date_start,
+.wp-list-table .courses tbody .date_end,
+.wp-list-table .courses tbody .date_enrollment_end,
+.wp-list-table .courses tbody .date_enrollment_start {
   width: 7em;
 }
-
 .wp-list-table .manage-column.column-status {
   width: 90px;
 }
@@ -784,8 +783,7 @@ input.button.button-primary.instructor-assign {
   overflow: hidden;
 }
 
-#course-setup-steps .step-content .instructor-avatar-holder,
-#course-setup-steps .step-content .facilitator-avatar-holder {
+#course-setup-steps .step-content .avatar-holder {
   margin-bottom: 5px;
   margin-left: 5px;
   margin-right: 5px;
@@ -798,25 +796,20 @@ input.button.button-primary.instructor-assign {
   z-index: 0;
 }
 
-#course-setup-steps .step-content .facilitator-avatar-holder .fa,
-#course-setup-steps .step-content .instructor-avatar-holder .fa {
+#course-setup-steps .step-content .avatar-holder .fa {
   margin-top: 10px;
   color: #6bbb1a;
 }
 
-#course-setup-steps .step-content .instructor-avatar-holder:hover,
-#course-setup-steps .step-content .facilitator-avatar-holder:hover {
+#course-setup-steps .step-content .avatar-holder:hover {
   opacity: 0.7;
 }
 
-#course-setup-steps .step-content .instructor-avatar-holder.empty,
-#course-setup-steps .step-content .facilitator-avatar-holder.empty {
+#course-setup-steps .step-content .avatar-holder.empty {
   border: 1px dashed #e1e1e1;
 }
 
-#course-setup-steps .step-content .invite-remove a,
-#course-setup-steps .step-content .instructor-remove a,
-#course-setup-steps .step-content .facilitator-remove a {
+#course-setup-steps .step-content .remove a {
   display: block;
   width: 80px;
   height: 80px;
@@ -830,15 +823,19 @@ input.button.button-primary.instructor-assign {
   z-index: 9999;
 }
 
-#course-setup-steps .step-content .invite-remove a:hover,
-#course-setup-steps .step-content .instructor-remove a:hover,
-#course-setup-steps .step-content .facilitator-remove a:hover {
+#course-setup-steps .step-content .remove.removing-process a {
+  text-indent: 0;
+  padding-top: 20px;
+}
+#course-setup-steps .step-content .remove.removing-process a span {
+  font-size: 30px;
+}
+
+#course-setup-steps .step-content .remove a:hover {
   text-indent: 0;
 }
 
-#course-setup-steps .step-content .invite-remove a span.dashicons-dismiss::before,
-#course-setup-steps .step-content .instructor-remove a span.dashicons-dismiss::before,
-#course-setup-steps .step-content .facilitator-remove a span.dashicons-dismiss::before {
+#course-setup-steps .step-content .remove a span.dashicons-dismiss::before {
   font-size: 28px;
   left: 28px;
   margin: 0;
@@ -2319,13 +2316,12 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 .coursepress_wrapper.coursepress-reports .column-report .pdf {
   background-image: url("../img/pdf_document.png");
   background-size: 100% 100%;
-  width: 16px;
-  height: 16px;
+  width: 32px;
+  height: 32px;
   display: block;
   cursor: pointer;
 }
-.coursepress_wrapper.coursepress-reports td.column-responses,
-.coursepress_wrapper.coursepress-reports td.column-average {
+.coursepress_wrapper.coursepress-reports td.column-responses, .coursepress_wrapper.coursepress-reports td.column-average {
   text-indent: 15px;
 }
 .coursepress_wrapper.coursepress-reports .help-tooltip {

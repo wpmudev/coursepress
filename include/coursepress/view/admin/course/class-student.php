@@ -78,7 +78,7 @@ class CoursePress_View_Admin_Course_Student {
 		}
 
 		$content .= '<hr /><div class="coursepress_course_email_enroled_students_wrapper">';
-		$content .= '<h2>' . esc_html__( 'Send email to enrolled students', 'cp' ) .'</h2>';
+		$content .= '<h2>' . esc_html__( 'Send an email to enrolled students', 'cp' ) .'</h2>';
 		if ( count( $list_course->items ) ) {
 			$nonce = wp_create_nonce( 'send_email_to_enroled_students' );
 			$content .= '<table class="form-table" id="send-email-to-enroled-students">';

@@ -194,7 +194,8 @@ class CoursePress_Data_Course {
 				// update_post_meta( $course_id, $key, cp_filter_content( $value ) );
 				// }
 				// Add taxonomy terms
-				if ( 'course_category' == $key || 'meta_course_category' == $key ) {
+				$can_manage_categories = CoursePress_Data_Capabilities::can_manage_categories();
+				if ( $can_manage_categories && ( 'course_category' == $key || 'meta_course_category' == $key ) ) {
 					if ( isset( $data->meta_course_category ) ) {
 						self::set_setting(
 							$settings,
@@ -348,9 +349,11 @@ class CoursePress_Data_Course {
 				$course_id,
 				$global_option
 			);
+			
+			self::update_setting( $course_id, 'instructors', $instructors );
 		}
 
-		self::update_setting( $course_id, 'instructors', $instructors );
+		
 
 	}
 
@@ -1540,7 +1543,10 @@ class CoursePress_Data_Course {
 		$instructors = CoursePress_Data_Course::get_instructors( $course_id );
 		$is_instructor = in_array( $student_id, $instructors );
 
-		$preview_modules = isset( $preview['structure'][ $unit_id ][ $page ] ) ? array_keys( $preview['structure'][ $unit_id ][ $page ] ) : array();
+		$preview_modules = array();
+		if ( isset( $preview['structure'][ $unit_id ][ $page ] ) && is_array( $preview['structure'][ $unit_id ][ $page ] ) ) {
+			$preview_modules = array_keys( $preview['structure'][ $unit_id ][ $page ] );
+		}
 		$can_preview_module = in_array( $module_id, $preview_modules ) || ( isset( $preview['structure'][ $unit_id ] ) && ! is_array( $preview['structure'][ $unit_id ] ) );
 
 		if ( ! $enrolled && ! $can_preview_module && ! $is_instructor ) {
@@ -1615,8 +1621,8 @@ class CoursePress_Data_Course {
 			if ( $current_module && ! $current_module_done ) {
 				// Student did not complete the current module. Do not allow to
 				// navigate to next page.
-				$next['not_done'] = true;
-				return $next;
+				//$next['not_done'] = true;
+				//return $next;
 			}
 		}
 
@@ -1706,24 +1712,10 @@ class CoursePress_Data_Course {
 					$valid = false;
 				}
 			}
-			/*
-			if ( ! $has_required && empty( $item['restricted'] ) ) {
-				$new_sequence[] = $item;
-			}
-
-			if ( 'module' == $item['type'] ) {
-				$is_done = CoursePress_Data_Module::is_module_done_by_student( $item['id'], 0 );
-
-				if ( ! $is_done ) {
-					$has_required = true;
-				}
-			}
-			*/
 		}
 		$nav_sequence = $new_sequence;
 
 		if ( 1 > $current_index || $current_index > count( $nav_sequence ) ) {
-			//return array( 'id' => false );
 			$current_index = count( $nav_sequence );
 		}
 
@@ -1770,13 +1762,7 @@ class CoursePress_Data_Course {
 			// 2. Generate the list of navigation items.
 			//
 			$items = array();
-
-			$course_slug = get_post_field( 'post_name', $course_id );
-			$course_link = sprintf(
-				'%s%s',
-				CoursePress_Core::get_slug( 'courses/', true ),
-				$course_slug
-			);
+			$course_link = self::get_course_url( $course_id );
 
 			// First node always is the course overview (clicking prev on first page).
 			$items[] = array(
@@ -1785,6 +1771,7 @@ class CoursePress_Data_Course {
 				'section' => 0,
 				'unit' => 0,
 				'url' => trailingslashit( $course_link ),
+				'course_id' => $course_id,
 			);
 
 			if ( $has_full_access ) {
@@ -1816,19 +1803,14 @@ class CoursePress_Data_Course {
 						if ( ! $is_available ) { continue; }
 					}
 
-					$unit_link = sprintf(
-						'%s/%s%s',
-						$course_link,
-						CoursePress_Core::get_slug( 'unit/' ),
-						$unit['unit']->post_name
-					);
+					$unit_link = CoursePress_Data_Unit::get_unit_url( $unit_id );
 
 					if ( empty( $unit['pages'] ) ) {
 						$unit['pages'] = array();
 					}
 
 					foreach ( $unit['pages'] as $page_id => $page ) {
-						$page_link = sprintf( '%s/page/%s', $unit_link, $page_id );
+						$page_link = sprintf( '%spage/%s', $unit_link, $page_id );
 
 						$items[] = array(
 							'id' => $page_id,
@@ -1836,12 +1818,14 @@ class CoursePress_Data_Course {
 							'unit' => $unit_id,
 							'url' => $page_link,
 							'restricted' => $unit_restricted,
+							'course_id' => $course_id,
 						);
 
 						foreach ( $page['modules'] as $module_id => $module ) {
-							$module_link = sprintf( '%s#module-%s', $page_link, $module_id );
+							$module_link = sprintf( '%spage/%s/module_id/%s', $unit_link, $page_id, $module_id );//sprintf( '%s#module-%s', $page_link, $module_id );
 
 							$items[] = array(
+								'course_id' => $course_id,
 								'id' => $module_id,
 								'type' => 'module',
 								'section' => $page_id,
@@ -1853,12 +1837,13 @@ class CoursePress_Data_Course {
 					}
 				}
 
+				$completion_url = $course_link . trailingslashit( CoursePress_Core::get_slug( 'completion' ) );
 				$completion_page = array(
 					'id' => 'completion_page',
 					'type' => 'section',
 					'section' => null,
 					'unit' => true,
-					'url' => CoursePress_Core::get_slug( 'courses/', true ) . $course_slug . '/' . CoursePress_Core::get_slug( 'completion' ),
+					'url' => $completion_url,
 				);
 				array_push( $items, $completion_page );
 			} else {
@@ -1982,7 +1967,7 @@ class CoursePress_Data_Course {
 		$course->duration = $duration > 0 ? sprintf( _n( '%s Day', '%s Days', $duration, 'cp' ), $duration ) : __( 'Open-ended', 'cp' );
 
 		// Links
-		$course->permalink = get_permalink( $course_id );
+		$course->permalink = self::get_course_url( $course_id );
 		$course->edit_link = add_query_arg(
 			array(
 				'page' => CoursePress_View_Admin_Course_Edit::$slug,
@@ -2187,17 +2172,23 @@ class CoursePress_Data_Course {
 
 	}
 
-	public static function get_course_url( $course_id ) {
-		$course = get_post( $course_id );
+	/**
+	 * Generate course url
+	 *
+	 * @param (int) $course_id
+	 **/
+	public static function get_course_url( $course_id = 0 ) {
+		$url = '';
 
-		if ( $course ) {
-			// Check if current course is not yet live.
-			if ( 'publish' != $course->post_status ) {
-				return CoursePress_Core::get_slug( 'courses', true ) . $course->post_name . '/';
-			} else {
-				return get_permalink( $course_id );
-			}
+		if ( ! empty( $course_id ) ) {
+			$course_slug = get_post_field( 'post_name', $course_id );
+			$course_url = CoursePress_Core::get_slug( 'course/', true );
+			$course_url .= trailingslashit( $course_slug );
+
+			$url = $course_url;
 		}
+
+		return $url;
 	}
 
 	public static function is_course_preview( $course_id ) {
@@ -2383,7 +2374,7 @@ class CoursePress_Data_Course {
 	 *
 	 * @since 2.0
 	 **/
-	public static function can_access( $course_id, $unit_id = 0, $module_id = 0, $student_id = 0, $page = 1, $type ) {
+	public static function can_access( $course_id, $unit_id = 0, $module_id = 0, $student_id = 0, $page = 1 ) {
 		if ( empty( $student_id ) ) {
 			$student_id = get_current_user_id();
 		}
@@ -2703,7 +2694,7 @@ class CoursePress_Data_Course {
 	 * @param integer $course_id Course ID.
 	 * @return string Unit list.
 	 */
-	public function get_units_html_list( $course_id ) {
+	public static function get_units_html_list( $course_id ) {
 		$units_list = '';
 		$units = CoursePress_Data_Course::get_units( $course_id );
 
@@ -2950,7 +2941,10 @@ class CoursePress_Data_Course {
 	 * @param integer $post_id Post ID.
 	 * @return string Post title.
 	 */
-	public static function add_numeric_identifier_to_course_name( $post_title, $post_id ) {
+	public static function add_numeric_identifier_to_course_name( $post_title, $post_id = 0 ) {
+		if ( empty( $post_id ) ) {
+			return $post_title;
+		}
 		if ( ! is_admin() ) {
 			return $post_title;
 		}
@@ -2987,4 +2981,51 @@ class CoursePress_Data_Course {
 		}
 		self::save_course_number( $post_id, $post_type, array( $post_id ) );
 	}
+
+	/**
+	 * return array of allowed enrollment restrictions.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $course_id Course ID
+	 *
+	 * @return string
+	 */
+	public static function get_enrollment_types_array( $course_id = 0 ) {
+		$enrollment_types = array(
+			'manually' => __( 'Manually added only', 'cp' ),
+		);
+		if ( CoursePress_Helper_Utility::users_can_register() ) {
+			$enrollment_types = array_merge( $enrollment_types, array(
+				'anyone' => __( 'Any registered users', 'cp' ),
+				'passcode' => __( 'Any registered users with a pass code', 'cp' ),
+				'prerequisite' => __( 'Registered users who completed the prerequisite course(s)', 'cp' ),
+			) );
+		} else {
+			$enrollment_types = array_merge( $enrollment_types, array(
+				'registered' => __( 'Any registered users', 'cp' ),
+				'passcode' => __( 'Any registered users with a pass code', 'cp' ),
+				'prerequisite' => __( 'Registered users who completed the prerequisite course(s)', 'cp' ),
+			) );
+		}
+		$enrollment_types = apply_filters( 'coursepress_course_enrollment_types', $enrollment_types, $course_id );
+		return $enrollment_types;
+	}
+
+	/**
+	 * Get enrollment type default.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param $integer $course_id Course ID
+	 */
+	public static function get_enrollment_type_default( $course_id = 0 ) {
+		$default = 'registered';
+		if ( CoursePress_Helper_Utility::users_can_register() ) {
+			$default = 'anyone';
+		}
+		$default = CoursePress_Core::get_setting( 'course/enrollment_type_default', $default );
+		return apply_filters( 'coursepress_course_enrollment_type_default', $default, $course_id );
+	}
+
 }

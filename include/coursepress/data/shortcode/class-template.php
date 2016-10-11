@@ -66,6 +66,10 @@ class CoursePress_Data_Shortcode_Template {
 				array( __CLASS__, 'course_signup' )
 			);
 		}
+		add_shortcode(
+			'course_categories',
+			array( __CLASS__, '_the_categories' )
+		);
 
 		add_shortcode(
 			'messaging_submenu',
@@ -81,7 +85,7 @@ class CoursePress_Data_Shortcode_Template {
 			'posts_per_page' => 10,
 			'show_pager' => true,
 			'echo' => false,
-			'courses_type' => 'any',
+			'courses_type' => 'current_and_upcoming',
 		), $a, 'course_archive' );
 
 		$category = sanitize_text_field( $a['category'] );
@@ -197,6 +201,7 @@ class CoursePress_Data_Shortcode_Template {
 			'clickable_label' => __( 'Course Details', 'cp' ),
 			'override_button_text' => '',
 			'override_button_link' => '',
+			'button_label' => __( 'Details', 'cp' ),
 			'echo' => false,
 		), $a, 'course_list_box' );
 
@@ -204,7 +209,7 @@ class CoursePress_Data_Shortcode_Template {
 		$clickable_label = sanitize_text_field( $a['clickable_label'] );
 		$echo = cp_is_true( $a['echo'] );
 		$clickable = cp_is_true( $a['clickable'] );
-		$url = CoursePress_Core::get_slug( 'courses/', true ) . get_post_field( 'post_name', $course_id );
+		$url = CoursePress_Data_Course::get_course_url( $course_id );
 
 		$course_image = CoursePress_Data_Course::get_setting( $course_id, 'listing_image' );
 		$has_thumbnail = ! empty( $course_image );
@@ -212,14 +217,21 @@ class CoursePress_Data_Shortcode_Template {
 		$clickable_link = $clickable ? 'data-link="' . esc_url( $url ) . '"' : '';
 		$clickable_class = $clickable ? 'clickable' : '';
 		$clickable_text = $clickable ? '<div class="clickable-label">' . $clickable_label . '</div>' : '';
-		$button_text = ! $clickable ? '[course_join_button list_page="yes" course_id="' . $course_id . '"]' : '';
+		$button_label = $a['button_label'];
+		$button_link = $url;
+
+		if ( ! empty( $a['override_button_link'] ) ) {
+			$button_link = $a['override_button_link'];
+		}
+
+		$button_text = sprintf( '<a href="%s" rel="bookmark" class="button apply-button apply-button-details">%s</a>', esc_url( $button_link ), $button_label );
 		$instructor_link = $clickable ? 'no' : 'yes';
 		$thumbnail_class = $has_thumbnail ? 'has-thumbnail' : '';
 
 		$completed = false;
 		$student_progress = false;
 		if ( is_user_logged_in() ) {
-			$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id ); //CoursePress_Data_Student::calculate_completion( get_current_user_id(), $course_id );
+			$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id );
 			$completed = isset( $student_progress['completion']['completed'] ) && ! empty( $student_progress['completion']['completed'] );
 		}
 		$completion_class = CoursePress_Data_Course::course_class( $course_id );
@@ -236,17 +248,20 @@ class CoursePress_Data_Shortcode_Template {
 		 * schema.org
 		 */
 		$schema = apply_filters( 'coursepress_schema', '', 'itemscope' );
+		$course_title = do_shortcode( sprintf( '[course_title course_id="%s"]', $course_id ) );
+		$course_title = sprintf( '<a href="%s" rel="bookmark">%s</a>', esc_url( $url ), $course_title );
 
 		$template = '<div class="course course_list_box_item course_' . $course_id . ' ' . $clickable_class . ' ' . $completion_class . ' ' . $thumbnail_class . '" ' . $clickable_link . ' ' . $schema .'>
 			[course_thumbnail course_id="' . $course_id . '"]
 			<div class="course-information">
-				[course_title course_id="' . $course_id . '"]
+				' . $course_title . '
 				[course_summary course_id="' . $course_id . '"]
 				[course_instructors style="list-flat" link="' . $instructor_link . '" course_id="' . $course_id . '"]
 				<div class="course-meta-information">
 					[course_start label="" course_id="' . $course_id . '"]
 					[course_language label="" course_id="' . $course_id . '"]
 					[course_cost label="" course_id="' . $course_id . '"]
+					[course_categories course_id="' . $course_id . '"]
 				</div>' .
 					$button_text . $clickable_text . '
 			</div>
@@ -262,6 +277,47 @@ class CoursePress_Data_Shortcode_Template {
 		}
 
 		return $content;
+	}
+
+	public static function _the_categories( $atts ) {
+		$atts = shortcode_atts(
+			array(
+				'course_id' => CoursePress_Helper_Utility::the_course( true ),
+				'before' => '',
+				'after' => '',
+				'icon' => '<span class="dashicons dashicons-category"></span>'
+			),
+			$atts,
+			'course_categories'
+		);
+
+		$categories = self::the_categories( $atts['course_id'], $atts['before'], $atts['after'] );
+
+		if ( ! empty( $categories ) ) {
+			$format = '<div class="course-category course-category-%s">%s %s</div>';
+			$categories = sprintf( $format, $atts['course_id'], $atts['icon'], $categories );
+		}
+		return $categories;
+	}
+
+	public static function the_categories( $course_id, $before = '', $after = '' ) {
+		$taxonomy = CoursePress_Data_Course::get_post_category_name();
+		$terms = wp_get_object_terms( (int) $course_id, array( $taxonomy ) );
+
+		if ( ! empty( $terms ) ) {
+			$links = array();
+
+			foreach ( $terms as $term ) {
+				$link = get_term_link( $term->term_id, $taxonomy );
+				$links[] = sprintf( '<a href="%s">%s</a>', esc_url( $link ), $term->name );
+			}
+
+			$links = $before . implode( $after . $before, $links );
+
+			return $links;
+		}
+
+		return '';
 	}
 
 	public static function course_page( $a ) {
@@ -675,7 +731,7 @@ class CoursePress_Data_Shortcode_Template {
 				// Main content
 				$content .= '<div class="focus-main ' . implode( ' ', $focus_class ) . '">';
 
-				$method = 'render_' . str_replace( '-', '_', $attributes['module_type'] );
+				$method = 'template';
 				$template = 'CoursePress_Template_Module';
 				$next_module_class = array( 'focus-nav-next' );
 
@@ -687,7 +743,7 @@ class CoursePress_Data_Shortcode_Template {
 						$unit_id,
 						$module->ID
 					);
-
+/*
 					if ( ! $can_update_course &&
 						(
 						( ! $is_assessable && empty( $quiz_result ) )
@@ -700,9 +756,13 @@ class CoursePress_Data_Shortcode_Template {
 							'not_done' => true,
 						);
 					}
+*/
 				}
 
-				$preview_modules = isset( $preview['structure'][ $unit_id ][ $page ] ) ? array_keys( $preview['structure'][ $unit_id ][ $page ] ) : array();
+				$preview_modules = array();
+				if ( isset( $preview['structure'][ $unit_id ][ $page ] ) && is_array( $preview['structure'][ $unit_id ][ $page ] ) ) {
+					$preview_modules = array_keys( $preview['structure'][ $unit_id ][ $page ] );
+				}
 				$can_preview_module = in_array( $module->ID, $preview_modules ) || ( isset( $preview['structure'][ $unit_id ] ) && ! is_array( $preview['structure'][ $unit_id ] ) );
 
 				if ( ! empty( $error_message ) ) {
@@ -712,7 +772,7 @@ class CoursePress_Data_Shortcode_Template {
 						'not_done' => true,
 					);
 				} else {
-					$content .= call_user_func( array( $template, $method ), $module, $attributes );
+					$content .= call_user_func( array( $template, $method ), $module->ID, true );
 				}
 
 				$content .= '</div>'; // .focus-main
@@ -726,7 +786,7 @@ class CoursePress_Data_Shortcode_Template {
 				);
 
 				// Next Navigation
-				if ( 'section' == $next['type'] ) {
+				if ( ! empty( $next['type'] ) && 'section' == $next['type'] ) {
 					$next_module_class[] = 'next-section';
 					$title = '';
 					$text = $next_section_text;
@@ -746,13 +806,16 @@ class CoursePress_Data_Shortcode_Template {
 					$next,
 					$text,
 					$next_module_class,
-					$title
+					$title,
+					true
 				);
 
 				$content .= '</div>'; // .focus-nav
 				$content .= '</div>'; // .focus-wrapper
 
-				$template = $content;
+				$template = sprintf( '<form method="post" enctype="multipart/form-data" class="cp cp-form">%s</form>', $content );
+				$template = apply_filters( 'coursepress_focus_mode_module_template', $template, $content, $item_id );
+
 				break;
 
 			case 'no_access':
@@ -842,20 +905,37 @@ class CoursePress_Data_Shortcode_Template {
 	 * @param  string $link_title Tooltip title of the link.
 	 * @return string HTML code of the button.
 	 */
-	public static function show_nav_button( $button, $title, $classes, $link_title = '' ) {
+	public static function show_nav_button( $button, $title, $classes, $link_title = '', $next = false ) {
 		$res = '';
 
 		if ( $button['id'] ) {
-			$res = sprintf(
-				'<div class="%5$s" data-id="%1$s" data-type="%2$s" data-unit="%4$s" data-title="%6$s" data-url="%7$s"><a href="#%2$s-%1$s" title="%6$s">%3$s</a></div>',
-				esc_attr( $button['id'] ),
-				esc_attr( $button['type'] ),
-				$title,
-				esc_attr( $button['unit'] ),
-				esc_attr( implode( ' ', $classes ) ),
-				esc_attr( $link_title ),
-				esc_url( $button['url'] )
-			);
+			$classes = is_array( $classes ) ? implode( ' ', $classes ) : $classes;
+			if ( $next) {
+				if ( 'completion_page' == $button['id'] ) {
+					$title = __( 'Finish', 'cp' );
+				}
+				$format = '<button type="submit" name="type-%s" class="button %s" title="%s" data-url="%s">%s</button>';
+				$res = sprintf( $format,
+					$button['type'],
+					esc_attr( $classes ),
+					esc_attr( $link_title ),
+					esc_url( $button['url'] ),
+					$title
+				);
+			} else {
+				$res = sprintf(
+					'<button type="button" class="button %5$s" data-course="%8$s" data-id="%1$s" data-type="%2$s" data-unit="%4$s" data-title="%6$s" data-url="%7$s"><a href="%7$s" title="%6$s">%3$s</a></button>',
+					esc_attr( $button['id'] ),
+					esc_attr( $button['type'] ),
+					$title,
+					esc_attr( $button['unit'] ),
+					esc_attr( $classes ),
+					esc_attr( $link_title ),
+					esc_url( $button['url'] ),
+					$button['course_id']
+				);
+			}
+
 		} else {
 			$res = sprintf(
 				'<div class="%2$s" data-title="%3$s"><span title="%3$s">%1$s</span></div>',

@@ -1,6 +1,49 @@
 <?php
 
 class CoursePress_Template_Student {
+	public static function process_enrollment() {
+		if ( ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'enrollment_process' ) ) {
+			$request = $_REQUEST;
+
+			if ( empty( $request['student_id'] ) ) {
+				// Assume the call is at front page
+				$student_id = get_current_user_id();
+			} else {
+				$student_id = (int) $request['student_id'];
+			}
+			$course_id = (int) $request['course_id'];
+			$json_data = array();
+
+			if ( CoursePress_Data_Course::enroll_student( $student_id, $course_id ) ) {
+				if ( empty( $request['cpnonce'] ) ) {
+					$course_url = CoursePress_Data_Course::get_course_url( $course_id );
+					$course_url .= trailingslashit( 'units' );
+					// Send the student the unit overview
+					wp_safe_redirect( $course_url );
+				} else {
+					$json_data['success'] = true;
+					$json_data['course_id'] = $course_id;
+					$json_data['student_id'] = $student_id;
+
+					wp_send_json_success( $json_data ); exit;
+				}
+			} else {
+				if ( empty( $request['cpnonce'] ) ) {
+					if ( ! empty( $request['_wp_http_referer'] ) ) {
+						$url = $request['_wp_http_referer'];
+					} else {
+						$url = remove_query_arg( 'dummy' );
+					}
+					wp_safe_redirect( $url ); exit;
+
+				} else {
+					$json_data['error_message'] = __( 'Enrollment failed!', 'cp' );
+
+					wp_send_json_error( $json_data );
+				}
+			}
+		}
+	}
 
 	public static function dashboard() {
 

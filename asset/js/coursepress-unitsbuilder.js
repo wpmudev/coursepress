@@ -1,4 +1,6 @@
-/*global tinyMCE*/
+/*!  - v2.0.0
+ * 
+ * Copyright (c) 2016; * Licensed GPLv2+ */
 /*global tinyMCEPreInit*/
 /*global _coursepress*/
 

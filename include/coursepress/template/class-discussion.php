@@ -113,7 +113,7 @@ class CoursePress_Template_Discussion {
 		if ( CoursePress_Data_Discussion::is_comment_in_discussion( $post_id ) ) {
 			$post_type = get_post_type( $post_id );
 
-			if ( CoursePress_Data_Module::get_post_type_name() == $post_type ) {
+			if ( CoursePress_Data_Discussion::get_post_type_name() == $post_type ) {
 				$unit_id = get_post_field( 'post_parent', $post_id );
 				$course_id = get_post_field( 'post_parent', $unit_id );
 
@@ -189,5 +189,26 @@ class CoursePress_Template_Discussion {
 			CoursePress_Data_Module::get_post_type_name(),
 			CoursePress_Data_Unit::get_post_type_name(),
 		);
+	}
+
+	public static function get_single_comment( $comment_id ) {
+		$comments = get_comments(
+			array(
+				'ID' => $comment_id,
+				'number' => 1
+			)
+		);
+
+		ob_start();
+
+		wp_list_comments( array(
+			'style'       => 'ol',
+			'short_ping'  => true,
+			'avatar_size' => 42,
+		), $comments );
+
+		$comment_output = ob_get_clean();
+
+		return $comment_output;
 	}
 }
