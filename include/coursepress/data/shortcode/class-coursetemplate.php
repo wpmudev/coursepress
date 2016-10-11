@@ -650,6 +650,10 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				$unit['pages'] = array();
 			}
 
+			if ( false === $enrolled && false === $can_update_course ) {
+				continue;
+			}
+
 			$content .= '<ul class="unit-structure-modules">';
 			$count = 0;
 			ksort( $unit['pages'] );
