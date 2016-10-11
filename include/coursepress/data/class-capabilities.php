@@ -1457,10 +1457,18 @@ class CoursePress_Data_Capabilities {
 		$global_option = ! is_multisite();
 		update_user_option( $user_id, 'role_ins', 'instructor', $global_option );
 
-		self::reset_user_capabilities( $user_obj );
-
-		$user_obj->add_cap( 'read' );
-		$user_obj->add_cap( 'upload_files' );
+		// do not use reset_user_capabilities()
+		// very dangerous and needs to be rewritten, destroys WP capabilites which we shouldn't be touching
+		// self::reset_user_capabilities( $user_obj );
+	
+		// no need to add READ capability as all WP users have this up to Subscriber level
+		// $user_obj->add_cap( 'read' );
+		
+		// only add `upload_files` cap to Contributor and Subscriber because the rest already have it
+		// refer to https://codex.wordpress.org/Roles_and_Capabilities#upload_files
+		if ( $user_obj->roles && ( in_array( 'contributor', $user_obj->roles ) || in_array( 'subscriber', $user_obj->roles ) ) ) {
+			$user_obj->add_cap( 'upload_files' );
+		}
 
 		foreach ( $instructor_capabilities as $capability_name => $capability_status ) {
 			if ( $capability_status ) {
@@ -1489,13 +1497,38 @@ class CoursePress_Data_Capabilities {
 		$global_option = ! is_multisite();
 		delete_user_option( $user_id, 'role_ins', $global_option );
 
-		self::reset_user_capabilities( $user_obj );
+		// do not use reset_user_capabilities()
+		// very dangerous and needs to be rewritten, destroys WP capabilites which we shouldn't be touching
+		// self::reset_user_capabilities( $user_obj );
+		
+		self::remove_cp_instructor_capabilities( $user_obj );
 		self::grant_private_caps( $user_id );
 
 		// Add facilitator role
 		$facilitated_courses = CoursePress_Data_Facilitator::get_facilitated_courses( $user_id, array( 'any' ), true, 0, 1 );
 		if ( ! empty( $facilitated_courses ) ) {
 			self::assign_facilitator_capabilities( $user_id );
+		} else {
+			// only remove `upload_files` cap to Contributor and Subscriber, don't ever remove for other User Roles
+			// refer to: https://codex.wordpress.org/Roles_and_Capabilities#upload_files
+			if ( $user_obj->roles && ( in_array( 'contributor', $user_obj->roles ) || in_array( 'subscriber', $user_obj->roles ) ) ) {
+				$user_obj->remove_cap( 'upload_files' );
+			}
+		}
+	}
+	
+	/**
+	 * Removes all special CoursePress capabilites for an instructor
+	 *
+	 * @since  2.0.0
+	 * @param  WP_User $user The user to modify.
+	 */
+	private static function remove_cp_instructor_capabilities ( $user ) {
+		if ( $user && is_object( $user ) && $user instanceof WP_User ) {
+			$instructor_capabilities = self::get_instructor_capabilities();
+			foreach ( $instructor_capabilities as $capability_name => $capability_status ) {
+				if ( $user->has_cap($capability_name) ) $user->remove_cap($capability_name);
+			}
 		}
 	}
 
@@ -1603,10 +1636,18 @@ class CoursePress_Data_Capabilities {
 		update_user_option( $user_id, 'cp_role', 'facilitator', $global_option );
 		add_user_meta( $user_id, 'cp_role', 'facilitator' );
 
-		self::reset_user_capabilities( $user_obj );
-
-		$user_obj->add_cap( 'read' );
-		$user_obj->add_cap( 'upload_files' );
+		// do not use reset_user_capabilities()
+		// very dangerous and needs to be rewritten, destroys WP capabilites which we shouldn't be touching
+		// self::reset_user_capabilities( $user_obj );
+	
+		// no need to add READ capability as all WP users have this up to Subscriber level
+		// $user_obj->add_cap( 'read' );
+		
+		// only add `upload_files` cap to Contributor and Subscriber because the rest already have it
+		// refer to https://codex.wordpress.org/Roles_and_Capabilities#upload_files
+		if ( $user_obj->roles && ( in_array( 'contributor', $user_obj->roles ) || in_array( 'subscriber', $user_obj->roles ) ) ) {
+			$user_obj->add_cap( 'upload_files' );
+		}
 
 		foreach ( $instructor_capabilities as $capability_name => $capability_status ) {
 			if ( $capability_status ) {
@@ -1641,9 +1682,15 @@ class CoursePress_Data_Capabilities {
 		delete_user_option( $user_id, 'cp_role', $global_option );
 		delete_user_meta( $user_id, 'cp_role' );
 
-		$user_obj->remove_cap( 'upload_files' );
+		// only remove `upload_files` cap to Contributor and Subscriber, don't ever remove for other User Roles
+		// refer to: https://codex.wordpress.org/Roles_and_Capabilities#upload_files
+		if ( $user_obj->roles && ( in_array( 'contributor', $user_obj->roles ) || in_array( 'subscriber', $user_obj->roles ) ) ) {
+			$user_obj->remove_cap( 'upload_files' );
+		}
 
-		self::reset_user_capabilities( $user_obj );
+		// do not use reset_user_capabilities()
+		// very dangerous and needs to be rewritten, destroys WP capabilites which we shouldn't be touching
+		// self::reset_user_capabilities( $user_obj );
 		self::grant_private_caps( $user_id );
 	}
 

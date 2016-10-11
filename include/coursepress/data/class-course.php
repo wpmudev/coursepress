@@ -349,9 +349,11 @@ class CoursePress_Data_Course {
 				$course_id,
 				$global_option
 			);
+			
+			self::update_setting( $course_id, 'instructors', $instructors );
 		}
 
-		self::update_setting( $course_id, 'instructors', $instructors );
+		
 
 	}
 
