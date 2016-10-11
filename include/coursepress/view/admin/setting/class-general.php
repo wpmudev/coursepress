@@ -645,6 +645,9 @@ class CoursePress_View_Admin_Setting_General {
 				$new_settings = CoursePress_Core::merge_settings( $settings, $post_settings );
 
 				CoursePress_Core::update_setting( false, $new_settings ); // false will replace all settings
+
+				// Flush rewrite rules
+				flush_rewrite_rules();
 			}
 		}
 
