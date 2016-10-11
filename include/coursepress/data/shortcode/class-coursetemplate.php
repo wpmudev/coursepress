@@ -131,6 +131,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$course->course_expired = ! $course->open_ended_course && ! empty( $course->course_end_date ) && CoursePress_Data_Course::strtotime( $course->course_end_date ) <= $now ? true : false;
 		$course->enrollment_expired = ! empty( $course->enrollment_end_date ) && CoursePress_Data_Course::strtotime( $course->enrollment_end_date ) <= $now ? true : false;
 		$course->full = CoursePress_Data_Course::is_full( $course_id );
+		$course_progress = 0;
 
 		$button = '';
 		$button_option = '';
@@ -146,6 +147,12 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			$student_id = get_current_user_id();
 			$student_enrolled = CoursePress_Data_Course::student_enrolled( $student_id, $course_id );
 			$is_instructor = CoursePress_Data_Instructor::is_assigned_to_course( $course_id, $student_id );
+			$course_progress = CoursePress_Data_Student::get_course_progress( $student_id, $course_id );
+
+			if ( 100 === $course_progress ) {
+				$continue_learning_text = __( 'Completed', 'cp' );
+				$class .= ' course-completed-button';
+			}
 		} else {
 			if ( false === $is_custom_login ) {
 				$signup_url = wp_login_url( $course_url );
