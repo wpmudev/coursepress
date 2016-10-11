@@ -100,6 +100,7 @@ class CoursePress_Helper_UI {
 		if ( false === $courses ) {
 			$courses = get_posts( 'post_type=' . CoursePress_Data_Course::get_post_type_name() );
 		}
+		$courses = array_filter( $courses );
 
 		$content = '';
 		$content .= '<select name="' . $name . '" id="' . $id . '"';
