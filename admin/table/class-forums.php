@@ -1,0 +1,219 @@
+<?php
+/**
+ * A sub-class of WP_Posts_List_Table
+ *
+ * @package WordPress
+ * @subpackage CoursePress
+ **/
+class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notifications {
+	private $count = array();
+	private $post_type;
+	private $_categories;
+
+	public function __construct() {
+		$post_format = CoursePress_Data_Discussion::get_format();
+		parent::__construct( array(
+			'singular' => $post_format['post_args']['labels']['singular_name'],
+			'plural' => $post_format['post_args']['labels']['name'],
+			'ajax' => false,
+		) );
+
+		$this->post_type = CoursePress_Data_Discussion::get_post_type_name();
+		$this->count = wp_count_posts( $this->post_type );
+	}
+
+	public function prepare_items() {
+		global $wp_query;
+		$screen = get_current_screen();
+		/**
+		 * Per Page
+		 */
+		$option = $screen->get_option( 'per_page', 'option' );
+		$per_page = (int) get_user_option( $option );
+		if ( empty( $per_page ) || $per_page < 1 ) {
+			$per_page = $this->get_option( 'per_page', 'default' );
+			if ( ! $per_page ) {
+				$per_page = 20;
+			}
+		}
+		$per_page = $this->get_items_per_page( 'coursepress_discussions_per_page', $per_page );
+		/**
+		 * Post statsu
+		 */
+		$post_status = 'any';
+		$current_page = $this->get_pagenum();
+		$offset = ( $current_page - 1 ) * $per_page;
+		$s = isset( $_POST['s'] )? mb_strtolower( trim( $_POST['s'] ) ):false;
+
+		$post_args = array(
+			'post_type' => $this->post_type,
+			'post_status' => $post_status,
+			'posts_per_page' => $per_page,
+			'paged' => $current_page,
+			's' => $s,
+		);
+
+		$course_id = isset( $_GET['course_id'] ) ? sanitize_text_field( $_GET['course_id'] ) : '';
+
+		if ( ! empty( $course_id ) ) {
+			$post_args['meta_query'] = array(
+				'relation' => 'AND',
+				array(
+					'key' => 'course_id',
+					'value' => (int) $course_id,
+				)
+			);
+		}
+
+		// @todo: Validate per course
+		/*
+		if ( ! empty( $course_id ) && 'all' !== $course_id ) {
+			$post_args['meta_query'] = array(
+				array(
+					'key' => 'course_id',
+					'value' => (int) $course_id,
+				),
+			);
+		} else {
+			// Only show notifications where the current user have access with.
+			$courses = array();
+			$courses_ids = array_map( array( __CLASS__, 'get_course_id' ), $courses );
+			// Include notification for all courses
+			$courses_ids[] = 'all';
+			$post_args['meta_query'] = array(
+				array(
+					'key' => 'course_id',
+					'value' => (array) $courses_ids,
+					'compare' => 'IN',
+				),
+			);
+		}
+		 */
+
+		// @todo: Add permissions
+		$wp_query = new WP_Query( $post_args );
+		$this->items = array();
+		foreach ( $wp_query->posts as $post ) {
+			$post->user_can_edit = CoursePress_Data_Capabilities::can_update_discussion( $post->ID );
+			$post->user_can_delete  = CoursePress_Data_Capabilities::can_delete_discussion( $post->ID );
+			$post->user_can_change_status = CoursePress_Data_Capabilities::can_change_status_discussion( $post->ID );
+			$post->user_can_change = $post->user_can_edit || $post->user_can_delete || $post->user_can_change_status;
+			$this->items[] = $post;
+		}
+		$total_items = $wp_query->found_posts;
+
+		$this->set_pagination_args(
+			array(
+				'total_items' => $total_items,
+				'per_page'	=> $per_page,
+				'total_pages' => ceil( $total_items / $per_page ),
+			)
+		);
+	}
+
+	/** No items */
+	public function no_items() {
+		echo __( 'No topics found.', 'cp' );
+	}
+
+	public function column_cb( $item ) {
+		if ( $item->user_can_change ) {
+			return sprintf(
+				'<input type="checkbox" name="bulk-actions[]" value="%s" />', $item->ID
+			);
+		}
+		return '';
+	}
+
+	public function get_columns() {
+		$columns = array(
+			'cb' => '<input type="checkbox" />',
+			'title' => __( 'Topic', 'cp' ),
+			'course' => __( 'Course', 'cp' ),
+			'comments' => '<span class="vers comment-grey-bubble" title="' . esc_attr__( 'Comments', 'cp' ) . '"><span class="screen-reader-text">' . __( 'Comments', 'cp' ) . '</span></span>',
+			'status' => __( 'Status', 'cp' ),
+		);
+		return $columns;
+	}
+
+	/**
+	 * Row actions
+	 */
+	protected function handle_row_actions( $item, $column_name, $primary ) {
+		if ( 'title' !== $column_name ) {
+			return '';
+		}
+		$row_actions = array();
+		if ( $item->user_can_edit ) {
+			$edit_url = add_query_arg(
+				array(
+					'action' => 'edit',
+					'id' => $item->ID,
+				)
+			);
+			$row_actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'cp' ) );
+		}
+		if ( $item->user_can_delete ) {
+			$delete_url = add_query_arg(
+				array(
+					'_wpnonce' => wp_create_nonce( 'coursepress_delete_discussion' ),
+					'id' => $item->ID,
+					'action' => 'delete',
+				)
+			);
+			$row_actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $delete_url ), __( 'Delete', 'cp' ) );
+		}
+		return $this->row_actions( $row_actions );
+	}
+
+	public function column_title( $item ) {
+		$title = $item->post_title;
+
+		return $title;
+	}
+
+	public function extra_tablenav( $which ) {
+		if ( 'top' !== $which ) {
+			return;
+		}
+
+?>
+		<div class="alignleft actions category-filter">
+			<?php $this->course_filter( $which ); ?>
+			<input type="submit" class="button" name="action" value="<?php esc_attr_e( 'Filter', 'cp' ); ?>" />
+		</div>
+<?php
+		$this->search_box( __( 'Search Forums', 'cp' ), 'search_discussions' );
+	}
+
+	/**
+	 * Column Status
+	 *
+	 * @since 2.0.0
+	 */
+	public function column_status( $item ) {
+		/**
+		 * check permissions
+		 */
+		if ( ! $item->user_can_change_status ) {
+			return ucfirst( $item->post_status );
+		}
+		// Publish Course Toggle
+		$item->ID = $item->ID;
+		$status = get_post_status( $item->ID );
+		$ui = array(
+			'label' => '',
+			'left' => '<i class="fa fa-key"></i>',
+			'left_class' => '',
+			'right' => '<i class="fa fa-globe"></i>',
+			'right_class' => '',
+			'state' => 'publish' === $status ? 'on' : 'off',
+			'data' => array(
+				'nonce' => wp_create_nonce( 'publish-discussion-' . $item->ID ),
+			),
+		);
+		$ui['class'] = 'discussion-' . $item->ID;
+		$publish_toggle = ! empty( $item->ID ) ? CoursePress_Helper_UI::toggle_switch( 'publish-discussion-toggle-' . $item->ID, 'publish-discussion-toggle-' . $item->ID, $ui ) : '';
+		return $publish_toggle;
+	}
+}

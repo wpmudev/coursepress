@@ -8,7 +8,7 @@
  **/
 class CoursePress_Data_Facilitator {
 
-	private static $facilitators_post_meta_name = 'facilitator_invites ';
+	private static $facilitators_post_meta_name = 'facilitator_invites';
 
 	/**
 	 * Add course facilitator.
@@ -55,12 +55,11 @@ class CoursePress_Data_Facilitator {
 
 		if ( ! $ids_only ) {
 			foreach ( $facilitators as $pos => $user_id ) {
-				$facilitators[$user_id] = get_userdata( $user_id );
-				unset( $facilitators[$pos] );
+				$facilitators[ $user_id ] = get_userdata( $user_id );
+				unset( $facilitators[ $pos ] );
 			}
 			$facilitators = array_filter( $facilitators );
 		}
-
 
 		return $facilitators;
 	}
@@ -105,14 +104,14 @@ class CoursePress_Data_Facilitator {
 
 		if ( empty( $courses ) ) {
 			// Check if user is also an instructor
-			$can_update_course = CoursePress_Data_Capabilities::is_course_instructor( $course_id, $user_id );
+			$can_update_course = self::is_course_facilitator( $course_id, $user_id );
 
 			if ( $can_update_course ) {
 				// Because both facilitator and instructor share the same capabilities, only remove the role
 				$global_option = ! is_multisite();
 				delete_user_option( $user_id, 'cp_role', $global_option );
 			} else {
-				CoursePress_Data_Capabilities::drop_facilitator_capabilities( $user_id );
+				CoursePress_Data_Capabilities::drop_instructor_capabilities( $user_id );
 			}
 		}
 
@@ -172,11 +171,7 @@ class CoursePress_Data_Facilitator {
 		$email_args['invite_hash'] = $invite_data['hash'];
 
 		// Get invites
-		$facilitator_invites = get_post_meta(
-			$course_id,
-			self::$facilitators_post_meta_name,
-			true
-		);
+		$facilitator_invites = self::get_invitations_by_course_id( $course_id );
 
 		// Create Course invites if they don't exist, and check to see if this invite is already there.
 		$invite_exists = false;
@@ -248,7 +243,7 @@ class CoursePress_Data_Facilitator {
 			);
 		};
 
-		if ( !isset( $return_data['message']['exists'] ) ) {
+		if ( ! isset( $return_data['message']['exists'] ) ) {
 			$return_data['message']['exists'] = __( 'Invitation already exists.', 'cp' );
 		}
 
@@ -357,4 +352,19 @@ class CoursePress_Data_Facilitator {
 		);
 	}
 
+	/**
+	 * Get course invitations.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $course_id Course ID.
+	 * @return array Array of invitations.
+	 */
+	public static function get_invitations_by_course_id( $course_id ) {
+		return get_post_meta(
+			$course_id,
+			self::$facilitators_post_meta_name,
+			true
+		);
+	}
 }

@@ -769,8 +769,17 @@ var CoursePress = CoursePress || {};
 			var link = $( $( $( this ).parents( '.unit-archive-single' )[0] ).find('a.unit-archive-single-title')[0] ).attr('href');
 			var mod_hash = 'module-' + $(this).attr('data-id');
 			var has_link = $( this ).find( 'a.unit-archive-single-title').length > 0;
-
-			if ( has_link ) { window.location.href = link + '#' + mod_hash; }
+			if ( has_link ) {
+				window.location.href = link + '#' + mod_hash;
+			}
+			/**
+			 * "focus" view mode
+			 */
+			if ( 'focus' == $( '.unit-archive-list-wrapper' ).data( 'view-mode' ) ) {
+				var module = $('a', $(this)).attr("href").split("#");
+				var link = $( $( $( this ).parents( '.unit-archive-single' )[0] ).find('a.unit-archive-single-title')[0] ).attr('href') + '#' + module[1];
+				window.location.href = link;
+			}
 		} );
 
 		$( '.apply-button.signup, .apply-button.enroll' ).on( 'click', function( ev ) {
@@ -1066,7 +1075,8 @@ var CoursePress = CoursePress || {};
 		} );
 
 		// Submit Result
-		$( '.module-submit-action' ).on( 'click', function() {
+		// Depracated!!!
+		$( '.module-submit-action' ).on( 'click', function() { return;
 			var el = this;
 			var parent = $( el ).parents( '.module-container' );
 			var elements = $( parent ).find( '.module-elements' );
@@ -1829,6 +1839,19 @@ var CoursePress = CoursePress || {};
 
 	};
 
+	// Toggle module
+	CoursePress.toggleModule = function() {
+		var button = $(this),
+			module_id = button.data( 'module' ),
+			module_elements = $( '#cp-element-' + module_id ),
+			module_response = $( '#cp-response-' + module_id )
+		;
+		module_response.addClass( 'hide' );
+		module_elements.removeClass( 'hide' );
+
+		return false;
+	};
+
 	$( document ).ready( function() {
 		CoursePress.Page.init();
 		create_modal_model();
@@ -1841,7 +1864,8 @@ var CoursePress = CoursePress || {};
 			$( '<div class="enrolment-container-div">' ).html( CoursePress.Enrollment.dialog.render().el ).appendTo( 'body' );
 			CoursePress.Enrollment.dialog.openAtAction( 'unsubscribe' );
 		}
-	} );
+	} )
+	.on( 'click', '.cp .button-reload-module', CoursePress.toggleModule );
 
 	/**
 	 * bind arrows on course module page

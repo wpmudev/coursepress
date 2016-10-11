@@ -2,13 +2,15 @@
 /**
  * Core plugin file.
  *
- * @package CoursePress
+ * @package WordPress
+ * @subpackage CoursePress
  */
 
 /**
  * Plugin initialization for the CoursePress core plugin.
  */
 class CoursePress_Core {
+	public static $is_cp_page = false;
 
 	/**
 	 * Initialize CoursePress Core.
@@ -46,8 +48,7 @@ class CoursePress_Core {
 		// Initialise the rewrite tules.
 		add_filter( 'rewrite_rules_array', array( __CLASS__, 'add_rewrite_rules' ) );
 
-		// Initialize JavaScript Object Helper.
-		CoursePress_Helper_JavaScript::init();
+		CoursePress_Hooks::init();
 
 		// Initialize Plugin Integrations.
 		CoursePress_Helper_Integration::init();
@@ -77,15 +78,18 @@ class CoursePress_Core {
 
 			// Initialize Admin Views.
 			CoursePress_View_Admin_CoursePress::init();
-			CoursePress_View_Admin_Instructor::init();
-			CoursePress_View_Admin_Student::init();
-			CoursePress_View_Admin_Communication::init();
+			//CoursePress_View_Admin_Instructor::init();
+			//CoursePress_View_Admin_Student::init();
 			CoursePress_View_Admin_Setting::init();
-			CoursePress_View_Admin_Course_Export::init();
+			//CoursePress_View_Admin_Course_Export::init();
 			CoursePress_Helper_PDF::init();
 
+			new CoursePress_Admin_Students;
+			new CoursePress_Admin_Instructors;
 			new CoursePress_Admin_Assessment;
+			new CoursePress_Admin_Reports;
 			new CoursePress_Admin_Notifications;
+			new CoursePress_Admin_Forums;
 			//new CoursePress_Admin_Certificate;
 			new CoursePress_Admin_Import;
 			new CoursePress_Admin_Export;
@@ -138,9 +142,6 @@ class CoursePress_Core {
 
 		// Init Featured Course widget
 		CoursePress_Widget_FeaturedCourse::init();
-
-		//
-		CoursePress_Data_Discussion::init();
 
 		/**
 		 * show guide page?
@@ -475,6 +476,7 @@ class CoursePress_Core {
 		$query_vars[] = 'coursename';
 		$query_vars[] = 'course_category';
 		$query_vars[] = 'unitname';
+		$query_vars[] = 'module_id';
 		$query_vars[] = 'instructor_username';
 		$query_vars[] = 'discussion_name';
 		$query_vars[] = 'discussion_archive';
@@ -512,12 +514,14 @@ class CoursePress_Core {
 		$new_rules[ '^' . self::get_slug( 'course' ) . '/' . self::get_slug( 'category' ) . '/([^/]*)/?' ] = 'index.php?page_id=-1&course_category=$matches[1]';
 
 		$new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'discussion' ) . '/page/([^/]*)/?' ] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive&paged=$matches[2]'; // page/?( [0-9]{1,} )/?$
+		$new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'discussion' ) . '/([^/]*)/comment-page-(\d+)/?' ] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_name=$matches[2]&cpage=$matches[3]';
 		$new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'discussion' ) . '/([^/]*)/?' ] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_name=$matches[2]';
 		$new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'discussion' ) ] = 'index.php?page_id=-1&coursename=$matches[1]&discussion_archive';
 
 		$new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'grades' ) ] = 'index.php?page_id=-1&coursename=$matches[1]&grades_archive';
 		$new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'workbook' ) ] = 'index.php?page_id=-1&coursename=$matches[1]&workbook';
 
+		$new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'unit' ) . '/([^/]*)/page/([^/]*)/module_id/([^/]*)/?' ] = 'index.php?page_id=-1&coursename=$matches[1]&unitname=$matches[2]&paged=$matches[3]&module_id=$matches[4]'; // page/?( [0-9]{1,} )/?$
 		$new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'unit' ) . '/([^/]*)/page/([^/]*)/?' ] = 'index.php?page_id=-1&coursename=$matches[1]&unitname=$matches[2]&paged=$matches[3]'; // page/?( [0-9]{1,} )/?$
 		$new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'unit' ) . '/([^/]*)/?' ] = 'index.php?page_id=-1&coursename=$matches[1]&unitname=$matches[2]';
 		$new_rules[ '^' . self::get_slug( 'course' ) . '/([^/]*)/' . self::get_slug( 'unit' ) ] = 'index.php?page_id=-1&coursename=$matches[1]';

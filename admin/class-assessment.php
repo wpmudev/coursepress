@@ -854,7 +854,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 									<div class="cp-grade-editor-box" style="display:none;">
 										<div class="coursepress-tooltip cp-right cp-edit-grade-box">
 											<label class="cp-assess-label">'. __( 'Grade', 'cp' ) . '</label>
-											<input type="text" name="module-grade" data-courseid="' . $course_id . '" data-unit="' . $unit_id . '" data-module="' . $module_id . '" data-minimum="' . esc_attr( $min_grade ) . '" data-student="' . $student_id . '" class="module-grade" data-grade="'. esc_attr( $grade ) . '" value="' . esc_attr( $grade ) . '" />
+											<input type="number" name="module-grade" data-courseid="' . $course_id . '" data-unit="' . $unit_id . '" data-module="' . $module_id . '" data-minimum="' . esc_attr( $min_grade ) . '" data-student="' . $student_id . '" class="module-grade small-text" data-grade="'. esc_attr( $grade ) . '" value="' . esc_attr( $grade ) . '" min="0" max="100" />
 											<button type="button" class="button-primary cp-right cp-save-as-draft disabled">'. __( 'Save Feeback as Draft', 'cp' ) . '</button>
 											<button type="button" class="button-primary cp-submit-grade disabled">' . __( 'Submit Grade', 'cp' ) . '</button>
 											<button type="button" class="button cp-cancel">' . __( 'Cancel', 'cp' ) . '</button>
@@ -973,18 +973,18 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 													$options = (array) $question['options'];
 													$checked = (array) $options['checked'];
 													$checked = array_filter( $checked );
-													$student_response = $response[$q_index];
+													$student_response = $response[ $q_index ];
 
 													$page_content .= '<div class="cp-q"><hr />
 														<p class="description cp-question">' . esc_html( $question['question']  ) . '</p>
 														<ul>';
 
 															foreach ( $options['answers'] as $p_index => $answer ) {
-																$the_answer = isset( $checked[$p_index] ) ? $checked[$p_index] : false;
+																$the_answer = isset( $checked[ $p_index ] ) ? $checked[ $p_index ] : false;
 																$student_answer = '';
 
-																if ( isset( $student_response[$p_index] ) && $student_response[$p_index] ) {
-																	$student_answer = $student_response[$p_index];
+																if ( isset( $student_response[ $p_index ] ) && $student_response[ $p_index ] ) {
+																	$student_answer = $student_response[ $p_index ];
 
 																	if ( $the_answer ) {
 																		$student_answer = '<span class="chosen-answer correct"></span>';
@@ -1006,20 +1006,36 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 												$questions = $attributes['questions'];
 
 												foreach ( $questions as $q_index => $question ) {
-													$student_response = $response[$q_index];
+													$student_response = ! empty( $response[ $q_index ] ) ? $response[ $q_index ] : '';
+													$format = '<div class="cp-q"><hr /><p class="description cp-question">%s</p>';
+													$page_content .= sprintf( $format, esc_html( $question['question'] ) );
+													$page_content .= '<ul>';
 
-													$page_content .= '<div class="cp-q"><hr />
-														<p class="description cp-question">' . esc_html( $question['question']  ) . '</p>
-														<ul>';
-															foreach ( $response[$q_index] as $p_index => $answer ) {
-																	$page_content .= '<li>' . esc_html( $answer ) . '</li>';
+													if ( 'selectable' == $question['type'] ) {
+														$options = $question['options']['answers'];
+														$checked = $question['options']['checked'];
+
+														foreach ( $options as $ai => $answer ) {
+															if ( $student_response == $ai ) {
+																$the_answer = ! empty( $checked[ $ai ] );
+																
+																if ( $the_answer === $student_response ) {
+																	$student_answer = '<span class="chosen-answer correct"></span>';
+																} else {
+																	$student_answer = '<span class="chosen-answer incorrect"></span>';
 																}
+																$page_content .= sprintf( '<li>%s %s</li>', $student_answer, $answer );
+															}
+														}
+													} else {
+														$page_content .= sprintf( '<li>%s</li>', esc_html( $student_response ) );
+													}
+
 													$page_content .= '</ul></div>';
 
 												}
 											}
 											break;
-											
 									}
 
 								$page_content .= '</div>';

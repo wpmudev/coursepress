@@ -1164,6 +1164,7 @@ class CoursePress_Data_Shortcode_Course {
 		$content = '';
 
 		$categories = CoursePress_Data_Course::get_course_categories( $course_id );
+
 		$counter = 0;
 		foreach ( $categories as $key => $category ) {
 			$counter += 1;
@@ -1172,7 +1173,7 @@ class CoursePress_Data_Shortcode_Course {
 		}
 
 		if ( empty( $categories ) ) {
-			$content .= $no_category_text;
+			return '';
 		}
 
 		$display_content = $content;
