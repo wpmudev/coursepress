@@ -446,6 +446,15 @@ class CoursePress_Helper_JavaScript {
 			'server_error' => __( 'An unexpected error occur while processing. Please try again.', 'cp' )
 		);
 
+				/**
+		 * Filter localize script to allow data insertion.
+		 *
+		 * @since 2.0
+		 *
+		 * @param (array) $localize_array.
+		 **/
+		$localize_array = apply_filters( 'coursepress_localize_object', $localize_array );
+
 		wp_localize_script( 'coursepress-front-js', '_coursepress', $localize_array );
 	}
 }
