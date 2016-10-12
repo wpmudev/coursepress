@@ -25,6 +25,13 @@ class CoursePress_Admin_Table_Students extends CoursePress_Admin_Table_Instructo
 			'search' => $usersearch,
 		);
 
+		if ( ! empty( $_GET['course_id'] ) ) {
+			// Show only students of current course
+			$course_id = (int) $_GET['course_id'];
+			$student_ids = CoursePress_Data_Course::get_student_ids( $course_id );
+			$args['include'] = $student_ids;
+		}
+
 		if ( '' !== $args['search'] )
 			$args['search'] = '*' . $args['search'] . '*';
 
