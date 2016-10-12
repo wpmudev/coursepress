@@ -621,6 +621,7 @@ tester {
 .cp .module-elements .file {
   position: relative;
   display: inline-block;
+  max-width: 100%;
 }
 .cp .module-elements .file .button {
   position: absolute;
@@ -634,6 +635,15 @@ tester {
   float: right;
   font-size: 1.4em;
   line-height: 1;
+}
+.cp .module-elements .current-file {
+  display: block;
+  margin-top: 25px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  padding: 5px 10px;
+}
+.cp .cp-try-again {
+  margin-top: 15px;
 }
 .cp .module-quiz-question .question {
   font-size: 110%;

@@ -114,8 +114,7 @@ class CoursePress_Template_Module {
 						}
 					}
 				} else {
-					$quiz_result = CoursePress_Data_Module::get_quiz_results( $student_id, $course_id, $unit_id, $module_id );
-					$content .= CoursePress_Data_Module::quiz_result_content( $student_id, $course_id, $unit_id, $module_id, $quiz_result );
+					$content .= self::quiz_result_content( $student_id, $course_id, $unit_id, $module_id );
 				}
 				break;
 
@@ -246,7 +245,11 @@ class CoursePress_Template_Module {
 				$element_class = ! empty( $responses ) ? 'hide' : '';
 				$response_count = ! empty( $responses ) ? count( $responses ) : 0;
 
-				$retry = sprintf( '<a data-module="%s" class="button module-submit-action button-reload-module">%s</a>', $module_id, __( 'Try again', 'cp' ) );
+				$try_again_label = __( 'Try Again', 'cp' );
+				if ( 'input-upload' == $module_type ) {
+					$try_again_label = __( 'Upload a different file', 'cp' );
+				}
+				$retry = sprintf( '<p class="cp-try-again"><a data-module="%s" class="button module-submit-action button-reload-module">%s</a></p>', $module_id, $try_again_label );
 
 				// Check if retry is disabled
 				if ( ! empty( $attributes['allow_retries'] ) && 0 < $response_count ) {
@@ -277,8 +280,9 @@ class CoursePress_Template_Module {
 				}
 
 				$student_answers = sprintf( '<span class="cp-status status-%s">%s</span>', strtolower( $status ), $status );
-				$student_answers = sprintf( '<div class="cp-student-status">%s</div>', $student_answers . $retry );
+				$student_answers = sprintf( '<div class="cp-student-status">%s</div>', $student_answers );
 				$student_answers .= self::get_student_answer( $module->ID, $student_id );
+				$student_answers .= $retry;
 
 				$module_elements .= sprintf( '<div id="cp-response-%s" class="module-response">%s</div>', $module_id, $student_answers );
 			}
@@ -889,5 +893,44 @@ class CoursePress_Template_Module {
 			do_shortcode( apply_filters( 'the_content', $content ) ),
 			$after_content
 		);
+	}
+
+	public static function quiz_result_content( $student_id, $course_id, $unit_id, $module_id, $quiz_result = false ) {
+
+		// Get last submitted result
+		if ( empty( $quiz_result ) ) {
+			$quiz_result = CoursePress_Data_Module::get_quiz_results( $student_id, $course_id, $unit_id, $module_id );
+		}
+		$quiz_passed = ! empty( $quiz_result['passed'] );
+
+		$passed_class = $quiz_passed ? 'passed' : 'not-passed';
+		$passed_message = ! empty( $quiz_result['passed'] ) ? __( 'You have successfully passed the quiz. Here are your results.', 'cp' ) : __( 'You did not pass the quiz this time. Here are your results.', 'cp' );
+
+		$template = '<div class="module-quiz-questions">
+			<div class="coursepress-quiz-results ' . esc_attr( $passed_class ) . '">
+				<div class="quiz-message"><p class="result-message">' . $passed_message . '</p></div>
+				<div class="quiz-results">
+					<table>
+					<tr><th>' . esc_html__( 'Total Questions', 'cp' ) . '</th><td>' . esc_html( $quiz_result['total_questions'] ) . '</td></tr>
+					<tr><th>' . esc_html__( 'Correct', 'cp' ) . '</th><td>' . esc_html( $quiz_result['correct'] ) . '</td></tr>
+					<tr><th>' . esc_html__( 'Incorrect', 'cp' ) . '</th><td>' . esc_html( $quiz_result['wrong'] ) . '</td></tr>
+					<tr><th>' . esc_html__( 'Grade', 'cp' ) . '</th><td>' . esc_html( $quiz_result['grade'] ) . '%</td></tr>
+					</table>
+				</div>
+			</div>
+		</div>';
+
+		$attributes = array(
+			'course_id' => $course_id,
+			'unit_id' => $unit_id,
+			'module_id' => $module_id,
+			'student_id' => $student_id,
+			'quiz_result' => $quiz_result,
+		);
+
+		// Can't use shortcodes this time as this also loads via AJAX
+		$template = apply_filters( 'coursepress_template_quiz_results', $template, $attributes );
+
+		return $template;
 	}
 }
