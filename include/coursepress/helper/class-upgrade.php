@@ -195,11 +195,11 @@ class CoursePress_Helper_Upgrade {
 			'course_dates',
 			'course_classes_discusion_and_workbook',
 			'course_enrollment_and_cost',
+			'student_progress',
+            'module_page',
         );
 
-        $updates = array(
-            'student_progress',
-        );
+//        $updates = array();
 
 		foreach ( $updates as $function_sufix ) {
 			$function = 'course_upgrade_'.$function_sufix;
@@ -544,15 +544,13 @@ class CoursePress_Helper_Upgrade {
 	private static function course_upgrade_student_progress( $course ) {
 		global $wpdb;
 		$sql = $wpdb->prepare(
-			'update %s set meta_key = %s where meta_key = %s',
-			$wpdb->usermeta,
+			"update {$wpdb->usermeta} set meta_key = %s where meta_key = %s",
 			sprintf( '_course_%d_progress', $course->ID ),
 			sprintf( 'course_%d_progress', $course->ID )
 		);
 		$wpdb->query( $sql );
 		$sql = $wpdb->prepare(
-			'update %s set meta_key = %s where meta_key = %s',
-			$wpdb->usermeta,
+			"update {$wpdb->usermeta} set meta_key = %s where meta_key = %s",
 			sprintf( '_course_%d_completed', $course->ID ),
 			sprintf( 'course_%d_completed', $course->ID )
 		);
@@ -595,5 +593,43 @@ class CoursePress_Helper_Upgrade {
 				CoursePress_Data_Course::update_setting( $course_id, $data['settings'], $value );
 			}
 		}
-	}
+    }
+
+    /**
+     * split to pages
+     */
+    public static function course_upgrade_module_page( $course ) {
+        $units = CoursePress_Data_Course::get_units( $course->ID, array( 'any' ), true );
+        if ( empty( $units ) ) {
+            return;
+        }
+        foreach( $units as $unit_id ) {
+            $split_to_pages = get_post_meta( $unit_id, '_cp_split_to_pages', true );
+            if ( empty( $split_to_page ) || 'done' != $split_to_pages ) {
+                $args = array(
+                    'post_type' => CoursePress_Data_Module::get_post_type_name(),
+                    'post_parent' => $unit_id,
+                    'post_status' => 'any',
+                    'order' => 'ASC',
+                    'orderby' => 'meta_value_num',
+                    'meta_key' => 'module_order',
+                    'nopaging' => true,
+                    'ignore_sticky_posts' => true,
+                );
+                $query = new WP_Query( $args );
+                $page = 1;
+                foreach ( $query->posts as $module ) {
+                    $type = get_post_meta( $module->ID, 'module_type', true );
+                    if ( 'page_break_module' == $type ) {
+                        $page++;
+                        wp_delete_post( $module->ID, true );
+                    } else {
+                        CoursePress_Helper_Utility::add_meta_unique( $module->ID, 'module_page', $page );
+                    }
+                }
+                CoursePress_Helper_Utility::add_meta_unique( $unit_id, '_cp_split_to_pages', 'done' );
+            }
+        }
+    }
+
 }
