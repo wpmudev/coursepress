@@ -1226,7 +1226,7 @@ var CoursePress = CoursePress || {};
 	/*
 	***** Settings > Basic Certificate *****
 	 */
-	(function() {
+	(function( $ ) {
 		function check_extension( url, field ) {
 			jQuery( field ).val( url );
 
@@ -1270,12 +1270,11 @@ var CoursePress = CoursePress || {};
 			}
 		}
 
-		jQuery( '.certificate_enabled' ).on( 'click', on_enabled_click );
-		jQuery( '.certificate_background_button' ).on( 'click', on_background_click );
-
-		// Hide the form on page-load if certificates are disabled.
-		window.setTimeout( on_enabled_click, 10 );
-	}());
+		$(document)
+			.ready( on_enabled_click )
+			.on( 'click', '.certificate_enabled', on_enabled_click )
+			.on( 'click', '.certificate_background_button', on_background_click );
+	})(jQuery);
 
 	/*
 	***** Settings > Instructor Capabilities *****
@@ -1342,12 +1341,13 @@ var CoursePress = CoursePress || {};
 			show_settings( '.cp-content-box.discussion', [this] );
 		}
 
-		jQuery( '.capability-list .coursepress_dashboard_cap input' ).on( 'click', on_dash_click );
-		jQuery( '.capability-list .coursepress_courses_cap input' ).on( 'click', on_course_click );
-		jQuery( '.capability-list .coursepress_instructors_cap input' ).on( 'click', on_instructor_click );
-		jQuery( '.capability-list .coursepress_students_cap input' ).on( 'click', on_student_click );
-		jQuery( '.capability-list .coursepress_notifications_cap input' ).on( 'click', on_notification_click );
-		jQuery( '.capability-list .coursepress_discussions_cap input' ).on( 'click', on_discussion_click );
-	}());
+		$(document)
+			.on( 'change', '.capability-list .coursepress_dashboard_cap input', on_dash_click )
+			.on( 'change', '.capability-list .coursepress_courses_cap input', on_course_click )
+			.on( 'change', '.capability-list .coursepress_instructors_cap input', on_instructor_click )
+			.on( 'change', '.capability-list .coursepress_students_cap input', on_student_click )
+			.on( 'change', '.capability-list .coursepress_notifications_cap input', on_notification_click )
+			.on( 'change', '.capability-list .coursepress_discussions_cap input', on_discussion_click );
+	})();
 
 })( jQuery );

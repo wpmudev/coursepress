@@ -168,9 +168,16 @@ class CoursePress_Data_VirtualPage {
 		if ( isset( $args['is_singular'] ) ) {
 			$this->is_singular = $args['is_singular'];
 			$post = get_post( $args['ID'] );
+
+			// Check status
+			if ( 'publish' != $post->post_status && false === CoursePress_Data_Capabilities::can_update_course( $post->ID ) ) {
+				return;
+			}
 		}
 		if ( isset( $args['is_archive'] ) ) {
-			$this->is_archive = $args['is_archive'];
+			//$this->is_archive = $args['is_archive'];
+			$wp_query->is_single = true;
+			$wp_query->is_singular = true;
 		}
 
 		// Hook up our virtual page with WP.

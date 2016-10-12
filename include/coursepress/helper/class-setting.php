@@ -10,7 +10,7 @@ class CoursePress_Helper_Setting {
 
 	public static function init() {
 		add_action( 'plugins_loaded', array( __CLASS__, 'admin_plugins_loaded' ) );
-		add_action( 'admin_menu', array( __CLASS__, 'admin_menu' ) );
+		//add_action( 'admin_menu', array( __CLASS__, 'admin_menu' ) );
 		add_action( 'admin_init', array( __CLASS__, 'admin_init' ) );
 		add_action( 'shutdown', array( __CLASS__, 'update_post_meta' ) );
 		/** This filter is documented in /wp-admin/includes/misc.php */
@@ -188,7 +188,7 @@ class CoursePress_Helper_Setting {
 	public static function admin_init() {
 
 		$page = isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : 'coursepress';
-		if ( in_array( $page, self::get_valid_pages() ) ) {
+		if ( 'course' == get_post_type() || in_array( $page, self::get_valid_pages() ) ) {
 			do_action( 'coursepress_settings_page_pre_render_' . $page );
 		}
 
@@ -212,7 +212,7 @@ class CoursePress_Helper_Setting {
 
 		$page = isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : '';
 
-		if ( in_array( $page, self::get_valid_pages() ) ) {
+		if ( 'course' == get_post_type() || in_array( $page, self::get_valid_pages() ) ) {
 			wp_enqueue_style( 'coursepress_admin_general', $style, array( 'dashicons' ), CoursePress::$version );
 			wp_enqueue_script( 'coursepress_admin_general_js', $script, array( 'jquery' ), CoursePress::$version, true );
 			wp_enqueue_script( 'sticky_js', $sticky, array( 'jquery' ), CoursePress::$version, true );
