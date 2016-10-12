@@ -108,7 +108,44 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 
 			case 'last_activity':
 				$last_activity = get_user_meta( $user_id, 'latest_activity', true );
+				$last_activity_kind = get_user_meta( $user_id, 'latest_activity_kind', true );
+				if ( empty( $last_activity ) ) {
+					$last_activity = get_user_meta( $user_id, 'last_login', true );
+					if ( ! empty( $last_activity ) ) {
+						$last_activity = $last_activity['time'];
+					}
+					$last_activity_kind = 'login';
+				}
+				if ( empty( $last_activity ) ) {
+					return sprintf( '<small>%s</small>', __( '[never]', 'cp' ) );
+				}
 				$return = date_i18n( $date_format . ' ' . $time_format, CoursePress_Data_Course::strtotime( $last_activity ) );
+				$return .= '<br /><small>';
+
+				switch ( $last_activity_kind ) {
+					case 'course_module_seen':
+						$return .= __( 'Course module seen.', 'cp' );
+					break;
+					case 'course_seen':
+						$return .= __( 'Course seen', 'cp' );
+					break;
+					case 'course_unit_seen':
+						$return .= __( 'Course unit seen.', 'cp' );
+					break;
+					case 'enrolled':
+						$return .= __( 'User enrolled to a course.', 'cp' );
+					break;
+					case 'login':
+						$return .= __( 'User have logged in.', 'cp' );
+					break;
+					case 'module_answered':
+						$return .= __( 'Answered a module.', 'cp' );
+					break;
+					default:
+						$return .= __( 'Unknown student action.', 'cp' );
+					break;
+				}
+				$return .= '</small>';
 				break;
 
 			case 'courses':
@@ -138,7 +175,6 @@ class CoursePress_Helper_Table_Student extends WP_Users_List_Table {
 			<h2>
 				<?php
 				esc_html_e( 'Students', 'cp' );
-
 				if ( CoursePress_Data_Capabilities::can_create_student() ) {
 					$add_link = admin_url( 'user-new.php' );
 					?>

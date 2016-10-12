@@ -217,7 +217,7 @@ class CoursePress_View_Front_Course {
 		/**
 		 * Try to add course_id - it should be unique post meta.
 		 */
-		$success == add_post_meta( $id, 'course_id', $course_id, true );
+		$success = add_post_meta( $id, 'course_id', $course_id, true );
 		if ( ! $success ) {
 			update_post_meta( $id, 'course_id', $course_id );
 		}
@@ -896,6 +896,17 @@ class CoursePress_View_Front_Course {
 			// This is a single course page!
 			CoursePress_Helper_Utility::$is_singular = true;
 
+			$user_id = get_current_user_id();
+			$can_update_course = CoursePress_Data_Capabilities::can_update_course( $cp->course_id );
+			$course_url = CoursePress_Data_Course::get_course_url( $cp->course_id );
+
+			// Redirect user to units overview
+			if ( false === $can_update_course && CoursePress_Data_Course::student_enrolled( $user_id, $cp->course_id ) ) {
+				$units_overview = $course_url . 'units';
+
+			//	wp_safe_redirect( $units_overview ); exit;???
+			}
+
 			/**
 			 * Filter whether to display the course title.
 			 *
@@ -917,6 +928,8 @@ class CoursePress_View_Front_Course {
 					'main'
 				),
 				'type' => CoursePress_Data_Course::get_post_type_name(),
+				'is_singular' => true,
+				'ID' => $cp->course_id,
 			);
 			// -----------------------------------------------------------------
 		} elseif ( $cp->is_completion_page ) {
@@ -1247,6 +1260,9 @@ class CoursePress_View_Front_Course {
 
 		// Finally set up the virtual page, if we found a special CP page.
 		if ( $cp->vp_args ) {
+			// Marked the current page is CP page
+			CoursePress_Core::$is_cp_page = true;
+
 			$pg = new CoursePress_Data_VirtualPage( $cp->vp_args );
 			self::$title = $cp->title;
 
@@ -1327,6 +1343,8 @@ class CoursePress_View_Front_Course {
 
 		$action = sanitize_text_field( $data->action );
 		$json_data['action'] = $action;
+
+		l( $action, __FUNCTION__ );
 
 		switch ( $action ) {
 			case 'record_module_response':
@@ -1413,6 +1431,7 @@ class CoursePress_View_Front_Course {
 		}
 
 		if ( $success ) {
+			CoursePress_Data_Student::log_student_activity( 'module_answered', $json_data['student_id'] );
 			wp_send_json_success( $json_data );
 		} else {
 			wp_send_json_error( $json_data );

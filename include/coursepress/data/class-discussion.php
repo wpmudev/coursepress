@@ -270,6 +270,15 @@ class CoursePress_Data_Discussion {
 		// Unsubscribe message
 		add_action( 'the_content', array( __CLASS__, 'unsubscribe_from_discussion' ) );
 
+		/**
+		 * Modifi args for thread
+		 */
+		add_filter( 'wp_list_comments_args', array( __CLASS__, 'wp_list_comments_args' ) );
+
+		/**
+		 * Avoid comments on add new thread page
+		 */
+		add_filter( 'comments_template_query_args', array( __CLASS__, 'comments_template_query_args' ) );
 	}
 
 	public static function approved_discussion_comment( $is_approved, $commentdata ) {
@@ -332,11 +341,13 @@ class CoursePress_Data_Discussion {
 	 **/
 	public static function redirect_back( $location, $comment ) {
 		$post_id = $comment->comment_post_ID;
-
+		$post_type = get_post_type( $post_id );
+		if ( $post_type == self::$post_type ) {
+			$post_id = get_post_meta( $post_id, 'course_id', true );
+		}
 		if ( self::is_comment_in_discussion( $post_id ) ) {
 			$location = CoursePress_Template_Discussion::discussion_url( $post_id );
 		}
-
 		return $location;
 	}
 
@@ -701,6 +712,98 @@ class CoursePress_Data_Discussion {
 	}
 
 	/**
+	 * Setup comments thread data.
+	 *
+	 * @since 2.0.0
+	 */
+	public static function wp_list_comments_args( $args ) {
+		global $post;
+		/**
+		 * No post? return!
+		 */
+		if ( ! is_object( $post ) ) {
+			return $args;
+		}
+		/**
+		 * Wrong post type? return!
+		 */
+		if ( 'course_discussion' != $post->post_type ) {
+			return $args;
+		}
+		/**
+		 * How deep (in comment replies) should the comments be fetched.
+		 */
+		$value = get_post_meta( $post->ID, 'thread_comments_depth', true );
+		if ( ! empty( $value ) ) {
+			$args['max_depth'] = $value;
+		}
+		/**
+		 * The number of items to show for each page of comments.
+		 */
+		$value = get_post_meta( $post->ID, 'comments_per_page', true );
+		if ( ! empty( $value ) ) {
+			$args['per_page'] = $value;
+		}
+		return $args;
+	}
+
+	/**
+	 * Disable comments on add new thread page.
+	 *
+	 * @since 2.0.0
+	 */
+	public static function comments_template_query_args( $args ) {
+		// Set default arguments
+		$args = wp_parse_args( $args, array(
+			'number' => 20,
+		) );
+
+		$discussion_name = get_query_var( 'discussion_name' );
+		if ( empty( $discussion_name ) ) {
+			return $args;
+		}
+		$add_new = CoursePress_Core::get_setting( 'slugs/discussions_new', 'add_new_discussion' );
+		if ( $add_new == $discussion_name ) {
+			$args['post_id'] = -1;
+		}
+		global $post;
+		/**
+		 * No post? return!
+		 */
+		if ( ! is_object( $post ) ) {
+			return $args;
+		}
+		/**
+		 * Wrong post type? return!
+		 */
+		if ( 'course_discussion' != $post->post_type ) {
+			return $args;
+		}
+		/**
+		 * The number of items to show for each page of comments.
+		 */
+		$value = get_post_meta( $post->ID, 'comments_per_page', true );
+		if ( ! empty( $value ) ) {
+			$args['number'] = $value;
+		}
+		/**
+		 * (string) Order of results. Accepts 'ASC' or 'DESC'.
+		 */
+		$args['order'] = 'ASC';
+		$args['orderby'] = 'comment_date';
+		$value = get_post_meta( $post->ID, 'comments_order', true );
+		if ( ! empty( $value ) && 'older' == $value ) {
+			$args['order'] = 'DESC';
+		}
+		/**
+		 * Page (offset)
+		 */
+		$cpage = intval( get_query_var( 'cpage' ) );
+		$args['offset'] = $args['number'] * $cpage;
+		return $args;
+	}
+
+	/*
 	 * Check current user submitted at least 1 comment/reply
 	 *
 	 * @since 2.0

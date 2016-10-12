@@ -316,21 +316,6 @@ class CoursePress_Data_Student {
 		}
 
 		CoursePress_Helper_Utility::set_array_val( $data, 'completion/' . $unit_id . '/modules_seen/' . $module_id, true );
-/*
-		$units = CoursePress_Helper_Utility::get_array_val(
-			$data,
-			'units/' . $unit_id
-		);
-
-		if ( empty( $units ) ) {
-			// Initialize units
-			CoursePress_Helper_Utility::set_array_val(
-				$data,
-				'units/' . $unit_id,
-				array()
-			);
-		}
-*/
 		self::update_completion_data( $student_id, $course_id, $data );
 
 		return $data;
@@ -568,7 +553,7 @@ class CoursePress_Data_Student {
 		if ( ! $response_index ) {
 			$response_index = ( count( $responses ) - 1 );
 
-			if ( $response_index < 0 ) $response_index = 0;
+			if ( $response_index < 0 ) { $response_index = 0; }
 		}
 
 		$grade_data = array(
@@ -621,7 +606,7 @@ class CoursePress_Data_Student {
 	 * @param (int) $response_index				The array key position of the response the feedback is given to.
 	 * @param (int) $feedback_index				The array key position of the feedback in the feedback list.
 	 * @param (array) $data						Optional. An array of previously fetch course completion data.
-	 * 
+	 *
 	 * @return Returns the feedback given if not empty, otherwise false.
 	 **/
 	public static function get_feedback(
@@ -907,7 +892,7 @@ class CoursePress_Data_Student {
 										$unit_completed_required_modules += 1;
 
 										if ( $is_module_structure_visible ) { $valid_items += 1; }
-										continue; 
+										continue;
 									}
 
 									// Get the last grade and see if the student pass
@@ -920,7 +905,7 @@ class CoursePress_Data_Student {
 									// Set grade for input-textarea, input-text
 									$excluded_modules = array(
 										'input-textarea',
-										'input-text'
+										'input-text',
 									);
 
 									if ( in_array( $module_type, $excluded_modules ) && 0 == $grade ) {
@@ -1003,7 +988,7 @@ class CoursePress_Data_Student {
 									$last_seen_index = $index;
 									if ( $is_module_structure_visible ) { $valid_items += 1; }
 								} else {
-									$unseen_modules[$module_id] = $module_id;
+									$unseen_modules[ $module_id ] = $module_id;
 								}
 							}
 						}
@@ -1476,8 +1461,8 @@ class CoursePress_Data_Student {
 		$student_progress = $student_progress = self::get_completion_data( $student_id, $course_id );
 		$attributes = CoursePress_Data_Module::attributes( $module_id );
 		$module_type = $attributes['module_type'];
-		$is_required = cp_is_true( $attributes['mandatory'] );
-		$is_assessable = cp_is_true( $attributes['assessable'] );
+		$is_required = isset( $attributes['mandatory'] ) && cp_is_true( $attributes['mandatory'] );
+		$is_assessable = isset( $attributes['assessable'] ) && cp_is_true( $attributes['assessable'] );
 		$is_answerable = preg_match( '%input-%', $attributes['module_type'] ) || 'discussion' == $attributes['module_type'];
 		$responses = CoursePress_Helper_Utility::get_array_val(
 			$student_progress,
@@ -1506,7 +1491,7 @@ class CoursePress_Data_Student {
 
 				$excluded_modules = array(
 					'input-textarea',
-					'input-text'
+					'input-text',
 				);
 
 				if ( ! empty( $last_answer ) ) {
@@ -1563,6 +1548,10 @@ class CoursePress_Data_Student {
 			$courses = array_map( 'get_post', $course_ids );
 		}
 
+		if ( empty( $courses ) ) {
+			return;
+		}
+
 		$found_courses = array(
 			'current' => array(),
 			'completed' => array(),
@@ -1605,10 +1594,49 @@ class CoursePress_Data_Student {
 					$found_courses['future'][] = $course;
 				}
 			}
-
 		}
 
 		return $found_courses;
+	}
+
+	/**
+	 * Save last Student Activity,
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $user_id Student ID.
+	 * @param string $kind Activity kind.
+	 */
+	public static function log_student_activity( $kind = 'login', $user_id = 0 ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		if ( empty( $user_id ) ) {
+			return;
+		}
+		if ( (int) $kind > 0 ) {
+			$kind = 'course_module_seen';
+		}
+
+		$success = add_user_meta( $user_id, 'latest_activity', time(), true );
+		if ( ! $success ) {
+			update_user_meta( $user_id, 'latest_activity', time() );
+		}
+		$allowed_kinds = array(
+			'course_module_seen',
+			'course_seen',
+			'course_unit_seen',
+			'enrolled',
+			'login',
+			'module_answered',
+		);
+		if ( ! in_array( $kind, $allowed_kinds ) ) {
+			$kind = 'unknown';
+		}
+		$success = add_user_meta( $user_id, 'latest_activity_kind', $kind, true );
+		if ( ! $success ) {
+			update_user_meta( $user_id, 'latest_activity_kind', $kind );
+		}
 	}
 
 	public static function get_course_status( $course_id, $student_id = 0 ) {
@@ -1633,7 +1661,7 @@ class CoursePress_Data_Student {
 			);
 
 			if ( ! empty( $failed ) ) {
-				$status = __( 'Failed', 'cp' );
+				$return = __( 'Failed', 'cp' );
 			} else {
 				if ( 'open' == $course_status ) {
 					$return = __( 'Ongoing', 'cp' );

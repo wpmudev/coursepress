@@ -128,7 +128,7 @@ class CoursePress_Template_Unit {
 		$previous_unit_id = CoursePress_Data_Unit::get_previous_unit_id( $course_id, $unit_id );
 		$availability = CoursePress_Data_Unit::get_unit_availability_status( $course_id, $unit_id, $previous_unit_id );
 
-		if ( empty( $availability['available'] ) ) {
+		if ( false === $can_update_course && empty( $availability['available'] ) ) {
 			$message = CoursePress_Data_Shortcode_Unit::module_status(
 				array(
 					'course_id' => $course_id,

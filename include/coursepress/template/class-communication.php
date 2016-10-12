@@ -216,8 +216,8 @@ class CoursePress_Template_Communication {
 			<input name="discussion_title" type="text" placeholder="' . esc_attr__( 'Title of the discussion', 'cp' ) . '" value="' . esc_attr( $title ) . '" />
 			<textarea name="discussion_content" placeholder="' . esc_attr__( 'Type your discussion or question here…', 'cp' ) . '">' . CoursePress_Helper_Utility::filter_content( $body ) . '</textarea>
 			<div class="button-links">
-				<a href="' . esc_url( $cancel_link ) . '">' . esc_html__( 'Cancel', 'cp' ) . '</a>
-				<a class="submit-discussion">' . esc_html( $add_edit ) . '</a>
+				<a href="' . esc_url( $cancel_link ) . '" class="button">' . esc_html__( 'Cancel', 'cp' ) . '</a>
+				<button type="submit" class="submit-discussion">' . esc_html( $add_edit ) . '</button>
 			</div>
 		</form>
 		';

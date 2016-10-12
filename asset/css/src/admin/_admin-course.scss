@@ -1,3 +1,5 @@
+@import 'colors';
+
 #student-add {
 	min-width: 300px;
 }
@@ -24,7 +26,7 @@
 #course-setup-steps .chosen-container-multi .chosen-choices {
 	background: none;
 	background-color: #fff;
-	border: 1px solid #ddd;
+	border: 1px solid $colorGrey;
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07) inset;
 	color: #32373c;
 	outline: medium none;
@@ -55,29 +57,30 @@
 }
 
 #course-setup-steps .step-content label.required:after {
-	content: '*';
+	content: ' *';
 	color: #E43037;
 }
 
 #course-setup-steps .step-content .disabled label.required:after {
-	content: '*';
-	color: #dddddd;
+	content: ' *';
+	color: $colorGrey;
 }
 
 #course-setup-steps .step-content .disabled label {
-	color: #dddddd;
+	color: $colorGrey;
 }
 
-#course-setup-steps .step-content label p.description {
-	font-weight: normal;
-}
-
-#course-setup-steps .step-content label.checkbox {
-	font-weight: normal;
-	display: block;
-	margin: 10px 0 0 0;
-	font-size: 1em;
-	cursor: pointer;
+#course-setup-steps .step-content label {
+	&.checkbox {
+		font-weight: normal;
+		display: block;
+		margin: 10px 0 0 0;
+		font-size: 1em;
+		cursor: pointer;
+	}
+	p.description {
+		font-weight: normal;
+	}
 }
 
 #course-setup-steps .step-content input.wide {
@@ -173,7 +176,7 @@
 	height: 20px;
 	width: 20px;
 	background: #f1f1f1;
-	border: 1px solid #ddd;
+	border: 1px solid $colorGrey;
 	position: absolute;
 	top: 0.8em;
 	right: 1em;
@@ -558,7 +561,7 @@ input.button.button-primary.instructor-assign {
 }
 
 #course-setup-steps .step-content .ui-spinner {
-	border-color: #ddd;
+	border-color: $colorGrey;
 	border-radius: 0;
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07) inset;
 	position: relative;
@@ -591,7 +594,7 @@ input.button.button-primary.instructor-assign {
 .ui-spinner-button.ui-spinner-up {
 	top: -0.8em;
 	z-index: 1;
-	border-bottom: 1px solid #dddddd;
+	border-bottom: 1px solid $colorGrey;
 }
 .ui-spinner-button.ui-spinner-down {
 	bottom: -0.8em;
@@ -607,7 +610,7 @@ input.button.button-primary.instructor-assign {
 
 #course-setup-steps .step-content .payment-message {
 	background: #f1f1f1;
-	border: 1px solid #dddddd;
+	border: 1px solid $colorGrey;
 	border-radius: 10px;
 	padding: 10px;
 	margin-top: 10px;

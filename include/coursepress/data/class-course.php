@@ -349,9 +349,11 @@ class CoursePress_Data_Course {
 				$course_id,
 				$global_option
 			);
+			
+			self::update_setting( $course_id, 'instructors', $instructors );
 		}
 
-		self::update_setting( $course_id, 'instructors', $instructors );
+		
 
 	}
 
@@ -1164,6 +1166,11 @@ class CoursePress_Data_Course {
 		// Update course count
 		CoursePress_Data_Student::count_enrolled_courses_ids( $student_id, true );
 
+		/**
+		 * Log student activity
+		 */
+		CoursePress_Data_Student::log_student_activity( 'enrolled', $student_id );
+
 		// Reset students count
 		CoursePress_Data_Instructor::reset_students_count( $instructors );
 		return true;
@@ -1541,7 +1548,10 @@ class CoursePress_Data_Course {
 		$instructors = CoursePress_Data_Course::get_instructors( $course_id );
 		$is_instructor = in_array( $student_id, $instructors );
 
-		$preview_modules = isset( $preview['structure'][ $unit_id ][ $page ] ) ? array_keys( $preview['structure'][ $unit_id ][ $page ] ) : array();
+		$preview_modules = array();
+		if ( isset( $preview['structure'][ $unit_id ][ $page ] ) && is_array( $preview['structure'][ $unit_id ][ $page ] ) ) {
+			$preview_modules = array_keys( $preview['structure'][ $unit_id ][ $page ] );
+		}
 		$can_preview_module = in_array( $module_id, $preview_modules ) || ( isset( $preview['structure'][ $unit_id ] ) && ! is_array( $preview['structure'][ $unit_id ] ) );
 
 		if ( ! $enrolled && ! $can_preview_module && ! $is_instructor ) {
@@ -2999,6 +3009,52 @@ class CoursePress_Data_Course {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * return array of allowed enrollment restrictions.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $course_id Course ID
+	 *
+	 * @return string
+	 */
+	public static function get_enrollment_types_array( $course_id = 0 ) {
+		$enrollment_types = array(
+			'manually' => __( 'Manually added only', 'cp' ),
+		);
+		if ( CoursePress_Helper_Utility::users_can_register() ) {
+			$enrollment_types = array_merge( $enrollment_types, array(
+				'anyone' => __( 'Any registered users', 'cp' ),
+				'passcode' => __( 'Any registered users with a pass code', 'cp' ),
+				'prerequisite' => __( 'Registered users who completed the prerequisite course(s)', 'cp' ),
+			) );
+		} else {
+			$enrollment_types = array_merge( $enrollment_types, array(
+				'registered' => __( 'Any registered users', 'cp' ),
+				'passcode' => __( 'Any registered users with a pass code', 'cp' ),
+				'prerequisite' => __( 'Registered users who completed the prerequisite course(s)', 'cp' ),
+			) );
+		}
+		$enrollment_types = apply_filters( 'coursepress_course_enrollment_types', $enrollment_types, $course_id );
+		return $enrollment_types;
+	}
+
+	/**
+	 * Get enrollment type default.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param $integer $course_id Course ID
+	 */
+	public static function get_enrollment_type_default( $course_id = 0 ) {
+		$default = 'registered';
+		if ( CoursePress_Helper_Utility::users_can_register() ) {
+			$default = 'anyone';
+		}
+		$default = CoursePress_Core::get_setting( 'course/enrollment_type_default', $default );
+		return apply_filters( 'coursepress_course_enrollment_type_default', $default, $course_id );
 	}
 
 }

@@ -130,9 +130,9 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 			'cb' => '<input type="checkbox" />',
 			'title' => __( 'Topic', 'cp' ),
 			'course' => __( 'Course', 'cp' ),
+			'comments' => '<span class="vers comment-grey-bubble" title="' . esc_attr__( 'Comments', 'cp' ) . '"><span class="screen-reader-text">' . __( 'Comments', 'cp' ) . '</span></span>',
 			'status' => __( 'Status', 'cp' ),
 		);
-
 		return $columns;
 	}
 

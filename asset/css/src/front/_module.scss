@@ -1,24 +1,10 @@
 .cp {
-	.cp-error {
-		p {
-			margin: 15px 0;
-			font-size: 0.9em;
-			border: 1px solid rgba(0,0, 0, 0.05);
-			padding: 5px 15px;
-			&:before {
-				content: "\F534";
-				font-family: Dashicons;
-				font-size: 1.2em;
-				margin-right: 5px;
-				color: red;
-			}
-		}
-	}
 	.cp-module-content {
 		position: relative;
 		display: block;
 		margin: 15px 0 25px 0;
 		clear: both;
+		border: 1px solid transparent;
 
 		.comment-reply-title {
 			margin-bottom: 0;
@@ -37,6 +23,7 @@
 			float: right;
 			font-size: 0.8em;
 			text-transform: uppercase;
+			color: $color2;
 			&:before {
 				content: '*';
 				display: inline-block;
@@ -51,6 +38,39 @@
 			width: 100%;
 			option {
 				padding: 4px 12px;
+			}
+		}
+		.file {
+			position: relative;
+			display: inline-block;
+			.button {
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 100%;
+				&:after {
+					content: '\f317';
+					font-family: Dashicons;
+					float: right;
+					font-size: 1.4em;
+					line-height: 1;
+				}
+			}
+		}
+	}
+	.module-quiz-question {
+		.question {
+			font-size: 110%;
+			font-weight: 600;
+		}
+		ul {
+			margin-bottom: 25px;
+		}
+		li {
+			label {
+				display: block;
+				padding-left: 25px;
+				margin-top: -28px;
 			}
 		}
 	}
@@ -94,15 +114,22 @@
 			}
 		}
 	}
+	.invalid-extension {
+		margin: 25px 0 0 0;
+		font-style: italic;
+		font-size: 14px;
+		padding: 5px 12px;
+		clear: both;
+		background-color: $warning_bg;
+		border: $warning_border;
+	}
 	.cp-sub {
 		margin: 15px 0;
 		p {
-			float: left;
-			width: 50%;
-			font-size: 0.8em;
-			text-transform: uppercase;
-			text-align: center;
-			padding: 5px 0;
+			margin: 0;
+			font-style: italic;
+			font-size: 14px;
+			opacity: 0.8;
 		}
 	}
 	.prev-button,
