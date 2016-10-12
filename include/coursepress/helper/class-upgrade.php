@@ -730,17 +730,34 @@ class CoursePress_Helper_Upgrade {
 		}
 		self::$messages[] = __( 'Added content of dafaults Course Completion pages.', 'cp' );
 		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
-    }
+	}
 
-    /**
-     * Unit - Section Title (former Page title)
-     */
-    private static function course_upgrade_unit_page_title( $course ) {
+	/**
+	 * Unit - Section Title (former Page title)
+	 */
+	private static function course_upgrade_unit_page_title( $course ) {
 		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
 		if ( $done ) {
 			return;
 		}
-    }
+		$units = CoursePress_Data_Course::get_units( $course->ID, array( 'any' ), true );
+		foreach ( $units as $unit_id ) {
+			$page_title = get_post_meta( $unit_id, 'page_title', true );
+			$titles = maybe_unserialize( $page_title );
+			if ( empty( $titles ) ) {
+				continue;
+			}
+			$new = array();
+			$i = 1;
+			foreach( $titles as $title ) {
+				$new['page_'.$i++] = $title;
+			}
+			delete_post_meta( $unit_id, 'page_title' );
+			CoursePress_Helper_Utility::add_meta_unique($unit_id, 'page_title', $new );
+		}
+		self::$messages[] = __( 'Section titles (former page titles) inside units cinverted.', 'cp' );
+		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
+	}
 
 	private static function upgrade_step_check( $course_id, $name ) {
 		$meta_key = sprintf( '_cp_us_%s', $name );
