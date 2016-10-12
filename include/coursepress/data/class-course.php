@@ -3057,4 +3057,43 @@ class CoursePress_Data_Course {
 		return apply_filters( 'coursepress_course_enrollment_type_default', $default, $course_id );
 	}
 
+    /**
+     * Default values for titles and contents of course pages.
+     *
+     * @since 2.0.0
+     *
+     * @return array Array of defaults.
+     */
+	public static function get_defaults_setup_pages_content() {
+		$defaults = array(
+			'pre_completion' => array(),
+			'course_completion' => array(),
+		);
+
+		/**
+		 * Pre-Completion Page
+		 */
+		$defaults['pre_completion']['title'] = __( 'Almost there!', 'cp' );
+		$defaults['pre_completion']['content'] = sprintf( '<h3>%s</h3>', __( 'You have completed the course!', 'cp' ) );
+		$defaults['pre_completion']['content'] .= sprintf( '<p>%s</p>', __( 'Your submitted business plan will be reviewed, and you\'ll hear back from me on whether you pass or fail.', 'cp' ) );
+		/**
+		 * Course Completion Page
+		 */
+		$defaults['course_completion']['title'] = __( 'Congratulations, You Passed!', 'cp' );
+		$defaults['course_completion']['content'] = sprintf( '<p>%s</p>', __( 'Woohoo! You\'ve passed COURSE_NAME!', 'cp' ) );
+
+		/**
+		 * Course Fail Page
+		 */
+		$defaults['course_failed']['title'] = __( 'Sorry, you did not pass this course!', 'cp' );
+		$defaults['course_failed']['content'] = __( 'I\'m sorry to say you didn\'t pass COURSE_NAME. Better luck next time!', 'cp' );
+		/**
+		 * Filter for defaults values allow in easy way change all defaults values.
+		 *
+		 * @since 2.0.0
+		 */
+		$defaults = apply_filters( 'coursepress_pages_defaults', $defaults );
+		return $defaults;
+	}
+
 }

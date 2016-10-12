@@ -1026,20 +1026,21 @@ class CoursePress_View_Admin_Course_Edit {
 		$setup_class = (int) CoursePress_Data_Course::get_setting( $course_id, 'setup_marker', 0 ) === 7 ? $setup_class . ' setup_marker' : $setup_class;
 
 		/**
+		 * Get defaults
+		 */
+		$defaults = CoursePress_Data_Course::get_defaults_setup_pages_content();
+		/**
 		 * Pre-Completion Page
 		 */
-		$pre_completion_title = CoursePress_Data_Course::get_setting( $course_id, 'pre_completion_title', __( 'Almost there!', 'cp' ) );
-		$pre_completion_content = sprintf( '<h3>%s</h3>', __( 'You have completed the course!', 'cp' ) );
-		$pre_completion_content .= sprintf( '<p>%s</p>', __( 'Your submitted business plan will be reviewed, and you\'ll hear back from me on whether you pass or fail.', 'cp' ) );
-		$pre_completion_content = CoursePress_Data_Course::get_setting( $course_id, 'pre_completion_content', $pre_completion_content );
+		$pre_completion_title = CoursePress_Data_Course::get_setting( $course_id, 'pre_completion_title', $defaults['pre_completion']['title'] );
+		$pre_completion_content = CoursePress_Data_Course::get_setting( $course_id, 'pre_completion_content', $defaults['pre_completion']['content'] );
 		$pre_completion_content = htmlspecialchars_decode( $pre_completion_content );
 
 		/**
 		 * Course Completion Page
 		 */
-		$completion_title = CoursePress_Data_Course::get_setting( $course_id, 'course_completion_title', __( 'Congratulations, You Passed!', 'cp' ) );
-		$completion_content = sprintf( '<p>%s</p>', __( 'Woohoo! You\'ve passed COURSE_NAME!', 'cp' ) );
-		$completion_content = CoursePress_Data_Course::get_setting( $course_id, 'course_completion_content', $completion_content );
+		$completion_title = CoursePress_Data_Course::get_setting( $course_id, 'course_completion_title', $defaults['course_completion']['title'] );
+		$completion_content = CoursePress_Data_Course::get_setting( $course_id, 'course_completion_content', $defaults['course_completion']['content'] );
 		$completion_content = htmlspecialchars_decode( $completion_content );
 
 		$content = '<div class="step-title step-7">'
@@ -1096,13 +1097,11 @@ class CoursePress_View_Admin_Course_Edit {
 		$content .= self::get_wp_editor( 'course-completion-editor-content', 'meta_course_completion_content', $completion_content );
 		$content .= '</div>';
 
-		// Fail info
-		$failed_title = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_title', __( 'Sorry, you did not pass this course!', 'cp' ) );
-		$failed_content = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_content', '' );
-//=======
-//		$failed_content = __( 'I\'m sorry to say you didn\'t pass JavaScript for COURSE_NAME. Better luck next time!', 'cp' );
-//		$failed_content = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_content', $failed_content );
-//>>>>>>> coursepress/2.0-dev
+        /**
+         * Course Fail Page
+         */
+		$failed_title = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_title', $defaults['course_failed']['title'] );
+		$failed_content = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_content', $defaults['course_failed']['content'] );
 		$failed_content = htmlspecialchars_decode( $failed_content );
 
 		$content .= '<div class="wide page-failed">
@@ -1978,4 +1977,5 @@ class CoursePress_View_Admin_Course_Edit {
 		$editor_html = ob_get_clean();
 		return $editor_html;
 	}
+
 }

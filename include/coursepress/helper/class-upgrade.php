@@ -1,8 +1,13 @@
 <?php
 
+/**
+ * This class is responsible for CoursePress upgrade process.
+ */
+
 class CoursePress_Helper_Upgrade {
 
 	private static $message_meta_name = 'course_upgrade_messsage';
+	private static $messages = array();
 
 	public static function init() {
 		add_action( 'wp_ajax_coursepress_upgrade_update', array( __CLASS__, 'ajax_courses_upgrade' ) );
@@ -196,25 +201,27 @@ class CoursePress_Helper_Upgrade {
 			'course_classes_discusion_and_workbook',
 			'course_enrollment_and_cost',
 			'student_progress',
-            'module_page',
-        );
-
-//        $updates = array();
-
+			'module_page',
+			'student_enrolled',
+            'course_completion',
+            'unit_page_title',
+		);
+//				$updates = array();
 		foreach ( $updates as $function_sufix ) {
 			$function = 'course_upgrade_'.$function_sufix;
-			if ( is_callable( array( __CLASS__, $function ) ) ) {
-				call_user_func( array( __CLASS__, $function ), $course );
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				error_log( sprintf( 'COURSE UPDATE: before call function: %s', $function ) );
 			}
+			self::$function( $course );
 		}
-
+		/**
+		 * setup course
+		 */
 		CoursePress_Data_Course::update_setting( $course->ID, 'course_view', 'normal' );
 		for ( $i = 1; $i < 8; $i++ ) {
 			CoursePress_Data_Course::update_setting( $course->ID, 'setup_step_'.$i, 'saved' );
-        }
+		}
 		//l(CoursePress_Data_Course::get_setting( $course->ID ));
-
-
 		return true;
 	}
 
@@ -273,8 +280,8 @@ class CoursePress_Helper_Upgrade {
 		 * return data
 		 */
 		$title = sprintf( '<b>%s</b>', apply_filters( 'the_title', $course->post_title ) );
-		$message = sprintf( __( 'Course %s was successful updated.', 'cp' ), $title );
-		self::print_json_and_die( $message, true );
+		self::$messages[] = sprintf( __( 'Course %s was successful updated.', 'cp' ), $title );
+		self::print_json_and_die( false, true );
 	}
 
 	/**
@@ -286,9 +293,12 @@ class CoursePress_Helper_Upgrade {
 	 * @param boolean $success Information about status of operation.
 	 */
 	private static function print_json_and_die( $message, $success = false ) {
+		if ( ! empty( $message ) ) {
+			self::$messages[] = $message;
+		}
 		$json = array(
 			'success' => $success,
-			'message' => $message,
+			'message' => '<ol><li>'. implode( self::$messages, '</li><li>' ) . '</li></ol>',
 		);
 		echo json_encode( $json );
 		wp_die();
@@ -298,6 +308,10 @@ class CoursePress_Helper_Upgrade {
 	 * Course Details: Course Video
 	 */
 	private static function course_upgrade_course_details_video( $course ) {
+		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
+		if ( $done ) {
+			return;
+		}
 		$fields = array(
 			array(
 				'meta_key_old' => 'course_video_url',
@@ -306,12 +320,17 @@ class CoursePress_Helper_Upgrade {
 			),
 		);
 		self::update_array( $course->ID, $fields );
+		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
 	}
 
 	/**
 	 * Course Details: Course Structure
 	 */
 	private static function course_upgrade_course_details_structure( $course ) {
+		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
+		if ( $done ) {
+			return;
+		}
 		$fields = array(
 			array(
 				'meta_key_old' => 'course_structure_options',
@@ -416,13 +435,17 @@ class CoursePress_Helper_Upgrade {
 		foreach ( $keys as $key ) {
 			CoursePress_Data_Course::update_setting( $course->ID, $key, $$key );
 		}
-
+		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
 	}
 
 	/**
 	 * Course Dataes
 	 */
 	private static function course_upgrade_course_dates( $course ) {
+		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
+		if ( $done ) {
+			return;
+		}
 		$dates = array(
 			array(
 				'meta_key_old' => 'course_end_date',
@@ -472,12 +495,17 @@ class CoursePress_Helper_Upgrade {
 			),
 		);
 		self::update_array( $course->ID, $dates );
+		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
 	}
 
 	/**
 	 * Step 3 – Instructors and Facilitators
 	 */
 	private static function course_upgrade_course_instructors( $course ) {
+		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
+		if ( $done ) {
+			return;
+		}
 		$fields = array(
 			array(
 				'meta_key_old' => 'instructors',
@@ -486,12 +514,17 @@ class CoursePress_Helper_Upgrade {
 			),
 		);
 		self::update_array( $course->ID, $fields );
+		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
 	}
 
 	/**
 	 * Step 3 – Instructors and Facilitators
 	 */
 	private static function course_upgrade_course_classes_discusion_and_workbook( $course ) {
+		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
+		if ( $done ) {
+			return;
+		}
 		$fields = array(
 			array(
 				'meta_key_old' => 'allow_course_discussion',
@@ -511,12 +544,17 @@ class CoursePress_Helper_Upgrade {
 			),
 		);
 		self::update_array( $course->ID, $fields );
+		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
 	}
 
 	/**
 	 * Step 6 – Enrollment & Course Cost
 	 */
 	private static function course_upgrade_course_enrollment_and_cost( $course ) {
+		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
+		if ( $done ) {
+			return;
+		}
 		$fields = array(
 			array(
 				'meta_key_old' => 'enroll_type',
@@ -536,12 +574,52 @@ class CoursePress_Helper_Upgrade {
 			),
 		);
 		self::update_array( $course->ID, $fields );
+		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
+	}
+
+	private static function course_upgrade_student_enrolled( $course ) {
+		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
+		if ( $done ) {
+			return;
+		}
+		$meta_key = sprintf( 'enrolled_course_date_%d', $course->ID );
+		$args = array(
+			'meta_key' => $meta_key,
+			'fields' => 'ids',
+			'number' => -1,
+		);
+		if ( is_multisite() ) {
+			$args['blog_id'] = get_current_blog_id();
+		}
+		$user_query = new WP_User_Query( $args );
+		$ids = $user_query->get_results();
+		if ( empty( $ids ) ) {
+			return;
+		}
+		foreach ( $ids as $user_id ) {
+			$success = update_post_meta( $course->ID, 'course_enrolled_student_id', $user_id, $user_id );
+			if ( ! $success ) {
+				add_post_meta( $course->ID, 'course_enrolled_student_id', $user_id );
+			}
+			delete_user_meta( $user_id, $meta_key );
+		}
+		$count = count( $ids );
+		self::$messages[] = sprintf( _n( '%s student enrolled to this course.', '%s students enroled to this course.', $count, 'your_textdomain' ), $count );
+		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
 	}
 
 	/**
 	 * Rename progress
 	 */
 	private static function course_upgrade_student_progress( $course ) {
+		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
+		if ( $done ) {
+			return;
+		}
+		return;
+		/**
+		 * TODO
+		 */
 		global $wpdb;
 		$sql = $wpdb->prepare(
 			"update {$wpdb->usermeta} set meta_key = %s where meta_key = %s",
@@ -555,6 +633,8 @@ class CoursePress_Helper_Upgrade {
 			sprintf( 'course_%d_completed', $course->ID )
 		);
 		$wpdb->query( $sql );
+		self::$messages[] = __( 'Student progress updated.', 'cp' );
+		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
 	}
 
 	/**
@@ -593,43 +673,87 @@ class CoursePress_Helper_Upgrade {
 				CoursePress_Data_Course::update_setting( $course_id, $data['settings'], $value );
 			}
 		}
+	}
+
+	/**
+	 * split to pages
+	 */
+	public static function course_upgrade_module_page( $course ) {
+		$units = CoursePress_Data_Course::get_units( $course->ID, array( 'any' ), true );
+		if ( empty( $units ) ) {
+			return;
+		}
+		foreach( $units as $unit_id ) {
+			$split_to_pages = get_post_meta( $unit_id, '_cp_split_to_pages', true );
+			if ( empty( $split_to_page ) || 'done' != $split_to_pages ) {
+				$args = array(
+					'post_type' => CoursePress_Data_Module::get_post_type_name(),
+					'post_parent' => $unit_id,
+					'post_status' => 'any',
+					'order' => 'ASC',
+					'orderby' => 'meta_value_num',
+					'meta_key' => 'module_order',
+					'nopaging' => true,
+					'ignore_sticky_posts' => true,
+				);
+				$query = new WP_Query( $args );
+				$page = 1;
+				foreach ( $query->posts as $module ) {
+					$type = get_post_meta( $module->ID, 'module_type', true );
+					if ( 'page_break_module' == $type ) {
+						$page++;
+						wp_delete_post( $module->ID, true );
+					} else {
+						CoursePress_Helper_Utility::add_meta_unique( $module->ID, 'module_page', $page );
+					}
+				}
+				CoursePress_Helper_Utility::add_meta_unique( $unit_id, '_cp_split_to_pages', 'done' );
+			}
+		}
+	}
+
+	/**
+	 * Step 7 - Course Completion
+	 */
+	private static function course_upgrade_course_completion( $course ) {
+		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
+		if ( $done ) {
+			return;
+		}
+		CoursePress_Data_Course::update_setting( $course->ID, 'minimum_grade_required', 100 );
+		$defaults = CoursePress_Data_Course::get_defaults_setup_pages_content();
+		foreach( $defaults as $group => $data ) {
+			foreach( $data as $name => $content ) {
+				$key = sprintf( '%s_%s', $group, $name );
+				CoursePress_Data_Course::update_setting( $course->ID, $key, $content );
+			}
+		}
+		self::$messages[] = __( 'Added content of dafaults Course Completion pages.', 'cp' );
+		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
     }
 
     /**
-     * split to pages
+     * Unit - Section Title (former Page title)
      */
-    public static function course_upgrade_module_page( $course ) {
-        $units = CoursePress_Data_Course::get_units( $course->ID, array( 'any' ), true );
-        if ( empty( $units ) ) {
-            return;
-        }
-        foreach( $units as $unit_id ) {
-            $split_to_pages = get_post_meta( $unit_id, '_cp_split_to_pages', true );
-            if ( empty( $split_to_page ) || 'done' != $split_to_pages ) {
-                $args = array(
-                    'post_type' => CoursePress_Data_Module::get_post_type_name(),
-                    'post_parent' => $unit_id,
-                    'post_status' => 'any',
-                    'order' => 'ASC',
-                    'orderby' => 'meta_value_num',
-                    'meta_key' => 'module_order',
-                    'nopaging' => true,
-                    'ignore_sticky_posts' => true,
-                );
-                $query = new WP_Query( $args );
-                $page = 1;
-                foreach ( $query->posts as $module ) {
-                    $type = get_post_meta( $module->ID, 'module_type', true );
-                    if ( 'page_break_module' == $type ) {
-                        $page++;
-                        wp_delete_post( $module->ID, true );
-                    } else {
-                        CoursePress_Helper_Utility::add_meta_unique( $module->ID, 'module_page', $page );
-                    }
-                }
-                CoursePress_Helper_Utility::add_meta_unique( $unit_id, '_cp_split_to_pages', 'done' );
-            }
-        }
+    private static function course_upgrade_unit_page_title( $course ) {
+		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
+		if ( $done ) {
+			return;
+		}
     }
+
+	private static function upgrade_step_check( $course_id, $name ) {
+		$meta_key = sprintf( '_cp_us_%s', $name );
+		$done = get_post_meta( $course_id, $meta_key, true );
+		return 'done' == $done;
+	}
+
+	private static function upgrade_step_set_done( $course_id, $name ) {
+		$meta_key = sprintf( '_cp_us_%s', $name );
+		CoursePress_Helper_Utility::add_meta_unique( $course_id, $meta_key, 'done' );
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			error_log( sprintf( 'COURSE UPDATE: done: %s', $name ) );
+		}
+	}
 
 }

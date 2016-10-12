@@ -16,11 +16,12 @@
 			var $thiz = $(this);
 			var $ids = [];
 			var done = 0;
+			var $orginal = '';
 			$("input.course", $form).each( function() {
 				$ids.push( $(this).val() );
 			});
 			if ( 0 === $ids.length ) {
-			$holder.html( '<p>' + $form.data('label-empty-list') + '</p>' );
+				$holder.html( '<p>' + $form.data('label-empty-list') + '</p>' );
 				return false;
 			}
 			data = {
@@ -30,6 +31,7 @@
 				_wp_http_referer: $("input[name=_wp_http_referer]").val(),
 				course_id: 0
 			};
+			$orginal = $holder.html();
 			$holder.html( '<p class="working"><span><i class="fa fa-spinner fa-pulse"></i></span> ' + $form.data('label-working') + '</p>' );
 			$.each( $ids, function( index, value ) {
 				data.course_id = value;
@@ -46,7 +48,9 @@
 					if ( done === $ids.length ) {
 						$( ".working", $holder ).detach();
 					}
-				});
+				}).fail( function() {
+					$holder.html( $orginal );
+				})
 			});
 			return false;
 		});
