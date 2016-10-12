@@ -25,7 +25,10 @@ class CoursePress_Helper_JavaScript {
 			'coursepress',
 		) );
 
-		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], $valid_pages ) ) {
+		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], $valid_pages ) || 'course' == get_post_type() ) {
+			if ( 'course' == get_post_type() ) {
+				$_GET['page'] = $_REQUEST['page'] = 'coursepress_course';
+			}
 			return true;
 		}
 
@@ -46,6 +49,7 @@ class CoursePress_Helper_JavaScript {
 			return;
 		}
 
+		$course_type = CoursePress_Data_Course::get_post_type_name();
 		$script = CoursePress::$url . 'asset/js/coursepress.js';
 
 		wp_enqueue_script( 'coursepress_object', $script, array(
@@ -86,6 +90,11 @@ class CoursePress_Helper_JavaScript {
 				'required_fields' => __( 'Required fields must not be empty!', 'cp' ),
 			),
 		);
+
+		// Add course_id in edit page
+		if ( $course_type == get_post_type() ) {
+			$localize_array['course_id'] = get_the_ID();
+		}
 
 		// Models
 		/** COURSEPRESS_COURSE */
@@ -165,6 +174,13 @@ class CoursePress_Helper_JavaScript {
 			}
 		}
 
+		$style_global = CoursePress::$url . 'asset/css/admin-global.css';
+		$timepicker_css = CoursePress::$url . 'asset/css/external/jquery-ui-timepicker-addon.min.css';
+		$timepicker_js = CoursePress::$url . 'asset/js/external/jquery-ui-timepicker-addon.min.js';
+		wp_enqueue_style( 'coursepress_admin_timepicker', $timepicker_css, false, CoursePress::$version );
+		wp_enqueue_script( 'coursepress_admin_timepicker', $timepicker_js, array( 'jquery-ui-slider', 'jquery-ui-datepicker' ), CoursePress::$version, true );
+		wp_enqueue_style( 'coursepress_admin_global', $style_global, array( 'jquery-datepicker' ), CoursePress::$version );
+
 		/** COURSEPRESS_COURSE|UNIT BUILDER */
 		if ( 'coursepress_course' == $_GET['page'] && isset( $_GET['tab'] ) && 'units' == $_GET['tab'] ) {
 			$script = CoursePress::$url . 'asset/js/coursepress-unitsbuilder.js';
@@ -187,7 +203,7 @@ class CoursePress_Helper_JavaScript {
 		}
 
 		/** COURSE LIST */
-		if ( 'coursepress' === $_GET['page'] ) {
+		if ( 'coursepress_course' === $_GET['page'] && empty( $_GET['action'] ) ) {
 			$script = CoursePress::$url . 'asset/js/coursepress-courselist.js';
 			wp_enqueue_script( 'coursepress_course_list', $script, array(
 				'jquery-ui-accordion',

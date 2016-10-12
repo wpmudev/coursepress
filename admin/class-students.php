@@ -14,9 +14,6 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Controller_Menu {
 	var $enrolled_courses = null;
 
 	public function __construct() {
-		// Search Users
-		add_action( 'wp_ajax_coursepress_user_search', array( __CLASS__, 'search_user' ) );
-
 		/** Send certificate manually **/
 		add_action( 'wp_ajax_certificate_send', array( __CLASS__, 'certificate_send' ) );
 

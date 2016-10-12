@@ -116,6 +116,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		return CoursePress.utility.fix_checkboxes( items, '.step-content.step-' + step, false_value );
 	};
 
+	CoursePress.Course.hasError = false;
 	CoursePress.Course.get_step = function( step, action_type ) {
 		if ( undefined === action_type ) {
 			action_type = 'next';
@@ -499,11 +500,14 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 				});
 
 				if ( found > 0 ) {
+					CoursePress.Course.hasError = true;
 					// Alert
 					// @todo: Make this message info nicer!
 					alert( _coursepress.labels.required_fields );
 
 					return false;
+				} else {
+					CoursePress.Course.hasError = false;
 				}
 			}
 
@@ -1674,6 +1678,43 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		return markup;
 	}
 
+	// UPDATE COURSE
+	CoursePress.updateCourse = function( ev ) {
+		var form = $(this),
+			finishbutton = $( '.finish.step-7' )
+		;
+
+		if ( 0 === finishbutton.length ) {
+			// Search students helper
+			var s = $( '[name="s"]', form ),
+				url = $( '[name="_wp_http_referer"]' );
+
+			form.attr( 'action', url.val() );
+
+			return true;
+		}
+
+		// Trigger finish event
+		finishbutton.trigger( 'click' );
+
+		if ( ! CoursePress.Course.hasError ) {
+			return true;
+		}
+
+		ev.stopImmediatePropagation();
+
+		return false;
+	};
+
+	CoursePress.maybeUpdateCourse = function() {
+		var form = $( 'form#post' );
+
+		form.unbind( 'submit' ).on( 'submit', CoursePress.updateCourse );
+		form.submit();
+
+		return false;
+	};
+
 	// Try to keep only one of these blocks and use functions/objects instead
 	$( document ).ready( function() {
 		setup_UI();
@@ -1782,7 +1823,9 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			return false;
 		}
 	})
-	.on( 'change', '[name="meta_basic_certificate"]', toggleCertificatePreview );
+	.on( 'change', '[name="meta_basic_certificate"]', toggleCertificatePreview )
+	.on( 'click', '.post-type-course #publish, .post-type-course #search-submit', CoursePress.maybeUpdateCourse )
+	.on( 'submit', '.post-type-course form#post', CoursePress.updateCourse );
 
 })( jQuery );
 

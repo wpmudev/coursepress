@@ -49,6 +49,9 @@ class CoursePress_Admin_Controller_Menu {
 		$labels = $this->get_labels();
 
 		if ( ! empty( $this->parent_slug ) ) {
+			$post_type = CoursePress_Data_Course::get_post_type_name();
+			$this->parent_slug = 'edit.php?post_type=' . $post_type;
+
 			// It's a sub-menu
 			$submenu = add_submenu_page( $this->parent_slug, $labels['title'], $labels['menu_title'], $this->cap, $this->slug, array( $this, 'render_page' ) );
 
@@ -190,6 +193,12 @@ class CoursePress_Admin_Controller_Menu {
 				wp_enqueue_script( 'chosen', $url . 'asset/js/external/chosen.jquery.min.js' );
 				wp_enqueue_script( 'coursepress_course', $url . 'asset/js/coursepress-course.js', $course_dependencies, $version );
 				wp_enqueue_script( 'jquery-treegrid', $url . 'asset/js/external/jquery.treegrid.min.js' );
+
+				$script = $url . 'asset/js/admin-general.js';
+				$sticky = $url . 'asset/js/external/sticky.min.js';
+
+				wp_enqueue_script( 'coursepress_admin_general_js', $script, array( 'jquery' ), $version, true );
+				wp_enqueue_script( 'sticky_js', $sticky, array( 'jquery' ), $version, true );
 			}
 
 			// Print the script required for this page
