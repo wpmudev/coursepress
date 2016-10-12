@@ -83,7 +83,7 @@ class CoursePress_Admin_Table_Students extends CoursePress_Admin_Table_Instructo
 	}
 
 	public function column_courses( $user_id ) {
-		$courses = CoursePress_Data_Student::count_enrolled_courses_ids( $user_id );
+		$courses = CoursePress_Data_Student::count_enrolled_courses_ids( $user_id, true );
 		$profile_link = add_query_arg(
 			array( 'view' => 'profile', 'student_id' => $user_id )
 		);

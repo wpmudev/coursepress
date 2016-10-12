@@ -1677,18 +1677,29 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 	}
 
 	// UPDATE COURSE
-	CoursePress.updateCourse = function() {
+	CoursePress.updateCourse = function( ev ) {
 		var form = $(this),
 			finishbutton = $( '.finish.step-7' )
 		;
+
+		if ( 0 === finishbutton.length ) {
+			// Search students helper
+			var s = $( '[name="s"]', form ),
+				url = $( '[name="_wp_http_referer"]' );
+
+			form.attr( 'action', url.val() );
+
+			return true;
+		}
 
 		// Trigger finish event
 		finishbutton.trigger( 'click' );
 
 		if ( ! CoursePress.Course.hasError ) {
-			// Continue submission
 			return true;
 		}
+
+		ev.stopImmediatePropagation();
 
 		return false;
 	};
@@ -1698,6 +1709,8 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 
 		form.unbind( 'submit' ).on( 'submit', CoursePress.updateCourse );
 		form.submit();
+
+		return false;
 	};
 
 	// Try to keep only one of these blocks and use functions/objects instead
@@ -1809,8 +1822,8 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		}
 	})
 	.on( 'change', '[name="meta_basic_certificate"]', toggleCertificatePreview )
-	.on( 'click', '.post-type-course #publish', CoursePress.maybeUpdateCourse )
-	.on( 'submit', '.post-type-course form#post', CouresPress.updateCourse );
+	.on( 'click', '.post-type-course #publish, .post-type-course #search-submit', CoursePress.maybeUpdateCourse )
+	.on( 'submit', '.post-type-course form#post', CoursePress.updateCourse );
 
 })( jQuery );
 
