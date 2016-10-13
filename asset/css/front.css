@@ -214,62 +214,71 @@ tester {
 }
 
 .course_list_box_item {
-  margin: 10px 10px 0 0;
+  margin: 10px 0 25px 0;
   position: relative;
   transform-style: preserve-3d;
   overflow: hidden;
   clear: both;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  background-color: #FFF;
+  padding: 15px;
 }
 .course_list_box_item * {
   box-sizing: border-box;
 }
 .course_list_box_item .course-title {
-  margin: 0;
+  margin-top: 0;
   padding: 0;
 }
 .course_list_box_item .course-summary p:last-child {
   margin-bottom: 0;
 }
 .course_list_box_item .course-information {
-  padding: 0 10px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  border-left: 5px solid rgba(0, 0, 0, 0.2);
+  padding: 0 0 0 25px;
+  border: 0;
+}
+.course_list_box_item .instructor-list {
+  display: block;
+  margin: 15px 0;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  border-width: 1px 0;
+  padding: 8px 0;
 }
 .course_list_box_item.has-thumbnail .course-thumbnail {
+  position: relative;
   width: 40%;
   float: left;
   padding-right: 2px;
-  position: absolute;
   top: 0;
   bottom: 0;
+}
+.course_list_box_item.has-thumbnail .course-thumbnail figure {
+  margin: 0;
+  line-height: 0;
+}
+.course_list_box_item.has-thumbnail .course-thumbnail img {
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  padding: 8px;
+  background-color: #F2F2F2;
 }
 .course_list_box_item.has-thumbnail .course-information {
   width: 60%;
   float: right;
 }
 .course_list_box_item .apply-button-details {
-  position: absolute;
-  bottom: 5px;
-  right: 5px;
-  float: right;
-  padding: 5px 15px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 5px 12px;
-  text-decoration: none;
-  -webkit-text-decoration-style: none;
-  text-decoration-style: none;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  background-color: #F4F4F4;
-  cursor: pointer;
-  color: inherit;
+  display: none;
 }
-.course_list_box_item .apply-button-details:hover {
-  text-decoration: none;
+.course_list_box_item .course-meta-information:after {
+  content: '';
+  display: block;
+  clear: both;
 }
-.course_list_box_item .apply-button-details a {
-  text-decoration: none;
-  border: 0;
-  color: inherit;
+.course_list_box_item .course-meta-information .course-language,
+.course_list_box_item .course-meta-information .course-start-date,
+.course_list_box_item .course-meta-information .course-category,
+.course_list_box_item .course-meta-information .course-cost {
+  float: left;
+  margin-right: 20px;
 }
 .course_list_box_item .course-meta-information .course-language:before,
 .course_list_box_item .course-meta-information .course-start-date:before,
@@ -638,6 +647,7 @@ tester {
 .cp .module-elements input[type="text"],
 .cp .module-elements textarea {
   padding: 12px 15px;
+  height: auto;
 }
 .cp .module-elements li input,
 .cp .module-elements li label {
@@ -686,17 +696,11 @@ tester {
 }
 .cp .module-response .cp-student-status .cp-status {
   padding: 4px 12px;
-  font-size: 0.8em;
-  border: 1px solid rgba(0, 0, 0, 0.02);
-  border-radius: 50%;
   text-transform: uppercase;
-  background-color: rgba(0, 0, 0, 0.01);
-}
-.cp .module-response .cp-student-status .cp-status.status-pass {
-  background-color: rgba(147, 147, 0, 0.01);
-}
-.cp .module-response .cp-student-status .cp-status.status-fail {
-  background-color: red;
+  border: 5px double rgba(0, 0, 0, 0.1);
+  background-color: #FFF;
+  border-radius: 10px;
+  font-size: 80%;
 }
 .cp .module-response .cp-answers .chosen-answer {
   display: inline-block;
@@ -710,6 +714,14 @@ tester {
 }
 .cp .module-response .cp-answers .chosen-answer.correct:before {
   content: "\f147";
+}
+.cp .module-response .quiz-results table {
+  text-align: left;
+  border: 0;
+}
+.cp .module-response .quiz-results td, .cp .module-response .quiz-results th {
+  padding: 5px 15px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 .cp .invalid-extension {
   margin: 25px 0 0 0;
@@ -729,11 +741,19 @@ tester {
   font-size: 14px;
   opacity: 0.8;
 }
+.cp .unit-pager {
+  display: block;
+  clear: both;
+  padding: 0;
+  text-align: left;
+}
 .cp .prev-button,
 .cp .next-button {
   display: inline-block;
   cursor: pointer;
   margin-top: 10px;
+  padding: 8px 25px;
+  font-size: 120%;
 }
 .cp .prev-button a,
 .cp .next-button a {

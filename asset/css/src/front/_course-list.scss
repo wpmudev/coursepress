@@ -1,32 +1,51 @@
 .course_list_box_item {
-	margin: 10px 10px 0 0;
+	margin: 10px 0 25px 0;
 	position: relative;
 	transform-style: preserve-3d;
 	overflow: hidden;
 	clear: both;
+	border: 1px solid rgba(0, 0, 0, 0.04);
+	background-color: #FFF;
+	padding: 15px;
+
 	* {
 		box-sizing: border-box;
 	}
 	.course-title {
-		margin: 0;
+		margin-top: 0;
 		padding: 0;
 	}
 	.course-summary p:last-child {
 		margin-bottom: 0;
 	}
 	.course-information {
-		padding: 0 10px;
-		border: 1px solid rgba(0, 0, 0, 0.2);
-		border-left: 5px solid rgba(0, 0, 0, 0.2);
+		padding: 0 0 0 25px;
+		border: 0;
+	}
+	.instructor-list {
+		display: block;
+		margin: 15px 0;
+		border: 1px solid rgba(0, 0, 0, 0.04);
+		border-width: 1px 0;
+		padding: 8px 0;
 	}
 	&.has-thumbnail {
 		.course-thumbnail {
+			position: relative;
 			width: 40%;
 			float: left;
 			padding-right: 2px;
-			position: absolute;
 			top: 0;
 			bottom: 0;
+			figure {
+				margin: 0;
+				line-height: 0;
+			}
+			img {
+				border: 1px solid rgba(0, 0, 0, 0.04);
+				padding: 8px;
+				background-color: #F2F2F2;
+			}
 		}
 		.course-information {
 			width: 60%;
@@ -34,17 +53,20 @@
 		}
 	}
 	.apply-button-details {
-		position: absolute;
-		bottom: 5px;
-		right: 5px;
-		float: right;
-		@include button;
+		display: none;
 	}
 	.course-meta-information {
+		&:after {
+			content: '';
+			display: block;
+			clear: both;
+		}
 		.course-language,
 		.course-start-date,
 		.course-category,
 		.course-cost {
+			float: left;
+			margin-right: 20px;
 			&:before {
 				font-family: fontawesome;
 				display: inline-block;

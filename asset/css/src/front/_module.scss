@@ -59,6 +59,7 @@
 		input[type="text"],
 		textarea {
 			padding: 12px 15px;
+			height: auto;
 		}
 		li {
 			input,
@@ -112,17 +113,15 @@
 
 			.cp-status {
 				padding: 4px 12px;
-				font-size: 0.8em;
-				border: 1px solid rgba(0, 0, 0, 0.02);
-				border-radius: 50%;
 				text-transform: uppercase;
-				background-color: rgba(0, 0, 0, 0.01);
+				border: 5px double rgba(0, 0, 0, 0.1);
+				background-color: #FFF;
+				border-radius: 10px;
+				font-size: 80%;
 
 				&.status-pass {
-					background-color: rgba(147, 147, 0, 0.01);
 				}
 				&.status-fail {
-					background-color: red;
 				}
 			}
 		}
@@ -140,6 +139,16 @@
 				&.correct:before {
 					content: "\f147";
 				}
+			}
+		}
+		.quiz-results {
+			table {
+				text-align: left;
+				border: 0;
+			}
+			td, th {
+				padding: 5px 15px;
+				border: 1px solid rgba(0, 0, 0, 0.04);
 			}
 		}
 	}
@@ -161,11 +170,19 @@
 			opacity: 0.8;
 		}
 	}
+	.unit-pager {
+		display: block;
+		clear: both;
+		padding: 0;
+		text-align: left;
+	}
 	.prev-button,
 	.next-button {
 		display: inline-block;
 		cursor: pointer;
 		margin-top: 10px;
+		padding: 8px 25px;
+		font-size: 120%;
 		a {
 			@include reset_a;
 			color: inherit;
