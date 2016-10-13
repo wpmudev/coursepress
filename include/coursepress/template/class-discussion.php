@@ -120,9 +120,8 @@ class CoursePress_Template_Discussion {
 				$url = CoursePress_Core::get_slug( 'courses/', true ) . get_post_field( 'post_name', $course_id );
 				$url .= '/' . CoursePress_Core::get_slug( 'unit/' ) . get_post_field( 'post_name', $unit_id );
 				$url .= '#module-' . $post_id;
+				return $url;
 			}
-
-			return $url;
 		}
 	}
 
