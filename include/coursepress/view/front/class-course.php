@@ -406,10 +406,9 @@ class CoursePress_View_Front_Course {
 		$theme_file = locate_template( array( 'single-course.php' ) );
 		if ( $theme_file ) {
 			self::$template = $theme_file;
-			if ( CoursePress_Data_Course::is_course( $course_id ) ) {
-				$content = get_post( $course_id );
-				$content = $content->post_content;
-				$content = apply_filters( 'the_content', $content );
+			$course_post = get_post( $course_id );
+			if ( $course_post && CoursePress_Admin_Courses::_is_course($course_post) ) {
+				$content = apply_filters( 'the_content', $course_post->post_content );
 			}
 		} else {
 			$content = CoursePress_Template_Course::course();
