@@ -220,6 +220,7 @@
 		display: inline-block;
 		cursor: pointer;
 		margin-top: 10px;
+		@include button;
 		a {
 			@include reset_a;
 			color: inherit;
