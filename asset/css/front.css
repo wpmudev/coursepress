@@ -820,6 +820,26 @@ tester {
   display: inline-block;
   cursor: pointer;
   margin-top: 10px;
+  padding: 5px 15px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 5px 12px;
+  text-decoration: none;
+  -webkit-text-decoration-style: none;
+  text-decoration-style: none;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  background-color: #F4F4F4;
+  cursor: pointer;
+  color: inherit;
+}
+.coursepress-focus-view .focus-nav-prev:hover,
+.coursepress-focus-view .focus-nav-next:hover {
+  text-decoration: none;
+}
+.coursepress-focus-view .focus-nav-prev a,
+.coursepress-focus-view .focus-nav-next a {
+  text-decoration: none;
+  border: 0;
+  color: inherit;
 }
 .coursepress-focus-view .focus-nav-prev a,
 .coursepress-focus-view .focus-nav-next a {
