@@ -5,6 +5,15 @@
 		margin: 15px 0 25px 0;
 		clear: both;
 		border: 1px solid transparent;
+		font-size: 110%;
+		border: 1px solid rgba(0, 0, 0, 0.04);
+		padding: 15px 20px;
+		border-radius: 5px;
+		box-sizing: border-box;
+
+		* {
+			box-sizing: border-box;
+		}
 
 		.comment-reply-title {
 			margin-bottom: 0;
@@ -18,7 +27,10 @@
 		}
 	}
 	.module-header {
-		margin: 25px 0;
+		margin: 0 0 25px 0;
+		.modul-title {
+			margin: 0;
+		}
 		.is-mandatory {
 			float: right;
 			font-size: 0.8em;
@@ -35,14 +47,16 @@
 	.module-elements {
 		margin: 15px 0;
 		select,
-		[type="text"],
+		input[type="text"],
 		textarea {
+			display: block;
 			width: 100%;
+			max-width: 100%;
 			option {
 				padding: 4px 12px;
 			}
 		}
-		[type="text"],
+		input[type="text"],
 		textarea {
 			padding: 12px 15px;
 		}

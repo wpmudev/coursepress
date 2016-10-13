@@ -583,6 +583,14 @@ tester {
   margin: 15px 0 25px 0;
   clear: both;
   border: 1px solid transparent;
+  font-size: 110%;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  padding: 15px 20px;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+.cp .cp-module-content * {
+  box-sizing: border-box;
 }
 .cp .cp-module-content .comment-reply-title {
   margin-bottom: 0;
@@ -595,7 +603,10 @@ tester {
   margin: 25px 0;
 }
 .cp .module-header {
-  margin: 25px 0;
+  margin: 0 0 25px 0;
+}
+.cp .module-header .modul-title {
+  margin: 0;
 }
 .cp .module-header .is-mandatory {
   float: right;
@@ -613,16 +624,18 @@ tester {
   margin: 15px 0;
 }
 .cp .module-elements select,
-.cp .module-elements [type="text"],
+.cp .module-elements input[type="text"],
 .cp .module-elements textarea {
+  display: block;
   width: 100%;
+  max-width: 100%;
 }
 .cp .module-elements select option,
-.cp .module-elements [type="text"] option,
+.cp .module-elements input[type="text"] option,
 .cp .module-elements textarea option {
   padding: 4px 12px;
 }
-.cp .module-elements [type="text"],
+.cp .module-elements input[type="text"],
 .cp .module-elements textarea {
   padding: 12px 15px;
 }
