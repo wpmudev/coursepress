@@ -10,15 +10,23 @@
 	}
 
 	.enroll-box {
-		overflow: hidden;
-		border-top: 1px solid rgba(0, 0, 0, 0.2);
-		position: relative;
+		display: block;
 		margin: 15px 0;
-		padding-top: 15px;
+		border: 0;
+		padding: 20px 0;
+
 		&:after {
 			display: block;
 			content: '';
 			clear: both;
+		}
+		strong {
+			background-color: transparent;
+			text-shadow: none;
+			color: inherit;
+			font-size: 100%;
+			font-weight: inherit;
+			min-width: 160px;
 		}
 		.course-completed-button {
 			position: relative;
@@ -118,20 +126,37 @@
 		clear: both;
 	}
 	.instructor-block {
+		display: block;
+		margin: 15px 0;
+		border: 1px solid rgba(0, 0, 0, 0.04);
+		border-width: 1px 0;
 		padding: 15px 0;
-		border-top: 1px solid rgba(0, 0, 0, 0.2);
-		border-bottom: 3px solid rgba(0, 0, 0, 0.2);
+		.instructor-profile {
+			border: 1px solid rgba(0, 0, 0, 0.04);
+			display: inline-block;
+			text-align: center;
+			padding: 10px;
+			background-color: #FFF;
+			.avatar {
+				margin-bottom: 5px;
+			}
+		}
 	}
 }
 .coursepress-course-share {
 	display: block;
 	margin: 15px 0;
+	border: 1px solid rgba(0, 0, 0, 0.04);
+	border-width: 1px 0;
+	padding: 8px 0;
+
 	a, a[href] {
 		@include reset_a;
-		margin-left: 5px;
-		* {
-			padding: 0 0 0.4em 0;
-			vertical-align: middle;
+		margin: 0 5px;
+		display: inline-block;
+		vertical-align: middle;
+		span {
+			font-size: 130%;
 		}
 	}
 }
