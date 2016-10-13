@@ -203,10 +203,9 @@ class CoursePress_Helper_Upgrade {
 			'student_progress',
 			'module_page',
 			'student_enrolled',
-            'course_completion',
-            'unit_page_title',
+			'course_completion',
+			'unit_page_title',
 		);
-//				$updates = array();
 		foreach ( $updates as $function_sufix ) {
 			$function = 'course_upgrade_'.$function_sufix;
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
@@ -221,7 +220,6 @@ class CoursePress_Helper_Upgrade {
 		for ( $i = 1; $i < 8; $i++ ) {
 			CoursePress_Data_Course::update_setting( $course->ID, 'setup_step_'.$i, 'saved' );
 		}
-		//l(CoursePress_Data_Course::get_setting( $course->ID ));
 		return true;
 	}
 
@@ -683,7 +681,7 @@ class CoursePress_Helper_Upgrade {
 		if ( empty( $units ) ) {
 			return;
 		}
-		foreach( $units as $unit_id ) {
+		foreach ( $units as $unit_id ) {
 			$split_to_pages = get_post_meta( $unit_id, '_cp_split_to_pages', true );
 			if ( empty( $split_to_page ) || 'done' != $split_to_pages ) {
 				$args = array(
@@ -722,8 +720,8 @@ class CoursePress_Helper_Upgrade {
 		}
 		CoursePress_Data_Course::update_setting( $course->ID, 'minimum_grade_required', 100 );
 		$defaults = CoursePress_Data_Course::get_defaults_setup_pages_content();
-		foreach( $defaults as $group => $data ) {
-			foreach( $data as $name => $content ) {
+		foreach ( $defaults as $group => $data ) {
+			foreach ( $data as $name => $content ) {
 				$key = sprintf( '%s_%s', $group, $name );
 				CoursePress_Data_Course::update_setting( $course->ID, $key, $content );
 			}
@@ -749,22 +747,28 @@ class CoursePress_Helper_Upgrade {
 			}
 			$new = array();
 			$i = 1;
-			foreach( $titles as $title ) {
-				$new['page_'.$i++] = $title;
+			foreach ( $titles as $title ) {
+				$new[ 'page_'.$i++ ] = $title;
 			}
 			delete_post_meta( $unit_id, 'page_title' );
-			CoursePress_Helper_Utility::add_meta_unique($unit_id, 'page_title', $new );
+			CoursePress_Helper_Utility::add_meta_unique( $unit_id, 'page_title', $new );
 		}
 		self::$messages[] = __( 'Section titles (former page titles) inside units cinverted.', 'cp' );
 		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
 	}
 
+	/**
+	 * Check is upgrade of this section needed?
+	 */
 	private static function upgrade_step_check( $course_id, $name ) {
 		$meta_key = sprintf( '_cp_us_%s', $name );
 		$done = get_post_meta( $course_id, $meta_key, true );
 		return 'done' == $done;
 	}
 
+	/**
+	 * Set upgrade is done for function.
+	 */
 	private static function upgrade_step_set_done( $course_id, $name ) {
 		$meta_key = sprintf( '_cp_us_%s', $name );
 		CoursePress_Helper_Utility::add_meta_unique( $course_id, $meta_key, 'done' );
@@ -772,5 +776,4 @@ class CoursePress_Helper_Upgrade {
 			error_log( sprintf( 'COURSE UPDATE: done: %s', $name ) );
 		}
 	}
-
 }
