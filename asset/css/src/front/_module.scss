@@ -34,10 +34,24 @@
 	}
 	.module-elements {
 		margin: 15px 0;
-		select {
+		select,
+		[type="text"],
+		textarea {
 			width: 100%;
 			option {
 				padding: 4px 12px;
+			}
+		}
+		[type="text"],
+		textarea {
+			padding: 12px 15px;
+		}
+		li {
+			input,
+			label {
+				display: inline-block;
+				vertical-align: top;
+				margin-right: 5px;
 			}
 		}
 		.file {
@@ -72,16 +86,7 @@
 		.question {
 			font-size: 110%;
 			font-weight: 600;
-		}
-		ul {
-			margin-bottom: 25px;
-		}
-		li {
-			label {
-				display: block;
-				padding-left: 25px;
-				margin-top: -28px;
-			}
+			margin: 25px 0 15px 0;
 		}
 	}
 	.module-response {
