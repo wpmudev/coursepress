@@ -275,10 +275,11 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 			'value' => 'all',
 		);
 
+		$courses =  CoursePress_Data_Notification::get_courses();
 		if ( current_user_can( 'manage_options' ) ) {
 			$courses = false;
 		} elseif ( CoursePress_Data_Capabilities::can_add_notification_to_all() ) {
-			$courses =  CoursePress_Data_Notification::get_courses();
+			$courses = false;
 		}
 
 		echo CoursePress_Helper_UI::get_course_dropdown( 'course_id', 'course_id', $courses, $options );

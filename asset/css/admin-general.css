@@ -198,6 +198,10 @@ A. Responsive
 /*--------------------------------------------------------------
 # 3. Settings Boxes
 --------------------------------------------------------------*/
+.tab-content {
+  min-height: 1px;
+}
+
 .tab-content .postbox h3 {
   font-size: 1.2em;
   line-height: 1.4em;
@@ -378,6 +382,9 @@ A. Responsive
 /*--------------------------------------------------------------
 # 5. Course Setup
 --------------------------------------------------------------*/
+/**
+ * colors
+ */
 #student-add {
   min-width: 300px;
 }
@@ -432,21 +439,17 @@ A. Responsive
 }
 
 #course-setup-steps .step-content label.required:after {
-  content: '*';
+  content: ' *';
   color: #E43037;
 }
 
 #course-setup-steps .step-content .disabled label.required:after {
-  content: '*';
-  color: #dddddd;
+  content: ' *';
+  color: #ddd;
 }
 
 #course-setup-steps .step-content .disabled label {
-  color: #dddddd;
-}
-
-#course-setup-steps .step-content label p.description {
-  font-weight: normal;
+  color: #ddd;
 }
 
 #course-setup-steps .step-content label.checkbox {
@@ -455,6 +458,9 @@ A. Responsive
   margin: 10px 0 0 0;
   font-size: 1em;
   cursor: pointer;
+}
+#course-setup-steps .step-content label p.description {
+  font-weight: normal;
 }
 
 #course-setup-steps .step-content input.wide {
@@ -958,7 +964,7 @@ input.button.button-primary.instructor-assign {
 .ui-spinner-button.ui-spinner-up {
   top: -0.8em;
   z-index: 1;
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid #ddd;
 }
 
 .ui-spinner-button.ui-spinner-down {
@@ -975,7 +981,7 @@ input.button.button-primary.instructor-assign {
 
 #course-setup-steps .step-content .payment-message {
   background: #f1f1f1;
-  border: 1px solid #dddddd;
+  border: 1px solid #ddd;
   border-radius: 10px;
   padding: 10px;
   margin-top: 10px;
@@ -1992,7 +1998,6 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   padding: 25px 15px 8px 15px;
 }
 .cp-content .cp-unit-div .cp-modules .module-grade {
-  width: 50px;
   text-align: center;
 }
 .cp-content .cp-unit-div .cp-modules .cp-assess-label {
@@ -2334,6 +2339,11 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 /*--------------------------------------------------------------
 # B. Warnings, notices and extra things
 --------------------------------------------------------------*/
+.post-type-course .misc-pub-section#visibility,
+.post-type-course .misc-pub-section.misc-pub-curtime {
+  display: none;
+}
+
 /**
  * Invalid file extension
  */
@@ -2359,7 +2369,8 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 /**
  * jQuery Date Picker
  */
-body[class*="_page_coursepress_course"] .ui-datepicker {
+body[class*="_page_coursepress_course"] .ui-datepicker,
+.post-type-course .ui-datepicker {
   background: #F1F1F1;
   color: #333333;
   border-radius: 4px;
@@ -2368,7 +2379,8 @@ body[class*="_page_coursepress_course"] .ui-datepicker {
   padding: 4px;
   font-family: Verdana,Arial,sans-serif;
 }
-body[class*="_page_coursepress_course"] .ui-datepicker-header {
+body[class*="_page_coursepress_course"] .ui-datepicker-header,
+.post-type-course .ui-datepicker-header {
   position: relative;
   background: #0091CD;
   padding: 10px;
@@ -2378,17 +2390,22 @@ body[class*="_page_coursepress_course"] .ui-datepicker-header {
   color: #fff;
 }
 body[class*="_page_coursepress_course"] .ui-datepicker-prev,
-body[class*="_page_coursepress_course"] .ui-datepicker-next {
+body[class*="_page_coursepress_course"] .ui-datepicker-next,
+.post-type-course .ui-datepicker-prev,
+.post-type-course .ui-datepicker-next {
   position: absolute;
   top: -0.5em;
 }
-body[class*="_page_coursepress_course"] .ui-datepicker-prev {
+body[class*="_page_coursepress_course"] .ui-datepicker-prev,
+.post-type-course .ui-datepicker-prev {
   left: 0;
 }
-body[class*="_page_coursepress_course"] .ui-datepicker-next {
+body[class*="_page_coursepress_course"] .ui-datepicker-next,
+.post-type-course .ui-datepicker-next {
   right: 0;
 }
-body[class*="_page_coursepress_course"] .ui-datepicker-prev:after {
+body[class*="_page_coursepress_course"] .ui-datepicker-prev:after,
+.post-type-course .ui-datepicker-prev:after {
   color: #fff;
   content: "\f141";
   font-family: dashicons;
@@ -2396,7 +2413,8 @@ body[class*="_page_coursepress_course"] .ui-datepicker-prev:after {
   height: 16px;
   width: 16px;
 }
-body[class*="_page_coursepress_course"] .ui-datepicker-next:after {
+body[class*="_page_coursepress_course"] .ui-datepicker-next:after,
+.post-type-course .ui-datepicker-next:after {
   color: #fff;
   content: "\f139";
   font-family: dashicons;
@@ -2405,20 +2423,26 @@ body[class*="_page_coursepress_course"] .ui-datepicker-next:after {
   width: 16px;
 }
 body[class*="_page_coursepress_course"] .ui-datepicker-prev span,
-body[class*="_page_coursepress_course"] .ui-datepicker-next span {
+body[class*="_page_coursepress_course"] .ui-datepicker-next span,
+.post-type-course .ui-datepicker-prev span,
+.post-type-course .ui-datepicker-next span {
   text-indent: -9999px;
   display: block;
 }
-body[class*="_page_coursepress_course"] .ui-datepicker .ui-datepicker-calendar td {
+body[class*="_page_coursepress_course"] .ui-datepicker .ui-datepicker-calendar td,
+.post-type-course .ui-datepicker .ui-datepicker-calendar td {
   padding: 0;
 }
-body[class*="_page_coursepress_course"] .ui-datepicker-calendar tr th {
+body[class*="_page_coursepress_course"] .ui-datepicker-calendar tr th,
+.post-type-course .ui-datepicker-calendar tr th {
   padding: 5px 0;
 }
-body[class*="_page_coursepress_course"] .ui-datepicker-calendar tr th span {
+body[class*="_page_coursepress_course"] .ui-datepicker-calendar tr th span,
+.post-type-course .ui-datepicker-calendar tr th span {
   font-size: 0.8em;
 }
-body[class*="_page_coursepress_course"] .ui-datepicker .ui-state-default {
+body[class*="_page_coursepress_course"] .ui-datepicker .ui-state-default,
+.post-type-course .ui-datepicker .ui-state-default {
   width: 2em;
   display: inline-block;
   text-align: right;
@@ -2428,15 +2452,19 @@ body[class*="_page_coursepress_course"] .ui-datepicker .ui-state-default {
   padding: 2px;
   margin: 0;
 }
-body[class*="_page_coursepress_course"] .ui-datepicker .ui-state-default.ui-state-active {
+body[class*="_page_coursepress_course"] .ui-datepicker .ui-state-default.ui-state-active,
+.post-type-course .ui-datepicker .ui-state-default.ui-state-active {
   background: #0091CD;
   color: #fff;
 }
-body[class*="_page_coursepress_course"] .ui-datepicker .ui-state-default.ui-state-highlight {
+body[class*="_page_coursepress_course"] .ui-datepicker .ui-state-default.ui-state-highlight,
+.post-type-course .ui-datepicker .ui-state-default.ui-state-highlight {
   border: 1px solid rgba(0, 145, 205, 0.3);
 }
 body[class*="_page_coursepress_course"] .ui-datepicker .ui-state-default.ui-timepicker-select,
-body[class*="_page_coursepress_course"] .ui-datepicker .ui_tpicker_timezone select {
+body[class*="_page_coursepress_course"] .ui-datepicker .ui_tpicker_timezone select,
+.post-type-course .ui-datepicker .ui-state-default.ui-timepicker-select,
+.post-type-course .ui-datepicker .ui_tpicker_timezone select {
   display: inherit;
   width: inherit;
   padding: 0;

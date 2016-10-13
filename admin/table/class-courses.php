@@ -23,9 +23,6 @@ class CoursePress_Admin_Table_Courses extends WP_Posts_List_Table {
 			'plural' => $post_format['post_args']['labels']['name'],
 			'ajax' => false,
 		) );
-
-		// Course caps
-		CoursePress_Data_Capabilities::course_capabilities();
 	}
 
 	public function prepare_items() {
@@ -34,10 +31,12 @@ class CoursePress_Admin_Table_Courses extends WP_Posts_List_Table {
 
 		$post_status = 'any';
 		$per_page = get_post( 'per_page' );
+		$student_courses = CoursePress_Data_Student::get_enrolled_courses_ids( $this->student_id );
 
 		$args = array(
 			'post_type' => CoursePress_Data_Course::get_post_type_name(),
 			'post_status' => $post_status,
+			'post__in' => $student_courses,
 		);
 
 		$wp_query = new WP_Query( $args );

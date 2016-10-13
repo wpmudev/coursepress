@@ -103,6 +103,7 @@ class CoursePress_View_Admin_Student_Workbook {
 			$units = CoursePress_Data_Course::get_units_with_modules( $selected_course, array( 'publish', 'draft' ) );
 			$active_unit_id = ! empty( $_GET['unit_id'] ) ? (int) $_GET['unit_id'] : null;
 			$active_unit = null;
+			$excluded_modules = array( 'input-textarea', 'input-text' );
 
 			if ( ! empty( $units ) ) :
 			?>
@@ -154,19 +155,22 @@ class CoursePress_View_Admin_Student_Workbook {
 					<tbody>
 						<?php
 							$pages = $active_unit['pages'];
-
-						if ( $pages ) :
-							foreach ( $pages as $page_number => $page ) :
-								?>
+							if ( $pages ) {
+								foreach ( $pages as $page_number => $page ) {
+?>
 								<tr>
 									<th colspan="6">
 										<?php echo $page['title']; ?>
 									</th>
 								</tr>
-								<?php
+<?php
 									$modules = $page['modules'];
 
-								foreach ( $modules as $module_id => $module ) :
+									foreach ( $modules as $module_id => $module ) {
+
+										$attributes = CoursePress_Data_Module::attributes( $module_id );
+										$module_type = $attributes['module_type'];
+
 										$response = CoursePress_Data_Student::get_response(
 											$student_id,
 											$selected_course,
@@ -175,6 +179,9 @@ class CoursePress_View_Admin_Student_Workbook {
 											false,
 											$student_progress
 										);
+										/**
+										 * Grade
+										 */
 										$grade = CoursePress_Data_Student::get_grade(
 											$student_id,
 											$selected_course,
@@ -184,6 +191,14 @@ class CoursePress_View_Admin_Student_Workbook {
 											false,
 											$student_progress
 										);
+										$require_instructor_assessment = ! empty( $attributes['instructor_assessable'] ) && cp_is_true( $attributes['instructor_assessable'] );
+										if ( $require_instructor_assessment || in_array( $module_type, $excluded_modules ) ) {
+											$graded_by = CoursePress_Helper_Utility::get_array_val( $grade, 'graded_by');
+											if ( 'auto' === $graded_by ) {
+												// Set 0 as grade if it is auto-graded
+												$grade = 0;
+											}
+										}
 										$feedback = CoursePress_Data_Student::get_feedback(
 											$student_id,
 											$selected_course,
@@ -195,7 +210,7 @@ class CoursePress_View_Admin_Student_Workbook {
 										);
 										$view_link = '';
 
-										if ( $response ) :
+										if ( $response ) {
 											$view_link = add_query_arg(
 												array(
 													'page' => 'coursepress_assessments',
@@ -207,45 +222,43 @@ class CoursePress_View_Admin_Student_Workbook {
 												admin_url( 'admin.php' )
 											);
 											$view_link = sprintf( '<a href="%s&view_answer">%s</a>', $view_link, __( 'View', 'cp' ) );
-										endif;
-								?>
+										}
+?>
 										<tr>
 											<td width="1%"></td>
 											<td><?php echo $module->post_title; ?></td>
 											<td>
-												<?php
-												if ( $response && ! empty( $response['date'] ) ) :
-														$date_format = get_option( 'date_format' );
-														echo date_i18n( $date_format, strtotime( $response['date'] ) );
-													endif;
-												?>
+<?php
+										if ( $response && ! empty( $response['date'] ) ) {
+											$date_format = get_option( 'date_format' );
+											echo date_i18n( $date_format, strtotime( $response['date'] ) );
+										}
+?>
 											</td>
 											<td><?php echo $view_link; ?></td>
 											<td>
-												<?php
-													echo (-1 == $grade['grade'] ? __( '--', 'cp' ) : $grade['grade'] );
-												?>
+<?php
+										echo (-1 == $grade['grade'] ? __( '--', 'cp' ) : sprintf( '%d%%', $grade['grade'] ) );
+?>
 											</td>
 											<td id="instructor-feedback">
-												<?php
-													$first_last = CoursePress_Helper_Utility::get_user_name( (int) $feedback['feedback_by'] );
-													echo ! empty( $feedback['feedback'] ) ? '<div class="feedback"><div class="comment">' . $feedback['feedback'] . '</div><div class="instructor"> – <em>' . esc_html( $first_last ) . '</em></div></div>' : '';
-												?>
+<?php
+										$first_last = CoursePress_Helper_Utility::get_user_name( (int) $feedback['feedback_by'] );
+										echo ! empty( $feedback['feedback'] ) ? '<div class="feedback"><div class="comment">' . $feedback['feedback'] . '</div><div class="instructor"> – <em>' . esc_html( $first_last ) . '</em></div></div>' : '';
+?>
 											</td>
 										</tr>
-								<?php
-									endforeach;
-								?>
-							<?php
-								endforeach;
-							endif;
-						?>
+<?php
+									}
+								}
+							}
+?>
 					</tbody>
 				</table>
-			<?php
-				endif;
-			?>
+<?php
+endif;
+?>
 		</div><!-- end .wrap -->
-		<?php
+<?php
 	}
 }

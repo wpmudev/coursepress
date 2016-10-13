@@ -214,12 +214,52 @@ class CoursePress_Data_Discussion {
 		return $post;
 	}
 
-	public static function init() {
+	public static function before_add_comment( $comment_post_ID, $course_id ) {
+		// Let's re-register module post type
+		$post_format = CoursePress_Data_Module::get_format();
+		register_post_type( $post_format['post_type'], $post_format['post_args'] );
+
+		// Add comment filters
+		add_filter( 'comments_open', '__return_true' );
 		// Auto-approved discussion comment
 		add_filter( 'pre_comment_approved', array( __CLASS__, 'approved_discussion_comment' ), 100, 2 );
-
 		// Alter comments before saving to DB.
 		add_filter( 'preprocess_comment', array( __CLASS__, 'preprocess_discussion_comment' ), 100 );
+	}
+
+	public static function after_add_comment( $comment_id, $student_id, $comment_post_ID, $course_id ) {
+		// Approved this comment
+		wp_set_comment_status( $comment_id, 'approve' );
+
+		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
+
+		// Record visit action
+		if ( ! isset( $student_progress['units'] ) && ! isset( $student_progress['units'][ $comment_id] ) ) {
+			CoursePress_Helper_Utility::set_array_val( $student_progress, 'units/' . $comment_id, array() );
+			CoursePress_Data_Student::update_completion_data( $student_id, $course_id, $student_progress );
+		}
+
+		/** notify users */
+		CoursePress_Data_Discussion_Cron::add_comment_id( $comment_id );
+
+		remove_filter( 'comments_open', '__return_true' );
+		// Auto-approved discussion comment
+		remove_filter( 'pre_comment_approved', array( __CLASS__, 'approved_discussion_comment' ), 100, 2 );
+		// Alter comments before saving to DB.
+		remove_filter( 'preprocess_comment', array( __CLASS__, 'preprocess_discussion_comment' ), 100 );
+	}
+
+	public static function init() {
+		// Trigger hooks before adding comment
+		add_action( 'coursepress_before_add_comment', array( __CLASS__, 'before_add_comment' ), 10, 2 );
+		// Trigger hooks after adding comment
+		add_action( 'coursepress_after_add_comment', array( __CLASS__, 'after_add_comment' ), 10, 4 );
+
+		// Auto-approved discussion comment
+		//add_filter( 'pre_comment_approved', array( __CLASS__, 'approved_discussion_comment' ), 100, 2 );
+
+		// Alter comments before saving to DB.
+		//add_filter( 'preprocess_comment', array( __CLASS__, 'preprocess_discussion_comment' ), 100 );
 
 		// Redirect back
 		add_filter( 'comment_post_redirect', array( __CLASS__, 'redirect_back' ), 10, 2 );
@@ -230,6 +270,15 @@ class CoursePress_Data_Discussion {
 		// Unsubscribe message
 		add_action( 'the_content', array( __CLASS__, 'unsubscribe_from_discussion' ) );
 
+		/**
+		 * Modifi args for thread
+		 */
+		add_filter( 'wp_list_comments_args', array( __CLASS__, 'wp_list_comments_args' ) );
+
+		/**
+		 * Avoid comments on add new thread page
+		 */
+		add_filter( 'comments_template_query_args', array( __CLASS__, 'comments_template_query_args' ) );
 	}
 
 	public static function approved_discussion_comment( $is_approved, $commentdata ) {
@@ -292,11 +341,13 @@ class CoursePress_Data_Discussion {
 	 **/
 	public static function redirect_back( $location, $comment ) {
 		$post_id = $comment->comment_post_ID;
-
+		$post_type = get_post_type( $post_id );
+		if ( $post_type == self::$post_type ) {
+			$post_id = get_post_meta( $post_id, 'course_id', true );
+		}
 		if ( self::is_comment_in_discussion( $post_id ) ) {
 			$location = CoursePress_Template_Discussion::discussion_url( $post_id );
 		}
-
 		return $location;
 	}
 
@@ -663,5 +714,119 @@ class CoursePress_Data_Discussion {
 	public static function is_correct_post_type( $post ) {
 		$post_type = get_post_type( $post );
 		return self::$post_type == $post_type;
+	}
+
+	/**
+	 * Setup comments thread data.
+	 *
+	 * @since 2.0.0
+	 */
+	public static function wp_list_comments_args( $args ) {
+		global $post;
+		/**
+		 * No post? return!
+		 */
+		if ( ! is_object( $post ) ) {
+			return $args;
+		}
+		/**
+		 * Wrong post type? return!
+		 */
+		if ( 'course_discussion' != $post->post_type ) {
+			return $args;
+		}
+		/**
+		 * How deep (in comment replies) should the comments be fetched.
+		 */
+		$value = get_post_meta( $post->ID, 'thread_comments_depth', true );
+		if ( ! empty( $value ) ) {
+			$args['max_depth'] = $value;
+		}
+		/**
+		 * The number of items to show for each page of comments.
+		 */
+		$value = get_post_meta( $post->ID, 'comments_per_page', true );
+		if ( ! empty( $value ) ) {
+			$args['per_page'] = $value;
+		}
+		return $args;
+	}
+
+	/**
+	 * Disable comments on add new thread page.
+	 *
+	 * @since 2.0.0
+	 */
+	public static function comments_template_query_args( $args ) {
+		// Set default arguments
+		$args = wp_parse_args( $args, array(
+			'number' => 20,
+		) );
+
+		$discussion_name = get_query_var( 'discussion_name' );
+		if ( empty( $discussion_name ) ) {
+			return $args;
+		}
+		$add_new = CoursePress_Core::get_setting( 'slugs/discussions_new', 'add_new_discussion' );
+		if ( $add_new == $discussion_name ) {
+			$args['post_id'] = -1;
+		}
+		global $post;
+		/**
+		 * No post? return!
+		 */
+		if ( ! is_object( $post ) ) {
+			return $args;
+		}
+		/**
+		 * Wrong post type? return!
+		 */
+		if ( 'course_discussion' != $post->post_type ) {
+			return $args;
+		}
+		/**
+		 * The number of items to show for each page of comments.
+		 */
+		$value = get_post_meta( $post->ID, 'comments_per_page', true );
+		if ( ! empty( $value ) ) {
+			$args['number'] = $value;
+		}
+		/**
+		 * (string) Order of results. Accepts 'ASC' or 'DESC'.
+		 */
+		$args['order'] = 'ASC';
+		$args['orderby'] = 'comment_date';
+		$value = get_post_meta( $post->ID, 'comments_order', true );
+		if ( ! empty( $value ) && 'older' == $value ) {
+			$args['order'] = 'DESC';
+		}
+		/**
+		 * Page (offset)
+		 */
+		$cpage = intval( get_query_var( 'cpage' ) );
+		$args['offset'] = $args['number'] * $cpage;
+		return $args;
+	}
+
+	/*
+	 * Check current user submitted at least 1 comment/reply
+	 *
+	 * @since 2.0
+	 * @param (int) $student_id			User ID.
+	 * @param (int) $post_id			Course, unit or module ID.
+	 * @return (bool) Returns true if there's at least 1 reply found.
+	 **/
+	public static function have_comments( $student_id, $post_id ) {
+		$args = array(
+			'post_id' => $post_id,
+			'user_id' => $student_id,
+			'order' => 'ASC',
+			'offset' => 0,
+			'number' => 1, // We only need one to verify if current user posted a comment.
+			'fields' => 'ids',
+		);
+		$comments = get_comments( $args );
+
+		return count( $comments ) > 0;
 	}
 }

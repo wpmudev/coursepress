@@ -6,6 +6,7 @@ class CoursePress_View_Front_Login {
 
 	public static function init() {
 		add_action( 'parse_request', array( __CLASS__, 'parse_request' ) );
+		add_action( 'wp_login', array( __CLASS__, 'log_student_activity_login' ), 10, 2 );
 	}
 
 	/**
@@ -137,5 +138,14 @@ class CoursePress_View_Front_Login {
 			)
 		);
 
+	}
+
+	/**
+	 * Save student activity - login
+	 *
+	 * @since 2.0.0
+	 */
+	public static function log_student_activity_login( $user_login, $user ) {
+		CoursePress_Data_Student::log_student_activity( 'login', $user->ID );
 	}
 }

@@ -39,6 +39,7 @@ class CoursePress_Helper_Integration_MarketPress {
 			return false;
 		}
 		self::$is_active = true;
+		add_filter( 'coursepress_is_marketpress_active', '__return_true' );
 
 		// Enable Payment Support
 		add_filter(
@@ -805,8 +806,9 @@ class CoursePress_Helper_Integration_MarketPress {
 	 */
 	private static function _get_add_to_cart_button_by_course_id( $course_id ) {
 		$product_id = self::get_product_id( $course_id );
-		$product = new MP_Product( $product_id );
-		return $product->buy_button( false );
+		$shortcode = sprintf( '[mp_buy_button product_id="%s"]', $product_id );
+
+		return do_shortcode( $shortcode );
 	}
 
 	/**

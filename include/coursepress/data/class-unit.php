@@ -601,7 +601,7 @@ class CoursePress_Data_Unit {
 	 * @param integer $course_id course ID.
 	 * @param array $meta Meta data.
 	 */
-	public static function show_new_on_list( $unit_id, $course_id, $meta ) {
+	public static function show_new_on_list( $unit_id, $course_id, $meta = array() ) {
 		/**
 		 * unit
 		 */
@@ -659,13 +659,15 @@ class CoursePress_Data_Unit {
 	 * Generate the unit url
 	 *
 	 * @param (int) $unit_id
+	 * @return Returns unit url structure.
 	 **/
 	public static function get_unit_url( $unit_id = 0 ) {
 		if ( ! empty( $unit_id ) ) {
 			$course_id = get_post_field( 'post_parent', $unit_id );
 			$course_url = CoursePress_Data_Course::get_course_url( $course_id );
 			$unit_url = CoursePress_Core::get_slug( 'unit/' );
-			$unit_slug = get_post_field( 'post_name', $unit_id );
+			$unit = get_post( $unit_id );
+			$unit_slug = $unit->post_name;
 
 			return $course_url . $unit_url . trailingslashit( $unit_slug );
 		}

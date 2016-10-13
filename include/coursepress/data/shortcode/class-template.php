@@ -82,10 +82,10 @@ class CoursePress_Data_Shortcode_Template {
 
 		$a = shortcode_atts( array(
 			'category' => CoursePress_Helper_Utility::the_course_category(),
-			'posts_per_page' => apply_filters( 'coursepress_courses_per_page', 10 ),
+			'posts_per_page' => 10,
 			'show_pager' => true,
 			'echo' => false,
-			'courses_type' => 'any',
+			'courses_type' => 'current_and_upcoming',
 		), $a, 'course_archive' );
 
 		$category = sanitize_text_field( $a['category'] );
@@ -137,16 +137,12 @@ class CoursePress_Data_Shortcode_Template {
 		// Pager.
 		if ( $show_pager ) {
 			$big = 999999999; // need an unlikely integer.
-			$args = array(
+			$content .= paginate_links( array(
 				'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
 				'format' => '?paged=%#%',
 				'current' => $paged,
 				'total' => $query->max_num_pages,
-			);
-			$pager = paginate_links( $args );
-			if ( $pager ) {
-				$content .= sprintf( '<div class="nav-links">%s</div>', $pager );
-			}
+			) );
 		}
 
 		$content = apply_filters( 'coursepress_course_archive_content', $content, $a );
@@ -205,6 +201,7 @@ class CoursePress_Data_Shortcode_Template {
 			'clickable_label' => __( 'Course Details', 'cp' ),
 			'override_button_text' => '',
 			'override_button_link' => '',
+			'button_label' => __( 'Details', 'cp' ),
 			'echo' => false,
 		), $a, 'course_list_box' );
 
@@ -220,14 +217,21 @@ class CoursePress_Data_Shortcode_Template {
 		$clickable_link = $clickable ? 'data-link="' . esc_url( $url ) . '"' : '';
 		$clickable_class = $clickable ? 'clickable' : '';
 		$clickable_text = $clickable ? '<div class="clickable-label">' . $clickable_label . '</div>' : '';
-		$button_text = ! $clickable ? '[course_join_button list_page="yes" course_id="' . $course_id . '"]' : '';
+		$button_label = $a['button_label'];
+		$button_link = $url;
+
+		if ( ! empty( $a['override_button_link'] ) ) {
+			$button_link = $a['override_button_link'];
+		}
+
+		$button_text = sprintf( '<a href="%s" rel="bookmark" class="button apply-button apply-button-details">%s</a>', esc_url( $button_link ), $button_label );
 		$instructor_link = $clickable ? 'no' : 'yes';
 		$thumbnail_class = $has_thumbnail ? 'has-thumbnail' : '';
 
 		$completed = false;
 		$student_progress = false;
 		if ( is_user_logged_in() ) {
-			$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id ); //CoursePress_Data_Student::calculate_completion( get_current_user_id(), $course_id );
+			$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id );
 			$completed = isset( $student_progress['completion']['completed'] ) && ! empty( $student_progress['completion']['completed'] );
 		}
 		$completion_class = CoursePress_Data_Course::course_class( $course_id );
@@ -727,7 +731,7 @@ class CoursePress_Data_Shortcode_Template {
 				// Main content
 				$content .= '<div class="focus-main ' . implode( ' ', $focus_class ) . '">';
 
-				$method = 'render_' . str_replace( '-', '_', $attributes['module_type'] );
+				$method = 'template';
 				$template = 'CoursePress_Template_Module';
 				$next_module_class = array( 'focus-nav-next' );
 
@@ -739,7 +743,7 @@ class CoursePress_Data_Shortcode_Template {
 						$unit_id,
 						$module->ID
 					);
-
+/*
 					if ( ! $can_update_course &&
 						(
 						( ! $is_assessable && empty( $quiz_result ) )
@@ -752,9 +756,13 @@ class CoursePress_Data_Shortcode_Template {
 							'not_done' => true,
 						);
 					}
+*/
 				}
 
-				$preview_modules = isset( $preview['structure'][ $unit_id ][ $page ] ) ? array_keys( $preview['structure'][ $unit_id ][ $page ] ) : array();
+				$preview_modules = array();
+				if ( isset( $preview['structure'][ $unit_id ][ $page ] ) && is_array( $preview['structure'][ $unit_id ][ $page ] ) ) {
+					$preview_modules = array_keys( $preview['structure'][ $unit_id ][ $page ] );
+				}
 				$can_preview_module = in_array( $module->ID, $preview_modules ) || ( isset( $preview['structure'][ $unit_id ] ) && ! is_array( $preview['structure'][ $unit_id ] ) );
 
 				if ( ! empty( $error_message ) ) {
@@ -764,7 +772,7 @@ class CoursePress_Data_Shortcode_Template {
 						'not_done' => true,
 					);
 				} else {
-					$content .= call_user_func( array( $template, $method ), $module, $attributes );
+					$content .= call_user_func( array( $template, $method ), $module->ID, true );
 				}
 
 				$content .= '</div>'; // .focus-main
@@ -778,7 +786,7 @@ class CoursePress_Data_Shortcode_Template {
 				);
 
 				// Next Navigation
-				if ( isset( $next['type'] ) && 'section' == $next['type'] ) {
+				if ( ! empty( $next['type'] ) && 'section' == $next['type'] ) {
 					$next_module_class[] = 'next-section';
 					$title = '';
 					$text = $next_section_text;
@@ -798,13 +806,16 @@ class CoursePress_Data_Shortcode_Template {
 					$next,
 					$text,
 					$next_module_class,
-					$title
+					$title,
+					true
 				);
 
 				$content .= '</div>'; // .focus-nav
 				$content .= '</div>'; // .focus-wrapper
 
-				$template = $content;
+				$template = sprintf( '<form method="post" enctype="multipart/form-data" class="cp cp-form">%s</form>', $content );
+				$template = apply_filters( 'coursepress_focus_mode_module_template', $template, $content, $item_id );
+
 				break;
 
 			case 'no_access':
@@ -894,20 +905,37 @@ class CoursePress_Data_Shortcode_Template {
 	 * @param  string $link_title Tooltip title of the link.
 	 * @return string HTML code of the button.
 	 */
-	public static function show_nav_button( $button, $title, $classes, $link_title = '' ) {
+	public static function show_nav_button( $button, $title, $classes, $link_title = '', $next = false ) {
 		$res = '';
 
 		if ( $button['id'] ) {
-			$res = sprintf(
-				'<div class="%5$s" data-id="%1$s" data-type="%2$s" data-unit="%4$s" data-title="%6$s" data-url="%7$s"><a href="#%2$s-%1$s" title="%6$s">%3$s</a></div>',
-				esc_attr( $button['id'] ),
-				esc_attr( $button['type'] ),
-				$title,
-				esc_attr( $button['unit'] ),
-				esc_attr( implode( ' ', $classes ) ),
-				esc_attr( $link_title ),
-				esc_url( $button['url'] )
-			);
+			$classes = is_array( $classes ) ? implode( ' ', $classes ) : $classes;
+			if ( $next) {
+				if ( 'completion_page' == $button['id'] ) {
+					$title = __( 'Finish', 'cp' );
+				}
+				$format = '<button type="submit" name="type-%s" class="button %s" title="%s" data-url="%s">%s</button>';
+				$res = sprintf( $format,
+					$button['type'],
+					esc_attr( $classes ),
+					esc_attr( $link_title ),
+					esc_url( $button['url'] ),
+					$title
+				);
+			} else {
+				$res = sprintf(
+					'<button type="button" class="button %5$s" data-course="%8$s" data-id="%1$s" data-type="%2$s" data-unit="%4$s" data-title="%6$s" data-url="%7$s"><a href="%7$s" title="%6$s">%3$s</a></button>',
+					esc_attr( $button['id'] ),
+					esc_attr( $button['type'] ),
+					$title,
+					esc_attr( $button['unit'] ),
+					esc_attr( $classes ),
+					esc_attr( $link_title ),
+					esc_url( $button['url'] ),
+					$button['course_id']
+				);
+			}
+
 		} else {
 			$res = sprintf(
 				'<div class="%2$s" data-title="%3$s"><span title="%3$s">%1$s</span></div>',
@@ -1122,6 +1150,12 @@ class CoursePress_Data_Shortcode_Template {
 			$signup_url = $signup_url . '?redirect_url=' . $_POST['redirect_url'];
 			$login_url = $login_url . '?redirect_url=' . $_POST['redirect_url'];
 		}
+
+		// Set a cookie now to see if they are supported by the browser.
+		setcookie( TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN );
+		if ( SITECOOKIEPATH != COOKIEPATH ) {
+			setcookie( TEST_COOKIE, 'WP Cookie check', 0, SITECOOKIEPATH, COOKIE_DOMAIN );
+		};
 
 		$form_message = '';
 		$form_message_class = '';
@@ -1528,6 +1562,12 @@ class CoursePress_Data_Shortcode_Template {
 		$signup_url = CoursePress_Core::get_slug( 'signup', true );
 		$login_url = CoursePress_Core::get_slug( 'login', true );
 		$forgot_url = wp_lostpassword_url();
+
+		// Set a cookie now to see if they are supported by the browser.
+		setcookie( TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN );
+		if ( SITECOOKIEPATH != COOKIEPATH ) {
+			setcookie( TEST_COOKIE, 'WP Cookie check', 0, SITECOOKIEPATH, COOKIE_DOMAIN );
+		};
 
 		$content = '';
 		switch ( $page ) {

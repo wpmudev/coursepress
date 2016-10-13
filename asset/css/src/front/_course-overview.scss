@@ -1,0 +1,137 @@
+.course-wrapper {
+	.tree {
+		@include nolist;
+		ul,ol {
+			@include nolist;
+			a {
+				@include reset_a;
+			}
+		}
+	}
+
+	.enroll-box {
+		overflow: hidden;
+		border-top: 1px solid rgba(0, 0, 0, 0.2);
+		position: relative;
+		margin: 15px 0;
+		padding-top: 15px;
+		&:after {
+			display: block;
+			content: '';
+			clear: both;
+		}
+		.course-completed-button {
+			position: relative;
+			padding-left: 35px !important;
+			&:before {
+				content: '\f147';
+				position: absolute;
+				left: 0;
+				font-family: Dashicons;
+				font-size: 1.7em;
+				line-height: 115%;
+			}
+		}
+	}
+	.enroll-box-left {
+		float: left;
+	}
+	.enroll-box-right {
+		float: right;
+		padding-top: 5px;
+	}
+	.unit-page-module-wrapper,
+	.unit-page-title-wrapper,
+	.unit-title-wrapper {
+		width: 100%;
+		overflow: hidden;
+		border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+		padding: 2px 0;
+		position: relative;
+	}
+	.unit-title-wrapper {
+		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+		padding: 10px 0 0 0;
+		&:first-child {
+			padding: 0;
+		}
+	}
+	.module-title,
+	.page-title,
+	.unit-title {
+		float: left;
+		a {
+			@include reset_a;
+		}
+	}
+	.module-title {
+		padding-left: 20px;
+		a {
+			padding-left: 20px;
+			text-decoration: none;
+			border: none;
+		}
+	}
+	.unit-title {
+		font-weight: bold;
+		clear: both;
+	}
+	.unit-page-title {
+		padding-left: 20px;
+	}
+	.enrolled {
+		.module-title,
+		.page-title,
+		.unit-title {
+			width: 100%;
+			float: none;
+			a {
+				display: block;
+				width: 100%;
+			}
+		}
+		.module-title {
+			padding-left: 20px;
+		}
+	}
+	.unit-module-preview-link,
+	.unit-page-link,
+	.unit-link {
+		float: right;
+		margin-right: 50px;
+	}
+	.unit-page-estimate {
+		position: absolute;
+		top: 2px;
+		right: 0;
+	}
+	.unit-page-estimate {
+		position: absolute;
+		top: 2px;
+		right: 0;
+	}
+	.course-description {
+		margin: 15px 0;
+		padding: 15px 0;
+	}
+	.course-structure-block li {
+		clear: both;
+	}
+	.instructor-block {
+		padding: 15px 0;
+		border-top: 1px solid rgba(0, 0, 0, 0.2);
+		border-bottom: 3px solid rgba(0, 0, 0, 0.2);
+	}
+}
+.coursepress-course-share {
+	display: block;
+	margin: 15px 0;
+	a, a[href] {
+		@include reset_a;
+		margin-left: 5px;
+		* {
+			padding: 0 0 0.4em 0;
+			vertical-align: middle;
+		}
+	}
+}

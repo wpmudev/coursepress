@@ -1,15 +1,12 @@
 <?php
-
 class CoursePress_Helper_JavaScript {
+	protected static $is_cp_called = false;
 
-	public static function init() {
-		// These don't work here because of core using wp_print_styles()
-		// add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
-		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_admin_scripts' ) );
+	public static $scripts = array();
+	public static $styles = array();
 
-		add_action( 'admin_footer', array( __CLASS__, 'enqueue_scripts' ) );
-		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_front_scripts' ) );
-	}
+	// Depracated!!!
+	public static function init() {}
 
 	/**
 	 * Check if current page is CP page.
@@ -28,7 +25,10 @@ class CoursePress_Helper_JavaScript {
 			'coursepress',
 		) );
 
-		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], $valid_pages ) ) {
+		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], $valid_pages ) || 'course' == get_post_type() ) {
+			if ( 'course' == get_post_type() ) {
+				$_GET['page'] = $_REQUEST['page'] = 'coursepress_course';
+			}
 			return true;
 		}
 
@@ -49,6 +49,7 @@ class CoursePress_Helper_JavaScript {
 			return;
 		}
 
+		$course_type = CoursePress_Data_Course::get_post_type_name();
 		$script = CoursePress::$url . 'asset/js/coursepress.js';
 
 		wp_enqueue_script( 'coursepress_object', $script, array(
@@ -89,6 +90,11 @@ class CoursePress_Helper_JavaScript {
 				'required_fields' => __( 'Required fields must not be empty!', 'cp' ),
 			),
 		);
+
+		// Add course_id in edit page
+		if ( $course_type == get_post_type() ) {
+			$localize_array['course_id'] = get_the_ID();
+		}
 
 		// Models
 		/** COURSEPRESS_COURSE */
@@ -168,6 +174,13 @@ class CoursePress_Helper_JavaScript {
 			}
 		}
 
+		$style_global = CoursePress::$url . 'asset/css/admin-global.css';
+		$timepicker_css = CoursePress::$url . 'asset/css/external/jquery-ui-timepicker-addon.min.css';
+		$timepicker_js = CoursePress::$url . 'asset/js/external/jquery-ui-timepicker-addon.min.js';
+		wp_enqueue_style( 'coursepress_admin_timepicker', $timepicker_css, false, CoursePress::$version );
+		wp_enqueue_script( 'coursepress_admin_timepicker', $timepicker_js, array( 'jquery-ui-slider', 'jquery-ui-datepicker' ), CoursePress::$version, true );
+		wp_enqueue_style( 'coursepress_admin_global', $style_global, array( 'jquery-datepicker' ), CoursePress::$version );
+
 		/** COURSEPRESS_COURSE|UNIT BUILDER */
 		if ( 'coursepress_course' == $_GET['page'] && isset( $_GET['tab'] ) && 'units' == $_GET['tab'] ) {
 			$script = CoursePress::$url . 'asset/js/coursepress-unitsbuilder.js';
@@ -190,7 +203,7 @@ class CoursePress_Helper_JavaScript {
 		}
 
 		/** COURSE LIST */
-		if ( 'coursepress' === $_GET['page'] ) {
+		if ( 'coursepress_course' === $_GET['page'] && empty( $_GET['action'] ) ) {
 			$script = CoursePress::$url . 'asset/js/coursepress-courselist.js';
 			wp_enqueue_script( 'coursepress_course_list', $script, array(
 				'jquery-ui-accordion',
@@ -376,5 +389,88 @@ class CoursePress_Helper_JavaScript {
 
 		$front_css = CoursePress::$url . 'asset/css/front.css';
 		wp_enqueue_style( 'coursepress-front', $front_css, array(), CoursePress::$version );
+	}
+
+	public static function maybe_print_assets() {
+		if( false === self::$is_cp_called && CoursePress_Core::$is_cp_page ) {
+			self::front_assets();
+		}
+	}
+
+	public static function front_assets() {
+		if ( false === CoursePress_Core::$is_cp_page ) {
+			return;
+		}
+
+		self::$is_cp_called = true;
+		$script_url = CoursePress::$url . 'asset/js/';
+		$css_url = CoursePress::$url . 'asset/css/';
+		$version = CoursePress::$version;
+		$course_id = CoursePress_Helper_Utility::the_course( true );
+
+		// Fontawesome
+		$fontawesome = $css_url . 'external/font-awesome.min.css';
+		wp_enqueue_style( 'fontawesome', $fontawesome, array(), $version );
+		$bbm_modal_css = $css_url . 'bbm.modal.css';
+		wp_enqueue_style( 'coursepress-modal-css', $bbm_modal_css, array(), $version );
+		// Front CSS
+		wp_enqueue_style( 'coursepress-front-css', $css_url . 'front.css', array( 'dashicons' ), $version );
+
+		wp_enqueue_script( 'comment-reply' );
+
+		$script = $script_url . 'external/circle-progress.min.js';
+		wp_enqueue_script( 'circle-progress', $script, array( 'jquery' ), $version );
+
+		$modal_script_url = $script_url . 'external/backbone.modal-min.js';
+		wp_enqueue_script( 'coursepress-backbone-modal', $modal_script_url, array( 'jquery', 'backbone', 'underscore', 'password-strength-meter' ) );
+		wp_enqueue_script( 'coursepress-front-js', $script_url . 'front.js', array( 'jquery', 'backbone', 'underscore' ), $version );
+
+		$localize_array = array(
+			'_ajax_url' => CoursePress_Helper_Utility::get_ajax_url(),
+			'cpnonce' => wp_create_nonce( 'coursepress_nonce' ),
+			'allowed_video_extensions' => wp_get_video_extensions(),
+			'allowed_audio_extensions' => wp_get_audio_extensions(),
+			'allowed_image_extensions' => CoursePress_Helper_Utility::get_image_extensions(),
+			'allowed_extensions' => apply_filters( 'coursepress_custom_allowed_extensions', false ),
+			'allowed_student_extensions' => CoursePress_Helper_Utility::allowed_student_mimes(),
+			'no_browser_upload' => __( 'Please try a different browser to upload your file.', 'cp' ),
+			'invalid_upload_message' => __( 'Invalid file format!', 'cp' ),
+			'file_uploaded_message' => __( 'Your file has been submitted successfully.', 'cp' ),
+			'file_upload_fail_message' => __( 'There was a problem processing your file.', 'cp' ),
+			'response_saved_message' => __( 'Your response was recorded successfully.', 'cp' ),
+			'response_fail_message' => __( 'There was a problem saving your response. Please reload this page and try again.', 'cp' ),
+			'current_course_is_paid' => CoursePress_Data_Course::is_paid_course( $course_id )? 'yes':'no',
+			'course_url' => get_permalink( CoursePress_Helper_Utility::the_course( true ) ),
+			'home_url' => home_url(),
+			'current_student' => get_current_user_id(),
+			'workbook_view_answer' => __( 'View', 'cp' ),
+			'labels' => CoursePress_Helper_UI_Module::get_labels(),
+			'signup_errors' => array(
+				'all_fields' => __( 'All fields are required.', 'cp' ),
+				'email_invalid' => __( 'Invalid e-mail address.', 'cp' ),
+				'email_exists' => __( 'That e-mail address is already taken.', 'cp' ),
+				'user_exists' => __( 'That usernam is already taken.', 'cp' ),
+				'weak_password' => __( 'Weak passwords not allowed.', 'cp' ),
+				'mismatch_password' => __( 'Passwords do not match.', 'cp' ),
+			),
+			'login_errors' => array(
+				'required' => __( 'Your username and/or password is required!', 'cp' ),
+			),
+			'comments' => array(
+				'require_valid_comment' => __( 'Please type a comment.', 'cp' ),
+			),
+			'server_error' => __( 'An unexpected error occur while processing. Please try again.', 'cp' )
+		);
+
+				/**
+		 * Filter localize script to allow data insertion.
+		 *
+		 * @since 2.0
+		 *
+		 * @param (array) $localize_array.
+		 **/
+		$localize_array = apply_filters( 'coursepress_localize_object', $localize_array );
+
+		wp_localize_script( 'coursepress-front-js', '_coursepress', $localize_array );
 	}
 }

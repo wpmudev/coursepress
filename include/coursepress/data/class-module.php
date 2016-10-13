@@ -52,7 +52,6 @@ class CoursePress_Data_Module {
 				'query_var' => true,
 			),
 		);
-
 	}
 
 	public static function get_post_type_name() {
@@ -350,7 +349,6 @@ class CoursePress_Data_Module {
 	}
 
 	public static function get_quiz_results( $student_id, $course_id, $unit_id, $module_id, $response = false, $data = false ) {
-
 		$attributes = self::attributes( $module_id );
 
 		if ( false === $data ) {
@@ -382,7 +380,6 @@ class CoursePress_Data_Module {
 					$correct_responses = 0;
 
 					if ( is_array( $response[ $key ] ) ) {
-
 						foreach ( $response[ $key ] as $a_key => $answer ) {
 							if ( $answer === $correct_answers[ $a_key ] ) {
 								$correct_responses += 1;
@@ -393,7 +390,6 @@ class CoursePress_Data_Module {
 					$result = (int) ( $correct_responses / $total_answers * 100 );
 					// If multiple choice passed, add it to the total
 					$gross_correct = 100 === $result ? $gross_correct + 1 : $gross_correct;
-
 					break;
 
 				case 'single1':
@@ -461,6 +457,7 @@ class CoursePress_Data_Module {
 
 	}
 
+	// DEPRACATED!!!
 	public static function quiz_result_content( $student_id, $course_id, $unit_id, $module_id, $quiz_result = false ) {
 
 		// Get last submitted result
