@@ -147,6 +147,10 @@ class CoursePress_Data_Course {
 			'post_type' => self::get_post_type_name(),
 		);
 
+		if ( 'auto-draft' == $post['post_status'] ) {
+			$post['post_status'] = 'draft';
+		}
+
 		// Make sure we get existing settings if not all data is being submitted
 		if ( ! $new_course ) {
 			$post['post_excerpt'] = $course && isset( $data->course_excerpt ) ? CoursePress_Helper_Utility::filter_content( $data->course_excerpt ) : $course->post_excerpt;
@@ -553,7 +557,7 @@ class CoursePress_Data_Course {
 		$val = isset( $meta[ $val ] ) ? $meta[ $val ] : $default;
 
 		if ( is_array( $val ) ) {
-			$val = $val[0];
+			$val = array_shift( $val );//$val[0];
 		}
 
 		if ( empty( $val ) ) {

@@ -28,6 +28,10 @@ class CoursePress_Hooks {
 		add_action( 'dbx_post_advanced', array( 'CoursePress_Admin_Edit', 'init_hooks' ) );
 		// Per course certificate preview
 		add_action( 'init', array( 'CoursePress_Admin_Edit', 'certificate_preview' ) );
+		// Update Course
+		add_action( 'wp_ajax_update_course', array( 'CoursePress_Admin_Controller_Course', 'update_course' ) );
+		// Update UnitBuilder
+		add_action( 'wp_ajax_unit_builder', array( 'CoursePress_Admin_Controller_Unit', 'unit_builder_ajax' ) );
 
 		// Hook to admin ajax request
 		add_action( 'wp_ajax_coursepress_request', array( __CLASS__, 'process_request' ) );
@@ -38,10 +42,6 @@ class CoursePress_Hooks {
 
 		// Search user
 		add_action( 'wp_ajax_coursepress_user_search', array( 'CoursePress_Admin_Students', 'search_user' ) );
-		// Update Course
-		add_action( 'wp_ajax_update_course', array( 'CoursePress_Admin_Controller_Course', 'update_course' ) );
-		// Update UnitBuilder
-		add_action( 'wp_ajax_unit_builder', array( 'CoursePress_Admin_Controller_Unit', 'unit_builder_ajax' ) );
 
 		// Set front scripts
 		add_action( 'wp_enqueue_scripts', array( 'CoursePress_Helper_Javascript', 'front_assets' ) );
