@@ -612,11 +612,25 @@ tester {
 .cp .module-elements {
   margin: 15px 0;
 }
-.cp .module-elements select {
+.cp .module-elements select,
+.cp .module-elements [type="text"],
+.cp .module-elements textarea {
   width: 100%;
 }
-.cp .module-elements select option {
+.cp .module-elements select option,
+.cp .module-elements [type="text"] option,
+.cp .module-elements textarea option {
   padding: 4px 12px;
+}
+.cp .module-elements [type="text"],
+.cp .module-elements textarea {
+  padding: 12px 15px;
+}
+.cp .module-elements li input,
+.cp .module-elements li label {
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 5px;
 }
 .cp .module-elements .file {
   position: relative;
@@ -648,14 +662,7 @@ tester {
 .cp .module-quiz-question .question {
   font-size: 110%;
   font-weight: 600;
-}
-.cp .module-quiz-question ul {
-  margin-bottom: 25px;
-}
-.cp .module-quiz-question li label {
-  display: block;
-  padding-left: 25px;
-  margin-top: -28px;
+  margin: 25px 0 15px 0;
 }
 .cp .module-response {
   margin-bottom: 20px;

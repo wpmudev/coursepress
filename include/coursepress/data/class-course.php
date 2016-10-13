@@ -556,8 +556,8 @@ class CoursePress_Data_Course {
 	private static function upgrade_meta_val( $meta, $val, $default = '' ) {
 		$val = isset( $meta[ $val ] ) ? $meta[ $val ] : $default;
 
-		if ( is_array( $val ) ) {
-			$val = array_shift( $val );//$val[0];
+		if ( is_array( $val ) && isset( $val[0] ) ) {
+			$val = $val[0];
 		}
 
 		if ( empty( $val ) ) {
