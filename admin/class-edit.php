@@ -4,7 +4,7 @@
  **/
 class CoursePress_Admin_Edit {
 	public static $slug = 'coursepress_course';
-	private static $action = 'edit';
+	private static $action = 'new';
 	private static $allowed_actions = array(
 		'new',
 		'edit',
@@ -19,6 +19,10 @@ class CoursePress_Admin_Edit {
 			return;
 		}
 		self::$current_course = $post;
+
+		if ( 'auto-draft' !== $post->post_status || ! empty( $_GET['post'] ) ) {
+			self::$action = 'edit';
+		}
 
 		$tab = empty( $_GET['tab'] ) ? 'setup' : $_GET['tab'];
 		add_action( 'edit_form_top', array( __CLASS__, 'edit_tabs' ) );
@@ -218,9 +222,7 @@ class CoursePress_Admin_Edit {
 			)
 		);
 		$content = '';
-		/**
-		 * previous button
-		 */
+
 		if ( $args['previous'] ) {
 			$content .= sprintf(
 				'<input type="button" class="button step prev step-%d" value="%s" />',
@@ -228,9 +230,7 @@ class CoursePress_Admin_Edit {
 				esc_attr__( 'Previous', 'cp' )
 			);
 		}
-		/**
-		 * next button
-		 */
+
 		if ( $args['next'] ) {
 			$content .= sprintf(
 				'<input type="button" class="button step next step-%d" value="%s" />',

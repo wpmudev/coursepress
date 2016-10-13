@@ -203,7 +203,7 @@ class CoursePress_Helper_JavaScript {
 		}
 
 		/** COURSE LIST */
-		if ( 'coursepress_course' === $_GET['page'] && empty( $_GET['action'] ) ) {
+		if ( 'coursepress_course' === $_GET['page'] && empty( $_GET['post_type'] ) ) {
 			$script = CoursePress::$url . 'asset/js/coursepress-courselist.js';
 			wp_enqueue_script( 'coursepress_course_list', $script, array(
 				'jquery-ui-accordion',
