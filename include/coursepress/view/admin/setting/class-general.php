@@ -22,7 +22,6 @@ class CoursePress_View_Admin_Setting_General {
 	}
 
 	public static function return_content( $content, $slug, $tab ) {
-
 		$my_course_prefix = __( 'my-course', 'cp' );
 		$my_course_prefix = sanitize_text_field( CoursePress_Core::get_setting( 'slugs/course', 'courses' ) ) . '/'. $my_course_prefix;
 		$page_dropdowns = array();

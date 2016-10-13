@@ -13,6 +13,8 @@
  * @since 1.0.0
  */
 class CoursePress_Data_Capabilities {
+	protected static $is_admin = false;
+	protected static $current_caps = array();
 
 	public static $capabilities = array(
 		'instructor' => array(
@@ -32,7 +34,7 @@ class CoursePress_Data_Capabilities {
 			'coursepress_update_course_cap' => 1,
 			'coursepress_update_my_course_cap' => 1,
 			'coursepress_update_all_courses_cap' => 0, // NOT IMPLEMENTED YET
-			'coursepress_delete_course_cap' => 0,
+			'coursepress_delete_course_cap' => 1,
 			'coursepress_delete_my_course_cap' => 1,
 			'coursepress_delete_all_courses_cap' => 0, // NOT IMPLEMENTED YET
 			'coursepress_change_course_status_cap' => 0,
@@ -115,16 +117,41 @@ class CoursePress_Data_Capabilities {
 	);
 
 	public static function init() {
+		add_action( 'init', array( __CLASS__, 'init_caps' ) );
 		add_action( 'set_user_role', array( __CLASS__, 'assign_role_capabilities' ), 10, 3 );
 		add_action( 'wp_login', array( __CLASS__, 'restore_capabilities' ), 10, 2 );
 		add_action( 'admin_init', array( __CLASS__, 'fix_admin_capabilities' ) );
+		add_filter( 'user_has_cap', array( __CLASS__, 'user_cap' ), 10, 3 );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			// Filter the capability of the current user
-			add_filter( 'user_has_cap', array( __CLASS__, 'user_cap' ), 10, 3 );
 
 			// If current user can view and create categories but not edit
 			add_filter( 'tag_row_actions', array( __CLASS__, 'filter_row_actions' ), 10, 2 );
+		}
+	}
+
+	public static function init_caps() {
+		global $current_user;
+
+		self::$is_admin = current_user_can( 'manage_options' );
+
+		if ( self::$is_admin ) {
+			// Enable edit course cap
+			$current_user->allcaps['edit_course'] = true;
+
+		} elseif ( self::is_instructor() || self::is_facilitator() ) {
+			global $current_user;
+
+			$current_caps = CoursePress_Data_Capabilities::get_instructor_capabilities();
+			self::$current_caps = array_filter( $current_caps );
+
+			// Reset user caps but don't save any changes!
+			if ( ! empty( $current_user->allcaps ) ) {
+				// Process caps
+				$current_user->allcaps = wp_parse_args( $current_caps, $current_user->allcaps );
+				$current_user->caps = wp_parse_args( $current_caps, $current_user->caps );
+			}
 		}
 	}
 
@@ -215,6 +242,8 @@ class CoursePress_Data_Capabilities {
 	}
 
 	public static function can_manage_courses( $user_id = '' ) {
+		global $current_user;
+
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
@@ -222,7 +251,7 @@ class CoursePress_Data_Capabilities {
 		if ( user_can( $user_id, 'manage_options' ) ) {
 			$return = true;
 		} else {
-			$return = user_can( $user_id, 'coursepress_courses_cap' );
+			$return = ! empty( $current_user->allcaps['coursepress_courses_cap'] );
 		}
 
 		return $return;
@@ -262,7 +291,7 @@ class CoursePress_Data_Capabilities {
 			$user_id = get_current_user_id();
 		}
 
-		$return = user_can( $user_id, 'manage_options' );
+		$return = self::$is_admin;
 
 		if ( ! $return ) {
 			if ( self::can_manage_courses( $user_id ) ) {
@@ -287,7 +316,7 @@ class CoursePress_Data_Capabilities {
 		$return = user_can( $user_id, 'manage_options' );
 		$post_status = get_post_status( $course_id );
 
-		if ( ! $return && self::can_manage_courses( $user_id ) && self::can_create_course() ) {
+		if ( false === $return && self::can_manage_courses( $user_id ) && self::can_create_course() ) {
 			$course_creator = self::is_course_creator( $course_id, $user_id );
 			$is_instructor = self::is_course_instructor( $course_id, $user_id );
 			$is_facilitator = CoursePress_Data_Facilitator::is_course_facilitator( $course_id, $user_id );
@@ -337,7 +366,6 @@ class CoursePress_Data_Capabilities {
 		}
 
 		return $return;
-
 	}
 
 	/**
@@ -1562,22 +1590,18 @@ class CoursePress_Data_Capabilities {
 	}
 
 	public static function user_cap( $allcaps, $cap, $args ) {
-		if ( self::is_instructor() || self::is_facilitator() ) {
-			$instructor_capabilities = CoursePress_Data_Capabilities::get_instructor_capabilities();
+		if ( ! empty( self::$current_caps ) && ( self::is_instructor() || self::is_facilitator() ) ) {
+			$allcaps = wp_parse_args( self::$current_caps, $allcaps );
+		}
 
-			foreach ( $instructor_capabilities as $instructor_cap => $is_true ) {
-				if ( ! $is_true ) {
-					if ( isset( $allcaps[ $instructor_cap ] ) ) {
-						unset( $allcaps[ $instructor_cap ] );
-					}
-				} else {
-					$allcaps[ $instructor_cap ] = true;
-				}
-			}
+		return $allcaps;
+	}
 
-			if ( ! empty( $instructor_capabilities['coursepress_course_categories_manage_terms_cap'] ) ) {
-				$allcaps['coursepress_course_categories_edit_terms_cap'] = true;
-			}
+	public static function add_all_courses_cap( $allcaps ) {
+		$instructor_capabilities = array_keys( self::$capabilities['instructor'], 1 );
+
+		foreach ( $instructor_capabilities as $instructor_cap => $is_true ) {
+			$allcaps[ $instructor_cap ] = true;
 		}
 
 		return $allcaps;

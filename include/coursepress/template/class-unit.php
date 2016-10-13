@@ -344,18 +344,18 @@ class CoursePress_Template_Unit {
 			}
 			$format = '<a href="%s" class="button prev-button unit unit-%s">%s</a>';
 
-			$unit_pager .= sprintf( $format, esc_url( $unit_url ), $previous_unit_id, __( 'Previous Unit', 'cp' ) );
+			$unit_pager .= sprintf( $format, esc_url( $unit_url ), $previous_unit_id, __( 'Previous', 'cp' ) );
 		}
 
 		if ( ! empty( $next_unit ) && empty( $next_page ) ) {
 			$unit_url = CoursePress_Data_Unit::get_unit_url( $next_unit );
-			$format = '<button type="submit" name="next_unit" value="%1$s" class="next-button unit unit-%1$s">%2$s</button>';
-			$unit_pager .= sprintf( $format, $next_unit, __( 'Next Unit', 'cp' ) );
+			$format = '<button type="submit" name="next_unit" value="%1$s" class="button next-button unit unit-%1$s">%2$s</button>';
+			$unit_pager .= sprintf( $format, $next_unit, __( 'Next', 'cp' ) );
 			$has_submit_button = true;
 		}
 
 		if ( false === $has_submit_button ) {
-			$unit_pager .= sprintf( '<button type="submit" name="finish" class="next-button">%s</button>', __( 'Submit', 'cp' ) );
+			$unit_pager .= sprintf( '<button type="submit" name="finish" class="button next-button">%s</button>', __( 'Next', 'cp' ) );
 		}
 
 		$unit_pager .= '</div>'; // .pager

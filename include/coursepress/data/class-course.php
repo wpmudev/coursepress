@@ -19,10 +19,10 @@ class CoursePress_Data_Course {
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
 				'labels' => array(
-					'name' => __( 'Courses', 'cp' ),
+					'name' => CoursePress::$name,
 					'singular_name' => __( 'Course', 'cp' ),
-					'add_new' => __( 'Create New', 'cp' ),
-					'add_new_item' => __( 'Create New Course', 'cp' ),
+					'add_new' => __( 'New Course', 'cp' ),
+					'add_new_item' => __( 'New Course', 'cp' ),
 					'edit_item' => __( 'Edit Course', 'cp' ),
 					'edit' => __( 'Edit', 'cp' ),
 					'new_item' => __( 'New Course', 'cp' ),
@@ -31,21 +31,35 @@ class CoursePress_Data_Course {
 					'not_found' => __( 'No Courses Found', 'cp' ),
 					'not_found_in_trash' => __( 'No Courses found in Trash', 'cp' ),
 					'view' => __( 'View Course', 'cp' ),
+					'all_items' => __( 'Courses', 'cp' ),
 				),
-				'public' => false,
+				'public' => true,
 				'exclude_from_search' => false,
 				'has_archive' => true,
-				'show_ui' => false,
+				'show_ui' => true,
 				'publicly_queryable' => true,
-				'capability_type' => 'course',
-				'map_meta_cap' => true,
+				'capability_type' => array( 'course', 'courses' ),
+				'capabilities' => array(
+					'edit_post' => 'edit_course',
+					'edit_posts' => 'coursepress_dashboard_cap',
+					'edit_published_posts' => 'coursepress_update_course_cap',
+					'delete_post' => 'coursepress_delete_course_cap',
+					'delete_posts' => 'coursepress_delete_course_cap',
+					'publish_posts' => 'coursepress_change_course_status_cap',
+					'edit_others_posts' => 'coursepress_update_course_cap',
+					'read_private_posts' => 'coursepress_update_course_cap',
+					'create_posts' => 'coursepress_create_course_cap',
+				),
+				'map_meta_cap' => false,
 				'query_var' => true,
 				'rewrite' => array(
 					'slug' => CoursePress_Core::get_slug( 'course' ),
 					'with_front' => false,
 				),
-				'supports' => array( 'thumbnail' ),
+				//'supports' => array( 'thumbnail' ),
 				'taxonomies' => array( 'course_category' ),
+				'supports' => array( 'slug' ),
+				'menu_icon' => CoursePress::$url . 'asset/img/coursepress-icon.png',
 			),
 		);
 	}
@@ -58,15 +72,15 @@ class CoursePress_Data_Course {
 				'coursepress_register_course_category',
 				array(
 					'labels' => array(
-						'name' => __( 'Course Categories', 'cp' ),
-						'singular_name' => __( 'Course Category', 'cp' ),
+						'name' => __( 'Categories', 'cp' ),
+						'singular_name' => __( 'Category', 'cp' ),
 						'search_items' => __( 'Search Course Categories', 'cp' ),
 						'all_items' => __( 'All Course Categories', 'cp' ),
 						'edit_item' => __( 'Edit Course Categories', 'cp' ),
 						'update_item' => __( 'Update Course Category', 'cp' ),
 						'add_new_item' => __( 'Add New Course Category', 'cp' ),
 						'new_item_name' => __( 'New Course Category Name', 'cp' ),
-						'menu_name' => __( 'Course Category', 'cp' ),
+						'menu_name' => __( 'Categories', 'cp' ),
 					),
 					'hierarchical' => true,
 					'sort' => true,
@@ -132,6 +146,10 @@ class CoursePress_Data_Course {
 			'post_status' => $course ? $course->post_status : 'private',
 			'post_type' => self::get_post_type_name(),
 		);
+
+		if ( 'auto-draft' == $post['post_status'] ) {
+			$post['post_status'] = 'draft';
+		}
 
 		// Make sure we get existing settings if not all data is being submitted
 		if ( ! $new_course ) {
@@ -538,7 +556,7 @@ class CoursePress_Data_Course {
 	private static function upgrade_meta_val( $meta, $val, $default = '' ) {
 		$val = isset( $meta[ $val ] ) ? $meta[ $val ] : $default;
 
-		if ( is_array( $val ) ) {
+		if ( is_array( $val ) && isset( $val[0] ) ) {
 			$val = $val[0];
 		}
 
@@ -1006,6 +1024,24 @@ class CoursePress_Data_Course {
 	public static function count_students( $course_id ) {
 		$count = self::get_student_ids( $course_id, true );
 		return empty( $count ) ? 0 : $count;
+	}
+
+	public static function get_certified_student_ids( $course_id ) {
+		$certified = array();
+
+		$student_ids = CoursePress_Data_Course::get_student_ids( $course_id );
+
+		if ( ! empty( $student_ids ) ) {
+			foreach ( $student_ids as $student_id ) {
+				$completed = CoursePress_Data_Student::is_course_complete( $student_id, $course_id );
+
+				if ( ! empty( $completed ) ) {
+					$certified[] = $student_id;
+				}
+			}
+		}
+
+		return $certified;
 	}
 
 	public static function student_enrolled( $student_id, $course_id ) {

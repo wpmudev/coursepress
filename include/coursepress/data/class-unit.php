@@ -601,7 +601,7 @@ class CoursePress_Data_Unit {
 	 * @param integer $course_id course ID.
 	 * @param array $meta Meta data.
 	 */
-	public static function show_new_on_list( $unit_id, $course_id, $meta ) {
+	public static function show_new_on_list( $unit_id, $course_id, $meta = array() ) {
 		/**
 		 * unit
 		 */

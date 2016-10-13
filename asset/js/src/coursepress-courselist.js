@@ -169,7 +169,7 @@ var CoursePress = CoursePress || {};
 			}
 		});
 
-		$('.duplicate-course-link' ).on( 'click', function( e ) {
+		$( '.duplicate-course-link' ).on( 'click', function( e ) {
 			var data;
 			e.stopImmediatePropagation();
 			e.preventDefault();

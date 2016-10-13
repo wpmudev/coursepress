@@ -145,7 +145,7 @@ class CoursePress_View_Front_Login {
 	 *
 	 * @since 2.0.0
 	 */
-	public function log_student_activity_login( $user_login, $user ) {
+	public static function log_student_activity_login( $user_login, $user ) {
 		CoursePress_Data_Student::log_student_activity( 'login', $user->ID );
 	}
 }

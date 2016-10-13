@@ -162,10 +162,17 @@ class CoursePress_Helper_Upgrade {
 			$slug = CoursePress_View_Admin_Upgrade::get_slug();
 			$hide = isset( $_GET['page'] ) && $_GET['page'] == $slug;
 			if ( ! $hide ) {
+				$url = add_query_arg(
+					array(
+						'post_type' => CoursePress_Data_Course::get_post_type_name(),
+						'page' => CoursePress_View_Admin_Upgrade::get_slug(), 
+					),
+					admin_url( 'edit.php' )
+				);
 				CoursePress_Helper_Upgrade::add_message(
 					sprintf(
 						'Courses needs an upgrade. Please go to <a href="%s">Upgrade Courses</a> page.',
-						esc_url( add_query_arg( 'page', CoursePress_View_Admin_Upgrade::get_slug(), admin_url( 'admin.php' ) ) )
+						esc_url( $url )
 					)
 				);
 			}

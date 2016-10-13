@@ -8,10 +8,10 @@ class CoursePress_View_Admin_CoursePress {
 	private static $list_course = null;
 
 	private static $admin_pages = array(
-		'Course_Edit',
-		'Upgrade',
+		//'Course_Edit',
 		//'Assessment_List',
 		//'Assessment_Report',
+		//'Upgrade',
 	);
 
 	public static function init() {
@@ -98,7 +98,7 @@ class CoursePress_View_Admin_CoursePress {
 			$cpt = CoursePress_Data_Course::get_post_type_name();
 			$pages['course_categories'] = array(
 				'title' => __( 'Edit Course Categories', 'cp' ),
-				'menu_title' => __( 'Course Categories', 'cp' ),
+				'menu_title' => __( 'Categories', 'cp' ),
 				'handle' => 'edit-tags.php?taxonomy=' . $category . '&post_type=' . $cpt,
 				'callback' => 'none',
 				'order' => 15,

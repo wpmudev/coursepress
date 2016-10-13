@@ -379,7 +379,7 @@ class CoursePress_Data_Module {
 					$total_answers = count( $correct_answers );
 					$correct_responses = 0;
 
-					if ( is_array( $response[ $key ] ) ) {
+					if ( isset( $response[ $key ] ) && is_array( $response[ $key ] ) ) {
 						foreach ( $response[ $key ] as $a_key => $answer ) {
 							if ( $answer === $correct_answers[ $a_key ] ) {
 								$correct_responses += 1;

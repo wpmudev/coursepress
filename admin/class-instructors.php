@@ -20,6 +20,8 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Controller_Menu {
 	}
 
 	public function process_form() {
+		$this->switch_to_selected_course();
+
 		if ( empty( $_REQUEST['view'] ) ) {
 			// Set up instructors table
 			$this->instructors_list = new CoursePress_Admin_Table_Instructors;
@@ -29,6 +31,25 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Controller_Menu {
 		} else {
 			$view = $_REQUEST['view'];
 			$this->slug = 'instructor-' . $view;
+		}
+	}
+
+	public function switch_to_selected_course() {
+		if ( ! empty( $_REQUEST['action'] ) && 'Filter' === $_REQUEST['action'] ) {
+			$return_url = remove_query_arg(
+				array(
+					'view',
+					'course_id',
+					'student_id',
+				)
+			);
+
+			if ( (int) ( $_REQUEST['course_id'] ) > 0 ) {
+				$course_id = (int) $_REQUEST['course_id'];
+				$return_url = add_query_arg( 'course_id', $course_id );
+			}
+			wp_safe_redirect( $return_url );
+			exit;
 		}
 	}
 }

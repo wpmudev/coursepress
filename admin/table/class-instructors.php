@@ -39,6 +39,13 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 			'search' => $usersearch,
 		);
 
+		if ( ! empty( $_GET['course_id'] ) ) {
+			// Show only students of current course
+			$course_id = (int) $_GET['course_id'];
+			$instructor_ids = CoursePress_Data_Course::get_instructors( $course_id );
+			$args['include'] = $instructor_ids;
+		}
+
 		if ( '' !== $args['search'] )
 			$args['search'] = '*' . $args['search'] . '*';
 
