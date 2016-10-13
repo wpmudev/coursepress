@@ -957,6 +957,27 @@ tester {
 
 /** Discussion **/
 /* Notifications and Discussions */
+.course-discussion-wrapper .button {
+  padding: 5px 15px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 5px 12px;
+  text-decoration: none;
+  -webkit-text-decoration-style: none;
+  text-decoration-style: none;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  background-color: #F4F4F4;
+  cursor: pointer;
+  color: inherit;
+}
+.course-discussion-wrapper .button:hover {
+  text-decoration: none;
+}
+.course-discussion-wrapper .button a {
+  text-decoration: none;
+  border: 0;
+  color: inherit;
+}
+
 .discussion-new {
   display: block;
   margin: 15px 0 25px 0;

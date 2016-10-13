@@ -113,7 +113,7 @@ class CoursePress_Template_Communication {
 	}
 
 	public static function render_discussion() {
-		global $wp;
+		global $wp, $post;
 
 		$course_id = CoursePress_Helper_Utility::the_course( true );
 		$post_name = $wp->query_vars['discussion_name'];
@@ -151,9 +151,13 @@ class CoursePress_Template_Communication {
 		$content .= '</div>';
 
 		if ( ! empty( $discussion ) ) {
+			setup_postdata( $discussion );
+
 			ob_start();
 			comments_template();
 			$content .= ob_get_clean();
+
+			wp_reset_postdata();
 		}
 
 		$content .= '</div>';
@@ -217,7 +221,7 @@ class CoursePress_Template_Communication {
 			<textarea name="discussion_content" placeholder="' . esc_attr__( 'Type your discussion or question here…', 'cp' ) . '">' . CoursePress_Helper_Utility::filter_content( $body ) . '</textarea>
 			<div class="button-links">
 				<a href="' . esc_url( $cancel_link ) . '" class="button">' . esc_html__( 'Cancel', 'cp' ) . '</a>
-				<button type="submit" class="submit-discussion">' . esc_html( $add_edit ) . '</button>
+				<button type="submit" class="button submit-discussion">' . esc_html( $add_edit ) . '</button>
 			</div>
 		</form>
 		';

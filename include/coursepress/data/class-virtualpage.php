@@ -1,19 +1,19 @@
 <?php
 /**
- * Data access module.
- *
- * @package CoursePress
- */
-
-/**
  * Handles the virtual pages used by CoursePress.
  *
  * When the coursepress theme is used, these virtual pages are not used because
  * the theme already comes with special template files for CoursePress pages.
  *
  * @since  2.0.0
+ *
+ * @package WordPress
+ * @subpackage CoursePress
  */
 class CoursePress_Data_VirtualPage {
+	protected $callback = false;
+	protected $context = '';
+
 	/**
 	 * The slug of our virtual page.
 	 *
@@ -133,6 +133,12 @@ class CoursePress_Data_VirtualPage {
 		$this->date = current_time( 'mysql' );
 		$this->orig_id = get_the_ID();
 
+		if ( ! empty( $args ) ) {
+			foreach ( $args as $key => $value ) {
+				$this->$key = $value;
+			}
+		}
+
 		if ( isset( $args['show_title'] ) ) {
 			$this->show_title = $args['show_title'];
 		}
@@ -190,6 +196,11 @@ class CoursePress_Data_VirtualPage {
 			array( $this, 'virtual_title' ),
 			10, 2
 		);
+		add_filter(
+			'the_content',
+			array( $this, 'virtual_content' )
+		);
+
 		add_filter(
 			'comments_template',
 			array( $this, 'virtual_comments' )
@@ -283,6 +294,15 @@ class CoursePress_Data_VirtualPage {
 		$wp_query->is_404 = false;
 
 		return array( $virtual_post );
+	}
+
+	public function virtual_content( $content ) {
+		if ( $this->callback ) {
+			$content = call_user_func( $this->callback, $content );
+			$content = apply_filters( 'coursepress_view_course', $content, $this->ID, $this->context );
+		}
+
+		return $content;
 	}
 
 	/**

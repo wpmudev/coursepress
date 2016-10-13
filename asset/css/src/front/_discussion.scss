@@ -1,4 +1,9 @@
 /* Notifications and Discussions */
+.course-discussion-wrapper {
+	.button {
+		@include button;
+	}
+}
 .discussion-new {
 	display: block;
 	margin: 15px 0 25px 0;
