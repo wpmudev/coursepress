@@ -652,6 +652,12 @@ tester {
   vertical-align: middle;
   padding: 2px 4px;
 }
+.cp .module-content {
+  max-width: 100%;
+}
+.cp .module-content * {
+  max-width: 100%;
+}
 .cp .module-elements {
   margin: 15px 0;
 }
