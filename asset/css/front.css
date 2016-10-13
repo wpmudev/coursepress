@@ -1130,6 +1130,12 @@ ul.notification-archive-list:after {
   margin-left: 20px;
 }
 
+/** Instructor Page **/
+.cp-instructor-page .instructor-avatar {
+  float: left;
+  margin: 0 25px 25px 0;
+}
+
 /** Media Queries **/
 @media screen and (min-width: 768px) {
   .enrolment-container-div .bbm-modal {

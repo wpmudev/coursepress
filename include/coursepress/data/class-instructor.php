@@ -187,43 +187,6 @@ class CoursePress_Data_Instructor {
 		return $posts;
 	}
 
-	/*
-	TODO: Remove this in 2.1 or so - keep it in 2.0 for reference:
-
-	public static function get_accessable_courses( $user, $include_posts = false ) {
-		return self::get_instructor_courses( $user );
-		$user_id = self::_get_id( $user );
-		$courses = self::get_assigned_courses_ids( $user_id );
-		$course_array = array();
-
-		foreach ( $courses as $course ) {
-
-			// @todo ADD CAPABILITIES CLASS
-			// $can_update = CoursePress_Capabilities::can_update_course( $course, $user_id );
-			// $can_delete = CoursePress_Capabilities::can_delete_course( $course, $user_id );
-			// $can_publish = CoursePress_Capabilities::can_change_course_status( $course, $user_id );
-			// $can_view_unit = CoursePress_Capabilities::can_view_course_units( $course, $user_id );
-			// $my_course = CoursePress_Capabilities::is_course_instructor( $course, $user_id );
-			// $creator = CoursePress_Capabilities::is_course_creator( $course, $user_id );
-			$my_course = true;
-
-			if ( ! $my_course && ! $creator && ! $can_update && ! $can_delete && ! $can_publish && ! $can_view_unit ) {
-				continue;
-			} else {
-				$course_array[] = $course;
-			}
-		}
-
-		if ( ! $include_posts ) {
-			return $course_array;
-		} else {
-			$post_type = CoursePress_Data_Course::get_post_type_name();
-			$query = new WP_Query( array( 'post__in' => $course_array, 'post_type' => $post_type, 'posts_per_page' => -1 ) );
-			return $query->posts;
-		}
-	}
-	*/
-
 	public static function unassign_from_course( $user, $course_id = 0 ) {
 		$user_id = self::_get_id( $user );
 		$global_option = ! is_multisite();
