@@ -877,8 +877,82 @@ tester {
   float: right;
   font-size: 1.6em;
 }
-.cp-student-workbook .mandatory {
-  color: rgba(255, 0, 0, 0.09);
+.cp-student-workbook .workbook-table {
+  margin: 15px 0;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+.cp-student-workbook .workbook-table th, .cp-student-workbook .workbook-table td {
+  vertical-align: top;
+  text-align: left;
+  background-color: transparent;
+  padding: 8px 15px;
+}
+.cp-student-workbook .workbook-table .row-unit th {
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  border-width: 1px 0;
+  padding: 8px 15px;
+  background-color: #FFF;
+}
+.cp-student-workbook .workbook-table .row-unit th.td-right {
+  width: 20%;
+}
+.cp-student-workbook .workbook-table .td-right {
+  text-align: right;
+}
+.cp-student-workbook .workbook-table .non-gradable:before {
+  content: '\f534';
+  font-family: Dashicons;
+  font-size: 120%;
+  margin-right: 10px;
+  line-height: 16px;
+  vertical-align: middle;
+}
+.cp-student-workbook .workbook-table .button {
+  padding: 5px 15px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 5px 12px;
+  text-decoration: none;
+  -webkit-text-decoration-style: none;
+  text-decoration-style: none;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  background-color: #F4F4F4;
+  cursor: pointer;
+  color: inherit;
+}
+.cp-student-workbook .workbook-table .button:hover {
+  text-decoration: none;
+}
+.cp-student-workbook .workbook-table .button a {
+  text-decoration: none;
+  border: 0;
+  color: inherit;
+}
+.cp-student-workbook .workbook-table .button.button-download:after {
+  content: '\f316';
+  font-family: Dashicons;
+  margin-left: 25px;
+}
+.cp-student-workbook .workbook-table .column-title {
+  width: 25%;
+}
+.cp-student-workbook .workbook-table .question {
+  font-size: 110%;
+  font-weight: 600;
+}
+.cp-student-workbook .workbook-table .answer {
+  padding-left: 25px;
+}
+.cp-student-workbook .workbook-table .answer:before {
+  content: '\f335';
+  font-family: Dashicons;
+  font-size: 130%;
+  width: 25px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: -25px;
+}
+.cp-student-workbook .workbook-table .answer.chosen-correct:before {
+  content: '\f147';
 }
 
 /** Discussion **/
