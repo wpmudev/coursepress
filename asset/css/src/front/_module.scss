@@ -44,6 +44,12 @@
 			}
 		}
 	}
+	.module-content {
+		max-width: 100%;
+		* {
+			max-width: 100%;
+		}
+	}
 	.module-elements {
 		margin: 15px 0;
 		select,
