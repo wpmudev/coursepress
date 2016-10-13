@@ -184,7 +184,7 @@ class CoursePress_Template_Calendar {
 		 * Add course-calendar.js script and front.css to ensure it works when use outside of coursepress pages
 		 * but use the same slug to avoid multiple inclusion.
 		 **/
-		add_action( 'wp_footer', array( __CLASS__, 'enqueue_calendar_script' ) );
+		add_action( 'wp_footer', array( $this, 'enqueue_calendar_script' ) );
 
 		return $calendar;
 
