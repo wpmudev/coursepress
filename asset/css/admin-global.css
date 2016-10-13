@@ -244,13 +244,13 @@
   color: #82878c;
 }
 
-#adminmenu #toplevel_page_coursepress div.wp-menu-image:before,
+#adminmenu #menu-posts-course div.wp-menu-image:before,
 #post-body .misc-pub-post-course:before {
   font-family: 'ico-cp' !important;
   content: "\e600";
 }
 
-#adminmenu .toplevel_page_coursepress div.wp-menu-image img {
+#adminmenu #menu-posts-course div.wp-menu-image img {
   display: none;
 }
 

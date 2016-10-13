@@ -810,7 +810,7 @@ class CoursePress_View_Front_Course {
 			$cp->cp_course = $wp->query_vars['coursename'];
 		}
 
-		if ( isset( $wp->query_vars['course_completion'] ) ) {
+		if ( ! empty( $wp->query_vars['course_completion'] ) ) {
 			$cp->is_unit = false;
 			$cp->cp_course = $wp->query_vars['coursename'];
 			$cp->is_completion_page = true;
@@ -935,7 +935,6 @@ class CoursePress_View_Front_Course {
 			);
 			// -----------------------------------------------------------------
 		} elseif ( $cp->is_completion_page ) {
-
 			// Render completion page
 			if ( $cp->is_enrolled ) {
 				$student_progress = CoursePress_Data_Student::get_completion_data( $cp->student_id, $cp->course_id );

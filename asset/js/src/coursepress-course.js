@@ -1081,11 +1081,14 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			if ( data.redirect ) {
 				var dest = location.href.replace( '&tab=setup', '' );
 
-				if ( !/\&id/.test( dest ) ) {
-					dest += '&id=' + data.course_id;
+				if ( !/\&post/.test( dest ) ) {
+					dest += '&post=' + data.course_id;
 				}
 				if ( !/\&action=edit/.test( dest ) ) {
 					dest += '&action=edit';
+				}
+				if ( /post-new.php/.test( dest ) ) {
+					dest = dest.replace( /post-new.php/, 'post.php' );
 				}
 
 				location.href = dest + '&tab=units';
