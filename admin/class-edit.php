@@ -31,6 +31,9 @@ class CoursePress_Admin_Edit {
 		remove_all_actions( 'add_meta_boxes' );
 
 		if ( 'setup' == $tab ) {
+			// Change preview link
+			add_filter( 'preview_post_link', array( __CLASS__, 'preview_post_link' ), 10, 2 );
+
 			// Disable permalink
 			add_filter( 'get_sample_permalink_html', array( __CLASS__, 'disable_permalink' ), 100, 5 );
 	
@@ -73,6 +76,12 @@ class CoursePress_Admin_Edit {
 		}
 		</style>
 		<?php
+	}
+
+	public static function preview_post_link( $preview_link, $post ) {
+		$preview_link = CoursePress_Data_Course::get_course_url( $post->ID );
+
+		return $preview_link;
 	}
 
 	public static function disable_permalink( $return, $post_id, $new_title, $new_slug, $post ) {
