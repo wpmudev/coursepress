@@ -333,7 +333,7 @@ class CoursePress_Helper_Integration_MarketPress {
 
 		foreach ( $items as $product_id => $qty ) {
 
-			$course_id = (int) get_post_meta( $product_id, 'course_id', true );
+			$course_id = (int) get_post_meta( $product_id, 'mp_course_id', true );
 			$user_id   = $order_post->post_author;
 
 			// If not enrolled...
@@ -1088,7 +1088,7 @@ Yours sincerely,
 		if ( ! self::$is_active ) {
 			return $enroll_student;
 		}
-		return ! CoursePress_Data_Course::is_paid_course( $course_id );
+		return CoursePress_Data_Course::is_paid_course( $course_id );
 	}
 
 	/**
