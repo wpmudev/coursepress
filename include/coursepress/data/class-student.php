@@ -383,6 +383,17 @@ class CoursePress_Data_Student {
 				);
 				$grade = $result['grade'];
 				break;
+			case 'input-form':
+				$result = CoursePress_Data_Module::get_form_results(
+					$student_id,
+					$course_id,
+					$unit_id,
+					$module_id,
+					$response,
+					$data
+				);
+				$grade = $result['grade'];
+				break;
 			case 'input-upload':
 				if ( ! empty( $response['file'] ) ) {
 					$grade = $attributes['minimum_grade'];

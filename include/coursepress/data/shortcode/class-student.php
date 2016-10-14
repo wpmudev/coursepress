@@ -301,6 +301,15 @@ class CoursePress_Data_Shortcode_Student {
 
 								$response_display = $display;
 								break;
+							case 'input-form':
+								$display = '';
+								if ( $response_display ) {
+									foreach( $response_display as $answers ){
+										$display .= sprintf( '<p class="answer">%s</p>', $answers );
+									}
+								}
+								$response_display = $display;
+								break;
 							case 'input-text': case 'input-textarea':
 								$response_display = empty( $response_display ) ? __( 'No answer!', 'cp' ) : $response_display;
 								$display = sprintf( '<p>%s</p>', $response_display );
