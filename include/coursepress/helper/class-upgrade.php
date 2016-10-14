@@ -702,31 +702,122 @@ class CoursePress_Helper_Upgrade {
 	private static function course_upgrade_student_progress( $course ) {
 		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
 		if ( $done ) {
-			return;
+			//			return;
 		}
-
-
-
-
-
-
-		return;
 		/**
-		 * TODO
+		 * get students
 		 */
-		global $wpdb;
-		$sql = $wpdb->prepare(
-			"update {$wpdb->usermeta} set meta_key = %s where meta_key = %s",
-			sprintf( '_course_%d_progress', $course->ID ),
-			sprintf( 'course_%d_progress', $course->ID )
-		);
-		$wpdb->query( $sql );
-		$sql = $wpdb->prepare(
-			"update {$wpdb->usermeta} set meta_key = %s where meta_key = %s",
-			sprintf( '_course_%d_completed', $course->ID ),
-			sprintf( 'course_%d_completed', $course->ID )
-		);
-		$wpdb->query( $sql );
+		$student_ids = CoursePress_Data_Course::get_student_ids( $course->ID );
+		foreach( $student_ids as $student_id ) {
+			//$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course->ID );
+			$student_progress = array();
+			/**
+			 * Get student responses
+			 */
+			$args = array(
+				'post_type' => 'module_response',
+				'nopaging' => true,
+				'ignore_sticky_posts' => true,
+				'meta_query' => array(
+					'relation' => 'AND',
+					array(
+						'key' => 'course_id',
+						'value' => $course->ID,
+					),
+					array(
+						'key' => 'user_ID',
+						'value' => $student_id,
+					),
+				),
+			);
+			$query = new WP_Query( $args );
+			$responses = $query->posts;
+			$unit_id = 0;
+			foreach( $responses as $response ) {
+				/**
+				 * Module & Unit iD
+				 */
+				$module_id = $response->post_parent;
+				$unit_id = CoursePress_Data_Module::get_unit_id_by_module( $module_id );
+				/**
+				 * Modules seen
+				 */
+				CoursePress_Helper_Utility::set_array_val(
+					$student_progress,
+					'completion/' . $unit_id . '/modules_seen/'.$module_id,
+					true
+				);
+				/**
+				 */
+				$meta = get_post_meta( $response->ID );
+				l($meta);
+				/**
+				 * student_checked_answers
+				 */
+				if ( isset( $meta['student_checked_answers'] ) ) {
+					foreach( $meta['student_checked_answers'] as $index => $response_student_checked_answer ) {
+						$response_student_checked_answer = maybe_unserialize( $response_student_checked_answer );
+						CoursePress_Helper_Utility::set_array_val(
+							$student_progress,
+							'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/response',
+							maybe_unserialize( $response_student_checked_answer )
+						);
+
+					}
+				}
+				/**
+				 * response_grade
+				 */
+				if ( isset( $meta['response_grade'] ) ) {
+					foreach( $meta['response_grade'] as $index => $grade ) {
+						$grade = maybe_unserialize( $grade );
+						/**
+						 * Module response
+						 */
+						CoursePress_Helper_Utility::set_array_val(
+							$student_progress,
+							'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/grades/0',
+							array(
+								'grade_by' => $student_id == $grade['instructor'] ? 'auto' : $grade['instructors'],
+								'grade' => $grade['grade'],
+								'date' => date( 'Y-m-d H:i:s', $grade['time'] ),
+							)
+						);
+						CoursePress_Helper_Utility::set_array_val(
+							$student_progress,
+							'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/date',
+							date( 'Y-m-d H:i:s', $grade['time'] )
+						);
+					}
+				}
+			}
+			/**
+			 * Visited pages for unit
+			 */
+			if ( $unit_id ) {
+				/**
+				 * visited pages
+				 */
+				$value = get_user_meta( $student_id, 'visited_unit_pages_'.$unit_id.'_page', true );
+				$value = explode( '|', get_user_meta( $student_id, 'visited_unit_pages_'.$unit_id.'_page', true ) );
+				CoursePress_Helper_Utility::set_array_val(
+					$student_progress,
+					'units/' . $unit_id . '/visited_pages/',
+					$value
+				);
+				/**
+				 * last visited page
+				 */
+				CoursePress_Helper_Utility::set_array_val(
+					$student_progress,
+					'units/' . $unit_id . '/last_visited_page/',
+					explode( '|', get_user_meta( $student_id, 'last_visited_unit_pages_'.$unit_id.'_page', true ) )
+				);
+			}
+			$student_progress = CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course->ID, $student_progress );
+			CoursePress_Data_Student::update_completion_data( $student_id, $course->ID, $student_progress );
+			//l($student_progress );
+		}
 		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
 	}
 
@@ -795,7 +886,7 @@ class CoursePress_Helper_Upgrade {
 					$type = get_post_meta( $module->ID, 'module_type', true );
 					if ( 'page_break_module' == $type ) {
 						$page++;
-//						wp_delete_post( $module->ID, true );
+						//						wp_delete_post( $module->ID, true );
 					} else {
 						CoursePress_Helper_Utility::add_meta_unique( $module->ID, 'module_page', $page );
 					}
