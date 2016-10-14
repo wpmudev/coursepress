@@ -384,7 +384,7 @@ class CoursePress_Helper_Integration_MarketPress {
 				</label>';
 
 		$product_id = self::get_product_id( $course_id );
-
+		
 		if ( $product_id ) {
 			// Add MP product ID as indication.
 			$mp_content .= '
@@ -645,7 +645,7 @@ class CoursePress_Helper_Integration_MarketPress {
 	 * @return integer product ID
 	 */
 	public static function get_product_id( $course_id = false ) {
-		$product_id = CoursePress_Data_Course::get_setting( $course_id, 'mp_product_id', false );
+		$product_id = CoursePress_Data_Course::get_setting( $course_id, 'cp_mp_product_id', false );
 		/**
 		 * Check if the corresponding product exists, if not, set product ID
 		 * to false. This happens if the product "accidentally" got deleted.

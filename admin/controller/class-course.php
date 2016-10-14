@@ -423,7 +423,13 @@ class CoursePress_Admin_Controller_Course {
 				// Check wp nonce.
 				if ( wp_verify_nonce( $data->data->nonce, 'duplicate_course' ) ) {
 					$json_data = CoursePress_Data_Course::duplicate_course( $data );
-					$success = ! empty( $json_data );
+					$success = (bool) $json_data['success'];
+					if ( $success ) {
+						// force removal of MP meta stuffs
+						delete_post_meta( $json_data['course_id'], 'cp_mp_product_id' );
+						delete_post_meta( $json_data['course_id'], 'cp_mp_sku' );
+						delete_post_meta( $json_data['course_id'], 'cp_mp_auto_sku' );
+					}
 				}
 
 				break;

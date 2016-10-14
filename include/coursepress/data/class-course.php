@@ -2066,6 +2066,11 @@ class CoursePress_Data_Course {
 		self::save_course_number( $new_course_id, $the_course['post_title'] );
 
 		$course_meta = get_post_meta( $course_id );
+		// unset MP stuffs
+		if ( isset($course_meta['cp_mp_product_id']) ) unset($course_meta['cp_mp_product_id']);
+		if ( isset($course_meta['cp_mp_sku']) ) unset($course_meta['cp_mp_sku']);
+		if ( isset($course_meta['cp_mp_auto_sku']) ) unset($course_meta['cp_mp_auto_sku']);
+		
 		foreach ( $course_meta as $key => $value ) {
 			/**
 			 * do not copy students to new course
@@ -2075,11 +2080,11 @@ class CoursePress_Data_Course {
 			}
 			if ( ! preg_match( '/^_/', $key ) ) {
 				foreach ( $value as $key_value ) {
-					add_post_meta( $new_course_id, $key, maybe_unserialize( $key_value ), true );
+					update_post_meta( $new_course_id, $key, maybe_unserialize( $key_value ), true );
 				}
 			}
 		}
-
+		
 		$visible_units = self::get_setting( $course_id, 'structure_visible_units', array() );
 		$preview_units = self::get_setting( $course_id, 'structure_preview_units', array() );
 		$visible_pages = self::get_setting( $course_id, 'structure_visible_pages', array() );
