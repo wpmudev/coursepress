@@ -225,11 +225,11 @@ class CoursePress_Helper_Upgrade {
 			'course_dates',
 			'course_classes_discusion_and_workbook',
 			'course_enrollment_and_cost',
-			'student_progress',
-			'module_page',
-			'student_enrolled',
 			'course_completion',
+			'module_page',
 			'unit_page_title',
+			'student_enrolled',
+			'student_progress',
 			'end'
 		);
 		$section = isset( $_POST['section'] )? $_POST['section']:$updates[0];
@@ -250,7 +250,16 @@ class CoursePress_Helper_Upgrade {
 		if ( empty( $json['message'] ) ) {
 			$json['message'] = $section;
 		}
-		$json['message'] .= '<br />';
+		switch( $section) {
+		case 'begin':
+			$json['message'] = sprintf( '<h2>%s</h2><ol>', $json['message'] );
+			break;
+		case 'end':
+			$json['message'] = sprintf( '<li class="%s">%s</li></ol>', esc_attr( $section ), $json['message'] );
+			break;
+		default:
+			$json['message'] = sprintf( '<li class="%s">%s</li>', esc_attr( $section ), $json['message'] );
+		}
 		/**
 		 * try to use new section
 		 */
@@ -275,15 +284,22 @@ class CoursePress_Helper_Upgrade {
 		return sprintf( 'Start updating course: <b>%s</b>', apply_filters( 'the_title', $course->post_title ) );
 	}
 
-
+	/**
+	 * Last settings
+	 */
 	public static function course_upgrade_end( $course ) {
-		CoursePress_Data_Course::update_setting( $course->ID, 'course_view', 'normal' );
-		for ( $i = 1; $i < 8; $i++ ) {
-			CoursePress_Data_Course::update_setting( $course->ID, 'setup_step_'.$i, 'saved' );
+		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
+		if ( ! $done ) {
+			$settings = CoursePress_Data_Course::get_setting( $course->ID, true );
+			CoursePress_Data_Course::set_setting( $course->ID, 'course_view', 'normal' );
+			for ( $i = 1; $i < 8; $i++ ) {
+				CoursePress_Data_Course::set_setting( $course->ID, 'setup_step_'.$i, 'saved' );
+			}
+			CoursePress_Data_Course::update_setting( $course->ID, true, $settings );
+			self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
 		}
 		$title = sprintf( '<b>%s</b>', apply_filters( 'the_title', $course->post_title ) );
 		$content = sprintf( __( 'Course %s was successful updated.', 'cp' ), $title );
-		$content .= '<br />';
 		return $content;
 	}
 
