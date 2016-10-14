@@ -129,7 +129,7 @@ class CoursePress_Helper_Integration_MarketPress {
 		 * Reference to order ID, will need to get the actual product using the MarketPress Order class
 		 */
 		add_action(
-			'mp_order_order_paid',
+			'mp_order_paid',
 			array( __CLASS__, 'course_paid_3pt0' )
 		);
 
@@ -327,20 +327,16 @@ class CoursePress_Helper_Integration_MarketPress {
 	}
 
 	public static function course_paid_3pt0( $order ) {
+		if ( ! empty( $order->mp_cart_info ) ) {
+			foreach ( $order->mp_cart_info as $product_id => $info ) {
+				$course_id = (int) get_post_meta( $product_id, 'mp_course_id', true );
+				$user_id   = $order->post_author;
 
-		$order_post = get_post( $order->ID );
-		$cart	   = $order->get_cart();
-		$items	  = $cart->get_items();
-
-		foreach ( $items as $product_id => $qty ) {
-
-			$course_id = (int) get_post_meta( $product_id, 'mp_course_id', true );
-			$user_id   = $order_post->post_author;
-
-			// If not enrolled...
-			if ( ! CoursePress_Data_Student::is_enrolled_in_course( $user_id, $course_id ) ) {
-				//Then enroll..
-				CoursePress_Data_Course::enroll_student( $user_id, $course_id );
+				// If not enrolled...
+				if ( ! CoursePress_Data_Student::is_enrolled_in_course( $user_id, $course_id ) ) {
+					//Then enroll..
+					CoursePress_Data_Course::enroll_student( $user_id, $course_id );
+				}
 			}
 		}
 	}
