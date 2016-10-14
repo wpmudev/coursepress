@@ -714,9 +714,9 @@ module.exports = function(grunt) {
 			grunt.task.run( 'gitcommit:' + branch );
 
 			// Create a distributable zip-file of the plugin branch.
-			///grunt.task.run( 'clean:release_' + branch );
-			///grunt.task.run( 'copy:' + branch );
-			//grunt.task.run( 'compress:' + branch );
+			grunt.task.run( 'clean:release_' + branch );
+			grunt.task.run( 'copy:' + branch );
+			grunt.task.run( 'compress:' + branch );
 
 			grunt.task.run( 'gitcheckout:base');
 		}
@@ -739,4 +739,13 @@ module.exports = function(grunt) {
 	grunt.registerTask( 'php', ['phplint', 'phpcs:sniff'] );
 
 	grunt.registerTask( 'default', ['php', 'test', 'js', 'css'] );
+
+	grunt.registerTask( 'release', 'Generating release version...', function( target ) {
+		if ( ! target ) {
+			grunt.log.subhead( 'What type of release are you generating?' );
+			return false;
+		}
+
+		grunt.task.run( 'copy:' + target );
+	} );
 };
