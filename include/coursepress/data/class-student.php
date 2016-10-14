@@ -1002,7 +1002,7 @@ class CoursePress_Data_Student {
 
 											if ( $is_module_structure_visible ) {
 												$valid_items += 1;
-												$uni_valid_progress += 1;
+												$unit_valid_progress += 1;
 											}
 										}
 									} else {

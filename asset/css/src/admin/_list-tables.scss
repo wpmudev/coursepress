@@ -35,7 +35,21 @@
 		width: 90px;
 	}
 }
-
+.post-type-course {
+	.column-certificates,
+	.column-students {
+		width: 100px;
+		text-align: center !important;
+	}
+	.column-taxonomy-course_category,
+	.column-date_start,
+	.column-date_end,
+	.column-date_enrollment_start,
+	.column-date_enrollment_end,
+	.column-units {
+		width: 130px;
+	}
+}
 
 
 .coursepress_student_searchbox {
