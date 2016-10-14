@@ -37,17 +37,20 @@ class CoursePress_Template_Course {
 				'name' => __( 'Course', 'cp' ),
 				'date_enrolled' => __( 'Date Enrolled', 'cp' ),
 				'average' => __( 'Average', 'cp' ),
+				'status' => __( 'Status', 'cp' ),
 				'certificate' => __( 'Certificate', 'cp' ),
 			);
 
 			foreach ( $table_columns as $column => $column_label ) {
 				$table_header .= sprintf( '<th class="column-%s">%s</th>', $column, $column_label );
 			}
+			$table_header .= '<th>&nbsp;</th>';
 
 			$column_keys = array_keys( $table_columns );
 
 			foreach ( $courses as $course ) {
 				$course_url = CoursePress_Data_Course::get_course_url( $course->ID );
+				$completion_status = CoursePress_Data_Student::get_course_status( $course->ID, $student_id );
 				$course_completed = CoursePress_Data_Student::is_course_complete( $student_id, $course->ID );
 
 				$table_body .= '<tr>';
@@ -55,9 +58,6 @@ class CoursePress_Template_Course {
 				foreach ( $column_keys as $column_key ) {
 					switch ( $column_key ) {
 						case 'name':
-							$workbook_url = CoursePress_Data_Student::get_workbook_url( $course->ID );
-							$workbook_link = sprintf( '<a href="%s">%s</a>', esc_url( $workbook_url ), __( 'Workbook', 'cp' ) );
-
 							$table_body .= sprintf( '<td><a href="%s">%s</a></td>', esc_url( $course_url ), $course->post_title );
 							break;
 
@@ -73,8 +73,21 @@ class CoursePress_Template_Course {
 							break;
 
 						case 'average':
-							$average = CoursePress_Data_Student::average_course_responses( $student_id, $course->ID );
-							$table_body .= sprintf( '<td>%s%s</td>', $average, '%' );
+							$statuses = array( 'Ongoing', 'Awaiting Review' );
+
+							if ( in_array( $completion_status, $statuses ) ) {
+								$average = '-';
+							} else {
+								$average = CoursePress_Data_Student::average_course_responses( $student_id, $course->ID );
+								$average .= '%';
+							}
+							$table_body .= sprintf( '<td>%s</td>', $average );
+							break;
+
+						case 'status':
+							
+							$table_body .= sprintf( '<td class="column-status">%s</td>', $completion_status );
+
 							break;
 
 						case 'certificate':
@@ -91,20 +104,12 @@ class CoursePress_Template_Course {
 				}
 
 				// Row actions
+				$workbook_url = CoursePress_Data_Student::get_workbook_url( $course->ID );
+				$workbook_link = sprintf( '<a href="%s" target="_blank">%s</a>', esc_url( $workbook_url ), __( 'Workbook', 'cp' ) );
+
 				$row_actions = array(
 					'workbook' => $workbook_link,
-					'view' => sprintf( '<a href="%s">%s</a>', esc_attr( $course_url ), __( 'View Course', 'cp' ) ),
 				);
-
-				if ( CoursePress_Data_Capabilities::can_update_course( $course->ID, $student_id ) ) {
-					$edit_link = add_query_arg( array(
-						'page' => 'coursepress_course',
-						'action' => 'edit',
-						'id' => $course->ID,
-					) );
-					$edit_link = sprintf( '<a href="%s">%s</a>', esc_url( $edit_link ), __( 'Edit', 'cp' ) );
-					array_unshift( $row_actions, $edit_link );
-				}
 
 				$withdraw_link = add_query_arg( array(
 					'_wpnonce' => wp_create_nonce( 'coursepress_student_withdraw' ),
@@ -118,7 +123,7 @@ class CoursePress_Template_Course {
 				$table_body .= '</tr>';
 			}
 
-			$table_format = '<table><thead><tr>%s</tr></thead><tbody>%s</tbody></table>';
+			$table_format = '<table class="cp-dashboard-table"><thead><tr>%s</tr></thead><tbody>%s</tbody></table>';
 
 			$content .= sprintf( $table_format, $table_header, $table_body );
 		}

@@ -708,7 +708,7 @@ class CoursePress_Template_Module {
 			$content .= '<ul style="list-style:none;">';
 
 			foreach ( $attributes['answers'] as $key => $answer ) {
-				$checked = ' ' . checked( 1, $response == $key, false );
+				$checked = '' != $response ? ' ' . checked( 1, $response == $key, false ) : '';
 
 				$format = '<li class="%1$s %2$s"><input type="radio" value="%5$s" name="module[%3$s]" id="module-%3$s-%5$s" %6$s /> <label for="module-%3$s-%5$s">%4$s</label> </li>';
 				$content .= sprintf( $format, $oddeven, $alt, $module->ID, esc_html__( $answer ), esc_attr( $key ), $disabled_attr . $checked );

@@ -297,6 +297,27 @@ tester {
 .course_list_box_item .course-meta-information .course-cost:before {
   content: '\f0d6';
 }
+.course_list_box_item .coursepress-course-link {
+  padding: 5px 15px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 5px 12px;
+  text-decoration: none;
+  -webkit-text-decoration-style: none;
+  text-decoration-style: none;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  background-color: #F4F4F4;
+  cursor: pointer;
+  color: inherit;
+  float: right;
+}
+.course_list_box_item .coursepress-course-link:hover {
+  text-decoration: none;
+}
+.course_list_box_item .coursepress-course-link a {
+  text-decoration: none;
+  border: 0;
+  color: inherit;
+}
 .course_list_box_item .clickable {
   cursor: pointer;
 }
@@ -571,8 +592,16 @@ tester {
   padding-left: 60px;
 }
 .units-archive-list .course-progress-disc-container {
+  position: relative;
   float: right;
   margin-bottom: -25px;
+}
+.units-archive-list .course-progress-disc-container a {
+  opacity: 1;
+  filter: alpha(opacity=100);
+  margin: 0;
+  top: 0;
+  left: 0;
 }
 .units-archive-list .course-preview-container {
   float: right;
@@ -1134,6 +1163,25 @@ ul.notification-archive-list:after {
 .cp-instructor-page .instructor-avatar {
   float: left;
   margin: 0 25px 25px 0;
+}
+
+/** Student Dashboard **/
+.coursepress-dashboard-wrapper .cp-dashboard-table {
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+.coursepress-dashboard-wrapper .cp-dashboard-table th, .coursepress-dashboard-wrapper .cp-dashboard-table td {
+  text-align: left;
+  background-color: transparent;
+  padding: 4px 15px;
+}
+.coursepress-dashboard-wrapper .cp-dashboard-table thead th, .coursepress-dashboard-wrapper .cp-dashboard-table thead td {
+  background-color: #FFF;
+}
+
+/** Enrollment **/
+.bbm-modal label span {
+  display: block;
+  padding-bottom: 5px;
 }
 
 /** Media Queries **/
