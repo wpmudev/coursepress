@@ -83,6 +83,10 @@
 			content: '\f0d6';
 		}
 	}
+	.coursepress-course-link {
+		@include button;
+		float: right;
+	}
 	.clickable {
 		cursor: pointer;
 

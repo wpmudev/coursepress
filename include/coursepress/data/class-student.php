@@ -217,8 +217,6 @@ class CoursePress_Data_Student {
 		$data = array();
 		CoursePress_Helper_Utility::set_array_val( $data, 'version', '2.0' );
 
-		self::update_completion_data( $student_id, $course_id, $data );
-
 		return $data;
 	}
 
@@ -290,6 +288,10 @@ class CoursePress_Data_Student {
 
 		if ( empty( $data ) ) {
 			$data = self::get_completion_data( $student_id, $course_id );
+		}
+
+		if ( empty( $data['units'] ) ) {
+			$data['units'] = array();
 		}
 
 		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/visited_pages/' . $page, $page );
@@ -738,6 +740,7 @@ class CoursePress_Data_Student {
 			$unit_gradable_modules = 0;
 			$unit_passing_grade = 0;
 			$unit_progress_counter = 0;
+			$unit_valid_progress = 0;
 
 			if ( false === $is_unit_available ) {
 				// Let's not check unavailable unit
@@ -747,12 +750,15 @@ class CoursePress_Data_Student {
 			if ( ! empty( $unit['pages'] ) ) {
 				foreach ( $unit['pages'] as $page_number => $modules ) {
 					$seen_modules = 0;
+					$valid_module_progress = 0;
+					$valid_page_progress = false;
 
 					// Include pages only that is set to be visible to avoid progress rate confusion
 					$is_page_structure_visible = CoursePress_Data_Unit::is_page_structure_visible( $course_id, $unit_id, $page_number, $student_id );
 
 					if ( $is_page_structure_visible || $is_normal_mode ) {
 						$unit_progress_counter += 1;
+						$valid_page_progress = true;
 					}
 
 					if ( ! empty( $modules['modules'] ) ) {
@@ -906,11 +912,8 @@ class CoursePress_Data_Student {
 									$excluded_modules = array(
 										'input-textarea',
 										'input-text',
+										'input-upload',
 									);
-
-									if ( in_array( $module_type, $excluded_modules ) && 0 == $grade ) {
-										$grade = $minimum_grade;
-									}
 
 									$total_course_grade += $grade;
 									// Check if the grade came from an instructor
@@ -919,12 +922,15 @@ class CoursePress_Data_Student {
 										'graded_by'
 									);
 
-									if ( $require_instructor_assessment || in_array( $module_type, $excluded_modules ) ) {
+									if ( in_array( $module_type, $excluded_modules ) ) {
 
-										if ( 'auto' === $graded_by ) {
+										if ( 'auto' === $graded_by || empty( $graded_by ) ) {
 											// Set 0 as grade if it is auto-graded
 											$grade = 0;
-											$require_assessment += 1;
+
+											if ( $is_assessable || $require_instructor_assessment ) {
+												$require_assessment += 1;
+											}
 										}
 									}
 
@@ -942,7 +948,11 @@ class CoursePress_Data_Student {
 											if ( $pass ) {
 												$unit_completed_modules += 1;
 												$unit_completed_assessable_modules += 1;
-												if ( $is_module_structure_visible ) { $valid_items += 1; }
+
+												if ( $is_module_structure_visible ) {
+													$valid_items += 1;
+													$unit_valid_progress += 1;
+												}
 
 												// Trigger passed hook
 												if ( ! cp_is_true( $had_passed ) ) {
@@ -955,26 +965,45 @@ class CoursePress_Data_Student {
 													true
 												);
 											} else {
-												if ( $require_instructor_assessment ) {
-													if ( $is_module_structure_visible ) { $valid_items += 1; }
-												}
-												if ( 'auto' != $graded_by ) {
-													$unit_completed_modules += 1;
+												if ( in_array( $module_type, $excluded_modules ) ) {
+													if ( ( $is_assessable || $require_instructor_assessment ) ) {
+														if ( 0 < (int) $graded_by ) {
+															$valid_items += 1;
+															$unit_valid_progress += 1;
+														} else {
+															if ( $is_module_structure_visible ) {
+																$valid_items += 1;
+																$unit_valid_progress += 1;
+															}
+														}
+													}
 												}
 											}
 										} else {
 											$unit_completed_modules += 1;
-											if ( $is_module_structure_visible ) { $valid_items += 1; }
+
+											if ( $is_module_structure_visible ) {
+												$valid_items += 1;
+												$unit_valid_progress += 1;
+											}
 										}
 									} else {
 										$unit_completed_modules += 1;
-										if ( $is_module_structure_visible ) { $valid_items += 1; }
+
+										if ( $is_module_structure_visible ) {
+											$valid_items += 1;
+											$unit_valid_progress += 1;
+										}
 									}
 								} else {
 									if ( $module_seen ) {
 										if ( false === $is_mandatory && false === $is_assessable && false === $require_instructor_assessment ) {
 											$unit_completed_modules += 1;
-											if ( $is_module_structure_visible ) { $valid_items += 1; }
+
+											if ( $is_module_structure_visible ) {
+												$valid_items += 1;
+												$uni_valid_progress += 1;
+											}
 										}
 									} else {
 										if ( 'closed' == $course_status && false === $is_mandatory && false === $is_assessable ) {
@@ -986,12 +1015,29 @@ class CoursePress_Data_Student {
 								if ( $module_seen ) {
 									$unit_completed_modules += 1;
 									$last_seen_index = $index;
-									if ( $is_module_structure_visible ) { $valid_items += 1; }
+									if ( $is_module_structure_visible ) {
+										$valid_items += 1;
+										$unit_valid_progress += 1;
+									}
 								} else {
 									$unseen_modules[ $module_id ] = $module_id;
 								}
 							}
 						}
+					}
+
+					$have_seen = false;
+					if ( count( $seen_modules ) > 0 ) {
+						$have_seen = true;
+					}
+
+					$visited = CoursePress_Helper_Utility::get_array_val(
+						$student_progress,
+						'units/' . $unit_id . '/visited_pages'
+					);
+
+					if ( $valid_page_progress && ( $have_seen || ! empty( $visited[ $page_number ] ) ) ) {
+						$unit_valid_progress += 1;
 					}
 				}
 			}
@@ -1033,10 +1079,17 @@ class CoursePress_Data_Student {
 				$unit_assessable_modules == $unit_completed_assessable_modules
 			);
 
+/*
 			// Calculate unit progress
 			$unit_progress = $valid_items * 100;
 			if ( $unit_progress > 0 && $total_valid_items > 0 ) {
 				$unit_progress = ceil( $unit_progress / $total_valid_items );
+			}
+*/
+			// Calculate unit progress
+			$unit_progress = $unit_valid_progress * 100;
+			if ( $unit_progress > 0 && $unit_valid_progress > 0 ) {
+				$unit_progress = ceil( $unit_progress / $unit_progress_counter );
 			}
 
 			CoursePress_Helper_Utility::set_array_val(
@@ -1101,8 +1154,39 @@ class CoursePress_Data_Student {
 
 		// Compute course average
 		$completion_average = 0;
-		if ( $course_gradable_modules > 0 && $course_grade > 0 ) {
-			$completion_average = ceil( $course_grade / $course_gradable_modules );
+		$is_completed = false;
+
+		// Remove failed marker
+		CoursePress_Helper_Utility::unset_array_val(
+			$student_progress,
+			'completion/failed'
+		);
+
+		if ( 0 === $require_assessment ) {
+			if ( $course_gradable_modules > 0 && $course_grade > 0 ) {
+				$completion_average = ceil( $course_grade / $course_gradable_modules );
+			}
+
+			$is_completed = 100 == $course_progress;
+			$minimum_grade_required = (int) CoursePress_Data_Course::get_setting( $course_id, 'minimum_grade_required', 100 );
+
+			if ( $is_completed ) {
+				$is_completed = false;
+
+				if ( $course_gradable_modules > 0 && $total_course_grade > 0 ) {
+					$total_course_grade = ceil( $total_course_grade / $course_gradable_modules );
+
+					if ( $total_course_grade < $minimum_grade_required ) {
+						CoursePress_Helper_Utility::set_array_val(
+							$student_progress,
+							'completion/failed',
+							true
+						);
+					}
+				} else {
+					$is_completed = true;
+				}
+			}
 		}
 
 		CoursePress_Helper_Utility::set_array_val(
@@ -1110,34 +1194,6 @@ class CoursePress_Data_Student {
 			'completion/average',
 			$completion_average
 		);
-
-		$is_completed = $unit_count > 0 && $unit_count == $unit_completed;
-		$minimum_grade_required = (int) CoursePress_Data_Course::get_setting( $course_id, 'minimum_grade_required', 100 );
-
-		// Compute actual grade acquired
-		if ( 0 === $require_assessment && $course_gradable_modules > 0 && $total_course_grade > 0 ) {
-			$total_course_grade = ceil( $total_course_grade / $course_gradable_modules );
-
-			if ( $total_course_grade < $minimum_grade_required ) {
-				$is_completed = false;
-
-				CoursePress_Helper_Utility::set_array_val(
-					$student_progress,
-					'completion/failed',
-					true
-				);
-			} else {
-				CoursePress_Helper_Utility::unset_array_val(
-					$student_progress,
-					'completion/failed'
-				);
-			}
-		} else {
-			CoursePress_Helper_Utility::unset_array_val(
-				$student_progress,
-				'completion/failed'
-			);
-		}
 
 		CoursePress_Helper_Utility::set_array_val(
 			$student_progress,
@@ -1656,13 +1712,20 @@ class CoursePress_Data_Student {
 			$return = __( 'Certified', 'cp' );
 		} else {
 			$course_status = CoursePress_Data_Course::get_course_status( $course_id );
-			$failed = CoursePress_Helper_Utility::get_array_val(
-				$student_progress,
-				'completion/failed'
-			);
+			$course_progress = self::get_course_progress( $student_id, $course_id, $student_progress );
 
-			if ( ! empty( $failed ) ) {
-				$return = __( 'Failed', 'cp' );
+			if ( 100 == $course_progress ) {
+				$failed = CoursePress_Helper_Utility::get_array_val(
+					$student_progress,
+					'completion/failed'
+				);
+
+				if ( ! empty( $failed ) ) {
+					$return = __( 'Failed', 'cp' );
+				} else {
+					$return = __( 'Awaiting Review', 'cp' );
+				}
+
 			} else {
 				if ( 'open' == $course_status ) {
 					$return = __( 'Ongoing', 'cp' );

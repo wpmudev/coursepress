@@ -17,6 +17,11 @@ class CoursePress_View_Admin_Setting_Extensions {
 			array( __CLASS__, 'return_content' ),
 			10, 3
 		);
+		add_action(
+			'admin_init',
+			array( __CLASS__, 'activating_deactivating_plugin' ),
+			20
+		);
 
 		// TODO: This is premium only. move to premium folder!
 		add_action(
@@ -87,15 +92,33 @@ class CoursePress_View_Admin_Setting_Extensions {
 
 			add_filter( 'coursepress_settings_page_main', array( __CLASS__, 'return_content_plugin_install' ) );
 		}
-
-		if ( isset( $_POST['action'] ) && 'activate-plugin' === $_POST['action'] && 'extensions' === $tab && wp_verify_nonce( $_POST['_wp_nonce'], 'activate-plugin' ) ) {
-
-			activate_plugin( $_POST['base'] );
-		}
-
-		if ( isset( $_POST['action'] ) && 'deactivate-plugin' === $_POST['action'] && 'extensions' === $tab && wp_verify_nonce( $_POST['_wp_nonce'], 'deactivate-plugin' ) ) {
-
-			deactivate_plugins( $_POST['base'] );
+	}
+	
+	// hooked to `admin_init` so we can redirect to pages
+	public static function activating_deactivating_plugin() {
+		$data = !empty($_POST) ? stripslashes_deep($_POST) : array();
+		$tab = ( isset($data['tab']) ) ? $data['tab'] : false;
+		
+		if ( $data && $tab === 'extensions' ) {
+			$action = ( isset($data['action']) ) ? $data['action'] : false ;
+			$plugin = ( isset($data['plugin']) ) ? $data['plugin'] : false ;
+			$plugin_base = ( isset($data['base']) ) ? $data['base'] : false ;
+			$nonce = ( isset($data['_wp_nonce']) ) ? $data['_wp_nonce'] : false ;
+			
+			if ( $action && $plugin_base && $nonce ) {
+				// plugin activation
+				if ( 'activate-plugin' === $action && wp_verify_nonce( $nonce, 'activate-plugin' ) ) {
+					activate_plugin( $plugin_base, null, false, true );
+					wp_safe_redirect(add_query_arg('tab',$plugin));
+					exit;
+				}
+				// plugin deactivation
+				if ( 'deactivate-plugin' === $action && wp_verify_nonce( $nonce, 'deactivate-plugin' ) ) {
+					deactivate_plugins( $plugin_base, true );
+					wp_safe_redirect(add_query_arg('tab',$tab));
+					exit;
+				}
+			}
 		}
 	}
 
