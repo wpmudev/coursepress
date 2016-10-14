@@ -1827,8 +1827,8 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		}
 	})
 	.on( 'change', '[name="meta_basic_certificate"]', toggleCertificatePreview )
-	.on( 'click', '.post-type-course #publish, .post-type-course #search-submit', CoursePress.maybeUpdateCourse )
-	.on( 'submit', '.post-type-course form#post', CoursePress.updateCourse );
+	.on( 'click', '.post-type-course #publish, .post-type-course #search-submit, .post-type-course #post-preview', CoursePress.maybeUpdateCourse );
+	//.on( 'submit', '.post-type-course form#post', CoursePress.updateCourse );
 
 })( jQuery );
 

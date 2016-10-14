@@ -56,7 +56,7 @@ class CoursePress_Data_Course {
 					'slug' => CoursePress_Core::get_slug( 'course' ),
 					'with_front' => false,
 				),
-				//'supports' => array( 'thumbnail' ),
+				'supports' => array( 'slug', 'thumbnail' ),
 				'taxonomies' => array( 'course_category' ),
 				'supports' => array( 'slug' ),
 				'menu_icon' => CoursePress::$url . 'asset/img/coursepress-icon.png',

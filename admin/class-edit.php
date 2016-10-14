@@ -31,12 +31,15 @@ class CoursePress_Admin_Edit {
 		remove_all_actions( 'add_meta_boxes' );
 
 		if ( 'setup' == $tab ) {
+			// Remove submitdiv
+			remove_meta_box( 'submitdiv', $post_type, 'side' );
+
 			// Change preview link
 			add_filter( 'preview_post_link', array( __CLASS__, 'preview_post_link' ), 10, 2 );
 
 			// Disable permalink
 			add_filter( 'get_sample_permalink_html', array( __CLASS__, 'disable_permalink' ), 100, 5 );
-	
+
 			// Start wrapper
 			add_action( 'edit_form_after_editor', array( __CLASS__, 'start_wrapper' ) );
 	
