@@ -158,3 +158,21 @@ tester {
 		margin: 10px 0;
 	}
 }
+.cp-warning-box {
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	padding: 25px;
+	text-align: center;
+	border-radius: 5px;
+
+	&:before {
+		content: '\f348';
+		font-family: Dashicons;
+		font-size: 200%;
+		line-height: 1;
+		float: left;
+		color: rgba(255, 0, 0, 0.5);
+	}
+	p {
+		margin-bottom: 0;
+	}
+}

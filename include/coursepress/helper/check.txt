@@ -1,0 +1,26 @@
+Array
+(
+    [to] => nicklo@leapa.net
+    [subject] => Invitation to be an instructor at Local WordPress Dev
+    [message] => Hi Nick L,
+
+Congratulations! You have been invited to become an instructor for the course: Test Course
+
+Click on the link below to confirm:
+
+<a href="http://local.wordpress.dev/courses/test-course/?action=course_invite&#038;course_id=165&#038;c=Q5yKGuHygjHXIM0Ugi8T&#038;h=4ee90fc010b3da8e25a7dc6df0fefa64425b082b">http://local.wordpress.dev/courses/test-course/?action=course_invite&#038;course_id=165&#038;c=Q5yKGuHygjHXIM0Ugi8T&#038;h=4ee90fc010b3da8e25a7dc6df0fefa64425b082b</a>
+
+If you haven't yet got a username you will need to create one.
+
+<a href="http://local.wordpress.dev">http://local.wordpress.dev</a>
+	
+    [headers] => Array
+        (
+            [Content-Type] => text/html
+        )
+
+    [attachments] => Array
+        (
+        )
+
+)
