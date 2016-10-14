@@ -303,10 +303,20 @@ class CoursePress_Data_Shortcode_Student {
 								break;
 							case 'input-form':
 								$display = '';
+								$questions = $attributes['questions'];
 								if ( $response_display ) {
-									foreach( $response_display as $answers ){
-										$display .= sprintf( '<p class="answer">%s</p>', $answers );
+									foreach ( $questions as $q_index => $question ) {
+										$answer = $response_display[$q_index];
+										if ( $question['type'] == 'selectable' ) {
+											$selected = ( isset($question['options']) && isset($question['options']['answers']) && isset($question['options']['answers'][$answer]) ) 
+												? $question['options']['answers'][$answer]
+												: '';
+											$display .= sprintf( '<p class="answer">%s</p>', $selected );
+										} else {
+											$display .= sprintf( '<p class="answer">%s</p>', $answer );
+										}
 									}
+									
 								}
 								$response_display = $display;
 								break;
