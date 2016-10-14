@@ -433,6 +433,7 @@ class CoursePress_Helper_Integration_MarketPress {
 
 	public static function update_product_meta( $product_id, $settings, $course_id ) {
 		// Update the meta
+		$is_sale = ! empty( $settings['mp_sale_price_enabled'] ) ? '1' : '';
 		$product_meta = array(
 			'sku' => $settings['mp_sku'],
 			'regular_price' => $settings['mp_product_price'],
@@ -440,6 +441,10 @@ class CoursePress_Helper_Integration_MarketPress {
 			'sale_price_amount' => $settings['mp_product_sale_price'],
 			'sort_price' => $settings['mp_product_sale_price'],
 			'mp_course_id' => $course_id,
+			'mp_price' => $settings['mp_product_price'],
+			'mp_sale_price' => $settings['mp_product_sale_price'],
+			'mp_sku' => $settings['mp_sku'],
+			'mp_is_sale' => $is_sale,
 		);
 
 		// Create Auto SKU
@@ -451,7 +456,6 @@ class CoursePress_Helper_Integration_MarketPress {
 		foreach ( $product_meta as $key => $value ) {
 			update_post_meta( $product_id, $key, $value );
 		}
-
 	}
 
 	public static function update_product_from_course( $course_id, $settings ) {
