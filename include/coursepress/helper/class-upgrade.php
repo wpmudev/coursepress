@@ -219,6 +219,7 @@ class CoursePress_Helper_Upgrade {
 		}
 		$updates = array(
 			'begin',
+			'module_page',
 			'course_details_video',
 			'course_details_structure',
 			'course_instructors',
@@ -226,7 +227,6 @@ class CoursePress_Helper_Upgrade {
 			'course_classes_discusion_and_workbook',
 			'course_enrollment_and_cost',
 			'course_completion',
-			'module_page',
 			'unit_page_title',
 			'student_enrolled',
 			'student_progress',
@@ -291,9 +291,9 @@ class CoursePress_Helper_Upgrade {
 		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
 		if ( ! $done ) {
 			$settings = CoursePress_Data_Course::get_setting( $course->ID, true );
-			CoursePress_Data_Course::set_setting( $course->ID, 'course_view', 'normal' );
+			CoursePress_Data_Course::set_setting( $settings, 'course_view', 'normal' );
 			for ( $i = 1; $i < 8; $i++ ) {
-				CoursePress_Data_Course::set_setting( $course->ID, 'setup_step_'.$i, 'saved' );
+				CoursePress_Data_Course::set_setting( $settings, 'setup_step_'.$i, 'saved' );
 			}
 			CoursePress_Data_Course::update_setting( $course->ID, true, $settings );
 			self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
@@ -452,18 +452,19 @@ class CoursePress_Helper_Upgrade {
 		$cp1_visible_pages = array();
 		foreach ( $visible_pages as $page => $status ) {
 			if ( cp_is_true( $status ) && preg_match( '/^(\d+)_(\d+)$/', $page, $matches ) ) {
-				$cp1_visible_pages[] = sprintf( '%d_%d', $matches[1], $matches[2] - 1 );
+				$cp1_visible_pages[] = sprintf( '%d_%d', $matches[1], $matches[2] );
 			}
 		}
-
 		$preview_pages = CoursePress_Data_Course::get_setting( $course->ID, 'structure_preview_pages' );
 		$cp1_preview_pages = array();
 		foreach ( $preview_pages as $page => $status ) {
 			if ( cp_is_true( $status ) && preg_match( '/^(\d+)_(\d+)$/', $page, $matches ) ) {
-				$cp1_preview_pages[] = sprintf( '%d_%d', $matches[1], $matches[2] - 1 );
+				$cp1_preview_pages[] = sprintf( '%d_%d', $matches[1], $matches[2] );
 			}
 		}
-
+		/**
+		 * Update unit visibility - by default - all units in visible page
+		 */
 		$keys = array(
 			'structure_preview_modules',
 			'structure_preview_pages',
@@ -509,9 +510,11 @@ class CoursePress_Helper_Upgrade {
 				}
 			}
 		}
+		$settings = CoursePress_Data_Course::get_setting( $course->ID, true );
 		foreach ( $keys as $key ) {
-			CoursePress_Data_Course::update_setting( $course->ID, $key, $$key );
+			CoursePress_Data_Course::set_setting( $settings, $key, $$key );
 		}
+		CoursePress_Data_Course::update_setting( $course->ID, true, $settings );
 		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
 		return __( 'Course structure settings have been updated.', 'cp' );
 	}
@@ -700,7 +703,7 @@ class CoursePress_Helper_Upgrade {
 		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
 		if ( $done ) {
 			return;
-        }
+		}
 
 
 
@@ -792,7 +795,7 @@ class CoursePress_Helper_Upgrade {
 					$type = get_post_meta( $module->ID, 'module_type', true );
 					if ( 'page_break_module' == $type ) {
 						$page++;
-						wp_delete_post( $module->ID, true );
+//						wp_delete_post( $module->ID, true );
 					} else {
 						CoursePress_Helper_Utility::add_meta_unique( $module->ID, 'module_page', $page );
 					}
@@ -809,16 +812,18 @@ class CoursePress_Helper_Upgrade {
 	private static function course_upgrade_course_completion( $course ) {
 		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
 		if ( $done ) {
-			return;
+			return __( 'Course Completion do not need to be updated.', 'cp' );
 		}
-		CoursePress_Data_Course::update_setting( $course->ID, 'minimum_grade_required', 100 );
+		$settings = CoursePress_Data_Course::get_setting( $course->ID, true );
+		CoursePress_Data_Course::set_setting( $settings, 'minimum_grade_required', 100 );
 		$defaults = CoursePress_Data_Course::get_defaults_setup_pages_content();
 		foreach ( $defaults as $group => $data ) {
 			foreach ( $data as $name => $content ) {
 				$key = sprintf( '%s_%s', $group, $name );
-				CoursePress_Data_Course::update_setting( $course->ID, $key, $content );
+				CoursePress_Data_Course::set_setting( $settings, $key, $content );
 			}
 		}
+		CoursePress_Data_Course::update_setting( $course->ID, true, $settings );
 		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
 		return  __( 'Added content of dafaults Course Completion pages.', 'cp' );
 	}
