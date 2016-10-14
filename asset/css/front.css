@@ -213,6 +213,24 @@ tester {
   margin: 10px 0;
 }
 
+.cp-warning-box {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  text-align: center;
+  border-radius: 5px;
+}
+.cp-warning-box:before {
+  content: '\f348';
+  font-family: Dashicons;
+  font-size: 200%;
+  line-height: 1;
+  float: left;
+  color: rgba(255, 0, 0, 0.5);
+}
+.cp-warning-box p {
+  margin-bottom: 0;
+}
+
 .course_list_box_item {
   margin: 10px 0 25px 0;
   position: relative;

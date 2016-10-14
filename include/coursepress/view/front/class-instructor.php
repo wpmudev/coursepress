@@ -103,13 +103,13 @@ class CoursePress_View_Front_Instructor {
 					} else {
 						$url = wp_login_url();
 					}
+
+					$content = sprintf( '<p><a href="%s">%s</a> %s</p>', esc_url( $url ), __( 'Login', 'cp' ), __( 'to continue.', 'cp' ) );
+
 					$args = array(
 						'show_title' => false,
 						'title' => apply_filters( 'coursepress_instructor_invitation_title', esc_html__( 'Instructor Invitation', 'cp' ) ),
-						'content' => apply_filters( 'coursepress_instructor_invitation_content', sprintf(
-							'<p>%s</p>',
-							esc_html__( 'You must log in to confirm this invitation.', 'cp' )
-						) ),
+						'content' => apply_filters( 'coursepress_instructor_invitation_content', $content ),
 					);
 					$vp_args = wp_parse_args( $args, $vp_args );
 
@@ -156,7 +156,7 @@ class CoursePress_View_Front_Instructor {
 				'show_title' => false,
 				'title' => esc_html__( 'Invitation not found', 'cp' ),
 				'content' => sprintf(
-					'<p>%s</p><p>%s</p>',
+					'<div class="cp-warning-box"><p>%s</p><p>%s</p></div>',
 					esc_html__( 'This invitation could not be found or is no longer available.', 'cp' ),
 					esc_html__( 'Please contact us if you believe this to be an error.', 'cp' )
 				),
