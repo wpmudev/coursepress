@@ -395,6 +395,11 @@ class CoursePress_Helper_JavaScript {
 		if( false === self::$is_cp_called && CoursePress_Core::$is_cp_page ) {
 			self::front_assets();
 		}
+
+		if ( self::$is_cp_called && false === is_user_logged_in() ) {
+			// Print enrollment templates
+			echo do_shortcode( '[coursepress_enrollment_templates]' );
+		}
 	}
 
 	public static function front_assets() {

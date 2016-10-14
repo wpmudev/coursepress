@@ -854,7 +854,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 									<div class="cp-grade-editor-box" style="display:none;">
 										<div class="coursepress-tooltip cp-right cp-edit-grade-box">
 											<label class="cp-assess-label">'. __( 'Grade', 'cp' ) . '</label>
-											<input type="number" name="module-grade" data-courseid="' . $course_id . '" data-unit="' . $unit_id . '" data-module="' . $module_id . '" data-minimum="' . esc_attr( $min_grade ) . '" data-student="' . $student_id . '" class="module-grade small-text" data-grade="'. esc_attr( $grade ) . '" value="' . esc_attr( $grade ) . '" min="0" max="100" />
+											<input type="text" name="module-grade" data-courseid="' . $course_id . '" data-unit="' . $unit_id . '" data-module="' . $module_id . '" data-minimum="' . esc_attr( $min_grade ) . '" data-student="' . $student_id . '" class="module-grade small-text" data-grade="'. esc_attr( $grade ) . '" value="' . esc_attr( $grade ) . '" min="0" max="100" />
 											<button type="button" class="button-primary cp-right cp-save-as-draft disabled">'. __( 'Save Feeback as Draft', 'cp' ) . '</button>
 											<button type="button" class="button-primary cp-submit-grade disabled">' . __( 'Submit Grade', 'cp' ) . '</button>
 											<button type="button" class="button cp-cancel">' . __( 'Cancel', 'cp' ) . '</button>

@@ -1096,6 +1096,7 @@ $(document)
 	CoursePress.Enrollment = CoursePress.Enrollment || {};
 
 	CoursePress.CustomLoginHook = function() {
+        $(this).attr( 'href', 'javascript:;');
 		var newDiv = $( '<div class="cp-mask enrolment-container-div">' );
 
 		newDiv.appendTo( 'body' );
@@ -1209,8 +1210,7 @@ $(document)
 
 			}
 		} );
-
-	}
+	};
 
 	// Hook the events
 	$( document )

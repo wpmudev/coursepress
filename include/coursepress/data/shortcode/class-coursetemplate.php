@@ -1385,6 +1385,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 	 * @return string Shortcode output.
 	 */
 	public static function course_list( $atts ) {
+		CoursePress_Core::$is_cp_page = true;
 		$atts = CoursePress_Helper_Utility::sanitize_recursive(
 			shortcode_atts(
 				array(
@@ -1394,18 +1395,18 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					'student' => '', // If both student and instructor is specified only student will be used
 					'student_msg' => __( 'You are not enrolled in any courses. <a href="%s">See available courses.</a>', 'cp' ),
 					'dashboard' => false,
-					'context' => '', // <blank>, enrolled, completed
+					'context' => 'all', // <blank>, enrolled, completed
 					'limit' => - 1,
 					'order' => 'ASC',
-					'manage_label' => __( 'Courses you manage', 'cp' ),
-					'current_label' => __( 'Current courses', 'cp' ),
+					'manage_label' => __( 'Manage Courses', 'cp' ),
+					'current_label' => __( 'Current Courses', 'cp' ),
 					'future_label' => __( 'Starting soon', 'cp' ),
 					'incomplete_label' => __( 'Incomplete courses', 'cp' ),
 					'completed_label' => __( 'Completed courses', 'cp' ),
 					'past_label' => __( 'Past courses', 'cp' ),
 					'suggested_label' => __( 'Suggested courses', 'cp' ),
 					'facilitator' => '',
-					'facilitator_label' => __( 'Courses you facilitated', 'cp' ),
+					'facilitator_label' => __( 'Facilitated Courses', 'cp' ),
 					'suggested_msg' => __( 'You are not enrolled in any courses.<br />Here are a few you might like, or <a href="%s">see all available courses.</a>', 'cp' ),
 					'show_labels' => false,
 				),
@@ -1534,50 +1535,13 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			}
 		}
 
-		/***
-		* Hide this for reference
-		foreach ( $courses as $course ) {
-			if ( ! $atts['dashboard'] ) {
-				$content .= do_shortcode( '[course_list_box course_id="' . $course->ID . '"]' );
-				$counter += 1;
-			} else {
-				if ( $student_list ) {
-					$course_url = get_permalink( $course->ID );
-					$completed = CoursePress_Data_Student::is_course_complete( $student, $course->ID );
-
-					switch ( $atts['context'] ) {
-
-						case 'enrolled':
-							if ( ! $completed ) {
-								$content .= do_shortcode( '[course_list_box course_id="' . $course->ID . '" override_button_text="' . esc_attr__( 'Go to Course', 'cp' ) . '" override_button_link="' . esc_url( $course_url ) . '"]' );
-								$counter += 1;
-							}
-							break;
-
-						case 'completed':
-							if ( $completed ) {
-								$content .= do_shortcode( '[course_list_box course_id="' . $course->ID . '" override_button_text="' . esc_attr__( 'Go to Course', 'cp' ) . '" override_button_link="' . esc_url( $course_url ) . '"]' );
-								$counter += 1;
-							}
-							break;
-					}
-				} else {
-					$edit_page = CoursePress_View_Admin_Course_Edit::$slug;
-					$query = sprintf( '?page=%s&action=%s&id=%s', esc_attr( $edit_page ), 'edit', absint( $course->ID ) );
-					$course_url = admin_url( 'admin.php' . $query );
-					$content .= do_shortcode( '[course_list_box course_id="' . $course->ID . '" override_button_text="' . esc_attr__( 'Manage Course', 'cp' ) . '" override_button_link="' . esc_url( $course_url ) . '"]' );
-					$counter += 1;
-				}
-			}
-		}
-		*/
 		$context = $atts['dashboard'] && $instructor_list ? 'manage' : $atts['context'];
 
 		if ( $atts['dashboard'] && ! empty( $counter ) ) {
 			$label = '';
 
 			switch ( $context ) {
-				case 'enrolled': case 'current':
+				case 'enrolled': case 'current': case 'all':
 						$label = $atts['current_label'];
 					break;
 				case 'future':

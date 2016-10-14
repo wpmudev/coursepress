@@ -921,7 +921,7 @@ class CoursePress_Data_Student {
 
 									if ( $require_instructor_assessment || in_array( $module_type, $excluded_modules ) ) {
 
-										if ( 'auto' === $graded_by ) {
+										if ( 'auto' === $graded_by || empty( $graded_by ) ) {
 											// Set 0 as grade if it is auto-graded
 											$grade = 0;
 											$require_assessment += 1;
@@ -1656,13 +1656,20 @@ class CoursePress_Data_Student {
 			$return = __( 'Certified', 'cp' );
 		} else {
 			$course_status = CoursePress_Data_Course::get_course_status( $course_id );
-			$failed = CoursePress_Helper_Utility::get_array_val(
-				$student_progress,
-				'completion/failed'
-			);
+			$course_progress = self::get_course_progress( $student_id, $course_id, $student_progress );
 
-			if ( ! empty( $failed ) ) {
-				$return = __( 'Failed', 'cp' );
+			if ( 100 == $course_progress ) {
+				$failed = CoursePress_Helper_Utility::get_array_val(
+					$student_progress,
+					'completion/failed'
+				);
+
+				if ( ! empty( $failed ) ) {
+					$return = __( 'Failed', 'cp' );
+				} else {
+					$return = __( 'Awaiting Review', 'cp' );
+				}
+
 			} else {
 				if ( 'open' == $course_status ) {
 					$return = __( 'Ongoing', 'cp' );
