@@ -1011,6 +1011,7 @@ class CoursePress_Data_Course {
 				'meta_key' => $course_meta_key,
 				'compare' => 'EXISTS',
 				'fields' => 'ID',
+				'orderby' => 'ID',
 			)
 		);
 
