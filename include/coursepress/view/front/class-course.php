@@ -923,6 +923,7 @@ class CoursePress_View_Front_Course {
 				'slug' => 'course_' . $cp->course_id,
 				'title' => get_the_title( $cp->course_id ),
 				'show_title' => $show_title,
+				'callback' => array( __CLASS__, 'render_course_main' ),
 				'content' => apply_filters(
 					'coursepress_view_course',
 					self::render_course_main( $cp->course_id ),
@@ -1014,7 +1015,7 @@ class CoursePress_View_Front_Course {
 							$cp->cp_category
 						),
 						'type' => CoursePress_Data_Course::get_post_type_name() . '_archive',
-						'is_archive' => true,
+						'is_archive' => false,
 						),
 						$cp->cp_category
 					);
@@ -1029,9 +1030,9 @@ class CoursePress_View_Front_Course {
 
 			// Are we adding a new discussion?
 			if ( CoursePress_Core::get_slug( 'discussion_new' ) == $cp->discussion ) {
-				$discussion_content = self::render_new_course_discussion();
+				$callback = array( __CLASS__, 'render_new_course_discussion' );
 			} else {
-				$discussion_content = self::render_course_discussion();
+				$callback = array( __CLASS__, 'render_course_discussion' );
 			}
 
 			$discussion = get_page_by_path(
@@ -1057,12 +1058,9 @@ class CoursePress_View_Front_Course {
 				'ID' => ! empty( $discussion ) ? $discussion->ID : '',
 				'slug' => 'discussion_' . $cp->course_id,
 				'title' => get_the_title( $cp->course_id ),
-				'content' => apply_filters(
-					'coursepress_view_course',
-					$discussion_content,
-					$cp->course_id,
-					'discussion'
-				),
+				'callback' => $callback,
+				'content' => '',
+				'filter' => 'coursepress_view_course',
 				'type' => 'course_discussion',
 				'comment_status' => $comment_status,
 			);

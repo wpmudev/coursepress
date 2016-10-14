@@ -359,6 +359,7 @@ class CoursePress_Data_Shortcode_Template {
 		$a = shortcode_atts( array(
 			'instructor_id' => CoursePress_View_Front_Instructor::$last_instructor,
 			'echo' => false,
+			'heading_title' => __( 'Courses', 'cp' ),
 		), $a, 'instructor_page' );
 
 		$instructor_id = (int) $a['instructor_id'];
@@ -379,7 +380,7 @@ class CoursePress_Data_Shortcode_Template {
 		$schema = apply_filters( 'coursepress_schema', '', 'description' );
 
 		$template .= '<div class="instructor-bio"'.$schema.'>' . CoursePress_Helper_Utility::filter_content( get_user_meta( $instructor_id, 'description', true ) ) . '</div>
-			<h3 class="courses-title">' . esc_html__( 'Courses', 'cp' ) . '</h3>
+			<h3 class="courses-title">' . $a['heading_title'] . '</h3>
 			[course_list instructor="' . $instructor_id . '" class="course" left_class="enroll-box-left" right_class="enroll-box-right" course_class="enroll-box" title_link="yes" show_media="yes"]
 		</div>
 		';
