@@ -696,7 +696,7 @@ module.exports = function(grunt) {
 		//HIDE:grunt.task.run( 'default' );
 
 		// Generate all translation files (pro and free)
-		//Hide: grunt.task.run( 'lang' );
+		grunt.task.run( 'lang' );
 
 		for ( i in build ) {
 			branch = build[i];
@@ -714,9 +714,9 @@ module.exports = function(grunt) {
 			grunt.task.run( 'gitcommit:' + branch );
 
 			// Create a distributable zip-file of the plugin branch.
-			///grunt.task.run( 'clean:release_' + branch );
-			///grunt.task.run( 'copy:' + branch );
-			//grunt.task.run( 'compress:' + branch );
+			grunt.task.run( 'clean:release_' + branch );
+			grunt.task.run( 'copy:' + branch );
+			grunt.task.run( 'compress:' + branch );
 
 			grunt.task.run( 'gitcheckout:base');
 		}
