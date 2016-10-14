@@ -2205,6 +2205,11 @@ class CoursePress_Data_Course {
 		self::update_setting( $new_course_id, 'structure_preview_pages', $preview_pages );
 		self::update_setting( $new_course_id, 'structure_visible_modules', $visible_modules );
 		self::update_setting( $new_course_id, 'structure_preview_modules', $preview_modules );
+		
+		// clear course MP settings
+		self::update_setting( $new_course_id, 'mp_product_id', '' );
+		self::update_setting( $new_course_id, 'mp_sku', '' );
+		self::update_setting( $new_course_id, 'mp_auto_sku', '' );
 
 		$json_data['course_id'] = $new_course_id;
 		$json_data['data'] = $data->data;
