@@ -81,12 +81,13 @@ class CoursePress_Helper_Integration_MarketPress {
 			array( __CLASS__, 'update_course_from_product' ),
 			10, 3
 		);
-
-		add_action(
-			'wp_insert_post',
-			array( __CLASS__, 'update_product_from_course_on_wp_insert_post' ),
-			10, 3
-		);
+		
+		// Below hook will result to duplicate entry on Products
+		// add_action(
+			// 'wp_insert_post',
+			// array( __CLASS__, 'update_product_from_course_on_wp_insert_post' ),
+			// 10, 3
+		// );
 
 		add_filter(
 			'coursepress_shortcode_course_cost',
