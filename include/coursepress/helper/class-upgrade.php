@@ -683,7 +683,7 @@ class CoursePress_Helper_Upgrade {
 			if ( ! $success ) {
 				add_post_meta( $course->ID, 'course_enrolled_student_id', $user_id );
 			}
-			delete_user_meta( $user_id, $meta_key );
+			//delete_user_meta( $user_id, $meta_key );
 		}
 		$count = count( $ids );
 		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
@@ -700,7 +700,13 @@ class CoursePress_Helper_Upgrade {
 		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
 		if ( $done ) {
 			return;
-		}
+        }
+
+
+
+
+
+
 		return;
 		/**
 		 * TODO
@@ -837,7 +843,7 @@ class CoursePress_Helper_Upgrade {
 			foreach ( $titles as $title ) {
 				$new[ 'page_'.$i++ ] = $title;
 			}
-			delete_post_meta( $unit_id, 'page_title' );
+			//delete_post_meta( $unit_id, 'page_title' );
 			CoursePress_Helper_Utility::add_meta_unique( $unit_id, 'page_title', $new );
 		}
 		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
