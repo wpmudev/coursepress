@@ -159,8 +159,14 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 					$student_progress,
 					'completion/completed'
 				);
+				$unit_grade = CoursePress_Helper_Utility::get_array_val(
+					$student_progress,
+					'completion/' . $unit_id . '/average'
+				);
 				$json_data['completed'] = cp_is_true( $is_completed );
 				$json_data['success'] = $success = true;
+				$json_data['unit_grade'] = (int) $unit_grade;
+				$json_data['course_grade'] = CoursePress_Data_Student::average_course_responses( $student_id, $course_id );
 				break;
 
 			case 'save_draft_feedback':
@@ -639,12 +645,13 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 					$last_active = date_i18n( $date_format, $last_active );
 				}
 			}
+			$course_grade = CoursePress_Data_Student::average_course_responses( $student_id, $course_id );
 
 			$table .= '<tr class="student-row student-row-' . $student_id . '" data-student="'. $student_id . '">
 						<td>' . $avatar . $student_label . '</td>
 						<td class="unit-last-active">' . $last_active . '</td>
 						<td data-student="' . $student_id . '">
-							<span class="final-grade"></span>
+							<span class="final-grade">'. (int) $course_grade . '%</span>
 							<span class="cp-certified" ' . $certified . '>'. esc_html__( 'Certified', 'cp' ) . '</span>
 						</td>
 						<td class="cp-actions">
@@ -725,10 +732,14 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 			if ( $activeUnit > 0 && $activeUnit != $unit_id ) {
 				continue;
 			}
+			$unit_grade = CoursePress_Helper_Utility::get_array_val(
+				$student_progress,
+				'completion/' . $unit_id . '/average'
+			);
 
 			$unit_title = '<h3 class="cp-toggle">
 				<span class="cp-right unit-data cp-unit-toggle">
-					<em class="unit-grade" data-unit="'. $unit_id . '" data-student="'. $student_id . '"></em>
+					<em class="unit-grade" data-unit="'. $unit_id . '" data-student="'. $student_id . '">' . (int) $unit_grade . '%</em>
 					<i class="dashicons dashicons-arrow-' .( $hide ? 'down' : 'up' ) . '"></i>
 				</span>
 				'. $the_unit->post_title . '
@@ -800,7 +811,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 								'graded_by'
 							);
 
-							if ( $require_instructor_assessment || in_array( $module_type, $excluded_modules ) ) {
+							if ( $is_assessable || $require_instructor_assessment || in_array( $module_type, $excluded_modules ) ) {
 								if ( 'auto' === $graded_by ) {
 									// Set 0 as grade if it is auto-graded
 									$grade = 0;

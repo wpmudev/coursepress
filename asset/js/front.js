@@ -458,8 +458,8 @@ $(document)
 			timer = false
 		;
 
-		if ( 0 === error_box.length ) {
-			error_box = $( '<div class="cp-error-box">' ).prependTo( form );
+		if ( 0 < error_box.length ) {
+			error_box.remove();
 		}
 
 		// Insert ajax marker
