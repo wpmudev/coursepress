@@ -81,12 +81,13 @@ class CoursePress_Helper_Integration_MarketPress {
 			array( __CLASS__, 'update_course_from_product' ),
 			10, 3
 		);
-
-		add_action(
-			'wp_insert_post',
-			array( __CLASS__, 'update_product_from_course_on_wp_insert_post' ),
-			10, 3
-		);
+		
+		// Below hook will result to duplicate entry on Products
+		// add_action(
+			// 'wp_insert_post',
+			// array( __CLASS__, 'update_product_from_course_on_wp_insert_post' ),
+			// 10, 3
+		// );
 
 		add_filter(
 			'coursepress_shortcode_course_cost',
@@ -384,7 +385,7 @@ class CoursePress_Helper_Integration_MarketPress {
 				</label>';
 
 		$product_id = self::get_product_id( $course_id );
-
+		
 		if ( $product_id ) {
 			// Add MP product ID as indication.
 			$mp_content .= '
@@ -465,7 +466,7 @@ class CoursePress_Helper_Integration_MarketPress {
 		$product_id = $product_id && $product_status ? $product_id : false;
 
 		if ( ! $product_id ) {
-			self::maybe_create_product( $course_id, $settings );
+			self::maybe_create_product( $settings, $course_id );
 			return;
 		}
 		$is_paid = CoursePress_Data_Course::is_paid_course( $course_id );
