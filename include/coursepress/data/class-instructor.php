@@ -24,10 +24,16 @@ class CoursePress_Data_Instructor {
 
 
 	public static function get_course_meta_keys( $user ) {
-		$meta = get_user_meta( self::_get_id( $user ) );
-		$meta = array_filter( array_keys( $meta ), array( __CLASS__, 'filter_course_meta_array' ) );
+		$user_id = self::_get_id( $user );
 
-		return $meta;
+		if ( 0 < $user_id ) {
+			$meta = get_user_meta( self::_get_id( $user ) );
+			$meta = array_filter( array_keys( $meta ), array( __CLASS__, 'filter_course_meta_array' ) );
+
+			return $meta;
+		}
+
+		return array();
 	}
 
 	/**
