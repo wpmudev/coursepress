@@ -99,7 +99,9 @@ module.exports = function(grunt) {
 				'./composer.lock',
 				'./Gruntfile.js',
 				'./package.json',
-				'./README.md'
+				'./README.md',
+				'./asset/css/src',
+				'./asset/js/src'
 			],
 			exclude_free: [
 				'./test',
@@ -169,6 +171,7 @@ module.exports = function(grunt) {
 			files: {
 				expand: true,
 				src: [
+					'**',
 					'**/*.php',
 					'**/*.css',
 					'**/*.js',
