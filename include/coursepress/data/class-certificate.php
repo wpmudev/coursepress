@@ -482,6 +482,7 @@ class CoursePress_Data_Certificate {
 		/**
 		 * get from certificate
 		 */
+
 		$certificate_id = self::get_certificate_id( $student_id, $course_id );
 		if ( ! empty( $certificate_id ) ) {
 			$file = get_post_meta( $certificate_id, self::$custom_field_name_for_pdf_file, true );
@@ -502,6 +503,7 @@ class CoursePress_Data_Certificate {
 		 * legacy of not secure certificates.
 		 *
 		 */
+		
 		$file = CoursePress_Data_Certificate::deprecated_get_pdf_file_name( $course_id, $student_id );
 		$url = self::url_prepare( $file );
 		if ( ! empty( $url ) ) {

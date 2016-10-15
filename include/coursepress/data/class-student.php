@@ -175,7 +175,7 @@ class CoursePress_Data_Student {
 	public static function is_enrolled_in_course( $student_id, $course_id ) {
 		$global_option = ! is_multisite();
 		$key = 'enrolled_course_date_' . $course_id;
-		$enrolled = get_user_option( $key, $student_id, $global_option );
+		$enrolled = get_user_option( $key, $student_id );
 
 		return ! empty( $enrolled );
 	}
@@ -937,13 +937,17 @@ class CoursePress_Data_Student {
 										'graded_by'
 									);
 
+									if ( $require_instructor_assessment ) {
+										$is_assessable = true;
+									}
+
 									if ( in_array( $module_type, $excluded_modules ) ) {
 
 										if ( 'auto' === $graded_by || empty( $graded_by ) ) {
 											// Set 0 as grade if it is auto-graded
 											$grade = 0;
 
-											if ( $is_assessable || $require_instructor_assessment ) {
+											if ( $is_assessable ) {
 												$require_assessment += 1;
 											}
 										}
@@ -958,7 +962,7 @@ class CoursePress_Data_Student {
 									if ( $is_mandatory ) {
 										$unit_completed_required_modules += 1;
 
-										if ( $is_assessable || $require_instructor_assessment ) {
+										if ( $is_assessable ) {
 											// We'll only validate a passing grade if it is assessable
 											if ( $pass ) {
 												$unit_completed_modules += 1;
@@ -1197,9 +1201,9 @@ class CoursePress_Data_Student {
 							'completion/failed',
 							true
 						);
+					} else {
+						$is_completed = true;
 					}
-				} else {
-					$is_completed = true;
 				}
 			}
 		}
