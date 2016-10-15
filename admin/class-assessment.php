@@ -301,7 +301,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 	 * @return (array) $found_students		An array of student IDs that pass all the applied filters.
 	 **/
 	public static function filter_students( $course_id, $unit_id = 0, $type = false, $student_ids = array() ) {
-		if ( ! empty( $course_id ) ) {
+		if ( empty( $course_id ) ) {
 			return;
 		}
 
