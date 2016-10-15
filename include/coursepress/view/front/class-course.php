@@ -1011,11 +1011,16 @@ class CoursePress_View_Front_Course {
 						'slug' => 'course_archive',
 						'title' => $cp->title,
 						'show_title' => true,
+						'content' => '',
+						'callback' => array( __CLASS__, 'render_course_archive' ),
+						'context' => $cp->cp_category,
+						/*
 						'content' => apply_filters(
 							'coursepress_view_course_archive',
 							self::render_course_archive(),
 							$cp->cp_category
 						),
+						*/
 						'type' => CoursePress_Data_Course::get_post_type_name() . '_archive',
 						'is_archive' => false,
 						),

@@ -803,7 +803,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 							$grades = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
 							$grade = empty( $grades['grade'] ) ? 0 : (int) $grades['grade'];
 
-							$excluded_modules = array( 'input-textarea', 'input-text' );
+							$excluded_modules = array( 'input-textarea', 'input-text', 'input-upload', 'input-form' );
 
 							// Check if the grade came from an instructor
 							$graded_by = CoursePress_Helper_Utility::get_array_val(
@@ -811,7 +811,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 								'graded_by'
 							);
 
-							if ( $is_assessable || $require_instructor_assessment || in_array( $module_type, $excluded_modules ) ) {
+							if ( ( $is_assessable || $require_instructor_assessment ) && in_array( $module_type, $excluded_modules ) ) {
 								if ( 'auto' === $graded_by ) {
 									// Set 0 as grade if it is auto-graded
 									$grade = 0;
@@ -830,7 +830,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 							$page_content .= '<div class="cp-module '. $no_anwer_class . '" id="unit-' . $unit_id . '-module-' . $module_id . '">';
 
 							// Will only allow feedback for 'Short', 'Long', and 'Upload' modules.
-							$allowed_for_feedback = array( 'input-text', 'input-textarea', 'input-upload' );
+							$allowed_for_feedback = array( 'input-text', 'input-textarea', 'input-upload', 'input-form' );
 
 							if ( false === $no_anwer && ( $is_assessable || $require_instructor_assessment ) && in_array( $module_type, $allowed_for_feedback ) ) {
 								$no_feedback_button_label = __( 'Submit Grade without Feedback', 'cp' );
@@ -913,16 +913,24 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 
 									$page_content .= '</div>';
 								} else {
-									$page_content .= '<div class="cp-right cp-assessment-div">
-											<div>
-												<div class="cp-module-grade-info">
-													<label class="cp-assess-label">' . __( 'Module Grade: ', 'cp' ) . '</label>
-													<span class="cp-current-grade">'. $grade . '%</span>
-													<span class="cp-check ' . $pass_class . '">' . ( 'green' === trim( $pass_class ) ? __( 'Pass', 'cp' ) : __( 'Fail', 'cp' ) ) . '</span>
+									if ( in_array( $module_type, $excluded_modules ) ) {
+										$page_content .= '<div class="cp-right cp-assessment-div">
+											<div class="cp-module-grade-info">
+												<label class="cp-assess-label">' . __( 'Non-gradable', 'cp' ) . '</label>
+											</div>
+										</div>';
+									} else {
+										$page_content .= '<div class="cp-right cp-assessment-div">
+												<div>
+													<div class="cp-module-grade-info">
+														<label class="cp-assess-label">' . __( 'Module Grade: ', 'cp' ) . '</label>
+														<span class="cp-current-grade">'. $grade . '%</span>
+														<span class="cp-check ' . $pass_class . '">' . ( 'green' === trim( $pass_class ) ? __( 'Pass', 'cp' ) : __( 'Fail', 'cp' ) ) . '</span>
+													</div>
 												</div>
 											</div>
-										</div>
-									';
+										';
+									}
 								}
 							}
 

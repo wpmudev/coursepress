@@ -913,6 +913,7 @@ class CoursePress_Data_Student {
 										'input-textarea',
 										'input-text',
 										'input-upload',
+										'input-form',
 									);
 
 									$total_course_grade += $grade;
