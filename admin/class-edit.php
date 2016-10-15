@@ -42,7 +42,7 @@ class CoursePress_Admin_Edit {
 
 			// Start wrapper
 			add_action( 'edit_form_after_editor', array( __CLASS__, 'start_wrapper' ) );
-	
+
 			// Step 1
 			add_action( 'edit_form_after_editor', array( __CLASS__, 'step_1' ) );
 			// Step 2
@@ -65,9 +65,8 @@ class CoursePress_Admin_Edit {
 		} else {
 			$_GET['id'] = $_REQUEST['id'] = self::$current_course->ID;
 			add_action( 'add_meta_boxes', array( __CLASS__, 'disable_meta_boxes' ), 1 );
+			add_action( 'admin_footer', array( __CLASS__, 'disable_style' ), 100 );
 		}
-
-		add_action( 'admin_footer', array( __CLASS__, 'disable_style' ), 100 );
 	}
 
 	public static function disable_meta_boxes() {
