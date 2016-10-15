@@ -1050,13 +1050,14 @@ class CoursePress_Data_Course {
 		if ( empty( $student_id ) ) {
 			return false;
 		}
+		$global_option = ! is_multisite();
 
 		if ( is_multisite() ) {
 			$course_meta_key = $wpdb->prefix . 'enrolled_course_date_' . $course_id;
 		} else {
 			$course_meta_key = 'enrolled_course_date_' . $course_id;
 		}
-		$enrolled = get_user_option( $course_meta_key, $student_id );
+		$enrolled = get_user_option( $course_meta_key, $student_id, $global_option );
 
 		return ! empty( $enrolled ) ? $enrolled : '';
 	}
@@ -1087,7 +1088,7 @@ class CoursePress_Data_Course {
 		// If student is already enrolled, exit.
 		$enrolled = self::student_enrolled( $student_id, $course_id );
 		if ( ! empty( $enrolled ) ) {
-			return $course_id;
+			//return $course_id;
 		}
 
 		/**
@@ -1118,7 +1119,7 @@ class CoursePress_Data_Course {
 		}
 		update_user_option(
 			$student_id,
-			$prefix . 'enrolled_course_date_' . $course_id,
+			'enrolled_course_date_' . $course_id,
 			$current_time,
 			$global_option
 		);
