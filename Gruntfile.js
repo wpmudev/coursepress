@@ -699,7 +699,7 @@ module.exports = function(grunt) {
 		//HIDE:grunt.task.run( 'default' );
 
 		// Generate all translation files (pro and free)
-		grunt.task.run( 'lang' );
+		//grunt.task.run( 'lang' );
 
 		for ( i in build ) {
 			branch = build[i];
