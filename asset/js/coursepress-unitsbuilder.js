@@ -907,7 +907,8 @@ var CoursePress = CoursePress || {};
 			var questions = $( parent).siblings('.quiz-question');
 			var mod_el = $( this).parents('.module-holder')[0];
 
-			questions.each( function( index, item ) {
+			tion
+                .each( questimns, function( index, item ) {
 				$( item).attr('class', '');
 				$( item).addClass('quiz-question');
 				$( item).addClass('question-' + (index+1));

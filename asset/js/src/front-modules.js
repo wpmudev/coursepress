@@ -263,12 +263,77 @@
 		return false;
 	};
 
+	CoursePress.singleFolded = function() {
+			var target = $('>ul', $(this).parent() );
+			var unit = $('.unit-archive-single-title', $(this).parent());
+			var modules_container = $('.unit-archive-module-wrapper', $(this).parent());
+			var container = $(this);
+			if ( container.hasClass('folded') ) {
+				target.slideDown( function() {
+					container.removeClass('folded');
+					container.closest('li').removeClass('folded').addClass('unfolded');
+					unit.attr('href', unit.data('original-href'));
+					unit.off('click');
+				});
+			} else {
+				target.slideUp(function() {
+					container.addClass('folded');
+					container.closest('li').removeClass('unfolded').addClass('folded');
+					if ( "undefined" == typeof( unit.data('href') ) ) {
+						/**
+						 * find last seen module
+						 */
+						var module = $('.module-seen', modules_container).last();
+						if ( module.length ) {
+							module = $('.module-title', module );
+							if ( module.length ) {
+								unit.attr('href', unit.attr('href') + '#module-'+ module.data('id') );
+								return false;
+							}
+						}
+						/**
+						 * find last seen section
+						 */
+						var section = $('.section-seen', modules_container).last();
+						if ( section.length ) {
+							section = $('.section-title', section );
+							if ( section.length ) {
+								unit.attr('href', unit.attr('href') + '#section-'+ section.data('id') );
+								return false;
+							}
+						}
+					}
+				});
+			}
+			return false;
+	};
+
+	CoursePress.unitFolded = function() {
+			var span = $(this),
+				container = span.parents( 'li' ).first(),
+				module_wrapper = container.find( '.unit-structure-modules' ),
+				is_open = container.is( '.folded' )
+			;
+
+			if ( is_open ) {
+				container.removeClass( 'folded' ).addClass( 'unfolded' );
+				span.removeClass( 'folded' );
+				module_wrapper.slideDown();
+			} else {
+				container.removeClass( 'unfolded' ).addClass( 'folded' );
+				span.addClass( 'folded' );
+				module_wrapper.slideUp();
+			}
+	};
+
 	$( document )
 		.on( 'submit', '.cp-form', CoursePress.ModuleSubmit )
 		.on( 'click', '.focus-nav-prev, .focus-nav-next', CoursePress.LoadFocusModule )
 		.on( 'click', '.button-reload-module', CoursePress.toggleModuleState )
 		.on( 'click', '.cp-module-content .comment-reply-link', CoursePress.commentReplyLink )
 		.on( 'click', '.cp-comment-submit', CoursePress.addComment )
-		.on( 'change', '.cp-module-content .file input', CoursePress.validateUploadModule );
+		.on( 'change', '.cp-module-content .file input', CoursePress.validateUploadModule )
+		.on( 'click', '.unit-archive-single .fold', CoursePress.singleFolded )
+		.on( 'click', '.course-structure-block .unit .fold', CoursePress.unitFolded );
 
 })(jQuery);
