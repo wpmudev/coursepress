@@ -173,8 +173,11 @@ class CoursePress_Data_Student {
 	 * @return bool
 	 */
 	public static function is_enrolled_in_course( $student_id, $course_id ) {
-		$enrolled = self::get_enrolled_courses_ids( $student_id );
-		return in_array( $course_id, $enrolled );
+		$global_option = ! is_multisite();
+		$key = 'enrolled_course_date_' . $course_id;
+		$enrolled = get_user_option( $key, $student_id, $global_option );
+
+		return ! empty( $enrolled );
 	}
 
 	/**
