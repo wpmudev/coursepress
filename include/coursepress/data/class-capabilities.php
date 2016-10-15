@@ -316,7 +316,8 @@ class CoursePress_Data_Capabilities {
 		$return = user_can( $user_id, 'manage_options' );
 		$post_status = get_post_status( $course_id );
 
-		if ( false === $return && self::can_manage_courses( $user_id ) && self::can_create_course() ) {
+		//if ( false === $return && self::can_manage_courses( $user_id ) && self::can_create_course() ) {
+		if ( false === $return ) {
 			$course_creator = self::is_course_creator( $course_id, $user_id );
 			$is_instructor = self::is_course_instructor( $course_id, $user_id );
 			$is_facilitator = CoursePress_Data_Facilitator::is_course_facilitator( $course_id, $user_id );

@@ -376,6 +376,10 @@
 			reset_button = search.siblings( '#search_reset' )
 		;
 
+		if ( ! course_id ) {
+			return;
+		}
+
 		if ( '' != search.val() ) {
 			// Enable reset
 			reset_button.removeClass( 'disabled' );

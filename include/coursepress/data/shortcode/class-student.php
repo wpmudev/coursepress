@@ -195,6 +195,9 @@ class CoursePress_Data_Shortcode_Student {
 
 					foreach ( $page['modules'] as $module_id => $module ) {
 						$attributes = CoursePress_Data_Module::attributes( $module_id );
+						$is_assessable = ! empty( $attributes['assessable'] );
+						$require_instructor_assessment = ! empty( $attributes['instructor_assessable'] );
+
 						if ( 'output' === $attributes['mode'] ) {
 							continue;
 						}
@@ -215,7 +218,7 @@ class CoursePress_Data_Shortcode_Student {
 						);
 						$grade = empty( $grades['grade'] ) ? 0 : (int) $grades['grade'];
 
-						$excluded_modules = array( 'input-textarea', 'input-text', 'input-upload' );
+						$excluded_modules = array( 'input-textarea', 'input-text', 'input-upload', 'input-form' );
 
 						if ( in_array( $module_type, $excluded_modules ) ) {
 							if ( ( 'auto' == $graded_by || empty( $graded_by ) ) && ! empty( $response ) ) {
@@ -305,12 +308,45 @@ class CoursePress_Data_Shortcode_Student {
 								$response_display = empty( $response_display ) ? __( 'No answer!', 'cp' ) : $response_display;
 								$display = sprintf( '<p>%s</p>', $response_display );
 								break;
+
+							case 'input-form':
+								$response = $response_display;
+								$response_display = '';
+
+								if ( ! empty( $attributes['questions'] ) ) {
+									$questions = $attributes['questions'];
+
+									foreach ( $questions as $q_index => $question ) {
+										$student_response = ! empty( $response[ $q_index ] ) ? $response[ $q_index ] : '';
+										$format = '<p class="question">%s</p>';
+										$response_display .= sprintf( $format, esc_html( $question['question'] ) );
+
+										if ( 'selectable' == $question['type'] ) {
+											$options = $question['options']['answers'];
+											$checked = $question['options']['checked'];
+
+											foreach ( $options as $ai => $answer ) {
+												if ( $student_response == $ai ) {
+													$the_answer = ! empty( $checked[ $ai ] );
+
+													if ( $the_answer === $student_response ) {
+														$class = 'chosen-correct';
+													} else {
+														$class = 'chosen-incorrect';
+													}
+													$response_display .= sprintf( '<p class="answer %s">%s</p>', $class, $answer );
+												}
+											}
+										} else {
+											$response_display .= sprintf( '<p>%s</p>', esc_html( $student_response ) );
+										}
+
+									}
+								}
+								break;
 						}
 
 						$response_date = ! isset( $response['date'] ) ? '' : date_i18n( get_option( 'date_format' ), CoursePress_Data_Course::strtotime( $response['date'] ) );
-
-						//$grade = (-1 == $grade ? __( 'Ungraded', 'cp' ) : $grade );
-
 						$mandatory = cp_is_true( $attributes['mandatory'] ) ? '<span class="dashicons dashicons-flag mandatory"></span>' : '';
 						$non_assessable = cp_is_true( $attributes['assessable'] ) ? '' : '<span class="dashicons dashicons-star-filled non-assessable"></span>';
 
@@ -320,7 +356,15 @@ class CoursePress_Data_Shortcode_Student {
 
 						$feedback_display = ! empty( $feedback['feedback'] ) ? '<div class="feedback"><div class="comment">' . $feedback['feedback'] . '</div><div class="instructor"> – <em>' . esc_html( $first_last ) . '</em></div></div>' : '';
 
-						$grade_display = 0 < (int) $grade ? $grade . '%' : $grade;
+						$grade_display = 0 === $grade || 0 < (int) $grade ? $grade . '%' : $grade;
+
+						if ( $require_instructor_assessment ) {
+							$is_assessable = true;
+						}
+
+						if ( 'Pending' === $grade_display && false === $is_assessable ) {
+							$grade_display = __( 'Non-gradable', 'cp' );
+						}
 
 						$content .= '<tr class="row-module">';
 						$content .= sprintf( '<td class="column-title">%s</td>', $title );

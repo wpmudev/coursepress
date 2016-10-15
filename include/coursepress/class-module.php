@@ -197,6 +197,8 @@ class CoursePress_Module {
 		$excluded_modules = array(
 			'input-textarea',
 			'input-text',
+			'input-upload',
+			'input-form',
 		);
 
 		// Validate the course
