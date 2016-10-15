@@ -7,7 +7,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 	var $slug = 'coursepress_assessments';
 	var $with_editor = true;
 	static $feedback_email = false;
-	protected $cap = 'coursepress_settings_cap';
+	protected $cap = 'coursepress_assessment_cap';
 
 	public function __construct() {
 		parent::__construct();
