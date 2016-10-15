@@ -157,12 +157,20 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 		);
 		$workbook_link = add_query_arg(
 			array(
-				'page' => CoursePress_View_Admin_Student::get_slug(),
-				'view' => 'workbook',
+				'post_type' => CoursePress_Data_Course::get_post_type_name(),
+				'page' => 'coursepress_assessments',
+				'view' => 'profile',
 				'student_id' => $item->ID,
 				'course_id' => $this->course_id,
 			),
-			admin_url( 'admin.php' )
+			remove_query_arg(
+				array(
+					'tab',
+					'post',
+					'action',
+				),
+				admin_url( 'edit.php' )
+			)
 		);
 		$title = sprintf(
 			'<strong><a href="%s">%d</a></strong>',
