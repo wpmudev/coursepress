@@ -1057,7 +1057,7 @@ class CoursePress_Data_Course {
 		} else {
 			$course_meta_key = 'enrolled_course_date_' . $course_id;
 		}
-		$enrolled = get_user_option( $course_meta_key, $student_id, $global_option );
+		$enrolled = get_user_option( $course_meta_key, $student_id );
 
 		return ! empty( $enrolled ) ? $enrolled : '';
 	}

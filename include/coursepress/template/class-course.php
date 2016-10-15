@@ -32,14 +32,18 @@ class CoursePress_Template_Course {
 
 			$table_header = '';
 			$table_body = '';
+			$certificated = CoursePress_Data_Certificate::is_enabled();
 
 			$table_columns = array(
 				'name' => __( 'Course', 'cp' ),
 				'date_enrolled' => __( 'Date Enrolled', 'cp' ),
 				'average' => __( 'Average', 'cp' ),
 				'status' => __( 'Status', 'cp' ),
-				'certificate' => __( 'Certificate', 'cp' ),
 			);
+
+			if ( $certificated ) {
+				$table_columns['certificate'] = __( 'Certificate', 'cp' );
+			}
 
 			foreach ( $table_columns as $column => $column_label ) {
 				$table_header .= sprintf( '<th class="column-%s">%s</th>', $column, $column_label );

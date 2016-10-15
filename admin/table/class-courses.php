@@ -136,19 +136,13 @@ class CoursePress_Admin_Table_Courses extends WP_Posts_List_Table {
 	}
 
 	public function column_average( $course ) {
-		if ( empty( self::$student_progress ) ) {
-			self::$student_progress = CoursePress_Data_Student::get_completion_data( $this->student_id, $course->ID );
-		}
-		$average = CoursePress_Helper_Utility::get_array_val(
-			self::$student_progress,
-			'completion/average'
-		);
+		$average = CoursePress_Data_Student::average_course_responses( $this->student_id, $course->ID );
 
 		return (float) $average . '%';
 	}
 
 	public function column_certificate( $course ) {
-		$completed = CoursePress_Data_Student::is_course_complete( $this->student_id, $course->ID, self::$student_progress );
+		$completed = CoursePress_Data_Student::is_course_complete( $this->student_id, $course->ID );
 		$download_certificate = __( 'Not available', 'cp' );
 
 		if ( $completed ) {
