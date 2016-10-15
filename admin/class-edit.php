@@ -66,11 +66,16 @@ class CoursePress_Admin_Edit {
 			$_GET['id'] = $_REQUEST['id'] = self::$current_course->ID;
 			add_action( 'add_meta_boxes', array( __CLASS__, 'disable_meta_boxes' ), 1 );
 		}
+
+		add_action( 'admin_footer', array( __CLASS__, 'disable_style' ), 100 );
 	}
 
 	public static function disable_meta_boxes() {
 		global $wp_meta_boxes;
 		$wp_meta_boxes = array();
+	}
+
+	public static function disable_style() {
 		?>
 		<style>
 		#postbox-container-1,
