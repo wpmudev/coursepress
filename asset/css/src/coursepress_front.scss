@@ -1158,3 +1158,18 @@ ul.notification-archive-list {
 	height: 1em;
 	font-size: 1em;
 }
+
+.coursepress-page {
+	.nav-links {
+		display: flex;
+		flex-wrap: nowrap;
+		width: 100%;
+		justify-content: center;
+			margin-top: 2em;
+			a, span {
+				padding: 0 15px;
+				margin: 0 2px;
+			}
+	}
+}
+

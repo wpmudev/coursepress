@@ -705,7 +705,7 @@ class CoursePress_Data_Shortcode_Unit {
 	 *
 	 * @since 1.0.0
 	 */
-	function course_unit_title( $atts ) {
+	public static function course_unit_title( $atts ) {
 		extract( shortcode_atts( array(
 			'unit_id'   => in_the_loop() ? get_the_ID() : '',
 			'title_tag' => '',

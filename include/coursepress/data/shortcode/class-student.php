@@ -304,6 +304,25 @@ class CoursePress_Data_Shortcode_Student {
 
 								$response_display = $display;
 								break;
+							case 'input-form':
+								$display = '';
+								$questions = $attributes['questions'];
+								if ( $response_display ) {
+									foreach ( $questions as $q_index => $question ) {
+										$answer = $response_display[$q_index];
+										if ( $question['type'] == 'selectable' ) {
+											$selected = ( isset($question['options']) && isset($question['options']['answers']) && isset($question['options']['answers'][$answer]) ) 
+												? $question['options']['answers'][$answer]
+												: '';
+											$display .= sprintf( '<p class="answer">%s</p>', $selected );
+										} else {
+											$display .= sprintf( '<p class="answer">%s</p>', $answer );
+										}
+									}
+									
+								}
+								$response_display = $display;
+								break;
 							case 'input-text': case 'input-textarea':
 								$response_display = empty( $response_display ) ? __( 'No answer!', 'cp' ) : $response_display;
 								$display = sprintf( '<p>%s</p>', $response_display );

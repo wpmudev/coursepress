@@ -550,7 +550,7 @@ class CoursePress_Template_Module {
 				esc_url( $url ),
 				esc_html( $link_text )
 			);
-			$content .= self::_wrap_content( $module->post_content, $after_content );
+			$content .= $after_content;
 		}
 
 		return $content;
