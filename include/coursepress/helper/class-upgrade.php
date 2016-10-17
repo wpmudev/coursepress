@@ -702,7 +702,20 @@ class CoursePress_Helper_Upgrade {
 	private static function course_upgrade_student_progress( $course ) {
 		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
 		if ( $done ) {
-			//			return;
+			return;
+		}
+		/**
+		 * get units
+		 */
+		$units = CoursePress_Data_Course::get_units( $course->ID, array( 'any' ), true );
+		/**
+		 * Get course modules
+		 */
+		$modules = array();
+		$all_modules = array();
+		foreach( $units as $unit_id ) {
+			$modules[ $unit_id ] = CoursePress_Data_Course::get_unit_modules( $unit_id, array( 'any' ), true );
+			$all_modules = array_merge( $all_modules, array_values( $modules[ $unit_id ] ) );
 		}
 		/**
 		 * get students
@@ -711,6 +724,18 @@ class CoursePress_Helper_Upgrade {
 		foreach( $student_ids as $student_id ) {
 			//$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course->ID );
 			$student_progress = array();
+			/**
+			 * Build fake structure
+			 */
+			foreach( $modules as $unit_id => $module_ids ) {
+				foreach( $module_ids as $module_id ) {
+						CoursePress_Helper_Utility::set_array_val(
+							$student_progress,
+							'units/' . $unit_id . '/responses/'.$module_id,
+							array()
+						);
+				}
+			}
 			/**
 			 * Get student responses
 			 */
@@ -750,7 +775,6 @@ class CoursePress_Helper_Upgrade {
 				/**
 				 */
 				$meta = get_post_meta( $response->ID );
-				l($meta);
 				/**
 				 * student_checked_answers
 				 */
@@ -762,7 +786,6 @@ class CoursePress_Helper_Upgrade {
 							'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/response',
 							maybe_unserialize( $response_student_checked_answer )
 						);
-
 					}
 				}
 				/**
@@ -792,6 +815,53 @@ class CoursePress_Helper_Upgrade {
 				}
 			}
 			/**
+			 * input-file
+			 */
+			$args = array(
+				'post_type' => 'attachment',
+				'nopaging' => true,
+				'ignore_sticky_posts' => true,
+				'post_parent__in' => $all_modules,
+				'post_status' => 'inherit',
+			);
+			$query = new WP_Query( $args );
+			$responses = $query->posts;
+			$unit_id = 0;
+			foreach( $responses as $response ) {
+				/**
+				 * Module & Unit iD
+				 */
+				$module_id = $response->post_parent;
+				$unit_id = CoursePress_Data_Module::get_unit_id_by_module( $module_id );
+				$module_id = $response->post_parent;
+				$unit_id = CoursePress_Data_Module::get_unit_id_by_module( $module_id );
+				$meta = get_post_meta( $response->ID );
+				CoursePress_Helper_Utility::set_array_val(
+					$student_progress,
+					'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/grades/0',
+					array(
+						'grade_by' => $student_id == $grade['instructor'] ? 'auto' : $grade['instructors'],
+						'grade' => 100,
+						'date' => $response->post_date,
+					)
+				);
+				CoursePress_Helper_Utility::set_array_val(
+					$student_progress,
+					'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/date',
+					$response->post_date
+				);
+				CoursePress_Helper_Utility::set_array_val(
+					$student_progress,
+					'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/response',
+					array(
+						'file' => '',
+						'url' => get_attachment_link( $response->ID ),
+						'type' => $response->post_mime_type,
+						'size' => '',
+					)
+				);
+			}
+			/**
 			 * Visited pages for unit
 			 */
 			if ( $unit_id ) {
@@ -816,7 +886,6 @@ class CoursePress_Helper_Upgrade {
 			}
 			$student_progress = CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course->ID, $student_progress );
 			CoursePress_Data_Student::update_completion_data( $student_id, $course->ID, $student_progress );
-			//l($student_progress );
 		}
 		self::upgrade_step_set_done( $course->ID, __FUNCTION__ );
 	}
