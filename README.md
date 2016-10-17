@@ -1,12 +1,12 @@
 # README
 
-The **only** development branch for CoursePress 2 is `coursepress/2.0-dev`. This branch ultimately is responsible for creating the production branches that are finally published. Consider it to be a "super branch".  
+The **only** development branch for CoursePress 2 is `coursepress/2.0-dev`. This branch ultimately is responsible for creating the production branches that are finally published. Consider it to be a "super branch".
 
 Production branches are automatically built, based on the dev branch. Any changes made to those other branches will be overwritten!
 
 **Remember:** `coursepress/2.0-dev` is the ONLY branch that should be edited and forked!
 
-**Notes:** 
+**Notes:**
 
 1. Only fork and submit pull-requests to the super branch `coursepress/2.0-dev`!
 2. Never fork the production branches (below)!
@@ -19,15 +19,15 @@ Production branches are automatically built, based on the dev branch. Any change
 Production branches are always supposed to be stable and can be released/published at any time.
 
 
-## CoursePress Pro (coursepress/2-pro)  
+## CoursePress Pro (coursepress/2-pro)
 
 CoursePress Pro is the official premium plugin that lives on WPMU DEV. Also this plugin is used to power the WP Academy site.
 
-## CoursePress (coursepress/2-free)  
+## CoursePress (coursepress/2-free)
 
 CoursePress is the free limited version that gets published to the WordPress plugin directory.
 
-## CoursePress Campus (coursepress/2-campus)  
+## CoursePress Campus (coursepress/2-campus)
 
 CoursePress Campus is the version that is used on Edublogs and CampusPress.
 
@@ -60,24 +60,24 @@ There are special comments in the `coursepress/2.0-dev` branch will make sure so
 Those are:
 
 ```
-#!php 
+#!php
 /* start:pro */
-echo 'This is only in coursepress/2-pro';  
+echo 'This is only in coursepress/2-pro';
 /* end:pro */
-  
+
 /* start:free */
-echo 'This is only in coursepress/2-free';  
+echo 'This is only in coursepress/2-free';
 /* end:free */
 
 /* start:campus */
-echo 'This is only in coursepress/2-campus';  
+echo 'This is only in coursepress/2-campus';
 /* end:campus */
 ```
 
 
 ## WP-Academy
 
-Updating CoursePress in wp-academy is very simple. It takes two steps: 
+Updating CoursePress in wp-academy is very simple. It takes two steps:
 First update and push CoursePress 2-Pro to latest version.
 Second clone and commit CoursePress 2-Pro in WP-Academy.
 
@@ -99,19 +99,19 @@ Second clone and commit CoursePress 2-Pro in WP-Academy.
 
 ### Cloning
 
-CoursePress uses submodules, so use the `--recursive` flag if you clone from command line:  
+CoursePress uses submodules, so use the `--recursive` flag if you clone from command line:
 
 ```
-#!bash 
-$ git clone git@bitbucket.org:incsub/coursepress.git --recursive  
+#!bash
+$ git clone git@bitbucket.org:incsub/coursepress.git --recursive
 ```
 
-If you already have a cloned repo, you will need to *init* the submodule.  
+If you already have a cloned repo, you will need to *init* the submodule.
 
 ```
-#!bash 
+#!bash
 $ git submodule init --
-$ git submodule update  
+$ git submodule update
 ```
 
 ### Agile workflow
@@ -140,7 +140,7 @@ Plugin code:
 > *Special folders inside asset:*
 >  `asset/js/src/` (source js-files)
 >  `asset/css/src/` (source scss-files)
->  
+>
 >  *Do not edit the .css and .js files in root of `asset/js` and `asset/css`, they are overwritten by grunt!*
 * `include/` .. All php code of the core (free version) goes here.
 * `premium/` .. All Premium-Only code belongs here!
@@ -163,18 +163,18 @@ Product folders `premium` and `campus` also contain the same subfolders as the c
 > Example: *"class-templatetag.php" not "class-templateTag.php"*
 * Use hyphen "-" instead of underscore "_"
 > Example: *"class-core.php" not "class_core.php"*
-* Try to keep all folder and file names in singular 
+* Try to keep all folder and file names in singular
 > Example: *"include" not "includes"*
 
-### Working with MarketPress in CoursePress  
+### Working with MarketPress in CoursePress
 
-#### Preparing MarketPress for CoursePress Standard  
+#### Preparing MarketPress for CoursePress Standard
 
-No steps required here as CoursePress Standard now fetches MarketPress Lite directly from the WordPress.org directory when the user wants to enable it.  
+No steps required here as CoursePress Standard now fetches MarketPress Lite directly from the WordPress.org directory when the user wants to enable it.
 
 #### Preparing MarketPress for CoursePress Pro
 
-* Download MarketPress from WPMU DEV Premium.  
+* Download MarketPress from WPMU DEV Premium.
 * Save the zip file as `/asset/file/marketpress-pro.zip` (replace existing file).
 
 
@@ -188,9 +188,9 @@ Many tasks as well as basic quality control are done via grunt. Below is a list 
 
 **Important**: Before making a pull-request to the super branch (2.0-dev) always run the task `grunt` - this ensures that all .php, .js and .css files are validated and existing unit tests pass. If an problems are reported then fix those problems before submitting the pull request.
 
-### Grunt Task Runner  
+### Grunt Task Runner
 
-**ALWAYS** use Grunt to build CoursePress production branches. Use the following commands:  
+**ALWAYS** use Grunt to build CoursePress production branches. Use the following commands:
 
 Category | Command | Action
 ---------| ------- | ------
@@ -223,10 +223,10 @@ The example shows how to update the Pro-version, but the process for free nad ca
 
 #### 1. npm
 
-First install node.js from: <http://nodejs.org/>  
+First install node.js from: <http://nodejs.org/>
 
 ```
-#!bash 
+#!bash
 # Test it:
 $ npm -v
 
@@ -239,7 +239,7 @@ $ npm install -g npm
 Install grunt by running this command in command line:
 
 ```
-#!bash 
+#!bash
 # Install grunt:
 $ npm install -g grunt-cli
 ```
@@ -249,7 +249,7 @@ $ npm install -g grunt-cli
 In command line switch to the `coursepress` plugin folder. Run this command to set up grunt for the coursepress plugin:
 
 ```
-#!bash 
+#!bash
 # Install automation tools for coursepress:
 $ cd <path-to-wordpress>/wp-content/plugins/coursepress
 $ npm install
@@ -263,7 +263,7 @@ $ grunt hello
 Same as 3: Run commands in the `coursepress` plugin folder:
 
 ```
-#!bash 
+#!bash
 $ cd <path-to-wordpress>/wp-content/plugins/coursepress
 
 # Install composer:
@@ -286,30 +286,22 @@ $ git config user.email "<your email>"
 $ git config user.name "<your name>"
 ```
 
-### Set up wordpress-develop for unit tests
+### Unit Testing
 
-If the command `grunt test` fails you possibly need to follow these steps and install the wordpress-develop repository to your server.
+Run the command `grunt phpunit` to run unit tests. If it fails you possibly need to follow these steps and install the test environment:
 
 The repository must exist at one of those directories:
 
-* `/srv/www/wptest/wordpress-develop`
-* `/srv/www/wordpress-develop/trunk`    
+* `/tmp/wordpress-tests-lib/` (default location as setup by wp cli)
+* `/srv/www/wordpress-develop/trunk/tests/phpunit/`  (VVV location)
 * Or set the environment variable `WP_TESTS_DIR` to the directory
 
 (See: tests/bootstrap.php line 12-21 for logic)
 
 ```
-#!bash 
-# Create the directory at correct place:
-$ mkdir /srv/www/wordpress-develop
-
-# Download the WP-developer repository:
-$ cd /srv/www/wordpress-develop
-$ svn co http://develop.svn.wordpress.org/trunk/
-
-# Run this to download latest WP updates:
-$ cd /srv/www/wordpress-develop/trunk
-$ svn up
+#!bash
+# This one command will setup the test env:
+$ bash test/install-wp-tests.sh
 ```
 
 

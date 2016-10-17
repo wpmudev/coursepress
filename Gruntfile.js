@@ -181,8 +181,11 @@ module.exports = function(grunt) {
 					'!vendor/**',
 					'!language/**',
 					'!release/**',
+					'!test/**',
 					'!asset/file/**',
 					'!Gruntfile.js',
+					'!package.json',
+					'!bitbucket-pipelines.yml',
 					'!build/**',
 					'!.git/**'
 				],
@@ -549,7 +552,6 @@ module.exports = function(grunt) {
 				dir: ''
 			},
 			options: {
-				bin: 'vendor/phpunit/phpunit/phpunit',
 				bootstrap: 'test/bootstrap.php',
 				testsuite: 'default',
 				configuration: 'test/phpunit.xml',
