@@ -51,6 +51,7 @@ class CoursePress_Template_Unit {
 		$preview_pages = array();
 		$next_page = false;
 		$next_unit = false;
+		$page = max( 1, $page );
 
 		$enrolled = CoursePress_Data_Course::student_enrolled( $student_id, $course_id );
 

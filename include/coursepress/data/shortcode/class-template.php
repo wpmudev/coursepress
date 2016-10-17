@@ -410,11 +410,22 @@ class CoursePress_Data_Shortcode_Template {
 		$template = '<div class="coursepress-dashboard-wrapper">
 			[course_list instructor="' . $user_id . '" dashboard="true"]
 			[course_list facilitator="' . $user_id . '" dashboard="true"]
-			[course_list student="' . $user_id . '" dashboard="true" context="current"]
-			[course_list student="'. $user_id . '" dashboard="true" context="future"]
-			[course_list student="' . $user_id . '" dashboard="true" context="past"]
+			[course_list student="' . $user_id . '" dashboard="true" context="all" current_label=""]
 		</div>
 		';
+
+		$template = '<div class="coursepress-dashboard-wrapper">
+			[course_list instructor="%1$s" dashboard="true"]
+			[course_list facilitator="%1$s" dashboard="true"]
+			[course_list student="%1$s" dashboard="true" current_label="%2$s"]
+		</div>';
+
+		$template = sprintf( $template, $user_id, __( 'Enrolled Courses', 'cp' ) );
+/*
+[course_list student="' . $user_id . '" dashboard="true" context="current"]
+			[course_list student="'. $user_id . '" dashboard="true" context="future"]
+			[course_list student="' . $user_id . '" dashboard="true" context="past"]
+*/
 
 		$template = apply_filters( 'coursepress_template_dashboard_page', $template, $user_id, $a );
 
@@ -1507,6 +1518,14 @@ class CoursePress_Data_Shortcode_Template {
 		return $content;
 	}
 
+	public static function cookie_test() {
+		// Set a cookie now to see if they are supported by the browser.
+		setcookie( TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN );
+		if ( SITECOOKIEPATH != COOKIEPATH ) {
+			setcookie( TEST_COOKIE, 'WP Cookie check', 0, SITECOOKIEPATH, COOKIE_DOMAIN );
+		};
+	}
+
 	public static function course_signup_form( $atts ) {
 		$allowed = array( 'signup', 'login' );
 
@@ -1563,12 +1582,6 @@ class CoursePress_Data_Shortcode_Template {
 		$signup_url = CoursePress_Core::get_slug( 'signup', true );
 		$login_url = CoursePress_Core::get_slug( 'login', true );
 		$forgot_url = wp_lostpassword_url();
-
-		// Set a cookie now to see if they are supported by the browser.
-		setcookie( TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN );
-		if ( SITECOOKIEPATH != COOKIEPATH ) {
-			setcookie( TEST_COOKIE, 'WP Cookie check', 0, SITECOOKIEPATH, COOKIE_DOMAIN );
-		};
 
 		$content = '';
 		switch ( $page ) {

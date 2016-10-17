@@ -43,6 +43,8 @@ class CoursePress_Helper_JavaScript {
 	}
 
 	public static function enqueue_scripts() {
+		global $pagenow;
+
 		$is_valid_page = self::is_valid_page();
 
 		if ( false === $is_valid_page ) {
@@ -203,7 +205,7 @@ class CoursePress_Helper_JavaScript {
 		}
 
 		/** COURSE LIST */
-		if ( 'coursepress_course' === $_GET['page'] && empty( $_GET['post'] ) ) {
+		if ( 'coursepress_course' === $_GET['page'] && 'edit.php' == $pagenow ) {
 			$script = CoursePress::$url . 'asset/js/coursepress-courselist.js';
 			wp_enqueue_script( 'coursepress_course_list', $script, array(
 				'jquery-ui-accordion',
@@ -394,6 +396,11 @@ class CoursePress_Helper_JavaScript {
 	public static function maybe_print_assets() {
 		if( false === self::$is_cp_called && CoursePress_Core::$is_cp_page ) {
 			self::front_assets();
+		}
+
+		if ( self::$is_cp_called && false === is_user_logged_in() ) {
+			// Print enrollment templates
+			echo do_shortcode( '[coursepress_enrollment_templates]' );
 		}
 	}
 

@@ -456,6 +456,85 @@ class CoursePress_Data_Module {
 		);
 
 	}
+	
+	/**
+	* Form results will not depend on grades, just check if mandatory and empty
+	*/
+	public static function get_form_results( $student_id, $course_id, $unit_id, $module_id, $response = false, $data = false ) {
+		$attributes = self::attributes( $module_id );
+		$is_mandatory = (bool) $attributes['mandatory'];
+		
+		if ( false === $data ) {
+			$data = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
+		}
+
+		if ( false === $response ) {
+			$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $data );
+			$response = ! empty( $response ) ? $response['response'] : false;
+		}
+
+		if ( empty( $response ) ) {
+			return false;
+		}
+
+		$minimum_grade = (int) $attributes['minimum_grade'];
+
+		$total_questions = count( $attributes['questions'] );
+		$gross_correct = 0;
+		
+		if ( $is_mandatory ) {
+			foreach ( $attributes['questions'] as $key => $question ) {
+				$answer = $response[$key];
+				switch ( $question['type'] ) {
+					case 'selectable':
+						// selectable will always have a default response
+						$gross_correct += 1;
+						break;
+					case 'short':
+					case 'long':
+						// just check if empty
+						$gross_correct = ( !empty($answer) ) ? $gross_correct + 1 : $gross_correct;
+						break;
+				}
+			}
+			$grade = (int) ( $gross_correct / $total_questions * 100 );
+		} else {
+			$grade = 100;
+		}
+		
+		$passed = $grade >= $minimum_grade;
+		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
+		$responses = CoursePress_Data_Student::get_responses( $student_id, $course_id, $unit_id, $module_id, true, $student_progress );
+		$response_count = count( $responses );
+		$unlimited = empty( $attributes['retry_attempts'] );
+		$remaining = ! $unlimited ? (int) $attributes['retry_attempts'] - ( $response_count - 1 ) : 0;
+		$remaining_message = ! $unlimited ? sprintf( __( 'You have %d attempts left.', 'cp' ), $remaining ) : '';
+		$remaining_message = sprintf(
+			esc_html__( 'Your last attempt was unsuccessful. Try again. %s', 'cp' ),
+			$remaining_message
+		);
+		$allow_retries = cp_is_true( $attributes['allow_retries'] );
+
+		if ( ! $allow_retries || ( ! $unlimited && 1 > $remaining ) ) {
+			$remaining_message = esc_html__( 'Your last attempt was unsuccessful. You can not try anymore.', 'cp' );
+		}
+
+		$message = array(
+			'hide' => $passed,
+			'text' => $remaining_message,
+		);
+
+		return array(
+			'grade' => (int) $grade,
+			'correct' => (int) $gross_correct,
+			'wrong' => (int) $total_questions - (int) $gross_correct,
+			'total_questions' => (int) $total_questions,
+			'passed' => $passed,
+			'attributes' => $attributes,
+			'message' => $message,
+		);
+
+	}
 
 	// DEPRACATED!!!
 	public static function quiz_result_content( $student_id, $course_id, $unit_id, $module_id, $quiz_result = false ) {

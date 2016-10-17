@@ -401,16 +401,18 @@ class CoursePress_View_Front_Course {
 	 * @see    self::parse_request()
 	 * @return string The HTML code.
 	 */
-	public static function render_course_main() {
+	public static function render_course_main( $course_id = 0 ) {
+		$content = '';
 		$theme_file = locate_template( array( 'single-course.php' ) );
-
 		if ( $theme_file ) {
 			self::$template = $theme_file;
-			$content = '';
+			$course_post = get_post( $course_id );
+			if ( $course_post && CoursePress_Admin_Courses::_is_course($course_post) ) {
+				$content = apply_filters( 'the_content', $course_post->post_content );
+			}
 		} else {
 			$content = CoursePress_Template_Course::course();
 		}
-
 		return $content;
 	}
 
@@ -921,10 +923,12 @@ class CoursePress_View_Front_Course {
 				'slug' => 'course_' . $cp->course_id,
 				'title' => get_the_title( $cp->course_id ),
 				'show_title' => $show_title,
-				'callback' => array( __CLASS__, 'render_course_main' ),
+				//'callback' => array( __CLASS__, 'render_course_main' ),
+				//'context' => 'main',
+				'content' => '',
 				'content' => apply_filters(
 					'coursepress_view_course',
-					self::render_course_main(),
+					self::render_course_main( $cp->course_id ),
 					$cp->course_id,
 					'main'
 				),
@@ -1007,11 +1011,16 @@ class CoursePress_View_Front_Course {
 						'slug' => 'course_archive',
 						'title' => $cp->title,
 						'show_title' => true,
+						'content' => '',
+						'callback' => array( __CLASS__, 'render_course_archive' ),
+						'context' => $cp->cp_category,
+						/*
 						'content' => apply_filters(
 							'coursepress_view_course_archive',
 							self::render_course_archive(),
 							$cp->cp_category
 						),
+						*/
 						'type' => CoursePress_Data_Course::get_post_type_name() . '_archive',
 						'is_archive' => false,
 						),

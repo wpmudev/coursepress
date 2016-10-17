@@ -87,41 +87,12 @@
 
 		return passingGrade;
 	},
-	calculateFinalGrade = function( student_id ) {
-		var units = $( '.cp-unit-div[data-student="' + student_id + '"]' ),
-			total = 0,
-			modules = $( '.module-grade', units ),
-			totalPassingGrade = 0,
-			finalDiv = $( '.final-grade[data-student="' + student_id + '"], [data-student="' + student_id + '"] .final-grade' ),
-			modules_length = 0,
-			container = units.parents( '.cp-responses' ).first()
-		;
+	calculateFinalGrade = function( student_id, course_grade ) {
+		var finalDiv = $( '.final-grade[data-student="' + student_id + '"], [data-student="' + student_id + '"] .final-grade' );
 
-		if ( 'all' != activeUnit ) {
-			modules = $( '.module-assessable .module-grade', units );
+		if ( course_grade ) {
+			finalDiv.html( course_grade + '%' );
 		}
-
-		_.each( modules, function( module ) {
-			module = $(module);
-
-			var grade = module.val();
-			grade = ! grade || null == grade ? 0 : grade;
-			total += parseInt( grade );
-		});
-
-		container.find( '.cp-total-unit-modules' ).each(function() {
-			var counter = $(this),
-				count = counter.val()
-			;
-			count = ! count || null == count ? 0 : parseInt( count );
-			modules_length += count;
-		});
-
-		if ( total > 0 ) {
-			total = Math.ceil( total / modules_length );
-		}
-
-		finalDiv.html( total + '%' );
 	};
 
 	// Edit module grade
@@ -218,8 +189,8 @@
 				noFeedbackButton.html( _coursepress.assessment_labels.edit_no_feedback );
 
 				var totalUnitGrade = calculateUnitGrade( unit_id, student_id ),
-					totalCourseGrade = calculateFinalGrade( student_id );
-				unitGrade.html( totalUnitGrade + '%' );
+					totalCourseGrade = calculateFinalGrade( student_id, data.course_grade );
+				unitGrade.html( data.unit_grade + '%' );
 
 				if ( with_feedback && '' != param.feedback_content.trim() ) {
 					var feedback_editor = $( '.cp-instructor-feedback', moduleDiv ).show(),
@@ -391,7 +362,7 @@
 			var data = div.data();
 
 			if ( data.unit == unit_id && data.student == student_id ) {
-				div.show().html( unitGrade + '%' );
+				//div.show().html( unitGrade + '%' );
 			}
 		});
 
@@ -407,6 +378,10 @@
 			search = $( '#search_student_box' ),
 			reset_button = search.siblings( '#search_reset' )
 		;
+
+		if ( ! course_id ) {
+			return;
+		}
 
 		if ( '' != search.val() ) {
 			// Enable reset

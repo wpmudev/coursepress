@@ -353,7 +353,7 @@ class CoursePress_Helper_Setting {
 			'per_page',
 			array(
 				'default' => 20,
-				'label' => _x( 'Number of items per page:', 'courses per page (screen options)', 'cp' ),
+				'label' => _x( 'Number of courses per page:', 'courses per page (screen options)', 'cp' ),
 				'option' => 'coursepress_courses_per_page',
 			)
 		);

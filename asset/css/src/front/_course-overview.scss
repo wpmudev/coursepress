@@ -1,3 +1,34 @@
+.course-structure-block {
+	.tree {
+		margin: 0;
+		list-style: none;
+		ul {
+			margin: 0 0 0 25px;
+			list-style: none;
+		}
+	}
+	.unit {
+		display: block;
+		clear: both;
+		.fold {
+			display: inline-block;
+			width: 25px;
+			float: left;
+			height: 25px;
+			margin-right: 15px;
+			cursor: pointer;
+			&:before {
+				content: '\f140';
+				font-family: Dashicons;
+				font-size: 20px;
+				line-height: 1.2;
+			}
+			&.folded:before {
+				content: '\f139';
+			}
+		}
+	}
+}
 .course-wrapper {
 	.tree {
 		@include nolist;

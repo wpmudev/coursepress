@@ -59,8 +59,16 @@
 		}
 	}
 	.course-progress-disc-container {
+		position: relative;
 		float: right;
 		margin-bottom: -25px;
+		a {
+			opacity: 1;
+			filter: alpha(opacity=100);
+			margin: 0;
+			top: 0;
+			left: 0;
+		}
 	}
 	.course-preview-container {
 		float: right;

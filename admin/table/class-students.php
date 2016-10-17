@@ -11,19 +11,31 @@ class CoursePress_Admin_Table_Students extends CoursePress_Admin_Table_Instructo
 	static $student_progress = array();
 
 	public function prepare_items() {
+		global $wpdb;
+
 		$usersearch = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : '';
 		$per_page = ( $this->is_site_users ) ? 'site_users_network_per_page' : 'users_per_page';
 		$users_per_page = $this->get_items_per_page( $per_page );
 
 		$paged = $this->get_pagenum();
+		$role = 'role';
+
+		if ( is_multisite() ) {
+			$role = $wpdb->prefix . $role;
+		}
+
 		$args = array(
 			'number' => $users_per_page,
 			'offset' => ( $paged-1 ) * $users_per_page,
-			'meta_key' => 'role',
+			'meta_key' => $role,
 			'meta_value' => 'student',
 			'fields' => 'all_with_meta',
 			'search' => $usersearch,
 		);
+
+		if ( is_multisite() ) {
+			$args['blog_id'] = get_current_blog_id();
+		}
 
 		if ( ! empty( $_GET['course_id'] ) ) {
 			// Show only students of current course

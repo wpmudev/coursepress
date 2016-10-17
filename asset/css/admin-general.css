@@ -310,6 +310,20 @@ A. Responsive
   width: 90px;
 }
 
+.post-type-course .column-certificates,
+.post-type-course .column-students {
+  width: 100px;
+  text-align: center !important;
+}
+.post-type-course .column-taxonomy-course_category,
+.post-type-course .column-date_start,
+.post-type-course .column-date_end,
+.post-type-course .column-date_enrollment_start,
+.post-type-course .column-date_enrollment_end,
+.post-type-course .column-units {
+  width: 130px;
+}
+
 .coursepress_student_searchbox {
   float: left;
   margin-bottom: -25px;

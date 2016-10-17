@@ -81,12 +81,13 @@ class CoursePress_Helper_Integration_MarketPress {
 			array( __CLASS__, 'update_course_from_product' ),
 			10, 3
 		);
-
-		add_action(
-			'wp_insert_post',
-			array( __CLASS__, 'update_product_from_course_on_wp_insert_post' ),
-			10, 3
-		);
+		
+		// Below hook will result to duplicate entry on Products
+		// add_action(
+			// 'wp_insert_post',
+			// array( __CLASS__, 'update_product_from_course_on_wp_insert_post' ),
+			// 10, 3
+		// );
 
 		add_filter(
 			'coursepress_shortcode_course_cost',
@@ -128,7 +129,7 @@ class CoursePress_Helper_Integration_MarketPress {
 		 * Reference to order ID, will need to get the actual product using the MarketPress Order class
 		 */
 		add_action(
-			'mp_order_order_paid',
+			'mp_order_paid',
 			array( __CLASS__, 'course_paid_3pt0' )
 		);
 
@@ -326,20 +327,16 @@ class CoursePress_Helper_Integration_MarketPress {
 	}
 
 	public static function course_paid_3pt0( $order ) {
+		if ( ! empty( $order->mp_cart_info ) ) {
+			foreach ( $order->mp_cart_info as $product_id => $info ) {
+				$course_id = (int) get_post_meta( $product_id, 'mp_course_id', true );
+				$user_id   = $order->post_author;
 
-		$order_post = get_post( $order->ID );
-		$cart	   = $order->get_cart();
-		$items	  = $cart->get_items();
-
-		foreach ( $items as $product_id => $qty ) {
-
-			$course_id = (int) get_post_meta( $product_id, 'course_id', true );
-			$user_id   = $order_post->post_author;
-
-			// If not enrolled...
-			if ( ! CoursePress_Data_Student::is_enrolled_in_course( $user_id, $course_id ) ) {
-				//Then enroll..
-				CoursePress_Data_Course::enroll_student( $user_id, $course_id );
+				// If not enrolled...
+				if ( ! CoursePress_Data_Student::is_enrolled_in_course( $user_id, $course_id ) ) {
+					//Then enroll..
+					CoursePress_Data_Course::enroll_student( $user_id, $course_id );
+				}
 			}
 		}
 	}
@@ -384,7 +381,7 @@ class CoursePress_Helper_Integration_MarketPress {
 				</label>';
 
 		$product_id = self::get_product_id( $course_id );
-
+		
 		if ( $product_id ) {
 			// Add MP product ID as indication.
 			$mp_content .= '
@@ -432,6 +429,7 @@ class CoursePress_Helper_Integration_MarketPress {
 
 	public static function update_product_meta( $product_id, $settings, $course_id ) {
 		// Update the meta
+		$is_sale = ! empty( $settings['mp_sale_price_enabled'] ) ? '1' : '';
 		$product_meta = array(
 			'sku' => $settings['mp_sku'],
 			'regular_price' => $settings['mp_product_price'],
@@ -439,6 +437,10 @@ class CoursePress_Helper_Integration_MarketPress {
 			'sale_price_amount' => $settings['mp_product_sale_price'],
 			'sort_price' => $settings['mp_product_sale_price'],
 			'mp_course_id' => $course_id,
+			'mp_price' => $settings['mp_product_price'],
+			'mp_sale_price' => $settings['mp_product_sale_price'],
+			'mp_sku' => $settings['mp_sku'],
+			'mp_is_sale' => $is_sale,
 		);
 
 		// Create Auto SKU
@@ -450,7 +452,6 @@ class CoursePress_Helper_Integration_MarketPress {
 		foreach ( $product_meta as $key => $value ) {
 			update_post_meta( $product_id, $key, $value );
 		}
-
 	}
 
 	public static function update_product_from_course( $course_id, $settings ) {
@@ -465,7 +466,7 @@ class CoursePress_Helper_Integration_MarketPress {
 		$product_id = $product_id && $product_status ? $product_id : false;
 
 		if ( ! $product_id ) {
-			self::maybe_create_product( $course_id, $settings );
+			self::maybe_create_product( $settings, $course_id );
 			return;
 		}
 		$is_paid = CoursePress_Data_Course::is_paid_course( $course_id );
@@ -1088,7 +1089,7 @@ Yours sincerely,
 		if ( ! self::$is_active ) {
 			return $enroll_student;
 		}
-		return ! CoursePress_Data_Course::is_paid_course( $course_id );
+		return CoursePress_Data_Course::is_paid_course( $course_id );
 	}
 
 	/**

@@ -7,7 +7,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 	var $slug = 'coursepress_assessments';
 	var $with_editor = true;
 	static $feedback_email = false;
-	protected $cap = 'coursepress_settings_cap';
+	protected $cap = 'coursepress_assessment_cap';
 
 	public function __construct() {
 		parent::__construct();
@@ -159,8 +159,14 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 					$student_progress,
 					'completion/completed'
 				);
+				$unit_grade = CoursePress_Helper_Utility::get_array_val(
+					$student_progress,
+					'completion/' . $unit_id . '/average'
+				);
 				$json_data['completed'] = cp_is_true( $is_completed );
 				$json_data['success'] = $success = true;
+				$json_data['unit_grade'] = (int) $unit_grade;
+				$json_data['course_grade'] = CoursePress_Data_Student::average_course_responses( $student_id, $course_id );
 				break;
 
 			case 'save_draft_feedback':
@@ -295,6 +301,10 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 	 * @return (array) $found_students		An array of student IDs that pass all the applied filters.
 	 **/
 	public static function filter_students( $course_id, $unit_id = 0, $type = false, $student_ids = array() ) {
+		if ( empty( $course_id ) ) {
+			return;
+		}
+
 		if ( empty( $student_ids ) ) {
 			remove_all_filters( 'pre_user_query' );
 			$student_ids = CoursePress_Data_Course::get_student_ids( $course_id );
@@ -639,12 +649,13 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 					$last_active = date_i18n( $date_format, $last_active );
 				}
 			}
+			$course_grade = CoursePress_Data_Student::average_course_responses( $student_id, $course_id );
 
 			$table .= '<tr class="student-row student-row-' . $student_id . '" data-student="'. $student_id . '">
 						<td>' . $avatar . $student_label . '</td>
 						<td class="unit-last-active">' . $last_active . '</td>
 						<td data-student="' . $student_id . '">
-							<span class="final-grade"></span>
+							<span class="final-grade">'. (int) $course_grade . '%</span>
 							<span class="cp-certified" ' . $certified . '>'. esc_html__( 'Certified', 'cp' ) . '</span>
 						</td>
 						<td class="cp-actions">
@@ -725,10 +736,14 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 			if ( $activeUnit > 0 && $activeUnit != $unit_id ) {
 				continue;
 			}
+			$unit_grade = CoursePress_Helper_Utility::get_array_val(
+				$student_progress,
+				'completion/' . $unit_id . '/average'
+			);
 
 			$unit_title = '<h3 class="cp-toggle">
 				<span class="cp-right unit-data cp-unit-toggle">
-					<em class="unit-grade" data-unit="'. $unit_id . '" data-student="'. $student_id . '"></em>
+					<em class="unit-grade" data-unit="'. $unit_id . '" data-student="'. $student_id . '">' . (int) $unit_grade . '%</em>
 					<i class="dashicons dashicons-arrow-' .( $hide ? 'down' : 'up' ) . '"></i>
 				</span>
 				'. $the_unit->post_title . '
@@ -792,7 +807,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 							$grades = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
 							$grade = empty( $grades['grade'] ) ? 0 : (int) $grades['grade'];
 
-							$excluded_modules = array( 'input-textarea', 'input-text' );
+							$excluded_modules = array( 'input-textarea', 'input-text', 'input-upload', 'input-form' );
 
 							// Check if the grade came from an instructor
 							$graded_by = CoursePress_Helper_Utility::get_array_val(
@@ -800,7 +815,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 								'graded_by'
 							);
 
-							if ( $require_instructor_assessment || in_array( $module_type, $excluded_modules ) ) {
+							if ( ( $is_assessable || $require_instructor_assessment ) && in_array( $module_type, $excluded_modules ) ) {
 								if ( 'auto' === $graded_by ) {
 									// Set 0 as grade if it is auto-graded
 									$grade = 0;
@@ -819,7 +834,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 							$page_content .= '<div class="cp-module '. $no_anwer_class . '" id="unit-' . $unit_id . '-module-' . $module_id . '">';
 
 							// Will only allow feedback for 'Short', 'Long', and 'Upload' modules.
-							$allowed_for_feedback = array( 'input-text', 'input-textarea', 'input-upload' );
+							$allowed_for_feedback = array( 'input-text', 'input-textarea', 'input-upload', 'input-form' );
 
 							if ( false === $no_anwer && ( $is_assessable || $require_instructor_assessment ) && in_array( $module_type, $allowed_for_feedback ) ) {
 								$no_feedback_button_label = __( 'Submit Grade without Feedback', 'cp' );
@@ -854,7 +869,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 									<div class="cp-grade-editor-box" style="display:none;">
 										<div class="coursepress-tooltip cp-right cp-edit-grade-box">
 											<label class="cp-assess-label">'. __( 'Grade', 'cp' ) . '</label>
-											<input type="number" name="module-grade" data-courseid="' . $course_id . '" data-unit="' . $unit_id . '" data-module="' . $module_id . '" data-minimum="' . esc_attr( $min_grade ) . '" data-student="' . $student_id . '" class="module-grade small-text" data-grade="'. esc_attr( $grade ) . '" value="' . esc_attr( $grade ) . '" min="0" max="100" />
+											<input type="text" name="module-grade" data-courseid="' . $course_id . '" data-unit="' . $unit_id . '" data-module="' . $module_id . '" data-minimum="' . esc_attr( $min_grade ) . '" data-student="' . $student_id . '" class="module-grade small-text" data-grade="'. esc_attr( $grade ) . '" value="' . esc_attr( $grade ) . '" min="0" max="100" />
 											<button type="button" class="button-primary cp-right cp-save-as-draft disabled">'. __( 'Save Feeback as Draft', 'cp' ) . '</button>
 											<button type="button" class="button-primary cp-submit-grade disabled">' . __( 'Submit Grade', 'cp' ) . '</button>
 											<button type="button" class="button cp-cancel">' . __( 'Cancel', 'cp' ) . '</button>
@@ -902,16 +917,24 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 
 									$page_content .= '</div>';
 								} else {
-									$page_content .= '<div class="cp-right cp-assessment-div">
-											<div>
-												<div class="cp-module-grade-info">
-													<label class="cp-assess-label">' . __( 'Module Grade: ', 'cp' ) . '</label>
-													<span class="cp-current-grade">'. $grade . '%</span>
-													<span class="cp-check ' . $pass_class . '">' . ( 'green' === trim( $pass_class ) ? __( 'Pass', 'cp' ) : __( 'Fail', 'cp' ) ) . '</span>
+									if ( in_array( $module_type, $excluded_modules ) ) {
+										$page_content .= '<div class="cp-right cp-assessment-div">
+											<div class="cp-module-grade-info">
+												<label class="cp-assess-label">' . __( 'Non-gradable', 'cp' ) . '</label>
+											</div>
+										</div>';
+									} else {
+										$page_content .= '<div class="cp-right cp-assessment-div">
+												<div>
+													<div class="cp-module-grade-info">
+														<label class="cp-assess-label">' . __( 'Module Grade: ', 'cp' ) . '</label>
+														<span class="cp-current-grade">'. $grade . '%</span>
+														<span class="cp-check ' . $pass_class . '">' . ( 'green' === trim( $pass_class ) ? __( 'Pass', 'cp' ) : __( 'Fail', 'cp' ) ) . '</span>
+													</div>
 												</div>
 											</div>
-										</div>
-									';
+										';
+									}
 								}
 							}
 

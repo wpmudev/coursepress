@@ -56,7 +56,7 @@ class CoursePress_Data_Course {
 					'slug' => CoursePress_Core::get_slug( 'course' ),
 					'with_front' => false,
 				),
-				//'supports' => array( 'thumbnail' ),
+				'supports' => array( 'slug', 'thumbnail' ),
 				'taxonomies' => array( 'course_category' ),
 				'supports' => array( 'slug' ),
 				'menu_icon' => CoursePress::$url . 'asset/img/coursepress-icon.png',
@@ -1051,6 +1051,7 @@ class CoursePress_Data_Course {
 		if ( empty( $student_id ) ) {
 			return false;
 		}
+		$global_option = ! is_multisite();
 
 		if ( is_multisite() ) {
 			$course_meta_key = $wpdb->prefix . 'enrolled_course_date_' . $course_id;
@@ -1088,7 +1089,7 @@ class CoursePress_Data_Course {
 		// If student is already enrolled, exit.
 		$enrolled = self::student_enrolled( $student_id, $course_id );
 		if ( ! empty( $enrolled ) ) {
-			return $course_id;
+			//return $course_id;
 		}
 
 		/**
@@ -1119,7 +1120,7 @@ class CoursePress_Data_Course {
 		}
 		update_user_option(
 			$student_id,
-			$prefix . 'enrolled_course_date_' . $course_id,
+			'enrolled_course_date_' . $course_id,
 			$current_time,
 			$global_option
 		);
@@ -2067,6 +2068,11 @@ class CoursePress_Data_Course {
 		self::save_course_number( $new_course_id, $the_course['post_title'] );
 
 		$course_meta = get_post_meta( $course_id );
+		// unset MP stuffs
+		if ( isset($course_meta['cp_mp_product_id']) ) unset($course_meta['cp_mp_product_id']);
+		if ( isset($course_meta['cp_mp_sku']) ) unset($course_meta['cp_mp_sku']);
+		if ( isset($course_meta['cp_mp_auto_sku']) ) unset($course_meta['cp_mp_auto_sku']);
+		
 		foreach ( $course_meta as $key => $value ) {
 			/**
 			 * do not copy students to new course
@@ -2076,11 +2082,11 @@ class CoursePress_Data_Course {
 			}
 			if ( ! preg_match( '/^_/', $key ) ) {
 				foreach ( $value as $key_value ) {
-					add_post_meta( $new_course_id, $key, maybe_unserialize( $key_value ), true );
+					update_post_meta( $new_course_id, $key, maybe_unserialize( $key_value ), true );
 				}
 			}
 		}
-
+		
 		$visible_units = self::get_setting( $course_id, 'structure_visible_units', array() );
 		$preview_units = self::get_setting( $course_id, 'structure_preview_units', array() );
 		$visible_pages = self::get_setting( $course_id, 'structure_visible_pages', array() );
@@ -2201,6 +2207,11 @@ class CoursePress_Data_Course {
 		self::update_setting( $new_course_id, 'structure_preview_pages', $preview_pages );
 		self::update_setting( $new_course_id, 'structure_visible_modules', $visible_modules );
 		self::update_setting( $new_course_id, 'structure_preview_modules', $preview_modules );
+		
+		// clear course MP settings
+		self::update_setting( $new_course_id, 'mp_product_id', '' );
+		self::update_setting( $new_course_id, 'mp_sku', '' );
+		self::update_setting( $new_course_id, 'mp_auto_sku', '' );
 
 		$json_data['course_id'] = $new_course_id;
 		$json_data['data'] = $data->data;

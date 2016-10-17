@@ -197,6 +197,8 @@ class CoursePress_Module {
 		$excluded_modules = array(
 			'input-textarea',
 			'input-text',
+			'input-upload',
+			'input-form',
 		);
 
 		// Validate the course
@@ -297,17 +299,23 @@ class CoursePress_Module {
 
 							// Attempt to record the submission
 							CoursePress_Data_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $response );
-
+							
+							// override $is_assessable if module type 'input-form', regardless if enabled in admin dashboard or not
+							// logic from CoursePress_Data_Module::get_form_results() is that Form will have a grade of 100 if not required, otherwise check if empty for all submodules
+							if ( $module_type == 'input-form' ) $is_assessable = true;
+							
 							// Check if the grade acquired pass
 							if ( true === $is_assessable && ! in_array( $module_type, $excluded_modules ) ) {
 								$minimum_grade = $attributes['minimum_grade'];
 								$grades = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $module_id );
 								$grade = CoursePress_Helper_Utility::get_array_val( $grades, 'grade' );
 								$pass = (int) $grade >= (int) $minimum_grade;
-
+								
 								if ( false === $pass ) {
 									$has_error = true;
-									self::$error_message = __( 'You did not pass the required minimum grade!', 'cp' );
+									self::$error_message = ( $module_type == 'input-form' ) ?
+										__( 'You did not complete the form!', 'cp' )
+										: __( 'You did not pass the required minimum grade!', 'cp' );
 								}
 							}
 						}

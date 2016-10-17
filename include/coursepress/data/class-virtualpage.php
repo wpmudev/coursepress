@@ -333,7 +333,12 @@ class CoursePress_Data_VirtualPage {
 		if ( $id && $this->ID != $id ) {
 			return $title;
 		}
-
+		/**
+		 * Prevent menu items
+		 */
+		if ( is_string( $id ) && preg_match( '/^cp\-/', $id ) ) {
+			return $title;
+		}
 		if ( $this->show_title ) {
 			return $title;
 		} else {

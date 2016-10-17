@@ -427,13 +427,15 @@ class CoursePress_Data_Shortcode_Course {
 		$course = get_post( $course_id );
 
 		$content = '<div class="course-summary course-summary-' . $course_id . ' ' . $class . '">';
-
-		if ( is_numeric( $length ) ) {
-			$content .= CoursePress_Helper_Utility::truncate_html( do_shortcode( $course->post_excerpt ), $length );
-		} else {
-			$content .= do_shortcode( $course->post_excerpt );
+		
+		if ( $course && is_object($course) ) {
+			if ( is_numeric( $length ) ) {
+				$content .= CoursePress_Helper_Utility::truncate_html( do_shortcode( $course->post_excerpt ), $length );
+			} else {
+				$content .= do_shortcode( $course->post_excerpt );
+			}
 		}
-
+		
 		$content .= '</div>';
 
 		// Return the html in the buffer.

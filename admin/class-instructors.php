@@ -9,7 +9,7 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Controller_Menu {
 	var $parent_slug = 'coursepress';
 	var $slug = 'coursepress_instructors';
 	var $with_editor = false;
-	protected $cap = 'coursepress_instructors_cap';
+	protected $cap = 'coursepress_settings_cap';
 	var $instructors_list;
 
 	public function get_labels() {

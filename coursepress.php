@@ -129,7 +129,9 @@ class CoursePress {
 		 * Clean up when this plugin is deactivated.
 		 **/
 		register_deactivation_hook( __FILE__, array( __CLASS__, 'deactivate_coursepress' ) );
-
+		
+		// Define custom theme directory for CoursePress theme
+		self::register_cp_theme_directory();
 	}
 
 	/**
@@ -247,5 +249,20 @@ class CoursePress {
 
 		// Reset the schedule during deactivation.
 		wp_clear_scheduled_hook( 'coursepress_schedule-email_task' );
+	}
+	
+	/**
+	 * Registering CP Theme 
+	 *
+	 * @since 2.0.0
+	 **/
+	private static function register_cp_theme_directory () {
+		$theme_directories = apply_filters( 'coursepress_theme_directory_array', array(
+				self::$path . 'themes/'
+			) 
+		);
+		foreach( $theme_directories as $theme_directory ) {
+			register_theme_directory($theme_directory);
+		}
 	}
 }

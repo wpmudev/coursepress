@@ -658,7 +658,13 @@ class CoursePress_Helper_Utility {
 			}
 
 			echo '<a href="' . esc_url_raw( wp_get_referer() ) . $append_url . '" style="padding: 5px; font-size: 12px; text-decoration: none; opacity: 0.3; background: #3C3C3C; color: #fff; font-family: helvetica, sans-serif; position: absolute; top: 2; left: 2;"> &laquo; ' . esc_html__( 'Back to Course', 'cp' ) . '</a>';
-			echo '<iframe style="margin:0; padding:0; border:none; width: 100%; height: 100vh;" src="' .$file_url . '"></iframe>';
+			
+			if ( file_exists($file_path) ) {
+				echo '<iframe style="margin:0; padding:0; border:none; width: 100%; height: 100vh;" src="' .$file_url . '"></iframe>';
+			} else {
+				// file not there? try redirect and should go to 404
+				wp_safe_redirect($file_url);
+			}
 			exit();
 		}
 	}
