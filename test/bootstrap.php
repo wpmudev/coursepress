@@ -5,19 +5,18 @@ ob_start();
 /**
  * Set up environment for my plugin's tests suite.
  */
+$_tests_dir = getenv( 'WP_TESTS_DIR' );
+if ( ! $_tests_dir ) {
+	$_tests_dir = '/tmp/wordpress-tests-lib/';
+}
 
 /**
- * Find the path to the WordPress tests installation.
+ * The path to the WordPress tests checkout.
  */
-$test_dirs = array(
-	getenv( 'WP_TESTS_DIR' ),
-	'/srv/www/wptest/wordpress-develop/tests/phpunit/', // Vagrant.
-	'/srv/www/wordpress-develop/trunk/tests/phpunit/',  // Vagrant.
-);
-foreach ( $test_dirs as $dir_name ) {
-	if ( $dir_name && is_dir( $dir_name ) ) {
-		define( 'WP_TESTS_DIR', $dir_name );
-	}
+if ( file_exists( $_tests_dir ) ) {
+	define( 'WP_TESTS_DIR', '/tmp/wordpress-tests-lib/' );
+} else { // Without the "wptest" but with "trunk" subfolder...
+	define( 'WP_TESTS_DIR', '/srv/www/wordpress-develop/trunk/tests/phpunit/' );
 }
 
 /**
