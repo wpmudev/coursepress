@@ -702,7 +702,7 @@ class CoursePress_Helper_Upgrade {
 	private static function course_upgrade_student_progress( $course ) {
 		$done = self::upgrade_step_check( $course->ID, __FUNCTION__ );
 		if ( $done ) {
-			return __( 'Student Progress do not need to be updated.', 'cp' );
+//			return __( 'Student Progress do not need to be updated.', 'cp' );
 		}
 		/**
 		 * get units
@@ -759,134 +759,126 @@ class CoursePress_Helper_Upgrade {
 			$responses = $query->posts;
 			$unit_id = 0;
 			$index = 0;
-			foreach( $responses as $response ) {
-				/**
-				 * Module & Unit iD
-				 */
-				$module_id = $response->post_parent;
-				$module_type = get_post_meta( $module_id, 'module_type', true );
-				$unit_id = CoursePress_Data_Module::get_unit_id_by_module( $module_id );
-				/**
-				 * Modules seen
-				 */
-				CoursePress_Helper_Utility::set_array_val(
-					$student_progress,
-					'completion/' . $unit_id . '/modules_seen/'.$module_id,
-					true
-				);
-				/**
-				 */
-				$meta = get_post_meta( $response->ID );
-				switch( $module_type ) {
-				case 'input-text':
-					/*
-							CoursePress_Helper_Utility::set_array_val(
-								$student_progress,
-								'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/grades',
-								array(
-									'grade_by' => $student_id == $grade['instructor'] ? 'auto' : $grade['instructors'],
-									'grade' => $grade['grade'],
-									'date' => $response->post_date,
-								)
-							);
-					 */
-					CoursePress_Helper_Utility::set_array_val(
-						$student_progress,
-						'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/response',
-						$response->post_content
-					);
-					CoursePress_Helper_Utility::set_array_val(
-						$student_progress,
-						'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/date',
-						$response->post_date
-					);
-					CoursePress_Helper_Utility::set_array_val(
-						$student_progress,
-						'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/grades',
-						array(
-						)
-					);
-					CoursePress_Helper_Utility::set_array_val(
-						$student_progress,
-						'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/feedback',
-						array(
-						)
-					);
-					CoursePress_Helper_Utility::set_array_val(
-						$student_progress,
-						'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/grades/0',
-						array(
-							'grade_by' => 'auto',
-							'grade' => 100,
-							'date' => $response->post_date
-						)
-					);
-					break;
-				case 'input-radio':
-					CoursePress_Helper_Utility::set_array_val(
-						$student_progress,
-						'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/response',
-						$response->post_content
-					);
-					CoursePress_Helper_Utility::set_array_val(
-						$student_progress,
-						'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/grades/0',
-						array(
-							'grade_by' => 'auto',
-							'grade' => 100,
-							'date' => $response->post_date
-						)
-					);
-					CoursePress_Helper_Utility::set_array_val(
-						$student_progress,
-						'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/date',
-						$response->post_date
-					);
-					break;
-				case 'input-checkbox':
-					/**
-					 * student_checked_answers
-					 */
-					if ( isset( $meta['student_checked_answers'] ) ) {
-						foreach( $meta['student_checked_answers'] as $index => $response_student_checked_answer ) {
-							$response_student_checked_answer = maybe_unserialize( $response_student_checked_answer );
-							CoursePress_Helper_Utility::set_array_val(
-								$student_progress,
-								'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/response',
-								maybe_unserialize( $response_student_checked_answer )
-							);
-						}
-					}
-					/**
-					 * response_grade
-					 */
-					if ( isset( $meta['response_grade'] ) ) {
-						foreach( $meta['response_grade'] as $index => $grade ) {
-							$grade = maybe_unserialize( $grade );
-							/**
-							 * Module response
-							 */
-							CoursePress_Helper_Utility::set_array_val(
-								$student_progress,
-								'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/grades/0',
-								array(
-									'grade_by' => $student_id == $grade['instructor'] ? 'auto' : $grade['instructors'],
-									'grade' => $grade['grade'],
-									'date' => date( 'Y-m-d H:i:s', $grade['time'] ),
-								)
-							);
-							CoursePress_Helper_Utility::set_array_val(
-								$student_progress,
-								'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/date',
-								date( 'Y-m-d H:i:s', $grade['time'] )
-							);
-						}
-					}
-					break;
-				default:
-					l($module_type);
-				}
-			}
+            foreach( $responses as $response ) {
+                /**
+                 * Module & Unit iD
+                 */
+                $module_id = $response->post_parent;
+                $module_type = get_post_meta( $module_id, 'module_type', true );
+                $unit_id = CoursePress_Data_Module::get_unit_id_by_module( $module_id );
+                /**
+                 * Modules seen
+                 */
+                CoursePress_Helper_Utility::set_array_val(
+                    $student_progress,
+                    'completion/' . $unit_id . '/modules_seen/'.$module_id,
+                    true
+                );
+                /**
+                 */
+                $meta = get_post_meta( $response->ID );
+                switch( $module_type ) {
+                case 'input-text':
+                    CoursePress_Helper_Utility::set_array_val(
+                        $student_progress,
+                        'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/response',
+                        $response->post_content
+                    );
+                    CoursePress_Helper_Utility::set_array_val(
+                        $student_progress,
+                        'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/date',
+                        $response->post_date
+                    );
+                    CoursePress_Helper_Utility::set_array_val(
+                        $student_progress,
+                        'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/grades',
+                        array(
+                        )
+                    );
+                    CoursePress_Helper_Utility::set_array_val(
+                        $student_progress,
+                        'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/feedback',
+                        array(
+                        )
+                    );
+                    break;
+                case 'input-radio':
+                    CoursePress_Helper_Utility::set_array_val(
+                        $student_progress,
+                        'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/response',
+                        $response->post_content
+                    );
+                    CoursePress_Helper_Utility::set_array_val(
+                        $student_progress,
+                        'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/date',
+                        $response->post_date
+                    );
+                    break;
+                case 'input-checkbox':
+                    /**
+                     * student_checked_answers
+                     */
+                    if ( isset( $meta['student_checked_answers'] ) ) {
+                        foreach( $meta['student_checked_answers'] as $index => $response_student_checked_answer ) {
+                            $response_student_checked_answer = maybe_unserialize( $response_student_checked_answer );
+                            CoursePress_Helper_Utility::set_array_val(
+                                $student_progress,
+                                'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/response',
+                                maybe_unserialize( $response_student_checked_answer )
+                            );
+                        }
+                    }
+                    break;
+                default:
+                    error_log($module_type);
+                }
+                /**
+                 * response_grade
+                 */
+                if ( isset( $meta['response_grade'] ) ) {
+                    foreach( $meta['response_grade'] as $index => $grade ) {
+                        $grade = maybe_unserialize( $grade );
+                        /**
+                         * Module response
+                         */
+                        CoursePress_Helper_Utility::set_array_val(
+                            $student_progress,
+                            'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/grades/0',
+                            array(
+                                'grade_by' => $student_id == $grade['instructor'] ? 'auto' : $grade['instructors'],
+                                'grade' => $grade['grade'],
+                                'date' => date( 'Y-m-d H:i:s', $grade['time'] ),
+                            )
+                        );
+                        CoursePress_Helper_Utility::set_array_val(
+                            $student_progress,
+                            'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/date',
+                            date( 'Y-m-d H:i:s', $grade['time'] )
+                        );
+                    }
+                } elseif ( preg_match( '/^input/', $module_type ) ) {
+                    CoursePress_Helper_Utility::set_array_val(
+                        $student_progress,
+                        'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/grades/0',
+                        array()
+                    );
+                }
+                /**
+                 * Response comment
+                 */
+                if ( isset( $meta['response_comment'] ) ) {
+                    foreach( $meta['response_comment'] as $index => $comment ) {
+                        CoursePress_Helper_Utility::set_array_val(
+                            $student_progress,
+                            'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/feedback/0',
+                            array(
+                                'feedback' => $comment,
+                            )
+                        );
+                    }
+                }
+
+            }
 			/**
 			 * input-file
 			 */
