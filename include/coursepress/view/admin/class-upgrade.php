@@ -44,6 +44,8 @@ class CoursePress_View_Admin_Upgrade {
 		$labels = array(
 			'working' => __( 'Working...', 'cp' ),
 			'empty-list' => __( 'There is no courses to update!', 'cp' ),
+			'done' => __( 'Upgrade is done.', 'cp' ),
+			'fail' => __( 'Something went wrong.', 'cp' ),
 		);
 
 		echo '<div id="coursepress-updater-holder">';
