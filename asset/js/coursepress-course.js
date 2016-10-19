@@ -333,10 +333,11 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 				showButtonPanel: false,
 				timeInput: true,
 				controlType: 'select',
-				oneLine: true,
+				oneLine: true
 			} );
 			$( '.dateinput' ).datepicker( {
-				dateFormat: 'yy-mm-dd'
+				dateFormat: 'yy-mm-dd',
+				autoclose: true
 					//firstDay: coursepress.start_of_week
 			} );
 		}
