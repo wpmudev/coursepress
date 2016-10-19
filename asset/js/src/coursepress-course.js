@@ -627,6 +627,9 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 
 		// ADD INSTRUCTOR.
 		$( '.button.instructor-assign' ).on( 'click', function() {
+			if ( $(this).hasClass( "disabled" ) ) {
+				return false;
+			}
 			var instructor = $( 'select[name="instructors"]' ),
 				instructor_id = parseInt( instructor.val() ),
 				instructor_name = instructor.html(),
@@ -892,6 +895,9 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 
 		// Add course facilitator
 		$( '.button.facilitator-assign' ).on( 'click', function() {
+			if ( $(this).hasClass( "disabled" ) ) {
+				return false;
+			}
 			var select = $( '[name="facilitators"]' ),
 				facilitator_id = select.val(),
 				facilitator_name = select.find( ':selected' ).text(),
@@ -1111,11 +1117,10 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		CoursePress.Course.on( 'coursepress:add_instructor_success', function( data ) {
 
 			var content = '';
-			// DEBUG code. remove it.
-			window.console.log( data );
-
 			var avatar = _coursepress.instructor_avatars[ 'default' ];
 			var template = wp.template('course-person');
+
+			$( "input.button.instructor-assign" ).addClass( "disabled" );
 
 			if ( data.avatar ) {
 				avatar = data.avatar;
@@ -1222,6 +1227,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			var facilitator_id = data.facilitator_id,
 				avatar = _coursepress.instructor_avatars['default']
 			;
+			$( "input.button.facilitator-assign" ).addClass( "disabled" );
 			if ( data.avatar ) {
 				avatar = data.avatar;
 			}
@@ -1739,7 +1745,13 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		 * Check select2 exist first!
 		 */
 		if ( "function" == typeof($().select2) ) {
-			$('#student-add, #facilitators, #instructors').select2( Search_Params );
+			$('#student-add, #facilitators, #instructors').select2( Search_Params )
+			.on( "select2:selecting", function(e) {
+				$( "input.button.disabled", $(this).closest( ".wide" ) ).removeClass( "disabled" );
+			})
+			.on( "select2:unselecting", function(e) {
+				$( "input.button", $(this).closest( ".wide" ) ).addClass( "disabled" );
+			});
 		}
 
 		/**

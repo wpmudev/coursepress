@@ -640,7 +640,7 @@ class CoursePress_Admin_Edit {
 						<p class="description">' . esc_html__( 'Select one or more instructor to facilitate this course', 'cp' ) . '</p>
 						</label>
 						<select id="instructors" style="width:350px;" name="instructors" data-nonce-search="' . $search_nonce . '" class="medium"></select>
-						<input type="button" class="button button-primary instructor-assign" value="' . esc_attr__( 'Assign', 'cp' ) . '" />
+						<input type="button" class="button button-primary instructor-assign disabled" value="' . esc_attr__( 'Assign', 'cp' ) . '" />
 				</div>';
 		}
 
@@ -686,7 +686,7 @@ class CoursePress_Admin_Edit {
 						<p class="description">' . esc_html__( 'Select one or more facilitator to facilitate this course', 'cp' ) . '</p>
 						</label>
 			<select data-nonce-search="'. $search_nonce . '" name="facilitators" style="width:350px;" id="facilitators" class="user-dropdown medium"></select>
-			<input type="button" class="button button-primary facilitator-assign" value="' . esc_attr__( 'Assign', 'cp' ) . '" />
+			<input type="button" class="button button-primary facilitator-assign disabled" value="' . esc_attr__( 'Assign', 'cp' ) . '" />
 				</div>';
 		} else {
 
