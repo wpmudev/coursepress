@@ -142,7 +142,7 @@ class CoursePress_Helper_Upgrade {
 			return;
 		}
 		$plugin_version = get_option( 'coursepress_version', '0' );
-		$coursepress_courses_need_update = false;
+		$coursepress_courses_need_update = 'no';
 		if ( 0 > version_compare( $plugin_version, CoursePress::$version ) ) {
 			update_option( 'coursepress_version', CoursePress::$version, 'no' );
 			/**
@@ -152,12 +152,12 @@ class CoursePress_Helper_Upgrade {
 			$count_courses = (array) wp_count_posts( $post_type );
 			$count_courses = array_sum( $count_courses );
 			if ( ! empty( $count_courses ) ) {
-				$coursepress_courses_need_update = true;
+				$coursepress_courses_need_update = 'yes';
 			}
-			update_option( 'coursepress_courses_need_update', $coursepress_courses_need_update );
+			add_option( 'coursepress_courses_need_update', $coursepress_courses_need_update );
 		}
 		$coursepress_courses_need_update = get_option( 'coursepress_courses_need_update', $coursepress_courses_need_update );
-		if ( $coursepress_courses_need_update ) {
+		if ( 'yes' == $coursepress_courses_need_update ) {
 			$slug = CoursePress_View_Admin_Upgrade::get_slug();
 			$hide = isset( $_GET['page'] ) && $_GET['page'] == $slug;
 			if ( ! $hide ) {
@@ -176,6 +176,8 @@ class CoursePress_Helper_Upgrade {
 				);
 			}
 			CoursePress_Helper_Upgrade::admin_init();
+		} else {
+			add_option( 'coursepress_courses_need_update', 'no' );
 		}
 	}
 
@@ -196,9 +198,12 @@ class CoursePress_Helper_Upgrade {
 			'ignore_sticky_posts' => true,
 			'fields' => 'ids',
 			'meta_query' => array(
-				'key' => '_cp_updated_to_version_2',
-				'compare' => 'NOT EXISTS',
+				array(
+					'key' => '_cp_updated_to_version_2',
+					'compare' => 'NOT EXISTS',
+				),
 			),
+			'suppress_filters' => true,
 		);
 		$query = new WP_Query( $args );
 		return $query->posts;

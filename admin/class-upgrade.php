@@ -11,17 +11,21 @@ class CoursePress_Admin_Upgrade extends CoursePress_Admin_Controller_Menu {
 
 	public function init() {
 		$coursepress_courses_need_update = get_option( 'coursepress_courses_need_update', false );
-		if ( $coursepress_courses_need_update ) {
+		if ( 'yes' == $coursepress_courses_need_update ) {
 			add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		}
 	}
 
 	public function get_labels() {
-		$this->init();
-		return array(
-			'title' => __( 'CoursePress Upgrade', 'cp' ),
-			'menu_title' => __( 'Upgrade', 'cp' ),
-		);
+		$coursepress_courses_need_update = get_option( 'coursepress_courses_need_update', 'no' );
+		if ( 'yes' == $coursepress_courses_need_update ) {
+			$this->init();
+			return array(
+				'title' => __( 'CoursePress Upgrade', 'cp' ),
+				'menu_title' => __( 'Upgrade', 'cp' ),
+			);
+		}
+		return array();
 	}
 
 	/**

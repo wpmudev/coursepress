@@ -13,9 +13,9 @@ class CoursePress_View_Admin_Upgrade {
 	private static $title = '';
 	private static $menu_title = '';
 
-    public static function render_page() {
+	public static function render_page() {
 
-        $courses_ids = CoursePress_Helper_Upgrade::upgrade_get_courses_list();
+		$courses_ids = CoursePress_Helper_Upgrade::upgrade_get_courses_list();
 
 		echo ' <div class="wrap">';
 		printf( '<h1>%s</h1>', self::$menu_title );
@@ -38,7 +38,7 @@ class CoursePress_View_Admin_Upgrade {
 		 */
 		printf(
 			'<p>%s</p>',
-			sprintf( _n( 'You have %d course to update.', 'You have %d courses to update.', $count, 'cp'), $count )
+			sprintf( _n( 'You have %d course to update.', 'You have %d courses to update.', $count, 'cp' ), $count )
 		);
 
 		$labels = array(
@@ -48,7 +48,7 @@ class CoursePress_View_Admin_Upgrade {
 
 		echo '<div id="coursepress-updater-holder">';
 		echo '<form id="coursepress-update-courses-form"';
-		foreach( $labels as $key => $label ) {
+		foreach ( $labels as $key => $label ) {
 			printf( ' data-label-%s="%s"', esc_attr( $key ), esc_attr( $label ) );
 		}
 		echo '>';
@@ -80,6 +80,5 @@ class CoursePress_View_Admin_Upgrade {
 		$script = CoursePress::$url . 'asset/js/admin-upgrade.js';
 		wp_enqueue_script( 'coursepress_admin_upgrade_js', $script, array( 'jquery' ), CoursePress::$version, true );
 	}
-
 }
 
