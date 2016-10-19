@@ -1195,11 +1195,8 @@ class CoursePress_Admin_Edit {
 
 		// Fail info
 		$failed_title = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_title', __( 'Sorry, you did not pass this course!', 'cp' ) );
-		$failed_content = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_content', '' );
-//=======
-//		$failed_content = __( 'I\'m sorry to say you didn\'t pass JavaScript for COURSE_NAME. Better luck next time!', 'cp' );
-//		$failed_content = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_content', $failed_content );
-//>>>>>>> coursepress/2.0-dev
+		$failed_content = __( 'I\'m sorry to say you didn\'t pass COURSE_NAME. Better luck next time!', 'cp' );
+		$failed_content = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_content', $failed_content );
 		$failed_content = htmlspecialchars_decode( $failed_content );
 
 		$content .= '<div class="wide page-failed">
