@@ -442,7 +442,7 @@
       }
 
       // Title
-      label.module-title {
+      div.module-title {
         width: 100%;
 
         .label, .description {
@@ -527,27 +527,23 @@
           display: block;
         }
         .wp-editor-wrap {
-          position: relative;
-          top: -20px;
-
           iframe {
             height: 400px;
-          }
-        }
-        .wp-media-buttons {
-          float:none;
-          position: absolute;
-          right: 112px;
-          top: 6px;
-          .insert-media {
-            height: 27px;
-            padding: 0 8px 0 5px;
           }
         }
 
       }
 
       // Components
+
+      .module {
+          padding-bottom: .5em;
+          h4 {
+              margin: 0;
+              font-size: 1.1em;
+          }
+      }
+
       .module-components {
 
         .module-component {

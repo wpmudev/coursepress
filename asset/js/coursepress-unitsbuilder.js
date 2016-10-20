@@ -1071,9 +1071,9 @@ var CoursePress = CoursePress || {};
 			'<span class="description">' + labels[ 'module_show_title_desc' ] + '</span>' +
 			'</label>';
 
-			content += '<label class="module-title"><span class="label">' + labels[ 'module_title' ] + '</span>' +
+			content += '<div class="module module-title"><h4 class="label">' + labels[ 'module_title' ] + '</h4>' +
 			'<span class="description">' + labels[ 'module_title_desc' ] + '</span>' +
-			'<input class="module-title-text" type="text" name="post_title" value="' + data[ 'title' ] + '" /></label>';
+			'<input class="module-title-text" type="text" name="post_title" value="' + data[ 'title' ] + '" /></div>';
 
 			content += '<input type="hidden" name="meta_module_type" value="' + data[ 'type' ] + '" />';
 
@@ -1122,10 +1122,9 @@ var CoursePress = CoursePress || {};
 
 				}
 			}
-
 			content +=
-				'<label class="module-duration"><span class="label">' + labels[ 'module_duration' ] + '</span><br />' +
-				'<input type="text" name="meta_duration" value="' + data[ 'duration' ] + '" /></label>';
+				'<div class="module module-duration"><h4 class="div">' + labels[ 'module_duration' ] + '</h4>' +
+				'<input type="text" name="meta_duration" value="' + data[ 'duration' ] + '" /></div>';
 
 			if ( 'input-upload' === module_type ) {
 
@@ -1153,18 +1152,18 @@ var CoursePress = CoursePress || {};
 				var content_descrtiption = 'input' === data[ 'mode' ] ? labels[ 'module_question_desc' ] : labels[ 'module_content_desc' ];
 				var editor_height = data[ 'editor_height' ] ? 'data-height="' + data[ 'editor_height' ] + '"' : '';
 
-				content += '<label class="module-excerpt">' +
-				'<span class="label">' + content_label + '</span>' +
+				content += '<div class="module module-excerpt">' +
+				'<h4 class="label">' + content_label + '</h4>' +
 				'<span class="description">' + content_descrtiption + '</span>' +
 				'<textarea class="editor" name="' + textarea_name + '" id="' + textareaID + '" ' + editor_height + '>' + data[ 'content' ] + '</textarea>' +
-				'</label>';
+				'</div>';
 			}
 
 			// Now it gets tricky...
 			content += '</div>';
 
 			// RENDER COMPONENTS
-			content += '<div class="module-components">' +
+			content += '<div class="module module-components">' +
 			CoursePress.Helpers.Module.render_components( module, data ) +
 			'</div>';
 
@@ -1192,7 +1191,7 @@ var CoursePress = CoursePress || {};
 			var component_key = key;
 			var component_selector = 'module-component-' + component_key;
 
-			content += '<div class="module-component ' + component_selector + '">' +
+			content += '<div class="module module-component ' + component_selector + '">' +
 			'<label data-key="label" ' + label_class + '>' +
 			'<span class="label">' + label + '</span>' +
 			'<span class="description">' + description + '</span></label>';
