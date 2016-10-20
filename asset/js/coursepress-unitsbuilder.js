@@ -1,6 +1,4 @@
-/*!  - v2.0.0
- * 
- * Copyright (c) 2016; * Licensed GPLv2+ */
+/*global tinyMCE*/
 /*global tinyMCEPreInit*/
 /*global _coursepress*/
 
@@ -1111,14 +1109,14 @@ var CoursePress = CoursePress || {};
 					content += '<label class="module-allow-retries">' +
 						'<input type="checkbox" name="meta_allow_retries[' + module.cid + ']" value="1" ' + CoursePress.utility.checked(data['allow_retries'], 1) + ' />' +
 						'<span class="label">' + labels['module_allow_retries'] + '</span>' +
-						'<input type="text" name="meta_retry_attempts" value="' + data['retry_attempts'] + '" />' +
+						'<input type="number" name="meta_retry_attempts" value="' + data['retry_attempts'] + '" min="0" class="small-text" />' +
 						'<span class="description">' + labels['module_allow_retries_desc'] + '</span>' +
 						'</label>';
 
 					// Minimum Grade
 					content += '<label class="module-minimum-grade">' +
 						'<span class="label">' + labels['module_minimum_grade'] + '</span>' +
-						'<input type="text" name="meta_minimum_grade" value="' + data['minimum_grade'] + '" />' +
+						'<input type="number" name="meta_minimum_grade" value="' + data['minimum_grade'] + '" min="0" max="100" class="small-text" />' +
 						'<span class="description">' + labels['module_minimum_grade_desc'] + '</span>' +
 						'</label>';
 
