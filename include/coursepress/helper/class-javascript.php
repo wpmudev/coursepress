@@ -202,6 +202,9 @@ class CoursePress_Helper_JavaScript {
 			$localize_array['unit_builder_form_pleaceholder_label'] = __( 'Placeholder Text', 'cp' );
 			$localize_array['unit_builder_form_pleaceholder_desc'] = __( 'Placeholder text to put inside the textbox (additional information)', 'cp' );
 			$localize_array['unit_builder_form']['messages']['required_fields'] = __( "Answer fields must not be empty!\nPlease check modules:", 'cp' );
+			$localize_array['unit_builder_form']['messages']['saving_unit'] = __( 'Unit is saving now...', 'cp' );
+			$localize_array['unit_builder_form']['messages']['successfully_saved'] = __( 'Unit was successfully saved!', 'cp' );
+			$localize_array['unit_builder_form']['messages']['error_while_saving'] = __( 'Something went wrong. Unit was not saved!', 'cp' );
 
 		}
 

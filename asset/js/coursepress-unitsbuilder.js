@@ -976,16 +976,31 @@ var CoursePress = CoursePress || {};
 				nonce = response[ 'nonce' ];
 				$( '#unit-builder' ).attr( 'data-nonce', nonce );
 				CoursePress.UnitBuilder.unit_collection.trigger( custom_event, CoursePress.UnitBuilder.unit_collection );
+				CoursePress.Helpers.Module.unit_show_message( _coursepress.unit_builder_form.messages.successfully_saved, 'success' );
 			},
 			error: function() {
 				$( '.save-progress' ).detach();
 				$( e.currentTarget ).prepend( '<i class="fa fa-info-circle save-progress"></i> ' );
+				CoursePress.Helpers.Module.unit_show_message( _coursepress.unit_builder_form.messages.error_while_saving, 'error' );
 			}
 		} );
 
 		// Reset URL
 		CoursePress.UnitBuilder.unit_collection.url = _coursepress._ajax_url + '?action=unit_builder&task=units&course_id=' + _coursepress.course_id;
+
+		/**
+		 * Add message
+		 */
+		CoursePress.Helpers.Module.unit_show_message( _coursepress.unit_builder_form.messages.saving_unit, 'info' );
 	};
+
+	CoursePress.Helpers.Module.unit_show_message = function( message, notice_class ) {
+		$( ".unit-builder-header .unit-buttons .notice, .unit-builder-footer .unit-buttons .notice" ).detach();
+		$( ".unit-builder-header .unit-buttons, .unit-builder-footer .unit-buttons" ).prepend( '<div class="notice notice-' + notice_class + '"><p>'+message+'</p></div>' );
+		if ( "success" === notice_class ) {
+			setTimeout(function(){ $( ".unit-builder-header .unit-buttons .notice, .unit-builder-footer .unit-buttons .notice" ).fadeOut(); }, 3000);
+		}
+	}
 
 	CoursePress.Helpers.Module.toggle_unit_state = function() {
 		var nonce = $( '#unit-builder' ).attr( 'data-nonce' );
