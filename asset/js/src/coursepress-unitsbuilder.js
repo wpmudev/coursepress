@@ -932,6 +932,30 @@ var CoursePress = CoursePress || {};
 		$( '.unit-buttons .unit-save-button' ).prepend( '<i class="fa fa-spinner fa-spin save-progress"></i> ' );
 
 		var nonce = $( '#unit-builder' ).attr( 'data-nonce' );
+		var form = $( "#unit-builder" ).closest( "form" );
+		var requireds = $( ".component-checkbox-answer, .component-radio-answer, .component-select-answer", form );
+		/**
+		 * Check option labels
+		 */
+		if ( 0 < requireds.length ) {
+			var errors = [];
+			var title = '';
+			$.each( requireds, function( index, element ) {
+				e = $(element);
+				if ( "" === e.val() ) {
+					module_title = $(".module-title .module-title-text", e.closest( '.module-holder' ) ).val();
+					if ( title !== module_title ) {
+						errors.push( "- " + module_title );
+						title = module_title;
+					}
+				}
+			});
+			if ( 0 < errors.length ) {
+				$( '.save-progress' ).detach();
+				alert( _coursepress.unit_builder_form.messages.required_fields + "\n" + errors.join( "\n" ) );
+				return false;
+			}
+		}
 
 		// Save modules first... just in case the unit is deleted to avoid orphans
 		CoursePress.UnitBuilder.module_collection.url = _coursepress._ajax_url + '?action=unit_builder&task=modules_update&course_id=' + _coursepress.course_id + '&unit_id=' + CoursePress.UnitBuilder.activeUnitID + '&page=' + CoursePress.UnitBuilder.activePage + '&wp_nonce=' + nonce + '&x=1';

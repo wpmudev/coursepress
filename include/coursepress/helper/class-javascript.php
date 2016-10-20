@@ -201,6 +201,7 @@ class CoursePress_Helper_JavaScript {
 			$localize_array['unit_builder_add_answer_label'] = __( 'Add Answer', 'cp' );
 			$localize_array['unit_builder_form_pleaceholder_label'] = __( 'Placeholder Text', 'cp' );
 			$localize_array['unit_builder_form_pleaceholder_desc'] = __( 'Placeholder text to put inside the textbox (additional information)', 'cp' );
+			$localize_array['unit_builder_form']['messages']['required_fields'] = __( "Answer fields must not be empty!\nPlease check modules:", 'cp' );
 
 		}
 
