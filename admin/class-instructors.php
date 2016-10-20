@@ -11,8 +11,16 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Controller_Menu {
 	var $with_editor = false;
 	protected $cap = 'coursepress_settings_cap';
 	var $instructors_list;
-
+	
+	
 	public function get_labels() {
+		
+		add_action(
+			'admin_init',
+			array( $this, 'process_action' ),
+			20
+		);
+		
 		return array(
 			'title' => __( 'CoursePress Instructors', 'cp' ),
 			'menu_title' => __( 'Instructors', 'cp' ),
@@ -28,6 +36,7 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Controller_Menu {
 			$this->instructors_list->prepare_items();
 
 			add_screen_option( 'per_page', array( 'default' => 20 ) );
+			
 		} else {
 			$view = $_REQUEST['view'];
 			$this->slug = 'instructor-' . $view;
@@ -50,6 +59,40 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Controller_Menu {
 			}
 			wp_safe_redirect( $return_url );
 			exit;
+		}
+	}
+	
+	public function process_action() {
+		if ( isset($_REQUEST['action']) && !empty($_REQUEST['action']) && isset($_REQUEST['instructor_id']) && !empty($_REQUEST['instructor_id']) ) {
+			$data = !empty($_REQUEST) ? stripslashes_deep($_REQUEST) : array();
+			$instructor_id = (int) $data['instructor_id'];
+			$return_url = add_query_arg(
+				array(
+					'post_type' => 'course',
+					'page' => 'coursepress_instructors',
+				),
+				admin_url('edit.php')
+			);
+			
+			switch( $data['action'] ){
+				case 'delete':
+					if ( isset($data['_wpnonce']) && wp_verify_nonce($data['_wpnonce'], 'coursepress_remove_instructor') ) {
+						if ( isset($data['course_id']) && !empty($data['course_id']) ) {
+							// remove from this course
+							CoursePress_Data_Course::remove_instructor((int)$data['course_id'], $instructor_id);
+						} else {
+							// remove from all courses associated
+							$instructor = get_userdata( $instructor_id );
+							$assigned_courses_ids = CoursePress_Data_Instructor::get_assigned_courses_ids( $instructor );
+							foreach( $assigned_courses_ids as $course_id ) {
+								CoursePress_Data_Course::remove_instructor((int)$course_id, $instructor_id);
+							}
+						}
+						wp_safe_redirect( $return_url );
+						exit;
+					}
+					break;
+			}
 		}
 	}
 }

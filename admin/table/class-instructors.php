@@ -169,9 +169,10 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 			array(
 				'_wpnonce' => wp_create_nonce( 'coursepress_remove_instructor' ),
 				'instructor_id' => $user_id,
+				'action' => 'delete',
 			)
 		);
-		$actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $delete_url ), __( 'Remove as Instructor', 'cp' ) );
+		$actions['delete'] = sprintf( '<a class="remove_instructor_action" href="%s">%s</a>', esc_url( $delete_url ), __( 'Remove as Instructor', 'cp' ) );
 
 		return $avatar . $name . $this->row_actions( $actions );
 	}
