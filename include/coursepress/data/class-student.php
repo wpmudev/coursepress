@@ -756,7 +756,7 @@ class CoursePress_Data_Student {
 			$unit_progress_counter = 0;
 			$unit_valid_progress = 0;
 
-			if ( false === $is_unit_available ) {
+			if ( false === $is_unit_available && 'closed' != $course_status ) {
 				// Let's not check unavailable unit
 				continue;
 			}
@@ -862,7 +862,7 @@ class CoursePress_Data_Student {
 
 								$previous_module_done = self::is_module_completed( $course_id, $unit_id, $module_id, $student_id );
 
-								if ( false === $is_normal_mode && false === $previous_module_done ) {
+								if ( ( false === $is_normal_mode && false === $previous_module_done ) && 'closed' != $course_status ) {
 									$valid = false;
 								}
 

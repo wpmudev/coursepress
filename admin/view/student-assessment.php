@@ -5,6 +5,7 @@ $unit_id = isset( $_REQUEST['unit_id'] ) ? (int) $_REQUEST['unit_id'] : 0;
 $module_id = isset( $_REQUEST['module_id'] ) ? (int) $_REQUEST['module_id'] : 0;
 $student_id = isset( $_REQUEST['student_id'] ) ? (int) $_REQUEST['student_id'] : 0;
 $userdata = get_userdata( $student_id );
+CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course_id );
 $student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
 $course_grade = (int) CoursePress_Helper_Utility::get_array_val( $student_progress, 'completion/average' );
 $display_type = isset( $_REQUEST['display'] ) && ! empty( $_REQUEST['display'] ) ? $_REQUEST['display'] : 'all';
@@ -20,7 +21,7 @@ $certified = $is_completed ? '' : 'style="display:none;"';
 wp_nonce_field( 'student-grade-feedback' );
 ?>
 <div class="wrap coursepress_wrapper coursepress-assessment">
-	<h2><?php esc_html_e( 'Assessments', 'cp' ); ?></h2><hr />
+	<h2><?php esc_html_e( 'Student Workbook', 'cp' ); ?></h2><hr />
 
 	<input type="hidden" id="cp_student_id" value="<?php echo $student_id; ?>" />
 	<div class="cp-actions">
