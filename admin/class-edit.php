@@ -141,7 +141,7 @@ class CoursePress_Admin_Edit {
 
 		// Make sure that we have all the fields we need
 		foreach ( self::$tabs as $key => $tab ) {
-			self::$tabs[ $key ]['url'] = add_query_arg( 'tab', $key );
+			self::$tabs[ $key ]['url'] = add_query_arg( 'tab', $key, remove_query_arg( 'message' ) );
 			self::$tabs[ $key ]['buttons'] = isset( $tab['buttons'] ) ? $tab['buttons'] : 'both';
 			self::$tabs[ $key ]['class'] = isset( $tab['class'] ) ? $tab['class'] : '';
 			self::$tabs[ $key ]['is_form'] = isset( $tab['is_form'] ) ? $tab['is_form'] : true;
@@ -152,6 +152,24 @@ class CoursePress_Admin_Edit {
 		self::$tabs = CoursePress_Helper_Utility::sort_on_key( self::$tabs, 'order' );
 
 		return self::$tabs;
+	}
+
+	public static function updated_messages( $messages ) {
+		global $typenow;
+
+		$post_type = CoursePress_Data_Course::get_post_type_name();
+
+		if ( $typenow == $post_type ) {
+			$post_messages = $messages['post'];
+
+			foreach ( $post_messages as $pos => $msg ) {
+				$msg = str_replace( 'Post', ucfirst( $post_type ), $msg );
+				$post_messages[ $pos ] = $msg;
+			}
+			$messages['post'] = $post_messages;
+		}
+
+		return $messages;
 	}
 
 	public static function edit_tabs() {
@@ -190,7 +208,8 @@ class CoursePress_Admin_Edit {
 		);
 		$ui['class'] = 'course-' . $course_id;
 		$publish_toggle = '';
-		if ( CoursePress_Data_Capabilities::can_change_course_status( $course_id ) ) {
+
+		if ( 'edit' == self::$action && CoursePress_Data_Capabilities::can_change_course_status( $course_id ) ) {
 			$publish_toggle = ! empty( $course_id ) ? CoursePress_Helper_UI::toggle_switch( 'publish-course-toggle', 'publish-course-toggle', $ui ) : '';
 		}
 		echo CoursePress_Helper_Tabs::render_tabs( $tabs, $content, $hidden_args, self::$slug, $tab, false, 'horizontal', $publish_toggle );
