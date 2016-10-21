@@ -325,15 +325,19 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 
 		// ----- DATE PICKERS -----
 		if ( "function" === typeof( $(document).datetimepicker ) ) {
-			$( '.dateinput.timeinput' ).datetimepicker( {
+			var datetime = $( '.dateinput.timeinput' ).datetimepicker( {
 				dateFormat: 'yy-mm-dd',
 				timeFormat: 'HH:mm',
 				showButtonPanel: false,
 				timeInput: true,
 				controlType: 'select',
-				oneLine: true
+				oneLine: true,
+				autoclose: true,
+				onSelect: function() {
+					datetime.datepicker('hide');
+				}
 			} );
-			$( '.dateinput' ).datepicker( {
+			$( '.dateinput' ).not( '.dateinput.timeinput' ).datepicker( {
 				dateFormat: 'yy-mm-dd',
 				autoclose: true
 					//firstDay: coursepress.start_of_week
