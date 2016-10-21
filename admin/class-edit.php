@@ -32,7 +32,7 @@ class CoursePress_Admin_Edit {
 
 		if ( 'setup' == $tab ) {
 			// Remove submitdiv
-			remove_meta_box( 'submitdiv', $post_type, 'side' );
+			//remove_meta_box( 'submitdiv', $post_type, 'side' );
 
 			// Change preview link
 			add_filter( 'preview_post_link', array( __CLASS__, 'preview_post_link' ), 10, 2 );
@@ -109,6 +109,7 @@ class CoursePress_Admin_Edit {
 			'description' => __( 'Edit your course specific settings below.', 'cp' ),
 			'order' => 10,
 			'buttons' => 'none',
+			'is_form' => false,
 		);
 		$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
 
@@ -133,6 +134,7 @@ class CoursePress_Admin_Edit {
 					'description' => __( 'Edit your course specific settings below.', 'cp' ),
 					'order' => 30,
 					'buttons' => 'none',
+					'is_form' => false,
 				);
 			}
 		}
