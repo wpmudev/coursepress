@@ -190,6 +190,17 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			CoursePress.Course.add_array_to_data( data, meta_items );
 		}
 
+		// Save course category
+		var checklist = $( '#course_categorychecklist input:checked' ), meta_category = [];
+
+		if ( 0 < checklist.length ) {
+			checklist.each( function() {
+				var input = $(this);
+				meta_category.push( {name: 'meta_course_category', value: input.val() } );
+			});
+			CoursePress.Course.add_array_to_data( data, meta_category );
+		}
+
 		var next_step = step;
 
 		if ( 'next' === action_type ) {
