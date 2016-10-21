@@ -454,12 +454,15 @@ class CoursePress_Admin_Edit {
 						</label>
 						<label class="checkbox">
 							<input type="radio" name="meta_course_view" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'course_view', 'normal' ), 'normal' ) . ' value="normal">' . esc_html__( 'Normal: Show full unit pages', 'cp' ) . '<br />
+						</label><label class="checkbox">
 							<input type="radio" name="meta_course_view" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'course_view', 'focus' ), 'focus' ) . ' value="focus">' . esc_html__( 'Focus: Focus on one item at a time', 'cp' ) . '<br />
+						</label><label class="checkbox">
 							<input type="checkbox" name="meta_focus_hide_section" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'focus_hide_section', true ) ) . ' value="unit">' . esc_html__( 'Don\'t render section titles in focus mode.', 'cp' ) . '<br />
 							<p class="description">' . esc_html__( 'Choose if your course will show in "normal" mode or step by step "focus" mode.', 'cp' ) . '</p>
 						</label>
 						<label class="checkbox">
 							<input type="radio" name="meta_structure_level" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'structure_level', 'unit' ), 'unit' ) . ' value="unit">' . esc_html__( 'Unit list only', 'cp' ) . '<br />
+						</label><label class="checkbox">
 							<input type="radio" name="meta_structure_level" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'structure_level', 'section' ), 'section' ) . ' value="section">' . esc_html__( 'Expanded unit list', 'cp' ) . '<br />
 							<p class="description">' . esc_html__( 'Choose if course Unit page shows units only or in expanded view.', 'cp' ) . '</p>
 						</label>
@@ -904,7 +907,7 @@ class CoursePress_Admin_Edit {
 					esc_html__( 'Course Discussion', 'cp' ) . '
 					</label>
 					<p class="description">' . esc_html__( 'If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'cp' ) . '</p>
-					<label class="checkbox narrow">
+					<label class="checkbox">
 						<input type="checkbox" name="meta_allow_discussion" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'allow_discussion', false ) ) . ' />
 						<span>' . esc_html__( 'Allow course discussion', 'cp' ) . '</span>
 					</label>
@@ -916,7 +919,7 @@ class CoursePress_Admin_Edit {
 					esc_html__( 'Student Workbook', 'cp' ) . '
 					</label>
 					<p class="description">' . esc_html__( 'If checked, students can see their progress and grades.', 'cp' ) . '</p>
-					<label class="checkbox narrow">
+					<label class="checkbox">
 						<input type="checkbox" name="meta_allow_workbook" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'allow_workbook', false ) ) . ' />
 						<span>' . esc_html__( 'Show student workbook', 'cp' ) . '</span>
 					</label>

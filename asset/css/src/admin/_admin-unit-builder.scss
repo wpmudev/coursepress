@@ -1,5 +1,21 @@
 @import 'colors';
 
+#unit-builder {
+  .unit-detail {
+    h3 {
+      font-size: 1.4em;
+      .unit-state {
+        font-size: 0.8em;
+      }
+    }
+    .fa-cog {
+      margin-right: 5px;
+    }
+    label {
+      padding-bottom: 5px;
+    }
+  }
+}
 // Loading message...
 #unit-builder .loading {
   background: url( '#{$imagePath}ajax-loader.gif' ) no-repeat left;
