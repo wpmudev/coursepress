@@ -43,7 +43,6 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 			}
 		}
 		$per_page = $this->get_items_per_page( 'coursepress_instructors_per_page', $per_page );
-		l( $per_page );
 		/**
 		 * pagination
 		 */
