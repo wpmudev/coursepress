@@ -197,6 +197,9 @@
 	.next-button {
 		float: right;
 	}
+	.button {
+		@include button;
+	}
 }
 .coursepress-focus-view {
 	.coursepress-breadcrumbs {

@@ -923,15 +923,17 @@ class CoursePress_View_Front_Course {
 				'slug' => 'course_' . $cp->course_id,
 				'title' => get_the_title( $cp->course_id ),
 				'show_title' => $show_title,
-				//'callback' => array( __CLASS__, 'render_course_main' ),
-				//'context' => 'main',
+				'callback' => array( __CLASS__, 'render_course_main' ),
+				'context' => 'main',
 				'content' => '',
+				/*
 				'content' => apply_filters(
 					'coursepress_view_course',
 					self::render_course_main( $cp->course_id ),
 					$cp->course_id,
 					'main'
 				),
+				*/
 				'type' => CoursePress_Data_Course::get_post_type_name(),
 				'is_singular' => true,
 				'ID' => $cp->course_id,
