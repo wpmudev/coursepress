@@ -214,6 +214,9 @@
         z-index: 1;
       }
 
+      .notice {
+          color: #444;
+      }
     }
 
     .unit-builder-pager {
@@ -614,6 +617,9 @@
       #unit-live-toggle-2 {
         float: right;
         padding: 8px 10px;
+      }
+      .notice {
+          color: #444;
       }
 
     }

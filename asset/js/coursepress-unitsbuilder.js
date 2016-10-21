@@ -1,6 +1,4 @@
-/*!  - v2.0.0
- * 
- * Copyright (c) 2016; * Licensed GPLv2+ */
+/*global tinyMCE*/
 /*global tinyMCEPreInit*/
 /*global _coursepress*/
 
@@ -934,6 +932,30 @@ var CoursePress = CoursePress || {};
 		$( '.unit-buttons .unit-save-button' ).prepend( '<i class="fa fa-spinner fa-spin save-progress"></i> ' );
 
 		var nonce = $( '#unit-builder' ).attr( 'data-nonce' );
+		var form = $( "#unit-builder" ).closest( "form" );
+		var requireds = $( ".component-checkbox-answer, .component-radio-answer, .component-select-answer", form );
+		/**
+		 * Check option labels
+		 */
+		if ( 0 < requireds.length ) {
+			var errors = [];
+			var title = '';
+			$.each( requireds, function( index, element ) {
+				e = $(element);
+				if ( "" === e.val() ) {
+					module_title = $(".module-title .module-title-text", e.closest( '.module-holder' ) ).val();
+					if ( title !== module_title ) {
+						errors.push( "- " + module_title );
+						title = module_title;
+					}
+				}
+			});
+			if ( 0 < errors.length ) {
+				$( '.save-progress' ).detach();
+				alert( _coursepress.unit_builder_form.messages.required_fields + "\n" + errors.join( "\n" ) );
+				return false;
+			}
+		}
 
 		// Save modules first... just in case the unit is deleted to avoid orphans
 		CoursePress.UnitBuilder.module_collection.url = _coursepress._ajax_url + '?action=unit_builder&task=modules_update&course_id=' + _coursepress.course_id + '&unit_id=' + CoursePress.UnitBuilder.activeUnitID + '&page=' + CoursePress.UnitBuilder.activePage + '&wp_nonce=' + nonce + '&x=1';
@@ -954,16 +976,31 @@ var CoursePress = CoursePress || {};
 				nonce = response[ 'nonce' ];
 				$( '#unit-builder' ).attr( 'data-nonce', nonce );
 				CoursePress.UnitBuilder.unit_collection.trigger( custom_event, CoursePress.UnitBuilder.unit_collection );
+				CoursePress.Helpers.Module.unit_show_message( _coursepress.unit_builder_form.messages.successfully_saved, 'success' );
 			},
 			error: function() {
 				$( '.save-progress' ).detach();
 				$( e.currentTarget ).prepend( '<i class="fa fa-info-circle save-progress"></i> ' );
+				CoursePress.Helpers.Module.unit_show_message( _coursepress.unit_builder_form.messages.error_while_saving, 'error' );
 			}
 		} );
 
 		// Reset URL
 		CoursePress.UnitBuilder.unit_collection.url = _coursepress._ajax_url + '?action=unit_builder&task=units&course_id=' + _coursepress.course_id;
+
+		/**
+		 * Add message
+		 */
+		CoursePress.Helpers.Module.unit_show_message( _coursepress.unit_builder_form.messages.saving_unit, 'info' );
 	};
+
+	CoursePress.Helpers.Module.unit_show_message = function( message, notice_class ) {
+		$( ".unit-builder-header .unit-buttons .notice, .unit-builder-footer .unit-buttons .notice" ).detach();
+		$( ".unit-builder-header .unit-buttons, .unit-builder-footer .unit-buttons" ).prepend( '<div class="notice notice-' + notice_class + '"><p>'+message+'</p></div>' );
+		if ( "success" === notice_class ) {
+			setTimeout(function(){ $( ".unit-builder-header .unit-buttons .notice, .unit-builder-footer .unit-buttons .notice" ).fadeOut(); }, 3000);
+		}
+	}
 
 	CoursePress.Helpers.Module.toggle_unit_state = function() {
 		var nonce = $( '#unit-builder' ).attr( 'data-nonce' );

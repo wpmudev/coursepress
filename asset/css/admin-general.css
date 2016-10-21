@@ -1259,6 +1259,9 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   left: 165px;
   z-index: 1;
 }
+.tab-content .unit-builder-content .unit-builder-header .notice {
+  color: #444;
+}
 .tab-content .unit-builder-content .unit-builder-pager {
   background: #F1F1F1;
   padding: 3px 20px 8px 20px;
@@ -1555,6 +1558,9 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 .tab-content .unit-builder-content .section.unit-builder-footer #unit-live-toggle-2 {
   float: right;
   padding: 8px 10px;
+}
+.tab-content .unit-builder-content .section.unit-builder-footer .notice {
+  color: #444;
 }
 
 .unit-builder-modules .module-header .label,
