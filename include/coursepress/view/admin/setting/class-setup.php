@@ -173,7 +173,7 @@ if ( current_user_can( 'manage_options' ) && ! get_option( 'permalink_structure'
 <?php
 	}
 } else {
-	$url = add_query_arg( 'page', CoursePress_View_Admin_Course_Edit::$slug, admin_url( 'admin.php' ) );
+	$url = add_query_arg( 'post_type', CoursePress_Data_Course::get_post_type_name(), admin_url( 'post-new.php' ) );
 ?>
 	<a href="<?php echo esc_url( $url ); ?>" class="button button-units save-unit-button start-course-button"><?php _e( 'Start building your own course now &rarr;', 'cp' ); ?></a>
 <?php
