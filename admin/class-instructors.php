@@ -76,6 +76,11 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Controller_Menu {
 					}
 				break;
 			}
+
+			if ( isset( $_REQUEST['instructor_id'] ) ) {
+				$return_url = remove_query_arg( array( 'action', 'action2', '_wpnonce', 'instructor_id' ) );
+				wp_safe_redirect( $return_url ); exit;
+			}
 		}
 		$this->switch_to_selected_course();
 		if ( empty( $_REQUEST['view'] ) ) {
