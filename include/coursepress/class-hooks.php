@@ -40,6 +40,9 @@ class CoursePress_Hooks {
 		// Course list
 		add_action( 'admin_init', array( 'CoursePress_Admin_Courses', 'init' ) );
 
+		// Course Instructors list
+		add_action( 'admin_init', array( 'CoursePress_Admin_Instructors', 'init' ) );
+
 		// Search user
 		add_action( 'wp_ajax_coursepress_user_search', array( 'CoursePress_Admin_Students', 'search_user' ) );
 

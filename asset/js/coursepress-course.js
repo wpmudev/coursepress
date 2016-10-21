@@ -1722,7 +1722,9 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 
 	CoursePress.maybeUpdateCourse = function() {
 		var form = $( 'form#post' );
-
+		if ( 0 == form.length ) {
+			return true;
+		}
 		form.unbind( 'submit' ).on( 'submit', CoursePress.updateCourse );
 		form.submit();
 
