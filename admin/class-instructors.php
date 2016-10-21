@@ -20,13 +20,59 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Controller_Menu {
 	}
 
 	public function process_form() {
+		/**
+		 * Check actions
+		 */
+		$action = '';
+		if ( isset( $_REQUEST['action'] ) ) {
+			$action = $_REQUEST['action'];
+		} elseif ( isset( $_REQUEST['action2'] ) ) {
+			$action = $_REQUEST['action2'];
+		}
+		if ( isset( $_REQUEST['_wpnonce'] ) ) {
+			$user_id = get_current_user_id();
+			switch ( $action ) {
+				/**
+				 * Remove single instructor
+				 */
+				case 'remove_instructor':
+					if ( ! isset( $_REQUEST['instructor_id'] ) ) {
+						break;
+					}
+					$nonce_action = CoursePress_Data_Instructor::get_nonce_action( $action, $_REQUEST['instructor_id'] );
+					if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], $nonce_action ) ) {
+						break;
+					}
+					CoursePress_Data_Instructor::remove_instructor_status( $_REQUEST['instructor_id'] );
+				break;
+				/**
+				 * Bulk action - remove instructors
+				 */
+				case 'withdraw':
+					if ( ! isset( $_REQUEST['users'] ) ) {
+						break;
+					}
+					if ( empty( $_REQUEST['users'] ) ) {
+						break;
+					}
+					if ( ! is_array( $_REQUEST['users'] ) ) {
+						break;
+					}
+					$nonce_action = 'bulk-users';
+					if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], $nonce_action ) ) {
+						break;
+					}
+					foreach ( $_REQUEST['users'] as $instructor_id ) {
+						CoursePress_Data_Instructor::remove_instructor_status( $instructor_id );
+					}
+				break;
+			}
+		}
 		$this->switch_to_selected_course();
-
 		if ( empty( $_REQUEST['view'] ) ) {
 			// Set up instructors table
 			$this->instructors_list = new CoursePress_Admin_Table_Instructors;
 			$this->instructors_list->prepare_items();
-
 			add_screen_option( 'per_page', array( 'default' => 20 ) );
 		} else {
 			$view = $_REQUEST['view'];

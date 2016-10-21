@@ -32,7 +32,7 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 		$paged = $this->get_pagenum();
 		$args = array(
 			'number' => $users_per_page,
-			'offset' => ( $paged-1 ) * $users_per_page,
+			'offset' => ( $paged -1 ) * $users_per_page,
 			'meta_key' => 'role_ins',
 			'meta_value' => 'instructor',
 			'fields' => 'all_with_meta',
@@ -46,11 +46,11 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 			$args['include'] = $instructor_ids;
 		}
 
-		if ( '' !== $args['search'] )
-			$args['search'] = '*' . $args['search'] . '*';
+		if ( '' !== $args['search'] ) {
+			$args['search'] = '*' . $args['search'] . '*'; }
 
-		if ( $this->is_site_users )
-			$args['blog_id'] = $this->site_id;
+		if ( $this->is_site_users ) {
+			$args['blog_id'] = $this->site_id; }
 
 		// Query the user IDs for this page
 		$wp_user_search = new WP_User_Query( $args );
@@ -165,10 +165,14 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 		$actions['courses'] = sprintf( '<a href="%s">%s</a>', esc_url( $courses_url ), __( 'View Courses', 'cp' ) );
 
 		// @todo: Add sanity check/validation
+
+		$action = 'remove_instructor';
+		$nonce_action = CoursePress_Data_Instructor::get_nonce_action( $action, $user_id );
 		$delete_url = add_query_arg(
 			array(
-				'_wpnonce' => wp_create_nonce( 'coursepress_remove_instructor' ),
+				'_wpnonce' => wp_create_nonce( $nonce_action ),
 				'instructor_id' => $user_id,
+				'action' => $action,
 			)
 		);
 		$actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $delete_url ), __( 'Remove as Instructor', 'cp' ) );
