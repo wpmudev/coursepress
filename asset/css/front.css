@@ -872,6 +872,26 @@ tester {
 .cp .next-button {
   float: right;
 }
+.cp .button {
+  padding: 5px 15px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 5px 12px;
+  text-decoration: none;
+  -webkit-text-decoration-style: none;
+  text-decoration-style: none;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  background-color: #F4F4F4;
+  cursor: pointer;
+  color: inherit;
+}
+.cp .button:hover {
+  text-decoration: none;
+}
+.cp .button a {
+  text-decoration: none;
+  border: 0;
+  color: inherit;
+}
 
 .coursepress-focus-view .coursepress-breadcrumbs {
   border-bottom: 3px solid rgba(0, 0, 0, 0.2);

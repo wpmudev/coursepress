@@ -339,9 +339,8 @@ var CoursePress = CoursePress || {};
 			$(container).append( content );
 			CoursePress.Helpers.Module.quiz.update_meta( mod_el );
 			CoursePress.Helpers.Module.quiz.bind_buttons();
-
 		} );
-
+		CoursePress.Helpers.Module.quiz.bind_add_item();
 		CoursePress.Helpers.Module.form.bind_buttons();
 
 		// ===== FORM BUTTONS =====
