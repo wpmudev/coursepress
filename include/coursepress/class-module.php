@@ -299,7 +299,7 @@ class CoursePress_Module {
 
 							// Attempt to record the submission
 							CoursePress_Data_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $response );
-							
+	
 							// override $is_assessable if module type 'input-form', regardless if enabled in admin dashboard or not
 							// logic from CoursePress_Data_Module::get_form_results() is that Form will have a grade of 100 if not required, otherwise check if empty for all submodules
 							if ( $module_type == 'input-form' ) $is_assessable = true;

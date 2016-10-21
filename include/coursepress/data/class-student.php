@@ -370,6 +370,7 @@ class CoursePress_Data_Student {
 
 			case 'input-select':
 			case 'input-radio':
+
 				if ( $response == $attributes['answers_selected'] ) {
 					$grade = 100;
 				} else {
