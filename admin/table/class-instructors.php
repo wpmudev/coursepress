@@ -26,14 +26,35 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 	}
 
 	public function prepare_items() {
+		$screen = get_current_screen();
+		/**
+		 * Search
+		 */
 		$usersearch = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : '';
-		$per_page = ( $this->is_site_users ) ? 'site_users_network_per_page' : 'users_per_page';
-		$users_per_page = $this->get_items_per_page( $per_page );
-
-		$paged = $this->get_pagenum();
+		/**
+		 * Per Page
+		 */
+		$option = $screen->get_option( 'per_page', 'option' );
+		$per_page = (int) get_user_option( $option );
+		if ( empty( $per_page ) || $per_page < 1 ) {
+			$per_page = $this->get_option( 'per_page', 'default' );
+			if ( ! $per_page ) {
+				$per_page = 20;
+			}
+		}
+		$per_page = $this->get_items_per_page( 'coursepress_instructors_per_page', $per_page );
+		l( $per_page );
+		/**
+		 * pagination
+		 */
+		$current_page = $this->get_pagenum();
+		$offset = ( $current_page - 1 ) * $per_page;
+		/**
+		 * Query args
+		 */
 		$args = array(
-			'number' => $users_per_page,
-			'offset' => ( $paged -1 ) * $users_per_page,
+			'number' => $per_page,
+			'offset' => $offset,
 			'meta_key' => 'role_ins',
 			'meta_value' => 'instructor',
 			'fields' => 'all_with_meta',
@@ -62,7 +83,7 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 
 		$this->set_pagination_args( array(
 			'total_items' => $wp_user_search->get_total(),
-			'per_page' => $users_per_page,
+			'per_page' => $per_page,
 		) );
 	}
 
@@ -80,8 +101,8 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 			'cb' => '<input type="checkbox" />',
 			'instructor_name' => __( 'Name', 'cp' ),
 			'registered' => __( 'Registered', 'cp' ),
-			'courses' => __( 'Courses', 'cp' ),
-			'courses_list' => __( 'Courses List', 'cp' ),
+			'courses' => __( 'Number Courses', 'cp' ),
+			'courses_list' => __( 'Courses', 'cp' ),
 		);
 
 		return $columns;
