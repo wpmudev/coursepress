@@ -12,6 +12,7 @@ if ( ! class_exists( 'WP_Users_List_Table' ) ) {
 }
 class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 	var $course_id = 0;
+	private $courses;
 
 	public function __construct() {
 		parent::__construct();
@@ -78,6 +79,7 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 			'instructor_name' => __( 'Name', 'cp' ),
 			'registered' => __( 'Registered', 'cp' ),
 			'courses' => __( 'Courses', 'cp' ),
+			'courses_list' => __( 'Courses List', 'cp' ),
 		);
 
 		return $columns;
@@ -196,5 +198,46 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 		);
 
 		return $count > 0 ? sprintf( '<a href="%s">%s</a>', $courses_link, $count ) : 0;
+	}
+
+	/**
+	 * Show courses list.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $user_id Current row user ID.
+	 * @return string List of courses or information about nothing.
+	 */
+	public function column_courses_list( $user_id ) {
+		$assigned_courses_ids = CoursePress_Data_Instructor::get_assigned_courses_ids( $user_id );
+		if ( empty( $assigned_courses_ids ) ) {
+			return sprintf(
+				'<span aria-hidden="true">&#8212;</span><span class="screen-reader-text">%s</span>',
+				__( 'Instructor is not assigned to any course.', 'cp' )
+			);
+		}
+		$content = '<ul>';
+		foreach ( $assigned_courses_ids as $course_id ) {
+			if ( ! isset( $this->courses[ $course_id ] ) ) {
+				$this->courses[ $course_id ] = array(
+					'title' => get_the_title( $course_id ),
+					'link' => add_query_arg(
+						array(
+							'post_type' => CoursePress_Data_Course::get_post_type_name(),
+							'page' => 'coursepress_instructors',
+							'course_id' => $course_id,
+						),
+						admin_url( 'edit.php' )
+					),
+				);
+			}
+			$content .= sprintf(
+				'<li><a href="%s">%s</a></li>',
+				esc_url( $this->courses[ $course_id ]['link'] ),
+				$this->courses[ $course_id ]['title']
+			);
+		}
+		$content .= '</ul>';
+		return $content;
 	}
 }

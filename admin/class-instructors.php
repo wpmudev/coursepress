@@ -12,6 +12,10 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Controller_Menu {
 	protected $cap = 'coursepress_settings_cap';
 	var $instructors_list;
 
+	public static function init() {
+		add_filter( 'default_hidden_columns', array( __CLASS__, 'hidden_columns' ) );
+	}
+
 	public function get_labels() {
 		return array(
 			'title' => __( 'CoursePress Instructors', 'cp' ),
@@ -43,7 +47,7 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Controller_Menu {
 					if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], $nonce_action ) ) {
 						break;
 					}
-					CoursePress_Data_Instructor::remove_instructor_status( $_REQUEST['instructor_id'] );
+					CoursePress_Data_Instructor::remove_from_all_courses( $_REQUEST['instructor_id'] );
 				break;
 				/**
 				 * Bulk action - remove instructors
@@ -62,8 +66,13 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Controller_Menu {
 					if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], $nonce_action ) ) {
 						break;
 					}
+					$course_id = intval( isset( $_REQUEST['course_id'] )? $_REQUEST['course_id'] : 'all' );
 					foreach ( $_REQUEST['users'] as $instructor_id ) {
-						CoursePress_Data_Instructor::remove_instructor_status( $instructor_id );
+						if ( 0 === $course_id ) {
+							CoursePress_Data_Instructor::remove_from_all_courses( $instructor_id );
+						} else {
+							CoursePress_Data_Instructor::removed_from_course( $instructor_id, $course_id );
+						}
 					}
 				break;
 			}
@@ -97,5 +106,22 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Controller_Menu {
 			wp_safe_redirect( $return_url );
 			exit;
 		}
+	}
+
+	/**
+	 * Hide "courses_list" column by default
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $columns List of hidden columns.
+	 * @return array List of hidden columns.
+	 */
+	public static function hidden_columns( $columns ) {
+		$screen = get_current_screen();
+		if ( 'course_page_coursepress_instructors' != $screen->id ) {
+			return;
+		}
+		array_push( $columns, 'courses_list' );
+		return $columns;
 	}
 }

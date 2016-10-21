@@ -379,6 +379,24 @@ class CoursePress_Data_Instructor {
 		self::count_courses( $instructor_id, true );
 	}
 
+	/**
+	 * Remove Instructor from all courses
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $instructor_id Instructor ID
+	 */
+	public static function remove_from_all_courses( $instructor_id ) {
+		$assigned_courses_ids = self::get_assigned_courses_ids( $instructor_id );
+		if ( empty( $assigned_courses_ids ) ) {
+			self::remove_instructor_status( $instructor_id );
+			return;
+		}
+		foreach ( $assigned_courses_ids as $course_id ) {
+			self::removed_from_course( $instructor_id, $course_id );
+		}
+	}
+
 	public static function removed_from_course( $instructor_id, $course_id ) {
 
 		$global_option = ! is_multisite();
