@@ -1629,9 +1629,8 @@ class CoursePress_View_Front_Course {
 		$post_type = CoursePress_Data_Course::get_post_type_name();
 		$type = get_post_type_object( $post_type );
 		$url_args = array(
-			'page' => CoursePress_View_Admin_Course_Edit::get_slug(),
 			'action' => 'edit',
-			'id' => $course_id,
+			'post' => $course_id,
 		);
 		if ( $tab ) {
 			$url_args['tab'] = $tab;
@@ -1639,7 +1638,7 @@ class CoursePress_View_Front_Course {
 		$args = array(
 			'id'	 => 'edit',
 			'title'  => $type->labels->edit_item,
-			'href'   => add_query_arg( $url_args, admin_url( 'admin.php' ) ),
+			'href'   => add_query_arg( $url_args, admin_url( 'post.php' ) ),
 		);
 		$bar->add_menu( $args );
 	}
