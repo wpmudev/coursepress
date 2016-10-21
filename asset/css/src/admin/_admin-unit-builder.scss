@@ -1,5 +1,21 @@
 @import 'colors';
 
+#unit-builder {
+  .unit-detail {
+    h3 {
+      font-size: 1.4em;
+      .unit-state {
+        font-size: 0.8em;
+      }
+    }
+    .fa-cog {
+      margin-right: 5px;
+    }
+    label {
+      padding-bottom: 5px;
+    }
+  }
+}
 // Loading message...
 #unit-builder .loading {
   background: url( '#{$imagePath}ajax-loader.gif' ) no-repeat left;
@@ -214,6 +230,9 @@
         z-index: 1;
       }
 
+      .notice {
+          color: #444;
+      }
     }
 
     .unit-builder-pager {
@@ -610,6 +629,9 @@
       #unit-live-toggle-2 {
         float: right;
         padding: 8px 10px;
+      }
+      .notice {
+          color: #444;
       }
 
     }

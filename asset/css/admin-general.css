@@ -399,6 +399,11 @@ A. Responsive
 /**
  * colors
  */
+#course-setup-steps .wide label {
+  display: block;
+  padding-bottom: 5px;
+}
+
 #student-add {
   min-width: 300px;
 }
@@ -469,7 +474,7 @@ A. Responsive
 #course-setup-steps .step-content label.checkbox {
   font-weight: normal;
   display: block;
-  margin: 10px 0 0 0;
+  margin: 0;
   font-size: 1em;
   cursor: pointer;
 }
@@ -662,6 +667,11 @@ A. Responsive
 .course-structure .column-course-structure {
   min-width: 320px;
   position: relative;
+  height: 45px;
+  vertical-align: top;
+}
+.course-structure .column-course-structure small {
+  display: block !important;
 }
 
 .course-structure .column-show,
@@ -1083,6 +1093,19 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 /**
  * colors
  */
+#unit-builder .unit-detail h3 {
+  font-size: 1.4em;
+}
+#unit-builder .unit-detail h3 .unit-state {
+  font-size: 0.8em;
+}
+#unit-builder .unit-detail .fa-cog {
+  margin-right: 5px;
+}
+#unit-builder .unit-detail label {
+  padding-bottom: 5px;
+}
+
 #unit-builder .loading {
   background: url("../img/ajax-loader.gif") no-repeat left;
   padding-left: 22px;
@@ -1258,6 +1281,9 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   position: absolute;
   left: 165px;
   z-index: 1;
+}
+.tab-content .unit-builder-content .unit-builder-header .notice {
+  color: #444;
 }
 .tab-content .unit-builder-content .unit-builder-pager {
   background: #F1F1F1;
@@ -1548,6 +1574,9 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 .tab-content .unit-builder-content .section.unit-builder-footer #unit-live-toggle-2 {
   float: right;
   padding: 8px 10px;
+}
+.tab-content .unit-builder-content .section.unit-builder-footer .notice {
+  color: #444;
 }
 
 .unit-builder-modules .module-header .label,

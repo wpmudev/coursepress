@@ -31,18 +31,19 @@ module.exports = function(grunt) {
 		// Concatenate those JS files into a single file (target: [source, source, ...]).
 		js_files_concat: {
 			'{js}admin-general.js':            ['{js}src/admin-general.js'],
+			'{js}admin-upgrade.js':            ['{js}src/admin-upgrade.js'],
 			'{js}coursepress.js':              ['{js}src/coursepress.js'],
 			'{js}coursepress-course.js':       ['{js}src/coursepress-course.js'],
 			'{js}coursepress-courselist.js':   ['{js}src/coursepress-courselist.js'],
 			'{js}coursepress-front.js':        ['{js}src/coursepress-front.js'],
 			'{js}coursepress-unitsbuilder.js': ['{js}src/coursepress-unitsBuilder.js'],
-			'{js}coursepress-calendar.js':		['{js}src/coursepress-calendar.js'],
-			'{js}coursepress-assessment.js':	['{js}/src/coursepress-assessment.js'],
-			'{js}admin-ui.js':					['{js}/src/admin-ui.js'],
+			'{js}coursepress-calendar.js':     ['{js}src/coursepress-calendar.js'],
+			'{js}coursepress-assessment.js':   ['{js}src/coursepress-assessment.js'],
+			'{js}admin-ui.js':                 ['{js}src/admin-ui.js'],
 			'{js}front.js':						[
-				'{js}/src/front-core.js',
-				'{js}/src/front-modules.js',
-				'{js}/src/front-enrollment.js'
+				'{js}src/front-core.js',
+				'{js}src/front-modules.js',
+				'{js}src/front-enrollment.js'
 			]
 		},
 
@@ -53,8 +54,8 @@ module.exports = function(grunt) {
 			'{css}coursepress_front.css': '{css}src/coursepress_front.scss',
 			'{css}bbm.modal.css':         '{css}src/bbm.modal.scss',
 			'{css}editor.css':            '{css}src/editor.scss',
-			'{css}admin-ui.css':           '{css}src/admin/admin-ui.scss',
-			'{css}front.css':				'{css}src/front.scss'
+			'{css}admin-ui.css':          '{css}src/admin/admin-ui.scss',
+			'{css}front.css':             '{css}src/front.scss'
 		},
 
 		// PHP files to validate.
