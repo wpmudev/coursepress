@@ -48,6 +48,10 @@ class CoursePress_Admin_Controller_Menu {
 	public function admin_menu() {
 		$labels = $this->get_labels();
 
+		if ( empty( $labels ) ) {
+			return;
+		}
+
 		if ( ! empty( $this->parent_slug ) ) {
 			$post_type = CoursePress_Data_Course::get_post_type_name();
 			$this->parent_slug = 'edit.php?post_type=' . $post_type;

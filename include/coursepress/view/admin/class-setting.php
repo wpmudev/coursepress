@@ -16,6 +16,7 @@ class CoursePress_View_Admin_Setting {
 		'MarketPress',
 		'WooCommerce',
 		'Setup',
+		'Update',
 	);
 
 	public static function init() {

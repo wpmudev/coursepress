@@ -84,6 +84,7 @@ class CoursePress_Core {
 			//CoursePress_View_Admin_Course_Export::init();
 			CoursePress_Helper_PDF::init();
 
+			new CoursePress_Admin_Upgrade;
 			new CoursePress_Admin_Students;
 			new CoursePress_Admin_Instructors;
 			new CoursePress_Admin_Assessment;
@@ -117,6 +118,11 @@ class CoursePress_Core {
 		// Always initialize the Front-End; needed in is_admin() for ajax calls!
 		CoursePress_View_Front_Course::init();
 
+		/**
+		 * Add upgrade ajax calls
+		 */
+		CoursePress_Helper_Upgrade::init();
+
 		// Initialize Utility actions.
 		CoursePress_Helper_Utility::init();
 
@@ -144,6 +150,11 @@ class CoursePress_Core {
 
 		// Init Featured Course widget
 		CoursePress_Widget_FeaturedCourse::init();
+
+		/**
+		 * Check version
+		 */
+		add_action( 'admin_init', array( 'CoursePress_Helper_Upgrade', 'maybe_upgrade' ) );
 
 		/**
 		 * show guide page?
@@ -619,4 +630,5 @@ class CoursePress_Core {
 		);
 		exit();
 	}
+
 }
