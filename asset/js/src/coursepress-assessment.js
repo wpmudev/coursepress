@@ -236,10 +236,21 @@
 	},
 	enableSubmitButton = function() {
 		var module = $(this),
-			submitButton = module.siblings( '.cp-submit-grade' )
+			submitButton = module.siblings( '.cp-submit-grade' ),
+			val = parseFloat( module.val() )
 		;
 
-		submitButton[ '' != module.val() ? 'removeClass' : 'addClass' ]('disabled');
+		if ( val > 100 ) {
+			// Maximum grade is 100
+			val = 100;
+		}
+		if ( 0 > val ) {
+			// Minimum grade is 0
+			val = 0;
+		}
+		module.val( val );
+
+		submitButton[ val >= 0 ? 'removeClass' : 'addClass' ]('disabled');
 	},
 	cancelEdit = function() {
 		var btn = $(this),
