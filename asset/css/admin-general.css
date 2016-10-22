@@ -1461,13 +1461,13 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   font-size: 0.9em;
   font-weight: normal;
 }
-.tab-content .unit-builder-content .module-holder label.module-title {
+.tab-content .unit-builder-content .module-holder div.module-title {
   width: 100%;
 }
-.tab-content .unit-builder-content .module-holder label.module-title .label, .tab-content .unit-builder-content .module-holder label.module-title .description {
+.tab-content .unit-builder-content .module-holder div.module-title .label, .tab-content .unit-builder-content .module-holder div.module-title .description {
   display: block;
 }
-.tab-content .unit-builder-content .module-holder label.module-title input {
+.tab-content .unit-builder-content .module-holder div.module-title input {
   width: 100%;
 }
 .tab-content .unit-builder-content .module-holder label.module-show-title,
@@ -1522,22 +1522,15 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 .tab-content .unit-builder-content .module-holder label.module-excerpt .description {
   display: block;
 }
-.tab-content .unit-builder-content .module-holder label.module-excerpt .wp-editor-wrap {
-  position: relative;
-  top: -20px;
-}
 .tab-content .unit-builder-content .module-holder label.module-excerpt .wp-editor-wrap iframe {
   height: 400px;
 }
-.tab-content .unit-builder-content .module-holder label.module-excerpt .wp-media-buttons {
-  float: none;
-  position: absolute;
-  right: 112px;
-  top: 6px;
+.tab-content .unit-builder-content .module-holder .module {
+  padding-bottom: .5em;
 }
-.tab-content .unit-builder-content .module-holder label.module-excerpt .wp-media-buttons .insert-media {
-  height: 27px;
-  padding: 0 8px 0 5px;
+.tab-content .unit-builder-content .module-holder .module h4 {
+  margin: 0;
+  font-size: 1.1em;
 }
 .tab-content .unit-builder-content .module-holder .module-components .module-component .remove-item {
   cursor: pointer;
