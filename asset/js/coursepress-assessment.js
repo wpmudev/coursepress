@@ -423,12 +423,20 @@
 
 	// Search students
 	var searchStudents = function() {
-		var button = $(this),
-			reset_button = button.siblings( '#search_reset' )
-		;
+		var form = $(this),
+			search_box = $( '#search_student_box', form ),
+			button = $( '#search_student_submit', form ),
+			reset_button = button.siblings( '#search_reset' );
+
+		if ( ! search_box.val() ) {
+			// No key term, bail!
+			return false;
+		}
 
 		reset_button.removeClass( 'disabled' );
 		loadStudentTable();
+
+		return false;
 	},
 	// Reset table display when search was previously done
 	resetStudentDisplay = function() {
@@ -544,7 +552,7 @@
 		.on( 'click', '.cp-save-as-draft', saveFeedbackAsDraft )
 		.on( 'change', '#grade-type', changeDisplayType )
 		.on( 'change', '#course-list', newCourse )
-		.on( 'click', '#search_student_submit', searchStudents )
+		.on( 'submit', '.assessment-search-student-box', searchStudents )
 		.on( 'click', '#search_reset', resetStudentDisplay );
 
 })(jQuery);
