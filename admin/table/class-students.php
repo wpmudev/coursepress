@@ -9,13 +9,29 @@
  **/
 class CoursePress_Admin_Table_Students extends CoursePress_Admin_Table_Instructors {
 	static $student_progress = array();
+	private $courses;
 
 	public function prepare_items() {
 		global $wpdb;
+		/**
+		 * Search
+		 */
+		$usersearch = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : '';
+		/**
+		 * Per Page
+		 */
+		$per_page = $this->get_per_page();
+		$per_page = $this->get_items_per_page( 'coursepress_students_per_page', $per_page );
+		/**
+		 * pagination
+		 */
+		$current_page = $this->get_pagenum();
+		$offset = ( $current_page - 1 ) * $per_page;
+		/**
+		 * Query args
+		 */
 
 		$usersearch = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : '';
-		$per_page = ( $this->is_site_users ) ? 'site_users_network_per_page' : 'users_per_page';
-		$users_per_page = $this->get_items_per_page( $per_page );
 
 		$paged = $this->get_pagenum();
 		$role = 'role';
@@ -25,8 +41,8 @@ class CoursePress_Admin_Table_Students extends CoursePress_Admin_Table_Instructo
 		}
 
 		$args = array(
-			'number' => $users_per_page,
-			'offset' => ( $paged-1 ) * $users_per_page,
+			'number' => $per_page,
+			'offset' => $offset,
 			'meta_key' => $role,
 			'meta_value' => 'student',
 			'fields' => 'all_with_meta',
@@ -39,8 +55,8 @@ class CoursePress_Admin_Table_Students extends CoursePress_Admin_Table_Instructo
 
 		if ( ! empty( $_GET['course_id'] ) ) {
 			// Show only students of current course
-			$course_id = (int) $_GET['course_id'];
-			$student_ids = CoursePress_Data_Course::get_student_ids( $course_id );
+			$this->course_id = (int) $_GET['course_id'];
+			$student_ids = CoursePress_Data_Course::get_student_ids( $this->course_id );
 			$args['include'] = $student_ids;
 		}
 
@@ -57,7 +73,7 @@ class CoursePress_Admin_Table_Students extends CoursePress_Admin_Table_Instructo
 
 		$this->set_pagination_args( array(
 			'total_items' => $wp_user_search->get_total(),
-			'per_page' => $users_per_page,
+			'per_page' => $per_page,
 		) );
 	}
 
@@ -67,11 +83,13 @@ class CoursePress_Admin_Table_Students extends CoursePress_Admin_Table_Instructo
 			'user_id' => __( 'ID', 'cp' ),
 			'student_name' => __( 'Name', 'cp' ),
 			'last_login' => __( 'Last Login', 'cp' ),
-			'courses' => __( 'Courses', 'cp' ),
+			'courses' => __( 'Number Courses', 'cp' ),
+			'courses_list' => __( 'Courses', 'cp' ),
 		);
 
 		if ( ! empty( $this->course_id ) ) {
 			unset( $columns['courses'] );
+			unset( $columns['courses_list'] );
 			$columns['average'] = __( 'Average', 'cp' );
 			$columns['status'] = __( 'Status', 'cp' );
 		}
@@ -111,14 +129,13 @@ class CoursePress_Admin_Table_Students extends CoursePress_Admin_Table_Instructo
 	}
 
 	public function column_student_name( $user_id ) {
+		$actions = array();
 		$user = get_userdata( $user_id );
-
+		$actions['user_id'] = sprintf( __( 'Student ID: %d', 'cp' ), $user_id );
 		// User avatar
 		$avatar = get_avatar( $user->user_email, 32 );
 		$name = CoursePress_Helper_Utility::get_user_name( $user_id, true );
-
 		// Generate row actions
-		$actions = array();
 		$url = remove_query_arg(
 			array(
 				'view',
@@ -126,7 +143,6 @@ class CoursePress_Admin_Table_Students extends CoursePress_Admin_Table_Instructo
 				'student_id',
 			)
 		);
-
 		// @todo: Add sanity check/validation
 		$courses_url = add_query_arg(
 			array(
@@ -137,17 +153,26 @@ class CoursePress_Admin_Table_Students extends CoursePress_Admin_Table_Instructo
 		$actions['courses'] = sprintf( '<a href="%s">%s</a>', esc_url( $courses_url ), __( 'View Profile', 'cp' ) );
 
 		// @todo: Add sanity check/validation
+		$action = 'remove_student';
+		$nonce_action = CoursePress_Data_Student::get_nonce_action( $action, $user_id );
 		$delete_url = add_query_arg(
 			array(
-				'_wpnonce' => wp_create_nonce( 'coursepress_withdraw_student' ),
+				'_wpnonce' => wp_create_nonce( $nonce_action ),
 				'student_id' => $user_id,
+				'action' => $action,
+				'course_id' => 'all',
 			)
 		);
 		$withdraw_title = __( 'Withdraw to all courses', 'cp' );
 
-		if ( ! empty( $this->course_id ) ) {
-			$withdraw_title = __( 'Withdraw', 'cp' );
-		}
+        if ( ! empty( $this->course_id ) ) {
+            $withdraw_title = __( 'Withdraw', 'cp' );
+            $delete_url = add_query_arg(
+                array(
+                    'course_id' => $this->course_id,
+                )
+            );
+        }
 		$actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $delete_url ), $withdraw_title );
 
 		return $avatar . $name . $this->row_actions( $actions );
@@ -184,4 +209,46 @@ class CoursePress_Admin_Table_Students extends CoursePress_Admin_Table_Instructo
 
 		return $status;
 	}
+
+	/**
+	 * Show courses list.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $user_id Current row user ID.
+	 * @return string List of courses or information about nothing.
+	 */
+	public function column_courses_list( $user_id ) {
+		$courses_ids = CoursePress_Data_Student::get_enrolled_courses_ids( $user_id );
+		if ( empty( $courses_ids ) ) {
+			return sprintf(
+				'<span aria-hidden="true">&#8212;</span><span class="screen-reader-text">%s</span>',
+				__( 'Instructor is not assigned to any course.', 'cp' )
+			);
+		}
+		$content = '<ul>';
+		foreach ( $courses_ids as $course_id ) {
+			if ( ! isset( $this->courses[ $course_id ] ) ) {
+				$this->courses[ $course_id ] = array(
+					'title' => get_the_title( $course_id ),
+					'link' => add_query_arg(
+						array(
+							'post_type' => CoursePress_Data_Course::get_post_type_name(),
+							'page' => 'coursepress_students',
+							'course_id' => $course_id,
+						),
+						admin_url( 'edit.php' )
+					),
+				);
+			}
+			$content .= sprintf(
+				'<li><a href="%s">%s</a></li>',
+				esc_url( $this->courses[ $course_id ]['link'] ),
+				$this->courses[ $course_id ]['title']
+			);
+		}
+		$content .= '</ul>';
+		return $content;
+	}
+
 }

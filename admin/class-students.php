@@ -16,6 +16,7 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Controller_Menu {
 	public function __construct() {
 		/** Send certificate manually **/
 		add_action( 'wp_ajax_certificate_send', array( __CLASS__, 'certificate_send' ) );
+		add_filter( 'default_hidden_columns', array( __CLASS__, 'hidden_columns' ) );
 
 		parent::__construct();
 	}
@@ -28,6 +29,65 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Controller_Menu {
 	}
 
 	public function process_form() {
+		/**
+		 * Check actions
+		 */
+		$action = '';
+		if ( isset( $_REQUEST['action'] ) ) {
+			$action = $_REQUEST['action'];
+		} elseif ( isset( $_REQUEST['action2'] ) ) {
+			$action = $_REQUEST['action2'];
+		}
+		if ( isset( $_REQUEST['_wpnonce'] ) ) {
+			$user_id = get_current_user_id();
+			switch ( $action ) {
+				/**
+				 * Remove single student
+				 */
+			case 'remove_student':
+				if ( ! isset( $_REQUEST['student_id'] ) ) {
+					break;
+				}
+				$nonce_action = CoursePress_Data_Student::get_nonce_action( $action, $_REQUEST['student_id'] );
+				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], $nonce_action ) ) {
+					break;
+				}
+				//					CoursePress_Data_student::remove_from_all_courses( $_REQUEST['student_id'] );
+				break;
+				/**
+				 * Bulk action - remove students
+				 */
+			case 'withdraw':
+				if ( ! isset( $_REQUEST['users'] ) ) {
+					break;
+				}
+				if ( empty( $_REQUEST['users'] ) ) {
+					break;
+				}
+				if ( ! is_array( $_REQUEST['users'] ) ) {
+					break;
+				}
+				$nonce_action = 'bulk-users';
+				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], $nonce_action ) ) {
+					break;
+				}
+				$course_id = intval( isset( $_REQUEST['course_id'] )? $_REQUEST['course_id'] : 'all' );
+				foreach ( $_REQUEST['users'] as $student_id ) {
+					if ( 0 === $course_id ) {
+						//							CoursePress_Data_student::remove_from_all_courses( $student_id );
+					} else {
+						//							CoursePress_Data_student::removed_from_course( $student_id, $course_id );
+					}
+				}
+				break;
+            }
+//            l($_REQUEST);
+			if ( isset( $_REQUEST['student_id'] ) ) {
+				$return_url = remove_query_arg( array( 'action', 'action2', '_wpnonce', 'student_id' ) );
+				wp_safe_redirect( $return_url ); exit;
+			}
+		}
+
 		$this->switch_to_selected_course();
 
 		if ( empty( $_REQUEST['view'] ) ) {
@@ -35,7 +95,7 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Controller_Menu {
 			$this->students_list = new CoursePress_Admin_Table_Students;
 			$this->students_list->prepare_items();
 
-			add_screen_option( 'per_page', array( 'default' => 20 ) );
+			add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_students_per_page', 'label' => __( 'Number of students per page:', 'cp' ) ) );
 		} else {
 			$view = $_REQUEST['view'];
 			$this->slug = 'student-' . $view;
@@ -265,4 +325,23 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Controller_Menu {
 		echo json_encode( $results );
 		die;
 	}
+
+	/**
+	 * Hide "courses_list" column by default
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $columns List of hidden columns.
+	 * @return array List of hidden columns.
+	 */
+	public static function hidden_columns( $columns ) {
+		$screen = get_current_screen();
+		if ( 'course_page_coursepress_students' != $screen->id ) {
+			return $columns;
+		}
+		array_push( $columns, 'user_id' );
+		array_push( $columns, 'courses_list' );
+		return $columns;
+	}
+
 }

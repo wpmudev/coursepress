@@ -25,15 +25,8 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 		}
 	}
 
-	public function prepare_items() {
+	protected function get_per_page() {
 		$screen = get_current_screen();
-		/**
-		 * Search
-		 */
-		$usersearch = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : '';
-		/**
-		 * Per Page
-		 */
 		$option = $screen->get_option( 'per_page', 'option' );
 		$per_page = (int) get_user_option( $option );
 		if ( empty( $per_page ) || $per_page < 1 ) {
@@ -42,6 +35,17 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 				$per_page = 20;
 			}
 		}
+	}
+
+	public function prepare_items() {
+		/**
+		 * Search
+		 */
+		$usersearch = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : '';
+		/**
+		 * Per Page
+		 */
+		$per_page = $this->get_per_page();
 		$per_page = $this->get_items_per_page( 'coursepress_instructors_per_page', $per_page );
 		/**
 		 * pagination

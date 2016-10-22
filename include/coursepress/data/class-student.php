@@ -1778,4 +1778,18 @@ class CoursePress_Data_Student {
 			wp_safe_redirect( $return_url ); exit;
 		}
 	}
+
+	/**
+	 * Build nonce action string
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $action Nonce action.
+	 * @param integer $student_id student ID - default 0;
+	 * @return string Nonce action.
+	 */
+	public static function get_nonce_action( $action, $student_id = 0 ) {
+		$user_id = get_current_user_id();
+		return sprintf( '%s_%s_%d_%d', __CLASS__, $action, $user_id, $student_id );
+	}
 }
