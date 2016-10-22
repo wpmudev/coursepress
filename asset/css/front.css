@@ -700,7 +700,8 @@ tester {
 .cp .cp-module-content {
   position: relative;
   display: block;
-  margin: 15px 0 25px 0;
+  margin: 15px auto 25px auto;
+  max-width: 1024px;
   clear: both;
   border: 1px solid transparent;
   font-size: 110%;

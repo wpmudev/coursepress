@@ -130,8 +130,11 @@
 						if ( data.data.html ) {
 							focus_box.html( data.data.html );
 						}
-						error_box = $( '.cp-form' );
-						CoursePress.showError( data.data.error_message, error_box );
+						new CoursePress.Alert({
+							message: data.data.error_message
+						});
+						//error_box = $( '.cp-form' );
+						//CoursePress.showError( data.data.error_message, error_box );
 					}
 				}
 			}, 100 );
@@ -170,8 +173,10 @@
 		}
 
 		comment_parent.val( com_id );
-		comment_div.append( form );
+		form.hide();
+		comment_div.append( form.slideDown() );
 
+		cancel_link.off( 'click' );
 		cancel_link.show().on( 'click', function() {
 			form.insertBefore( tempDiv );
 			cancel_link.hide();
@@ -182,6 +187,8 @@
 
 		// Focus to the form
 		CoursePress.Focus( form );
+		// Focus to textarea
+		form.find( 'textarea[name="comment"]' ).focus();
 
 		return false;
 	};
@@ -212,7 +219,9 @@
 
 		if ( '' === comment.val() ) {
 			// Alert the user
-			CoursePress.showError( _coursepress.comments.require_valid_comment, form );
+			new CoursePress.Alert({
+				message: _coursepress.comments.require_valid_comment
+			});
 
 			// Prevent the form from submitting
 			ev.stopImmediatePropagation();
