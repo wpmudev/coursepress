@@ -4,6 +4,17 @@ tester {
   position: absolute !important;
 }
 
+.cp-alert-container {
+  background-color: #FFF;
+  display: block;
+  width: 400px;
+  margin: 155px auto 0 auto;
+  border: 5px solid #f4f4f4;
+  padding: 15px;
+  text-align: center;
+  max-width: 90%;
+}
+
 .cp .hide {
   display: none;
 }

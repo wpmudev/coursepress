@@ -53,12 +53,42 @@
 			error_box = form.find( '.cp-error-box' ),
 			focus_box = form.parents( '.coursepress-focus-view, .cp.unit-wrapper' ),
 			iframe = false,
-			timer = false
+			timer = false,
+			module_elements = $( '.module-elements[data-required="1"]', form ),
+			error = 0, mask
 		;
 
 		if ( 0 < error_box.length ) {
 			error_box.remove();
 		}
+
+		// Validate required submission
+		module_elements.each( function() {
+			var module = $(this),
+				module_type = module.data( 'type' ),
+				input;
+
+			if ( _.contains( ['input-checkbox', 'input-radio'], module_type ) ) {
+				input = $( ':checked', module );
+
+				if ( 0 == input.length ) {
+					error += 1;
+				}
+			}
+		} );
+
+		if ( error > 0 ) {
+			// Don't submit if an error is found!
+			new CoursePress.Alert({
+				message: _coursepress.module_error.required
+			});
+			//CoursePress.showError( _coursepress.module_error.required, $( 'body' ) );
+
+			return false;
+		}
+
+		// Mask the page
+		mask = CoursePress.Mask();
 
 		// Insert ajax marker
 		form.append( '<input type="hidden" name="is_cp_ajax" value="1" />' );
@@ -79,6 +109,8 @@
 				if ( '' != html ) {
 					// Kill timer
 					clearInterval( timer );
+					// Remove the mask
+					mask.done();
 
 					var data = window.JSON.parse( html );
 
