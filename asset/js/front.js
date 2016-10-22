@@ -497,7 +497,8 @@ $(document)
 				module_type = module.data( 'type' ),
 				input;
 
-			if ( _.contains( ['input-checkbox', 'input-radio'], module_type ) ) {
+			// Validate radio and checkbox
+			if ( _.contains( ['input-checkbox', 'input-radio', 'input-quiz'], module_type ) ) {
 				input = $( ':checked', module );
 
 				if ( 0 == input.length ) {
