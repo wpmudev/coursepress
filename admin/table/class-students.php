@@ -57,6 +57,9 @@ class CoursePress_Admin_Table_Students extends CoursePress_Admin_Table_Instructo
 			// Show only students of current course
 			$this->course_id = (int) $_GET['course_id'];
 			$student_ids = CoursePress_Data_Course::get_student_ids( $this->course_id );
+			if ( empty( $student_ids ) ) {
+				return;
+			}
 			$args['include'] = $student_ids;
 		}
 
@@ -69,8 +72,11 @@ class CoursePress_Admin_Table_Students extends CoursePress_Admin_Table_Instructo
 		// Query the user IDs for this page
 		$wp_user_search = new WP_User_Query( $args );
 
-		$this->items = $wp_user_search->get_results();
-
+		$students = $wp_user_search->get_results();
+		foreach( $students as $user_id => $student ) {
+			$student->count_enrolled_courses = CoursePress_Data_Student::count_enrolled_courses_ids( $user_id, true );
+			$this->items[$user_id] = $student;
+		}
 		$this->set_pagination_args( array(
 			'total_items' => $wp_user_search->get_total(),
 			'per_page' => $per_page,
@@ -120,12 +126,10 @@ class CoursePress_Admin_Table_Students extends CoursePress_Admin_Table_Instructo
 	}
 
 	public function column_courses( $user_id ) {
-		$courses = CoursePress_Data_Student::count_enrolled_courses_ids( $user_id, true );
 		$profile_link = add_query_arg(
 			array( 'view' => 'profile', 'student_id' => $user_id )
 		);
-
-		return sprintf( '<a href="%s">%s</a>', $profile_link, $courses );
+		return sprintf( '<a href="%s">%s</a>', $profile_link, $this->items[ $user_id ]->count_enrolled_courses );
 	}
 
 	public function column_student_name( $user_id ) {
@@ -152,28 +156,29 @@ class CoursePress_Admin_Table_Students extends CoursePress_Admin_Table_Instructo
 		);
 		$actions['courses'] = sprintf( '<a href="%s">%s</a>', esc_url( $courses_url ), __( 'View Profile', 'cp' ) );
 
-		// @todo: Add sanity check/validation
-		$action = 'remove_student';
-		$nonce_action = CoursePress_Data_Student::get_nonce_action( $action, $user_id );
-		$delete_url = add_query_arg(
-			array(
-				'_wpnonce' => wp_create_nonce( $nonce_action ),
-				'student_id' => $user_id,
-				'action' => $action,
-				'course_id' => 'all',
-			)
-		);
-		$withdraw_title = __( 'Withdraw to all courses', 'cp' );
-
-        if ( ! empty( $this->course_id ) ) {
-            $withdraw_title = __( 'Withdraw', 'cp' );
-            $delete_url = add_query_arg(
-                array(
-                    'course_id' => $this->course_id,
-                )
+        /**
+         * Withdraw
+         */
+        if ( 0 !== $this->items[ $user_id ]->count_enrolled_courses ) {
+            $action = 'remove_student';
+            $nonce_action = CoursePress_Data_Student::get_nonce_action( $action, $user_id );
+            $args = array(
+                '_wpnonce' => wp_create_nonce( $nonce_action ),
+                'student_id' => $user_id,
+                'action' => $action,
+                'course_id' => 'all',
             );
+            $withdraw_title = __( 'Withdraw to all courses', 'cp' );
+            /**
+             * Add course data if list if filtered by Course.
+             */
+            if ( ! empty( $this->course_id ) ) {
+                $withdraw_title = __( 'Withdraw', 'cp' );
+                $args['course_id'] = $this->course_id;
+            }
+            $delete_url = add_query_arg( $args );
+            $actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $delete_url ), $withdraw_title );
         }
-		$actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $delete_url ), $withdraw_title );
 
 		return $avatar . $name . $this->row_actions( $actions );
 	}
@@ -223,7 +228,7 @@ class CoursePress_Admin_Table_Students extends CoursePress_Admin_Table_Instructo
 		if ( empty( $courses_ids ) ) {
 			return sprintf(
 				'<span aria-hidden="true">&#8212;</span><span class="screen-reader-text">%s</span>',
-				__( 'Instructor is not assigned to any course.', 'cp' )
+				__( 'Student is not enrolled to any course.', 'cp' )
 			);
 		}
 		$content = '<ul>';

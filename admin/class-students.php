@@ -17,7 +17,6 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Controller_Menu {
 		/** Send certificate manually **/
 		add_action( 'wp_ajax_certificate_send', array( __CLASS__, 'certificate_send' ) );
 		add_filter( 'default_hidden_columns', array( __CLASS__, 'hidden_columns' ) );
-
 		parent::__construct();
 	}
 
@@ -45,14 +44,30 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Controller_Menu {
 				 * Remove single student
 				 */
 			case 'remove_student':
+				/**
+				 * Is student_id available?
+				 */
 				if ( ! isset( $_REQUEST['student_id'] ) ) {
 					break;
 				}
+				/**
+				 * Check nonce.
+				 */
 				$nonce_action = CoursePress_Data_Student::get_nonce_action( $action, $_REQUEST['student_id'] );
 				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], $nonce_action ) ) {
 					break;
 				}
-				//					CoursePress_Data_student::remove_from_all_courses( $_REQUEST['student_id'] );
+				/**
+				 * Is course_id available?
+				 */
+				if ( !isset( $_REQUEST['course_id'] ) ) {
+					break;
+				}
+				if ( 'all' == $_REQUEST['course_id'] ) {
+					CoursePress_Data_Student::remove_from_all_courses( $_REQUEST['student_id'] );
+				} else {
+					CoursePress_Data_Course::withdraw_student( $_REQUEST['student_id'], $_REQUEST['course_id'] );
+				}
 				break;
 				/**
 				 * Bulk action - remove students
@@ -74,14 +89,13 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Controller_Menu {
 				$course_id = intval( isset( $_REQUEST['course_id'] )? $_REQUEST['course_id'] : 'all' );
 				foreach ( $_REQUEST['users'] as $student_id ) {
 					if ( 0 === $course_id ) {
-						//							CoursePress_Data_student::remove_from_all_courses( $student_id );
+						CoursePress_Data_Student::remove_from_all_courses( $student_id );
 					} else {
-						//							CoursePress_Data_student::removed_from_course( $student_id, $course_id );
+						CoursePress_Data_Course::withdraw_student( $student_id, $course_id );
 					}
 				}
 				break;
-            }
-//            l($_REQUEST);
+			}
 			if ( isset( $_REQUEST['student_id'] ) ) {
 				$return_url = remove_query_arg( array( 'action', 'action2', '_wpnonce', 'student_id' ) );
 				wp_safe_redirect( $return_url ); exit;
