@@ -131,7 +131,7 @@ class CoursePress_Admin_Table_Students extends CoursePress_Admin_Table_Instructo
 	public function column_student_name( $user_id ) {
 		$actions = array();
 		$user = get_userdata( $user_id );
-		$actions['user_id'] = sprintf( __( 'Student ID: %d', 'cp' ), $user_id );
+		$actions['user_id'] = sprintf( __( 'User ID: %d', 'cp' ), $user_id );
 		// User avatar
 		$avatar = get_avatar( $user->user_email, 32 );
 		$name = CoursePress_Helper_Utility::get_user_name( $user_id, true );

@@ -102,6 +102,7 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
+			'user_id' => __( 'ID', 'cp' ),
 			'instructor_name' => __( 'Name', 'cp' ),
 			'registered' => __( 'Registered', 'cp' ),
 			'courses' => __( 'Number Courses', 'cp' ),
@@ -168,13 +169,14 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 
 	public function column_instructor_name( $user_id ) {
 		$user = get_userdata( $user_id );
+		$actions = array();
+		$actions['user_id'] = sprintf( __( 'User ID: %d', 'cp' ), $user_id );
 
 		// User avatar
 		$avatar = get_avatar( $user->user_email, 32 );
 		$name = CoursePress_Helper_Utility::get_user_name( $user_id, true );
 
 		// Generate row actions
-		$actions = array();
 		$url = remove_query_arg(
 			array(
 				'view',
@@ -266,4 +268,9 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 		$content .= '</ul>';
 		return $content;
 	}
+
+	public function column_user_id( $user_id ) {
+		return $user_id;
+	}
+
 }
