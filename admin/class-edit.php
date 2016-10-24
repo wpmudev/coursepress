@@ -209,7 +209,7 @@ class CoursePress_Admin_Edit {
 		$ui['class'] = 'course-' . $course_id;
 		$publish_toggle = '';
 
-		if ( 'edit' == self::$action && CoursePress_Data_Capabilities::can_change_course_status( $course_id ) ) {
+		if ( 'edit' == self::$action && CoursePress_Data_Capabilities::can_change_course_status( $course_id ) && $status !== 'auto-draft' ) {
 			$publish_toggle = ! empty( $course_id ) ? CoursePress_Helper_UI::toggle_switch( 'publish-course-toggle', 'publish-course-toggle', $ui ) : '';
 		}
 		echo CoursePress_Helper_Tabs::render_tabs( $tabs, $content, $hidden_args, self::$slug, $tab, false, 'horizontal', $publish_toggle );

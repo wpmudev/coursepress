@@ -52,11 +52,13 @@ class CoursePress_Module {
 		$mandatory = ! empty( $attributes['mandatory'] );
 		$is_assessable = ! empty( $attributes['assessable'] );
 		$has_error = false;
+		$course_mode = get_post_meta( $course_id, 'cp_course_view', true );
+		$is_focus = 'focus' == $course_mode;
 
 		if ( true === $mandatory ) {
 			if ( '' == $response ) {
 				$has_error = true;
-				self::$error_message = __( 'You need to complete the required module!', 'cp' );
+				self::$error_message = $is_focus ? __( 'You need to complete this module!', 'cp' ) : __( 'You need to complete the required modules!', 'cp' );
 			} else {
 				// Attempt to record the submission
 				CoursePress_Data_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $response );

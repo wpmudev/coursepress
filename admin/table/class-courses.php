@@ -33,14 +33,22 @@ class CoursePress_Admin_Table_Courses extends WP_Posts_List_Table {
 		$per_page = get_post( 'per_page' );
 		$student_courses = CoursePress_Data_Student::get_enrolled_courses_ids( $this->student_id );
 
+		/**
+		 * Do not continue if user is not enrolled.
+		 * WP_Query with empty 'post__in' should return all published posts.
+		 */
+		if ( empty( $student_courses ) ) {
+			return;
+		}
+
 		$args = array(
 			'post_type' => CoursePress_Data_Course::get_post_type_name(),
 			'post_status' => $post_status,
 			'post__in' => $student_courses,
+			'ignore_sticky_posts' => true,
 		);
 
 		$wp_query = new WP_Query( $args );
-
 		$total_items = $wp_query->found_posts;
 		$this->items = $wp_query->posts;
 
@@ -61,7 +69,6 @@ class CoursePress_Admin_Table_Courses extends WP_Posts_List_Table {
 
 	public function get_columns() {
 		$columns = array(
-			'cb' => '<input type="checkbox" />',
 			'title' => __( 'Title', 'cp' ),
 		);
 

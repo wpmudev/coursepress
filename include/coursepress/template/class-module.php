@@ -210,6 +210,14 @@ class CoursePress_Template_Module {
 		$student_id = get_current_user_id();
 		$content = '';
 
+		/**
+		 * Fire before the module template is printed
+		 *
+		 * @since 2.0
+		 *
+		 * @param (int) $module_id			The WP_Post object ID.
+		 * @param (int) $student_id			Current user ID.
+		 **/
 		do_action( 'coursepress_module_view', $module_id, $student_id );
 
 		if ( $is_focus ) {
@@ -325,8 +333,8 @@ class CoursePress_Template_Module {
 		$attributes = false === $attributes ? self::attributes( $module->ID ) : $attributes;
 		$content = '';
 
-		$show_title = isset( $attributes['show_title'] ) ? $attributes['show_title'] : false;
-		$mandatory = isset( $attributes['mandatory'] ) ? $attributes['mandatory'] : false;
+		$show_title = ! empty( $attributes['show_title'] );
+		$mandatory = ! empty( $attributes['mandatory'] );
 
 		if ( $show_title ) {
 			$content .= sprintf( '<h4 class="module-title">%s</h4>', $module->post_title );
@@ -551,6 +559,11 @@ class CoursePress_Template_Module {
 				esc_html( $link_text )
 			);
 			$content .= $after_content;
+		} elseif( empty( $attributes['primary_file'] ) ) {
+			$content .= sprintf(
+				'<div class="zip_holder error">%s</div>',
+				__( 'Primary File not set, please come back later.', 'cp' )
+			);
 		}
 
 		return $content;
@@ -584,14 +597,8 @@ class CoursePress_Template_Module {
 		$comment_form = ob_get_clean();
 
 		$comment_form = str_replace(
-			array(
-				'<form',
-				'</form>'
-			),
-			array(
-				'<div',
-				'</div>'
-			),
+			array( '<form', '</form>' ),
+			array( '<div', '</div>' ),
 			$comment_form
 		);
 
@@ -642,7 +649,7 @@ class CoursePress_Template_Module {
 		$discussion_link = add_query_arg( 'replytocom', $comment->comment_ID, $discussion_link );
 		$discussion_link .= '#respond';
 		$link = preg_replace( '%href=([\'"])(.*?)([\'"])%', 'href=$1' . $discussion_link . '$3', $link );
-		$link = sprintf( '<span data-comid="%s" data-parentid="%s">%s</span>', $comment->comment_ID, $post->ID, $link );
+		$link = sprintf( '<div data-comid="%s" data-parentid="%s">%s</div>', $comment->comment_ID, $post->ID, $link );
 
 		return $link;
 	}
