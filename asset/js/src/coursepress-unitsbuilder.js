@@ -426,17 +426,6 @@ var CoursePress = CoursePress || {};
 
 		CoursePress.Helpers.Module.form.bind_buttons();		
 
-		// Show title
-		$( '.module-title input.show-title' ).on( 'change', function() {
-			var input = $( this );
-			target = $( input.data( 'target' ), input.closest( '.module-title' ) );
-			if ( input.is( ':checked' ) ) {
-				target.removeClass( 'hidden' );
-			} else {
-				target.addClass( 'hidden' );
-			}
-		});
-
 		// Enable/disable duration or minimum grade
 		$( '.module-use-timer input, .module-assessable input' ).on( 'change', function() {
 			var input = $( this ),
@@ -1118,11 +1107,7 @@ var CoursePress = CoursePress || {};
 				'<input type="checkbox" class="show-title" name="meta_show_title[' + module.cid + ']" value="1" ' + CoursePress.utility.checked( data[ 'show_title' ], 1 ) + ' data-target=".module-title-text"/>' +
 				labels[ 'module_show_title_desc' ] + '</label>' +
 
-				'<input class="module-title-text';
-			if ( false === data['show_title'] ) {
-				content += ' hidden';
-			}
-			content +='" type="text" name="post_title" value="' + data[ 'title' ] + '" /></div>';
+				'<input class="module-title-text" type="text" name="post_title" value="' + data[ 'title' ] + '" /></div>';
 
 			content += '<input type="hidden" name="meta_module_type" value="' + data[ 'type' ] + '" />';
 
