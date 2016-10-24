@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * Course Calendar Widget
+ *
+ * @package WordPress
+ * @subpackage CoursePress
+ **/
 class CoursePress_Widget_Calendar extends WP_Widget {
 
 	public static function init() {
@@ -117,8 +122,8 @@ class CoursePress_Widget_Calendar extends WP_Widget {
 
 		$course_id = $instance['course'];
 
-		if ( ( $post && ( 'course' == $post->post_type || 'unit' == $post->post_type ) && ! is_post_type_archive( 'course' ) ) || 'false' != $instance['course'] ) {
-
+		//if ( ( $post && ( 'course' == $post->post_type || 'unit' == $post->post_type ) && ! is_post_type_archive( 'course' ) ) || 'false' != $instance['course'] ) {
+		if ( ! empty( $course_id ) ) {
 			echo $before_widget;
 
 			$title = empty( $instance['title'] ) ? ' ' : apply_filters( 'widget_title', $instance['title'] );

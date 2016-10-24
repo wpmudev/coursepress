@@ -1349,24 +1349,5 @@ var CoursePress = CoursePress || {};
 			.on( 'change', '.capability-list .coursepress_notifications_cap input', on_notification_click )
 			.on( 'change', '.capability-list .coursepress_discussions_cap input', on_discussion_click );
 	})();
-	
-	/*
-	***** Admin Page - CoursePress Instructors *****
-	*/
-	$(document).on('click', '.coursepress-instructors a.remove_instructor_action', function(e){
-		var course_id = $('select#course_id').val(),
-			course_label = $('select#course_id option[value="'+ course_id +'"]').text(),
-			message = ( course_id === 'all' ) 
-				? _coursepress.messages.instructors.instructor_delete_all_confirm 
-				: _coursepress.messages.instructors.instructor_delete_confirm.replace('%s', course_label),
-			$anchor = $(e.currentTarget)
-		;
-		if ( window.confirm( message ) ) {
-			window.location = $anchor.attr('href');
-		}
-		e.preventDefault();
-		e.stopImmediatePropagation();
-		return false;
-	});
 
 })( jQuery );
