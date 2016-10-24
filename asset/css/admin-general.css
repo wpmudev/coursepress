@@ -1293,6 +1293,9 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 .tab-content .unit-builder-content .unit-builder-header .notice {
   color: #444;
 }
+.tab-content .unit-builder-content .unit-loading-mask {
+	text-align: center;
+}
 .tab-content .unit-builder-content .unit-builder-pager {
   background: #F1F1F1;
   padding: 3px 20px 8px 20px;

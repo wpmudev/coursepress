@@ -142,7 +142,12 @@ class CoursePress_Data_Student {
 				update_user_meta( $student_id, 'cp_course_count', $count );
 			}
 		}
-
+		/**
+		 * Sanitize
+		 */
+		if ( empty( $count ) ) {
+			$count = 0;
+		}
 		return $count;
 	}
 
@@ -1760,6 +1765,21 @@ class CoursePress_Data_Student {
 		return $return;
 	}
 
+	/**
+	 * Remove student fron all courses.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $student_id $tudent ID.
+	 */
+	public static function remove_from_all_courses( $student_id ) {
+		$course_ids = self::get_course_enrollment_meta( $student_id );
+		foreach( $course_ids as $course_id ) {
+			CoursePress_Data_Course::withdraw_student( $student_id, $course_id );
+		}
+		delete_user_option( $student_id, 'cp_course_count' );
+	}
+
 	public static function withdraw_from_course() {
 		if ( ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_student_withdraw' ) ) {
 			$course_id = (int) $_REQUEST['course_id'];
@@ -1777,5 +1797,19 @@ class CoursePress_Data_Student {
 
 			wp_safe_redirect( $return_url ); exit;
 		}
+	}
+
+	/**
+	 * Build nonce action string
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $action Nonce action.
+	 * @param integer $student_id student ID - default 0;
+	 * @return string Nonce action.
+	 */
+	public static function get_nonce_action( $action, $student_id = 0 ) {
+		$user_id = get_current_user_id();
+		return sprintf( '%s_%s_%d_%d', __CLASS__, $action, $user_id, $student_id );
 	}
 }

@@ -53,12 +53,12 @@ $base_location = remove_query_arg( array( 'unit', 'type', 'paged' ) );
 					</select>
 				</div>
 				<div class="cp-box">
-					<div class="cp-right assessment-search-student-box">
+					<form method="get" class="cp-right assessment-search-student-box">
 						<p class="description"><?php esc_html_e( 'Search students by name, username, or email.', 'cp' ); ?></p>
 						<input type="text" id="search_student_box" placeholder="<?php esc_attr_e( 'Enter here...', 'cp' ); ?>" />
-						<input type="button" id="search_student_submit" class="button-primary" value="<?php esc_attr_e( 'Search', 'cp' ); ?>" />
+						<input type="submit" id="search_student_submit" class="button-primary" value="<?php esc_attr_e( 'Search', 'cp' ); ?>" />
 						<input type="button" id="search_reset" class="button disabled" value="<?php esc_attr_e( 'Reset' ); ?>" />
-					</div>
+					</form>
 				</div>
 			</div>
 			<div id="assessment-table-container"></div>

@@ -250,6 +250,10 @@ class CoursePress_Admin_Controller_Menu {
 								'empty_content' => __( 'No content!', 'cp' ),
 								'empty_title' => __( 'No title!', 'cp' ),
 							),
+							'instructors' => array(
+								'instructor_delete_confirm' => __( 'Please confirm that you want to remove the instructor from this course (%s).', 'cp' ),
+								'instructor_delete_all_confirm' => __( 'Please confirm that you want to remove the instructor from ALL the associated courses.', 'cp' ),
+							),
 						),
 					),
 					$this->localize_array

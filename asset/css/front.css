@@ -4,6 +4,17 @@ tester {
   position: absolute !important;
 }
 
+.cp-alert-container {
+  background-color: #FFF;
+  display: block;
+  width: 400px;
+  margin: 155px auto 0 auto;
+  border: 5px solid #f4f4f4;
+  padding: 15px;
+  text-align: center;
+  max-width: 90%;
+}
+
 .cp .hide {
   display: none;
 }
@@ -689,7 +700,8 @@ tester {
 .cp .cp-module-content {
   position: relative;
   display: block;
-  margin: 15px 0 25px 0;
+  margin: 15px auto 25px auto;
+  max-width: 1024px;
   clear: both;
   border: 1px solid transparent;
   font-size: 110%;
@@ -700,6 +712,9 @@ tester {
 }
 .cp .cp-module-content * {
   box-sizing: border-box;
+}
+.cp .cp-module-content .zip_holder.error {
+	color: rgba(255, 0, 0, 0.5);
 }
 .cp .cp-module-content .comment-reply-title {
   margin-bottom: 0;

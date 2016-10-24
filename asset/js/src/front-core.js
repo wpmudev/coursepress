@@ -72,6 +72,29 @@ CoursePress.showError = function( error_message, container ) {
 	CoursePress.Focus( '.cp-error-box' );
 };
 
+CoursePress.WindowAlert = Backbone.View.extend({
+	className: 'cp-mask cp-window-alert',
+	message: '',
+	callback: false,
+	type: 'alert',
+	html: '<div class="cp-alert-container"><p><button type="button" class="button">OK</button></p></div>',
+	events: {
+		'click .button': 'remove'
+	},
+	initialize: function( options ) {
+		_.extend( this, options );
+		Backbone.View.prototype.initialize.apply( this, arguments );
+		this.render();
+	},
+	render: function() {
+		this.$el.append( this.html );
+		this.container = this.$el.find( '.cp-alert-container' );
+		this.container.addClass( 'cp-' + this.type );
+		this.container.prepend( '<p class="msg">' + this.message + '</p>' );
+		this.$el.appendTo( 'body' );
+	}
+});
+
 /** Loader Mask **/
 CoursePress.Mask = function( selector ) {
 	selector = ! selector ? 'body' : selector;
