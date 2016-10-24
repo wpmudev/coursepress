@@ -73,47 +73,43 @@ CoursePress.showError = function( error_message, container ) {
 	CoursePress.Focus( '.cp-error-box' );
 };
 
-_.extend( CoursePress, {
-	/** Custom Alert **/
-	Alert: Backbone.View.extend({
-		className: 'cp-mask cp-window-alert',
-		message: '',
-		callback: false,
-		type: 'alert',
-		html: '<div class="cp-alert-container"><p><button type="button" class="button">OK</button></p></div>',
-		events: {
-			'click .button': 'remove'
-		},
-		initialize: function( options ) {
-			_.extend( this, options );
-			Backbone.View.prototype.initialize.apply( this, arguments );
-			this.render();
-		},
-		render: function() {
-			this.$el.append( this.html );
-			this.container = this.$el.find( '.cp-alert-container' );
-			this.container.addClass( 'cp-' + this.type );
-			this.container.prepend( '<p class="msg">' + this.message + '</p>' );
-			this.$el.appendTo( 'body' );
-		}
-	}),
-
-	/** Loader Mask **/
-	Mask: function( selector ) {
-		selector = ! selector ? 'body' : selector;
-
-		var mask = $( '<div class="cp-mask mask"></div>' );
-		mask.appendTo( selector );
-	
-		return {
-			mask: mask,
-			done: function() {
-				mask.remove();
-			}
-		};
+CoursePress.WindowAlert = Backbone.View.extend({
+	className: 'cp-mask cp-window-alert',
+	message: '',
+	callback: false,
+	type: 'alert',
+	html: '<div class="cp-alert-container"><p><button type="button" class="button">OK</button></p></div>',
+	events: {
+		'click .button': 'remove'
+	},
+	initialize: function( options ) {
+		_.extend( this, options );
+		Backbone.View.prototype.initialize.apply( this, arguments );
+		this.render();
+	},
+	render: function() {
+		this.$el.append( this.html );
+		this.container = this.$el.find( '.cp-alert-container' );
+		this.container.addClass( 'cp-' + this.type );
+		this.container.prepend( '<p class="msg">' + this.message + '</p>' );
+		this.$el.appendTo( 'body' );
 	}
 });
 
+/** Loader Mask **/
+CoursePress.Mask = function( selector ) {
+	selector = ! selector ? 'body' : selector;
+
+	var mask = $( '<div class="cp-mask mask"></div>' );
+	mask.appendTo( selector );
+
+	return {
+		mask: mask,
+		done: function() {
+			mask.remove();
+		}
+	};
+};
 
 /** Unit Progress **/
 CoursePress.UnitProgressIndicator = function() {
@@ -504,15 +500,20 @@ $(document)
 				if ( 0 == input.length ) {
 					error += 1;
 				}
+			// Validate input module
+			} else if ( _.contains( ['input-upload', 'input-text', 'input-textarea', 'input-select'], module_type ) ) {
+				input = $( 'input,textarea,select', module );
+				if ( '' === input.val() ) {
+					error += 1;
+				}
 			}
 		} );
 
 		if ( error > 0 ) {
 			// Don't submit if an error is found!
-			new CoursePress.Alert({
+			new CoursePress.WindowAlert({
 				message: _coursepress.module_error.required
 			});
-			//CoursePress.showError( _coursepress.module_error.required, $( 'body' ) );
 
 			return false;
 		}
@@ -559,7 +560,7 @@ $(document)
 						if ( data.data.html ) {
 							focus_box.html( data.data.html );
 						}
-						new CoursePress.Alert({
+						new CoursePress.WindowAlert({
 							message: data.data.error_message
 						});
 						//error_box = $( '.cp-form' );
@@ -648,7 +649,7 @@ $(document)
 
 		if ( '' === comment.val() ) {
 			// Alert the user
-			new CoursePress.Alert({
+			new CoursePress.WindowAlert({
 				message: _coursepress.comments.require_valid_comment
 			});
 

@@ -75,15 +75,20 @@
 				if ( 0 == input.length ) {
 					error += 1;
 				}
+			// Validate input module
+			} else if ( _.contains( ['input-upload', 'input-text', 'input-textarea', 'input-select'], module_type ) ) {
+				input = $( 'input,textarea,select', module );
+				if ( '' === input.val() ) {
+					error += 1;
+				}
 			}
 		} );
 
 		if ( error > 0 ) {
 			// Don't submit if an error is found!
-			new CoursePress.Alert({
+			new CoursePress.WindowAlert({
 				message: _coursepress.module_error.required
 			});
-			//CoursePress.showError( _coursepress.module_error.required, $( 'body' ) );
 
 			return false;
 		}
@@ -130,7 +135,7 @@
 						if ( data.data.html ) {
 							focus_box.html( data.data.html );
 						}
-						new CoursePress.Alert({
+						new CoursePress.WindowAlert({
 							message: data.data.error_message
 						});
 						//error_box = $( '.cp-form' );
@@ -219,7 +224,7 @@
 
 		if ( '' === comment.val() ) {
 			// Alert the user
-			new CoursePress.Alert({
+			new CoursePress.WindowAlert({
 				message: _coursepress.comments.require_valid_comment
 			});
 
