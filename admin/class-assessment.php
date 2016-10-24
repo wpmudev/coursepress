@@ -1041,12 +1041,14 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 														foreach ( $options as $ai => $answer ) {
 															if ( $student_response == $ai ) {
 																$the_answer = ! empty( $checked[ $ai ] );
+																// if ( $the_answer === $student_response ) {
+																	// $student_answer = '<span class="chosen-answer correct"></span>';
+																// } else {
+																	// $student_answer = '<span class="chosen-answer incorrect"></span>';
+																// }
 																
-																if ( $the_answer === $student_response ) {
-																	$student_answer = '<span class="chosen-answer correct"></span>';
-																} else {
-																	$student_answer = '<span class="chosen-answer incorrect"></span>';
-																}
+																// in form there is no right answer, so there is no correct/incorrect indicator
+																$student_answer = '<span class="chosen-answer"></span>';
 																$page_content .= sprintf( '<li>%s %s</li>', $student_answer, $answer );
 															}
 														}
