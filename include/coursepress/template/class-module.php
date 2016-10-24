@@ -551,6 +551,11 @@ class CoursePress_Template_Module {
 				esc_html( $link_text )
 			);
 			$content .= $after_content;
+		} elseif( empty( $attributes['primary_file'] ) ) {
+			$content .= sprintf(
+				'<div class="zip_holder error">%s</div>',
+				__( 'Primary File not set, please come back later.', 'cp' )
+			);
 		}
 
 		return $content;
