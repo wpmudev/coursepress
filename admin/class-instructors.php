@@ -38,7 +38,7 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Controller_Menu {
 			$this->instructors_list = new CoursePress_Admin_Table_Instructors;
 			$this->instructors_list->prepare_items();
 
-			add_screen_option( 'per_page', array( 'default' => 20 ) );
+			add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_instructors_per_page', 'label' => __( 'Number of instructors per page', 'cp' ) ) );
 			
 		} else {
 			$view = $_REQUEST['view'];

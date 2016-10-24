@@ -38,3 +38,6 @@
   padding: 5px 0;
   display: block;
 }
+.coursepress_wrapper .row-actions .user_id {
+  color: #555;
+}

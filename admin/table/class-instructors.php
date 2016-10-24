@@ -24,12 +24,40 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 		}
 	}
 
-	public function prepare_items() {
-		$usersearch = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : '';
-		$per_page = ( $this->is_site_users ) ? 'site_users_network_per_page' : 'users_per_page';
-		$users_per_page = $this->get_items_per_page( $per_page );
+	protected function get_per_page() {
+		$screen = get_current_screen();
+		$option = $screen->get_option( 'per_page', 'option' );
 
+		$per_page = (int) get_user_option( $option );
+		if ( empty( $per_page ) || $per_page < 1 ) {
+			$per_page = $this->get_option( 'per_page', 'default' );
+			if ( ! $per_page ) {
+				$per_page = 20;
+			}
+		}
+	}
+
+	public function prepare_items() {
 		$paged = $this->get_pagenum();
+		/**
+		 * Search
+		 */
+		$usersearch = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : '';
+		/**
+		 * Per Page
+		 */
+		$per_page = $this->get_per_page();
+		$users_per_page = $per_page = $this->get_items_per_page( 'coursepress_instructors_per_page', $per_page );
+
+		/**
+		 * pagination
+		 */
+		$current_page = $this->get_pagenum();
+		$offset = ( $current_page - 1 ) * $per_page;
+		/**
+		 * Query args
+		 */
+
 		$args = array(
 			'number' => $users_per_page,
 			'offset' => ( $paged-1 ) * $users_per_page,
@@ -75,6 +103,7 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
+			'user_id' => __( 'ID', 'cp' ),
 			'instructor_name' => __( 'Name', 'cp' ),
 			'registered' => __( 'Registered', 'cp' ),
 			'courses' => __( 'Courses', 'cp' ),
@@ -140,13 +169,14 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 
 	public function column_instructor_name( $user_id ) {
 		$user = get_userdata( $user_id );
+		$actions = array();
+		$actions['user_id'] = sprintf( __( 'User ID: %d', 'cp' ), $user_id );
 
 		// User avatar
 		$avatar = get_avatar( $user->user_email, 32 );
 		$name = CoursePress_Helper_Utility::get_user_name( $user_id, true );
 
 		// Generate row actions
-		$actions = array();
 		$url = remove_query_arg(
 			array(
 				'view',
@@ -193,5 +223,50 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 		);
 
 		return $count > 0 ? sprintf( '<a href="%s">%s</a>', $courses_link, $count ) : 0;
+	}
+
+	/**
+	 * Show courses list.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $user_id Current row user ID.
+	 * @return string List of courses or information about nothing.
+	 */
+	public function column_courses_list( $user_id ) {
+		$assigned_courses_ids = CoursePress_Data_Instructor::get_assigned_courses_ids( $user_id );
+		if ( empty( $assigned_courses_ids ) ) {
+			return sprintf(
+				'<span aria-hidden="true">&#8212;</span><span class="screen-reader-text">%s</span>',
+				__( 'Instructor is not assigned to any course.', 'cp' )
+			);
+		}
+		$content = '<ul>';
+		foreach ( $assigned_courses_ids as $course_id ) {
+			if ( ! isset( $this->courses[ $course_id ] ) ) {
+				$this->courses[ $course_id ] = array(
+					'title' => get_the_title( $course_id ),
+					'link' => add_query_arg(
+						array(
+							'post_type' => CoursePress_Data_Course::get_post_type_name(),
+							'page' => 'coursepress_instructors',
+							'course_id' => $course_id,
+						),
+						admin_url( 'edit.php' )
+					),
+				);
+			}
+			$content .= sprintf(
+				'<li><a href="%s">%s</a></li>',
+				esc_url( $this->courses[ $course_id ]['link'] ),
+				$this->courses[ $course_id ]['title']
+			);
+		}
+		$content .= '</ul>';
+		return $content;
+	}
+
+	public function column_user_id( $user_id ) {
+		return $user_id;
 	}
 }

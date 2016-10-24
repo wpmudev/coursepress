@@ -1262,11 +1262,21 @@ class CoursePress_Data_Course {
 		if ( 0 == $enrolled_courses ) {
 			delete_user_option( $student_id, 'role', $global_option );
 		}
+
+		/**
+		 * decrease student counter
+		 */
+		$count = intval( get_user_option( $student_id, 'cp_course_count' ) );
+		$count--;
+		if ( $count < 1 ) {
+			delete_user_option( $student_id, 'cp_course_count' );
+		} else {
+			update_user_meta( $student_id, 'cp_course_count', $count );
+		}
 	}
 
 	public static function withdraw_all_students( $course_id ) {
 		$students = self::get_student_ids( $course_id );
-
 		foreach ( $students as $student ) {
 			self::withdraw_student( $student, $course_id );
 		}
