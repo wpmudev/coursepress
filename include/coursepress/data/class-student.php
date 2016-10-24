@@ -360,11 +360,15 @@ class CoursePress_Data_Student {
 				if ( is_array( $response ) ) {
 					foreach ( $response as $answer ) {
 						if ( in_array( $answer, $attributes['answers_selected'] ) ) {
-							$correct += 1;
+							$correct++;
+						} else {
+							$correct--;
 						}
 					}
 				}
-
+				if ( 0 > $correct ) {
+					$correct = 0;
+				}
 				$grade = (int) ( $correct / $total * 100 );
 				break;
 
@@ -756,7 +760,7 @@ class CoursePress_Data_Student {
 			$unit_progress_counter = 0;
 			$unit_valid_progress = 0;
 
-			if ( false === $is_unit_available ) {
+			if ( false === $is_unit_available && 'closed' != $course_status ) {
 				// Let's not check unavailable unit
 				continue;
 			}
@@ -799,7 +803,7 @@ class CoursePress_Data_Student {
 
 							// Count only modules that are set to be visible to avoid progress rating confusion
 							if ( $is_module_structure_visible ) {
-							//	$total_valid_items += 1;
+								//	$total_valid_items += 1;
 							}
 
 							if ( $is_mandatory ) {
@@ -862,7 +866,7 @@ class CoursePress_Data_Student {
 
 								$previous_module_done = self::is_module_completed( $course_id, $unit_id, $module_id, $student_id );
 
-								if ( false === $is_normal_mode && false === $previous_module_done ) {
+								if ( ( false === $is_normal_mode && false === $previous_module_done ) && 'closed' != $course_status ) {
 									$valid = false;
 								}
 
@@ -1098,13 +1102,13 @@ class CoursePress_Data_Student {
 				$unit_assessable_modules == $unit_completed_assessable_modules
 			);
 
-/*
+			/*
 			// Calculate unit progress
 			$unit_progress = $valid_items * 100;
 			if ( $unit_progress > 0 && $total_valid_items > 0 ) {
 				$unit_progress = ceil( $unit_progress / $total_valid_items );
 			}
-*/
+			*/
 			// Calculate unit progress
 			$unit_progress = $unit_valid_progress * 100;
 			if ( $unit_progress > 0 && $unit_valid_progress > 0 ) {
@@ -1744,7 +1748,6 @@ class CoursePress_Data_Student {
 				} else {
 					$return = __( 'Awaiting Review', 'cp' );
 				}
-
 			} else {
 				if ( 'open' == $course_status ) {
 					$return = __( 'Ongoing', 'cp' );

@@ -185,7 +185,7 @@ class CoursePress_Data_Instructor {
 				$can_update = CoursePress_Data_Capabilities::can_update_course( $post->ID );
 
 				if ( false === $can_update ) {
-					unset( $posts[$index] );
+					unset( $posts[ $index ] );
 				}
 			}
 		}
@@ -343,7 +343,7 @@ class CoursePress_Data_Instructor {
 					array( 'CoursePress_Data_Instructor', 'filter_course_meta_array' ),
 					$meta_keys
 				);
-				$course_ids = array_filter( $course_ids ); 
+				$course_ids = array_filter( $course_ids );
 				$count = count( $course_ids );
 
 				// Save counted courses.
@@ -379,6 +379,24 @@ class CoursePress_Data_Instructor {
 		self::count_courses( $instructor_id, true );
 	}
 
+	/**
+	 * Remove Instructor from all courses
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $instructor_id Instructor ID
+	 */
+	public static function remove_from_all_courses( $instructor_id ) {
+		$assigned_courses_ids = self::get_assigned_courses_ids( $instructor_id );
+		if ( empty( $assigned_courses_ids ) ) {
+			self::remove_instructor_status( $instructor_id );
+			return;
+		}
+		foreach ( $assigned_courses_ids as $course_id ) {
+			self::removed_from_course( $instructor_id, $course_id );
+		}
+	}
+
 	public static function removed_from_course( $instructor_id, $course_id ) {
 
 		$global_option = ! is_multisite();
@@ -387,10 +405,9 @@ class CoursePress_Data_Instructor {
 
 		// Other associated actions
 		// Unroll user from course only if he is not a student
-		if( ! CoursePress_Data_Student::is_enrolled_in_course( $instructor_id, $course_id ) ){
-			self::unassign_from_course( $instructor_id, $course_id );	
+		if ( ! CoursePress_Data_Student::is_enrolled_in_course( $instructor_id, $course_id ) ) {
+			self::unassign_from_course( $instructor_id, $course_id );
 		}
-		
 
 		$instructor = get_userdata( $instructor_id );
 		$assigned_courses_ids = self::get_assigned_courses_ids( $instructor );
@@ -697,5 +714,19 @@ class CoursePress_Data_Instructor {
 				self::get_students_count( $instructor_id, true );
 			}
 		}
+	}
+
+	/**
+	 * Build nonce action string
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $action Nonce action.
+	 * @param integer $instructor_id Instructor ID - default 0;
+	 * @return string Nonce action.
+	 */
+	public static function get_nonce_action( $action, $instructor_id = 0 ) {
+		$user_id = get_current_user_id();
+		return sprintf( '%s_%s_%d_%d', __CLASS__, $action, $user_id, $instructor_id );
 	}
 }

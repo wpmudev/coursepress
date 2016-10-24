@@ -6,6 +6,8 @@ class CoursePress_Admin_Courses {
 	static $certified_students = 0;
 
 	public static function init() {
+		global $pagenow, $typenow;
+
 		self::$post_type = $post_type = CoursePress_Data_Course::get_post_type_name();
 		self::$date_format = get_option( 'date_format' );
 
@@ -14,6 +16,12 @@ class CoursePress_Admin_Courses {
 		// Disable months dropdown
 		add_filter( 'disable_months_dropdown', array( __CLASS__, 'disable_months_dropdown' ), 10, 2 );
 
+		// Don't allow columns to be customized (for now)
+		if ( $typenow == $post_type ) {
+			remove_all_filters( 'manage_posts_columns' );
+		}
+
+		remove_all_filters( 'manage_' . $post_type . '_posts_columns' );
 		add_filter( 'manage_' . $post_type . '_posts_columns', array( __CLASS__, 'header_columns' ) );
 		add_action( 'manage_' . $post_type . '_posts_custom_column', array( __CLASS__, 'courselist_columns' ), 10, 2 );
 

@@ -25,6 +25,7 @@ class CoursePress_Hooks {
 		add_action( 'coursepress_module_view', array( 'CoursePress_Data_Student', 'log_student_activity' ), 10, 2 );
 
 		// Edit Course
+		add_filter( 'post_updated_messages', array( 'CoursePress_Admin_Edit', 'updated_messages' ) );
 		add_action( 'dbx_post_advanced', array( 'CoursePress_Admin_Edit', 'init_hooks' ) );
 		// Per course certificate preview
 		add_action( 'init', array( 'CoursePress_Admin_Edit', 'certificate_preview' ) );
@@ -39,6 +40,9 @@ class CoursePress_Hooks {
 
 		// Course list
 		add_action( 'admin_init', array( 'CoursePress_Admin_Courses', 'init' ) );
+
+		// Course Instructors list
+		add_action( 'admin_init', array( 'CoursePress_Admin_Instructors', 'init' ) );
 
 		// Search user
 		add_action( 'wp_ajax_coursepress_user_search', array( 'CoursePress_Admin_Students', 'search_user' ) );

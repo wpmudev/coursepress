@@ -32,7 +32,7 @@ class CoursePress_Admin_Edit {
 
 		if ( 'setup' == $tab ) {
 			// Remove submitdiv
-			remove_meta_box( 'submitdiv', $post_type, 'side' );
+			//remove_meta_box( 'submitdiv', $post_type, 'side' );
 
 			// Change preview link
 			add_filter( 'preview_post_link', array( __CLASS__, 'preview_post_link' ), 10, 2 );
@@ -109,6 +109,7 @@ class CoursePress_Admin_Edit {
 			'description' => __( 'Edit your course specific settings below.', 'cp' ),
 			'order' => 10,
 			'buttons' => 'none',
+			'is_form' => false,
 		);
 		$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
 
@@ -133,13 +134,14 @@ class CoursePress_Admin_Edit {
 					'description' => __( 'Edit your course specific settings below.', 'cp' ),
 					'order' => 30,
 					'buttons' => 'none',
+					'is_form' => false,
 				);
 			}
 		}
 
 		// Make sure that we have all the fields we need
 		foreach ( self::$tabs as $key => $tab ) {
-			self::$tabs[ $key ]['url'] = add_query_arg( 'tab', $key );
+			self::$tabs[ $key ]['url'] = add_query_arg( 'tab', $key, remove_query_arg( 'message' ) );
 			self::$tabs[ $key ]['buttons'] = isset( $tab['buttons'] ) ? $tab['buttons'] : 'both';
 			self::$tabs[ $key ]['class'] = isset( $tab['class'] ) ? $tab['class'] : '';
 			self::$tabs[ $key ]['is_form'] = isset( $tab['is_form'] ) ? $tab['is_form'] : true;
@@ -150,6 +152,24 @@ class CoursePress_Admin_Edit {
 		self::$tabs = CoursePress_Helper_Utility::sort_on_key( self::$tabs, 'order' );
 
 		return self::$tabs;
+	}
+
+	public static function updated_messages( $messages ) {
+		global $typenow;
+
+		$post_type = CoursePress_Data_Course::get_post_type_name();
+
+		if ( $typenow == $post_type ) {
+			$post_messages = $messages['post'];
+
+			foreach ( $post_messages as $pos => $msg ) {
+				$msg = str_replace( 'Post', ucfirst( $post_type ), $msg );
+				$post_messages[ $pos ] = $msg;
+			}
+			$messages['post'] = $post_messages;
+		}
+
+		return $messages;
 	}
 
 	public static function edit_tabs() {
@@ -188,7 +208,8 @@ class CoursePress_Admin_Edit {
 		);
 		$ui['class'] = 'course-' . $course_id;
 		$publish_toggle = '';
-		if ( CoursePress_Data_Capabilities::can_change_course_status( $course_id ) && $status !== 'auto-draft' ) {
+
+		if ( 'edit' == self::$action && CoursePress_Data_Capabilities::can_change_course_status( $course_id ) && $status !== 'auto-draft' ) {
 			$publish_toggle = ! empty( $course_id ) ? CoursePress_Helper_UI::toggle_switch( 'publish-course-toggle', 'publish-course-toggle', $ui ) : '';
 		}
 		echo CoursePress_Helper_Tabs::render_tabs( $tabs, $content, $hidden_args, self::$slug, $tab, false, 'horizontal', $publish_toggle );
@@ -453,13 +474,18 @@ class CoursePress_Admin_Edit {
 						esc_html__( 'View Mode', 'cp' ) . '
 						</label>
 						<label class="checkbox">
-							<input type="radio" name="meta_course_view" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'course_view', 'normal' ), 'normal' ) . ' value="normal">' . esc_html__( 'Normal: Show full unit pages', 'cp' ) . '<br />
-							<input type="radio" name="meta_course_view" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'course_view', 'focus' ), 'focus' ) . ' value="focus">' . esc_html__( 'Focus: Focus on one item at a time', 'cp' ) . '<br />
-							<input type="checkbox" name="meta_focus_hide_section" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'focus_hide_section', true ) ) . ' value="unit">' . esc_html__( 'Don\'t render section titles in focus mode.', 'cp' ) . '<br />
+							<input type="radio" name="meta_course_view" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'course_view', 'normal' ), 'normal' ) . ' value="normal">' . esc_html__( 'Normal: Show full unit pages', 'cp' ) . '
 							<p class="description">' . esc_html__( 'Choose if your course will show in "normal" mode or step by step "focus" mode.', 'cp' ) . '</p>
 						</label>
 						<label class="checkbox">
+							<input type="radio" name="meta_course_view" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'course_view', 'focus' ), 'focus' ) . ' value="focus">' . esc_html__( 'Focus: Focus on one item at a time', 'cp' ) . '
+						</label>
+						<label class="checkbox">
+							<input type="checkbox" name="meta_focus_hide_section" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'focus_hide_section', true ) ) . ' value="unit">' . esc_html__( 'Don\'t render section titles in focus mode.', 'cp' ) . '
+						</label>
+						<label class="checkbox">
 							<input type="radio" name="meta_structure_level" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'structure_level', 'unit' ), 'unit' ) . ' value="unit">' . esc_html__( 'Unit list only', 'cp' ) . '<br />
+						</label><label class="checkbox">
 							<input type="radio" name="meta_structure_level" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'structure_level', 'section' ), 'section' ) . ' value="section">' . esc_html__( 'Expanded unit list', 'cp' ) . '<br />
 							<p class="description">' . esc_html__( 'Choose if course Unit page shows units only or in expanded view.', 'cp' ) . '</p>
 						</label>
@@ -640,7 +666,7 @@ class CoursePress_Admin_Edit {
 						<p class="description">' . esc_html__( 'Select one or more instructor to facilitate this course', 'cp' ) . '</p>
 						</label>
 						<select id="instructors" style="width:350px;" name="instructors" data-nonce-search="' . $search_nonce . '" class="medium"></select>
-						<input type="button" class="button button-primary instructor-assign" value="' . esc_attr__( 'Assign', 'cp' ) . '" />
+						<input type="button" class="button button-primary instructor-assign disabled" value="' . esc_attr__( 'Assign', 'cp' ) . '" />
 				</div>';
 		}
 
@@ -686,7 +712,7 @@ class CoursePress_Admin_Edit {
 						<p class="description">' . esc_html__( 'Select one or more facilitator to facilitate this course', 'cp' ) . '</p>
 						</label>
 			<select data-nonce-search="'. $search_nonce . '" name="facilitators" style="width:350px;" id="facilitators" class="user-dropdown medium"></select>
-			<input type="button" class="button button-primary facilitator-assign" value="' . esc_attr__( 'Assign', 'cp' ) . '" />
+			<input type="button" class="button button-primary facilitator-assign disabled" value="' . esc_attr__( 'Assign', 'cp' ) . '" />
 				</div>';
 		} else {
 
@@ -904,7 +930,7 @@ class CoursePress_Admin_Edit {
 					esc_html__( 'Course Discussion', 'cp' ) . '
 					</label>
 					<p class="description">' . esc_html__( 'If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'cp' ) . '</p>
-					<label class="checkbox narrow">
+					<label class="checkbox">
 						<input type="checkbox" name="meta_allow_discussion" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'allow_discussion', false ) ) . ' />
 						<span>' . esc_html__( 'Allow course discussion', 'cp' ) . '</span>
 					</label>
@@ -916,7 +942,7 @@ class CoursePress_Admin_Edit {
 					esc_html__( 'Student Workbook', 'cp' ) . '
 					</label>
 					<p class="description">' . esc_html__( 'If checked, students can see their progress and grades.', 'cp' ) . '</p>
-					<label class="checkbox narrow">
+					<label class="checkbox">
 						<input type="checkbox" name="meta_allow_workbook" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'allow_workbook', false ) ) . ' />
 						<span>' . esc_html__( 'Show student workbook', 'cp' ) . '</span>
 					</label>
@@ -1195,11 +1221,8 @@ class CoursePress_Admin_Edit {
 
 		// Fail info
 		$failed_title = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_title', __( 'Sorry, you did not pass this course!', 'cp' ) );
-		$failed_content = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_content', '' );
-//=======
-//		$failed_content = __( 'I\'m sorry to say you didn\'t pass JavaScript for COURSE_NAME. Better luck next time!', 'cp' );
-//		$failed_content = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_content', $failed_content );
-//>>>>>>> coursepress/2.0-dev
+		$failed_content = __( 'I\'m sorry to say you didn\'t pass COURSE_NAME. Better luck next time!', 'cp' );
+		$failed_content = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_content', $failed_content );
 		$failed_content = htmlspecialchars_decode( $failed_content );
 
 		$content .= '<div class="wide page-failed">

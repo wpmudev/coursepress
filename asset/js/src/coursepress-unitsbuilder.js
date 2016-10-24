@@ -339,9 +339,8 @@ var CoursePress = CoursePress || {};
 			$(container).append( content );
 			CoursePress.Helpers.Module.quiz.update_meta( mod_el );
 			CoursePress.Helpers.Module.quiz.bind_buttons();
-
 		} );
-
+		CoursePress.Helpers.Module.quiz.bind_add_item();
 		CoursePress.Helpers.Module.form.bind_buttons();
 
 		// ===== FORM BUTTONS =====
@@ -932,6 +931,30 @@ var CoursePress = CoursePress || {};
 		$( '.unit-buttons .unit-save-button' ).prepend( '<i class="fa fa-spinner fa-spin save-progress"></i> ' );
 
 		var nonce = $( '#unit-builder' ).attr( 'data-nonce' );
+		var form = $( "#unit-builder" ).closest( "form" );
+		var requireds = $( ".component-checkbox-answer, .component-radio-answer, .component-select-answer", form );
+		/**
+		 * Check option labels
+		 */
+		if ( 0 < requireds.length ) {
+			var errors = [];
+			var title = '';
+			$.each( requireds, function( index, element ) {
+				e = $(element);
+				if ( "" === e.val() ) {
+					module_title = $(".module-title .module-title-text", e.closest( '.module-holder' ) ).val();
+					if ( title !== module_title ) {
+						errors.push( "- " + module_title );
+						title = module_title;
+					}
+				}
+			});
+			if ( 0 < errors.length ) {
+				$( '.save-progress' ).detach();
+				alert( _coursepress.unit_builder_form.messages.required_fields + "\n" + errors.join( "\n" ) );
+				return false;
+			}
+		}
 
 		// Save modules first... just in case the unit is deleted to avoid orphans
 		CoursePress.UnitBuilder.module_collection.url = _coursepress._ajax_url + '?action=unit_builder&task=modules_update&course_id=' + _coursepress.course_id + '&unit_id=' + CoursePress.UnitBuilder.activeUnitID + '&page=' + CoursePress.UnitBuilder.activePage + '&wp_nonce=' + nonce + '&x=1';
@@ -952,16 +975,31 @@ var CoursePress = CoursePress || {};
 				nonce = response[ 'nonce' ];
 				$( '#unit-builder' ).attr( 'data-nonce', nonce );
 				CoursePress.UnitBuilder.unit_collection.trigger( custom_event, CoursePress.UnitBuilder.unit_collection );
+				CoursePress.Helpers.Module.unit_show_message( _coursepress.unit_builder_form.messages.successfully_saved, 'success' );
 			},
 			error: function() {
 				$( '.save-progress' ).detach();
 				$( e.currentTarget ).prepend( '<i class="fa fa-info-circle save-progress"></i> ' );
+				CoursePress.Helpers.Module.unit_show_message( _coursepress.unit_builder_form.messages.error_while_saving, 'error' );
 			}
 		} );
 
 		// Reset URL
 		CoursePress.UnitBuilder.unit_collection.url = _coursepress._ajax_url + '?action=unit_builder&task=units&course_id=' + _coursepress.course_id;
+
+		/**
+		 * Add message
+		 */
+		CoursePress.Helpers.Module.unit_show_message( _coursepress.unit_builder_form.messages.saving_unit, 'info' );
 	};
+
+	CoursePress.Helpers.Module.unit_show_message = function( message, notice_class ) {
+		$( ".unit-builder-header .unit-buttons .notice, .unit-builder-footer .unit-buttons .notice" ).detach();
+		$( ".unit-builder-header .unit-buttons, .unit-builder-footer .unit-buttons" ).prepend( '<div class="notice notice-' + notice_class + '"><p>'+message+'</p></div>' );
+		if ( "success" === notice_class ) {
+			setTimeout(function(){ $( ".unit-builder-header .unit-buttons .notice, .unit-builder-footer .unit-buttons .notice" ).fadeOut(); }, 3000);
+		}
+	}
 
 	CoursePress.Helpers.Module.toggle_unit_state = function() {
 		var nonce = $( '#unit-builder' ).attr( 'data-nonce' );
@@ -1071,9 +1109,9 @@ var CoursePress = CoursePress || {};
 			'<span class="description">' + labels[ 'module_show_title_desc' ] + '</span>' +
 			'</label>';
 
-			content += '<label class="module-title"><span class="label">' + labels[ 'module_title' ] + '</span>' +
+			content += '<div class="module module-title"><h4 class="label">' + labels[ 'module_title' ] + '</h4>' +
 			'<span class="description">' + labels[ 'module_title_desc' ] + '</span>' +
-			'<input class="module-title-text" type="text" name="post_title" value="' + data[ 'title' ] + '" /></label>';
+			'<input class="module-title-text" type="text" name="post_title" value="' + data[ 'title' ] + '" /></div>';
 
 			content += '<input type="hidden" name="meta_module_type" value="' + data[ 'type' ] + '" />';
 
@@ -1109,23 +1147,22 @@ var CoursePress = CoursePress || {};
 					content += '<label class="module-allow-retries">' +
 						'<input type="checkbox" name="meta_allow_retries[' + module.cid + ']" value="1" ' + CoursePress.utility.checked(data['allow_retries'], 1) + ' />' +
 						'<span class="label">' + labels['module_allow_retries'] + '</span>' +
-						'<input type="text" name="meta_retry_attempts" value="' + data['retry_attempts'] + '" />' +
+						'<input type="number" name="meta_retry_attempts" value="' + data['retry_attempts'] + '" min="0" class="small-text" />' +
 						'<span class="description">' + labels['module_allow_retries_desc'] + '</span>' +
 						'</label>';
 
 					// Minimum Grade
 					content += '<label class="module-minimum-grade">' +
 						'<span class="label">' + labels['module_minimum_grade'] + '</span>' +
-						'<input type="text" name="meta_minimum_grade" value="' + data['minimum_grade'] + '" />' +
+						'<input type="number" name="meta_minimum_grade" value="' + data['minimum_grade'] + '" min="0" max="100" class="small-text" />' +
 						'<span class="description">' + labels['module_minimum_grade_desc'] + '</span>' +
 						'</label>';
 
 				}
 			}
-
 			content +=
-				'<label class="module-duration"><span class="label">' + labels[ 'module_duration' ] + '</span><br />' +
-				'<input type="text" name="meta_duration" value="' + data[ 'duration' ] + '" /></label>';
+				'<div class="module module-duration"><h4 class="div">' + labels[ 'module_duration' ] + '</h4>' +
+				'<input type="text" name="meta_duration" value="' + data[ 'duration' ] + '" /></div>';
 
 			if ( 'input-upload' === module_type ) {
 
@@ -1153,18 +1190,18 @@ var CoursePress = CoursePress || {};
 				var content_descrtiption = 'input' === data[ 'mode' ] ? labels[ 'module_question_desc' ] : labels[ 'module_content_desc' ];
 				var editor_height = data[ 'editor_height' ] ? 'data-height="' + data[ 'editor_height' ] + '"' : '';
 
-				content += '<label class="module-excerpt">' +
-				'<span class="label">' + content_label + '</span>' +
+				content += '<div class="module module-excerpt">' +
+				'<h4 class="label">' + content_label + '</h4>' +
 				'<span class="description">' + content_descrtiption + '</span>' +
 				'<textarea class="editor" name="' + textarea_name + '" id="' + textareaID + '" ' + editor_height + '>' + data[ 'content' ] + '</textarea>' +
-				'</label>';
+				'</div>';
 			}
 
 			// Now it gets tricky...
 			content += '</div>';
 
 			// RENDER COMPONENTS
-			content += '<div class="module-components">' +
+			content += '<div class="module module-components">' +
 			CoursePress.Helpers.Module.render_components( module, data ) +
 			'</div>';
 
@@ -1192,7 +1229,7 @@ var CoursePress = CoursePress || {};
 			var component_key = key;
 			var component_selector = 'module-component-' + component_key;
 
-			content += '<div class="module-component ' + component_selector + '">' +
+			content += '<div class="module module-component ' + component_selector + '">' +
 			'<label data-key="label" ' + label_class + '>' +
 			'<span class="label">' + label + '</span>' +
 			'<span class="description">' + description + '</span></label>';
