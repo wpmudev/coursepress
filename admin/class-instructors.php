@@ -126,6 +126,7 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Controller_Menu {
 		if ( 'course_page_coursepress_instructors' != $screen->id ) {
 			return $columns;
 		}
+		array_push( $columns, 'user_id' );
 		array_push( $columns, 'courses_list' );
 		return $columns;
 	}
