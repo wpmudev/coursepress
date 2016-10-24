@@ -1046,6 +1046,7 @@ var CoursePress = CoursePress || {};
 			success: function( response ) {
 				self.switch( response[ 'post_status' ], unit_id, unit_ref );
 				$( '#unit-builder' ).attr( 'data-nonce', response[ 'nonce' ] );
+				CoursePress.UnitBuilder.activeUnitStatus = response[ 'post_status' ];
 			},
 			error: function( response ) {
 				self.switch( response[ 'post_status' ], unit_id, unit_ref );
