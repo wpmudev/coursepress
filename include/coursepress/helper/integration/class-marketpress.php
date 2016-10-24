@@ -1006,7 +1006,7 @@ class CoursePress_Helper_Integration_MarketPress {
 		 * do not add template for free courses
 		 */
 		if ( ! CoursePress_Data_Course::is_paid_course( $atts['course_id'] ) ) {
-			return $content;
+			return;
 		}
 		?>
 		<script type="text/template" id="modal-view-mp-template" data-type="modal-step" data-modal-action="paid_enrollment">

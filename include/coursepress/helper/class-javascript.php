@@ -147,7 +147,7 @@ class CoursePress_Helper_JavaScript {
 				'jquery'
 			), CoursePress::$version );
 
-			$ui_script = CoursePress::$url . 'asset/js/coursepress-ui.js';
+			$ui_script = CoursePress::$url . 'asset/js/src/coursepress-ui.js';
 			wp_enqueue_script( 'coursepress_ui', $ui_script, array(), CoursePress::$version );
 
 			$localize_array['instructor_role_defined'] = defined( 'COURSEPRESS_INSTRUCTOR_ROLE' );
