@@ -12,6 +12,9 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Controller_Menu {
 	protected $cap = 'coursepress_settings_cap';
 	var $instructors_list;
 	
+	public static function init() {
+		
+	}
 	
 	public function get_labels() {
 		
