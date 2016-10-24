@@ -1001,8 +1001,15 @@ var CoursePress = CoursePress || {};
 		}
 	}
 
-	CoursePress.Helpers.Module.toggle_unit_state = function() {
-		var nonce = $( '#unit-builder' ).attr( 'data-nonce' );
+	CoursePress.Helpers.Module.toggle_unit_state = function( e ) {
+		var nonce = $( '#unit-builder' ).attr( 'data-nonce' ),
+			parent_container = $(e.currentTarget).closest('.unit-builder-content'),
+			header_buttons = parent_container.find('.unit-builder-header .unit-buttons'),
+			footer_buttons = parent_container.find('.unit-builder-footer .unit-buttons'),
+			loading_mask = '<div class="unit-loading-mask"><i class="fa fa-spinner fa-spin save-progress"></i></div>',
+			unit_modules = parent_container.find('.unit-builder-components')
+			
+		;
 
 		this.switch = function( state, unit_id, unit_ref ) {
 			if ( 'publish' === state ) {
@@ -1040,6 +1047,13 @@ var CoursePress = CoursePress || {};
 		var unit_ref = CoursePress.UnitBuilder.activeUnitRef;
 		var state = CoursePress.UnitBuilder.unit_collection._byId[ unit_ref ].get( 'post_status' );
 		state = 'publish' === state ? 'draft' : 'publish';
+		
+		// Improved Flow: Hide Unit buttons/modules and show Loading instead
+		if ( !header_buttons.prev().hasClass('unit-loading-mask') ) $(loading_mask).insertBefore(header_buttons);
+		header_buttons.hide();
+		if ( !footer_buttons.prev().hasClass('unit-loading-mask') ) $(loading_mask).insertBefore(footer_buttons);
+		footer_buttons.hide();
+		unit_modules.hide();
 
 		CoursePress.UnitBuilder.unit_collection.url = _coursepress._ajax_url + '?action=unit_builder&task=unit_toggle&course_id=' + _coursepress.course_id + '&wp_nonce=' + nonce + '&state=' + state + '&unit_id=' + unit_id;
 		Backbone.sync( 'update', CoursePress.UnitBuilder.unit_collection, {
@@ -1051,7 +1065,16 @@ var CoursePress = CoursePress || {};
 				self.switch( response[ 'post_status' ], unit_id, unit_ref );
 				$( '#unit-builder' ).attr( 'data-nonce', response[ 'nonce' ] );
 			}
-		} );
+		} ).done( function() {
+			var header_prev = header_buttons.prev(),
+				footer_prev = footer_buttons.prev()
+			;
+			if ( header_prev.hasClass('unit-loading-mask') ) header_prev.remove();
+			header_buttons.show();
+			if ( footer_prev.hasClass('unit-loading-mask') ) footer_prev.remove();
+			footer_buttons.show();
+			unit_modules.show();
+		});
 
 		// Reset URL
 		CoursePress.UnitBuilder.unit_collection.url = _coursepress._ajax_url + '?action=unit_builder&task=units&course_id=' + _coursepress.course_id;
