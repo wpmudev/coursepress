@@ -53,12 +53,48 @@
 			error_box = form.find( '.cp-error-box' ),
 			focus_box = form.parents( '.coursepress-focus-view, .cp.unit-wrapper' ),
 			iframe = false,
-			timer = false
+			timer = false,
+			module_elements = $( '.module-elements[data-required="1"]', form ),
+			error = 0, mask
 		;
 
 		if ( 0 < error_box.length ) {
 			error_box.remove();
 		}
+
+		// Validate required submission
+		module_elements.each( function() {
+			var module = $(this),
+				module_type = module.data( 'type' ),
+				input;
+
+			// Validate radio and checkbox
+			if ( _.contains( ['input-checkbox', 'input-radio', 'input-quiz'], module_type ) ) {
+				input = $( ':checked', module );
+
+				if ( 0 == input.length ) {
+					error += 1;
+				}
+			// Validate input module
+			} else if ( _.contains( ['input-upload', 'input-text', 'input-textarea', 'input-select'], module_type ) ) {
+				input = $( 'input,textarea,select', module );
+				if ( '' === input.val() ) {
+					error += 1;
+				}
+			}
+		} );
+
+		if ( error > 0 ) {
+			// Don't submit if an error is found!
+			new CoursePress.WindowAlert({
+				message: _coursepress.module_error.required
+			});
+
+			return false;
+		}
+
+		// Mask the page
+		mask = CoursePress.Mask();
 
 		// Insert ajax marker
 		form.append( '<input type="hidden" name="is_cp_ajax" value="1" />' );
@@ -79,6 +115,8 @@
 				if ( '' != html ) {
 					// Kill timer
 					clearInterval( timer );
+					// Remove the mask
+					mask.done();
 
 					var data = window.JSON.parse( html );
 
@@ -97,8 +135,11 @@
 						if ( data.data.html ) {
 							focus_box.html( data.data.html );
 						}
-						error_box = $( '.cp-form' );
-						CoursePress.showError( data.data.error_message, error_box );
+						new CoursePress.WindowAlert({
+							message: data.data.error_message
+						});
+						//error_box = $( '.cp-form' );
+						//CoursePress.showError( data.data.error_message, error_box );
 					}
 				}
 			}, 100 );
@@ -137,8 +178,10 @@
 		}
 
 		comment_parent.val( com_id );
-		comment_div.append( form );
+		form.hide();
+		comment_div.append( form.slideDown() );
 
+		cancel_link.off( 'click' );
 		cancel_link.show().on( 'click', function() {
 			form.insertBefore( tempDiv );
 			cancel_link.hide();
@@ -149,6 +192,8 @@
 
 		// Focus to the form
 		CoursePress.Focus( form );
+		// Focus to textarea
+		form.find( 'textarea[name="comment"]' ).focus();
 
 		return false;
 	};
@@ -179,7 +224,9 @@
 
 		if ( '' === comment.val() ) {
 			// Alert the user
-			CoursePress.showError( _coursepress.comments.require_valid_comment, form );
+			new CoursePress.WindowAlert({
+				message: _coursepress.comments.require_valid_comment
+			});
 
 			// Prevent the form from submitting
 			ev.stopImmediatePropagation();

@@ -465,9 +465,14 @@ class CoursePress_Helper_JavaScript {
 				'required' => __( 'Your username and/or password is required!', 'cp' ),
 			),
 			'comments' => array(
-				'require_valid_comment' => __( 'Please type a comment.', 'cp' ),
+				'require_valid_comment' => __( 'Ooops! You did not write anything!', 'cp' ),
 			),
-			'server_error' => __( 'An unexpected error occur while processing. Please try again.', 'cp' )
+			'server_error' => __( 'An unexpected error occur while processing. Please try again.', 'cp' ),
+			'module_error' => array(
+				'required' => __( 'You need to complete this module!', 'cp' ),
+				'normal_required' => __( 'You need to complete all required modules!', 'pc' ),
+				'participate' => __( 'Your participation to the discussion is required!', 'cp' ),
+			)
 		);
 
 				/**
