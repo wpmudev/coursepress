@@ -403,6 +403,9 @@ A. Responsive
   display: block;
   padding-bottom: 5px;
 }
+#course-setup-steps .wide.course-step-buttons .notice {
+  margin-bottom: 0;
+}
 
 #student-add {
   min-width: 300px;

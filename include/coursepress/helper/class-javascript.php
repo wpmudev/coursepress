@@ -241,7 +241,16 @@ class CoursePress_Helper_JavaScript {
 				'help_tooltip' => __( 'If the submission of this grade makes a student completes the course, an email with certificate will be automatically sent.', 'cp' ),
 				'minimum_help' => __( 'You may change this minimum grade from course setting.', 'cp' ),
 			);
-		}
+        }
+
+        /**
+         * save unit message.
+         */
+			$localize_array['unit_builder_form']['messages']['setup']['saving'] = __( 'Step is saving now...', 'cp' );
+			$localize_array['unit_builder_form']['messages']['setup']['saved'] = __( 'Step was successfully saved!', 'cp' );
+			$localize_array['unit_builder_form']['messages']['setup']['error'] = __( 'Something went wrong. Step was not saved!', 'cp' );
+
+
 		wp_localize_script( 'coursepress_object', '_coursepress', $localize_array );
 	}
 
