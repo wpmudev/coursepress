@@ -25,3 +25,5 @@ composer.json
 /asset/css/src/.sass-cache
 /asset/css/src/admin/.sass-cache
 /asset/css/src/front/.sass-cache
+/1.x/*
+/2.0/*
