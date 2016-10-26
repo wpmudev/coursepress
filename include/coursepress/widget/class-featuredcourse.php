@@ -4,6 +4,7 @@ class CoursePress_Widget_FeaturedCourse extends WP_Widget {
 
 	public static function init() {
 		add_action( 'widgets_init', array( 'CoursePress_Widget_FeaturedCourse', 'register' ) );
+		add_action( 'wp_footer', array( 'CoursePress_Widget_FeaturedCourse', 'enqueue_featured_script' ) );
 	}
 
 	public static function register() {
@@ -17,6 +18,14 @@ class CoursePress_Widget_FeaturedCourse extends WP_Widget {
 		);
 
 		parent::__construct( 'CP_Featured_Course', __( 'Featured Course', 'cp' ), $widget_ops );
+	}
+	
+	public function enqueue_featured_script() {
+
+		$featured_js = CoursePress::$url . 'asset/js/coursepress-featured.js';
+		wp_enqueue_script( 'coursepress-featured', $featured_js, array(
+			'jquery'
+		), CoursePress::$version );
 	}
 
 	public function form( $instance ) {
