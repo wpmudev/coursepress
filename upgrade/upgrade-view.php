@@ -15,6 +15,7 @@ $course_args = array(
 );
 $courses = get_posts( $course_args );
 $count = count( $courses );
+$settings_done = get_option( 'cp_settings_done', false );
 ?>
 <div class="wrap coursepress-upgrade-view">
 	<h2><?php _e( 'CoursePress 2.0 Upgrade', 'cp' ); ?></h2>
@@ -25,7 +26,7 @@ $count = count( $courses );
 	<div class="coursepress-update-holder">
 		<form method="post" id="coursepress-update-form">
 			<input type="hidden" name="user_id" value="<?php echo get_current_user_id(); ?>" />
-
+			<input type="hidden" name="course" value="settings" data-done="<?php echo $settings_done; ?>" data-name="<?php _e( 'Updating course settings.', 'cp' ); ?>" />
 			<?php
 			foreach ( $courses as $course_id ) :
 				$already_upgraded = get_post_meta( $course_id, '_cp_updated_to_version_2', true );

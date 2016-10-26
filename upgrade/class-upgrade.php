@@ -79,6 +79,7 @@ class CoursePress_Upgrade {
 			'ajax_url' => admin_url( 'admin-ajax.php' ),
 			'_wpnonce' => wp_create_nonce( 'coursepress-upgrade-nonce' ),
 			'flush_nonce' => wp_create_nonce( 'cp2_flushed' ),
+			'settings_nonce' => wp_create_nonce( 'coursepress-settings' ),
 			'server_error' => __( 'An error occur while updating. Please contact your administrator to fix the problem.', 'cp' ),
 			'noloading' => __( 'Please refrain from reloading the page while updating!', 'cp' ),
 			'failed' => __( 'Update unsuccessful. Please try again!', 'cp' ),
@@ -91,8 +92,19 @@ class CoursePress_Upgrade {
 	public static function ajax_courses_upgrade() {
 		$request = json_decode( file_get_contents( 'php://input' ) );
 
-		if ( ! empty( $request->_wpnonce ) ) {
-			if ( wp_verify_nonce( $request->_wpnonce, 'coursepress-upgrade-nonce' ) ) {
+		if ( ! empty( $request->_wpnonce ) && wp_verify_nonce( $request->_wpnonce, 'coursepress-upgrade-nonce' ) ) {
+			$action = $request->action;
+
+			$ok = array( 'm' => true );
+			$not_ok = array( 'm' => false );
+
+			if ( 'settings' == $action ) {
+				if ( true == CoursePress_Helper_Upgrade::update_settings() ) {
+					wp_send_json_success( $ok );
+				} else {
+					wp_send_json_error( $not_ok );
+				}
+			} elseif ( 'course' == $action ) {
 				$update_class = dirname( __FILE__ ) . '/class-helper-upgrade.php';
 
 				require $update_class;
@@ -105,7 +117,7 @@ class CoursePress_Upgrade {
 					wp_send_json_error( array( 'message' => 'no ok' ) );
 				}
 				exit;
-			} else if ( wp_verify_nonce( $request->_wpnonce, 'cp2_flushed' ) ) {
+			} elseif ( 'flush' == $action ) {
 				update_option( 'coursepress_20_upgraded', true );
 				delete_option( 'cp2_flushed' );
 

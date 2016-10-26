@@ -6,11 +6,13 @@ _.extend( _coursepress_upgrade, {
 	totalSend: 0,
 	events: Backbone.Events,
 
-	upgrade: Backbone.Model.extend({
+	_upgrade: Backbone.Model.extend({
 		url: _coursepress_upgrade.ajax_url + '?action=coursepress_upgrade_update',
 		initialize: function( options ) {
 			_.extend( this, options );
 			this.on( 'error', this.server_error, this );
+
+			/*
 
 			var data = {
 				_wpnonce: _coursepress_upgrade._wpnonce,
@@ -22,6 +24,7 @@ _.extend( _coursepress_upgrade, {
 			};
 			this.set( data );
 			this.save();
+			*/
 		},
 		parse: function( response ) {
 			var progress_div;
@@ -45,6 +48,7 @@ _.extend( _coursepress_upgrade, {
 			window.alert( _coursepress_upgrade.server_error );
 		}
 	}),
+	upgrade: new _coursepress_upgrade._upgrade(),
 
 	view: Backbone.View.extend({
 		className: 'coursepress-update-view',
@@ -78,11 +82,21 @@ _.extend( _coursepress_upgrade, {
 					// Trigger the done event
 					_coursepress_upgrade.events.trigger( 'coursepress_update_done', this );
 				} else {
-					this.sync = new _coursepress_upgrade.upgrade({
-						course_id: this.input.val(),
+					var data = {
 						container: this,
-						user_id: this.user_id
-					});
+						action: 'course',
+						_wpnonce: _coursepress_upgrade._wpnonce
+					};
+
+					if ( 'settings' === this.input.val() ) {
+						data.action = 'settings';
+					} else {
+						data.action = 'course';
+						data.course_id = this.course_id;
+					}
+
+					_coursepress_upgrade.upgrade.set( data );
+					_coursepress_upgrade.upgrade.save();
 				}
 			}
 		}
@@ -140,7 +154,7 @@ _.extend( _coursepress_upgrade, {
 
 						if ( 0 === time ) {
 							clearInterval(timer);
-							window.location = _coursepress_upgrade.cp2_url;
+							//window.location = _coursepress_upgrade.cp2_url;
 						}
 					}, 1000 );
 				} else {

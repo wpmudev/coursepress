@@ -2,6 +2,70 @@
 class CoursePress_Helper_Upgrade {
 	private static $settings = array();
 
+	public static function update_settings() {
+		$settings = array(
+			'slugs' => array(
+				'course' => get_option( 'coursepress_course_slug', 'courses' ),
+				'category' => get_option( 'coursepress_course_category_slug', 'course_category' ),
+				'units' => get_option( 'coursepress_units_slug', 'units' ),
+				'notifications' => get_option( 'coursepress_notifications_slug', 'notifications' ),
+				'discussions' => get_option( 'coursepress_discussion_slug', 'discussions' ),
+				'discussions_new' => get_option( 'coursepress_discussion_slug_new', 'add_new_discussion' ),
+				'grades' => get_option( 'coursepress_grades_slug', 'grades' ),
+				'workbook'=> get_option( 'coursepress_workbook_slug', 'workbook' ),
+				'enrollment' => get_option( 'enrollment_process_slug', 'enrollment_process' ),
+				'login' => get_option( 'login_slug', 'student-login' ),
+				'signup' => get_option( 'signup_slug', 'courses-signup' ),
+				'student_dashboard' => get_option( 'student_dashboard_slug', 'courses-dashboard' ),
+				'student_settings' => get_option( 'student_settings_slug', 'student-settings' ),
+				'instructor_profile' => get_option( 'instructor_profile_slug', 'instructor' ),
+			),
+			'pages' => array(
+				'enrollment' => get_option( 'coursepress_enrollment_process_page', 0 ),
+				'login' => get_option( 'coursepress_login_page', 0 ),
+				'signup' => get_option( 'coursepress_signup_page', 0 ),
+				'student_settings' => get_option( 'coursepress_student_settings_page', 0 ),
+				'student_dashboard' => get_option( 'coursepress_student_dashboard_page', 0 ),
+			),
+			'general' => array(
+				'show_coursepress_menu' => get_option( 'display_menu_items', 1 ),
+				'use_custom_login' => get_option( 'use_custom_login_form', 1 ),
+				'redirect_after_login' => get_option( 'redirect_students_to_dashboard', 1 ),
+				'add_structure_data' => 1, // Not available in 1.x
+			),
+			'instructor' => array(
+				'use_username' => get_option( 'show_instructor_username', 1 ),
+			),
+			'course' => array(
+				'details_media_type' => get_option( 'details_media_type', 'default' ),
+				'details_media_priority' => get_option( 'details_media_priority', 'video' ),
+				'listing_media_type' => get_option( 'listings_media_type', 'default' ),
+				'listing_media_priority' => get_option( 'listings_media_priority', 'image' ),
+				'image_width' => get_option( 'course_image_width', 235 ),
+				'image_height' => get_option( 'course_image_height',225 ),
+				'order_by' => get_option( 'course_order_by', 'post_date' ),
+				'order_by_direction' => get_option( 'course_order_by_type', 'DESC' ),
+				'enrollment_type_default' => 'anyone',
+			),
+			'reports' => array(
+				'font' => get_option( 'reports_font', 'helvetica' ),
+			)
+		);
+
+		// Update CP2 settings
+		$network = is_multisite();
+		if ( $network ) {
+			update_site_option( 'coursepress_settings', $settings );
+		} else {
+			update_option( 'coursepress_settings', $settings );
+		}
+
+		// Marked settings as updated
+		update_option( 'cp_settings_done', true );
+
+		return true;
+	}
+
 	public static function update_course( $course_id ) {
 		$course = get_post( $course_id );
 		$found_error = 0;
