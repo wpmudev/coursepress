@@ -134,7 +134,7 @@ class CoursePress_Widget_FeaturedCourse extends WP_Widget {
 		}
 		?>
 		<div class="fcp_featured_widget cp_featured_widget-course-<?php echo $course_id; ?>">
-			<h3 class="cp_featured_widget_title"><?php echo do_shortcode( '[course_title course_id="'. $course_id . '"]' ); ?></h3>
+			<?php echo do_shortcode( '[course_title course_id="'. $course_id . '"]' ); ?>
 			<?php
 			echo do_shortcode( '[course_media type="' . $selected_type . '" priority="' . $selected_priority . '" course_id="' . $course_id . '"]' );
 			?>
