@@ -147,6 +147,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 			10, 2
 		);
 
+		add_action( 'woocommerce_before_main_content', array( __CLASS__, 'woocommerce_before_main_content' ) );
 	}
 
 	public static function change_order_status( $order_id, $old_status, $new_status ) {
@@ -513,7 +514,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 		}
 	}
 
-	function change_cp_item_name( $title, $cart_item, $cart_item_key ) {
+	public static function change_cp_item_name( $title, $cart_item, $cart_item_key ) {
 		$course_id = wp_get_post_parent_id( $cart_item['product_id'] );
 		if ( $course_id && get_post_type( $course_id ) == 'course' ) {
 			return get_the_title( $course_id );
@@ -844,5 +845,32 @@ class CoursePress_Helper_Integration_WooCommerce {
 			return 0;
 		}
 		return intval( get_post_meta( $product_id, 'cp_course_id', true ) );
+	}
+
+	/**
+	 * Change product status to "outofstock" if the course is not
+	 * available.
+	 *
+	 * @since 2.0.0
+	 */
+	public static function woocommerce_before_main_content() {
+		while ( have_posts() ) {
+			the_post();
+			$product_id = get_the_ID();
+			$product_status = get_post_meta( $product_id, '_stock_status', true );
+			if ( 'instock' != $product_status ) {
+				continue;
+			}
+			$course_id = get_post_meta( $product_id, 'cp_course_id', true );
+			if ( empty( $course_id ) ) {
+				continue;
+			}
+			$course_status = CoursePress_Data_Course::is_course_available( $course_id );
+			if ( $course_status ) {
+				continue;
+			}
+			update_post_meta( get_the_ID(), '_stock_status', 'outofstock' );
+		}
+		wp_reset_query();
 	}
 }
