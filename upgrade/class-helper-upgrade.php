@@ -52,6 +52,15 @@ class CoursePress_Helper_Upgrade {
 			)
 		);
 
+		// Email settings
+		$settings['email'] = array(
+			'registration' => array(
+				'from' => get_option( 'registration_from_name', get_option( 'blogname' ) ),
+				'email' => get_option( 'registration_from_email', get_option( 'admin_email' ) ),
+				'subject' => get_option( 'registration_email_subject', __( 'Registration Status', 'cp' ) )
+			)
+		);
+
 		// Update CP2 settings
 		$network = is_multisite();
 		if ( $network ) {
