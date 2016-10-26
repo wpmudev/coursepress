@@ -143,11 +143,15 @@ class CoursePress_Helper_Integration_WooCommerce {
 		/* This filter is documented in WordPress file: /wp-includes/link-template.php */
 		add_filter(
 			'post_type_link',
-			array( __CLASS__, 'change_product_linkt_to_course_link' ),
+			array( __CLASS__, 'change_product_link_to_course_link' ),
 			10, 2
 		);
 
+		/**
+		 * Change product status if course is not available.
+		 */
 		add_action( 'woocommerce_before_main_content', array( __CLASS__, 'woocommerce_before_main_content' ) );
+
 	}
 
 	public static function change_order_status( $order_id, $old_status, $new_status ) {
@@ -157,6 +161,14 @@ class CoursePress_Helper_Integration_WooCommerce {
 		if ( ! self::$is_active ) {
 			return;
 		}
+		/**
+		 * remove filter to allow enroll
+		 */
+		remove_filter(
+			'coursepress_enroll_student',
+			array( __CLASS__, 'allow_student_to_enroll' ),
+			10, 3
+		);
 		$order = new WC_order( $order_id );
 		$items = $order->get_items();
 		$user_id = get_post_meta( $order_id, '_customer_user', true );
@@ -167,6 +179,12 @@ class CoursePress_Helper_Integration_WooCommerce {
 			}
 			$key = sprintf( 'course_%d_woo_payment_status', $course_id );
 			update_user_meta( $user_id, $key, $new_status );
+			/**
+			 * Enroll student to course.
+			 */
+			if ( 'completed' === $new_status ) {
+				CoursePress_Data_Course::enroll_student( $user_id, $course_id );
+			}
 		}
 	}
 
@@ -522,7 +540,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 		return $title;
 	}
 
-	function change_cp_order_item_name( $name, $item ) {
+	public static function change_cp_order_item_name( $name, $item ) {
 		$product_id = isset( $item['item_meta']['_product_id'] ) ? $item['item_meta']['_product_id'] : '';
 		$product_id = $product_id[0];
 		if ( is_numeric( $product_id ) ) {
@@ -806,7 +824,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 	 * @param WP_Post $post Curent post object.
 	 *
 	 */
-	public static function change_product_linkt_to_course_link( $url, $post ) {
+	public static function change_product_link_to_course_link( $url, $post ) {
 		if ( ! self::$is_active ) {
 			return $url;
 		}
