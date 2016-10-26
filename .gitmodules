@@ -9,10 +9,10 @@
 
 [submodule "1.0"]
 	path = 1.0
-	url = git@bitbucket.org:incsub/coursepress.git
+	url = ./
 	branch = coursepress/base
 
 [submodule "2.0"]
 	path = 2.0
-	url = git@bitbucket.org:incsub/coursepress.git
+	url = ./
 	branch = coursepress/2.0-dev
