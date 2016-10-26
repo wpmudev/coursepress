@@ -3496,6 +3496,9 @@ if ( ! class_exists( 'CoursePress' ) ) {
 
 			$this->screen_base      = str_replace( ' ', '-', strtolower( $this->name ) );
 			$GLOBALS['screen_base'] = $this->screen_base;
+
+			/** Enable filter **/
+			do_action( 'coursepress_init_vars', $this );
 		}
 
 		//Load unit elements / modules / building blocks and other add-ons and plugins
