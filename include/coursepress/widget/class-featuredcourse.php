@@ -20,7 +20,7 @@ class CoursePress_Widget_FeaturedCourse extends WP_Widget {
 		parent::__construct( 'CP_Featured_Course', __( 'Featured Course', 'cp' ), $widget_ops );
 	}
 	
-	public function enqueue_featured_script() {
+	public static function enqueue_featured_script() {
 
 		$featured_js = CoursePress::$url . 'asset/js/coursepress-featured.js';
 		wp_enqueue_script( 'coursepress-featured', $featured_js, array(
