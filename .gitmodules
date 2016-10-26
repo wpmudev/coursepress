@@ -7,8 +7,8 @@
 	url = git@bitbucket.org:incsub/coursepress-theme.git
 	branch = coursepress/2.0-dev
 
-[submodule "1.0"]
-	path = 1.0
+[submodule "1.x"]
+	path = 1.x
 	url = ./
 	branch = coursepress/base
 
