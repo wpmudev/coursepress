@@ -23,51 +23,24 @@ module.exports = function(grunt) {
 	// Configuration.
 	var conf = {
 		// Folder that contains the CSS files.
-		js_folder: '2.0/asset/js/',
+		js_folder: 'upgrade/js/',
 
 		// Folder that contains the CSS files.
-		css_folder: '2.0/asset/css/',
+		css_folder: 'upgrade/css/',
 
-		// Concatenate those JS files into a single file (target: [source, source, ...]).
 		js_files_concat: {
-			'{js}admin-general.js':            ['{js}src/admin-general.js'],
-			'{js}coursepress.js':              ['{js}src/coursepress.js'],
-			'{js}coursepress-course.js':       ['{js}src/coursepress-course.js'],
-			'{js}coursepress-courselist.js':   ['{js}src/coursepress-courselist.js'],
-			'{js}coursepress-front.js':        ['{js}src/coursepress-front.js'],
-			'{js}coursepress-unitsbuilder.js': ['{js}src/coursepress-unitsBuilder.js'],
-			'{js}coursepress-calendar.js':     ['{js}src/coursepress-calendar.js'],
-			'{js}coursepress-assessment.js':   ['{js}src/coursepress-assessment.js'],
-			'{js}admin-ui.js':                 ['{js}src/admin-ui.js'],
-			'{js}front.js':						[
-				'{js}src/front-core.js',
-				'{js}src/front-modules.js',
-				'{js}src/front-enrollment.js'
-			],
 			'upgrade/js/admin-upgrade.js':            ['upgrade/js/src/admin-upgrade.js'],
 		},
 
 		// SASS files to process. Resulting CSS files will be minified as well.
 		css_files_compile: {
-			'{css}admin-general.css':     '{css}src/admin/admin-general.scss',
-			'{css}admin-global.css':      '{css}src/admin/admin-global.scss',
-			'{css}coursepress_front.css': '{css}src/coursepress_front.scss',
-			'{css}bbm.modal.css':         '{css}src/bbm.modal.scss',
-			'{css}editor.css':            '{css}src/editor.scss',
-			'{css}admin-ui.css':          '{css}src/admin/admin-ui.scss',
-			'{css}front.css':             '{css}src/front.scss',
 			'upgrade/css/upgrade.css':    'upgrade/css/src/upgrade.scss'
 		},
 
 		// PHP files to validate.
 		php_files: [
 			'coursepress.php',
-			'premium/**/*.php',
-			'campus/*.php',
-			'include/coursepress/**/*.php',
-			'!**/helper/utility.php',  // TODO: Too complex. Manually fix this file first!
-			'!**/model/shortcode.php', // TODO: Too complex. Manually fix this file first!
-			'!**/external/**/*.php'
+			'upgrade/*.php'
 		],
 
 		// Regex patterns to exclude from transation.
@@ -199,23 +172,6 @@ module.exports = function(grunt) {
 		plugin_file: 'coursepress.php',
 		plugin_dir: 'coursepress'
 	};
-	// -------------------------------------------------------------------------
-	var key, ind, newkey, newval;
-	for ( key in conf.js_files_concat ) {
-		newkey = key.replace( '{js}', conf.js_folder );
-		newval = conf.js_files_concat[key];
-		delete conf.js_files_concat[key];
-		for ( ind in newval ) { newval[ind] = newval[ind].replace( '{js}', conf.js_folder ); }
-		conf.js_files_concat[newkey] = newval;
-	}
-	for ( key in conf.css_files_compile ) {
-		newkey = key.replace( '{css}', conf.css_folder );
-		newval = conf.css_files_compile[key].replace( '{css}', conf.css_folder );
-		delete conf.css_files_compile[key];
-		conf.css_files_compile[newkey] = newval;
-	}
-	// -------------------------------------------------------------------------
-
 
 	// Define grunt tasks.
 	grunt.initConfig({
@@ -473,7 +429,7 @@ module.exports = function(grunt) {
 			sniff: {
 				src: conf.php_files,
 				options: {
-					bin: 'vendor/bin/phpcs',
+					bin: '^/srv/www/phpcs',
 					standard: 'WordPress-Core'
 				}
 			}
@@ -738,8 +694,7 @@ module.exports = function(grunt) {
 	grunt.task.run( 'clear' );
 
 	// Define default tasks.
-	//grunt.registerTask( 'js', ['jsvalidate', 'jshint', 'concat', 'uglify'] );
-	grunt.registerTask( 'js', ['concat', 'uglify'] );
+	grunt.registerTask( 'js', ['jsvalidate', 'jshint', 'concat', 'uglify'] );
 	grunt.registerTask( 'css', ['sass', 'autoprefixer', 'cssmin'] );
 
 	grunt.registerTask( 'test', ['phpunit'] );
