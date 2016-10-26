@@ -1,4 +1,0 @@
-Todo: 
-
-1. Convert deprecated/widgets/* files.
-2. Then delete this file.
