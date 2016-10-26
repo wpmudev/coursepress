@@ -23,15 +23,14 @@ module.exports = function(grunt) {
 	// Configuration.
 	var conf = {
 		// Folder that contains the CSS files.
-		js_folder: 'asset/js/',
+		js_folder: '2.0/asset/js/',
 
 		// Folder that contains the CSS files.
-		css_folder: 'asset/css/',
+		css_folder: '2.0/asset/css/',
 
 		// Concatenate those JS files into a single file (target: [source, source, ...]).
 		js_files_concat: {
 			'{js}admin-general.js':            ['{js}src/admin-general.js'],
-			'{js}admin-upgrade.js':            ['{js}src/admin-upgrade.js'],
 			'{js}coursepress.js':              ['{js}src/coursepress.js'],
 			'{js}coursepress-course.js':       ['{js}src/coursepress-course.js'],
 			'{js}coursepress-courselist.js':   ['{js}src/coursepress-courselist.js'],
@@ -44,7 +43,8 @@ module.exports = function(grunt) {
 				'{js}src/front-core.js',
 				'{js}src/front-modules.js',
 				'{js}src/front-enrollment.js'
-			]
+			],
+			'upgrade/js/admin-upgrade.js':            ['upgrade/js/src/admin-upgrade.js'],
 		},
 
 		// SASS files to process. Resulting CSS files will be minified as well.
@@ -55,7 +55,8 @@ module.exports = function(grunt) {
 			'{css}bbm.modal.css':         '{css}src/bbm.modal.scss',
 			'{css}editor.css':            '{css}src/editor.scss',
 			'{css}admin-ui.css':          '{css}src/admin/admin-ui.scss',
-			'{css}front.css':             '{css}src/front.scss'
+			'{css}front.css':             '{css}src/front.scss',
+			'upgrade/css/upgrade.css':    'upgrade/css/src/upgrade.scss'
 		},
 
 		// PHP files to validate.

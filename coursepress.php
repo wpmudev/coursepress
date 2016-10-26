@@ -43,226 +43,102 @@
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-// Launch CoursePress.
-CoursePress::init();
+class CoursePressUpgrade {
+	/** @var (boolean) Whether all courses are upgraded to the new version. **/
+	private static $coursepress_is_upgraded = false;
 
-/**
- * Main plugin class. Main purpose is to load all required files.
- */
-class CoursePress {
-
-	/**
-	 * Current plugin version, must match the version in the header comment.
-	 *
-	 * @var string
-	 */
-	public static $version = '2.0.0-BETA3.1.1472556111';
-
-	/**
-	 * Plugin name, this reflects the Pro/Standard version.
-	 *
-	 * @var string
-	 */
-	public static $name = 'CoursePress Pro'; // Translated by grunt.
-
-	/**
-	 * Absolut path to this file (main plugin file).
-	 *
-	 * @var string
-	 */
-	public static $file = '';
-
-	/**
-	 * Absolut path to the plugin files base-dir.
-	 *
-	 * @var string
-	 */
-	public static $path = '';
-
-	/**
-	 * Dir-name of this plugin (relative to wp-content/plugins).
-	 *
-	 * @var string
-	 */
-	public static $dir = '';
-
-	/**
-	 * Absolute URL to plugin folder.
-	 *
-	 * @var string
-	 */
-	public static $url = '';
-
-	/**
-	 * Initialize the plugin!
-	 *
-	 * @since  2.0.0
-	 */
 	public static function init() {
-		// Initialise the autoloader.
-		spl_autoload_register( array( __CLASS__, 'class_loader' ) );
+		//delete_option( 'coursepress_20_upgraded' );
+		self::$coursepress_is_upgraded = get_option( 'coursepress_20_upgraded', false );
+		$coursepress_version = false === self::$coursepress_is_upgraded ? '1.x' : '2.0';
 
-		// Prepare CoursePress Core parameters.
-		self::$file = __FILE__;
-		self::$path = plugin_dir_path( __FILE__ );
-		self::$dir = dirname( self::$path );
-		self::$url = plugin_dir_url( __FILE__ );
+		if ( '1.x' == $coursepress_version ) {
+			// Check for existing courses, maybe a new install?
+			$is_using_old = self::check_old_courses();
 
-		// Allow WP to load other plugins before we continue!
-		add_action( 'plugins_loaded', array( 'CoursePress_Core', 'init' ), 10 );
+			if ( false == $is_using_old ) {
+				// No need to upgrade, load 2.0
+				$coursepress_version = '2.0';
+			} else {
+				// Include the upgrade class
+				$upgrade_class = dirname( __FILE__ ) . '/upgrade/class-upgrade.php';
 
-		// Load additional features if available.
-		if ( file_exists( self::$path . '/premium/init.php' ) ) {
-			include_once self::$path . '/premium/init.php';
-		}
+				if ( is_readable( $upgrade_class ) ) {
+					require $upgrade_class;
 
-		if ( file_exists( self::$path . '/campus/init.php' ) ) {
-			include_once self::$path . '/campus/init.php';
-		}
-
-		/**
-		register_activation_hook * register_activation_hook
-		 */
-		register_activation_hook( __FILE__, array( __CLASS__, 'register_activation_hook' ) );
-
-		/**
-		 * Clean up when this plugin is deactivated.
-		 **/
-		register_deactivation_hook( __FILE__, array( __CLASS__, 'deactivate_coursepress' ) );
-		
-		// Define custom theme directory for CoursePress theme
-		self::register_cp_theme_directory();
-	}
-
-	/**
-	 * Handler for spl_autoload_register (autoload classes on demand).
-	 *
-	 * Note how the folder structure is build:
-	 *   'core' + namespace + classpath
-	 *   classpath = class name, while each _ is actually a subfolder separator.
-	 *
-	 * @since  2.0.0
-	 * @param  string $class Class name.
-	 * @return bool True if the class-file was found and loaded.
-	 */
-	private static function class_loader( $class ) {
-		$namespaces = array(
-			'CoursePressPro' => array(
-				'namespace_folder' => 'premium/include', // Base folder for classes.
-				'filename_prefix' => 'class-',           // Prefix filenames.
-			),
-			'CoursePressCampus' => array(
-				'namespace_folder' => 'campus/include', // Base folder for classes.
-				'filename_prefix' => 'class-',          // Prefix filenames.
-			),
-			'CoursePress' => array(
-				'namespace_folder' => 'include/coursepress', // Base folder for classes.
-				'filename_prefix' => 'class-',               // Prefix filenames.
-			),
-			'TCPDF' => array(
-				'namespace_folder' => 'include/tcpdf', // Base folder for classes.
-				'filename_prefix' => false,            // No prefix for filenames.
-			),
-		);
-
-		$class = trim( $class );
-
-		foreach ( $namespaces as $namespace => $options ) {
-			// Continue if the class name is prefixed with <namespace>.
-			if ( substr( $class, 0, strlen( $namespace ) ) === $namespace ) {
-
-				if ( empty( $options['namespace_folder'] ) ) {
-					continue;
-				} else {
-					$namespace_folder = $options['namespace_folder'];
+					CoursePress_Upgrade::init();
 				}
-
-				// Get the class-filename.
-				$class_path = explode( '_', $class );
-				$class_file = strtolower( array_pop( $class_path ) ) . '.php';
-
-				if ( ! empty( $options['filename_prefix'] ) ) {
-					$class_file = $options['filename_prefix'] . $class_file;
-				}
-
-				// Build the path to the class file.
-				array_shift( $class_path ); // Remove the first element (namespace-string).
-				array_unshift( $class_path, $namespace_folder );
-				$class_folder = strtolower(
-					self::$path . implode( DIRECTORY_SEPARATOR, $class_path )
-				);
-
-				$filename = $class_folder . DIRECTORY_SEPARATOR . $class_file;
-
-				// Override filename via filter.
-				$filename = apply_filters(
-					'coursepress_class_file_override',
-					$filename,
-					$class_folder,
-					$class_file,
-					$class,
-					$namespace
-				);
-
-				if ( is_readable( $filename ) ) {
-					include_once $filename;
-					return true;
-				}
-			} // End of namespace condition.
-		} // End of foreach loop.
-
-		// Check new location
-		$class_path = explode( '_', strtolower( $class ) );
-		$namespace = array_shift( $class_path );
-
-		if ( 'coursepress' == $namespace ) {
-			$class_filename = array_pop( $class_path );
-			$class_location = implode( DIRECTORY_SEPARATOR, $class_path );
-			$class_filename = self::$path . $class_location . DIRECTORY_SEPARATOR . 'class-' . $class_filename . '.php';
-
-			if ( is_readable( $class_filename ) ) {
-				include_once $class_filename;
-				return true;
 			}
 		}
+
+		/**
+		 * Retrieve the current coursepress version use.
+		 **/
+		self::get_coursepress( $coursepress_version );
 	}
 
-	/**
-	 * Redirect to Guide page semaphore and reset schedule.
-	 *
-	 * @since 2.0.0
-	 */
-	public static function register_activation_hook() {
-		add_option( 'coursepress_activate', true );
-
-		// Reset the schedule during activation.
-		wp_clear_scheduled_hook( 'coursepress_schedule-email_task' );
-	}
-
-	/**
-	 * Clean up.
-	 *
-	 * @since 2.0.0
-	 **/
-	public static function deactivate_coursepress() {
-		delete_option( 'coursepress_activate' );
-
-		// Reset the schedule during deactivation.
-		wp_clear_scheduled_hook( 'coursepress_schedule-email_task' );
-	}
-	
-	/**
-	 * Registering CP Theme 
-	 *
-	 * @since 2.0.0
-	 **/
-	private static function register_cp_theme_directory () {
-		$theme_directories = apply_filters( 'coursepress_theme_directory_array', array(
-				self::$path . 'themes/'
-			) 
+	/** Check if current courses contains un-upgraded to the current version. **/
+	private static function check_old_courses() {
+		$args = array(
+			'post_type' => 'course',
+			'post_status' => 'any',
+			'posts_per_page' => 1,
+			'fields' => 'ids',
+			'meta_key' => '_cp_updated_to_version_2',
+			'meta_compare' => 'NOT EXISTS',
+			'suppress_filters' => true,
 		);
-		foreach( $theme_directories as $theme_directory ) {
-			register_theme_directory($theme_directory);
+		$courses = get_posts( $args );
+
+		return count( $courses ) > 0;
+	}
+
+	private static function get_coursepress( $version ) {
+		$dir = dirname( __FILE__ );
+		$version_file = $dir . '/' . $version . '/coursepress.php';
+
+		if ( '1.x' == $version ) {
+			// Hooked to 1.x
+			add_action( 'coursepress_init_vars', array( __CLASS__, 'init_vars' ) );
+			// Flush the rewrite rules
+			// @note: While development only: must be removed
+			add_action( 'init', array( __CLASS__, 'cp1_flush_rewrite_rules' ) );
+		} else {
+			// Flush rewrite rules
+			//@note: While devevelopment only, must be removed:
+			add_action( 'init', array( __CLASS__, 'cp2_flush_rewrite_rules' ) );
+		}
+
+		if ( is_readable( $version_file ) ) {
+			include $version_file;
+		}
+	}
+
+	public static function init_vars( $instance ) {
+		$instance->location = 'plugins';
+		$instance->plugin_dir = WP_PLUGIN_DIR . '/coursepress/1.x/';
+		$instance->plugin_url = WP_PLUGIN_URL . '/coursepress/1.x/';
+	}
+
+	public static function cp1_flush_rewrite_rules() {
+		$is_flushed = get_option( 'cp1_flushed', false );
+
+		if ( false == $is_flushed ) {
+			delete_option( 'cp2_flushed' );
+			update_option( 'cp1_flushed', true );
+			cp_flush_rewrite_rules();
+		}
+	}
+
+	public static function cp2_flush_rewrite_rules() {
+		$is_flushed = get_option( 'cp2_flushed', false );
+
+		if ( false == $is_flushed ) {
+			delete_option( 'cp1_flushed' );
+			update_option( 'cp2_flushed', true );
+			//@todo: wrap this
+			flush_rewrite_rules();
 		}
 	}
 }
+CoursePressUpgrade::init();
