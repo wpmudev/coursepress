@@ -84,7 +84,6 @@ class CoursePress_Core {
 			//CoursePress_View_Admin_Course_Export::init();
 			CoursePress_Helper_PDF::init();
 
-			new CoursePress_Admin_Upgrade;
 			new CoursePress_Admin_Students;
 			new CoursePress_Admin_Instructors;
 			new CoursePress_Admin_Assessment;
