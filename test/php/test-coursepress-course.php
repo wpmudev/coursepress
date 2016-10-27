@@ -100,7 +100,6 @@ class CoursepressCourseTest extends WP_UnitTestCase {
 		wp_create_user( 'facilitator', 'facilitator', 'facilitator@example.com' );
 		$this->admin = get_user_by( 'login', 'admin' );
 		$this->assertEquals( 'admin', $this->admin->user_login );
-
 	}
 
 	public function test_get_format() {
@@ -122,6 +121,7 @@ class CoursepressCourseTest extends WP_UnitTestCase {
 		$user_id = $this->admin->ID;
 		$course = $this->course();
 		$this->course_id = CoursePress_Data_Course::update( false, $course );
+		$this->assertNotEmpty( $this->course_id );
 		$this->assertTrue( is_numeric( $this->course_id ) );
 		$this->assertTrue( CoursePress_Data_Course::is_course( $this->course_id ) );
 		$post = get_post( $this->course_id );
@@ -133,6 +133,19 @@ class CoursepressCourseTest extends WP_UnitTestCase {
 		$this->assertEquals( $post->post_content, $course->course_description );
 		$this->assertEquals( $post->ping_status, 'closed' );
 		$this->assertEquals( $post->comment_status, 'closed' );
+
+		/**
+		 * Settings
+		 */
+		$stack = CoursePress_Data_Course::update_setting( $this->course_id, 'test_key', 'test_value' );
+		$this->assertTrue( $stack );
+
+		$settings = CoursePress_Data_Course::get_setting( $this->course_id );
+		$this->assertNotEmpty( $settings );
+
+		$settings = CoursePress_Data_Course::get_setting( $this->course_id, 'test_key' );
+		$this->assertEquals( $settings, 'test_value' );
+
 	}
 
 	public function course() {
