@@ -143,11 +143,6 @@ class CoursePress_Core {
 		CoursePress_Widget_FeaturedCourse::init();
 
 		/**
-		 * Check version
-		 */
-		add_action( 'admin_init', array( 'CoursePress_Helper_Upgrade', 'maybe_upgrade' ) );
-
-		/**
 		 * show guide page?
 		 */
 		add_action( 'admin_init', array( __CLASS__, 'redirect_to_guide_page' ) );
