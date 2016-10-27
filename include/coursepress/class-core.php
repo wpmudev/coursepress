@@ -124,9 +124,6 @@ class CoursePress_Core {
 		CoursePress_Data_Unit::init_hooks();
 		CoursePress_Data_Module::module_init_hooks();
 
-		// Upgrade CoursePress if needed.
-		CoursePress_Upgrade::init();
-
 		// Initialize Calendar actions
 		CoursePress_View_Front_Calendar::init();
 
