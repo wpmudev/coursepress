@@ -8,7 +8,7 @@
 /**
  * Test cases for Settings.
  */
-class CoursePress_Settings_Tests extends WP_UnitTestCase {
+class CoursePressSettingsTest extends WP_UnitTestCase {
 
 	/**
 	 * Make sure our Settings Page has all the correct tabs
