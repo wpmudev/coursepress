@@ -81,6 +81,7 @@ _.extend( _coursepress_upgrade, {
 				} else {
 					this.sync = new _coursepress_upgrade.upgrade({
 						course_id: this.input.val(),
+						type: this.input.data('type'),
 						container: this,
 						user_id: this.user_id
 					});
