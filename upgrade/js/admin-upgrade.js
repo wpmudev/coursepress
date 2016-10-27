@@ -25,17 +25,18 @@ _.extend( _coursepress_upgrade, {
 			this.save();
 		},
 		parse: function( response ) {
-			var progress_div;
-
-			progress_div = this.container.$el.find( '.course-progress' );
-
-			if ( response.success ) {
-				progress_div.addClass( 'success' );
-				_coursepress_upgrade.totalSuccess += 1;
-			} else {
-				progress_div.addClass( 'error' );
-				_coursepress_upgrade.totalError += 1;
+			var progress_div = this.container.$el.find( '.course-progress' );
+			
+			if ( response ) {
+				if ( response.success ) {
+					progress_div.addClass( 'success' );
+					_coursepress_upgrade.totalSuccess += 1;
+				} else {
+					progress_div.addClass( 'error' );
+					_coursepress_upgrade.totalError += 1;
+				}
 			}
+			
 
 			_coursepress_upgrade.totalSend += 1;
 
