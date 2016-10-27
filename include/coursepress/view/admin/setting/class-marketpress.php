@@ -131,6 +131,7 @@ class CoursePress_View_Admin_Setting_MarketPress {
 	}
 
 	public static function process_form( $page, $tab ) {
+		
 		if ( ! isset( $_POST['_wpnonce'] ) ) { return; }
 		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'update-coursepress-options' ) ) { return; }
 
@@ -145,8 +146,10 @@ class CoursePress_View_Admin_Setting_MarketPress {
 				'enabled' => false,
 				'redirect' => false,
 				'unpaid' => 'change_status',
-			),
+				'delete' => 'change_status'
+			)
 		);
+		
 		/**
 		 * check data and if exists, then update
 		 */
@@ -168,6 +171,14 @@ class CoursePress_View_Admin_Setting_MarketPress {
 				$post_settings['marketpress']['unpaid'] = 'delete';
 			} else {
 				$post_settings['marketpress']['unpaid'] = 'change_status';
+			}
+			if (
+				isset( $_POST['coursepress_settings']['marketpress']['delete'] )
+				&& 'delete' == $_POST['coursepress_settings']['marketpress']['delete']
+			) {
+				$post_settings['marketpress']['delete'] = 'delete';
+			} else {
+				$post_settings['marketpress']['delete'] = 'change_status';
 			}
 		}
 		$post_settings = CoursePress_Helper_Utility::sanitize_recursive( $post_settings );
