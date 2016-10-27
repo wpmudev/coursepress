@@ -45,5 +45,9 @@
 		"grunt-contrib-sass": "~0.8.1",
 		"grunt-contrib-cssmin": "~0.10.0",
 		"grunt-contrib-watch": "~0.6.1"
+	},
+	"scripts": {
+		"test-php": "phpunit -c test/php/lib/phpunit.xml",
+		"test": "npm run test-php"
 	}
 }
