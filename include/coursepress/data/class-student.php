@@ -181,8 +181,11 @@ class CoursePress_Data_Student {
 		$global_option = ! is_multisite();
 		$key = 'enrolled_course_date_' . $course_id;
 		$enrolled = get_user_option( $key, $student_id );
-
-		return ! empty( $enrolled );
+		
+		return ( $enrolled && !empty($enrolled) ) 
+			? true
+			: false
+		;
 	}
 
 	/**

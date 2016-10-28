@@ -18,9 +18,8 @@ class CoursePress_View_Admin_Setting_Extensions {
 			10, 3
 		);
 		add_action(
-			'admin_init',
-			array( __CLASS__, 'activating_deactivating_plugin' ),
-			20
+			'coursepress_settings_process_extensions',
+			array( __CLASS__, 'activating_deactivating_plugin' )
 		);
 
 		// TODO: This is premium only. move to premium folder!

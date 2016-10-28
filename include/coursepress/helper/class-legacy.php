@@ -8,7 +8,7 @@
 class CoursePress_Helper_Legacy {
 	public static function init() {
 		// SEt course meta key
-		add_action( 'shutdown', array( __CLASS__, 'reset_course_metas' ) );
+		//add_action( 'shutdown', array( __CLASS__, 'reset_course_metas' ) );
 	}
 
 	/**

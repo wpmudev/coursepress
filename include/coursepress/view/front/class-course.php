@@ -918,7 +918,11 @@ class CoursePress_View_Front_Course {
 			 * @param (int) $course_id	The current course ID.
 			 **/
 			$show_title = apply_filters( 'coursepress_single_show_title', true, $cp->course_id );
-
+			
+			// from this point 'self::$template' is not yet set because callback will be called on 'the_content' hook,
+			// 'template_include' hook will be called first so call the render functions to set 'self::$template' 
+			self::render_course_main();
+			
 			$cp->vp_args = array(
 				'slug' => 'course_' . $cp->course_id,
 				'title' => get_the_title( $cp->course_id ),
@@ -926,14 +930,6 @@ class CoursePress_View_Front_Course {
 				'callback' => array( __CLASS__, 'render_course_main' ),
 				'context' => 'main',
 				'content' => '',
-				/*
-				'content' => apply_filters(
-					'coursepress_view_course',
-					self::render_course_main( $cp->course_id ),
-					$cp->course_id,
-					'main'
-				),
-				*/
 				'type' => CoursePress_Data_Course::get_post_type_name(),
 				'is_singular' => true,
 				'ID' => $cp->course_id,
@@ -1006,7 +1002,11 @@ class CoursePress_View_Front_Course {
 				self::archive_redirect();
 				// Invalid category... Redirect to course-list!
 			}
-
+					
+					// from this point 'self::$template' is not yet set because callback will be called on 'the_content' hook,
+					// 'template_include' hook will be called first so call the render functions to set 'self::$template' 
+					self::render_course_archive();
+					
 					$cp->vp_args = apply_filters(
 						'coursepress_category_page_args',
 						array(
@@ -1016,13 +1016,6 @@ class CoursePress_View_Front_Course {
 						'content' => '',
 						'callback' => array( __CLASS__, 'render_course_archive' ),
 						'context' => $cp->cp_category,
-						/*
-						'content' => apply_filters(
-							'coursepress_view_course_archive',
-							self::render_course_archive(),
-							$cp->cp_category
-						),
-						*/
 						'type' => CoursePress_Data_Course::get_post_type_name() . '_archive',
 						'is_archive' => false,
 						),
@@ -1036,11 +1029,16 @@ class CoursePress_View_Front_Course {
 			}
 
 			CoursePress_Helper_Utility::set_the_course_subpage( 'discussions' );
-
+			
+			// from this point 'self::$template' is not yet set because callback will be called on 'the_content' hook,
+			// 'template_include' hook will be called first so call the render functions below to set 'self::$template' 
+			
 			// Are we adding a new discussion?
 			if ( CoursePress_Core::get_slug( 'discussion_new' ) == $cp->discussion ) {
+				self::render_new_course_discussion();
 				$callback = array( __CLASS__, 'render_new_course_discussion' );
 			} else {
+				self::render_course_discussion();
 				$callback = array( __CLASS__, 'render_course_discussion' );
 			}
 

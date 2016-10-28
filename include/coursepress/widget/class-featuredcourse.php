@@ -4,6 +4,7 @@ class CoursePress_Widget_FeaturedCourse extends WP_Widget {
 
 	public static function init() {
 		add_action( 'widgets_init', array( 'CoursePress_Widget_FeaturedCourse', 'register' ) );
+		add_action( 'wp_footer', array( 'CoursePress_Widget_FeaturedCourse', 'enqueue_featured_script' ) );
 	}
 
 	public static function register() {
@@ -17,6 +18,14 @@ class CoursePress_Widget_FeaturedCourse extends WP_Widget {
 		);
 
 		parent::__construct( 'CP_Featured_Course', __( 'Featured Course', 'cp' ), $widget_ops );
+	}
+	
+	public static function enqueue_featured_script() {
+
+		$featured_js = CoursePress::$url . 'asset/js/coursepress-featured.js';
+		wp_enqueue_script( 'coursepress-featured', $featured_js, array(
+			'jquery'
+		), CoursePress::$version );
 	}
 
 	public function form( $instance ) {
@@ -125,7 +134,7 @@ class CoursePress_Widget_FeaturedCourse extends WP_Widget {
 		}
 		?>
 		<div class="fcp_featured_widget cp_featured_widget-course-<?php echo $course_id; ?>">
-			<h3 class="cp_featured_widget_title"><?php echo do_shortcode( '[course_title course_id="'. $course_id . '"]' ); ?></h3>
+			<?php echo do_shortcode( '[course_title course_id="'. $course_id . '"]' ); ?>
 			<?php
 			echo do_shortcode( '[course_media type="' . $selected_type . '" priority="' . $selected_priority . '" course_id="' . $course_id . '"]' );
 			?>
