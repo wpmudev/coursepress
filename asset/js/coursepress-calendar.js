@@ -4,7 +4,6 @@
 (function( $ ){
     function update_calendar( date, course_calendar ) {
         var wpajaxurl = window.wpajaxurl ? window.wpajaxurl : '';
-        
         $.post(
             wpajaxurl, // declared by class.coursecalendar
             {
@@ -13,27 +12,29 @@
                 date: date,
             }
         ).done( function( data ) {
-    
-            // Set a course_id if its still empty
-            var response = $.parseJSON( $( data ).find( 'response_data' ).text() );
-            var html = $.parseHTML( response.calendar );
-            // console.log( course_calendar );
-            $( course_calendar ).find( '.course-calendar-body' ).replaceWith( $( html ).find( '.course-calendar-body' ) );
-    
-            if ( $( html ).find( '.pre-month' ).data( 'date' ) === 'empty' ) {
-                $( course_calendar ).find( '.pre-month' ).hide();
-            } else {
-                $( course_calendar ).find( '.pre-month' ).show();
-            }
-    
-            if ( $( html ).find( '.next-month' ).data( 'date' ) === 'empty' ) {
-                $( course_calendar ).find( '.next-month' ).hide();
-            } else {
-                $( course_calendar ).find( '.next-month' ).show();
-            }
-    
-            $( course_calendar ).find( '.pre-month' ).data( 'date', $( html ).find( '.pre-month' ).data( 'date' ) );
-            $( course_calendar ).find( '.next-month' ).data( 'date', $( html ).find( '.next-month' ).data( 'date' ) );
+			if ( data && data !== '0' ) {
+				// Set a course_id if its still empty
+				var response = $.parseJSON( $( data ).find( 'response_data' ).text() );
+				var html = $.parseHTML( response.calendar );
+				// console.log( course_calendar );
+				$( course_calendar ).find( '.course-calendar-body' ).replaceWith( $( html ).find( '.course-calendar-body' ) );
+		
+				if ( $( html ).find( '.pre-month' ).data( 'date' ) === 'empty' ) {
+					$( course_calendar ).find( '.pre-month' ).hide();
+				} else {
+					$( course_calendar ).find( '.pre-month' ).show();
+				}
+		
+				if ( $( html ).find( '.next-month' ).data( 'date' ) === 'empty' ) {
+					$( course_calendar ).find( '.next-month' ).hide();
+				} else {
+					$( course_calendar ).find( '.next-month' ).show();
+				}
+		
+				$( course_calendar ).find( '.pre-month' ).data( 'date', $( html ).find( '.pre-month' ).data( 'date' ) );
+				$( course_calendar ).find( '.next-month' ).data( 'date', $( html ).find( '.next-month' ).data( 'date' ) );
+			}
+            
     
         } ).fail( function( ) {
         } );
