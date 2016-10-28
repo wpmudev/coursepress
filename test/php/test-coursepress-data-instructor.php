@@ -5,8 +5,11 @@
 class CoursepressDataInstructorTest extends WP_UnitTestCase {
 
 	protected $instructor;
+	protected $course;
+	protected $admin;
 
 	public function __construct() {
+		$this->admin = get_user_by( 'login', 'admin' );
 		/**
 		 * Set instructor data
 		 */
@@ -23,6 +26,20 @@ class CoursepressDataInstructorTest extends WP_UnitTestCase {
 			);
 			$user_id = wp_insert_user( $userdata );
 			$this->instructor = get_userdata( $user_id );
+		}
+
+		$this->course = get_page_by_title( 'test course title', OBJECT, CoursePress_Data_Course::get_post_type_name() );
+		if ( empty( $this->course ) ) {
+			$course = (object) array(
+				'post_author' => $this->admin->ID,
+				'post_status' => 'private',
+				'post_type' => CoursePress_Data_Course::get_post_type_name(),
+				'course_excerpt' => 'test course excerpt',
+				'course_description' => 'test course content',
+				'course_name' => 'test course title',
+			);
+			$course_id = CoursePress_Data_Course::update( false, $course );
+			$this->course = get_post( $course_id );
 		}
 	}
 
@@ -89,17 +106,36 @@ class CoursepressDataInstructorTest extends WP_UnitTestCase {
 			$this->assertEmpty( CoursePress_Data_Instructor::get_accessable_courses( $this->instructor, $post_status ) );
 		}
 		$this->assertEmpty( CoursePress_Data_Instructor::count_courses( $this->instructor->ID ) );
+		$this->assertEmpty( CoursePress_Data_Instructor::get_courses_number( $this->instructor->ID ) );
+		$this->assertFalse( CoursePress_Data_Instructor::is_assigned_to_course( $this->instructor->ID, 0 ) );
 	}
 
 	public function test_hash() {
 		CoursePress_Data_Instructor::create_hash( $this->instructor );
 		$hash = CoursePress_Data_Instructor::get_hash( $this->instructor );
 		$this->assertNotEmpty( $hash );
+		$instructor = CoursePress_Data_Instructor::instructor_by_hash( $hash );
+		$this->assertEquals( $this->instructor->ID, $instructor->ID );
+	}
+
+	public function test_instructor_by_login() {
+		$instructor = CoursePress_Data_Instructor::instructor_by_login( 'instructor' );
+		$this->assertEquals( $this->instructor->ID, $instructor->ID );
+	}
+
+	public function test_instructor_key() {
+		$this->assertFalse( CoursePress_Data_Instructor::instructor_key( 'foo_progress' ) );
+		$this->assertTrue( CoursePress_Data_Instructor::instructor_key( 'foo' ) );
 	}
 
 	public function test_meta_key() {
 		$meta = array( 'meta_key' => 'foo' );
 		$this->assertEquals( 'foo', CoursePress_Data_Instructor::meta_key( $meta ) );
+	}
+
+	public function test_get_nonce_action() {
+		$assert = CoursePress_Data_Instructor::get_nonce_action( 'foo' );
+		$this->assertEquals( 'CoursePress_Data_Instructor_foo_0_0', $assert );
 	}
 }
 
