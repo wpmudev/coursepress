@@ -677,7 +677,9 @@ class CoursePress_Data_Instructor {
 			// Update usermeta setting
 			update_user_meta( $instructor_id, 'coursepress_followers_count', $count );
 		}
-
+        if ( empty( $count ) ) {
+            return 0;
+        }
 		return $count;
 	}
 
