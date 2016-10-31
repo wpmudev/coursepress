@@ -7,41 +7,22 @@ class CoursepressDataInstructorTest extends WP_UnitTestCase {
 	protected $instructor;
 	protected $course;
 	protected $admin;
+	protected $student;
 
 	public function __construct() {
 		$this->admin = get_user_by( 'login', 'admin' );
 		/**
 		 * Set instructor data
 		 */
-		$this->instructor = get_user_by( 'login', 'instructor' );
-		if ( false === $this->instructor ) {
-			$userdata = array(
-				'user_login'  => 'instructor',
-				'user_url'    => 'https://premium.wpmudev.org/',
-				'user_pass'   => 'instructor',
-				'first_name'  => 'Jon',
-				'last_name'   => 'Snow',
-				'nickname'    => 'bastard',
-				'description' => 'Winter is comming.',
-				'user_email'  => 'snow@winterfell.com',
-			);
-			$user_id = wp_insert_user( $userdata );
-			$this->instructor = get_userdata( $user_id );
-		}
-
-		$this->course = get_page_by_title( 'test course title', OBJECT, CoursePress_Data_Course::get_post_type_name() );
-		if ( empty( $this->course ) ) {
-			$course = (object) array(
-				'post_author' => $this->admin->ID,
-				'post_status' => 'private',
-				'post_type' => CoursePress_Data_Course::get_post_type_name(),
-				'course_excerpt' => 'test course excerpt',
-				'course_description' => 'test course content',
-				'course_name' => 'test course title',
-			);
-			$course_id = CoursePress_Data_Course::update( false, $course );
-			$this->course = get_post( $course_id );
-		}
+		$this->instructor = coursepress_helper_instructor();
+		/**
+		 * Set student data
+		 */
+		$this->student = coursepress_helper_student();
+		/**
+		 * Set course data
+		 */
+		$this->course = coursepress_helper_course( $this->instructor->ID );
 	}
 
 	public function test_exists() {
@@ -116,7 +97,6 @@ class CoursepressDataInstructorTest extends WP_UnitTestCase {
 
 	public function test_courses() {
 		CoursePress_Data_Course::add_instructor( $this->course->ID, $this->instructor->ID );
-
 		$this->assertEquals( 1, CoursePress_Data_Instructor::get_course_count( $this->instructor ) );
 		$this->assertNotEmpty( CoursePress_Data_Instructor::get_course_meta_keys( $this->instructor ) );
 		$assert = CoursePress_Data_Instructor::get_course_meta_keys( $this->instructor );
@@ -145,6 +125,9 @@ class CoursepressDataInstructorTest extends WP_UnitTestCase {
 		$this->assertEquals( 1, CoursePress_Data_Instructor::count_courses( $this->instructor->ID ) );
 		$this->assertEquals( 1, CoursePress_Data_Instructor::get_courses_number( $this->instructor->ID ) );
 		$this->assertTrue( CoursePress_Data_Instructor::is_assigned_to_course( $this->instructor->ID, $this->course->ID ) );
+	}
+
+	public function test_course_with_student() {
 	}
 
 	public function test_hash() {

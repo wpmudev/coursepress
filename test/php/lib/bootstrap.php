@@ -58,3 +58,4 @@ tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
  * and viola, the tests begin.
  */
 require WP_TESTS_DIR . 'includes/bootstrap.php';
+require( dirname( __FILE__ ) . '/functions.php' );
