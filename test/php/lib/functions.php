@@ -51,12 +51,12 @@ function coursepress_helper_course( $admin_id ) {
 		);
 		$course_id = CoursePress_Data_Course::update( false, $course );
 		$course = get_post( $course_id );
-    }
-    $settings = CoursePress_Data_Course::get_setting( $course->ID );
-    CoursePress_Data_Course::set_setting( $settings, 'course_start_date', '2016-10-01' );
-    CoursePress_Data_Course::set_setting( $settings, 'course_end_date', '2116-10-01' );
-    CoursePress_Data_Course::set_setting( $settings, 'enrollment_end_date', '2016-10-11' );
-    CoursePress_Data_Course::set_setting( $settings, 'enrollment_start_date', '2116-10-01' );
-    CoursePress_Data_Course::update_setting( $course->ID, true, $settings );
+	}
+	$settings = CoursePress_Data_Course::get_setting( $course->ID );
+	CoursePress_Data_Course::set_setting( $settings, 'course_start_date', '2016-10-01' );
+	CoursePress_Data_Course::set_setting( $settings, 'course_end_date', '2116-10-01' );
+	CoursePress_Data_Course::set_setting( $settings, 'enrollment_end_date', '2016-10-11' );
+	CoursePress_Data_Course::set_setting( $settings, 'enrollment_start_date', '2116-10-01' );
+	CoursePress_Data_Course::update_setting( $course->ID, true, $settings );
 	return $course;
 }
