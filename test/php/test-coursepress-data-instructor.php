@@ -128,6 +128,9 @@ class CoursepressDataInstructorTest extends WP_UnitTestCase {
 	}
 
 	public function test_course_with_student() {
+		CoursePress_Data_Course::enroll_student( $this->student->ID, $this->course->ID );
+		$this->assertEquals( 0, CoursePress_Data_Instructor::get_students_count( $this->instructor->ID ) );
+		$this->assertEquals( 0, CoursePress_Data_Instructor::_get_students_count( $this->instructor->ID ) );
 	}
 
 	public function test_hash() {
