@@ -23,6 +23,7 @@ class CoursepressDataInstructorTest extends WP_UnitTestCase {
 				'last_name'   => 'Snow',
 				'nickname'    => 'bastard',
 				'description' => 'Winter is comming.',
+				'user_email'  => 'snow@winterfell.com',
 			);
 			$user_id = wp_insert_user( $userdata );
 			$this->instructor = get_userdata( $user_id );
@@ -108,6 +109,42 @@ class CoursepressDataInstructorTest extends WP_UnitTestCase {
 		$this->assertEmpty( CoursePress_Data_Instructor::count_courses( $this->instructor->ID ) );
 		$this->assertEmpty( CoursePress_Data_Instructor::get_courses_number( $this->instructor->ID ) );
 		$this->assertFalse( CoursePress_Data_Instructor::is_assigned_to_course( $this->instructor->ID, 0 ) );
+		$this->assertEquals( 0, CoursePress_Data_Instructor::get_students_count( $this->instructor->ID ) );
+		$this->assertEquals( 0, CoursePress_Data_Instructor::get_students_count( $this->instructor->ID, true ) );
+		$this->assertEquals( 0, CoursePress_Data_Instructor::_get_students_count( $this->instructor->ID ) );
+	}
+
+	public function test_courses() {
+		CoursePress_Data_Course::add_instructor( $this->course->ID, $this->instructor->ID );
+
+		$this->assertEquals( 1, CoursePress_Data_Instructor::get_course_count( $this->instructor ) );
+		$this->assertNotEmpty( CoursePress_Data_Instructor::get_course_meta_keys( $this->instructor ) );
+		$assert = CoursePress_Data_Instructor::get_course_meta_keys( $this->instructor );
+		$assert = array_shift( $assert );
+		$meta = sprintf( 'course_%d', $this->course->ID );
+		$this->assertEquals( $meta, $assert );
+		$assert = array( $this->course->ID );
+		$this->assertEquals( $assert, CoursePress_Data_Instructor::get_assigned_courses_ids( $this->instructor ) );
+		$this->assertEquals( $assert, CoursePress_Data_Instructor::get_assigned_courses_ids( $this->instructor, 'private' ) );
+		$this->assertNotEmpty( CoursePress_Data_Instructor::get_assigned_courses_ids( $this->instructor ) );
+		/**
+		 * coursepress_update_my_course_cap
+		 * it should empty
+		 */
+		$this->instructor->add_cap( 'coursepress_update_my_course_cap' );
+		$statuses = array(
+		   'inherit',
+		   'publish',
+		   'draft',
+		   'future',
+		);
+		foreach ( $statuses as $post_status ) {
+			$this->assertEquals( array(), CoursePress_Data_Instructor::get_assigned_courses_ids( $this->instructor, $post_status ) );
+			$this->assertEmpty( CoursePress_Data_Instructor::get_accessable_courses( $this->instructor, $post_status ) );
+		}
+		$this->assertEquals( 1, CoursePress_Data_Instructor::count_courses( $this->instructor->ID ) );
+		$this->assertEquals( 1, CoursePress_Data_Instructor::get_courses_number( $this->instructor->ID ) );
+		$this->assertTrue( CoursePress_Data_Instructor::is_assigned_to_course( $this->instructor->ID, $this->course->ID ) );
 	}
 
 	public function test_hash() {
@@ -136,6 +173,23 @@ class CoursepressDataInstructorTest extends WP_UnitTestCase {
 	public function test_get_nonce_action() {
 		$assert = CoursePress_Data_Instructor::get_nonce_action( 'foo' );
 		$this->assertEquals( 'CoursePress_Data_Instructor_foo_0_0', $assert );
+	}
+
+	public function test_create_invite_code_hash() {
+		$args = array(
+			'email' => 'admin@example.com',
+		);
+		$assert = CoursePress_Data_Instructor::create_invite_code_hash( $args );
+		$this->assertNotEmpty( $assert['code'] );
+		$this->assertNotEmpty( $assert['hash'] );
+		$hash = sha1( sanitize_email( $args['email'] ) . $assert['code'] );
+		$this->assertEquals( $hash, $assert['hash'] );
+	}
+
+	public function test_course_invite() {
+		$this->assertFalse( CoursePress_Data_Instructor::is_course_invite() );
+		$this->assertFalse( CoursePress_Data_Instructor::verify_invitation_code( $this->course->ID, '1' ) );
+		$this->assertFalse( CoursePress_Data_Instructor::add_from_invitation( $this->course->ID, $this->instructor->ID, false ) );
 	}
 }
 
