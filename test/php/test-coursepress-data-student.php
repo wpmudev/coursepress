@@ -10,19 +10,20 @@ class CoursepressDataStudentTest extends WP_UnitTestCase {
 	protected $student;
 
 	public function __construct() {
+		$helper = new CoursePress_Tests_Helper();
 		$this->admin = get_user_by( 'login', 'admin' );
 		/**
 		 * Set instructor data
 		 */
-		$this->instructor = coursepress_helper_instructor();
+		$this->instructor = $helper->get_instructor();
 		/**
 		 * Set student data
 		 */
-		$this->student = coursepress_helper_student();
+		$this->student = $helper->get_student();
 		/**
 		 * Set course data
 		 */
-		$this->course = coursepress_helper_course( $this->instructor->ID );
+		$this->course = $helper->get_course( $this->instructor->ID );
 	}
 
 	public function test_exists() {
