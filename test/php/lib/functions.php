@@ -39,6 +39,9 @@ function coursepress_helper_student() {
 }
 
 function coursepress_helper_course( $admin_id ) {
+	/**
+	 * Course Data
+	 */
 	$course = get_page_by_title( 'test course title', OBJECT, CoursePress_Data_Course::get_post_type_name() );
 	if ( empty( $course ) ) {
 		$course = (object) array(
@@ -51,6 +54,17 @@ function coursepress_helper_course( $admin_id ) {
 		);
 		$course_id = CoursePress_Data_Course::update( false, $course );
 		$course = get_post( $course_id );
+		/**
+	 * Course Taxonomy
+	 */
+		$taxonomy = CoursePress_Data_Course::get_post_category_name();
+		$category = get_term_by( 'name', 'Test Category', $taxonomy );
+		$term = array();
+		if ( empty( $category ) ) {
+			$term = wp_insert_term( 'Test Category', $taxonomy );
+			print_r( $term );
+		}
+		wp_set_post_terms( $course_id, array( $term['term_id'] ), $taxonomy );
 	}
 	$settings = CoursePress_Data_Course::get_setting( $course->ID );
 	CoursePress_Data_Course::set_setting( $settings, 'course_start_date', '2016-10-01' );
