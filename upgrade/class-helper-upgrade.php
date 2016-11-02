@@ -173,6 +173,7 @@ class CoursePress_Helper_Upgrade {
 			'course_video_url' => 'featured_video',
 			'course_structure_options' => 'structure_visible',
 			'course_structure_time_display' => 'structure_show_duration',
+			'course_language' => 'course_language',
 			/** Course Dates **/
 			'open_ended_course' => 'course_open_ended',
 			'course_start_date' => 'course_start_date',
