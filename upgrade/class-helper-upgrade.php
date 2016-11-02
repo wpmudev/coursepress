@@ -89,7 +89,7 @@ class CoursePress_Helper_Upgrade {
 		}
 
 		// Now update the course settings
-		if ( false == self::update_setting( $course_id, self::$settings ) ) {
+		if ( false == self::update_course_settings( $course_id, self::$settings ) ) {
 			$found_error += 1;
 		}
 		
@@ -108,7 +108,7 @@ class CoursePress_Helper_Upgrade {
 		return $timestamp;
 	}
 
-	public static function update_setting( $course_id, $settings ) {
+	public static function update_course_settings( $course_id, $settings ) {
 		$settings = array_filter( $settings );
 		update_post_meta( $course_id, 'course_settings', $settings );
 
