@@ -29,14 +29,17 @@ _.extend( _coursepress_upgrade, {
 			
 			if ( response ) {
 				if ( response.success ) {
-					if ( !progress_div.hasClass('error') ) progress_div.addClass( 'success' );
-					_coursepress_upgrade.totalSuccess += 1;
+					if ( ! progress_div.hasClass('error') ) {
+						progress_div.addClass( 'success' );
+						_coursepress_upgrade.totalSuccess += 1;
+					}
 				} else {
-					if ( !progress_div.hasClass('success') ) progress_div.addClass( 'error' );
-					_coursepress_upgrade.totalError += 1;
+					if ( !progress_div.hasClass('success') ) {
+						progress_div.addClass( 'error' );
+						_coursepress_upgrade.totalError += 1;
+					}
 				}
 			}
-			
 
 			_coursepress_upgrade.totalSend += 1;
 
@@ -128,11 +131,11 @@ _.extend( _coursepress_upgrade, {
 					update_nag.html( _coursepress_upgrade.success );
 
 					// Send flush rewrite rules request
-					_coursepress_upgrade._wpnonce = _coursepress_upgrade.flush_nonce;
 					new _coursepress_upgrade.upgrade({
 						container: sender,
 						course_id: sender.course_id,
-						user_id: sender.user_id
+						user_id: sender.user_id,
+						type: 'flush'
 					});
 
 					// Redirect user

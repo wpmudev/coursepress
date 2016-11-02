@@ -2,177 +2,6 @@
 class CoursePress_Helper_Upgrade {
 	private static $settings = array();
 
-	public static function default_capabilities() {
-		return array(
-			'instructor' => array(
-				/* General */
-				'coursepress_dashboard_cap' => 1,
-				'coursepress_courses_cap' => 1,
-				'coursepress_instructors_cap' => 0, // DEPRECATED
-				'coursepress_students_cap' => 1,
-				'coursepress_assessment_cap' => 1,
-				'coursepress_reports_cap' => 1,
-				'coursepress_notifications_cap' => 1,
-				'coursepress_discussions_cap' => 1,
-				'coursepress_settings_cap' => 1,
-				/* Courses */
-				'coursepress_create_course_cap' => 1,
-				'coursepress_view_others_course_cap' => 1,
-				'coursepress_update_course_cap' => 1,
-				'coursepress_update_my_course_cap' => 1,
-				'coursepress_update_all_courses_cap' => 0, // NOT IMPLEMENTED YET
-				'coursepress_delete_course_cap' => 1,
-				'coursepress_delete_my_course_cap' => 1,
-				'coursepress_delete_all_courses_cap' => 0, // NOT IMPLEMENTED YET
-				'coursepress_change_course_status_cap' => 0,
-				'coursepress_change_my_course_status_cap' => 1,
-				'coursepress_change_all_courses_status_cap' => 0, // NOT IMPLEMENTED YET
-				/* Units */
-				'coursepress_create_course_unit_cap' => 1,
-				'coursepress_view_all_units_cap' => 0,
-				'coursepress_update_course_unit_cap' => 1,
-				'coursepress_update_my_course_unit_cap' => 1,
-				'coursepress_update_all_courses_unit_cap' => 0, // NOT IMPLEMENTED YET
-				'coursepress_delete_course_units_cap' => 1,
-				'coursepress_delete_my_course_units_cap' => 1,
-				'coursepress_delete_all_courses_units_cap' => 0, // NOT IMPLEMENTED YET
-				'coursepress_change_course_unit_status_cap' => 1,
-				'coursepress_change_my_course_unit_status_cap' => 1,
-				'coursepress_change_all_courses_unit_status_cap' => 0, // NOT IMPLEMENTED YET
-				/* Instructors */
-				'coursepress_assign_and_assign_instructor_course_cap' => 0,
-				'coursepress_assign_and_assign_instructor_my_course_cap' => 1,
-				/* Facilitators */
-				'coursepress_assign_my_course_facilitator_cap' => 1,
-				'coursepress_assign_facilitator_cap' => 1,
-				/* Classes */
-				'coursepress_add_new_classes_cap' => 0,
-				'coursepress_add_new_my_classes_cap' => 0,
-				'coursepress_delete_classes_cap' => 0,
-				'coursepress_delete_my_classes_cap' => 0,
-				/* Students */
-				'coursepress_invite_students_cap' => 0,
-				'coursepress_invite_my_students_cap' => 1,
-				'coursepress_withdraw_students_cap' => 0,
-				'coursepress_withdraw_my_students_cap' => 1,
-				'coursepress_add_move_students_cap' => 0,
-				'coursepress_add_move_my_students_cap' => 1,
-				'coursepress_add_move_my_assigned_students_cap' => 1,
-				/* Groups */
-				'coursepress_settings_groups_page_cap' => 0,
-				/* Notifications */
-				'coursepress_create_my_assigned_notification_cap' => 1,
-				'coursepress_create_my_notification_cap' => 1,
-				'coursepress_update_notification_cap' => 0,
-				'coursepress_update_my_notification_cap' => 1,
-				'coursepress_delete_notification_cap' => 0,
-				'coursepress_delete_my_notification_cap' => 1,
-				'coursepress_change_notification_status_cap' => 0,
-				'coursepress_change_my_notification_status_cap' => 1,
-				/* Discussions */
-				'coursepress_create_my_assigned_discussion_cap' => 1,
-				'coursepress_create_my_discussion_cap' => 1,
-				'coursepress_update_discussion_cap' => 0,
-				'coursepress_update_my_discussion_cap' => 1,
-				'coursepress_delete_discussion_cap' => 0,
-				'coursepress_delete_my_discussion_cap' => 1,
-				'coursepress_change_discussion_status_cap' => 0,
-				'coursepress_change_my_discussion_status_cap' => 1,
-				/* Certificates */
-				'coursepress_certificates_cap' => 0,
-				'coursepress_create_certificates_cap' => 0,
-				'coursepress_update_certificates_cap' => 0,
-				'coursepress_delete_certificates_cap' => 0,
-				/* Course Categories */
-				'coursepress_course_categories_manage_terms_cap' => 1,
-				'coursepress_course_categories_edit_terms_cap' => 1,
-				'coursepress_course_categories_delete_terms_cap' => 0,
-				/* Posts and Pages */
-				'edit_pages' => 0,
-				'edit_published_pages' => 0,
-				'edit_posts' => 0,
-				'publish_pages' => 0,
-				'publish_posts' => 0,
-			),
-		);
-	}
-
-	public static function update_settings() {
-		$default_capabilities = self::default_capabilities();
-
-		$settings = array(
-			'slugs' => array(
-				'course' => get_option( 'coursepress_course_slug', 'courses' ),
-				'category' => get_option( 'coursepress_course_category_slug', 'course_category' ),
-				'units' => get_option( 'coursepress_units_slug', 'units' ),
-				'notifications' => get_option( 'coursepress_notifications_slug', 'notifications' ),
-				'discussions' => get_option( 'coursepress_discussion_slug', 'discussions' ),
-				'discussions_new' => get_option( 'coursepress_discussion_slug_new', 'add_new_discussion' ),
-				'grades' => get_option( 'coursepress_grades_slug', 'grades' ),
-				'workbook'=> get_option( 'coursepress_workbook_slug', 'workbook' ),
-				'enrollment' => get_option( 'enrollment_process_slug', 'enrollment_process' ),
-				'login' => get_option( 'login_slug', 'student-login' ),
-				'signup' => get_option( 'signup_slug', 'courses-signup' ),
-				'student_dashboard' => get_option( 'student_dashboard_slug', 'courses-dashboard' ),
-				'student_settings' => get_option( 'student_settings_slug', 'student-settings' ),
-				'instructor_profile' => get_option( 'instructor_profile_slug', 'instructor' ),
-			),
-			'pages' => array(
-				'enrollment' => get_option( 'coursepress_enrollment_process_page', 0 ),
-				'login' => get_option( 'coursepress_login_page', 0 ),
-				'signup' => get_option( 'coursepress_signup_page', 0 ),
-				'student_settings' => get_option( 'coursepress_student_settings_page', 0 ),
-				'student_dashboard' => get_option( 'coursepress_student_dashboard_page', 0 ),
-			),
-			'general' => array(
-				'show_coursepress_menu' => get_option( 'display_menu_items', 1 ),
-				'use_custom_login' => get_option( 'use_custom_login_form', 1 ),
-				'redirect_after_login' => get_option( 'redirect_students_to_dashboard', 1 ),
-				'add_structure_data' => 1, // Not available in 1.x
-			),
-			'instructor' => array(
-				'use_username' => get_option( 'show_instructor_username', 1 ),
-				'capabilities' => get_option( 'coursepress_instructor_capabilities', $default_capabilities ),
-			),
-			'course' => array(
-				'details_media_type' => get_option( 'details_media_type', 'default' ),
-				'details_media_priority' => get_option( 'details_media_priority', 'video' ),
-				'listing_media_type' => get_option( 'listings_media_type', 'default' ),
-				'listing_media_priority' => get_option( 'listings_media_priority', 'image' ),
-				'image_width' => get_option( 'course_image_width', 235 ),
-				'image_height' => get_option( 'course_image_height',225 ),
-				'order_by' => get_option( 'course_order_by', 'post_date' ),
-				'order_by_direction' => get_option( 'course_order_by_type', 'DESC' ),
-				'enrollment_type_default' => 'anyone',
-			),
-			'reports' => array(
-				'font' => get_option( 'reports_font', 'helvetica' ),
-			)
-		);
-
-		// Email settings
-		$settings['email'] = array(
-			'registration' => array(
-				'from' => get_option( 'registration_from_name', get_option( 'blogname' ) ),
-				'email' => get_option( 'registration_from_email', get_option( 'admin_email' ) ),
-				'subject' => get_option( 'registration_email_subject', __( 'Registration Status', 'cp' ) )
-			)
-		);
-
-		// Update CP2 settings
-		$network = is_multisite();
-		if ( $network ) {
-			update_site_option( 'coursepress_settings', $settings );
-		} else {
-			update_option( 'coursepress_settings', $settings );
-		}
-
-		// Marked settings as updated
-		update_option( 'cp_settings_done', true );
-
-		return true;
-	}
-
 	public static function update_course( $course_id ) {
 		$course = get_post( $course_id );
 		$found_error = 0;
@@ -199,7 +28,6 @@ class CoursePress_Helper_Upgrade {
 
 	public static function strtotime( $timestamp ) {
 		if ( ! is_numeric( $timestamp ) ) {
-			error_log( "STRTOTIME: $timestamp" );
 			$timestamp = strtotime( $timestamp . ' UTC' ); //@todo: Need hook to change timestamp
 		}
 
@@ -235,8 +63,6 @@ class CoursePress_Helper_Upgrade {
 			}
 		}
 
-		$message = "Course: $course_id updated! \n" . print_r( $settings, true );
-		error_log( $message );
 		return true;
 	}
 
