@@ -6,6 +6,11 @@
 			display: block;
 			padding-bottom: 5px;
 		}
+		&.course-step-buttons {
+			.notice {
+				margin-bottom: 0;
+			}
+		}
 	}
 }
 #student-add {
