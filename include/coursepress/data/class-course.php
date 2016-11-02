@@ -367,11 +367,9 @@ class CoursePress_Data_Course {
 				$course_id,
 				$global_option
 			);
-			
+
 			self::update_setting( $course_id, 'instructors', $instructors );
 		}
-
-		
 
 	}
 
@@ -1398,7 +1396,7 @@ class CoursePress_Data_Course {
 	}
 
 	public static function structure_visibility( $course_id ) {
-		if ( empty( self::$structure_visibility ) ) {
+		if ( ! isset( self::$structure_visibility[ $course_id ] ) || empty( self::$structure_visibility[ $course_id ] ) ) {
 			$units = array_filter(
 				CoursePress_Data_Course::get_setting(
 					$course_id,
@@ -1459,16 +1457,16 @@ class CoursePress_Data_Course {
 				}
 			}
 
-			self::$structure_visibility['structure'] = $visibility;
+			self::$structure_visibility[ $course_id ]['structure']  = $visibility;
 
 			if ( ! empty( $units ) || ! empty( $page ) || ! empty( $modules ) ) {
-				self::$structure_visibility['has_visible'] = true;
+				self::$structure_visibility[ $course_id ]['has_visible'] = true;
 			} else {
-				self::$structure_visibility['has_visible'] = false;
+				self::$structure_visibility[ $course_id ]['has_visible'] = false;
 			}
 		}
 
-		return self::$structure_visibility;
+		return self::$structure_visibility[ $course_id ];
 	}
 
 	public static function previewability( $course_id ) {
@@ -2079,10 +2077,10 @@ class CoursePress_Data_Course {
 
 		$course_meta = get_post_meta( $course_id );
 		// unset MP stuffs
-		if ( isset($course_meta['cp_mp_product_id']) ) unset($course_meta['cp_mp_product_id']);
-		if ( isset($course_meta['cp_mp_sku']) ) unset($course_meta['cp_mp_sku']);
-		if ( isset($course_meta['cp_mp_auto_sku']) ) unset($course_meta['cp_mp_auto_sku']);
-		
+		if ( isset( $course_meta['cp_mp_product_id'] ) ) { unset( $course_meta['cp_mp_product_id'] ); }
+		if ( isset( $course_meta['cp_mp_sku'] ) ) { unset( $course_meta['cp_mp_sku'] ); }
+		if ( isset( $course_meta['cp_mp_auto_sku'] ) ) { unset( $course_meta['cp_mp_auto_sku'] ); }
+
 		foreach ( $course_meta as $key => $value ) {
 			/**
 			 * do not copy students to new course
@@ -2096,7 +2094,7 @@ class CoursePress_Data_Course {
 				}
 			}
 		}
-		
+
 		$visible_units = self::get_setting( $course_id, 'structure_visible_units', array() );
 		$preview_units = self::get_setting( $course_id, 'structure_preview_units', array() );
 		$visible_pages = self::get_setting( $course_id, 'structure_visible_pages', array() );
@@ -2217,7 +2215,7 @@ class CoursePress_Data_Course {
 		self::update_setting( $new_course_id, 'structure_preview_pages', $preview_pages );
 		self::update_setting( $new_course_id, 'structure_visible_modules', $visible_modules );
 		self::update_setting( $new_course_id, 'structure_preview_modules', $preview_modules );
-		
+
 		// clear course MP settings
 		self::update_setting( $new_course_id, 'mp_product_id', '' );
 		self::update_setting( $new_course_id, 'mp_sku', '' );
@@ -3115,13 +3113,13 @@ class CoursePress_Data_Course {
 		return apply_filters( 'coursepress_course_enrollment_type_default', $default, $course_id );
 	}
 
-    /**
-     * Default values for titles and contents of course pages.
-     *
-     * @since 2.0.0
-     *
-     * @return array Array of defaults.
-     */
+	/**
+	 * Default values for titles and contents of course pages.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return array Array of defaults.
+	 */
 	public static function get_defaults_setup_pages_content() {
 		$defaults = array(
 			'pre_completion' => array(),
@@ -3153,5 +3151,4 @@ class CoursePress_Data_Course {
 		$defaults = apply_filters( 'coursepress_pages_defaults', $defaults );
 		return $defaults;
 	}
-
 }
