@@ -301,7 +301,7 @@ class CoursePress_Helper_Integration_MarketPress {
 	}
 
 	/**
-	 * Replace feature image if course has one.
+	 * Replace featured image if course has one.
 	 *
 	 * @since 1.0.0
 	 *

@@ -380,7 +380,7 @@ class CoursePress_Admin_Edit {
 			'meta_listing_image',
 			array(
 				'placeholder' => __( 'Add Image URL or Browse for Image', 'cp' ),
-				'title' => __( 'Feature Image', 'cp' ),
+				'title' => __( 'Featured Image', 'cp' ),
 				'value' => CoursePress_Data_Course::get_listing_image( $course_id ),
 			)
 		);
