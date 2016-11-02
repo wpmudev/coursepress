@@ -204,9 +204,9 @@ class CoursePress_Data_Capabilities {
 			}
 
 			// Add facilitator role
-			$facilitated_courses = CoursePress_Data_Facilitator::get_facilitated_courses( $user_id, array( 'any' ), true, 0, 1 );
+			$facilitated_courses = CoursePress_Data_Facilitator::get_facilitated_courses( $user->id, array( 'any' ), true, 0, 1 );
 			if ( ! empty( $facilitated_courses ) ) {
-				self::assign_facilitator_capabilities( $user_id );
+				self::assign_facilitator_capabilities( $user->id );
 			}
 		}
 	}

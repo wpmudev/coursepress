@@ -1378,13 +1378,13 @@ class CoursePress_Data_Student {
 		$student_data = get_userdata( $student_id );
 
 		$email_args = array();
-		$email_args['email'] = $student_data['user_email'];
-		$email_args['first_name'] = $student_data['first_name'];
-		$email_args['last_name'] = $student_data['last_name'];
+		$email_args['email'] = $student_data->user_email;
+		$email_args['first_name'] = $student_data->first_name;
+		$email_args['last_name'] = $student_data->last_name;
 		$email_args['fields'] = array();
 		$email_args['fields']['student_id'] = $student_id;
-		$email_args['fields']['student_username'] = $student_data['user_login'];
-		$email_args['fields']['student_password'] = $student_data['user_pass'];
+		$email_args['fields']['student_username'] = $student_data->user_login;
+		$email_args['fields']['student_password'] = $student_data->user_pass;
 
 		$sent = CoursePress_Helper_Email::send_email(
 			CoursePress_Helper_Email::REGISTRATION,
