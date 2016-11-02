@@ -14,15 +14,22 @@ class CoursePress_Helper_Upgrade {
 		if ( false == self::update_course_meta( $course_id ) ) {
 			$found_error += 1;
 		}
+		// Update course structure
+		if ( false == self::update_course_structure( $course_id ) ) {
+			$found_error += 1;
+		}
 
 		// Now update the course settings
 		if ( false == self::update_course_settings( $course_id, self::$settings ) ) {
 			$found_error += 1;
 		}
-		
+
 		$result = ( 0 == $found_error );
-		if ( $result ) update_post_meta($course_id, '_cp_updated_to_version_2', 1);
-		
+
+		if ( $result ) {
+			update_post_meta($course_id, '_cp_updated_to_version_2', 1);
+		}
+
 		return $result;
 	}
 
@@ -34,8 +41,29 @@ class CoursePress_Helper_Upgrade {
 		return $timestamp;
 	}
 
+	public static function fix_settings( $settings ) {
+		if ( is_array( $settings ) ) {
+			foreach ( $settings as $key => $value ) {
+				if ( 'on' == $value ) {
+					$value = 1;
+				} elseif ( 'off' == $value ) {
+					$value = '';
+				} elseif ( is_array( $value ) ) {
+					$value = self::fix_settings( $value );
+				}
+				$settings[ $key ] = $value;
+			}
+		}
+
+		return $settings;
+	}
+
 	public static function update_course_settings( $course_id, $settings ) {
 		$settings = array_filter( $settings );
+
+		// Fix settings
+		$settings = self::fix_settings( $settings );
+
 		update_post_meta( $course_id, 'course_settings', $settings );
 
 		$date_types = array(
@@ -93,7 +121,7 @@ class CoursePress_Helper_Upgrade {
 			'setup_step_7' => 'saved',
 		);
 		$meta_keys = array(
-			'feature_url' => 'listing_image',
+			'featured_url' => 'listing_image',
 			'course_video_url' => 'featured_video',
 			'course_structure_options' => 'structure_visible',
 			'course_structure_time_display' => 'structure_show_duration',
@@ -128,7 +156,61 @@ class CoursePress_Helper_Upgrade {
 			$course_metas[ $new_meta ] = $meta_value;
 		}
 
-		self::$settings = wp_parse_args( self::$settings, $course_metas );
+		self::$settings = wp_parse_args( $course_metas, self::$settings );
+
+		return true;
+	}
+
+	public static function update_course_structure( $course_id ) {
+		self::$settings['structure_visible_units'] = get_post_meta( $course_id, 'show_unit_boxes', true );
+		self::$settings['structure_preview_units'] = get_post_meta( $course_id, 'preview_unit_boxes', true );
+		$cp1_visible_pages = (array) get_post_meta( $course_id, 'show_page_boxes', true );
+		$cp1_preview_pages = (array) get_post_meta( $course_id, 'preview_page_boxes', true );
+		$structure_visible_modules = array();
+		$structure_preview_modules = array();
+
+		/**
+		 * get units
+		 */
+		$units = Course::get_units_with_modules( $course_id, true );
+//		$units = CoursePress_Helper_Utility::sort_on_object_key( $units, 'order' );
+error_log( print_r( $units, true ) );
+		/**
+		 * Update pages and try to update modules too.
+		 */
+		foreach ( $units as $unit ) {
+			if ( ! isset( $unit['pages'] ) ) {
+				continue;
+			}
+			foreach ( $unit['pages'] as $key => $page ) {
+				$page_key = (int) $unit['unit']->ID . '_' . (int) $key;
+				/**
+				 * Visible
+				 */
+				if ( in_array( $page_key, $cp1_visible_pages ) ) {
+					$structure_visible_pages[ $page_key ] = true;
+					foreach ( $page['modules'] as $module ) {
+						$mod_key = $page_key . '_' . (int) $module->ID;
+						$structure_visible_modules[ $mod_key ] = true;
+					}
+				}
+				/**
+				 * Preview
+				 */
+				if ( in_array( $page_key, $cp1_preview_pages ) ) {
+					$structure_preview_pages[ $page_key ] = true;
+					foreach ( $page['modules'] as $module ) {
+						$mod_key = $page_key . '_' . (int) $module->ID;
+						$structure_preview_modules[ $mod_key ] = true;
+					}
+				}
+			}
+		}
+
+		self::$settings['structure_visible_pages'] = $cp1_visible_pages;
+		self::$settings['structure_preview_pages'] = $cp1_preview_pages;
+		self::$settings['structure_visible_modules'] = $structure_visible_modules;
+		self::$settings['structure_preview_modules'] = $structure_preview_modules;
 
 		return true;
 	}
