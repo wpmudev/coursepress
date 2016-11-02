@@ -29,10 +29,10 @@ _.extend( _coursepress_upgrade, {
 			
 			if ( response ) {
 				if ( response.success ) {
-					progress_div.addClass( 'success' );
+					if ( !progress_div.hasClass('error') ) progress_div.addClass( 'success' );
 					_coursepress_upgrade.totalSuccess += 1;
 				} else {
-					progress_div.addClass( 'error' );
+					if ( !progress_div.hasClass('success') ) progress_div.addClass( 'error' );
 					_coursepress_upgrade.totalError += 1;
 				}
 			}
