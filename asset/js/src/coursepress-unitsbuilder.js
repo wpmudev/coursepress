@@ -426,7 +426,6 @@ var CoursePress = CoursePress || {};
 
 		CoursePress.Helpers.Module.form.bind_buttons();		
 
-
 		// Enable/disable duration or minimum grade
 		$( '.module-use-timer input, .module-assessable input' ).on( 'change', function() {
 			var input = $( this ),
@@ -904,8 +903,7 @@ var CoursePress = CoursePress || {};
 			var questions = $( parent).siblings('.quiz-question');
 			var mod_el = $( this).parents('.module-holder')[0];
 
-			tion
-                .each( questimns, function( index, item ) {
+			$.each( questions, function( index, item ) {
 				$( item).attr('class', '');
 				$( item).addClass('quiz-question');
 				$( item).addClass('question-' + (index+1));
@@ -1103,16 +1101,13 @@ var CoursePress = CoursePress || {};
 
 			content += '<div class="module-header">';
 
-			// Show Title
-			content += '<label class="module-show-title">' +
-			'<input type="checkbox" name="meta_show_title[' + module.cid + ']" value="1" ' + CoursePress.utility.checked( data[ 'show_title' ], 1 ) + ' />' +
-			'<span class="label">' + labels[ 'module_show_title' ] + '</span>' +
-			'<span class="description">' + labels[ 'module_show_title_desc' ] + '</span>' +
-			'</label>';
-
 			content += '<div class="module module-title"><h4 class="label">' + labels[ 'module_title' ] + '</h4>' +
-			'<span class="description">' + labels[ 'module_title_desc' ] + '</span>' +
-			'<input class="module-title-text" type="text" name="post_title" value="' + data[ 'title' ] + '" /></div>';
+				'<span class="description">' + labels[ 'module_title_desc' ] + '</span>' +
+				'<label class="show-title">' +
+				'<input type="checkbox" class="show-title" name="meta_show_title[' + module.cid + ']" value="1" ' + CoursePress.utility.checked( data[ 'show_title' ], 1 ) + ' data-target=".module-title-text"/>' +
+				labels[ 'module_show_title_desc' ] + '</label>' +
+
+				'<input class="module-title-text" type="text" name="post_title" value="' + data[ 'title' ] + '" /></div>';
 
 			content += '<input type="hidden" name="meta_module_type" value="' + data[ 'type' ] + '" />';
 

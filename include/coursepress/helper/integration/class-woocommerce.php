@@ -147,6 +147,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 			10, 2
 		);
 
+		add_action( 'woocommerce_before_main_content', array( __CLASS__, 'woocommerce_before_main_content' ) );
 	}
 
 	public static function change_order_status( $order_id, $old_status, $new_status ) {
@@ -176,36 +177,36 @@ class CoursePress_Helper_Integration_WooCommerce {
 	public static function product_settings( $content, $course_id ) {
 		// Prefix fields with meta_ to automatically add it to the course meta!
 		$mp_content = '
-			<div class="wide">
-				<label>' .
+            <div class="wide">
+                <label>' .
 					esc_html__( 'WooCommerce Product Settings', 'cp' ) .
 					'</label>
-				<p class="description">' . esc_html__( 'Your course will be a new product in WooCommerce. Enter your course\'s payment settings below.', 'cp' ) . '</p>
+                <p class="description">' . esc_html__( 'Your course will be a new product in WooCommerce. Enter your course\'s payment settings below.', 'cp' ) . '</p>
 
-				<label class="normal required">
-					' . esc_html__( 'Full Price', 'cp' ) . '
-				</label>
-				<input type="text" name="meta_mp_product_price" value="' . CoursePress_Data_Course::get_setting( $course_id, 'mp_product_price', '' ) . '" />
+                <label class="normal required">
+                    ' . esc_html__( 'Full Price', 'cp' ) . '
+                </label>
+                <input type="text" name="meta_mp_product_price" value="' . CoursePress_Data_Course::get_setting( $course_id, 'mp_product_price', '' ) . '" />
 
 
-				<label class="normal">
-					' . esc_html__( 'Sale Price', 'cp' ) . '
-				</label>
-				<input type="text" name="meta_mp_product_sale_price" value="' . CoursePress_Data_Course::get_setting( $course_id, 'mp_product_sale_price', '' ) . '" /><br >
+                <label class="normal">
+                    ' . esc_html__( 'Sale Price', 'cp' ) . '
+                </label>
+                <input type="text" name="meta_mp_product_sale_price" value="' . CoursePress_Data_Course::get_setting( $course_id, 'mp_product_sale_price', '' ) . '" /><br >
 
-				<label class="checkbox narrow">
-					<input type="checkbox" name="meta_mp_sale_price_enabled" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'mp_sale_price_enabled', false ) ) . ' />
-					<span>' . esc_html__( 'Enable Sale Price', 'cp' ) . '</span>
-				</label>
+                <label class="checkbox narrow">
+                    <input type="checkbox" name="meta_mp_sale_price_enabled" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'mp_sale_price_enabled', false ) ) . ' />
+                    <span>' . esc_html__( 'Enable Sale Price', 'cp' ) . '</span>
+                </label>
 
-				<label class="normal">
-					<span> ' . esc_html__( 'Course SKU:', 'cp' ) . '</span>
-				</label>
-				<input type="text" name="meta_mp_sku" placeholder="' . sprintf( __( 'e.g. %s0001', 'cp' ), apply_filters( 'coursepress_course_sku_prefix', 'CP-' ) ) . '" value="' . CoursePress_Data_Course::get_setting( $course_id, 'mp_sku', '' ) . '" /><br >
-				<label class="checkbox narrow">
-					<input type="checkbox" name="meta_mp_auto_sku" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'mp_auto_sku', false ) ) . ' />
-					<span>' . esc_html__( 'Automatically generate Stock Keeping Units (SKUs)', 'cp' ) . '</span>
-				</label>';
+                <label class="normal">
+                    <span> ' . esc_html__( 'Course SKU:', 'cp' ) . '</span>
+                </label>
+                <input type="text" name="meta_mp_sku" placeholder="' . sprintf( __( 'e.g. %s0001', 'cp' ), apply_filters( 'coursepress_course_sku_prefix', 'CP-' ) ) . '" value="' . CoursePress_Data_Course::get_setting( $course_id, 'mp_sku', '' ) . '" /><br >
+                <label class="checkbox narrow">
+                    <input type="checkbox" name="meta_mp_auto_sku" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'mp_auto_sku', false ) ) . ' />
+                    <span>' . esc_html__( 'Automatically generate Stock Keeping Units (SKUs)', 'cp' ) . '</span>
+                </label>';
 
 		$product_id = CoursePress_Data_Course::get_setting( $course_id, 'woo/product_id', false );
 		$product_id = $product_id && get_post_status( $product_id ) ? $product_id : false;
@@ -436,9 +437,9 @@ class CoursePress_Helper_Integration_WooCommerce {
 	public static function cp_woo_post_parent_box_content() {
 		global $post;
 		if ( isset( $post->ID ) ) {
-			?>
-			<input type="text" name="parent_course" value="<?php echo esc_attr( wp_get_post_parent_id( $post->ID ) ); ?>" />
-			<?php
+?>
+            <input type="text" name="parent_course" value="<?php echo esc_attr( wp_get_post_parent_id( $post->ID ) ); ?>" />
+<?php
 		}
 	}
 
@@ -523,7 +524,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 		}
 	}
 
-	function change_cp_item_name( $title, $cart_item, $cart_item_key ) {
+	public static function change_cp_item_name( $title, $cart_item, $cart_item_key ) {
 		$course_id = wp_get_post_parent_id( $cart_item['product_id'] );
 		if ( $course_id && get_post_type( $course_id ) == 'course' ) {
 			return get_the_title( $course_id );
@@ -640,13 +641,13 @@ class CoursePress_Helper_Integration_WooCommerce {
 
 		ob_start();
 		do_action( 'woocommerce_before_add_to_cart_form' ); ?>
-		<form class="cart" method="post" enctype='multipart/form-data' action="<?php echo esc_url( wc_get_cart_url() ); ?>">
-		<?php do_action( 'woocommerce_before_add_to_cart_button' ); ?>
-		<input type="hidden" name="add-to-cart" value="<?php echo esc_attr( $product->id ); ?>" />
-		<button type="submit" class="single_add_to_cart_button button alt"><?php echo esc_html( $product->single_add_to_cart_text() ); ?></button>
-		<?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
-		</form>
-		<?php
+        <form class="cart" method="post" enctype='multipart/form-data' action="<?php echo esc_url( wc_get_cart_url() ); ?>">
+        <?php do_action( 'woocommerce_before_add_to_cart_button' ); ?>
+        <input type="hidden" name="add-to-cart" value="<?php echo esc_attr( $product->id ); ?>" />
+        <button type="submit" class="single_add_to_cart_button button alt"><?php echo esc_html( $product->single_add_to_cart_text() ); ?></button>
+        <?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
+        </form>
+<?php
 		do_action( 'woocommerce_after_add_to_cart_form' );
 		$content = ob_get_contents();
 		ob_end_clean();
@@ -690,23 +691,23 @@ class CoursePress_Helper_Integration_WooCommerce {
 			return;
 		}
 
-		?>
-		<script type="text/template" id="modal-view-woo-template" data-type="modal-step" data-modal-action="paid_enrollment">
-			<div class="bbm-modal__topbar">
-				<h3 class="bbm-modal__title">
-					<?php esc_html_e( 'Add Course to cart.', 'cp' ); ?>
-				</h3>
-			</div>
-			<div class="bbm-modal__section">
-				<p>
-					<?php esc_html_e( 'You can now add this course to cart.', 'cp' ); ?>
-				</p>
-				<?php echo self::_get_add_to_cart_button_by_course_id( $atts['course_id'] ); ?>
-			</div>
-			<div class="bbm-modal__bottombar">
-			</div>
-		</script>
-		<?php
+?>
+        <script type="text/template" id="modal-view-woo-template" data-type="modal-step" data-modal-action="paid_enrollment">
+        <div class="bbm-modal__topbar">
+            <h3 class="bbm-modal__title">
+            <?php esc_html_e( 'Add Course to cart.', 'cp' ); ?>
+            </h3>
+            </div>
+            <div class="bbm-modal__section">
+            <p>
+            <?php esc_html_e( 'You can now add this course to cart.', 'cp' ); ?>
+            </p>
+            <?php echo self::_get_add_to_cart_button_by_course_id( $atts['course_id'] ); ?>
+            </div>
+            <div class="bbm-modal__bottombar">
+            </div>
+            </script>
+<?php
 	}
 
 	/**
@@ -813,7 +814,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 	 *
 	 * @param string $url Current post url.
 	 * @param WP_Post $post Curent post object.
-	 *
+	 * @return string link.
 	 */
 	public static function change_product_linkt_to_course_link( $url, $post ) {
 		if ( ! self::$is_active ) {
@@ -902,5 +903,32 @@ class CoursePress_Helper_Integration_WooCommerce {
 		 * Finally ... set product thumbnail.
 		 */
 		set_post_thumbnail( $product_id, $thumbnail_id );
+	}
+
+	/**
+	 * Change product status to "outofstock" if the course is not
+	 * available.
+	 *
+	 * @since 2.0.0
+	 */
+	public static function woocommerce_before_main_content() {
+		while ( have_posts() ) {
+			the_post();
+			$product_id = get_the_ID();
+			$product_status = get_post_meta( $product_id, '_stock_status', true );
+			if ( 'instock' != $product_status ) {
+				continue;
+			}
+			$course_id = get_post_meta( $product_id, 'cp_course_id', true );
+			if ( empty( $course_id ) ) {
+				continue;
+			}
+			$course_status = CoursePress_Data_Course::is_course_available( $course_id );
+			if ( $course_status ) {
+				continue;
+			}
+			update_post_meta( get_the_ID(), '_stock_status', 'outofstock' );
+		}
+		wp_reset_query();
 	}
 }
