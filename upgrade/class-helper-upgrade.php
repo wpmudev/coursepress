@@ -169,38 +169,53 @@ class CoursePress_Helper_Upgrade {
 		$structure_visible_modules = array();
 		$structure_preview_modules = array();
 
-		/**
-		 * get units
-		 */
-		$units = Course::get_units_with_modules( $course_id, true );
-//		$units = CoursePress_Helper_Utility::sort_on_object_key( $units, 'order' );
-error_log( print_r( $units, true ) );
-		/**
-		 * Update pages and try to update modules too.
-		 */
-		foreach ( $units as $unit ) {
-			if ( ! isset( $unit['pages'] ) ) {
+		$units_args = array(
+			'post_type' => 'unit',
+			'post_parent' => $course_id,
+			'post_status' => array( 'publish', 'draft', 'private' ),
+			'posts_per_page' => -1,
+			'suppress_filters' => true,
+			'fields' => 'ids',
+		);
+		$units = get_posts( $units_args );
+
+		$module_args = array(
+			'post_type' => 'module',
+			'post_status' => 'any',
+			'posts_per_page' => -1,
+			'suppress_filters' => true,
+			'fields' => 'ids',
+		);
+
+		foreach ( $units as $unit_id ) {
+			$unit_pages = get_post_meta( $unit_id, 'page_title', true );
+
+			if ( empty( $unit_pages ) ) {
 				continue;
 			}
-			foreach ( $unit['pages'] as $key => $page ) {
-				$page_key = (int) $unit['unit']->ID . '_' . (int) $key;
-				/**
-				 * Visible
-				 */
-				if ( in_array( $page_key, $cp1_visible_pages ) ) {
-					$structure_visible_pages[ $page_key ] = true;
-					foreach ( $page['modules'] as $module ) {
-						$mod_key = $page_key . '_' . (int) $module->ID;
+
+			foreach ( $unit_pages as $key => $page ) {
+				$key = str_replace( 'page_', '', $key );
+				$page_key = $unit_id . '_' . (int) $key;
+
+				// Visible Modules
+				if ( in_array( $page_key, array_keys( $cp1_visible_pages ) ) ) {
+					$module_args['post_parent'] = $unit_id;
+					$modules = get_posts( $module_args );
+
+					foreach ( $modules as $module ) {
+						$mod_key = $page_key . '_' . (int) $module;
 						$structure_visible_modules[ $mod_key ] = true;
 					}
 				}
-				/**
-				 * Preview
-				 */
-				if ( in_array( $page_key, $cp1_preview_pages ) ) {
-					$structure_preview_pages[ $page_key ] = true;
-					foreach ( $page['modules'] as $module ) {
-						$mod_key = $page_key . '_' . (int) $module->ID;
+
+				// Preview Modules
+				if ( in_array( $page_key, array_keys( $cp1_preview_pages ) ) ) {
+					$module_args['post_parent'] = $unit_id;
+					$modules = get_posts( $module_args );
+
+					foreach ( $modules as $module ) {
+						$mod_key = $page_key . '_' . (int) $module;
 						$structure_preview_modules[ $mod_key ] = true;
 					}
 				}
