@@ -42,19 +42,23 @@ class CoursePress_Tests_Helper {
 
 	public function get_course( $admin_id ) {
 		/**
+		 * set title
+		 */
+		$title = 'test course title';
+		/**
 		 * Course Data
 		 */
-		$course = get_page_by_title( 'test course title', OBJECT, CoursePress_Data_Course::get_post_type_name() );
+		$course = get_page_by_title( $title, OBJECT, CoursePress_Data_Course::get_post_type_name() );
 		if ( empty( $course ) ) {
-			$course = (object) array(
+			$postarr = (object) array(
 				'post_author' => $admin_id,
-				'post_status' => 'private',
+				'post_status' => 'publish',
 				'post_type' => CoursePress_Data_Course::get_post_type_name(),
 				'course_excerpt' => 'test course excerpt',
 				'course_description' => 'test course content',
-				'course_name' => 'test course title',
+				'course_name' => $title,
 			);
-			$course_id = CoursePress_Data_Course::update( false, $course );
+			$course_id = CoursePress_Data_Course::update( false, $postarr );
 			$course = get_post( $course_id );
 			/**
 			 * Course Taxonomy
@@ -64,7 +68,6 @@ class CoursePress_Tests_Helper {
 			$term = array();
 			if ( empty( $category ) ) {
 				$term = wp_insert_term( 'Test Category', $taxonomy );
-				print_r( $term );
 			}
 			wp_set_post_terms( $course_id, array( $term['term_id'] ), $taxonomy );
 		}
@@ -152,9 +155,21 @@ class CoursePress_Tests_Helper {
 		CoursePress_Data_Course::update_setting( $course->ID, true, $settings );
 
 		/**
+		 * Publish course
+		 */
+		wp_update_post( array( 'ID' => $course->ID, 'post_status' => 'publish' ) );
+
+		/**
 		 * add unit
 		 */
-		$unit_id = $this->add_unit( $course );
+		$course->units = array();
+		$course->units[] = $this->add_unit( $course );
+
+		/**
+		 * Add instructor
+		 */
+		$instructor = $this->get_instructor();
+		CoursePress_Data_Course::add_instructor( $course->ID, $instructor->ID );
 
 		/**
 		 * return course
@@ -163,6 +178,29 @@ class CoursePress_Tests_Helper {
 	}
 
 	private function add_unit( $course ) {
-		return 0;
+		$admin = get_user_by( 'login', 'admin' );
+		$title = 'test unit title';
+		$unit = get_page_by_title( $title, OBJECT, CoursePress_Data_Unit::get_post_type_name() );
+		$postarr = (object) array(
+			'post_author' => $admin->ID,
+			'post_status' => 'publish',
+			'post_type' => CoursePress_Data_Unit::get_post_type_name(),
+			'post_parent' => $course->ID,
+			'post_excerpt' => 'test unit excerpt',
+			'post_description' => 'test unit content',
+			'post_title' => $title,
+			'meta_input' => array(
+				'page_title' => array( 'page_1' => 'page one' ),
+				'show_page_title' => array( true ),
+				'unit_order' => 1,
+			),
+		);
+		if ( empty( $unit ) ) {
+			$unit_id = wp_insert_post( $postarr );
+			$unit = get_post( $unit_id );
+		}
+		CoursePress_Data_Unit::show_new_pages( $unit->ID, $postarr->meta_input );
+		CoursePress_Data_Unit::show_new_on_list( $unit->ID, $course->ID, $postarr->meta_input );
+		return $unit;
 	}
 }
