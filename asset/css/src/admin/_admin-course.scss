@@ -91,25 +91,25 @@
 	}
 }
 
-#course-setup-steps .step-content input.wide {
-	width: 100%;
-}
-
-#course-setup-steps .step-content {
-	input.error,
-	textarea.error {
-		border: 1px solid #ff0000;
+#course-setup-steps {
+	.step-content {
+		input.error,
+		textarea.error {
+			border: 1px solid #ff0000;
+		}
+		input.wide {
+			width: 100%;
+		}
+		.medium {
+			min-width: 400px;
+			width: 40%;
+		}
+		label.drop-line {
+			position: relative;
+			top: 2.2em;
+			margin: 0;
+		}
 	}
-} 
-
-#course-setup-steps .step-content .medium {
-	width: 40%;
-}
-
-#course-setup-steps .step-content label.drop-line {
-	position: relative;
-	top: 2.2em;
-	margin: 0;
 }
 
 #course-setup-steps .step-title  {
@@ -705,5 +705,12 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 	}
 	.notice span.fa {
 		font-size: 1em;
+	}
+}
+
+@media screen and ( max-width: 700px ) {
+	#course-setup-steps .step-content .medium {
+		min-width: 100px;
+		width: 100%;
 	}
 }

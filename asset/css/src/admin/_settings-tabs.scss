@@ -145,3 +145,8 @@
   box-shadow: none;
   clear: both;
 }
+@media screen and ( max-width: 700px ) {
+	.tab-tabs-horizontal ul {
+		padding-top: 2em;
+	}
+}

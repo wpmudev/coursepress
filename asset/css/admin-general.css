@@ -195,6 +195,11 @@ A. Responsive
   clear: both;
 }
 
+@media screen and (max-width: 700px) {
+  .tab-tabs-horizontal ul {
+    padding-top: 2em;
+  }
+}
 /*--------------------------------------------------------------
 # 3. Settings Boxes
 --------------------------------------------------------------*/
@@ -482,19 +487,17 @@ A. Responsive
   font-weight: normal;
 }
 
-#course-setup-steps .step-content input.wide {
-  width: 100%;
-}
-
 #course-setup-steps .step-content input.error,
 #course-setup-steps .step-content textarea.error {
   border: 1px solid #ff0000;
 }
-
+#course-setup-steps .step-content input.wide {
+  width: 100%;
+}
 #course-setup-steps .step-content .medium {
+  min-width: 400px;
   width: 40%;
 }
-
 #course-setup-steps .step-content label.drop-line {
   position: relative;
   top: 2.2em;
@@ -1087,6 +1090,12 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   font-size: 1em;
 }
 
+@media screen and (max-width: 700px) {
+  #course-setup-steps .step-content .medium {
+    min-width: 100px;
+    width: 100%;
+  }
+}
 /*--------------------------------------------------------------
 # 6. Unit Builder
 --------------------------------------------------------------*/
@@ -1166,7 +1175,6 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 }
 .tab-content label {
   display: inline-block;
-  font-weight: bold;
   cursor: default;
 }
 .tab-content label.bigger {
@@ -1470,8 +1478,11 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 .tab-content .unit-builder-content .module-holder div.module-title .label, .tab-content .unit-builder-content .module-holder div.module-title .description {
   display: block;
 }
-.tab-content .unit-builder-content .module-holder div.module-title input {
+.tab-content .unit-builder-content .module-holder div.module-title input[type=text] {
   width: 100%;
+}
+.tab-content .unit-builder-content .module-holder div.module-title .show-title {
+  text-weight: normal;
 }
 .tab-content .unit-builder-content .module-holder label.module-show-title,
 .tab-content .unit-builder-content .module-holder label.module-mandatory,
@@ -1615,6 +1626,51 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   display: none;
 }
 
+@media screen and (max-width: 1000px) {
+  .tab-content .unit-builder-content .module-holder label.module-show-title,
+  .tab-content .unit-builder-content .module-holder label.module-mandatory,
+  .tab-content .unit-builder-content .module-holder label.module-assessable,
+  .tab-content .unit-builder-content .module-holder label.module-allow-retries,
+  .tab-content .unit-builder-content .module-holder label.module-minimum-grade,
+  .tab-content .unit-builder-content .module-holder label.module-duration,
+  .tab-content .unit-builder-content .module-holder label.module-use-timer {
+    width: 49%;
+  }
+  .tab-content .unit-builder-content .module-holder label.module-show-title .description,
+  .tab-content .unit-builder-content .module-holder label.module-mandatory .description,
+  .tab-content .unit-builder-content .module-holder label.module-assessable .description,
+  .tab-content .unit-builder-content .module-holder label.module-allow-retries .description,
+  .tab-content .unit-builder-content .module-holder label.module-minimum-grade .description,
+  .tab-content .unit-builder-content .module-holder label.module-duration .description,
+  .tab-content .unit-builder-content .module-holder label.module-use-timer .description {
+    margin-left: 0;
+  }
+  .tab-content .unit-builder-content .module-holder .module-components .module-component .component-checkbox-answer, .tab-content .unit-builder-content .module-holder .module-components .module-component .component-checkbox-answer.wide,
+  .tab-content .unit-builder-content .module-holder .module-components .module-component .component-select-answer, .tab-content .unit-builder-content .module-holder .module-components .module-component .component-select-answer.wide,
+  .tab-content .unit-builder-content .module-holder .module-components .module-component .component-radio-answer, .tab-content .unit-builder-content .module-holder .module-components .module-component .component-radio-answer.wide {
+    width: 70%;
+  }
+}
+@media screen and (max-width: 700px) {
+  .tab-content .unit-builder-content .module-holder label.module-show-title,
+  .tab-content .unit-builder-content .module-holder label.module-mandatory,
+  .tab-content .unit-builder-content .module-holder label.module-assessable,
+  .tab-content .unit-builder-content .module-holder label.module-allow-retries,
+  .tab-content .unit-builder-content .module-holder label.module-minimum-grade,
+  .tab-content .unit-builder-content .module-holder label.module-duration,
+  .tab-content .unit-builder-content .module-holder label.module-use-timer {
+    width: 100%;
+  }
+  .tab-content .unit-builder-content .unit-buttons .button {
+    display: block;
+  }
+  .tab-content .unit-builder-content .unit-buttons .button.unit-delete-button {
+    float: none;
+  }
+  .tab-content .unit-builder-content .section.unit-builder-footer #unit-live-toggle-2 {
+    float: none;
+  }
+}
 .module-zipped a,
 .module-audio a,
 .module-video a,
