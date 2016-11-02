@@ -5977,8 +5977,11 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				if ( ! empty( $course_id ) ) {
 					$course_obj = new Course( $course_id );
 					$course     = $course_obj->get_course();
-
-					return str_replace( '%course%', $course->post_name, $permalink );
+					
+					return ( $course && is_object($course) )
+						? str_replace( '%course%', $course->post_name, $permalink )
+						: str_replace( '%course%', '', $permalink )
+					;
 				} else {
 					return $permalink;
 				}
