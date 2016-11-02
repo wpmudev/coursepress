@@ -92,8 +92,11 @@ class CoursePress_Helper_Upgrade {
 		if ( false == self::update_setting( $course_id, self::$settings ) ) {
 			$found_error += 1;
 		}
-
-		return 0 == $found_error;
+		
+		$result = ( 0 == $found_error );
+		if ( $result ) update_post_meta($course_id, '_cp_updated_to_version_2', 1);
+		
+		return $result;
 	}
 
 	public static function strtotime( $timestamp ) {

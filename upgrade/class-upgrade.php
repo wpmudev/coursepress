@@ -117,7 +117,7 @@ class CoursePress_Upgrade {
 					break;
 					
 				case 'course':
-					if ( $course_id ) $success = CoursePress_Helper_Upgrade::update_course( $request->course_id );
+					if ( $course_id ) $success = CoursePress_Helper_Upgrade::update_course( $course_id );
 					break;
 					
 				// case 'flush':
