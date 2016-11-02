@@ -170,7 +170,7 @@ class CoursePress_Helper_Upgrade {
 		);
 		$meta_keys = array(
 			'feature_url' => 'listing_image',
-			'video_url' => 'featured_video',
+			'course_video_url' => 'featured_video',
 			'course_structure_options' => 'structure_visible',
 			'course_structure_time_display' => 'structure_show_duration',
 			/** Course Dates **/
