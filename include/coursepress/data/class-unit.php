@@ -138,7 +138,12 @@ class CoursePress_Data_Unit {
 		} else {
 			// If we did not find a unit by name, try to fetch it via ID.
 			$post = get_post( $slug );
-
+			/**
+			 * Check it... is a post at all?
+			 */
+			if ( ! is_a( $post, 'WP_Post' ) ) {
+				return $res;
+			}
 			if ( self::get_post_type_name() == $post->post_type ) {
 				if ( $id_only ) {
 					$res = $post->ID;
@@ -155,8 +160,7 @@ class CoursePress_Data_Unit {
 		if ( ! $status ) {
 			$status = self::get_unit_availability_status( $course, $unit, $previous_unit );
 		}
-
-		return $status['available'];
+		return isset( $status['available'] )? $status['available'] : false;
 	}
 
 	public static function get_page_meta( $unit_id, $item_id ) {
@@ -186,8 +190,24 @@ class CoursePress_Data_Unit {
 	}
 
 	public static function get_unit_availability_status( $course, $unit, $previous_unit = 0 ) {
+		$status = array(
+			'mandatory_required' => array(
+				'enabled' => false,
+				'result' => false,
+			),
+			'completion_required' => array(
+				'enabled' => false,
+				'result' => false,
+			),
+		);
 		if ( ! is_object( $unit ) ) {
 			$unit = get_post( $unit );
+		}
+		/**
+		 * Check it... is a post at all?
+		 */
+		if ( ! is_a( $unit, 'WP_Post' ) ) {
+			return $status;
 		}
 
 		$course_id = is_object( $course ) ? $course->ID : (int) $course;
@@ -215,17 +235,6 @@ class CoursePress_Data_Unit {
 				get_post_meta( $previous_unit_id, 'force_current_unit_successful_completion', true )
 			);
 		}
-
-		$status = array(
-			'mandatory_required' => array(
-				'enabled' => false,
-				'result' => false,
-			),
-			'completion_required' => array(
-				'enabled' => false,
-				'result' => false,
-			),
-		);
 
 		if ( $previous_unit_id && $is_available ) {
 			$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
@@ -413,6 +422,12 @@ class CoursePress_Data_Unit {
 	 */
 	public static function get_url( $unit_id, $page = false ) {
 		$unit = get_post( $unit_id );
+		/**
+		 * Check it... is a post at all?
+		 */
+		if ( ! is_a( $unit, 'WP_Post' ) ) {
+			return '';
+		}
 		$course_id = wp_get_post_parent_id( $unit_id );
 
 		$unit_url = sprintf(
@@ -456,8 +471,14 @@ class CoursePress_Data_Unit {
 	 */
 	public static function get_course_id_by_unit( $unit ) {
 		$post_type = self::get_post_type_name();
-		if ( !is_object( $unit ) && preg_match( '/^\d+$/', $unit ) ) {
+		if ( ! is_object( $unit ) && preg_match( '/^\d+$/', $unit ) ) {
 			$unit = get_post( $unit );
+		}
+		/**
+		 * Check it... is a post at all?
+		 */
+		if ( ! is_a( $unit, 'WP_Post' ) ) {
+			return 0;
 		}
 		if ( $unit->post_type == $post_type ) {
 			return $unit->post_parent;
@@ -667,9 +688,13 @@ class CoursePress_Data_Unit {
 			$course_url = CoursePress_Data_Course::get_course_url( $course_id );
 			$unit_url = CoursePress_Core::get_slug( 'unit/' );
 			$unit = get_post( $unit_id );
-			$unit_slug = $unit->post_name;
-
-			return $course_url . $unit_url . trailingslashit( $unit_slug );
+			/**
+			 * Check it... is a post at all?
+			 */
+			if ( is_a( $unit, 'WP_Post' ) ) {
+				$unit_slug = $unit->post_name;
+				return $course_url . $unit_url . trailingslashit( $unit_slug );
+			}
 		}
 
 		return '';
