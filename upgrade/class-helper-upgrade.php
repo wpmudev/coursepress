@@ -89,11 +89,14 @@ class CoursePress_Helper_Upgrade {
 		}
 
 		// Now update the course settings
-		if ( false == self::update_setting( $course_id, self::$settings ) ) {
+		if ( false == self::update_course_settings( $course_id, self::$settings ) ) {
 			$found_error += 1;
 		}
-
-		return 0 == $found_error;
+		
+		$result = ( 0 == $found_error );
+		if ( $result ) update_post_meta($course_id, '_cp_updated_to_version_2', 1);
+		
+		return $result;
 	}
 
 	public static function strtotime( $timestamp ) {
@@ -105,7 +108,7 @@ class CoursePress_Helper_Upgrade {
 		return $timestamp;
 	}
 
-	public static function update_setting( $course_id, $settings ) {
+	public static function update_course_settings( $course_id, $settings ) {
 		$settings = array_filter( $settings );
 		update_post_meta( $course_id, 'course_settings', $settings );
 
@@ -167,9 +170,10 @@ class CoursePress_Helper_Upgrade {
 		);
 		$meta_keys = array(
 			'feature_url' => 'listing_image',
-			'video_url' => 'featured_video',
+			'course_video_url' => 'featured_video',
 			'course_structure_options' => 'structure_visible',
 			'course_structure_time_display' => 'structure_show_duration',
+			'course_language' => 'course_language',
 			/** Course Dates **/
 			'open_ended_course' => 'course_open_ended',
 			'course_start_date' => 'course_start_date',

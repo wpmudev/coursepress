@@ -91,39 +91,48 @@ class CoursePress_Upgrade {
 
 	public static function ajax_courses_upgrade() {
 		$request = json_decode( file_get_contents( 'php://input' ) );
+		
+		if ( !isset($request->type) || empty($request->type) ) die();
+		if ( !isset($request->course_id) || empty($request->course_id) ) die();
 
 		if ( ! empty( $request->_wpnonce ) && wp_verify_nonce( $request->_wpnonce, 'coursepress-upgrade-nonce' ) ) {
-			$action = $request->action;
-
-			$ok = array( 'm' => true );
-			$not_ok = array( 'm' => false );
-
-			if ( 'settings' == $action ) {
-				if ( true == CoursePress_Helper_Upgrade::update_settings() ) {
-					wp_send_json_success( $ok );
-				} else {
-					wp_send_json_error( $not_ok );
-				}
-			} elseif ( 'course' == $action ) {
-				$update_class = dirname( __FILE__ ) . '/class-helper-upgrade.php';
-
-				require $update_class;
-
-				$success = CoursePress_Helper_Upgrade::update_course( $request->course_id );
-
-				if ( $success ) {
-					wp_send_json_success( array( 'message' => 'ok' ) );
-				} else {
-					wp_send_json_error( array( 'message' => 'no ok' ) );
-				}
-				exit;
-			} elseif ( 'flush' == $action ) {
-				update_option( 'coursepress_20_upgraded', true );
-				delete_option( 'cp2_flushed' );
-
-				wp_send_json_success(array( 'm' => 'ok' ) );
-				exit;
+			
+			// include required classes
+			$update_class = dirname( __FILE__ ) . '/class-helper-upgrade.php';
+			require $update_class;
+			
+			// variables
+			$type = $request->type;
+			$ok = array( 'success' => true );
+			$not_ok = array( 'success' => false );
+			$success = false;
+			
+			preg_match_all('!\d+!', $request->course_id, $course_id_matches);
+			$course_id =  (int)implode('', $course_id_matches[0]);			
+			
+			switch ( $type ) {
+				
+				case 'settings':
+					$success = CoursePress_Helper_Upgrade::update_settings();
+					break;
+					
+				case 'course':
+					if ( $course_id ) $success = CoursePress_Helper_Upgrade::update_course( $course_id );
+					break;
+					
+				// case 'flush':
+					// update_option( 'coursepress_20_upgraded', true );
+					// delete_option( 'cp2_flushed' );
+					// break
+			}
+			
+			// response
+			if ( $success && !is_wp_error($success) ) {
+				wp_send_json_success( $ok );
+			} else {
+				wp_send_json_error( $not_ok );
 			}
 		}
+		die();
 	}
 }

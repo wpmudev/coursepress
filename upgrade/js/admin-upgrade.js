@@ -25,17 +25,18 @@ _.extend( _coursepress_upgrade, {
 			this.save();
 		},
 		parse: function( response ) {
-			var progress_div;
-
-			progress_div = this.container.$el.find( '.course-progress' );
-
-			if ( response.success ) {
-				progress_div.addClass( 'success' );
-				_coursepress_upgrade.totalSuccess += 1;
-			} else {
-				progress_div.addClass( 'error' );
-				_coursepress_upgrade.totalError += 1;
+			var progress_div = this.container.$el.find( '.course-progress' );
+			
+			if ( response ) {
+				if ( response.success ) {
+					if ( !progress_div.hasClass('error') ) progress_div.addClass( 'success' );
+					_coursepress_upgrade.totalSuccess += 1;
+				} else {
+					if ( !progress_div.hasClass('success') ) progress_div.addClass( 'error' );
+					_coursepress_upgrade.totalError += 1;
+				}
 			}
+			
 
 			_coursepress_upgrade.totalSend += 1;
 
@@ -81,6 +82,7 @@ _.extend( _coursepress_upgrade, {
 				} else {
 					this.sync = new _coursepress_upgrade.upgrade({
 						course_id: this.input.val(),
+						type: this.input.data('type'),
 						container: this,
 						user_id: this.user_id
 					});
