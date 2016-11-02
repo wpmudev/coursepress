@@ -17,7 +17,7 @@ class CoursePress_Template_Student {
 			if ( CoursePress_Data_Course::enroll_student( $student_id, $course_id ) ) {
 				if ( empty( $request['cpnonce'] ) ) {
 					$course_url = CoursePress_Data_Course::get_course_url( $course_id );
-					$course_url .= trailingslashit( 'units' );
+					$course_url .= CoursePress_Core::get_slug( 'units/' );
 					// Send the student the unit overview
 					wp_safe_redirect( $course_url );
 				} else {

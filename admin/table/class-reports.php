@@ -35,6 +35,8 @@ class CoursePress_Admin_Table_Reports extends WP_List_Table {
 	}
 
 	public function prepare_items() {
+		global $wpdb;
+
 		$screen = get_current_screen();
 		/**
 		 * Per Page
