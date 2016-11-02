@@ -1,18 +1,15 @@
 /* global _coursepress_upgrade */
-
 _.extend( _coursepress_upgrade, {
 	totalCourses: 0,
 	totalSuccess: 0,
 	totalSend: 0,
 	events: Backbone.Events,
 
-	_upgrade: Backbone.Model.extend({
+	upgrade: Backbone.Model.extend({
 		url: _coursepress_upgrade.ajax_url + '?action=coursepress_upgrade_update',
 		initialize: function( options ) {
 			_.extend( this, options );
 			this.on( 'error', this.server_error, this );
-
-			/*
 
 			var data = {
 				_wpnonce: _coursepress_upgrade._wpnonce,
@@ -24,19 +21,22 @@ _.extend( _coursepress_upgrade, {
 			};
 			this.set( data );
 			this.save();
-			*/
 		},
 		parse: function( response ) {
-			var progress_div;
-
-			progress_div = this.container.$el.find( '.course-progress' );
-
-			if ( response.success ) {
-				progress_div.addClass( 'success' );
-				_coursepress_upgrade.totalSuccess += 1;
-			} else {
-				progress_div.addClass( 'error' );
-				_coursepress_upgrade.totalError += 1;
+			var progress_div = this.container.$el.find( '.course-progress' );
+			
+			if ( response ) {
+				if ( response.success ) {
+					if ( ! progress_div.hasClass('error') ) {
+						progress_div.addClass( 'success' );
+						_coursepress_upgrade.totalSuccess += 1;
+					}
+				} else {
+					if ( !progress_div.hasClass('success') ) {
+						progress_div.addClass( 'error' );
+						_coursepress_upgrade.totalError += 1;
+					}
+				}
 			}
 
 			_coursepress_upgrade.totalSend += 1;
@@ -48,7 +48,6 @@ _.extend( _coursepress_upgrade, {
 			window.alert( _coursepress_upgrade.server_error );
 		}
 	}),
-	upgrade: new _coursepress_upgrade._upgrade(),
 
 	view: Backbone.View.extend({
 		className: 'coursepress-update-view',
@@ -82,21 +81,12 @@ _.extend( _coursepress_upgrade, {
 					// Trigger the done event
 					_coursepress_upgrade.events.trigger( 'coursepress_update_done', this );
 				} else {
-					var data = {
+					this.sync = new _coursepress_upgrade.upgrade({
+						course_id: this.input.val(),
+						type: this.input.data('type'),
 						container: this,
-						action: 'course',
-						_wpnonce: _coursepress_upgrade._wpnonce
-					};
-
-					if ( 'settings' === this.input.val() ) {
-						data.action = 'settings';
-					} else {
-						data.action = 'course';
-						data.course_id = this.course_id;
-					}
-
-					_coursepress_upgrade.upgrade.set( data );
-					_coursepress_upgrade.upgrade.save();
+						user_id: this.user_id
+					});
 				}
 			}
 		}
@@ -138,14 +128,6 @@ _.extend( _coursepress_upgrade, {
 					update_nag.parent().removeClass( 'notice-warning' );
 					update_nag.html( _coursepress_upgrade.success );
 
-					// Send flush rewrite rules request
-					_coursepress_upgrade._wpnonce = _coursepress_upgrade.flush_nonce;
-					new _coursepress_upgrade.upgrade({
-						container: sender,
-						course_id: sender.course_id,
-						user_id: sender.user_id
-					});
-
 					// Redirect user
 					time = 5;
 					timer = setInterval(function(){
@@ -154,7 +136,7 @@ _.extend( _coursepress_upgrade, {
 
 						if ( 0 === time ) {
 							clearInterval(timer);
-							//window.location = _coursepress_upgrade.cp2_url;
+							window.location = _coursepress_upgrade.cp2_url;
 						}
 					}, 1000 );
 				} else {

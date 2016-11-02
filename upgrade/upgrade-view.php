@@ -17,10 +17,11 @@ $courses = get_posts( $course_args );
 $courses_to_upgrade = array();
 foreach( $courses as $course_id ) {
 	$already_upgraded = (bool) get_post_meta( $course_id, '_cp_updated_to_version_2', true );
-	if ( !$already_upgraded ) $courses_to_upgrade[] = $course_id;
+	if ( !$already_upgraded ) {
+		$courses_to_upgrade[] = $course_id;
+	}
 }
 $count = count( $courses_to_upgrade );
-$settings_done = get_option( 'cp_settings_done', false );
 ?>
 <div class="wrap coursepress-upgrade-view">
 	<h2><?php _e( 'CoursePress 2.0 Upgrade', 'cp' ); ?></h2>
@@ -31,10 +32,6 @@ $settings_done = get_option( 'cp_settings_done', false );
 	<div class="coursepress-update-holder">
 		<form method="post" id="coursepress-update-form">
 			<input type="hidden" name="user_id" value="<?php echo get_current_user_id(); ?>" />
-			<?php if ( !$settings_done ) : ?>
-				<input type="hidden" name="course" value="settings" data-type="settings" data-done="<?php echo $settings_done; ?>" data-name="<?php _e( 'Updating course settings.', 'cp' ); ?>" />
-			<?php endif; ?>
-			
 			<?php foreach ( $courses_to_upgrade as $course_id ) : ?>
 					<input type="hidden" name="course" value="<?php echo $course_id; ?>" data-type="course" data-done="" data-name="<?php echo esc_attr( get_the_title( $course_id ) ); ?>" />
 			<?php endforeach; ?>

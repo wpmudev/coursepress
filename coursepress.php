@@ -49,6 +49,8 @@ class CoursePressUpgrade {
 
 	public static function init() {
 		//delete_option( 'coursepress_20_upgraded' );
+		//delete_option( 'cp2_flushed' );
+		//delete_option( 'coursepress_settings' );
 		self::$coursepress_is_upgraded = get_option( 'coursepress_20_upgraded', false );
 		$coursepress_version = false === self::$coursepress_is_upgraded ? '1.x' : '2.0';
 
@@ -84,11 +86,16 @@ class CoursePressUpgrade {
 			'post_status' => 'any',
 			'posts_per_page' => 1,
 			'fields' => 'ids',
-			'meta_key' => '_cp_updated_to_version_2',
+			'meta_key' => 'course_settings',
 			'meta_compare' => 'NOT EXISTS',
 			'suppress_filters' => true,
 		);
 		$courses = get_posts( $args );
+
+		foreach ( $courses as $course_id ) {
+			//delete_post_meta( $course_id, '_cp_updated_to_version_2' );
+			//delete_post_meta( $course_id, 'course_settings' );
+		}
 
 		return count( $courses ) > 0;
 	}
@@ -136,6 +143,10 @@ class CoursePressUpgrade {
 		if ( false == $is_flushed ) {
 			delete_option( 'cp1_flushed' );
 			update_option( 'cp2_flushed', true );
+
+			/** Update 2.0 Settings **/
+			CoursePress_Upgrade::init();
+
 			//@todo: wrap this
 			flush_rewrite_rules();
 		}
