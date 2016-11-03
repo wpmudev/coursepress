@@ -44,6 +44,14 @@
 		"grunt-autoprefixer": "~0.7.2",
 		"grunt-contrib-sass": "~0.8.1",
 		"grunt-contrib-cssmin": "~0.10.0",
-		"grunt-contrib-watch": "~0.6.1"
+		"grunt-contrib-watch": "~0.6.1",
+		"mocha": "^2.3.3",
+		"underscore": "^1.8.3"
+	},
+	"scripts": {
+		"test-php": "phpunit -c test/php/lib/phpunit.xml",
+		"test-js": "node_modules/.bin/mocha test/js",
+		"test": "npm run test-php && npm run test-js",
+		"test": "npm run test-php"
 	}
 }
