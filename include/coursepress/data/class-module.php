@@ -456,14 +456,14 @@ class CoursePress_Data_Module {
 		);
 
 	}
-	
+
 	/**
 	* Form results will not depend on grades, just check if mandatory and empty
 	*/
 	public static function get_form_results( $student_id, $course_id, $unit_id, $module_id, $response = false, $data = false ) {
 		$attributes = self::attributes( $module_id );
 		$is_mandatory = (bool) $attributes['mandatory'];
-		
+
 		if ( false === $data ) {
 			$data = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
 		}
@@ -481,10 +481,10 @@ class CoursePress_Data_Module {
 
 		$total_questions = count( $attributes['questions'] );
 		$gross_correct = 0;
-		
+
 		if ( $is_mandatory ) {
 			foreach ( $attributes['questions'] as $key => $question ) {
-				$answer = $response[$key];
+				$answer = $response[ $key ];
 				switch ( $question['type'] ) {
 					case 'selectable':
 						// selectable will always have a default response
@@ -493,7 +493,7 @@ class CoursePress_Data_Module {
 					case 'short':
 					case 'long':
 						// just check if empty
-						$gross_correct = ( !empty($answer) ) ? $gross_correct + 1 : $gross_correct;
+						$gross_correct = ( ! empty( $answer ) ) ? $gross_correct + 1 : $gross_correct;
 						break;
 				}
 			}
@@ -501,7 +501,7 @@ class CoursePress_Data_Module {
 		} else {
 			$grade = 100;
 		}
-		
+
 		$passed = $grade >= $minimum_grade;
 		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
 		$responses = CoursePress_Data_Student::get_responses( $student_id, $course_id, $unit_id, $module_id, true, $student_progress );
@@ -755,6 +755,17 @@ class CoursePress_Data_Module {
 	 * @return array List of modules of the unit.
 	 */
 	public static function get_modules_ids_by_unit( $unit_id ) {
+		/**
+		 * Check unit_id post type
+		 */
+		$post_type = get_post_type( $unit_id );
+		$unit_post_type = CoursePress_Data_Unit::get_post_type_name();
+		if ( $unit_post_type != $post_type ) {
+			return array();
+		}
+		/**
+		 * get children
+		 */
 		$args = array(
 			'post_type' => self::$post_type,
 			'post_status' => 'publish',
@@ -798,6 +809,12 @@ class CoursePress_Data_Module {
 	public static function get_unit_id_by_module( $module ) {
 		if ( ! is_object( $module ) && preg_match( '/^\d+$/', $module ) ) {
 			$module = get_post( $module );
+		}
+		/**
+		 * Check module is a WP_Post object?
+		 */
+		if ( ! is_a( $module, 'WP_Post' ) ) {
+			return 0;
 		}
 		$post_type = self::get_post_type_name();
 		if ( $module->post_type == $post_type ) {
@@ -862,6 +879,12 @@ class CoursePress_Data_Module {
 	 * @return array Array of module IDs.
 	 */
 	public static function get_module_ids_by_unit_ids( $ids ) {
+		if ( empty( $ids ) ) {
+			return array();
+		}
+		if ( ! is_array( $ids ) ) {
+			$ids = array( $ids );
+		}
 		$args = array(
 			'post_type' => self::$post_type,
 			'nopaging' => true,
