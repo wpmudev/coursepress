@@ -682,7 +682,7 @@ class CoursePress_Data_Shortcode_Template {
 				}
 
 				// Title retrieved below
-				$breadcrumb_trail .= $bcs . '<a href="' . esc_url( $u_link_url ) . '#section-' . $page . '" class="breadcrumb-course-unit-section crumb" data-id="' . $page . '">' . $page_info['title'] . '</a>';
+				$breadcrumb_trail .= $bcs . '<a href="' . esc_url( $u_link_url ) . '/page/' . $page . '" class="breadcrumb-course-unit-section crumb" data-id="' . $page . '">' . $page_info['title'] . '</a>';
 
 				$modules_status = $can_update_course ? 'any' : array( 'publish' );
 

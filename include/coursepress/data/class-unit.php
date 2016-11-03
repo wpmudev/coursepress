@@ -686,7 +686,7 @@ class CoursePress_Data_Unit {
 		if ( ! empty( $unit_id ) ) {
 			$course_id = get_post_field( 'post_parent', $unit_id );
 			$course_url = CoursePress_Data_Course::get_course_url( $course_id );
-			$unit_url = CoursePress_Core::get_slug( 'unit/' );
+			$unit_url = CoursePress_Core::get_slug( 'units/' );
 			$unit = get_post( $unit_id );
 			/**
 			 * Check it... is a post at all?

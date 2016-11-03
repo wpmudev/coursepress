@@ -21,10 +21,6 @@ class CoursePress_Upgrade {
 
 
 	private static function _2p0() {
-		// $settings = get_option( 'coursepress_settings', array() );
-		// error_log( print_r( CoursePress_Core::get_network_setting('general/version'), true ) );
-		return false;
-
 		/**
 		 * Upgrade blog options
 		 *
@@ -81,7 +77,15 @@ class CoursePress_Upgrade {
 		// Instructor
 		CoursePress_Helper_Utility::set_array_val( $settings, 'instructor/show_username', get_option( 'show_instructor_username', 1 ) );
 		$default_capabilities = CoursePress_Data_Capabilities::get_instructor_capabilities();
-		CoursePress_Helper_Utility::set_array_val( $settings, 'instructor/capabilities', get_option( 'coursepress_instructor_capabilities', $default_capabilities ) );
+		$instructor_capabilities = get_option( 'coursepress_instructor_capabilities', array() );
+
+		if ( ! empty( $instructor_capabilities ) && is_array( $instructor_capabilities ) ) {
+			foreach ( $instructor_capabilities as $capability ) {
+				$default_capabilities[ $capability ] = 1;
+			}
+		}
+
+		CoursePress_Helper_Utility::set_array_val( $settings, 'instructor/capabilities', $default_capabilities );
 
 		// Basic Certificate
 		/**
@@ -111,63 +115,63 @@ class CoursePress_Upgrade {
 		$default_settings = CoursePress_Helper_Setting_Email::get_defaults();
 		$value = isset( $options['auto_email'] ) ? $options['auto_email'] : 1;
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/basic_certificate/auto_email', $value );
-		$value = isset( $options['from_name'] ) ? $options['from_name'] : $default_settings['basic_certificate']['from_name'];
+		$value = isset( $options['from_name'] ) ? $options['from_name'] : $default_settings['basic_certificate']['from'];
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/basic_certificate/from', $value );
-		$value = isset( $options['from_email'] ) ? $options['from_email'] : $default_settings['basic_certificate']['from_email'];
+		$value = isset( $options['from_email'] ) ? $options['from_email'] : $default_settings['basic_certificate']['email'];
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/basic_certificate/email', $value );
 		$value = isset( $options['email_subject'] ) ? $options['email_subject'] : $default_settings['basic_certificate']['subject'];
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/basic_certificate/subject', $value );
 		$value = isset( $options['email_content'] ) ? $options['email_content'] : $default_settings['basic_certificate']['content'];
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/basic_certificate/content', $value );
 
-		$value = get_option( 'registration_from_name', $default_settings['registration']['from_name'] );
+		$value = get_option( 'registration_from_name', $default_settings['registration']['from'] );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/registration/from', $value );
-		$value = get_option( 'registration_from_email', $default_settings['registration']['from_email'] );
+		$value = get_option( 'registration_from_email', $default_settings['registration']['email'] );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/registration/email', $value );
 		$value = get_option( 'registration_email_subject', $default_settings['registration']['subject'] );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/registration/subject', $value );
 		$value = get_option( 'registration_content_email', $default_settings['registration']['content'] );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/registration/content', $value );
 
-		$value = get_option( 'enrollment_from_name', $default_settings['enrollment_confirm']['from_name'] );
+		$value = get_option( 'enrollment_from_name', $default_settings['enrollment_confirm']['from'] );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/enrollment_confirm/from', $value );
-		$value = get_option( 'enrollment_from_email', $default_settings['enrollment_confirm']['from_email'] );
+		$value = get_option( 'enrollment_from_email', $default_settings['enrollment_confirm']['email'] );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/enrollment_confirm/email', $value );
 		$value = get_option( 'enrollment_email_subject', $default_settings['enrollment_confirm']['subject'] );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/enrollment_confirm/subject', $value );
 		$value = get_option( 'enrollment_content_email', $default_settings['enrollment_confirm']['content'] );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/enrollment_confirm/content', $value );
 
-		$value = get_option( 'invitation_from_name', $default_settings['course_invitation']['from_name'] );
+		$value = get_option( 'invitation_from_name', $default_settings['course_invitation']['from'] );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/course_invitation/from', $value );
-		$value = get_option( 'invitation_from_email', $default_settings['course_invitation']['from_email'] );
+		$value = get_option( 'invitation_from_email', $default_settings['course_invitation']['email'] );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/course_invitation/email', $value );
 		$value = get_option( 'invitation_email_subject', $default_settings['course_invitation']['subject'] );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/course_invitation/subject', $value );
 		$value = get_option( 'invitation_content_email', $default_settings['course_invitation']['content'] );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/course_invitation/content', $value );
 
-		$value = get_option( 'invitation_passcode_from_name', $default_settings['course_invitation_password']['from_name'] );
+		$value = get_option( 'invitation_passcode_from_name', $default_settings['course_invitation_password']['from'] );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/course_invitation_password/from', $value );
-		$value = get_option( 'invitation_passcode_from_email', $default_settings['course_invitation_password']['from_email'] );
+		$value = get_option( 'invitation_passcode_from_email', $default_settings['course_invitation_password']['email'] );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/course_invitation_password/email', $value );
 		$value = get_option( 'invitation_passcode_email_subject', $default_settings['course_invitation_password']['subject'] );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/course_invitation_password/subject', $value );
 		$value = get_option( 'invitation_content_passcode_email', $default_settings['course_invitation_password']['content'] );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/course_invitation_password/content', $value );
 
-		$value = get_option( 'instructor_invitation_from_name', $default_settings['instructor_invitation']['from_name'] );
+		$value = get_option( 'instructor_invitation_from_name', $default_settings['instructor_invitation']['from'] );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/instructor_invitation/from', $value );
-		$value = get_option( 'instructor_invitation_from_email', $default_settings['instructor_invitation']['from_email'] );
+		$value = get_option( 'instructor_invitation_from_email', $default_settings['instructor_invitation']['email'] );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/instructor_invitation/email', $value );
 		$value = get_option( 'instructor_invitation_email_subject', $default_settings['instructor_invitation']['subject'] );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/instructor_invitation/subject', $value );
 		$value = get_option( 'instructor_invitation_email', $default_settings['instructor_invitation']['content'] );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/instructor_invitation/content', $value );
 
-		$value = get_option( 'mp_order_from_name', $default_settings['new_order']['from_name'] );
+		$value = get_option( 'mp_order_from_name', $default_settings['new_order']['from'] );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/new_order/from', $value );
-		$value = get_option( 'mp_order_from_email', $default_settings['new_order']['from_email'] );
+		$value = get_option( 'mp_order_from_email', $default_settings['new_order']['email'] );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/new_order/email', $value );
 		$value = get_option( 'mp_order_email_subject', $default_settings['new_order']['subject'] );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/new_order/subject', $value );

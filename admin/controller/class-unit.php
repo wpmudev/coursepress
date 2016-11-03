@@ -88,7 +88,7 @@ class CoursePress_Admin_Controller_Unit {
 				'unit_feature_image',
 				array(
 					'placeholder' => __( 'Add Image URL or Browse for Image', 'cp' ),
-					'title' => __( 'Unit Feature Image', 'cp' ),
+					'title' => __( 'Unit Featured Image', 'cp' ),
 					'value' => '<%= unit_feature_image %>', // Add _s template
 				)
 			) . '
