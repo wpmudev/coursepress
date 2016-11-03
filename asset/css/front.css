@@ -361,7 +361,6 @@ tester {
   transform: translate(-50%, -50%);
 }
 .course_list_box_item .clickable:hover .course-information *:not([class*="clickable-label"]) {
-  -webkit-filter: blur(2px);
   filter: blur(2px);
 }
 .course_list_box_item .clickable:hover .clickable-label {
@@ -713,9 +712,6 @@ tester {
 .cp .cp-module-content * {
   box-sizing: border-box;
 }
-.cp .cp-module-content .zip_holder.error {
-	color: rgba(255, 0, 0, 0.5);
-}
 .cp .cp-module-content .comment-reply-title {
   margin-bottom: 0;
 }
@@ -743,6 +739,22 @@ tester {
   display: inline-block;
   vertical-align: middle;
   padding: 2px 4px;
+}
+.cp .quiz_timer {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-weight: 600;
+}
+.cp .quiz_timer_info {
+  position: absolute;
+  top: 35px;
+  right: 20px;
+  padding: 5px 0;
+  color: red;
+  text-transform: uppercase;
+  font-size: 11px;
+  display: none;
 }
 .cp .module-content {
   max-width: 100%;
