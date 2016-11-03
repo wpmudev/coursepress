@@ -223,8 +223,10 @@ class CoursePress_Template_Module {
 		 **/
 		do_action( 'coursepress_module_view', $module_id, $student_id );
 
-		// Marked module as visited
+		// Marked module and page as visited
+		$module_page = get_post_meta( $module_id, 'module_page', true );
 		CoursePress_Data_Student::visited_module( $student_id, $course_id, $unit_id, $module_id );
+		CoursePress_Data_Student::visited_page( $student_id, $course_id, $unit_id, $module_page );
 
 		$content .= sprintf( '<input type="hidden" name="course_id" value="%s" />', $course_id );
 		$content .= sprintf( '<input type="hidden" name="unit_id" value="%s" />', $unit_id );
