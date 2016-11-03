@@ -482,11 +482,10 @@ class CoursePress_Data_Certificate {
 		/**
 		 * get from certificate
 		 */
-
 		$certificate_id = self::get_certificate_id( $student_id, $course_id );
 		if ( ! empty( $certificate_id ) ) {
 			$file = get_post_meta( $certificate_id, self::$custom_field_name_for_pdf_file, true );
-			$url = self::url_prepare( $file );
+			$url = self::url_prepare( $file, $course_id, $student_id );
 			if ( ! empty( $url ) ) {
 				return $url;
 			}
@@ -495,7 +494,7 @@ class CoursePress_Data_Certificate {
 		 * get by default
 		 */
 		$file = CoursePress_Data_Certificate::get_pdf_file_name( $course_id, $student_id );
-		$url = self::url_prepare( $file );
+		$url = self::url_prepare( $file, $course_id, $student_id );
 		if ( ! empty( $url ) ) {
 			return $url;
 		}
@@ -503,9 +502,8 @@ class CoursePress_Data_Certificate {
 		 * legacy of not secure certificates.
 		 *
 		 */
-		
 		$file = CoursePress_Data_Certificate::deprecated_get_pdf_file_name( $course_id, $student_id );
-		$url = self::url_prepare( $file );
+		$url = self::url_prepare( $file, $course_id, $student_id );
 		if ( ! empty( $url ) ) {
 			return $url;
 		}
@@ -523,12 +521,13 @@ class CoursePress_Data_Certificate {
 	 * @param string $file full path to certificate file.
 	 * @return string/boolean Returns encoded URL or false if file do not * exists.
 	 */
-	public static function url_prepare( $file ) {
+	public static function url_prepare( $file, $course_id, $student_id ) {
 		if ( is_file( $file ) && is_readable( $file ) ) {
 			$upload_dir = wp_upload_dir();
 			$url = str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $file );
 			$url = CoursePress_Helper_Utility::encode( $url );
-			$url = trailingslashit( home_url() ) . '?fdcpf=' . $url;
+			//$url = trailingslashit( home_url() ) . '?fdcpf=' . $url;
+			$url = add_query_arg( array( 'fdcpf' => $url, 'c' => $course_id, 'u' => $student_id ), home_url() );
 			return $url;
 		}
 		return false;
