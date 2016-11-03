@@ -40,7 +40,8 @@ class CoursePress_Tests_Helper {
 		return $student;
 	}
 
-	public function get_course( $admin_id ) {
+	public function get_course() {
+		$admin = get_user_by( 'login', 'admin' );
 		/**
 		 * set title
 		 */
@@ -51,7 +52,7 @@ class CoursePress_Tests_Helper {
 		$course = get_page_by_title( $title, OBJECT, CoursePress_Data_Course::get_post_type_name() );
 		if ( empty( $course ) ) {
 			$postarr = (object) array(
-				'post_author' => $admin_id,
+				'post_author' => $admin->ID,
 				'post_status' => 'publish',
 				'post_type' => CoursePress_Data_Course::get_post_type_name(),
 				'course_excerpt' => 'test course excerpt',
