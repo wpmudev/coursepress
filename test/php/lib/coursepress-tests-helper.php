@@ -202,6 +202,119 @@ class CoursePress_Tests_Helper {
 		}
 		CoursePress_Data_Unit::show_new_pages( $unit->ID, $postarr->meta_input );
 		CoursePress_Data_Unit::show_new_on_list( $unit->ID, $course->ID, $postarr->meta_input );
+		$unit->modules = $this->add_modules( $unit );
 		return $unit;
+	}
+
+	private function add_modules( $unit ) {
+		$modules = array();
+		$admin = get_user_by( 'login', 'admin' );
+		/**
+		 * Text Module
+		 */
+		$title = 'Text Module';
+		$postarr = (object) array(
+			'post_author' => $admin->ID,
+			'post_status' => 'publish',
+			'post_type' => CoursePress_Data_Module::get_post_type_name(),
+			'post_parent' => $unit->ID,
+			'post_description' => 'Nullam auctor commodo eleifend. Integer aliquet, ex a rutrum tempor, mauris dolor finibus orci, elementum auctor lorem quam eu nibh.',
+			'post_title' => $title,
+			'meta_input' => array(
+				'allow_retries' => 1,
+				'assessable' => 0,
+				'duration' => '0:00',
+				'mandatory' => 0,
+				'minimum_grade' => 100,
+				'module_order' => 1,
+				'module_page' => 1,
+				'module_type' => 'text',
+				'order' => 0,
+				'retry_attempts' => 0,
+				'show_title' => 1,
+			),
+		);
+		$module = get_page_by_title( $title, OBJECT, CoursePress_Data_Module::get_post_type_name() );
+		if ( empty( $module ) ) {
+			$module_id = wp_insert_post( $postarr );
+			$module = get_post( $module_id );
+			CoursePress_Data_Module::show_on_list( $module->ID, $unit->ID, $postarr->meta_input );
+		}
+		$modules[] = $module;
+		/**
+		 * Single Choice Module
+		 */
+		$title = 'Single Choice Module';
+		$postarr = (object) array(
+			'post_author' => $admin->ID,
+			'post_status' => 'publish',
+			'post_type' => CoursePress_Data_Module::get_post_type_name(),
+			'post_parent' => $unit->ID,
+			'post_description' => 'Nullam auctor commodo eleifend. Integer aliquet, ex a rutrum tempor, mauris dolor finibus orci, elementum auctor lorem quam eu nibh.',
+			'post_title' => $title,
+			'meta_input' => array(
+				'allow_retries' => 1,
+				'answers' => 'a:2:{i:0;s:8:"Answer A";i:1;s:8:"Answer B";}',
+				'answers_selected' => 0,
+				'assessable' => 1,
+				'duration' => '0:00',
+				'mandatory' => 0,
+				'minimum_grade' => 100,
+				'module_order' => 2,
+				'module_page' => 1,
+				'module_type' => 'input-radio',
+				'order' => 0,
+				'retry_attempts' => 0,
+				'show_title' => 1,
+				'use_timer' => '',
+
+			),
+		);
+		$module = get_page_by_title( $title, OBJECT, CoursePress_Data_Module::get_post_type_name() );
+		if ( empty( $module ) ) {
+			$module_id = wp_insert_post( $postarr );
+			$module = get_post( $module_id );
+			CoursePress_Data_Module::show_on_list( $module->ID, $unit->ID, $postarr->meta_input );
+		}
+		$modules[] = $module;
+		/**
+		 * File Upload Module
+		 */
+		$title = 'File Upload Module';
+		$postarr = (object) array(
+			'post_author' => $admin->ID,
+			'post_status' => 'publish',
+			'post_type' => CoursePress_Data_Module::get_post_type_name(),
+			'post_parent' => $unit->ID,
+			'post_description' => 'Nullam auctor commodo eleifend. Integer aliquet, ex a rutrum tempor, mauris dolor finibus orci, elementum auctor lorem quam eu nibh.',
+			'post_title' => $title,
+			'meta_input' => array(
+				'allow_retries' => 1,
+				'assessable' => 1,
+				'duration' => '0:00',
+				'instructor_assessable' => 1,
+				'mandatory' => 0,
+				'minimum_grade' => 100,
+				'module_order' => 3,
+				'module_page' => 1,
+				'module_type' => 'input-upload',
+				'order' => 0,
+				'retry_attempts' => 0,
+				'show_title' => 1,
+				'use_timer' => '',
+
+			),
+		);
+		$module = get_page_by_title( $title, OBJECT, CoursePress_Data_Module::get_post_type_name() );
+		if ( empty( $module ) ) {
+			$module_id = wp_insert_post( $postarr );
+			$module = get_post( $module_id );
+			CoursePress_Data_Module::show_on_list( $module->ID, $unit->ID, $postarr->meta_input );
+		}
+		$modules[] = $module;
+		/**
+		 * return modules
+		 */
+		return $modules;
 	}
 }
