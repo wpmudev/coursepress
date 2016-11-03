@@ -223,6 +223,9 @@ class CoursePress_Template_Module {
 		 **/
 		do_action( 'coursepress_module_view', $module_id, $student_id );
 
+		// Marked module as visited
+		CoursePress_Data_Student::visited_module( $student_id, $course_id, $unit_id, $module_id );
+
 		$content .= sprintf( '<input type="hidden" name="course_id" value="%s" />', $course_id );
 		$content .= sprintf( '<input type="hidden" name="unit_id" value="%s" />', $unit_id );
 		$content .= sprintf( '<input type="hidden" name="student_id" value="%s" />', $student_id );
