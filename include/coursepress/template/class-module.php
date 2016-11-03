@@ -1,6 +1,9 @@
 <?php
 /**
- * Module Template
+ * Use to print the different modules.
+ *
+ * @package WordPress
+ * @subpackage CoursePress
  **/
 class CoursePress_Template_Module {
 	private static $args = array();
@@ -220,12 +223,12 @@ class CoursePress_Template_Module {
 		 **/
 		do_action( 'coursepress_module_view', $module_id, $student_id );
 
-		if ( $is_focus ) {
-			$content .= sprintf( '<input type="hidden" name="course_id" value="%s" />', $course_id );
-			$content .= sprintf( '<input type="hidden" name="unit_id" value="%s" />', $unit_id );
-			$content .= sprintf( '<input type="hidden" name="student_id" value="%s" />', $student_id );
-			$content .= wp_nonce_field( 'coursepress_submit_modules', '_wpnonce', true, false );
+		$content .= sprintf( '<input type="hidden" name="course_id" value="%s" />', $course_id );
+		$content .= sprintf( '<input type="hidden" name="unit_id" value="%s" />', $unit_id );
+		$content .= sprintf( '<input type="hidden" name="student_id" value="%s" />', $student_id );
 
+		if ( $is_focus ) {
+			$content .= wp_nonce_field( 'coursepress_submit_modules', '_wpnonce', true, false );
 			$content .= sprintf( '<div class="cp-error">%s</div>', apply_filters( 'coursepress_before_unit_modules', '' ) );
 		}
 		$content .= sprintf( '<input type="hidden" name="module_id[]" value="%s" />', $module_id );
