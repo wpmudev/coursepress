@@ -588,7 +588,7 @@ class CoursePress_Template_Module {
 			'logged_in_as' => '',
 			'action' => '',
 			'class_submit' => 'submit cp-comment-submit',
-			'comment_field' => '<p class="comment-form-comment"><label for="comment">' . _x( 'Comment', 'noun' ) . '</label> <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525"></textarea></p>',
+			'comment_field' => '<p class="comment-form-comment"><textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525"></textarea></p>',
 		);
 
 		add_filter( 'comment_form_submit_button', array( 'CoursePress_Template_Discussion', 'add_subscribe_button' ) );
