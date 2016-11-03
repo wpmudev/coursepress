@@ -536,7 +536,7 @@ class CoursePress_Template_Module {
 				esc_html( $link_text ),
 				CoursePress_Helper_Utility::filter_content( $filesize )
 			);
-			$content .= self::_wrap_content( $module->post_content, $after_content );
+			$content .= $after_content;
 		}
 
 		return $content;
