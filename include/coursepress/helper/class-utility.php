@@ -572,6 +572,13 @@ class CoursePress_Helper_Utility {
 
 	public static function force_download_file_request() {
 		if ( isset( $_GET['fdcpf'] ) ) {
+			// Regenerate certficate
+			if ( ! empty( $_GET['c'] ) && ! empty( $_GET['u'] ) ) {
+				$course_id = (int) $_GET['c'];
+				$student_id = (int) $_GET['u'];
+				CoursePress_Data_Certificate::generate_pdf_certificate( $course_id, $student_id );
+			}
+
 			$requested_file = self::decode( $_GET['fdcpf'] );
 			self::download_file_request( $requested_file );
 		}

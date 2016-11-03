@@ -49,6 +49,14 @@ wp_nonce_field( 'student-grade-feedback' );
 				<option value="all_assessable" <?php selected( 'all_assessable', $display_type ); ?>><?php esc_html_e( 'Show all assessable modules', 'cp' ); ?></option>
 			</select>
 		</div>
+		<?php if ( $is_completed ) : ?>
+		<div class="cp-box" style="float:right;">
+			<?php
+			$certificate_url = CoursePress_Data_Certificate::get_encoded_url( $course_id, $student_id );
+			?>
+			<a href="<?php echo esc_url( $certificate_url ); ?>" target="_blank" class="button"><?php _e( 'View Certificate', 'cp' ); ?></a>
+		</div>
+		<?php endif; ?>
 	</div>
 	<div class="cp-content modules-answer-wrapper" data-student="<?php echo $student_id; ?>">
 		<table>
