@@ -484,7 +484,7 @@ class CoursePress_Helper_JavaScript {
 			)
 		);
 
-				/**
+		/**
 		 * Filter localize script to allow data insertion.
 		 *
 		 * @since 2.0

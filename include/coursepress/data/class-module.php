@@ -47,7 +47,7 @@ class CoursePress_Data_Module {
 				'public' => false,
 				'show_ui' => false,
 				'publicly_queryable' => false,
-				'capability_type' => 'module',
+				'capability_type' => 'post',
 				'map_meta_cap' => true,
 				'query_var' => true,
 			),

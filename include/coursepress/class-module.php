@@ -90,6 +90,9 @@ class CoursePress_Module {
 		return $has_error;
 	}
 
+	/**
+	 * Add single comment in discussion module.
+	 **/
 	public static function add_comment( $comments, $student_id ) {
 		if ( empty( $student_id ) ) {
 			// Assume current user ID
@@ -451,5 +454,18 @@ class CoursePress_Module {
 			$format = '<p>%s</p>';
 			return sprintf( $format, self::$error_message );
 		}
+	}
+
+	public static function record_expired_answer( $request ) {
+		$module_id = (int) $request['module_id'];
+		$course_id = (int) $request['course_id'];
+		$unit_id = (int) $request['unit_id'];
+		$student_id = (int) $request['student_id'];
+		$keys = array( $course_id, $unit_id, $module_id, $student_id );
+		$key = 'response_' . implode( '_', $keys );
+		$count = (int) get_user_meta( $student_id, $key, true );
+		$count += 1;
+		update_user_meta( $student_id, $key, $count );
+		wp_send_json_success(array('true' => true));
 	}
 }
