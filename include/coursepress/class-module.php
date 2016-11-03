@@ -1,6 +1,11 @@
 <?php
 /**
  * The class that handles student submissions.
+ *
+ * @since 2.0.0
+ *
+ * @package WordPress
+ * @subpackage CoursePress
  **/
 class CoursePress_Module {
 	public static $error_message = '';

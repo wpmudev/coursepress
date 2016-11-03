@@ -1,6 +1,9 @@
 <?php
 /**
- * Module Template
+ * Use to print the different modules.
+ *
+ * @package WordPress
+ * @subpackage CoursePress
  **/
 class CoursePress_Template_Module {
 	private static $args = array();
@@ -220,12 +223,17 @@ class CoursePress_Template_Module {
 		 **/
 		do_action( 'coursepress_module_view', $module_id, $student_id );
 
-		if ( $is_focus ) {
-			$content .= sprintf( '<input type="hidden" name="course_id" value="%s" />', $course_id );
-			$content .= sprintf( '<input type="hidden" name="unit_id" value="%s" />', $unit_id );
-			$content .= sprintf( '<input type="hidden" name="student_id" value="%s" />', $student_id );
-			$content .= wp_nonce_field( 'coursepress_submit_modules', '_wpnonce', true, false );
+		// Marked module and page as visited
+		$module_page = get_post_meta( $module_id, 'module_page', true );
+		CoursePress_Data_Student::visited_module( $student_id, $course_id, $unit_id, $module_id );
+		CoursePress_Data_Student::visited_page( $student_id, $course_id, $unit_id, $module_page );
 
+		$content .= sprintf( '<input type="hidden" name="course_id" value="%s" />', $course_id );
+		$content .= sprintf( '<input type="hidden" name="unit_id" value="%s" />', $unit_id );
+		$content .= sprintf( '<input type="hidden" name="student_id" value="%s" />', $student_id );
+
+		if ( $is_focus ) {
+			$content .= wp_nonce_field( 'coursepress_submit_modules', '_wpnonce', true, false );
 			$content .= sprintf( '<div class="cp-error">%s</div>', apply_filters( 'coursepress_before_unit_modules', '' ) );
 		}
 		$content .= sprintf( '<input type="hidden" name="module_id[]" value="%s" />', $module_id );
@@ -536,7 +544,7 @@ class CoursePress_Template_Module {
 				esc_html( $link_text ),
 				CoursePress_Helper_Utility::filter_content( $filesize )
 			);
-			$content .= self::_wrap_content( $module->post_content, $after_content );
+			$content .= $after_content;
 		}
 
 		return $content;
@@ -588,7 +596,7 @@ class CoursePress_Template_Module {
 			'logged_in_as' => '',
 			'action' => '',
 			'class_submit' => 'submit cp-comment-submit',
-			'comment_field' => '<p class="comment-form-comment"><label for="comment">' . _x( 'Comment', 'noun' ) . '</label> <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525"></textarea></p>',
+			'comment_field' => '<p class="comment-form-comment"><textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525"></textarea></p>',
 		);
 
 		add_filter( 'comment_form_submit_button', array( 'CoursePress_Template_Discussion', 'add_subscribe_button' ) );
