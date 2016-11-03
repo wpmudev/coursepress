@@ -455,4 +455,17 @@ class CoursePress_Module {
 			return sprintf( $format, self::$error_message );
 		}
 	}
+
+	public static function record_expired_answer( $request ) {
+		$module_id = (int) $request['module_id'];
+		$course_id = (int) $request['course_id'];
+		$unit_id = (int) $request['unit_id'];
+		$student_id = (int) $request['student_id'];
+		$keys = array( $course_id, $unit_id, $module_id, $student_id );
+		$key = 'response_' . implode( '_', $keys );
+		$count = (int) get_user_meta( $student_id, $key, true );
+		$count += 1;
+		update_user_meta( $student_id, $key, $count );
+		wp_send_json_success(array('true' => true));
+	}
 }

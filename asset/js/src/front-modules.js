@@ -2,15 +2,21 @@
 /** MODULES **/
 (function( $ ) {
 	CoursePress.timer = function( container ) {
-		var timer_span = container.find( '.quiz_timer' );
+		var timer_span = container.find( '.quiz_timer' ).show(),
+			module_elements = container.find( '.module-elements' );
 
 		if ( 0 === timer_span.length ) {
+			return;
+		}
+		// Don't run the timer when module element is hidden
+		if ( ! module_elements.is( ':visible' ) ) {
+			timer_span.hide();
 			return;
 		}
 
 		var duration = timer_span.data( 'limit' ), repeat = timer_span.data( 'retry' ),
 			hours = 0, minutes = 0, seconds = 0, total_limit = 0, timer,
-			_seconds = 60, _minutes = '00', _hours = '00', dtime, info;
+			_seconds = 60, _minutes = '00', _hours = '00', dtime, info, send, expired;
 
 		duration = duration.split( ':' );
 
@@ -29,18 +35,47 @@
 
 		total_limit = hours + minutes + seconds;
 
+		info = container.find( '.quiz_timer_info' );
+		expired = function() {
+			container.find( 'input,select,textarea' ).attr( 'disabled', 'disabled' );
+			info.show();
+		};
+
+		if ( 0 === total_limit ) {
+			if ( 'no' === repeat ) {
+				expired();
+			}
+			return;
+		}
+
 		timer = setInterval(function(){
 			_seconds = parseInt( _seconds ) - 1;
 
 			if ( _seconds <= 0 && _minutes <= 0 && _hours <= 0 ) {
 				clearInterval( timer );
 
-				container.find( 'input,select,textarea' ).attr( 'disabled', 'disabled' );
-				info = container.find( '.quiz_timer_info' );
-				info.show();
+				expired();
 
-				// Send expiration data to DB here
+				// Send record data in silence
+				send = new CoursePress.SendRequest();
+				send.set({
+					cpnonce: _coursepress.cpnonce,
+					className: 'CoursePress_Module',
+					method: 'record_expired_answer',
+					module_id: container.data( 'id' ),
+					course_id: container.find( '[name="course_id"]' ).val(),
+					unit_id: container.find( '[name="unit_id"]' ).val(),
+					student_id: container.find( '[name="student_id"]' ).val(),
+					action: 'record_time'
+				});
+				send.save();
+
 				// Enable retry button here
+				info.on( 'click', function() {
+					container.find( 'input,select,textarea' ).removeAttr( 'disabled' );
+					info.hide();
+					CoursePress.timer( container );
+				});
 			}
 
 			if ( _seconds < 0 ) {
@@ -72,7 +107,7 @@
 
 			dtime = _hours + ':' + _minutes + ':' + _seconds;
 			timer_span.html( dtime );
-		}, 10);
+		}, 1000);
 	};
 
 	CoursePress.LoadFocusModule = function() {

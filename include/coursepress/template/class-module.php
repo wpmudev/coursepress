@@ -261,6 +261,12 @@ class CoursePress_Template_Module {
 				$element_class = ! empty( $responses ) ? 'hide' : '';
 				$response_count = ! empty( $responses ) ? count( $responses ) : 0;
 
+				// Get recorded time lapsed
+				$keys = array( $course_id, $unit_id, $module_id, $student_id );
+				$key = 'response_' . implode( '_', $keys );
+				$lapses = (int) get_user_meta( $student_id, $key, true );
+				$response_count += $lapses;
+
 				$try_again_label = __( 'Try Again', 'cp' );
 				if ( 'input-upload' == $module_type ) {
 					$try_again_label = __( 'Upload a different file', 'cp' );
@@ -268,7 +274,9 @@ class CoursePress_Template_Module {
 				$retry = sprintf( '<p class="cp-try-again"><a data-module="%s" class="button module-submit-action button-reload-module">%s</a></p>', $module_id, $try_again_label );
 
 				// Check if retry is disabled
-				if ( ! empty( $attributes['allow_retries'] ) && 0 < $response_count ) {
+				if ( empty( $attributes['allow_retries'] ) ) {
+					$retry = '';
+				} elseif ( 0 < $response_count ) {
 					$attempts = (int) $attributes['retry_attempts'];
 					if ( $attempts >= $response_count ) {
 						$disabled = true;
@@ -279,15 +287,19 @@ class CoursePress_Template_Module {
 				if ( ! empty( $attributes['use_timer'] ) && ! empty( $attributes['duration'] ) ) {
 					$allow_retry = true;
 					$attempts = (int) $attributes['retry_attempts'];
-					$attempts = empty( $attributes['allow_retries'] ) ? 1 : $attempts;
+					$duration = $attributes['duration'];
+
 					$format = '<span class="quiz_timer" data-limit="%1$s" data-retry="%2$s">%1$s</span><span class="quiz_timer_info">%3$s</span>';
 
 					if ( empty( $retry ) ) {
-						$allow_retry = 'no';
+						$attempts = 'no';
+						if ( $response_count > 0 ) {
+							$duration = '00:00:00';
+						}
 					}
 
-					$timer_info = __( 'Time Ended', 'cp' ) . $retry;
-					$content .= sprintf( $format, $attributes['duration'], $allow_retry ? $attempts : false, $timer_info );
+					$timer_info = __( 'Session Expired', 'cp' ) . $retry;
+					$content .= sprintf( $format, $duration, $attempts, $timer_info );
 				}
 			}
 
