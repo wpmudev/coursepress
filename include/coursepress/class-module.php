@@ -90,6 +90,9 @@ class CoursePress_Module {
 		return $has_error;
 	}
 
+	/**
+	 * Add single comment in discussion module.
+	 **/
 	public static function add_comment( $comments, $student_id ) {
 		if ( empty( $student_id ) ) {
 			// Assume current user ID

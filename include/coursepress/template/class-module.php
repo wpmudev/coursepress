@@ -279,13 +279,14 @@ class CoursePress_Template_Module {
 				if ( ! empty( $attributes['use_timer'] ) && ! empty( $attributes['duration'] ) ) {
 					$allow_retry = true;
 					$attempts = (int) $attributes['retry_attempts'];
+					$attempts = empty( $attributes['allow_retries'] ) ? 1 : $attempts;
 					$format = '<span class="quiz_timer" data-limit="%1$s" data-retry="%2$s">%1$s</span><span class="quiz_timer_info">%3$s</span>';
 
 					if ( empty( $retry ) ) {
 						$allow_retry = 'no';
 					}
 
-					$timer_info = __( 'Time Ended', 'cp' );
+					$timer_info = __( 'Time Ended', 'cp' ) . $retry;
 					$content .= sprintf( $format, $attributes['duration'], $allow_retry ? $attempts : false, $timer_info );
 				}
 			}
