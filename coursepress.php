@@ -48,9 +48,7 @@ class CoursePressUpgrade {
 	private static $coursepress_is_upgraded = false;
 
 	public static function init() {
-		//delete_option( 'coursepress_20_upgraded' );
-		//delete_option( 'cp2_flushed' );
-		//delete_option( 'coursepress_settings' );
+		//self::reset();
 		self::$coursepress_is_upgraded = get_option( 'coursepress_20_upgraded', false );
 		$coursepress_version = false === self::$coursepress_is_upgraded ? '1.x' : '2.0';
 
@@ -79,6 +77,26 @@ class CoursePressUpgrade {
 		self::get_coursepress( $coursepress_version );
 	}
 
+	/** Use to reset CP into 1.x version */
+	private static function reset() {
+		delete_option( 'coursepress_20_upgraded' );
+		delete_option( 'cp2_flushed' );
+		delete_option( 'coursepress_settings' );
+		$args = array(
+			'post_type' => 'course',
+			'post_status' => 'any',
+			'posts_per_page' => 1,
+			'fields' => 'ids',
+			'suppress_filters' => true,
+		);
+		$courses = get_posts( $args );
+
+		foreach ( $courses as $course_id ) {
+			delete_post_meta( $course_id, '_cp_updated_to_version_2' );
+			delete_post_meta( $course_id, 'course_settings' );
+		}
+	}
+
 	/** Check if current courses contains un-upgraded to the current version. **/
 	private static function check_old_courses() {
 		$args = array(
@@ -91,11 +109,6 @@ class CoursePressUpgrade {
 			'suppress_filters' => true,
 		);
 		$courses = get_posts( $args );
-
-		foreach ( $courses as $course_id ) {
-			//delete_post_meta( $course_id, '_cp_updated_to_version_2' );
-			//delete_post_meta( $course_id, 'course_settings' );
-		}
 
 		return count( $courses ) > 0;
 	}
@@ -127,6 +140,15 @@ class CoursePressUpgrade {
 		$instance->plugin_url = WP_PLUGIN_URL . '/coursepress/1.x/';
 	}
 
+	public static function maybe_switch_theme() {
+		$current_theme = wp_get_theme();
+
+		if ( 'coursepress' == $current_theme->get_stylesheet() ) {
+			wp_clean_themes_cache( true );
+			switch_theme( $current_theme->get_stylesheet() );
+		}
+	}
+
 	public static function cp1_flush_rewrite_rules() {
 		$is_flushed = get_option( 'cp1_flushed', false );
 
@@ -134,6 +156,8 @@ class CoursePressUpgrade {
 			delete_option( 'cp2_flushed' );
 			update_option( 'cp1_flushed', true );
 			cp_flush_rewrite_rules();
+
+			add_action( 'admin_init', array( __CLASS__, 'maybe_switch_theme' ) );
 		}
 	}
 
@@ -149,6 +173,8 @@ class CoursePressUpgrade {
 
 			//@todo: wrap this
 			flush_rewrite_rules();
+
+			add_action( 'admin_init', array( __CLASS__, 'maybe_switch_theme' ) );
 		}
 	}
 }
