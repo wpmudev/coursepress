@@ -11,6 +11,17 @@ if ( ! class_exists( 'WP_Comments_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-comments-list-table.php';
 }
 class CoursePress_Admin_Table_Comments extends WP_Comments_List_Table {
+	var $course_id = 0;
+
+	public function __construct() {
+		parent::__construct();
+		if ( ! empty( $_REQUEST['course_id'] ) ) {
+			$course_id = (int) $_REQUEST['course_id'];
+			if ( CoursePress_Data_Course::is_course( $course_id ) ) {
+				$this->course_id = $course_id;
+			}
+		}
+	}
 
 	public function prepare_items() {
 		global $post_id, $comment_status, $search, $comment_type;
@@ -116,10 +127,6 @@ class CoursePress_Admin_Table_Comments extends WP_Comments_List_Table {
 			return '';
 		}
 
-		if ( ! $this->user_can ) {
-			//          return;
-		}
-
 		$the_comment_status = wp_get_comment_status( $comment );
 
 		$out = '';
@@ -176,5 +183,61 @@ class CoursePress_Admin_Table_Comments extends WP_Comments_List_Table {
 		$out .= '<button type="button" class="toggle-row"><span class="screen-reader-text">' . __( 'Show more details' ) . '</span></button>';
 
 		return $out;
+	}
+	/**
+	 *
+	 * @global string $comment_status
+	 * @global string $comment_type
+	 *
+	 * @param string $which
+	 */
+	protected function extra_tablenav( $which ) {
+		global $comment_status, $comment_type;
+?>
+		<div class="alignleft actions">
+<?php
+if ( 'top' === $which ) {
+	$options = array();
+	$options['value'] = $this->course_id;
+	$options['class'] = 'medium dropdown';
+	$options['first_option'] = array(
+	'text' => __( 'All courses', 'cp' ),
+	'value' => 'all',
+	);
+
+		$assigned_courses = array();
+		$user_id = get_current_user_id();
+	if ( CoursePress_Data_Capabilities::is_facilitator() ) {
+		$assigned_courses = CoursePress_Data_Facilitator::get_facilitated_courses( $user_id, array( 'any' ), 0, -1 );
+	} else if ( CoursePress_Data_Capabilities::is_instructor() ) {
+		$assigned_courses = CoursePress_Data_Instructor::get_assigned_courses_ids( $user_id );
+	}
+
+	$assigned_courses = array_filter( $assigned_courses );
+	$assigned_courses = array_map( 'get_post', $assigned_courses );
+
+	$courses = CoursePress_Helper_UI::get_course_dropdown( 'filter-by-course', 'course_id', $assigned_courses, $options );
+?>
+	<label class="screen-reader-text" for="filter-by-course"><?php _e( 'Filter by course' ); ?></label>
+	<?php echo $courses; ?>
+		<?php
+		/**
+			 * Fires just before the Filter submit button for comment types.
+			 *
+			 * @since 3.5.0
+			 */
+		do_action( 'restrict_manage_comments' );
+		submit_button( __( 'Filter' ), 'button', 'filter_action', false, array( 'id' => 'post-query-submit' ) );
+}
+
+		/**
+		 * Fires after the Filter submit button for comment types.
+		 *
+		 * @since 2.5.0
+		 *
+		 * @param string $comment_status The comment status name. Default 'All'.
+		 */
+		do_action( 'manage_comments_nav', $comment_status );
+		echo '</div>';
 	}
 }

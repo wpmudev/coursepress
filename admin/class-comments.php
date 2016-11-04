@@ -30,6 +30,30 @@ class CoursePress_Admin_Comments extends CoursePress_Admin_Controller_Menu {
 	public function process_form() {
 		$action = isset( $_REQUEST['action'] )? $_REQUEST['action']:'default';
 		switch ( $action ) {
+			case 'approvecomment':
+			case 'unapprovecomment':
+				if ( isset( $_REQUEST['c'] ) && isset( $_REQUEST['_wpnonce'] ) ) {
+					$nonce = $_REQUEST['_wpnonce'];
+					$nonce_action = sprintf( 'approve-comment_%d', $_REQUEST['c'] );
+					if ( wp_verify_nonce( $nonce, $nonce_action ) ) {
+						$commentarr = array(
+						'comment_ID' => $_REQUEST['c'],
+						'comment_approved' => 'approvecomment' == $action ? 1 : 0,
+						);
+						wp_update_comment( $commentarr );
+					}
+					$url = add_query_arg(
+						array(
+						'page' => $this->slug,
+						'post_type' => CoursePress_Data_Course::get_post_type_name(),
+						),
+						admin_url( 'edit.php' )
+					);
+					wp_safe_redirect( $url );
+					exit;
+				}
+			break;
+
 			case 'editedcomment':
 				if ( isset( $_POST['comment_ID'] ) ) {
 					$commentarr = array(

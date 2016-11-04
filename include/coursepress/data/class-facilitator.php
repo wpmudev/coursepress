@@ -118,7 +118,7 @@ class CoursePress_Data_Facilitator {
 		do_action( 'coursepress_facilitator_removed', $course_id, $user_id );
 	}
 
-	public static function get_facilitated_courses( $user_id = 0, $status = array( 'pubish' ), $ids_only = false, $page = 0, $per_page = 20 ) {
+	public static function get_facilitated_courses( $user_id = 0, $status = array( 'publish' ), $ids_only = false, $page = 0, $per_page = 20 ) {
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
@@ -129,10 +129,14 @@ class CoursePress_Data_Facilitator {
 			'meta_key' => 'course_facilitator',
 			'meta_value' => $user_id,
 			'meta_compare' => 'IN',
-			'paged' => $page,
-			'posts_per_page' => $per_page,
 			'suppress_filters' => true,
 		);
+		if ( 0 < $per_page ) {
+			$args['paged'] = $page;
+			$args['posts_per_page'] = $per_page;
+		} else {
+			$args['nopaging'] = true;
+		}
 
 		if ( $ids_only ) {
 			$args['fields'] = 'ids';
