@@ -28,13 +28,29 @@ class CoursePress_Admin_Comments extends CoursePress_Admin_Controller_Menu {
 	 * @since 2.0
 	 **/
 	public function process_form() {
-        if ( empty( $_REQUEST['view'] ) ) {
-			// Set up comments table
-			$this->comments_list = new CoursePress_Admin_Table_Comments;
-			$this->comments_list->prepare_items();
-			add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_comments_per_page', 'label' => __( 'Number of comments per page:', 'cp' ) ) );
-        } else {
-        }
-	}
+		$action = isset( $_REQUEST['action'] )? $_REQUEST['action']:'default';
+		switch ( $action ) {
+			case 'editedcomment':
+				if ( isset( $_POST['comment_ID'] ) ) {
+					$commentarr = array(
+					'comment_ID' => $_POST['comment_ID'],
+					'comment_content' => $_POST['content'],
+					'comment_approved' => $_POST['comment_status'],
+					);
+					wp_update_comment( $commentarr );
+				}
+				$this->slug = 'comment-edit';
+			break;
 
+			case 'editcomment':
+				$this->slug = 'comment-edit';
+			break;
+
+			default:
+				$this->comments_list = new CoursePress_Admin_Table_Comments;
+				$this->comments_list->prepare_items();
+				add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_comments_per_page', 'label' => __( 'Number of comments per page:', 'cp' ) ) );
+			break;
+		}
+	}
 }

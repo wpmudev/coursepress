@@ -113,6 +113,7 @@ class CoursePress_Data_Capabilities {
 			'edit_posts' => 0,
 			'publish_pages' => 0,
 			'publish_posts' => 0,
+			'edit_comments' => 1,
 		),
 	);
 
@@ -1489,10 +1490,10 @@ class CoursePress_Data_Capabilities {
 		// do not use reset_user_capabilities()
 		// very dangerous and needs to be rewritten, destroys WP capabilites which we shouldn't be touching
 		// self::reset_user_capabilities( $user_obj );
-	
+
 		// no need to add READ capability as all WP users have this up to Subscriber level
 		// $user_obj->add_cap( 'read' );
-		
+
 		// only add `upload_files` cap to Contributor and Subscriber because the rest already have it
 		// refer to https://codex.wordpress.org/Roles_and_Capabilities#upload_files
 		if ( $user_obj->roles && ( in_array( 'contributor', $user_obj->roles ) || in_array( 'subscriber', $user_obj->roles ) ) ) {
@@ -1529,7 +1530,7 @@ class CoursePress_Data_Capabilities {
 		// do not use reset_user_capabilities()
 		// very dangerous and needs to be rewritten, destroys WP capabilites which we shouldn't be touching
 		// self::reset_user_capabilities( $user_obj );
-		
+
 		self::remove_cp_instructor_capabilities( $user_obj );
 		self::grant_private_caps( $user_id );
 
@@ -1545,18 +1546,18 @@ class CoursePress_Data_Capabilities {
 			}
 		}
 	}
-	
+
 	/**
 	 * Removes all special CoursePress capabilites for an instructor
 	 *
 	 * @since  2.0.0
 	 * @param  WP_User $user The user to modify.
 	 */
-	private static function remove_cp_instructor_capabilities ( $user ) {
+	private static function remove_cp_instructor_capabilities( $user ) {
 		if ( $user && is_object( $user ) && $user instanceof WP_User ) {
 			$instructor_capabilities = self::get_instructor_capabilities();
 			foreach ( $instructor_capabilities as $capability_name => $capability_status ) {
-				if ( $user->has_cap($capability_name) ) $user->remove_cap($capability_name);
+				if ( $user->has_cap( $capability_name ) ) { $user->remove_cap( $capability_name ); }
 			}
 		}
 	}
@@ -1664,10 +1665,10 @@ class CoursePress_Data_Capabilities {
 		// do not use reset_user_capabilities()
 		// very dangerous and needs to be rewritten, destroys WP capabilites which we shouldn't be touching
 		// self::reset_user_capabilities( $user_obj );
-	
+
 		// no need to add READ capability as all WP users have this up to Subscriber level
 		// $user_obj->add_cap( 'read' );
-		
+
 		// only add `upload_files` cap to Contributor and Subscriber because the rest already have it
 		// refer to https://codex.wordpress.org/Roles_and_Capabilities#upload_files
 		if ( $user_obj->roles && ( in_array( 'contributor', $user_obj->roles ) || in_array( 'subscriber', $user_obj->roles ) ) ) {
@@ -1749,7 +1750,11 @@ class CoursePress_Data_Capabilities {
 		}
 
 		return $return;
-	}
+    }
+
+    public static function can_edit_comment( $comment_id ) {
+        return true;
+    }
 
 	/**
 	 * Check if user_id or current user is of type facilitator.
@@ -1781,7 +1786,7 @@ class CoursePress_Data_Capabilities {
 				$caps = $wp_post_types['post']->cap;
 
 				foreach ( $caps as $cap_key => $cap_value ) {
-					unset( $caps[ $cap_key] );
+					unset( $caps[ $cap_key ] );
 
 					$cap_key = str_replace( 'post', $post_type, $cap_key );
 					$cap_value = str_replace( 'post', $post_type, $cap_value );

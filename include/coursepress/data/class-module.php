@@ -907,7 +907,7 @@ class CoursePress_Data_Module {
 		}
 	}
 
-	public function get_all_modules_ids_by_type( $type ) {
+	public static function get_all_modules_ids_by_type( $type ) {
 		$args = array(
 			'post_type' => self::get_post_type_name(),
 			'fields' => 'ids',
