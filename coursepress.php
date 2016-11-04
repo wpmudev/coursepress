@@ -79,6 +79,7 @@ class CoursePressUpgrade {
 
 	/** Use to reset CP into 1.x version */
 	private static function reset() {
+		delete_option( 'cp1_flushed' );
 		delete_option( 'coursepress_20_upgraded' );
 		delete_option( 'cp2_flushed' );
 		delete_option( 'coursepress_settings' );
