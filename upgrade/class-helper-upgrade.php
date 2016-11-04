@@ -392,7 +392,7 @@ class CoursePress_Helper_Upgrade {
 										'date' => $attachment->post_date,
 										'response' => array(
 											'file' => '',
-											'url' => get_attachment_link($attachment->ID),
+											'url' => wp_get_attachment_url($attachment->ID),
 											'type' => $attachment->post_mime_type,
 											'size' => ''
 										),
