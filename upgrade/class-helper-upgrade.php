@@ -347,7 +347,7 @@ class CoursePress_Helper_Upgrade {
 													'graded_by' => ( $user->ID == $grade['instructor'] ) ? 'auto' : $grade['instructor'],
 													'grade' => $grade['grade'],
 													'date' => date( 'Y-m-d H:i:s', $grade['time'] ),
-												);												
+												);
 											}
 										} elseif ( preg_match( '/^input/', $module_type ) ) {
 											$new_response_data['grades'] = array();
