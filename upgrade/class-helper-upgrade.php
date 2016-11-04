@@ -417,6 +417,7 @@ class CoursePress_Helper_Upgrade {
 				$new_student_progress['units'] = $units;
 				
 				// completion
+				$completion['progress'] = $current_student_course_progress['course_progress'];
 				$new_student_progress['completion'] = $completion;
 				
 				// save the new data structure
