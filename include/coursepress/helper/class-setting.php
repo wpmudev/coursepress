@@ -12,7 +12,7 @@ class CoursePress_Helper_Setting {
 		add_action( 'plugins_loaded', array( __CLASS__, 'admin_plugins_loaded' ) );
 		//add_action( 'admin_menu', array( __CLASS__, 'admin_menu' ) );
 		add_action( 'admin_init', array( __CLASS__, 'admin_init' ) );
-		add_action( 'shutdown', array( __CLASS__, 'update_post_meta' ) );
+		//add_action( 'shutdown', array( __CLASS__, 'update_post_meta' ) );
 		/** This filter is documented in /wp-admin/includes/misc.php */
 		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
 		add_filter( 'screen_settings', array( __CLASS__, 'screen_settings' ), 10, 2 );
@@ -298,6 +298,7 @@ class CoursePress_Helper_Setting {
 	 *	   ****************************************
 	 *
 	 * @since 2.0.0.
+	 * DEPRACATED!!!
 	 */
 	public static function update_post_meta() {
 
