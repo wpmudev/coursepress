@@ -456,14 +456,14 @@ class CoursePress_Data_Module {
 		);
 
 	}
-	
+
 	/**
 	* Form results will not depend on grades, just check if mandatory and empty
 	*/
 	public static function get_form_results( $student_id, $course_id, $unit_id, $module_id, $response = false, $data = false ) {
 		$attributes = self::attributes( $module_id );
 		$is_mandatory = (bool) $attributes['mandatory'];
-		
+
 		if ( false === $data ) {
 			$data = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
 		}
@@ -481,10 +481,10 @@ class CoursePress_Data_Module {
 
 		$total_questions = count( $attributes['questions'] );
 		$gross_correct = 0;
-		
+
 		if ( $is_mandatory ) {
 			foreach ( $attributes['questions'] as $key => $question ) {
-				$answer = $response[$key];
+				$answer = $response[ $key ];
 				switch ( $question['type'] ) {
 					case 'selectable':
 						// selectable will always have a default response
@@ -493,7 +493,7 @@ class CoursePress_Data_Module {
 					case 'short':
 					case 'long':
 						// just check if empty
-						$gross_correct = ( !empty($answer) ) ? $gross_correct + 1 : $gross_correct;
+						$gross_correct = ( ! empty( $answer ) ) ? $gross_correct + 1 : $gross_correct;
 						break;
 				}
 			}
@@ -501,7 +501,7 @@ class CoursePress_Data_Module {
 		} else {
 			$grade = 100;
 		}
-		
+
 		$passed = $grade >= $minimum_grade;
 		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
 		$responses = CoursePress_Data_Student::get_responses( $student_id, $course_id, $unit_id, $module_id, true, $student_progress );
@@ -905,5 +905,18 @@ class CoursePress_Data_Module {
 		if ( ! isset( $visible_modules[ $id ] ) ) {
 			CoursePress_Data_Unit::show_page( $unit_id, $page_id, $course_id );
 		}
+	}
+
+	public function get_all_modules_ids_by_type( $type ) {
+		$args = array(
+			'post_type' => self::get_post_type_name(),
+			'fields' => 'ids',
+			'suppress_filters' => true,
+			'nopaging' => true,
+			'meta_key' => 'module_type',
+			'meta_value' => $type,
+		);
+		$modules = new WP_Query( $args );
+		return $modules->posts;
 	}
 }
