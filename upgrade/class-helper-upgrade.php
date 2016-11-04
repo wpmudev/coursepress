@@ -23,6 +23,11 @@ class CoursePress_Helper_Upgrade {
 		if ( false == self::update_course_settings( $course_id, self::$settings ) ) {
 			$found_error += 1;
 		}
+		
+		// Update Student Progress data
+		if ( false == self::update_course_students_progress( $course_id ) ) {
+			$found_error += 1;
+		}
 
 		$result = ( 0 == $found_error );
 
@@ -227,6 +232,200 @@ class CoursePress_Helper_Upgrade {
 		self::$settings['structure_visible_modules'] = $structure_visible_modules;
 		self::$settings['structure_preview_modules'] = $structure_preview_modules;
 
+		return true;
+	}
+	
+	public static function update_course_students_progress ( $course_id ) {
+		global $wpdb;
+		
+		// get all enrolled students
+		if ( is_multisite() ) {
+			$class_meta_query_key = $wpdb->prefix . 'enrolled_course_class_' . $course_id;
+		} else {
+			$class_meta_query_key = 'enrolled_course_class_' . $course_id;
+		}
+		$args = array(
+			'meta_query' => array(
+				array(
+					'key'   => $class_meta_query_key,
+					'value' => '',
+				)
+			)
+		);
+
+		$wp_user_search = new WP_User_Query( $args );
+		foreach ( $wp_user_search->get_results() as $user ) {
+			// get (1.x) student progress data
+			$current_student_course_progress = get_user_option( '_course_' . $course_id . '_progress', $user->ID );
+			if ( $current_student_course_progress ) {
+				// transform into (2.0) data
+				$new_student_progress = array(
+					'version' => '2.0'
+				);
+				
+				// completion
+				$completion = array();
+				
+				// units
+				$units = array();
+				$old_unit_data = ( isset( $current_student_course_progress['unit'] ) ) ? $current_student_course_progress['unit'] : false;
+				if ( $old_unit_data ) {
+					foreach ( $old_unit_data as $key => $unit_data ) {
+						$new_unit_data = array();
+						
+						// visited pages
+						if ( isset($unit_data['visited_pages']) ) {
+							$visited_pages = array();
+							foreach ( $visited_pages as $page ) {
+								$visited_pages[$page] = $page;
+							}
+							$new_unit_data['visited_pages'] = $visited_pages;
+						}
+						
+						// last visited page
+						if ( isset($unit_data['last_visited_page']) ) {
+							$new_unit_data['last_visited_page'] = $unit_data['last_visited_page'];
+						}
+						
+						// responses
+						$new_responses_data = array();
+						if ( isset($unit_data['mandatory_answered']) && is_array($unit_data['mandatory_answered']) ) {
+							
+							$completion[$key] = array(
+								'modules_seen' => array(),
+								'answered' => array()
+							);
+							
+							foreach ( $unit_data['mandatory_answered'] as $mandatory_key => $val ) {
+								
+								// module seen
+								$completion[$key]['modules_seen'][$mandatory_key] = true;
+								// answered
+								$completion[$key]['answered'][$mandatory_key] = true;
+								
+								$module_type = get_post_meta( $mandatory_key, 'module_type', true );
+								$new_module_response = array();
+								$response_args = array(
+									'post_type' => 'module_response',
+									'post_status' => array( 'publish', 'private' ),
+									'nopaging' => true,
+									'ignore_sticky_posts' => true,
+									'post_parent' => $mandatory_key,
+									'orderby' => 'date',
+									'order'   => 'ASC',
+								);
+								$response_query = new WP_Query( $response_args );
+								$module_responses = $response_query->posts;
+								if ( $module_responses && !empty($module_responses) ) {
+									foreach ( $module_responses as $post_response ) {
+										$new_response_data = array();
+										$meta_response = get_post_meta( $post_response->ID );
+										// date, response, feedback
+										$new_response_data['date'] = $post_response->post_date;
+										switch ( $module_type ){
+											case 'checkbox_input_module':
+												if ( isset($meta_response['student_checked_answers']) && is_array($meta_response['student_checked_answers']) ) {
+													foreach ( $meta_response['student_checked_answers'] as $response_student_checked_answer ) {
+														$new_response_data['response'] = maybe_unserialize($response_student_checked_answer);
+													}
+												}
+												$new_response_data['feedback'] = array();
+												break;
+											case 'radio_input_module':
+												$new_response_data['response'] = $post_response->post_content;
+												$new_response_data['feedback'] = array();
+												break;
+											case 'text_input_module':
+												$new_response_data['response'] = $post_response->post_content;
+												break;
+										}
+										// grade
+										if ( isset($meta_response['response_grade']) && is_array($meta_response['response_grade']) ) {
+											foreach ( $meta_response['response_grade'] as $grade ) {
+												$grade = maybe_unserialize($grade);
+												$new_response_data['grades'][] = array(
+													'graded_by' => ( $user->ID == $grade['instructor'] ) ? 'auto' : $grade['instructor'],
+													'grade' => $grade['grade'],
+													'date' => date( 'Y-m-d H:i:s', $grade['time'] ),
+												);												
+											}
+										} elseif ( preg_match( '/^input/', $module_type ) ) {
+											$new_response_data['grades'] = array();
+										}
+										// comment feedback
+										if ( isset($meta_response['response_comment']) && is_array($meta_response['response_comment']) ) {
+											foreach ( $meta_response['response_comment'] as $comment ) {
+												$new_response_data['feedback'] = $comment;
+											}
+										}
+										
+										$new_module_response[] = $new_response_data;
+									}
+								}
+								$new_responses_data[$mandatory_key] = $new_module_response;
+							}
+						}
+						
+						// input file
+						$modules_args = array(
+							'post_type' => 'module',
+							'post_parent' => $key,
+							'post_status' => array('any'),
+							'fields' => 'ids'
+						);
+						$modules_query = new WP_Query( $modules_args );
+						$modules_ids = $modules_query->posts;
+						if ( $modules_ids && !empty($modules_ids) ) {
+							$attachment_args = array(
+								'post_type' => 'attachment',
+								'nopaging' => true,
+								'ignore_sticky_posts' => true,
+								'post_parent__in' => $modules_ids,
+								'post_status' => 'inherit'
+							);
+							$attachment_query = new WP_Query( $attachment_args );
+							$attachments = $attachment_query->posts;
+							foreach ( $attachments as $attachment ) {
+								$new_responses_data[$attachment->post_parent] = array(
+									array (
+										'feedback' => array(),
+										'date' => $attachment->post_date,
+										'response' => array(
+											'file' => '',
+											'url' => wp_get_attachment_url($attachment->ID),
+											'type' => $attachment->post_mime_type,
+											'size' => ''
+										),
+										'grades' => array(
+											array(
+												'graded_by' => 'auto',
+												'grade' => 100,
+												'date' => $attachment->post_date
+											)
+										)
+									)
+								);
+							}
+						}
+						
+						
+						// newly structured responses
+						$new_unit_data['responses'] = $new_responses_data;
+						$units[$key] = $new_unit_data;
+					}
+				}
+				$new_student_progress['units'] = $units;
+				
+				// completion
+				$completion['progress'] = $current_student_course_progress['course_progress'];
+				$new_student_progress['completion'] = $completion;
+				
+				// save the new data structure
+				$global_setting = ! is_multisite();
+				update_user_option( $user->ID, 'course_' . $course_id . '_progress', $new_student_progress, $global_setting );
+			}
+		}
+		
 		return true;
 	}
 }
