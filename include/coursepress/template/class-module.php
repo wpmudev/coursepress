@@ -169,7 +169,7 @@ class CoursePress_Template_Module {
 		$module_type = $attributes['module_type'];
 		$assessables = array( 'input-text', 'input-textarea', 'input-upload' );
 		$response = self::get_response( $module_id, $student_id, true );
-		$grades = CoursePress_Helper_Utility::get_array_val( $response, 'grades' );
+		$grades = (array) CoursePress_Helper_Utility::get_array_val( $response, 'grades' );
 		$grades = array_pop( $grades );
 		$grade = (int) CoursePress_Helper_Utility::get_array_val( $grades, 'grade' );
 		$minimum_grade = (int) $attributes['minimum_grade'];
