@@ -18,8 +18,8 @@ class CoursePress_Admin_Table_Reports extends WP_List_Table {
 	public function __construct() {
 
 		parent::__construct( array(
-			'singular' => __( 'Reports', 'cp' ),
-			'plural' => __( 'Reports', 'cp' ),
+			'singular' => __( 'Reports', 'CP_TD' ),
+			'plural' => __( 'Reports', 'CP_TD' ),
 			'ajax' => false,// should this table support ajax?
 		) );
 
@@ -82,24 +82,24 @@ class CoursePress_Admin_Table_Reports extends WP_List_Table {
 	}
 
 	public function no_items() {
-		_e( 'No students found.', 'cp' );
+		_e( 'No students found.', 'CP_TD' );
 	}
 
 	public function get_columns() {
 		return array(
 			'cb' => '<input type="checkbox" />',
-			'id' => __( 'ID', 'cp' ),
-			'name' => __( 'Student Name', 'cp' ),
-			'responses' => __( 'Responses', 'cp' ),
-			'average' => __( 'Average', 'cp' ),
-			'report' => __( 'Download', 'cp' ),
+			'id' => __( 'ID', 'CP_TD' ),
+			'name' => __( 'Student Name', 'CP_TD' ),
+			'responses' => __( 'Responses', 'CP_TD' ),
+			'average' => __( 'Average', 'CP_TD' ),
+			'report' => __( 'Download', 'CP_TD' ),
 		);
 	}
 
 	public function get_bulk_actions() {
 		$actions = array(
-			'download' => __( 'Download', 'cp' ),
-			'download_summary' => __( 'Download Summary', 'cp' ),
+			'download' => __( 'Download', 'CP_TD' ),
+			'download_summary' => __( 'Download Summary', 'CP_TD' ),
 		);
 
 		return $actions;
@@ -161,7 +161,7 @@ class CoursePress_Admin_Table_Reports extends WP_List_Table {
 				esc_attr( $this->course_id )
 			);
 		}
-		return sprintf( '<span class="pdf" title="%s" data-click="false"></span>', esc_attr__( 'We can not generata PDF. Cache directory is not writable.', 'cp' ) );
+		return sprintf( '<span class="pdf" title="%s" data-click="false"></span>', esc_attr__( 'We can not generata PDF. Cache directory is not writable.', 'CP_TD' ) );
 	}
 
 	public function extra_tablenav( $which ) {
@@ -172,15 +172,15 @@ class CoursePress_Admin_Table_Reports extends WP_List_Table {
 		$options = array();
 		$options['value'] = $this->course_id;
 		$options['class'] = 'medium dropdown';
-		$options['placeholder'] = __( 'Select course', 'cp' );
+		$options['placeholder'] = __( 'Select course', 'CP_TD' );
 		$courses = CoursePress_Helper_UI::get_course_dropdown( 'course_id', 'course_id', $this->courses, $options );
 		?>
 		<div class="alignleft course-filter">
 			<?php echo $courses; ?>
-			<input type="submit" class="button action" name="action" value="<?php esc_attr_e( 'Filter', 'cp' ); ?>" />
+			<input type="submit" class="button action" name="action" value="<?php esc_attr_e( 'Filter', 'CP_TD' ); ?>" />
 		</div>
 		<?php
-		$this->search_box( __( 'Search', 'cp' ), 'search_students' );
+		$this->search_box( __( 'Search', 'CP_TD' ), 'search_students' );
 	}
 
 	public function pagination( $which ) {

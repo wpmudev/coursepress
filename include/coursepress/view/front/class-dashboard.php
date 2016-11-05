@@ -52,12 +52,12 @@ class CoursePress_View_Front_Dashboard {
 			// }
 			$content = '';
 			// if ( empty( $instructor ) ) {
-			// $content = __( 'The requested instuctor does not exists', 'cp' );
+			// $content = __( 'The requested instuctor does not exists', 'CP_TD' );
 			// }
 			//
 			// self::$last_instructor = empty( $instructor ) ? 0 : $instructor->ID;
-			// $page_title = ! empty( self::$last_instructor ) ? CoursePress_Helper_Utility::get_user_name( self::$last_instructor, false, false ) : __( 'Instructor not found.', 'cp' );
-			$page_title = __( 'My Courses', 'cp' );
+			// $page_title = ! empty( self::$last_instructor ) ? CoursePress_Helper_Utility::get_user_name( self::$last_instructor, false, false ) : __( 'Instructor not found.', 'CP_TD' );
+			$page_title = __( 'My Courses', 'CP_TD' );
 
 			$args = array(
 				'slug' => CoursePress_Core::get_slug( 'student_dashboard' ),

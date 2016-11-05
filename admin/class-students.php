@@ -22,8 +22,8 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Controller_Menu {
 
 	public function get_labels() {
 		return array(
-			'title' => __( 'CoursePress Students', 'cp' ),
-			'menu_title' => __( 'Students', 'cp' ),
+			'title' => __( 'CoursePress Students', 'CP_TD' ),
+			'menu_title' => __( 'Students', 'CP_TD' ),
 		);
 	}
 
@@ -109,7 +109,7 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Controller_Menu {
 			$this->students_list = new CoursePress_Admin_Table_Students;
 			$this->students_list->prepare_items();
 
-			add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_students_per_page', 'label' => __( 'Number of students per page:', 'cp' ) ) );
+			add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_students_per_page', 'label' => __( 'Number of students per page:', 'CP_TD' ) ) );
 		} else {
 			$view = $_REQUEST['view'];
 			$this->slug = 'student-' . $view;
@@ -298,7 +298,7 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Controller_Menu {
 	public static function certificate_send() {
 		$results = array(
 			'success' => false,
-			'message' => __( 'Something went wrong. Sending failed.', 'cp' ),
+			'message' => __( 'Something went wrong. Sending failed.', 'CP_TD' ),
 			'step' => 'init',
 		);
 		/**
@@ -330,7 +330,7 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Controller_Menu {
 				'message' => sprintf(
 					'<div class="notice notice-success certificate-send"><p>%s</p></div>',
 					sprintf(
-						__( 'Certificate of <b>%s</b> has been sent.', 'cp' ),
+						__( 'Certificate of <b>%s</b> has been sent.', 'CP_TD' ),
 						get_the_title( $parent_id )
 					)
 				),

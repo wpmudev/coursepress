@@ -25,16 +25,16 @@ class CoursePress_Module {
 
 		if ( empty( $input['course_id'] ) ) {
 			$has_error = true;
-			self::$error_message = __( 'Invalid course ID!', 'cp' );
+			self::$error_message = __( 'Invalid course ID!', 'CP_TD' );
 		} elseif ( false === CoursePress_Data_Course::student_enrolled( $input['student_id'], $input['course_id'] ) ) {
 			$has_error = true;
-			self::$error_message = __( 'You are currently not enrolled to this course!', 'cp' );
+			self::$error_message = __( 'You are currently not enrolled to this course!', 'CP_TD' );
 		} elseif ( 'closed' == ( $course_status = CoursePress_Data_Course::get_course_status( $input['course_id'] ) ) ) {
 			$has_error = true;
-			self::$error_message = __( 'This course is completed, you can not submit answers anymore.', 'cp' );
+			self::$error_message = __( 'This course is completed, you can not submit answers anymore.', 'CP_TD' );
 		} elseif ( empty( $input['unit_id'] ) ) {
 			$has_error = true;
-			self::$error_message = __( 'Invalid unit!', 'cp' );
+			self::$error_message = __( 'Invalid unit!', 'CP_TD' );
 		}
 
 		return $has_error;
@@ -63,7 +63,7 @@ class CoursePress_Module {
 		if ( true === $mandatory ) {
 			if ( '' == $response ) {
 				$has_error = true;
-				self::$error_message = $is_focus ? __( 'You need to complete this module!', 'cp' ) : __( 'You need to complete the required modules!', 'cp' );
+				self::$error_message = $is_focus ? __( 'You need to complete this module!', 'CP_TD' ) : __( 'You need to complete the required modules!', 'CP_TD' );
 			} else {
 				// Attempt to record the submission
 				CoursePress_Data_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $response );
@@ -81,7 +81,7 @@ class CoursePress_Module {
 
 					if ( false === $pass ) {
 						$has_error = true;
-						self::$error_message = __( 'You did not pass the required minimum grade!', 'cp' );
+						self::$error_message = __( 'You did not pass the required minimum grade!', 'CP_TD' );
 					}
 				}
 			}
@@ -233,7 +233,7 @@ class CoursePress_Module {
 
 					if ( 'input-upload' == $module_type ) {
 						if ( false == $can_update_course && empty( $_FILES ) ) {
-							self::$error_message = __( 'You need to complete the required module!', 'cp' );
+							self::$error_message = __( 'You need to complete the required module!', 'CP_TD' );
 							$has_error = true;
 						}
 						continue; // Upload validation is at the bottom
@@ -247,7 +247,7 @@ class CoursePress_Module {
 									continue;
 								} else {
 									$has_error = true;
-									self::$error_message = __( 'Your participation to the discussion is required!', 'cp' );
+									self::$error_message = __( 'Your participation to the discussion is required!', 'CP_TD' );
 									continue;
 								}
 							}
@@ -277,7 +277,7 @@ class CoursePress_Module {
 						if ( ! isset( $module[ $module_id ] ) || '' === ( $module[ $module_id ] ) ) {
 							// Check if module is mandatory
 							if ( $is_mandatory && false == $can_update_course ) {
-								self::$error_message = __( 'You need to complete the required module!', 'cp' );
+								self::$error_message = __( 'You need to complete the required module!', 'CP_TD' );
 								$has_error = true;
 							}
 							continue;
@@ -327,8 +327,8 @@ class CoursePress_Module {
 								if ( false === $pass && false == $can_update_course ) {
 									$has_error = true;
 									self::$error_message = ( $module_type == 'input-form' ) ?
-										__( 'You did not complete the form!', 'cp' )
-										: __( 'You did not pass the required minimum grade!', 'cp' );
+										__( 'You did not complete the form!', 'CP_TD' )
+										: __( 'You did not pass the required minimum grade!', 'CP_TD' );
 								}
 							}
 						}
@@ -355,7 +355,7 @@ class CoursePress_Module {
 					if ( true === $required && false == $can_update_course ) {
 						if ( empty( $filename ) ) {
 							if ( empty( $response ) ) {
-								self::$error_message = __( 'You need to complete the required module!', 'cp' );
+								self::$error_message = __( 'You need to complete the required module!', 'CP_TD' );
 								$has_error = true;
 								continue;
 							} else {
