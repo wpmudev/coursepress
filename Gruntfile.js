@@ -411,16 +411,16 @@ module.exports = function(grunt) {
 				nonull: true
 			},
 			pro: {
-				src: conf.plugin_patterns.files.src,
-				dest: 'release/<%= pkg.version %>-pro/'
+				//src: conf.plugin_patterns.files.src,
+				//dest: 'release/<%= pkg.version %>-pro/'
 			},
 			free: {
-				src: conf.plugin_patterns.files.src,
-				dest: 'release/<%= pkg.version %>-free/'
+				//src: conf.plugin_patterns.files.src,
+				//dest: 'release/<%= pkg.version %>-free/'
 			},
 			campus: {
-				src: conf.plugin_patterns.files.src,
-				dest: 'release/<%= pkg.version %>-campus/'
+				//src: conf.plugin_patterns.files.src,
+				//dest: 'release/<%= pkg.version %>-campus/'
 			}
 		},
 
@@ -731,7 +731,7 @@ module.exports = function(grunt) {
 			grunt.task.run( 'gitcheckout:' + branch );
 
 			// Remove code and files that does not belong to 1.x and 2.0 versions
-			if ( 'pro' == branch ) {
+			if ( 'pro' === branch ) {
 				grunt.task.run( 'replace:pro_1' );
 				grunt.task.run( 'replace:pro_2' );
 			}
