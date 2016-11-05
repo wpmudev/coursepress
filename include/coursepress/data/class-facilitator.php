@@ -224,7 +224,7 @@ class CoursePress_Data_Facilitator {
 				CoursePress_Helper_Utility::set_array_val(
 					$return_data,
 					'message/sent',
-					__( 'Invitation successfully sent.', 'cp' )
+					__( 'Invitation successfully sent.', 'CP_TD' )
 				);
 
 			} else {
@@ -234,7 +234,7 @@ class CoursePress_Data_Facilitator {
 				CoursePress_Helper_Utility::set_array_val(
 					$return_data,
 					'message/exists',
-					__( 'Invitation already exists. Invitation was re-sent.', 'cp' )
+					__( 'Invitation already exists. Invitation was re-sent.', 'CP_TD' )
 				);
 			}
 		} else {
@@ -243,12 +243,12 @@ class CoursePress_Data_Facilitator {
 			CoursePress_Helper_Utility::set_array_val(
 				$return_data,
 				'message/send_error',
-				__( 'Email failed to send.', 'cp' )
+				__( 'Email failed to send.', 'CP_TD' )
 			);
 		};
 
 		if ( ! isset( $return_data['message']['exists'] ) ) {
-			$return_data['message']['exists'] = __( 'Invitation already exists.', 'cp' );
+			$return_data['message']['exists'] = __( 'Invitation already exists.', 'CP_TD' );
 		}
 
 		return $return_data;

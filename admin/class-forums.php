@@ -52,7 +52,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 		 */
 		add_meta_box(
 			'submitdiv',
-			__( 'Save', 'cp' ),
+			__( 'Save', 'CP_TD' ),
 			array( __CLASS__, 'box_submitdiv' ),
 			self::$post_type,
 			'side',
@@ -60,14 +60,14 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 		);
 		add_meta_box(
 			'related_courses',
-			__( 'Related Courses', 'cp' ),
+			__( 'Related Courses', 'CP_TD' ),
 			array( __CLASS__, 'box_release_courses' ),
 			self::$post_type,
 			'side'
 		);
 		add_meta_box(
 			'settings',
-			__( 'Settings', 'cp' ),
+			__( 'Settings', 'CP_TD' ),
 			array( __class__, 'box_settings' ),
 			self::$post_type,
 			'side'
@@ -76,8 +76,8 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 
 	public function get_labels() {
 		return array(
-			'title' => __( 'CoursePress Forums', 'cp' ),
-			'menu_title' => __( 'Forums', 'cp' ),
+			'title' => __( 'CoursePress Forums', 'CP_TD' ),
+			'menu_title' => __( 'Forums', 'CP_TD' ),
 		);
 	}
 
@@ -119,13 +119,13 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 
 		// Validate
 		if ( empty( $title ) ) {
-			self::$error_message = __( 'The topic title is required!', 'cp' );
+			self::$error_message = __( 'The topic title is required!', 'CP_TD' );
 			return;
 		} elseif ( empty( $_POST['post_content'] ) ) {
-			self::$error_message = __( 'The topic description is required!', 'cp' );
+			self::$error_message = __( 'The topic description is required!', 'CP_TD' );
 			return;
 		} elseif ( ! empty( $id ) && ! CoursePress_Data_Capabilities::can_update_discussion( $id ) ) {
-			self::$error_message = __( 'You have no permission to edit this topic!', 'cp' );
+			self::$error_message = __( 'You have no permission to edit this topic!', 'CP_TD' );
 			return;
 		}
 
@@ -254,7 +254,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 		$unit_id = 'course';
 		if ( 'new' !== $the_id && ! empty( $the_id ) ) {
 			if ( ! CoursePress_Data_Capabilities::can_update_discussion( $the_id ) ) {
-				_e( 'You do not have permission to edit this discussion.', 'cp' );
+				_e( 'You do not have permission to edit this discussion.', 'CP_TD' );
 				return;
 			}
 			$post = get_post( $the_id );
@@ -263,7 +263,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 			$unit_id = $attributes['unit_id'];
 		} else {
 			if ( ! CoursePress_Data_Capabilities::can_add_discussion( 0 ) ) {
-				_e( 'You do not have permission to add discussion.', 'cp' );
+				_e( 'You do not have permission to add discussion.', 'CP_TD' );
 				return;
 			}
         }
@@ -272,7 +272,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 		if ( ! CoursePress_Data_Capabilities::can_add_discussion_to_all() ) {
 			$options['courses'] = self::get_courses();
 			if ( empty( $options['courses'] ) ) {
-				_e( 'You do not have permission to add discussion.', 'cp' );
+				_e( 'You do not have permission to add discussion.', 'CP_TD' );
 				return;
 			}
 		}
@@ -285,10 +285,10 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 		$options_unit = array();
 		$options_unit['value'] = $unit_id;
 		$options_unit['first_option'] = array(
-			'text' => __( 'All units', 'cp' ),
+			'text' => __( 'All units', 'CP_TD' ),
 			'value' => 'course',
 		);
-		printf( '<h4>%s</h4>', esc_html__( 'Select Unit', 'cp' ) );
+		printf( '<h4>%s</h4>', esc_html__( 'Select Unit', 'CP_TD' ) );
 		echo CoursePress_Helper_UI::get_unit_dropdown( 'unit_id', 'meta_unit_id', $course_id, false, $options_unit );
 	}
 
@@ -378,9 +378,9 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 		 * email_notification
 		 */
 		$email_notification = get_post_meta( $post->ID, 'email_notification', true );
-		printf( '<h4>%s</h4>', __( 'Enable email notification', 'cp' ) );
+		printf( '<h4>%s</h4>', __( 'Enable email notification', 'CP_TD' ) );
 		printf( '<input type="checkbox" name="email_notification" value="yes" %s id="meta_email_notification" />', checked( $email_notification, 'yes', false ) );
-		printf( ' <label for="meta_email_notification">%s</label>', __( 'Enable email notification', 'cp' ) );
+		printf( ' <label for="meta_email_notification">%s</label>', __( 'Enable email notification', 'CP_TD' ) );
 		/**
 		 * thread_comments_depth
 		 */
@@ -388,7 +388,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 		if ( empty( $thread_comments_depth ) ) {
 			$thread_comments_depth = get_option( 'thread_comments_depth', 5 );
 		}
-		printf( '<h4>%s</h4>', __( 'Threaded comments level', 'cp' ) );
+		printf( '<h4>%s</h4>', __( 'Threaded comments level', 'CP_TD' ) );
 		printf( '<input type="number" min="0" value="%d" name="thread_comments_depth" class="small-text" />', $thread_comments_depth );
 		/**
 		 * comments_per_page
@@ -397,20 +397,20 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 		if ( empty( $comments_per_page ) ) {
 			$comments_per_page = get_option( 'comments_per_page', 20 );
 		}
-		printf( '<h4>%s</h4>', __( 'Number of comments per page', 'cp' ) );
+		printf( '<h4>%s</h4>', __( 'Number of comments per page', 'CP_TD' ) );
 		printf( '<input type="number" min="0" value="%d" name="comments_per_page" class="small-text" />', $comments_per_page );
 		/**
 		 * comments_order
 		 */
 		$attr = array(
-			'older' => __( 'Older first', 'cp' ),
-			'newer' => __( 'Newer first', 'cp' ),
+			'older' => __( 'Older first', 'CP_TD' ),
+			'newer' => __( 'Newer first', 'CP_TD' ),
 		);
 		$comments_order = get_post_meta( $post->ID, 'comments_order', true );
 		if ( empty( $comments_order ) || ! array_key_exists( $comments_order, $attr ) ) {
 			$comments_order = 'newer';
 		}
-		printf( '<h4>%s</h4>', __( 'Comments order', 'cp' ) );
+		printf( '<h4>%s</h4>', __( 'Comments order', 'CP_TD' ) );
 		echo '<ul>';
 		foreach ( $attr as $key => $label ) {
 			printf(

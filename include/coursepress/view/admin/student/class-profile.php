@@ -7,12 +7,12 @@ class CoursePress_View_Admin_Student_Profile extends CoursePress_View_Admin_Stud
 		$date_format = get_option( 'date_format' );
 		?>
 		<div class="wrap student-workbook student-profile">
-			<h1><?php esc_html_e( 'Student Profile', 'cp' ); ?></h1>
+			<h1><?php esc_html_e( 'Student Profile', 'CP_TD' ); ?></h1>
 			<hr />
 			<?php
 				self::profile();
 			?>
-			<h2><?php esc_html_e( 'Courses', 'cp' ); ?></h2>
+			<h2><?php esc_html_e( 'Courses', 'CP_TD' ); ?></h2>
 			<?php
 				$enrolled_courses = CoursePress_Data_Student::get_enrolled_courses_ids( $student_id );
 				$args = array(
@@ -34,7 +34,7 @@ class CoursePress_View_Admin_Student_Profile extends CoursePress_View_Admin_Stud
 							<td>
 <ul>
 <li><a href="<?php echo $workbook_link; ?>" class="button button-units workbook-button">
-									<?php esc_html_e( 'View Workbook', 'cp' ); ?>
+									<?php esc_html_e( 'View Workbook', 'CP_TD' ); ?>
 								</a></li>
 <?php
 							/**
@@ -48,9 +48,9 @@ if ( ! empty( $certificate_id ) ) {
 		'<a href="#" data-certificate-id="%s" data-nonce="%s" class="button button-certificate-send" data-label-default="%s" data-label-sending="%s">%s</a>',
 		esc_attr( $certificate_id ),
 		esc_attr( wp_create_nonce( 'send-certificate-'.$certificate_id ) ),
-		esc_attr__( 'Send Certificate', 'cp' ),
-		esc_attr__( 'Sending...', 'cp' ),
-		__( 'Send Certificate', 'cp' )
+		esc_attr__( 'Send Certificate', 'CP_TD' ),
+		esc_attr__( 'Sending...', 'CP_TD' ),
+		__( 'Send Certificate', 'CP_TD' )
 	);
 	echo '</li>';
 }
@@ -70,20 +70,20 @@ if ( ! empty( $certificate_id ) ) {
 										<div class="course-summary"><?php the_excerpt(); ?></div>
 										<div class="course-info-holder">
 											<span class="info_caption">
-												<?php esc_html_e( 'Start', 'cp' ); ?>
+												<?php esc_html_e( 'Start', 'CP_TD' ); ?>
 												<i class="fa fa-calendar"></i>
 											</span>
 											<span class="info">
 												<?php echo $course->start_date; ?>
 											</span>
 											<span class="info_caption">
-												<?php esc_html_e( 'End', 'cp' ); ?>
+												<?php esc_html_e( 'End', 'CP_TD' ); ?>
 											</span>
 											<span class="info">
 												<?php echo $course->end_date; ?>
 											</span>
 											<span class="info_caption">
-												<?php esc_html_e( 'Duration', 'cp' ); ?>
+												<?php esc_html_e( 'Duration', 'CP_TD' ); ?>
 												<i class="fa fa-clock-o"></i>
 											</span>
 											<span class="info"><?php echo $course->duration; ?></span>
