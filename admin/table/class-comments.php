@@ -319,4 +319,17 @@ if ( 'top' === $which ) {
 		}
 
 	}
+	public function get_per_page( $comment_status = 'all' ) {
+		$screen = get_current_screen();
+		$option = $screen->get_option( 'per_page', 'option' );
+		$per_page = (int) get_user_option( $option );
+		if ( empty( $per_page ) || $per_page < 1 ) {
+			$per_page = $this->get_option( 'per_page', 'default' );
+			if ( ! $per_page ) {
+				$per_page = 20;
+			}
+		}
+		$per_page = $this->get_items_per_page( 'coursepress_comments_per_page', $per_page );
+		return $per_page;
+	}
 }
