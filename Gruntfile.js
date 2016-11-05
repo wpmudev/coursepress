@@ -157,57 +157,57 @@ module.exports = function(grunt) {
 			files_1: {
 				expand: true,
 				src: [
-					'./1.x/*.php',
-					'./1.x/includes/*.php',
-					'./1.x/includes/**/*.php',
-					'./1.x/**/*.css',
-					'./1.x/**/*.js',
-					'./1.x/**/*.html',
-					'./1.x/**/*.txt',
-					'!./1.x/node_modules/**',
-					'!./1.x/includes/external/**',
-					'!./1.x/Gruntfile.js',
-					'!./1.x/package.json',
-					'!./1.x/build/**',
-					'!./1.x/grunt_tasks/**',
-					'!./1.x/.git/**'
+					'1.x/*.php',
+					'1.x/includes/*.php',
+					'1.x/includes/**/*.php',
+					'1.x/**/*.css',
+					'1.x/**/*.js',
+					'1.x/**/*.html',
+					'1.x/**/*.txt',
+					'!1.x/node_modules/**',
+					'!1.x/includes/external/**',
+					'!1.x/Gruntfile.js',
+					'!1.x/package.json',
+					'!1.x/build/**',
+					'!1.x/grunt_tasks/**',
+					'!1.x/.git/**'
 				],
-				dest: './1.x/'
+				dest: '1.x/'
 			},
 			// Files to apply above patterns to (not only php files).
 			files_2: {
 				expand: true,
 				src: [
-					'./*.php',
-					'./upgrade/*.php',
-					'./upgrade/css/*.css',
-					'./upgrade/js/*.js',
-					'./2.0/*.php',
-					'./2.0/admin/*.php',
-					'./2.0/admin/**/*.php',
-					'./2.0/include/coursepress/*.php',
-					'./2.0/include/coursepress/**/*.php',
-					'./2.0/include/coursepress/**/**/*.php',
-					'./2.0/**/asset/js/*.js',
-					'./2.0/**/asset/css/*.css',
-					'!./node_modules/**',
-					'!./vendor/**',
-					'!./language/**',
-					'!./release/**',
-					'!./test/**',
-					'!./2.0/text/**',
-					'!./asset/file/**',
-					'!./Gruntfile.js',
-					'!./2.0/Gruntfile.js',
-					'!./package.json',
-					'!./2.0/package.json',
-					'!./bitbucket-pipelines.yml',
-					'!./2.0/bitbucket-pipelines.yml',
-					'!./build/**',
-					'!./.git/**',
-					'!./2.0/.git/**'
+					'*.php',
+					'upgrade/*.php',
+					'upgrade/css/*.css',
+					'upgrade/js/*.js',
+					'2.0/*.php',
+					'2.0/admin/*.php',
+					'2.0/admin/**/*.php',
+					'2.0/include/coursepress/*.php',
+					'2.0/include/coursepress/**/*.php',
+					'2.0/include/coursepress/**/**/*.php',
+					'2.0/**/asset/js/*.js',
+					'2.0/**/asset/css/*.css',
+					'!node_modules/**',
+					'!vendor/**',
+					'!language/**',
+					'!release/**',
+					'!test/**',
+					'!2.0/text/**',
+					'!asset/file/**',
+					'!Gruntfile.js',
+					'!2.0/Gruntfile.js',
+					'!package.json',
+					'!2.0/package.json',
+					'!bitbucket-pipelines.yml',
+					'!2.0/bitbucket-pipelines.yml',
+					'!build/**',
+					'!.git/**',
+					'!2.0/.git/**'
 				],
-				dest: './2.0/'
+				dest: '2.0/'
 			}
 		},
 
@@ -412,7 +412,7 @@ module.exports = function(grunt) {
 				nonull: true
 			},
 			pro: {
-				src: [ conf.plugin_patterns.files_1, conf.plugin_patterns.files_2],
+				src: [ conf.plugin_patterns.files_1.src, conf.plugin_patterns.files_2],
 				dest: 'release/<%= pkg.version %>-pro/'
 			},
 			free: {
@@ -616,8 +616,8 @@ module.exports = function(grunt) {
 					'release/<%= pkg.version %>-campus-<%= pkg.version %>.zip'
 				]
 			},
-			pro_1: conf.plugin_branches.exclude_pro_1,
-			pro_2: conf.plugin_branches.exclude_pro_2,
+			pro_1: conf.plugin_branches.exclude_1_pro,
+			pro_2: conf.plugin_branches.exclude_2_pro,
 			free: conf.plugin_branches.exclude_free,
 			campus: conf.plugin_branches.exclude_campus,
 			upgrade: conf.plugin_branches.exclude_upgrade
