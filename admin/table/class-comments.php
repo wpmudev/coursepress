@@ -332,4 +332,8 @@ if ( 'top' === $which ) {
 		$per_page = $this->get_items_per_page( 'coursepress_comments_per_page', $per_page );
 		return $per_page;
 	}
+
+	protected function get_bulk_actions() {
+		return array();
+	}
 }
