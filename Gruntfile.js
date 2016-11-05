@@ -119,7 +119,7 @@ module.exports = function(grunt) {
 		plugin_patterns: {
 			pro_1: [
 				{ match: /CoursePress Base/g, replace: 'CoursePress Pro' },
-				{ match: /<%= wpmudev.plugin.version %>/g, replace: conf.version_1 },
+				{ match: /<%= wpmudev.plugin.version %>/g, replace: '<%= conf.version_1%>' },
 				{ match: /coursepress_base_td/g, replace: 'cp' },
 				{ match: /\/\/<wpmudev.plugin.free_only([^<]+)/mg, replace: '' },
 				{ match: /<\/wpmudev.plugin.free_only>/g, replace: '' },
@@ -157,48 +157,56 @@ module.exports = function(grunt) {
 			files_1: {
 				expand: true,
 				src: [
-					'1.x/**/*.php',
-					'1.x/**/*.css',
-					'1.x/**/*.js',
-					'1.x/**/*.html',
-					'1.x/**/*.txt',
-					'!1.x/node_modules/**',
-					'!1.x/includes/external/**',
-					'!1.x/Gruntfile.js',
-					'!1.x/package.json',
-					'!1.x/build/**',
-					'!1.x/grunt_tasks/**',
-					'!1.x/.git/**'
-				]
+					'./1.x/*.php',
+					'./1.x/includes/*.php',
+					'./1.x/includes/**/*.php',
+					'./1.x/**/*.css',
+					'./1.x/**/*.js',
+					'./1.x/**/*.html',
+					'./1.x/**/*.txt',
+					'!./1.x/node_modules/**',
+					'!./1.x/includes/external/**',
+					'!./1.x/Gruntfile.js',
+					'!./1.x/package.json',
+					'!./1.x/build/**',
+					'!./1.x/grunt_tasks/**',
+					'!./1.x/.git/**'
+				],
+				dest: '1.x/'
 			},
 			// Files to apply above patterns to (not only php files).
 			files_2: {
 				expand: true,
 				src: [
-					'*.php',
-					'upgrade/*.php',
-					'upgrade/css/*.css',
-					'upgrade/js/*.js',
-					'2.0/*.php',
-					'2.0/**/*.php',
-					'2.0/**/**/*.php',
-					'2.0/**/**/**/*.php',
-					'2.0/**/**/**/**/*.php',
-					'2.0/**/asset/js/*.js',
-					'2.0/**/asset/css/*.css',
-					'!node_modules/**',
-					'!vendor/**',
-					'!language/**',
-					'!release/**',
-					'!test/**',
-					'!asset/file/**',
-					'!Gruntfile.js',
-					'!package.json',
-					'!bitbucket-pipelines.yml',
-					'!build/**',
-					'!.git/**'
+					'./*.php',
+					'./upgrade/*.php',
+					'./upgrade/css/*.css',
+					'./upgrade/js/*.js',
+					'./2.0/*.php',
+					'./2.0/**/*.php',
+					'./2.0/**/**/*.php',
+					'./2.0/**/**/**/*.php',
+					'./2.0/**/**/**/**/*.php',
+					'./2.0/**/asset/js/*.js',
+					'./2.0/**/asset/css/*.css',
+					'!./node_modules/**',
+					'!./vendor/**',
+					'!./language/**',
+					'!./release/**',
+					'!./test/**',
+					'!./2.0/text/**',
+					'!./asset/file/**',
+					'!./Gruntfile.js',
+					'!./2.0/Gruntfile.js',
+					'!./package.json',
+					'!./2.0/package.json',
+					'!./bitbucket-pipelines.yml',
+					'!./2.0/bitbucket-pipelines.yml',
+					'!./build/**',
+					'!./.git/**',
+					'!./2.0/.git/**'
 				],
-				dest: './'
+				dest: '2.0/'
 			}
 		},
 
@@ -723,7 +731,11 @@ module.exports = function(grunt) {
 			grunt.task.run( 'gitcheckout:' + branch );
 
 			// Remove code and files that does not belong to 1.x and 2.0 versions
-			grunt.task.run( 'replace:' + branch );
+			if ( 'pro' == branch ) {
+				grunt.task.run( 'replace:pro_1' );
+				grunt.task.run( 'replace:pro_2' );
+			}
+
 			/*
 			grunt.task.run( 'clean:' + branch );
 
