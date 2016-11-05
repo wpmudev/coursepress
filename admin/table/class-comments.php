@@ -26,7 +26,8 @@ class CoursePress_Admin_Table_Comments extends WP_Comments_List_Table {
 	public function prepare_items() {
 		global $post_id, $comment_status, $search, $comment_type;
 
-		$discussions = CoursePress_Data_Module::get_all_modules_ids_by_type( 'discussion' );
+		$course_id = ( isset( $_REQUEST['course_id'] ) ) ? $_REQUEST['course_id'] : null;
+		$discussions = CoursePress_Data_Module::get_all_modules_ids_by_type( 'discussion', $course_id );
 		if ( empty( $discussions ) ) {
 			return;
 		}
@@ -239,5 +240,83 @@ if ( 'top' === $which ) {
 		 */
 		do_action( 'manage_comments_nav', $comment_status );
 		echo '</div>';
+	}
+
+	/**
+	 * @access public
+	 *
+	 * @param WP_Comment $comment The comment object.
+	 */
+	public function column_response( $comment ) {
+		$post = get_post();
+
+		if ( ! $post ) {
+			return;
+		}
+
+		if ( isset( $this->pending_count[ $post->ID ] ) ) {
+			$pending_comments = $this->pending_count[ $post->ID ];
+		} else {
+			$_pending_count_temp = get_pending_comments_num( array( $post->ID ) );
+			$pending_comments = $this->pending_count[ $post->ID ] = $_pending_count_temp[ $post->ID ];
+		}
+
+		if ( current_user_can( 'edit_post', $post->ID ) ) {
+			$post_link = "<a href='" . get_edit_post_link( $post->ID ) . "' class='comments-edit-item-link'>";
+			$post_link .= esc_html( get_the_title( $post->ID ) ) . '</a>';
+		} else {
+			$post_link = esc_html( get_the_title( $post->ID ) );
+		}
+
+		echo '<div class="response-links">';
+		if ( 'attachment' === $post->post_type && ( $thumb = wp_get_attachment_image( $post->ID, array( 80, 60 ), true ) ) ) {
+			echo $thumb;
+		}
+		echo $post_link;
+		echo '<br />';
+		echo '<span class="post-com-count-wrapper post-com-count-', $post->ID, '">';
+		$this->comments_bubble( $post->ID, $pending_comments );
+		echo '</span> ';
+		echo '</div>';
+	}
+
+	/**
+	 * Display a comment count bubble
+	 *
+	 * @since 3.1.0
+	 * @access protected
+	 *
+	 * @param int $post_id          The post ID.
+	 * @param int $pending_comments Number of pending comments.
+	 */
+	protected function comments_bubble( $post_id, $pending_comments ) {
+		$approved_comments = get_comments_number();
+
+		$approved_comments_number = number_format_i18n( $approved_comments );
+		$pending_comments_number = number_format_i18n( $pending_comments );
+
+		$approved_only_phrase = sprintf( _n( '%s comment', '%s comments', $approved_comments ), $approved_comments_number );
+		$approved_phrase = sprintf( _n( '%s approved comment', '%s approved comments', $approved_comments ), $approved_comments_number );
+		$pending_phrase = sprintf( _n( '%s pending comment', '%s pending comments', $pending_comments ), $pending_comments_number );
+
+		// No comments at all.
+		if ( ! $approved_comments && ! $pending_comments ) {
+			printf( '<span aria-hidden="true">—</span><span class="screen-reader-text">%s</span>',
+				__( 'No comments' )
+			);
+			// Approved comments have different display depending on some conditions.
+		} elseif ( $approved_comments ) {
+			printf( '<span href="%s" class="post-com-count post-com-count-approved"><span class="comment-count-approved" aria-hidden="true">%s</span><span class="screen-reader-text">%s</span></span>',
+				esc_url( add_query_arg( array( 'p' => $post_id, 'comment_status' => 'approved' ), admin_url( 'edit-comments.php' ) ) ),
+				$approved_comments_number,
+				$pending_comments ? $approved_phrase : $approved_only_phrase
+			);
+		} else {
+			printf( '<span class="post-com-count post-com-count-no-comments"><span class="comment-count comment-count-no-comments" aria-hidden="true">%s</span><span class="screen-reader-text">%s</span></span>',
+				$approved_comments_number,
+				$pending_comments ? __( 'No approved comments' ) : __( 'No comments' )
+			);
+		}
+
 	}
 }
