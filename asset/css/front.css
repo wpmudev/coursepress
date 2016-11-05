@@ -704,8 +704,7 @@ tester {
   clear: both;
   border: 1px solid transparent;
   font-size: 110%;
-  border: 1px solid rgba(0, 0, 0, 0.04);
-  padding: 15px 20px;
+  padding: 0;
   border-radius: 5px;
   box-sizing: border-box;
 }
@@ -714,13 +713,25 @@ tester {
 }
 .cp .cp-module-content .comment-reply-title {
   margin-bottom: 0;
+  padding-bottom: 15px;
 }
 .cp .cp-module-content .comment-notification {
   display: inline-block;
-  margin-left: 20px;
+  margin: 0;
 }
 .cp .cp-module-content .comment-list {
   margin: 25px 0;
+}
+.cp .cp-module-content .comment-respond {
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  padding: 15px 25px;
+  background-color: rgba(255, 255, 255, 0.56);
+}
+.cp .cp-module-content .comment-respond .form-submit {
+  margin: 0 0 15px 0;
+}
+.cp .cp-module-content .comment-respond .form-submit #submit {
+  margin: 0;
 }
 .cp .module-header {
   margin: 0 0 25px 0;
@@ -817,6 +828,36 @@ tester {
   margin-top: 25px;
   border: 1px solid rgba(0, 0, 0, 0.3);
   padding: 5px 10px;
+}
+.cp .module-elements .comment-list {
+  list-style: none;
+}
+.cp .module-elements .comment-list .avatar {
+  float: left;
+  margin-right: 15px;
+}
+.cp .module-elements .comment-list .comment-meta {
+  clear: right;
+  font-size: 14px;
+  clear: right;
+  margin-bottom: 15px;
+}
+.cp .module-elements .comment-list .reply {
+  clear: both;
+  text-align: right;
+}
+.cp .module-elements .comment-list .comment-body {
+  clear: both;
+  margin: 15px 0;
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  padding: 15px 25px;
+  background-color: rgba(255, 255, 255, 0.56);
+}
+.cp .module-elements .comment-list li {
+  list-style: none;
+}
+.cp .module-elements .comment-list li li {
+  margin-left: 25px;
 }
 .cp .cp-try-again {
   margin-top: 15px;
