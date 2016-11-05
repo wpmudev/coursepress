@@ -22,6 +22,8 @@ module.exports = function(grunt) {
 	// -------------------------------------------------------------------------
 	// Configuration.
 	var conf = {
+		// 1.x version
+		version_1: '1.2.6.7',
 		// Folder that contains the CSS files.
 		js_folder: 'upgrade/js/',
 
@@ -72,7 +74,14 @@ module.exports = function(grunt) {
 				'1.x/Gruntfile.js',
 				'1.x/package.json',
 				'1.x/README.md',
-				'1.x/readme.txt'
+				'1.x/readme.txt',
+				'1.x/themes/.gitattributes',
+				'1.x/themes/.gitignore',
+				'1.x/themes/.gitmodules',
+				'1.x/themes/Gruntfile.js',
+				'1.x/themes/package.json',
+				'1.x/themes/README.md',
+				'1.x/themes/readme.txt'
 			],
 			exclude_2_pro: [
 				'2.0/test',
@@ -90,7 +99,14 @@ module.exports = function(grunt) {
 				'2.0/package.json',
 				'2.0/README.md',
 				'2.0/asset/css/src',
-				'2.0/asset/js/src'
+				'2.0/asset/js/src',
+				'2.0/themes/.gitattributes',
+				'2.0/themes/.gitignore',
+				'2.0/themes/.gitmodules',
+				'2.0/themes/bitbucket-pipelines.yml',
+				'2.0/themes/README.md',
+				'2.0/themes/package.json',
+				'2.0/thems/Gruntfile.js'
 			],
 			base: 'coursepress/2.0-release',
 			pro: 'coursepress/2.0-release-pro',
@@ -103,7 +119,7 @@ module.exports = function(grunt) {
 		plugin_patterns: {
 			pro_1: [
 				{ match: /CoursePress Base/g, replace: 'CoursePress Pro' },
-				{ match: /<%= wpmudev.plugin.version %>/g, replace: plugin_info.version },
+				{ match: /<%= wpmudev.plugin.version %>/g, replace: conf.version_1 },
 				{ match: /coursepress_base_td/g, replace: 'cp' },
 				{ match: /\/\/<wpmudev.plugin.free_only([^<]+)/mg, replace: '' },
 				{ match: /<\/wpmudev.plugin.free_only>/g, replace: '' },
@@ -706,7 +722,7 @@ module.exports = function(grunt) {
 			// Checkout the destination branch.
 			grunt.task.run( 'gitcheckout:' + branch );
 
-			// Remove code and files that does not belong to this version.
+			// Remove code and files that does not belong to 1.x and 2.0 versions
 			grunt.task.run( 'replace:' + branch );
 			/*
 			grunt.task.run( 'clean:' + branch );
