@@ -824,6 +824,7 @@ class CoursePress_Data_Discussion {
 			'offset' => 0,
 			'number' => 1, // We only need one to verify if current user posted a comment.
 			'fields' => 'ids',
+			'status' => 'all',
 		);
 		$comments = get_comments( $args );
 
