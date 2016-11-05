@@ -213,6 +213,7 @@ class CoursePress_Module {
 
 		// Validate the course
 		$error = CoursePress_Data_Course::can_access( $course_id, $unit_id );
+		$can_update_course = CoursePress_Data_Capabilities::can_update_course( $course_id, $student_id );
 
 		if ( ! empty( $error ) ) {
 			$has_error = true;
@@ -231,7 +232,7 @@ class CoursePress_Module {
 					$is_answerable = preg_match( '%input-%', $module_type );
 
 					if ( 'input-upload' == $module_type ) {
-						if ( empty( $_FILES ) ) {
+						if ( false == $can_update_course && empty( $_FILES ) ) {
 							self::$error_message = __( 'You need to complete the required module!', 'cp' );
 							$has_error = true;
 						}
@@ -240,7 +241,7 @@ class CoursePress_Module {
 
 					if ( 'discussion' == $module_type ) {
 						if ( empty( $input['comment'] ) ) {
-							if ( $is_mandatory ) {
+							if ( $is_mandatory && false == $can_update_course ) {
 								// Check if current student previously commented.
 								if ( CoursePress_Data_Discussion::have_comments( $student_id, $module_id ) ) {
 									continue;
@@ -275,7 +276,7 @@ class CoursePress_Module {
 					if ( $is_answerable ) {
 						if ( ! isset( $module[ $module_id ] ) || '' === ( $module[ $module_id ] ) ) {
 							// Check if module is mandatory
-							if ( $is_mandatory ) {
+							if ( $is_mandatory && false == $can_update_course ) {
 								self::$error_message = __( 'You need to complete the required module!', 'cp' );
 								$has_error = true;
 							}
@@ -312,7 +313,9 @@ class CoursePress_Module {
 
 							// override $is_assessable if module type 'input-form', regardless if enabled in admin dashboard or not
 							// logic from CoursePress_Data_Module::get_form_results() is that Form will have a grade of 100 if not required, otherwise check if empty for all submodules
-							if ( $module_type == 'input-form' ) $is_assessable = true;
+							if ( $module_type == 'input-form' ) {
+								$is_assessable = true;
+							}
 
 							// Check if the grade acquired pass
 							if ( true === $is_assessable && ! in_array( $module_type, $excluded_modules ) ) {
@@ -321,7 +324,7 @@ class CoursePress_Module {
 								$grade = CoursePress_Helper_Utility::get_array_val( $grades, 'grade' );
 								$pass = (int) $grade >= (int) $minimum_grade;
 								
-								if ( false === $pass ) {
+								if ( false === $pass && false == $can_update_course ) {
 									$has_error = true;
 									self::$error_message = ( $module_type == 'input-form' ) ?
 										__( 'You did not complete the form!', 'cp' )
@@ -349,7 +352,7 @@ class CoursePress_Module {
 					$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $_module_id );
 					$required = ! empty( $attributes['mandatory'] );
 
-					if ( true === $required ) {
+					if ( true === $required && false == $can_update_course ) {
 						if ( empty( $filename ) ) {
 							if ( empty( $response ) ) {
 								self::$error_message = __( 'You need to complete the required module!', 'cp' );

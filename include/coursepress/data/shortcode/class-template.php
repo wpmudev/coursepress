@@ -755,20 +755,6 @@ class CoursePress_Data_Shortcode_Template {
 						$unit_id,
 						$module->ID
 					);
-/*
-					if ( ! $can_update_course &&
-						(
-						( ! $is_assessable && empty( $quiz_result ) )
-						|| ( $is_assessable && empty( $quiz_result['passed'] ) )
-						)
-					) {
-						$next_module_class[] = 'not-active';
-						$next = array(
-							'id' => '',
-							'not_done' => true,
-						);
-					}
-*/
 				}
 
 				$preview_modules = array();
