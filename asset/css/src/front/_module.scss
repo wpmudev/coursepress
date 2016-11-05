@@ -16,12 +16,17 @@
 		}
 
 		.comment-reply-title {
-			margin-bottom: 0;
+			margin: 0;
 			padding-bottom: 15px;
 		}
 		.comment-notification {
 			display: inline-block;
 			margin: 0;
+			float: left;
+		}
+		.comment-form {
+			margin: 0;
+			padding: 0 0 15px 0;
 		}
 		.comment-list {
 			margin: 25px 0;
@@ -33,8 +38,10 @@
 
 			.form-submit {
 				margin: 0 0 15px 0;
+				text-align: right;
 				#submit {
 					margin: 0;
+					width: auto;
 				}
 			}
 		}

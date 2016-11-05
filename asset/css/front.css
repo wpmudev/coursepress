@@ -486,6 +486,7 @@ tester {
 .course-wrapper .unit-title-wrapper {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   padding: 10px 0 0 0;
+  width: auto;
 }
 .course-wrapper .unit-title-wrapper:first-child {
   padding: 0;
@@ -712,12 +713,17 @@ tester {
   box-sizing: border-box;
 }
 .cp .cp-module-content .comment-reply-title {
-  margin-bottom: 0;
+  margin: 0;
   padding-bottom: 15px;
 }
 .cp .cp-module-content .comment-notification {
   display: inline-block;
   margin: 0;
+  float: left;
+}
+.cp .cp-module-content .comment-form {
+  margin: 0;
+  padding: 0 0 15px 0;
 }
 .cp .cp-module-content .comment-list {
   margin: 25px 0;
@@ -729,9 +735,11 @@ tester {
 }
 .cp .cp-module-content .comment-respond .form-submit {
   margin: 0 0 15px 0;
+  text-align: right;
 }
 .cp .cp-module-content .comment-respond .form-submit #submit {
   margin: 0;
+  width: auto;
 }
 .cp .module-header {
   margin: 0 0 25px 0;
