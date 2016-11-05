@@ -30,6 +30,9 @@ class CoursePress_Hooks {
 		// Per course certificate preview
 		add_action( 'init', array( 'CoursePress_Admin_Edit', 'certificate_preview' ) );
 		// Update Course
+		add_action( 'coursepress_course_updated', array( 'CoursePress_Data_Course', 'get_expired_courses' ) );
+		add_action( 'coursepress_course_updated', array( 'CoursePress_Data_Course', 'get_enrollment_ended_courses' ) );
+
 		add_action( 'wp_ajax_update_course', array( 'CoursePress_Admin_Controller_Course', 'update_course' ) );
 		// Update UnitBuilder
 		add_action( 'wp_ajax_unit_builder', array( 'CoursePress_Admin_Controller_Unit', 'unit_builder_ajax' ) );

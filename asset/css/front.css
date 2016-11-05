@@ -605,6 +605,9 @@ tester {
   clear: both;
   list-style: none;
 }
+.units-archive-list .fa-lock {
+  display: none;
+}
 .units-archive-list li {
   position: relative;
   clear: both;
@@ -627,11 +630,22 @@ tester {
   width: 30px;
   text-align: center;
 }
-.units-archive-list .unfolded:before {
-  content: "\f140";
+.units-archive-list .fold {
+  display: inline-block;
+  width: 25px;
+  float: left;
+  height: 25px;
+  margin-right: 15px;
+  cursor: pointer;
 }
-.units-archive-list .folded:before {
-  content: "\f139";
+.units-archive-list .fold:before {
+  content: '\f140';
+  font-family: Dashicons;
+  font-size: 20px;
+  line-height: 1.2;
+}
+.units-archive-list .fold.folded:before {
+  content: '\f139';
 }
 .units-archive-list .unit-archive-single ul, .units-archive-list .unit-archive-single ol {
   margin: 0;
@@ -672,17 +686,50 @@ tester {
   font-style: italic;
   opacity: 0.5;
 }
-.units-archive-list .li-locked-unit .unit-archive-single-title {
+.units-archive-list .li-locked-unit img {
+  display: none;
+}
+.units-archive-list .li-locked-unit:after {
+  content: attr(data-title);
+  position: absolute;
+  right: 0;
+  padding: 5px 15px;
+  font-size: 14px;
+  background-color: rgba(0, 0, 0, 0.06);
+  color: #111;
+  display: none;
+}
+.units-archive-list .li-locked-unit:hover:after {
+  display: block;
+}
+.units-archive-list .li-locked-unit .unit-archive-single {
   position: relative;
 }
-.units-archive-list .li-locked-unit .unit-archive-single-title:before {
+.units-archive-list .li-locked-unit .unit-archive-single:before {
   content: "\f160";
   font-family: Dashicons;
   float: right;
   font-size: 1.2em;
   line-height: 1.4em;
 }
+.units-archive-list .li-locked-unit .unit-archive-single-title .unit-delay-date {
+  float: right;
+}
 .units-archive-list .li-locked-unit .course-progress-disc-container {
+  display: none;
+}
+.units-archive-list .module-required {
+  position: relative;
+}
+.units-archive-list .module-required:after {
+  content: '\f227';
+  font-family: Dashicons;
+  float: right;
+  font-size: 1.2em;
+  line-height: 1.4em;
+  color: red;
+}
+.units-archive-list .module-required.module-completed:after {
   display: none;
 }
 .units-archive-list .module-locked .module-title {

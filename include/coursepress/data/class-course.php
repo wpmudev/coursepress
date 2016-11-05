@@ -13,6 +13,7 @@ class CoursePress_Data_Course {
 	public static $last_course_subpage = '';
 	public static $previewability = false;
 	public static $structure_visibility = false;
+	private static $current = array();
 
 	public static function get_format() {
 		return array(
@@ -632,23 +633,29 @@ class CoursePress_Data_Course {
 	public static function get_units(
 		$course_id, $status = array( 'publish' ), $ids_only = false, $include_count = false
 	) {
+		$key = self::get_key( 'course_units', $course_id, $status, $ids_only, $include_count );
 
-		$post_args = array(
-			'post_type' => CoursePress_Data_Unit::get_post_type_name(),
-			'post_parent' => $course_id,
-			'post_status' => $status,
-			'posts_per_page' => - 1,
-			'order' => 'ASC',
-			'orderby' => 'meta_value_num',
-			'meta_key' => 'unit_order',
-			'suppress_filters' => true,
-		);
+		if ( ! empty( self::$current[ $key ] ) ) {
+			$query = self::$current[ $key ];
+		} else {
 
-		if ( $ids_only ) {
-			$post_args['fields'] = 'ids';
+			$post_args = array(
+				'post_type' => CoursePress_Data_Unit::get_post_type_name(),
+				'post_parent' => $course_id,
+				'post_status' => $status,
+				'posts_per_page' => - 1,
+				'order' => 'ASC',
+				'orderby' => 'meta_value_num',
+				'meta_key' => 'unit_order',
+				'suppress_filters' => true,
+			);
+
+			if ( $ids_only ) {
+				$post_args['fields'] = 'ids';
+			}
+			$query = new WP_Query( $post_args );
+			self::$current[ $key ] = $query;
 		}
-
-		$query = new WP_Query( $post_args );
 
 		if ( $include_count ) {
 			// Handy if using pagination.
@@ -684,6 +691,12 @@ class CoursePress_Data_Course {
 	}
 
 	public static function get_units_with_modules( $course_id, $status = array( 'publish' ) ) {
+		$key = self::get_key( 'units_with_modules', $course_id, $status );
+
+		if ( ! empty( self::$current[ $key ] ) ) {
+			return self::$current[ $key ];
+		}
+
 		$items = array();
 
 		// Get units
@@ -766,6 +779,8 @@ class CoursePress_Data_Course {
 				update_post_meta( $post_id, 'show_page_title', $page_visible );
 			}
 		}
+
+		self::$current[ $key ] = $items;
 
 		return $items;
 	}
@@ -901,36 +916,55 @@ class CoursePress_Data_Course {
 		}
 	}
 
+	public static function get_key() {
+		$args = func_get_args();
+
+		foreach ( $args as $pos => $arg ) {
+			$arg = is_array( $arg ) ? implode( '-', $arg ) : $arg;
+			$args[ $pos ] = $arg;
+		}
+
+		return implode( '_', $args );
+	}
+
 	public static function get_unit_modules(
 		$unit_id, $status = array( 'publish' ), $ids_only = false, $include_count = false, $args = array()
 	) {
 
-		$post_args = array(
-			'post_type' => CoursePress_Data_Module::get_post_type_name(),
-			'post_parent' => $unit_id,
-			'post_status' => $status,
-			'posts_per_page' => -1,
-			'order' => 'ASC',
-			'orderby' => 'meta_value_num',
-			'meta_key' => 'module_order',
-		);
+		$key = self::get_key( 'unit_modules', $unit_id, $status, $ids_only, $include_count, $args );
 
-		if ( $ids_only ) {
-			$post_args['fields'] = 'ids';
-		}
+		if ( ! empty( self::$current[ $key ] ) ) {
+			$query = self::$current[ $key ];
+		} else {
 
-		// Get modules for specific page
-		if ( isset( $args['page'] ) && (int) $args['page'] ) {
-			$post_args['meta_query'] = array(
-				array(
-					'key' => 'module_page',
-					'value' => (int) $args['page'],
-					'compare' => '=',
-				),
+			$post_args = array(
+				'post_type' => CoursePress_Data_Module::get_post_type_name(),
+				'post_parent' => $unit_id,
+				'post_status' => $status,
+				'posts_per_page' => -1,
+				'order' => 'ASC',
+				'orderby' => 'meta_value_num',
+				'meta_key' => 'module_order',
 			);
-		}
 
-		$query = new WP_Query( $post_args );
+			if ( $ids_only ) {
+				$post_args['fields'] = 'ids';
+			}
+
+			// Get modules for specific page
+			if ( isset( $args['page'] ) && (int) $args['page'] ) {
+				$post_args['meta_query'] = array(
+					array(
+						'key' => 'module_page',
+						'value' => (int) $args['page'],
+						'compare' => '=',
+					),
+				);
+			}
+
+			$query = new WP_Query( $post_args );
+			self::$current[ $key ] = $query;
+		}
 
 		if ( $include_count ) {
 			// Handy if using pagination.
@@ -2782,25 +2816,33 @@ class CoursePress_Data_Course {
 	 * We use custom SQL to avoid overcaps
 	 * @TODO: Create and hooked into `POSTS_JOIN` as counter part to orig CP
 	 **/
-	public static function get_expired_courses( $per_page = 20 ) {
+	public static function get_expired_courses( $refresh = false ) {
 		global $wpdb;
 
-		$paged = get_query_var( 'paged' );
-		$paged = (int) $paged > 1 ? $paged : 1;
-		$limit = $per_page;
-		$offset = ($paged - 1 ) * $limit;
-		$limit = $paged * $limit;
-
+		$course_ids = get_option( 'cp_expired_courses', false );
+		$last_update = get_option( 'cp_expired_date', false );
+		$post_type = self::get_post_type_name();
 		$now = self::time_now();
-		$sql = "SELECT m.`post_id`, p.`ID` FROM {$wpdb->postmeta} AS m, {$wpdb->posts} AS p
-			WHERE (m.`meta_key`='cp_course_end_date' AND ( m.`meta_value` > 0 AND m.`meta_value` < %d ))
-			AND ( p.ID=m.post_id AND p.post_status IN ('publish') )
-			LIMIT %d, %d
-		";
-		$sql = $wpdb->prepare( $sql, $now, $offset, $limit );
+		$date = date( 'MdY' );
 
-		$course_ids = $wpdb->get_results( $sql, ARRAY_A );
-		$course_ids = array_map( array( __CLASS__, 'return_id' ), $course_ids );
+		if ( $last_update != $date ) {
+			// Force refresh daily
+			$refresh = true;
+		}
+
+		if ( false === $course_ids && false == $last_update || $refresh ) {
+			$sql = "SELECT m.`post_id`, p.`ID` FROM {$wpdb->postmeta} AS m, {$wpdb->posts} AS p
+				WHERE p.`post_type`='%s' AND (m.`meta_key`='cp_course_end_date' AND ( m.`meta_value` > 0 AND m.`meta_value` < %d ))
+				AND ( p.ID=m.post_id AND p.post_status IN ('publish') )
+			";
+			$sql = $wpdb->prepare( $sql, $post_type, $now );
+
+			$course_ids = $wpdb->get_results( $sql, ARRAY_A );
+			$course_ids = array_map( array( __CLASS__, 'return_id' ), $course_ids );
+
+			update_option( 'cp_expired_courses', $course_ids );
+			update_option( 'cp_expired_date', $date );
+		}
 
 		return $course_ids;
 	}
@@ -2808,25 +2850,33 @@ class CoursePress_Data_Course {
 	/**
 	 * @todo: Create and hooked into `POSTS_JOIN` as counter part to orig CP
 	 **/
-	public static function get_enrollment_ended_courses( $per_page = 20 ) {
+	public static function get_enrollment_ended_courses( $refresh = false ) {
 		global $wpdb;
 
-		$paged = get_query_var( 'paged' );
-		$paged = (int) $paged > 1 ? $paged : 1;
-		$limit = $per_page;
-		$offset = ($paged - 1 ) * $limit;
-		$limit = $paged * $limit;
-
+		$course_ids = get_option( 'cp_enrollment_ended_courses', false );
+		$last_update = get_option( 'cp_enrollment_ended_date', false );
+		$post_type = self::get_post_type_name();
 		$now = self::time_now();
-		$sql = "SELECT m.`post_id`, p.`ID` FROM {$wpdb->postmeta} AS m, {$wpdb->posts} AS p
-			WHERE (m.`meta_key`='cp_enrollment_end_date' AND ( m.`meta_value` > 0 AND m.`meta_value` <= %d ))
-			AND ( p.ID=m.post_id AND p.post_status IN ('publish') )
-			LIMIT %d, %d
-		";
-		$sql = $wpdb->prepare( $sql, $now, $offset, $limit );
+		$date = date( 'MdY' );
 
-		$course_ids = $wpdb->get_results( $sql, ARRAY_A );
-		$course_ids = array_map( array( __CLASS__, 'return_id' ), $course_ids );
+		if ( $last_update != $date ) {
+			// Force refresh daily
+			$refresh = true;
+		}
+
+		if ( false === $course_ids && false == $last_update || $refresh ) {
+			$sql = "SELECT m.`post_id`, p.`ID` FROM {$wpdb->postmeta} AS m, {$wpdb->posts} AS p
+				WHERE p.`post_type`='%s' AND (m.`meta_key`='cp_enrollment_end_date' AND ( m.`meta_value` > 0 AND m.`meta_value` <= %d ))
+				AND ( p.ID=m.post_id AND p.post_status IN ('publish') )
+			";
+			$sql = $wpdb->prepare( $sql, $post_type, $now );
+
+			$course_ids = $wpdb->get_results( $sql, ARRAY_A );
+			$course_ids = array_map( array( __CLASS__, 'return_id' ), $course_ids );
+
+			update_option( 'cp_enrollment_ended_courses', $course_ids );
+			update_option( 'cp_enrollment_ended_date', $date );
+		}
 
 		return $course_ids;
 	}
@@ -2855,14 +2905,14 @@ class CoursePress_Data_Course {
 		);
 
 		// Get expired courses
-		$expired_courses = self::get_expired_courses( $args['posts_per_page'] );
+		$expired_courses = self::get_expired_courses();
 		$enrollment_ended_courses = array();
 
 		// Get enrollment ended courses for non-admin
 		$is_admin = user_can( $student_id, 'manage_options' );
 
 		if ( false === $is_admin ) {
-			$enrollment_ended_courses = self::get_enrollment_ended_courses( $args['posts_per_page'] );
+			$enrollment_ended_courses = self::get_enrollment_ended_courses();
 			$enrolled_courses = (array) CoursePress_Data_Student::get_enrolled_courses_ids( $student_id );
 
 			if ( ! empty( $enrollment_ended_courses ) ) {
