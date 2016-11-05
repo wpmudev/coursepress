@@ -48,8 +48,13 @@ module.exports = function(grunt) {
 			ignore_files: [
 				'(^.php)',      // Ignore non-php files.
 				'bin/.*',       // Unit testing.
-				'test/.*',      // Unit testing.
+				'2.0/test/.*',      // Unit testing.
+				'2.0/test/php/.*', // Uni testing
 				'node_modules/.*',
+				'2.0/node_modules/.*',
+				'2.0/tcpdf/.*',
+				'2.0/themes/.*',
+				'1.x/node_moudles/.*',
 				'lib/TCPDF/.*', // External module.
 				'themes/.*',    // External module.
 			],
@@ -58,64 +63,54 @@ module.exports = function(grunt) {
 			textdomain_free: 'coursepress',
 		},
 
-		// BUILD branches.
+		// Build branches.
 		plugin_branches: {
-			exclude_pro: [
-				'./test',
-				'./readme.txt',
-				'./language/coursepress.pot',
-				'./campus',
-				'./node_modules',
-				'./vendor',
-				'./.gitattributes',
-				'./.gitignore',
-				'./.gitmodules',
-				'./composer.json',
-				'./composer.lock',
-				'./Gruntfile.js',
-				'./package.json',
-				'./README.md',
-				'./asset/css/src',
-				'./asset/js/src'
+			exclude_1_pro: [
+				'1.x/node_modules',
+				'1.x/.gitignore',
+				'1.x/.gitmodules',
+				'1.x/Gruntfile.js',
+				'1.x/package.json',
+				'1.x/README.md',
+				'1.x/readme.txt'
 			],
-			exclude_free: [
-				'./test',
-				'./language/cp.pot',
-				'./premium',
-				'./campus',
-				'./node_modules',
-				'./vendor',
-				'./.gitattributes',
-				'./.gitignore',
-				'./composer.json',
-				'./composer.lock',
-				'./Gruntfile.js',
-				'./package.json',
-				'./README.md'
+			exclude_2_pro: [
+				'2.0/test',
+				'2.0/readme.txt',
+				'2.0/language/coursepress.pot',
+				'2.0/campus',
+				'2.0/node_modules',
+				'2.0/vendor',
+				'2.0/.gitattributes',
+				'2.0/.gitignore',
+				'2.0/.gitmodules',
+				'2.0/composer.json',
+				'2.0/composer.lock',
+				'2.0/Gruntfile.js',
+				'2.0/package.json',
+				'2.0/README.md',
+				'2.0/asset/css/src',
+				'2.0/asset/js/src'
 			],
-			exclude_campus: [
-				'./test',
-				'./readme.txt',
-				'./language/coursepress.pot',
-				'./node_modules',
-				'./vendor',
-				'./.gitattributes',
-				'./.gitignore',
-				'./composer.json',
-				'./composer.lock',
-				'./Gruntfile.js',
-				'./package.json',
-				'./README.md'
-			],
-			base: 'coursepress/2.0-dev',
-			pro: 'coursepress/2.0-pro-test',
-			free: 'coursepress/2.0-free-test',
-			campus: 'coursepress/2.0-campus-test'
+			base: 'coursepress/2.0-release',
+			pro: 'coursepress/2.0-release-pro',
+			free: 'coursepress/2.0-release-free',
+			campus: 'coursepress/2.0-release-campus',
+			dev: 'coursepress/2.0-release-dev'
 		},
 
 		// BUILD patterns to exclude code for specific builds.
 		plugin_patterns: {
-			pro: [
+			pro_1: [
+				{ match: /CoursePress Base/g, replace: 'CoursePress Pro' },
+				{ match: /<%= wpmudev.plugin.version %>/g, replace: plugin_info.version },
+				{ match: /coursepress_base_td/g, replace: 'cp' },
+				{ match: /\/\/<wpmudev.plugin.free_only([^<]+)/mg, replace: '' },
+				{ match: /<\/wpmudev.plugin.free_only>/g, replace: '' },
+				{ match: /\/\/<wpmudev.plugin.pro_only>/g, replace: '' },
+				{ match: /\/\/<\/wpmudev.plugin.pro_only>/g, replace: '' }
+			],
+			pro_2: [
 				{ match: /CoursePress Base/g, replace: 'CoursePress Pro' },
 				{ match: /BUILDTIME/g, replace: buildtime },
 				{ match: /'CP_TD'/g, replace: '\'cp\'' },
@@ -142,16 +137,39 @@ module.exports = function(grunt) {
 				{ match: /\/\* start:pro \*[^\*]+\* end:pro \*\//mg, replace: '' },
 				{ match: /\/\* start:free \*[^\*]+\* end:free \*\//mg, replace: '' }
 			],
-			// Files to apply above patterns to (not only php files).
-			files: {
+			// Files to apply in 1.x version
+			files_1: {
 				expand: true,
 				src: [
-					'**',
-					'**/*.php',
-					'**/*.css',
-					'**/*.js',
-					'**/*.html',
-					'**/*.txt',
+					'1.x/**/*.php',
+					'1.x/**/*.css',
+					'1.x/**/*.js',
+					'1.x/**/*.html',
+					'1.x/**/*.txt',
+					'!1.x/node_modules/**',
+					'!1.x/includes/external/**',
+					'!1.x/Gruntfile.js',
+					'!1.x/package.json',
+					'!1.x/build/**',
+					'!1.x/grunt_tasks/**',
+					'!1.x/.git/**'
+				]
+			},
+			// Files to apply above patterns to (not only php files).
+			files_2: {
+				expand: true,
+				src: [
+					'*.php',
+					'upgrade/*.php',
+					'upgrade/css/*.css',
+					'upgrade/js/*.js',
+					'2.0/*.php',
+					'2.0/**/*.php',
+					'2.0/**/**/*.php',
+					'2.0/**/**/**/*.php',
+					'2.0/**/**/**/**/*.php',
+					'2.0/**/asset/js/*.js',
+					'2.0/**/asset/css/*.css',
 					'!node_modules/**',
 					'!vendor/**',
 					'!language/**',
@@ -442,64 +460,70 @@ module.exports = function(grunt) {
 				standard: 'WordPress-Core'
 			},
 			main: {
-				src: [ '*.php', 'include/coursepress/*.php' ]
+				src: [ '*.php', '2.0/*.php', '2.0/include/coursepress/*.php' ]
 			},
 			admin: {
 				src: [
-					'admin/*.php',
-					'admin/controller/*.php',
-					'admin/view/*.php'
+					'2.0/admin/*.php',
+					'2.0/admin/controller/*.php',
+					'2.0/admin/view/*.php'
 				]
 			},
 			data: {
 				src: [
-					'include/coursepress/data/*.php',
-					'include/coursepress/data/discussion/*.php',
-					'include/coursepress/data/shortcode/*.php'
+					'2.0/include/coursepress/data/*.php',
+					'2.0/include/coursepress/data/discussion/*.php',
+					'2.0/include/coursepress/data/shortcode/*.php'
 				]
 			},
 			helper: {
 				src: [
-					'include/coursepress/helper/*.php',
-					'include/coursepress/helper/extension/*.php',
-					'include/coursepress/helper/integration/*.php',
-					'include/coursepress/helper/query/*.php',
-					'include/coursepress/helper/setting/*.php',
-					'include/coursepress/helper/table/*.php',
-					'include/coursepress/helper/ui/*.php'
+					'2.0/include/coursepress/helper/*.php',
+					'2.0/include/coursepress/helper/extension/*.php',
+					'2.0/include/coursepress/helper/integration/*.php',
+					'2.0/include/coursepress/helper/query/*.php',
+					'2.0/include/coursepress/helper/setting/*.php',
+					'2.0/include/coursepress/helper/table/*.php',
+					'2.0/include/coursepress/helper/ui/*.php'
 				]
 			},
 			template: {
 				src: [
-					'include/coursepress/template/*.php'
+					'2.0/include/coursepress/template/*.php'
 				]
 			},
 			view: {
 				src: [
-					'include/coursepress/view/admin/*.php',
-					'include/coursepress/view/admin/assessment/*.php',
-					'include/courseperss/view/admin/communication/*.php',
-					'include/coursepress/view/admin/course/*.php',
-					'include/coursepress/view/admin/setting/*.php',
-					'include/coursepress/view/admin/student/*.php',
-					'include/coursepress/view/front/*.php'
+					'2.0/include/coursepress/view/admin/*.php',
+					'2.0/include/coursepress/view/admin/assessment/*.php',
+					'2.0/include/courseperss/view/admin/communication/*.php',
+					'2.0/include/coursepress/view/admin/course/*.php',
+					'2.0/include/coursepress/view/admin/setting/*.php',
+					'2.0/include/coursepress/view/admin/student/*.php',
+					'2.0/include/coursepress/view/front/*.php'
 				]
 			},
 			widget: {
 				src: [
-					'include/coursepress/widget/*.php'
+					'2.0/include/coursepress/widget/*.php'
 				]
 			},
 			campus: {
 				src: [
-					'campus/*.php',
-					'campus/include/*.php'
+					'2.0/campus/*.php',
+					'2.0/campus/include/*.php'
 				]
 			},
 			premium: {
 				src: [
-					'premium/*.php',
-					'premium/include/*.php'
+					'2.0/premium/*.php',
+					'2.0/premium/include/*.php'
+				]
+			},
+			upgrade: {
+				src: [
+					'*.php',
+					'upgrade/*.php'
 				]
 			}
 		},
@@ -521,11 +545,17 @@ module.exports = function(grunt) {
 
 		// BUILD: Replace conditional tags in code
 		replace: {
-			pro: {
+			pro_1: {
 				options: {
-					patterns: conf.plugin_patterns.pro
+					patterns: conf.plugin_patterns.pro_1
 				},
-				files: [conf.plugin_patterns.files]
+				files: [conf.plugin_patterns.files_1]
+			},
+			pro_2: {
+				options: {
+					patterns: conf.plugin_patterns.pro_2
+				},
+				files: [conf.plugin_patterns.files_2]
 			},
 			free: {
 				options: {
@@ -563,11 +593,19 @@ module.exports = function(grunt) {
 			},
 			pro: conf.plugin_branches.exclude_pro,
 			free: conf.plugin_branches.exclude_free,
-			campus: conf.plugin_branches.exclude_campus
+			campus: conf.plugin_branches.exclude_campus,
+			upgrade: conf.plugin_branches.exclude_upgrade
 		},
 
 		// BUILD: Git control (check out branch).
 		gitcheckout: {
+			dev: {
+				options: {
+					verbose: true,
+					branch: conf.plugin_branches.dev,
+					overwrite: true
+				}
+			},
 			pro: {
 				options: {
 					verbose: true,
@@ -670,6 +708,7 @@ module.exports = function(grunt) {
 
 			// Remove code and files that does not belong to this version.
 			grunt.task.run( 'replace:' + branch );
+			/*
 			grunt.task.run( 'clean:' + branch );
 
 			// Add the processes/cleaned files to the target branch.
@@ -680,7 +719,7 @@ module.exports = function(grunt) {
 			grunt.task.run( 'clean:release_' + branch );
 			grunt.task.run( 'copy:' + branch );
 			grunt.task.run( 'compress:' + branch );
-
+			*/
 			grunt.task.run( 'gitcheckout:base');
 		}
 	});
