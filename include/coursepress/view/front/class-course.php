@@ -114,7 +114,7 @@ class CoursePress_View_Front_Course {
 		/**
 		 * sort by course start date
 		 */
-		add_action( 'pre_get_posts', array( __CLASS__, 'set_sort_by_start_date' ) );
+		//add_action( 'pre_get_posts', array( __CLASS__, 'set_sort_by_start_date' ) );
 		add_action( 'init', array( __CLASS__, 'handle_module_uploads' ) );
 
 		CoursePress_View_Front_EnrollmentPopup::init();
@@ -904,7 +904,7 @@ class CoursePress_View_Front_Course {
 
 			// Redirect user to units overview
 			if ( false === $can_update_course && CoursePress_Data_Course::student_enrolled( $user_id, $cp->course_id ) ) {
-				$units_overview = $course_url . 'units';
+				$units_overview = $course_url . CoursePress_Core::get_slug( 'unit/' );
 
 			//	wp_safe_redirect( $units_overview ); exit;???
 			}
@@ -918,16 +918,17 @@ class CoursePress_View_Front_Course {
 			 * @param (int) $course_id	The current course ID.
 			 **/
 			$show_title = apply_filters( 'coursepress_single_show_title', true, $cp->course_id );
-			
-			// from this point 'self::$template' is not yet set because callback will be called on 'the_content' hook,
-			// 'template_include' hook will be called first so call the render functions to set 'self::$template' 
-			self::render_course_main();
-			
+			$theme_file = locate_template( array( 'single-course.php' ) );
+
+			if ( $theme_file ) {
+				self::$template = $theme_file;
+			}
+
 			$cp->vp_args = array(
 				'slug' => 'course_' . $cp->course_id,
 				'title' => get_the_title( $cp->course_id ),
 				'show_title' => $show_title,
-				'callback' => array( __CLASS__, 'render_course_main' ),
+				'callback' => array( 'CoursePress_Template_Course', 'course' ),
 				'context' => 'main',
 				'content' => '',
 				'type' => CoursePress_Data_Course::get_post_type_name(),
@@ -1002,26 +1003,31 @@ class CoursePress_View_Front_Course {
 				self::archive_redirect();
 				// Invalid category... Redirect to course-list!
 			}
-					
-					// from this point 'self::$template' is not yet set because callback will be called on 'the_content' hook,
-					// 'template_include' hook will be called first so call the render functions to set 'self::$template' 
-					self::render_course_archive();
-					
-					$cp->vp_args = apply_filters(
-						'coursepress_category_page_args',
-						array(
-						'slug' => 'course_archive',
-						'title' => $cp->title,
-						'show_title' => true,
-						'content' => '',
-						'callback' => array( __CLASS__, 'render_course_archive' ),
-						'context' => $cp->cp_category,
-						'type' => CoursePress_Data_Course::get_post_type_name() . '_archive',
-						'is_archive' => false,
-						),
-						$cp->cp_category
-					);
-					// -----------------------------------------------------------------
+
+			$theme_file = locate_template(
+				array(
+					'archive-course-' . $cp->cp_category . '.php',
+					'archive-course.php',
+				)
+			);
+			if ( $theme_file ) {
+				self::$template = $theme_file;
+			}
+
+			$cp->vp_args = apply_filters(
+				'coursepress_category_page_args',
+				array(
+					'slug' => 'course_archive',
+					'title' => $cp->title,
+					'show_title' => true,
+					'content' => '',
+					'callback' => array( 'CoursePress_Template_Course', 'course_archive' ),
+					'context' => $cp->cp_category,
+					'type' => CoursePress_Data_Course::get_post_type_name() . '_archive',
+					'is_archive' => false,
+					),
+					$cp->cp_category
+				);
 		} elseif ( $cp->is_unit_discussion ) {
 			// Unit discussion details.
 			if ( ! $cp->is_instructor && ! $cp->is_enrolled ) {

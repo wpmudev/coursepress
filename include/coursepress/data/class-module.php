@@ -1,7 +1,7 @@
 <?php
 
 class CoursePress_Data_Module {
-
+	private static $mandatory_modules = array();
 	private static $post_type = 'module';
 
 	public static function module_init_hooks() {
@@ -661,7 +661,12 @@ class CoursePress_Data_Module {
 	 *
 	 * @return array List of mandatory modules.
 	 */
+
 	public static function get_mandatory_modules( $unit_id ) {
+		if ( ! empty( self::$mandatory_modules[ $unit_id ] ) ) {
+			return self::$mandatory_modules[ $unit_id ];
+		}
+
 		$args = self::get_args_mandatory_modules( $unit_id );
 		$the_query = new WP_Query( $args );
 		$mandatory_modules = array();
@@ -670,6 +675,10 @@ class CoursePress_Data_Module {
 				$mandatory_modules[ $module_id ] = get_post_meta( $module_id, 'module_type', true );
 			}
 		}
+
+		// Store mandatory modules
+		self::$mandatory_modules[ $unit_id ] = $mandatory_modules;
+
 		return $mandatory_modules;
 	}
 
@@ -690,6 +699,7 @@ class CoursePress_Data_Module {
 
 		$unit_id = wp_get_post_parent_id( $module_id );
 		$mandatory_modules = self::get_mandatory_modules( $unit_id );
+
 		if ( isset( $mandatory_modules[ $module_id ] ) ) {
 			switch ( $mandatory_modules[ $module_id ] ) {
 				case 'discussion':
