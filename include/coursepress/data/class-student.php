@@ -1725,7 +1725,7 @@ class CoursePress_Data_Student {
 		$is_completed = ! empty( $completed );
 
 		if ( $is_completed ) {
-			$return = __( 'Certified', 'cp' );
+			$return = __( 'Certified', 'CP_TD' );
 		} else {
 			$course_status = CoursePress_Data_Course::get_course_status( $course_id );
 			$course_progress = self::get_course_progress( $student_id, $course_id, $student_progress );
@@ -1737,15 +1737,15 @@ class CoursePress_Data_Student {
 				);
 
 				if ( ! empty( $failed ) ) {
-					$return = __( 'Failed', 'cp' );
+					$return = __( 'Failed', 'CP_TD' );
 				} else {
-					$return = __( 'Awaiting Review', 'cp' );
+					$return = __( 'Awaiting Review', 'CP_TD' );
 				}
 			} else {
 				if ( 'open' == $course_status ) {
-					$return = __( 'Ongoing', 'cp' );
+					$return = __( 'Ongoing', 'CP_TD' );
 				} else {
-					$return = __( 'Incomplete', 'cp' );
+					$return = __( 'Incomplete', 'CP_TD' );
 				}
 			}
 		}

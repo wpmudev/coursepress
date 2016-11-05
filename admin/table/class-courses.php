@@ -69,17 +69,17 @@ class CoursePress_Admin_Table_Courses extends WP_Posts_List_Table {
 
 	public function get_columns() {
 		$columns = array(
-			'title' => __( 'Title', 'cp' ),
+			'title' => __( 'Title', 'CP_TD' ),
 		);
 
 		if ( ! empty( $this->student_id ) ) {
 			$columns = array_merge(
 				$columns,
 				array(
-					'date_enrolled' => __( 'Date Enrolled', 'cp' ),
-					'last_login' => __( 'Last Active', 'cp' ),
-					'average' => __( 'Average', 'cp' ),
-					'certificate' => __( 'Certificate', 'cp' ),
+					'date_enrolled' => __( 'Date Enrolled', 'CP_TD' ),
+					'last_login' => __( 'Last Active', 'CP_TD' ),
+					'average' => __( 'Average', 'CP_TD' ),
+					'certificate' => __( 'Certificate', 'CP_TD' ),
 				)
 			);
 		}
@@ -97,7 +97,7 @@ class CoursePress_Admin_Table_Courses extends WP_Posts_List_Table {
 		$course_url = CoursePress_Data_Course::get_course_url( $item->ID );
 
 		if ( ! empty( $this->student_id ) ) {
-			$actions['view'] = sprintf( '<a href="%s" target="_blank">%s</a>', $course_url, __( 'View Course', 'cp' ) );
+			$actions['view'] = sprintf( '<a href="%s" target="_blank">%s</a>', $course_url, __( 'View Course', 'CP_TD' ) );
 
 			$workbook_url = add_query_arg(
 					array(
@@ -108,7 +108,7 @@ class CoursePress_Admin_Table_Courses extends WP_Posts_List_Table {
 						'display' => 'all_answered',
 					)
 				);
-			$actions['workbook'] = sprintf( '<a href="%s">%s</a>', $workbook_url, __( 'Workbook', 'cp' ) );
+			$actions['workbook'] = sprintf( '<a href="%s">%s</a>', $workbook_url, __( 'Workbook', 'CP_TD' ) );
 		}
 
 		return $this->row_actions( $actions );
@@ -150,11 +150,11 @@ class CoursePress_Admin_Table_Courses extends WP_Posts_List_Table {
 
 	public function column_certificate( $course ) {
 		$completed = CoursePress_Data_Student::is_course_complete( $this->student_id, $course->ID );
-		$download_certificate = __( 'Not available', 'cp' );
+		$download_certificate = __( 'Not available', 'CP_TD' );
 
 		if ( $completed ) {
 			$certificate_link = CoursePress_Data_Certificate::get_encoded_url( $course->ID, $this->student_id );
-			$download_certificate = sprintf( '<a href="%s" class="button-primary">%s</a>', $certificate_link, __( 'Download', 'cp' ) );
+			$download_certificate = sprintf( '<a href="%s" class="button-primary">%s</a>', $certificate_link, __( 'Download', 'CP_TD' ) );
 		}
 
 		return $download_certificate;
