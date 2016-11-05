@@ -172,7 +172,7 @@ module.exports = function(grunt) {
 					'!./1.x/grunt_tasks/**',
 					'!./1.x/.git/**'
 				],
-				dest: '1.x/'
+				dest: './1.x/'
 			},
 			// Files to apply above patterns to (not only php files).
 			files_2: {
@@ -183,10 +183,11 @@ module.exports = function(grunt) {
 					'./upgrade/css/*.css',
 					'./upgrade/js/*.js',
 					'./2.0/*.php',
-					'./2.0/**/*.php',
-					'./2.0/**/**/*.php',
-					'./2.0/**/**/**/*.php',
-					'./2.0/**/**/**/**/*.php',
+					'./2.0/admin/*.php',
+					'./2.0/admin/**/*.php',
+					'./2.0/include/coursepress/*.php',
+					'./2.0/include/coursepress/**/*.php',
+					'./2.0/include/coursepress/**/**/*.php',
 					'./2.0/**/asset/js/*.js',
 					'./2.0/**/asset/css/*.css',
 					'!./node_modules/**',
@@ -206,7 +207,7 @@ module.exports = function(grunt) {
 					'!./.git/**',
 					'!./2.0/.git/**'
 				],
-				dest: '2.0/'
+				dest: './2.0/'
 			}
 		},
 
@@ -411,8 +412,8 @@ module.exports = function(grunt) {
 				nonull: true
 			},
 			pro: {
-				//src: conf.plugin_patterns.files.src,
-				//dest: 'release/<%= pkg.version %>-pro/'
+				src: [ conf.plugin_patterns.files_1, conf.plugin_patterns.files_2],
+				dest: 'release/<%= pkg.version %>-pro/'
 			},
 			free: {
 				//src: conf.plugin_patterns.files.src,
@@ -615,7 +616,8 @@ module.exports = function(grunt) {
 					'release/<%= pkg.version %>-campus-<%= pkg.version %>.zip'
 				]
 			},
-			pro: conf.plugin_branches.exclude_pro,
+			pro_1: conf.plugin_branches.exclude_pro_1,
+			pro_2: conf.plugin_branches.exclude_pro_2,
 			free: conf.plugin_branches.exclude_free,
 			campus: conf.plugin_branches.exclude_campus,
 			upgrade: conf.plugin_branches.exclude_upgrade
@@ -734,7 +736,12 @@ module.exports = function(grunt) {
 			if ( 'pro' === branch ) {
 				grunt.task.run( 'replace:pro_1' );
 				grunt.task.run( 'replace:pro_2' );
+				grunt.task.run( 'clean:pro_1' );
+				grunt.task.run( 'clean:pro_2' );
 			}
+			grunt.task.run( 'gitadd:' + branch );
+			grunt.task.run( 'gitcommit:' + branch );
+			grunt.task.run( 'clean:release_' + branch );
 
 			/*
 			grunt.task.run( 'clean:' + branch );
