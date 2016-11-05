@@ -1750,11 +1750,44 @@ class CoursePress_Data_Capabilities {
 		}
 
 		return $return;
-    }
+	}
 
-    public static function can_edit_comment( $comment_id ) {
-        return true;
-    }
+	/**
+	 * Check can edit comments.
+	 *
+	 * @since 2.0
+	 *
+	 * @param integer $course_id		The course ID.
+	 */
+	public static function can_edit_comment( $comment_id, $user_id = null ) {
+		/**
+		 * do not check admins
+		 */
+		if ( current_user_can( 'manage_options' ) ) {
+			return true;
+		}
+		$comment = get_comment( $comment_id );
+		if ( empty( $comment ) ) {
+			return false;
+		}
+		if ( ! is_a( $comment, 'WP_Comment' ) ) {
+			return false;
+		}
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		$module_id = $comment->comment_post_ID;
+		$course_id = CoursePress_Data_Module::get_course_id_by_module( $module_id );
+
+		if ( CoursePress_Data_Facilitator::is_course_facilitator( $course_id, $user_id ) ) {
+			return true;
+		}
+
+		if ( CoursePress_Data_Instructor::is_assigned_to_course( $user_id, $course_id ) ) {
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Check if user_id or current user is of type facilitator.
