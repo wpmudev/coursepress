@@ -1186,16 +1186,20 @@ class CoursePress_View_Front_Course {
 				get_post_field( 'post_title', $cp->course_id )
 			);
 
+			$theme_file = locate_template( array( 'archive-unit.php' ) );
+			if ( $theme_file ) {
+				self::$template = $theme_file;
+			}
+
 			$cp->vp_args = array(
 				'slug' => 'unit_archive_' . $cp->course_id,
 				'title' => get_the_title( $cp->course_id ),
-				'content' => apply_filters(
-					'coursepress_view_course',
-					self::render_course_unit_archive(),
-					$cp->course_id,
-					'workbook'
-				),
+				'content' => '',
+				'callback' => array( 'CoursePress_Template_Unit', 'unit_archive' ),
+				'context' => 'units',
+				'ID' => $cp->course_id,
 				'type' => CoursePress_Data_Unit::get_post_type_name() . '_archive',
+				'is_singular' => true,
 			);
 			// -----------------------------------------------------------------
 		} elseif ( $cp->is_modules ) {

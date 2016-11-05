@@ -402,6 +402,7 @@ class CoursePress_Module {
 					'error' => true,
 					'error_message' => self::$error_message,
 					'html' => $html,
+					'is_reload' => false,
 				);
 
 				wp_send_json_error( $json_data );
@@ -415,8 +416,10 @@ class CoursePress_Module {
 
 			if ( $via_ajax ) {
 				$item_id = $next['id'];
+				$reload = false;
 
 				if ( 'section' == $next['type'] ) {
+					$reload = $unit_id != $next['unit'];
 					$unit_id = $next['unit'];
 					$item_id = $next['id'];
 				} else {
@@ -434,11 +437,13 @@ class CoursePress_Module {
 					}
 				}
 				$type = 'completion_page' == $next['id'] ? 'completion' : $next['type'];
+
 				$json_data = array(
 					'success' => true,
 					'html' => $html,
 					'url' => ! empty( $next['url'] ) ? $next['url'] : false,
 					'type' => $type,
+					'is_reload' => $reload,
 				);
 
 				wp_send_json_success( $json_data );
