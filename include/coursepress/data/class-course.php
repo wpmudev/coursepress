@@ -633,13 +633,7 @@ class CoursePress_Data_Course {
 	public static function get_units(
 		$course_id, $status = array( 'publish' ), $ids_only = false, $include_count = false
 	) {
-		$key = array( 'course_units', $course_id, $ids_only, $include_count );
-		if ( is_array( $status ) ) {
-			$key[] = implode( '-', $status );
-		} else {
-			$key[] = $status;
-		}
-		$key = implode( '_', $key );
+		$key = self::get_key( 'course_units', $course_id, $status, $ids_only, $include_count );
 
 		if ( ! empty( self::$current[ $key ] ) ) {
 			$query = self::$current[ $key ];
@@ -697,7 +691,7 @@ class CoursePress_Data_Course {
 	}
 
 	public static function get_units_with_modules( $course_id, $status = array( 'publish' ) ) {
-		$key = 'units_with_modules_' . $course_id;
+		$key = self::get_key( 'units_with_modules', $course_id, $status );
 
 		if ( ! empty( self::$current[ $key ] ) ) {
 			return self::$current[ $key ];
@@ -922,36 +916,55 @@ class CoursePress_Data_Course {
 		}
 	}
 
+	public static function get_key() {
+		$args = func_get_args();
+
+		foreach ( $args as $pos => $arg ) {
+			$arg = is_array( $arg ) ? implode( '-', $arg ) : $arg;
+			$args[ $pos ] = $arg;
+		}
+
+		return implode( '_', $args );
+	}
+
 	public static function get_unit_modules(
 		$unit_id, $status = array( 'publish' ), $ids_only = false, $include_count = false, $args = array()
 	) {
 
-		$post_args = array(
-			'post_type' => CoursePress_Data_Module::get_post_type_name(),
-			'post_parent' => $unit_id,
-			'post_status' => $status,
-			'posts_per_page' => -1,
-			'order' => 'ASC',
-			'orderby' => 'meta_value_num',
-			'meta_key' => 'module_order',
-		);
+		$key = self::get_key( 'unit_modules', $unit_id, $status, $ids_only, $include_count, $args );
 
-		if ( $ids_only ) {
-			$post_args['fields'] = 'ids';
-		}
+		if ( ! empty( self::$current[ $key ] ) ) {
+			$query = self::$current[ $key ];
+		} else {
 
-		// Get modules for specific page
-		if ( isset( $args['page'] ) && (int) $args['page'] ) {
-			$post_args['meta_query'] = array(
-				array(
-					'key' => 'module_page',
-					'value' => (int) $args['page'],
-					'compare' => '=',
-				),
+			$post_args = array(
+				'post_type' => CoursePress_Data_Module::get_post_type_name(),
+				'post_parent' => $unit_id,
+				'post_status' => $status,
+				'posts_per_page' => -1,
+				'order' => 'ASC',
+				'orderby' => 'meta_value_num',
+				'meta_key' => 'module_order',
 			);
-		}
 
-		$query = new WP_Query( $post_args );
+			if ( $ids_only ) {
+				$post_args['fields'] = 'ids';
+			}
+
+			// Get modules for specific page
+			if ( isset( $args['page'] ) && (int) $args['page'] ) {
+				$post_args['meta_query'] = array(
+					array(
+						'key' => 'module_page',
+						'value' => (int) $args['page'],
+						'compare' => '=',
+					),
+				);
+			}
+
+			$query = new WP_Query( $post_args );
+			self::$current[ $key ] = $query;
+		}
 
 		if ( $include_count ) {
 			// Handy if using pagination.

@@ -516,6 +516,6 @@
 		.on( 'click', '.cp-comment-submit', CoursePress.addComment )
 		.on( 'change', '.cp-module-content .file input', CoursePress.validateUploadModule )
 		.on( 'click', '.unit-archive-single .fold', CoursePress.singleFolded )
-		.on( 'click', '.course-structure-block .unit .fold', CoursePress.unitFolded );
+		.on( 'click', '.course-structure-block .unit .fold, .unit-archive-list .fold', CoursePress.unitFolded );
 
 })(jQuery);
