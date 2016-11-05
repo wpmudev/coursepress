@@ -44,6 +44,8 @@
 		if ( 0 === total_limit ) {
 			if ( 'no' === repeat ) {
 				expired();
+			} else {
+				timer_span.hide();
 			}
 			return;
 		}
@@ -114,17 +116,29 @@
 		var nav = $(this),
 			data = nav.data(),
 			container = $( '.coursepress-focus-view' ),
-			url = [ _coursepress.home_url, 'coursepress_focus' ]
+			url = [ _coursepress.home_url, 'coursepress_focus' ],
+			parents = $( '.cp, .coursepress-focus-view' )
 		;
 
 		if ( 'submit' === nav.attr( 'type' ) ) {
 			// It's a submit button, continue submission
 			return;
 		}
+
 		if ( 'course' === data.type ) {
 			// Reload
 			window.location = data.url;
 			return;
+		}
+
+		if ( data.unit ) {
+			//Find current unit serve
+			var current_unit = parents.find( '[name="unit_id"]' );
+
+			if ( 0 == current_unit.length || data.unit != current_unit.val() ) {
+				window.location = data.url;
+				return;
+			}
 		}
 
 		url.push( data.course, data.unit, data.type, data.id );
@@ -242,7 +256,7 @@
 					if ( true === data.success ) {
 						// Process success
 						if ( data.data.url ) {
-							if ( false === is_focus || data.data.type && 'completion' === data.data.type ) {
+							if ( false === is_focus || true === data.data.is_reload || data.data.type && 'completion' === data.data.type ) {
 								window.location = data.data.url;
 							} else {
 								focus_box.html( data.data.html );

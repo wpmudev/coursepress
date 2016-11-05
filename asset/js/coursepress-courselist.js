@@ -59,8 +59,9 @@ var CoursePress = CoursePress || {};
 			var nonce = $('.nonce-holder').attr( 'data-nonce' );
 			var courses = [];
 			var courses_titles = [];
+			var form = $(this).parents( 'form' ).first();
 
-			$.each( $( '[name="bulk-actions[]"]' ), function( index, item ) {
+			$.each( $( '[name="post[]"]' ), function( index, item ) {
 				if ( $( item ).is( ':checked' ) ) {
 					courses.push( $( item ).val() );
 					courses_titles.push( $('.post_title strong', $(item).closest('tr')).html() );
