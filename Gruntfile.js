@@ -157,57 +157,33 @@ module.exports = function(grunt) {
 			files_1: {
 				expand: true,
 				src: [
-					'1.x/*.php',
-					'1.x/includes/*.php',
-					'1.x/includes/**/*.php',
-					'1.x/**/*.css',
-					'1.x/**/*.js',
-					'1.x/**/*.html',
-					'1.x/**/*.txt',
-					'!1.x/node_modules/**',
-					'!1.x/includes/external/**',
-					'!1.x/Gruntfile.js',
-					'!1.x/package.json',
-					'!1.x/build/**',
-					'!1.x/grunt_tasks/**',
-					'!1.x/.git/**'
-				],
-				dest: '1.x/'
+					'../release/1.x/*.php',
+					'../release/1.x/includes/*.php',
+					'../release/1.x/includes/**/*.php',
+					'../release/1.x/**/*.css',
+					'../release/1.x/**/*.js',
+					'../release/1.x/**/*.html',
+					'../release/1.x/**/*.txt',
+					'!../release/1.x/external/*'
+				]
 			},
 			// Files to apply above patterns to (not only php files).
 			files_2: {
 				expand: true,
 				src: [
-					'*.php',
-					'upgrade/*.php',
-					'upgrade/css/*.css',
-					'upgrade/js/*.js',
-					'2.0/*.php',
-					'2.0/admin/*.php',
-					'2.0/admin/**/*.php',
-					'2.0/include/coursepress/*.php',
-					'2.0/include/coursepress/**/*.php',
-					'2.0/include/coursepress/**/**/*.php',
-					'2.0/**/asset/js/*.js',
-					'2.0/**/asset/css/*.css',
-					'!node_modules/**',
-					'!vendor/**',
-					'!language/**',
-					'!release/**',
-					'!test/**',
-					'!2.0/text/**',
-					'!asset/file/**',
-					'!Gruntfile.js',
-					'!2.0/Gruntfile.js',
-					'!package.json',
-					'!2.0/package.json',
-					'!bitbucket-pipelines.yml',
-					'!2.0/bitbucket-pipelines.yml',
-					'!build/**',
-					'!.git/**',
-					'!2.0/.git/**'
-				],
-				dest: '2.0/'
+					'../release/*.php',
+					'../release/upgrade/*.php',
+					'../release/upgrade/css/*.css',
+					'../release/upgrade/js/*.js',
+					'../release/2.0/*.php',
+					'../release/2.0/admin/*.php',
+					'../release/2.0/admin/**/*.php',
+					'../release/2.0/include/coursepress/*.php',
+					'../release/2.0/include/coursepress/**/*.php',
+					'../release/2.0/include/coursepress/**/**/*.php',
+					'../release/2.0/**/asset/js/*.js',
+					'../release/2.0/**/asset/css/*.css'
+				]
 			}
 		},
 
@@ -404,36 +380,22 @@ module.exports = function(grunt) {
 			}
 		},
 
-		// BUILD: Copy files.
-		copy: {
-			release: {
-				src: [
-					'.',
-					'!node_modules'
-				],
-				dest: '../release'
-			},
-			translation: {
-				src: conf.translation.pot_dir + conf.translation.textdomain_pro + '.pot',
-				dest: conf.translation.pot_dir + conf.translation.textdomain_free + '.pot',
-				nonull: true
-			},
-			pro: {
-				src: [ conf.plugin_patterns.files_1.src, conf.plugin_patterns.files_2],
-				dest: 'release/<%= pkg.version %>-pro/'
-			},
-			free: {
-				//src: conf.plugin_patterns.files.src,
-				//dest: 'release/<%= pkg.version %>-free/'
-			},
-			campus: {
-				//src: conf.plugin_patterns.files.src,
-				//dest: 'release/<%= pkg.version %>-campus/'
-			}
-		},
-
 		// COMPRESS: Create a zip-archive of the plugin (for distribution).
 		compress: {
+			release_pro: {
+				options: {
+					mode: 'zip',
+					archive: '../release/<%= pkg.name %>-pro-<%= pkg.version %>.zip'
+				},
+				expand: true,
+				cwd: '../release',
+				src: [
+					'*',
+					'**',
+					'!*.zip',
+					'!**.zip'
+				]
+			},
 			pro: {
 				options: {
 					mode: 'zip',
@@ -605,6 +567,10 @@ module.exports = function(grunt) {
 
 		// BUILD: Remove files that are not relevant for target product.
 		clean: {
+			release: {
+				options: { force: true },
+				src: ['../release', '../release/*', '../release/**']
+			},
 			release_pro: {
 				src: [
 					'release/<%= pkg.version %>-pro/',
@@ -628,6 +594,80 @@ module.exports = function(grunt) {
 			free: conf.plugin_branches.exclude_free,
 			campus: conf.plugin_branches.exclude_campus,
 			upgrade: conf.plugin_branches.exclude_upgrade
+		},
+
+		// BUILD: Copy files.
+		copy: {
+			release: {
+				expand: true,
+				src: [
+					'*',
+					'**',
+					'!node_modules',
+					'!node_modules/*',
+					'!node_modules/**',
+					'!bitbucket-pipelines.yml',
+					'!.git',
+					'!Gruntfile.js',
+					'!package.json',
+					/** UPGRADE **/
+					'!upgrade/css/src',
+					'!upgrade/css/src/*',
+					'!upgrade/css/src/**',
+					'!upgrade/js/src',
+					'!upgrade/js/src/*',
+					'!upgrade/js/src/**',
+					/** 1.x **/
+					'!1.x/.git',
+					'!1.x/.gitattributes',
+					'!1.x/.gitmodules',
+					'!1.x/.gitignore',
+					'!1.x/Gruntfile.js',
+					'!1.x/package.json',
+					'!1.x/README.md',
+					'!1.x/node_modules',
+					'!1.x/node_modules/*',
+					'!1.x/themes/coursepress/.git',
+					/** 2.0 **/
+					'!2.0/.git',
+					'!2.0/.gitattributes',
+					'!2.0/.gitmodules',
+					'!2.0/.gitignore',
+					'!2.0/Gruntfile.js',
+					'!2.0/package.json',
+					'!2.0/README.md',
+					'!2.0/node_modules',
+					'!2.0/node_modules/*',
+					'!2.0/test',
+					'!2.0/themes/coursepress/.git',
+					'!2.0/asset/css/src',
+					'!2.0/asset/css/src/*',
+					'!2.0/asset/css/src/**',
+					'!2.0/asset/js/src',
+					'!2.0/asset/js/src/*',
+					'!2.0/asset/js/src/**',
+					'!2.0/bitbucket-pipelines.yml'
+				],
+				dest: '../release',
+				noEmpty: true
+			},
+			translation: {
+				src: conf.translation.pot_dir + conf.translation.textdomain_pro + '.pot',
+				dest: conf.translation.pot_dir + conf.translation.textdomain_free + '.pot',
+				nonull: true
+			},
+			pro: {
+				src: [ conf.plugin_patterns.files_1.src, conf.plugin_patterns.files_2],
+				dest: 'release/<%= pkg.version %>-pro/'
+			},
+			free: {
+				//src: conf.plugin_patterns.files.src,
+				//dest: 'release/<%= pkg.version %>-free/'
+			},
+			campus: {
+				//src: conf.plugin_patterns.files.src,
+				//dest: 'release/<%= pkg.version %>-campus/'
+			}
 		},
 
 		// BUILD: Git control (check out branch).
@@ -788,5 +828,17 @@ module.exports = function(grunt) {
 			return;
 		}
 
+		grunt.task.run( 'clean:release' );
+		grunt.task.run( 'copy:release' );
+
+		if ( 'pro' == target ) {
+			grunt.task.run( 'replace:pro_1' );
+			grunt.task.run( 'replace:pro_2' );
+			grunt.task.run( 'compress:release_pro' );
+		}
+	});
+
+	grunt.registerTask( 'zipped', 'Compressing release version', function( target ) {
+		grunt.task.run( 'compress:release_pro' );
 	});
 };
