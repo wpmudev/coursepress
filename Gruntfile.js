@@ -406,6 +406,13 @@ module.exports = function(grunt) {
 
 		// BUILD: Copy files.
 		copy: {
+			release: {
+				src: [
+					'.',
+					'!node_modules'
+				],
+				dest: '../release'
+			},
 			translation: {
 				src: conf.translation.pot_dir + conf.translation.textdomain_pro + '.pot',
 				dest: conf.translation.pot_dir + conf.translation.textdomain_free + '.pot',
@@ -775,4 +782,11 @@ module.exports = function(grunt) {
 	grunt.registerTask( 'php', ['phplint', 'phpcs:sniff'] );
 
 	grunt.registerTask( 'default', ['php', 'test', 'js', 'css'] );
+
+	grunt.registerTask( 'release', 'Generating release copy', function( target ) {
+		if ( ! target ) {
+			return;
+		}
+
+	});
 };
