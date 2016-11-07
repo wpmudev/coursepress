@@ -571,6 +571,7 @@ ul.notification-archive-list {
 }
 
 .course_list_box_item.clickable:hover .course-information *:not([class*="clickable-label"]) {
+  -webkit-filter: blur(2px);
   filter: blur(2px);
 }
 

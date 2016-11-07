@@ -95,19 +95,20 @@ class CoursePress_Admin_Table_Courses extends WP_Posts_List_Table {
 		$actions = array();
 
 		$course_url = CoursePress_Data_Course::get_course_url( $item->ID );
+		$actions['course_id'] = sprintf( __( 'Course ID: %d', 'CP_TD' ), $item->ID );
 
 		if ( ! empty( $this->student_id ) ) {
 			$actions['view'] = sprintf( '<a href="%s" target="_blank">%s</a>', $course_url, __( 'View Course', 'CP_TD' ) );
 
 			$workbook_url = add_query_arg(
-					array(
+				array(
 						'page' => 'coursepress_assessments',
 						'student_id' => $this->student_id,
 						'course_id' => $item->ID,
 						'view_answer' => 1,
 						'display' => 'all_answered',
 					)
-				);
+			);
 			$actions['workbook'] = sprintf( '<a href="%s">%s</a>', $workbook_url, __( 'Workbook', 'CP_TD' ) );
 		}
 
@@ -122,13 +123,21 @@ class CoursePress_Admin_Table_Courses extends WP_Posts_List_Table {
 		if ( is_array( $date_enrolled ) ) {
 			$date_enrolled = array_pop( $date_enrolled );
 		}
+
+		if ( empty( $date_enrolled ) ) {
+			return sprintf(
+				'<span aria-hidden="true">&#8212;</span><span class="screen-reader-text">%s</span>',
+				__( 'Unknown enrolled date.', 'CP_TD' )
+			);
+		}
+
 		$date_enrolled = date_i18n( $date_format . ' ' . $time_format, CoursePress_Data_Course::strtotime( $date_enrolled ) );
 
 		return $date_enrolled;
 	}
 
 	public function column_last_login( $course_id ) {
-		
+
 		$date_format = get_option( 'date_format' );
 		$time_format = get_option( 'time_format' );
 		$last_activity = get_user_meta( $this->student_id, 'latest_activity', true );
