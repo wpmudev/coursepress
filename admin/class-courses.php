@@ -220,22 +220,26 @@ class CoursePress_Admin_Courses {
 
 		// Reconstruct row actions
 		$actions = array();
+
 		$edit_link = get_edit_post_link( $course->ID );
 		$published = 'publish' == $course->post_status;
 		$course_url = CoursePress_Data_Course::get_course_url( $course->ID );
 		$can_update = false;
+		$post_type_object = get_post_type_object( $course->post_type );
 
 		if ( self::can_update_course( $course->ID ) ) {
 			$can_update = true;
 
-			// Add edit link
-			$actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_link ), __( 'Edit', 'CP_TD' ) );
+			if ( 'trash' != $course->post_status ) {
+				// Add edit link
+				$actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_link ), __( 'Edit', 'CP_TD' ) );
 
-			$edit_units = add_query_arg( 'tab', 'units', $edit_link );
-			$edit_students = add_query_arg( 'tab', 'students', $edit_link );
+				$edit_units = add_query_arg( 'tab', 'units', $edit_link );
+				$edit_students = add_query_arg( 'tab', 'students', $edit_link );
 
-			$actions['units'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_units ), __( 'Units', 'CP_TD' ) );
-			$actions['students'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_students ), __( 'Students', 'CP_TD' ) );
+				$actions['units'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_units ), __( 'Units', 'CP_TD' ) );
+				$actions['students'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_students ), __( 'Students', 'CP_TD' ) );
+			}
 
 			/**
 			 * single course export
@@ -265,24 +269,57 @@ class CoursePress_Admin_Courses {
 			$actions['duplicate'] = sprintf( '<a data-nonce="%s" data-id="%s" class="duplicate-course-link">%s</a>', $duplicate_nonce, $course->ID, __( 'Duplicate Course', 'CP_TD' ) );
 		}
 
-		if ( $can_update && self::can_delete_course( $course->ID ) ) {
-			$trash_url = get_delete_post_link( $course->ID );
-			$actions['trash'] = sprintf( '<a href="%s">%s</a>', esc_url( $trash_url ), __( 'Trash', 'CP_TD' ) );
-		}
-
-		$format = '<a href="%s" target="_blank">%s</a>';
-		$unit_overview_url = $course_url . 'units/';
-
-		if ( false === $published ) {
-			if ( $can_update ) {
-				$actions['view'] = sprintf( $format, esc_url( $course_url ), __( 'Preview Course', 'CP_TD' ) );
-				$actions['preview-units'] = sprintf( $format, esc_url( $unit_overview_url ), __( 'Preview Units', 'CP_TD' ) );
+		if ( 'trash' != $course->post_status ) {
+			if ( $can_update && self::can_delete_course( $course->ID ) ) {
+				$trash_url = get_delete_post_link( $course->ID );
+				$actions['trash'] = sprintf( '<a href="%s">%s</a>', esc_url( $trash_url ), __( 'Trash', 'CP_TD' ) );
 			}
-		} else {
-			$actions['view'] = sprintf( $format, esc_url( $course_url ), __( 'View Course', 'CP_TD' ) );
-			$actions['preview-units'] = sprintf( $format, esc_url( $unit_overview_url ), __( 'View Units', 'CP_TD' ) );
+
+			$format = '<a href="%s" target="_blank">%s</a>';
+			$unit_overview_url = $course_url . 'units/';
+
+			if ( false === $published ) {
+				if ( $can_update ) {
+					$actions['view'] = sprintf( $format, esc_url( $course_url ), __( 'Preview Course', 'CP_TD' ) );
+					$actions['preview-units'] = sprintf( $format, esc_url( $unit_overview_url ), __( 'Preview Units', 'CP_TD' ) );
+				}
+			} else {
+				$actions['view'] = sprintf( $format, esc_url( $course_url ), __( 'View Course', 'CP_TD' ) );
+				$actions['preview-units'] = sprintf( $format, esc_url( $unit_overview_url ), __( 'View Units', 'CP_TD' ) );
+			}
 		}
 
+		/**
+		 * Actions when course is in Trash
+		 */
+		if ( 'trash' == $course->post_status ) {
+			if ( 'trash' === $course->post_status ) {
+				$actions['untrash'] = sprintf(
+					'<a href="%s" aria-label="%s">%s</a>',
+					wp_nonce_url( admin_url( sprintf( $post_type_object->_edit_link . '&amp;action=untrash', $course->ID ) ), 'untrash-post_' . $course->ID ),
+					/* translators: %s: post title */
+					esc_attr( sprintf( __( 'Restore &#8220;%s&#8221; from the Trash', 'CP_TD' ), $title ) ),
+					__( 'Restore', 'CP_TD' )
+				);
+			} elseif ( EMPTY_TRASH_DAYS ) {
+				$actions['trash'] = sprintf(
+					'<a href="%s" class="submitdelete" aria-label="%s">%s</a>',
+					get_delete_post_link( $course->ID ),
+					/* translators: %s: post title */
+					esc_attr( sprintf( __( 'Move &#8220;%s&#8221; to the Trash', 'CP_TD' ), $title ) ),
+					_x( 'Trash', 'verb', 'CP_TD' )
+				);
+			}
+			if ( 'trash' === $course->post_status || ! EMPTY_TRASH_DAYS ) {
+				$actions['delete'] = sprintf(
+					'<a href="%s" class="submitdelete" aria-label="%s">%s</a>',
+					get_delete_post_link( $course->ID, '', true ),
+					/* translators: %s: post title */
+					esc_attr( sprintf( __( 'Delete &#8220;%s&#8221; permanently', 'CP_TD' ), $title ) ),
+					__( 'Delete Permanently', 'CP_TD' )
+				);
+			}
+		}
 		return $actions;
 	}
 
