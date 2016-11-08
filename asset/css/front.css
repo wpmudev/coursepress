@@ -361,6 +361,7 @@ tester {
   transform: translate(-50%, -50%);
 }
 .course_list_box_item .clickable:hover .course-information *:not([class*="clickable-label"]) {
+  -webkit-filter: blur(2px);
   filter: blur(2px);
 }
 .course_list_box_item .clickable:hover .clickable-label {
@@ -848,6 +849,9 @@ tester {
 .cp .module-elements input[type="text"] option,
 .cp .module-elements textarea option {
   padding: 4px 12px;
+}
+.cp .module-elements input[type="checkbox"] {
+  margin-top: .4em;
 }
 .cp .module-elements input[type="text"],
 .cp .module-elements textarea {

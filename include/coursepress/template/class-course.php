@@ -71,8 +71,14 @@ class CoursePress_Template_Course {
 							if ( is_array( $date_enrolled ) ) {
 								$date_enrolled = array_pop( $date_enrolled );
 							}
-							$date_enrolled = date_i18n( $date_format, CoursePress_Data_Course::strtotime( $date_enrolled ) );
-
+							if ( empty( $date_enrolled ) ) {
+								$date_enrolled = sprintf(
+									'<span aria-hidden="true">&#8212;</span><span class="screen-reader-text">%s</span>',
+									__( 'Unknown enrolled date.', 'CP_TD' )
+								);
+							} else {
+								$date_enrolled = date_i18n( $date_format, CoursePress_Data_Course::strtotime( $date_enrolled ) );
+							}
 							$table_body .= sprintf( '<td>%s</td>', $date_enrolled );
 							break;
 
@@ -80,7 +86,7 @@ class CoursePress_Template_Course {
 							$statuses = array( 'Ongoing', 'Awaiting Review' );
 
 							if ( in_array( $completion_status, $statuses ) ) {
-								$average = '-';
+								$average = '&#8212;';
 							} else {
 								$average = CoursePress_Data_Student::average_course_responses( $student_id, $course->ID );
 								$average .= '%';
@@ -89,7 +95,7 @@ class CoursePress_Template_Course {
 							break;
 
 						case 'status':
-							
+
 							$table_body .= sprintf( '<td class="column-status">%s</td>', $completion_status );
 
 							break;
@@ -284,5 +290,4 @@ class CoursePress_Template_Course {
 		$content .= '</script>';
 		return $content;
 	}
-
 }
