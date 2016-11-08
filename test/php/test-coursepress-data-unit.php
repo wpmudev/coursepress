@@ -113,7 +113,7 @@ class Coursepress_Data_Unit_Test extends WP_UnitTestCase {
 			$this->assertArrayHasKey( 'hours', $assert['unit']['components'] );
 			$this->assertArrayHasKey( 'minutes', $assert['unit']['components'] );
 			$this->assertArrayHasKey( 'seconds', $assert['unit']['components'] );
-			$this->assertEquals( '00:00:00', $assert['unit']['estimation'] );
+			$this->assertEquals( '00:03:00', $assert['unit']['estimation'] );
 			$this->assertEquals( 0, $assert['unit']['components']['hours'] );
 			$this->assertEquals( 0, $assert['unit']['components']['minutes'] );
 			$this->assertEquals( 0, $assert['unit']['components']['seconds'] );
@@ -358,7 +358,7 @@ class Coursepress_Data_Unit_Test extends WP_UnitTestCase {
 		 */
 		foreach ( $this->course->units as $unit ) {
 			$assert = CoursePress_Data_Unit::is_page_structure_visible( $this->course->ID, $unit->ID, 1 );
-			$this->assertFalse( $assert );
+			$this->assertTrue( $assert );
 			$assert = CoursePress_Data_Unit::is_page_structure_visible( $this->course->ID, $unit->ID, 1, $this->student->ID );
 			$this->assertFalse( $assert );
 		}
