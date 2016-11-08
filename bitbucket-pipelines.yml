@@ -13,6 +13,9 @@ pipelines:
           - (umask  077 ; echo $PIPELINES_SSH_KEY | base64 --decode > ~/.ssh/id_rsa)
           - ssh-keyscan -t rsa -H bitbucket.org >> ~/.ssh/known_hosts
           - git submodule update --init --recursive
+          - cd 1.x && git checkout coursepress/base
+          - cd ../2.0 && git checkout coursepress/2.0-dev
+          - cd ..
           - service mysql start
           - bash tests/install-wp-tests.sh wordpress_test root '' localhost latest
           - phpunit-multi 5.3,5.6,7.0 -c tests/phpunit.xml #runs phpunit against passed php versions
