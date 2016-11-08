@@ -7,7 +7,6 @@ $_tests_dir = getenv( 'WP_TESTS_DIR' );
 // Setup environment
 if ( ! empty( $_tests_dir ) ) {
 	$_tests_dir = '/tmp/wp-tests/coursepress-tests-lib';
-	$_tests_dir .= '/tests/phpunit';
 }
 
 $_test_bootstrap = 'includes/bootstrap.php';
