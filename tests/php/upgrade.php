@@ -82,5 +82,6 @@ class CoursePressUpgradeTest extends WP_UnitTestCase {
 		CoursePress_Data_Course::update_setting( $c1, true, $settings );
 
 		$this->assertEquals( false, CoursePressUpgrade::check_old_courses() );
+		$this->assertStringStartsWith( '2.0', CoursePress::$version );
 	}
 }
