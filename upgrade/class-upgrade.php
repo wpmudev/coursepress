@@ -91,7 +91,7 @@ class CoursePress_Upgrade {
 
 	public static function ajax_courses_upgrade() {
 		$request = json_decode( file_get_contents( 'php://input' ) );
-		
+
 		if ( ! isset( $request->type ) || empty( $request->type ) ) {
 			die();
 		}
