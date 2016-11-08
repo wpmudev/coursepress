@@ -33,7 +33,6 @@ class CoursePressUpgradeTest extends WP_UnitTestCase {
 
 		$c1 = self::factory()->post->create( $c1 );
 
-		add_action( 'coursepress_before_init_vars', array( __CLASS__, 'before_init_vars' ), 99 );
 		require_once $courseupgrade;
 
 		global $coursepress;
