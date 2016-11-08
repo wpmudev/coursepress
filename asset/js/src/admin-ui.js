@@ -109,7 +109,7 @@
 	$(document)
 		.ready( function() {
 			// Transform normal dropdown unto select2
-			$( 'select.dropdown' ).select2();
+			$( 'select.dropdown, .post-type-course select[name="action"]' ).select2();
 		})
 		.on( 'change', '.input-key', canSubmit )
 		.on( 'change', '.input-requiredby', enableInput )

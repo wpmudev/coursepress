@@ -7,8 +7,7 @@
 		clear: both;
 		border: 1px solid transparent;
 		font-size: 110%;
-		border: 1px solid rgba(0, 0, 0, 0.04);
-		padding: 15px 20px;
+		padding: 0;
 		border-radius: 5px;
 		box-sizing: border-box;
 
@@ -17,14 +16,34 @@
 		}
 
 		.comment-reply-title {
-			margin-bottom: 0;
+			margin: 0;
+			padding-bottom: 15px;
 		}
 		.comment-notification {
 			display: inline-block;
-			margin-left: 20px;
+			margin: 0;
+			float: left;
+		}
+		.comment-form {
+			margin: 0;
+			padding: 0 0 15px 0;
 		}
 		.comment-list {
 			margin: 25px 0;
+		}
+		.comment-respond {
+			border: 1px solid rgba(0, 0, 0, 0.16);
+			padding: 15px 25px;
+			background-color: rgba(255, 255, 255, 0.56);
+
+			.form-submit {
+				margin: 0 0 15px 0;
+				text-align: right;
+				#submit {
+					margin: 0;
+					width: auto;
+				}
+			}
 		}
 	}
 	.module-header {
@@ -45,6 +64,28 @@
 			}
 		}
 	}
+	.quiz_timer {
+		position: absolute;
+		top: 15px;
+		right: 20px;
+		font-weight: 600;
+	}
+	.quiz_timer_info {
+		position: absolute;
+		top: 35px;
+		right: 20px;
+		padding: 5px 0;
+		color: red;
+		text-transform: uppercase;
+		font-size: 11px;
+		display: none;
+		text-align: right;
+		line-height: 14px;
+		.button-reload-module {
+			font-size: 13px;
+			margin: 0;
+		}
+	}
 	.module-content {
 		max-width: 100%;
 		* {
@@ -62,6 +103,9 @@
 			option {
 				padding: 4px 12px;
 			}
+		}
+		input[type="checkbox"] {
+			margin-top: .4em;
 		}
 		input[type="text"],
 		textarea {
@@ -99,6 +143,36 @@
 			margin-top: 25px;
 			border: 1px solid $border_color;
 			padding: 5px 10px;
+		}
+		.comment-list {
+			list-style: none;
+			.avatar {
+				float: left;
+				margin-right: 15px;
+			}
+			.comment-meta {
+				clear: right;
+				font-size: 14px;
+				clear: right;
+				margin-bottom: 15px;
+			}
+			.reply {
+				clear: both;
+				text-align: right;
+			}
+			.comment-body {
+				clear: both;
+				margin: 15px 0;
+				border: 1px solid rgba(0, 0, 0, 0.16);
+				padding: 15px 25px;
+				background-color: rgba(255, 255, 255, 0.56);
+			}
+			li {
+				list-style: none;
+				li {
+					margin-left: 25px;
+				}
+			}
 		}
 	}
 	.cp-try-again {

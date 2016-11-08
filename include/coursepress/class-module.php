@@ -1,6 +1,11 @@
 <?php
 /**
  * The class that handles student submissions.
+ *
+ * @since 2.0.0
+ *
+ * @package WordPress
+ * @subpackage CoursePress
  **/
 class CoursePress_Module {
 	public static $error_message = '';
@@ -20,16 +25,16 @@ class CoursePress_Module {
 
 		if ( empty( $input['course_id'] ) ) {
 			$has_error = true;
-			self::$error_message = __( 'Invalid course ID!', 'cp' );
+			self::$error_message = __( 'Invalid course ID!', 'CP_TD' );
 		} elseif ( false === CoursePress_Data_Course::student_enrolled( $input['student_id'], $input['course_id'] ) ) {
 			$has_error = true;
-			self::$error_message = __( 'You are currently not enrolled to this course!', 'cp' );
+			self::$error_message = __( 'You are currently not enrolled to this course!', 'CP_TD' );
 		} elseif ( 'closed' == ( $course_status = CoursePress_Data_Course::get_course_status( $input['course_id'] ) ) ) {
 			$has_error = true;
-			self::$error_message = __( 'This course is completed, you can not submit answers anymore.', 'cp' );
+			self::$error_message = __( 'This course is completed, you can not submit answers anymore.', 'CP_TD' );
 		} elseif ( empty( $input['unit_id'] ) ) {
 			$has_error = true;
-			self::$error_message = __( 'Invalid unit!', 'cp' );
+			self::$error_message = __( 'Invalid unit!', 'CP_TD' );
 		}
 
 		return $has_error;
@@ -58,7 +63,7 @@ class CoursePress_Module {
 		if ( true === $mandatory ) {
 			if ( '' == $response ) {
 				$has_error = true;
-				self::$error_message = $is_focus ? __( 'You need to complete this module!', 'cp' ) : __( 'You need to complete the required modules!', 'cp' );
+				self::$error_message = $is_focus ? __( 'You need to complete this module!', 'CP_TD' ) : __( 'You need to complete the required modules!', 'CP_TD' );
 			} else {
 				// Attempt to record the submission
 				CoursePress_Data_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $response );
@@ -76,7 +81,7 @@ class CoursePress_Module {
 
 					if ( false === $pass ) {
 						$has_error = true;
-						self::$error_message = __( 'You did not pass the required minimum grade!', 'cp' );
+						self::$error_message = __( 'You did not pass the required minimum grade!', 'CP_TD' );
 					}
 				}
 			}
@@ -85,6 +90,9 @@ class CoursePress_Module {
 		return $has_error;
 	}
 
+	/**
+	 * Add single comment in discussion module.
+	 **/
 	public static function add_comment( $comments, $student_id ) {
 		if ( empty( $student_id ) ) {
 			// Assume current user ID
@@ -205,6 +213,7 @@ class CoursePress_Module {
 
 		// Validate the course
 		$error = CoursePress_Data_Course::can_access( $course_id, $unit_id );
+		$can_update_course = CoursePress_Data_Capabilities::can_update_course( $course_id, $student_id );
 
 		if ( ! empty( $error ) ) {
 			$has_error = true;
@@ -223,8 +232,8 @@ class CoursePress_Module {
 					$is_answerable = preg_match( '%input-%', $module_type );
 
 					if ( 'input-upload' == $module_type ) {
-						if ( empty( $_FILES ) ) {
-							self::$error_message = __( 'You need to complete the required module!', 'cp' );
+						if ( false == $can_update_course && empty( $_FILES ) ) {
+							self::$error_message = __( 'You need to complete the required module!', 'CP_TD' );
 							$has_error = true;
 						}
 						continue; // Upload validation is at the bottom
@@ -232,13 +241,13 @@ class CoursePress_Module {
 
 					if ( 'discussion' == $module_type ) {
 						if ( empty( $input['comment'] ) ) {
-							if ( $is_mandatory ) {
+							if ( $is_mandatory && false == $can_update_course ) {
 								// Check if current student previously commented.
 								if ( CoursePress_Data_Discussion::have_comments( $student_id, $module_id ) ) {
 									continue;
 								} else {
 									$has_error = true;
-									self::$error_message = __( 'Your participation to the discussion is required!', 'cp' );
+									self::$error_message = __( 'Your participation to the discussion is required!', 'CP_TD' );
 									continue;
 								}
 							}
@@ -267,8 +276,8 @@ class CoursePress_Module {
 					if ( $is_answerable ) {
 						if ( ! isset( $module[ $module_id ] ) || '' === ( $module[ $module_id ] ) ) {
 							// Check if module is mandatory
-							if ( $is_mandatory ) {
-								self::$error_message = __( 'You need to complete the required module!', 'cp' );
+							if ( $is_mandatory && false == $can_update_course ) {
+								self::$error_message = __( 'You need to complete the required module!', 'CP_TD' );
 								$has_error = true;
 							}
 							continue;
@@ -304,7 +313,9 @@ class CoursePress_Module {
 
 							// override $is_assessable if module type 'input-form', regardless if enabled in admin dashboard or not
 							// logic from CoursePress_Data_Module::get_form_results() is that Form will have a grade of 100 if not required, otherwise check if empty for all submodules
-							if ( $module_type == 'input-form' ) $is_assessable = true;
+							if ( $module_type == 'input-form' ) {
+								$is_assessable = true;
+							}
 
 							// Check if the grade acquired pass
 							if ( true === $is_assessable && ! in_array( $module_type, $excluded_modules ) ) {
@@ -313,11 +324,11 @@ class CoursePress_Module {
 								$grade = CoursePress_Helper_Utility::get_array_val( $grades, 'grade' );
 								$pass = (int) $grade >= (int) $minimum_grade;
 								
-								if ( false === $pass ) {
+								if ( false === $pass && false == $can_update_course ) {
 									$has_error = true;
 									self::$error_message = ( $module_type == 'input-form' ) ?
-										__( 'You did not complete the form!', 'cp' )
-										: __( 'You did not pass the required minimum grade!', 'cp' );
+										__( 'You did not complete the form!', 'CP_TD' )
+										: __( 'You did not pass the required minimum grade!', 'CP_TD' );
 								}
 							}
 						}
@@ -341,10 +352,10 @@ class CoursePress_Module {
 					$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $_module_id );
 					$required = ! empty( $attributes['mandatory'] );
 
-					if ( true === $required ) {
+					if ( true === $required && false == $can_update_course ) {
 						if ( empty( $filename ) ) {
 							if ( empty( $response ) ) {
-								self::$error_message = __( 'You need to complete the required module!', 'cp' );
+								self::$error_message = __( 'You need to complete the required module!', 'CP_TD' );
 								$has_error = true;
 								continue;
 							} else {
@@ -394,6 +405,7 @@ class CoursePress_Module {
 					'error' => true,
 					'error_message' => self::$error_message,
 					'html' => $html,
+					'is_reload' => false,
 				);
 
 				wp_send_json_error( $json_data );
@@ -407,8 +419,10 @@ class CoursePress_Module {
 
 			if ( $via_ajax ) {
 				$item_id = $next['id'];
+				$reload = false;
 
 				if ( 'section' == $next['type'] ) {
+					$reload = $unit_id != $next['unit'];
 					$unit_id = $next['unit'];
 					$item_id = $next['id'];
 				} else {
@@ -426,11 +440,13 @@ class CoursePress_Module {
 					}
 				}
 				$type = 'completion_page' == $next['id'] ? 'completion' : $next['type'];
+
 				$json_data = array(
 					'success' => true,
 					'html' => $html,
 					'url' => ! empty( $next['url'] ) ? $next['url'] : false,
 					'type' => $type,
+					'is_reload' => $reload,
 				);
 
 				wp_send_json_success( $json_data );
@@ -446,5 +462,18 @@ class CoursePress_Module {
 			$format = '<p>%s</p>';
 			return sprintf( $format, self::$error_message );
 		}
+	}
+
+	public static function record_expired_answer( $request ) {
+		$module_id = (int) $request['module_id'];
+		$course_id = (int) $request['course_id'];
+		$unit_id = (int) $request['unit_id'];
+		$student_id = (int) $request['student_id'];
+		$keys = array( $course_id, $unit_id, $module_id, $student_id );
+		$key = 'response_' . implode( '_', $keys );
+		$count = (int) get_user_meta( $student_id, $key, true );
+		$count += 1;
+		update_user_meta( $student_id, $key, $count );
+		wp_send_json_success(array('true' => true));
 	}
 }

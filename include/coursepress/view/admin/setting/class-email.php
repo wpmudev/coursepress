@@ -21,8 +21,8 @@ class CoursePress_View_Admin_Setting_Email {
 
 	public static function add_tabs( $tabs ) {
 		$tabs['email'] = array(
-			'title' => __( 'E-mail Settings', 'cp' ),
-			'description' => __( 'Setup the e-mail templates to be sent to users.', 'cp' ),
+			'title' => __( 'E-mail Settings', 'CP_TD' ),
+			'description' => __( 'Setup the e-mail templates to be sent to users.', 'CP_TD' ),
 			'order' => 10,
 		);
 
@@ -57,26 +57,26 @@ class CoursePress_View_Admin_Setting_Email {
 
 			$content .= '
 							<tr>
-								<th>' . esc_html__( 'From Name', 'cp' ) . '</th>
+								<th>' . esc_html__( 'From Name', 'CP_TD' ) . '</th>
 								<td><input type="text" class="widefat" name="coursepress_settings[email][' . $key . '][from]" value="' . esc_attr( CoursePress_Core::get_setting( 'email/' . $key . '/from', $default_settings[ $key ]['from'] ) ) . '"/></td>
 							</tr>
 			';
 			$content .= '
 							<tr>
-								<th>' . esc_html__( 'From Email', 'cp' ) . '</th>
+								<th>' . esc_html__( 'From Email', 'CP_TD' ) . '</th>
 								<td><input type="text" class="widefat" name="coursepress_settings[email][' . $key . '][email]" value="' . esc_attr( CoursePress_Core::get_setting( 'email/' . $key . '/email', $default_settings[ $key ]['email'] ) ) . '"/></td>
 							</tr>
 			';
 			$content .= '
 							<tr>
-								<th>' . esc_html__( 'Subject', 'cp' ) . '</th>
+								<th>' . esc_html__( 'Subject', 'CP_TD' ) . '</th>
 								<td><input type="text" class="widefat" name="coursepress_settings[email][' . $key . '][subject]" value="' . esc_attr( CoursePress_Core::get_setting( 'email/' . $key . '/subject', $default_settings[ $key ]['subject'] ) ) . '"/></td>
 							</tr>
 			';
 			$content .= '
 							<tr>
 								<th>
-								' . esc_html__( 'Email Body', 'cp' ) . '</th>
+								' . esc_html__( 'Email Body', 'CP_TD' ) . '</th>
 								<td>
 								<p class="description">' . esc_html( $section['content_help_text'] ) . '</p>';
 

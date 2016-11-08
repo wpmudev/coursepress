@@ -1,4 +1,4 @@
-/*!  - v2.0.0
+/*! CoursePress - v2.0.0
  * https://premium.wpmudev.org/project/coursepress-pro/
  * Copyright (c) 2016; * Licensed GPLv2+ */
 /*global _coursepress*/
@@ -97,7 +97,6 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			}
 
 			if ( name.match( /\/$/g ) || CoursePress.Course.multiple_elements( items, element.name ) ) {
-				//console.log( item_count + ': ' + element.name );
 				if ( name.match( /\/$/g ) ) {
 					CoursePress.utility.update_object_by_path( data, name + item_count, element.value );
 				} else {
@@ -400,17 +399,10 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		$( '.spinners' ).spinner();
 
 		$( '[name="meta_class_limited"]' ).change( function() {
-			// DEBUG code. remove it.
-			window.console.log( 'yup' );
-			window.console.log( $( this ).parents( '.class-size' ).find( '.num-students' ) );
 			if ( this.checked ) {
-				// DEBUG code. remove it.
-				window.console.log( 'checked' );
 				$( this ).parents( '.class-size' ).find( '.num-students' ).removeClass( 'disabled' );
 				$( this ).parents( '.class-size' ).find( '.num-students input' ).removeAttr( 'disabled' );
 			} else {
-				// DEBUG code. remove it.
-				window.console.log( 'unchecked' );
 				$( this ).parents( '.class-size' ).find( '.num-students' ).addClass( 'disabled' );
 				$( this ).parents( '.class-size' ).find( '.num-students input' ).attr( 'disabled', 'disabled' );
 			}
@@ -730,9 +722,6 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 				};
 				CoursePress.Course.set( 'data', data );
 				CoursePress.Course.save();
-			} else {
-				// DEBUG code. remove it.
-				window.console.log( 'DO SOMETHING TO THE UI!' );
 			}
 		} );
 
@@ -1044,6 +1033,10 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 						};
 						CoursePress.Course.set( 'data', data );
 						CoursePress.Course.save();
+                        /**
+                         * reset select2
+                         */
+                        $("#student-add, #facilitators, #instructors").select2("val", "");
 					}
 					break;
 				case 'pending':
@@ -1137,9 +1130,6 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			$( '.step-title.step-' + data.last_step ).find( '.status' ).addClass( 'save-error' );
 			$( '.step-title.step-' + data.last_step ).find( '.status' ).removeClass( 'save-attention' );
 			$( '.step-title.step-' + data.last_step ).find( '.status' ).removeClass( 'save-process' );
-
-			// DEBUG code. remove it.
-			window.console.log( data );
 		} );
 
 		/**
@@ -1677,7 +1667,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 				};
 			},
 			processResults: function (data, params) {
-				// parse the results into the format expected by Select2
+				// parse the results into the format expected by select2
 				// since we are using custom formatting functions we do not need to
 				// alter the remote JSON data, except to indicate that infinite
 				// scrolling can be used
