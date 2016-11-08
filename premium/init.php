@@ -89,6 +89,8 @@ class CoursePressPro {
 				'id' => 913071,
 				'name' => CoursePress::$name,
 				'screens' => array(
+					'course',
+					'edit-course',
 					'coursepress_settings',
 					'toplevel_page_courses',
 					'toplevel_page_coursepress',

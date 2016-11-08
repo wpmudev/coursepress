@@ -38,8 +38,8 @@ class CoursePress_View_Admin_Setting_Setup {
 
 	public static function add_tabs( $tabs ) {
 		$tabs['setup'] = array(
-			'title' => __( 'Setup Guide', 'cp' ),
-			'description' => __( 'This is the description of what you can do on this page.', 'cp' ),
+			'title' => __( 'Setup Guide', 'CP_TD' ),
+			'description' => __( 'This is the description of what you can do on this page.', 'CP_TD' ),
 			'order' => 70,
 			'class' => 'setup_tab',
 		);
@@ -51,39 +51,39 @@ class CoursePress_View_Admin_Setting_Setup {
 		ob_start();
 ?>
 <div class="wrap about-wrap cp-wrap">
-	<h1><?php _e( 'Welcome to', 'cp' ); ?> <?php echo CoursePress::$name; ?></h1>
+	<h1><?php _e( 'Welcome to', 'CP_TD' ); ?> <?php echo CoursePress::$name; ?></h1>
 
 	<div class="about-text">
 <?php
-		printf( __( '%s has done a few things to get you on your way.', 'cp' ), CoursePress::$name );
+		printf( __( '%s has done a few things to get you on your way.', 'CP_TD' ), CoursePress::$name );
 ?>
 		<br/>
 <?php
-		_e( 'It’s created a couple of dynamic pages labeled ‘Courses’ & ‘Dashboard’ and added them to your navigation.', 'cp' );
+		_e( 'It’s created a couple of dynamic pages labeled ‘Courses’ & ‘Dashboard’ and added them to your navigation.', 'CP_TD' );
 ?>
 		<br/>
 <?php
-		printf( __( 'If these are not visible on your site and theme, you may need to check your %s.', 'cp' ), '<a href="' . admin_url( 'nav-menus.php' ) . '">' . __( 'Menu Settings', 'cp' ) . '</a>' );
+		printf( __( 'If these are not visible on your site and theme, you may need to check your %s.', 'CP_TD' ), '<a href="' . admin_url( 'nav-menus.php' ) . '">' . __( 'Menu Settings', 'CP_TD' ) . '</a>' );
 ?>
 		<br/>
 <?php
-		printf( __( '%s has also installed - but not activated - MarketPress Lite.', 'cp' ), CoursePress::$name );
+		printf( __( '%s has also installed - but not activated - MarketPress Lite.', 'CP_TD' ), CoursePress::$name );
 ?>
 		<br/>
-		<?php _e( 'For those of you who wish to sell your amazing courses you will need to activate and set up a payment gateway.  But more on that later.', 'cp' ); ?>
+		<?php _e( 'For those of you who wish to sell your amazing courses you will need to activate and set up a payment gateway.  But more on that later.', 'CP_TD' ); ?>
 	</div>
 
-	<h1><?php _e( 'Let’s Get Started', 'cp' ); ?></h1>
+	<h1><?php _e( 'Let’s Get Started', 'CP_TD' ); ?></h1>
 
 	<div class="changelog">
-		<h3><?php _e( 'Step 1. Create a course', 'cp' ); ?></h3>
+		<h3><?php _e( 'Step 1. Create a course', 'CP_TD' ); ?></h3>
 
 		<div class="about-text">
 			<ul>
-				<li><?php _e( 'Add course title and description', 'cp' ); ?></li>
-				<li><?php _e( 'Assign course instructor', 'cp' ); ?></li>
-				<li><?php _e( 'Configure attendance and access settings', 'cp' ); ?></li>
-				<li><?php _e( 'Set up payment gateways for paid courses', 'cp' ); ?></li>
+				<li><?php _e( 'Add course title and description', 'CP_TD' ); ?></li>
+				<li><?php _e( 'Assign course instructor', 'CP_TD' ); ?></li>
+				<li><?php _e( 'Configure attendance and access settings', 'CP_TD' ); ?></li>
+				<li><?php _e( 'Set up payment gateways for paid courses', 'CP_TD' ); ?></li>
 			</ul>
 
 		</div>
@@ -92,17 +92,17 @@ class CoursePress_View_Admin_Setting_Setup {
 	</div>
 
 	<div class="changelog">
-		<h3><?php _e( 'Step 2. Add course Content', 'cp' ); ?></h3>
+		<h3><?php _e( 'Step 2. Add course Content', 'CP_TD' ); ?></h3>
 
 		<div class="about-text">
 <?php
-		_e( 'Courses are structured by Units. Units are made up of elements these can be presented on a single page or over several pages . Elements include', 'cp' );
+		_e( 'Courses are structured by Units. Units are made up of elements these can be presented on a single page or over several pages . Elements include', 'CP_TD' );
 ?>
 			<ul>
-				<li><?php _e( 'Text, Video & Audio', 'cp' ); ?></li>
-				<li><?php _e( 'File Upload and Download ', 'cp' ); ?></li>
-				<li><?php _e( 'Multiple and Single Choice Questions', 'cp' ); ?></li>
-				<li><?php _e( 'Test Response fields', 'cp' ); ?></li>
+				<li><?php _e( 'Text, Video & Audio', 'CP_TD' ); ?></li>
+				<li><?php _e( 'File Upload and Download ', 'CP_TD' ); ?></li>
+				<li><?php _e( 'Multiple and Single Choice Questions', 'CP_TD' ); ?></li>
+				<li><?php _e( 'Test Response fields', 'CP_TD' ); ?></li>
 			</ul>
 
 		</div>
@@ -111,15 +111,15 @@ class CoursePress_View_Admin_Setting_Setup {
 	</div>
 
 	<div class="changelog">
-		<h3><?php _e( 'Step 3. Enroll students', 'cp' ); ?></h3>
+		<h3><?php _e( 'Step 3. Enroll students', 'CP_TD' ); ?></h3>
 
 		<div class="about-text">
 <?php
-		_e( 'Configure student enrollment, select to either:', 'cp' );
+		_e( 'Configure student enrollment, select to either:', 'CP_TD' );
 ?>
 			<ul>
-				<li><?php _e( 'Manually add students with or without passcode restriction', 'cp' ); ?></li>
-				<li><?php _e( 'Enroll students  automatically after registration and/or payment', 'cp' ); ?></li>
+				<li><?php _e( 'Manually add students with or without passcode restriction', 'CP_TD' ); ?></li>
+				<li><?php _e( 'Enroll students  automatically after registration and/or payment', 'CP_TD' ); ?></li>
 			</ul>
 
 		</div>
@@ -127,11 +127,11 @@ class CoursePress_View_Admin_Setting_Setup {
 	</div>
 
 	<div class="changelog">
-		<h3><?php _e( 'Step 4. Publish your course!', 'cp' ); ?></h3>
+		<h3><?php _e( 'Step 4. Publish your course!', 'CP_TD' ); ?></h3>
 
 		<div class="about-text">
 <?php
-		_e( 'There are many other features in CoursePress, but those are the basics to get you up and running. Now it’s time to publish the course and watch your students learn', 'cp' );
+		_e( 'There are many other features in CoursePress, but those are the basics to get you up and running. Now it’s time to publish the course and watch your students learn', 'CP_TD' );
 ?>
 			<br/><br/>
 
@@ -141,13 +141,13 @@ class CoursePress_View_Admin_Setting_Setup {
 	</div>
 
 	<div class="changelog">
-		<h3><?php _e( 'Step 5. Course Management', 'cp' ); ?></h3>
+		<h3><?php _e( 'Step 5. Course Management', 'CP_TD' ); ?></h3>
 
 		<div class="about-text">
 			<ul>
-				<li><?php _e( 'Administer instructors and students', 'cp' ); ?></li>
-				<li><?php _e( 'Manage Grading of the students submitted work', 'cp' ); ?></li>
-				<li><?php _e( 'Generate Unit/Course/Site-wide Reporting', 'cp' ); ?></li>
+				<li><?php _e( 'Administer instructors and students', 'CP_TD' ); ?></li>
+				<li><?php _e( 'Manage Grading of the students submitted work', 'CP_TD' ); ?></li>
+				<li><?php _e( 'Generate Unit/Course/Site-wide Reporting', 'CP_TD' ); ?></li>
 			</ul>
 		</div>
 
@@ -165,17 +165,17 @@ if ( current_user_can( 'manage_options' ) && ! get_option( 'permalink_structure'
 	if ( $show_warning ) {
 ?>
 		<div class="permalinks-error">
-			<h4><?php _e( 'Pretty permalinks are required to use CoursePress.', 'cp' ); ?></h4>
+			<h4><?php _e( 'Pretty permalinks are required to use CoursePress.', 'CP_TD' ); ?></h4>
 
-			<p><?php _e( 'Click the button below to setup your permalinks.', 'cp' ); ?></p>
-			<a href="<?php echo admin_url( 'options-permalink.php' ); ?>" class="button button-units save-unit-button setup-permalinks-button"><?php _e( 'Setup Permalinks', 'cp' ); ?></a>
+			<p><?php _e( 'Click the button below to setup your permalinks.', 'CP_TD' ); ?></p>
+			<a href="<?php echo admin_url( 'options-permalink.php' ); ?>" class="button button-units save-unit-button setup-permalinks-button"><?php _e( 'Setup Permalinks', 'CP_TD' ); ?></a>
 		</div>
 <?php
 	}
 } else {
 	$url = admin_url('post-new.php?post_type=' . CoursePress_Data_Course::get_post_type_name());
 ?>
-	<a href="<?php echo esc_url( $url ); ?>" class="button button-units save-unit-button start-course-button"><?php _e( 'Start building your own course now &rarr;', 'cp' ); ?></a>
+	<a href="<?php echo esc_url( $url ); ?>" class="button button-units save-unit-button start-course-button"><?php _e( 'Start building your own course now &rarr;', 'CP_TD' ); ?></a>
 <?php
 }
 ?>

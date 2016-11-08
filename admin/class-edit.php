@@ -105,8 +105,8 @@ class CoursePress_Admin_Edit {
 		self::$tabs = apply_filters( self::$slug . '_tabs', self::$tabs );
 
 		self::$tabs['setup'] = array(
-			'title' => __( 'Course Setup', 'cp' ),
-			'description' => __( 'Edit your course specific settings below.', 'cp' ),
+			'title' => __( 'Course Setup', 'CP_TD' ),
+			'description' => __( 'Edit your course specific settings below.', 'CP_TD' ),
 			'order' => 10,
 			'buttons' => 'none',
 			'is_form' => false,
@@ -117,8 +117,8 @@ class CoursePress_Admin_Edit {
 			if ( CoursePress_Data_Capabilities::can_view_course_units( $course_id ) ) {
 				$units = CoursePress_Data_Course::get_unit_ids( $course_id, array( 'publish', 'draft' ) );
 				self::$tabs['units'] = array(
-					'title' => sprintf( __( 'Units (%s)', 'cp' ), count( $units ) ),
-					'description' => __( 'Edit your course specific settings below.', 'cp' ),
+					'title' => sprintf( __( 'Units (%s)', 'CP_TD' ), count( $units ) ),
+					'description' => __( 'Edit your course specific settings below.', 'CP_TD' ),
 					'order' => 20,
 					'buttons' => 'none',
 					'is_form' => false,
@@ -128,10 +128,10 @@ class CoursePress_Admin_Edit {
 			if ( CoursePress_Data_Capabilities::can_view_course_students( $course_id ) ) {
 				self::$tabs['students'] = array(
 					'title' => sprintf(
-						__( 'Students (%s)', 'cp' ),
+						__( 'Students (%s)', 'CP_TD' ),
 						CoursePress_Data_Course::count_students( $course_id )
 					),
-					'description' => __( 'Edit your course specific settings below.', 'cp' ),
+					'description' => __( 'Edit your course specific settings below.', 'CP_TD' ),
 					'order' => 30,
 					'buttons' => 'none',
 					'is_form' => false,
@@ -264,7 +264,7 @@ class CoursePress_Admin_Edit {
 			$content .= sprintf(
 				'<input type="button" class="button step prev step-%d" value="%s" />',
 				esc_attr( $step ),
-				esc_attr__( 'Previous', 'cp' )
+				esc_attr__( 'Previous', 'CP_TD' )
 			);
 		}
 
@@ -272,7 +272,7 @@ class CoursePress_Admin_Edit {
 			$content .= sprintf(
 				'<input type="button" class="button step next step-%d" value="%s" />',
 				esc_attr( $step ),
-				esc_attr__( 'Next', 'cp' )
+				esc_attr__( 'Next', 'CP_TD' )
 			);
 		}
 
@@ -280,7 +280,7 @@ class CoursePress_Admin_Edit {
 		if ( 7 == $step ) {
 			$content .= sprintf(
 				'<input type="button" class="button step finish step-7" value="%s" />',
-				esc_attr__( 'Finish', 'cp' )
+				esc_attr__( 'Finish', 'CP_TD' )
 			);
 		}
 		/**
@@ -290,7 +290,7 @@ class CoursePress_Admin_Edit {
 			$content .= sprintf(
 				'<input type="button" class="button step update hidden step-%d" value="%s" />',
 				esc_attr( $step ),
-				esc_attr__( 'Update', 'cp' )
+				esc_attr__( 'Update', 'CP_TD' )
 			);
 		}
 		/**
@@ -338,7 +338,7 @@ class CoursePress_Admin_Edit {
 		$setup_class = ( (int) CoursePress_Data_Course::get_setting( $course_id, 'setup_marker', 0 ) === 6 ) || ( (int) CoursePress_Data_Course::get_setting( $course_id, 'setup_marker', 0 ) === 0 ) ? $setup_class . ' setup_marker' : $setup_class;
 
 		$content = '
-			<div class="step-title step-1">' . esc_html__( 'Step 1 – Course Overview', 'cp' ) . '
+			<div class="step-title step-1">' . esc_html__( 'Step 1 – Course Overview', 'CP_TD' ) . '
 				<div class="status ' . $setup_class . '"></div>
 			</div>
 			<div class="step-content step-1">
@@ -353,7 +353,7 @@ class CoursePress_Admin_Edit {
 		$content .= '
 				<div class="wide">
 						<label for="course_name" class="required first">' .
-					esc_html__( 'Title', 'cp' ) . '
+					esc_html__( 'Title', 'CP_TD' ) . '
 						</label>
 						<input class="wide" type="text" name="course_name" id="course_name" value="' . $course_name . '"/>
 				</div>';
@@ -367,7 +367,7 @@ class CoursePress_Admin_Edit {
 		$content .= '
 				<div class="wide">
 						<label for="courseExcerpt" class="required drop-line">' .
-					esc_html__( 'Short Overview', 'cp' ) . '
+					esc_html__( 'Short Overview', 'CP_TD' ) . '
 						</label>
 						' . $editor_html . '
 				</div>';
@@ -379,8 +379,8 @@ class CoursePress_Admin_Edit {
 			'meta_listing_image',
 			'meta_listing_image',
 			array(
-				'placeholder' => __( 'Add Image URL or Browse for Image', 'cp' ),
-				'title' => __( 'Feature Image', 'cp' ),
+				'placeholder' => __( 'Add Image URL or Browse for Image', 'CP_TD' ),
+				'title' => __( 'Featured Image', 'CP_TD' ),
 				'value' => CoursePress_Data_Course::get_listing_image( $course_id ),
 			)
 		);
@@ -398,12 +398,12 @@ class CoursePress_Admin_Edit {
 		// Course Language
 		$language = CoursePress_Data_Course::get_setting( $course_id, 'course_language' );
 		if ( empty( $language ) ) {
-			$language = __( 'English', 'cp' );
+			$language = __( 'English', 'CP_TD' );
 		}
 		$content .= '
 				<div class="wide">
 						<label for="meta_course_language">' .
-					esc_html__( 'Language', 'cp' ) . '
+					esc_html__( 'Language', 'CP_TD' ) . '
 						</label>
 						<input class="medium" type="text" name="meta_course_language" id="meta_course_language" value="' . $language . '"/>
 				</div>';
@@ -431,7 +431,7 @@ class CoursePress_Admin_Edit {
 		$setup_class = CoursePress_Data_Course::get_setting( $course_id, 'setup_step_2', '' );
 		$setup_class = (int) CoursePress_Data_Course::get_setting( $course_id, 'setup_marker', 0 ) === 1 ? $setup_class . ' setup_marker' : $setup_class;
 		$content = '
-			<div class="step-title step-2">' . esc_html__( 'Step 2 – Course Details', 'cp' ) . '
+			<div class="step-title step-2">' . esc_html__( 'Step 2 – Course Details', 'CP_TD' ) . '
 				<div class="status ' . $setup_class . '"></div>
 			</div>
 			<div class="step-content step-2">
@@ -440,16 +440,16 @@ class CoursePress_Admin_Edit {
 
 		// Featured Video
 		$supported_ext = implode( ', ', wp_get_video_extensions() );
-		$placeholder = sprintf( __( 'Add URL or Browse ( %s )', 'cp' ), $supported_ext );
+		$placeholder = sprintf( __( 'Add URL or Browse ( %s )', 'CP_TD' ), $supported_ext );
 		$content .= CoursePress_Helper_UI::browse_media_field(
 			'meta_featured_video',
 			'meta_featured_video',
 			array(
 				'placeholder' => $placeholder,
-				'title' => __( 'Featured Video', 'cp' ),
+				'title' => __( 'Featured Video', 'CP_TD' ),
 				'value' => CoursePress_Data_Course::get_setting( $course_id, 'featured_video' ),
 				'type' => 'video',
-				'description' => __( 'This is used on the Course Overview page and will be displayed with the course description.', 'cp' ),
+				'description' => __( 'This is used on the Course Overview page and will be displayed with the course description.', 'CP_TD' ),
 			)
 		);
 
@@ -463,7 +463,7 @@ class CoursePress_Admin_Edit {
 		$content .= '
 				<div class="wide">
 						<label for="courseDescription" class="required">' .
-					esc_html__( 'Full Description', 'cp' ) . '
+					esc_html__( 'Full Description', 'CP_TD' ) . '
 						</label><br />
 						' . $editor_html . '
 				</div>';
@@ -471,61 +471,61 @@ class CoursePress_Admin_Edit {
 		$content .= '
 				<div class="wide">
 						<label>' .
-						esc_html__( 'View Mode', 'cp' ) . '
+						esc_html__( 'View Mode', 'CP_TD' ) . '
 						</label>
 						<label class="checkbox">
-							<input type="radio" name="meta_course_view" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'course_view', 'normal' ), 'normal' ) . ' value="normal">' . esc_html__( 'Normal: Show full unit pages', 'cp' ) . '
-							<p class="description">' . esc_html__( 'Choose if your course will show in "normal" mode or step by step "focus" mode.', 'cp' ) . '</p>
+							<input type="radio" name="meta_course_view" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'course_view', 'normal' ), 'normal' ) . ' value="normal">' . esc_html__( 'Normal: Show full unit pages', 'CP_TD' ) . '
+							<p class="description">' . esc_html__( 'Choose if your course will show in "normal" mode or step by step "focus" mode.', 'CP_TD' ) . '</p>
 						</label>
 						<label class="checkbox">
-							<input type="radio" name="meta_course_view" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'course_view', 'focus' ), 'focus' ) . ' value="focus">' . esc_html__( 'Focus: Focus on one item at a time', 'cp' ) . '
+							<input type="radio" name="meta_course_view" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'course_view', 'focus' ), 'focus' ) . ' value="focus">' . esc_html__( 'Focus: Focus on one item at a time', 'CP_TD' ) . '
 						</label>
 						<label class="checkbox">
-							<input type="checkbox" name="meta_focus_hide_section" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'focus_hide_section', true ) ) . ' value="unit">' . esc_html__( 'Don\'t render section titles in focus mode.', 'cp' ) . '
+							<input type="checkbox" name="meta_focus_hide_section" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'focus_hide_section', true ) ) . ' value="unit">' . esc_html__( 'Don\'t render section titles in focus mode.', 'CP_TD' ) . '
 						</label>
 						<label class="checkbox">
-							<input type="radio" name="meta_structure_level" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'structure_level', 'unit' ), 'unit' ) . ' value="unit">' . esc_html__( 'Unit list only', 'cp' ) . '<br />
+							<input type="radio" name="meta_structure_level" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'structure_level', 'unit' ), 'unit' ) . ' value="unit">' . esc_html__( 'Unit list only', 'CP_TD' ) . '<br />
 						</label><label class="checkbox">
-							<input type="radio" name="meta_structure_level" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'structure_level', 'section' ), 'section' ) . ' value="section">' . esc_html__( 'Expanded unit list', 'cp' ) . '<br />
-							<p class="description">' . esc_html__( 'Choose if course Unit page shows units only or in expanded view.', 'cp' ) . '</p>
+							<input type="radio" name="meta_structure_level" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'structure_level', 'section' ), 'section' ) . ' value="section">' . esc_html__( 'Expanded unit list', 'CP_TD' ) . '<br />
+							<p class="description">' . esc_html__( 'Choose if course Unit page shows units only or in expanded view.', 'CP_TD' ) . '</p>
 						</label>
 				</div>';
 
 		// Course Structure
 		$content .= '
 				<div class="wide">
-					<label>' . esc_html__( 'Course Structure', 'cp' ) . '</label>
-					<p>' . esc_html__( 'This gives you the option to show/hide Course Units, Lessons, Estimated Time and Free Preview options on the Course Overview page', 'cp' ) . '</p>
+					<label>' . esc_html__( 'Course Structure', 'CP_TD' ) . '</label>
+					<p>' . esc_html__( 'This gives you the option to show/hide Course Units, Lessons, Estimated Time and Free Preview options on the Course Overview page', 'CP_TD' ) . '</p>
 
 					<div class="course-structure">
 
 						<label class="checkbox">
 							<input type="checkbox" name="meta_structure_visible" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'structure_visible', true ) ) . ' />
-							<span>' . esc_html__( 'Show the Course Overview structure and Preview Options', 'cp' ) . '</span>
+							<span>' . esc_html__( 'Show the Course Overview structure and Preview Options', 'CP_TD' ) . '</span>
 						</label>
 						<label class="checkbox">
 							<input type="checkbox" name="meta_structure_show_duration" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'structure_show_duration', true ) ) . ' />
-							<span>' . esc_html__( 'Display Time Estimates for Units and Lessons', 'cp' ) . '</span>
+							<span>' . esc_html__( 'Display Time Estimates for Units and Lessons', 'CP_TD' ) . '</span>
 						</label>
 
 
 						<table class="course-structure-tree">
 							<thead>
 								<tr>
-									<th class="column-course-structure">' . esc_html__( 'Course Structure', 'cp' ) . ' <small>' . esc_html__( 'Units and Pages with Modules selected will automatically be visible (only selected Modules accessible).', 'cp' ) . '</small></th>
-									<th class="column-show">' . esc_html__( 'Show', 'cp' ) . '</th>
-									<th class="column-free-preview">' . esc_html__( 'Free Preview', 'cp' ) . '</th>
-									<th class="column-time">' . esc_html__( 'Time', 'cp' ) . '</th>
+									<th class="column-course-structure">' . esc_html__( 'Course Structure', 'CP_TD' ) . ' <small>' . esc_html__( 'Units and Pages with Modules selected will automatically be visible (only selected Modules accessible).', 'CP_TD' ) . '</small></th>
+									<th class="column-show">' . esc_html__( 'Show', 'CP_TD' ) . '</th>
+									<th class="column-free-preview">' . esc_html__( 'Free Preview', 'CP_TD' ) . '</th>
+									<th class="column-time">' . esc_html__( 'Time', 'CP_TD' ) . '</th>
 								</tr>
 								<tr class="break"><th colspan="4"></th></tr>
 							</thead>
 							<tfoot>
 								<tr class="break"><th colspan="4"></th></tr>
 								<tr>
-									<th class="column-course-structure">' . esc_html__( 'Course Structure', 'cp' ) . '</th>
-									<th class="column-show">' . esc_html__( 'Show', 'cp' ) . '</th>
-									<th class="column-free-preview">' . esc_html__( 'Free Preview', 'cp' ) . '</th>
-									<th class="column-time">' . esc_html__( 'Time', 'cp' ) . '</th>
+									<th class="column-course-structure">' . esc_html__( 'Course Structure', 'CP_TD' ) . '</th>
+									<th class="column-show">' . esc_html__( 'Show', 'CP_TD' ) . '</th>
+									<th class="column-free-preview">' . esc_html__( 'Free Preview', 'CP_TD' ) . '</th>
+									<th class="column-time">' . esc_html__( 'Time', 'CP_TD' ) . '</th>
 								</tr>
 							</tfoot>
 							<tbody>';
@@ -545,7 +545,7 @@ class CoursePress_Admin_Edit {
 
 			$estimations = CoursePress_Data_Unit::get_time_estimation( $unit['unit']->ID, $units );
 			$count += 1;
-			$status = 'publish' === $unit['unit']->post_status ? '' : __( '[DRAFT] ', 'cp' );
+			$status = 'publish' === $unit['unit']->post_status ? '' : __( '[DRAFT] ', 'CP_TD' );
 			$draft_class = 'publish' === $unit['unit']->post_status ? '' : 'draft';
 
 			$alt = $count % 2 ? 'even' : 'odd';
@@ -568,7 +568,7 @@ class CoursePress_Admin_Edit {
 
 			foreach ( $unit['pages'] as $key => $page ) {
 				$count += 1;
-				$page_title = ! empty( $page['title'] ) ? $page['title'] : sprintf( __( 'Page %s', 'cp' ), $key );
+				$page_title = ! empty( $page['title'] ) ? $page['title'] : sprintf( __( 'Page %s', 'CP_TD' ), $key );
 
 				$page_key = (int) $unit['unit']->ID . '_' . (int) $key;
 
@@ -592,7 +592,7 @@ class CoursePress_Admin_Edit {
 				foreach ( $page['modules'] as $module ) {
 					$count += 1;
 					$alt = $count % 2 ? 'even' : 'odd';
-					$module_title = ! empty( $module->post_title ) ? $module->post_title : __( 'Untitled Module', 'cp' );
+					$module_title = ! empty( $module->post_title ) ? $module->post_title : __( 'Untitled Module', 'CP_TD' );
 
 					$mod_key = $page_key . '_' . (int) $module->ID;
 
@@ -649,7 +649,7 @@ class CoursePress_Admin_Edit {
 		$can_assign_instructor = CoursePress_Data_Capabilities::can_assign_course_instructor( $course_id );
 
 		$content = '
-			<div class="step-title step-3">' . esc_html__( 'Step 3 – Instructors and Facilitators', 'cp' ) . '
+			<div class="step-title step-3">' . esc_html__( 'Step 3 – Instructors and Facilitators', 'CP_TD' ) . '
 				<div class="status ' . $setup_class . '"></div>
 			</div>
 			<div class="step-content step-3">
@@ -662,19 +662,19 @@ class CoursePress_Admin_Edit {
 			$content .= '
 				<div class="wide">
 						<label for="course_name" class="">' .
-					esc_html__( 'Course Instructor(s)', 'cp' ) . '
-						<p class="description">' . esc_html__( 'Select one or more instructor to facilitate this course', 'cp' ) . '</p>
+					esc_html__( 'Course Instructor(s)', 'CP_TD' ) . '
+						<p class="description">' . esc_html__( 'Select one or more instructor to facilitate this course', 'CP_TD' ) . '</p>
 						</label>
 						<select id="instructors" style="width:350px;" name="instructors" data-nonce-search="' . $search_nonce . '" class="medium"></select>
-						<input type="button" class="button button-primary instructor-assign disabled" value="' . esc_attr__( 'Assign', 'cp' ) . '" />
+						<input type="button" class="button button-primary instructor-assign disabled" value="' . esc_attr__( 'Assign', 'CP_TD' ) . '" />
 				</div>';
 		}
 
 		$content .= '<div class="instructors-info medium" id="instructors-info">';
 		if ( $can_assign_instructor ) {
-			$content .= '<p>' . esc_html__( 'Assigned Instructors:', 'cp' ) . '</p>';
+			$content .= '<p>' . esc_html__( 'Assigned Instructors:', 'CP_TD' ) . '</p>';
 		} else {
-			$content .= '<p>' . esc_html__( 'You do not have sufficient permission to add instructor!', 'cp' );
+			$content .= '<p>' . esc_html__( 'You do not have sufficient permission to add instructor!', 'CP_TD' );
 		}
 
 		$args = array(
@@ -687,7 +687,7 @@ class CoursePress_Admin_Edit {
 			if ( $can_assign_instructor ) {
 				$content .= '
 					<div class="instructor-avatar-holder empty">
-						<span class="instructor-name">' . esc_html__( 'Please Assign Instructor', 'cp' ) . '</span>
+						<span class="instructor-name">' . esc_html__( 'Please Assign Instructor', 'CP_TD' ) . '</span>
 					</div>
 ';
 				$content .= CoursePress_Helper_UI::course_pendings_instructors_avatars( $course_id );
@@ -708,17 +708,17 @@ class CoursePress_Admin_Edit {
 			$content .= '
 				<div class="wide">
 						<label for="course_name" class="">' .
-					esc_html__( 'Course Facilitator(s)', 'cp' ) . '
-						<p class="description">' . esc_html__( 'Select one or more facilitator to facilitate this course', 'cp' ) . '</p>
+					esc_html__( 'Course Facilitator(s)', 'CP_TD' ) . '
+						<p class="description">' . esc_html__( 'Select one or more facilitator to facilitate this course', 'CP_TD' ) . '</p>
 						</label>
 			<select data-nonce-search="'. $search_nonce . '" name="facilitators" style="width:350px;" id="facilitators" class="user-dropdown medium"></select>
-			<input type="button" class="button button-primary facilitator-assign disabled" value="' . esc_attr__( 'Assign', 'cp' ) . '" />
+			<input type="button" class="button button-primary facilitator-assign disabled" value="' . esc_attr__( 'Assign', 'CP_TD' ) . '" />
 				</div>';
 		} else {
 
 			if ( ! empty( $facilitators ) ) {
 				$content .= '<div class="wide">
-					<label>' . __( 'Course Facilitators', 'cp' ) . '</label>
+					<label>' . __( 'Course Facilitators', 'CP_TD' ) . '</label>
 					</div>
 				';
 			}
@@ -735,17 +735,17 @@ class CoursePress_Admin_Edit {
 			$placeholder = '';
 
 			if ( $can_assign_instructor && $can_assign_facilitator ) {
-				$label = esc_html__( 'Invite New Instructor or Facilitator', 'cp' );
-				$description = esc_html__( 'If the instructor or the facilitator can not be found in the list above, you will need to invite them via email.', 'cp' );
-				$placeholder = __( 'instructor-or-facilitator@email.com', 'cp' );
+				$label = esc_html__( 'Invite New Instructor or Facilitator', 'CP_TD' );
+				$description = esc_html__( 'If the instructor or the facilitator can not be found in the list above, you will need to invite them via email.', 'CP_TD' );
+				$placeholder = __( 'instructor-or-facilitator@email.com', 'CP_TD' );
 			} else if ( $can_assign_instructor ) {
-				$label = esc_html__( 'Invite New Instructor', 'cp' );
-				$description = esc_html__( 'If the instructor can not be found in the list above, you will need to invite them via email.', 'cp' );
-				$placeholder = __( 'facilitator@email.com', 'cp' );
+				$label = esc_html__( 'Invite New Instructor', 'CP_TD' );
+				$description = esc_html__( 'If the instructor can not be found in the list above, you will need to invite them via email.', 'CP_TD' );
+				$placeholder = __( 'facilitator@email.com', 'CP_TD' );
 			} else if ( $can_assign_facilitator ) {
-				$label = esc_html__( 'Invite New Facilitator', 'cp' );
-				$description = esc_html__( 'If the facilitator can not be found in the list above, you will need to invite them via email.', 'cp' );
-				$placeholder = __( 'instructor@email.com', 'cp' );
+				$label = esc_html__( 'Invite New Facilitator', 'CP_TD' );
+				$description = esc_html__( 'If the facilitator can not be found in the list above, you will need to invite them via email.', 'CP_TD' );
+				$placeholder = __( 'instructor@email.com', 'CP_TD' );
 			}
 
 			// Instructor/Facilitator Invite
@@ -757,25 +757,25 @@ class CoursePress_Admin_Edit {
 						</label>
 						<div class="instructor-invite">';
 			if ( $can_assign_instructor && $can_assign_facilitator ) {
-				$content .= '<label>'.__( 'Instructor or Facilitator', 'cp' ).'</label>
+				$content .= '<label>'.__( 'Instructor or Facilitator', 'CP_TD' ).'</label>
 							<ul>
-<li><label><input type="radio" name="invite_instructor_type" value="instructor" checked="checked" /> ' . __( 'Instructor', 'cp' ) . '</label></li>
-<li><label><input type="radio" name="invite_instructor_type" value="facilitator" /> ' . __( 'Facilitator', 'cp' ) . '</label></li>
+<li><label><input type="radio" name="invite_instructor_type" value="instructor" checked="checked" /> ' . __( 'Instructor', 'CP_TD' ) . '</label></li>
+<li><label><input type="radio" name="invite_instructor_type" value="facilitator" /> ' . __( 'Facilitator', 'CP_TD' ) . '</label></li>
 							</ul>';
 			} else if ( $can_assign_instructor ) {
 				$content .= '<input type="hidden" name="invite_instructor_type="instructor" />';
 			} else if ( $can_assign_facilitator ) {
 				$content .= '<input type="hidden" name="invite_instructor_type="facilitator" />';
 			}
-			$content .= '<label for="invite_instructor_first_name">' . esc_html__( 'First Name', 'cp' ) . '</label>
-							<input type="text" name="invite_instructor_first_name" placeholder="' . esc_attr__( 'First Name', 'cp' ) . '"/>
-							<label for="invite_instructor_last_name">' . esc_html__( 'Last Name', 'cp' ) . '</label>
-							<input type="text" name="invite_instructor_last_name" placeholder="' . esc_attr__( 'Last Name', 'cp' ) . '"/>
-							<label for="invite_instructor_email">' . esc_html__( 'E-Mail', 'cp' ) . '</label>
+			$content .= '<label for="invite_instructor_first_name">' . esc_html__( 'First Name', 'CP_TD' ) . '</label>
+							<input type="text" name="invite_instructor_first_name" placeholder="' . esc_attr__( 'First Name', 'CP_TD' ) . '"/>
+							<label for="invite_instructor_last_name">' . esc_html__( 'Last Name', 'CP_TD' ) . '</label>
+							<input type="text" name="invite_instructor_last_name" placeholder="' . esc_attr__( 'Last Name', 'CP_TD' ) . '"/>
+							<label for="invite_instructor_email">' . esc_html__( 'E-Mail', 'CP_TD' ) . '</label>
 							<input type="text" name="invite_instructor_email" placeholder="' . esc_attr( $placeholder ) . '"/>
 
 							<div class="submit-message">
-								<input class="button-primary" name="invite_instructor_trigger" id="invite-instructor-trigger" type="button" value="' . esc_attr__( 'Send Invite', 'cp' ) . '">
+								<input class="button-primary" name="invite_instructor_trigger" id="invite-instructor-trigger" type="button" value="' . esc_attr__( 'Send Invite', 'CP_TD' ) . '">
 							</div>
 						</div>
 					</div>
@@ -810,7 +810,7 @@ class CoursePress_Admin_Edit {
 		$setup_class = CoursePress_Data_Course::get_setting( $course_id, 'setup_step_4', '' );
 		$setup_class = (int) CoursePress_Data_Course::get_setting( $course_id, 'setup_marker', 0 ) === 3 ? $setup_class . ' setup_marker' : $setup_class;
 		$content = '
-			<div class="step-title step-4">' . esc_html__( 'Step 4 – Course Dates', 'cp' ) . '
+			<div class="step-title step-4">' . esc_html__( 'Step 4 – Course Dates', 'CP_TD' ) . '
 				<div class="status ' . $setup_class . '"></div>
 			</div>
 			<div class="step-content step-4">
@@ -822,23 +822,23 @@ class CoursePress_Admin_Edit {
 		$content .= '
 				<div class="wide course-dates">
 					<label>' .
-					esc_html__( 'Course Availability', 'cp' ) . '
+					esc_html__( 'Course Availability', 'CP_TD' ) . '
 					</label>
-					<p class="description">' . esc_html__( 'These are the dates that the course will be available to students', 'cp' ) . '</p>
+					<p class="description">' . esc_html__( 'These are the dates that the course will be available to students', 'CP_TD' ) . '</p>
 					<label class="checkbox medium">
 						<input type="checkbox" name="meta_course_open_ended" ' . $open_ended_checked . ' />
-						<span>' . esc_html__( 'This course has no end date', 'cp' ) . '</span>
+						<span>' . esc_html__( 'This course has no end date', 'CP_TD' ) . '</span>
 					</label>
 					<div class="date-range">
 						<div class="start-date">
-							<label for="meta_course_start_date" class="start-date-label required">' . esc_html__( 'Start Date', 'cp' ) . '</label>
+							<label for="meta_course_start_date" class="start-date-label required">' . esc_html__( 'Start Date', 'CP_TD' ) . '</label>
 
 							<div class="date">
 								<input type="text" class="dateinput timeinput" name="meta_course_start_date" value="' . CoursePress_Data_Course::get_setting( $course_id, 'course_start_date', date( 'Y-m-d' ) ) . '"/><i class="calendar"></i>
 							</div>
 						</div>
 						<div class="end-date ' . ( $open_ended_course ? 'disabled' : '' ) . '">
-							<label for="meta_course_end_date" class="end-date-label required">' . esc_html__( 'End Date', 'cp' ) . '</label>
+							<label for="meta_course_end_date" class="end-date-label required">' . esc_html__( 'End Date', 'CP_TD' ) . '</label>
 							<div class="date">
 								<input type="text" class="dateinput" name="meta_course_end_date" value="' . CoursePress_Data_Course::get_setting( $course_id, 'course_end_date', '' ) . '" ' . ( $open_ended_course ? 'disabled="disabled"' : '' ) . ' />
 							</div>
@@ -851,23 +851,23 @@ class CoursePress_Admin_Edit {
 		$content .= '
 				<div class="wide enrollment-dates">
 					<label>' .
-					esc_html__( 'Course Enrollment Dates', 'cp' ) . '
+					esc_html__( 'Course Enrollment Dates', 'CP_TD' ) . '
 					</label>
-					<p class="description">' . esc_html__( 'These are the dates that students will be able to enroll in a course.', 'cp' ) . '</p>
+					<p class="description">' . esc_html__( 'These are the dates that students will be able to enroll in a course.', 'CP_TD' ) . '</p>
 					<label class="checkbox medium">
 						<input type="checkbox" name="meta_enrollment_open_ended" ' . $open_ended_checked . ' />
-						<span>' . esc_html__( 'Students can enroll at any time', 'cp' ) . '</span>
+						<span>' . esc_html__( 'Students can enroll at any time', 'CP_TD' ) . '</span>
 					</label>
 					<div class="date-range enrollment">
 						<div class="start-date ' . ( $open_ended ? 'disabled' : '' ) . '">
-							<label for="meta_enrollment_start_date" class="start-date-label required">' . esc_html__( 'Start Date', 'cp' ) . '</label>
+							<label for="meta_enrollment_start_date" class="start-date-label required">' . esc_html__( 'Start Date', 'CP_TD' ) . '</label>
 
 							<div class="date">
 								<input type="text" class="dateinput" name="meta_enrollment_start_date" value="' . CoursePress_Data_Course::get_setting( $course_id, 'enrollment_start_date', '' ) . '"/><i class="calendar"></i>
 							</div>
 						</div>
 						<div class="end-date ' . ( $open_ended ? 'disabled' : '' ) . '">
-							<label for="meta_enrollment_end_date" class="end-date-label required">' . esc_html__( 'End Date', 'cp' ) . '</label>
+							<label for="meta_enrollment_end_date" class="end-date-label required">' . esc_html__( 'End Date', 'CP_TD' ) . '</label>
 							<div class="date">
 								<input type="text" class="dateinput" name="meta_enrollment_end_date" value="' . CoursePress_Data_Course::get_setting( $course_id, 'enrollment_end_date', '' ) . '" ' . ( $open_ended ? 'disabled="disabled"' : '' ) . ' />
 							</div>
@@ -898,7 +898,7 @@ class CoursePress_Admin_Edit {
 		$setup_class = CoursePress_Data_Course::get_setting( $course_id, 'setup_step_5', '' );
 		$setup_class = (int) CoursePress_Data_Course::get_setting( $course_id, 'setup_marker', 0 ) === 4 ? $setup_class . ' setup_marker' : $setup_class;
 		$content = '
-			<div class="step-title step-5">' . esc_html__( 'Step 5 – Classes, Discussion & Workbook', 'cp' ) . '
+			<div class="step-title step-5">' . esc_html__( 'Step 5 – Classes, Discussion & Workbook', 'CP_TD' ) . '
 				<div class="status ' . $setup_class . '"></div>
 			</div>
 			<div class="step-content step-5">
@@ -910,16 +910,16 @@ class CoursePress_Admin_Edit {
 		$content .= '
 				<div class="wide class-size">
 					<label>' .
-					esc_html__( 'Class Size', 'cp' ) . '
+					esc_html__( 'Class Size', 'CP_TD' ) . '
 					</label>
-					<p class="description">' . esc_html__( 'Use this setting to set a limit for all classes. Uncheck for unlimited class size(s).', 'cp' ) . '</p>
+					<p class="description">' . esc_html__( 'Use this setting to set a limit for all classes. Uncheck for unlimited class size(s).', 'CP_TD' ) . '</p>
 					<label class="narrow col">
 						<input type="checkbox" name="meta_class_limited" ' . $limit_checked . ' />
-						<span>' . esc_html__( 'Limit class size', 'cp' ) . '</span>
+						<span>' . esc_html__( 'Limit class size', 'CP_TD' ) . '</span>
 					</label>
 
 					<label class="num-students narrow col ' . ( $limited ? '' : 'disabled' ) . '">
-						' . esc_html__( 'Number of students', 'cp' ) . '
+						' . esc_html__( 'Number of students', 'CP_TD' ) . '
 						<input type="text" class="spinners" name="meta_class_size" value="' . CoursePress_Data_Course::get_setting( $course_id, 'class_size', '' ) . '" ' . ( $limited ? '' : 'disabled="disabled"' ) . '/>
 					</label>
 				</div>';
@@ -927,24 +927,24 @@ class CoursePress_Admin_Edit {
 		$content .= '
 				<div class="wide">
 					<label>' .
-					esc_html__( 'Course Discussion', 'cp' ) . '
+					esc_html__( 'Course Discussion', 'CP_TD' ) . '
 					</label>
-					<p class="description">' . esc_html__( 'If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'cp' ) . '</p>
+					<p class="description">' . esc_html__( 'If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'CP_TD' ) . '</p>
 					<label class="checkbox">
 						<input type="checkbox" name="meta_allow_discussion" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'allow_discussion', false ) ) . ' />
-						<span>' . esc_html__( 'Allow course discussion', 'cp' ) . '</span>
+						<span>' . esc_html__( 'Allow course discussion', 'CP_TD' ) . '</span>
 					</label>
 				</div>';
 
 		$content .= '
 				<div class="wide">
 					<label>' .
-					esc_html__( 'Student Workbook', 'cp' ) . '
+					esc_html__( 'Student Workbook', 'CP_TD' ) . '
 					</label>
-					<p class="description">' . esc_html__( 'If checked, students can see their progress and grades.', 'cp' ) . '</p>
+					<p class="description">' . esc_html__( 'If checked, students can see their progress and grades.', 'CP_TD' ) . '</p>
 					<label class="checkbox">
 						<input type="checkbox" name="meta_allow_workbook" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'allow_workbook', false ) ) . ' />
-						<span>' . esc_html__( 'Show student workbook', 'cp' ) . '</span>
+						<span>' . esc_html__( 'Show student workbook', 'CP_TD' ) . '</span>
 					</label>
 				</div>';
 
@@ -976,10 +976,10 @@ class CoursePress_Admin_Edit {
 		$setup_class = CoursePress_Data_Course::get_setting( $course_id, 'setup_step_6', '' );
 		$setup_class = (int) CoursePress_Data_Course::get_setting( $course_id, 'setup_marker', 0 ) === 5 ? $setup_class . ' setup_marker' : $setup_class;
 
-		$payment_tagline = ! $disable_payment ? __( ' & Course Cost', 'cp' ) : '';
+		$payment_tagline = ! $disable_payment ? __( ' & Course Cost', 'CP_TD' ) : '';
 
 		$content = '
-			<div class="step-title step-6">' . esc_html( sprintf( __( 'Step 6 – Enrollment%s', 'cp' ), $payment_tagline ) ) . '
+			<div class="step-title step-6">' . esc_html( sprintf( __( 'Step 6 – Enrollment%s', 'CP_TD' ), $payment_tagline ) ) . '
 				<div class="status ' . $setup_class . '"></div>
 			</div>
 			<div class="step-content step-6">
@@ -991,9 +991,9 @@ class CoursePress_Admin_Edit {
 		$enrollment_types = CoursePress_Data_Course::get_enrollment_types_array( $course_id );
 
 		$content .= '<div class="wide">';
-		$content .= sprintf( '<label>%s</label>', esc_html__( 'Enrollment Restrictions', 'cp' ) );
+		$content .= sprintf( '<label>%s</label>', esc_html__( 'Enrollment Restrictions', 'CP_TD' ) );
 
-		$content .= '<p class="description">' . esc_html__( 'Select the limitations on accessing and enrolling in this course.', 'cp' ) . '</p>';
+		$content .= '<p class="description">' . esc_html__( 'Select the limitations on accessing and enrolling in this course.', 'CP_TD' ) . '</p>';
 		/**
 		 * select
 		 */
@@ -1009,9 +1009,9 @@ class CoursePress_Admin_Edit {
 		$class_extra = is_rtl() ? 'chosen-rtl' : '';
 		$content .= '
 					<label>' .
-					esc_html__( 'Prerequisite Courses', 'cp' ) .
+					esc_html__( 'Prerequisite Courses', 'CP_TD' ) .
 					'</label>
-					<p class="description">' . esc_html__( 'Select the courses a student needs to complete before enrolling in this course', 'cp' ) . '</p>
+					<p class="description">' . esc_html__( 'Select the courses a student needs to complete before enrolling in this course', 'CP_TD' ) . '</p>
 					<select name="meta_enrollment_prerequisite" class="medium chosen-select chosen-select-course ' . $class_extra . '" multiple="true" data-placeholder=" ">
 			';
 
@@ -1041,9 +1041,9 @@ class CoursePress_Admin_Edit {
 
 		$content .= '
 				<label>' .
-					esc_html__( 'Course Passcode', 'cp' ) .
+					esc_html__( 'Course Passcode', 'CP_TD' ) .
 					'</label>
-				<p class="description">' . esc_html__( 'Enter the passcode required to access this course', 'cp' ) . '</p>
+				<p class="description">' . esc_html__( 'Enter the passcode required to access this course', 'CP_TD' ) . '</p>
 				<input type="text" name="meta_enrollment_passcode" value="' . CoursePress_Data_Course::get_setting( $course_id, 'enrollment_passcode', '' ) . '" />
 			';
 
@@ -1059,12 +1059,12 @@ class CoursePress_Admin_Edit {
 				<hr class="separator" />
 				<div class="wide">
 					<label>' .
-						esc_html__( 'Course Payment', 'cp' ) . '
+						esc_html__( 'Course Payment', 'CP_TD' ) . '
 					</label>
-					<p class="description">' . esc_html__( 'Payment options for your course. Additional plugins are required and settings vary depending on the plugin.', 'cp' ) . '</p>
+					<p class="description">' . esc_html__( 'Payment options for your course. Additional plugins are required and settings vary depending on the plugin.', 'CP_TD' ) . '</p>
 					<label class="checkbox narrow">
 						<input type="checkbox" name="meta_payment_paid_course" ' . $paid_checked . ' />
-						<span>' . esc_html__( 'This is a paid course', 'cp' ) . '</span>
+						<span>' . esc_html__( 'This is a paid course', 'CP_TD' ) . '</span>
 					</label>
 				</div>';
 		}
@@ -1078,15 +1078,15 @@ class CoursePress_Admin_Edit {
 
 			if ( current_user_can( 'install_plugins' ) || current_user_can( 'activate_plugins ' ) ) {
 				$install_message = sprintf( __( '<p>To start selling your course, please install and activate MarketPress here:</p>
-								<a href="%s">Activate MarketPress</a>', 'cp' ), esc_url_raw( admin_url( 'admin.php?page=coursepress_settings&tab=extensions' ) ) );
+								<a href="%s">Activate MarketPress</a>', 'CP_TD' ), esc_url_raw( admin_url( 'admin.php?page=coursepress_settings&tab=extensions' ) ) );
 			} else {
-				$install_message = __( '<p>Please contact your administrator to enable MarketPress for your site.</p>', 'cp' );
+				$install_message = __( '<p>Please contact your administrator to enable MarketPress for your site.</p>', 'CP_TD' );
 			}
 
 			if ( CP_IS_PREMIUM ) {
-				$version_message = __( '<p>The full version of MarketPress has been bundled with CoursePress Pro.</p>', 'cp' );
+				$version_message = __( '<p>The full version of MarketPress has been bundled with CoursePress Pro.</p>', 'CP_TD' );
 			} else {
-				$version_message = __( '<p>You can use the free or premium version of MarketPress to sell your courses.</p>', 'cp' );
+				$version_message = __( '<p>You can use the free or premium version of MarketPress to sell your courses.</p>', 'CP_TD' );
 			}
 
 			$class = $is_paid ? '' : 'hidden';
@@ -1101,7 +1101,7 @@ class CoursePress_Admin_Edit {
 					%s
 					<p>Other supported plugins: WooCommerce</p>
 				</div>
-			', 'cp' ), $class, $version_message, $install_message ), $course_id );
+			', 'CP_TD' ), $class, $version_message, $install_message ), $course_id );
 
 			// It's already been filtered, but because we're dealing with HTML, lets be sure
 			$content .= CoursePress_Helper_Utility::filter_content( $payment_message );
@@ -1151,22 +1151,22 @@ class CoursePress_Admin_Edit {
 		/**
 		 * Pre-Completion Page
 		 */
-		$pre_completion_title = CoursePress_Data_Course::get_setting( $course_id, 'pre_completion_title', __( 'Almost there!', 'cp' ) );
-		$pre_completion_content = sprintf( '<h3>%s</h3>', __( 'You have completed the course!', 'cp' ) );
-		$pre_completion_content .= sprintf( '<p>%s</p>', __( 'Your submitted business plan will be reviewed, and you\'ll hear back from me on whether you pass or fail.', 'cp' ) );
+		$pre_completion_title = CoursePress_Data_Course::get_setting( $course_id, 'pre_completion_title', __( 'Almost there!', 'CP_TD' ) );
+		$pre_completion_content = sprintf( '<h3>%s</h3>', __( 'You have completed the course!', 'CP_TD' ) );
+		$pre_completion_content .= sprintf( '<p>%s</p>', __( 'Your submitted business plan will be reviewed, and you\'ll hear back from me on whether you pass or fail.', 'CP_TD' ) );
 		$pre_completion_content = CoursePress_Data_Course::get_setting( $course_id, 'pre_completion_content', $pre_completion_content );
 		$pre_completion_content = htmlspecialchars_decode( $pre_completion_content );
 
 		/**
 		 * Course Completion Page
 		 */
-		$completion_title = CoursePress_Data_Course::get_setting( $course_id, 'course_completion_title', __( 'Congratulations, You Passed!', 'cp' ) );
-		$completion_content = sprintf( '<p>%s</p>', __( 'Woohoo! You\'ve passed COURSE_NAME!', 'cp' ) );
+		$completion_title = CoursePress_Data_Course::get_setting( $course_id, 'course_completion_title', __( 'Congratulations, You Passed!', 'CP_TD' ) );
+		$completion_content = sprintf( '<p>%s</p>', __( 'Woohoo! You\'ve passed COURSE_NAME!', 'CP_TD' ) );
 		$completion_content = CoursePress_Data_Course::get_setting( $course_id, 'course_completion_content', $completion_content );
 		$completion_content = htmlspecialchars_decode( $completion_content );
 
 		$content = '<div class="step-title step-7">'
-			. esc_html( 'Step 7 - Course Completion', 'cp' )
+			. esc_html( 'Step 7 - Course Completion', 'CP_TD' )
 			. '<div class="status '. $setup_class . '"></div>'
 			. '</div>';
 
@@ -1177,11 +1177,11 @@ class CoursePress_Admin_Edit {
 		$minimum_grade = CoursePress_Data_Course::get_setting( $course_id, 'minimum_grade_required', 100 );
 
 		$content .= '<div class="wide minimum-grade">';
-		$content .= sprintf( '<label class="required" for="meta_minimum_grade_required">%s</label> ', __( 'Minimum Grade Required', 'cp' ) );
+		$content .= sprintf( '<label class="required" for="meta_minimum_grade_required">%s</label> ', __( 'Minimum Grade Required', 'CP_TD' ) );
 		$content .= sprintf( '<input type="number" id="meta_minimum_grade_required" name="meta_minimum_grade_required" value="%d" min="0" max="100" class="text-small" />', esc_attr__( $minimum_grade ) );
 		$content .= sprintf(
 			'<p class="description">%s</p>',
-			__( 'The minimum grade required to marked course completion and send course certficates.', 'cp' )
+			__( 'The minimum grade required to marked course completion and send course certficates.', 'CP_TD' )
 		);
 		$content .= '</div>';
 
@@ -1194,43 +1194,43 @@ class CoursePress_Admin_Edit {
 			'DOWNLOAD_CERTIFICATE_BUTTON',
 			'STUDENT_WORKBOOK',
 		);
-		$token_info = '<p class="description" style="margin-bottom: -25px;">'. __( sprintf( 'Use these tokens to display actual course details: %s', implode( ', ', $tokens ) ), 'cp' ) . '</p>';
+		$token_info = '<p class="description" style="margin-bottom: -25px;">'. __( sprintf( 'Use these tokens to display actual course details: %s', implode( ', ', $tokens ) ), 'CP_TD' ) . '</p>';
 
 		// Pre-completion page
 		$content .= '<div class="wide page-pre-completion">'
-			. '<label>' . __( 'Pre-Completion Page', 'cp' ) . '</label>'
-			. '<p class="description">' . __( 'Use the fields below to show custom pre-completion page after the student completed the course but require final assessment from instructors.', 'cp' ) . '</p>'
-			. '<label for="meta_pre_completion_title" class="required">' . __( 'Page Title', 'cp' ) . '</label>'
+			. '<label>' . __( 'Pre-Completion Page', 'CP_TD' ) . '</label>'
+			. '<p class="description">' . __( 'Use the fields below to show custom pre-completion page after the student completed the course but require final assessment from instructors.', 'CP_TD' ) . '</p>'
+			. '<label for="meta_pre_completion_title" class="required">' . __( 'Page Title', 'CP_TD' ) . '</label>'
 			. '<input type="text" class="wide" name="meta_pre_completion_title" value="'. esc_attr( $pre_completion_title ) . '" />'
-			. '<label for="meta_pre_completion_content" class="required">' . __( 'Page Content', 'cp' ) . '</label>'
+			. '<label for="meta_pre_completion_content" class="required">' . __( 'Page Content', 'CP_TD' ) . '</label>'
 			. $token_info
 		;
 		$content .= self::get_wp_editor( 'pre-completion-content', 'meta_pre_completion_content', $pre_completion_content );
 		$content .= '</div>';
 
 		$content .= '<div class="wide page-completion">'
-			. '<label>' . __( 'Course Completion Page', 'cp' ) . '</label>'
-			. '<p class="description">' . __( 'Use the fields below to show a custom page after successfull course completion.', 'cp' ) . '</p>'
-			. '<label for="meta_course_completion_title" class="required">' . __( 'Page Title', 'cp' ) . '</label>'
+			. '<label>' . __( 'Course Completion Page', 'CP_TD' ) . '</label>'
+			. '<p class="description">' . __( 'Use the fields below to show a custom page after successfull course completion.', 'CP_TD' ) . '</p>'
+			. '<label for="meta_course_completion_title" class="required">' . __( 'Page Title', 'CP_TD' ) . '</label>'
 			. '<input type="text" class="widefat" name="meta_course_completion_title" value="'. esc_attr( $completion_title ) . '" />'
 		;
 
-		$content .= '<label for="meta_course_completion_content" class="required">' . __( 'Page Content', 'cp' ) . '</label>' . $token_info;
+		$content .= '<label for="meta_course_completion_content" class="required">' . __( 'Page Content', 'CP_TD' ) . '</label>' . $token_info;
 		$content .= self::get_wp_editor( 'course-completion-editor-content', 'meta_course_completion_content', $completion_content );
 		$content .= '</div>';
 
 		// Fail info
-		$failed_title = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_title', __( 'Sorry, you did not pass this course!', 'cp' ) );
-		$failed_content = __( 'I\'m sorry to say you didn\'t pass COURSE_NAME. Better luck next time!', 'cp' );
+		$failed_title = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_title', __( 'Sorry, you did not pass this course!', 'CP_TD' ) );
+		$failed_content = __( 'I\'m sorry to say you didn\'t pass COURSE_NAME. Better luck next time!', 'CP_TD' );
 		$failed_content = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_content', $failed_content );
 		$failed_content = htmlspecialchars_decode( $failed_content );
 
 		$content .= '<div class="wide page-failed">
-			<label>' . __( 'Failed Page', 'cp' ) . '</label>
-			<p class="description">'. __( 'Use the fields below to display failure page when an student completed a course but fail to reach the minimum required grade.', 'cp' ) . '</p>
-			<label for="meta_course_failed_title" class="required">'. __( 'Page Title', 'cp' ) . '</label>
+			<label>' . __( 'Failed Page', 'CP_TD' ) . '</label>
+			<p class="description">'. __( 'Use the fields below to display failure page when an student completed a course but fail to reach the minimum required grade.', 'CP_TD' ) . '</p>
+			<label for="meta_course_failed_title" class="required">'. __( 'Page Title', 'CP_TD' ) . '</label>
 			<input type="text" class="widefat" name="meta_course_failed_title" value="'. esc_attr__( $failed_title ) . '" />
-			<label for="meta_course_field_content" class="required">'. __( 'Page Content', 'cp' ) . '</label>'
+			<label for="meta_course_field_content" class="required">'. __( 'Page Content', 'CP_TD' ) . '</label>'
 			. $token_info;
 		$content .= self::get_wp_editor( 'course-failed-content', 'meta_course_failed_content', $failed_content );
 		$content .= '</div>';
@@ -1268,31 +1268,31 @@ class CoursePress_Admin_Edit {
 		$class = cp_is_true( $value )? '':'hidden';
 
 		$content .= '<div class="wide course-certificate">';
-		$content .= sprintf( '<br /><h3>%s</h3>', esc_html__( 'Course Certificate', 'cp' ) );
+		$content .= sprintf( '<br /><h3>%s</h3>', esc_html__( 'Course Certificate', 'CP_TD' ) );
 		$content .= sprintf(
 			'<a href="%s" target="_blank" class="button button-default btn-cert %s" style="float:right;margin-top:-35px;">%s</a>',
 			esc_url( $certificate_link ),
 			esc_attr( $class ),
-			esc_html__( 'Preview', 'cp' )
+			esc_html__( 'Preview', 'CP_TD' )
 		);
 		$content .= '<label>';
-		$content .= '<input type="checkbox" name="meta_basic_certificate" value="1" '. checked( 1, $value, false ) . ' /> '. __( 'Override course certificate.', 'cp' )
+		$content .= '<input type="checkbox" name="meta_basic_certificate" value="1" '. checked( 1, $value, false ) . ' /> '. __( 'Override course certificate.', 'CP_TD' )
 
 			. '</label>'
-			. '<p class="description">' . __( 'Use this field to override general course certificate setting.', 'cp' ) . '</p>';
+			. '<p class="description">' . __( 'Use this field to override general course certificate setting.', 'CP_TD' ) . '</p>';
 		$content .= sprintf( '<div class="options %s">', cp_is_true( $value )? '':'hidden' );
-		$content .= '<label for="meta_basic_certificate_layout">' . __( 'Certificate Content', 'cp' ) . '</label>'
-			. '<p class="description" style="float:left;">' . __( 'Useful tokens: ', 'cp' ) . implode( ', ', $field_keys ) . '</p>'
+		$content .= '<label for="meta_basic_certificate_layout">' . __( 'Certificate Content', 'CP_TD' ) . '</label>'
+			. '<p class="description" style="float:left;">' . __( 'Useful tokens: ', 'CP_TD' ) . implode( ', ', $field_keys ) . '</p>'
 		;
 		$content .= self::get_wp_editor( 'basic-certificate-layout', 'meta_basic_certificate', $certficate_content );
 		$content .= '<table class="wide"><tr><td style="width:20%;">'
-			. '<label>' . __( 'Background Image', 'cp' ) . '</label>'
+			. '<label>' . __( 'Background Image', 'CP_TD' ) . '</label>'
 			. '</td><td>';
 		$content .= CoursePress_Helper_UI::browse_media_field(
 			'meta_certificate_background',
 			'meta_certificate_background',
 			array(
-				'placeholder' => __( 'Choose background image', 'cp' ),
+				'placeholder' => __( 'Choose background image', 'CP_TD' ),
 				'type' => 'image',
 				'value' => CoursePress_Data_Course::get_setting( $course_id, 'certificate_background', '' ),
 			)
@@ -1303,15 +1303,15 @@ class CoursePress_Admin_Edit {
 		$padding_bottom = CoursePress_Helper_Utility::get_array_val( $cert_padding, 'bottom', '' );
 		$padding_left = CoursePress_Helper_Utility::get_array_val( $cert_padding, 'left', '' );
 		$padding_right = CoursePress_Helper_Utility::get_array_val( $cert_padding, 'right', '' );
-		$content .= '<tr><td><label>' . __( 'Content Padding', 'cp' ) . '</label></td><td>';
-		$content .= __( 'Top', 'cp' ) . ': <input type="text" size="10" name="meta_cert_padding[top]" value="'. esc_attr( $padding_top ) . '" />';
-		$content .= __( 'Bottom', 'cp' ) . ': <input type="text" size="10" name="meta_cert_padding[bottom]" value="'. esc_attr( $padding_bottom ) .'" />';
-		$content .= __( 'Left', 'cp' ) . ': <input type="text" size="10" name="meta_cert_padding[left]" value="'. esc_attr( $padding_left ) . '" />';
-		$content .= __( 'Right', 'cp' ) . ': <input type="text" size="10" name="meta_cert_padding[right]" value="'. esc_attr( $padding_right ) . '" />';
+		$content .= '<tr><td><label>' . __( 'Content Padding', 'CP_TD' ) . '</label></td><td>';
+		$content .= __( 'Top', 'CP_TD' ) . ': <input type="text" size="10" name="meta_cert_padding[top]" value="'. esc_attr( $padding_top ) . '" />';
+		$content .= __( 'Bottom', 'CP_TD' ) . ': <input type="text" size="10" name="meta_cert_padding[bottom]" value="'. esc_attr( $padding_bottom ) .'" />';
+		$content .= __( 'Left', 'CP_TD' ) . ': <input type="text" size="10" name="meta_cert_padding[left]" value="'. esc_attr( $padding_left ) . '" />';
+		$content .= __( 'Right', 'CP_TD' ) . ': <input type="text" size="10" name="meta_cert_padding[right]" value="'. esc_attr( $padding_right ) . '" />';
 		$content .= '</td></tr>';
-		$content .= '<tr><td><label>' . __( 'Page Orientation', 'cp' ) . '</label></td><td>';
-		$content .= '<label style="float:left;margin-right:25px;"><input type="radio" name="meta_page_orientation" value="L" '. checked( 'L', CoursePress_Data_Course::get_setting( $course_id, 'page_orientation', 'L' ), false ) .' /> ' . __( 'Landscape', 'cp' ) . '</label>';
-		$content .= '<label style="float:left;"><input type="radio" name="meta_page_orientation" value="P" '. checked( 'P', CoursePress_Data_Course::get_setting( $course_id, 'page_orientation', '' ), false ) .'/>' . __( 'Portrait', 'cp' ) . '</label>';
+		$content .= '<tr><td><label>' . __( 'Page Orientation', 'CP_TD' ) . '</label></td><td>';
+		$content .= '<label style="float:left;margin-right:25px;"><input type="radio" name="meta_page_orientation" value="L" '. checked( 'L', CoursePress_Data_Course::get_setting( $course_id, 'page_orientation', 'L' ), false ) .' /> ' . __( 'Landscape', 'CP_TD' ) . '</label>';
+		$content .= '<label style="float:left;"><input type="radio" name="meta_page_orientation" value="P" '. checked( 'P', CoursePress_Data_Course::get_setting( $course_id, 'page_orientation', '' ), false ) .'/>' . __( 'Portrait', 'CP_TD' ) . '</label>';
 		$content .= '</td></tr>';
 		$content .= '</table></div>';
 		$content .= '</div>';
@@ -1370,7 +1370,7 @@ class CoursePress_Admin_Edit {
 
 				// Set PDF args
 				$args = array(
-					'title' => __( 'Course Completion Certificate', 'cp' ),
+					'title' => __( 'Course Completion Certificate', 'CP_TD' ),
 					'orientation' => $orientation,
 					'image' => $background,
 					'filename' => $filename,

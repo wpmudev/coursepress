@@ -39,7 +39,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 		 */
 		add_meta_box(
 			'submitdiv',
-			__( 'Save', 'cp' ),
+			__( 'Save', 'CP_TD' ),
 			array( __CLASS__, 'box_submitdiv' ),
 			self::$post_type,
 			'side',
@@ -52,7 +52,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 		if ( $add_box_notify_students ) {
 			add_meta_box(
 				'notify-students',
-				__( 'Notify Students', 'cp' ),
+				__( 'Notify Students', 'CP_TD' ),
 				array( $this, 'box_notify_students' ),
 				$post_type,
 				'side'
@@ -64,7 +64,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 	public function get_labels() {
 		self::init();
 		return array(
-			'title' => __( 'CoursePress Notifications', 'cp' ),
+			'title' => __( 'CoursePress Notifications', 'CP_TD' ),
 			'menu_title' => self::get_label_by_name( 'name' ),
 		);
 	}
@@ -107,13 +107,13 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 
 		// Validate
 		if ( empty( $title ) ) {
-			self::$error_message = __( 'No notification title!', 'cp' );
+			self::$error_message = __( 'No notification title!', 'CP_TD' );
 			return;
 		} elseif ( empty( $_POST['post_content'] ) ) {
-			self::$error_message = __( 'No notification content!', 'cp' );
+			self::$error_message = __( 'No notification content!', 'CP_TD' );
 			return;
 		} elseif ( ! empty( $id ) && ! CoursePress_Data_Capabilities::can_update_notification( $id ) ) {
-			self::$error_message = __( 'You do not have permission to edit this notification.', 'cp' );
+			self::$error_message = __( 'You do not have permission to edit this notification.', 'CP_TD' );
 			return;
 		}
 
@@ -246,7 +246,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 	 */
 	public static function get_release_courses( $post ) {
 		echo '<div class="misc-pub-section misc-pub-post-course">';
-		printf( '<label for="course_id">%s</label>', __( 'Course:', 'cp' ) );
+		printf( '<label for="course_id">%s</label>', __( 'Course:', 'CP_TD' ) );
 
 		$the_id = ! empty( $post->ID ) ? $post->ID : 'new';
 
@@ -256,7 +256,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 		$course_id = 'all';
 		if ( 'new' !== $the_id ) {
 			if ( ! CoursePress_Data_Capabilities::can_update_notification( $the_id ) ) {
-				return __( 'You do not have permission to edit this notification.', 'cp' );
+				return __( 'You do not have permission to edit this notification.', 'CP_TD' );
 			}
 			$post = get_post( $the_id );
 			$attributes = CoursePress_Data_Notification::attributes( $the_id );
@@ -266,13 +266,13 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 		$options['value'] = $course_id;
 		if ( CoursePress_Data_Capabilities::can_add_notification_to_all() ) {
 			$options['first_option'] = array(
-				'text' => __( 'All courses', 'cp' ),
+				'text' => __( 'All courses', 'CP_TD' ),
 				'value' => 'all',
 			);
 		} else {
 			$options['courses'] = self::get_courses();
 			if ( empty( $options['courses'] ) ) {
-				return __( 'You do not have permission to add notification.', 'cp' );
+				return __( 'You do not have permission to add notification.', 'CP_TD' );
 			}
 		}
 		echo CoursePress_Helper_UI::get_course_dropdown( 'course_id', 'meta_course_id', false, $options );
@@ -284,8 +284,8 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 		 */
 
 		echo '<div class="misc-pub-section misc-pub-visibility" id="visibility">';
-		_e( 'Receivers:', 'cp' );
-		$visibility_trans = __( 'Unknown', 'cp' );
+		_e( 'Receivers:', 'CP_TD' );
+		$visibility_trans = __( 'Unknown', 'CP_TD' );
 
 		if ( is_numeric( $course_id ) ) {
 
@@ -324,10 +324,10 @@ foreach ( $allowed_options as $key => $data ) {
 </p>
 <?php
 		} else {
-			printf( '<span id="post-visibility-display">%s</span>', __( 'no option available', 'cp' ) );
+			printf( '<span id="post-visibility-display">%s</span>', __( 'no option available', 'CP_TD' ) );
 			echo '<div class="placeholder">';
 			echo '<p class="description">';
-			_e( 'Please choose a course first and save the notification.', 'cp' );
+			_e( 'Please choose a course first and save the notification.', 'CP_TD' );
 			echo '</p>';
 			echo '</div>';
 		}
@@ -386,16 +386,16 @@ foreach ( $allowed_options as $key => $data ) {
 	public static function get_allowed_options( $course_id ) {
 		$allowed_options = array(
 			'enrolled' => array(
-				'label' => __( 'Enrolled students of this course.', 'cp' ),
-				'info' => __( 'Enrolled', 'cp' ),
+				'label' => __( 'Enrolled students of this course.', 'CP_TD' ),
+				'info' => __( 'Enrolled', 'CP_TD' ),
 			),
 			'passed' => array(
-				'label' => __( 'All students who pass this course.', 'cp' ),
-				'info' => __( 'Passed', 'cp' ),
+				'label' => __( 'All students who pass this course.', 'CP_TD' ),
+				'info' => __( 'Passed', 'CP_TD' ),
 			),
 			'failed' => array(
-				'label' => __( 'All students who failed this course.', 'cp' ),
-				'info' => __( 'Failed', 'cp' ),
+				'label' => __( 'All students who failed this course.', 'CP_TD' ),
+				'info' => __( 'Failed', 'CP_TD' ),
 			),
 		);
 		if ( is_numeric( $course_id ) ) {
@@ -403,8 +403,8 @@ foreach ( $allowed_options as $key => $data ) {
 			foreach ( $units as $unit ) {
 				$label = apply_filters( 'the_title', $unit->post_title, $unit->ID );
 				$allowed_options[ 'unit-'.$unit->ID ] = array(
-					'label' => sprintf( __( 'All students who completed "%s".', 'cp' ), $label ),
-					'info' => sprintf( __( 'Unit "%s"', 'cp' ), $label ),
+					'label' => sprintf( __( 'All students who completed "%s".', 'CP_TD' ), $label ),
+					'info' => sprintf( __( 'Unit "%s"', 'CP_TD' ), $label ),
 				);
 			}
 		}

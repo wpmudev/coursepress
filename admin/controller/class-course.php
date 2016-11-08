@@ -65,7 +65,7 @@ class CoursePress_Admin_Controller_Course {
 		$success = false;
 
 		if ( empty( $data->action ) ) {
-			$json_data['message'] = __( 'Course Update: No action.', 'cp' );
+			$json_data['message'] = __( 'Course Update: No action.', 'CP_TD' );
 			wp_send_json_error( $json_data );
 		}
 
@@ -344,7 +344,7 @@ class CoursePress_Admin_Controller_Course {
 					$success = true;
 				} else {
 					$json_data['facilitator_id'] = $data->data->facilitator_id;
-					$json_data['message'] = __( 'Unable to add facilitator!', 'cp' );
+					$json_data['message'] = __( 'Unable to add facilitator!', 'CP_TD' );
 				}
 
 				break;
@@ -438,7 +438,7 @@ class CoursePress_Admin_Controller_Course {
 				if ( wp_verify_nonce( $data->data->nonce, 'send_email_to_enroled_students' ) ) {
 					$course_id = $data->data->course_id;
 					$students = CoursePress_Data_Course::get_students( $course_id );
-					$error_message = __( 'No email sent!', 'cp' );
+					$error_message = __( 'No email sent!', 'CP_TD' );
 
 					// Filter list of students to send email to
 					if ( ! empty( $data->data->send_to ) && 'all' != $data->data->send_to ) {
@@ -469,7 +469,7 @@ class CoursePress_Admin_Controller_Course {
 						if ( count( $filtered_students ) > 0 ) {
 							$students = $filtered_students;
 						} else {
-							$error_message = __( 'No students found!', 'cp' );
+							$error_message = __( 'No students found!', 'CP_TD' );
 							$students = array();
 						}
 					}
@@ -539,7 +539,7 @@ class CoursePress_Admin_Controller_Course {
 								'%d email have been sent successfully.',
 								'%d emails have been sent successfully.',
 								$count,
-								'cp'
+								'CP_TD'
 							),
 							$count
 						);
@@ -549,7 +549,7 @@ class CoursePress_Admin_Controller_Course {
 					}
 				} else {
 					$json_data['message']['to'] = 0;
-					$json_data['message']['info'] = __( 'Something went wrong.', 'cp' );
+					$json_data['message']['info'] = __( 'Something went wrong.', 'CP_TD' );
 				}
 				break;
 
