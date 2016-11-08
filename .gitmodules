@@ -1,18 +1,28 @@
-[submodule "2.0/premium/external/dashboard"]
-	path = 2.0/premium/external/dashboard
-	url = git@bitbucket.org:incsub/wpmudev-dashboard-notification.git
+[submodule "2.0"]
+	path = 2.0
+	url = git@bitbucket.org:incsub/coursepress.git
+	branch = coursepress/2.0-dev
 
 [submodule "2.0/themes/coursepress"]
 	path = 2.0/themes/coursepress
 	url = git@bitbucket.org:incsub/coursepress-theme.git
 	branch = coursepress/2.0-dev
 
+[submodule "2.0/premium/external/dashboard"]
+	path = 2.0/premium/external/dashboard
+	url = git@bitbucket.org:incsub/wpmudev-dashboard-notification.git
+
 [submodule "1.x"]
 	path = 1.x
 	url = git@bitbucket.org:incsub/coursepress.git
 	branch = coursepress/base
 
-[submodule "2.0"]
-	path = 2.0
-	url = git@bitbucket.org:incsub/coursepress.git
-	branch = coursepress/2.0-dev
+[submodule "1.x/includes/external/dashboard"]
+	path = 1.x/includes/external/dashboard
+	url = git@bitbucket.org:incsub/wpmudev-dashboard-notification.git
+
+[submodule "1.x/themes/coursepress"]
+	path = 1.x/themes/coursepress
+	url = git@bitbucket.org:incsub/coursepress-theme.git
+	branch = coursepress/base
+
