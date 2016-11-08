@@ -3477,6 +3477,11 @@ if ( ! class_exists( 'CoursePress' ) ) {
 		}
 
 		function init_vars() {
+			/**
+			 * Fire before init vars
+			 **/
+			do_action( 'coursepress_before_init_vars', $this );
+
 			//setup proper directories
 			if ( defined( 'WP_PLUGIN_URL' ) && defined( 'WP_PLUGIN_DIR' ) && file_exists( WP_PLUGIN_DIR . '/' . $this->dir_name . '/' . basename( __FILE__ ) ) ) {
 				$this->location   = 'subfolder-plugins';
@@ -3497,7 +3502,9 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			$this->screen_base      = str_replace( ' ', '-', strtolower( $this->name ) );
 			$GLOBALS['screen_base'] = $this->screen_base;
 
-			/** Enable filter **/
+			/**
+			 * Fire after init vars
+			 **/
 			do_action( 'coursepress_init_vars', $this );
 		}
 
