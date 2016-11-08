@@ -2,7 +2,7 @@
 /**
  * Test upgrade cycle
  **/
-$data_dir = WP_COURSEPRESS_DIR . 'tests/data/';
+$data_dir = dirname( __DIR__ ) . '/data/';
 
 require $data_dir . 'course.php';
 
