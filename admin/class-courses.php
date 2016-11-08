@@ -226,6 +226,7 @@ class CoursePress_Admin_Courses {
 		$course_url = CoursePress_Data_Course::get_course_url( $course->ID );
 		$can_update = false;
 		$post_type_object = get_post_type_object( $course->post_type );
+		$title = _draft_or_post_title();
 
 		if ( self::can_update_course( $course->ID ) ) {
 			$can_update = true;
@@ -233,37 +234,34 @@ class CoursePress_Admin_Courses {
 			if ( 'trash' != $course->post_status ) {
 				// Add edit link
 				$actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_link ), __( 'Edit', 'CP_TD' ) );
-
 				$edit_units = add_query_arg( 'tab', 'units', $edit_link );
 				$edit_students = add_query_arg( 'tab', 'students', $edit_link );
-
 				$actions['units'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_units ), __( 'Units', 'CP_TD' ) );
 				$actions['students'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_students ), __( 'Students', 'CP_TD' ) );
+
+				/**
+				 * single course export
+				 */
+				$action = 'coursepress_export';
+				$nonce = wp_create_nonce( $action );
+				$url = add_query_arg(
+					array(
+						'page' => $action,
+						'coursepress' => array( 'courses' => array( absint( $course->ID ) ) ),
+						'coursepress_export' => $nonce,
+					),
+					admin_url( 'admin.php' )
+				);
+				$url = wp_nonce_url( $url, $action, $nonce );
+				$actions['export'] = sprintf(
+					'<a href="%s">%s</a>',
+					esc_url( $url ),
+					__( 'Export', 'CP_TD' )
+				);
 			}
-
-			/**
-			 * single course export
-			 */
-			$action = 'coursepress_export';
-			$nonce = wp_create_nonce( $action );
-			$url = add_query_arg(
-				array(
-					'page' => $action,
-					'coursepress' => array( 'courses' => array( absint( $course->ID ) ) ),
-					'coursepress_export' => $nonce,
-				),
-				admin_url( 'admin.php' )
-			);
-
-			$url = wp_nonce_url( $url, $action, $nonce );
-			$actions['export'] = sprintf(
-				'<a href="%s">%s</a>',
-				esc_url( $url ),
-				__( 'Export', 'CP_TD' )
-			);
 		}
 
-		if ( CoursePress_Data_Capabilities::can_create_course( $course->ID ) ) {
+		if ( 'trash' != $course->post_status && CoursePress_Data_Capabilities::can_create_course( $course->ID ) ) {
 			// create a nonce
 			$duplicate_nonce = wp_create_nonce( 'duplicate_course' );
 			$actions['duplicate'] = sprintf( '<a data-nonce="%s" data-id="%s" class="duplicate-course-link">%s</a>', $duplicate_nonce, $course->ID, __( 'Duplicate Course', 'CP_TD' ) );
