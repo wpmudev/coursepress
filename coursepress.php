@@ -140,7 +140,7 @@ class CoursePressUpgrade {
 	 * Set CP 1.x directory name
 	 **/
 	public static function before_init_vars( $instance ) {
-		$instance->dir_name = 'coursepress/1.x';
+		$instance->dir_name = '1.x';
 	}
 
 	public static function init_vars( $instance ) {
