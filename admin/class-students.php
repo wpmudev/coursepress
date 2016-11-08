@@ -43,57 +43,57 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Controller_Menu {
 				/**
 				 * Remove single student
 				 */
-			case 'remove_student':
-				/**
+				case 'remove_student':
+					/**
 				 * Is student_id available?
 				 */
-				if ( ! isset( $_REQUEST['student_id'] ) ) {
-					break;
-				}
-				/**
+					if ( ! isset( $_REQUEST['student_id'] ) ) {
+						break;
+					}
+					/**
 				 * Check nonce.
 				 */
-				$nonce_action = CoursePress_Data_Student::get_nonce_action( $action, $_REQUEST['student_id'] );
-				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], $nonce_action ) ) {
-					break;
-				}
-				/**
+					$nonce_action = CoursePress_Data_Student::get_nonce_action( $action, $_REQUEST['student_id'] );
+					if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], $nonce_action ) ) {
+						break;
+					}
+					/**
 				 * Is course_id available?
 				 */
-				if ( !isset( $_REQUEST['course_id'] ) ) {
-					break;
-				}
-				if ( 'all' == $_REQUEST['course_id'] ) {
-					CoursePress_Data_Student::remove_from_all_courses( $_REQUEST['student_id'] );
-				} else {
-					CoursePress_Data_Course::withdraw_student( $_REQUEST['student_id'], $_REQUEST['course_id'] );
-				}
+					if ( ! isset( $_REQUEST['course_id'] ) ) {
+						break;
+					}
+					if ( 'all' == $_REQUEST['course_id'] ) {
+						CoursePress_Data_Student::remove_from_all_courses( $_REQUEST['student_id'] );
+					} else {
+						CoursePress_Data_Course::withdraw_student( $_REQUEST['student_id'], $_REQUEST['course_id'] );
+					}
 				break;
 				/**
 				 * Bulk action - remove students
 				 */
-			case 'withdraw':
-				if ( ! isset( $_REQUEST['users'] ) ) {
-					break;
-				}
-				if ( empty( $_REQUEST['users'] ) ) {
-					break;
-				}
-				if ( ! is_array( $_REQUEST['users'] ) ) {
-					break;
-				}
-				$nonce_action = 'bulk-users';
-				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], $nonce_action ) ) {
-					break;
-				}
-				$course_id = intval( isset( $_REQUEST['course_id'] )? $_REQUEST['course_id'] : 'all' );
-				foreach ( $_REQUEST['users'] as $student_id ) {
-					if ( 0 === $course_id ) {
-						CoursePress_Data_Student::remove_from_all_courses( $student_id );
-					} else {
-						CoursePress_Data_Course::withdraw_student( $student_id, $course_id );
+				case 'withdraw':
+					if ( ! isset( $_REQUEST['users'] ) ) {
+						break;
 					}
-				}
+					if ( empty( $_REQUEST['users'] ) ) {
+						break;
+					}
+					if ( ! is_array( $_REQUEST['users'] ) ) {
+						break;
+					}
+					$nonce_action = 'bulk-users';
+					if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], $nonce_action ) ) {
+						break;
+					}
+					$course_id = intval( isset( $_REQUEST['course_id'] )? $_REQUEST['course_id'] : 'all' );
+					foreach ( $_REQUEST['users'] as $student_id ) {
+						if ( 0 === $course_id ) {
+							CoursePress_Data_Student::remove_from_all_courses( $student_id );
+						} else {
+							CoursePress_Data_Course::withdraw_student( $student_id, $course_id );
+						}
+					}
 				break;
 			}
 			if ( isset( $_REQUEST['student_id'] ) ) {
@@ -252,6 +252,7 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Controller_Menu {
 		if ( ! empty( $query->results ) ) {
 			if ( ! empty( $user_query->results ) ) {
 				$user_query->results += $query->results;
+				$user_query->total_users += $query->total_users;
 			} else {
 				$user_query = $query;
 			}
@@ -269,6 +270,9 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Controller_Menu {
 				'user_email',
 			),
 		);
+		if ( ! empty( $exclude ) ) {
+			$args2['exclude'] = $exclude;
+		}
 		$user_query2 = new WP_User_Query( $args2 );
 
 		if ( ! empty( $user_query2->results ) ) {
@@ -276,6 +280,7 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Controller_Menu {
 				$user_query->results = array();
 			}
 			$user_query->results += $user_query2->results;
+			$user_query->total_users += $user_query2->total_users;
 		}
 
 		if ( ! empty( $user_query->results ) ) {
@@ -357,5 +362,4 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Controller_Menu {
 		array_push( $columns, 'courses_list' );
 		return $columns;
 	}
-
 }

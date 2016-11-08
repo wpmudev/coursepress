@@ -38,6 +38,7 @@
   padding: 5px 0;
   display: block;
 }
-.coursepress_wrapper .row-actions .user_id {
+.coursepress_wrapper .row-actions .user_id,
+.coursepress_wrapper .row-actions .course_id {
   color: #555;
 }
