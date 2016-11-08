@@ -3481,7 +3481,9 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			 * Fire before init vars
 			 **/
 			do_action( 'coursepress_before_init_vars', $this );
-
+echo 'DIR:' . WP_PLUGIN_DIR;
+echo 'URL:' . WP_PLUGIN_URL;
+echo 'FILE:' . WP_PLUGIN_DIR . '/' . $this->dir_name . '/' . basename( __FILE__ );
 			//setup proper directories
 			if ( defined( 'WP_PLUGIN_URL' ) && defined( 'WP_PLUGIN_DIR' ) && file_exists( WP_PLUGIN_DIR . '/' . $this->dir_name . '/' . basename( __FILE__ ) ) ) {
 				$this->location   = 'subfolder-plugins';
