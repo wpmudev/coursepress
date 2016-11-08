@@ -5,7 +5,7 @@ define( 'WP_COURSEPRESS_DIR', dirname( dirname( __FILE__ ) ) . '/' );
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 
 // Setup environment
-if ( ! empty( $_tests_dir ) ) {
+if ( ! $_tests_dir ) {
 	$_tests_dir = '/tmp/wp-tests/coursepress-tests-lib';
 }
 
