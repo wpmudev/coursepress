@@ -191,7 +191,7 @@ class CoursePress_Tests_Helper {
 			'post_content' => 'test unit content',
 			'post_title' => 'Test Unit Title',
 			'meta_input' => array(
-                'page_title' => array( 'page_1' => 'page one', 'page_2' => 'page two', ),
+				'page_title' => array( 'page_1' => 'page one', 'page_2' => 'page two' ),
 				'show_page_title' => array( true ),
 				'unit_order' => 1,
 			),
@@ -426,11 +426,42 @@ class CoursePress_Tests_Helper {
 		return $this->add_module( $postarr );
 	}
 
+	function add_module_() {
+	}
 
 	/**
-	 * Input Modules
+	 * INPUT MODULES
 	 */
-
+	/**
+	 * Multiple Choice
+	 */
+	private function add_module_multiple_choice() {
+		$postarr = (object) array(
+			'post_author' => $this->admin->ID,
+			'post_status' => 'publish',
+			'post_type' => CoursePress_Data_Module::get_post_type_name(),
+			'post_parent' => $this->unit->ID,
+			'post_content' => 'Lorem Ipsum Multiple Choice',
+			'post_title' => ' Module Multiple Choice',
+			'meta_input' => array(
+				'allow_retries' => 1,
+				'answers' => array( 'Answer A', 'Answer B', 'Answer C', 'Answer D' ),
+				'answers_selected' => array( 0, 2 ),
+				'assessable' => 1,
+				'duration' => '0:00',
+				'mandatory' => 0,
+				'minimum_grade' => 100,
+				'module_order' => 1,
+				'module_page' => 2,
+				'module_type' => 'input-checkbox',
+				'order' => 0,
+				'retry_attempts' => 0,
+				'show_title' => 1,
+				'use_timer' => '',
+			),
+		);
+		return $this->add_module( $postarr );
+	}
 
 	/**
 	 * Module Single Choice
@@ -441,11 +472,11 @@ class CoursePress_Tests_Helper {
 			'post_status' => 'publish',
 			'post_type' => CoursePress_Data_Module::get_post_type_name(),
 			'post_parent' => $this->unit->ID,
-			'post_description' => 'Nullam auctor commodo eleifend. Integer aliquet, ex a rutrum tempor, mauris dolor finibus orci, elementum auctor lorem quam eu nibh.',
+			'post_content' => 'Lorem Ipsum Single Choice',
 			'post_title' => 'Single Choice Module',
 			'meta_input' => array(
 				'allow_retries' => 1,
-				'answers' => 'a:2:{i:0;s:8:"Answer A";i:1;s:8:"Answer B";}',
+				'answers' => array( 'Answer A', 'Answer B' ),
 				'answers_selected' => 0,
 				'assessable' => 1,
 				'duration' => '0:00',
@@ -465,7 +496,98 @@ class CoursePress_Tests_Helper {
 	}
 
 	/**
-	 * Module File Upload Module
+	 * Selectable
+	 */
+	private function add_module_selectable() {
+		$postarr = (object) array(
+			'post_author' => $this->admin->ID,
+			'post_status' => 'publish',
+			'post_type' => CoursePress_Data_Module::get_post_type_name(),
+			'post_parent' => $this->unit->ID,
+			'post_content' => 'Lorem Ipsum Selectable',
+			'post_title' => 'Selectable Module',
+			'meta_input' => array(
+				'allow_retries' => 1,
+				'answers' => array( 'Answer A', 'Answer B', 'Answer C', 'Answer D' ),
+				'answers_selected' => 0,
+				'assessable' => 1,
+				'duration' => '0:00',
+				'mandatory' => 0,
+				'minimum_grade' => 100,
+				'module_order' => 3,
+				'module_page' => 2,
+				'module_type' => 'input-select',
+				'order' => 0,
+				'retry_attempts' => 0,
+				'show_title' => 1,
+				'use_timer' => '',
+			),
+		);
+		return $this->add_module( $postarr );
+	}
+
+	/**
+	 * Short Answer
+	 */
+	private function add_module_short_answer() {
+		$postarr = (object) array(
+			'post_author' => $this->admin->ID,
+			'post_status' => 'publish',
+			'post_type' => CoursePress_Data_Module::get_post_type_name(),
+			'post_parent' => $this->unit->ID,
+			'post_content' => 'Lorem Ipsum Short Answer',
+			'post_title' => 'Short Answer Module',
+			'meta_input' => array(
+				'allow_retries' => 1,
+				'assessable' => 1,
+				'duration' => '0:00',
+				'mandatory' => 0,
+				'minimum_grade' => 100,
+				'module_order' => 4,
+				'module_page' => 2,
+				'module_type' => 'input-text',
+				'order' => 0,
+				'placeholder_text' => 'Placeholder text for Short Answer',
+				'retry_attempts' => 0,
+				'show_title' => 1,
+				'use_timer' => '',
+			),
+		);
+		return $this->add_module( $postarr );
+	}
+
+	/**
+	 * Long Answer
+	 */
+	private function add_module_long_answer() {
+		$postarr = (object) array(
+			'post_author' => $this->admin->ID,
+			'post_status' => 'publish',
+			'post_type' => CoursePress_Data_Module::get_post_type_name(),
+			'post_parent' => $this->unit->ID,
+			'post_content' => 'Lorem Ipsum Long Answer',
+			'post_title' => 'Long Answer Module',
+			'meta_input' => array(
+				'allow_retries' => 1,
+				'assessable' => 1,
+				'duration' => '0:00',
+				'mandatory' => 0,
+				'minimum_grade' => 100,
+				'module_order' => 5,
+				'module_page' => 2,
+				'module_type' => 'input-textarea',
+				'order' => 0,
+				'placeholder_text' => 'Placeholder text for Long Answer',
+				'retry_attempts' => 0,
+				'show_title' => 1,
+				'use_timer' => '',
+			),
+		);
+		return $this->add_module( $postarr );
+	}
+
+	/**
+	 * File Upload
 	 */
 	private function add_module_file_upload() {
 		$postarr = (object) array(
@@ -473,7 +595,7 @@ class CoursePress_Tests_Helper {
 			'post_status' => 'publish',
 			'post_type' => CoursePress_Data_Module::get_post_type_name(),
 			'post_parent' => $this->unit->ID,
-			'post_description' => 'Nullam auctor commodo eleifend. Integer aliquet, ex a rutrum tempor, mauris dolor finibus orci, elementum auctor lorem quam eu nibh.',
+			'post_content' => 'Lorem Ipsum File Upload',
 			'post_title' => 'File Upload Module Module',
 			'meta_input' => array(
 				'allow_retries' => 1,
@@ -482,7 +604,7 @@ class CoursePress_Tests_Helper {
 				'instructor_assessable' => 1,
 				'mandatory' => 0,
 				'minimum_grade' => 100,
-				'module_order' => 3,
+				'module_order' => 6,
 				'module_page' => 1,
 				'module_type' => 'input-upload',
 				'order' => 0,
@@ -494,6 +616,103 @@ class CoursePress_Tests_Helper {
 		return $this->add_module( $postarr );
 	}
 
+	/**
+	 * Quiz
+	 */
+	private function add_module_quiz() {
+		$postarr = (object) array(
+			'post_author' => $this->admin->ID,
+			'post_status' => 'publish',
+			'post_type' => CoursePress_Data_Module::get_post_type_name(),
+			'post_parent' => $this->unit->ID,
+			'post_content' => 'Lorem Ipsum Quiz',
+			'post_title' => 'Quiz Module',
+			'meta_input' => array(
+				'allow_retries' => 1,
+				'assessable' => 1,
+				'duration' => '0:00',
+				'mandatory' => 0,
+				'minimum_grade' => 100,
+				'module_order' => 7,
+				'module_page' => 2,
+				'module_type' => 'input-quiz',
+				'order' => 0,
+				'questions' => array(
+					array(
+						'type' => 'multiple',
+						'question' => 'Multiple Choice:',
+						'options' => array(
+							'answers' => array( 'Answer A', 'Answer B', 'Answer C', 'Answer D' ),
+							'checked' => array( 1, 1, '', '' ),
+							),
+						),
+						array(
+							'type' => 'single',
+							'question' => 'Single Choice:￼',
+							'options' => array(
+								'answers' => array( 'Answer A', 'Answer B' ),
+								'checked' => array( 1, '' ),
+								),
+							),
+						),
+				'retry_attempts' => 0,
+				'show_title' => 1,
+				'use_timer' => '',
+			),
+		);
+		return $this->add_module( $postarr );
+	}
+
+	/**
+	 * Form
+	 */
+	private function add_module_form() {
+		$postarr = (object) array(
+			'post_author' => $this->admin->ID,
+			'post_status' => 'publish',
+			'post_type' => CoursePress_Data_Module::get_post_type_name(),
+			'post_parent' => $this->unit->ID,
+			'post_content' => 'Lorem Ipsum Form',
+			'post_title' => 'Form Module',
+			'meta_input' => array(
+				'allow_retries' => 1,
+				'assessable' => 1,
+				'duration' => '0:00',
+				'mandatory' => 0,
+				'minimum_grade' => 100,
+				'module_order' => 8,
+				'module_page' => 2,
+				'module_type' => 'input-form',
+				'order' => 0,
+				'questions' => array(
+					array(
+						'type' => 'short',
+						'question' => 'Short Answer:',
+						'options' => array(),
+						'placeholder' => 'Placeholder Text',
+					),
+					array(
+						'type' => 'long',
+						'question' => 'Long Answer:',
+						'options' => array(),
+						'placeholder' => 'Placeholder Text',
+					),
+					array(
+						'type' => 'selectable',
+						'question' => 'Selectable Choice:',
+						'options' => array(
+							'answers' => array( 'Answer A', 'Answer B' ),
+							'checked' => array( 1, '' ),
+							),
+						),
+					),
+				'retry_attempts' => 0,
+				'show_title' => 1,
+				'use_timer' => '',
+			),
+		);
+		return $this->add_module( $postarr );
+	}
 
 	private function add_modules( $unit ) {
 		$this->admin = get_user_by( 'login', 'admin' );
@@ -509,20 +728,14 @@ class CoursePress_Tests_Helper {
 		$modules[] = $this->add_module_file_download();
 		$modules[] = $this->add_module_zipped_object();
 		$modules[] = $this->add_module_discussion();
-		/*
-            $modules[] = $this->add_module_multiple_choice();
-         */
+		$modules[] = $this->add_module_multiple_choice();
 		$modules[] = $this->add_module_single_choice();
-		/*
 		$modules[] = $this->add_module_selectable();
 		$modules[] = $this->add_module_short_answer();
-        $modules[] = $this->add_module_long_answer();
-         */
+		$modules[] = $this->add_module_long_answer();
 		$modules[] = $this->add_module_file_upload();
-		/*
 		$modules[] = $this->add_module_quiz();
-        $modules[] = $this->add_module_form();
-         */
+		$modules[] = $this->add_module_form();
 		/**
 		 * return modules
 		 */
