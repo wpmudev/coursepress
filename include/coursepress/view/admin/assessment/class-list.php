@@ -22,8 +22,8 @@ class CoursePress_View_Admin_Assessment_List {
 
 		self::$action = isset( $_GET['action'] ) && in_array( $_GET['action'], self::$allowed_actions ) ? sanitize_text_field( $_GET['action'] ) : 'new';
 
-		self::$title = __( 'Assessments/CoursePress', 'cp' );
-		self::$menu_title = __( 'Assessments', 'cp' );
+		self::$title = __( 'Assessments/CoursePress', 'CP_TD' );
+		self::$menu_title = __( 'Assessments', 'CP_TD' );
 		self::$feedback_email = new CoursePress_View_Admin_Assessment_FeedbackEmail;
 
 		add_filter( 'coursepress_admin_valid_pages', array( __CLASS__, 'add_valid' ) );
@@ -170,7 +170,7 @@ class CoursePress_View_Admin_Assessment_List {
 				array( 'student_id', 'view_answer' )
 			);
 			$content .= '<span class="cp-right cp-back">'
-				. '<a href="'. esc_url( $back_url ) . '"><span class="dashicons dashicons-arrow-left-alt2"></span> '. __( 'Back', 'cp' ) . '</a>'
+				. '<a href="'. esc_url( $back_url ) . '"><span class="dashicons dashicons-arrow-left-alt2"></span> '. __( 'Back', 'CP_TD' ) . '</a>'
 				. '</span>';
 		}
 
@@ -211,18 +211,18 @@ class CoursePress_View_Admin_Assessment_List {
 			<div class="cp-assessment-page" data-nonce="' . esc_attr( $nonce ) . '">';
 
 		if ( empty( $courses ) ) {
-			$content .= sprintf( '<p class="description">%s</p>', __( 'You currently have no courses assigned.', 'cp' ) );
+			$content .= sprintf( '<p class="description">%s</p>', __( 'You currently have no courses assigned.', 'CP_TD' ) );
 		} else {
 			$content .= '<div class="cp-course-selector"><br />
 				<div class="cp-box">
-					<label>' . esc_html__( 'Select Course', 'cp' ) . '</label>
+					<label>' . esc_html__( 'Select Course', 'CP_TD' ) . '</label>
 					' . CoursePress_Helper_UI::get_course_dropdown( 'course-list', 'course-list', $courses, array( 'class' => 'medium', 'value' => $selected_course ) )
 					.
 				'</div>
 				<div class="cp-box">
 					<select id="unit-list">
-						<option value="all">' . esc_html__( 'Show all', 'cp' ) . '</option>
-						<option value="all_submitted"' . selected( 'all_submitted', $current_unit, false ) . '>' . esc_html__('Show all assessable students', 'cp' ) . '</option>';
+						<option value="all">' . esc_html__( 'Show all', 'CP_TD' ) . '</option>
+						<option value="all_submitted"' . selected( 'all_submitted', $current_unit, false ) . '>' . esc_html__('Show all assessable students', 'CP_TD' ) . '</option>';
 
 						foreach( $units as $unit ) {
 							$content .= '<option value="'. $unit->ID . '" ' . selected( $current_unit, $unit->ID, false ) . '>';
@@ -233,16 +233,16 @@ class CoursePress_View_Admin_Assessment_List {
 				</div>
 				<div class="cp-box">
 					<select id="ungraded-list">
-						<option value="all">' . esc_html__( 'Show graded and ungraded students', 'cp' ) . '</option>
-						<option value="ungraded" ' . selected( 'ungraded', $type, false ) . '>' . esc_html__( 'Show ungraded students only', 'cp' ) . '</option>
-						<option value="graded" ' . selected( 'graded', $type, false ) . '>' . esc_html__( 'Show graded students only', 'cp' ) . '</option>
+						<option value="all">' . esc_html__( 'Show graded and ungraded students', 'CP_TD' ) . '</option>
+						<option value="ungraded" ' . selected( 'ungraded', $type, false ) . '>' . esc_html__( 'Show ungraded students only', 'CP_TD' ) . '</option>
+						<option value="graded" ' . selected( 'graded', $type, false ) . '>' . esc_html__( 'Show graded students only', 'CP_TD' ) . '</option>
 					</select>
 				</div>
 			</div>';
 
 			$content .= '<div id="assessment-table-container"></div>';
 			$content .= sprintf( '<div class="cp-loader-info" style="display:none;"><span class="fa fa-spinner fa-spin"></span> %s</div>',
-				__( 'Fetching students...', 'cp' )
+				__( 'Fetching students...', 'CP_TD' )
 			);
 		}
 
@@ -264,26 +264,26 @@ class CoursePress_View_Admin_Assessment_List {
 		$content = '';
 
 		if ( empty( $total ) ) {
-			return sprintf( '<br><br><p class="description">%s</p>', __( 'There are no students found..', 'cp' ) );
+			return sprintf( '<br><br><p class="description">%s</p>', __( 'There are no students found..', 'CP_TD' ) );
 		}
 
 		$table = '
 			<table>
 			<tr>
-				<td>' . __( 'Students Found:', 'cp' ) . ' ' . $total . '</td>
-				<td>' . __( 'Modules:', 'cp' ) . ' <span class="cp-total-assessable">' . $results['assessable'] . '</span></td>
-				<td>' . __( 'Passing Grade: ', 'cp' ) . ' <span class="cp-pasing-grade">' . $results['passing_grade'] . '%</span></td>
+				<td>' . __( 'Students Found:', 'CP_TD' ) . ' ' . $total . '</td>
+				<td>' . __( 'Modules:', 'CP_TD' ) . ' <span class="cp-total-assessable">' . $results['assessable'] . '</span></td>
+				<td>' . __( 'Passing Grade: ', 'CP_TD' ) . ' <span class="cp-pasing-grade">' . $results['passing_grade'] . '%</span></td>
 			</tr>
 			</table>
 		';
 
 		$table .= '<table class="wp-list-table widefat fixed striped cp-table">
 			<thead>
-				<th>' . esc_html__( 'Student', 'cp' ) . '</th>
-				<th>' . esc_html__( 'Last Active', 'cp' ) . '</th>
-				<th class="unit-grade">' . esc_html__( 'Grade', 'cp' ) . '</th>
-				<th width="5%">' . esc_html__( 'Modules', 'cp' ) . '</th>
-				<th width="5%">' . esc_html__( 'View All', 'cp' ) . '</th>
+				<th>' . esc_html__( 'Student', 'CP_TD' ) . '</th>
+				<th>' . esc_html__( 'Last Active', 'CP_TD' ) . '</th>
+				<th class="unit-grade">' . esc_html__( 'Grade', 'CP_TD' ) . '</th>
+				<th width="5%">' . esc_html__( 'Modules', 'CP_TD' ) . '</th>
+				<th width="5%">' . esc_html__( 'View All', 'CP_TD' ) . '</th>
 			</thead>
 			<tbody>
 		';
@@ -355,10 +355,10 @@ class CoursePress_View_Admin_Assessment_List {
 		$table .= '</tbody></table>';
 
 		$table .= '<br><br><div class="no-student-info" style="display: none;">
-			<p class="description">' . esc_html__( '0 students found under this unit', 'cp' ) . '</p>
+			<p class="description">' . esc_html__( '0 students found under this unit', 'CP_TD' ) . '</p>
 		</div>
 		<div class="no-assessable-info" style="display: none;">
-			<p class="description">' . esc_html__( 'There are no assessable students found!', 'cp' ) . '</p>
+			<p class="description">' . esc_html__( 'There are no assessable students found!', 'CP_TD' ) . '</p>
 		</div>';
 
 		$url = add_query_arg(
@@ -660,27 +660,27 @@ class CoursePress_View_Admin_Assessment_List {
 								$page_content .= '
 									<div class="cp-right cp-assessment-div">
 										<span class="cp-check cp-right ' . $pass_class . '">
-											' . ( 'green' === trim($pass_class) ? __( 'Pass', 'cp' ) : __( 'Fail', 'cp' ) ) . '
+											' . ( 'green' === trim($pass_class) ? __( 'Pass', 'CP_TD' ) : __( 'Fail', 'CP_TD' ) ) . '
 										</span>
-										<label class="cp-assess-label"> ' . __( 'Assessment Result', 'cp' ) . '</label><br />
+										<label class="cp-assess-label"> ' . __( 'Assessment Result', 'CP_TD' ) . '</label><br />
 										<p class="coursepress-tooltip description cp-min-tooltip">
-											' . __( 'The minimum grade required is: ', 'cp' ) .'
+											' . __( 'The minimum grade required is: ', 'CP_TD' ) .'
 											' . $min_grade . '
 										</p>
 										<p class="coursepress-tooltip cp-grade-tooltip">
 											<input type="text" data-courseid="' . $course_id . '" data-unit="' . $unit_id . '" data-module="' . $module_id . '" data-minimum="' . esc_attr( $min_grade ) . '" data-student="'. $student_id . '" class="module-grade" name="module-grade" value="' . esc_attr( $grade ) . '" /> <span class="cp-percent">%</span>
 											<button type="button" class="button-primary module-submit disabled">
-												' . __( 'Submit Grade', 'cp' ) . '
+												' . __( 'Submit Grade', 'CP_TD' ) . '
 											</button>
 										</p>
 									</div>';
 								if ( $is_required ) {
-									$page_content .= '<span class="cp-required cp-right">' . __( 'Required', 'cp' ) . '</span>';
+									$page_content .= '<span class="cp-required cp-right">' . __( 'Required', 'CP_TD' ) . '</span>';
 								}
 							} else {
 								$page_content .= '
 									<span class="cp-check cp-right ' . $pass_class . '">
-										' . ( 'green' === trim($pass_class) ? __( 'Pass', 'cp' ) : __( 'Fail', 'cp' ) ) . '
+										' . ( 'green' === trim($pass_class) ? __( 'Pass', 'CP_TD' ) : __( 'Fail', 'CP_TD' ) ) . '
 									</span>';
 								$page_content .= '<input type="hidden" data-courseid="' . $course_id . '" data-unit="' . $unit_id . '" data-module="' . $module_id . '" data-minimum="' . esc_attr( $min_grade ) . '" data-student="'. $student_id . '" class="module-grade" name="module-grade" value="0" />';
 							}
@@ -777,7 +777,7 @@ class CoursePress_View_Admin_Assessment_List {
 							}
 
 							if ( 0 === count( $response ) ) {
-								$page_content .= sprintf( '<div class="cp-answer-box"><span class="dashicons dashicons-no"></span> %s</div>', __( 'No answer!', 'cp' ) );
+								$page_content .= sprintf( '<div class="cp-answer-box"><span class="dashicons dashicons-no"></span> %s</div>', __( 'No answer!', 'CP_TD' ) );
 							} else {
 								// Will only allow feedback for 'Short', 'Long', and 'Upload' modules.
 								$allowed_for_feedback = array( 'input-text', 'input-textarea', 'input-upload' );
@@ -786,19 +786,19 @@ class CoursePress_View_Admin_Assessment_List {
 
 									$feedback_text = ! empty( $feedback['feedback'] ) ? $feedback['feedback'] : '';
 									$feedback_by = ! empty( $feedback['feedback'] ) ? '- ' . CoursePress_Helper_Utility::get_user_name( $feedback['feedback_by'] ) : '';
-									$add_label = $has_feedback ? __( 'Edit Feedback', 'cp' ) : __( 'Add Feedback', 'cp' );
+									$add_label = $has_feedback ? __( 'Edit Feedback', 'CP_TD' ) : __( 'Add Feedback', 'CP_TD' );
 
 									$page_content .= '<div class="cp-instructor-feedback">
-										<h4>' . __( 'Instructor Feedback', 'cp' ) . '</h4>
+										<h4>' . __( 'Instructor Feedback', 'CP_TD' ) . '</h4>
 										<div class="cp-right cp-feedback-buttons">
 											<button type="button" class="button-primary edit-feedback">' . $add_label . '</button>
-											<button type="button" class="button-primary delete-feedback'. ( $has_feedback ? '' : ' disabled' ) . '">' . __( 'Delete Feedback', 'cp' ) . '</button>
-											<button type="button" class="button-primary send-feedback disabled">' . __( 'Send Feedback', 'cp' ) . '</button>
+											<button type="button" class="button-primary delete-feedback'. ( $has_feedback ? '' : ' disabled' ) . '">' . __( 'Delete Feedback', 'CP_TD' ) . '</button>
+											<button type="button" class="button-primary send-feedback disabled">' . __( 'Send Feedback', 'CP_TD' ) . '</button>
 										</div>
 									';
 
 									$page_content .= sprintf( '<div class="cp-feedback-details%s">%s</div><cite>%s</cite>', empty( $feedback_text ) ? ' empty' : '', $feedback_text, $feedback_by );
-									$page_content .= sprintf( '<p class="description" %s>%s</p>', empty( $feedback_text ) ? '' : $hide, __( 'Write your feedback!', 'cp' ) );
+									$page_content .= sprintf( '<p class="description" %s>%s</p>', empty( $feedback_text ) ? '' : $hide, __( 'Write your feedback!', 'CP_TD' ) );
 
 									$page_content .= '<textarea '. $hide . ' class="cp-temp-container"></textarea><textarea '. $hide . '" id="cp-editor-'. $course_id . '-'. $unit_id . '-'. $module_id . '" class="cp-feedback-content">'. esc_textarea( $feedback['feedback'] ). '</textarea>';
 									$page_content .= '<div class="cp-feedback-text"></div>';
@@ -826,7 +826,7 @@ class CoursePress_View_Admin_Assessment_List {
 		}
 
 		if ( empty( $content ) ) {
-			$content .= sprintf( '<p class="div-info description">%s</p>', __( 'There are no assessable items!', 'cp' ) );
+			$content .= sprintf( '<p class="div-info description">%s</p>', __( 'There are no assessable items!', 'CP_TD' ) );
 		}
 
 		$content .= implode( ' ', $hidden_fields );

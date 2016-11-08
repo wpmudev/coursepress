@@ -1,4 +1,4 @@
-.course-structure-block {
+.course-structure-block,{
 	.tree {
 		margin: 0;
 		list-style: none;
@@ -91,6 +91,7 @@
 	.unit-title-wrapper {
 		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 		padding: 10px 0 0 0;
+		width: auto;
 		&:first-child {
 			padding: 0;
 		}

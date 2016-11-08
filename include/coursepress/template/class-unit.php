@@ -80,7 +80,7 @@ class CoursePress_Template_Unit {
 		$can_preview_page = ! $can_preview_page ? $can_update_course : $can_preview_page;
 
 		if ( ! $enrolled && ! $can_preview_page && ! $is_instructor ) {
-			return __( 'Sorry. You are not permitted to view this part of the course.', 'cp' );
+			return __( 'Sorry. You are not permitted to view this part of the course.', 'CP_TD' );
 		}
 
 		$view_mode = CoursePress_Data_Course::get_setting( $course_id, 'course_view', 'normal' );
@@ -142,7 +142,7 @@ class CoursePress_Template_Unit {
 			if ( $previous_unit_id ) {
 				$unit_url = CoursePress_Data_Unit::get_unit_url( $previous_unit_id );
 				$format = '<span class="next-button unit unit-%s"><a href="%s"><button>%s</button></a></span> ';
-				$content .= sprintf( $format, $previous_unit_id, esc_url_raw( $unit_url ), __( 'Previous Unit', 'cp' ) );
+				$content .= sprintf( $format, $previous_unit_id, esc_url_raw( $unit_url ), __( 'Previous Unit', 'CP_TD' ) );
 			}
 
 			return $content;
@@ -245,6 +245,9 @@ class CoursePress_Template_Unit {
 		$url_path = CoursePress_Data_Unit::get_unit_url( $unit->ID );
 		$url_path .= trailingslashit( 'page' );
 		$has_submit_button = false;
+		$next_text = __( 'Next &raquo;', 'CP_TD' );
+		$prev_text = __( '&laquo; Previous', 'CP_TD' );
+		$previous_page = false;
 
 		$unit_pager = '<div class="pager unit-pager">';
 
@@ -257,11 +260,14 @@ class CoursePress_Template_Unit {
 
 					// Disable anchor if it is the current page
 					if ( $page == $i ) {
+						if ( $i > 1 ) {
+							$previous_page = $page - 1;
+						}
 						$format = '<span class="page page-%1$s">%1$s</span>';
 					} else {
 						$format = '<input type="submit" name="next_page" value="%1$s" class="page page-%1$s" />';
 					}
-					$unit_pager .= sprintf( $format, $i );
+					//$unit_pager .= sprintf( $format, $i );
 				}
 			}
 
@@ -281,17 +287,25 @@ class CoursePress_Template_Unit {
 			} else {
 				$next_page = $page + 1;
 
+
 				if ( $next_page > $total_pages ) {
 					$next_page = false;
 				}
 			}
 
+			if ( (int) $previous_page > 0 ) {
+				$format = '<a href="%s" class="button prev-button page page-%s">%s</a>';
+				$unit_pager .= sprintf( $format, $url_path . '/' . $previous_page, $previous_page, $prev_text );
+			}
+
 			if ( (int) $next_page > 0 ) {
 				$unit_url = $url_path . $next_page;
 				$has_submit_button = true;
-				$format = '<input type="submit" name="next_page" value="%1$s" class="next-button page page-%1$s" />';
-				$unit_pager .= sprintf( $format, $next_page );
+				$format = '<button type="submit" name="next_page" value="%1$s" class="button next-button page page-%1$s">%2$s</button>';
+				//$format = '<input type="submit" name="next_page" value="%1$s" class="next-button page page-%1$s" />';
+				$unit_pager .= sprintf( $format, $next_page, $next_text );
 			}
+
 		}
 
 		// Next unit.
@@ -345,18 +359,18 @@ class CoursePress_Template_Unit {
 			}
 			$format = '<a href="%s" class="button prev-button unit unit-%s">%s</a>';
 
-			$unit_pager .= sprintf( $format, esc_url( $unit_url ), $previous_unit_id, __( 'Previous', 'cp' ) );
+			$unit_pager .= sprintf( $format, esc_url( $unit_url ), $previous_unit_id, $prev_text );
 		}
 
 		if ( ! empty( $next_unit ) && empty( $next_page ) ) {
 			$unit_url = CoursePress_Data_Unit::get_unit_url( $next_unit );
 			$format = '<button type="submit" name="next_unit" value="%1$s" class="button next-button unit unit-%1$s">%2$s</button>';
-			$unit_pager .= sprintf( $format, $next_unit, __( 'Next', 'cp' ) );
+			$unit_pager .= sprintf( $format, $next_unit, $next_text );
 			$has_submit_button = true;
 		}
 
 		if ( false === $has_submit_button ) {
-			$unit_pager .= sprintf( '<button type="submit" name="finish" class="button next-button">%s</button>', __( 'Next', 'cp' ) );
+			$unit_pager .= sprintf( '<button type="submit" name="finish" class="button next-button">%s</button>', $next_text );
 		}
 
 		$unit_pager .= '</div>'; // .pager

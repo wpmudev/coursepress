@@ -30,7 +30,7 @@ class CoursePress_View_Front_Settings {
 				exit;
 			}
 			$content = '';
-			$page_title = __( 'My Profile', 'cp' );
+			$page_title = __( 'My Profile', 'CP_TD' );
 
 			$args = array(
 				'slug' => CoursePress_Core::get_slug( 'student_settings' ),

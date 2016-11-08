@@ -45,18 +45,18 @@ class CoursePress_Data_Certificate {
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
 				'labels' => array(
-					'name' => __( 'Certificates', 'cp' ),
-					'singular_name' => __( 'Certificate', 'cp' ),
-					'add_new' => __( 'Create New', 'cp' ),
-					'add_new_item' => __( 'Create New Certificate', 'cp' ),
-					'edit_item' => __( 'Edit Certificate', 'cp' ),
-					'edit' => __( 'Edit', 'cp' ),
-					'new_item' => __( 'New Certificate', 'cp' ),
-					'view_item' => __( 'View Certificate', 'cp' ),
-					'search_items' => __( 'Search Certificates', 'cp' ),
-					'not_found' => __( 'No Certificates Found', 'cp' ),
-					'not_found_in_trash' => __( 'No Certificates found in Trash', 'cp' ),
-					'view' => __( 'View Certificate', 'cp' ),
+					'name' => __( 'Certificates', 'CP_TD' ),
+					'singular_name' => __( 'Certificate', 'CP_TD' ),
+					'add_new' => __( 'Create New', 'CP_TD' ),
+					'add_new_item' => __( 'Create New Certificate', 'CP_TD' ),
+					'edit_item' => __( 'Edit Certificate', 'CP_TD' ),
+					'edit' => __( 'Edit', 'CP_TD' ),
+					'new_item' => __( 'New Certificate', 'CP_TD' ),
+					'view_item' => __( 'View Certificate', 'CP_TD' ),
+					'search_items' => __( 'Search Certificates', 'CP_TD' ),
+					'not_found' => __( 'No Certificates Found', 'CP_TD' ),
+					'not_found_in_trash' => __( 'No Certificates found in Trash', 'CP_TD' ),
+					'view' => __( 'View Certificate', 'CP_TD' ),
 				),
 				'public' => false,
 				'show_ui' => false,
@@ -426,7 +426,7 @@ class CoursePress_Data_Certificate {
 			 **/
 			$html = apply_filters( 'coursepress_basic_certificate_html', $html, $course_id, $student_id );
 
-			$certificate_title = apply_filters( 'coursepress_certificate_title', __( 'Certificate of Completion', 'cp' ) );
+			$certificate_title = apply_filters( 'coursepress_certificate_title', __( 'Certificate of Completion', 'CP_TD' ) );
 			$args = array(
 				'title' => $certificate_title,
 				'orientation' => $orientation,
@@ -482,11 +482,10 @@ class CoursePress_Data_Certificate {
 		/**
 		 * get from certificate
 		 */
-
 		$certificate_id = self::get_certificate_id( $student_id, $course_id );
 		if ( ! empty( $certificate_id ) ) {
 			$file = get_post_meta( $certificate_id, self::$custom_field_name_for_pdf_file, true );
-			$url = self::url_prepare( $file );
+			$url = self::url_prepare( $file, $course_id, $student_id );
 			if ( ! empty( $url ) ) {
 				return $url;
 			}
@@ -495,7 +494,7 @@ class CoursePress_Data_Certificate {
 		 * get by default
 		 */
 		$file = CoursePress_Data_Certificate::get_pdf_file_name( $course_id, $student_id );
-		$url = self::url_prepare( $file );
+		$url = self::url_prepare( $file, $course_id, $student_id );
 		if ( ! empty( $url ) ) {
 			return $url;
 		}
@@ -503,9 +502,8 @@ class CoursePress_Data_Certificate {
 		 * legacy of not secure certificates.
 		 *
 		 */
-		
 		$file = CoursePress_Data_Certificate::deprecated_get_pdf_file_name( $course_id, $student_id );
-		$url = self::url_prepare( $file );
+		$url = self::url_prepare( $file, $course_id, $student_id );
 		if ( ! empty( $url ) ) {
 			return $url;
 		}
@@ -523,12 +521,13 @@ class CoursePress_Data_Certificate {
 	 * @param string $file full path to certificate file.
 	 * @return string/boolean Returns encoded URL or false if file do not * exists.
 	 */
-	public static function url_prepare( $file ) {
+	public static function url_prepare( $file, $course_id, $student_id ) {
 		if ( is_file( $file ) && is_readable( $file ) ) {
 			$upload_dir = wp_upload_dir();
 			$url = str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $file );
 			$url = CoursePress_Helper_Utility::encode( $url );
-			$url = trailingslashit( home_url() ) . '?fdcpf=' . $url;
+			//$url = trailingslashit( home_url() ) . '?fdcpf=' . $url;
+			$url = add_query_arg( array( 'fdcpf' => $url, 'c' => $course_id, 'u' => $student_id ), home_url() );
 			return $url;
 		}
 		return false;
@@ -560,7 +559,7 @@ class CoursePress_Data_Certificate {
 			$vars['CERTIFICATE_BUTTON'] = sprintf(
 				'<p class="buttons"><a href="%s" class="button blue-button light-blue-button">%s</a></p>',
 				esc_url( $vars['CERTIFICATE_URL'] ),
-				__( 'Download your certificate', 'cp' )
+				__( 'Download your certificate', 'CP_TD' )
 			);
 		}
 		return $vars;

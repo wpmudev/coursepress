@@ -113,7 +113,7 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 
 	/** No items */
 	public function no_items() {
-		echo __( 'No topics found.', 'cp' );
+		echo __( 'No topics found.', 'CP_TD' );
 	}
 
 	public function column_cb( $item ) {
@@ -128,10 +128,10 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 	public function get_columns() {
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
-			'title' => __( 'Topic', 'cp' ),
-			'course' => __( 'Course', 'cp' ),
-			'comments' => '<span class="vers comment-grey-bubble" title="' . esc_attr__( 'Comments', 'cp' ) . '"><span class="screen-reader-text">' . __( 'Comments', 'cp' ) . '</span></span>',
-			'status' => __( 'Status', 'cp' ),
+			'title' => __( 'Topic', 'CP_TD' ),
+			'course' => __( 'Course', 'CP_TD' ),
+			'comments' => '<span class="vers comment-grey-bubble" title="' . esc_attr__( 'Comments', 'CP_TD' ) . '"><span class="screen-reader-text">' . __( 'Comments', 'CP_TD' ) . '</span></span>',
+			'status' => __( 'Status', 'CP_TD' ),
 		);
 		return $columns;
 	}
@@ -151,7 +151,7 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 					'id' => $item->ID,
 				)
 			);
-			$row_actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'cp' ) );
+			$row_actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'CP_TD' ) );
 		}
 		if ( $item->user_can_delete ) {
 			$delete_url = add_query_arg(
@@ -161,7 +161,7 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 					'action' => 'delete',
 				)
 			);
-			$row_actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $delete_url ), __( 'Delete', 'cp' ) );
+			$row_actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $delete_url ), __( 'Delete', 'CP_TD' ) );
 		}
 		return $this->row_actions( $row_actions );
 	}
@@ -180,10 +180,10 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 ?>
 		<div class="alignleft actions category-filter">
 			<?php $this->course_filter( $which ); ?>
-			<input type="submit" class="button" name="action" value="<?php esc_attr_e( 'Filter', 'cp' ); ?>" />
+			<input type="submit" class="button" name="action" value="<?php esc_attr_e( 'Filter', 'CP_TD' ); ?>" />
 		</div>
 <?php
-		$this->search_box( __( 'Search Forums', 'cp' ), 'search_discussions' );
+		$this->search_box( __( 'Search Forums', 'CP_TD' ), 'search_discussions' );
 	}
 
 	/**
