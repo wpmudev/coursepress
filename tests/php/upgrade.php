@@ -4,10 +4,10 @@
  **/
 
 class CoursePressUpgradeTest extends WP_UnitTestCase {
-	/**
-	 * @requires function wp_plugin_directory_constants
-	 **/
-	public static function test_load_version_1() {
+
+	public function test_load_version_1() {
+		$this->setUp();
+
 		$upgrade_class = WP_COURSEPRESS_DIR . 'upgrade/class-upgrade.php';
 
 		// Load upgrade class
