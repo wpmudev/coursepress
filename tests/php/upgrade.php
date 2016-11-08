@@ -2,61 +2,85 @@
 /**
  * Test upgrade cycle
  **/
+$data_dir = WP_COURSEPRESS_DIR . 'tests/data/';
+
+require $data_dir . 'course.php';
 
 class CoursePressUpgradeTest extends WP_UnitTestCase {
-	public function test_version_switch() {
-		$coursepress = WP_COURSEPRESS_DIR . 'coursepress.php';
+	public static function bootstrap() {
+		if ( defined( 'WP_COURSEPRESS_DIR' ) ) {
+			return;
+		}
 
-		require $coursepress;
+		$bootstrap = WP_COURSEPRESS_DIR . 'tests/bootstrap.php';
 
-		// Expect 2.0
-		$this->assertEquals( false, CoursePressUpgrade::check_old_courses() );
+		require $bootstrap;
+	}
 
-		$c1 = self::factory()->post->create(array(
-			'post_type' => 'course',
-			'post_title' => 'Course 1',
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 **/
+	public function test_version_1() {
+		self::bootstrap();
+
+		$courseupgrade = WP_COURSEPRESS_DIR . 'coursepress.php';
+
+		// Pre-create courses
+		$c1 = CoursePressData::course_data(array(
+			'post_title' => 'Course 1'
 		));
 
-		// Expect 1.x
+		$c1 = self::factory()->post->create( $c1 );
+
+		require_once $courseupgrade;
+
+		global $coursepress;
 		$this->assertEquals( true, CoursePressUpgrade::check_old_courses() );
+		$this->assertTrue( class_exists( 'CoursePress' ) );
+		$this->assertStringStartsWith( '1.', $coursepress->version );
 	}
 
-/*
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 **/
+	public function test_new_install() {
+		self::bootstrap();
 
-	public function test_load_version_1() {
-		$upgrade_class = WP_COURSEPRESS_DIR . 'upgrade/class-upgrade.php';
+		$course_upgrade = WP_COURSEPRESS_DIR . 'coursepress.php';
 
-		// Load upgrade class
-		require $upgrade_class;
-
-		add_action( 'coursepress_before_init_vars', array( __CLASS__, 'before_init_vars' ) );
-		add_action( 'coursepress_init_vars', array( __CLASS__, 'init_vars' ) );
-
-		$version_1 = WP_COURSEPRESS_DIR . '1.x/';
-		$version_file = $version_1 . 'coursepress.php';
-
-		require $version_file;
+		require_once $course_upgrade;
 
 		$this->assertTrue( class_exists( 'CoursePress' ) );
+		$this->assertEquals( false, CoursePressUpgrade::check_old_courses() );
+		$this->assertStringStartsWith( '2.0', CoursePress::$version );
 	}
 
-	public static function before_init_vars( $instance ) {
-		$instance->dir_name = '1.x';
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 **/
+	public function test_version_2() {
+		self::bootstrap();
+
+		$course_upgrade = WP_COURSEPRESS_DIR . 'coursepress.php';
+
+		require_once $course_upgrade;
+
+		// Pre-create courses
+		$c1 = CoursePressData::course_data(array(
+			'post_title' => 'Course 1'
+		));
+
+		$c1 = self::factory()->post->create( $c1 );
+
+		$settings = array(
+			'course_start_date' => '2016-21-05 04:14'
+		);
+
+		CoursePress_Data_Course::update_setting( $c1, true, $settings );
+
+		$this->assertEquals( false, CoursePressUpgrade::check_old_courses() );
 	}
-
-	public static function init_vars( $instance ) {
-		$instance->location = 'plugins';
-		$instance->plugin_dir = WP_PLUGIN_DIR . '/coursepress/1.x/';
-		$instance->plugin_url = WP_PLUGIN_URL . '/coursepress/1.x/';
-	}
-
-	public function test_load_version_2() {
-		$version_2 = WP_COURSEPRESS_DIR . '2.0/';
-		$version_file = $version_2 . 'coursepress.php';
-
-		require $version_file;
-
-		$this->assertTrue( class_exists( 'CoursePress' ) );
-	}
-*/
 }

@@ -7,5 +7,7 @@ class CoursePressData {
 			'post_title' => 'Course',
 		);
 		$course = wp_parse_args( $args, $course );
+
+		return $course;
 	}
 }
