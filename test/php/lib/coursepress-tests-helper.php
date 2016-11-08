@@ -2,6 +2,9 @@
 
 class CoursePress_Tests_Helper {
 
+	private $admin;
+	private $unit;
+
 	public function get_instructor() {
 		$instructor = get_user_by( 'login', 'instructor' );
 		if ( false === $instructor ) {
@@ -41,7 +44,7 @@ class CoursePress_Tests_Helper {
 	}
 
 	public function get_course() {
-		$admin = get_user_by( 'login', 'admin' );
+		$this->admin = get_user_by( 'login', 'admin' );
 		/**
 		 * set title
 		 */
@@ -52,7 +55,7 @@ class CoursePress_Tests_Helper {
 		$course = get_page_by_title( $title, OBJECT, CoursePress_Data_Course::get_post_type_name() );
 		if ( empty( $course ) ) {
 			$postarr = (object) array(
-				'post_author' => $admin->ID,
+				'post_author' => $this->admin->ID,
 				'post_status' => 'publish',
 				'post_type' => CoursePress_Data_Course::get_post_type_name(),
 				'course_excerpt' => 'test course excerpt',
@@ -179,23 +182,21 @@ class CoursePress_Tests_Helper {
 	}
 
 	private function add_unit( $course ) {
-		$admin = get_user_by( 'login', 'admin' );
-		$title = 'test unit title';
-		$unit = get_page_by_title( $title, OBJECT, CoursePress_Data_Unit::get_post_type_name() );
 		$postarr = (object) array(
-			'post_author' => $admin->ID,
+			'post_author' => $this->admin->ID,
 			'post_status' => 'publish',
 			'post_type' => CoursePress_Data_Unit::get_post_type_name(),
 			'post_parent' => $course->ID,
 			'post_excerpt' => 'test unit excerpt',
-			'post_description' => 'test unit content',
-			'post_title' => $title,
+			'post_content' => 'test unit content',
+			'post_title' => 'Test Unit Title',
 			'meta_input' => array(
-				'page_title' => array( 'page_1' => 'page one' ),
+                'page_title' => array( 'page_1' => 'page one', 'page_2' => 'page two', ),
 				'show_page_title' => array( true ),
 				'unit_order' => 1,
 			),
 		);
+		$unit = get_page_by_title( $postarr->post_title, OBJECT, CoursePress_Data_Unit::get_post_type_name() );
 		if ( empty( $unit ) ) {
 			$unit_id = wp_insert_post( $postarr );
 			$unit = get_post( $unit_id );
@@ -206,20 +207,27 @@ class CoursePress_Tests_Helper {
 		return $unit;
 	}
 
-	private function add_modules( $unit ) {
-		$modules = array();
-		$admin = get_user_by( 'login', 'admin' );
-		/**
-		 * Text Module
-		 */
-		$title = 'Text Module';
+	private function add_module( $postarr ) {
+		$module = get_page_by_title( $postarr->post_title, OBJECT, CoursePress_Data_Module::get_post_type_name() );
+		if ( empty( $module ) ) {
+			$module_id = wp_insert_post( $postarr );
+			$module = get_post( $module_id );
+			CoursePress_Data_Module::show_on_list( $module->ID, $this->unit->ID, $postarr->meta_input );
+		}
+		return $module;
+	}
+
+	/**
+	 * Text Module
+	 */
+	private function add_module_text() {
 		$postarr = (object) array(
-			'post_author' => $admin->ID,
+			'post_author' => $this->admin->ID,
 			'post_status' => 'publish',
 			'post_type' => CoursePress_Data_Module::get_post_type_name(),
-			'post_parent' => $unit->ID,
-			'post_description' => 'Nullam auctor commodo eleifend. Integer aliquet, ex a rutrum tempor, mauris dolor finibus orci, elementum auctor lorem quam eu nibh.',
-			'post_title' => $title,
+			'post_parent' => $this->unit->ID,
+			'post_content' => 'Nullam auctor commodo eleifend. Integer aliquet, ex a rutrum tempor, mauris dolor finibus orci, elementum auctor lorem quam eu nibh.',
+			'post_title' => 'Text Module',
 			'meta_input' => array(
 				'allow_retries' => 1,
 				'assessable' => 0,
@@ -234,24 +242,207 @@ class CoursePress_Tests_Helper {
 				'show_title' => 1,
 			),
 		);
-		$module = get_page_by_title( $title, OBJECT, CoursePress_Data_Module::get_post_type_name() );
-		if ( empty( $module ) ) {
-			$module_id = wp_insert_post( $postarr );
-			$module = get_post( $module_id );
-			CoursePress_Data_Module::show_on_list( $module->ID, $unit->ID, $postarr->meta_input );
-		}
-		$modules[] = $module;
-		/**
-		 * Single Choice Module
-		 */
-		$title = 'Single Choice Module';
+		return $this->add_module( $postarr );
+	}
+
+	/**
+	 * Module Image
+	 */
+	private function add_module_image() {
 		$postarr = (object) array(
-			'post_author' => $admin->ID,
+			'post_author' => $this->admin->ID,
 			'post_status' => 'publish',
 			'post_type' => CoursePress_Data_Module::get_post_type_name(),
-			'post_parent' => $unit->ID,
+			'post_parent' => $this->unit->ID,
+			'post_title' => 'Image Module',
+			'meta_input' => array(
+				'allow_retries' => 1,
+				'assessable' => 0,
+				'caption_custom_text' => 'Image Custom Caption',
+				'caption_field' => 'custom',
+				'duration' => '0:00',
+				'image_url' => 'http://incsub/sample.jpg',
+				'mandatory' => 0,
+				'minimum_grade' => 100,
+				'module_order' => 2,
+				'module_page' => 1,
+				'module_type' => 'image',
+				'order' => 0,
+				'retry_attempts' => 0,
+				'show_media_caption' => 1,
+				'show_title' => 1,
+			),
+		);
+		return $this->add_module( $postarr );
+	}
+
+	/**
+	 * Module Video
+	 */
+	private function add_module_video() {
+		$postarr = (object) array(
+			'post_author' => $this->admin->ID,
+			'post_status' => 'publish',
+			'post_type' => CoursePress_Data_Module::get_post_type_name(),
+			'post_parent' => $this->unit->ID,
+			'post_title' => 'Video Module',
+			'meta_input' => array(
+				'allow_retries' => 1,
+				'assessable' => 0,
+				'caption_custom_text' => 'Video Custom Caption',
+				'caption_field' => 'custom',
+				'duration' => '0:00',
+				'hide_related_media' => 1,
+				'mandatory' => 0,
+				'minimum_grade' => 100,
+				'module_order' => 3,
+				'module_page' => 1,
+				'module_type' => 'video',
+				'order' => 0,
+				'retry_attempts' => 0,
+				'show_media_caption' => 1,
+				'show_title' => 1,
+				'video_url' => 'http://incsub/sample.mp4',
+			),
+		);
+		return $this->add_module( $postarr );
+	}
+
+	/**
+	 * Module Audio
+	 */
+	private function add_module_audio() {
+		$postarr = (object) array(
+			'post_author' => $this->admin->ID,
+			'post_status' => 'publish',
+			'post_type' => CoursePress_Data_Module::get_post_type_name(),
+			'post_parent' => $this->unit->ID,
+			'post_title' => 'Audio Module',
+			'meta_input' => array(
+				'allow_retries' => 1,
+				'assessable' => 0,
+				'audio_url' => 'http://incsub/sample.mp3',
+				'autoplay' => 1,
+				'duration' => '0:00',
+				'mandatory' => 0,
+				'minimum_grade' => 100,
+				'module_order' => 4,
+				'module_page' => 1,
+				'module_type' => 'audio',
+				'order' => 0,
+				'retry_attempts' => 0,
+				'show_title' => 1,
+			),
+		);
+		return $this->add_module( $postarr );
+	}
+
+	/**
+	 * Module File Download
+	 */
+	private function add_module_file_download() {
+		$postarr = (object) array(
+			'post_author' => $this->admin->ID,
+			'post_status' => 'publish',
+			'post_type' => CoursePress_Data_Module::get_post_type_name(),
+			'post_parent' => $this->unit->ID,
+			'post_title' => 'File Download Module',
+			'post_content' => 'Lorem Ipsum File Download Module',
+			'meta_input' => array(
+				'allow_retries' => 1,
+				'assessable' => 0,
+				'duration' => '0:00',
+				'file_url' => 'http://incsub/sample.zip',
+				'link_text' => 'Link to File Download',
+				'mandatory' => 0,
+				'minimum_grade' => 100,
+				'module_order' => 5,
+				'module_page' => 1,
+				'module_type' => 'download',
+				'order' => 0,
+				'retry_attempts' => 0,
+				'show_title' => 1,
+			),
+		);
+		return $this->add_module( $postarr );
+	}
+
+	/**
+	 * Module Zipped Object
+	 */
+	private function add_module_zipped_object() {
+		$postarr = (object) array(
+			'post_author' => $this->admin->ID,
+			'post_status' => 'publish',
+			'post_type' => CoursePress_Data_Module::get_post_type_name(),
+			'post_parent' => $this->unit->ID,
+			'post_title' => 'Zipped Object Module',
+			'post_content' => 'Lorem Ipsum Zipped Object Module',
+			'meta_input' => array(
+				'allow_retries' => 1,
+				'assessable' => 0,
+				'duration' => '0:00',
+				'link_text' => 'Link to Zipped Object',
+				'mandatory' => 0,
+				'minimum_grade' => 100,
+				'module_order' => 6,
+				'module_page' => 1,
+				'module_type' => 'zipped',
+				'order' => 0,
+				'primary_file' => 'index.html',
+				'retry_attempts' => 0,
+				'show_title' => 1,
+				'zip_url' => 'http://incsub/sample.zip',
+			),
+		);
+		return $this->add_module( $postarr );
+	}
+
+	/**
+	 * Module Discussion
+	 */
+	private function add_module_discussion() {
+		$postarr = (object) array(
+			'post_author' => $this->admin->ID,
+			'post_status' => 'publish',
+			'post_type' => CoursePress_Data_Module::get_post_type_name(),
+			'post_parent' => $this->unit->ID,
+			'post_title' => 'Discussion Module',
+			'post_content' => 'Lorem Ipsum Discussion Module',
+			'meta_input' => array(
+				'allow_retries' => 1,
+				'assessable' => 0,
+				'duration' => '0:00',
+				'mandatory' => 0,
+				'minimum_grade' => 100,
+				'module_order' => 7,
+				'module_page' => 1,
+				'module_type' => 'discussion',
+				'order' => 0,
+				'retry_attempts' => 0,
+				'show_title' => 1,
+			),
+		);
+		return $this->add_module( $postarr );
+	}
+
+
+	/**
+	 * Input Modules
+	 */
+
+
+	/**
+	 * Module Single Choice
+	 */
+	private function add_module_single_choice() {
+		$postarr = (object) array(
+			'post_author' => $this->admin->ID,
+			'post_status' => 'publish',
+			'post_type' => CoursePress_Data_Module::get_post_type_name(),
+			'post_parent' => $this->unit->ID,
 			'post_description' => 'Nullam auctor commodo eleifend. Integer aliquet, ex a rutrum tempor, mauris dolor finibus orci, elementum auctor lorem quam eu nibh.',
-			'post_title' => $title,
+			'post_title' => 'Single Choice Module',
 			'meta_input' => array(
 				'allow_retries' => 1,
 				'answers' => 'a:2:{i:0;s:8:"Answer A";i:1;s:8:"Answer B";}',
@@ -261,7 +452,7 @@ class CoursePress_Tests_Helper {
 				'mandatory' => 0,
 				'minimum_grade' => 100,
 				'module_order' => 2,
-				'module_page' => 1,
+				'module_page' => 2,
 				'module_type' => 'input-radio',
 				'order' => 0,
 				'retry_attempts' => 0,
@@ -270,24 +461,20 @@ class CoursePress_Tests_Helper {
 
 			),
 		);
-		$module = get_page_by_title( $title, OBJECT, CoursePress_Data_Module::get_post_type_name() );
-		if ( empty( $module ) ) {
-			$module_id = wp_insert_post( $postarr );
-			$module = get_post( $module_id );
-			CoursePress_Data_Module::show_on_list( $module->ID, $unit->ID, $postarr->meta_input );
-		}
-		$modules[] = $module;
-		/**
-		 * File Upload Module
-		 */
-		$title = 'File Upload Module';
+		return $this->add_module( $postarr );
+	}
+
+	/**
+	 * Module File Upload Module
+	 */
+	private function add_module_file_upload() {
 		$postarr = (object) array(
-			'post_author' => $admin->ID,
+			'post_author' => $this->admin->ID,
 			'post_status' => 'publish',
 			'post_type' => CoursePress_Data_Module::get_post_type_name(),
-			'post_parent' => $unit->ID,
+			'post_parent' => $this->unit->ID,
 			'post_description' => 'Nullam auctor commodo eleifend. Integer aliquet, ex a rutrum tempor, mauris dolor finibus orci, elementum auctor lorem quam eu nibh.',
-			'post_title' => $title,
+			'post_title' => 'File Upload Module Module',
 			'meta_input' => array(
 				'allow_retries' => 1,
 				'assessable' => 1,
@@ -302,16 +489,40 @@ class CoursePress_Tests_Helper {
 				'retry_attempts' => 0,
 				'show_title' => 1,
 				'use_timer' => '',
-
 			),
 		);
-		$module = get_page_by_title( $title, OBJECT, CoursePress_Data_Module::get_post_type_name() );
-		if ( empty( $module ) ) {
-			$module_id = wp_insert_post( $postarr );
-			$module = get_post( $module_id );
-			CoursePress_Data_Module::show_on_list( $module->ID, $unit->ID, $postarr->meta_input );
-		}
-		$modules[] = $module;
+		return $this->add_module( $postarr );
+	}
+
+
+	private function add_modules( $unit ) {
+		$this->admin = get_user_by( 'login', 'admin' );
+		$this->unit = $unit;
+		/**
+		 * Add Modules
+		 */
+		$modules = array();
+		$modules[] = $this->add_module_text();
+		$modules[] = $this->add_module_image();
+		$modules[] = $this->add_module_video();
+		$modules[] = $this->add_module_audio();
+		$modules[] = $this->add_module_file_download();
+		$modules[] = $this->add_module_zipped_object();
+		$modules[] = $this->add_module_discussion();
+		/*
+            $modules[] = $this->add_module_multiple_choice();
+         */
+		$modules[] = $this->add_module_single_choice();
+		/*
+		$modules[] = $this->add_module_selectable();
+		$modules[] = $this->add_module_short_answer();
+        $modules[] = $this->add_module_long_answer();
+         */
+		$modules[] = $this->add_module_file_upload();
+		/*
+		$modules[] = $this->add_module_quiz();
+        $modules[] = $this->add_module_form();
+         */
 		/**
 		 * return modules
 		 */
