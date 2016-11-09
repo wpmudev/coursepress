@@ -40,6 +40,7 @@ class CoursePress_Tests_Helper {
 			$user_id = wp_insert_user( $userdata );
 			$student = get_userdata( $user_id );
 		}
+		add_user_meta( $student->ID, 'last_login', array( 'time' => 1478721593 ), true );
 		return $student;
 	}
 
