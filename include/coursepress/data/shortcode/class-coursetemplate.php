@@ -1119,7 +1119,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 						if ( 'normal' == $view_mode ) {
 							$module_table .= '<div class="'. $section_class . '" data-id="' . $page_number . '"'. $section_data .'>' . ( ! empty( $page['title'] ) ? esc_html( $page['title'] ) : esc_html__( 'Untitled', 'CP_TD' ) ) . '</div>';
 						} else {
-							$section_link = $unit_url . '#section-' . $page_number;
+							$section_link = sprintf( '%spage/%s', $unit_url, $page_number );
 							$module_table .= '<div class="'. $section_class . '" data-id="' . $page_number . '"'. $section_data . '>';
 
 							if ( $clickable || $can_update_course ) {
