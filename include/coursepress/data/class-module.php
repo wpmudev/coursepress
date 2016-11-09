@@ -223,26 +223,33 @@ class CoursePress_Data_Module {
 		return $attributes;
 	}
 
-	public static function discussion_module_link( $link, $comment, $args ) {
+	public static function discussion_module_link( $link, $comment ) {
+		/**
+		 * Check post type
+		 */
 		$post_type = get_post_type( $comment->comment_post_ID );
-
-		if ( 'module' === $post_type ) {
-			$unit_id = get_post_field( 'post_parent', $comment->comment_post_ID );
-			$course_id = get_post_field( 'post_parent', $unit_id );
-			$course_link = get_permalink( $course_id );
-			$link = esc_url_raw( $course_link . CoursePress_Core::get_slug( 'unit/' ) . get_post_field( 'post_name', $course_id ) . '#module-' . $comment->comment_post_ID );
+		if ( 'module' !== $post_type ) {
+			return $link;
 		}
-
+		/**
+		 * Check module type
+		 */
+		$module_type = get_post_meta( $comment->comment_post_ID, 'module_type', true );
+		if ( 'discussion' !== $module_type ) {
+			return $link;
+		}
+		$unit_id = get_post_field( 'post_parent', $comment->comment_post_ID );
+		$course_id = get_post_field( 'post_parent', $unit_id );
+		$course_link = get_permalink( $course_id );
+		$link = esc_url_raw( $course_link . CoursePress_Core::get_slug( 'unit/' ) . get_post_field( 'post_name', $course_id ) . '#module-' . $comment->comment_post_ID );
 		return $link;
 	}
 
 	public static function discussions_comments_open( $open, $post_id ) {
 		$type = get_post_meta( $post_id, 'module_type', true );
-
 		if ( 'discussion' == $type ) {
 			return true;
 		}
-
 		return $open;
 	}
 
