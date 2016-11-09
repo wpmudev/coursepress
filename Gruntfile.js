@@ -617,6 +617,9 @@ module.exports = function(grunt) {
 					'!upgrade/js/src',
 					'!upgrade/js/src/*',
 					'!upgrade/js/src/**',
+					'!tests',
+					'!tests/*',
+					'!tests/**',
 					/** 1.x **/
 					'!1.x/.git',
 					'!1.x/.gitattributes',

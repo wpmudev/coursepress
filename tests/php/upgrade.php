@@ -33,12 +33,19 @@ class CoursePressUpgradeTest extends WP_UnitTestCase {
 
 		$c1 = self::factory()->post->create( $c1 );
 
+		add_action( 'coursepress_init_vars', array( __CLASS__, 'init_vars' ), 100 );
 		require_once $courseupgrade;
 
 		global $coursepress;
 		$this->assertEquals( true, CoursePressUpgrade::check_old_courses() );
 		$this->assertTrue( class_exists( 'CoursePress' ) );
 		$this->assertStringStartsWith( '1.', $coursepress->version );
+	}
+
+	public static function init_vars( $instance ) {
+		$instance->location = 'plugins';
+		$instance->plugin_dir = WP_COURSEPRESS_DIR . '1.x/';
+		$instance->plugin_url = WP_COURSEPRESS_DIR . '2.0/';
 	}
 
 	/**
