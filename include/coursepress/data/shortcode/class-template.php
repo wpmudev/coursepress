@@ -556,7 +556,7 @@ class CoursePress_Data_Shortcode_Template {
 			$c_link = '<a href="' . esc_url( $c_link ) . '" class="breadcrumb-course crumb">' . get_post_field( 'post_title', $course_id ) . '</a>';
 			$a_link = '<a href="' . esc_url( $a_link ) . '" class="breadcrumb-course-units crumb">' . esc_html__( 'Units', 'CP_TD' ) . '</a>';
 			$u_link_url = $u_link;
-			$u_link = '<a href="' . esc_url( $u_link ) . '#section-1" class="breadcrumb-course-unit crumb" data-id="1">' . get_post_field( 'post_title', $unit_id ) . '</a>';
+			$u_link = '<a href="' . esc_url( $u_link ) . '/page/1" class="breadcrumb-course-unit crumb" data-id="1">' . get_post_field( 'post_title', $unit_id ) . '</a>';
 
 			$breadcrumb_trail = $c_link . $bcs . $a_link . $bcs . $u_link;
 		}
