@@ -23,7 +23,8 @@ class CoursePress_Admin_Edit {
 		if ( 'auto-draft' !== $post->post_status || ! empty( $_GET['post'] ) ) {
 			self::$action = 'edit';
 		}
-
+//$setting = CoursePress_Data_Course::get_setting( $post->ID );
+//print_r( $setting );
 		$tab = empty( $_GET['tab'] ) ? 'setup' : $_GET['tab'];
 		add_action( 'edit_form_top', array( __CLASS__, 'edit_tabs' ) );
 
@@ -1284,7 +1285,7 @@ class CoursePress_Admin_Edit {
 		$content .= '<label for="meta_basic_certificate_layout">' . __( 'Certificate Content', 'CP_TD' ) . '</label>'
 			. '<p class="description" style="float:left;">' . __( 'Useful tokens: ', 'CP_TD' ) . implode( ', ', $field_keys ) . '</p>'
 		;
-		$content .= self::get_wp_editor( 'basic-certificate-layout', 'meta_basic_certificate', $certficate_content );
+		$content .= self::get_wp_editor( 'basic-certificate-layout', 'meta_basic_certificate_layout', $certficate_content );
 		$content .= '<table class="wide"><tr><td style="width:20%;">'
 			. '<label>' . __( 'Background Image', 'CP_TD' ) . '</label>'
 			. '</td><td>';
@@ -1378,6 +1379,7 @@ class CoursePress_Admin_Edit {
 					'uid' => '12345',
 					'style' => '<style>' . $styles . '</style>',
 				);
+
 				CoursePress_Helper_PDF::make_pdf( $html, $args );
 				// Print preview
 				$args['format'] = 'I';
