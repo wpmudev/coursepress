@@ -99,7 +99,7 @@ class CoursePressUpgrade {
 	}
 
 	/** Check if current courses contains un-upgraded to the current version. **/
-	private static function check_old_courses() {
+	public static function check_old_courses() {
 		$args = array(
 			'post_type' => 'course',
 			'post_status' => 'any',
@@ -120,6 +120,7 @@ class CoursePressUpgrade {
 
 		if ( '1.x' == $version ) {
 			// Hooked to 1.x
+			add_action( 'coursepress_before_init_vars', array( __CLASS__, 'before_init_vars' ), 10 );
 			add_action( 'coursepress_init_vars', array( __CLASS__, 'init_vars' ) );
 			// Flush the rewrite rules
 			// @note: While development only: must be removed
@@ -133,6 +134,13 @@ class CoursePressUpgrade {
 		if ( is_readable( $version_file ) ) {
 			include $version_file;
 		}
+	}
+
+	/**
+	 * Set CP 1.x directory name
+	 **/
+	public static function before_init_vars( $instance ) {
+		$instance->dir_name = 'coursepress/1.x';
 	}
 
 	public static function init_vars( $instance ) {

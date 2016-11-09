@@ -13,7 +13,7 @@ pipelines:
           - (umask  077 ; echo $PIPELINES_SSH_KEY | base64 --decode > ~/.ssh/id_rsa)
           - ssh-keyscan -t rsa -H bitbucket.org >> ~/.ssh/known_hosts
           - git submodule update --init --recursive
-          - cd 1.x && git checkout coursepress/base
+          - cd 1.x && git checkout coursepress/base-migration
           - cd ../2.0 && git checkout coursepress/2.0-dev
           - cd themes/coursepress && git checkout coursepress/2.0-dev
           - cd ../../..
