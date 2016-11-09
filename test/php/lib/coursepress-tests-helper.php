@@ -423,7 +423,38 @@ class CoursePress_Tests_Helper {
 				'show_title' => 1,
 			),
 		);
-		return $this->add_module( $postarr );
+		$module = $this->add_module( $postarr );
+		/**
+		 * delete all comments
+		 */
+		$args = array(
+			'post_id' => $module->ID,
+			'status' => 'all',
+		);
+		$comments = get_comments( $args );
+		foreach ( $comments as $comment ) {
+			print_r( $comment );
+			wp_delete_comment( $comment->ID, true );
+		}
+		/**
+		 * add comment
+		 */
+		$student = $this->get_student();
+		$data = array(
+			'comment_post_ID' => $module->ID,
+			'comment_author' => $student->data->user_login,
+			'comment_author_email' => $student->data->user_email,
+			'comment_author_url' => $student->data->user_url,
+			'comment_content' => 'Comment content.',
+			'user_id' => $student->ID,
+			'comment_author_IP' => '127.0.0.1',
+			'comment_approved' => 1,
+			'comment_meta' => array(
+				'last_login' => 1478686730,
+			),
+		);
+		$comment_id = wp_insert_comment( $data );
+		return $module;
 	}
 
 	function add_module_() {
