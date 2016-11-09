@@ -389,6 +389,7 @@ module.exports = function(grunt) {
 				},
 				expand: true,
 				cwd: '../release',
+				dest: conf.plugin_dir,
 				src: [
 					'*',
 					'**',
@@ -617,6 +618,9 @@ module.exports = function(grunt) {
 					'!upgrade/js/src',
 					'!upgrade/js/src/*',
 					'!upgrade/js/src/**',
+					'!tests',
+					'!tests/*',
+					'!tests/**',
 					/** 1.x **/
 					'!1.x/.git',
 					'!1.x/.gitattributes',
@@ -754,56 +758,6 @@ module.exports = function(grunt) {
 
 		// Simply copy the pro-translations to the Free plugin .pot file.
 		grunt.task.run( 'copy:translation' );
-	});
-
-	// Plugin build tasks
-	grunt.registerTask( 'build', 'Run all tasks.', function(target) {
-		var build = [], i, branch;
-
-		if ( target ) {
-			build.push( target );
-		} else {
-			build = ['pro', 'free', 'campus'];
-		}
-
-		// Run the default tasks (js/css/php validation)
-		//HIDE:grunt.task.run( 'default' );
-
-		// Generate all translation files (pro and free)
-		//grunt.task.run( 'lang' );
-
-		for ( i in build ) {
-			branch = build[i];
-			grunt.log.subhead( 'Update product branch [' + branch + ']...' );
-
-			// Checkout the destination branch.
-			grunt.task.run( 'gitcheckout:' + branch );
-
-			// Remove code and files that does not belong to 1.x and 2.0 versions
-			if ( 'pro' === branch ) {
-				grunt.task.run( 'replace:pro_1' );
-				grunt.task.run( 'replace:pro_2' );
-				grunt.task.run( 'clean:pro_1' );
-				grunt.task.run( 'clean:pro_2' );
-			}
-			grunt.task.run( 'gitadd:' + branch );
-			grunt.task.run( 'gitcommit:' + branch );
-			grunt.task.run( 'clean:release_' + branch );
-
-			/*
-			grunt.task.run( 'clean:' + branch );
-
-			// Add the processes/cleaned files to the target branch.
-			grunt.task.run( 'gitadd:' + branch );
-			grunt.task.run( 'gitcommit:' + branch );
-
-			// Create a distributable zip-file of the plugin branch.
-			grunt.task.run( 'clean:release_' + branch );
-			grunt.task.run( 'copy:' + branch );
-			grunt.task.run( 'compress:' + branch );
-			*/
-			grunt.task.run( 'gitcheckout:base');
-		}
 	});
 
 	// Test task.
