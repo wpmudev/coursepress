@@ -546,70 +546,145 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * TODO
+	 * is_module_done_by_student( $module_id, $student_id )
 	 */
 	public function test_is_module_done_by_student() {
-			/**
-		print_r(array( $assert));
+		/**
 		 * Wrong data
-			 */
+		 */
+		$assert = CoursePress_Data_Module::is_module_done_by_student( 'foo', 'bar' );
+		$this->assertInternalType( 'boolean', $assert );
+		$this->assertTrue( $assert );
+		$assert = CoursePress_Data_Module::is_module_done_by_student( 0, 'bar' );
+		$this->assertInternalType( 'boolean', $assert );
+		$this->assertTrue( $assert );
+		$assert = CoursePress_Data_Module::is_module_done_by_student( 0, 0 );
+		$this->assertInternalType( 'boolean', $assert );
+		$this->assertTrue( $assert );
+		$assert = CoursePress_Data_Module::is_module_done_by_student( 'foo', 0 );
+		$this->assertInternalType( 'boolean', $assert );
+		$this->assertTrue( $assert );
 		/**
 		 * Good data
 		 */
+		$modules = $this->get_modules();
+		foreach ( $modules as $module ) {
+			$assert = CoursePress_Data_Module::is_module_done_by_student( $module->ID, $this->student->ID );
+			$this->assertInternalType( 'boolean', $assert );
+			$this->assertTrue( $assert );
+		}
 	}
 
 	/**
-	 * TODO
+	 * add_last_login_time( $comment_id, $comment )
 	 */
 	public function test_add_last_login_time() {
 		/**
 		 * Wrong data
 		 */
+		$assert = CoursePress_Data_Module::add_last_login_time( 'foo', 'bar' );
+		$this->assertEmpty( $assert );
+		$assert = CoursePress_Data_Module::add_last_login_time( 0, 'bar' );
+		$this->assertEmpty( $assert );
+		$assert = CoursePress_Data_Module::add_last_login_time( 0, 0 );
+		$this->assertEmpty( $assert );
+		$assert = CoursePress_Data_Module::add_last_login_time( 'foo', 0 );
+		$this->assertEmpty( $assert );
 		/**
 		 * Good data
 		 */
+		$modules = $this->get_modules();
+		foreach ( $modules as $module ) {
+			$args = array(
+				'post_id' => $module->ID,
+				'status' => 'all',
+			);
+			$comments = get_comments( $args );
+			foreach ( $comments as $comment ) {
+				$assert = get_comment_meta( $comment->comment_ID, 'last_login', true );
+				$this->assertNotEmpty( $assert );
+				$this->assertEquals( '1478686730', $assert );
+			}
+		}
 	}
 
 	/**
 	 * TODO
 	 */
-	public function test_get_modules_ids_by_unit() {
+	/**
+	 * get_modules_ids_by_unit( $unit_id )
+	 */
+	public function xxxx_get_modules_ids_by_unit() {
 		/**
 		 * Wrong data
 		 */
+		$assert = CoursePress_Data_Module::get_modules_ids_by_unit( 'foo' );
+		print_r( array( $assert ) );
+		$assert = CoursePress_Data_Module::get_modules_ids_by_unit( 1 );
+		print_r( array( $assert ) );
 		/**
 		 * Good data
 		 */
+		foreach ( $this->course->units as $unit ) {
+			$assert = CoursePress_Data_Module::get_modules_ids_by_unit( $unit->ID );
+			print_r( array( $assert, $unit->modules ) );
+			$this->assertNotEmpty( $assert );
+			$this->assertInternalType( 'array', $assert );
+			$this->assertEqualSets( $unit->modules, $assert );
+		}
 	}
 
 	/**
 	 * TODO
 	 */
-	public function test_get_unit_id_by_module() {
+	public function xxxx_get_unit_id_by_module() {
 		/**
 		 * Wrong data
 		 */
+		$assert = CoursePress_Data_Module::get_unit_id_by_module( 'foo' );
+		print_r( array( $assert ) );
+		$assert = CoursePress_Data_Module::get_unit_id_by_module( 0 );
+		print_r( array( $assert ) );
 		/**
 		 * Good data
 		 */
+		$modules = $this->get_modules();
+		foreach ( $modules as $module ) {
+			$assert = CoursePress_Data_Module::get_unit_id_by_module( $module->ID );
+			$this->assertNotEmpty( $assert );
+			$this->assertInternalType( 'integer', $assert );
+			$this->assertEquals( $module->post_parent, $assert );
+		}
 	}
 
 	/**
 	 * TODO
 	 */
-	public function test_get_course_id_by_module() {
+	public function xxxx_get_course_id_by_module() {
 		/**
 		 * Wrong data
 		 */
+		$assert = CoursePress_Data_Module::get_course_id_by_module( 'foo' );
+		print_r( array( $assert ) );
+		$assert = CoursePress_Data_Module::get_course_id_by_module( 0 );
+		print_r( array( $assert ) );
 		/**
 		 * Good data
 		 */
+		$modules = $this->get_modules();
+		foreach ( $modules as $module ) {
+			$assert = CoursePress_Data_Module::get_course_id_by_module( $module->ID );
+			$this->assertNotEmpty( $assert );
+			$this->assertInternalType( 'integer', $assert );
+			$post_parent = wp_get_post_parent_id( $module->post_parent );
+			$this->assertEquals( $post_parent, $assert );
+		}
 	}
 
 	/**
 	 * TODO
 	 */
-	public function test_get_instructors() {
+	public function xxxx_get_instructors() {
 		/**
 		 * Wrong data
 		 */
@@ -621,7 +696,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	/**
 	 *
 	 */
-	public function test_add_instructors_to_comments_args() {
+	public function xxxx_add_instructors_to_comments_args() {
 		/**
 		 * Wrong data
 		 */
@@ -633,7 +708,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	/**
 	 * TODO
 	 */
-	public function test_get_module_ids_by_unit_ids() {
+	public function xxxx_get_module_ids_by_unit_ids() {
 		/**
 		 * Wrong data
 		 */
@@ -645,7 +720,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	/**
 	 * TODO
 	 */
-	public function test_show_on_list() {
+	public function xxxx_show_on_list() {
 		/**
 		 * Wrong data
 		 */
