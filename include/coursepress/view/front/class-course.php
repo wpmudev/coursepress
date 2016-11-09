@@ -978,6 +978,7 @@ class CoursePress_View_Front_Course {
 					'show_title' => true,
 					'content' => $page_content,
 					'type' => CoursePress_Data_Course::get_post_type_name(),
+					'ID' => $cp->course_id,
 				);
 			}
 		} elseif ( $cp->is_category ) {

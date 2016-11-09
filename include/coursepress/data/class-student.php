@@ -837,15 +837,6 @@ class CoursePress_Data_Student {
 									$is_answerable = true;
 									// Don't treat discussion as assessable
 									$is_assessable = false;
-									/*
-									$last_answer = CoursePress_Data_Discussion::have_comments( $student_id, $module_id );
-
-									if ( $last_answer ) {
-										$total_valid_items += 1;
-										$valid_items += 1;
-										$module_seen = true;
-									}
-									*/
 								}
 							}
 
@@ -953,6 +944,8 @@ class CoursePress_Data_Student {
 
 											if ( $is_assessable ) {
 												$require_assessment += 1;
+											} else {
+												$unit_gradable_modules -= 1;
 											}
 										}
 									}
@@ -1019,6 +1012,7 @@ class CoursePress_Data_Student {
 										}
 									}
 								} else {
+									
 									if ( $module_seen ) {
 										if ( false === $is_mandatory && false === $is_assessable && false === $require_instructor_assessment ) {
 											$unit_completed_modules += 1;
@@ -1050,7 +1044,7 @@ class CoursePress_Data_Student {
 					}
 
 					$have_seen = false;
-					if ( count( $seen_modules ) > 0 ) {
+					if ( $seen_modules > 0 ) {
 						$have_seen = true;
 					}
 
@@ -1217,7 +1211,7 @@ class CoursePress_Data_Student {
 			$is_completed
 		);
 
-		if ( empty( $is_done ) && $is_completed ) {
+		if ( ! $is_done && $is_completed ) {
 			// Notify other modules about the lucky student!
 			do_action(
 				'coursepress_student_course_completed',
