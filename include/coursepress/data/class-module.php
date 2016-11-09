@@ -790,6 +790,12 @@ class CoursePress_Data_Module {
 	 *
 	 */
 	public static function add_last_login_time( $comment_id, $comment ) {
+		/**
+		 * Check WP_Comment class
+		 */
+		if ( ! is_a( $comment, 'WP_Comment' ) ) {
+			return;
+		}
 		$parent_post_type = get_post_type( $comment->comment_post_ID );
 		if ( $parent_post_type != self::$post_type ) {
 			return;
