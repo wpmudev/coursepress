@@ -192,61 +192,306 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 		}
 	}
 
+	/**
+	 * discussion_module_link
+	 */
 	public function test_discussion_module_link() {
 		/**
-		 * TODO: add module discussion
+		 * Wrong data
 		 */
+		$assert = CoursePress_Data_Module::discussion_module_link( 'foo', 'baz' );
+		$this->assertEquals( 'foo', $assert );
+		$assert = CoursePress_Data_Module::discussion_module_link( 'foo', 0 );
+		$this->assertEquals( 'foo', $assert );
+		/**
+		 * Good data
+		 */
+		$modules = $this->get_modules();
+		foreach ( $modules as $module ) {
+			$module_type = get_post_meta( $module->ID, 'module_type', true );
+			$is_discussion = 'discussion' == $module_type;
+			$args = array(
+				'post_id' => $module->ID,
+				'status' => 'all',
+			);
+			$comments = get_comments( $args );
+			foreach ( $comments as $comment ) {
+				/**
+				 * discussion_module_link
+				 */
+				$assert = CoursePress_Data_Module::discussion_module_link( 'foo', $comment );
+				$re = sprintf( '/#module-%d/', $module->ID );
+				if ( $is_discussion ) {
+					$this->assertNotEquals( 'foo', $assert );
+					$this->assertRegExp( $re, $assert );
+				} else {
+					$this->assertEquals( 'foo', $assert );
+				}
+			}
+		}
 	}
 
+	/**
+	 * discussions_comments_open
+	 */
 	public function test_discussions_comments_open() {
 		/**
-		 * TODO: add module discussion
+		 * Wrong data
 		 */
+		$assert = CoursePress_Data_Module::discussions_comments_open( 'foo', 'baz' );
+		$this->assertEquals( 'foo', $assert );
+		$assert = CoursePress_Data_Module::discussions_comments_open( 'foo', 0 );
+		$this->assertEquals( 'foo', $assert );
+		/**
+		 * Good data
+		 */
+		$modules = $this->get_modules();
+		foreach ( $modules as $module ) {
+			$module_type = get_post_meta( $module->ID, 'module_type', true );
+			$is_discussion = 'discussion' == $module_type;
+			$args = array(
+				'post_id' => $module->ID,
+				'status' => 'all',
+			);
+			$comments = get_comments( $args );
+			foreach ( $comments as $comment ) {
+				$assert = CoursePress_Data_Module::discussions_comments_open( 'bar', $module->ID );
+				if ( $is_discussion ) {
+					$this->assertTrue( $assert );
+				} else {
+					$this->assertEquals( 'bar', $assert );
+				}
+			}
+		}
 	}
 
+	/**
+	 * discussion_post_link
+	 */
 	public function test_discussion_post_link() {
 		/**
-		 * TODO: add module discussion
+		 * Wrong data
 		 */
+		$assert = CoursePress_Data_Module::discussion_post_link( 'foo', 'baz' );
+		$this->assertEquals( 'foo', $assert );
+		$assert = CoursePress_Data_Module::discussion_post_link( 'foo', 0 );
+		$this->assertEquals( 'foo', $assert );
+		/**
+		 * Good data
+		 */
+		$modules = $this->get_modules();
+		foreach ( $modules as $module ) {
+			$module_type = get_post_meta( $module->ID, 'module_type', true );
+			$is_discussion = 'discussion' == $module_type;
+			$args = array(
+				'post_id' => $module->ID,
+				'status' => 'all',
+			);
+			$comments = get_comments( $args );
+			foreach ( $comments as $comment ) {
+				$re = sprintf( '/#module-%d/', $module->ID );
+				$assert = CoursePress_Data_Module::discussion_post_link( 'foo', $module );
+				if ( $is_discussion ) {
+					$this->assertNotEquals( 'foo', $assert );
+					$this->assertRegExp( $re, $assert );
+				} else {
+					$this->assertEquals( 'foo', $assert );
+				}
+			}
+		}
 	}
 
+	/**
+	 * discussion_edit_redirect
+	 */
 	public function test_discussion_edit_redirect() {
 		/**
-		 * TODO: add module discussion
+		 * Wrong data
 		 */
+		$assert = CoursePress_Data_Module::discussion_edit_redirect( 'foo', 0 );
+		$this->assertEquals( 'foo', $assert );
+		$assert = CoursePress_Data_Module::discussion_edit_redirect( 'foo', 'baz' );
+		$this->assertEquals( 'foo', $assert );
+		/**
+		 * Good data
+		 */
+		$modules = $this->get_modules();
+		foreach ( $modules as $module ) {
+			$module_type = get_post_meta( $module->ID, 'module_type', true );
+			$is_discussion = 'discussion' == $module_type;
+			$args = array(
+				'post_id' => $module->ID,
+				'status' => 'all',
+			);
+			$comments = get_comments( $args );
+			foreach ( $comments as $comment ) {
+				$re = sprintf( '/#comment-%d/', $comment->comment_ID );
+				$assert = CoursePress_Data_Module::discussion_edit_redirect( 'foo', $comment->comment_ID );
+				if ( $is_discussion ) {
+					$this->assertNotEquals( 'foo', $assert );
+					$this->assertRegExp( $re, $assert );
+				} else {
+					$this->assertEquals( 'foo', $assert );
+				}
+			}
+		}
 	}
 
+	/**
+	 * discussion_reply_link
+	 */
 	public function test_discussion_reply_link() {
+		$assert_args = array(
+			'add_below'     => 'comment',
+			'respond_id'    => 'respond',
+			'reply_text'    => 'Reply',
+			'reply_to_text' => 'Reply to %s',
+			'login_text'    => 'Log in to Reply',
+			'depth'         => 0,
+			'before'        => '',
+			'after'         => '',
+		);
 		/**
-		 * TODO: add module discussion
+		 * Wrong data
 		 */
+		$assert = CoursePress_Data_Module::discussion_reply_link( 'foo', array(), 0, 0 );
+		$this->assertEquals( 'foo', $assert );
+		$assert = CoursePress_Data_Module::discussion_reply_link( 'foo', $assert_args, 0, 0 );
+		$this->assertEquals( 'foo', $assert );
+		$assert = CoursePress_Data_Module::discussion_reply_link( 'foo', $assert_args, 0, 'baz' );
+		$this->assertEquals( 'foo', $assert );
+		$assert = CoursePress_Data_Module::discussion_reply_link( 'foo', $assert_args, 'bar', 0 );
+		$this->assertEquals( 'foo', $assert );
+		$assert = CoursePress_Data_Module::discussion_reply_link( 'foo', $assert_args, 'bar', 'baz' );
+		$this->assertEquals( 'foo', $assert );
+		/**
+		 * Good data
+		 */
+		$modules = $this->get_modules();
+		foreach ( $modules as $module ) {
+			$module_type = get_post_meta( $module->ID, 'module_type', true );
+			$is_discussion = 'discussion' == $module_type;
+			$args = array(
+				'post_id' => $module->ID,
+				'status' => 'all',
+			);
+			$comments = get_comments( $args );
+			foreach ( $comments as $comment ) {
+				/**
+				 * discussion_reply_link
+				 */
+				$assert = CoursePress_Data_Module::discussion_reply_link( 'foo', $assert_args, $comment, $module );
+				$this->assertNotEmpty( $assert );
+				$this->assertNotEquals( 'foo', $assert );
+				$this->assertRegExp( '/^<a.+a>$/', $assert );
+			}
+		}
 	}
 
+	/**
+	 * discussion_cancel_reply_link
+	 */
 	public function test_discussion_cancel_reply_link() {
+		$text = 'Click here to cancel reply.';
+		$link = esc_html( remove_query_arg( 'replytocom' ) ) . '#respond';
+		$formatted_link = sprintf( '<a href="%s">%s</a>', esc_url( $link ), $text );
 		/**
-		 * TODO: add module discussion
+		 * Wrong data
 		 */
+		$assert = CoursePress_Data_Module::discussion_cancel_reply_link( $formatted_link, $link, $text );
+		$this->assertEmpty( $assert );
+		/**
+		 * Good data
+		 */
+		$modules = $this->get_modules();
+		foreach ( $modules as $module ) {
+			$module_type = get_post_meta( $module->ID, 'module_type', true );
+			$is_discussion = 'discussion' == $module_type;
+			$args = array(
+				'post_id' => $module->ID,
+				'status' => 'all',
+			);
+			$comments = get_comments( $args );
+			foreach ( $comments as $comment ) {
+				$_GET['replytocom'] = $comment->comment_ID;
+				$assert = CoursePress_Data_Module::discussion_cancel_reply_link( $formatted_link, $link, $text );
+				$this->assertNotEmpty( $assert );
+				$this->assertRegExp( '/^<a.+a>$/', $assert );
+				$this->assertNotEquals( $formatted_link, $assert );
+			}
+		}
 	}
 
+	/**
+	 * get_quiz_results( $student_id, $course_id, $unit_id, $module_id, $response = false, $data = false )
+	 */
 	public function test_get_quiz_results() {
+		$keys = array(
+			'attributes',
+			'correct',
+			'grade',
+			'message' => array( 'hide', 'text' ),
+			'passed',
+			'total_questions',
+			'wrong',
+		);
 		/**
-		 * TODO: add module quiz
+		 * Wrong data
 		 */
+		$assert = CoursePress_Data_Module::get_quiz_results( 'foo', 'bar', 'baz', 'gas' );
+		$this->assertFalse( $assert );
+		$assert = CoursePress_Data_Module::get_quiz_results( 0, 0, 0, 0 );
+		$this->assertFalse( $assert );
+		/**
+		 * Good data
+		 */
+		$modules = $this->get_modules();
+		foreach ( $modules as $module ) {
+			$assert = CoursePress_Data_Module::get_quiz_results(
+				$this->student->ID,
+				$this->course->ID,
+				$module->post_parent,
+				$module->ID
+			);
+			$this->assertFalse( $assert );
+			/**
+			 * TODO: add students answer and check it
+			 *
+			 $this->assertInternalType( 'array', $assert );
+			$this->has_keys( $keys, $assert );
+			 */
+		}
 	}
 
+	/**
+	 * quiz_result_content( $student_id, $course_id, $unit_id, $module_id, $quiz_result = false )
+	 */
 	public function test_quiz_result_content() {
 		/**
-		 * TODO: add module quiz
+		 * Wrong data
 		 */
-	}
-
-	public function test_get_form_results() {
+		$assert = CoursePress_Data_Module::quiz_result_content( 'foo', 'foo', 'foo', 'foo' );
+		$this->assertNotEmpty( $assert );
+		$assert = CoursePress_Data_Module::quiz_result_content( 0, 0, 0, 0 );
+		$this->assertNotEmpty( $assert );
 		/**
-		 * TODO: add module form
+		 * Good data
 		 */
+		$modules = $this->get_modules();
+		foreach ( $modules as $module ) {
+			$assert = CoursePress_Data_Module::quiz_result_content(
+				$this->student->ID,
+				$this->course->ID,
+				$module->post_parent,
+				$module->ID
+			);
+			$this->assertNotEmpty( $assert );
+		}
 	}
 
-
+	/**
+	 * get_args_mandatory_modules( $unit_id )
+	 */
 	public function test_get_args_mandatory_modules() {
 		$expected = array(
 			'fields' => 'ids',
@@ -277,6 +522,142 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 		}
 	}
 
+	/**
+	 * function get_mandatory_modules( $unit_id )
+	 */
+	public function test_get_mandatory_modules() {
+		/**
+		 * Wrong data
+		 */
+		$assert = CoursePress_Data_Module::get_mandatory_modules( 0 );
+		$this->assertInternalType( 'array', $assert );
+		$this->assertEmpty( $assert );
+		$assert = CoursePress_Data_Module::get_mandatory_modules( 'foo' );
+		$this->assertInternalType( 'array', $assert );
+		$this->assertEmpty( $assert );
+		/**
+		 * Good data
+		 */
+		foreach ( $this->course->units as $unit ) {
+			$assert = CoursePress_Data_Module::get_mandatory_modules( $unit->ID );
+			$this->assertInternalType( 'array', $assert );
+			$this->assertEmpty( $assert );
+		}
+	}
+
+	/**
+	 * TODO
+	 */
+	public function test_is_module_done_by_student() {
+			/**
+		print_r(array( $assert));
+		 * Wrong data
+			 */
+		/**
+		 * Good data
+		 */
+	}
+
+	/**
+	 * TODO
+	 */
+	public function test_add_last_login_time() {
+		/**
+		 * Wrong data
+		 */
+		/**
+		 * Good data
+		 */
+	}
+
+	/**
+	 * TODO
+	 */
+	public function test_get_modules_ids_by_unit() {
+		/**
+		 * Wrong data
+		 */
+		/**
+		 * Good data
+		 */
+	}
+
+	/**
+	 * TODO
+	 */
+	public function test_get_unit_id_by_module() {
+		/**
+		 * Wrong data
+		 */
+		/**
+		 * Good data
+		 */
+	}
+
+	/**
+	 * TODO
+	 */
+	public function test_get_course_id_by_module() {
+		/**
+		 * Wrong data
+		 */
+		/**
+		 * Good data
+		 */
+	}
+
+	/**
+	 * TODO
+	 */
+	public function test_get_instructors() {
+		/**
+		 * Wrong data
+		 */
+		/**
+		 * Good data
+		 */
+	}
+
+	/**
+	 *
+	 */
+	public function test_add_instructors_to_comments_args() {
+		/**
+		 * Wrong data
+		 */
+		/**
+		 * Good data
+		 */
+	}
+
+	/**
+	 * TODO
+	 */
+	public function test_get_module_ids_by_unit_ids() {
+		/**
+		 * Wrong data
+		 */
+		/**
+		 * Good data
+		 */
+	}
+
+	/**
+	 * TODO
+	 */
+	public function test_show_on_list() {
+		/**
+		 * Wrong data
+		 */
+		/**
+		 * Good data
+		 */
+	}
+
+	/**
+	 * Helpers
+	 */
+
 	private function get_modules() {
 		if ( ! empty( $this->modules ) ) {
 			return $this->modules;
@@ -287,11 +668,21 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 		}
 		return $this->modules;
 	}
+
+	private function has_keys( $keys, $assert ) {
+		foreach ( $keys as $key ) {
+			if ( is_array( $key ) ) {
+				$this->has_keys( $key, $assert[ $key ] );
+				continue;
+			}
+			$this->assertArrayHasKey( $key, $assert );
+		}
+	}
 }
-		/**
-		print_r(array( $assert));
-		 * Wrong data
-		 */
-		/**
-		 * Good data
-		 */
+/**
+print_r(array( $assert));
+ * Wrong data
+ */
+/**
+ * Good data
+ */
