@@ -1012,6 +1012,7 @@ class CoursePress_Data_Student {
 										}
 									}
 								} else {
+									
 									if ( $module_seen ) {
 										if ( false === $is_mandatory && false === $is_assessable && false === $require_instructor_assessment ) {
 											$unit_completed_modules += 1;
@@ -1043,7 +1044,7 @@ class CoursePress_Data_Student {
 					}
 
 					$have_seen = false;
-					if ( count( $seen_modules ) > 0 ) {
+					if ( $seen_modules > 0 ) {
 						$have_seen = true;
 					}
 
