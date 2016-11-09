@@ -479,7 +479,7 @@ class CoursePress_Admin_Edit {
 							<p class="description">' . esc_html__( 'Choose if your course will show in "normal" mode or step by step "focus" mode.', 'CP_TD' ) . '</p>
 						</label>
 						<label class="checkbox">
-							<input type="radio" name="meta_course_view" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'course_view', 'focus' ), 'focus' ) . ' value="focus">' . esc_html__( 'Focus: Focus on one item at a time', 'CP_TD' ) . '
+							<input type="radio" name="meta_course_view" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'course_view', 'normal' ), 'focus' ) . ' value="focus">' . esc_html__( 'Focus: Focus on one item at a time', 'CP_TD' ) . '
 						</label>
 						<label class="checkbox">
 							<input type="checkbox" name="meta_focus_hide_section" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'focus_hide_section', true ) ) . ' value="unit">' . esc_html__( 'Don\'t render section titles in focus mode.', 'CP_TD' ) . '
