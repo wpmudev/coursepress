@@ -42,15 +42,6 @@ class CoursePressUpgradeTest extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Set CP 1.x directory name
-	 **/
-	public static function before_init_vars( $instance ) {
-		preg_match( '%coursepress-tests-lib%', WP_TESTS_DIR, $matches );
-
-		$instance->dir_name = '1.x';
-	}
-
-	/**
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 **/
