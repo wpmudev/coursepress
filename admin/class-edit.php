@@ -1,6 +1,9 @@
 <?php
 /**
- * CoursePress
+ * Course Edit
+ *
+ * @package WordPress
+ * @subpackage CoursePress
  **/
 class CoursePress_Admin_Edit {
 	public static $slug = 'coursepress_course';
@@ -23,8 +26,7 @@ class CoursePress_Admin_Edit {
 		if ( 'auto-draft' !== $post->post_status || ! empty( $_GET['post'] ) ) {
 			self::$action = 'edit';
 		}
-//$setting = CoursePress_Data_Course::get_setting( $post->ID );
-//print_r( $setting );
+
 		$tab = empty( $_GET['tab'] ) ? 'setup' : $_GET['tab'];
 		add_action( 'edit_form_top', array( __CLASS__, 'edit_tabs' ) );
 
@@ -32,8 +34,6 @@ class CoursePress_Admin_Edit {
 		remove_all_actions( 'add_meta_boxes' );
 
 		if ( 'setup' == $tab ) {
-			// Remove submitdiv
-			//remove_meta_box( 'submitdiv', $post_type, 'side' );
 
 			// Change preview link
 			add_filter( 'preview_post_link', array( __CLASS__, 'preview_post_link' ), 10, 2 );
@@ -75,6 +75,9 @@ class CoursePress_Admin_Edit {
 		$wp_meta_boxes = array();
 	}
 
+	/**
+	 * Disable metabox containers. It looks ugly on units and students tabs.
+	 **/
 	public static function disable_style() {
 		?>
 		<style>
