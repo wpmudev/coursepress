@@ -534,6 +534,7 @@ class CoursePress_Template_Module {
 				'loop' => $loop,
 				'autoplay' => $autoplay,
 			);
+
 			$content .= '<div class="module-content">
 					<div class="audio_player">
 						' . wp_audio_shortcode( $attr ) . '

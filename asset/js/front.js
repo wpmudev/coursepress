@@ -537,6 +537,16 @@ $(document)
 		}, 1000);
 	};
 
+	CoursePress.MediaElements = function( container ) {
+		if ( $.fn.mediaelementplayer ) {
+			var media = $( 'audio,video', container );
+
+			if ( media.length > 0 ) {
+				media.mediaelementplayer();
+			}
+		}
+	};
+
 	CoursePress.LoadFocusModule = function() {
 		var nav = $(this),
 			data = nav.data(),
@@ -571,6 +581,7 @@ $(document)
 		container.load( url, function() {
 			CoursePress.resetBrowserURL( data.url );
 			CoursePress.timer( container.find( '.cp-module-content' ) );
+			CoursePress.MediaElements( container.find( '.cp-module-content' ) );
 		});
 
 		return false;
@@ -687,6 +698,7 @@ $(document)
 								focus_box.html( data.data.html );
 								CoursePress.resetBrowserURL( data.data.url );
 								CoursePress.timer( focus_box.find( '.cp-module-content' ) );
+								CoursePress.MediaElements( focus_box.find( '.cp-module-content' ) );
 							}
 						}
 					} else {
