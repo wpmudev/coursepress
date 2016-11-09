@@ -3495,8 +3495,6 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				$this->location   = 'mu-plugins';
 				$this->plugin_dir = WPMU_PLUGIN_DIR;
 				$this->plugin_url = WPMU_PLUGIN_URL;
-			} else {
-				wp_die( sprintf( __( 'There was an issue determining where %s is installed. Please reinstall it.', 'coursepress_base_td' ), $this->name ) );
 			}
 
 			$this->screen_base      = str_replace( ' ', '-', strtolower( $this->name ) );
@@ -3506,6 +3504,10 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			 * Fire after init vars
 			 **/
 			do_action( 'coursepress_init_vars', $this );
+
+			if ( empty( $this->plugin_dir ) && empty( $this->plugin_url ) ) {
+				wp_die( sprintf( __( 'There was an issue determining where %s is installed. Please reinstall it.', 'coursepress_base_td' ), $this->name ) );
+			}
 		}
 
 		//Load unit elements / modules / building blocks and other add-ons and plugins
