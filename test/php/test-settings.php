@@ -1,6 +1,6 @@
 <?php
 /**
- * Unit tests.
+ * Settings tests.
  *
  * @package CoursePress
  */
@@ -8,15 +8,17 @@
 /**
  * Test cases for Settings.
  */
-class CoursePressSettingsTest extends WP_UnitTestCase {
+class CoursePress_Settings_Test extends CoursePress_UnitTestCase {
+
+	public function __construct() {
+		/** Initialise the hooks we need for the tests */
+		$this->add_test_hooks();
+	}
 
 	/**
 	 * Make sure our Settings Page has all the correct tabs
 	 */
 	function test_settings_array_keys() {
-
-		/** Initialise the hooks we need for the tests */
-		$this->add_test_hooks();
 
 		/**
 		 * Get the tabs. The `coursepress_tabs_coursepress_settings` hook is used in the test
@@ -69,8 +71,8 @@ class CoursePressSettingsTest extends WP_UnitTestCase {
 		/**
 		 * Test empty or false options
 		 */
-		$this->assertEquals( null, CoursePress_Core::get_setting( 'level1/level2/level3/level4' ) );
-		$this->assertNotEquals( true, CoursePress_Core::get_setting( 'level1/key1' ) );
+		$this->assertEmpty( CoursePress_Core::get_setting( 'level1/level2/level3/level4' ) );
+		$this->assertFalse( CoursePress_Core::get_setting( 'level1/key1' ) );
 
 		/**
 		 * Test default values
