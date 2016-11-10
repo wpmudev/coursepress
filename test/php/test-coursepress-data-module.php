@@ -791,24 +791,24 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	/**
 	 * show_on_list( $module_id, $unit_id, $meta )
 	 */
-    public function test_show_on_list() {
-        /**
-         * Wrong data
-         */
-        $assert = CoursePress_Data_Module::show_on_list( 'foo', 'bar', 'baz' );
-        $this->assertEmpty( $assert );
-        $assert = CoursePress_Data_Module::show_on_list( 0, 0, 0 );
-        $this->assertEmpty( $assert );
-        /**
-         * Good data
-         */
-        $modules = $this->get_modules();
-        foreach ( $modules as $module ) {
-            $meta = get_post_meta( $module->ID );
-            $assert = CoursePress_Data_Module::show_on_list( $module->ID, $module->post_parent, $meta );
-            $this->assertEmpty( $assert );
-        }
-    }
+	public function test_show_on_list() {
+		/**
+		 * Wrong data
+		 */
+		$assert = CoursePress_Data_Module::show_on_list( 'foo', 'bar', 'baz' );
+		$this->assertEmpty( $assert );
+		$assert = CoursePress_Data_Module::show_on_list( 0, 0, 0 );
+		$this->assertEmpty( $assert );
+		/**
+		 * Good data
+		 */
+		$modules = $this->get_modules();
+		foreach ( $modules as $module ) {
+			$meta = get_post_meta( $module->ID );
+			$assert = CoursePress_Data_Module::show_on_list( $module->ID, $module->post_parent, $meta );
+			$this->assertEmpty( $assert );
+		}
+	}
 
 	/**
 	 * Helpers
@@ -835,10 +835,3 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 		}
 	}
 }
-/**
-print_r(array( $assert));
- * Wrong data
- */
-/**
- * Good data
- */

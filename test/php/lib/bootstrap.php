@@ -59,3 +59,4 @@ tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
  */
 require WP_TESTS_DIR . 'includes/bootstrap.php';
 require( dirname( __FILE__ ) . '/coursepress-tests-helper.php' );
+require( dirname( __FILE__ ) . '/coursepress-unit-test-case.php' );
