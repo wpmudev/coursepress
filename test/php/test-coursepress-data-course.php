@@ -113,13 +113,17 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		$post = get_post( $this->course->ID );
 		$this->assertInstanceOf( 'WP_Post', $post );
 		$this->assertEquals( $post->post_type, CoursePress_Data_Course::get_post_type_name() );
-		$this->assertEquals( $post->post_author, $this->course->post_author );
-		$this->assertEquals( $post->post_status, $this->course->post_status );
-		$this->assertEquals( $post->post_title, $this->course->course_name );
-		$this->assertEquals( $post->post_excerpt, $this->course->course_excerpt );
-		$this->assertEquals( $post->post_content, $this->course->course_description );
-		$this->assertEquals( $post->ping_status, 'closed' );
-		$this->assertEquals( $post->comment_status, 'closed' );
+		$keys = array(
+			'post_author',
+			'post_title',
+			'post_excerpt',
+			'post_content',
+			'ping_status',
+			'comment_status',
+		);
+		foreach ( $keys as $key ) {
+			$this->assertEquals( $post->$key, $this->course->$key );
+		}
 
 		/**
 		 * Settings
@@ -143,7 +147,6 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		$keys = array( 'ca', 'cu', 'usc', 'ud', 'ua', 'uu', 'as', 'ac', 'dc', 'us', 'usl', 'is', 'ia' );
 		$assert = CoursePress_Data_Course::get_default_messages();
 		$this->has_keys( $keys, $assert );
-
 	}
 }
 
