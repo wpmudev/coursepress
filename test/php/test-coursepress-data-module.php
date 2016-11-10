@@ -27,7 +27,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 		$this->course = $helper->get_course();
 	}
 
-	public function xxxx_exists() {
+	public function test_exists() {
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Module', 'module_init_hooks' ) ) );
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Module', 'get_format' ) ) );
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Module', 'get_post_type_name' ) ) );
@@ -57,7 +57,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Module', 'show_on_list' ) ) );
 	}
 
-	public function xxxx_get_format() {
+	public function test_get_format() {
 		$assert = CoursePress_Data_Module::get_format();
 		$keys = array(
 			'post_type',
@@ -97,11 +97,11 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 		}
 	}
 
-	public function xxxx_get_post_type_name() {
+	public function test_get_post_type_name() {
 		$this->assertEquals( 'module', CoursePress_Data_Module::get_post_type_name() );
 	}
 
-	public function xxxx_get_time_estimation() {
+	public function test_get_time_estimation() {
 		/**
 		 * Wrong data
 		 */
@@ -119,7 +119,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 		}
 	}
 
-	public function xxxx_legacy_map() {
+	public function test_legacy_map() {
 		$assert = CoursePress_Data_Module::legacy_map();
 		$keys = array(
 			'audio_module',
@@ -142,7 +142,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 		}
 	}
 
-	public function xxxx_attributes() {
+	public function test_attributes() {
 		/**
 		 * Wrong data
 		 */
@@ -195,7 +195,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	/**
 	 * discussion_module_link
 	 */
-	public function xxxx_discussion_module_link() {
+	public function test_discussion_module_link() {
 		/**
 		 * Wrong data
 		 */
@@ -234,7 +234,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	/**
 	 * discussions_comments_open
 	 */
-	public function xxxx_discussions_comments_open() {
+	public function test_discussions_comments_open() {
 		/**
 		 * Wrong data
 		 */
@@ -268,7 +268,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	/**
 	 * discussion_post_link
 	 */
-	public function xxxx_discussion_post_link() {
+	public function test_discussion_post_link() {
 		/**
 		 * Wrong data
 		 */
@@ -304,7 +304,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	/**
 	 * discussion_edit_redirect
 	 */
-	public function xxxx_discussion_edit_redirect() {
+	public function test_discussion_edit_redirect() {
 		/**
 		 * Wrong data
 		 */
@@ -340,7 +340,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	/**
 	 * discussion_reply_link
 	 */
-	public function xxxx_discussion_reply_link() {
+	public function test_discussion_reply_link() {
 		$assert_args = array(
 			'add_below'     => 'comment',
 			'respond_id'    => 'respond',
@@ -391,7 +391,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	/**
 	 * discussion_cancel_reply_link
 	 */
-	public function xxxx_discussion_cancel_reply_link() {
+	public function test_discussion_cancel_reply_link() {
 		$text = 'Click here to cancel reply.';
 		$link = esc_html( remove_query_arg( 'replytocom' ) ) . '#respond';
 		$formatted_link = sprintf( '<a href="%s">%s</a>', esc_url( $link ), $text );
@@ -425,7 +425,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	/**
 	 * get_quiz_results( $student_id, $course_id, $unit_id, $module_id, $response = false, $data = false )
 	 */
-	public function xxxx_get_quiz_results() {
+	public function test_get_quiz_results() {
 		$keys = array(
 			'attributes',
 			'correct',
@@ -466,7 +466,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	/**
 	 * quiz_result_content( $student_id, $course_id, $unit_id, $module_id, $quiz_result = false )
 	 */
-	public function xxxx_quiz_result_content() {
+	public function test_quiz_result_content() {
 		/**
 		 * Wrong data
 		 */
@@ -492,7 +492,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	/**
 	 * get_args_mandatory_modules( $unit_id )
 	 */
-	public function xxxx_get_args_mandatory_modules() {
+	public function test_get_args_mandatory_modules() {
 		$expected = array(
 			'fields' => 'ids',
 			'meta_key' => 'mandatory',
@@ -525,7 +525,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	/**
 	 * function get_mandatory_modules( $unit_id )
 	 */
-	public function xxxx_get_mandatory_modules() {
+	public function test_get_mandatory_modules() {
 		/**
 		 * Wrong data
 		 */
@@ -548,7 +548,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	/**
 	 * is_module_done_by_student( $module_id, $student_id )
 	 */
-	public function xxxx_is_module_done_by_student() {
+	public function test_is_module_done_by_student() {
 		/**
 		 * Wrong data
 		 */
@@ -578,7 +578,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	/**
 	 * add_last_login_time( $comment_id, $comment )
 	 */
-	public function xxxx_add_last_login_time() {
+	public function test_add_last_login_time() {
 		/**
 		 * Wrong data
 		 */
@@ -611,7 +611,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	/**
 	 * get_modules_ids_by_unit( $unit_id )
 	 */
-	public function xxxx_get_modules_ids_by_unit() {
+	public function test_get_modules_ids_by_unit() {
 		/**
 		 * Wrong data
 		 */
@@ -635,7 +635,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	/**
 	 * get_unit_id_by_module( $module )
 	 */
-	public function xxxx_get_unit_id_by_module() {
+	public function test_get_unit_id_by_module() {
 		/**
 		 * Wrong data
 		 */
@@ -658,7 +658,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	/**
 	 * get_course_id_by_module( $module )
 	 */
-	public function xxxx_get_course_id_by_module() {
+	public function test_get_course_id_by_module() {
 		/**
 		 * Wrong data
 		 */
@@ -682,7 +682,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	/**
 	 * get_instructors( $module_id, $objects = false )
 	 */
-	public function xxxx_get_instructors() {
+	public function test_get_instructors() {
 		/**
 		 * Wrong data
 		 */
@@ -718,7 +718,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	/**
 	 * add_instructors_to_comments_args( $args )
 	 */
-	public function xxxx_add_instructors_to_comments_args() {
+	public function test_add_instructors_to_comments_args() {
 		/**
 		 * Wrong data
 		 */
@@ -791,20 +791,24 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	/**
 	 * show_on_list( $module_id, $unit_id, $meta )
 	 */
-	public function xxxx_show_on_list() {
-		/**
-		 * Wrong data
-		 */
-		/**
-		 * Good data
-		 */
-		$modules = $this->get_modules();
-		foreach ( $modules as $module ) {
-			$meta = get_post_meta( $module->ID );
-			$assert = CoursePress_Data_Module::show_on_list( $module->ID, $module->post_parent, $meta );
-			print_r( array( $assert ) );
-		}
-	}
+    public function test_show_on_list() {
+        /**
+         * Wrong data
+         */
+        $assert = CoursePress_Data_Module::show_on_list( 'foo', 'bar', 'baz' );
+        $this->assertEmpty( $assert );
+        $assert = CoursePress_Data_Module::show_on_list( 0, 0, 0 );
+        $this->assertEmpty( $assert );
+        /**
+         * Good data
+         */
+        $modules = $this->get_modules();
+        foreach ( $modules as $module ) {
+            $meta = get_post_meta( $module->ID );
+            $assert = CoursePress_Data_Module::show_on_list( $module->ID, $module->post_parent, $meta );
+            $this->assertEmpty( $assert );
+        }
+    }
 
 	/**
 	 * Helpers
