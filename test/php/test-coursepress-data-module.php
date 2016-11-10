@@ -611,7 +611,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	/**
 	 * get_modules_ids_by_unit( $unit_id )
 	 */
-	public function test_get_modules_ids_by_unit() {
+	public function xxxx_get_modules_ids_by_unit() {
 		/**
 		 * Wrong data
 		 */
@@ -633,16 +633,16 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * TODO
+	 * get_unit_id_by_module( $module )
 	 */
-	public function xxxx_get_unit_id_by_module() {
+	public function test_get_unit_id_by_module() {
 		/**
 		 * Wrong data
 		 */
 		$assert = CoursePress_Data_Module::get_unit_id_by_module( 'foo' );
-		print_r( array( $assert ) );
+		$this->assertEquals( 0, $assert );
 		$assert = CoursePress_Data_Module::get_unit_id_by_module( 0 );
-		print_r( array( $assert ) );
+		$this->assertEquals( 0, $assert );
 		/**
 		 * Good data
 		 */
