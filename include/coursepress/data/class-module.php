@@ -921,6 +921,13 @@ class CoursePress_Data_Module {
 	 */
 	public static function add_instructors_to_comments_args( $args ) {
 		global $post;
+		print_r( $post );
+		/**
+		 * Check WP_Post class
+		 */
+		if ( ! is_a( $post, 'WP_Post' ) ) {
+			return $args;
+		}
 		$post_type = self::get_post_type_name();
 		if ( $post_type != $post->post_type ) {
 			return $args;
