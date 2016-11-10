@@ -473,7 +473,7 @@ class CoursePress_Tests_Helper {
 			'post_type' => CoursePress_Data_Module::get_post_type_name(),
 			'post_parent' => $this->unit->ID,
 			'post_content' => 'Lorem Ipsum Multiple Choice',
-			'post_title' => ' Module Multiple Choice',
+			'post_title' => 'Module Multiple Choice',
 			'meta_input' => array(
 				'allow_retries' => 1,
 				'answers' => array( 'Answer A', 'Answer B', 'Answer C', 'Answer D' ),
