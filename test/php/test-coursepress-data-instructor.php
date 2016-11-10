@@ -108,7 +108,7 @@ class CoursepressDataInstructorTest extends WP_UnitTestCase {
 		$this->assertEquals( $meta, $assert );
 		$assert = array( $this->course->ID );
 		$this->assertEquals( $assert, CoursePress_Data_Instructor::get_assigned_courses_ids( $this->instructor ) );
-		$this->assertEquals( $assert, CoursePress_Data_Instructor::get_assigned_courses_ids( $this->instructor, 'private' ) );
+		$this->assertEqualSets( $assert, CoursePress_Data_Instructor::get_assigned_courses_ids( $this->instructor, 'private' ) );
 		$this->assertNotEmpty( CoursePress_Data_Instructor::get_assigned_courses_ids( $this->instructor ) );
 		/**
 		 * coursepress_update_my_course_cap
