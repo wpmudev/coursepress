@@ -240,7 +240,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 		} else {
 			wp_send_json_error( $json_data );
 		}
-		exit;
+		wp_die();
 	}
 
 	/**
