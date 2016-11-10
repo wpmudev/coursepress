@@ -159,6 +159,7 @@ class CoursePress_Helper_Utility {
 			} else {
 				return null;
 			}
+		}
 		return $a;
 	}
 
