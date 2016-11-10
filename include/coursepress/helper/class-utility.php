@@ -153,15 +153,12 @@ class CoursePress_Helper_Utility {
 		if ( ! is_array( $path ) ) {
 			$path = explode( '/', $path );
 		}
-
 		foreach ( $path as $k ) {
 			if ( isset( $a[ $k ] ) ) {
-				$a = &$a[ $k ];
+				$a = $a[ $k ];
 			} else {
 				return null;
 			}
-		}
-
 		return $a;
 	}
 
