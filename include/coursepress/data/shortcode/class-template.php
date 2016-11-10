@@ -922,6 +922,18 @@ class CoursePress_Data_Shortcode_Template {
 				);
 			} else {
 				$res = sprintf(
+					'<button type="button" class="button %5$s" data-course="%8$s" data-id="%1$s" data-type="%2$s" data-unit="%4$s" data-title="%6$s" data-url="%7$s">%3$s</button>',
+					esc_attr( $button['id'] ),
+					esc_attr( $button['type'] ),
+					$title,
+					esc_attr( $button['unit'] ),
+					esc_attr( $classes ),
+					esc_attr( $link_title ),
+					esc_url( $button['url'] ),
+					$button['course_id']
+				);
+				/*
+				$res = sprintf(
 					'<button type="button" class="button %5$s" data-course="%8$s" data-id="%1$s" data-type="%2$s" data-unit="%4$s" data-title="%6$s" data-url="%7$s"><a href="%7$s" title="%6$s">%3$s</a></button>',
 					esc_attr( $button['id'] ),
 					esc_attr( $button['type'] ),
@@ -932,6 +944,7 @@ class CoursePress_Data_Shortcode_Template {
 					esc_url( $button['url'] ),
 					$button['course_id']
 				);
+				*/
 			}
 
 		} else {
