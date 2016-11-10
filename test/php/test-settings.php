@@ -71,8 +71,8 @@ class CoursePress_Settings_Test extends CoursePress_UnitTestCase {
 		/**
 		 * Test empty or false options
 		 */
-		$assert = CoursePress_Core::get_setting( 'level1/level2/level3/level4' );
-		$this->assertEquals( '', $assert );
+		$assert = CoursePress_Core::get_setting( 'level1/level2/level3/level4', 'foo' );
+		$this->assertEquals( 'foo', $assert );
 		$this->assertFalse( CoursePress_Core::get_setting( 'level1/key1' ) );
 
 		/**
