@@ -2,28 +2,10 @@
 /**
  * @group coursepress-core
  */
-class CoursepressDataInstructorTest extends WP_UnitTestCase {
-
-	protected $instructor;
-	protected $course;
-	protected $admin;
-	protected $student;
+class CoursePress_Data_Instructor_Test extends CoursePress_UnitTestCase {
 
 	public function __construct() {
-		$helper = new CoursePress_Tests_Helper();
-		$this->admin = get_user_by( 'login', 'admin' );
-		/**
-		 * Set instructor data
-		 */
-		$this->instructor = $helper->get_instructor();
-		/**
-		 * Set student data
-		 */
-		$this->student = $helper->get_student();
-		/**
-		 * Set course data
-		 */
-		$this->course = $helper->get_course( $this->instructor->ID );
+		parent::__construct();
 	}
 
 	public function test_exists() {
@@ -74,7 +56,7 @@ class CoursepressDataInstructorTest extends WP_UnitTestCase {
 
 	public function test_no_courses() {
 		$assert = CoursePress_Data_Instructor::get_course_count( $this->instructor );
-		if ( !empty( $assert ) ) {
+		if ( ! empty( $assert ) ) {
 			return;
 		}
 		$this->assertEmpty( CoursePress_Data_Instructor::get_course_meta_keys( $this->instructor ) );
@@ -106,10 +88,11 @@ class CoursepressDataInstructorTest extends WP_UnitTestCase {
 		$assert = array_shift( $assert );
 		$meta = sprintf( 'course_%d', $this->course->ID );
 		$this->assertEquals( $meta, $assert );
-		$assert = array( $this->course->ID );
-		$this->assertEquals( $assert, CoursePress_Data_Instructor::get_assigned_courses_ids( $this->instructor ) );
-		$this->assertEqualSets( $assert, CoursePress_Data_Instructor::get_assigned_courses_ids( $this->instructor, 'private' ) );
-		$this->assertNotEmpty( CoursePress_Data_Instructor::get_assigned_courses_ids( $this->instructor ) );
+		$assert = CoursePress_Data_Instructor::get_assigned_courses_ids( $this->instructor );
+		$this->assertNotEmpty( $assert );
+		$this->assertEquals( array( $this->course->ID ), $assert );
+		$assert = CoursePress_Data_Instructor::get_assigned_courses_ids( $this->instructor, 'publish' );
+		$this->assertEquals( array( $this->course->ID ), $assert );
 		/**
 		 * coursepress_update_my_course_cap
 		 * it should empty
@@ -117,7 +100,7 @@ class CoursepressDataInstructorTest extends WP_UnitTestCase {
 		$this->instructor->add_cap( 'coursepress_update_my_course_cap' );
 		$statuses = array(
 		   'inherit',
-		   'publish',
+		   'private',
 		   'draft',
 		   'future',
 		);
