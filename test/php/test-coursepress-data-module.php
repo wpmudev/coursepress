@@ -706,12 +706,12 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 			$assert = CoursePress_Data_Module::get_instructors( $module->ID, true );
 			$this->assertInternalType( 'array', $assert );
 			$assert = $assert[0];
-			$this->assertInternalType( 'WP_User', $assert );
-			$this->assertEqualSetsWithIndex( $this->instructor->data, $assert->data );
-			$this->assertEqual( array( $this->instructor->ID ), $assert->ID );
+			$this->assertInstanceOf( 'WP_User', $assert );
+			$this->assertEquals( $this->instructor->data, $assert->data );
+			$this->assertEquals( $this->instructor->ID, $assert->ID );
 			$assert = CoursePress_Data_Module::get_instructors( $module->ID, false );
 			$this->assertInternalType( 'array', $assert );
-			$this->assertEquals( array( $this->instructor->ID ), $assert );
+			$this->assertEqualSets( array( $this->instructor->ID ), $assert );
 		}
 	}
 
