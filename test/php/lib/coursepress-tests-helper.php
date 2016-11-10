@@ -434,7 +434,6 @@ class CoursePress_Tests_Helper {
 		);
 		$comments = get_comments( $args );
 		foreach ( $comments as $comment ) {
-			print_r( $comment );
 			wp_delete_comment( $comment->ID, true );
 		}
 		/**
