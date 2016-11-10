@@ -157,7 +157,7 @@ class CoursePress_Helper_Utility {
 			if ( isset( $a[ $k ] ) ) {
 				$a = $a[ $k ];
 			} else {
-				return null;
+				return NULL;
 			}
 		}
 		return $a;
