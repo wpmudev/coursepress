@@ -163,6 +163,7 @@ class CoursePress_Tests_Helper {
 		 * Publish course
 		 */
 		wp_update_post( array( 'ID' => $course->ID, 'post_status' => 'publish' ) );
+		$this->course = get_post( $course->ID );
 
 		/**
 		 * add unit
