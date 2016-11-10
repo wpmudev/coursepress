@@ -743,7 +743,6 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 		foreach ( $modules as $module ) {
 			$post = $module;
 			$assert = Coursepress_Data_Module::add_instructors_to_comments_args( array() );
-			print_r( array( $assert ) );
 			$this->assertInternalType( 'array', $assert );
 			$this->assertEqualSets( array( $this->instructor->ID ), $assert['coursepress_instructors'] );
 		}
