@@ -8,7 +8,7 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		parent::__construct();
 	}
 
-	public function xxxx_exists() {
+	public function test_exists() {
 		$this->assertTrue( class_exists( 'CoursePress_Data_Course' ) );
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Course', 'get_format' ) ) );
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Course', 'get_taxonomy' ) ) );
@@ -96,13 +96,13 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Course', 'get_defaults_setup_pages_content' ) ) );
 	}
 
-	public function xxxx_get_format() {
+	public function test_get_format() {
 		$assert = CoursePress_Data_Course::get_format();
 		$this->assertNotEmpty( $assert );
 		$this->assertEquals( 'course', $assert['post_type'] );
 	}
 
-	public function xxxx_get_taxonomy() {
+	public function test_get_taxonomy() {
 		$assert = CoursePress_Data_Course::get_taxonomy();
 		$this->assertNotEmpty( $assert );
 		$this->assertEquals( 'course_category', $assert['taxonomy_type'] );
