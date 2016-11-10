@@ -37,14 +37,13 @@ class CoursePress_UnitTestCase extends WP_UnitTestCase {
 	}
 
 	protected function has_keys( $keys, $assert ) {
-		foreach ( $keys as $key ) {
-			if ( is_array( $key ) ) {
-				$this->has_keys( $key, $assert[ $key ] );
+		foreach ( $keys as $key => $value ) {
+			if ( is_array( $value ) ) {
+				$this->has_keys( $value, $assert[ $key ] );
 				continue;
 			}
-			$this->assertArrayHasKey( $key, $assert );
+			$this->assertArrayHasKey( $value, $assert );
 		}
 	}
-
 }
 
