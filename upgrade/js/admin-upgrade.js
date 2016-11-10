@@ -130,14 +130,6 @@ _.extend( _coursepress_upgrade, {
 					update_nag.parent().removeClass( 'notice-warning' );
 					update_nag.html( _coursepress_upgrade.success );
 
-					// Send flush rewrite rules request
-					new _coursepress_upgrade.upgrade({
-						container: sender,
-						course_id: sender.course_id,
-						user_id: sender.user_id,
-						type: 'flush'
-					});
-
 					// Redirect user
 					time = 5;
 					timer = setInterval(function(){

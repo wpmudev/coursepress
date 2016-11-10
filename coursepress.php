@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: CoursePress Pro
- * Version:     2.0.0-BETA3
+ * Version:     2.0.0
  * Description: CoursePress Pro turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also assess student work, sell your courses and much much more.
  * Author:      WPMU DEV
  * Author URI:  http://premium.wpmudev.org
@@ -48,7 +48,6 @@ class CoursePressUpgrade {
 	private static $coursepress_is_upgraded = false;
 
 	public static function init() {
-		//self::reset();
 		self::$coursepress_is_upgraded = get_option( 'coursepress_20_upgraded', false );
 		$coursepress_version = false === self::$coursepress_is_upgraded ? '1.x' : '2.0';
 

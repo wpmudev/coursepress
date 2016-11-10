@@ -204,17 +204,6 @@ module.exports = function(grunt) {
 			]
 		},
 
-		fixmyjs: {
-			options: {
-				config: '.jshintrc',
-				indentPref: 'tabs'
-			},
-			all: [
-				'Gruntfile.js',
-				conf.js_folder + 'src/*.js'
-			]
-		},
-
 		// JS: Validate JS files (2).
 		jshint: {
 			all: [
@@ -389,6 +378,7 @@ module.exports = function(grunt) {
 				},
 				expand: true,
 				cwd: '../release',
+				dest: conf.plugin_dir,
 				src: [
 					'*',
 					'**',
@@ -441,8 +431,9 @@ module.exports = function(grunt) {
 			sniff: {
 				src: conf.php_files,
 				options: {
-					bin: '^/srv/www/phpcs',
-					standard: 'WordPress-Core'
+					bin: '../../../../vendor/bin/phpcbf',
+					standard: 'WordPress-Core',
+					verbose: true
 				}
 			}
 		},
@@ -450,7 +441,7 @@ module.exports = function(grunt) {
 		phpcbf: {
 			options: {
 				noPatch: true,
-				bin: 'vendor/bin/phpcbf',
+				bin: '../../../../vendor/bin/phpcbf',
 				standard: 'WordPress-Core'
 			},
 			main: {
@@ -610,6 +601,8 @@ module.exports = function(grunt) {
 					'!.git',
 					'!Gruntfile.js',
 					'!package.json',
+					'!tests/*',
+					'!tests/**',
 					/** UPGRADE **/
 					'!upgrade/css/src',
 					'!upgrade/css/src/*',
@@ -618,8 +611,6 @@ module.exports = function(grunt) {
 					'!upgrade/js/src/*',
 					'!upgrade/js/src/**',
 					'!tests',
-					'!tests/*',
-					'!tests/**',
 					/** 1.x **/
 					'!1.x/.git',
 					'!1.x/.gitattributes',
@@ -641,7 +632,13 @@ module.exports = function(grunt) {
 					'!2.0/README.md',
 					'!2.0/node_modules',
 					'!2.0/node_modules/*',
+					'!2.0/node_modules/**',
 					'!2.0/test',
+					'!2.0/test/*',
+					'!2.0/test/**',
+					'!2.0/campus',
+					'!2.0/campus/*',
+					'!2.0/campus/**',
 					'!2.0/themes/coursepress/.git',
 					'!2.0/asset/css/src',
 					'!2.0/asset/css/src/*',
@@ -658,18 +655,6 @@ module.exports = function(grunt) {
 				src: conf.translation.pot_dir + conf.translation.textdomain_pro + '.pot',
 				dest: conf.translation.pot_dir + conf.translation.textdomain_free + '.pot',
 				nonull: true
-			},
-			pro: {
-				src: [ conf.plugin_patterns.files_1.src, conf.plugin_patterns.files_2],
-				dest: 'release/<%= pkg.version %>-pro/'
-			},
-			free: {
-				//src: conf.plugin_patterns.files.src,
-				//dest: 'release/<%= pkg.version %>-free/'
-			},
-			campus: {
-				//src: conf.plugin_patterns.files.src,
-				//dest: 'release/<%= pkg.version %>-campus/'
 			}
 		},
 
@@ -759,56 +744,6 @@ module.exports = function(grunt) {
 		grunt.task.run( 'copy:translation' );
 	});
 
-	// Plugin build tasks
-	grunt.registerTask( 'build', 'Run all tasks.', function(target) {
-		var build = [], i, branch;
-
-		if ( target ) {
-			build.push( target );
-		} else {
-			build = ['pro', 'free', 'campus'];
-		}
-
-		// Run the default tasks (js/css/php validation)
-		//HIDE:grunt.task.run( 'default' );
-
-		// Generate all translation files (pro and free)
-		//grunt.task.run( 'lang' );
-
-		for ( i in build ) {
-			branch = build[i];
-			grunt.log.subhead( 'Update product branch [' + branch + ']...' );
-
-			// Checkout the destination branch.
-			grunt.task.run( 'gitcheckout:' + branch );
-
-			// Remove code and files that does not belong to 1.x and 2.0 versions
-			if ( 'pro' === branch ) {
-				grunt.task.run( 'replace:pro_1' );
-				grunt.task.run( 'replace:pro_2' );
-				grunt.task.run( 'clean:pro_1' );
-				grunt.task.run( 'clean:pro_2' );
-			}
-			grunt.task.run( 'gitadd:' + branch );
-			grunt.task.run( 'gitcommit:' + branch );
-			grunt.task.run( 'clean:release_' + branch );
-
-			/*
-			grunt.task.run( 'clean:' + branch );
-
-			// Add the processes/cleaned files to the target branch.
-			grunt.task.run( 'gitadd:' + branch );
-			grunt.task.run( 'gitcommit:' + branch );
-
-			// Create a distributable zip-file of the plugin branch.
-			grunt.task.run( 'clean:release_' + branch );
-			grunt.task.run( 'copy:' + branch );
-			grunt.task.run( 'compress:' + branch );
-			*/
-			grunt.task.run( 'gitcheckout:base');
-		}
-	});
-
 	// Test task.
 	grunt.registerTask( 'hello', 'Test if grunt is working', function() {
 		grunt.log.subhead( 'Hi there :)' );
@@ -834,14 +769,10 @@ module.exports = function(grunt) {
 		grunt.task.run( 'clean:release' );
 		grunt.task.run( 'copy:release' );
 
-		if ( 'pro' == target ) {
+		if ( 'pro' === target ) {
 			grunt.task.run( 'replace:pro_1' );
 			grunt.task.run( 'replace:pro_2' );
 			grunt.task.run( 'compress:release_pro' );
 		}
-	});
-
-	grunt.registerTask( 'zipped', 'Compressing release version', function( target ) {
-		grunt.task.run( 'compress:release_pro' );
 	});
 };
