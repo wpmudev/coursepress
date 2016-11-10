@@ -2,28 +2,10 @@
 /**
  * @group coursepress-core
  */
-class Coursepress_Data_Unit_Test extends WP_UnitTestCase {
-
-	protected $admin;
-	protected $course;
-	protected $instructor;
-	protected $student;
+class CoursePress_Data_Unit_Test extends CoursePress_UnitTestCase {
 
 	public function __construct() {
-		$helper = new CoursePress_Tests_Helper();
-		$this->admin = get_user_by( 'login', 'admin' );
-		/**
-		 * Set instructor data
-		 */
-		$this->instructor = $helper->get_instructor();
-		/**
-		 * Set student data
-		 */
-		$this->student = $helper->get_student();
-		/**
-		 * Set course data
-		 */
-		$this->course = $helper->get_course( $this->admin->ID );
+		parent::__construct();
 	}
 
 	public function test_exists() {
@@ -51,44 +33,34 @@ class Coursepress_Data_Unit_Test extends WP_UnitTestCase {
 	}
 
 	public function test_get_format() {
-		$assert = CoursePress_Data_Unit::get_format();
 		$keys = array(
 			'post_type',
-			'post_args',
+			'post_args' => array(
+				'labels' => array(
+					'name',
+					'singular_name',
+					'add_new',
+					'add_new_item',
+					'edit_item',
+					'edit',
+					'new_item',
+					'view_item',
+					'search_items',
+					'not_found',
+					'not_found_in_trash',
+					'view',
+				),
+				'public',
+				'show_ui',
+				'publicly_queryable',
+				'capability_type',
+				'map_meta_cap',
+				'query_var',
+				'rewrite',
+			),
 		);
-		foreach ( $keys as $key ) {
-			$this->assertArrayHasKey( $key, $assert );
-		}
-		$keys = array(
-			'labels',
-			'public',
-			'show_ui',
-			'publicly_queryable',
-			'capability_type',
-			'map_meta_cap',
-			'query_var',
-			'rewrite',
-		);
-		foreach ( $keys as $key ) {
-			$this->assertArrayHasKey( $key, $assert['post_args'] );
-		}
-		$keys = array(
-			'name',
-			'singular_name',
-			'add_new',
-			'add_new_item',
-			'edit_item',
-			'edit',
-			'new_item',
-			'view_item',
-			'search_items',
-			'not_found',
-			'not_found_in_trash',
-			'view',
-		);
-		foreach ( $keys as $key ) {
-			$this->assertArrayHasKey( $key, $assert['post_args']['labels'] );
-		}
+		$assert = CoursePress_Data_Unit::get_format();
+		$this->has_keys( $keys, $assert );
 	}
 
 	public function test_get_post_type_name() {
@@ -104,18 +76,26 @@ class Coursepress_Data_Unit_Test extends WP_UnitTestCase {
 		/**
 		 * Good data
 		 */
+		$keys = array(
+			'unit' => array(
+				'estimation',
+				'components' => array(
+					'hours',
+					'minutes',
+					'seconds',
+				),
+			),
+		);
+
+		$modules = $this->get_modules();
+		$time = count( $modules );
 		$units = CoursePress_Data_Course::get_units_with_modules( $this->course->ID, array( 'publish' ) );
 		foreach ( $this->course->units as $unit ) {
 			$assert = CoursePress_Data_Unit::get_time_estimation( $unit->ID, $units );
-			$this->assertArrayHasKey( 'unit', $assert );
-			$this->assertArrayHasKey( 'estimation', $assert['unit'] );
-			$this->assertArrayHasKey( 'components', $assert['unit'] );
-			$this->assertArrayHasKey( 'hours', $assert['unit']['components'] );
-			$this->assertArrayHasKey( 'minutes', $assert['unit']['components'] );
-			$this->assertArrayHasKey( 'seconds', $assert['unit']['components'] );
+			$this->has_keys( $keys, $assert );
 			$this->assertRegExp( '/\d\d:\d\d:\d\d/', $assert['unit']['estimation'] );
 			$this->assertEquals( 0, $assert['unit']['components']['hours'] );
-			$this->assertEquals( 0, $assert['unit']['components']['minutes'] );
+			$this->assertEquals( $time, $assert['unit']['components']['minutes'] );
 			$this->assertEquals( 0, $assert['unit']['components']['seconds'] );
 		}
 	}
