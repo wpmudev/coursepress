@@ -11,13 +11,13 @@ $course_args = array(
 	'post_status' => 'any',
 	'posts_per_page' => -1,
 	'suppress_filters' => true,
-	'fields' => 'ids'
+	'fields' => 'ids',
 );
 $courses = get_posts( $course_args );
 $courses_to_upgrade = array();
-foreach( $courses as $course_id ) {
+foreach ( $courses as $course_id ) {
 	$already_upgraded = (bool) get_post_meta( $course_id, '_cp_updated_to_version_2', true );
-	if ( !$already_upgraded ) {
+	if ( ! $already_upgraded ) {
 		$courses_to_upgrade[] = $course_id;
 	}
 }

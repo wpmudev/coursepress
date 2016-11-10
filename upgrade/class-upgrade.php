@@ -55,7 +55,7 @@ class CoursePress_Upgrade {
 		$upgrade_view = add_query_arg( 'page', 'coursepress-upgrade', admin_url() );
 		$upgrade = sprintf( '<a href="%s" class="button-primary">%s</a>', esc_url( $upgrade_view ), __( 'click here', 'cp' ) );
 
-		$message = '<p>' . sprintf( __( 'You have courses that are outdated and require an update. Please %s your site then %s to update.', 'cp' ), $snapshot, $upgrade ) . '</p>';
+		$message = '<p>' . sprintf( __( 'You have courses that are outdated and require an update. Please %1$s your site then %1$s to update.', 'cp' ), $snapshot, $upgrade ) . '</p>';
 
 		// Remind the user to backup their system in upgrade page
 		if ( self::is_upgrade_page() ) {
@@ -83,7 +83,7 @@ class CoursePress_Upgrade {
 			'server_error' => __( 'An error occur while updating. Please contact your administrator to fix the problem.', 'cp' ),
 			'noloading' => __( 'Please refrain from reloading the page while updating!', 'cp' ),
 			'failed' => __( 'Update unsuccessful. Please try again!', 'cp' ),
-			'success' => sprintf( __( 'Hooray! Update completed. Redirecting in %s. If you are not redirected in 5 seconds click %s.', 'cp' ),  '<span class="coursepress-counter">5</span>', '' ),
+			'success' => sprintf( __( 'Hooray! Update completed. Redirecting in %1$s. If you are not redirected in 5 seconds click %1$s.', 'cp' ),  '<span class="coursepress-counter">5</span>', '' ),
 			'cp2_url' => admin_url( 'edit.php?post_type=course' ),
 		);
 		wp_localize_script( 'coursepress_admin_upgrade_js', '_coursepress_upgrade', $localize_array );
@@ -91,7 +91,7 @@ class CoursePress_Upgrade {
 
 	public static function ajax_courses_upgrade() {
 		$request = json_decode( file_get_contents( 'php://input' ) );
-		
+
 		if ( ! isset( $request->type ) || empty( $request->type ) ) {
 			die();
 		}
@@ -103,16 +103,16 @@ class CoursePress_Upgrade {
 			// include required classes
 			$update_class = dirname( __FILE__ ) . '/class-helper-upgrade.php';
 			require $update_class;
-			
+
 			// variables
 			$type = $request->type;
 			$ok = array( 'success' => true );
 			$not_ok = array( 'success' => false );
 			$success = false;
-			
-			preg_match_all('!\d+!', $request->course_id, $course_id_matches);
-			$course_id =  (int)implode('', $course_id_matches[0]);			
-			
+
+			preg_match_all( '!\d+!', $request->course_id, $course_id_matches );
+			$course_id = (int) implode( '', $course_id_matches[0] );
+
 			switch ( $type ) {
 				case 'course':
 					if ( $course_id ) {
@@ -120,7 +120,7 @@ class CoursePress_Upgrade {
 					}
 					break;
 
-				 case 'flush':
+				case 'flush':
 					update_option( 'coursepress_20_upgraded', true );
 					delete_option( 'cp2_flushed' );
 					$success = true;
@@ -128,7 +128,7 @@ class CoursePress_Upgrade {
 			}
 
 			// response
-			if ( $success && !is_wp_error($success) ) {
+			if ( $success && ! is_wp_error( $success ) ) {
 				wp_send_json_success( $ok );
 			} else {
 				wp_send_json_error( $not_ok );
