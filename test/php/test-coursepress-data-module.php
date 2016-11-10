@@ -682,7 +682,7 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	/**
 	 * get_instructors( $module_id, $objects = false )
 	 */
-	public function test_get_instructors() {
+	public function xxxx_get_instructors() {
 		/**
 		 * Wrong data
 		 */
@@ -718,30 +718,35 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 	/**
 	 * add_instructors_to_comments_args( $args )
 	 */
-	public function xxxx_add_instructors_to_comments_args() {
-		global $post;
+	public function test_add_instructors_to_comments_args() {
 		/**
 		 * Wrong data
 		 */
 		$assert = Coursepress_Data_Module::add_instructors_to_comments_args( 'foo' );
-		print_r( array( $assert ) );
+		$this->assertEquals( 'foo', $assert );
 		$assert = Coursepress_Data_Module::add_instructors_to_comments_args( 0 );
-		print_r( array( $assert ) );
+		$this->assertEquals( 0, $assert );
 		$assert = Coursepress_Data_Module::add_instructors_to_comments_args( array() );
-			print_r( array( $assert ) );
+		$this->assertEquals( array(), $assert );
 		$post = $this->course;
 		$assert = Coursepress_Data_Module::add_instructors_to_comments_args( 'foo' );
-		print_r( array( $assert ) );
+		$this->assertEquals( 'foo', $assert );
 		$assert = Coursepress_Data_Module::add_instructors_to_comments_args( 0 );
-		print_r( array( $assert ) );
+		$this->assertEquals( 0, $assert );
 		$assert = Coursepress_Data_Module::add_instructors_to_comments_args( array() );
-			print_r( array( $assert ) );
-		$post = $this->course;
+		$this->assertEquals( array(), $assert );
 		/**
 		 * Good data
 		 */
-		$assert = Coursepress_Data_Module::add_instructors_to_comments_args( array() );
-		print_r( array( $assert ) );
+		global $post;
+		$modules = $this->get_modules();
+		foreach ( $modules as $module ) {
+			$post = $module;
+			$assert = Coursepress_Data_Module::add_instructors_to_comments_args( array() );
+			print_r( array( $assert ) );
+			$this->assertInternalType( 'array', $assert );
+			$this->assertEqualSets( array( $this->instructor->ID ), $assert['coursepress_instructors'] );
+		}
 	}
 
 	/**
@@ -751,9 +756,31 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 		/**
 		 * Wrong data
 		 */
+		$assert = CoursePress_Data_Module::get_module_ids_by_unit_ids( 'foo' );
+		print_r( array( $assert ) );
+		$assert = CoursePress_Data_Module::get_module_ids_by_unit_ids( 0 );
+		print_r( array( $assert ) );
+		$assert = CoursePress_Data_Module::get_module_ids_by_unit_ids( array() );
+		print_r( array( $assert ) );
+		$assert = CoursePress_Data_Module::get_module_ids_by_unit_ids( array( 'foo' ) );
+		print_r( array( $assert ) );
+		$assert = CoursePress_Data_Module::get_module_ids_by_unit_ids( array( 0 ) );
+		print_r( array( $assert ) );
 		/**
 		 * Good data
 		 */
+		$units_ids = array();
+		foreach ( $this->course->units as $unit ) {
+			$units_ids[] = $unit->ID;
+		}
+		$assert = CoursePress_Data_Module::get_module_ids_by_unit_ids( $units_ids );
+		print_r( array( $assert ) );
+		$this->assertNotEmpty( $assert );
+		$this->assertInternalType( 'array', $assert );
+		$assert = $assert[0];
+		$this->assertInstanceOf( 'WP_Post', $assert );
+		$this->assertEquals( $this->course->ID, $assert->ID );
+
 	}
 
 	/**
