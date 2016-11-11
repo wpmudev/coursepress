@@ -1735,10 +1735,22 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 	};
 
 	CoursePress.maybeUpdateCourse = function() {
-		var form = $( 'form#post' );
+		var form = $( 'form#post' ),
+			target = $(this);
+
 		if ( 0 == form.length ) {
 			return true;
 		}
+
+		if ( target.is( '#search-submit' ) ) {
+			var referer = form.find( '[name="_wp_http_referer"]' ),
+				s = form.find( '[name="s"]' ).val();
+			referer = referer.val() + '&s=' + s;
+
+			window.location = referer;
+			return false;
+		}
+
 		form.unbind( 'submit' ).on( 'submit', CoursePress.updateCourse );
 		form.submit();
 

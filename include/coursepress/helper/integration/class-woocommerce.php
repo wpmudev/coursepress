@@ -644,7 +644,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 		 * no or invalid product? any doubts?
 		 */
 		if ( ! $product->is_purchasable() || ! $product->is_in_stock() ) {
-			return $content;
+			return '';
 		}
 
 		ob_start();
