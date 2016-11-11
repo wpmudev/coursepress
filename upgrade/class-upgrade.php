@@ -55,7 +55,7 @@ class CoursePress_Upgrade {
 		$upgrade_view = add_query_arg( 'page', 'coursepress-upgrade', admin_url() );
 		$upgrade = sprintf( '<a href="%s" class="button-primary">%s</a>', esc_url( $upgrade_view ), __( 'click here', 'cp' ) );
 
-		$message = '<p>' . sprintf( __( 'You have courses that are outdated and require an update. Please %1$s your site then %1$s to update.', 'cp' ), $snapshot, $upgrade ) . '</p>';
+		$message = '<p>' . sprintf( __( 'You have courses that are outdated and require an update. Please %1$s your site then %2$s to update.', 'cp' ), $snapshot, $upgrade ) . '</p>';
 
 		// Remind the user to backup their system in upgrade page
 		if ( self::is_upgrade_page() ) {
