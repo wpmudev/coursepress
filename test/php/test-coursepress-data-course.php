@@ -2,10 +2,11 @@
 /**
  * @group coursepress-core
  */
-class CoursepressCourseTest extends WP_UnitTestCase {
+class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 
-	private $course_id = 0;
-	private $admin;
+	public function __construct() {
+		parent::__construct();
+	}
 
 	public function test_exists() {
 		$this->assertTrue( class_exists( 'CoursePress_Data_Course' ) );
@@ -95,69 +96,64 @@ class CoursepressCourseTest extends WP_UnitTestCase {
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Course', 'get_defaults_setup_pages_content' ) ) );
 	}
 
-	public function test_wp_create_user() {
-		wp_create_user( 'instructor', 'instructor', 'instructor@example.com' );
-		wp_create_user( 'facilitator', 'facilitator', 'facilitator@example.com' );
-		$this->admin = get_user_by( 'login', 'admin' );
-		$this->assertEquals( 'admin', $this->admin->user_login );
-	}
-
 	public function test_get_format() {
-		$stack = CoursePress_Data_Course::get_format();
-		$this->assertNotEmpty( $stack );
-		$this->assertEquals( 'course', $stack['post_type'] );
+		$assert = CoursePress_Data_Course::get_format();
+		$this->assertNotEmpty( $assert );
+		$this->assertEquals( 'course', $assert['post_type'] );
 	}
 
 	public function test_get_taxonomy() {
-		$stack = CoursePress_Data_Course::get_taxonomy();
-		$this->assertNotEmpty( $stack );
-		$this->assertEquals( 'course_category', $stack['taxonomy_type'] );
-		$this->assertEquals( 'course', $stack['post_type'] );
+		$assert = CoursePress_Data_Course::get_taxonomy();
+		$this->assertNotEmpty( $assert );
+		$this->assertEquals( 'course_category', $assert['taxonomy_type'] );
+		$this->assertEquals( 'course', $assert['post_type'] );
 	}
 
 	public function test_course() {
-		global $user_id;
-		$this->admin = get_user_by( 'login', 'admin' );
-		$user_id = $this->admin->ID;
-		$course = $this->course();
-		$this->course_id = CoursePress_Data_Course::update( false, $course );
-		$this->assertNotEmpty( $this->course_id );
-		$this->assertTrue( is_numeric( $this->course_id ) );
-		$this->assertTrue( CoursePress_Data_Course::is_course( $this->course_id ) );
-		$post = get_post( $this->course_id );
+		$post = get_post( $this->course->ID );
+		$this->assertInstanceOf( 'WP_Post', $post );
 		$this->assertEquals( $post->post_type, CoursePress_Data_Course::get_post_type_name() );
-		$this->assertEquals( $post->post_author, $course->post_author );
-		$this->assertEquals( $post->post_status, $course->post_status );
-		$this->assertEquals( $post->post_title, $course->course_name );
-		$this->assertEquals( $post->post_excerpt, $course->course_excerpt );
-		$this->assertEquals( $post->post_content, $course->course_description );
-		$this->assertEquals( $post->ping_status, 'closed' );
-		$this->assertEquals( $post->comment_status, 'closed' );
+		$keys = array(
+			'post_author',
+			'post_title',
+			'post_excerpt',
+			'post_content',
+			'ping_status',
+			'comment_status',
+		);
+		foreach ( $keys as $key ) {
+			$this->assertEquals( $post->$key, $this->course->$key );
+		}
 
 		/**
 		 * Settings
 		 */
-		$stack = CoursePress_Data_Course::update_setting( $this->course_id, 'test_key', 'test_value' );
+		$stack = CoursePress_Data_Course::update_setting( $this->course->ID, 'test_key', 'test_value' );
 		$this->assertTrue( $stack );
 
-		$settings = CoursePress_Data_Course::get_setting( $this->course_id );
+		$settings = CoursePress_Data_Course::get_setting( $this->course->ID );
 		$this->assertNotEmpty( $settings );
 
-		$settings = CoursePress_Data_Course::get_setting( $this->course_id, 'test_key' );
+		$settings = CoursePress_Data_Course::get_setting( $this->course->ID, 'test_key' );
 		$this->assertEquals( $settings, 'test_value' );
 
 	}
 
-	public function course() {
-		$course = array(
-			'post_author' => $this->admin->ID,
-			'post_status' => 'private',
-			'post_type' => CoursePress_Data_Course::get_post_type_name(),
-			'course_excerpt' => 'test course excerpt',
-			'course_description' => 'test course content',
-			'course_name' => 'test course title',
-		);
-		return (object) $course;
+	/**
+	 * get_message( $key, $alternate = '' )
+	 * get_default_messages( $key = '' ) {
+	 */
+	public function test_messages() {
+		$keys = array( 'ca', 'cu', 'usc', 'ud', 'ua', 'uu', 'as', 'ac', 'dc', 'us', 'usl', 'is', 'ia' );
+		$assert = CoursePress_Data_Course::get_default_messages();
+		$this->has_keys( $keys, $assert );
 	}
 }
 
+/**
+print_r(array( $assert));
+ * Wrong data
+ */
+/**
+ * Good data
+ */

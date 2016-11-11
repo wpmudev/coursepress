@@ -670,14 +670,15 @@ class CoursePress_Data_Instructor {
 			return 0; // Bail if no ID
 		}
 		$count = get_user_meta( $instructor_id, 'coursepress_followers_count', true );
-
 		if ( false === $count || $refresh ) {
 			// Not set yet, let's get the total student count
 			$count = self::_get_students_count( $instructor_id );
 			// Update usermeta setting
 			update_user_meta( $instructor_id, 'coursepress_followers_count', $count );
 		}
-
+		if ( empty( $count ) ) {
+			return 0;
+		}
 		return $count;
 	}
 
