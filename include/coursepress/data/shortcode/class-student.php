@@ -370,8 +370,9 @@ class CoursePress_Data_Shortcode_Student {
 						$non_assessable = cp_is_true( $attributes['assessable'] ) ? '' : '<span class="dashicons dashicons-star-filled non-assessable"></span>';
 
 						$extra = $mandatory . $non_assessable;
-
-						$first_last = CoursePress_Helper_Utility::get_user_name( (int) $feedback['feedback_by'] );
+						
+						$feedback_by = ( !is_null($feedback) && isset($feedback['feedback_by']) ) ? (int)$feedback['feedback_by'] : 0;
+						$first_last = CoursePress_Helper_Utility::get_user_name( $feedback_by );
 
 						$feedback_display = ! empty( $feedback['feedback'] ) ? '<div class="feedback"><div class="comment">' . $feedback['feedback'] . '</div><div class="instructor"> – <em>' . esc_html( $first_last ) . '</em></div></div>' : '';
 
