@@ -203,7 +203,7 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	 * add_instructor( $course_id, $instructor_id )
 	 * remove_instructor( $course_id, $instructor_id )
 	 */
-	public function test_instructor() {
+	public function xxxx_instructor() {
 		/**
 		 * Wrong data
 		 */
@@ -218,6 +218,55 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		$this->assertEmpty( $assert );
 		$assert = CoursePress_Data_Course::remove_instructor( $this->course->ID, $this->admin->ID );
 		$this->assertEmpty( $assert );
+	}
+
+	/**
+	 * get_setting( $course_id, $key = true, $default = null )
+	 * set_setting( &$settings, $key, $value )
+	 * delete_setting( $course_id, $key = true )
+	 */
+	public function test_settings() {
+		/**
+		 * Wrong data
+		 */
+		$assert = CoursePress_Data_Course::get_setting( 'foo', 'bar', 'baz' );
+		$this->assertNotEmpty( $assert );
+		$this->assertEquals( 'baz', $assert );
+		$assert = CoursePress_Data_Course::get_setting( 'foo', false );
+		$this->assertEmpty( $assert );
+		$assert = CoursePress_Data_Course::get_setting( 'foo', array() );
+		$this->assertEmpty( $assert );
+		$assert = CoursePress_Data_Course::get_setting( 0, 'bar', 'baz' );
+		$this->assertNotEmpty( $assert );
+		$this->assertEquals( 'baz', $assert );
+		$assert = CoursePress_Data_Course::get_setting( 0, false );
+		$this->assertEmpty( $assert );
+		$assert = CoursePress_Data_Course::get_setting( 0, array() );
+		$this->assertEmpty( $assert );
+		$settings = 'baz';
+		$assert = CoursePress_Data_Course::set_setting( $settings, 'foo', 'bar' );
+		$this->assertEmpty( $assert );
+		$settings = null;
+		$assert = CoursePress_Data_Course::set_setting( $settings, 'foo', 'bar' );
+		$this->assertEmpty( $assert );
+		/**
+		 * Good data
+		 */
+		$assert = CoursePress_Data_Course::get_setting( $this->course->ID, true );
+		$this->assertNotEmpty( $assert );
+		$this->assertInternalType( 'array', $assert );
+		$assert = CoursePress_Data_Course::get_setting( $this->course->ID, 'foo' );
+		$this->assertEmpty( $assert );
+		$settings = CoursePress_Data_Course::get_setting( $this->course->ID, true );
+		$assert = CoursePress_Data_Course::set_setting( $settings, 'foo', 'bar' );
+		$this->assertEmpty( $assert );
+		$assert = CoursePress_Data_Course::get_setting( $this->course->ID, 'foo' );
+		$this->assertEquals( '', $assert );
+		$assert = CoursePress_Data_Course::delete_setting( $this->course->ID, 'foo' );
+		$this->assertFalse( $assert );
+		$assert = CoursePress_Data_Course::get_setting( $this->course->ID, 'foo' );
+		$this->assertEmpty( $assert );
+
 	}
 }
 
