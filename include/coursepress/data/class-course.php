@@ -137,6 +137,26 @@ class CoursePress_Data_Course {
 	public static function update( $course_id, $data ) {
 		global $user_id;
 
+		/**
+		 * Sanitize $data
+		 */
+		if ( ! is_object( $data ) ) {
+			if ( is_array( $data ) ) {
+				$data = (object) $data;
+			} else {
+				$data = new stdClass();
+			}
+		}
+
+		/**
+		 * Sanitize $course_id
+		 */
+		if ( ! empty( $course_id ) ) {
+			if ( ! self::is_course( $course_id ) ) {
+				$course_id = null;
+			}
+		}
+
 		do_action( 'coursepress_course_pre_update', $course_id, $data );
 		$new_course = empty( $course_id ) ? true : false;
 		$course = $new_course ? false : get_post( $course_id );
@@ -161,12 +181,16 @@ class CoursePress_Data_Course {
 				$post['post_name'] = wp_unique_post_slug( sanitize_title( $post['post_title'] ), $course_id, 'publish', 'course', 0 );
 			}
 		} else {
-			$post['post_excerpt'] = CoursePress_Helper_Utility::filter_content( $data->course_excerpt );
+			if ( isset( $data->course_excerpt ) ) {
+				$post['post_excerpt'] = CoursePress_Helper_Utility::filter_content( $data->course_excerpt );
+			}
 			if ( isset( $data->course_description ) ) {
 				$post['post_content'] = CoursePress_Helper_Utility::filter_content( $data->course_description );
 			}
-			$post['post_title'] = CoursePress_Helper_Utility::filter_content( $data->course_name );
-			$post['post_name'] = wp_unique_post_slug( sanitize_title( $post['post_title'] ), 0, 'publish', 'course', 0 );
+			if ( isset( $data->course_name ) ) {
+				$post['post_title'] = CoursePress_Helper_Utility::filter_content( $data->course_name );
+				$post['post_name'] = wp_unique_post_slug( sanitize_title( $post['post_title'] ), 0, 'publish', 'course', 0 );
+			}
 		}
 
 		// Set the ID to trigger update and not insert
@@ -183,7 +207,9 @@ class CoursePress_Data_Course {
 		/**
 		 * update post counter for posts with the same title
 		 */
-		self::save_course_number( $course_id, $post['post_title'] );
+		if ( isset( $post['post_title'] ) ) {
+			self::save_course_number( $course_id, $post['post_title'] );
+		}
 
 		// Course Settings
 		$settings = self::get_setting( $course_id, true );
