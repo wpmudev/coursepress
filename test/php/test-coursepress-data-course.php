@@ -272,13 +272,12 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	/**
 	 * allow_pages( $course_id )
 	 */
-	public function test_allow_pages() {
+	public function xxxx_allow_pages() {
 		$test = array(
 			'course_discussion' => true,
 			'workbook' => true,
 			'grades' => true,
 		);
-
 		/**
 		 * Wrong data
 		 */
@@ -291,6 +290,51 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		 */
 		$assert = CoursePress_Data_Course::allow_pages( $this->course->ID );
 		$this->assertEqualSetsWithIndex( $test, $assert );
+	}
+
+
+	/**
+	 * get_units( $course_id, $status = array( 'publish' ), $ids_only = false, $include_count = false )
+	 * get_unit_ids( $course_id, $status = array( 'publish' ), $include_count = false )
+	 */
+	public function test_units() {
+		/**
+		 * Wrong data
+		 */
+		$assert = CoursePress_Data_Course::get_units( 'foo' );
+		$this->assertInternalType( 'array', $assert );
+		$assert = CoursePress_Data_Course::get_units( 0 );
+		$this->assertInternalType( 'array', $assert );
+		$assert = CoursePress_Data_Course::get_unit_ids( 'foo' );
+		$this->assertInternalType( 'array', $assert );
+		$assert = CoursePress_Data_Course::get_unit_ids( 0 );
+		$this->assertInternalType( 'array', $assert );
+		/**
+		 * Good data
+		 */
+		$units_ids = array();
+		foreach ( $this->course->units as $unit ) {
+			$units_ids[] = $unit->ID;
+		}
+		$assert = CoursePress_Data_Course::get_units( $this->course->ID, array( 'publish' ), true );
+		$this->assertInternalType( 'array', $assert );
+		$this->assertEqualSets( $units_ids, $assert );
+		$assert = CoursePress_Data_Course::get_unit_ids( $this->course->ID );
+		$this->assertInternalType( 'array', $assert );
+		$this->assertEqualSets( $units_ids, $assert );
+		$assert = CoursePress_Data_Course::get_units( $this->course->ID );
+		$this->assertInternalType( 'array', $assert );
+		foreach ( $assert as $unit ) {
+			$this->assertInstanceOf( 'WP_Post', $unit );
+		}
+		$assert = CoursePress_Data_Course::get_units( $this->course->ID, array( 'publish' ), false, true );
+		$this->assertInternalType( 'array', $assert );
+		$this->assertArrayHasKey( 'units', $assert );
+		$this->assertArrayHasKey( 'found', $assert );
+		foreach ( $assert['units'] as $unit ) {
+			$this->assertInstanceOf( 'WP_Post', $unit );
+		}
+		$this->assertEquals( count( $this->course->units ), $assert['found'] );
 	}
 }
 
