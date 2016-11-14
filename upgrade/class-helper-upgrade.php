@@ -265,6 +265,8 @@ class CoursePress_Helper_Upgrade {
 
 				// completion
 				$completion = array();
+				$course_total_grade = 0;
+				$course_module_gradable_count = 0;
 
 				// units
 				$units = array();
@@ -294,7 +296,11 @@ class CoursePress_Helper_Upgrade {
 							$completion[ $key ] = array(
 								'modules_seen' => array(),
 								'answered' => array(),
+								'progress' => isset( $unit_data['unit_progress'] ) ? $unit_data['unit_progress'] : 0,
 							);
+							
+							$unit_total_grade = 0;
+							$module_gradable_count = 0;
 
 							foreach ( $unit_data['mandatory_answered'] as $mandatory_key => $val ) {
 
@@ -302,8 +308,16 @@ class CoursePress_Helper_Upgrade {
 								$completion[ $key ]['modules_seen'][ $mandatory_key ] = true;
 								// answered
 								$completion[ $key ]['answered'][ $mandatory_key ] = true;
-
+								
+								// module meta
 								$module_type = get_post_meta( $mandatory_key, 'module_type', true );
+								$is_gradable = get_post_meta( $mandatory_key, 'gradable_answer', true );
+								
+								if ( $is_gradable == 'yes' ) {
+									$module_gradable_count++;
+									$course_module_gradable_count++;
+								}
+								
 								$new_module_response = array();
 								$response_args = array(
 									'post_type' => 'module_response',
@@ -348,6 +362,12 @@ class CoursePress_Helper_Upgrade {
 													'grade' => $grade['grade'],
 													'date' => date( 'Y-m-d H:i:s', $grade['time'] ),
 												);
+												
+												// for total grade
+												if ( $is_gradable == 'yes' ) {
+													$unit_total_grade += (int) $grade['grade'];
+													$course_total_grade += (int) $grade['grade'];
+												}
 											}
 										} elseif ( preg_match( '/^input/', $module_type ) ) {
 											$new_response_data['grades'] = array();
@@ -364,6 +384,9 @@ class CoursePress_Helper_Upgrade {
 								}
 								$new_responses_data[ $mandatory_key ] = $new_module_response;
 							}
+							
+							// unit average grade
+							$completion[$key]['average'] = $unit_total_grade / $module_gradable_count;
 						}
 
 						// input file
@@ -417,6 +440,7 @@ class CoursePress_Helper_Upgrade {
 
 				// completion
 				$completion['progress'] = $current_student_course_progress['course_progress'];
+				$completion['average'] = $course_total_grade / $course_module_gradable_count;
 				$new_student_progress['completion'] = $completion;
 
 				// save the new data structure
