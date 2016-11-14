@@ -470,11 +470,61 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 
 	/**
 	 * get_students( $course_id, $per_page = 0, $offset = 0, $fields = 'all' )
+	 * student_enrolled( $student_id, $course_id ) {
 	 */
-	public function test_get_students() {
+	public function test_students() {
 		/**
-		 * TODO
+		 * Wrong data
 		 */
+		$assert = CoursePress_Data_Course::get_students( 'foo', -1 );
+		$this->assertInternalType( 'array', $assert );
+		$this->assertEquals( array(), $assert );
+
+		$assert = CoursePress_Data_Course::get_students( 0, -1 );
+		$this->assertInternalType( 'array', $assert );
+		$this->assertEquals( array(), $assert );
+
+		$assert = CoursePress_Data_Course::get_students( 0, 'aaa' );
+		$this->assertInternalType( 'array', $assert );
+		$this->assertEquals( array(), $assert );
+
+		$assert = CoursePress_Data_Course::student_enrolled( 'foo', 'bar' );
+		$this->assertInternalType( 'boolean', $assert );
+		$this->assertFalse( $assert );
+
+		$assert = CoursePress_Data_Course::student_enrolled( 'foo', $this->course->ID );
+		$this->assertInternalType( 'string', $assert );
+		$this->assertEquals( '', $assert );
+
+		$assert = CoursePress_Data_Course::student_enrolled( $this->student->ID, 'bar' );
+		$this->assertInternalType( 'boolean', $assert );
+		$this->assertFalse( $assert );
+		/**
+		 * Good data
+		 */
+		$assert = CoursePress_Data_Course::get_students( $this->course->ID, -1 );
+		$this->assertInternalType( 'array', $assert );
+		$this->assertEquals( array(), $assert );
+
+		$assert = CoursePress_Data_Course::student_enrolled( $this->student->ID, $this->course->ID );
+		$this->assertInternalType( 'string', $assert );
+		$this->assertEquals( '', $assert );
+
+		$assert = CoursePress_Data_Course::enroll_student( $this->student->ID, $this->course->ID );
+		$this->assertInternalType( 'boolean', $assert );
+		$this->assertTrue( $assert );
+
+		$assert = CoursePress_Data_Course::get_students( $this->course->ID, -1 );
+		$this->assertInternalType( 'array', $assert );
+		$assert = $assert[0];
+		$this->assertInstanceOf( 'WP_User', $assert );
+		$this->assertEquals( $this->student->ID, $assert->ID );
+
+		$assert = CoursePress_Data_Course::student_enrolled( $this->student->ID, $this->course->ID );
+		$this->assertInternalType( 'string', $assert );
+		$this->assertRegExp( '/^[\d \-\:]+$/', $assert );
+
+		/** todo **/
 	}
 }
 
