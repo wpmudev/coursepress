@@ -109,7 +109,12 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		$this->assertEquals( 'course', $assert['post_type'] );
 	}
 
-	public function xxxx_course() {
+	/**
+	 * set_last_course_id()
+	 * last_course_id()
+	 * is_paid_course()
+	 */
+	public function test_course() {
 		$post = get_post( $this->course->ID );
 		$this->assertInstanceOf( 'WP_Post', $post );
 		$this->assertEquals( $post->post_type, CoursePress_Data_Course::get_post_type_name() );
@@ -137,6 +142,30 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		$settings = CoursePress_Data_Course::get_setting( $this->course->ID, 'test_key' );
 		$this->assertEquals( $settings, 'test_value' );
 
+		/**
+		 * set/get last_course_id
+		 */
+		$assert = CoursePress_Data_Course::set_last_course_id( $this->course->ID );
+		$this->assertEmpty( $assert );
+		$assert = CoursePress_Data_Course::last_course_id();
+		$this->assertNotEmpty( $assert );
+		$this->assertEquals( $this->course->ID, $assert );
+
+		/**
+		 * Paid?
+		 */
+		$assert = CoursePress_Data_Course::is_paid_course( 'foo' );
+		$this->assertInternalType( 'boolean', $assert );
+		$this->assertFalse( $assert );
+		$assert = CoursePress_Data_Course::is_paid_course( 0 );
+		$this->assertInternalType( 'boolean', $assert );
+		$this->assertFalse( $assert );
+		$assert = CoursePress_Data_Course::is_paid_course( array() );
+		$this->assertInternalType( 'boolean', $assert );
+		$this->assertFalse( $assert );
+		$assert = CoursePress_Data_Course::is_paid_course( $this->course->ID );
+		$this->assertInternalType( 'boolean', $assert );
+		$this->assertFalse( $assert );
 	}
 
 	/**
@@ -378,9 +407,9 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		 */
 		$assert = CoursePress_Data_Course::get_units_with_modules( $this->course->ID );
 		$this->assertInternalType( 'array', $assert );
-		foreach( $assert as $unit_id => $data ) {
+		foreach ( $assert as $unit_id => $data ) {
 			$this->assertInternalType( 'array', $data );
-			foreach( $data['pages'] as $page ) {
+			foreach ( $data['pages'] as $page ) {
 				$this->assertInternalType( 'array', $page );
 				foreach ( $page['modules'] as $module ) {
 					$this->assertInstanceOf( 'WP_Post', $module );
@@ -402,10 +431,10 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		$assert = CoursePress_Data_Course::get_key( array() );
 		$this->assertInternalType( 'string', $assert );
 		$this->assertEquals( '', $assert );
-		$assert = CoursePress_Data_Course::get_key('foo');
+		$assert = CoursePress_Data_Course::get_key( 'foo' );
 		$this->assertInternalType( 'string', $assert );
 		$this->assertEquals( 'foo', $assert );
-		$assert = CoursePress_Data_Course::get_key('foo', 'bar');
+		$assert = CoursePress_Data_Course::get_key( 'foo', 'bar' );
 		$this->assertInternalType( 'string', $assert );
 		$this->assertEquals( 'foo_bar', $assert );
 	}
@@ -413,7 +442,7 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	/**
 	 * get_unit_modules( $unit_id, $status = array( 'publish' ), $ids_only = false, $include_count = false, $args = array() )
 	 */
-	public function test_get_unit_modules() {
+	public function xxxx_get_unit_modules() {
 		/**
 		 * Wrong data
 		 */
@@ -433,16 +462,15 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		foreach ( $this->course->units as $unit ) {
 			$assert = CoursePress_Data_Course::get_unit_modules( $unit->ID );
 			$this->assertInternalType( 'array', $assert );
-			foreach( $assert as $module ) {
+			foreach ( $assert as $module ) {
 				$this->assertInstanceOf( 'WP_Post', $module );
 			}
 		}
 	}
-
 }
 
 /**
-print_r(array( $assert));
+print_r(array( gettype( $assert ), $assert));
  * Wrong data
  */
 /**
