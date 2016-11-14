@@ -369,9 +369,9 @@ class CoursePress_Data_Unit_Test extends CoursePress_UnitTestCase {
 		$modules = $this->get_modules();
 		foreach ( $modules as $module ) {
 			$assert = CoursePress_Data_Unit::is_module_structure_visible( $this->course->ID, $module->post_parent, $module->ID );
-			$this->assertTrue( $assert );
+			$this->assertInternalType( 'boolean', $assert );
 			$assert = CoursePress_Data_Unit::is_module_structure_visible( $this->course->ID, $module->post_parent, $module->ID, $this->student->ID );
-			$this->assertTrue( $assert );
+			$this->assertInternalType( 'boolean', $assert );
 		}
 	}
 
