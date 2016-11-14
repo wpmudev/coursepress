@@ -32,6 +32,9 @@ class CoursePress_Data_Unit_Test extends CoursePress_UnitTestCase {
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Unit', 'get_unit_url' ) ) );
 	}
 
+	/**
+	 * get_format()
+	 */
 	public function test_get_format() {
 		$keys = array(
 			'post_type',
@@ -323,6 +326,9 @@ class CoursePress_Data_Unit_Test extends CoursePress_UnitTestCase {
 		}
 	}
 
+	/**
+	 * is_unit_structure_visible( $course_id, $unit_id, $user_id = 0 )
+	 */
 	public function test_is_page_structure_visible() {
 		/**
 		 * Wrong data
@@ -342,16 +348,31 @@ class CoursePress_Data_Unit_Test extends CoursePress_UnitTestCase {
 			$assert = CoursePress_Data_Unit::is_page_structure_visible( $this->course->ID, $unit->ID, 1, $this->student->ID );
 			$this->assertTrue( $assert );
 		}
-		/**
-		 * TODO: test when we add modules
-		 */
-
 	}
 
+	/**
+	 * is_module_structure_visible( $course_id, $unit_id, $module_id, $user_id = 0 )
+	 */
 	public function test_is_module_structure_visible() {
 		/**
-		 * TODO: test when we add modules
+		 * Wrong data
 		 */
+		$assert = CoursePress_Data_Unit::is_module_structure_visible( 'foo', 'bar', 'foobar', 'baz' );
+		$this->assertFalse( $assert );
+		$assert = CoursePress_Data_Unit::is_module_structure_visible( 0, 0, 0 );
+		$this->assertFalse( $assert );
+		$assert = CoursePress_Data_Unit::is_module_structure_visible( $this->course->ID, 0, 0 );
+		$this->assertFalse( $assert );
+		/**
+		 * Good data
+		 */
+		$modules = $this->get_modules();
+		foreach ( $modules as $module ) {
+			$assert = CoursePress_Data_Unit::is_module_structure_visible( $this->course->ID, $module->post_parent, $module->ID );
+			$this->assertTrue( $assert );
+			$assert = CoursePress_Data_Unit::is_module_structure_visible( $this->course->ID, $module->post_parent, $module->ID, $this->student->ID );
+			$this->assertTrue( $assert );
+		}
 	}
 
 	public function test_get_unit_ids_by_course_ids() {
@@ -389,6 +410,67 @@ class CoursePress_Data_Unit_Test extends CoursePress_UnitTestCase {
 		foreach ( $this->course->units as $unit ) {
 			$assert = CoursePress_Data_Unit::get_unit_url( $unit->ID );
 			$this->assertNotEmpty( $assert );
+		}
+	}
+
+	/**
+	 * show_new_on_list( $unit_id, $course_id, $meta = array() )
+	 */
+	public function test_show_new_on_list() {
+		/**
+		 * Wrong data
+		 */
+		$assert = CoursePress_Data_Unit::show_new_on_list( 'foo', 'bar' );
+		$this->assertEmpty( $assert );
+		$assert = CoursePress_Data_Unit::show_new_on_list( 0, 0 );
+		$this->assertEmpty( $assert );
+		/**
+		 * Good data
+		 */
+		foreach ( $this->course->units as $unit ) {
+			$assert = CoursePress_Data_Unit::show_new_on_list( $unit->ID, $unit->post_parent );
+			$this->assertEmpty( $assert );
+		}
+	}
+
+	/**
+	 * show_page( $unit_id, $page_id, $course_id = false )
+	 */
+	public function test_show_page() {
+		/**
+		print_r(array( $assert ) );
+		 * Wrong data
+		 */
+		$assert = CoursePress_Data_Unit::show_page( 'foo', 'bar', 'baz' );
+			$this->assertEmpty( $assert );
+		$assert = CoursePress_Data_Unit::show_page( 0, 0, 0 );
+			$this->assertEmpty( $assert );
+		/**
+		 * Good data
+		 */
+		foreach ( $this->course->units as $unit ) {
+			$assert = CoursePress_Data_Unit::show_page( $unit->ID, 1, $unit->post_parent );
+			$this->assertEmpty( $assert );
+		}
+	}
+
+	/**
+	 * show_new_pages( $unit_id, $meta )
+	 */
+	public function test_show_new_pages() {
+		/**
+		 * Wrong data
+		 */
+		$assert = CoursePress_Data_Unit::show_new_pages( 'foo', 'bar' );
+		$this->assertEmpty( $assert );
+		$assert = CoursePress_Data_Unit::show_new_pages( 0, 0 );
+		$this->assertEmpty( $assert );
+		/**
+		 * Good data
+		 */
+		foreach ( $this->course->units as $unit ) {
+			$assert = CoursePress_Data_Unit::show_new_pages( $unit->ID, array( 'page_title' => 'foo' ) );
+			$this->assertEmpty( $assert );
 		}
 	}
 }
