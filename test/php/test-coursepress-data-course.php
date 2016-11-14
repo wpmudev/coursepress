@@ -152,10 +152,10 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	/**
 	 * function update( $course_id, $data )
 	 */
-	public function test_update() {
+	public function xxxx_update() {
 		/**
- * Wrong data
- */
+		 * Wrong data
+		 */
 		$assert = CoursePress_Data_Course::update( 'foo', 'foo' );
 		$this->assertNotEmpty( $assert );
 		$this->assertInternalType( 'integer', $assert );
@@ -175,8 +175,8 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		$this->assertNotEmpty( $assert );
 		$this->assertInternalType( 'integer', $assert );
 		/**
- * Good data
- */
+		 * Good data
+		 */
 		$data = (object) array(
 			'course_excerpt' => 'foo',
 			'course_name' => 'bar',
@@ -201,8 +201,23 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 
 	/**
 	 * add_instructor( $course_id, $instructor_id )
+	 * remove_instructor( $course_id, $instructor_id )
 	 */
-	public function xxxx_add_instructor() {
+	public function test_instructor() {
+		/**
+		 * Wrong data
+		 */
+		$assert = CoursePress_Data_Course::add_instructor( 'foo', 'bar' );
+		$this->assertEmpty( $assert );
+		$assert = CoursePress_Data_Course::add_instructor( 0, 0 );
+		$this->assertEmpty( $assert );
+		/**
+		 * Good data
+		 */
+		$assert = CoursePress_Data_Course::add_instructor( $this->course->ID, $this->admin->ID );
+		$this->assertEmpty( $assert );
+		$assert = CoursePress_Data_Course::remove_instructor( $this->course->ID, $this->admin->ID );
+		$this->assertEmpty( $assert );
 	}
 }
 
