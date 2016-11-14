@@ -297,7 +297,7 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	 * get_units( $course_id, $status = array( 'publish' ), $ids_only = false, $include_count = false )
 	 * get_unit_ids( $course_id, $status = array( 'publish' ), $include_count = false )
 	 */
-	public function test_units() {
+	public function xxxx_units() {
 		/**
 		 * Wrong data
 		 */
@@ -336,6 +336,31 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		}
 		$this->assertEquals( count( $this->course->units ), $assert['found'] );
 	}
+
+	/**
+	 * get_listing_image( $course_id )
+	 */
+	public function test_get_listing_image() {
+		/**
+		 * Wrong data
+		 */
+		$assert = CoursePress_Data_Course::get_listing_image( 'foo' );
+		$this->assertFalse( $assert );
+		$assert = CoursePress_Data_Course::get_listing_image( 0 );
+		$this->assertFalse( $assert );
+		$assert = CoursePress_Data_Course::get_listing_image( array() );
+		$this->assertFalse( $assert );
+		$assert = CoursePress_Data_Course::get_listing_image( null );
+		$this->assertFalse( $assert );
+		/**
+		 * Good data
+		 */
+		$assert = CoursePress_Data_Course::get_listing_image( $this->course->ID );
+		$this->assertInternalType( 'string', $assert );
+		$this->assertEquals( '', $assert );
+	}
+
+
 }
 
 /**
