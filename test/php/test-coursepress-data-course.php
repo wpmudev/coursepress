@@ -8,7 +8,7 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		parent::__construct();
 	}
 
-	public function test_exists() {
+	public function xxxx_exists() {
 		$this->assertTrue( class_exists( 'CoursePress_Data_Course' ) );
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Course', 'get_format' ) ) );
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Course', 'get_taxonomy' ) ) );
@@ -96,20 +96,20 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Course', 'get_defaults_setup_pages_content' ) ) );
 	}
 
-	public function test_get_format() {
+	public function xxxx_get_format() {
 		$assert = CoursePress_Data_Course::get_format();
 		$this->assertNotEmpty( $assert );
 		$this->assertEquals( 'course', $assert['post_type'] );
 	}
 
-	public function test_get_taxonomy() {
+	public function xxxx_get_taxonomy() {
 		$assert = CoursePress_Data_Course::get_taxonomy();
 		$this->assertNotEmpty( $assert );
 		$this->assertEquals( 'course_category', $assert['taxonomy_type'] );
 		$this->assertEquals( 'course', $assert['post_type'] );
 	}
 
-	public function test_course() {
+	public function xxxx_course() {
 		$post = get_post( $this->course->ID );
 		$this->assertInstanceOf( 'WP_Post', $post );
 		$this->assertEquals( $post->post_type, CoursePress_Data_Course::get_post_type_name() );
@@ -143,10 +143,66 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	 * get_message( $key, $alternate = '' )
 	 * get_default_messages( $key = '' ) {
 	 */
-	public function test_messages() {
+	public function xxxx_messages() {
 		$keys = array( 'ca', 'cu', 'usc', 'ud', 'ua', 'uu', 'as', 'ac', 'dc', 'us', 'usl', 'is', 'ia' );
 		$assert = CoursePress_Data_Course::get_default_messages();
 		$this->has_keys( $keys, $assert );
+	}
+
+	/**
+	 * function update( $course_id, $data )
+	 */
+	public function test_update() {
+		/**
+ * Wrong data
+ */
+		$assert = CoursePress_Data_Course::update( 'foo', 'foo' );
+		$this->assertNotEmpty( $assert );
+		$this->assertInternalType( 'integer', $assert );
+		$assert = CoursePress_Data_Course::update( 0, 0 );
+		$this->assertNotEmpty( $assert );
+		$this->assertInternalType( 'integer', $assert );
+		$assert = CoursePress_Data_Course::update( 'bar', array() );
+		$this->assertNotEmpty( $assert );
+		$this->assertInternalType( 'integer', $assert );
+		$assert = CoursePress_Data_Course::update( $this->course->ID, 'foo' );
+		$this->assertNotEmpty( $assert );
+		$this->assertInternalType( 'integer', $assert );
+		$assert = CoursePress_Data_Course::update( $this->course->ID, 0 );
+		$this->assertNotEmpty( $assert );
+		$this->assertInternalType( 'integer', $assert );
+		$assert = CoursePress_Data_Course::update( $this->course->ID, array() );
+		$this->assertNotEmpty( $assert );
+		$this->assertInternalType( 'integer', $assert );
+		/**
+ * Good data
+ */
+		$data = (object) array(
+			'course_excerpt' => 'foo',
+			'course_name' => 'bar',
+			'course_description' => 'baz',
+		);
+		$assert = CoursePress_Data_Course::update( $this->course->ID, $data );
+		$this->assertNotEmpty( $assert );
+		$this->assertInternalType( 'integer', $assert );
+		$this->assertEquals( $this->course->ID, $assert );
+		$post = get_post( $assert );
+		$this->assertEquals( $data->course_excerpt, $post->post_excerpt );
+		$this->assertEquals( $data->course_name, $post->post_title );
+		$this->assertEquals( $data->course_description, $post->post_content );
+		/**
+		 * revert
+		 */
+		$data->course_excerpt = $this->post_excerpt;
+		$data->course_name = $this->post_title;
+		$data->course_description = $this->post_content;
+		CoursePress_Data_Course::update( $this->course->ID, $data );
+	}
+
+	/**
+	 * add_instructor( $course_id, $instructor_id )
+	 */
+	public function xxxx_add_instructor() {
 	}
 }
 
