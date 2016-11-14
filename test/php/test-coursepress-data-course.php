@@ -392,7 +392,7 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	/**
 	 * get_key()
 	 */
-	public function test_get_key() {
+	public function xxxx_get_key() {
 		$assert = CoursePress_Data_Course::get_key();
 		$this->assertInternalType( 'string', $assert );
 		$this->assertEquals( '', $assert );
@@ -408,6 +408,35 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		$assert = CoursePress_Data_Course::get_key('foo', 'bar');
 		$this->assertInternalType( 'string', $assert );
 		$this->assertEquals( 'foo_bar', $assert );
+	}
+
+	/**
+	 * get_unit_modules( $unit_id, $status = array( 'publish' ), $ids_only = false, $include_count = false, $args = array() )
+	 */
+	public function test_get_unit_modules() {
+		/**
+		 * Wrong data
+		 */
+		$assert = CoursePress_Data_Course::get_unit_modules( 'foo' );
+		$this->assertInternalType( 'array', $assert );
+		$this->assertEquals( array(), $assert );
+		$assert = CoursePress_Data_Course::get_unit_modules( 0 );
+		$this->assertInternalType( 'array', $assert );
+		$this->assertEquals( array(), $assert );
+		$assert = CoursePress_Data_Course::get_unit_modules( array() );
+		$this->assertInternalType( 'array', $assert );
+		$this->assertEquals( array(), $assert );
+		/**
+		 * Good data
+		 */
+		$assert = CoursePress_Data_Course::get_unit_modules( 'foo' );
+		foreach ( $this->course->units as $unit ) {
+			$assert = CoursePress_Data_Course::get_unit_modules( $unit->ID );
+			$this->assertInternalType( 'array', $assert );
+			foreach( $assert as $module ) {
+				$this->assertInstanceOf( 'WP_Post', $module );
+			}
+		}
 	}
 
 }
