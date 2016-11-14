@@ -666,7 +666,13 @@ class CoursePress_Data_Course {
 
 	public static function get_units(
 		$course_id, $status = array( 'publish' ), $ids_only = false, $include_count = false
-	) {
+    ) {
+        /**
+         * Sanitize course_id
+         */
+        if ( ! self::is_course( $course_id ) ) {
+            return array();
+        }
 		$key = self::get_key( 'course_units', $course_id, $status, $ids_only, $include_count );
 
 		if ( ! empty( self::$current[ $key ] ) ) {
