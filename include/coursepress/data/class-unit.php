@@ -665,6 +665,9 @@ class CoursePress_Data_Unit {
 		if ( ! isset( $meta['page_title'] ) ) {
 			return;
 		}
+		if ( ! is_array( $meta['page_title'] ) ) {
+			return;
+		}
 		$old_pages = get_post_meta( $unit_id, 'page_title', true );
 		foreach ( $meta['page_title'] as $key => $value ) {
 			if ( array_key_exists( $key, $old_pages ) ) {
