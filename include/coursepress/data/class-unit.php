@@ -701,4 +701,28 @@ class CoursePress_Data_Unit {
 
 		return '';
 	}
+
+	/**
+	 * Check entry - is this a unit?
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param WP_Post|integer|null $course Variable to check.
+	 * @return boolean Answer is that course or not?
+	 */
+	public static function is_unit( $unit = null ) {
+		$unit_id = 0;
+		if ( empty( $unit ) ) {
+			global $post;
+			if ( ! is_object( $post ) ) {
+				return false;
+			}
+			$unit = $post;
+		}
+		$post_type = get_post_type( $unit );
+		if ( $post_type == self::$post_type ) {
+			return true;
+		}
+		return false;
+	}
 }
