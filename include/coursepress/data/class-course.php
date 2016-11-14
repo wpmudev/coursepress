@@ -1055,6 +1055,13 @@ class CoursePress_Data_Course {
 	public static function get_students( $course_id, $per_page = 0, $offset = 0, $fields = 'all' ) {
 		global $wpdb;
 
+		/**
+		 * Sanitize course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
+			return array();
+		}
+
 		if ( is_multisite() ) {
 			$course_meta_key = $wpdb->prefix . 'enrolled_course_date_' . $course_id;
 		} else {
@@ -1130,6 +1137,12 @@ class CoursePress_Data_Course {
 		global $wpdb;
 
 		if ( empty( $student_id ) ) {
+			return false;
+		}
+		/**
+		 * Sanitize course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
 			return false;
 		}
 		$global_option = ! is_multisite();
