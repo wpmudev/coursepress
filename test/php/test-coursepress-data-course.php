@@ -8,7 +8,7 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		parent::__construct();
 	}
 
-	public function xxxx_exists() {
+	public function test_exists() {
 		$this->assertTrue( class_exists( 'CoursePress_Data_Course' ) );
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Course', 'get_format' ) ) );
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Course', 'get_taxonomy' ) ) );
@@ -96,13 +96,13 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Course', 'get_defaults_setup_pages_content' ) ) );
 	}
 
-	public function xxxx_get_format() {
+	public function test_get_format() {
 		$assert = CoursePress_Data_Course::get_format();
 		$this->assertNotEmpty( $assert );
 		$this->assertEquals( 'course', $assert['post_type'] );
 	}
 
-	public function xxxx_get_taxonomy() {
+	public function test_get_taxonomy() {
 		$assert = CoursePress_Data_Course::get_taxonomy();
 		$this->assertNotEmpty( $assert );
 		$this->assertEquals( 'course_category', $assert['taxonomy_type'] );
@@ -172,7 +172,7 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	 * get_message( $key, $alternate = '' )
 	 * get_default_messages( $key = '' ) {
 	 */
-	public function xxxx_messages() {
+	public function test_messages() {
 		$keys = array( 'ca', 'cu', 'usc', 'ud', 'ua', 'uu', 'as', 'ac', 'dc', 'us', 'usl', 'is', 'ia' );
 		$assert = CoursePress_Data_Course::get_default_messages();
 		$this->has_keys( $keys, $assert );
@@ -181,7 +181,7 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	/**
 	 * function update( $course_id, $data )
 	 */
-	public function xxxx_update() {
+	public function test_update() {
 		/**
 		 * Wrong data
 		 */
@@ -232,7 +232,7 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	 * add_instructor( $course_id, $instructor_id )
 	 * remove_instructor( $course_id, $instructor_id )
 	 */
-	public function xxxx_instructor() {
+	public function test_instructor() {
 		/**
 		 * Wrong data
 		 */
@@ -254,7 +254,7 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	 * set_setting( &$settings, $key, $value )
 	 * delete_setting( $course_id, $key = true )
 	 */
-	public function xxxx_settings() {
+	public function test_settings() {
 		/**
 		 * Wrong data
 		 */
@@ -301,7 +301,7 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	/**
 	 * allow_pages( $course_id )
 	 */
-	public function xxxx_allow_pages() {
+	public function test_allow_pages() {
 		$test = array(
 			'course_discussion' => true,
 			'workbook' => true,
@@ -326,7 +326,7 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	 * get_units( $course_id, $status = array( 'publish' ), $ids_only = false, $include_count = false )
 	 * get_unit_ids( $course_id, $status = array( 'publish' ), $include_count = false )
 	 */
-	public function xxxx_units() {
+	public function test_units() {
 		/**
 		 * Wrong data
 		 */
@@ -369,7 +369,7 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	/**
 	 * get_listing_image( $course_id )
 	 */
-	public function xxxx_get_listing_image() {
+	public function test_get_listing_image() {
 		/**
 		 * Wrong data
 		 */
@@ -392,7 +392,7 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	/**
 	 * get_units_with_modules( $course_id, $status = array( 'publish' ) )
 	 */
-	public function xxxx_get_units_with_modules() {
+	public function test_get_units_with_modules() {
 		/**
 		 * Wrong data
 		 */
@@ -421,7 +421,7 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	/**
 	 * get_key()
 	 */
-	public function xxxx_get_key() {
+	public function test_get_key() {
 		$assert = CoursePress_Data_Course::get_key();
 		$this->assertInternalType( 'string', $assert );
 		$this->assertEquals( '', $assert );
@@ -442,7 +442,7 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	/**
 	 * get_unit_modules( $unit_id, $status = array( 'publish' ), $ids_only = false, $include_count = false, $args = array() )
 	 */
-	public function xxxx_get_unit_modules() {
+	public function test_get_unit_modules() {
 		/**
 		 * Wrong data
 		 */
@@ -466,6 +466,15 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 				$this->assertInstanceOf( 'WP_Post', $module );
 			}
 		}
+	}
+
+	/**
+	 * get_students( $course_id, $per_page = 0, $offset = 0, $fields = 'all' )
+	 */
+	public function test_get_students() {
+		/**
+		 * TODO
+		 */
 	}
 }
 
