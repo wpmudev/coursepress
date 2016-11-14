@@ -225,7 +225,7 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	 * set_setting( &$settings, $key, $value )
 	 * delete_setting( $course_id, $key = true )
 	 */
-	public function test_settings() {
+	public function xxxx_settings() {
 		/**
 		 * Wrong data
 		 */
@@ -267,6 +267,30 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		$assert = CoursePress_Data_Course::get_setting( $this->course->ID, 'foo' );
 		$this->assertEmpty( $assert );
 
+	}
+
+	/**
+	 * allow_pages( $course_id )
+	 */
+	public function test_allow_pages() {
+		$test = array(
+			'course_discussion' => true,
+			'workbook' => true,
+			'grades' => true,
+		);
+
+		/**
+		 * Wrong data
+		 */
+		$assert = CoursePress_Data_Course::allow_pages( 'foo' );
+		$this->assertEqualSetsWithIndex( $test, $assert );
+		$assert = CoursePress_Data_Course::allow_pages( 0 );
+		$this->assertEqualSetsWithIndex( $test, $assert );
+		/**
+		 * Good data
+		 */
+		$assert = CoursePress_Data_Course::allow_pages( $this->course->ID );
+		$this->assertEqualSetsWithIndex( $test, $assert );
 	}
 }
 
