@@ -427,6 +427,13 @@ class CoursePress_Data_Course {
 			return $settings;
 		}
 
+		/**
+		 * Process only strings
+		 */
+		if ( ! is_string( $key ) ) {
+			return $default;
+		}
+
 		$setting = CoursePress_Helper_Utility::get_array_val( $settings, $key );
 		$setting = is_null( $setting ) ? $default : $setting;
 		$setting = ! is_array( $setting ) ? trim( $setting ) : $setting;
@@ -515,6 +522,9 @@ class CoursePress_Data_Course {
 	 * @param $value
 	 */
 	public static function set_setting( &$settings, $key, $value ) {
+		if ( ! is_array( $settings ) ) {
+			return;
+		}
 		CoursePress_Helper_Utility::set_array_val( $settings, $key, $value );
 	}
 
