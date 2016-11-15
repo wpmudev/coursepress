@@ -21,10 +21,9 @@ if ( ! class_exists( 'Student_Search' ) ) {
 			$search_term = '', $page_num = '', $search_args = array(), $meta_args = array(),
 			$additional_url_args = array()
 		) {
-			parent::__construct();
-
 			global $wpdb;
 
+			$this->db = $wpdb;
 			$this->additional_url_args = $additional_url_args;
 
 			if ( ! empty( $search_args['users_per_page'] ) && is_numeric( $search_args['users_per_page'] ) ) {
