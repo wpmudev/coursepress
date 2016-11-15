@@ -20,8 +20,8 @@ class CoursePressUpgradeTest extends WP_UnitTestCase {
 		require $bootstrap;
 	}
 
-	public static function require_coursepress() {
-		require_once WP_COURSEPRESS_DIR . 'coursepress.php';
+	public static function require_coursepress( $version = '' ) {
+		require_once WP_COURSEPRESS_DIR . $version . 'coursepress.php';
 	}
 
 	/**
@@ -88,6 +88,10 @@ class CoursePressUpgradeTest extends WP_UnitTestCase {
 		$this->assertStringStartsWith( '2.0', CoursePress::$version );
 	}
 
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 **/
 	public static function create_course() {
 		// Pre-create courses
 		$c1 = CoursePressData::course_data(array(
@@ -105,6 +109,10 @@ class CoursePressUpgradeTest extends WP_UnitTestCase {
 		return $c1;
 	}
 
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 **/
 	public function test_global_settings_migration() {
 		$course_id = self::create_course();
 
@@ -178,5 +186,87 @@ class CoursePressUpgradeTest extends WP_UnitTestCase {
 		$this->assertEquals( 'student-signup1', $slugs['signup'] );
 		$this->assertEquals( 'student-dashboard1', $slugs['student_dashboard'] );
 		$this->assertEquals( 'student-settings1', $slugs['student_settings'] );
+
+		// Pages
+		// Course
+		// Reports
+		// Instructor
+		// Basic Certificate
+		// Email Settings
+		// MarketingPress
+		// WooCommerce
+		// Terms of Service
 	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 **/
+	public function test_course_settings_migration() {
+		$c1 = self::factory()->post->create(array(
+			'post_type' => 'course',
+			'post_title' => 'Course 2',
+			'post_excerpt' => 'course-except',
+			'post_content' => 'course-description',
+		));
+
+		register_taxonomy( 'course_category', 'course_category' );
+		$tax1 = self::factory()->term->create(array(
+			'name' => 'Technology',
+			'taxonomy' => 'course_category'
+		));
+
+		wp_set_object_terms( $c1, $tax1, 'course_category' );
+
+		$instructor1 = self::factory()->user->create();
+		$instructor2 = self::factory()->user->create();
+		$user1 = self::factory()->user->create();
+		$user2 = self::factory()->user->create();
+		$user3 = self::factory()->user->create();
+
+		// Set featured url
+		$featured_url = 'http://local.wordpress-trunk.dev/wp-content/uploads/2016/11/20161027_194251.jpg';
+		update_post_meta( $c1, 'featured_url', $featured_url );
+		// Set instructors
+		$instructors = array( $instructor1, $instructor2 );
+		update_post_meta( $c1, 'instructors', $instructors );
+		// Course dates
+		$start = Date( 'Y-m-d', strtotime( '-5 Days' ) );
+		update_post_meta( $c1, 'course_start_date', $start );
+		$end = Date( 'Y-m-d', strtotime( '15 Days' ) );
+		update_post_meta( $c1, 'course_end_date', $end );
+
+		// Enrollments
+		update_post_meta( $c1, 'enrollment_start_date', $start );
+		update_post_meta( $c1, 'enrollment_end_date', $end );
+
+		// Discussion
+		update_post_meta( $c1, 'allow_course_discussion', 'on' );
+		update_post_meta( $c1, 'allow_workbook_page', 'on' );
+		update_post_meta( $c1, 'enroll_type', 'registered' );
+
+		require_once WP_COURSEPRESS_DIR . 'upgrade/class-helper-upgrade.php';
+
+		CoursePress_Helper_Upgrade::update_course( $c1 );
+
+		self::require_coursepress();
+
+		$course_setting = CoursePress_Data_Course::get_setting( $c1 );
+
+		$this->assertEquals( $featured_url, $course_setting['listing_image'] );
+		$this->assertEquals( $start, $course_setting['course_start_date'] );
+		$this->assertEquals( $end, $course_setting['course_end_date'] );
+		$this->assertEquals( $start, $course_setting['enrollment_start_date'] );
+		$this->assertEquals( $end, $course_setting['enrollment_end_date'] );
+		$this->assertEquals( 1, $course_setting['allow_discussion'] );
+		$this->assertEquals( 1, $course_setting['allow_workbook'] );
+		$this->assertEquals( 'registered', $course_setting['enrollment_type'] );
+
+		// Instructors
+		$cp2_instructors = CoursePress_Data_Course::get_instructors( $c1 );
+		$this->assertTrue( ! empty( $cp2_instructors ) );
+		$this->assertTrue( in_array( $instructor1, $cp2_instructors ) );
+		$this->assertTrue( in_array( $instructor2, $cp2_instructors ) );
+	}
+
 }

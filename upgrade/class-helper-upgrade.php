@@ -150,14 +150,6 @@ class CoursePress_Helper_Upgrade {
 
 		foreach ( $meta_keys as $old_meta => $new_meta ) {
 			$meta_value = get_post_meta( $course_id, $old_meta, true );
-
-			if ( 'enroll_type' == $old_meta ) {
-				// Fix enrollment type
-				if ( 'registered' == $meta_value ) {
-					$meta_value = 'anyone';
-				}
-			}
-
 			$course_metas[ $new_meta ] = $meta_value;
 		}
 
