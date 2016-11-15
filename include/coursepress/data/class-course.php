@@ -1777,6 +1777,13 @@ class CoursePress_Data_Course {
 	public static function get_next_accessible_module(
 		$course_id, $unit_id, $current_page = 1, $current_module = 0
 	) {
+		$next = array( 'id' => false );
+		/**
+		 * Sanitize $course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
+			return $next;
+		}
 		$can_update_course = CoursePress_Data_Capabilities::can_update_course( $course_id );
 		$student_id = get_current_user_id();
 		$instructors = array_filter( CoursePress_Data_Course::get_instructors( $course_id ) );
@@ -1784,7 +1791,6 @@ class CoursePress_Data_Course {
 		$is_enrolled = CoursePress_Data_Course::student_enrolled( $student_id, $course_id );
 		$current_module_done = true;
 		$current_page = (int) $current_page > 1 ? $current_page : 1;
-		$next = array( 'id' => false );
 
 		// Optionally check if current module is completed.
 		if ( $is_enrolled && $current_module ) {
