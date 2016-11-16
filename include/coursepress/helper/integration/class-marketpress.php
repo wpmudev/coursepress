@@ -81,7 +81,7 @@ class CoursePress_Helper_Integration_MarketPress {
 			array( __CLASS__, 'update_course_from_product' ),
 			10, 3
 		);
-		
+
 		// Below hook will result to duplicate entry on Products
 		// add_action(
 			// 'wp_insert_post',
@@ -327,7 +327,7 @@ class CoursePress_Helper_Integration_MarketPress {
 	}
 
 	public static function course_paid_3pt0( $order ) {
-		$cart = $order->get_meta('mp_cart_info');
+		$cart = $order->get_meta( 'mp_cart_info' );
 		if ( $cart ) {
 			$items = $cart->get_items();
 			if ( $items ) {
@@ -385,7 +385,7 @@ class CoursePress_Helper_Integration_MarketPress {
 				</label>';
 
 		$product_id = self::get_product_id( $course_id );
-		
+
 		if ( $product_id ) {
 			// Add MP product ID as indication.
 			$mp_content .= '
@@ -1093,7 +1093,7 @@ Yours sincerely,
 		if ( ! self::$is_active ) {
 			return $enroll_student;
 		}
-		return CoursePress_Data_Course::is_paid_course( $course_id );
+		return ! CoursePress_Data_Course::is_paid_course( $course_id );
 	}
 
 	/**
