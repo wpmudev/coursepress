@@ -2208,6 +2208,12 @@ class CoursePress_Data_Course {
 		) {
 			return $json_data;
 		}
+		/**
+		 * Sanitize course_id
+		 */
+		if ( ! self::is_course( $data->data->course_id ) ) {
+			return $json_data;
+		}
 
 		$course_id = (int) $data->data->course_id;
 
@@ -2449,13 +2455,11 @@ class CoursePress_Data_Course {
 	 * @return int|0 Timestamp in GMT timezone.
 	 **/
 	public static function strtotime( $date_string ) {
-
 		$timestamp = 0;
-
 		if ( is_numeric( $date_string ) ) {
 			// Apparently we got a timestamp already. Simply return it.
 			$timestamp = (int) $date_string;
-		} elseif ( is_string( $date_string ) ) {
+		} elseif ( is_string( $date_string ) && ! empty( $date_string ) ) {
 			/*
 			 * Convert the date-string into a timestamp; PHP assumes that the
 			 * date string is in servers default timezone.
