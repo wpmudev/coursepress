@@ -220,9 +220,6 @@ class CoursePressUpgradeTest extends WP_UnitTestCase {
 
 		$instructor1 = self::factory()->user->create();
 		$instructor2 = self::factory()->user->create();
-		$user1 = self::factory()->user->create();
-		$user2 = self::factory()->user->create();
-		$user3 = self::factory()->user->create();
 
 		// Set featured url
 		$featured_url = 'http://local.wordpress-trunk.dev/wp-content/uploads/2016/11/20161027_194251.jpg';
@@ -245,11 +242,72 @@ class CoursePressUpgradeTest extends WP_UnitTestCase {
 		update_post_meta( $c1, 'allow_workbook_page', 'on' );
 		update_post_meta( $c1, 'enroll_type', 'registered' );
 
+		// Units
+		register_post_type( 'unit' );
+		$unit1 = self::factory()->post->create(array(
+			'post_type' => 'unit',
+			'post_title' => 'Unit 1',
+			'post_status' => 'publish',
+			'post_parent' => $c1,
+		));
+		update_post_meta( $unit1, 'unit_availability', $start );
+		update_post_meta( $unit1, 'force_current_unit_completion', 'on' );
+		update_post_meta( $unit1, 'force_current_unit_successful_completion', 'on' );
+		update_post_meta( $unit1, 'refresh_unit_completion_progres', 'on' );
+
+		update_post_meta( $unit1, 'page_title', array(
+			'page_1' => 'Page 1: Section 1',
+			'page_2' => 'Page 2: Section 2'
+		));
+		update_post_meta( $unit1, 'show_page_title', array(
+			'yes',
+			'no'
+		));
+
+		// Modules
+		$mt = self::factory()->post->create(array(
+			'post_type' => 'module',
+			'post_status' => 'publish',
+			'post_title' => 'Multiple Choice',
+			'post_content' => 'Multiple Choice Module',
+		));
+		$mt_meta = array(
+			'module_type' => 'checkbox_input_module',
+			'module_page' => 1,
+			'answers' => array(
+				'Option 1',
+				'Option 2',
+				'Option 3',
+				'Option 4'
+			),
+			'checked_answers' => array(
+				'Option 1',
+				'Option 3'
+			)
+		);
+
+		// Students
+		$current_time = current_time( 'mysql' );
+		$global_option = !is_multisite();
+		$class = '';
+		$group = '';
+
+		$user1 = self::factory()->user->create();
+
+		update_user_option( $user1, 'enrolled_course_date_' . $c1, $current_time, $global_option );
+		update_user_option( $user1, 'enrolled_course_class_' . $c1, $class, $global_option );
+		update_user_option( $user1, 'enrolled_course_group_' . $c1, $group, $global_option );
+		update_user_option( $user1, 'role', 'student', $global_option );
+
+		//$user2 = self::factory()->user->create();
+		//$user3 = self::factory()->user->create();
+
 		require_once WP_COURSEPRESS_DIR . 'upgrade/class-helper-upgrade.php';
 
 		CoursePress_Helper_Upgrade::update_course( $c1 );
 
 		self::require_coursepress();
+		CoursePress_Core::init();
 
 		$course_setting = CoursePress_Data_Course::get_setting( $c1 );
 
@@ -267,6 +325,15 @@ class CoursePressUpgradeTest extends WP_UnitTestCase {
 		$this->assertTrue( ! empty( $cp2_instructors ) );
 		$this->assertTrue( in_array( $instructor1, $cp2_instructors ) );
 		$this->assertTrue( in_array( $instructor2, $cp2_instructors ) );
+
+		// Students
+		$students = CoursePress_Data_Course::get_student_ids( $c1 );
+		$this->assertTrue( ! empty( $students ) );
+		$this->assertTrue( CoursePress_Data_Student::is_enrolled_in_course( $user1, $c1 ) );
+
+		// Units
+		$this->assertTrue( CoursePress_Data_Unit::is_unit_available( $c1, $unit1, false ) );
+		$this->assertEquals( $start, get_post_meta( $unit1, 'unit_date_availability', true ) );
 	}
 
 }

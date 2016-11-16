@@ -24,6 +24,10 @@ class CoursePress_Helper_Upgrade {
 			$found_error += 1;
 		}
 
+		if ( false == self::update_course_units( $course_id ) ) {
+			$found_error += 1;
+		}
+
 		// Update Student Progress data
 		if ( false == self::update_course_students_progress( $course_id ) ) {
 			$found_error += 1;
@@ -414,6 +418,32 @@ class CoursePress_Helper_Upgrade {
 				// save the new data structure
 				$global_setting = ! is_multisite();
 				update_user_option( $user->ID, 'course_' . $course_id . '_progress', $new_student_progress, $global_setting );
+			}
+		}
+
+		return true;
+	}
+
+	public static function update_course_units( $course_id ) {
+		$units_args = array(
+			'post_type' => 'unit',
+			'post_status' => array( 'publish', 'pending', 'draft', 'private' ),
+			'fields' => 'ids',
+			'suppress_filters' => true,
+			'posts_per_page' => -1,
+			'post_parent' => $course_id,
+		);
+
+		$units = get_posts( $units_args );
+
+		if ( ! empty( $units ) ) {
+			foreach ( $units as $unit_id ) {
+				$unit_availability = get_post_meta( $unit_id, 'unit_availability', true );
+
+				if ( ! empty( $unit_availability ) ) {
+					update_post_meta( $unit_id, 'unit_availability', 'on_date' );
+					update_post_meta( $unit_id, 'unit_date_availability', $unit_availability );
+				}
 			}
 		}
 
