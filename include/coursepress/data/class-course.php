@@ -2149,6 +2149,9 @@ class CoursePress_Data_Course {
 	public static function get_course( $course_id = 0 ) {
 		$course_id = ! $course_id ? get_the_ID() : $course_id;
 		$course = get_post( $course_id );
+		/**
+		 * sanitize course class
+		 */
 		if ( ! is_a( $course, 'WP_Post' ) ) {
 			return false;
 		}
@@ -2187,6 +2190,13 @@ class CoursePress_Data_Course {
 	 *
 	 */
 	static public function duplicate_course( $data ) {
+		$json_data = array(
+			'course_id' => null,
+			'data' => null,
+			'nonce' => null,
+			'success' => false,
+			'action' => 'duplicate_course',
+		);
 		/**
 		 * sanitize data object
 		 */
@@ -2196,7 +2206,7 @@ class CoursePress_Data_Course {
 			|| ! is_object( $data->data )
 			|| ! isset( $data->data->course_id )
 		) {
-			return $data;
+			return $json_data;
 		}
 
 		$course_id = (int) $data->data->course_id;
@@ -2204,7 +2214,7 @@ class CoursePress_Data_Course {
 		$the_course = get_post( $course_id );
 
 		if ( empty( $the_course ) ) {
-			return array();
+			return $json_data;
 		}
 
 		$the_course = CoursePress_Helper_Utility::object_to_array( $the_course );
@@ -2397,15 +2407,18 @@ class CoursePress_Data_Course {
 	 **/
 	public static function get_course_url( $course_id = 0 ) {
 		$url = '';
-
+		/**
+		 * Sanitize course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
+			return $url;
+		}
 		if ( ! empty( $course_id ) ) {
 			$course_slug = get_post_field( 'post_name', $course_id );
 			$course_url = CoursePress_Core::get_slug( 'course/', true );
 			$course_url .= trailingslashit( $course_slug );
-
 			$url = $course_url;
 		}
-
 		return $url;
 	}
 
@@ -2424,7 +2437,6 @@ class CoursePress_Data_Course {
 	 **/
 	public static function time_now() {
 		$now = current_time( 'timestamp', 1 );
-
 		return $now;
 	}
 
@@ -2437,12 +2449,13 @@ class CoursePress_Data_Course {
 	 * @return int|0 Timestamp in GMT timezone.
 	 **/
 	public static function strtotime( $date_string ) {
+
 		$timestamp = 0;
 
 		if ( is_numeric( $date_string ) ) {
 			// Apparently we got a timestamp already. Simply return it.
 			$timestamp = (int) $date_string;
-		} elseif ( $date_string ) {
+		} elseif ( is_string( $date_string ) ) {
 			/*
 			 * Convert the date-string into a timestamp; PHP assumes that the
 			 * date string is in servers default timezone.
@@ -2452,7 +2465,7 @@ class CoursePress_Data_Course {
 			$timestamp = strtotime( $date_string . ' UTC' );
 		}
 
-		return $timestamp;
+		return (int) $timestamp;
 	}
 
 	/**
@@ -2468,8 +2481,29 @@ class CoursePress_Data_Course {
 			$student_id = get_current_user_id();
 		}
 
+		/**
+		 * Check student id
+		 */
+		if ( empty( $student_id ) ) {
+			return false;
+		}
+		if ( is_object( $student_id ) ) {
+			return false;
+		}
+		$student_id = intval( $student_id );
+		if ( 1 > $student_id ) {
+			return false;
+		}
+
 		$course_id = ! $course_id ? get_the_ID() : $course_id;
 		$course = get_post( $course_id );
+
+		/**
+		 * sanitize course class
+		 */
+		if ( ! is_a( $course, 'WP_Post' ) ) {
+			return false;
+		}
 
 		$now = self::time_now();
 		$is_open_ended = self::get_setting( $course_id, 'course_open_ended' );
@@ -2761,7 +2795,7 @@ class CoursePress_Data_Course {
 	 * Helper function to get IDs
 	 **/
 	public static function get_course_id( $course ) {
-		if ( is_object( $course ) ) {
+		if ( is_a( $course, 'WP_Post' ) ) {
 			return $course->ID;
 		}
 		return false;
