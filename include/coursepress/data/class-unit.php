@@ -620,9 +620,8 @@ class CoursePress_Data_Unit {
 	 *
 	 * @param integer $unit_id unit ID.
 	 * @param integer $course_id course ID.
-	 * @param array $meta Meta data.
 	 */
-	public static function show_new_on_list( $unit_id, $course_id, $meta = array() ) {
+	public static function show_new_on_list( $unit_id, $course_id ) {
 		/**
 		 * unit
 		 */
@@ -664,6 +663,9 @@ class CoursePress_Data_Unit {
 	 */
 	public static function show_new_pages( $unit_id, $meta ) {
 		if ( ! isset( $meta['page_title'] ) ) {
+			return;
+		}
+		if ( ! is_array( $meta['page_title'] ) ) {
 			return;
 		}
 		$old_pages = get_post_meta( $unit_id, 'page_title', true );
