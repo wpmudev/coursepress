@@ -16,12 +16,30 @@ class CoursePress_Tests_Helper {
 				'last_name'   => 'Snow',
 				'nickname'    => 'bastard',
 				'description' => 'Winter is comming.',
-				'user_email'  => 'snow@winterfell.com',
+				'user_email'  => 'snow@example.com',
 			);
 			$user_id = wp_insert_user( $userdata );
 			$instructor = get_userdata( $user_id );
 		}
 		return $instructor;
+	}
+
+	public function get_facilitator() {
+		$facilitator = get_user_by( 'login', 'facilitator' );
+		if ( false === $facilitator ) {
+			$userdata = array(
+				'user_login'  => 'facilitator',
+				'user_url'    => 'https://premium.wpmudev.org/',
+				'user_pass'   => 'facilitator',
+				'first_name'  => 'Petyr',
+				'last_name'   => 'Baelish',
+				'nickname'    => 'littlefinger',
+				'user_email'  => 'littlefinger@example.com',
+			);
+			$user_id = wp_insert_user( $userdata );
+			$facilitator = get_userdata( $user_id );
+		}
+		return $facilitator;
 	}
 
 	public function get_student() {
@@ -127,7 +145,7 @@ class CoursePress_Tests_Helper {
 		 * Step 5 – Classes, Discussion & Workbook
 		 */
 		CoursePress_Data_Course::set_setting( $settings, 'class_limited', 'on' );
-		CoursePress_Data_Course::set_setting( $settings, 'class_size', '10' );
+		CoursePress_Data_Course::set_setting( $settings, 'class_size', '1' );
 		CoursePress_Data_Course::set_setting( $settings, 'allow_discussion', 'on' );
 		CoursePress_Data_Course::set_setting( $settings, 'allow_workbook', 'on' );
 		CoursePress_Data_Course::set_setting( $settings, 'setup_step_5', 'saved' );
@@ -176,6 +194,12 @@ class CoursePress_Tests_Helper {
 		 */
 		$instructor = $this->get_instructor();
 		CoursePress_Data_Course::add_instructor( $course->ID, $instructor->ID );
+
+		/**
+		 * Add facilitator
+		 */
+		$facilitator = $this->get_facilitator();
+		CoursePress_Data_Facilitator::add_course_facilitator( $course->ID, $facilitator->ID );
 
 		/**
 		 * return course

@@ -4,9 +4,10 @@ class CoursePress_UnitTestCase extends WP_UnitTestCase {
 
 	protected $admin;
 	protected $course;
+	protected $facilitator;
 	protected $instructor;
-	protected $student;
 	protected $modules;
+	protected $student;
 
 	public function __construct() {
 		$helper = new CoursePress_Tests_Helper();
@@ -15,6 +16,10 @@ class CoursePress_UnitTestCase extends WP_UnitTestCase {
 		 * Set instructor data
 		 */
 		$this->instructor = $helper->get_instructor();
+		/**
+		 * Set facilitator data
+		 */
+		$this->facilitator = $helper->get_facilitator();
 		/**
 		 * Set student data
 		 */
