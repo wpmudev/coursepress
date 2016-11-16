@@ -95,7 +95,7 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 		$actions = array();
 
 		// @todo: Add sanity check/filter
-		$actions['withdraw'] = __( 'Remove as Instructors', 'cp' );
+		$actions['withdraw'] = __( 'Remove as Instructors', 'CP_TD' );
 
 		return $actions;
 	}
@@ -103,10 +103,10 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
-			'user_id' => __( 'ID', 'cp' ),
-			'instructor_name' => __( 'Name', 'cp' ),
-			'registered' => __( 'Registered', 'cp' ),
-			'courses' => __( 'Courses', 'cp' ),
+			'user_id' => __( 'ID', 'CP_TD' ),
+			'instructor_name' => __( 'Name', 'CP_TD' ),
+			'registered' => __( 'Registered', 'CP_TD' ),
+			'courses' => __( 'Courses', 'CP_TD' ),
 		);
 
 		return $columns;
@@ -121,7 +121,7 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 		$options['value'] = $this->course_id;
 		$options['class'] = 'medium dropdown';
 		$options['first_option'] = array(
-			'text' => __( 'All courses', 'cp' ),
+			'text' => __( 'All courses', 'CP_TD' ),
 			'value' => 'all',
 		);
 
@@ -137,7 +137,7 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 		?>
 		<div class="alignleft actions category-filter">
 			<?php echo $courses; ?>
-			<input type="submit" class="button" name="action" value="<?php esc_attr_e( 'Filter', 'cp' ); ?>" />
+			<input type="submit" class="button" name="action" value="<?php esc_attr_e( 'Filter', 'CP_TD' ); ?>" />
 		</div>
 		<?php
 	}
@@ -147,7 +147,7 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 		if ( 'top' !== $which ) {
 			parent::pagination( $which );
 		} else {
-			$this->search_box( __( 'Search Instructors', 'cp' ), 'search' );
+			$this->search_box( __( 'Search Instructors', 'CP_TD' ), 'search' );
 		}
 	}
 
@@ -170,7 +170,7 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 	public function column_instructor_name( $user_id ) {
 		$user = get_userdata( $user_id );
 		$actions = array();
-		$actions['user_id'] = sprintf( __( 'User ID: %d', 'cp' ), $user_id );
+		$actions['user_id'] = sprintf( __( 'User ID: %d', 'CP_TD' ), $user_id );
 
 		// User avatar
 		$avatar = get_avatar( $user->user_email, 32 );
@@ -192,7 +192,7 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 				'instructor_id' => $user_id,
 			)
 		);
-		$actions['courses'] = sprintf( '<a href="%s">%s</a>', esc_url( $courses_url ), __( 'View Courses', 'cp' ) );
+		$actions['courses'] = sprintf( '<a href="%s">%s</a>', esc_url( $courses_url ), __( 'View Courses', 'CP_TD' ) );
 
 		// @todo: Add sanity check/validation
 		$delete_url = add_query_arg(
@@ -202,7 +202,7 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 				'action' => 'delete',
 			)
 		);
-		$actions['delete'] = sprintf( '<a class="remove_instructor_action" href="%s">%s</a>', esc_url( $delete_url ), __( 'Remove as Instructor', 'cp' ) );
+		$actions['delete'] = sprintf( '<a class="remove_instructor_action" href="%s">%s</a>', esc_url( $delete_url ), __( 'Remove as Instructor', 'CP_TD' ) );
 
 		return $avatar . $name . $this->row_actions( $actions );
 	}
@@ -238,7 +238,7 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 		if ( empty( $assigned_courses_ids ) ) {
 			return sprintf(
 				'<span aria-hidden="true">&#8212;</span><span class="screen-reader-text">%s</span>',
-				__( 'Instructor is not assigned to any course.', 'cp' )
+				__( 'Instructor is not assigned to any course.', 'CP_TD' )
 			);
 		}
 		$content = '<ul>';

@@ -117,7 +117,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 
 	/** No items */
 	public function no_items() {
-		echo __( 'No notifications found.', 'cp' );
+		echo __( 'No notifications found.', 'CP_TD' );
 	}
 
 	public function column_cb( $item ) {
@@ -132,10 +132,10 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
-			'notification' => __( 'Notification', 'cp' ),
-			'course' => __( 'Course', 'cp' ),
-			'receivers' => __( 'Receivers', 'cp' ),
-			'status' => __( 'Status', 'cp' ),
+			'notification' => __( 'Notification', 'CP_TD' ),
+			'course' => __( 'Course', 'CP_TD' ),
+			'receivers' => __( 'Receivers', 'CP_TD' ),
+			'status' => __( 'Status', 'CP_TD' ),
 		);
 
 		return $columns;
@@ -158,7 +158,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 					'id' => $item->ID,
 				)
 			);
-			$actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'cp' ) );
+			$actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'CP_TD' ) );
 		}
 
 		if ( $this->can_delete( $item ) ) {
@@ -168,7 +168,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 					'id' => $item->ID,
 				)
 			);
-			$actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $delete_url ), __( 'Delete', 'cp' ) );
+			$actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $delete_url ), __( 'Delete', 'CP_TD' ) );
 		}
 
 		return $this->row_actions( $actions );
@@ -194,7 +194,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 		if ( 'all' == $course_id ) {
 			return sprintf(
 				'<span aria-hidden="true">&#8212;</span><span class="screen-reader-text">%s</span>',
-				__( 'Option not available for all courses.', 'cp' )
+				__( 'Option not available for all courses.', 'CP_TD' )
 			);
 		}
 		$recivers_allowed_options = array();
@@ -207,14 +207,14 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 		if ( isset( $recivers_allowed_options[ $receivers ] ) ) {
 			return $recivers_allowed_options[ $receivers ]['label'];
 		}
-		return __( 'Wrong receivers!', 'cp' );
+		return __( 'Wrong receivers!', 'CP_TD' );
 	}
 
 	protected function get_bulk_actions() {
 		$actions = array(
-			'publish' => __( 'Visible', 'cp' ),
-			'unpublish' => __( 'Private', 'cp' ),
-			'delete' => __( 'Delete', 'cp' ),
+			'publish' => __( 'Visible', 'CP_TD' ),
+			'unpublish' => __( 'Private', 'CP_TD' ),
+			'delete' => __( 'Delete', 'CP_TD' ),
 		);
 		return $actions;
 	}
@@ -271,7 +271,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 		$options['value'] = $course_id;
 		$options['class'] = 'medium dropdown';
 		$options['first_option'] = array(
-			'text' => __( 'All courses', 'cp' ),
+			'text' => __( 'All courses', 'CP_TD' ),
 			'value' => 'all',
 		);
 
@@ -300,9 +300,9 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 		?>
 		<div class="alignleft actions category-filter">
 			<?php $this->course_filter( $which ); ?>
-			<input type="submit" class="button" name="action" value="<?php esc_attr_e( 'Filter', 'cp' ); ?>" />
+			<input type="submit" class="button" name="action" value="<?php esc_attr_e( 'Filter', 'CP_TD' ); ?>" />
 		</div>
 		<?php
-		$this->search_box( __( 'Search Notifications', 'cp' ), 'search_notifications' );
+		$this->search_box( __( 'Search Notifications', 'CP_TD' ), 'search_notifications' );
 	}
 }

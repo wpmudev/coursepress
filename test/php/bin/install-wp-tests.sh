@@ -11,8 +11,9 @@ DB_PASS=$3
 DB_HOST=${4-localhost}
 WP_VERSION=${5-latest}
 
-WP_TESTS_DIR='/tmp/wordpress-tests-lib'
-WP_CORE_DIR=${WP_CORE_DIR-/tmp/wordpress/}
+WP_TESTS_DIR='/tmp/wp-tests/coursepress-tests-lib'
+WP_CORE_DIR=${WP_CORE_DIR-/tmp/wp-tests/coursepress-test/}
+
 
 download() {
     if [ `which curl` ]; then
@@ -27,8 +28,7 @@ if [[ $WP_VERSION =~ [0-9]+\.[0-9]+(\.[0-9]+)? ]]; then
 else
 	# http serves a single offer, whereas https serves multiple. we only want one
 	download http://api.wordpress.org/core/version-check/1.7/ /tmp/wp-latest.json
-	grep '[0-9]+\.[0-9]+(\.[0-9]+)?' /tmp/wp-latest.json
-	LATEST_VERSION=$(grep -o '"version":"[^"]*' /tmp/wp-latest.json | sed 's/"version":"//')
+	LATEST_VERSION=$( grep -o '"version":"[^"]*' /tmp/wp-latest.json | sed 's/"version":"//' )
 	if [[ -z "$LATEST_VERSION" ]]; then
 		echo "Latest WordPress version could not be found"
 		exit 1

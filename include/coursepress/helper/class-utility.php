@@ -153,15 +153,13 @@ class CoursePress_Helper_Utility {
 		if ( ! is_array( $path ) ) {
 			$path = explode( '/', $path );
 		}
-
 		foreach ( $path as $k ) {
 			if ( isset( $a[ $k ] ) ) {
-				$a = &$a[ $k ];
+				$a = $a[ $k ];
 			} else {
-				return null;
+				return NULL;
 			}
 		}
-
 		return $a;
 	}
 
@@ -572,6 +570,13 @@ class CoursePress_Helper_Utility {
 
 	public static function force_download_file_request() {
 		if ( isset( $_GET['fdcpf'] ) ) {
+			// Regenerate certficate
+			if ( ! empty( $_GET['c'] ) && ! empty( $_GET['u'] ) ) {
+				$course_id = (int) $_GET['c'];
+				$student_id = (int) $_GET['u'];
+				CoursePress_Data_Certificate::generate_pdf_certificate( $course_id, $student_id );
+			}
+
 			$requested_file = self::decode( $_GET['fdcpf'] );
 			self::download_file_request( $requested_file );
 		}
@@ -610,7 +615,7 @@ class CoursePress_Helper_Utility {
 			header( 'Connection: close' );
 			echo $body;
 		} else {
-			_e( 'Something went wrong.', 'cp' );
+			_e( 'Something went wrong.', 'CP_TD' );
 		}
 		exit();
 	}
@@ -657,7 +662,7 @@ class CoursePress_Helper_Utility {
 				$unzipfile = unzip_file( $src_path, $object_dir );
 			}
 
-			echo '<a href="' . esc_url_raw( wp_get_referer() ) . $append_url . '" style="padding: 5px; font-size: 12px; text-decoration: none; opacity: 0.3; background: #3C3C3C; color: #fff; font-family: helvetica, sans-serif; position: absolute; top: 2; left: 2;"> &laquo; ' . esc_html__( 'Back to Course', 'cp' ) . '</a>';
+			echo '<a href="' . esc_url_raw( wp_get_referer() ) . $append_url . '" style="padding: 5px; font-size: 12px; text-decoration: none; opacity: 0.3; background: #3C3C3C; color: #fff; font-family: helvetica, sans-serif; position: absolute; top: 2; left: 2;"> &laquo; ' . esc_html__( 'Back to Course', 'CP_TD' ) . '</a>';
 			
 			if ( file_exists($file_path) ) {
 				echo '<iframe style="margin:0; padding:0; border:none; width: 100%; height: 100vh;" src="' .$file_url . '"></iframe>';

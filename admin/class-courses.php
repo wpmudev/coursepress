@@ -69,14 +69,14 @@ class CoursePress_Admin_Courses {
 		self::$is_course = true;
 
 		$columns = array_merge( $columns, array(
-			'date_start' => __( 'Start Date', 'cp' ),
-			'date_end' => __( 'End Date', 'cp' ),
-			'date_enrollment_start' => __( 'Enrollment Start', 'cp' ),
-			'date_enrollment_end' => __( 'Enrollment End', 'cp' ),
-			'units' => __( 'Units', 'cp' ),
-			'students' => __( 'Students', 'cp' ),
-			'certificates' => __( 'Certified', 'cp' ),
-			'status' => __( 'Status', 'cp' ),
+			'date_start' => __( 'Start Date', 'CP_TD' ),
+			'date_end' => __( 'End Date', 'CP_TD' ),
+			'date_enrollment_start' => __( 'Enrollment Start', 'CP_TD' ),
+			'date_enrollment_end' => __( 'Enrollment End', 'CP_TD' ),
+			'units' => __( 'Units', 'CP_TD' ),
+			'students' => __( 'Students', 'CP_TD' ),
+			'certificates' => __( 'Certified', 'CP_TD' ),
+			'status' => __( 'Status', 'CP_TD' ),
 		) );
 
 		// Remove date column
@@ -158,9 +158,9 @@ class CoursePress_Admin_Courses {
 		}
 		$output = sprintf( '<div><p>%d&nbsp;%s<br />%d&nbsp;%s</p>',
 			$query->found_posts,
-			__( 'Units', 'cp' ),
+			__( 'Units', 'CP_TD' ),
 			$published,
-			__( 'Published', 'cp' )
+			__( 'Published', 'CP_TD' )
 		);
 
 		wp_reset_postdata();
@@ -220,69 +220,104 @@ class CoursePress_Admin_Courses {
 
 		// Reconstruct row actions
 		$actions = array();
+
 		$edit_link = get_edit_post_link( $course->ID );
 		$published = 'publish' == $course->post_status;
 		$course_url = CoursePress_Data_Course::get_course_url( $course->ID );
 		$can_update = false;
+		$post_type_object = get_post_type_object( $course->post_type );
+		$title = _draft_or_post_title();
 
 		if ( self::can_update_course( $course->ID ) ) {
 			$can_update = true;
 
-			// Add edit link
-			$actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_link ), __( 'Edit', 'cp' ) );
+			if ( 'trash' != $course->post_status ) {
+				// Add edit link
+				$actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_link ), __( 'Edit', 'CP_TD' ) );
+				$edit_units = add_query_arg( 'tab', 'units', $edit_link );
+				$edit_students = add_query_arg( 'tab', 'students', $edit_link );
+				$actions['units'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_units ), __( 'Units', 'CP_TD' ) );
+				$actions['students'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_students ), __( 'Students', 'CP_TD' ) );
 
-			$edit_units = add_query_arg( 'tab', 'units', $edit_link );
-			$edit_students = add_query_arg( 'tab', 'students', $edit_link );
-
-			$actions['units'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_units ), __( 'Units', 'cp' ) );
-			$actions['students'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_students ), __( 'Students', 'cp' ) );
-
-			/**
-			 * single course export
-			 */
-			$action = 'coursepress_export';
-			$nonce = wp_create_nonce( $action );
-			$url = add_query_arg(
-				array(
-					'page' => $action,
-					'coursepress' => array( 'courses' => array( absint( $course->ID ) ) ),
-					'coursepress_export' => $nonce,
-				),
-				admin_url( 'admin.php' )
-			);
-
-			$url = wp_nonce_url( $url, $action, $nonce );
-			$actions['export'] = sprintf(
-				'<a href="%s">%s</a>',
-				esc_url( $url ),
-				__( 'Export', 'cp' )
-			);
+				/**
+				 * single course export
+				 */
+				$action = 'coursepress_export';
+				$nonce = wp_create_nonce( $action );
+				$url = add_query_arg(
+					array(
+						'page' => $action,
+						'coursepress' => array( 'courses' => array( absint( $course->ID ) ) ),
+						'coursepress_export' => $nonce,
+					),
+					admin_url( 'admin.php' )
+				);
+				$url = wp_nonce_url( $url, $action, $nonce );
+				$actions['export'] = sprintf(
+					'<a href="%s">%s</a>',
+					esc_url( $url ),
+					__( 'Export', 'CP_TD' )
+				);
+			}
 		}
 
-		if ( CoursePress_Data_Capabilities::can_create_course( $course->ID ) ) {
+		if ( 'trash' != $course->post_status && CoursePress_Data_Capabilities::can_create_course( $course->ID ) ) {
 			// create a nonce
 			$duplicate_nonce = wp_create_nonce( 'duplicate_course' );
-			$actions['duplicate'] = sprintf( '<a data-nonce="%s" data-id="%s" class="duplicate-course-link">%s</a>', $duplicate_nonce, $course->ID, __( 'Duplicate Course', 'cp' ) );
+			$actions['duplicate'] = sprintf( '<a data-nonce="%s" data-id="%s" class="duplicate-course-link">%s</a>', $duplicate_nonce, $course->ID, __( 'Duplicate Course', 'CP_TD' ) );
 		}
 
-		if ( $can_update && self::can_delete_course( $course->ID ) ) {
-			$trash_url = get_delete_post_link( $course->ID );
-			$actions['trash'] = sprintf( '<a href="%s">%s</a>', esc_url( $trash_url ), __( 'Trash', 'cp' ) );
-		}
-
-		$format = '<a href="%s" target="_blank">%s</a>';
-		$unit_overview_url = $course_url . 'units/';
-
-		if ( false === $published ) {
-			if ( $can_update ) {
-				$actions['view'] = sprintf( $format, esc_url( $course_url ), __( 'Preview Course', 'cp' ) );
-				$actions['preview-units'] = sprintf( $format, esc_url( $unit_overview_url ), __( 'Preview Units', 'cp' ) );
+		if ( 'trash' != $course->post_status ) {
+			if ( $can_update && self::can_delete_course( $course->ID ) ) {
+				$trash_url = get_delete_post_link( $course->ID );
+				$actions['trash'] = sprintf( '<a href="%s">%s</a>', esc_url( $trash_url ), __( 'Trash', 'CP_TD' ) );
 			}
-		} else {
-			$actions['view'] = sprintf( $format, esc_url( $course_url ), __( 'View Course', 'cp' ) );
-			$actions['preview-units'] = sprintf( $format, esc_url( $unit_overview_url ), __( 'View Units', 'cp' ) );
+
+			$format = '<a href="%s" target="_blank">%s</a>';
+			$unit_overview_url = $course_url . 'units/';
+
+			if ( false === $published ) {
+				if ( $can_update ) {
+					$actions['view'] = sprintf( $format, esc_url( $course_url ), __( 'Preview Course', 'CP_TD' ) );
+					$actions['preview-units'] = sprintf( $format, esc_url( $unit_overview_url ), __( 'Preview Units', 'CP_TD' ) );
+				}
+			} else {
+				$actions['view'] = sprintf( $format, esc_url( $course_url ), __( 'View Course', 'CP_TD' ) );
+				$actions['preview-units'] = sprintf( $format, esc_url( $unit_overview_url ), __( 'View Units', 'CP_TD' ) );
+			}
 		}
 
+		/**
+		 * Actions when course is in Trash
+		 */
+		if ( 'trash' == $course->post_status ) {
+			if ( 'trash' === $course->post_status ) {
+				$actions['untrash'] = sprintf(
+					'<a href="%s" aria-label="%s">%s</a>',
+					wp_nonce_url( admin_url( sprintf( $post_type_object->_edit_link . '&amp;action=untrash', $course->ID ) ), 'untrash-post_' . $course->ID ),
+					/* translators: %s: post title */
+					esc_attr( sprintf( __( 'Restore &#8220;%s&#8221; from the Trash', 'CP_TD' ), $title ) ),
+					__( 'Restore', 'CP_TD' )
+				);
+			} elseif ( EMPTY_TRASH_DAYS ) {
+				$actions['trash'] = sprintf(
+					'<a href="%s" class="submitdelete" aria-label="%s">%s</a>',
+					get_delete_post_link( $course->ID ),
+					/* translators: %s: post title */
+					esc_attr( sprintf( __( 'Move &#8220;%s&#8221; to the Trash', 'CP_TD' ), $title ) ),
+					_x( 'Trash', 'verb', 'CP_TD' )
+				);
+			}
+			if ( 'trash' === $course->post_status || ! EMPTY_TRASH_DAYS ) {
+				$actions['delete'] = sprintf(
+					'<a href="%s" class="submitdelete" aria-label="%s">%s</a>',
+					get_delete_post_link( $course->ID, '', true ),
+					/* translators: %s: post title */
+					esc_attr( sprintf( __( 'Delete &#8220;%s&#8221; permanently', 'CP_TD' ), $title ) ),
+					__( 'Delete Permanently', 'CP_TD' )
+				);
+			}
+		}
 		return $actions;
 	}
 
@@ -293,22 +328,22 @@ class CoursePress_Admin_Courses {
 		?>
 		<script type="text/html" id="tmpl-coursepress-courses-delete-one">
 				<div class="notice notice-warning">
-					<p><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span> <?php _e( 'Deleting course <b>{{{data.names}}}</b>, please wait!', 'cp' ); ?></p>
-					<p><?php _e( 'This page will be reloaded shortly.', 'cp' ); ?></p>
+					<p><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span> <?php _e( 'Deleting course <b>{{{data.names}}}</b>, please wait!', 'CP_TD' ); ?></p>
+					<p><?php _e( 'This page will be reloaded shortly.', 'CP_TD' ); ?></p>
 				</div>
 			</script>
 			<script type="text/html" id="tmpl-coursepress-courses-delete-more">
 				<div class="notice notice-warning">
-					<p><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span><?php _e( 'Deleting {{{data.size}}} courses, please wait!', 'cp' ); ?></p>
-					<p><?php _e( 'This page will be reloaded shortly.', 'cp' ); ?></p>
-					<p><?php _e( 'Deleted courses:', 'cp' ) ?></p>
+					<p><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span><?php _e( 'Deleting {{{data.size}}} courses, please wait!', 'CP_TD' ); ?></p>
+					<p><?php _e( 'This page will be reloaded shortly.', 'CP_TD' ); ?></p>
+					<p><?php _e( 'Deleted courses:', 'CP_TD' ) ?></p>
 					{{{data.names}}}
 				</div>
 			</script>
 			<script type="text/html" id="tmpl-coursepress-courses-duplicate">
 				<div class="notice notice-warning">
-					<p><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span> <?php _e( 'Duplicating course <b>{{{data.names}}}</b>, please wait!', 'cp' ); ?></p>
-					<p><?php _e( 'This page will be reloaded shortly.', 'cp' ); ?></p>
+					<p><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span> <?php _e( 'Duplicating course <b>{{{data.names}}}</b>, please wait!', 'CP_TD' ); ?></p>
+					<p><?php _e( 'This page will be reloaded shortly.', 'CP_TD' ); ?></p>
 				</div>
 			</script>
 		<?php

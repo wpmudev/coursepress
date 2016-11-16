@@ -7,26 +7,26 @@ $date_format = get_option( 'date_format' );
 $time_format = get_option( 'time_format' );
 ?>
 <div class="wrap coursepress_wrapper course-student-profile">
-	<h2><?php esc_html_e( 'Profile', 'cp' ); ?></h2>
+	<h2><?php esc_html_e( 'Profile', 'CP_TD' ); ?></h2>
 	<hr />
 
 	<table class="widefat striped">
 		<tr>
 			<td rowspan="3" width="5%"><?php echo $avatar; ?></td>
-			<td width="15%"><?php esc_html_e( 'Student ID', 'cp' ); ?></td>
+			<td width="15%"><?php esc_html_e( 'Student ID', 'CP_TD' ); ?></td>
 			<td><?php echo $student_id; ?></td>
 		</tr>
 		<tr>
-			<td><?php esc_html_e( 'First Name', 'cp' ); ?></td>
+			<td><?php esc_html_e( 'First Name', 'CP_TD' ); ?></td>
 			<td><?php echo $student->first_name; ?></td>
 		</tr>
 		<tr>
-			<td><?php esc_html_e( 'Last Name', 'cp' ); ?></td>
+			<td><?php esc_html_e( 'Last Name', 'CP_TD' ); ?></td>
 			<td><?php echo $student->last_name; ?></td>
 		</tr>
 	</table>
 
-	<h2><?php esc_html_e( 'Enrolled Courses', 'cp' ); ?></h2>
+	<h2><?php esc_html_e( 'Enrolled Courses', 'CP_TD' ); ?></h2>
 	<hr />
 	<?php $this->enrolled_courses->display(); ?>
 </div>

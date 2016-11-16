@@ -517,7 +517,7 @@ class CoursePress_Data_Instructor {
 				CoursePress_Helper_Utility::set_array_val(
 					$return_data,
 					'message/sent',
-					__( 'Invitation successfully sent.', 'cp' )
+					__( 'Invitation successfully sent.', 'CP_TD' )
 				);
 
 			} else {
@@ -527,7 +527,7 @@ class CoursePress_Data_Instructor {
 				CoursePress_Helper_Utility::set_array_val(
 					$return_data,
 					'message/exists',
-					__( 'Invitation already exists. Invitation was re-sent.', 'cp' )
+					__( 'Invitation already exists. Invitation was re-sent.', 'CP_TD' )
 				);
 			}
 		} else {
@@ -536,7 +536,7 @@ class CoursePress_Data_Instructor {
 			CoursePress_Helper_Utility::set_array_val(
 				$return_data,
 				'message/send_error',
-				__( 'Email failed to send.', 'cp' )
+				__( 'Email failed to send.', 'CP_TD' )
 			);
 		};
 
@@ -670,14 +670,15 @@ class CoursePress_Data_Instructor {
 			return 0; // Bail if no ID
 		}
 		$count = get_user_meta( $instructor_id, 'coursepress_followers_count', true );
-
 		if ( false === $count || $refresh ) {
 			// Not set yet, let's get the total student count
 			$count = self::_get_students_count( $instructor_id );
 			// Update usermeta setting
 			update_user_meta( $instructor_id, 'coursepress_followers_count', $count );
 		}
-
+		if ( empty( $count ) ) {
+			return 0;
+		}
 		return $count;
 	}
 

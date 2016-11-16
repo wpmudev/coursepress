@@ -13,6 +13,7 @@ class CoursePress_Data_Course {
 	public static $last_course_subpage = '';
 	public static $previewability = false;
 	public static $structure_visibility = false;
+	private static $current = array();
 
 	public static function get_format() {
 		return array(
@@ -20,18 +21,18 @@ class CoursePress_Data_Course {
 			'post_args' => array(
 				'labels' => array(
 					'name' => CoursePress::$name,
-					'singular_name' => __( 'Course', 'cp' ),
-					'add_new' => __( 'New Course', 'cp' ),
-					'add_new_item' => __( 'New Course', 'cp' ),
-					'edit_item' => __( 'Edit Course', 'cp' ),
-					'edit' => __( 'Edit', 'cp' ),
-					'new_item' => __( 'New Course', 'cp' ),
-					'view_item' => __( 'View Course', 'cp' ),
-					'search_items' => __( 'Search Courses', 'cp' ),
-					'not_found' => __( 'No Courses Found', 'cp' ),
-					'not_found_in_trash' => __( 'No Courses found in Trash', 'cp' ),
-					'view' => __( 'View Course', 'cp' ),
-					'all_items' => __( 'Courses', 'cp' ),
+					'singular_name' => __( 'Course', 'CP_TD' ),
+					'add_new' => __( 'New Course', 'CP_TD' ),
+					'add_new_item' => __( 'New Course', 'CP_TD' ),
+					'edit_item' => __( 'Edit Course', 'CP_TD' ),
+					'edit' => __( 'Edit', 'CP_TD' ),
+					'new_item' => __( 'New Course', 'CP_TD' ),
+					'view_item' => __( 'View Course', 'CP_TD' ),
+					'search_items' => __( 'Search Courses', 'CP_TD' ),
+					'not_found' => __( 'No Courses Found', 'CP_TD' ),
+					'not_found_in_trash' => __( 'No Courses found in Trash', 'CP_TD' ),
+					'view' => __( 'View Course', 'CP_TD' ),
+					'all_items' => __( 'Courses', 'CP_TD' ),
 				),
 				'public' => true,
 				'exclude_from_search' => false,
@@ -72,15 +73,15 @@ class CoursePress_Data_Course {
 				'coursepress_register_course_category',
 				array(
 					'labels' => array(
-						'name' => __( 'Categories', 'cp' ),
-						'singular_name' => __( 'Category', 'cp' ),
-						'search_items' => __( 'Search Course Categories', 'cp' ),
-						'all_items' => __( 'All Course Categories', 'cp' ),
-						'edit_item' => __( 'Edit Course Categories', 'cp' ),
-						'update_item' => __( 'Update Course Category', 'cp' ),
-						'add_new_item' => __( 'Add New Course Category', 'cp' ),
-						'new_item_name' => __( 'New Course Category Name', 'cp' ),
-						'menu_name' => __( 'Categories', 'cp' ),
+						'name' => __( 'Categories', 'CP_TD' ),
+						'singular_name' => __( 'Category', 'CP_TD' ),
+						'search_items' => __( 'Search Course Categories', 'CP_TD' ),
+						'all_items' => __( 'All Course Categories', 'CP_TD' ),
+						'edit_item' => __( 'Edit Course Categories', 'CP_TD' ),
+						'update_item' => __( 'Update Course Category', 'CP_TD' ),
+						'add_new_item' => __( 'Add New Course Category', 'CP_TD' ),
+						'new_item_name' => __( 'New Course Category Name', 'CP_TD' ),
+						'menu_name' => __( 'Categories', 'CP_TD' ),
 					),
 					'hierarchical' => true,
 					'sort' => true,
@@ -115,19 +116,19 @@ class CoursePress_Data_Course {
 		return apply_filters(
 			'coursepress_course_messages',
 			array(
-				'ca' => __( 'New Course added successfully!', 'cp' ),
-				'cu' => __( 'Course updated successfully.', 'cp' ),
-				'usc' => __( 'Unit status changed successfully', 'cp' ),
-				'ud' => __( 'Unit deleted successfully', 'cp' ),
-				'ua' => __( 'New Unit added successfully!', 'cp' ),
-				'uu' => __( 'Unit updated successfully.', 'cp' ),
-				'as' => __( 'Student added to the class successfully.', 'cp' ),
-				'ac' => __( 'New class has been added successfully.', 'cp' ),
-				'dc' => __( 'Selected class has been deleted successfully.', 'cp' ),
-				'us' => __( 'Selected student has been withdrawed successfully from the course.', 'cp' ),
-				'usl' => __( 'Selected students has been withdrawed successfully from the course.', 'cp' ),
-				'is' => __( 'Invitation sent sucessfully.', 'cp' ),
-				'ia' => __( 'Successfully added as instructor.', 'cp' ),
+				'ca' => __( 'New Course added successfully!', 'CP_TD' ),
+				'cu' => __( 'Course updated successfully.', 'CP_TD' ),
+				'usc' => __( 'Unit status changed successfully', 'CP_TD' ),
+				'ud' => __( 'Unit deleted successfully', 'CP_TD' ),
+				'ua' => __( 'New Unit added successfully!', 'CP_TD' ),
+				'uu' => __( 'Unit updated successfully.', 'CP_TD' ),
+				'as' => __( 'Student added to the class successfully.', 'CP_TD' ),
+				'ac' => __( 'New class has been added successfully.', 'CP_TD' ),
+				'dc' => __( 'Selected class has been deleted successfully.', 'CP_TD' ),
+				'us' => __( 'Selected student has been withdrawed successfully from the course.', 'CP_TD' ),
+				'usl' => __( 'Selected students has been withdrawed successfully from the course.', 'CP_TD' ),
+				'is' => __( 'Invitation sent sucessfully.', 'CP_TD' ),
+				'ia' => __( 'Successfully added as instructor.', 'CP_TD' ),
 			),
 			$key
 		);
@@ -135,6 +136,26 @@ class CoursePress_Data_Course {
 
 	public static function update( $course_id, $data ) {
 		global $user_id;
+
+		/**
+		 * Sanitize $data
+		 */
+		if ( ! is_object( $data ) ) {
+			if ( is_array( $data ) ) {
+				$data = (object) $data;
+			} else {
+				$data = new stdClass();
+			}
+		}
+
+		/**
+		 * Sanitize $course_id
+		 */
+		if ( ! empty( $course_id ) ) {
+			if ( ! self::is_course( $course_id ) ) {
+				$course_id = null;
+			}
+		}
 
 		do_action( 'coursepress_course_pre_update', $course_id, $data );
 		$new_course = empty( $course_id ) ? true : false;
@@ -160,12 +181,16 @@ class CoursePress_Data_Course {
 				$post['post_name'] = wp_unique_post_slug( sanitize_title( $post['post_title'] ), $course_id, 'publish', 'course', 0 );
 			}
 		} else {
-			$post['post_excerpt'] = CoursePress_Helper_Utility::filter_content( $data->course_excerpt );
+			if ( isset( $data->course_excerpt ) ) {
+				$post['post_excerpt'] = CoursePress_Helper_Utility::filter_content( $data->course_excerpt );
+			}
 			if ( isset( $data->course_description ) ) {
 				$post['post_content'] = CoursePress_Helper_Utility::filter_content( $data->course_description );
 			}
-			$post['post_title'] = CoursePress_Helper_Utility::filter_content( $data->course_name );
-			$post['post_name'] = wp_unique_post_slug( sanitize_title( $post['post_title'] ), 0, 'publish', 'course', 0 );
+			if ( isset( $data->course_name ) ) {
+				$post['post_title'] = CoursePress_Helper_Utility::filter_content( $data->course_name );
+				$post['post_name'] = wp_unique_post_slug( sanitize_title( $post['post_title'] ), 0, 'publish', 'course', 0 );
+			}
 		}
 
 		// Set the ID to trigger update and not insert
@@ -182,7 +207,9 @@ class CoursePress_Data_Course {
 		/**
 		 * update post counter for posts with the same title
 		 */
-		self::save_course_number( $course_id, $post['post_title'] );
+		if ( isset( $post['post_title'] ) ) {
+			self::save_course_number( $course_id, $post['post_title'] );
+		}
 
 		// Course Settings
 		$settings = self::get_setting( $course_id, true );
@@ -367,11 +394,9 @@ class CoursePress_Data_Course {
 				$course_id,
 				$global_option
 			);
-			
+
 			self::update_setting( $course_id, 'instructors', $instructors );
 		}
-
-		
 
 	}
 
@@ -400,6 +425,13 @@ class CoursePress_Data_Course {
 		// Return all settings.
 		if ( true === $key ) {
 			return $settings;
+		}
+
+		/**
+		 * Process only strings
+		 */
+		if ( ! is_string( $key ) ) {
+			return $default;
 		}
 
 		$setting = CoursePress_Helper_Utility::get_array_val( $settings, $key );
@@ -490,6 +522,9 @@ class CoursePress_Data_Course {
 	 * @param $value
 	 */
 	public static function set_setting( &$settings, $key, $value ) {
+		if ( ! is_array( $settings ) ) {
+			return;
+		}
 		CoursePress_Helper_Utility::set_array_val( $settings, $key, $value );
 	}
 
@@ -632,23 +667,35 @@ class CoursePress_Data_Course {
 	public static function get_units(
 		$course_id, $status = array( 'publish' ), $ids_only = false, $include_count = false
 	) {
-
-		$post_args = array(
-			'post_type' => CoursePress_Data_Unit::get_post_type_name(),
-			'post_parent' => $course_id,
-			'post_status' => $status,
-			'posts_per_page' => - 1,
-			'order' => 'ASC',
-			'orderby' => 'meta_value_num',
-			'meta_key' => 'unit_order',
-			'suppress_filters' => true,
-		);
-
-		if ( $ids_only ) {
-			$post_args['fields'] = 'ids';
+		/**
+		 * Sanitize course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
+			return array();
 		}
+		$key = self::get_key( 'course_units', $course_id, $status, $ids_only, $include_count );
 
-		$query = new WP_Query( $post_args );
+		if ( ! empty( self::$current[ $key ] ) ) {
+			$query = self::$current[ $key ];
+		} else {
+
+			$post_args = array(
+				'post_type' => CoursePress_Data_Unit::get_post_type_name(),
+				'post_parent' => $course_id,
+				'post_status' => $status,
+				'posts_per_page' => - 1,
+				'order' => 'ASC',
+				'orderby' => 'meta_value_num',
+				'meta_key' => 'unit_order',
+				'suppress_filters' => true,
+			);
+
+			if ( $ids_only ) {
+				$post_args['fields'] = 'ids';
+			}
+			$query = new WP_Query( $post_args );
+			self::$current[ $key ] = $query;
+		}
 
 		if ( $include_count ) {
 			// Handy if using pagination.
@@ -684,6 +731,12 @@ class CoursePress_Data_Course {
 	}
 
 	public static function get_units_with_modules( $course_id, $status = array( 'publish' ) ) {
+		$key = self::get_key( 'units_with_modules', $course_id, $status );
+
+		if ( ! empty( self::$current[ $key ] ) ) {
+			return self::$current[ $key ];
+		}
+
 		$items = array();
 
 		// Get units
@@ -766,6 +819,8 @@ class CoursePress_Data_Course {
 				update_post_meta( $post_id, 'show_page_title', $page_visible );
 			}
 		}
+
+		self::$current[ $key ] = $items;
 
 		return $items;
 	}
@@ -901,36 +956,62 @@ class CoursePress_Data_Course {
 		}
 	}
 
+	public static function get_key() {
+		$args = func_get_args();
+
+		foreach ( $args as $pos => $arg ) {
+			$arg = is_array( $arg ) ? implode( '-', $arg ) : $arg;
+			$args[ $pos ] = $arg;
+		}
+
+		return implode( '_', $args );
+	}
+
 	public static function get_unit_modules(
 		$unit_id, $status = array( 'publish' ), $ids_only = false, $include_count = false, $args = array()
 	) {
-
-		$post_args = array(
-			'post_type' => CoursePress_Data_Module::get_post_type_name(),
-			'post_parent' => $unit_id,
-			'post_status' => $status,
-			'posts_per_page' => -1,
-			'order' => 'ASC',
-			'orderby' => 'meta_value_num',
-			'meta_key' => 'module_order',
-		);
-
-		if ( $ids_only ) {
-			$post_args['fields'] = 'ids';
+		/**
+		 * sanitize unit_id
+		 */
+		$is_unit = CoursePress_Data_Unit::is_unit( $unit_id );
+		if ( ! $is_unit ) {
+			return array();
 		}
 
-		// Get modules for specific page
-		if ( isset( $args['page'] ) && (int) $args['page'] ) {
-			$post_args['meta_query'] = array(
-				array(
-					'key' => 'module_page',
-					'value' => (int) $args['page'],
-					'compare' => '=',
-				),
+		$key = self::get_key( 'unit_modules', $unit_id, $status, $ids_only, $include_count, $args );
+
+		if ( ! empty( self::$current[ $key ] ) ) {
+			$query = self::$current[ $key ];
+		} else {
+
+			$post_args = array(
+				'post_type' => CoursePress_Data_Module::get_post_type_name(),
+				'post_parent' => $unit_id,
+				'post_status' => $status,
+				'posts_per_page' => -1,
+				'order' => 'ASC',
+				'orderby' => 'meta_value_num',
+				'meta_key' => 'module_order',
 			);
-		}
 
-		$query = new WP_Query( $post_args );
+			if ( $ids_only ) {
+				$post_args['fields'] = 'ids';
+			}
+
+			// Get modules for specific page
+			if ( isset( $args['page'] ) && (int) $args['page'] ) {
+				$post_args['meta_query'] = array(
+					array(
+						'key' => 'module_page',
+						'value' => (int) $args['page'],
+						'compare' => '=',
+					),
+				);
+			}
+
+			$query = new WP_Query( $post_args );
+			self::$current[ $key ] = $query;
+		}
 
 		if ( $include_count ) {
 			// Handy if using pagination.
@@ -974,6 +1055,13 @@ class CoursePress_Data_Course {
 	public static function get_students( $course_id, $per_page = 0, $offset = 0, $fields = 'all' ) {
 		global $wpdb;
 
+		/**
+		 * Sanitize course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
+			return array();
+		}
+
 		if ( is_multisite() ) {
 			$course_meta_key = $wpdb->prefix . 'enrolled_course_date_' . $course_id;
 		} else {
@@ -1000,6 +1088,16 @@ class CoursePress_Data_Course {
 	public static function get_student_ids( $course_id, $count = false ) {
 		global $wpdb;
 
+		/**
+		 * Sanitize course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
+			if ( $count ) {
+				return 0;
+			}
+			return array();
+		}
+
 		if ( is_multisite() ) {
 			$course_meta_key = $wpdb->prefix . 'enrolled_course_date_' . $course_id;
 		} else {
@@ -1018,7 +1116,7 @@ class CoursePress_Data_Course {
 		if ( ! $count ) {
 			return $students->get_results();
 		} else {
-			return $students->get_total();
+			return (int) $students->get_total();
 		}
 	}
 
@@ -1029,6 +1127,12 @@ class CoursePress_Data_Course {
 
 	public static function get_certified_student_ids( $course_id ) {
 		$certified = array();
+		/**
+		 * Sanitize course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
+			return $certified;
+		}
 
 		$student_ids = CoursePress_Data_Course::get_student_ids( $course_id );
 
@@ -1049,6 +1153,12 @@ class CoursePress_Data_Course {
 		global $wpdb;
 
 		if ( empty( $student_id ) ) {
+			return false;
+		}
+		/**
+		 * Sanitize course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
 			return false;
 		}
 		$global_option = ! is_multisite();
@@ -1216,6 +1326,13 @@ class CoursePress_Data_Course {
 
 	public static function withdraw_student( $student_id, $course_id ) {
 
+		/**
+		 * Sanitize course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
+			return;
+		}
+
 		$global_option = ! is_multisite();
 		$current_time = current_time( 'mysql' );
 		$unit_ids = self::get_unit_ids( $course_id );
@@ -1276,6 +1393,13 @@ class CoursePress_Data_Course {
 	}
 
 	public static function withdraw_all_students( $course_id ) {
+		/**
+		 * Sanitize course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
+			return;
+		}
+
 		$students = self::get_student_ids( $course_id );
 		foreach ( $students as $student ) {
 			self::withdraw_student( $student, $course_id );
@@ -1398,7 +1522,7 @@ class CoursePress_Data_Course {
 	}
 
 	public static function structure_visibility( $course_id ) {
-		if ( empty( self::$structure_visibility ) ) {
+		if ( ! isset( self::$structure_visibility[ $course_id ] ) || empty( self::$structure_visibility[ $course_id ] ) ) {
 			$units = array_filter(
 				CoursePress_Data_Course::get_setting(
 					$course_id,
@@ -1459,16 +1583,16 @@ class CoursePress_Data_Course {
 				}
 			}
 
-			self::$structure_visibility['structure'] = $visibility;
+			self::$structure_visibility[ $course_id ]['structure']  = $visibility;
 
 			if ( ! empty( $units ) || ! empty( $page ) || ! empty( $modules ) ) {
-				self::$structure_visibility['has_visible'] = true;
+				self::$structure_visibility[ $course_id ]['has_visible'] = true;
 			} else {
-				self::$structure_visibility['has_visible'] = false;
+				self::$structure_visibility[ $course_id ]['has_visible'] = false;
 			}
 		}
 
-		return self::$structure_visibility;
+		return self::$structure_visibility[ $course_id ];
 	}
 
 	public static function previewability( $course_id ) {
@@ -1653,6 +1777,13 @@ class CoursePress_Data_Course {
 	public static function get_next_accessible_module(
 		$course_id, $unit_id, $current_page = 1, $current_module = 0
 	) {
+		$next = array( 'id' => false );
+		/**
+		 * Sanitize $course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
+			return $next;
+		}
 		$can_update_course = CoursePress_Data_Capabilities::can_update_course( $course_id );
 		$student_id = get_current_user_id();
 		$instructors = array_filter( CoursePress_Data_Course::get_instructors( $course_id ) );
@@ -1660,7 +1791,6 @@ class CoursePress_Data_Course {
 		$is_enrolled = CoursePress_Data_Course::student_enrolled( $student_id, $course_id );
 		$current_module_done = true;
 		$current_page = (int) $current_page > 1 ? $current_page : 1;
-		$next = array( 'id' => false );
 
 		// Optionally check if current module is completed.
 		if ( $is_enrolled && $current_module ) {
@@ -1736,6 +1866,12 @@ class CoursePress_Data_Course {
 	public static function get_prev_accessible_module(
 		$course_id, $unit_id, $current_page = 1, $current_module = 0
 	) {
+		/**
+		 * Sanitize $course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
+			return false;
+		}
 		$nav_sequence = self::get_course_navigation_items( $course_id );
 		$current_index = self::_get_current_index( $nav_sequence, $unit_id, $current_page, $current_module );
 
@@ -1788,7 +1924,12 @@ class CoursePress_Data_Course {
 	 */
 	public static function get_course_navigation_items( $course_id ) {
 		static $Items = array();
-
+		/**
+		 * Sanitize $course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
+			return false;
+		}
 		if ( ! isset( $Items[ $course_id ] ) ) {
 			$can_update_course = CoursePress_Data_Capabilities::can_update_course( $course_id );
 			$student_id = get_current_user_id();
@@ -2008,7 +2149,9 @@ class CoursePress_Data_Course {
 	public static function get_course( $course_id = 0 ) {
 		$course_id = ! $course_id ? get_the_ID() : $course_id;
 		$course = get_post( $course_id );
-
+		if ( ! is_a( $course, 'WP_Post' ) ) {
+			return false;
+		}
 		// Set duration
 		$date_format = get_option( 'date_format' );
 		$start_date = self::get_setting( $course_id, 'course_start_date' );
@@ -2017,7 +2160,7 @@ class CoursePress_Data_Course {
 
 		$course->start_date = date_i18n( $date_format, CoursePress_Data_Course::strtotime( $start_date ) );
 		$course->end_date = $duration > 0 ? date_i18n( $date_format, CoursePress_Data_Course::strtotime( $end_date ) ) : '--';
-		$course->duration = $duration > 0 ? sprintf( _n( '%s Day', '%s Days', $duration, 'cp' ), $duration ) : __( 'Open-ended', 'cp' );
+		$course->duration = $duration > 0 ? sprintf( _n( '%s Day', '%s Days', $duration, 'CP_TD' ), $duration ) : __( 'Open-ended', 'CP_TD' );
 
 		// Links
 		$course->permalink = self::get_course_url( $course_id );
@@ -2044,6 +2187,18 @@ class CoursePress_Data_Course {
 	 *
 	 */
 	static public function duplicate_course( $data ) {
+		/**
+		 * sanitize data object
+		 */
+		if (
+			! is_object( $data )
+			|| ! isset( $data->data )
+			|| ! is_object( $data->data )
+			|| ! isset( $data->data->course_id )
+		) {
+			return $data;
+		}
+
 		$course_id = (int) $data->data->course_id;
 
 		$the_course = get_post( $course_id );
@@ -2057,7 +2212,7 @@ class CoursePress_Data_Course {
 		$the_course['comment_count'] = 0;
 		if ( apply_filters( 'coursepress_course_duplicated_add_copy', true ) ) {
 			$the_course['post_title'] = sprintf(
-				_x( '%s Copy', 'Default title for a duplicated course. Variable is original title.', 'cp' ),
+				_x( '%s Copy', 'Default title for a duplicated course. Variable is original title.', 'CP_TD' ),
 				$the_course['post_title']
 			);
 		}
@@ -2079,10 +2234,10 @@ class CoursePress_Data_Course {
 
 		$course_meta = get_post_meta( $course_id );
 		// unset MP stuffs
-		if ( isset($course_meta['cp_mp_product_id']) ) unset($course_meta['cp_mp_product_id']);
-		if ( isset($course_meta['cp_mp_sku']) ) unset($course_meta['cp_mp_sku']);
-		if ( isset($course_meta['cp_mp_auto_sku']) ) unset($course_meta['cp_mp_auto_sku']);
-		
+		if ( isset( $course_meta['cp_mp_product_id'] ) ) { unset( $course_meta['cp_mp_product_id'] ); }
+		if ( isset( $course_meta['cp_mp_sku'] ) ) { unset( $course_meta['cp_mp_sku'] ); }
+		if ( isset( $course_meta['cp_mp_auto_sku'] ) ) { unset( $course_meta['cp_mp_auto_sku'] ); }
+
 		foreach ( $course_meta as $key => $value ) {
 			/**
 			 * do not copy students to new course
@@ -2096,7 +2251,7 @@ class CoursePress_Data_Course {
 				}
 			}
 		}
-		
+
 		$visible_units = self::get_setting( $course_id, 'structure_visible_units', array() );
 		$preview_units = self::get_setting( $course_id, 'structure_preview_units', array() );
 		$visible_pages = self::get_setting( $course_id, 'structure_visible_pages', array() );
@@ -2217,7 +2372,7 @@ class CoursePress_Data_Course {
 		self::update_setting( $new_course_id, 'structure_preview_pages', $preview_pages );
 		self::update_setting( $new_course_id, 'structure_visible_modules', $visible_modules );
 		self::update_setting( $new_course_id, 'structure_preview_modules', $preview_modules );
-		
+
 		// clear course MP settings
 		self::update_setting( $new_course_id, 'mp_product_id', '' );
 		self::update_setting( $new_course_id, 'mp_sku', '' );
@@ -2400,7 +2555,7 @@ class CoursePress_Data_Course {
 			$start_date = self::strtotime( $start_date );
 
 			if ( $start_date > $now ) {
-				$status = sprintf( __( 'This course will open on %s', 'cp' ), date_i18n( $date_format, $start_date ) );
+				$status = sprintf( __( 'This course will open on %s', 'CP_TD' ), date_i18n( $date_format, $start_date ) );
 			} else {
 				// Check if it has end date
 				$is_open_ended = self::get_setting( $course_id, 'course_open_ended' );
@@ -2411,7 +2566,7 @@ class CoursePress_Data_Course {
 					$end_date = self::strtotime( $end_date );
 
 					if ( $end_date < $now ) {
-						$status = __( 'This course is already closed.', 'cp' );
+						$status = __( 'This course is already closed.', 'CP_TD' );
 					}
 				}
 			}
@@ -2464,7 +2619,7 @@ class CoursePress_Data_Course {
 					$unit_availability_date = CoursePress_Data_Unit::get_unit_availability_date( $unit_id, $course_id );
 
 					if ( ! empty( $unit_availability_date ) ) {
-						$error_message = sprintf( __( 'This unit will be available on %s', 'cp' ), date_i18n( $date_format, self::strtotime( $unit_availability_date ) ) );
+						$error_message = sprintf( __( 'This unit will be available on %s', 'CP_TD' ), date_i18n( $date_format, self::strtotime( $unit_availability_date ) ) );
 					} else {
 						if ( $previous_unit_id > 0 ) {
 							$shortcode = sprintf( '[module_status unit_id="%s" previous_unit="%s"]', $unit_id, $previous_unit_id );
@@ -2489,7 +2644,7 @@ class CoursePress_Data_Course {
 							$is_done = CoursePress_Data_Module::is_module_done_by_student( $_module_id, $student_id );
 
 							if ( ! $is_done ) {
-								$first_line = __( 'You need to complete all the REQUIRED modules before this unit.', 'cp' );
+								$first_line = __( 'You need to complete all the REQUIRED modules before this unit.', 'CP_TD' );
 								$error_message = CoursePress_Helper_UI::get_message_required_modules( $first_line );
 								continue;
 							}
@@ -2519,7 +2674,7 @@ class CoursePress_Data_Course {
 						$is_done = CoursePress_Data_Module::is_module_done_by_student( $_module_id, $student_id );
 
 						if ( ! $is_done ) {
-							$first_line = __( 'You need to complete all the REQUIRED modules before this section.', 'cp' );
+							$first_line = __( 'You need to complete all the REQUIRED modules before this section.', 'CP_TD' );
 							$error_message = CoursePress_Helper_UI::get_message_required_modules( $first_line );
 							continue;
 						}
@@ -2553,7 +2708,7 @@ class CoursePress_Data_Course {
 						$title = get_the_title( $_module_id );
 
 						if ( ! $is_done ) {
-							$first_line = __( 'You need to complete all the REQUIRED modules before this module.', 'cp' );
+							$first_line = __( 'You need to complete all the REQUIRED modules before this module.', 'CP_TD' );
 							$error_message = CoursePress_Helper_UI::get_message_required_modules( $first_line );
 							continue;
 						} else {
@@ -2576,7 +2731,7 @@ class CoursePress_Data_Course {
 								);
 
 								if ( ! $pass && ! in_array( $module_type, $excluded_modules ) ) {
-									$first_line = __( 'You need to complete all the REQUIRED modules before this module.', 'cp' );
+									$first_line = __( 'You need to complete all the REQUIRED modules before this module.', 'CP_TD' );
 									$error_message = CoursePress_Helper_UI::get_message_required_modules( $first_line );
 									continue;
 								}
@@ -2782,25 +2937,33 @@ class CoursePress_Data_Course {
 	 * We use custom SQL to avoid overcaps
 	 * @TODO: Create and hooked into `POSTS_JOIN` as counter part to orig CP
 	 **/
-	public static function get_expired_courses( $per_page = 20 ) {
+	public static function get_expired_courses( $refresh = false ) {
 		global $wpdb;
 
-		$paged = get_query_var( 'paged' );
-		$paged = (int) $paged > 1 ? $paged : 1;
-		$limit = $per_page;
-		$offset = ($paged - 1 ) * $limit;
-		$limit = $paged * $limit;
-
+		$course_ids = get_option( 'cp_expired_courses', false );
+		$last_update = get_option( 'cp_expired_date', false );
+		$post_type = self::get_post_type_name();
 		$now = self::time_now();
-		$sql = "SELECT m.`post_id`, p.`ID` FROM {$wpdb->postmeta} AS m, {$wpdb->posts} AS p
-			WHERE (m.`meta_key`='cp_course_end_date' AND ( m.`meta_value` > 0 AND m.`meta_value` < %d ))
-			AND ( p.ID=m.post_id AND p.post_status IN ('publish') )
-			LIMIT %d, %d
-		";
-		$sql = $wpdb->prepare( $sql, $now, $offset, $limit );
+		$date = date( 'MdY' );
 
-		$course_ids = $wpdb->get_results( $sql, ARRAY_A );
-		$course_ids = array_map( array( __CLASS__, 'return_id' ), $course_ids );
+		if ( $last_update != $date ) {
+			// Force refresh daily
+			$refresh = true;
+		}
+
+		if ( false === $course_ids && false == $last_update || $refresh ) {
+			$sql = "SELECT m.`post_id`, p.`ID` FROM {$wpdb->postmeta} AS m, {$wpdb->posts} AS p
+				WHERE p.`post_type`='%s' AND (m.`meta_key`='cp_course_end_date' AND ( m.`meta_value` > 0 AND m.`meta_value` < %d ))
+				AND ( p.ID=m.post_id AND p.post_status IN ('publish') )
+			";
+			$sql = $wpdb->prepare( $sql, $post_type, $now );
+
+			$course_ids = $wpdb->get_results( $sql, ARRAY_A );
+			$course_ids = array_map( array( __CLASS__, 'return_id' ), $course_ids );
+
+			update_option( 'cp_expired_courses', $course_ids );
+			update_option( 'cp_expired_date', $date );
+		}
 
 		return $course_ids;
 	}
@@ -2808,25 +2971,33 @@ class CoursePress_Data_Course {
 	/**
 	 * @todo: Create and hooked into `POSTS_JOIN` as counter part to orig CP
 	 **/
-	public static function get_enrollment_ended_courses( $per_page = 20 ) {
+	public static function get_enrollment_ended_courses( $refresh = false ) {
 		global $wpdb;
 
-		$paged = get_query_var( 'paged' );
-		$paged = (int) $paged > 1 ? $paged : 1;
-		$limit = $per_page;
-		$offset = ($paged - 1 ) * $limit;
-		$limit = $paged * $limit;
-
+		$course_ids = get_option( 'cp_enrollment_ended_courses', false );
+		$last_update = get_option( 'cp_enrollment_ended_date', false );
+		$post_type = self::get_post_type_name();
 		$now = self::time_now();
-		$sql = "SELECT m.`post_id`, p.`ID` FROM {$wpdb->postmeta} AS m, {$wpdb->posts} AS p
-			WHERE (m.`meta_key`='cp_enrollment_end_date' AND ( m.`meta_value` > 0 AND m.`meta_value` <= %d ))
-			AND ( p.ID=m.post_id AND p.post_status IN ('publish') )
-			LIMIT %d, %d
-		";
-		$sql = $wpdb->prepare( $sql, $now, $offset, $limit );
+		$date = date( 'MdY' );
 
-		$course_ids = $wpdb->get_results( $sql, ARRAY_A );
-		$course_ids = array_map( array( __CLASS__, 'return_id' ), $course_ids );
+		if ( $last_update != $date ) {
+			// Force refresh daily
+			$refresh = true;
+		}
+
+		if ( false === $course_ids && false == $last_update || $refresh ) {
+			$sql = "SELECT m.`post_id`, p.`ID` FROM {$wpdb->postmeta} AS m, {$wpdb->posts} AS p
+				WHERE p.`post_type`='%s' AND (m.`meta_key`='cp_enrollment_end_date' AND ( m.`meta_value` > 0 AND m.`meta_value` <= %d ))
+				AND ( p.ID=m.post_id AND p.post_status IN ('publish') )
+			";
+			$sql = $wpdb->prepare( $sql, $post_type, $now );
+
+			$course_ids = $wpdb->get_results( $sql, ARRAY_A );
+			$course_ids = array_map( array( __CLASS__, 'return_id' ), $course_ids );
+
+			update_option( 'cp_enrollment_ended_courses', $course_ids );
+			update_option( 'cp_enrollment_ended_date', $date );
+		}
 
 		return $course_ids;
 	}
@@ -2855,14 +3026,14 @@ class CoursePress_Data_Course {
 		);
 
 		// Get expired courses
-		$expired_courses = self::get_expired_courses( $args['posts_per_page'] );
+		$expired_courses = self::get_expired_courses();
 		$enrollment_ended_courses = array();
 
 		// Get enrollment ended courses for non-admin
 		$is_admin = user_can( $student_id, 'manage_options' );
 
 		if ( false === $is_admin ) {
-			$enrollment_ended_courses = self::get_enrollment_ended_courses( $args['posts_per_page'] );
+			$enrollment_ended_courses = self::get_enrollment_ended_courses();
 			$enrolled_courses = (array) CoursePress_Data_Student::get_enrolled_courses_ids( $student_id );
 
 			if ( ! empty( $enrollment_ended_courses ) ) {
@@ -3054,7 +3225,6 @@ class CoursePress_Data_Course {
 	 * @return boolean Answer is that course or not?
 	 */
 	public static function is_course( $course = null ) {
-		$course_id = 0;
 		if ( empty( $course ) ) {
 			global $post;
 			if ( ! is_object( $post ) ) {
@@ -3080,19 +3250,19 @@ class CoursePress_Data_Course {
 	 */
 	public static function get_enrollment_types_array( $course_id = 0 ) {
 		$enrollment_types = array(
-			'manually' => __( 'Manually added only', 'cp' ),
+			'manually' => __( 'Manually added only', 'CP_TD' ),
 		);
 		if ( CoursePress_Helper_Utility::users_can_register() ) {
 			$enrollment_types = array_merge( $enrollment_types, array(
-				'anyone' => __( 'Any registered users', 'cp' ),
-				'passcode' => __( 'Any registered users with a pass code', 'cp' ),
-				'prerequisite' => __( 'Registered users who completed the prerequisite course(s)', 'cp' ),
+				'anyone' => __( 'Any registered users', 'CP_TD' ),
+				'passcode' => __( 'Any registered users with a pass code', 'CP_TD' ),
+				'prerequisite' => __( 'Registered users who completed the prerequisite course(s)', 'CP_TD' ),
 			) );
 		} else {
 			$enrollment_types = array_merge( $enrollment_types, array(
-				'registered' => __( 'Any registered users', 'cp' ),
-				'passcode' => __( 'Any registered users with a pass code', 'cp' ),
-				'prerequisite' => __( 'Registered users who completed the prerequisite course(s)', 'cp' ),
+				'registered' => __( 'Any registered users', 'CP_TD' ),
+				'passcode' => __( 'Any registered users with a pass code', 'CP_TD' ),
+				'prerequisite' => __( 'Registered users who completed the prerequisite course(s)', 'CP_TD' ),
 			) );
 		}
 		$enrollment_types = apply_filters( 'coursepress_course_enrollment_types', $enrollment_types, $course_id );
@@ -3115,13 +3285,13 @@ class CoursePress_Data_Course {
 		return apply_filters( 'coursepress_course_enrollment_type_default', $default, $course_id );
 	}
 
-    /**
-     * Default values for titles and contents of course pages.
-     *
-     * @since 2.0.0
-     *
-     * @return array Array of defaults.
-     */
+	/**
+	 * Default values for titles and contents of course pages.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return array Array of defaults.
+	 */
 	public static function get_defaults_setup_pages_content() {
 		$defaults = array(
 			'pre_completion' => array(),
@@ -3131,20 +3301,20 @@ class CoursePress_Data_Course {
 		/**
 		 * Pre-Completion Page
 		 */
-		$defaults['pre_completion']['title'] = __( 'Almost there!', 'cp' );
-		$defaults['pre_completion']['content'] = sprintf( '<h3>%s</h3>', __( 'You have completed the course!', 'cp' ) );
-		$defaults['pre_completion']['content'] .= sprintf( '<p>%s</p>', __( 'Your submitted business plan will be reviewed, and you\'ll hear back from me on whether you pass or fail.', 'cp' ) );
+		$defaults['pre_completion']['title'] = __( 'Almost there!', 'CP_TD' );
+		$defaults['pre_completion']['content'] = sprintf( '<h3>%s</h3>', __( 'You have completed the course!', 'CP_TD' ) );
+		$defaults['pre_completion']['content'] .= sprintf( '<p>%s</p>', __( 'Your submitted business plan will be reviewed, and you\'ll hear back from me on whether you pass or fail.', 'CP_TD' ) );
 		/**
 		 * Course Completion Page
 		 */
-		$defaults['course_completion']['title'] = __( 'Congratulations, You Passed!', 'cp' );
-		$defaults['course_completion']['content'] = sprintf( '<p>%s</p>', __( 'Woohoo! You\'ve passed COURSE_NAME!', 'cp' ) );
+		$defaults['course_completion']['title'] = __( 'Congratulations, You Passed!', 'CP_TD' );
+		$defaults['course_completion']['content'] = sprintf( '<p>%s</p>', __( 'Woohoo! You\'ve passed COURSE_NAME!', 'CP_TD' ) );
 
 		/**
 		 * Course Fail Page
 		 */
-		$defaults['course_failed']['title'] = __( 'Sorry, you did not pass this course!', 'cp' );
-		$defaults['course_failed']['content'] = __( 'I\'m sorry to say you didn\'t pass COURSE_NAME. Better luck next time!', 'cp' );
+		$defaults['course_failed']['title'] = __( 'Sorry, you did not pass this course!', 'CP_TD' );
+		$defaults['course_failed']['content'] = __( 'I\'m sorry to say you didn\'t pass COURSE_NAME. Better luck next time!', 'CP_TD' );
 		/**
 		 * Filter for defaults values allow in easy way change all defaults values.
 		 *
@@ -3153,5 +3323,4 @@ class CoursePress_Data_Course {
 		$defaults = apply_filters( 'coursepress_pages_defaults', $defaults );
 		return $defaults;
 	}
-
 }

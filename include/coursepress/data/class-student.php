@@ -837,22 +837,6 @@ class CoursePress_Data_Student {
 									$is_answerable = true;
 									// Don't treat discussion as assessable
 									$is_assessable = false;
-								} else {
-									$args = array(
-										'post_id' => $module_id,
-										'user_id' => $student_id,
-										'order' => 'ASC',
-										'number' => 1, // We only need one to verify if current user posted a comment.
-										'fields' => 'ids',
-									);
-									$comments = get_comments( $args );
-									$last_answer = count( $comments ) > 0;
-
-									if ( $last_answer ) {
-										$total_valid_items += 1;
-										$valid_items += 1;
-										$module_seen = true;
-									}
 								}
 							}
 
@@ -897,16 +881,12 @@ class CoursePress_Data_Student {
 								// Only validate the last submitted response
 								$last_answer = is_array( $responses ) ? array_pop( $responses ) : array();
 
-								if ( $module_seen && 'discussion' == $module_type ) {
-									$args = array(
-										'post_id' => $module_id,
-										'user_id' => $student_id,
-										'order' => 'ASC',
-										'number' => 1, // We only need one to verify if current user posted a comment.
-										'fields' => 'ids',
-									);
-									$comments = get_comments( $args );
-									$last_answer = count( $comments ) > 0;
+								if ( 'discussion' == $module_type ) {
+									$last_answer = CoursePress_Data_Discussion::have_comments( $student_id, $module_id );
+
+									if ( $last_answer ) {
+										$module_seen = true;
+									}
 								}
 
 								if ( ! empty( $last_answer ) ) {
@@ -923,7 +903,10 @@ class CoursePress_Data_Student {
 										$unit_completed_modules += 1;
 										$unit_completed_required_modules += 1;
 
-										if ( $is_module_structure_visible ) { $valid_items += 1; }
+										if ( $is_module_structure_visible ) {
+											$valid_items += 1;
+											$unit_valid_progress += 1;
+										}
 										continue;
 									}
 
@@ -961,6 +944,8 @@ class CoursePress_Data_Student {
 
 											if ( $is_assessable ) {
 												$require_assessment += 1;
+											} else {
+												$unit_gradable_modules -= 1;
 											}
 										}
 									}
@@ -1027,6 +1012,7 @@ class CoursePress_Data_Student {
 										}
 									}
 								} else {
+									
 									if ( $module_seen ) {
 										if ( false === $is_mandatory && false === $is_assessable && false === $require_instructor_assessment ) {
 											$unit_completed_modules += 1;
@@ -1058,7 +1044,7 @@ class CoursePress_Data_Student {
 					}
 
 					$have_seen = false;
-					if ( count( $seen_modules ) > 0 ) {
+					if ( $seen_modules > 0 ) {
 						$have_seen = true;
 					}
 
@@ -1110,13 +1096,6 @@ class CoursePress_Data_Student {
 				$unit_assessable_modules == $unit_completed_assessable_modules
 			);
 
-			/*
-			// Calculate unit progress
-			$unit_progress = $valid_items * 100;
-			if ( $unit_progress > 0 && $total_valid_items > 0 ) {
-				$unit_progress = ceil( $unit_progress / $total_valid_items );
-			}
-			*/
 			// Calculate unit progress
 			$unit_progress = $unit_valid_progress * 100;
 			if ( $unit_progress > 0 && $unit_valid_progress > 0 ) {
@@ -1232,7 +1211,7 @@ class CoursePress_Data_Student {
 			$is_completed
 		);
 
-		if ( empty( $is_done ) && $is_completed ) {
+		if ( ! $is_done && $is_completed ) {
 			// Notify other modules about the lucky student!
 			do_action(
 				'coursepress_student_course_completed',
@@ -1740,7 +1719,7 @@ class CoursePress_Data_Student {
 		$is_completed = ! empty( $completed );
 
 		if ( $is_completed ) {
-			$return = __( 'Certified', 'cp' );
+			$return = __( 'Certified', 'CP_TD' );
 		} else {
 			$course_status = CoursePress_Data_Course::get_course_status( $course_id );
 			$course_progress = self::get_course_progress( $student_id, $course_id, $student_progress );
@@ -1752,15 +1731,15 @@ class CoursePress_Data_Student {
 				);
 
 				if ( ! empty( $failed ) ) {
-					$return = __( 'Failed', 'cp' );
+					$return = __( 'Failed', 'CP_TD' );
 				} else {
-					$return = __( 'Awaiting Review', 'cp' );
+					$return = __( 'Awaiting Review', 'CP_TD' );
 				}
 			} else {
 				if ( 'open' == $course_status ) {
-					$return = __( 'Ongoing', 'cp' );
+					$return = __( 'Ongoing', 'CP_TD' );
 				} else {
-					$return = __( 'Incomplete', 'cp' );
+					$return = __( 'Incomplete', 'CP_TD' );
 				}
 			}
 		}

@@ -1,6 +1,9 @@
 <?php
 /**
- * Module Template
+ * Use to print the different modules.
+ *
+ * @package WordPress
+ * @subpackage CoursePress
  **/
 class CoursePress_Template_Module {
 	private static $args = array();
@@ -166,7 +169,7 @@ class CoursePress_Template_Module {
 		$module_type = $attributes['module_type'];
 		$assessables = array( 'input-text', 'input-textarea', 'input-upload' );
 		$response = self::get_response( $module_id, $student_id, true );
-		$grades = CoursePress_Helper_Utility::get_array_val( $response, 'grades' );
+		$grades = (array) CoursePress_Helper_Utility::get_array_val( $response, 'grades' );
 		$grades = array_pop( $grades );
 		$grade = (int) CoursePress_Helper_Utility::get_array_val( $grades, 'grade' );
 		$minimum_grade = (int) $attributes['minimum_grade'];
@@ -178,14 +181,14 @@ class CoursePress_Template_Module {
 				$graded_by = CoursePress_Helper_Utility::get_array_val( $grades, 'graded_by' );
 
 				if ( 'auto' === $graded_by || empty( $grades ) ) {
-					$status = __( 'Pending', 'cp' );
+					$status = __( 'Pending', 'CP_TD' );
 				}
 			} else {
-				$status = __( 'Non Gradable', 'cp' );
+				$status = __( 'Non Gradable', 'CP_TD' );
 			}
 		} else {
 			$pass = $grade >= $minimum_grade;
-			$status = $pass ? __( 'Pass', 'cp' ) : __( 'Fail', 'cp' );
+			$status = $pass ? __( 'Pass', 'CP_TD' ) : __( 'Fail', 'CP_TD' );
 		}
 
 		return $status;
@@ -220,12 +223,17 @@ class CoursePress_Template_Module {
 		 **/
 		do_action( 'coursepress_module_view', $module_id, $student_id );
 
-		if ( $is_focus ) {
-			$content .= sprintf( '<input type="hidden" name="course_id" value="%s" />', $course_id );
-			$content .= sprintf( '<input type="hidden" name="unit_id" value="%s" />', $unit_id );
-			$content .= sprintf( '<input type="hidden" name="student_id" value="%s" />', $student_id );
-			$content .= wp_nonce_field( 'coursepress_submit_modules', '_wpnonce', true, false );
+		// Marked module and page as visited
+		$module_page = get_post_meta( $module_id, 'module_page', true );
+		CoursePress_Data_Student::visited_module( $student_id, $course_id, $unit_id, $module_id );
+		CoursePress_Data_Student::visited_page( $student_id, $course_id, $unit_id, $module_page );
 
+		$content .= sprintf( '<input type="hidden" name="course_id" value="%s" />', $course_id );
+		$content .= sprintf( '<input type="hidden" name="unit_id" value="%s" />', $unit_id );
+		$content .= sprintf( '<input type="hidden" name="student_id" value="%s" />', $student_id );
+
+		if ( $is_focus ) {
+			$content .= wp_nonce_field( 'coursepress_submit_modules', '_wpnonce', true, false );
 			$content .= sprintf( '<div class="cp-error">%s</div>', apply_filters( 'coursepress_before_unit_modules', '' ) );
 		}
 		$content .= sprintf( '<input type="hidden" name="module_id[]" value="%s" />', $module_id );
@@ -253,19 +261,45 @@ class CoursePress_Template_Module {
 				$element_class = ! empty( $responses ) ? 'hide' : '';
 				$response_count = ! empty( $responses ) ? count( $responses ) : 0;
 
-				$try_again_label = __( 'Try Again', 'cp' );
+				// Get recorded time lapsed
+				$keys = array( $course_id, $unit_id, $module_id, $student_id );
+				$key = 'response_' . implode( '_', $keys );
+				$lapses = (int) get_user_meta( $student_id, $key, true );
+				$response_count += $lapses;
+
+				$try_again_label = __( 'Try Again', 'CP_TD' );
 				if ( 'input-upload' == $module_type ) {
-					$try_again_label = __( 'Upload a different file', 'cp' );
+					$try_again_label = __( 'Upload a different file', 'CP_TD' );
 				}
 				$retry = sprintf( '<p class="cp-try-again"><a data-module="%s" class="button module-submit-action button-reload-module">%s</a></p>', $module_id, $try_again_label );
 
 				// Check if retry is disabled
-				if ( ! empty( $attributes['allow_retries'] ) && 0 < $response_count ) {
+				if ( empty( $attributes['allow_retries'] ) ) {
+					$retry = '';
+				} elseif ( 0 < $response_count ) {
 					$attempts = (int) $attributes['retry_attempts'];
 					if ( $attempts >= $response_count ) {
 						$disabled = true;
 						$retry = '';
 					}
+				}
+
+				if ( ! empty( $attributes['use_timer'] ) && ! empty( $attributes['duration'] ) ) {
+					$allow_retry = true;
+					$attempts = (int) $attributes['retry_attempts'];
+					$duration = $attributes['duration'];
+
+					$format = '<span class="quiz_timer" data-limit="%1$s" data-retry="%2$s">%1$s</span><span class="quiz_timer_info">%3$s</span>';
+
+					if ( empty( $retry ) ) {
+						$attempts = 'no';
+						if ( $response_count > 0 ) {
+							$duration = '00:00:00';
+						}
+					}
+
+					$timer_info = __( 'Session Expired', 'CP_TD' ) . $retry;
+					$content .= sprintf( $format, $duration, $attempts, $timer_info );
 				}
 			}
 
@@ -297,7 +331,7 @@ class CoursePress_Template_Module {
 
 			if ( 'closed' == $course_status ) {
 				$format = '<div class="module-warnings"><p>%s</p></div>';
-				$module_warning = sprintf( $format, esc_html__( 'This course is completed, you can not submit answers anymore.', 'cp' ) );
+				$module_warning = sprintf( $format, esc_html__( 'This course is completed, you can not submit answers anymore.', 'CP_TD' ) );
 
 				/**
 				 * Filter the warning message.
@@ -341,7 +375,7 @@ class CoursePress_Template_Module {
 		}
 
 		if ( $mandatory ) {
-			$content .= sprintf( '<div class="is-mandatory">%s</div>', __( 'Required', 'cp' ) );
+			$content .= sprintf( '<div class="is-mandatory">%s</div>', __( 'Required', 'CP_TD' ) );
 		}
 
 		$format = '<div class="module-header module %1$s module-%2$s %3$s" data-type="%1$s" data-module="%2$s">%4$s</div>';
@@ -500,6 +534,7 @@ class CoursePress_Template_Module {
 				'loop' => $loop,
 				'autoplay' => $autoplay,
 			);
+
 			$content .= '<div class="module-content">
 					<div class="audio_player">
 						' . wp_audio_shortcode( $attr ) . '
@@ -536,7 +571,7 @@ class CoursePress_Template_Module {
 				esc_html( $link_text ),
 				CoursePress_Helper_Utility::filter_content( $filesize )
 			);
-			$content .= self::_wrap_content( $module->post_content, $after_content );
+			$content .= $after_content;
 		}
 
 		return $content;
@@ -562,7 +597,7 @@ class CoursePress_Template_Module {
 		} elseif( empty( $attributes['primary_file'] ) ) {
 			$content .= sprintf(
 				'<div class="zip_holder error">%s</div>',
-				__( 'Primary File not set, please come back later.', 'cp' )
+				__( 'Primary File not set, please come back later.', 'CP_TD' )
 			);
 		}
 
@@ -582,13 +617,13 @@ class CoursePress_Template_Module {
 
 		$args = array(
 			'class_form' => implode( ' ', $form_class ),
-			'title_reply' => __( 'Post Here', 'cp' ),
-			'label_submit' => __( 'Post', 'cp' ),
+			'title_reply' => __( 'Post Here', 'CP_TD' ),
+			'label_submit' => __( 'Post', 'CP_TD' ),
 			'must_log_in' => '',
 			'logged_in_as' => '',
 			'action' => '',
 			'class_submit' => 'submit cp-comment-submit',
-			'comment_field' => '<p class="comment-form-comment"><label for="comment">' . _x( 'Comment', 'noun' ) . '</label> <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525"></textarea></p>',
+			'comment_field' => '<p class="comment-form-comment"><textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525"></textarea></p>',
 		);
 
 		add_filter( 'comment_form_submit_button', array( 'CoursePress_Template_Discussion', 'add_subscribe_button' ) );
@@ -785,16 +820,16 @@ class CoursePress_Template_Module {
 		$response = self::get_response( $module->ID, get_current_user_id() );
 
 		$format = '<label class="file"><input type="file" name="module[%s]" %s /><span class="button" data-change="%s" data-upload="%s">%s <span class="upload-progress"></span></label>';
-		$content = sprintf( $format, $module->ID, $disabled_attr, __( 'Change File', 'cp' ), __( 'Upload File', 'cp' ), __( 'Upload File', 'cp' ) );
+		$content = sprintf( $format, $module->ID, $disabled_attr, __( 'Change File', 'CP_TD' ), __( 'Upload File', 'CP_TD' ), __( 'Upload File', 'CP_TD' ) );
 
 		$upload_types = CoursePress_Helper_Utility::allowed_student_mimes();
 		$upload_types = array_map( 'strtoupper', array_keys( $upload_types ) );
 		$format = '<div class="cp-sub"><p>%s %s</p><p>%s %s</p></div>';
 
 		$content .= sprintf( $format,
-			__( 'Accepted File Format: ', 'cp' ),
+			__( 'Accepted File Format: ', 'CP_TD' ),
 			implode( ' ', $upload_types ),
-			__( 'Max File Size:', 'cp' ),
+			__( 'Max File Size:', 'CP_TD' ),
 			ini_get( 'upload_max_filesize' )
 		);
 		return $content;
@@ -911,17 +946,17 @@ class CoursePress_Template_Module {
 		$quiz_passed = ! empty( $quiz_result['passed'] );
 
 		$passed_class = $quiz_passed ? 'passed' : 'not-passed';
-		$passed_message = ! empty( $quiz_result['passed'] ) ? __( 'You have successfully passed the quiz. Here are your results.', 'cp' ) : __( 'You did not pass the quiz this time. Here are your results.', 'cp' );
+		$passed_message = ! empty( $quiz_result['passed'] ) ? __( 'You have successfully passed the quiz. Here are your results.', 'CP_TD' ) : __( 'You did not pass the quiz this time. Here are your results.', 'CP_TD' );
 
 		$template = '<div class="module-quiz-questions">
 			<div class="coursepress-quiz-results ' . esc_attr( $passed_class ) . '">
 				<div class="quiz-message"><p class="result-message">' . $passed_message . '</p></div>
 				<div class="quiz-results">
 					<table>
-					<tr><th>' . esc_html__( 'Total Questions', 'cp' ) . '</th><td>' . esc_html( $quiz_result['total_questions'] ) . '</td></tr>
-					<tr><th>' . esc_html__( 'Correct', 'cp' ) . '</th><td>' . esc_html( $quiz_result['correct'] ) . '</td></tr>
-					<tr><th>' . esc_html__( 'Incorrect', 'cp' ) . '</th><td>' . esc_html( $quiz_result['wrong'] ) . '</td></tr>
-					<tr><th>' . esc_html__( 'Grade', 'cp' ) . '</th><td>' . esc_html( $quiz_result['grade'] ) . '%</td></tr>
+					<tr><th>' . esc_html__( 'Total Questions', 'CP_TD' ) . '</th><td>' . esc_html( $quiz_result['total_questions'] ) . '</td></tr>
+					<tr><th>' . esc_html__( 'Correct', 'CP_TD' ) . '</th><td>' . esc_html( $quiz_result['correct'] ) . '</td></tr>
+					<tr><th>' . esc_html__( 'Incorrect', 'CP_TD' ) . '</th><td>' . esc_html( $quiz_result['wrong'] ) . '</td></tr>
+					<tr><th>' . esc_html__( 'Grade', 'CP_TD' ) . '</th><td>' . esc_html( $quiz_result['grade'] ) . '%</td></tr>
 					</table>
 				</div>
 			</div>

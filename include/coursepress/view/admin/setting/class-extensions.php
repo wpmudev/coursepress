@@ -31,8 +31,8 @@ class CoursePress_View_Admin_Setting_Extensions {
 
 	public static function add_tabs( $tabs ) {
 		$tabs['extensions'] = array(
-			'title' => __( 'Extensions', 'cp' ),
-			'description' => __( 'Extensions and plugins to enhance CoursePress.', 'cp' ),
+			'title' => __( 'Extensions', 'CP_TD' ),
+			'description' => __( 'Extensions and plugins to enhance CoursePress.', 'CP_TD' ),
 			'order' => 60,
 			'is_form' => false,
 			'buttons' => 'none',
@@ -43,30 +43,15 @@ class CoursePress_View_Admin_Setting_Extensions {
 
 	public static function return_content( $content, $slug, $tab ) {
 		CoursePress_Helper_Extension::init();
-
-		$content = '
-			<input type="hidden" name="page" value="' . esc_attr( $slug ) .'"/>
-			<input type="hidden" name="tab" value="' . esc_attr( $tab ) .'"/>
-			<input type="hidden" name="action" value="updateoptions"/>
-		' . wp_nonce_field( 'update-coursepress-options', '_wpnonce', true, false );
-
-		$content .= CoursePress_Helper_Extension::plugins_table();
-
-		// if ( ! empty( $section['description'] ) ) {
-		// $content .= '<p class="description">' . esc_html( $section['description'] ) . '</p>';
-		// }
-		return $content;
-
-	}
-
-	public static function process_form( $page, $tab ) {
 		if ( isset( $_POST['action'] ) && 'install-plugin' === $_POST['action'] && 'extensions' === $tab && wp_verify_nonce( $_POST['_wp_nonce'], 'install-plugin' ) ) {
 
+			ob_start();
+
 			echo '<div class="coursepress_settings_wrapper">' .
-				'<h3>' . esc_html( CoursePress::$name ) . ' : ' . esc_html__( 'Installing plugin...', 'cp' ) . '</h3>
-				<hr />';
+				'<h1>' . esc_html( CoursePress::$name ) . ' : ' . esc_html__( 'Installing plugin...', 'CP_TD' ) . '</h1>
+                <hr />';
 			echo '</div>';
-			echo '<h3>' . esc_html( $_POST['plugin_name'] ) . '</h3>';
+			echo '<h2>' . esc_html( $_POST['plugin_name'] ) . '</h2>';
 
 			// add_filter( 'coursepress_settings_page_main', array( __CLASS__, 'return_content_plugin_install' ) );
 			require_once ABSPATH . 'wp-admin/includes/plugin-install.php'; // Need for plugins_api.
@@ -88,33 +73,53 @@ class CoursePress_View_Admin_Setting_Extensions {
 			$upgrader->install( $source );
 
 			wp_cache_flush();
+			$content = ob_get_contents();
+			ob_end_flush();
 
-			add_filter( 'coursepress_settings_page_main', array( __CLASS__, 'return_content_plugin_install' ) );
+			$content .= add_filter( 'coursepress_settings_page_main', array( __CLASS__, 'return_content_plugin_install' ), $content );
+		} else {
+
+			$content = '
+            <input type="hidden" name="page" value="' . esc_attr( $slug ) .'"/>
+            <input type="hidden" name="tab" value="' . esc_attr( $tab ) .'"/>
+            <input type="hidden" name="action" value="updateoptions"/>
+        ' . wp_nonce_field( 'update-coursepress-options', '_wpnonce', true, false );
+
+			$content .= CoursePress_Helper_Extension::plugins_table();
 		}
+
+		// if ( ! empty( $section['description'] ) ) {
+		// $content .= '<p class="description">' . esc_html( $section['description'] ) . '</p>';
+		// }
+		return $content;
+
 	}
-	
+
+	public static function process_form( $page, $tab ) {
+	}
+
 	// hooked to `admin_init` so we can redirect to pages
 	public static function activating_deactivating_plugin() {
-		$data = !empty($_POST) ? stripslashes_deep($_POST) : array();
-		$tab = ( isset($data['tab']) ) ? $data['tab'] : false;
-		
+		$data = ! empty( $_POST ) ? stripslashes_deep( $_POST ) : array();
+		$tab = ( isset( $data['tab'] ) ) ? $data['tab'] : false;
+
 		if ( $data && $tab === 'extensions' ) {
-			$action = ( isset($data['action']) ) ? $data['action'] : false ;
-			$plugin = ( isset($data['plugin']) ) ? $data['plugin'] : false ;
-			$plugin_base = ( isset($data['base']) ) ? $data['base'] : false ;
-			$nonce = ( isset($data['_wp_nonce']) ) ? $data['_wp_nonce'] : false ;
-			
+			$action = ( isset( $data['action'] ) ) ? $data['action'] : false ;
+			$plugin = ( isset( $data['plugin'] ) ) ? $data['plugin'] : false ;
+			$plugin_base = ( isset( $data['base'] ) ) ? $data['base'] : false ;
+			$nonce = ( isset( $data['_wp_nonce'] ) ) ? $data['_wp_nonce'] : false ;
+
 			if ( $action && $plugin_base && $nonce ) {
 				// plugin activation
 				if ( 'activate-plugin' === $action && wp_verify_nonce( $nonce, 'activate-plugin' ) ) {
 					activate_plugin( $plugin_base, null, false, true );
-					wp_safe_redirect(add_query_arg('tab',$plugin));
+					wp_safe_redirect( add_query_arg( 'tab',$plugin ) );
 					exit;
 				}
 				// plugin deactivation
 				if ( 'deactivate-plugin' === $action && wp_verify_nonce( $nonce, 'deactivate-plugin' ) ) {
 					deactivate_plugins( $plugin_base, true );
-					wp_safe_redirect(add_query_arg('tab',$tab));
+					wp_safe_redirect( add_query_arg( 'tab',$tab ) );
 					exit;
 				}
 			}
@@ -130,7 +135,7 @@ class CoursePress_View_Admin_Setting_Extensions {
 			admin_url( 'admin.php' )
 		);
 
-		return '<a href="' . $return_url . '">' . esc_html__( 'Return to CoursePress settings.', 'cp' ) . '</a>';
+		return '<a href="' . $return_url . '">' . esc_html__( 'Return to CoursePress settings.', 'CP_TD' ) . '</a>';
 	}
 
 	public static function remove_dashboard_notification() {

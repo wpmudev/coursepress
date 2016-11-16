@@ -112,7 +112,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 		$success = false;
 
 		if ( empty( $data->action ) ) {
-			$json_data['message'] = __( 'Enrolment: No action.', 'cp' );
+			$json_data['message'] = __( 'Enrolment: No action.', 'CP_TD' );
 			wp_send_json_error( $json_data );
 		}
 
@@ -319,7 +319,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 						$the_course = CoursePress_Helper_Utility::object_to_array( $the_course );
 						$the_course['post_author'] = get_current_user_id();
 						$the_course['comment_count'] = 0;
-						$the_course['post_title'] = $the_course['post_title'] . ' ' . __( 'Copy', 'cp' );
+						$the_course['post_title'] = $the_course['post_title'] . ' ' . __( 'Copy', 'CP_TD' );
 						$the_course['post_status'] = 'draft';
 						unset( $the_course['ID'] );
 						unset( $the_course['post_date'] );
@@ -418,7 +418,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 				if ( wp_verify_nonce( $data->data->nonce, 'coursepress_enrollment_action_signup' ) ) {
 					$nonce = wp_create_nonce( 'coursepress_enrollment_action' );
 				} else {
-					$json_data['message'] = __( 'Enrolment: Invalid request. Please try reloading the page.', 'cp' );
+					$json_data['message'] = __( 'Enrolment: Invalid request. Please try reloading the page.', 'CP_TD' );
 					wp_send_json_error( $json_data );
 					return;
 				}
@@ -443,11 +443,11 @@ class CoursePress_View_Front_EnrollmentPopup {
 
 				$user_id = username_exists( $username );
 				if ( ! empty( $user_id ) ) {
-					$signup_errors[] = __( 'Username already taken.', 'cp' );
+					$signup_errors[] = __( 'Username already taken.', 'CP_TD' );
 				}
 				$email_exists = email_exists( $email );
 				if ( $email_exists ) {
-					$signup_errors[] = __( 'E-mail address already used.', 'cp' );
+					$signup_errors[] = __( 'E-mail address already used.', 'CP_TD' );
 				}
 
 				if ( ! $user_id && ! $email_exists ) {
@@ -517,7 +517,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 					$json_data['course_id'] = $course_id;
 					$json_data['success'] = true;
 				} else {
-					$json_data['error_message'] = __( 'Could not enroll at this time.', 'cp' );
+					$json_data['error_message'] = __( 'Could not enroll at this time.', 'CP_TD' );
 					$json_data['success'] = false;
 				}
 

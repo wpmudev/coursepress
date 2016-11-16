@@ -14,5 +14,5 @@ pipelines:
           - ssh-keyscan -t rsa -H bitbucket.org >> ~/.ssh/known_hosts
           - git submodule update --init --recursive
           - service mysql start
-          - bash test/install-wp-tests.sh wordpress_test root '' localhost latest
-          - phpunit-multi 5.3,5.6,7.0 -c test/phpunit.xml #runs phpunit against passed php versions
+          - bash test/php/bin/install-wp-tests.sh wordpress_test root '' localhost latest
+          - phpunit-multi 5.3,5.6,7.0 -c test/php/lib/phpunit.xml #runs phpunit against passed php versions

@@ -21,8 +21,8 @@ $assigned_courses = array_map( 'get_post', $assigned_courses );
 	<table class="wp-list-table widefat stripe">
 		<thead>
 			<tr>
-				<th><?php esc_html_e( 'Course', 'cp' ); ?></th>
-				<th><?php esc_html_e( 'Start Date', 'cp' ); ?></th>
+				<th><?php esc_html_e( 'Course', 'CP_TD' ); ?></th>
+				<th><?php esc_html_e( 'Start Date', 'CP_TD' ); ?></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -38,6 +38,6 @@ $assigned_courses = array_map( 'get_post', $assigned_courses );
 	</table>
 	<?php else: ?>
 	<br />
-	<p class="description"><?php esc_html_e( 'No courses found!', 'cp' ); ?></p>
+	<p class="description"><?php esc_html_e( 'No courses found!', 'CP_TD' ); ?></p>
 	<?php endif; ?>
 </div>

@@ -487,6 +487,7 @@ tester {
 .course-wrapper .unit-title-wrapper {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   padding: 10px 0 0 0;
+  width: auto;
 }
 .course-wrapper .unit-title-wrapper:first-child {
   padding: 0;
@@ -605,6 +606,9 @@ tester {
   clear: both;
   list-style: none;
 }
+.units-archive-list .fa-lock {
+  display: none;
+}
 .units-archive-list li {
   position: relative;
   clear: both;
@@ -627,11 +631,22 @@ tester {
   width: 30px;
   text-align: center;
 }
-.units-archive-list .unfolded:before {
-  content: "\f140";
+.units-archive-list .fold {
+  display: inline-block;
+  width: 25px;
+  float: left;
+  height: 25px;
+  margin-right: 15px;
+  cursor: pointer;
 }
-.units-archive-list .folded:before {
-  content: "\f139";
+.units-archive-list .fold:before {
+  content: '\f140';
+  font-family: Dashicons;
+  font-size: 20px;
+  line-height: 1.2;
+}
+.units-archive-list .fold.folded:before {
+  content: '\f139';
 }
 .units-archive-list .unit-archive-single ul, .units-archive-list .unit-archive-single ol {
   margin: 0;
@@ -672,17 +687,50 @@ tester {
   font-style: italic;
   opacity: 0.5;
 }
-.units-archive-list .li-locked-unit .unit-archive-single-title {
+.units-archive-list .li-locked-unit img {
+  display: none;
+}
+.units-archive-list .li-locked-unit:after {
+  content: attr(data-title);
+  position: absolute;
+  right: 0;
+  padding: 5px 15px;
+  font-size: 14px;
+  background-color: rgba(0, 0, 0, 0.06);
+  color: #111;
+  display: none;
+}
+.units-archive-list .li-locked-unit:hover:after {
+  display: block;
+}
+.units-archive-list .li-locked-unit .unit-archive-single {
   position: relative;
 }
-.units-archive-list .li-locked-unit .unit-archive-single-title:before {
+.units-archive-list .li-locked-unit .unit-archive-single:before {
   content: "\f160";
   font-family: Dashicons;
   float: right;
   font-size: 1.2em;
   line-height: 1.4em;
 }
+.units-archive-list .li-locked-unit .unit-archive-single-title .unit-delay-date {
+  float: right;
+}
 .units-archive-list .li-locked-unit .course-progress-disc-container {
+  display: none;
+}
+.units-archive-list .module-required {
+  position: relative;
+}
+.units-archive-list .module-required:after {
+  content: '\f227';
+  font-family: Dashicons;
+  float: right;
+  font-size: 1.2em;
+  line-height: 1.4em;
+  color: red;
+}
+.units-archive-list .module-required.module-completed:after {
   display: none;
 }
 .units-archive-list .module-locked .module-title {
@@ -705,26 +753,41 @@ tester {
   clear: both;
   border: 1px solid transparent;
   font-size: 110%;
-  border: 1px solid rgba(0, 0, 0, 0.04);
-  padding: 15px 20px;
+  padding: 0;
   border-radius: 5px;
   box-sizing: border-box;
 }
 .cp .cp-module-content * {
   box-sizing: border-box;
 }
-.cp .cp-module-content .zip_holder.error {
-	color: rgba(255, 0, 0, 0.5);
-}
 .cp .cp-module-content .comment-reply-title {
-  margin-bottom: 0;
+  margin: 0;
+  padding-bottom: 15px;
 }
 .cp .cp-module-content .comment-notification {
   display: inline-block;
-  margin-left: 20px;
+  margin: 0;
+  float: left;
+}
+.cp .cp-module-content .comment-form {
+  margin: 0;
+  padding: 0 0 15px 0;
 }
 .cp .cp-module-content .comment-list {
   margin: 25px 0;
+}
+.cp .cp-module-content .comment-respond {
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  padding: 15px 25px;
+  background-color: rgba(255, 255, 255, 0.56);
+}
+.cp .cp-module-content .comment-respond .form-submit {
+  margin: 0 0 15px 0;
+  text-align: right;
+}
+.cp .cp-module-content .comment-respond .form-submit #submit {
+  margin: 0;
+  width: auto;
 }
 .cp .module-header {
   margin: 0 0 25px 0;
@@ -743,6 +806,28 @@ tester {
   display: inline-block;
   vertical-align: middle;
   padding: 2px 4px;
+}
+.cp .quiz_timer {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-weight: 600;
+}
+.cp .quiz_timer_info {
+  position: absolute;
+  top: 35px;
+  right: 20px;
+  padding: 5px 0;
+  color: red;
+  text-transform: uppercase;
+  font-size: 11px;
+  display: none;
+  text-align: right;
+  line-height: 14px;
+}
+.cp .quiz_timer_info .button-reload-module {
+  font-size: 13px;
+  margin: 0;
 }
 .cp .module-content {
   max-width: 100%;
@@ -764,6 +849,9 @@ tester {
 .cp .module-elements input[type="text"] option,
 .cp .module-elements textarea option {
   padding: 4px 12px;
+}
+.cp .module-elements input[type="checkbox"] {
+  margin-top: .4em;
 }
 .cp .module-elements input[type="text"],
 .cp .module-elements textarea {
@@ -799,6 +887,36 @@ tester {
   margin-top: 25px;
   border: 1px solid rgba(0, 0, 0, 0.3);
   padding: 5px 10px;
+}
+.cp .module-elements .comment-list {
+  list-style: none;
+}
+.cp .module-elements .comment-list .avatar {
+  float: left;
+  margin-right: 15px;
+}
+.cp .module-elements .comment-list .comment-meta {
+  clear: right;
+  font-size: 14px;
+  clear: right;
+  margin-bottom: 15px;
+}
+.cp .module-elements .comment-list .reply {
+  clear: both;
+  text-align: right;
+}
+.cp .module-elements .comment-list .comment-body {
+  clear: both;
+  margin: 15px 0;
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  padding: 15px 25px;
+  background-color: rgba(255, 255, 255, 0.56);
+}
+.cp .module-elements .comment-list li {
+  list-style: none;
+}
+.cp .module-elements .comment-list li li {
+  margin-left: 25px;
 }
 .cp .cp-try-again {
   margin-top: 15px;

@@ -12,7 +12,7 @@ class CoursePress_Helper_Setting {
 		add_action( 'plugins_loaded', array( __CLASS__, 'admin_plugins_loaded' ) );
 		//add_action( 'admin_menu', array( __CLASS__, 'admin_menu' ) );
 		add_action( 'admin_init', array( __CLASS__, 'admin_init' ) );
-		add_action( 'shutdown', array( __CLASS__, 'update_post_meta' ) );
+		//add_action( 'shutdown', array( __CLASS__, 'update_post_meta' ) );
 		/** This filter is documented in /wp-admin/includes/misc.php */
 		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
 		add_filter( 'screen_settings', array( __CLASS__, 'screen_settings' ), 10, 2 );
@@ -298,6 +298,7 @@ class CoursePress_Helper_Setting {
 	 *	   ****************************************
 	 *
 	 * @since 2.0.0.
+	 * DEPRACATED!!!
 	 */
 	public static function update_post_meta() {
 
@@ -345,7 +346,7 @@ class CoursePress_Helper_Setting {
 			'columns',
 			array(
 				'default' => '',
-				'label' => _x( 'Columns', 'courses per page (screen options)', 'cp' ),
+				'label' => _x( 'Columns', 'courses per page (screen options)', 'CP_TD' ),
 				'option' => 'coursepress_courses_columns',
 			)
 		);
@@ -353,7 +354,7 @@ class CoursePress_Helper_Setting {
 			'per_page',
 			array(
 				'default' => 20,
-				'label' => _x( 'Number of courses per page:', 'courses per page (screen options)', 'cp' ),
+				'label' => _x( 'Number of courses per page:', 'courses per page (screen options)', 'CP_TD' ),
 				'option' => 'coursepress_courses_per_page',
 			)
 		);
@@ -370,17 +371,17 @@ class CoursePress_Helper_Setting {
 	 */
 	private static function courses_get_columns( $option = '' ) {
 		$columns = array(
-			'ID' => __( 'ID', 'cp' ),
-			'categories' => __( 'Categories', 'cp' ),
-			'date_start' => __( 'Start date', 'cp' ),
-			'date_end' => __( 'End Date', 'cp' ),
-			'date_enrollment_start' => __( 'Enrollment Start', 'cp' ),
-			'date_enrollment_end' => __( 'Enrollment End', 'cp' ),
-			'units' => __( 'Units', 'cp' ),
-			'students' => __( 'Students', 'cp' ),
-			'certificates' => __( 'Certified', 'cp' ),
-			'status' => __( 'Status', 'cp' ),
-			'actions' => __( 'Actions', 'cp' ),
+			'ID' => __( 'ID', 'CP_TD' ),
+			'categories' => __( 'Categories', 'CP_TD' ),
+			'date_start' => __( 'Start date', 'CP_TD' ),
+			'date_end' => __( 'End Date', 'CP_TD' ),
+			'date_enrollment_start' => __( 'Enrollment Start', 'CP_TD' ),
+			'date_enrollment_end' => __( 'Enrollment End', 'CP_TD' ),
+			'units' => __( 'Units', 'CP_TD' ),
+			'students' => __( 'Students', 'CP_TD' ),
+			'certificates' => __( 'Certified', 'CP_TD' ),
+			'status' => __( 'Status', 'CP_TD' ),
+			'actions' => __( 'Actions', 'CP_TD' ),
 		);
 		if ( 'keys-only' == $option ) {
 			$columns = array_keys( $columns );
@@ -412,7 +413,7 @@ class CoursePress_Helper_Setting {
 			$columns_names = self::courses_get_columns();
 			$hidden = self::get_hidden_columns();
 			$content .= '<fieldset class="metabox-prefs">';
-			$content .= sprintf( '<legend>%s</legend>', __( 'Columns', 'cp' ) );
+			$content .= sprintf( '<legend>%s</legend>', __( 'Columns', 'CP_TD' ) );
 			$content .= '<div class="metabox-prefs">';
 			foreach ( $columns_names as $key => $name ) {
 				$check = in_array( $key, $hidden ) ? 'off' : 'on';

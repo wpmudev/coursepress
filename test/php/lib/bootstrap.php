@@ -7,14 +7,14 @@ ob_start();
  */
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 if ( ! $_tests_dir ) {
-	$_tests_dir = '/tmp/wordpress-tests-lib/';
+	$_tests_dir = '/tmp/wp-tests/coursepress-tests-lib';
 }
 
 /**
  * The path to the WordPress tests checkout.
  */
 if ( file_exists( $_tests_dir ) ) {
-	define( 'WP_TESTS_DIR', '/tmp/wordpress-tests-lib/' );
+	define( 'WP_TESTS_DIR', '/tmp/wp-tests/coursepress-tests-lib/' );
 } else { // Without the "wptest" but with "trunk" subfolder...
 	define( 'WP_TESTS_DIR', '/srv/www/wordpress-develop/trunk/tests/phpunit/' );
 }
@@ -58,3 +58,5 @@ tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
  * and viola, the tests begin.
  */
 require WP_TESTS_DIR . 'includes/bootstrap.php';
+require( dirname( __FILE__ ) . '/coursepress-tests-helper.php' );
+require( dirname( __FILE__ ) . '/coursepress-unit-test-case.php' );

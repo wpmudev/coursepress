@@ -1,4 +1,4 @@
-/*!  - v2.0.0
+/*! CoursePress - v2.0.0
  * https://premium.wpmudev.org/project/coursepress-pro/
  * Copyright (c) 2016; * Licensed GPLv2+ */
 var CoursePress = {};
@@ -424,28 +424,165 @@ $(document)
 	.on( 'focus', '.cp-mask .has-error, .cp .has-error', CoursePress.removeErrorHint );
 
 })(jQuery);
+/** MODULES **/
 (function( $ ) {
+	CoursePress.timer = function( container ) {
+		var timer_span = container.find( '.quiz_timer' ).show(),
+			module_elements = container.find( '.module-elements' );
+
+		if ( 0 === timer_span.length ) {
+			return;
+		}
+		// Don't run the timer when module element is hidden
+		if ( ! module_elements.is( ':visible' ) ) {
+			timer_span.hide();
+			return;
+		}
+
+		var duration = timer_span.data( 'limit' ), repeat = timer_span.data( 'retry' ),
+			hours = 0, minutes = 0, seconds = 0, total_limit = 0, timer,
+			_seconds = 60, _minutes = '00', _hours = '00', dtime, info, send, expired;
+
+		duration = duration.split( ':' );
+
+		seconds = duration.pop();
+		seconds = parseInt( seconds );
+
+		if ( duration.length > 0 ) {
+			_minutes = minutes = duration.pop();
+			minutes = parseInt( minutes ) * 60;
+		}
+
+		if ( duration.length > 0 ) {
+			_hours = hours = duration.pop();
+			hours = parseInt( hours ) * 60 * 60;
+		}
+
+		total_limit = hours + minutes + seconds;
+
+		info = container.find( '.quiz_timer_info' );
+		expired = function() {
+			container.find( 'input,select,textarea' ).attr( 'disabled', 'disabled' );
+			info.show();
+		};
+
+		if ( 0 === total_limit ) {
+			if ( 'no' === repeat ) {
+				expired();
+			} else {
+				timer_span.hide();
+			}
+			return;
+		}
+
+		timer = setInterval(function(){
+			_seconds = parseInt( _seconds ) - 1;
+
+			if ( _seconds <= 0 && _minutes <= 0 && _hours <= 0 ) {
+				clearInterval( timer );
+
+				expired();
+
+				// Send record data in silence
+				send = new CoursePress.SendRequest();
+				send.set({
+					cpnonce: _coursepress.cpnonce,
+					className: 'CoursePress_Module',
+					method: 'record_expired_answer',
+					module_id: container.data( 'id' ),
+					course_id: container.find( '[name="course_id"]' ).val(),
+					unit_id: container.find( '[name="unit_id"]' ).val(),
+					student_id: container.find( '[name="student_id"]' ).val(),
+					action: 'record_time'
+				});
+				send.save();
+
+				// Enable retry button here
+				info.on( 'click', function() {
+					container.find( 'input,select,textarea' ).removeAttr( 'disabled' );
+					info.hide();
+					CoursePress.timer( container );
+				});
+			}
+
+			if ( _seconds < 0 ) {
+				_seconds = 59;
+
+				if ( parseInt( _minutes ) > 0 ) {
+					_minutes = parseInt( _minutes ) - 1;
+				}
+
+				if ( parseInt( _minutes ) <= 0 ) {
+					if ( parseInt( _hours ) > 0 ) {
+						_hours = parseInt( _hours ) - 1;
+						_minutes = 59;
+
+						if ( _hours < 10 ) {
+							_hours = '0' + parseInt( _hours );
+						}
+					}
+				}
+
+				if ( _minutes < 10 ) {
+					_minutes = '0' + parseInt( _minutes );
+				}
+			}
+
+			if ( _seconds < 10 ) {
+				_seconds = '0' + parseInt( _seconds );
+			}
+
+			dtime = _hours + ':' + _minutes + ':' + _seconds;
+			timer_span.html( dtime );
+		}, 1000);
+	};
+
+	CoursePress.MediaElements = function( container ) {
+		if ( $.fn.mediaelementplayer ) {
+			var media = $( 'audio,video', container );
+
+			if ( media.length > 0 ) {
+				media.mediaelementplayer();
+			}
+		}
+	};
+
 	CoursePress.LoadFocusModule = function() {
 		var nav = $(this),
 			data = nav.data(),
 			container = $( '.coursepress-focus-view' ),
-			url = [ _coursepress.home_url, 'coursepress_focus' ]
+			url = [ _coursepress.home_url, 'coursepress_focus' ],
+			parents = $( '.cp, .coursepress-focus-view' )
 		;
 
 		if ( 'submit' === nav.attr( 'type' ) ) {
 			// It's a submit button, continue submission
 			return;
 		}
+
 		if ( 'course' === data.type ) {
 			// Reload
 			window.location = data.url;
 			return;
 		}
 
+		if ( data.unit ) {
+			//Find current unit serve
+			var current_unit = parents.find( '[name="unit_id"]' );
+
+			if ( 0 == current_unit.length || data.unit != current_unit.val() ) {
+				window.location = data.url;
+				return;
+			}
+		}
+
 		url.push( data.course, data.unit, data.type, data.id );
 		url = url.join( '/' );
-		container.load( url );
-		CoursePress.resetBrowserURL( data.url );
+		container.load( url, function() {
+			CoursePress.resetBrowserURL( data.url );
+			CoursePress.timer( container.find( '.cp-module-content' ) );
+			CoursePress.MediaElements( container.find( '.cp-module-content' ) );
+		});
 
 		return false;
 	};
@@ -555,11 +692,13 @@ $(document)
 					if ( true === data.success ) {
 						// Process success
 						if ( data.data.url ) {
-							if ( false === is_focus || data.data.type && 'completion' === data.data.type ) {
+							if ( false === is_focus || true === data.data.is_reload || data.data.type && 'completion' === data.data.type ) {
 								window.location = data.data.url;
 							} else {
 								focus_box.html( data.data.html );
 								CoursePress.resetBrowserURL( data.data.url );
+								CoursePress.timer( focus_box.find( '.cp-module-content' ) );
+								CoursePress.MediaElements( focus_box.find( '.cp-module-content' ) );
 							}
 						}
 					} else {
@@ -804,6 +943,9 @@ $(document)
 	};
 
 	$( document )
+		.ready(function(){
+			CoursePress.timer( $('.cp-module-content' ) );
+		})
 		.on( 'submit', '.cp-form', CoursePress.ModuleSubmit )
 		.on( 'click', '.focus-nav-prev, .focus-nav-next', CoursePress.LoadFocusModule )
 		.on( 'click', '.button-reload-module', CoursePress.toggleModuleState )
@@ -811,7 +953,7 @@ $(document)
 		.on( 'click', '.cp-comment-submit', CoursePress.addComment )
 		.on( 'change', '.cp-module-content .file input', CoursePress.validateUploadModule )
 		.on( 'click', '.unit-archive-single .fold', CoursePress.singleFolded )
-		.on( 'click', '.course-structure-block .unit .fold', CoursePress.unitFolded );
+		.on( 'click', '.course-structure-block .unit .fold, .unit-archive-list .fold', CoursePress.unitFolded );
 
 })(jQuery);
 /* global CoursePress */
