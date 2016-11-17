@@ -311,8 +311,10 @@ class CoursePress_Helper_Integration_WooCommerce {
 			$post_id = wp_insert_post( $post );
 			update_post_meta( $post_id, '_stock_status', 'instock' );
 
-			// Only works if the course actually has a thumbnail.
-			set_post_thumbnail( $post_id, get_post_thumbnail_id( $course_id ) );
+			/**
+			 * Set or update thumbnail.
+			 */
+			self::update_product_thumbnail( $post_id );
 
 			$automatic_sku = $settings['mp_auto_sku'];
 
@@ -453,9 +455,9 @@ class CoursePress_Helper_Integration_WooCommerce {
 	public static function cp_woo_post_parent_box_content() {
 		global $post;
 		if ( isset( $post->ID ) ) {
-			?>
-			<input type="text" name="parent_course" value="<?php echo esc_attr( wp_get_post_parent_id( $post->ID ) ); ?>" />
-			<?php
+?>
+            <input type="text" name="parent_course" value="<?php echo esc_attr( wp_get_post_parent_id( $post->ID ) ); ?>" />
+<?php
 		}
 	}
 
@@ -467,6 +469,10 @@ class CoursePress_Helper_Integration_WooCommerce {
 		if ( isset( $_POST['parent_course'] ) && ! empty( $_POST['parent_course'] ) ) {
 			wp_update_post( array( 'ID' => $post->ID, 'post_parent' => (int) $_POST['parent_course'] ) );
 		}
+		/**
+		 * Set or update thumbnail.
+		 */
+		self::update_product_thumbnail( $product->ID );
 	}
 
 	public static function update_course_from_product( $product_id, $post, $before_update ) {
@@ -501,6 +507,10 @@ class CoursePress_Helper_Integration_WooCommerce {
 		foreach ( $meta as $key => $value ) {
 			CoursePress_Data_Course::update_setting( $course_id, $key, $value );
 		}
+		/**
+		 * Set or update thumbnail.
+		 */
+		self::update_product_thumbnail( $product_id );
 		self::$updated = true;
 	}
 
@@ -649,13 +659,13 @@ class CoursePress_Helper_Integration_WooCommerce {
 
 		ob_start();
 		do_action( 'woocommerce_before_add_to_cart_form' ); ?>
-		<form class="cart" method="post" enctype='multipart/form-data' action="<?php echo esc_url( wc_get_cart_url() ); ?>">
-		<?php do_action( 'woocommerce_before_add_to_cart_button' ); ?>
-		<input type="hidden" name="add-to-cart" value="<?php echo esc_attr( $product->id ); ?>" />
-		<button type="submit" class="single_add_to_cart_button button alt"><?php echo esc_html( $product->single_add_to_cart_text() ); ?></button>
-		<?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
-		</form>
-		<?php
+        <form class="cart" method="post" enctype='multipart/form-data' action="<?php echo esc_url( wc_get_cart_url() ); ?>">
+        <?php do_action( 'woocommerce_before_add_to_cart_button' ); ?>
+        <input type="hidden" name="add-to-cart" value="<?php echo esc_attr( $product->id ); ?>" />
+        <button type="submit" class="single_add_to_cart_button button alt"><?php echo esc_html( $product->single_add_to_cart_text() ); ?></button>
+        <?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
+        </form>
+<?php
 		do_action( 'woocommerce_after_add_to_cart_form' );
 		$content = ob_get_contents();
 		ob_end_clean();
@@ -698,7 +708,6 @@ class CoursePress_Helper_Integration_WooCommerce {
 		if ( ! self::$is_active ) {
 			return;
 		}
-
 		?>
 		<script type="text/template" id="modal-view-woo-template" data-type="modal-step" data-modal-action="paid_enrollment">
 			<div class="bbm-modal__topbar">
@@ -822,7 +831,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 	 *
 	 * @param string $url Current post url.
 	 * @param WP_Post $post Curent post object.
-	 *
+	 * @return string link.
 	 */
 	public static function change_product_link_to_course_link( $url, $post ) {
 		if ( ! self::$is_active ) {
@@ -863,6 +872,54 @@ class CoursePress_Helper_Integration_WooCommerce {
 			return 0;
 		}
 		return intval( get_post_meta( $product_id, 'cp_course_id', true ) );
+	}
+
+	/**
+	 * Set or update thumbnail.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $product_id Product ID.
+	 */
+	public static function update_product_thumbnail( $product_id ) {
+		$thumbnail_id = get_post_thumbnail_id( $product_id );
+		if ( ! empty( $thumbnail_id ) ) {
+			return;
+		}
+		/**
+		 * Check is set course?
+		 */
+		$course_id = wp_get_post_parent_id( $product_id );
+		if ( empty( $course_id ) ) {
+			return;
+		}
+		/**
+		 * Is the course really a course?
+		 */
+		$is_course = CoursePress_Data_Course::is_course( $course_id );
+		if ( ! $is_course ) {
+			return;
+		}
+		/**
+		 *  Only works if the course actually has a thumbnail.
+		 */
+		$thumbnail_url = get_post_meta( $course_id, 'cp_listing_image', true );
+		if ( empty( $thumbnail_url ) ) {
+			return;
+		}
+		/**
+		 * Get thumbnail id from thumbnail_url, if it is custom image, do not
+		 * set thumbnail for product.
+		 */
+		global $wpdb;
+		$thumbnail_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE guid='%s';", $thumbnail_url ) );
+		if ( empty( $thumbnail_id ) ) {
+			return;
+		}
+		/**
+		 * Finally ... set product thumbnail.
+		 */
+		set_post_thumbnail( $product_id, $thumbnail_id );
 	}
 
 	/**
