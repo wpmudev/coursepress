@@ -1453,33 +1453,32 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		$assert = CoursePress_Data_Course::get_units_html_list( $this->course->ID );
 		$this->assertInternalType( 'string', $assert );
 		$this->assertNotEmpty( $assert );
-    }
+	}
 
-    /**
-     * get_expired_courses( $refresh = false )
-     */
-    public function test_get_expired_courses() {
+	/**
+	 * get_expired_courses( $refresh = false )
+	 */
+	public function test_get_expired_courses() {
 		/**
 		 * Wrong data
 		 */
 		$values = $this->get_wrong_values();
 		foreach ( $values as $value ) {
 			$assert = CoursePress_Data_Course::get_expired_courses( $value );
-			$this->assertInternalType( 'string', $assert );
-			$this->assertEquals( '', $assert );
+			$this->assertInternalType( 'array', $assert );
+			$this->assertEquals( array(), $assert );
 		}
 		/**
 		 * Good data
 		 */
 		$assert = CoursePress_Data_Course::get_expired_courses( true );
-		$this->assertInternalType( 'string', $assert );
-        $this->assertEquals( '', $assert );
+		$this->assertInternalType( 'array', $assert );
+		$this->assertEquals( array(), $assert );
 
 		$assert = CoursePress_Data_Course::get_expired_courses( false );
-		$this->assertInternalType( 'string', $assert );
-			$this->assertEquals( '', $assert );
-    }
-
+		$this->assertInternalType( 'array', $assert );
+		$this->assertEquals( array(), $assert );
+	}
 }
 
 /**
