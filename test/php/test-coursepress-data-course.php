@@ -1504,6 +1504,29 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		$this->assertInternalType( 'array', $assert );
 		$this->assertEquals( array(), $assert );
 	}
+
+	/**
+	 * return_id( $a )
+	 */
+	public function test_return_id() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::return_id( $value );
+			$this->assertInternalType( 'integer', $assert );
+			$this->assertEquals( 0, $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$value = 10;
+		$a = array( 'post_id' => $value );
+		$assert = CoursePress_Data_Course::return_id( $a );
+		$this->assertInternalType( 'integer', $assert );
+		$this->assertEquals( $value, $assert );
+	}
 }
 
 /**
