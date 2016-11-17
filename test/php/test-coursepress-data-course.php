@@ -1483,7 +1483,7 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	/**
 	 * get_enrollment_ended_courses( $refresh = false )
 	 */
-	public function test_get_enrollment_ended_courses() {
+	public function xxxx_get_enrollment_ended_courses() {
 		/**
 		 * Wrong data
 		 */
@@ -1508,7 +1508,7 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	/**
 	 * return_id( $a )
 	 */
-	public function test_return_id() {
+	public function xxxx_return_id() {
 		/**
 		 * Wrong data
 		 */
@@ -1526,6 +1526,27 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		$assert = CoursePress_Data_Course::return_id( $a );
 		$this->assertInternalType( 'integer', $assert );
 		$this->assertEquals( $value, $assert );
+	}
+
+	/**
+	 * current_and_upcoming_courses( $args = array(), $student_id = 0 )
+	 */
+	public function test_current_and_upcoming_courses() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $args ) {
+			foreach ( $values as $student_id ) {
+				$assert = CoursePress_Data_Course::current_and_upcoming_courses( $args, $student_id );
+				$this->assertInstanceOf( 'WP_Query', $assert );
+			}
+		}
+		/**
+		 * Good data
+		 */
+		$assert = CoursePress_Data_Course::current_and_upcoming_courses( array(), $this->student->ID );
+		$this->assertInstanceOf( 'WP_Query', $assert );
 	}
 }
 
