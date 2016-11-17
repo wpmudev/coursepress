@@ -2942,6 +2942,12 @@ class CoursePress_Data_Course {
 	 * @return array Array of substitutions.
 	 */
 	public static function get_vars( $course_id ) {
+		/**
+		 * Sanitize course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
+			return array();
+		}
 		$vars = array(
 			'COURSE_NAME' => html_entity_decode( get_the_title( $course_id ) ),
 			'UNIT_LIST' => self::get_units_html_list( $course_id ),
@@ -2959,16 +2965,19 @@ class CoursePress_Data_Course {
 	 */
 	public static function get_units_html_list( $course_id ) {
 		$units_list = '';
+		/**
+		 * Sanitize course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
+			return $units_list;
+		}
 		$units = CoursePress_Data_Course::get_units( $course_id );
-
 		if ( $units ) {
 			$list = array();
 			$previous_unit_id = null;
-
 			foreach ( $units as $unit ) {
 				$is_unit_available = CoursePress_Data_Unit::is_unit_available( $course_id, $unit->ID, $previous_unit_id );
 				$previous_unit_id = $unit->ID;
-
 				if ( $is_unit_available ) {
 					$list[] = sprintf( '<li>%s</li>', $unit->post_title );
 				}
