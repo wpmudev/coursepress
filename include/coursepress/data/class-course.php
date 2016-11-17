@@ -3154,6 +3154,12 @@ class CoursePress_Data_Course {
 	}
 
 	public static function get_course_status( $course_id ) {
+		/**
+		 * Sanitize course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
+			return 'unknown';
+		}
 		$setting = self::get_setting( $course_id );
 		$start_date = ! empty( $setting['course_start_date'] ) ? self::strtotime( $setting['course_start_date'] ) : 0;
 		$end_date = ! empty( $setting['course_end_date'] ) ? self::strtotime( $setting['course_end_date'] ) : 0;
