@@ -3101,7 +3101,12 @@ class CoursePress_Data_Course {
 		$enrollment_ended_courses = array();
 
 		// Get enrollment ended courses for non-admin
-		$is_admin = user_can( $student_id, 'manage_options' );
+		$is_admin = false;
+		if ( is_numeric( $student_id ) || is_string( $student_id ) ) {
+			$is_admin = user_can( $student_id, 'manage_options' );
+		} else {
+			$student_id = 0;
+		}
 
 		if ( false === $is_admin ) {
 			$enrollment_ended_courses = self::get_enrollment_ended_courses();
