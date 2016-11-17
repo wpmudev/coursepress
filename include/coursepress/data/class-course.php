@@ -3138,11 +3138,15 @@ class CoursePress_Data_Course {
 
 	public static function sort_courses( $courses ) {
 		$ordered_courses = array();
-
+		if ( ! is_array( $courses ) ) {
+			return $courses;
+		}
 		foreach ( $courses as $index => $course ) {
-			$course_id = is_object( $course ) ? $course->ID : $course;
-			$start_date = get_post_meta( $course_id, 'cp_course_start_date', true );
-			$ordered_courses[] = $start_date;
+			if ( is_a( $course, 'WP_Post' ) ) {
+				$course_id = is_object( $course ) ? $course->ID : $course;
+				$start_date = get_post_meta( $course_id, 'cp_course_start_date', true );
+				$ordered_courses[] = $start_date;
+			}
 		}
 		array_multisort( $ordered_courses, $courses );
 
