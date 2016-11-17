@@ -2863,10 +2863,15 @@ class CoursePress_Data_Course {
 	}
 
 	public static function course_class( $course_id, $user_id = 0 ) {
+		/**
+		 * Sanitize course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
+			return array();
+		}
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
-
 		$is_course_available = self::is_course_available( $course_id );
 		$date_format = get_option( 'date_format' );
 		$now = self::time_now();
