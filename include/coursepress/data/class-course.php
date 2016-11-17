@@ -3071,7 +3071,10 @@ class CoursePress_Data_Course {
 	}
 
 	public static function return_id( $a ) {
-		return $a['post_id'];
+		if ( is_array( $a ) && isset( $a['post_id'] ) ) {
+			return $a['post_id'];
+		}
+		return 0;
 	}
 
 	public static function current_and_upcoming_courses( $args = array(), $student_id = 0 ) {
