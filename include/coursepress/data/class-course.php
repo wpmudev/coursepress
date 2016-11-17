@@ -3035,6 +3035,13 @@ class CoursePress_Data_Course {
 	public static function get_enrollment_ended_courses( $refresh = false ) {
 		global $wpdb;
 
+		/**
+		 * sanitize $refresh
+		 */
+		if ( ! is_bool( $refresh ) ) {
+			$refresh = cp_is_true( $refresh );
+		}
+
 		$course_ids = get_option( 'cp_enrollment_ended_courses', false );
 		$last_update = get_option( 'cp_enrollment_ended_date', false );
 		$post_type = self::get_post_type_name();
