@@ -1392,7 +1392,7 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	/**
 	 * course_class( $course_id, $user_id = 0 )
 	 */
-	public function test_course_class() {
+	public function xxxx_course_class() {
 		/**
 		 * Wrong data
 		 */
@@ -1409,6 +1409,49 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		 */
 		$assert = CoursePress_Data_Course::course_class( $this->course->ID, $this->student->ID );
 		$this->assertInternalType( 'array', $assert );
+		$this->assertNotEmpty( $assert );
+	}
+
+	/**
+	 * get_vars( $course_id )
+	 */
+	public function xxxx_get_vars() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::get_vars( $value );
+			$this->assertInternalType( 'array', $assert );
+			$this->assertEquals( array(), $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$keys = array( 'COURSE_NAME', 'UNIT_LIST' );
+		$assert = CoursePress_Data_Course::get_vars( $this->course->ID );
+		$this->assertInternalType( 'array', $assert );
+		$this->has_keys( $keys, $assert );
+	}
+
+	/**
+	 * get_units_html_list( $course_id )
+	 */
+	public function test_get_units_html_list() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::get_units_html_list( $value );
+			$this->assertInternalType( 'string', $assert );
+			$this->assertEquals( '', $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$assert = CoursePress_Data_Course::get_units_html_list( $this->course->ID );
+		$this->assertInternalType( 'string', $assert );
 		$this->assertNotEmpty( $assert );
 	}
 }
