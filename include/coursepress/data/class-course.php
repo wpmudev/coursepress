@@ -3177,6 +3177,12 @@ class CoursePress_Data_Course {
 	}
 
 	public static function get_enrollment_status( $course_id ) {
+		/**
+		 * Sanitize course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
+			return 'unknown';
+		}
 		$setting = self::get_setting( $course_id );
 		$start_enrollment = ! empty( $setting['enrollment_start_date'] ) ? self::strtotime( $setting['enrollment_start_date'] ) : 0;
 		$end_enrollment = ! empty( $setting['enrollment_end_date'] ) ? self::strtotime( $setting['enrollment_end_date'] ) : 0;
@@ -3203,12 +3209,7 @@ class CoursePress_Data_Course {
 	 * @return boolean Is a course post
 	 */
 	public static function check_post_type_by_post( $post ) {
-		$post_type = get_post_type( $post );
-		$course_post_type = self::get_post_type_name();
-		if ( $post_type == $course_post_type ) {
-			return true;
-		}
-		return false;
+		return self::is_course( $post );
 	}
 
 	/**
