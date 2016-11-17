@@ -1479,6 +1479,31 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		$this->assertInternalType( 'array', $assert );
 		$this->assertEquals( array(), $assert );
 	}
+
+	/**
+	 * get_enrollment_ended_courses( $refresh = false )
+	 */
+	public function test_get_enrollment_ended_courses() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::get_enrollment_ended_courses( $value );
+			$this->assertInternalType( 'array', $assert );
+			$this->assertEquals( array(), $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$assert = CoursePress_Data_Course::get_enrollment_ended_courses( true );
+		$this->assertInternalType( 'array', $assert );
+		$this->assertEquals( array(), $assert );
+
+		$assert = CoursePress_Data_Course::get_enrollment_ended_courses( false );
+		$this->assertInternalType( 'array', $assert );
+		$this->assertEquals( array(), $assert );
+	}
 }
 
 /**
