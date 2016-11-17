@@ -2820,8 +2820,10 @@ class CoursePress_Data_Course {
 			'suppress_filters' => true,
 			'ignore_sticky_posts' => true,
 		);
-		if ( ! empty( $ids ) ) {
+		if ( is_array( $ids ) && ! empty( $ids ) ) {
 			$args['post__in'] = $ids;
+		} else {
+			return array();
 		}
 		$query = new WP_Query( $args );
 		return $query->posts;
