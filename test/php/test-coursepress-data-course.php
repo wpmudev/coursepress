@@ -1531,7 +1531,7 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	/**
 	 * current_and_upcoming_courses( $args = array(), $student_id = 0 )
 	 */
-	public function test_current_and_upcoming_courses() {
+	public function xxxx_current_and_upcoming_courses() {
 		/**
 		 * Wrong data
 		 */
@@ -1547,6 +1547,26 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		 */
 		$assert = CoursePress_Data_Course::current_and_upcoming_courses( array(), $this->student->ID );
 		$this->assertInstanceOf( 'WP_Query', $assert );
+	}
+
+	/**
+	 * sort_courses( $courses )
+	 */
+	public function test_sort_courses() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::sort_courses( $value );
+			$this->assertEquals( $value, $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$value = array( $this->course );
+			$assert = CoursePress_Data_Course::sort_courses( $value );
+			$this->assertEquals( $value, $assert );
 	}
 }
 
