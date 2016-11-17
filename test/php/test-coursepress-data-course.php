@@ -1590,6 +1590,69 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		$this->assertInternalType( 'string', $assert );
 		$this->assertEquals( 'open', $assert );
 	}
+
+	/**
+	 * get_enrollment_status( $course_id )
+	 */
+	public function test_get_enrollment_status() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::get_enrollment_status( $value );
+			$this->assertInternalType( 'string', $assert );
+			$this->assertEquals( 'unknown', $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$value = $this->course->ID;
+		$assert = CoursePress_Data_Course::get_enrollment_status( $value );
+		$this->assertInternalType( 'string', $assert );
+		$this->assertEquals( 'open', $assert );
+	}
+
+	/**
+	 * check_post_type_by_post( $post )
+	 * is_course( $course )
+	 */
+	public function test_course_post_type() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::check_post_type_by_post( $value );
+			$this->assertInternalType( 'boolean', $assert );
+			$this->assertFalse( $assert );
+
+			$assert = CoursePress_Data_Course::is_course( $value );
+			$this->assertInternalType( 'boolean', $assert );
+			$this->assertFalse( $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$value = $this->course;
+		$assert = CoursePress_Data_Course::check_post_type_by_post( $value );
+		$this->assertInternalType( 'boolean', $assert );
+		$this->assertTrue( $assert );
+
+		$assert = CoursePress_Data_Course::is_course( $value );
+		$this->assertInternalType( 'boolean', $assert );
+		$this->assertTrue( $assert );
+
+		$value = $this->course->ID;
+		$assert = CoursePress_Data_Course::check_post_type_by_post( $value );
+		$this->assertInternalType( 'boolean', $assert );
+		$this->assertTrue( $assert );
+
+		$assert = CoursePress_Data_Course::is_course( $value );
+		$this->assertInternalType( 'boolean', $assert );
+		$this->assertTrue( $assert );
+
+	}
 }
 
 /**
