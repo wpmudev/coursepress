@@ -3222,7 +3222,7 @@ class CoursePress_Data_Course {
 	 * @param array $excludes Array of excluded Post IDs
 	 */
 	public static function save_course_number( $post_id, $post_title, $excludes = array() ) {
-		if ( ! self::check_post_type_by_post( $post_id ) ) {
+		if ( ! self::is_course( $post_id ) ) {
 			return $post_title;
 		}
 		global $wpdb;
@@ -3269,7 +3269,7 @@ class CoursePress_Data_Course {
 		if ( ! is_admin() ) {
 			return $post_title;
 		}
-		if ( ! self::check_post_type_by_post( $post_id ) ) {
+		if ( ! self::is_course( $post_id ) ) {
 			return $post_title;
 		}
 		$number = get_post_meta( $post_id, self::$post_count_title_name, true );
@@ -3288,7 +3288,7 @@ class CoursePress_Data_Course {
 	 * @param integer $post_id Post ID.
 	 */
 	public static function delete_course_number( $post_id ) {
-		if ( ! self::check_post_type_by_post( $post_id ) ) {
+		if ( ! self::is_course( $post_id ) ) {
 			return;
 		}
 		global $wpdb;
