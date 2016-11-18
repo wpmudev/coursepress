@@ -21,6 +21,17 @@ class CoursePress_Admin_Edit {
 		if ( $post->post_type != $post_type ) {
 			return;
 		}
+
+		/**
+		 * Free version can add only one course
+		 */
+		$is_limit_reach = CoursePress_Data_Course::is_limit_reach();
+		if ( $is_limit_reach ) {
+			add_action( 'add_meta_boxes', array( __CLASS__, 'disable_meta_boxes' ), 1 );
+			add_action( 'admin_footer', array( __CLASS__, 'disable_style' ), 100 );
+			add_action( 'edit_form_after_editor', array( __CLASS__, 'notice_about_pro_when_try_to_add_new_course' ) );
+			return;
+		}
 		self::$current_course = $post;
 
 		if ( 'auto-draft' !== $post->post_status || ! empty( $_GET['post'] ) ) {
@@ -1392,5 +1403,17 @@ class CoursePress_Admin_Edit {
 
 			exit;
 		}
+	}
+
+	/**
+	 * Message in FREE version, when we have more than 0 (zero) courses and we
+	 * try to add next one. This is advertising to buy PRO version.
+	 *
+	 * @since 2.0.0
+	 */
+	public static function notice_about_pro_when_try_to_add_new_course() {
+		echo '<p>';
+		_e( 'Publication limit has been reached - you cannot create a new course. Please use PRO version.','CP_TD' );
+		echo '</p>';
 	}
 }
