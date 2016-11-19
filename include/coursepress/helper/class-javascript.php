@@ -404,8 +404,11 @@ class CoursePress_Helper_JavaScript {
 	}
 
 	public static function maybe_print_assets() {
-		if( false === self::$is_cp_called && CoursePress_Core::$is_cp_page ) {
-			self::front_assets();
+		if ( CoursePress_Core::$is_cp_page ) {
+			if ( false == self::$is_cp_called ) {
+				// Load the script
+				self::front_assets();
+			}
 		}
 
 		if ( self::$is_cp_called && false === is_user_logged_in() ) {
@@ -431,7 +434,7 @@ class CoursePress_Helper_JavaScript {
 		$bbm_modal_css = $css_url . 'bbm.modal.css';
 		wp_enqueue_style( 'coursepress-modal-css', $bbm_modal_css, array(), $version );
 		// Front CSS
-		wp_enqueue_style( 'coursepress-front-css', $css_url . 'front.css', array( 'dashicons' ), $version );
+		wp_enqueue_style( 'coursepress-front-css', $css_url . 'front.css', array( 'dashicons', 'wp-mediaelement' ), $version );
 
 		wp_enqueue_script( 'comment-reply' );
 
@@ -440,7 +443,9 @@ class CoursePress_Helper_JavaScript {
 
 		$modal_script_url = $script_url . 'external/backbone.modal-min.js';
 		wp_enqueue_script( 'coursepress-backbone-modal', $modal_script_url, array( 'jquery', 'backbone', 'underscore', 'password-strength-meter' ) );
-		wp_enqueue_script( 'coursepress-front-js', $script_url . 'front.js', array( 'jquery', 'backbone', 'underscore' ), $version );
+
+		$deps = array( 'underscore', 'wp-mediaelement' );
+		wp_enqueue_script( 'coursepress-front-js', $script_url . 'front.js', $deps, $version );
 
 		$localize_array = array(
 			'_ajax_url' => CoursePress_Helper_Utility::get_ajax_url(),

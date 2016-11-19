@@ -1,6 +1,9 @@
 <?php
 /**
- * CoursePress
+ * Course Edit
+ *
+ * @package WordPress
+ * @subpackage CoursePress
  **/
 class CoursePress_Admin_Edit {
 	public static $slug = 'coursepress_course';
@@ -23,8 +26,7 @@ class CoursePress_Admin_Edit {
 		if ( 'auto-draft' !== $post->post_status || ! empty( $_GET['post'] ) ) {
 			self::$action = 'edit';
 		}
-//$setting = CoursePress_Data_Course::get_setting( $post->ID );
-//print_r( $setting );
+
 		$tab = empty( $_GET['tab'] ) ? 'setup' : $_GET['tab'];
 		add_action( 'edit_form_top', array( __CLASS__, 'edit_tabs' ) );
 
@@ -32,8 +34,6 @@ class CoursePress_Admin_Edit {
 		remove_all_actions( 'add_meta_boxes' );
 
 		if ( 'setup' == $tab ) {
-			// Remove submitdiv
-			//remove_meta_box( 'submitdiv', $post_type, 'side' );
 
 			// Change preview link
 			add_filter( 'preview_post_link', array( __CLASS__, 'preview_post_link' ), 10, 2 );
@@ -75,6 +75,9 @@ class CoursePress_Admin_Edit {
 		$wp_meta_boxes = array();
 	}
 
+	/**
+	 * Disable metabox containers. It looks ugly on units and students tabs.
+	 **/
 	public static function disable_style() {
 		?>
 		<style>
@@ -479,7 +482,7 @@ class CoursePress_Admin_Edit {
 							<p class="description">' . esc_html__( 'Choose if your course will show in "normal" mode or step by step "focus" mode.', 'CP_TD' ) . '</p>
 						</label>
 						<label class="checkbox">
-							<input type="radio" name="meta_course_view" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'course_view', 'focus' ), 'focus' ) . ' value="focus">' . esc_html__( 'Focus: Focus on one item at a time', 'CP_TD' ) . '
+							<input type="radio" name="meta_course_view" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'course_view', 'normal' ), 'focus' ) . ' value="focus">' . esc_html__( 'Focus: Focus on one item at a time', 'CP_TD' ) . '
 						</label>
 						<label class="checkbox">
 							<input type="checkbox" name="meta_focus_hide_section" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'focus_hide_section', true ) ) . ' value="unit">' . esc_html__( 'Don\'t render section titles in focus mode.', 'CP_TD' ) . '
