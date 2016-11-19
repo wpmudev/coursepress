@@ -223,47 +223,79 @@ class CoursePress_Data_Module {
 		return $attributes;
 	}
 
-	public static function discussion_module_link( $link, $comment, $args ) {
-		$post_type = get_post_type( $comment->comment_post_ID );
-
-		if ( 'module' === $post_type ) {
-			$unit_id = get_post_field( 'post_parent', $comment->comment_post_ID );
-			$course_id = get_post_field( 'post_parent', $unit_id );
-			$course_link = get_permalink( $course_id );
-			$link = esc_url_raw( $course_link . CoursePress_Core::get_slug( 'unit/' ) . get_post_field( 'post_name', $course_id ) . '#module-' . $comment->comment_post_ID );
+	public static function discussion_module_link( $location, $comment ) {
+		/**
+		 * Check WP_Comment class
+		 */
+		if ( ! is_a( $comment, 'WP_Comment' ) ) {
+			return $location;
 		}
-
-		return $link;
+		/**
+		 * Check post type
+		 */
+		$post_type = get_post_type( $comment->comment_post_ID );
+		if ( self::$post_type !== $post_type ) {
+			return $location;
+		}
+		/**
+		 * Check module type
+		 */
+		$module_type = get_post_meta( $comment->comment_post_ID, 'module_type', true );
+		if ( 'discussion' !== $module_type ) {
+			return $location;
+		}
+		$unit_id = get_post_field( 'post_parent', $comment->comment_post_ID );
+		$course_id = get_post_field( 'post_parent', $unit_id );
+		$course_link = get_permalink( $course_id );
+		$location = esc_url_raw( $course_link . CoursePress_Core::get_slug( 'unit/' ) . get_post_field( 'post_name', $course_id ) . '#module-' . $comment->comment_post_ID );
+		return $location;
 	}
 
 	public static function discussions_comments_open( $open, $post_id ) {
 		$type = get_post_meta( $post_id, 'module_type', true );
-
 		if ( 'discussion' == $type ) {
 			return true;
 		}
-
 		return $open;
 	}
 
-	public static function discussion_post_link( $link, $post, $args ) {
-		$post_type = get_post_type( $post );
-
-		if ( self::$post_type === $post_type ) {
-			$unit_id = get_post_field( 'post_parent', $post );
-			$course_id = get_post_field( 'post_parent', $unit_id );
-			$course_link = get_permalink( $course_id );
-			$link = esc_url_raw( $course_link . CoursePress_Core::get_slug( 'unit/' ) . get_post_field( 'post_name', $unit_id ) . '#module-' . $post );
+	public static function discussion_post_link( $location, $post ) {
+		/**
+		 * Check WP_Post class
+		 */
+		if ( ! is_a( $post, 'WP_Post' ) ) {
+			return $location;
 		}
-
-		return $link;
+		/**
+		 * Check post type
+		 */
+		$post_type = get_post_type( $post );
+		if ( self::$post_type !== $post_type ) {
+			return $location;
+		}
+		/**
+		 * Check module type
+		 */
+		$module_type = get_post_meta( $post->ID, 'module_type', true );
+		if ( 'discussion' !== $module_type ) {
+			return $location;
+		}
+		$unit_id = get_post_field( 'post_parent', $post );
+		$course_id = get_post_field( 'post_parent', $unit_id );
+		$course_link = get_permalink( $course_id );
+		$location = esc_url_raw( $course_link . CoursePress_Core::get_slug( 'unit/' ) . get_post_field( 'post_name', $unit_id ) . '#module-' . $post->ID );
+		return $location;
 	}
 
 	public static function discussion_edit_redirect( $location, $comment_id ) {
 		$comment = get_comment( $comment_id );
-
+		/**
+		 * Check WP_Comment class
+		 */
+		if ( ! is_a( $comment, 'WP_Comment' ) ) {
+			return $location;
+		}
 		$post_type = get_post_type( $comment->comment_post_ID );
-
 		if ( self::$post_type === $post_type ) {
 			$unit_id = get_post_field( 'post_parent', $comment->comment_post_ID );
 			$course_id = get_post_field( 'post_parent', $unit_id );
@@ -274,8 +306,19 @@ class CoursePress_Data_Module {
 		return $location;
 	}
 
-	public static function discussion_reply_link( $link, $args, $comment, $post ) {
-
+	public static function discussion_reply_link( $location, $args, $comment, $post ) {
+		/**
+		 * Check WP_Post class
+		 */
+		if ( ! is_a( $post, 'WP_Post' ) ) {
+			return $location;
+		}
+		/**
+		 * Check WP_Comment class
+		 */
+		if ( ! is_a( $comment, 'WP_Comment' ) ) {
+			return $location;
+		}
 		// $comment = get_comment( $comment_id );
 		// $post_type = get_post_type( $comment->comment_post_ID );
 		//
@@ -283,11 +326,11 @@ class CoursePress_Data_Module {
 		// $unit_id = get_post_field( 'post_parent', $comment->comment_post_ID );
 		// $course_id = get_post_field( 'post_parent', $unit_id );
 		// $course_link = get_permalink( $course_id );
-		// $link = esc_url_raw( $course_link . CoursePress_Core::get_slug( 'unit/' ) . get_post_field('post_name', $unit_id ) . '#module-' . $comment->comment_post_ID );
+		// $location = esc_url_raw( $course_link . CoursePress_Core::get_slug( 'unit/' ) . get_post_field('post_name', $unit_id ) . '#module-' . $comment->comment_post_ID );
 		// }
 		if ( 'module' === $post->post_type ) {
 			if ( get_option( 'comment_registration' ) && ! is_user_logged_in() ) {
-				$link = sprintf( '<a rel="nofollow" class="comment-reply-login" href="%s">%s</a>',
+				$location = sprintf( '<a rel="nofollow" class="comment-reply-login" href="%s">%s</a>',
 					esc_url( wp_login_url( get_permalink() ) ),
 					$args['login_text']
 				);
@@ -305,8 +348,8 @@ class CoursePress_Data_Module {
 				);
 
 				// $onclick = '';
-				$link = sprintf( "<a rel='nofollow' class='comment-reply-link discussion' href='%s' onclick='%s' aria-label='%s'>%s</a>",
-					// $link = sprintf( "<a rel='nofollow' class='comment-reply-link discussion' aria-label='%s'>%s</a>",
+				$location = sprintf( "<a rel='nofollow' class='comment-reply-link discussion' href='%s' onclick='%s' aria-label='%s'>%s</a>",
+					// $location = sprintf( "<a rel='nofollow' class='comment-reply-link discussion' aria-label='%s'>%s</a>",
 					esc_url( $location ) . '#' . $args['respond_id'],
 					$onclick,
 					esc_attr( sprintf( $args['reply_to_text'], $comment->comment_author ) ),
@@ -315,10 +358,10 @@ class CoursePress_Data_Module {
 			}
 		}
 
-		return $link;
+		return $location;
 	}
 
-	public static function discussion_cancel_reply_link( $formatted_link, $link, $text ) {
+	public static function discussion_cancel_reply_link( $formatted_link, $location, $text ) {
 
 		$comment_id = isset( $_GET['replytocom'] ) ? (int) $_GET['replytocom'] : '';
 
@@ -456,14 +499,14 @@ class CoursePress_Data_Module {
 		);
 
 	}
-	
+
 	/**
 	* Form results will not depend on grades, just check if mandatory and empty
 	*/
 	public static function get_form_results( $student_id, $course_id, $unit_id, $module_id, $response = false, $data = false ) {
 		$attributes = self::attributes( $module_id );
 		$is_mandatory = (bool) $attributes['mandatory'];
-		
+
 		if ( false === $data ) {
 			$data = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
 		}
@@ -481,10 +524,10 @@ class CoursePress_Data_Module {
 
 		$total_questions = count( $attributes['questions'] );
 		$gross_correct = 0;
-		
+
 		if ( $is_mandatory ) {
 			foreach ( $attributes['questions'] as $key => $question ) {
-				$answer = $response[$key];
+				$answer = $response[ $key ];
 				switch ( $question['type'] ) {
 					case 'selectable':
 						// selectable will always have a default response
@@ -493,7 +536,7 @@ class CoursePress_Data_Module {
 					case 'short':
 					case 'long':
 						// just check if empty
-						$gross_correct = ( !empty($answer) ) ? $gross_correct + 1 : $gross_correct;
+						$gross_correct = ( ! empty( $answer ) ) ? $gross_correct + 1 : $gross_correct;
 						break;
 				}
 			}
@@ -501,7 +544,7 @@ class CoursePress_Data_Module {
 		} else {
 			$grade = 100;
 		}
-		
+
 		$passed = $grade >= $minimum_grade;
 		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
 		$responses = CoursePress_Data_Student::get_responses( $student_id, $course_id, $unit_id, $module_id, true, $student_progress );
@@ -747,6 +790,12 @@ class CoursePress_Data_Module {
 	 *
 	 */
 	public static function add_last_login_time( $comment_id, $comment ) {
+		/**
+		 * Check WP_Comment class
+		 */
+		if ( ! is_a( $comment, 'WP_Comment' ) ) {
+			return;
+		}
 		$parent_post_type = get_post_type( $comment->comment_post_ID );
 		if ( $parent_post_type != self::$post_type ) {
 			return;
@@ -765,6 +814,17 @@ class CoursePress_Data_Module {
 	 * @return array List of modules of the unit.
 	 */
 	public static function get_modules_ids_by_unit( $unit_id ) {
+		/**
+		 * Check unit_id post type
+		 */
+		$post_type = get_post_type( $unit_id );
+		$unit_post_type = CoursePress_Data_Unit::get_post_type_name();
+		if ( $unit_post_type != $post_type ) {
+			return array();
+		}
+		/**
+		 * get children
+		 */
 		$args = array(
 			'post_type' => self::$post_type,
 			'post_status' => 'publish',
@@ -808,6 +868,12 @@ class CoursePress_Data_Module {
 	public static function get_unit_id_by_module( $module ) {
 		if ( ! is_object( $module ) && preg_match( '/^\d+$/', $module ) ) {
 			$module = get_post( $module );
+		}
+		/**
+		 * Check module is a WP_Post object?
+		 */
+		if ( ! is_a( $module, 'WP_Post' ) ) {
+			return 0;
 		}
 		$post_type = self::get_post_type_name();
 		if ( $module->post_type == $post_type ) {
@@ -855,6 +921,12 @@ class CoursePress_Data_Module {
 	 */
 	public static function add_instructors_to_comments_args( $args ) {
 		global $post;
+		/**
+		 * Check WP_Post class
+		 */
+		if ( ! is_a( $post, 'WP_Post' ) ) {
+			return $args;
+		}
 		$post_type = self::get_post_type_name();
 		if ( $post_type != $post->post_type ) {
 			return $args;
@@ -872,6 +944,12 @@ class CoursePress_Data_Module {
 	 * @return array Array of module IDs.
 	 */
 	public static function get_module_ids_by_unit_ids( $ids ) {
+		if ( empty( $ids ) ) {
+			return array();
+		}
+		if ( ! is_array( $ids ) ) {
+			$ids = array( $ids );
+		}
 		$args = array(
 			'post_type' => self::$post_type,
 			'nopaging' => true,
