@@ -161,7 +161,10 @@ class CoursePress_Data_Student {
 	 * A helper function to get the meta_key of the user metas.
 	 **/
 	public static function meta_key( $key ) {
-		return $key['meta_key'];
+		if ( is_array( $key ) && isset( $key['meta_key'] ) ) {
+			return $key['meta_key'];
+		}
+		return '';
 	}
 
 	/**
@@ -187,8 +190,8 @@ class CoursePress_Data_Student {
 		$global_option = ! is_multisite();
 		$key = 'enrolled_course_date_' . $course_id;
 		$enrolled = get_user_option( $key, $student_id );
-		
-		return ( $enrolled && !empty($enrolled) ) 
+
+		return ( $enrolled && ! empty( $enrolled ) )
 			? true
 			: false
 		;
@@ -202,6 +205,18 @@ class CoursePress_Data_Student {
 	 * @return bool
 	 */
 	public static function update_student_data( $student_id, $student_data ) {
+		/**
+		 * Sanitize $student_id
+		 */
+		if ( ! is_numeric( $student_id ) || 1 < $student_id ) {
+			return false;
+		}
+		/**
+		 * Sanitize $student_data
+		 */
+		if ( ! is_array( $student_data ) ) {
+			return false;
+		}
 		if ( ! isset( $student_data['ID'] ) ) {
 			$student_data['ID'] = $student_id;
 		}
@@ -1018,7 +1033,7 @@ class CoursePress_Data_Student {
 										}
 									}
 								} else {
-									
+
 									if ( $module_seen ) {
 										if ( false === $is_mandatory && false === $is_assessable && false === $require_instructor_assessment ) {
 											$unit_completed_modules += 1;
@@ -1762,7 +1777,7 @@ class CoursePress_Data_Student {
 	 */
 	public static function remove_from_all_courses( $student_id ) {
 		$course_ids = self::get_course_enrollment_meta( $student_id );
-		foreach( $course_ids as $course_id ) {
+		foreach ( $course_ids as $course_id ) {
 			CoursePress_Data_Course::withdraw_student( $student_id, $course_id );
 		}
 		delete_user_option( $student_id, 'cp_course_count' );
