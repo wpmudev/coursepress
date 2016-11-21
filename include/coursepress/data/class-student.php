@@ -120,6 +120,12 @@ class CoursePress_Data_Student {
 	 * @return (int) Returns the total number of courses the user is enrolled at.
 	 **/
 	public static function count_enrolled_courses_ids( $student_id, $refresh = false ) {
+		/**
+		 * Sanitize $student_id
+		 */
+		if ( ! is_numeric( $student_id ) ) {
+			return 0;
+		}
 		$count = get_user_meta( $student_id, 'cp_course_count', true );
 
 		if ( ! $count || $refresh ) {
