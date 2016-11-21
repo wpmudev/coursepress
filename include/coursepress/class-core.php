@@ -616,11 +616,4 @@ class CoursePress_Core {
 		);
 		exit();
 	}
-
-	/**
-	 * Is CoursePress free version?
-	 */
-	public static function is_free() {
-		return true;
-	}
 }

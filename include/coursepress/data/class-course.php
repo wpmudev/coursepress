@@ -3335,10 +3335,12 @@ class CoursePress_Data_Course {
 	 * @since 2.0.0
 	 */
 	public static function is_limit_reach() {
+		$file = dirname( dirname( dirname( dirname( __FILE__ ) ) ) ).DIRECTORY_SEPARATOR.'coursepress.php';
 		/**
 		 * TODO: add check is PRO version.
 		 */
-		$is_pro = true;
+		$plugin = get_plugin_data( $file );
+		$is_pro = 'CoursePress Pro' == $plugin['Name'];
 		if ( $is_pro ) {
 			return false;
 		}
