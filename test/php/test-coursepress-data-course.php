@@ -1711,20 +1711,23 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	 * get_enrollment_types_array( $course_id  = 0 )
 	 */
 	public function test_get_enrollment_types_array() {
+		$keys = array( 'manually', 'registered', 'passcode', 'prerequisite' );
 		/**
 		 * Wrong data
 		 */
 		$values = $this->get_wrong_values();
 		foreach ( $values as $value ) {
-            $assert = CoursePress_Data_Course::get_enrollment_types_array( $value );
-            print_r(array( $assert ) );
+			$assert = CoursePress_Data_Course::get_enrollment_types_array( $value );
+			$this->assertInternalType( 'array', $assert );
+			$this->has_keys( $keys, $assert );
 		}
 		/**
 		 * Good data
 		 */
 		$value = $this->course->ID;
-            $assert = CoursePress_Data_Course::get_enrollment_types_array( $value );
-            print_r(array( $assert ) );
+		$assert = CoursePress_Data_Course::get_enrollment_types_array( $value );
+		$this->assertInternalType( 'array', $assert );
+		$this->has_keys( $keys, $assert );
 	}
 
 	/**
