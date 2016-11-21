@@ -1656,14 +1656,18 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 
 	/**
 	 * save_course_number( $post_id, $post_title, $excludes = array() )
+	 * delete_course_number( $post_id )
 	 */
-	public function xxxx_save_course_number() {
+	public function test_save_course_number() {
 		/**
 		 * Wrong data
 		 */
 		$values = $this->get_wrong_values();
 		foreach ( $values as $value ) {
 			$assert = CoursePress_Data_Course::save_course_number( $value, $this->course->post_title );
+			$this->assertEmpty( $assert );
+
+			$assert = CoursePress_Data_Course::delete_course_number( $value );
 			$this->assertEmpty( $assert );
 		}
 		/**
@@ -1676,12 +1680,15 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		$assert = get_post_meta( $this->course->ID, 'course_number_by_title', true );
 		$this->assertInternalType( 'string', $assert );
 		$this->assertEquals( '', $assert );
+
+		$assert = CoursePress_Data_Course::delete_course_number( $value );
+		$this->assertEmpty( $assert );
 	}
 
 	/**
 	 * add_numeric_identifier_to_course_name( $post_title, $post_id = 0 )
 	 */
-	public function test_add_numeric_identifier_to_course_name() {
+	public function xxxx_add_numeric_identifier_to_course_name() {
 		/**
 		 * Wrong data
 		 */
@@ -1698,13 +1705,6 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		$value = $this->course->post_title;
 		$assert = CoursePress_Data_Course::add_numeric_identifier_to_course_name( $value, $this->course->ID );
 		$this->assertEquals( $value, $assert );
-	}
-
-	/**
-	 * delete_course_number( $post_id )
-	 */
-	public function xxxx_delete_course_number() {
-		/** TODO **/
 	}
 
 	/**
