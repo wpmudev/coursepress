@@ -1658,7 +1658,7 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	 * save_course_number( $post_id, $post_title, $excludes = array() )
 	 * delete_course_number( $post_id )
 	 */
-	public function test_save_course_number() {
+	public function xxxx_save_course_number() {
 		/**
 		 * Wrong data
 		 */
@@ -1710,8 +1710,21 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	/**
 	 * get_enrollment_types_array( $course_id  = 0 )
 	 */
-	public function xxxx_get_enrollment_types_array() {
-		/** TODO **/
+	public function test_get_enrollment_types_array() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+            $assert = CoursePress_Data_Course::get_enrollment_types_array( $value );
+            print_r(array( $assert ) );
+		}
+		/**
+		 * Good data
+		 */
+		$value = $this->course->ID;
+            $assert = CoursePress_Data_Course::get_enrollment_types_array( $value );
+            print_r(array( $assert ) );
 	}
 
 	/**
