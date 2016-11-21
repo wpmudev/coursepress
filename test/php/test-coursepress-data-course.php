@@ -1733,8 +1733,22 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	/**
 	 * get_enrollment_type_default( $cours_id = 0 )
 	 */
-	public function xxxx_get_enrollment_type_default() {
-		/** TODO **/
+	public function test_get_enrollment_type_default() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::get_enrollment_type_default( $value );
+			$this->assertInternalType( 'string', $assert );
+			$this->assertEquals( 'registered', $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$assert = CoursePress_Data_Course::get_enrollment_type_default( $value );
+		$this->assertInternalType( 'string', $assert );
+		$this->assertEquals( 'registered', $assert );
 	}
 
 	/**
