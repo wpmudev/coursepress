@@ -2148,11 +2148,17 @@ class CoursePress_Data_Course {
 
 	public static function get_course( $course_id = 0 ) {
 		$course_id = ! $course_id ? get_the_ID() : $course_id;
+		/**
+		 * sanitize course_id
+		 */
+		if ( empty( $course_id ) ) {
+			return false;
+		}
 		$course = get_post( $course_id );
 		/**
 		 * sanitize course class
 		 */
-		if ( ! is_a( $course, 'WP_Post' ) ) {
+		if ( ! is_a( $course, 'WP_Post' ) || 0 == $course->ID ) {
 			return false;
 		}
 		// Set duration
@@ -2634,7 +2640,12 @@ class CoursePress_Data_Course {
 		if ( empty( $student_id ) ) {
 			$student_id = get_current_user_id();
 		}
-
+		/**
+		 * Sanitize $course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
+			return '';
+		}
 		$error_message = '';
 		$date_format = get_option( 'date_format' );
 		$can_update_course = CoursePress_Data_Capabilities::can_update_course( $course_id );
@@ -3223,7 +3234,7 @@ class CoursePress_Data_Course {
 	 */
 	public static function save_course_number( $post_id, $post_title, $excludes = array() ) {
 		if ( ! self::is_course( $post_id ) ) {
-			return $post_title;
+			return;
 		}
 		global $wpdb;
 		$course_post_type = self::get_post_type_name();
