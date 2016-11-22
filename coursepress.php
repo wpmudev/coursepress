@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: CoursePress Pro
+ * Plugin Name: CoursePress Base
  * Version:     2.0.0
  * Description: CoursePress Pro turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also assess student work, sell your courses and much much more.
  * Author:      WPMU DEV
@@ -48,8 +48,6 @@ class CoursePressUpgrade {
 	private static $coursepress_is_upgraded = false;
 
 	public static function init() {
-		register_activation_hook( __FILE__, array( __CLASS__, 'on_activate' ) );
-
 		self::$coursepress_is_upgraded = get_option( 'coursepress_20_upgraded', false );
 		$coursepress_version = false === self::$coursepress_is_upgraded ? '1.x' : '2.0';
 
@@ -76,10 +74,6 @@ class CoursePressUpgrade {
 		 * Retrieve the current coursepress version use.
 		 **/
 		self::get_coursepress( $coursepress_version );
-	}
-
-	public static function on_activate() {
-		flush_rewrite_rules();
 	}
 
 	/** Use to reset CP into 1.x version */

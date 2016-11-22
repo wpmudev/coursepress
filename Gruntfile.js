@@ -68,45 +68,21 @@ module.exports = function(grunt) {
 		// Build branches.
 		plugin_branches: {
 			exclude_1_pro: [
-				'1.x/node_modules',
-				'1.x/.gitignore',
-				'1.x/.gitmodules',
-				'1.x/Gruntfile.js',
-				'1.x/package.json',
-				'1.x/README.md',
-				'1.x/readme.txt',
-				'1.x/themes/.gitattributes',
-				'1.x/themes/.gitignore',
-				'1.x/themes/.gitmodules',
-				'1.x/themes/Gruntfile.js',
-				'1.x/themes/package.json',
-				'1.x/themes/README.md',
-				'1.x/themes/readme.txt'
+				'../release/1.x/readme.txt'
 			],
 			exclude_2_pro: [
-				'2.0/test',
-				'2.0/readme.txt',
-				'2.0/language/coursepress.pot',
-				'2.0/campus',
-				'2.0/node_modules',
-				'2.0/vendor',
-				'2.0/.gitattributes',
-				'2.0/.gitignore',
-				'2.0/.gitmodules',
-				'2.0/composer.json',
-				'2.0/composer.lock',
-				'2.0/Gruntfile.js',
-				'2.0/package.json',
-				'2.0/README.md',
-				'2.0/asset/css/src',
-				'2.0/asset/js/src',
-				'2.0/themes/.gitattributes',
-				'2.0/themes/.gitignore',
-				'2.0/themes/.gitmodules',
-				'2.0/themes/bitbucket-pipelines.yml',
-				'2.0/themes/README.md',
-				'2.0/themes/package.json',
-				'2.0/thems/Gruntfile.js'
+				'../release/2.0/readme.txt'
+			],
+			exclude_1_free: [
+				'../release/1.x/readme.txt',
+				'../release/1.x/changelog.txt',
+				'../release/1.x/excludes/external/dashboard/'
+			],
+			exclude_2_free: [
+				'../release/2.0/test',
+				'../release/2.0/campus',
+				'../release/2.0/changelog.txt',
+				'../release/2.0/premium/'
 			],
 			base: 'coursepress/2.0-release',
 			pro: 'coursepress/2.0-release-pro',
@@ -416,36 +392,6 @@ module.exports = function(grunt) {
 					'!*.zip',
 					'!**.zip'
 				]
-			},
-			pro: {
-				options: {
-					mode: 'zip',
-					archive: './release/<%= pkg.name %>-pro-<%= pkg.version %>.zip'
-				},
-				expand: true,
-				cwd: 'release/<%= pkg.version %>-pro/',
-				src: [ '**/*' ],
-				dest: conf.plugin_dir
-			},
-			free: {
-				options: {
-					mode: 'zip',
-					archive: './release/<%= pkg.name %>-free-<%= pkg.version %>.zip'
-				},
-				expand: true,
-				cwd: 'release/<%= pkg.version %>-free/',
-				src: [ '**/*' ],
-				dest: conf.plugin_dir
-			},
-			campus: {
-				options: {
-					mode: 'zip',
-					archive: './release/<%= pkg.name %>-campus-<%= pkg.version %>.zip'
-				},
-				expand: true,
-				cwd: 'release/<%= pkg.version %>-campus/',
-				src: [ '**/*' ],
-				dest: conf.plugin_dir
 			}
 		},
 
@@ -595,6 +541,7 @@ module.exports = function(grunt) {
 
 		// BUILD: Remove files that are not relevant for target product.
 		clean: {
+			options: { force: true },
 			release: {
 				options: { force: true },
 				src: ['../release', '../release/*', '../release/**']
@@ -605,20 +552,10 @@ module.exports = function(grunt) {
 					'release/<%= pkg.version %>-pro-<%= pkg.version %>.zip'
 				]
 			},
-			release_free: {
-				src: [
-					'release/<%= pkg.version %>-free/',
-					'release/<%= pkg.version %>-free-<%= pkg.version %>.zip'
-				]
-			},
-			release_campus: {
-				src: [
-					'release/<%= pkg.version %>-campus/',
-					'release/<%= pkg.version %>-campus-<%= pkg.version %>.zip'
-				]
-			},
 			pro_1: conf.plugin_branches.exclude_1_pro,
 			pro_2: conf.plugin_branches.exclude_2_pro,
+			free_1: conf.plugin_branches.exclude_1_free,
+			free_2: conf.plugin_branches.exclude_2_free,
 			free: conf.plugin_branches.exclude_free,
 			campus: conf.plugin_branches.exclude_campus,
 			upgrade: conf.plugin_branches.exclude_upgrade
@@ -688,88 +625,74 @@ module.exports = function(grunt) {
 				dest: '../release',
 				noEmpty: true
 			},
+			release_free: {
+				expand: true,
+				src: [
+					'*',
+					'**',
+					'!node_modules',
+					'!node_modules/*',
+					'!node_modules/**',
+					'!bitbucket-pipelines.yml',
+					'!.git',
+					'!Gruntfile.js',
+					'!package.json',
+					'!tests/*',
+					'!tests/**',
+					/** UPGRADE **/
+					'!upgrade/css/src',
+					'!upgrade/css/src/*',
+					'!upgrade/css/src/**',
+					'!upgrade/js/src',
+					'!upgrade/js/src/*',
+					'!upgrade/js/src/**',
+					'!tests',
+					/** 1.x **/
+					'!1.x/.git',
+					'!1.x/.gitattributes',
+					'!1.x/.gitmodules',
+					'!1.x/.gitignore',
+					'!1.x/Gruntfile.js',
+					'!1.x/package.json',
+					'!1.x/README.md',
+					'!1.x/node_modules',
+					'!1.x/node_modules/*',
+					'!1.x/themes/coursepress/.git',
+					/** 2.0 **/
+					'!2.0/.git',
+					'!2.0/.gitattributes',
+					'!2.0/.gitmodules',
+					'!2.0/.gitignore',
+					'!2.0/Gruntfile.js',
+					'!2.0/package.json',
+					'!2.0/README.md',
+					'!2.0/node_modules',
+					'!2.0/node_modules/*',
+					'!2.0/node_modules/**',
+					'!2.0/test',
+					'!2.0/test/*',
+					'!2.0/test/**',
+					'!2.0/campus',
+					'!2.0/campus/*',
+					'!2.0/campus/**',
+					'!2.0/themes/coursepress/.git',
+					'!2.0/asset/css/src',
+					'!2.0/asset/css/src/*',
+					'!2.0/asset/css/src/**',
+					'!2.0/asset/js/src',
+					'!2.0/asset/js/src/*',
+					'!2.0/asset/js/src/**',
+					'!2.0/bitbucket-pipelines.yml'
+				],
+				dest: '../release',
+				noEmpty: true
+			},
 			translation: {
 				src: conf.translation.pot_dir + conf.translation.textdomain_pro + '.pot',
 				dest: conf.translation.pot_dir + conf.translation.textdomain_free + '.pot',
 				nonull: true
 			}
-		},
-
-		// BUILD: Git control (check out branch).
-		gitcheckout: {
-			dev: {
-				options: {
-					verbose: true,
-					branch: conf.plugin_branches.dev,
-					overwrite: true
-				}
-			},
-			pro: {
-				options: {
-					verbose: true,
-					branch: conf.plugin_branches.pro,
-					overwrite: true
-				}
-			},
-			free: {
-				options: {
-					branch: conf.plugin_branches.free,
-					overwrite: true
-				}
-			},
-			campus: {
-				options: {
-					branch: conf.plugin_branches.campus,
-					overwrite: true
-				}
-			},
-			base: {
-				options: {
-					branch: conf.plugin_branches.base
-				}
-			}
-		},
-
-		// BUILD: Git control (add files).
-		gitadd: {
-			pro: {
-				options: {
-				verbose: true, all: true }
-			},
-			free: {
-				options: { all: true }
-			},
-			campus: {
-				options: { all: true }
-			}
-		},
-
-		// BUILD: Git control (commit changes).
-		gitcommit: {
-			pro: {
-				verbose: true,
-				options: {
-					message: 'Built from: ' + conf.plugin_branches.base,
-					allowEmpty: true
-				},
-				files: { src: ['.'] }
-			},
-			free: {
-				options: {
-					message: 'Built from: ' + conf.plugin_branches.base,
-					allowEmpty: true
-				},
-				files: { src: ['.'] }
-			},
-			campus: {
-				options: {
-					message: 'Built from: ' + conf.plugin_branches.base,
-					allowEmpty: true
-				},
-				files: { src: ['.'] }
-			}
-		},
-
+		}
 	} );
 
 	// Translate plugin.
@@ -809,10 +732,14 @@ module.exports = function(grunt) {
 		if ( 'pro' === target ) {
 			grunt.task.run( 'replace:pro_1' );
 			grunt.task.run( 'replace:pro_2' );
+			grunt.task.run( 'clean:pro_1' );
+			grunt.task.run( 'clean:pro_2' );
 			grunt.task.run( 'compress:release_pro' );
 		} else if ( 'free' === target ) {
 			grunt.task.run( 'replace:free_1' );
 			grunt.task.run( 'replace:free_2' );
+			grunt.task.run( 'clean:free_1' );
+			grunt.task.run( 'clean:free_2' );
 			grunt.task.run( 'compress:release_free' );
 		}
 	});
