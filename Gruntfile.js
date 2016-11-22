@@ -136,7 +136,7 @@ module.exports = function(grunt) {
 				{ match: /\/\* start:campus \*[^\*]+\* end:campus \*\//mg, replace: '' }
 			],
 			free_1: [
-				{ match: /CoursePress Base/g, replace: 'CoursePress' },
+				{ match: /CoursePress Base|CoursePress Pro/g, replace: 'CoursePress' },
 				{ match: /<%= wpmudev.plugin.version %>/g, replace: '<%= conf.version_1%>' },
 				{ match: /coursepress_base_td/g, replace: 'coursepress' },
 				{ match: /\/\/<wpmudev.plugin.pro_only([^<]+)/mg, replace: '' },
@@ -150,7 +150,7 @@ module.exports = function(grunt) {
 				})() }
 			],
 			free_2: [
-				{ match: /CoursePress Base/g, replace: 'CoursePress' },
+				{ match: /CoursePress Base|CoursePress Pro/g, replace: 'CoursePress' },
 				{ match: /BUILDTIME/g, replace: buildtime },
 				{ match: /'CP_TD'/g, replace: '\'cp\'' },
 				{ match: /\/\* start:free \*\//g, replace: '' },
