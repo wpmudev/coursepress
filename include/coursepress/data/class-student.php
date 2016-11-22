@@ -208,32 +208,32 @@ class CoursePress_Data_Student {
 		/**
 		 * Sanitize $student_id
 		 */
-		if ( ! is_numeric( $student_id ) || 1 < $student_id ) {
+		if ( empty( $student_id ) || ! is_numeric( $student_id ) ) {
 			return false;
 		}
 		/**
 		 * Sanitize $student_data
 		 */
-		if ( ! is_array( $student_data ) ) {
+		if ( empty( $student_data ) || ! is_array( $student_data ) ) {
 			return false;
 		}
 		if ( ! isset( $student_data['ID'] ) ) {
 			$student_data['ID'] = $student_id;
 		}
+		/**
+		 * Update student data.
+		 */
 		$student_data = apply_filters( 'coursepress_student_update_data', $student_data );
 		if ( wp_update_user( $student_data ) ) {
-
 			/**
 			 * Perform action after a Student object is updated.
 			 *
 			 * @since 1.2.2
 			 */
 			do_action( 'coursepress_student_updated', $student_id );
-
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	/**
