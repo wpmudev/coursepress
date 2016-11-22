@@ -48,6 +48,8 @@ class CoursePressUpgrade {
 	private static $coursepress_is_upgraded = false;
 
 	public static function init() {
+		register_activation_hook( __FILE__, array( __CLASS__, 'on_activate' ) );
+
 		self::$coursepress_is_upgraded = get_option( 'coursepress_20_upgraded', false );
 		$coursepress_version = false === self::$coursepress_is_upgraded ? '1.x' : '2.0';
 
@@ -74,6 +76,10 @@ class CoursePressUpgrade {
 		 * Retrieve the current coursepress version use.
 		 **/
 		self::get_coursepress( $coursepress_version );
+	}
+
+	public static function on_activate() {
+		flush_rewrite_rules();
 	}
 
 	/** Use to reset CP into 1.x version */
