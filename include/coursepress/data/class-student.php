@@ -261,13 +261,26 @@ class CoursePress_Data_Student {
 	 * @return (associative_array)			An array of course completion data, including responses, visited pages etc.
 	 **/
 	public static function get_completion_data( $student_id, $course_id ) {
-
+		/**
+		 * Sanitize $student_id
+		 */
+		if ( empty( $student_id ) || ! is_numeric( $student_id ) ) {
+			return array();
+		}
+		/**
+		 * Sanitize $course_id
+		 */
+		if ( empty( $course_id ) ) {
+			return array();
+		}
+		$is_course = CoursePress_Data_Course::is_course( $course_id );
+		if ( ! $is_course ) {
+			return array();
+		}
 		if ( ! function_exists( 'get_userdata' ) ) {
 			require_once( ABSPATH . 'wp-includes/pluggable.php' );
 		}
-
 		$data = get_user_option( 'course_' . $course_id . '_progress', $student_id );
-
 		if ( empty( $data ) ) {
 			$data = apply_filters( 'coursepress_get_student_progress', array(), $student_id, $course_id );
 			//$data = self::init_completion_data( $student_id, $course_id );
