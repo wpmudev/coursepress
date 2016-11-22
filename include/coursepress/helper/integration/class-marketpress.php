@@ -224,6 +224,10 @@ class CoursePress_Helper_Integration_MarketPress {
 			10, 2
 		);
 
+		/**
+		 * Add class to body
+		 */
+		add_filter( 'body_class', array( __CLASS__, 'body_class' ) );
 	}
 
 	public static function fix_mp3_on_sale( $on_sale, $product ) {
@@ -1195,6 +1199,27 @@ Yours sincerely,
 			return get_permalink( $course_id );
 		}
 		return $url;
+	}
+
+	/**
+	 * add "marketpress-course" class to body tag if course is paid.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $classes Array of body classes.
+	 */
+	public static function body_class( $classes ) {
+		if ( ! self::$is_active ) {
+			return $classes;
+		}
+		if ( CoursePress_Data_Course::is_course() ) {
+			global $post;
+			$is_paid = CoursePress_Data_Course::is_paid_course( $post->ID );
+			if ( $is_paid ) {
+				$classes[] = 'marketpress-course';
+			}
+		}
+		return $classes;
 	}
 }
 
