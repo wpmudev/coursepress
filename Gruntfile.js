@@ -135,10 +135,24 @@ module.exports = function(grunt) {
 				{ match: /\/\* start:free \*[^\*]+\* end:free \*\//mg, replace: '' },
 				{ match: /\/\* start:campus \*[^\*]+\* end:campus \*\//mg, replace: '' }
 			],
-			free: [
+			free_1: [
+				{ match: /CoursePress Base/g, replace: 'CoursePress' },
+				{ match: /<%= wpmudev.plugin.version %>/g, replace: '<%= conf.version_1%>' },
+				{ match: /coursepress_base_td/g, replace: 'coursepress' },
+				{ match: /\/\/<wpmudev.plugin.pro_only([^<]+)/mg, replace: '' },
+				{ match: /<\/wpmudev.plugin.pro_only>/g, replace: '' },
+				{ match: /\/\/<wpmudev.plugin.free_only>/g, replace: '' },
+				{ match: /\/\/<\/wpmudev.plugin.free_only>/g, replace: '' },
+				{ match: /<%= wpmudev.plugin.changelog %>/g, replace: (function() {
+					var changelog = grunt.file.read('./changelog.txt');
+					changelog = changelog.replace(/^(\S|\s)*==.changelog.==\S*/igm, '' ).trim();
+					return changelog;
+				})() }
+			],
+			free_2: [
 				{ match: /CoursePress Base/g, replace: 'CoursePress' },
 				{ match: /BUILDTIME/g, replace: buildtime },
-				{ match: /'CP_TD'/g, replace: '\'coursepress\'' },
+				{ match: /'CP_TD'/g, replace: '\'cp\'' },
 				{ match: /\/\* start:free \*\//g, replace: '' },
 				{ match: /\/\* end:free \*\//g, replace: '' },
 				{ match: /\/\* start:pro \*[^\*]+\* end:pro \*\//mg, replace: '' },
@@ -164,7 +178,8 @@ module.exports = function(grunt) {
 					'../release/1.x/**/*.js',
 					'../release/1.x/**/*.html',
 					'../release/1.x/**/*.txt',
-					'!../release/1.x/external/*'
+					'!../release/1.x/external/*',
+					'!../release/1.x/themes/*'
 				]
 			},
 			// Files to apply above patterns to (not only php files).
@@ -182,7 +197,8 @@ module.exports = function(grunt) {
 					'../release/2.0/include/coursepress/**/*.php',
 					'../release/2.0/include/coursepress/**/**/*.php',
 					'../release/2.0/**/asset/js/*.js',
-					'../release/2.0/**/asset/css/*.css'
+					'../release/2.0/**/asset/css/*.css',
+					'!../release/2.0/themes/*'
 				]
 			}
 		},
@@ -386,6 +402,21 @@ module.exports = function(grunt) {
 					'!**.zip'
 				]
 			},
+			release_free: {
+				options: {
+					mode: 'zip',
+					archive: '../release/<%= pkg.name %>-free-<%= pkg.version %>.zip'
+				},
+				expand: true,
+				cwd: '../release',
+				dest: conf.plugin_dir,
+				src: [
+					'*',
+					'**',
+					'!*.zip',
+					'!**.zip'
+				]
+			},
 			pro: {
 				options: {
 					mode: 'zip',
@@ -542,11 +573,17 @@ module.exports = function(grunt) {
 				},
 				files: [conf.plugin_patterns.files_2]
 			},
-			free: {
+			free_1: {
 				options: {
-					patterns: conf.plugin_patterns.free
+					patterns: conf.plugin_patterns.free_1
 				},
-				files: [conf.plugin_patterns.files]
+				files: [ conf.plugin_patterns.files_1 ]
+			},
+			free_2: {
+				options: {
+					patterns: conf.plugin_patterns.free_2
+				},
+				files: [conf.plugin_patterns.files_2]
 			},
 			campus: {
 				options: {
@@ -773,6 +810,10 @@ module.exports = function(grunt) {
 			grunt.task.run( 'replace:pro_1' );
 			grunt.task.run( 'replace:pro_2' );
 			grunt.task.run( 'compress:release_pro' );
+		} else if ( 'free' === target ) {
+			grunt.task.run( 'replace:free_1' );
+			grunt.task.run( 'replace:free_2' );
+			grunt.task.run( 'compress:release_free' );
 		}
 	});
 };
