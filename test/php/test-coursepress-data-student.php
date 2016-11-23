@@ -8,7 +8,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 		parent::__construct();
 	}
 
-	public functiontest_exists() {
+	public function xxxx_exists() {
 
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Student', 'get_course_enrollment_meta' ) ) );
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Student', 'filter_course_meta_array' ) ) );
@@ -57,7 +57,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 * get_course_enrollment_meta( $user_id )
 	 */
-	public functiontest_get_course_enrollment_meta() {
+	public function xxxx_get_course_enrollment_meta() {
 		/**
 		 * Wrong data
 		 */
@@ -79,7 +79,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 * count_enrolled_courses_ids( $student_id, $refresh = false )
 	 */
-	public functiontest_count_enrolled_courses_ids() {
+	public function xxxx_count_enrolled_courses_ids() {
 		/**
 		 * Wrong data
 		 */
@@ -106,7 +106,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 * meta_key( $key )
 	 */
-	public functiontest_meta_key() {
+	public function xxxx_meta_key() {
 		/**
 		 * Wrong data
 		 */
@@ -128,7 +128,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 * get_enrolled_courses_ids( $student_id )
 	 */
-	public functiontest_get_enrolled_courses_ids() {
+	public function xxxx_get_enrolled_courses_ids() {
 		/**
 		 * Wrong data
 		 */
@@ -155,7 +155,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_is_enrolled_in_course() {
+	public function xxxx_is_enrolled_in_course() {
 		/**
 		 * Wrong data
 		 */
@@ -179,7 +179,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 * update_student_data( $student_id, $student_data )
 	 */
-	public functiontest_update_student_data() {
+	public function xxxx_update_student_data() {
 		/**
 		 * Wrong data
 		 */
@@ -200,7 +200,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 		$assert = get_the_author_meta( 'url', $this->student->ID );
 		$this->assertNotEquals( $url, $assert );
 
-		$assert =  CoursePress_Data_Student::update_student_data( $this->student->ID, $student_data );
+		$assert = CoursePress_Data_Student::update_student_data( $this->student->ID, $student_data );
 		$this->assertInternalType( 'boolean', $assert );
 		$this->assertTrue( $assert );
 
@@ -215,7 +215,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 * init_completion_data( $student_id, $course_id )
 	 */
-	public functiontest_init_completion_data() {
+	public function xxxx_init_completion_data() {
 		$data = array( 'version' => '2.0' );
 		/**
 		 * Wrong data
@@ -239,7 +239,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 * get_completion_data( $student_id, $course_id )
 	 */
-	public function test_get_completion_data() {
+	public function xxxx_get_completion_data() {
 		$data = array();
 		/**
 		 * Wrong data
@@ -263,7 +263,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_update_completion_data() {
+	public function xxxx_update_completion_data() {
 		/**
 		 * Wrong data
 		 */
@@ -283,7 +283,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_is_course_complete() {
+	public function xxxx_is_course_complete() {
 		/**
 		 * Wrong data
 		 */
@@ -305,7 +305,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_count_course_responses() {
+	public function xxxx_count_course_responses() {
 		/**
 		 * Wrong data
 		 */
@@ -325,7 +325,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_average_course_responses() {
+	public function xxxx_average_course_responses() {
 		/**
 		 * Wrong data
 		 */
@@ -345,7 +345,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_get_workbook_url() {
+	public function xxxx_get_workbook_url() {
 		/**
 		 * Wrong data
 		 */
@@ -362,7 +362,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_get_admin_workbook_link() {
+	public function xxxx_get_admin_workbook_link() {
 		/**
 		 * Wrong data
 		 */
@@ -379,7 +379,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_get_vars() {
+	public function xxxx_get_vars() {
 		/**
 		 * Wrong data
 		 */
@@ -397,7 +397,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_my_courses() {
+	public function xxxx_my_courses() {
 		/**
 		 * Wrong data
 		 */
@@ -433,7 +433,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_log_student_activity() {
+	public function xxxx_log_student_activity() {
 		/**
 		 * Wrong data
 		 */
@@ -467,7 +467,28 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 * filter_course_meta_array( $var )
 	 */
-	public functiontest_filter_course_meta_array() {
+	public function test_filter_course_meta_array() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Student::filter_course_meta_array( $value );
+			$this->assertInternalType( 'boolean', $assert );
+			$this->assertFalse( $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$values = 'enrolled_course_date_'.$this->course->ID;
+		$assert = CoursePress_Data_Student::filter_course_meta_array( $value );
+		$this->assertInternalType( 'boolean', $assert );
+		$this->assertFalse( $assert );
+	}
+	/**
+	 *
+	 */
+	public function xxxx_course_id_from_meta() {
 		/**
 		 * Wrong data
 		 */
@@ -481,7 +502,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_course_id_from_meta() {
+	public function xxxx_visited_page() {
 		/**
 		 * Wrong data
 		 */
@@ -495,7 +516,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_visited_page() {
+	public function xxxx_visited_module() {
 		/**
 		 * Wrong data
 		 */
@@ -509,7 +530,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_visited_module() {
+	public function xxxx_module_response() {
 		/**
 		 * Wrong data
 		 */
@@ -523,7 +544,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_module_response() {
+	public function xxxx_get_responses() {
 		/**
 		 * Wrong data
 		 */
@@ -537,7 +558,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_get_responses() {
+	public function xxxx_get_grade() {
 		/**
 		 * Wrong data
 		 */
@@ -551,7 +572,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_get_grade() {
+	public function xxxx_record_grade() {
 		/**
 		 * Wrong data
 		 */
@@ -565,7 +586,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_record_grade() {
+	public function xxxx_get_response() {
 		/**
 		 * Wrong data
 		 */
@@ -579,7 +600,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_get_response() {
+	public function xxxx_get_feedback() {
 		/**
 		 * Wrong data
 		 */
@@ -593,7 +614,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_get_feedback() {
+	public function xxxx_record_feedback() {
 		/**
 		 * Wrong data
 		 */
@@ -607,7 +628,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_record_feedback() {
+	public function xxxx_get_calculated_completion_data() {
 		/**
 		 * Wrong data
 		 */
@@ -621,7 +642,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_get_calculated_completion_data() {
+	public function xxxx_get_mandatory_completion() {
 		/**
 		 * Wrong data
 		 */
@@ -635,7 +656,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_get_mandatory_completion() {
+	public function xxxx_get_unit_progress() {
 		/**
 		 * Wrong data
 		 */
@@ -649,7 +670,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_get_unit_progress() {
+	public function xxxx_get_course_progress() {
 		/**
 		 * Wrong data
 		 */
@@ -663,7 +684,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_get_course_progress() {
+	public function xxxx_is_mandatory_done() {
 		/**
 		 * Wrong data
 		 */
@@ -677,7 +698,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_is_mandatory_done() {
+	public function xxxx_is_unit_complete() {
 		/**
 		 * Wrong data
 		 */
@@ -691,7 +712,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_is_unit_complete() {
+	public function xxxx_get_all_unit_progress() {
 		/**
 		 * Wrong data
 		 */
@@ -705,7 +726,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_get_all_unit_progress() {
+	public function xxxx_is_section_seen() {
 		/**
 		 * Wrong data
 		 */
@@ -719,7 +740,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_is_section_seen() {
+	public function xxxx_is_module_completed() {
 		/**
 		 * Wrong data
 		 */
@@ -733,7 +754,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_is_module_completed() {
+	public function xxxx_get_course_status() {
 		/**
 		 * Wrong data
 		 */
@@ -747,7 +768,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_get_course_status() {
+	public function xxxx_remove_from_all_courses() {
 		/**
 		 * Wrong data
 		 */
@@ -761,7 +782,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_remove_from_all_courses() {
+	public function xxxx_withdraw_from_course() {
 		/**
 		 * Wrong data
 		 */
@@ -775,21 +796,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 *
 	 */
-	public functiontest_withdraw_from_course() {
-		/**
-		 * Wrong data
-		 */
-		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
-		}
-		/**
-		 * Good data
-		 */
-	}
-	/**
-	 *
-	 */
-	public functiontest_get_nonce_action() {
+	public function xxxx_get_nonce_action() {
 		/**
 		 * Wrong data
 		 */
