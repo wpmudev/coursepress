@@ -75,6 +75,8 @@ class CoursePress_Upgrade {
 		$script = $host . 'js/admin-upgrade.js';
 		wp_enqueue_script( 'coursepress_admin_upgrade_js', $script, array( 'jquery', 'backbone', 'underscore' ), self::$version, true );
 
+		$cp_url = admin_url( 'edit.php?post_type=course');
+		$cp_url = sprintf( '<a href="%s" class="cp2-button">%s</a>', esc_url( $cp_url ), __( 'here', 'cp' ) );
 		$localize_array = array(
 			'ajax_url' => admin_url( 'admin-ajax.php' ),
 			'_wpnonce' => wp_create_nonce( 'coursepress-upgrade-nonce' ),
@@ -83,7 +85,7 @@ class CoursePress_Upgrade {
 			'server_error' => __( 'An error occur while updating. Please contact your administrator to fix the problem.', 'cp' ),
 			'noloading' => __( 'Please refrain from reloading the page while updating!', 'cp' ),
 			'failed' => __( 'Update unsuccessful. Please try again!', 'cp' ),
-			'success' => sprintf( __( 'Hooray! Update completed. Redirecting in %1$s. If you are not redirected in 5 seconds click %1$s.', 'cp' ),  '<span class="coursepress-counter">5</span>', '' ),
+			'success' => sprintf( __( 'Hooray! Update completed. Redirecting in %1$s. If you are not redirected in 5 seconds click %2$s.', 'cp' ),  '<span class="coursepress-counter">5</span>', $cp_url ),
 			'cp2_url' => admin_url( 'edit.php?post_type=course' ),
 		);
 		wp_localize_script( 'coursepress_admin_upgrade_js', '_coursepress_upgrade', $localize_array );

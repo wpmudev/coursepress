@@ -336,13 +336,33 @@ class CoursePress_Helper_Upgrade {
 											case 'checkbox_input_module':
 												if ( isset( $meta_response['student_checked_answers'] ) && is_array( $meta_response['student_checked_answers'] ) ) {
 													foreach ( $meta_response['student_checked_answers'] as $response_student_checked_answer ) {
-														$new_response_data['response'] = maybe_unserialize( $response_student_checked_answer );
+														//$new_response_data['response'] = maybe_unserialize( $response_student_checked_answer );
+														$response = maybe_unserialize( $response_student_checked_answer );
+														$answers = get_post_meta( $post_response->post_parent, 'answers', true );
+														if ( $answers ) {
+															$fix_response = array();
+															$index = 0;
+															foreach ( $answers as $answer ) {
+																if ( in_array( $answer, $response ) ) {
+																	$fix_response[ $index ] = $index;
+																}
+																$index++;
+															}
+															$response = $fix_response;
+														}
+														$new_response_data['response'] = $response;
 													}
 												}
 												$new_response_data['feedback'] = array();
 												break;
 											case 'radio_input_module':
-												$new_response_data['response'] = $post_response->post_content;
+												$the_answer = '';
+												$answers = get_post_meta( $post_response->post_parent, 'answers', true );
+												if ( $answers ) {
+													$the_answer = array_keys( $answers, $post_response->post_content );
+													$the_answer = array_shift( $the_answer );
+												}
+												$new_response_data['response'] = $the_answer;
 												$new_response_data['feedback'] = array();
 												break;
 											case 'text_input_module':
