@@ -309,18 +309,11 @@ class CoursePress_Data_Student {
 	 * @return null
 	 **/
 	public static function update_completion_data( $student_id, $course_id, $data = array() ) {
-		// @todo: Remove debugger code!
-
 		if ( ! empty( $data ) ) {
 			if ( (int) $course_id > 0 ) {
 				$global_setting = ! is_multisite();
-
 				update_user_option( $student_id, 'course_' . $course_id . '_progress', $data, $global_setting );
-			} else {
-				CoursePress_Debugger::log( 'Invalid course ID!' );
 			}
-		} else {
-			CoursePress_Debugger::log( 'Attempting to save an empty data!' );
 		}
 	}
 
@@ -336,6 +329,13 @@ class CoursePress_Data_Student {
 	 * @return (array) $data				Returns the complete list of course completion data.
 	 **/
 	public static function visited_page( $student_id, $course_id, $unit_id, $page, &$data = false ) {
+
+		/**
+		 * Sanitize $unit_id
+		 */
+		if ( empty( $unit_id ) || ! is_numeric( $unit_id ) ) {
+			return array();
+		}
 
 		if ( empty( $data ) ) {
 			$data = self::get_completion_data( $student_id, $course_id );
@@ -363,14 +363,14 @@ class CoursePress_Data_Student {
 	 * @return (array) $data					Returns an array of course completion data.
 	 **/
 	public static function visited_module( $student_id, $course_id, $unit_id, $module_id, &$data = false ) {
-
 		if ( empty( $data ) ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
-
+		if ( empty( $unit_id ) || ! is_numeric( $unit_id ) ) {
+			return $data;
+		}
 		CoursePress_Helper_Utility::set_array_val( $data, 'completion/' . $unit_id . '/modules_seen/' . $module_id, true );
 		self::update_completion_data( $student_id, $course_id, $data );
-
 		return $data;
 	}
 
