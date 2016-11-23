@@ -516,6 +516,7 @@ class CoursePress_Data_Student {
 			$response_index,
 			$data
 		);
+		
 		if ( empty( $response ) ) {
 			$response = array();
 		}

@@ -40,7 +40,7 @@ class CoursePress_Template_Module {
 		$course_id = get_post_field( 'post_parent', $unit_id );
 		$content = '';
 		$response = self::get_response( $module_id, $student_id );
-print_r( $response );
+
 		switch( $module_type ) {
 			case 'input-checkbox': case 'input-radio': case 'input-select':
 				$answers = $attributes['answers'];
