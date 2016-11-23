@@ -181,6 +181,7 @@ class CoursePressUpgrade {
 			/** Check users to update **/
 			$users_to_update = get_option( 'cp2_users_to_update', array() );
 
+			// @todo: Find another solution to update student progress!!!
 			if ( ! empty( $users_to_update ) ) {
 				foreach ( $users_to_update as $course_id => $users ) {
 					foreach ( $users as $user_id ) {
