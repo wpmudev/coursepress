@@ -247,12 +247,179 @@ class CoursePress_Helper_Upgrade {
 					'value' => '',
 				),
 			),
+			'fields' => 'ids',
 		);
 
 		$wp_user_search = new WP_User_Query( $args );
+		$users_to_update = array();
 		foreach ( $wp_user_search->get_results() as $user ) {
+			$new_progress = array(
+				'version' => '2.0',
+				'completion' => array(),
+				'units' => array(),
+			);
+
 			// get (1.x) student progress data
+			$responses = array(
+				'post_type' => array( 'module_response', 'attachment' ),
+				'posts_per_page' => -1,
+				'post_author' => $user,
+				'author' => $user,
+				'post_status' => 'any',
+				'meta_key' => 'course_id',
+				'meta_value' => $course_id,
+			);
+			$responses = get_posts( $responses );
+
+			if ( $responses ) {
+				foreach ( $responses as $response ) {
+					$module_id = $response->post_parent;
+					$module_type = get_post_meta( $module_id, 'module_type', true );
+					$module_page = (int) get_post_meta( $module_id, 'module_page', true );
+					$unit_id = get_post_field( 'post_parent', $module_id );
+
+					if ( empty( $unit_id ) ) {
+						continue;
+					}
+
+					if ( empty( $new_progress['units'][ $unit_id ] ) ) {
+						$progress = array(
+							'visited_pages' => array(),
+							'last_visited_page' => '',
+						);
+						$new_progress['units'][ $unit_id ] = $progress;
+					}
+					$new_progress['units'][ $unit_id ]['visited_pages'][ $module_page ] = max( 1, $module_page );
+
+					// Get grade
+					$grade = get_post_meta( $response->ID, 'response_grade', true );
+					if ( $grade ) {
+						$grade['graded_by'] = empty( $grade['instructor'] ) ? 'auto' : $grade['instructor'];
+						$grade['date'] = date( 'Y-m-d H:i:s', $grade['time'] );
+						unset( $grade['instructor'], $grade['time'] );
+					} else {
+						$grade = array(
+							'grade' => 0,
+							'graded_by' => 'auto',
+							'date' => $response->post_date,
+						);
+					}
+					$student_answer = maybe_unserialize( $response->post_content );
+
+					switch ( $module_type ) {
+						case 'checkbox_input_module':
+							$student_answer = get_post_meta( $response->ID, 'student_checked_answers', true );
+							$answers = get_post_meta( $module_id, 'answers', true );
+							if ( $answers ) {
+								$fix_response = array();
+								$index = 0;
+								foreach ( $answers as $answer ) {
+									if ( in_array( $answer, $student_answer ) ) {
+										$fix_response[ $index ] = $index;
+									}
+									$index++;
+								}
+								$student_answer = $fix_response;
+							}
+							break;
+						case 'radio_input_module':
+							$answers = get_post_meta( $module_id, 'answers', true );
+
+							if ( $answers ) {
+								$the_answer = array_keys( $answers, $student_answer );
+								$student_answer = array_shift( $the_answer );
+							}
+
+							break;
+						case 'file_input_module':
+							$student_answer = array(
+								'file' => '',
+								'url' => wp_get_attachment_url( $response->ID ),
+								'type' => $response->post_mime_type,
+								'size' => '',
+							);
+							break;
+					}
+
+					$feedback = array();
+					if ( ! empty( $response->response_comment ) ) {
+						$feedback = array(
+							'feedback_by' => '',
+							'feedback' => $response->response_comment,
+							'date' => current_time( 'mysql' ),
+							'draft' => false,
+						);
+					}
+
+					$student_response = array(
+						'response' => $student_answer,
+						'date' => $response->post_date,
+						'grades' => array( $grade ),
+						'feedback' => array( $feedback )
+					);
+
+					$new_progress['units'][ $unit_id ]['responses'][ $module_id ] = array( $student_response );
+
+					// Completion Progress
+					if ( empty( $new_progress['completion'][ $unit_id ] ) ) {
+						$new_progress['completion'][ $unit_id ] = array( 'modules_seen' => array(), 'answered' => array() );
+					}
+					$new_progress['completion'][ $unit_id ]['modules_seen'][ $module_id ] = 1;
+					if ( ! empty( $grade ) ) {
+						$new_progress['completion'][ $unit_id ]['answered'][ $module_id ] = 1;
+					}
+				}
+			}
+
+			$current_student_course_progress = get_user_option( '_course_' . $course_id . '_progress', $user );
+
+			if ( $current_student_course_progress && ! empty( $current_student_course_progress['unit'] ) ) {
+				$old_unit = $current_student_course_progress['unit'];
+
+				foreach ( $old_unit as $old_unit_id => $old_unit_data ) {
+					if ( empty( $new_progress['units'][ $old_unit_id ] ) ) {
+						$new_progress['units'][ $old_unit_id ] = array();
+					}
+					if ( ! empty( $old_unit_data['visited_pages'] ) ) {
+						$pages = $old_unit_data['visited_pages'];
+						foreach ( $pages as $page ) {
+							$new_progress['units'][ $old_unit_id ]['visited_pages'][ $page ] = $page;
+						}
+						// Update modules seen per page
+						$modules_seen_args = array(
+							'post_type' => 'module',
+							'post_parent' => $old_unit_id,
+							'meta_key' => 'module_page',
+							'meta_value' => $pages,
+							'meta_compare' => 'IN',
+							'fields' => 'ids',
+							'suppress_filters' => true,
+							'posts_per_page' => -1,
+						);
+						$modules_seen = get_posts( $modules_seen_args );
+
+						if ( $modules_seen ) {
+							foreach ( $modules_seen as $module_seen_id ) {
+								$new_progress['completion'][ $old_unit_id ]['modules_seen'][ $module_seen_id ] = 1;
+							}
+						}
+					}
+
+					if ( ! empty( $old_unit_data['last_visited_page'] ) ) {
+						$new_progress['units'][ $old_unit_id ]['last_visited_page'] = $old_unit_data['last_visited_page'];
+					}
+				}
+			}
+
+			// save the new data structure
+			$global_setting = ! is_multisite();
+			update_user_option( $user, 'course_' . $course_id . '_progress', $new_progress, $global_setting );
+			$users_to_update[] = $user;
+			//error_log( "COURSE: $course_id");
+			//error_log( print_r( $new_progress, true ) );
+/*
 			$current_student_course_progress = get_user_option( '_course_' . $course_id . '_progress', $user->ID );
+
 			if ( $current_student_course_progress ) {
 				// transform into (2.0) data
 				$new_student_progress = array(
@@ -267,6 +434,7 @@ class CoursePress_Helper_Upgrade {
 				// units
 				$units = array();
 				$old_unit_data = ( isset( $current_student_course_progress['unit'] ) ) ? $current_student_course_progress['unit'] : false;
+
 				if ( $old_unit_data ) {
 					foreach ( $old_unit_data as $key => $unit_data ) {
 						$new_unit_data = array();
@@ -463,7 +631,14 @@ class CoursePress_Helper_Upgrade {
 				$global_setting = ! is_multisite();
 				update_user_option( $user->ID, 'course_' . $course_id . '_progress', $new_student_progress, $global_setting );
 			}
+*/
 		}
+
+		// Save in option users to update
+		$current_list = get_option( 'cp2_users_to_update', array() );
+		$current_list = empty( $current_list ) ? array() : $current_list;
+		$current_list[ $course_id ] = $users_to_update;
+		update_option( 'cp2_users_to_update', $current_list );
 
 		return true;
 	}
