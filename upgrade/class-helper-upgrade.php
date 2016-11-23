@@ -150,6 +150,13 @@ class CoursePress_Helper_Upgrade {
 			/** Enrollment & Cost **/
 			'enroll_type' => 'enrollment_type',
 			'paid_course' => 'payment_paid_course',
+			/** Marketpress **/
+			'mp_sku' => 'mp_sku',
+			'mp_auto_sku' => 'mp_auto_sku',
+			'mp_price' => 'mp_product_price',
+			'mp_sale_price' => 'mp_product_sale_price',
+			'mp_is_sale' => 'mp_sale_price_enabled',
+			'mp_product_id' => 'mp_product_id',
 		);
 
 		foreach ( $meta_keys as $old_meta => $new_meta ) {
