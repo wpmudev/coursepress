@@ -85,9 +85,9 @@ class CoursePressUpgrade {
 		$args = array(
 			'post_type' => 'course',
 			'post_status' => 'any',
-			'posts_per_page' => 1,
 			'fields' => 'ids',
 			'suppress_filters' => true,
+			'posts_per_page' => -1,
 		);
 		$courses = get_posts( $args );
 
@@ -174,15 +174,32 @@ class CoursePressUpgrade {
 
 		if ( false == $is_flushed ) {
 			delete_option( 'cp1_flushed' );
-			update_option( 'cp2_flushed', true );
 
 			/** Update 2.0 Settings **/
 			CoursePress_Upgrade::init();
+
+			/** Check users to update **/
+			$users_to_update = get_option( 'cp2_users_to_update', array() );
+
+			if ( ! empty( $users_to_update ) ) {
+				foreach ( $users_to_update as $course_id => $users ) {
+					foreach ( $users as $user_id ) {
+						CoursePress_Data_Student::get_calculated_completion_data( $user_id, $course_id );
+					}
+					unset( $users_to_update[ $course_id ] );
+				}
+				if ( ! empty( $users_to_update ) ) {
+					update_option( 'cp2_users_to_update', $users_to_update );
+				} else {
+					delete_option( 'cp2_users_to_update' );
+				}
+			}
 
 			//@todo: wrap this
 			flush_rewrite_rules();
 
 			add_action( 'admin_init', array( __CLASS__, 'maybe_switch_theme' ) );
+			update_option( 'cp2_flushed', true );
 		}
 	}
 }
