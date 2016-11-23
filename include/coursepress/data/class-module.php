@@ -115,62 +115,87 @@ class CoursePress_Data_Module {
 		}
 
 		// Fix legacy meta
-		if ( isset( $meta['checked_answer'] ) ) {
+		if ( empty( $meta['answers_selected'] ) && isset( $meta['checked_answer'] ) ) {
 			$value = $meta['checked_answer'][0];
-			update_post_meta( $module_id, 'answers_selected', $value );
-			delete_post_meta( $module_id, 'checked_answer' );
+			$answers = maybe_unserialize( $meta['answers'][0] );
+			if ( is_array( $answers ) ) {
+				$the_answer = array_keys( $answers, $value );
+				$value = array_shift( $the_answer );
+			}
+			$meta['answers_selected'][0] = $value;
+			//update_post_meta( $module_id, 'answers_selected', $value );
+			//delete_post_meta( $module_id, 'checked_answer' );
 		}
-		if ( isset( $meta['checked_answers'] ) ) {
+		if ( isset( $meta['checked_answers'] ) && empty( $meta['answers_selected'] ) ) {
 			$value = get_post_meta( $module_id, 'checked_answers', true );
-			update_post_meta( $module_id, 'answers_selected', $value );
-			delete_post_meta( $module_id, 'checked_answers' );
+			$answers = maybe_unserialize( $meta['answers'][0] );
+			$checked_answers = array();
+
+			foreach ( $answers as $key => $val ) {
+				if ( in_array( $val, $value ) ) {
+					$checked_answers[ $key ] = $key;
+				}
+			}
+			$meta['answers_selected'][0] = $checked_answers;
+			//update_post_meta( $module_id, 'answers_selected', $value );
+			//delete_post_meta( $module_id, 'checked_answers' );
 		}
 
-		if ( isset( $meta['time_estimation'] ) ) {
+		if ( empty( $meta['duration'] ) && isset( $meta['time_estimation'] ) ) {
 			$value = $meta['time_estimation'][0];
-			update_post_meta( $module_id, 'duration', $value );
-			delete_post_meta( $module_id, 'time_estimation' );
+			$meta['duration'][0] = $value;
+			//update_post_meta( $module_id, 'duration', $value );
+			//delete_post_meta( $module_id, 'time_estimation' );
 		}
 
-		if ( isset( $meta['show_title_on_front'] ) ) {
+		if ( empty( $meta['show_title'] ) && isset( $meta['show_title_on_front'] ) ) {
 			$value = cp_is_true( $meta['show_title_on_front'][0] );
-			update_post_meta( $module_id, 'show_title', $value );
-			delete_post_meta( $module_id, 'show_title_on_front' );
+			$meta['show_title'][0] = $value;
+			//update_post_meta( $module_id, 'show_title', $value );
+			//delete_post_meta( $module_id, 'show_title_on_front' );
 		}
 
-		if ( isset( $meta['mandatory_answer'] ) ) {
+		if ( empty( $meta['mandatory'] ) && isset( $meta['mandatory_answer'] ) ) {
 			$value = cp_is_true( $meta['mandatory_answer'][0] );
-			update_post_meta( $module_id, 'mandatory', $value );
-			delete_post_meta( $module_id, 'mandatory_answer' );
+			$meta['mandatory'][0] = $value;
+			//update_post_meta( $module_id, 'mandatory', $value );
+			//delete_post_meta( $module_id, 'mandatory_answer' );
 		}
 
-		if ( isset( $meta['gradable_answer'] ) ) {
+		if ( empty( $meta['assessable'] ) && isset( $meta['gradable_answer'] ) ) {
 			$value = cp_is_true( $meta['gradable_answer'][0] );
-			update_post_meta( $module_id, 'assessable', $value );
-			delete_post_meta( $module_id, 'gradable_answer' );
+			$meta['assessable'][0] = $value;
+			//update_post_meta( $module_id, 'assessable', $value );
+			//delete_post_meta( $module_id, 'gradable_answer' );
 		}
 
-		if ( isset( $meta['minimum_grade_required'] ) ) {
+		if ( empty( $meta['minimum_grade'] ) && isset( $meta['minimum_grade_required'] ) ) {
 			$value = floatval( $meta['minimum_grade_required'][0] );
-			update_post_meta( $module_id, 'minimum_grade', $value );
-			delete_post_meta( $module_id, 'minimum_grade_required' );
+			$meta['minimum_grade'][0] = $value;
+			//update_post_meta( $module_id, 'minimum_grade', $value );
+			//delete_post_meta( $module_id, 'minimum_grade_required' );
 		}
 
-		if ( isset( $meta['limit_attempts_value'] ) ) {
+		if ( empty( $meta['retry_attempts'] ) && isset( $meta['limit_attempts_value'] ) ) {
 			$value = (int) $meta['limit_attempts_value'][0];
-			update_post_meta( $module_id, 'retry_attempts', $value );
-			delete_post_meta( $module_id, 'limit_attempts_value' );
+			$meta['retry_attempts'][0] = $value;
+			//update_post_meta( $module_id, 'retry_attempts', $value );
+			//delete_post_meta( $module_id, 'limit_attempts_value' );
 		}
 
-		if ( isset( $meta['limit_attempts'] ) ) {
+		if ( empty( $meta['allow_retries'] ) && isset( $meta['limit_attempts'] ) ) {
 			$value = cp_is_true( $meta['limit_attempts'][0] );
 			$value = ! $value; // inverse
-			update_post_meta( $module_id, 'allow_retries', $value );
-			delete_post_meta( $module_id, 'limit_attempts' );
+			$meta['allow_retries'][0] = $value;
+			//update_post_meta( $module_id, 'allow_retries', $value );
+			//delete_post_meta( $module_id, 'limit_attempts' );
 		}
 
 		// Update Type
-		update_post_meta( $module_id, 'module_type', $module_type );
+		//update_post_meta( $module_id, 'module_type', $module_type );
+		$meta['module_type'][0] = $module_type;
+
+		return $meta;
 	}
 
 	public static function attributes( $module, $meta = false ) {
@@ -190,8 +215,8 @@ class CoursePress_Data_Module {
 		}
 
 		if ( array_key_exists( $module_type, $legacy ) ) {
-			self::fix_legacy_meta( $module_id, $meta );
-			$meta = get_post_meta( $module_id );
+			$meta = self::fix_legacy_meta( $module_id, $meta );
+			//$meta = get_post_meta( $module_id );
 			$module_type = $meta['module_type'][0];
 		}
 

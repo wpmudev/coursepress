@@ -550,6 +550,7 @@ class CoursePress_Data_Student {
 			$response_index,
 			$data
 		);
+		
 		if ( empty( $response ) ) {
 			$response = array();
 		}
@@ -746,7 +747,6 @@ class CoursePress_Data_Student {
 	}
 
 	public static function get_calculated_completion_data( $student_id, $course_id, &$student_progress = false ) {
-
 		if ( ! $student_progress ) {
 			$student_progress = self::get_completion_data( $student_id, $course_id );
 		}

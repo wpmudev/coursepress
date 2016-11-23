@@ -123,8 +123,8 @@ class CoursePress_Admin_Table_Reports extends WP_List_Table {
 	}
 
 	public function column_responses( $item ) {
+		CoursePress_Data_Student::get_calculated_completion_data( $item->ID, $this->course_id );
 		$this->last_student_progress = CoursePress_Data_Student::get_completion_data( $item->ID, $this->course_id );
-
 		$responses = (int) CoursePress_Data_Student::count_course_responses( $item->ID, $this->course_id, $this->last_student_progress );
 
 		return $responses;
