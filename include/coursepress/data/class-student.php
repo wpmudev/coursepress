@@ -67,6 +67,12 @@ class CoursePress_Data_Student {
 	 * @return bool|mixed
 	 */
 	public static function course_id_from_meta( $meta_value ) {
+		/**
+		 * Sanitize $meta_value
+		 */
+		if ( ! is_string( $meta_value ) || empty( $meta_value ) ) {
+			return false;
+		}
 		global $wpdb;
 		$prefix = $wpdb->prefix;
 		$base_prefix = $wpdb->base_prefix;
@@ -550,7 +556,7 @@ class CoursePress_Data_Student {
 			$response_index,
 			$data
 		);
-		
+
 		if ( empty( $response ) ) {
 			$response = array();
 		}
