@@ -178,6 +178,12 @@ class CoursePress_Upgrade {
 		$value = get_option( 'mp_order_content_email', $default_settings['new_order']['content'] );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'email/new_order/content', $value );
 
+		// MP
+		$value = is_plugin_active( 'marketpress/marketpress.php' );
+		CoursePress_Helper_Utility::set_array_val( $settings, 'marketpress/enabled', $value );
+		$value = get_option( 'redirect_mp_to_course', false );
+		CoursePress_Helper_Utility::set_array_val( $settings, 'marketpress/redirect', $value );
+
 		// WooCommerce Integration
 		CoursePress_Helper_Utility::set_array_val( $settings, 'woocommerce/use', get_option( 'use_woo', 0 ) );
 		CoursePress_Helper_Utility::set_array_val( $settings, 'woocommerce/redirect_to_course', get_option( 'redirect_woo_to_course',0 ) );
