@@ -352,19 +352,23 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *
+	 * get_workbook_url( $course_id )
 	 */
-	public function xxxx_get_workbook_url() {
+	public function test_get_workbook_url() {
 		/**
 		 * Wrong data
 		 */
 		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
+		foreach ( $values as $course_id ) {
+			$assert = CoursePress_Data_Student::get_workbook_url( $course_id );
+			$this->assertInternalType( 'string', $assert );
+			$this->assertEquals( 'workbook/', $assert );
 		}
 		/**
 		 * Good data
 		 */
 		$assert = CoursePress_Data_Student::get_workbook_url( $this->course->ID );
+		$this->assertInternalType( 'string', $assert );
 		$this->assertNotEmpty( $assert );
 	}
 
