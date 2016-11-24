@@ -939,7 +939,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 * get_all_unit_progress( $student_id, $course_id, $unit_id, &$data = false )
 	 */
-	public function test_get_all_unit_progress() {
+	public function xxxx_get_all_unit_progress() {
 		/**
 		 * Wrong data
 		 */
@@ -965,19 +965,32 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *
+	 * is_section_seen( $course_id, $unit_id, $page, $student_id = 0 )
 	 */
-	public function xxxx_is_section_seen() {
+	public function test_is_section_seen() {
 		/**
 		 * Wrong data
 		 */
 		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
+		foreach ( $values as $student_id ) {
+			foreach ( $values as $course_id ) {
+				foreach ( $values as $unit_id ) {
+					$assert = CoursePress_Data_Student::is_section_seen( $course_id, $unit_id, 1, $student_id );
+					$this->assertInternalType( 'boolean', $assert );
+					$this->assertFalse( $assert );
+				}
+			}
 		}
 		/**
 		 * Good data
 		 */
+		foreach ( $this->course->units as $unit ) {
+			$assert = CoursePress_Data_Student::is_section_seen( $this->course->ID, $unit->ID, 1, $this->student->ID );
+			$this->assertInternalType( 'boolean', $assert );
+			$this->assertFalse( $assert );
+		}
 	}
+
 	/**
 	 *
 	 */
