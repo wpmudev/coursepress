@@ -331,7 +331,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 * average_course_responses( $student_id, $course_id, $data = false )
 	 */
-	public function test_average_course_responses() {
+	public function xxxx_average_course_responses() {
 		/**
 		 * Wrong data
 		 */
@@ -354,7 +354,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 * get_workbook_url( $course_id )
 	 */
-	public function test_get_workbook_url() {
+	public function xxxx_get_workbook_url() {
 		/**
 		 * Wrong data
 		 */
@@ -373,19 +373,25 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *
+	 * get_admin_workbook_link( $student_id, $course_id )
 	 */
-	public function xxxx_get_admin_workbook_link() {
+	public function test_get_admin_workbook_link() {
 		/**
 		 * Wrong data
 		 */
 		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
+		foreach ( $values as $student_id ) {
+			foreach ( $values as $course_id ) {
+				$assert = CoursePress_Data_Student::get_admin_workbook_link( $student_id, $course_id );
+				$this->assertInternalType( 'string', $assert );
+				$this->assertNotEmpty( $assert );
+			}
 		}
 		/**
 		 * Good data
 		 */
 		$assert = CoursePress_Data_Student::get_admin_workbook_link( $this->student->ID, $this->course->ID );
+		$this->assertInternalType( 'string', $assert );
 		$this->assertNotEmpty( $assert );
 	}
 
