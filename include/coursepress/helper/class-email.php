@@ -355,8 +355,7 @@ class CoursePress_Helper_Email {
 
 		do_action( 'coursepress_email_sent', $args, $type, $result );
 		do_action( 'coursepress_email_sent-' . $type, $args, $result );
-error_log( print_r( $args, true ) );
-error_log( print_r( $result, true) );
+
 		return $result;
 	}
 
