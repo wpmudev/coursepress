@@ -1598,6 +1598,12 @@ class CoursePress_Data_Student {
 		if ( empty( $student_id ) ) {
 			$student_id = get_current_user_id();
 		}
+		/**
+		 * Sanitize $unit_id
+		 */
+		if ( empty( $unit_id ) || ! is_numeric( $unit_id ) ) {
+			return false;
+		}
 
 		$completed = false;
 		$student_progress = $student_progress = self::get_completion_data( $student_id, $course_id );

@@ -967,7 +967,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 * is_section_seen( $course_id, $unit_id, $page, $student_id = 0 )
 	 */
-	public function test_is_section_seen() {
+	public function xxxx_is_section_seen() {
 		/**
 		 * Wrong data
 		 */
@@ -992,19 +992,35 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *
+	 * is_module_completed( $course_id, $unit_id, $module_id, $student_id = 0 )
 	 */
-	public function xxxx_is_module_completed() {
+	public function test_is_module_completed() {
 		/**
 		 * Wrong data
 		 */
 		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
+		foreach ( $values as $student_id ) {
+			foreach ( $values as $course_id ) {
+				foreach ( $values as $unit_id ) {
+					foreach ( $values as $module_id ) {
+						$assert = CoursePress_Data_Student::is_module_completed( $course_id, $unit_id, $module_id, $student_id );
+						$this->assertInternalType( 'boolean', $assert );
+						$this->assertFalse( $assert );
+					}
+				}
+			}
 		}
 		/**
 		 * Good data
 		 */
+		$modules = $this->get_modules();
+		foreach ( $modules as $module ) {
+			$assert = CoursePress_Data_Student::is_module_completed( $this->course->ID, $module->post_parent, $module->ID, $this->student->ID );
+			$this->assertInternalType( 'boolean', $assert );
+			$this->assertFalse( $assert );
+		}
 	}
+
 	/**
 	 *
 	 */
