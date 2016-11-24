@@ -4,8 +4,11 @@
  */
 class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 
+	protected $student_progress;
+
 	public function __construct() {
 		parent::__construct();
+		$this->student_progress = CoursePress_Data_Student::get_completion_data( $this->student->ID, $this->course->ID );
 	}
 
 	public function xxxx_exists() {
@@ -305,7 +308,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 * count_course_responses( $student_id, $course_id, $data = false )
 	 */
-	public function test_count_course_responses() {
+	public function xxxx_count_course_responses() {
 		/**
 		 * Wrong data
 		 */
@@ -320,29 +323,31 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 		/**
 		 * Good data
 		 */
-		$data = CoursePress_Data_Student::get_completion_data( $this->student->ID, $this->course->ID );
-		$assert = CoursePress_Data_Student::count_course_responses( $this->student->ID, $this->course->ID, $data );
+		$assert = CoursePress_Data_Student::count_course_responses( $this->student->ID, $this->course->ID, $this->student_progress );
 		$this->assertInternalType( 'integer', $assert );
 		$this->assertEquals( 0, $assert );
 	}
 
 	/**
-	 *
+	 * average_course_responses( $student_id, $course_id, $data = false )
 	 */
-	public function xxxx_average_course_responses() {
+	public function test_average_course_responses() {
 		/**
 		 * Wrong data
 		 */
 		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
+		foreach ( $values as $student_id ) {
+			foreach ( $values as $course_id ) {
+				$assert = CoursePress_Data_Student::average_course_responses( $student_id, $course_id );
+				$this->assertInternalType( 'integer', $assert );
+				$this->assertEquals( 0, $assert );
+			}
 		}
 		/**
 		 * Good data
 		 */
-		$assert = CoursePress_Data_Student::average_course_responses( $this->student->ID, $this->course->ID );
-		$this->assertEquals( 0, $assert );
-		$data = array();
-		$assert = CoursePress_Data_Student::average_course_responses( $this->student->ID, $this->course->ID, $data );
+		$assert = CoursePress_Data_Student::average_course_responses( $this->student->ID, $this->course->ID, $this->student_progress );
+		$this->assertInternalType( 'integer', $assert );
 		$this->assertEquals( 0, $assert );
 	}
 
@@ -530,7 +535,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 		/**
 		 * Good data
 		 */
-		$data = CoursePress_Data_Student::get_completion_data( $this->student->ID, $this->course->ID );
+		$data = $this->student_progress;
 		foreach ( $this->course->units as $unit ) {
 			$assert = CoursePress_Data_Student::visited_page( $this->student->ID, $this->course->ID, $unit->ID, 1, $data );
 			$this->assertInternalType( 'array', $assert );
@@ -560,7 +565,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 		/**
 		 * Good data
 		 */
-		$data = CoursePress_Data_Student::get_completion_data( $this->student->ID, $this->course->ID );
+		$data = $this->student_progress;
 		$modules = $this->get_modules();
 		foreach ( $modules as $module ) {
 			$assert = CoursePress_Data_Student::visited_module( $this->student->ID, $this->course->ID, $module->post_parent, $module->ID, $data );
@@ -610,7 +615,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 		/**
 		 * Good data
 		 */
-		$data = CoursePress_Data_Student::get_completion_data( $this->student->ID, $this->course->ID );
+		$data = $this->student_progress;
 		$assert = CoursePress_Data_Student::get_responses( $student_id, $course_id, $unit_id, $module_id );
 
 		$modules = $this->get_modules();
@@ -646,7 +651,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 		/**
 		 * Good data
 		 */
-		$data = CoursePress_Data_Student::get_completion_data( $this->student->ID, $this->course->ID );
+		$data = $this->student_progress;
 		$assert = CoursePress_Data_Student::get_responses( $student_id, $course_id, $unit_id, $module_id );
 
 		$modules = $this->get_modules();
@@ -717,7 +722,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 		/**
 		 * Good data
 		 */
-		$data = CoursePress_Data_Student::get_completion_data( $this->student->ID, $this->course->ID );
+		$data = $this->student_progress;
 		$assert = CoursePress_Data_Student::get_responses( $student_id, $course_id, $unit_id, $module_id );
 
 		$modules = $this->get_modules();
@@ -765,7 +770,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 		/**
 		 * Good data
 		 */
-		$data = CoursePress_Data_Student::get_completion_data( $this->student->ID, $this->course->ID );
+		$data = $this->student_progress;
 		$assert = CoursePress_Data_Student::get_calculated_completion_data( $this->student->ID, $this->course->ID, $data );
 		$this->assertInternalType( 'array', $assert );
 		$this->assertEquals( array(), $assert );
@@ -792,7 +797,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 		/**
 		 * Good data
 		 */
-		$data = CoursePress_Data_Student::get_completion_data( $this->student->ID, $this->course->ID );
+		$data = $this->student_progress;
 		foreach ( $this->course->units as $unit ) {
 			$assert = CoursePress_Data_Student::get_mandatory_completion( $this->student->ID, $this->course->ID, $unit->ID, $data );
 			$this->assertInternalType( 'array', $assert );
@@ -821,7 +826,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 		/**
 		 * Good data
 		 */
-		$data = CoursePress_Data_Student::get_completion_data( $this->student->ID, $this->course->ID );
+		$data = $this->student_progress;
 		foreach ( $this->course->units as $unit ) {
 			$assert = CoursePress_Data_Student::get_unit_progress( $this->student->ID, $this->course->ID, $unit->ID, $data );
 			$this->assertInternalType( 'integer', $assert );
@@ -863,7 +868,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 		/**
 		 * Good data
 		 */
-		$data = CoursePress_Data_Student::get_completion_data( $this->student->ID, $this->course->ID );
+		$data = $this->student_progress;
 		foreach ( $this->course->units as $unit ) {
 			$assert = CoursePress_Data_Student::is_mandatory_done( $this->student->ID, $this->course->ID, $unit_id, $data );
 			$this->assertInternalType( 'boolean', $assert );
@@ -891,7 +896,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 		/**
 		 * Good data
 		 */
-		$data = CoursePress_Data_Student::get_completion_data( $this->student->ID, $this->course->ID );
+		$data = $this->student_progress;
 		foreach ( $this->course->units as $unit ) {
 			$assert = CoursePress_Data_Student::is_unit_complete( $this->student->ID, $this->course->ID, $unit_id, $data );
 			$this->assertInternalType( 'boolean', $assert );
