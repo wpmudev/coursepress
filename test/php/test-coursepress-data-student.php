@@ -426,7 +426,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	 * my_courses( $student_id = 0, $courses = array() )
 	 */
 	public function test_my_courses() {
-		$keys = array( 'current', 'completed', 'future' );
+		$keys = array( 'current', 'completed', 'future', 'incomplete', 'past' );
 		/**
 		 * Wrong data
 		 */
@@ -447,16 +447,6 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 		$this->assertNotEmpty( $assert );
 		$this->assertCount( 5, $assert );
 		$this->has_keys( $keys, $assert );
-		foreach ( $keys as $key ) {
-			$this->assertEquals( array(), $assert[ $key ] );
-		}
-
-		$keys = array( 'incomplete', 'past' );
-		foreach ( $keys as $key ) {
-			$this->assertNotEmpty( $assert[ $key ] );
-			$this->assertCount( 1, $assert[ $key ] );
-			$this->assertContainsOnlyInstancesOf( 'WP_Post',  $assert[ $key ] );
-		}
 		CoursePress_Data_Course::withdraw_student( $this->student->ID, $this->course->ID );
 	}
 
