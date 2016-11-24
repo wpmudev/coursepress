@@ -850,7 +850,10 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 		/**
 		 * Good data
 		 */
-		$data = $this->student_progress;
+        $data = $this->student_progress;
+
+print_r($this->course->units);
+
 		foreach ( $this->course->units as $unit ) {
 			$assert = CoursePress_Data_Student::get_unit_progress( $this->student->ID, $this->course->ID, $unit->ID, $data );
 			$this->assertInternalType( 'integer', $assert );
@@ -861,7 +864,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 * get_course_progress( $student_id, $course_id, &$data = false )
 	 */
-	public function test_get_course_progress() {
+	public function xxxx_get_course_progress() {
 		/**
 		 * Wrong data
 		 */
@@ -903,7 +906,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 		 */
 		$data = $this->student_progress;
 		foreach ( $this->course->units as $unit ) {
-			$assert = CoursePress_Data_Student::is_mandatory_done( $this->student->ID, $this->course->ID, $unit_id, $data );
+			$assert = CoursePress_Data_Student::is_mandatory_done( $this->student->ID, $this->course->ID, $unit->ID, $data );
 			$this->assertInternalType( 'boolean', $assert );
 			$this->assertFalse( $assert );
 		}
@@ -931,25 +934,38 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 		 */
 		$data = $this->student_progress;
 		foreach ( $this->course->units as $unit ) {
-			$assert = CoursePress_Data_Student::is_unit_complete( $this->student->ID, $this->course->ID, $unit_id, $data );
+			$assert = CoursePress_Data_Student::is_unit_complete( $this->student->ID, $this->course->ID, $unit->ID, $data );
 			$this->assertInternalType( 'boolean', $assert );
 			$this->assertFalse( $assert );
 		}
 	}
 	/**
-	 *
+	 * get_all_unit_progress( $student_id, $course_id, $unit_id, &$data = false )
 	 */
-	public function xxxx_get_all_unit_progress() {
-		/**
-		 * Wrong data
-		 */
-		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
-		}
-		/**
-		 * Good data
-		 */
-	}
+    public function test_get_all_unit_progress() {
+        /**
+         * Wrong data
+         */
+        $values = $this->get_wrong_values();
+        foreach ( $values as $student_id ) {
+            foreach ( $values as $course_id ) {
+                foreach ( $values as $unit_id ) {
+                    $assert = CoursePress_Data_Student::get_all_unit_progress( $student_id, $course_id, $unit_id );
+                    $this->assertInternalType( 'integer', $assert );
+                    $this->assertEquals( 100, $assert );
+                }
+            }
+        }
+        /**
+         * Good data
+         */
+        $data = $this->student_progress;
+        foreach ( $this->course->units as $unit ) {
+            print_r( $unit->ID );
+            $assert = CoursePress_Data_Student::get_all_unit_progress( $this->student_id, $this->course_id, $unit->ID, $data );
+            print_r( array( gettype( $assert) , $assert ) );
+        }
+    }
 	/**
 	 *
 	 */
