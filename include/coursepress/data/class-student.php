@@ -1672,7 +1672,6 @@ class CoursePress_Data_Student {
 	 * @return array Array of substitutions.
 	 */
 	public static function get_vars( $student_id ) {
-		$user = get_userdata( $student_id );
 		$vars = array(
 			'FIRST_NAME' => get_user_meta( $student_id, 'first_name', true ),
 			'LAST_NAME' => get_user_meta( $student_id, 'last_name', true ),

@@ -375,7 +375,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 * get_admin_workbook_link( $student_id, $course_id )
 	 */
-	public function test_get_admin_workbook_link() {
+	public function xxxx_get_admin_workbook_link() {
 		/**
 		 * Wrong data
 		 */
@@ -396,19 +396,28 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *
+	 * get_vars( $student_id )
 	 */
-	public function xxxx_get_vars() {
+	public function test_get_vars() {
+		$keys = array( 'FIRST_NAME', 'LAST_NAME' );
 		/**
 		 * Wrong data
 		 */
 		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
+		foreach ( $values as $student_id ) {
+			$assert = CoursePress_Data_Student::get_vars( $student_id );
+			$this->assertInternalType( 'array', $assert );
+			$this->has_keys( $keys, $assert );
+			foreach ( $keys as $key ) {
+				$this->assertEmpty( $assert[ $key ] );
+			}
 		}
 		/**
 		 * Good data
 		 */
 		$assert = CoursePress_Data_Student::get_vars( $this->student->ID );
+		$this->assertInternalType( 'array', $assert );
+		$this->has_keys( $keys, $assert );
 		$this->assertEquals( 'Albert', $assert['FIRST_NAME'] );
 		$this->assertEquals( 'Einstein', $assert['LAST_NAME'] );
 	}
