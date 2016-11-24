@@ -742,7 +742,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 		foreach ( $modules as $module ) {
 			foreach ( array( true, false ) as $response_index ) {
 				foreach ( array( true, false ) as $feedback_index ) {
-					$assert = CoursePress_Data_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, $response_index, $feedback_index, $this->student->completion_data );
+					$assert = CoursePress_Data_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, $response_index, $feedback_index, $data );
 					$this->assertInternalType( 'boolean', $assert );
 					$this->assertFalse( $assert );
 				}
