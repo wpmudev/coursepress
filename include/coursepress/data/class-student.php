@@ -858,7 +858,7 @@ class CoursePress_Data_Student {
 
 								$previous_module_done = self::is_module_completed( $course_id, $unit_id, $module_id, $student_id );
 
-								if ( ( false === $is_normal_mode && false === $previous_module_done ) && 'closed' != $course_status ) {
+								if ( ( false == $is_normal_mode && false === $previous_module_done ) && 'closed' != $course_status ) {
 									$valid = false;
 								}
 
@@ -1032,6 +1032,7 @@ class CoursePress_Data_Student {
 								if ( $module_seen ) {
 									$unit_completed_modules += 1;
 									$last_seen_index = $index;
+
 									if ( $is_module_structure_visible ) {
 										$valid_items += 1;
 										$unit_valid_progress += 1;
