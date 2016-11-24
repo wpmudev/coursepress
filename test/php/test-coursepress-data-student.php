@@ -463,7 +463,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 * log_student_activity( $kind = 'login', $user_id = 0 )
 	 */
-	public function test_log_student_activity() {
+	public function xxxx_log_student_activity() {
 		/**
 		 * Wrong data
 		 */
@@ -859,19 +859,28 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 * TODO
+	 * get_course_progress( $student_id, $course_id, &$data = false )
 	 */
-	public function xxxx_get_course_progress() {
+	public function test_get_course_progress() {
 		/**
 		 * Wrong data
 		 */
 		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
+		foreach ( $values as $student_id ) {
+			foreach ( $values as $course_id ) {
+				$assert = CoursePress_Data_Student::get_course_progress( $student_id, $course_id );
+				$this->assertInternalType( 'integer', $assert );
+				$this->assertEquals( 0, $assert );
+			}
 		}
 		/**
 		 * Good data
 		 */
+		$assert = CoursePress_Data_Student::get_course_progress( $this->student->ID, $this->course->ID, $this->student_progress );
+		$this->assertInternalType( 'integer', $assert );
+		$this->assertEquals( 0, $assert );
 	}
+
 	/**
 	 * is_mandatory_done( $student_id, $course_id, $unit_id, &$data = false )
 	 */
