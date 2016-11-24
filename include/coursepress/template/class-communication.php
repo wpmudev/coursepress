@@ -8,6 +8,14 @@ class CoursePress_Template_Communication {
 
 		$content = do_shortcode( '[course_unit_submenu]' );
 
+		if ( empty( $notifications ) ) {
+			$content .= sprintf(
+				'<p class="message">%s</p>',
+				__( 'This course does not have any notifications.', 'CP_TD' )
+			);
+			return $content;
+		}
+
 		$content .= '<ul class="notification-archive-list">';
 		foreach ( $notifications as $notification ) {
 			$content .= '
@@ -62,6 +70,13 @@ class CoursePress_Template_Communication {
 				<a href="' . esc_url( $new_discussion_link ) . '" class="button">' . esc_html( 'Start a new discussion', 'CP_TD' ) . '</a>
 			</div>
 		';
+		if ( empty( $notifications ) ) {
+			$content .= sprintf(
+				'<p class="message">%s</p>',
+				__( 'This course does not have any discussions.', 'CP_TD' )
+			);
+			return $content;
+		}
 
 		$content .= '<ul class="discussion-archive-list">';
 		foreach ( $discussions as $discussion ) {

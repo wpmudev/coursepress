@@ -63,11 +63,13 @@ class CoursePress_Admin_Table_Students extends CoursePress_Admin_Table_Instructo
 			$args['include'] = $student_ids;
 		}
 
-		if ( '' !== $args['search'] )
+		if ( '' !== $args['search'] ) {
 			$args['search'] = '*' . $args['search'] . '*';
+		}
 
-		if ( $this->is_site_users )
+		if ( $this->is_site_users ) {
 			$args['blog_id'] = $this->site_id;
+		}
 
 		// Query the user IDs for this page
 		$wp_user_search = new WP_User_Query( $args );

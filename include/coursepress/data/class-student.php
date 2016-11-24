@@ -137,22 +137,24 @@ class CoursePress_Data_Student {
 		if ( ! $count || $refresh ) {
 			global $wpdb;
 
-			$meta_keys = $wpdb->get_results(
-				$wpdb->prepare( "SELECT `meta_key` FROM $wpdb->usermeta WHERE `meta_key` LIKE 'enrolled_course_class%%' AND `user_id`=%d", $student_id )
-			, ARRAY_A);
+			$course_ids = get_posts(array(
+				'post_type' => CoursePress_Data_Course::get_post_type_name(),
+				'posts_per_page' => -1,
+				'fields' => 'ids',
+				'suppress_filters' => true,
+			));
 
-			if ( $meta_keys ) {
-				$meta_keys = array_map(
-					array( __CLASS__, 'meta_key' ),
-					$meta_keys
-				);
-				$meta_keys = array_unique( $meta_keys );
-
-				$count = count( $meta_keys );
-
-				// Save counted courses.
-				update_user_meta( $student_id, 'cp_course_count', $count );
+			$metas = array();
+			if ( ! empty( $course_ids ) ) {
+				foreach ( $course_ids as $course_id ) {
+					$metas[] = 'enrolled_course_date_' . $course_id;
+				}
 			}
+			$metas = implode( "','", $metas );
+			$sql = $wpdb->prepare( "SELECT COUNT(meta_key) FROM $wpdb->usermeta WHERE meta_key IN ('" . $metas . "') AND user_id=%d", $student_id );
+			$count = $wpdb->get_var( $sql );
+
+			update_user_meta( $student_id, 'cp_course_count', $count );
 		}
 		/**
 		 * Sanitize
@@ -196,7 +198,6 @@ class CoursePress_Data_Student {
 		$global_option = ! is_multisite();
 		$key = 'enrolled_course_date_' . $course_id;
 		$enrolled = get_user_option( $key, $student_id );
-
 		return ( $enrolled && ! empty( $enrolled ) )
 			? true
 			: false
@@ -898,7 +899,7 @@ class CoursePress_Data_Student {
 
 								$previous_module_done = self::is_module_completed( $course_id, $unit_id, $module_id, $student_id );
 
-								if ( ( false === $is_normal_mode && false === $previous_module_done ) && 'closed' != $course_status ) {
+								if ( ( false == $is_normal_mode && false === $previous_module_done ) && 'closed' != $course_status ) {
 									$valid = false;
 								}
 
@@ -1072,6 +1073,7 @@ class CoursePress_Data_Student {
 								if ( $module_seen ) {
 									$unit_completed_modules += 1;
 									$last_seen_index = $index;
+
 									if ( $is_module_structure_visible ) {
 										$valid_items += 1;
 										$unit_valid_progress += 1;
