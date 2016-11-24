@@ -1017,7 +1017,6 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 		foreach ( $modules as $module ) {
 			$assert = CoursePress_Data_Student::is_module_completed( $this->course->ID, $module->post_parent, $module->ID, $this->student->ID );
 			$this->assertInternalType( 'boolean', $assert );
-			$this->assertFalse( $assert );
 		}
 	}
 
