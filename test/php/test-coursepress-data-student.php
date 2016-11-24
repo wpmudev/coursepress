@@ -826,7 +826,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *
+	 * TODO
 	 */
 	public function xxxx_get_course_progress() {
 		/**
@@ -840,19 +840,33 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 		 */
 	}
 	/**
-	 *
+	 * is_mandatory_done( $student_id, $course_id, $unit_id, &$data = false )
 	 */
-	public function xxxx_is_mandatory_done() {
+	public function test_is_mandatory_done() {
 		/**
 		 * Wrong data
 		 */
 		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
+		foreach ( $values as $student_id ) {
+			foreach ( $values as $course_id ) {
+				foreach ( $values as $unit_id ) {
+					$assert = CoursePress_Data_Student::is_mandatory_done( $student_id, $course_id, $unit_id );
+					$this->assertInternalType( 'boolean', $assert );
+					$this->assertFalse( $assert );
+				}
+			}
 		}
 		/**
 		 * Good data
 		 */
+		$data = CoursePress_Data_Student::get_completion_data( $this->student->ID, $this->course->ID );
+		foreach ( $this->course->units as $unit ) {
+			$assert = CoursePress_Data_Student::is_mandatory_done( $this->student->ID, $this->course->ID, $unit_id, $data );
+			$this->assertInternalType( 'boolean', $assert );
+			$this->assertFalse( $assert );
+		}
 	}
+
 	/**
 	 *
 	 */
