@@ -1879,6 +1879,18 @@ class CoursePress_Data_Student {
 	 */
 	public static function get_nonce_action( $action, $student_id = 0 ) {
 		$user_id = get_current_user_id();
+		/**
+		 * Sanitize $action
+		 */
+		if ( ! is_string( $action ) ) {
+			$action = '';
+		}
+		/**
+		 * Sanitize $student_id
+		 */
+		if ( ! is_string( $student_id ) && ! is_numeric( $student_id ) ) {
+			$student_id = 0;
+		}
 		return sprintf( '%s_%s_%d_%d', __CLASS__, $action, $user_id, $student_id );
 	}
 }
