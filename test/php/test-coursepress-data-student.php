@@ -303,22 +303,26 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *
+	 * count_course_responses( $student_id, $course_id, $data = false )
 	 */
-	public function xxxx_count_course_responses() {
+	public function test_count_course_responses() {
 		/**
 		 * Wrong data
 		 */
 		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
+		foreach ( $values as $student_id ) {
+			foreach ( $values as $course_id ) {
+				$assert = CoursePress_Data_Student::count_course_responses( $student_id, $course_id );
+				$this->assertInternalType( 'integer', $assert );
+				$this->assertEquals( 0, $assert );
+			}
 		}
 		/**
 		 * Good data
 		 */
-		$assert = CoursePress_Data_Student::count_course_responses( $this->student->ID, $this->course->ID );
-		$this->assertEquals( 0, $assert );
-		$data = array();
+		$data = CoursePress_Data_Student::get_completion_data( $this->student->ID, $this->course->ID );
 		$assert = CoursePress_Data_Student::count_course_responses( $this->student->ID, $this->course->ID, $data );
+		$this->assertInternalType( 'integer', $assert );
 		$this->assertEquals( 0, $assert );
 	}
 
@@ -870,7 +874,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	  is_unit_complete( $student_id, $course_id, $unit_id, &$data = false )*
 	 */
-	public function test_is_unit_complete() {
+	public function xxxx_is_unit_complete() {
 		/**
 		 * Wrong data
 		 */
@@ -893,15 +897,6 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 			$this->assertInternalType( 'boolean', $assert );
 			$this->assertFalse( $assert );
 		}
-		/**
-		 * Wrong data
-		 */
-		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
-		}
-		/**
-		 * Good data
-		 */
 	}
 	/**
 	 *
