@@ -1756,6 +1756,12 @@ class CoursePress_Data_Student {
 		if ( empty( $user_id ) ) {
 			return;
 		}
+		/**
+		 * Sanitize $kind
+		 */
+		if ( ! is_string( $kind ) && ! is_numeric( $kind ) ) {
+			return;
+		}
 		if ( (int) $kind > 0 ) {
 			$kind = 'course_module_seen';
 		}

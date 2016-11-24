@@ -425,7 +425,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 * my_courses( $student_id = 0, $courses = array() )
 	 */
-	public function test_my_courses() {
+	public function xxxx_my_courses() {
 		$keys = array( 'current', 'completed', 'future' );
 		/**
 		 * Wrong data
@@ -461,14 +461,17 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *
+	 * log_student_activity( $kind = 'login', $user_id = 0 )
 	 */
-	public function xxxx_log_student_activity() {
+	public function test_log_student_activity() {
 		/**
 		 * Wrong data
 		 */
 		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
+		foreach ( $values as $kind ) {
+			foreach ( $values as $user_id ) {
+				CoursePress_Data_Student::log_student_activity( $kind, $user_id );
+			}
 		}
 		/**
 		 * Good data
