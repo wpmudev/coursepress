@@ -504,6 +504,12 @@ class CoursePress_Data_Student {
 	 * @return (mixed) $responses				Returns the response or responses.
 	 **/
 	public static function get_responses( $student_id, $course_id, $unit_id, $module_id, $response_only = false, &$data = false ) {
+		/**
+		 * Sanitize $unit_id
+		 */
+		if ( empty( $unit_id ) || ! is_numeric( $unit_id ) ) {
+			return array();
+		}
 
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
@@ -543,7 +549,7 @@ class CoursePress_Data_Student {
 	public static function get_grade(
 		$student_id, $course_id, $unit_id, $module_id, $response_index = false, $grade_index = false, &$data = false
 	) {
-		$grade = false;
+		$grade = array();
 
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
@@ -649,20 +655,29 @@ class CoursePress_Data_Student {
 	public static function get_response(
 		$student_id, $course_id, $unit_id, $module_id, $response_index = false, &$data = false
 	) {
+		/**
+		 * Sanitize $unit_id
+		 */
+		if ( empty( $unit_id ) || ! is_numeric( $unit_id ) ) {
+			return false;
+		}
+		/**
+		 * Sanitize $module_id
+		 */
+		if ( empty( $module_id ) || ! is_numeric( $module_id ) ) {
+			return false;
+		}
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
-
 		$responses = CoursePress_Helper_Utility::get_array_val(
 			$data,
 			'units/' . $unit_id . '/responses/' . $module_id
 		);
-
 		// Get last grade
 		if ( ! $response_index ) {
 			$response_index = ( count( $responses ) - 1 );
 		}
-
 		return ! empty( $responses ) && isset( $responses[ $response_index ] ) ? $responses[ $response_index ] : false;
 	}
 
@@ -1282,26 +1297,37 @@ class CoursePress_Data_Student {
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
-
-		return array(
-			'required' => CoursePress_Data_Unit::get_number_of_mandatory( $unit_id ),
-			'completed' => CoursePress_Helper_Utility::get_array_val(
+		$completed = '';
+		/**
+		 * Sanitize $unit_id
+		 */
+		if ( ! empty( $unit_id ) && is_numeric( $unit_id ) ) {
+			$completed = CoursePress_Helper_Utility::get_array_val(
 				$data,
 				'completion/' . $unit_id . '/completed_mandatory'
-			),
+			);
+		}
+		return array(
+			'required' => CoursePress_Data_Unit::get_number_of_mandatory( $unit_id ),
+			'completed' => $completed,
 		);
 	}
 
 	public static function get_unit_progress( $student_id, $course_id, $unit_id, &$data = false ) {
-		//return self::get_all_unit_progress( $student_id, $course_id, $unit_id, $data );
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
-
-		return (int) CoursePress_Helper_Utility::get_array_val(
-			$data,
-			'completion/' . $unit_id . '/progress'
-		);
+		$completed = 0;
+		/**
+		 * Sanitize $unit_id
+		 */
+		if ( ! empty( $unit_id ) && is_numeric( $unit_id ) ) {
+			$completed = (int) CoursePress_Helper_Utility::get_array_val(
+				$data,
+				'completion/' . $unit_id . '/progress'
+			);
+		}
+		return $completed;
 	}
 
 	public static function get_course_progress( $student_id, $course_id, &$data = false ) {
