@@ -1362,13 +1362,17 @@ class CoursePress_Data_Student {
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
-
-		$completed = CoursePress_Helper_Utility::get_array_val(
-			$data,
-			'completion/' . $unit_id . '/completed'
-		);
-
-		return cp_is_true( $completed );
+		/**
+		 * Sanitize $unit_id
+		 */
+		if ( ! empty( $unit_id ) && is_numeric( $unit_id ) ) {
+			$completed = CoursePress_Helper_Utility::get_array_val(
+				$data,
+				'completion/' . $unit_id . '/completed'
+			);
+			return cp_is_true( $completed );
+		}
+		return false;
 	}
 
 	public static function is_course_complete( $student_id, $course_id, &$data = false ) {

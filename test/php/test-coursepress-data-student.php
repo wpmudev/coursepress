@@ -799,7 +799,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 * get_unit_progress( $student_id, $course_id, $unit_id, &$data = false )
 	 */
-	public function test_get_unit_progress() {
+	public function xxxx_get_unit_progress() {
 		$keys = array( 'required', 'completed' );
 		/**
 		 * Wrong data
@@ -842,7 +842,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 * is_mandatory_done( $student_id, $course_id, $unit_id, &$data = false )
 	 */
-	public function test_is_mandatory_done() {
+	public function xxxx_is_mandatory_done() {
 		/**
 		 * Wrong data
 		 */
@@ -868,9 +868,31 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *
+	  is_unit_complete( $student_id, $course_id, $unit_id, &$data = false )*
 	 */
-	public function xxxx_is_unit_complete() {
+	public function test_is_unit_complete() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $student_id ) {
+			foreach ( $values as $course_id ) {
+				foreach ( $values as $unit_id ) {
+					$assert = CoursePress_Data_Student::is_unit_complete( $student_id, $course_id, $unit_id );
+					$this->assertInternalType( 'boolean', $assert );
+					$this->assertFalse( $assert );
+				}
+			}
+		}
+		/**
+		 * Good data
+		 */
+		$data = CoursePress_Data_Student::get_completion_data( $this->student->ID, $this->course->ID );
+		foreach ( $this->course->units as $unit ) {
+			$assert = CoursePress_Data_Student::is_unit_complete( $this->student->ID, $this->course->ID, $unit_id, $data );
+			$this->assertInternalType( 'boolean', $assert );
+			$this->assertFalse( $assert );
+		}
 		/**
 		 * Wrong data
 		 */
