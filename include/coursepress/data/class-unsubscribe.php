@@ -70,7 +70,7 @@ class CoursePress_Data_Unsubscribe {
 
 		if ( ! empty( $mail_to ) ) {
 			$user = get_user_by( 'email', $mail_to );
-			$is_unsubscriber = self::is_unsubscriber( $user->ID );
+			$is_unsubscriber = is_object( $user ) ? self::is_unsubscriber( $user->ID ) : false;
 			$unsubscribable = self::unsubscribable();
 
 			if ( in_array( $email_type, $unsubscribable ) ) {
