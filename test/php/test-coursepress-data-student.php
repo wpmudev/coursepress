@@ -398,7 +398,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	/**
 	 * get_vars( $student_id )
 	 */
-	public function test_get_vars() {
+	public function xxxx_get_vars() {
 		$keys = array( 'FIRST_NAME', 'LAST_NAME' );
 		/**
 		 * Wrong data
@@ -423,14 +423,17 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *
+	 * my_courses( $student_id = 0, $courses = array() )
 	 */
-	public function xxxx_my_courses() {
+	public function test_my_courses() {
+		$keys = array( 'current', 'completed', 'future' );
 		/**
 		 * Wrong data
 		 */
 		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
+		foreach ( $values as $student_id ) {
+			$assert = CoursePress_Data_Student::my_courses( $student_id );
+			$this->assertEmpty( $assert );
 		}
 		/**
 		 * Good data
@@ -443,18 +446,17 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 		$assert = CoursePress_Data_Student::my_courses( $this->student->ID );
 		$this->assertNotEmpty( $assert );
 		$this->assertCount( 5, $assert );
-		$keys = array(
-			'completed',
-			'incomplete',
-			'future',
-			'past',
-		);
+		$this->has_keys( $keys, $assert );
 		foreach ( $keys as $key ) {
 			$this->assertEquals( array(), $assert[ $key ] );
 		}
-		$this->assertNotEmpty( $assert['current'] );
-		$this->assertCount( 1, $assert['current'] );
-		$this->assertContainsOnlyInstancesOf( 'WP_Post',  $assert['current'] );
+
+		$keys = array( 'incomplete', 'past' );
+		foreach ( $keys as $key ) {
+			$this->assertNotEmpty( $assert[ $key ] );
+			$this->assertCount( 1, $assert[ $key ] );
+			$this->assertContainsOnlyInstancesOf( 'WP_Post',  $assert[ $key ] );
+		}
 		CoursePress_Data_Course::withdraw_student( $this->student->ID, $this->course->ID );
 	}
 

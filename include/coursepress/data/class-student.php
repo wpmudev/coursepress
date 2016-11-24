@@ -1707,7 +1707,7 @@ class CoursePress_Data_Student {
 		foreach ( $courses as $course ) {
 			$course_id = $course->ID;
 			$course_setting = CoursePress_Data_Course::get_setting( $course_id );
-			$start_date = CoursePress_Data_Course::strtotime( $course_setting['course_start_date'] );
+			$start_date = ! empty( $course_setting['course_start_date'] ) ? CoursePress_Data_Course::strtotime( $course_setting['course_start_date'] ) : 0;
 			$end_date = ! empty( $course_setting['course_end_date'] ) ? CoursePress_Data_Course::strtotime( $course_setting['course_end_date'] ) : 0;
 			$is_open_ended = ! empty( $course_setting['course_open_ended'] );
 
