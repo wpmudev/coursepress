@@ -339,6 +339,9 @@ class CoursePress_Helper_Integration_MarketPress {
 					$course_id = (int) get_post_meta( $product_id, 'mp_course_id', true );
 					$user_id   = $order->post_author;
 
+					// Remove enrollment restrictions
+					remove_all_filters( 'coursepress_enroll_student' );
+
 					// If not enrolled...
 					if ( ! CoursePress_Data_Student::is_enrolled_in_course( $user_id, $course_id ) ) {
 						//Then enroll..
@@ -1097,6 +1100,7 @@ Yours sincerely,
 		if ( ! self::$is_active ) {
 			return $enroll_student;
 		}
+
 		return ! CoursePress_Data_Course::is_paid_course( $course_id );
 	}
 
