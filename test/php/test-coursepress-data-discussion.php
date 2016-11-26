@@ -8,7 +8,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 		parent::__construct();
 	}
 
-	public function xxxx_exists() {
+	public function test_exists() {
 		$this->assertTrue( class_exists( 'CoursePress_Data_Discussion' ) );
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Discussion', 'get_format' ) ) );
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Discussion', 'get_post_type_name' ) ) );
@@ -42,7 +42,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	/**
 	 * get_format()
 	 */
-	public function xxxx_get_format() {
+	public function test_get_format() {
 		$keys = array(
 			'post_type',
 			'post_args' => array(
@@ -75,7 +75,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	/**
 	 * get_post_type_name()
 	 */
-	public function xxxx_get_post_type_name() {
+	public function test_get_post_type_name() {
 		$assert = CoursePress_Data_Discussion::get_post_type_name();
 		$this->assertInternalType( 'string', $assert );
 		$this->assertEquals( 'discussions', $assert );
@@ -84,7 +84,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	/**
 	 * attributes( $n_id )
 	 */
-	public function xxxx_attributes() {
+	public function test_attributes() {
 		$keys = array( 'course_id', 'course_title', 'unit_id', 'unit_title' );
 		/**
 		 * Wrong data
@@ -134,67 +134,71 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 * TODO
 	 * permalink( $permalink, $post, $leavename )
 	 */
-	public function xxxx_permalink() {
+	public function test_permalink() {
 		/**
-		 * Wrong data
+		 * this function do ... nothing ...
 		 */
-		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
-		}
-		/**
-		 * Good data
-		 */
-		$value = '';
-		//		$assert = CoursePress_Data_Discussion::;
-
 	}
 
 	/**
 	 * TODO
 	 * update_discussion( $discussion_title = '', $discussion_description = '', $course_id = '', $unit_id = '' )
 	 */
-	public function xxxx_update_discussion() {
+	public function test_update_discussion() {
 		/**
 		 * Wrong data
 		 */
 		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
+		foreach ( $values as $course_id ) {
+			foreach ( $values as $unit_id ) {
+				//$assert = CoursePress_Data_Discussion::update_discussion( 'foo', 'bar', $course_id, $unit_id );
+			}
 		}
 		/**
 		 * Good data
 		 */
-		$value = '';
-		//		$assert = CoursePress_Data_Discussion::;
+		//$assert = CoursePress_Data_Discussion::update_discussion( 'foo', 'bar', $course_id, $unit_id );
 
 	}
 
 	/**
-	 * TODO
 	 * get_one( $post_id = 0 )
 	 */
-	public function xxxx_get_one() {
+	public function test_get_one() {
+		$post = array(
+			'ID'           => 0,
+			'post_title'   => '',
+			'post_content' => '',
+		);
 		/**
 		 * Wrong data
 		 */
 		$values = $this->get_wrong_values();
 		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Discussion::get_one( $value );
+			$this->assertInternalType( 'array', $assert );
+			$this->assertEquals( $post, $assert );
 		}
 		/**
 		 * Good data
 		 */
-		$value = '';
-		//		$assert = CoursePress_Data_Discussion::;
-
+		wp_set_current_user( $this->admin->ID );
+		foreach ( $this->course->discussions as $value ) {
+			$assert = CoursePress_Data_Discussion::get_one( $value );
+			$this->assertInternalType( 'array', $assert );
+			$this->assertEquals( $value->ID, $assert['ID'] );
+			$this->assertEquals( $value->post_title, $assert['post_title'] );
+			$this->assertEquals( $value->post_content, $assert['post_content'] );
+		}
 	}
 
 	/**
 	 * TODO
 	 * before_add_comment( $comment_post_ID, $course_id )
 	 */
-	public function xxxx_before_add_comment() {
+	public function test_before_add_comment() {
 		/**
 		 * Wrong data
 		 */
@@ -213,7 +217,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	 * TODO
 	 * after_add_comment( $comment_id, $student_id, $comment_post_ID, $course_id )
 	 */
-	public function xxxx_after_add_comment() {
+	public function test_after_add_comment() {
 		/**
 		 * Wrong data
 		 */
@@ -232,7 +236,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	 * TODO
 	 * init()
 	 */
-	public function xxxx_init() {
+	public function test_init() {
 		/**
 		 * Wrong data
 		 */
@@ -251,7 +255,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	 * TODO
 	 * approved_discussion_comment( $is_approved, $commentdata )
 	 */
-	public function xxxx_approved_discussion_comment() {
+	public function test_approved_discussion_comment() {
 		/**
 		 * Wrong data
 		 */
@@ -270,7 +274,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	 * TODO
 	 * comment_post_types()
 	 */
-	public function xxxx_comment_post_types() {
+	public function test_comment_post_types() {
 		/**
 		 * Wrong data
 		 */
@@ -289,7 +293,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	 * TODO
 	 * is_comment_in_discussion( $comment_id )
 	 */
-	public function xxxx_is_comment_in_discussion() {
+	public function test_is_comment_in_discussion() {
 		/**
 		 * Wrong data
 		 */
@@ -308,7 +312,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	 * TODO
 	 * preprocess_discussion_comment( $comment_data )
 	 */
-	public function xxxx_preprocess_discussion_comment() {
+	public function test_preprocess_discussion_comment() {
 		/**
 		 * Wrong data
 		 */
@@ -327,7 +331,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	 * TODO
 	 * redirect_back( $location, $comment )
 	 */
-	public function xxxx_redirect_back() {
+	public function test_redirect_back() {
 		/**
 		 * Wrong data
 		 */
@@ -346,7 +350,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	 * TODO
 	 * is_discussion_subscriber( $user_id, $discussion_id )
 	 */
-	public function xxxx_is_discussion_subscriber() {
+	public function test_is_discussion_subscriber() {
 		/**
 		 * Wrong data
 		 */
@@ -365,7 +369,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	 * TODO
 	 * is_discussion_reactions_subscriber( $user_id, $discussion_id )
 	 */
-	public function xxxx_is_discussion_reactions_subscriber() {
+	public function test_is_discussion_reactions_subscriber() {
 		/**
 		 * Wrong data
 		 */
@@ -384,7 +388,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	 * TODO
 	 * is_subscriber( $user_id, $discussion_id )
 	 */
-	public function xxxx_is_subscriber() {
+	public function test_is_subscriber() {
 		/**
 		 * Wrong data
 		 */
@@ -403,7 +407,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	 * TODO
 	 * is_unsubscribe_link( $course_url, $course_id )
 	 */
-	public function xxxx_is_unsubscribe_link() {
+	public function test_is_unsubscribe_link() {
 		/**
 		 * Wrong data
 		 */
@@ -422,7 +426,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	 * TODO
 	 * unsubscribe_from_discussion( $content )
 	 */
-	public function xxxx_unsubscribe_from_discussion() {
+	public function test_unsubscribe_from_discussion() {
 		/**
 		 * Wrong data
 		 */
@@ -441,7 +445,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	 * TODO
 	 * update_user_subscription( $user_id, $discussion_id, $new_value = false )
 	 */
-	public function xxxx_update_user_subscription() {
+	public function test_update_user_subscription() {
 		/**
 		 * Wrong data
 		 */
@@ -460,7 +464,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	 * TODO
 	 * comment_add_new( $data, $json_data )
 	 */
-	public function xxxx_comment_add_new() {
+	public function test_comment_add_new() {
 		/**
 		 * Wrong data
 		 */
@@ -479,7 +483,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	 * TODO
 	 * ajax_update()
 	 */
-	public function xxxx_ajax_update() {
+	public function test_ajax_update() {
 		/**
 		 * Wrong data
 		 */
@@ -498,7 +502,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	 * TODO
 	 * is_correct_post_type( $post )
 	 */
-	public function xxxx_is_correct_post_type() {
+	public function test_is_correct_post_type() {
 		/**
 		 * Wrong data
 		 */
@@ -517,7 +521,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	 * TODO
 	 * wp_list_comments_args( $args )
 	 */
-	public function xxxx_wp_list_comments_args() {
+	public function test_wp_list_comments_args() {
 		/**
 		 * Wrong data
 		 */
@@ -536,7 +540,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	 * TODO
 	 * comments_template_query_args( $args )
 	 */
-	public function xxxx_comments_template_query_args() {
+	public function test_comments_template_query_args() {
 		/**
 		 * Wrong data
 		 */
@@ -555,7 +559,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	 * TODO
 	 * have_comments( $student_id, $post_id )
 	 */
-	public function xxxx_have_comments() {
+	public function test_have_comments() {
 		/**
 		 * Wrong data
 		 */
