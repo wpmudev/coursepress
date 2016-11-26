@@ -44,13 +44,18 @@ class CoursePress_Data_Discussion {
 
 	public static function attributes( $n_id ) {
 
-		if ( is_object( $n_id ) ) {
+		if ( is_object( $n_id ) && is_a( $n_id, 'WP_Post' ) ) {
 			$n_id = $n_id->ID;
-		} else {
+		} else if ( is_integer( $n_id ) || is_string( $n_id ) ) {
 			$n_id = (int) $n_id;
+		} else {
+			return array();
+		}
+		$course_id = (int) get_post_meta( $n_id, 'course_id', true );
+		if ( ! CoursePress_Data_Course::is_course( $course_id ) ) {
+			return array();
 		}
 
-		$course_id = (int) get_post_meta( $n_id, 'course_id', true );
 		$course_title = ! empty( $course_id ) ? get_the_title( $course_id ) : __( 'All courses', 'CP_TD' );
 		$course_id = ! empty( $course_id ) ? $course_id : 'all';
 
@@ -234,7 +239,7 @@ class CoursePress_Data_Discussion {
 		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
 
 		// Record visit action
-		if ( ! isset( $student_progress['units'] ) && ! isset( $student_progress['units'][ $comment_id] ) ) {
+		if ( ! isset( $student_progress['units'] ) && ! isset( $student_progress['units'][ $comment_id ] ) ) {
 			CoursePress_Helper_Utility::set_array_val( $student_progress, 'units/' . $comment_id, array() );
 			CoursePress_Data_Student::update_completion_data( $student_id, $course_id, $student_progress );
 		}
