@@ -62,7 +62,7 @@ class CoursePress_Tests_Helper {
 		return $student;
 	}
 
-	private function get_discussion( $course_id ) {
+	private function get_discussion( $course ) {
 		/**
 		 * set title
 		 */
@@ -73,11 +73,15 @@ class CoursePress_Tests_Helper {
 				'post_author' => $this->admin->ID,
 				'post_status' => 'publish',
 				'post_type' => CoursePress_Data_Discussion::get_post_type_name(),
-				'discussion_excerpt' => 'test discussion excerpt',
-				'discussion_description' => 'test discussion content',
-				'discussion_name' => $title,
+				'post_excerpt' => 'test discussion excerpt',
+				'post_content' => 'test discussion content',
+				'post_title' => $title,
+				'post_parent' => $course->ID,
+				'meta_input' => array(
+					'course_id' => $course->ID,
+				),
 			);
-			$discussion_id = CoursePress_Data_Discussion::update( false, $postarr );
+			$discussion_id = wp_insert_post( $postarr );
 			$discussion = get_post( $discussion_id );
 		}
 		return $discussion;
@@ -214,7 +218,7 @@ class CoursePress_Tests_Helper {
 		 * add discussion
 		 */
 		$course->discussions = array();
-		$course->discussions[] = $this->add_discussion( $course );
+		$course->discussions[] = $this->get_discussion( $course );
 
 		/**
 		 * Add instructor
