@@ -52,6 +52,9 @@ class CoursePress_Data_Discussion {
 			return array();
 		}
 		$course_id = (int) get_post_meta( $n_id, 'course_id', true );
+		/**
+		 * Sanitize $course_id
+		 */
 		if ( ! CoursePress_Data_Course::is_course( $course_id ) ) {
 			return array();
 		}
@@ -73,26 +76,28 @@ class CoursePress_Data_Discussion {
 
 	}
 
-	public static function get_discussions( $course ) {
-
-		$course = (array) $course;
+	public static function get_discussions( $course_id ) {
+		/**
+		 * Sanitize $course_id
+		 */
+		if ( ! CoursePress_Data_Course::is_course( $course_id ) ) {
+			return array();
+		}
+		$courses = (array) $course_id;
 
 		$args = array(
 			'post_type' => self::get_post_type_name(),
 			'meta_query' => array(
 				array(
 					'key' => 'course_id',
-					'value' => $course,
+					'value' => $courses,
 					'compare' => 'IN',
 				),
 			),
 			'post_per_page' => 20,
 		);
-
 		return get_posts( $args );
-
 	}
-
 
 	// Hook from CoursePress_View_Front
 	public static function permalink( $permalink, $post, $leavename ) {
