@@ -84,7 +84,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	/**
 	 * attributes( $n_id )
 	 */
-	public function test_attributes() {
+	public function xxxx_attributes() {
 		$keys = array( 'course_id', 'course_title', 'unit_id', 'unit_title' );
 		/**
 		 * Wrong data
@@ -111,25 +111,31 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *get_discussions( $course )
+	 * get_discussions( $course )
 	 */
-	public function xxxx_get_discussions() {
+	public function test_get_discussions() {
 		/**
 		 * Wrong data
 		 */
 		$values = $this->get_wrong_values();
 		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Discussion::get_discussions( $value );
+			$this->assertInternalType( 'array', $assert );
+			$this->assertEquals( array(), $assert );
 		}
 		/**
 		 * Good data
 		 */
-		$value = '';
-		//		$assert = CoursePress_Data_Discussion::;
-
+		$value = $this->course->ID;
+		$assert = CoursePress_Data_Discussion::get_discussions( $value );
+		$this->assertInternalType( 'array', $assert );
+		$assert = $assert[0];
+		$this->assertInstanceOf( 'WP_Post', $assert );
 	}
 
 	/**
-	 *permalink( $permalink, $post, $leavename )
+	 * TODO
+	 * permalink( $permalink, $post, $leavename )
 	 */
 	public function xxxx_permalink() {
 		/**
@@ -147,7 +153,8 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *update_discussion( $discussion_title = '', $discussion_description = '', $course_id = '', $unit_id = '' )
+	 * TODO
+	 * update_discussion( $discussion_title = '', $discussion_description = '', $course_id = '', $unit_id = '' )
 	 */
 	public function xxxx_update_discussion() {
 		/**
@@ -165,7 +172,8 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *get_one( $post_id = 0 )
+	 * TODO
+	 * get_one( $post_id = 0 )
 	 */
 	public function xxxx_get_one() {
 		/**
@@ -183,7 +191,8 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *before_add_comment( $comment_post_ID, $course_id )
+	 * TODO
+	 * before_add_comment( $comment_post_ID, $course_id )
 	 */
 	public function xxxx_before_add_comment() {
 		/**
@@ -201,7 +210,8 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *after_add_comment( $comment_id, $student_id, $comment_post_ID, $course_id )
+	 * TODO
+	 * after_add_comment( $comment_id, $student_id, $comment_post_ID, $course_id )
 	 */
 	public function xxxx_after_add_comment() {
 		/**
@@ -219,7 +229,8 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *init()
+	 * TODO
+	 * init()
 	 */
 	public function xxxx_init() {
 		/**
@@ -237,7 +248,8 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *approved_discussion_comment( $is_approved, $commentdata )
+	 * TODO
+	 * approved_discussion_comment( $is_approved, $commentdata )
 	 */
 	public function xxxx_approved_discussion_comment() {
 		/**
@@ -255,7 +267,8 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *comment_post_types()
+	 * TODO
+	 * comment_post_types()
 	 */
 	public function xxxx_comment_post_types() {
 		/**
@@ -273,7 +286,8 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *is_comment_in_discussion( $comment_id )
+	 * TODO
+	 * is_comment_in_discussion( $comment_id )
 	 */
 	public function xxxx_is_comment_in_discussion() {
 		/**
@@ -291,7 +305,8 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *preprocess_discussion_comment( $comment_data )
+	 * TODO
+	 * preprocess_discussion_comment( $comment_data )
 	 */
 	public function xxxx_preprocess_discussion_comment() {
 		/**
@@ -309,7 +324,8 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *redirect_back( $location, $comment )
+	 * TODO
+	 * redirect_back( $location, $comment )
 	 */
 	public function xxxx_redirect_back() {
 		/**
@@ -327,7 +343,8 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *is_discussion_subscriber( $user_id, $discussion_id )
+	 * TODO
+	 * is_discussion_subscriber( $user_id, $discussion_id )
 	 */
 	public function xxxx_is_discussion_subscriber() {
 		/**
@@ -345,7 +362,8 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *is_discussion_reactions_subscriber( $user_id, $discussion_id )
+	 * TODO
+	 * is_discussion_reactions_subscriber( $user_id, $discussion_id )
 	 */
 	public function xxxx_is_discussion_reactions_subscriber() {
 		/**
@@ -363,7 +381,8 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *is_subscriber( $user_id, $discussion_id )
+	 * TODO
+	 * is_subscriber( $user_id, $discussion_id )
 	 */
 	public function xxxx_is_subscriber() {
 		/**
@@ -381,7 +400,8 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *is_unsubscribe_link( $course_url, $course_id )
+	 * TODO
+	 * is_unsubscribe_link( $course_url, $course_id )
 	 */
 	public function xxxx_is_unsubscribe_link() {
 		/**
@@ -399,7 +419,8 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *unsubscribe_from_discussion( $content )
+	 * TODO
+	 * unsubscribe_from_discussion( $content )
 	 */
 	public function xxxx_unsubscribe_from_discussion() {
 		/**
@@ -417,7 +438,8 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *update_user_subscription( $user_id, $discussion_id, $new_value = false )
+	 * TODO
+	 * update_user_subscription( $user_id, $discussion_id, $new_value = false )
 	 */
 	public function xxxx_update_user_subscription() {
 		/**
@@ -435,7 +457,8 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *comment_add_new( $data, $json_data )
+	 * TODO
+	 * comment_add_new( $data, $json_data )
 	 */
 	public function xxxx_comment_add_new() {
 		/**
@@ -453,7 +476,8 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *ajax_update()
+	 * TODO
+	 * ajax_update()
 	 */
 	public function xxxx_ajax_update() {
 		/**
@@ -471,7 +495,8 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *is_correct_post_type( $post )
+	 * TODO
+	 * is_correct_post_type( $post )
 	 */
 	public function xxxx_is_correct_post_type() {
 		/**
@@ -489,7 +514,8 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *wp_list_comments_args( $args )
+	 * TODO
+	 * wp_list_comments_args( $args )
 	 */
 	public function xxxx_wp_list_comments_args() {
 		/**
@@ -507,7 +533,8 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *comments_template_query_args( $args )
+	 * TODO
+	 * comments_template_query_args( $args )
 	 */
 	public function xxxx_comments_template_query_args() {
 		/**
@@ -525,7 +552,8 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 *have_comments( $student_id, $post_id )
+	 * TODO
+	 * have_comments( $student_id, $post_id )
 	 */
 	public function xxxx_have_comments() {
 		/**
@@ -544,4 +572,4 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 }
 /**
 print_r( array( gettype( $assert ), $assert ) );
-*/
+ */
