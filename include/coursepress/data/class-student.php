@@ -1219,7 +1219,6 @@ class CoursePress_Data_Student {
 			$course_progress
 		);
 
-		// Compute course average
 		$completion_average = 0;
 		$is_completed = false;
 
@@ -1228,6 +1227,11 @@ class CoursePress_Data_Student {
 			$student_progress,
 			'completion/failed'
 		);
+
+		// Compute course average
+		if ( $course_gradable_modules > 0 && $course_grade > 0 ) {
+			$completion_average = ceil( $course_grade / $course_gradable_modules );
+		}
 
 		if ( 0 === $require_assessment ) {
 			if ( $course_gradable_modules > 0 && $course_grade > 0 ) {
