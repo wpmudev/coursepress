@@ -238,8 +238,33 @@ class CoursePress_Data_Discussion {
 	}
 
 	public static function after_add_comment( $comment_id, $student_id, $comment_post_ID, $course_id ) {
+		/**
+		 * Sanitize $comment_id
+		 */
+		if ( empty( $comment_id ) ) {
+			return;
+		}
+		if ( is_string( $comment_id ) ) {
+			$comment_id = (int) $comment_id;
+		}
+		if ( ! is_integer( $comment_id ) ) {
+			return;
+		}
+		if ( 1 > $comment_id ) {
+			return;
+		}
+
 		// Approved this comment
-		wp_set_comment_status( $comment_id, 'approve' );
+		$result = wp_set_comment_status( $comment_id, 'approve' );
+
+		/**
+		 * Do not continue is wp_set_comment_status() fail or was deleted.
+		 * See more:
+		 * https://codex.wordpress.org/Function_Reference/wp_set_comment_status#Return_Values
+		 */
+		if ( ! $result ) {
+			return;
+		}
 
 		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
 
