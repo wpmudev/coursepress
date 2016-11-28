@@ -69,7 +69,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 			),
 		);
 		$assert = CoursePress_Data_Discussion::get_format();
-		$this->has_keys( $assert );
+		$this->has_keys( $keys, $assert );
 	}
 
 	/**
@@ -195,7 +195,6 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 * TODO
 	 * before_add_comment( $comment_post_ID, $course_id )
 	 */
 	public function test_before_add_comment() {
@@ -203,18 +202,27 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 		 * Wrong data
 		 */
 		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
+		foreach ( $values as $comment_post_ID ) {
+			foreach ( $values as $course_id ) {
+				$assert = CoursePress_Data_Discussion::before_add_comment( $comment_post_ID, $course_id );
+				$this->assertEmpty( $assert );
+			}
 		}
 		/**
 		 * Good data
 		 */
-		$value = '';
-		//		$assert = CoursePress_Data_Discussion::;
-
+		$course_id = $this->course->ID;
+		foreach ( $this->course->discussions as $value ) {
+			$comment_post_ID = $value->ID;
+			$assert = CoursePress_Data_Discussion::before_add_comment( $comment_post_ID, $course_id );
+			$this->assertEmpty( $assert );
+			/**
+			 * TODO add test after adding a comment
+			 */
+		}
 	}
 
 	/**
-	 * TODO
 	 * after_add_comment( $comment_id, $student_id, $comment_post_ID, $course_id )
 	 */
 	public function test_after_add_comment() {
@@ -222,14 +230,24 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 		 * Wrong data
 		 */
 		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
+		foreach ( $values as $comment_id ) {
+			foreach ( $values as $student_id ) {
+				foreach ( $values as $comment_post_ID ) {
+					foreach ( $values as $course_id ) {
+						$assert = CoursePress_Data_Discussion::after_add_comment( $comment_id, $student_id, $comment_post_ID, $course_id );
+						$this->assertEmpty( $assert );
+					}
+				}
+			}
 		}
 		/**
 		 * Good data
+		 * TODO add test after adding a comment
 		 */
-		$value = '';
+		$course_id = $this->course->ID;
+		foreach ( $this->course->discussions as $value ) {
+		}
 		//		$assert = CoursePress_Data_Discussion::;
-
 	}
 
 	/**
