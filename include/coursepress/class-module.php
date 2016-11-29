@@ -189,6 +189,7 @@ class CoursePress_Module {
 	 * Validate modules submission.
 	 **/
 	public static function process_submission() {
+
 		if ( self::is_valid() ) {
 			self::submit( $_REQUEST );
 		}
