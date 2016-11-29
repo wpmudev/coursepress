@@ -296,26 +296,16 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 * TODO
 	 * comment_post_types()
 	 */
 	public function test_comment_post_types() {
-		/**
-		 * Wrong data
-		 */
-		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
-		}
-		/**
-		 * Good data
-		 */
-		$value = '';
-		//		$assert = CoursePress_Data_Discussion::;
-
+		$values = array( 'discussions', 'module', 'unit' );
+		$assert = CoursePress_Data_Discussion::comment_post_types();
+		$this->assertInternalType( 'array', $assert );
+		$this->assertEqualSets( $values, $assert );
 	}
 
 	/**
-	 * TODO
 	 * is_comment_in_discussion( $comment_id )
 	 */
 	public function test_is_comment_in_discussion() {
@@ -324,8 +314,12 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 		 */
 		$values = $this->get_wrong_values();
 		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Discussion::is_comment_in_discussion( $value );
+			$this->assertInternalType( 'boolean', $assert );
+			$this->assertFalse( $assert );
 		}
 		/**
+	 * TODO
 		 * Good data
 		 */
 		$value = '';
@@ -353,7 +347,6 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 * TODO
 	 * redirect_back( $location, $comment )
 	 */
 	public function test_redirect_back() {
@@ -361,18 +354,21 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 		 * Wrong data
 		 */
 		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
+		foreach ( $values as $location ) {
+			foreach ( $values as $comment ) {
+				$assert = CoursePress_Data_Discussion::redirect_back( $location, $comment );
+				$this->assertEquals( $location, $assert );
+			}
 		}
 		/**
+	 * TODO
 		 * Good data
 		 */
 		$value = '';
 		//		$assert = CoursePress_Data_Discussion::;
-
 	}
 
 	/**
-	 * TODO
 	 * is_discussion_subscriber( $user_id, $discussion_id )
 	 */
 	public function test_is_discussion_subscriber() {
@@ -380,9 +376,15 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 		 * Wrong data
 		 */
 		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
+		foreach ( $values as $user_id ) {
+			foreach ( $values as $discussion_id ) {
+				$assert = CoursePress_Data_Discussion::is_discussion_subscriber( $user_id, $discussion_id );
+				$this->assertInternalType( 'boolean', $assert );
+				$this->assertFalse( $assert );
+			}
 		}
 		/**
+		 * TODO
 		 * Good data
 		 */
 		$value = '';
@@ -391,7 +393,6 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 * TODO
 	 * is_discussion_reactions_subscriber( $user_id, $discussion_id )
 	 */
 	public function test_is_discussion_reactions_subscriber() {
@@ -399,18 +400,22 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 		 * Wrong data
 		 */
 		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
+		foreach ( $values as $user_id ) {
+			foreach ( $values as $discussion_id ) {
+				$assert = CoursePress_Data_Discussion::is_discussion_reactions_subscriber( $user_id, $discussion_id );
+				$this->assertInternalType( 'boolean', $assert );
+				$this->assertTrue( $assert );
+			}
 		}
 		/**
 		 * Good data
+		 * TODO
 		 */
 		$value = '';
 		//		$assert = CoursePress_Data_Discussion::;
-
 	}
 
 	/**
-	 * TODO
 	 * is_subscriber( $user_id, $discussion_id )
 	 */
 	public function test_is_subscriber() {
@@ -418,18 +423,22 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 		 * Wrong data
 		 */
 		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
+		foreach ( $values as $user_id ) {
+			foreach ( $values as $discussion_id ) {
+				$assert = CoursePress_Data_Discussion::is_subscriber( $user_id, $discussion_id );
+				$this->assertInternalType( 'boolean', $assert );
+				$this->assertTrue( $assert );
+			}
 		}
 		/**
 		 * Good data
+		 * TODO
 		 */
 		$value = '';
 		//		$assert = CoursePress_Data_Discussion::;
-
 	}
 
 	/**
-	 * TODO
 	 * is_unsubscribe_link( $course_url, $course_id )
 	 */
 	public function test_is_unsubscribe_link() {
@@ -437,18 +446,21 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 		 * Wrong data
 		 */
 		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
+		foreach ( $values as $course_url ) {
+			foreach ( $values as $course_id ) {
+				$assert = CoursePress_Data_Discussion::is_unsubscribe_link( $course_url, $course_id );
+				$this->assertEquals( $course_url, $assert );
+			}
 		}
 		/**
 		 * Good data
+		 * TODO
 		 */
 		$value = '';
 		//		$assert = CoursePress_Data_Discussion::;
-
 	}
 
 	/**
-	 * TODO
 	 * unsubscribe_from_discussion( $content )
 	 */
 	public function test_unsubscribe_from_discussion() {
@@ -457,13 +469,21 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 		 */
 		$values = $this->get_wrong_values();
 		foreach ( $values as $value ) {
+			foreach ( $values as $user_id ) {
+				foreach ( $values as $post_id ) {
+					$_GET['uid'] = $user_id;
+					$_GET['unsubscribe'] = $post_id;
+					$assert = CoursePress_Data_Discussion::unsubscribe_from_discussion( $value );
+					$this->assertEquals( $value, $assert );
+				}
+			}
 		}
 		/**
+		 * TODO
 		 * Good data
 		 */
 		$value = '';
 		//		$assert = CoursePress_Data_Discussion::;
-
 	}
 
 	/**
@@ -520,11 +540,9 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 		 */
 		$value = '';
 		//		$assert = CoursePress_Data_Discussion::;
-
 	}
 
 	/**
-	 * TODO
 	 * is_correct_post_type( $post )
 	 */
 	public function test_is_correct_post_type() {
@@ -533,13 +551,18 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 		 */
 		$values = $this->get_wrong_values();
 		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Discussion::is_correct_post_type( $value );
+			$this->assertInternalType( 'boolean', $assert );
+			$this->assertFalse( $assert );
 		}
 		/**
 		 * Good data
 		 */
-		$value = '';
-		//		$assert = CoursePress_Data_Discussion::;
-
+		foreach ( $this->course->discussions as $discussion ) {
+			$assert = CoursePress_Data_Discussion::is_correct_post_type( $discussion );
+			$this->assertInternalType( 'boolean', $assert );
+			$this->assertTrue( $assert );
+		}
 	}
 
 	/**
