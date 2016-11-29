@@ -373,6 +373,12 @@ class CoursePress_Data_Discussion {
 	 * @since 2.0
 	 **/
 	public static function redirect_back( $location, $comment ) {
+		/**
+		 * Sanitize $comment
+		 */
+		if ( ! is_a( $comment, 'WP_Comment' ) ) {
+			return $location;
+		}
 		$post_id = $comment->comment_post_ID;
 		$post_type = get_post_type( $post_id );
 		if ( $post_type == self::$post_type ) {
@@ -385,8 +391,20 @@ class CoursePress_Data_Discussion {
 	}
 
 	public static function is_discussion_subscriber( $user_id, $discussion_id ) {
-		$key = CoursePress_Helper_Discussion::get_user_meta_name( $discussion_id );
-		$value = get_user_meta( $user_id, $key, true );
+		$value = '';
+		/**
+		 * Sanitize $discussion_id
+		 */
+		if ( is_string( $discussion_id ) ) {
+			$discussion_id = (int) $discussion_id;
+		}
+		if ( is_numeric( $discussion_id ) && 0 < $discussion_id ) {
+			$key = CoursePress_Helper_Discussion::get_user_meta_name( $discussion_id );
+			$value = get_user_meta( $user_id, $key, true );
+		}
+		/**
+		 * sanitize value
+		 */
 		$value = CoursePress_Helper_Discussion::sanitize_cp_subscribe_to_key( $value );
 		return 'subscribe-all' == $value;
 	}
@@ -401,8 +419,20 @@ class CoursePress_Data_Discussion {
 	 * @return boolean User subscribe reactions?
 	 */
 	public static function is_discussion_reactions_subscriber( $user_id, $discussion_id ) {
-		$key = CoursePress_Helper_Discussion::get_user_meta_name( $discussion_id );
-		$value = get_user_meta( $user_id, $key, true );
+		$value = '';
+		/**
+		 * Sanitize $discussion_id
+		 */
+		if ( is_string( $discussion_id ) ) {
+			$discussion_id = (int) $discussion_id;
+		}
+		if ( is_numeric( $discussion_id ) && 0 < $discussion_id ) {
+			$key = CoursePress_Helper_Discussion::get_user_meta_name( $discussion_id );
+			$value = get_user_meta( $user_id, $key, true );
+		}
+		/**
+		 * sanitize value
+		 */
 		$value = CoursePress_Helper_Discussion::sanitize_cp_subscribe_to_key( $value );
 		return 'subscribe-reactions' == $value;
 	}
@@ -443,10 +473,17 @@ class CoursePress_Data_Discussion {
 	}
 
 	public static function unsubscribe_from_discussion( $content ) {
-		if ( isset( $_GET['unsubscribe'] ) && isset( $_GET['uid'] ) ) {
+		if (
+			isset( $_GET['unsubscribe'] )
+			&& ( is_string( $_GET['unsubscribe'] ) || is_numeric( $_GET['unsubscribe'] ) )
+			&& isset( $_GET['uid'] )
+			&& ( is_string( $_GET['uid'] ) || is_numeric( $_GET['uid'] ) )
+		) {
 			$user_id = (int) $_GET['uid'];
 			$post_id = (int) $_GET['unsubscribe'];
-
+			if ( 1 > $user_id || 1 > $post_id ) {
+				return $content;
+			}
 			if ( self::is_subscriber( $user_id, $post_id ) ) {
 				// Double check
 				$post_type = get_post_field( 'post_type', $post_id );
