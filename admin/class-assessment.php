@@ -34,7 +34,6 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 		$this->css = array(
 			'select2' => true,
 			'admin-ui' => true,
-			'assessment' => CoursePress::$url . 'asset/css/assessment.css',
 		);
 
 		// Set localize array for assessment only
