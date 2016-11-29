@@ -70,7 +70,7 @@ class CoursePress_Template_Communication {
 				<a href="' . esc_url( $new_discussion_link ) . '" class="button">' . esc_html( 'Start a new discussion', 'CP_TD' ) . '</a>
 			</div>
 		';
-		if ( empty( $notifications ) ) {
+		if ( empty( $discussions ) ) {
 			$content .= sprintf(
 				'<p class="message">%s</p>',
 				__( 'This course does not have any discussions.', 'CP_TD' )
