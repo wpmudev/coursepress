@@ -441,7 +441,7 @@ $(document)
 
 		var duration = timer_span.data( 'limit' ), repeat = timer_span.data( 'retry' ),
 			hours = 0, minutes = 0, seconds = 0, total_limit = 0, timer,
-			_seconds = 60, _minutes = '00', _hours = '00', dtime, info, send, expired;
+			_seconds = 60, _minutes = '00', _hours = '00', dtime, info, send, expired, inputs;
 
 		duration = duration.split( ':' );
 
@@ -461,8 +461,11 @@ $(document)
 		total_limit = hours + minutes + seconds;
 
 		info = container.find( '.quiz_timer_info' );
+		inputs = container.find( '.module-elements input, .module_elements select, .module-elements textarea' );
+		inputs.removeAttr('disabled');
+
 		expired = function() {
-			container.find( 'input,select,textarea' ).attr( 'disabled', 'disabled' );
+			inputs.attr( 'disabled', 'disabled' );
 			info.show();
 		};
 
@@ -503,7 +506,7 @@ $(document)
 				send.save();
 				// Enable retry button here
 				info.on( 'click', function() {
-					container.find( 'input,select,textarea' ).removeAttr( 'disabled' );
+					inputs.removeAttr( 'disabled' );
 					info.hide();
 					CoursePress.timer( container );
 				});
