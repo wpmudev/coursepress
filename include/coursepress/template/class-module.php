@@ -236,7 +236,7 @@ class CoursePress_Template_Module {
 
 		if ( $is_focus ) {
 			$content .= wp_nonce_field( 'coursepress_submit_modules', '_wpnonce', true, false );
-			$content .= sprintf( '<div class="cp-error">%s</div>', apply_filters( 'coursepress_before_unit_modules', '' ) );
+			//$content .= sprintf( '<div class="cp-error">%s</div>', apply_filters( 'coursepress_before_unit_modules', '' ) );
 		}
 		$content .= sprintf( '<input type="hidden" name="module_id[]" value="%s" />', $module_id );
 
@@ -280,7 +280,8 @@ class CoursePress_Template_Module {
 					$retry = '';
 				} elseif ( 0 < $response_count ) {
 					$attempts = (int) $attributes['retry_attempts'];
-					if ( $attempts >= $response_count ) {
+					
+					if ( $response_count >= $attempts ) {
 						$disabled = true;
 						$retry = '';
 					}

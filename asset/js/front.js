@@ -441,7 +441,7 @@ $(document)
 
 		var duration = timer_span.data( 'limit' ), repeat = timer_span.data( 'retry' ),
 			hours = 0, minutes = 0, seconds = 0, total_limit = 0, timer,
-			_seconds = 60, _minutes = '00', _hours = '00', dtime, info, send, expired;
+			_seconds = 60, _minutes = '00', _hours = '00', dtime, info, send, expired, inputs;
 
 		duration = duration.split( ':' );
 
@@ -461,8 +461,11 @@ $(document)
 		total_limit = hours + minutes + seconds;
 
 		info = container.find( '.quiz_timer_info' );
+		inputs = container.find( '.module-elements input, .module_elements select, .module-elements textarea' );
+		inputs.removeAttr('disabled');
+
 		expired = function() {
-			container.find( 'input,select,textarea' ).attr( 'disabled', 'disabled' );
+			inputs.attr( 'disabled', 'disabled' );
 			info.show();
 		};
 
@@ -476,13 +479,18 @@ $(document)
 		}
 
 		timer = setInterval(function(){
+
+			if ( 60 == _seconds ) {
+				if ( parseInt( _minutes ) > 0 ) {
+					_minutes = parseInt( _minutes ) - 1;
+				}
+			}
+
 			_seconds = parseInt( _seconds ) - 1;
 
 			if ( _seconds <= 0 && _minutes <= 0 && _hours <= 0 ) {
 				clearInterval( timer );
-
 				expired();
-
 				// Send record data in silence
 				send = new CoursePress.SendRequest();
 				send.set({
@@ -496,43 +504,39 @@ $(document)
 					action: 'record_time'
 				});
 				send.save();
-
 				// Enable retry button here
 				info.on( 'click', function() {
-					container.find( 'input,select,textarea' ).removeAttr( 'disabled' );
+					inputs.removeAttr( 'disabled' );
 					info.hide();
 					CoursePress.timer( container );
 				});
 			}
-
 			if ( _seconds < 0 ) {
 				_seconds = 59;
-
 				if ( parseInt( _minutes ) > 0 ) {
 					_minutes = parseInt( _minutes ) - 1;
 				}
-
 				if ( parseInt( _minutes ) <= 0 ) {
 					if ( parseInt( _hours ) > 0 ) {
 						_hours = parseInt( _hours ) - 1;
 						_minutes = 59;
-
 						if ( _hours < 10 ) {
 							_hours = '0' + parseInt( _hours );
 						}
 					}
 				}
-
-				if ( _minutes < 10 ) {
-					_minutes = '0' + parseInt( _minutes );
-				}
 			}
-
 			if ( _seconds < 10 ) {
 				_seconds = '0' + parseInt( _seconds );
 			}
-
-			dtime = _hours + ':' + _minutes + ':' + _seconds;
+			if ( _minutes < 10 ) {
+				_minutes = '0' + parseInt( _minutes );
+			}
+			if ( '00' == _hours ) {
+				dtime = _minutes + ':' + _seconds;
+			} else {
+				dtime = _hours + ':' + _minutes + ':' + _seconds;
+			}
 			timer_span.html( dtime );
 		}, 1000);
 	};
@@ -956,6 +960,7 @@ $(document)
 		.on( 'click', '.course-structure-block .unit .fold, .unit-archive-list .fold', CoursePress.unitFolded );
 
 })(jQuery);
+
 /* global CoursePress */
 
 (function( $ ) {
