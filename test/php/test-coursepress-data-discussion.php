@@ -251,22 +251,29 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 * TODO
 	 * init()
 	 */
 	public function test_init() {
-		/**
-		 * Wrong data
-		 */
-		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
-		}
-		/**
-		 * Good data
-		 */
-		$value = '';
-		//		$assert = CoursePress_Data_Discussion::;
+		$assert = has_action( 'coursepress_before_add_comment', array( 'CoursePress_Data_Discussion', 'before_add_comment' ) );
+		$this->assertEquals( 10, $assert );
 
+		$assert = has_action( 'coursepress_after_add_comment', array( 'CoursePress_Data_Discussion', 'after_add_comment' ) );
+		$this->assertEquals( 10, $assert );
+
+		$assert = has_action( 'the_content', array( 'CoursePress_Data_Discussion', 'unsubscribe_from_discussion' ) );
+		$this->assertEquals( 10, $assert );
+
+		$assert = has_filter( 'comment_post_redirect', array( 'CoursePress_Data_Discussion', 'redirect_back' ) );
+		$this->assertEquals( 10, $assert );
+
+		$assert = has_filter( 'coursepress_no_access_redirect_url', array( 'CoursePress_Data_Discussion', 'is_unsubscribe_link' ) );
+		$this->assertEquals( 10, $assert );
+
+		$assert = has_filter( 'wp_list_comments_args', array( 'CoursePress_Data_Discussion', 'wp_list_comments_args' ) );
+		$this->assertEquals( 10, $assert );
+
+		$assert = has_filter( 'comments_template_query_args', array( 'CoursePress_Data_Discussion', 'comments_template_query_args' ) );
+		$this->assertEquals( 10, $assert );
 	}
 
 	/**
