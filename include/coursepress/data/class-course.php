@@ -3221,7 +3221,7 @@ class CoursePress_Data_Course {
 		);
 		$results = $wpdb->get_results( $sql );
 		foreach ( $results as $post ) {
-			delete_post_meta( $post->id, self::$post_count_title_name );
+			delete_post_meta( $post->ID, self::$post_count_title_name );
 		}
 		self::save_course_number( $post_id, $post_type, array( $post_id ) );
 	}
