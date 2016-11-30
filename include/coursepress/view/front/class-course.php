@@ -492,6 +492,9 @@ class CoursePress_View_Front_Course {
 	 * @return string The HTML code.
 	 */
 	public static function render_course_discussion() {
+		global $post;
+		$post->comment_status = 'closed';
+
 		$theme_file = locate_template( array( 'single-course-discussion.php' ) );
 
 		if ( $theme_file ) {

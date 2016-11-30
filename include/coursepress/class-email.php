@@ -15,6 +15,8 @@ class CoursePress_Email {
 	public function __construct() {
 		// Set admin related hooks
 		add_action( 'admin_init', array( $this, 'admin_hooks' ) );
+		// Set default settings
+		add_filter( 'coursepress_default_email_settings', array( $this, 'default_email_settings' ) );
 	}
 
 	/**
@@ -23,6 +25,21 @@ class CoursePress_Email {
 	public function admin_hooks() {
 		// Set email settings block
 		add_filter( 'coursepress_email_settings_sections', array( $this, 'email_settings_view' ) );
+	}
+
+	public function default_email_settings( $all_settings ) {
+		$email_fields = wp_parse_args(
+			$this->default_email_fields(),
+			array(
+				'from' => get_option( 'blogname' ),
+				'email' => get_option( 'admin_email' ),
+				'subject' => __( 'Subject line here...', 'CP_TD' ),
+				'content' => 'The content goes here...',
+		) );
+
+		$all_settings[ $this->email_type ] = $email_fields;
+
+		return $all_settings;
 	}
 
 	/**
