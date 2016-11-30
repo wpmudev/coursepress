@@ -192,8 +192,8 @@ class CoursePress_Upgrade {
 		CoursePress_Helper_Utility::set_array_val( $settings, 'marketpress/redirect', $value );
 
 		// WooCommerce Integration
-		CoursePress_Helper_Utility::set_array_val( $settings, 'woocommerce/use', get_option( 'use_woo', 0 ) );
-		CoursePress_Helper_Utility::set_array_val( $settings, 'woocommerce/redirect_to_course', get_option( 'redirect_woo_to_course',0 ) );
+		CoursePress_Helper_Utility::set_array_val( $settings, 'woocommerce/enabled', get_option( 'use_woo', 0 ) );
+		CoursePress_Helper_Utility::set_array_val( $settings, 'woocommerce/redirect', get_option( 'redirect_woo_to_course',0 ) );
 
 		// Terms of Service Integration
 		CoursePress_Helper_Utility::set_array_val( $settings, 'tos/use', get_option( 'show_tos', 0 ) );
