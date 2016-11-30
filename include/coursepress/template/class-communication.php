@@ -64,7 +64,9 @@ class CoursePress_Template_Communication {
 
 		$content = do_shortcode( '[course_unit_submenu]' );
 
-		$new_discussion_link = CoursePress_Core::get_slug( 'course/', true ) . $course->post_name . '/' . CoursePress_Core::get_slug( 'discussions/' ) . CoursePress_Core::get_slug( 'discussion_new' );
+		$slug_new = CoursePress_Core::get_setting( 'slugs/discussions_new', 'add_new_discussion' );
+
+		$new_discussion_link = CoursePress_Core::get_slug( 'course/', true ) . $course->post_name . '/' . CoursePress_Core::get_slug( 'discussions/' ) . $slug_new;
 		$content .= '
 			<div class="discussion-new">
 				<a href="' . esc_url( $new_discussion_link ) . '" class="button">' . esc_html( 'Start a new discussion', 'CP_TD' ) . '</a>
