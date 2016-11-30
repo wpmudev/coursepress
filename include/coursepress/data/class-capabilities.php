@@ -197,7 +197,7 @@ class CoursePress_Data_Capabilities {
 		if ( user_can( $user, 'manage_options' ) ) {
 			self::assign_admin_capabilities( $user );
 		} else {
-			$count = CoursePress_Data_Instructor::get_course_count( $user->id );
+			$count = CoursePress_Data_Instructor::get_course_count( $user->ID );
 			if ( ! empty( $count ) ) {
 				self::assign_instructor_capabilities( $user->ID );
 			} else {
@@ -205,9 +205,9 @@ class CoursePress_Data_Capabilities {
 			}
 
 			// Add facilitator role
-			$facilitated_courses = CoursePress_Data_Facilitator::get_facilitated_courses( $user->id, array( 'any' ), true, 0, 1 );
+			$facilitated_courses = CoursePress_Data_Facilitator::get_facilitated_courses( $user->ID, array( 'any' ), true, 0, 1 );
 			if ( ! empty( $facilitated_courses ) ) {
-				self::assign_facilitator_capabilities( $user->id );
+				self::assign_facilitator_capabilities( $user->ID );
 			}
 		}
 	}

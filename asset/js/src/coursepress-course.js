@@ -479,7 +479,9 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 				// Get editor type field
 				mce_helper = function( editor_id, editor ) {
 					var content = tinyMCE && tinyMCE.get( editor_id ) ? tinyMCE.get( editor_id ).getContent() : editor.val();
-
+					if ( '' == content ) {
+						content = $('#'+editor_id).val();
+					}
 					return content;
 				};
 

@@ -620,9 +620,8 @@ class CoursePress_Data_Unit {
 	 *
 	 * @param integer $unit_id unit ID.
 	 * @param integer $course_id course ID.
-	 * @param array $meta Meta data.
 	 */
-	public static function show_new_on_list( $unit_id, $course_id, $meta = array() ) {
+	public static function show_new_on_list( $unit_id, $course_id ) {
 		/**
 		 * unit
 		 */
@@ -666,6 +665,9 @@ class CoursePress_Data_Unit {
 		if ( ! isset( $meta['page_title'] ) ) {
 			return;
 		}
+		if ( ! is_array( $meta['page_title'] ) ) {
+			return;
+		}
 		$old_pages = get_post_meta( $unit_id, 'page_title', true );
 		foreach ( $meta['page_title'] as $key => $value ) {
 			if ( array_key_exists( $key, $old_pages ) ) {
@@ -698,5 +700,29 @@ class CoursePress_Data_Unit {
 		}
 
 		return '';
+	}
+
+	/**
+	 * Check entry - is this a unit?
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param WP_Post|integer|null $course Variable to check.
+	 * @return boolean Answer is that course or not?
+	 */
+	public static function is_unit( $unit = null ) {
+		$unit_id = 0;
+		if ( empty( $unit ) ) {
+			global $post;
+			if ( ! is_object( $post ) ) {
+				return false;
+			}
+			$unit = $post;
+		}
+		$post_type = get_post_type( $unit );
+		if ( $post_type == self::$post_type ) {
+			return true;
+		}
+		return false;
 	}
 }

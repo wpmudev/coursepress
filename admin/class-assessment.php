@@ -11,7 +11,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 
 	public function __construct() {
 		parent::__construct();
-		self::$feedback_email = new CoursePress_Admin_FeedbackEmail;
+		self::$feedback_email = new CoursePress_Admin_FeedbackEmail();
 	}
 
 	public function get_labels() {
@@ -34,7 +34,6 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 		$this->css = array(
 			'select2' => true,
 			'admin-ui' => true,
-			'assessment' => CoursePress::$url . 'asset/css/assessment.css',
 		);
 
 		// Set localize array for assessment only
@@ -128,10 +127,10 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 				);
 
 				$is_feedback_new = false;
-
+				
 				if ( $with_feedback ) {
 					$is_feedback_new = empty( $old_feedback );
-
+					
 					if ( ! empty( $old_feedback ) ) {
 						$is_feedback_new = $draft_feedback || trim( $feedback_text ) != trim( $old_feedback );
 					}
@@ -147,7 +146,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 							false,
 							$student_progress
 						);
-
+						
 						// New feedback, send email
 						self::$feedback_email->send_feedback( $course_id, $unit_id, $module_id, $student_id, $feedback_text );
 					}
@@ -240,7 +239,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 		} else {
 			wp_send_json_error( $json_data );
 		}
-		exit;
+		wp_die();
 	}
 
 	/**

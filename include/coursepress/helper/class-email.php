@@ -116,8 +116,10 @@ class CoursePress_Helper_Email {
 			add_filter( 'wp_mail_from_name', array( __CLASS__, 'wp_mail_from_name' ) );
 
 			$email_settings = self::get_email_fields( $type );
-
-			$args['subject'] = $email_settings['subject'];
+			
+			if ( isset($email_settings['subject']) && !empty($email_settings['subject']) ) {
+				$args['subject'] = $email_settings['subject'];
+			}
 
 			switch ( $type ) {
 				case self::BASIC_CERTIFICATE:
@@ -215,7 +217,7 @@ class CoursePress_Helper_Email {
 		 * @param (bool) $send
 		 **/
 		$send = CoursePress_Data_Unsubscribe::is_send( $type, $args );
-
+		
 		if ( $send ) {
 			return self::process_and_send( $type, $args );
 		}
@@ -334,14 +336,21 @@ class CoursePress_Helper_Email {
 		);
 
 		// If custom send-option failed or was not used then send via wp_mail.
-		if ( ! $result ) {
-			$result = wp_mail(
-				$email['to'],
-				$email['subject'],
-				$email['message'],
-				$email['headers'],
-				$email['attachments']
-			);
+		if ( is_null($result) || !$result ) {
+			
+			try {
+				$result = wp_mail(
+					$email['to'],
+					$email['subject'],
+					$email['message'],
+					$email['headers'],
+					$email['attachments']
+				);
+			} catch(phpmailerException $e) {
+				// print_r($e->getMessage()); // for debugging purposes
+				$result = false;
+			}
+			
 		}
 
 		do_action( 'coursepress_email_sent', $args, $type, $result );
@@ -359,37 +368,49 @@ class CoursePress_Helper_Email {
 	protected static function from_name( $email_type ) {
 		$fields = CoursePress_Helper_Setting_Email::get_defaults( $email_type );
 
-		return CoursePress_Core::get_setting(
-			'email/' . $email_type . '/from',
-			$fields['from']
-		);
+		if ( ! empty( $fields['from'] ) ) {
+			return CoursePress_Core::get_setting(
+				'email/' . $email_type . '/from',
+				$fields['from']
+			);
+		}
+		return '';
 	}
 
 	protected static function from_email( $email_type ) {
 		$fields = CoursePress_Helper_Setting_Email::get_defaults( $email_type );
 
-		return CoursePress_Core::get_setting(
-			'email/' . $email_type . '/email',
-			$fields['email']
-		);
+		if ( ! empty( $fields['email'] ) ) {
+			return CoursePress_Core::get_setting(
+				'email/' . $email_type . '/email',
+				$fields['email']
+			);
+		}
+		return '';
 	}
 
 	protected static function subject( $email_type ) {
 		$fields = CoursePress_Helper_Setting_Email::get_defaults( $email_type );
 
-		return CoursePress_Core::get_setting(
-			'email/' . $email_type . '/subject',
-			$fields['subject']
-		);
+		if ( ! empty( $fields['subject'] ) ) {
+			return CoursePress_Core::get_setting(
+				'email/' . $email_type . '/subject',
+				$fields['subject']
+			);
+		}
+		return '';
 	}
 
 	protected static function content( $email_type ) {
 		$fields = CoursePress_Helper_Setting_Email::get_defaults( $email_type );
 
-		return CoursePress_Core::get_setting(
-			'email/' . $email_type . '/content',
-			$fields['content']
-		);
+		if ( ! empty( $fields['content'] ) ) {
+			return CoursePress_Core::get_setting(
+				'email/' . $email_type . '/content',
+				$fields['content']
+			);
+		}
+		return '';
 	}
 
 	/**

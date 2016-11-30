@@ -81,7 +81,7 @@ class CoursePress_Helper_Integration_MarketPress {
 			array( __CLASS__, 'update_course_from_product' ),
 			10, 3
 		);
-		
+
 		// Below hook will result to duplicate entry on Products
 		// add_action(
 			// 'wp_insert_post',
@@ -224,6 +224,10 @@ class CoursePress_Helper_Integration_MarketPress {
 			10, 2
 		);
 
+		/**
+		 * Add class to body
+		 */
+		add_filter( 'body_class', array( __CLASS__, 'body_class' ) );
 	}
 
 	public static function fix_mp3_on_sale( $on_sale, $product ) {
@@ -327,13 +331,16 @@ class CoursePress_Helper_Integration_MarketPress {
 	}
 
 	public static function course_paid_3pt0( $order ) {
-		$cart = $order->get_meta('mp_cart_info');
+		$cart = $order->get_meta( 'mp_cart_info' );
 		if ( $cart ) {
 			$items = $cart->get_items();
 			if ( $items ) {
 				foreach ( $items as $product_id => $info ) {
 					$course_id = (int) get_post_meta( $product_id, 'mp_course_id', true );
 					$user_id   = $order->post_author;
+
+					// Remove enrollment restrictions
+					remove_all_filters( 'coursepress_enroll_student' );
 
 					// If not enrolled...
 					if ( ! CoursePress_Data_Student::is_enrolled_in_course( $user_id, $course_id ) ) {
@@ -385,7 +392,7 @@ class CoursePress_Helper_Integration_MarketPress {
 				</label>';
 
 		$product_id = self::get_product_id( $course_id );
-		
+
 		if ( $product_id ) {
 			// Add MP product ID as indication.
 			$mp_content .= '
@@ -1093,7 +1100,8 @@ Yours sincerely,
 		if ( ! self::$is_active ) {
 			return $enroll_student;
 		}
-		return CoursePress_Data_Course::is_paid_course( $course_id );
+
+		return ! CoursePress_Data_Course::is_paid_course( $course_id );
 	}
 
 	/**
@@ -1195,6 +1203,27 @@ Yours sincerely,
 			return get_permalink( $course_id );
 		}
 		return $url;
+	}
+
+	/**
+	 * add "marketpress-course" class to body tag if course is paid.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $classes Array of body classes.
+	 */
+	public static function body_class( $classes ) {
+		if ( ! self::$is_active ) {
+			return $classes;
+		}
+		if ( CoursePress_Data_Course::is_course() ) {
+			global $post;
+			$is_paid = CoursePress_Data_Course::is_paid_course( $post->ID );
+			if ( $is_paid ) {
+				$classes[] = 'marketpress-course';
+			}
+		}
+		return $classes;
 	}
 }
 
