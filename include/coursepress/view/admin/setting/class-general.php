@@ -469,7 +469,8 @@ class CoursePress_View_Admin_Setting_General {
 						</tbody>
 					</table>
 
-				</div>
+                </div>';
+		/*
 
 				<!-- COURSE IMAGES -->
 				<h3 class="hndle" style="cursor:auto;"><span>' . esc_html__( 'Course Images', 'CP_TD' ) . '</span></h3>
@@ -495,9 +496,10 @@ class CoursePress_View_Admin_Setting_General {
 							</tr>
 						</tbody>
 					</table>
-				</div>
-
-				<!-- COURSE ORDER -->
+                    </div>
+		*/
+		$content .= '
+<!-- COURSE ORDER -->
 				<h3 class="hndle" style="cursor:auto;"><span>' . esc_html__( 'Course Order', 'CP_TD' ) . '</span></h3>
 				<p class="description">' . __( 'Order of courses in admin and on front. If you choose "Post Order Number", you will have option to reorder courses from within the Courses admin page.', 'CP_TD' ) . '</p>
 				<div class="inside">
@@ -547,7 +549,7 @@ class CoursePress_View_Admin_Setting_General {
 		$enrollment_type_default = CoursePress_Data_Course::get_enrollment_type_default();
 		$selected = CoursePress_Core::get_setting( 'course/enrollment_type_default', $enrollment_type_default );
 		$content .= CoursePress_Helper_UI::select( 'coursepress_settings[course][enrollment_type_default]', $enrollment_types, $selected, 'chosen-select medium' );
-		$content .= sprintf( '<p class="description">%s</p>', __('Select the default limitations on accessing and enrolling in this course.', 'CP_TD' ) );
+		$content .= sprintf( '<p class="description">%s</p>', __( 'Select the default limitations on accessing and enrolling in this course.', 'CP_TD' ) );
 		$content .= '
 								</td>
 							</tr>
