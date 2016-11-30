@@ -164,8 +164,7 @@ class CoursePress_Helper_Upgrade {
 			$course_metas[ $new_meta ] = $meta_value;
 		}
 
-		if ( function_exists( 'is_plugin_active' ) ) {
-			$value = is_plugin_active( 'marketpress/marketpress.php' );
+		if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
 			// Find the product ID
 			$args = array(
 				'posts_per_page' => 1,
