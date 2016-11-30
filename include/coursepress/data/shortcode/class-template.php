@@ -75,6 +75,8 @@ class CoursePress_Data_Shortcode_Template {
 			'messaging_submenu',
 			array( __CLASS__, 'messaging_submenu' )
 		);
+
+		add_filter( 'term_link', array( __CLASS__, 'term_link' ), 10, 3 );
 	}
 
 	public static function course_archive( $a ) {
@@ -285,7 +287,7 @@ class CoursePress_Data_Shortcode_Template {
 				'course_id' => CoursePress_Helper_Utility::the_course( true ),
 				'before' => '',
 				'after' => '',
-				'icon' => '<span class="dashicons dashicons-category"></span>'
+				'icon' => '<span class="dashicons dashicons-category"></span>',
 			),
 			$atts,
 			'course_categories'
@@ -309,6 +311,7 @@ class CoursePress_Data_Shortcode_Template {
 
 			foreach ( $terms as $term ) {
 				$link = get_term_link( $term->term_id, $taxonomy );
+				l( $link );
 				$links[] = sprintf( '<a href="%s">%s</a>', esc_url( $link ), $term->name );
 			}
 
@@ -421,11 +424,11 @@ class CoursePress_Data_Shortcode_Template {
 		</div>';
 
 		$template = sprintf( $template, $user_id, __( 'Enrolled Courses', 'CP_TD' ) );
-/*
-[course_list student="' . $user_id . '" dashboard="true" context="current"]
+		/*
+		[course_list student="' . $user_id . '" dashboard="true" context="current"]
 			[course_list student="'. $user_id . '" dashboard="true" context="future"]
 			[course_list student="' . $user_id . '" dashboard="true" context="past"]
-*/
+		*/
 
 		$template = apply_filters( 'coursepress_template_dashboard_page', $template, $user_id, $a );
 
@@ -604,21 +607,21 @@ class CoursePress_Data_Shortcode_Template {
 
 					$template = '<div class="focus-item focus-item-' . esc_attr( $type ) . '">';
 
-					if ( empty( $error_message ) ) {
-						if ( ! empty( $page_info['feature_image'] ) ) {
-							$feature_image = sprintf( '<img src="%s" alt="%s" />', esc_url( $page_info['feature_image'] ), esc_attr( basename( $page_info['feature_image'] ) ) );
-							$template .= '<div class="section-thumbnail">' . $feature_image . '</div>';
-						}
-
-						$template .= '<h3>'. $page_info['title'] . '</h3>';
-
-						if ( ! empty( $page_info['description'] ) ) {
-							$template .= $page_info['description'];
-						}
-					} else {
-						// Show restriction message
-						$content .= sprintf( '<div class="focus-item focus-item-'. esc_attr( $type ) . '">%s</div>', $error_message );
+				if ( empty( $error_message ) ) {
+					if ( ! empty( $page_info['feature_image'] ) ) {
+						$feature_image = sprintf( '<img src="%s" alt="%s" />', esc_url( $page_info['feature_image'] ), esc_attr( basename( $page_info['feature_image'] ) ) );
+						$template .= '<div class="section-thumbnail">' . $feature_image . '</div>';
 					}
+
+					$template .= '<h3>'. $page_info['title'] . '</h3>';
+
+					if ( ! empty( $page_info['description'] ) ) {
+						$template .= $page_info['description'];
+					}
+				} else {
+					// Show restriction message
+					$content .= sprintf( '<div class="focus-item focus-item-'. esc_attr( $type ) . '">%s</div>', $error_message );
+				}
 
 					$template .= '</div>';
 
@@ -648,26 +651,26 @@ class CoursePress_Data_Shortcode_Template {
 						);
 					}
 
-				$content .= '<div class="focus-nav">';
-				// Previous Navigation
-				$content .= self::show_nav_button(
-					$prev,
-					$pre_text,
-					array( 'focus-nav-prev' )
-				);
+					$content .= '<div class="focus-nav">';
+					// Previous Navigation
+					$content .= self::show_nav_button(
+						$prev,
+						$pre_text,
+						array( 'focus-nav-prev' )
+					);
 
-				// Next Navigation
-				$content .= self::show_nav_button(
-					$next,
-					$next_text,
-					array( 'focus-nav-next' ),
-					$next_section_title
-				);
+					// Next Navigation
+					$content .= self::show_nav_button(
+						$next,
+						$next_text,
+						array( 'focus-nav-next' ),
+						$next_section_title
+					);
 
-				$content .= '</div>'; // .focus-nav
-				$content .= '</div>'; // .focus-wrapper
+					$content .= '</div>'; // .focus-nav
+					$content .= '</div>'; // .focus-wrapper
 
-				$template = $content;
+					$template = $content;
 				break;
 
 			case 'module':
@@ -908,7 +911,7 @@ class CoursePress_Data_Shortcode_Template {
 
 		if ( $button['id'] ) {
 			$classes = is_array( $classes ) ? implode( ' ', $classes ) : $classes;
-			if ( $next) {
+			if ( $next ) {
 				if ( 'completion_page' == $button['id'] ) {
 					$title = __( 'Finish', 'CP_TD' );
 				}
@@ -946,7 +949,6 @@ class CoursePress_Data_Shortcode_Template {
 				);
 				*/
 			}
-
 		} else {
 			$res = sprintf(
 				'<div class="%2$s" data-title="%3$s"><span title="%3$s">%1$s</span></div>',
@@ -1816,5 +1818,22 @@ class CoursePress_Data_Shortcode_Template {
 		}
 
 		return $current_page_number;
+	}
+
+	/**
+	 * Fix course category link.
+	 *
+	 * @since 2.0.0
+	 */
+	public function term_link( $termlink, $term, $taxonomy ) {
+		$course_category_name = CoursePress_Data_Course::get_post_category_name();
+		if ( $course_category_name != $taxonomy ) {
+			return $termlink;
+		}
+		$courses_slug = CoursePress_Core::get_setting( 'slugs/course', 'courses' );
+		$re = sprintf( '@/%s/@', $course_category_name );
+		$to = sprintf( '/%s/%s/', $courses_slug, $course_category_name );
+		$termlink = preg_replace( $re, $to, $termlink );
+		return $termlink;
 	}
 }
