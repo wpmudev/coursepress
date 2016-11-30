@@ -164,6 +164,23 @@ class CoursePress_Helper_Upgrade {
 			$course_metas[ $new_meta ] = $meta_value;
 		}
 
+		if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
+			// Find the product ID
+			$args = array(
+				'posts_per_page' => 1,
+				'post_type'		 => 'product',
+				'post_parent'	 => $course_id,
+				'post_status'	 => 'publish',
+				'fields'		 => 'ids',
+			);
+			$product_id = get_posts( $args );
+
+			if ( ! empty( $product_id ) ) {
+				$product_id = array_shift( $product_id );
+				$course_metas['woo'] = array( 'product_id' => $product_id );
+			}
+		}
+
 		self::$settings = wp_parse_args( $course_metas, self::$settings );
 
 		return true;
