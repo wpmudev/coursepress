@@ -60,6 +60,14 @@ class CoursePress_Template_Communication {
 
 		$course = CoursePress_Helper_Utility::the_course( false );
 		$course_id = $course->ID;
+
+		$discussion_is_allowed = CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'allow_discussion', false ) );
+
+		if ( false == $discussion_is_allowed ) {
+			$content = sprintf( '<p class="message">%s</p>', __( 'Discussions are not available for this course.', 'CP_TD' ) );
+			return $content;
+		}
+
 		$discussions = CoursePress_Data_Discussion::get_discussions( array( $course_id, 'all' ) );
 
 		$content = do_shortcode( '[course_unit_submenu]' );
