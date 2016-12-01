@@ -265,6 +265,9 @@ tester {
 .course_list_box_item .course-information {
   padding: 0 0 0 25px;
   border: 0;
+  vertical-align: top;
+  width: 100%;
+  display: block;
 }
 .course_list_box_item .instructor-list {
   display: block;
@@ -275,11 +278,10 @@ tester {
 }
 .course_list_box_item.has-thumbnail .course-thumbnail {
   position: relative;
-  width: 40%;
-  float: left;
   padding-right: 2px;
   top: 0;
   bottom: 0;
+  display: table-cell;
 }
 .course_list_box_item.has-thumbnail .course-thumbnail figure {
   margin: 0;
@@ -291,8 +293,7 @@ tester {
   background-color: #F2F2F2;
 }
 .course_list_box_item.has-thumbnail .course-information {
-  width: 60%;
-  float: right;
+  display: table-cell;
 }
 .course_list_box_item .apply-button-details {
   display: none;
@@ -361,7 +362,6 @@ tester {
   transform: translate(-50%, -50%);
 }
 .course_list_box_item .clickable:hover .course-information *:not([class*="clickable-label"]) {
-  -webkit-filter: blur(2px);
   filter: blur(2px);
 }
 .course_list_box_item .clickable:hover .clickable-label {
