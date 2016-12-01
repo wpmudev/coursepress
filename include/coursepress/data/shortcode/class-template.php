@@ -311,7 +311,6 @@ class CoursePress_Data_Shortcode_Template {
 
 			foreach ( $terms as $term ) {
 				$link = get_term_link( $term->term_id, $taxonomy );
-				l( $link );
 				$links[] = sprintf( '<a href="%s">%s</a>', esc_url( $link ), $term->name );
 			}
 
@@ -1825,7 +1824,7 @@ class CoursePress_Data_Shortcode_Template {
 	 *
 	 * @since 2.0.0
 	 */
-	public function term_link( $termlink, $term, $taxonomy ) {
+	public static function term_link( $termlink, $term, $taxonomy ) {
 		$course_category_name = CoursePress_Data_Course::get_post_category_name();
 		if ( $course_category_name != $taxonomy ) {
 			return $termlink;
