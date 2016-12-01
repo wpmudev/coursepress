@@ -1356,8 +1356,8 @@ class CoursePress_Data_Shortcode_Course {
 			'list_page' => 'no',
 			'class' => '',
 			'wrapper' => '',
-			'height' => '',
-			'width' => '',
+			'height' => CoursePress_Core::get_setting( 'course/image_height' ),
+			'width' => CoursePress_Core::get_setting( 'course/image_width' ),
 		), $atts, 'course_media' ) );
 
 		$course_id = (int) $course_id;
@@ -1370,6 +1370,14 @@ class CoursePress_Data_Shortcode_Course {
 		$wrapper = sanitize_html_class( $wrapper );
 		$height = sanitize_text_field( $height );
 		$width = sanitize_text_field( $width );
+
+		// We'll use pixel if none is set
+		if ( ! empty( $width ) && (int) $width == $width ) {
+			$width .= 'px';
+		}
+		if ( ! empty( $height ) && (int) $height == $height ) {
+			$height .= 'px';
+		}
 
 		if ( ! $list_page ) {
 			$type = empty( $type ) ? CoursePress_Core::get_setting( 'course/details_media_type', 'default' ) : $type;
@@ -1402,6 +1410,10 @@ class CoursePress_Data_Shortcode_Course {
 		$wrapper_style = '';
 		$wrapper_style .= ! empty( $width ) ? 'width:' . $width . ';' : '';
 		$wrapper_style .= ! empty( $width ) ? 'height:' . $height . ';' : '';
+
+		if ( is_singular( 'course' ) ) {
+			$wrapper_style = '';
+		}
 
 		if ( ( ( 'default' == $type && 'video' == $priority ) || 'video' == $type || ( 'default' == $type && 'image' == $priority && empty( $course_image ) ) ) && ! empty( $course_video ) ) {
 
