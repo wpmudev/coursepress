@@ -8,6 +8,14 @@ class CoursePress_Template_Communication {
 
 		$content = do_shortcode( '[course_unit_submenu]' );
 
+		if ( empty( $notifications ) ) {
+			$content .= sprintf(
+				'<p class="message">%s</p>',
+				__( 'This course does not have any notifications.', 'CP_TD' )
+			);
+			return $content;
+		}
+
 		$content .= '<ul class="notification-archive-list">';
 		foreach ( $notifications as $notification ) {
 			$content .= '
@@ -56,12 +64,21 @@ class CoursePress_Template_Communication {
 
 		$content = do_shortcode( '[course_unit_submenu]' );
 
-		$new_discussion_link = CoursePress_Core::get_slug( 'course/', true ) . $course->post_name . '/' . CoursePress_Core::get_slug( 'discussions/' ) . CoursePress_Core::get_slug( 'discussion_new' );
+		$slug_new = CoursePress_Core::get_setting( 'slugs/discussions_new', 'add_new_discussion' );
+
+		$new_discussion_link = CoursePress_Core::get_slug( 'course/', true ) . $course->post_name . '/' . CoursePress_Core::get_slug( 'discussions/' ) . $slug_new;
 		$content .= '
 			<div class="discussion-new">
 				<a href="' . esc_url( $new_discussion_link ) . '" class="button">' . esc_html( 'Start a new discussion', 'CP_TD' ) . '</a>
 			</div>
 		';
+		if ( empty( $discussions ) ) {
+			$content .= sprintf(
+				'<p class="message">%s</p>',
+				__( 'This course does not have any discussions.', 'CP_TD' )
+			);
+			return $content;
+		}
 
 		$content .= '<ul class="discussion-archive-list">';
 		foreach ( $discussions as $discussion ) {

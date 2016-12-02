@@ -407,7 +407,7 @@ class CoursePress_View_Front_Course {
 		if ( $theme_file ) {
 			self::$template = $theme_file;
 			$course_post = get_post( $course_id );
-			if ( $course_post && CoursePress_Admin_Courses::_is_course($course_post) ) {
+			if ( $course_post && CoursePress_Admin_Courses::_is_course( $course_post ) ) {
 				$content = apply_filters( 'the_content', $course_post->post_content );
 			}
 		} else {
@@ -492,6 +492,9 @@ class CoursePress_View_Front_Course {
 	 * @return string The HTML code.
 	 */
 	public static function render_course_discussion() {
+		global $post;
+		$post->comment_status = 'closed';
+
 		$theme_file = locate_template( array( 'single-course-discussion.php' ) );
 
 		if ( $theme_file ) {
@@ -906,7 +909,7 @@ class CoursePress_View_Front_Course {
 			if ( false === $can_update_course && CoursePress_Data_Course::student_enrolled( $user_id, $cp->course_id ) ) {
 				$units_overview = $course_url . CoursePress_Core::get_slug( 'unit/' );
 
-			//	wp_safe_redirect( $units_overview ); exit;???
+				//	wp_safe_redirect( $units_overview ); exit;???
 			}
 
 			/**
@@ -1027,8 +1030,8 @@ class CoursePress_View_Front_Course {
 					'type' => CoursePress_Data_Course::get_post_type_name() . '_archive',
 					'is_archive' => false,
 					),
-					$cp->cp_category
-				);
+				$cp->cp_category
+			);
 		} elseif ( $cp->is_unit_discussion ) {
 			// Unit discussion details.
 			if ( ! $cp->is_instructor && ! $cp->is_enrolled ) {
@@ -1036,12 +1039,13 @@ class CoursePress_View_Front_Course {
 			}
 
 			CoursePress_Helper_Utility::set_the_course_subpage( 'discussions' );
-			
+
 			// from this point 'self::$template' is not yet set because callback will be called on 'the_content' hook,
-			// 'template_include' hook will be called first so call the render functions below to set 'self::$template' 
-			
+			// 'template_include' hook will be called first so call the render functions below to set 'self::$template'
+
 			// Are we adding a new discussion?
-			if ( CoursePress_Core::get_slug( 'discussion_new' ) == $cp->discussion ) {
+			$slug_new = CoursePress_Core::get_setting( 'slugs/discussions_new', 'add_new_discussion' );
+			if ( $slug_new == $cp->discussion ) {
 				self::render_new_course_discussion();
 				$callback = array( __CLASS__, 'render_new_course_discussion' );
 			} else {

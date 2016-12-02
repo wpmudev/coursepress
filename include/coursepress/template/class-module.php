@@ -174,6 +174,7 @@ class CoursePress_Template_Module {
 		$grade = (int) CoursePress_Helper_Utility::get_array_val( $grades, 'grade' );
 		$minimum_grade = (int) $attributes['minimum_grade'];
 		$require_assessment = false;
+		$pass = $grade >= $minimum_grade;
 		$status = '';
 
 		if ( in_array( $module_type, $assessables ) ) {
@@ -182,12 +183,13 @@ class CoursePress_Template_Module {
 
 				if ( 'auto' === $graded_by || empty( $grades ) ) {
 					$status = __( 'Pending', 'CP_TD' );
+				} elseif ( $pass ) {
+					$status = __( 'Pass', 'CP_TD' );
 				}
 			} else {
 				$status = __( 'Non Gradable', 'CP_TD' );
 			}
 		} else {
-			$pass = $grade >= $minimum_grade;
 			$status = $pass ? __( 'Pass', 'CP_TD' ) : __( 'Fail', 'CP_TD' );
 		}
 
@@ -234,7 +236,7 @@ class CoursePress_Template_Module {
 
 		if ( $is_focus ) {
 			$content .= wp_nonce_field( 'coursepress_submit_modules', '_wpnonce', true, false );
-			$content .= sprintf( '<div class="cp-error">%s</div>', apply_filters( 'coursepress_before_unit_modules', '' ) );
+			//$content .= sprintf( '<div class="cp-error">%s</div>', apply_filters( 'coursepress_before_unit_modules', '' ) );
 		}
 		$content .= sprintf( '<input type="hidden" name="module_id[]" value="%s" />', $module_id );
 
@@ -278,7 +280,8 @@ class CoursePress_Template_Module {
 					$retry = '';
 				} elseif ( 0 < $response_count ) {
 					$attempts = (int) $attributes['retry_attempts'];
-					if ( $attempts >= $response_count ) {
+					
+					if ( $response_count >= $attempts ) {
 						$disabled = true;
 						$retry = '';
 					}

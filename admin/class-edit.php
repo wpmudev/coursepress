@@ -41,8 +41,8 @@ class CoursePress_Admin_Edit {
 		$tab = empty( $_GET['tab'] ) ? 'setup' : $_GET['tab'];
 		add_action( 'edit_form_top', array( __CLASS__, 'edit_tabs' ) );
 
-		// No extra metabox please !!!
-		remove_all_actions( 'add_meta_boxes' );
+		// Filter metabox to render
+		add_action( 'add_meta_boxes', array( __CLASS__, 'allowed_meta_boxes' ), 999 );
 
 		if ( 'setup' == $tab ) {
 
@@ -76,14 +76,50 @@ class CoursePress_Admin_Edit {
 			add_action( 'edit_form_after_editor', array( __CLASS__, 'end_wrapper' ) );
 		} else {
 			$_GET['id'] = $_REQUEST['id'] = self::$current_course->ID;
-			add_action( 'add_meta_boxes', array( __CLASS__, 'disable_meta_boxes' ), 1 );
 			add_action( 'admin_footer', array( __CLASS__, 'disable_style' ), 100 );
 		}
 	}
 
-	public static function disable_meta_boxes() {
+	public static function allowed_meta_boxes() {
 		global $wp_meta_boxes;
-		$wp_meta_boxes = array();
+
+		$post_type = CoursePress_Data_Course::get_post_type_name();
+
+		if ( ! empty( $wp_meta_boxes[ $post_type ] ) ) {
+			$cp_metaboxes = $wp_meta_boxes[ $post_type ];
+
+			/**
+			 * Note: Add third party meta_box ID here to be included in CP edit UI!
+			 **/
+			$allowed = array(
+				'submitdiv',
+				'course_categorydiv',
+				'slugdiv',
+				'wpseo_meta',
+			);
+
+			/**
+			 * Filter the allowed meta boxes to be rendered
+			 **/
+			$allowed = apply_filters( 'coursepress_allowed_meta_boxes', $allowed );
+
+			foreach ( $cp_metaboxes as $group => $groups ) {
+				foreach ( $groups as $location => $metaboxes ) {
+					foreach ( $allowed as $key ) {
+						if ( ! isset( $metaboxes[ $key ] ) ) {
+							unset( $cp_metaboxes[ $group ][ $location ][ $key ] );
+						}
+					}
+				}
+			}
+			// Restore metaboxes
+			$wp_meta_boxes[ $post_type ] = $cp_metaboxes;
+		}
+
+		// Remove media buttons hooks
+		remove_all_actions( 'media_buttons' );
+		// Enable 'Add Media' button
+		add_action( 'media_buttons', 'media_buttons' );
 	}
 
 	/**

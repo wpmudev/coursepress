@@ -969,11 +969,20 @@ var CoursePress = CoursePress || {};
 					}
 				} );
 
+				// @todo: Change this into wp.media unique instance
+				var isOn = false;
 				$( this ).on( 'click', function() {
 					var self = jQuery( this );
 					var target_url_field = parent;
+					var old_props = wp.media.string.props;
+					var old_send = wp.media.editor.send.attachment;
+					isOn = true;
 
 					wp.media.string.props = function( props, attachment ) {
+						if ( false === isOn ) {
+							return old_props(props, attachment);
+						}
+
 						$( target_url_field ).val( props.url );
 
 						if ( CoursePress.utility.valid_media_extension( attachment.url, target_url_field ) ) {//extension is allowed
@@ -987,6 +996,10 @@ var CoursePress = CoursePress || {};
 					};
 
 					wp.media.editor.send.attachment = function( props, attachment ) {
+						if ( false === isOn ) {
+							return old_send(props, attachment);
+						}
+
 						$( target_url_field ).val( attachment.url );
 						if ( CoursePress.utility.valid_media_extension( attachment.url, target_url_field ) ) {//extension is allowed
 							$( target_url_field ).removeClass( 'invalid_extension_field' );
@@ -997,10 +1010,14 @@ var CoursePress = CoursePress || {};
 						}
 						self.trigger( 'change' );
 					};
+
 					wp.media.editor.open( target_url_field );
 					return false;
 
-				} );
+				} )
+				.on( 'change', function() {
+					isOn = false;
+				});
 
 			} );
 		},

@@ -1043,8 +1043,18 @@ class CoursePress_Data_Course {
 	}
 
 	public static function is_paid_course( $course_id ) {
+		if ( empty( $course_id ) ) {
+			return false;
+		}
+
 		$is_paid = self::get_setting( $course_id, 'payment_paid_course', false );
-		$is_paid = empty( $is_paid ) || 'off' === $is_paid ? false : true;
+
+		if ( ! $is_paid ) {
+			// Try the other meta
+			$is_paid = self::get_setting( $course_id, 'paid_course', false );
+		}
+
+		$is_paid = empty( $is_paid ) || 'off' == $is_paid ? false : true;
 		return $is_paid;
 	}
 
@@ -1213,7 +1223,7 @@ class CoursePress_Data_Course {
 		 * @param integer $student_id Student ID.
 		 * @param integer $course_id Course ID.
 		 */
-		if ( ! apply_filters( 'coursepress_enroll_student', true, $student_id, $course_id ) ) {
+		if ( false == apply_filters( 'coursepress_enroll_student', true, $student_id, $course_id ) ) {
 			return;
 		}
 
@@ -3216,7 +3226,7 @@ class CoursePress_Data_Course {
 		);
 		$results = $wpdb->get_results( $sql );
 		foreach ( $results as $post ) {
-			delete_post_meta( $post->id, self::$post_count_title_name );
+			delete_post_meta( $post->ID, self::$post_count_title_name );
 		}
 		self::save_course_number( $post_id, $post_type, array( $post_id ) );
 	}

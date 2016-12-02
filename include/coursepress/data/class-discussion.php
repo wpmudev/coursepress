@@ -106,15 +106,13 @@ class CoursePress_Data_Discussion {
 			'post_content' => CoursePress_Helper_Utility::filter_content( ! $discussion_description ? $_POST['discussion_description'] : $discussion_description ),
 			'post_status'  => $post_status,
 			'post_title'   => CoursePress_Helper_Utility::filter_content( ( ! $discussion_title ? $_POST['discussion_name'] : $discussion_title ), true ),
-			'post_type'    => self::$post_type,
+			'post_type'	=> self::$post_type,
 		);
 
 		if ( isset( $_POST['discussion_id'] ) ) {
 			$post['ID'] = $_POST['discussion_id']; //If ID is set, wp_insert_post will do the UPDATE instead of insert
 		}
-
 		$post_id = wp_insert_post( $post );
-
 		//Update post meta
 		if ( $post_id ) {
 
@@ -133,7 +131,7 @@ class CoursePress_Data_Discussion {
 			/**
 			 * Try to add course_id - it should be unique post meta.
 			 */
-			$success == add_post_meta( $post_id, 'course_id', $course_id, true );
+			$success = add_post_meta( $post_id, 'course_id', $course_id, true );
 			if ( ! $success ) {
 				update_post_meta( $post_id, 'course_id', $course_id );
 			}
@@ -234,7 +232,7 @@ class CoursePress_Data_Discussion {
 		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
 
 		// Record visit action
-		if ( ! isset( $student_progress['units'] ) && ! isset( $student_progress['units'][ $comment_id] ) ) {
+		if ( ! isset( $student_progress['units'] ) && ! isset( $student_progress['units'][ $comment_id ] ) ) {
 			CoursePress_Helper_Utility::set_array_val( $student_progress, 'units/' . $comment_id, array() );
 			CoursePress_Data_Student::update_completion_data( $student_id, $course_id, $student_progress );
 		}
