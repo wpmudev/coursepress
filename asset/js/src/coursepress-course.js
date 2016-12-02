@@ -1121,6 +1121,14 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 				}
 
 				location.href = dest + '&tab=units';
+			} else {
+				var edit_link = $( '#edit_course_link_url' );
+				if ( edit_link.length > 0 ) {
+					if ( window.history.pushState ) {
+						// Reset browser url
+						window.history.pushState( {}, null, edit_link.val() );
+					}
+				}
 			}
 		} );
 
@@ -1707,12 +1715,13 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 	}
 
 	// UPDATE COURSE
-	CoursePress.updateCourse = function( ev ) {
+	CoursePress.updateCourse = function() {
 		var form = $(this),
-			finishbutton = $( '.finish.step-7' )
+			step = $( '#course-setup-steps .step-content:visible .step.next' )
+			finishbutton = $( '#course-setup-steps .step-content:visible .finish.step-7' )
 		;
 
-		if ( 0 === finishbutton.length ) {
+		if ( 0 === step.length && 0 === finishbutton.length ) {
 			// Search students helper
 			var s = $( '[name="s"]', form ),
 				url = $( '[name="_wp_http_referer"]' );
@@ -1722,14 +1731,16 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			return true;
 		}
 
-		// Trigger finish event
-		finishbutton.trigger( 'click' );
+		if ( 0 === finishbutton.length ) {
+			step.trigger( 'click' );
+		} else {
+			finishbutton.trigger( 'click' );
+			var params = form.serialize();
 
-		if ( ! CoursePress.Course.hasError ) {
-			return true;
+			if ( ! CoursePress.Course.hasError ) {
+				$.post( form.attr('action'), params );
+			}
 		}
-
-		ev.stopImmediatePropagation();
 
 		return false;
 	};
@@ -1751,8 +1762,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			return false;
 		}
 
-		form.unbind( 'submit' ).on( 'submit', CoursePress.updateCourse );
-		form.submit();
+		form.unbind('submit').submit();
 
 		return false;
 	};

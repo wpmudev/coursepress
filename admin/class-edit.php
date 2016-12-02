@@ -260,7 +260,8 @@ class CoursePress_Admin_Edit {
 		$setup_nonce = wp_create_nonce( 'setup-course' );
 
 		CoursePress_View_Admin_Course_Edit::$current_course = self::$current_course;
-
+		printf( '<input type="hidden" id="edit_course_link_url" value="%s" />',
+			esc_url( get_edit_post_link( self::$current_course->ID ) ) );
 		echo '<div class="coursepress-course-step-container">
 			<div id="course-setup-steps" data-nonce="' . $setup_nonce . '">';
 	}
