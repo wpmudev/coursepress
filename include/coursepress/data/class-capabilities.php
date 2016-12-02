@@ -117,7 +117,7 @@ class CoursePress_Data_Capabilities {
 	);
 
 	public static function init() {
-		add_action( 'init', array( __CLASS__, 'init_caps' ) );
+		add_action( 'init', array( __CLASS__, 'init_caps' ), 1 );
 		add_action( 'set_user_role', array( __CLASS__, 'assign_role_capabilities' ), 10, 3 );
 		add_action( 'wp_login', array( __CLASS__, 'restore_capabilities' ), 10, 2 );
 		add_action( 'admin_init', array( __CLASS__, 'fix_admin_capabilities' ) );
@@ -135,7 +135,8 @@ class CoursePress_Data_Capabilities {
 		global $current_user;
 
 		self::$is_admin = current_user_can( 'manage_options' );
-		
+		self::course_capabilities();
+
 		if ( self::$is_admin ) {
 			// Enable edit course cap
 			$current_user->allcaps['edit_course'] = true;
@@ -1738,7 +1739,7 @@ class CoursePress_Data_Capabilities {
 
 		if ( ! $return ) {
 			// Check if current user is the course author.
-			$is_author = self::is_course_creator( $course_id, $student_id );
+			$is_author = self::is_course_creator( $course_id, $user_id );
 
 			if ( $is_author ) {
 				$return = user_can( $user_id, 'coursepress_assign_my_course_facilitator_cap' );
