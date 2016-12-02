@@ -412,6 +412,21 @@ class CoursePress_Data_Shortcode_Student {
 	}
 
 	public static function coursepress_enrollment_templates( $atts ) {
+		/**
+		 * Avoid to load templates twice...
+		 */
+		global $post;
+		if (
+			isset( $post->coursepress_enrollment_templates_was_alredy_loaded )
+			&& $post->coursepress_enrollment_templates_was_alredy_loaded
+		) {
+			return;
+		}
+		$post->coursepress_enrollment_templates_was_alredy_loaded = true;
+		self:$templates_was_alredy_loaded = true;
+		/**
+		 * proceder shortcode
+		 */
 		$atts = shortcode_atts(
 			array(
 				'course_id' => CoursePress_Helper_Utility::the_course( true ),
