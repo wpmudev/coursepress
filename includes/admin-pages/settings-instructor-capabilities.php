@@ -5,6 +5,7 @@ if ( isset( $_POST[ 'submit' ] ) && current_user_can( 'manage_options' ) && isse
 
 	/* Set capabilities for each instructor user */
 	$wp_user_search = new Instructor_Search();
+
 	// $wp_user_search = new Instructor_Search( $usersearch, $page_num );
 
 	foreach ( $wp_user_search->get_results() as $user ) {
@@ -17,7 +18,7 @@ if ( isset( $_POST[ 'submit' ] ) && current_user_can( 'manage_options' ) && isse
 		  } */
 
 		$role				 = new WP_User( $user->ID );
-		$user_capabilities	 = $role->wp_capabilities;
+		$user_capabilities	 = empty( $role->wp_capabilities ) ? $role->caps : $role->wp_capabilities;
 
 		// More than the hidden field needs to be present to add roles.
 		if ( isset( $_POST[ 'instructor_capability' ] ) && 1 < count( $_POST[ 'instructor_capability' ] ) ) {
