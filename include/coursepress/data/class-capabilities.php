@@ -121,7 +121,7 @@ class CoursePress_Data_Capabilities {
 		add_action( 'set_user_role', array( __CLASS__, 'assign_role_capabilities' ), 10, 3 );
 		add_action( 'wp_login', array( __CLASS__, 'restore_capabilities' ), 10, 2 );
 		add_action( 'admin_init', array( __CLASS__, 'fix_admin_capabilities' ) );
-		add_filter( 'user_has_cap', array( __CLASS__, 'user_cap' ), 10, 3 );
+		add_filter( 'user_has_cap', array( __CLASS__, 'user_cap' ), 99, 3 );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			// Filter the capability of the current user
@@ -135,11 +135,13 @@ class CoursePress_Data_Capabilities {
 		global $current_user;
 
 		self::$is_admin = current_user_can( 'manage_options' );
-
+		
 		if ( self::$is_admin ) {
 			// Enable edit course cap
 			$current_user->allcaps['edit_course'] = true;
-
+			//$current_user->allcaps['coursepress_delete_course_cap'] = true;
+			$current_caps = self::$capabilities['instructor'];
+			self::$current_caps = $current_caps = array_map( '__return_true', $current_caps );
 		} elseif ( self::is_instructor() || self::is_facilitator() ) {
 			global $current_user;
 
