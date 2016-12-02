@@ -27,7 +27,7 @@ class CoursePress_Admin_Edit {
 		 */
 		$is_limit_reach = CoursePress_Data_Course::is_limit_reach();
 		if ( $is_limit_reach ) {
-			add_action( 'add_meta_boxes', array( __CLASS__, 'disable_meta_boxes' ), 1 );
+			add_action( 'add_meta_boxes', array( __CLASS__, 'remove_meta_boxes' ), 1 );
 			add_action( 'admin_footer', array( __CLASS__, 'disable_style' ), 100 );
 			add_action( 'edit_form_after_editor', array( __CLASS__, 'notice_about_pro_when_try_to_add_new_course' ) );
 			return;
@@ -1449,7 +1449,36 @@ class CoursePress_Admin_Edit {
 	 */
 	public static function notice_about_pro_when_try_to_add_new_course() {
 		echo '<p>';
-		_e( 'Publication limit has been reached - you cannot create a new course. Please use PRO version.','CP_TD' );
+		_e( 'The free version of CoursePress is limited to one course. To add more courses, upgrade to CoursePress Pro for unlimited courses and more payment gateways.', 'CP_TD' );
 		echo '</p>';
+		printf(
+			'<p><a href="%s" class="button-primary">%s</a></p>',
+			esc_url( __( 'https://premium.wpmudev.org/project/coursepress-pro/', 'CP_TD' ) ),
+			esc_html__( 'Try CoursePress Pro for Free', 'CP_TD' )
+		);
+	}
+
+	/**
+	 * Remove course add meta boxes.
+	 *
+	 * @since 2.0.0
+	 */
+	public static function remove_meta_boxes() {
+		$screen = get_current_screen();
+		if ( ! is_a( $screen, 'WP_Screen' ) ) {
+			return;
+		}
+		if ( 'add' != $screen->action ) {
+			return;
+		}
+		$post_type = CoursePress_Data_Course::get_post_type_name();
+		if ( $post_type != $screen->post_type ) {
+			return;
+		}
+		$page = $screen->id;
+		global $wp_meta_boxes;
+		if ( isset( $wp_meta_boxes[ $page ] ) ) {
+			unset( $wp_meta_boxes[ $page ] );
+		}
 	}
 }
