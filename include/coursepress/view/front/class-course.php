@@ -1048,6 +1048,11 @@ class CoursePress_View_Front_Course {
 			if ( $slug_new == $cp->discussion ) {
 				self::render_new_course_discussion();
 				$callback = array( __CLASS__, 'render_new_course_discussion' );
+				/**
+				 * return false to avoid comments on "Add new discussion"
+				 * page.
+				 */
+				add_filter( 'get_comments_number', '__return_false' );
 			} else {
 				self::render_course_discussion();
 				$callback = array( __CLASS__, 'render_course_discussion' );
