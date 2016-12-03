@@ -114,13 +114,13 @@ class CoursePress_View_Admin_Setting_General {
 								</td>
 							</tr>
 
-							<tr valign="top" class="break">
+							<tr class="hidden" valign="top" class="break">
 								<th scope="row">' . esc_html__( 'Enrollment Process Slug', 'CP_TD' ) . '</th>
 								<td>' . trailingslashit( esc_url( home_url() ) ) . '
 									&nbsp;<input type="text" name="coursepress_settings[slugs][enrollment]" id="enrollment_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/enrollment', 'enrollment_process' ) ) . '" />&nbsp;/
 								</td>
 							</tr>
-							<tr valign="top">
+							<tr class="hidden" valign="top">
 								<th scope="row">' . esc_html__( 'Enrollment Process Page', 'CP_TD' ) . '</th>
 								<td>' .
 									$page_dropdowns['enrollment'] .
