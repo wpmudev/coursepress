@@ -137,7 +137,22 @@ class CoursePress_Data_Instructor {
 			}
 		}
 
-		return $assigned_courses;
+		$course_ids = array();
+
+		if ( ! empty( $assigned_courses ) ) {
+			// Filter the course IDs, make sure courses exists and are not deleted
+			$args = array(
+				'post_type' => CoursePress_Data_Course::get_post_type_name(),
+				'post_status' => 'any',
+				'suppress_filters' => true,
+				'fields' => 'ids',
+				'post__in' => $assigned_courses,
+				'posts_per_page' => -1,
+			);
+			$course_ids = get_posts( $args );
+		}
+
+		return $course_ids;
 	}
 
 	public static function get_accessable_courses( $user_id = '', $post_status = 'publish' ) {
