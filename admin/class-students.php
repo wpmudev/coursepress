@@ -355,7 +355,7 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Controller_Menu {
 	 */
 	public static function hidden_columns( $columns ) {
 		$screen = get_current_screen();
-		if ( 'course_page_coursepress_students' != $screen->id ) {
+		if ( empty( $screen ) || 'course_page_coursepress_students' != $screen->id ) {
 			return $columns;
 		}
 		array_push( $columns, 'user_id' );
