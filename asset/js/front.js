@@ -1178,7 +1178,6 @@ $(document)
 		},
 		handle_enroll_student_return: function( data ) {
 			var steps = $( '[data-type="modal-step"]' );
-
 			if ( true === data['success'] ) {
 				$.each( steps, function( i, step ) {
 					var action = $( step ).attr( 'data-modal-action' );
@@ -1188,7 +1187,14 @@ $(document)
 						CoursePress.Enrollment.dialog.openAt( i );
 					}
 				});
-			}
+			} else {
+				$.each( steps, function( i, step ) {
+					var action = $( step ).attr( 'data-modal-action' );
+					if ( 'passcode' == _coursepress.current_course_type && 'passcode' === action ) {
+						CoursePress.Enrollment.dialog.openAt( i );
+                    }
+                });
+            }
 
 			$('.enrolment-container-div' ).removeClass('hidden');
 		},
@@ -1308,6 +1314,17 @@ $(document)
 			CoursePress.Post.save();
 
 			// Manual hook here as this is not a step in the modal templates
+			CoursePress.Post.off( 'coursepress:enrollment:enroll_student_error' );
+			CoursePress.Post.on( 'coursepress:enrollment:enroll_student_error', function( data ) {
+console.log(data);
+				if ( undefined !== data['callback'] ) {
+					var fn = CoursePress.Enrollment.dialog[ data['callback'] ];
+					if ( typeof fn === 'function' ) {
+						fn( data );
+						return;
+					}
+                }
+            });
 			CoursePress.Post.off( 'coursepress:enrollment:enroll_student_success' );
 			CoursePress.Post.on( 'coursepress:enrollment:enroll_student_success', function( data ) {
 				cpmask.removeClass( 'loading' );

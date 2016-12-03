@@ -511,8 +511,11 @@ class CoursePress_View_Front_EnrollmentPopup {
 			case 'enroll_student':
 				$student_id = (int) $data->data->student_id;
 				$course_id = (int) $data->data->course_id;
+				$type = CoursePress_Data_Course::get_setting( $course_id, 'enrollment_type', 'manually' );
 
-				if ( ! empty( $student_id ) && ! empty( $course_id ) && true === CoursePress_Data_Course::enroll_student( $student_id, $course_id ) ) {
+				if ( 'passcode' == $type ) {
+					$json_data['success'] = false;
+				} else if ( ! empty( $student_id ) && ! empty( $course_id ) && true === CoursePress_Data_Course::enroll_student( $student_id, $course_id ) ) {
 					$json_data['student_id'] = $student_id;
 					$json_data['course_id'] = $course_id;
 					$json_data['success'] = true;

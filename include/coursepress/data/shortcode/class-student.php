@@ -516,7 +516,23 @@ class CoursePress_Data_Shortcode_Student {
 				<p>
 					<?php esc_html_e( 'Congratulations! You have successfully enrolled. Click below to get started.', 'CP_TD' ); ?>
 				</p>
-				<a href="<?php echo get_permalink( CoursePress_Helper_Utility::the_course( true ) ) . CoursePress_Core::get_slug( 'units' ); ?>">Start Learning</a>
+				<a href="<?php echo get_permalink( CoursePress_Helper_Utility::the_course( true ) ) . CoursePress_Core::get_slug( 'units' ); ?>"><?php _e( 'Start Learning', 'CP_TD' ); ?></a>
+			</div>
+			<div class="bbm-modal__bottombar">
+			</div>
+		</script>
+		<?php endif; ?>
+
+		<?php if ( apply_filters( 'coursepress_registration_form_step-4', true ) ) : ?>
+		<script type="text/template" id="modal-view4-template" data-type="modal-step" data-modal-action="passcode">
+			<div class="bbm-modal__topbar">
+                <h3 class="bbm-modal__title"><?php esc_html_e( 'Could not enroll at this time.', 'CP_TD' ); ?>
+				</h3>
+			</div>
+            <div class="bbm-modal__section"><?php
+			printf( '<p>%s</p>', esc_html__( 'A passcode is required to enroll. Click below to back to course.', 'CP_TD' ) );
+?>
+                    <a href="<?php echo get_permalink( CoursePress_Helper_Utility::the_course( true ) ) . CoursePress_Core::get_slug( 'units' ); ?>"><?php _e( 'Go back to course!', 'CP_TD' ); ?></a>
 			</div>
 			<div class="bbm-modal__bottombar">
 			</div>
