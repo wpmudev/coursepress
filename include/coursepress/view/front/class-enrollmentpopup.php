@@ -528,6 +528,22 @@ class CoursePress_View_Front_EnrollmentPopup {
 
 				$success = isset( $json_data['success'] ) ? $json_data['success'] : false;
 				break;
+			case 'enroll_with_passcode':
+				$passcode = $data->data->passcode;
+				$student_id = $data->data->student_id;
+				$course_id = $data->data->course_id;
+				// Verify passcode
+				$course_passcode = CoursePress_Data_Course::get_setting( $course_id, 'enrollment_passcode' );
+
+				if ( $course_passcode != $passcode ) {
+					$json_data['success'] = false;
+					$json_data['message'] = __( 'Invalid PASSCODE!', 'CP_TD' );
+				} else {
+					CoursePress_Data_Course::enroll_student( $student_id, $course_id );
+					$json_data['success'] = true;
+				}
+				$success = isset( $json_data['success'] ) ? $json_data['success'] : false;
+				break;
 
 			default:
 				// Custom actions may be handled (e.g. extending the registration process) but must return an array to send for return values.

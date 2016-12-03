@@ -554,10 +554,54 @@ console.log(data);
 		} );
 	};
 
+	CoursePress.validatePassCode = function() {
+		var form = $(this),
+			passcode = form.find( '[name="passcode"]' )
+			student_id = form.find( '[name="student_id"]' ).val(),
+			course_id = form.find( '[name="course_id"]' ).val()
+		;
+
+		if ( '' === passcode.val() ) {
+			new CoursePress.WindowAlert({
+				message: _coursepress.module_error.passcode_required
+			});
+			return false;
+		} else {
+			CoursePress.Post.prepare( 'course_enrollment', 'enrollment:' );
+			CoursePress.Post.set( 'action', 'enroll_with_passcode' );
+			CoursePress.Post.set( 'data', {
+				passcode: passcode.val(),
+				student_id: student_id,
+				course_id: course_id,
+				step: 0
+			});
+			CoursePress.Post.off( 'coursepress:enrollment:enroll_with_passcode_success' );
+			CoursePress.Post.on( 'coursepress:enrollment:enroll_with_passcode_success', function(data){
+				var newDiv = $( '<div class="cp-mask enrolment-container-div">' );
+
+				newDiv.appendTo( 'body' );
+				// Set modal
+				CoursePress.Dialogs.init();
+				$(newDiv).html(CoursePress.Enrollment.dialog.render().el);
+				CoursePress.Enrollment.dialog.openAtAction( 'enrolled' );
+			});
+			CoursePress.Post.off( 'coursepress:enrollment:enroll_with_passcode_error' );
+			CoursePress.Post.on( 'coursepress:enrollment:enroll_with_passcode_error', function(data){
+				new CoursePress.WindowAlert({
+					message: data.message
+				});
+			});
+			CoursePress.Post.save();
+		}
+
+		return false;
+	};
+
 	// Hook the events
 	$( document )
 		.on( 'click', '.cp-custom-login', CoursePress.CustomLoginHook )
 		.on( 'click', '.apply-button.enroll', CoursePress.EnrollStudent )
+		.on( 'submit', '[name="enrollment-process"][data-type="passcode"]', CoursePress.validatePassCode )
 		.on( 'submit', '.apply-box .enrollment-process', CoursePress.validateEnrollment );
 
 })(jQuery);
