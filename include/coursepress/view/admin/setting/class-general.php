@@ -124,7 +124,7 @@ class CoursePress_View_Admin_Setting_General {
 								<th scope="row">' . esc_html__( 'Enrollment Process Page', 'CP_TD' ) . '</th>
 								<td>' .
 									$page_dropdowns['enrollment'] .
-									'<p class="description">' . sprintf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'CP_TD' ), '<strong>[cp_pages page="enrollment_process"]</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET['page'] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'CP_TD' ) . '</a>' ) . '</p>
+									'<p class="description">' . sprintf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'CP_TD' ), '<input type="text" readonly="readonly" class="cp-sc-box" value="[cp_pages page=&quot;enrollment_process&quot;]" />', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET['page'] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'CP_TD' ) . '</a>' ) . '</p>
 								</td>
 							</tr>
 
@@ -138,7 +138,7 @@ class CoursePress_View_Admin_Setting_General {
 								<th scope="row">' . esc_html__( 'Login Page', 'CP_TD' ) . '</th>
 								<td>' .
 									$page_dropdowns['login'] .
-									'<p class="description">' . sprintf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'CP_TD' ), '<strong>[cp_pages page="student_login"]</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET['page'] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'CP_TD' ) . '</a>' ) . '</p>
+									'<p class="description">' . sprintf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'CP_TD' ), '<input type="text" readonly="readonly" class="cp-sc-box" value="[cp_pages page=&quot;student_login&quot;]" />', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET['page'] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'CP_TD' ) . '</a>' ) . '</p>
 								</td>
 							</tr>
 
@@ -152,7 +152,7 @@ class CoursePress_View_Admin_Setting_General {
 								<th scope="row">' . esc_html__( 'Signup Page', 'CP_TD' ) . '</th>
 								<td>' .
 									$page_dropdowns['signup'] .
-									'<p class="description">' . sprintf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'CP_TD' ), '<strong>[cp_pages page="student_signup"]</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET['page'] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'CP_TD' ) . '</a>' ) . '</p>
+									'<p class="description">' . sprintf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'CP_TD' ), '<input type="text" readonly="readonly" class="cp-sc-box" value="[cp_pages page=&quot;student_signup&quot;]" />', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET['page'] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'CP_TD' ) . '</a>' ) . '</p>
 								</td>
 							</tr>
 
@@ -166,7 +166,7 @@ class CoursePress_View_Admin_Setting_General {
 								<th scope="row">' . esc_html__( 'Student Dashboard Page', 'CP_TD' ) . '</th>
 								<td>' .
 									$page_dropdowns['student_dashboard'] .
-									'<p class="description">' . sprintf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'CP_TD' ), '<strong>[cp_pages page="student_dashboard"]</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET['page'] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'CP_TD' ) . '</a>' ) . '</p>
+									'<p class="description">' . sprintf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'CP_TD' ), '<input type="text" readonly="readonly" class="cp-sc-box" value="[cp_pages page=&quot;student_dashboard&quot;]" />', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET['page'] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'CP_TD' ) . '</a>' ) . '</p>
 								</td>
 							</tr>
 
@@ -180,7 +180,7 @@ class CoursePress_View_Admin_Setting_General {
 								<th scope="row">' . esc_html__( 'Student Dashboard Page', 'CP_TD' ) . '</th>
 								<td>' .
 									$page_dropdowns['student_settings'] .
-									'<p class="description">' . sprintf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'CP_TD' ), '<strong>[cp_pages page="student_settings"]</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET['page'] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'CP_TD' ) . '</a>' ) . '</p>
+									'<p class="description">' . sprintf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'CP_TD' ), '<input type="text" readonly="readonly" class="cp-sc-box" value="[cp_pages page=&quot;student_settings&quot;]" />', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET['page'] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'CP_TD' ) . '</a>' ) . '</p>
 								</td>
 							</tr>
 
