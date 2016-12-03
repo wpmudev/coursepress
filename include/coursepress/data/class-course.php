@@ -2153,7 +2153,12 @@ class CoursePress_Data_Course {
 	 * @return integer number of courses
 	 */
 	public static function count_courses() {
-		return array_sum( get_object_vars( wp_count_posts( self::get_post_type_name() ) ) );
+		$count = wp_count_posts( self::get_post_type_name() );
+		/**
+		 * Do not count auto-drafts.
+		 */
+		$count->{'auto-draft'} = 0;
+		return array_sum( get_object_vars( $count ) );
 	}
 
 	public static function get_course( $course_id = 0 ) {
@@ -3332,5 +3337,28 @@ class CoursePress_Data_Course {
 		 */
 		$defaults = apply_filters( 'coursepress_pages_defaults', $defaults );
 		return $defaults;
+	}
+
+	/**
+	 * Check limit, currently one course, for free version.
+	 *
+	 * @since 2.0.0
+	 */
+	public static function is_limit_reach() {
+		$is_pro = defined( 'CP_IS_PREMIUM' ) && CP_IS_PREMIUM;
+		if ( $is_pro ) {
+			return false;
+		}
+		$post_type = self::get_post_type_name();
+		$screen = get_current_screen();
+		if (
+			$post_type != $screen->post_type
+			|| 'post' != $screen->base
+			|| 'add' != $screen->action
+		) {
+			return false;
+		}
+		$number_of_courses = self::count_courses();
+		return 0 < $number_of_courses;
 	}
 }
