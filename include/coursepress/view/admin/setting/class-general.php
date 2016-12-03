@@ -499,7 +499,7 @@ class CoursePress_View_Admin_Setting_General {
 
 				<!-- COURSE ORDER -->
 				<h3 class="hndle" style="cursor:auto;"><span>' . esc_html__( 'Course Order', 'CP_TD' ) . '</span></h3>
-				<p class="description">' . __( 'Order of courses in admin and on front. If you choose "Post Order Number", you will have option to reorder courses from within the Courses admin page.', 'CP_TD' ) . '</p>
+				<p class="description">' . __( 'Order of courses in admin and on front.', 'CP_TD' ) . '</p>
 				<div class="inside">
 					<table class="form-table">
 						<tbody>
@@ -531,13 +531,6 @@ class CoursePress_View_Admin_Setting_General {
 									</select>
 								</td>
 							</tr>
-							<tr valign="top">
-								<th scope="row">' . esc_html__( 'Login Page', 'CP_TD' ) . '</th>
-								<td>' .
-									$page_dropdowns['login'] .
-									'<p class="description">' . sprintf( __( 'Select page where you have %s shortcode or any other set of %s. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'CP_TD' ), '<strong>[cp_pages page="student_login"]</strong>', '<a target="_blank" href="' . admin_url( 'admin.php?page=' . $_GET['page'] . '&tab=shortcodes' ) . '">' . __( 'shortcodes', 'CP_TD' ) . '</a>' ) . '</p>
-								</td>
-							</tr>
 
 <!-- Default course Enrollment Restrictions -->
 							<tr valign="top" class="break">
@@ -547,7 +540,7 @@ class CoursePress_View_Admin_Setting_General {
 		$enrollment_type_default = CoursePress_Data_Course::get_enrollment_type_default();
 		$selected = CoursePress_Core::get_setting( 'course/enrollment_type_default', $enrollment_type_default );
 		$content .= CoursePress_Helper_UI::select( 'coursepress_settings[course][enrollment_type_default]', $enrollment_types, $selected, 'chosen-select medium' );
-		$content .= sprintf( '<p class="description">%s</p>', __('Select the default limitations on accessing and enrolling in this course.', 'CP_TD' ) );
+		$content .= sprintf( '<p class="description">%s</p>', __( 'Select the default limitations on accessing and enrolling in this course.', 'CP_TD' ) );
 		$content .= '
 								</td>
 							</tr>
