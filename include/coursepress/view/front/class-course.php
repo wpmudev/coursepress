@@ -493,7 +493,15 @@ class CoursePress_View_Front_Course {
 	 */
 	public static function render_course_discussion() {
 		global $post;
-		$post->comment_status = 'closed';
+
+		if ( ! is_object( $post ) ) {
+			// Get the current
+			$post = get_post();
+		}
+
+		if ( is_object( $post ) ) {
+			$post->comment_status = 'closed';
+		}
 
 		$theme_file = locate_template( array( 'single-course-discussion.php' ) );
 

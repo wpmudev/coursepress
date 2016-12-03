@@ -83,9 +83,9 @@ class CoursePress_Data_Capabilities {
 			/* Notifications */
 			'coursepress_create_my_assigned_notification_cap' => 1,
 			'coursepress_create_my_notification_cap' => 1,
-			'coursepress_update_notification_cap' => 0,
+			'coursepress_update_notification_cap' => 1,
 			'coursepress_update_my_notification_cap' => 1,
-			'coursepress_delete_notification_cap' => 0,
+			'coursepress_delete_notification_cap' => 1,
 			'coursepress_delete_my_notification_cap' => 1,
 			'coursepress_change_notification_status_cap' => 0,
 			'coursepress_change_my_notification_status_cap' => 1,
@@ -319,7 +319,6 @@ class CoursePress_Data_Capabilities {
 		$return = user_can( $user_id, 'manage_options' );
 		$post_status = get_post_status( $course_id );
 
-		//if ( false === $return && self::can_manage_courses( $user_id ) && self::can_create_course() ) {
 		if ( false === $return ) {
 			$course_creator = self::is_course_creator( $course_id, $user_id );
 			$is_instructor = self::is_course_instructor( $course_id, $user_id );
@@ -1775,22 +1774,14 @@ class CoursePress_Data_Capabilities {
 		$course_type = CoursePress_Data_Course::get_post_type_name();
 		$module_type = CoursePress_Data_Module::get_post_type_name();
 		$unit_type = CoursePress_Data_Unit::get_post_type_name();
+		$noti = CoursePress_Data_Notification::get_post_type_name();
 
-		$coursepress_post_types = compact( $course_type, $unit_type, $module_type );
+		$coursepress_post_types = compact( 'course_type', 'unit_type', 'module_type', 'noti' );//compact( $course_type, $unit_type, $module_type, $noti );
 
 		foreach ( $coursepress_post_types as $post_type ) {
 
 			if ( isset( $wp_post_types[ $post_type ] ) ) {
 				$caps = $wp_post_types['post']->cap;
-
-				foreach ( $caps as $cap_key => $cap_value ) {
-					unset( $caps[ $cap_key] );
-
-					$cap_key = str_replace( 'post', $post_type, $cap_key );
-					$cap_value = str_replace( 'post', $post_type, $cap_value );
-					$caps[ $cap_key ] = $cap_value;
-				}
-
 				$wp_post_types[ $post_type ]->cap = $caps;
 			}
 		}
