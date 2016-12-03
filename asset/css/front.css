@@ -15,6 +15,10 @@ tester {
   max-width: 90%;
 }
 
+input.cp-has-error {
+  border: 1px solid rgba(255, 0, 0, 0.5);
+}
+
 .cp .hide {
   display: none;
 }
