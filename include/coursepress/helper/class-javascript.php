@@ -487,6 +487,8 @@ class CoursePress_Helper_JavaScript {
 				'required' => __( 'You need to complete this module!', 'CP_TD' ),
 				'normal_required' => __( 'You need to complete all required modules!', 'pc' ),
 				'participate' => __( 'Your participation to the discussion is required!', 'CP_TD' ),
+				'passcode_required' => __( 'Enter PASSCODE!', 'CP_TD' ),
+				'invalid_passcode' => __( 'Invalid PASSCODE!', 'CP_TD' ),
 			),
 		);
 
