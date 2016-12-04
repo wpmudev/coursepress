@@ -41,7 +41,7 @@ class CoursePress_Data_Course {
 				'publicly_queryable' => true,
 				'capability_type' => array( 'course', 'courses', 'post' ),
 				'capabilities' => array(
-					'edit_posts' => 'coursepress_update_course_cap',
+					'edit_posts' => 'coursepress_create_course_cap',
 					'edit_post' => 'coursepress_update_course_cap',
 					'delete_post' => 'coursepress_delete_course_cap',
 					'delete_posts' => 'coursepress_delete_course_cap',
