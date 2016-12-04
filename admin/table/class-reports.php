@@ -77,6 +77,7 @@ class CoursePress_Admin_Table_Reports extends WP_List_Table {
 			array(
 				'total_items' => $total_items,
 				'per_page' => $per_page,
+				'course_id' => $this->course_id,
 			)
 		);
 	}
