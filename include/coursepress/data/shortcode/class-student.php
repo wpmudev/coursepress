@@ -416,6 +416,11 @@ class CoursePress_Data_Shortcode_Student {
 		 * Avoid to load templates twice...
 		 */
 		global $post;
+
+		if ( ! is_object( $post ) ) {
+			$course_id = CoursePress_Helper_Utility::the_course( true );
+			$post = get_post( $course_id );
+		}
 		if (
 			isset( $post->coursepress_enrollment_templates_was_alredy_loaded )
 			&& $post->coursepress_enrollment_templates_was_alredy_loaded
