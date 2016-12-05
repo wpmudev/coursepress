@@ -114,12 +114,16 @@ class CoursePress_Template_Course {
 				}
 
 				// Row actions
-				$workbook_url = CoursePress_Data_Student::get_workbook_url( $course->ID );
-				$workbook_link = sprintf( '<a href="%s" target="_blank">%s</a>', esc_url( $workbook_url ), __( 'Workbook', 'CP_TD' ) );
+				$row_actions = array();
 
-				$row_actions = array(
-					'workbook' => $workbook_link,
-				);
+				$allow_workbook = CoursePress_Data_Course::get_setting( $course->ID, 'allow_workbook' );
+
+				if ( $allow_workbook ) {
+					$workbook_url = CoursePress_Data_Student::get_workbook_url( $course->ID );
+					$workbook_link = sprintf( '<a href="%s" target="_blank">%s</a>', esc_url( $workbook_url ), __( 'Workbook', 'CP_TD' ) );
+
+					$row_actions['workbook'] = $workbook_link;
+				}
 
 				$withdraw_link = add_query_arg( array(
 					'_wpnonce' => wp_create_nonce( 'coursepress_student_withdraw' ),
