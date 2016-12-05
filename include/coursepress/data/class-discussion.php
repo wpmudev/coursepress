@@ -28,6 +28,11 @@ class CoursePress_Data_Discussion {
 				'show_ui' => false,
 				'publicly_queryable' => false,
 				'capability_type' => 'discussion',
+				'capabilities' => array(
+					'read' => 'read',
+					'edit_published_posts' => 'coursepress_update_discussion_cap',
+					'edit_posts' => 'coursepress_update_discussion_cap',
+				),
 				'map_meta_cap' => true,
 				'query_var' => true,
 				// 'rewrite' => array(

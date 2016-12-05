@@ -108,6 +108,11 @@
 		window.location = url;
 	};
 
+	HighLightShortCode = function() {
+		var input = $(this);
+		input.select();
+	};
+
 	// Hooked events
 	$(document)
 		.ready( function() {
@@ -117,5 +122,6 @@
 		.on( 'change', '.input-key', canSubmit )
 		.on( 'change', '.input-requiredby', enableInput )
 		.on( 'submit', '.has-disabled', formSubmission )
-		.on( 'change', '.course-reload', reloadPageByCourse );
+		.on( 'change', '.course-reload', reloadPageByCourse )
+		.on( 'focus', '.cp-sc-box', HighLightShortCode );
 }(jQuery);

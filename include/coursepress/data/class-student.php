@@ -418,7 +418,11 @@ class CoursePress_Data_Student {
 				if ( 0 > $correct ) {
 					$correct = 0;
 				}
-				$grade = (int) ( $correct / $total * 100 );
+				$grade = 0;
+
+				if ( $corret > 0 && $total > 0 ) {
+					$grade = (int) ( $correct / $total * 100 );
+				}
 				break;
 
 			case 'input-select':

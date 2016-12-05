@@ -241,15 +241,14 @@ class CoursePress_Helper_JavaScript {
 				'help_tooltip' => __( 'If the submission of this grade makes a student completes the course, an email with certificate will be automatically sent.', 'CP_TD' ),
 				'minimum_help' => __( 'You may change this minimum grade from course setting.', 'CP_TD' ),
 			);
-        }
+		}
 
-        /**
-         * save unit message.
-         */
+		/**
+		 * save unit message.
+		 */
 			$localize_array['unit_builder_form']['messages']['setup']['saving'] = __( 'Step is saving now...', 'CP_TD' );
 			$localize_array['unit_builder_form']['messages']['setup']['saved'] = __( 'Step was successfully saved!', 'CP_TD' );
 			$localize_array['unit_builder_form']['messages']['setup']['error'] = __( 'Something went wrong. Step was not saved!', 'CP_TD' );
-
 
 		wp_localize_script( 'coursepress_object', '_coursepress', $localize_array );
 	}
@@ -333,6 +332,7 @@ class CoursePress_Helper_JavaScript {
 			'response_fail_message' => __( 'There was a problem saving your response. Please reload this page and try again.', 'CP_TD' ),
 			'current_course' => $course_id,
 			'current_course_is_paid' => CoursePress_Data_Course::is_paid_course( $course_id )? 'yes':'no',
+			'current_course_type' => CoursePress_Data_Course::get_setting( $course_id, 'enrollment_type', 'manually' ),
 			'course_url' => get_permalink( CoursePress_Helper_Utility::the_course( true ) ),
 			'home_url' => home_url(),
 			'current_student' => get_current_user_id(),
@@ -462,6 +462,7 @@ class CoursePress_Helper_JavaScript {
 			'response_saved_message' => __( 'Your response was recorded successfully.', 'CP_TD' ),
 			'response_fail_message' => __( 'There was a problem saving your response. Please reload this page and try again.', 'CP_TD' ),
 			'current_course_is_paid' => CoursePress_Data_Course::is_paid_course( $course_id )? 'yes':'no',
+			'current_course_type' => CoursePress_Data_Course::get_setting( $course_id, 'enrollment_type', 'manually' ),
 			'course_url' => get_permalink( CoursePress_Helper_Utility::the_course( true ) ),
 			'home_url' => home_url(),
 			'current_student' => get_current_user_id(),
@@ -486,7 +487,9 @@ class CoursePress_Helper_JavaScript {
 				'required' => __( 'You need to complete this module!', 'CP_TD' ),
 				'normal_required' => __( 'You need to complete all required modules!', 'pc' ),
 				'participate' => __( 'Your participation to the discussion is required!', 'CP_TD' ),
-			)
+				'passcode_required' => __( 'Enter PASSCODE!', 'CP_TD' ),
+				'invalid_passcode' => __( 'Invalid PASSCODE!', 'CP_TD' ),
+			),
 		);
 
 		/**

@@ -137,7 +137,22 @@ class CoursePress_Data_Instructor {
 			}
 		}
 
-		return $assigned_courses;
+		$course_ids = array();
+
+		if ( ! empty( $assigned_courses ) ) {
+			// Filter the course IDs, make sure courses exists and are not deleted
+			$args = array(
+				'post_type' => CoursePress_Data_Course::get_post_type_name(),
+				'post_status' => 'any',
+				'suppress_filters' => true,
+				'fields' => 'ids',
+				'post__in' => $assigned_courses,
+				'posts_per_page' => -1,
+			);
+			$course_ids = get_posts( $args );
+		}
+
+		return $course_ids;
 	}
 
 	public static function get_accessable_courses( $user_id = '', $post_status = 'publish' ) {
@@ -270,6 +285,7 @@ class CoursePress_Data_Instructor {
 		// Not in cache, so retrieve
 		if ( empty( $user_id ) ) {
 			$sql = $wpdb->prepare( 'SELECT user_id FROM ' . $wpdb->prefix . 'usermeta WHERE meta_key = %s', $hash );
+
 			$user_id = $wpdb->get_var( $sql );
 			wp_cache_add( $hash, $user_id, 'coursepress_userhash' );
 		}
@@ -300,8 +316,7 @@ class CoursePress_Data_Instructor {
 		 * we'll populate it with current value. Will be an empty array if
 		 * nothing exists. We're only interested in the key anyway.
 		 */
-		update_user_option( $user_id, $hash, get_user_option( $hash, $user_id ), $global_option );
-
+		update_user_option( $user_id, $hash, time(), $global_option );
 		// Put it in cache
 		wp_cache_add( $hash, $user_id, 'coursepress_userhash' );
 	}
@@ -311,9 +326,10 @@ class CoursePress_Data_Instructor {
 		$user = get_userdata( $user_id );
 		$hash = md5( $user->user_login );
 		$global_option = ! is_multisite();
-
 		$option = get_user_option( $hash, $user_id );
-
+		if ( empty( $option ) ) {
+			self::create_hash( $user );
+		}
 		return null !== $option ? $hash : false;
 	}
 

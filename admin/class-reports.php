@@ -23,7 +23,12 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Controller_Menu {
 		self::process_request();
 
 		if ( empty( $_REQUEST['view'] ) ) {
-			add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_reports_per_page' ) );
+			$options = array(
+				'default' => 20,
+				'option' => 'coursepress_reports_per_page',
+				'course_id' => isset( $_REQUEST['course_id'] ) ? (int) $_REQUEST['course_id'] : 0,
+			);
+			add_screen_option( 'per_page', $options );
 			$this->reports_table = new CoursePress_Admin_Table_Reports;
 			$this->reports_table->prepare_items();
 		}
@@ -52,13 +57,11 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Controller_Menu {
 		}
 
 		switch ( $action ) {
-			case 'filter':
-				if ( wp_verify_nonce( $nonce, 'coursepress_report' )  ) {
-					// Reload the page to apply filter
-					$course_id = (int) $_REQUEST['course_id'];
-					$url = add_query_arg( 'course_id', $course_id );
-					wp_safe_redirect( $url ); exit;
-				}
+			case 'filter': case 'Filter':
+				// Reload the page to apply filter
+				$course_id = (int) $_REQUEST['course_id'];
+				$url = add_query_arg( 'course_id', $course_id );
+				wp_safe_redirect( $url ); exit;
 			break;
 			case 'download':
 				if ( ! empty( $_REQUEST['students'] ) ) {

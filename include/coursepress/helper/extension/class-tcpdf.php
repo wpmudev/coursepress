@@ -7,9 +7,7 @@ class CoursePress_Helper_Extension_TCPDF {
 	);
 
 	public static function init() {
-
-		add_filter( 'coursepress_extensions_plugins', array( __CLASS__, 'add_to_extensions_list' ) );
-
+		//add_filter( 'coursepress_extensions_plugins', array( __CLASS__, 'add_to_extensions_list' ) );
 	}
 
 	public static function add_to_extensions_list( $plugins ) {
