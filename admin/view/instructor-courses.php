@@ -10,7 +10,7 @@ $assigned_courses = array_map( 'get_post', $assigned_courses );
 	<table>
 		<tr>
 			<td><?php echo get_avatar( $instructor->user_email, 102 ); ?></td>
-			<td>
+			<td valign="top">
 				<h2><?php echo $instructor_name; ?></h2>
 			</td>
 		</tr>
@@ -22,7 +22,6 @@ $assigned_courses = array_map( 'get_post', $assigned_courses );
 		<thead>
 			<tr>
 				<th><?php esc_html_e( 'Course', 'CP_TD' ); ?></th>
-				<th><?php esc_html_e( 'Start Date', 'CP_TD' ); ?></th>
 			</tr>
 		</thead>
 		<tbody>

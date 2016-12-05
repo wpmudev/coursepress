@@ -83,9 +83,9 @@ class CoursePress_Data_Capabilities {
 			/* Notifications */
 			'coursepress_create_my_assigned_notification_cap' => 1,
 			'coursepress_create_my_notification_cap' => 1,
-			'coursepress_update_notification_cap' => 0,
+			'coursepress_update_notification_cap' => 1,
 			'coursepress_update_my_notification_cap' => 1,
-			'coursepress_delete_notification_cap' => 0,
+			'coursepress_delete_notification_cap' => 1,
 			'coursepress_delete_my_notification_cap' => 1,
 			'coursepress_change_notification_status_cap' => 0,
 			'coursepress_change_my_notification_status_cap' => 1,
@@ -117,11 +117,11 @@ class CoursePress_Data_Capabilities {
 	);
 
 	public static function init() {
-		add_action( 'init', array( __CLASS__, 'init_caps' ) );
+		add_action( 'init', array( __CLASS__, 'init_caps' ), 1 );
 		add_action( 'set_user_role', array( __CLASS__, 'assign_role_capabilities' ), 10, 3 );
 		add_action( 'wp_login', array( __CLASS__, 'restore_capabilities' ), 10, 2 );
 		add_action( 'admin_init', array( __CLASS__, 'fix_admin_capabilities' ) );
-		add_filter( 'user_has_cap', array( __CLASS__, 'user_cap' ), 10, 3 );
+		add_filter( 'user_has_cap', array( __CLASS__, 'user_cap' ), 99, 3 );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			// Filter the capability of the current user
@@ -135,11 +135,14 @@ class CoursePress_Data_Capabilities {
 		global $current_user;
 
 		self::$is_admin = current_user_can( 'manage_options' );
+		self::course_capabilities();
 
 		if ( self::$is_admin ) {
 			// Enable edit course cap
 			$current_user->allcaps['edit_course'] = true;
-
+			//$current_user->allcaps['coursepress_delete_course_cap'] = true;
+			$current_caps = self::$capabilities['instructor'];
+			self::$current_caps = $current_caps = array_map( '__return_true', $current_caps );
 		} elseif ( self::is_instructor() || self::is_facilitator() ) {
 			global $current_user;
 
@@ -316,7 +319,6 @@ class CoursePress_Data_Capabilities {
 		$return = user_can( $user_id, 'manage_options' );
 		$post_status = get_post_status( $course_id );
 
-		//if ( false === $return && self::can_manage_courses( $user_id ) && self::can_create_course() ) {
 		if ( false === $return ) {
 			$course_creator = self::is_course_creator( $course_id, $user_id );
 			$is_instructor = self::is_course_instructor( $course_id, $user_id );
@@ -1736,7 +1738,7 @@ class CoursePress_Data_Capabilities {
 
 		if ( ! $return ) {
 			// Check if current user is the course author.
-			$is_author = self::is_course_creator( $course_id, $student_id );
+			$is_author = self::is_course_creator( $course_id, $user_id );
 
 			if ( $is_author ) {
 				$return = user_can( $user_id, 'coursepress_assign_my_course_facilitator_cap' );
@@ -1772,22 +1774,14 @@ class CoursePress_Data_Capabilities {
 		$course_type = CoursePress_Data_Course::get_post_type_name();
 		$module_type = CoursePress_Data_Module::get_post_type_name();
 		$unit_type = CoursePress_Data_Unit::get_post_type_name();
+		$noti = CoursePress_Data_Notification::get_post_type_name();
 
-		$coursepress_post_types = compact( $course_type, $unit_type, $module_type );
+		$coursepress_post_types = compact( 'course_type', 'unit_type', 'module_type', 'noti' );//compact( $course_type, $unit_type, $module_type, $noti );
 
 		foreach ( $coursepress_post_types as $post_type ) {
 
 			if ( isset( $wp_post_types[ $post_type ] ) ) {
 				$caps = $wp_post_types['post']->cap;
-
-				foreach ( $caps as $cap_key => $cap_value ) {
-					unset( $caps[ $cap_key] );
-
-					$cap_key = str_replace( 'post', $post_type, $cap_key );
-					$cap_value = str_replace( 'post', $post_type, $cap_value );
-					$caps[ $cap_key ] = $cap_value;
-				}
-
 				$wp_post_types[ $post_type ]->cap = $caps;
 			}
 		}

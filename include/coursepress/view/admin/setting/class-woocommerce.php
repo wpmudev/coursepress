@@ -143,6 +143,7 @@ class CoursePress_View_Admin_Setting_WooCommerce {
 				'enabled' => false,
 				'redirect' => false,
 				'unpaid' => 'change_status',
+				'delete' => 'change_status',
 			),
 		);
 
@@ -167,6 +168,14 @@ class CoursePress_View_Admin_Setting_WooCommerce {
 				$post_settings['woocommerce']['unpaid'] = 'delete';
 			} else {
 				$post_settings['woocommerce']['unpaid'] = 'change_status';
+			}
+			if (
+				isset( $_POST['coursepress_settings']['woocommerce']['delete'] )
+				&& 'delete' == $_POST['coursepress_settings']['woocommerce']['delete']
+			) {
+				$post_settings['woocommerce']['delete'] = 'delete';
+			} else {
+				$post_settings['woocommerce']['delete'] = 'change_status';
 			}
 		}
 		$post_settings = CoursePress_Helper_Utility::sanitize_recursive( $post_settings );

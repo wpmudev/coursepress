@@ -7,8 +7,7 @@ $date_format = get_option( 'date_format' );
 $time_format = get_option( 'time_format' );
 ?>
 <div class="wrap coursepress_wrapper course-student-profile">
-	<h2><?php esc_html_e( 'Profile', 'CP_TD' ); ?></h2>
-	<hr />
+	<h2><?php esc_html_e( 'Student Profile', 'CP_TD' ); ?></h2>
 
 	<table class="widefat striped">
 		<tr>
@@ -26,7 +25,6 @@ $time_format = get_option( 'time_format' );
 		</tr>
 	</table>
 
-	<h2><?php esc_html_e( 'Enrolled Courses', 'CP_TD' ); ?></h2>
-	<hr />
+	<h3><?php esc_html_e( 'Enrolled Courses', 'CP_TD' ); ?></h3>
 	<?php $this->enrolled_courses->display(); ?>
 </div>
