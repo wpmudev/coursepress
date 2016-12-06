@@ -892,6 +892,26 @@ class CoursePress_Data_Discussion {
 	 * @return (bool) Returns true if there's at least 1 reply found.
 	 **/
 	public static function have_comments( $student_id, $post_id ) {
+		/**
+		 * sanitize $student_id
+		 */
+		if ( ! is_numeric( $student_id ) && ! is_string( $student_id ) ) {
+			return false;
+		}
+		$student_id = (int) $student_id;
+		if ( 0 == $student_id ) {
+			return false;
+		}
+		/**
+		 * Sanitize $post_id
+		 */
+		if ( ! is_numeric( $post_id ) && ! is_string( $post_id ) ) {
+			return false;
+		}
+		$post_id = (int) $post_id;
+		if ( 0 == $post_id ) {
+			return false;
+		}
 		$args = array(
 			'post_id' => $post_id,
 			'user_id' => $student_id,
@@ -902,7 +922,6 @@ class CoursePress_Data_Discussion {
 			'status' => 'all',
 		);
 		$comments = get_comments( $args );
-
 		return count( $comments ) > 0;
 	}
 }
