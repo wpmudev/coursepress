@@ -29,6 +29,11 @@ class CoursePress_Admin_Courses {
 
 		// Print templates at footer
 		add_action( 'admin_footer', array( __CLASS__, 'templates' ) );
+
+		/**
+		 * when delete a course
+		 */
+		add_action( 'delete_post', array( 'CoursePress_Admin_Controller_Course', 'delete_course' ) );
 	}
 
 	public static function _is_course( $post ) {

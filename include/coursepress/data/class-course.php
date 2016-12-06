@@ -3221,7 +3221,7 @@ class CoursePress_Data_Course {
 		}
 		global $wpdb;
 		$sql = $wpdb->prepare(
-			"select id from {$wpdb->posts} where post_title = ( select a.post_title from {$wpdb->posts} a where a.id = %d )",
+			"select ID from {$wpdb->posts} where post_title = ( select a.post_title from {$wpdb->posts} a where a.id = %d )",
 			$post_id
 		);
 		$results = $wpdb->get_results( $sql );
