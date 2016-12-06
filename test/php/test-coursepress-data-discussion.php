@@ -168,7 +168,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	 */
 	public function test_get_one() {
 		$post = array(
-			'ID'           => 0,
+			'ID'		   => 0,
 			'post_title'   => '',
 			'post_content' => '',
 		);
@@ -319,7 +319,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 			$this->assertFalse( $assert );
 		}
 		/**
-	 * TODO
+		 * TODO
 		 * Good data
 		 */
 		$value = '';
@@ -361,7 +361,7 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 			}
 		}
 		/**
-	 * TODO
+		 * TODO
 		 * Good data
 		 */
 		$value = '';
@@ -566,7 +566,6 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 	}
 
 	/**
-	 * TODO
 	 * wp_list_comments_args( $args )
 	 */
 	public function test_wp_list_comments_args() {
@@ -575,17 +574,20 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 		 */
 		$values = $this->get_wrong_values();
 		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Discussion::wp_list_comments_args( $value );
+			$this->assertEquals( $value, $assert );
 		}
 		/**
 		 * Good data
 		 */
-		$value = '';
-		//		$assert = CoursePress_Data_Discussion::;
-
+		foreach ( $this->course->discussions as $value ) {
+			$assert = CoursePress_Data_Discussion::wp_list_comments_args( $value );
+			$this->assertInstanceOf( 'WP_Post', $assert );
+			$this->assertEquals( $value, $assert );
+		}
 	}
 
 	/**
-	 * TODO
 	 * comments_template_query_args( $args )
 	 */
 	public function test_comments_template_query_args() {
@@ -594,17 +596,22 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 		 */
 		$values = $this->get_wrong_values();
 		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Discussion::comments_template_query_args( $value );
+			$this->assertInternalType( 'array', $assert );
+			$this->assertArrayHasKey( 'number', $assert );
+			$this->assertEquals( 20, $assert['number'] );
 		}
 		/**
 		 * Good data
 		 */
-		$value = '';
-		//		$assert = CoursePress_Data_Discussion::;
-
+		$value = array();
+		$assert = CoursePress_Data_Discussion::comments_template_query_args( $value );
+		$this->assertInternalType( 'array', $assert );
+		$this->assertArrayHasKey( 'number', $assert );
+		$this->assertEquals( 20, $assert['number'] );
 	}
 
 	/**
-	 * TODO
 	 * have_comments( $student_id, $post_id )
 	 */
 	public function test_have_comments() {
@@ -612,14 +619,22 @@ class CoursePress_Data_Discussion_Test extends CoursePress_UnitTestCase {
 		 * Wrong data
 		 */
 		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
+		foreach ( $values as $student_id ) {
+			foreach ( $values as $post_id ) {
+				$assert = CoursePress_Data_Discussion::have_comments( $student_id, $post_id );
+				$this->assertInternalType( 'boolean', $assert );
+				$this->assertFalse( $assert );
+			}
 		}
 		/**
 		 * Good data
 		 */
 		$value = '';
-		//		$assert = CoursePress_Data_Discussion::;
-
+		foreach ( $this->course->discussions as $post_id ) {
+			$assert = CoursePress_Data_Discussion::have_comments( $this->student->ID, $post_id );
+			$this->assertInternalType( 'boolean', $assert );
+			$this->assertFalse( $assert );
+		}
 	}
 }
 /**
