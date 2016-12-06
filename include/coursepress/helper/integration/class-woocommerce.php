@@ -536,7 +536,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 			echo '<p class="cp_woo_dashboard_link">';
 			printf(
 				__( 'You can find the course in your <a href="%s">Dashboard</a>', 'CP_TD' ),
-				CoursePress::instance()->get_student_dashboard_slug( true )
+				( method_exists('CoursePress_Core', 'get_slug') ) ? CoursePress_Core::get_slug('student_dashboard', true) : ''
 			);
 			echo '</p><hr />';
 		}

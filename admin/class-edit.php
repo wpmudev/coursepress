@@ -21,6 +21,17 @@ class CoursePress_Admin_Edit {
 		if ( $post->post_type != $post_type ) {
 			return;
 		}
+
+		/**
+		 * Free version can add only one course
+		 */
+		$is_limit_reach = CoursePress_Data_Course::is_limit_reach();
+		if ( $is_limit_reach ) {
+			add_action( 'add_meta_boxes', array( __CLASS__, 'remove_meta_boxes' ), 1 );
+			add_action( 'admin_footer', array( __CLASS__, 'disable_style' ), 100 );
+			add_action( 'edit_form_after_editor', array( __CLASS__, 'notice_about_pro_when_try_to_add_new_course' ) );
+			return;
+		}
 		self::$current_course = $post;
 
 		if ( 'auto-draft' !== $post->post_status || ! empty( $_GET['post'] ) ) {
@@ -30,8 +41,8 @@ class CoursePress_Admin_Edit {
 		$tab = empty( $_GET['tab'] ) ? 'setup' : $_GET['tab'];
 		add_action( 'edit_form_top', array( __CLASS__, 'edit_tabs' ) );
 
-		// No extra metabox please !!!
-		remove_all_actions( 'add_meta_boxes' );
+		// Filter metabox to render
+		add_action( 'add_meta_boxes', array( __CLASS__, 'allowed_meta_boxes' ), 999 );
 
 		if ( 'setup' == $tab ) {
 
@@ -65,14 +76,50 @@ class CoursePress_Admin_Edit {
 			add_action( 'edit_form_after_editor', array( __CLASS__, 'end_wrapper' ) );
 		} else {
 			$_GET['id'] = $_REQUEST['id'] = self::$current_course->ID;
-			add_action( 'add_meta_boxes', array( __CLASS__, 'disable_meta_boxes' ), 1 );
 			add_action( 'admin_footer', array( __CLASS__, 'disable_style' ), 100 );
 		}
 	}
 
-	public static function disable_meta_boxes() {
+	public static function allowed_meta_boxes() {
 		global $wp_meta_boxes;
-		$wp_meta_boxes = array();
+
+		$post_type = CoursePress_Data_Course::get_post_type_name();
+
+		if ( ! empty( $wp_meta_boxes[ $post_type ] ) ) {
+			$cp_metaboxes = $wp_meta_boxes[ $post_type ];
+
+			/**
+			 * Note: Add third party meta_box ID here to be included in CP edit UI!
+			 **/
+			$allowed = array(
+				'submitdiv',
+				'course_categorydiv',
+				'slugdiv',
+				'wpseo_meta',
+			);
+
+			/**
+			 * Filter the allowed meta boxes to be rendered
+			 **/
+			$allowed = apply_filters( 'coursepress_allowed_meta_boxes', $allowed );
+
+			foreach ( $cp_metaboxes as $group => $groups ) {
+				foreach ( $groups as $location => $metaboxes ) {
+					foreach ( $allowed as $key ) {
+						if ( ! isset( $metaboxes[ $key ] ) ) {
+							unset( $cp_metaboxes[ $group ][ $location ][ $key ] );
+						}
+					}
+				}
+			}
+			// Restore metaboxes
+			$wp_meta_boxes[ $post_type ] = $cp_metaboxes;
+		}
+
+		// Remove media buttons hooks
+		remove_all_actions( 'media_buttons' );
+		// Enable 'Add Media' button
+		add_action( 'media_buttons', 'media_buttons' );
 	}
 
 	/**
@@ -224,7 +271,8 @@ class CoursePress_Admin_Edit {
 		$setup_nonce = wp_create_nonce( 'setup-course' );
 
 		CoursePress_View_Admin_Course_Edit::$current_course = self::$current_course;
-
+		printf( '<input type="hidden" id="edit_course_link_url" value="%s" />',
+			esc_url( get_edit_post_link( self::$current_course->ID ) ) );
 		echo '<div class="coursepress-course-step-container">
 			<div id="course-setup-steps" data-nonce="' . $setup_nonce . '">';
 	}
@@ -1391,6 +1439,47 @@ class CoursePress_Admin_Edit {
 			}
 
 			exit;
+		}
+	}
+
+	/**
+	 * Message in FREE version, when we have more than 0 (zero) courses and we
+	 * try to add next one. This is advertising to buy PRO version.
+	 *
+	 * @since 2.0.0
+	 */
+	public static function notice_about_pro_when_try_to_add_new_course() {
+		echo '<p>';
+		_e( 'The free version of CoursePress is limited to one course. To add more courses, upgrade to CoursePress Pro for unlimited courses and more payment gateways.', 'CP_TD' );
+		echo '</p>';
+		printf(
+			'<p><a href="%s" class="button-primary">%s</a></p>',
+			esc_url( __( 'https://premium.wpmudev.org/project/coursepress-pro/', 'CP_TD' ) ),
+			esc_html__( 'Try CoursePress Pro for Free', 'CP_TD' )
+		);
+	}
+
+	/**
+	 * Remove course add meta boxes.
+	 *
+	 * @since 2.0.0
+	 */
+	public static function remove_meta_boxes() {
+		$screen = get_current_screen();
+		if ( ! is_a( $screen, 'WP_Screen' ) ) {
+			return;
+		}
+		if ( 'add' != $screen->action ) {
+			return;
+		}
+		$post_type = CoursePress_Data_Course::get_post_type_name();
+		if ( $post_type != $screen->post_type ) {
+			return;
+		}
+		$page = $screen->id;
+		global $wp_meta_boxes;
+		if ( isset( $wp_meta_boxes[ $page ] ) ) {
+			unset( $wp_meta_boxes[ $page ] );
 		}
 	}
 }
