@@ -509,15 +509,23 @@ class CoursePress_View_Admin_Setting_General {
 								</th>
 								<td>';
 
-		$selected_order = CoursePress_Core::get_setting( 'course/order_by', 'post_date' );
-		$content .= '
-									<select name="coursepress_settings[course][order_by]" class="widefat" id="course_order_by">
-										<option value="post_date" ' . selected( $selected_order, 'post_date', false ) .'>' . __( 'Post Date', 'CP_TD' ) . '</option>
-										<option value="course_order" ' . selected( $selected_order, 'course_order', false ) .'>' . __( 'Post Order Number', 'CP_TD' ) . '</option>
-									</select>
-								</td>
-							</tr>
-							<tr valign="top">
+		$selected_order = CoursePress_Core::get_setting( 'course/order_by', 'course_start_date' );
+
+		$options = array(
+			'post_date' => __( 'Post Date', 'CP_TD' ),
+			'start_date' => __( 'Course start date', 'CP_TD' ),
+			'enrollment_start_date' => __( 'Course enrollment start date', 'CP_TD' ),
+		);
+		$content .= CoursePress_Helper_UI::select(
+			'coursepress_settings[course][order_by]',
+			$options,
+			$selected_order,
+			'widefat',
+			'course_order_by'
+		);
+
+		$content .= '</td></tr>';
+		$content .= '<tr valign="top">
 								<th scope="row">
 								' . esc_html__( 'Direction', 'CP_TD' ) . '
 								</th>

@@ -764,13 +764,21 @@ class CoursePress_Helper_UI {
 	 * @param array $options Array options, option_key => option_label
 	 * @param string $selected selected value.
 	 * @param string $class element class
+	 * @param string $id element id
 	 * @return string Valid html select element.
 	 */
-	public static function select( $name, $options, $selected = '', $class = '' ) {
+	public static function select( $name, $options, $selected = '', $class = '', $id = '' ) {
+		$select_atts = '';
+		if ( ! empty( $class ) ) {
+			$select_atts .= sprintf( ' class="%s"', esc_attr( $class ) );
+		}
+		if ( ! empty( $id ) ) {
+			$select_atts .= sprintf( ' id="%s"', esc_attr( $id ) );
+		}
 		$content = sprintf(
-			'<select name="%s" class="%s">',
+			'<select name="%s"%s>',
 			esc_attr( $name ),
-			esc_attr( $class )
+			$select_atts
 		);
 		foreach ( $options as $key => $label ) {
 			$content .= '<option value="' . $key . '" ' . selected( $selected, $key, false ) . '>' . esc_html( $label ) . '</option>';
