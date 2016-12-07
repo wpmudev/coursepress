@@ -308,6 +308,13 @@ class CoursePress_Helper_UI {
 
 		$instructors = CoursePress_Data_Course::get_setting( $course_id, 'instructors', array() );
 		$instructors = array_filter( $instructors );
+
+		if ( empty( $instructors ) ) {
+			// Set current user the default instructor
+			CoursePress_Data_Course::add_instructor( $course_id, get_current_user_id() );
+			$instructors = array( get_current_user_id() );
+		}
+
 		$instructors = ! empty( $instructors ) ? array_map( 'get_userdata', $instructors ) : array();
 		$instructors = array_filter( $instructors );
 
