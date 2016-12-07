@@ -159,9 +159,14 @@ class CoursePress_Helper_Upgrade {
 			'mp_product_id' => 'mp_product_id',
 		);
 
+		$date_metas = array( 'course_start_date', 'course_end_date', 'enrollment_start_date', 'enrollment_end_date' );
 		foreach ( $meta_keys as $old_meta => $new_meta ) {
 			$meta_value = get_post_meta( $course_id, $old_meta, true );
 			$course_metas[ $new_meta ] = $meta_value;
+
+			if ( in_array( $new_meta, $date_metas ) ) {
+				update_post_meta( $course_id, "cp_" . $new_meta, strtotime( $meta_value ) );
+			}
 		}
 
 		if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
