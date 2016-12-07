@@ -101,7 +101,12 @@ _.extend( _coursepress_upgrade, {
 			inputs = $( '[name="course"]', form ),
 			update_nag = $( '.coursepress-upgrade-nag p' ),
 			user_id = $( '[name="user_id"]', form ).val(),
+			submit_button = form.find( '[type="submit"]' ),
 			updateDone, wrap_title, timer, time, sender;
+
+		if ( submit_button.is( ':disabled') ) {
+			return false;
+		}
 
 		if ( 0 === update_nag.length ) {
 			// Update nag have been removed, recreate 1
@@ -109,6 +114,8 @@ _.extend( _coursepress_upgrade, {
 			update_nag = $( '<div class="notice notice-warning is-dismissible coursepress-upgrade-nag">' ).insertAfter( wrap_title );
 			update_nag = $( '<p>' ).appendTo( update_nag );
 		}
+
+		submit_button.attr( 'disabled', 'disabled' );
 
 		update_nag.parent().removeClass( 'notice-error' ).addClass( 'notice-warning' );
 		update_nag.html( _coursepress_upgrade.noloading );
