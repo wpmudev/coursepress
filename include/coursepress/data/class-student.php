@@ -381,7 +381,7 @@ class CoursePress_Data_Student {
 				}
 				$grade = 0;
 
-				if ( $corret > 0 && $total > 0 ) {
+				if ( $correct > 0 && $total > 0 ) {
 					$grade = (int) ( $correct / $total * 100 );
 				}
 				break;
