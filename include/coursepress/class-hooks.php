@@ -64,6 +64,9 @@ class CoursePress_Hooks {
 		// Update Communication
 		add_action( 'wp_ajax_update_notification', array( 'CoursePress_Data_Notification', 'ajax_update' ) );
 		add_action( 'wp_ajax_update_discussion', array( 'CoursePress_Data_Discussion', 'ajax_update' ) );
+
+		// MP Notice
+		add_action( 'admin_notices', array( 'CoursePress_Helper_Extension_MarketPress', 'mp_notice' ) );
 	}
 
 	/**
