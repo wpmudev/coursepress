@@ -23,7 +23,10 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 	}
 
 	public function prepare_items() {
-		global $wp_query;
+		global $avail_post_stati, $wp_query, $per_page, $mode;
+
+		//is going to call wp()
+		$avail_post_stati = wp_edit_posts_query();
 		$screen = get_current_screen();
 		/**
 		 * Per Page

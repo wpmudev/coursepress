@@ -166,6 +166,14 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 			'filter',
 		);
 
+		$action = '';
+
+		if ( isset( $_REQUEST['action'] ) ) {
+			$action = $_REQUEST['action'];
+		}
+
+		l( $action );
+
 		if ( empty( $_REQUEST['action'] ) || ! in_array( strtolower( $_REQUEST['action'] ), $actions ) ) {
 			return;
 		}

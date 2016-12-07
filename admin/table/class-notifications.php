@@ -214,6 +214,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 		$actions = array(
 			'publish' => __( 'Visible', 'CP_TD' ),
 			'unpublish' => __( 'Private', 'CP_TD' ),
+			'trash' => __( 'Trash', 'CP_TD' ),
 			'delete' => __( 'Delete', 'CP_TD' ),
 		);
 		return $actions;
@@ -275,7 +276,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 			'value' => 'all',
 		);
 
-		$courses =  CoursePress_Data_Notification::get_courses();
+		$courses = CoursePress_Data_Notification::get_courses();
 		if ( current_user_can( 'manage_options' ) ) {
 			$courses = false;
 		} elseif ( CoursePress_Data_Capabilities::can_add_notification_to_all() ) {

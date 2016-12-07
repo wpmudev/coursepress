@@ -18,8 +18,10 @@ CoursePress_Admin_Forums::add_button_add_new();
 ?></h2>
 	<hr />
 	<form method="post">
-		<?php
-		wp_nonce_field( 'coursepress_discussion_list' );
-		$this->list_forums->display(); ?>
+<?php
+wp_nonce_field( 'coursepress_discussion_list' );
+$this->list_forums->views();
+$this->list_forums->display();
+?>
 	</form>
 </div>
