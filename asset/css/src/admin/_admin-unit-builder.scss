@@ -127,6 +127,7 @@
 
     // Buttons
     .unit-buttons {
+	  margin: 15px 0 5px 0;
 
       .button {
         border: none;
@@ -135,7 +136,8 @@
         display: inline-block;
         margin: 5px 5px 0 0;
         text-align: center;
-        width: 120px;
+        width: auto;
+		min-width: 120px;
         -moz-border-radius: 0;
         -webkit-border-radius: 0;
         border-radius: 0;

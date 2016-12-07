@@ -18,7 +18,6 @@ class CoursePress_Helper_Extension_MarketPress {
 		}
 
 		add_filter( 'coursepress_extensions_plugins', array( __CLASS__, 'add_to_extensions_list' ) );
-
 	}
 
 	public static function add_to_extensions_list( $plugins ) {
@@ -82,5 +81,32 @@ class CoursePress_Helper_Extension_MarketPress {
 		require_once ABSPATH . 'wp-admin/includes/plugin.php'; // Need for plugins_api.
 
 		return ! empty( $scope ) ? is_plugin_active( self::$base_path[ $scope ] ) : false;
+	}
+
+	/**
+	 * Show MP install/activation notice
+	 **/
+	public static function mp_notice() {
+		$post_type = CoursePress_Data_Course::get_post_type_name();
+		$message = '';
+
+		if ( ! self::installed() ) {
+			$mp_settings_url = add_query_arg( array(
+				'post_type' => $post_type,
+				'page' => 'coursepress_settings',
+				'tab' => 'extensions',
+				),
+				admin_url( 'edit.php' )
+			);
+			$message = sprintf( '<strong>%s</strong> ', __( 'Install MarketPress plugin in order to sell courses.', 'cp' ) );
+			$message .= sprintf( '<a href="%s">%s</a>', $mp_settings_url, __( 'Install MarketPress', 'cp' ) );
+		} elseif ( ! self::activated() ) {
+			$mp_link = sprintf( '<a href="%s">%s</a>', admin_url( 'plugins.php' ), __( 'MarketPress', 'cp' ) );
+			$message = sprintf( __( 'Activate %s to start selling courses.', 'cp' ), $mp_link );
+		}
+
+		if ( ! empty( $message ) ) {
+			echo CoursePress_Helper_UI::admin_notice( $message, 'warning' );
+		}
 	}
 }
