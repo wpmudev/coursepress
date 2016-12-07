@@ -740,8 +740,7 @@ class CoursePress_Admin_Edit {
 				$content .= '
 					<div class="instructor-avatar-holder empty">
 						<span class="instructor-name">' . esc_html__( 'Please Assign Instructor', 'CP_TD' ) . '</span>
-					</div>
-';
+					</div>';
 				$content .= CoursePress_Helper_UI::course_pendings_instructors_avatars( $course_id );
 			}
 		} else {
