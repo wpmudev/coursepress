@@ -45,12 +45,12 @@ class CoursePress_Admin_Controller_Course {
 		 */
 		$meta_key = 'course_' . $course_id;
 		global $wpdb;
-		$query = $wpdb->prepare( "delete from {$wpdb->usermeta} where meta_key = %s", $meta_key );
+		$query = $wpdb->prepare( "DELETE FROM {$wpdb->usermeta} WHERE meta_key = %s", $meta_key );
 		$wpdb->query( $query );
 		/**
 		 * delete counters
 		 */
-		$query = $wpdb->prepare( "delete from {$wpdb->usermeta} where meta_key = %s", 'cp_instructor_course_count' );
+		$query = $wpdb->prepare( "DELETE FROM {$wpdb->usermeta} WHERE meta_key = %s", 'cp_instructor_course_count' );
 		$wpdb->query( $query );
 		/**
 		 * Notify others that a course is deleted
