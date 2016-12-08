@@ -11,18 +11,15 @@ class CoursePress_Admin_FeedbackEmail extends CoursePress_Email {
 		return array(
 			'subject' => __( 'New Feedback', 'CP_TD' ),
 			'content' => sprintf( __(
-				'
-				Howdy %s %s,
+				'Hi %1$s %2$s,
 
-				A new feedback is given by your instructor at %s in %s at %s
+A new feedback is given by your instructor at %3$s in %4$s at %5$s
 
-				%s says
-				%s
+%6$s says
+%7$s
 
-				Cheers,
-				%s
-				%s
-				', 'CP_TD' ),
+Best wishes,
+The %8$s Team', 'CP_TD' ),
 				'FIRST_NAME',
 				'LAST_NAME',
 				'COURSE_NAME',
@@ -30,8 +27,7 @@ class CoursePress_Admin_FeedbackEmail extends CoursePress_Email {
 				'CURRENT_MODULE',
 				'INSTRUCTOR_FIRST_NAME INSTRUCTOR_LAST_NAME',
 				'INSTRUCTOR_FEEDBACK',
-				'BLOG_NAME',
-				'BLOG_ADDRESS'
+				'WEBSITE_ADDRESS'
 			),
 		);
 	}
