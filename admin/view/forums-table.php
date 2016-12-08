@@ -19,7 +19,6 @@ CoursePress_Admin_Forums::add_button_add_new();
 	<hr />
 	<form method="post">
 <?php
-wp_nonce_field( 'coursepress_discussion_list' );
 $this->list_forums->views();
 $this->list_forums->display();
 ?>

@@ -86,19 +86,65 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 		self::save_discussion();
 		self::update_discussion();
 
-		if ( empty( $_REQUEST['action'] ) || 'edit' !== $_REQUEST['action'] ) {
-			$this->slug = 'coursepress_forums-table';
+		$action = -1;
+		if ( ! empty( $_REQUEST['action'] ) ) {
+			$action = $_REQUEST['action'];
+		}
+		if ( -1 == $action && ! empty( $_REQUEST['action2'] ) ) {
+			$action = $_REQUEST['action2'];
+		}
 
+		switch ( $action ) {
+			case 'edit':
+				$this->slug = 'coursepress_edit-forum';
+
+				// Set before the page
+				add_screen_option( 'layout_columns', array( 'max' => 2, 'default' => 2 ) );
+			break;
+
+			case 'delete':
+			case 'draft':
+			case 'publish':
+			case 'trash':
+			case 'untrash':
+				if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'bulk-posts' ) ) {
+					if ( isset( $_POST['post'] ) && is_array( $_POST['post'] ) ) {
+						foreach ( $_POST['post'] as $discussion_id ) {
+							if ( CoursePress_Data_Discussion::is_correct_post_type( $discussion_id ) ) {
+								switch ( $action ) {
+									case 'delete':
+										wp_delete_post( $discussion_id );
+									break;
+									case 'draft':
+										$post = array(
+										'ID' => $discussion_id,
+										'post_status' => 'draft',
+										);
+										wp_update_post( $post );
+									break;
+									case 'publish':
+										wp_publish_post( $discussion_id );
+									break;
+									case 'trash':
+										wp_trash_post( $discussion_id );
+									break;
+									case 'untrash':
+										wp_untrash_post( $discussion_id );
+									break;
+								}
+							}
+						}
+					}
+				}
+			break;
+		}
+
+		if ( 'edit' !== $action ) {
+			$this->slug = 'coursepress_forums-table';
 			// Prepare items
 			add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_forum_per_page' ) );
 			$this->list_forums = new CoursePress_Admin_Table_Forums();
 			$this->list_forums->prepare_items();
-
-		} elseif ( 'edit' == $_REQUEST['action'] ) {
-			$this->slug = 'coursepress_edit-forum';
-
-			// Set before the page
-			add_screen_option( 'layout_columns', array( 'max' => 2, 'default' => 2 ) );
 		}
 	}
 
@@ -213,8 +259,10 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 		switch ( $action ) {
 			case 'delete' && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_delete_discussion' ) :
 				$id = (int) $_REQUEST['id'];
-				// @todo: Add vlidation
-				wp_delete_post( $id );
+				$is_correct_post_type = CoursePress_Data_Discussion::is_correct_post_type( $id );
+				if ( $is_correct_post_type ) {
+					wp_delete_post( $id );
+				}
 				$url = remove_query_arg(
 					array(
 					'id',
@@ -233,7 +281,24 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 					$url = remove_query_arg( 'course_id' );
 				}
 				wp_safe_redirect( $url ); exit;
-			break;
+				break;
+
+			case 'trash' && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_trash_discussion' ) :
+				$id = (int) $_REQUEST['id'];
+				$is_correct_post_type = CoursePress_Data_Discussion::is_correct_post_type( $id );
+				if ( $is_correct_post_type ) {
+					wp_trash_post( $id );
+				}
+				break;
+
+			case 'untrash' && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_untrash_discussion' ) :
+				$id = (int) $_REQUEST['id'];
+				$is_correct_post_type = CoursePress_Data_Discussion::is_correct_post_type( $id );
+				if ( $is_correct_post_type ) {
+					wp_untrash_post( $id );
+				}
+				break;
+
 		}
 	}
 
@@ -266,7 +331,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 				_e( 'You do not have permission to add discussion.', 'CP_TD' );
 				return;
 			}
-        }
+		}
 		$options = array();
 		$options['value'] = $course_id;
 		if ( ! CoursePress_Data_Capabilities::can_add_discussion_to_all() ) {
@@ -467,5 +532,4 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 		$posts = get_posts( $args );
 		return $posts;
 	}
-
 }

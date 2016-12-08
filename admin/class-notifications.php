@@ -172,8 +172,6 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 			$action = $_REQUEST['action'];
 		}
 
-		l( $action );
-
 		if ( empty( $_REQUEST['action'] ) || ! in_array( strtolower( $_REQUEST['action'] ), $actions ) ) {
 			return;
 		}
@@ -191,8 +189,8 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 				}
 				break;
 			case 'publish': case 'unpublish': case 'delete':
-						if ( ! empty( $_REQUEST['bulk-actions'] ) ) {
-							$notification_ids = $_REQUEST['bulk-actions'];
+						if ( ! empty( $_REQUEST['post'] ) ) {
+							$notification_ids = $_REQUEST['post'];
 
 							foreach ( $notification_ids as $id ) {
 								if ( 'delete' != $action ) {

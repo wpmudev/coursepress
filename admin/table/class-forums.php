@@ -7,7 +7,6 @@
  **/
 class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notifications {
 	private $count = array();
-	private $post_type;
 	private $_categories;
 
 	public function __construct() {
@@ -43,7 +42,11 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 		/**
 		 * Post statsu
 		 */
-		$post_status = 'any';
+		$post_status = isset( $_GET['post_status'] )? $_GET['post_status'] : 'any';
+
+		/**
+		 * Pagination
+		 */
 		$current_page = $this->get_pagenum();
 		$offset = ( $current_page - 1 ) * $per_page;
 		$s = isset( $_POST['s'] )? mb_strtolower( trim( $_POST['s'] ) ):false;
@@ -105,6 +108,8 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 		}
 		$total_items = $wp_query->found_posts;
 
+		$this->is_trash = isset( $_REQUEST['post_status'] ) && $_REQUEST['post_status'] == 'trash';
+
 		$this->set_pagination_args(
 			array(
 				'total_items' => $total_items,
@@ -122,7 +127,7 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 	public function column_cb( $item ) {
 		if ( $item->user_can_change ) {
 			return sprintf(
-				'<input type="checkbox" name="bulk-actions[]" value="%s" />', $item->ID
+				'<input type="checkbox" name="post[]" value="%s" />', $item->ID
 			);
 		}
 		return '';
@@ -148,23 +153,51 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 		}
 		$row_actions = array();
 		if ( $item->user_can_edit ) {
-			$edit_url = add_query_arg(
-				array(
-					'action' => 'edit',
-					'id' => $item->ID,
-				)
-			);
-			$row_actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'CP_TD' ) );
+			if ( $this->is_trash ) {
+				$url = add_query_arg(
+					array(
+						'_wpnonce' => wp_create_nonce( 'coursepress_untrash_discussion' ),
+						'action' => 'untrash',
+						'id' => $item->ID,
+					)
+				);
+				$row_actions['untrash'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Restore', 'CP_TD' ) );
+			} else {
+				$url = add_query_arg(
+					array(
+						'action' => 'edit',
+						'id' => $item->ID,
+					)
+				);
+				$row_actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Edit', 'CP_TD' ) );
+			}
 		}
 		if ( $item->user_can_delete ) {
-			$delete_url = add_query_arg(
-				array(
-					'_wpnonce' => wp_create_nonce( 'coursepress_delete_discussion' ),
-					'id' => $item->ID,
-					'action' => 'delete',
-				)
-			);
-			$row_actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $delete_url ), __( 'Delete', 'CP_TD' ) );
+			if ( $this->is_trash ) {
+				$url = add_query_arg(
+					array(
+						'_wpnonce' => wp_create_nonce( 'coursepress_delete_discussion' ),
+						'id' => $item->ID,
+						'action' => 'delete',
+					)
+				);
+				$row_actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Delete Permanently', 'CP_TD' ) );
+			} else {
+				$url = add_query_arg(
+					array(
+						'_wpnonce' => wp_create_nonce( 'coursepress_trash_discussion' ),
+						'id' => $item->ID,
+						'action' => 'trash',
+					)
+				);
+				$row_actions['trash'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Trash', 'CP_TD' ) );
+			}
+		}
+		if ( 'publish' == $item->post_status ) {
+			$url = CoursePress_Data_Discussion::get_url( $item );
+			if ( ! empty( $url ) ) {
+				$row_actions['view'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'View', 'CP_TD' ) );
+			}
 		}
 		return $this->row_actions( $row_actions );
 	}
