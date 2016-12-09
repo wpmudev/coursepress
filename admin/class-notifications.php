@@ -73,20 +73,59 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 		self::init();
 		self::save_notification();
 		self::update_notification();
-
-		if ( empty( $_REQUEST['action'] ) || 'edit' !== $_REQUEST['action'] ) {
+		/**
+		 * Find action
+		 */
+		$action = -1;
+		if ( ! empty( $_REQUEST['action'] ) ) {
+			$action = $_REQUEST['action'];
+		}
+		if ( -1 == $action && ! empty( $_REQUEST['action2'] ) ) {
+			$action = $_REQUEST['action2'];
+		}
+		/**
+		 * build
+		 */
+		if ( 'edit' == $action ) {
+			$this->slug = 'coursepress_edit-notification';
+			// Set before the page
+			add_screen_option( 'layout_columns', array( 'max' => 2, 'default' => 2 ) );
+		} else {
+			if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'bulk-posts' ) ) {
+				l( $_REQUEST );
+				if ( isset( $_POST['post'] ) && is_array( $_POST['post'] ) ) {
+					foreach ( $_POST['post'] as $post_id ) {
+						if ( CoursePress_Data_Notification::is_correct_post_type( $post_id ) ) {
+							switch ( $action ) {
+								case 'delete':
+									wp_delete_post( $post_id );
+								break;
+								case 'draft':
+									$post = array(
+									'ID' => $post_id,
+									'post_status' => 'draft',
+									);
+									wp_update_post( $post );
+								break;
+								case 'publish':
+									wp_publish_post( $post_id );
+								break;
+								case 'trash':
+									wp_trash_post( $post_id );
+								break;
+								case 'untrash':
+									wp_untrash_post( $post_id );
+								break;
+							}
+						}
+					}
+				}
+			}
 			$this->slug = 'coursepress_notifications-table';
-
 			// Prepare items
 			$this->list_notification = new CoursePress_Admin_Table_Notifications();
 			$this->list_notification->prepare_items();
 			add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_notifications_per_page' ) );
-
-		} elseif ( 'edit' == $_REQUEST['action'] ) {
-			$this->slug = 'coursepress_edit-notification';
-
-			// Set before the page
-			add_screen_option( 'layout_columns', array( 'max' => 2, 'default' => 2 ) );
 		}
 	}
 

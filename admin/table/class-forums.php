@@ -8,6 +8,7 @@
 class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notifications {
 	private $count = array();
 	private $_categories;
+	protected $page = 'coursepress_discussions';
 
 	public function __construct() {
 		$post_format = CoursePress_Data_Discussion::get_format();

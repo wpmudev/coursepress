@@ -85,7 +85,9 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 		self::init();
 		self::save_discussion();
 		self::update_discussion();
-
+		/**
+		 * Find action
+		 */
 		$action = -1;
 		if ( ! empty( $_REQUEST['action'] ) ) {
 			$action = $_REQUEST['action'];
@@ -93,53 +95,43 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 		if ( -1 == $action && ! empty( $_REQUEST['action2'] ) ) {
 			$action = $_REQUEST['action2'];
 		}
-
-		switch ( $action ) {
-			case 'edit':
+		/**
+		 * build
+		 */
+		if ( 'edit' == $action ) {
 				$this->slug = 'coursepress_edit-forum';
-
 				// Set before the page
 				add_screen_option( 'layout_columns', array( 'max' => 2, 'default' => 2 ) );
-			break;
-
-			case 'delete':
-			case 'draft':
-			case 'publish':
-			case 'trash':
-			case 'untrash':
-				if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'bulk-posts' ) ) {
-					if ( isset( $_POST['post'] ) && is_array( $_POST['post'] ) ) {
-						foreach ( $_POST['post'] as $discussion_id ) {
-							if ( CoursePress_Data_Discussion::is_correct_post_type( $discussion_id ) ) {
-								switch ( $action ) {
-									case 'delete':
-										wp_delete_post( $discussion_id );
-									break;
-									case 'draft':
-										$post = array(
-										'ID' => $discussion_id,
-										'post_status' => 'draft',
-										);
-										wp_update_post( $post );
-									break;
-									case 'publish':
-										wp_publish_post( $discussion_id );
-									break;
-									case 'trash':
-										wp_trash_post( $discussion_id );
-									break;
-									case 'untrash':
-										wp_untrash_post( $discussion_id );
-									break;
-								}
+		} else {
+			if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'bulk-posts' ) ) {
+				if ( isset( $_POST['post'] ) && is_array( $_POST['post'] ) ) {
+					foreach ( $_POST['post'] as $post_id ) {
+						if ( CoursePress_Data_Discussion::is_correct_post_type( $post_id ) ) {
+							switch ( $action ) {
+								case 'delete':
+									wp_delete_post( $post_id );
+								break;
+								case 'draft':
+									$post = array(
+									'ID' => $post_id,
+									'post_status' => 'draft',
+									);
+									wp_update_post( $post );
+								break;
+								case 'publish':
+									wp_publish_post( $post_id );
+								break;
+								case 'trash':
+									wp_trash_post( $post_id );
+								break;
+								case 'untrash':
+									wp_untrash_post( $post_id );
+								break;
 							}
 						}
 					}
 				}
-			break;
-		}
-
-		if ( 'edit' !== $action ) {
+			}
 			$this->slug = 'coursepress_forums-table';
 			// Prepare items
 			add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_forum_per_page' ) );

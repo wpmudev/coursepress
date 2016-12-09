@@ -15,6 +15,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 	private $_categories;
 	private $recivers_allowed_options;
 	protected $is_trash;
+	protected $page = 'coursepress_notifications';
 
 	public function __construct() {
 		$post_format = CoursePress_Data_Notification::get_format();
@@ -150,32 +151,53 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 			return '';
 		}
 
-		$actions = array();
+		$row_actions = array();
 
 		/**
 		 * check current_user_can update?
 		 */
 		if ( $this->can_update( $item ) ) {
-			$edit_url = add_query_arg(
-				array(
-					'action' => 'edit',
-					'id' => $item->ID,
-				)
-			);
-			$actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'CP_TD' ) );
+			if ( $this->is_trash ) {
+				$url = add_query_arg(
+					array(
+						'_wpnonce' => wp_create_nonce( 'coursepress_untrash_notification' ),
+						'action' => 'untrash',
+						'id' => $item->ID,
+					)
+				);
+				$row_actions['untrash'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Restore', 'CP_TD' ) );
+			} else {
+				$url = add_query_arg(
+					array(
+						'action' => 'edit',
+						'id' => $item->ID,
+					)
+				);
+				$row_actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Edit', 'CP_TD' ) );
+			}
 		}
-
 		if ( $this->can_delete( $item ) ) {
-			$delete_url = add_query_arg(
-				array(
-					'action' => 'delete2',
-					'id' => $item->ID,
-				)
-			);
-			$actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $delete_url ), __( 'Delete', 'CP_TD' ) );
+			if ( $this->is_trash ) {
+				$url = add_query_arg(
+					array(
+						'_wpnonce' => wp_create_nonce( 'coursepress_delete_notification' ),
+						'id' => $item->ID,
+						'action' => 'delete',
+					)
+				);
+				$row_actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Delete Permanently', 'CP_TD' ) );
+			} else {
+				$url = add_query_arg(
+					array(
+						'_wpnonce' => wp_create_nonce( 'coursepress_trash_notification' ),
+						'id' => $item->ID,
+						'action' => 'trash',
+					)
+				);
+				$row_actions['trash'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Trash', 'CP_TD' ) );
+			}
 		}
-
-		return $this->row_actions( $actions );
+		return $this->row_actions( $row_actions );
 	}
 
 	public function column_notification( $item ) {
@@ -338,7 +360,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 		$current_user_id = get_current_user_id();
 		$all_args = array(
 			'post_type' => CoursePress_Data_Course::get_post_type_name(),
-			'page' => 'coursepress_discussions',
+			'page' => $this->page,
 		);
 		$mine = '';
 
@@ -354,7 +376,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 
 			$mine_args = array(
 				'post_type' => CoursePress_Data_Course::get_post_type_name(),
-				'page' => 'coursepress_discussions',
+				'page' => $this->page,
 				'author' => $current_user_id,
 			);
 
@@ -409,7 +431,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 			$status_args = array(
 				'post_status' => $status_name,
 				'post_type' => CoursePress_Data_Course::get_post_type_name(),
-				'page' => 'coursepress_discussions',
+				'page' => $this->page,
 			);
 
 			$status_label = sprintf(
@@ -425,7 +447,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 
 			$sticky_args = array(
 				'post_type' => CoursePress_Data_Course::get_post_type_name(),
-				'page' => 'coursepress_discussions',
+				'page' => $this->page,
 				'show_sticky' => 1,
 			);
 
