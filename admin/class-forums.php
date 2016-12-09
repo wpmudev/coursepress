@@ -95,43 +95,21 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 		if ( -1 == $action && ! empty( $_REQUEST['action2'] ) ) {
 			$action = $_REQUEST['action2'];
 		}
+		$action = strtolower( trim( $action ) );
+		/**
+		 * filter
+		 */
+		if ( 'filter' === $action ) {
+			self::filter_redirect();
+		}
 		/**
 		 * build
 		 */
 		if ( 'edit' == $action ) {
-				$this->slug = 'coursepress_edit-forum';
-				// Set before the page
-				add_screen_option( 'layout_columns', array( 'max' => 2, 'default' => 2 ) );
+			$this->slug = 'coursepress_edit-forum';
+			// Set before the page
+			add_screen_option( 'layout_columns', array( 'max' => 2, 'default' => 2 ) );
 		} else {
-			if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'bulk-posts' ) ) {
-				if ( isset( $_POST['post'] ) && is_array( $_POST['post'] ) ) {
-					foreach ( $_POST['post'] as $post_id ) {
-						if ( CoursePress_Data_Discussion::is_correct_post_type( $post_id ) ) {
-							switch ( $action ) {
-								case 'delete':
-									wp_delete_post( $post_id );
-								break;
-								case 'draft':
-									$post = array(
-									'ID' => $post_id,
-									'post_status' => 'draft',
-									);
-									wp_update_post( $post );
-								break;
-								case 'publish':
-									wp_publish_post( $post_id );
-								break;
-								case 'trash':
-									wp_trash_post( $post_id );
-								break;
-								case 'untrash':
-									wp_untrash_post( $post_id );
-								break;
-							}
-						}
-					}
-				}
-			}
 			$this->slug = 'coursepress_forums-table';
 			// Prepare items
 			add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_forum_per_page' ) );
@@ -238,56 +216,116 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 	}
 
 	public static function update_discussion() {
-		if ( empty( $_REQUEST['action'] ) ) {
+		/**
+		 * check action
+		 */
+		if ( ! isset( $_REQUEST['action'] ) || empty( $_REQUEST['action'] ) ) {
 			return;
 		}
 		$action = strtolower( trim( $_REQUEST['action'] ) );
-		switch ( $action ) {
-			case 'delete' && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_delete_discussion' ) :
-				$id = (int) $_REQUEST['id'];
-				$is_correct_post_type = CoursePress_Data_Discussion::is_correct_post_type( $id );
-				if ( $is_correct_post_type ) {
-					wp_delete_post( $id );
+		/**
+		 * check id
+		 */
+		$id = 0;
+		if ( isset( $_REQUEST['id'] ) && ! empty( $_REQUEST['id'] ) ) {
+			$id = $_REQUEST['id'];
+			if ( is_string( $id ) ) {
+				$id = (int) $id;
+			}
+			if ( ! is_numeric( $id ) ) {
+				$id = 0;
+			}
+			if ( ! CoursePress_Data_Discussion::is_correct_post_type( $id ) ) {
+				$id = 0;
+			}
+		}
+		/**
+		 * check post (bulk action)
+		 */
+		$posts = array();
+		if ( isset( $_REQUEST['post'] ) && ! empty( $_REQUEST['post'] ) && is_array( $_REQUEST['post'] ) ) {
+			$posts = $_REQUEST['post'];
+		}
+		/**
+		 * have we id or ids to update?
+		 */
+		if ( empty( $id ) && empty( $posts ) ) {
+			return;
+		}
+		/**
+		 * first bulk!
+		 */
+		if ( ! empty( $posts ) ) {
+			if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'bulk-posts' ) ) {
+				if ( isset( $_POST['post'] ) && is_array( $_POST['post'] ) ) {
+					foreach ( $_POST['post'] as $post_id ) {
+						if ( CoursePress_Data_Discussion::is_correct_post_type( $post_id ) ) {
+							switch ( $action ) {
+								case 'delete':
+									wp_delete_post( $post_id );
+								break;
+								case 'draft':
+									$post = array(
+									'ID' => $post_id,
+									'post_status' => 'draft',
+									);
+									wp_update_post( $post );
+								break;
+								case 'publish':
+									wp_publish_post( $post_id );
+								break;
+								case 'trash':
+									wp_trash_post( $post_id );
+								break;
+								case 'untrash':
+									wp_untrash_post( $post_id );
+								break;
+							}
+						}
+					}
 				}
-				$url = remove_query_arg(
-					array(
-					'id',
-					'action',
-					'_wpnonce',
-					)
-				);
-				wp_safe_redirect( $url ); exit;
-			break;
-
-			case 'filter':
-				$id = (int) $_REQUEST['course_id'];
-				if ( 0 < $id ) {
-					$url = add_query_arg( 'course_id', $id );
-				} else {
-					$url = remove_query_arg( 'course_id' );
-				}
-				wp_safe_redirect( $url ); exit;
+			}
+		} else {
+			/**
+			 * do action
+			 */
+			switch ( $action ) {
+				/**
+				 * delete
+				 */
+				case 'delete' && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_delete_discussion' ) :
+					$is_correct_post_type = CoursePress_Data_Discussion::is_correct_post_type( $id );
+					if ( $is_correct_post_type ) {
+						wp_delete_post( $id );
+					}
+					$url = remove_query_arg(
+						array(
+						'id',
+						'action',
+						'_wpnonce',
+						)
+					);
+					wp_safe_redirect( $url ); exit;
 				break;
 				/**
 				 * trash
 				 */
-			case 'trash' && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_trash_discussion' ) :
-				$id = (int) $_REQUEST['id'];
-				$is_correct_post_type = CoursePress_Data_Discussion::is_correct_post_type( $id );
-				if ( $is_correct_post_type ) {
-					wp_trash_post( $id );
-				}
+				case 'trash' && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_trash_discussion' ) :
+					$is_correct_post_type = CoursePress_Data_Discussion::is_correct_post_type( $id );
+					if ( $is_correct_post_type ) {
+						wp_trash_post( $id );
+					}
 				break;
 				/**
 				 * untrash
 				 */
-			case 'untrash' && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_untrash_discussion' ) :
-				$id = (int) $_REQUEST['id'];
-				$is_correct_post_type = CoursePress_Data_Discussion::is_correct_post_type( $id );
-				if ( $is_correct_post_type ) {
-					wp_untrash_post( $id );
-				}
+				case 'untrash' && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_untrash_discussion' ) :
+					$is_correct_post_type = CoursePress_Data_Discussion::is_correct_post_type( $id );
+					if ( $is_correct_post_type ) {
+						wp_untrash_post( $id );
+					}
 				break;
+			}
 		}
 	}
 
