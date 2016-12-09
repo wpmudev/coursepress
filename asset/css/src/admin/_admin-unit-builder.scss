@@ -373,6 +373,13 @@
       margin: 0 auto;
       width: 40px;
     }
+	.output-element.module-chat a:before {
+		content: '\f101';
+		font-family: Dashicons;
+		font-size: 36px;
+		line-height: 45px;
+		color: #999;
+	}
 
 
     // MODULES

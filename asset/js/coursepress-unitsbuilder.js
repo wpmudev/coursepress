@@ -4,11 +4,6 @@
 /*global tinyMCEPreInit*/
 /*global _coursepress*/
 
-/*global tinyMCE*/
-/*global tinyMCEPreInit*/
-/*global _coursepress*/
-
-
 var CoursePress = CoursePress || {};
 
 (function( $ ) {
@@ -1158,6 +1153,7 @@ var CoursePress = CoursePress || {};
 
 				}
 			}
+
 			content +=
 				'<div class="module module-duration"><h4 class="div">' + labels[ 'module_duration' ] + '</h4>' +
 				'<input type="text" name="meta_duration" value="' + data[ 'duration' ] + '" /></div>';
