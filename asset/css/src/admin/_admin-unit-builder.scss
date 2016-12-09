@@ -373,6 +373,7 @@
       margin: 0 auto;
       width: 40px;
     }
+
 	.output-element.module-chat a:before {
 		content: '\f101';
 		font-family: Dashicons;
@@ -744,5 +745,20 @@
 			}
 		}
 	}
+}
+
+.post-type-course {
+  .output-element.module-chat,
+  .group-chat {
+	display: none;
+  }
+  &.cp-with-chat {
+	 .output-element.module-chat {
+	  display: inline-block;
+	 }
+	.group-chat {
+	  display: block;
+	}
+  }
 }
 
