@@ -1410,6 +1410,13 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   margin: 0 auto;
   width: 40px;
 }
+.tab-content .unit-builder-content .output-element.module-chat a:before {
+  content: '\f101';
+  font-family: Dashicons;
+  font-size: 36px;
+  line-height: 45px;
+  color: #999;
+}
 .tab-content .unit-builder-content h3.module-holder-title {
   background: #0092CB;
   color: #ffffff;

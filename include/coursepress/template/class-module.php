@@ -922,6 +922,16 @@ class CoursePress_Template_Module {
 	}
 
 	/**
+	 * Chat Module
+	 **/
+	public static function render_chat( $module, $attributes = false, $student_progress = false, $disabled = false ) {
+		$content = sprintf( '<div class="cp-chat-module">[chat id="%s"]</div>', $module->ID );
+		$content = do_shortcode( $content );
+
+		return $content;
+	}
+
+	/**
 	 * Wrap Content by div, apply filter and shortcodes.
 	 *
 	 * @access private
