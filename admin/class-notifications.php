@@ -194,27 +194,9 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 	}
 
 	public static function update_notification() {
-
-		$actions = array(
-			'delete',
-			'toggle',
-			'unpublish',
-			'publish',
-			'delete',
-			'delete2',
-			'filter',
-		);
-
-		$action = '';
-
-		if ( isset( $_REQUEST['action'] ) ) {
-			$action = $_REQUEST['action'];
-		}
-
-		if ( empty( $_REQUEST['action'] ) || ! in_array( strtolower( $_REQUEST['action'] ), $actions ) ) {
+		if ( empty( $_REQUEST['action'] ) ) {
 			return;
 		}
-
 		$action = strtolower( trim( $_REQUEST['action'] ) );
 		$json_data = array();
 		$success = false;
@@ -226,6 +208,12 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 					$url = 0 == $course_id ? remove_query_arg( 'course_id' ) : add_query_arg( 'course_id', $course_id );
 					wp_safe_redirect( $url );
 				}
+				break;
+				/**
+				 * delete
+				 */
+			case 'delete' && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_delete_notification' ) :
+
 				break;
 			case 'publish': case 'unpublish': case 'delete':
 						if ( ! empty( $_REQUEST['post'] ) ) {
@@ -278,6 +266,26 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 				$json_data['notification_id'] = $notification_id;
 				$json_data['state'] = $data->data->state;
 
+				break;
+				/**
+				 * trash
+				 */
+			case 'trash' && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_trash_notification' ) :
+				$id = (int) $_REQUEST['id'];
+				$is_correct_post_type = CoursePress_Data_Notification::is_correct_post_type( $id );
+				if ( $is_correct_post_type ) {
+					wp_trash_post( $id );
+				}
+				break;
+				/**
+				 * untrash
+				 */
+			case 'untrash' && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_untrash_notification' ) :
+				$id = (int) $_REQUEST['id'];
+				$is_correct_post_type = CoursePress_Data_Notification::is_correct_post_type( $id );
+				if ( $is_correct_post_type ) {
+					wp_untrash_post( $id );
+				}
 				break;
 		}
 	}

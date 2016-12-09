@@ -238,15 +238,9 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 	}
 
 	public static function update_discussion() {
-		// Discussion actions
 		if ( empty( $_REQUEST['action'] ) ) {
 			return;
 		}
-		$actions = array(
-			'delete',
-			'delete2',
-			'filter',
-		);
 		$action = strtolower( trim( $_REQUEST['action'] ) );
 		switch ( $action ) {
 			case 'delete' && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_delete_discussion' ) :
@@ -274,7 +268,9 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 				}
 				wp_safe_redirect( $url ); exit;
 				break;
-
+				/**
+				 * trash
+				 */
 			case 'trash' && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_trash_discussion' ) :
 				$id = (int) $_REQUEST['id'];
 				$is_correct_post_type = CoursePress_Data_Discussion::is_correct_post_type( $id );
@@ -282,7 +278,9 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 					wp_trash_post( $id );
 				}
 				break;
-
+				/**
+				 * untrash
+				 */
 			case 'untrash' && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_untrash_discussion' ) :
 				$id = (int) $_REQUEST['id'];
 				$is_correct_post_type = CoursePress_Data_Discussion::is_correct_post_type( $id );
@@ -290,7 +288,6 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Controller_Menu {
 					wp_untrash_post( $id );
 				}
 				break;
-
 		}
 	}
 

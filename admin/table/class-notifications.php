@@ -122,7 +122,12 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 
 	/** No items */
 	public function no_items() {
-		echo __( 'No notifications found.', 'CP_TD' );
+		$post_type_object = get_post_type_object( $this->post_type );
+		if ( $this->is_trash ) {
+			echo $post_type_object->labels->not_found_in_trash;
+		} else {
+			echo $post_type_object->labels->not_found;
+		}
 	}
 
 	public function column_cb( $item ) {

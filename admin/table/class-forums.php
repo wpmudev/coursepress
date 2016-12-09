@@ -120,20 +120,6 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 		);
 	}
 
-	/** No items */
-	public function no_items() {
-		echo __( 'No topics found.', 'CP_TD' );
-	}
-
-	public function column_cb( $item ) {
-		if ( $item->user_can_change ) {
-			return sprintf(
-				'<input type="checkbox" name="post[]" value="%s" />', $item->ID
-			);
-		}
-		return '';
-	}
-
 	public function get_columns() {
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
