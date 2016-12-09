@@ -103,6 +103,18 @@ class CoursePress_Helper_Extension_MarketPress {
 		} elseif ( ! self::activated() ) {
 			$mp_link = sprintf( '<a href="%s">%s</a>', admin_url( 'plugins.php' ), __( 'MarketPress', 'cp' ) );
 			$message = sprintf( __( 'Activate %s to start selling courses.', 'cp' ), $mp_link );
+		} elseif ( self::activated() ) {
+			if ( defined( 'MP_VERSION' ) ) {
+				if ( version_compare( MP_VERSION, '3.1.2' ) < 0 ) {
+					$plugin_url = admin_url( 'plugins.php' );
+					$mp = sprintf( '<a href="%s">%s</a>', $plugin_url, '<strong>MarketPress</strong>' );
+					$cp = defined( 'CP_IS_PREMIUM' ) && CP_IS_PREMIUM ? '<strong>CoursePress Pro</strong>' : '<strong>CoursePress</strong>';
+					$cp = sprintf( '<a href="%s">%s</a>', $plugin_url, $cp );
+					$message = __( 'You are using an older version of %s plugin. %s require the latest version for compatilibity.', 'CP_TD' );
+					$message .= __( ' Update your %s now!', 'CP_TD' );
+					$message = sprintf( $message, $mp, $cp, $mp );
+				}
+			}
 		}
 
 		if ( ! empty( $message ) ) {
