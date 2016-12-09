@@ -2744,7 +2744,7 @@ var CoursePress = CoursePress || {};
 				var moduleView = new CoursePress.Views.ModuleView( {
 					model: module,
 					tagName: 'div',
-					className: 'group'
+					className: 'group group-' + module.module_type()
 				} );
 				var order = module.get_meta( 'module_order' );
 

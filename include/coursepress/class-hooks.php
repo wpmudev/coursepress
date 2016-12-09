@@ -67,6 +67,9 @@ class CoursePress_Hooks {
 
 		// MP Notice
 		add_action( 'admin_notices', array( 'CoursePress_Helper_Extension_MarketPress', 'mp_notice' ) );
+
+		// Admin class
+		add_filter( 'admin_body_class', array( __CLASS__, 'admin_classes' ) );
 	}
 
 	/**
@@ -87,5 +90,21 @@ class CoursePress_Hooks {
 				exit;
 			}
 		}
+	}
+
+	public static function admin_classes( $class ) {
+		$_class = '';
+
+		if ( cp_is_chat_plugin_active() ) {
+			$_class .= 'cp-with-chat';
+		}
+
+		if ( is_array( $class ) ) {
+			array_push( $class, $_class );
+		} else {
+			$class .= $_class;
+		}
+
+		return $class;
 	}
 }
