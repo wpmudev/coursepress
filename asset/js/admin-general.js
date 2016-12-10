@@ -90,6 +90,20 @@
 			});
 			return false;
 		});
+		/**
+		 * bind dismissible notices
+		 */
+		$('div.notice.is-dismissible[data-dismissible] button.notice-dismiss').click(function (event) {
+			event.preventDefault();
+			option_name = $(this).parent().attr('data-option-name');
+			data = {
+				'action': 'coursepress_dismiss_admin_notice',
+				'option_name': option_name,
+				'_wpnonce': $(this).parent().data('nonce'),
+				'user_id': $(this).parent().data('user_id')
+			};
+			$.post(ajaxurl, data);
+		});
 	});
 
 }));
