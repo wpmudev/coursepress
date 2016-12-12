@@ -4,6 +4,10 @@ Build Time:  2016-04-07T13:37:59.644Z
 
 CHANGELOG
 =================================================
+= 2.0.1 =
+* Fixed: Chat module support for wordpress-chat plugin.
+* Fixed: Module's unlimited retry attempts.
+* Fixed: Internationalization.
 
 = 2.0.0 =
 -------------------------------------------------
