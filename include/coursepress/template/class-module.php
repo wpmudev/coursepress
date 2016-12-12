@@ -278,7 +278,7 @@ class CoursePress_Template_Module {
 				// Check if retry is disabled
 				if ( empty( $attributes['allow_retries'] ) ) {
 					$retry = '';
-				} elseif ( 0 < $response_count ) {
+				} elseif ( ! empty( $attributes['retry_attempts'] ) && 0 < $response_count ) {
 					$attempts = (int) $attributes['retry_attempts'];
 					
 					if ( $response_count >= $attempts ) {
