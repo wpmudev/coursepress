@@ -49,16 +49,18 @@ module.exports = function(grunt) {
 		translation: {
 			ignore_files: [
 				'(^.php)',      // Ignore non-php files.
-				'bin/.*',       // Unit testing.
-				'2.0/test/.*',      // Unit testing.
-				'2.0/test/php/.*', // Uni testing
-				'node_modules/.*',
+				'tests/', // Upgrade tests
+				'node_modules/',
+				'1.x/', // Old CP version
+				'2.0/test/',      // Unit testing.
+				'2.0/.sass-cache/',
 				'2.0/node_modules/.*',
 				'2.0/tcpdf/.*',
 				'2.0/themes/.*',
-				'1.x/node_moudles/.*',
-				'lib/TCPDF/.*', // External module.
-				'themes/.*',    // External module.
+				'2.0/include/tcpdf/.*', // External module.
+				'2.0/themes/.*',    // External module.,
+				'2.0/campus/*',
+				'2.0/premium/'
 			],
 			pot_dir: 'language/',  // With trailing slash.
 			textdomain_pro: 'cp',   // Campus uses same textdomain.
@@ -356,9 +358,23 @@ module.exports = function(grunt) {
 						'x-generator': 'grunt-wp-i18n',
 						'x-poedit-keywordslist': true // Include a list of all possible gettext functions.
 					},
-					type: 'wp-plugin' // wp-plugin or wp-theme
+					type: 'wp-plugin', // wp-plugin or wp-theme
+					include: [
+						'coursepress.php',
+						'upgrade/*.',
+						'2.0/coursepress.php',
+						'2.0/admin/*.php',
+						'2.0/admin/.*',
+						'2.0/include/coursepress/.*'
+					]
 				}
 			}
+		},
+		wpmu_pot2mo: {
+		    files: {
+		        src: 'language/*.pot',
+		        expand: true
+		    }
 		},
 
 		// COMPRESS: Create a zip-archive of the plugin (for distribution).
@@ -720,6 +736,25 @@ module.exports = function(grunt) {
 	grunt.registerTask( 'php', ['phplint', 'phpcs:sniff'] );
 
 	grunt.registerTask( 'default', ['php', 'test', 'js', 'css'] );
+
+	// Adapted from https://github.com/MicheleBertoli/grunt-po2mo
+	grunt.registerMultiTask('wpmu_pot2mo', 'Compile .pot files into binary .mo files with msgfmt.', function() {
+		this.files.forEach(function(file) {
+
+		  var dest = file.dest;
+		  if (dest.indexOf('.pot') > -1) {
+		      dest = dest.replace('.pot', '.mo');
+		  }
+		  grunt.file.write(dest);
+
+		  var exec = require('child_process').exec;
+		  var command = 'msgfmt -o ' + dest + ' ' + file.src[0];
+
+		  grunt.verbose.writeln('Executing: ' + command);
+		  exec(command);
+
+		});
+	});
 
 	grunt.registerTask( 'release', 'Generating release copy', function( target ) {
 		if ( ! target ) {
