@@ -11,9 +11,17 @@
 .coursepress-upgrade-nag p {
   font-size: 18px;
 }
-.coursepress-upgrade-nag .button-primary {
+.coursepress-upgrade-nag .button-primary,
+.coursepress-upgrade-nag .button-primary:hover {
   text-transform: uppercase;
-  color: #FFF;
+  border: 3px solid rgba(53, 131, 191, 0.4) !important;
+  height: auto;
+  padding: 5px 10px;
+  line-height: 1;
+  background-color: #06385e;
+  color: #e8da42;
+  text-shadow: none;
+  font-weight: 700;
 }
 .coursepress-upgrade-nag.notice-error {
   background-color: rgba(255, 0, 0, 0.1);
