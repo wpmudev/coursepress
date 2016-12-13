@@ -24,6 +24,9 @@ class CoursePress_Hooks {
 		// Log student visit on modules
 		add_action( 'coursepress_module_view', array( 'CoursePress_Data_Student', 'log_student_activity' ), 10, 2 );
 
+		// Add comment
+		add_action( 'wp_insert_comment', array( 'CoursePress_Data_Discussion', 'wp_insert_comment' ), 10 , 2 );
+
 		// Edit Course
 		add_filter( 'post_updated_messages', array( 'CoursePress_Admin_Edit', 'updated_messages' ) );
 		add_action( 'dbx_post_advanced', array( 'CoursePress_Admin_Edit', 'init_hooks' ) );

@@ -833,4 +833,27 @@ class CoursePress_Data_Discussion {
 
 		return count( $comments ) > 0;
 	}
+
+	/**
+	 *
+	 * @since 2.x.x
+	 *
+	 */
+	public static function wp_insert_comment( $comment_id, $comment_object ) {
+		if ( ! is_a( $comment_object, 'WP_Comment' ) ) {
+			return;
+		}
+		$is_discussion = self::is_correct_post_type( $comment_object->comment_post_ID );
+		if ( ! $is_discussion ) {
+			return;
+		}
+		/**
+		 * update subscription status
+		 */
+		CoursePress_Data_Discussion::update_user_subscription( $comment_object->user_id, $comment_object->comment_post_ID );
+		/**
+		 * send notification
+		 */
+
+	}
 }

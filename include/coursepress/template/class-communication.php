@@ -224,7 +224,7 @@ class CoursePress_Template_Communication {
 			'text' => sprintf( '%s: %s', __( 'Course', 'CP_TD' ), get_post_field( 'post_title', $course_id ) ),
 			'value' => 'course',
 		);
-		$content .= '<div class="discussion-section">
+		$content .= '<div class="section section-discussion">
 				<label><span>' .
 				esc_html( 'This discussion is about ', 'CP_TD' ) .
 				CoursePress_Helper_UI::get_unit_dropdown( 'unitID', 'unit_id', $course_id, false, $options_unit ) .
@@ -241,11 +241,18 @@ class CoursePress_Template_Communication {
 
 		$add_edit = $edit ? esc_html__( 'Update discussion', 'CP_TD' ) : esc_html__( 'Add discussion', 'CP_TD' );
 
-		$content .= '<input type="hidden" value="add_new_discussion" name="action" /><input type="hidden" value="' . esc_attr( $course_id ) . '" name="course_id" />
-			<input name="discussion_title" type="text" placeholder="' . esc_attr__( 'Title of the discussion', 'CP_TD' ) . '" value="' . esc_attr( $title ) . '" />
-			<textarea name="discussion_content" placeholder="' . esc_attr__( 'Type your discussion or question here…', 'CP_TD' ) . '">' . CoursePress_Helper_Utility::filter_content( $body ) . '</textarea>
-			<div class="button-links">
-				<a href="' . esc_url( $cancel_link ) . '" class="button">' . esc_html__( 'Cancel', 'CP_TD' ) . '</a>
+		$content .= '<input type="hidden" value="add_new_discussion" name="action" /><input type="hidden" value="' . esc_attr( $course_id ) . '" name="course_id" />';
+		$content .= '<div class="section section-title">';
+		$content .= '<input name="discussion_title" type="text" placeholder="' . esc_attr__( 'Title of the discussion', 'CP_TD' ) . '" value="' . esc_attr( $title ) . '" />';
+		$content .= '</div>';
+		$content .= '<div class="section section-content">';
+		$content .= '<textarea name="discussion_content" placeholder="' . esc_attr__( 'Type your discussion or question here…', 'CP_TD' ) . '">' . CoursePress_Helper_Utility::filter_content( $body ) . '</textarea>';
+		$content .= '</div>';
+		$content .= '<div class="section discussion-subscribe">';
+		$content .= CoursePress_Template_Discussion::add_subscribe_button( '' );
+		$content .= '</div>';
+		$content .= '<div class="section button-links">
+				<a href="' . esc_url( $cancel_link ) . '" class="cancel">' . esc_html__( 'Cancel', 'CP_TD' ) . '</a>
 				<button type="submit" class="button submit-discussion">' . esc_html( $add_edit ) . '</button>
 			</div>
 		</form>

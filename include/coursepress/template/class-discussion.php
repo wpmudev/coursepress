@@ -89,7 +89,10 @@ class CoursePress_Template_Discussion {
 
 	public static function add_subscribe_button( $submit_button ) {
 		global $post;
-		$user_subscribe = CoursePress_Helper_Discussion::get_subscription_status( $post->ID );
+		$user_subscribe = 'subscribe-all';
+		if ( is_a( $post, 'WP_Post' ) ) {
+			$user_subscribe = CoursePress_Helper_Discussion::get_subscription_status( $post->ID );
+		}
 		$options = CoursePress_Helper_Discussion::get_subscription_statuses_array();
 		$subscribe = sprintf(
 			'<span class="comment-notification"><select name="%s">',
@@ -194,7 +197,7 @@ class CoursePress_Template_Discussion {
 		$comments = get_comments(
 			array(
 				'ID' => $comment_id,
-				'number' => 1
+				'number' => 1,
 			)
 		);
 

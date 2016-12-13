@@ -128,6 +128,11 @@ class CoursePress_View_Front_Course {
 		 * admin_bar_menu
 		 */
 		add_action( 'admin_bar_menu', array( __CLASS__, 'add_edit_to_admin_bar_menu' ), 199 );
+
+		/**
+		 * add notification field
+		 */
+		add_action( 'comment_form_fields', array( __CLASS__, 'comment_form_fields' ) );
 	}
 
 	/**
@@ -199,12 +204,14 @@ class CoursePress_View_Front_Course {
 			$unit_id = (int) $_POST['unit_id'];
 		}
 
+		$user_id = get_current_user_id();
+
 		$args = array(
 			'post_title' => $title,
 			'post_content' => $content,
 			'post_type' => CoursePress_Data_Discussion::get_post_type_name(),
 			'post_status' => 'publish',
-			'post_author' => get_current_user_id(),
+			'post_author' => $user_id,
 			'comment_status' => 'open',
 		);
 
@@ -229,6 +236,11 @@ class CoursePress_View_Front_Course {
 		if ( ! $success ) {
 			update_post_meta( $id, 'unit_id', $unit_id );
 		}
+
+		/**
+		 * update subscription status
+		 */
+		CoursePress_Data_Discussion::update_user_subscription( $user_id, $id );
 
 		$url = CoursePress_Core::get_slug( 'course/', true ) .
 			get_post_field( 'post_name', $course_id ) . '/' .
@@ -1760,5 +1772,20 @@ class CoursePress_View_Front_Course {
 			CoursePress_Data_Certificate::generate_pdf_certificate( $course_id, $student_id, true );
 			exit;
 		}
+	}
+
+	/**
+	 * Add notification field to comment form
+	 *
+	 * @since 2.x.x
+	 *
+	 * @param array $fields
+	 */
+	public static function comment_form_fields( $fields ) {
+		$post_type = get_post_type();
+		if ( 'course_discussion' == $post_type ) {
+			$fields['comment'] .= sprintf( '<p>%s</p>', CoursePress_Template_Discussion::add_subscribe_button( '' ) );
+		}
+		return $fields;
 	}
 }
