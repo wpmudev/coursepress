@@ -130,6 +130,13 @@ if ( ! function_exists( 'cp_can_access_course' ) ) {
 	 * @return boolean User can or can not.
 	 */
 	function cp_can_access_course( $course_id ) {
+		if ( empty( $course_id ) ) {
+			$course_id = CoursePress_Helper_Utility::the_course( true );
+
+			if ( empty( $course_id ) ) {
+				return; // Simply return to avoid fatal error
+			}
+		}
 
 		if ( ! is_user_logged_in() ) {
 			wp_safe_redirect( get_permalink( $course_id ) );
