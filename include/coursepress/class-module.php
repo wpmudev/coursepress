@@ -196,6 +196,8 @@ class CoursePress_Module {
 	}
 
 	public static function submit( $input ) {
+		set_time_limit(0);
+
 		$course_id = (int) $input['course_id'];
 		$unit_id = (int) $input['unit_id'];
 		$module = isset( $input['module'] ) ? (array) $input['module'] : false;
@@ -415,7 +417,7 @@ class CoursePress_Module {
 			}
 		} else {
 			// Update student progress
-			CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course_id );
+			//CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course_id );
 			$next = CoursePress_Data_Course::get_next_accessible_module( $course_id, $unit_id, $page, $module_id );
 
 			if ( $via_ajax ) {
