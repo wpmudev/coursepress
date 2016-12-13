@@ -295,7 +295,7 @@ class CoursePress_Template_Unit {
 
 			if ( (int) $previous_page > 0 ) {
 				$format = '<a href="%s" class="button prev-button page page-%s">%s</a>';
-				$unit_pager .= sprintf( $format, $url_path . '/' . $previous_page, $previous_page, $prev_text );
+				$unit_pager .= sprintf( $format, $url_path . $previous_page, $previous_page, $prev_text );
 			}
 
 			if ( (int) $next_page > 0 ) {
@@ -350,7 +350,7 @@ class CoursePress_Template_Unit {
 			}
 		}
 
-		if ( 0 < (int) $previous_unit_id ) {
+		if ( false === $previous_page && 0 < (int) $previous_unit_id ) {
 			$unit_url = CoursePress_Data_Unit::get_unit_url( $previous_unit_id );
 			$page_titles = get_post_meta( $previous_unit_id, 'page_title', true );
 
