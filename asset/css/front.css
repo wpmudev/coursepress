@@ -1211,6 +1211,19 @@ input.cp-has-error {
   border: 0;
   color: inherit;
 }
+.course-discussion-wrapper .course-discussion-page .section {
+  padding-bottom: 1em;
+}
+.course-discussion-wrapper .course-discussion-content.new .button-links {
+  text-align: right;
+  margin: 10px 0 0 0;
+  padding: 0;
+}
+.course-discussion-wrapper .course-discussion-content.new .button-links a {
+  float: left;
+  font-size: .9em;
+  box-shadow: none;
+}
 
 .discussion-new {
   display: block;
@@ -1351,17 +1364,6 @@ ul.notification-archive-list:after {
 
 .course-discussion-wrapper .course-discussion-content.new textarea {
   min-height: 400px;
-}
-
-.course-discussion-wrapper .course-discussion-content.new .button-links {
-  text-align: right;
-  margin: 10px 0 0 0;
-  padding: 0;
-}
-
-.course-discussion-wrapper .course-discussion-content.new .button-links a {
-  cursor: pointer;
-  margin-left: 20px;
 }
 
 /** Instructor Page **/

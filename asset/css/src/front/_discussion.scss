@@ -3,7 +3,27 @@
 	.button {
 		@include button;
 	}
+	.course-discussion-page {
+		.section {
+			padding-bottom: 1em;
+		}
+	}
+	.course-discussion-content {
+		&.new {
+			.button-links {
+				text-align: right;
+				margin: 10px 0 0 0;
+				padding: 0;
+				a {
+					float: left;
+					font-size: .9em;
+					box-shadow: none;
+				}
+			}
+		}
+	}
 }
+
 .discussion-new {
 	display: block;
 	margin: 15px 0 25px 0;
@@ -126,13 +146,3 @@ ul.notification-archive-list {
 	min-height: 400px;
 }
 
-.course-discussion-wrapper .course-discussion-content.new .button-links {
-	text-align: right;
-	margin: 10px 0 0 0;
-	padding: 0;
-}
-
-.course-discussion-wrapper .course-discussion-content.new .button-links a {
-	cursor: pointer;
-	margin-left: 20px;
-}
