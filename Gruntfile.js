@@ -23,7 +23,7 @@ module.exports = function(grunt) {
 	// Configuration.
 	var conf = {
 		// 1.x version
-		version_1: '1.2.6.7',
+		version_1: '2.0.1',
 		// Folder that contains the CSS files.
 		js_folder: 'upgrade/js/',
 
