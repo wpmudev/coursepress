@@ -5,9 +5,15 @@ Build Time:  2016-04-07T13:37:59.644Z
 CHANGELOG
 =================================================
 = 2.0.1 =
-* Fixed: Chat module support for wordpress-chat plugin.
-* Fixed: Module's unlimited retry attempts.
-* Fixed: Internationalization.
+* Fixed: Chat module support for wordpress-chat plugin
+* Fixed: Module's unlimited retry attempts
+* Fixed: Language Internationalization
+* Fixed: compatibility issue with Market Press CSS covering course edit
+* Fixed: Student progress migration when Market Press is enabled
+* Fixed: Treegrid js error
+* Fixed: Units overview link
+* Updated WPMU dashboard
+* Updated included Market Press version 3.1.2
 
 = 2.0.0 =
 -------------------------------------------------
