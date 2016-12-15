@@ -1083,9 +1083,10 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 .coursepress_settings_wrapper .column-units {
   width: 100px;
 }
-.coursepress_settings_wrapper .column-students,
+.coursepress_settings_wrapper .column-actions,
 .coursepress_settings_wrapper .column-certificates,
-.coursepress_settings_wrapper .column-actions {
+.coursepress_settings_wrapper .column-students,
+.coursepress_settings_wrapper .column-week {
   width: 60px !important;
   text-align: center;
 }
