@@ -8,6 +8,7 @@ CHANGELOG
 = 2.0.2 =
 -------------------------------------------------
 * Fixed a bug with class autoloder function.
+* Handle situation when student try to add comment to non existing module.
 
 = 2.0.0 =
 -------------------------------------------------
