@@ -36,6 +36,11 @@ class CoursePress_Admin_Controller_Menu {
 		// Set ajax callback
 		add_action( 'wp_ajax_' . $this->slug, array( $this, 'ajax_request' ) );
 		add_action( 'coursepress_submitbox_misc_actions', array( __CLASS__, 'get_statuses' ), 10 );
+		/**
+		* add links on plugin page.
+		 */
+		$file = CoursePress::get_file();
+		add_filter( 'plugin_action_links_' . plugin_basename( $file ), array( __CLASS__, 'add_action_links' ), 10, 4 );
 	}
 
 	public function get_labels() {
@@ -442,5 +447,38 @@ foreach ( $allowed_statuses as $status => $label ) {
 <?php } ?>
 </div>
 <?php
+	}
+
+	/**
+	 * Add "support" and "settings" on plugin list page
+	 *
+	 * @since 2.0.0.2
+	 *
+	 */
+	public static function add_action_links( $actions, $plugin_file, $plugin_data, $context ) {
+		if ( current_user_can( 'manage_options' ) ) {
+			$url = add_query_arg(
+				array(
+					'post_type' => CoursePress_Data_Course::get_post_type_name(),
+					'page' => CoursePress_View_Admin_Setting::get_slug(),
+				),
+				admin_url( 'edit.php' )
+			);
+			$actions['settings'] = sprintf(
+				'<a href="%s">%s</a>',
+				esc_url( $url ),
+				__( 'Settings', 'CP_TD' )
+			);
+		}
+		$url = 'https://wordpress.org/support/plugin/coursepress';
+		/* start:pro */
+		$url = 'https://premium.wpmudev.org/forums/tags/coursepress-pro';
+		/* end:pro */
+		$actions['support'] = sprintf(
+			'<a href="%s">%s</a>',
+			esc_url( $url ),
+			__( 'Support', 'custom-sidebars' )
+		);
+		return $actions;
 	}
 }

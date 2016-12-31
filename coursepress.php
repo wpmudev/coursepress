@@ -271,4 +271,8 @@ class CoursePress {
 			register_theme_directory( $theme_directory );
 		}
 	}
+
+	public static function get_file() {
+		return self::$file;
+	}
 }
