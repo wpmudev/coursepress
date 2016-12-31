@@ -8,6 +8,7 @@ CHANGELOG
 = 2.0.2 =
 -------------------------------------------------
 * Fixed a bug with class autoloder function.
+* Added "Settings" and "Support" links on WP plugins page.
 
 = 2.0.0 =
 -------------------------------------------------
