@@ -1020,4 +1020,20 @@ class CoursePress_Data_Module {
 			CoursePress_Data_Unit::show_page( $unit_id, $page_id, $course_id );
 		}
 	}
+
+	/**
+	 * Check entry - is this module?
+	 *
+	 * @since 2.0.2
+	 *
+	 * @param WP_Post|integer $module Variable to check.
+	 * @return boolean Answer is that module or not?
+	 */
+	public static function is_module( $module ) {
+		$post_type = get_post_type( $module );
+		if ( $post_type == self::$post_type ) {
+			return true;
+		}
+		return false;
+	}
 }
