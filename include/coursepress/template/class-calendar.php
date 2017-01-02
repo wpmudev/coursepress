@@ -90,7 +90,7 @@ class CoursePress_Template_Calendar {
 		$this->date_indicator = sanitize_text_field( $date_indicator );
 	}
 
-	public function create_calendar( $pre = '«', $next = '»' ) {
+	public function create_calendar( $pre = '&laquo;', $next = '&raquo;' ) {
 		global $wp_locale;
 
 		$calendar = '<div class="course-calendar" data-courseid="' . $this->course_id . '">';
