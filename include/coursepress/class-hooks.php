@@ -27,13 +27,15 @@ class CoursePress_Hooks {
 		// Edit Course
 		add_filter( 'post_updated_messages', array( 'CoursePress_Admin_Edit', 'updated_messages' ) );
 		add_action( 'dbx_post_advanced', array( 'CoursePress_Admin_Edit', 'init_hooks' ) );
+
 		// Per course certificate preview
 		add_action( 'init', array( 'CoursePress_Admin_Edit', 'certificate_preview' ) );
+
 		// Update Course
 		add_action( 'coursepress_course_updated', array( 'CoursePress_Data_Course', 'get_expired_courses' ) );
 		add_action( 'coursepress_course_updated', array( 'CoursePress_Data_Course', 'get_enrollment_ended_courses' ) );
-
 		add_action( 'wp_ajax_update_course', array( 'CoursePress_Admin_Controller_Course', 'update_course' ) );
+
 		// Update UnitBuilder
 		add_action( 'wp_ajax_unit_builder', array( 'CoursePress_Admin_Controller_Unit', 'unit_builder_ajax' ) );
 
@@ -58,6 +60,17 @@ class CoursePress_Hooks {
 		// Set admin scripts
 		add_action( 'admin_enqueue_scripts', array( 'CoursePress_Helper_Javascript', 'enqueue_admin_scripts' ) );
 		add_action( 'admin_footer', array( 'CoursePress_Helper_Javascript', 'enqueue_scripts' ) );
+
+		// Update Communication
+		add_action( 'wp_ajax_update_notification', array( 'CoursePress_Data_Notification', 'ajax_update' ) );
+		add_action( 'wp_ajax_update_discussion', array( 'CoursePress_Data_Discussion', 'ajax_update' ) );
+
+		// MP Notice
+		add_action( 'admin_notices', array( 'CoursePress_Helper_Extension_MarketPress', 'mp_notice' ) );
+
+		// Admin class
+		add_filter( 'admin_body_class', array( __CLASS__, 'admin_classes' ) );
+		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'remove_css_overrides' ), 99 );
 	}
 
 	/**
@@ -77,6 +90,31 @@ class CoursePress_Hooks {
 
 				exit;
 			}
+		}
+	}
+
+	public static function admin_classes( $class ) {
+		$_class = '';
+
+		if ( cp_is_chat_plugin_active() ) {
+			$_class .= 'cp-with-chat';
+		}
+
+		if ( is_array( $class ) ) {
+			array_push( $class, $_class );
+		} else {
+			$class .= $_class;
+		}
+
+		return $class;
+	}
+
+	public static function remove_css_overrides() {
+		global $pagenow, $typenow;
+
+		if ( 'course' === $typenow ) {
+			wp_dequeue_style( 'jquery-ui-datepicker' );
+			wp_dequeue_style( 'jquery-smoothness' );
 		}
 	}
 }

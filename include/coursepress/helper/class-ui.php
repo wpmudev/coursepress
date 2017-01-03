@@ -308,6 +308,13 @@ class CoursePress_Helper_UI {
 
 		$instructors = CoursePress_Data_Course::get_setting( $course_id, 'instructors', array() );
 		$instructors = array_filter( $instructors );
+
+		if ( empty( $instructors ) ) {
+			// Set current user the default instructor
+			CoursePress_Data_Course::add_instructor( $course_id, get_current_user_id() );
+			$instructors = array( get_current_user_id() );
+		}
+
 		$instructors = ! empty( $instructors ) ? array_map( 'get_userdata', $instructors ) : array();
 		$instructors = array_filter( $instructors );
 
@@ -757,13 +764,21 @@ class CoursePress_Helper_UI {
 	 * @param array $options Array options, option_key => option_label
 	 * @param string $selected selected value.
 	 * @param string $class element class
+	 * @param string $id element id
 	 * @return string Valid html select element.
 	 */
-	public static function select( $name, $options, $selected = '', $class = '' ) {
+	public static function select( $name, $options, $selected = '', $class = '', $id = '' ) {
+		$select_atts = '';
+		if ( ! empty( $class ) ) {
+			$select_atts .= sprintf( ' class="%s"', esc_attr( $class ) );
+		}
+		if ( ! empty( $id ) ) {
+			$select_atts .= sprintf( ' id="%s"', esc_attr( $id ) );
+		}
 		$content = sprintf(
-			'<select name="%s" class="%s">',
+			'<select name="%s"%s>',
 			esc_attr( $name ),
-			esc_attr( $class )
+			$select_atts
 		);
 		foreach ( $options as $key => $label ) {
 			$content .= '<option value="' . $key . '" ' . selected( $selected, $key, false ) . '>' . esc_html( $label ) . '</option>';

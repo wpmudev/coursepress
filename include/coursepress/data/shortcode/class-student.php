@@ -81,9 +81,19 @@ class CoursePress_Data_Shortcode_Student {
 	}
 
 	public static function student_workbook_table( $args ) {
+
+		$course_id = CoursePress_Helper_Utility::the_course( true );
+
+		$workbook_is_active = CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'allow_workbook', false ) );
+
+		if ( false == $workbook_is_active ) {
+			$content = sprintf( '<p class="message">%s</p>', __( 'Workbook is not available for this course.', 'CP_TD' ) );
+			return $content;
+		}
+
 		$args = shortcode_atts(
 			array(
-				'course_id' => CoursePress_Helper_Utility::the_course( true ),
+				'course_id' => $course_id,
 				'unit_id' => false,
 				'module_column_title' => __( 'Element', 'CP_TD' ),
 				'title_column_title' => __( 'Module', 'CP_TD' ),
@@ -231,24 +241,24 @@ class CoursePress_Data_Shortcode_Student {
 						switch ( $attributes['module_type'] ) {
 
 							case 'input-checkbox': case 'input-radio': case 'input-select':
-								$answers = $attributes['answers'];
-								$selected = (array) $attributes['answers_selected'];
-								$display = '';
+										$answers = $attributes['answers'];
+										$selected = (array) $attributes['answers_selected'];
+										$display = '';
 
-								foreach ( $answers as $key => $answer ) {
-									$the_answer = in_array( $key, $selected );
-									$student_answer = is_array( $response_display ) ? in_array( $key, $response_display ) : $response_display == $key;
+										foreach ( $answers as $key => $answer ) {
+											$the_answer = in_array( $key, $selected );
+											$student_answer = is_array( $response_display ) ? in_array( $key, $response_display ) : $response_display == $key;
 
-									if ( 'input-radio' === $attributes['module_type'] ) {
-										$student_answer = $response_display == $key;
-									}
+											if ( 'input-radio' === $attributes['module_type'] ) {
+												$student_answer = $response_display == $key;
+											}
 
-									if ( $student_answer ) {
-										$class = $the_answer ? 'chosen-correct' : 'chosen-incorrect';
-										$display .= sprintf( '<p class="answer %s">%s</p>', $class, $answer );
-									}
-								}
-								$response_display = $display;
+											if ( $student_answer ) {
+												$class = $the_answer ? 'chosen-correct' : 'chosen-incorrect';
+												$display .= sprintf( '<p class="answer %s">%s</p>', $class, $answer );
+											}
+										}
+										$response_display = $display;
 
 								break;
 
@@ -309,23 +319,22 @@ class CoursePress_Data_Shortcode_Student {
 								$questions = $attributes['questions'];
 								if ( $response_display ) {
 									foreach ( $questions as $q_index => $question ) {
-										$answer = $response_display[$q_index];
+										$answer = $response_display[ $q_index ];
 										if ( $question['type'] == 'selectable' ) {
-											$selected = ( isset($question['options']) && isset($question['options']['answers']) && isset($question['options']['answers'][$answer]) ) 
-												? $question['options']['answers'][$answer]
+											$selected = ( isset( $question['options'] ) && isset( $question['options']['answers'] ) && isset( $question['options']['answers'][ $answer ] ) )
+												? $question['options']['answers'][ $answer ]
 												: '';
 											$display .= sprintf( '<p class="answer">%s</p>', $selected );
 										} else {
 											$display .= sprintf( '<p class="answer">%s</p>', $answer );
 										}
 									}
-									
 								}
 								$response_display = $display;
 								break;
 							case 'input-text': case 'input-textarea':
-								$response_display = empty( $response_display ) ? __( 'No answer!', 'CP_TD' ) : $response_display;
-								$display = sprintf( '<p>%s</p>', $response_display );
+									$response_display = empty( $response_display ) ? __( 'No answer!', 'CP_TD' ) : $response_display;
+									$display = sprintf( '<p>%s</p>', $response_display );
 								break;
 
 							case 'input-form':
@@ -359,7 +368,6 @@ class CoursePress_Data_Shortcode_Student {
 										} else {
 											$response_display .= sprintf( '<p>%s</p>', esc_html( $student_response ) );
 										}
-
 									}
 								}
 								break;
@@ -370,8 +378,8 @@ class CoursePress_Data_Shortcode_Student {
 						$non_assessable = cp_is_true( $attributes['assessable'] ) ? '' : '<span class="dashicons dashicons-star-filled non-assessable"></span>';
 
 						$extra = $mandatory . $non_assessable;
-						
-						$feedback_by = ( !is_null($feedback) && isset($feedback['feedback_by']) ) ? (int)$feedback['feedback_by'] : 0;
+
+						$feedback_by = ( ! is_null( $feedback ) && isset( $feedback['feedback_by'] ) ) ? (int) $feedback['feedback_by'] : 0;
 						$first_last = CoursePress_Helper_Utility::get_user_name( $feedback_by );
 
 						$feedback_display = ! empty( $feedback['feedback'] ) ? '<div class="feedback"><div class="comment">' . $feedback['feedback'] . '</div><div class="instructor"> – <em>' . esc_html( $first_last ) . '</em></div></div>' : '';
@@ -404,6 +412,26 @@ class CoursePress_Data_Shortcode_Student {
 	}
 
 	public static function coursepress_enrollment_templates( $atts ) {
+		/**
+		 * Avoid to load templates twice...
+		 */
+		global $post;
+
+		if ( ! is_object( $post ) ) {
+			$course_id = CoursePress_Helper_Utility::the_course( true );
+			$post = get_post( $course_id );
+		}
+		if (
+			isset( $post->coursepress_enrollment_templates_was_already_loaded )
+			&& $post->coursepress_enrollment_templates_was_already_loaded
+		) {
+			return;
+		}
+		$post->coursepress_enrollment_templates_was_already_loaded = true;
+		self:$templates_was_already_loaded = true;
+		/**
+		 * proceder shortcode
+		 */
 		$atts = shortcode_atts(
 			array(
 				'course_id' => CoursePress_Helper_Utility::the_course( true ),
@@ -493,7 +521,23 @@ class CoursePress_Data_Shortcode_Student {
 				<p>
 					<?php esc_html_e( 'Congratulations! You have successfully enrolled. Click below to get started.', 'CP_TD' ); ?>
 				</p>
-				<a href="<?php echo get_permalink( CoursePress_Helper_Utility::the_course( true ) ) . CoursePress_Core::get_slug( 'units' ); ?>">Start Learning</a>
+				<a href="<?php echo get_permalink( CoursePress_Helper_Utility::the_course( true ) ) . CoursePress_Core::get_slug( 'units' ); ?>"><?php _e( 'Start Learning', 'CP_TD' ); ?></a>
+			</div>
+			<div class="bbm-modal__bottombar">
+			</div>
+		</script>
+		<?php endif; ?>
+
+		<?php if ( apply_filters( 'coursepress_registration_form_step-4', true ) ) : ?>
+		<script type="text/template" id="modal-view4-template" data-type="modal-step" data-modal-action="passcode">
+			<div class="bbm-modal__topbar">
+                <h3 class="bbm-modal__title"><?php esc_html_e( 'Could not enroll at this time.', 'CP_TD' ); ?>
+				</h3>
+			</div>
+            <div class="bbm-modal__section"><?php
+			printf( '<p>%s</p>', esc_html__( 'A passcode is required to enroll. Click below to back to course.', 'CP_TD' ) );
+?>
+                    <a href="<?php echo get_permalink( CoursePress_Helper_Utility::the_course( true ) ) . CoursePress_Core::get_slug( 'units' ); ?>"><?php _e( 'Go back to course!', 'CP_TD' ); ?></a>
 			</div>
 			<div class="bbm-modal__bottombar">
 			</div>
@@ -687,7 +731,7 @@ class CoursePress_Data_Shortcode_Student {
 		/**
 		 * check is unit available?
 		 */
-		$is_unit_available = CoursePress_Data_Unit::is_unit_available( $course_id, $unit_id, null);
+		$is_unit_available = CoursePress_Data_Unit::is_unit_available( $course_id, $unit_id, null );
 
 		if ( $is_unit_available ) {
 			if ( 'flat' == $style ) {

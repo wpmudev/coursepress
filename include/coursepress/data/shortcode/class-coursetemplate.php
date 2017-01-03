@@ -444,7 +444,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 		// Wrap button in form if needed.
 		if ( $is_form ) {
-			$button = '<form name="enrollment-process" method="post" action="' . $button_url . '">' . $button;
+			$button = '<form name="enrollment-process" method="post" data-type="'. $button_option . '" action="' . $button_url . '">' . $button;
 			$button .= sprintf( '<input type="hidden" name="student_id" value="%s" />', get_current_user_id() );
 
 			if ( 'enroll' == $button_option ) {

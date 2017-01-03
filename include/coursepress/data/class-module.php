@@ -126,6 +126,7 @@ class CoursePress_Data_Module {
 			update_post_meta( $module_id, 'answers_selected', $value );
 			//delete_post_meta( $module_id, 'checked_answer' );
 		}
+
 		if ( isset( $meta['checked_answers'] ) && ! isset( $meta['answers_selected'] ) ) {
 			$value = get_post_meta( $module_id, 'checked_answers', true );
 			$answers = maybe_unserialize( $meta['answers'][0] );

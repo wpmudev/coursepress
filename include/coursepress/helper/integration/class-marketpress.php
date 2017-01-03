@@ -1216,6 +1216,7 @@ Yours sincerely,
 		if ( ! self::$is_active ) {
 			return $classes;
 		}
+
 		if ( CoursePress_Data_Course::is_course() ) {
 			global $post;
 			$is_paid = CoursePress_Data_Course::is_paid_course( $post->ID );
@@ -1223,6 +1224,7 @@ Yours sincerely,
 				$classes[] = 'marketpress-course';
 			}
 		}
+
 		return $classes;
 	}
 }

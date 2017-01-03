@@ -39,19 +39,19 @@ class CoursePress_Data_Course {
 				'has_archive' => true,
 				'show_ui' => true,
 				'publicly_queryable' => true,
-				'capability_type' => array( 'course', 'courses' ),
+				'capability_type' => array( 'course', 'courses', 'post' ),
 				'capabilities' => array(
-					'edit_post' => 'edit_course',
-					'edit_posts' => 'coursepress_dashboard_cap',
-					'edit_published_posts' => 'coursepress_update_course_cap',
+					'edit_posts' => 'coursepress_create_course_cap',
+					'edit_post' => 'coursepress_update_course_cap',
 					'delete_post' => 'coursepress_delete_course_cap',
 					'delete_posts' => 'coursepress_delete_course_cap',
-					'publish_posts' => 'coursepress_change_course_status_cap',
+					'edit_published_posts' => 'coursepress_update_course_cap',
+					'edit_private_posts' => 'coursepress_update_course_cap',
 					'edit_others_posts' => 'coursepress_update_course_cap',
-					'read_private_posts' => 'coursepress_update_course_cap',
-					'create_posts' => 'coursepress_create_course_cap',
+					'delete_others_posts' => 'coursepress_delete_course_cap',
+					'delete_published_posts' => 'coursepress_delete_course_cap',
+					'publish_posts' => 'coursepress_change_course_status_cap',
 				),
-				'map_meta_cap' => false,
 				'query_var' => true,
 				'rewrite' => array(
 					'slug' => CoursePress_Core::get_slug( 'course' ),
@@ -1007,6 +1007,20 @@ class CoursePress_Data_Course {
 						'compare' => '=',
 					),
 				);
+			}
+
+			if ( ! cp_is_chat_plugin_active() ) {
+				$metas = array(
+					'key' => 'module_type',
+					'value' => 'chat',
+					'compare' => '!='
+				);
+
+				if ( ! empty( $post_args['meta_query'] ) ) {
+					array_push( $post_args['meta_query'], $metas );
+				} else {
+					$post_args['meta_query'] = $metas;
+				}
 			}
 
 			$query = new WP_Query( $post_args );
@@ -2153,7 +2167,12 @@ class CoursePress_Data_Course {
 	 * @return integer number of courses
 	 */
 	public static function count_courses() {
-		return array_sum( get_object_vars( wp_count_posts( self::get_post_type_name() ) ) );
+		$count = wp_count_posts( self::get_post_type_name() );
+		/**
+		 * Do not count auto-drafts.
+		 */
+		$count->{'auto-draft'} = 0;
+		return array_sum( get_object_vars( $count ) );
 	}
 
 	public static function get_course( $course_id = 0 ) {
@@ -3117,6 +3136,32 @@ class CoursePress_Data_Course {
 			)
 		);
 
+		/**
+		 * Orderby Parameter
+		 */
+		$selected_order = CoursePress_Core::get_setting( 'course/order_by', 'course_start_date' );
+		switch ( $selected_order ) {
+			case 'post_date':
+				$args['orderby'] = 'date';
+				unset( $args['meta_key'] );
+				break;
+			case 'enrollment_start_date':
+				$args['meta_key'] = 'cp_enrollment_start_date';
+				break;
+			case 'start_date':
+			default:
+				$args['meta_key'] = 'cp_course_start_date';
+				break;
+		}
+		/**
+		 * Order Parameter
+		 */
+		$selected_dir = CoursePress_Core::get_setting( 'course/order_by_direction', 'ASC' );
+		if ( ! preg_match( '/^(ASC|DESC)$/', $selected_dir ) ) {
+			$selected_dir = 'ASC';
+		}
+		$args['order'] = $selected_dir;
+
 		// Get expired courses
 		$expired_courses = self::get_expired_courses();
 		$enrollment_ended_courses = array();
@@ -3151,9 +3196,7 @@ class CoursePress_Data_Course {
 		if ( ! empty( $excludes ) ) {
 			$args['post__not_in'] = $excludes;
 		}
-
 		$query = new WP_Query( $args );
-
 		return $query;
 	}
 
@@ -3314,7 +3357,7 @@ class CoursePress_Data_Course {
 		}
 		global $wpdb;
 		$sql = $wpdb->prepare(
-			"select ID, post_title from {$wpdb->posts} where post_title = ( select a.post_title from {$wpdb->posts} a where a.id = %d )",
+			"SELECT ID FROM {$wpdb->posts} WHERE post_title = ( SELECT a.post_title FROM {$wpdb->posts} a WHERE a.ID = %d )",
 			$post_id
 		);
 		$results = $wpdb->get_results( $sql );
@@ -3323,7 +3366,9 @@ class CoursePress_Data_Course {
 			delete_post_meta( $post->ID, self::$post_count_title_name );
 			$post_title = $post->post_title;
 		}
-		self::save_course_number( $post_id, $post_title, array( $post_id ) );
+
+		$post_type = self::get_post_type_name();
+		self::save_course_number( $post_id, $post_type, array( $post_id ) );
 	}
 
 	/**
@@ -3432,5 +3477,28 @@ class CoursePress_Data_Course {
 		 */
 		$defaults = apply_filters( 'coursepress_pages_defaults', $defaults );
 		return $defaults;
+	}
+
+	/**
+	 * Check limit, currently one course, for free version.
+	 *
+	 * @since 2.0.0
+	 */
+	public static function is_limit_reach() {
+		$is_pro = defined( 'CP_IS_PREMIUM' ) && CP_IS_PREMIUM;
+		if ( $is_pro ) {
+			return false;
+		}
+		$post_type = self::get_post_type_name();
+		$screen = get_current_screen();
+		if (
+			$post_type != $screen->post_type
+			|| 'post' != $screen->base
+			|| 'add' != $screen->action
+		) {
+			return false;
+		}
+		$number_of_courses = self::count_courses();
+		return 0 < $number_of_courses;
 	}
 }

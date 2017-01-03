@@ -32,7 +32,12 @@ class CoursePress_Data_Notification {
 				'show_ui' => false,
 				'publicly_queryable' => false,
 				'capability_type' => 'notification',
-				'map_meta_cap' => true,
+				'capabilities' => array(
+					'read' => 'read',
+					'edit_post' => 'coursepress_update_notification_cap',
+					'edit_posts' => 'coursepress_update_notification_cap'
+				),
+				'map_meta_cap' => false,
 				'query_var' => true,
 				'rewrite' => array(
 					'slug' => CoursePress_Core::get_slug( 'course/' ) . '%course%/' . CoursePress_Core::get_slug( 'notification' ),
