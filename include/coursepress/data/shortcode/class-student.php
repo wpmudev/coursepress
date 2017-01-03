@@ -422,13 +422,13 @@ class CoursePress_Data_Shortcode_Student {
 			$post = get_post( $course_id );
 		}
 		if (
-			isset( $post->coursepress_enrollment_templates_was_alredy_loaded )
-			&& $post->coursepress_enrollment_templates_was_alredy_loaded
+			isset( $post->coursepress_enrollment_templates_was_already_loaded )
+			&& $post->coursepress_enrollment_templates_was_already_loaded
 		) {
 			return;
 		}
-		$post->coursepress_enrollment_templates_was_alredy_loaded = true;
-		self:$templates_was_alredy_loaded = true;
+		$post->coursepress_enrollment_templates_was_already_loaded = true;
+		self:$templates_was_already_loaded = true;
 		/**
 		 * proceder shortcode
 		 */

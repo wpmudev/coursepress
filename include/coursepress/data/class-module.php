@@ -126,6 +126,7 @@ class CoursePress_Data_Module {
 			update_post_meta( $module_id, 'answers_selected', $value );
 			//delete_post_meta( $module_id, 'checked_answer' );
 		}
+
 		if ( isset( $meta['checked_answers'] ) && ! isset( $meta['answers_selected'] ) ) {
 			$value = get_post_meta( $module_id, 'checked_answers', true );
 			$answers = maybe_unserialize( $meta['answers'][0] );
@@ -1018,5 +1019,35 @@ class CoursePress_Data_Module {
 		if ( ! isset( $visible_modules[ $id ] ) ) {
 			CoursePress_Data_Unit::show_page( $unit_id, $page_id, $course_id );
 		}
+	}
+
+	/**
+	 * Get modules by type
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $type module type
+	 * @param integer $course_id course ID.
+	 * @return array Array of modules ids.
+	 */
+	public static function get_all_modules_ids_by_type( $type, $course_id = null ) {
+		$args = array(
+			'post_type' => self::get_post_type_name(),
+			'fields' => 'ids',
+			'suppress_filters' => true,
+			'nopaging' => true,
+			'meta_key' => 'module_type',
+			'meta_value' => $type,
+		);
+		if ( ! empty( $course_id ) ) {
+			$units = CoursePress_Data_Course::get_units( $course_id, array( 'any' ), true );
+			if ( empty( $units ) ) {
+				return array();
+			}
+			$args['post_parent__in'] = $units;
+
+		}
+		$modules = new WP_Query( $args );
+		return $modules->posts;
 	}
 }

@@ -44,15 +44,16 @@ class CoursePress_Template_Module {
 		switch( $module_type ) {
 			case 'input-checkbox': case 'input-radio': case 'input-select':
 				$answers = $attributes['answers'];
-				$selected = (array) $attributes['answers_selected'];
+				$selected = $attributes['answers_selected'];
 				$content .= '<ul class="cp-answers">';
 
 				foreach ( $answers as $key => $answer ) {
-					$the_answer = in_array( $key, $selected );
-					$student_answer = is_array( $response ) ? in_array( $key, $response ) : $response == $key;
-
-					if ( 'input-radio' === $module_type ) {
-						$student_answer = $response == $key;
+					if ( 'input-checkbox' !== $module_type ) {
+						$the_answer = $selected === $key || $selected === $answer;
+						$student_answer = $response == $key || $response === $answer;
+					} else {
+						$the_answer = in_array( $key, $selected );
+						$student_answer = is_array( $response ) ? in_array( $key, $response ) : $response == $key;
 					}
 
 					if ( $student_answer ) {
@@ -236,7 +237,7 @@ class CoursePress_Template_Module {
 
 		if ( $is_focus ) {
 			$content .= wp_nonce_field( 'coursepress_submit_modules', '_wpnonce', true, false );
-			//$content .= sprintf( '<div class="cp-error">%s</div>', apply_filters( 'coursepress_before_unit_modules', '' ) );
+			$content .= sprintf( '<div class="cp-error">%s</div>', apply_filters( 'coursepress_before_unit_modules', '' ) );
 		}
 		$content .= sprintf( '<input type="hidden" name="module_id[]" value="%s" />', $module_id );
 
@@ -753,7 +754,7 @@ class CoursePress_Template_Module {
 			$content .= '<ul style="list-style:none;">';
 
 			foreach ( $attributes['answers'] as $key => $answer ) {
-				$checked = '' != $response ? ' ' . checked( 1, $response == $key, false ) : '';
+				$checked = '' !== $response ? ' ' . checked( 1, '' != $response && (int) $response === $key, false ) : '';
 
 				$format = '<li class="%1$s %2$s"><input type="radio" value="%5$s" name="module[%3$s]" id="module-%3$s-%5$s" %6$s /> <label for="module-%3$s-%5$s">%4$s</label> </li>';
 				$content .= sprintf( $format, $oddeven, $alt, $module->ID, esc_html__( $answer ), esc_attr( $key ), $disabled_attr . $checked );

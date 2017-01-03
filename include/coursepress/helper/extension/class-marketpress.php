@@ -21,34 +21,36 @@ class CoursePress_Helper_Extension_MarketPress {
 	}
 
 	public static function add_to_extensions_list( $plugins ) {
-
+		/**
+		 * We'll giving out MP to all verions, yay!!!
+		 **/
+		$plugins[] = array(
+			'name' => 'MarketPress',
+			'slug' => 'marketpress',
+			'base_path' => self::$base_path['pro'],
+			'source' => CoursePress::$path . 'asset/file/marketpress-pro.zip',
+			'source_message' => __( 'Included in the CoursePress Plugin', 'CP_TD' ),
+			'external_url' => '', /* http://premium.wpmudev.org/project/e-commerce/ */
+			'external' => 'no',
+			'protocol' => '',
+		);
+		/**
+		 * Just hide this for now
 		if ( CP_IS_PREMIUM ) {
-
-			$plugins[] = array(
-				'name' => 'MarketPress',
-				'slug' => 'marketpress',
-				'base_path' => self::$base_path['pro'],
-				'source' => CoursePress::$path . 'asset/file/marketpress-pro.zip',
-				'source_message' => __( 'Included in the CoursePress Plugin', 'CP_TD' ),
-				'external_url' => '', /* http://premium.wpmudev.org/project/e-commerce/ */
-				'external' => 'no',
-				'protocol' => '',
-			);
-
 		} else {
-
 			$plugins[] = array(
 				'name' => 'MarketPress - WordPress eCommerce',
 				'slug' => 'wordpress-ecommerce',
 				'base_path' => self::$base_path['free'],
 				'source' => 'downloads.wordpress.org/plugin/wordpress-ecommerce.zip',
 				'source_message' => __( 'WordPress.org Repository', 'CP_TD' ),
-				'external_url' => '', /* https://wordpress.org/plugins/wordpress-ecommerce/ */
+				'external_url' => '', /* https://wordpress.org/plugins/wordpress-ecommerce/ 
 				'external' => 'yes',
 				'protocol' => 'https',
 			);
 
 		}
+		*/
 
 		return $plugins;
 	}
@@ -87,9 +89,23 @@ class CoursePress_Helper_Extension_MarketPress {
 	 * Show MP install/activation notice
 	 **/
 	public static function mp_notice() {
+		/**
+		 * check screen
+		 */
 		$post_type = CoursePress_Data_Course::get_post_type_name();
+		$screen = get_current_screen();
+		if ( ! isset( $screen->post_type ) || $post_type != $screen->post_type ) {
+			return;
+		}
+		/**
+		 * check user meta
+		 */
+			$user_id = get_current_user_id();
+		$show = get_user_option( 'marketpress-run-notice' );
+		if ( 'hide' == $show ) {
+			return;
+		}
 		$message = '';
-
 		if ( ! self::installed() ) {
 			$mp_settings_url = add_query_arg( array(
 				'post_type' => $post_type,
@@ -118,7 +134,13 @@ class CoursePress_Helper_Extension_MarketPress {
 		}
 
 		if ( ! empty( $message ) ) {
-			echo CoursePress_Helper_UI::admin_notice( $message, 'warning' );
+			$data = array(
+				'dismissible' => true,
+				'option-name' => 'marketpress-run-notice',
+				'nonce' => wp_create_nonce( 'marketpress-run-notice'.$user_id ),
+				'user_id' => $user_id,
+			);
+			echo CoursePress_Helper_UI::admin_notice( $message, 'warning', 'marketpress-run-notice', $data );
 		}
 	}
 }
