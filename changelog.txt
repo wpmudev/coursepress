@@ -9,6 +9,10 @@ CHANGELOG
 -------------------------------------------------
 * Added course discussion notification.
 
+= 2.0.2 =
+-------------------------------------------------
+* Fixed a bug with class autoloder function.
+
 = 2.0.0 =
 -------------------------------------------------
 * Overall optimisation through whole new codebase.

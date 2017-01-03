@@ -109,7 +109,7 @@ class CoursePress_View_Front_Course {
 		);
 
 		// TODO: The filter is always removed... Does not look correct.
-		remove_filter( 'the_content', 'wpautop' );
+		//remove_filter( 'the_content', 'wpautop' );
 
 		/**
 		 * sort by course start date

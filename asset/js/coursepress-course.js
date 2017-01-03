@@ -341,7 +341,12 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		$( '.chosen-select.narrow' ).chosen( { disable_search_threshold: 5, width: '20%' } );
 
 		// Tree for course structure
-		$( 'table.course-structure-tree' ).treegrid( { initialState: 'expanded' } );
+		var treegridtable = $( 'table.course-structure-tree' ),
+			total_rows = $( 'tr', treegridtable );
+		if ( total_rows < 100 ) {
+			// Treegrid is causing js error when there are too many rows
+			$( 'table.course-structure-tree' ).treegrid( { initialState: 'expanded' } );
+		}
 
 		// ----- DATE PICKERS -----
 		if ( "function" === typeof( $(document).datetimepicker ) ) {
