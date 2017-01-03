@@ -1,5 +1,9 @@
 <?php
 $course_id = isset( $_REQUEST['course_id'] ) ? (int) $_REQUEST['course_id'] : 0;
+$can_update = CoursePress_Data_Capabilities::can_update_course( $course_id );
+if ( ! $can_update ) {
+	wp_die( __( 'Sorry, you are not allowed to access this page.' ), 403 );
+}
 $course = get_post( $course_id );
 $unit_id = isset( $_REQUEST['unit_id'] ) ? (int) $_REQUEST['unit_id'] : 0;
 $module_id = isset( $_REQUEST['module_id'] ) ? (int) $_REQUEST['module_id'] : 0;

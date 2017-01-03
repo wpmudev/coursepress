@@ -146,6 +146,7 @@ class CoursePress_Email {
 			'textarea_name' => 'coursepress_settings[email]['. $this->email_type . '][content]',
 			'media_buttons' => false,
 			'teeny' => true,
+			'tinymce' => array( 'height' => 400 ),
 		);
 		$editor_id = 'cp-wp-email-editor-' . $this->email_type;
 		$editor_content = stripcslashes( $email_settings['content'] );

@@ -3,6 +3,7 @@
 class CoursePress_Helper_UI_Module {
 
 	const OUTPUT_TEXT = 'text';
+	const OUTPUT_CHAT = 'chat';
 	const OUTPUT_IMAGE = 'image';
 	const OUTPUT_VIDEO = 'video';
 	const OUTPUT_AUDIO = 'audio';
@@ -272,6 +273,11 @@ class CoursePress_Helper_UI_Module {
 				'mode' => 'output',
 				'icon' => 'default',
 			),
+			self::OUTPUT_CHAT => array(
+				'title' => __( 'Chat', 'CP_TD' ),
+				'mode' => 'output',
+				'icon' => 'default',
+			),
 			self::OUTPUT_IMAGE => array(
 				'title' => __( 'Image', 'CP_TD' ),
 				'mode' => 'output',
@@ -376,6 +382,22 @@ class CoursePress_Helper_UI_Module {
 					"components": []
 				}
 			',
+			self::OUTPUT_CHAT => '{
+				"id": "0",
+				"title": "' . __( 'Untitled', 'CP_TD' ) . '",
+				"duration": "0:00",
+				"type": "' . self::OUTPUT_CHAT . '",
+				"show_title": "1",
+				"mandatory": "0",
+				"assessable": "0",
+				"minimum_grade": "100",
+				"allow_retries": "1",
+				"retry_attempts": "0",
+				"content": "",
+				"editor_height": "500",
+				"order": "0",
+				"components": []
+			}',
 			self::OUTPUT_IMAGE => '
 				{
 					"id": "0",

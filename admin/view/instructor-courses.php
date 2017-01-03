@@ -16,12 +16,12 @@ $assigned_courses = array_map( 'get_post', $assigned_courses );
 		</tr>
 	</table>
 	<hr />
-
 	<?php if ( ! empty( $assigned_courses ) ) : ?>
 	<table class="wp-list-table widefat stripe">
 		<thead>
 			<tr>
 				<th><?php esc_html_e( 'Course', 'CP_TD' ); ?></th>
+				<th><?php esc_html_e( 'Course status', 'CP_TD' ); ?></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -31,11 +31,15 @@ $assigned_courses = array_map( 'get_post', $assigned_courses );
 			?>
 			<tr>
 				<td><a href="<?php echo esc_url( $permalink ); ?>" target="_blank"><?php echo $course->post_title; ?></a></td>
+				<td><?php
+				$status = get_post_status_object( $course->post_status );
+				echo $status->label;
+?></td>
 			</tr>
 			<?php endforeach; ?>
 		</tbody>
 	</table>
-	<?php else: ?>
+	<?php else : ?>
 	<br />
 	<p class="description"><?php esc_html_e( 'No courses found!', 'CP_TD' ); ?></p>
 	<?php endif; ?>
