@@ -89,9 +89,23 @@ class CoursePress_Helper_Extension_MarketPress {
 	 * Show MP install/activation notice
 	 **/
 	public static function mp_notice() {
+		/**
+		 * check screen
+		 */
 		$post_type = CoursePress_Data_Course::get_post_type_name();
+		$screen = get_current_screen();
+		if ( ! isset( $screen->post_type ) || $post_type != $screen->post_type ) {
+			return;
+		}
+		/**
+		 * check user meta
+		 */
+			$user_id = get_current_user_id();
+		$show = get_user_option( 'marketpress-run-notice' );
+		if ( 'hide' == $show ) {
+			return;
+		}
 		$message = '';
-
 		if ( ! self::installed() ) {
 			$mp_settings_url = add_query_arg( array(
 				'post_type' => $post_type,
@@ -120,7 +134,13 @@ class CoursePress_Helper_Extension_MarketPress {
 		}
 
 		if ( ! empty( $message ) ) {
-			echo CoursePress_Helper_UI::admin_notice( $message, 'warning' );
+			$data = array(
+				'dismissible' => true,
+				'option-name' => 'marketpress-run-notice',
+				'nonce' => wp_create_nonce( 'marketpress-run-notice'.$user_id ),
+				'user_id' => $user_id,
+			);
+			echo CoursePress_Helper_UI::admin_notice( $message, 'warning', 'marketpress-run-notice', $data );
 		}
 	}
 }
