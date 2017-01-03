@@ -740,8 +740,7 @@ class CoursePress_Admin_Edit {
 				$content .= '
 					<div class="instructor-avatar-holder empty">
 						<span class="instructor-name">' . esc_html__( 'Please Assign Instructor', 'CP_TD' ) . '</span>
-					</div>
-';
+					</div>';
 				$content .= CoursePress_Helper_UI::course_pendings_instructors_avatars( $course_id );
 			}
 		} else {
@@ -1204,8 +1203,8 @@ class CoursePress_Admin_Edit {
 		 * Pre-Completion Page
 		 */
 		$pre_completion_title = CoursePress_Data_Course::get_setting( $course_id, 'pre_completion_title', __( 'Almost there!', 'CP_TD' ) );
-		$pre_completion_content = sprintf( '<h3>%s</h3>', __( 'You have completed the course!', 'CP_TD' ) );
-		$pre_completion_content .= sprintf( '<p>%s</p>', __( 'Your submitted business plan will be reviewed, and you\'ll hear back from me on whether you pass or fail.', 'CP_TD' ) );
+		$pre_completion_content = sprintf( '<h3>%s</h3>', __( 'Congratulations! You have completed COURSE_NAME!', 'CP_TD' ) );
+		$pre_completion_content .= sprintf( '<p>%s</p>', __( 'Your course instructor will now review your work and get back to you with your final grade before issuing you a certificate of completion.', 'CP_TD' ) );
 		$pre_completion_content = CoursePress_Data_Course::get_setting( $course_id, 'pre_completion_content', $pre_completion_content );
 		$pre_completion_content = htmlspecialchars_decode( $pre_completion_content );
 
@@ -1213,7 +1212,10 @@ class CoursePress_Admin_Edit {
 		 * Course Completion Page
 		 */
 		$completion_title = CoursePress_Data_Course::get_setting( $course_id, 'course_completion_title', __( 'Congratulations, You Passed!', 'CP_TD' ) );
-		$completion_content = sprintf( '<p>%s</p>', __( 'Woohoo! You\'ve passed COURSE_NAME!', 'CP_TD' ) );
+		$completion_content = sprintf( '<h3>%s</h3><p>%s</p><p>DOWNLOAD_CERTIFICATE_BUTTON</p>',
+			__( 'Congratulations! You have successfully completed and passed COURSE_NAME!', 'CP_TD' ),
+			__( 'You can download your certificate here.', 'CP_TD' )
+		);
 		$completion_content = CoursePress_Data_Course::get_setting( $course_id, 'course_completion_content', $completion_content );
 		$completion_content = htmlspecialchars_decode( $completion_content );
 
@@ -1273,7 +1275,10 @@ class CoursePress_Admin_Edit {
 
 		// Fail info
 		$failed_title = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_title', __( 'Sorry, you did not pass this course!', 'CP_TD' ) );
-		$failed_content = __( 'I\'m sorry to say you didn\'t pass COURSE_NAME. Better luck next time!', 'CP_TD' );
+		$failed_content = sprintf( '<p>%s</p><p>%s</p>',
+			__( 'Unfortunately, you didn’t pass COURSE_NAME.', 'CP_TD' ),
+			__( 'Better luck next time!', 'CP_TD' )
+		);
 		$failed_content = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_content', $failed_content );
 		$failed_content = htmlspecialchars_decode( $failed_content );
 

@@ -639,7 +639,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 		foreach ( $cart_data as $cart_item_key => $values ) {
 			$_product = $values['data'];
 			if ( $product_id == $_product->id ) {
-				$content = __( 'This course is alredy in the cart.', 'CP_TD' );
+				$content = __( 'This course is already in the cart.', 'CP_TD' );
 				global $woocommerce;
 				$content .= sprintf(
 					' <button data-link="%s" class="course_list_box_item button">%s</button>',

@@ -29,6 +29,11 @@ class CoursePress_Admin_Courses {
 
 		// Print templates at footer
 		add_action( 'admin_footer', array( __CLASS__, 'templates' ) );
+
+		/**
+		 * when delete a course
+		 */
+		add_action( 'delete_post', array( 'CoursePress_Admin_Controller_Course', 'delete_course' ) );
 	}
 
 	public static function _is_course( $post ) {
@@ -274,7 +279,9 @@ class CoursePress_Admin_Courses {
 			}
 
 			$format = '<a href="%s" target="_blank">%s</a>';
-			$unit_overview_url = $course_url . 'units/';
+			$course_url = CoursePress_Data_Course::get_course_url( $course->ID );
+			$unit_url = CoursePress_Core::get_slug( 'units/' );
+			$unit_overview_url = $course_url . $unit_url;
 
 			if ( false === $published ) {
 				if ( $can_update ) {
