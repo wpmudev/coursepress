@@ -813,11 +813,14 @@ if ( ! function_exists( 'is_mac' ) ) {
 
 if ( ! function_exists( 'cp_is_chat_plugin_active' ) ) {
 	function cp_is_chat_plugin_active() {
+		/*
+		 * @note: Keep hidden until otherwise confirmed it is deprecated!!!
 		_doing_it_wrong(
 			'cp_is_chat_plugin_active',
 			'Deprecated CoursePress function (without replacement)',
 			'2.0'
 		);
+		*/
 
 		$plugins = get_option( 'active_plugins' );
 
@@ -839,11 +842,12 @@ if ( ! function_exists( 'cp_is_chat_plugin_active' ) ) {
 
 if ( ! function_exists( 'cp_preg_array_key_exists' ) ) {
 	function cp_preg_array_key_exists( $pattern, $array ) {
+		/*
 		_doing_it_wrong(
 			'cp_preg_array_key_exists',
 			'Deprecated CoursePress function (without replacement)',
 			'2.0'
-		);
+		);*/
 
 		$keys = array_keys( $array );
 
@@ -853,11 +857,12 @@ if ( ! function_exists( 'cp_preg_array_key_exists' ) ) {
 
 if ( ! function_exists( 'cp_is_plugin_network_active' ) ) {
 	function cp_is_plugin_network_active( $plugin_file ) {
+		/*
 		_doing_it_wrong(
 			'cp_is_plugin_network_active',
 			'Deprecated CoursePress function (without replacement)',
 			'2.0'
-		);
+		);*/
 
 		if ( is_multisite() ) {
 			$exists = array_key_exists(

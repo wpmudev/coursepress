@@ -1009,6 +1009,20 @@ class CoursePress_Data_Course {
 				);
 			}
 
+			if ( ! cp_is_chat_plugin_active() ) {
+				$metas = array(
+					'key' => 'module_type',
+					'value' => 'chat',
+					'compare' => '!='
+				);
+
+				if ( ! empty( $post_args['meta_query'] ) ) {
+					array_push( $post_args['meta_query'], $metas );
+				} else {
+					$post_args['meta_query'] = $metas;
+				}
+			}
+
 			$query = new WP_Query( $post_args );
 			self::$current[ $key ] = $query;
 		}
@@ -3040,6 +3054,32 @@ class CoursePress_Data_Course {
 			)
 		);
 
+		/**
+		 * Orderby Parameter
+		 */
+		$selected_order = CoursePress_Core::get_setting( 'course/order_by', 'course_start_date' );
+		switch ( $selected_order ) {
+			case 'post_date':
+				$args['orderby'] = 'date';
+				unset( $args['meta_key'] );
+				break;
+			case 'enrollment_start_date':
+				$args['meta_key'] = 'cp_enrollment_start_date';
+				break;
+			case 'start_date':
+			default:
+				$args['meta_key'] = 'cp_course_start_date';
+				break;
+		}
+		/**
+		 * Order Parameter
+		 */
+		$selected_dir = CoursePress_Core::get_setting( 'course/order_by_direction', 'ASC' );
+		if ( ! preg_match( '/^(ASC|DESC)$/', $selected_dir ) ) {
+			$selected_dir = 'ASC';
+		}
+		$args['order'] = $selected_dir;
+
 		// Get expired courses
 		$expired_courses = self::get_expired_courses();
 		$enrollment_ended_courses = array();
@@ -3069,9 +3109,7 @@ class CoursePress_Data_Course {
 		if ( ! empty( $excludes ) ) {
 			$args['post__not_in'] = $excludes;
 		}
-
 		$query = new WP_Query( $args );
-
 		return $query;
 	}
 

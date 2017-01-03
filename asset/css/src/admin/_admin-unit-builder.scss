@@ -374,6 +374,14 @@
       width: 40px;
     }
 
+	.output-element.module-chat a:before {
+		content: '\f101';
+		font-family: Dashicons;
+		font-size: 36px;
+		line-height: 45px;
+		color: #999;
+	}
+
 
     // MODULES
     h3.module-holder-title {
@@ -737,5 +745,20 @@
 			}
 		}
 	}
+}
+
+.post-type-course {
+  .output-element.module-chat,
+  .group-chat {
+	display: none;
+  }
+  &.cp-with-chat {
+	 .output-element.module-chat {
+	  display: inline-block;
+	 }
+	.group-chat {
+	  display: block;
+	}
+  }
 }
 

@@ -1410,6 +1410,13 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   margin: 0 auto;
   width: 40px;
 }
+.tab-content .unit-builder-content .output-element.module-chat a:before {
+  content: '\f101';
+  font-family: Dashicons;
+  font-size: 36px;
+  line-height: 45px;
+  color: #999;
+}
 .tab-content .unit-builder-content h3.module-holder-title {
   background: #0092CB;
   color: #ffffff;
@@ -1675,6 +1682,17 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
     float: none;
   }
 }
+.post-type-course .output-element.module-chat,
+.post-type-course .group-chat {
+  display: none;
+}
+.post-type-course.cp-with-chat .output-element.module-chat {
+  display: inline-block;
+}
+.post-type-course.cp-with-chat .group-chat {
+  display: block;
+}
+
 .module-zipped a,
 .module-audio a,
 .module-video a,
