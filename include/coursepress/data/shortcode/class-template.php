@@ -1119,17 +1119,17 @@ class CoursePress_Data_Shortcode_Template {
 		extract(
 			shortcode_atts(
 				array(
-					'page' => isset( $_REQUEST['page'] ) ? $_REQUEST['page'] : '',
-					'failed_login_text' => __( 'Invalid login.', 'CP_TD' ),
 					'failed_login_class' => 'red',
-					'logout_url' => '',
-					'signup_tag' => 'h3',
-					'signup_title' => __( 'Signup', 'CP_TD' ),
+					'failed_login_text' => __( 'Invalid login.', 'CP_TD' ),
 					'login_tag' => 'h3',
 					'login_title' => __( 'Login', 'CP_TD' ),
-					'signup_url' => '',
 					'login_url' => '',
+					'logout_url' => '',
+					'page' => isset( $_REQUEST['page'] ) ? $_REQUEST['page'] : '',
 					'redirect_url' => '', // Redirect on successful login or signup.
+					'signup_tag' => 'h3',
+					'signup_title' => __( 'Signup', 'CP_TD' ),
+					'signup_url' => '',
 				),
 				$atts,
 				'course_signup'

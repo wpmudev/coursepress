@@ -90,6 +90,7 @@ class CoursePress_Core {
 			new CoursePress_Admin_Reports;
 			new CoursePress_Admin_Notifications;
 			new CoursePress_Admin_Forums;
+			new CoursePress_Admin_Comments;
 			//new CoursePress_Admin_Certificate;
 			new CoursePress_Admin_Import;
 			new CoursePress_Admin_Export;
