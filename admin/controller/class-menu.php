@@ -40,6 +40,9 @@ class CoursePress_Admin_Controller_Menu {
 		* add links on plugin page.
 		 */
 		$file = CoursePress::get_file();
+		if ( defined( 'COURSEPRESS_UPGRADE' ) && COURSEPRESS_UPGRADE ) {
+			$file = preg_replace( '@/2.0/@', '/', $file );
+		}
 		add_filter( 'plugin_action_links_' . plugin_basename( $file ), array( __CLASS__, 'add_action_links' ), 10, 4 );
 	}
 
