@@ -43,6 +43,8 @@
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
+define( 'COURSEPRESS_UPGRADE', true );
+
 class CoursePressUpgrade {
 	/** @var (boolean) Whether all courses are upgraded to the new version. **/
 	private static $coursepress_is_upgraded = false;
