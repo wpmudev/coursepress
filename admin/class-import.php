@@ -141,6 +141,7 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 		if ( empty( $courses ) ) {
 			return;
 		}
+
 		self::$start_time = microtime( true );
 		$actions = array(
 			'pre_post_update',
@@ -371,6 +372,9 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 					}
 
 					if ( false === self::check_memory() ) { break; }
+
+					// Remove enrollment restrictions
+					remove_all_filters( 'coursepress_enroll_student' );
 
 					// Enroll student
 					CoursePress_Data_Course::enroll_student( $new_student_id, $new_course_id );
