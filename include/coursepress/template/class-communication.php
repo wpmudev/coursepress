@@ -60,11 +60,21 @@ class CoursePress_Template_Communication {
 
 		$course = CoursePress_Helper_Utility::the_course( false );
 		$course_id = $course->ID;
+
+		$discussion_is_allowed = CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'allow_discussion', false ) );
+
+		if ( false == $discussion_is_allowed ) {
+			$content = sprintf( '<p class="message">%s</p>', __( 'Discussions are not available for this course.', 'CP_TD' ) );
+			return $content;
+		}
+
 		$discussions = CoursePress_Data_Discussion::get_discussions( array( $course_id, 'all' ) );
 
 		$content = do_shortcode( '[course_unit_submenu]' );
 
-		$new_discussion_link = CoursePress_Core::get_slug( 'course/', true ) . $course->post_name . '/' . CoursePress_Core::get_slug( 'discussions/' ) . CoursePress_Core::get_slug( 'discussion_new' );
+		$slug_new = CoursePress_Core::get_setting( 'slugs/discussions_new', 'add_new_discussion' );
+
+		$new_discussion_link = CoursePress_Core::get_slug( 'course/', true ) . $course->post_name . '/' . CoursePress_Core::get_slug( 'discussions/' ) . $slug_new;
 		$content .= '
 			<div class="discussion-new">
 				<a href="' . esc_url( $new_discussion_link ) . '" class="button">' . esc_html( 'Start a new discussion', 'CP_TD' ) . '</a>

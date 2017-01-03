@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: CoursePress Pro
- * Version:     2.0.0-BETA3
+ * Version:     2.0.1
  * Description: CoursePress Pro turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also assess student work, sell your courses and much much more.
  * Author:      WPMU DEV
  * Author URI:  http://premium.wpmudev.org
@@ -56,7 +56,7 @@ class CoursePress {
 	 *
 	 * @var string
 	 */
-	public static $version = '2.0.0-BETA3.1.1472556112';
+	public static $version = '2.0.1';
 
 	/**
 	 * Plugin name, this reflects the Pro/Standard version.
@@ -129,7 +129,7 @@ class CoursePress {
 		 * Clean up when this plugin is deactivated.
 		 **/
 		register_deactivation_hook( __FILE__, array( __CLASS__, 'deactivate_coursepress' ) );
-		
+
 		// Define custom theme directory for CoursePress theme
 		self::register_cp_theme_directory();
 	}
@@ -188,8 +188,11 @@ class CoursePress {
 				// Build the path to the class file.
 				array_shift( $class_path ); // Remove the first element (namespace-string).
 				array_unshift( $class_path, $namespace_folder );
-				$class_folder = strtolower(
-					self::$path . implode( DIRECTORY_SEPARATOR, $class_path )
+				$class_folder = self::$path . strtolower(
+					implode( DIRECTORY_SEPARATOR, $class_path )
+				);
+				$dir_folder = dirname( __FILE__ ) . strtolower(
+					DIRECTORY_SEPARATOR . implode( DIRECTORY_SEPARATOR, $class_path )
 				);
 
 				$filename = $class_folder . DIRECTORY_SEPARATOR . $class_file;
@@ -206,6 +209,9 @@ class CoursePress {
 
 				if ( is_readable( $filename ) ) {
 					include_once $filename;
+					return true;
+				} elseif ( is_readable( $dir_folder ) ) {
+					include_once $dir_folder . DIRECTORY_SEPARATOR . $class_file;
 					return true;
 				}
 			} // End of namespace condition.
@@ -250,19 +256,19 @@ class CoursePress {
 		// Reset the schedule during deactivation.
 		wp_clear_scheduled_hook( 'coursepress_schedule-email_task' );
 	}
-	
+
 	/**
-	 * Registering CP Theme 
+	 * Registering CP Theme
 	 *
 	 * @since 2.0.0
 	 **/
-	private static function register_cp_theme_directory () {
+	private static function register_cp_theme_directory() {
 		$theme_directories = apply_filters( 'coursepress_theme_directory_array', array(
 				self::$path . 'themes/'
-			) 
+			)
 		);
-		foreach( $theme_directories as $theme_directory ) {
-			register_theme_directory($theme_directory);
+		foreach ( $theme_directories as $theme_directory ) {
+			register_theme_directory( $theme_directory );
 		}
 	}
 }

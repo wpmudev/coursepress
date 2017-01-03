@@ -5,10 +5,28 @@ Build Time:  2016-04-07T13:37:59.644Z
 CHANGELOG
 =================================================
 
+= 2.0.2 =
+-------------------------------------------------
+* Fixed a bug with class autoloder function.
+
 = 2.0.0 =
 -------------------------------------------------
-* ...
-
+* Overall optimisation through whole new codebase.
+* Added 'Focus' course view mode where modules will be viewed individually.
+* Added per course completion certificate option.
+* Added course completion pages (pre-completion, successful completion, failed).
+* Added course notification when the course starts.
+* Added unit notification when a unit opens.
+* Added instructor feedback notification.
+* Added course facilitators.
+* Added course import/exports.
+* Added overview reports download option.
+* Added enhanced units settings
+* Added quiz, form, selectable, and discussion modules.
+* Improved assessments page.
+* Improved discussion management.
+* Improved course/students lists.
+* Removed section break module.
 * Delete certificate when deleting student.
 
 -------------------------------------------------

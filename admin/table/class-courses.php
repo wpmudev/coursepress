@@ -109,7 +109,10 @@ class CoursePress_Admin_Table_Courses extends WP_Posts_List_Table {
 						'display' => 'all_answered',
 					)
 			);
-			$actions['workbook'] = sprintf( '<a href="%s">%s</a>', $workbook_url, __( 'Workbook', 'CP_TD' ) );
+			$can_update = CoursePress_Data_Capabilities::can_update_course( $item->ID );
+			if ( $can_update ) {
+				$actions['workbook'] = sprintf( '<a href="%s">%s</a>', $workbook_url, __( 'Workbook', 'CP_TD' ) );
+			}
 		}
 
 		return $this->row_actions( $actions );

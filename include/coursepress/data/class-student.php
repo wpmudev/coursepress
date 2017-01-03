@@ -379,12 +379,28 @@ class CoursePress_Data_Student {
 				if ( 0 > $correct ) {
 					$correct = 0;
 				}
-				$grade = (int) ( $correct / $total * 100 );
+				$grade = 0;
+
+				if ( $correct > 0 && $total > 0 ) {
+					$grade = (int) ( $correct / $total * 100 );
+				}
 				break;
 
 			case 'input-select':
 			case 'input-radio':
-				if ( (int) $response == (int) $attributes['answers_selected'] ) {
+				$answers_selected = $attributes['answers_selected'];
+				// Double check answer
+				if ( isset( $attributes['checked_answer'] ) ) {
+					$answers = $attributes['answers'];
+					foreach ( $answers as $k => $v ) {
+						if ( $answers_selected === $v ) {
+							$answers_selected = $k;
+						}
+					}
+				}
+
+				//if ( $response === $answers_selected ) {
+				if ( (int) $response == (int) $answers_selected ) {
 					$grade = 100;
 				} else {
 					$grade = 0;

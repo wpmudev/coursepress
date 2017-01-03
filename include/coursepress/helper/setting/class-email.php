@@ -279,14 +279,14 @@ class CoursePress_Helper_Setting_Email {
 			sprintf(
 				__( 'Hi %1$s %2$s,
 
-Congratulations! We have set up your account at %3$s!
-You can already access your account here %4$s
+Welcome to %3$s!
 
-Get started by exploring our courses:
-%5$s
+You can access your profile here: %4$s
 
-best wishes,
-%6$s Team', 'CP_TD' ),
+And get started exploring our courses here: %5$s
+
+Best wishes,
+The %6$s Team', 'CP_TD' ),
 				'STUDENT_FIRST_NAME',
 				'STUDENT_LAST_NAME',
 				'BLOG_NAME',
@@ -303,20 +303,20 @@ best wishes,
 			sprintf(
 				__( 'Hi %1$s %2$s,
 
-Congratulations! You have enrolled in course "%3$s" successfully!
+Congratulations! You have enrolled in "%3$s”.
 
-You may check all courses you are enrolled in here: %4$s.
+You can review the courses you’re enrolled in here: %4$s.
 
-Or you can explore other courses in your %5$s
+And explore other courses available to you here: %5$s
 
-best wishes,
-%6$s Team', 'CP_TD' ),
+Best wishes,
+The %6$s Team', 'CP_TD' ),
 				'STUDENT_FIRST_NAME',
 				'STUDENT_LAST_NAME',
 				'<a href="COURSE_ADDRESS">COURSE_TITLE</a>',
 				'<a href="STUDENT_DASHBOARD">' . __( 'Dashboard', 'CP_TD' ) . '</a>',
 				'<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>',
-				'BLOG_NAME'
+				'WEBSITE_ADDRESS'
 			)
 		);
 	}
@@ -327,17 +327,18 @@ best wishes,
 			sprintf(
 				__( 'Hi %1$s %2$s,
 
-we would like to invite you to participate in the course: "%3$s"
+You’ve invited to enroll in: "%3$s"
 
-What its all about:
+Here’s some more information about the course:
+
 %4$s
 
-Check this page for more info on the course: %5$s
+Check out the course page for a detailed overview: %5$s
 
-If you have any question feel free to contact us.
+If you have any questions feel free to get in touch!
 
-best wishes,
-%6$s Team', 'CP_TD' ),
+Best wishes,
+The %6$s Team', 'CP_TD' ),
 				'STUDENT_FIRST_NAME',
 				'STUDENT_LAST_NAME',
 				'COURSE_NAME',
@@ -354,19 +355,22 @@ best wishes,
 			sprintf(
 				__( 'Hi %1$s %2$s,
 
-we would like to invite you to participate in the course: "%3$s"
+You’ve invited to enroll in: "%3$s"
 
-Since the course is only for selected ones, it is passcode protected. Here is the passcode for you: %7$s
+This course is only available to select participants who have a passcode.
 
-What its all about:
+Your passcode is: %7$s
+
+Here’s some more information about the course:
+
 %4$s
 
-Check this page for more info on the course: %5$s
+Check out the course page for a detailed overview: %5$s
 
-If you have any question feel free to contact us.
+If you have any questions feel free to get in touch!
 
-best wishes,
-%6$s Team', 'CP_TD' ),
+Best wishes,
+The %6$s Team', 'CP_TD' ),
 				'STUDENT_FIRST_NAME',
 				'STUDENT_LAST_NAME',
 				'COURSE_NAME',
@@ -393,7 +397,9 @@ Click on the link below to confirm:
 If you haven\'t yet got a username you will need to create one.
 
 %5$s
-	', 'CP_TD' ),
+
+Best wishes,
+The %5$s Team', 'CP_TD' ),
 				'INSTRUCTOR_FIRST_NAME',
 				'INSTRUCTOR_LAST_NAME',
 				'COURSE_NAME',
@@ -409,16 +415,18 @@ If you haven\'t yet got a username you will need to create one.
 			sprintf(
 				__('Hi %1$s %2$s,
 
-Congratulations! You have been invited to become a facilitator for the course: %3$s
+Congratulations! You have been invited to join %3$s as a facilitator.
 
 Click on the link below to confirm:
 
 %4$s
 
-If you haven\'t yet got a username you will need to create one.
+If you haven\'t yet received a username you will need to create one. You can do that here:
 
 %5$s
-	', 'CP_TD' ),
+
+Best wishes,
+The %5$s Team', 'CP_TD' ),
 				'INSTRUCTOR_FIRST_NAME',
 				'INSTRUCTOR_LAST_NAME',
 				'COURSE_NAME',
@@ -455,18 +463,20 @@ best wishes,
 		return CoursePress_Core::get_setting(
 			'email/course_start/content',
 			sprintf(
-				__( 'Your %s have started.
+				__( 'Hi %1$s,
 
-You can start reading the material by clicking the link below.
+Your course %2$s has begun!
 
-%s
+You can review course material here::
 
-%s
-					'
-				),
+%3$s
+
+Best wishes,
+The %4$s Team', 'CP_TD' ),
+				'FIRST_NAME',
 				'COURSE_NAME',
 				'<a href="COURSE_ADDRESS">COURSE_ADDRESS</a>',
-				'BLOG_NAME'
+				'WEBSITE_ADDRESS'
 			)
 		);
 	}
@@ -475,16 +485,15 @@ You can start reading the material by clicking the link below.
 		return CoursePress_Core::get_setting(
 			'email/discussion_notification/content',
 			sprintf(
-				__( 'A new comment is added %s.
+				__( 'A new comment has been added to %1$s:
 
-%s
+%2$s
 
-%s
-					'
-				),
+Best wishes,
+The %3$s Team', 'CP_TD' ),
 				'COURSE_NAME',
 				'COMMENT_MESSAGE',
-				'BLOG_NAME'
+				'WEBSITE_ADDRESS'
 			)
 		);
 	}
@@ -493,18 +502,20 @@ You can start reading the material by clicking the link below.
 		return CoursePress_Core::get_setting(
 			'email/unit_started/content',
 			sprintf(
-				__( 'Howdy %s,
+				__( 'Howdy %1$s,
 
-<strong>%s</strong> of %s is now available.
+%2$s of %3$s is now available.
 
 You can continue your learning by clicking the link below:
-<a href="%s">%s</a>
-				'),
+%4$s
+
+Best wishes,
+The %5$s Team', 'CP_TD' ),
 				'STUDENT_FIRST_NAME',
 				'UNIT_TITLE',
 				'COURSE_NAME',
 				'UNIT_ADDRESS',
-				'UNIT_ADDRESS'
+				'WEBSITE_ADDRESS'
 			)
 		);
 	}

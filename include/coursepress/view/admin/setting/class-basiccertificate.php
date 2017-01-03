@@ -285,17 +285,20 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 		$msg = __(
 			'Hi %1$s,
 
-			Congratulations! You have completed the course: %2$s
+Congratulations! You have completed the course: %2$s
 
-			Please <a href="%3$s">download your certificate of completion</a>.'
-			, 'CP_TD'
-		);
+Please %3$sdownload your certificate of completion%4$s.
+
+Best wishes,
+The %5$s Team', 'CP_TD');
 
 		$default_basic_certificate_email = sprintf(
 			$msg,
 			'FIRST_NAME',
 			'COURSE_NAME',
-			'CERTIFICATE_URL'
+			'<a href="CERTIFICATE_URL">',
+			'</a>',
+			'WEBSITE_ADDRESS'
 		);
 
 		return get_option(

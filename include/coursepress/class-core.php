@@ -94,7 +94,7 @@ class CoursePress_Core {
 			new CoursePress_Admin_Import;
 			new CoursePress_Admin_Export;
 			new CoursePress_Admin_Settings;
-		//	CoursePress_View_Admin_Setting::init();
+			//	CoursePress_View_Admin_Setting::init();
 		} else {
 			// Now we're in the front.
 			CoursePress_View_Front_General::init();
@@ -616,5 +616,4 @@ class CoursePress_Core {
 		);
 		exit();
 	}
-
 }
