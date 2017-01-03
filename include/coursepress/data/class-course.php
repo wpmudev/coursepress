@@ -3366,7 +3366,6 @@ class CoursePress_Data_Course {
 			delete_post_meta( $post->ID, self::$post_count_title_name );
 			$post_title = $post->post_title;
 		}
-
 		$post_type = self::get_post_type_name();
 		self::save_course_number( $post_id, $post_type, array( $post_id ) );
 	}
