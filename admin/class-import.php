@@ -46,13 +46,20 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 					$import_id = $import['id'];
 
 					$filename = $import['file'];
-					$courses = file_get_contents( $filename );
+					$file_content = file_get_contents( $filename );
 
+					$courses = array();
 					if ( preg_match( '%.json%', $filename ) ) {
 						// Import file is json format!
-						$courses = json_decode( $courses );
+						$courses = json_decode( $file_content );
 					}
-
+					/**
+					 * Check $courses
+					 */
+					if ( empty( $courses ) ) {
+						add_action( 'admin_notices', array( __CLASS__, 'import_failed_wrong_or_empty_file' ) );
+						return;
+					}
 					self::course_importer( $courses, $import_id, $is_replace, $with_students, $with_comments );
 				}
 			} else {
@@ -80,6 +87,15 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 
 		// Notify user that import has completed
 		add_action( 'admin_notices', array( __CLASS__, 'import_completed' ) );
+	}
+
+	/**
+	 * Print fail import notice
+	 **/
+	public static function import_failed_wrong_or_empty_file() {
+		printf( '<div class="notice notice-error"><p>%s</p></div>',
+			__( 'Courses import fail. Wrong or empty file.', 'CP_TD' )
+		);
 	}
 
 	/**
@@ -122,6 +138,10 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 	 * @param (bool) $with_comments         Whether to import comments of the course
 	 **/
 	public static function course_importer( $courses, $import_id, $replace, $with_students, $with_comments ) {
+		if ( empty( $courses ) ) {
+			return;
+		}
+
 		self::$start_time = microtime( true );
 		$actions = array(
 			'pre_post_update',

@@ -427,15 +427,15 @@ class CoursePress_Data_Shortcode_Course {
 		$course = get_post( $course_id );
 
 		$content = '<div class="course-summary course-summary-' . $course_id . ' ' . $class . '">';
-		
-		if ( $course && is_object($course) ) {
+
+		if ( $course && is_object( $course ) ) {
 			if ( is_numeric( $length ) ) {
 				$content .= CoursePress_Helper_Utility::truncate_html( do_shortcode( $course->post_excerpt ), $length );
 			} else {
 				$content .= do_shortcode( $course->post_excerpt );
 			}
 		}
-		
+
 		$content .= '</div>';
 
 		// Return the html in the buffer.
@@ -877,15 +877,15 @@ class CoursePress_Data_Shortcode_Course {
 	public static function course_enrollment_type( $atts ) {
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
-			'label' => __( 'Who can Enroll: ', 'CP_TD' ),
-			'label_tag' => 'strong',
-			'label_delimeter' => ':',
-			'manual_text' => __( 'Students are added by instructors.', 'CP_TD' ),
-			'prerequisite_text' => __( 'Students need to complete %s first.', 'CP_TD' ),
-			'passcode_text' => __( 'A passcode is required to enroll.', 'CP_TD' ),
 			'anyone_text' => __( 'Anyone', 'CP_TD' ),
-			'registered_text' => __( 'Registered users', 'CP_TD' ),
 			'class' => '',
+			'label_delimeter' => ':',
+			'label_tag' => 'strong',
+			'label' => __( 'Who can Enroll: ', 'CP_TD' ),
+			'manual_text' => __( 'Students are added by instructors.', 'CP_TD' ),
+			'passcode_text' => __( 'A passcode is required to enroll.', 'CP_TD' ),
+			'prerequisite_text' => __( 'Students need to complete %s first.', 'CP_TD' ),
+			'registered_text' => __( 'Registered users.', 'CP_TD' ),
 		), $atts, 'course_enrollment_type' ) );
 
 		$course_id = (int) $course_id;
@@ -967,14 +967,14 @@ class CoursePress_Data_Shortcode_Course {
 	public static function course_class_size( $atts ) {
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
-			'show_no_limit' => 'no',
-			'show_remaining' => 'yes',
-			'label' => __( 'Class Size: ', 'CP_TD' ),
-			'label_tag' => 'strong',
+			'class' => '',
 			'label_delimeter' => ':',
+			'label_tag' => 'strong',
+			'label' => __( 'Class Size: ', 'CP_TD' ),
 			'no_limit_text' => __( 'Unlimited', 'CP_TD' ),
 			'remaining_text' => __( '(%d places left)', 'CP_TD' ),
-			'class' => '',
+			'show_no_limit' => 'no',
+			'show_remaining' => 'yes',
 		), $atts, 'course_class_size' ) );
 
 		$course_id = (int) $course_id;
@@ -1035,12 +1035,12 @@ class CoursePress_Data_Shortcode_Course {
 		global $coursepress;
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
-			'label' => __( 'Price:&nbsp;', 'CP_TD' ),
-			'label_tag' => 'strong',
-			'label_delimeter' => ': ',
-			'no_cost_text' => __( 'FREE', 'CP_TD' ),
-			'show_icon' => 'false',
 			'class' => '',
+			'label_delimeter' => ': ',
+			'label_tag' => 'strong',
+			'label' => __( 'Price:&nbsp;', 'CP_TD' ),
+			'no_cost_text' => __( 'FREE', 'CP_TD' ),
+			'show_icon' => 'no',
 		), $atts, 'course_cost' ) );
 
 		$course_id = (int) $course_id;
@@ -1068,19 +1068,6 @@ class CoursePress_Data_Shortcode_Course {
 			}
 		}
 
-		// if ( $is_paid && CoursePress::instance()->marketpress_active ) {
-		//
-		// $mp_product = get_post_meta( $course_id, 'marketpress_product', true );
-		//
-		// $content .= do_shortcode( '[mp_product_price product_id="' . $mp_product . '" label=""]' );
-		// } else {
-		// if ( $show_icon ) {
-		// $content .= '<span class="mp_product_price">' . $no_cost_text . '</span>';
-		// } else {
-		// $content .= $no_cost_text;
-		// }
-		// }
-		// }
 		if ( ! empty( $content ) ) {
 			$display_content = $content;
 
@@ -1219,28 +1206,33 @@ class CoursePress_Data_Shortcode_Course {
 
 		$image_src = CoursePress_Data_Course::get_setting( $course_id, 'listing_image', '' );
 
-		if ( ! empty( $image_src ) ) {
-			list( $img_w, $img_h ) = getimagesize( $image_src );
-
-			// Note: by using both it usually reverts to the width.
-			$width = 'default' == $width ? $img_w : $width;
-			$height = 'default' == $height ? $img_h : $height;
-
-			/**
-			 * schema.org
-			 */
-			$schema = apply_filters( 'coursepress_schema', '', 'image' );
-
-			$content = '<div class="course-list-image course-list-image-' . $course_id . ' ' . $class . '">';
-
-			$content .= '<img width="' . esc_attr( $width ) . '" height="' . esc_attr( $height ) . '" src="' . esc_url( $image_src ) . '" alt="' . esc_attr( $course->post_title ) . '" title="' . esc_attr( $course->post_title ) . '"'.$schema.' />';
-
-			$content .= '</div>';
-
-			return $content;
+		if ( empty( $image_src ) ) {
+			return '';
 		}
 
-		return '';
+		list( $img_w, $img_h ) = getimagesize( $image_src );
+
+		// Note: by using both it usually reverts to the width.
+		$width = 'default' == $width ? $img_w : $width;
+		$height = 'default' == $height ? $img_h : $height;
+		/**
+		 * schema.org
+		 */
+		$schema = apply_filters( 'coursepress_schema', '', 'image' );
+		/**
+		 * wrapper start
+		 */
+		$content = sprintf(
+			'<div class="course-list-image course-list-image-%d %s">',
+			$course_id,
+			esc_attr( $class )
+		);
+		$content .= '<img width="' . esc_attr( $width ) . '" height="' . esc_attr( $height ) . '" src="' . esc_url( $image_src ) . '" alt="' . esc_attr( $course->post_title ) . '" title="' . esc_attr( $course->post_title ) . '"'.$schema.' />';
+		/**
+		 * wrapper end
+		 */
+		$content .= '</div>';
+		return $content;
 	}
 
 	/**
@@ -1351,13 +1343,13 @@ class CoursePress_Data_Shortcode_Course {
 	public static function course_media( $atts ) {
 		extract( shortcode_atts( array(
 			'course_id' => CoursePress_Helper_Utility::the_course( true ),
-			'type' => '', // Default, video, image.
-			'priority' => '', // Gives priority to video (or image).
-			'list_page' => 'no',
 			'class' => '',
-			'wrapper' => '',
 			'height' => CoursePress_Core::get_setting( 'course/image_height' ),
+			'list_page' => 'no',
+			'priority' => '', // Gives priority to video (or image).
+			'type' => '', // Default, video, image.
 			'width' => CoursePress_Core::get_setting( 'course/image_width' ),
+			'wrapper' => '',
 		), $atts, 'course_media' ) );
 
 		$course_id = (int) $course_id;

@@ -96,7 +96,7 @@ class CoursePress_Template_Calendar {
 		$calendar = '<div class="course-calendar" data-courseid="' . $this->course_id . '">';
 		$calendar .= ! empty( $this->previous_month ) ? '<a class="pre-month" data-date="' . $this->previous_month . '">' . $pre . '</a>' : '<a class="pre-month" data-date="empty">' . $pre . '</a>';
 		$calendar .= ! empty( $this->next_month ) ? '<a class="next-month" data-date="' . $this->next_month . '">' . $next . '</a>' : '<a class="next-month" data-date="empty">' . $next . '</a>';
-		$calendar .= sprintf( '<table class="course-calendar-body %s">', $this->date_indicator );
+		$calendar .= sprintf( '<table class="course-calendar-body %s">', esc_attr( $this->date_indicator ) );
 		$calendar .= '<caption>';
 		$calendar .= "$this->month_name $this->year";
 		$calendar .= '</caption>';
