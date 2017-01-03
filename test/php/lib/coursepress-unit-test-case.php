@@ -50,5 +50,16 @@ class CoursePress_UnitTestCase extends WP_UnitTestCase {
 			$this->assertArrayHasKey( $value, $assert );
 		}
 	}
+
+	protected function get_wrong_values() {
+		return array(
+			'',
+			0,
+			array(),
+			'foo',
+			new stdClass(),
+			null,
+		);
+	}
 }
 

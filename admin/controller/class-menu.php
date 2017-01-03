@@ -470,4 +470,23 @@ foreach ( $allowed_statuses as $status => $label ) {
 		}
 		update_user_option( $user_id, $option_name, 'hide' );
 	}
+
+	/**
+	 * Redirect on admin pages
+	 *
+	 * @since 2.0.1
+	 * @access protected
+	 *
+	 */
+	protected static function filter_redirect() {
+		if ( ! isset( $_REQUEST['course_id'] ) ) {
+			return;
+		}
+		$course_id = $_POST['course_id'];
+		if ( CoursePress_Data_Course::is_course( $course_id ) ) {
+			$url = 0 == $course_id ? remove_query_arg( 'course_id' ) : add_query_arg( 'course_id', $course_id );
+			wp_safe_redirect( $url );
+			exit;
+		}
+	}
 }

@@ -70,6 +70,7 @@ class CoursePress_Hooks {
 
 		// Admin class
 		add_filter( 'admin_body_class', array( __CLASS__, 'admin_classes' ) );
+		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'remove_css_overrides' ), 99 );
 	}
 
 	/**
@@ -106,5 +107,14 @@ class CoursePress_Hooks {
 		}
 
 		return $class;
+	}
+
+	public static function remove_css_overrides() {
+		global $pagenow, $typenow;
+
+		if ( 'course' === $typenow ) {
+			wp_dequeue_style( 'jquery-ui-datepicker' );
+			wp_dequeue_style( 'jquery-smoothness' );
+		}
 	}
 }

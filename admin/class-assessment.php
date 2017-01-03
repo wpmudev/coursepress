@@ -946,16 +946,17 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 									switch ( $module_type ) {
 										case 'input-checkbox': case 'input-select': case 'input-radio':
 											$answers = $attributes['answers'];
-											$selected = (array) $attributes['answers_selected'];
+											$selected = $attributes['answers_selected'];
 
 											$page_content .= '<ul class="cp-answers">';
 
 											foreach ( $answers as $key => $answer ) {
-												$the_answer = in_array( $key, $selected );
-												$student_answer = is_array( $response ) ? in_array( $key, $response ) : $response == $key;
-	
-												if ( 'input-radio' === $module_type ) {
-													$student_answer = $response == $key;
+												if ( 'input-checkbox' !== $module_type ) {
+													$the_answer = $selected === $key || $selected === $answer;
+													$student_answer = $response == $key || $response === $answer;
+												} else {
+													$the_answer = in_array( $key, $selected );
+													$student_answer = is_array( $response ) ? in_array( $key, $response ) : $response == $key;
 												}
 
 												if ( $student_answer ) {
