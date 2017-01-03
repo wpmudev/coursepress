@@ -74,10 +74,10 @@ class CoursePress_Widget_Calendar extends WP_Widget {
 		</p>
 
 		<p><label for="<?php echo $this->get_field_id( 'pre_text' ); ?>"><?php _e( 'Previous Month Text:', 'CP_TD' ); ?>:
-				<input class="widefat" id="<?php echo $this->get_field_id( 'pre_text' ); ?>" name="<?php echo $this->get_field_name( 'pre_text' ); ?>" type="text" value="<?php echo( ! isset( $pre_text ) ? __( '« Previous', 'CP_TD' ) : esc_attr( $pre_text ) ); ?>"/></label>
+				<input class="widefat" id="<?php echo $this->get_field_id( 'pre_text' ); ?>" name="<?php echo $this->get_field_name( 'pre_text' ); ?>" type="text" value="<?php echo( ! isset( $pre_text ) ? __( '&laquo; Previous', 'CP_TD' ) : esc_attr( $pre_text ) ); ?>"/></label>
 		</p>
 		<p><label for="<?php echo $this->get_field_id( 'next_text' ); ?>"><?php _e( 'Next Month Text:', 'CP_TD' ); ?>:
-				<input class="widefat" id="<?php echo $this->get_field_id( 'next_text' ); ?>" name="<?php echo $this->get_field_name( 'next_text' ); ?>" type="text" value="<?php echo( ! isset( $next_text ) ? __( 'Next »', 'CP_TD' ) : esc_attr( $next_text ) ); ?>"/></label>
+				<input class="widefat" id="<?php echo $this->get_field_id( 'next_text' ); ?>" name="<?php echo $this->get_field_name( 'next_text' ); ?>" type="text" value="<?php echo( ! isset( $next_text ) ? __( 'Next &raquo;', 'CP_TD' ) : esc_attr( $next_text ) ); ?>"/></label>
 		</p>
 
 		<p><label for="<?php echo $this->get_field_id( 'indicator' ); ?>"><?php _e( 'Dates indicators', 'CP_TD' ); ?><br/>
