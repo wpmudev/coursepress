@@ -1500,6 +1500,10 @@ class CoursePress_Data_Capabilities {
 		// refer to https://codex.wordpress.org/Roles_and_Capabilities#upload_files
 		if ( $user_obj->roles && ( in_array( 'contributor', $user_obj->roles ) || in_array( 'subscriber', $user_obj->roles ) ) ) {
 			$user_obj->add_cap( 'upload_files' );
+			/**
+			 * WooCommerce integration
+			 */
+			$user_obj->add_cap( 'view_admin_dashboard' );
 		}
 
 		foreach ( $instructor_capabilities as $capability_name => $capability_status ) {
@@ -1675,6 +1679,10 @@ class CoursePress_Data_Capabilities {
 		// refer to https://codex.wordpress.org/Roles_and_Capabilities#upload_files
 		if ( $user_obj->roles && ( in_array( 'contributor', $user_obj->roles ) || in_array( 'subscriber', $user_obj->roles ) ) ) {
 			$user_obj->add_cap( 'upload_files' );
+			/**
+			 * WooCommerce integration
+			 */
+			$user_obj->add_cap( 'view_admin_dashboard' );
 		}
 
 		foreach ( $instructor_capabilities as $capability_name => $capability_status ) {
