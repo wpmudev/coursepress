@@ -8,6 +8,7 @@ CHANGELOG
 = 2.0.2 =
 -------------------------------------------------
 * Fixed a bug with class autoloder function.
+* Handle situation when student try to add comment to non existing module.
 * Fixed "Domain Name" for proper translation.
 * Added check to import json file.
 
@@ -22,8 +23,6 @@ CHANGELOG
 * Fixed: Units overview link
 * Updated WPMU dashboard
 * Updated included Market Press version 3.1.2
-
->>>>>>> coursepress/2.0.2-dev
 
 = 2.0.0 =
 -------------------------------------------------
