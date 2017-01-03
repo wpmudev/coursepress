@@ -206,7 +206,8 @@ class CoursePress_Helper_JavaScript {
 		}
 
 		/** COURSE LIST */
-		if ( 'coursepress_course' === $_GET['page'] && 'edit.php' == $pagenow ) {
+		$screen = get_current_screen();
+		if ( 'coursepress_course' === $_GET['page'] && 'edit.php' == $pagenow && 'edit-course' == $screen->id ) {
 			$script = CoursePress::$url . 'asset/js/coursepress-courselist.js';
 			wp_enqueue_script( 'coursepress_course_list', $script, array(
 				'jquery-ui-accordion',
