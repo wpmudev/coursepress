@@ -2177,8 +2177,17 @@ class CoursePress_Data_Course {
 
 	public static function get_course( $course_id = 0 ) {
 		$course_id = ! $course_id ? get_the_ID() : $course_id;
+		/**
+		 * sanitize course_id
+		 */
+		if ( empty( $course_id ) ) {
+			return false;
+		}
 		$course = get_post( $course_id );
-		if ( ! is_a( $course, 'WP_Post' ) ) {
+		/**
+		 * sanitize course class
+		 */
+		if ( ! is_a( $course, 'WP_Post' ) || 0 == $course->ID ) {
 			return false;
 		}
 		// Set duration
@@ -2216,6 +2225,13 @@ class CoursePress_Data_Course {
 	 *
 	 */
 	static public function duplicate_course( $data ) {
+		$json_data = array(
+			'course_id' => null,
+			'data' => null,
+			'nonce' => null,
+			'success' => false,
+			'action' => 'duplicate_course',
+		);
 		/**
 		 * sanitize data object
 		 */
@@ -2225,7 +2241,13 @@ class CoursePress_Data_Course {
 			|| ! is_object( $data->data )
 			|| ! isset( $data->data->course_id )
 		) {
-			return $data;
+			return $json_data;
+		}
+		/**
+		 * Sanitize course_id
+		 */
+		if ( ! self::is_course( $data->data->course_id ) ) {
+			return $json_data;
 		}
 
 		$course_id = (int) $data->data->course_id;
@@ -2233,7 +2255,7 @@ class CoursePress_Data_Course {
 		$the_course = get_post( $course_id );
 
 		if ( empty( $the_course ) ) {
-			return array();
+			return $json_data;
 		}
 
 		$the_course = CoursePress_Helper_Utility::object_to_array( $the_course );
@@ -2426,15 +2448,18 @@ class CoursePress_Data_Course {
 	 **/
 	public static function get_course_url( $course_id = 0 ) {
 		$url = '';
-
+		/**
+		 * Sanitize course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
+			return $url;
+		}
 		if ( ! empty( $course_id ) ) {
 			$course_slug = get_post_field( 'post_name', $course_id );
 			$course_url = CoursePress_Core::get_slug( 'course/', true );
 			$course_url .= trailingslashit( $course_slug );
-
 			$url = $course_url;
 		}
-
 		return $url;
 	}
 
@@ -2453,7 +2478,6 @@ class CoursePress_Data_Course {
 	 **/
 	public static function time_now() {
 		$now = current_time( 'timestamp', 1 );
-
 		return $now;
 	}
 
@@ -2467,11 +2491,10 @@ class CoursePress_Data_Course {
 	 **/
 	public static function strtotime( $date_string ) {
 		$timestamp = 0;
-
 		if ( is_numeric( $date_string ) ) {
 			// Apparently we got a timestamp already. Simply return it.
 			$timestamp = (int) $date_string;
-		} elseif ( $date_string ) {
+		} elseif ( is_string( $date_string ) && ! empty( $date_string ) ) {
 			/*
 			 * Convert the date-string into a timestamp; PHP assumes that the
 			 * date string is in servers default timezone.
@@ -2481,7 +2504,7 @@ class CoursePress_Data_Course {
 			$timestamp = strtotime( $date_string . ' UTC' );
 		}
 
-		return $timestamp;
+		return (int) $timestamp;
 	}
 
 	/**
@@ -2497,8 +2520,29 @@ class CoursePress_Data_Course {
 			$student_id = get_current_user_id();
 		}
 
+		/**
+		 * Check student id
+		 */
+		if ( empty( $student_id ) ) {
+			return false;
+		}
+		if ( is_object( $student_id ) ) {
+			return false;
+		}
+		$student_id = intval( $student_id );
+		if ( 1 > $student_id ) {
+			return false;
+		}
+
 		$course_id = ! $course_id ? get_the_ID() : $course_id;
 		$course = get_post( $course_id );
+
+		/**
+		 * sanitize course class
+		 */
+		if ( ! is_a( $course, 'WP_Post' ) ) {
+			return false;
+		}
 
 		$now = self::time_now();
 		$is_open_ended = self::get_setting( $course_id, 'course_open_ended' );
@@ -2625,7 +2669,12 @@ class CoursePress_Data_Course {
 		if ( empty( $student_id ) ) {
 			$student_id = get_current_user_id();
 		}
-
+		/**
+		 * Sanitize $course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
+			return '';
+		}
 		$error_message = '';
 		$date_format = get_option( 'date_format' );
 		$can_update_course = CoursePress_Data_Capabilities::can_update_course( $course_id );
@@ -2790,7 +2839,7 @@ class CoursePress_Data_Course {
 	 * Helper function to get IDs
 	 **/
 	public static function get_course_id( $course ) {
-		if ( is_object( $course ) ) {
+		if ( is_a( $course, 'WP_Post' ) ) {
 			return $course->ID;
 		}
 		return false;
@@ -2811,8 +2860,10 @@ class CoursePress_Data_Course {
 			'suppress_filters' => true,
 			'ignore_sticky_posts' => true,
 		);
-		if ( ! empty( $ids ) ) {
+		if ( is_array( $ids ) && ! empty( $ids ) ) {
 			$args['post__in'] = $ids;
+		} else {
+			return array();
 		}
 		$query = new WP_Query( $args );
 		return $query->posts;
@@ -2852,10 +2903,15 @@ class CoursePress_Data_Course {
 	}
 
 	public static function course_class( $course_id, $user_id = 0 ) {
+		/**
+		 * Sanitize course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
+			return array();
+		}
 		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
-
 		$is_course_available = self::is_course_available( $course_id );
 		$date_format = get_option( 'date_format' );
 		$now = self::time_now();
@@ -2926,6 +2982,12 @@ class CoursePress_Data_Course {
 	 * @return array Array of substitutions.
 	 */
 	public static function get_vars( $course_id ) {
+		/**
+		 * Sanitize course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
+			return array();
+		}
 		$vars = array(
 			'COURSE_NAME' => html_entity_decode( get_the_title( $course_id ) ),
 			'UNIT_LIST' => self::get_units_html_list( $course_id ),
@@ -2943,16 +3005,19 @@ class CoursePress_Data_Course {
 	 */
 	public static function get_units_html_list( $course_id ) {
 		$units_list = '';
+		/**
+		 * Sanitize course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
+			return $units_list;
+		}
 		$units = CoursePress_Data_Course::get_units( $course_id );
-
 		if ( $units ) {
 			$list = array();
 			$previous_unit_id = null;
-
 			foreach ( $units as $unit ) {
 				$is_unit_available = CoursePress_Data_Unit::is_unit_available( $course_id, $unit->ID, $previous_unit_id );
 				$previous_unit_id = $unit->ID;
-
 				if ( $is_unit_available ) {
 					$list[] = sprintf( '<li>%s</li>', $unit->post_title );
 				}
@@ -2968,6 +3033,13 @@ class CoursePress_Data_Course {
 	 **/
 	public static function get_expired_courses( $refresh = false ) {
 		global $wpdb;
+
+		/**
+		 * sanitize $refresh
+		 */
+		if ( ! is_bool( $refresh ) ) {
+			$refresh = cp_is_true( $refresh );
+		}
 
 		$course_ids = get_option( 'cp_expired_courses', false );
 		$last_update = get_option( 'cp_expired_date', false );
@@ -3003,6 +3075,13 @@ class CoursePress_Data_Course {
 	public static function get_enrollment_ended_courses( $refresh = false ) {
 		global $wpdb;
 
+		/**
+		 * sanitize $refresh
+		 */
+		if ( ! is_bool( $refresh ) ) {
+			$refresh = cp_is_true( $refresh );
+		}
+
 		$course_ids = get_option( 'cp_enrollment_ended_courses', false );
 		$last_update = get_option( 'cp_enrollment_ended_date', false );
 		$post_type = self::get_post_type_name();
@@ -3032,7 +3111,10 @@ class CoursePress_Data_Course {
 	}
 
 	public static function return_id( $a ) {
-		return $a['post_id'];
+		if ( is_array( $a ) && isset( $a['post_id'] ) ) {
+			return $a['post_id'];
+		}
+		return 0;
 	}
 
 	public static function current_and_upcoming_courses( $args = array(), $student_id = 0 ) {
@@ -3085,7 +3167,12 @@ class CoursePress_Data_Course {
 		$enrollment_ended_courses = array();
 
 		// Get enrollment ended courses for non-admin
-		$is_admin = user_can( $student_id, 'manage_options' );
+		$is_admin = false;
+		if ( is_numeric( $student_id ) || is_string( $student_id ) ) {
+			$is_admin = user_can( $student_id, 'manage_options' );
+		} else {
+			$student_id = 0;
+		}
 
 		if ( false === $is_admin ) {
 			$enrollment_ended_courses = self::get_enrollment_ended_courses();
@@ -3115,11 +3202,15 @@ class CoursePress_Data_Course {
 
 	public static function sort_courses( $courses ) {
 		$ordered_courses = array();
-
+		if ( ! is_array( $courses ) ) {
+			return $courses;
+		}
 		foreach ( $courses as $index => $course ) {
-			$course_id = is_object( $course ) ? $course->ID : $course;
-			$start_date = get_post_meta( $course_id, 'cp_course_start_date', true );
-			$ordered_courses[] = $start_date;
+			if ( is_a( $course, 'WP_Post' ) ) {
+				$course_id = is_object( $course ) ? $course->ID : $course;
+				$start_date = get_post_meta( $course_id, 'cp_course_start_date', true );
+				$ordered_courses[] = $start_date;
+			}
 		}
 		array_multisort( $ordered_courses, $courses );
 
@@ -3127,6 +3218,12 @@ class CoursePress_Data_Course {
 	}
 
 	public static function get_course_status( $course_id ) {
+		/**
+		 * Sanitize course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
+			return 'unknown';
+		}
 		$setting = self::get_setting( $course_id );
 		$start_date = ! empty( $setting['course_start_date'] ) ? self::strtotime( $setting['course_start_date'] ) : 0;
 		$end_date = ! empty( $setting['course_end_date'] ) ? self::strtotime( $setting['course_end_date'] ) : 0;
@@ -3144,6 +3241,12 @@ class CoursePress_Data_Course {
 	}
 
 	public static function get_enrollment_status( $course_id ) {
+		/**
+		 * Sanitize course_id
+		 */
+		if ( ! self::is_course( $course_id ) ) {
+			return 'unknown';
+		}
 		$setting = self::get_setting( $course_id );
 		$start_enrollment = ! empty( $setting['enrollment_start_date'] ) ? self::strtotime( $setting['enrollment_start_date'] ) : 0;
 		$end_enrollment = ! empty( $setting['enrollment_end_date'] ) ? self::strtotime( $setting['enrollment_end_date'] ) : 0;
@@ -3170,12 +3273,7 @@ class CoursePress_Data_Course {
 	 * @return boolean Is a course post
 	 */
 	public static function check_post_type_by_post( $post ) {
-		$post_type = get_post_type( $post );
-		$course_post_type = self::get_post_type_name();
-		if ( $post_type == $course_post_type ) {
-			return true;
-		}
-		return false;
+		return self::is_course( $post );
 	}
 
 	/**
@@ -3188,8 +3286,8 @@ class CoursePress_Data_Course {
 	 * @param array $excludes Array of excluded Post IDs
 	 */
 	public static function save_course_number( $post_id, $post_title, $excludes = array() ) {
-		if ( ! self::check_post_type_by_post( $post_id ) ) {
-			return $post_title;
+		if ( ! self::is_course( $post_id ) ) {
+			return;
 		}
 		global $wpdb;
 		$course_post_type = self::get_post_type_name();
@@ -3235,7 +3333,7 @@ class CoursePress_Data_Course {
 		if ( ! is_admin() ) {
 			return $post_title;
 		}
-		if ( ! self::check_post_type_by_post( $post_id ) ) {
+		if ( ! self::is_course( $post_id ) ) {
 			return $post_title;
 		}
 		$number = get_post_meta( $post_id, self::$post_count_title_name, true );
@@ -3254,7 +3352,7 @@ class CoursePress_Data_Course {
 	 * @param integer $post_id Post ID.
 	 */
 	public static function delete_course_number( $post_id ) {
-		if ( ! self::check_post_type_by_post( $post_id ) ) {
+		if ( ! self::is_course( $post_id ) ) {
 			return;
 		}
 		global $wpdb;
@@ -3263,9 +3361,12 @@ class CoursePress_Data_Course {
 			$post_id
 		);
 		$results = $wpdb->get_results( $sql );
+		$post_title = '';
 		foreach ( $results as $post ) {
 			delete_post_meta( $post->ID, self::$post_count_title_name );
+			$post_title = $post->post_title;
 		}
+
 		$post_type = self::get_post_type_name();
 		self::save_course_number( $post_id, $post_type, array( $post_id ) );
 	}
