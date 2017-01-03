@@ -552,13 +552,21 @@ class CoursePress_Helper_UI {
 	 *
 	 * @param string $message Message to display.
 	 * @param string $class Class to add.
+	 * @param string $id id to add.
+	 * @param array $data data to add.
 	 */
-	public static function admin_notice( $message, $class = 'success' ) {
-		return sprintf(
-			'<div class="notice notice-%s is-dismissible">%s</div>',
-			esc_attr( $class ),
-			wpautop( $message )
-		);
+	public static function admin_notice( $message, $class = 'success', $id = '', $data = array() ) {
+		$html = '<div';
+		if ( ! empty( $id ) ) {
+			$html .= sprintf( ' id="%s"', esc_attr( $id ) );
+		}
+		if ( ! empty( $data ) && is_array( $data ) ) {
+			foreach ( $data as $key => $value ) {
+				$html .= sprintf( ' data-%s="%s"', esc_attr( $key ), esc_attr( $value ) );
+			}
+		}
+		$html .= ' class="notice notice-%s is-dismissible">%s</div>';
+		return sprintf( $html, esc_attr( $class ), wpautop( $message ) );
 	}
 
 	/**

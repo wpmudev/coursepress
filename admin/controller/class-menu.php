@@ -36,6 +36,7 @@ class CoursePress_Admin_Controller_Menu {
 		// Set ajax callback
 		add_action( 'wp_ajax_' . $this->slug, array( $this, 'ajax_request' ) );
 		add_action( 'coursepress_submitbox_misc_actions', array( __CLASS__, 'get_statuses' ), 10 );
+		add_action( 'wp_ajax_coursepress_dismiss_admin_notice', array( __CLASS__, 'dismiss_admin_notice' ) );
 	}
 
 	public function get_labels() {
@@ -442,6 +443,32 @@ foreach ( $allowed_statuses as $status => $label ) {
 <?php } ?>
 </div>
 <?php
+	}
+
+	/**
+	 * update option for dismissable message.
+	 *
+	 * @since 2.0.1
+	 */
+	public static function dismiss_admin_notice() {
+		if (
+			! isset( $_POST['option_name'] )
+			|| ! isset( $_POST['_wpnonce'] )
+			|| ! isset( $_POST['user_id'] )
+		) {
+			return;
+		}
+		$user_id = intval( $_POST['user_id'] );
+		if ( empty( $user_id ) ) {
+			return;
+		}
+		$option_name = $_POST['option_name'];
+		$nonce_value = $_POST['_wpnonce'];
+		$nonce_action = $option_name.$user_id;
+		if ( ! wp_verify_nonce( $nonce_value, $nonce_action ) ) {
+			return;
+		}
+		update_user_option( $user_id, $option_name, 'hide' );
 	}
 
 	/**
