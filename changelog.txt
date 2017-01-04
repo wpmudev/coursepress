@@ -15,6 +15,7 @@ CHANGELOG
 * Added check to import json file.
 * Added confirmation popup when student withdraw from the course.
 * Fixed non-virtual student login page.
+* Removed fakepath file location in file upload.
 
 = 2.0.1 =
 ------------------------------------------------------
