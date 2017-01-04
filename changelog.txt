@@ -13,6 +13,7 @@ CHANGELOG
 * Handle situation when student try to add comment to non existing module.
 * Fixed "Domain Name" for proper translation.
 * Added check to import json file.
+* Added confirmation popup when student withdraw from the course.
 
 = 2.0.1 =
 ------------------------------------------------------

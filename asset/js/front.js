@@ -1,6 +1,6 @@
 /*! CoursePress - v2.0.0
  * https://premium.wpmudev.org/project/coursepress-pro/
- * Copyright (c) 2016; * Licensed GPLv2+ */
+ * Copyright (c) 2017; * Licensed GPLv2+ */
 var CoursePress = {};
 CoursePress.Models = CoursePress.Models || {};
 CoursePress.Events = _.extend( {}, Backbone.Events );
@@ -80,7 +80,8 @@ CoursePress.WindowAlert = Backbone.View.extend({
 	type: 'alert',
 	html: '<div class="cp-alert-container"><p><button type="button" class="button">OK</button></p></div>',
 	events: {
-		'click .button': 'remove'
+		'click .button': 'remove',
+		'click .button-confirmed': 'doCallback'
 	},
 	initialize: function( options ) {
 		_.extend( this, options );
@@ -88,13 +89,51 @@ CoursePress.WindowAlert = Backbone.View.extend({
 		this.render();
 	},
 	render: function() {
-		this.$el.append( this.html );
+		this.container = new Backbone.View({
+			className: 'cp-alert-container',
+		});
+
+		this.container = this.container.$el.appendTo( this.$el );
+
+		//this.$el.append( this.html );
 		this.container = this.$el.find( '.cp-alert-container' );
 		this.container.addClass( 'cp-' + this.type );
 		this.container.prepend( '<p class="msg">' + this.message + '</p>' );
+
+		var ok_button = new Backbone.View({
+			tagName: 'button',
+			attributes: {
+				type: 'button',
+				class: 'button'
+			}
+		});
+		ok_button.$el.html( _coursepress.buttons.ok );
+		this.container.append( ok_button.$el );
+
+		if ( 'prompt' === this.type ) {
+			var cancel_button = new Backbone.View({
+				tagName: 'button',
+				attributes: {
+					type: 'button',
+					class: 'button button-cancel'
+				}
+			});
+			cancel_button.$el.html( _coursepress.buttons.cancel );
+			cancel_button.$el.insertBefore( ok_button.$el );
+
+			// Change the ok button class
+			ok_button.$el.addClass( 'button-confirmed' );
+		}
+
 		this.$el.appendTo( 'body' );
+	},
+	doCallback: function() {
+		if ( this.callback ) {
+			this.callback.apply(this.callback, this);
+		}
 	}
 });
+
 
 /** Loader Mask **/
 CoursePress.Mask = function( selector ) {
@@ -1565,5 +1604,26 @@ console.log(data);
 		.on( 'click', '.apply-button.enroll', CoursePress.EnrollStudent )
 		.on( 'submit', '[name="enrollment-process"][data-type="passcode"]', CoursePress.validatePassCode )
 		.on( 'submit', '.apply-box .enrollment-process', CoursePress.validateEnrollment );
+
+})(jQuery);
+
+/* global CoursePress */
+
+(function($){
+	var confirmWithdrawal = function() {
+		var href = $(this).attr( 'href' ),
+			win = new CoursePress.WindowAlert({
+			type: 'prompt',
+			message: _coursepress.confirmed_withdraw,
+			callback: function() {
+				window.location = href;
+			}
+		});
+
+		return false;
+	};
+
+	$(document)
+		.on( 'click', '.cp-withdraw-student', confirmWithdrawal );
 
 })(jQuery);
