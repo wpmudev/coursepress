@@ -100,6 +100,11 @@ class CoursePress_Module {
 		}
 
 		$module_id = $comments['comment_post_ID'];
+		$is_module = CoursePress_Data_Module::is_module( $module_id );
+		if ( ! $is_module ) {
+			return new WP_Error( 'error', __( 'Module do not exists.', 'CP_TD' ) );
+		}
+
 		$unit_id = get_post_field( 'post_parent', $module_id );
 		$course_id = get_post_field( 'post_parent', $unit_id );
 
@@ -121,7 +126,6 @@ class CoursePress_Module {
 			)
 		);
 		$comment_id = wp_new_comment( $comments );
-
 		/**
 		 * Trigger CP action hooks after inserting comment to DB
 		 **/
@@ -133,10 +137,19 @@ class CoursePress_Module {
 	public static function add_single_comment( $input ) {
 		global $post;
 
+		$module_id = (int) $input['comment_post_ID'];
+		$is_module = CoursePress_Data_Module::is_module( $module_id );
+		if ( ! $is_module ) {
+			$json_data = array(
+				'success' => false,
+			);
+			wp_send_json_error( $json_data );
+			return;
+		}
+
 		$unit_id = (int) $input['unit_id'];
 		$course_id = (int) $input['course_id'];
 		$student_id = (int) $input['student_id'];
-		$module_id = (int) $input['comment_post_ID'];
 
 		$comments = array(
 			'comment_content' => $input['comment'],
@@ -147,6 +160,14 @@ class CoursePress_Module {
 
 		// Add new comment
 		$comment_id = self::add_comment( $comments, $student_id );
+
+		if ( is_a( $comment_id, 'WP_Error' ) ) {
+			$json_data = array(
+				'success' => false,
+			);
+			wp_send_json_error( $json_data );
+			return;
+		}
 
 		if ( 0 < $comment_id ) {
 			// Update subscribers list
@@ -196,7 +217,7 @@ class CoursePress_Module {
 	}
 
 	public static function submit( $input ) {
-		set_time_limit(0);
+		set_time_limit( 0 );
 
 		$course_id = (int) $input['course_id'];
 		$unit_id = (int) $input['unit_id'];
@@ -326,7 +347,7 @@ class CoursePress_Module {
 								$grades = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $module_id );
 								$grade = CoursePress_Helper_Utility::get_array_val( $grades, 'grade' );
 								$pass = (int) $grade >= (int) $minimum_grade;
-								
+
 								if ( false === $pass && false == $can_update_course ) {
 									$has_error = true;
 									self::$error_message = ( $module_type == 'input-form' ) ?
@@ -378,7 +399,7 @@ class CoursePress_Module {
 						'size' => $files['size'][ $_module_id ],
 						'error' => $files['error'][ $_module_id ],
 						'type' => $files['type'][ $_module_id ],
-						'tmp_name' => $files['tmp_name'][ $_module_id ]
+						'tmp_name' => $files['tmp_name'][ $_module_id ],
 					);
 					$response = wp_handle_upload( $file, $upload_overrides );
 					$response['size'] = $file['size'];
@@ -477,6 +498,6 @@ class CoursePress_Module {
 		$count = (int) get_user_meta( $student_id, $key, true );
 		$count += 1;
 		update_user_meta( $student_id, $key, $count );
-		wp_send_json_success(array('true' => true));
+		wp_send_json_success( array( 'true' => true ) );
 	}
 }

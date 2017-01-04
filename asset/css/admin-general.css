@@ -1083,9 +1083,10 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 .coursepress_settings_wrapper .column-units {
   width: 100px;
 }
-.coursepress_settings_wrapper .column-students,
+.coursepress_settings_wrapper .column-actions,
 .coursepress_settings_wrapper .column-certificates,
-.coursepress_settings_wrapper .column-actions {
+.coursepress_settings_wrapper .column-students,
+.coursepress_settings_wrapper .column-week {
   width: 60px !important;
   text-align: center;
 }
@@ -2588,4 +2589,24 @@ body[class*="_page_coursepress_course"] .ui-datepicker .ui_tpicker_timezone sele
   height: inherit;
   line-height: normal;
   vertical-align: inherit;
+}
+
+/**
+ * Shortcodes help screen
+ */
+.shortcodes-list .cp-content-box .inside {
+  padding-bottom: 2em;
+}
+.shortcodes-list .cp-content-box:last-child inside {
+  padding-bottom: 0;
+}
+.shortcodes-list .cp-content-box .cp-shortcode-options li span {
+  font-family: monospace;
+  font-weight: bold;
+}
+.shortcodes-list .cp-content-box .cp-shortcode-subheading {
+  font-weight: bold;
+}
+.shortcodes-list .cp-content-box .cp-shortcode-subheading.optional {
+  opacity: .8;
 }
