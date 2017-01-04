@@ -1163,11 +1163,14 @@ class CoursePress_Data_Shortcode_Template {
 			$login_url = $login_url . '?redirect_url=' . $_POST['redirect_url'];
 		}
 
+		/**
+		 * Cookies should always be set before any output!
 		// Set a cookie now to see if they are supported by the browser.
 		setcookie( TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN );
 		if ( SITECOOKIEPATH != COOKIEPATH ) {
 			setcookie( TEST_COOKIE, 'WP Cookie check', 0, SITECOOKIEPATH, COOKIE_DOMAIN );
 		};
+		**/
 
 		$form_message = '';
 		$form_message_class = '';
