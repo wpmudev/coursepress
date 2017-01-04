@@ -8,6 +8,7 @@ CHANGELOG
 = 2.0.2 =
 -------------------------------------------------
 * Fixed a bug with class autoloder function.
+* Added "Settings" and "Support" links on WP plugins page.
 * Fixed a bug with import students to course when MarketPress is active.
 * Handle situation when student try to add comment to non existing module.
 * Fixed "Domain Name" for proper translation.
@@ -30,6 +31,7 @@ CHANGELOG
 >>>>>>> coursepress/2.0.2-dev
 
 =======
+>>>>>>> coursepress/2.0.2-dev
 >>>>>>> coursepress/2.0.2-dev
 = 2.0.0 =
 -------------------------------------------------
