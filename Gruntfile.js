@@ -44,7 +44,8 @@ module.exports = function(grunt) {
 			'{js}front.js':						[
 				'{js}src/front-core.js',
 				'{js}src/front-modules.js',
-				'{js}src/front-enrollment.js'
+				'{js}src/front-enrollment.js',
+				'{js}src/front-dashboard.js'
 			]
 		},
 

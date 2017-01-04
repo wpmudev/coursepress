@@ -10,6 +10,9 @@ tester {
 	padding: 15px;
 	text-align: center;
 	max-width: 90%;
+	button {
+		margin: 5px;
+	}
 }
 input.cp-has-error {
 	border: 1px solid rgba(255, 0, 0, 0.5);
