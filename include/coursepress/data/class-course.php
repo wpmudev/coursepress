@@ -20,7 +20,7 @@ class CoursePress_Data_Course {
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
 				'labels' => array(
-					'name' => CoursePress::$name,
+					'name' => _x( CoursePress::$name, 'post type & admin menu', 'CP_TD' ),
 					'singular_name' => __( 'Course', 'CP_TD' ),
 					'add_new' => __( 'New Course', 'CP_TD' ),
 					'add_new_item' => __( 'New Course', 'CP_TD' ),
@@ -1013,7 +1013,7 @@ class CoursePress_Data_Course {
 				$metas = array(
 					'key' => 'module_type',
 					'value' => 'chat',
-					'compare' => '!='
+					'compare' => '!=',
 				);
 
 				if ( ! empty( $post_args['meta_query'] ) ) {
