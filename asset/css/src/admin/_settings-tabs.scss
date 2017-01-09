@@ -1,6 +1,12 @@
 .tab-container {
   position: relative;
   overflow: hidden;
+  .tab-content-vertical {
+      .button-certificate {
+          float: right;
+          margin-top: -35px;
+      }
+  }
 }
 
 .tab-tabs {

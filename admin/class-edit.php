@@ -272,7 +272,7 @@ class CoursePress_Admin_Edit {
 
 		CoursePress_View_Admin_Course_Edit::$current_course = self::$current_course;
 		printf( '<input type="hidden" id="edit_course_link_url" value="%s" />',
-			esc_url( get_edit_post_link( self::$current_course->ID ) ) );
+		esc_url( get_edit_post_link( self::$current_course->ID ) ) );
 		echo '<div class="coursepress-course-step-container">
 			<div id="course-setup-steps" data-nonce="' . $setup_nonce . '">';
 	}
@@ -1355,16 +1355,15 @@ class CoursePress_Admin_Edit {
 			)
 		);
 		$content .= '</td></tr>';
-		$cert_padding = CoursePress_Data_Course::get_setting( $course_id, 'cert_padding', array() );
-		$padding_top = CoursePress_Helper_Utility::get_array_val( $cert_padding, 'top', '' );
-		$padding_bottom = CoursePress_Helper_Utility::get_array_val( $cert_padding, 'bottom', '' );
-		$padding_left = CoursePress_Helper_Utility::get_array_val( $cert_padding, 'left', '' );
-		$padding_right = CoursePress_Helper_Utility::get_array_val( $cert_padding, 'right', '' );
-		$content .= '<tr><td><label>' . __( 'Content Padding', 'CP_TD' ) . '</label></td><td>';
-		$content .= __( 'Top', 'CP_TD' ) . ': <input type="text" size="10" name="meta_cert_padding[top]" value="'. esc_attr( $padding_top ) . '" />';
-		$content .= __( 'Bottom', 'CP_TD' ) . ': <input type="text" size="10" name="meta_cert_padding[bottom]" value="'. esc_attr( $padding_bottom ) .'" />';
-		$content .= __( 'Left', 'CP_TD' ) . ': <input type="text" size="10" name="meta_cert_padding[left]" value="'. esc_attr( $padding_left ) . '" />';
-		$content .= __( 'Right', 'CP_TD' ) . ': <input type="text" size="10" name="meta_cert_padding[right]" value="'. esc_attr( $padding_right ) . '" />';
+		$cert_margin = CoursePress_Data_Course::get_setting( $course_id, 'cert_margin', array() );
+		$margin_top = CoursePress_Helper_Utility::get_array_val( $cert_margin, 'top', '' );
+		$margin_bottom = CoursePress_Helper_Utility::get_array_val( $cert_margin, 'bottom', '' );
+		$margin_left = CoursePress_Helper_Utility::get_array_val( $cert_margin, 'left', '' );
+		$margin_right = CoursePress_Helper_Utility::get_array_val( $cert_margin, 'right', '' );
+		$content .= '<tr><td><label>' . __( 'Content margin', 'CP_TD' ) . '</label></td><td>';
+		$content .= __( 'Top', 'CP_TD' ) . ': <input type="number" class="small-text" name="meta_cert_margin[top]" value="'. esc_attr( $margin_top ) . '" />';
+		$content .= __( 'Left', 'CP_TD' ) . ': <input type="number" class="small-text" name="meta_cert_margin[left]" value="'. esc_attr( $margin_left ) . '" />';
+		$content .= __( 'Right', 'CP_TD' ) . ': <input type="number" class="small-text" name="meta_cert_margin[right]" value="'. esc_attr( $margin_right ) . '" />';
 		$content .= '</td></tr>';
 		$content .= '<tr><td><label>' . __( 'Page Orientation', 'CP_TD' ) . '</label></td><td>';
 		$content .= '<label style="float:left;margin-right:25px;"><input type="radio" name="meta_page_orientation" value="L" '. checked( 'L', CoursePress_Data_Course::get_setting( $course_id, 'page_orientation', 'L' ), false ) .' /> ' . __( 'Landscape', 'CP_TD' ) . '</label>';
@@ -1392,57 +1391,138 @@ class CoursePress_Admin_Edit {
 	}
 
 	public static function certificate_preview() {
+		if ( ! isset( $_REQUEST['course_id'] ) ) {
+			return;
+		}
 		if ( isset( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], 'cp_certificate_preview' ) ) {
 			$course_id = (int) $_REQUEST['course_id'];
+			/**
+			 * filename
+			 */
+			$filename = 'cert-preview-' . $course_id . '.pdf';
+			/**
+			 * options
+			 */
+			$background = '';
+			$orientation = 'P';
+			$html = '';
+			$margins = array();
+			$text_color = array();
+			$logo = array();
+			/**
+			 * vars
+			 */
+			$date_format = apply_filters( 'coursepress_basic_certificate_date_format', get_option( 'date_format' ) );
+			$vars = array(
+				'FIRST_NAME' => __( 'Jon', 'CP_TD' ),
+				'LAST_NAME' => __( 'Snow', 'CP_TD' ),
+				'COURSE_NAME' => __( 'Example Course Title', 'CP_TD' ),
+				'COMPLETION_DATE' => date_i18n( $date_format, CoursePress_Data_Course::time_now() ),
+				'CERTIFICATE_NUMBER' => uniqid( rand(), true ),
+			);
+
+			/**
+			 * Use CP defaults?
+			 */
+			$use_cp_default = CoursePress_Core::get_setting( 'basic_certificate/use_cp_default', false );
+			$use_cp_default = cp_is_true( $use_cp_default );
 
 			if ( $course_id > 0 ) {
-				$background = CoursePress_Data_Course::get_setting( $course_id, 'certificate_background', '' );
-				$paddings = CoursePress_Data_Course::get_setting( $course_id, 'cert_padding', array() );
-				$orientation = CoursePress_Data_Course::get_setting( $course_id, 'page_orientation', 'L' );
-				$html = CoursePress_Data_Course::get_setting( $course_id, 'basic_certificate_layout' );
-				$html = apply_filters( 'coursepress_basic_certificate_html', $html, $course_id, get_current_user_id() );
-
-				$filename = 'cert-preview-' . $course_id . '.pdf';
-				$styles = array();
-
-				foreach ( $paddings as $padding => $value ) {
-					$value = empty( $value ) ? 0 : $value;
-					$styles[] = "padding-{$padding}: {$value};";
+				$use_course_settings = CoursePress_Data_Course::get_setting( $course_id, 'basic_certificate', false );
+				$use_course_settings = cp_is_true( $use_course_settings );
+				if ( $use_course_settings ) {
+					$background = CoursePress_Data_Course::get_setting( $course_id, 'certificate_background', '' );
+					$margins = CoursePress_Data_Course::get_setting( $course_id, 'cert_margin', array() );
+					$orientation = CoursePress_Data_Course::get_setting( $course_id, 'page_orientation', 'L' );
+					$html = CoursePress_Data_Course::get_setting( $course_id, 'basic_certificate_layout' );
+					$html = apply_filters( 'coursepress_basic_certificate_html', $html, $course_id, get_current_user_id() );
+					$use_cp_default = false;
 				}
-
-				$styles = '.basic_certificate {' . implode( ' ', $styles ) . ' }';
-
 				$userdata = get_userdata( get_current_user_id() );
 				$course = get_post( $course_id );
-				$date_format = apply_filters( 'coursepress_basic_certificate_date_format', get_option( 'date_format' ) );
-				$vars = array(
-					'FIRST_NAME' => $userdata->first_name,
-					'LAST_NAME' => $userdata->last_name,
-					'COURSE_NAME' => $course->post_title,
-					'COMPLETION_DATE' => date_i18n( $date_format, CoursePress_Data_Course::time_now() ),
-					'CERTIFICATE_NUMBER' => uniqid( rand(), true ),
+				$vars = array_merge(
+					$vars,
+					array(
+						'FIRST_NAME' => $userdata->first_name,
+						'LAST_NAME' => $userdata->last_name,
+						'COURSE_NAME' => $course->post_title,
+					)
 				);
-				$html = CoursePress_Helper_Utility::replace_vars( $html, $vars );
-				$html = sprintf( '<div class="basic_certificate">%s</div>', $html );
-
-				// Set PDF args
-				$args = array(
-					'title' => __( 'Course Completion Certificate', 'CP_TD' ),
-					'orientation' => $orientation,
-					'image' => $background,
-					'filename' => $filename,
-					'format' => 'F',
-					'uid' => '12345',
-					'style' => '<style>' . $styles . '</style>',
-				);
-
-				CoursePress_Helper_PDF::make_pdf( $html, $args );
-				// Print preview
-				$args['format'] = 'I';
-				CoursePress_Helper_PDF::make_pdf( $html, $args );
-
+				if ( empty( $vars['FIRST_NAME'] ) && empty( $vars['LAST_NAME'] ) ) {
+					$vars['FIRST_NAME'] = $userdata->display_name;
+				}
+			} else if ( 0 == $course_id ) {
+				$background = CoursePress_Core::get_setting( 'basic_certificate/background_image' );
+				$orientation = CoursePress_Core::get_setting( 'basic_certificate/orientation', 'L' );
+				$margins  = CoursePress_Core::get_setting( 'basic_certificate/margin' );
+				foreach ( $margins as $margin => $value ) {
+					$margins[ $margin ] = $value;
+				}
 			}
 
+			if ( $use_cp_default ) {
+				/**
+				 * Default Background
+				 */
+				$background = CoursePress::$path.'/asset/img/certificate/certificate-background-p.png';
+				/**
+				 * default orientation
+				 */
+				$orientation = 'P';
+				/**
+				 * CP Logo
+				 */
+				$logo = array(
+					'file' => CoursePress::$path.'/asset/img/certificate/certificate-logo-coursepress.png',
+					'x' => 95,
+					'y' => 15,
+					'w' => 100,
+				);
+				/**
+				 * Default margins
+				 */
+				$margins = array(
+					'left' => 40,
+					'right' => 40,
+					'top' => 100,
+				);
+				/**
+				 * default color
+				 */
+				$text_color = array( 90, 90, 90 );
+				/**
+				 * get default content
+				 */
+				$html = CoursePress_View_Admin_Setting_BasicCertificate::default_certificate_content();
+			}
+
+			/**
+			 * get default content
+			 */
+			if ( empty( $html ) ) {
+				$html = CoursePress_Core::get_setting(
+					'basic_certificate/content',
+					CoursePress_View_Admin_Setting_BasicCertificate::default_certificate_content()
+				);
+			}
+			$html = CoursePress_Helper_Utility::replace_vars( $html, $vars );
+
+			// Set PDF args
+			$args = array(
+				'title' => __( 'Course Completion Certificate', 'CP_TD' ),
+				'orientation' => $orientation,
+				'image' => $background,
+				'filename' => $filename,
+				'format' => 'F',
+				'uid' => '12345',
+				'margins' => apply_filters( 'coursepress_basic_certificate_margins', $margins ),
+				'logo' => apply_filters( 'coursepress_basic_certificate_logo', $logo ),
+				'text_color' => apply_filters( 'coursepress_basic_certificate_text_color', $text_color ),
+			);
+			CoursePress_Helper_PDF::make_pdf( $html, $args );
+			// Print preview
+			$args['format'] = 'I';
+			CoursePress_Helper_PDF::make_pdf( $html, $args );
 			exit;
 		}
 	}

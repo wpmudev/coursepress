@@ -60,6 +60,10 @@ A. Responsive
   position: relative;
   overflow: hidden;
 }
+.tab-container .tab-content-vertical .button-certificate {
+  float: right;
+  margin-top: -35px;
+}
 
 .tab-tabs {
   float: left;

@@ -1277,19 +1277,26 @@ var CoursePress = CoursePress || {};
 		}
 
 		function on_enabled_click() {
-			var check = jQuery( '.certificate_enabled' ),
-				form = jQuery( '.certificate-details' );
-
-			if ( check.is(':checked') ) {
-				form.show();
+			var check_enabled = jQuery( '.certificate_enabled' )
+				form_enabled = jQuery( '.certificate-details, .button-certificate, .use-cp-default' ),
+				check_default = jQuery( '.certificate_default' ),
+				form_default = jQuery( '.certificate-details' );
+			if ( check_enabled.is(':checked') ) {
+				form_enabled.show();
+				if ( check_default.is(':checked') ) {
+					form_default.hide();
+				} else {
+					form_default.show();
+				}
 			} else {
-				form.hide();
+				form_enabled.hide();
 			}
 		}
 
 		$(document)
 			.ready( on_enabled_click )
 			.on( 'click', '.certificate_enabled', on_enabled_click )
+			.on( 'click', '.certificate_default', on_enabled_click )
 			.on( 'click', '.certificate_background_button', on_background_click );
 	})(jQuery);
 
