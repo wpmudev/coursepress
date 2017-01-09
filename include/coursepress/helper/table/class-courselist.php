@@ -102,14 +102,17 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 	 **************************************************************************/
 	public function get_columns() {
 		$columns = $this->columns_config;
-
 		if ( ! CoursePress_Data_Capabilities::can_manage_courses() ) {
 			unset( $columns['cb'], $columns['actions'], $columns['units'] );
 		}
 		if ( ! CoursePress_Data_Capabilities::can_delete_course( 0 ) ) {
 			unset( $columns['actions'] );
 		}
-
+		/**
+		 * WordPress standard action for defeult column - it allows to add
+		 * special columns.
+		 */
+		$columns = apply_filters( "manage_{$this->post_type}_posts_columns", $columns );
 		return $columns;
 	}
 
@@ -435,12 +438,15 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 	 * @return string Text or HTML to be placed inside the column <td>
 	 **************************************************************************/
 	public function column_default( $item, $column_name ) {
-
 		switch ( $column_name ) {
 			case 'ID':
 				return $item->{$column_name};
 		}
-
+		/**
+		 * WordPress standard action for defeult column - it allows to add
+		 * special columns.
+		 */
+		do_action( "manage_{$this->post_type}_posts_custom_column", $column_name, $item->ID );
 	}
 
 	/** ************************************************************************

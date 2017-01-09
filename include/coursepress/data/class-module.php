@@ -1020,4 +1020,50 @@ class CoursePress_Data_Module {
 			CoursePress_Data_Unit::show_page( $unit_id, $page_id, $course_id );
 		}
 	}
+
+	/**
+	 * Check entry - is this module?
+	 *
+	 * @since 2.0.2
+	 *
+	 * @param WP_Post|integer $module Variable to check.
+	 * @return boolean Answer is that module or not?
+	 */
+	public static function is_module( $module ) {
+		$post_type = get_post_type( $module );
+		if ( $post_type == self::$post_type ) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Get modules by type
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $type module type
+	 * @param integer $course_id course ID.
+	 * @return array Array of modules ids.
+	 */
+	public static function get_all_modules_ids_by_type( $type, $course_id = null ) {
+		$args = array(
+			'post_type' => self::get_post_type_name(),
+			'fields' => 'ids',
+			'suppress_filters' => true,
+			'nopaging' => true,
+			'meta_key' => 'module_type',
+			'meta_value' => $type,
+		);
+		if ( ! empty( $course_id ) ) {
+			$units = CoursePress_Data_Course::get_units( $course_id, array( 'any' ), true );
+			if ( empty( $units ) ) {
+				return array();
+			}
+			$args['post_parent__in'] = $units;
+
+		}
+		$modules = new WP_Query( $args );
+		return $modules->posts;
+	}
 }

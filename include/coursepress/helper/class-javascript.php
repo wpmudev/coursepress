@@ -202,11 +202,13 @@ class CoursePress_Helper_JavaScript {
 			$localize_array['unit_builder_form']['messages']['saving_unit'] = __( 'Unit is saving now...', 'CP_TD' );
 			$localize_array['unit_builder_form']['messages']['successfully_saved'] = __( 'Unit was successfully saved!', 'CP_TD' );
 			$localize_array['unit_builder_form']['messages']['error_while_saving'] = __( 'Something went wrong. Unit was not saved!', 'CP_TD' );
+			$localize_array['unit_builder_form']['messages']['adding_module'] = __( 'Wait, module adding now...', 'CP_TD' );
 
 		}
 
 		/** COURSE LIST */
-		if ( 'coursepress_course' === $_GET['page'] && 'edit.php' == $pagenow ) {
+		$screen = get_current_screen();
+		if ( 'coursepress_course' === $_GET['page'] && 'edit.php' == $pagenow && 'edit-course' == $screen->id ) {
 			$script = CoursePress::$url . 'asset/js/coursepress-courselist.js';
 			wp_enqueue_script( 'coursepress_course_list', $script, array(
 				'jquery-ui-accordion',
@@ -489,6 +491,11 @@ class CoursePress_Helper_JavaScript {
 				'participate' => __( 'Your participation to the discussion is required!', 'CP_TD' ),
 				'passcode_required' => __( 'Enter PASSCODE!', 'CP_TD' ),
 				'invalid_passcode' => __( 'Invalid PASSCODE!', 'CP_TD' ),
+			),
+			'confirmed_withdraw' => __( 'Please confirm that you want to withdraw from the course. If you withdraw, all your records and access to this course will also be removed.', 'cp' ),
+			'buttons' => array(
+				'ok' => __( 'OK', 'cp' ),
+				'cancel' => __( 'Cancel', 'cp' ),
 			),
 		);
 

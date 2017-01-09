@@ -1119,17 +1119,17 @@ class CoursePress_Data_Shortcode_Template {
 		extract(
 			shortcode_atts(
 				array(
-					'page' => isset( $_REQUEST['page'] ) ? $_REQUEST['page'] : '',
-					'failed_login_text' => __( 'Invalid login.', 'CP_TD' ),
 					'failed_login_class' => 'red',
-					'logout_url' => '',
-					'signup_tag' => 'h3',
-					'signup_title' => __( 'Signup', 'CP_TD' ),
+					'failed_login_text' => __( 'Invalid login.', 'CP_TD' ),
 					'login_tag' => 'h3',
 					'login_title' => __( 'Login', 'CP_TD' ),
-					'signup_url' => '',
 					'login_url' => '',
+					'logout_url' => '',
+					'page' => isset( $_REQUEST['page'] ) ? $_REQUEST['page'] : '',
 					'redirect_url' => '', // Redirect on successful login or signup.
+					'signup_tag' => 'h3',
+					'signup_title' => __( 'Signup', 'CP_TD' ),
+					'signup_url' => '',
 				),
 				$atts,
 				'course_signup'
@@ -1163,11 +1163,14 @@ class CoursePress_Data_Shortcode_Template {
 			$login_url = $login_url . '?redirect_url=' . $_POST['redirect_url'];
 		}
 
+		/**
+		 * Cookies should always be set before any output!
 		// Set a cookie now to see if they are supported by the browser.
 		setcookie( TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN );
 		if ( SITECOOKIEPATH != COOKIEPATH ) {
 			setcookie( TEST_COOKIE, 'WP Cookie check', 0, SITECOOKIEPATH, COOKIE_DOMAIN );
 		};
+		**/
 
 		$form_message = '';
 		$form_message_class = '';

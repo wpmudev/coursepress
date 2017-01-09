@@ -130,7 +130,7 @@ class CoursePress_Template_Course {
 					'course_id' => $course->ID,
 					'student_id' => $student_id,
 				) );
-				$withdraw_link = sprintf( '<a href="%s">%s</a>', esc_url( $withdraw_link ), __( 'Withdraw', 'CP_TD' ) );
+				$withdraw_link = sprintf( '<a href="%s" class="cp-withdraw-student">%s</a>', esc_url( $withdraw_link ), __( 'Withdraw', 'CP_TD' ) );
 				$row_actions['withdraw'] = $withdraw_link;
 
 				$table_body .= sprintf( '<td class="row-actions">%s</td>', implode( ' | ', $row_actions ) );
