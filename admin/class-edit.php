@@ -247,7 +247,7 @@ class CoursePress_Admin_Edit {
 		$publish_toggle = '';
 
 		$ui = array(
-			'label' => 'Publish Course',
+			'label' => __( 'Publish Course', 'cp' ),
 			'left' => '<i class="fa fa-ban"></i>',
 			'left_class' => 'red',
 			'right' => '<i class="fa fa-check"></i>',
@@ -450,12 +450,12 @@ class CoursePress_Admin_Edit {
 		// Course Language
 		$language = CoursePress_Data_Course::get_setting( $course_id, 'course_language' );
 		if ( empty( $language ) ) {
-			$language = __( 'English', 'CP_TD' );
+			$language = __( 'English', 'cp' );
 		}
 		$content .= '
 				<div class="wide">
 						<label for="meta_course_language">' .
-					esc_html__( 'Language', 'CP_TD' ) . '
+					esc_html__( 'Language', 'cp' ) . '
 						</label>
 						<input class="medium" type="text" name="meta_course_language" id="meta_course_language" value="' . $language . '"/>
 				</div>';
@@ -1248,7 +1248,7 @@ class CoursePress_Admin_Edit {
 			'DOWNLOAD_CERTIFICATE_BUTTON',
 			'STUDENT_WORKBOOK',
 		);
-		$token_info = '<p class="description" style="margin-bottom: -25px;">'. __( sprintf( 'Use these tokens to display actual course details: %s', implode( ', ', $tokens ) ), 'CP_TD' ) . '</p>';
+		$token_info = '<p class="description" style="margin-bottom: -25px;">'. sprintf( __( 'Use these tokens to display actual course details: %s', 'cp' ), implode( ', ', $tokens ) ) . '</p>';
 
 		// Pre-completion page
 		$content .= '<div class="wide page-pre-completion">'
