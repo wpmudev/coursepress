@@ -8,6 +8,7 @@ CHANGELOG
 = 2.0.2 =
 -------------------------------------------------
 * Fixed a bug with class autoloder function.
+* Added better default CoursePress certificate.
 
 = 2.0.0 =
 -------------------------------------------------
