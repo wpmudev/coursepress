@@ -249,13 +249,13 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 
 	public static function default_certificate_content() {
 		$msg = __(
-			'%1$s %2$s
+			'<h2>%1$s %2$s</h2>
 			has successfully completed the course
 
-			%3$s
+			<h3>%3$s</h3>
 
-			Date: %4$s
-			Certificate no.: %5$s', 'CP_TD'
+			<h4>Date: %4$s</h4>
+			<small>Certificate no.: %5$s</small>', 'CP_TD'
 		);
 
 		$default_certification_content = sprintf(
