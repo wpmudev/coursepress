@@ -44,7 +44,7 @@ class CoursePress_Helper_Extension_MarketPress {
 				'base_path' => self::$base_path['free'],
 				'source' => 'downloads.wordpress.org/plugin/wordpress-ecommerce.zip',
 				'source_message' => __( 'WordPress.org Repository', 'CP_TD' ),
-				'external_url' => '', /* https://wordpress.org/plugins/wordpress-ecommerce/ 
+				'external_url' => '', /* https://wordpress.org/plugins/wordpress-ecommerce/
 				'external' => 'yes',
 				'protocol' => 'https',
 			);
@@ -114,11 +114,11 @@ class CoursePress_Helper_Extension_MarketPress {
 				),
 				admin_url( 'edit.php' )
 			);
-			$message = sprintf( '<strong>%s</strong> ', __( 'Install MarketPress plugin in order to sell courses.', 'cp' ) );
-			$message .= sprintf( '<a href="%s">%s</a>', $mp_settings_url, __( 'Install MarketPress', 'cp' ) );
+			$message = sprintf( '<strong>%s</strong> ', __( 'Install MarketPress plugin in order to sell courses.', 'CP_TD' ) );
+			$message .= sprintf( '<a href="%s">%s</a>', $mp_settings_url, __( 'Install MarketPress', 'CP_TD' ) );
 		} elseif ( ! self::activated() ) {
-			$mp_link = sprintf( '<a href="%s">%s</a>', admin_url( 'plugins.php' ), __( 'MarketPress', 'cp' ) );
-			$message = sprintf( __( 'Activate %s to start selling courses.', 'cp' ), $mp_link );
+			$mp_link = sprintf( '<a href="%s">%s</a>', admin_url( 'plugins.php' ), __( 'MarketPress', 'CP_TD' ) );
+			$message = sprintf( __( 'Activate %s to start selling courses.', 'CP_TD' ), $mp_link );
 		} elseif ( self::activated() ) {
 			if ( defined( 'MP_VERSION' ) ) {
 				if ( version_compare( MP_VERSION, '3.1.2' ) < 0 ) {
