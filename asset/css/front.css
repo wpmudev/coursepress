@@ -1391,6 +1391,9 @@ ul.notification-archive-list:after {
   display: block;
   padding-bottom: 5px;
 }
+.bbm-modal label.weak-password-confirm {
+  display: none;
+}
 
 /** Media Queries **/
 @media screen and (min-width: 768px) {
