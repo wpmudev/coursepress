@@ -1541,7 +1541,7 @@ class CoursePress_Data_Shortcode_Template {
 				'signup_link_url' => '#',
 				'signup_link_id' => '',
 				'signup_link_class' => '',
-				'signup_link_label' => __( 'Don’t have an account? <a href="%s" class="%s" id="%s">Create an Account</a> now!', 'CP_TD' ),
+				'signup_link_label' => __( 'Don\'t have an account? <a href="%s" class="%s" id="%s">Create an Account</a> now!', 'CP_TD' ),
 				'forgot_password_label' => __( 'Forgot Password?', 'CP_TD' ),
 				'submit_button_class' => '',
 				'submit_button_attributes' => '',
