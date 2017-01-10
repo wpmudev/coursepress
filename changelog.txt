@@ -4,7 +4,24 @@ Build Time:  2016-04-07T13:37:59.644Z
 
 CHANGELOG
 =================================================
+= 2.0.2 =
+-------------------------------------------------
+* Fixed a bug with class autoloder function.
+* Added better default CoursePress certificate.
+* Added "Settings" and "Support" links on WP plugins page.
+* Fixed a bug with import students to course when MarketPress is active.
+* Handle situation when student try to add comment to non existing module.
+* Fixed "Domain Name" for proper translation.
+* Added check to import json file.
+* Added confirmation popup when student withdraw from the course.
+* Fixed non-virtual student login page.
+* Removed fakepath file location in file upload.
+* Fixed student dashboard page.
+* Fixed warning message when user is logged out.
+* Fixed untranslated texts.
+
 = 2.0.1 =
+----------------------------------------------------
 * Fixed: Chat module support for wordpress-chat plugin
 * Fixed: Module's unlimited retry attempts
 * Fixed: Language Internationalization
