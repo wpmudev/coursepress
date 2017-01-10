@@ -1154,17 +1154,8 @@ class CoursePress_Admin_Edit {
 					%s
 					<p>%s: WooCommerce</p>
 				</div>
-			', __( 'Sell your courses online with MarketPress.', 'cp' ), $class, $version_message, $install_message, __( 'Other supported plugins', 'cp' ) ), $course_id );
-			/*
-			$payment_message = apply_filters( 'coursepress_course_payment_message', sprintf( __( '
-				<div class="payment-message %s">
-					<h3>Sell your courses online with MarketPress.</h3>
-					%s
-					%s
-					<p>Other supported plugins: WooCommerce</p>
-				</div>
-			', 'CP_TD' ), $class, $version_message, $install_message ), $course_id );
-			*/
+			', $class, __( 'Sell your courses online with MarketPress.', 'cp' ), $version_message, $install_message, __( 'Other supported plugins', 'cp' ) ), $course_id );
+
 			// It's already been filtered, but because we're dealing with HTML, lets be sure
 			$content .= CoursePress_Helper_Utility::filter_content( $payment_message );
 		}
