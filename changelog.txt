@@ -19,6 +19,7 @@ CHANGELOG
 * Removed fakepath file location in file upload.
 * Fixed student dashboard page.
 * Fixed warning message when user is logged out.
+* Fixed unstranslated texts.
 
 = 2.0.1 =
 ------------------------------------------------------
@@ -31,7 +32,6 @@ CHANGELOG
 * Fixed: Units overview link
 * Updated WPMU dashboard
 * Updated included Market Press version 3.1.2
->>>>>>> coursepress/2.0.2-dev
 
 = 2.0.0 =
 -------------------------------------------------
