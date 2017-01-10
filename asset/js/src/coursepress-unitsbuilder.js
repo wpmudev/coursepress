@@ -265,7 +265,7 @@ var CoursePress = CoursePress || {};
 				case 'single':
 					var radio_name = 'single-' + ( total + 1 );
 
-					question_type = 'Single Choice';
+					question_type = _coursepress.unit_builder.question_type.single;
 
 					question_content += '<div class="answer-group">';
 					question_content += '<div class="answer"><input type="radio" name="' + radio_name + '" value="" />';
@@ -277,7 +277,7 @@ var CoursePress = CoursePress || {};
 
 					break;
 				case 'multiple':
-					question_type = 'Multiple Choice';
+					question_type = _coursepress.unit_builder.question_type.multiple;
 
 					question_content += '<div class="answer-group">';
 					question_content += '<div class="answer"><input type="checkbox" name="" value="" />';
@@ -289,7 +289,7 @@ var CoursePress = CoursePress || {};
 
 					break;
 				case 'short':
-					question_type = 'Short Answer';
+					question_type = _coursepress.unit_builder.question_type.short;
 
 					question_content += '<div class="answer-group">';
 					question_content += '<label data-key="label" class="wide">';
@@ -303,7 +303,7 @@ var CoursePress = CoursePress || {};
 
 					break;
 				case 'long':
-					question_type = 'Long Answer';
+					question_type = _coursepress.unit_builder.question_type.long;
 
 					question_content += '<div class="answer-group">';
 					question_content += '<label data-key="label" class="wide">';
@@ -358,7 +358,7 @@ var CoursePress = CoursePress || {};
 			switch( type ) {
 
 				case 'short':
-					question_type = 'Short Answer';
+					question_type = _coursepress.unit_builder.question_type.short;
 
 					question_content += '<div class="answer-group">';
 					question_content += '<label data-key="label" class="wide">';
@@ -372,7 +372,7 @@ var CoursePress = CoursePress || {};
 
 					break;
 				case 'long':
-					question_type = 'Long Answer';
+					question_type = _coursepress.unit_builder.question_type.long;
 
 					question_content += '<div class="answer-group">';
 					question_content += '<label data-key="label" class="wide">';
@@ -388,7 +388,7 @@ var CoursePress = CoursePress || {};
 				case 'selectable':
 					var radio_name = 'selectable-' + ( total + 1 );
 
-					question_type = 'Selectable Choice';
+					question_type = _coursepress.unit_builder.question_type.selectable;
 
 					question_content += '<div class="answer-group">';
 					question_content += '<div class="answer"><input type="radio" name="' + radio_name + '" value="" />';
@@ -464,7 +464,7 @@ var CoursePress = CoursePress || {};
 					//
 					//question_content += '</div>';
 					//question_content += '<a class="add-item">' + _coursepress.unit_builder_add_answer_label + '</a>';
-					question_type = 'Single Choice';
+					question_type = _coursepress.unit_builder.question_type.single;
 
 					question_content += '<div class="answer-group">';
 
@@ -481,7 +481,7 @@ var CoursePress = CoursePress || {};
 
 					break;
 				case 'multiple':
-					question_type = 'Multiple Choice';
+					question_type = _coursepress.unit_builder.question_type.multiple;
 
 					question_content += '<div class="answer-group">';
 
@@ -698,7 +698,7 @@ var CoursePress = CoursePress || {};
 			switch( item.type ) {
 
 				case 'short':
-					question_type = 'Short Answer';
+					question_type = _coursepress.unit_builder.question_type.short;
 					
 					question_content += '<div class="answer-group">';
 					question_content += '<label data-key="label" class="wide">';
@@ -712,7 +712,7 @@ var CoursePress = CoursePress || {};
 
 					break;
 				case 'long':
-					question_type = 'Long Answer';
+					question_type = _coursepress.unit_builder.question_type.long;
 					
 					question_content += '<div class="answer-group">';
 					question_content += '<label data-key="label" class="wide">';
@@ -726,7 +726,7 @@ var CoursePress = CoursePress || {};
 
 					break;
 				case 'selectable':
-					question_type = 'Selectable Choice';
+					question_type = _coursepress.unit_builder.question_type.selectable;
 
 					question_content += '<div class="answer-group">';
 
@@ -910,7 +910,6 @@ var CoursePress = CoursePress || {};
 			CoursePress.Helpers.Module.form.update_meta( mod_el );
 		} );
 	};
-
 
 	CoursePress.Helpers.Module.form.bind_buttons = function() {
 		CoursePress.Helpers.Module.form.bind_add_item();
