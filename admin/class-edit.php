@@ -1276,7 +1276,7 @@ class CoursePress_Admin_Edit {
 		// Fail info
 		$failed_title = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_title', __( 'Sorry, you did not pass this course!', 'CP_TD' ) );
 		$failed_content = sprintf( '<p>%s</p><p>%s</p>',
-			__( 'Unfortunately, you didn’t pass COURSE_NAME.', 'CP_TD' ),
+			__( 'Unfortunately, you didn\'t pass COURSE_NAME.', 'CP_TD' ),
 			__( 'Better luck next time!', 'CP_TD' )
 		);
 		$failed_content = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_content', $failed_content );
