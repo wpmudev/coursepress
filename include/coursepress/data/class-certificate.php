@@ -530,7 +530,7 @@ class CoursePress_Data_Certificate {
 			$url = add_query_arg( array( 'fdcpf' => $url, 'c' => $course_id, 'u' => $student_id ), home_url() );
 			return $url;
 		}
-		return false;
+		return CoursePress_View_Front_Course::download_certificate_link( $course_id, $student_id );
 	}
 
 	/**
