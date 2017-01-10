@@ -17,6 +17,7 @@ CHANGELOG
 * Added confirmation popup when student withdraw from the course.
 * Fixed non-virtual student login page.
 * Removed fakepath file location in file upload.
+* Fixed student dashboard page.
 
 = 2.0.1 =
 ------------------------------------------------------

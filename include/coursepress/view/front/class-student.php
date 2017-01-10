@@ -84,11 +84,15 @@ class CoursePress_View_Front_Student {
 
 	}
 
-	public static function render_student_dashboard_page() {
+	public static function render_student_dashboard_page( $student_id = 0 ) {
 
 		if ( ! is_user_logged_in() ) {
 			_e( 'You must be logged in in order to complete the action', 'CP_TD' );
 			exit;
+		} else {
+			if ( empty( $student_id ) ) {
+				$student_id = get_current_user_id();
+			}
 		}
 
 		$student_courses = CoursePress_Data_Student::get_enrolled_courses_ids( $student_id );
@@ -103,7 +107,8 @@ class CoursePress_View_Front_Student {
 
 		$show_random_courses = true;
 
-		if ( ! empty( $course_list ) ) {
+		if ( ! empty( $course_list )
+			&& ( CoursePress_Data_Capabilities::is_instructor() || CoursePress_Data_Capabilities::is_facilitator() ) ) {
 			echo '<div class="dashboard-managed-courses-list">';
 			echo '<h1 class="title managed-courses-title">' . __( 'Courses you manage:', 'CP_TD' ) . '</h1>';
 			echo '<div class="course-list course-list-managed course course-student-dashboard">';
