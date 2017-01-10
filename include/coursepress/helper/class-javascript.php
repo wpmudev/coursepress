@@ -204,6 +204,18 @@ class CoursePress_Helper_JavaScript {
 			$localize_array['unit_builder_form']['messages']['error_while_saving'] = __( 'Something went wrong. Unit was not saved!', 'CP_TD' );
 			$localize_array['unit_builder_form']['messages']['adding_module'] = __( 'Wait, module adding now...', 'CP_TD' );
 
+			$localize_array['unit_l8n'] = array(
+				'question_type' => array(
+					'single' => __( 'Single Choice', 'cp' ),
+					'multiple' => __( 'Multiple Choice', 'cp' ),
+					'short_answer' => __( 'Short Answer', 'cp' ),
+					'long_answer' => __( 'Long Answer', 'cp' ),
+				),
+				'pre_answers' => array(
+					'a' => __( 'Answer A', 'cp' ),
+					'b' => __( 'Answer B', 'cp' ),
+				)
+			);
 		}
 
 		/** COURSE LIST */

@@ -247,7 +247,7 @@ class CoursePress_Admin_Edit {
 		$publish_toggle = '';
 
 		$ui = array(
-			'label' => 'Publish Course',
+			'label' => __( 'Publish Course', 'cp' ),
 			'left' => '<i class="fa fa-ban"></i>',
 			'left_class' => 'red',
 			'right' => '<i class="fa fa-check"></i>',
@@ -450,12 +450,12 @@ class CoursePress_Admin_Edit {
 		// Course Language
 		$language = CoursePress_Data_Course::get_setting( $course_id, 'course_language' );
 		if ( empty( $language ) ) {
-			$language = __( 'English', 'CP_TD' );
+			$language = __( 'English', 'cp' );
 		}
 		$content .= '
 				<div class="wide">
 						<label for="meta_course_language">' .
-					esc_html__( 'Language', 'CP_TD' ) . '
+					esc_html__( 'Language', 'cp' ) . '
 						</label>
 						<input class="medium" type="text" name="meta_course_language" id="meta_course_language" value="' . $language . '"/>
 				</div>';
@@ -1128,16 +1128,18 @@ class CoursePress_Admin_Edit {
 		if ( ! $payment_supported && ! $disable_payment ) {
 
 			if ( current_user_can( 'install_plugins' ) || current_user_can( 'activate_plugins ' ) ) {
-				$install_message = sprintf( __( '<p>To start selling your course, please install and activate MarketPress here:</p>
-								<a href="%s">Activate MarketPress</a>', 'CP_TD' ), esc_url_raw( admin_url( 'admin.php?page=coursepress_settings&tab=extensions' ) ) );
+				$install_message = sprintf( '<p>%s</p> <a href="%s">%s MarketPress</a>',
+					__( 'To start selling your course, please install and activate MarketPress here:', 'CP_TD' ),
+					esc_url_raw( admin_url( 'admin.php?page=coursepress_settings&tab=extensions' ) ),
+					__( 'Activate', 'CP_TD' ) );
 			} else {
-				$install_message = __( '<p>Please contact your administrator to enable MarketPress for your site.</p>', 'CP_TD' );
+				$install_message = sprintf( '<p>%s</p>', __( 'Please contact your administrator to enable MarketPress for your site.', 'CP_TD' ) );
 			}
 
 			if ( CP_IS_PREMIUM ) {
-				$version_message = __( '<p>The full version of MarketPress has been bundled with CoursePress Pro.</p>', 'CP_TD' );
+				$version_message = sprintf( '<p>%s</p>', __( 'The full version of MarketPress has been bundled with CoursePress Pro.', 'CP_TD' ) );
 			} else {
-				$version_message = __( '<p>You can use the free or premium version of MarketPress to sell your courses.</p>', 'CP_TD' );
+				$version_message = sprintf( '<p>%s</p>', __( 'You can use the free or premium version of MarketPress to sell your courses.', 'CP_TD' ) );
 			}
 
 			$class = $is_paid ? '' : 'hidden';
@@ -1145,6 +1147,15 @@ class CoursePress_Admin_Edit {
 			/**
 			 * Hook this filter to get rid of the payment message
 			 */
+			$payment_message = apply_filters( 'coursepress_course_payment_message', sprintf( '
+				<div class="payment-message %s">
+					<h3>%s</h3>
+					%s
+					%s
+					<p>%s: WooCommerce</p>
+				</div>
+			', __( 'Sell your courses online with MarketPress.', 'cp' ), $class, $version_message, $install_message, __( 'Other supported plugins', 'cp' ) ), $course_id );
+			/*
 			$payment_message = apply_filters( 'coursepress_course_payment_message', sprintf( __( '
 				<div class="payment-message %s">
 					<h3>Sell your courses online with MarketPress.</h3>
@@ -1153,10 +1164,9 @@ class CoursePress_Admin_Edit {
 					<p>Other supported plugins: WooCommerce</p>
 				</div>
 			', 'CP_TD' ), $class, $version_message, $install_message ), $course_id );
-
+			*/
 			// It's already been filtered, but because we're dealing with HTML, lets be sure
 			$content .= CoursePress_Helper_Utility::filter_content( $payment_message );
-
 		}
 
 		if ( $payment_supported ) {
@@ -1248,7 +1258,7 @@ class CoursePress_Admin_Edit {
 			'DOWNLOAD_CERTIFICATE_BUTTON',
 			'STUDENT_WORKBOOK',
 		);
-		$token_info = '<p class="description" style="margin-bottom: -25px;">'. __( sprintf( 'Use these tokens to display actual course details: %s', implode( ', ', $tokens ) ), 'CP_TD' ) . '</p>';
+		$token_info = '<p class="description" style="margin-bottom: -25px;">'. sprintf( __( 'Use these tokens to display actual course details: %s', 'cp' ), implode( ', ', $tokens ) ) . '</p>';
 
 		// Pre-completion page
 		$content .= '<div class="wide page-pre-completion">'
