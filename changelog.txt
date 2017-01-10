@@ -18,6 +18,7 @@ CHANGELOG
 * Fixed non-virtual student login page.
 * Removed fakepath file location in file upload.
 * Fixed student dashboard page.
+* Fixed warning message when user is logged out.
 
 = 2.0.1 =
 ------------------------------------------------------
