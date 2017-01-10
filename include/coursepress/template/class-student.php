@@ -231,6 +231,7 @@ class CoursePress_Template_Student {
 					<input type="password" name="password_confirmation" value=""/>
 				</label>
 				' . do_action( 'coursepress_after_settings_pasword' ) . '
+				<label class="weak-password-label"><input type="checkbox" name="weak_password_confirm" value="1" /> ' . __( 'Confirm use of weak password.', 'cp' ) . '</label>
 				<label class="full">
 					<input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="' . esc_html__( 'Save Changes', 'CP_TD' ) .'"/>
 				</label>

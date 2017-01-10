@@ -1402,6 +1402,11 @@ class CoursePress_Data_Shortcode_Template {
 								<input type="password" name="password_confirmation" value=""/>
 							</label>
 						';
+						$content .= '<label class="weak-password-confirm">
+							<input type="checkbox" name="confirm_weak_password" value="1" />
+							<span>' . __( 'Confirm use of weark password', 'cp' ) . '</span>
+							</label>
+						';
 
 						if ( shortcode_exists( 'signup-tos' ) ) {
 							if ( get_option( 'show_tos', 0 ) == '1' ) {
@@ -1677,6 +1682,11 @@ class CoursePress_Data_Shortcode_Template {
 						if ( $strength_meter_placeholder ) {
 							$content .= '<span id="password-strength"></span>';
 						}
+						$content .= '<label class="weak-password-confirm">
+							<input type="checkbox" name="confirm_weak_password" value="1" />
+							' . __( 'Confirm use of weak password', 'cp' ) . '
+							</label>
+						';
 
 						if ( shortcode_exists( 'signup-tos' ) ) {
 							if ( get_option( 'show_tos', 0 ) == '1' ) {

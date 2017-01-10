@@ -20,6 +20,7 @@ CHANGELOG
 * Fixed student dashboard page.
 * Fixed warning message when user is logged out.
 * Fixed unstranslated texts.
+* Added allow weak password registration.
 
 = 2.0.1 =
 ------------------------------------------------------
