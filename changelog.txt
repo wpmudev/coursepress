@@ -8,6 +8,8 @@ CHANGELOG
 = 2.0.2 =
 -------------------------------------------------
 * Fixed a bug with class autoloder function.
+* Added ability to auto re-create certificate if file is missing.
+* Added permission check when try to download certificate.
 
 = 2.0.0 =
 -------------------------------------------------
