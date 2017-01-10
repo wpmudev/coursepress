@@ -62,7 +62,7 @@ module.exports = function(grunt) {
 				'2.0/campus/*',
 				'2.0/premium/'
 			],
-			pot_dir: 'language/',  // With trailing slash.
+			pot_dir: '/language/',  // With trailing slash.
 			textdomain_pro: 'cp',   // Campus uses same textdomain.
 			textdomain_free: 'coursepress',
 		},
