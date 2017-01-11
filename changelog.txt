@@ -8,6 +8,7 @@ CHANGELOG
 = 2.0.2 =
 -------------------------------------------------
 * Fixed a bug with class autoloder function.
+* Fixed a bug with adding students to course in admin, when MarketPress or WooCommerce is used to sell courses.
 
 = 2.0.0 =
 -------------------------------------------------
