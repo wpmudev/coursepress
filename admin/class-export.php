@@ -45,9 +45,9 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 				// Get all course details
 				$course = get_post( $course_id );
 
-				$courses[$course_id]['course'] = $course;
-				$courses[$course_id]['author'] = get_userdata( $course->post_author )->data;
-				$courses[$course_id]['meta'] = self::unique_meta( get_post_meta( $course_id ) );
+				$courses[ $course_id ]['course'] = $course;
+				$courses[ $course_id ]['author'] = get_userdata( $course->post_author )->data;
+				$courses[ $course_id ]['meta'] = self::unique_meta( get_post_meta( $course_id ) );
 
 				// Export instructors
 				$course_instructors = array();
@@ -57,10 +57,10 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 				if ( ! empty( $instructors ) ) {
 					foreach ( $instructors as $instructor_id ) {
 						$instructor = get_userdata( $instructor_id );
-						$course_instructors[$instructor_id] = $instructor->data;
+						$course_instructors[ $instructor_id ] = $instructor->data;
 					}
 				}
-				$courses[$course_id]['instructors'] = $course_instructors;
+				$courses[ $course_id ]['instructors'] = $course_instructors;
 
 				// Export facilitators
 				$facilitators = CoursePress_Data_Facilitator::get_course_facilitators( $course_id, false );
@@ -68,10 +68,10 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 
 				if ( ! empty( $facilitators ) ) {
 					foreach ( $facilitators as $facilitator_id => $facilitator ) {
-						$course_facilitators[$facilitator_id] = $facilitator->data;
+						$course_facilitators[ $facilitator_id ] = $facilitator->data;
 					}
 				}
-				$courses[$course_id]['facilitators'] = $course_facilitators;
+				$courses[ $course_id ]['facilitators'] = $course_facilitators;
 
 				// @todo: Export categories
 				// @todo: Export discussions/forum
@@ -81,7 +81,7 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 				foreach ( $units as $unit_id => $unit ) {
 					// Get unit metas
 					$unit_metas = self::unique_meta( get_post_meta( $unit_id ) );
-					$units[$unit_id]['meta'] = $unit_metas;
+					$units[ $unit_id ]['meta'] = $unit_metas;
 
 					if ( ! empty( $unit['pages'] ) ) {
 						foreach ( $unit['pages'] as $page_number => $modules ) {
@@ -89,16 +89,16 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 								foreach ( $modules['modules'] as $module_id => $module ) {
 									$module_meta = self::unique_meta( get_post_meta( $module_id ) );
 									$module->meta = $module_meta;
-									$units[$unit_id]['pages'][$page_number]['modules'][$module_id] = $module;
+									$units[ $unit_id ]['pages'][ $page_number ]['modules'][ $module_id ] = $module;
 
 									if ( $with_comments ) {
 										// Get module comments
 										$comments = get_comments( 'post_id=' . $module_id );
-										foreach ($comments as $comment_id => $comment) {
+										foreach ( $comments as $comment_id => $comment ) {
 											$comment->user = get_userdata( $comment->user_id )->data;
 											$comment->unit_id = $unit_id;
 											$comment->module_id = $module_id;
-											$courses[$course_id]['comments']['modules'][$module_id][] = $comment;
+											$courses[ $course_id ]['comments']['modules'][ $module_id ][] = $comment;
 										}
 									}
 								}
@@ -107,7 +107,7 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 					}
 				}
 
-				$courses[$course_id]['units'] = $units;
+				$courses[ $course_id ]['units'] = $units;
 
 				if ( $with_students ) {
 					// Include students
@@ -118,18 +118,18 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 						// Get student progress
 						$student_progress = CoursePress_Data_Student::get_completion_data( $student->ID, $course_id );
 						$student->data->progress = $student_progress;
-						$course_students[$student->ID] = $student->data;
+						$course_students[ $student->ID ] = $student->data;
 					}
 
-					$courses[$course_id]['students'] = $course_students;
+					$courses[ $course_id ]['students'] = $course_students;
 				}
 
 				if ( $with_comments ) {
 					// Get course comments
 					$comments = get_comments( 'post_id=' . $course_id );
-					foreach ($comments as $comment_id => $comment) {
+					foreach ( $comments as $comment_id => $comment ) {
 						$comment->user = get_userdata( $comment->user_id )->data;
-						$courses[$course_id]['comments']['course'][] = $comment;
+						$courses[ $course_id ]['comments']['course'][] = $comment;
 					}
 				}
 			}
@@ -152,7 +152,8 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 			header( 'Content-Disposition: attachment; filename=' . $wp_filename );
 			header( 'Content-Type: text/json; charset=' . get_option( 'blog_charset' ), true );
 
-			echo json_encode( $courses );
+			$option = defined( 'JSON_PRETTY_PRINT' )? JSON_PRETTY_PRINT : null;
+			echo json_encode( $courses, $option );
 			exit;
 		}
 	}
@@ -177,7 +178,7 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 			}
 
 			if ( in_array( $key, $excludes ) ) {
-				unset( $metas[$key] );
+				unset( $metas[ $key ] );
 				continue;
 			}
 
@@ -193,11 +194,11 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 					if ( ! empty( $v['invited_students'] ) ) {
 						unset( $v['invited_students'] );
 					}
-					$value[$k] = $v;
+					$value[ $k ] = $v;
 				}
 			}
 
-			$metas[$key] = $value;
+			$metas[ $key ] = $value;
 		}
 
 		return $metas;
