@@ -88,7 +88,7 @@ class CoursePress_View_Admin_Setting_Setup {
 
 		</div>
 		<br/>
-		<img alt="" src="<?php echo esc_attr_e( CoursePress::$url . 'asset/img/quick-setup/step-1.jpg' ); ?>" class="image-66">
+		<img alt="" src="<?php echo esc_attr_e( CoursePress::$url . 'asset/img/quick-setup/step-1.png' ); ?>" class="image-66">
 	</div>
 
 	<div class="changelog">
@@ -106,7 +106,7 @@ class CoursePress_View_Admin_Setting_Setup {
 			</ul>
 
 		</div>
-		<img alt="" src="<?php echo esc_attr_e( CoursePress::$url . 'asset/img/quick-setup/step-2.jpg' ); ?>" class="image-66">
+		<img alt="" src="<?php echo esc_attr_e( CoursePress::$url . 'asset/img/quick-setup/step-2.png' ); ?>" class="image-66">
 
 	</div>
 
@@ -136,7 +136,7 @@ class CoursePress_View_Admin_Setting_Setup {
 			<br/><br/>
 
 		</div>
-		<img alt="" src="<?php esc_attr_e( CoursePress::$url . 'asset/img/quick-setup/step-3.jpg' ); ?>" class="image-66">
+		<img alt="" src="<?php esc_attr_e( CoursePress::$url . 'asset/img/quick-setup/step-3.png' ); ?>" class="image-66">
 
 	</div>
 
@@ -173,7 +173,7 @@ if ( current_user_can( 'manage_options' ) && ! get_option( 'permalink_structure'
 <?php
 	}
 } else {
-	$url = admin_url('post-new.php?post_type=' . CoursePress_Data_Course::get_post_type_name());
+	$url = admin_url( 'post-new.php?post_type=' . CoursePress_Data_Course::get_post_type_name() );
 ?>
 	<a href="<?php echo esc_url( $url ); ?>" class="button button-units save-unit-button start-course-button"><?php _e( 'Start building your own course now &rarr;', 'CP_TD' ); ?></a>
 <?php
