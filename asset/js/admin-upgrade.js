@@ -1,6 +1,6 @@
 /*! CoursePress - v2.0.0
  * https://premium.wpmudev.org/project/coursepress-pro/
- * Copyright (c) 2016; * Licensed GPLv2+ */
+ * Copyright (c) 2017; * Licensed GPLv2+ */
 (jQuery(function() {
 	jQuery(document).ready( function($) {
 		var coursepress_upgrade_form = $('form#coursepress-update-courses-form');

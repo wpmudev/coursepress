@@ -4,5 +4,8 @@
 			display: block;
 			padding-bottom: 5px;
 		}
+		&.weak-password-confirm {
+			display: none;
+		}
 	}
 }

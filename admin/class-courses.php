@@ -81,7 +81,7 @@ class CoursePress_Admin_Courses {
 			'units' => __( 'Units', 'CP_TD' ),
 			'students' => __( 'Students', 'CP_TD' ),
 			'certificates' => __( 'Certified', 'CP_TD' ),
-			'status' => __( 'Status', 'CP_TD' ),
+			'status' => __( 'Status', 'CP' ),
 		) );
 
 		// Remove date column
@@ -238,7 +238,7 @@ class CoursePress_Admin_Courses {
 
 			if ( 'trash' != $course->post_status ) {
 				// Add edit link
-				$actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_link ), __( 'Edit', 'CP_TD' ) );
+				$actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_link ), __( 'Edit', 'cp' ) );
 				$edit_units = add_query_arg( 'tab', 'units', $edit_link );
 				$edit_students = add_query_arg( 'tab', 'students', $edit_link );
 				$actions['units'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_units ), __( 'Units', 'CP_TD' ) );
@@ -335,13 +335,13 @@ class CoursePress_Admin_Courses {
 		?>
 		<script type="text/html" id="tmpl-coursepress-courses-delete-one">
 				<div class="notice notice-warning">
-					<p><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span> <?php _e( 'Deleting course <b>{{{data.names}}}</b>, please wait!', 'CP_TD' ); ?></p>
+					<p><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span> <?php _e( sprintf( 'Deleting course %s, please wait!', '<b>{{{data.names}}}</b>'), 'CP_TD' ); ?></p>
 					<p><?php _e( 'This page will be reloaded shortly.', 'CP_TD' ); ?></p>
 				</div>
 			</script>
 			<script type="text/html" id="tmpl-coursepress-courses-delete-more">
 				<div class="notice notice-warning">
-					<p><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span><?php _e( 'Deleting {{{data.size}}} courses, please wait!', 'CP_TD' ); ?></p>
+					<p><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span><?php _e( __( 'Deleting %s courses, please wait!', '{{{data.size}}}' ), 'CP_TD' ); ?></p>
 					<p><?php _e( 'This page will be reloaded shortly.', 'CP_TD' ); ?></p>
 					<p><?php _e( 'Deleted courses:', 'CP_TD' ) ?></p>
 					{{{data.names}}}
@@ -349,7 +349,7 @@ class CoursePress_Admin_Courses {
 			</script>
 			<script type="text/html" id="tmpl-coursepress-courses-duplicate">
 				<div class="notice notice-warning">
-					<p><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span> <?php _e( 'Duplicating course <b>{{{data.names}}}</b>, please wait!', 'CP_TD' ); ?></p>
+					<p><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span> <?php _e( __( 'Duplicating course %s, please wait!', '<b>{{{data.names}}}</b>' ), 'CP_TD' ); ?></p>
 					<p><?php _e( 'This page will be reloaded shortly.', 'CP_TD' ); ?></p>
 				</div>
 			</script>
