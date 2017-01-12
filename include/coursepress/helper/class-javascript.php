@@ -214,7 +214,7 @@ class CoursePress_Helper_JavaScript {
 				'pre_answers' => array(
 					'a' => __( 'Answer A', 'CP_TD' ),
 					'b' => __( 'Answer B', 'CP_TD' ),
-				)
+				),
 			);
 		}
 
@@ -499,15 +499,15 @@ class CoursePress_Helper_JavaScript {
 			'server_error' => __( 'An unexpected error occur while processing. Please try again.', 'CP_TD' ),
 			'module_error' => array(
 				'required' => __( 'You need to complete this module!', 'CP_TD' ),
-				'normal_required' => __( 'You need to complete all required modules!', 'pc' ),
+				'normal_required' => __( 'You need to complete all required modules!', 'CP_TD' ),
 				'participate' => __( 'Your participation to the discussion is required!', 'CP_TD' ),
 				'passcode_required' => __( 'Enter PASSCODE!', 'CP_TD' ),
 				'invalid_passcode' => __( 'Invalid PASSCODE!', 'CP_TD' ),
 			),
-			'confirmed_withdraw' => __( 'Please confirm that you want to withdraw from the course. If you withdraw, all your records and access to this course will also be removed.', 'cp' ),
+			'confirmed_withdraw' => __( 'Please confirm that you want to withdraw from the course. If you withdraw, all your records and access to this course will also be removed.', 'CP_TD' ),
 			'buttons' => array(
-				'ok' => __( 'OK', 'cp' ),
-				'cancel' => __( 'Cancel', 'cp' ),
+				'ok' => __( 'OK', 'CP_TD' ),
+				'cancel' => __( 'Cancel', 'CP_TD' ),
 			),
 		);
 

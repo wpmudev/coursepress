@@ -178,7 +178,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 						'id' => $item->ID,
 					)
 				);
-				$row_actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Edit', 'cp' ) );
+				$row_actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Edit', 'CP_TD' ) );
 			}
 		}
 		if ( $this->can_delete( $item ) ) {

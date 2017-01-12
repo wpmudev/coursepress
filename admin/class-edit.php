@@ -450,12 +450,12 @@ class CoursePress_Admin_Edit {
 		// Course Language
 		$language = CoursePress_Data_Course::get_setting( $course_id, 'course_language' );
 		if ( empty( $language ) ) {
-			$language = __( 'English', 'cp' );
+			$language = __( 'English', 'CP_TD' );
 		}
 		$content .= '
 				<div class="wide">
 						<label for="meta_course_language">' .
-					esc_html__( 'Language', 'cp' ) . '
+					esc_html__( 'Language', 'CP_TD' ) . '
 						</label>
 						<input class="medium" type="text" name="meta_course_language" id="meta_course_language" value="' . $language . '"/>
 				</div>';
@@ -1131,7 +1131,7 @@ class CoursePress_Admin_Edit {
 				$install_message = sprintf( '<p>%s</p> <a href="%s">%s MarketPress</a>',
 					__( 'To start selling your course, please install and activate MarketPress here:', 'CP_TD' ),
 					esc_url_raw( admin_url( 'admin.php?page=coursepress_settings&tab=extensions' ) ),
-					__( 'Activate', 'CP_TD' ) );
+				__( 'Activate', 'CP_TD' ) );
 			} else {
 				$install_message = sprintf( '<p>%s</p>', __( 'Please contact your administrator to enable MarketPress for your site.', 'CP_TD' ) );
 			}
@@ -1154,7 +1154,7 @@ class CoursePress_Admin_Edit {
 					%s
 					<p>%s: WooCommerce</p>
 				</div>
-			', $class, __( 'Sell your courses online with MarketPress.', 'cp' ), $version_message, $install_message, __( 'Other supported plugins', 'cp' ) ), $course_id );
+			', $class, __( 'Sell your courses online with MarketPress.', 'CP_TD' ), $version_message, $install_message, __( 'Other supported plugins', 'CP_TD' ) ), $course_id );
 
 			// It's already been filtered, but because we're dealing with HTML, lets be sure
 			$content .= CoursePress_Helper_Utility::filter_content( $payment_message );
