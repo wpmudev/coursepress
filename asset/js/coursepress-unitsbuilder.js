@@ -269,9 +269,9 @@ var CoursePress = CoursePress || {};
 
 					question_content += '<div class="answer-group">';
 					question_content += '<div class="answer"><input type="radio" name="' + radio_name + '" value="" />';
-					question_content += '<input class="component-radio-answer wide" type="text" value="Answer A" /><span class="remove-quiz-item"><i class="fa fa-trash-o"></i></span></div>';
+					question_content += '<input class="component-radio-answer wide" type="text" value="' + _coursepress.unit_l8n.pre_answers.a + '" /><span class="remove-quiz-item"><i class="fa fa-trash-o"></i></span></div>';
 					question_content += '<div class="answer"><input type="radio" name="' + radio_name + '" value="" />';
-					question_content += '<input class="component-radio-answer wide" type="text" value="Answer B" /><span class="remove-quiz-item"><i class="fa fa-trash-o"></i></span></div>';
+					question_content += '<input class="component-radio-answer wide" type="text" value="' + _coursepress.unit_l8n.pre_answers.b + '" /><span class="remove-quiz-item"><i class="fa fa-trash-o"></i></span></div>';
 					question_content += '</div>';
 					question_content += '<a class="add-quiz-item">' + _coursepress.unit_builder_add_answer_label + '</a>';
 
@@ -281,9 +281,9 @@ var CoursePress = CoursePress || {};
 
 					question_content += '<div class="answer-group">';
 					question_content += '<div class="answer"><input type="checkbox" name="" value="" />';
-					question_content += '<input class="component-checkbox-answer wide" type="text" value="Answer A" name="" /><span class="remove-quiz-item"><i class="fa fa-trash-o"></i></span></div>';
+					question_content += '<input class="component-checkbox-answer wide" type="text" value="' + _coursepress.unit_l8n.pre_answers.a + '" name="" /><span class="remove-quiz-item"><i class="fa fa-trash-o"></i></span></div>';
 					question_content += '<div class="answer"><input type="checkbox" name="" value="" />';
-					question_content += '<input class="component-checkbox-answer wide" type="text" value="Answer B" name="" /><span class="remove-quiz-item"><i class="fa fa-trash-o"></i></span></div>';
+					question_content += '<input class="component-checkbox-answer wide" type="text" value="' + _coursepress.unit_l8n.pre_answers.b + '" name="" /><span class="remove-quiz-item"><i class="fa fa-trash-o"></i></span></div>';
 					question_content += '</div>';
 					question_content += '<a class="add-quiz-item">' + _coursepress.unit_builder_add_answer_label + '</a>';
 
@@ -984,6 +984,15 @@ var CoursePress = CoursePress || {};
 		 */
 		CoursePress.Helpers.Module.unit_show_message( _coursepress.unit_builder_form.messages.saving_unit, 'info' );
 	};
+
+	CoursePress.Helpers.Module.unit_add_show_message = function( message, notice_class ) {
+		$( ".section.unit-builder-components .notice" ).detach();
+		$( ".section.unit-builder-components .description" ).after( '<div class="notice notice-' + notice_class + '"><p>'+message+'</p></div>' );
+		if ( "success" === notice_class ) {
+			setTimeout(function(){ $( ".section.unit-builder-components .notice" ).fadeOut(); }, 3000);
+		}
+    }
+
 
 	CoursePress.Helpers.Module.unit_show_message = function( message, notice_class ) {
 		$( ".unit-builder-header .unit-buttons .notice, .unit-builder-footer .unit-buttons .notice" ).detach();
@@ -2417,20 +2426,21 @@ var CoursePress = CoursePress || {};
 			unit.set_page_image( page, el_val );
 		},
 		add_element: function( e ) {
+		CoursePress.Helpers.Module.unit_add_show_message( '<i class="fa fa-circle-o-notch fa-spin"></i> ' + _coursepress.unit_builder_form.messages.adding_module, 'info' );
 			var el = e.currentTarget;
 			var module_type = $( el ).attr( 'class' ).match( /module-(\w|-)*/g )[ 0 ].trim().replace( 'module-', '' );
-
 			//Count current elements
 			var count = $( '.module-holder' ).length;
-
 			var module = new CoursePress.Models.Module();
 			module.from_template( module_type );
 			module.set_meta( 'module_order', (count + 1) );
 			module.set_meta( 'module_page', this.parentView.activePage );
-
-			module.save();
+			module.save( null, {
+				success: function( model, response ) {
+					$( ".section.unit-builder-components .notice" ).detach();
+				}
+			});
 			this.parentView.module_collection.add( module );
-
 			//$( '.section.unit-builder-modules' ).append( CoursePress.Helpers.Module.render_module( module, (count + 1) ) );
 			//CoursePress.Helpers.Module.refresh_ui();
 		},

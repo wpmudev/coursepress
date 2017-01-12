@@ -8,7 +8,7 @@
  * Plugin URI:  http://premium.wpmudev.org/project/coursepress/
  * License:     GPL2
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * TextDomain:  cp
+ * Text Domain: CP_TD
  * Domain Path: /language/
  * Build Time:  2016-04-07T13:37:59.644Z
  * WDP ID:      913071
@@ -99,6 +99,10 @@ class CoursePress {
 	 * @since  2.0.0
 	 */
 	public static function init() {
+		/**
+		 * Translate plugin name
+		 */
+		self::$name = _x( 'CoursePress Pro', 'plugin name', 'CP_TD' ); // Translated by grunt.
 		// Initialise the autoloader.
 		spl_autoload_register( array( __CLASS__, 'class_loader' ) );
 
@@ -270,5 +274,9 @@ class CoursePress {
 		foreach ( $theme_directories as $theme_directory ) {
 			register_theme_directory( $theme_directory );
 		}
+	}
+
+	public static function get_file() {
+		return self::$file;
 	}
 }

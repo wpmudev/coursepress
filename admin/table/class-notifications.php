@@ -11,9 +11,11 @@ if ( ! class_exists( 'WP_Posts_List_Table' ) ) {
 
 class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 	private $count = array();
-	private $post_type;
+	protected $post_type;
 	private $_categories;
 	private $recivers_allowed_options;
+	protected $is_trash;
+	protected $page = 'coursepress_notifications';
 
 	public function __construct() {
 		$post_format = CoursePress_Data_Notification::get_format();
@@ -28,7 +30,8 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 	}
 
 	public function prepare_items() {
-		global $wp_query;
+		global $avail_post_stati, $wp_query, $per_page, $mode;
+		$avail_post_stati = wp_edit_posts_query();
 		$screen = get_current_screen();
 		/**
 		 * Per Page
@@ -45,7 +48,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 		/**
 		 * Post statsu
 		 */
-		$post_status = 'any';
+		$post_status = isset( $_GET['post_status'] )? $_GET['post_status'] : 'any';
 		$current_page = $this->get_pagenum();
 		$offset = ( $current_page - 1 ) * $per_page;
 		$s = isset( $_POST['s'] )? mb_strtolower( trim( $_POST['s'] ) ):false;
@@ -94,6 +97,8 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 		}
 		$total_items = $wp_query->found_posts;
 
+		$this->is_trash = isset( $_REQUEST['post_status'] ) && $_REQUEST['post_status'] === 'trash';
+
 		$this->set_pagination_args(
 			array(
 			'total_items' => $total_items,
@@ -117,13 +122,18 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 
 	/** No items */
 	public function no_items() {
-		echo __( 'No notifications found.', 'CP_TD' );
+		$post_type_object = get_post_type_object( $this->post_type );
+		if ( $this->is_trash ) {
+			echo $post_type_object->labels->not_found_in_trash;
+		} else {
+			echo $post_type_object->labels->not_found;
+		}
 	}
 
 	public function column_cb( $item ) {
 		if ( $item->user_can_edit ) {
 			return sprintf(
-				'<input type="checkbox" name="bulk-actions[]" value="%s" />', $item->ID
+				'<input type="checkbox" name="post[]" value="%s" />', $item->ID
 			);
 		}
 		return '';
@@ -146,32 +156,53 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 			return '';
 		}
 
-		$actions = array();
+		$row_actions = array();
 
 		/**
 		 * check current_user_can update?
 		 */
 		if ( $this->can_update( $item ) ) {
-			$edit_url = add_query_arg(
-				array(
-					'action' => 'edit',
-					'id' => $item->ID,
-				)
-			);
-			$actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'CP_TD' ) );
+			if ( $this->is_trash ) {
+				$url = add_query_arg(
+					array(
+						'_wpnonce' => wp_create_nonce( 'coursepress_untrash_notification' ),
+						'action' => 'untrash',
+						'id' => $item->ID,
+					)
+				);
+				$row_actions['untrash'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Restore', 'CP_TD' ) );
+			} else {
+				$url = add_query_arg(
+					array(
+						'action' => 'edit',
+						'id' => $item->ID,
+					)
+				);
+				$row_actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Edit', 'cp' ) );
+			}
 		}
-
 		if ( $this->can_delete( $item ) ) {
-			$delete_url = add_query_arg(
-				array(
-					'action' => 'delete2',
-					'id' => $item->ID,
-				)
-			);
-			$actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $delete_url ), __( 'Delete', 'CP_TD' ) );
+			if ( $this->is_trash ) {
+				$url = add_query_arg(
+					array(
+						'_wpnonce' => wp_create_nonce( 'coursepress_delete_notification' ),
+						'id' => $item->ID,
+						'action' => 'delete',
+					)
+				);
+				$row_actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Delete Permanently', 'CP_TD' ) );
+			} else {
+				$url = add_query_arg(
+					array(
+						'_wpnonce' => wp_create_nonce( 'coursepress_trash_notification' ),
+						'id' => $item->ID,
+						'action' => 'trash',
+					)
+				);
+				$row_actions['trash'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Trash', 'CP_TD' ) );
+			}
 		}
-
-		return $this->row_actions( $actions );
+		return $this->row_actions( $row_actions );
 	}
 
 	public function column_notification( $item ) {
@@ -212,10 +243,16 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 
 	protected function get_bulk_actions() {
 		$actions = array(
-			'publish' => __( 'Visible', 'CP_TD' ),
-			'unpublish' => __( 'Private', 'CP_TD' ),
-			'delete' => __( 'Delete', 'CP_TD' ),
+			'publish' => __( 'Publish', 'CP_TD' ),
+			'draft' => __( 'Change status to Draft', 'CP_TD' ),
+			'trash' => __( 'Move to Trash', 'CP_TD' ),
 		);
+		if ( $this->is_trash ) {
+			$actions = array(
+				'untrash' => __( 'Restore', 'CP_TD' ),
+				'delete' => __( 'Delete Permanently', 'CP_TD' ),
+			);
+		}
 		return $actions;
 	}
 
@@ -275,7 +312,7 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 			'value' => 'all',
 		);
 
-		$courses =  CoursePress_Data_Notification::get_courses();
+		$courses = CoursePress_Data_Notification::get_courses();
 		if ( current_user_can( 'manage_options' ) ) {
 			$courses = false;
 		} elseif ( CoursePress_Data_Capabilities::can_add_notification_to_all() ) {
@@ -304,5 +341,140 @@ class CoursePress_Admin_Table_Notifications extends WP_Posts_List_Table {
 		</div>
 		<?php
 		$this->search_box( __( 'Search Notifications', 'CP_TD' ), 'search_notifications' );
+	}
+
+	/**
+	 *
+	 * @global array $locked_post_status This seems to be deprecated.
+	 * @global array $avail_post_stati
+	 * @return array
+	 */
+	protected function get_views() {
+		global $locked_post_status, $avail_post_stati;
+
+		$post_type = $this->post_type;
+
+		if ( ! empty( $locked_post_status ) ) {
+			return array(); }
+
+		$status_links = array();
+		$num_posts = wp_count_posts( $post_type, 'readable' );
+		$total_posts = array_sum( (array) $num_posts );
+		$class = '';
+
+		$current_user_id = get_current_user_id();
+		$all_args = array(
+			'post_type' => CoursePress_Data_Course::get_post_type_name(),
+			'page' => $this->page,
+		);
+		$mine = '';
+
+		// Subtract post types that are not included in the admin all list.
+		foreach ( get_post_stati( array( 'show_in_admin_all_list' => false ) ) as $state ) {
+			$total_posts -= $num_posts->$state;
+		}
+
+		if ( $this->user_posts_count && $this->user_posts_count !== $total_posts ) {
+			if ( isset( $_GET['author'] ) && ( $_GET['author'] == $current_user_id ) ) {
+				$class = 'current';
+			}
+
+			$mine_args = array(
+				'post_type' => CoursePress_Data_Course::get_post_type_name(),
+				'page' => $this->page,
+				'author' => $current_user_id,
+			);
+
+			$mine_inner_html = sprintf(
+				_nx(
+					'Mine <span class="count">(%s)</span>',
+					'Mine <span class="count">(%s)</span>',
+					$this->user_posts_count,
+					'posts'
+				),
+				number_format_i18n( $this->user_posts_count )
+			);
+
+			$mine = $this->get_edit_link( $mine_args, $mine_inner_html, $class );
+
+			$all_args['all_posts'] = 1;
+			$class = '';
+		}
+
+		if ( empty( $class ) && ( $this->is_base_request() || isset( $_REQUEST['all_posts'] ) ) ) {
+			$class = 'current';
+		}
+
+		$all_inner_html = sprintf(
+			_nx(
+				'All <span class="count">(%s)</span>',
+				'All <span class="count">(%s)</span>',
+				$total_posts,
+				'posts'
+			),
+			number_format_i18n( $total_posts )
+		);
+
+		$status_links['all'] = $this->get_edit_link( $all_args, $all_inner_html, $class );
+		if ( $mine ) {
+			$status_links['mine'] = $mine;
+		}
+
+		foreach ( get_post_stati( array( 'show_in_admin_status_list' => true ), 'objects' ) as $status ) {
+			$class = '';
+
+			$status_name = $status->name;
+
+			if ( ! in_array( $status_name, $avail_post_stati ) || empty( $num_posts->$status_name ) ) {
+				continue;
+			}
+
+			if ( isset( $_REQUEST['post_status'] ) && $status_name === $_REQUEST['post_status'] ) {
+				$class = 'current';
+			}
+
+			$status_args = array(
+				'post_status' => $status_name,
+				'post_type' => CoursePress_Data_Course::get_post_type_name(),
+				'page' => $this->page,
+			);
+
+			$status_label = sprintf(
+				translate_nooped_plural( $status->label_count, $num_posts->$status_name ),
+				number_format_i18n( $num_posts->$status_name )
+			);
+
+			$status_links[ $status_name ] = $this->get_edit_link( $status_args, $status_label, $class );
+		}
+
+		if ( ! empty( $this->sticky_posts_count ) ) {
+			$class = ! empty( $_REQUEST['show_sticky'] ) ? 'current' : '';
+
+			$sticky_args = array(
+				'post_type' => CoursePress_Data_Course::get_post_type_name(),
+				'page' => $this->page,
+				'show_sticky' => 1,
+			);
+
+			$sticky_inner_html = sprintf(
+				_nx(
+					'Sticky <span class="count">(%s)</span>',
+					'Sticky <span class="count">(%s)</span>',
+					$this->sticky_posts_count,
+					'posts'
+				),
+				number_format_i18n( $this->sticky_posts_count )
+			);
+
+			$sticky_link = array(
+				'sticky' => $this->get_edit_link( $sticky_args, $sticky_inner_html, $class ),
+			);
+
+			// Sticky comes after Publish, or if not listed, after All.
+			$split = 1 + array_search( ( isset( $status_links['publish'] ) ? 'publish' : 'all' ), array_keys( $status_links ) );
+			$status_links = array_merge( array_slice( $status_links, 0, $split ), $sticky_link, array_slice( $status_links, $split ) );
+		}
+
+		return $status_links;
 	}
 }

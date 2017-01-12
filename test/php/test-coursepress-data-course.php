@@ -1106,17 +1106,11 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		/**
 		 * Wrong data
 		 */
-		$assert = CoursePress_Data_Course::get_permalink( 0 );
-		$this->assertInternalType( 'string', $assert );
-
-		$assert = CoursePress_Data_Course::get_permalink( array() );
-		$this->assertInternalType( 'string', $assert );
-
-		$assert = CoursePress_Data_Course::get_permalink( null );
-		$this->assertInternalType( 'string', $assert );
-
-		$assert = CoursePress_Data_Course::get_permalink( 'foo' );
-		$this->assertInternalType( 'string', $assert );
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::get_permalink( $value );
+			$this->assertInternalType( 'string', $assert );
+		}
 
 		/**
 		 * Good data
@@ -1144,21 +1138,12 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		/**
 		 * Wrong data
 		 */
-		$assert = CoursePress_Data_Course::get_course( 0 );
-		$this->assertInternalType( 'boolean', $assert );
-		$this->assertFalse( $assert );
-
-		$assert = CoursePress_Data_Course::get_course( 'foo' );
-		$this->assertInternalType( 'boolean', $assert );
-		$this->assertFalse( $assert );
-
-		$assert = CoursePress_Data_Course::get_course( array() );
-		$this->assertInternalType( 'boolean', $assert );
-		$this->assertFalse( $assert );
-
-		$assert = CoursePress_Data_Course::get_course( null );
-		$this->assertInternalType( 'boolean', $assert );
-		$this->assertFalse( $assert );
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::get_course( $value );
+			$this->assertInternalType( 'boolean', $assert );
+			$this->assertFalse( $assert );
+		}
 
 		/**
 		 * Good data
@@ -1171,34 +1156,612 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 	/**
 	 * duplicate_course( $data )
 	 */
-	public function xxxx_duplicate_course() {
-		/** TODO **/
-		$data = (object) array( 'data' => array( 'course_id' => 0 ) );
-		$values = array( 0, null, array(), 'foo' );
+	public function test_duplicate_course() {
+		$keys = array( 'course_id', 'data', 'nonce', 'success', 'action' );
+		$data = (object) array( 'data' => (object) array( 'course_id' => 0 ) );
 		/**
 		 * Wrong data
 		 */
+		$values = $this->get_wrong_values();
 		foreach ( $values as $value ) {
 			$assert = CoursePress_Data_Course::duplicate_course( $value );
-			print_r( array( gettype( $assert ), $assert ) );
+			$this->assertInternalType( 'array', $assert );
+			$this->has_keys( $keys, $assert );
+			$this->assertFalse( $assert['success'] );
 
 			$data->data->course_id = $value;
 			$assert = CoursePress_Data_Course::duplicate_course( $data );
-			print_r( array( gettype( $assert ), $assert ) );
+			$this->assertInternalType( 'array', $assert );
+			$this->has_keys( $keys, $assert );
+			$this->assertFalse( $assert['success'] );
 		}
 		/**
 		 * Good data
 		 */
 		$data->data->course_id = $this->course->ID;
 		$assert = CoursePress_Data_Course::duplicate_course( $data );
-		print_r( array( gettype( $assert ), $assert ) );
+		$this->has_keys( $keys, $assert );
+		$this->assertTrue( $assert['success'] );
+		$course_id = $assert['course_id'];
+		$assert = get_post( $course_id );
+		$this->assertInstanceOf( 'WP_Post', $assert );
+		$this->assertEquals( $course_id, $assert->ID );
+		$post_type = CoursePress_Data_Course::get_post_type_name();
+		$this->assertEquals( $post_type, $assert->post_type );
+		$this->assertEquals( 0, $assert->post_parent );
+	}
+
+	/**
+	 * get_course_url( $course_id = 0 )
+	 */
+	public function test_get_course_url() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::get_course_url( $value );
+			$this->assertInternalType( 'string', $assert );
+			$this->assertEquals( '', $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$assert = CoursePress_Data_Course::get_course_url( $this->course->ID );
+		$this->assertInternalType( 'string', $assert );
+		$re = sprintf( '@%s/$@', $this->course->post_name );
+		$this->assertRegExp( $re, $assert );
+	}
+
+	/**
+	 * is_course_preview( $course_id )
+	 */
+	public function test_is_course_preview() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::is_course_preview( $value );
+			$this->assertEmpty( $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$assert = CoursePress_Data_Course::is_course_preview( $this->course->ID );
+		$this->assertEmpty( $assert );
+	}
+
+	/**
+	 * time_now()
+	 */
+	public function test_time_now() {
+		$assert = CoursePress_Data_Course::time_now();
+		$this->assertInternalType( 'integer', $assert );
+		$this->assertGreaterThan( 1479304573, $assert );
+	}
+
+	/**
+	 * strtotime( $date_string )
+	 */
+	public function test_strtotime() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::strtotime( $value );
+			$this->assertInternalType( 'integer', $assert );
+			$this->assertEquals( 0, $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$assert = CoursePress_Data_Course::strtotime( '2016-11-20' );
+		$this->assertInternalType( 'integer', $assert );
+		$this->assertEquals( 1479600000, $assert );
+	}
+
+	/**
+	* is_course_available( $course_id, $student_id = 0 )
+	 * get_course_availability_status( $course_id, $user_id = 0 )
+	 */
+	public function test_course_available() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $course_id ) {
+			foreach ( $values as $student_id ) {
+				$assert = CoursePress_Data_Course::is_course_available( $course_id, $student_id );
+				$this->assertInternalType( 'boolean', $assert );
+				$this->assertFalse( $assert );
+
+				$assert = CoursePress_Data_Course::get_course_availability_status( $course_id, $student_id );
+				$this->assertInternalType( 'string', $assert );
+				$this->assertEquals( '', $assert );
+			}
+		}
+		/**
+		 * Good data
+		 */
+		$assert = CoursePress_Data_Course::is_course_available( $this->course->ID, $this->student->ID );
+		$this->assertInternalType( 'boolean', $assert );
+		$this->assertFalse( $assert );
+
+		$assert = CoursePress_Data_Course::get_course_availability_status( $this->course->ID, $this->student->ID );
+		$this->assertInternalType( 'string', $assert );
+		$this->assertEquals( '2116-10-01', $assert );
+	}
+
+	/**
+	 * reorder_modules( $results )
+	 */
+	public function test_reorder_modules() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::reorder_modules( $value );
+			$this->assertInternalType( 'array', $assert );
+			$this->assertEquals( array(), $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$modules = $this->get_modules();
+		$assert = CoursePress_Data_Course::reorder_modules( $modules );
+		$this->assertInternalType( 'array', $assert );
+	}
+
+	/**
+	 * can_access( $course_id, $unit_id = 0, $module_id = 0, $student_id = 0, $page = 1 )
+	 */
+	public function test_can_access() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $course_id ) {
+			foreach ( $values as $unit_id ) {
+				foreach ( $values as $module_id ) {
+					foreach ( $values as $student_id ) {
+						$assert = CoursePress_Data_Course::can_access( $course_id, $unit_id, $module_id, $student_id );
+						$this->assertInternalType( 'string', $assert );
+						$this->assertEquals( '', $assert );
+					}
+				}
+			}
+		}
+		/**
+		 * Good data
+		 */
+		$modules = $this->get_modules();
+		foreach ( $modules as $module ) {
+			$assert = CoursePress_Data_Course::can_access( $this->course->ID, $module->post_parent, $module->ID, $this->student->ID );
+			$this->assertInternalType( 'string', $assert );
+			$this->assertEquals( '2116-10-01', $assert );
+		}
+	}
+
+	/**
+	 * get_course_id( $course )
+	 */
+	public function test_get_course_id() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::get_course_id( $value );
+			$this->assertInternalType( 'boolean', $assert );
+			$this->assertFalse( $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$assert = CoursePress_Data_Course::get_course_id( $this->course );
+		$this->assertInternalType( 'integer', $assert );
+		$this->assertEquals( $this->course->ID, $assert );
+	}
+
+	/**
+	 * get_courses_by_ids( $ids )
+	 */
+	public function test_get_courses_by_ids() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::get_courses_by_ids( $value );
+			$this->assertInternalType( 'array', $assert );
+			$this->assertEquals( array(), $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$assert = CoursePress_Data_Course::get_courses_by_ids( $this->course );
+		$this->assertInternalType( 'array', $assert );
+		foreach ( $assert as $post ) {
+			$this->assertInstanceOf( 'WP_Post', $post );
+		}
+	}
+
+	/**
+	 * course_class( $course_id, $user_id = 0 )
+	 */
+	public function test_course_class() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $course_id ) {
+			foreach ( $values as $student_id ) {
+				$assert = CoursePress_Data_Course::course_class( $course_id, $student_id );
+				$this->assertInternalType( 'array', $assert );
+				$this->assertEquals( array(), $assert );
+			}
+		}
+		/**
+		 * Good data
+		 */
+		$assert = CoursePress_Data_Course::course_class( $this->course->ID, $this->student->ID );
+		$this->assertInternalType( 'array', $assert );
+		$this->assertNotEmpty( $assert );
+	}
+
+	/**
+	 * get_vars( $course_id )
+	 */
+	public function test_get_vars() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::get_vars( $value );
+			$this->assertInternalType( 'array', $assert );
+			$this->assertEquals( array(), $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$keys = array( 'COURSE_NAME', 'UNIT_LIST' );
+		$assert = CoursePress_Data_Course::get_vars( $this->course->ID );
+		$this->assertInternalType( 'array', $assert );
+		$this->has_keys( $keys, $assert );
+	}
+
+	/**
+	 * get_units_html_list( $course_id )
+	 */
+	public function test_get_units_html_list() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::get_units_html_list( $value );
+			$this->assertInternalType( 'string', $assert );
+			$this->assertEquals( '', $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$assert = CoursePress_Data_Course::get_units_html_list( $this->course->ID );
+		$this->assertInternalType( 'string', $assert );
+		$this->assertNotEmpty( $assert );
+	}
+
+	/**
+	 * get_expired_courses( $refresh = false )
+	 */
+	public function test_get_expired_courses() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::get_expired_courses( $value );
+			$this->assertInternalType( 'array', $assert );
+			$this->assertEquals( array(), $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$assert = CoursePress_Data_Course::get_expired_courses( true );
+		$this->assertInternalType( 'array', $assert );
+		$this->assertEquals( array(), $assert );
+
+		$assert = CoursePress_Data_Course::get_expired_courses( false );
+		$this->assertInternalType( 'array', $assert );
+		$this->assertEquals( array(), $assert );
+	}
+
+	/**
+	 * get_enrollment_ended_courses( $refresh = false )
+	 */
+	public function test_get_enrollment_ended_courses() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::get_enrollment_ended_courses( $value );
+			$this->assertInternalType( 'array', $assert );
+			$this->assertEquals( array(), $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$assert = CoursePress_Data_Course::get_enrollment_ended_courses( true );
+		$this->assertInternalType( 'array', $assert );
+		$this->assertEquals( array(), $assert );
+
+		$assert = CoursePress_Data_Course::get_enrollment_ended_courses( false );
+		$this->assertInternalType( 'array', $assert );
+		$this->assertEquals( array(), $assert );
+	}
+
+	/**
+	 * return_id( $a )
+	 */
+	public function test_return_id() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::return_id( $value );
+			$this->assertInternalType( 'integer', $assert );
+			$this->assertEquals( 0, $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$value = 10;
+		$a = array( 'post_id' => $value );
+		$assert = CoursePress_Data_Course::return_id( $a );
+		$this->assertInternalType( 'integer', $assert );
+		$this->assertEquals( $value, $assert );
+	}
+
+	/**
+	 * current_and_upcoming_courses( $args = array(), $student_id = 0 )
+	 */
+	public function test_current_and_upcoming_courses() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $args ) {
+			foreach ( $values as $student_id ) {
+				$assert = CoursePress_Data_Course::current_and_upcoming_courses( $args, $student_id );
+				$this->assertInstanceOf( 'WP_Query', $assert );
+			}
+		}
+		/**
+		 * Good data
+		 */
+		$assert = CoursePress_Data_Course::current_and_upcoming_courses( array(), $this->student->ID );
+		$this->assertInstanceOf( 'WP_Query', $assert );
+	}
+
+	/**
+	 * sort_courses( $courses )
+	 */
+	public function test_sort_courses() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::sort_courses( $value );
+			$this->assertEquals( $value, $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$value = array( $this->course );
+		$assert = CoursePress_Data_Course::sort_courses( $value );
+		$this->assertEquals( $value, $assert );
+	}
+
+	/**
+	 * get_course_status( $course_id )
+	 */
+	public function test_get_course_status() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::get_course_status( $value );
+			$this->assertInternalType( 'string', $assert );
+			$this->assertEquals( 'unknown', $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$value = $this->course->ID;
+		$assert = CoursePress_Data_Course::get_course_status( $value );
+		$this->assertInternalType( 'string', $assert );
+		$this->assertEquals( 'open', $assert );
+	}
+
+	/**
+	 * get_enrollment_status( $course_id )
+	 */
+	public function test_get_enrollment_status() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::get_enrollment_status( $value );
+			$this->assertInternalType( 'string', $assert );
+			$this->assertEquals( 'unknown', $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$value = $this->course->ID;
+		$assert = CoursePress_Data_Course::get_enrollment_status( $value );
+		$this->assertInternalType( 'string', $assert );
+		$this->assertEquals( 'open', $assert );
+	}
+
+	/**
+	 * check_post_type_by_post( $post )
+	 * is_course( $course )
+	 */
+	public function test_course_post_type() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::check_post_type_by_post( $value );
+			$this->assertInternalType( 'boolean', $assert );
+			$this->assertFalse( $assert );
+
+			$assert = CoursePress_Data_Course::is_course( $value );
+			$this->assertInternalType( 'boolean', $assert );
+			$this->assertFalse( $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$value = $this->course;
+		$assert = CoursePress_Data_Course::check_post_type_by_post( $value );
+		$this->assertInternalType( 'boolean', $assert );
+		$this->assertTrue( $assert );
+
+		$assert = CoursePress_Data_Course::is_course( $value );
+		$this->assertInternalType( 'boolean', $assert );
+		$this->assertTrue( $assert );
+
+		$value = $this->course->ID;
+		$assert = CoursePress_Data_Course::check_post_type_by_post( $value );
+		$this->assertInternalType( 'boolean', $assert );
+		$this->assertTrue( $assert );
+
+		$assert = CoursePress_Data_Course::is_course( $value );
+		$this->assertInternalType( 'boolean', $assert );
+		$this->assertTrue( $assert );
+
+	}
+
+	/**
+	 * save_course_number( $post_id, $post_title, $excludes = array() )
+	 * delete_course_number( $post_id )
+	 */
+	public function test_save_course_number() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::save_course_number( $value, $this->course->post_title );
+			$this->assertEmpty( $assert );
+
+			$assert = CoursePress_Data_Course::delete_course_number( $value );
+			$this->assertEmpty( $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$value = $this->course->ID;
+		$assert = CoursePress_Data_Course::save_course_number( $value, $this->course->post_title );
+		$this->assertEmpty( $assert );
+
+		$assert = get_post_meta( $this->course->ID, 'course_number_by_title', true );
+		$this->assertInternalType( 'string', $assert );
+		$this->assertEquals( '', $assert );
+
+		$assert = CoursePress_Data_Course::delete_course_number( $value );
+		$this->assertEmpty( $assert );
+	}
+
+	/**
+	 * add_numeric_identifier_to_course_name( $post_title, $post_id = 0 )
+	 */
+	public function test_add_numeric_identifier_to_course_name() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			foreach ( $values as $post_id ) {
+				$assert = CoursePress_Data_Course::add_numeric_identifier_to_course_name( $value, $post_id );
+				$this->assertEquals( $value, $assert );
+			}
+		}
+		/**
+		 * Good data
+		 */
+		$value = $this->course->post_title;
+		$assert = CoursePress_Data_Course::add_numeric_identifier_to_course_name( $value, $this->course->ID );
+		$this->assertEquals( $value, $assert );
+	}
+
+	/**
+	 * get_enrollment_types_array( $course_id  = 0 )
+	 */
+	public function test_get_enrollment_types_array() {
+		$keys = array( 'manually', 'registered', 'passcode', 'prerequisite' );
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::get_enrollment_types_array( $value );
+			$this->assertInternalType( 'array', $assert );
+			$this->has_keys( $keys, $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$value = $this->course->ID;
+		$assert = CoursePress_Data_Course::get_enrollment_types_array( $value );
+		$this->assertInternalType( 'array', $assert );
+		$this->has_keys( $keys, $assert );
+	}
+
+	/**
+	 * get_enrollment_type_default( $cours_id = 0 )
+	 */
+	public function test_get_enrollment_type_default() {
+		/**
+		 * Wrong data
+		 */
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Course::get_enrollment_type_default( $value );
+			$this->assertInternalType( 'string', $assert );
+			$this->assertEquals( 'registered', $assert );
+		}
+		/**
+		 * Good data
+		 */
+		$assert = CoursePress_Data_Course::get_enrollment_type_default( $value );
+		$this->assertInternalType( 'string', $assert );
+		$this->assertEquals( 'registered', $assert );
+	}
+
+	/**
+	 * get_defaults_setup_pages_content( $post_title, $post_id = 0 )
+	 */
+	public function test_get_defaults_setup_pages_content() {
+		$keys = array( 'pre_completion', 'course_completion' );
+		/**
+		 * Good data
+		 */
+		$assert = CoursePress_Data_Course::get_defaults_setup_pages_content();
+			$this->assertInternalType( 'array', $assert );
+			$this->has_keys( $keys, $assert );
 	}
 }
 
-/**
-print_r(array( gettype( $assert ), $assert));
- * Wrong data
- */
-/**
- * Good data
- */
