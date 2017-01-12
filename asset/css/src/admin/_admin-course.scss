@@ -702,9 +702,10 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 	.column-units {
 		width: 100px;
 	}
-	.column-students,
+	.column-actions,
 	.column-certificates,
-	.column-actions {
+	.column-students,
+	.column-week {
 		width: 60px !important;
 		text-align: center;
 	}

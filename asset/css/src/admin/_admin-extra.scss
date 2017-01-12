@@ -137,3 +137,30 @@ body[class*="_page_coursepress_course"],
 	    }
 	}
 }
+/**
+ * Shortcodes help screen
+ */
+.shortcodes-list {
+	.cp-content-box {
+		.inside {
+			padding-bottom: 2em;
+		}
+		&:last-child inside {
+			padding-bottom: 0;
+		}
+		.cp-shortcode-options {
+			li {
+				span {
+					font-family: monospace;
+					font-weight: bold;
+				}
+			}
+		}
+		.cp-shortcode-subheading {
+			font-weight: bold;
+			&.optional {
+				opacity: .8;
+			}
+		}
+	}
+}

@@ -130,7 +130,32 @@ class CoursePress_View_Front_General {
 			$login->ID = 'cp-logout';
 			$login->db_id = '';
 			$use_custom = cp_is_true( CoursePress_Core::get_setting( 'general/use_custom_login', 1 ) );
-			$login->url = $is_in ? wp_logout_url() : ( $use_custom ? CoursePress_Core::get_slug( 'login', true ) : wp_login_url() );
+
+			if ( $is_in ) {
+				$login->url = wp_logout_url();
+			} else {
+				if ( $use_custom ) {
+					$login_page = CoursePress_Core::get_setting( 'pages/login', false );
+
+					if ( empty( $login_page ) ) {
+						$login->url = CoursePress_Core::get_slug( 'login', true );
+					} else {
+						$login->url = get_permalink( (int) $login_page );
+					}
+				} else {
+					$url = '';
+					$course_id = CoursePress_Helper_Utility::the_course(true);
+
+					if ( ! empty( $course_id ) ) {
+						// Make sure the user returns to the course
+						$url = CoursePress_Data_Course::get_course_url( $course_id );
+					}
+
+					$login->url = wp_login_url( $url );
+				}
+			}
+
+			//$login->url = $is_in ? wp_logout_url() : ( $use_custom ? CoursePress_Core::get_slug( 'login', true ) : wp_login_url() );
 
 			$sorted_menu_items[] = $login;
 		}

@@ -109,6 +109,28 @@
 
 	CoursePress.Post = new CoursePress.Models.Post();
 
+	CoursePress.checkWeakPassword = function() {
+		var pass1 = $( '[name="password"]' ),
+		pass2 = $( '[name="password_confirmation"]' ),
+		confirm_weak = $( '.weak-password-confirm' );
+
+		if ( pass1.val() && pass2.val() ) {
+			var passStrength = CoursePress.utility.checkPasswordStrength(
+				pass1, 
+				pass2,
+				$('#password-strength'), // Strength meter
+				false,
+				[]        // Blacklisted words
+			);
+
+			if ( parseInt( passStrength ) <= 2 ) {
+				confirm_weak.show();
+			} else {
+				confirm_weak.hide();
+			}
+		}
+	};
+
 	CoursePress.Dialogs = {
 		beforeSubmit: function() {
 			var step = this.currentIndex;
@@ -260,10 +282,11 @@
 				$('#password-strength'),           // Strength meter
 				false,
 				[]        // Blacklisted words
-			);
+			),
+			confirm_weak = $( '[name="confirm_weak_password"]' );
 
 			// Can't have a weak password
-			if ( strength <= 2 ) {
+			if ( strength <= 2 && ! confirm_weak.is( ':checked' ) ) {
 				valid = false;
 				errors.push( _coursepress.signup_errors['weak_password'] );
 			}
@@ -602,6 +625,7 @@ console.log(data);
 		.on( 'click', '.cp-custom-login', CoursePress.CustomLoginHook )
 		.on( 'click', '.apply-button.enroll', CoursePress.EnrollStudent )
 		.on( 'submit', '[name="enrollment-process"][data-type="passcode"]', CoursePress.validatePassCode )
+		.on( 'change', '.signup-form [name="password"], .signup-form [name="password_confirmation"]', CoursePress.checkWeakPassword )
 		.on( 'submit', '.apply-box .enrollment-process', CoursePress.validateEnrollment );
 
 })(jQuery);

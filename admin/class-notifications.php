@@ -73,20 +73,36 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 		self::init();
 		self::save_notification();
 		self::update_notification();
-
-		if ( empty( $_REQUEST['action'] ) || 'edit' !== $_REQUEST['action'] ) {
+		/**
+		 * Find action
+		 */
+		$action = -1;
+		if ( ! empty( $_REQUEST['action'] ) ) {
+			$action = $_REQUEST['action'];
+		}
+		if ( -1 == $action && ! empty( $_REQUEST['action2'] ) ) {
+			$action = $_REQUEST['action2'];
+		}
+		$action = strtolower( trim( $action ) );
+		/**
+		 * filter
+		 */
+		if ( 'filter' === $action ) {
+			self::filter_redirect();
+		}
+		/**
+		 * build
+		 */
+		if ( 'edit' == $action ) {
+			$this->slug = 'coursepress_edit-notification';
+			// Set before the page
+			add_screen_option( 'layout_columns', array( 'max' => 2, 'default' => 2 ) );
+		} else {
 			$this->slug = 'coursepress_notifications-table';
-
 			// Prepare items
 			$this->list_notification = new CoursePress_Admin_Table_Notifications();
 			$this->list_notification->prepare_items();
 			add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_notifications_per_page' ) );
-
-		} elseif ( 'edit' == $_REQUEST['action'] ) {
-			$this->slug = 'coursepress_edit-notification';
-
-			// Set before the page
-			add_screen_option( 'layout_columns', array( 'max' => 2, 'default' => 2 ) );
 		}
 	}
 
@@ -155,85 +171,145 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Controller_Menu 
 	}
 
 	public static function update_notification() {
-
-		$actions = array(
-			'delete',
-			'toggle',
-			'unpublish',
-			'publish',
-			'delete',
-			'delete2',
-			'filter',
-		);
-
-		if ( empty( $_REQUEST['action'] ) || ! in_array( strtolower( $_REQUEST['action'] ), $actions ) ) {
+		/**
+		 * check action
+		 */
+		if ( ! isset( $_REQUEST['action'] ) || empty( $_REQUEST['action'] ) ) {
 			return;
 		}
-
 		$action = strtolower( trim( $_REQUEST['action'] ) );
-		$json_data = array();
-		$success = false;
-
-		switch ( $action ) {
-			case 'filter':
-				if ( ! empty( $_POST['course_id'] ) ) {
-					$course_id = (int) $_POST['course_id'];
-					$url = 0 == $course_id ? remove_query_arg( 'course_id' ) : add_query_arg( 'course_id', $course_id );
-					wp_safe_redirect( $url );
+		/**
+		 * check id or ids
+		 */
+		$id = 0;
+		if ( isset( $_REQUEST['id'] ) && ! empty( $_REQUEST['id'] ) ) {
+			$id = $_REQUEST['id'];
+			if ( is_string( $id ) ) {
+				$id = (int) $id;
+			}
+			if ( ! is_numeric( $id ) ) {
+				$id = 0;
+			}
+			if ( ! CoursePress_Data_Notification::is_correct_post_type( $id ) ) {
+				$id = 0;
+			}
+		}
+		/**
+		 * check post (bulk action)
+		 */
+		$posts = array();
+		if ( isset( $_REQUEST['post'] ) && ! empty( $_REQUEST['post'] ) && is_array( $_REQUEST['post'] ) ) {
+			$posts = $_REQUEST['post'];
+		}
+		/**
+		 * have we id or ids to update?
+		 */
+		if ( empty( $id ) && empty( $posts ) ) {
+			return;
+		}
+		/**
+		 * first bulk!
+		 */
+		if ( ! empty( $posts ) ) {
+			if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'bulk-posts' ) ) {
+				foreach ( $posts as $post_id ) {
+					if ( CoursePress_Data_Notification::is_correct_post_type( $post_id ) ) {
+						switch ( $action ) {
+							case 'delete':
+								wp_delete_post( $post_id );
+							break;
+							case 'draft':
+								$post = array(
+								'ID' => $post_id,
+								'post_status' => 'draft',
+								);
+								wp_update_post( $post );
+							break;
+							case 'publish':
+								wp_publish_post( $post_id );
+							break;
+							case 'trash':
+								wp_trash_post( $post_id );
+							break;
+							case 'untrash':
+								wp_untrash_post( $post_id );
+							break;
+						}
+					}
 				}
+			}
+		} else if ( ! empty( $id ) ) {
+			switch ( $action ) {
+				case 'filter':
 				break;
-			case 'publish': case 'unpublish': case 'delete':
-						if ( ! empty( $_REQUEST['bulk-actions'] ) ) {
-							$notification_ids = $_REQUEST['bulk-actions'];
-
-							foreach ( $notification_ids as $id ) {
-								if ( 'delete' != $action ) {
-									if ( CoursePress_Data_Capabilities::can_change_status_notification( $id ) ) {
-										$post_status = 'unpublish' == $action ? 'draft' : $action;
-										wp_update_post( array(
-											'ID' => $id,
-											'post_status' => $post_status,
-										) );
-									}
-								} else {
-									if ( CoursePress_Data_Capabilities::can_delete_notification( $id ) ) {
-										wp_delete_post( $id );
+				/**
+				 * delete
+				 */
+				case 'delete' && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_delete_notification' ) :
+					if ( CoursePress_Data_Capabilities::can_delete_notification( $id ) ) {
+						wp_delete_post( $id );
+					}
+				break;
+				case 'publish': case 'unpublish': case 'delete':
+							if ( ! empty( $_REQUEST['post'] ) ) {
+								$notification_ids = $_REQUEST['post'];
+								foreach ( $notification_ids as $id ) {
+									if ( 'delete' != $action ) {
+										if ( CoursePress_Data_Capabilities::can_change_status_notification( $id ) ) {
+											$post_status = 'unpublish' == $action ? 'draft' : $action;
+											wp_update_post( array(
+												'ID' => $id,
+												'post_status' => $post_status,
+											) );
+										}
+									} else {
 									}
 								}
 							}
-						}
 				break;
 
-			case 'delete2':
-				$id = (int) $_REQUEST['id'];
+				case 'delete2':
+					$id = (int) $_REQUEST['id'];
 
-				if ( CoursePress_Data_Capabilities::can_delete_notification( $id ) ) {
-					wp_delete_post( $id );
-					$json_data['notification_id'] = $id;
-					$json_data['nonce'] = wp_create_nonce( 'delete-notification' );
-					$success = true;
-				}
-				break;
-
-			case 'toggle':
-				$data = json_decode( file_get_contents( 'php://input' ) );
-				$notification_id = $data->data->notification_id;
-
-				if ( wp_verify_nonce( $data->data->nonce, 'publish-notification' ) ) {
-					if ( CoursePress_Data_Capabilities::can_change_status_notification( $notification_id ) ) {
-						wp_update_post( array(
-							'ID' => $notification_id,
-							'post_status' => $data->data->status,
-						) );
-						$success = true;
+					if ( CoursePress_Data_Capabilities::can_delete_notification( $id ) ) {
+						wp_delete_post( $id );
 					}
-					$json_data['nonce'] = wp_create_nonce( 'publish-notification' );
-				}
-
-				$json_data['notification_id'] = $notification_id;
-				$json_data['state'] = $data->data->state;
-
 				break;
+
+				case 'toggle':
+					$data = json_decode( file_get_contents( 'php://input' ) );
+					$notification_id = $data->data->notification_id;
+
+					if ( wp_verify_nonce( $data->data->nonce, 'publish-notification' ) ) {
+						if ( CoursePress_Data_Capabilities::can_change_status_notification( $notification_id ) ) {
+							wp_update_post( array(
+								'ID' => $notification_id,
+								'post_status' => $data->data->status,
+							) );
+						}
+					}
+				break;
+				/**
+				 * trash
+				 */
+				case 'trash' && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_trash_notification' ) :
+					$id = (int) $_REQUEST['id'];
+					$is_correct_post_type = CoursePress_Data_Notification::is_correct_post_type( $id );
+					if ( $is_correct_post_type ) {
+						wp_trash_post( $id );
+					}
+				break;
+				/**
+				 * untrash
+				 */
+				case 'untrash' && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_untrash_notification' ) :
+					$id = (int) $_REQUEST['id'];
+					$is_correct_post_type = CoursePress_Data_Notification::is_correct_post_type( $id );
+					if ( $is_correct_post_type ) {
+						wp_untrash_post( $id );
+					}
+				break;
+			}
 		}
 	}
 

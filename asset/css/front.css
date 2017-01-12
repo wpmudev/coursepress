@@ -14,6 +14,9 @@ tester {
   text-align: center;
   max-width: 90%;
 }
+.cp-alert-container button {
+  margin: 5px;
+}
 
 input.cp-has-error {
   border: 1px solid rgba(255, 0, 0, 0.5);
@@ -1387,6 +1390,9 @@ ul.notification-archive-list:after {
 .bbm-modal label span {
   display: block;
   padding-bottom: 5px;
+}
+.bbm-modal label.weak-password-confirm {
+  display: none;
 }
 
 /** Media Queries **/
