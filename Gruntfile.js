@@ -44,7 +44,8 @@ module.exports = function(grunt) {
 			'{js}front.js':						[
 				'{js}src/front-core.js',
 				'{js}src/front-modules.js',
-				'{js}src/front-enrollment.js'
+				'{js}src/front-enrollment.js',
+				'{js}src/front-dashboard.js'
 			]
 		},
 
@@ -146,6 +147,7 @@ module.exports = function(grunt) {
 				{ match: /CoursePress Base/g, replace: 'CoursePress Pro' },
 				{ match: /BUILDTIME/g, replace: buildtime },
 				{ match: /'CP_TD'/g, replace: '\'cp\'' },
+				{ match: /Text Domain: CP_TD/g, replace: 'Text Domain: cp' },
 				{ match: /\/\* start:pro \*\//g, replace: '' },
 				{ match: /\/\* end:pro \*\//g, replace: '' },
 				{ match: /\/\* start:free \*[^\*]+\* end:free \*\//mg, replace: '' },
@@ -155,6 +157,7 @@ module.exports = function(grunt) {
 				{ match: /CoursePress Base/g, replace: 'CoursePress' },
 				{ match: /BUILDTIME/g, replace: buildtime },
 				{ match: /'CP_TD'/g, replace: '\'coursepress\'' },
+				{ match: /Text Domain: CP_TD/g, replace: 'Text Domain: coursepress' },
 				{ match: /\/\* start:free \*\//g, replace: '' },
 				{ match: /\/\* end:free \*\//g, replace: '' },
 				{ match: /\/\* start:pro \*[^\*]+\* end:pro \*\//mg, replace: '' },
@@ -164,6 +167,7 @@ module.exports = function(grunt) {
 				{ match: /CoursePress Base/g, replace: 'CoursePress Campus' },
 				{ match: /BUILDTIME/g, replace: buildtime },
 				{ match: /'CP_TD'/g, replace: '\'cp\'' },
+				{ match: /Text Domain: CP_TD/g, replace: 'Text Domain: cp' },
 				{ match: /\/\* start:campus \*\//g, replace: '' },
 				{ match: /\/\* end:campus \*\//g, replace: '' },
 				{ match: /\/\* start:pro \*[^\*]+\* end:pro \*\//mg, replace: '' },

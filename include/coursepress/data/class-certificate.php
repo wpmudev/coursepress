@@ -346,6 +346,12 @@ class CoursePress_Data_Certificate {
 
 		if ( cp_is_true( $is_override ) ) {
 			$content = CoursePress_Data_Course::get_setting( $course_id, 'basic_certificate_layout', $content );
+		} else {
+			$use_cp_default = CoursePress_Core::get_setting( 'basic_certificate/use_cp_default', false );
+			$use_cp_default = cp_is_true( $use_cp_default );
+			if ( $use_cp_default ) {
+				$content = CoursePress_View_Admin_Setting_BasicCertificate::default_certificate_content();
+			}
 		}
 
 		$vars = array(
@@ -356,6 +362,7 @@ class CoursePress_Data_Certificate {
 			'CERTIFICATE_NUMBER' => (int) $data['certificate_id'],
 			'UNIT_LIST' => $data['unit_list'],
 		);
+
 		/**
 		 * Filter variables before applying changes.
 		 *
@@ -385,31 +392,56 @@ class CoursePress_Data_Certificate {
 			// We'll replace the existing content to a new one to apply settings changes when applicable.
 			$certificate = self::get_certificate_content( $post->ID );
 			$settings = CoursePress_Core::get_setting( 'basic_certificate' );
-			$background_image = CoursePress_Helper_Utility::get_array_val( $settings, 'background_image' );
+			$background = CoursePress_Helper_Utility::get_array_val( $settings, 'background' );
 			$orientation = CoursePress_Helper_Utility::get_array_val( $settings, 'orientation' );
-			$padding = (array) CoursePress_Helper_Utility::get_array_val( $settings, 'padding' );
+			$margins = (array) CoursePress_Helper_Utility::get_array_val( $settings, 'margin' );
 			$filename = self::get_pdf_file_name( $course_id, $student_id, 'no-base-dir' );
-			$styles = array();
+			$logo = array();
+			$text_color = array();
 
 			if ( $is_override ) {
-				$padding = CoursePress_Data_Course::get_setting( $course_id, 'cert_padding', array() );
+				$margins = CoursePress_Data_Course::get_setting( $course_id, 'cert_margin', array() );
 				$orientation = CoursePress_Data_Course::get_setting( $course_id, 'page_orientation', 'L' );
-				$background_image = CoursePress_Data_Course::get_setting( $course_id, 'certificate_background', '' );
-			}
+				$background = CoursePress_Data_Course::get_setting( $course_id, 'certificate_background', '' );
+			} else {
+				/**
+				 * Use CP defaults?
+				 */
+				$use_cp_default = CoursePress_Core::get_setting( 'basic_certificate/use_cp_default', false );
+				$use_cp_default = cp_is_true( $use_cp_default );
 
-			if ( ! empty( $padding['top'] ) ) {
-				$styles[] = 'padding-top:' . $padding['top'] . 'px;';
+				if ( $use_cp_default ) {
+					/**
+					 * Default Background
+					 */
+					$background = CoursePress::$path.'/asset/img/certificate/certificate-background-p.png';
+					/**
+					 * default orientation
+					 */
+					$orientation = 'P';
+					/**
+					 * CP Logo
+					 */
+					$logo = array(
+						'file' => CoursePress::$path.'/asset/img/certificate/certificate-logo-coursepress.png',
+						'x' => 95,
+						'y' => 15,
+						'w' => 100,
+					);
+					/**
+					 * Default margins
+					 */
+					$margins = array(
+						'left' => 40,
+						'right' => 40,
+						'top' => 100,
+					);
+					/**
+					 * default color
+					 */
+					$text_color = array( 90, 90, 90 );
+				}
 			}
-			if ( ! empty( $padding['bottom'] ) ) {
-				$styles[] = 'padding-bottom:' . $padding['bottom'] . 'px;';
-			}
-			if ( ! empty( $padding['left'] ) ) {
-				$styles[] = 'padding-left:' . $padding['left'] . 'px;';
-			}
-			if ( ! empty( $padding['right'] ) ) {
-				$styles[] = 'padding-right:' . $padding['right'] . 'px;';
-			}
-			$style = '.basic_certificate {' . implode( ' ', $styles ) . '}';
 
 			// Set the content
 			$certificate = stripslashes( $certificate );
@@ -430,12 +462,14 @@ class CoursePress_Data_Certificate {
 			$args = array(
 				'title' => $certificate_title,
 				'orientation' => $orientation,
-				'image' => $background_image,
+				'image' => $background,
 				'filename' => $filename,
 				'format' => 'F',
 				'uid' => $post->ID,
-				'style' => '<style>'. $style . '</style>',
 				'page_break' => 'no',
+				'margins' => apply_filters( 'coursepress_basic_certificate_margins', $margins ),
+				'logo' => apply_filters( 'coursepress_basic_certificate_logo', $logo ),
+				'text_color' => apply_filters( 'coursepress_basic_certificate_text_color', $text_color ),
 			);
 			if ( $download ) {
 				$args['format'] = 'FI';
