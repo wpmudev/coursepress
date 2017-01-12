@@ -8,6 +8,7 @@ CHANGELOG
 = 2.0.2 =
 -------------------------------------------------
 * Fixed a bug with class autoloder function.
+* Fixed a bug with pagination on course archive page.
 
 = 2.0.0 =
 -------------------------------------------------
