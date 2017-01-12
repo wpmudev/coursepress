@@ -67,6 +67,12 @@ class CoursePress_Data_Student {
 	 * @return bool|mixed
 	 */
 	public static function course_id_from_meta( $meta_value ) {
+		/**
+		 * Sanitize $meta_value
+		 */
+		if ( ! is_string( $meta_value ) || empty( $meta_value ) ) {
+			return false;
+		}
 		global $wpdb;
 		$prefix = $wpdb->prefix;
 		$base_prefix = $wpdb->base_prefix;
@@ -120,6 +126,12 @@ class CoursePress_Data_Student {
 	 * @return (int) Returns the total number of courses the user is enrolled at.
 	 **/
 	public static function count_enrolled_courses_ids( $student_id, $refresh = false ) {
+		/**
+		 * Sanitize $student_id
+		 */
+		if ( ! is_numeric( $student_id ) ) {
+			return 0;
+		}
 		$count = get_user_meta( $student_id, 'cp_course_count', true );
 
 		if ( ! $count || $refresh ) {
@@ -157,7 +169,10 @@ class CoursePress_Data_Student {
 	 * A helper function to get the meta_key of the user metas.
 	 **/
 	public static function meta_key( $key ) {
-		return $key['meta_key'];
+		if ( is_array( $key ) && isset( $key['meta_key'] ) ) {
+			return $key['meta_key'];
+		}
+		return '';
 	}
 
 	/**
@@ -183,8 +198,7 @@ class CoursePress_Data_Student {
 		$global_option = ! is_multisite();
 		$key = 'enrolled_course_date_' . $course_id;
 		$enrolled = get_user_option( $key, $student_id );
-
-		return ( $enrolled && !empty($enrolled) ) 
+		return ( $enrolled && ! empty( $enrolled ) )
 			? true
 			: false
 		;
@@ -198,23 +212,35 @@ class CoursePress_Data_Student {
 	 * @return bool
 	 */
 	public static function update_student_data( $student_id, $student_data ) {
+		/**
+		 * Sanitize $student_id
+		 */
+		if ( empty( $student_id ) || ! is_numeric( $student_id ) ) {
+			return false;
+		}
+		/**
+		 * Sanitize $student_data
+		 */
+		if ( empty( $student_data ) || ! is_array( $student_data ) ) {
+			return false;
+		}
 		if ( ! isset( $student_data['ID'] ) ) {
 			$student_data['ID'] = $student_id;
 		}
+		/**
+		 * Update student data.
+		 */
 		$student_data = apply_filters( 'coursepress_student_update_data', $student_data );
 		if ( wp_update_user( $student_data ) ) {
-
 			/**
 			 * Perform action after a Student object is updated.
 			 *
 			 * @since 1.2.2
 			 */
 			do_action( 'coursepress_student_updated', $student_id );
-
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	/**
@@ -242,13 +268,26 @@ class CoursePress_Data_Student {
 	 * @return (associative_array)			An array of course completion data, including responses, visited pages etc.
 	 **/
 	public static function get_completion_data( $student_id, $course_id ) {
-
+		/**
+		 * Sanitize $student_id
+		 */
+		if ( empty( $student_id ) || ! is_numeric( $student_id ) ) {
+			return array();
+		}
+		/**
+		 * Sanitize $course_id
+		 */
+		if ( empty( $course_id ) ) {
+			return array();
+		}
+		$is_course = CoursePress_Data_Course::is_course( $course_id );
+		if ( ! $is_course ) {
+			return array();
+		}
 		if ( ! function_exists( 'get_userdata' ) ) {
 			require_once( ABSPATH . 'wp-includes/pluggable.php' );
 		}
-
 		$data = get_user_option( 'course_' . $course_id . '_progress', $student_id );
-
 		if ( empty( $data ) ) {
 			$data = apply_filters( 'coursepress_get_student_progress', array(), $student_id, $course_id );
 			//$data = self::init_completion_data( $student_id, $course_id );
@@ -271,18 +310,11 @@ class CoursePress_Data_Student {
 	 * @return null
 	 **/
 	public static function update_completion_data( $student_id, $course_id, $data = array() ) {
-		// @todo: Remove debugger code!
-
 		if ( ! empty( $data ) ) {
 			if ( (int) $course_id > 0 ) {
 				$global_setting = ! is_multisite();
-
 				update_user_option( $student_id, 'course_' . $course_id . '_progress', $data, $global_setting );
-			} else {
-				CoursePress_Debugger::log( 'Invalid course ID!' );
 			}
-		} else {
-			CoursePress_Debugger::log( 'Attempting to save an empty data!' );
 		}
 	}
 
@@ -298,6 +330,13 @@ class CoursePress_Data_Student {
 	 * @return (array) $data				Returns the complete list of course completion data.
 	 **/
 	public static function visited_page( $student_id, $course_id, $unit_id, $page, &$data = false ) {
+
+		/**
+		 * Sanitize $unit_id
+		 */
+		if ( empty( $unit_id ) || ! is_numeric( $unit_id ) ) {
+			return array();
+		}
 
 		if ( empty( $data ) ) {
 			$data = self::get_completion_data( $student_id, $course_id );
@@ -325,14 +364,14 @@ class CoursePress_Data_Student {
 	 * @return (array) $data					Returns an array of course completion data.
 	 **/
 	public static function visited_module( $student_id, $course_id, $unit_id, $module_id, &$data = false ) {
-
 		if ( empty( $data ) ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
-
+		if ( empty( $unit_id ) || ! is_numeric( $unit_id ) ) {
+			return $data;
+		}
 		CoursePress_Helper_Utility::set_array_val( $data, 'completion/' . $unit_id . '/modules_seen/' . $module_id, true );
 		self::update_completion_data( $student_id, $course_id, $data );
-
 		return $data;
 	}
 
@@ -481,6 +520,12 @@ class CoursePress_Data_Student {
 	 * @return (mixed) $responses				Returns the response or responses.
 	 **/
 	public static function get_responses( $student_id, $course_id, $unit_id, $module_id, $response_only = false, &$data = false ) {
+		/**
+		 * Sanitize $unit_id
+		 */
+		if ( empty( $unit_id ) || ! is_numeric( $unit_id ) ) {
+			return array();
+		}
 
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
@@ -520,7 +565,7 @@ class CoursePress_Data_Student {
 	public static function get_grade(
 		$student_id, $course_id, $unit_id, $module_id, $response_index = false, $grade_index = false, &$data = false
 	) {
-		$grade = false;
+		$grade = array();
 
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
@@ -534,7 +579,7 @@ class CoursePress_Data_Student {
 			$response_index,
 			$data
 		);
-		
+
 		if ( empty( $response ) ) {
 			$response = array();
 		}
@@ -626,20 +671,29 @@ class CoursePress_Data_Student {
 	public static function get_response(
 		$student_id, $course_id, $unit_id, $module_id, $response_index = false, &$data = false
 	) {
+		/**
+		 * Sanitize $unit_id
+		 */
+		if ( empty( $unit_id ) || ! is_numeric( $unit_id ) ) {
+			return false;
+		}
+		/**
+		 * Sanitize $module_id
+		 */
+		if ( empty( $module_id ) || ! is_numeric( $module_id ) ) {
+			return false;
+		}
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
-
 		$responses = CoursePress_Helper_Utility::get_array_val(
 			$data,
 			'units/' . $unit_id . '/responses/' . $module_id
 		);
-
 		// Get last grade
 		if ( ! $response_index ) {
 			$response_index = ( count( $responses ) - 1 );
 		}
-
 		return ! empty( $responses ) && isset( $responses[ $response_index ] ) ? $responses[ $response_index ] : false;
 	}
 
@@ -1030,7 +1084,7 @@ class CoursePress_Data_Student {
 										}
 									}
 								} else {
-									
+
 									if ( $module_seen ) {
 										if ( false === $is_mandatory && false === $is_assessable && false === $require_instructor_assessment ) {
 											$unit_completed_modules += 1;
@@ -1263,26 +1317,37 @@ class CoursePress_Data_Student {
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
-
-		return array(
-			'required' => CoursePress_Data_Unit::get_number_of_mandatory( $unit_id ),
-			'completed' => CoursePress_Helper_Utility::get_array_val(
+		$completed = '';
+		/**
+		 * Sanitize $unit_id
+		 */
+		if ( ! empty( $unit_id ) && is_numeric( $unit_id ) ) {
+			$completed = CoursePress_Helper_Utility::get_array_val(
 				$data,
 				'completion/' . $unit_id . '/completed_mandatory'
-			),
+			);
+		}
+		return array(
+			'required' => CoursePress_Data_Unit::get_number_of_mandatory( $unit_id ),
+			'completed' => $completed,
 		);
 	}
 
 	public static function get_unit_progress( $student_id, $course_id, $unit_id, &$data = false ) {
-		//return self::get_all_unit_progress( $student_id, $course_id, $unit_id, $data );
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
-
-		return (int) CoursePress_Helper_Utility::get_array_val(
-			$data,
-			'completion/' . $unit_id . '/progress'
-		);
+		$completed = 0;
+		/**
+		 * Sanitize $unit_id
+		 */
+		if ( ! empty( $unit_id ) && is_numeric( $unit_id ) ) {
+			$completed = (int) CoursePress_Helper_Utility::get_array_val(
+				$data,
+				'completion/' . $unit_id . '/progress'
+			);
+		}
+		return $completed;
 	}
 
 	public static function get_course_progress( $student_id, $course_id, &$data = false ) {
@@ -1300,26 +1365,34 @@ class CoursePress_Data_Student {
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
-
-		$mandatory = CoursePress_Helper_Utility::get_array_val(
-			$data,
-			'completion/' . $unit_id . '/all_mandatory'
-		);
-
-		return cp_is_true( $mandatory );
+		/**
+		 * Sanitize $unit_id
+		 */
+		if ( ! empty( $unit_id ) && is_numeric( $unit_id ) ) {
+			$mandatory = CoursePress_Helper_Utility::get_array_val(
+				$data,
+				'completion/' . $unit_id . '/all_mandatory'
+			);
+			return cp_is_true( $mandatory );
+		}
+		return false;
 	}
 
 	public static function is_unit_complete( $student_id, $course_id, $unit_id, &$data = false ) {
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
-
-		$completed = CoursePress_Helper_Utility::get_array_val(
-			$data,
-			'completion/' . $unit_id . '/completed'
-		);
-
-		return cp_is_true( $completed );
+		/**
+		 * Sanitize $unit_id
+		 */
+		if ( ! empty( $unit_id ) && is_numeric( $unit_id ) ) {
+			$completed = CoursePress_Helper_Utility::get_array_val(
+				$data,
+				'completion/' . $unit_id . '/completed'
+			);
+			return cp_is_true( $completed );
+		}
+		return false;
 	}
 
 	public static function is_course_complete( $student_id, $course_id, &$data = false ) {
@@ -1545,6 +1618,12 @@ class CoursePress_Data_Student {
 		if ( empty( $student_id ) ) {
 			$student_id = get_current_user_id();
 		}
+		/**
+		 * Sanitize $unit_id
+		 */
+		if ( empty( $unit_id ) || ! is_numeric( $unit_id ) ) {
+			return false;
+		}
 
 		$completed = false;
 		$student_progress = $student_progress = self::get_completion_data( $student_id, $course_id );
@@ -1619,7 +1698,6 @@ class CoursePress_Data_Student {
 	 * @return array Array of substitutions.
 	 */
 	public static function get_vars( $student_id ) {
-		$user = get_userdata( $student_id );
 		$vars = array(
 			'FIRST_NAME' => get_user_meta( $student_id, 'first_name', true ),
 			'LAST_NAME' => get_user_meta( $student_id, 'last_name', true ),
@@ -1655,7 +1733,7 @@ class CoursePress_Data_Student {
 		foreach ( $courses as $course ) {
 			$course_id = $course->ID;
 			$course_setting = CoursePress_Data_Course::get_setting( $course_id );
-			$start_date = CoursePress_Data_Course::strtotime( $course_setting['course_start_date'] );
+			$start_date = ! empty( $course_setting['course_start_date'] ) ? CoursePress_Data_Course::strtotime( $course_setting['course_start_date'] ) : 0;
 			$end_date = ! empty( $course_setting['course_end_date'] ) ? CoursePress_Data_Course::strtotime( $course_setting['course_end_date'] ) : 0;
 			$is_open_ended = ! empty( $course_setting['course_open_ended'] );
 
@@ -1702,6 +1780,12 @@ class CoursePress_Data_Student {
 			$user_id = get_current_user_id();
 		}
 		if ( empty( $user_id ) ) {
+			return;
+		}
+		/**
+		 * Sanitize $kind
+		 */
+		if ( ! is_string( $kind ) && ! is_numeric( $kind ) ) {
 			return;
 		}
 		if ( (int) $kind > 0 ) {
@@ -1779,7 +1863,7 @@ class CoursePress_Data_Student {
 	 */
 	public static function remove_from_all_courses( $student_id ) {
 		$course_ids = self::get_course_enrollment_meta( $student_id );
-		foreach( $course_ids as $course_id ) {
+		foreach ( $course_ids as $course_id ) {
 			CoursePress_Data_Course::withdraw_student( $student_id, $course_id );
 		}
 		delete_user_option( $student_id, 'cp_course_count' );
@@ -1815,6 +1899,18 @@ class CoursePress_Data_Student {
 	 */
 	public static function get_nonce_action( $action, $student_id = 0 ) {
 		$user_id = get_current_user_id();
+		/**
+		 * Sanitize $action
+		 */
+		if ( ! is_string( $action ) ) {
+			$action = '';
+		}
+		/**
+		 * Sanitize $student_id
+		 */
+		if ( ! is_string( $student_id ) && ! is_numeric( $student_id ) ) {
+			$student_id = 0;
+		}
 		return sprintf( '%s_%s_%d_%d', __CLASS__, $action, $user_id, $student_id );
 	}
 }

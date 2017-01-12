@@ -833,4 +833,22 @@ class CoursePress_Data_Discussion {
 
 		return count( $comments ) > 0;
 	}
+
+	public static function get_url( $discussion ) {
+		$url = '';
+		if ( ! is_a( $discussion, 'WP_Post' ) ) {
+			if ( ! is_integer( $discussion ) ) {
+				return $url;
+			}
+			$discussion = get_post( $discussion );
+		}
+		$course_id = (int) get_post_meta( $discussion->ID, 'course_id', true );
+		if ( ! CoursePress_Data_Course::is_course( $course_id ) ) {
+			return $url;
+		}
+		$course = get_post( $course_id );
+		$url = CoursePress_Core::get_slug( 'courses/', true ) . $course->post_name . '/';
+		$url = $url . CoursePress_Core::get_slug( 'discussion/' ) . $discussion->post_name;
+		return $url;
+	}
 }

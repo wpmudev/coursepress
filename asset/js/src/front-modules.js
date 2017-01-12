@@ -184,6 +184,14 @@
 			warningDiv = $( '<div class="invalid-extension">' ).insertAfter( input_file.parent() );
 			warningDiv.html( _coursepress.invalid_upload_message )
 		} else {
+			var file = input_file.get(0);
+
+			if ( file.files && file.files.length ) {
+				for (var i=0; i < file.files.length; i++) {
+					filename = file.files[i].name;
+				}
+			}
+
 			warningDiv = $( '<div class="current-file"></div>' ).html( filename );
 			warningDiv.insertAfter( input_file.parent() );
 		}
