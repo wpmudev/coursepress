@@ -21,6 +21,7 @@ CHANGELOG
 * Fixed warning message when user is logged out.
 * Fixed unstranslated texts.
 * Added allow weak password registration.
+* Fixed a bug with custom certificate background.
 
 = 2.0.1 =
 ------------------------------------------------------
