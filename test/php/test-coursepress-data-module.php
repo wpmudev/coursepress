@@ -2,29 +2,10 @@
 /**
  * @group coursepress-core
  */
-class Coursepress_Data_Module_Test extends WP_UnitTestCase {
-
-	protected $admin;
-	protected $course;
-	protected $instructor;
-	protected $student;
-	protected $modules;
+class Coursepress_Data_Module_Test extends CoursePress_UnitTestCase {
 
 	public function __construct() {
-		$helper = new CoursePress_Tests_Helper();
-		$this->admin = get_user_by( 'login', 'admin' );
-		/**
-		 * Set instructor data
-		 */
-		$this->instructor = $helper->get_instructor();
-		/**
-		 * Set student data
-		 */
-		$this->student = $helper->get_student();
-		/**
-		 * Set course data
-		 */
-		$this->course = $helper->get_course();
+		parent::__construct();
 	}
 
 	public function test_exists() {
@@ -105,10 +86,11 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 		/**
 		 * Wrong data
 		 */
-		$assert = CoursePress_Data_Module::get_time_estimation( 'foo' );
-		$this->assertEquals( '1:00', $assert );
-		$assert = CoursePress_Data_Module::get_time_estimation( 0 );
-		$this->assertEquals( '1:00', $assert );
+		$values = $this->get_wrong_values();
+		foreach ( $values as $value ) {
+			$assert = CoursePress_Data_Module::get_time_estimation( $value );
+			$this->assertEquals( '1:00', $assert );
+		}
 		/**
 		 * Good data
 		 */
@@ -807,31 +789,6 @@ class Coursepress_Data_Module_Test extends WP_UnitTestCase {
 			$meta = get_post_meta( $module->ID );
 			$assert = CoursePress_Data_Module::show_on_list( $module->ID, $module->post_parent, $meta );
 			$this->assertEmpty( $assert );
-		}
-	}
-
-	/**
-	 * Helpers
-	 */
-
-	private function get_modules() {
-		if ( ! empty( $this->modules ) ) {
-			return $this->modules;
-		}
-		$this->modules = array();
-		foreach ( $this->course->units as $unit ) {
-			$this->modules = array_merge( $this->modules, $unit->modules );
-		}
-		return $this->modules;
-	}
-
-	private function has_keys( $keys, $assert ) {
-		foreach ( $keys as $key ) {
-			if ( is_array( $key ) ) {
-				$this->has_keys( $key, $assert[ $key ] );
-				continue;
-			}
-			$this->assertArrayHasKey( $key, $assert );
 		}
 	}
 }

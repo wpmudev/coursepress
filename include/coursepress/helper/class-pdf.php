@@ -221,7 +221,6 @@ class CoursePress_Helper_PDF extends TCPDF {
 	 * @return array|string
 	 */
 	public static function make_pdf( $html, $args = array() ) {
-
 		if ( ! isset( $args['title'] ) || empty( $args['title'] ) ) {
 			$args['title'] = __( 'CoursePress Report', 'CP_TD' );
 		}
@@ -250,9 +249,8 @@ class CoursePress_Helper_PDF extends TCPDF {
 				unlink( $fname ); // more than 12 hours old;
 			}
 		}
-
 		// create new PDF document
-		$pdf = new CoursePress_Helper_PDF( $page_orientation, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false );
+$pdf = new CoursePress_Helper_PDF( $page_orientation, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false );
 
 		// $dimension = $this->get_format_in_mm( PDF_PAGE_FORMAT );
 		$dimension = self::get_format_in_px( PDF_PAGE_FORMAT );
@@ -288,7 +286,7 @@ class CoursePress_Helper_PDF extends TCPDF {
 			$pdf->setPrintHeader( false );
 			// adjust margin
 			$pdf->SetHeaderMargin( PDF_MARGIN_HEADER );
-		}
+        }
 
 		if ( isset( $args['footer'] ) ) {
 
@@ -339,7 +337,6 @@ class CoursePress_Helper_PDF extends TCPDF {
 			$pdf->setPageMark();
 		}
 
-		// $pdf->SetMargins( PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT );
 		// set auto page breaks
 		$set_auto_page_break = true;
 		if ( isset( $args['page_break'] ) && $args['page_break'] ) {
@@ -350,6 +347,43 @@ class CoursePress_Helper_PDF extends TCPDF {
 		} else {
 			$pdf->SetAutoPageBreak( false );
 		}
+
+        /**
+         * margins
+         */
+        if ( isset( $args['margins'] ) ) {
+			$pdf->setPageMark();
+            if ( isset( $args['margins']['right'] ) ) {
+                $pdf->setRightMargin( $args['margins']['right'] );
+            }
+            if ( isset( $args['margins']['top'] ) ) {
+                $pdf->setTopMargin( $args['margins']['top'] );
+            }
+            if ( isset( $args['margins']['left'] ) ) {
+                $pdf->setLeftMargin( $args['margins']['left'] );
+            }
+        }
+
+        /**
+         * text color
+         */
+        if ( isset( $args['text_color'] ) ) {
+            if ( is_array( $args['text_color']) && 2 < sizeof( $args['text_color'] ) ) {
+                $pdf->SetTextColor( $args['text_color'][0], $args['text_color'][1], $args['text_color'][2]);
+            }
+        }
+
+        /**
+         * Logo
+         */
+        if ( isset( $args['logo'] ) && ! empty( $args['logo'] ) && is_array( $args['logo'] ) ) {
+            $pdf->Image(
+                $args['logo']['file'],
+                $args['logo']['x'],
+                $args['logo']['y'],
+                $args['logo']['w']
+            );
+        }
 
 		// output the HTML content
 		$pdf->writeHTML( $html, true, false, true, false, '' );

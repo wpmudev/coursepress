@@ -7,8 +7,8 @@
  **/
 class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notifications {
 	private $count = array();
-	private $post_type;
 	private $_categories;
+	protected $page = 'coursepress_discussions';
 
 	public function __construct() {
 		$post_format = CoursePress_Data_Discussion::get_format();
@@ -23,7 +23,10 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 	}
 
 	public function prepare_items() {
-		global $wp_query;
+		global $avail_post_stati, $wp_query, $per_page, $mode;
+
+		//is going to call wp()
+		$avail_post_stati = wp_edit_posts_query();
 		$screen = get_current_screen();
 		/**
 		 * Per Page
@@ -40,7 +43,11 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 		/**
 		 * Post statsu
 		 */
-		$post_status = 'any';
+		$post_status = isset( $_GET['post_status'] )? $_GET['post_status'] : 'any';
+
+		/**
+		 * Pagination
+		 */
 		$current_page = $this->get_pagenum();
 		$offset = ( $current_page - 1 ) * $per_page;
 		$s = isset( $_POST['s'] )? mb_strtolower( trim( $_POST['s'] ) ):false;
@@ -102,6 +109,8 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 		}
 		$total_items = $wp_query->found_posts;
 
+		$this->is_trash = isset( $_REQUEST['post_status'] ) && $_REQUEST['post_status'] == 'trash';
+
 		$this->set_pagination_args(
 			array(
 				'total_items' => $total_items,
@@ -109,20 +118,6 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 				'total_pages' => ceil( $total_items / $per_page ),
 			)
 		);
-	}
-
-	/** No items */
-	public function no_items() {
-		echo __( 'No topics found.', 'CP_TD' );
-	}
-
-	public function column_cb( $item ) {
-		if ( $item->user_can_change ) {
-			return sprintf(
-				'<input type="checkbox" name="bulk-actions[]" value="%s" />', $item->ID
-			);
-		}
-		return '';
 	}
 
 	public function get_columns() {
@@ -145,23 +140,51 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 		}
 		$row_actions = array();
 		if ( $item->user_can_edit ) {
-			$edit_url = add_query_arg(
-				array(
-					'action' => 'edit',
-					'id' => $item->ID,
-				)
-			);
-			$row_actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'CP_TD' ) );
+			if ( $this->is_trash ) {
+				$url = add_query_arg(
+					array(
+						'_wpnonce' => wp_create_nonce( 'coursepress_untrash_discussion' ),
+						'action' => 'untrash',
+						'id' => $item->ID,
+					)
+				);
+				$row_actions['untrash'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Restore', 'CP_TD' ) );
+			} else {
+				$url = add_query_arg(
+					array(
+						'action' => 'edit',
+						'id' => $item->ID,
+					)
+				);
+				$row_actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Edit', 'CP_TD' ) );
+			}
 		}
 		if ( $item->user_can_delete ) {
-			$delete_url = add_query_arg(
-				array(
-					'_wpnonce' => wp_create_nonce( 'coursepress_delete_discussion' ),
-					'id' => $item->ID,
-					'action' => 'delete',
-				)
-			);
-			$row_actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $delete_url ), __( 'Delete', 'CP_TD' ) );
+			if ( $this->is_trash ) {
+				$url = add_query_arg(
+					array(
+						'_wpnonce' => wp_create_nonce( 'coursepress_delete_discussion' ),
+						'id' => $item->ID,
+						'action' => 'delete',
+					)
+				);
+				$row_actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Delete Permanently', 'CP_TD' ) );
+			} else {
+				$url = add_query_arg(
+					array(
+						'_wpnonce' => wp_create_nonce( 'coursepress_trash_discussion' ),
+						'id' => $item->ID,
+						'action' => 'trash',
+					)
+				);
+				$row_actions['trash'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'Trash', 'CP_TD' ) );
+			}
+		}
+		if ( 'publish' == $item->post_status ) {
+			$url = CoursePress_Data_Discussion::get_url( $item );
+			if ( ! empty( $url ) ) {
+				$row_actions['view'] = sprintf( '<a href="%s">%s</a>', esc_url( $url ), __( 'View', 'CP_TD' ) );
+			}
 		}
 		return $this->row_actions( $row_actions );
 	}
@@ -183,7 +206,7 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 			<input type="submit" class="button" name="action" value="<?php esc_attr_e( 'Filter', 'CP_TD' ); ?>" />
 		</div>
 <?php
-		$this->search_box( __( 'Search Forums', 'CP_TD' ), 'search_discussions' );
+		$this->search_box( __( 'Search Forums', 'cp' ), 'search_discussions' );
 	}
 
 	/**

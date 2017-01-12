@@ -13,16 +13,7 @@ class CoursePress_View_Front_Login {
 	 * @todo: Why is this commented? Find out and finish function is needed!
 	 */
 	public static function render_login_page() {
-		// if ( $theme_file = locate_template( array( 'instructor-single.php' ) ) ) {
-		// } else {
-		// wp_enqueue_style( 'front_course_single', $this->plugin_url . 'css/front_course_single.css', array(), $this->version );
-		// if ( locate_template( array( 'instructor-single.php' ) ) ) {//add custom content in the single template ONLY if the post type doesn't already has its own template
-		// just output the content
-		// } else {
 		$content = CoursePress_Template_Dashboard::render_login_page();
-
-		// }
-		// }
 		return $content;
 	}
 
@@ -30,16 +21,7 @@ class CoursePress_View_Front_Login {
 	 * @todo: Why is this commented? Find out and finish function is needed!
 	 */
 	public static function render_signup_page() {
-		// if ( $theme_file = locate_template( array( 'instructor-single.php' ) ) ) {
-		// } else {
-		// wp_enqueue_style( 'front_course_single', $this->plugin_url . 'css/front_course_single.css', array(), $this->version );
-		// if ( locate_template( array( 'instructor-single.php' ) ) ) {//add custom content in the single template ONLY if the post type doesn't already has its own template
-		// just output the content
-		// } else {
 		$content = CoursePress_Template_Dashboard::render_signup_page();
-
-		// }
-		// }
 		return $content;
 	}
 

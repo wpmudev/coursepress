@@ -46,7 +46,7 @@
 		"underscore": "^1.8.3"
 	},
 	"scripts": {
-		"test-php": "phpunit -c test/php/lib/phpunit.xml",
+		"test-php": "phpunit -c test/php/lib/phpunit.xml --coverage-text=/tmp/coverage.txt",
 		"test-js": "node_modules/.bin/mocha test/js",
 		"test": "npm run test-php && npm run test-js",
 		"test": "npm run test-php"
