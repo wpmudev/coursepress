@@ -984,6 +984,17 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			$unit_feature_image = get_post_meta( $unit_id, 'unit_feature_image', true );
 			$unit_image = ($unit_feature_image) ? '<div class="circle-thumbnail"><div class="unit-thumbnail"><img src="' . $unit_feature_image . '"" alt="' . $the_unit->post_title . '" /></div></div>' : '';
 
+			/**
+			 * unit content
+			 */
+			$unit_content = '';
+			if ( ! empty( $the_unit->post_content ) ) {
+				$unit_content = sprintf(
+					'<div class="unit-content">%s</div>',
+					wpautop( $the_unit->post_content )
+				);
+			}
+
 			$post_name = empty( $the_unit->post_name ) ? $the_unit->ID : $the_unit->post_name;
 			$title_suffix = '';
 			if ( 'publish' != $the_unit->post_status && $can_update_course ) {
@@ -1246,6 +1257,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 			$content .= '<li class="' . esc_attr( $additional_li_class ) . '"'. $unit_data . '>' .
 				$unit_image .
+				$unit_content .
 				'<div class="unit-archive-single">' .
 				$unit_progress .
 				//$unit_image .
