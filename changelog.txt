@@ -20,7 +20,7 @@ CHANGELOG
 * Fixed a bug with import students to course when MarketPress is active.
 * Handle situation when student try to add comment to non existing module.
 * Fixed "Domain Name" for proper translation.
-* Added check to import JSNO file.
+* Added check to import JSON file.
 * Added confirmation popup when student withdraw from the course.
 * Fixed non-virtual student login page.
 * Removed fakepath file location in file upload.
