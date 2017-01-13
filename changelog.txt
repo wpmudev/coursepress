@@ -5,6 +5,11 @@ Build Time:  2016-04-07T13:37:59.644Z
 CHANGELOG
 =================================================
 
+= 2.0.3 =
+-------------------------------------------------
+* Added ability to login by email too.
+* Fixed problem with custom CoursePress login page.
+
 = 2.0.2 =
 -------------------------------------------------
 * Fixed a bug with class autoloder function.

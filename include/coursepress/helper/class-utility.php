@@ -28,6 +28,7 @@ class CoursePress_Helper_Utility {
 		add_action( 'init', array( __CLASS__, 'open_course_zip_object' ), 1 );
 		//add_action( 'admin_init', array( __CLASS__, 'course_admin_filters' ), 1 );
 		add_filter( 'upload_mimes', array( __CLASS__, 'enable_extended_upload' ) );
+		add_action( 'parse_request', array( __CLASS__, 'course_signup' ) );
 	}
 
 	public static function enable_extended_upload( $mime_types = array() ) {
@@ -157,7 +158,7 @@ class CoursePress_Helper_Utility {
 			if ( isset( $a[ $k ] ) ) {
 				$a = $a[ $k ];
 			} else {
-				return NULL;
+				return null;
 			}
 		}
 		return $a;
@@ -663,12 +664,12 @@ class CoursePress_Helper_Utility {
 			}
 
 			echo '<a href="' . esc_url_raw( wp_get_referer() ) . $append_url . '" style="padding: 5px; font-size: 12px; text-decoration: none; opacity: 0.3; background: #3C3C3C; color: #fff; font-family: helvetica, sans-serif; position: absolute; top: 2; left: 2;"> &laquo; ' . esc_html__( 'Back to Course', 'CP_TD' ) . '</a>';
-			
-			if ( file_exists($file_path) ) {
+
+			if ( file_exists( $file_path ) ) {
 				echo '<iframe style="margin:0; padding:0; border:none; width: 100%; height: 100vh;" src="' .$file_url . '"></iframe>';
 			} else {
 				// file not there? try redirect and should go to 404
-				wp_safe_redirect($file_url);
+				wp_safe_redirect( $file_url );
 			}
 			exit();
 		}
@@ -1172,5 +1173,40 @@ class CoursePress_Helper_Utility {
 			wp_die( __( 'Sorry, you are not allowed to access this page.' ), 403 );
 		}
 		return $post;
+	}
+
+	/**
+	 * Login user - we need do it in parse_request action, because when
+	 * shortcode is parsed, then it is too late to set auth cookie.
+	 *
+	 * @since 2.0.3
+	 */
+	public static function course_signup() {
+		if ( ! isset( $_POST['log'] ) || ! isset( $_POST['pwd'] ) ) {
+			return;
+		}
+		if ( is_user_logged_in() ) {
+			return;
+		}
+		// Attempt a login if submitted.
+		$user = $_POST['log'];
+		if ( preg_match( '/@/', $user ) ) {
+			$userdata = get_user_by( 'email', $user );
+			$user = $userdata->user_login;
+		}
+		$credentials = array(
+			'user_login' => $user,
+			'user_password' => $_POST['pwd'],
+		);
+		$auth = wp_signon( $credentials );
+		if ( ! is_wp_error( $auth ) ) {
+			if ( isset( $_POST['redirect_url'] ) ) {
+				wp_safe_redirect( urldecode( esc_url_raw( $_POST['redirect_url'] ) ) );
+			} else {
+				wp_redirect( esc_url_raw( CoursePress_Core::get_slug( 'student_dashboard', true ) ) );
+			}
+			exit;
+		}
+		add_filter( 'cp_course_signup_form_show_messages', '__return_true' );
 	}
 }
