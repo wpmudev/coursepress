@@ -157,7 +157,7 @@ class CoursePress_Helper_Utility {
 			if ( isset( $a[ $k ] ) ) {
 				$a = $a[ $k ];
 			} else {
-				return NULL;
+				return null;
 			}
 		}
 		return $a;
@@ -483,13 +483,12 @@ class CoursePress_Helper_Utility {
 		if ( ! $value ) { return false; }
 		if ( ! extension_loaded( 'mcrypt' ) ) { return $value; }
 		if ( ! function_exists( 'mcrypt_module_open' ) ) { return $value; }
-
-		$security_key = NONCE_KEY;
+		$security_key = self::get_security_key();
 		$iv_size = mcrypt_get_iv_size( MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB );
 		$iv = mcrypt_create_iv( $iv_size, MCRYPT_RAND );
 		$crypttext = mcrypt_encrypt(
 			MCRYPT_RIJNDAEL_256,
-			mb_substr( $security_key, 0, 24 ),
+			$security_key,
 			$value,
 			MCRYPT_MODE_ECB,
 			$iv
@@ -503,7 +502,7 @@ class CoursePress_Helper_Utility {
 		if ( ! extension_loaded( 'mcrypt' ) ) { return $value; }
 		if ( ! function_exists( 'mcrypt_module_open' ) ) { return $value; }
 
-		$security_key = NONCE_KEY;
+		$security_key = self::get_security_key();
 		$crypttext = self::safe_b64decode( $value );
 
 		if ( ! $crypttext ) { return false; }
@@ -512,7 +511,7 @@ class CoursePress_Helper_Utility {
 		$iv = mcrypt_create_iv( $iv_size, MCRYPT_RAND );
 		$decrypttext = mcrypt_decrypt(
 			MCRYPT_RIJNDAEL_256,
-			mb_substr( $security_key, 0, 24 ),
+			$security_key,
 			$crypttext,
 			MCRYPT_MODE_ECB,
 			$iv
@@ -663,12 +662,12 @@ class CoursePress_Helper_Utility {
 			}
 
 			echo '<a href="' . esc_url_raw( wp_get_referer() ) . $append_url . '" style="padding: 5px; font-size: 12px; text-decoration: none; opacity: 0.3; background: #3C3C3C; color: #fff; font-family: helvetica, sans-serif; position: absolute; top: 2; left: 2;"> &laquo; ' . esc_html__( 'Back to Course', 'CP_TD' ) . '</a>';
-			
-			if ( file_exists($file_path) ) {
+
+			if ( file_exists( $file_path ) ) {
 				echo '<iframe style="margin:0; padding:0; border:none; width: 100%; height: 100vh;" src="' .$file_url . '"></iframe>';
 			} else {
 				// file not there? try redirect and should go to 404
-				wp_safe_redirect($file_url);
+				wp_safe_redirect( $file_url );
 			}
 			exit();
 		}
@@ -737,7 +736,7 @@ class CoursePress_Helper_Utility {
 						}
 					}
 					$truncate .= substr( $line_matchings[2], 0, $left + $entities_length );
-					// maximum lenght is reached, so get off the loop
+					// maximum length is reached, so get off the loop
 					break;
 				} else {
 					$truncate .= $line_matchings[2];
@@ -1172,5 +1171,33 @@ class CoursePress_Helper_Utility {
 			wp_die( __( 'Sorry, you are not allowed to access this page.' ), 403 );
 		}
 		return $post;
+	}
+
+	/**
+	 * get $security_key - get key as substring of NONCE_KEY, but check
+	 * length.
+	 *
+	 * @since 2.0.3
+	 */
+	private static function get_security_key() {
+		$security_key = NONCE_KEY;
+		$available_lengths = array( 32, 24, 16 );
+		$security_key = NONCE_KEY;
+		foreach ( $available_lengths as $key_length ) {
+			if ( function_exists( 'mb_substr' ) ) {
+				$security_key = mb_substr( $security_key, 0, $key_length );
+			} else {
+				$security_key = substr( $security_key, 0, $key_length );
+			}
+			if ( $key_length == strlen( $security_key ) ) {
+				return $security_key;
+			}
+		}
+		$security_key = get_option( 'cp_security_key' );
+		if ( empty( $security_key ) ) {
+			$security_key = wp_generate_password( 32, true, true );
+		}
+		update_option( 'cp_security_key', $security_key );
+		return $security_key;
 	}
 }
