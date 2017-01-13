@@ -1196,8 +1196,8 @@ class CoursePress_Helper_Utility {
 		$security_key = get_option( 'cp_security_key' );
 		if ( empty( $security_key ) ) {
 			$security_key = wp_generate_password( 32, true, true );
+			update_option( 'cp_security_key', $security_key );
 		}
-		update_option( 'cp_security_key', $security_key );
 		return $security_key;
 	}
 }
