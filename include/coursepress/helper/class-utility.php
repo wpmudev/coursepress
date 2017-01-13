@@ -1200,6 +1200,14 @@ class CoursePress_Helper_Utility {
 		);
 		$auth = wp_signon( $credentials );
 		if ( ! is_wp_error( $auth ) ) {
+			/**
+			 * redirect contributors+ to dashboard
+			 */
+			$userdata = get_user_by( 'login', $user );
+			if ( user_can( $userdata, 'edit_posts' ) ) {
+				wp_safe_redirect( admin_url() );
+				exit;
+			}
 			if ( isset( $_POST['redirect_url'] ) ) {
 				wp_safe_redirect( urldecode( esc_url_raw( $_POST['redirect_url'] ) ) );
 			} else {
