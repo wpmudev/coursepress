@@ -1193,11 +1193,10 @@ class CoursePress_Helper_Utility {
 				return $security_key;
 			}
 		}
-		$security_key = get_option( 'cp_security_key' );
-		if ( empty( $security_key ) ) {
-			$security_key = wp_generate_password( 32, true, true );
-			update_option( 'cp_security_key', $security_key );
-		}
+		/**
+		 * md5 has always 16 characters length.
+		 */
+		$security_key = md5( NONCE_KEY );
 		return $security_key;
 	}
 }
