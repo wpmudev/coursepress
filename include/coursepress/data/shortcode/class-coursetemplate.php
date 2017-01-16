@@ -1257,11 +1257,11 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 			$content .= '<li class="' . esc_attr( $additional_li_class ) . '"'. $unit_data . '>' .
 				$unit_image .
-				$unit_content .
 				'<div class="unit-archive-single">' .
 				$unit_progress .
 				//$unit_image .
-				$unit_link;
+				$unit_link.
+				$unit_content;
 
 			$content .= $module_table;
 
