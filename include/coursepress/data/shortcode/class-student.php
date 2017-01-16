@@ -428,7 +428,7 @@ class CoursePress_Data_Shortcode_Student {
 			return;
 		}
 		$post->coursepress_enrollment_templates_was_already_loaded = true;
-		self:$templates_was_already_loaded = true;
+		self::$templates_was_already_loaded = true;
 		/**
 		 * proceder shortcode
 		 */
