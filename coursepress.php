@@ -4994,7 +4994,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 		function cp_jquery_admin( $hook_sufix ) {
 			if ( strpos( $hook_sufix, 'course' ) !== false ) {
 				wp_enqueue_script( 'jquery' );
-				wp_enqueue_script( 'jquery-ui', '//code.jquery.com/ui/1.10.3/jquery-ui.js', array( 'jquery' ), '1.10.3' ); //need to change this to built-in
+				wp_enqueue_script( 'jquery-ui', '//code.jquery.com/ui/1.11.4/jquery-ui.js', array( 'jquery' ), '1.11.4' ); //need to change this to built-in
 			}
 		}
 
