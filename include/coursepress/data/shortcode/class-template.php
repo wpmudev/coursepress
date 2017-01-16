@@ -1389,7 +1389,7 @@ class CoursePress_Data_Shortcode_Template {
 						';
 						$content .= '<label class="weak-password-confirm">
 							<input type="checkbox" name="confirm_weak_password" value="1" />
-							<span>' . __( 'Confirm use of weark password', 'CP_TD' ) . '</span>
+							<span>' . __( 'Confirm use of weak password', 'CP_TD' ) . '</span>
 							</label>
 						';
 
