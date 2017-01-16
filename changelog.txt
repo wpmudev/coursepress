@@ -8,6 +8,7 @@ CHANGELOG
 = 2.0.3 =
 -------------------------------------------------
 * Added ability yo show unit description.
+* Added key length check for mcrypt function to avoid wrong key size.
 * Fixed a bug with pagination on course archive page.
 * Fixed a bug with custom certificate background.
 
