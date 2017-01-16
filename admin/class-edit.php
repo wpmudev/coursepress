@@ -1438,6 +1438,13 @@ class CoursePress_Admin_Edit {
 					$html = CoursePress_Data_Course::get_setting( $course_id, 'basic_certificate_layout' );
 					$html = apply_filters( 'coursepress_basic_certificate_html', $html, $course_id, get_current_user_id() );
 					$use_cp_default = false;
+				} else {
+					$background = CoursePress_Core::get_setting( 'basic_certificate/background_image' );
+					$orientation = CoursePress_Core::get_setting( 'basic_certificate/orientation', 'L' );
+					$margins  = CoursePress_Core::get_setting( 'basic_certificate/margin' );
+					foreach ( $margins as $margin => $value ) {
+						$margins[ $margin ] = $value;
+					}
 				}
 				$userdata = get_userdata( get_current_user_id() );
 				$course = get_post( $course_id );

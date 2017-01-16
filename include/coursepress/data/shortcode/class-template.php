@@ -96,13 +96,11 @@ class CoursePress_Data_Shortcode_Template {
 		$echo = cp_is_true( $a['echo'] );
 
 		$paged = isset( $wp->query_vars['paged'] ) ? absint( $wp->query_vars['paged'] ) : 1;
-		$offset = $paged - 1;
 
 		$post_args = array(
 			'post_type' => CoursePress_Data_Course::get_post_type_name(),
 			'post_status' => 'publish',
 			'posts_per_page' => $per_page,
-			'offset' => $offset,
 			'paged' => $paged,
 			'meta_key' => 'cp_course_start_date',
 			'orderby' => 'meta_value_num',
