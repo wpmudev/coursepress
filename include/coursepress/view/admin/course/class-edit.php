@@ -115,7 +115,7 @@ class CoursePress_View_Admin_Course_Edit {
 		$publish_toggle = '';
 
 		$ui = array(
-			'label' => 'Publish Course',
+			'label' => __( 'Publish Course', 'CP_TD' ),
 			'left' => '<i class="fa fa-ban"></i>',
 			'left_class' => 'red',
 			'right' => '<i class="fa fa-check"></i>',
@@ -260,7 +260,7 @@ class CoursePress_View_Admin_Course_Edit {
 			$manage_category_link = sprintf( '<a href="%s" class="context-link">%s</a>', esc_url_raw( $url ), esc_html__( 'Manage Categories', 'CP_TD' ) );
 		}
 
-        $content .= sprintf( '<div class="wide %s">', $can_manage_categories ? '' : 'hidden' );
+		$content .= sprintf( '<div class="wide %s">', $can_manage_categories ? '' : 'hidden' );
 		$content .= '
 					<label for="meta_course_category" class="medium">' .
 					esc_html__( 'Course Category', 'CP_TD' ) . $manage_category_link . '
@@ -1072,7 +1072,7 @@ class CoursePress_View_Admin_Course_Edit {
 			'DOWNLOAD_CERTIFICATE_BUTTON',
 			'STUDENT_WORKBOOK',
 		);
-		$token_info = '<p class="description" style="margin-bottom: -25px;">'. __( sprintf( 'Use these tokens to display actual course details: %s', implode( ', ', $tokens ) ), 'CP_TD' ) . '</p>';
+		$token_info = '<p class="description" style="margin-bottom: -25px;">'. __( sprintf( __( 'Use these tokens to display actual course details: %s', 'CP_TD' ), implode( ', ', $tokens ) ), 'CP_TD' ) . '</p>';
 
 		// Pre-completion page
 		$content .= '<div class="wide page-pre-completion">'
@@ -1097,9 +1097,9 @@ class CoursePress_View_Admin_Course_Edit {
 		$content .= self::get_wp_editor( 'course-completion-editor-content', 'meta_course_completion_content', $completion_content );
 		$content .= '</div>';
 
-        /**
-         * Course Fail Page
-         */
+		/**
+		 * Course Fail Page
+		 */
 		$failed_title = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_title', $defaults['course_failed']['title'] );
 		$failed_content = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_content', $defaults['course_failed']['content'] );
 		$failed_content = htmlspecialchars_decode( $failed_content );
@@ -1977,5 +1977,4 @@ class CoursePress_View_Admin_Course_Edit {
 		$editor_html = ob_get_clean();
 		return $editor_html;
 	}
-
 }

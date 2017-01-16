@@ -243,7 +243,7 @@ class CoursePress_Helper_Table_CourseList extends WP_List_Table {
 		 * check instructor privileges
 		 */
 		if ( CoursePress_Data_Capabilities::can_update_course( $item->ID ) ) {
-			$actions['edit'] = sprintf( '<a href="?page=%s&action=%s&id=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), __( 'Edit', 'cp' ) );
+			$actions['edit'] = sprintf( '<a href="?page=%s&action=%s&id=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), __( 'Edit', 'CP_TD' ) );
 			$actions['units'] = sprintf( '<a href="?page=%s&action=%s&id=%s&tab=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), 'units', __( 'Units', 'CP_TD' ) );
 			$actions['students'] = sprintf( '<a href="?page=%s&action=%s&id=%s&tab=%s">%s</a>', esc_attr( $edit_page ), 'edit', absint( $item->ID ), 'students',  __( 'Students', 'CP_TD' ) );
 			if ( CoursePress_Data_Capabilities::can_create_course( $user_id ) ) {

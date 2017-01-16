@@ -247,7 +247,7 @@ class CoursePress_Admin_Edit {
 		$publish_toggle = '';
 
 		$ui = array(
-			'label' => __( 'Publish Course', 'cp' ),
+			'label' => __( 'Publish Course', 'CP_TD' ),
 			'left' => '<i class="fa fa-ban"></i>',
 			'left_class' => 'red',
 			'right' => '<i class="fa fa-check"></i>',
@@ -390,7 +390,7 @@ class CoursePress_Admin_Edit {
 		$setup_class = ( (int) CoursePress_Data_Course::get_setting( $course_id, 'setup_marker', 0 ) === 6 ) || ( (int) CoursePress_Data_Course::get_setting( $course_id, 'setup_marker', 0 ) === 0 ) ? $setup_class . ' setup_marker' : $setup_class;
 
 		$content = '
-			<div class="step-title step-1">' . esc_html__( 'Step 1 – Course Overview', 'CP_TD' ) . '
+			<div class="step-title step-1">' . esc_html__( 'Step 1 &ndash; Course Overview', 'CP_TD' ) . '
 				<div class="status ' . $setup_class . '"></div>
 			</div>
 			<div class="step-content step-1">
@@ -450,12 +450,12 @@ class CoursePress_Admin_Edit {
 		// Course Language
 		$language = CoursePress_Data_Course::get_setting( $course_id, 'course_language' );
 		if ( empty( $language ) ) {
-			$language = __( 'English', 'cp' );
+			$language = __( 'English', 'CP_TD' );
 		}
 		$content .= '
 				<div class="wide">
 						<label for="meta_course_language">' .
-					esc_html__( 'Language', 'cp' ) . '
+					esc_html__( 'Language', 'CP_TD' ) . '
 						</label>
 						<input class="medium" type="text" name="meta_course_language" id="meta_course_language" value="' . $language . '"/>
 				</div>';
@@ -483,7 +483,7 @@ class CoursePress_Admin_Edit {
 		$setup_class = CoursePress_Data_Course::get_setting( $course_id, 'setup_step_2', '' );
 		$setup_class = (int) CoursePress_Data_Course::get_setting( $course_id, 'setup_marker', 0 ) === 1 ? $setup_class . ' setup_marker' : $setup_class;
 		$content = '
-			<div class="step-title step-2">' . esc_html__( 'Step 2 – Course Details', 'CP_TD' ) . '
+			<div class="step-title step-2">' . esc_html__( 'Step 2 &ndash; Course Details', 'CP_TD' ) . '
 				<div class="status ' . $setup_class . '"></div>
 			</div>
 			<div class="step-content step-2">
@@ -701,7 +701,7 @@ class CoursePress_Admin_Edit {
 		$can_assign_instructor = CoursePress_Data_Capabilities::can_assign_course_instructor( $course_id );
 
 		$content = '
-			<div class="step-title step-3">' . esc_html__( 'Step 3 – Instructors and Facilitators', 'CP_TD' ) . '
+			<div class="step-title step-3">' . esc_html__( 'Step 3 &ndash; Instructors and Facilitators', 'CP_TD' ) . '
 				<div class="status ' . $setup_class . '"></div>
 			</div>
 			<div class="step-content step-3">
@@ -861,7 +861,7 @@ class CoursePress_Admin_Edit {
 		$setup_class = CoursePress_Data_Course::get_setting( $course_id, 'setup_step_4', '' );
 		$setup_class = (int) CoursePress_Data_Course::get_setting( $course_id, 'setup_marker', 0 ) === 3 ? $setup_class . ' setup_marker' : $setup_class;
 		$content = '
-			<div class="step-title step-4">' . esc_html__( 'Step 4 – Course Dates', 'CP_TD' ) . '
+			<div class="step-title step-4">' . esc_html__( 'Step 4 &ndash; Course Dates', 'CP_TD' ) . '
 				<div class="status ' . $setup_class . '"></div>
 			</div>
 			<div class="step-content step-4">
@@ -949,7 +949,7 @@ class CoursePress_Admin_Edit {
 		$setup_class = CoursePress_Data_Course::get_setting( $course_id, 'setup_step_5', '' );
 		$setup_class = (int) CoursePress_Data_Course::get_setting( $course_id, 'setup_marker', 0 ) === 4 ? $setup_class . ' setup_marker' : $setup_class;
 		$content = '
-			<div class="step-title step-5">' . esc_html__( 'Step 5 – Classes, Discussion & Workbook', 'CP_TD' ) . '
+			<div class="step-title step-5">' . esc_html__( 'Step 5 &ndash; Classes, Discussion & Workbook', 'CP_TD' ) . '
 				<div class="status ' . $setup_class . '"></div>
 			</div>
 			<div class="step-content step-5">
@@ -1030,7 +1030,7 @@ class CoursePress_Admin_Edit {
 		$payment_tagline = ! $disable_payment ? __( ' & Course Cost', 'CP_TD' ) : '';
 
 		$content = '
-			<div class="step-title step-6">' . esc_html( sprintf( __( 'Step 6 – Enrollment%s', 'CP_TD' ), $payment_tagline ) ) . '
+			<div class="step-title step-6">' . esc_html( sprintf( __( 'Step 6 &ndash; Enrollment%s', 'CP_TD' ), $payment_tagline ) ) . '
 				<div class="status ' . $setup_class . '"></div>
 			</div>
 			<div class="step-content step-6">
@@ -1154,7 +1154,7 @@ class CoursePress_Admin_Edit {
 					%s
 					<p>%s: WooCommerce</p>
 				</div>
-			', $class, __( 'Sell your courses online with MarketPress.', 'cp' ), $version_message, $install_message, __( 'Other supported plugins', 'cp' ) ), $course_id );
+			', $class, __( 'Sell your courses online with MarketPress.', 'CP_TD' ), $version_message, $install_message, __( 'Other supported plugins', 'CP_TD' ) ), $course_id );
 
 			// It's already been filtered, but because we're dealing with HTML, lets be sure
 			$content .= CoursePress_Helper_Utility::filter_content( $payment_message );
@@ -1221,7 +1221,7 @@ class CoursePress_Admin_Edit {
 		$completion_content = htmlspecialchars_decode( $completion_content );
 
 		$content = '<div class="step-title step-7">'
-			. esc_html( 'Step 7 - Course Completion', 'CP_TD' )
+			. esc_html( 'Step 7 &ndash; Course Completion', 'CP_TD' )
 			. '<div class="status '. $setup_class . '"></div>'
 			. '</div>';
 
@@ -1249,7 +1249,7 @@ class CoursePress_Admin_Edit {
 			'DOWNLOAD_CERTIFICATE_BUTTON',
 			'STUDENT_WORKBOOK',
 		);
-		$token_info = '<p class="description" style="margin-bottom: -25px;">'. sprintf( __( 'Use these tokens to display actual course details: %s', 'cp' ), implode( ', ', $tokens ) ) . '</p>';
+		$token_info = '<p class="description" style="margin-bottom: -25px;">'. sprintf( __( 'Use these tokens to display actual course details: %s', 'CP_TD' ), implode( ', ', $tokens ) ) . '</p>';
 
 		// Pre-completion page
 		$content .= '<div class="wide page-pre-completion">'
@@ -1277,7 +1277,7 @@ class CoursePress_Admin_Edit {
 		// Fail info
 		$failed_title = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_title', __( 'Sorry, you did not pass this course!', 'CP_TD' ) );
 		$failed_content = sprintf( '<p>%s</p><p>%s</p>',
-			__( 'Unfortunately, you didn’t pass COURSE_NAME.', 'CP_TD' ),
+			__( 'Unfortunately, you didn\'t pass COURSE_NAME.', 'CP_TD' ),
 			__( 'Better luck next time!', 'CP_TD' )
 		);
 		$failed_content = CoursePress_Data_Course::get_setting( $course_id, 'course_failed_content', $failed_content );

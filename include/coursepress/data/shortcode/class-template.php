@@ -1402,7 +1402,7 @@ class CoursePress_Data_Shortcode_Template {
 						';
 						$content .= '<label class="weak-password-confirm">
 							<input type="checkbox" name="confirm_weak_password" value="1" />
-							<span>' . __( 'Confirm use of weark password', 'cp' ) . '</span>
+							<span>' . __( 'Confirm use of weark password', 'CP_TD' ) . '</span>
 							</label>
 						';
 
@@ -1547,7 +1547,7 @@ class CoursePress_Data_Shortcode_Template {
 				'signup_link_url' => '#',
 				'signup_link_id' => '',
 				'signup_link_class' => '',
-				'signup_link_label' => __( 'Don’t have an account? <a href="%s" class="%s" id="%s">Create an Account</a> now!', 'CP_TD' ),
+				'signup_link_label' => __( 'Don\'t have an account? <a href="%s" class="%s" id="%s">Create an Account</a> now!', 'CP_TD' ),
 				'forgot_password_label' => __( 'Forgot Password?', 'CP_TD' ),
 				'submit_button_class' => '',
 				'submit_button_attributes' => '',
@@ -1682,7 +1682,7 @@ class CoursePress_Data_Shortcode_Template {
 						}
 						$content .= '<label class="weak-password-confirm">
 							<input type="checkbox" name="confirm_weak_password" value="1" />
-							' . __( 'Confirm use of weak password', 'cp' ) . '
+							' . __( 'Confirm use of weak password', 'CP_TD' ) . '
 							</label>
 						';
 
