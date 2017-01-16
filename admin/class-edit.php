@@ -1131,7 +1131,7 @@ class CoursePress_Admin_Edit {
 				$install_message = sprintf( '<p>%s</p> <a href="%s">%s MarketPress</a>',
 					__( 'To start selling your course, please install and activate MarketPress here:', 'CP_TD' ),
 					esc_url_raw( admin_url( 'admin.php?page=coursepress_settings&tab=extensions' ) ),
-					__( 'Activate', 'CP_TD' ) );
+				__( 'Activate', 'CP_TD' ) );
 			} else {
 				$install_message = sprintf( '<p>%s</p>', __( 'Please contact your administrator to enable MarketPress for your site.', 'CP_TD' ) );
 			}
@@ -1438,6 +1438,13 @@ class CoursePress_Admin_Edit {
 					$html = CoursePress_Data_Course::get_setting( $course_id, 'basic_certificate_layout' );
 					$html = apply_filters( 'coursepress_basic_certificate_html', $html, $course_id, get_current_user_id() );
 					$use_cp_default = false;
+				} else {
+					$background = CoursePress_Core::get_setting( 'basic_certificate/background_image' );
+					$orientation = CoursePress_Core::get_setting( 'basic_certificate/orientation', 'L' );
+					$margins  = CoursePress_Core::get_setting( 'basic_certificate/margin' );
+					foreach ( $margins as $margin => $value ) {
+						$margins[ $margin ] = $value;
+					}
 				}
 				$userdata = get_userdata( get_current_user_id() );
 				$course = get_post( $course_id );

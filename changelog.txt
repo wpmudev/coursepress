@@ -5,6 +5,10 @@ Build Time:  2016-04-07T13:37:59.644Z
 CHANGELOG
 =================================================
 
+= 2.0.3 =
+-------------------------------------------------
+* Fixed a bug with custom certificate background.
+
 = 2.0.2 =
 -------------------------------------------------
 * Fixed a bug with class autoloder function.
