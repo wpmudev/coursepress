@@ -419,6 +419,13 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			$button_pre = isset( $buttons[ $button_option ]['button_pre'] ) ? $buttons[ $button_option ]['button_pre'] : '';
 			$button_post = isset( $buttons[ $button_option ]['button_post'] ) ? $buttons[ $button_option ]['button_post'] : '';
 
+			/**
+			 * If there is no script, made a regular link instead of button.
+			 */
+			if ( empty( wp_script_is( 'coursepress-front-js' ) ) ) {
+				$buttons[ $button_option ]['type'] = 'link';
+			}
+
 			switch ( $buttons[ $button_option ]['type'] ) {
 				case 'label':
 					$button = '<span ' . $button_attributes . '>' . esc_html( $buttons[ $button_option ]['label'] ) . '</span>';
