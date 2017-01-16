@@ -9,6 +9,8 @@ CHANGELOG
 -------------------------------------------------
 * Added ability to auto re-create certificate if file is missing.
 * Added permission check when try to download certificate.
+* Fixed a bug with pagination on course archive page.
+* Fixed a bug with custom certificate background.
 
 = 2.0.2 =
 -------------------------------------------------
