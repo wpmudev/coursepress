@@ -202,7 +202,7 @@ if ( 'top' === $which ) {
 	$options['value'] = $this->course_id;
 	$options['class'] = 'medium dropdown';
 	$options['first_option'] = array(
-	'text' => __( 'All courses', 'cp' ),
+	'text' => __( 'All courses', 'CP_TD' ),
 	'value' => 'all',
 	);
 

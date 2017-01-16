@@ -1118,7 +1118,7 @@ class CoursePress_Data_Shortcode_Template {
 			shortcode_atts(
 				array(
 					'failed_login_class' => 'red',
-					'failed_login_text' => __( 'Invalid login.', 'CP_TD' ),
+					'failed_login_text' => __( 'Invalid username or password.', 'CP_TD' ),
 					'login_tag' => 'h3',
 					'login_title' => __( 'Login', 'CP_TD' ),
 					'login_url' => '',
@@ -1175,20 +1175,7 @@ class CoursePress_Data_Shortcode_Template {
 
 		// Attempt a login if submitted.
 		if ( isset( $_POST['log'] ) && isset( $_POST['pwd'] ) ) {
-
-			$auth = wp_authenticate_username_password( null, $_POST['log'], $_POST['pwd'] );
-			if ( ! is_wp_error( $auth ) ) {
-				$user = get_user_by( 'login', $_POST['log'] );
-				$user_id = $user->ID;
-				wp_set_current_user( $user_id );
-				wp_set_auth_cookie( $user_id );
-				if ( ! empty( $redirect_url ) ) {
-					wp_redirect( urldecode( esc_url_raw( $redirect_url ) ) );
-				} else {
-					wp_redirect( esc_url_raw( CoursePress_Core::get_slug( 'student_dashboard', true ) ) );
-				}
-				exit;
-			} else {
+			if ( apply_filters( 'cp_course_signup_form_show_messages', false ) ) {
 				$form_message = $failed_login_text;
 				$form_message_class = $failed_login_class;
 			}
@@ -1402,7 +1389,7 @@ class CoursePress_Data_Shortcode_Template {
 						';
 						$content .= '<label class="weak-password-confirm">
 							<input type="checkbox" name="confirm_weak_password" value="1" />
-							<span>' . __( 'Confirm use of weark password', 'cp' ) . '</span>
+							<span>' . __( 'Confirm use of weark password', 'CP_TD' ) . '</span>
 							</label>
 						';
 
@@ -1479,7 +1466,7 @@ class CoursePress_Data_Shortcode_Template {
 
 				$content .= '
 						<label class="username">
-							<span>' . esc_html__( 'Username', 'CP_TD' ) . '</span>
+							<span>' . esc_html__( 'Username or Email Address', 'CP_TD' ) . '</span>
 							<input type="text" name="log" value="' . ( isset( $_POST['log'] ) ? esc_attr( $_POST['log'] ) : '' ) . '"/>
 						</label>
 						<label class="password">
@@ -1547,7 +1534,7 @@ class CoursePress_Data_Shortcode_Template {
 				'signup_link_url' => '#',
 				'signup_link_id' => '',
 				'signup_link_class' => '',
-				'signup_link_label' => __( 'Don’t have an account? <a href="%s" class="%s" id="%s">Create an Account</a> now!', 'CP_TD' ),
+				'signup_link_label' => __( 'Don\'t have an account? <a href="%s" class="%s" id="%s">Create an Account</a> now!', 'CP_TD' ),
 				'forgot_password_label' => __( 'Forgot Password?', 'CP_TD' ),
 				'submit_button_class' => '',
 				'submit_button_attributes' => '',
@@ -1682,7 +1669,7 @@ class CoursePress_Data_Shortcode_Template {
 						}
 						$content .= '<label class="weak-password-confirm">
 							<input type="checkbox" name="confirm_weak_password" value="1" />
-							' . __( 'Confirm use of weak password', 'cp' ) . '
+							' . __( 'Confirm use of weak password', 'CP_TD' ) . '
 							</label>
 						';
 
