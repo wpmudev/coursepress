@@ -8,6 +8,7 @@ CHANGELOG
 = 2.0.3 =
 -------------------------------------------------
 * Fixed a bug with pagination on course archive page.
+* Fixed a bug with custom certificate background.
 
 = 2.0.2 =
 -------------------------------------------------
