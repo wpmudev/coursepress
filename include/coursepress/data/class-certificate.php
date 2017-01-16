@@ -392,7 +392,7 @@ class CoursePress_Data_Certificate {
 			// We'll replace the existing content to a new one to apply settings changes when applicable.
 			$certificate = self::get_certificate_content( $post->ID );
 			$settings = CoursePress_Core::get_setting( 'basic_certificate' );
-			$background = CoursePress_Helper_Utility::get_array_val( $settings, 'background' );
+			$background = CoursePress_Helper_Utility::get_array_val( $settings, 'background_image' );
 			$orientation = CoursePress_Helper_Utility::get_array_val( $settings, 'orientation' );
 			$margins = (array) CoursePress_Helper_Utility::get_array_val( $settings, 'margin' );
 			$filename = self::get_pdf_file_name( $course_id, $student_id, 'no-base-dir' );
