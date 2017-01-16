@@ -8,6 +8,8 @@ CHANGELOG
 = 2.0.3 =
 -------------------------------------------------
 * Fixed a bug with adding students to course in admin, when MarketPress or WooCommerce is used to sell courses.
+* Fixed a bug with pagination on course archive page.
+* Fixed a bug with custom certificate background.
 
 = 2.0.2 =
 -------------------------------------------------
