@@ -7,6 +7,7 @@ CHANGELOG
 
 = 2.0.3 =
 -------------------------------------------------
+* Fixed a bug with adding students to course in admin, when MarketPress or WooCommerce is used to sell courses.
 * Added ability to login by email too.
 * Fixed problem with custom CoursePress login page.
 * Changed redirect after login, for editors it will be now WordPress Dashboard.
