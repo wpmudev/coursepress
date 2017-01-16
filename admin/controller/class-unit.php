@@ -78,7 +78,7 @@ class CoursePress_Admin_Controller_Unit {
 							)
 						)
 					. '</h3>
-					<label for="unit_name">Unit Title</label>
+					<label for="unit_name">' . __( 'Unit Title', 'CP_TD' ) . '</label>
 					<input id="unit_name" class="wide" type="text" value="<%= unit_title %>" name="post_title" spellcheck="true">
 					<div class="unit-additional-info">
 					<label class="unit-description">' . __( 'Unit Description', 'CP_TD' ) . '</label>

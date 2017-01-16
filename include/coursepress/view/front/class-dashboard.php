@@ -33,8 +33,17 @@ class CoursePress_View_Front_Dashboard {
 			 * redirect non logged
 			 */
 			if ( ! is_user_logged_in() ) {
-				$home = site_url();
-				wp_redirect( $home );
+				$url = wp_login_url();
+				$use_custom = cp_is_true( CoursePress_Core::get_setting( 'general/use_custom_login', 1 ) );
+				if ( $use_custom ) {
+					$login_page = CoursePress_Core::get_setting( 'pages/login', false );
+					if ( empty( $login_page ) ) {
+						$url = CoursePress_Core::get_slug( 'login', true );
+					} else {
+						$url = get_permalink( (int) $login_page );
+					}
+				}
+				wp_safe_redirect( $url );
 				exit;
 			}
 
