@@ -1249,7 +1249,7 @@ class CoursePress_Admin_Edit {
 			'DOWNLOAD_CERTIFICATE_BUTTON',
 			'STUDENT_WORKBOOK',
 		);
-		$token_info = '<p class="description" style="margin-bottom: -25px;">'. __( sprintf( __( 'Use these tokens to display actual course details: %s', 'CP_TD' ), implode( ', ', $tokens ) ), 'CP_TD' ) . '</p>';
+		$token_info = '<p class="description" style="margin-bottom: -25px;">'. sprintf( __( 'Use these tokens to display actual course details: %s', 'CP_TD' ), implode( ', ', $tokens ) ) . '</p>';
 
 		// Pre-completion page
 		$content .= '<div class="wide page-pre-completion">'
