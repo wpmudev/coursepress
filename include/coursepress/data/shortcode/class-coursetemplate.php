@@ -423,6 +423,12 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			 * If there is no script, made a regular link instead of button.
 			 */
 			if ( empty( wp_script_is( 'coursepress-front-js' ) ) ) {
+				/**
+				 * fix button on shortcode
+				 */
+				if ( 'enroll' == $button_option ) {
+					$button_option = 'details';
+				}
 				$buttons[ $button_option ]['type'] = 'link';
 			}
 

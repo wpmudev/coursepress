@@ -7,7 +7,7 @@ CHANGELOG
 
 = 2.0.3 =
 -------------------------------------------------
-* Fixed shortcode "course_join_button" whe it is used outside a course.
+* Fixed "button" in shortcodes when not on courses list.
 * Added key length check for mcrypt function to avoid wrong key size.
 * Fixed a bug with pagination on course archive page.
 * Fixed a bug with custom certificate background.
