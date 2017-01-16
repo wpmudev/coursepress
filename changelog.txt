@@ -11,6 +11,7 @@ CHANGELOG
 * Fixed problem with custom CoursePress login page.
 * Changed redirect after login, for editors it will be now WordPress Dashboard.
 * Changed redirect for non-logged users who enter student dashboard URL to login page.
+* Added key length check for mcrypt function to avoid wrong key size.
 * Fixed a bug with pagination on course archive page.
 * Fixed a bug with custom certificate background.
 

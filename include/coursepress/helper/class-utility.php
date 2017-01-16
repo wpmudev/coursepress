@@ -484,13 +484,12 @@ class CoursePress_Helper_Utility {
 		if ( ! $value ) { return false; }
 		if ( ! extension_loaded( 'mcrypt' ) ) { return $value; }
 		if ( ! function_exists( 'mcrypt_module_open' ) ) { return $value; }
-
-		$security_key = NONCE_KEY;
+		$security_key = self::get_security_key();
 		$iv_size = mcrypt_get_iv_size( MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB );
 		$iv = mcrypt_create_iv( $iv_size, MCRYPT_RAND );
 		$crypttext = mcrypt_encrypt(
 			MCRYPT_RIJNDAEL_256,
-			mb_substr( $security_key, 0, 24 ),
+			$security_key,
 			$value,
 			MCRYPT_MODE_ECB,
 			$iv
@@ -504,7 +503,7 @@ class CoursePress_Helper_Utility {
 		if ( ! extension_loaded( 'mcrypt' ) ) { return $value; }
 		if ( ! function_exists( 'mcrypt_module_open' ) ) { return $value; }
 
-		$security_key = NONCE_KEY;
+		$security_key = self::get_security_key();
 		$crypttext = self::safe_b64decode( $value );
 
 		if ( ! $crypttext ) { return false; }
@@ -513,7 +512,7 @@ class CoursePress_Helper_Utility {
 		$iv = mcrypt_create_iv( $iv_size, MCRYPT_RAND );
 		$decrypttext = mcrypt_decrypt(
 			MCRYPT_RIJNDAEL_256,
-			mb_substr( $security_key, 0, 24 ),
+			$security_key,
 			$crypttext,
 			MCRYPT_MODE_ECB,
 			$iv
@@ -738,7 +737,7 @@ class CoursePress_Helper_Utility {
 						}
 					}
 					$truncate .= substr( $line_matchings[2], 0, $left + $entities_length );
-					// maximum lenght is reached, so get off the loop
+					// maximum length is reached, so get off the loop
 					break;
 				} else {
 					$truncate .= $line_matchings[2];
@@ -1216,5 +1215,32 @@ class CoursePress_Helper_Utility {
 			exit;
 		}
 		add_filter( 'cp_course_signup_form_show_messages', '__return_true' );
+	}
+
+	/**
+	 * get $security_key - get key as substring of NONCE_KEY, but check
+	 * length.
+	 *
+	 * @since 2.0.3
+	 */
+	private static function get_security_key() {
+		$security_key = NONCE_KEY;
+		$available_lengths = array( 32, 24, 16 );
+		$security_key = NONCE_KEY;
+		foreach ( $available_lengths as $key_length ) {
+			if ( function_exists( 'mb_substr' ) ) {
+				$security_key = mb_substr( $security_key, 0, $key_length );
+			} else {
+				$security_key = substr( $security_key, 0, $key_length );
+			}
+			if ( $key_length == strlen( $security_key ) ) {
+				return $security_key;
+			}
+		}
+		/**
+		 * md5 has always 16 characters length.
+		 */
+		$security_key = md5( NONCE_KEY );
+		return $security_key;
 	}
 }
