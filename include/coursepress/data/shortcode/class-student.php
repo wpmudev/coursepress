@@ -10,6 +10,8 @@
  */
 class CoursePress_Data_Shortcode_Student {
 
+	private static $templates_was_already_loaded = false;
+
 	/**
 	 * Register the shortcodes.
 	 *
