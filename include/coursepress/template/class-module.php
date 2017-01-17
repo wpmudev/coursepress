@@ -41,37 +41,37 @@ class CoursePress_Template_Module {
 		$content = '';
 		$response = self::get_response( $module_id, $student_id );
 
-		switch( $module_type ) {
+		switch ( $module_type ) {
 			case 'input-checkbox': case 'input-radio': case 'input-select':
-				$answers = $attributes['answers'];
-				$selected = $attributes['answers_selected'];
-				$content .= '<ul class="cp-answers">';
+						$answers = $attributes['answers'];
+						$selected = $attributes['answers_selected'];
+						$content .= '<ul class="cp-answers">';
 
-				foreach ( $answers as $key => $answer ) {
-					if ( 'input-checkbox' !== $module_type ) {
-						$the_answer = $selected === $key || $selected === $answer;
-						$student_answer = $response == $key || $response === $answer;
-					} else {
-						$the_answer = in_array( $key, $selected );
-						$student_answer = is_array( $response ) ? in_array( $key, $response ) : $response == $key;
-					}
+						foreach ( $answers as $key => $answer ) {
+							if ( 'input-checkbox' !== $module_type ) {
+								$the_answer = $selected === $key || $selected === $answer;
+								$student_answer = $response == $key || $response === $answer;
+							} else {
+								$the_answer = in_array( $key, $selected );
+								$student_answer = is_array( $response ) ? in_array( $key, $response ) : $response == $key;
+							}
 
-					if ( $student_answer ) {
-						if ( $the_answer ) {
-							$answer = '<span class="chosen-answer correct"></span>' . $answer;
-						} else {
-							$answer = '<span class="chosen-answer incorrect"></span>' . $answer;
+							if ( $student_answer ) {
+								if ( $the_answer ) {
+									$answer = '<span class="chosen-answer correct"></span>' . $answer;
+								} else {
+									$answer = '<span class="chosen-answer incorrect"></span>' . $answer;
+								}
+								$content .= sprintf( '<li>%s</li>', $answer );
+							}
 						}
-						$content .= sprintf( '<li>%s</li>', $answer );
-					}
-				}
-				$content .= '</ul>';
+						$content .= '</ul>';
 
 				break;
 			case 'input-textarea': case 'input-text':
-				if ( ! empty( $response ) ) {
-					$content .= sprintf( '<div class="cp-answer-box">%s</div>', $response );
-				}
+					if ( ! empty( $response ) ) {
+						$content .= sprintf( '<div class="cp-answer-box">%s</div>', $response );
+					}
 				break;
 
 			case 'input-upload':
@@ -96,7 +96,7 @@ class CoursePress_Template_Module {
 							$checked = array_filter( $checked );
 							$student_response = $response[ $q_index ];
 
-							$content .= sprintf( '<div class="cp-q"><hr /><p class="description cp-question">%s</p><ul>', esc_html( $question['question']  ) );
+							$content .= sprintf( '<div class="cp-q"><hr /><p class="description cp-question">%s</p><ul>', esc_html( $question['question'] ) );
 
 							foreach ( $options['answers'] as $p_index => $answer ) {
 								$the_answer = isset( $checked[ $p_index ] ) ? $checked[ $p_index ] : false;
@@ -281,7 +281,7 @@ class CoursePress_Template_Module {
 					$retry = '';
 				} elseif ( ! empty( $attributes['retry_attempts'] ) && 0 < $response_count ) {
 					$attempts = (int) $attributes['retry_attempts'];
-					
+
 					if ( $response_count >= $attempts ) {
 						$disabled = true;
 						$retry = '';
@@ -307,7 +307,7 @@ class CoursePress_Template_Module {
 				}
 			}
 
-			if ( 'closed' == $course_status ){
+			if ( 'closed' == $course_status ) {
 				$disabled = true;
 				$retry = '';
 			}
@@ -493,11 +493,12 @@ class CoursePress_Template_Module {
 				$video = wp_video_shortcode( $attr );
 			} else {
 				$embed_args = array();
-
+				add_filter( 'oembed_result', array( __CLASS__, 'oembed_result_add_autoplay' ), 10, 3 );
 				$video = wp_oembed_get( $url, $embed_args );
 				if ( ! $video ) {
 					$video = apply_filters( 'the_content', '[embed]' . $url . '[/embed]' );
 				}
+				remove_filter( 'oembed_result', array( __CLASS__, 'oembed_result_add_autoplay' ), 10, 3 );
 			}
 
 			if ( $show_caption ) {
@@ -598,7 +599,7 @@ class CoursePress_Template_Module {
 				esc_html( $link_text )
 			);
 			$content .= $after_content;
-		} elseif( empty( $attributes['primary_file'] ) ) {
+		} elseif ( empty( $attributes['primary_file'] ) ) {
 			$content .= sprintf(
 				'<div class="zip_holder error">%s</div>',
 				__( 'Primary File not set, please come back later.', 'CP_TD' )
@@ -615,7 +616,7 @@ class CoursePress_Template_Module {
 	private static function comment_form( $post_id ) {
 		ob_start();
 
-		$form_class = array(  'comment-form', 'cp-comment-form' );
+		$form_class = array( 'comment-form', 'cp-comment-form' );
 		$comment_order = get_option( 'comment_order' );
 		$form_class[] = 'comment-form-' . $comment_order;
 
@@ -871,7 +872,7 @@ class CoursePress_Template_Module {
 				}
 
 				$questions .= '</ul>';
-				$questions = sprintf('<p class="question">%s</p>%s', esc_html( $question['question'] ), $questions );
+				$questions = sprintf( '<p class="question">%s</p>%s', esc_html( $question['question'] ), $questions );
 				$container_format = '<div class="module-quiz-question question-%s" data-type="%s">%s</div>';
 				$content .= sprintf( $container_format, $qi, $question['type'], $questions );
 			}
@@ -991,5 +992,23 @@ class CoursePress_Template_Module {
 		$template = apply_filters( 'coursepress_template_quiz_results', $template, $attributes );
 
 		return $template;
+	}
+
+	public static function oembed_result_add_autoplay( $html, $url, $attr ) {
+		wp_parse_str( $url, $attr );
+		if ( isset( $attr['autoplay'] ) && $attr['autoplay'] ) {
+			preg_match( '/src="([^"]+)"/', $html, $matches );
+			if ( 1 < sizeof( $matches ) ) {
+				$url = add_query_arg(
+					array(
+						'autoplay' => 1,
+					),
+					$matches[1]
+				);
+				$src = sprintf( 'src="%s"', esc_url( $url ) );
+				$html = preg_replace( '/src="[^"]+"/', $src, $html );
+			}
+		}
+		return $html;
 	}
 }
