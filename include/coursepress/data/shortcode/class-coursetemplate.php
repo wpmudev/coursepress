@@ -1458,7 +1458,6 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		}
 
 		if ( ! empty( $atts['student'] ) ) {
-			$include_ids = array();
 
 			$students = explode( ',', $atts['student'] );
 			if ( ! empty( $students ) ) {
@@ -1494,11 +1493,97 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			'orderby' => 'meta_value_num',
 		);
 
-		if ( ! empty( $include_ids ) ) {
-			$post_args = wp_parse_args( array( 'post__in' => $include_ids ), $post_args );
+		$test_empty_courses_ids = false;
+
+		switch ( $atts['context'] ) {
+			case 'enrolled':
+				$test_empty_courses_ids = true;
+				$user_id = get_current_user_id();
+				$include_ids = CoursePress_Data_Student::get_enrolled_courses_ids( $user_id );
+			break;
+			case 'incomplete':
+				$test_empty_courses_ids = true;
+				$user_id = get_current_user_id();
+				$ids = CoursePress_Data_Student::get_enrolled_courses_ids( $user_id );
+				foreach ( $ids as $course_id ) {
+					$status = CoursePress_Data_Student::get_course_status( $course_id, $user_id, false );
+					if ( 'certified' != $status ) {
+						$include_ids[] = $course_id;
+					}
+				}
+			break;
+			case 'completed':
+				$test_empty_courses_ids = true;
+				$user_id = get_current_user_id();
+				$ids = CoursePress_Data_Student::get_enrolled_courses_ids( $user_id );
+				foreach ( $ids as $course_id ) {
+					$status = CoursePress_Data_Student::get_course_status( $course_id, $user_id, false );
+					if ( 'certified' == $status ) {
+						$include_ids[] = $course_id;
+					}
+				}
+			break;
+			case 'future':
+				unset( $post_args['meta_key'] );
+				$post_args['meta_query'] = array(
+				array(
+					'key' => 'cp_course_start_date',
+					'value' => time(),
+					'type' => 'NUMERIC',
+					'compare' => '>',
+				),
+				);
+			break;
+			case 'past':
+				unset( $post_args['meta_key'] );
+				$post_args['meta_query'] = array(
+				'relation' => 'AND',
+				array(
+					'key' => 'cp_course_end_date',
+					'compare' => 'EXISTS',
+				),
+				array(
+					'key' => 'cp_course_end_date',
+					'value' => 0,
+					'type' => 'NUMERIC',
+					'compare' => '>',
+				),
+				array(
+					'key' => 'cp_course_end_date',
+					'value' => time(),
+					'type' => 'NUMERIC',
+					'compare' => '<',
+				),
+				);
+			break;
+			case 'manage':
+				$user_id = get_current_user_id();
+				$test_empty_courses_ids = true;
+				if ( CoursePress_Data_Capabilities::can_manage_courses( $user_id ) ) {
+					$local_args = array(
+					'post_type' => CoursePress_Data_Course::get_post_type_name(),
+					'nopaging' => true,
+					'fields' => 'ids',
+					);
+					$include_ids = get_posts( $local_args );
+				} else {
+					$include_ids = CoursePress_Data_Instructor::get_assigned_courses_ids( $user_id );
+					if ( empty( $include_ids ) ) {
+						$include_ids = CoursePress_Data_Facilitator::get_facilitated_courses( $user_id, array( 'all' ), true, 0, -1 );
+					}
+				}
+			break;
 		}
 
-		if ( ( ( $student_list || $instructor_list ) && ! empty( $include_ids ) ) || ( ! $student_list && ! $instructor_list ) ) {
+		if ( $test_empty_courses_ids && empty( $include_ids ) ) {
+			/**
+			 * do nothing if we have empty list
+			 */
+			$courses = array();
+		} else if ( ( ( $student_list || $instructor_list ) && ! empty( $include_ids ) ) || ( ! $student_list && ! $instructor_list ) ) {
+			if ( ! empty( $include_ids ) ) {
+				$post_args = wp_parse_args( array( 'post__in' => $include_ids ), $post_args );
+			}
 			$courses = get_posts( $post_args );
 		}
 
