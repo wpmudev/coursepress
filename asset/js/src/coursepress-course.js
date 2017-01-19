@@ -220,8 +220,17 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			data.meta_setup_marker = step;
 			data.is_finished = true;
 		}
-
+		/**
+		 * post status
+		 */
+		data.post_status = $('#post_status').val();
+		/**
+		 * nonce
+		 */
 		data.nonce = get_setup_nonce();
+		/**
+		 * set
+		 */
 		CoursePress.Course.set( 'data', data );
 		CoursePress.Course.set( 'action', 'update_course' );
 		CoursePress.Course.set( 'next_step', next_step );
