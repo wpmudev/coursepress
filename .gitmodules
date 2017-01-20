@@ -4,3 +4,4 @@
 [submodule "themes/coursepress"]
 	path = themes/coursepress
 	url = git@bitbucket.org:incsub/coursepress-theme.git
+    branch = coursepress/campus
