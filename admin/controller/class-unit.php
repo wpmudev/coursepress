@@ -589,6 +589,13 @@ class CoursePress_Admin_Controller_Unit {
 					do_action( 'coursepress_module_added', $id, $data['post_parent'], $meta );
 				}
 				break;
+			case 'modules_update_delete_section':
+				if ( $is_valid ) {
+					$unit_id = $_REQUEST['unit_id'];
+					$page = $_REQUEST['page'];
+					CoursePress_Data_Unit::delete_section( $unit_id, $page );
+				}
+				break;
 		}
 
 		if ( ! empty( $json_data ) || $skip_empty ) {
