@@ -18,6 +18,7 @@ CHANGELOG
 * Fixed a bug with course fee with WooCommerce.
 * Fixed a bug on workbook page - it show correct answers before student answered.
 * Fixed a bug with post status on course edit page.
+* Fixed a problem with access to CoursePress menu for instructors.
 * Fixed shortcode course_list context attribute.
 * Changed redirect after login, for editors it will be now WordPress Dashboard.
 * Changed redirect for non-logged users who enter student dashboard URL to login page.
