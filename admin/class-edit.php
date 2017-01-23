@@ -22,6 +22,7 @@ class CoursePress_Admin_Edit {
 			return;
 		}
 
+		do_action( 'coursepress_admin_render_page' );
 		/**
 		 * Free version can add only one course
 		 */
@@ -543,6 +544,16 @@ class CoursePress_Admin_Edit {
 						</label>
 				</div>';
 
+		/**
+		 * duration column
+		 */
+		$display_duration = CoursePress_Data_Course::get_setting( $course_id, 'structure_show_duration', true );
+		$display_duration = cp_is_true( $display_duration );
+		$display_duration_class = 'hidden';
+		if ( $display_duration ) {
+			$display_duration_class = '';
+		}
+
 		// Course Structure
 		$content .= '
 				<div class="wide">
@@ -567,7 +578,7 @@ class CoursePress_Admin_Edit {
 									<th class="column-course-structure">' . esc_html__( 'Course Structure', 'CP_TD' ) . ' <small>' . esc_html__( 'Units and Pages with Modules selected will automatically be visible (only selected Modules accessible).', 'CP_TD' ) . '</small></th>
 									<th class="column-show">' . esc_html__( 'Show', 'CP_TD' ) . '</th>
 									<th class="column-free-preview">' . esc_html__( 'Free Preview', 'CP_TD' ) . '</th>
-									<th class="column-time">' . esc_html__( 'Time', 'CP_TD' ) . '</th>
+									<th class="column-time '.esc_attr( $display_duration_class ).'">' . esc_html__( 'Time', 'CP_TD' ) . '</th>
 								</tr>
 								<tr class="break"><th colspan="4"></th></tr>
 							</thead>
@@ -577,7 +588,7 @@ class CoursePress_Admin_Edit {
 									<th class="column-course-structure">' . esc_html__( 'Course Structure', 'CP_TD' ) . '</th>
 									<th class="column-show">' . esc_html__( 'Show', 'CP_TD' ) . '</th>
 									<th class="column-free-preview">' . esc_html__( 'Free Preview', 'CP_TD' ) . '</th>
-									<th class="column-time">' . esc_html__( 'Time', 'CP_TD' ) . '</th>
+                                    <th class="column-time '.esc_attr( $display_duration_class ) .'">' . esc_html__( 'Time', 'CP_TD' ) . '</th>
 								</tr>
 							</tfoot>
 							<tbody>';
@@ -609,7 +620,7 @@ class CoursePress_Admin_Edit {
 									<td>' . $status . $unit['unit']->post_title . '</td>
 									<td><input type="checkbox" name="meta_structure_visible_units[' . $unit['unit']->ID . ']" value="1" ' . $unit_view_checked . '/></td>
 									<td><input type="checkbox" name="meta_structure_preview_units[' . $unit['unit']->ID . ']" value="1" ' . $unit_preview_checked . '/></td>
-									<td>' . $estimations['unit']['estimation'] . '</td>
+									<td class="column-time '.esc_attr( $display_duration_class ) .'">' . self::sanitize_duration_display( $estimations['unit']['estimation'] ) . '</td>
 								</tr>
 			';
 
@@ -628,12 +639,13 @@ class CoursePress_Admin_Edit {
 				$page_preview_checked = isset( $preview_pages[ $page_key ] ) && '' != $preview_pages[ $page_key ] ? CoursePress_Helper_Utility::checked( $preview_pages[ $page_key ] ) : '';
 				$alt = $count % 2 ? 'even' : 'odd';
 				$duration = ! empty( $estimations['pages'][ $key ]['estimation'] ) ? $estimations['pages'][ $key ]['estimation'] : '';
+				$duration = self::sanitize_duration_display( $duration );
 				$content .= '
 								<tr class="page page-' . $key . ' treegrid-' . $count . ' treegrid-parent-' . $unit_parent . ' ' . $draft_class . ' ' . $alt . '" data-unitid="'. $unit['unit']->ID . '" data-pagenumber="'. $key . '">
 									<td>' . $page_title . '</td>
 									<td><input type="checkbox" name="meta_structure_visible_pages[' . $page_key . ']" value="1" ' . $page_view_checked . '/></td>
 									<td><input type="checkbox" name="meta_structure_preview_pages[' . $page_key . ']" value="1" ' . $page_preview_checked . '/></td>
-									<td>' . $duration . '</td>
+									<td class="column-time '.esc_attr( $display_duration_class ) .'">' . $duration . '</td>
 								</tr>
 				';
 
@@ -660,18 +672,15 @@ class CoursePress_Admin_Edit {
 									<td>' . $module_title . '</td>
 									<td><input type="checkbox" name="meta_structure_visible_modules[' . $mod_key . ']" value="1" ' . $mod_view_checked . '/></td>
 									<td><input type="checkbox" name="meta_structure_preview_modules[' . $mod_key . ']" value="1" ' . $mod_preview_checked . '/></td>
-									<td>' . CoursePress_Data_Module::get_time_estimation( $module->ID, '1:00', true ) . '</td>
+									<td class="column-time '.esc_attr( $display_duration_class ) .'">' . self::sanitize_duration_display( CoursePress_Data_Module::get_time_estimation( $module->ID, '1:00', true ) ) . '</td>
 								</tr>
 					';
-
 				}
 			}
 		}
-
 		$content .= '
 							</tbody>
 						</table>
-
 					</div>
 				</div>
 		';
@@ -1574,5 +1583,23 @@ class CoursePress_Admin_Edit {
 		if ( isset( $wp_meta_boxes[ $page ] ) ) {
 			unset( $wp_meta_boxes[ $page ] );
 		}
+	}
+
+	/**
+	 * Helper to format time.
+	 *
+	 * @since 2.0.3
+	 *
+	 * @param string $duration current duration.
+	 * @return Formated duration.
+	 */
+	private static function sanitize_duration_display( $duration ) {
+		if ( preg_match( '/^[0:]+$/', $duration ) ) {
+			$duration = '';
+		}
+		if ( empty( $duration ) ) {
+			$duration = '&ndash;';
+		}
+		return $duration;
 	}
 }
