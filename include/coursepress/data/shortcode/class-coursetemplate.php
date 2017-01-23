@@ -400,7 +400,12 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		// Prepare the button.
 		if ( ( ! $is_single && ! is_page() ) || $list_page ) {
 			$button_url = get_permalink( $course_id );
-			$button = '<button data-link="' . esc_url( $button_url ) . '" class="apply-button apply-button-details ' . esc_attr( $class ) . '">' . esc_html( $details_text ) . '</button>';
+			global $post;
+			if ( CoursePress_Data_Course::is_course( $post ) ) {
+				$button = '<button data-link="' . esc_url( $button_url ) . '" class="apply-button apply-button-details ' . esc_attr( $class ) . '">' . esc_html( $details_text ) . '</button>';
+			} else {
+				$button = '<a href="' . esc_url( $button_url ) . '" class="apply-button apply-button-details ' . esc_attr( $class ) . '">' . esc_html( $details_text ) . '</a>';
+			}
 		} else {
 			//$button = apply_filters( 'coursepress_enroll_button_content', '', $course );
 			if ( empty( $button_option ) || ( 'manually' == $course->enroll_type && ! ( 'access' == $button_option || 'continue' == $button_option ) ) ) {
@@ -413,6 +418,19 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			}
 			$button_pre = isset( $buttons[ $button_option ]['button_pre'] ) ? $buttons[ $button_option ]['button_pre'] : '';
 			$button_post = isset( $buttons[ $button_option ]['button_post'] ) ? $buttons[ $button_option ]['button_post'] : '';
+
+			/**
+			 * If there is no script, made a regular link instead of button.
+			 */
+			if ( empty( wp_script_is( 'coursepress-front-js' ) ) ) {
+				/**
+				 * fix button on shortcode
+				 */
+				if ( 'enroll' == $button_option ) {
+					$button_option = 'details';
+				}
+				$buttons[ $button_option ]['type'] = 'link';
+			}
 
 			switch ( $buttons[ $button_option ]['type'] ) {
 				case 'label':

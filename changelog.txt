@@ -8,6 +8,7 @@ CHANGELOG
 = 2.0.3 =
 -------------------------------------------------
 * Added ability to show unit description.
+* Fixed "button" in shortcodes when not on courses list.
 * Fixed a bug with adding students to course in admin, when MarketPress or WooCommerce is used to sell courses.
 * Added ability to login by email too.
 * Fixed problem with custom CoursePress login page.
