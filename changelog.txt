@@ -17,11 +17,13 @@ CHANGELOG
 * Added key length check for mcrypt function to avoid wrong key size.
 * Fixed a bug with pagination on course archive page.
 * Fixed a bug with custom certificate background.
+* Fixed a bug with instructors permission to see CoursePress assessments.
 * Fixed a bug with course fee with WooCommerce.
 * Fixed a bug on workbook page - it show correct answers before student answered.
 * Fixed a bug with post status on course edit page.
 * Fixed shortcode course_list context attribute.
 * Added parsing video URL to add autoplay parameter.
+
 
 = 2.0.2 =
 -------------------------------------------------
