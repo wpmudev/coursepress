@@ -1031,13 +1031,16 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			}
 
 			if ( ! $is_unit_available && $enrolled ) {
-				$unit_availability_date = CoursePress_Data_Unit::get_unit_availability_date( $unit_id, $course_id );
+				/**
+				 * return date with known format
+				 */
+				$unit_availability_date = CoursePress_Data_Unit::get_unit_availability_date( $unit_id, $course_id, 'c' );
 
 				if ( ! empty( $unit_availability_date ) && 'expired' != $unit_availability_date ) {
 					$unit_availability_date = CoursePress_Data_Course::strtotime( $unit_availability_date );
 					$year_now = date( 'Y', CoursePress_Data_Course::time_now() );
 					$unit_year = date( 'Y', $unit_availability_date );
-					$format = $year_now !== $unit_year ? 'M d Y' : 'M d';
+					$format = $year_now !== $unit_year ? _x( 'M d, Y', 'Unit available date with year for future unit.', 'CP_TD' ) : _x( 'M d', 'Unit available date without year for future unit.', 'CP_TD' );
 
 					// Requires custom hook to attached
 					$when = date( $format, $unit_availability_date );
