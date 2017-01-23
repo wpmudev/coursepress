@@ -490,6 +490,24 @@ class CoursePress_Template_Module {
 				$attr = array(
 					'src' => $url,
 				);
+				if ( preg_match( '%\?%', $url ) ) {
+					// URL with ? doesn't read on shortcode
+					$param = substr( $url, strrpos( $url, '?' )+1 );
+					$url = substr( $url, 0, strrpos($url, '?' ) );
+					$param = explode( '&', $param );
+					$param = array_filter( $param );
+
+					if ( ! empty( $param ) ) {
+						foreach ( $param as $_param ) {
+							$_param = explode( '=', $_param );
+							if ( count( $_param ) > 1 ) {
+								$attr[ $_param[0] ] = $_param[1];
+							}
+						}
+					}
+					$attr['src'] = $url;
+				}
+
 				$video = wp_video_shortcode( $attr );
 			} else {
 				$embed_args = array();
