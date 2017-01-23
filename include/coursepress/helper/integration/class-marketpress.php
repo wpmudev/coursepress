@@ -547,10 +547,13 @@ class CoursePress_Helper_Integration_MarketPress {
 		CoursePress_Data_Course::set_setting( $settings, 'payment_paid_course', $is_paid );
 		CoursePress_Data_Course::update_setting( $course_id, true, $settings );
 
-		wp_update_post( array(
+		$post_args = array(
 			'ID' => $course_id,
 			'post_status' => $post->post_status,
-		) );
+			'post_content' => $post->post_content,
+		);
+
+		wp_update_post( $post_args );
 
 		self::$updated = true;
 	}
