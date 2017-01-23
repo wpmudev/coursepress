@@ -727,10 +727,10 @@ if ( ! class_exists( 'Unit' ) ) {
 
 			$input_module_meta = maybe_unserialize( $input_module_meta );
 
-			if ( $input_module_meta[ $module_id ]['mandatory_answer'] != $meta['mandatory_answer']
+			if ( isset( $input_module_meta[ $module_id ] ) && ( $input_module_meta[ $module_id ]['mandatory_answer'] != $meta['mandatory_answer']
 			     || $input_module_meta[ $module_id ]['gradable_answer'] != $meta['gradable_answer']
 			     || $input_module_meta[ $module_id ]['minimum_grade_required'] != $meta['minimum_grade_required']
-			) {
+			) ) {
 				do_action( 'coursepress_module_completion_criteria_change', $unit_id, $module_id, $meta, $input_module_meta[ $module_id ] );
 			}
 
@@ -764,6 +764,16 @@ if ( ! class_exists( 'Unit' ) ) {
 				self::_create_input_module_meta( $unit_id );
 				// Now get the new data
 				$input_module_meta = get_post_meta( $unit_id, 'input_modules', true );
+			}
+
+			if ( $input_module_meta ) {
+				// Remove old modules meta
+				foreach ( $input_module_meta as $module_id => $meta ) {
+					$module = get_post( $module_id );
+					if ( $module->post_parent != $unit_id ) {
+						unset( $input_module_meta[ $module_id ] );
+					}
+				}
 			}
 
 			return maybe_unserialize( $input_module_meta );
