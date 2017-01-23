@@ -1668,6 +1668,16 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			url = link.attr( 'href' )
 		;
 	}
+	var toggleTimePreview = function() {
+		var input = $(this);
+		var is_checked = input.is( ':checked' );
+		var parent = $(this).closest( '.wide');
+		if ( is_checked ) {
+			$( '.column-time', parent).show();
+		} else {
+			$( '.column-time', parent).hide();
+		}
+	}
 
 	/**
 	 * Search Users
@@ -1896,6 +1906,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		}
 	})
 	.on( 'change', '[name="meta_basic_certificate"]', toggleCertificatePreview )
+	.on( 'change', '[name="meta_structure_show_duration"]', toggleTimePreview )
 	.on( 'click', '.post-type-course #publish, .post-type-course #search-submit, .post-type-course #post-preview', CoursePress.maybeUpdateCourse )
 	.on( 'submit', '.post-type-course form#post', CoursePress.updateCourse );
 
