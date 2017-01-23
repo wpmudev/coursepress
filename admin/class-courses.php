@@ -8,6 +8,7 @@ class CoursePress_Admin_Courses {
 	public static function init() {
 		global $pagenow, $typenow;
 
+		do_action( 'coursepress_admin_render_page' );
 		self::$post_type = $post_type = CoursePress_Data_Course::get_post_type_name();
 		self::$date_format = get_option( 'date_format' );
 
