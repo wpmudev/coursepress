@@ -1753,10 +1753,19 @@ class CoursePress_View_Front_Course {
 	 **/
 	public static function download_certificate() {
 		if ( isset( $_REQUEST['action'] ) && 'certificate' == $_REQUEST['action']
-			&& ! empty( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], 'coursepress_download_certificate' )
-			) {
+			&& ! empty( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], 'coursepress_download_certificate' ) && isset( $_REQUEST['course_id'] ) ) {
 			$course_id = (int) $_REQUEST['course_id'];
-			$student_id = (int) $_REQUEST['student_id'];
+			$student_id = (int) isset( $_REQUEST['student_id'] )? $_REQUEST['student_id']:get_current_user_id();
+			/**
+			 * check privileges
+			 */
+			$current_user_id = get_current_user_id();
+			if ( $student_id != $current_user_id ) {
+				if ( ! CoursePress_Data_Capabilities::can_update_course( $course_id ) ) {
+					_e( 'Cheatin&#8217; uh?', 'CP_TD' );
+					exit;
+				}
+			}
 			CoursePress_Data_Certificate::generate_pdf_certificate( $course_id, $student_id, true );
 			exit;
 		}
