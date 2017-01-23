@@ -9,6 +9,7 @@
  * Student-related shortcodes.
  */
 class CoursePress_Data_Shortcode_Student {
+	private static $templates_was_already_loaded = false;
 
 	/**
 	 * Register the shortcodes.
@@ -244,22 +245,22 @@ class CoursePress_Data_Shortcode_Student {
 										$answers = $attributes['answers'];
 										$selected = (array) $attributes['answers_selected'];
 										$display = '';
-
-										foreach ( $answers as $key => $answer ) {
-											$the_answer = in_array( $key, $selected );
-											$student_answer = is_array( $response_display ) ? in_array( $key, $response_display ) : $response_display == $key;
-
-											if ( 'input-radio' === $attributes['module_type'] ) {
-												$student_answer = $response_display == $key;
+										if ( empty( $response ) ) {
+											$response_display = '&ndash;';
+										} else {
+											foreach ( $answers as $key => $answer ) {
+												$the_answer = in_array( $key, $selected );
+												$student_answer = is_array( $response_display ) ? in_array( $key, $response_display ) : $response_display == $key;
+												if ( 'input-radio' === $attributes['module_type'] ) {
+													$student_answer = $response_display == $key;
+												}
+												if ( $student_answer ) {
+													$class = $the_answer ? 'chosen-correct' : 'chosen-incorrect';
+													$display .= sprintf( '<p class="answer %s">%s</p>', $class, $answer );
+												}
 											}
-
-											if ( $student_answer ) {
-												$class = $the_answer ? 'chosen-correct' : 'chosen-incorrect';
-												$display .= sprintf( '<p class="answer %s">%s</p>', $class, $answer );
-											}
+											$response_display = $display;
 										}
-										$response_display = $display;
-
 								break;
 
 							case 'input-upload':
@@ -428,7 +429,7 @@ class CoursePress_Data_Shortcode_Student {
 			return;
 		}
 		$post->coursepress_enrollment_templates_was_already_loaded = true;
-		self:$templates_was_already_loaded = true;
+		self::$templates_was_already_loaded = true;
 		/**
 		 * proceder shortcode
 		 */

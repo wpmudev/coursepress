@@ -249,9 +249,11 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 	 * @return (array) $courses			An array of courses the user allowed to assess.
 	 **/
 	public static function get_assessable_courses( $user_id = 0 ) {
-		$now = CoursePress_Data_Course::time_now();
-
+		/**
+		 * Admins see everything...
+		 */
 		if ( current_user_can( 'manage_options' ) ) {
+			$now = CoursePress_Data_Course::time_now();
 			// An admin, get all published courses but have already started
 			$post_args = array(
 				'post_type' => CoursePress_Data_Course::get_post_type_name(),
@@ -262,32 +264,41 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 				'meta_compare' => '<=',
 			);
 			$courses = new WP_Query( $post_args );
-		} else {
-			$user_id = get_current_user_id();
-			$courses = array();
-
-			if ( CoursePress_Data_Capabilities::is_facilitator( $user_id ) ) {
-				$courses = CoursePress_Data_Facilitator::get_facilitated_courses( $user_id, 'publish' );
-			}
-			if ( CoursePress_Data_Capabilities::is_instructor( $user_id ) ) {
-				$courses2 = CoursePress_Data_Instructor::get_accessable_courses( $user_id, 'publish' );
-
-				// Combine courses instructed and facilitated
-				if ( ! empty( $courses ) ) {
-					foreach ( $courses as $course ) {
-						foreach ( $courses2 as $course2 ) {
-							if ( $course2->ID != $course->ID ) {
-								$courses[] = $course2;
-							}
-						}
-					}
-				}
-			}
-
-			return $courses;
+			return $courses->posts;
 		}
-
-		return $courses->posts;
+		/**
+		 * others need to check
+		 */
+		$user_id = get_current_user_id();
+		$courses = array();
+		/**
+		 * Get facilitator courses.
+		 */
+		if ( CoursePress_Data_Capabilities::is_facilitator( $user_id ) ) {
+			$courses = CoursePress_Data_Facilitator::get_facilitated_courses( $user_id, 'publish' );
+		}
+		/**
+		 * Get instructor courses.
+		 */
+		if ( CoursePress_Data_Capabilities::is_instructor( $user_id ) ) {
+			$courses2 = CoursePress_Data_Instructor::get_accessable_courses( $user_id, 'publish' );
+			/**
+			 * Check courses
+			 */
+			$courses_already_added = array();
+			foreach ( $courses as $course ) {
+				$courses_already_added[] = $course->ID;
+			}
+			// Combine courses instructed and facilitated
+			foreach ( $courses2 as $course ) {
+				if ( in_array( $course->ID, $courses_already_added ) ) {
+					continue;
+				}
+				$courses[] = $course;
+				$courses_already_added[] = $course->ID;
+			}
+		}
+		return $courses;
 	}
 
 	/**

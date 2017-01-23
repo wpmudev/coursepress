@@ -161,10 +161,18 @@ class CoursePress_Data_Course {
 		$new_course = empty( $course_id ) ? true : false;
 		$course = $new_course ? false : get_post( $course_id );
 
+		/**
+		 * post status
+		 */
+		$post_status = $course ? $course->post_status : 'private';
+		if ( isset( $data->post_status ) && $post_status != $data->post_status ) {
+			$post_status = $data->post_status;
+		}
+
 		// Publishing toggle.
 		$post = array(
 			'post_author' => $course ? $course->post_author : $user_id,
-			'post_status' => $course ? $course->post_status : 'private',
+			'post_status' => $post_status,
 			'post_type' => self::get_post_type_name(),
 		);
 
@@ -2556,6 +2564,10 @@ class CoursePress_Data_Course {
 			$end_date = self::get_setting( $course_id, 'course_end_date' );
 			$end_date = self::strtotime( $end_date );
 
+			if ( ! empty( $end_date ) ) {
+				$end_date += DAY_IN_SECONDS;
+			}
+
 			if ( ! $is_open_ended && ! empty( $end_date ) ) {
 				$is_available = $end_date > $now;
 
@@ -3230,6 +3242,10 @@ class CoursePress_Data_Course {
 		$open_ended = ! empty( $setting['course_open_ended'] ) && $setting['course_open_ended'];
 		$now = self::time_now();
 		$status = 'open';
+
+		if ( ! empty( $end_date ) ) {
+			$end_date += DAY_IN_SECONDS;
+		}
 
 		if ( $start_date > 0 && $start_date > $now ) {
 			$status = 'future';

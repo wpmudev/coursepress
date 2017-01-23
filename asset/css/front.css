@@ -750,6 +750,10 @@ input.cp-has-error {
   font-size: 1.2em;
   line-height: 1.4em;
 }
+.units-archive-list .unit-content {
+  clear: both;
+  margin: 0 40px;
+}
 
 /** Modules **/
 .cp .cp-module-content {
