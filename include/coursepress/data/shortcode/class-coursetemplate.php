@@ -400,7 +400,12 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		// Prepare the button.
 		if ( ( ! $is_single && ! is_page() ) || $list_page ) {
 			$button_url = get_permalink( $course_id );
-			$button = '<button data-link="' . esc_url( $button_url ) . '" class="apply-button apply-button-details ' . esc_attr( $class ) . '">' . esc_html( $details_text ) . '</button>';
+			global $post;
+			if ( CoursePress_Data_Course::is_course( $post ) ) {
+				$button = '<button data-link="' . esc_url( $button_url ) . '" class="apply-button apply-button-details ' . esc_attr( $class ) . '">' . esc_html( $details_text ) . '</button>';
+			} else {
+				$button = '<a href="' . esc_url( $button_url ) . '" class="apply-button apply-button-details ' . esc_attr( $class ) . '">' . esc_html( $details_text ) . '</a>';
+			}
 		} else {
 			//$button = apply_filters( 'coursepress_enroll_button_content', '', $course );
 			if ( empty( $button_option ) || ( 'manually' == $course->enroll_type && ! ( 'access' == $button_option || 'continue' == $button_option ) ) ) {
@@ -413,6 +418,19 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			}
 			$button_pre = isset( $buttons[ $button_option ]['button_pre'] ) ? $buttons[ $button_option ]['button_pre'] : '';
 			$button_post = isset( $buttons[ $button_option ]['button_post'] ) ? $buttons[ $button_option ]['button_post'] : '';
+
+			/**
+			 * If there is no script, made a regular link instead of button.
+			 */
+			if ( empty( wp_script_is( 'coursepress-front-js' ) ) ) {
+				/**
+				 * fix button on shortcode
+				 */
+				if ( 'enroll' == $button_option ) {
+					$button_option = 'details';
+				}
+				$buttons[ $button_option ]['type'] = 'link';
+			}
 
 			switch ( $buttons[ $button_option ]['type'] ) {
 				case 'label':
@@ -984,6 +1002,17 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			$unit_feature_image = get_post_meta( $unit_id, 'unit_feature_image', true );
 			$unit_image = ($unit_feature_image) ? '<div class="circle-thumbnail"><div class="unit-thumbnail"><img src="' . $unit_feature_image . '"" alt="' . $the_unit->post_title . '" /></div></div>' : '';
 
+			/**
+			 * unit content
+			 */
+			$unit_content = '';
+			if ( ! empty( $the_unit->post_content ) ) {
+				$unit_content = sprintf(
+					'<div class="unit-content">%s</div>',
+					wpautop( $the_unit->post_content )
+				);
+			}
+
 			$post_name = empty( $the_unit->post_name ) ? $the_unit->ID : $the_unit->post_name;
 			$title_suffix = '';
 			if ( 'publish' != $the_unit->post_status && $can_update_course ) {
@@ -1249,7 +1278,8 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				'<div class="unit-archive-single">' .
 				$unit_progress .
 				//$unit_image .
-				$unit_link;
+				$unit_link.
+				$unit_content;
 
 			$content .= $module_table;
 
