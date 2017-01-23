@@ -122,9 +122,6 @@ class CoursePress_Admin_Controller_Course {
 						$enrollment_end_date = strtotime( $enrollment_end_date );
 						update_post_meta( $course_id, 'course_enrollment_end_date', $enrollment_end_date );
 					}
-
-					/** This action is documented in include/coursepress/data/class-course.php */
-					do_action( 'coursepress_course_updated', $course_id, $settings );
 				}
 
 				break;

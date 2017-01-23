@@ -59,10 +59,17 @@ class CoursePress_Data_Module {
 	}
 
 	public static function get_time_estimation( $module_id, $default = '1:00', $formatted = false ) {
-
-		$estimation = get_post_meta( $module_id, 'time_estimation', true );
+		$module_type = get_post_meta( $module_id, 'module_type', true );
+		if ( ! preg_match( '/^input-/', $module_type ) ) {
+			return '';
+		}
+		$user_timer = get_post_meta( $module_id, 'use_timer', true );
+		$user_timer = cp_is_true( $user_timer );
+		if ( ! $user_timer ) {
+			return '';
+		}
+		$estimation = get_post_meta( $module_id, 'duration', true );
 		$estimation = empty( $estimation ) ? $default : $estimation;
-
 		if ( ! $formatted ) {
 			return empty( $estimation ) ? $default : $estimation;
 		} else {
