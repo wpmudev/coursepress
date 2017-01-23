@@ -1538,11 +1538,16 @@ var CoursePress = CoursePress || {};
 
 				var meta = self.unit_collection._byId[ self.activeUnitRef ].get( 'meta' );
 				var page_title = meta[ 'page_title' ];
+				var page_description = meta[ 'page_description' ];
 				var show_page_title = meta[ 'show_page_title' ];
-
+				/**
+				 * Add information about deleted page
+				 */
+				meta[ "deleted_page"] = page;
 				// Update indexes
 				var new_array = [];
 				var new_object = {};
+				var new_object_page_description = {};
 				var offset = 0;
 				$.each( show_page_title, function( index, value ) {
 					if ( index === ( page - 1) ) {
@@ -1552,10 +1557,12 @@ var CoursePress = CoursePress || {};
 						new_array.push( value );
 						var page_index = index + 1 + offset;
 						new_object[ 'page_' + page_index ] = page_title[ 'page_' + ( index + 1 ) ];
+						new_object_page_description[ 'page_' + page_index ] = page_description[ 'page_' + ( index + 1 ) ];
 					}
 				} );
 				meta[ 'page_title' ] = new_object;
 				meta[ 'show_page_title' ] = new_array;
+				meta[ 'page_description' ] = new_object_page_description;
 				self.unit_collection._byId[ self.activeUnitRef ].set( 'meta', meta );
 				self.unit_collection._byId[ self.activeUnitRef ].trigger( 'change', self.unit_collection._byId[ self.activeUnitRef ] );
 
@@ -1575,8 +1582,10 @@ var CoursePress = CoursePress || {};
 
 				// Trigger save
 				CoursePress.Helpers.Module.save_unit( e );
-				// Trigger fetch
-				self.fetchModules( self.activeUnitID, 1 );
+				/**
+				 * trigger click on first section
+				 */
+				$('.unit-builder-pager ul li:first').trigger( 'click' );
 			}
 		},
 		deleteUnit: function( e ) {

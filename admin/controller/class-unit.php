@@ -405,6 +405,17 @@ class CoursePress_Admin_Controller_Unit {
 								CoursePress_Data_Unit::show_new_pages( $id, $meta );
 							}
 
+							/**
+							 * get deleted page number
+							 * update modules with page number greateer then
+							 * deleted_page
+							 */
+							if ( isset( $meta['deleted_page'] ) ) {
+								$deleted_page = $meta['deleted_page'];
+								unset( $meta['deleted_page'] );
+								CoursePress_Data_Module::decrease_page_number( $unit_id, $deleted_page );
+							}
+
 							// Have pages been removed?
 							foreach ( $meta as $key => $value ) {
 								$success = add_post_meta( $id, $key, $value, true );
