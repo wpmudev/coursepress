@@ -1813,7 +1813,12 @@ class CoursePress_Data_Student {
 		}
 	}
 
-	public static function get_course_status( $course_id, $student_id = 0 ) {
+	/**
+	 * Return course stats.
+	 *
+	 * @param boolean $return_human_readable_label @since 2.0.3 return label instad "row" status - default true.
+	 */
+	public static function get_course_status( $course_id, $student_id = 0, $return_human_readable_label = true ) {
 		if ( empty( $student_id ) ) {
 			$student_id = get_current_user_id();
 		}
@@ -1825,8 +1830,16 @@ class CoursePress_Data_Student {
 		);
 		$is_completed = ! empty( $completed );
 
+		$labels = array(
+			'certified' => __( 'Certified', 'CP_TD' ),
+			'failed' => __( 'Failed', 'CP_TD' ),
+			'awaiting-review' => __( 'Awaiting Review', 'CP_TD' ),
+			'ongoing' => __( 'Ongoing', 'CP_TD' ),
+			'incomplete' => __( 'Incomplete', 'CP_TD' ),
+		);
+
 		if ( $is_completed ) {
-			$return = __( 'Certified', 'CP_TD' );
+			$return = 'certified';
 		} else {
 			$course_status = CoursePress_Data_Course::get_course_status( $course_id );
 			$course_progress = self::get_course_progress( $student_id, $course_id, $student_progress );
@@ -1838,17 +1851,21 @@ class CoursePress_Data_Student {
 				);
 
 				if ( ! empty( $failed ) ) {
-					$return = __( 'Failed', 'CP_TD' );
+					$return = 'failed';
 				} else {
-					$return = __( 'Awaiting Review', 'CP_TD' );
+					$return = 'awaiting-review';
 				}
 			} else {
 				if ( 'open' == $course_status ) {
-					$return = __( 'Ongoing', 'CP_TD' );
+					$return = 'ongoing';
 				} else {
-					$return = __( 'Incomplete', 'CP_TD' );
+					$return = 'incomplete';
 				}
 			}
+		}
+
+		if ( $return_human_readable_label ) {
+			return $labels[ $return ];
 		}
 
 		return $return;
