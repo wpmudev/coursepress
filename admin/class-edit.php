@@ -22,6 +22,7 @@ class CoursePress_Admin_Edit {
 			return;
 		}
 
+		do_action( 'coursepress_admin_render_page' );
 		/**
 		 * Free version can add only one course
 		 */

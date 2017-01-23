@@ -95,6 +95,7 @@ class CoursePress_Admin_Controller_Menu {
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 
 		$this->is_page_loaded = true;
+		do_action( 'coursepress_admin_render_page' );
 	}
 
 	/**
