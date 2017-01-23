@@ -253,8 +253,13 @@ class CoursePress_Admin_Controller_Course {
 				break;
 
 			case 'enroll_student':
-
 				if ( wp_verify_nonce( $data->data->nonce, 'add_student' ) ) {
+					/**
+					 * Turn off enroll_student check when we are in ajax admin action
+					 */
+					if ( is_admin() && defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+						remove_all_filters( 'coursepress_enroll_student' );
+					}
 					CoursePress_Data_Course::enroll_student( $data->data->student_id, $data->data->course_id );
 					$json_data['student_id'] = $data->data->student_id;
 					$json_data['course_id'] = $data->data->course_id;

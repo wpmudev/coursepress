@@ -202,19 +202,19 @@ class CoursePress_Helper_JavaScript {
 			$localize_array['unit_builder_form']['messages']['saving_unit'] = __( 'Unit is saving now...', 'CP_TD' );
 			$localize_array['unit_builder_form']['messages']['successfully_saved'] = __( 'Unit was successfully saved!', 'CP_TD' );
 			$localize_array['unit_builder_form']['messages']['error_while_saving'] = __( 'Something went wrong. Unit was not saved!', 'CP_TD' );
+			$localize_array['unit_builder']['question_type'] = array(
+				'single' => __( 'Single Choice', 'CP_TD' ),
+				'multiple' => __( 'Multiple Choice', 'CP_TD' ),
+				'short' => __( 'Short Answer', 'CP_TD' ),
+				'long' => __( 'Long Answer', 'CP_TD' ),
+				'selectable' => __( 'Selectable Choice', 'CP_TD' ),
+			);
 			$localize_array['unit_builder_form']['messages']['adding_module'] = __( 'Wait, module adding now...', 'CP_TD' );
-
 			$localize_array['unit_l8n'] = array(
-				'question_type' => array(
-					'single' => __( 'Single Choice', 'cp' ),
-					'multiple' => __( 'Multiple Choice', 'cp' ),
-					'short_answer' => __( 'Short Answer', 'cp' ),
-					'long_answer' => __( 'Long Answer', 'cp' ),
-				),
 				'pre_answers' => array(
-					'a' => __( 'Answer A', 'cp' ),
-					'b' => __( 'Answer B', 'cp' ),
-				)
+					'a' => __( 'Answer A', 'CP_TD' ),
+					'b' => __( 'Answer B', 'CP_TD' ),
+				),
 			);
 		}
 
@@ -499,15 +499,15 @@ class CoursePress_Helper_JavaScript {
 			'server_error' => __( 'An unexpected error occur while processing. Please try again.', 'CP_TD' ),
 			'module_error' => array(
 				'required' => __( 'You need to complete this module!', 'CP_TD' ),
-				'normal_required' => __( 'You need to complete all required modules!', 'pc' ),
+				'normal_required' => __( 'You need to complete all required modules!', 'CP_TD' ),
 				'participate' => __( 'Your participation to the discussion is required!', 'CP_TD' ),
 				'passcode_required' => __( 'Enter PASSCODE!', 'CP_TD' ),
 				'invalid_passcode' => __( 'Invalid PASSCODE!', 'CP_TD' ),
 			),
-			'confirmed_withdraw' => __( 'Please confirm that you want to withdraw from the course. If you withdraw, all your records and access to this course will also be removed.', 'cp' ),
+			'confirmed_withdraw' => __( 'Please confirm that you want to withdraw from the course. If you withdraw, all your records and access to this course will also be removed.', 'CP_TD' ),
 			'buttons' => array(
-				'ok' => __( 'OK', 'cp' ),
-				'cancel' => __( 'Cancel', 'cp' ),
+				'ok' => __( 'OK', 'CP_TD' ),
+				'cancel' => __( 'Cancel', 'CP_TD' ),
 			),
 		);
 

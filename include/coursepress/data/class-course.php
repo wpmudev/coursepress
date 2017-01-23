@@ -2556,6 +2556,10 @@ class CoursePress_Data_Course {
 			$end_date = self::get_setting( $course_id, 'course_end_date' );
 			$end_date = self::strtotime( $end_date );
 
+			if ( ! empty( $end_date ) ) {
+				$end_date += DAY_IN_SECONDS;
+			}
+
 			if ( ! $is_open_ended && ! empty( $end_date ) ) {
 				$is_available = $end_date > $now;
 
@@ -3230,6 +3234,10 @@ class CoursePress_Data_Course {
 		$open_ended = ! empty( $setting['course_open_ended'] ) && $setting['course_open_ended'];
 		$now = self::time_now();
 		$status = 'open';
+
+		if ( ! empty( $end_date ) ) {
+			$end_date += DAY_IN_SECONDS;
+		}
 
 		if ( $start_date > 0 && $start_date > $now ) {
 			$status = 'future';
