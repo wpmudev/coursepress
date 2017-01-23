@@ -17,6 +17,7 @@ CHANGELOG
 * Added key length check for mcrypt function to avoid wrong key size.
 * Fixed a bug with pagination on course archive page.
 * Fixed a bug with custom certificate background.
+* Fixed shortcode course_list context attribute.
 * Added parsing video URL to add autoplay parameter.
 
 = 2.0.2 =
