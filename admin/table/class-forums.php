@@ -206,7 +206,7 @@ class CoursePress_Admin_Table_Forums extends CoursePress_Admin_Table_Notificatio
 			<input type="submit" class="button" name="action" value="<?php esc_attr_e( 'Filter', 'CP_TD' ); ?>" />
 		</div>
 <?php
-		$this->search_box( __( 'Search Forums', 'cp' ), 'search_discussions' );
+		$this->search_box( __( 'Search Forums', 'CP_TD' ), 'search_discussions' );
 	}
 
 	/**

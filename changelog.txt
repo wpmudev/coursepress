@@ -9,24 +9,38 @@ CHANGELOG
 -------------------------------------------------
 * Added ability to auto re-create certificate if file is missing.
 * Added permission check when try to download certificate.
+* Added ability to show unit description.
+* Fixed "button" in shortcodes when not on courses list.
+* Fixed a bug with adding students to course in admin, when MarketPress or WooCommerce is used to sell courses.
+* Added ability to login by email too.
+* Fixed problem with custom CoursePress login page.
+* Changed redirect after login, for editors it will be now WordPress Dashboard.
+* Changed redirect for non-logged users who enter student dashboard URL to login page.
+* Added key length check for mcrypt function to avoid wrong key size.
 * Fixed a bug with pagination on course archive page.
 * Fixed a bug with custom certificate background.
+* Fixed a bug with instructors permission to see CoursePress assessments.
+* Fixed a bug with course fee with WooCommerce.
+* Fixed a bug on workbook page - it show correct answers before student answered.
+* Fixed a bug with post status on course edit page.
+* Fixed shortcode course_list context attribute.
+* Added parsing video URL to add autoplay parameter.
 
 = 2.0.2 =
 -------------------------------------------------
-* Fixed a bug with class autoloder function.
+* Fixed a bug with class autoloader function.
 * Added better default CoursePress certificate.
 * Added "Settings" and "Support" links on WP plugins page.
 * Fixed a bug with import students to course when MarketPress is active.
 * Handle situation when student try to add comment to non existing module.
 * Fixed "Domain Name" for proper translation.
-* Added check to import json file.
+* Added check to import JSON file.
 * Added confirmation popup when student withdraw from the course.
 * Fixed non-virtual student login page.
 * Removed fakepath file location in file upload.
 * Fixed student dashboard page.
 * Fixed warning message when user is logged out.
-* Fixed unstranslated texts.
+* Fixed untranslated texts.
 * Added allow weak password registration.
 
 = 2.0.1 =

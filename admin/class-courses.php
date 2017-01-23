@@ -8,6 +8,7 @@ class CoursePress_Admin_Courses {
 	public static function init() {
 		global $pagenow, $typenow;
 
+		do_action( 'coursepress_admin_render_page' );
 		self::$post_type = $post_type = CoursePress_Data_Course::get_post_type_name();
 		self::$date_format = get_option( 'date_format' );
 
@@ -81,7 +82,7 @@ class CoursePress_Admin_Courses {
 			'units' => __( 'Units', 'CP_TD' ),
 			'students' => __( 'Students', 'CP_TD' ),
 			'certificates' => __( 'Certified', 'CP_TD' ),
-			'status' => __( 'Status', 'CP' ),
+			'status' => __( 'Status', 'CP_TD' ),
 		) );
 
 		// Remove date column
@@ -238,7 +239,7 @@ class CoursePress_Admin_Courses {
 
 			if ( 'trash' != $course->post_status ) {
 				// Add edit link
-				$actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_link ), __( 'Edit', 'cp' ) );
+				$actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_link ), __( 'Edit', 'CP_TD' ) );
 				$edit_units = add_query_arg( 'tab', 'units', $edit_link );
 				$edit_students = add_query_arg( 'tab', 'students', $edit_link );
 				$actions['units'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_units ), __( 'Units', 'CP_TD' ) );
@@ -335,7 +336,7 @@ class CoursePress_Admin_Courses {
 		?>
 		<script type="text/html" id="tmpl-coursepress-courses-delete-one">
 				<div class="notice notice-warning">
-					<p><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span> <?php _e( sprintf( 'Deleting course %s, please wait!', '<b>{{{data.names}}}</b>'), 'CP_TD' ); ?></p>
+					<p><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span> <?php _e( sprintf( 'Deleting course %s, please wait!', '<b>{{{data.names}}}</b>' ), 'CP_TD' ); ?></p>
 					<p><?php _e( 'This page will be reloaded shortly.', 'CP_TD' ); ?></p>
 				</div>
 			</script>
