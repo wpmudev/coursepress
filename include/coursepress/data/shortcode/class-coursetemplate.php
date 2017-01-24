@@ -1503,7 +1503,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		}
 
 		if ( ! empty( $atts['student'] ) ) {
-
+			$include_ids = array();
 			$students = explode( ',', $atts['student'] );
 			if ( ! empty( $students ) ) {
 				foreach ( $students as $student ) {
