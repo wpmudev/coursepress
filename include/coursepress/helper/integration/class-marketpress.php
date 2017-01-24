@@ -229,6 +229,11 @@ class CoursePress_Helper_Integration_MarketPress {
 		 * Add class to body
 		 */
 		add_filter( 'body_class', array( __CLASS__, 'body_class' ) );
+
+		/**
+		 * Enroll student for new order if order is paid.
+		 */
+		add_action( 'mp_order/new_order',  array( __CLASS__, 'enroll_student_when_order_is_paid' ) );
 	}
 
 	public static function fix_mp3_on_sale( $on_sale, $product ) {
@@ -339,10 +344,8 @@ class CoursePress_Helper_Integration_MarketPress {
 				foreach ( $items as $product_id => $info ) {
 					$course_id = (int) get_post_meta( $product_id, 'mp_course_id', true );
 					$user_id   = $order->post_author;
-
 					// Remove enrollment restrictions
 					remove_all_filters( 'coursepress_enroll_student' );
-
 					// If not enrolled...
 					if ( ! CoursePress_Data_Student::is_enrolled_in_course( $user_id, $course_id ) ) {
 						//Then enroll..
@@ -1066,10 +1069,10 @@ class CoursePress_Helper_Integration_MarketPress {
 	 * @return int Course-ID or false.
 	 */
 	private static function _get_order_course_id( $order_id ) {
-		global $mp;
+		$mp = Marketpress::get_instance();
 
 		if ( empty( $mp ) ) { return false; }
-		$order = $mp->get_order( $order_id );
+		$order = new MP_Order( $order_id );
 		$cart_info = $order->mp_cart_info;
 		if ( ! is_array( $cart_info ) ) { return false; }
 
@@ -1239,6 +1242,21 @@ Yours sincerely,
 		}
 
 		return $classes;
+	}
+
+	/**
+	 * An exception, when we insert already paid course, look at "stripe"
+	 * method.
+	 *
+	 * @since 2.0.3
+	 *
+	 * @param MP_Order $order MarketPress order object.
+	 */
+	public static function enroll_student_when_order_is_paid( $order ) {
+		$order_status = $order->__get( 'post_status' );
+		if ( 'order_paid' == $order_status ) {
+			self::course_paid_3pt0( $order );
+		}
 	}
 }
 
