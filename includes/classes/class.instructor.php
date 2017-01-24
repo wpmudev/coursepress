@@ -29,6 +29,10 @@ if ( ! class_exists( 'Instructor' ) ) {
 		}
 
 		static function get_course_meta_keys( $user_id ) {
+			if ( empty( $user_id ) ) {
+				return array();
+			}
+
 			$meta = get_user_meta( $user_id );
 			$meta = array_filter( array_keys( $meta ), array( 'Instructor', 'filter_course_meta_array' ) );
 

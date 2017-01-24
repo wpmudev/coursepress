@@ -2267,16 +2267,19 @@ if ( ! class_exists( 'CoursePress' ) ) {
 			if ( $this->is_preview( $unit_id ) ) {
 				//have access
 			} else {
-				$student    = new Student( get_current_user_id() );
-				$instructor = new Instructor( get_current_user_id() );
 				$has_access = false;
+				$student_id = get_current_User_id();
+				if ( (int) $student_id > 0 ) {
+					$student    = new Student( get_current_user_id() );
+					$instructor = new Instructor( get_current_user_id() );
 
-				if ( current_user_can( 'manage_options' ) || $student->has_access_to_course( $course_id ) || $instructor->is_assigned_to_course( $course_id, get_current_user_id() ) ) {
-					$has_access = true;
+					if ( current_user_can( 'manage_options' ) || $student->has_access_to_course( $course_id ) || $instructor->is_assigned_to_course( $course_id, get_current_user_id() ) ) {
+						$has_access = true;
+					}
 				}
 
 				if ( ! $has_access ) {
-					wp_redirect( get_permalink( $course_id ) );
+					wp_safe_redirect( get_permalink( $course_id ) );
 					exit;
 				}
 			}
@@ -2981,7 +2984,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 					} else {
 						$args = array(
 							'slug'        => $wp->request,
-							'title'       => $unit->details->post_title,
+							'title'       => empty( $unit ) || empty( $unit->details ) ? __( 'Not available!', 'cp' ) : $unit->details->post_title,
 							'content'     => __( 'This Unit is not available at the moment. Please check back later.', 'cp' ),
 							'type'        => 'page',
 							'is_page'     => true,

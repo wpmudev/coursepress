@@ -537,6 +537,9 @@ if ( !class_exists( 'Student' ) ) {
 		 * @return bool
 		 */
 		function has_access_to_course( $course_id = '', $user_id = '' ) {
+			if ( empty( $user_id ) ) {
+				return false;
+			}
 			return $this->user_enrolled_in_course( $course_id, $user_id );
 		}
 
