@@ -27,6 +27,7 @@ CHANGELOG
 * Added ability to show unit description.
 * Added ability to login by email too.
 * Added key length check for mcrypt function to avoid wrong key size.
+* Added sanitization of course id in "course_join_button" shortcode.
 
 = 2.0.2 =
 -------------------------------------------------
