@@ -104,7 +104,19 @@ if ( ! class_exists( 'Student_Completion' ) ) {
 
 			// Check that we're on the right version or upgrade
 			if ( ! self::_check_version( $student_id, $course_id, $course_progress ) ) {
-				$course_progress = self::get_completion_data( $student_id, $course_id );
+				// Otherwise it should be in user meta
+				$course_progress = get_user_option( '_course_' . $course_id . '_progress', $student_id );
+				if ( empty( $course_progress ) ) {
+                    if( is_array( $session_data ) && !empty($session_data[ $student_id ]['course_completion'][ $course_id ]) ) {
+                        //If we are here, there are no unit completion data.
+                        //Let's keep basic course information from session.
+                        $course_progress = $session_data[ $student_id ]['course_completion'][ $course_id ];
+                        $in_session = true;
+                    } else {
+					$course_progress = array();
+    				$in_session = false;
+			        }
+				}
 			};
 
 			CoursePress_Cache::cp_cache_set($cache_key, $course_progress);
