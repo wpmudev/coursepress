@@ -4,6 +4,29 @@ Build Time:  2016-04-07T13:37:59.644Z
 
 CHANGELOG
 =================================================
+= 2.0.3 =
+-------------------------------------------------
+* Fixed a bug with deleting sections within modules.
+* Fixed "button" in shortcodes when not on courses list.
+* Fixed a bug with adding students to course in admin, when MarketPress or WooCommerce is used to sell courses.
+* Fixed problem with custom CoursePress login page.
+* Fixed a bug with pagination on course archive page.
+* Fixed a bug with custom certificate background.
+* Fixed a bug with available unit date for different languages then English.
+* Fixed a bug with instructors permission to see CoursePress assessments.
+* Fixed a bug with course fee with WooCommerce.
+* Fixed a bug on workbook page - it show correct answers before student answered.
+* Fixed a bug with post status on course edit page.
+* Fixed shortcode course_list context attribute.
+* Changed redirect after login, for editors it will be now WordPress Dashboard.
+* Changed redirect for non-logged users who enter student dashboard URL to login page.
+* Added parsing video URL to add autoplay parameter.
+* Added ability to auto re-create certificate if file is missing.
+* Added permission check when try to download certificate.
+* Added ability to show unit description.
+* Added ability to login by email too.
+* Added key length check for mcrypt function to avoid wrong key size.
+
 = 2.0.2 =
 -------------------------------------------------
 * Fixed a bug with class autoloder function.
