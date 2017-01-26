@@ -725,4 +725,33 @@ class CoursePress_Data_Unit {
 		}
 		return false;
 	}
+
+	/**
+	 * Check free preview of unit.
+	 *
+	 * @since 2.0.4
+	 *
+	 * @param integer $unit_id unit ID.
+	 * @return boolean Is free preview available for this unit?
+	 */
+	public static function can_be_previewed( $unit_id ) {
+		$course_id = self::get_course_id_by_unit( $unit_id );
+		if ( empty( $course_id ) ) {
+			return false;
+		}
+		$preview = CoursePress_Data_Course::previewability( $course_id );
+		if (
+			! empty( $preview )
+			&& is_array( $preview )
+			&& isset( $preview['structure'] )
+			&& is_array( $preview['structure'] )
+			&& isset( $preview['structure'][ $unit_id ] )
+			&& is_array( $preview['structure'][ $unit_id ] )
+			&& isset( $preview['structure'][ $unit_id ]['unit_has_previews'] )
+			&& cp_is_true( $preview['structure'][ $unit_id ]['unit_has_previews'] )
+		) {
+			return true;
+		}
+		return false;
+	}
 }

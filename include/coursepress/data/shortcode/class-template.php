@@ -574,8 +574,22 @@ class CoursePress_Data_Shortcode_Template {
 				}
 			}
 		}
-
-		$type = $can_view || $can_update_course ? $type : 'no_access';
+		/**
+		 * view type
+		 */
+		$view_type = 'normal';
+		/**
+		 * Can be preview?
+		 */
+		$can_be_previewed = false;
+		if ( 'module' == $type && ! $can_view && ! $can_update_course ) {
+			$can_be_previewed = CoursePress_Data_Module::can_be_previewed( $item_id );
+			$view_type = 'preview';
+		}
+		/**
+		 * sanitize type
+		 */
+		$type = $can_be_previewed || $can_view || $can_update_course ? $type : 'no_access';
 		$template = '';
 
 		// Get restriction message when applicable.
@@ -648,23 +662,26 @@ class CoursePress_Data_Shortcode_Template {
 						);
 					}
 
-					$content .= '<div class="focus-nav">';
-					// Previous Navigation
-					$content .= self::show_nav_button(
-						$prev,
-						$pre_text,
-						array( 'focus-nav-prev' )
-					);
+					if ( $is_enrolled || $can_update_course ) {
+						$content .= '<div class="focus-nav">';
+						// Previous Navigation
+						$content .= self::show_nav_button(
+							$prev,
+							$pre_text,
+							array( 'focus-nav-prev' )
+						);
 
-					// Next Navigation
-					$content .= self::show_nav_button(
-						$next,
-						$next_text,
-						array( 'focus-nav-next' ),
-						$next_section_title
-					);
+						// Next Navigation
+						$content .= self::show_nav_button(
+							$next,
+							$next_text,
+							array( 'focus-nav-next' ),
+							$next_section_title
+						);
 
-					$content .= '</div>'; // .focus-nav
+						$content .= '</div>'; // .focus-nav
+					}
+
 					$content .= '</div>'; // .focus-wrapper
 
 					$template = $content;
@@ -770,45 +787,51 @@ class CoursePress_Data_Shortcode_Template {
 						'not_done' => true,
 					);
 				} else {
-					$content .= call_user_func( array( $template, $method ), $module->ID, true );
+					$content .= call_user_func( array( $template, $method ), $module->ID, true, $view_type );
 				}
 
 				$content .= '</div>'; // .focus-main
-				$content .= '<div class="focus-nav">';
 
-				// Previous Navigation
-				$content .= self::show_nav_button(
-					$prev,
-					$pre_text,
-					array( 'focus-nav-prev' )
-				);
+				/**
+				 * Navigation
+				 */
+				if ( 'normal' == $view_type && ( $is_enrolled || $can_update_course ) ) {
+					$content .= '<div class="focus-nav">';
 
-				// Next Navigation
-				if ( ! empty( $next['type'] ) && 'section' == $next['type'] ) {
-					$next_module_class[] = 'next-section';
-					$title = '';
-					$text = $next_section_text;
-				} else {
-					$title = $next_module_title;
-					$text = $next_text;
+					// Previous Navigation
+					$content .= self::show_nav_button(
+						$prev,
+						$pre_text,
+						array( 'focus-nav-prev' )
+					);
+
+					// Next Navigation
+					if ( ! empty( $next['type'] ) && 'section' == $next['type'] ) {
+						$next_module_class[] = 'next-section';
+						$title = '';
+						$text = $next_section_text;
+					} else {
+						$title = $next_module_title;
+						$text = $next_text;
+					}
+
+					if ( ! empty( $next['not_done'] ) ) {
+						// Student has to complete current module first...
+						$next_module_class[] = 'module-is-not-done';
+						$content .= self::tpl_mandatory_not_completed();
+						$title = __( 'You need to complete this REQUIRED module before you can continue.', 'CP_TD' );
+					}
+
+					$content .= self::show_nav_button(
+						$next,
+						$text,
+						$next_module_class,
+						$title,
+						true
+					);
+
+					$content .= '</div>'; // .focus-nav
 				}
-
-				if ( ! empty( $next['not_done'] ) ) {
-					// Student has to complete current module first...
-					$next_module_class[] = 'module-is-not-done';
-					$content .= self::tpl_mandatory_not_completed();
-					$title = __( 'You need to complete this REQUIRED module before you can continue.', 'CP_TD' );
-				}
-
-				$content .= self::show_nav_button(
-					$next,
-					$text,
-					$next_module_class,
-					$title,
-					true
-				);
-
-				$content .= '</div>'; // .focus-nav
 				$content .= '</div>'; // .focus-wrapper
 
 				$template = sprintf( '<form method="post" enctype="multipart/form-data" class="cp cp-form">%s</form>', $content );
@@ -929,8 +952,8 @@ class CoursePress_Data_Shortcode_Template {
 					esc_attr( $button['unit'] ),
 					esc_attr( $classes ),
 					esc_attr( $link_title ),
-					esc_url( $button['url'] ),
-					$button['course_id']
+					isset( $button['url'] )? esc_url( $button['url'] ) : '',
+					isset( $button['course_id'] )?  $button['course_id'] : 0
 				);
 				/*
 				$res = sprintf(

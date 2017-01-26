@@ -1229,16 +1229,36 @@ class CoursePress_View_Front_Course {
 		} elseif ( $cp->is_modules ) {
 			// Unit With Modules.
 			if ( ! $cp->is_enrolled && ! $cp->can_preview && ! $cp->is_instructor ) {
-				self::no_access_redirect( $cp->course_id );
+				$can_be_previewed = false;
+				$view_mode = CoursePress_Data_Course::get_setting( $cp->course_id, 'course_view', 'normal' );
+				/**
+				 * check free preview
+				 */
+				if ( isset( $wp->query_vars['module_id'] ) ) {
+					if ( 'focus' == $view_mode ) {
+						$module_id = $wp->query_vars['module_id'];
+						$can_be_previewed = CoursePress_Data_Module::can_be_previewed( $module_id );
+					}
+				} else {
+					$unit_id = CoursePress_Data_Unit::by_name(
+						$wp->query_vars['unitname'],
+						true,
+						$cp->course_id
+					);
+					$can_be_previewed = CoursePress_Data_Unit::can_be_previewed( $unit_id );
+				}
+				if ( ! $can_be_previewed ) {
+					self::no_access_redirect( $cp->course_id );
+				}
 			}
-
-			CoursePress_Helper_Utility::$is_singular = true;
 
 			$post_id = CoursePress_Data_Unit::by_name(
 				$wp->query_vars['unitname'],
 				true,
 				$cp->course_id
 			);
+			CoursePress_Helper_Utility::$is_singular = true;
+
 			CoursePress_Helper_Utility::set_the_post( $post_id );
 
 			$cp->title = sprintf(

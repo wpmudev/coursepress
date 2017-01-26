@@ -1080,7 +1080,7 @@ class CoursePress_Data_Course {
 			// Check for supported integration
 			if ( class_exists( 'CoursePress_Helper_Integration_MarketPress' ) ) {
 				$is_paid = CoursePress_Helper_Integration_MarketPress::$is_active;
-			} elseif ( class_exists( 'CoursePress_Helper_Integration_WooCommerce') ) {
+			} elseif ( class_exists( 'CoursePress_Helper_Integration_WooCommerce' ) ) {
 				$is_paid = CoursePress_Helper_Integration_WooCommerce::$is_active;
 			}
 		}
@@ -2096,7 +2096,7 @@ class CoursePress_Data_Course {
 					$items[] = array(
 						'id' => $module,
 						'type' => 'module',
-						'section' => $section,
+						'section' => isset( $section )? $section : null,
 						'unit' => $unit,
 					);
 				}
