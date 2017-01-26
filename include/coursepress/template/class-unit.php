@@ -158,8 +158,9 @@ class CoursePress_Template_Unit {
 		);
 
 		$before_html = apply_filters( 'coursepress_before_unit_modules', '' );
-
-		$content .= sprintf( '<div class="cp-error-box">%s</div>', $before_html );
+		if ( ! empty( $before_html ) ) {
+			$content .= sprintf( '<div class="cp-error-box">%s</div>', $before_html );
+		}
 		$content .= '<div class="cp unit-wrapper unit-' . $unit->ID . ' course-' . $course_id . '">';
 
 		// Page Title.
@@ -287,7 +288,6 @@ class CoursePress_Template_Unit {
 			} else {
 				$next_page = $page + 1;
 
-
 				if ( $next_page > $total_pages ) {
 					$next_page = false;
 				}
@@ -305,7 +305,6 @@ class CoursePress_Template_Unit {
 				//$format = '<input type="submit" name="next_page" value="%1$s" class="next-button page page-%1$s" />';
 				$unit_pager .= sprintf( $format, $next_page, $next_text );
 			}
-
 		}
 
 		// Next unit.
@@ -417,5 +416,4 @@ class CoursePress_Template_Unit {
 
 		return $content;
 	}
-
 }
