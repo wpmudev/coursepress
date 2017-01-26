@@ -422,7 +422,8 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			/**
 			 * If there is no script, made a regular link instead of button.
 			 */
-			if ( empty( wp_script_is( 'coursepress-front-js' ) ) ) {
+			$is_wp_script = wp_script_is( 'coursepress-front-js' );
+			if ( empty( $is_wp_script ) ) {
 				/**
 				 * fix button on shortcode
 				 */
