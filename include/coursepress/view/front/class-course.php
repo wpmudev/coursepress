@@ -837,6 +837,16 @@ class CoursePress_View_Front_Course {
 			$cp->course_id = CoursePress_Data_Course::by_name( $cp->cp_course, true );
 			$cp->can_preview = CoursePress_Data_Capabilities::can_update_course( $cp->course_id );
 
+			/**
+			 * handle student enroll
+			 */
+			if ( isset( $_REQUEST['action'] ) && isset( $_REQUEST['_wpnonce'] ) ) {
+				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'enroll_student' ) ) {
+					$user_id = get_current_user_id();
+					CoursePress_Data_Course::enroll_student( $user_id, $cp->course_id );
+				}
+			}
+
 			// The course-name did not resolve to a course_id. Back to start!
 			if ( ! $cp->course_id ) { self::archive_redirect(); }
 		}

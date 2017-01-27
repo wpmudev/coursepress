@@ -152,10 +152,24 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				$class .= ' course-completed-button';
 			}
 		} else {
+			$course_url = add_query_arg(
+				array(
+					'action' => 'enroll_student',
+					'_wpnonce' => wp_create_nonce( 'enroll_student' ),
+				),
+				$course_url
+			);
 			if ( false === $is_custom_login ) {
 				$signup_url = wp_login_url( $course_url );
 			} else {
 				$signup_url = CoursePress_Core::get_slug( 'login/', true );
+				$signup_url = add_query_arg(
+					array(
+						'redirect_to' => urlencode( $course_url ),
+						'_wpnonce' => wp_create_nonce( 'redirect_to' ),
+					),
+					$signup_url
+				);
 			}
 		}
 
@@ -1661,7 +1675,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 			switch ( $context ) {
 				case 'enrolled': case 'current': case 'all':
-					$label = $atts['current_label'];
+							$label = $atts['current_label'];
 					break;
 				case 'future':
 					$label = $atts['future_label'];
