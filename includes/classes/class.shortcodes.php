@@ -325,9 +325,9 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 			<div class="course-summary course-summary-<?php echo $course_id; ?> <?php echo $class; ?>">
 				<?php
 				if ( is_numeric( $length ) ) {
-					echo cp_length( do_shortcode( $course->details->post_content ), $length );
+					echo cp_length( do_shortcode( $course->details->post_excerpt ), $length );
 				} else {
-					echo do_shortcode( $course->details->post_content );
+					echo do_shortcode( $course->details->post_excerpt );
 				}
 				?>
 			</div>
