@@ -317,7 +317,6 @@ if ( ! class_exists( 'CoursePress_Shortcodes' ) ) {
 
 			$course_id = (int) $course_id;
 			$class     = sanitize_html_class( $class );
-			$length    = (int) $length;
 			$course    = empty( $course ) ? new Course( $course_id ) : object_decode( $course, 'Course' );
 
 			ob_start();
