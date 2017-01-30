@@ -136,4 +136,8 @@
 			@include locked;
 		}
 	}
+	.unit-content {
+		clear: both;
+		margin: 0 40px;
+	}
 }

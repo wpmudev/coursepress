@@ -78,7 +78,7 @@ class CoursePress_Admin_Controller_Unit {
 							)
 						)
 					. '</h3>
-					<label for="unit_name">Unit Title</label>
+					<label for="unit_name">' . __( 'Unit Title', 'CP_TD' ) . '</label>
 					<input id="unit_name" class="wide" type="text" value="<%= unit_title %>" name="post_title" spellcheck="true">
 					<div class="unit-additional-info">
 					<label class="unit-description">' . __( 'Unit Description', 'CP_TD' ) . '</label>
@@ -403,6 +403,17 @@ class CoursePress_Admin_Controller_Unit {
 							 */
 							if ( ! $new_unit ) {
 								CoursePress_Data_Unit::show_new_pages( $id, $meta );
+							}
+
+							/**
+							 * get deleted page number
+							 * update modules with page number greateer then
+							 * deleted_page
+							 */
+							if ( isset( $meta['deleted_page'] ) ) {
+								$deleted_page = $meta['deleted_page'];
+								unset( $meta['deleted_page'] );
+								CoursePress_Data_Module::decrease_page_number( $unit_id, $deleted_page );
 							}
 
 							// Have pages been removed?

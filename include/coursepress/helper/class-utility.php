@@ -28,6 +28,7 @@ class CoursePress_Helper_Utility {
 		add_action( 'init', array( __CLASS__, 'open_course_zip_object' ), 1 );
 		//add_action( 'admin_init', array( __CLASS__, 'course_admin_filters' ), 1 );
 		add_filter( 'upload_mimes', array( __CLASS__, 'enable_extended_upload' ) );
+		add_action( 'parse_request', array( __CLASS__, 'course_signup' ) );
 	}
 
 	public static function enable_extended_upload( $mime_types = array() ) {
@@ -157,7 +158,7 @@ class CoursePress_Helper_Utility {
 			if ( isset( $a[ $k ] ) ) {
 				$a = $a[ $k ];
 			} else {
-				return NULL;
+				return null;
 			}
 		}
 		return $a;
@@ -483,13 +484,12 @@ class CoursePress_Helper_Utility {
 		if ( ! $value ) { return false; }
 		if ( ! extension_loaded( 'mcrypt' ) ) { return $value; }
 		if ( ! function_exists( 'mcrypt_module_open' ) ) { return $value; }
-
-		$security_key = NONCE_KEY;
+		$security_key = self::get_security_key();
 		$iv_size = mcrypt_get_iv_size( MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB );
 		$iv = mcrypt_create_iv( $iv_size, MCRYPT_RAND );
 		$crypttext = mcrypt_encrypt(
 			MCRYPT_RIJNDAEL_256,
-			mb_substr( $security_key, 0, 24 ),
+			$security_key,
 			$value,
 			MCRYPT_MODE_ECB,
 			$iv
@@ -503,7 +503,7 @@ class CoursePress_Helper_Utility {
 		if ( ! extension_loaded( 'mcrypt' ) ) { return $value; }
 		if ( ! function_exists( 'mcrypt_module_open' ) ) { return $value; }
 
-		$security_key = NONCE_KEY;
+		$security_key = self::get_security_key();
 		$crypttext = self::safe_b64decode( $value );
 
 		if ( ! $crypttext ) { return false; }
@@ -512,7 +512,7 @@ class CoursePress_Helper_Utility {
 		$iv = mcrypt_create_iv( $iv_size, MCRYPT_RAND );
 		$decrypttext = mcrypt_decrypt(
 			MCRYPT_RIJNDAEL_256,
-			mb_substr( $security_key, 0, 24 ),
+			$security_key,
 			$crypttext,
 			MCRYPT_MODE_ECB,
 			$iv
@@ -663,12 +663,12 @@ class CoursePress_Helper_Utility {
 			}
 
 			echo '<a href="' . esc_url_raw( wp_get_referer() ) . $append_url . '" style="padding: 5px; font-size: 12px; text-decoration: none; opacity: 0.3; background: #3C3C3C; color: #fff; font-family: helvetica, sans-serif; position: absolute; top: 2; left: 2;"> &laquo; ' . esc_html__( 'Back to Course', 'CP_TD' ) . '</a>';
-			
-			if ( file_exists($file_path) ) {
+
+			if ( file_exists( $file_path ) ) {
 				echo '<iframe style="margin:0; padding:0; border:none; width: 100%; height: 100vh;" src="' .$file_url . '"></iframe>';
 			} else {
 				// file not there? try redirect and should go to 404
-				wp_safe_redirect($file_url);
+				wp_safe_redirect( $file_url );
 			}
 			exit();
 		}
@@ -737,7 +737,7 @@ class CoursePress_Helper_Utility {
 						}
 					}
 					$truncate .= substr( $line_matchings[2], 0, $left + $entities_length );
-					// maximum lenght is reached, so get off the loop
+					// maximum length is reached, so get off the loop
 					break;
 				} else {
 					$truncate .= $line_matchings[2];
@@ -1172,5 +1172,75 @@ class CoursePress_Helper_Utility {
 			wp_die( __( 'Sorry, you are not allowed to access this page.' ), 403 );
 		}
 		return $post;
+	}
+
+	/**
+	 * Login user - we need do it in parse_request action, because when
+	 * shortcode is parsed, then it is too late to set auth cookie.
+	 *
+	 * @since 2.0.3
+	 */
+	public static function course_signup() {
+		if ( ! isset( $_POST['log'] ) || ! isset( $_POST['pwd'] ) ) {
+			return;
+		}
+		if ( is_user_logged_in() ) {
+			return;
+		}
+		// Attempt a login if submitted.
+		$user = $_POST['log'];
+		if ( preg_match( '/@/', $user ) ) {
+			$userdata = get_user_by( 'email', $user );
+			$user = $userdata->user_login;
+		}
+		$credentials = array(
+			'user_login' => $user,
+			'user_password' => $_POST['pwd'],
+		);
+		$auth = wp_signon( $credentials );
+		if ( ! is_wp_error( $auth ) ) {
+			/**
+			 * redirect contributors+ to dashboard
+			 */
+			$userdata = get_user_by( 'login', $user );
+			if ( user_can( $userdata, 'edit_posts' ) ) {
+				wp_safe_redirect( admin_url() );
+				exit;
+			}
+			if ( isset( $_POST['redirect_url'] ) ) {
+				wp_safe_redirect( urldecode( esc_url_raw( $_POST['redirect_url'] ) ) );
+			} else {
+				wp_redirect( esc_url_raw( CoursePress_Core::get_slug( 'student_dashboard', true ) ) );
+			}
+			exit;
+		}
+		add_filter( 'cp_course_signup_form_show_messages', '__return_true' );
+	}
+
+	/**
+	 * get $security_key - get key as substring of NONCE_KEY, but check
+	 * length.
+	 *
+	 * @since 2.0.3
+	 */
+	private static function get_security_key() {
+		$security_key = NONCE_KEY;
+		$available_lengths = array( 32, 24, 16 );
+		$security_key = NONCE_KEY;
+		foreach ( $available_lengths as $key_length ) {
+			if ( function_exists( 'mb_substr' ) ) {
+				$security_key = mb_substr( $security_key, 0, $key_length );
+			} else {
+				$security_key = substr( $security_key, 0, $key_length );
+			}
+			if ( $key_length == strlen( $security_key ) ) {
+				return $security_key;
+			}
+		}
+		/**
+		 * md5 has always 16 characters length.
+		 */
+		$security_key = md5( NONCE_KEY );
+		return $security_key;
 	}
 }

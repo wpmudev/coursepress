@@ -12,9 +12,10 @@
 class CoursePress_Helper_Integration_MarketPress {
 
 	private static $updated = false;
-	private static $is_active = false;
+	public static $is_active = false;
 	private static $product_ctp = 'product';
 	private static $looping = false;
+	private static $post_args = array();
 
 	/**
 	 * Initialize the Integration.
@@ -534,6 +535,7 @@ class CoursePress_Helper_Integration_MarketPress {
 		$sku = get_post_meta( $product_id, 'sku', true );
 		$price = get_post_meta( $product_id, 'regular_price', true );
 		$sale_price = get_post_meta( $product_id, 'sale_price_amount', true );
+
 		$is_sale = get_post_meta( $product_id, 'has_sale', true )? 'on':'off';
 
 		$is_paid = ('publish' == $post->post_status)? 'on' : 'off';
@@ -547,12 +549,23 @@ class CoursePress_Helper_Integration_MarketPress {
 		CoursePress_Data_Course::set_setting( $settings, 'payment_paid_course', $is_paid );
 		CoursePress_Data_Course::update_setting( $course_id, true, $settings );
 
-		wp_update_post( array(
+		$post_args = array(
 			'ID' => $course_id,
 			'post_status' => $post->post_status,
-		) );
+			'post_content' => $post->post_content,
+		);
+
+		self::$post_args = $post_args;
+		add_action( 'shutdown', array( __CLASS__, '__update_course' ) );
 
 		self::$updated = true;
+	}
+
+	public static function __update_course() {
+		if ( ! empty( self::$post_args ) ) {
+			remove_action( 'post_updated', array( __CLASS__, 'update_course_from_product' ), 10, 3 );
+			wp_update_post( self::$post_args );
+		}
 	}
 
 	public static function shortcode_cost( $content, $course_id ) {

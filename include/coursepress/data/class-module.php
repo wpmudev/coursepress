@@ -59,10 +59,17 @@ class CoursePress_Data_Module {
 	}
 
 	public static function get_time_estimation( $module_id, $default = '1:00', $formatted = false ) {
-
-		$estimation = get_post_meta( $module_id, 'time_estimation', true );
+		$module_type = get_post_meta( $module_id, 'module_type', true );
+		if ( ! preg_match( '/^input-/', $module_type ) ) {
+			return '';
+		}
+		$user_timer = get_post_meta( $module_id, 'use_timer', true );
+		$user_timer = cp_is_true( $user_timer );
+		if ( ! $user_timer ) {
+			return '';
+		}
+		$estimation = get_post_meta( $module_id, 'duration', true );
 		$estimation = empty( $estimation ) ? $default : $estimation;
-
 		if ( ! $formatted ) {
 			return empty( $estimation ) ? $default : $estimation;
 		} else {
@@ -1022,6 +1029,40 @@ class CoursePress_Data_Module {
 	}
 
 	/**
+	 * Change page number for modules, when we delete page (section).
+	 *
+	 * @since 2.0.3
+	 *
+	 * @param integer $unit_id Unit ID.
+	 * @param integer $page_number Deleted page number.
+	 */
+	public static function decrease_page_number( $unit_id, $page_number ) {
+		if ( empty( $unit_id ) ) {
+			return;
+		}
+		$args = array(
+			'post_type' => self::get_post_type_name(),
+			'post_parent' => $unit_id,
+			'meta_query' => array(
+				array(
+					'key' => 'module_page',
+					'value' => intval( $page_number ),
+					'compare' => '>',
+					'type' => 'SIGNED',
+				),
+			),
+			'fields' => 'ids',
+			'posts_per_page' => -1,
+		);
+		$the_query = new WP_Query( $args );
+		foreach ( $the_query->posts as $post_id ) {
+			$value = get_post_meta( $post_id, 'module_page', true );
+			$value--;
+			update_post_meta( $post_id, 'module_page', $value );
+		}
+	}
+
+	/**
 	 * Check entry - is this module?
 	 *
 	 * @since 2.0.2
@@ -1061,7 +1102,6 @@ class CoursePress_Data_Module {
 				return array();
 			}
 			$args['post_parent__in'] = $units;
-
 		}
 		$modules = new WP_Query( $args );
 		return $modules->posts;

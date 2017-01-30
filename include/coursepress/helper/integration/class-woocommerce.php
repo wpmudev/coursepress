@@ -14,7 +14,7 @@
  */
 class CoursePress_Helper_Integration_WooCommerce {
 
-	private static $is_active = false;
+	public static $is_active = false;
 	private static $updated = false;
 	private static $product_ctp = 'product';
 
@@ -345,6 +345,10 @@ class CoursePress_Helper_Integration_WooCommerce {
 
 				update_post_meta( $post_id, 'mp_sale_price_enabled', CoursePress_Helper_Utility::filter_content( ( ! empty( $settings['mp_sale_price_enabled'] ) ? $settings['mp_sale_price_enabled'] : '' ), true ) );
 				update_post_meta( $post_id, 'cp_course_id', $course_id );
+
+				// Resave product meta
+				CoursePress_Data_Course::update_setting( $course_id, 'mp_product_price', $price );
+				CoursePress_Data_Course::update_setting( $course_id, 'mp_product_sale_price', $sale_price );
 			}
 			// Remove product if its not a paid course (clean up WooCommerce products)
 		} elseif ( isset( $settings['payment_paid_course'] ) && empty( $settings['payment_paid_course'] ) ) {
@@ -366,6 +370,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 				}
 			}
 		}
+
 	}
 
 	/**
