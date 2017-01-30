@@ -422,7 +422,8 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			/**
 			 * If there is no script, made a regular link instead of button.
 			 */
-			if ( empty( wp_script_is( 'coursepress-front-js' ) ) ) {
+			$is_wp_script = wp_script_is( 'coursepress-front-js' );
+			if ( empty( $is_wp_script ) ) {
 				/**
 				 * fix button on shortcode
 				 */
@@ -1031,13 +1032,16 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			}
 
 			if ( ! $is_unit_available && $enrolled ) {
-				$unit_availability_date = CoursePress_Data_Unit::get_unit_availability_date( $unit_id, $course_id );
+				/**
+				 * return date with known format
+				 */
+				$unit_availability_date = CoursePress_Data_Unit::get_unit_availability_date( $unit_id, $course_id, 'c' );
 
 				if ( ! empty( $unit_availability_date ) && 'expired' != $unit_availability_date ) {
 					$unit_availability_date = CoursePress_Data_Course::strtotime( $unit_availability_date );
 					$year_now = date( 'Y', CoursePress_Data_Course::time_now() );
 					$unit_year = date( 'Y', $unit_availability_date );
-					$format = $year_now !== $unit_year ? 'M d Y' : 'M d';
+					$format = $year_now !== $unit_year ? _x( 'M d, Y', 'Unit available date with year for future unit.', 'CP_TD' ) : _x( 'M d', 'Unit available date without year for future unit.', 'CP_TD' );
 
 					// Requires custom hook to attached
 					$when = date( $format, $unit_availability_date );
@@ -1450,6 +1454,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$courses = array();
 		$content = '';
 		$student = 0;
+		$include_ids = array();
 
 		if ( ! empty( $atts['instructor'] ) ) {
 			$include_ids = array();
@@ -1651,12 +1656,12 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 		$context = $atts['dashboard'] && $instructor_list ? 'manage' : $atts['context'];
 
-		if ( $atts['dashboard'] && ! empty( $counter ) ) {
+		if ( ( $atts['dashboard'] && ! empty( $counter ) ) || ! empty( $atts['show_labels'] ) ) {
 			$label = '';
 
 			switch ( $context ) {
 				case 'enrolled': case 'current': case 'all':
-							$label = $atts['current_label'];
+					$label = $atts['current_label'];
 					break;
 				case 'future':
 					$label = $atts['future_label'];

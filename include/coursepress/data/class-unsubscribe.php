@@ -36,7 +36,7 @@ class CoursePress_Data_Unsubscribe {
 		// Include unsubscribe link
 		$unsubscribe_link = add_query_arg(
 			array(
-				'uid' => $user->ID,
+				'uid' => $user_id,
 				'unsubscriber' => 1,
 			),
 			CoursePress_Core::get_slug( 'courses/', true )
