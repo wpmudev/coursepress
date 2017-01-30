@@ -1386,7 +1386,7 @@ $(document)
 			// Manual hook here as this is not a step in the modal templates
 			CoursePress.Post.off( 'coursepress:enrollment:enroll_student_error' );
 			CoursePress.Post.on( 'coursepress:enrollment:enroll_student_error', function( data ) {
-console.log(data);
+
 				if ( undefined !== data['callback'] ) {
 					var fn = CoursePress.Enrollment.dialog[ data['callback'] ];
 					if ( typeof fn === 'function' ) {
@@ -1502,6 +1502,7 @@ console.log(data);
 					ID: parseInt( _coursepress.current_student )
 				}
 			};
+			
 			// We're logged in, so lets try to enroll
 			CoursePress.Enrollment.dialog.attempt_enroll( enroll_data );
 			$(newDiv).html(CoursePress.Enrollment.dialog.render().el);
