@@ -422,7 +422,8 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			/**
 			 * If there is no script, made a regular link instead of button.
 			 */
-			if ( empty( wp_script_is( 'coursepress-front-js' ) ) ) {
+			$is_wp_script = wp_script_is( 'coursepress-front-js' );
+			if ( empty( $is_wp_script ) ) {
 				/**
 				 * fix button on shortcode
 				 */
@@ -1453,6 +1454,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$courses = array();
 		$content = '';
 		$student = 0;
+		$include_ids = array();
 
 		if ( ! empty( $atts['instructor'] ) ) {
 			$include_ids = array();
@@ -1654,12 +1656,12 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 		$context = $atts['dashboard'] && $instructor_list ? 'manage' : $atts['context'];
 
-		if ( $atts['dashboard'] && ! empty( $counter ) ) {
+		if ( ( $atts['dashboard'] && ! empty( $counter ) ) || ! empty( $atts['show_labels'] ) ) {
 			$label = '';
 
 			switch ( $context ) {
 				case 'enrolled': case 'current': case 'all':
-							$label = $atts['current_label'];
+					$label = $atts['current_label'];
 					break;
 				case 'future':
 					$label = $atts['future_label'];

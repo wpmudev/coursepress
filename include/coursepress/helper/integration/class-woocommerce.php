@@ -14,7 +14,7 @@
  */
 class CoursePress_Helper_Integration_WooCommerce {
 
-	private static $is_active = false;
+	public static $is_active = false;
 	private static $updated = false;
 	private static $product_ctp = 'product';
 

@@ -12,7 +12,7 @@
 class CoursePress_Helper_Integration_MarketPress {
 
 	private static $updated = false;
-	private static $is_active = false;
+	public static $is_active = false;
 	private static $product_ctp = 'product';
 	private static $looping = false;
 	private static $post_args = array();
