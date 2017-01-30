@@ -7,6 +7,7 @@ CHANGELOG
 
 = 2.0.4 =
 -------------------------------------------------
+* Fixed a bug with ability to approve comments to discussions.
 
 = 2.0.3 =
 -------------------------------------------------
