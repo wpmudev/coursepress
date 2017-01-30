@@ -1130,6 +1130,15 @@ class CoursePress_Data_Course {
 			$is_paid = self::get_setting( $course_id, 'paid_course', false );
 		}
 
+		if ( $is_paid ) {
+			// Check for supported integration
+			if ( class_exists( 'CoursePress_Helper_Integration_MarketPress' ) ) {
+				$is_paid = CoursePress_Helper_Integration_MarketPress::$is_active;
+			} elseif ( class_exists( 'CoursePress_Helper_Integration_WooCommerce') ) {
+				$is_paid = CoursePress_Helper_Integration_WooCommerce::$is_active;
+			}
+		}
+
 		$is_paid = empty( $is_paid ) || 'off' == $is_paid ? false : true;
 		return $is_paid;
 	}
