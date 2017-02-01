@@ -118,9 +118,16 @@ class CoursePress_View_Front_Student {
 			echo '<div class="clearfix"></div>';
 		}
 
-		// Add some random courses.
-		$course_list = do_shortcode( '[course_list student="' . get_current_user_id() . '" student_msg="" course_status="incomplete" list_wrapper_before="" class="course course-student-dashboard" left_class="enroll-box-left" right_class="enroll-box-right" course_class="enroll-box" title_class="h1-title" title_link="no" show_media="no"]' );
+		$shortcode_attributes = array(
+			'student' => get_current_user_id(),
+			'student_msg' => '',
+			'status' => 'incomplete',
+		);
+		$shortcode_attributes = apply_filters( 'course_list_page_student_dashsboard', $shortcode_attributes );
+		$shortcode_attributes = CoursePress_Helper_Utility::convert_array_to_params( $shortcode_attributes );
+		$course_list = do_shortcode( '[course_list '.$shortcode_attributes.']' );
 
+		// Add some random courses.
 		if ( empty( $course_list ) && $show_random_courses ) {
 
 			//Random Courses
@@ -143,8 +150,20 @@ class CoursePress_View_Front_Student {
 
 		// Completed courses
 		$show = 'dates,class_size';
-		$course_list = do_shortcode( '[course_list student="' . get_current_user_id() . '" student_msg="" course_status="completed" list_wrapper_before="" title_link="no" title_tag="h1" title_class="h1-title" show_divider="yes" left_class="enroll-box-left" right_class="enroll-box-right"]' );
 
+		$shortcode_attributes = array(
+			'student' => get_current_user_id(),
+			'student_msg' => '',
+			'status' => 'completed',
+		);
+		/**
+		 * Allow to change cshortcode attributes before fired.
+		 *
+		 * @since 2.0.4
+		 */
+		$shortcode_attributes = apply_filters( 'course_list_page_student_dashsboard', $shortcode_attributes );
+		$shortcode_attributes = CoursePress_Helper_Utility::convert_array_to_params( $shortcode_attributes );
+		$course_list = do_shortcode( '[course_list '.$shortcode_attributes.']' );
 		if ( ! empty( $course_list ) ) {
 			// Course List
 			echo '<div class="dashboard-completed-courses-list">';

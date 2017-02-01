@@ -7,6 +7,8 @@ CHANGELOG
 
 = 2.0.4 =
 -------------------------------------------------
+* Fixed a problem with wrong courses on [cp_pages page="student_dashboard"].
+* Added ability to show "Withdraw" link on [cp_pages page="student_dashboard"].
 
 = 2.0.3 =
 -------------------------------------------------
