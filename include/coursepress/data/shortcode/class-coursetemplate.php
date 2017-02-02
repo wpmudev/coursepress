@@ -1645,9 +1645,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				}
 			} else {
 				foreach ( $courses as $course ) {
-					$edit_page = CoursePress_View_Admin_Course_Edit::$slug;
-					$query = sprintf( '?page=%s&action=%s&id=%s', esc_attr( $edit_page ), 'edit', absint( $course->ID ) );
-					$course_url = admin_url( 'admin.php' . $query );
+					$course_url = get_edit_post_link( $course->ID );
 					$content .= do_shortcode( '[course_list_box course_id="' . $course->ID . '" override_button_text="' . esc_attr__( 'Manage Course', 'CP_TD' ) . '" override_button_link="' . esc_url( $course_url ) . '"]' );
 					$counter += 1;
 				}
@@ -1661,7 +1659,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 			switch ( $context ) {
 				case 'enrolled': case 'current': case 'all':
-					$label = $atts['current_label'];
+							$label = $atts['current_label'];
 					break;
 				case 'future':
 					$label = $atts['future_label'];
