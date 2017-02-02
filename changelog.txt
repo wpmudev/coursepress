@@ -7,6 +7,7 @@ CHANGELOG
 
 = 2.0.4 =
 -------------------------------------------------
+* Added auto-creating missing directories for PDF certificates.
 
 = 2.0.3 =
 -------------------------------------------------
