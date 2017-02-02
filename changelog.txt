@@ -8,6 +8,7 @@ CHANGELOG
 = 2.0.4 =
 -------------------------------------------------
 * Added auto-creating missing directories for PDF certificates.
+* Fixed a bug when user can enroll in the course without paying to paid course.
 
 = 2.0.3 =
 -------------------------------------------------
