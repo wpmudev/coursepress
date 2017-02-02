@@ -9,7 +9,7 @@ CHANGELOG
 -------------------------------------------------
 * Fixed a bug related to the inability to disable CoursePress login form.
 * Improved login/signup popups for small screens.
-
+* Fixed a bug when user can enroll in the course without paying to paid course.
 
 = 2.0.3 =
 -------------------------------------------------

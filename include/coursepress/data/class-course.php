@@ -1068,25 +1068,40 @@ class CoursePress_Data_Course {
 		if ( empty( $course_id ) ) {
 			return false;
 		}
-
+		/**
+		 * check Course settings
+		 */
 		$is_paid = self::get_setting( $course_id, 'payment_paid_course', false );
-
+		$is_paid = cp_is_true( $is_paid );
 		if ( ! $is_paid ) {
 			// Try the other meta
 			$is_paid = self::get_setting( $course_id, 'paid_course', false );
+			$is_paid = cp_is_true( $is_paid );
 		}
-
-		if ( $is_paid ) {
-			// Check for supported integration
-			if ( class_exists( 'CoursePress_Helper_Integration_MarketPress' ) ) {
+		/**
+		 * Check for supported integration: MarketPress
+		 */
+		if ( $is_paid && class_exists( 'CoursePress_Helper_Integration_MarketPress' ) ) {
+			if ( defined( 'MP_VERSION' ) && MP_VERSION ) {
 				$is_paid = CoursePress_Helper_Integration_MarketPress::$is_active;
-			} elseif ( class_exists( 'CoursePress_Helper_Integration_WooCommerce') ) {
-				$is_paid = CoursePress_Helper_Integration_WooCommerce::$is_active;
+				$is_paid = cp_is_true( $is_paid );
+				return $is_paid;
 			}
 		}
-
-		$is_paid = empty( $is_paid ) || 'off' == $is_paid ? false : true;
-		return $is_paid;
+		/**
+		 * Check for supported integration: WooCommerce
+		 */
+		if ( $is_paid && class_exists( 'CoursePress_Helper_Integration_WooCommerce' ) ) {
+			if ( class_exists( 'WooCommerce' ) ) {
+				$is_paid = CoursePress_Helper_Integration_WooCommerce::$is_active? 'on':'off';
+				$is_paid = cp_is_true( $is_paid );
+				return $is_paid;
+			}
+		}
+		/**
+		 * when there is no integration, always return false!
+		 */
+		return false;
 	}
 
 	public static function get_users( $args ) {
