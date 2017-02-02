@@ -8,6 +8,7 @@ CHANGELOG
 = 2.0.4 =
 -------------------------------------------------
 * Fixed a bug with previewing units & modules.
+* Fixed a bug when user can enroll in the course without paying to paid course.
 
 = 2.0.3 =
 -------------------------------------------------
