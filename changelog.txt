@@ -8,6 +8,7 @@ CHANGELOG
 = 2.0.4 =
 -------------------------------------------------
 * Fixed a bug when user can enroll in the course without paying to paid course.
+* Delete related course data from usermeta table when deleting a course.
 
 = 2.0.3 =
 -------------------------------------------------
