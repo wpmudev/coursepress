@@ -8,8 +8,8 @@ CHANGELOG
 = 2.0.4 =
 -------------------------------------------------
 * Fixed a bug when user can enroll in the course without paying to paid course.
-* Fixed a "60 seconds" bug - when module use a timer, there was no chance to show different amount of seconds then "60".
-* Fixed a bug with sum of time for pages and units on course edit page.
+* Fixed a "60 seconds" bug - when module uses a timer, there was no chance to show different amount of seconds then "60".
+* Fixed a bug with the sum of time for pages and units on course edit page.
 * Improved time count method for modules, pages and units.
 
 = 2.0.3 =
