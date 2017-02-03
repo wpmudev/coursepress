@@ -44,9 +44,11 @@ input.cp-has-error {
   background-color: #F4F4F4;
   cursor: pointer;
   color: inherit;
+  box-shadow: none;
 }
 .cp .button:hover {
   text-decoration: none;
+  box-shadow: inset 0 0 0 transparent, 0 3px 0 black;
 }
 .cp .button a {
   text-decoration: none;
@@ -157,9 +159,11 @@ input.cp-has-error {
   background-color: #F4F4F4;
   cursor: pointer;
   color: inherit;
+  box-shadow: none;
 }
 .apply-button:hover {
   text-decoration: none;
+  box-shadow: inset 0 0 0 transparent, 0 3px 0 black;
 }
 .apply-button a {
   text-decoration: none;
@@ -190,9 +194,11 @@ input.cp-has-error {
   background-color: #F4F4F4;
   cursor: pointer;
   color: inherit;
+  box-shadow: none;
 }
 .enrolment-container-div .bbm-modal .cancel-link:hover {
   text-decoration: none;
+  box-shadow: inset 0 0 0 transparent, 0 3px 0 black;
 }
 .enrolment-container-div .bbm-modal .cancel-link a {
   text-decoration: none;
@@ -345,10 +351,12 @@ input.cp-has-error {
   background-color: #F4F4F4;
   cursor: pointer;
   color: inherit;
+  box-shadow: none;
   float: right;
 }
 .course_list_box_item .coursepress-course-link:hover {
   text-decoration: none;
+  box-shadow: inset 0 0 0 transparent, 0 3px 0 black;
 }
 .course_list_box_item .coursepress-course-link a {
   text-decoration: none;
@@ -1027,9 +1035,11 @@ input.cp-has-error {
   background-color: #F4F4F4;
   cursor: pointer;
   color: inherit;
+  box-shadow: none;
 }
 .cp .button:hover {
   text-decoration: none;
+  box-shadow: inset 0 0 0 transparent, 0 3px 0 black;
 }
 .cp .button a {
   text-decoration: none;
@@ -1077,10 +1087,12 @@ input.cp-has-error {
   background-color: #F4F4F4;
   cursor: pointer;
   color: inherit;
+  box-shadow: none;
 }
 .coursepress-focus-view .focus-nav-prev:hover,
 .coursepress-focus-view .focus-nav-next:hover {
   text-decoration: none;
+  box-shadow: inset 0 0 0 transparent, 0 3px 0 black;
 }
 .coursepress-focus-view .focus-nav-prev a,
 .coursepress-focus-view .focus-nav-next a {
@@ -1159,9 +1171,11 @@ input.cp-has-error {
   background-color: #F4F4F4;
   cursor: pointer;
   color: inherit;
+  box-shadow: none;
 }
 .cp-student-workbook .workbook-table .button:hover {
   text-decoration: none;
+  box-shadow: inset 0 0 0 transparent, 0 3px 0 black;
 }
 .cp-student-workbook .workbook-table .button a {
   text-decoration: none;
@@ -1209,9 +1223,11 @@ input.cp-has-error {
   background-color: #F4F4F4;
   cursor: pointer;
   color: inherit;
+  box-shadow: none;
 }
 .course-discussion-wrapper .button:hover {
   text-decoration: none;
+  box-shadow: inset 0 0 0 transparent, 0 3px 0 black;
 }
 .course-discussion-wrapper .button a {
   text-decoration: none;
@@ -1235,9 +1251,11 @@ input.cp-has-error {
   background-color: #F4F4F4;
   cursor: pointer;
   color: inherit;
+  box-shadow: none;
 }
 .discussion-new .button:hover {
   text-decoration: none;
+  box-shadow: inset 0 0 0 transparent, 0 3px 0 black;
 }
 .discussion-new .button a {
   text-decoration: none;

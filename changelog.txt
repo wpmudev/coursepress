@@ -8,6 +8,8 @@ CHANGELOG
 = 2.0.4 =
 -------------------------------------------------
 * Fixed a bug when user can enroll in the course without paying to paid course.
+* Standardizing the appearance of buttons on course frontend page.
+
 
 = 2.0.3 =
 -------------------------------------------------
