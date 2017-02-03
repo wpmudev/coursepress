@@ -1,4 +1,4 @@
-/*! CoursePress - v2.0.0
+/*! CoursePress - v2.0.4
  * https://premium.wpmudev.org/project/coursepress-pro/
  * Copyright (c) 2017; * Licensed GPLv2+ */
 var CoursePress = {};
@@ -485,7 +485,7 @@ $(document)
 		duration = duration.split( ':' );
 
 		seconds = duration.pop();
-		seconds = parseInt( seconds );
+		_seconds = seconds = parseInt( seconds );
 
 		if ( duration.length > 0 ) {
 			_minutes = minutes = duration.pop();
