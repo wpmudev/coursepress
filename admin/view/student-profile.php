@@ -1,11 +1,12 @@
 <?php
-$student_id = (int) $_GET['student_id'];
+$student_id = isset( $_GET['student_id'] ) ? intval( $_GET['student_id'] ) : 0;
 $student = get_userdata( $student_id );
 ?>
 <div class="wrap coursepress_wrapper course-student-profile">
 	<h2><?php esc_html_e( 'Student Profile', 'CP_TD' ); ?></h2>
 <?php
-if ( is_a( $student, 'WP_User' ) ) { 
+$nonce_verify = CoursePress_Admin_Students::view_profile_verify_nonce( $student_id );
+if ( is_a( $student, 'WP_User' ) && $nonce_verify ) {
 	$avatar = get_avatar( $student->user_email, 92 );
 	$enrolled_courses = CoursePress_Data_Student::get_enrolled_courses_ids( $student_id );
 	$date_format = get_option( 'date_format' );

@@ -10,6 +10,7 @@ CHANGELOG
 * Fixed a bug when user can enroll in the course without paying to paid course.
 * Added fields "Display Name", "Email" and "Registered" to "Student Profile" page.
 * Added "Edit user" link on "Student Profile" page.
+* Improve "Student Profile" screen by adding nonce check, to avoid any profile display.
 
 = 2.0.3 =
 -------------------------------------------------
