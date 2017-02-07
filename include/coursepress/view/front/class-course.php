@@ -619,9 +619,9 @@ class CoursePress_View_Front_Course {
 	 * Prevent WordPress from doing a rel = canonical redirect.
 	 *
 	 * Canonical redirect is an SEO action that prevents duplicate content
-	 * page penalties. However,  many CoursePress theme pages have virtual
-	 * slugs for the URL.  So the canonical redirect would send the user to
-	 * the wrong page. It's safe to disable this for those custom post types.
+	 * page penalties. However, many CoursePress theme pages have virtual
+	 * slugs for the URL. So the canonical redirect would send the user to the
+	 * wrong page. It's safe to disable this for those custom post types.
 	 *
 	 * @since  2.0.0
 	 * @param  WP_Query $wp_query The global WP_Query object.
