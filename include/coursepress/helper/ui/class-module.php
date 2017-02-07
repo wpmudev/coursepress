@@ -216,31 +216,37 @@ class CoursePress_Helper_UI_Module {
 				'title' => __( 'Multiple Choice', 'CP_TD' ),
 				'mode' => 'input',
 				'icon' => 'default',
+				'dashicon' => 'list-view',
 			),
 			self::INPUT_SINGLE_CHOICE => array(
 				'title' => __( 'Single Choice', 'CP_TD' ),
 				'mode' => 'input',
 				'icon' => 'default',
+				'dashicon' => 'editor-ul',
 			),
 			self::INPUT_SELECT_CHOICE => array(
 				'title' => __( 'Selectable', 'CP_TD' ),
 				'mode' => 'input',
 				'icon' => 'default',
+				'dashicon' => 'menu',
 			),
 			self::INPUT_SHORT_TEXT => array(
 				'title' => __( 'Short Answer', 'CP_TD' ),
 				'mode' => 'input',
 				'icon' => 'default',
+				'dashicon' => 'editor-textcolor',
 			),
 			self::INPUT_LONG_TEXT => array(
 				'title' => __( 'Long Answer', 'CP_TD' ),
 				'mode' => 'input',
 				'icon' => 'default',
+				'dashicon' => 'editor-alignleft',
 			),
 			self::INPUT_UPLOAD => array(
 				'title' => __( 'File Upload', 'CP_TD' ),
 				'mode' => 'input',
 				'icon' => 'default',
+				'dashicon' => 'upload',
 			),
 			self::INPUT_QUIZ => array(
 				'title' => __( 'Quiz', 'CP_TD' ),
@@ -272,6 +278,7 @@ class CoursePress_Helper_UI_Module {
 				'title' => __( 'Text', 'CP_TD' ),
 				'mode' => 'output',
 				'icon' => 'default',
+				'dashicon' => 'media-text',
 			),
 			self::OUTPUT_CHAT => array(
 				'title' => __( 'Chat', 'CP_TD' ),
@@ -283,38 +290,36 @@ class CoursePress_Helper_UI_Module {
 				'mode' => 'output',
 				'excerpt' => 'hidden',
 				'icon' => 'default',
+				'dashicon' => 'format-image',
 			),
 			self::OUTPUT_VIDEO => array(
 				'title' => __( 'Video', 'CP_TD' ),
 				'mode' => 'output',
 				'excerpt' => 'hidden',
 				'icon' => 'default',
+				'dashicon' => 'video-alt3',
 			),
 			self::OUTPUT_AUDIO => array(
 				'title' => __( 'Audio', 'CP_TD' ),
 				'mode' => 'output',
 				'excerpt' => 'hidden',
 				'icon' => 'default',
+				'dashicon' => 'format-audio',
 			),
 			self::OUTPUT_DOWNLOAD => array(
 				'title' => __( 'File Download', 'CP_TD' ),
 				'mode' => 'output',
 			// 'excerpt' => 'hidden',
 				'icon' => 'default',
+				'dashicon' => 'media-text',
 			),
 			self::OUTPUT_ZIPPED_OBJECT => array(
 				'title' => __( 'Zipped Object', 'CP_TD' ),
 				'mode' => 'output',
 			// 'excerpt' => 'hidden',
 				'icon' => 'default',
+				'dashicon' => 'media-archive',
 			),
-			// self::OUTPUT_SECTION => array(
-			// 'title' => __( 'Section Break', 'CP_TD' ),
-			// 'mode' => 'output',
-			// 'excerpt' => 'hidden',
-			// 'body' => 'hidden',
-			// 'icon' => 'default',
-			// ),
 			self::OUTPUT_DISCUSSION => array(
 				'title' => __( 'Discussion', 'CP_TD' ),
 				'mode' => 'output',
@@ -933,14 +938,18 @@ class CoursePress_Helper_UI_Module {
 							"class": "wide",
 							"items": [
 								{
+									"title": "' . __( 'Multiple Choice', 'CP_TD' ) .'",
 									"type": "action",
-									"class": "quiz-action-button multiple wide",
-									"action": "multiple"
+									"class": "input-element module-input-checkbox quiz-action-button multiple wide",
+									"action": "multiple",
+									"dashicon": "list-view"
 								},
 								{
+									"title": "' . __( 'Single Choice', 'CP_TD' ) .'",
 									"type": "action",
-									"class": "quiz-action-button single wide",
-									"action": "single"
+									"class": "input-element module-input-radio quiz-action-button single wide",
+									"action": "single",
+									"dashicon": "editor-ul"
 								}
 							]
 						},
@@ -976,7 +985,7 @@ class CoursePress_Helper_UI_Module {
 					"components": [
 						{
 							"label": "' . __( 'Form elements', 'CP_TD' ) . '",
-							"description": "' . __( 'Add all the elements for your form here', 'CP_TD' ) .'",
+							"description": "' . __( 'Add all the elements for your form here', 'CP_TD' ) .,'",
 							"class": "wide",
 							"items": [
 								{
