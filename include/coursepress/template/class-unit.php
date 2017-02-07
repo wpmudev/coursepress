@@ -249,7 +249,7 @@ class CoursePress_Template_Unit {
 		$prev_text = __( '&laquo; Previous', 'CP_TD' );
 		$previous_page = false;
 
-		$unit_pager = '<div class="pager unit-pager">';
+		$unit_pager = '';
 
 		// Show pager only if there's more than 1 pages.
 		if ( $total_pages > 1 ) {
@@ -371,11 +371,24 @@ class CoursePress_Template_Unit {
 
 		if ( false === $has_submit_button ) {
 			$unit_pager .= sprintf( '<button type="submit" name="finish" class="button next-button">%s</button>', $next_text );
-		}
+			$has_submit_button = true;
+        }
 
-		$unit_pager .= '</div>'; // .pager
-		$format = '<form method="post" enctype="multipart/form-data" class="cp-form">%s</form>';
-		$content .= sprintf( $format, $module_template . $unit_pager );
+        /**
+         * Save Progress & Exit link
+         */
+        $save_progress_link = '';
+        if ( 'normal' == $view_mode && $enrolled && $has_submit_button ) {
+            $save_progress_link = sprintf(
+                '<a href="#" class="save-progress-and-exit">%s</a>',
+                __( 'Save Progress &amp; Exit', 'CP_TD' )
+            );
+        }
+
+
+
+		$format = '<form method="post" enctype="multipart/form-data" class="cp-form">%s<div class="pager unit-pager">%s%s</div></form>';
+		$content .= sprintf( $format, $module_template, $save_progress_link, $unit_pager );
 		$content .= '</div>'; // .unit-wrapper
 
 		// Student Tracking:

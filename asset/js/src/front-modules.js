@@ -208,7 +208,6 @@
 			is_focus = form.parents( '.coursepress-focus-view' ).length > 0,
 			error = 0, mask
 		;
-
 		if ( 0 < error_box.length ) {
 			error_box.remove();
 		}
@@ -529,6 +528,17 @@
 			}
 	};
 
+    /**
+     * Save Progress & Exit
+     */
+    CoursePress.saveProgressAndExit = function() {
+        var form = $(this).closest('form');
+		form.append( '<input type="hidden" name="is_cp_ajax" value="1" />' );
+		form.append( '<input type="hidden" name="save_progress_and_exit" value="1" />' );
+        console.log( 'fii' );
+        return false;
+    }
+
 	$( document )
 		.ready(function(){
 			CoursePress.timer( $('.cp-module-content' ) );
@@ -540,6 +550,8 @@
 		.on( 'click', '.cp-comment-submit', CoursePress.addComment )
 		.on( 'change', '.cp-module-content .file input', CoursePress.validateUploadModule )
 		.on( 'click', '.unit-archive-single .fold', CoursePress.singleFolded )
-		.on( 'click', '.course-structure-block .unit .fold, .unit-archive-list .fold', CoursePress.unitFolded );
+		.on( 'click', '.course-structure-block .unit .fold, .unit-archive-list .fold', CoursePress.unitFolded )
+		.on( 'click', '.save-progress-and-exit', CoursePress.saveProgressAndExit );
+
 
 })(jQuery);

@@ -97,7 +97,13 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		), $atts, 'course_join_button' ) );
 
 		$course_id = (int) $course_id;
-		if ( empty( $course_id ) ) { return ''; }
+        if ( empty( $course_id ) ) {
+            return '';
+        }
+        $is_course = CoursePress_Data_Course::is_course( $course_id );
+        if ( ! $is_course ) {
+            return '';
+        }
 
 		$list_page = sanitize_text_field( $list_page );
 		$list_page = cp_is_true( $list_page );
