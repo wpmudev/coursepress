@@ -445,6 +445,11 @@ class CoursePress_Module {
 				add_action( 'coursepress_before_unit_modules', array( __CLASS__, 'show_error_message' ) );
 			}
 		} else {
+
+			if ( isset( $input['page'] ) ) {
+				$page = intval( $input['page'] );
+			}
+
 			// Update student progress
 			//CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course_id );
 			$next = CoursePress_Data_Course::get_next_accessible_module( $course_id, $unit_id, $page, $module_id );

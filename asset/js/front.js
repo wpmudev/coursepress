@@ -1166,6 +1166,9 @@ $(document)
 				var step_action = $( step ).attr('data-modal-action');
 				if ( undefined !== step_action && action === step_action ) {
 					CoursePress.Enrollment.dialog.openAt( i );
+					if ( "login" == action ) {
+						$(window).scrollTop( $( "div.cp-mask.enrolment-container-div" ).offset().top - 100 );
+					}
 				}
 			});
 		},
@@ -1270,9 +1273,9 @@ $(document)
 					var action = $( step ).attr( 'data-modal-action' );
 					if ( 'passcode' == _coursepress.current_course_type && 'passcode' === action ) {
 						CoursePress.Enrollment.dialog.openAt( i );
-                    }
-                });
-            }
+					}
+				});
+			}
 
 			$('.enrolment-container-div' ).removeClass('hidden');
 		},
@@ -1402,8 +1405,8 @@ $(document)
 						fn( data );
 						return;
 					}
-                }
-            });
+				}
+			});
 			CoursePress.Post.off( 'coursepress:enrollment:enroll_student_success' );
 			CoursePress.Post.on( 'coursepress:enrollment:enroll_student_success', function( data ) {
 				cpmask.removeClass( 'loading' );
@@ -1479,7 +1482,7 @@ $(document)
 	CoursePress.Enrollment = CoursePress.Enrollment || {};
 
 	CoursePress.CustomLoginHook = function() {
-        $(this).attr( 'href', 'javascript:;');
+		$(this).attr( 'href', '#');
 		var newDiv = $( '<div class="cp-mask enrolment-container-div">' );
 
 		newDiv.appendTo( 'body' );
