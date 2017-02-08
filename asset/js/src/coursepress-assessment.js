@@ -462,7 +462,7 @@
 	},
 	updateNav = function() {
 		var nav = $(this),
-			href = nav.attr( 'href', 'javascript:;' ),
+			href = nav.attr( 'href', '#' ),
 			paged = nav.data( 'paged' )
 		;
 
