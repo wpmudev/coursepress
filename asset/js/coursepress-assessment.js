@@ -1,4 +1,4 @@
-/*! CoursePress - v2.0.0
+/*! CoursePress - v2.0.4
  * https://premium.wpmudev.org/project/coursepress-pro/
  * Copyright (c) 2017; * Licensed GPLv2+ */
 +(function($){
@@ -465,7 +465,7 @@
 	},
 	updateNav = function() {
 		var nav = $(this),
-			href = nav.attr( 'href', 'javascript:;' ),
+			href = nav.attr( 'href', '#' ),
 			paged = nav.data( 'paged' )
 		;
 
