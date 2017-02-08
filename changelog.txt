@@ -7,7 +7,15 @@ CHANGELOG
 
 = 2.0.4 =
 -------------------------------------------------
+* Fixed a problem with enrolling students using MarketPress.
+* Fixed a problem with sections pagination when course is in normal mode.
+* Fixed a bug with ability to approve comments to discussions.
+* Added filter "coursepress_unit_add_open_date" to allow display open unit date.
+* Added auto-creating missing directories for PDF certificates.
+* Fixed a problem with wrong courses on [cp_pages page="student_dashboard"].
+* Added ability to show "Withdraw" link on [cp_pages page="student_dashboard"].
 * Fixed a bug when user can enroll in the course without paying to paid course.
+* Improve login and signup screens for small screens.
 
 = 2.0.3 =
 -------------------------------------------------
