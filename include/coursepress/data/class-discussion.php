@@ -282,6 +282,11 @@ class CoursePress_Data_Discussion {
 		 * Avoid comments on add new thread page
 		 */
 		add_filter( 'comments_template_query_args', array( __CLASS__, 'comments_template_query_args' ) );
+
+		/**
+		 * add capabilities
+		 */
+		add_filter( 'user_has_cap', array( 'CoursePress_Data_Discussion', 'fix_comments_capabilites' ), 10, 4 );
 	}
 
 	public static function approved_discussion_comment( $is_approved, $commentdata ) {
@@ -850,5 +855,40 @@ class CoursePress_Data_Discussion {
 		$url = CoursePress_Core::get_slug( 'courses/', true ) . $course->post_name . '/';
 		$url = $url . CoursePress_Core::get_slug( 'discussion/' ) . $discussion->post_name;
 		return $url;
+	}
+
+	/**
+	 * Dynamically filter a user's capabilities.
+	 *
+	 * @since 2.0.4
+	 *
+	 * @param array   $allcaps An array of all the user's capabilities.
+	 * @param array   $caps    Actual capabilities for meta capability.
+	 * @param array   $args    Optional parameters passed to has_cap(), typically object ID.
+	 * @param WP_User $user    The user object.
+	 */
+	public static function fix_comments_capabilites( $allcaps, $caps, $args, $capabilities ) {
+		if ( ! in_array( 'edit_comment', $args ) ) {
+			return $allcaps;
+		}
+		if ( 2 > sizeof( $args ) ) {
+			return $allcaps;
+		}
+		$comment = get_comment( $args[2] );
+		if ( ! is_a( $comment, 'WP_Comment' ) ) {
+			return $allcaps;
+		}
+		$discussion = get_post( $comment->comment_post_ID );
+		$is_correct_post_type = self::is_correct_post_type( $discussion );
+		if ( ! $is_correct_post_type ) {
+			return $allcaps;
+		}
+		$can_update_discusssion = CoursePress_Data_Capabilities::can_update_discussion( $discussion, $args[1] );
+
+		if ( ! $can_update_discusssion ) {
+			return $allcaps;
+		}
+		$allcaps['edit_others_discussions'] = 1;
+		return $allcaps;
 	}
 }
