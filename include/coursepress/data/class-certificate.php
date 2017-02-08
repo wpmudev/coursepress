@@ -198,8 +198,10 @@ class CoursePress_Data_Certificate {
 		 */
 		$dir = substr( $filename, 0, 2 );
 		$subdirectory = sprintf( '%s/', $dir );
+		CoursePress_Helper_PDF::check_dir( $subdirectory );
 		$dir = substr( $filename, 2, 2 );
 		$subdirectory .= sprintf( '%s/', $dir );
+		CoursePress_Helper_PDF::check_dir( $subdirectory );
 		$filename = substr( $filename, 4 );
 		/**
 		 * add basedir or not?
@@ -386,7 +388,6 @@ class CoursePress_Data_Certificate {
 		$post = get_posts( $post_params );
 		$is_override = CoursePress_Data_Course::get_setting( $course_id, 'basic_certificate' );
 		$is_override = cp_is_true( $is_override );
-
 		if ( count( $post ) > 0 || $is_override ) {
 			$post = $post[0];
 			// We'll replace the existing content to a new one to apply settings changes when applicable.
@@ -398,7 +399,9 @@ class CoursePress_Data_Certificate {
 			$filename = self::get_pdf_file_name( $course_id, $student_id, 'no-base-dir' );
 			$logo = array();
 			$text_color = array();
-
+			/**
+			 * Is certificate overrided?
+			 */
 			if ( $is_override ) {
 				$margins = CoursePress_Data_Course::get_setting( $course_id, 'cert_margin', array() );
 				$orientation = CoursePress_Data_Course::get_setting( $course_id, 'page_orientation', 'L' );
@@ -409,7 +412,6 @@ class CoursePress_Data_Certificate {
 				 */
 				$use_cp_default = CoursePress_Core::get_setting( 'basic_certificate/use_cp_default', false );
 				$use_cp_default = cp_is_true( $use_cp_default );
-
 				if ( $use_cp_default ) {
 					/**
 					 * Default Background
@@ -442,11 +444,9 @@ class CoursePress_Data_Certificate {
 					$text_color = array( 90, 90, 90 );
 				}
 			}
-
 			// Set the content
 			$certificate = stripslashes( $certificate );
 			$html = '<div class="basic_certificate">'. $certificate . '</div>';
-
 			/**
 			 * Allow others to modify the HTML layout.
 			 *
@@ -457,7 +457,6 @@ class CoursePress_Data_Certificate {
 			 * @param (int) $student_id			The student ID the certificate is generated to.
 			 **/
 			$html = apply_filters( 'coursepress_basic_certificate_html', $html, $course_id, $student_id );
-
 			$certificate_title = apply_filters( 'coursepress_certificate_title', __( 'Certificate of Completion', 'CP_TD' ) );
 			$args = array(
 				'title' => $certificate_title,
@@ -478,7 +477,6 @@ class CoursePress_Data_Certificate {
 			}
 			return CoursePress_Helper_PDF::make_pdf( $html, $args );
 		}
-
 		return false;
 	}
 
