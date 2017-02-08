@@ -1243,4 +1243,22 @@ class CoursePress_Helper_Utility {
 		$security_key = md5( NONCE_KEY );
 		return $security_key;
 	}
+
+	/**
+	 * Convert an associative array to html params.
+	 *
+	 * @since 2.0.4
+	 */
+	public static function convert_array_to_params( $array ) {
+		$content = '';
+		if ( is_array( $array ) ) {
+			foreach ( $array as $key => $value ) {
+				if ( preg_match( '/^\d+$/', $key ) ) {
+					continue;
+				}
+				$content .= sprintf( ' %s="%s"', $key, esc_attr( $value ) );
+			}
+		}
+		return $content;
+	}
 }
