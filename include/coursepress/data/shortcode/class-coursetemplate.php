@@ -1031,7 +1031,23 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				$is_unit_available = false;
 			}
 
-			if ( ! $is_unit_available && $enrolled ) {
+            $add_open_date = false;
+            if ( ! $is_unit_available && $enrolled ) {
+                $add_open_date = true;
+            }
+
+			/**
+			 * Filter allow to display open unit date.
+			 *
+			 * @since 2.0.4
+			 *
+             * @param boolean $add_open_date Current state of display open * unit date.
+             * @param integer $unit_id Unit ID.
+             * @param integer $course_id Course ID.
+			 */
+            $add_open_date = apply_filters( 'coursepress_unit_add_open_date', $add_open_date, $unit_id, $course_id );
+
+            if ( $add_open_date ) {
 				/**
 				 * return date with known format
 				 */
@@ -1442,6 +1458,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					'student' => '', // If both student and instructor is specified only student will be used
 					'suggested_label' => __( 'Suggested courses', 'CP_TD' ),
 					'suggested_msg' => __( 'You are not enrolled in any courses.<br />Here are a few you might like, or <a href="%s">see all available courses.</a>', 'CP_TD' ),
+					'show_withdraw_link' => false,
 				),
 				$atts,
 				'course_page'
@@ -1455,6 +1472,13 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$content = '';
 		$student = 0;
 		$include_ids = array();
+
+		/**
+		 * Sanitize show_withdraw_link
+		 */
+		if ( empty( $atts['student'] ) || 'incomplete' != $atts['status'] ) {
+			$atts['show_withdraw_link'] = false;
+		}
 
 		if ( ! empty( $atts['instructor'] ) ) {
 			$include_ids = array();
@@ -1493,28 +1517,44 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		}
 
 		if ( ! empty( $atts['student'] ) ) {
-
 			$students = explode( ',', $atts['student'] );
-			if ( ! empty( $students ) ) {
-				foreach ( $students as $student ) {
-					$student = (int) $student;
-					if ( $student ) {
-						$course_ids = CoursePress_Data_Student::get_enrolled_courses_ids( $student );
-						if ( $course_ids ) {
-							$include_ids = array_unique( array_merge( $include_ids, $course_ids ) );
-						}
-					}
-				}
-			} else {
-				$student = (int) $atts['student'];
+			foreach ( $students as $student ) {
+				$student = (int) $student;
 				if ( $student ) {
-					$course_ids = CoursePress_Data_Student::get_enrolled_courses_ids( $student );
-					if ( $course_ids ) {
-						$include_ids = array_unique( array_merge( $include_ids, $course_ids ) );
+					$courses_ids = array();
+					$courses_to_add = CoursePress_Data_Student::get_enrolled_courses_ids( $student );
+					if ( isset( $atts['status'] ) ) {
+						foreach ( $courses_to_add as $course_id ) {
+							$status = get_post_status( $course_id );
+							if ( 'publish' != $status ) {
+								continue;
+							}
+							$add = true;
+							if ( 'publish' != $atts['status'] ) {
+								$status = CoursePress_Data_Student::get_course_status( $course_id, $student, false );
+								if ( 'completed' == $atts['status'] ) {
+									$add = false;
+									if ( 'certified' == $status ) {
+										$add = true;
+									}
+								} else {
+									if ( 'certified' == $status ) {
+										$add = false;
+									}
+								}
+							}
+							if ( $add ) {
+								$courses_ids[] = $course_id;
+							}
+						}
+					} else {
+						$courses_ids = $courses_to_add;
+					}
+					if ( $courses_ids ) {
+						$include_ids = array_unique( array_merge( $include_ids, $courses_ids ) );
 					}
 				}
 			}
-
 			$student_list = true;
 		}
 
@@ -1626,7 +1666,12 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 		if ( ! $atts['dashboard'] ) {
 			foreach ( $courses as $course ) {
-				$content .= do_shortcode( '[course_list_box course_id="' . $course->ID . '"]' );
+				$shortcode_attributes  = array(
+					'course_id' => $course->ID,
+					'show_withdraw_link' => $atts['show_withdraw_link'],
+				);
+				$shortcode_attributes = CoursePress_Helper_Utility::convert_array_to_params( $shortcode_attributes );
+				$content .= do_shortcode( '[course_list_box ' . $shortcode_attributes . ']' );
 				$counter += 1;
 			}
 		} else {
