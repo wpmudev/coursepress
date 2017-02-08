@@ -228,6 +228,7 @@ class CoursePress_Admin_Courses {
 		$actions = array();
 
 		$edit_link = get_edit_post_link( $course->ID );
+
 		$published = 'publish' == $course->post_status;
 		$course_url = CoursePress_Data_Course::get_course_url( $course->ID );
 		$can_update = false;
@@ -239,11 +240,13 @@ class CoursePress_Admin_Courses {
 
 			if ( 'trash' != $course->post_status ) {
 				// Add edit link
-				$actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_link ), __( 'Edit', 'CP_TD' ) );
-				$edit_units = add_query_arg( 'tab', 'units', $edit_link );
-				$edit_students = add_query_arg( 'tab', 'students', $edit_link );
-				$actions['units'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_units ), __( 'Units', 'CP_TD' ) );
-				$actions['students'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_students ), __( 'Students', 'CP_TD' ) );
+				if ( ! empty( $edit_link ) ) {
+					$actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_link ), __( 'Edit', 'CP_TD' ) );
+					$edit_units = add_query_arg( 'tab', 'units', $edit_link );
+					$edit_students = add_query_arg( 'tab', 'students', $edit_link );
+					$actions['units'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_units ), __( 'Units', 'CP_TD' ) );
+					$actions['students'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_students ), __( 'Students', 'CP_TD' ) );
+				}
 
 				/**
 				 * single course export
