@@ -1031,7 +1031,23 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				$is_unit_available = false;
 			}
 
-			if ( ! $is_unit_available && $enrolled ) {
+            $add_open_date = false;
+            if ( ! $is_unit_available && $enrolled ) {
+                $add_open_date = true;
+            }
+
+			/**
+			 * Filter allow to display open unit date.
+			 *
+			 * @since 2.0.4
+			 *
+             * @param boolean $add_open_date Current state of display open * unit date.
+             * @param integer $unit_id Unit ID.
+             * @param integer $course_id Course ID.
+			 */
+            $add_open_date = apply_filters( 'coursepress_unit_add_open_date', $add_open_date, $unit_id, $course_id );
+
+            if ( $add_open_date ) {
 				/**
 				 * return date with known format
 				 */
