@@ -309,6 +309,9 @@ class CoursePress_Data_Instructor {
 	public static function create_hash( $user ) {
 		$user_id = self::_get_id( $user );
 		$user = get_userdata( $user_id );
+		if ( empty( $user ) ) {
+			return;
+		}
 		$hash = md5( $user->user_login );
 		$global_option = ! is_multisite();
 		/*
