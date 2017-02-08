@@ -203,6 +203,7 @@ class CoursePress_Data_Shortcode_Template {
 			'override_button_link' => '',
 			'button_label' => __( 'Details', 'CP_TD' ),
 			'echo' => false,
+			'show_withdraw_link' => false,
 		), $a, 'course_list_box' );
 
 		$course_id = (int) $a['course_id'];
@@ -219,6 +220,7 @@ class CoursePress_Data_Shortcode_Template {
 		$clickable_text = $clickable ? '<div class="clickable-label">' . $clickable_label . '</div>' : '';
 		$button_label = $a['button_label'];
 		$button_link = $url;
+		$withdraw_from_course = '';
 
 		if ( ! empty( $a['override_button_link'] ) ) {
 			$button_link = $a['override_button_link'];
@@ -233,6 +235,20 @@ class CoursePress_Data_Shortcode_Template {
 		if ( is_user_logged_in() ) {
 			$student_progress = CoursePress_Data_Student::get_completion_data( get_current_user_id(), $course_id );
 			$completed = isset( $student_progress['completion']['completed'] ) && ! empty( $student_progress['completion']['completed'] );
+			/**
+			 * Withdraw from course
+			 */
+			$show_withdraw_link = cp_is_true( $a['show_withdraw_link'] );
+			if ( $show_withdraw_link && ! $completed ) {
+				$withdraw_link = add_query_arg(
+					array(
+						'_wpnonce' => wp_create_nonce( 'coursepress_student_withdraw' ),
+						'course_id' => $course_id,
+						'student_id' => get_current_user_id(),
+					)
+				);
+				$withdraw_from_course = sprintf( '<a href="%s" class="cp-withdraw-student">%s</a>', esc_url( $withdraw_link ), __( 'Withdraw', 'CP_TD' ) );
+			}
 		}
 		$completion_class = CoursePress_Data_Course::course_class( $course_id );
 		$completion_class = implode( ' ', $completion_class );
@@ -261,7 +277,8 @@ class CoursePress_Data_Shortcode_Template {
 					[course_start label="" course_id="' . $course_id . '"]
 					[course_language label="" course_id="' . $course_id . '"]
 					[course_cost label="" course_id="' . $course_id . '"]
-					[course_categories course_id="' . $course_id . '"]
+                    [course_categories course_id="' . $course_id . '"]
+'.$withdraw_from_course.'
 				</div>' .
 					$button_text . $clickable_text . '
 			</div>
@@ -408,24 +425,12 @@ class CoursePress_Data_Shortcode_Template {
 		$echo = cp_is_true( $a['echo'] );
 
 		$template = '<div class="coursepress-dashboard-wrapper">
-			[course_list instructor="' . $user_id . '" dashboard="true"]
-			[course_list facilitator="' . $user_id . '" dashboard="true"]
-			[course_list student="' . $user_id . '" dashboard="true" context="all" current_label=""]
-		</div>
-		';
-
-		$template = '<div class="coursepress-dashboard-wrapper">
 			[course_list instructor="%1$s" dashboard="true"]
 			[course_list facilitator="%1$s" dashboard="true"]
 			[course_list student="%1$s" dashboard="true" current_label="%2$s"]
 		</div>';
 
 		$template = sprintf( $template, $user_id, __( 'Enrolled Courses', 'CP_TD' ) );
-		/*
-		[course_list student="' . $user_id . '" dashboard="true" context="current"]
-			[course_list student="'. $user_id . '" dashboard="true" context="future"]
-			[course_list student="' . $user_id . '" dashboard="true" context="past"]
-		*/
 
 		$template = apply_filters( 'coursepress_template_dashboard_page', $template, $user_id, $a );
 
@@ -1025,7 +1030,7 @@ class CoursePress_Data_Shortcode_Template {
 				break;
 
 			case 'student_dashboard':
-				CoursePress_View_Front_Student::render_student_dashboard_page();
+				CoursePress_View_Front_Student::render_student_dashboard_page( false, $atts );
 				break;
 
 			case 'student_settings':

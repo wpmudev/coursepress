@@ -194,9 +194,11 @@ class CoursePress_Template_Unit {
 
 		// Modules.
 		$module_template = wp_nonce_field( 'coursepress_submit_modules', '_wpnonce', true, false );
-		$module_template .= sprintf( '<input type="hidden" name="course_id" value="%s" />', $course_id );
-		$module_template .= sprintf( '<input type="hidden" name="unit_id" value="%s" />', $unit_id );
-		$module_template .= sprintf( '<input type="hidden" name="student_id" value="%s" />', get_current_user_id() );
+		$module_template .= sprintf( '<input type="hidden" name="page" value="%d" />', $page );
+		$module_template .= sprintf( '<input type="hidden" name="course_id" value="%d" />', $course_id );
+		$module_template .= sprintf( '<input type="hidden" name="unit_id" value="%d" />', $unit_id );
+		$current_user_id = get_current_user_id();
+		$module_template .= sprintf( '<input type="hidden" name="student_id" value="%d" />', $current_user_id );
 
 		foreach ( $modules as $module ) {
 			$preview_modules = array();
@@ -287,7 +289,6 @@ class CoursePress_Template_Unit {
 			} else {
 				$next_page = $page + 1;
 
-
 				if ( $next_page > $total_pages ) {
 					$next_page = false;
 				}
@@ -305,7 +306,6 @@ class CoursePress_Template_Unit {
 				//$format = '<input type="submit" name="next_page" value="%1$s" class="next-button page page-%1$s" />';
 				$unit_pager .= sprintf( $format, $next_page, $next_text );
 			}
-
 		}
 
 		// Next unit.
@@ -417,5 +417,4 @@ class CoursePress_Template_Unit {
 
 		return $content;
 	}
-
 }
