@@ -1507,6 +1507,10 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 							),
 						),
 					),
+					'show_withdraw_link' => array(
+						'content' => __( 'Allow to show withdraw link, but it work only when is a student and status is set on "incomplete".', 'CP_TD' ),
+						'default' => 'false',
+					),
 				),
 			),
 			'examples' => array(
