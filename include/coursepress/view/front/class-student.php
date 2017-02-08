@@ -84,7 +84,7 @@ class CoursePress_View_Front_Student {
 
 	}
 
-	public static function render_student_dashboard_page( $student_id = 0 ) {
+	public static function render_student_dashboard_page( $student_id = 0, $atts = array() ) {
 
 		if ( ! is_user_logged_in() ) {
 			_e( 'You must be logged in in order to complete the action', 'CP_TD' );
@@ -123,6 +123,11 @@ class CoursePress_View_Front_Student {
 			'student_msg' => '',
 			'status' => 'incomplete',
 		);
+
+		if ( ! empty( $atts['show_withdraw_link'] ) && 'yes' == $atts['show_withdraw_link'] ) {
+			$shortcode_attributes['show_withdraw_link'] = 'yes';
+		}
+
 		$shortcode_attributes = apply_filters( 'course_list_page_student_dashsboard', $shortcode_attributes );
 		$shortcode_attributes = CoursePress_Helper_Utility::convert_array_to_params( $shortcode_attributes );
 		$course_list = do_shortcode( '[course_list '.$shortcode_attributes.']' );
