@@ -1887,7 +1887,13 @@ class CoursePress_Data_Student {
 	}
 
 	public static function withdraw_from_course() {
-		if ( ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_student_withdraw' ) ) {
+		/**
+		 * do nothing without critical data
+		 */
+		if ( ! isset( $_REQUEST['course_id'] ) || ! isset( $_REQUEST['student_id'] ) ) {
+			return;
+		}
+		if ( isset( $_REQUEST['_wpnonce'] ) && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress_student_withdraw' ) ) {
 			$course_id = (int) $_REQUEST['course_id'];
 			$student_id = (int) $_REQUEST['student_id'];
 
