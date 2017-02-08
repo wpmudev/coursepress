@@ -997,6 +997,14 @@ input.cp-has-error {
   padding: 0;
   text-align: left;
 }
+.cp .unit-pager .save-progress-and-exit-container {
+  padding-bottom: 1em;
+}
+.cp .unit-pager .save-progress-and-exit-container .save-progress-and-exit {
+  font-size: .9em;
+  opacity: .8;
+  box-shadow: none;
+}
 .cp .prev-button,
 .cp .next-button {
   display: inline-block;

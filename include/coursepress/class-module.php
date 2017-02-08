@@ -235,6 +235,8 @@ class CoursePress_Module {
 			'input-form',
 		);
 
+		$validate = isset( $input['save_progress_and_exit'] )? false : true;
+
 		// Validate the course
 		$error = CoursePress_Data_Course::can_access( $course_id, $unit_id );
 		$can_update_course = CoursePress_Data_Capabilities::can_update_course( $course_id, $student_id );
@@ -257,8 +259,10 @@ class CoursePress_Module {
 
 					if ( 'input-upload' == $module_type ) {
 						if ( false == $can_update_course && empty( $_FILES ) ) {
-							self::$error_message = __( 'You need to complete the required module!', 'CP_TD' );
-							$has_error = true;
+							if ( $validate ) {
+								self::$error_message = __( 'You need to complete the required module!', 'CP_TD' );
+								$has_error = true;
+							}
 						}
 						continue; // Upload validation is at the bottom
 					}
@@ -301,8 +305,10 @@ class CoursePress_Module {
 						if ( ! isset( $module[ $module_id ] ) || '' === ( $module[ $module_id ] ) ) {
 							// Check if module is mandatory
 							if ( $is_mandatory && false == $can_update_course ) {
-								self::$error_message = __( 'You need to complete the required module!', 'CP_TD' );
-								$has_error = true;
+								if ( $validate ) {
+									self::$error_message = __( 'You need to complete the required module!', 'CP_TD' );
+									$has_error = true;
+								}
 							}
 							continue;
 						} else {
@@ -379,8 +385,10 @@ class CoursePress_Module {
 					if ( true === $required && false == $can_update_course ) {
 						if ( empty( $filename ) ) {
 							if ( empty( $response ) ) {
-								self::$error_message = __( 'You need to complete the required module!', 'CP_TD' );
-								$has_error = true;
+								if ( $validate ) {
+									self::$error_message = __( 'You need to complete the required module!', 'CP_TD' );
+									$has_error = true;
+								}
 								continue;
 							} else {
 								// There's an old submission, exclude!
@@ -442,6 +450,7 @@ class CoursePress_Module {
 			$next = CoursePress_Data_Course::get_next_accessible_module( $course_id, $unit_id, $page, $module_id );
 
 			if ( $via_ajax ) {
+
 				$item_id = $next['id'];
 				$reload = false;
 
@@ -464,6 +473,19 @@ class CoursePress_Module {
 					}
 				}
 				$type = 'completion_page' == $next['id'] ? 'completion' : $next['type'];
+
+				/**
+				 * Save last seen unit and page.
+				 */
+				if ( isset( $input['save_progress_and_exit'] ) ) {
+					$meta_key = CoursePress_Data_Course::get_last_seen_unit_meta_key( $course_id );
+					$meta_value = array(
+						'unit_id' => isset( $input['unit_id'] )? $input['unit_id'] : false,
+						'page' => isset( $input['page'] )? $input['page'] : 1,
+					);
+					update_user_meta( $student_id, $meta_key, $meta_value );
+					$next['url'] = CoursePress_Data_Course::get_course_url( $course_id );
+				}
 
 				$json_data = array(
 					'success' => true,

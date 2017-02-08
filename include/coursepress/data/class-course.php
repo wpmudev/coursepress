@@ -3540,4 +3540,16 @@ class CoursePress_Data_Course {
 		$number_of_courses = self::count_courses();
 		return 0 < $number_of_courses;
 	}
+
+	/**
+	 * Get meta name "last seen unit".
+	 *
+	 * @since 2.0.4
+	 * @param integer $course_id Course ID
+	 *
+	 * @return string
+	 */
+	public static function get_last_seen_unit_meta_key( $course_id ) {
+		return sprintf( 'course_%s_last_seen_unit', $course_id );
+	}
 }
