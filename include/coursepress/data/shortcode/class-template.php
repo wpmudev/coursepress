@@ -1030,7 +1030,7 @@ class CoursePress_Data_Shortcode_Template {
 				break;
 
 			case 'student_dashboard':
-				CoursePress_View_Front_Student::render_student_dashboard_page();
+				CoursePress_View_Front_Student::render_student_dashboard_page( false, $atts );
 				break;
 
 			case 'student_settings':
