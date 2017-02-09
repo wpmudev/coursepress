@@ -517,7 +517,7 @@ class CoursePress_Data_Shortcode_Template {
 		if ( 'section' === $type ) {
 			$page = $item_id;
 
-			if ( CoursePress_Data_Course::get_setting( $course_id, 'focus_hide_section', true ) ) {
+			if ( CoursePress_Data_Course::get_setting( $course_id, 'focus_hide_section', false ) ) {
 				$next_modules = CoursePress_Data_Course::get_unit_modules(
 					$unit_id,
 					array( 'publish' ),
@@ -960,19 +960,6 @@ class CoursePress_Data_Shortcode_Template {
 					isset( $button['url'] )? esc_url( $button['url'] ) : '',
 					isset( $button['course_id'] )?  $button['course_id'] : 0
 				);
-				/*
-				$res = sprintf(
-					'<button type="button" class="button %5$s" data-course="%8$s" data-id="%1$s" data-type="%2$s" data-unit="%4$s" data-title="%6$s" data-url="%7$s"><a href="%7$s" title="%6$s">%3$s</a></button>',
-					esc_attr( $button['id'] ),
-					esc_attr( $button['type'] ),
-					$title,
-					esc_attr( $button['unit'] ),
-					esc_attr( $classes ),
-					esc_attr( $link_title ),
-					esc_url( $button['url'] ),
-					$button['course_id']
-				);
-				*/
 			}
 		} else {
 			$res = sprintf(
