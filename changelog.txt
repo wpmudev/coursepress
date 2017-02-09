@@ -9,34 +9,34 @@ CHANGELOG
 -------------------------------------------------
 * Added ability to enroll, when we use course_join_button, but we are not logged.
 * Added sanitization of course id in "course_join_button" shortcode.
-* Fixed a bug related to the inability to disable CoursePress login form.
+* Added ability to save course state and exit.
+* Added filter "coursepress_unit_add_open_date" to allow display open unit date.
+* Added auto-creating missing directories for PDF certificates.
+* Added ability to show "Withdraw" link on [cp_pages page="student_dashboard"].
+* Added fields "Display Name", "Email" and "Registered" to "Student Profile" page.
+* Added "Edit user" link on "Student Profile" page.
+* Improved time count method for modules, pages and units.
 * Improved login/signup popups for small screens.
+* Improved integration with WooCommerce - when we change order status from completed to another status, a student will be withdrawn from the ordered courses.
+* Limiting facilitator role, from now on it can only edit allowed courses.
+* Improved the appearance of buttons on course frontend page.
+* Improved "My Profile" screen.
+* Delete related course data from usermeta table when deleting a course.
+* Improve "Student Profile" screen by adding nonce check, to avoid any profile display.
+* Improve login and signup screens for small screens.
+* Fixed a problem with wrong courses on [cp_pages page="student_dashboard"].
+* Fixed a "60 seconds" bug - when module uses a timer, there was no chance to show different amount of seconds then "60".
+* Fixed a bug with the sum of time for pages and units on course edit page.
+* Fixed a bug related to the inability to disable CoursePress login form.
 * Fixed a bug with previewing units & modules.
 * Fixed a problem with "Manage Course" button.
-* Improved integration with WooCommerce - when we change order status from completed to another status, a student will be withdrawn from the ordered courses.
 * Fixed a problem with access to CoursePress menu for instructors.
 * Fixed a problem with enrolling students using MarketPress.
 * Fixed a problem with sections pagination when course is in normal mode.
 * Fixed untranslated texts.
 * Fixed a bug with ability to approve comments to discussions.
-* Limiting facilitator role, from now on it can only edit allowed courses.
-* Added filter "coursepress_unit_add_open_date" to allow display open unit date.
-* Added auto-creating missing directories for PDF certificates.
-* Fixed a problem with wrong courses on [cp_pages page="student_dashboard"].
-* Standardizing the appearance of buttons on course frontend page.
-* Added ability to show "Withdraw" link on [cp_pages page="student_dashboard"].
-* Improved "My Profile" screen.
 * Fixed a bug when user can enroll in the course without paying to paid course.
 * Fixed a bug with combination when we do not have required modules, but we check "User needs to answer all required[...]".
-* Delete related course data from usermeta table when deleting a course.
-* Added fields "Display Name", "Email" and "Registered" to "Student Profile" page.
-* Added "Edit user" link on "Student Profile" page.
-* Improve "Student Profile" screen by adding nonce check, to avoid any profile display.
-* Improve login and signup screens for small screens.
-* Added ability to save course state and exit.
-* Fixed a "60 seconds" bug - when module uses a timer, there was no chance to show different amount of seconds then "60".
-* Fixed a bug with the sum of time for pages and units on course edit page.
-* Improved time count method for modules, pages and units.
 
 = 2.0.3 =
 -------------------------------------------------
