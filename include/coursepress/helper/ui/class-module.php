@@ -985,7 +985,7 @@ class CoursePress_Helper_UI_Module {
 					"components": [
 						{
 							"label": "' . __( 'Form elements', 'CP_TD' ) . '",
-							"description": "' . __( 'Add all the elements for your form here', 'CP_TD' ) .,'",
+							"description": "' . __( 'Add all the elements for your form here', 'CP_TD' ) . '",
 							"class": "wide",
 							"items": [
 								{
@@ -1002,7 +1002,7 @@ class CoursePress_Helper_UI_Module {
 									"type": "action",
 									"class": "form-action-button selectable wide",
 									"action": "selectable"
-								}								
+								}
 							]
 						},
 						{
