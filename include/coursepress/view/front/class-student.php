@@ -243,51 +243,19 @@ class CoursePress_View_Front_Student {
 	<?php do_action( 'coursepress_before_settings_form' ); ?>
 	<form id="student-settings" name="student-settings" method="post" class="student-settings">
 	<?php wp_nonce_field( 'student_settings_save', 'student_settings_nonce' ); ?>
-	<label>
-		<?php _e( 'First Name', 'CP_TD' ); ?>:
-		<input type="text" name="first_name" value="<?php esc_attr_e( $student->user_firstname ); ?>"/>
-	</label>
+	<p><label><?php _e( 'First Name', 'CP_TD' ); ?>: <input type="text" name="first_name" value="<?php esc_attr_e( $student->user_firstname ); ?>"/></label></p><?php do_action( 'coursepress_after_settings_first_name' ); ?>
 
-	<?php do_action( 'coursepress_after_settings_first_name' ); ?>
+	<p><label><?php _e( 'Last Name', 'CP_TD' ); ?>: <input type="text" name="last_name" value="<?php esc_attr_e( $student->user_lastname ); ?>"/></label></p><?php do_action( 'coursepress_after_settings_last_name' ); ?>
 
-	<label>
-		<?php _e( 'Last Name', 'CP_TD' ); ?>:
-		<input type="text" name="last_name" value="<?php esc_attr_e( $student->user_lastname ); ?>"/>
-	</label>
+	<p><label><?php _e( 'E-mail', 'CP_TD' ); ?>: <input type="text" name="email" value="<?php esc_attr_e( $student->user_email ); ?>"/></label></p><?php do_action( 'coursepress_after_settings_email' ); ?>
 
-	<?php do_action( 'coursepress_after_settings_last_name' ); ?>
+	<p><label><?php _e( 'Username', 'CP_TD' ); ?>: <input type="text" name="username" value="<?php esc_attr_e( $student->user_login ); ?>" disabled="disabled"/> </label></p><?php do_action( 'coursepress_after_settings_username' ); ?>
 
-	<label>
-		<?php _e( 'E-mail', 'CP_TD' ); ?>:
-		<input type="text" name="email" value="<?php esc_attr_e( $student->user_email ); ?>"/>
-	</label>
+	<p><label><?php _e( 'Password', 'CP_TD' ); ?>: <input type="password" name="password" value="" placeholder="<?php _e( "Won't change if empty.", 'CP_TD' ); ?>"/> </label></p><?php do_action( 'coursepress_after_settings_passwordon' ); ?>
 
-	<?php do_action( 'coursepress_after_settings_email' ); ?>
+	<p><label><?php _e( 'Confirm Password', 'CP_TD' ); ?>: <input type="password" name="password_confirmation" value=""/> </label></p><?php do_action( 'coursepress_after_settings_pasword' ); ?>
 
-	<label>
-		<?php _e( 'Username', 'CP_TD' ); ?>:
-		<input type="text" name="username" value="<?php esc_attr_e( $student->user_login ); ?>" disabled="disabled"/>
-	</label>
-
-	<?php do_action( 'coursepress_after_settings_username' ); ?>
-
-	<label>
-		<?php _e( 'Password', 'CP_TD' ); ?>:
-		<input type="password" name="password" value="" placeholder="<?php _e( "Won't change if empty.", 'CP_TD' ); ?>"/>
-	</label>
-
-	<?php do_action( 'coursepress_after_settings_passwordon' ); ?>
-
-	<label>
-		<?php _e( 'Confirm Password', 'CP_TD' ); ?>:
-		<input type="password" name="password_confirmation" value=""/>
-	</label>
-
-	<?php do_action( 'coursepress_after_settings_pasword' ); ?>
-
-	<label class="full">
-		<input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php _e( 'Save Changes', 'CP_TD' ); ?>"/>
-	</label>
+<input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php _e( 'Save Changes', 'CP_TD' ); ?>"/>
 	</form><?php
 		do_action( 'coursepress_after_settings_form' );
 	}
