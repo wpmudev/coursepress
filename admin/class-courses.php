@@ -228,6 +228,7 @@ class CoursePress_Admin_Courses {
 		$actions = array();
 
 		$edit_link = get_edit_post_link( $course->ID );
+
 		$published = 'publish' == $course->post_status;
 		$course_url = CoursePress_Data_Course::get_course_url( $course->ID );
 		$can_update = false;
@@ -239,11 +240,13 @@ class CoursePress_Admin_Courses {
 
 			if ( 'trash' != $course->post_status ) {
 				// Add edit link
-				$actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_link ), __( 'Edit', 'CP_TD' ) );
-				$edit_units = add_query_arg( 'tab', 'units', $edit_link );
-				$edit_students = add_query_arg( 'tab', 'students', $edit_link );
-				$actions['units'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_units ), __( 'Units', 'CP_TD' ) );
-				$actions['students'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_students ), __( 'Students', 'CP_TD' ) );
+				if ( ! empty( $edit_link ) ) {
+					$actions['edit'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_link ), __( 'Edit', 'CP_TD' ) );
+					$edit_units = add_query_arg( 'tab', 'units', $edit_link );
+					$edit_students = add_query_arg( 'tab', 'students', $edit_link );
+					$actions['units'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_units ), __( 'Units', 'CP_TD' ) );
+					$actions['students'] = sprintf( '<a href="%s">%s</a>', esc_url( $edit_students ), __( 'Students', 'CP_TD' ) );
+				}
 
 				/**
 				 * single course export
@@ -336,13 +339,13 @@ class CoursePress_Admin_Courses {
 		?>
 		<script type="text/html" id="tmpl-coursepress-courses-delete-one">
 				<div class="notice notice-warning">
-					<p><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span> <?php _e( sprintf( 'Deleting course %s, please wait!', '<b>{{{data.names}}}</b>' ), 'CP_TD' ); ?></p>
+					<p><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span> <?php printf( __( 'Deleting course <b>%s</b>, please wait!', 'CP_TD' ), '{{{data.names}}}' ); ?></p>
 					<p><?php _e( 'This page will be reloaded shortly.', 'CP_TD' ); ?></p>
 				</div>
 			</script>
 			<script type="text/html" id="tmpl-coursepress-courses-delete-more">
 				<div class="notice notice-warning">
-					<p><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span><?php _e( __( 'Deleting %s courses, please wait!', '{{{data.size}}}' ), 'CP_TD' ); ?></p>
+					<p><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span><?php printf( __( 'Deleting %s courses, please wait!', 'CP_TD' ), '{{{data.size}}}' ); ?></p>
 					<p><?php _e( 'This page will be reloaded shortly.', 'CP_TD' ); ?></p>
 					<p><?php _e( 'Deleted courses:', 'CP_TD' ) ?></p>
 					{{{data.names}}}
@@ -350,7 +353,7 @@ class CoursePress_Admin_Courses {
 			</script>
 			<script type="text/html" id="tmpl-coursepress-courses-duplicate">
 				<div class="notice notice-warning">
-					<p><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span> <?php _e( __( 'Duplicating course %s, please wait!', '<b>{{{data.names}}}</b>' ), 'CP_TD' ); ?></p>
+					<p><span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span> <?php printf( __( 'Duplicating course <b>%s</b>, please wait!', 'CP_TD' ), '{{{data.names}}}' ); ?></p>
 					<p><?php _e( 'This page will be reloaded shortly.', 'CP_TD' ); ?></p>
 				</div>
 			</script>
