@@ -7,7 +7,8 @@ CHANGELOG
 
 = 2.0.4 =
 -------------------------------------------------
-* Fixed problem with deletein section on courses edit page.
+* Fixed problem with deleting section on courses edit page.
+* Improve module order recalculate, when we deleting a section.
 * Added ability to enroll, when we use course_join_button, but we are not logged.
 * Added sanitization of course id in "course_join_button" shortcode.
 * Fixed a bug related to the inability to disable CoursePress login form.
