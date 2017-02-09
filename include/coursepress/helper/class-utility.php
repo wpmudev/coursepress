@@ -1207,8 +1207,11 @@ class CoursePress_Helper_Utility {
 				wp_safe_redirect( admin_url() );
 				exit;
 			}
+
 			if ( isset( $_POST['redirect_url'] ) ) {
 				wp_safe_redirect( urldecode( esc_url_raw( $_POST['redirect_url'] ) ) );
+			} else if ( isset( $_POST['redirect_to'] ) ) {
+				wp_safe_redirect( urldecode( esc_url_raw( $_POST['redirect_to'] ) ) );
 			} else {
 				wp_redirect( esc_url_raw( CoursePress_Core::get_slug( 'student_dashboard', true ) ) );
 			}

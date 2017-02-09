@@ -1495,6 +1495,13 @@ class CoursePress_Data_Shortcode_Template {
 				do_action( 'coursepress_form_fields' );
 				$content .= ob_get_clean();
 
+				$redirect_to = CoursePress_Core::get_slug( 'student_dashboard', true );
+				if ( isset( $_REQUEST['redirect_to'] ) && isset( $_REQUEST['_wpnonce'] ) ) {
+					if ( wp_verify_nonce( $_REQUEST['_wpnonce'], 'redirect_to' ) ) {
+						$redirect_to = $_REQUEST['redirect_to'];
+					}
+				}
+
 				$content .= '
 						<label class="signup-link full">
 						' . ( CoursePress_Helper_Utility::users_can_register() ? sprintf( __( 'Don\'t have an account? %s%s%s now!', 'CP_TD' ), '<a href="' . $signup_url . '">', __( 'Create an Account', 'CP_TD' ), '</a>' ) : '' ) . '
@@ -1505,7 +1512,7 @@ class CoursePress_Data_Shortcode_Template {
 						<label class="submit-link half-right">
 							<input type="submit" name="wp-submit" id="wp-submit" class="apply-button-enrolled" value="' . esc_attr__( 'Log In', 'CP_TD' ) . '"><br>
 						</label>
-						<input name="redirect_to" value="' . esc_url( CoursePress_Core::get_slug( 'student_dashboard', true ) ) . '" type="hidden">
+						<input name="redirect_to" value="' . esc_url( $redirect_to ) . '" type="hidden">
 						<input name="testcookie" value="1" type="hidden">
 						<input name="course_signup_login" value="1" type="hidden">
 				';
