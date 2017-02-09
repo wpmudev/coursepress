@@ -1106,4 +1106,47 @@ class CoursePress_Data_Module {
 		$modules = new WP_Query( $args );
 		return $modules->posts;
 	}
+
+	/**
+	 * Check free preview of module.
+	 *
+	 * @since 2.0.4
+	 *
+	 * @param integer $module_id Module ID.
+	 * @return boolean Is free preview available for this module?
+	 */
+	public static function can_be_previewed( $module_id ) {
+		global $wp;
+		$page_id = 0;
+		if ( isset( $wp->query_vars['paged'] ) ) {
+			$page_id = $wp->query_vars['paged'];
+		}
+		if ( empty( $page_id ) ) {
+			return false;
+		}
+		$unit_id = self::get_unit_id_by_module( $module_id );
+		if ( empty( $unit_id ) ) {
+			return false;
+		}
+		$course_id = self::get_course_id_by_module( $module_id );
+		if ( empty( $course_id ) ) {
+			return false;
+		}
+		$preview = CoursePress_Data_Course::previewability( $course_id );
+		if (
+			! empty( $preview )
+			&& is_array( $preview )
+			&& isset( $preview['structure'] )
+			&& is_array( $preview['structure'] )
+			&& isset( $preview['structure'][ $unit_id ] )
+			&& is_array( $preview['structure'][ $unit_id ] )
+			&& isset( $preview['structure'][ $unit_id ][ $page_id ] )
+			&& is_array( $preview['structure'][ $unit_id ][ $page_id ] )
+			&& isset( $preview['structure'][ $unit_id ][ $page_id ][ $module_id ] )
+			&& cp_is_true( $preview['structure'][ $unit_id ][ $page_id ][ $module_id ] )
+		) {
+			return true;
+		}
+		return false;
+	}
 }

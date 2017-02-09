@@ -522,6 +522,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$title = ! empty( $label ) ? '<h3 class="section-title">' . esc_html( $label ) . '</h3>' : $label;
 		$class = sanitize_html_class( $class );
 		$deep = cp_is_true( sanitize_text_field( $deep ) );
+		$view_mode = CoursePress_Data_Course::get_setting( $course_id, 'course_view', 'normal' );
 		$with_modules = false;
 		$counter = 0;
 
@@ -654,7 +655,15 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			);
 			$content .= '<div class="unit-title">' . $unit_title . '</div>';
 
-			if ( $free_show && ! $enrolled && ! empty( $preview['structure'][ $unit_id ] ) && ! is_array( $preview['structure'][ $unit_id ] ) ) {
+			$show_structure = false;
+
+			if (
+				$free_show
+				&& isset( $preview['structure'][ $unit_id ] )
+				&& is_array( $preview['structure'][ $unit_id ] )
+				&& isset( $preview['structure'][ $unit_id ]['unit_has_previews'] )
+				&& cp_is_true( $preview['structure'][ $unit_id ]['unit_has_previews'] )
+			) {
 				if ( empty( $last_unit ) ) {
 					$unit_available = true;
 				} else {
@@ -662,11 +671,19 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				}
 				if ( $unit_available ) {
 					$content .= '<div class="unit-link"><a href="' . esc_url( $unit_link ) . '">' . $free_text . '</a></div>';
+					$show_structure = true;
 				}
 			}
 			$content .= '</div>';
 
-			if ( ( ! $can_update_course && $is_unit_only ) || ( ! $is_unit_available && ! $can_update_course ) || ( ! $clickable && ! $can_update_course ) ) {
+			if (
+				! $show_structure
+				&& (
+					( ! $can_update_course && $is_unit_only )
+					|| ( ! $is_unit_available && ! $can_update_course )
+					|| ( ! $clickable && ! $can_update_course )
+				)
+			) {
 				continue;
 			}
 
@@ -674,7 +691,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				$unit['pages'] = array();
 			}
 
-			if ( false === $enrolled && false === $can_update_course ) {
+			if ( ! $show_structure && false === $enrolled && false === $can_update_course ) {
 				continue;
 			}
 
@@ -686,6 +703,20 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 				// Hide pages if it is not set as visible
 				$show_page = CoursePress_Data_Unit::is_page_structure_visible( $course_id, $unit_id, $key, $student_id );
+
+				if ( false === $enrolled && false === $can_update_course ) {
+					if (
+						! isset( $preview['structure'][ $unit_id ] )
+						|| ! is_array( $preview['structure'][ $unit_id ] )
+						|| ! isset( $preview['structure'][ $unit_id ][ $key ] )
+						|| ! is_array( $preview['structure'][ $unit_id ][ $key ] )
+						|| ! isset( $preview['structure'][ $unit_id ][ $key ]['page_has_previews'] )
+						|| ! cp_is_true( $preview['structure'][ $unit_id ][ $key ]['page_has_previews'] )
+					) {
+						continue;
+					}
+				}
+
 				//	if ( empty( $show_page ) ) { continue; }
 
 				$count += 1;
@@ -813,7 +844,8 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 							$module_title = sprintf( '<span>%s</span>', $module->post_title );
 						}
 
-						if ( $free_show && ! $enrolled && ! empty( $preview['structure'][ $unit_id ] ) && ! empty( $preview['structure'][ $unit_id ][ $key ] ) && ! empty( $preview['structure'][ $unit_id ][ $key ][ $m_key ] ) ) {
+						if ( 'focus' == $view_mode && $free_show && ! $enrolled && ! empty( $preview['structure'][ $unit_id ] ) && ! empty( $preview['structure'][ $unit_id ][ $key ] ) && ! empty( $preview['structure'][ $unit_id ][ $key ][ $m_key ] ) ) {
+							$module_link = preg_replace( '/#module-/', '/module_id/', $module_link );
 							$list_content .= '<div class="unit-module-preview-link"><a href="' . esc_url( $module_link ) . '">' . $free_text . '</a></div>';
 						}
 
@@ -1690,9 +1722,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				}
 			} else {
 				foreach ( $courses as $course ) {
-					$edit_page = CoursePress_View_Admin_Course_Edit::$slug;
-					$query = sprintf( '?page=%s&action=%s&id=%s', esc_attr( $edit_page ), 'edit', absint( $course->ID ) );
-					$course_url = admin_url( 'admin.php' . $query );
+					$course_url = get_edit_post_link( $course->ID );
 					$content .= do_shortcode( '[course_list_box course_id="' . $course->ID . '" override_button_text="' . esc_attr__( 'Manage Course', 'CP_TD' ) . '" override_button_link="' . esc_url( $course_url ) . '"]' );
 					$counter += 1;
 				}
