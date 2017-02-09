@@ -485,7 +485,7 @@ $(document)
 		duration = duration.split( ':' );
 
 		seconds = duration.pop();
-		seconds = parseInt( seconds );
+		_seconds = seconds = parseInt( seconds );
 
 		if ( duration.length > 0 ) {
 			_minutes = minutes = duration.pop();
@@ -613,7 +613,7 @@ $(document)
 			//Find current unit serve
 			var current_unit = parents.find( '[name="unit_id"]' );
 
-			if ( 0 == current_unit.length || data.unit != current_unit.val() ) {
+			if ( 0 === current_unit.length || data.unit !== current_unit.val() ) {
 				window.location = data.url;
 				return;
 			}
@@ -1664,11 +1664,24 @@ $(document)
 				window.location = href;
 			}
 		});
+		return false;
+	};
+
+	var confirmManage= function() {
+		var href = $(this).data( 'link' ),
+			win = new CoursePress.WindowAlert({
+			type: 'prompt',
+			message: _coursepress.confirmed_edit,
+			callback: function() {
+				window.location = href;
+			}
+		});
 
 		return false;
 	};
 
 	$(document)
-		.on( 'click', '.cp-withdraw-student', confirmWithdrawal );
+		.on( 'click', '.cp-withdraw-student', confirmWithdrawal )
+		.on( 'click', '.coursepress-course-link', confirmManage );
 
 })(jQuery);

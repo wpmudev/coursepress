@@ -89,7 +89,7 @@ class Coursepress_Data_Module_Test extends CoursePress_UnitTestCase {
 		$values = $this->get_wrong_values();
 		foreach ( $values as $value ) {
 			$assert = CoursePress_Data_Module::get_time_estimation( $value );
-			$this->assertEquals( '1:00', $assert );
+			$this->assertEmpty($assert );
 		}
 		/**
 		 * Good data
@@ -97,7 +97,7 @@ class Coursepress_Data_Module_Test extends CoursePress_UnitTestCase {
 		$modules = $this->get_modules();
 		foreach ( $modules as $module ) {
 			$assert = CoursePress_Data_Module::get_time_estimation( $module->ID );
-			$this->assertEquals( '1:00', $assert );
+			$this->assertEmpty( $assert );
 		}
 	}
 
