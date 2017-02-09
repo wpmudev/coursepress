@@ -670,47 +670,45 @@ $(document)
 			module_elements = $( '.module-elements[data-required="1"]', form ),
 			module_response = module_elements.next( '.module-response' ),
 			is_focus = form.parents( '.coursepress-focus-view' ).length > 0,
-			error = 0, mask
+			error = 0, mask,
+            validate = $('[name=save_progress_and_exit]').length < 1
 		;
-
 		if ( 0 < error_box.length ) {
 			error_box.remove();
 		}
 
 		// Validate required submission
-		module_elements.each( function() {
-			var module = $(this),
+		if ( validate ) {
+			module_elements.each( function() {
+				var module = $(this),
 				module_type = module.data( 'type' ),
 				input;
-
-			// Validate radio and checkbox
-			if ( _.contains( ['input-checkbox', 'input-radio', 'input-quiz'], module_type ) ) {
-				input = $( ':checked', module );
-
-				if ( 0 == input.length ) {
-					error += 1;
+				// Validate radio and checkbox
+				if ( _.contains( ['input-checkbox', 'input-radio', 'input-quiz'], module_type ) ) {
+					input = $( ':checked', module );
+					if ( 0 == input.length ) {
+						error += 1;
+					}
+				} else if ( 'input-upload' === module_type && 0 === module_response.length ) {
+					input = $( '[type="file"]', module );
+					if ( '' === input.val() ) {
+						error += 1;
+					}
+					// Validate input module
+				} else if ( _.contains( ['input-text', 'input-textarea', 'input-select'], module_type ) ) {
+					input = $( 'input,textarea,select', module );
+					if ( '' === input.val() ) {
+						error += 1;
+					}
 				}
-			} else if ( 'input-upload' === module_type && 0 === module_response.length ) {
-				input = $( '[type="file"]', module );
-				if ( '' === input.val() ) {
-					error += 1;
-				}
-			// Validate input module
-			} else if ( _.contains( ['input-text', 'input-textarea', 'input-select'], module_type ) ) {
-				input = $( 'input,textarea,select', module );
-				if ( '' === input.val() ) {
-					error += 1;
-				}
+			} );
+			if ( error > 0 ) {
+				// Don't submit if an error is found!
+				new CoursePress.WindowAlert({
+					message: _coursepress.module_error[ is_focus ? 'required' : 'normal_required' ]
+				});
+				return false;
 			}
-		} );
-
-		if ( error > 0 ) {
-			// Don't submit if an error is found!
-			new CoursePress.WindowAlert({
-				message: _coursepress.module_error[ is_focus ? 'required' : 'normal_required' ]
-			});
-
-			return false;
 		}
 
 		// Mask the page
@@ -993,6 +991,15 @@ $(document)
 			}
 	};
 
+	/**
+	 * Save Progress & Exit
+	 */
+	CoursePress.saveProgressAndExit = function() {
+		var form = $(this).closest('form');
+		form.append( '<input type="hidden" name="save_progress_and_exit" value="1" />' );
+		form.submit();
+	}
+
 	$( document )
 		.ready(function(){
 			CoursePress.timer( $('.cp-module-content' ) );
@@ -1004,7 +1011,9 @@ $(document)
 		.on( 'click', '.cp-comment-submit', CoursePress.addComment )
 		.on( 'change', '.cp-module-content .file input', CoursePress.validateUploadModule )
 		.on( 'click', '.unit-archive-single .fold', CoursePress.singleFolded )
-		.on( 'click', '.course-structure-block .unit .fold, .unit-archive-list .fold', CoursePress.unitFolded );
+		.on( 'click', '.course-structure-block .unit .fold, .unit-archive-list .fold', CoursePress.unitFolded )
+		.on( 'click', '.save-progress-and-exit', CoursePress.saveProgressAndExit );
+
 
 })(jQuery);
 
