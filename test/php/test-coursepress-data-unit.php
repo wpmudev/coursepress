@@ -98,7 +98,7 @@ class CoursePress_Data_Unit_Test extends CoursePress_UnitTestCase {
 			$this->has_keys( $keys, $assert );
 			$this->assertRegExp( '/\d\d:\d\d:\d\d/', $assert['unit']['estimation'] );
 			$this->assertEquals( 0, $assert['unit']['components']['hours'] );
-			$this->assertEquals( $time, $assert['unit']['components']['minutes'] );
+			$this->assertEquals( 0, $assert['unit']['components']['minutes'] );
 			$this->assertEquals( 0, $assert['unit']['components']['seconds'] );
 		}
 	}

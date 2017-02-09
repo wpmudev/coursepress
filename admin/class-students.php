@@ -115,9 +115,12 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Controller_Menu {
 			$this->slug = 'student-' . $view;
 
 			if ( 'profile' == $view ) {
-				$student_id = (int) $_GET['student_id'];
-				$this->enrolled_courses = new CoursePress_Admin_Table_Courses( $student_id );
-				$this->enrolled_courses->prepare_items();
+				$student_id = isset( $_GET['student_id'] ) ? intval( $_GET['student_id'] ) : 0;
+				$nonce_verify = self::view_profile_verify_nonce( $student_id );
+				if ( $nonce_verify ) {
+					$this->enrolled_courses = new CoursePress_Admin_Table_Courses( $student_id );
+					$this->enrolled_courses->prepare_items();
+				}
 			}
 		}
 	}
@@ -361,5 +364,41 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Controller_Menu {
 		array_push( $columns, 'user_id' );
 		array_push( $columns, 'courses_list' );
 		return $columns;
+	}
+
+	/**
+	 * Create view profile nonce base on user email.
+	 *
+	 * @since 2.0.4
+	 *
+	 * @param mixed $user WP_User object or user ID.
+	 * @return string Nounce action.
+	 */
+	public static function get_view_profile_nonce_action( $user ) {
+		$action = 'view_profile:';
+		$email = '';
+		if ( ! is_a( $user, 'WP_User' ) ) {
+			$user = get_userdata( $user );
+		}
+		if ( is_a( $user, 'WP_User' ) ) {
+			$action .= $user->user_email;
+		}
+		return $action;
+	}
+
+	/**
+	 * Check view profile nonce base on user email.
+	 *
+	 * @since 2.0.4
+	 *
+	 * @param mixed $user WP_User object or user ID.
+	 * @return boolean Is a proper nonce or not?
+	 */
+	public static function view_profile_verify_nonce( $user ) {
+		$action = self::get_view_profile_nonce_action( $user );
+		if ( isset( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], $action ) ) {
+			return true;
+		}
+		return false;
 	}
 }
