@@ -485,7 +485,7 @@ $(document)
 		duration = duration.split( ':' );
 
 		seconds = duration.pop();
-		seconds = parseInt( seconds );
+		_seconds = seconds = parseInt( seconds );
 
 		if ( duration.length > 0 ) {
 			_minutes = minutes = duration.pop();
