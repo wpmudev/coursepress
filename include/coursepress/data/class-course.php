@@ -2171,7 +2171,7 @@ class CoursePress_Data_Course {
 					$items[] = array(
 						'id' => $module,
 						'type' => 'module',
-						'section' => $section,
+						'section' => isset( $section )? $section : null,
 						'unit' => $unit,
 					);
 				}
