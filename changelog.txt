@@ -20,6 +20,7 @@ CHANGELOG
 * Added ability to show "Withdraw" link on [cp_pages page="student_dashboard"].
 * Improved "My Profile" screen.
 * Fixed a bug when user can enroll in the course without paying to paid course.
+* Delete related course data from usermeta table when deleting a course.
 * Added fields "Display Name", "Email" and "Registered" to "Student Profile" page.
 * Added "Edit user" link on "Student Profile" page.
 * Improve "Student Profile" screen by adding nonce check, to avoid any profile display.
