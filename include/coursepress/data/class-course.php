@@ -3582,6 +3582,10 @@ class CoursePress_Data_Course {
 	 * @since 2.0.0
 	 */
 	public static function is_limit_reach() {
+		/**
+		 * from 2.0.4 free version has no limit!
+		 */
+		return false;
 		$is_pro = defined( 'CP_IS_PREMIUM' ) && CP_IS_PREMIUM;
 		if ( $is_pro ) {
 			return false;
@@ -3597,5 +3601,17 @@ class CoursePress_Data_Course {
 		}
 		$number_of_courses = self::count_courses();
 		return 0 < $number_of_courses;
+	}
+
+	/**
+	 * Get meta name "last seen unit".
+	 *
+	 * @since 2.0.4
+	 * @param integer $course_id Course ID
+	 *
+	 * @return string
+	 */
+	public static function get_last_seen_unit_meta_key( $course_id ) {
+		return sprintf( 'course_%s_last_seen_unit', $course_id );
 	}
 }

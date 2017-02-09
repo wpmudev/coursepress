@@ -256,6 +256,14 @@
 		clear: both;
 		padding: 0;
 		text-align: left;
+		.save-progress-and-exit-container {
+			padding-bottom: 1em;
+			.save-progress-and-exit {
+				font-size: .9em;
+				opacity: .8;
+				box-shadow: none;
+			}
+		}
 	}
 	.prev-button,
 	.next-button {
