@@ -16,7 +16,7 @@ class CoursePress_Data_Course {
 	private static $current = array();
 
 	public static function get_format() {
-		return array(
+	    $register_post_type_array = array(
 			'post_type' => self::get_post_type_name(),
 			'post_args' => array(
 				'labels' => array(
@@ -51,6 +51,7 @@ class CoursePress_Data_Course {
 					'delete_others_posts' => 'coursepress_delete_course_cap',
 					'delete_published_posts' => 'coursepress_delete_course_cap',
 					'publish_posts' => 'coursepress_change_course_status_cap',
+					'create_posts' => 'coursepress_create_course_cap',
 				),
 				'query_var' => true,
 				'rewrite' => array(
@@ -63,6 +64,59 @@ class CoursePress_Data_Course {
 				'menu_icon' => CoursePress::$url . 'asset/img/coursepress-icon.png',
 			),
 		);
+		/**
+		 * check is logged?
+		 */
+		if ( ! is_user_logged_in() ) {
+			return $register_post_type_array;
+		}
+		/**
+		 * [...] One Ring to rule them all, One Ring to find them,
+		 * One Ring to bring them all and in the darkness bind them [...]
+		 */
+		if ( current_user_can( 'manage_options' ) ) {
+			return $register_post_type_array;
+		}
+		/**
+		 * is an instructor?
+		 */
+		$user_id = get_current_user_id();
+		$courses = CoursePress_Data_Instructor::count_courses( $user_id );
+		if ( empty( $courses ) ) {
+			return $register_post_type_array;
+		}
+		/**
+		 * get instructor capabilities
+		 */
+		$instructor_capabilities = CoursePress_Core::get_setting( 'instructor/capabilities' );
+		/**
+		 * check has access to courses submenu
+		 */
+		if ( ! isset( $instructor_capabilities['coursepress_courses_cap'] ) || empty( $instructor_capabilities['coursepress_courses_cap'] ) ) {
+				$register_post_type_array['post_args']['capabilities']['edit_posts'] = 'manage_options';
+			return $register_post_type_array;
+		}
+		/**
+		 * check all "list-access" capabilities
+		 */
+		$check_keys = array(
+			'coursepress_change_course_status_cap',
+			'coursepress_change_my_course_status_cap',
+			'coursepress_delete_course_cap',
+			'coursepress_delete_course_cap',
+			'coursepress_delete_my_course_cap',
+			'coursepress_delete_my_course_cap',
+			'coursepress_update_course_cap',
+			'coursepress_update_my_course_cap',
+			'coursepress_view_others_course_cap',
+		);
+		foreach ( $check_keys as $capability ) {
+			if ( isset( $instructor_capabilities[ $capability ] ) && $instructor_capabilities[ $capability ] ) {
+				$register_post_type_array['post_args']['capabilities']['edit_posts'] = $capability;
+				return $register_post_type_array;
+			}
+		}
+		return $register_post_type_array;
 	}
 
 	public static function get_taxonomy() {
@@ -1938,12 +1992,16 @@ class CoursePress_Data_Course {
 		$prev_unit_id = 0;
 		$new_sequence = array();
 		$valid = true;
+		$hide_section = CoursePress_Data_Course::get_setting( $course_id, 'focus_hide_section', false );
 
 		foreach ( $nav_sequence as $item ) {
 			if ( 'completion_page' === $item['id'] ) {
 				continue;
 			}
 
+			if ( 'unit' == $hide_section && 'section' == $item['type'] ) {
+				continue;
+			}
 			if ( $valid ) {
 				$new_sequence[] = $item;
 			}
@@ -1951,6 +2009,7 @@ class CoursePress_Data_Course {
 			if ( $current_module ) {
 				if ( $current_module == $item['id'] ) {
 					$valid = false;
+					array_pop( $new_sequence );
 				}
 			} else {
 				if ( $unit_id == $item['unit'] && $current_page == $item['id'] ) {
@@ -1963,7 +2022,7 @@ class CoursePress_Data_Course {
 		if ( 1 > $current_index || $current_index > count( $nav_sequence ) ) {
 			$current_index = count( $nav_sequence );
 		}
-
+//error_log(print_r($nav_sequence,true));
 		return $nav_sequence[ $current_index - 1 ];
 	}
 
@@ -2010,9 +2069,10 @@ class CoursePress_Data_Course {
 			}
 
 			// 2. Generate the list of navigation items.
-			//
 			$items = array();
 			$course_link = self::get_course_url( $course_id );
+			$unit_url = CoursePress_Core::get_slug( 'units/' );
+			$units_overview_url = $course_link . $unit_url;
 
 			// First node always is the course overview (clicking prev on first page).
 			$items[] = array(
@@ -2020,7 +2080,7 @@ class CoursePress_Data_Course {
 				'type' => 'course',
 				'section' => 0,
 				'unit' => 0,
-				'url' => trailingslashit( $course_link ),
+				'url' => trailingslashit( $units_overview_url ),
 				'course_id' => $course_id,
 			);
 
@@ -3401,10 +3461,8 @@ class CoursePress_Data_Course {
 			$post_id
 		);
 		$results = $wpdb->get_results( $sql );
-		$post_title = '';
 		foreach ( $results as $post ) {
 			delete_post_meta( $post->ID, self::$post_count_title_name );
-			$post_title = $post->post_title;
 		}
 		$post_type = self::get_post_type_name();
 		self::save_course_number( $post_id, $post_type, array( $post_id ) );

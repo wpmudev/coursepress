@@ -1841,4 +1841,34 @@ class CoursePress_Data_Capabilities {
 			}
 		}
 	}
+
+	/**
+	 * Dynamically filter a user's capabilities, for
+	 * "edit_posts"->"edit_course".
+	 *
+	 * @since 2.0.4
+	 *
+	 * @param array   $allcaps An array of all the user's capabilities.
+	 * @param array   $caps    Actual capabilities for meta capability.
+	 * @param array   $args    Optional parameters passed to has_cap(), typically object ID.
+	 * @param WP_User $user    The user object.
+	 */
+	public static function user_has_cap_edit_course( $allcaps, $caps, $args, $user ) {
+		if ( ! in_array( 'edit_post', $args ) ) {
+			return $allcaps;
+		}
+		if ( 2 > sizeof( $args ) ) {
+			return $allcaps;
+		}
+		if ( ! CoursePress_Data_Course::is_course( $args[2] ) ) {
+			return $allcaps;
+		}
+		$can_update = self::can_update_course( $args[2], $user->ID );
+		if ( ! $can_update ) {
+			foreach ( (array) $caps as $cap ) {
+				$allcaps[ $cap ] = false;
+			}
+		}
+		return $allcaps;
+	}
 }

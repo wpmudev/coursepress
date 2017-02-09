@@ -152,6 +152,11 @@ class CoursePress_Helper_Integration_WooCommerce {
 		 */
 		add_action( 'woocommerce_before_main_content', array( __CLASS__, 'woocommerce_before_main_content' ) );
 
+		/**
+		 * WooCommerce change order status
+		 */
+		add_action( 'woocommerce_order_status_changed', array( __CLASS__, 'woocommerce_order_status_changed' ), 21, 3 );
+
 	}
 
 	public static function change_order_status( $order_id, $old_status, $new_status ) {
@@ -541,7 +546,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 			echo '<p class="cp_woo_dashboard_link">';
 			printf(
 				__( 'You can find the course in your <a href="%s">Dashboard</a>', 'CP_TD' ),
-				( method_exists('CoursePress_Core', 'get_slug') ) ? CoursePress_Core::get_slug('student_dashboard', true) : ''
+				( method_exists( 'CoursePress_Core', 'get_slug' ) ) ? CoursePress_Core::get_slug( 'student_dashboard', true ) : ''
 			);
 			echo '</p><hr />';
 		}
@@ -952,5 +957,38 @@ class CoursePress_Helper_Integration_WooCommerce {
 			update_post_meta( get_the_ID(), '_stock_status', 'outofstock' );
 		}
 		wp_reset_query();
+	}
+
+	/**
+	 * Change student enrollment status in course, depend on order status.
+	 *
+	 * @since 2.0.4
+	 *
+	 * @param integer $order_id WooCommerce order ID.
+	 * @param string $old_status Old status of this order.
+	 * @param string $new_status New status of this order.
+	 */
+	public static function woocommerce_order_status_changed( $order_id, $old_status, $new_status ) {
+		if ( 'completed' == $new_status ) {
+			return;
+		}
+		$order = new WC_order( $order_id );
+		$items = $order->get_items();
+		$student_id = get_post_meta( $order_id, '_customer_user', true );
+		foreach ( $items as $item ) {
+			$course_id = self::get_course_id_by_product( $item['product_id'] );
+			if ( empty( $course_id ) ) {
+				continue;
+			}
+			/**
+			 * withdraw student from course
+		 */
+			CoursePress_Data_Course::withdraw_student( $student_id, $course_id );
+			/**
+		 * change student meta key
+		 */
+			$key = sprintf( 'course_%d_woo_payment_status', $course_id );
+			update_user_meta( $student_id, $key, $new_status );
+		}
 	}
 }

@@ -607,6 +607,7 @@ class CoursePress_Admin_Edit {
 		foreach ( $units as $unit ) {
 
 			$estimations = CoursePress_Data_Unit::get_time_estimation( $unit['unit']->ID, $units );
+
 			$count += 1;
 			$status = 'publish' === $unit['unit']->post_status ? '' : __( '[DRAFT] ', 'CP_TD' );
 			$draft_class = 'publish' === $unit['unit']->post_status ? '' : 'draft';
@@ -1598,7 +1599,7 @@ class CoursePress_Admin_Edit {
 			$duration = '';
 		}
 		if ( empty( $duration ) ) {
-			$duration = '&ndash;';
+			return '&ndash;';
 		}
 		return $duration;
 	}
