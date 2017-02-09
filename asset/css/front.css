@@ -34,7 +34,6 @@ input.cp-has-error {
   text-decoration: none;
 }
 .cp .button {
-  padding: 5px 15px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 5px 12px;
   text-decoration: none;
@@ -44,6 +43,8 @@ input.cp-has-error {
   background-color: #F4F4F4;
   cursor: pointer;
   color: inherit;
+  line-height: 1.2;
+  font-weight: 400;
   box-shadow: none;
 }
 .cp .button:hover {
@@ -161,7 +162,6 @@ input.cp-has-error {
 }
 
 .apply-button {
-  padding: 5px 15px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 5px 12px;
   text-decoration: none;
@@ -171,6 +171,8 @@ input.cp-has-error {
   background-color: #F4F4F4;
   cursor: pointer;
   color: inherit;
+  line-height: 1.2;
+  font-weight: 400;
   box-shadow: none;
 }
 .apply-button:hover {
@@ -196,7 +198,6 @@ input.cp-has-error {
   display: block;
 }
 .enrolment-container-div .bbm-modal .cancel-link {
-  padding: 5px 15px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 5px 12px;
   text-decoration: none;
@@ -206,6 +207,8 @@ input.cp-has-error {
   background-color: #F4F4F4;
   cursor: pointer;
   color: inherit;
+  line-height: 1.2;
+  font-weight: 400;
   box-shadow: none;
 }
 .enrolment-container-div .bbm-modal .cancel-link:hover {
@@ -353,7 +356,6 @@ input.cp-has-error {
   content: '\f0d6';
 }
 .course_list_box_item .coursepress-course-link {
-  padding: 5px 15px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 5px 12px;
   text-decoration: none;
@@ -363,6 +365,8 @@ input.cp-has-error {
   background-color: #F4F4F4;
   cursor: pointer;
   color: inherit;
+  line-height: 1.2;
+  font-weight: 400;
   box-shadow: none;
   float: right;
 }
@@ -1037,7 +1041,6 @@ input.cp-has-error {
   float: right;
 }
 .cp .button {
-  padding: 5px 15px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 5px 12px;
   text-decoration: none;
@@ -1047,6 +1050,8 @@ input.cp-has-error {
   background-color: #F4F4F4;
   cursor: pointer;
   color: inherit;
+  line-height: 1.2;
+  font-weight: 400;
   box-shadow: none;
 }
 .cp .button:hover {
@@ -1089,7 +1094,6 @@ input.cp-has-error {
   display: inline-block;
   cursor: pointer;
   margin-top: 10px;
-  padding: 5px 15px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 5px 12px;
   text-decoration: none;
@@ -1099,6 +1103,8 @@ input.cp-has-error {
   background-color: #F4F4F4;
   cursor: pointer;
   color: inherit;
+  line-height: 1.2;
+  font-weight: 400;
   box-shadow: none;
 }
 .coursepress-focus-view .focus-nav-prev:hover,
@@ -1173,7 +1179,6 @@ input.cp-has-error {
   vertical-align: middle;
 }
 .cp-student-workbook .workbook-table .button {
-  padding: 5px 15px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 5px 12px;
   text-decoration: none;
@@ -1183,6 +1188,8 @@ input.cp-has-error {
   background-color: #F4F4F4;
   cursor: pointer;
   color: inherit;
+  line-height: 1.2;
+  font-weight: 400;
   box-shadow: none;
 }
 .cp-student-workbook .workbook-table .button:hover {
@@ -1225,7 +1232,6 @@ input.cp-has-error {
 /** Discussion **/
 /* Notifications and Discussions */
 .course-discussion-wrapper .button {
-  padding: 5px 15px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 5px 12px;
   text-decoration: none;
@@ -1235,6 +1241,8 @@ input.cp-has-error {
   background-color: #F4F4F4;
   cursor: pointer;
   color: inherit;
+  line-height: 1.2;
+  font-weight: 400;
   box-shadow: none;
 }
 .course-discussion-wrapper .button:hover {
@@ -1253,7 +1261,6 @@ input.cp-has-error {
   text-align: right;
 }
 .discussion-new .button {
-  padding: 5px 15px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 5px 12px;
   text-decoration: none;
@@ -1263,6 +1270,8 @@ input.cp-has-error {
   background-color: #F4F4F4;
   cursor: pointer;
   color: inherit;
+  line-height: 1.2;
+  font-weight: 400;
   box-shadow: none;
 }
 .discussion-new .button:hover {
