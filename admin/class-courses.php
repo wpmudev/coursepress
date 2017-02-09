@@ -35,6 +35,12 @@ class CoursePress_Admin_Courses {
 		 * when delete a course
 		 */
 		add_action( 'delete_post', array( 'CoursePress_Admin_Controller_Course', 'delete_course' ) );
+
+		/**
+		* add capabilities
+		*/
+		add_filter( 'user_has_cap', array( 'CoursePress_Data_Capabilities', 'user_has_cap_edit_course' ), 200, 4 );
+
 	}
 
 	public static function _is_course( $post ) {
