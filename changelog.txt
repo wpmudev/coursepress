@@ -15,7 +15,6 @@ CHANGELOG
 * Fixed a problem with "Manage Course" button.
 * Improved integration with WooCommerce - when we change order status from completed to another status, a student will be withdrawn from the ordered courses.
 * Fixed a problem with access to CoursePress menu for instructors.
->>>>>>> coursepress/2.0.4-dev
 * Fixed a problem with enrolling students using MarketPress.
 * Fixed a problem with sections pagination when course is in normal mode.
 * Fixed untranslated texts.
