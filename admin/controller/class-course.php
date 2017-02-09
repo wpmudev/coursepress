@@ -6,9 +6,12 @@ class CoursePress_Admin_Controller_Course {
 	/**
 	 * Delete a course and it's units and modules
 	 *
+	 * @global wpdb $wpdb WordPress database abstraction object.
+	 *
 	 * @param (int) $course_id		The course ID to delete.
 	 **/
 	public static function delete_course( $course_id ) {
+		global $wpdb;
 		/**
 		 * check is course
 		 */
@@ -41,17 +44,27 @@ class CoursePress_Admin_Controller_Course {
 			}
 		}
 		/**
-		 * delete instructor user_meta
-		 */
-		$meta_key = 'course_' . $course_id;
-		global $wpdb;
-		$query = $wpdb->prepare( "delete from {$wpdb->usermeta} where meta_key = %s", $meta_key );
-		$wpdb->query( $query );
-		/**
 		 * delete counters
 		 */
 		$query = $wpdb->prepare( "delete from {$wpdb->usermeta} where meta_key = %s", 'cp_instructor_course_count' );
 		$wpdb->query( $query );
+		/**
+		 * delete user meta, most of them are students meta
+		 */
+		$keys_to_delete = array(
+			'course_%d', // delete instructor user_meta
+			'course_%d_progress',
+			'cp_notice-course_%d',
+			'enrolled_course_class_%d',
+			'enrolled_course_date_%d',
+			'enrolled_course_group_%d',
+			'withdrawn_course_date_%d',
+		);
+		foreach ( $keys_to_delete as $template_of_meta_key ) {
+			$meta_key = sprintf( $template_of_meta_key, $course_id );
+			$query = $wpdb->prepare( "delete from {$wpdb->usermeta} where meta_key = %s", $meta_key );
+			$wpdb->query( $query );
+		}
 		/**
 		 * Notify others that a course is deleted
 		 **/

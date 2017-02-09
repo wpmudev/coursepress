@@ -51,69 +51,53 @@ class CoursePress_Data_Unit {
 		return CoursePress_Data_PostFormat::prefix( self::$post_type );
 	}
 
+	/**
+	 * Get time to end tasks.
+	 */
 	public static function get_time_estimation( $unit_id, $data, $default = '1:00' ) {
 		$estimations = array();
-
-		$unit_hours = 0;
-		$unit_minutes = 0;
-		$unit_seconds = 0;
-
 		if ( ! isset( $data[ $unit_id ]['pages'] ) ) {
 			$data[ $unit_id ]['pages'] = array();
 		}
+		$unit_seconds = 0;
 		foreach ( $data[ $unit_id ]['pages'] as $page_id => $page ) {
-
-			$page_hours = 0;
-			$page_minutes = 0;
 			$page_seconds = 0;
-
 			foreach ( $page['modules'] as $module_id => $module ) {
 				$duration = CoursePress_Data_Module::get_time_estimation( $module_id, $default );
-
 				$parts = explode( ':', $duration );
 				$seconds = (int) array_pop( $parts );
 				$minutes = (int) array_pop( $parts );
+				$hours = 0;
 				if ( ! empty( $parts ) ) {
 					$hours = (int) array_pop( $parts );
-				} else {
-					$hours = 0;
 				}
-
-				$page_seconds += $seconds;
-				$page_minutes += $minutes;
-				$page_hours += $hours;
-
-				CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/estimation', sprintf( '%02d:%02d:%02d', $page_hours, $page_minutes, $page_seconds ) );
-				CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/components/hours', $page_hours );
-				CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/components/minutes', $page_minutes );
-				CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/components/seconds', $page_seconds );
+				$time = CoursePress_Helper_Utility::get_time( $seconds, $minutes, $hours );
+				/**
+				 * Increase page time
+				 */
+				$page_seconds += $time['total_seconds'];
 			}
-
-			$total_seconds = $page_seconds + ( $page_minutes * 60 ) + ( $page_hours * 3600 );
-
-			$page_hours = floor( $total_seconds / 3600 );
-			$total_seconds = $total_seconds % 3600;
-			$page_minutes = floor( $total_seconds / 60 );
-			$page_seconds = $total_seconds % 60;
-
-			$unit_hours += $page_hours;
-			$unit_minutes += $page_minutes;
-			$unit_seconds += $page_seconds;
-
+			/**
+			 * Page time
+			 */
+			$time = CoursePress_Helper_Utility::get_time( $page_seconds );
+			CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/estimation', $time['time'] );
+			CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/components/hours', $time['hours'] );
+			CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/components/minutes', $time['minutes'] );
+			CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/components/seconds', $time['seconds'] );
+			/**
+			 * Increase unit time
+			 */
+			$unit_seconds += $time['total_seconds'];
 		}
-
-		$total_seconds = $unit_seconds + ( $unit_minutes * 60 ) + ( $unit_hours * 3600 );
-
-		$unit_hours = floor( $total_seconds / 3600 );
-		$total_seconds = $total_seconds % 3600;
-		$unit_minutes = floor( $total_seconds / 60 );
-		$unit_seconds = $total_seconds % 60;
-
-		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/estimation', sprintf( '%02d:%02d:%02d', $unit_hours, $unit_minutes, $unit_seconds ) );
-		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/components/hours', $unit_hours );
-		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/components/minutes', $unit_minutes );
-		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/components/seconds', $unit_seconds );
-
+		/**
+		 * Unit time
+		 */
+		$time = CoursePress_Helper_Utility::get_time( $unit_seconds );
+		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/estimation', $time['time'] );
+		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/components/hours', $time['hours'] );
+		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/components/minutes', $time['minutes'] );
+		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/components/seconds', $time['seconds'] );
 		return $estimations;
 	}
 
@@ -234,7 +218,19 @@ class CoursePress_Data_Unit {
 			$force_current_unit_successful_completion = cp_is_true(
 				get_post_meta( $previous_unit_id, 'force_current_unit_successful_completion', true )
 			);
-		}
+        }
+
+        /**
+         * If there is NO MANDATORY modules, then this parameter can not be
+         * true!
+         */
+        if ( $force_current_unit_completion ) {
+            $number_of_mandatory = self::get_number_of_mandatory( $previous_unit_id );
+            if ( 0 == $number_of_mandatory ) {
+                $force_current_unit_completion = false;
+                $force_current_unit_successful_completion = false;
+            }
+        }
 
 		if ( $previous_unit_id && $is_available ) {
 			$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
@@ -721,6 +717,35 @@ class CoursePress_Data_Unit {
 		}
 		$post_type = get_post_type( $unit );
 		if ( $post_type == self::$post_type ) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Check free preview of unit.
+	 *
+	 * @since 2.0.4
+	 *
+	 * @param integer $unit_id unit ID.
+	 * @return boolean Is free preview available for this unit?
+	 */
+	public static function can_be_previewed( $unit_id ) {
+		$course_id = self::get_course_id_by_unit( $unit_id );
+		if ( empty( $course_id ) ) {
+			return false;
+		}
+		$preview = CoursePress_Data_Course::previewability( $course_id );
+		if (
+			! empty( $preview )
+			&& is_array( $preview )
+			&& isset( $preview['structure'] )
+			&& is_array( $preview['structure'] )
+			&& isset( $preview['structure'][ $unit_id ] )
+			&& is_array( $preview['structure'][ $unit_id ] )
+			&& isset( $preview['structure'][ $unit_id ]['unit_has_previews'] )
+			&& cp_is_true( $preview['structure'][ $unit_id ]['unit_has_previews'] )
+		) {
 			return true;
 		}
 		return false;
