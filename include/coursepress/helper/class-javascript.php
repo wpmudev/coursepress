@@ -505,6 +505,7 @@ class CoursePress_Helper_JavaScript {
 				'invalid_passcode' => __( 'Invalid PASSCODE!', 'CP_TD' ),
 			),
 			'confirmed_withdraw' => __( 'Please confirm that you want to withdraw from the course. If you withdraw, all your records and access to this course will also be removed.', 'CP_TD' ),
+			'confirmed_edit' => __( 'Please confirm that you want to edit this course.', 'CP_TD' ),
 			'buttons' => array(
 				'ok' => __( 'OK', 'CP_TD' ),
 				'cancel' => __( 'Cancel', 'CP_TD' ),
