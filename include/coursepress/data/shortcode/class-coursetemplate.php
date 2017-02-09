@@ -96,14 +96,26 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			'signup_text' => __( 'Enroll Now!', 'CP_TD' ),
 		), $atts, 'course_join_button' ) );
 
+		/**
+		 * Check course ID
+		 */
 		$course_id = (int) $course_id;
-		if ( empty( $course_id ) ) { return ''; }
+		if ( empty( $course_id ) ) {
+			return '';
+		}
+
+		/**
+		 * check course
+		 */
+		$course = get_post( $course_id );
+		if ( empty( $course ) ) {
+			return '';
+		}
 
 		$list_page = sanitize_text_field( $list_page );
 		$list_page = cp_is_true( $list_page );
 		$class = sanitize_html_class( $class );
 
-		$course = get_post( $course_id );
 		$course_url = CoursePress_Data_Course::get_course_url( $course_id );
 		$can_update_course = CoursePress_Data_Capabilities::can_update_course( $course_id );
 
@@ -1549,6 +1561,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		}
 
 		if ( ! empty( $atts['student'] ) ) {
+			$include_ids = array();
 			$students = explode( ',', $atts['student'] );
 			foreach ( $students as $student ) {
 				$student = (int) $student;

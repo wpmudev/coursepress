@@ -7,6 +7,8 @@ CHANGELOG
 
 = 2.0.4 =
 -------------------------------------------------
+
+* Added sanitization of course id in "course_join_button" shortcode.
 * Fixed a bug related to the inability to disable CoursePress login form.
 * Improved login/signup popups for small screens.
 * Fixed a bug with previewing units & modules.
