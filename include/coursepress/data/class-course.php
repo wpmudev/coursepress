@@ -3582,6 +3582,10 @@ class CoursePress_Data_Course {
 	 * @since 2.0.0
 	 */
 	public static function is_limit_reach() {
+		/**
+		 * from 2.0.4 free version has no limit!
+		 */
+		return false;
 		$is_pro = defined( 'CP_IS_PREMIUM' ) && CP_IS_PREMIUM;
 		if ( $is_pro ) {
 			return false;
