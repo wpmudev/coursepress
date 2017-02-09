@@ -139,7 +139,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$student_enrolled = false;
 		$student_id = false;
 		$is_instructor = false;
-		$is_custom_login = ! empty( $general_settings['use_custom_login'] );
+		$is_custom_login = cp_is_true( $general_settings['use_custom_login'] );
 
 		if ( is_user_logged_in() ) {
 			$student_id = get_current_user_id();
@@ -1735,29 +1735,35 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			$label = '';
 
 			switch ( $context ) {
-				case 'enrolled': case 'current': case 'all':
-							$label = $atts['current_label'];
-					break;
+				case 'enrolled':
+				case 'current':
+				case 'all':
+					$label = $atts['current_label'];
+				break;
+
 				case 'future':
 					$label = $atts['future_label'];
-					break;
+				break;
+
 				case 'incomplete':
 					$label = $atts['incomplete_label'];
-					break;
+				break;
 
 				case 'completed':
 					$label = $atts['completed_label'];
-					break;
+				break;
+
 				case 'past':
 					$label = $atts['past_label'];
-					break;
+				break;
 
 				case 'manage':
 					$label = $atts['manage_label'];
-					break;
+				break;
+
 				case 'facilitator':
 					$label = $atts['facilitator_label'];
-					break;
+				break;
 			}
 
 			$content = '<div class="dashboard-course-list ' . esc_attr( $context ) . '">' .
