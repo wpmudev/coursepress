@@ -421,6 +421,9 @@ class CoursePress_Data_Shortcode_Student {
 		if ( ! is_object( $post ) ) {
 			$course_id = CoursePress_Helper_Utility::the_course( true );
 			$post = get_post( $course_id );
+			if ( ! is_a( $post, 'WP_Post' ) ) {
+				return;
+			}
 		}
 		if (
 			isset( $post->coursepress_enrollment_templates_was_already_loaded )

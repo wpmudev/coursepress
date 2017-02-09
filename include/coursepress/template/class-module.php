@@ -197,7 +197,13 @@ class CoursePress_Template_Module {
 		return $status;
 	}
 
-	public static function template( $module_id = 0, $is_focus = false ) {
+	/**
+	 *
+	 * @param integer $module_id Modile ID.
+	 * @param boolean $is_focus Is in focus mode?
+	 * @param string $view_type View type, possible values "normal", "preview" @since 2.0.4
+	 */
+	public static function template( $module_id = 0, $is_focus = false, $view_type = 'normal' ) {
 		if ( empty( $module_id ) ) {
 			return ''; // Nothing to process, bail!
 		}
@@ -292,6 +298,21 @@ class CoursePress_Template_Module {
 					$allow_retry = true;
 					$attempts = (int) $attributes['retry_attempts'];
 					$duration = $attributes['duration'];
+					$dur = explode( ':', $duration );
+					/**
+					 * sanitize time format
+					 */
+					switch ( sizeof( $dur ) ) {
+						case 1:
+							$duration = sprintf( '00:%02d', $dur[0] );
+						break;
+						case 2:
+							$duration = sprintf( '%02d:%02d', $dur[0], $dur[1] );
+						break;
+						case 3:
+							$duration = sprintf( '%02d:%02d:%02d', $dur[0], $dur[1], $dur[2] );
+						break;
+					}
 
 					$format = '<span class="quiz_timer" data-limit="%1$s" data-retry="%2$s">%1$s</span><span class="quiz_timer_info">%3$s</span>';
 
@@ -314,6 +335,9 @@ class CoursePress_Template_Module {
 
 			$disabled_attr = $disabled ? 'disabled="disabled"' : '';
 			$module_elements = call_user_func( array( __CLASS__, $method ), $module, $attributes, $student_progress );
+			if ( $is_module_answerable && 'preview' == $view_type  ) {
+				$module_elements = '';
+			}
 
 			$module_elements = sprintf( '<div id="cp-element-%s" class="module-elements %s" data-type="%s" data-required="%s">%s</div>', $module_id, $element_class, $module_type, $is_required, $module_elements );
 
@@ -492,8 +516,8 @@ class CoursePress_Template_Module {
 				);
 				if ( preg_match( '%\?%', $url ) ) {
 					// URL with ? doesn't read on shortcode
-					$param = substr( $url, strrpos( $url, '?' )+1 );
-					$url = substr( $url, 0, strrpos($url, '?' ) );
+					$param = substr( $url, strrpos( $url, '?' ) + 1 );
+					$url = substr( $url, 0, strrpos( $url, '?' ) );
 					$param = explode( '&', $param );
 					$param = array_filter( $param );
 
