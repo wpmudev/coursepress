@@ -20,9 +20,7 @@
 	}
 }
 @mixin button {
-	padding: 5px 15px;
 	border: 1px solid rgba(0, 0, 0, 0.1);
-
 	padding: 5px 12px;
 	text-decoration: none;
 	text-decoration-style: none;
@@ -30,7 +28,8 @@
 	background-color: $button_bg;
 	cursor: pointer;
 	color: inherit;
-
+	line-height: 1.2;
+	font-weight: 400;
 	box-shadow: none;
 
 	&:hover {
