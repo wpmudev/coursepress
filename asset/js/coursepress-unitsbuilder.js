@@ -993,8 +993,7 @@ var CoursePress = CoursePress || {};
 		if ( "success" === notice_class ) {
 			setTimeout(function(){ $( ".section.unit-builder-components .notice" ).fadeOut(); }, 3000);
 		}
-    }
-
+	}
 
 	CoursePress.Helpers.Module.unit_show_message = function( message, notice_class ) {
 		$( ".unit-builder-header .unit-buttons .notice, .unit-builder-footer .unit-buttons .notice" ).detach();
@@ -1399,8 +1398,18 @@ var CoursePress = CoursePress || {};
 					case 'action':
 						var css_class = item['class'] || '';
 						var action = item['action'] || '';
+						var title = item['title'] || '';
+						var dashicon = item['dashicon'] || '';
 
-						content += '<div class="' + css_class + '" data-type="' + action + '"><a></a></div>';
+						content += '<div class="' + css_class + '" data-type="' + action + '"><a>';
+						if ( dashicon ) {
+							content += '<span class="dashicons dashicons-'+dashicon+'"></span>';
+						}
+						content += '</a>';
+						if ( title ) {
+							content += '<span class="element-label">'+title+'</span>';
+						}
+						content += '</div>';
 						//content += '<span style="color:green">«- Developer note: Only multiple choice for now, will add others soon.</span>';
 
 						break;
