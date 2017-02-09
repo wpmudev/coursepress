@@ -1992,12 +1992,16 @@ class CoursePress_Data_Course {
 		$prev_unit_id = 0;
 		$new_sequence = array();
 		$valid = true;
+		$hide_section = CoursePress_Data_Course::get_setting( $course_id, 'focus_hide_section', false );
 
 		foreach ( $nav_sequence as $item ) {
 			if ( 'completion_page' === $item['id'] ) {
 				continue;
 			}
 
+			if ( 'unit' == $hide_section && 'section' == $item['type'] ) {
+				continue;
+			}
 			if ( $valid ) {
 				$new_sequence[] = $item;
 			}
@@ -2005,6 +2009,7 @@ class CoursePress_Data_Course {
 			if ( $current_module ) {
 				if ( $current_module == $item['id'] ) {
 					$valid = false;
+					array_pop( $new_sequence );
 				}
 			} else {
 				if ( $unit_id == $item['unit'] && $current_page == $item['id'] ) {
@@ -2017,7 +2022,7 @@ class CoursePress_Data_Course {
 		if ( 1 > $current_index || $current_index > count( $nav_sequence ) ) {
 			$current_index = count( $nav_sequence );
 		}
-
+//error_log(print_r($nav_sequence,true));
 		return $nav_sequence[ $current_index - 1 ];
 	}
 
@@ -2064,9 +2069,10 @@ class CoursePress_Data_Course {
 			}
 
 			// 2. Generate the list of navigation items.
-			//
 			$items = array();
 			$course_link = self::get_course_url( $course_id );
+			$unit_url = CoursePress_Core::get_slug( 'units/' );
+			$units_overview_url = $course_link . $unit_url;
 
 			// First node always is the course overview (clicking prev on first page).
 			$items[] = array(
@@ -2074,7 +2080,7 @@ class CoursePress_Data_Course {
 				'type' => 'course',
 				'section' => 0,
 				'unit' => 0,
-				'url' => trailingslashit( $course_link ),
+				'url' => trailingslashit( $units_overview_url ),
 				'course_id' => $course_id,
 			);
 
