@@ -8,6 +8,7 @@ CHANGELOG
 = 2.0.4 =
 -------------------------------------------------
 * Fixed problem with deletein section on courses edit page.
+* Added ability to enroll, when we use course_join_button, but we are not logged.
 * Added sanitization of course id in "course_join_button" shortcode.
 * Fixed a bug related to the inability to disable CoursePress login form.
 * Improved login/signup popups for small screens.
@@ -33,6 +34,7 @@ CHANGELOG
 * Added "Edit user" link on "Student Profile" page.
 * Improve "Student Profile" screen by adding nonce check, to avoid any profile display.
 * Improve login and signup screens for small screens.
+* Added ability to save course state and exit.
 * Fixed a "60 seconds" bug - when module uses a timer, there was no chance to show different amount of seconds then "60".
 * Fixed a bug with the sum of time for pages and units on course edit page.
 * Improved time count method for modules, pages and units.
