@@ -15,6 +15,7 @@ CHANGELOG
 * Added filter "coursepress_unit_add_open_date" to allow display open unit date.
 * Added auto-creating missing directories for PDF certificates.
 * Fixed a problem with wrong courses on [cp_pages page="student_dashboard"].
+* Standardizing the appearance of buttons on course frontend page.
 * Added ability to show "Withdraw" link on [cp_pages page="student_dashboard"].
 * Improved "My Profile" screen.
 * Fixed a bug when user can enroll in the course without paying to paid course.
