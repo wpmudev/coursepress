@@ -4,7 +4,7 @@
  **/
 $data_dir = dirname( __DIR__ ) . '/data/';
 
-require $data_dir . 'course.php';
+require_once $data_dir . 'course.php';
 
 class CoursePressUpgradeTest extends WP_UnitTestCase {
 	/**
