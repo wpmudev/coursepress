@@ -217,7 +217,9 @@ class CoursePress_Module {
 	}
 
 	public static function submit( $input ) {
-		set_time_limit( 0 );
+		if ( ! ini_get( 'safe_mode' ) ) {
+			set_time_limit( 0 );
+		}
 
 		$course_id = (int) $input['course_id'];
 		$unit_id = (int) $input['unit_id'];

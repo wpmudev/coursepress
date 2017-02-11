@@ -5,6 +5,10 @@ Build Time:  2016-04-07T13:37:59.644Z
 CHANGELOG
 =================================================
 
+= 2.0.5 =
+-------------------------------------------------
+* Added check is safe_mode before call set_time_limit() function.
+
 = 2.0.4 =
 -------------------------------------------------
 * Added ability to enroll, when we use course_join_button, but we are not logged.
