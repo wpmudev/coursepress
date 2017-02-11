@@ -148,7 +148,7 @@ class CoursePress_Data_Shortcode_Instructor {
 					$show_username = cp_is_true( CoursePress_Core::get_setting( 'instructor/show_username', true ) );
 					$profile_href .= $show_username ? trailingslashit( $instructor->user_login ) : trailingslashit( $hash );
 
-					$display_name = apply_filters(
+					$display_name = ' ' . apply_filters(
 						'coursepress_schema',
 						esc_html( CoursePress_Helper_Utility::get_user_name( $instructor->ID, false, false ) ),
 						'title'
