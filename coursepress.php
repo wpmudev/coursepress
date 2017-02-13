@@ -32,6 +32,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } // Exit if accessed directly
 
+include_once( 'eb-mods/eb-mods.php' );
 /**
  * Load the common functions.
  */
