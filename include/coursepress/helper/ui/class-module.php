@@ -131,7 +131,14 @@ class CoursePress_Helper_UI_Module {
 
 			// Only for user inputs
 			if ( 'input' === $module_mode ) {
-
+				$content .= '<div class="advanced-options">';
+				$content .= sprintf(
+					'<a href="#" data-message-show="%s" data-message-hide="%s">%s</a>',
+					esc_attr( $labels['advanced_options_show'] ),
+					esc_attr( $labels['advanced_options_hide'] ),
+					esc_html( $labels['advanced_options_show'] )
+				);
+				$content .= '<div class="options">';
 				// required
 				$content .= '
 					<label class="module-mandatory">
@@ -164,7 +171,8 @@ class CoursePress_Helper_UI_Module {
 						<input type="text" name="meta_retry_attempts" value="' . $data['retry_attempts'] . '" />
 						<span class="description">' . $labels['module_allow_retries_desc'] . '</span>
 					</label>';
-
+                $content .= '</div>';
+                $content .= '</div>';
 			}
 
 			// Excerpt
@@ -361,6 +369,8 @@ class CoursePress_Helper_UI_Module {
 			'module_answer_add_new' => __( 'Add', 'CP_TD' ),
 			'module_delete' => __( 'Delete Module', 'CP_TD' ),
 			'module_start_quiz' => __( 'Start Quiz', 'CP_TD' ),
+			'advanced_options_hide' => __( 'Hide advanced options', 'CP_TD' ),
+			'advanced_options_show' => __( 'Show advanced options', 'CP_TD' ),
 		) );
 
 	}

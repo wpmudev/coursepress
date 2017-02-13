@@ -1,4 +1,4 @@
-/*! CoursePress - v2.0.4
+/*! CoursePress - v2.0.5
  * https://premium.wpmudev.org/project/coursepress-pro/
  * Copyright (c) 2017; * Licensed GPLv2+ */
 /*global tinyMCEPreInit*/
@@ -433,6 +433,19 @@ var CoursePress = CoursePress || {};
 
 			inputs.attr( 'readonly', ! is_checked );
 		}).change();
+
+        $(".module-header .advanced-options .toggle-visibility").on( "click", function() {
+            if ( $(this).hasClass( "is-open" ) ) {
+                $(".options", $(this).parent() ).slideUp();
+                $(this).removeClass( "is-open" );
+                $(this).html( _coursepress.unit_builder_module_labels.advanced_options_show );
+            } else {
+                $(".options", $(this).parent() ).slideDown();
+                $(this).addClass( "is-open" );
+                $(this).html( _coursepress.unit_builder_module_labels.advanced_options_hide );
+            }
+            return false;
+        });
 	};
 
 	CoursePress.Helpers.Module.quiz.render_component = function( module ) {
@@ -1118,6 +1131,10 @@ var CoursePress = CoursePress || {};
 			// Only for user inputs (or discussion)
 			if ( 'input' === data[ 'mode' ] || 'discussion' === data[ 'type' ] ) {
 
+				content += '<div class="advanced-options">';
+				content += '<a href="#" class="button toggle-visibility">'+labels['advanced_options_show']+'</a>',
+				content += '<div class="options hidden">';
+
 				// Mandatory
 				content += '<label class="module-mandatory">' +
 				'<input type="checkbox" name="meta_mandatory[' + module.cid + ']" value="1" ' + CoursePress.utility.checked( data[ 'mandatory' ], 1 ) + ' />' +
@@ -1159,20 +1176,23 @@ var CoursePress = CoursePress || {};
 						'</label>';
 
 				}
-			}
-
-			content +=
-				'<div class="module module-duration"><h4 class="div">' + labels[ 'module_duration' ] + '</h4>' +
-				'<input type="text" name="meta_duration" value="' + data[ 'duration' ] + '" /></div>';
-
-			if ( 'input-upload' === module_type ) {
-
+				content +=
+					'<label class="module module-duration"><span class="label">' + labels[ 'module_duration' ] + '</span>' +
+					'<input type="text" name="meta_duration" value="' + data[ 'duration' ] + '" /></label>';
+				/**
+				 * input upload
+				 */
+				if ( 'input-upload' === module_type ) {
 					content += '<label class="module-assessable-2">'
 						+ '<input type="checkbox" name="meta_instructor_assessable[' + module.cid + ']" value="1" ' + CoursePress.utility.checked(data['instructor_assessable'], 1) + ' />'
 						+ '<span class="label">' + labels.module_instructor_assessable + '</span><br />'
 						+ '<span class="description">' + labels.module_instructor_assessable_desc + '</span>'
 						+ '</label>';
+				}
+
+				content += "</div></div>";
 			}
+
 
 			// Excerpt
 			if ( ( types[ data[ 'type' ] ][ 'excerpt' ] && 'hidden' !== types[ data[ 'type' ] ][ 'excerpt' ] ) || !types[ data[ 'type' ] ][ 'excerpt' ] ) {

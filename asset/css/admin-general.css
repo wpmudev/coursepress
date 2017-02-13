@@ -1599,6 +1599,9 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 .tab-content .unit-builder-content .module-holder .module-components .component-media-caption .caption-source input[type="text"] {
   width: 80%;
 }
+.tab-content .unit-builder-content .module-holder .advanced-options {
+  padding-bottom: 1em;
+}
 .tab-content .unit-builder-content .section.unit-builder-footer {
   padding: 2px 6px 8px 6px;
   margin: 0;
