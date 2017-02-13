@@ -989,19 +989,25 @@ class CoursePress_Helper_UI_Module {
 							"class": "wide",
 							"items": [
 								{
+									"title": "' . __( 'Short Answer', 'CP_TD' ) .'",
 									"type": "action",
-									"class": "form-action-button short wide",
-									"action": "short"
+									"class": "input-element form-action-button short wide",
+									"action": "short",
+									"dashicon": "editor-textcolor"
 								},
 								{
+									"title": "' . __( 'Long Answer', 'CP_TD' ) .'",
 									"type": "action",
-									"class": "form-action-button long wide",
-									"action": "long"
+									"class": "input-element form-action-button long wide",
+									"action": "long",
+									"dashicon": "editor-alignleft"
 								},
 								{
+									"title": "' . __( 'Selectable', 'CP_TD' ) .'",
 									"type": "action",
-									"class": "form-action-button selectable wide",
-									"action": "selectable"
+									"class": "input-element form-action-button selectable wide",
+									"action": "selectable",
+									"dashicon": "menu"
 								}
 							]
 						},
