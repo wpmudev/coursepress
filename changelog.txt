@@ -7,7 +7,8 @@ CHANGELOG
 
 = 2.0.5 =
 -------------------------------------------------
-
+* Fixed missing messages on login/signup form.
+* Improved HTML login & signup forms.
 
 = 2.0.4 =
 -------------------------------------------------
