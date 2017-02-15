@@ -13,7 +13,12 @@ class CoursePress_View_Front_General {
 			 */
 			add_filter( 'wp_nav_menu_objects', array( __CLASS__, 'main_navigation_links' ), 10, 2 );
 		}
-
+		/**
+		 * Handle coustom endpoints
+		 *
+		 * @since 2.0.5
+		 */
+		add_filter( 'wp_nav_menu_objects', array( __CLASS__, 'handle_custom_endpoints' ), 10, 2 );
 	}
 
 	public static function main_navigation_links( $sorted_menu_items, $args ) {
@@ -129,37 +134,90 @@ class CoursePress_View_Front_General {
 			$login->menu_item_parent = 0;
 			$login->ID = 'cp-logout';
 			$login->db_id = '';
-			$use_custom = cp_is_true( CoursePress_Core::get_setting( 'general/use_custom_login', 1 ) );
-
-			if ( $is_in ) {
-				$login->url = wp_logout_url();
-			} else {
-				if ( $use_custom ) {
-					$login_page = CoursePress_Core::get_setting( 'pages/login', false );
-
-					if ( empty( $login_page ) ) {
-						$login->url = CoursePress_Core::get_slug( 'login', true );
-					} else {
-						$login->url = get_permalink( (int) $login_page );
-					}
-				} else {
-					$url = '';
-					$course_id = CoursePress_Helper_Utility::the_course(true);
-
-					if ( ! empty( $course_id ) ) {
-						// Make sure the user returns to the course
-						$url = CoursePress_Data_Course::get_course_url( $course_id );
-					}
-
-					$login->url = wp_login_url( $url );
-				}
-			}
-
-			//$login->url = $is_in ? wp_logout_url() : ( $use_custom ? CoursePress_Core::get_slug( 'login', true ) : wp_login_url() );
+			$login->url = self::get_log_in_out_link();
 
 			$sorted_menu_items[] = $login;
 		}
 
+		return $sorted_menu_items;
+	}
+
+	/**
+	 * get login or logut link depend on settings.
+	 *
+	 * @since 2.0.5
+	 *
+	 * @return string Login/logout URL.
+	 */
+	public static function get_log_in_out_link() {
+		$use_custom = cp_is_true( CoursePress_Core::get_setting( 'general/use_custom_login', 1 ) );
+		if ( is_user_logged_in() ) {
+			return wp_logout_url();
+		}
+		if ( $use_custom ) {
+			$login_page = CoursePress_Core::get_setting( 'pages/login', false );
+			if ( empty( $login_page ) ) {
+				return CoursePress_Core::get_slug( 'login', true );
+			}
+			return get_permalink( (int) $login_page );
+		}
+		$url = '';
+		$course_id = CoursePress_Helper_Utility::the_course( true );
+		if ( ! empty( $course_id ) ) {
+			// Make sure the user returns to the course
+			$url = CoursePress_Data_Course::get_course_url( $course_id );
+		}
+		return wp_login_url( $url );
+	}
+
+	/**
+	 * Handle custom end points.
+	 *
+	 * See more https://developer.wordpress.org/reference/hooks/wp_nav_menu_objects/
+	 *
+	 * @since 2.0.5
+	 *
+	 * @param array $sorted_menu_items
+	 * @param stdClass $args
+	 */
+	public static function handle_custom_endpoints( $sorted_menu_items, $args ) {
+		$current_url = CoursePress_Helper_Utility::get_current_url();
+		foreach ( $sorted_menu_items as $index => $item ) {
+			/**
+			 * next if not WP_Post
+			 */
+			if ( ! is_a( $item, 'WP_Post' ) ) {
+				continue;
+			}
+			/**
+			 * next if not custom
+			 */
+			if ( 'custom' != $item->type ) {
+				continue;
+			}
+			switch ( $item->url ) {
+				case '#coursepress-endpoints-login':
+					if ( is_user_logged_in() ) {
+						if ( __( 'Log In', 'CP_TD' ) == $item->title  ) {
+							$item->title = __( 'Log Out', 'CP_TD' );
+						}
+					}
+					$item->url = self::get_log_in_out_link();
+				break;
+				case '#coursepress-endpoints-courses':
+					$item->url = CoursePress_Core::get_slug( 'courses', true );
+				break;
+				case '#coursepress-endpoints-dashboard':
+					$item->url = CoursePress_Core::get_slug( 'student_dashboard', true );
+				break;
+				case '#coursepress-endpoints-profile':
+					$item->url = CoursePress_Core::get_slug( 'student_settings', true );
+				break;
+			}
+			if ( $current_url == $item->url ) {
+				$item->classes[] = 'current_page_item';
+			}
+		}
 		return $sorted_menu_items;
 	}
 }
