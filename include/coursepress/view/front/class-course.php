@@ -616,12 +616,12 @@ class CoursePress_View_Front_Course {
 	}
 
 	/**
-	 * Prevent WordPress from doing a canonical-redirect.
+	 * Prevent WordPress from doing a rel = canonical redirect.
 	 *
-	 * Canonical redirect is a SEO measurement to avoid "duplicate content"
-	 * penalties, when same content is available under different URLs. However,
-	 * many CoursePress pages have no real permalink, so the redirect would
-	 * send the user to the wrong page. It's save to disable it for CP pages.
+	 * Canonical redirect is an SEO action that prevents duplicate content
+	 * page penalties. However, many CoursePress theme pages have virtual
+	 * slugs for the URL. So the canonical redirect would send the user to the
+	 * wrong page. It's safe to disable this for those custom post types.
 	 *
 	 * @since  2.0.0
 	 * @param  WP_Query $wp_query The global WP_Query object.
@@ -836,6 +836,16 @@ class CoursePress_View_Front_Course {
 		if ( $cp->cp_course ) {
 			$cp->course_id = CoursePress_Data_Course::by_name( $cp->cp_course, true );
 			$cp->can_preview = CoursePress_Data_Capabilities::can_update_course( $cp->course_id );
+
+			/**
+			 * handle student enroll
+			 */
+			if ( isset( $_REQUEST['action'] ) && isset( $_REQUEST['_wpnonce'] ) ) {
+				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'enroll_student' ) ) {
+					$user_id = get_current_user_id();
+					CoursePress_Data_Course::enroll_student( $user_id, $cp->course_id );
+				}
+			}
 
 			// The course-name did not resolve to a course_id. Back to start!
 			if ( ! $cp->course_id ) { self::archive_redirect(); }
@@ -1229,16 +1239,36 @@ class CoursePress_View_Front_Course {
 		} elseif ( $cp->is_modules ) {
 			// Unit With Modules.
 			if ( ! $cp->is_enrolled && ! $cp->can_preview && ! $cp->is_instructor ) {
-				self::no_access_redirect( $cp->course_id );
+				$can_be_previewed = false;
+				$view_mode = CoursePress_Data_Course::get_setting( $cp->course_id, 'course_view', 'normal' );
+				/**
+				 * check free preview
+				 */
+				if ( isset( $wp->query_vars['module_id'] ) ) {
+					if ( 'focus' == $view_mode ) {
+						$module_id = $wp->query_vars['module_id'];
+						$can_be_previewed = CoursePress_Data_Module::can_be_previewed( $module_id );
+					}
+				} else {
+					$unit_id = CoursePress_Data_Unit::by_name(
+						$wp->query_vars['unitname'],
+						true,
+						$cp->course_id
+					);
+					$can_be_previewed = CoursePress_Data_Unit::can_be_previewed( $unit_id );
+				}
+				if ( ! $can_be_previewed ) {
+					self::no_access_redirect( $cp->course_id );
+				}
 			}
-
-			CoursePress_Helper_Utility::$is_singular = true;
 
 			$post_id = CoursePress_Data_Unit::by_name(
 				$wp->query_vars['unitname'],
 				true,
 				$cp->course_id
 			);
+			CoursePress_Helper_Utility::$is_singular = true;
+
 			CoursePress_Helper_Utility::set_the_post( $post_id );
 
 			$cp->title = sprintf(

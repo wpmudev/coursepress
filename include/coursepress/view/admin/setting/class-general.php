@@ -231,7 +231,7 @@ class CoursePress_View_Admin_Setting_General {
 							<tr valign="top">
 								<th scope="row">
 								' . esc_html__( 'Display Menu Items', 'CP_TD' ) . '
-									<a class="help-icon" href="javascript:;"></a>
+									<a class="help-icon" href="#"></a>
 									<div class="tooltip hidden">
 										<div class="tooltip-before"></div>
 										<div class="tooltip-button">&times;</div>
@@ -284,7 +284,7 @@ class CoursePress_View_Admin_Setting_General {
 							<tr valign="top">
 								<th scope="row">
 								' . esc_html__( 'Use Custom Login Form', 'CP_TD' ) . '
-									<a class="help-icon" href="javascript:;"></a>
+									<a class="help-icon" href="#"></a>
 									<div class="tooltip hidden">
 										<div class="tooltip-before"></div>
 										<div class="tooltip-button">&times;</div>
@@ -312,7 +312,7 @@ class CoursePress_View_Admin_Setting_General {
 							<tr valign="top">
 								<th scope="row">
 								' . esc_html__( 'Redirect After Login', 'CP_TD' ) . '
-									<a class="help-icon" href="javascript:;"></a>
+									<a class="help-icon" href="#"></a>
 									<div class="tooltip hidden">
 										<div class="tooltip-before"></div>
 										<div class="tooltip-button">&times;</div>
@@ -340,7 +340,7 @@ class CoursePress_View_Admin_Setting_General {
 							<tr valign="top">
 								<th scope="row">
 								' . esc_html__( 'Show Instructor Username in URL', 'CP_TD' ) . '
-									<a class="help-icon" href="javascript:;"></a>
+									<a class="help-icon" href="#"></a>
 									<div class="tooltip hidden">
 										<div class="tooltip-before"></div>
 										<div class="tooltip-button">&times;</div>
@@ -369,7 +369,7 @@ class CoursePress_View_Admin_Setting_General {
 							<tr valign="top">
 								<th scope="row">
 								' . esc_html__( 'Media Type', 'CP_TD' ) . '
-									<a class="help-icon" href="javascript:;"></a>
+									<a class="help-icon" href="#"></a>
 									<div class="tooltip hidden">
 										<div class="tooltip-before"></div>
 										<div class="tooltip-button">&times;</div>
@@ -392,7 +392,7 @@ class CoursePress_View_Admin_Setting_General {
 							<tr valign="top">
 								<th scope="row">
 								' . esc_html__( 'Priority', 'CP_TD' ) . '
-									<a class="help-icon" href="javascript:;"></a>
+									<a class="help-icon" href="#"></a>
 									<div class="tooltip hidden">
 										<div class="tooltip-before"></div>
 										<div class="tooltip-button">&times;</div>
@@ -424,7 +424,7 @@ class CoursePress_View_Admin_Setting_General {
 							<tr valign="top">
 								<th scope="row">
 								' . esc_html__( 'Media Type', 'CP_TD' ) . '
-									<a class="help-icon" href="javascript:;"></a>
+									<a class="help-icon" href="#"></a>
 									<div class="tooltip hidden">
 										<div class="tooltip-before"></div>
 										<div class="tooltip-button">&times;</div>
@@ -447,7 +447,7 @@ class CoursePress_View_Admin_Setting_General {
 							<tr valign="top">
 								<th scope="row">
 								' . esc_html__( 'Priority', 'CP_TD' ) . '
-									<a class="help-icon" href="javascript:;"></a>
+									<a class="help-icon" href="#"></a>
 									<div class="tooltip hidden">
 										<div class="tooltip-before"></div>
 										<div class="tooltip-button">&times;</div>
@@ -599,7 +599,7 @@ class CoursePress_View_Admin_Setting_General {
 							<tr valign="top">
 								<th scope="row">
 								' . esc_html__( 'Add microdata syntax.', 'CP_TD' ) . '
-									<a class="help-icon" href="javascript:;"></a>
+									<a class="help-icon" href="#"></a>
 									<div class="tooltip hidden">
 										<div class="tooltip-before"></div>
 										<div class="tooltip-button">&times;</div>

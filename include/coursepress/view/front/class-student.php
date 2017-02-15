@@ -84,7 +84,7 @@ class CoursePress_View_Front_Student {
 
 	}
 
-	public static function render_student_dashboard_page( $student_id = 0 ) {
+	public static function render_student_dashboard_page( $student_id = 0, $atts = array() ) {
 
 		if ( ! is_user_logged_in() ) {
 			_e( 'You must be logged in in order to complete the action', 'CP_TD' );
@@ -118,9 +118,21 @@ class CoursePress_View_Front_Student {
 			echo '<div class="clearfix"></div>';
 		}
 
-		// Add some random courses.
-		$course_list = do_shortcode( '[course_list student="' . get_current_user_id() . '" student_msg="" course_status="incomplete" list_wrapper_before="" class="course course-student-dashboard" left_class="enroll-box-left" right_class="enroll-box-right" course_class="enroll-box" title_class="h1-title" title_link="no" show_media="no"]' );
+		$shortcode_attributes = array(
+			'student' => get_current_user_id(),
+			'student_msg' => '',
+			'status' => 'incomplete',
+		);
 
+		if ( ! empty( $atts['show_withdraw_link'] ) && 'yes' == $atts['show_withdraw_link'] ) {
+			$shortcode_attributes['show_withdraw_link'] = 'yes';
+		}
+
+		$shortcode_attributes = apply_filters( 'course_list_page_student_dashsboard', $shortcode_attributes );
+		$shortcode_attributes = CoursePress_Helper_Utility::convert_array_to_params( $shortcode_attributes );
+		$course_list = do_shortcode( '[course_list '.$shortcode_attributes.']' );
+
+		// Add some random courses.
 		if ( empty( $course_list ) && $show_random_courses ) {
 
 			//Random Courses
@@ -143,8 +155,20 @@ class CoursePress_View_Front_Student {
 
 		// Completed courses
 		$show = 'dates,class_size';
-		$course_list = do_shortcode( '[course_list student="' . get_current_user_id() . '" student_msg="" course_status="completed" list_wrapper_before="" title_link="no" title_tag="h1" title_class="h1-title" show_divider="yes" left_class="enroll-box-left" right_class="enroll-box-right"]' );
 
+		$shortcode_attributes = array(
+			'student' => get_current_user_id(),
+			'student_msg' => '',
+			'status' => 'completed',
+		);
+		/**
+		 * Allow to change cshortcode attributes before fired.
+		 *
+		 * @since 2.0.4
+		 */
+		$shortcode_attributes = apply_filters( 'course_list_page_student_dashsboard', $shortcode_attributes );
+		$shortcode_attributes = CoursePress_Helper_Utility::convert_array_to_params( $shortcode_attributes );
+		$course_list = do_shortcode( '[course_list '.$shortcode_attributes.']' );
 		if ( ! empty( $course_list ) ) {
 			// Course List
 			echo '<div class="dashboard-completed-courses-list">';
@@ -219,51 +243,19 @@ class CoursePress_View_Front_Student {
 	<?php do_action( 'coursepress_before_settings_form' ); ?>
 	<form id="student-settings" name="student-settings" method="post" class="student-settings">
 	<?php wp_nonce_field( 'student_settings_save', 'student_settings_nonce' ); ?>
-	<label>
-		<?php _e( 'First Name', 'CP_TD' ); ?>:
-		<input type="text" name="first_name" value="<?php esc_attr_e( $student->user_firstname ); ?>"/>
-	</label>
+	<p><label><?php _e( 'First Name', 'CP_TD' ); ?>: <input type="text" name="first_name" value="<?php esc_attr_e( $student->user_firstname ); ?>"/></label></p><?php do_action( 'coursepress_after_settings_first_name' ); ?>
 
-	<?php do_action( 'coursepress_after_settings_first_name' ); ?>
+	<p><label><?php _e( 'Last Name', 'CP_TD' ); ?>: <input type="text" name="last_name" value="<?php esc_attr_e( $student->user_lastname ); ?>"/></label></p><?php do_action( 'coursepress_after_settings_last_name' ); ?>
 
-	<label>
-		<?php _e( 'Last Name', 'CP_TD' ); ?>:
-		<input type="text" name="last_name" value="<?php esc_attr_e( $student->user_lastname ); ?>"/>
-	</label>
+	<p><label><?php _e( 'E-mail', 'CP_TD' ); ?>: <input type="text" name="email" value="<?php esc_attr_e( $student->user_email ); ?>"/></label></p><?php do_action( 'coursepress_after_settings_email' ); ?>
 
-	<?php do_action( 'coursepress_after_settings_last_name' ); ?>
+	<p><label><?php _e( 'Username', 'CP_TD' ); ?>: <input type="text" name="username" value="<?php esc_attr_e( $student->user_login ); ?>" disabled="disabled"/> </label></p><?php do_action( 'coursepress_after_settings_username' ); ?>
 
-	<label>
-		<?php _e( 'E-mail', 'CP_TD' ); ?>:
-		<input type="text" name="email" value="<?php esc_attr_e( $student->user_email ); ?>"/>
-	</label>
+	<p><label><?php _e( 'Password', 'CP_TD' ); ?>: <input type="password" name="password" value="" placeholder="<?php _e( "Won't change if empty.", 'CP_TD' ); ?>"/> </label></p><?php do_action( 'coursepress_after_settings_passwordon' ); ?>
 
-	<?php do_action( 'coursepress_after_settings_email' ); ?>
+	<p><label><?php _e( 'Confirm Password', 'CP_TD' ); ?>: <input type="password" name="password_confirmation" value=""/> </label></p><?php do_action( 'coursepress_after_settings_pasword' ); ?>
 
-	<label>
-		<?php _e( 'Username', 'CP_TD' ); ?>:
-		<input type="text" name="username" value="<?php esc_attr_e( $student->user_login ); ?>" disabled="disabled"/>
-	</label>
-
-	<?php do_action( 'coursepress_after_settings_username' ); ?>
-
-	<label>
-		<?php _e( 'Password', 'CP_TD' ); ?>:
-		<input type="password" name="password" value="" placeholder="<?php _e( "Won't change if empty.", 'CP_TD' ); ?>"/>
-	</label>
-
-	<?php do_action( 'coursepress_after_settings_passwordon' ); ?>
-
-	<label>
-		<?php _e( 'Confirm Password', 'CP_TD' ); ?>:
-		<input type="password" name="password_confirmation" value=""/>
-	</label>
-
-	<?php do_action( 'coursepress_after_settings_pasword' ); ?>
-
-	<label class="full">
-		<input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php _e( 'Save Changes', 'CP_TD' ); ?>"/>
-	</label>
+<input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php _e( 'Save Changes', 'CP_TD' ); ?>"/>
 	</form><?php
 		do_action( 'coursepress_after_settings_form' );
 	}

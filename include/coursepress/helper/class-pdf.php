@@ -286,7 +286,7 @@ $pdf = new CoursePress_Helper_PDF( $page_orientation, PDF_UNIT, PDF_PAGE_FORMAT,
 			$pdf->setPrintHeader( false );
 			// adjust margin
 			$pdf->SetHeaderMargin( PDF_MARGIN_HEADER );
-        }
+		}
 
 		if ( isset( $args['footer'] ) ) {
 
@@ -348,42 +348,42 @@ $pdf = new CoursePress_Helper_PDF( $page_orientation, PDF_UNIT, PDF_PAGE_FORMAT,
 			$pdf->SetAutoPageBreak( false );
 		}
 
-        /**
-         * margins
-         */
-        if ( isset( $args['margins'] ) ) {
+		/**
+		 * margins
+		 */
+		if ( isset( $args['margins'] ) ) {
 			$pdf->setPageMark();
-            if ( isset( $args['margins']['right'] ) ) {
-                $pdf->setRightMargin( $args['margins']['right'] );
-            }
-            if ( isset( $args['margins']['top'] ) ) {
-                $pdf->setTopMargin( $args['margins']['top'] );
-            }
-            if ( isset( $args['margins']['left'] ) ) {
-                $pdf->setLeftMargin( $args['margins']['left'] );
-            }
-        }
+			if ( isset( $args['margins']['right'] ) ) {
+				$pdf->setRightMargin( $args['margins']['right'] );
+			}
+			if ( isset( $args['margins']['top'] ) ) {
+				$pdf->setTopMargin( $args['margins']['top'] );
+			}
+			if ( isset( $args['margins']['left'] ) ) {
+				$pdf->setLeftMargin( $args['margins']['left'] );
+			}
+		}
 
-        /**
-         * text color
-         */
-        if ( isset( $args['text_color'] ) ) {
-            if ( is_array( $args['text_color']) && 2 < sizeof( $args['text_color'] ) ) {
-                $pdf->SetTextColor( $args['text_color'][0], $args['text_color'][1], $args['text_color'][2]);
-            }
-        }
+		/**
+		 * text color
+		 */
+		if ( isset( $args['text_color'] ) ) {
+			if ( is_array( $args['text_color']) && 2 < sizeof( $args['text_color'] ) ) {
+				$pdf->SetTextColor( $args['text_color'][0], $args['text_color'][1], $args['text_color'][2]);
+			}
+		}
 
-        /**
-         * Logo
-         */
-        if ( isset( $args['logo'] ) && ! empty( $args['logo'] ) && is_array( $args['logo'] ) ) {
-            $pdf->Image(
-                $args['logo']['file'],
-                $args['logo']['x'],
-                $args['logo']['y'],
-                $args['logo']['w']
-            );
-        }
+		/**
+		 * Logo
+		 */
+		if ( isset( $args['logo'] ) && ! empty( $args['logo'] ) && is_array( $args['logo'] ) ) {
+			$pdf->Image(
+				$args['logo']['file'],
+				$args['logo']['x'],
+				$args['logo']['y'],
+				$args['logo']['w']
+			);
+		}
 
 		// output the HTML content
 		$pdf->writeHTML( $html, true, false, true, false, '' );
@@ -494,4 +494,21 @@ $pdf = new CoursePress_Helper_PDF( $page_orientation, PDF_UNIT, PDF_PAGE_FORMAT,
 		</div>
 		<?php
 	}
+
+	/**
+	 * check and create subdirectory.
+	 *
+	 * @since 2.0.4
+	 *
+	 * @param string $subdirectory subdirectory
+	 */
+	public static function check_dir( $subdirectory ) {
+		$uploads_dir = wp_upload_dir();
+		$cache_path = apply_filters( 'coursepress_pdf_cache_path', trailingslashit( $uploads_dir['basedir'] ) . 'pdf-cache/' );
+		$check_directory = $cache_path . $subdirectory;
+		if ( ! is_dir( $check_directory) ) {
+			mkdir($check_directory);
+		}
+	}
+
 }

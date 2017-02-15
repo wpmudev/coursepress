@@ -1,4 +1,4 @@
-/*! CoursePress - v2.0.0
+/*! CoursePress - v2.0.4
  * https://premium.wpmudev.org/project/coursepress-pro/
  * Copyright (c) 2017; * Licensed GPLv2+ */
 var CoursePress = {};
@@ -485,7 +485,7 @@ $(document)
 		duration = duration.split( ':' );
 
 		seconds = duration.pop();
-		seconds = parseInt( seconds );
+		_seconds = seconds = parseInt( seconds );
 
 		if ( duration.length > 0 ) {
 			_minutes = minutes = duration.pop();
@@ -613,7 +613,7 @@ $(document)
 			//Find current unit serve
 			var current_unit = parents.find( '[name="unit_id"]' );
 
-			if ( 0 == current_unit.length || data.unit != current_unit.val() ) {
+			if ( 0 === current_unit.length || data.unit !== current_unit.val() ) {
 				window.location = data.url;
 				return;
 			}
@@ -670,47 +670,45 @@ $(document)
 			module_elements = $( '.module-elements[data-required="1"]', form ),
 			module_response = module_elements.next( '.module-response' ),
 			is_focus = form.parents( '.coursepress-focus-view' ).length > 0,
-			error = 0, mask
+			error = 0, mask,
+            validate = $('[name=save_progress_and_exit]').length < 1
 		;
-
 		if ( 0 < error_box.length ) {
 			error_box.remove();
 		}
 
 		// Validate required submission
-		module_elements.each( function() {
-			var module = $(this),
+		if ( validate ) {
+			module_elements.each( function() {
+				var module = $(this),
 				module_type = module.data( 'type' ),
 				input;
-
-			// Validate radio and checkbox
-			if ( _.contains( ['input-checkbox', 'input-radio', 'input-quiz'], module_type ) ) {
-				input = $( ':checked', module );
-
-				if ( 0 == input.length ) {
-					error += 1;
+				// Validate radio and checkbox
+				if ( _.contains( ['input-checkbox', 'input-radio', 'input-quiz'], module_type ) ) {
+					input = $( ':checked', module );
+					if ( 0 == input.length ) {
+						error += 1;
+					}
+				} else if ( 'input-upload' === module_type && 0 === module_response.length ) {
+					input = $( '[type="file"]', module );
+					if ( '' === input.val() ) {
+						error += 1;
+					}
+					// Validate input module
+				} else if ( _.contains( ['input-text', 'input-textarea', 'input-select'], module_type ) ) {
+					input = $( 'input,textarea,select', module );
+					if ( '' === input.val() ) {
+						error += 1;
+					}
 				}
-			} else if ( 'input-upload' === module_type && 0 === module_response.length ) {
-				input = $( '[type="file"]', module );
-				if ( '' === input.val() ) {
-					error += 1;
-				}
-			// Validate input module
-			} else if ( _.contains( ['input-text', 'input-textarea', 'input-select'], module_type ) ) {
-				input = $( 'input,textarea,select', module );
-				if ( '' === input.val() ) {
-					error += 1;
-				}
+			} );
+			if ( error > 0 ) {
+				// Don't submit if an error is found!
+				new CoursePress.WindowAlert({
+					message: _coursepress.module_error[ is_focus ? 'required' : 'normal_required' ]
+				});
+				return false;
 			}
-		} );
-
-		if ( error > 0 ) {
-			// Don't submit if an error is found!
-			new CoursePress.WindowAlert({
-				message: _coursepress.module_error[ is_focus ? 'required' : 'normal_required' ]
-			});
-
-			return false;
 		}
 
 		// Mask the page
@@ -993,6 +991,15 @@ $(document)
 			}
 	};
 
+	/**
+	 * Save Progress & Exit
+	 */
+	CoursePress.saveProgressAndExit = function() {
+		var form = $(this).closest('form');
+		form.append( '<input type="hidden" name="save_progress_and_exit" value="1" />' );
+		form.submit();
+	}
+
 	$( document )
 		.ready(function(){
 			CoursePress.timer( $('.cp-module-content' ) );
@@ -1004,7 +1011,9 @@ $(document)
 		.on( 'click', '.cp-comment-submit', CoursePress.addComment )
 		.on( 'change', '.cp-module-content .file input', CoursePress.validateUploadModule )
 		.on( 'click', '.unit-archive-single .fold', CoursePress.singleFolded )
-		.on( 'click', '.course-structure-block .unit .fold, .unit-archive-list .fold', CoursePress.unitFolded );
+		.on( 'click', '.course-structure-block .unit .fold, .unit-archive-list .fold', CoursePress.unitFolded )
+		.on( 'click', '.save-progress-and-exit', CoursePress.saveProgressAndExit );
+
 
 })(jQuery);
 
@@ -1157,6 +1166,9 @@ $(document)
 				var step_action = $( step ).attr('data-modal-action');
 				if ( undefined !== step_action && action === step_action ) {
 					CoursePress.Enrollment.dialog.openAt( i );
+					if ( "login" == action ) {
+						$(window).scrollTop( $( "div.cp-mask.enrolment-container-div" ).offset().top - 100 );
+					}
 				}
 			});
 		},
@@ -1261,9 +1273,9 @@ $(document)
 					var action = $( step ).attr( 'data-modal-action' );
 					if ( 'passcode' == _coursepress.current_course_type && 'passcode' === action ) {
 						CoursePress.Enrollment.dialog.openAt( i );
-                    }
-                });
-            }
+					}
+				});
+			}
 
 			$('.enrolment-container-div' ).removeClass('hidden');
 		},
@@ -1393,8 +1405,8 @@ $(document)
 						fn( data );
 						return;
 					}
-                }
-            });
+				}
+			});
 			CoursePress.Post.off( 'coursepress:enrollment:enroll_student_success' );
 			CoursePress.Post.on( 'coursepress:enrollment:enroll_student_success', function( data ) {
 				cpmask.removeClass( 'loading' );
@@ -1470,7 +1482,7 @@ $(document)
 	CoursePress.Enrollment = CoursePress.Enrollment || {};
 
 	CoursePress.CustomLoginHook = function() {
-        $(this).attr( 'href', 'javascript:;');
+		$(this).attr( 'href', '#');
 		var newDiv = $( '<div class="cp-mask enrolment-container-div">' );
 
 		newDiv.appendTo( 'body' );
@@ -1652,11 +1664,24 @@ $(document)
 				window.location = href;
 			}
 		});
+		return false;
+	};
+
+	var confirmManage= function() {
+		var href = $(this).data( 'link' ),
+			win = new CoursePress.WindowAlert({
+			type: 'prompt',
+			message: _coursepress.confirmed_edit,
+			callback: function() {
+				window.location = href;
+			}
+		});
 
 		return false;
 	};
 
 	$(document)
-		.on( 'click', '.cp-withdraw-student', confirmWithdrawal );
+		.on( 'click', '.cp-withdraw-student', confirmWithdrawal )
+		.on( 'click', '.coursepress-course-link', confirmManage );
 
 })(jQuery);

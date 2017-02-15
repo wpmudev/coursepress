@@ -1,4 +1,4 @@
-/*! CoursePress - v2.0.0
+/*! CoursePress - v2.0.4
  * https://premium.wpmudev.org/project/coursepress-pro/
  * Copyright (c) 2017; * Licensed GPLv2+ */
 /*global tinyMCEPreInit*/
@@ -394,9 +394,9 @@ var CoursePress = CoursePress || {};
 
 					question_content += '<div class="answer-group">';
 					question_content += '<div class="answer"><input type="radio" name="' + radio_name + '" value="" />';
-					question_content += '<input class="component-select-answer wide" type="text" value="Answer A" /><span class="remove-form-item"><i class="fa fa-trash-o"></i></span></div>';
+					question_content += '<input class="component-select-answer wide" type="text" value="' + _coursepress.unit_l8n.pre_answers.a + '" /><span class="remove-form-item"><i class="fa fa-trash-o"></i></span></div>';
 					question_content += '<div class="answer"><input type="radio" name="' + radio_name + '" value="" />';
-					question_content += '<input class="component-select-answer wide" type="text" value="Answer B" /><span class="remove-form-item"><i class="fa fa-trash-o"></i></span></div>';
+					question_content += '<input class="component-select-answer wide" type="text" value="' + _coursepress.unit_l8n.pre_answers.b + '" /><span class="remove-form-item"><i class="fa fa-trash-o"></i></span></div>';
 					question_content += '</div>';
 					question_content += '<a class="add-form-item">' + _coursepress.unit_builder_add_answer_label + '</a>';
 
@@ -460,9 +460,9 @@ var CoursePress = CoursePress || {};
 					//question_content += '<div class="answer-group">';
 					//
 					//question_content += '<div class="answer"><input type="radio" name="" value="" />';
-					//question_content += '<input type="text" value="Answer A" name="" /><span class="remove-item"><i class="fa fa-trash-o"></i></span></div>';
+					//question_content += '<input type="text" value="' + _coursepress.unit_l8n.pre_answers.a + '" name="" /><span class="remove-item"><i class="fa fa-trash-o"></i></span></div>';
 					//question_content += '<div class="answer"><input type="radio" name="" value="" />';
-					//question_content += '<input type="text" value="Answer B" name="" /><span class="remove-item"><i class="fa fa-trash-o"></i></span></div>';
+					//question_content += '<input type="text" value="' + _coursepress.unit_l8n.pre_answers.b + '" name="" /><span class="remove-item"><i class="fa fa-trash-o"></i></span></div>';
 					//
 					//question_content += '</div>';
 					//question_content += '<a class="add-item">' + _coursepress.unit_builder_add_answer_label + '</a>';
@@ -993,8 +993,7 @@ var CoursePress = CoursePress || {};
 		if ( "success" === notice_class ) {
 			setTimeout(function(){ $( ".section.unit-builder-components .notice" ).fadeOut(); }, 3000);
 		}
-    }
-
+	}
 
 	CoursePress.Helpers.Module.unit_show_message = function( message, notice_class ) {
 		$( ".unit-builder-header .unit-buttons .notice, .unit-builder-footer .unit-buttons .notice" ).detach();
@@ -1399,8 +1398,18 @@ var CoursePress = CoursePress || {};
 					case 'action':
 						var css_class = item['class'] || '';
 						var action = item['action'] || '';
+						var title = item['title'] || '';
+						var dashicon = item['dashicon'] || '';
 
-						content += '<div class="' + css_class + '" data-type="' + action + '"><a></a></div>';
+						content += '<div class="' + css_class + '" data-type="' + action + '"><a>';
+						if ( dashicon ) {
+							content += '<span class="dashicons dashicons-'+dashicon+'"></span>';
+						}
+						content += '</a>';
+						if ( title ) {
+							content += '<span class="element-label">'+title+'</span>';
+						}
+						content += '</div>';
 						//content += '<span style="color:green">«- Developer note: Only multiple choice for now, will add others soon.</span>';
 
 						break;

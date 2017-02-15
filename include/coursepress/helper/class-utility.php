@@ -1207,8 +1207,11 @@ class CoursePress_Helper_Utility {
 				wp_safe_redirect( admin_url() );
 				exit;
 			}
+
 			if ( isset( $_POST['redirect_url'] ) ) {
 				wp_safe_redirect( urldecode( esc_url_raw( $_POST['redirect_url'] ) ) );
+			} else if ( isset( $_POST['redirect_to'] ) ) {
+				wp_safe_redirect( urldecode( esc_url_raw( $_POST['redirect_to'] ) ) );
 			} else {
 				wp_redirect( esc_url_raw( CoursePress_Core::get_slug( 'student_dashboard', true ) ) );
 			}
@@ -1242,5 +1245,50 @@ class CoursePress_Helper_Utility {
 		 */
 		$security_key = md5( NONCE_KEY );
 		return $security_key;
+	}
+
+	/**
+	 * Get total secounds.
+	 *
+	 * @since 2.0.4
+	 *
+	 * @param integer $secounds Number of secounds.
+	 * @param integer $hours Number of hours.
+	 * @param integer $minutes Number of minutes.
+	 * @return array {
+	 *      @type string Time in format hh:mm:ss
+	 *      @type integer Number of hours.
+	 *      @type integer Number of minutes.
+	 *      @type integer Number of seconds.
+	 * }
+	 * internet Total number of seconds.
+	 */
+	public static function get_time( $seconds = 0, $minutes = 0, $hours = 0 ) {
+		$time = (int) $seconds + (int) $minutes * MINUTE_IN_SECONDS + (int) $hours * HOUR_IN_SECONDS;
+		return array(
+			'total_seconds' => $time,
+			'time' => date( 'H:i:s', $time ),
+			'hours' => date( 'H', $time ),
+			'minutes' => date( 'i', $time ),
+			'seconds' => date( 's', $time ),
+		);
+	}
+
+	/*
+	 * Convert an associative array to html params.
+	 *
+	 * @since 2.0.4
+	 */
+	public static function convert_array_to_params( $array ) {
+		$content = '';
+		if ( is_array( $array ) ) {
+			foreach ( $array as $key => $value ) {
+				if ( preg_match( '/^\d+$/', $key ) ) {
+					continue;
+				}
+				$content .= sprintf( ' %s="%s"', $key, esc_attr( $value ) );
+			}
+		}
+		return $content;
 	}
 }

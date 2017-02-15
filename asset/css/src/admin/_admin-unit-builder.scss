@@ -574,8 +574,10 @@
 
       .module-components {
 
-        .module-component {
-          .remove-item {
+        .module-component,
+        .question-answer {
+          .remove-item,
+          .remove-quiz-item {
             cursor: pointer;
             margin-left: 10px;
           }
