@@ -456,9 +456,20 @@ CoursePress.removeErrorHint = function() {
 		return value;
 	};
 
+	/**
+	 * proceder data-link if exists
+	 */
+	CoursePress.procederDataLink = function( e ) {
+		var target = e.currentTarget;
+		if ( $( target ).attr( 'data-link' ) ) {
+			window.location.href = $( target ).attr( 'data-link' );
+		}
+	}
+
 // Hook into document
 $(document)
 	.ready( CoursePress.unitProgressInit ) // Call unit progress init
-	.on( 'focus', '.cp-mask .has-error, .cp .has-error', CoursePress.removeErrorHint );
+	.on( 'focus', '.cp-mask .has-error, .cp .has-error', CoursePress.removeErrorHint )
+	.on( "click", ".single_show_cart_button", CoursePress.procederDataLink );
 
 })(jQuery);
