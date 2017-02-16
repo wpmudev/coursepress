@@ -7,7 +7,7 @@ CHANGELOG
 
 = 2.0.5 =
 -------------------------------------------------
-
+* Fixed a wrong icon on assessments page, it was always shown fail icon.
 
 = 2.0.4 =
 -------------------------------------------------
