@@ -570,7 +570,7 @@ class CoursePress_Data_Course {
 			$settings = array();
 		} else {
 			// Replace only one setting
-			CoursePress_Helper_Utility::unset_array_val( $settings, $key );
+			$settings = CoursePress_Helper_Utility::unset_array_value( $settings, $key );
 		}
 
 		return update_post_meta( $course_id, 'course_settings', $settings );

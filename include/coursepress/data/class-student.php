@@ -1235,7 +1235,7 @@ class CoursePress_Data_Student {
 		$is_completed = false;
 
 		// Remove failed marker
-		CoursePress_Helper_Utility::unset_array_val(
+		$student_progress = CoursePress_Helper_Utility::unset_array_value(
 			$student_progress,
 			'completion/failed'
 		);

@@ -626,7 +626,7 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 							'modules_seen/' . $new_module_id,
 							1
 						);
-						CoursePress_Helper_Utility::unset_array_val(
+						$unit_completion = CoursePress_Helper_Utility::unset_array_value(
 							$unit_completion,
 							'modules_seen/' . $module_id
 						);
@@ -641,7 +641,7 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 							'answered/' . $new_module_id,
 							1
 						);
-						CoursePress_Helper_Utility::unset_array_val(
+						$unit_completion = CoursePress_Helper_Utility::unset_array_value(
 							$unit_completion,
 							'answered/' . $module_id
 						);
@@ -655,7 +655,7 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 					'units/' . $new_unit_id,
 					$unit_data
 				);
-				CoursePress_Helper_Utility::unset_array_val(
+				$student_progress = CoursePress_Helper_Utility::unset_array_value(
 					$student_progress,
 					'units/' . $unit_id
 				);
@@ -666,7 +666,7 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 					'completion/' . $new_unit_id,
 					$unit_completion
 				);
-				CoursePress_Helper_Utility::unset_array_val(
+				$student_progress = CoursePress_Helper_Utility::unset_array_value(
 					$student_progress,
 					'completion/' . $unit_id
 				);

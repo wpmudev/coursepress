@@ -159,12 +159,52 @@ class CoursePress_Helper_Utility {
 		return $a;
 	}
 
+	// get array value based on path.
+	public static function get_array_val( $a, $path ) {
+		if ( ! is_array( $path ) ) {
+			$path = explode( '/', $path );
+		}
+		foreach ( $path as $k ) {
+			if ( isset( $a[ $k ] ) ) {
+				$a = $a[ $k ];
+			} else {
+				return null;
+			}
+		}
+		return $a;
+	}
+
+	/**
+	 * Unset array value based on path.
+	 *
+	 * @since 2.0.5
+	 *
+	 * @param mixed $a Array or nothing - current values set.
+	 * @param string/array $path Path as a string or an array.
+	 *
+	 * @return array Settings array.
+	 */
+	public static function unset_array_value( $a, $path ) {
+		if ( ! is_array( $path ) ) {
+			$path = explode( '/', $path );
+		}
+		$key = array_shift( $path );
+		if ( empty( $path ) ) {
+			unset( $a[ $key ? $key : count( $a ) ] );
+			return $a;
+		}
+		if ( ! isset( $a[ $key ] ) || ! is_array( $a[ $key ] ) ) {
+			$a[ $key ] = array();
+		}
+		$a[ $key ] = self::unset_array_value( $a[ $key ], $path );
+		return $a;
+	}
+
 	/**
 	 * set array value based on path.
 	 *
 	 * @deprecated 2.0.5 Use set_array_value()
 	 * @see set_array_value()
-	 *
 	 */
 	public static function set_array_val( &$a, $path, $value ) {
 		CoursePress_Helper_Legacy::deprecated_function( __CLASS__.'::'.__FUNCTION__, '2.0.5', 'CoursePress_Helper_Utility::set_array_value()' );
@@ -181,26 +221,17 @@ class CoursePress_Helper_Utility {
 		$a[ $key ? $key : count( $a ) ] = $value;
 	}
 
-	// get array value based on path.
-	public static function get_array_val( $a, $path ) {
-		if ( ! is_array( $path ) ) {
-			$path = explode( '/', $path );
-		}
-		foreach ( $path as $k ) {
-			if ( isset( $a[ $k ] ) ) {
-				$a = $a[ $k ];
-			} else {
-				return null;
-			}
-		}
-		return $a;
-	}
-
+	/**
+	 * unset array value based on path.
+	 *
+	 * @deprecated 2.0.5 Use unset_array_value()
+	 * @see unset_array_value()
+	 */
 	public static function unset_array_val( &$a, $path ) {
+		CoursePress_Helper_Legacy::deprecated_function( __CLASS__.'::'.__FUNCTION__, '2.0.5', 'CoursePress_Helper_Utility::unset_array_value()' );
 		if ( ! is_array( $path ) ) {
 			$path = explode( '/', $path );
 		}
-
 		$key = array_pop( $path );
 		foreach ( $path as $k ) {
 			if ( ! isset( $a[ $k ] ) ) {
@@ -215,7 +246,6 @@ class CoursePress_Helper_Utility {
 		if ( is_object( $object ) ) {
 			$object = get_object_vars( $object );
 		}
-
 		if ( is_array( $object ) ) {
 			return array_map( array( __CLASS__, 'object_to_array' ), $object );
 		} else {
