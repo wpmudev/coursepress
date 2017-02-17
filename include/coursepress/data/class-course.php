@@ -516,7 +516,7 @@ class CoursePress_Data_Course {
 			$settings = $value;
 		} else {
 			// Replace only one setting
-			CoursePress_Helper_Utility::set_array_val( $settings, $key, $value );
+			$settings = CoursePress_Helper_Utility::set_array_value( $settings, $key, $value );
 		}
 
 		/**
@@ -587,7 +587,7 @@ class CoursePress_Data_Course {
 		if ( ! is_array( $settings ) ) {
 			return;
 		}
-		CoursePress_Helper_Utility::set_array_val( $settings, $key, $value );
+		$settings = CoursePress_Helper_Utility::set_array_value( $settings, $key, $value );
 	}
 
 	public static function allow_pages( $course_id ) {
@@ -805,9 +805,8 @@ class CoursePress_Data_Course {
 		$units = self::get_units( $course_id, $status );
 
 		foreach ( $units as $unit ) {
-			CoursePress_Helper_Utility::set_array_val( $items, $unit->ID . '/order', get_post_meta( $unit->ID, 'unit_order', true ) );
-			CoursePress_Helper_Utility::set_array_val( $items, $unit->ID . '/unit', $unit );
-
+			$items = CoursePress_Helper_Utility::set_array_value( $items, $unit->ID . '/order', get_post_meta( $unit->ID, 'unit_order', true ) );
+			$items = CoursePress_Helper_Utility::set_array_value( $items, $unit->ID . '/unit', $unit );
 			$page_titles = get_post_meta( $unit->ID, 'page_title', true );
 			$page_description = (array) get_post_meta( $unit->ID, 'page_description', true );
 			$page_feature_image = (array) get_post_meta( $unit->ID, 'page_feature_image', true );
@@ -819,23 +818,23 @@ class CoursePress_Data_Course {
 				foreach ( $page_titles as $page_id => $page_title ) {
 					$page_number = str_replace( 'page_', '', $page_id );
 
-					CoursePress_Helper_Utility::set_array_val(
+					$items = CoursePress_Helper_Utility::set_array_value(
 						$items,
 						$page_path . '/' . $page_number . '/title',
 						$page_title
 					);
 
-					CoursePress_Helper_Utility::set_array_val(
+					$items = CoursePress_Helper_Utility::set_array_value(
 						$items,
 						$page_path . '/' . $page_number . '/description',
 						! empty( $page_description[ $page_id ] ) ? $page_description[ $page_id ] : ''
 					);
-					CoursePress_Helper_Utility::set_array_val(
+					$items = CoursePress_Helper_Utility::set_array_value(
 						$items,
 						$page_path . '/' . $page_number . '/feature_image',
 						! empty( $page_feature_image[ $page_id ] ) ? $page_feature_image[ $page_id ] : ''
 					);
-					CoursePress_Helper_Utility::set_array_val(
+					$items = CoursePress_Helper_Utility::set_array_value(
 						$items,
 						$page_path . '/' . $page_number . '/visible',
 						isset( $show_page_title[ $page_number - 1 ] ) ? $show_page_title[ $page_number -1 ] : false
@@ -844,14 +843,14 @@ class CoursePress_Data_Course {
 					$modules = self::get_unit_modules( $unit->ID, $status, false, false, array( 'page' => $page_number ) );
 					uasort( $modules, array( __CLASS__, 'uasort_modules' ) );
 
-					CoursePress_Helper_Utility::set_array_val(
+					$items = CoursePress_Helper_Utility::set_array_value(
 						$items,
 						$page_path . '/' . $page_number . '/modules',
 						array()
 					);
 
 					foreach ( $modules as $module ) {
-						CoursePress_Helper_Utility::set_array_val(
+						$items = CoursePress_Helper_Utility::set_array_value(
 							$items,
 							$page_path . '/' . $page_number . '/modules/' . $module->ID,
 							$module
@@ -954,19 +953,19 @@ class CoursePress_Data_Course {
 				$page_visibility = ! empty( $visibilities ) && isset( $visibilities[ ( $page - 1 ) ] ) ? $visibilities[ ( $page - 1 ) ] : false;
 
 				$path = $post->post_parent . '/pages/' . $page;
-				CoursePress_Helper_Utility::set_array_val( $combine, $path . '/title', $page_title );
-				CoursePress_Helper_Utility::set_array_val( $combine, $path . '/description', $page_description );
-				CoursePress_Helper_Utility::set_array_val( $combine, $path . '/feature_image', $page_image );
-				CoursePress_Helper_Utility::set_array_val( $combine, $path . '/visible', $page_visibility );
+				$combine = CoursePress_Helper_Utility::set_array_value( $combine, $path . '/title', $page_title );
+				$combine = CoursePress_Helper_Utility::set_array_value( $combine, $path . '/description', $page_description );
+				$combine = CoursePress_Helper_Utility::set_array_value( $combine, $path . '/feature_image', $page_image );
+				$combine = CoursePress_Helper_Utility::set_array_value( $combine, $path . '/visible', $page_visibility );
 
 				$path = $post->post_parent . '/pages/' . $page . '/modules/' . $post->ID;
-				CoursePress_Helper_Utility::set_array_val( $combine, $path, $post );
+				$combine = CoursePress_Helper_Utility::set_array_value( $combine, $path, $post );
 
 				$previous_parent = $post->post_parent;
 
 			} elseif ( $unit_cpt == $post->post_type ) {
-				CoursePress_Helper_Utility::set_array_val( $combine, $post->ID . '/order', get_post_meta( $post->ID, 'unit_order', true ) );
-				CoursePress_Helper_Utility::set_array_val( $combine, $post->ID . '/unit', $post );
+				$combine = CoursePress_Helper_Utility::set_array_value( $combine, $post->ID . '/order', get_post_meta( $post->ID, 'unit_order', true ) );
+				$combine = CoursePress_Helper_Utility::set_array_value( $combine, $post->ID . '/unit', $post );
 			}
 		}
 
@@ -1668,7 +1667,7 @@ class CoursePress_Data_Course {
 
 				// Include only pages of existing unit
 				if ( in_array( $unit, array_keys( $units ) ) ) {
-					CoursePress_Helper_Utility::set_array_val(
+					$visibility = CoursePress_Helper_Utility::set_array_value(
 						$visibility,
 						$unit . '/' . $page ,
 						true
@@ -1685,7 +1684,7 @@ class CoursePress_Data_Course {
 				);
 
 				if ( $is_visible ) {
-					CoursePress_Helper_Utility::set_array_val(
+					$visibility = CoursePress_Helper_Utility::set_array_value(
 						$visibility,
 						$unit . '/' . $page . '/' . $module,
 						true
@@ -1740,12 +1739,12 @@ class CoursePress_Data_Course {
 
 			foreach ( array_keys( $pages ) as $key ) {
 				list( $unit, $page ) = explode( '_', $key );
-				CoursePress_Helper_Utility::set_array_val(
+				$preview_structure = CoursePress_Helper_Utility::set_array_value(
 					$preview_structure,
 					$unit . '/' . $page,
 					true
 				);
-				CoursePress_Helper_Utility::set_array_val(
+				$preview_structure = CoursePress_Helper_Utility::set_array_value(
 					$preview_structure,
 					$unit . '/unit_has_previews',
 					true
@@ -1754,17 +1753,17 @@ class CoursePress_Data_Course {
 
 			foreach ( array_keys( $modules ) as $key ) {
 				list( $unit, $page, $module ) = explode( '_', $key );
-				CoursePress_Helper_Utility::set_array_val(
+				$preview_structure = CoursePress_Helper_Utility::set_array_value(
 					$preview_structure,
 					$unit . '/' . $page . '/' . $module,
 					true
 				);
-				CoursePress_Helper_Utility::set_array_val(
+				$preview_structure = CoursePress_Helper_Utility::set_array_value(
 					$preview_structure,
 					$unit . '/' . $page . '/page_has_previews',
 					true
 				);
-				CoursePress_Helper_Utility::set_array_val(
+				$preview_structure = CoursePress_Helper_Utility::set_array_value(
 					$preview_structure,
 					$unit . '/unit_has_previews',
 					true
@@ -2022,7 +2021,6 @@ class CoursePress_Data_Course {
 		if ( 1 > $current_index || $current_index > count( $nav_sequence ) ) {
 			$current_index = count( $nav_sequence );
 		}
-//error_log(print_r($nav_sequence,true));
 		return $nav_sequence[ $current_index - 1 ];
 	}
 

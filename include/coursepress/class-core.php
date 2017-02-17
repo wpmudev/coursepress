@@ -229,7 +229,7 @@ class CoursePress_Core {
 
 		if ( ! empty( $key ) ) {
 			// Replace only one setting.
-			CoursePress_Helper_Utility::set_array_val( $settings, $key, $value );
+			$settings = CoursePress_Helper_Utility::set_array_value( $settings, $key, $value );
 		} else {
 			// Replace all settings.
 			$settings = $value;

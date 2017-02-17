@@ -29,7 +29,7 @@ class CoursePress_Helper_Legacy {
 					'suppress_filtes' => true,
 				)
 			);
-	
+
 			if ( ! empty( $courses ) ) {
 				foreach ( $courses as $course_id ) {
 					$old_settings = CoursePress_Data_Course::get_setting( $course_id );
@@ -38,6 +38,46 @@ class CoursePress_Helper_Legacy {
 				}
 			} else {
 				update_option( 'cp_courses_meta_updated', true );
+			}
+		}
+	}
+
+	/**
+	 * Mark a function as deprecated and inform when it has been used.
+	 *
+	 * The current behavior is to trigger a user error if `WP_DEBUG` is true.
+	 *
+	 * This function is to be used in every function that is deprecated.
+	 *
+	 * @since 2.0.5
+	 *
+	 * @param string $function    The function that was called.
+	 * @param string $version     The version of WordPress that deprecated the function.
+	 * @param string $replacement Optional. The function that should have been called. Default null.
+	 */
+	public static function deprecated_function( $function, $version, $replacement = null ) {
+		/**
+		 * Filters whether to trigger an error for deprecated functions.
+		 *
+		 * @since 2.5.0
+		 *
+		 * @param bool $trigger Whether to trigger the error for deprecated functions. Default true.
+		 */
+		if ( WP_DEBUG && apply_filters( 'deprecated_function_trigger_error', true ) ) {
+			if ( function_exists( '__' ) ) {
+				if ( ! is_null( $replacement ) ) {
+					/* translators: 1: PHP function name, 2: version number, 3: alternative function name */
+					trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead.' ), $function, $version, $replacement ) );
+				} else {
+					/* translators: 1: PHP function name, 2: version number */
+					trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since version %2$s with no alternative available.' ), $function, $version ) );
+				}
+			} else {
+				if ( ! is_null( $replacement ) ) {
+					trigger_error( sprintf( '%1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead.', $function, $version, $replacement ) );
+				} else {
+					trigger_error( sprintf( '%1$s is <strong>deprecated</strong> since version %2$s with no alternative available.', $function, $version ) );
+				}
 			}
 		}
 	}

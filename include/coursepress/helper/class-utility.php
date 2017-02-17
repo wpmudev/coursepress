@@ -132,13 +132,45 @@ class CoursePress_Helper_Utility {
 		}
 	}
 
-
-	// set array value based on path.
-	public static function set_array_val( &$a, $path, $value ) {
+	/**
+	 * Set array value based on path.
+	 *
+	 * @since 2.0.5
+	 *
+	 * @param mixed $a Array or nothing - current values set.
+	 * @param string/array $path Path as a string or an array.
+	 * @param mixed $value Value to set.
+	 *
+	 * @return array Settings array.
+	 */
+	public static function set_array_value( $a, $path, $value ) {
 		if ( ! is_array( $path ) ) {
 			$path = explode( '/', $path );
 		}
+		$key = array_shift( $path );
+		if ( empty( $path ) ) {
+			$a[ $key ? $key : count( $a ) ] = $value;
+			return $a;
+		}
+		if ( ! isset( $a[ $key ] ) || ! is_array( $a[ $key ] ) ) {
+			$a[ $key ] = array();
+		}
+		$a[ $key ] = self::set_array_value( $a[ $key ], $path, $value );
+		return $a;
+	}
 
+	/**
+	 * set array value based on path.
+	 *
+	 * @deprecated 2.0.5 Use set_array_value()
+	 * @see set_array_value()
+	 *
+	 */
+	public static function set_array_val( &$a, $path, $value ) {
+		CoursePress_Helper_Legacy::deprecated_function( __CLASS__.'::'.__FUNCTION__, '2.0.5', 'CoursePress_Helper_Utility::set_array_value()' );
+		if ( ! is_array( $path ) ) {
+			$path = explode( '/', $path );
+		}
 		$key = array_pop( $path );
 		foreach ( $path as $k ) {
 			if ( ! isset( $a[ $k ] ) || ! is_array( $a[ $k ] ) ) {

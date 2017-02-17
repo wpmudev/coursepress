@@ -88,7 +88,6 @@ class CoursePress_View_Admin_Course_Edit {
 	}
 
 	public static function process_form() {
-		// error_log( print_r( $_REQUEST, true ) );
 	}
 
 	public static function render_page() {
