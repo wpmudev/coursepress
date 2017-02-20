@@ -49,14 +49,24 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 		$responses     = 0;
 
 		$user_object = new Student( $user_id );
-		?>
-		<h2 style="text-align:center; color:#2396A0;"><?php echo $user_object->first_name . ' ' . $user_object->last_name; ?></h2>
-		<?php
+		$userdata = get_userdata( $user_id );
+		if ( $userdata ) {
+			$display_name = $userdata->display_name;
+			?>
+			<h2 style="text-align:center; color:#2396A0;"><?php echo $display_name; ?></h2>
+			<?php
+		}
+		else {
+			?>
+			<h2 style="text-align:center; color:#2396A0;"><?php echo $user_object->first_name . ' ' . $user_object->last_name; ?></h2>
+			<?php
+		}
+
 		foreach ( $course_units as $course_unit ) {
 			?>
 			<table cellspacing="0" cellpadding="5">
 				<tr>
-					<td colspan="4" style="background-color:#f5f5f5;"><?php echo $course_unit->post_title; ?></td>
+					<td colspan="4" style="background-color:#f5f5f5;"><?php echo get_the_title( $course_unit['post']->ID ); ?></td>
 				</tr>
 			</table>
 			<?php
@@ -206,6 +216,29 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 	}//post users
 
     $report_content = apply_filters('cp_report_content_output', ob_get_clean());
+
+	if ( 'html' === $_POST['mode'] ) {
+		echo $report_content;
+		?>
+		<style>
+			table {
+				width:100%;
+			}
+			table td:first-child {
+				width:5%;
+			}
+			td {
+				width:30%;
+				border-right: 1px solid #C1DAD7;
+				border-bottom: 1px solid #C1DAD7;
+				background: #fff;
+				padding: 6px 6px 6px 12px;
+				color: #6D929B;
+			}
+		</style>
+		<?php
+		die();
+	}
 
 
 	if ( $users_num == 1 ) {
@@ -483,7 +516,7 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 
 					<td class="column-responses <?php echo $style; ?>"><?php echo $user_object->get_number_of_responses( $current_course_id ); ?></td>
 					<td class="column-average-grade <?php echo $style; ?>"><?php echo $user_object->get_avarage_response_grade( $current_course_id ) . '%'; ?></td>
-					<td class="column-report <?php echo $style; ?>"><a class="pdf">&nbsp;</a></td>
+					<td class="column-report <?php echo $style; ?>"><a class="pdf">&nbsp;</a> <a class="html">&nbsp;</a></td>
 				</tr>
 
 			<?php
@@ -518,6 +551,7 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 					?>
 
 				</select>
+				<input type="hidden" name="mode" id="report-mode" value="pdf">
 				<?php submit_button( __( 'Generate Report', 'cp' ), 'primary', 'generate_report_button', false ); ?>
 			</div>
 

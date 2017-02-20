@@ -61,9 +61,21 @@
     background-image: url( "../images/pdf_document.png" );
     background-repeat: no-repeat;
     height: 16px;
-    display: block;
+    width: 16px;
+    display: inline-block;
     margin-left: 12px;
     cursor: pointer;
+}
+
+.html {
+    background-image: url( "../images/html-icon.gif" );
+    background-repeat: no-repeat;
+    height: 16px;
+    display: inline-block;
+    margin-left: 12px;
+    cursor: pointer;
+    height: 16px;
+    width: 16px;
 }
 
 .widefat td{

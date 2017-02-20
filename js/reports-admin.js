@@ -12,6 +12,14 @@ jQuery(function() {
     jQuery('.pdf').click(function(){
         jQuery(".check-column input").prop('checked', false);
         jQuery(this).closest('tr').find(".check-column input").prop('checked', true);
+        jQuery( '#report-mode' ).val( 'pdf' );
+        jQuery("#generate-report").submit();
+    });
+
+    jQuery('.html').click(function(){
+        jQuery(".check-column input").prop('checked', false);
+        jQuery(this).closest('tr').find(".check-column input").prop('checked', true);
+        jQuery( '#report-mode' ).val( 'html' );
         jQuery("#generate-report").submit();
     });
     
