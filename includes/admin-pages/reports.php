@@ -277,6 +277,8 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 		<div id="message" class="updated fade"><p><?php echo $message; ?></p></div>
 	<?php
 	}
+
+	$course_id = isset( $_GET['course'] ) ? absint( $_GET['course'] ) : '';
 	?>
 
 	<div class="tablenav tablenav-top">
@@ -286,7 +288,7 @@ $wp_user_search = new Student_Search( $usersearch, $page_num );
 
 			<div class="alignleft actions">
 				<select name="course_id" id="dynamic_courses" class="chosen-select">
-
+					<option value="" <?php selected( '', $course_id ); ?>><?php _e( '-- Select a course --', 'coursepress' ); ?></option>
 					<?php
 					$args = array(
 						'post_type'      => 'course',
