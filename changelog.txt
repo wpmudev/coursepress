@@ -7,6 +7,7 @@ CHANGELOG
 
 = 2.0.5 =
 -------------------------------------------------
+* Added CoursePress Endpoints to Apperance -> Menu screen.
 * Fixed missing messages on login/signup form.
 * Improved HTML login & signup forms.
 * FIxed on signup form double error messages.
