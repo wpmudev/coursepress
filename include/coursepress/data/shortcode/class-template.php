@@ -1583,10 +1583,6 @@ class CoursePress_Data_Shortcode_Template {
 						do_action( 'coursepress_before_all_signup_fields' );
 						$content .= ob_get_clean();
 
-						if ( $strength_meter_placeholder ) {
-							$content .= '<span id="error-messages"></span>';
-						}
-
 						// First name.
 						$content .= '
 							<input type="hidden" name="course_id" value="' . esc_attr( $course_id ) . '"/>
