@@ -7,6 +7,8 @@ CHANGELOG
 
 = 2.0.5 =
 -------------------------------------------------
+* Fixed missing messages on login/signup form.
+* Improved HTML login & signup forms.
 * FIxed on signup form double error messages.
 * Added check is safe_mode before call set_time_limit() function.
 

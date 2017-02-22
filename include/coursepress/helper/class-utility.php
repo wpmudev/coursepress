@@ -28,7 +28,7 @@ class CoursePress_Helper_Utility {
 		add_action( 'init', array( __CLASS__, 'open_course_zip_object' ), 1 );
 		//add_action( 'admin_init', array( __CLASS__, 'course_admin_filters' ), 1 );
 		add_filter( 'upload_mimes', array( __CLASS__, 'enable_extended_upload' ) );
-		add_action( 'parse_request', array( __CLASS__, 'course_signup' ) );
+		add_action( 'parse_request', array( __CLASS__, 'course_signup' ), 1 );
 	}
 
 	public static function enable_extended_upload( $mime_types = array() ) {
@@ -1207,7 +1207,6 @@ class CoursePress_Helper_Utility {
 				wp_safe_redirect( admin_url() );
 				exit;
 			}
-
 			if ( isset( $_POST['redirect_url'] ) ) {
 				wp_safe_redirect( urldecode( esc_url_raw( $_POST['redirect_url'] ) ) );
 			} else if ( isset( $_POST['redirect_to'] ) ) {

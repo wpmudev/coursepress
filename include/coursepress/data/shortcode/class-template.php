@@ -1188,14 +1188,6 @@ class CoursePress_Data_Shortcode_Template {
 		$form_message = '';
 		$form_message_class = '';
 
-		// Attempt a login if submitted.
-		if ( isset( $_POST['log'] ) && isset( $_POST['pwd'] ) ) {
-			if ( apply_filters( 'cp_course_signup_form_show_messages', false ) ) {
-				$form_message = $failed_login_text;
-				$form_message_class = $failed_login_class;
-			}
-		}
-
 		$content = '';
 		switch ( $page ) {
 			case 'signup':
@@ -1203,7 +1195,7 @@ class CoursePress_Data_Shortcode_Template {
 					if ( CoursePress_Helper_Utility::users_can_register() ) {
 						$form_message_class = '';
 						$form_message = '';
-
+						$content = '<div class="coursepress-form coursepress-form-signup">';
 						if ( isset( $_POST['student-settings-submit'] ) ) {
 							check_admin_referer( 'student_signup' );
 							$min_password_length = apply_filters( 'coursepress_min_password_length', 6 );
@@ -1330,83 +1322,68 @@ class CoursePress_Data_Shortcode_Template {
 						do_action( 'coursepress_before_signup_form' );
 						$content .= ob_get_clean();
 
-						$content .= '
-							<form id="student-settings" name="student-settings" method="post" class="student-settings signup-form">
-						';
+						$content .= '<form id="student-settings" name="student-settings" method="post" class="student-settings signup-form">';
 
 						ob_start();
 						do_action( 'coursepress_before_all_signup_fields' );
 						$content .= ob_get_clean();
 
 						// First name
-						$content .= '
-							<input type="hidden" name="course_id" value="' . esc_attr( isset( $_GET['course_id'] ) ? $_GET['course_id'] : ' ' ) . '"/>
-							<input type="hidden" name="redirect_url" value="' . esc_url( $redirect_url ) . '"/>
-							<label class="firstname">
-								<span>' . esc_html__( 'First Name', 'CP_TD' ) . ':</span>
-								<input type="text" name="first_name" value="' . ( isset( $_POST['first_name'] ) ? esc_html( $_POST['first_name'] ) : '' ) . '"/>
-							</label>
-						';
+						$content .= '<input type="hidden" name="course_id" value="' . esc_attr( isset( $_GET['course_id'] ) ? $_GET['course_id'] : ' ' ) . '"/>';
+						$content .= '<input type="hidden" name="redirect_url" value="' . esc_url( $redirect_url ) . '"/>';
+						$content .= '<label class="firstname">';
+						$content .= '<span>' . esc_html__( 'First Name', 'CP_TD' ) . ':</span>';
+						$content .= '<input type="text" name="first_name" value="' . ( isset( $_POST['first_name'] ) ? esc_html( $_POST['first_name'] ) : '' ) . '"/>';
+						$content .= '</label>';
 						ob_start();
 						do_action( 'coursepress_after_signup_first_name' );
 						$content .= ob_get_clean();
 
 						// Last name
-						$content .= '
-							<label class="lastname">
-								<span>' . esc_html__( 'Last Name', 'CP_TD' ) . ':</span>
-								<input type="text" name="last_name" value="' . ( isset( $_POST['last_name'] ) ? esc_attr( $_POST['last_name'] ) : '' ) . '"/>
-							</label>
-						';
+						$content .= '<label class="lastname">';
+						$content .= '<span>' . esc_html__( 'Last Name', 'CP_TD' ) . ':</span>';
+						$content .= '<input type="text" name="last_name" value="' . ( isset( $_POST['last_name'] ) ? esc_attr( $_POST['last_name'] ) : '' ) . '"/>';
+						$content .= '</label>';
 						ob_start();
 						do_action( 'coursepress_after_signup_last_name' );
 						$content .= ob_get_clean();
 
 						// Username.
-						$content .= '
-							<label class="username">
-								<span>' . esc_html__( 'Username', 'CP_TD' ) . ':</span>
-								<input type="text" name="username" value="' . ( isset( $_POST['username'] ) ? esc_attr( $_POST['username'] ) : '' ) . '"/>
-							</label>
-						';
+						$content .= '<label class="username">';
+						$content .= '<span>' . esc_html__( 'Username', 'CP_TD' ) . ':</span>';
+						$content .= '<input type="text" name="username" value="' . ( isset( $_POST['username'] ) ? esc_attr( $_POST['username'] ) : '' ) . '"/>';
+						$content .= '</label> ';
 						ob_start();
 						do_action( 'coursepress_after_signup_username' );
 						$content .= ob_get_clean();
 
 						// Email.
-						$content .= '
-							<label class="email">
-								<span>' . esc_html__( 'E-mail', 'CP_TD' ) . ':</span>
-								<input type="text" name="email" value="' . ( isset( $_POST['email'] ) ? esc_attr( $_POST['email'] ) : '' ) . '"/>
-							</label>
-						';
+						$content .= '<label class="email">';
+						$content .= '<span>' . esc_html__( 'E-mail', 'CP_TD' ) . ':</span>';
+						$content .= '<input type="text" name="email" value="' . ( isset( $_POST['email'] ) ? esc_attr( $_POST['email'] ) : '' ) . '"/>';
+						$content .= '</label> ';
 						ob_start();
 						do_action( 'coursepress_after_signup_email' );
 						$content .= ob_get_clean();
 
 						// Password.
-						$content .= '
-							<label class="password">
-								<span>' . esc_html__( 'Password', 'CP_TD' ) . ':</span>
-								<input type="password" name="password" value=""/>
-							</label>
-						';
+						$content .= '<label class="password">';
+						$content .= '<span>' . esc_html__( 'Password', 'CP_TD' ) . ':</span>';
+						$content .= '<input type="password" name="password" value=""/>';
+						$content .= '</label>';
 						ob_start();
 						do_action( 'coursepress_after_signup_password' );
 						$content .= ob_get_clean();
 
 						// Confirm.
-						$content .= '
-							<label class="password-confirm right">
-								<span>' . esc_html__( 'Confirm Password', 'CP_TD' ) . ':</span>
-								<input type="password" name="password_confirmation" value=""/>
-							</label>
-						';
-						$content .= '<label class="weak-password-confirm">
-							<input type="checkbox" name="confirm_weak_password" value="1" />
-							<span>' . __( 'Confirm use of weak password', 'CP_TD' ) . '</span>
-							</label>
-						';
+						$content .= '<label class="password-confirm right">';
+						$content .= '<span>' . esc_html__( 'Confirm Password', 'CP_TD' ) . ':</span>';
+						$content .= '<input type="password" name="password_confirmation" value=""/>';
+						$content .= '</label>';
+						$content .= '<label class="weak-password-confirm">';
+						$content .= '<input type="checkbox" name="confirm_weak_password" value="1" /> ';
+						$content .= '<span>' . __( 'Confirm use of weak password', 'CP_TD' ) . '</span>';
+						$content .= '</label>';
 
 						if ( shortcode_exists( 'signup-tos' ) ) {
 							if ( get_option( 'show_tos', 0 ) == '1' ) {
@@ -1422,29 +1399,22 @@ class CoursePress_Data_Shortcode_Template {
 						do_action( 'coursepress_after_all_signup_fields' );
 						$content .= ob_get_clean();
 
-						$content .= '
-							<label class="existing-link full">
-								' . sprintf( __( 'Already have an account? %s%s%s!', 'CP_TD' ), '<a href="' . esc_url( $login_url ) . '">', __( 'Login to your account', 'CP_TD' ), '</a>' ) . '
-							</label>
-							<label class="submit-link full-right">
-								<input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="' . esc_attr__( 'Create an Account', 'CP_TD' ) . '"/>
-							</label>
-						';
+						$content .= '<label class="existing-link full"> ' . sprintf( __( 'Already have an account? %s%s%s!', 'CP_TD' ), '<a href="' . esc_url( $login_url ) . '">', __( 'Login to your account', 'CP_TD' ), '</a>' ) . ' </label>';
+						$content .= '<label class="submit-link full-right">';
+						$content .= '<input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="' . esc_attr__( 'Create an Account', 'CP_TD' ) . '"/>';
+						$content .= '</label>';
 
 						ob_start();
 						do_action( 'coursepress_after_submit' );
 						$content .= ob_get_clean();
 
 						$content .= wp_nonce_field( 'student_signup', '_wpnonce', true, false );
-						$content .= '
-							</form>
-							<div class="clearfix" style="clear: both;"></div>
-						';
+						$content .= '</form>';
 
 						ob_start();
 						do_action( 'coursepress_after_signup_form' );
 						$content .= ob_get_clean();
-
+						$content .= '</div>';
 					} else {
 						$content .= __( 'Registrations are not allowed.', 'CP_TD' );
 					}
@@ -1460,37 +1430,39 @@ class CoursePress_Data_Shortcode_Template {
 				break;
 
 			case 'login':
-				$content = '';
-
+				$content = '<div class="coursepress-form coursepress-form-login">';
 				if ( ! empty( $login_title ) ) {
 					$content .= '<' . $login_tag . '>' . $login_title . '</' . $login_tag . '>';
 				}
-
-				$content .= '
-					<p class="form-info-' . esc_attr( apply_filters( 'signup_form_message_class', sanitize_text_field( $form_message_class ) ) ) . '">' . esc_html( apply_filters( 'signup_form_message', sanitize_text_field( $form_message ) ) ) . '</p>
-				';
+				// Attempt a login if submitted.
+				if ( isset( $_POST['log'] ) && isset( $_POST['pwd'] ) ) {
+					if ( apply_filters( 'cp_course_signup_form_show_messages', false ) ) {
+						$form_message = $failed_login_text;
+						$form_message_class = $failed_login_class;
+					}
+				}
+				$content .= '<p class="form-info-' . esc_attr( apply_filters( 'signup_form_message_class', sanitize_text_field( $form_message_class ) ) ) . '">' . esc_html( apply_filters( 'signup_form_message', sanitize_text_field( $form_message ) ) ) . '</p>';
 				ob_start();
 				do_action( 'coursepress_before_login_form' );
 				$content .= ob_get_clean();
-				$content .= '
-					<form name="loginform" id="student-settings" class="student-settings login-form" method="post">
-				';
+				$content .= '<form name="loginform" id="student-settings" class="student-settings login-form" method="post">';
 				ob_start();
 				do_action( 'coursepress_after_start_form_fields' );
 				$content .= ob_get_clean();
-
-				$content .= '
-						<label class="username">
-							<span>' . esc_html__( 'Username or Email Address', 'CP_TD' ) . '</span>
-							<input type="text" name="log" value="' . ( isset( $_POST['log'] ) ? esc_attr( $_POST['log'] ) : '' ) . '"/>
-						</label>
-						<label class="password">
-							<span>' . esc_html__( 'Password', 'CP_TD' ) . '</span>
-							<input type="password" name="pwd" value="' . ( isset( $_POST['pwd'] ) ? esc_attr( $_POST['pwd'] ) : '' ) . '"/>
-						</label>
-
-				';
-
+				/**
+				 * Username
+				 */
+				$content .= '<label class="username">';
+				$content .= '<span>' . esc_html__( 'Username or Email Address', 'CP_TD' ) . '</span>';
+				$content .= '<input type="text" name="log" value="' . ( isset( $_POST['log'] ) ? esc_attr( $_POST['log'] ) : '' ) . '"/>';
+				$content .= '</label>';
+				/**
+				 * password
+				 */
+				$content .= '<label class="password">';
+				$content .= '<span>' . esc_html__( 'Password', 'CP_TD' ) . '</span>';
+				$content .= '<input type="password" name="pwd" value="' . ( isset( $_POST['pwd'] ) ? esc_attr( $_POST['pwd'] ) : '' ) . '"/>';
+				$content .= '</label>';
 				ob_start();
 				do_action( 'coursepress_form_fields' );
 				$content .= ob_get_clean();
@@ -1502,20 +1474,12 @@ class CoursePress_Data_Shortcode_Template {
 					}
 				}
 
-				$content .= '
-						<label class="signup-link full">
-						' . ( CoursePress_Helper_Utility::users_can_register() ? sprintf( __( 'Don\'t have an account? %s%s%s now!', 'CP_TD' ), '<a href="' . $signup_url . '">', __( 'Create an Account', 'CP_TD' ), '</a>' ) : '' ) . '
-						</label>
-						<label class="forgot-link half-left">
-							<a href="' . esc_url( wp_lostpassword_url() ) . '">' . esc_html__( 'Forgot Password?', 'CP_TD' ) . '</a>
-						</label>
-						<label class="submit-link half-right">
-							<input type="submit" name="wp-submit" id="wp-submit" class="apply-button-enrolled" value="' . esc_attr__( 'Log In', 'CP_TD' ) . '"><br>
-						</label>
-						<input name="redirect_to" value="' . esc_url( $redirect_to ) . '" type="hidden">
-						<input name="testcookie" value="1" type="hidden">
-						<input name="course_signup_login" value="1" type="hidden">
-				';
+				$content .= '<label class="signup-link full">' . ( CoursePress_Helper_Utility::users_can_register() ? sprintf( __( 'Don\'t have an account? %s%s%s now!', 'CP_TD' ), '<a href="' . $signup_url . '">', __( 'Create an Account', 'CP_TD' ), '</a>' ) : '' ) . '</label>';
+				$content .= '<label class="forgot-link half-left"><a href="' . esc_url( wp_lostpassword_url() ) . '">' . esc_html__( 'Forgot Password?', 'CP_TD' ) . '</a></label>';
+				$content .= '<label class="submit-link half-right"><input type="submit" name="wp-submit" id="wp-submit" class="apply-button-enrolled" value="' . esc_attr__( 'Log In', 'CP_TD' ) . '"></label>';
+				$content .= '<input name="redirect_to" value="' . esc_url( $redirect_to ) . '" type="hidden">';
+				$content .= '<input name="testcookie" value="1" type="hidden">';
+				$content .= '<input name="course_signup_login" value="1" type="hidden">';
 
 				ob_start();
 				do_action( 'coursepress_before_end_form_fields' );
@@ -1526,6 +1490,7 @@ class CoursePress_Data_Shortcode_Template {
 				ob_start();
 				do_action( 'coursepress_after_login_form' );
 				$content .= ob_get_clean();
+				$content .= '</div>';
 
 				break;
 		}
@@ -1653,43 +1618,35 @@ class CoursePress_Data_Shortcode_Template {
 						$content .= ob_get_clean();
 
 						// Email.
-						$content .= '
-							<label class="email">
-								<span>' . esc_html__( 'E-mail', 'CP_TD' ) . ':</span>
-								<input type="text" name="email" />
-							</label>
-						';
+						$content .= '<label class="email">';
+						$content .= '<span>' . esc_html__( 'E-mail', 'CP_TD' ) . ':</span>';
+						$content .= '<input type="text" name="email" />';
+						$content .= '</label> ';
 						ob_start();
 						do_action( 'coursepress_after_signup_email' );
 						$content .= ob_get_clean();
 
 						// Password.
-						$content .= '
-							<label class="password">
-								<span>' . esc_html__( 'Password', 'CP_TD' ) . ':</span>
-								<input type="password" name="password" value=""/>
-							</label>
-						';
+						$content .= ' <label class="password">';
+						$content .= '<span>' . esc_html__( 'Password', 'CP_TD' ) . ':</span>';
+						$content .= '<input type="password" name="password" value=""/>';
+						$content .= '</label> ';
 						ob_start();
 						do_action( 'coursepress_after_signup_password' );
 						$content .= ob_get_clean();
 
 						// Confirm.
-						$content .= '
-							<label class="password-confirm right">
-								<span>' . esc_html__( 'Confirm Password', 'CP_TD' ) . ':</span>
-								<input type="password" name="password_confirmation" value=""/>
-							</label>
-						';
+						$content .= ' <label class="password-confirm right">';
+						$content .= '<span>' . esc_html__( 'Confirm Password', 'CP_TD' ) . ':</span>';
+						$content .= '<input type="password" name="password_confirmation" value=""/>';
+						$content .= '</label> ';
 
 						if ( $strength_meter_placeholder ) {
 							$content .= '<span id="password-strength"></span>';
 						}
-						$content .= '<label class="weak-password-confirm">
-							<input type="checkbox" name="confirm_weak_password" value="1" />
-							' . __( 'Confirm use of weak password', 'CP_TD' ) . '
-							</label>
-						';
+						$content .= '<label class="weak-password-confirm">';
+						$content .= '<input type="checkbox" name="confirm_weak_password" value="1" /> ' . __( 'Confirm use of weak password', 'CP_TD' );
+						$content .= '</label> ';
 
 						if ( shortcode_exists( 'signup-tos' ) ) {
 							if ( get_option( 'show_tos', 0 ) == '1' ) {
