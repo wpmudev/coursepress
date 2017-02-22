@@ -46,6 +46,10 @@ class CoursePress_Admin_Controller_Menu {
 		}
 		add_filter( 'plugin_action_links_' . plugin_basename( $file ), array( __CLASS__, 'add_action_links' ), 10, 4 );
 		add_action( 'wp_ajax_coursepress_dismiss_admin_notice', array( __CLASS__, 'dismiss_admin_notice' ) );
+
+		// Add endpoints custom URLs in Appearance > Menus > Pages
+		add_action( 'admin_init', array( 'CoursePress_Helper_Utility', 'add_nav_menu_meta_boxes' ) );
+
 	}
 
 	public function get_labels() {
