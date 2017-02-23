@@ -415,6 +415,7 @@ class CoursePress_Admin_Edit {
 
 		// Course Excerpt / Short Overview
 		$editor_content = ! empty( self::$current_course ) ? self::$current_course->post_excerpt : '';
+		$editor_content = htmlspecialchars_decode( $editor_content, true );
 		$editor_html = self::get_wp_editor( 'courseExcerpt', 'course_excerpt', $editor_content, array( 'teeny' => true ) );
 
 		$content .= '
