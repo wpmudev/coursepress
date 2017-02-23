@@ -1157,6 +1157,14 @@ var CoursePress = CoursePress || {};
 						'</label>';
 
 				}
+			} else {
+				if ( 'video' === module_type ) {
+					content += '<label class="module-use-timer">' +
+							'<input type="checkbox" data-target=".module-duration" name="meta_use_timer[' + module.cid + ']" value="1" ' + CoursePress.utility.checked(data['use_timer'], 1) + ' />' +
+							'<span class="label">' + labels['module_use_timer'] + '</span><br />' +
+							'<span class="description">' + labels['module_use_timer_desc'] + '</span>' +
+							'</label>';
+				}
 			}
 
 			content +=

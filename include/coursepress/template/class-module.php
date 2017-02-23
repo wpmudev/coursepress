@@ -264,33 +264,35 @@ class CoursePress_Template_Module {
 			CoursePress_Data_Student::visited_module( $student_id, $course_id, $unit_id, $module_id, self::$student_progress );
 
 			$retry = 'TRY';
-			if ( $is_module_answerable ) {
-				$responses = CoursePress_Data_Student::get_responses( $student_id, $course_id, $unit_id, $module_id, true, $student_progress );
-				$last_response = self::get_response( $module_id, $student_id );
-				$element_class = ! empty( $responses ) ? 'hide' : '';
-				$response_count = ! empty( $responses ) ? count( $responses ) : 0;
+			if ( $is_module_answerable || 'video' == $module_type ) {
+				if ( $is_module_answerable ) {
+					$responses = CoursePress_Data_Student::get_responses( $student_id, $course_id, $unit_id, $module_id, true, $student_progress );
+					$last_response = self::get_response( $module_id, $student_id );
+					$element_class = ! empty( $responses ) ? 'hide' : '';
+					$response_count = ! empty( $responses ) ? count( $responses ) : 0;
 
-				// Get recorded time lapsed
-				$keys = array( $course_id, $unit_id, $module_id, $student_id );
-				$key = 'response_' . implode( '_', $keys );
-				$lapses = (int) get_user_meta( $student_id, $key, true );
-				$response_count += $lapses;
+					// Get recorded time lapsed
+					$keys = array( $course_id, $unit_id, $module_id, $student_id );
+					$key = 'response_' . implode( '_', $keys );
+					$lapses = (int) get_user_meta( $student_id, $key, true );
+					$response_count += $lapses;
 
-				$try_again_label = __( 'Try Again', 'CP_TD' );
-				if ( 'input-upload' == $module_type ) {
-					$try_again_label = __( 'Upload a different file', 'CP_TD' );
-				}
-				$retry = sprintf( '<p class="cp-try-again"><a data-module="%s" class="button module-submit-action button-reload-module">%s</a></p>', $module_id, $try_again_label );
+					$try_again_label = __( 'Try Again', 'CP_TD' );
+					if ( 'input-upload' == $module_type ) {
+						$try_again_label = __( 'Upload a different file', 'CP_TD' );
+					}
+					$retry = sprintf( '<p class="cp-try-again"><a data-module="%s" class="button module-submit-action button-reload-module">%s</a></p>', $module_id, $try_again_label );
 
-				// Check if retry is disabled
-				if ( empty( $attributes['allow_retries'] ) ) {
-					$retry = '';
-				} elseif ( ! empty( $attributes['retry_attempts'] ) && 0 < $response_count ) {
-					$attempts = (int) $attributes['retry_attempts'];
-
-					if ( $response_count >= $attempts ) {
-						$disabled = true;
+					// Check if retry is disabled
+					if ( empty( $attributes['allow_retries'] ) ) {
 						$retry = '';
+					} elseif ( ! empty( $attributes['retry_attempts'] ) && 0 < $response_count ) {
+						$attempts = (int) $attributes['retry_attempts'];
+
+						if ( $response_count >= $attempts ) {
+							$disabled = true;
+							$retry = '';
+						}
 					}
 				}
 
@@ -321,6 +323,9 @@ class CoursePress_Template_Module {
 						if ( $response_count > 0 ) {
 							$duration = '00:00:00';
 						}
+					}
+					if ( 'TRY' == $retry ) {
+						$retry = '';
 					}
 
 					$timer_info = __( 'Session Expired', 'CP_TD' ) . $retry;
