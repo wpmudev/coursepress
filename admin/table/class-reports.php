@@ -94,6 +94,7 @@ class CoursePress_Admin_Table_Reports extends WP_List_Table {
 			'responses' => __( 'Responses', 'CP_TD' ),
 			'average' => __( 'Average', 'CP_TD' ),
 			'report' => __( 'Download', 'CP_TD' ),
+			'html' => __( 'View', 'CP_TD' ),
 		);
 	}
 
@@ -101,6 +102,8 @@ class CoursePress_Admin_Table_Reports extends WP_List_Table {
 		$actions = array(
 			'download' => __( 'Download', 'CP_TD' ),
 			'download_summary' => __( 'Download Summary', 'CP_TD' ),
+			'show' => __( 'Show', 'CP_TD' ),
+			'show_summary' => __( 'Show Summary', 'CP_TD' ),
 		);
 
 		return $actions;
@@ -156,13 +159,35 @@ class CoursePress_Admin_Table_Reports extends WP_List_Table {
 				)
 			);
 			return sprintf(
-				'<a href="%s" class="pdf" data-student="%d" data-course="%d">&nbsp;</a>',
+				'<a href="%s" data-student="%d" data-course="%d"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>&nbsp;</a>',
 				esc_url( $download_url ),
 				esc_attr( $item->ID ),
 				esc_attr( $this->course_id )
 			);
 		}
-		return sprintf( '<span class="pdf" title="%s" data-click="false"></span>', esc_attr__( 'We can not generata PDF. Cache directory is not writable.', 'CP_TD' ) );
+		return sprintf( '<span title="%s" data-click="false"></span>', esc_attr__( 'We can not generata PDF. Cache directory is not writable.', 'CP_TD' ) );
+	}
+
+	/**
+	 * Preview Report in HTML
+	 *
+	 * @since 2.0.5
+	 */
+	public function column_html( $item ) {
+		$download_url = add_query_arg(
+			array(
+				'student_id' => $item->ID,
+				'course_id' => $this->course_id,
+				'mode' => 'html',
+				'_wpnonce' => wp_create_nonce( 'coursepress_download_report' ),
+			)
+		);
+		return sprintf(
+			'<a href="%s" data-student="%d" data-course="%d"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;</a>',
+			esc_url( $download_url ),
+			esc_attr( $item->ID ),
+			esc_attr( $this->course_id )
+		);
 	}
 
 	public function extra_tablenav( $which ) {

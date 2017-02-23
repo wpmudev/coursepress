@@ -7,6 +7,7 @@ CHANGELOG
 
 = 2.0.5 =
 -------------------------------------------------
+* Added HTML preview for Raports.
 * Added ability to turn on/off social sharing icons.
 * Fixed a wrong icon on assessments page, it was always shown fail icon.
 * Added check is user logged before we show comment form in discussion module.
