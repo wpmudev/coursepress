@@ -414,7 +414,7 @@ class CoursePress_Admin_Edit {
 		$content .= apply_filters( 'coursepress_course_setup_step_1_after_title', '', $course_id );
 
 		// Course Excerpt / Short Overview
-		$editor_content = ! empty( self::$current_course ) ? htmlspecialchars_decode( self::$current_course->post_excerpt ) : '';
+		$editor_content = ! empty( self::$current_course ) ? self::$current_course->post_excerpt : '';
 		$editor_html = self::get_wp_editor( 'courseExcerpt', 'course_excerpt', $editor_content, array( 'teeny' => true ) );
 
 		$content .= '
@@ -507,7 +507,7 @@ class CoursePress_Admin_Edit {
 		);
 
 		// Course Description
-		$editor_content = ! empty( self::$current_course ) ? htmlspecialchars_decode( self::$current_course->post_content ) : '';
+		$editor_content = ! empty( self::$current_course ) ? self::$current_course->post_content : '';
 		$args = array(
 			'media_buttons' => true,
 		);

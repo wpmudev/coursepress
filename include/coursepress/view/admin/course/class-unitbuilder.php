@@ -252,6 +252,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					// Temp for reordering
 					$unit->unit_order = isset( $meta['unit_order'] ) ? $meta['unit_order'] : 0;
 					$unit->meta = $meta;
+					$unit->post_content = wp_richedit_pre( $unit->post_content );
 
 					// Let's add unit capabilities
 					$user_cap = array();
