@@ -8,6 +8,14 @@ CHANGELOG
 = 2.0.5 =
 -------------------------------------------------
 * Added HTML preview for Raports.
+* Added ability to turn on/off social sharing icons.
+* Fixed a wrong icon on assessments page, it was always shown fail icon.
+* Added check is user logged before we show comment form in discussion module.
+* Added CoursePress Endpoints to Apperance -> Menu screen.
+* Fixed missing messages on login/signup form.
+* Improved HTML login & signup forms.
+* FIxed on signup form double error messages.
+* Added check is safe_mode before call set_time_limit() function.
 
 = 2.0.4 =
 -------------------------------------------------
