@@ -2369,13 +2369,13 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 /*--------------------------------------------------------------
 # 8. Assessments
 --------------------------------------------------------------*/
-.coursepress_wrapper.coursepress-reports .column-report .pdf {
-  background-image: url("../img/pdf_document.png");
-  background-size: 100% 100%;
-  width: 32px;
-  height: 32px;
-  display: block;
-  cursor: pointer;
+.coursepress_wrapper.coursepress-reports .fa {
+  font-size: 2em;
+}
+.coursepress_wrapper.coursepress-reports .column-report,
+.coursepress_wrapper.coursepress-reports .column-html {
+  width: 5em;
+  text-align: center;
 }
 .coursepress_wrapper.coursepress-reports td.column-responses, .coursepress_wrapper.coursepress-reports td.column-average {
   text-indent: 15px;

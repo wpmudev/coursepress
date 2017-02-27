@@ -166,7 +166,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 				$json_data['success'] = $success = true;
 				$json_data['unit_grade'] = (int) $unit_grade;
 				$json_data['course_grade'] = CoursePress_Data_Student::average_course_responses( $student_id, $course_id );
-				break;
+			break;
 
 			case 'save_draft_feedback':
 				$course_id = $data->course_id;
@@ -188,7 +188,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 				);
 
 				$json['success'] = $success = true;
-				break;
+			break;
 			case 'delete_feedback':
 				$course_id = $data->course_id;
 				$unit_id = $data->unit_id;
@@ -211,7 +211,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 				CoursePress_Data_Student::update_completion_data( $student_id, $course_id, $student_progress );
 				$json_data['success'] = $success = true;
 
-				break;
+			break;
 
 			case 'refresh':
 				$course_id = $data->course_id;
@@ -221,7 +221,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 				$progress = CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course_id );
 				$json_data['success'] = $success = true;
 				$json_data['html'] = self::student_assessment( $student_id, $course_id, $progress, $assess, $display_type );
-				break;
+			break;
 			case 'table':
 				$course_id = $data->course_id;
 				$unit_id = $data->unit_id;
@@ -231,7 +231,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 
 				$json_data['html'] = self::get_students_table( $course_id, $unit_id, $type, $paged, $search );
 				$json_data['success'] = $success = true;
-				break;
+			break;
 		}
 
 		if ( $success ) {
@@ -591,26 +591,26 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 
 		$grading_system = '<em>' . $grading_system . '</em>';
 		$table = '
-			<table class="cp-result-details">
-			<tr>
-				<td>' . __( 'Students Found:', 'CP_TD' ) . ' ' . $total . '</td>
-				<td>' . __( 'Modules:', 'CP_TD' ) . ' <span class="cp-total-assessable">' . $results['assessable'] . '</span></td>
-				<td>' . __( 'Passing Grade: ', 'CP_TD' ) . ' <span class="cp-pasing-grade">' . $results['passing_grade'] . '%</span></td>
-				<td>'. __( 'Grade System: ', 'CP_TD' ) . $grading_system . '</td>
-			</tr>
-			</table>
-		';
+            <table class="cp-result-details">
+            <tr>
+                <td>' . __( 'Students Found:', 'CP_TD' ) . ' ' . $total . '</td>
+                <td>' . __( 'Modules:', 'CP_TD' ) . ' <span class="cp-total-assessable">' . $results['assessable'] . '</span></td>
+                <td>' . __( 'Passing Grade: ', 'CP_TD' ) . ' <span class="cp-pasing-grade">' . $results['passing_grade'] . '%</span></td>
+                <td>'. __( 'Grade System: ', 'CP_TD' ) . $grading_system . '</td>
+            </tr>
+            </table>
+        ';
 
 		$table .= '<table class="wp-list-table widefat fixed striped cp-table">
-			<thead>
-				<th>' . esc_html__( 'Student', 'CP_TD' ) . '</th>
-				<th>' . esc_html__( 'Last Active', 'CP_TD' ) . '</th>
-				<th class="unit-grade">' . esc_html__( 'Grade', 'CP_TD' ) . '</th>
-				<th width="5%">' . esc_html__( 'Modules', 'CP_TD' ) . '</th>
-				<th width="5%">' . esc_html__( 'View All', 'CP_TD' ) . '</th>
-			</thead>
-			<tbody>
-		';
+            <thead>
+            <th>' . esc_html__( 'Student', 'CP_TD' ) . '</th>
+            <th>' . esc_html__( 'Last Active', 'CP_TD' ) . '</th>
+            <th class="unit-grade">' . esc_html__( 'Grade', 'CP_TD' ) . '</th>
+            <th width="5%">' . esc_html__( 'Modules', 'CP_TD' ) . '</th>
+            <th width="5%">' . esc_html__( 'View All', 'CP_TD' ) . '</th>
+            </thead>
+            <tbody>
+';
 
 		$students = array_map( 'get_userdata', $students );
 
@@ -662,39 +662,39 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 			$course_grade = CoursePress_Data_Student::average_course_responses( $student_id, $course_id );
 
 			$table .= '<tr class="student-row student-row-' . $student_id . '" data-student="'. $student_id . '">
-						<td>' . $avatar . $student_label . '</td>
-						<td class="unit-last-active">' . $last_active . '</td>
-						<td data-student="' . $student_id . '">
-							<span class="final-grade">'. (int) $course_grade . '%</span>
-							<span class="cp-certified" ' . $certified . '>'. esc_html__( 'Certified', 'CP_TD' ) . '</span>
-						</td>
-						<td class="cp-actions">
-							<span class="cp-edit-grade" data-student="' . $student_id . '">
-								<i class="dashicons dashicons-list-view"></i>
-							</span>
-						</td><td class="cp-actions">
-							<a href="' . esc_url( $view_link ) . '" target="_blank" class="cp-popup">
-								<span class="dashicons dashicons-external"></span>
-							</a>
-						</td>
-					</tr>
-					<tr class="cp-content" data-student="' . $student_id . '" style="display: none;">
-						<td class="cp-responses cp-inline-responses" colspan="5">
-							<script type="text/template" id="student-grade-' . $student_id . '">
-								' . CoursePress_Admin_Assessment::student_assessment( $student_id, $course_id, $student_progress, $the_unit, ( $the_unit != 'all' ) ) . '
-							</script>
-						</td>
-					</tr>';
+                <td>' . $avatar . $student_label . '</td>
+                <td class="unit-last-active">' . $last_active . '</td>
+                <td data-student="' . $student_id . '">
+                <span class="final-grade">'. (int) $course_grade . '%</span>
+                <span class="cp-certified" ' . $certified . '>'. esc_html__( 'Certified', 'CP_TD' ) . '</span>
+                </td>
+                <td class="cp-actions">
+                <span class="cp-edit-grade" data-student="' . $student_id . '">
+                <i class="dashicons dashicons-list-view"></i>
+                </span>
+                </td><td class="cp-actions">
+                <a href="' . esc_url( $view_link ) . '" target="_blank" class="cp-popup">
+                <span class="dashicons dashicons-external"></span>
+                </a>
+                </td>
+                </tr>
+                <tr class="cp-content" data-student="' . $student_id . '" style="display: none;">
+                <td class="cp-responses cp-inline-responses" colspan="5">
+                <script type="text/template" id="student-grade-' . $student_id . '">
+' . CoursePress_Admin_Assessment::student_assessment( $student_id, $course_id, $student_progress, $the_unit, ( $the_unit != 'all' ) ) . '
+                            </script>
+                        </td>
+                    </tr>';
 		}
 
 		$table .= '</tbody></table>';
 
 		$table .= '<br><br><div class="no-student-info" style="display: none;">
-			<p class="description">' . esc_html__( '0 students found under this unit', 'CP_TD' ) . '</p>
-		</div>
-		<div class="no-assessable-info" style="display: none;">
-			<p class="description">' . esc_html__( 'There are no assessable students found!', 'CP_TD' ) . '</p>
-		</div>';
+            <p class="description">' . esc_html__( '0 students found under this unit', 'CP_TD' ) . '</p>
+        </div>
+        <div class="no-assessable-info" style="display: none;">
+            <p class="description">' . esc_html__( 'There are no assessable students found!', 'CP_TD' ) . '</p>
+        </div>';
 
 		$url = add_query_arg(
 			array(
@@ -752,12 +752,12 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 			);
 
 			$unit_title = '<h3 class="cp-toggle">
-				<span class="cp-right unit-data cp-unit-toggle">
-					<em class="unit-grade" data-unit="'. $unit_id . '" data-student="'. $student_id . '">' . (int) $unit_grade . '%</em>
-					<i class="dashicons dashicons-arrow-' .( $hide ? 'down' : 'up' ) . '"></i>
-				</span>
-				'. $the_unit->post_title . '
-				</h3>';
+                <span class="cp-right unit-data cp-unit-toggle">
+                    <em class="unit-grade" data-unit="'. $unit_id . '" data-student="'. $student_id . '">' . (int) $unit_grade . '%</em>
+                    <i class="dashicons dashicons-arrow-' .( $hide ? 'down' : 'up' ) . '"></i>
+                </span>
+                '. $the_unit->post_title . '
+                </h3>';
 
 			$unit_content = '';
 
@@ -958,16 +958,22 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 							case 'input-checkbox': case 'input-select': case 'input-radio':
 										$answers = $attributes['answers'];
 										$selected = $attributes['answers_selected'];
-
 										$page_content .= '<ul class="cp-answers">';
-
 										foreach ( $answers as $key => $answer ) {
-											if ( 'input-checkbox' !== $module_type ) {
-												$the_answer = $selected === $key || $selected === $answer;
-												$student_answer = $response == $key || $response === $answer;
-											} else {
+											$student_answer = false;
+											if ( 'input-checkbox' == $module_type ) {
 												$the_answer = in_array( $key, $selected );
 												$student_answer = is_array( $response ) ? in_array( $key, $response ) : $response == $key;
+											} else {
+												/**
+													 * $selected is a STRING, convert
+													 * it to int if has only numbers!
+													 */
+												if ( is_string( $selected ) && preg_match( '/^\d+$/', $selected ) ) {
+													$selected = intval( $selected );
+												}
+												$the_answer = $selected === $key || $selected === $answer;
+												$student_answer = $response == $key || $response === $answer;
 											}
 
 											if ( $student_answer ) {
@@ -982,7 +988,6 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 										$page_content .= '</ul>';
 
 										break;
-
 							case 'input-textarea': case 'input-text':
 									if ( ! empty( $response ) ) {
 										$page_content .= sprintf( '<div class="cp-answer-box">%s</div>', $response );
@@ -1009,8 +1014,8 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 										$student_response = $response[ $q_index ];
 
 										$page_content .= '<div class="cp-q"><hr />
-														<p class="description cp-question">' . esc_html( $question['question'] ) . '</p>
-														<ul>';
+                                                        <p class="description cp-question">' . esc_html( $question['question'] ) . '</p>
+                                                        <ul>';
 
 										foreach ( $options['answers'] as $p_index => $answer ) {
 											$the_answer = isset( $checked[ $p_index ] ) ? $checked[ $p_index ] : false;
@@ -1027,9 +1032,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 												$page_content .= '<li>' . $student_answer . esc_html( $answer ) . '</li>';
 											}
 										}
-
 												$page_content .= '</ul></div>';
-
 									}
 								}
 								break;
@@ -1064,17 +1067,13 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 										} else {
 											$page_content .= sprintf( '<li>%s</li>', esc_html( $student_response ) );
 										}
-
 										$page_content .= '</ul></div>';
-
 									}
 								}
 								break;
 						}
-
 							$page_content .= '</div>';
 					}
-
 					if ( 0 === count( $response ) ) {
 						$page_content .= sprintf( '<div class="cp-answer-box"><span class="dashicons dashicons-no"></span> %s</div>', __( 'No answer!', 'CP_TD' ) );
 					} else {
@@ -1083,8 +1082,8 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 							$is_draft = $has_feedback && ! empty( $feedback['draft'] );
 
 							$page_content .= '<div class="cp-instructor-feedback" style="display: '. ( ! empty( $feedback ) ? 'block' : 'none' ) . '">
-										<h4>' . __( 'Instructor Feedback', 'CP_TD' ) . ' <span class="cp-draft-icon" style="display: '. ( $is_draft ? 'inline-block' : 'none' ) . ';">['. __( 'Draft', 'CP_TD' ) . ']</span></h4>
-									';
+                                        <h4>' . __( 'Instructor Feedback', 'CP_TD' ) . ' <span class="cp-draft-icon" style="display: '. ( $is_draft ? 'inline-block' : 'none' ) . ';">['. __( 'Draft', 'CP_TD' ) . ']</span></h4>
+                                    ';
 							$page_content .= sprintf( '<div class="cp-feedback-details%s">%s</div><cite>%s</cite>', empty( $feedback_text ) ? ' empty' : '', $feedback_text, $feedback_by );
 							$page_content .= sprintf( '<p class="description" %s>%s</p>', empty( $feedback_text ) ? '' : $hide, __( 'Write your feedback!', 'CP_TD' ) );
 							$page_content .= '</div>';
