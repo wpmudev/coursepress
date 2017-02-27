@@ -16,6 +16,7 @@ CHANGELOG
 * Improved HTML login & signup forms.
 * FIxed on signup form double error messages.
 * Added check is safe_mode before call set_time_limit() function.
+* Added the action "coursepress_woocommerce_product_updated". This action has two variable $product_id and $course_id and is called after update product by CoursePress.
 
 = 2.0.4 =
 -------------------------------------------------

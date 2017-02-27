@@ -354,6 +354,15 @@ class CoursePress_Helper_Integration_WooCommerce {
 				// Resave product meta
 				CoursePress_Data_Course::update_setting( $course_id, 'mp_product_price', $price );
 				CoursePress_Data_Course::update_setting( $course_id, 'mp_product_sale_price', $sale_price );
+				/**
+				 * Action for WooCommerce product after CoursePress update.
+				 *
+				 * @since 2.0.5
+				 *
+				 * @param integer $post_id WooCommerce product ID.
+				 * @param integer $course_id CoursePress course ID.
+				 */
+				do_action( 'coursepress_woocommerce_product_updated', $post_id, $course_id );
 			}
 			// Remove product if its not a paid course (clean up WooCommerce products)
 		} elseif ( isset( $settings['payment_paid_course'] ) && empty( $settings['payment_paid_course'] ) ) {
