@@ -134,14 +134,6 @@ class CoursePress_Admin_Courses {
 	 * Start date
 	 */
 	public static function column_date_start( $item ) {
-		$c = '';
-		$d = get_post_meta( $item->ID, 'cp_course_start_date', true );
-		$c .= date( 'Y-m-d', $d );
-		$c .= '<br>';
-		$c .= $d;
-		$c .= '<br>';
-		$c .= self::_get_course_meta_date( 'course_start', $item );
-		return $c;
 		return self::_get_course_meta_date( 'course_start', $item );
 	}
 
@@ -392,7 +384,6 @@ class CoursePress_Admin_Courses {
 		if ( ! $query->is_main_query() ) {
 			return;
 		}
-		l( $query );
 		$screen = get_current_screen();
 		if ( ! isset( $screen->post_type ) || self::$post_type != $screen->post_type ) {
 			return;
