@@ -589,16 +589,16 @@ class CoursePress_View_Admin_Setting_General {
 							</tr>
 						</tbody>
 					</table>
-				</div>
+				</div>';
 
-				<!-- schema.org -->
+		$content .= '<!-- schema.org -->
 				<h3 class="hndle" style="cursor:auto;"><span>' . esc_html__( 'schema.org', 'CP_TD' ) . '</span></h3>
 				<div class="inside">
 					<table class="form-table">
 						<tbody>
 							<tr valign="top">
 								<th scope="row">
-								' . esc_html__( 'Add microdata syntax.', 'CP_TD' ) . '
+								' . esc_html__( 'Add microdata syntax', 'CP_TD' ) . '
 									<a class="help-icon" href="#"></a>
 									<div class="tooltip hidden">
 										<div class="tooltip-before"></div>
@@ -617,11 +617,45 @@ class CoursePress_View_Admin_Setting_General {
 							</tr>
 						</tbody>
 					</table>
-				</div>
-		';
+				</div>';
 
+		/**
+		 * Social Sharing
+		 */
+		$services = CoursePress_Helper_SocialMedia::get_social_sharing_array();
+		$content .= '<!-- social-sharing.org -->
+				<h3 class="hndle" style="cursor:auto;"><span>' . esc_html__( 'Social Sharing', 'CP_TD' ) . '</span></h3>
+				<div class="inside">
+					<table class="form-table">
+						<tbody>
+							<tr valign="top">
+								<th scope="row">
+								' . esc_html__( 'Social Sharing', 'CP_TD' ) . '
+									<a class="help-icon" href="#"></a>
+									<div class="tooltip hidden">
+										<div class="tooltip-before"></div>
+										<div class="tooltip-button">&times;</div>
+										<div class="tooltip-content">
+											' . __( '', 'CP_TD' ) . '
+										</div>
+									</div>
+								</th>
+								<td><ul>';
+		foreach ( $services as $key => $label ) {
+			$checked = cp_is_true( CoursePress_Core::get_setting( 'general/social_sharing/'.$key, 1 ) );
+			$content .= sprintf(
+				'<li><label><input type="checkbox" name="coursepress_settings[general][social_sharing][%s]" value="on" /%s /> %s</label></li>',
+				esc_attr( $key ),
+				checked( $checked, true, false ),
+				esc_html( $label )
+			);
+		}
+		$content .= '</ul></td></tr>';
+		/**
+		 * ebd table settings body
+		 */
+		$content .= '</tbody></table></div>';
 		return $content;
-
 	}
 
 	public static function process_form( $page, $tab ) {
@@ -630,26 +664,34 @@ class CoursePress_View_Admin_Setting_General {
 
 			$settings = CoursePress_Core::get_setting( false ); // false returns all settings
 			$post_settings = (array) $_POST['coursepress_settings'];
-
 			// Now is a good time to make changes to $post_settings, especially to fix up unchecked checkboxes
 			$post_settings['general']['show_coursepress_menu'] = isset( $post_settings['general']['show_coursepress_menu'] ) ? $post_settings['general']['show_coursepress_menu'] : 'off';
 			$post_settings['general']['use_custom_login'] = isset( $post_settings['general']['use_custom_login'] ) ? $post_settings['general']['use_custom_login'] : 'off';
 			$post_settings['general']['redirect_after_login'] = isset( $post_settings['general']['redirect_after_login'] ) ? $post_settings['general']['redirect_after_login'] : 'off';
 			$post_settings['instructor']['show_username'] = isset( $post_settings['instructor']['show_username'] ) ? $post_settings['instructor']['show_username'] : false;
 			$post_settings['general']['add_structure_data'] = isset( $post_settings['general']['add_structure_data'] ) ? $post_settings['general']['add_structure_data'] : 'off';
-
+			/**
+			 * Social Sharing
+			 */
+			$services = CoursePress_Helper_Socialmedia::get_social_sharing_array();
+			foreach ( $services as $key => $label ) {
+				if ( isset( $post_settings['general']['social_sharing'][ $key ] ) ) {
+					$post_settings['general']['social_sharing'][ $key ] = 'on';
+				} else {
+					$post_settings['general']['social_sharing'][ $key ] = 'off';
+				}
+			}
+			/**
+			 * sanitize
+			 */
 			$post_settings = CoursePress_Helper_Utility::sanitize_recursive( $post_settings );
-
 			// Don't replace settings if there is nothing to replace
 			if ( ! empty( $post_settings ) ) {
 				$new_settings = CoursePress_Core::merge_settings( $settings, $post_settings );
-
 				CoursePress_Core::update_setting( false, $new_settings ); // false will replace all settings
-
 				// Flush rewrite rules
 				flush_rewrite_rules();
 			}
 		}
-
 	}
 }

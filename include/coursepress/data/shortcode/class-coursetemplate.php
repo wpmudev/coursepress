@@ -1100,23 +1100,23 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				$is_unit_available = false;
 			}
 
-            $add_open_date = false;
-            if ( ! $is_unit_available && $enrolled ) {
-                $add_open_date = true;
-            }
+			$add_open_date = false;
+			if ( ! $is_unit_available && $enrolled ) {
+				$add_open_date = true;
+			}
 
 			/**
 			 * Filter allow to display open unit date.
 			 *
 			 * @since 2.0.4
 			 *
-             * @param boolean $add_open_date Current state of display open * unit date.
-             * @param integer $unit_id Unit ID.
-             * @param integer $course_id Course ID.
+			 * @param boolean $add_open_date Current state of display open * unit date.
+			 * @param integer $unit_id Unit ID.
+			 * @param integer $course_id Course ID.
 			 */
-            $add_open_date = apply_filters( 'coursepress_unit_add_open_date', $add_open_date, $unit_id, $course_id );
+			$add_open_date = apply_filters( 'coursepress_unit_add_open_date', $add_open_date, $unit_id, $course_id );
 
-            if ( $add_open_date ) {
+			if ( $add_open_date ) {
 				/**
 				 * return date with known format
 				 */
@@ -1826,10 +1826,11 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 	}
 
 	public static function course_social_links( $atts ) {
+		$services = CoursePress_Helper_SocialMedia::get_social_sharing_keys();
 		$atts = shortcode_atts(
 			array(
 				'course_id' => CoursePress_Helper_Utility::the_course( true ),
-				'services' => 'facebook,twitter,google,email',
+				'services' => implode( ',', $services ),
 				'share_title' => __( 'Share', 'CP_TD' ),
 				'echo' => false,
 			),
@@ -1850,6 +1851,10 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$course_image = CoursePress_Data_Course::get_setting( $course_id, 'listing_image' );
 
 		foreach ( $services as $service ) {
+			$is_on = cp_is_true( CoursePress_Core::get_setting( 'general/social_sharing/'.$service, 1 ) );
+			if ( ! $is_on ) {
+				continue;
+			}
 			switch ( $service ) {
 				case 'facebook':
 					$service_title = '<span class="dashicons dashicons-facebook"></span>';

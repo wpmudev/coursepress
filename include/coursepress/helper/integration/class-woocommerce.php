@@ -652,7 +652,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 				$content = __( 'This course is already in the cart.', 'CP_TD' );
 				global $woocommerce;
 				$content .= sprintf(
-					' <button data-link="%s" class="course_list_box_item button">%s</button>',
+					' <button data-link="%s" class="single_show_cart_button button">%s</button>',
 					esc_url( $woocommerce->cart->get_cart_url() ),
 					esc_html__( 'Show cart', 'CP_TD' )
 				);
