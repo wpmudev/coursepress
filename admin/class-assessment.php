@@ -864,34 +864,34 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 						}
 
 						$page_content .= '<div class="cp-grade-editor">
-									<div class="cp-right cp-assessment-div">
-										<div>
-											<div class="cp-module-grade-info">
-												<label class="cp-assess-label">' . __( 'Assessment Result: ', 'CP_TD' ) . '</label>
-												<span class="cp-current-grade">'. $grade . '%</span>
-												<span class="cp-check ' . $pass_class . '">' . $module_status . '</span>
-											</div>
-											<button type="button" class="button-primary edit-no-feedback">' . $no_feedback_button_label . '</button>
-											<button type="button" class="button-primary edit-with-feedback">' . $with_feedback_button_label . '</button>
-										</div>
-									</div>
-									<textarea class="cp_feedback_content" style="display:none;">'. esc_textarea( $feedback_text ) . '</textarea>
-									<div class="cp-grade-editor-box" style="display:none;">
-										<div class="coursepress-tooltip cp-right cp-edit-grade-box">
-											<label class="cp-assess-label">'. __( 'Grade', 'CP_TD' ) . '</label>
-											<input type="number" name="module-grade" data-courseid="' . $course_id . '" data-unit="' . $unit_id . '" data-module="' . $module_id . '" data-minimum="' . esc_attr( $min_grade ) . '" data-student="' . $student_id . '" class="module-grade small-text" data-grade="'. esc_attr( $grade ) . '" value="' . esc_attr( $grade ) . '" min="0" max="100" />
-											<button type="button" class="button-primary cp-right cp-save-as-draft disabled">'. __( 'Save Feeback as Draft', 'CP_TD' ) . '</button>
-											<button type="button" class="button-primary cp-submit-grade disabled">' . __( 'Submit Grade', 'CP_TD' ) . '</button>
-											<button type="button" class="button cp-cancel">' . __( 'Cancel', 'CP_TD' ) . '</button>
-											<p class="description">' . $pass_label . '</p>
-										</div>
-										<div class="cp-feedback-editor">
-											<label class="cp-feedback-title">' . __( 'Feedback', 'CP_TD' ) . '</label>
-											<p class="description">'. __( 'Your feedback will be emailed to the student after submission.', 'CP_TD' ) . '</p>
-										</div>
-									</div>
-								</div>
-								';
+                                    <div class="cp-right cp-assessment-div">
+                                        <div>
+                                            <div class="cp-module-grade-info">
+                                                <label class="cp-assess-label">' . __( 'Assessment Result: ', 'CP_TD' ) . '</label>
+                                                <span class="cp-current-grade">'. $grade . '%</span>
+                                                <span class="cp-check ' . $pass_class . '">' . $module_status . '</span>
+                                            </div>
+                                            <button type="button" class="button-primary edit-no-feedback">' . $no_feedback_button_label . '</button>
+                                            <button type="button" class="button-primary edit-with-feedback">' . $with_feedback_button_label . '</button>
+                                        </div>
+                                    </div>
+                                    <textarea class="cp_feedback_content" style="display:none;">'. esc_textarea( $feedback_text ) . '</textarea>
+                                    <div class="cp-grade-editor-box" style="display:none;">
+                                        <div class="coursepress-tooltip cp-right cp-edit-grade-box">
+                                            <label class="cp-assess-label">'. __( 'Grade', 'CP_TD' ) . '</label>
+                                            <input type="number" name="module-grade" data-courseid="' . $course_id . '" data-unit="' . $unit_id . '" data-module="' . $module_id . '" data-minimum="' . esc_attr( $min_grade ) . '" data-student="' . $student_id . '" class="module-grade small-text" data-grade="'. esc_attr( $grade ) . '" value="' . esc_attr( $grade ) . '" min="0" max="100" />
+                                            <button type="button" class="button-primary cp-right cp-save-as-draft disabled">'. __( 'Save Feeback as Draft', 'CP_TD' ) . '</button>
+                                            <button type="button" class="button-primary cp-submit-grade disabled">' . __( 'Submit Grade', 'CP_TD' ) . '</button>
+                                            <button type="button" class="button cp-cancel">' . __( 'Cancel', 'CP_TD' ) . '</button>
+                                            <p class="description">' . $pass_label . '</p>
+                                        </div>
+                                        <div class="cp-feedback-editor">
+                                            <label class="cp-feedback-title">' . __( 'Feedback', 'CP_TD' ) . '</label>
+                                            <p class="description">'. __( 'Your feedback will be emailed to the student after submission.', 'CP_TD' ) . '</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                ';
 
 					} else {
 						$page_content .= '<input type="hidden" data-courseid="' . $course_id . '" data-unit="' . $unit_id . '" data-module="' . $module_id . '" data-minimum="' . esc_attr( $min_grade ) . '" data-student="'. $student_id . '" class="module-grade" name="module-grade" value="'. esc_attr( $grade ) . '" />';
@@ -929,21 +929,21 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 						} else {
 							if ( in_array( $module_type, $excluded_modules ) ) {
 								$page_content .= '<div class="cp-right cp-assessment-div">
-											<div class="cp-module-grade-info">
-												<label class="cp-assess-label">' . __( 'Non-gradable', 'CP_TD' ) . '</label>
-											</div>
-										</div>';
+                                            <div class="cp-module-grade-info">
+                                                <label class="cp-assess-label">' . __( 'Non-gradable', 'CP_TD' ) . '</label>
+                                            </div>
+                                        </div>';
 							} else {
 								$page_content .= '<div class="cp-right cp-assessment-div">
-												<div>
-													<div class="cp-module-grade-info">
-														<label class="cp-assess-label">' . __( 'Module Grade: ', 'CP_TD' ) . '</label>
-														<span class="cp-current-grade">'. $grade . '%</span>
-														<span class="cp-check ' . $pass_class . '">' . ( 'green' === trim( $pass_class ) ? __( 'Pass', 'CP_TD' ) : __( 'Fail', 'CP_TD' ) ) . '</span>
-													</div>
-												</div>
-											</div>
-										';
+                                                <div>
+                                                    <div class="cp-module-grade-info">
+                                                        <label class="cp-assess-label">' . __( 'Module Grade: ', 'CP_TD' ) . '</label>
+                                                        <span class="cp-current-grade">'. $grade . '%</span>
+                                                        <span class="cp-check ' . $pass_class . '">' . ( 'green' === trim( $pass_class ) ? __( 'Pass', 'CP_TD' ) : __( 'Fail', 'CP_TD' ) ) . '</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ';
 							}
 						}
 					}
