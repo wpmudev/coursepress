@@ -1524,8 +1524,8 @@ class CoursePress_Admin_Edit {
 					CoursePress_View_Admin_Setting_BasicCertificate::default_certificate_content()
 				);
 			}
+			$html = stripslashes( $html );
 			$html = CoursePress_Helper_Utility::replace_vars( $html, $vars );
-
 			// Set PDF args
 			$args = array(
 				'title' => __( 'Course Completion Certificate', 'CP_TD' ),
