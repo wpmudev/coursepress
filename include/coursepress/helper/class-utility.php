@@ -1297,7 +1297,7 @@ class CoursePress_Helper_Utility {
 	 * Adapted from http://www.johnmorrisonline.com/how-to-add-a-fully-functional-custom-meta-box-to-wordpress-navigation-menus/.
 	 */
 	public static function add_nav_menu_meta_boxes() {
-		add_meta_box( 'coursepress_endpoints_nav_link', __( 'CoursePress Endpoints', 'CP_TD' ), array( __CLASS__, 'nav_menu_links' ), 'nav-menus', 'side', 'low' );
+		add_meta_box( 'coursepress_endpoints_nav_link', __( 'CoursePress Menu', 'CP_TD' ), array( __CLASS__, 'nav_menu_links' ), 'nav-menus', 'side', 'low' );
 	}
 
 	/**
@@ -1310,7 +1310,7 @@ class CoursePress_Helper_Utility {
 				'value' => '#coursepress-endpoints-courses',
 			),
 			'login' => array(
-				'label' => __( 'Log In', 'CP_TD' ),
+				'label' => __( 'Log In/Out', 'CP_TD' ),
 				'value' => '#coursepress-endpoints-login',
 			),
 			'dashboard' => array(
