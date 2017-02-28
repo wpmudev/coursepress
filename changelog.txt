@@ -1,6 +1,6 @@
 Plugin Name: CoursePress Pro
 Author:      WPMU DEV (Irene, Marcin, Philipp, Marko, Jose, Rheinard)
-Build Time:  2016-04-07T13:37:59.644Z
+Build Time:  BUILDTIME
 
 CHANGELOG
 =================================================
@@ -12,6 +12,7 @@ CHANGELOG
 * Fixed a wrong icon on assessments page, it was always shown fail icon.
 * Added check is user logged before we show comment form in discussion module.
 * Added CoursePress Endpoints to Apperance -> Menu screen.
+* Added ability to remember the last sorting chosen by user on the list of courses in admin area.
 * Fixed missing messages on login/signup form.
 * Improved HTML login & signup forms.
 * FIxed on signup form double error messages.
