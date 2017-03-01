@@ -10,6 +10,7 @@ CHANGELOG
 * Added HTML preview for Raports.
 * Added ability to turn on/off social sharing icons.
 * Fixed a wrong icon on assessments page, it was always shown fail icon.
+* Fixed missing html attributes on certificate preview.
 * Added check is user logged before we show comment form in discussion module.
 * Added CoursePress Endpoints to Apperance -> Menu screen.
 * Added ability to remember the last sorting chosen by user on the list of courses in admin area.
@@ -19,6 +20,10 @@ CHANGELOG
 * Added check is safe_mode before call set_time_limit() function.
 * Added the action "coursepress_woocommerce_product_updated". This action has two variable $product_id and $course_id and is called after update product by CoursePress.
 * Fixed "Grades" screen.
+* Fixed a wrong link to student profile from students tab on a course edit screen.
+* Improved link building to student profile in admin area.
+* Fixed a bug with prerequisites courses when we have only one prerequisite course.
+* Improve select2 field for prerequisites and remove current course from the list.
 
 = 2.0.4 =
 -------------------------------------------------

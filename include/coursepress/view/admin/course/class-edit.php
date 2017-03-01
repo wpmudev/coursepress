@@ -894,10 +894,7 @@ class CoursePress_View_Admin_Course_Edit {
 
 		$courses = CoursePress_Data_Instructor::get_accessable_courses( wp_get_current_user(), true );
 
-		$saved_settings = CoursePress_Data_Course::get_setting( $course_id, 'enrollment_prerequisite', array() );
-		if ( ! is_array( $saved_settings ) ) {
-			$saved_settings = array( $saved_settings );
-		}
+		$saved_settings = CoursePress_Data_Course::get_prerequisites( $course_id );
 
 		foreach ( $courses as $course ) {
 			$post_id = $course->ID;
