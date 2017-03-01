@@ -50,7 +50,7 @@ class CoursePress_Template_Module {
 						// $selected is of string type, change it to int
 						$ints = array_fill(0, 10, true);
 
-						if ( ! empty( $ints[ $selected ] ) ) {
+						if ( ! is_array( $selected ) && ! empty( $ints[ $selected ] ) ) {
 							$selected = (int) $selected;
 						}
 
@@ -59,7 +59,7 @@ class CoursePress_Template_Module {
 								$the_answer = $selected === $key || $selected === $answer;
 								$student_answer = $response == $key || $response === $answer;
 							} else {
-								$the_answer = $key == $selected;
+								$the_answer = in_array( $key, $selected );
 								$student_answer = is_array( $response ) ? in_array( $key, $response ) : $response == $key;
 							}
 
