@@ -1936,4 +1936,26 @@ class CoursePress_Data_Student {
 		}
 		return sprintf( '%s_%s_%d_%d', __CLASS__, $action, $user_id, $student_id );
 	}
+
+	/**
+	 * Get admin student profile URL.
+	 *
+	 * @since 2.0.5
+	 *
+	 * @param integer $student_id Student ID.
+	 * @return string URL to student profile (admin area).
+	 */
+	public static function get_admin_profile_url( $student_id ) {
+		$nonce = wp_create_nonce( CoursePress_Admin_Students::get_view_profile_nonce_action( $student_id ) );
+		return add_query_arg(
+			array(
+				'post_type' => CoursePress_Data_Course::get_post_type_name(),
+				'page' => CoursePress_View_Admin_Student::get_slug(),
+				'view' => 'profile',
+				'student_id' => $student_id,
+				'nonce' => $nonce,
+			),
+			admin_url( 'edit.php' )
+		);
+	}
 }
