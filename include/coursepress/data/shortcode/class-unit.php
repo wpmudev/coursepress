@@ -557,6 +557,10 @@ class CoursePress_Data_Shortcode_Unit {
 			$content .= '<li class="submenu-item submenu-workbook ' . ( 'workbook' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( $course_base_url . CoursePress_Core::get_slug( 'workbook' ) ) . '">' . esc_html__( 'Workbook', 'CP_TD' ) . '</a></li>';
 		}
 
+		if ( $pages['grades'] && $enrolled ) {
+			$content .= '<li class="submenu-item submenu-grades ' . ( 'grades' == $subpage ? 'submenu-active' : '' ) . '"><a href="' . esc_url_raw( $course_base_url . CoursePress_Core::get_slug( 'grades' ) ) . '">' . esc_html__( 'Grades', 'CP_TD' ) . '</a></li>';
+		}
+
 		$content .= '<li class="submenu-item submenu-info"><a href="' . esc_url_raw( $course_base_url ) . '">' . esc_html__( 'Course Details', 'CP_TD' ) . '</a></li>';
 
 		$show_link = false;
