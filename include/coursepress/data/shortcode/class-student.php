@@ -61,6 +61,11 @@ class CoursePress_Data_Shortcode_Student {
 			'course_unit_percent',
 			array( __CLASS__, 'course_unit_percent' )
 		);
+
+		/**
+		 * Log student visit to the course **/
+		add_action( 'coursepress_focus_item_preload', array( __CLASS__, 'log_student_visit' ) );
+		add_action( 'coursepress_normal_items_loaded', array( __CLASS__, 'log_normal_student_visit' ), 10, 3 );
 	}
 
 	public static function courses_student_dashboard( $atts ) {
@@ -786,5 +791,35 @@ class CoursePress_Data_Shortcode_Student {
 		$content = apply_filters( 'coursepress_unit_progress_wheel', $content, $course_id, $unit_id, $percent_value );
 
 		return $content;
+	}
+
+	/**
+	 * Helper function to log student visit to the course in focus view mode.
+	 *
+	 * @param (array) $array
+	 **/
+	public static function log_student_visit( array $array ) {
+		$course_id = $array['course'];
+		$unit_id = $array['unit'];
+		$page_number = 1;
+		$module_id = 0;
+		$type = $array['type'];
+
+		if ( 'section' == $type ) {
+			$page_number = $array['item_id'];
+		}
+		elseif ( 'module' == $type ) {
+			$module_id = $array['item_id'];
+			$page_number = CoursePress_Data_Shortcode_Template::get_module_page( $course_id, $unit_id, $module_id );
+		}
+
+		CoursePress_Data_Student::log_visited_course( $course_id, $unit_id, $page_number, $module_id );
+	}
+
+	/**
+	 * Helper function to log student visit to a course in normal mode.
+	 **/
+	public static function log_normal_student_visit( $course_id, $unit_id, $page_number ) {
+		CoursePress_Data_Student::log_visited_course( $course_id, $unit_id, $page_number );
 	}
 }

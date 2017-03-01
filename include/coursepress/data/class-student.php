@@ -1958,4 +1958,64 @@ class CoursePress_Data_Student {
 			admin_url( 'edit.php' )
 		);
 	}
+
+	/**
+	 * Record the last time the student visited the course
+	 *
+	 * @since 2.0.5
+	 *
+	 * @param (int) $course_id
+	 * @param (int) $unit_id
+	 * @param (int) $page_number
+	 * @param (int) $module_id
+	 **/
+	public static function log_visited_course( $course_id, $unit_id = 0, $page_number = 1, $module_id = 0 ) {
+		if ( empty( $course_id ) ) {
+			return;
+		}
+
+		$key = 'coursepress_last_visited_' . $course_id;
+		$value = array(
+			'unit' => $unit_id,
+			'page' => $page_number,
+			'module' => $module_id,
+		);
+
+		update_user_meta( get_current_user_id(), $key, $value );
+	}
+
+	/**
+	 * Returns the permalink of the last visited page of the course.
+	 *
+	 * @since 2.0.5
+	 *
+	 * @param (int) $course_id
+	 * @return Returns permalink of the last visited page otherwise the units overview page.
+	 **/
+	public static function get_last_visited_url( $course_id ) {
+		$key = 'coursepress_last_visited_' . $course_id;
+		$link = CoursePress_Data_Course::get_course_url( $course_id );
+		$link .= CoursePress_Core::get_slug( 'units/' );
+
+		$last_visited = get_user_meta( get_current_user_id(), $key, true );
+
+		if ( ! empty( $last_visited ) ) {
+			// Get unit url
+			if ( ! empty( $last_visited['unit'] ) ) {
+				$link = CoursePress_Data_Unit::get_unit_url( (int) $last_visited['unit'] );
+
+				// Add page number
+				if ( ! empty( $last_visited['page'] ) ) {
+					$link .= 'page/' . (int) $last_visited['page'] . '/';
+
+					// Add module ID
+					if ( ! empty( $last_visited['module'] ) ) {
+						$link .= 'module_id/' . (int) $last_visited['module'];
+					}
+				}
+			}
+		}
+
+		return $link;
+	}
 }
