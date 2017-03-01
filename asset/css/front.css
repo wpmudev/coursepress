@@ -153,6 +153,9 @@ input.cp-has-error {
   margin: 0 5px 0 0;
   padding: 0;
 }
+.cp-submenu .submenu-item.submenu-active {
+  opacity: .6;
+}
 .cp-submenu .submenu-item a {
   padding: 4px 12px;
   text-decoration: none;
