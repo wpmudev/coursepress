@@ -149,7 +149,10 @@ class CoursePress_Helper_Utility {
 		}
 		$key = array_shift( $path );
 		if ( empty( $path ) ) {
-			$a[ $key ? $key : count( $a ) ] = $value;
+			if ( empty( $key ) ) {
+				$key = count( $a );
+			}
+			$a[ $key ] = $value;
 			return $a;
 		}
 		if ( ! isset( $a[ $key ] ) || ! is_array( $a[ $key ] ) ) {
@@ -190,7 +193,10 @@ class CoursePress_Helper_Utility {
 		}
 		$key = array_shift( $path );
 		if ( empty( $path ) ) {
-			unset( $a[ $key ? $key : count( $a ) ] );
+			if ( empty( $key ) ) {
+				$key = count( $a );
+			}
+			unset( $key );
 			return $a;
 		}
 		if ( ! isset( $a[ $key ] ) || ! is_array( $a[ $key ] ) ) {
