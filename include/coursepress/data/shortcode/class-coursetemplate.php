@@ -290,7 +290,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					'label' => ! $is_instructor ? sanitize_text_field( $continue_learning_text ) : sanitize_text_field( $instructor_text ),
 					'attr' => array(
 						'class' => 'apply-button apply-button-enrolled ' . $class,
-						'data-link' => $course_link,
+						'data-link' => CoursePress_Data_Student::get_last_visited_url( $course_id  ),
 					),
 					'type' => 'link',
 				),
