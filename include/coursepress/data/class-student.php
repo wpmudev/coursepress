@@ -404,14 +404,15 @@ class CoursePress_Data_Student {
 		// Auto-grade the easy ones
 		switch ( $attributes['module_type'] ) {
 			case 'input-checkbox':
-				$total = count( $attributes['answers_selected'] );
+				$selected = $attributes['answers_selected'];
+				$total = count( $selected );
+				$ratio = $total > 0 ? 100 / $total : 0;
+
 				$correct = 0;
 				if ( is_array( $response ) ) {
 					foreach ( $response as $answer ) {
-						if ( in_array( $answer, $attributes['answers_selected'] ) ) {
+						if ( in_array( $answer, $selected ) ) {
 							$correct++;
-						} else {
-							$correct--;
 						}
 					}
 				}
@@ -421,8 +422,9 @@ class CoursePress_Data_Student {
 				$grade = 0;
 
 				if ( $correct > 0 && $total > 0 ) {
-					$grade = (int) ( $correct / $total * 100 );
+					$grade = (int) $correct * $ratio;
 				}
+
 				break;
 
 			case 'input-select':
