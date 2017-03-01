@@ -794,4 +794,35 @@ class CoursePress_Helper_UI {
 		$content .= '</select>';
 		return $content;
 	}
+
+	/**
+	 * Build course checkbox field.
+	 *
+	 * @since 2.0.5
+	 *
+	 * @param array $checkbox Array of checkbox.
+	 * @param integer $course_id Course ID.
+	 * @return string Valid html checkbox section.
+	 */
+	public static function course_edit_checkbox( $checkbox, $course_id = null ) {
+		$content = '<div class="wide">';
+		if ( isset( $checkbox['title'] ) ) {
+			$content .= sprintf( '<label>%s</label>', esc_html( $checkbox['title'] ) );
+		}
+		$content .= '<label class="checkbox">';
+		$content .= sprintf(
+			'<input type="checkbox" name="meta_%s" %s />',
+			esc_attr( $checkbox['meta_key'] ),
+			CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, $checkbox['meta_key'], false ) )
+		);
+		if ( isset( $checkbox['label'] ) ) {
+			$content .= sprintf( '<span class="label">%s</span>', esc_html( $checkbox['label'] ) );
+		}
+		$content .= '</label>';
+		if ( isset( $checkbox['description'] ) ) {
+			$content .= sprintf( '<p class="description">%s</p>', esc_html( $checkbox['description'] ) );
+		}
+		$content .= '</div>';
+		return $content;
+	}
 }

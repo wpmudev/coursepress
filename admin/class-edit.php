@@ -986,29 +986,32 @@ class CoursePress_Admin_Edit {
 					</label>
 				</div>';
 
-		$content .= '
-				<div class="wide">
-					<label>' .
-					esc_html__( 'Course Discussion', 'CP_TD' ) . '
-					</label>
-					<p class="description">' . esc_html__( 'If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'CP_TD' ) . '</p>
-					<label class="checkbox">
-						<input type="checkbox" name="meta_allow_discussion" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'allow_discussion', false ) ) . ' />
-						<span>' . esc_html__( 'Allow course discussion', 'CP_TD' ) . '</span>
-					</label>
-				</div>';
-
-		$content .= '
-				<div class="wide">
-					<label>' .
-					esc_html__( 'Student Workbook', 'CP_TD' ) . '
-					</label>
-					<p class="description">' . esc_html__( 'If checked, students can see their progress and grades.', 'CP_TD' ) . '</p>
-					<label class="checkbox">
-						<input type="checkbox" name="meta_allow_workbook" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'allow_workbook', false ) ) . ' />
-						<span>' . esc_html__( 'Show student workbook', 'CP_TD' ) . '</span>
-					</label>
-				</div>';
+		$checkboxes = array(
+			array(
+				'meta_key' => 'allow_discussion',
+				'title' => __( 'Course Discussion', 'CP_TD' ),
+				'description' => __( 'If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'CP_TD' ),
+				'label' => __( 'Allow course discussion', 'CP_TD' ),
+				'default' => false,
+			),
+			array(
+				'meta_key' => 'allow_workbook',
+				'title' => __( 'Student Workbook', 'CP_TD' ),
+				'description' => __( 'If checked, students can see their progress and grades.', 'CP_TD' ),
+				'label' => __( 'Show student workbook', 'CP_TD' ),
+				'default' => false,
+			),
+			array(
+				'meta_key' => 'allow_grades',
+				'title' => __( 'Student grades', 'CP_TD' ),
+				'description' => __( 'If checked, students can see their grades.', 'CP_TD' ),
+				'label' => __( 'Show student grades', 'CP_TD' ),
+				'default' => false,
+			),
+		);
+		foreach ( $checkboxes as $one ) {
+			$content .= CoursePress_Helper_UI::course_edit_checkbox( $one, $course_id );
+		}
 
 		/**
 		 * Add additional fields.
@@ -1121,18 +1124,15 @@ class CoursePress_Admin_Edit {
 		$is_paid = ! empty( $paid_checked );
 
 		if ( ! $disable_payment ) {
-			$content .= '
-				<hr class="separator" />
-				<div class="wide">
-					<label>' .
-						esc_html__( 'Course Payment', 'CP_TD' ) . '
-					</label>
-					<p class="description">' . esc_html__( 'Payment options for your course. Additional plugins are required and settings vary depending on the plugin.', 'CP_TD' ) . '</p>
-					<label class="checkbox narrow">
-						<input type="checkbox" name="meta_payment_paid_course" ' . $paid_checked . ' />
-						<span>' . esc_html__( 'This is a paid course', 'CP_TD' ) . '</span>
-					</label>
-				</div>';
+			$one = array(
+				'meta_key' => 'payment_paid_course',
+				'title' => __( 'Course Payment', 'CP_TD' ),
+				'description' => __( 'Payment options for your course. Additional plugins are required and settings vary depending on the plugin.', 'CP_TD' ),
+				'label' => __( 'This is a paid course', 'CP_TD' ),
+				'default' => false,
+			);
+			$content .= '<hr class="separator" />';
+			$content .= CoursePress_Helper_UI::course_edit_checkbox( $one, $course_id );
 		}
 
 		/**
@@ -1348,11 +1348,17 @@ class CoursePress_Admin_Edit {
 			esc_attr( $class ),
 			esc_html__( 'Preview', 'CP_TD' )
 		);
-		$content .= '<label>';
-		$content .= '<input type="checkbox" name="meta_basic_certificate" value="1" '. checked( 1, $value, false ) . ' /> '. __( 'Override course certificate.', 'CP_TD' )
+		/**
+		 * Override Course Certificate
+		 */
+		$one = array(
+			'meta_key' => 'basic_certificate',
+			'description' => __( 'Use this field to override general course certificate setting.', 'CP_TD' ),
+			'label' => __( 'Override course certificate.', 'CP_TD' ),
+			'default' => false,
+		);
+		$content .= CoursePress_Helper_UI::course_edit_checkbox( $one, $course_id );
 
-			. '</label>'
-			. '<p class="description">' . __( 'Use this field to override general course certificate setting.', 'CP_TD' ) . '</p>';
 		$content .= sprintf( '<div class="options %s">', cp_is_true( $value )? '':'hidden' );
 		$content .= '<label for="meta_basic_certificate_layout">' . __( 'Certificate Content', 'CP_TD' ) . '</label>'
 			. '<p class="description" style="float:left;">' . __( 'Useful tokens: ', 'CP_TD' ) . implode( ', ', $field_keys ) . '</p>'

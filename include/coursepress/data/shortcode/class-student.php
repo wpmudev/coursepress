@@ -44,6 +44,11 @@ class CoursePress_Data_Shortcode_Student {
 			array( __CLASS__, 'student_workbook_table' )
 		);
 
+		add_shortcode(
+			'student_grades_table',
+			array( __CLASS__, 'student_grades_table' )
+		);
+
 		// -- Course-progress.
 		add_shortcode(
 			'course_progress',
@@ -790,6 +795,226 @@ class CoursePress_Data_Shortcode_Student {
 		 **/
 		$content = apply_filters( 'coursepress_unit_progress_wheel', $content, $course_id, $unit_id, $percent_value );
 
+		return $content;
+	}
+
+	/**
+	 * Course Grades
+	 *
+	 * @since 2.0.5
+	 */
+	public static function student_grades_table( $args ) {
+
+		$course_id = CoursePress_Helper_Utility::the_course( true );
+
+		$workbook_is_active = CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'allow_workbook', false ) );
+
+		if ( false == $workbook_is_active ) {
+			$content = sprintf( '<p class="message">%s</p>', __( 'Workbook is not available for this course.', 'CP_TD' ) );
+			return $content;
+		}
+
+		$args = shortcode_atts(
+			array(
+				'course_id' => $course_id,
+			)
+			,
+			$args,
+			'student_workbook_table'
+		);
+
+		$course_id = (int) $args['course_id'];
+		$student_id = get_current_user_id();
+
+		if ( empty( $course_id ) || empty( $student_id ) ) {
+			return '';
+		}
+		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
+
+		$content = '';
+		$unit_list = CoursePress_Data_Course::get_units_with_modules( $course_id );
+		$unit_list = CoursePress_Helper_Utility::sort_on_key( $unit_list, 'order' );
+
+		$content .= '<div class="grades">';
+		$content .= '<table class="grades-table">';
+
+		$student_progress_units = ( ! empty( $student_progress['units'] ) ) ? $student_progress['units'] : array();
+		foreach ( $unit_list as $unit_id => $unit ) {
+			$progress = CoursePress_Data_Student::get_unit_progress( $student_id, $course_id, $unit_id, $student_progress );
+			$content .= '<tbody>';
+			$content .= '<tr class="row-unit">';
+			$content .= sprintf( '<td class="workbook-unit unit-%s">%s</td>', esc_attr( $unit_id ), $unit['unit']->post_title );
+			$content .= sprintf( '<td class="td-right">%s: %d%%</td>', __( 'Progress', 'CP_TD' ), $progress );
+			$content .= '</tr>';
+
+			$module_count = 0;
+			$module_done = 0;
+			if ( isset( $unit['pages'] ) ) {
+				foreach ( $unit['pages'] as $page ) {
+					foreach ( $page['modules'] as $module_id => $module ) {
+						$attributes = CoursePress_Data_Module::attributes( $module_id );
+						$is_assessable = ! empty( $attributes['assessable'] );
+						$require_instructor_assessment = ! empty( $attributes['instructor_assessable'] );
+						if ( 'output' === $attributes['mode'] ) {
+							continue;
+						}
+						$module_count += 1;
+						$module_type = $attributes['module_type'];
+
+						$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
+						$feedback = CoursePress_Data_Student::get_feedback( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
+
+						// Check if the grade came from an instructor
+						$grades = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $module_id, false, false, $student_progress );
+						$graded_by = CoursePress_Helper_Utility::get_array_val(
+							$grades,
+							'graded_by'
+						);
+						$grade = empty( $grades['grade'] ) ? 0 : (int) $grades['grade'];
+
+						$excluded_modules = array( 'input-textarea', 'input-text', 'input-upload', 'input-form' );
+
+						$auto_grade = true;
+						if ( in_array( $module_type, $excluded_modules ) ) {
+							if ( ( 'auto' == $graded_by || empty( $graded_by ) ) && ! empty( $response ) ) {
+								$auto_grade = false;
+							}
+						}
+
+						$response_display = $response['response'];
+
+						switch ( $attributes['module_type'] ) {
+
+							case 'input-checkbox': case 'input-radio': case 'input-select':
+										$answers = $attributes['answers'];
+										$selected = (array) $attributes['answers_selected'];
+										if ( empty( $response ) ) {
+											$response_display = '&ndash;';
+										} else {
+											$add = false;
+											foreach ( $answers as $key => $answer ) {
+												$the_answer = in_array( $key, $selected );
+												$student_answer = is_array( $response_display ) ? in_array( $key, $response_display ) : $response_display == $key;
+												if ( 'input-radio' === $attributes['module_type'] ) {
+													$student_answer = $response_display == $key;
+												}
+												if ( $student_answer && $the_answer ) {
+													$add = true;
+												}
+											}
+											if ( $add && $auto_grade ) {
+												$module_done++;
+											}
+										}
+							break;
+
+							case 'input-upload':
+								if ( $response && $auto_grade ) {
+									$module_done++;
+								}
+							break;
+							case 'input-quiz':
+								$questions = $attributes['questions'];
+								$add = false;
+								foreach ( $questions as $q_index => $question ) {
+									$options = (array) $question['options'];
+									$checked = (array) $options['checked'];
+									$checked = array_filter( $checked );
+									$student_response = $response_display[ $q_index ];
+									if ( ! empty( $response_display[ $q_index ] ) ) {
+										$answers = $response_display[ $q_index ];
+										foreach ( $answers as $a_index => $answer ) {
+											if ( ! empty( $answer ) ) {
+												$the_answer = CoursePress_Helper_Utility::get_array_val(
+													$attributes,
+													'questions/' . $q_index . '/options/answers/' . $a_index
+												);
+
+												if ( $correct ) {
+													$add = true;
+												}
+											}
+										}
+									}
+								}
+								if ( $add && $auto_grade ) {
+									$module_done++;
+								}
+							break;
+
+							case 'input-form':
+								$questions = $attributes['questions'];
+								if ( $response_display ) {
+									$add = false;
+									foreach ( $questions as $q_index => $question ) {
+										$answer = $response_display[ $q_index ];
+										if ( $answer ) {
+											$add = true;
+										}
+									}
+								}
+								if ( $add && $auto_grade ) {
+									$module_done++;
+								}
+							break;
+
+							case 'input-text': case 'input-textarea':
+									if ( ! empty( $response_display ) && $auto_grade ) {
+										$module_done++;
+									}
+							break;
+
+							case 'input-form':
+								$response = $response_display;
+								$response_display = '';
+
+								if ( ! empty( $attributes['questions'] ) ) {
+									$questions = $attributes['questions'];
+									$add = false;
+									foreach ( $questions as $q_index => $question ) {
+										$student_response = ! empty( $response[ $q_index ] ) ? $response[ $q_index ] : '';
+										if ( $student_response  ) {
+											if ( 'selectable' == $question['type'] ) {
+												$options = $question['options']['answers'];
+												$checked = $question['options']['checked'];
+												foreach ( $options as $ai => $answer ) {
+													if ( $student_response == $ai ) {
+														$the_answer = ! empty( $checked[ $ai ] );
+
+														if ( $the_answer === $student_response ) {
+															$add = true;
+														}
+													}
+												}
+											} else {
+												$add = true;
+											}
+										}
+									}
+									if ( $add && $auto_grade ) {
+										$module_done++;
+									}
+								}
+							break;
+						}
+						$grade_display = 0 === $grade || 0 < (int) $grade ? $grade . '%' : $grade;
+						if ( $require_instructor_assessment ) {
+							$is_assessable = true;
+						}
+					}
+				}
+			}
+			$grade_display = __( 'No gradable modules under this unit.', 'CP_TD' );
+			if ( 0 != $module_count ) {
+				$grade_display = __( '%d of %d elements completed.', 'CP_TD' );
+				$grade_display = sprintf( $grade_display, $module_done, $module_count );
+			}
+			$content .= '<tr class="row-elements">';
+			$content .= sprintf( '<td colspan="2" >%s</td>', $grade_display );
+			$content .= '</tr>';
+			$content .= '</tbody>';
+		}
+		$content .= '</table></div>';
 		return $content;
 	}
 
