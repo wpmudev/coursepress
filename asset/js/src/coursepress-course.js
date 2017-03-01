@@ -735,6 +735,9 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 					nonce: get_setup_nonce()
 				};
 				CoursePress.Course.set( 'data', data );
+				CoursePress.Course.on( 'coursepress:invite_instructor_success', function() {
+					$('[name="invite_instructor_first_name"],[name="invite_instructor_last_name"],[name="invite_instructor_email"]' ).val('');
+				});
 				CoursePress.Course.save();
 			}
 		} );
