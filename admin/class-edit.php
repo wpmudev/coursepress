@@ -1079,17 +1079,21 @@ class CoursePress_Admin_Edit {
 
 		$courses = CoursePress_Data_Instructor::get_accessable_courses( wp_get_current_user(), true );
 
-		$saved_settings = CoursePress_Data_Course::get_setting( $course_id, 'enrollment_prerequisite', array() );
-		if ( ! is_array( $saved_settings ) ) {
-			$saved_settings = array( $saved_settings );
-		}
+		$saved_settings = CoursePress_Data_Course::get_prerequisites( $course_id );
 
 		foreach ( $courses as $course ) {
-			$post_id = $course->ID;
-			if ( $post_id !== $course_id ) {
-				$selected_item = in_array( $post_id, $saved_settings ) ? 'selected="selected"' : '';
-				$content .= '<option value="' . $post_id . '" ' . $selected_item . '>' . $course->post_title . '</option>';
+			/**
+			 * exclude current course
+			 */
+			if ( $course_id == $course->ID ) {
+				continue;
 			}
+			$content .= sprintf(
+				'<option value="%s" %s>%s</option>',
+				esc_attr( $course->ID ),
+				selected( in_array( $course->ID, $saved_settings ), true, false ),
+				esc_html( apply_filters( 'the_title', $course->post_title ) )
+			);
 		}
 
 		$content .= '
@@ -1524,8 +1528,8 @@ class CoursePress_Admin_Edit {
 					CoursePress_View_Admin_Setting_BasicCertificate::default_certificate_content()
 				);
 			}
+			$html = stripslashes( $html );
 			$html = CoursePress_Helper_Utility::replace_vars( $html, $vars );
-
 			// Set PDF args
 			$args = array(
 				'title' => __( 'Course Completion Certificate', 'CP_TD' ),

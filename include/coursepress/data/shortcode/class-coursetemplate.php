@@ -136,7 +136,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$course->enrollment_end_date = CoursePress_Data_Course::get_setting( $course_id, 'enrollment_end_date' );
 		$course->open_ended_course = cp_is_true( CoursePress_Data_Course::get_setting( $course_id, 'course_open_ended' ) );
 		$course->open_ended_enrollment = cp_is_true( CoursePress_Data_Course::get_setting( $course_id, 'enrollment_open_ended' ) );
-		$course->prerequisite = CoursePress_Data_Course::get_setting( $course_id, 'enrollment_prerequisite' );
+		$course->prerequisite = CoursePress_Data_Course::get_prerequisites( $course_id );
 		$course->is_paid = cp_is_true( CoursePress_Data_Course::get_setting( $course_id, 'payment_paid_course' ) );
 		$course->course_started = ! $course->open_ended_course && ! empty( $course->course_end_date ) && CoursePress_Data_Course::strtotime( $course->course_start_date ) <= $now ? true : false;
 		$course->enrollment_started = CoursePress_Data_Course::strtotime( $course->enrollment_start_date ) <= $now ? true : false;

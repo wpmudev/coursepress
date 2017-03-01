@@ -41,6 +41,10 @@ class CoursePress_Admin_Courses {
 		*/
 		add_filter( 'user_has_cap', array( 'CoursePress_Data_Capabilities', 'user_has_cap_edit_course' ), 200, 4 );
 
+		/**
+		 * set sort order
+		 */
+		add_action( 'pre_get_posts', array( __CLASS__, 'set_sort' ) );
 	}
 
 	public static function _is_course( $post ) {
@@ -364,5 +368,61 @@ class CoursePress_Admin_Courses {
 				</div>
 			</script>
 		<?php
+	}
+
+	/**
+	 * Set sort order and save it to user meta.
+	 *
+	 * @since 2.0.5
+	 *
+	 * @param
+	 */
+	public static function set_sort( $query ) {
+		if ( ! is_admin() ) {
+			return;
+		}
+		if ( ! $query->is_main_query() ) {
+			return;
+		}
+		$screen = get_current_screen();
+		if ( ! isset( $screen->post_type ) || self::$post_type != $screen->post_type ) {
+			return;
+		}
+		$orderby = $query->get( 'orderby' );
+		$order = $query->get( 'order' );
+		$user_id = get_current_user_id();
+		/**
+		 * if empty, try to get from user meta
+		 */
+		if ( empty( $orderby ) ) {
+			$orderby = get_user_meta( $user_id, 'coursepress_admin_courses_list_orderby', true );
+			$order = get_user_meta( $user_id, 'coursepress_admin_courses_list_order', true );
+		}
+		/**
+		 * update user meta sort order
+		 */
+		if ( ! empty( $orderby ) ) {
+			update_user_meta( $user_id, 'coursepress_admin_courses_list_orderby', $orderby );
+			update_user_meta( $user_id, 'coursepress_admin_courses_list_order', $order );
+		}
+		/**
+		 * set sort
+		 */
+		switch ( $orderby ) {
+			case 'title':
+				$query->set( 'orderby','post_title' );
+			break;
+			case 'date_enrollment_start':
+				$query->set( 'meta_key','cp_enrollment_start_date' );
+				$query->set( 'orderby','meta_value_num' );
+			break;
+			case 'date_start':
+				$query->set( 'meta_key','cp_course_start_date' );
+				$query->set( 'orderby','meta_value_num' );
+			break;
+		}
+		if ( ! empty( $order ) ) {
+			$query->set( 'order', $order );
+		}
 	}
 }

@@ -47,12 +47,19 @@ class CoursePress_Template_Module {
 						$selected = $attributes['answers_selected'];
 						$content .= '<ul class="cp-answers">';
 
+						// $selected is of string type, change it to int
+						$ints = array_fill(0, 10, true);
+
+						if ( ! empty( $ints[ $selected ] ) ) {
+							$selected = (int) $selected;
+						}
+
 						foreach ( $answers as $key => $answer ) {
 							if ( 'input-checkbox' !== $module_type ) {
 								$the_answer = $selected === $key || $selected === $answer;
 								$student_answer = $response == $key || $response === $answer;
 							} else {
-								$the_answer = in_array( $key, $selected );
+								$the_answer = $key == $selected;
 								$student_answer = is_array( $response ) ? in_array( $key, $response ) : $response == $key;
 							}
 
