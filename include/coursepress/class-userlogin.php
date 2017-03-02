@@ -144,11 +144,13 @@ if ( ! class_exists( 'CoursePress_UserLogin' ) ) :
 		 * Render registration form if current user is not logged-in.
 		 *
 		 * @param (string) $redirect_url
-		 * @param ($string) $login_url
+		 * @param (string) $login_url
+		 * @param (string) $signup_title
+		 * @param (string) $signup_tag
 		 *
 		 * @return Returns registration form or null.
 		 **/
-		public static function get_registration_form( $redirect_url = '', $login_url = '' ) {
+		public static function get_registration_form( $redirect_url = '', $login_url = '', $signup_title = '', $signup_tag = '' ) {
 			if ( is_user_logged_in() ) {
 				return '';
 			}
@@ -170,6 +172,8 @@ if ( ! class_exists( 'CoursePress_UserLogin' ) ) :
 			self::$form_message = apply_filters( 'signup_form_message', self::$form_message );
 
 			$args = array(
+				'signup_title' => $signup_title,
+				'signup_tag' => $signup_tag,
 				'form_message' => self::$form_message,
 				'form_message_class' => self::$form_message_class,
 				'course_id' => isset( $_GET['course_id'] ) ? (int) $_GET['course_id'] : 0,

@@ -1200,7 +1200,7 @@ class CoursePress_Data_Shortcode_Template {
 			case 'signup':
 				if ( ! is_user_logged_in() ) {
 					if ( CoursePress_Helper_Utility::users_can_register() ) {
-						$content .= CoursePress_UserLogin::get_registration_form( $redirect_url, $login_url );
+						$content .= CoursePress_UserLogin::get_registration_form( $redirect_url, $login_url, $signup_title, $signup_tag );
 					} else {
 						$content .= __( 'Registrations are not allowed.', 'CP_TD' );
 					}

@@ -6,6 +6,9 @@
  **/
 ?>
 <div class="coursepress-form coursepress-form-signup">
+	<?php if ( ! empty( $signup_title ) ) : ?>
+		<?php printf( '<%1$s>%2$s</%1$s>', $signup_tag, $signup_title ); ?>
+	<?php endif; ?>
 	<p class="form-info-<?php echo $form_message_class; ?>"><?php echo $form_message; ?></p>
 
 	<form id="student-settings" name="student-settings" method="post" class="student-settings signup-form">
