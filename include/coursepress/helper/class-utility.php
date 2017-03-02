@@ -1357,4 +1357,26 @@ class CoursePress_Helper_Utility {
 		</div>
 		<?php
 	}
+
+	/**
+	 * Check first time run and create a course!
+	 *
+	 * @since 2.0.6
+	 */
+	public static function check_first_time_run() {
+		$plugin_version_db = get_option( 'coursepress_version', 0 );
+		if ( 0 == $plugin_version_db ) {
+			$settings = get_option( 'coursepress_settings', null );
+			if ( empty( $settings ) ) {
+				update_option( 'coursepress_settings', array( 'not' => 'empty' ) );
+				CoursePress_Helper_Course_Generator::run();
+			}
+		}
+		if ( version_compare( $plugin_version_db, CoursePress::$version, '<' ) ) {
+			$result = add_option( 'coursepress_version', CoursePress::$version, '', 'no' );
+			if ( ! $result ) {
+				update_option( 'coursepress_version', CoursePress::$version );
+			}
+		}
+	}
 }
