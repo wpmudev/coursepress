@@ -60,12 +60,19 @@ class CoursePress_Data_Shortcode_Template {
 			'course_signup_form',
 			array( __CLASS__, 'course_signup_form' )
 		);
+
 		if ( apply_filters( 'coursepress_custom_signup', true ) ) {
+			/**
+			 * Listen to signup form submission
+			 **/
+			add_action( 'after_setup_theme', array( __CLASS__, 'process_registration_form' ) );
+
 			add_shortcode(
 				'course_signup',
 				array( __CLASS__, 'course_signup' )
 			);
 		}
+
 		add_shortcode(
 			'course_categories',
 			array( __CLASS__, '_the_categories' )
@@ -1121,6 +1128,15 @@ class CoursePress_Data_Shortcode_Template {
 		return $content;
 	}
 
+	/**
+	 * Helper function to load registration process/validation if user is not logged-in.
+	 **/
+	public static function process_registration_form() {
+		if ( ! is_user_logged_in() ) {
+			CoursePress_UserLogin::process_registration_form();
+		}
+	}
+
 	public static function course_signup( $atts ) {
 
 		if ( is_user_logged_in() ) {
@@ -1176,15 +1192,6 @@ class CoursePress_Data_Shortcode_Template {
 			$login_url = $login_url . '?redirect_url=' . $_POST['redirect_url'];
 		}
 
-		/**
-		 * Cookies should always be set before any output!
-		// Set a cookie now to see if they are supported by the browser.
-		setcookie( TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN );
-		if ( SITECOOKIEPATH != COOKIEPATH ) {
-			setcookie( TEST_COOKIE, 'WP Cookie check', 0, SITECOOKIEPATH, COOKIE_DOMAIN );
-		};
-		**/
-
 		$form_message = '';
 		$form_message_class = '';
 
@@ -1193,233 +1200,11 @@ class CoursePress_Data_Shortcode_Template {
 			case 'signup':
 				if ( ! is_user_logged_in() ) {
 					if ( CoursePress_Helper_Utility::users_can_register() ) {
-						$form_message_class = '';
-						$form_message = '';
-						$content = '<div class="coursepress-form coursepress-form-signup">';
-						if ( isset( $_POST['student-settings-submit'] ) ) {
-							check_admin_referer( 'student_signup' );
-							$min_password_length = apply_filters( 'coursepress_min_password_length', 6 );
-
-							$student_data = array();
-							$form_errors = 0;
-
-							do_action( 'coursepress_before_signup_validation' );
-
-							$username = $_POST['username'];
-							$firstname = $_POST['first_name'];
-							$lastname = $_POST['last_name'];
-							$email = $_POST['email'];
-							$passwd = $_POST['password'];
-							$passwd2 = $_POST['password_confirmation'];
-
-							if ( $username && $firstname && $lastname && $email && $passwd && $passwd2 ) {
-
-								if ( ! username_exists( $username ) ) {
-									if ( ! email_exists( $email ) ) {
-										if ( $passwd == $passwd2 ) {
-											if ( ! preg_match( '#[0-9a-z]+#i', $passwd ) || strlen( $passwd ) < $min_password_length ) {
-												$form_message = sprintf( __( 'Your password must be at least %d characters long and have at least one letter and one number in it.', 'CP_TD' ), $min_password_length );
-												$form_message_class = 'red';
-												$form_errors++;
-											} else {
-
-												if ( $_POST['password_confirmation'] ) {
-													$student_data['user_pass'] = $_POST['password'];
-												} else {
-													$form_message = __( "Passwords don't match", 'CP_TD' );
-													$form_message_class = 'red';
-													$form_errors++;
-												}
-											}
-										} else {
-											$form_message = __( 'Passwords don\'t match', 'CP_TD' );
-											$form_message_class = 'red';
-											$form_errors++;
-										}
-
-										$student_data['role'] = get_option( 'default_role', 'subscriber' );
-										$student_data['user_login'] = $_POST['username'];
-										$student_data['user_email'] = $_POST['email'];
-										$student_data['first_name'] = $_POST['first_name'];
-										$student_data['last_name'] = $_POST['last_name'];
-
-										if ( ! is_email( $_POST['email'] ) ) {
-											$form_message = __( 'E-mail address is not valid.', 'CP_TD' );
-											$form_message_class = 'red';
-											$form_errors++;
-										}
-
-										if ( isset( $_POST['tos_agree'] ) ) {
-											if ( ! cp_is_true( $_POST['tos_agree'] ) ) {
-												$form_message = __( 'You must agree to the Terms of Service in order to signup.', 'CP_TD' );
-												$form_message_class = 'red';
-												$form_errors++;
-											}
-										}
-
-										if ( ! $form_errors ) {
-
-											$student_data = CoursePress_Helper_Utility::sanitize_recursive(
-												$student_data
-											);
-											$student_id = wp_insert_user( $student_data );
-
-											if ( ! empty( $student_id ) ) {
-												CoursePress_Data_Student::send_registration( $student_id );
-
-												$creds = array();
-												$creds['user_login'] = $student_data['user_login'];
-												$creds['user_password'] = $student_data['user_pass'];
-												$creds['remember'] = true;
-												$user = wp_signon( $creds, false );
-
-												if ( is_wp_error( $user ) ) {
-													$form_message = $user->get_error_message();
-													$form_message_class = 'red';
-												}
-
-												if ( isset( $_POST['course_id'] ) && is_numeric( $_POST['course_id'] ) ) {
-													$url = get_permalink( (int) $_POST['course_id'] );
-													wp_safe_redirect( $url );
-												} else {
-													if ( ! empty( $redirect_url ) ) {
-														wp_safe_redirect( esc_url_raw( apply_filters( 'coursepress_redirect_after_signup_redirect_url', $redirect_url ) ) );
-													} else {
-														wp_safe_redirect( esc_url_raw( apply_filters( 'coursepress_redirect_after_signup_url', CoursePress_Core::get_slug( 'student_dashboard', true ) ) ) );
-													}
-												}
-												exit;
-											} else {
-												$form_message = __( 'An error occurred while creating the account. Please check the form and try again.', 'CP_TD' );
-												$form_message_class = 'red';
-											}
-										}
-									} else {
-										$form_message = __( 'Sorry, that email address is already used!', 'CP_TD' );
-										$form_message_class = 'error';
-									}
-								} else {
-									$form_message = __( 'Username already exists. Please choose another one.', 'CP_TD' );
-									$form_message_class = 'red';
-								}
-							} else {
-								$form_message = __( 'All fields are required.', 'CP_TD' );
-								$form_message_class = 'red';
-							}
-						} else {
-							$form_message = __( 'All fields are required.', 'CP_TD' );
-						}
-
-						if ( ! empty( $signup_title ) ) {
-							$content .= '<' . $signup_tag . '>' . $signup_title . '</' . $signup_tag . '>';
-						}
-
-						$content .= '
-							<p class="form-info-' . esc_attr( apply_filters( 'signup_form_message_class', sanitize_text_field( $form_message_class ) ) ) . '">' . esc_html( apply_filters( 'signup_form_message', sanitize_text_field( $form_message ) ) ) . '</p>
-						';
-
-						ob_start();
-						do_action( 'coursepress_before_signup_form' );
-						$content .= ob_get_clean();
-
-						$content .= '<form id="student-settings" name="student-settings" method="post" class="student-settings signup-form">';
-
-						ob_start();
-						do_action( 'coursepress_before_all_signup_fields' );
-						$content .= ob_get_clean();
-
-						// First name
-						$content .= '<input type="hidden" name="course_id" value="' . esc_attr( isset( $_GET['course_id'] ) ? $_GET['course_id'] : ' ' ) . '"/>';
-						$content .= '<input type="hidden" name="redirect_url" value="' . esc_url( $redirect_url ) . '"/>';
-						$content .= '<label class="firstname">';
-						$content .= '<span>' . esc_html__( 'First Name', 'CP_TD' ) . ':</span>';
-						$content .= '<input type="text" name="first_name" value="' . ( isset( $_POST['first_name'] ) ? esc_html( $_POST['first_name'] ) : '' ) . '"/>';
-						$content .= '</label>';
-						ob_start();
-						do_action( 'coursepress_after_signup_first_name' );
-						$content .= ob_get_clean();
-
-						// Last name
-						$content .= '<label class="lastname">';
-						$content .= '<span>' . esc_html__( 'Last Name', 'CP_TD' ) . ':</span>';
-						$content .= '<input type="text" name="last_name" value="' . ( isset( $_POST['last_name'] ) ? esc_attr( $_POST['last_name'] ) : '' ) . '"/>';
-						$content .= '</label>';
-						ob_start();
-						do_action( 'coursepress_after_signup_last_name' );
-						$content .= ob_get_clean();
-
-						// Username.
-						$content .= '<label class="username">';
-						$content .= '<span>' . esc_html__( 'Username', 'CP_TD' ) . ':</span>';
-						$content .= '<input type="text" name="username" value="' . ( isset( $_POST['username'] ) ? esc_attr( $_POST['username'] ) : '' ) . '"/>';
-						$content .= '</label> ';
-						ob_start();
-						do_action( 'coursepress_after_signup_username' );
-						$content .= ob_get_clean();
-
-						// Email.
-						$content .= '<label class="email">';
-						$content .= '<span>' . esc_html__( 'E-mail', 'CP_TD' ) . ':</span>';
-						$content .= '<input type="text" name="email" value="' . ( isset( $_POST['email'] ) ? esc_attr( $_POST['email'] ) : '' ) . '"/>';
-						$content .= '</label> ';
-						ob_start();
-						do_action( 'coursepress_after_signup_email' );
-						$content .= ob_get_clean();
-
-						// Password.
-						$content .= '<label class="password">';
-						$content .= '<span>' . esc_html__( 'Password', 'CP_TD' ) . ':</span>';
-						$content .= '<input type="password" name="password" value=""/>';
-						$content .= '</label>';
-						ob_start();
-						do_action( 'coursepress_after_signup_password' );
-						$content .= ob_get_clean();
-
-						// Confirm.
-						$content .= '<label class="password-confirm right">';
-						$content .= '<span>' . esc_html__( 'Confirm Password', 'CP_TD' ) . ':</span>';
-						$content .= '<input type="password" name="password_confirmation" value=""/>';
-						$content .= '</label>';
-						$content .= '<label class="weak-password-confirm">';
-						$content .= '<input type="checkbox" name="confirm_weak_password" value="1" /> ';
-						$content .= '<span>' . __( 'Confirm use of weak password', 'CP_TD' ) . '</span>';
-						$content .= '</label>';
-
-						if ( shortcode_exists( 'signup-tos' ) ) {
-							if ( get_option( 'show_tos', 0 ) == '1' ) {
-								$content .= '<label class="tos full">';
-								ob_start();
-								echo do_shortcode( '[signup-tos]' );
-								$content .= ob_get_clean();
-								$content .= '</label>';
-							}
-						}
-
-						ob_start();
-						do_action( 'coursepress_after_all_signup_fields' );
-						$content .= ob_get_clean();
-
-						$content .= '<label class="existing-link full"> ' . sprintf( __( 'Already have an account? %s%s%s!', 'CP_TD' ), '<a href="' . esc_url( $login_url ) . '">', __( 'Login to your account', 'CP_TD' ), '</a>' ) . ' </label>';
-						$content .= '<label class="submit-link full-right">';
-						$content .= '<input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="' . esc_attr__( 'Create an Account', 'CP_TD' ) . '"/>';
-						$content .= '</label>';
-
-						ob_start();
-						do_action( 'coursepress_after_submit' );
-						$content .= ob_get_clean();
-
-						$content .= wp_nonce_field( 'student_signup', '_wpnonce', true, false );
-						$content .= '</form>';
-
-						ob_start();
-						do_action( 'coursepress_after_signup_form' );
-						$content .= ob_get_clean();
-						$content .= '</div>';
+						$content .= CoursePress_UserLogin::get_registration_form( $redirect_url, $login_url );
 					} else {
 						$content .= __( 'Registrations are not allowed.', 'CP_TD' );
 					}
 				} else {
-
 					if ( ! empty( $redirect_url ) ) {
 						wp_redirect( esc_url_raw( urldecode( $redirect_url ) ) );
 					} else {

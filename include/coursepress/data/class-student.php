@@ -1451,7 +1451,7 @@ class CoursePress_Data_Student {
 	 * @param  int $student_id The newly created WP User ID.
 	 * @return bool True on success.
 	 */
-	public static function send_registration( $student_id ) {
+	public static function send_registration( $student_id, $user_data = array() ) {
 		$student_data = get_userdata( $student_id );
 
 		$email_args = array();
@@ -1462,6 +1462,7 @@ class CoursePress_Data_Student {
 		$email_args['fields']['student_id'] = $student_id;
 		$email_args['fields']['student_username'] = $student_data->user_login;
 		$email_args['fields']['student_password'] = $student_data->user_pass;
+		$email_args['fields']['password'] = ! empty( $user_data['password_txt'] ) ? $user_data['password_txt'] : '';
 
 		$sent = CoursePress_Helper_Email::send_email(
 			CoursePress_Helper_Email::REGISTRATION,
