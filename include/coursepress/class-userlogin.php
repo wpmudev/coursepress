@@ -67,8 +67,7 @@ if ( ! class_exists( 'CoursePress_UserLogin' ) ) :
 						self::$form_message = __( 'Passwords don\'t match', 'cp' );
 						$found_errors++;
 					}
-					elseif( ! isset( $_POST['confirm_weak_password'] ) &&
-						( ! preg_match( '#[0-9a-z]+#i', $passwd ) || strlen( $passwd ) < $min_password_length ) ) {
+					elseif( strlen( $passwd ) < $min_password_length || ( ! isset( $_POST['confirm_weak_password'] ) && ! preg_match( '#[0-9a-z]+#i', $passwd ) ) ) {
 						self::$form_message = sprintf( __( 'Your password must be at least %d characters long and have at least one letter and one number in it.', 'CP_TD' ), $min_password_length );
 						$found_errors++;
 					}
