@@ -25,6 +25,8 @@ CHANGELOG
 * Fixed a bug with prerequisites courses when we have only one prerequisite course.
 * Improved select2 field for prerequisites and remove current course from the list.
 * Improved MarketPress product thumbnail and images integration.
+* Fixed: Registration email tokens.
+* Fixed: Registration form shortcode.
 
 = 2.0.4 =
 -------------------------------------------------

@@ -25,6 +25,9 @@ if ( ! class_exists( 'CoursePress_UserLogin' ) ) :
 		 **/
 		static $form_message_class = '';
 
+		/**
+		 * Process user registration submission.
+		 **/
 		public static function process_registration_form() {
 			if ( isset( $_POST['student-settings-submit'] ) && isset( $_POST['_wpnonce'] )
 				&& wp_verify_nonce( $_POST['_wpnonce'], 'student_signup' ) ) {
