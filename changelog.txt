@@ -7,6 +7,7 @@ CHANGELOG
 
 = 2.0.6 =
 -------------------------------------------------
+* Fixed issue with not showing HTML tags in Multiple/Single Choice field.
 
 = 2.0.5 =
 -------------------------------------------------
