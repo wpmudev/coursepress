@@ -7,6 +7,7 @@ CHANGELOG
 
 = 2.0.6 =
 -------------------------------------------------
+* Added message to units screen, when there is no visible units at all.
 
 = 2.0.5 =
 -------------------------------------------------

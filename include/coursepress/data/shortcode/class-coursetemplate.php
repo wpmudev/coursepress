@@ -290,7 +290,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					'label' => ! $is_instructor ? sanitize_text_field( $continue_learning_text ) : sanitize_text_field( $instructor_text ),
 					'attr' => array(
 						'class' => 'apply-button apply-button-enrolled ' . $class,
-						'data-link' => CoursePress_Data_Student::get_last_visited_url( $course_id  ),
+						'data-link' => CoursePress_Data_Student::get_last_visited_url( $course_id ),
 					),
 					'type' => 'link',
 				),
@@ -981,7 +981,6 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		}
 
 		$content .= sprintf( '<div class="unit-archive-list-wrapper" data-view-mode="%s">', esc_attr( $view_mode ) );
-		$content .= count( $units ) > 0 ? '<ul class="units-archive-list">' : '';
 		$counter = 0;
 
 		$enrolled = false;
@@ -999,10 +998,13 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$previous_unit_id = false;
 		$last_module_id = false;
 
+		/**
+		 * units
+		 */
+		$content_units = '';
 		foreach ( $units as $unit ) {
 			$the_unit = $with_modules ? $unit['unit'] : $unit;
 			$unit_id = $the_unit->ID;
-
 			// Hide hidden unit
 			$is_unit_structure_visible = CoursePress_Data_Unit::is_unit_structure_visible( $course_id, $unit_id, $student_id );
 			if ( ! $is_unit_structure_visible ) { continue; }
@@ -1362,7 +1364,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				$additional_li_class .= ' unfolded';
 			}
 
-			$content .= '<li class="' . esc_attr( $additional_li_class ) . '"'. $unit_data . '>' .
+			$content_units .= '<li class="' . esc_attr( $additional_li_class ) . '"'. $unit_data . '>' .
 				$unit_image .
 				'<div class="unit-archive-single">' .
 				$unit_progress .
@@ -1370,15 +1372,21 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				$unit_link.
 				$unit_content;
 
-			$content .= $module_table;
-
-			$content .= '</div></li>';
+			$content_units .= $module_table;
+			$content_units .= '</div></li>';
 		}
 
-		$content .= count( $units ) > 0 ? '</ul>' : '';
+		if ( empty( $content_units ) ) {
+			$content .= sprintf(
+				'<h3 class="zero-course-units">%s</h3>',
+				esc_html__( 'No visible units in the course currently. Please check back later.', 'CP_TD' )
+			);
+		} else {
+			$content .= sprintf( '<ul class="units-archive-list">%s</ul>', $content_units );
+		}
 
 		if ( empty( $units ) ) {
-			$content .= '<h3 class="zero-course-units">' . esc_html__( 'No units in the course currently. Please check back later.' ) . '</h3>';
+			$content .= '<h3 class="zero-course-units">' . esc_html__( 'No units in the course currently. Please check back later.', 'CP_TD' ) . '</h3>';
 		}
 		$content .= '</div>';
 

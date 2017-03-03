@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoursePress Pro 2.0.5\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/coursepress\n"
-"POT-Creation-Date: 2017-03-02 12:48:50+00:00\n"
+"POT-Creation-Date: 2017-03-03 10:42:35+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -353,7 +353,7 @@ msgstr ""
 
 #: admin/class-courses.php:92 admin/class-courses.php:177
 #: admin/class-courses.php:257 include/coursepress/data/class-unit.php:26
-#: include/coursepress/data/shortcode/class-coursetemplate.php:2124
+#: include/coursepress/data/shortcode/class-coursetemplate.php:2132
 #: include/coursepress/data/shortcode/class-template.php:569
 #: include/coursepress/data/shortcode/class-unit.php:536
 #: include/coursepress/helper/class-setting.php:380
@@ -1183,7 +1183,7 @@ msgstr ""
 #: admin/controller/class-unit.php:192 admin/controller/class-unit.php:193
 #: include/coursepress/data/shortcode/class-coursetemplate.php:535
 #: include/coursepress/data/shortcode/class-coursetemplate.php:892
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1311
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1313
 #: include/coursepress/view/admin/course/class-edit.php:167
 #: include/coursepress/view/admin/course/class-edit.php:1152
 #: include/coursepress/view/admin/course/class-unitbuilder.php:132
@@ -2098,8 +2098,8 @@ msgstr ""
 
 #: admin/table/class-instructors.php:109 admin/table/class-students.php:96
 #: include/coursepress/data/class-course.php:35
-#: include/coursepress/data/shortcode/class-coursetemplate.php:2110
-#: include/coursepress/data/shortcode/class-coursetemplate.php:2120
+#: include/coursepress/data/shortcode/class-coursetemplate.php:2118
+#: include/coursepress/data/shortcode/class-coursetemplate.php:2128
 #: include/coursepress/data/shortcode/class-template.php:386
 #: include/coursepress/helper/class-utility.php:1309
 #: include/coursepress/helper/table/class-instructor.php:91
@@ -2804,7 +2804,7 @@ msgid "You need to complete all the REQUIRED modules before this unit."
 msgstr ""
 
 #: include/coursepress/data/class-course.php:2850
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1234
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1236
 msgid "You need to complete all the REQUIRED modules before this section."
 msgstr ""
 
@@ -2892,7 +2892,7 @@ msgid "You have been removed from \"%s\" discussion."
 msgstr ""
 
 #: include/coursepress/data/class-discussion.php:574
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1458
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1466
 #: include/coursepress/data/shortcode/class-template.php:460
 #: include/coursepress/template/class-unit.php:270
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1389
@@ -2901,7 +2901,7 @@ msgid "&laquo; Previous"
 msgstr ""
 
 #: include/coursepress/data/class-discussion.php:575
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1457
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1465
 #: include/coursepress/data/shortcode/class-template.php:461
 #: include/coursepress/template/class-unit.php:269
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1385
@@ -3378,27 +3378,27 @@ msgstr ""
 msgid "Untitled Page %s"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1089
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1091
 msgid " [DRAFT]"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1099
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1101
 msgid ""
 "This unit is available, but you need to complete all the REQUIRED modules "
 "before this unit."
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1134
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1136
 msgid "Opens"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1135
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1137
 msgid "This unit will be available on the scheduled start date."
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1237
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1243
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1239
 #: include/coursepress/data/shortcode/class-coursetemplate.php:1245
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1247
 #: include/coursepress/helper/ui/class-module.php:375
 #: include/coursepress/helper/ui/class-module.php:392
 #: include/coursepress/helper/ui/class-module.php:409
@@ -3419,113 +3419,117 @@ msgstr ""
 msgid "Untitled"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1310
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1312
 msgid "You need to completed all the REQUIRED modules before this module."
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1321
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1323
 msgid "Mod"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1381
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1382
+msgid "No visible units in the course currently. Please check back later."
+msgstr ""
+
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1389
 msgid "No units in the course currently. Please check back later."
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1400
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1408
 #: include/coursepress/view/admin/setting/class-shortcodes.php:166
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1549
 #: include/coursepress/widget/class-featuredcourse.php:20
 msgid "Featured Course"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1401
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1409
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1553
 msgid "Find out more."
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1510
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1518
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1422
 msgid "Completed courses"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1512
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1520
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1431
 msgid "Current Courses"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1514
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1522
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1439
 msgid "Facilitated Courses"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1516
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1524
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1447
 msgid "Starting soon"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1517
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1525
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1451
 msgid "Incomplete courses"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1518
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1526
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1455
 msgid "The Instructor does not have any courses assigned yet."
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1521
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1529
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1468
 msgid "Manage Courses"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1523
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1531
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1477
 msgid "Past courses"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1526
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1534
 msgid ""
 "You are not enrolled in any courses. <a href=\"%s\">See available "
 "courses.</a>"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1528
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1536
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1500
 msgid "Suggested courses"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1529
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1537
 msgid ""
 "You are not enrolled in any courses.<br />Here are a few you might like, or "
 "<a href=\"%s\">see all available courses.</a>"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1764
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1772
 msgid "Manage Course"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1834
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1842
 msgid "Share"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1917
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1925
 #: include/coursepress/view/admin/course/class-student.php:160
 msgid "Send"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1919
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1927
 msgid "Write a Reply or Comment"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1958
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1966
 msgid "Reply"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1990
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1998
 msgid "-- General --"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:2070
+#: include/coursepress/data/shortcode/class-coursetemplate.php:2078
 msgid "0 course units prepared yet. Please check back later."
 msgstr ""
 
@@ -8640,17 +8644,17 @@ msgctxt "Default title for a duplicated course. Variable is original title."
 msgid "%s Copy"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1129
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1131
 msgctxt "Unit available date with year for future unit."
 msgid "M d, Y"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1129
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1131
 msgctxt "Unit available date without year for future unit."
 msgid "M d"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1923
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1931
 #: include/coursepress/data/shortcode/class-unit.php:698
 msgctxt "noun"
 msgid "Comment"
