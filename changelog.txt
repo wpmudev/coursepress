@@ -1,18 +1,40 @@
 Plugin Name: CoursePress Pro
 Author:      WPMU DEV (Irene, Marcin, Philipp, Marko, Jose, Rheinard)
-Build Time:  2016-04-07T13:37:59.644Z
+Build Time:  BUILDTIME
 
 CHANGELOG
 =================================================
 
-= 2.0.5 =
+= 2.0.6 =
 -------------------------------------------------
 
+= 2.0.5 =
+-------------------------------------------------
+* Added HTML preview for Raports.
+* Added ability to turn on/off social sharing icons.
+* Added check is safe_mode before call set_time_limit() function.
+* Added the action "coursepress_woocommerce_product_updated". This action has two variable $product_id and $course_id and is called after update product by CoursePress.
+* Added check is user logged before we show comment form in discussion module.
+* Added CoursePress Endpoints to Apperance -> Menu screen.
+* Added ability to remember the last sorting chosen by user on the list of courses in admin area.
+* Improved select2 field for prerequisites and remove current course from the list.
+* Improved MarketPress product thumbnail and images integration.
+* Improved link building to student profile in admin area.
+* Improved HTML login & signup forms.
+* FIxed on signup form double error messages.
+* Fixed "Grades" screen.
+* Fixed a wrong link to student profile from students tab on a course edit screen.
+* Fixed a bug with prerequisites courses when we have only one prerequisite course.
+* Fixed registration email tokens.
+* Fixed registration form shortcode.
+* Fixed a wrong icon on assessments page, it was always shown fail icon.
+* Fixed missing html attributes on certificate preview.
+* Fixed missing messages on login/signup form.
 
 = 2.0.4 =
 -------------------------------------------------
 * Added ability to enroll, when we use course_join_button, but we are not logged.
-* Added sanitization of course id in "course_join_button" shortcode.
+* Added sanitization course id field in "course_join_button" shortcode.
 * Added ability to save course state and exit.
 * Added filter "coursepress_unit_add_open_date" to allow display open unit date.
 * Added auto-creating missing directories for PDF certificates.
@@ -25,22 +47,22 @@ CHANGELOG
 * Limiting facilitator role, from now on it can only edit allowed courses.
 * Improved the appearance of buttons on course frontend page.
 * Improved "My Profile" screen.
-* Delete related course data from usermeta table when deleting a course.
-* Improve "Student Profile" screen by adding nonce check, to avoid any profile display.
+* Delete related course data from a usermeta table when deleting a course.
+* Improve "Student Profile" screen by adding a nonce check, to avoid any profile display.
 * Improve login and signup screens for small screens.
 * Fixed a problem with wrong courses on [cp_pages page="student_dashboard"].
-* Fixed a "60 seconds" bug - when module uses a timer, there was no chance to show different amount of seconds then "60".
+* Fixed a "60 seconds" bug - when a module uses a timer, there was no chance to show different amount of seconds then "60".
 * Fixed a bug with the sum of time for pages and units on course edit page.
 * Fixed a bug related to the inability to disable CoursePress login form.
 * Fixed a bug with previewing units & modules.
 * Fixed a problem with "Manage Course" button.
 * Fixed a problem with access to CoursePress menu for instructors.
 * Fixed a problem with enrolling students using MarketPress.
-* Fixed a problem with sections pagination when course is in normal mode.
+* Fixed a problem with sections pagination when a course is in normal mode.
 * Fixed untranslated texts.
-* Fixed a bug with ability to approve comments to discussions.
-* Fixed a bug when user can enroll in the course without paying to paid course.
-* Fixed a bug with combination when we do not have required modules, but we check "User needs to answer all required[...]".
+* Fixed a bug with the ability to approve comments to discussions.
+* Fixed a bug when a user can enroll in the course without paying to paid course.
+* Fixed a bug with the combination when we do not have required modules, but we check "User needs to answer all required[...]".
 
 = 2.0.3 =
 -------------------------------------------------

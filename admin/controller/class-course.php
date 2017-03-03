@@ -376,7 +376,7 @@ class CoursePress_Admin_Controller_Course {
 
 			case 'bulk_actions':
 
-				if ( wp_verify_nonce( $data->data->nonce, 'bulk_action_nonce' ) ) {
+				if ( isset( $data->data->nonce ) && wp_verify_nonce( $data->data->nonce, 'bulk_action_nonce' ) ) {
 
 					$courses = $data->data->courses;
 					$action = $data->data->the_action;

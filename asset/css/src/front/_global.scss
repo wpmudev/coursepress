@@ -133,6 +133,10 @@ input.cp-has-error {
 		margin: 0 5px 0 0;
 		padding: 0;
 
+		&.submenu-active {
+			opacity: .6;
+		}
+
 		a {
 			padding: 4px 12px;
 			@include reset_a;
