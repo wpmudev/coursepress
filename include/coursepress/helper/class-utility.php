@@ -146,7 +146,7 @@ class CoursePress_Helper_Utility {
 			}
 			$a = &$a[ $k ];
 		}
-		$a[ $key ? $key : count( $a ) ] = $value;
+		$a[ $key && ! is_array( $key ) ? $key : count( $a ) ] = $value;
 	}
 
 	// get array value based on path.

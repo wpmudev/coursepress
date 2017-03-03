@@ -484,6 +484,25 @@ class CoursePress_Data_Course {
 	public static function get_setting( $course_id, $key = true, $default = null ) {
 		$settings = get_post_meta( $course_id, 'course_settings', true );
 
+		$defaults = array(
+			'setup_marker' => 0,
+			'setup_step_1' => '',
+			'setup_step_2' => '',
+			'setup_step_3' => '',
+			'setup_step_4' => '',
+			'course_language' => __( 'English', 'CP_TD' ),
+			'course_view' => 'normal',
+			'structure_level' => 'unit',
+			'structure_visible_units' => array(),
+			'structure_preview_units' => array(),
+			'structure_visible_pages' => array(),
+			'structure_preview_pages' => array(),
+			'structure_visible_modules' => array(),
+			'structure_preview_modules' => array(),
+		);
+
+		$settings = wp_parse_args( $settings, $defaults );
+
 		// Return all settings.
 		if ( true === $key ) {
 			return $settings;
@@ -496,6 +515,7 @@ class CoursePress_Data_Course {
 			return $default;
 		}
 
+		
 		$setting = CoursePress_Helper_Utility::get_array_val( $settings, $key );
 		$setting = is_null( $setting ) ? $default : $setting;
 		$setting = ! is_array( $setting ) ? trim( $setting ) : $setting;
