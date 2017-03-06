@@ -30,6 +30,8 @@ class TestCourseEdit extends WP_UnitTestCase {
 
 		ob_start();
 
+		$instructors = CoursePress_Data_Course::get_setting( $course->ID, 'instructors', array() );
+
 		do_action( 'dbx_post_advanced', $course );
 
 		do_action( 'edit_form_after_editor', $course );
