@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoursePress Pro 2.0.5\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/coursepress\n"
-"POT-Creation-Date: 2017-03-02 12:48:50+00:00\n"
+"POT-Creation-Date: 2017-03-03 09:13:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -330,13 +330,13 @@ msgstr ""
 msgid "Number of comments per page:"
 msgstr ""
 
-#: admin/class-courses.php:88 admin/class-edit.php:896 admin/class-edit.php:925
+#: admin/class-courses.php:88 admin/class-edit.php:901 admin/class-edit.php:930
 #: include/coursepress/view/admin/course/class-edit.php:711
 #: include/coursepress/view/admin/course/class-edit.php:740
 msgid "Start Date"
 msgstr ""
 
-#: admin/class-courses.php:89 admin/class-edit.php:903 admin/class-edit.php:932
+#: admin/class-courses.php:89 admin/class-edit.php:908 admin/class-edit.php:937
 #: include/coursepress/helper/class-setting.php:377
 #: include/coursepress/view/admin/course/class-edit.php:718
 #: include/coursepress/view/admin/course/class-edit.php:747
@@ -353,7 +353,7 @@ msgstr ""
 
 #: admin/class-courses.php:92 admin/class-courses.php:177
 #: admin/class-courses.php:257 include/coursepress/data/class-unit.php:26
-#: include/coursepress/data/shortcode/class-coursetemplate.php:2124
+#: include/coursepress/data/shortcode/class-coursetemplate.php:2127
 #: include/coursepress/data/shortcode/class-template.php:569
 #: include/coursepress/data/shortcode/class-unit.php:536
 #: include/coursepress/helper/class-setting.php:380
@@ -644,7 +644,7 @@ msgstr ""
 msgid "Choose if course Unit page shows units only or in expanded view."
 msgstr ""
 
-#: admin/class-edit.php:561 admin/class-edit.php:579 admin/class-edit.php:589
+#: admin/class-edit.php:561 admin/class-edit.php:584 admin/class-edit.php:594
 #: include/coursepress/data/shortcode/class-coursetemplate.php:544
 #: include/coursepress/view/admin/course/class-edit.php:374
 #: include/coursepress/view/admin/course/class-edit.php:392
@@ -672,166 +672,176 @@ msgstr ""
 msgid "Display Time Estimates for Units and Lessons"
 msgstr ""
 
-#: admin/class-edit.php:579
+#: admin/class-edit.php:576
+msgid "Show units without modules"
+msgstr ""
+
+#: admin/class-edit.php:577
+msgid ""
+"By default unit without modules is not displayed, even if it is selected "
+"below."
+msgstr ""
+
+#: admin/class-edit.php:584
 #: include/coursepress/view/admin/course/class-edit.php:392
 msgid ""
 "Units and Pages with Modules selected will automatically be visible (only "
 "selected Modules accessible)."
 msgstr ""
 
-#: admin/class-edit.php:580 admin/class-edit.php:590
+#: admin/class-edit.php:585 admin/class-edit.php:595
 #: admin/table/class-reports.php:105
 #: include/coursepress/view/admin/course/class-edit.php:393
 #: include/coursepress/view/admin/course/class-edit.php:403
 msgid "Show"
 msgstr ""
 
-#: admin/class-edit.php:581 admin/class-edit.php:591
+#: admin/class-edit.php:586 admin/class-edit.php:596
 #: include/coursepress/view/admin/course/class-edit.php:394
 #: include/coursepress/view/admin/course/class-edit.php:404
 msgid "Free Preview"
 msgstr ""
 
-#: admin/class-edit.php:582 admin/class-edit.php:592
+#: admin/class-edit.php:587 admin/class-edit.php:597
 #: include/coursepress/view/admin/course/class-edit.php:395
 #: include/coursepress/view/admin/course/class-edit.php:405
 msgid "Time"
 msgstr ""
 
-#: admin/class-edit.php:613
+#: admin/class-edit.php:618
 #: include/coursepress/view/admin/course/class-edit.php:425
 msgid "[DRAFT] "
 msgstr ""
 
-#: admin/class-edit.php:636
+#: admin/class-edit.php:641
 #: include/coursepress/view/admin/course/class-edit.php:448
 msgid "Page %s"
 msgstr ""
 
-#: admin/class-edit.php:661
+#: admin/class-edit.php:666
 #: include/coursepress/view/admin/course/class-edit.php:472
 msgid "Untitled Module"
 msgstr ""
 
-#: admin/class-edit.php:715
+#: admin/class-edit.php:720
 msgid "Step 3 &ndash; Instructors and Facilitators"
 msgstr ""
 
-#: admin/class-edit.php:728
+#: admin/class-edit.php:733
 #: include/coursepress/view/admin/course/class-edit.php:542
 msgid "Course Instructor(s)"
 msgstr ""
 
-#: admin/class-edit.php:729
+#: admin/class-edit.php:734
 #: include/coursepress/view/admin/course/class-edit.php:543
 msgid "Select one or more instructor to facilitate this course"
 msgstr ""
 
-#: admin/class-edit.php:732 admin/class-edit.php:777
+#: admin/class-edit.php:737 admin/class-edit.php:782
 #: include/coursepress/view/admin/course/class-edit.php:546
 #: include/coursepress/view/admin/course/class-edit.php:592
 msgid "Assign"
 msgstr ""
 
-#: admin/class-edit.php:738
+#: admin/class-edit.php:743
 #: include/coursepress/view/admin/course/class-edit.php:552
 msgid "Assigned Instructors:"
 msgstr ""
 
-#: admin/class-edit.php:740
+#: admin/class-edit.php:745
 #: include/coursepress/view/admin/course/class-edit.php:554
 msgid "You do not have sufficient permission to add instructor!"
 msgstr ""
 
-#: admin/class-edit.php:753 include/coursepress/helper/class-javascript.php:156
+#: admin/class-edit.php:758 include/coursepress/helper/class-javascript.php:156
 #: include/coursepress/view/admin/course/class-edit.php:567
 msgid "Please Assign Instructor"
 msgstr ""
 
-#: admin/class-edit.php:773
+#: admin/class-edit.php:778
 #: include/coursepress/view/admin/course/class-edit.php:588
 msgid "Course Facilitator(s)"
 msgstr ""
 
-#: admin/class-edit.php:774
+#: admin/class-edit.php:779
 #: include/coursepress/view/admin/course/class-edit.php:589
 msgid "Select one or more facilitator to facilitate this course"
 msgstr ""
 
-#: admin/class-edit.php:783
+#: admin/class-edit.php:788
 #: include/coursepress/view/admin/course/class-edit.php:598
 msgid "Course Facilitators"
 msgstr ""
 
-#: admin/class-edit.php:800
+#: admin/class-edit.php:805
 #: include/coursepress/view/admin/course/class-edit.php:615
 msgid "Invite New Instructor or Facilitator"
 msgstr ""
 
-#: admin/class-edit.php:801
+#: admin/class-edit.php:806
 #: include/coursepress/view/admin/course/class-edit.php:616
 msgid ""
 "If the instructor or the facilitator can not be found in the list above, "
 "you will need to invite them via email."
 msgstr ""
 
-#: admin/class-edit.php:802
+#: admin/class-edit.php:807
 #: include/coursepress/view/admin/course/class-edit.php:617
 msgid "instructor-or-facilitator@email.com"
 msgstr ""
 
-#: admin/class-edit.php:804
+#: admin/class-edit.php:809
 #: include/coursepress/view/admin/course/class-edit.php:619
 msgid "Invite New Instructor"
 msgstr ""
 
-#: admin/class-edit.php:805
+#: admin/class-edit.php:810
 #: include/coursepress/view/admin/course/class-edit.php:620
 msgid ""
 "If the instructor can not be found in the list above, you will need to "
 "invite them via email."
 msgstr ""
 
-#: admin/class-edit.php:806
+#: admin/class-edit.php:811
 #: include/coursepress/view/admin/course/class-edit.php:621
 msgid "facilitator@email.com"
 msgstr ""
 
-#: admin/class-edit.php:808
+#: admin/class-edit.php:813
 #: include/coursepress/view/admin/course/class-edit.php:623
 msgid "Invite New Facilitator"
 msgstr ""
 
-#: admin/class-edit.php:809
+#: admin/class-edit.php:814
 #: include/coursepress/view/admin/course/class-edit.php:624
 msgid ""
 "If the facilitator can not be found in the list above, you will need to "
 "invite them via email."
 msgstr ""
 
-#: admin/class-edit.php:810
+#: admin/class-edit.php:815
 #: include/coursepress/view/admin/course/class-edit.php:625
 msgid "instructor@email.com"
 msgstr ""
 
-#: admin/class-edit.php:822
+#: admin/class-edit.php:827
 #: include/coursepress/view/admin/course/class-edit.php:637
 msgid "Instructor or Facilitator"
 msgstr ""
 
-#: admin/class-edit.php:824
+#: admin/class-edit.php:829
 #: include/coursepress/data/shortcode/class-instructor.php:67
 #: include/coursepress/view/admin/course/class-edit.php:639
 #: include/coursepress/view/admin/setting/class-pages.php:106
 msgid "Instructor"
 msgstr ""
 
-#: admin/class-edit.php:825
+#: admin/class-edit.php:830
 #: include/coursepress/view/admin/course/class-edit.php:640
 msgid "Facilitator"
 msgstr ""
 
-#: admin/class-edit.php:832 admin/class-edit.php:833
+#: admin/class-edit.php:837 admin/class-edit.php:838
 #: admin/view/student-profile.php:22
 #: include/coursepress/data/shortcode/class-template.php:1375
 #: include/coursepress/helper/table/class-coursestudent.php:98
@@ -848,7 +858,7 @@ msgstr ""
 msgid "First Name"
 msgstr ""
 
-#: admin/class-edit.php:834 admin/class-edit.php:835
+#: admin/class-edit.php:839 admin/class-edit.php:840
 #: admin/view/student-profile.php:26
 #: include/coursepress/data/shortcode/class-template.php:1386
 #: include/coursepress/helper/table/class-coursestudent.php:99
@@ -864,83 +874,83 @@ msgstr ""
 msgid "Last Name"
 msgstr ""
 
-#: admin/class-edit.php:836
+#: admin/class-edit.php:841
 #: include/coursepress/view/admin/course/class-edit.php:651
 msgid "E-Mail"
 msgstr ""
 
-#: admin/class-edit.php:840
+#: admin/class-edit.php:845
 #: include/coursepress/view/admin/course/class-edit.php:655
 msgid "Send Invite"
 msgstr ""
 
-#: admin/class-edit.php:875
+#: admin/class-edit.php:880
 msgid "Step 4 &ndash; Course Dates"
 msgstr ""
 
-#: admin/class-edit.php:887
+#: admin/class-edit.php:892
 #: include/coursepress/view/admin/course/class-edit.php:702
 msgid "Course Availability"
 msgstr ""
 
-#: admin/class-edit.php:889
+#: admin/class-edit.php:894
 #: include/coursepress/view/admin/course/class-edit.php:704
 msgid "These are the dates that the course will be available to students"
 msgstr ""
 
-#: admin/class-edit.php:892
+#: admin/class-edit.php:897
 #: include/coursepress/view/admin/course/class-edit.php:707
 msgid "This course has no end date"
 msgstr ""
 
-#: admin/class-edit.php:916
+#: admin/class-edit.php:921
 #: include/coursepress/view/admin/course/class-edit.php:731
 #: include/coursepress/view/admin/setting/class-shortcodes.php:114
 msgid "Course Enrollment Dates"
 msgstr ""
 
-#: admin/class-edit.php:918
+#: admin/class-edit.php:923
 #: include/coursepress/view/admin/course/class-edit.php:733
 msgid "These are the dates that students will be able to enroll in a course."
 msgstr ""
 
-#: admin/class-edit.php:921
+#: admin/class-edit.php:926
 #: include/coursepress/view/admin/course/class-edit.php:736
 msgid "Students can enroll at any time"
 msgstr ""
 
-#: admin/class-edit.php:963
+#: admin/class-edit.php:968
 msgid "Step 5 &ndash; Classes, Discussion & Workbook"
 msgstr ""
 
-#: admin/class-edit.php:975
+#: admin/class-edit.php:980
 #: include/coursepress/view/admin/course/class-edit.php:790
 msgid "Class Size"
 msgstr ""
 
-#: admin/class-edit.php:977
+#: admin/class-edit.php:982
 #: include/coursepress/view/admin/course/class-edit.php:792
 msgid ""
 "Use this setting to set a limit for all classes. Uncheck for unlimited "
 "class size(s)."
 msgstr ""
 
-#: admin/class-edit.php:980
+#: admin/class-edit.php:985
 #: include/coursepress/view/admin/course/class-edit.php:795
 msgid "Limit class size"
 msgstr ""
 
-#: admin/class-edit.php:984
+#: admin/class-edit.php:989
 #: include/coursepress/view/admin/course/class-edit.php:799
 msgid "Number of students"
 msgstr ""
 
-#: admin/class-edit.php:992
+#: admin/class-edit.php:997
 #: include/coursepress/view/admin/course/class-edit.php:807
 msgid "Course Discussion"
 msgstr ""
 
-#: admin/class-edit.php:993
+#: admin/class-edit.php:998
 #: include/coursepress/view/admin/course/class-edit.php:809
 msgid ""
 "If checked, students can post questions and receive answers at a course "
@@ -948,242 +958,242 @@ msgid ""
 "discussions occuring from all class members and instructors."
 msgstr ""
 
-#: admin/class-edit.php:994
+#: admin/class-edit.php:999
 #: include/coursepress/view/admin/course/class-edit.php:812
 msgid "Allow course discussion"
 msgstr ""
 
-#: admin/class-edit.php:999 admin/view/student-assessment.php:28
+#: admin/class-edit.php:1004 admin/view/student-assessment.php:28
 #: include/coursepress/view/admin/course/class-edit.php:819
 #: include/coursepress/view/admin/student/class-workbook.php:72
 msgid "Student Workbook"
 msgstr ""
 
-#: admin/class-edit.php:1000
+#: admin/class-edit.php:1005
 #: include/coursepress/view/admin/course/class-edit.php:821
 msgid "If checked, students can see their progress and grades."
 msgstr ""
 
-#: admin/class-edit.php:1001
+#: admin/class-edit.php:1006
 #: include/coursepress/view/admin/course/class-edit.php:824
 msgid "Show student workbook"
 msgstr ""
 
-#: admin/class-edit.php:1006
+#: admin/class-edit.php:1011
 msgid "Student grades"
 msgstr ""
 
-#: admin/class-edit.php:1007
+#: admin/class-edit.php:1012
 msgid "If checked, students can see their grades."
 msgstr ""
 
-#: admin/class-edit.php:1008
+#: admin/class-edit.php:1013
 msgid "Show student grades"
 msgstr ""
 
-#: admin/class-edit.php:1044
+#: admin/class-edit.php:1049
 #: include/coursepress/view/admin/course/class-edit.php:856
 msgid " & Course Cost"
 msgstr ""
 
-#: admin/class-edit.php:1047
+#: admin/class-edit.php:1052
 msgid "Step 6 &ndash; Enrollment%s"
 msgstr ""
 
-#: admin/class-edit.php:1059
+#: admin/class-edit.php:1064
 #: include/coursepress/view/admin/course/class-edit.php:871
 #: include/coursepress/view/admin/setting/class-general.php:545
 msgid "Enrollment Restrictions"
 msgstr ""
 
-#: admin/class-edit.php:1061
+#: admin/class-edit.php:1066
 #: include/coursepress/view/admin/course/class-edit.php:873
 msgid "Select the limitations on accessing and enrolling in this course."
 msgstr ""
 
-#: admin/class-edit.php:1077
+#: admin/class-edit.php:1082
 #: include/coursepress/view/admin/course/class-edit.php:889
 msgid "Prerequisite Courses"
 msgstr ""
 
-#: admin/class-edit.php:1079
+#: admin/class-edit.php:1084
 #: include/coursepress/view/admin/course/class-edit.php:891
 msgid ""
 "Select the courses a student needs to complete before enrolling in this "
 "course"
 msgstr ""
 
-#: admin/class-edit.php:1113
+#: admin/class-edit.php:1118
 #: include/coursepress/view/admin/course/class-edit.php:918
 msgid "Course Passcode"
 msgstr ""
 
-#: admin/class-edit.php:1115
+#: admin/class-edit.php:1120
 #: include/coursepress/view/admin/course/class-edit.php:920
 msgid "Enter the passcode required to access this course"
 msgstr ""
 
-#: admin/class-edit.php:1129
+#: admin/class-edit.php:1134
 #: include/coursepress/view/admin/course/class-edit.php:936
 msgid "Course Payment"
 msgstr ""
 
-#: admin/class-edit.php:1130
+#: admin/class-edit.php:1135
 #: include/coursepress/view/admin/course/class-edit.php:938
 msgid ""
 "Payment options for your course. Additional plugins are required and "
 "settings vary depending on the plugin."
 msgstr ""
 
-#: admin/class-edit.php:1131
+#: admin/class-edit.php:1136
 #: include/coursepress/view/admin/course/class-edit.php:941
 msgid "This is a paid course"
 msgstr ""
 
-#: admin/class-edit.php:1147
+#: admin/class-edit.php:1152
 msgid "To start selling your course, please install and activate MarketPress here:"
 msgstr ""
 
-#: admin/class-edit.php:1149 include/coursepress/helper/class-extension.php:78
+#: admin/class-edit.php:1154 include/coursepress/helper/class-extension.php:78
 msgid "Activate"
 msgstr ""
 
-#: admin/class-edit.php:1151
+#: admin/class-edit.php:1156
 msgid "Please contact your administrator to enable MarketPress for your site."
 msgstr ""
 
-#: admin/class-edit.php:1155
+#: admin/class-edit.php:1160
 msgid "The full version of MarketPress has been bundled with CoursePress Pro."
 msgstr ""
 
-#: admin/class-edit.php:1157
+#: admin/class-edit.php:1162
 msgid "You can use the free or premium version of MarketPress to sell your courses."
 msgstr ""
 
-#: admin/class-edit.php:1172
+#: admin/class-edit.php:1177
 msgid "Sell your courses online with MarketPress."
 msgstr ""
 
-#: admin/class-edit.php:1172
+#: admin/class-edit.php:1177
 msgid "Other supported plugins"
 msgstr ""
 
-#: admin/class-edit.php:1221 include/coursepress/data/class-course.php:3555
+#: admin/class-edit.php:1226 include/coursepress/data/class-course.php:3555
 msgid "Almost there!"
 msgstr ""
 
-#: admin/class-edit.php:1222
+#: admin/class-edit.php:1227
 msgid "Congratulations! You have completed COURSE_NAME!"
 msgstr ""
 
-#: admin/class-edit.php:1223
+#: admin/class-edit.php:1228
 msgid ""
 "Your course instructor will now review your work and get back to you with "
 "your final grade before issuing you a certificate of completion."
 msgstr ""
 
-#: admin/class-edit.php:1230 include/coursepress/data/class-course.php:3561
+#: admin/class-edit.php:1235 include/coursepress/data/class-course.php:3561
 msgid "Congratulations, You Passed!"
 msgstr ""
 
-#: admin/class-edit.php:1232
+#: admin/class-edit.php:1237
 msgid "Congratulations! You have successfully completed and passed COURSE_NAME!"
 msgstr ""
 
-#: admin/class-edit.php:1233
+#: admin/class-edit.php:1238
 msgid "You can download your certificate here."
 msgstr ""
 
-#: admin/class-edit.php:1250
+#: admin/class-edit.php:1255
 #: include/coursepress/view/admin/course/class-edit.php:1055
 msgid "Minimum Grade Required"
 msgstr ""
 
-#: admin/class-edit.php:1254
+#: admin/class-edit.php:1259
 #: include/coursepress/view/admin/course/class-edit.php:1059
 msgid ""
 "The minimum grade required to marked course completion and send course "
 "certficates."
 msgstr ""
 
-#: admin/class-edit.php:1267
+#: admin/class-edit.php:1272
 msgid "Use these tokens to display actual course details: %s"
 msgstr ""
 
-#: admin/class-edit.php:1271
+#: admin/class-edit.php:1276
 #: include/coursepress/view/admin/course/class-edit.php:1076
 msgid "Pre-Completion Page"
 msgstr ""
 
-#: admin/class-edit.php:1272
+#: admin/class-edit.php:1277
 #: include/coursepress/view/admin/course/class-edit.php:1077
 msgid ""
 "Use the fields below to show custom pre-completion page after the student "
 "completed the course but require final assessment from instructors."
 msgstr ""
 
-#: admin/class-edit.php:1273 admin/class-edit.php:1284
-#: admin/class-edit.php:1304
+#: admin/class-edit.php:1278 admin/class-edit.php:1289
+#: admin/class-edit.php:1309
 #: include/coursepress/view/admin/course/class-edit.php:1078
 #: include/coursepress/view/admin/course/class-edit.php:1089
 #: include/coursepress/view/admin/course/class-edit.php:1107
 msgid "Page Title"
 msgstr ""
 
-#: admin/class-edit.php:1275 admin/class-edit.php:1288
-#: admin/class-edit.php:1306
+#: admin/class-edit.php:1280 admin/class-edit.php:1293
+#: admin/class-edit.php:1311
 #: include/coursepress/view/admin/course/class-edit.php:1080
 #: include/coursepress/view/admin/course/class-edit.php:1093
 #: include/coursepress/view/admin/course/class-edit.php:1109
 msgid "Page Content"
 msgstr ""
 
-#: admin/class-edit.php:1282
+#: admin/class-edit.php:1287
 #: include/coursepress/view/admin/course/class-edit.php:1087
 msgid "Course Completion Page"
 msgstr ""
 
-#: admin/class-edit.php:1283
+#: admin/class-edit.php:1288
 #: include/coursepress/view/admin/course/class-edit.php:1088
 msgid ""
 "Use the fields below to show a custom page after successfull course "
 "completion."
 msgstr ""
 
-#: admin/class-edit.php:1293 include/coursepress/data/class-course.php:3567
+#: admin/class-edit.php:1298 include/coursepress/data/class-course.php:3567
 msgid "Sorry, you did not pass this course!"
 msgstr ""
 
-#: admin/class-edit.php:1295
+#: admin/class-edit.php:1300
 msgid "Unfortunately, you didn't pass COURSE_NAME."
 msgstr ""
 
-#: admin/class-edit.php:1296
+#: admin/class-edit.php:1301
 msgid "Better luck next time!"
 msgstr ""
 
-#: admin/class-edit.php:1302
+#: admin/class-edit.php:1307
 #: include/coursepress/view/admin/course/class-edit.php:1105
 msgid "Failed Page"
 msgstr ""
 
-#: admin/class-edit.php:1303
+#: admin/class-edit.php:1308
 #: include/coursepress/view/admin/course/class-edit.php:1106
 msgid ""
 "Use the fields below to display failure page when an student completed a "
 "course but fail to reach the minimum required grade."
 msgstr ""
 
-#: admin/class-edit.php:1344
+#: admin/class-edit.php:1349
 #: include/coursepress/view/admin/course/class-edit.php:1147
 msgid "Course Certificate"
 msgstr ""
 
-#: admin/class-edit.php:1349 admin/controller/class-unit.php:128
+#: admin/class-edit.php:1354 admin/controller/class-unit.php:128
 #: admin/controller/class-unit.php:192 admin/controller/class-unit.php:193
 #: include/coursepress/data/shortcode/class-coursetemplate.php:535
-#: include/coursepress/data/shortcode/class-coursetemplate.php:892
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1311
+#: include/coursepress/data/shortcode/class-coursetemplate.php:890
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1314
 #: include/coursepress/view/admin/course/class-edit.php:167
 #: include/coursepress/view/admin/course/class-edit.php:1152
 #: include/coursepress/view/admin/course/class-unitbuilder.php:132
@@ -1194,106 +1204,106 @@ msgstr ""
 msgid "Preview"
 msgstr ""
 
-#: admin/class-edit.php:1356
+#: admin/class-edit.php:1361
 #: include/coursepress/view/admin/course/class-edit.php:1158
 msgid "Use this field to override general course certificate setting."
 msgstr ""
 
-#: admin/class-edit.php:1357
+#: admin/class-edit.php:1362
 #: include/coursepress/view/admin/course/class-edit.php:1155
 msgid "Override course certificate."
 msgstr ""
 
-#: admin/class-edit.php:1363
+#: admin/class-edit.php:1368
 #: include/coursepress/view/admin/course/class-edit.php:1160
 msgid "Certificate Content"
 msgstr ""
 
-#: admin/class-edit.php:1364
+#: admin/class-edit.php:1369
 #: include/coursepress/view/admin/course/class-edit.php:1161
 msgid "Useful tokens: "
 msgstr ""
 
-#: admin/class-edit.php:1368
+#: admin/class-edit.php:1373
 #: include/coursepress/view/admin/course/class-edit.php:1165
 #: include/coursepress/view/admin/setting/class-basiccertificate.php:173
 msgid "Background Image"
 msgstr ""
 
-#: admin/class-edit.php:1374
+#: admin/class-edit.php:1379
 #: include/coursepress/view/admin/course/class-edit.php:1171
 msgid "Choose background image"
 msgstr ""
 
-#: admin/class-edit.php:1385
+#: admin/class-edit.php:1390
 msgid "Content margin"
 msgstr ""
 
-#: admin/class-edit.php:1386
+#: admin/class-edit.php:1391
 #: include/coursepress/view/admin/course/class-edit.php:1183
 #: include/coursepress/view/admin/setting/class-basiccertificate.php:202
 msgid "Top"
 msgstr ""
 
-#: admin/class-edit.php:1387
+#: admin/class-edit.php:1392
 #: include/coursepress/view/admin/course/class-edit.php:1185
 #: include/coursepress/view/admin/setting/class-basiccertificate.php:208
 msgid "Left"
 msgstr ""
 
-#: admin/class-edit.php:1388
+#: admin/class-edit.php:1393
 #: include/coursepress/view/admin/course/class-edit.php:1186
 #: include/coursepress/view/admin/setting/class-basiccertificate.php:214
 msgid "Right"
 msgstr ""
 
-#: admin/class-edit.php:1390
+#: admin/class-edit.php:1395
 #: include/coursepress/view/admin/course/class-edit.php:1188
 #: include/coursepress/view/admin/setting/class-basiccertificate.php:224
 msgid "Page Orientation"
 msgstr ""
 
-#: admin/class-edit.php:1391
+#: admin/class-edit.php:1396
 #: include/coursepress/view/admin/course/class-edit.php:1189
 #: include/coursepress/view/admin/setting/class-basiccertificate.php:231
 msgid "Landscape"
 msgstr ""
 
-#: admin/class-edit.php:1392
+#: admin/class-edit.php:1397
 #: include/coursepress/view/admin/course/class-edit.php:1190
 #: include/coursepress/view/admin/setting/class-basiccertificate.php:234
 msgid "Portrait"
 msgstr ""
 
-#: admin/class-edit.php:1439
+#: admin/class-edit.php:1444
 msgid "Jon"
 msgstr ""
 
-#: admin/class-edit.php:1440
+#: admin/class-edit.php:1445
 msgid "Snow"
 msgstr ""
 
-#: admin/class-edit.php:1441
+#: admin/class-edit.php:1446
 msgid "Example Course Title"
 msgstr ""
 
-#: admin/class-edit.php:1541
+#: admin/class-edit.php:1546
 #: include/coursepress/view/admin/course/class-edit.php:1877
 msgid "Course Completion Certificate"
 msgstr ""
 
-#: admin/class-edit.php:1567
+#: admin/class-edit.php:1572
 msgid ""
 "The free version of CoursePress is limited to one course. To add more "
 "courses, upgrade to CoursePress Pro for unlimited courses and more payment "
 "gateways."
 msgstr ""
 
-#: admin/class-edit.php:1571
+#: admin/class-edit.php:1576
 msgid "https://premium.wpmudev.org/project/coursepress-pro/"
 msgstr ""
 
-#: admin/class-edit.php:1572
+#: admin/class-edit.php:1577
 msgid "Try CoursePress Pro for Free"
 msgstr ""
 
@@ -2098,8 +2108,8 @@ msgstr ""
 
 #: admin/table/class-instructors.php:109 admin/table/class-students.php:96
 #: include/coursepress/data/class-course.php:35
-#: include/coursepress/data/shortcode/class-coursetemplate.php:2110
-#: include/coursepress/data/shortcode/class-coursetemplate.php:2120
+#: include/coursepress/data/shortcode/class-coursetemplate.php:2113
+#: include/coursepress/data/shortcode/class-coursetemplate.php:2123
 #: include/coursepress/data/shortcode/class-template.php:386
 #: include/coursepress/helper/class-utility.php:1309
 #: include/coursepress/helper/table/class-instructor.php:91
@@ -2804,7 +2814,7 @@ msgid "You need to complete all the REQUIRED modules before this unit."
 msgstr ""
 
 #: include/coursepress/data/class-course.php:2850
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1234
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1237
 msgid "You need to complete all the REQUIRED modules before this section."
 msgstr ""
 
@@ -2892,7 +2902,7 @@ msgid "You have been removed from \"%s\" discussion."
 msgstr ""
 
 #: include/coursepress/data/class-discussion.php:574
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1458
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1461
 #: include/coursepress/data/shortcode/class-template.php:460
 #: include/coursepress/template/class-unit.php:270
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1389
@@ -2901,7 +2911,7 @@ msgid "&laquo; Previous"
 msgstr ""
 
 #: include/coursepress/data/class-discussion.php:575
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1457
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1460
 #: include/coursepress/data/shortcode/class-template.php:461
 #: include/coursepress/template/class-unit.php:269
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1385
@@ -3374,31 +3384,31 @@ msgstr ""
 msgid "Completed"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:762
+#: include/coursepress/data/shortcode/class-coursetemplate.php:760
 msgid "Untitled Page %s"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1089
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1092
 msgid " [DRAFT]"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1099
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1102
 msgid ""
 "This unit is available, but you need to complete all the REQUIRED modules "
 "before this unit."
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1134
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1137
 msgid "Opens"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1135
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1138
 msgid "This unit will be available on the scheduled start date."
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1237
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1243
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1245
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1240
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1246
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1248
 #: include/coursepress/helper/ui/class-module.php:375
 #: include/coursepress/helper/ui/class-module.php:392
 #: include/coursepress/helper/ui/class-module.php:409
@@ -3419,113 +3429,113 @@ msgstr ""
 msgid "Untitled"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1310
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1313
 msgid "You need to completed all the REQUIRED modules before this module."
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1321
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1324
 msgid "Mod"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1381
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1384
 msgid "No units in the course currently. Please check back later."
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1400
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1403
 #: include/coursepress/view/admin/setting/class-shortcodes.php:166
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1549
 #: include/coursepress/widget/class-featuredcourse.php:20
 msgid "Featured Course"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1401
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1404
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1553
 msgid "Find out more."
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1510
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1513
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1422
 msgid "Completed courses"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1512
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1515
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1431
 msgid "Current Courses"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1514
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1517
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1439
 msgid "Facilitated Courses"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1516
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1519
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1447
 msgid "Starting soon"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1517
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1520
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1451
 msgid "Incomplete courses"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1518
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1521
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1455
 msgid "The Instructor does not have any courses assigned yet."
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1521
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1524
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1468
 msgid "Manage Courses"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1523
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1526
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1477
 msgid "Past courses"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1526
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1529
 msgid ""
 "You are not enrolled in any courses. <a href=\"%s\">See available "
 "courses.</a>"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1528
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1531
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1500
 msgid "Suggested courses"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1529
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1532
 msgid ""
 "You are not enrolled in any courses.<br />Here are a few you might like, or "
 "<a href=\"%s\">see all available courses.</a>"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1764
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1767
 msgid "Manage Course"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1834
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1837
 msgid "Share"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1917
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1920
 #: include/coursepress/view/admin/course/class-student.php:160
 msgid "Send"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1919
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1922
 msgid "Write a Reply or Comment"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1958
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1961
 msgid "Reply"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1990
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1993
 msgid "-- General --"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:2070
+#: include/coursepress/data/shortcode/class-coursetemplate.php:2073
 msgid "0 course units prepared yet. Please check back later."
 msgstr ""
 
@@ -8640,17 +8650,17 @@ msgctxt "Default title for a duplicated course. Variable is original title."
 msgid "%s Copy"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1129
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1132
 msgctxt "Unit available date with year for future unit."
 msgid "M d, Y"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1129
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1132
 msgctxt "Unit available date without year for future unit."
 msgid "M d"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1923
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1926
 #: include/coursepress/data/shortcode/class-unit.php:698
 msgctxt "noun"
 msgid "Comment"

@@ -603,6 +603,11 @@ class CoursePress_Admin_Edit {
 							<input type="checkbox" name="meta_structure_show_duration" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'structure_show_duration', true ) ) . ' />
 							<span>' . esc_html__( 'Display Time Estimates for Units and Lessons', 'CP_TD' ) . '</span>
 						</label>
+						<label class="checkbox">
+							<input type="checkbox" name="meta_structure_show_empty_units" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'structure_show_empty_units', false ) ) . ' />
+							<span>' . esc_html__( 'Show units without modules', 'CP_TD' ) . '</span>
+							<p class="description">'.esc_html__( 'By default unit without modules is not displayed, even if it is selected below.', 'CP_TD' ).'</p>
+						</label>
 
 
 						<table class="course-structure-tree">

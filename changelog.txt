@@ -14,6 +14,7 @@ CHANGELOG
 * Added check is user logged before we show comment form in discussion module.
 * Added CoursePress Endpoints to Apperance -> Menu screen.
 * Added ability to remember the last sorting chosen by user on the list of courses in admin area.
+* Added new option "Show empty units" which allow to show units without modules.
 * Improved select2 field for prerequisites and remove current course from the list.
 * Improved MarketPress product thumbnail and images integration.
 * Improved link building to student profile in admin area.
