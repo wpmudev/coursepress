@@ -152,7 +152,6 @@ class CoursePress_Admin_Edit {
 	}
 
 	public static function get_tabs() {
-
 		// Make it a filter so we can add more tabs easily
 		self::$tabs = apply_filters( self::$slug . '_tabs', self::$tabs );
 
