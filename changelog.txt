@@ -7,6 +7,8 @@ CHANGELOG
 
 = 2.0.6 =
 -------------------------------------------------
+* Fixed too many redirects error.
+* Added redirect to login page on student settings page for non-logged users.
 
 = 2.0.5 =
 -------------------------------------------------
