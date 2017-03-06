@@ -27,16 +27,7 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 		}
 
 		do_action( 'coursepress_admin_render_page' );
-		/**
-		 * Free version can add only one course
-		 */
-		$is_limit_reach = CoursePress_Data_Course::is_limit_reach();
-		if ( $is_limit_reach ) {
-			add_action( 'add_meta_boxes', array( __CLASS__, 'remove_meta_boxes' ), 1 );
-			add_action( 'admin_footer', array( __CLASS__, 'disable_style' ), 100 );
-			add_action( 'edit_form_after_editor', array( __CLASS__, 'notice_about_pro_when_try_to_add_new_course' ) );
-			return;
-		}
+
 		self::$current_course = $post;
 
 		if ( 'auto-draft' !== $post->post_status || ! empty( $_GET['post'] ) ) {
@@ -156,7 +147,6 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 	}
 
 	public static function get_tabs() {
-
 		// Make it a filter so we can add more tabs easily
 		self::$tabs = apply_filters( self::$slug . '_tabs', self::$tabs );
 
@@ -372,24 +362,61 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 	 * https://codex.wordpress.org/Function_Reference/wp_editor#Parameters
 	 * @return string WP Editor.
 	 */
+
 	static function get_wp_editor( $editor_id, $editor_name, $editor_content = '', $args = array() ) {
+		wp_enqueue_script( 'post' );
+		$_wp_editor_expand = $_content_editor_dfw = false;
+
+		$post_type = CoursePress_Data_Course::get_post_type_name();
+		global $is_IE;
+
+		if (
+			! wp_is_mobile()
+			&& ! ( $is_IE && preg_match( '/MSIE [5678]/', $_SERVER['HTTP_USER_AGENT'] ) )
+			&& apply_filters( 'wp_editor_expand', true, $post_type )
+		) {
+
+			wp_enqueue_script( 'editor-expand' );
+			$_content_editor_dfw = true;
+			$_wp_editor_expand = ( get_user_setting( 'editor_expand', 'on' ) === 'on' );
+		}
+
+		if ( wp_is_mobile() ) {
+			wp_enqueue_script( 'jquery-touch-punch' );
+		}
+
+		/** This filter is documented in wp-includes/class-wp-editor.php  */
+		add_filter( 'teeny_mce_plugins', array( __CLASS__, 'teeny_mce_plugins' ) );
+
 		$defaults = array(
+			'_content_editor_dfw' => $_content_editor_dfw,
+			'drag_drop_upload' => true,
+			'tabfocus_elements' => 'content-html,save-post',
 			'textarea_name' => $editor_name,
 			'editor_class' => 'cp-editor cp-course-overview',
 			'media_buttons' => false,
+			'editor_height' => 300,
 			'tinymce' => array(
-				'height' => '300',
+				'resize' => false,
+				'wp_autoresize_on' => $_wp_editor_expand,
+				'add_unload_trigger' => false,
 			),
 		);
 		$args = wp_parse_args( $args, $defaults );
 		$args = apply_filters( 'coursepress_element_editor_args', $args, $editor_name, $editor_id );
+
 		ob_start();
 		wp_editor( $editor_content, $editor_id, $args );
-		$editor_html = ob_get_clean();
+		$editor_html = sprintf( '<div class="postarea%s">', $_wp_editor_expand? ' wp-editor-expand':'' );
+		$editor_html .= ob_get_clean();
+		$editor_html .= '</div>';
 		return $editor_html;
 	}
 
-	public static function step_1() {
+	/**
+	 * Step 1 - Course Overview
+	 **/
+	static function step_1() {
 		self::$course_id = $course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
 		self::$settings = $settings = CoursePress_Data_Course::get_setting( $course_id, true );
 		self::$setup_marker = $setup_marker = (int) $settings['setup_marker'];
@@ -407,17 +434,20 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 		) );
 	}
 
-	public static function step_2() {
+	/**
+	 * Step 2 - Course Details
+	 **/
+	static function step_2() {
 		$setup_class = self::$settings['setup_step_2'];
 		$setup_class = self::$setup_marker === 1 ? $setup_class . ' setup_marker' : $setup_class;
-		$supported_ext = implode( ', ', wp_get_video_extensions() );
+
 		$units = CoursePress_Data_Course::get_units_with_modules( self::$course_id, array( 'publish', 'draft' ) );
 		$units = CoursePress_Helper_Utility::sort_on_key( $units, 'order' );
 
 		self::render( 'admin/view/steps/step-2', array(
 			'course_id' => self::$course_id,
 			'setup_class' => $setup_class,
-			'supported_ext' => $supported_ext,
+			'supported_ext' => implode( ', ', wp_get_video_extensions() ),
 			'editor_content' => ! empty( self::$current_course ) ? self::$current_course->post_content : '',
 			'course_view' => self::$settings['course_view'],
 			'focus_hide_section' => ! empty( self::$settings['focus_hide_section'] ),
@@ -429,269 +459,62 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 		) );
 	}
 
-	public static function step_3() {
+	/**
+	 * Step 3 - Instructors and Facilitators
+	 **/
+	static function step_3() {
 		$setup_class = self::$settings['setup_step_3'];
 		$setup_class = 2 == self::$setup_marker ? $setup_class . ' setup_marker' : $setup_class;
+		$can_assign_instructor = CoursePress_Data_Capabilities::can_assign_course_instructor( self::$course_id );
+		$can_assign_facilitator = CoursePress_Data_Capabilities::can_assign_facilitator( self::$course_id );
+
+		$label = $description = $placeholder = '';
+
+		if ( $can_assign_instructor && $can_assign_facilitator ) {
+			$label = esc_html__( 'Invite New Instructor or Facilitator', 'CP_TD' );
+			$description = esc_html__( 'If the instructor or the facilitator can not be found in the list above, you will need to invite them via email.', 'CP_TD' );
+			$placeholder = __( 'instructor-or-facilitator@email.com', 'CP_TD' );
+
+		} else if ( $can_assign_instructor ) {
+			$label = esc_html__( 'Invite New Instructor', 'CP_TD' );
+			$description = esc_html__( 'If the instructor can not be found in the list above, you will need to invite them via email.', 'CP_TD' );
+			$placeholder = __( 'facilitator@email.com', 'CP_TD' );
+
+		} else if ( $can_assign_facilitator ) {
+			$label = esc_html__( 'Invite New Facilitator', 'CP_TD' );
+			$description = esc_html__( 'If the facilitator can not be found in the list above, you will need to invite them via email.', 'CP_TD' );
+			$placeholder = __( 'instructor@email.com', 'CP_TD' );
+		}
 
 		self::render( 'admin/view/steps/step-3', array(
 			'course_id' => self::$course_id,
 			'setup_class' => $setup_class,
-			'can_assign_instructor' => CoursePress_Data_Capabilities::can_assign_course_instructor( self::$course_id ),
+			'can_assign_instructor' => $can_assign_instructor,
 			'search_nonce' => wp_create_nonce( 'coursepress_instructor_search' ),
 			'instructors' => CoursePress_Helper_UI::course_instructors_avatars( self::$course_id, array( 'remove_buttons' => true, 'count' => true ) ),
-			'can_assign_facilitator' =>  CoursePress_Data_Capabilities::can_assign_facilitator( self::$course_id ),
+			'can_assign_facilitator' => $can_assign_facilitator,
 			'facilitators' => CoursePress_Data_Facilitator::get_course_facilitators( self::$course_id ),
 			'facilitator_search_nonce' => $search_nonce = wp_create_nonce( 'coursepress_search_users' ),
+			'label' => $label,
+			'description' => $description,
+			'placeholder' => $placeholder,
 		));
-	/*
-		$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
-		$setup_class = CoursePress_Data_Course::get_setting( $course_id, 'setup_step_3', '' );
-		$setup_class = (int) CoursePress_Data_Course::get_setting( $course_id, 'setup_marker', 0 ) === 2 ? $setup_class . ' setup_marker' : $setup_class;
-		$can_assign_instructor = CoursePress_Data_Capabilities::can_assign_course_instructor( $course_id );
-
-		$content = '
-			<div class="step-title step-3">' . esc_html__( 'Step 3 &ndash; Instructors and Facilitators', 'CP_TD' ) . '
-				<div class="status ' . $setup_class . '"></div>
-			</div>
-			<div class="step-content step-3">
-				<input type="hidden" name="meta_setup_step_3" value="saved" />
-			';
-
-		if ( $can_assign_instructor ) {
-			$search_nonce = wp_create_nonce( 'coursepress_instructor_search' );
-
-			$content .= '
-				<div class="wide">
-						<label for="course_name" class="">' .
-					esc_html__( 'Course Instructor(s)', 'CP_TD' ) . '
-						<p class="description">' . esc_html__( 'Select one or more instructor to facilitate this course', 'CP_TD' ) . '</p>
-						</label>
-						<select id="instructors" style="width:350px;" name="instructors" data-nonce-search="' . $search_nonce . '" class="medium"></select>
-						<input type="button" class="button button-primary instructor-assign disabled" value="' . esc_attr__( 'Assign', 'CP_TD' ) . '" />
-				</div>';
-		}
-
-		$content .= '<div class="instructors-info medium" id="instructors-info">';
-		if ( $can_assign_instructor ) {
-			$content .= '<p>' . esc_html__( 'Assigned Instructors:', 'CP_TD' ) . '</p>';
-		} else {
-			$content .= '<p>' . esc_html__( 'You do not have sufficient permission to add instructor!', 'CP_TD' );
-		}
-
-		$args = array(
-			'remove_buttons' => true,
-			'count' => true,
-		);
-		$number_of_instructors = CoursePress_Helper_UI::course_instructors_avatars( $course_id, $args );
-
-		if ( 0 >= $number_of_instructors ) {
-			if ( $can_assign_instructor ) {
-				$content .= '
-					<div class="instructor-avatar-holder empty">
-						<span class="instructor-name">' . esc_html__( 'Please Assign Instructor', 'CP_TD' ) . '</span>
-					</div>';
-				$content .= CoursePress_Helper_UI::course_pendings_instructors_avatars( $course_id );
-			}
-		} else {
-			$content .= CoursePress_Helper_UI::course_instructors_avatars( $course_id, array(), true );
-		}
-
-		$content .= '
-				</div>';
-		// Facilitators
-		$can_assign_facilitator = CoursePress_Data_Capabilities::can_assign_facilitator( $course_id );
-		$facilitators = CoursePress_Data_Facilitator::get_course_facilitators( $course_id );
-
-		if ( $can_assign_facilitator ) {
-			$search_nonce = wp_create_nonce( 'coursepress_search_users' );
-
-			$content .= '
-				<div class="wide">
-						<label for="course_name" class="">' .
-					esc_html__( 'Course Facilitator(s)', 'CP_TD' ) . '
-						<p class="description">' . esc_html__( 'Select one or more facilitator to facilitate this course', 'CP_TD' ) . '</p>
-						</label>
-			<select data-nonce-search="'. $search_nonce . '" name="facilitators" style="width:350px;" id="facilitators" class="user-dropdown medium"></select>
-			<input type="button" class="button button-primary facilitator-assign disabled" value="' . esc_attr__( 'Assign', 'CP_TD' ) . '" />
-				</div>';
-		} else {
-
-			if ( ! empty( $facilitators ) ) {
-				$content .= '<div class="wide">
-					<label>' . __( 'Course Facilitators', 'CP_TD' ) . '</label>
-					</div>
-				';
-			}
-		}
-
-		$content .= '<br><div class="wide facilitator-info medium" id="facilitators-info">';
-		$content .= CoursePress_Helper_UI::course_facilitator_avatars( $course_id, array(), true );
-		$content .= '</div><br>';
-
-		if ( $can_assign_instructor || $can_assign_facilitator ) {
-
-			$label = '';
-			$description = '';
-			$placeholder = '';
-
-			if ( $can_assign_instructor && $can_assign_facilitator ) {
-				$label = esc_html__( 'Invite New Instructor or Facilitator', 'CP_TD' );
-				$description = esc_html__( 'If the instructor or the facilitator can not be found in the list above, you will need to invite them via email.', 'CP_TD' );
-				$placeholder = __( 'instructor-or-facilitator@email.com', 'CP_TD' );
-			} else if ( $can_assign_instructor ) {
-				$label = esc_html__( 'Invite New Instructor', 'CP_TD' );
-				$description = esc_html__( 'If the instructor can not be found in the list above, you will need to invite them via email.', 'CP_TD' );
-				$placeholder = __( 'facilitator@email.com', 'CP_TD' );
-			} else if ( $can_assign_facilitator ) {
-				$label = esc_html__( 'Invite New Facilitator', 'CP_TD' );
-				$description = esc_html__( 'If the facilitator can not be found in the list above, you will need to invite them via email.', 'CP_TD' );
-				$placeholder = __( 'instructor@email.com', 'CP_TD' );
-			}
-
-			// Instructor/Facilitator Invite
-			$content .= '
-					<div class="wide">
-						<hr />
-						<label>' . $label .'
-							<p class="description">' . $description . '</p>
-						</label>
-						<div class="instructor-invite">';
-			if ( $can_assign_instructor && $can_assign_facilitator ) {
-				$content .= '<label>'.__( 'Instructor or Facilitator', 'CP_TD' ).'</label>
-							<ul>
-<li><label><input type="radio" name="invite_instructor_type" value="instructor" checked="checked" /> ' . __( 'Instructor', 'CP_TD' ) . '</label></li>
-<li><label><input type="radio" name="invite_instructor_type" value="facilitator" /> ' . __( 'Facilitator', 'CP_TD' ) . '</label></li>
-							</ul>';
-			} else if ( $can_assign_instructor ) {
-				$content .= '<input type="hidden" name="invite_instructor_type="instructor" />';
-			} else if ( $can_assign_facilitator ) {
-				$content .= '<input type="hidden" name="invite_instructor_type="facilitator" />';
-			}
-			$content .= '<label for="invite_instructor_first_name">' . esc_html__( 'First Name', 'CP_TD' ) . '</label>
-							<input type="text" name="invite_instructor_first_name" placeholder="' . esc_attr__( 'First Name', 'CP_TD' ) . '"/>
-							<label for="invite_instructor_last_name">' . esc_html__( 'Last Name', 'CP_TD' ) . '</label>
-							<input type="text" name="invite_instructor_last_name" placeholder="' . esc_attr__( 'Last Name', 'CP_TD' ) . '"/>
-							<label for="invite_instructor_email">' . esc_html__( 'E-Mail', 'CP_TD' ) . '</label>
-							<input type="text" name="invite_instructor_email" placeholder="' . esc_attr( $placeholder ) . '"/>
-
-							<div class="submit-message">
-								<input class="button-primary" name="invite_instructor_trigger" id="invite-instructor-trigger" type="button" value="' . esc_attr__( 'Send Invite', 'CP_TD' ) . '">
-							</div>
-						</div>
-					</div>
-					';
-		}
-
-		/**
-		 * add javascript templates
-		 *
-		$content .= CoursePress_Template_Course::javascript_templates();
-
-		/**
-		 * Add additional fields.
-		 *
-		 * Names must begin with meta_ to allow it to be automatically added to the course settings
-		 *
-		$content .= apply_filters( 'coursepress_course_setup_step_3', '', $course_id );
-
-		// Buttons
-		$content .= self::get_buttons( $course_id, 3 );
-
-		// End
-		$content .= '
-			</div>
-		';
-
-		echo $content;
-		*/
 	}
 
-	public static function step_4() {
-				$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
-		$setup_class = CoursePress_Data_Course::get_setting( $course_id, 'setup_step_4', '' );
-		$setup_class = (int) CoursePress_Data_Course::get_setting( $course_id, 'setup_marker', 0 ) === 3 ? $setup_class . ' setup_marker' : $setup_class;
-		$content = '
-			<div class="step-title step-4">' . esc_html__( 'Step 4 &ndash; Course Dates', 'CP_TD' ) . '
-				<div class="status ' . $setup_class . '"></div>
-			</div>
-			<div class="step-content step-4">
-				<input type="hidden" name="meta_setup_step_4" value="saved" />
-			';
+	static function step_4() {
+		$setup_class = self::$settings['setup_step_4'];
+		$setup_class = 3 == self::$setup_marker ? $setup_class . ' setup_marker' : $setup_class;
 
-		$open_ended_checked = CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'course_open_ended', true ) );
-		$open_ended_course = ! empty( $open_ended_checked );
-		$content .= '
-				<div class="wide course-dates">
-					<label>' .
-					esc_html__( 'Course Availability', 'CP_TD' ) . '
-					</label>
-					<p class="description">' . esc_html__( 'These are the dates that the course will be available to students', 'CP_TD' ) . '</p>
-					<label class="checkbox medium">
-						<input type="checkbox" name="meta_course_open_ended" ' . $open_ended_checked . ' />
-						<span>' . esc_html__( 'This course has no end date', 'CP_TD' ) . '</span>
-					</label>
-					<div class="date-range">
-						<div class="start-date">
-							<label for="meta_course_start_date" class="start-date-label required">' . esc_html__( 'Start Date', 'CP_TD' ) . '</label>
-
-							<div class="date">
-								<input type="text" class="dateinput timeinput" name="meta_course_start_date" value="' . CoursePress_Data_Course::get_setting( $course_id, 'course_start_date', date( 'Y-m-d' ) ) . '"/><i class="calendar"></i>
-							</div>
-						</div>
-						<div class="end-date ' . ( $open_ended_course ? 'disabled' : '' ) . '">
-							<label for="meta_course_end_date" class="end-date-label required">' . esc_html__( 'End Date', 'CP_TD' ) . '</label>
-							<div class="date">
-								<input type="text" class="dateinput" name="meta_course_end_date" value="' . CoursePress_Data_Course::get_setting( $course_id, 'course_end_date', '' ) . '" ' . ( $open_ended_course ? 'disabled="disabled"' : '' ) . ' />
-							</div>
-						</div>
-					</div>
-				</div>';
-
-		$open_ended_checked = CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'enrollment_open_ended', true ) );
-		$open_ended = ! empty( $open_ended_checked );
-		$content .= '
-				<div class="wide enrollment-dates">
-					<label>' .
-					esc_html__( 'Course Enrollment Dates', 'CP_TD' ) . '
-					</label>
-					<p class="description">' . esc_html__( 'These are the dates that students will be able to enroll in a course.', 'CP_TD' ) . '</p>
-					<label class="checkbox medium">
-						<input type="checkbox" name="meta_enrollment_open_ended" ' . $open_ended_checked . ' />
-						<span>' . esc_html__( 'Students can enroll at any time', 'CP_TD' ) . '</span>
-					</label>
-					<div class="date-range enrollment">
-						<div class="start-date ' . ( $open_ended ? 'disabled' : '' ) . '">
-							<label for="meta_enrollment_start_date" class="start-date-label required">' . esc_html__( 'Start Date', 'CP_TD' ) . '</label>
-
-							<div class="date">
-								<input type="text" class="dateinput" name="meta_enrollment_start_date" value="' . CoursePress_Data_Course::get_setting( $course_id, 'enrollment_start_date', '' ) . '"/><i class="calendar"></i>
-							</div>
-						</div>
-						<div class="end-date ' . ( $open_ended ? 'disabled' : '' ) . '">
-							<label for="meta_enrollment_end_date" class="end-date-label required">' . esc_html__( 'End Date', 'CP_TD' ) . '</label>
-							<div class="date">
-								<input type="text" class="dateinput" name="meta_enrollment_end_date" value="' . CoursePress_Data_Course::get_setting( $course_id, 'enrollment_end_date', '' ) . '" ' . ( $open_ended ? 'disabled="disabled"' : '' ) . ' />
-							</div>
-						</div>
-					</div>
-				</div>';
-
-		/**
-		 * Add additional fields.
-		 *
-		 * Names must begin with meta_ to allow it to be automatically added to the course settings
-		 */
-		$content .= apply_filters( 'coursepress_course_setup_step_4', '', $course_id );
-
-		// Buttons
-		$content .= self::get_buttons( $course_id, 4 );
-
-		// End
-		$content .= '
-			</div>
-		';
-
-		echo $content;
+		self::render( 'admin/view/steps/step-4', array(
+			'course_id' => self::$course_id,
+			'setup_class' => $setup_class,
+			'open_ended_course' => ! empty( self::$settings['course_open_ended'] ),
+			'course_start_date' => self::$settings['course_start_date'],
+			'course_end_date' => self::$settings['course_end_date'],
+			'enrollment_open_ended' => ! empty( self::$settings['enrollment_open_ended'] ),
+			'enrollment_start_date' => self::$settings['enrollment_start_date'],
+			'enrollment_end_date' => self::$settings['enrollment_end_date'],
+		) );
 	}
 
 	public static function step_5() {
@@ -1352,5 +1175,19 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 			return '&ndash;';
 		}
 		return $duration;
+	}
+
+	/**
+	 * Add tinymce plugins
+	 *
+	 * @since 2.0.5
+	 *
+	 * @param array $plugins An array of teenyMCE plugins.
+	 * @return array The list of teenyMCE plugins.
+	 */
+	public static function teeny_mce_plugins( $plugins ) {
+		$plugins[] = 'paste';
+		$plugins[] = 'wpautoresize';
+		return $plugins;
 	}
 }

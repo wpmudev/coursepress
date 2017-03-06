@@ -483,6 +483,7 @@ class CoursePress_Data_Course {
 
 	public static function get_setting( $course_id, $key = true, $default = null ) {
 		$settings = get_post_meta( $course_id, 'course_settings', true );
+		$date_format = get_option( 'date_format' );
 
 		$defaults = array(
 			'setup_marker' => 0,
@@ -499,6 +500,12 @@ class CoursePress_Data_Course {
 			'structure_preview_pages' => array(),
 			'structure_visible_modules' => array(),
 			'structure_preview_modules' => array(),
+			'course_open_ended' => empty( $settings ),
+			'course_start_date' => date( $date_format ),
+			'course_end_date' => '',
+			'enrollment_open_ended' => empty( $settings ),
+			'enrollment_start_date' => '',
+			'enrollment_end_date' => '',
 		);
 
 		$settings = wp_parse_args( $settings, $defaults );
@@ -529,6 +536,11 @@ class CoursePress_Data_Course {
 
 	public static function update_setting( $course_id, $key = true, $value ) {
 		$settings = get_post_meta( $course_id, 'course_settings', true );
+
+		if ( empty( $settings ) ) {
+			$settings = array();
+		}
+
 		$old_settings = $settings;
 
 		if ( true === $key ) {

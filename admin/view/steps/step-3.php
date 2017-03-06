@@ -51,10 +51,61 @@
 		</div>
 	<?php endif; ?>
 
-	<div class="wide facilitator-info medium" id="facilitators-info">
+	<div class="wide facilitator-info medium" id="facilitators-info"><br />
 		<?php echo CoursePress_Helper_UI::course_facilitator_avatars( $course_id, array(), true ); ?>
 	</div>
 
 	<?php if ( $can_assign_instructor || $can_assign_facilitator ) : ?>
+		<div class="wide">
+			<hr />
+			<label><?php echo $label; ?>
+				<p class="description"><?php echo $description; ?></p>
+			</label>
+
+			<div class="instructor-invite">
+
+				<?php if ( $can_assign_instructor && $can_assign_facilitator ) : ?>
+					<label><?php _e( 'Instructor or Facilitator', 'CP_TD' ); ?></label>
+					<ul>
+						<li>
+							<label>
+								<input type="radio" name="invite_instructor_type" value="instructor" checked="checked" /> <?php _e( 'Instructor', 'CP_TD' ); ?></label>
+						</li>
+						<li>
+							<label>
+								<input type="radio" name="invite_instructor_type" value="facilitator" /> <?php _e( 'Facilitator', 'CP_TD' ); ?></label>
+						</li>
+					</ul>
+				<?php elseif ( $can_assign_instructor ) : ?>
+					<input type="hidden" name="invite_instructor_type="instructor" />
+				<?php elseif ( $can_assign_facilitator ) : ?>
+					<input type="hidden" name="invite_instructor_type="facilitator" />
+				<?php endif; ?>
+
+				<label for="invite_instructor_first_name"><?php _e( 'First Name', 'CP_TD' ); ?></label>
+				<input type="text" name="invite_instructor_first_name" placeholder="<?php esc_attr_e( 'First Name', 'CP_TD' ); ?>"/>
+				<label for="invite_instructor_last_name"><?php _e( 'Last Name', 'CP_TD' ); ?></label>
+				<input type="text" name="invite_instructor_last_name" placeholder="<?php esc_attr_e( 'Last Name', 'CP_TD' ); ?>" />
+				<label for="invite_instructor_email"><?php _e( 'E-Mail', 'CP_TD' ); ?></label>
+				<input type="text" name="invite_instructor_email" placeholder="<?php echo esc_attr( $placeholder ); ?>" />
+
+				<div class="submit-message">
+					<input class="button-primary" name="invite_instructor_trigger" id="invite-instructor-trigger" type="button" value="<?php _e( 'Send Invite', 'CP_TD' ); ?>" />
+				</div>
+			</div>
+		</div>
 	<?php endif; ?>
+
+	<?php
+	// Include JS template
+	echo CoursePress_Template_Course::javascript_templates();
+
+	/**
+	 * Trigger after printing step 3 fields.
+	 **/
+	echo apply_filters( 'coursepress_course_setup_step_3', '', $course_id );
+
+	// Print buttons
+	echo static::get_buttons( $course_id, 3 );
+	?>
 </div>
