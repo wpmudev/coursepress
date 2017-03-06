@@ -40,4 +40,47 @@ class TestCourseEdit extends WP_UnitTestCase {
 
 		$this->assertCount( 7, array_keys( $matches[0] ) );
 	}
+
+	function test_settings() {
+		$c1 = CoursePressData::course_data(array(
+			'post_title' => 'Course 1'
+		));
+		$c1 = self::factory()->post->create( $c1 );
+
+		$instructors = CoursePress_Data_Course::get_setting( $c1, 'instructors' );
+
+		$this->assertTrue( empty( $instructors ) );
+	}
+
+	function test_edit_course() {
+		$hooks = new CoursePress_Hooks();
+		$edit = new CoursePress_Admin_Edit();
+
+		// Setup hooks
+		$hooks->init();
+		//$edit->init_hooks();
+
+		$c1 = CoursePressData::course_data(array(
+			'post_title' => 'Course 1'
+		));
+		$c1 = self::factory()->post->create( $c1 );
+
+		$_REQUEST['action'] = 'edit';
+		$_REQUEST['post'] = $c1;
+
+		do_action( 'plugins_loaded' );
+
+		ob_start();
+
+		$course = get_post( $c1 );
+		do_action( 'dbx_post_advanced', $course );
+
+		do_action( 'edit_form_after_editor', $course );
+
+		$content = ob_get_clean();
+
+		preg_match_all( '|<div class="step-title[^>]*>|', $content, $matches );
+
+		$this->assertCount( 7, array_keys( $matches[0] ) );
+	}
 }
