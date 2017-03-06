@@ -47,7 +47,13 @@ class TestCourseEdit extends WP_UnitTestCase {
 		));
 		$c1 = self::factory()->post->create( $c1 );
 
-		$instructors = CoursePress_Data_Course::get_setting( $c1, 'instructors' );
+		$settings = array(
+			'course_start_date' => '2016-21-05 04:14'
+		);
+
+		update_post_meta( $c1, 'course_settings', $settings );
+
+		$instructors = CoursePress_Data_Course::get_setting( $c1, 'instructors', array() );
 
 		$this->assertTrue( empty( $instructors ) );
 	}
