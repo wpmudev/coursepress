@@ -509,6 +509,11 @@ class CoursePress_Data_Course {
 
 	public static function update_setting( $course_id, $key = true, $value ) {
 		$settings = get_post_meta( $course_id, 'course_settings', true );
+
+		if ( empty( $settings ) ) {
+			$settings = array();
+		}
+
 		$old_settings = $settings;
 
 		if ( true === $key ) {
