@@ -105,6 +105,7 @@ class CoursePress_Core {
 			CoursePress_View_Front_Settings::init();
 			CoursePress_View_Front_Student::init();
 			CoursePress_View_Front_Login::init();
+			CoursePress_View_Front_Signup::init();
 			/**
 			 * add schema.org microdata
 			 */
@@ -541,23 +542,18 @@ class CoursePress_Core {
 
 		/**
 		 * student login page
-		 */
-		$new_rules[ '^' . self::get_slug( 'login' ) . '/?$' ] = 'index.php?page_id=-1&pagename='.self::get_slug( 'login' );
-
-		/**
 		 * create account
-		 */
-		$new_rules[ '^' . self::get_slug( 'signup' ) . '/?$' ] = 'index.php?page_id=-1&pagename='.self::get_slug( 'signup' );
-
-		/**
 		 * account settings
-		 */
-		$new_rules[ '^' . self::get_slug( 'student_settings' ) . '/?$' ] = 'index.php?page_id=-1&pagename='.self::get_slug( 'student_settings' );
-
-		/**
 		 * Student Dashboard
 		 */
-		$new_rules[ '^' . self::get_slug( 'student_dashboard' ) . '/?$' ] = 'index.php?page_id=-1&pagename='.self::get_slug( 'student_dashboard' );
+		$pages = array( 'login', 'signup', 'student_settings', 'student_dashboard' );
+		foreach ( $pages as $page ) {
+			$page_id = intval( CoursePress_Core::get_setting( 'pages/'.$page, 0 ) );
+			if ( 0 === $page_id ) {
+				$slug = self::get_slug( $page );
+				$new_rules[ '^' .$slug . '/?$' ] = 'index.php?page_id=-1&pagename='.$slug;
+			}
+		}
 
 		$upload_dir = wp_upload_dir();
 		$upload_path = trailingslashit( str_replace( home_url(), '', $upload_dir['baseurl'] ) );
