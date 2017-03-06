@@ -18,6 +18,7 @@ CHANGELOG
 * Improved MarketPress product thumbnail and images integration.
 * Improved link building to student profile in admin area.
 * Improved HTML login & signup forms.
+* Improved TinyMCE editor on course edit screen.
 * FIxed on signup form double error messages.
 * Fixed "Grades" screen.
 * Fixed a wrong link to student profile from students tab on a course edit screen.
