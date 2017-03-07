@@ -2009,7 +2009,7 @@ class CoursePress_Data_Student {
 				$link = CoursePress_Data_Unit::get_unit_url( (int) $last_visited['unit'] );
 
 				// Add page number
-				if ( ! empty( $last_visited['page'] ) ) {
+				if ( ! empty( $last_visited['page'] ) || 'completion_page' != $last_visited['page'] ) {
 					$page = max( 1, (int) $last_visited['page'] );
 					$link .= 'page/' . $page . '/';
 
