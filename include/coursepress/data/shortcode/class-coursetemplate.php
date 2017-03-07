@@ -290,7 +290,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					'label' => ! $is_instructor ? sanitize_text_field( $continue_learning_text ) : sanitize_text_field( $instructor_text ),
 					'attr' => array(
 						'class' => 'apply-button apply-button-enrolled ' . $class,
-						'data-link' => CoursePress_Data_Student::get_last_visited_url( $course_id  ),
+						'data-link' => CoursePress_Data_Student::get_last_visited_url( $course_id ),
 					),
 					'type' => 'link',
 				),
@@ -572,9 +572,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 		if ( ! $structure_visible ) { return ''; }
 
-		$time_estimates = cp_is_true(
-			CoursePress_Data_Course::get_setting( $course_id, 'structure_show_duration' )
-		);
+		$time_estimates = cp_is_true( CoursePress_Data_Course::get_setting( $course_id, 'structure_show_duration' ) );
 
 		$preview = CoursePress_Data_Course::previewability( $course_id );
 		$visibility = CoursePress_Data_Course::structure_visibility( $course_id );
@@ -963,6 +961,11 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$instructors = CoursePress_Data_Course::get_instructors( $course_id );
 		$is_instructor = is_array( $instructors ) && in_array( $student_id, $instructors );
 
+		/**
+		 * Show empty units?
+		 */
+		$show_empty_units = cp_is_true( CoursePress_Data_Course::get_setting( $course_id, 'structure_show_empty_units' ) );
+
 		$content = '';
 
 		$unit_status = array( 'publish' );
@@ -1184,7 +1187,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			}
 
 			// Don't show units without modules/elements.
-			if ( ! $has_pages && ! $can_update_course ) {
+			if ( ! $show_empty_units && ! $has_pages && ! $can_update_course ) {
 				continue;
 			}
 
