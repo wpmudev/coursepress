@@ -1,4 +1,4 @@
-/*! CoursePress - v2.0.5
+/*! CoursePress - v2.0.6
  * https://premium.wpmudev.org/project/coursepress-pro/
  * Copyright (c) 2017; * Licensed GPLv2+ */
 /*global tinyMCE*/
@@ -48,8 +48,6 @@ var CoursePress = CoursePress || {};
 		var search = editor.match(/id="dummy_editor_id">(.*|\s)/)[1];
 
 		editor = editor.replace( /dummy_editor_id/g, id );
-		editor = editor.replace( search, content );
-		editor = editor.replace( /dummy_editor_content/g, content );
 		editor = editor.replace( /dummy_editor_name/g, name );
 		editor = editor.replace( /rows="\d*"/g, 'style="height: ' + height + 'px"' ); // remove rows attribute
 
@@ -61,6 +59,7 @@ var CoursePress = CoursePress || {};
 		} else {
 			$( target ).replaceWith( editor );
 		}
+		$('textarea#' + id ).val(content);
 
 		var options = JSON.parse( JSON.stringify( tinyMCEPreInit.mceInit[ 'dummy_editor_id' ] ) );
 		if ( undefined !== options ) {
