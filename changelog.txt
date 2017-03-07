@@ -7,6 +7,8 @@ CHANGELOG
 
 = 2.0.6 =
 -------------------------------------------------
+* Improved process of saving answers.
+* Fixed a bug with missing grade for manualy graded fields when we use "Save & Exit" feature.
 
 = 2.0.5 =
 -------------------------------------------------
