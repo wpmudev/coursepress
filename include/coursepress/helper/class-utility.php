@@ -1369,7 +1369,7 @@ class CoursePress_Helper_Utility {
 			$settings = get_option( 'coursepress_settings', null );
 			if ( empty( $settings ) ) {
 				update_option( 'coursepress_settings', array( 'not' => 'empty' ) );
-				CoursePress_Helper_Course_Generator::run();
+				CoursePress_Helper_Course_Import::import_sample_course();
 			}
 		}
 		if ( version_compare( $plugin_version_db, CoursePress::$version, '<' ) ) {
