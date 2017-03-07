@@ -2001,6 +2001,7 @@ class CoursePress_Data_Student {
 		$link .= CoursePress_Core::get_slug( 'units/' );
 
 		$last_visited = get_user_meta( get_current_user_id(), $key, true );
+		$last_visited = array_filter( $last_visited );
 
 		if ( ! empty( $last_visited ) ) {
 			// Get unit url
@@ -2009,7 +2010,8 @@ class CoursePress_Data_Student {
 
 				// Add page number
 				if ( ! empty( $last_visited['page'] ) ) {
-					$link .= 'page/' . (int) $last_visited['page'] . '/';
+					$page = max( 1, (int) $last_visited['page'] );
+					$link .= 'page/' . $page . '/';
 
 					// Add module ID
 					if ( ! empty( $last_visited['module'] ) ) {
