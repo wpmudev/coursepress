@@ -122,7 +122,6 @@ class CoursePress_View_Admin_Setting_MarketPress {
 						</td>
 					</tr>
 				</tbody>
-				</tbody>
 			</table>
 		<?php
 		$content = ob_get_clean();

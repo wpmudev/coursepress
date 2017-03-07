@@ -147,14 +147,7 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 
 	public function column_ID( $item ) {
 		$this->students[] = $item->ID;
-		$profile_link = add_query_arg(
-			array(
-				'page' => CoursePress_View_Admin_Student::get_slug(),
-				'view' => 'profile',
-				'student_id' => $item->ID,
-			),
-			admin_url( 'admin.php' )
-		);
+		$profile_link = CoursePress_Data_Student::get_admin_profile_url( $item->ID );
 		$workbook_link = add_query_arg(
 			array(
 				'post_type' => CoursePress_Data_Course::get_post_type_name(),

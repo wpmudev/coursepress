@@ -157,6 +157,17 @@ class CoursePress_Template_Unit {
 			array( 'page' => $page )
 		);
 
+		/**
+		 * Trigger before loading section modules.
+		 *
+		 * @since 2.0.5
+		 *
+		 * @param (int) $course_id
+		 * @param (int) $unit_id
+		 * @param (int) $page_number
+		 **/
+		do_action( 'coursepress_normal_items_loaded', $course_id, $unit->ID, $page );
+
 		$before_html = apply_filters( 'coursepress_before_unit_modules', '' );
 		if ( ! empty( $before_html ) ) {
 			$content .= sprintf( '<div class="cp-error-box">%s</div>', $before_html );

@@ -508,6 +508,8 @@ class CoursePress_Helper_Email {
 		$vars = array(
 			'STUDENT_FIRST_NAME' => sanitize_text_field( $args['first_name'] ),
 			'STUDENT_LAST_NAME' => sanitize_text_field( $args['last_name'] ),
+			'STUDENT_USERNAME' => $args['fields']['student_username'],
+			'STUDENT_PASSWORD' => $args['fields']['password'],
 			'BLOG_NAME' => get_bloginfo( 'name' ),
 			'LOGIN_ADDRESS' => esc_url( $login_url ),
 			'COURSES_ADDRESS' => CoursePress_Core::get_slug( 'course', true ),

@@ -44,7 +44,8 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Controller_Menu {
 		if ( wp_verify_nonce( $nonce, 'coursepress_download_report' ) ) {
 			$student_id = (int) $_REQUEST['student_id'];
 			$course_id = (int) $_REQUEST['course_id'];
-			self::report_content( array( $student_id ), $course_id );
+			$mode = isset( $_REQUEST['mode'] ) ? $_REQUEST['mode'] : 'pdf';
+			self::report_content( array( $student_id ), $course_id, $mode );
 			exit;
 		}
 
@@ -58,26 +59,30 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Controller_Menu {
 
 		switch ( $action ) {
 			case 'filter': case 'Filter':
-				// Reload the page to apply filter
-				$course_id = (int) $_REQUEST['course_id'];
-				$url = add_query_arg( 'course_id', $course_id );
-				wp_safe_redirect( $url ); exit;
+					// Reload the page to apply filter
+					$course_id = (int) $_REQUEST['course_id'];
+					$url = add_query_arg( 'course_id', $course_id );
+					wp_safe_redirect( $url ); exit;
 			break;
 			case 'download':
+			case 'show':
 				if ( ! empty( $_REQUEST['students'] ) ) {
 					$students = (array) $_REQUEST['students'];
 					$course_id = (int) $_REQUEST['course_id'];
-					self::report_content( $students, $course_id );
+					$mode = 'show' == $action ? 'html':'pdf';
+					self::report_content( $students, $course_id, $mode );
 					exit;
 				} else {
 					self::$warning_message = __( 'Select students to generate the report!', 'CP_TD' );
 				}
 			break;
 			case 'download_summary':
+			case 'show_summary':
 				if ( ! empty( $_REQUEST['students'] ) ) {
 					$students = (array) $_REQUEST['students'];
 					$course_id = (int) $_REQUEST['course_id'];
-					self::report_content_multi( $students, $course_id );
+					$mode = 'show_summary' == $action ? 'html':'pdf';
+					self::report_content_multi( $students, $course_id, $mode );
 					exit;
 				} else {
 					self::$warning_message = __( 'Select students to generate the report!', 'CP_TD' );
@@ -86,7 +91,7 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Controller_Menu {
 		}
 	}
 
-	public static function report_content( $students, $course_id, $unit_id = 'all' ) {
+	public static function report_content( $students, $course_id, $mode = 'pdf' ) {
 		$pdf_args = array(
 			'format' => 'D',
 			'force_download' => true, // Use force_download with
@@ -105,13 +110,6 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Controller_Menu {
 		// Get the units...
 		$units = CoursePress_Data_Course::get_units_with_modules( $course_id );
 		$units = CoursePress_Helper_Utility::sort_on_key( $units, 'order' );
-
-		// Or unit...
-		$unit_file_part = 'all_units';
-		if ( 'all' != $unit_id ) {
-			$units = array( $unit_id => $units[ (int) $unit_id ] );
-			$unit_file_part = $units[ (int) $unit_id ]['unit']->post_name;
-		}
 
 		if ( 1 < count( $students ) ) {
 			$html .= '<br />';
@@ -245,20 +243,24 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Controller_Menu {
 
 		if ( count( $students ) === 1 ) {
 			$student_name = CoursePress_Helper_Utility::get_user_name( $last_student );
-			$pdf_args['filename'] = $course_title . '_' . $unit_file_part . '_' . $student_name;
-
+			$pdf_args['filename'] = $course_title . '_' . $student_name;
 		} elseif ( count( $students > 1 ) ) {
-			$pdf_args['filename'] = $course_title . '_' . $unit_file_part . '_bulk';
+			$pdf_args['filename'] = $course_title . '_bulk';
 		}
 
 		$pdf_args['filename'] = sanitize_title( strtolower( str_replace( ' ', '-', $pdf_args['filename'] ) ) ).'.pdf';
 		$pdf_args['footer'] = __( 'Course Report', 'CP_TD' );
 
+		if ( 'html' == $mode ) {
+			CoursePress_Helper_HTML::make( $html, $pdf_args );
+			return;
+		}
+
 		CoursePress_Helper_PDF::make_pdf( $html, $pdf_args );
 
 	}
 
-	public static function report_content_multi( $students, $course_id, $unit_id = 'all' ) {
+	public static function report_content_multi( $students, $course_id, $mode = 'pdf' ) {
 		$pdf_args = array(
 			'format' => 'D',
 			'force_download' => true, // Use force_download with
@@ -274,13 +276,6 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Controller_Menu {
 		// Get the units...
 		$units = CoursePress_Data_Course::get_units_with_modules( $course_id );
 		$units = CoursePress_Helper_Utility::sort_on_key( $units, 'order' );
-
-		// Or unit...
-		$unit_file_part = 'all_units';
-		if ( 'all' != $unit_id ) {
-			$units = array( $unit_id => $units[ (int) $unit_id ] );
-			$unit_file_part = $units[ (int) $unit_id ]['unit']->post_name;
-		}
 
 		$last_student = false;
 		$html .= '<table>';
@@ -357,10 +352,15 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Controller_Menu {
 		}
 		$html .= '</table>';
 
-		$pdf_args['filename'] = $course_title . '_' . $unit_file_part . '_bulk';
+		$pdf_args['filename'] = $course_title . '_bulk';
 
 		$pdf_args['filename'] = sanitize_title( strtolower( str_replace( ' ', '-', $pdf_args['filename'] ) ) ).'.pdf';
 		$pdf_args['footer'] = __( 'Course Report', 'CP_TD' );
+
+		if ( 'html' == $mode ) {
+			CoursePress_Helper_HTML::make( $html, $pdf_args );
+			return;
+		}
 
 		CoursePress_Helper_PDF::make_pdf( $html, $pdf_args );
 

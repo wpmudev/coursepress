@@ -762,7 +762,9 @@ class CoursePress_Helper_Integration_MarketPress {
 		if ( ! empty( $product_id ) ) {
 			$product['ID'] = $product_id;
 		}
-		return wp_insert_post( $product );
+		$product_id = wp_insert_post( $product );
+		self::update_product_thumbnail( $product_id, $course->ID );
+		return $product_id;
 	}
 
 	/**
@@ -1257,6 +1259,60 @@ Yours sincerely,
 		if ( 'order_paid' == $order_status ) {
 			self::course_paid_3pt0( $order );
 		}
+	}
+
+	/**
+	 * Set or update thumbnail.
+	 *
+	 * @since 2.0.5
+	 *
+	 * @param integer $product_id Product ID.
+	 */
+	public static function update_product_thumbnail( $product_id, $course_id = 0 ) {
+		$thumbnail_id = get_post_thumbnail_id( $product_id );
+		if ( ! empty( $thumbnail_id ) ) {
+			return;
+		}
+		/**
+		 * Check is set course?
+		 */
+		if ( empty( $course_id ) ) {
+			$course_id = wp_get_post_parent_id( $product_id );
+		}
+		if ( empty( $course_id ) ) {
+			return;
+		}
+		/**
+		 * Is the course really a course?
+		 */
+		$is_course = CoursePress_Data_Course::is_course( $course_id );
+		if ( ! $is_course ) {
+			return;
+		}
+		/**
+		 *  Only works if the course actually has a thumbnail.
+		 */
+		$thumbnail_url = get_post_meta( $course_id, 'cp_listing_image', true );
+		if ( empty( $thumbnail_url ) ) {
+			return;
+		}
+		/**
+		 * Get thumbnail id from thumbnail_url, if it is custom image, do not
+		 * set thumbnail for product.
+		 */
+		global $wpdb;
+		$thumbnail_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE guid='%s';", $thumbnail_url ) );
+		if ( empty( $thumbnail_id ) ) {
+			return;
+		}
+		/**
+		 * Finally ... set product thumbnail.
+		 */
+		set_post_thumbnail( $product_id, $thumbnail_id );
+		$mp_product_images = explode( ',', get_post_meta( $product_id, 'mp_product_images', true ) );
+		array_unshift( $mp_product_images, $thumbnail_id );
+		$mp_product_images = implode( ',', array_filter( array_unique( $mp_product_images ) ) );
+		update_post_meta( $product_id, 'mp_product_images', $mp_product_images );
 	}
 }
 
