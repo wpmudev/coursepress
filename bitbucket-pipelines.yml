@@ -14,7 +14,7 @@ pipelines:
           - ssh-keyscan -t rsa -H bitbucket.org >> ~/.ssh/known_hosts
           - git submodule update --init --recursive
           - cd 1.x && git checkout coursepress/base-migration
-          - cd ../2.0 && git checkout coursepress/2.0.5-dev
+          - cd ../2.0 && git checkout coursepress/2.0-dev
           - cd themes/coursepress && git checkout coursepress/2.0-dev
           - cd ../../..
           - service mysql start
