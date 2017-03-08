@@ -7,6 +7,8 @@ CHANGELOG
 
 = 2.0.6 =
 -------------------------------------------------
+* Fixed a problem with too tall TinyMCE editoor.
+* Unified all TinyMCE editors.
 
 = 2.0.5 =
 -------------------------------------------------
