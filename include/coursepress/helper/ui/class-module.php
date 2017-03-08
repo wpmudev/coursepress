@@ -1003,7 +1003,7 @@ class CoursePress_Helper_UI_Module {
 									"dashicon": "editor-alignleft"
 								},
 								{
-									"title": "' . __( 'Selectable', 'CP_TD' ) .,'",
+									"title": "' . __( 'Selectable', 'CP_TD' ) . '",
 									"type": "action",
 									"class": "input-element form-action-button selectable wide",
 									"action": "selectable",
