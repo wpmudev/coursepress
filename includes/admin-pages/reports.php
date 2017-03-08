@@ -71,7 +71,7 @@ if ( isset( $_POST['units'] ) && isset( $_POST['users'] ) ) {
 			</table>
 			<?php
 
-			$modules = Unit_Module::get_modules( $course_unit->ID );
+			$modules = Unit_Module::get_modules( $course_unit['post']->ID );
 
 			$input_modules_count = 0;
 
