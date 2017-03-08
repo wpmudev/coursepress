@@ -616,7 +616,7 @@ class CoursePress_Admin_Edit {
 									<th class="column-course-structure">' . esc_html__( 'Course Structure', 'CP_TD' ) . ' <small>' . esc_html__( 'Units and Pages with Modules selected will automatically be visible (only selected Modules accessible).', 'CP_TD' ) . '</small></th>
 									<th class="column-show">' . esc_html__( 'Show', 'CP_TD' ) . '</th>
 									<th class="column-free-preview">' . esc_html__( 'Free Preview', 'CP_TD' ) . '</th>
-									<th class="column-time '.esc_attr( $display_duration_class ).'">' . esc_html__( 'Time', 'CP_TD' ) . '</th>
+									<th class="column-time '.esc_attr( $display_duration_class ).'">' . esc_html__( 'Time Limit', 'CP_TD' ) . '</th>
 								</tr>
 								<tr class="break"><th colspan="4"></th></tr>
 							</thead>
