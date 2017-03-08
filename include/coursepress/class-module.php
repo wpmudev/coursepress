@@ -217,13 +217,15 @@ class CoursePress_Module {
 	}
 
 	public static function submit( $input ) {
-		set_time_limit( 0 );
+		if ( ! ini_get( 'safe_mode' ) ) {
+			set_time_limit( 0 );
+		}
 
 		$course_id = (int) $input['course_id'];
 		$unit_id = (int) $input['unit_id'];
 		$module = isset( $input['module'] ) ? (array) $input['module'] : false;
 		$module_id = 0;
-		$page = 1;
+		$page = ! empty( $input['page'] ) ? (int) $input['page'] : 1;
 		$student_id = (int) $input['student_id'];
 		$has_error = false;
 		$course_mode = get_post_meta( $course_id, 'cp_course_view', true );

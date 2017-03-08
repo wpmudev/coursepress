@@ -47,6 +47,13 @@ class CoursePress_Template_Module {
 						$selected = $attributes['answers_selected'];
 						$content .= '<ul class="cp-answers">';
 
+						// $selected is of string type, change it to int
+						$ints = array_fill(0, 10, true);
+
+						if ( ! is_array( $selected ) && ! empty( $ints[ $selected ] ) ) {
+							$selected = (int) $selected;
+						}
+
 						foreach ( $answers as $key => $answer ) {
 							if ( 'input-checkbox' !== $module_type ) {
 								$the_answer = $selected === $key || $selected === $answer;
@@ -656,8 +663,16 @@ class CoursePress_Template_Module {
 	}
 
 	private static function comment_form( $post_id ) {
+        $enrolled = false;
+        if ( is_user_logged_in() ) {
+            $student_id = get_current_user_id();
+            $course_id = CoursePress_Data_Module::get_course_id_by_module( $post_id );
+            $enrolled = CoursePress_Data_Course::student_enrolled( $student_id, $course_id );
+        }
+        if ( false == $enrolled ) {
+            return '';
+        }
 		ob_start();
-
 		$form_class = array( 'comment-form', 'cp-comment-form' );
 		$comment_order = get_option( 'comment_order' );
 		$form_class[] = 'comment-form-' . $comment_order;
@@ -674,18 +689,14 @@ class CoursePress_Template_Module {
 		);
 
 		add_filter( 'comment_form_submit_button', array( 'CoursePress_Template_Discussion', 'add_subscribe_button' ) );
-
 		comment_form( $args, $post_id );
 		$comment_form = ob_get_clean();
-
 		$comment_form = str_replace(
 			array( '<form', '</form>' ),
 			array( '<div', '</div>' ),
 			$comment_form
 		);
-
 		remove_filter( 'comment_form_submit_button', array( 'CoursePress_Template_Discussion', 'add_subscribe_button' ) );
-
 		return $comment_form;
 	}
 
@@ -745,7 +756,10 @@ class CoursePress_Template_Module {
 		add_filter( 'comment_reply_link', array( __CLASS__, 'comment_reply_link' ), 10, 4 );
 		setup_postdata( $module );
 
-		$content = self::comment_form( $module->ID );
+
+        $content = '';
+
+		$content .= self::comment_form( $module->ID );
 		$content .= self::comment_list( $module->ID );
 
 		// Remove comment filters, etc

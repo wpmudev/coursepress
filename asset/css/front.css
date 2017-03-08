@@ -153,6 +153,9 @@ input.cp-has-error {
   margin: 0 5px 0 0;
   padding: 0;
 }
+.cp-submenu .submenu-item.submenu-active {
+  opacity: .6;
+}
 .cp-submenu .submenu-item a {
   padding: 4px 12px;
   text-decoration: none;
@@ -1235,6 +1238,23 @@ input.cp-has-error {
 }
 .cp-student-workbook .workbook-table .answer.chosen-correct:before {
   content: '\f147';
+}
+
+/** grades **/
+.cp-student-grades .grades-table tbody:after {
+  content: ' ';
+  display: block;
+  margin-bottom: 30px;
+}
+.cp-student-grades .grades-table .row-elements {
+  opacity: .8;
+  font-size: .9em;
+}
+.cp-student-grades .total_grade {
+  font-size: 1.3em;
+  font-weight: bold;
+  text-align: right;
+  text-transform: uppercase;
 }
 
 /** Discussion **/

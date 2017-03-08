@@ -152,14 +152,8 @@ class CoursePress_Admin_Table_Students extends CoursePress_Admin_Table_Instructo
 			)
 		);
 		// @todo: Add sanity check/validation
-		$courses_url = add_query_arg(
-			array(
-				'view' => 'profile',
-				'student_id' => $user_id,
-				'nonce' => wp_create_nonce( CoursePress_Admin_Students::get_view_profile_nonce_action( $user ) ),
-			)
-		);
-		$actions['courses'] = sprintf( '<a href="%s">%s</a>', esc_url( $courses_url ), __( 'View Profile', 'CP_TD' ) );
+		$profile_link = CoursePress_Data_Student::get_admin_profile_url( $user_id );
+		$actions['courses'] = sprintf( '<a href="%s">%s</a>', esc_url( $profile_link ), __( 'View Profile', 'CP_TD' ) );
 
 		/**
 		 * Withdraw
@@ -184,7 +178,6 @@ class CoursePress_Admin_Table_Students extends CoursePress_Admin_Table_Instructo
 			$delete_url = add_query_arg( $args );
 			$actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $delete_url ), $withdraw_title );
 		}
-
 		return $avatar . $name . $this->row_actions( $actions );
 	}
 

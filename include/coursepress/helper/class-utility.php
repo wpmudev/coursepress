@@ -28,7 +28,7 @@ class CoursePress_Helper_Utility {
 		add_action( 'init', array( __CLASS__, 'open_course_zip_object' ), 1 );
 		//add_action( 'admin_init', array( __CLASS__, 'course_admin_filters' ), 1 );
 		add_filter( 'upload_mimes', array( __CLASS__, 'enable_extended_upload' ) );
-		add_action( 'parse_request', array( __CLASS__, 'course_signup' ) );
+		add_action( 'parse_request', array( __CLASS__, 'course_signup' ), 1 );
 	}
 
 	public static function enable_extended_upload( $mime_types = array() ) {
@@ -1207,7 +1207,6 @@ class CoursePress_Helper_Utility {
 				wp_safe_redirect( admin_url() );
 				exit;
 			}
-
 			if ( isset( $_POST['redirect_url'] ) ) {
 				wp_safe_redirect( urldecode( esc_url_raw( $_POST['redirect_url'] ) ) );
 			} else if ( isset( $_POST['redirect_to'] ) ) {
@@ -1290,5 +1289,72 @@ class CoursePress_Helper_Utility {
 			}
 		}
 		return $content;
+	}
+
+	/**
+	 * Add custom nav meta box.
+	 *
+	 * Adapted from http://www.johnmorrisonline.com/how-to-add-a-fully-functional-custom-meta-box-to-wordpress-navigation-menus/.
+	 */
+	public static function add_nav_menu_meta_boxes() {
+		add_meta_box( 'coursepress_endpoints_nav_link', __( 'CoursePress Menu', 'CP_TD' ), array( __CLASS__, 'nav_menu_links' ), 'nav-menus', 'side', 'low' );
+	}
+
+	/**
+	 * Output menu links.
+	 */
+	public static function nav_menu_links() {
+		$end_points = array(
+			'courses' => array(
+				'label' => __( 'Courses', 'CP_TD' ),
+				'value' => '#coursepress-endpoints-courses',
+			),
+			'login' => array(
+				'label' => __( 'Log In/Out', 'CP_TD' ),
+				'value' => '#coursepress-endpoints-login',
+			),
+			'dashboard' => array(
+				'label' => __( 'Dashboard', 'CP_TD' ),
+				'value' => '#coursepress-endpoints-dashboard',
+			),
+			'profile' => array(
+				'label' => __( 'Profile', 'CP_TD' ),
+				'value' => '#coursepress-endpoints-profile',
+			),
+		);
+		?>
+		<div id="posttype-coursepress-endpoints" class="posttypediv">
+			<div id="tabs-panel-coursepress-endpoints" class="tabs-panel tabs-panel-active">
+				<ul id="coursepress-endpoints-checklist" class="categorychecklist form-no-clear">
+					<?php
+					$i = -1;
+					foreach ( $end_points as $one ) {
+						?>
+						<li>
+							<label class="menu-item-title">
+								<input type="checkbox" class="menu-item-checkbox" name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-object-id]" value="<?php echo esc_attr( $i ); ?>" /> <?php echo esc_html( $one['label'] ); ?>
+							</label>
+							<input type="hidden" class="menu-item-type" name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-type]" value="custom" />
+							<input type="hidden" class="menu-item-title" name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-title]" value="<?php echo esc_html( $one['label'] ); ?>" />
+							<input type="hidden" class="menu-item-url" name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-url]" value="<?php echo esc_url( $one['value'] ); ?>" />
+							<input type="hidden" class="menu-item-classes" name="menu-item[<?php echo esc_attr( $i ); ?>][menu-item-classes]" />
+						</li>
+						<?php
+						$i --;
+					}
+					?>
+				</ul>
+			</div>
+			<p class="button-controls">
+				<span class="list-controls">
+					<a href="<?php echo admin_url( 'nav-menus.php?page-tab=all&selectall=1#posttype-coursepress-endpoints' ); ?>" class="select-all"><?php _e( 'Select All', 'CP_TD' ); ?></a>
+				</span>
+				<span class="add-to-menu">
+					<input type="submit" class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( 'Add to Menu', 'CP_TD' ); ?>" name="add-post-type-menu-item" id="submit-posttype-coursepress-endpoints">
+					<span class="spinner"></span>
+				</span>
+			</p>
+		</div>
+		<?php
 	}
 }

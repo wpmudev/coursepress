@@ -248,6 +248,11 @@ class CoursePress_Admin_Controller_Unit {
 					// Temp for reordering
 					$unit->unit_order = isset( $meta['unit_order'] ) ? $meta['unit_order'] : 0;
 					$unit->meta = $meta;
+					$unit->post_content = format_for_editor( $unit->post_content );
+
+					if ( ! empty( $unit->meta['page_description'] ) ) {
+						$unit->meta['page_description'] = array_map( 'format_for_editor', $unit->meta['page_description'] );
+					}
 
 					// Let's add unit capabilities
 					$user_cap = array();
@@ -347,7 +352,7 @@ class CoursePress_Admin_Controller_Unit {
 					}
 					// Temp for reordering
 					$module->module_order = isset( $meta['module_order'] ) ? $meta['module_order'] : 0;
-					$module->post_content = apply_filters( 'format_for_editor', $module->post_content );
+					$module->post_content = format_for_editor( $module->post_content );
 					$module->meta = $meta;
 				}
 
@@ -495,6 +500,8 @@ class CoursePress_Admin_Controller_Unit {
 
 						if ( $update ) {
 							$meta = ! empty( $module['meta'] ) ? $module['meta'] : array();
+							$meta['legacy_updated'] = true;
+
 							unset( $module['meta'] );
 
 							$id = wp_insert_post( $module );
@@ -557,7 +564,7 @@ class CoursePress_Admin_Controller_Unit {
 					$data = json_decode( file_get_contents( 'php://input' ) );
 					$data = CoursePress_Helper_Utility::object_to_array( $data );
 					$new_module = false;
-					$meta = array();
+					$meta = array( 'legacy_updated' => true );
 
 					if ( ! empty( $data['meta'] ) ) {
 						$meta = $data['meta'];

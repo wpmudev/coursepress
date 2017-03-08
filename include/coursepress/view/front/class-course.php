@@ -569,7 +569,7 @@ class CoursePress_View_Front_Course {
 			self::$template = $theme_file;
 			$content = '';
 		} else {
-			$content = 'Oh no, not done yet!'; // TODO this is missing!
+			$content = CoursePress_Template_Grades::render();
 		}
 
 		return $content;

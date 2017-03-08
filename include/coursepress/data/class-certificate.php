@@ -295,6 +295,11 @@ class CoursePress_Data_Certificate {
 		$course_id = (int) get_post_field( 'post_parent', $certificate_id );
 		$completion_date = get_post_field( 'post_date', $certificate_id );
 
+		if ( ! empty( $completion_date ) ) {
+			$date_format = get_option( 'date_format' );
+			$completion_date = date_i18n( $date_format, strtotime( $completion_date ) );
+		}
+
 		if ( empty( $student_id ) ) { return false; }
 		if ( empty( $course_id ) ) { return false; }
 

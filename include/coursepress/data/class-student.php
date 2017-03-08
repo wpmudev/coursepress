@@ -404,14 +404,15 @@ class CoursePress_Data_Student {
 		// Auto-grade the easy ones
 		switch ( $attributes['module_type'] ) {
 			case 'input-checkbox':
-				$total = count( $attributes['answers_selected'] );
+				$selected = $attributes['answers_selected'];
+				$total = count( $selected );
+				$ratio = $total > 0 ? 100 / $total : 0;
+
 				$correct = 0;
 				if ( is_array( $response ) ) {
 					foreach ( $response as $answer ) {
-						if ( in_array( $answer, $attributes['answers_selected'] ) ) {
+						if ( in_array( $answer, $selected ) ) {
 							$correct++;
-						} else {
-							$correct--;
 						}
 					}
 				}
@@ -421,8 +422,9 @@ class CoursePress_Data_Student {
 				$grade = 0;
 
 				if ( $correct > 0 && $total > 0 ) {
-					$grade = (int) ( $correct / $total * 100 );
+					$grade = (int) $correct * $ratio;
 				}
+
 				break;
 
 			case 'input-select':
@@ -1449,7 +1451,7 @@ class CoursePress_Data_Student {
 	 * @param  int $student_id The newly created WP User ID.
 	 * @return bool True on success.
 	 */
-	public static function send_registration( $student_id ) {
+	public static function send_registration( $student_id, $user_data = array() ) {
 		$student_data = get_userdata( $student_id );
 
 		$email_args = array();
@@ -1460,6 +1462,7 @@ class CoursePress_Data_Student {
 		$email_args['fields']['student_id'] = $student_id;
 		$email_args['fields']['student_username'] = $student_data->user_login;
 		$email_args['fields']['student_password'] = $student_data->user_pass;
+		$email_args['fields']['password'] = ! empty( $user_data['password_txt'] ) ? $user_data['password_txt'] : '';
 
 		$sent = CoursePress_Helper_Email::send_email(
 			CoursePress_Helper_Email::REGISTRATION,
@@ -1831,11 +1834,11 @@ class CoursePress_Data_Student {
 		$is_completed = ! empty( $completed );
 
 		$labels = array(
-			'certified' => __( 'Certified', 'CP_TD' ),
-			'failed' => __( 'Failed', 'CP_TD' ),
-			'awaiting-review' => __( 'Awaiting Review', 'CP_TD' ),
-			'ongoing' => __( 'Ongoing', 'CP_TD' ),
-			'incomplete' => __( 'Incomplete', 'CP_TD' ),
+			'certified' => __( 'Certified', 'cp' ),
+			'failed' => __( 'Failed', 'cp' ),
+			'awaiting-review' => __( 'Awaiting Review', 'cp' ),
+			'ongoing' => __( 'Ongoing', 'cp' ),
+			'incomplete' => __( 'Incomplete', 'cp' ),
 		);
 
 		if ( $is_completed ) {
@@ -1935,5 +1938,91 @@ class CoursePress_Data_Student {
 			$student_id = 0;
 		}
 		return sprintf( '%s_%s_%d_%d', __CLASS__, $action, $user_id, $student_id );
+	}
+
+	/**
+	 * Get admin student profile URL.
+	 *
+	 * @since 2.0.5
+	 *
+	 * @param integer $student_id Student ID.
+	 * @return string URL to student profile (admin area).
+	 */
+	public static function get_admin_profile_url( $student_id ) {
+		$nonce = wp_create_nonce( CoursePress_Admin_Students::get_view_profile_nonce_action( $student_id ) );
+		return add_query_arg(
+			array(
+				'post_type' => CoursePress_Data_Course::get_post_type_name(),
+				'page' => CoursePress_View_Admin_Student::get_slug(),
+				'view' => 'profile',
+				'student_id' => $student_id,
+				'nonce' => $nonce,
+			),
+			admin_url( 'edit.php' )
+		);
+	}
+
+	/**
+	 * Record the last time the student visited the course
+	 *
+	 * @since 2.0.5
+	 *
+	 * @param (int) $course_id
+	 * @param (int) $unit_id
+	 * @param (int) $page_number
+	 * @param (int) $module_id
+	 **/
+	public static function log_visited_course( $course_id, $unit_id = 0, $page_number = 1, $module_id = 0 ) {
+		if ( empty( $course_id ) ) {
+			return;
+		}
+
+		$key = 'coursepress_last_visited_' . $course_id;
+		$value = array(
+			'unit' => $unit_id,
+			'page' => $page_number,
+			'module' => $module_id,
+		);
+
+		update_user_meta( get_current_user_id(), $key, $value );
+	}
+
+	/**
+	 * Returns the permalink of the last visited page of the course.
+	 *
+	 * @since 2.0.5
+	 *
+	 * @param (int) $course_id
+	 * @return Returns permalink of the last visited page otherwise the units overview page.
+	 **/
+	public static function get_last_visited_url( $course_id ) {
+		$key = 'coursepress_last_visited_' . $course_id;
+		$course_url = CoursePress_Data_Course::get_course_url( $course_id );
+		$link = $course_url . CoursePress_Core::get_slug( 'units/' );
+
+		$last_visited = get_user_meta( get_current_user_id(), $key, true );
+		$last_visited = array_filter( $last_visited );
+
+		if ( ! empty( $last_visited ) ) {
+			// Get unit url
+			if ( ! empty( $last_visited['unit'] ) ) {
+				$link = CoursePress_Data_Unit::get_unit_url( (int) $last_visited['unit'] );
+
+				// Add page number
+				if (  ! empty( $last_visited['page'] ) && (int) $last_visited['page'] > 0 ) {
+					$page = max( 1, (int) $last_visited['page'] );
+					$link .= 'page/' . $page . '/';
+
+					// Add module ID
+					if ( ! empty( $last_visited['module'] ) ) {
+						$link .= 'module_id/' . (int) $last_visited['module'];
+					}
+				} elseif ( 'completion_page' == $last_visited['page'] ) {
+					$link = $course_url . 'course-completion';
+				}
+			}
+		}
+
+		return $link;
 	}
 }

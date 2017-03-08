@@ -222,7 +222,7 @@ class CoursePress_Data_Module {
 			return false;
 		}
 
-		if ( array_key_exists( $module_type, $legacy ) ) {
+		if ( array_key_exists( $module_type, $legacy ) && empty( $meta['legacy_updated'] ) ) {
 			$meta = self::fix_legacy_meta( $module_id, $meta );
 			//$meta = get_post_meta( $module_id );
 			$module_type = $meta['module_type'][0];
