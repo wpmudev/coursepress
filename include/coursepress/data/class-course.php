@@ -509,6 +509,11 @@ class CoursePress_Data_Course {
 
 	public static function update_setting( $course_id, $key = true, $value ) {
 		$settings = get_post_meta( $course_id, 'course_settings', true );
+
+		if ( empty( $settings ) ) {
+			$settings = array();
+		}
+
 		$old_settings = $settings;
 
 		if ( true === $key ) {
@@ -3611,5 +3616,31 @@ class CoursePress_Data_Course {
 	 */
 	public static function get_last_seen_unit_meta_key( $course_id ) {
 		return sprintf( 'course_%s_last_seen_unit', $course_id );
+	}
+
+	/**
+	 * Ger prerequisites for the course.
+	 *
+	 * @since 2.0.5
+	 * @param integer $course_id Course ID
+	 *
+	 * @return array Array of prerequisite courses ids.
+	 */
+	public static function get_prerequisites( $course_id ) {
+		$courses = CoursePress_Data_Course::get_setting( $course_id, 'enrollment_prerequisite', null );
+		if ( empty( $courses ) ) {
+			return array();
+		}
+		if ( ! is_array( $courses ) ) {
+			$courses = array( $courses );
+		}
+		/**
+		 * remove $course_id
+		 */
+		$courses = array_diff( $courses, array( $course_id ) );
+		/**
+		 * return array of courses ids
+		 */
+		return $courses;
 	}
 }

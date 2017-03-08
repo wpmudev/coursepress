@@ -1,0 +1,21 @@
+.cp-student-grades {
+	.grades-table {
+		tbody {
+			&:after {
+				content: ' ';
+				display: block;
+				margin-bottom: 30px;
+			}
+		}
+		.row-elements {
+			opacity: .8;
+			font-size: .9em;
+		}
+	}
+	.total_grade {
+		font-size: 1.3em;
+		font-weight: bold;
+		text-align: right;
+		text-transform: uppercase;
+	}
+}

@@ -136,7 +136,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$course->enrollment_end_date = CoursePress_Data_Course::get_setting( $course_id, 'enrollment_end_date' );
 		$course->open_ended_course = cp_is_true( CoursePress_Data_Course::get_setting( $course_id, 'course_open_ended' ) );
 		$course->open_ended_enrollment = cp_is_true( CoursePress_Data_Course::get_setting( $course_id, 'enrollment_open_ended' ) );
-		$course->prerequisite = CoursePress_Data_Course::get_setting( $course_id, 'enrollment_prerequisite' );
+		$course->prerequisite = CoursePress_Data_Course::get_prerequisites( $course_id );
 		$course->is_paid = cp_is_true( CoursePress_Data_Course::get_setting( $course_id, 'payment_paid_course' ) );
 		$course->course_started = ! $course->open_ended_course && ! empty( $course->course_end_date ) && CoursePress_Data_Course::strtotime( $course->course_start_date ) <= $now ? true : false;
 		$course->enrollment_started = CoursePress_Data_Course::strtotime( $course->enrollment_start_date ) <= $now ? true : false;
@@ -290,7 +290,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					'label' => ! $is_instructor ? sanitize_text_field( $continue_learning_text ) : sanitize_text_field( $instructor_text ),
 					'attr' => array(
 						'class' => 'apply-button apply-button-enrolled ' . $class,
-						'data-link' => $course_link,
+						'data-link' => CoursePress_Data_Student::get_last_visited_url( $course_id ),
 					),
 					'type' => 'link',
 				),
@@ -572,9 +572,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 		if ( ! $structure_visible ) { return ''; }
 
-		$time_estimates = cp_is_true(
-			CoursePress_Data_Course::get_setting( $course_id, 'structure_show_duration' )
-		);
+		$time_estimates = cp_is_true( CoursePress_Data_Course::get_setting( $course_id, 'structure_show_duration' ) );
 
 		$preview = CoursePress_Data_Course::previewability( $course_id );
 		$visibility = CoursePress_Data_Course::structure_visibility( $course_id );
@@ -963,6 +961,11 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$instructors = CoursePress_Data_Course::get_instructors( $course_id );
 		$is_instructor = is_array( $instructors ) && in_array( $student_id, $instructors );
 
+		/**
+		 * Show empty units?
+		 */
+		$show_empty_units = cp_is_true( CoursePress_Data_Course::get_setting( $course_id, 'structure_show_empty_units' ) );
+
 		$content = '';
 
 		$unit_status = array( 'publish' );
@@ -1184,7 +1187,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			}
 
 			// Don't show units without modules/elements.
-			if ( ! $has_pages && ! $can_update_course ) {
+			if ( ! $show_empty_units && ! $has_pages && ! $can_update_course ) {
 				continue;
 			}
 

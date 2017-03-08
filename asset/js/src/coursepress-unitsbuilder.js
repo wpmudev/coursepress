@@ -1796,7 +1796,7 @@ var CoursePress = CoursePress || {};
 				value = this.fix_boolean( value );
 			}
 
-			if ( value.length === 0 || value === false || value === 0 ) {
+			if ( ! meta.legacy_updated && ( value.length === 0 || value === false || value === 0 ) ) {
 				value = this.get_legacy_meta( key, default_value );
 			}
 

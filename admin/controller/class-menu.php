@@ -114,25 +114,6 @@ class CoursePress_Admin_Controller_Menu {
 		return isset( $_REQUEST[ $this->slug ] ) && wp_verify_nonce( $_REQUEST[ $this->slug ], $this->slug );
 	}
 
-	public static function init_tiny_mce_listeners( $init_array ) {
-		$page = get_current_screen()->id;
-
-		if ( $page == $this->slug ) {
-			$init_array['height'] = '360px';
-			$init_array['relative_urls'] = false;
-			$init_array['url_converter'] = false;
-			$init_array['url_converter_scope'] = false;
-
-			$init_array['setup'] = 'function( ed ) {
-				ed.on( \'keyup\', function( args ) {
-					CoursePress.Events.trigger(\'editor:keyup\',ed);
-				} );
-			}';
-		}
-
-		return $init_array;
-	}
-
 	/**
 	 * Select or set CSS and JS file to include in the page.
 	 *
