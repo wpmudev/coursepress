@@ -1843,11 +1843,11 @@ class CoursePress_Data_Student {
 		$is_completed = ! empty( $completed );
 
 		$labels = array(
-			'certified' => __( 'Certified', 'CP_TD' ),
-			'failed' => __( 'Failed', 'CP_TD' ),
-			'awaiting-review' => __( 'Awaiting Review', 'CP_TD' ),
-			'ongoing' => __( 'Ongoing', 'CP_TD' ),
-			'incomplete' => __( 'Incomplete', 'CP_TD' ),
+			'certified' => __( 'Certified', 'cp' ),
+			'failed' => __( 'Failed', 'cp' ),
+			'awaiting-review' => __( 'Awaiting Review', 'cp' ),
+			'ongoing' => __( 'Ongoing', 'cp' ),
+			'incomplete' => __( 'Incomplete', 'cp' ),
 		);
 
 		if ( $is_completed ) {
@@ -2006,10 +2006,11 @@ class CoursePress_Data_Student {
 	 **/
 	public static function get_last_visited_url( $course_id ) {
 		$key = 'coursepress_last_visited_' . $course_id;
-		$link = CoursePress_Data_Course::get_course_url( $course_id );
-		$link .= CoursePress_Core::get_slug( 'units/' );
+		$course_url = CoursePress_Data_Course::get_course_url( $course_id );
+		$link = $course_url . CoursePress_Core::get_slug( 'units/' );
 
 		$last_visited = get_user_meta( get_current_user_id(), $key, true );
+		$last_visited = is_array( $last_visited ) ? array_filter( $last_visited ) : array();
 
 		if ( ! empty( $last_visited ) ) {
 			// Get unit url
@@ -2017,13 +2018,16 @@ class CoursePress_Data_Student {
 				$link = CoursePress_Data_Unit::get_unit_url( (int) $last_visited['unit'] );
 
 				// Add page number
-				if ( ! empty( $last_visited['page'] ) ) {
-					$link .= 'page/' . (int) $last_visited['page'] . '/';
+				if (  ! empty( $last_visited['page'] ) && (int) $last_visited['page'] > 0 ) {
+					$page = max( 1, (int) $last_visited['page'] );
+					$link .= 'page/' . $page . '/';
 
 					// Add module ID
 					if ( ! empty( $last_visited['module'] ) ) {
 						$link .= 'module_id/' . (int) $last_visited['module'];
 					}
+				} elseif ( 'completion_page' == $last_visited['page'] ) {
+					$link = $course_url . 'course-completion';
 				}
 			}
 		}
