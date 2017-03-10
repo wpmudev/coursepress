@@ -162,9 +162,9 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 					'textarea_rows' => 10,
 					'wpautop' => true,
 					'quicktags' => true,
-					'tinymce' => true,
+					'media_buttons' => true,
 				);
-				wp_editor( $editor_content, $editor_id, $args );
+				CoursePress_Helper_Editor::get_wp_editor( $editor_id, $editor_name, $editor_content, $args, true );
 				?>
 				</td>
 			</tr>

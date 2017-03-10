@@ -165,12 +165,17 @@ class CoursePress_Data_Unit {
 		$images = isset( $meta['page_feature_image'] ) && ! empty( $meta['page_feature_image'] ) ? maybe_unserialize( $meta['page_feature_image'][0] ) : array();
 		$visibilities = isset( $meta['show_page_title'] ) && ! empty( $meta['show_page_title'] ) ? maybe_unserialize( $meta['show_page_title'][0] ) : array();
 
-		return array(
+		$return = array(
 			'title' => $titles[ 'page_' . $item_id ],
 			'description' => isset( $descriptions[ 'page_' . $item_id ] ) ? $descriptions[ 'page_' . $item_id ] : '',
 			'feature_image' => isset( $images[ 'page_' . $item_id ] ) ? $images[ 'page_' . $item_id ] : '',
-			'visible' => $visibilities[ ( $item_id - 1 ) ],
 		);
+
+		if ( isset( $visibilities[ ( $item_id - 1 ) ] ) ) {
+			$return['visible'] = $visibilities[ ( $item_id - 1 ) ];
+		}
+
+		return $return;
 	}
 
 	public static function get_unit_availability_status( $course, $unit, $previous_unit = 0 ) {
@@ -218,19 +223,19 @@ class CoursePress_Data_Unit {
 			$force_current_unit_successful_completion = cp_is_true(
 				get_post_meta( $previous_unit_id, 'force_current_unit_successful_completion', true )
 			);
-        }
+		}
 
-        /**
-         * If there is NO MANDATORY modules, then this parameter can not be
-         * true!
-         */
-        if ( $force_current_unit_completion ) {
-            $number_of_mandatory = self::get_number_of_mandatory( $previous_unit_id );
-            if ( 0 == $number_of_mandatory ) {
-                $force_current_unit_completion = false;
-                $force_current_unit_successful_completion = false;
-            }
-        }
+		/**
+		 * If there is NO MANDATORY modules, then this parameter can not be
+		 * true!
+		 */
+		if ( $force_current_unit_completion ) {
+			$number_of_mandatory = self::get_number_of_mandatory( $previous_unit_id );
+			if ( 0 == $number_of_mandatory ) {
+				$force_current_unit_completion = false;
+				$force_current_unit_successful_completion = false;
+			}
+		}
 
 		if ( $previous_unit_id && $is_available ) {
 			$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
