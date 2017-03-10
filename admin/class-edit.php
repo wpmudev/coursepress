@@ -152,7 +152,6 @@ class CoursePress_Admin_Edit {
 	}
 
 	public static function get_tabs() {
-
 		// Make it a filter so we can add more tabs easily
 		self::$tabs = apply_filters( self::$slug . '_tabs', self::$tabs );
 
@@ -369,19 +368,52 @@ class CoursePress_Admin_Edit {
 	 * @return string WP Editor.
 	 */
 	private static function get_wp_editor( $editor_id, $editor_name, $editor_content = '', $args = array() ) {
+		wp_enqueue_script( 'post' );
+		$_wp_editor_expand = $_content_editor_dfw = false;
+
+		$post_type = CoursePress_Data_Course::get_post_type_name();
+		global $is_IE;
+
+		if (
+			! wp_is_mobile()
+			&& ! ( $is_IE && preg_match( '/MSIE [5678]/', $_SERVER['HTTP_USER_AGENT'] ) )
+			&& apply_filters( 'wp_editor_expand', true, $post_type )
+		) {
+
+			wp_enqueue_script( 'editor-expand' );
+			$_content_editor_dfw = true;
+			$_wp_editor_expand = ( get_user_setting( 'editor_expand', 'on' ) === 'on' );
+		}
+
+		if ( wp_is_mobile() ) {
+			wp_enqueue_script( 'jquery-touch-punch' );
+		}
+
+		/** This filter is documented in wp-includes/class-wp-editor.php  */
+		add_filter( 'teeny_mce_plugins', array( __CLASS__, 'teeny_mce_plugins' ) );
+
 		$defaults = array(
+			'_content_editor_dfw' => $_content_editor_dfw,
+			'drag_drop_upload' => true,
+			'tabfocus_elements' => 'content-html,save-post',
 			'textarea_name' => $editor_name,
 			'editor_class' => 'cp-editor cp-course-overview',
 			'media_buttons' => false,
+			'editor_height' => 300,
 			'tinymce' => array(
-				'height' => '300',
+				'resize' => false,
+				'wp_autoresize_on' => $_wp_editor_expand,
+				'add_unload_trigger' => false,
 			),
 		);
 		$args = wp_parse_args( $args, $defaults );
 		$args = apply_filters( 'coursepress_element_editor_args', $args, $editor_name, $editor_id );
+
 		ob_start();
 		wp_editor( $editor_content, $editor_id, $args );
-		$editor_html = ob_get_clean();
+		$editor_html = sprintf( '<div class="postarea%s">', $_wp_editor_expand? ' wp-editor-expand':'' );
+		$editor_html .= ob_get_clean();
+		$editor_html .= '</div>';
 		return $editor_html;
 	}
 
@@ -570,6 +602,11 @@ class CoursePress_Admin_Edit {
 						<label class="checkbox">
 							<input type="checkbox" name="meta_structure_show_duration" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'structure_show_duration', true ) ) . ' />
 							<span>' . esc_html__( 'Display Time Estimates for Units and Lessons', 'CP_TD' ) . '</span>
+						</label>
+						<label class="checkbox">
+							<input type="checkbox" name="meta_structure_show_empty_units" ' . CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'structure_show_empty_units', false ) ) . ' />
+							<span>' . esc_html__( 'Show units without modules', 'CP_TD' ) . '</span>
+							<p class="description">'.esc_html__( 'By default unit without modules is not displayed, even if it is selected below.', 'CP_TD' ).'</p>
 						</label>
 
 
@@ -1613,5 +1650,19 @@ class CoursePress_Admin_Edit {
 			return '&ndash;';
 		}
 		return $duration;
+	}
+
+	/**
+	 * Add tinymce plugins
+	 *
+	 * @since 2.0.5
+	 *
+	 * @param array $plugins An array of teenyMCE plugins.
+	 * @return array The list of teenyMCE plugins.
+	 */
+	public static function teeny_mce_plugins( $plugins ) {
+		$plugins[] = 'paste';
+		$plugins[] = 'wpautoresize';
+		return $plugins;
 	}
 }
