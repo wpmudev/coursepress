@@ -2709,8 +2709,15 @@ class CoursePress_Data_Course {
 			}
 		}
 		ksort( $posts );
-
-		return $posts;
+		/**
+		 * Recalculate indexes!
+		 */
+		$i = 1;
+		$reordered_posts = array();
+		foreach ( $posts as $post ) {
+			$reordered_posts[ $i++ ] = $post;
+		}
+		return $reordered_posts;
 	}
 
 	public static function get_course_availability_status( $course_id, $user_id = 0 ) {
@@ -2862,24 +2869,19 @@ class CoursePress_Data_Course {
 				$modules = self::get_unit_modules( $unit_id, array( 'publish' ), false, false, array( 'page' => (int) $page ) );
 				$modules = array_map( array( __CLASS__, 'get_course_id' ), $modules );
 				$modules = self::reorder_modules( $modules );
-
 				$module_index = 0;
-
 				foreach ( $modules as $index => $_module_id ) {
 					if ( $module_id == $_module_id ) {
 						$module_index = $index;
 					}
 				}
-
 				if ( $module_index > 0 ) {
 					$modules = array_slice( $modules, 0, $module_index );
-
 					// Remove the last module
 					array_pop( $modules );
 				} else {
 					$modules = array();
 				}
-
 				if ( count( $modules ) ) {
 					foreach ( $modules as $module_index => $_module_id ) {
 						$is_done = CoursePress_Data_Module::is_module_done_by_student( $_module_id, $student_id );
