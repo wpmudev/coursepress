@@ -4,8 +4,7 @@ Build Time:  BUILDTIME
 
 CHANGELOG
 =================================================
-= 2.0.3.1 =
-* Fixed: Fatal error thrown on old PHP version
+= 2.0.6 =
 
 = 2.0.5 =
 -------------------------------------------------
