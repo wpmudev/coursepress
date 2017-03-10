@@ -5,9 +5,8 @@ Build Time:  BUILDTIME
 CHANGELOG
 =================================================
 = 2.0.6 =
-
-= 2.0.6 =
 -------------------------------------------------
+* Fixed issue with not showing HTML tags in Multiple/Single Choice field.
 * Updated included Market Press version 3.2.3
 
 = 2.0.5 =
