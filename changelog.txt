@@ -6,6 +6,8 @@ CHANGELOG
 =================================================
 = 2.0.6 =
 -------------------------------------------------
+* Improved process of saving answers.
+* Fixed a bug with missing grade for manualy graded fields when we use "Save & Exit" feature.
 * Improved message about required units.
 * Fixed too many redirects error.
 * Added redirect to login page on student settings page for non-logged users.

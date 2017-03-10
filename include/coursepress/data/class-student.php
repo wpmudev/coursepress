@@ -399,6 +399,15 @@ class CoursePress_Data_Student {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
 
+		/**
+		 * Check answer freshness.
+		 */
+		$is_new_answer = self::check_is_new_answer( $student_id, $course_id, $unit_id, $module_id, $response, $data );
+
+		if ( false == $is_new_answer ) {
+			return;
+		}
+
 		$grade = - 1;
 
 		// Auto-grade the easy ones
@@ -2024,5 +2033,58 @@ class CoursePress_Data_Student {
 		}
 
 		return $link;
+	}
+
+	/**
+	 * Check answer and if is new on, return true.
+	 *
+	 * Check answer and if is new on, return true to avoid duplicating the same
+	 * answers. Function DO NOT HANDLE quiz, form, file modules!
+	 *
+	 * @param integer $student_id The user ID.
+	 * @param integer $course_id The course ID.
+	 * @param integer $unit_id The unit ID the current module belongs to.
+	 * @param integer $module_id The module ID the responses will be recorded to.
+	 * @param array $response An array of previously fetch responses.
+	 * @param array $data Optional. If null, we'll get the course completion data from DB.
+	 *
+	 * @return boolean True if this a new answer.
+	 **/
+	public static function check_is_new_answer( $student_id, $course_id, $unit_id, $module_id, $response, &$data = false ) {
+		if ( false === $data ) {
+			$data = self::get_completion_data( $student_id, $course_id );
+		}
+		/**
+		 * get old response
+		 */
+		$old = self::get_response( $student_id, $course_id, $unit_id, $module_id, false, $data );
+		/**
+		 * no response? this one is new!
+		 */
+		if ( false == $old ) {
+			return true;
+		}
+		if ( ! isset( $old['response'] ) ) {
+			return true;
+		}
+		/**
+		 * compare
+		 */
+		$attributes = CoursePress_Data_Module::attributes( $module_id );
+		$module_type = $attributes['module_type'];
+		switch ( $module_type ) {
+			case 'input-text':
+			case 'input-textarea':
+			case 'input-radio':
+			case 'input-select':
+			return $response != $old['response'];
+			case 'input-checkbox':
+				$diff = array_diff( $old['response'], $response );
+			return ! empty( $diff );
+		}
+		/**
+		 * not handled modules: file, quiz, form and another!
+		 */
+		return true;
 	}
 }
