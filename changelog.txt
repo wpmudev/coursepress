@@ -6,6 +6,7 @@ CHANGELOG
 =================================================
 = 2.0.6 =
 -------------------------------------------------
+* Improved message about required units.
 * Fixed too many redirects error.
 * Added redirect to login page on student settings page for non-logged users.
 * Fixed issue with not showing HTML tags in Multiple/Single Choice field.
