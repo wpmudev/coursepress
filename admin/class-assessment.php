@@ -569,11 +569,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 			}
 		} else {
 			$results = self::filter_students( $course_id, $the_unit, $type );
-        }
-
-
-l($results);
-
+		}
 
 		$students = $results['students'];
 		$total = count( $students );
