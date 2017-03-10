@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoursePress Pro 2.0.5\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/coursepress\n"
-"POT-Creation-Date: 2017-03-08 18:27:34+00:00\n"
+"POT-Creation-Date: 2017-03-08 18:28:49+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1102,6 +1102,10 @@ msgstr ""
 
 #: admin/class-edit.php:1270
 msgid "You can download your certificate here."
+msgstr ""
+
+#: admin/class-edit.php:1276
+msgid "Step 7 &ndash; Course Completion"
 msgstr ""
 
 #: admin/class-edit.php:1287

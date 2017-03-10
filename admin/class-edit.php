@@ -1210,7 +1210,7 @@ class CoursePress_Admin_Edit {
 		$completion_content = htmlspecialchars_decode( $completion_content );
 
 		$content = '<div class="step-title step-7">'
-			. esc_html( 'Step 7 &ndash; Course Completion', 'CP_TD' )
+			. esc_html__( 'Step 7 &ndash; Course Completion', 'CP_TD' )
 			. '<div class="status '. $setup_class . '"></div>'
 			. '</div>';
 
