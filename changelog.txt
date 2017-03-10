@@ -4,10 +4,10 @@ Build Time:  BUILDTIME
 
 CHANGELOG
 =================================================
-
 = 2.0.6 =
 -------------------------------------------------
 * Fixed issue with not showing HTML tags in Multiple/Single Choice field.
+* Updated included Market Press version 3.2.3
 
 = 2.0.5 =
 -------------------------------------------------
@@ -18,10 +18,12 @@ CHANGELOG
 * Added check is user logged before we show comment form in discussion module.
 * Added CoursePress Endpoints to Apperance -> Menu screen.
 * Added ability to remember the last sorting chosen by user on the list of courses in admin area.
+* Added new option "Show empty units" which allow to show units without modules.
 * Improved select2 field for prerequisites and remove current course from the list.
 * Improved MarketPress product thumbnail and images integration.
 * Improved link building to student profile in admin area.
 * Improved HTML login & signup forms.
+* Improved TinyMCE editor on course edit screen.
 * FIxed on signup form double error messages.
 * Fixed "Grades" screen.
 * Fixed a wrong link to student profile from students tab on a course edit screen.

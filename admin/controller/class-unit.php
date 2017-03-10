@@ -508,6 +508,8 @@ class CoursePress_Admin_Controller_Unit {
 
 						if ( $update ) {
 							$meta = ! empty( $module['meta'] ) ? $module['meta'] : array();
+							$meta['legacy_updated'] = true;
+
 							unset( $module['meta'] );
 
 							$id = wp_insert_post( $module );
@@ -570,7 +572,7 @@ class CoursePress_Admin_Controller_Unit {
 					$data = json_decode( file_get_contents( 'php://input' ) );
 					$data = CoursePress_Helper_Utility::object_to_array( $data );
 					$new_module = false;
-					$meta = array();
+					$meta = array( 'legacy_updated' => true );
 
 					if ( ! empty( $data['meta'] ) ) {
 						$meta = $data['meta'];
