@@ -4,10 +4,18 @@ Build Time:  BUILDTIME
 
 CHANGELOG
 =================================================
-
 = 2.0.6 =
 -------------------------------------------------
 * To avoid confusion, we changed label "Duration" to "Time Limit".
+* Fixed a problem with too tall TinyMCE editoor.
+* Unified all TinyMCE editors.
+* Improved process of saving answers.
+* Fixed a bug with missing grade for manualy graded fields when we use "Save & Exit" feature.
+* Improved message about required units.
+* Fixed too many redirects error.
+* Added redirect to login page on student settings page for non-logged users.
+* Fixed issue with not showing HTML tags in Multiple/Single Choice field.
+* Updated included Market Press version 3.2.3
 
 = 2.0.5 =
 -------------------------------------------------
