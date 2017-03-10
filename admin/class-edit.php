@@ -354,69 +354,6 @@ class CoursePress_Admin_Edit {
 		return sprintf( '<div class="wide course-step-buttons">%s</div>', $content );
 	}
 
-	/**
-	 * Get Wp Editor.
-	 *
-	 * @since 2.0.0
-	 * @access private
-	 *
-	 * @param string $editor_id WP Editor ID
-	 * @param string $editor_name WP Editor name
-	 * @param string $editor_content Edited content.
-	 * @param array $args WP Editor args, see
-	 * https://codex.wordpress.org/Function_Reference/wp_editor#Parameters
-	 * @return string WP Editor.
-	 */
-	private static function get_wp_editor( $editor_id, $editor_name, $editor_content = '', $args = array() ) {
-		wp_enqueue_script( 'post' );
-		$_wp_editor_expand = $_content_editor_dfw = false;
-
-		$post_type = CoursePress_Data_Course::get_post_type_name();
-		global $is_IE;
-
-		if (
-			! wp_is_mobile()
-			&& ! ( $is_IE && preg_match( '/MSIE [5678]/', $_SERVER['HTTP_USER_AGENT'] ) )
-			&& apply_filters( 'wp_editor_expand', true, $post_type )
-		) {
-
-			wp_enqueue_script( 'editor-expand' );
-			$_content_editor_dfw = true;
-			$_wp_editor_expand = ( get_user_setting( 'editor_expand', 'on' ) === 'on' );
-		}
-
-		if ( wp_is_mobile() ) {
-			wp_enqueue_script( 'jquery-touch-punch' );
-		}
-
-		/** This filter is documented in wp-includes/class-wp-editor.php  */
-		add_filter( 'teeny_mce_plugins', array( __CLASS__, 'teeny_mce_plugins' ) );
-
-		$defaults = array(
-			'_content_editor_dfw' => $_content_editor_dfw,
-			'drag_drop_upload' => true,
-			'tabfocus_elements' => 'content-html,save-post',
-			'textarea_name' => $editor_name,
-			'editor_class' => 'cp-editor cp-course-overview',
-			'media_buttons' => false,
-			'editor_height' => 300,
-			'tinymce' => array(
-				'resize' => false,
-				'wp_autoresize_on' => $_wp_editor_expand,
-				'add_unload_trigger' => false,
-			),
-		);
-		$args = wp_parse_args( $args, $defaults );
-		$args = apply_filters( 'coursepress_element_editor_args', $args, $editor_name, $editor_id );
-
-		ob_start();
-		wp_editor( $editor_content, $editor_id, $args );
-		$editor_html = sprintf( '<div class="postarea%s">', $_wp_editor_expand? ' wp-editor-expand':'' );
-		$editor_html .= ob_get_clean();
-		$editor_html .= '</div>';
-		return $editor_html;
-	}
-
 	public static function step_1() {
 		$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
 		$setup_class = CoursePress_Data_Course::get_setting( $course_id, 'setup_step_1', '' );
@@ -448,7 +385,7 @@ class CoursePress_Admin_Edit {
 		// Course Excerpt / Short Overview
 		$editor_content = ! empty( self::$current_course ) ? self::$current_course->post_excerpt : '';
 		$editor_content = htmlspecialchars_decode( $editor_content, true );
-		$editor_html = self::get_wp_editor( 'courseExcerpt', 'course_excerpt', $editor_content, array( 'teeny' => true ) );
+		$editor_html = CoursePress_Helper_Editor::get_wp_editor( 'courseExcerpt', 'course_excerpt', $editor_content, array( 'teeny' => true, 'editor_class' => 'cp-editor cp-course-overview' ) );
 
 		$content .= '
 				<div class="wide">
@@ -544,7 +481,7 @@ class CoursePress_Admin_Edit {
 		$args = array(
 			'media_buttons' => true,
 		);
-		$editor_html = self::get_wp_editor( 'courseDescription', 'course_description', $editor_content, $args );
+		$editor_html = CoursePress_Helper_Editor::get_wp_editor( 'courseDescription', 'course_description', $editor_content, $args );
 
 		$content .= '
 				<div class="wide">
@@ -616,7 +553,7 @@ class CoursePress_Admin_Edit {
 									<th class="column-course-structure">' . esc_html__( 'Course Structure', 'CP_TD' ) . ' <small>' . esc_html__( 'Units and Pages with Modules selected will automatically be visible (only selected Modules accessible).', 'CP_TD' ) . '</small></th>
 									<th class="column-show">' . esc_html__( 'Show', 'CP_TD' ) . '</th>
 									<th class="column-free-preview">' . esc_html__( 'Free Preview', 'CP_TD' ) . '</th>
-									<th class="column-time '.esc_attr( $display_duration_class ).'">' . esc_html__( 'Time', 'CP_TD' ) . '</th>
+									<th class="column-time '.esc_attr( $display_duration_class ).'">' . esc_html__( 'Time Limit', 'CP_TD' ) . '</th>
 								</tr>
 								<tr class="break"><th colspan="4"></th></tr>
 							</thead>
@@ -1312,7 +1249,7 @@ class CoursePress_Admin_Edit {
 			. '<label for="meta_pre_completion_content" class="required">' . __( 'Page Content', 'CP_TD' ) . '</label>'
 			. $token_info
 		;
-		$content .= self::get_wp_editor( 'pre-completion-content', 'meta_pre_completion_content', $pre_completion_content );
+		$content .= CoursePress_Helper_Editor::get_wp_editor( 'pre-completion-content', 'meta_pre_completion_content', $pre_completion_content );
 		$content .= '</div>';
 
 		$content .= '<div class="wide page-completion">'
@@ -1323,7 +1260,7 @@ class CoursePress_Admin_Edit {
 		;
 
 		$content .= '<label for="meta_course_completion_content" class="required">' . __( 'Page Content', 'CP_TD' ) . '</label>' . $token_info;
-		$content .= self::get_wp_editor( 'course-completion-editor-content', 'meta_course_completion_content', $completion_content );
+		$content .= CoursePress_Helper_Editor::get_wp_editor( 'course-completion-editor-content', 'meta_course_completion_content', $completion_content );
 		$content .= '</div>';
 
 		// Fail info
@@ -1342,7 +1279,7 @@ class CoursePress_Admin_Edit {
 			<input type="text" class="widefat" name="meta_course_failed_title" value="'. esc_attr__( $failed_title ) . '" />
 			<label for="meta_course_field_content" class="required">'. __( 'Page Content', 'CP_TD' ) . '</label>'
 			. $token_info;
-		$content .= self::get_wp_editor( 'course-failed-content', 'meta_course_failed_content', $failed_content );
+		$content .= CoursePress_Helper_Editor::get_wp_editor( 'course-failed-content', 'meta_course_failed_content', $failed_content );
 		$content .= '</div>';
 
 		// Basic certificate
@@ -1400,7 +1337,7 @@ class CoursePress_Admin_Edit {
 		$content .= '<label for="meta_basic_certificate_layout">' . __( 'Certificate Content', 'CP_TD' ) . '</label>'
 			. '<p class="description" style="float:left;">' . __( 'Useful tokens: ', 'CP_TD' ) . implode( ', ', $field_keys ) . '</p>'
 		;
-		$content .= self::get_wp_editor( 'basic-certificate-layout', 'meta_basic_certificate_layout', $certficate_content );
+		$content .= CoursePress_Helper_Editor::get_wp_editor( 'basic-certificate-layout', 'meta_basic_certificate_layout', $certficate_content );
 		$content .= '<table class="wide"><tr><td style="width:20%;">'
 			. '<label>' . __( 'Background Image', 'CP_TD' ) . '</label>'
 			. '</td><td>';
@@ -1650,19 +1587,5 @@ class CoursePress_Admin_Edit {
 			return '&ndash;';
 		}
 		return $duration;
-	}
-
-	/**
-	 * Add tinymce plugins
-	 *
-	 * @since 2.0.5
-	 *
-	 * @param array $plugins An array of teenyMCE plugins.
-	 * @return array The list of teenyMCE plugins.
-	 */
-	public static function teeny_mce_plugins( $plugins ) {
-		$plugins[] = 'paste';
-		$plugins[] = 'wpautoresize';
-		return $plugins;
 	}
 }
