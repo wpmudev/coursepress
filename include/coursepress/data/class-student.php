@@ -2001,7 +2001,7 @@ class CoursePress_Data_Student {
 		$link = $course_url . CoursePress_Core::get_slug( 'units/' );
 
 		$last_visited = get_user_meta( get_current_user_id(), $key, true );
-		$last_visited = array_filter( $last_visited );
+		$last_visited = is_array( $last_visited ) ? array_filter( $last_visited ) : array();
 
 		if ( ! empty( $last_visited ) ) {
 			// Get unit url
