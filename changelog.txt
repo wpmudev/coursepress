@@ -6,6 +6,7 @@ CHANGELOG
 =================================================
 = 2.0.6 =
 -------------------------------------------------
+* Fixed a problem with sale price in MarketPress.
 * To avoid confusion, we changed label "Duration" to "Time Limit".
 * Fixed a problem with too tall TinyMCE editoor.
 * Unified all TinyMCE editors.
