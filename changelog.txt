@@ -6,6 +6,8 @@ CHANGELOG
 =================================================
 = 2.0.6 =
 -------------------------------------------------
+* Fixed a problem with too tall TinyMCE editoor.
+* Unified all TinyMCE editors.
 * Improved process of saving answers.
 * Fixed a bug with missing grade for manualy graded fields when we use "Save & Exit" feature.
 * Improved message about required units.
