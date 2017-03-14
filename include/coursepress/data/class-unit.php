@@ -727,6 +727,45 @@ class CoursePress_Data_Unit {
 		return false;
 	}
 
+	public static function delete_section( $unit_id, $page_number ) {
+		if ( ! self::is_unit( $unit_id ) ) {
+			return;
+		}
+		/**
+		 * move module from deleted page/section to first
+		 */
+		CoursePress_Data_Module::move_to_first_page( $unit_id, $page_number );
+		/**
+		 * move modules one page down
+		 */
+		CoursePress_Data_Module::decrease_page_number( $unit_id, $page_number );
+		/**
+		 * rewrite pages/sections attributes
+		 */
+		$keys = array( 'page_title', 'show_page_title', 'page_description' );
+		foreach ( $keys as $key ) {
+			$$key = get_post_meta( $unit_id, $key, true );
+		}
+		$size = count( $page_title );
+		for ( $i = $page_number; $i < $size; $i++ ) {
+			$show_page_title[ $i - 1 ] = $show_page_title[ $i ];
+			$index_new = sprintf( 'page_%d', $i );
+			$index_old = sprintf( 'page_%d', $i + 1 );
+			$page_title[ $index_new ] = $page_title[ $index_old ];
+			$page_description[ $index_new ] = $page_description[ $index_old ];
+		}
+		/**
+		 * save new data
+		 */
+		foreach ( $keys as $key ) {
+			/**
+			 * delete last element
+			 */
+			array_pop( $$key );
+			update_post_meta( $unit_id, $key, $$key );
+		}
+	}
+
 	/**
 	 * Check free preview of unit.
 	 *

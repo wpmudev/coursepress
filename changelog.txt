@@ -6,6 +6,7 @@ CHANGELOG
 =================================================
 = 2.0.6 =
 -------------------------------------------------
+* Fixed a problem with modules when section is deleted.
 * Fixed untranslated texts.
 * Fixed a problem with sale price in MarketPress.
 * To avoid confusion, we changed label "Duration" to "Time Limit".
@@ -46,6 +47,8 @@ CHANGELOG
 
 = 2.0.4 =
 -------------------------------------------------
+* Fixed problem with deleting section on courses edit page.
+* Improve module order recalculate, when we deleting a section.
 * Added ability to enroll, when we use course_join_button, but we are not logged.
 * Added sanitization course id field in "course_join_button" shortcode.
 * Added ability to save course state and exit.
