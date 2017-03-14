@@ -333,7 +333,6 @@ class CoursePress_Admin_Controller_Unit {
 					$attributes = CoursePress_Data_Module::attributes( $module_id );
 					$module_type = $attributes['module_type'];
 					$meta = get_post_meta( $module->ID );
-
 					foreach ( $meta as $key => $value ) {
 						// Escape questions and answers before rendering
 						if ( 'questions' === $key ) {
@@ -347,7 +346,16 @@ class CoursePress_Admin_Controller_Unit {
 								}
 							}
 						}
-
+						/**
+						 * Escape questions and answers before rendering
+						 */
+						if ( 'answers' === $key ) {
+							$v = maybe_unserialize( $value[0] );
+							$value[0] = array();
+							foreach ( $v as $i => $q ) {
+								$value[0][ $i ] = esc_html( $q );
+							}
+						}
 						$meta[ $key ] = is_array( $value )  ? maybe_unserialize( $value[0] ) : $value;
 					}
 					// Temp for reordering
