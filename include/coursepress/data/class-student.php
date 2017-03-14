@@ -2018,7 +2018,7 @@ class CoursePress_Data_Student {
 				$link = CoursePress_Data_Unit::get_unit_url( (int) $last_visited['unit'] );
 
 				// Add page number
-				if (  ! empty( $last_visited['page'] ) && (int) $last_visited['page'] > 0 ) {
+				if ( ! empty( $last_visited['page'] ) && (int) $last_visited['page'] > 0 ) {
 					$page = max( 1, (int) $last_visited['page'] );
 					$link .= 'page/' . $page . '/';
 
@@ -2085,6 +2085,136 @@ class CoursePress_Data_Student {
 		/**
 		 * not handled modules: file, quiz, form and another!
 		 */
+		return true;
+	}
+
+	/**
+	 * Check module answer.
+	 *
+	 * @since 2.0.6
+	 *
+	 * @param integer $module_id Module ID.
+	 * @param array $response An array of previously fetch responses.
+	 * @return boolean Is module answer correct?
+	 */
+	public static function module_answer_is_correct( $module_id, $response ) {
+		$attributes = CoursePress_Data_Module::attributes( $module_id );
+		$response_display = $response['response'];
+		switch ( $attributes['module_type'] ) {
+
+			case 'input-checkbox':
+			case 'input-radio':
+			case 'input-select':
+				$answers = $attributes['answers'];
+				$selected = (array) $attributes['answers_selected'];
+				if ( ! empty( $response ) ) {
+					foreach ( $answers as $key => $answer ) {
+						$the_answer = in_array( $key, $selected );
+						$student_answer = is_array( $response_display ) ? in_array( $key, $response_display ) : $response_display == $key;
+						if ( 'input-radio' === $attributes['module_type'] ) {
+							$student_answer = $response_display == $key;
+						}
+						if ( $student_answer ) {
+							return  $the_answer;
+						}
+					}
+				}
+			break;
+
+			case 'input-upload':
+			case 'input-textarea':
+			case 'input-text':
+				if ( ! $response ) {
+					return false;
+				}
+			break;
+
+			case 'input-quiz':
+				if ( ! empty( $attributes['questions'] ) ) {
+					$questions = $attributes['questions'];
+
+					$pass = true;
+					foreach ( $questions as $q_index => $question ) {
+						$options = (array) $question['options'];
+						$checked = (array) $options['checked'];
+						$checked = array_filter( $checked );
+						$student_response = $response[ $q_index ];
+						foreach ( $options['answers'] as $p_index => $answer ) {
+							$the_answer = isset( $checked[ $p_index ] ) ? $checked[ $p_index ] : false;
+							$student_answer = '';
+
+							if ( isset( $student_response[ $p_index ] ) && $student_response[ $p_index ] ) {
+								$student_answer = $student_response[ $p_index ];
+
+								if ( ! $the_answer ) {
+									$pass = false;
+								}
+							}
+						}
+					}
+					return $pass;
+				}
+			break;
+
+			case 'input-form':
+				if ( ! empty( $attributes['questions'] ) ) {
+					$questions = $attributes['questions'];
+					$pass = true;
+					foreach ( $questions as $q_index => $question ) {
+						$student_response = ! empty( $response[ $q_index ] ) ? $response[ $q_index ] : '';
+						if ( 'selectable' == $question['type'] ) {
+							$options = $question['options']['answers'];
+							$checked = $question['options']['checked'];
+
+							foreach ( $options as $ai => $answer ) {
+								if ( $student_response == $ai ) {
+									$the_answer = ! empty( $checked[ $ai ] );
+									if ( $the_answer !== $student_response ) {
+										$pass = false;
+									}
+								}
+							}
+						}
+					}
+					return $pass;
+				}
+				break;
+		}
+		return false;
+	}
+
+	/**
+	 * Check unit modules answers.
+	 *
+	 * @since 2.0.6
+	 *
+	 * @param integer $student_id The user ID.
+	 * @param integer $course_id The course ID.
+	 * @param integer $unit_id The unit ID the current module belongs to.
+	 * @param array $student_progress Optional. If null, we'll get the course completion data from DB.
+	 * @return boolean Is module answer correct? By default return true.
+	 */
+	public static function unit_answers_are_correct( $student_id, $course_id, $unit_id, $student_progress = false ) {
+		if ( ! $student_progress ) {
+			$student_progress = self::get_completion_data( $student_id, $course_id );
+		}
+		$units = CoursePress_Data_Course::get_units_with_modules( $course_id );
+		$unit = $units[ $unit_id ];
+		foreach ( $unit['pages'] as $page_number => $page ) {
+			$modules = $page['modules'];
+			foreach ( $modules as $module_id => $module ) {
+				$completed = CoursePress_Data_Student::is_module_completed( $course_id, $unit_id, $module->ID, $student_id );
+				$completed = cp_is_true( $completed );
+				if ( ! $completed ) {
+					return false;
+				}
+				$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
+				$correct = self::module_answer_is_correct( $module_id, $response );
+				if ( ! $correct ) {
+					return false;
+				}
+			}
+		}
 		return true;
 	}
 }
