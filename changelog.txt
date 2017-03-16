@@ -7,6 +7,7 @@ CHANGELOG
 
 = 2.0.6 =
 -------------------------------------------------
+* Added filters to get_time_estimation() functions: coursepress_course_get_time_estimation, coursepress_unit_get_time_estimation, coursepress_module_get_time_estimation.
 * Fixed: Remove inclusion of CP assets on none CP pages.
 * Fixed a problem with change WooCommerce product status to "Out of stock".
 * Fixed a problem with modules when section is deleted.
