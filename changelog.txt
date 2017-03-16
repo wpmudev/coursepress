@@ -21,6 +21,7 @@ CHANGELOG
 * Added redirect to login page on student settings page for non-logged users.
 * Fixed issue with not showing HTML tags in Multiple/Single Choice field.
 * Updated included Market Press version 3.2.3
+* Fixed a problem with ignoring "User also needs to pass all required assessments" unit option.
 * Added "Number of failed attempts".
 * Improved message box for MarketPress on paid course.
 * Fixed "Passing Grade" value one assessments page.

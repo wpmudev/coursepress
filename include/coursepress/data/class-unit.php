@@ -188,6 +188,10 @@ class CoursePress_Data_Unit {
 				'enabled' => false,
 				'result' => false,
 			),
+			'passed_required' => array(
+				'enabled' => false,
+				'result' => false,
+			),
 		);
 		if ( ! is_object( $unit ) ) {
 			$unit = get_post( $unit );
@@ -265,6 +269,17 @@ class CoursePress_Data_Unit {
 			} elseif ( $status['mandatory_required']['enabled'] ) {
 				$is_available = $status['mandatory_required']['result'];
 			}
+
+			/**
+			 * User also needs to pass all required assessments
+			 *
+			 * @since 2.0.6
+			 */
+			if ( $is_available && $force_current_unit_successful_completion ) {
+				$is_available = CoursePress_Data_Student::unit_answers_are_correct( $student_id, $course_id, $previous_unit );
+				CoursePress_Helper_Utility::set_array_val( $status, 'passed_required/enabled', true );
+				CoursePress_Helper_Utility::set_array_val( $status, 'passed_required/result', $is_available );
+			}
 		}
 
 		/**
@@ -286,9 +301,7 @@ class CoursePress_Data_Unit {
 			$is_available,
 			$unit_id
 		);
-
 		$status['available'] = $is_available;
-
 		return $status;
 	}
 
