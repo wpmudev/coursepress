@@ -1,0 +1,26 @@
+$fontPath : "../font/";
+$imagePath : "../img/";
+
+/**
+* CoursePress Icon (admin side)
+*/
+@font-face {
+  font-family: 'ico-cp';
+  src:url( '#{$fontPath}cp_icon.eot' );
+  src:url( '#{$fontPath}cp_icon.eot?#iefix' ) format( 'embedded-opentype' ),
+  url( '#{$fontPath}cp_icon.ttf' ) format( 'truetype' ),
+  url( '#{$fontPath}cp_icon.woff' ) format( 'woff' ),
+  url( '#{$fontPath}cp_icon.svg#icomoon' ) format( 'svg' );
+  font-weight: normal;
+  font-style: normal;
+}
+
+#adminmenu #menu-posts-course div.wp-menu-image:before,
+#post-body .misc-pub-post-course:before {
+	font-family: 'ico-cp' !important;
+	content: "\e600";
+}
+
+#adminmenu #menu-posts-course div.wp-menu-image img {
+  display: none;
+}
