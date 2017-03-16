@@ -506,6 +506,10 @@ class CoursePress_Data_Course {
 			'enrollment_open_ended' => empty( $settings ),
 			'enrollment_start_date' => '',
 			'enrollment_end_date' => '',
+			'class_limited' => '',
+			'class_size' => '',
+			'enrollment_type' => CoursePress_Data_Course::get_enrollment_type_default( $course_id ),
+			'payment_paid_course' => false,
 		);
 
 		$settings = wp_parse_args( $settings, $defaults );

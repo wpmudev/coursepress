@@ -504,6 +504,9 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 		));
 	}
 
+	/**
+	 * Step 4 - Course Dates
+	 **/
 	static function step_4() {
 		$setup_class = self::$settings['setup_step_4'];
 		$setup_class = 3 == self::$setup_marker ? $setup_class . ' setup_marker' : $setup_class;
@@ -520,280 +523,43 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 		) );
 	}
 
+	/**
+	 * Step 5 - Classes, Discussion and Workbook
+	 **/
 	public static function step_5() {
-		$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
-		$setup_class = CoursePress_Data_Course::get_setting( $course_id, 'setup_step_5', '' );
-		$setup_class = (int) CoursePress_Data_Course::get_setting( $course_id, 'setup_marker', 0 ) === 4 ? $setup_class . ' setup_marker' : $setup_class;
-		$content = '
-			<div class="step-title step-5">' . esc_html__( 'Step 5 &ndash; Classes, Discussion & Workbook', 'CP_TD' ) . '
-				<div class="status ' . $setup_class . '"></div>
-			</div>
-			<div class="step-content step-5">
-				<input type="hidden" name="meta_setup_step_5" value="saved" />
-			';
+		$setup_class = self::$settings['setup_step_5'];
+		$setup_class = 4 == self::$setup_marker ? $setup_class . ' setup_marker' : $setup_class;
 
-		$limit_checked = CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'class_limited', false ) );
-		$limited = ! empty( $limit_checked );
-		$content .= '
-				<div class="wide class-size">
-					<label>' .
-					esc_html__( 'Class Size', 'CP_TD' ) . '
-					</label>
-					<p class="description">' . esc_html__( 'Use this setting to set a limit for all classes. Uncheck for unlimited class size(s).', 'CP_TD' ) . '</p>
-					<label class="narrow col">
-						<input type="checkbox" name="meta_class_limited" ' . $limit_checked . ' />
-						<span>' . esc_html__( 'Limit class size', 'CP_TD' ) . '</span>
-					</label>
-
-					<label class="num-students narrow col ' . ( $limited ? '' : 'disabled' ) . '">
-						' . esc_html__( 'Number of students', 'CP_TD' ) . '
-						<input type="text" class="spinners" name="meta_class_size" value="' . CoursePress_Data_Course::get_setting( $course_id, 'class_size', '' ) . '" ' . ( $limited ? '' : 'disabled="disabled"' ) . '/>
-					</label>
-				</div>';
-
-		$checkboxes = array(
-			array(
-				'meta_key' => 'allow_discussion',
-				'title' => __( 'Course Discussion', 'CP_TD' ),
-				'description' => __( 'If checked, students can post questions and receive answers at a course level. A \'Discusssion\' menu item is added for the student to see ALL discussions occuring from all class members and instructors.', 'CP_TD' ),
-				'label' => __( 'Allow course discussion', 'CP_TD' ),
-				'default' => false,
-			),
-			array(
-				'meta_key' => 'allow_workbook',
-				'title' => __( 'Student Workbook', 'CP_TD' ),
-				'description' => __( 'If checked, students can see their progress and grades.', 'CP_TD' ),
-				'label' => __( 'Show student workbook', 'CP_TD' ),
-				'default' => false,
-			),
-			array(
-				'meta_key' => 'allow_grades',
-				'title' => __( 'Student grades', 'CP_TD' ),
-				'description' => __( 'If checked, students can see their grades.', 'CP_TD' ),
-				'label' => __( 'Show student grades', 'CP_TD' ),
-				'default' => false,
-			),
-		);
-		foreach ( $checkboxes as $one ) {
-			$content .= CoursePress_Helper_UI::course_edit_checkbox( $one, $course_id );
-		}
-
-		/**
-		 * Add additional fields.
-		 *
-		 * Names must begin with meta_ to allow it to be automatically added to the course settings
-		 */
-		$content .= apply_filters( 'coursepress_course_setup_step_5', '', $course_id );
-
-		// Buttons
-		$content .= self::get_buttons( $course_id, 5 );
-
-		// End
-		$content .= '
-			</div>
-		';
-
-		echo $content;
+		self::render( 'admin/view/steps/step-5', array(
+			'course_id' => self::$course_id,
+			'setup_class' => $setup_class,
+			'class_limited' => self::$settings['class_limited'],
+			'class_size' => self::$settings['class_size'],
+		) );
 	}
 
+	/**
+	 * Step 6 - Enrollment and Course Cost
+	 **/
 	public static function step_6() {
-		$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
-
-		// Payment can be disabled using the COURSEPRESS_DISABLE_PAYMENT constant or hooking the filter
+		$setup_class = self::$settings['setup_step_5'];
+		$setup_class = 5 == self::$setup_marker ? $setup_class . ' setup_marker' : $setup_class;
 		$disable_payment = defined( 'COURSEPRESS_DISABLE_PAYMENT' ) && true == COURSEPRESS_DISABLE_PAYMENT;
-		$disable_payment = apply_filters( 'coursepress_disable_course_payments', $disable_payment, $course_id );
+		$disable_payment = apply_filters( 'coursepress_disable_course_payments', $disable_payment, self::$course_id );
 
-		$setup_class = CoursePress_Data_Course::get_setting( $course_id, 'setup_step_6', '' );
-		$setup_class = (int) CoursePress_Data_Course::get_setting( $course_id, 'setup_marker', 0 ) === 5 ? $setup_class . ' setup_marker' : $setup_class;
-
-		$payment_tagline = ! $disable_payment ? __( ' & Course Cost', 'CP_TD' ) : '';
-
-		$content = '
-			<div class="step-title step-6">' . esc_html( sprintf( __( 'Step 6 &ndash; Enrollment%s', 'CP_TD' ), $payment_tagline ) ) . '
-				<div class="status ' . $setup_class . '"></div>
-			</div>
-			<div class="step-content step-6">
-				<!-- depending on gateway setup, this could be save-attention -->
-				<input type="hidden" name="meta_setup_step_6" value="saved" />
-			';
-
-		// Enrollment Options
-		$enrollment_types = CoursePress_Data_Course::get_enrollment_types_array( $course_id );
-
-		$content .= '<div class="wide">';
-		$content .= sprintf( '<label>%s</label>', esc_html__( 'Enrollment Restrictions', 'CP_TD' ) );
-
-		$content .= '<p class="description">' . esc_html__( 'Select the limitations on accessing and enrolling in this course.', 'CP_TD' ) . '</p>';
-		/**
-		 * select
-		 */
-		$enrollment_type_default = CoursePress_Data_Course::get_enrollment_type_default( $course_id );
-		$selected = CoursePress_Data_Course::get_setting( $course_id, 'enrollment_type', $enrollment_type_default );
-		$content .= CoursePress_Helper_UI::select( 'meta_enrollment_type', $enrollment_types, $selected, 'chosen-select medium' );
-		$content .= '</div>';
-
-		$class = 'prerequisite' === $selected ? '' : 'hidden';
-		$content .= '
-				<div class="wide enrollment-type-options prerequisite ' . $class . '">';
-
-		$class_extra = is_rtl() ? 'chosen-rtl' : '';
-		$content .= '
-					<label>' .
-					esc_html__( 'Prerequisite Courses', 'CP_TD' ) .
-					'</label>
-					<p class="description">' . esc_html__( 'Select the courses a student needs to complete before enrolling in this course', 'CP_TD' ) . '</p>
-					<select name="meta_enrollment_prerequisite" class="medium chosen-select chosen-select-course ' . $class_extra . '" multiple="true" data-placeholder=" ">
-			';
-
-		$courses = CoursePress_Data_Instructor::get_accessable_courses( wp_get_current_user(), true );
-
-		$saved_settings = CoursePress_Data_Course::get_prerequisites( $course_id );
-
-		foreach ( $courses as $course ) {
-			/**
-			 * exclude current course
-			 */
-			if ( $course_id == $course->ID ) {
-				continue;
-			}
-			$content .= sprintf(
-				'<option value="%s" %s>%s</option>',
-				esc_attr( $course->ID ),
-				selected( in_array( $course->ID, $saved_settings ), true, false ),
-				esc_html( apply_filters( 'the_title', $course->post_title ) )
-			);
-		}
-
-		$content .= '
-					</select>
-				</div>
-			';
-
-		$class = 'passcode' === $selected ? '' : 'hidden';
-		$content .= '
-				<div class="wide enrollment-type-options passcode ' . $class . '">';
-
-		$content .= '
-				<label>' .
-					esc_html__( 'Course Passcode', 'CP_TD' ) .
-					'</label>
-				<p class="description">' . esc_html__( 'Enter the passcode required to access this course', 'CP_TD' ) . '</p>
-				<input type="text" name="meta_enrollment_passcode" value="' . CoursePress_Data_Course::get_setting( $course_id, 'enrollment_passcode', '' ) . '" />
-			';
-
-		$content .= '
-				</div>
-			';
-
-		$paid_checked = CoursePress_Helper_Utility::checked( CoursePress_Data_Course::get_setting( $course_id, 'payment_paid_course', false ) );
-		$is_paid = ! empty( $paid_checked );
-
-		if ( ! $disable_payment ) {
-			$one = array(
-				'meta_key' => 'payment_paid_course',
-				'title' => __( 'Course Payment', 'CP_TD' ),
-				'description' => __( 'Payment options for your course. Additional plugins are required and settings vary depending on the plugin.', 'CP_TD' ),
-				'label' => __( 'This is a paid course', 'CP_TD' ),
-				'default' => false,
-			);
-			$content .= '<hr class="separator" />';
-			$content .= CoursePress_Helper_UI::course_edit_checkbox( $one, $course_id );
-		}
-
-		/**
-		 * Hook this filter to add payment plugin support
-		 */
-		$payment_supported = CoursePress_Helper_Utility::is_payment_supported();
-
-		$installed = $activated = false;
-
-		if ( ! $payment_supported && ! $disable_payment ) {
-			$install_message = sprintf( '<p>%s</p>', __( 'Please contact your administrator to enable MarketPress for your site.', 'CP_TD' ) );
-			if ( current_user_can( 'install_plugins' ) || current_user_can( 'activate_plugins ' ) ) {
-				$url = add_query_arg(
-					array(
-						'post_type' => CoursePress_Data_Course::get_post_type_name(),
-						'page' => 'coursepress_settings',
-						'tab' => 'extensions',
-					),
-					admin_url( 'edit.php' )
-				);
-				$installed = CoursePress_Helper_Extension_MarketPress::installed();
-				$text = __( 'To start selling your course, please <a href="%s">install and activate MarketPress</a>.', 'CP_TD' );
-				if ( $installed ) {
-					$activated = CoursePress_Helper_Extension_MarketPress::activated();
-					$text = __( 'To start selling your course, please install and <a href="%s">activate MarketPress</a>.', 'CP_TD' );
-					if ( $activated ) {
-						$text = __( 'To start selling your course, please <a href="%s">complete setup</a> of of MarketPress.', 'CP_TD' );
-						$url = add_query_arg(
-							array(
-								'post_type' => CoursePress_Data_Course::get_post_type_name(),
-								'page' => 'coursepress_settings',
-								'tab' => 'marketpress',
-							),
-							admin_url( 'edit.php' )
-						);
-					}
-				}
-				$install_message = sprintf( '<p>%s</p>', sprintf( $text, esc_url_raw( $url ) ) );
-			}
-
-			/**
-			 * version message
-			 */
-			$version_message = '';
-			if ( ! $installed ) {
-				$version_message = sprintf( '<p>%s</p>', __( 'The full version of MarketPress has been bundled with CoursePress.', 'CP_TD' ) );
-			}
-
-			/**
-			 * Hook this filter to get rid of the payment message
-			 */
-			$payment_message = sprintf(
-				'<div class="payment-message %s"><h4>%s</h4>%s%s<p>%s: WooCommerce</p></div>',
-				esc_attr( $is_paid ? '' : 'hidden' ),
-				__( 'Sell your courses online with MarketPress.', 'CP_TD' ),
-				$version_message,
-				$install_message,
-				__( 'Other supported plugins', 'CP_TD' )
-			);
-			$payment_message = apply_filters( 'coursepress_course_payment_message', $payment_message, $course_id );
-			// It's already been filtered, but because we're dealing with HTML, lets be sure
-			$content .= CoursePress_Helper_Utility::filter_content( $payment_message );
-		}
-
-		if ( $payment_supported ) {
-
-			$class = $is_paid ? '' : 'hidden';
-			$content .= '<div class="is_paid_toggle ' . $class . '">';
-			/**
-			 * Add additional fields if 'This is a paid course' is selected.
-			 *
-			 * Field names must begin with meta_ to allow it to be automatically added to the course settings
-			 *
-			 * * This is the ideal filter to use for integrating payment plugins
-			 */
-			$content .= apply_filters( 'coursepress_course_setup_step_6_paid', '', $course_id );
-
-			$content .= '</div>';
-		}
-
-		/**
-		 * Add additional fields.
-		 *
-		 * Field names must begin with meta_ to allow it to be automatically added to the course settings
-		 */
-		$content .= apply_filters( 'coursepress_course_setup_step_6', '', $course_id );
-
-		// Buttons
-		$content .= self::get_buttons( $course_id, 6 );
-
-		// End
-		$content .= '
-			</div>
-		';
-
-		echo $content;
+		self::render( 'admin/view/steps/step-6', array(
+			'course_id' => self::$course_id,
+			'setup_class' => $setup_class,
+			'disable_payment' => $disable_payment,
+			'title2' => $disable_payment ? __( '& Course Cost', 'CP_TD' ) : '',
+			'enrollment_types' => CoursePress_Data_Course::get_enrollment_types_array( self::$course_id ),
+			'enrollment_type' => self::$settings['enrollment_type'],
+			'class' => 'prerequisite' === self::$settings['enrollment_type'] ? '' : ' hidden',
+			'class_extra' => is_rtl() ? 'chosen-rtl' : '',
+			'courses' => CoursePress_Data_Instructor::get_accessable_courses( wp_get_current_user(), true ),
+			'saved_settings' => CoursePress_Data_Course::get_prerequisites( self::$course_id ),
+			'payment_paid_course' => self::$settings['payment_paid_course'],
+		) );
 	}
 
 	public static function step_7() {
