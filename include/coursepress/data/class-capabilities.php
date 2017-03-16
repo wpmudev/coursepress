@@ -1857,7 +1857,7 @@ class CoursePress_Data_Capabilities {
 		if ( ! in_array( 'edit_post', $args ) ) {
 			return $allcaps;
 		}
-		if ( 2 > sizeof( $args ) ) {
+		if ( 2 < sizeof( $args ) ) {
 			return $allcaps;
 		}
 		if ( ! CoursePress_Data_Course::is_course( $args[2] ) ) {

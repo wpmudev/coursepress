@@ -81,10 +81,10 @@ class CoursePress_Data_Unit {
 			 * Page time
 			 */
 			$time = CoursePress_Helper_Utility::get_time( $page_seconds );
-			CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/estimation', $time['time'] );
-			CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/components/hours', $time['hours'] );
-			CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/components/minutes', $time['minutes'] );
-			CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/components/seconds', $time['seconds'] );
+			$estimations = CoursePress_Helper_Utility::set_array_value( $estimations, 'pages/' . $page_id . '/estimation', $time['time'] );
+			$estimations = CoursePress_Helper_Utility::set_array_value( $estimations, 'pages/' . $page_id . '/components/hours', $time['hours'] );
+			$estimations = CoursePress_Helper_Utility::set_array_value( $estimations, 'pages/' . $page_id . '/components/minutes', $time['minutes'] );
+			$estimations = CoursePress_Helper_Utility::set_array_value( $estimations, 'pages/' . $page_id . '/components/seconds', $time['seconds'] );
 			/**
 			 * Increase unit time
 			 */
@@ -94,10 +94,10 @@ class CoursePress_Data_Unit {
 		 * Unit time
 		 */
 		$time = CoursePress_Helper_Utility::get_time( $unit_seconds );
-		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/estimation', $time['time'] );
-		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/components/hours', $time['hours'] );
-		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/components/minutes', $time['minutes'] );
-		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/components/seconds', $time['seconds'] );
+		$estimations = CoursePress_Helper_Utility::set_array_value( $estimations, 'unit/estimation', $time['time'] );
+		$estimations = CoursePress_Helper_Utility::set_array_value( $estimations, 'unit/components/hours', $time['hours'] );
+		$estimations = CoursePress_Helper_Utility::set_array_value( $estimations, 'unit/components/minutes', $time['minutes'] );
+		$estimations = CoursePress_Helper_Utility::set_array_value( $estimations, 'unit/components/seconds', $time['seconds'] );
 		return $estimations;
 	}
 
@@ -165,12 +165,17 @@ class CoursePress_Data_Unit {
 		$images = isset( $meta['page_feature_image'] ) && ! empty( $meta['page_feature_image'] ) ? maybe_unserialize( $meta['page_feature_image'][0] ) : array();
 		$visibilities = isset( $meta['show_page_title'] ) && ! empty( $meta['show_page_title'] ) ? maybe_unserialize( $meta['show_page_title'][0] ) : array();
 
-		return array(
+		$return = array(
 			'title' => $titles[ 'page_' . $item_id ],
 			'description' => isset( $descriptions[ 'page_' . $item_id ] ) ? $descriptions[ 'page_' . $item_id ] : '',
 			'feature_image' => isset( $images[ 'page_' . $item_id ] ) ? $images[ 'page_' . $item_id ] : '',
-			'visible' => $visibilities[ ( $item_id - 1 ) ],
 		);
+
+		if ( isset( $visibilities[ ( $item_id - 1 ) ] ) ) {
+			$return['visible'] = $visibilities[ ( $item_id - 1 ) ];
+		}
+
+		return $return;
 	}
 
 	public static function get_unit_availability_status( $course, $unit, $previous_unit = 0 ) {
@@ -218,19 +223,19 @@ class CoursePress_Data_Unit {
 			$force_current_unit_successful_completion = cp_is_true(
 				get_post_meta( $previous_unit_id, 'force_current_unit_successful_completion', true )
 			);
-        }
+		}
 
-        /**
-         * If there is NO MANDATORY modules, then this parameter can not be
-         * true!
-         */
-        if ( $force_current_unit_completion ) {
-            $number_of_mandatory = self::get_number_of_mandatory( $previous_unit_id );
-            if ( 0 == $number_of_mandatory ) {
-                $force_current_unit_completion = false;
-                $force_current_unit_successful_completion = false;
-            }
-        }
+		/**
+		 * If there is NO MANDATORY modules, then this parameter can not be
+		 * true!
+		 */
+		if ( $force_current_unit_completion ) {
+			$number_of_mandatory = self::get_number_of_mandatory( $previous_unit_id );
+			if ( 0 == $number_of_mandatory ) {
+				$force_current_unit_completion = false;
+				$force_current_unit_successful_completion = false;
+			}
+		}
 
 		if ( $previous_unit_id && $is_available ) {
 			$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
@@ -241,17 +246,17 @@ class CoursePress_Data_Unit {
 				$student_id, $course_id, $previous_unit_id, $student_progress
 			);
 
-			CoursePress_Helper_Utility::set_array_val(
+			$status = CoursePress_Helper_Utility::set_array_value(
 				$status, 'mandatory_required/enabled', $force_current_unit_completion
 			);
-			CoursePress_Helper_Utility::set_array_val(
+			$status = CoursePress_Helper_Utility::set_array_value(
 				$status, 'mandatory_required/result', $mandatory_done
 			);
 
-			CoursePress_Helper_Utility::set_array_val(
+			$status = CoursePress_Helper_Utility::set_array_value(
 				$status, 'completion_required/enabled', $force_current_unit_successful_completion
 			);
-			CoursePress_Helper_Utility::set_array_val(
+			$status = CoursePress_Helper_Utility::set_array_value(
 				$status, 'completion_required/result', $unit_completed
 			);
 
@@ -720,6 +725,45 @@ class CoursePress_Data_Unit {
 			return true;
 		}
 		return false;
+	}
+
+	public static function delete_section( $unit_id, $page_number ) {
+		if ( ! self::is_unit( $unit_id ) ) {
+			return;
+		}
+		/**
+		 * move module from deleted page/section to first
+		 */
+		CoursePress_Data_Module::move_to_first_page( $unit_id, $page_number );
+		/**
+		 * move modules one page down
+		 */
+		CoursePress_Data_Module::decrease_page_number( $unit_id, $page_number );
+		/**
+		 * rewrite pages/sections attributes
+		 */
+		$keys = array( 'page_title', 'show_page_title', 'page_description' );
+		foreach ( $keys as $key ) {
+			$$key = get_post_meta( $unit_id, $key, true );
+		}
+		$size = count( $page_title );
+		for ( $i = $page_number; $i < $size; $i++ ) {
+			$show_page_title[ $i - 1 ] = $show_page_title[ $i ];
+			$index_new = sprintf( 'page_%d', $i );
+			$index_old = sprintf( 'page_%d', $i + 1 );
+			$page_title[ $index_new ] = $page_title[ $index_old ];
+			$page_description[ $index_new ] = $page_description[ $index_old ];
+		}
+		/**
+		 * save new data
+		 */
+		foreach ( $keys as $key ) {
+			/**
+			 * delete last element
+			 */
+			array_pop( $$key );
+			update_post_meta( $unit_id, $key, $$key );
+		}
 	}
 
 	/**
