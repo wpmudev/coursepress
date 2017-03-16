@@ -4,8 +4,11 @@ Build Time:  BUILDTIME
 
 CHANGELOG
 =================================================
+
 = 2.0.6 =
 -------------------------------------------------
+* Fixed a problem with change WooCommerce product status to "Out of stock".
+* Fixed a problem with modules when section is deleted.
 * Fixed untranslated texts.
 * Fixed a problem with sale price in MarketPress.
 * To avoid confusion, we changed label "Duration" to "Time Limit".
@@ -19,9 +22,13 @@ CHANGELOG
 * Fixed issue with not showing HTML tags in Multiple/Single Choice field.
 * Updated included Market Press version 3.2.3
 * Added "Number of failed attempts".
+* Improved message box for MarketPress on paid course.
+* Fixed "Passing Grade" value one assessments page.
+* Added checks for user related functions to avoid processing when there is no logged user.
 
 = 2.0.5 =
 -------------------------------------------------
+* Fixed errors with PHP 7.1.1.
 * Added HTML preview for Raports.
 * Added ability to turn on/off social sharing icons.
 * Added check is safe_mode before call set_time_limit() function.
@@ -47,6 +54,8 @@ CHANGELOG
 
 = 2.0.4 =
 -------------------------------------------------
+* Fixed problem with deleting section on courses edit page.
+* Improve module order recalculate, when we deleting a section.
 * Added ability to enroll, when we use course_join_button, but we are not logged.
 * Added sanitization course id field in "course_join_button" shortcode.
 * Added ability to save course state and exit.

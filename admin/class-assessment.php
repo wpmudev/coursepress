@@ -202,7 +202,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 
 				// Get last response
 				$response_index = ( count( $responses ) - 1 );
-				CoursePress_Helper_Utility::unset_array_val(
+				$student_progress = CoursePress_Helper_Utility::unset_array_value(
 					$student_progress,
 					'units/' . $unit_id . '/responses/' . $module_id . '/' . $response_index . '/feedback',
 					$feedback_data
@@ -323,7 +323,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 		$found_students = array();
 		$units = CoursePress_Data_Course::get_units_with_modules( $course_id );
 		$assessable = array();
-		$passing_grade = 100;
+
 		$module_count = array();
 
 		foreach ( $student_ids as $student_id ) {
@@ -416,7 +416,6 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 				$length = 'all' === $unit_id ? $unit_found : count( $assessable );
 				$student_grade = $length > 0 && $student_grade > 0 ? ceil( $student_grade / $length ) : 0;
 				$minimum_grade = $length > 0 && $minimum_grade > 0 ? ceil( $minimum_grade / $length ) : 0;
-				$passing_grade = $minimum_grade;
 
 				$passed = $student_grade > 0 && $minimum_grade > 0 && $student_grade >= $minimum_grade;
 
@@ -435,7 +434,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 		return array(
 			'students' => $student_ids,
 			'assessable' => 'all' === $unit_id ? count( $module_count ) : count( $assessable ),
-			'passing_grade' => $passing_grade,
+			'passing_grade' => CoursePress_Data_Course::get_setting( $course_id, 'minimum_grade_required', 100 ),
 		);
 
 	}
@@ -988,7 +987,6 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 										$page_content .= '</ul>';
 
 										break;
-
 							case 'input-textarea': case 'input-text':
 									if ( ! empty( $response ) ) {
 										$page_content .= sprintf( '<div class="cp-answer-box">%s</div>', $response );
@@ -1033,9 +1031,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 												$page_content .= '<li>' . $student_answer . esc_html( $answer ) . '</li>';
 											}
 										}
-
 												$page_content .= '</ul></div>';
-
 									}
 								}
 								break;
@@ -1070,17 +1066,13 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 										} else {
 											$page_content .= sprintf( '<li>%s</li>', esc_html( $student_response ) );
 										}
-
 										$page_content .= '</ul></div>';
-
 									}
 								}
 								break;
 						}
-
 							$page_content .= '</div>';
 					}
-
 					if ( 0 === count( $response ) ) {
 						$page_content .= sprintf( '<div class="cp-answer-box"><span class="dashicons dashicons-no"></span> %s</div>', __( 'No answer!', 'CP_TD' ) );
 					} else {
