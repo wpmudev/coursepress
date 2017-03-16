@@ -1114,37 +1114,59 @@ class CoursePress_Admin_Edit {
 		 */
 		$payment_supported = CoursePress_Helper_Utility::is_payment_supported();
 
+		$installed = $activated = false;
+
 		if ( ! $payment_supported && ! $disable_payment ) {
-
+			$install_message = sprintf( '<p>%s</p>', __( 'Please contact your administrator to enable MarketPress for your site.', 'CP_TD' ) );
 			if ( current_user_can( 'install_plugins' ) || current_user_can( 'activate_plugins ' ) ) {
-				$install_message = sprintf( '<p>%s</p> <a href="%s">%s MarketPress</a>',
-					__( 'To start selling your course, please install and activate MarketPress here:', 'CP_TD' ),
-					esc_url_raw( admin_url( 'admin.php?page=coursepress_settings&tab=extensions' ) ),
-				__( 'Activate', 'CP_TD' ) );
-			} else {
-				$install_message = sprintf( '<p>%s</p>', __( 'Please contact your administrator to enable MarketPress for your site.', 'CP_TD' ) );
+				$url = add_query_arg(
+					array(
+						'post_type' => CoursePress_Data_Course::get_post_type_name(),
+						'page' => 'coursepress_settings',
+						'tab' => 'extensions',
+					),
+					admin_url( 'edit.php' )
+				);
+				$installed = CoursePress_Helper_Extension_MarketPress::installed();
+				$text = __( 'To start selling your course, please <a href="%s">install and activate MarketPress</a>.', 'CP_TD' );
+				if ( $installed ) {
+					$activated = CoursePress_Helper_Extension_MarketPress::activated();
+					$text = __( 'To start selling your course, please install and <a href="%s">activate MarketPress</a>.', 'CP_TD' );
+					if ( $activated ) {
+						$text = __( 'To start selling your course, please <a href="%s">complete setup</a> of of MarketPress.', 'CP_TD' );
+						$url = add_query_arg(
+							array(
+								'post_type' => CoursePress_Data_Course::get_post_type_name(),
+								'page' => 'coursepress_settings',
+								'tab' => 'marketpress',
+							),
+							admin_url( 'edit.php' )
+						);
+					}
+				}
+				$install_message = sprintf( '<p>%s</p>', sprintf( $text, esc_url_raw( $url ) ) );
 			}
 
-			if ( CP_IS_PREMIUM ) {
-				$version_message = sprintf( '<p>%s</p>', __( 'The full version of MarketPress has been bundled with CoursePress Pro.', 'CP_TD' ) );
-			} else {
-				$version_message = sprintf( '<p>%s</p>', __( 'You can use the free or premium version of MarketPress to sell your courses.', 'CP_TD' ) );
+			/**
+			 * version message
+			 */
+			$version_message = '';
+			if ( ! $installed ) {
+				$version_message = sprintf( '<p>%s</p>', __( 'The full version of MarketPress has been bundled with CoursePress.', 'CP_TD' ) );
 			}
-
-			$class = $is_paid ? '' : 'hidden';
 
 			/**
 			 * Hook this filter to get rid of the payment message
 			 */
-			$payment_message = apply_filters( 'coursepress_course_payment_message', sprintf( '
-				<div class="payment-message %s">
-					<h3>%s</h3>
-					%s
-					%s
-					<p>%s: WooCommerce</p>
-				</div>
-			', $class, __( 'Sell your courses online with MarketPress.', 'CP_TD' ), $version_message, $install_message, __( 'Other supported plugins', 'CP_TD' ) ), $course_id );
-
+			$payment_message = sprintf(
+				'<div class="payment-message %s"><h4>%s</h4>%s%s<p>%s: WooCommerce</p></div>',
+				esc_attr( $is_paid ? '' : 'hidden' ),
+				__( 'Sell your courses online with MarketPress.', 'CP_TD' ),
+				$version_message,
+				$install_message,
+				__( 'Other supported plugins', 'CP_TD' )
+			);
+			$payment_message = apply_filters( 'coursepress_course_payment_message', $payment_message, $course_id );
 			// It's already been filtered, but because we're dealing with HTML, lets be sure
 			$content .= CoursePress_Helper_Utility::filter_content( $payment_message );
 		}

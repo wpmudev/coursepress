@@ -4,6 +4,7 @@ Build Time:  BUILDTIME
 
 CHANGELOG
 =================================================
+
 = 2.0.6 =
 -------------------------------------------------
 * Fixed a problem with change WooCommerce product status to "Out of stock".
@@ -20,6 +21,7 @@ CHANGELOG
 * Added redirect to login page on student settings page for non-logged users.
 * Fixed issue with not showing HTML tags in Multiple/Single Choice field.
 * Updated included Market Press version 3.2.3
+* Improved message box for MarketPress on paid course.
 * Fixed "Passing Grade" value one assessments page.
 * Added checks for user related functions to avoid processing when there is no logged user.
 
