@@ -155,6 +155,7 @@ class CoursePress_Helper_Utility {
 			$a[ $key ] = $value;
 			return $a;
 		}
+
 		if ( ! isset( $a[ $key ] ) || ! is_array( $a[ $key ] ) ) {
 			$a[ $key ] = array();
 		}

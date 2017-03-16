@@ -483,6 +483,32 @@ class CoursePress_Data_Course {
 
 	public static function get_setting( $course_id, $key = true, $default = null ) {
 		$settings = get_post_meta( $course_id, 'course_settings', true );
+		$date_format = get_option( 'date_format' );
+
+		$defaults = array(
+			'setup_marker' => 0,
+			'setup_step_1' => '',
+			'setup_step_2' => '',
+			'setup_step_3' => '',
+			'setup_step_4' => '',
+			'course_language' => __( 'English', 'CP_TD' ),
+			'course_view' => 'normal',
+			'structure_level' => 'unit',
+			'structure_visible_units' => array(),
+			'structure_preview_units' => array(),
+			'structure_visible_pages' => array(),
+			'structure_preview_pages' => array(),
+			'structure_visible_modules' => array(),
+			'structure_preview_modules' => array(),
+			'course_open_ended' => empty( $settings ),
+			'course_start_date' => date( $date_format ),
+			'course_end_date' => '',
+			'enrollment_open_ended' => empty( $settings ),
+			'enrollment_start_date' => '',
+			'enrollment_end_date' => '',
+		);
+
+		$settings = wp_parse_args( $settings, $defaults );
 
 		// Return all settings.
 		if ( true === $key ) {
@@ -496,6 +522,7 @@ class CoursePress_Data_Course {
 			return $default;
 		}
 
+		
 		$setting = CoursePress_Helper_Utility::get_array_val( $settings, $key );
 		$setting = is_null( $setting ) ? $default : $setting;
 		$setting = ! is_array( $setting ) ? trim( $setting ) : $setting;
