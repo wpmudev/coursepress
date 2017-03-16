@@ -29,10 +29,9 @@
 				<span class="instructor-name"><?php _e( 'Please Assign Instructor', 'CP_TD' ); ?></span>
 			</div>
 			<?php echo CoursePress_Helper_UI::course_pendings_instructors_avatars( $course_id ); ?>
-		<?php else :
-			echo CoursePress_Helper_UI::course_instructors_avatars( $course_id, array(), true );
-		endif;
-		?>
+		<?php endif; ?>
+
+		<?php echo CoursePress_Helper_UI::course_instructors_avatars( $course_id, array(), true ); ?>
 	</div>
 
 	<?php if ( $can_assign_facilitator ) : ?>

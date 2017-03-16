@@ -386,7 +386,7 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 		}
 
 		/** This filter is documented in wp-includes/class-wp-editor.php  */
-		add_filter( 'teeny_mce_plugins', array( __CLASS__, 'teeny_mce_plugins' ) );
+		//add_filter( 'teeny_mce_plugins', array( __CLASS__, 'teeny_mce_plugins' ) );
 
 		$defaults = array(
 			'_content_editor_dfw' => $_content_editor_dfw,
@@ -594,7 +594,7 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 	}
 
 	public static function step_6() {
-				$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
+		$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
 
 		// Payment can be disabled using the COURSEPRESS_DISABLE_PAYMENT constant or hooking the filter
 		$disable_payment = defined( 'COURSEPRESS_DISABLE_PAYMENT' ) && true == COURSEPRESS_DISABLE_PAYMENT;
@@ -702,37 +702,59 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 		 */
 		$payment_supported = CoursePress_Helper_Utility::is_payment_supported();
 
+		$installed = $activated = false;
+
 		if ( ! $payment_supported && ! $disable_payment ) {
-
+			$install_message = sprintf( '<p>%s</p>', __( 'Please contact your administrator to enable MarketPress for your site.', 'CP_TD' ) );
 			if ( current_user_can( 'install_plugins' ) || current_user_can( 'activate_plugins ' ) ) {
-				$install_message = sprintf( '<p>%s</p> <a href="%s">%s MarketPress</a>',
-					__( 'To start selling your course, please install and activate MarketPress here:', 'CP_TD' ),
-					esc_url_raw( admin_url( 'admin.php?page=coursepress_settings&tab=extensions' ) ),
-				__( 'Activate', 'CP_TD' ) );
-			} else {
-				$install_message = sprintf( '<p>%s</p>', __( 'Please contact your administrator to enable MarketPress for your site.', 'CP_TD' ) );
+				$url = add_query_arg(
+					array(
+						'post_type' => CoursePress_Data_Course::get_post_type_name(),
+						'page' => 'coursepress_settings',
+						'tab' => 'extensions',
+					),
+					admin_url( 'edit.php' )
+				);
+				$installed = CoursePress_Helper_Extension_MarketPress::installed();
+				$text = __( 'To start selling your course, please <a href="%s">install and activate MarketPress</a>.', 'CP_TD' );
+				if ( $installed ) {
+					$activated = CoursePress_Helper_Extension_MarketPress::activated();
+					$text = __( 'To start selling your course, please install and <a href="%s">activate MarketPress</a>.', 'CP_TD' );
+					if ( $activated ) {
+						$text = __( 'To start selling your course, please <a href="%s">complete setup</a> of of MarketPress.', 'CP_TD' );
+						$url = add_query_arg(
+							array(
+								'post_type' => CoursePress_Data_Course::get_post_type_name(),
+								'page' => 'coursepress_settings',
+								'tab' => 'marketpress',
+							),
+							admin_url( 'edit.php' )
+						);
+					}
+				}
+				$install_message = sprintf( '<p>%s</p>', sprintf( $text, esc_url_raw( $url ) ) );
 			}
 
-			if ( CP_IS_PREMIUM ) {
-				$version_message = sprintf( '<p>%s</p>', __( 'The full version of MarketPress has been bundled with CoursePress Pro.', 'CP_TD' ) );
-			} else {
-				$version_message = sprintf( '<p>%s</p>', __( 'You can use the free or premium version of MarketPress to sell your courses.', 'CP_TD' ) );
+			/**
+			 * version message
+			 */
+			$version_message = '';
+			if ( ! $installed ) {
+				$version_message = sprintf( '<p>%s</p>', __( 'The full version of MarketPress has been bundled with CoursePress.', 'CP_TD' ) );
 			}
-
-			$class = $is_paid ? '' : 'hidden';
 
 			/**
 			 * Hook this filter to get rid of the payment message
 			 */
-			$payment_message = apply_filters( 'coursepress_course_payment_message', sprintf( '
-				<div class="payment-message %s">
-					<h3>%s</h3>
-					%s
-					%s
-					<p>%s: WooCommerce</p>
-				</div>
-			', $class, __( 'Sell your courses online with MarketPress.', 'CP_TD' ), $version_message, $install_message, __( 'Other supported plugins', 'CP_TD' ) ), $course_id );
-
+			$payment_message = sprintf(
+				'<div class="payment-message %s"><h4>%s</h4>%s%s<p>%s: WooCommerce</p></div>',
+				esc_attr( $is_paid ? '' : 'hidden' ),
+				__( 'Sell your courses online with MarketPress.', 'CP_TD' ),
+				$version_message,
+				$install_message,
+				__( 'Other supported plugins', 'CP_TD' )
+			);
+			$payment_message = apply_filters( 'coursepress_course_payment_message', $payment_message, $course_id );
 			// It's already been filtered, but because we're dealing with HTML, lets be sure
 			$content .= CoursePress_Helper_Utility::filter_content( $payment_message );
 		}
@@ -798,7 +820,7 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 		$completion_content = htmlspecialchars_decode( $completion_content );
 
 		$content = '<div class="step-title step-7">'
-			. esc_html( 'Step 7 &ndash; Course Completion', 'CP_TD' )
+			. esc_html__( 'Step 7 &ndash; Course Completion', 'CP_TD' )
 			. '<div class="status '. $setup_class . '"></div>'
 			. '</div>';
 
@@ -837,7 +859,7 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 			. '<label for="meta_pre_completion_content" class="required">' . __( 'Page Content', 'CP_TD' ) . '</label>'
 			. $token_info
 		;
-		$content .= self::get_wp_editor( 'pre-completion-content', 'meta_pre_completion_content', $pre_completion_content );
+		$content .= CoursePress_Helper_Editor::get_wp_editor( 'pre-completion-content', 'meta_pre_completion_content', $pre_completion_content );
 		$content .= '</div>';
 
 		$content .= '<div class="wide page-completion">'
@@ -848,7 +870,7 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 		;
 
 		$content .= '<label for="meta_course_completion_content" class="required">' . __( 'Page Content', 'CP_TD' ) . '</label>' . $token_info;
-		$content .= self::get_wp_editor( 'course-completion-editor-content', 'meta_course_completion_content', $completion_content );
+		$content .= CoursePress_Helper_Editor::get_wp_editor( 'course-completion-editor-content', 'meta_course_completion_content', $completion_content );
 		$content .= '</div>';
 
 		// Fail info
@@ -867,7 +889,7 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 			<input type="text" class="widefat" name="meta_course_failed_title" value="'. esc_attr__( $failed_title ) . '" />
 			<label for="meta_course_field_content" class="required">'. __( 'Page Content', 'CP_TD' ) . '</label>'
 			. $token_info;
-		$content .= self::get_wp_editor( 'course-failed-content', 'meta_course_failed_content', $failed_content );
+		$content .= CoursePress_Helper_Editor::get_wp_editor( 'course-failed-content', 'meta_course_failed_content', $failed_content );
 		$content .= '</div>';
 
 		// Basic certificate
@@ -925,7 +947,7 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 		$content .= '<label for="meta_basic_certificate_layout">' . __( 'Certificate Content', 'CP_TD' ) . '</label>'
 			. '<p class="description" style="float:left;">' . __( 'Useful tokens: ', 'CP_TD' ) . implode( ', ', $field_keys ) . '</p>'
 		;
-		$content .= self::get_wp_editor( 'basic-certificate-layout', 'meta_basic_certificate_layout', $certficate_content );
+		$content .= CoursePress_Helper_Editor::get_wp_editor( 'basic-certificate-layout', 'meta_basic_certificate_layout', $certficate_content );
 		$content .= '<table class="wide"><tr><td style="width:20%;">'
 			. '<label>' . __( 'Background Image', 'CP_TD' ) . '</label>'
 			. '</td><td>';
@@ -1175,19 +1197,5 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 			return '&ndash;';
 		}
 		return $duration;
-	}
-
-	/**
-	 * Add tinymce plugins
-	 *
-	 * @since 2.0.5
-	 *
-	 * @param array $plugins An array of teenyMCE plugins.
-	 * @return array The list of teenyMCE plugins.
-	 */
-	public static function teeny_mce_plugins( $plugins ) {
-		$plugins[] = 'paste';
-		$plugins[] = 'wpautoresize';
-		return $plugins;
 	}
 }

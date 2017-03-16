@@ -1,4 +1,4 @@
-/*! CoursePress - v2.0.5
+/*! CoursePress - v2.0.6
  * https://premium.wpmudev.org/project/coursepress-pro/
  * Copyright (c) 2017; * Licensed GPLv2+ */
 /*global _coursepress*/
@@ -737,6 +737,9 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 					nonce: get_setup_nonce()
 				};
 				CoursePress.Course.set( 'data', data );
+				CoursePress.Course.on( 'coursepress:invite_instructor_success', function() {
+					$('[name="invite_instructor_first_name"],[name="invite_instructor_last_name"],[name="invite_instructor_email"]' ).val('');
+				});
 				CoursePress.Course.save();
 			}
 		} );
