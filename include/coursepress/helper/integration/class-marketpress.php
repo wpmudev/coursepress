@@ -238,11 +238,12 @@ class CoursePress_Helper_Integration_MarketPress {
 
 	public static function fix_mp3_on_sale( $on_sale, $product ) {
 		$course_id = self::get_course_id_by_product( $product );
-
 		if ( ! empty( $course_id ) ) {
-			$on_sale = (int) get_post_meta( $course_id, 'mp_is_sale', true );
-		}
-
+            $old = get_post_meta( $course_id, 'mp_is_sale', true );
+            if ( '' != $old ) {
+                $on_sale = (int)$old;
+            }
+        }
 		return $on_sale;
 	}
 

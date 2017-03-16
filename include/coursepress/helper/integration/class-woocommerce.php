@@ -948,6 +948,15 @@ class CoursePress_Helper_Integration_WooCommerce {
 	 * @since 2.0.0
 	 */
 	public static function woocommerce_before_main_content() {
+		/**
+		 * Changed to check only for logged users, becouse some courses
+		 * are always not available for not logged users.
+		 *
+		 * @since 2.0.6
+		 */
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
 		while ( have_posts() ) {
 			the_post();
 			$product_id = get_the_ID();

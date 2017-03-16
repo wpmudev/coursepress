@@ -1029,40 +1029,6 @@ class CoursePress_Data_Module {
 	}
 
 	/**
-	 * Change page number for modules, when we delete page (section).
-	 *
-	 * @since 2.0.3
-	 *
-	 * @param integer $unit_id Unit ID.
-	 * @param integer $page_number Deleted page number.
-	 */
-	public static function decrease_page_number( $unit_id, $page_number ) {
-		if ( empty( $unit_id ) ) {
-			return;
-		}
-		$args = array(
-			'post_type' => self::get_post_type_name(),
-			'post_parent' => $unit_id,
-			'meta_query' => array(
-				array(
-					'key' => 'module_page',
-					'value' => intval( $page_number ),
-					'compare' => '>',
-					'type' => 'SIGNED',
-				),
-			),
-			'fields' => 'ids',
-			'posts_per_page' => -1,
-		);
-		$the_query = new WP_Query( $args );
-		foreach ( $the_query->posts as $post_id ) {
-			$value = get_post_meta( $post_id, 'module_page', true );
-			$value--;
-			update_post_meta( $post_id, 'module_page', $value );
-		}
-	}
-
-	/**
 	 * Check entry - is this module?
 	 *
 	 * @since 2.0.2
@@ -1108,6 +1074,123 @@ class CoursePress_Data_Module {
 	}
 
 	/**
+	 * Change page number for modules, when we delete page (section).
+	 *
+	 * @since 2.0.3
+	 *
+	 * @param integer $unit_id Unit ID.
+	 * @param integer $page_number Deleted page number.
+	 */
+	public static function decrease_page_number( $unit_id, $page_number ) {
+		if ( ! CoursePress_Data_Unit::is_unit( $unit_id ) ) {
+			return;
+		}
+		$args = array(
+			'post_type' => self::get_post_type_name(),
+			'post_parent' => $unit_id,
+			'post_status' => 'any',
+			'meta_query' => array(
+				array(
+					'key' => 'module_page',
+					'value' => intval( $page_number ),
+					'compare' => '>',
+					'type' => 'SIGNED',
+				),
+			),
+			'fields' => 'ids',
+			'posts_per_page' => -1,
+		);
+
+		$the_query = new WP_Query( $args );
+		foreach ( $the_query->posts as $post_id ) {
+			/**
+			 * change page
+			 */
+			$value = get_post_meta( $post_id, 'module_page', true );
+			$value--;
+			update_post_meta( $post_id, 'module_page', $value );
+		}
+	}
+
+	/**
+	 * Move modules from deleted page/seciton to first page/section.
+	 *
+	 * @since 2.0.3
+	 *
+	 * @param integer $unit_id Unit ID.
+	 * @param integer $page_number Deleted page number.
+	 */
+	public static function move_to_first_page( $unit_id, $page_number ) {
+		if ( ! CoursePress_Data_Unit::is_unit( $unit_id ) ) {
+			return;
+		}
+		$page_number = intval( $page_number );
+		if ( empty( $page_number ) ) {
+			return;
+		}
+		global $wpdb;
+		/**
+		 * find last page order for targegt page. It is always page number 1,
+		 * except when we delete page number 1.
+		 */
+		$args = array(
+			'post_type' => self::get_post_type_name(),
+			'post_parent' => $unit_id,
+			'post_status' => 'any',
+			'meta_query' => array(
+				array(
+					'key' => 'module_page',
+					'value' => 1 == $page_number ? 2 : 1,
+					'compare' => '=',
+					'type' => 'SIGNED',
+				),
+			),
+			'fields' => 'ids',
+			'posts_per_page' => -1,
+		);
+		$the_query = new WP_Query( $args );
+		$query = $wpdb->prepare( "SELECT MAX( meta_value ) FROM {$wpdb->postmeta} WHERE meta_key = %s AND post_id IN (".implode( ', ', $the_query->posts ).')', 'module_order' );
+		$increase = $wpdb->get_var( $query );
+		/**
+		 * Find modules to move
+		 */
+		$args = array(
+			'post_type' => self::get_post_type_name(),
+			'post_parent' => $unit_id,
+			'post_status' => 'any',
+			'meta_query' => array(
+				array(
+					'key' => 'module_page',
+					'value' => $page_number,
+					'compare' => '=',
+					'type' => 'SIGNED',
+				),
+			),
+			'fields' => 'ids',
+			'posts_per_page' => -1,
+		);
+		$the_query = new WP_Query( $args );
+		/**
+		 * change module page number * increase module order
+		 */
+		foreach ( $the_query->posts as $post_id ) {
+			$value = get_post_meta( $post_id, 'module_page', true );
+			/**
+			 * change page
+			 */
+			if ( 1 != $value ) {
+				update_post_meta( $post_id, 'module_page', 1 );
+			}
+			/**
+			 * change order
+			 */
+			$value = intval( get_post_meta( $post_id, 'module_order', true ) );
+			$value += $increase;
+			update_post_meta( $post_id, 'module_order', $value );
+		}
+	}
+
+	/*
 	 * Check free preview of module.
 	 *
 	 * @since 2.0.4
