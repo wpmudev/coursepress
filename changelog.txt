@@ -19,6 +19,7 @@ CHANGELOG
 * Added redirect to login page on student settings page for non-logged users.
 * Fixed issue with not showing HTML tags in Multiple/Single Choice field.
 * Updated included Market Press version 3.2.3
+* Added checks for user related functions to avoid processing when there is no logged user.
 
 = 2.0.5 =
 -------------------------------------------------

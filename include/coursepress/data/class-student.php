@@ -1982,6 +1982,12 @@ class CoursePress_Data_Student {
 	 * @param (int) $module_id
 	 **/
 	public static function log_visited_course( $course_id, $unit_id = 0, $page_number = 1, $module_id = 0 ) {
+		/**
+		 * Do nothing if there is no user.
+		 */
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
 		if ( empty( $course_id ) ) {
 			return;
 		}
@@ -2005,8 +2011,14 @@ class CoursePress_Data_Student {
 	 * @return Returns permalink of the last visited page otherwise the units overview page.
 	 **/
 	public static function get_last_visited_url( $course_id ) {
-		$key = 'coursepress_last_visited_' . $course_id;
 		$course_url = CoursePress_Data_Course::get_course_url( $course_id );
+		/**
+		 * If there is no user, return course URL.
+		 */
+		if ( ! is_user_logged_in() ) {
+			return $course_url;
+		}
+		$key = 'coursepress_last_visited_' . $course_id;
 		$link = $course_url . CoursePress_Core::get_slug( 'units/' );
 
 		$last_visited = get_user_meta( get_current_user_id(), $key, true );
@@ -2018,7 +2030,7 @@ class CoursePress_Data_Student {
 				$link = CoursePress_Data_Unit::get_unit_url( (int) $last_visited['unit'] );
 
 				// Add page number
-				if (  ! empty( $last_visited['page'] ) && (int) $last_visited['page'] > 0 ) {
+				if ( ! empty( $last_visited['page'] ) && (int) $last_visited['page'] > 0 ) {
 					$page = max( 1, (int) $last_visited['page'] );
 					$link .= 'page/' . $page . '/';
 
