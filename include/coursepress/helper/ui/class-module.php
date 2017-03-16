@@ -94,7 +94,6 @@ class CoursePress_Helper_UI_Module {
 			),// components
 		);
 
-		// error_log( self::get_template( self::INPUT_SHORT_TEXT ) );
 		$data = json_decode( self::get_template( self::INPUT_SHORT_TEXT ) );
 		$data = CoursePress_Helper_Utility::object_to_array( $data );
 

@@ -533,7 +533,7 @@ class CoursePress_Data_Instructor {
 				// Invite sent and added.
 				$return_data['success'] = true;
 				$return_data['invite_code'] = $email_args['invite_code'];
-				CoursePress_Helper_Utility::set_array_val(
+				$return_data = CoursePress_Helper_Utility::set_array_value(
 					$return_data,
 					'message/sent',
 					__( 'Invitation successfully sent.', 'CP_TD' )
@@ -543,7 +543,7 @@ class CoursePress_Data_Instructor {
 				// Invite already exists.
 				$return_data['success'] = true;
 				$return_data['invite_code'] = $email_args['invite_code'];
-				CoursePress_Helper_Utility::set_array_val(
+				$return_data = CoursePress_Helper_Utility::set_array_value(
 					$return_data,
 					'message/exists',
 					__( 'Invitation already exists. Invitation was re-sent.', 'CP_TD' )
@@ -552,7 +552,7 @@ class CoursePress_Data_Instructor {
 		} else {
 			// Email not sent.
 			$return_data['success'] = false;
-			CoursePress_Helper_Utility::set_array_val(
+			$return_data = CoursePress_Helper_Utility::set_array_value(
 				$return_data,
 				'message/send_error',
 				__( 'Email failed to send.', 'CP_TD' )

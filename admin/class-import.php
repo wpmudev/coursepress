@@ -342,12 +342,12 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 			}
 
 			// Update course meta
-			CoursePress_Helper_Utility::set_array_val( $course_settings, 'structure_visible_units', $visible_units );
-			CoursePress_Helper_Utility::set_array_val( $course_settings, 'structure_preview_units', $preview_units );
-			CoursePress_Helper_Utility::set_array_val( $course_settings, 'structure_visible_pages', $visible_pages );
-			CoursePress_Helper_Utility::set_array_val( $course_settings, 'structure_preview_pages', $preview_pages );
-			CoursePress_Helper_Utility::set_array_val( $course_settings, 'structure_visible_modules', $visible_modules );
-			CoursePress_Helper_Utility::set_array_val( $course_settings, 'structure_preview_modules', $preview_modules );
+			$course_settings = CoursePress_Helper_Utility::set_array_value( $course_settings, 'structure_visible_units', $visible_units );
+			$course_settings = CoursePress_Helper_Utility::set_array_value( $course_settings, 'structure_preview_units', $preview_units );
+			$course_settings = CoursePress_Helper_Utility::set_array_value( $course_settings, 'structure_visible_pages', $visible_pages );
+			$course_settings = CoursePress_Helper_Utility::set_array_value( $course_settings, 'structure_preview_pages', $preview_pages );
+			$course_settings = CoursePress_Helper_Utility::set_array_value( $course_settings, 'structure_visible_modules', $visible_modules );
+			$course_settings = CoursePress_Helper_Utility::set_array_value( $course_settings, 'structure_preview_modules', $preview_modules );
 			CoursePress_Data_Course::update_setting( $new_course_id, true, $course_settings );
 
 			if ( false === self::check_memory() ) { break; }
@@ -609,7 +609,7 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 					);
 
 					if ( ! empty( $module_progress ) ) {
-						CoursePress_Helper_Utility::set_array_val(
+						$unit_data = CoursePress_Helper_Utility::set_array_value(
 							$unit_data,
 							'responses/' . $new_module_id,
 							$module_progress
@@ -621,12 +621,12 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 						'modules_seen/' . $module_id
 					);
 					if ( ! empty( $module_seen ) ) {
-						CoursePress_Helper_Utility::set_array_val(
+						$unit_completion = CoursePress_Helper_Utility::set_array_value(
 							$unit_completion,
 							'modules_seen/' . $new_module_id,
 							1
 						);
-						CoursePress_Helper_Utility::unset_array_val(
+						$unit_completion = CoursePress_Helper_Utility::unset_array_value(
 							$unit_completion,
 							'modules_seen/' . $module_id
 						);
@@ -636,12 +636,12 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 						'answered/' . $module_id
 					);
 					if ( ! empty( $module_answered ) ) {
-						CoursePress_Helper_Utility::set_array_val(
+						$unit_completion = CoursePress_Helper_Utility::set_array_value(
 							$unit_completion,
 							'answered/' . $new_module_id,
 							1
 						);
-						CoursePress_Helper_Utility::unset_array_val(
+						$unit_completion = CoursePress_Helper_Utility::unset_array_value(
 							$unit_completion,
 							'answered/' . $module_id
 						);
@@ -650,23 +650,23 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 			}
 
 			if ( ! empty( $unit_data ) ) {
-				CoursePress_Helper_Utility::set_array_val(
+				$student_progress = CoursePress_Helper_Utility::set_array_value(
 					$student_progress,
 					'units/' . $new_unit_id,
 					$unit_data
 				);
-				CoursePress_Helper_Utility::unset_array_val(
+				$student_progress = CoursePress_Helper_Utility::unset_array_value(
 					$student_progress,
 					'units/' . $unit_id
 				);
 			}
 			if ( ! empty( $unit_completion ) ) {
-				CoursePress_Helper_Utility::set_array_val(
+				$student_progress = CoursePress_Helper_Utility::set_array_value(
 					$student_progress,
 					'completion/' . $new_unit_id,
 					$unit_completion
 				);
-				CoursePress_Helper_Utility::unset_array_val(
+				$student_progress = CoursePress_Helper_Utility::unset_array_value(
 					$student_progress,
 					'completion/' . $unit_id
 				);

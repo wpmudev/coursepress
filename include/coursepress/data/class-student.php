@@ -252,11 +252,7 @@ class CoursePress_Data_Student {
 	 * @return (array)						An array of course completion data.
 	 **/
 	public static function init_completion_data( $student_id, $course_id ) {
-
-		$data = array();
-		CoursePress_Helper_Utility::set_array_val( $data, 'version', '2.0' );
-
-		return $data;
+		return CoursePress_Helper_Utility::set_array_value( array(), 'version', CoursePress::$version );
 	}
 
 	/**
@@ -346,8 +342,8 @@ class CoursePress_Data_Student {
 			$data['units'] = array();
 		}
 
-		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/visited_pages/' . $page, $page );
-		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/last_visited_page', $page );
+		$data = CoursePress_Helper_Utility::set_array_value( $data, 'units/' . $unit_id . '/visited_pages/' . $page, $page );
+		$data = CoursePress_Helper_Utility::set_array_value( $data, 'units/' . $unit_id . '/last_visited_page', $page );
 		self::update_completion_data( $student_id, $course_id, $data );
 
 		return $data;
@@ -370,7 +366,7 @@ class CoursePress_Data_Student {
 		if ( empty( $unit_id ) || ! is_numeric( $unit_id ) ) {
 			return $data;
 		}
-		CoursePress_Helper_Utility::set_array_val( $data, 'completion/' . $unit_id . '/modules_seen/' . $module_id, true );
+		$data = CoursePress_Helper_Utility::set_array_value( $data, 'completion/' . $unit_id . '/modules_seen/' . $module_id, true );
 		self::update_completion_data( $student_id, $course_id, $data );
 		return $data;
 	}
@@ -509,10 +505,10 @@ class CoursePress_Data_Student {
 		if ( isset( $attributes['mandatory'] ) && $attributes['mandatory'] ) {
 			$key = 'completion/' . $unit_id . '/completed_mandatory';
 			$mandatory = (int) CoursePress_Helper_Utility::get_array_val( $data, $key );
-			CoursePress_Helper_Utility::set_array_val( $data, $key, $mandatory + 1 );
+			$data = CoursePress_Helper_Utility::set_array_value( $data, $key, $mandatory + 1 );
 		}
 
-		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/responses/' . $module_id . '/', $response_data );
+		$data = CoursePress_Helper_Utility::set_array_value( $data, 'units/' . $unit_id . '/responses/' . $module_id . '/', $response_data );
 		self::get_calculated_completion_data( $student_id, $course_id, $data );
 
 		return $data;
@@ -645,7 +641,7 @@ class CoursePress_Data_Student {
 
 		if ( empty( $responses ) ) {
 			$responses = array();
-			CoursePress_Helper_Utility::set_array_val(
+			$data = CoursePress_Helper_Utility::set_array_value(
 				$data,
 				'units/' . $unit_id . '/responses/' . $module_id,
 				$responses
@@ -665,7 +661,7 @@ class CoursePress_Data_Student {
 			'date' => current_time( 'mysql' ),
 		);
 
-		CoursePress_Helper_Utility::set_array_val(
+		$data = CoursePress_Helper_Utility::set_array_value(
 			$data,
 			'units/' . $unit_id . '/responses/' . $module_id . '/' . $response_index . '/grades/',
 			$grade_data
@@ -784,7 +780,7 @@ class CoursePress_Data_Student {
 			'draft' => $is_draft,
 		);
 
-		CoursePress_Helper_Utility::set_array_val(
+		$data = CoursePress_Helper_Utility::set_array_value(
 			$data,
 			'units/' . $unit_id . '/responses/' . $module_id . '/' . $response_index . '/feedback/',
 			$feedback_data
@@ -977,7 +973,7 @@ class CoursePress_Data_Student {
 									if ( ! cp_is_true( $had_answered ) ) {
 										do_action( 'coursepress_student_module_attempted', $student_id, $module_id, get_post_field( 'post_tile', $module_id ), $unit_id, $course_id );
 									}
-									CoursePress_Helper_Utility::set_array_val(
+									$student_progress = CoursePress_Helper_Utility::set_array_value(
 										$student_progress, 'completion/' . $unit_id . '/answered/' . $module_id,
 										true
 									);
@@ -1058,7 +1054,7 @@ class CoursePress_Data_Student {
 													do_action( 'coursepress_student_module_passed', $student_id, $module_id, get_post_field( 'post_tile', $module_id ), $unit_id, $course_id );
 												}
 
-												CoursePress_Helper_Utility::set_array_val(
+												$student_progress = CoursePress_Helper_Utility::set_array_value(
 													$student_progress,
 													'completion/' . $unit_id . '/passed/' . $module_id,
 													true
@@ -1153,7 +1149,7 @@ class CoursePress_Data_Student {
 			}
 
 			// Set # of required steps
-			CoursePress_Helper_Utility::set_array_val(
+			$student_progress = CoursePress_Helper_Utility::set_array_value(
 				$student_progress,
 				'completion/' . $unit_id . '/required_steps',
 				$unit_required_modules
@@ -1161,20 +1157,20 @@ class CoursePress_Data_Student {
 			$course_mandatory_steps += $unit_required_modules;
 
 			// Set total # of answered mandatory modules
-			CoursePress_Helper_Utility::set_array_val(
+			$student_progress = CoursePress_Helper_Utility::set_array_value(
 				$student_progress,
 				'completion/' . $unit_id . '/completed_mandatory',
 				$unit_completed_required_modules
 			);
 			$course_completed_mandatory_steps += $unit_completed_required_modules;
 
-			CoursePress_Helper_Utility::set_array_val(
+			$student_progress = CoursePress_Helper_Utility::set_array_value(
 				$student_progress,
 				'completion/' . $unit_id . '/all_mandatory',
 				$unit_required_modules == $unit_completed_required_modules
 			);
 
-			CoursePress_Helper_Utility::set_array_val(
+			$student_progress = CoursePress_Helper_Utility::set_array_value(
 				$student_progress,
 				'completion/' . $unit_id . '/all_required_assessable',
 				$unit_assessable_modules == $unit_completed_assessable_modules
@@ -1186,7 +1182,7 @@ class CoursePress_Data_Student {
 				$unit_progress = ceil( $unit_progress / $unit_progress_counter );
 			}
 
-			CoursePress_Helper_Utility::set_array_val(
+			$student_progress = CoursePress_Helper_Utility::set_array_value(
 				$student_progress,
 				'completion/' . $unit_id . '/progress',
 				$unit_progress
@@ -1200,7 +1196,7 @@ class CoursePress_Data_Student {
 
 			// Marked unit completion status
 			$is_unit_completed = $unit_total_modules > 0 && $unit_completed_modules >= $unit_total_modules;
-			CoursePress_Helper_Utility::set_array_val(
+			$student_progress = CoursePress_Helper_Utility::set_array_value(
 				$student_progress,
 				'completion/' . $unit_id . '/completed',
 				$is_unit_completed
@@ -1209,7 +1205,7 @@ class CoursePress_Data_Student {
 			$course_gradable_modules += $unit_gradable_modules;
 			$course_grade += $unit_grade;
 			$unit_grade = $unit_grade > 0 && $unit_gradable_modules > 0 ? ceil( $unit_grade / $unit_gradable_modules ) : 0;
-			CoursePress_Helper_Utility::set_array_val(
+			$student_progress = CoursePress_Helper_Utility::set_array_value(
 				$student_progress,
 				'completion/' . $unit_id . '/average',
 				$unit_grade
@@ -1225,12 +1221,12 @@ class CoursePress_Data_Student {
 			}
 		}
 
-		CoursePress_Helper_Utility::set_array_val(
+		$student_progress = CoursePress_Helper_Utility::set_array_value(
 			$student_progress,
 			'completion/required_steps',
 			$course_mandatory_steps
 		);
-		CoursePress_Helper_Utility::set_array_val(
+		$student_progress = CoursePress_Helper_Utility::set_array_value(
 			$student_progress,
 			'completion/completed_steps',
 			$course_completed_mandatory_steps
@@ -1240,7 +1236,7 @@ class CoursePress_Data_Student {
 			$course_progress = ceil( $course_progress / $unit_count );
 		}
 
-		CoursePress_Helper_Utility::set_array_val(
+		$student_progress = CoursePress_Helper_Utility::set_array_value(
 			$student_progress,
 			'completion/progress',
 			$course_progress
@@ -1250,7 +1246,7 @@ class CoursePress_Data_Student {
 		$is_completed = false;
 
 		// Remove failed marker
-		CoursePress_Helper_Utility::unset_array_val(
+		$student_progress = CoursePress_Helper_Utility::unset_array_value(
 			$student_progress,
 			'completion/failed'
 		);
@@ -1275,7 +1271,7 @@ class CoursePress_Data_Student {
 					$total_course_grade = ceil( $total_course_grade / $course_gradable_modules );
 
 					if ( $total_course_grade < $minimum_grade_required ) {
-						CoursePress_Helper_Utility::set_array_val(
+						$student_progress = CoursePress_Helper_Utility::set_array_value(
 							$student_progress,
 							'completion/failed',
 							true
@@ -1287,13 +1283,13 @@ class CoursePress_Data_Student {
 			}
 		}
 
-		CoursePress_Helper_Utility::set_array_val(
+		$student_progress = CoursePress_Helper_Utility::set_array_value(
 			$student_progress,
 			'completion/average',
 			$completion_average
 		);
 
-		CoursePress_Helper_Utility::set_array_val(
+		$student_progress = CoursePress_Helper_Utility::set_array_value(
 			$student_progress,
 			'completion/completed',
 			$is_completed

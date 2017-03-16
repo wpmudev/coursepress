@@ -23,6 +23,7 @@ CHANGELOG
 
 = 2.0.5 =
 -------------------------------------------------
+* Fixed errors with PHP 7.1.1.
 * Added HTML preview for Raports.
 * Added ability to turn on/off social sharing icons.
 * Added check is safe_mode before call set_time_limit() function.
