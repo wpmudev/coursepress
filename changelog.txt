@@ -32,7 +32,6 @@ CHANGELOG
 * Updated external library "jquery-circle-progress" to version 1.2.1
 * Updated external font Awesome to version 4.7.0
 
-
 = 2.0.5 =
 -------------------------------------------------
 * Fixed errors with PHP 7.1.1.
