@@ -26,6 +26,9 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 			return;
 		}
 
+		/**
+		 * Trigger before rendering CP page.
+		 **/
 		do_action( 'coursepress_admin_render_page' );
 
 		self::$current_course = $post;

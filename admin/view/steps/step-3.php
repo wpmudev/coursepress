@@ -24,14 +24,14 @@
 	<div class="instructors-info medium" id="instructors-info">
 		<p><?php echo $can_assign_instructor ? __( 'Assigned Instructors:', 'CP_TD' ) : __( 'You do not have sufficient permission to add instructor!' ); ?></p>
 
-		<?php if ( $instructors > 0 && $can_assign_instructor ) : ?>
+		<?php if ( empty( $instructors )  && $can_assign_instructor ) : ?>
 			<div class="instructor-avatar-holder empty">
 				<span class="instructor-name"><?php _e( 'Please Assign Instructor', 'CP_TD' ); ?></span>
 			</div>
 			<?php echo CoursePress_Helper_UI::course_pendings_instructors_avatars( $course_id ); ?>
+		<?php else: ?>
+			<?php echo CoursePress_Helper_UI::course_instructors_avatars( $course_id, array(), true ); ?>
 		<?php endif; ?>
-
-		<?php echo CoursePress_Helper_UI::course_instructors_avatars( $course_id, array(), true ); ?>
 	</div>
 
 	<?php if ( $can_assign_facilitator ) : ?>
