@@ -481,6 +481,15 @@ class CoursePress_Data_Course {
 		self::update_setting( $course_id, 'instructors', $instructors );
 	}
 
+	/**
+	 * Returns an array of course settings.
+	 *
+	 * @param (int) $course_id		WP_Post object ID to get the settings from.
+	 * @param (mixed) $key			Optional. An specific setting key to retrieve. Set to `true` to get all course settings.
+	 * @param (mixed) $default		Optional. The default value to return if setting is null.
+	 *
+	 * @return (mixed) Returns an array of course settings or the value of an specified setting key.
+	 **/
 	public static function get_setting( $course_id, $key = true, $default = null ) {
 		$settings = get_post_meta( $course_id, 'course_settings', true );
 		$date_format = get_option( 'date_format' );
