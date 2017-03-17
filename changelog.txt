@@ -27,6 +27,7 @@ CHANGELOG
 * Improved message box for MarketPress on paid course.
 * Fixed "Passing Grade" value one assessments page.
 * Added checks for user related functions to avoid processing when there is no logged user.
+* Fixed link to student profile in "Number of Courses" column.
 
 = 2.0.5 =
 -------------------------------------------------
