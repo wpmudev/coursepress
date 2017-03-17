@@ -27,6 +27,7 @@ CHANGELOG
 * Improved message box for MarketPress on paid course.
 * Fixed "Passing Grade" value one assessments page.
 * Added checks for user related functions to avoid processing when there is no logged user.
+* Improved compatibility with Avada theme.
 
 = 2.0.5 =
 -------------------------------------------------
