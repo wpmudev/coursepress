@@ -408,6 +408,13 @@ A. Responsive
 /**
  * colors
  */
+#course-setup-steps.ui-state-disabled {
+  opacity: 1;
+}
+#course-setup-steps.ui-state-disabled .step-title.ui-state-disabled,
+#course-setup-steps.ui-state-disabled .step-content.ui-state-disabled {
+  opacity: 1;
+}
 #course-setup-steps .wide label {
   display: block;
   padding-bottom: 5px;
