@@ -1,9 +1,3 @@
-<?php
-/**
- * Course Edit Step - 6
- **/
-$class = 'prerequisite' === $enrollment_type ? '' : ' hidden';
-?>
 <div class="step-title step-6">
 	<?php printf( __( 'Step 6 &ndash; Enrollment %s', 'CP_TD' ), $title2 ); ?>
 	<div class="status <?php echo $setup_class; ?>"></div>
@@ -18,7 +12,7 @@ $class = 'prerequisite' === $enrollment_type ? '' : ' hidden';
 		<?php echo CoursePress_Helper_UI::select( 'meta_enrollment_type', $enrollment_types, $enrollment_type, 'chosen-select medium' ); ?>
 	</div>
 
-	<div class="wide enrollment-type-options prerequisite<?php echo $class; ?>">
+	<div class="wide enrollment-type-options prerequisite<?php echo $prerequisite_class; ?>">
 		<label><?php _e( 'Prerequisite Courses', 'CP_TD' ); ?></label>
 		<p class="description"><?php _e( 'Select the courses a student needs to complete before enrolling in this course', 'CP_TD' ); ?></p>
 		<select name="meta_enrollment_prerequisite" class="medium chosen-select chosen-select-course <?php echo $class_extra; ?>" multiple="true" data-placeholder=" ">
@@ -29,4 +23,52 @@ $class = 'prerequisite' === $enrollment_type ? '' : ' hidden';
 
 		</select>
 	</div>
+
+	<div class="wide enrollment-type-options passcode <?php echo $passcode_class; ?>">
+		<label><?php _e( 'Course Passcode', 'CP_TD' ); ?></label>
+		<p class="description"><?php _e( 'Enter the passcode required to access this course', 'CP_TD' ); ?></p>
+		<input type="text" name="meta_enrollment_passcode" value="<?php echo esc_attr( $enrollment_passcode ); ?>" />
+	</div>
+
+	<?php if ( false === $disable_payment ) :
+		$one = array(
+				'meta_key' => 'payment_paid_course',
+				'title' => __( 'Course Payment', 'CP_TD' ),
+				'description' => __( 'Payment options for your course. Additional plugins are required and settings vary depending on the plugin.', 'CP_TD' ),
+				'label' => __( 'This is a paid course', 'CP_TD' ),
+				'default' => false,
+			);
+		echo '<hr class="separator" />';
+		echo CoursePress_Helper_UI::course_edit_checkbox( $one, $course_id );
+	endif;
+	?>
+
+	<?php
+	// Show install|payment messages when applicable
+	if ( false === $payment_supported && false === $disable_payment ) :
+		echo $payment_message;
+	endif;
+	?>
+	<div class="is_paid_toggle <?php echo $payment_paid_course ? '' : 'hidden'; ?>">
+		<?php
+		/**
+		 * Add additional fields if 'This is a paid course' is selected.
+		 *
+		 * Field names must begin with meta_ to allow it to be automatically added to the course settings
+		 *
+		 * * This is the ideal filter to use for integrating payment plugins
+		 */
+		echo apply_filters( 'coursepress_course_setup_step_6_paid', '', $course_id );
+		?>
+	</div>
+
+	<?php
+	/**
+	 * Trigger to add additional fields in step 6.
+	 **/
+	echo apply_filters( 'coursepress_course_setup_step_6', '', $course_id );
+
+	// Show buttons
+	echo static::get_buttons( $course_id, 6 );
+	?>
 </div>

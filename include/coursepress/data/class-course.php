@@ -510,6 +510,23 @@ class CoursePress_Data_Course {
 			'class_size' => '',
 			'enrollment_type' => CoursePress_Data_Course::get_enrollment_type_default( $course_id ),
 			'payment_paid_course' => false,
+			'enrollment_passcode' => '',
+			'pre_completion_title' => __( 'Almost there!', 'CP_TD' ),
+			'pre_completion_content' => '',
+			'minimum_grade_required' => 100,
+			'course_completion_title' => __( 'Congratulations, You Passed!', 'CP_TD' ),
+			'course_completion_content' => '',
+			'course_failed_title' => __( 'Sorry, you did not pass this course!', 'CP_TD' ),
+			'course_failed_content' => '',
+			'basic_certificate_layout' => CoursePress_View_Admin_Setting_BasicCertificate::default_certificate_content(),
+			'basic_certificate' => false,
+			'certificate_background' => '',
+			'cert_margin' => array(
+				'top' => 0,
+				'left' => 0,
+				'right' => 0,
+			),
+			'page_orientation' => 'L',
 		);
 
 		$settings = wp_parse_args( $settings, $defaults );
