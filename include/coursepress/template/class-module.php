@@ -48,7 +48,7 @@ class CoursePress_Template_Module {
 						$content .= '<ul class="cp-answers">';
 
 						// $selected is of string type, change it to int
-						$ints = array_fill(0, 10, true);
+						$ints = array_fill( 0, 10, true );
 
 						if ( ! is_array( $selected ) && ! empty( $ints[ $selected ] ) ) {
 							$selected = (int) $selected;
@@ -298,6 +298,11 @@ class CoursePress_Template_Module {
 					if ( $response_count >= $attempts ) {
 						$disabled = true;
 						$retry = '';
+					} else {
+						$retry .= sprintf(
+							'<p class="number-of-fails">%s</p>',
+							sprintf( __( 'Number of failed attempts: %d', 'CP_TD' ), $response_count )
+						);
 					}
 				}
 
@@ -663,15 +668,15 @@ class CoursePress_Template_Module {
 	}
 
 	private static function comment_form( $post_id ) {
-        $enrolled = false;
-        if ( is_user_logged_in() ) {
-            $student_id = get_current_user_id();
-            $course_id = CoursePress_Data_Module::get_course_id_by_module( $post_id );
-            $enrolled = CoursePress_Data_Course::student_enrolled( $student_id, $course_id );
-        }
-        if ( false == $enrolled ) {
-            return '';
-        }
+		$enrolled = false;
+		if ( is_user_logged_in() ) {
+			$student_id = get_current_user_id();
+			$course_id = CoursePress_Data_Module::get_course_id_by_module( $post_id );
+			$enrolled = CoursePress_Data_Course::student_enrolled( $student_id, $course_id );
+		}
+		if ( false == $enrolled ) {
+			return '';
+		}
 		ob_start();
 		$form_class = array( 'comment-form', 'cp-comment-form' );
 		$comment_order = get_option( 'comment_order' );
@@ -756,8 +761,7 @@ class CoursePress_Template_Module {
 		add_filter( 'comment_reply_link', array( __CLASS__, 'comment_reply_link' ), 10, 4 );
 		setup_postdata( $module );
 
-
-        $content = '';
+		$content = '';
 
 		$content .= self::comment_form( $module->ID );
 		$content .= self::comment_list( $module->ID );
@@ -786,7 +790,7 @@ class CoursePress_Template_Module {
 				$checked = ' ' . checked( 1, is_array( $response ) && in_array( $key, $response ), false );
 
 				$format = '<li class="%1$s %2$s"><input type="checkbox" value="%5$s" name="module[%3$s][]" id="module-%3$s-%5$s" %6$s /> <label for="module-%3$s-%5$s">%4$s</label></li>';
-				$content .= sprintf( $format, $oddeven, $alt, $module->ID, esc_html__( $answer ), esc_attr( $key ), $disabled_attr . $checked );
+				$content .= sprintf( $format, $oddeven, $alt, $module->ID, $answer, esc_attr( $key ), $disabled_attr . $checked );
 
 				$oddeven = 'odd' === $oddeven ? 'even' : 'odd';
 			}
@@ -814,7 +818,8 @@ class CoursePress_Template_Module {
 				$checked = '' !== $response ? ' ' . checked( 1, '' != $response && (int) $response === $key, false ) : '';
 
 				$format = '<li class="%1$s %2$s"><input type="radio" value="%5$s" name="module[%3$s]" id="module-%3$s-%5$s" %6$s /> <label for="module-%3$s-%5$s">%4$s</label> </li>';
-				$content .= sprintf( $format, $oddeven, $alt, $module->ID, esc_html__( $answer ), esc_attr( $key ), $disabled_attr . $checked );
+
+				$content .= sprintf( $format, $oddeven, $alt, $module->ID, $answer, esc_attr( $key ), $disabled_attr . $checked );
 
 				$oddeven = 'odd' === $oddeven ? 'even' : 'odd';
 				$alt = empty( $alt ) ? 'alt' : '';

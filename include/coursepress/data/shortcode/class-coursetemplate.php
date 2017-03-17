@@ -290,7 +290,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					'label' => ! $is_instructor ? sanitize_text_field( $continue_learning_text ) : sanitize_text_field( $instructor_text ),
 					'attr' => array(
 						'class' => 'apply-button apply-button-enrolled ' . $class,
-						'data-link' => CoursePress_Data_Student::get_last_visited_url( $course_id  ),
+						'data-link' => CoursePress_Data_Student::get_last_visited_url( $course_id ),
 					),
 					'type' => 'link',
 				),
@@ -572,9 +572,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 		if ( ! $structure_visible ) { return ''; }
 
-		$time_estimates = cp_is_true(
-			CoursePress_Data_Course::get_setting( $course_id, 'structure_show_duration' )
-		);
+		$time_estimates = cp_is_true( CoursePress_Data_Course::get_setting( $course_id, 'structure_show_duration' ) );
 
 		$preview = CoursePress_Data_Course::previewability( $course_id );
 		$visibility = CoursePress_Data_Course::structure_visibility( $course_id );
@@ -963,6 +961,11 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$instructors = CoursePress_Data_Course::get_instructors( $course_id );
 		$is_instructor = is_array( $instructors ) && in_array( $student_id, $instructors );
 
+		/**
+		 * Show empty units?
+		 */
+		$show_empty_units = cp_is_true( CoursePress_Data_Course::get_setting( $course_id, 'structure_show_empty_units' ) );
+
 		$content = '';
 
 		$unit_status = array( 'publish' );
@@ -1123,29 +1126,31 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				$unit_availability_date = CoursePress_Data_Unit::get_unit_availability_date( $unit_id, $course_id, 'c' );
 
 				if ( ! empty( $unit_availability_date ) && 'expired' != $unit_availability_date ) {
-					$unit_availability_date = CoursePress_Data_Course::strtotime( $unit_availability_date );
-					$year_now = date( 'Y', CoursePress_Data_Course::time_now() );
-					$unit_year = date( 'Y', $unit_availability_date );
-					$format = $year_now !== $unit_year ? _x( 'M d, Y', 'Unit available date with year for future unit.', 'CP_TD' ) : _x( 'M d', 'Unit available date without year for future unit.', 'CP_TD' );
-
-					// Requires custom hook to attached
-					$when = date( $format, $unit_availability_date );
-
-					$delay_date = sprintf( '<span class="unit-delay-date">%s %s</span>', __( 'Opens', 'CP_TD' ), $when );
-					$unit_status = __( 'This unit will be available on the scheduled start date.', 'CP_TD' );
-					/**
-					 * Filter delay date markup.
-					 *
-					 * @since 2.0
-					 *
-					 * @param (string) $delay_date 	The HTML markup.
-					 * @param (date) $unit_availability_date	The date the unit becomes available.
-					 *
-					 * @return $date or null
-					 **/
-					$delay_date = apply_filters( 'coursepress_unit_delay_markup', $delay_date, $unit_availability_date );
-
-					$title_suffix .= $delay_date;
+					$status_type = get_post_meta( $unit_id, 'unit_availability', true );
+					if ( 'instant' == $status_type ) {
+						$unit_status = esc_attr__( 'You need to complete the REQUIRED unit before this unit.', 'CP_TD' );
+					} else {
+						$unit_availability_date = CoursePress_Data_Course::strtotime( $unit_availability_date );
+						$year_now = date( 'Y', CoursePress_Data_Course::time_now() );
+						$unit_year = date( 'Y', $unit_availability_date );
+						$format = $year_now !== $unit_year ? _x( 'M d, Y', 'Unit available date with year for future unit.', 'CP_TD' ) : _x( 'M d', 'Unit available date without year for future unit.', 'CP_TD' );
+						// Requires custom hook to attached
+						$when = date( $format, $unit_availability_date );
+						$delay_date = sprintf( '<span class="unit-delay-date">%s %s</span>', __( 'Opens', 'CP_TD' ), $when );
+						$unit_status = __( 'This unit will be available on the scheduled start date.', 'CP_TD' );
+						/**
+						 * Filter delay date markup.
+						 *
+						 * @since 2.0
+						 *
+						 * @param (string) $delay_date 	The HTML markup.
+						 * @param (date) $unit_availability_date	The date the unit becomes available.
+						 *
+						 * @return $date or null
+						 **/
+						$delay_date = apply_filters( 'coursepress_unit_delay_markup', $delay_date, $unit_availability_date );
+						$title_suffix .= $delay_date;
+					}
 				}
 			}
 
@@ -1184,7 +1189,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			}
 
 			// Don't show units without modules/elements.
-			if ( ! $has_pages && ! $can_update_course ) {
+			if ( ! $show_empty_units && ! $has_pages && ! $can_update_course ) {
 				continue;
 			}
 

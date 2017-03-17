@@ -8,9 +8,30 @@ CHANGELOG
 = 2.0.6 =
 -------------------------------------------------
 * Improved HTML login & signup forms.
+* Fixed: Remove inclusion of CP assets on none CP pages.
+* Fixed a problem with change WooCommerce product status to "Out of stock".
+* Fixed a problem with modules when section is deleted.
+* Fixed untranslated texts.
+* Fixed a problem with sale price in MarketPress.
+* To avoid confusion, we changed label "Duration" to "Time Limit".
+* Fixed a problem with too tall TinyMCE editoor.
+* Unified all TinyMCE editors.
+* Improved process of saving answers.
+* Fixed a bug with missing grade for manualy graded fields when we use "Save & Exit" feature.
+* Improved message about required units.
+* Fixed too many redirects error.
+* Added redirect to login page on student settings page for non-logged users.
+* Fixed issue with not showing HTML tags in Multiple/Single Choice field.
+* Updated included Market Press version 3.2.3
+* Fixed a problem with ignoring "User also needs to pass all required assessments" unit option.
+* Added "Number of failed attempts".
+* Improved message box for MarketPress on paid course.
+* Fixed "Passing Grade" value one assessments page.
+* Added checks for user related functions to avoid processing when there is no logged user.
 
 = 2.0.5 =
 -------------------------------------------------
+* Fixed errors with PHP 7.1.1.
 * Added HTML preview for Raports.
 * Added ability to turn on/off social sharing icons.
 * Added check is safe_mode before call set_time_limit() function.
@@ -18,10 +39,12 @@ CHANGELOG
 * Added check is user logged before we show comment form in discussion module.
 * Added CoursePress Endpoints to Apperance -> Menu screen.
 * Added ability to remember the last sorting chosen by user on the list of courses in admin area.
+* Added new option "Show empty units" which allow to show units without modules.
 * Improved select2 field for prerequisites and remove current course from the list.
 * Improved MarketPress product thumbnail and images integration.
 * Improved link building to student profile in admin area.
 * Improved HTML login & signup forms.
+* Improved TinyMCE editor on course edit screen.
 * FIxed on signup form double error messages.
 * Fixed "Grades" screen.
 * Fixed a wrong link to student profile from students tab on a course edit screen.
@@ -34,6 +57,8 @@ CHANGELOG
 
 = 2.0.4 =
 -------------------------------------------------
+* Fixed problem with deleting section on courses edit page.
+* Improve module order recalculate, when we deleting a section.
 * Added ability to enroll, when we use course_join_button, but we are not logged.
 * Added sanitization course id field in "course_join_button" shortcode.
 * Added ability to save course state and exit.

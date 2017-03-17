@@ -302,7 +302,7 @@ class CoursePress_Helper_UI {
 			$remove_buttons = isset( $options['remove_buttons'] ) ? $options['remove_buttons'] : true;
 		}
 
-		$just_count = isset( $options['count'] ) ? $options['count'] : false;
+		$just_count = ! empty( $options['count'] ) ? $options['count'] : false;
 
 		$content = '';
 
@@ -321,6 +321,7 @@ class CoursePress_Helper_UI {
 		if ( $just_count ) {
 			return count( $instructors );
 		}
+
 		foreach ( $instructors as $instructor ) {
 			$content .= CoursePress_Template_Course::course_edit_avatar( $instructor, $remove_buttons, 'instructor' );
 		}
