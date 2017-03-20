@@ -28,6 +28,7 @@ CHANGELOG
 * Fixed "Passing Grade" value one assessments page.
 * Added checks for user related functions to avoid processing when there is no logged user.
 * Fixed link to student profile in "Number of Courses" column.
+* Added email validation on CoursePress signup form.
 
 = 2.0.5 =
 -------------------------------------------------
