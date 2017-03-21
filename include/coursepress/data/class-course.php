@@ -503,6 +503,7 @@ class CoursePress_Data_Course {
 			'course_language' => __( 'English', 'CP_TD' ),
 			'course_view' => 'normal',
 			'structure_level' => 'unit',
+			'structure_show_empty_units' => false,
 			'structure_visible_units' => array(),
 			'structure_preview_units' => array(),
 			'structure_visible_pages' => array(),

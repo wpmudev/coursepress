@@ -489,6 +489,7 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 			'structure_show_duration' => ! empty( self::$settings['structure_show_duration'] ),
 			'units' => $units,
 			'duration_class' => ! empty( self::$settings['structure_show_duration'] ) ? '' : 'hidden',
+			'structure_show_empty_units' => self::$settings['structure_show_empty_units'],
 		) );
 	}
 
