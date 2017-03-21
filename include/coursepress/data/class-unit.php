@@ -81,10 +81,10 @@ class CoursePress_Data_Unit {
 			 * Page time
 			 */
 			$time = CoursePress_Helper_Utility::get_time( $page_seconds );
-			CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/estimation', $time['time'] );
-			CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/components/hours', $time['hours'] );
-			CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/components/minutes', $time['minutes'] );
-			CoursePress_Helper_Utility::set_array_val( $estimations, 'pages/' . $page_id . '/components/seconds', $time['seconds'] );
+			$estimations = CoursePress_Helper_Utility::set_array_value( $estimations, 'pages/' . $page_id . '/estimation', $time['time'] );
+			$estimations = CoursePress_Helper_Utility::set_array_value( $estimations, 'pages/' . $page_id . '/components/hours', $time['hours'] );
+			$estimations = CoursePress_Helper_Utility::set_array_value( $estimations, 'pages/' . $page_id . '/components/minutes', $time['minutes'] );
+			$estimations = CoursePress_Helper_Utility::set_array_value( $estimations, 'pages/' . $page_id . '/components/seconds', $time['seconds'] );
 			/**
 			 * Increase unit time
 			 */
@@ -94,10 +94,10 @@ class CoursePress_Data_Unit {
 		 * Unit time
 		 */
 		$time = CoursePress_Helper_Utility::get_time( $unit_seconds );
-		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/estimation', $time['time'] );
-		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/components/hours', $time['hours'] );
-		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/components/minutes', $time['minutes'] );
-		CoursePress_Helper_Utility::set_array_val( $estimations, 'unit/components/seconds', $time['seconds'] );
+		$estimations = CoursePress_Helper_Utility::set_array_value( $estimations, 'unit/estimation', $time['time'] );
+		$estimations = CoursePress_Helper_Utility::set_array_value( $estimations, 'unit/components/hours', $time['hours'] );
+		$estimations = CoursePress_Helper_Utility::set_array_value( $estimations, 'unit/components/minutes', $time['minutes'] );
+		$estimations = CoursePress_Helper_Utility::set_array_value( $estimations, 'unit/components/seconds', $time['seconds'] );
 		return $estimations;
 	}
 
@@ -188,6 +188,10 @@ class CoursePress_Data_Unit {
 				'enabled' => false,
 				'result' => false,
 			),
+			'passed_required' => array(
+				'enabled' => false,
+				'result' => false,
+			),
 		);
 		if ( ! is_object( $unit ) ) {
 			$unit = get_post( $unit );
@@ -246,17 +250,17 @@ class CoursePress_Data_Unit {
 				$student_id, $course_id, $previous_unit_id, $student_progress
 			);
 
-			CoursePress_Helper_Utility::set_array_val(
+			$status = CoursePress_Helper_Utility::set_array_value(
 				$status, 'mandatory_required/enabled', $force_current_unit_completion
 			);
-			CoursePress_Helper_Utility::set_array_val(
+			$status = CoursePress_Helper_Utility::set_array_value(
 				$status, 'mandatory_required/result', $mandatory_done
 			);
 
-			CoursePress_Helper_Utility::set_array_val(
+			$status = CoursePress_Helper_Utility::set_array_value(
 				$status, 'completion_required/enabled', $force_current_unit_successful_completion
 			);
-			CoursePress_Helper_Utility::set_array_val(
+			$status = CoursePress_Helper_Utility::set_array_value(
 				$status, 'completion_required/result', $unit_completed
 			);
 
@@ -264,6 +268,17 @@ class CoursePress_Data_Unit {
 				$is_available = $status['completion_required']['result'];
 			} elseif ( $status['mandatory_required']['enabled'] ) {
 				$is_available = $status['mandatory_required']['result'];
+			}
+
+			/**
+			 * User also needs to pass all required assessments
+			 *
+			 * @since 2.0.6
+			 */
+			if ( $is_available && $force_current_unit_successful_completion ) {
+				$is_available = CoursePress_Data_Student::unit_answers_are_correct( $student_id, $course_id, $previous_unit );
+				CoursePress_Helper_Utility::set_array_val( $status, 'passed_required/enabled', true );
+				CoursePress_Helper_Utility::set_array_val( $status, 'passed_required/result', $is_available );
 			}
 		}
 
@@ -286,9 +301,7 @@ class CoursePress_Data_Unit {
 			$is_available,
 			$unit_id
 		);
-
 		$status['available'] = $is_available;
-
 		return $status;
 	}
 

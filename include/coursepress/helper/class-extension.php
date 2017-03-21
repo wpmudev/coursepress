@@ -64,8 +64,7 @@ class CoursePress_Helper_Extension {
 				}
 			} elseif ( $installed ) {
 				$status = 'Installed/Not Activated';
-				if ( current_user_can( 'manage_options' ) ) {
-
+				if ( current_user_can( 'activate_plugins' ) ) {
 					$action = '<form method="post">
 						<input type="hidden" name="page" value="' . $_GET['page'] . '">
 						<input type="hidden" name="tab" value="' . $_GET['tab'] . '">

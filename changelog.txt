@@ -4,8 +4,11 @@ Build Time:  BUILDTIME
 
 CHANGELOG
 =================================================
+
 = 2.0.6 =
 -------------------------------------------------
+* Fixed: Remove inclusion of CP assets on none CP pages.
+* Fixed a problem with change WooCommerce product status to "Out of stock".
 * Fixed a problem with modules when section is deleted.
 * Fixed untranslated texts.
 * Fixed a problem with sale price in MarketPress.
@@ -19,9 +22,16 @@ CHANGELOG
 * Added redirect to login page on student settings page for non-logged users.
 * Fixed issue with not showing HTML tags in Multiple/Single Choice field.
 * Updated included Market Press version 3.2.3
+* Fixed a problem with ignoring "User also needs to pass all required assessments" unit option.
+* Added "Number of failed attempts".
+* Improved message box for MarketPress on paid course.
+* Fixed "Passing Grade" value one assessments page.
+* Added checks for user related functions to avoid processing when there is no logged user.
+* Fixed link to student profile in "Number of Courses" column.
 
 = 2.0.5 =
 -------------------------------------------------
+* Fixed errors with PHP 7.1.1.
 * Added HTML preview for Raports.
 * Added ability to turn on/off social sharing icons.
 * Added check is safe_mode before call set_time_limit() function.

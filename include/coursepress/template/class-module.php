@@ -298,6 +298,11 @@ class CoursePress_Template_Module {
 					if ( $response_count >= $attempts ) {
 						$disabled = true;
 						$retry = '';
+					} else {
+						$retry .= sprintf(
+							'<p class="number-of-fails">%s</p>',
+							sprintf( __( 'Number of failed attempts: %d', 'CP_TD' ), $response_count )
+						);
 					}
 				}
 
