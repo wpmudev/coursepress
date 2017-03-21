@@ -28,6 +28,7 @@ CHANGELOG
 * Fixed "Passing Grade" value one assessments page.
 * Added checks for user related functions to avoid processing when there is no logged user.
 * Fixed link to student profile in "Number of Courses" column.
+* Added filter "coursepress_data_shortcode_template_show_nav_button" - this filter allow to change html for next/previous buttons.
 
 = 2.0.5 =
 -------------------------------------------------
