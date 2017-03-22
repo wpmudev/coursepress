@@ -426,13 +426,13 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 		$edit_course_link = get_edit_post_link( self::$current_course->ID );
 		printf( '<input type="hidden" id="edit_course_link_url" value="%1$s" /><div class="coursepress-course-step-container"><div id="course-setup-steps" data-nonce="%2$s">', esc_url( $edit_course_link ), $setup_nonce );
 
-
-		// Iterate the 7 steps
-		for( $i = 1; $i <= 7; $i++ ) {
-			$step = 'step_' . $i;
-
-			self::$step();
-		}
+		self::step_1();
+		self::step_2();
+		self::step_3();
+		self::step_4();
+		self::step_5();
+		self::step_6();
+		self::step_7();
 
 		/**
 		 * Hook to course edit
