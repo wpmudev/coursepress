@@ -272,9 +272,12 @@ class CoursePress_Template_Module {
 
 			$retry = 'TRY';
 			if ( $is_module_answerable ) {
+				$element_class = array( 'module-elements' );
 				$responses = CoursePress_Data_Student::get_responses( $student_id, $course_id, $unit_id, $module_id, true, $student_progress );
 				$last_response = self::get_response( $module_id, $student_id );
-				$element_class = ! empty( $responses ) ? 'hide' : '';
+				if ( ! empty( $responses ) ) {
+					$element_class[] = 'hide';
+				}
 				$response_count = ! empty( $responses ) ? count( $responses ) : 0;
 
 				// Get recorded time lapsed
@@ -284,8 +287,11 @@ class CoursePress_Template_Module {
 				$response_count += $lapses;
 
 				$try_again_label = __( 'Try Again', 'CP_TD' );
-				if ( 'input-upload' == $module_type ) {
-					$try_again_label = __( 'Upload a different file', 'CP_TD' );
+
+				switch ( $module_type ) {
+					case 'input-upload':
+						$try_again_label = __( 'Upload a different file', 'CP_TD' );
+					break;
 				}
 				$retry = sprintf( '<p class="cp-try-again"><a data-module="%s" class="button module-submit-action button-reload-module">%s</a></p>', $module_id, $try_again_label );
 
@@ -351,7 +357,13 @@ class CoursePress_Template_Module {
 				$module_elements = '';
 			}
 
-			$module_elements = sprintf( '<div id="cp-element-%s" class="module-elements %s" data-type="%s" data-required="%s">%s</div>', $module_id, $element_class, $module_type, $is_required, $module_elements );
+			switch ( $module_type ) {
+				case 'input-quiz';
+					$module_elements = sprintf( '<div class="module-quiz-questions">%s</div>', $module_elements );
+					break;
+			}
+
+			$module_elements = sprintf( '<div id="cp-element-%s" class="%s" data-type="%s" data-required="%s">%s</div>', $module_id, implode( ' ', $element_class ), $module_type, $is_required, $module_elements );
 
 			if ( $is_module_answerable && ! empty( $responses ) ) {
 
@@ -388,8 +400,20 @@ class CoursePress_Template_Module {
 			 **/
 			$content .= apply_filters( 'coursepress_module_template', $module_elements, $module_type, $module_id );
 
-			$format = '<div class="cp-module-content" data-type="%1$s" data-id="%2$s" id="cp-module-%2$s">%3$s</div>';
-			$content = sprintf( $format, $module_type, $module_id, $content );
+			/**
+			 * Filter the module container classes
+			 *
+			 * @since 2.0.6
+			 **/
+			$module_container_classes = apply_filters( 'coursepress_module_container_classes', array( 'cp-module-content' ), $module_type, $module_id );
+
+			$content = sprintf(
+				'<div class="%4$s" data-type="%1$s" data-id="%2$s" id="cp-module-%2$s">%3$s</div>',
+				esc_attr( $module_type ),
+				esc_attr( $module_id ),
+				$content,
+				esc_attr( implode( ' ', $module_container_classes ) )
+			);
 		}
 
 		return $content;
@@ -785,7 +809,7 @@ class CoursePress_Template_Module {
 			$alt = '';
 			$response = self::get_response( $module->ID, get_current_user_id() );
 
-			$content .= '<ul style="list-style:none;">';
+			$content .= '<ul class="quiz-question quiz-question-checkbox">';
 			foreach ( $attributes['answers'] as $key => $answer ) {
 				$checked = ' ' . checked( 1, is_array( $response ) && in_array( $key, $response ), false );
 
@@ -812,7 +836,7 @@ class CoursePress_Template_Module {
 			$alt = '';
 			$response = self::get_response( $module->ID, get_current_user_id() );
 
-			$content .= '<ul style="list-style:none;">';
+			$content .= '<ul class="quiz-question quiz-question-radio">';
 
 			foreach ( $attributes['answers'] as $key => $answer ) {
 				$checked = '' !== $response ? ' ' . checked( 1, '' != $response && (int) $response === $key, false ) : '';
@@ -911,7 +935,7 @@ class CoursePress_Template_Module {
 			$response = self::get_response( $module->ID, get_current_user_id() );
 
 			foreach ( $attributes['questions'] as $qi => $question ) {
-				$questions = '<ul style="list-style: none;">';
+				$questions = '<ul class="quiz-question quiz-question-input">';
 
 				foreach ( $question['options']['answers'] as $ai => $answer ) {
 					$module_name = sprintf( 'module[%s][%s]', $module->ID, $qi );
@@ -939,6 +963,14 @@ class CoursePress_Template_Module {
 			}
 		}
 
+		/**
+		 * Filter allow to cange questions in input quiz.
+		 *
+		 * @since 2.0.6
+		 *
+		 * @param string $questions Quiz module questions.
+		 */
+		$content = apply_filters( 'coursepress_template_module_render_input_quiz_content', $content );
 		return $content;
 	}
 
