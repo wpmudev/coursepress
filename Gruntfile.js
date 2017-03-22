@@ -761,7 +761,7 @@ module.exports = function(grunt) {
 			return;
 		}
 
-		grunt.task.run( 'clean:release' );
+		grunt.task.run( 'clean:release');
 		grunt.task.run( 'copy:release' );
 
 		if ( 'pro' === target ) {
