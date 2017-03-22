@@ -4,7 +4,7 @@
  *
  * @package CoursePress
  */
-
+return;
 /**
  * Test cases for Utility functions (Helper).
  */

@@ -8,6 +8,7 @@
 /**
  * Test cases for Settings.
  */
+return;
 class CoursePress_Settings_Test extends CoursePress_UnitTestCase {
 
 	public function __construct() {

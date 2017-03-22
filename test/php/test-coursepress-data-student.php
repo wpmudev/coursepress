@@ -2,6 +2,7 @@
 /**
  * @group coursepress-core
  */
+return;
 class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 
 	protected $student_progress;

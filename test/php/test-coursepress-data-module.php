@@ -2,6 +2,7 @@
 /**
  * @group coursepress-core
  */
+return;
 class Coursepress_Data_Module_Test extends CoursePress_UnitTestCase {
 
 	public function __construct() {

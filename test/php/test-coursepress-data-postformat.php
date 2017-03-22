@@ -2,6 +2,7 @@
 /**
  * @group coursepress-core
  */
+return;
 class Coursepress_Data_PostFormat_Test extends WP_UnitTestCase {
 
 	public function test_exists() {
