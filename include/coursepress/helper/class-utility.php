@@ -1426,4 +1426,34 @@ class CoursePress_Helper_Utility {
 		</div>
 		<?php
 	}
+
+	/**
+	 * Site vars.
+	 *
+	 * @since 2.0.6
+	 *
+	 * @param array $vars Array of site vars.
+	 * @return array Array of site vars.
+	 */
+	public static function add_site_vars( $vars = array() ) {
+		/**
+		 * get login url
+		 */
+		$login_url = wp_login_url();
+		if ( CoursePress_Core::get_setting( 'general/use_custom_login', true ) ) {
+			$login_url = CoursePress_Core::get_slug( 'login', true );
+		}
+		$vars['BLOG_ADDRESS'] = site_url();
+		$vars['BLOG_NAME'] = $vars['WEBSITE_NAME'] =  get_bloginfo( 'name' );
+		$vars['LOGIN_ADDRESS'] = $login_url;
+		$vars['WEBSITE_ADDRESS'] = home_url();
+		/**
+		 * Allow to change site vars.
+		 *
+		 * @since 2.0.6
+		 *
+		 * @param array $vars Array of site vars.
+		 */
+		return apply_filters( 'coursepress_site_vars', $vars );
+	}
 }
