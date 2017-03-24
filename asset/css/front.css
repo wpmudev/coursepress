@@ -1155,33 +1155,41 @@ input.cp-has-error {
 }
 
 /** Workbook **/
-.cp-student-workbook .course-completion-progress small {
+.cp-student-workbook .course-completion-progress small,
+.coursepress-archive-workbook .course-completion-progress small {
   float: right;
   font-size: 1.6em;
 }
-.cp-student-workbook .workbook-table {
+.cp-student-workbook .workbook-table,
+.coursepress-archive-workbook .workbook-table {
   margin: 15px 0;
   border: 1px solid rgba(0, 0, 0, 0.04);
 }
-.cp-student-workbook .workbook-table th, .cp-student-workbook .workbook-table td {
+.cp-student-workbook .workbook-table th, .cp-student-workbook .workbook-table td,
+.coursepress-archive-workbook .workbook-table th,
+.coursepress-archive-workbook .workbook-table td {
   vertical-align: top;
   text-align: left;
   background-color: transparent;
   padding: 8px 15px;
 }
-.cp-student-workbook .workbook-table .row-unit th {
+.cp-student-workbook .workbook-table .row-unit th,
+.coursepress-archive-workbook .workbook-table .row-unit th {
   border: 1px solid rgba(0, 0, 0, 0.04);
   border-width: 1px 0;
   padding: 8px 15px;
   background-color: #FFF;
 }
-.cp-student-workbook .workbook-table .row-unit th.td-right {
+.cp-student-workbook .workbook-table .row-unit th.td-right,
+.coursepress-archive-workbook .workbook-table .row-unit th.td-right {
   width: 20%;
 }
-.cp-student-workbook .workbook-table .td-right {
+.cp-student-workbook .workbook-table .td-right,
+.coursepress-archive-workbook .workbook-table .td-right {
   text-align: right;
 }
-.cp-student-workbook .workbook-table .non-gradable:before {
+.cp-student-workbook .workbook-table .non-gradable:before,
+.coursepress-archive-workbook .workbook-table .non-gradable:before {
   content: '\f534';
   font-family: Dashicons;
   font-size: 120%;
@@ -1189,7 +1197,8 @@ input.cp-has-error {
   line-height: 16px;
   vertical-align: middle;
 }
-.cp-student-workbook .workbook-table .button {
+.cp-student-workbook .workbook-table .button,
+.coursepress-archive-workbook .workbook-table .button {
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 5px 12px;
   text-decoration: none;
@@ -1203,31 +1212,38 @@ input.cp-has-error {
   font-weight: 400;
   box-shadow: none;
 }
-.cp-student-workbook .workbook-table .button:hover {
+.cp-student-workbook .workbook-table .button:hover,
+.coursepress-archive-workbook .workbook-table .button:hover {
   text-decoration: none;
   box-shadow: inset 0 0 0 transparent, 0 3px 0 black;
 }
-.cp-student-workbook .workbook-table .button a {
+.cp-student-workbook .workbook-table .button a,
+.coursepress-archive-workbook .workbook-table .button a {
   text-decoration: none;
   border: 0;
   color: inherit;
 }
-.cp-student-workbook .workbook-table .button.button-download:after {
+.cp-student-workbook .workbook-table .button.button-download:after,
+.coursepress-archive-workbook .workbook-table .button.button-download:after {
   content: '\f316';
   font-family: Dashicons;
   margin-left: 25px;
 }
-.cp-student-workbook .workbook-table .column-title {
+.cp-student-workbook .workbook-table .column-title,
+.coursepress-archive-workbook .workbook-table .column-title {
   width: 25%;
 }
-.cp-student-workbook .workbook-table .question {
+.cp-student-workbook .workbook-table .question,
+.coursepress-archive-workbook .workbook-table .question {
   font-size: 110%;
   font-weight: 600;
 }
-.cp-student-workbook .workbook-table .answer {
+.cp-student-workbook .workbook-table .answer,
+.coursepress-archive-workbook .workbook-table .answer {
   padding-left: 25px;
 }
-.cp-student-workbook .workbook-table .answer:before {
+.cp-student-workbook .workbook-table .answer:before,
+.coursepress-archive-workbook .workbook-table .answer:before {
   content: '\f335';
   font-family: Dashicons;
   font-size: 130%;
@@ -1235,9 +1251,12 @@ input.cp-has-error {
   display: inline-block;
   vertical-align: middle;
   margin-left: -25px;
+  color: #f20;
 }
-.cp-student-workbook .workbook-table .answer.chosen-correct:before {
+.cp-student-workbook .workbook-table .answer.chosen-correct:before,
+.coursepress-archive-workbook .workbook-table .answer.chosen-correct:before {
   content: '\f147';
+  color: #0f2;
 }
 
 /** grades **/

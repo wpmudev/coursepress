@@ -413,11 +413,13 @@ class CoursePress_Data_Student {
 				$total = count( $selected );
 				$ratio = $total > 0 ? 100 / $total : 0;
 
-				$correct = 0;
+				$correct = $wrong = 0;
 				if ( is_array( $response ) ) {
 					foreach ( $response as $answer ) {
 						if ( in_array( $answer, $selected ) ) {
 							$correct++;
+						} else {
+							$wrong++;
 						}
 					}
 				}
@@ -425,11 +427,12 @@ class CoursePress_Data_Student {
 					$correct = 0;
 				}
 				$grade = 0;
-
 				if ( $correct > 0 && $total > 0 ) {
 					$grade = (int) $correct * $ratio;
+					if ( $wrong > 0 ) {
+						$grade = (int) $correct * 100 / ( $correct + $wrong );
+					}
 				}
-
 				break;
 
 			case 'input-select':
@@ -2083,12 +2086,18 @@ class CoursePress_Data_Student {
 		switch ( $module_type ) {
 			case 'input-text':
 			case 'input-textarea':
-			case 'input-radio':
 			case 'input-select':
 			return $response != $old['response'];
 			case 'input-checkbox':
-				$diff = array_diff( $old['response'], $response );
-			return ! empty( $diff );
+			case 'input-radio':
+				$diff1 = array_diff( $old['response'], $response );
+				$diff2 = array_diff( $response, $old['response'] );
+				/**
+			 * if both diffs are empty it means answers match perfectly
+			 */
+				if ( empty( $diff1 ) && empty( $diff2 ) ) {
+					return false;
+				}
 		}
 		/**
 		 * not handled modules: file, quiz, form and another!

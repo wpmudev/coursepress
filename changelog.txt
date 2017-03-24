@@ -15,6 +15,7 @@ CHANGELOG
 * Improved: Process of saving answers.
 * Improved: Required unit message.
 * Improved: Message box for paid course.
+* Improved: Calculate grade info for "Multiple Choice" field, now wrong answers are count to the result.
 * Updated: Bundled MarketPress to latest version.
 * Fixed: Remove inclusion of CP assets on none CP pages.
 * Fixed: WooCommerce "Out of stock" product status.

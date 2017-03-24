@@ -405,7 +405,7 @@ class CoursePress_Data_Shortcode_Student {
 							$grade_display = __( 'Non-gradable', 'CP_TD' );
 						}
 
-						$content .= '<tr class="row-module">';
+						$content .= sprintf( '<tr class="row-module module-%s">', esc_attr( $attributes['module_type'] ) );
 						$content .= sprintf( '<td class="column-title">%s</td>', $title );
 						$content .= sprintf( '<td class="column-answer">%s</td>', $response_display );
 						$content .= sprintf( '<td class="td-right">%s</td>', $grade_display );
@@ -1032,8 +1032,7 @@ class CoursePress_Data_Shortcode_Student {
 
 		if ( 'section' == $type ) {
 			$page_number = $array['item_id'];
-		}
-		elseif ( 'module' == $type ) {
+		} elseif ( 'module' == $type ) {
 			$module_id = $array['item_id'];
 			$page_number = CoursePress_Data_Shortcode_Template::get_module_page( $course_id, $unit_id, $module_id );
 		}

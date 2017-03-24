@@ -1,4 +1,5 @@
-.cp-student-workbook {
+.cp-student-workbook,
+.coursepress-archive-workbook {
 	.course-completion-progress {
 		small {
 			float: right;
@@ -63,9 +64,11 @@
 				display: inline-block;
 				vertical-align: middle;
 				margin-left: -25px;
+				color: #f20;
 			}
 			&.chosen-correct:before {
 				content: '\f147';
+				color: #0f2;
 			}
 		}
 	}
