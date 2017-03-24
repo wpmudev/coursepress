@@ -29,6 +29,7 @@ CHANGELOG
 * Fixed: Ignoring "User also needs to pass all required assessments" unit option.
 * Fixed: "Passing Grade" value one assessments page.
 * Fixed: Link to student profile in "Number of Courses" column.
+* Fixed: Problem with save "Multiple Choice" if new answer contains previous answer.
 
 = 2.0.5 =
 -------------------------------------------------
