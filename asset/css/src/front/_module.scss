@@ -104,8 +104,11 @@
 				padding: 4px 12px;
 			}
 		}
-		input[type="checkbox"] {
-			margin-top: .4em;
+		input {
+			&[type="checkbox"],
+			&[type="radio"] {
+				margin-top: .3em;
+			}
 		}
 		input[type="text"],
 		textarea {
