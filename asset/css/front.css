@@ -992,13 +992,24 @@ input.cp-has-error {
 .cp .module-response .cp-answers .chosen-answer.correct:before {
   content: "\f147";
 }
-.cp .module-response .quiz-results table {
+.cp .module-response .quiz-results table,
+.cp .module-response .form-results table {
   text-align: left;
   border: 0;
 }
-.cp .module-response .quiz-results td, .cp .module-response .quiz-results th {
+.cp .module-response .quiz-results td, .cp .module-response .quiz-results th,
+.cp .module-response .form-results td,
+.cp .module-response .form-results th {
   padding: 5px 15px;
   border: 1px solid rgba(0, 0, 0, 0.04);
+}
+.cp .module-response .quiz-results td,
+.cp .module-response .form-results td {
+  text-align: right;
+}
+.cp .module-response .quiz-results tr:nth-child(even),
+.cp .module-response .form-results tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.04);
 }
 .cp .invalid-extension {
   margin: 25px 0 0 0;

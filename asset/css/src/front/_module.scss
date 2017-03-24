@@ -222,7 +222,8 @@
 				}
 			}
 		}
-		.quiz-results {
+		.quiz-results,
+		.form-results {
 			table {
 				text-align: left;
 				border: 0;
@@ -230,6 +231,12 @@
 			td, th {
 				padding: 5px 15px;
 				border: 1px solid rgba(0, 0, 0, 0.04);
+			}
+			td {
+				text-align: right;
+			}
+			tr:nth-child(even) {
+				background-color: rgba(0, 0, 0, 0.04);
 			}
 		}
 	}
