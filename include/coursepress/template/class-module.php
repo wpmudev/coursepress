@@ -274,8 +274,8 @@ class CoursePress_Template_Module {
 			CoursePress_Data_Student::visited_module( $student_id, $course_id, $unit_id, $module_id, self::$student_progress );
 
 			$retry = 'TRY';
+			$element_class = array( 'module-elements' );
 			if ( $is_module_answerable ) {
-				$element_class = array( 'module-elements' );
 				$responses = CoursePress_Data_Student::get_responses( $student_id, $course_id, $unit_id, $module_id, true, $student_progress );
 				$last_response = self::get_response( $module_id, $student_id );
 				if ( ! empty( $responses ) ) {
