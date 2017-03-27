@@ -148,7 +148,7 @@ class CoursePress_Data_Unit {
 	}
 
 	public static function get_page_meta( $unit_id, $item_id ) {
-		if ( empty( $item_id ) ) {
+		if ( empty( $item_id ) || empty( $unit_id ) ) {
 			return array(
 				'title' => '',
 				'description' => '',
