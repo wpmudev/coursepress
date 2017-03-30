@@ -750,7 +750,7 @@ class CoursePress_Helper_Upgrade {
 						/**
 						 * Modules seen
 						 */
-						CoursePress_Helper_Utility::set_array_val(
+						$student_progress = CoursePress_Helper_Utility::set_array_value(
 							$student_progress,
 							'completion/' . $unit_id . '/modules_seen/'.$module_id,
 							true
@@ -763,7 +763,7 @@ class CoursePress_Helper_Upgrade {
 			 */
 			foreach ( $modules as $unit_id => $module_ids ) {
 				foreach ( $module_ids as $module_id ) {
-					CoursePress_Helper_Utility::set_array_val(
+					$student_progress = CoursePress_Helper_Utility::set_array_value(
 						$student_progress,
 						'units/' . $unit_id . '/responses/'.$module_id,
 						array()
@@ -803,7 +803,7 @@ class CoursePress_Helper_Upgrade {
 				/**
 				 * Modules seen
 				 */
-				CoursePress_Helper_Utility::set_array_val(
+				$student_progress = CoursePress_Helper_Utility::set_array_value(
 					$student_progress,
 					'completion/' . $unit_id . '/modules_seen/'.$module_id,
 					true
@@ -813,34 +813,34 @@ class CoursePress_Helper_Upgrade {
 				$meta = get_post_meta( $response->ID );
 				switch ( $module_type ) {
 					case 'input-text':
-						CoursePress_Helper_Utility::set_array_val(
+						$student_progress = CoursePress_Helper_Utility::set_array_value(
 							$student_progress,
 							'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/response',
 							$response->post_content
 						);
-						CoursePress_Helper_Utility::set_array_val(
+						$student_progress = CoursePress_Helper_Utility::set_array_value(
 							$student_progress,
 							'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/date',
 							$response->post_date
 						);
-						CoursePress_Helper_Utility::set_array_val(
+						$student_progress = CoursePress_Helper_Utility::set_array_value(
 							$student_progress,
 							'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/grades',
 							array()
 						);
-						CoursePress_Helper_Utility::set_array_val(
+						$student_progress = CoursePress_Helper_Utility::set_array_value(
 							$student_progress,
 							'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/feedback',
 							array()
 						);
 					break;
 					case 'input-radio':
-						CoursePress_Helper_Utility::set_array_val(
+						$student_progress = CoursePress_Helper_Utility::set_array_value(
 							$student_progress,
 							'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/response',
 							$response->post_content
 						);
-						CoursePress_Helper_Utility::set_array_val(
+						$student_progress = CoursePress_Helper_Utility::set_array_value(
 							$student_progress,
 							'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/date',
 							$response->post_date
@@ -853,7 +853,7 @@ class CoursePress_Helper_Upgrade {
 						if ( isset( $meta['student_checked_answers'] ) ) {
 							foreach ( $meta['student_checked_answers'] as $index => $response_student_checked_answer ) {
 								$response_student_checked_answer = maybe_unserialize( $response_student_checked_answer );
-								CoursePress_Helper_Utility::set_array_val(
+								$student_progress = CoursePress_Helper_Utility::set_array_value(
 									$student_progress,
 									'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/response',
 									maybe_unserialize( $response_student_checked_answer )
@@ -873,7 +873,7 @@ class CoursePress_Helper_Upgrade {
 						/**
 						 * Module response
 						 */
-						CoursePress_Helper_Utility::set_array_val(
+						$student_progress = CoursePress_Helper_Utility::set_array_value(
 							$student_progress,
 							'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/grades/0',
 							array(
@@ -882,14 +882,14 @@ class CoursePress_Helper_Upgrade {
 								'date' => date( 'Y-m-d H:i:s', $grade['time'] ),
 							)
 						);
-						CoursePress_Helper_Utility::set_array_val(
+						$student_progress = CoursePress_Helper_Utility::set_array_value(
 							$student_progress,
 							'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/date',
 							date( 'Y-m-d H:i:s', $grade['time'] )
 						);
 					}
 				} elseif ( preg_match( '/^input/', $module_type ) ) {
-					CoursePress_Helper_Utility::set_array_val(
+					$student_progress = CoursePress_Helper_Utility::set_array_value(
 						$student_progress,
 						'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/grades/0',
 						array()
@@ -900,7 +900,7 @@ class CoursePress_Helper_Upgrade {
 				 */
 				if ( isset( $meta['response_comment'] ) ) {
 					foreach ( $meta['response_comment'] as $index => $comment ) {
-						CoursePress_Helper_Utility::set_array_val(
+						$student_progress = CoursePress_Helper_Utility::set_array_value(
 							$student_progress,
 							'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/feedback/0',
 							array(
@@ -933,7 +933,7 @@ class CoursePress_Helper_Upgrade {
 				$module_id = $response->post_parent;
 				$unit_id = CoursePress_Data_Module::get_unit_id_by_module( $module_id );
 				$meta = get_post_meta( $response->ID );
-				CoursePress_Helper_Utility::set_array_val(
+				$student_progress = CoursePress_Helper_Utility::set_array_value(
 					$student_progress,
 					'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/grades/0',
 					array(
@@ -942,12 +942,12 @@ class CoursePress_Helper_Upgrade {
 						'date' => $response->post_date,
 					)
 				);
-				CoursePress_Helper_Utility::set_array_val(
+				$student_progress = CoursePress_Helper_Utility::set_array_value(
 					$student_progress,
 					'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/date',
 					$response->post_date
 				);
-				CoursePress_Helper_Utility::set_array_val(
+				$student_progress = CoursePress_Helper_Utility::set_array_value(
 					$student_progress,
 					'units/' . $unit_id . '/responses/'.$module_id.'/'.$index.'/response',
 					array(
@@ -967,7 +967,7 @@ class CoursePress_Helper_Upgrade {
 				 */
 				$value = get_user_meta( $student_id, 'visited_unit_pages_'.$unit_id.'_page', true );
 				$value = explode( '|', get_user_meta( $student_id, 'visited_unit_pages_'.$unit_id.'_page', true ) );
-				CoursePress_Helper_Utility::set_array_val(
+				$student_progress = CoursePress_Helper_Utility::set_array_value(
 					$student_progress,
 					'units/' . $unit_id . '/visited_pages/',
 					$value
@@ -975,7 +975,7 @@ class CoursePress_Helper_Upgrade {
 				/**
 				 * last visited page
 				 */
-				CoursePress_Helper_Utility::set_array_val(
+				$student_progress = CoursePress_Helper_Utility::set_array_value(
 					$student_progress,
 					'units/' . $unit_id . '/last_visited_page/',
 					explode( '|', get_user_meta( $student_id, 'last_visited_unit_pages_'.$unit_id.'_page', true ) )

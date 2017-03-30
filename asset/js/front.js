@@ -1,4 +1,4 @@
-/*! CoursePress - v2.0.6
+/*! CoursePress - v2.0.7
  * https://premium.wpmudev.org/project/coursepress-pro/
  * Copyright (c) 2017; * Licensed GPLv2+ */
 var CoursePress = {};
@@ -1187,6 +1187,10 @@ $(document)
 		handle_signup_return: function( data ) {
 			var signup_errors = data['signup_errors'];
 			var steps = $( '[data-type="modal-step"]' );
+			/**
+			 * remove spinner
+			 */
+			$("span.fa-circle-o-notch").detach();
 			if ( 0 === signup_errors.length && data['user_data']['logged_in'] === true ) {
 				// Check if the page is redirected from an invitation link
 				if ( _coursepress.invitation_data ) {
@@ -1575,6 +1579,13 @@ $(document)
 		fn = CoursePress.Enrollment.dialog[ action + '_data' ];
 		if ( typeof fn === 'function' ) {
 			data = fn( data );
+		}
+
+		/**
+		 * Add indicator
+		 */
+		if ( "signup" == action ) {
+			$("input.signup").after('<span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span>');
 		}
 
 		CoursePress.Post.set( 'data', data );

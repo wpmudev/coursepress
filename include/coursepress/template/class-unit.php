@@ -259,7 +259,7 @@ class CoursePress_Template_Unit {
 
 		// Pager.
 		$preview_pages = array();
-		if ( isset( $preview['structure'][ $unit->ID ] ) ) {
+		if ( isset( $preview['structure'][ $unit->ID ] ) && is_array( $preview['structure'][ $unit->ID ] ) ) {
 			$preview_pages = array_keys( $preview['structure'][ $unit->ID ] );
 		}
 
