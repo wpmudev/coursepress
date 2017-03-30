@@ -29,7 +29,7 @@ CHANGELOG
 * Fixed: Ignoring "User also needs to pass all required assessments" unit option.
 * Fixed: "Passing Grade" value one assessments page.
 * Fixed: Link to student profile in "Number of Courses" column.
-* Fixed form imput, there was a problem with correct grade.
+* Fixed: Form input with correct grade.
 
 = 2.0.5 =
 -------------------------------------------------
