@@ -161,6 +161,11 @@ class CoursePress_Helper_Integration_WooCommerce {
 		 * check cart before allow to proceder. Courses can not be buy by guests.
 		 */
 		add_filter( 'pre_option_woocommerce_enable_guest_checkout', array( __CLASS__, 'check_cart_and_user_login' ) );
+
+		/**
+		 * WooCommerce payment complete -> CoursePress enroll student.
+		 */
+		add_action( 'woocommerce_payment_complete', array( __CLASS__, 'payment_complete_enroll_student' ) );
 	}
 
 	public static function change_order_status( $order_id, $old_status, $new_status ) {
@@ -170,14 +175,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 		if ( ! self::$is_active ) {
 			return;
 		}
-		/**
-		 * remove filter to allow enroll
-		 */
-		remove_filter(
-			'coursepress_enroll_student',
-			array( __CLASS__, 'allow_student_to_enroll' ),
-			10, 3
-		);
+		self::remove_filter_coursepress_enroll_student();
 		$order = new WC_order( $order_id );
 		$items = $order->get_items();
 		$user_id = get_post_meta( $order_id, '_customer_user', true );
@@ -1039,5 +1037,48 @@ class CoursePress_Helper_Integration_WooCommerce {
 			}
 		}
 		return $enable_guest_checkout;
+	}
+
+	/**
+	 * Change student enrollment status in course, after payment complete.
+	 *
+	 * @since 2.0.7
+	 *
+	 * @param integer $order_id WooCommerce order ID.
+	 */
+	public static function payment_complete_enroll_student( $order_id ) {
+		/**
+		 * if we do not use woo, then we should not use this function
+		 */
+		if ( ! self::$is_active ) {
+			return;
+		}
+		self::remove_filter_coursepress_enroll_student();
+		$order = new WC_order( $order_id );
+		$items = $order->get_items();
+		$user_id = get_post_meta( $order_id, '_customer_user', true );
+		foreach ( $items as $item ) {
+			$course_id = self::get_course_id_by_product( $item['product_id'] );
+			if ( empty( $course_id ) ) {
+				continue;
+			}
+			CoursePress_Data_Course::enroll_student( $user_id, $course_id );
+		}
+	}
+
+	/**
+	 * Remove filter which preventing student to enroll course without paing.
+	 *
+	 * @since 2.0.7
+	 */
+	private static function remove_filter_coursepress_enroll_student() {
+		/**
+		 * remove filter to allow enroll
+		 */
+		remove_filter(
+			'coursepress_enroll_student',
+			array( __CLASS__, 'allow_student_to_enroll' ),
+			10, 3
+		);
 	}
 }

@@ -563,8 +563,15 @@ class CoursePress_Data_Module {
 				$answer = $response[ $key ];
 				switch ( $question['type'] ) {
 					case 'selectable':
-						// selectable will always have a default response
-						$gross_correct += 1;
+						$correct_answers = $question['options']['checked'];
+						$result = $total_answers = 0;
+						$correct = false;
+						if ( isset( $correct_answers[ $answer ] ) ) {
+							$correct = cp_is_true( $correct_answers[ $answer ] );
+							if ( $correct ) {
+								$gross_correct++;
+							}
+						}
 						break;
 					case 'short':
 					case 'long':
