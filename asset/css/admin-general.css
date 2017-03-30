@@ -1012,22 +1012,21 @@ input.button.button-primary.instructor-assign {
 #course-setup-steps .step-content hr.separator {
   margin-top: 40px;
 }
-
 #course-setup-steps .step-content .payment-message {
   background: #f1f1f1;
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 10px;
   margin-top: 10px;
-  width: 50%;
+  width: auto;
 }
-
-#course-setup-steps .step-content .payment-message h3 {
-  background: #0091CD;
-  color: #ffffff;
+#course-setup-steps .step-content .payment-message h4 {
+  margin-top: 0;
 }
-
-#course-setup-steps .step-content label.description {
+#course-setup-steps .step-content .payment-message p:last-of-type {
+  margin-bottom: 0;
+}
+#course-setup-steps .step-content label .description {
   font-weight: normal;
   font-style: oblique;
 }

@@ -5,12 +5,57 @@ Build Time:  BUILDTIME
 CHANGELOG
 =================================================
 
+= 2.0.7 =
+-------------------------------------------------
+* Added: A sample course to fresh CoursePress installation.
+* Added: 
+* Added: 
+* Added: 
+* Improved: 
+* Improved: 
+* Improved: 
+* Improved: 
+* Improved: 
+* Fixed: 
+* Fixed: 
+* Fixed: 
+* Fixed: 
+* Fixed: 
+
+
 = 2.0.6 =
 -------------------------------------------------
-* Added sample course to fresh CoursePress installation.
+* Added: Redirect to login page for guest users.
+* Added: Number of failed attempts at student assessment.
+* Added: Validation for user related functions to avoid processing when there is no logged user.
+
+* Improved: Change "Duration" to "Time Limit" label.
+* Improved: Unify all TinyMCE editors CP instance.
+* Improved: Process of saving answers.
+* Improved: Required unit message.
+* Improved: Message box for paid course.
+* Improved: Integration with WooCommerce - when student pay with PayPal, a student will be enrolled to the ordered courses.
+
+* Updated: Bundled MarketPress to latest version.
+
+* Fixed: Remove inclusion of CP assets on none CP pages.
+* Fixed: WooCommerce "Out of stock" product status.
+* Fixed: Deleting modules when section is deleted.
+* Fixed: Missing untranslated texts.
+* Fixed: Marketpress sale price.
+* Fixed: Editor height.
+* Fixed: Missing grade for manualy graded fields when using "Save & Exit".
+* Fixed: Too many redirects error.
+* Fixed: HTML tags not showing in Multiple/Single Choice field.
+* Fixed: Ignoring "User also needs to pass all required assessments" unit option.
+* Fixed: "Passing Grade" value one assessments page.
+* Fixed: Link to student profile in "Number of Courses" column.
+* Fixed: form imput, there was a problem with correct grade.
+* Fixed: Form input with correct grade.
 
 = 2.0.5 =
 -------------------------------------------------
+* Fixed errors with PHP 7.1.1.
 * Added HTML preview for Raports.
 * Added ability to turn on/off social sharing icons.
 * Added check is safe_mode before call set_time_limit() function.
@@ -18,10 +63,12 @@ CHANGELOG
 * Added check is user logged before we show comment form in discussion module.
 * Added CoursePress Endpoints to Apperance -> Menu screen.
 * Added ability to remember the last sorting chosen by user on the list of courses in admin area.
+* Added new option "Show empty units" which allow to show units without modules.
 * Improved select2 field for prerequisites and remove current course from the list.
 * Improved MarketPress product thumbnail and images integration.
 * Improved link building to student profile in admin area.
 * Improved HTML login & signup forms.
+* Improved TinyMCE editor on course edit screen.
 * FIxed on signup form double error messages.
 * Fixed "Grades" screen.
 * Fixed a wrong link to student profile from students tab on a course edit screen.
@@ -34,6 +81,8 @@ CHANGELOG
 
 = 2.0.4 =
 -------------------------------------------------
+* Fixed problem with deleting section on courses edit page.
+* Improve module order recalculate, when we deleting a section.
 * Added ability to enroll, when we use course_join_button, but we are not logged.
 * Added sanitization course id field in "course_join_button" shortcode.
 * Added ability to save course state and exit.
