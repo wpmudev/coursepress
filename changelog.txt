@@ -19,6 +19,7 @@ CHANGELOG
 * Fixed: 
 * Fixed: 
 * Fixed: 
+* Fixed: Remove vulnerability to view any module.
 * Fixed: 
 * Fixed: 
 
@@ -39,7 +40,6 @@ CHANGELOG
 * Updated: Bundled MarketPress to latest version.
 
 * Fixed: Remove inclusion of CP assets on none CP pages.
-* Fixed: Remove vulnerability to view any module.
 * Fixed: WooCommerce "Out of stock" product status.
 * Fixed: Deleting modules when section is deleted.
 * Fixed: Missing untranslated texts.
