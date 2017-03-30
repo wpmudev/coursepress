@@ -19,7 +19,7 @@ CHANGELOG
 * Fixed: 
 * Fixed: 
 * Fixed: 
-* Fixed: 
+* Fixed: Email placeholders.
 * Fixed: 
 
 
