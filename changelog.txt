@@ -5,6 +5,24 @@ Build Time:  BUILDTIME
 CHANGELOG
 =================================================
 
+= 2.0.7 =
+-------------------------------------------------
+* Added: 
+* Added: 
+* Added: 
+* Added: 
+* Improved: 
+* Improved: 
+* Improved: 
+* Improved: 
+* Improved: 
+* Fixed: 
+* Fixed: 
+* Fixed: 
+* Fixed: 
+* Fixed: 
+
+
 = 2.0.6 =
 -------------------------------------------------
 * Added: Redirect to login page for guest users.
@@ -29,7 +47,7 @@ CHANGELOG
 * Fixed: Ignoring "User also needs to pass all required assessments" unit option.
 * Fixed: "Passing Grade" value one assessments page.
 * Fixed: Link to student profile in "Number of Courses" column.
-* Fixed form imput, there was a problem with correct grade.
+* Fixed: form imput, there was a problem with correct grade.
 
 = 2.0.5 =
 -------------------------------------------------
