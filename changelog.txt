@@ -28,13 +28,16 @@ CHANGELOG
 * Added: Redirect to login page for guest users.
 * Added: Number of failed attempts at student assessment.
 * Added: Validation for user related functions to avoid processing when there is no logged user.
+
 * Improved: Change "Duration" to "Time Limit" label.
 * Improved: Unify all TinyMCE editors CP instance.
 * Improved: Process of saving answers.
 * Improved: Required unit message.
 * Improved: Message box for paid course.
 * Improved: Integration with WooCommerce - when student pay with PayPal, a student will be enrolled to the ordered courses.
+
 * Updated: Bundled MarketPress to latest version.
+
 * Fixed: Remove inclusion of CP assets on none CP pages.
 * Fixed: WooCommerce "Out of stock" product status.
 * Fixed: Deleting modules when section is deleted.
@@ -48,6 +51,7 @@ CHANGELOG
 * Fixed: "Passing Grade" value one assessments page.
 * Fixed: Link to student profile in "Number of Courses" column.
 * Fixed: form imput, there was a problem with correct grade.
+* Fixed: Form input with correct grade.
 
 = 2.0.5 =
 -------------------------------------------------
