@@ -1111,7 +1111,7 @@ class CoursePress_Template_Module {
 	/**
 	 * Check and show form input results.
 	 *
-	 * @since 2.0.6
+	 * @since 2.0.7
 	 *
 	 * @param integer $student_id student ID.
 	 * @param integer $course_id Course ID.
