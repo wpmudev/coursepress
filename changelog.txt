@@ -5,29 +5,54 @@ Build Time:  BUILDTIME
 CHANGELOG
 =================================================
 
+= 2.0.7 =
+-------------------------------------------------
+* Added: 
+* Added: 
+* Added: 
+* Added: 
+* Improved: HTML login & signup forms.
+* Improved: 
+* Improved: 
+* Improved: 
+* Improved: 
+* Improved: 
+* Fixed: 
+* Fixed: 
+* Fixed: 
+* Fixed: 
+* Fixed: 
+
+
 = 2.0.6 =
 -------------------------------------------------
-* Improved HTML login & signup forms.
+* Added: Redirect to login page for guest users.
+* Added: Number of failed attempts at student assessment.
+* Added: Validation for user related functions to avoid processing when there is no logged user.
+
+* Improved: Change "Duration" to "Time Limit" label.
+* Improved: Unify all TinyMCE editors CP instance.
+* Improved: Process of saving answers.
+* Improved: Required unit message.
+* Improved: Message box for paid course.
+* Improved: Integration with WooCommerce - when student pay with PayPal, a student will be enrolled to the ordered courses.
+
+* Updated: Bundled MarketPress to latest version.
+
 * Fixed: Remove inclusion of CP assets on none CP pages.
-* Fixed a problem with change WooCommerce product status to "Out of stock".
-* Fixed a problem with modules when section is deleted.
-* Fixed untranslated texts.
-* Fixed a problem with sale price in MarketPress.
-* To avoid confusion, we changed label "Duration" to "Time Limit".
-* Fixed a problem with too tall TinyMCE editoor.
-* Unified all TinyMCE editors.
-* Improved process of saving answers.
-* Fixed a bug with missing grade for manualy graded fields when we use "Save & Exit" feature.
-* Improved message about required units.
-* Fixed too many redirects error.
-* Added redirect to login page on student settings page for non-logged users.
-* Fixed issue with not showing HTML tags in Multiple/Single Choice field.
-* Updated included Market Press version 3.2.3
-* Fixed a problem with ignoring "User also needs to pass all required assessments" unit option.
-* Added "Number of failed attempts".
-* Improved message box for MarketPress on paid course.
-* Fixed "Passing Grade" value one assessments page.
-* Added checks for user related functions to avoid processing when there is no logged user.
+* Fixed: WooCommerce "Out of stock" product status.
+* Fixed: Deleting modules when section is deleted.
+* Fixed: Missing untranslated texts.
+* Fixed: Marketpress sale price.
+* Fixed: Editor height.
+* Fixed: Missing grade for manualy graded fields when using "Save & Exit".
+* Fixed: Too many redirects error.
+* Fixed: HTML tags not showing in Multiple/Single Choice field.
+* Fixed: Ignoring "User also needs to pass all required assessments" unit option.
+* Fixed: "Passing Grade" value one assessments page.
+* Fixed: Link to student profile in "Number of Courses" column.
+* Fixed: form imput, there was a problem with correct grade.
+* Fixed: Form input with correct grade.
 
 = 2.0.5 =
 -------------------------------------------------
