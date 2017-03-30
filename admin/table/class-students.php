@@ -129,9 +129,7 @@ class CoursePress_Admin_Table_Students extends CoursePress_Admin_Table_Instructo
 	}
 
 	public function column_courses( $user_id ) {
-		$profile_link = add_query_arg(
-			array( 'view' => 'profile', 'student_id' => $user_id )
-		);
+		$profile_link = CoursePress_Data_Student::get_admin_profile_url( $user_id );
 		return sprintf( '<a href="%s">%s</a>', $profile_link, $this->items[ $user_id ]->count_enrolled_courses );
 	}
 
