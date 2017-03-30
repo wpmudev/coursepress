@@ -622,27 +622,36 @@ input.button.button-primary.instructor-assign {
 	display: none;
 }
 
-#course-setup-steps .step-content hr.separator {
-	margin-top: 40px;
-}
-
-#course-setup-steps .step-content .payment-message {
-	background: #f1f1f1;
-	border: 1px solid $colorGrey;
-	border-radius: 10px;
-	padding: 10px;
-	margin-top: 10px;
-	width: 50%;
-}
-
-#course-setup-steps .step-content .payment-message h3 {
-	background: #0091CD;
-	color: #ffffff;
-}
-
-#course-setup-steps .step-content label.description {
-	font-weight: normal;
-	font-style: oblique;
+#course-setup-steps {
+	.step-content {
+		hr {
+			&.separator {
+				margin-top: 40px;
+			}
+		}
+		.payment-message {
+			background: #f1f1f1;
+			border: 1px solid $colorGrey;
+			border-radius: 10px;
+			padding: 10px;
+			margin-top: 10px;
+			width: auto;
+			h4 {
+				margin-top: 0;
+			}
+			p {
+				&:last-of-type {
+					margin-bottom: 0;
+				}
+			}
+		}
+		label{
+			.description {
+				font-weight: normal;
+				font-style: oblique;
+			}
+		}
+	}
 }
 
 [name="publish-course-toggle"] {

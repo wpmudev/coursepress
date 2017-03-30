@@ -80,7 +80,6 @@ class CoursePress_View_Admin_Setting_Email {
 								<td>
 								<p class="description">' . esc_html( $section['content_help_text'] ) . '</p>';
 
-			ob_start();
 			$editor_name = 'coursepress_settings[email][' . $key . '][content]';
 			$editor_id = 'coursepress_settings_email_' . $key . '_content';
 			$editor_content = stripslashes( CoursePress_Core::get_setting( 'email/' . $key . '/content', $default_settings[ $key ]['content'] ) );
@@ -91,18 +90,12 @@ class CoursePress_View_Admin_Setting_Email {
 				'wpautop' => true,
 				'teeny' => true,
 				'media_buttons' => false,
-				'tinymce' => array(
-					'height' => 400,
-				)
+					'quicktags' => true,
 			);
 			$args = apply_filters( 'coursepress_element_editor_args', $args, $editor_name, $editor_id );
-			wp_editor( $editor_content, $editor_id, $args );
+			$content .= CoursePress_Helper_Editor::get_wp_editor( $editor_id, $editor_name, $editor_content, $args );
 
-			$content .= ob_get_clean();
-
-			$content .= '	   <br /></td>
-							</tr>
-			';
+			$content .= '</td></tr>';
 			$content .= '
 						</tbody>
 					</table>

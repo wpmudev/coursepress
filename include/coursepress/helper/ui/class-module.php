@@ -94,7 +94,6 @@ class CoursePress_Helper_UI_Module {
 			),// components
 		);
 
-		// error_log( self::get_template( self::INPUT_SHORT_TEXT ) );
 		$data = json_decode( self::get_template( self::INPUT_SHORT_TEXT ) );
 		$data = CoursePress_Helper_Utility::object_to_array( $data );
 
@@ -336,7 +335,7 @@ class CoursePress_Helper_UI_Module {
 		return apply_filters( 'coursepress_module_labels', array(
 			'module_title' => __( 'Title', 'CP_TD' ),
 			'module_title_desc' => __( 'The title is used to identify this module element and is useful for assessment.', 'CP_TD' ),
-			'module_duration' => __( 'Duration ([hh:]mm:ss)', 'CP_TD' ),
+			'module_duration' => __( 'Student Completion Time Limit ([hh:]mm:ss)', 'CP_TD' ),
 			'module_show_title' => __( 'Show Title', 'CP_TD' ),
 			'module_show_title_desc' => __( 'Show title in unit view', 'CP_TD' ),
 			'module_mandatory' => __( 'Required', 'CP_TD' ),
@@ -1003,7 +1002,7 @@ class CoursePress_Helper_UI_Module {
 									"dashicon": "editor-alignleft"
 								},
 								{
-									"title": "' . __( 'Selectable', 'CP_TD' ) .'",
+									"title": "' . __( 'Selectable', 'CP_TD' ) . '",
 									"type": "action",
 									"class": "input-element form-action-button selectable wide",
 									"action": "selectable",
