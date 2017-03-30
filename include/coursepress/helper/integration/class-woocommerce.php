@@ -157,6 +157,10 @@ class CoursePress_Helper_Integration_WooCommerce {
 		 */
 		add_action( 'woocommerce_order_status_changed', array( __CLASS__, 'woocommerce_order_status_changed' ), 21, 3 );
 
+		/**
+		 * WooCommerce payment complete -> CoursePress enroll student.
+		 */
+		add_action( 'woocommerce_payment_complete', array( __CLASS__, 'payment_complete_enroll_student' ) );
 	}
 
 	public static function change_order_status( $order_id, $old_status, $new_status ) {
@@ -166,14 +170,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 		if ( ! self::$is_active ) {
 			return;
 		}
-		/**
-		 * remove filter to allow enroll
-		 */
-		remove_filter(
-			'coursepress_enroll_student',
-			array( __CLASS__, 'allow_student_to_enroll' ),
-			10, 3
-		);
+		self::remove_filter_coursepress_enroll_student();
 		$order = new WC_order( $order_id );
 		$items = $order->get_items();
 		$user_id = get_post_meta( $order_id, '_customer_user', true );
@@ -948,6 +945,15 @@ class CoursePress_Helper_Integration_WooCommerce {
 	 * @since 2.0.0
 	 */
 	public static function woocommerce_before_main_content() {
+		/**
+		 * Changed to check only for logged users, becouse some courses
+		 * are always not available for not logged users.
+		 *
+		 * @since 2.0.6
+		 */
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
 		while ( have_posts() ) {
 			the_post();
 			$product_id = get_the_ID();
@@ -999,5 +1005,48 @@ class CoursePress_Helper_Integration_WooCommerce {
 			$key = sprintf( 'course_%d_woo_payment_status', $course_id );
 			update_user_meta( $student_id, $key, $new_status );
 		}
+	}
+
+	/**
+	 * Change student enrollment status in course, after payment complete.
+	 *
+	 * @since 2.0.6
+	 *
+	 * @param integer $order_id WooCommerce order ID.
+	 */
+	public static function payment_complete_enroll_student( $order_id ) {
+		/**
+		 * if we do not use woo, then we should not use this function
+		 */
+		if ( ! self::$is_active ) {
+			return;
+		}
+		self::remove_filter_coursepress_enroll_student();
+		$order = new WC_order( $order_id );
+		$items = $order->get_items();
+		$user_id = get_post_meta( $order_id, '_customer_user', true );
+		foreach ( $items as $item ) {
+			$course_id = self::get_course_id_by_product( $item['product_id'] );
+			if ( empty( $course_id ) ) {
+				continue;
+			}
+			CoursePress_Data_Course::enroll_student( $user_id, $course_id );
+		}
+	}
+
+	/**
+	 * Remove filter which preventing student to enroll course without paing.
+	 *
+	 * @since 2.0.6
+	 */
+	private static function remove_filter_coursepress_enroll_student() {
+		/**
+		 * remove filter to allow enroll
+		 */
+		remove_filter(
+			'coursepress_enroll_student',
+			array( __CLASS__, 'allow_student_to_enroll' ),
+			10, 3
+		);
 	}
 }

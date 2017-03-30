@@ -252,11 +252,7 @@ class CoursePress_Data_Student {
 	 * @return (array)						An array of course completion data.
 	 **/
 	public static function init_completion_data( $student_id, $course_id ) {
-
-		$data = array();
-		CoursePress_Helper_Utility::set_array_val( $data, 'version', '2.0' );
-
-		return $data;
+		return CoursePress_Helper_Utility::set_array_value( array(), 'version', CoursePress::$version );
 	}
 
 	/**
@@ -346,8 +342,8 @@ class CoursePress_Data_Student {
 			$data['units'] = array();
 		}
 
-		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/visited_pages/' . $page, $page );
-		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/last_visited_page', $page );
+		$data = CoursePress_Helper_Utility::set_array_value( $data, 'units/' . $unit_id . '/visited_pages/' . $page, $page );
+		$data = CoursePress_Helper_Utility::set_array_value( $data, 'units/' . $unit_id . '/last_visited_page', $page );
 		self::update_completion_data( $student_id, $course_id, $data );
 
 		return $data;
@@ -370,7 +366,7 @@ class CoursePress_Data_Student {
 		if ( empty( $unit_id ) || ! is_numeric( $unit_id ) ) {
 			return $data;
 		}
-		CoursePress_Helper_Utility::set_array_val( $data, 'completion/' . $unit_id . '/modules_seen/' . $module_id, true );
+		$data = CoursePress_Helper_Utility::set_array_value( $data, 'completion/' . $unit_id . '/modules_seen/' . $module_id, true );
 		self::update_completion_data( $student_id, $course_id, $data );
 		return $data;
 	}
@@ -397,6 +393,15 @@ class CoursePress_Data_Student {
 
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
+		}
+
+		/**
+		 * Check answer freshness.
+		 */
+		$is_new_answer = self::check_is_new_answer( $student_id, $course_id, $unit_id, $module_id, $response, $data );
+
+		if ( false == $is_new_answer ) {
+			return;
 		}
 
 		$grade = - 1;
@@ -500,10 +505,10 @@ class CoursePress_Data_Student {
 		if ( isset( $attributes['mandatory'] ) && $attributes['mandatory'] ) {
 			$key = 'completion/' . $unit_id . '/completed_mandatory';
 			$mandatory = (int) CoursePress_Helper_Utility::get_array_val( $data, $key );
-			CoursePress_Helper_Utility::set_array_val( $data, $key, $mandatory + 1 );
+			$data = CoursePress_Helper_Utility::set_array_value( $data, $key, $mandatory + 1 );
 		}
 
-		CoursePress_Helper_Utility::set_array_val( $data, 'units/' . $unit_id . '/responses/' . $module_id . '/', $response_data );
+		$data = CoursePress_Helper_Utility::set_array_value( $data, 'units/' . $unit_id . '/responses/' . $module_id . '/', $response_data );
 		self::get_calculated_completion_data( $student_id, $course_id, $data );
 
 		return $data;
@@ -636,7 +641,7 @@ class CoursePress_Data_Student {
 
 		if ( empty( $responses ) ) {
 			$responses = array();
-			CoursePress_Helper_Utility::set_array_val(
+			$data = CoursePress_Helper_Utility::set_array_value(
 				$data,
 				'units/' . $unit_id . '/responses/' . $module_id,
 				$responses
@@ -656,7 +661,7 @@ class CoursePress_Data_Student {
 			'date' => current_time( 'mysql' ),
 		);
 
-		CoursePress_Helper_Utility::set_array_val(
+		$data = CoursePress_Helper_Utility::set_array_value(
 			$data,
 			'units/' . $unit_id . '/responses/' . $module_id . '/' . $response_index . '/grades/',
 			$grade_data
@@ -775,7 +780,7 @@ class CoursePress_Data_Student {
 			'draft' => $is_draft,
 		);
 
-		CoursePress_Helper_Utility::set_array_val(
+		$data = CoursePress_Helper_Utility::set_array_value(
 			$data,
 			'units/' . $unit_id . '/responses/' . $module_id . '/' . $response_index . '/feedback/',
 			$feedback_data
@@ -968,7 +973,7 @@ class CoursePress_Data_Student {
 									if ( ! cp_is_true( $had_answered ) ) {
 										do_action( 'coursepress_student_module_attempted', $student_id, $module_id, get_post_field( 'post_tile', $module_id ), $unit_id, $course_id );
 									}
-									CoursePress_Helper_Utility::set_array_val(
+									$student_progress = CoursePress_Helper_Utility::set_array_value(
 										$student_progress, 'completion/' . $unit_id . '/answered/' . $module_id,
 										true
 									);
@@ -1049,7 +1054,7 @@ class CoursePress_Data_Student {
 													do_action( 'coursepress_student_module_passed', $student_id, $module_id, get_post_field( 'post_tile', $module_id ), $unit_id, $course_id );
 												}
 
-												CoursePress_Helper_Utility::set_array_val(
+												$student_progress = CoursePress_Helper_Utility::set_array_value(
 													$student_progress,
 													'completion/' . $unit_id . '/passed/' . $module_id,
 													true
@@ -1144,7 +1149,7 @@ class CoursePress_Data_Student {
 			}
 
 			// Set # of required steps
-			CoursePress_Helper_Utility::set_array_val(
+			$student_progress = CoursePress_Helper_Utility::set_array_value(
 				$student_progress,
 				'completion/' . $unit_id . '/required_steps',
 				$unit_required_modules
@@ -1152,20 +1157,20 @@ class CoursePress_Data_Student {
 			$course_mandatory_steps += $unit_required_modules;
 
 			// Set total # of answered mandatory modules
-			CoursePress_Helper_Utility::set_array_val(
+			$student_progress = CoursePress_Helper_Utility::set_array_value(
 				$student_progress,
 				'completion/' . $unit_id . '/completed_mandatory',
 				$unit_completed_required_modules
 			);
 			$course_completed_mandatory_steps += $unit_completed_required_modules;
 
-			CoursePress_Helper_Utility::set_array_val(
+			$student_progress = CoursePress_Helper_Utility::set_array_value(
 				$student_progress,
 				'completion/' . $unit_id . '/all_mandatory',
 				$unit_required_modules == $unit_completed_required_modules
 			);
 
-			CoursePress_Helper_Utility::set_array_val(
+			$student_progress = CoursePress_Helper_Utility::set_array_value(
 				$student_progress,
 				'completion/' . $unit_id . '/all_required_assessable',
 				$unit_assessable_modules == $unit_completed_assessable_modules
@@ -1177,7 +1182,7 @@ class CoursePress_Data_Student {
 				$unit_progress = ceil( $unit_progress / $unit_progress_counter );
 			}
 
-			CoursePress_Helper_Utility::set_array_val(
+			$student_progress = CoursePress_Helper_Utility::set_array_value(
 				$student_progress,
 				'completion/' . $unit_id . '/progress',
 				$unit_progress
@@ -1191,7 +1196,7 @@ class CoursePress_Data_Student {
 
 			// Marked unit completion status
 			$is_unit_completed = $unit_total_modules > 0 && $unit_completed_modules >= $unit_total_modules;
-			CoursePress_Helper_Utility::set_array_val(
+			$student_progress = CoursePress_Helper_Utility::set_array_value(
 				$student_progress,
 				'completion/' . $unit_id . '/completed',
 				$is_unit_completed
@@ -1200,7 +1205,7 @@ class CoursePress_Data_Student {
 			$course_gradable_modules += $unit_gradable_modules;
 			$course_grade += $unit_grade;
 			$unit_grade = $unit_grade > 0 && $unit_gradable_modules > 0 ? ceil( $unit_grade / $unit_gradable_modules ) : 0;
-			CoursePress_Helper_Utility::set_array_val(
+			$student_progress = CoursePress_Helper_Utility::set_array_value(
 				$student_progress,
 				'completion/' . $unit_id . '/average',
 				$unit_grade
@@ -1216,12 +1221,12 @@ class CoursePress_Data_Student {
 			}
 		}
 
-		CoursePress_Helper_Utility::set_array_val(
+		$student_progress = CoursePress_Helper_Utility::set_array_value(
 			$student_progress,
 			'completion/required_steps',
 			$course_mandatory_steps
 		);
-		CoursePress_Helper_Utility::set_array_val(
+		$student_progress = CoursePress_Helper_Utility::set_array_value(
 			$student_progress,
 			'completion/completed_steps',
 			$course_completed_mandatory_steps
@@ -1231,7 +1236,7 @@ class CoursePress_Data_Student {
 			$course_progress = ceil( $course_progress / $unit_count );
 		}
 
-		CoursePress_Helper_Utility::set_array_val(
+		$student_progress = CoursePress_Helper_Utility::set_array_value(
 			$student_progress,
 			'completion/progress',
 			$course_progress
@@ -1241,7 +1246,7 @@ class CoursePress_Data_Student {
 		$is_completed = false;
 
 		// Remove failed marker
-		CoursePress_Helper_Utility::unset_array_val(
+		$student_progress = CoursePress_Helper_Utility::unset_array_value(
 			$student_progress,
 			'completion/failed'
 		);
@@ -1266,7 +1271,7 @@ class CoursePress_Data_Student {
 					$total_course_grade = ceil( $total_course_grade / $course_gradable_modules );
 
 					if ( $total_course_grade < $minimum_grade_required ) {
-						CoursePress_Helper_Utility::set_array_val(
+						$student_progress = CoursePress_Helper_Utility::set_array_value(
 							$student_progress,
 							'completion/failed',
 							true
@@ -1278,13 +1283,13 @@ class CoursePress_Data_Student {
 			}
 		}
 
-		CoursePress_Helper_Utility::set_array_val(
+		$student_progress = CoursePress_Helper_Utility::set_array_value(
 			$student_progress,
 			'completion/average',
 			$completion_average
 		);
 
-		CoursePress_Helper_Utility::set_array_val(
+		$student_progress = CoursePress_Helper_Utility::set_array_value(
 			$student_progress,
 			'completion/completed',
 			$is_completed
@@ -1973,6 +1978,12 @@ class CoursePress_Data_Student {
 	 * @param (int) $module_id
 	 **/
 	public static function log_visited_course( $course_id, $unit_id = 0, $page_number = 1, $module_id = 0 ) {
+		/**
+		 * Do nothing if there is no user.
+		 */
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
 		if ( empty( $course_id ) ) {
 			return;
 		}
@@ -1996,12 +2007,18 @@ class CoursePress_Data_Student {
 	 * @return Returns permalink of the last visited page otherwise the units overview page.
 	 **/
 	public static function get_last_visited_url( $course_id ) {
-		$key = 'coursepress_last_visited_' . $course_id;
 		$course_url = CoursePress_Data_Course::get_course_url( $course_id );
+		/**
+		 * If there is no user, return course URL.
+		 */
+		if ( ! is_user_logged_in() ) {
+			return $course_url;
+		}
+		$key = 'coursepress_last_visited_' . $course_id;
 		$link = $course_url . CoursePress_Core::get_slug( 'units/' );
 
 		$last_visited = get_user_meta( get_current_user_id(), $key, true );
-		$last_visited = array_filter( $last_visited );
+		$last_visited = is_array( $last_visited ) ? array_filter( $last_visited ) : array();
 
 		if ( ! empty( $last_visited ) ) {
 			// Get unit url
@@ -2009,7 +2026,7 @@ class CoursePress_Data_Student {
 				$link = CoursePress_Data_Unit::get_unit_url( (int) $last_visited['unit'] );
 
 				// Add page number
-				if (  ! empty( $last_visited['page'] ) && (int) $last_visited['page'] > 0 ) {
+				if ( ! empty( $last_visited['page'] ) && (int) $last_visited['page'] > 0 ) {
 					$page = max( 1, (int) $last_visited['page'] );
 					$link .= 'page/' . $page . '/';
 
@@ -2024,5 +2041,188 @@ class CoursePress_Data_Student {
 		}
 
 		return $link;
+	}
+
+	/**
+	 * Check answer and if is new on, return true.
+	 *
+	 * Check answer and if is new on, return true to avoid duplicating the same
+	 * answers. Function DO NOT HANDLE quiz, form, file modules!
+	 *
+	 * @param integer $student_id The user ID.
+	 * @param integer $course_id The course ID.
+	 * @param integer $unit_id The unit ID the current module belongs to.
+	 * @param integer $module_id The module ID the responses will be recorded to.
+	 * @param array $response An array of previously fetch responses.
+	 * @param array $data Optional. If null, we'll get the course completion data from DB.
+	 *
+	 * @return boolean True if this a new answer.
+	 **/
+	public static function check_is_new_answer( $student_id, $course_id, $unit_id, $module_id, $response, &$data = false ) {
+		if ( false === $data ) {
+			$data = self::get_completion_data( $student_id, $course_id );
+		}
+		/**
+		 * get old response
+		 */
+		$old = self::get_response( $student_id, $course_id, $unit_id, $module_id, false, $data );
+		/**
+		 * no response? this one is new!
+		 */
+		if ( false == $old ) {
+			return true;
+		}
+		if ( ! isset( $old['response'] ) ) {
+			return true;
+		}
+		/**
+		 * compare
+		 */
+		$attributes = CoursePress_Data_Module::attributes( $module_id );
+		$module_type = $attributes['module_type'];
+		switch ( $module_type ) {
+			case 'input-text':
+			case 'input-textarea':
+			case 'input-radio':
+			case 'input-select':
+			return $response != $old['response'];
+			case 'input-checkbox':
+				$diff = array_diff( $old['response'], $response );
+			return ! empty( $diff );
+		}
+		/**
+		 * not handled modules: file, quiz, form and another!
+		 */
+		return true;
+	}
+
+	/**
+	 * Check module answer.
+	 *
+	 * @since 2.0.6
+	 *
+	 * @param integer $module_id Module ID.
+	 * @param array $response An array of previously fetch responses.
+	 * @return boolean Is module answer correct?
+	 */
+	public static function module_answer_is_correct( $module_id, $response ) {
+		$attributes = CoursePress_Data_Module::attributes( $module_id );
+		$response_display = $response['response'];
+		switch ( $attributes['module_type'] ) {
+
+			case 'input-checkbox':
+			case 'input-radio':
+			case 'input-select':
+				$answers = $attributes['answers'];
+				$selected = (array) $attributes['answers_selected'];
+				if ( ! empty( $response ) ) {
+					foreach ( $answers as $key => $answer ) {
+						$the_answer = in_array( $key, $selected );
+						$student_answer = is_array( $response_display ) ? in_array( $key, $response_display ) : $response_display == $key;
+						if ( 'input-radio' === $attributes['module_type'] ) {
+							$student_answer = $response_display == $key;
+						}
+						if ( $student_answer ) {
+							return  $the_answer;
+						}
+					}
+				}
+			break;
+
+			case 'input-upload':
+			case 'input-textarea':
+			case 'input-text':
+				if ( ! $response ) {
+					return false;
+				}
+			break;
+
+			case 'input-quiz':
+				if ( ! empty( $attributes['questions'] ) ) {
+					$questions = $attributes['questions'];
+
+					$pass = true;
+					foreach ( $questions as $q_index => $question ) {
+						$options = (array) $question['options'];
+						$checked = (array) $options['checked'];
+						$checked = array_filter( $checked );
+						$student_response = $response[ $q_index ];
+						foreach ( $options['answers'] as $p_index => $answer ) {
+							$the_answer = isset( $checked[ $p_index ] ) ? $checked[ $p_index ] : false;
+							$student_answer = '';
+
+							if ( isset( $student_response[ $p_index ] ) && $student_response[ $p_index ] ) {
+								$student_answer = $student_response[ $p_index ];
+
+								if ( ! $the_answer ) {
+									$pass = false;
+								}
+							}
+						}
+					}
+					return $pass;
+				}
+			break;
+
+			case 'input-form':
+				if ( ! empty( $attributes['questions'] ) ) {
+					$questions = $attributes['questions'];
+					$pass = true;
+					foreach ( $questions as $q_index => $question ) {
+						$student_response = ! empty( $response[ $q_index ] ) ? $response[ $q_index ] : '';
+						if ( 'selectable' == $question['type'] ) {
+							$options = $question['options']['answers'];
+							$checked = $question['options']['checked'];
+
+							foreach ( $options as $ai => $answer ) {
+								if ( $student_response == $ai ) {
+									$the_answer = ! empty( $checked[ $ai ] );
+									if ( $the_answer !== $student_response ) {
+										$pass = false;
+									}
+								}
+							}
+						}
+					}
+					return $pass;
+				}
+				break;
+		}
+		return false;
+	}
+
+	/**
+	 * Check unit modules answers.
+	 *
+	 * @since 2.0.6
+	 *
+	 * @param integer $student_id The user ID.
+	 * @param integer $course_id The course ID.
+	 * @param integer $unit_id The unit ID the current module belongs to.
+	 * @param array $student_progress Optional. If null, we'll get the course completion data from DB.
+	 * @return boolean Is module answer correct? By default return true.
+	 */
+	public static function unit_answers_are_correct( $student_id, $course_id, $unit_id, $student_progress = false ) {
+		if ( ! $student_progress ) {
+			$student_progress = self::get_completion_data( $student_id, $course_id );
+		}
+		$units = CoursePress_Data_Course::get_units_with_modules( $course_id );
+		$unit = $units[ $unit_id ];
+		foreach ( $unit['pages'] as $page_number => $page ) {
+			$modules = $page['modules'];
+			foreach ( $modules as $module_id => $module ) {
+				$completed = CoursePress_Data_Student::is_module_completed( $course_id, $unit_id, $module->ID, $student_id );
+				$completed = cp_is_true( $completed );
+				if ( ! $completed ) {
+					return false;
+				}
+				$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
+				$correct = self::module_answer_is_correct( $module_id, $response );
+				if ( ! $correct ) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 }

@@ -238,7 +238,7 @@ class CoursePress_Data_Discussion {
 
 		// Record visit action
 		if ( ! isset( $student_progress['units'] ) && ! isset( $student_progress['units'][ $comment_id ] ) ) {
-			CoursePress_Helper_Utility::set_array_val( $student_progress, 'units/' . $comment_id, array() );
+			$student_progress = CoursePress_Helper_Utility::set_array_value( $student_progress, 'units/' . $comment_id, array() );
 			CoursePress_Data_Student::update_completion_data( $student_id, $course_id, $student_progress );
 		}
 
@@ -553,7 +553,7 @@ class CoursePress_Data_Discussion {
 		// Update course progress
 		$student_data = CoursePress_Data_Student::get_completion_data( $user_id, $course_id );
 		if ( ! isset( $student_data['units'] ) && ! isset( $student_data['units'][ $data->comment_post_ID ] ) ) {
-			CoursePress_Helper_Utility::set_array_val( $student_data, 'units/' . $data->comment_post_ID, array() );
+			$student_data = CoursePress_Helper_Utility::set_array_value( $student_data, 'units/' . $data->comment_post_ID, array() );
 			CoursePress_Data_Student::update_completion_data( $user_id, $course_id, $student_data );
 		}
 		CoursePress_Data_Student::get_calculated_completion_data( $user_id, $course_id );

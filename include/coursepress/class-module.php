@@ -321,7 +321,7 @@ class CoursePress_Module {
 								foreach ( $attributes['questions'] as $qi => $question ) {
 									$answers = array_keys( $question['options']['answers'] );
 
-									if ( '' != $response[ $qi ] ) {
+									if ( isset( $response[ $qi ] ) && '' != $response[ $qi ] ) {
 										$qi_response = $response[ $qi ];
 										$values = array();
 

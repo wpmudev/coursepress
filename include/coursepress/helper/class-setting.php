@@ -202,6 +202,14 @@ class CoursePress_Helper_Setting {
 	}
 
 	public static function admin_style() {
+		global $typenow;
+
+		if ( 'course' !== $typenow ) {
+			// Include css needed for menu-icon
+			wp_enqueue_style( 'coursepress-menu', CoursePress::$url . 'asset/css/admin-menu.min.css', false, CoursePress::$version );
+
+			return;
+		}
 
 		$style = CoursePress::$url . 'asset/css/admin-general.css';
 		$style_global = CoursePress::$url . 'asset/css/admin-global.css';
