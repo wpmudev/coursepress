@@ -1430,7 +1430,7 @@ class CoursePress_Helper_Utility {
 	/**
 	 * Site vars.
 	 *
-	 * @since 2.0.6
+	 * @since 2.0.7
 	 *
 	 * @param array $vars Array of site vars.
 	 * @return array Array of site vars.
