@@ -15,6 +15,7 @@ CHANGELOG
 * Improved: Process of saving answers.
 * Improved: Required unit message.
 * Improved: Message box for paid course.
+* Improved: Integration with WooCommerce - when student pay with PayPal, a student will be enrolled to the ordered courses.
 * Updated: Bundled MarketPress to latest version.
 * Fixed: Remove inclusion of CP assets on none CP pages.
 * Fixed: WooCommerce "Out of stock" product status.
