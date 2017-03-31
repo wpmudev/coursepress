@@ -15,8 +15,8 @@ CHANGELOG
 * Improved: 
 * Improved: 
 * Improved: 
-* Improved: 
-* Fixed: 
+* Improved: Install MarketPress message will be no longer visible if WooCommerce is already configured.
+* Fixed: Warning messages on CoursePress configuration page when we use tab, which no longer exits.
 * Fixed: 
 * Fixed: 
 * Fixed: 
