@@ -7,20 +7,8 @@ CHANGELOG
 
 = 2.0.7 =
 -------------------------------------------------
-* Added: 
-* Added: 
-* Added: 
-* Added: 
-* Improved: 
-* Improved: 
-* Improved: 
-* Improved: 
-* Improved: 
-* Fixed: 
-* Fixed: 
+* Fixed: Remove vulnerability to view any module.
 * Fixed: Prerequisite Courses problem with access to next course.
-* Fixed: 
-* Fixed: 
 
 
 = 2.0.6 =
