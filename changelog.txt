@@ -16,7 +16,7 @@ CHANGELOG
 * Improved: 
 * Improved: 
 * Improved: 
-* Fixed: 
+* Fixed: A problem with TinyMCE on units edit page.
 * Fixed: 
 * Fixed: 
 * Fixed: 
