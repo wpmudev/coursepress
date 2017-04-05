@@ -7,6 +7,7 @@ CHANGELOG
 
 = 2.0.7 =
 -------------------------------------------------
+* Fixed: Issue with tinymce edit unit page.
 * Fixed: Dark screen when use "Save Progress & Exit" with discussion module.
 
 = 2.0.6.1 =
