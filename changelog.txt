@@ -10,7 +10,6 @@ CHANGELOG
 * Fixed: Remove vulnerability to view any module.
 * Fixed: Prerequisite Courses problem with access to next course.
 
-
 = 2.0.6 =
 -------------------------------------------------
 * Added: Redirect to login page for guest users.
