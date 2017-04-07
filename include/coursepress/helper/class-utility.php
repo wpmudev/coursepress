@@ -255,9 +255,10 @@ class CoursePress_Helper_Utility {
 		}
 		if ( is_array( $object ) ) {
 			return array_map( array( __CLASS__, 'object_to_array' ), $object );
-		} else {
+		} elseif ( is_array( $object ) ) {
 			return $object;
 		}
+		return array();
 	}
 
 	public static function array_to_object( $array ) {
