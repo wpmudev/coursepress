@@ -228,7 +228,7 @@ class CoursePress_Template_Module {
 		$course_status = CoursePress_Data_Course::get_course_status( $course_id );
 		$is_module_answerable = preg_match( '%input-%', $module_type );
 		$disabled = false;
-		$element_class = '';
+		$element_class = array();
 		$student_id = get_current_user_id();
 		$content = '';
 
@@ -366,6 +366,8 @@ class CoursePress_Template_Module {
 					break;
 			}
 
+			$element_class[] = sprintf( 'module-type-%s', $module_type );
+
 			$module_elements = sprintf( '<div id="cp-element-%s" class="%s" data-type="%s" data-required="%s">%s</div>', $module_id, implode( ' ', $element_class ), $module_type, $is_required, $module_elements );
 
 			if ( $is_module_answerable && ! empty( $responses ) ) {
@@ -395,6 +397,15 @@ class CoursePress_Template_Module {
 				 **/
 				$module_elements .= apply_filters( 'coursepress_course_readonly_message', $module_warning, $module_id, $course_id );
 			}
+
+            /**
+             * custom wrappers
+             */
+			switch ( $module_type ) {
+            case 'discussion':
+					$module_elements = sprintf( '<div id="comments" class="comments-area"><div class="comments-list-container">%s</div></div>', $module_elements );
+					break;
+            }
 
 			/**
 			 * Filter the module elements template.
@@ -843,11 +854,8 @@ class CoursePress_Template_Module {
 
 			foreach ( $attributes['answers'] as $key => $answer ) {
 				$checked = '' !== $response ? ' ' . checked( 1, '' != $response && (int) $response === $key, false ) : '';
-
 				$format = '<li class="%1$s %2$s"><input type="radio" value="%5$s" name="module[%3$s]" id="module-%3$s-%5$s" %6$s /> <label for="module-%3$s-%5$s">%4$s</label> </li>';
-
 				$content .= sprintf( $format, $oddeven, $alt, $module->ID, $answer, esc_attr( $key ), $disabled_attr . $checked );
-
 				$oddeven = 'odd' === $oddeven ? 'even' : 'odd';
 				$alt = empty( $alt ) ? 'alt' : '';
 			}
@@ -958,7 +966,6 @@ class CoursePress_Template_Module {
 					$format = '<li><input type="%3$s" id="%1$s" name="%4$s" value="%5$s" %6$s/> <label for="%1$s">%2$s</label></li>';
 					$questions .= sprintf( $format, $quiz_id, esc_html( $answer ), $type, $module_name, $ai, $disabled_attr . $checked );
 				}
-
 				$questions .= '</ul>';
 				$questions = sprintf( '<p class="question">%s</p>%s', esc_html( $question['question'] ), $questions );
 				$container_format = '<div class="module-quiz-question question-%s" data-type="%s">%s</div>';
