@@ -230,7 +230,7 @@ class CoursePress_Template_Module {
 		$disabled = false;
 		$element_class = array();
 		$student_id = get_current_user_id();
-		$content = '';
+		$content = '<div class="module-container">';
 
 		/**
 		 * Fire before the module template is printed
@@ -250,12 +250,12 @@ class CoursePress_Template_Module {
 		$content .= sprintf( '<input type="hidden" name="course_id" value="%s" />', $course_id );
 		$content .= sprintf( '<input type="hidden" name="unit_id" value="%s" />', $unit_id );
 		$content .= sprintf( '<input type="hidden" name="student_id" value="%s" />', $student_id );
+		$content .= sprintf( '<input type="hidden" name="module_id[]" value="%s" />', $module_id );
 
 		if ( $is_focus ) {
 			$content .= wp_nonce_field( 'coursepress_submit_modules', '_wpnonce', true, false );
 			$content .= sprintf( '<div class="cp-error">%s</div>', apply_filters( 'coursepress_before_unit_modules', '' ) );
 		}
-		$content .= sprintf( '<input type="hidden" name="module_id[]" value="%s" />', $module_id );
 
 		// Module header
 		$content .= self::render_module_head( $module, $attributes );
@@ -429,7 +429,10 @@ class CoursePress_Template_Module {
 				esc_attr( implode( ' ', $module_container_classes ) )
 			);
 		}
-
+		/**
+		 * div.module-container
+		 */
+		$content .= '</div>';
 		return $content;
 	}
 
