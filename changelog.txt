@@ -27,6 +27,8 @@ CHANGELOG
 * Fixed: Issue with tinymce edit unit page.
 * Fixed: Dark screen when use "Save Progress & Exit" with discussion module.
 * Fixed: Removed PHP warnings when adding units.
+* Fixed: Next nav on IE.
+* Fixed: Unable to progress to next module.
 
 = 2.0.6.2 =
 -------------------------------------------------
