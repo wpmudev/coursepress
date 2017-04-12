@@ -439,7 +439,7 @@ if ( ! function_exists( 'cp_students_drop_down' ) ) {
 			'2.0'
 		);
 		$content = '';
-		$content .= '<select name="students" data-placeholder="' . __( 'Choose a Student...', 'CP_TD' ) . '" class="chosen-select">';
+		$content .= '<select name="students" data-placeholder="' . __( 'Choose a Student...', 'CP_TD' ) . '">';
 
 		$args = array(
 			'role' => '',

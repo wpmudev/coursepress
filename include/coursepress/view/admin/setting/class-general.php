@@ -532,7 +532,7 @@ class CoursePress_View_Admin_Setting_General {
 		$enrollment_types = CoursePress_Data_Course::get_enrollment_types_array();
 		$enrollment_type_default = CoursePress_Data_Course::get_enrollment_type_default();
 		$selected = CoursePress_Core::get_setting( 'course/enrollment_type_default', $enrollment_type_default );
-		$content .= CoursePress_Helper_UI::select( 'coursepress_settings[course][enrollment_type_default]', $enrollment_types, $selected, 'chosen-select medium' );
+		$content .= CoursePress_Helper_UI::select( 'coursepress_settings[course][enrollment_type_default]', $enrollment_types, $selected, 'medium' );
 		$content .= sprintf( '<p class="description">%s</p>', __( 'Select the default limitations on accessing and enrolling in this course.', 'CP_TD' ) );
 		$content .= '
 								</td>
@@ -556,16 +556,12 @@ class CoursePress_View_Admin_Setting_General {
 		$reports_font = CoursePress_Core::get_setting( 'reports/font', 'helvetica' );
 		$reports_font = empty( $reports_font ) ? 'helvetica' : $reports_font;
 		$fonts = CoursePress_Helper_PDF::fonts();
-		$content .= '
-									<select name="coursepress_settings[reports][font]" class="widefat" id="course_order_by_direction">
-					';
+		$content .= '<select name="coursepress_settings[reports][font]" class="widefat" id="course_order_by_direction">';
 
 		foreach ( $fonts as $font_php => $font_name ) {
 			if ( ! empty( $font_name ) ) {
 				$font = str_replace( '.php', '', $font_php );
-				$content .= '
-										<option value="' . esc_attr( $font ) . '" ' . selected( $reports_font, $font, false ) . '>' . esc_html( $font_name ) . '</option>
-				';
+				$content .= '<option value="' . esc_attr( $font ) . '" ' . selected( $reports_font, $font, false ) . '>' . esc_html( $font_name ) . '</option>';
 			}
 		}
 		$content .= '

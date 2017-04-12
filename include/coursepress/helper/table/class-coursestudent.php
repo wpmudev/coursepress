@@ -333,7 +333,7 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 							$name,
 							array(
 								'placeholder' => __( 'Choose student...', 'CP_TD' ),
-								'class' => 'chosen-select narrow',
+								'class' => 'narrow',
 								'exclude' => $this->students,
 								'context' => 'students',
 							)

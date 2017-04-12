@@ -264,7 +264,7 @@ class CoursePress_View_Admin_Course_Edit {
 					<label for="meta_course_category" class="medium">' .
 					esc_html__( 'Course Category', 'CP_TD' ) . $manage_category_link . '
 					</label>
-					<select name="meta_course_category" class="medium chosen-select chosen-select-course ' . $class_extra . '" multiple="true">';
+					<select name="meta_course_category" class="medium ' . $class_extra . '" multiple="true">';
 
 		foreach ( $terms as $terms ) {
 			$selected = in_array( $terms->term_id, $course_terms_array ) ? 'selected="selected"' : '';
@@ -875,7 +875,7 @@ class CoursePress_View_Admin_Course_Edit {
 		 */
 		$enrollment_type_default = CoursePress_Data_Course::get_enrollment_type_default( $course_id );
 		$selected = CoursePress_Data_Course::get_setting( $course_id, 'enrollment_type', $enrollment_type_default );
-		$content .= CoursePress_Helper_UI::select( 'meta_enrollment_type', $enrollment_types, $selected, 'chosen-select medium' );
+		$content .= CoursePress_Helper_UI::select( 'meta_enrollment_type', $enrollment_types, $selected, 'medium' );
 		$content .= '</div>';
 
 		$class = 'prerequisite' === $selected ? '' : 'hidden';
@@ -888,7 +888,7 @@ class CoursePress_View_Admin_Course_Edit {
 					esc_html__( 'Prerequisite Courses', 'CP_TD' ) .
 					'</label>
 					<p class="description">' . esc_html__( 'Select the courses a student needs to complete before enrolling in this course', 'CP_TD' ) . '</p>
-					<select name="meta_enrollment_prerequisite" class="medium chosen-select chosen-select-course ' . $class_extra . '" multiple="true" data-placeholder=" ">
+					<select name="meta_enrollment_prerequisite" class="medium ' . $class_extra . '" multiple="true" data-placeholder=" ">
 			';
 
 		$courses = CoursePress_Data_Instructor::get_accessable_courses( wp_get_current_user(), true );
