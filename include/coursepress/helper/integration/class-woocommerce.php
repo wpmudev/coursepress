@@ -158,6 +158,11 @@ class CoursePress_Helper_Integration_WooCommerce {
 		add_action( 'woocommerce_order_status_changed', array( __CLASS__, 'woocommerce_order_status_changed' ), 21, 3 );
 
 		/**
+		 * check cart before allow to proceder. Courses can not be buy by guests.
+		 */
+		add_filter( 'pre_option_woocommerce_enable_guest_checkout', array( __CLASS__, 'check_cart_and_user_login' ) );
+
+		/**
 		 * WooCommerce payment complete -> CoursePress enroll student.
 		 */
 		add_action( 'woocommerce_payment_complete', array( __CLASS__, 'payment_complete_enroll_student' ) );
@@ -1008,9 +1013,36 @@ class CoursePress_Helper_Integration_WooCommerce {
 	}
 
 	/**
-	 * Change student enrollment status in course, after payment complete.
+	 * Disable WooCommerce "enable_guest_checkout" option.
+	 *
+	 * Disable WooCommerce "enable_guest_checkout" option when in the cart is
+	 * some course, to avoid guest checkout of a course.
 	 *
 	 * @since 2.0.6
+	 *
+	 * @param mixed $enable_guest_checkout
+	 */
+	public static function check_cart_and_user_login( $enable_guest_checkout ) {
+		if ( is_user_logged_in() ) {
+			return $enable_guest_checkout;
+		}
+		if ( 'no' == $enable_guest_checkout ) {
+			return $enable_guest_checkout;
+		}
+		$cart_data = WC()->cart->get_cart();
+		foreach ( $cart_data as $cart_item_key => $values ) {
+			$_product = $values['data'];
+			if ( CoursePress_Data_Course::is_course( $_product->post->post_parent ) ) {
+				return 'no';
+			}
+		}
+		return $enable_guest_checkout;
+	}
+
+	/**
+	 * Change student enrollment status in course, after payment complete.
+	 *
+	 * @since 2.0.7
 	 *
 	 * @param integer $order_id WooCommerce order ID.
 	 */
@@ -1037,7 +1069,7 @@ class CoursePress_Helper_Integration_WooCommerce {
 	/**
 	 * Remove filter which preventing student to enroll course without paing.
 	 *
-	 * @since 2.0.6
+	 * @since 2.0.7
 	 */
 	private static function remove_filter_coursepress_enroll_student() {
 		/**
