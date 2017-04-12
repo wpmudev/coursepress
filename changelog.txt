@@ -4,8 +4,12 @@ Build Time:  BUILDTIME
 
 CHANGELOG
 =================================================
+= 2.0.6.2 =
+-------------------------------------------------
+Fixed: HTML and entities issue on unit editor.
+Fixed: Preview button.
 
-= 2.0.7 =
+= 2.0.6.1 =
 -------------------------------------------------
 * Fixed: Issue with tinymce edit unit page.
 * Fixed: Dark screen when use "Save Progress & Exit" with discussion module.

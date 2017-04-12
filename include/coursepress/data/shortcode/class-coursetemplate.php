@@ -1082,7 +1082,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			if ( ! empty( $the_unit->post_content ) ) {
 				$unit_content = sprintf(
 					'<div class="unit-content">%s</div>',
-					wpautop( $the_unit->post_content )
+					wpautop( htmlspecialchars_decode($the_unit->post_content) )
 				);
 			}
 
