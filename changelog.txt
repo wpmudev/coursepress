@@ -17,9 +17,10 @@ CHANGELOG
 * Improved: Hide Install MarketPress message when WooCommerce Integration is active.
 
 * Updated: External library "select2" to version 4.0.2
-* Updated: External library "jquery-chosen" to version 1.6.2
 * Updated: External library "jquery-circle-progress" to version 1.2.1
 * Updated: External font Awesome to version 4.7.0
+
+* Removed: External library "jquery-chosen".
 
 * Fixed: Email placeholders.
 * Fixed: "Continue Learning" link for required modules.
