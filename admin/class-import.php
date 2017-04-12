@@ -173,7 +173,13 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 
 			// Import course and author
 			if ( is_object( $course->course ) ) {
-				$author_id = self::maybe_add_user( $course->author );
+				/**
+				 * sanitize_course author
+				 */
+				$author_id = get_current_user_id();
+				if ( isset( $course->author ) ) {
+					$author_id = self::maybe_add_user( $course->author );
+				}
 				$course->course->post_author = $author_id;
 				$new_course_id = self::_insert_post( $course->course, CoursePress_Data_Course::get_post_type_name(), $replace );
 				$course->course = $new_course_id;
@@ -539,14 +545,11 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 	 **/
 	public static function insert_meta( $post_id, $metas = array() ) {
 		$metas = CoursePress_Helper_Utility::object_to_array( $metas );
-
 		foreach ( $metas as  $key => $values ) {
 			$values = array_map( 'maybe_unserialize', $values );
-
 			if ( is_array( $values ) ) {
 				foreach ( $values as $value ) {
 					$value = maybe_unserialize( $value );
-
 					add_post_meta( $post_id, $key, $value );
 				}
 			} else {
@@ -573,6 +576,9 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 		}
 
 		if ( $add || empty( $user ) ) {
+			if ( empty( $user_data ) ) {
+				return get_current_user_id();
+			}
 			// User doesn't exist, insert
 			unset( $user_data->ID );
 			$user_id = wp_insert_user( get_object_vars( $user_data ) );
