@@ -4,24 +4,22 @@ Build Time:  BUILDTIME
 
 CHANGELOG
 =================================================
-
 = 2.0.7 =
 -------------------------------------------------
-* Added: 
-* Added: 
-* Added: 
-* Added: 
-* Improved: 
-* Improved: 
-* Improved: Selecting page on CoursePress Settings page.
-* Improved: 
-* Improved: 
-* Fixed: 
-* Fixed: 
-* Fixed: 
-* Fixed: 
-* Fixed: 
+* Added: A sample course to fresh CoursePress installation.
+* Added: No visible units message info.
 
+* Improved: Description on settings page.
+
+= 2.0.6.2 =
+-------------------------------------------------
+Fixed: HTML and entities issue on unit editor.
+Fixed: Preview button.
+
+= 2.0.6.1 =
+-------------------------------------------------
+* Fixed: Remove vulnerability to view any module.
+* Fixed: Prerequisite Courses problem with access to next course.
 
 = 2.0.6 =
 -------------------------------------------------
