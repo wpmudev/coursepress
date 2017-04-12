@@ -19,6 +19,8 @@ CHANGELOG
 * Updated: External library "jquery-circle-progress" to version 1.2.1
 * Updated: External font Awesome to version 4.7.0
 
+* Fixed: Email placeholders.
+
 = 2.0.6.2 =
 -------------------------------------------------
 Fixed: HTML and entities issue on unit editor.
