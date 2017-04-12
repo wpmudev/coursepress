@@ -12,6 +12,7 @@ CHANGELOG
 
 * Improved: Description on settings page.
 * Improved: Compatibility with Avada theme.
+* Improved: Disable WooCommerce guest checkout for courses checkout.
 
 * Updated: External library "select2" to version 4.0.2
 * Updated: External library "jquery-chosen" to version 1.6.2
