@@ -275,7 +275,7 @@ class CoursePress_Template_Module {
 
 			$retry = 'TRY';
 			$element_class = array( 'module-elements' );
-			if ( $is_module_answerable ) {
+			if ( $is_module_answerable || 'video' == $module_type ) {
 				$responses = CoursePress_Data_Student::get_responses( $student_id, $course_id, $unit_id, $module_id, true, $student_progress );
 				$last_response = self::get_response( $module_id, $student_id );
 				if ( ! empty( $responses ) ) {
@@ -343,8 +343,11 @@ class CoursePress_Template_Module {
 							$duration = '00:00:00';
 						}
 					}
-
+					if ( 'video' == $module_type ) {
+						$retry = '';
+					}
 					$timer_info = __( 'Session Expired', 'CP_TD' ) . $retry;
+
 					$content .= sprintf( $format, $duration, $attempts, $timer_info );
 				}
 			}
@@ -573,9 +576,17 @@ class CoursePress_Template_Module {
 					$attr['src'] = $url;
 				}
 
+				if ( preg_match( '%youtube.com%', $attr['src'] ) ) {
+					$attr['enablejsapi'] = true;
+				}
 				$video = wp_video_shortcode( $attr );
 			} else {
 				$embed_args = array();
+
+				if ( preg_match( '%youtube.com%', $url ) ) {
+					$embed_args['enablejsapi'] = 1;
+				}
+
 				add_filter( 'oembed_result', array( __CLASS__, 'oembed_result_add_autoplay' ), 10, 3 );
 				$video = wp_oembed_get( $url, $embed_args );
 				if ( ! $video ) {

@@ -1,9 +1,15 @@
 /* global CoursePress */
 /** MODULES **/
 (function( $ ) {
+
+	CoursePress.Events.on( 'coursepress:module_duration_ended', function( container, module_type ) {
+		//alert(module_type);
+	});
+
 	CoursePress.timer = function( container ) {
 		var timer_span = container.find( '.quiz_timer' ).show(),
-			module_elements = container.find( '.module-elements' );
+			module_elements = container.find( '.module-elements' ),
+			module_type = container.data('type');
 
 		if ( 0 === timer_span.length ) {
 			return;
@@ -42,6 +48,8 @@
 		expired = function() {
 			inputs.attr( 'disabled', 'disabled' );
 			info.show();
+
+			CoursePress.Events.trigger( 'coursepress:module_duration_ended', container, module_type );
 		};
 
 		if ( 0 === total_limit ) {
@@ -298,6 +306,8 @@
 				}
 			}, 100 );
 		});
+
+		return true;
 	};
 
 	CoursePress.toggleModuleState = function() {
