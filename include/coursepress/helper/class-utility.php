@@ -255,9 +255,10 @@ class CoursePress_Helper_Utility {
 		}
 		if ( is_array( $object ) ) {
 			return array_map( array( __CLASS__, 'object_to_array' ), $object );
-		} else {
+		} elseif ( is_array( $object ) ) {
 			return $object;
 		}
+		return array();
 	}
 
 	public static function array_to_object( $array ) {
@@ -1425,5 +1426,57 @@ class CoursePress_Helper_Utility {
 			</p>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Site vars.
+	 *
+	 * @since 2.0.7
+	 *
+	 * @param array $vars Array of site vars.
+	 * @return array Array of site vars.
+	 */
+	public static function add_site_vars( $vars = array() ) {
+		/**
+		 * get login url
+		 */
+		$login_url = wp_login_url();
+		if ( CoursePress_Core::get_setting( 'general/use_custom_login', true ) ) {
+			$login_url = CoursePress_Core::get_slug( 'login', true );
+		}
+		$vars['BLOG_ADDRESS'] = site_url();
+		$vars['BLOG_NAME'] = $vars['WEBSITE_NAME'] =  get_bloginfo( 'name' );
+		$vars['LOGIN_ADDRESS'] = $login_url;
+		$vars['WEBSITE_ADDRESS'] = home_url();
+		/**
+		 * Allow to change site vars.
+		 *
+		 * @since 2.0.6
+		 *
+		 * @param array $vars Array of site vars.
+		 */
+		return apply_filters( 'coursepress_site_vars', $vars );
+	}
+
+	/**
+	 * Check first time run and create a course!
+	 *
+	 * @since 2.0.6
+	 */
+	public static function check_first_time_run() {
+		$plugin_version_db = get_option( 'coursepress_version', 0 );
+		if ( 0 == $plugin_version_db ) {
+			$settings = get_option( 'coursepress_settings', null );
+			if ( empty( $settings ) ) {
+				update_option( 'coursepress_settings', array( 'not' => 'empty' ) );
+				CoursePress_Helper_Course_Import::import_sample_course();
+			}
+		}
+		if ( version_compare( $plugin_version_db, CoursePress::$version, '<' ) ) {
+			$result = add_option( 'coursepress_version', CoursePress::$version, '', 'no' );
+			if ( ! $result ) {
+				update_option( 'coursepress_version', CoursePress::$version );
+			}
+		}
 	}
 }

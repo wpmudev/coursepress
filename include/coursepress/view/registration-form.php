@@ -106,7 +106,7 @@
 			<?php printf( __( 'Already have an account? %s%s%s!', 'CP_TD' ), '<a href="' . esc_url( $login_url ) . '">', __( 'Login to your account', 'CP_TD' ), '</a>' ); ?>
 		</label>
 		<label class="submit-link full-right">
-			<input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php echo esc_attr( 'Create an Account', 'CP_TD' ); ?>" />
+			<input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php esc_attr_e( 'Create an Account', 'CP_TD' ); ?>" />
 		</label>
 
 		<?php
