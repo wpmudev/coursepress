@@ -10,6 +10,7 @@ CHANGELOG
 * Added: No visible units message info.
 
 * Improved: Description on settings page.
+* Improved: Compatibility with Avada theme.
 
 * Updated: External library "select2" to version 4.0.2
 * Updated: External library "jquery-chosen" to version 1.6.2
