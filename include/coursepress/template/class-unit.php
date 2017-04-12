@@ -197,7 +197,7 @@ class CoursePress_Template_Unit {
 
 				$page_description = get_post_meta( $unit->ID, 'page_description', true );
 				if ( ! empty( $page_description[ 'page_' . $page ] ) ) {
-					$content .= $page_description[ 'page_' . $page ];
+					$content .= wpautop( htmlspecialchars_decode($page_description[ 'page_' . $page ]));
 				}
 
 				$content .= '</div>';

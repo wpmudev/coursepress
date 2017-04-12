@@ -508,10 +508,12 @@ class CoursePress_Data_Shortcode_Template {
 		$module = '';
 		if ( 'module' === $type ) {
 			$module = get_post( $item_id );
-
 			if ( ! is_object( $module ) ) {
 				$item_id = 0;
 				$type = '404';
+			} else if ( $module->post_parent != $unit_id ) {
+				$item_id = 0;
+				$type = '404_module';
 			}
 		}
 
@@ -866,12 +868,21 @@ class CoursePress_Data_Shortcode_Template {
 				break;
 
 			case '404':
+			case '404_module':
 
 				$content = do_shortcode( '[coursepress_enrollment_templates]' );
 				$content .= '<div class="focus-wrapper">';
 				$content .= '<div class="focus-main section">';
-
-				$content .= '<div class="no-access-message">' . __( 'This unit does not exist.', 'CP_TD' ) . '</div>';
+				$content .= '<div class="no-access-message"><p>';
+				switch ( $type ) {
+					case '404':
+						$content .= __( 'This unit does not exist.', 'CP_TD' );
+					break;
+					case '404_module':
+						$content .= __( 'This module does not exist.', 'CP_TD' );
+					break;
+				}
+				$content .= '</p></div>';
 				$content .= do_shortcode(
 					sprintf(
 						'[course_join_button course_id="%s" details_text="%s"]',
@@ -940,9 +951,8 @@ class CoursePress_Data_Shortcode_Template {
 	 */
 	public static function show_nav_button( $button, $title, $classes, $link_title = '', $next = false ) {
 		$res = '';
-
 		if ( $button['id'] ) {
-			$classes = is_array( $classes ) ? implode( ' ', $classes ) : $classes;
+			$c = is_array( $classes ) ? implode( ' ', $classes ) : $classes;
 			if ( $next ) {
 				if ( 'completion_page' == $button['id'] ) {
 					$title = __( 'Finish', 'CP_TD' );
@@ -950,7 +960,7 @@ class CoursePress_Data_Shortcode_Template {
 				$format = '<button type="submit" name="type-%s" class="button %s" title="%s" data-url="%s">%s</button>';
 				$res = sprintf( $format,
 					$button['type'],
-					esc_attr( $classes ),
+					esc_attr( $c ),
 					esc_attr( $link_title ),
 					esc_url( $button['url'] ),
 					$title
@@ -962,7 +972,7 @@ class CoursePress_Data_Shortcode_Template {
 					esc_attr( $button['type'] ),
 					$title,
 					esc_attr( $button['unit'] ),
-					esc_attr( $classes ),
+					esc_attr( $c ),
 					esc_attr( $link_title ),
 					isset( $button['url'] )? esc_url( $button['url'] ) : '',
 					isset( $button['course_id'] )?  $button['course_id'] : 0
@@ -976,8 +986,18 @@ class CoursePress_Data_Shortcode_Template {
 				esc_attr( $link_title )
 			);
 		}
-
-		return $res;
+		/**
+		 * Allow to change nex/prev buttons content.
+		 *
+		 * @since 2.0.6
+		 *
+		 * @param string $res HTML code of the button.
+		 * @param  array  $button Result of ::get_next_accessible_module().
+		 * @param  string $title Link title.
+		 * @param  array  $classes List of CSS classes of the button.
+		 * @param  string $link_title Tooltip title of the link.
+		 */
+		return apply_filters( 'coursepress_data_shortcode_template_show_nav_button', $res, $button, $title, $classes, $link_title, $next );
 	}
 
 	public static function coursepress_quiz_result( $a ) {
