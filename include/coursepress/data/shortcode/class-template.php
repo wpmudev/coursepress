@@ -641,7 +641,7 @@ class CoursePress_Data_Shortcode_Template {
 					$template .= '<h3>'. $page_info['title'] . '</h3>';
 
 					if ( ! empty( $page_info['description'] ) ) {
-						$template .= $page_info['description'];
+						$template .= wpautop( htmlspecialchars_decode( $page_info['description'] ) );
 					}
 				} else {
 					// Show restriction message
