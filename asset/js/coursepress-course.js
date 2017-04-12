@@ -344,11 +344,6 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			}, 200 ); // ensure the collapse animation is done
 		} );
 
-		// Setup Chosen
-		//$( '.chosen-select' ).chosen( { disable_search_threshold: 10 } );
-		$( '.chosen-select.medium' ).chosen( { disable_search_threshold: 5, width: '40%' } );
-		$( '.chosen-select.narrow' ).chosen( { disable_search_threshold: 5, width: '20%' } );
-
 		// Tree for course structure
 		var treegridtable = $( 'table.course-structure-tree' ),
 			total_rows = $( 'tr', treegridtable );
