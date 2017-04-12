@@ -890,10 +890,12 @@ class CoursePress_Data_Course {
 						$page_title
 					);
 
+					$description = ! empty( $page_description[ $page_id ] ) ? $page_description[ $page_id ] : '';
+					
 					$items = CoursePress_Helper_Utility::set_array_value(
 						$items,
 						$page_path . '/' . $page_number . '/description',
-						! empty( $page_description[ $page_id ] ) ? $page_description[ $page_id ] : ''
+						$description
 					);
 					$items = CoursePress_Helper_Utility::set_array_value(
 						$items,
