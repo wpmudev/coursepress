@@ -150,6 +150,7 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 
 	static function preview_post_link( $preview_link, $post ) {
 		$preview_link = self::$data_course->get_course_url( $post->ID );
+		$preview_link = add_query_arg( 'preview', 'true', $preview_link );
 
 		return $preview_link;
 	}

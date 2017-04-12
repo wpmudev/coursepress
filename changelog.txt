@@ -4,28 +4,27 @@ Build Time:  BUILDTIME
 
 CHANGELOG
 =================================================
-
 = 2.0.7 =
 -------------------------------------------------
-* Added: 
-* Added: 
-* Added: 
-* Added: 
-* Improved: 
-* Improved: 
-* Improved: 
-* Improved: 
-* Improved: 
-* Fixed: 
-* Fixed: 
-* Fixed: 
-* Fixed: 
-* Fixed: 
-* Updated external library "select2" to version 4.0.2
-* Updated external library "jquery-chosen" to version 1.6.2
-* Updated external library "jquery-circle-progress" to version 1.2.1
-* Updated external font Awesome to version 4.7.0
+* Added: A sample course to fresh CoursePress installation.
+* Added: No visible units message info.
 
+* Improved: Description on settings page.
+
+* Updated: External library "select2" to version 4.0.2
+* Updated: External library "jquery-chosen" to version 1.6.2
+* Updated: External library "jquery-circle-progress" to version 1.2.1
+* Updated: External font Awesome to version 4.7.0
+
+= 2.0.6.2 =
+-------------------------------------------------
+Fixed: HTML and entities issue on unit editor.
+Fixed: Preview button.
+
+= 2.0.6.1 =
+-------------------------------------------------
+* Fixed: Remove vulnerability to view any module.
+* Fixed: Prerequisite Courses problem with access to next course.
 
 = 2.0.6 =
 -------------------------------------------------
