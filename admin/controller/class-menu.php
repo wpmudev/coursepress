@@ -152,7 +152,7 @@ class CoursePress_Admin_Controller_Menu {
 			wp_enqueue_style( 'coursepress-admin-ui', $css_url . 'admin-ui.css', array(), $version );
 			if ( $include_core ) {
 				// Chosen
-				wp_enqueue_style( 'cp_chosen_css', $css_url . 'external/chosen.css' );
+				wp_enqueue_style( 'cp_chosen_css', $css_url . 'external/chosen.min.css' );
 				// Font Awesome.
 				wp_enqueue_style( 'fontawesome', $css_url . 'external/font-awesome.min.css' );
 
