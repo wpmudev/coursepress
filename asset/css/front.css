@@ -509,14 +509,19 @@ input.cp-has-error {
   float: right;
   padding-top: 5px;
 }
-.course-wrapper .unit-page-module-wrapper,
-.course-wrapper .unit-page-title-wrapper,
-.course-wrapper .unit-title-wrapper {
-  width: 100%;
-  overflow: hidden;
+.course-wrapper .course-structure-block .unit-page-module-wrapper,
+.course-wrapper .course-structure-block .unit-page-title-wrapper,
+.course-wrapper .course-structure-block .unit-title-wrapper {
+  -webkit-appearance: inherit;
+  -moz-appearance: inherit;
+  appearance: inherit;
+  border: 0;
   border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+  margin: 0;
+  overflow: hidden;
   padding: 2px 0;
   position: relative;
+  width: 100%;
 }
 .course-wrapper .unit-title-wrapper {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -828,12 +833,18 @@ input.cp-has-error {
   width: auto;
 }
 .cp .module-header {
+  border: 0;
   margin: 0 0 25px 0;
+  padding: 0;
+  -webkit-appearance: inherit;
+  -moz-appearance: inherit;
+  appearance: inherit;
 }
 .cp .module-header .modul-title {
   margin: 0;
 }
 .cp .module-header .is-mandatory {
+  font-weight: normal;
   float: right;
   font-size: 0.8em;
   text-transform: uppercase;
@@ -844,6 +855,9 @@ input.cp-has-error {
   display: inline-block;
   vertical-align: middle;
   padding: 2px 4px;
+}
+.cp .module-header h4 .is-mandatory {
+  font-size: 0.7em;
 }
 .cp .quiz_timer {
   position: absolute;
@@ -899,8 +913,8 @@ input.cp-has-error {
 .cp .module-elements li input,
 .cp .module-elements li label {
   display: inline-block;
-  vertical-align: top;
-  margin-right: 5px;
+  vertical-align: middle;
+  margin: 0 5px 0 0;
 }
 .cp .module-elements .file {
   position: relative;

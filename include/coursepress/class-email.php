@@ -224,11 +224,7 @@ class CoursePress_Email {
 	 **/
 	public function prepare_tokens() {
 		$vars = array_fill_keys( array_values( $this->mail_tokens() ), '' );
-
-		$vars['BLOG_NAME'] = get_bloginfo( 'name' );
-		$vars['WEBSITE_ADDRESS'] = site_url();
-		$vars['BLOG_ADDRESS'] = site_url();
-
+		$vars = CoursePress_Helper_Utility::add_site_vars( $vars );
 		return $vars;
 	}
 

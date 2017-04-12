@@ -4,24 +4,34 @@ Build Time:  BUILDTIME
 
 CHANGELOG
 =================================================
-
 = 2.0.7 =
 -------------------------------------------------
-* Added: 
-* Added: 
-* Added: 
-* Added: 
-* Improved: 
-* Improved: 
-* Improved: 
-* Improved: 
-* Improved: Install MarketPress message will be no longer visible if WooCommerce is already configured.
-* Fixed: Warning messages on CoursePress configuration page when we use tab, which no longer exits.
-* Fixed: 
-* Fixed: 
-* Fixed: 
-* Fixed: 
+* Added: Email validation on CoursePress signup form.
+* Added: A sample course to fresh CoursePress installation.
+* Added: No visible units message info.
 
+* Improved: Description on settings page.
+* Improved: Compatibility with Avada theme.
+* Improved: Disable WooCommerce guest checkout for courses checkout.
+* Improved: Hide Install MarketPress message when WooCommerce Integration is active.
+
+* Updated: External library "select2" to version 4.0.2
+* Updated: External library "jquery-chosen" to version 1.6.2
+* Updated: External library "jquery-circle-progress" to version 1.2.1
+* Updated: External font Awesome to version 4.7.0
+
+* Fixed: Email placeholders.
+* Fixed: Warning messages on CoursePress configuration page when we use tab, which no longer exits.
+
+= 2.0.6.2 =
+-------------------------------------------------
+Fixed: HTML and entities issue on unit editor.
+Fixed: Preview button.
+
+= 2.0.6.1 =
+-------------------------------------------------
+* Fixed: Remove vulnerability to view any module.
+* Fixed: Prerequisite Courses problem with access to next course.
 
 = 2.0.6 =
 -------------------------------------------------
