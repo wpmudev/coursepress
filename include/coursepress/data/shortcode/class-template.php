@@ -508,10 +508,12 @@ class CoursePress_Data_Shortcode_Template {
 		$module = '';
 		if ( 'module' === $type ) {
 			$module = get_post( $item_id );
-
 			if ( ! is_object( $module ) ) {
 				$item_id = 0;
 				$type = '404';
+			} else if ( $module->post_parent != $unit_id ) {
+				$item_id = 0;
+				$type = '404_module';
 			}
 		}
 
@@ -866,12 +868,21 @@ class CoursePress_Data_Shortcode_Template {
 				break;
 
 			case '404':
+			case '404_module':
 
 				$content = do_shortcode( '[coursepress_enrollment_templates]' );
 				$content .= '<div class="focus-wrapper">';
 				$content .= '<div class="focus-main section">';
-
-				$content .= '<div class="no-access-message">' . __( 'This unit does not exist.', 'CP_TD' ) . '</div>';
+				$content .= '<div class="no-access-message"><p>';
+				switch ( $type ) {
+					case '404':
+						$content .= __( 'This unit does not exist.', 'CP_TD' );
+					break;
+					case '404_module':
+						$content .= __( 'This module does not exist.', 'CP_TD' );
+					break;
+				}
+				$content .= '</p></div>';
 				$content .= do_shortcode(
 					sprintf(
 						'[course_join_button course_id="%s" details_text="%s"]',

@@ -335,7 +335,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					$all_complete = false;
 
 					foreach ( $prerequisites as $prerequisite ) {
-						if ( CoursePress_Data_Course::student_enrolled( $student_id, $prerequisite ) && CoursePress_Data_Student::is_course_complete( $student_id, $course_id ) ) {
+						if ( CoursePress_Data_Course::student_enrolled( $student_id, $prerequisite ) && CoursePress_Data_Student::is_course_complete( $student_id, $prerequisite ) ) {
 							$completed += 1;
 						}
 					}
@@ -1082,7 +1082,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			if ( ! empty( $the_unit->post_content ) ) {
 				$unit_content = sprintf(
 					'<div class="unit-content">%s</div>',
-					wpautop( $the_unit->post_content )
+					wpautop( htmlspecialchars_decode($the_unit->post_content) )
 				);
 			}
 

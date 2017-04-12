@@ -104,8 +104,11 @@
 				padding: 4px 12px;
 			}
 		}
-		input[type="checkbox"] {
-			margin-top: .4em;
+		input {
+			&[type="checkbox"],
+			&[type="radio"] {
+				margin-top: .3em;
+			}
 		}
 		input[type="text"],
 		textarea {
@@ -222,7 +225,8 @@
 				}
 			}
 		}
-		.quiz-results {
+		.quiz-results,
+		.form-results {
 			table {
 				text-align: left;
 				border: 0;
@@ -230,6 +234,12 @@
 			td, th {
 				padding: 5px 15px;
 				border: 1px solid rgba(0, 0, 0, 0.04);
+			}
+			td {
+				text-align: right;
+			}
+			tr:nth-child(even) {
+				background-color: rgba(0, 0, 0, 0.04);
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-/*! CoursePress - v2.0.6
+/*! CoursePress - v2.0.7
  * https://premium.wpmudev.org/project/coursepress-pro/
  * Copyright (c) 2017; * Licensed GPLv2+ */
 var CoursePress = {};
@@ -1008,6 +1008,7 @@ $(document)
 	 */
 	CoursePress.saveProgressAndExit = function() {
 		var form = $(this).closest('form');
+		$("#respond", form).detach();
 		form.append( '<input type="hidden" name="save_progress_and_exit" value="1" />' );
 		form.submit();
 	}
