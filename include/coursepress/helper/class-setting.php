@@ -227,12 +227,6 @@ class CoursePress_Helper_Setting {
 
 			add_editor_style( $editor_style );
 
-			// Add chosen.
-			$style = CoursePress::$url . 'asset/css/external/chosen.min.css';
-			$script = CoursePress::$url . 'asset/js/external/chosen.jquery.min.js';
-			wp_enqueue_style( 'chosen_css', $style, array( 'dashicons' ), CoursePress::$version );
-			wp_enqueue_script( 'chosen_js', $script, array( 'jquery' ), CoursePress::$version, true );
-
 			// Font Awesome.
 			wp_enqueue_style( 'fontawesome', $fontawesome, array(), CoursePress::$version );
 

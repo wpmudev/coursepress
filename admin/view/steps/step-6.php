@@ -9,13 +9,13 @@
 	<div class="wide">
 		<label><?php _e( 'Enrollment Restrictions', 'CP_TD' ); ?></label>
 		<p class="description"><?php _e( 'Select the limitations on accessing and enrolling in this course.', 'CP_TD' ); ?></p>
-		<?php echo CoursePress_Helper_UI::select( 'meta_enrollment_type', $enrollment_types, $enrollment_type, 'chosen-select medium' ); ?>
+		<?php echo CoursePress_Helper_UI::select( 'meta_enrollment_type', $enrollment_types, $enrollment_type ); ?>
 	</div>
 
 	<div class="wide enrollment-type-options prerequisite<?php echo $prerequisite_class; ?>">
 		<label><?php _e( 'Prerequisite Courses', 'CP_TD' ); ?></label>
 		<p class="description"><?php _e( 'Select the courses a student needs to complete before enrolling in this course', 'CP_TD' ); ?></p>
-		<select name="meta_enrollment_prerequisite" class="medium chosen-select chosen-select-course <?php echo $class_extra; ?>" multiple="true" data-placeholder=" ">
+		<select id="course_meta_enrollment_prerequisite" name="meta_enrollment_prerequisite" class="medium select2 <?php echo $class_extra; ?>" multiple="true" data-placeholder=" " multiple="multiple" style="width:100%">
 
 			<?php if ( ! empty( $courses ) ) : foreach ( $courses as $course ) : ?>
 				<option value="<?php echo $course->ID; ?>" <?php selected( true, in_array( $course->ID, $saved_settings ) ); ?>><?php echo $course->post_title; ?></option>

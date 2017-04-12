@@ -59,6 +59,7 @@ var CoursePress = CoursePress || {};
 		} else {
 			$( target ).replaceWith( editor );
 		}
+		content = _.unescape(content);
 		$('textarea#' + id ).val(content);
 
 		var options = JSON.parse( JSON.stringify( tinyMCEPreInit.mceInit[ 'dummy_editor_id' ] ) );

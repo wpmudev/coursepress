@@ -151,8 +151,6 @@ class CoursePress_Admin_Controller_Menu {
 
 			wp_enqueue_style( 'coursepress-admin-ui', $css_url . 'admin-ui.css', array(), $version );
 			if ( $include_core ) {
-				// Chosen
-				wp_enqueue_style( 'cp_chosen_css', $css_url . 'external/chosen.min.css' );
 				// Font Awesome.
 				wp_enqueue_style( 'fontawesome', $css_url . 'external/font-awesome.min.css' );
 
@@ -196,7 +194,6 @@ class CoursePress_Admin_Controller_Menu {
 					$course_dependencies[] = 'jquery-select2';
 				}
 				wp_enqueue_script( 'coursepress_object', $url . 'asset/js/coursepress.js', array( 'jquery', 'backbone', 'underscore' ), $version );
-				wp_enqueue_script( 'chosen', $url . 'asset/js/external/chosen.jquery.min.js' );
 				wp_enqueue_script( 'coursepress_course', $url . 'asset/js/coursepress-course.js', $course_dependencies, $version );
 				wp_enqueue_script( 'jquery-treegrid', $url . 'asset/js/external/jquery.treegrid.min.js' );
 

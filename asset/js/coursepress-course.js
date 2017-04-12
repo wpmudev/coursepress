@@ -1791,6 +1791,11 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			return false;
 		}
 
+		if ( target.is( '#post-preview' ) ) {
+			var href = target.attr('href');
+			window.open(href);
+		}
+
 		form.unbind('submit').submit();
 
 		return false;
@@ -1819,6 +1824,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		 * Check select2 exist first!
 		 */
 		if ( "function" == typeof($().select2) ) {
+			$("#course_meta_enrollment_prerequisite").select2();
 			$('#student-add, #facilitators, #instructors').select2( Search_Params )
 			.on( "select2:selecting", function(e) {
 				$( "input.button.disabled", $(this).closest( ".wide" ) ).removeClass( "disabled" );
