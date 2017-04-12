@@ -490,7 +490,6 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					$button = '<button ' . $button_attributes . '>' . esc_html( $buttons[ $button_option ]['label'] ) . '</button>';
 					break;
 				case 'link':
-					l( $buttons[ $button_option ] );
 					$url = $buttons[ $button_option ]['attr']['data-link'];
 					$format = '<a href="%s" %s>%s</a>';
 					$button = sprintf( $format, $url, $button_attributes, $buttons[ $button_option ]['label'] );
