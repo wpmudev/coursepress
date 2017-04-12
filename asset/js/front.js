@@ -1008,6 +1008,7 @@ $(document)
 	 */
 	CoursePress.saveProgressAndExit = function() {
 		var form = $(this).closest('form');
+		$("#respond", form).detach();
 		form.append( '<input type="hidden" name="save_progress_and_exit" value="1" />' );
 		form.submit();
 	}

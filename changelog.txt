@@ -4,25 +4,19 @@ Build Time:  BUILDTIME
 
 CHANGELOG
 =================================================
-
 = 2.0.7 =
 -------------------------------------------------
-* Added: A message to units screen, when there is no visible units at all.
-* Added: 
-* Added: 
-* Added: 
-* Added: 
-* Improved: 
-* Improved: 
-* Improved: 
-* Improved: 
-* Improved: 
-* Fixed: 
-* Fixed: 
-* Fixed: 
-* Fixed: 
-* Fixed: 
+* Added: No visible units message info.
 
+= 2.0.6.2 =
+-------------------------------------------------
+Fixed: HTML and entities issue on unit editor.
+Fixed: Preview button.
+
+= 2.0.6.1 =
+-------------------------------------------------
+* Fixed: Remove vulnerability to view any module.
+* Fixed: Prerequisite Courses problem with access to next course.
 
 = 2.0.6 =
 -------------------------------------------------

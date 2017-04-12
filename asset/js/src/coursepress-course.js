@@ -1789,6 +1789,11 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			return false;
 		}
 
+		if ( target.is( '#post-preview' ) ) {
+			var href = target.attr('href');
+			window.open(href);
+		}
+
 		form.unbind('submit').submit();
 
 		return false;
