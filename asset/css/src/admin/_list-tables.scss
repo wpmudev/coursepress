@@ -49,6 +49,17 @@
 	.column-units {
 		width: 130px;
 	}
+	.column-paid {
+		width: 40px;
+        text-align: center;
+        .free {
+            opacity: .6;
+        }
+        .paid {
+            font-weight: bold;
+            color: red;
+        }
+	}
 }
 
 

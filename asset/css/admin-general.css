@@ -332,6 +332,17 @@ A. Responsive
 .post-type-course .column-units {
   width: 130px;
 }
+.post-type-course .column-paid {
+  width: 40px;
+  text-align: center;
+}
+.post-type-course .column-paid .free {
+  opacity: .6;
+}
+.post-type-course .column-paid .paid {
+  font-weight: bold;
+  color: red;
+}
 
 .coursepress_student_searchbox {
   float: left;

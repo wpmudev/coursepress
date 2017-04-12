@@ -451,7 +451,7 @@ class CoursePress_Helper_Integration_MarketPress {
 			'regular_price' => $settings['mp_product_price'],
 			'has_sale' => 'on' == $settings['mp_sale_price_enabled']? 1 : 0,
 			'sale_price_amount' => $settings['mp_product_sale_price'],
-			'sort_price' => $settings['mp_product_sale_price'],
+			'sort_price' => '' !== $settings['mp_product_sale_price'] ? $settings['mp_product_sale_price'] : $settings['mp_product_price'],
 			'mp_course_id' => $course_id,
 			'mp_price' => $settings['mp_product_price'],
 			'mp_sale_price' => $settings['mp_product_sale_price'],

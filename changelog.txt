@@ -6,6 +6,7 @@ CHANGELOG
 =================================================
 = 2.0.7 =
 -------------------------------------------------
+* Added: New "Paid" column on course list table.
 * Added: Email validation on CoursePress signup form.
 * Added: A sample course to fresh CoursePress installation.
 * Added: No visible units message info.
@@ -13,6 +14,7 @@ CHANGELOG
 * Improved: Description on settings page.
 * Improved: Compatibility with Avada theme.
 * Improved: Disable WooCommerce guest checkout for courses checkout.
+* Improved: Hide Install MarketPress message when WooCommerce Integration is active.
 
 * Updated: External library "select2" to version 4.0.2
 * Updated: External library "jquery-chosen" to version 1.6.2
@@ -21,6 +23,10 @@ CHANGELOG
 
 * Fixed: Email placeholders.
 * Fixed: "Continue Learning" link for required modules.
+* Fixed: Warning messages on CoursePress configuration page when we use tab, which no longer exits.
+* Fixed: Issue with tinymce edit unit page.
+* Fixed: Dark screen when use "Save Progress & Exit" with discussion module.
+* Fixed: Removed PHP warnings when adding units.
 
 = 2.0.6.2 =
 -------------------------------------------------
