@@ -13,6 +13,7 @@ CHANGELOG
 * Improved: Description on settings page.
 * Improved: Compatibility with Avada theme.
 * Improved: Disable WooCommerce guest checkout for courses checkout.
+* Improved: Hide Install MarketPress message when WooCommerce Integration is active.
 
 * Updated: External library "select2" to version 4.0.2
 * Updated: External library "jquery-chosen" to version 1.6.2
@@ -20,6 +21,7 @@ CHANGELOG
 * Updated: External font Awesome to version 4.7.0
 
 * Fixed: Email placeholders.
+* Fixed: Warning messages on CoursePress configuration page when we use tab, which no longer exits.
 
 = 2.0.6.2 =
 -------------------------------------------------
