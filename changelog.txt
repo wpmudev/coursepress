@@ -20,6 +20,7 @@ CHANGELOG
 * Updated: External font Awesome to version 4.7.0
 
 * Fixed: Email placeholders.
+* Fixed: "Continue Learning" link for required modules.
 
 = 2.0.6.2 =
 -------------------------------------------------

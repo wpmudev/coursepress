@@ -155,6 +155,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$is_instructor = false;
 		$is_custom_login = cp_is_true( $general_settings['use_custom_login'] );
 		$course_link = esc_url( trailingslashit( get_permalink( $course_id ) ) . trailingslashit( CoursePress_Core::get_setting( 'slugs/units', 'units' ) ) );
+		$continue_learning_link = null;
 
 		if ( is_user_logged_in() ) {
 			$student_id = get_current_user_id();
@@ -171,7 +172,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 					$is_unit = CoursePress_Data_Unit::is_unit( $last_seen_unit['unit_id'] );
 					if ( $is_unit ) {
-						$course_link = CoursePress_Data_Unit::get_url( $last_seen_unit['unit_id'], $last_seen_unit['page'] );
+						$continue_learning_link = $course_link = CoursePress_Data_Unit::get_url( $last_seen_unit['unit_id'], $last_seen_unit['page'] );
 					}
 				}
 			}
@@ -290,7 +291,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					'label' => ! $is_instructor ? sanitize_text_field( $continue_learning_text ) : sanitize_text_field( $instructor_text ),
 					'attr' => array(
 						'class' => 'apply-button apply-button-enrolled ' . $class,
-						'data-link' => CoursePress_Data_Student::get_last_visited_url( $course_id ),
+						'data-link' => empty( $continue_learning_link )? CoursePress_Data_Student::get_last_visited_url( $course_id ) : $continue_learning_link,
 					),
 					'type' => 'link',
 				),
@@ -489,6 +490,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					$button = '<button ' . $button_attributes . '>' . esc_html( $buttons[ $button_option ]['label'] ) . '</button>';
 					break;
 				case 'link':
+					l( $buttons[ $button_option ] );
 					$url = $buttons[ $button_option ]['attr']['data-link'];
 					$format = '<a href="%s" %s>%s</a>';
 					$button = sprintf( $format, $url, $button_attributes, $buttons[ $button_option ]['label'] );
@@ -1084,7 +1086,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			if ( ! empty( $the_unit->post_content ) ) {
 				$unit_content = sprintf(
 					'<div class="unit-content">%s</div>',
-					wpautop( htmlspecialchars_decode($the_unit->post_content) )
+					wpautop( htmlspecialchars_decode( $the_unit->post_content ) )
 				);
 			}
 
