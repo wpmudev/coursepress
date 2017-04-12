@@ -22,6 +22,7 @@ CHANGELOG
 * Updated: External font Awesome to version 4.7.0
 
 * Fixed: Email placeholders.
+* Fixed: "Continue Learning" link for required modules.
 * Fixed: Warning messages on CoursePress configuration page when we use tab, which no longer exits.
 * Fixed: Issue with tinymce edit unit page.
 * Fixed: Dark screen when use "Save Progress & Exit" with discussion module.
