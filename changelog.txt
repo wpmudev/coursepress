@@ -22,6 +22,9 @@ CHANGELOG
 
 * Fixed: Email placeholders.
 * Fixed: Warning messages on CoursePress configuration page when we use tab, which no longer exits.
+* Fixed: Issue with tinymce edit unit page.
+* Fixed: Dark screen when use "Save Progress & Exit" with discussion module.
+* Fixed: Removed PHP warnings when adding units.
 
 = 2.0.6.2 =
 -------------------------------------------------
