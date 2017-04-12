@@ -6,6 +6,7 @@ CHANGELOG
 =================================================
 = 2.0.7 =
 -------------------------------------------------
+* Added: New "Paid" column on course list table.
 * Added: Email validation on CoursePress signup form.
 * Added: A sample course to fresh CoursePress installation.
 * Added: No visible units message info.
