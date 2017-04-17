@@ -777,13 +777,13 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 			$use_cp_default = cp_is_true( $use_cp_default );
 
 			if ( $course_id > 0 ) {
-				$use_course_settings = CoursePress_Data_Course::get_setting( $course_id, 'basic_certificate', false );
+				$use_course_settings = self::get_course_setting( $course_id, 'basic_certificate', false );
 				$use_course_settings = cp_is_true( $use_course_settings );
 				if ( $use_course_settings ) {
-					$background = CoursePress_Data_Course::get_setting( $course_id, 'certificate_background', '' );
-					$margins = CoursePress_Data_Course::get_setting( $course_id, 'cert_margin', array() );
-					$orientation = CoursePress_Data_Course::get_setting( $course_id, 'page_orientation', 'L' );
-					$html = CoursePress_Data_Course::get_setting( $course_id, 'basic_certificate_layout' );
+					$background = self::get_course_setting( $course_id, 'certificate_background', '' );
+					$margins = self::get_course_setting( $course_id, 'cert_margin', array() );
+					$orientation = self::get_course_setting( $course_id, 'page_orientation', 'L' );
+					$html = self::get_course_setting( $course_id, 'basic_certificate_layout' );
 					$html = apply_filters( 'coursepress_basic_certificate_html', $html, $course_id, get_current_user_id() );
 					$use_cp_default = false;
 				} else {
@@ -940,6 +940,16 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 			return '&ndash;';
 		}
 		return $duration;
+	}
+
+	private static function get_course_setting($course_id, $key, $default = '')
+	{
+		$query_param = 'meta_' . $key;
+		if (isset($_GET[ $query_param ])) {
+			return $_GET[ $query_param ];
+		}
+
+		return CoursePress_Data_Course::get_setting($course_id, $key, $default);
 	}
 }
 endif;
