@@ -39,8 +39,24 @@
 	.column-certificates,
 	.column-students {
 		width: 100px;
-		text-align: center !important;
+		text-align: center;
 	}
+    table {
+        &.users {
+            .column-certificates {
+                width: 6em;
+            }
+            .column-username {
+                .row-actions {
+                    .id {
+                        span {
+                            color: #000;
+                        }
+                    }
+                }
+            }
+        }
+    }
 	.column-taxonomy-course_category,
 	.column-date_start,
 	.column-date_end,

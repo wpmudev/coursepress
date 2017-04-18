@@ -322,7 +322,13 @@ A. Responsive
 .post-type-course .column-certificates,
 .post-type-course .column-students {
   width: 100px;
-  text-align: center !important;
+  text-align: center;
+}
+.post-type-course table.users .column-certificates {
+  width: 6em;
+}
+.post-type-course table.users .column-username .row-actions .id span {
+  color: #000;
 }
 .post-type-course .column-taxonomy-course_category,
 .post-type-course .column-date_start,
