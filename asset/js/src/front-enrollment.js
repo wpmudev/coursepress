@@ -2,57 +2,52 @@
 /* global CoursePress */
 
 (function( $ ) {
-		CoursePress.utility.checkPasswordStrength = function(
-		$pass1, $pass2, $strengthResult, $submitButton, blacklistArray
-	) {
-		var pass1 = $pass1.val();
-		var pass2 = $pass2.val();
+	CoursePress.utility.checkPasswordStrength = function (password_field, confirm_password_field, strength_indicator, confirm_weak_checkbox, password_strength_input) {
+		var pass1 = password_field.val();
+		var pass2 = confirm_password_field.val();
 
 		// Reset the form & meter
-		if ( $submitButton ) {
-			$submitButton.attr( 'disabled', 'disabled' );
-		}
-		$strengthResult.removeClass( 'short bad good strong' );
+		confirm_weak_checkbox.hide();
+		strength_indicator.removeClass('short bad good strong').html('');
 
-		// Extend our blacklist array with those from the inputs & site data
-		blacklistArray = blacklistArray.concat( wp.passwordStrength.userInputBlacklist() );
+		if (!pass1 && !pass2) {
+			return;
+		}
 
 		// Get the password strength
-		var strength = wp.passwordStrength.meter( pass1, blacklistArray, pass2 );
+		var strength = wp.passwordStrength.meter(pass1, wp.passwordStrength.userInputBlacklist(), pass2);
+
+		password_strength_input.val(strength);
 
 		// Add the strength meter results
-		switch ( strength ) {
+		switch (strength) {
 			case 2:
-				$strengthResult.addClass( 'bad' ).html( pwsL10n.bad );
+				strength_indicator.addClass('bad').html(pwsL10n.bad);
 				break;
 
 			case 3:
-				$strengthResult.addClass( 'good' ).html( pwsL10n.good );
+				strength_indicator.addClass('good').html(pwsL10n.good);
 				break;
 
 			case 4:
-				$strengthResult.addClass( 'strong' ).html( pwsL10n.strong );
+				strength_indicator.addClass('strong').html(pwsL10n.strong);
 				break;
 
 			case 5:
-				$strengthResult.addClass( 'short' ).html( pwsL10n.mismatch );
+				strength_indicator.addClass('bad').html(pwsL10n.mismatch);
 				break;
 
 			default:
-				$strengthResult.addClass( 'short' ).html( pwsL10n.short );
+				strength_indicator.addClass('bad').html(pwsL10n.short);
 
 		}
 
 		// The meter function returns a result even if pass2 is empty,
 		// enable only the submit button if the password is strong and
 		// both passwords are filled up
-		if ( $submitButton ) {
-			if ( 2 < strength && strength !== 5 && '' !== pass2.trim() ) {
-				$submitButton.removeAttr( 'disabled' );
-			}
+		if (strength < 3) {
+			confirm_weak_checkbox.show();
 		}
-
-		return strength;
 	};
 	CoursePress.Models.CourseFront = Backbone.Model.extend( {
 		url: _coursepress._ajax_url + '?action=course_front',
@@ -110,25 +105,13 @@
 	CoursePress.Post = new CoursePress.Models.Post();
 
 	CoursePress.checkWeakPassword = function() {
-		var pass1 = $( '[name="password"]' ),
-		pass2 = $( '[name="password_confirmation"]' ),
-		confirm_weak = $( '.weak-password-confirm' );
-
-		if ( pass1.val() && pass2.val() ) {
-			var passStrength = CoursePress.utility.checkPasswordStrength(
-				pass1, 
-				pass2,
-				$('#password-strength'), // Strength meter
-				false,
-				[]        // Blacklisted words
-			);
-
-			if ( parseInt( passStrength ) <= 2 ) {
-				confirm_weak.show();
-			} else {
-				confirm_weak.hide();
-			}
-		}
+		CoursePress.utility.checkPasswordStrength(
+			$('[name="password"]'),
+			$('[name="password_confirmation"]'),
+			$('.password-strength-meter'),
+			$('.weak-password-confirm'),
+			$('[name="password_strength_level"]')
+		);
 	};
 
 	CoursePress.Dialogs = {
@@ -640,7 +623,7 @@
 		.on( 'click', '.cp-custom-login', CoursePress.CustomLoginHook )
 		.on( 'click', '.apply-button.enroll', CoursePress.EnrollStudent )
 		.on( 'submit', '[name="enrollment-process"][data-type="passcode"]', CoursePress.validatePassCode )
-		.on( 'change', '.signup-form [name="password"], .signup-form [name="password_confirmation"]', CoursePress.checkWeakPassword )
+		.on( 'keyup', '.signup-form [name="password"], .signup-form [name="password_confirmation"]', CoursePress.checkWeakPassword )
 		.on( 'submit', '.apply-box .enrollment-process', CoursePress.validateEnrollment );
 
 })(jQuery);
