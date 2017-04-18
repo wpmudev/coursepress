@@ -308,7 +308,7 @@ class CoursePress_Data_Shortcode_Template {
 			array(
 				'course_id' => CoursePress_Helper_Utility::the_course( true ),
 				'before' => '',
-				'after' => '',
+				'after' => ', ',
 				'icon' => '<span class="dashicons dashicons-category"></span>',
 			),
 			$atts,

@@ -1417,6 +1417,10 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 			'content' => __( 'Displays a listing of courses. Can be for all courses or restricted by instructors or students (only one or the other, if both specified only students will be used).', 'CP_TD' ),
 			'parameters' => array(
 				'optional' => array(
+					'categories' => array(
+						'content' => __( 'You can add coma separate categories slugs to show courses from selected course categories.', 'CP_TD' ),
+						'default' => 'empty',
+					),
 					'completed_label' => array(
 						'content' => __( 'Label for completed courses list..', 'CP_TD' ),
 						'default' => __( 'Completed courses', 'CP_TD' ),
