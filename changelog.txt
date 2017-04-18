@@ -12,6 +12,7 @@ CHANGELOG
 * Added: No visible units message info.
 * Added: Ability to sort by title for course_list shortcode.
 * Added: Instructors notification for new enrolled students.
+* Added: Text color option for basic certificate.
 
 * Improved: Description on settings page.
 * Improved: Compatibility with Avada theme.
