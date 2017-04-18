@@ -22,6 +22,12 @@ class CoursePress_Helper_Email {
 
 	/**
 	 * Email type.
+	 * Used by CoursePress_Data_Course::enroll_student().
+	 */
+	const INSTRUCTOR_ENROLLMENT_NOTIFICATION = 'instructor_enrollment_notification';
+
+	/**
+	 * Email type.
 	 * Used by CoursePress_Data_Course::send_invitation().
 	 */
 	const COURSE_INVITATION = 'course_invitation';
@@ -138,6 +144,13 @@ class CoursePress_Helper_Email {
 
 				case self::ENROLLMENT_CONFIRM:
 					$args['message'] = self::enrollment_confirm_message(
+						$args,
+						$email_settings['content']
+					);
+					break;
+
+				case self::INSTRUCTOR_ENROLLMENT_NOTIFICATION:
+					$args['message'] = self::instructor_enrollment_notification_message(
 						$args,
 						$email_settings['content']
 					);
@@ -555,6 +568,48 @@ class CoursePress_Helper_Email {
 		$vars = apply_filters( 'coursepress_fields_' . self::ENROLLMENT_CONFIRM, $vars, $course_id );
 
 		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
+	}
+
+	/**
+	 * Email body for enrollment notification sent to instructor.
+	 * Triggered by CoursePress_Data_Course::enroll_student()
+	 *
+	 * @since  2.0.0
+	 * @param  array $args Email params.
+	 * @param  string $content Default email content, with placeholders.
+	 * @return string Finished email content.
+	 */
+	protected static function instructor_enrollment_notification_message( $args, $content ) {
+		$course_id = (int)$args['course_id'];
+		$post = get_post($course_id);
+		$course_name = $post->post_title;
+		$post_type_object = get_post_type_object($post->post_type);
+		$edit_link = admin_url(sprintf($post_type_object->_edit_link . '&action=edit', $post->ID));
+		$edit_students = add_query_arg('tab', 'students', $edit_link);
+
+		// Email Content.
+		$vars = array(
+			'STUDENT_FIRST_NAME'            => sanitize_text_field($args['student_first_name']),
+			'STUDENT_LAST_NAME'             => sanitize_text_field($args['student_last_name']),
+			'INSTRUCTOR_FIRST_NAME'         => sanitize_text_field($args['instructor_first_name']),
+			'INSTRUCTOR_LAST_NAME'          => sanitize_text_field($args['instructor_last_name']),
+			'COURSE_TITLE'                  => $course_name,
+			'COURSE_ADDRESS'                => get_permalink($course_id),
+			'COURSE_ADMIN_ADDRESS'          => $edit_link,
+			'COURSE_STUDENTS_ADMIN_ADDRESS' => esc_url_raw($edit_students),
+			'WEBSITE_NAME'                  => get_bloginfo(),
+			'WEBSITE_ADDRESS'               => home_url()
+		);
+
+		/**
+		 * Filter the variables before applying changes.
+		 *
+		 * @param array $vars
+		 * @param (int) $course_id
+		 **/
+		$vars = apply_filters('coursepress_fields_' . self::INSTRUCTOR_ENROLLMENT_NOTIFICATION, $vars, $course_id);
+
+		return CoursePress_Helper_Utility::replace_vars($content, $vars);
 	}
 
 	/**
