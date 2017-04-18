@@ -1292,7 +1292,9 @@ var CoursePress = CoursePress || {};
 		}
 
 		function hook_color_picker() {
-			$('.certificate-color-picker').wpColorPicker();
+			if ( $.fn.wpColorPicker ) {
+				$('.certificate-color-picker').wpColorPicker();
+			}
 		}
 
 		$(document)
