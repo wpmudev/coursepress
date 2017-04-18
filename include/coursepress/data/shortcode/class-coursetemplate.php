@@ -1534,6 +1534,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					'limit' => - 1,
 					'manage_label' => __( 'Manage Courses', 'CP_TD' ),
 					'order' => 'ASC',
+					'orderby' => 'meta', /// possible values: meta, title
 					'past_label' => __( 'Past courses', 'CP_TD' ),
 					'show_labels' => false,
 					'status' => 'publish',
@@ -1732,6 +1733,18 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					}
 				}
 			break;
+			case 'all':
+				$atts['orderby'] = strtolower( $atts['orderby'] );
+				switch ( $atts['orderby'] ) {
+					case 'title':
+					case 'post_title':
+						$post_args['orderby'] = 'title';
+					break;
+					default:
+						$post_args['orderby'] = 'meta_value_num';
+					break;
+				}
+				break;
 		}
 
 		if ( $test_empty_courses_ids && empty( $include_ids ) ) {

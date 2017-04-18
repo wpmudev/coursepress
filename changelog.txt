@@ -10,6 +10,7 @@ CHANGELOG
 * Added: Email validation on CoursePress signup form.
 * Added: A sample course to fresh CoursePress installation.
 * Added: No visible units message info.
+* Added: Ability to sort by title for course_list shortcode.
 
 * Improved: Description on settings page.
 * Improved: Compatibility with Avada theme.
