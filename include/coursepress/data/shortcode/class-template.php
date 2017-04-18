@@ -284,7 +284,7 @@ class CoursePress_Data_Shortcode_Template {
 					[course_start label="" course_id="' . $course_id . '"]
 					[course_language label="" course_id="' . $course_id . '"]
 					[course_cost label="" course_id="' . $course_id . '"]
-                    [course_categories course_id="' . $course_id . '"]
+					[course_categories course_id="' . $course_id . '"]
 '.$withdraw_from_course.'
 				</div>' .
 					$button_text . $clickable_text . '
@@ -682,7 +682,10 @@ class CoursePress_Data_Shortcode_Template {
 						$content .= self::show_nav_button(
 							$prev,
 							$pre_text,
-							array( 'focus-nav-prev' )
+							array( 'focus-nav-prev' ),
+							'',
+							false,
+							'prev'
 						);
 
 						// Next Navigation
@@ -690,7 +693,9 @@ class CoursePress_Data_Shortcode_Template {
 							$next,
 							$next_text,
 							array( 'focus-nav-next' ),
-							$next_section_title
+							$next_section_title,
+							false,
+							'next'
 						);
 
 						$content .= '</div>'; // .focus-nav
@@ -816,7 +821,10 @@ class CoursePress_Data_Shortcode_Template {
 					$content .= self::show_nav_button(
 						$prev,
 						$pre_text,
-						array( 'focus-nav-prev' )
+						array( 'focus-nav-prev' ),
+						'',
+						false,
+						'prev'
 					);
 
 					// Next Navigation
@@ -841,7 +849,8 @@ class CoursePress_Data_Shortcode_Template {
 						$text,
 						$next_module_class,
 						$title,
-						true
+						true,
+						'next'
 					);
 
 					$content .= '</div>'; // .focus-nav
@@ -943,14 +952,28 @@ class CoursePress_Data_Shortcode_Template {
 	 * Generate HTML code for a navigation button (prev/next)
 	 *
 	 * @since  2.0.0
+	 * @since  2.0.8 Added the 'rel' attribute.
+	 *
 	 * @param  array  $button Result of ::get_next_accessible_module().
 	 * @param  string $title Link title.
 	 * @param  array  $classes List of CSS classes of the button.
 	 * @param  string $link_title Tooltip title of the link.
+	 * @param  string $rel Rel attribute.
 	 * @return string HTML code of the button.
 	 */
-	public static function show_nav_button( $button, $title, $classes, $link_title = '', $next = false ) {
+	public static function show_nav_button( $button, $title, $classes, $link_title = '', $next = false, $rel = '' ) {
 		$res = '';
+
+		/**
+		 * The rel attribute
+		 */
+		$rel_attribute = '';
+		if ( ! empty( $rel ) ) {
+			$allowed = array( 'alternate', 'author', 'bookmark', 'external', 'help', 'license', 'next', 'nofollow', 'noreferrer', 'noopener', 'prev', 'search', 'tag' );
+			if ( in_array( $rel, $allowed ) ) {
+				$rel_attribute = sprintf( ' rel="%s"', esc_attr( $rel ) );
+			}
+		}
 
 		if ( $button['id'] ) {
 			$classes = is_array( $classes ) ? implode( ' ', $classes ) : $classes;
@@ -958,17 +981,18 @@ class CoursePress_Data_Shortcode_Template {
 				if ( 'completion_page' == $button['id'] ) {
 					$title = __( 'Finish', 'CP_TD' );
 				}
-				$format = '<button type="submit" name="type-%s" class="button %s" title="%s" data-url="%s">%s</button>';
+				$format = '<button type="submit" name="type-%s" class="button %s" title="%s" data-url="%s"%s>%s</button>';
 				$res = sprintf( $format,
 					$button['type'],
 					esc_attr( $classes ),
 					esc_attr( $link_title ),
 					esc_url( $button['url'] ),
+					$rel_attribute,
 					$title
 				);
 			} else {
 				$res = sprintf(
-					'<button type="button" class="button %5$s" data-course="%8$s" data-id="%1$s" data-type="%2$s" data-unit="%4$s" data-title="%6$s" data-url="%7$s">%3$s</button>',
+					'<button type="button" class="button %5$s" data-course="%8$s" data-id="%1$s" data-type="%2$s" data-unit="%4$s" data-title="%6$s" data-url="%7$s"%9$s>%3$s</button>',
 					esc_attr( $button['id'] ),
 					esc_attr( $button['type'] ),
 					$title,
@@ -976,7 +1000,8 @@ class CoursePress_Data_Shortcode_Template {
 					esc_attr( $classes ),
 					esc_attr( $link_title ),
 					isset( $button['url'] )? esc_url( $button['url'] ) : '',
-					isset( $button['course_id'] )?  $button['course_id'] : 0
+					isset( $button['course_id'] )?  $button['course_id'] : 0,
+					$rel_attribute
 				);
 			}
 		} else {
