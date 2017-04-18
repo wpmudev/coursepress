@@ -4,6 +4,11 @@ Build Time:  BUILDTIME
 
 CHANGELOG
 =================================================
+
+= 2.0.8 =
+-------------------------------------------------
+- Improved display course image.
+
 = 2.0.6.2 =
 -------------------------------------------------
 Fixed: HTML and entities issue on unit editor.
