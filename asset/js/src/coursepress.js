@@ -1291,8 +1291,15 @@ var CoursePress = CoursePress || {};
 			}
 		}
 
+		function hook_color_picker() {
+			$('.certificate-color-picker').wpColorPicker();
+		}
+
 		$(document)
-			.ready( on_enabled_click )
+			.ready(function(){
+				on_enabled_click();
+				hook_color_picker();
+			})
 			.on( 'click', '.certificate_enabled', on_enabled_click )
 			.on( 'click', '.certificate_default', on_enabled_click )
 			.on( 'click', '.certificate_background_button', on_background_click );

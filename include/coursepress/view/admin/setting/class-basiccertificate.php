@@ -60,6 +60,7 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 		$cert_margin_left = CoursePress_Core::get_setting( 'basic_certificate/margin/left' );
 		$cert_margin_right = CoursePress_Core::get_setting( 'basic_certificate/margin/right' );
 		$cert_orientation = CoursePress_Core::get_setting( 'basic_certificate/orientation', 'L' );
+		$text_color = CoursePress_Core::get_setting( 'basic_certificate/text_color' );
 		$allowed_extensions = CoursePress_Helper_Utility::get_image_extensions();
 
 		ob_start();
@@ -235,6 +236,24 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 						</option>
 					</select>
 				</td>
+			</tr>
+
+			<tr>
+				<th>
+					<?php esc_html_e( 'Text Color', 'CP_TD' ); ?><br />
+				</th>
+				<td style="padding: 15px 0;">
+					<input
+						type="text"
+						name="coursepress_settings[basic_certificate][text_color]"
+						id="cert_field_text_color"
+						class="certificate-color-picker"
+						value="<?php echo esc_attr($text_color); ?>" />
+				</td>
+				<?php
+					wp_enqueue_script( 'wp-color-picker' );
+					wp_enqueue_style( 'wp-color-picker' );
+				?>
 			</tr>
 
 			</tbody>
