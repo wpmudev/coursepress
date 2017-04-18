@@ -17,6 +17,7 @@ CHANGELOG
 * Improved: Compatibility with Avada theme.
 * Improved: Disable WooCommerce guest checkout for courses checkout.
 * Improved: Hide Install MarketPress message when WooCommerce Integration is active.
+* Improved: Password strength for custom registration form.
 
 * Updated: External library "select2" to version 4.0.2
 * Updated: External library "jquery-chosen" to version 1.6.2
