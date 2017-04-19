@@ -790,6 +790,7 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 					$background = self::get_setting( 'basic_certificate/background_image' );
 					$orientation = self::get_setting( 'basic_certificate/orientation', 'L' );
 					$margins  = self::get_setting( 'basic_certificate/margin' );
+					$text_color = CoursePress_Helper_Utility::convert_hex_color_to_rgb(self::get_setting( 'basic_certificate/text_color' ), $text_color);
 					foreach ( $margins as $margin => $value ) {
 						$margins[ $margin ] = $value;
 					}
@@ -811,6 +812,7 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 				$background = self::get_setting( 'basic_certificate/background_image' );
 				$orientation = self::get_setting( 'basic_certificate/orientation', 'L' );
 				$margins  = self::get_setting( 'basic_certificate/margin' );
+				$text_color = CoursePress_Helper_Utility::convert_hex_color_to_rgb(self::get_setting( 'basic_certificate/text_color' ), $text_color);
 				foreach ( $margins as $margin => $value ) {
 					$margins[ $margin ] = $value;
 				}

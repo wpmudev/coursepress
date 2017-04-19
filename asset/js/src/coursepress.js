@@ -1291,6 +1291,12 @@ var CoursePress = CoursePress || {};
 			}
 		}
 
+		function hook_color_picker() {
+			if ( $.fn.wpColorPicker ) {
+				$('.certificate-color-picker').wpColorPicker();
+			}
+		}
+
 		function on_preview_button_click()
 		{
 			var link = $(this),
@@ -1308,7 +1314,10 @@ var CoursePress = CoursePress || {};
 		}
 
 		$(document)
-			.ready( on_enabled_click )
+			.ready(function(){
+				on_enabled_click();
+				hook_color_picker();
+			})
 			.on( 'click', '.certificate_enabled', on_enabled_click )
 			.on( 'click', '.certificate_default', on_enabled_click )
 			.on( 'click', '.certificate_background_button', on_background_click )

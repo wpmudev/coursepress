@@ -10,11 +10,15 @@ CHANGELOG
 * Added: Email validation on CoursePress signup form.
 * Added: A sample course to fresh CoursePress installation.
 * Added: No visible units message info.
+* Added: Ability to sort by title for course_list shortcode.
+* Added: Instructors notification for new enrolled students.
+* Added: Text color option for basic certificate.
 
 * Improved: Description on settings page.
 * Improved: Compatibility with Avada theme.
 * Improved: Disable WooCommerce guest checkout for courses checkout.
 * Improved: Hide Install MarketPress message when WooCommerce Integration is active.
+* Improved: Password strength for custom registration form.
 
 * Updated: External library "select2" to version 4.0.2
 * Updated: External library "jquery-chosen" to version 1.6.2
