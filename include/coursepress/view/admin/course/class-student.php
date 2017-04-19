@@ -16,6 +16,7 @@ class CoursePress_View_Admin_Course_Student {
 		$content = '';
 		ob_start();
 		$list_course->search_box( __( 'Search', 'CP_TD' ), 'student' );
+		$list_course->views();
 		$list_course->display();
 		$content .= ob_get_clean();
 

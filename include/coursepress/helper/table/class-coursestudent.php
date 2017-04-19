@@ -44,6 +44,8 @@ class CoursePress_Helper_Table_CourseStudent extends WP_Users_List_Table {
 	private $add_new = false;
 	private $students = array();
 	private $can_withdraw_students = false;
+	private $filter_show = 'all';
+	private $filter_options = array();
 
 	/** ************************************************************************
 	 * REQUIRED. Set up a constructor that references the parent constructor. We
@@ -55,15 +57,75 @@ class CoursePress_Helper_Table_CourseStudent extends WP_Users_List_Table {
 			'plural' => __( 'Students', 'CP_TD' ),
 			'ajax' => false,// should this table support ajax?
 		) );
+
+		/**
+		 * add filters
+		 */
 		add_filter( 'user_row_actions', array( $this, 'student_row_actions' ), 10, 2 );
 		add_filter( 'manage_users_custom_column', array( $this, 'columns' ), 10, 3 );
-		$course_id = isset( $_GET['id'] ) ? (int) $_GET['id'] : null;
-		if ( CoursePress_Data_Course::is_course( $course_id ) ) {
-			$this->course_id = $course_id;
-			$this->can_withdraw_students = CoursePress_Data_Capabilities::can_withdraw_students( $course_id );
+		add_filter( 'views_course', array( $this, 'views_array_filter' ) );
+
+		/**
+		 * set course ID
+		 */
+		global $post;
+		if ( CoursePress_Data_Course::is_course( $post->ID ) ) {
+			$this->course_id = $post->ID;
+			$this->can_withdraw_students = CoursePress_Data_Capabilities::can_withdraw_students( $post->ID );
+		}
+
+		/**
+		 * filter options
+		 */
+		$this->filter_options = array(
+			'all' => __( 'All', 'CP_TD' ),
+			'yes' => __( 'Certified', 'CP_TD' ),
+			'no' => __( 'Not certified', 'CP_TD' ),
+		);
+		if ( isset( $_REQUEST['certified'] ) && array_key_exists( $_REQUEST['certified'], $this->filter_options ) ) {
+			$this->filter_show = $_REQUEST['certified'];
 		}
 	}
 
+	/**
+	 * Show quick filter.
+	 *
+	 * @since 2.0.8
+	 */
+	public function views_array_filter( $views ) {
+		global $post;
+		$views = array();
+		$pattern = '<a href="%s" class="%s">%s</a>';
+		$url = add_query_arg(
+			array(
+				'post_type' => $post->post_type,
+				'post' => $post->ID,
+				'action' => 'edit',
+				'tab' => 'students',
+			),
+			admin_url( 'post.php' )
+		);
+		foreach ( $this->filter_options as $key => $label ) {
+			$action_url = add_query_arg( 'certified', $key, $url );
+			$class = $key == $this->filter_show? 'current':'';
+			$views[ $key ] = sprintf(
+				$pattern,
+				esc_url( $action_url ),
+				$class,
+				esc_html( $label )
+			);
+		}
+		return $views;
+	}
+
+	/**
+	 * Get student object by student id.
+	 *
+	 * @since 2.0.8
+	 *
+	 * @param integer $ID Student ID.
+	 * @return null|WP User Student object.
+	 */
 	private function get_student( $ID ) {
 		foreach ( $this->items as $item ) {
 			if ( $ID == $item->ID ) {
@@ -315,12 +377,26 @@ class CoursePress_Helper_Table_CourseStudent extends WP_Users_List_Table {
 			$query_args['order'] = $_REQUEST['order'];
 		}
 
-		$users = new WP_User_Query( $query_args );
-
 		/**
 		 * fil certificates
 		 */
 		$certificates = CoursePress_Data_Certificate::get_certificated_students_by_course_id( $this->course_id );
+
+		/**
+		 * Certificates
+		 */
+		if ( ! empty( $certificates ) ) {
+			switch ( $this->filter_show ) {
+				case 'no':
+					$query_args['exclude'] = $certificates;
+				break;
+				case 'yes':
+					$query_args['include'] = $certificates;
+				break;
+			}
+		}
+
+		$users = new WP_User_Query( $query_args );
 
 		foreach ( $users->get_results() as $one ) {
 			$one->data->certified = in_array( $one->ID, $certificates )? 'yes' : 'no';
@@ -439,6 +515,6 @@ class CoursePress_Helper_Table_CourseStudent extends WP_Users_List_Table {
 		if ( 'yes' == $item->data->certified ) {
 			$value = 'yes';
 		}
-		return sprintf( '<span class="dashicons dashicons-%s"></span>', $value );
+		return sprintf( '<span class="dashicons dashicons-%s"></span>', esc_attr( $value ) );
 	}
 }
