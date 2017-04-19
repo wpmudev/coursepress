@@ -1291,11 +1291,28 @@ var CoursePress = CoursePress || {};
 			}
 		}
 
+		function on_preview_button_click()
+		{
+			var link = $(this),
+				form = link.closest('form');
+
+			tinymce.triggerSave();
+			var certificate_settings = form.serialize(),
+				preview_url_parts = [
+					link.attr('href'),
+					certificate_settings
+				];
+
+			window.open(preview_url_parts.join('&'), '_blank');
+			return false;
+		}
+
 		$(document)
 			.ready( on_enabled_click )
 			.on( 'click', '.certificate_enabled', on_enabled_click )
 			.on( 'click', '.certificate_default', on_enabled_click )
-			.on( 'click', '.certificate_background_button', on_background_click );
+			.on( 'click', '.certificate_background_button', on_background_click )
+			.on( 'click', '.button.button-certificate', on_preview_button_click );
 	})(jQuery);
 
 	/*
