@@ -1491,6 +1491,19 @@ ul.notification-archive-list:after {
   display: none;
 }
 
+.signup-form .password-strength-meter {
+  float: right;
+}
+.signup-form .password-strength-meter.bad {
+  color: red;
+}
+.signup-form .password-strength-meter.good {
+  color: orange;
+}
+.signup-form .password-strength-meter.strong {
+  color: green;
+}
+
 /** Media Queries **/
 @media screen and (min-width: 768px) {
   .enrolment-container-div .bbm-modal {

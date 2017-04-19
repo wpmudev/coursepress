@@ -117,6 +117,10 @@ A. Responsive
   min-height: 340px;
   z-index: 10;
 }
+.tab-content .shortcodes-list .cp-shortcode-examples code {
+  display: inline-block;
+  padding: 5px 10px;
+}
 
 .tab-content .header-save-button {
   float: right;

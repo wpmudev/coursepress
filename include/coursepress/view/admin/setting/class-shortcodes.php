@@ -1439,7 +1439,7 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 						'default' => __( 'Facilitated Courses', 'CP_TD' ),
 					),
 					'facilitator' => array(
-						'content' => __( 'If jest true or "yes" switch content to "facilitator".', 'CP_TD' ),
+						'content' => __( 'If this true or "yes" switch content to "facilitator".', 'CP_TD' ),
 						'default' => 'empty',
 					),
 					'future_label' => array(
@@ -1852,7 +1852,7 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 			$content .= wpautop( __( 'This shortcode has no parameters.', 'CP_TD' ) );
 		}
 		if ( isset( $data['examples'] ) && is_array( $data['examples'] ) && ! empty( $data['examples'] ) ) {
-			$content .= '<div cp-shortcode-examples">';
+			$content .= '<div class="cp-shortcode-examples">';
 			$content .= sprintf( '<p class="cp-shortcode-subheading">%s</p>', esc_attr__( 'Examples:', 'CP_TD' ) );
 			$content .= '<code>';
 			$content .= join( $data['examples'], '<br />' );
