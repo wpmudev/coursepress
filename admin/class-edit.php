@@ -945,8 +945,10 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 	private static function get_course_setting($course_id, $key, $default = '')
 	{
 		$query_param = 'meta_' . $key;
-		if (isset($_GET[ $query_param ])) {
-			return $_GET[ $query_param ];
+		$query_param_value = isset($_GET[ $query_param ]) ? $_GET[ $query_param ] : null;
+
+		if ($query_param_value) {
+			return CoursePress_Helper_Utility::filter_content($query_param_value);
 		}
 
 		return CoursePress_Data_Course::get_setting($course_id, $key, $default);
