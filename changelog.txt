@@ -13,6 +13,7 @@ CHANGELOG
 * Added: Ability to sort by title for course_list shortcode.
 * Added: Instructors notification for new enrolled students.
 * Added: Text color option for basic certificate.
+* Added: Preview without saving for basic and course certificates.
 
 * Improved: Description on settings page.
 * Improved: Compatibility with Avada theme.
