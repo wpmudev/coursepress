@@ -598,6 +598,10 @@ class CoursePress_Core {
 		// Remove redirect marker
 		delete_option( 'coursepress_maybe_redirect' );
 
+		// Flush rewrite rules
+		// @todo: Wrap this!
+		flush_rewrite_rules();
+
 		try {
 			$post_type = CoursePress_Data_Course::get_post_type_name();
 			$courses = wp_count_posts( $post_type );

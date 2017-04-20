@@ -12,6 +12,7 @@ class CoursePress_Admin_SampleCourses {
 		}
 
 		add_option( 'coursepress_maybe_redirect', true );
+
 	}
 
 	/**
