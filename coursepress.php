@@ -125,6 +125,11 @@ class CoursePress {
 		}
 
 		/**
+		 * Add sample courses when CP is activated.
+		 **/
+		add_action( 'coursepress_activate', array( 'CoursePress_Admin_SampleCourses', 'add_sample_courses' ) );
+
+		/**
 		register_activation_hook * register_activation_hook
 		 */
 		register_activation_hook( __FILE__, array( __CLASS__, 'register_activation_hook' ) );
@@ -247,6 +252,13 @@ class CoursePress {
 
 		// Reset the schedule during activation.
 		wp_clear_scheduled_hook( 'coursepress_schedule-email_task' );
+
+		/**
+		 * Fire whenever this plugin is activated.
+		 *
+		 * @since 2.0.7
+		 **/
+		do_action( 'coursepress_activate' );
 	}
 
 	/**
@@ -259,6 +271,13 @@ class CoursePress {
 
 		// Reset the schedule during deactivation.
 		wp_clear_scheduled_hook( 'coursepress_schedule-email_task' );
+
+		/**
+		 * Fire whenever this plugin is deactivated.
+		 *
+		 * @since 2.0.7
+		 **/
+		do_action( 'coursepress_deactivate' );
 	}
 
 	/**

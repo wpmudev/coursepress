@@ -2300,6 +2300,7 @@ class CoursePress_Data_Course {
 	 */
 	public static function count_courses() {
 		$count = wp_count_posts( self::get_post_type_name() );
+		error_log(print_r($count,true));
 		/**
 		 * Do not count auto-drafts.
 		 */
