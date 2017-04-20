@@ -707,7 +707,21 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 			$table .= CoursePress_Helper_UI::admin_paginate( $paged, $total, $per_page, $url, __( 'student', 'CP_TD' ) );
 		}
 
-		return $table;
+		$list = new CoursePress_Helper_Table_CourseAssessments();
+		$list->set_course( $course_id );
+		$list->set_search( $search );
+		$list->set_student_ids( $student_ids );
+		$list->set_the_unit( $the_unit );
+		$list->set_paged( $paged );
+		$list->set_type( $type );
+
+		$list->prepare_items();
+		$content = '';
+		ob_start();
+		$list->display();
+		$content .= ob_get_clean();
+
+		return $table.$content;
 	}
 
 	public static function student_assessment( $student_id, $course_id, $student_progress = false, $activeUnit = 'all', $assess = false, $display = false ) {

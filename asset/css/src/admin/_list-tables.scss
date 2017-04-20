@@ -38,14 +38,22 @@
 
 .post-type-course {
 	.column-certificates,
-	.column-students {
+	.column-grade,
+	.column-modules,
+	.column-students,
+	.column-view_all {
 		width: 100px;
 		text-align: center;
 	}
 	table {
 		&.users {
 			.column-certificates {
-				width: 6em;
+				width: 7em;
+				vertical-align: middle;
+				.cp-certified {
+					font-size: 1em;
+					margin: 0;
+				}
 			}
 			.column-username {
 				.row-actions {
@@ -54,6 +62,19 @@
 							color: #000;
 						}
 					}
+				}
+			}
+			.column-grade,
+			.column-modules,
+			.column-view_all {
+				width: 5em;
+			}
+			.column-last_active {
+				width: 8em;
+			}
+			td {
+				&.column-grade {
+					text-align: right;
 				}
 			}
 		}

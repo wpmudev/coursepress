@@ -320,15 +320,34 @@ A. Responsive
 }
 
 .post-type-course .column-certificates,
-.post-type-course .column-students {
+.post-type-course .column-grade,
+.post-type-course .column-modules,
+.post-type-course .column-students,
+.post-type-course .column-view_all {
   width: 100px;
   text-align: center;
 }
 .post-type-course table.users .column-certificates {
-  width: 6em;
+  width: 7em;
+  vertical-align: middle;
+}
+.post-type-course table.users .column-certificates .cp-certified {
+  font-size: 1em;
+  margin: 0;
 }
 .post-type-course table.users .column-username .row-actions .id span {
   color: #000;
+}
+.post-type-course table.users .column-grade,
+.post-type-course table.users .column-modules,
+.post-type-course table.users .column-view_all {
+  width: 5em;
+}
+.post-type-course table.users .column-last_active {
+  width: 8em;
+}
+.post-type-course table.users td.column-grade {
+  text-align: right;
 }
 .post-type-course .column-taxonomy-course_category,
 .post-type-course .column-date_start,
