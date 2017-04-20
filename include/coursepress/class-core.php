@@ -607,7 +607,7 @@ class CoursePress_Core {
 			$courses = wp_count_posts( $post_type );
 
 			if ( is_object( $courses ) ) {
-				if ( (int) $courses->publish > 0 ) return;
+				if ( isset( $courses->publish ) && (int) $courses->publish > 0 ) return;
 
 				wp_safe_redirect(
 					add_query_arg(
