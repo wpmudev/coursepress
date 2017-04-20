@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: CoursePress Base
- * Version:     2.0.6.2
+ * Version:     2.0.7
  * Description: CoursePress Pro turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also assess student work, sell your courses and much much more.
  * Author:      WPMU DEV
  * Author URI:  http://premium.wpmudev.org
@@ -49,6 +49,8 @@ class CoursePressUpgrade {
 	/** @var (boolean) Whether all courses are upgraded to the new version. **/
 	private static $coursepress_is_upgraded = false;
 
+	private static $coursepress_version;
+
 	public static function init() {
 		self::$coursepress_is_upgraded = get_option( 'coursepress_20_upgraded', false );
 		$coursepress_version = false === self::$coursepress_is_upgraded ? '1.x' : '2.0';
@@ -76,6 +78,18 @@ class CoursePressUpgrade {
 		 * Retrieve the current coursepress version use.
 		 **/
 		self::get_coursepress( $coursepress_version );
+
+		self::$coursepress_version = $coursepress_version;
+
+		/**
+		 * Set activation hook
+		 **/
+		register_activation_hook( __FILE__, array( __CLASS__, 'activate' ) );
+
+		/**
+		 * Set deactivation hook
+		 **/
+		register_deactivation_hook( __FILE__, array( __CLASS__, 'deactivate' ) );
 	}
 
 	/** Use to reset CP into 1.x version */
@@ -206,6 +220,24 @@ class CoursePressUpgrade {
 
 			add_action( 'admin_init', array( __CLASS__, 'maybe_switch_theme' ) );
 			update_option( 'cp2_flushed', true );
+		}
+	}
+
+	/**
+	 * Helper function to set activation hook for verion 2.x
+	 **/
+	static function activate() {
+		if ( method_exists( 'CoursePress', 'register_activation_hook' ) ) {
+			CoursePress::register_activation_hook();
+		}
+	}
+
+	/**
+	 * Helper function to set deactivation hook for version 2.x
+	 **/
+	static function deactivate() {
+		if ( method_exists( 'CoursePress', 'deactivate_coursepress' ) ) {
+			CoursePress::deactivate_coursepress();
 		}
 	}
 }
