@@ -8,7 +8,9 @@ CHANGELOG
 = 2.0.8 =
 -------------------------------------------------
 * Improved: Add individuall nonce when withdraw a student from a course.
-* Improved: Students list on course edit screen can by sorted by: username, display name, first name last name.
+* Improved: Students list on assessment screen can be sorted by username and display name.
+* Improved: Students list on assessment screen is more like users list.
+* Improved: Students list on course edit screen can by sorted by: username, display name, first name and last name.
 * Improved: Students list on course edit screen is more like users list.
 * Improved: Added certificate filter on students list on course edit screen.
 
