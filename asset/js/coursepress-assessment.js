@@ -1,4 +1,4 @@
-/*! CoursePress - v2.0.7
+/*! CoursePress - v2.0.8
  * https://premium.wpmudev.org/project/coursepress-pro/
  * Copyright (c) 2017; * Licensed GPLv2+ */
 +(function($){
@@ -385,6 +385,8 @@
 			activeUnit = $( '#unit-list' ).val(),
 			grade_type = $( '#ungraded-list' ).val(),
 			course_id = $( '#course-list' ).val(),
+			orderby = $( '#assessment-orderby' ).val(),
+			order = $( '#assessment-order' ).val(),
 			loader_info = $( '.cp-loader-info' ),
 			search = $( '#search_student_box' ),
 			reset_button = search.siblings( '#search_reset' )
@@ -407,7 +409,9 @@
 			student_type: grade_type,
 			paged: currentPage,
 			action: 'table',
-			search: search.val()
+			search: search.val(),
+			orderby: orderby,
+			order: order
 		};
 		container.empty();
 		loader_info.show();

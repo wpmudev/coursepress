@@ -6,6 +6,8 @@ $courses = array_filter( $courses );
 $selected_course = isset( $_REQUEST['course_id'] ) ? (int) $_REQUEST['course_id'] : 0;
 $active_unit = ! empty( $_REQUEST['unit'] ) ? $_REQUEST['unit'] : 'all';
 $grade_type = ! empty( $_REQUEST['type'] ) ? $_REQUEST['type'] : 'all';
+$orderby = isset( $_REQUEST['orderby'] ) ? $_REQUEST['orderby'] : 'login';
+$order = isset( $_REQUEST['order'] ) ? $_REQUEST['order'] : 'asc';
 
 if ( 0 == $selected_course && ! empty( $courses ) ) {
 	$selected_course = $courses[0]->ID;
@@ -15,6 +17,8 @@ $nonce = wp_create_nonce( 'cp_get_units' );
 $base_location = remove_query_arg( array( 'unit', 'type', 'paged' ) );
 ?>
 <input type="hidden" id="base_location" value="<?php echo esc_url( $base_location ); ?>" />
+<input type="hidden" id="assessment-orderby" value="<?php echo esc_attr( $orderby ); ?>" />
+<input type="hidden" id="assessment-order" value="<?php echo esc_attr( $order ); ?>" />
 <div class="wrap coursepress_wrapper coursepress-assessment">
 	<h2><?php esc_html_e( 'Assessments', 'CP_TD' ); ?></h2>
 

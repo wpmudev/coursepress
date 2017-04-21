@@ -22,6 +22,9 @@ class CoursePress_Helper_Table_CourseAssessments extends CoursePress_Helper_Tabl
 	private $the_unit;
 	private $paged = 0;
 	private $type;
+	private $data;
+	private $orderby;
+	private $order;
 
 	/** ************************************************************************
 	 * REQUIRED. Set up a constructor that references the parent constructor. We
@@ -150,8 +153,6 @@ class CoursePress_Helper_Table_CourseAssessments extends CoursePress_Helper_Tabl
 	public function get_sortable_columns() {
 		$c = array(
 			'display_name' => array( 'display_name', false ),
-			'grade' => array( 'grade', false ),
-			'last_active' => array( 'last_active', false ),
 			'username' => array( 'login', false ),
 		);
 		return $c;
@@ -268,34 +269,12 @@ class CoursePress_Helper_Table_CourseAssessments extends CoursePress_Helper_Tabl
 			'offset' => $offset,
 			'include' => array_values( $results['students'] ),
 		);
-		$usersearch = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : '';
 
-		if ( ! empty( $usersearch ) ) {
-			$query_args['search'] = '*' . $usersearch . '*';
+		if ( isset( $this->orderby ) ) {
+			$query_args['orderby'] = $this->orderby;
 		}
-
-		if ( isset( $_REQUEST['orderby'] ) ) {
-			$query_args['orderby'] = $_REQUEST['orderby'];
-			switch ( $_REQUEST['orderby'] ) {
-				case 'first_name':
-				case 'last_name':
-					$query_args['meta_query'] = array(
-					'relation' => 'AND',
-					array(
-						'key' => $_REQUEST['orderby'],
-						'compare' => 'EXISTS',
-					),
-					array(
-						'key' => $course_meta_key,
-						'compare' => 'EXISTS',
-					),
-					);
-					$query_args['orderby'] = 'meta_value';
-					break;
-			}
-		}
-		if ( isset( $_REQUEST['order'] ) ) {
-			$query_args['order'] = $_REQUEST['order'];
+		if ( isset( $this->order ) ) {
+			$query_args['order'] = $this->order;
 		}
 
 		/**
@@ -344,24 +323,21 @@ class CoursePress_Helper_Table_CourseAssessments extends CoursePress_Helper_Tabl
 		}
 	}
 
-	public function set_search( $search ) {
-		$this->search = $search;
-	}
-
-	public function set_the_unit( $the_unit ) {
-		$this->the_unit = $the_unit;
-	}
-
-	public function set_paged( $paged ) {
-		$this->paged = $paged;
-	}
-
 	public function set_type( $type ) {
 		$this->type = $type;
 	}
 
 	public function set_student_ids( $student_ids ) {
 		$this->student_ids = $student_ids;
+	}
+
+	public function set_data( $data ) {
+		$this->course_id = $data->course_id;
+		$this->orderby = $data->orderby;
+		$this->order = $data->order;
+		$this->paged = $data->paged;
+		$this->search = $data->search;
+		$this->the_unit = $data->unit_id;
 	}
 
 	/**
@@ -401,13 +377,13 @@ class CoursePress_Helper_Table_CourseAssessments extends CoursePress_Helper_Tabl
 
 			$current_url = remove_query_arg( 'paged', $current_url );
 
-		if ( isset( $_GET['orderby'] ) ) {
-			$current_orderby = $_GET['orderby'];
+		if ( isset( $this->orderby ) ) {
+			$current_orderby = $this->orderby;
 		} else {
 			$current_orderby = '';
 		}
 
-		if ( isset( $_GET['order'] ) && 'desc' === $_GET['order'] ) {
+		if ( isset( $this->order ) && 'desc' === $this->order ) {
 			$current_order = 'desc';
 		} else {
 			$current_order = 'asc';
