@@ -1,4 +1,4 @@
-/*! CoursePress - v2.0.7
+/*! CoursePress - v2.0.8
  * https://premium.wpmudev.org/project/coursepress-pro/
  * Copyright (c) 2017; * Licensed GPLv2+ */
 /*global tinyMCE*/
@@ -59,6 +59,7 @@ var CoursePress = CoursePress || {};
 		} else {
 			$( target ).replaceWith( editor );
 		}
+		content = _.unescape(content);
 		$('textarea#' + id ).val(content);
 
 		var options = JSON.parse( JSON.stringify( tinyMCEPreInit.mceInit[ 'dummy_editor_id' ] ) );
