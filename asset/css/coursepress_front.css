@@ -441,7 +441,6 @@ ul.notification-archive-list {
   position: absolute;
   top: 50%;
   left: 50%;
-  -ms-transform: translate(-50%, -50%) scale(1.2, 1);
   transform: translate(-50%, -50%) scale(1.2, 1);
 }
 
@@ -581,7 +580,6 @@ ul.notification-archive-list {
   position: absolute;
   top: 50%;
   left: 50%;
-  -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
 
@@ -1158,12 +1156,9 @@ ul.notification-archive-list {
 }
 
 .coursepress-page .nav-links {
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-wrap: nowrap;
   flex-wrap: nowrap;
   width: 100%;
-  -ms-flex-pack: center;
   justify-content: center;
   margin-top: 2em;
 }
