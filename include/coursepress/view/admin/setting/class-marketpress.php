@@ -6,7 +6,7 @@
  */
 
 /**
- * Settings for Basic Certificate.
+ * Settings for MarketPress.
  */
 class CoursePress_View_Admin_Setting_MarketPress {
 

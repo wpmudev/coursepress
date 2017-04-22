@@ -39,7 +39,7 @@ class CoursePress_Helper_Extension_MarketPress {
 		self::maybe_initialize_values();
 
 		/**
-		 * We'll giving out MP to all verions, yay!!!
+		 * We'll giving out MP to all versions, yay!!!
 		 **/
 		$plugins[] = array(
 			'name' => 'MarketPress',
@@ -128,7 +128,7 @@ class CoursePress_Helper_Extension_MarketPress {
 					$mp = sprintf( '<a href="%s">%s</a>', $plugin_url, '<strong>MarketPress</strong>' );
 					$cp = defined( 'CP_IS_PREMIUM' ) && CP_IS_PREMIUM ? '<strong>CoursePress Pro</strong>' : '<strong>CoursePress</strong>';
 					$cp = sprintf( '<a href="%s">%s</a>', $plugin_url, $cp );
-					$message = __( 'You are using an older version of %s plugin. %s require the latest version for compatilibity.', 'CP_TD' );
+					$message = __( 'You are using an older version of %s plugin. %s require the latest version for compatibility.', 'CP_TD' );
 					$message .= __( ' Update your %s now!', 'CP_TD' );
 					$message = sprintf( $message, $mp, $cp, $mp );
 				}
