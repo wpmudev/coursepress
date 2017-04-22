@@ -36,7 +36,7 @@
 		total_limit = hours + minutes + seconds;
 
 		info = container.find( '.quiz_timer_info' );
-		inputs = container.find( '.module-elements input, .module_elements select, .module-elements textarea' );
+		inputs = container.find( '.module-elements input, .module_elements select, .module-elements textarea, .module-elements .video_player' );
 		inputs.removeAttr('disabled');
 
 		expired = function() {
@@ -536,9 +536,48 @@
 		form.submit();
 	}
 
+	CoursePress.hookModuleVideos = function() {
+		function change_video_status(player)
+		{
+			if( $(player.el()).closest('.video_player').is('[disabled="disabled"]') )
+			{
+				player.pause();
+			}
+		}
+
+		$('.video-js').each(function(){
+			var video_id = $(this).attr('id');
+			var video = videojs(video_id);
+
+			video.on('ready', function(){
+				var player = this,
+					player_element = $(player.el());
+
+				if(player_element.is('[autoplay]'))
+				{
+					player.play();
+				}
+
+				if(player_element.is('[muted]'))
+				{
+					player.muted(true);
+				}
+			});
+
+			video.on('play', function(){
+				change_video_status(this);
+			});
+
+			video.on('timeupdate', function(){
+				change_video_status(this);
+			});
+		});
+	};
+
 	$( document )
 		.ready(function(){
 			CoursePress.timer( $('.cp-module-content' ) );
+			CoursePress.hookModuleVideos();
 		})
 		.on( 'submit', '.cp-form', CoursePress.ModuleSubmit )
 		.on( 'click', '.focus-nav-prev, .focus-nav-next', CoursePress.LoadFocusModule )

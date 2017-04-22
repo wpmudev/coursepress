@@ -522,5 +522,37 @@ class CoursePress_Helper_JavaScript {
 		$localize_array = apply_filters( 'coursepress_localize_object', $localize_array );
 
 		wp_localize_script( 'coursepress-front-js', '_coursepress', $localize_array );
+
+		$script = CoursePress::$url . 'asset/js/external/video.min.js';
+		wp_enqueue_script(
+			'coursepress-video-js',
+			$script,
+			array('jquery'),
+			CoursePress::$version
+		);
+
+		$script = CoursePress::$url . 'asset/js/external/video-youtube.min.js';
+		wp_enqueue_script(
+			'coursepress-video-youtube-js',
+			$script,
+			array('jquery', 'coursepress-video-js'),
+			CoursePress::$version
+		);
+
+		$script = CoursePress::$url . 'asset/js/external/video-vimeo.min.js';
+		wp_enqueue_script(
+			'coursepress-video-vimeo-js',
+			$script,
+			array('jquery', 'coursepress-video-js'),
+			CoursePress::$version
+		);
+
+		$video_js = CoursePress::$url . 'asset/css/external/video-js.min.css';
+		wp_enqueue_style(
+			'coursepress-video-js-style',
+			$video_js,
+			array(),
+			CoursePress::$version
+		);
 	}
 }

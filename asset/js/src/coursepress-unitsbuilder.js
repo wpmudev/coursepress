@@ -1116,6 +1116,47 @@ var CoursePress = CoursePress || {};
 
 		var module_type = data['type'];
 
+		function module_mandatory() {
+			return '<label class="module-mandatory">' +
+				'<input type="checkbox" name="meta_mandatory[' + module.cid + ']" value="1" ' + CoursePress.utility.checked(data['mandatory'], 1) + ' />' +
+				'<span class="label">' + labels['module_mandatory'] + '</span>' +
+				'<span class="description">' + labels['module_mandatory_desc'] + '</span>' +
+				'</label>';
+		}
+
+		function module_assessable() {
+			return '<label class="module-assessable">' +
+				'<input type="checkbox" data-target=".module-minimum-grade" name="meta_assessable[' + module.cid + ']" value="1" ' + CoursePress.utility.checked(data['assessable'], 1) + ' />' +
+				'<span class="label">' + labels['module_assessable'] + '</span>' +
+				'<span class="description">' + labels['module_assessable_desc'] + '</span>' +
+				'</label>';
+		}
+
+		function module_use_timer() {
+			return '<label class="module-use-timer">' +
+				'<input type="checkbox" data-target=".module-duration" name="meta_use_timer[' + module.cid + ']" value="1" ' + CoursePress.utility.checked(data['use_timer'], 1) + ' />' +
+				'<span class="label">' + labels['module_use_timer'] + '</span><br />' +
+				'<span class="description">' + labels['module_use_timer_desc'] + '</span>' +
+				'</label>';
+		}
+
+		function module_allow_retries() {
+			return '<label class="module-allow-retries">' +
+				'<input type="checkbox" name="meta_allow_retries[' + module.cid + ']" value="1" ' + CoursePress.utility.checked(data['allow_retries'], 1) + ' />' +
+				'<span class="label">' + labels['module_allow_retries'] + '</span>' +
+				'<input type="number" name="meta_retry_attempts" value="' + data['retry_attempts'] + '" min="0" class="small-text" />' +
+				'<span class="description">' + labels['module_allow_retries_desc'] + '</span>' +
+				'</label>';
+		}
+
+		function module_minimum_grade() {
+			return '<label class="module-minimum-grade">' +
+				'<span class="label">' + labels['module_minimum_grade'] + '</span>' +
+				'<input type="number" name="meta_minimum_grade" value="' + data['minimum_grade'] + '" min="0" max="100" class="small-text" />' +
+				'<span class="description">' + labels['module_minimum_grade_desc'] + '</span>' +
+				'</label>';
+		}
+
 		// Display the body of the module?
 		if ( ( types[ data[ 'type' ] ][ 'body' ] && 'hidden' !== types[ data[ 'type' ] ][ 'body' ] ) || !types[ data[ 'type' ] ][ 'body' ] ) {
 
@@ -1135,46 +1176,33 @@ var CoursePress = CoursePress || {};
 			if ( 'input' === data[ 'mode' ] || 'discussion' === data[ 'type' ] ) {
 
 				// Mandatory
-				content += '<label class="module-mandatory">' +
-				'<input type="checkbox" name="meta_mandatory[' + module.cid + ']" value="1" ' + CoursePress.utility.checked( data[ 'mandatory' ], 1 ) + ' />' +
-				'<span class="label">' + labels[ 'module_mandatory' ] + '</span>' +
-				'<span class="description">' + labels[ 'module_mandatory_desc' ] + '</span>' +
-				'</label>';
+				content += module_mandatory();
 
 				// Assessable
-				content += '<label class="module-assessable">' +
-				'<input type="checkbox" data-target=".module-minimum-grade" name="meta_assessable[' + module.cid + ']" value="1" ' + CoursePress.utility.checked( data[ 'assessable' ], 1 ) + ' />' +
-				'<span class="label">' + labels[ 'module_assessable' ] + '</span>' +
-				'<span class="description">' + labels[ 'module_assessable_desc' ] + '</span>' +
-				'</label>';
+				content += module_assessable();
 
 				if ( 'input' === data[ 'mode' ] ) {
 					// Use Timer - For Quizzes
 					//if ('input-quiz' === data['type']) {
 					if ( module_type.match( /input/ ) != null ) {
-						content += '<label class="module-use-timer">' +
-							'<input type="checkbox" data-target=".module-duration" name="meta_use_timer[' + module.cid + ']" value="1" ' + CoursePress.utility.checked(data['use_timer'], 1) + ' />' +
-							'<span class="label">' + labels['module_use_timer'] + '</span><br />' +
-							'<span class="description">' + labels['module_use_timer_desc'] + '</span>' +
-							'</label>';
+						content += module_use_timer();
 					}
 
 					// Allow Retries
-					content += '<label class="module-allow-retries">' +
-						'<input type="checkbox" name="meta_allow_retries[' + module.cid + ']" value="1" ' + CoursePress.utility.checked(data['allow_retries'], 1) + ' />' +
-						'<span class="label">' + labels['module_allow_retries'] + '</span>' +
-						'<input type="number" name="meta_retry_attempts" value="' + data['retry_attempts'] + '" min="0" class="small-text" />' +
-						'<span class="description">' + labels['module_allow_retries_desc'] + '</span>' +
-						'</label>';
+					content += module_allow_retries();
 
 					// Minimum Grade
-					content += '<label class="module-minimum-grade">' +
-						'<span class="label">' + labels['module_minimum_grade'] + '</span>' +
-						'<input type="number" name="meta_minimum_grade" value="' + data['minimum_grade'] + '" min="0" max="100" class="small-text" />' +
-						'<span class="description">' + labels['module_minimum_grade_desc'] + '</span>' +
-						'</label>';
-
+					content += module_minimum_grade();
 				}
+			}
+
+			if( 'video' === data[ 'type' ] )
+			{
+				// Use Timer
+				content += module_use_timer();
+
+				// Allow Retries
+				content += module_allow_retries();
 			}
 
 			content +=

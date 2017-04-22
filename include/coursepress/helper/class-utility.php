@@ -1426,4 +1426,43 @@ class CoursePress_Helper_Utility {
 		</div>
 		<?php
 	}
+
+	public static function is_youtube_url($url)
+	{
+		$host = parse_url($url, PHP_URL_HOST);
+		return $host && (strpos($host, 'youtube') !== false || strpos($host, 'youtu.be') !== false);
+	}
+
+	public static function is_vimeo_url($url)
+	{
+		$host = parse_url($url, PHP_URL_HOST);
+		return $host && strpos($host, 'vimeo') !== false;
+	}
+
+	public static function create_video_js_setup_data($url)
+	{
+		$src = null;
+		if(self::is_youtube_url($url))
+		{
+			$src = 'youtube';
+		}
+		else if(self::is_vimeo_url($url))
+		{
+			$src = 'vimeo';
+		}
+
+		$setup_data = array();
+		if($src)
+		{
+			$setup_data['techOrder'] = array($src);
+			$setup_data['sources'] = array(
+				array(
+					'type' => 'video/' . $src,
+					'src' => $url
+				)
+			);
+		}
+
+		return json_encode($setup_data);
+	}
 }
