@@ -2,14 +2,29 @@
 
 class CoursePress_Helper_Extension_MarketPress {
 
+	/**
+	 * Whether or not a MarketPress version (free or pro) is installed.
+	 * @var bool
+	 */
 	private static $installed = false;
 
+	/**
+	 * Whether or not a MarketPress version (free or pro) is active.
+	 * @var bool
+	 */
 	private static $activated = false;
 
-	private static $base_path = array(
-		'pro' => 'marketpress/marketpress.php',
-		'free' => 'wordpress-ecommerce/marketpress.php',
-	);
+	/**
+	 * If we have already checked for MarketPress once during the current request then we can get the required values from static variables and another search isn't necessary.
+	 * @var bool
+	 */
+	private static $cached = false;
+
+	/**
+	 * Base path of the MarketPress version (free or pro) currently installed on the site. Default value is the ideal pro base path.
+	 * @var string
+	 */
+	private static $base_path = 'marketpress/marketpress.php';
 
 	public static function init() {
 
@@ -21,13 +36,15 @@ class CoursePress_Helper_Extension_MarketPress {
 	}
 
 	public static function add_to_extensions_list( $plugins ) {
+		self::maybe_initialize_values();
+
 		/**
 		 * We'll giving out MP to all verions, yay!!!
 		 **/
 		$plugins[] = array(
 			'name' => 'MarketPress',
 			'slug' => 'marketpress',
-			'base_path' => self::$base_path['pro'],
+			'base_path' => self::$base_path,
 			'source' => CoursePress::$path . 'asset/file/marketpress-pro.zip',
 			'source_message' => __( 'Included in the CoursePress Plugin', 'CP_TD' ),
 			'external_url' => '', /* http://premium.wpmudev.org/project/e-commerce/ */
@@ -55,34 +72,16 @@ class CoursePress_Helper_Extension_MarketPress {
 		return $plugins;
 	}
 
-
-	public static function installed_scope() {
-		$scope = '';
-
-		foreach ( self::$base_path as $key => $path ) {
-			$plugin_dir = WP_PLUGIN_DIR . '/' . $path;
-			$plugin_mu_dir = WP_CONTENT_DIR . '/mu-plugins/' . $path;
-			$location = file_exists( $plugin_dir ) ? trailingslashit( WP_PLUGIN_DIR ) : ( file_exists( $plugin_mu_dir ) ?  WP_CONTENT_DIR . '/mu-plugins/' : '' ) ;
-			$scope = ! empty( $location ) ? $key : $scope;
-		}
-
-		return $scope;
-	}
-
 	public static function installed() {
+		self::maybe_initialize_values();
 
-		$scope = self::installed_scope();
-		return ! empty( $scope );
-
+		return self::$installed;
 	}
 
 	public static function activated() {
+		self::maybe_initialize_values();
 
-		$scope = self::installed_scope();
-
-		require_once ABSPATH . 'wp-admin/includes/plugin.php'; // Need for plugins_api.
-
-		return ! empty( $scope ) ? is_plugin_active( self::$base_path[ $scope ] ) : false;
+		return self::$activated;
 	}
 
 	/**
@@ -105,6 +104,9 @@ class CoursePress_Helper_Extension_MarketPress {
 		if ( 'hide' == $show ) {
 			return;
 		}
+
+		self::maybe_initialize_values();
+
 		$message = '';
 		if ( ! self::installed() ) {
 			$mp_settings_url = add_query_arg( array(
@@ -142,5 +144,42 @@ class CoursePress_Helper_Extension_MarketPress {
 			);
 			echo CoursePress_Helper_UI::admin_notice( $message, 'warning', 'marketpress-run-notice', $data );
 		}
+	}
+
+	private static function maybe_initialize_values()
+	{
+		if (self::$cached) {
+			return;
+		}
+
+		if (!function_exists('get_plugins')) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php'; // Need for plugins_api.
+		}
+
+		// Create a list of all plugins to check
+		$installed_plugins = array_merge(
+			get_plugins(),
+			get_mu_plugins()
+		);
+
+		// Start checking each plugin
+		foreach ($installed_plugins as $base_path => $plugin) {
+
+			// Check if this is a MarketPress version (free or pro)
+			// Both free and pro can be installed at the same time, only one can be active.
+			if (strpos($base_path, 'marketpress.php') !== false) {
+
+				self::$base_path = $base_path;
+				self::$installed = true;
+
+				if (is_plugin_active($base_path)) {
+					self::$activated = true;
+					// No matter which version this is, if it is active, we can't activate any other version so we have to break.
+					break;
+				}
+			}
+		}
+
+		self::$cached = true;
 	}
 }
