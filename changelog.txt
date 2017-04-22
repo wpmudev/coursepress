@@ -7,6 +7,7 @@ CHANGELOG
 
 = 2.0.8 =
 -------------------------------------------------
+Fixed: Issues with MarketPress installation through the extensions tab.
 
 = 2.0.7 =
 -------------------------------------------------
