@@ -6,8 +6,9 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 
 	protected $student_progress;
 
-	public function __construct() {
-		parent::__construct();
+	public function setUp() {
+		parent::setUp();
+
 		$this->student_progress = CoursePress_Data_Student::get_completion_data( $this->student->ID, $this->course->ID );
 	}
 

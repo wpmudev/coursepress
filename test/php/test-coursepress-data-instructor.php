@@ -4,10 +4,6 @@
  */
 class CoursePress_Data_Instructor_Test extends CoursePress_UnitTestCase {
 
-	public function __construct() {
-		parent::__construct();
-	}
-
 	public function test_exists() {
 		$this->assertTrue( class_exists( 'CoursePress_Data_Instructor' ) );
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Instructor', 'get_first_name' ) ) );
