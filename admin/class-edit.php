@@ -774,7 +774,7 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 				/**
 				 * Use CP defaults?
 				 */
-				$use_cp_default = CoursePress_Core::get_setting( 'basic_certificate/use_cp_default', false );
+				$use_cp_default = self::get_setting( 'basic_certificate/use_cp_default', false );
 				$use_cp_default = cp_is_true( $use_cp_default );
 
 				if ( $course_id > 0 ) {
@@ -788,9 +788,9 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 						$html = apply_filters( 'coursepress_basic_certificate_html', $html, $course_id, get_current_user_id() );
 						$use_cp_default = false;
 					} else {
-						$background = CoursePress_Core::get_setting( 'basic_certificate/background_image' );
-						$orientation = CoursePress_Core::get_setting( 'basic_certificate/orientation', 'L' );
-						$margins  = CoursePress_Core::get_setting( 'basic_certificate/margin' );
+						$background = self::get_setting( 'basic_certificate/background_image' );
+						$orientation = self::get_setting( 'basic_certificate/orientation', 'L' );
+						$margins  = self::get_setting( 'basic_certificate/margin' );
 						foreach ( $margins as $margin => $value ) {
 							$margins[ $margin ] = $value;
 						}
@@ -809,9 +809,9 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 						$vars['FIRST_NAME'] = $userdata->display_name;
 					}
 				} else if ( 0 == $course_id ) {
-					$background = CoursePress_Core::get_setting( 'basic_certificate/background_image' );
-					$orientation = CoursePress_Core::get_setting( 'basic_certificate/orientation', 'L' );
-					$margins  = CoursePress_Core::get_setting( 'basic_certificate/margin' );
+					$background = self::get_setting( 'basic_certificate/background_image' );
+					$orientation = self::get_setting( 'basic_certificate/orientation', 'L' );
+					$margins  = self::get_setting( 'basic_certificate/margin' );
 					foreach ( $margins as $margin => $value ) {
 						$margins[ $margin ] = $value;
 					}
@@ -857,7 +857,7 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 				 * get default content
 				 */
 				if ( empty( $html ) ) {
-					$html = CoursePress_Core::get_setting(
+					$html = self::get_setting(
 						'basic_certificate/content',
 						CoursePress_View_Admin_Setting_BasicCertificate::default_certificate_content()
 					);
