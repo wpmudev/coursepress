@@ -1696,16 +1696,14 @@ class CoursePress_View_Admin_Course_Edit {
 
 					// Email Content.
 					$vars = array(
-						'BLOG_NAME' => get_bloginfo( 'name' ),
 						'COURSE_ADDRESS' => esc_url( $course_address ),
 						'COURSE_EXCERPT' => $course_summary,
 						'COURSE_NAME' => $course_name,
 						'COURSE_OVERVIEW' => $course_summary,
 						'COURSES_ADDRESS' => CoursePress_Core::get_slug( 'course', true ),
-						'LOGIN_ADDRESS' => esc_url( $login_url ),
-						'WEBSITE_ADDRESS' => home_url(),
-						'WEBSITE_NAME' => get_bloginfo( 'name' ),
 					);
+					$vars = CoursePress_Helper_Utility::add_site_vars( $vars );
+
 					$count = 0;
 					/**
 					 * send mail to each student
