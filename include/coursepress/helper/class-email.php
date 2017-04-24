@@ -22,6 +22,12 @@ class CoursePress_Helper_Email {
 
 	/**
 	 * Email type.
+	 * Used by CoursePress_Data_Course::enroll_student().
+	 */
+	const INSTRUCTOR_ENROLLMENT_NOTIFICATION = 'instructor_enrollment_notification';
+
+	/**
+	 * Email type.
 	 * Used by CoursePress_Data_Course::send_invitation().
 	 */
 	const COURSE_INVITATION = 'course_invitation';
@@ -116,8 +122,8 @@ class CoursePress_Helper_Email {
 			add_filter( 'wp_mail_from_name', array( __CLASS__, 'wp_mail_from_name' ) );
 
 			$email_settings = self::get_email_fields( $type );
-			
-			if ( isset($email_settings['subject']) && !empty($email_settings['subject']) ) {
+
+			if ( isset( $email_settings['subject'] ) && ! empty( $email_settings['subject'] ) ) {
 				$args['subject'] = $email_settings['subject'];
 			}
 
@@ -138,6 +144,13 @@ class CoursePress_Helper_Email {
 
 				case self::ENROLLMENT_CONFIRM:
 					$args['message'] = self::enrollment_confirm_message(
+						$args,
+						$email_settings['content']
+					);
+					break;
+
+				case self::INSTRUCTOR_ENROLLMENT_NOTIFICATION:
+					$args['message'] = self::instructor_enrollment_notification_message(
 						$args,
 						$email_settings['content']
 					);
@@ -217,7 +230,7 @@ class CoursePress_Helper_Email {
 		 * @param (bool) $send
 		 **/
 		$send = CoursePress_Data_Unsubscribe::is_send( $type, $args );
-		
+
 		if ( $send ) {
 			return self::process_and_send( $type, $args );
 		}
@@ -274,7 +287,7 @@ class CoursePress_Helper_Email {
 			'attachments' => apply_filters(
 				'coursepress_email_attachments',
 				isset( $args['attachments'] ) ? $args['attachments'] : array()
-			)
+			),
 		);
 
 		$email = apply_filters(
@@ -336,8 +349,8 @@ class CoursePress_Helper_Email {
 		);
 
 		// If custom send-option failed or was not used then send via wp_mail.
-		if ( is_null($result) || !$result ) {
-			
+		if ( is_null( $result ) || ! $result ) {
+
 			try {
 				$result = wp_mail(
 					$email['to'],
@@ -346,11 +359,11 @@ class CoursePress_Helper_Email {
 					$email['headers'],
 					$email['attachments']
 				);
-			} catch(phpmailerException $e) {
+			} catch (phpmailerException $e) {
 				// print_r($e->getMessage()); // for debugging purposes
 				$result = false;
 			}
-			
+
 		}
 
 		do_action( 'coursepress_email_sent', $args, $type, $result );
@@ -456,17 +469,8 @@ class CoursePress_Helper_Email {
 	protected static function basic_certificate_message( $args, $content ) {
 		$course_id = (int) $args['course_id'];
 
-		if ( CoursePress_Core::get_setting( 'general/use_custom_login', true ) ) {
-			$login_url = CoursePress_Core::get_slug( 'login', true );
-		} else {
-			$login_url = wp_login_url();
-		}
-
 		$vars = array(
-			'BLOG_NAME' => get_bloginfo( 'name' ),
-			'LOGIN_ADDRESS' => esc_url( $login_url ),
 			'COURSES_ADDRESS' => CoursePress_Core::get_slug( 'course', true ),
-			'WEBSITE_ADDRESS' => home_url(),
 			'COURSE_ADDRESS' => esc_url( $args['course_address'] ),
 			'FIRST_NAME' => sanitize_text_field( $args['first_name'] ),
 			'LAST_NAME' => sanitize_text_field( $args['last_name'] ),
@@ -476,6 +480,7 @@ class CoursePress_Helper_Email {
 			'CERTIFICATE_URL' => esc_url( CoursePress_Data_Certificate::get_encoded_url( $course_id, $args['student_id'] ) ),
 			'UNIT_LIST' => $args['unit_list'],
 		);
+		$vars = CoursePress_Helper_Utility::add_site_vars( $vars );
 
 		/**
 		 * Filter the variables before applying changes.
@@ -498,11 +503,6 @@ class CoursePress_Helper_Email {
 	 * @return string Finished email content.
 	 */
 	protected static function registration_message( $args, $content ) {
-		if ( CoursePress_Core::get_setting( 'general/use_custom_login', true ) ) {
-			$login_url = CoursePress_Core::get_slug( 'login', true );
-		} else {
-			$login_url = wp_login_url();
-		}
 
 		// Email Content.
 		$vars = array(
@@ -510,11 +510,9 @@ class CoursePress_Helper_Email {
 			'STUDENT_LAST_NAME' => sanitize_text_field( $args['last_name'] ),
 			'STUDENT_USERNAME' => $args['fields']['student_username'],
 			'STUDENT_PASSWORD' => $args['fields']['password'],
-			'BLOG_NAME' => get_bloginfo( 'name' ),
-			'LOGIN_ADDRESS' => esc_url( $login_url ),
 			'COURSES_ADDRESS' => CoursePress_Core::get_slug( 'course', true ),
-			'WEBSITE_ADDRESS' => home_url(),
 		);
+		$vars = CoursePress_Helper_Utility::add_site_vars( $vars );
 
 		/**
 		 * Filter the registration variables before applying the changes.
@@ -557,9 +555,10 @@ class CoursePress_Helper_Email {
 			'COURSE_ADDRESS' => esc_url( $course_address ),
 			'STUDENT_DASHBOARD' => wp_login_url(),
 			'COURSES_ADDRESS' => CoursePress_Core::get_slug( 'course/', true ),
-			'BLOG_NAME' => get_bloginfo( 'name' ),
 			'UNSUBSCRIBE_LINK' => $unsubscribe_link,
 		);
+		$vars = CoursePress_Helper_Utility::add_site_vars( $vars );
+
 		/**
 		 * Filter the variables before applying changes.
 		 *
@@ -569,6 +568,48 @@ class CoursePress_Helper_Email {
 		$vars = apply_filters( 'coursepress_fields_' . self::ENROLLMENT_CONFIRM, $vars, $course_id );
 
 		return CoursePress_Helper_Utility::replace_vars( $content, $vars );
+	}
+
+	/**
+	 * Email body for enrollment notification sent to instructor.
+	 * Triggered by CoursePress_Data_Course::enroll_student()
+	 *
+	 * @since  2.0.0
+	 * @param  array $args Email params.
+	 * @param  string $content Default email content, with placeholders.
+	 * @return string Finished email content.
+	 */
+	protected static function instructor_enrollment_notification_message( $args, $content ) {
+		$course_id = (int)$args['course_id'];
+		$post = get_post($course_id);
+		$course_name = $post->post_title;
+		$post_type_object = get_post_type_object($post->post_type);
+		$edit_link = admin_url(sprintf($post_type_object->_edit_link . '&action=edit', $post->ID));
+		$edit_students = add_query_arg('tab', 'students', $edit_link);
+
+		// Email Content.
+		$vars = array(
+			'STUDENT_FIRST_NAME'            => sanitize_text_field($args['student_first_name']),
+			'STUDENT_LAST_NAME'             => sanitize_text_field($args['student_last_name']),
+			'INSTRUCTOR_FIRST_NAME'         => sanitize_text_field($args['instructor_first_name']),
+			'INSTRUCTOR_LAST_NAME'          => sanitize_text_field($args['instructor_last_name']),
+			'COURSE_TITLE'                  => $course_name,
+			'COURSE_ADDRESS'                => get_permalink($course_id),
+			'COURSE_ADMIN_ADDRESS'          => $edit_link,
+			'COURSE_STUDENTS_ADMIN_ADDRESS' => esc_url_raw($edit_students),
+			'WEBSITE_NAME'                  => get_bloginfo(),
+			'WEBSITE_ADDRESS'               => home_url()
+		);
+
+		/**
+		 * Filter the variables before applying changes.
+		 *
+		 * @param array $vars
+		 * @param (int) $course_id
+		 **/
+		$vars = apply_filters('coursepress_fields_' . self::INSTRUCTOR_ENROLLMENT_NOTIFICATION, $vars, $course_id);
+
+		return CoursePress_Helper_Utility::replace_vars($content, $vars);
 	}
 
 	/**
@@ -600,9 +641,10 @@ class CoursePress_Helper_Email {
 			'COURSE_NAME' => $course_name,
 			'COURSE_EXCERPT' => $course_summary,
 			'COURSE_ADDRESS' => esc_url( $course_address ),
-			'WEBSITE_ADDRESS' => home_url( '/' ),
 			'PASSCODE' => CoursePress_Data_Course::get_setting( $course_id, 'enrollment_passcode', '' ),
 		);
+		$vars = CoursePress_Helper_Utility::add_site_vars( $vars );
+
 		/**
 		 * Filter the variables before applying changes.
 		 *
@@ -670,9 +712,9 @@ class CoursePress_Helper_Email {
 			'COURSE_NAME' => $course_name,
 			'COURSE_EXCERPT' => $course_summary,
 			'COURSE_ADDRESS' => esc_url( $course_address ),
-			'WEBSITE_ADDRESS' => home_url(),
-			'WEBSITE_NAME' => get_bloginfo( 'name' ),
 		);
+		$vars = CoursePress_Helper_Utility::add_site_vars( $vars );
+
 		/**
 		 * Filter the variables before applying changes.
 		 *
@@ -734,9 +776,9 @@ class CoursePress_Helper_Email {
 			'COURSE_NAME' => $course_name,
 			'COURSE_EXCERPT' => $course_summary,
 			'COURSE_ADDRESS' => esc_url( $course_address ),
-			'WEBSITE_ADDRESS' => home_url(),
-			'WEBSITE_NAME' => get_bloginfo( 'name' ),
 		);
+		$vars = CoursePress_Helper_Utility::add_site_vars( $vars );
+
 		/**
 		 * Filter the variables before applying changes.
 		 *
@@ -808,13 +850,12 @@ class CoursePress_Helper_Email {
 			'COURSE_NAME' => $course_name,
 			'COURSE_OVERVIEW' => $course_summary,
 			'COURSE_ADDRESS' => esc_url( $course_address ),
-			'WEBSITE_ADDRESS' => home_url(),
-			'BLOG_NAME' => get_bloginfo( 'name' ),
 			'STUDENT_FIRST_NAME' => $args['first_name'],
 			'STUDENT_LAST_NAME' => $args['last_name'],
 			'STUDENT_LOGIN' => $args['display_name'],
 			'UNSUBSCRIBE_LINK' => $unsubscribe_link,
 		);
+		$vars = CoursePress_Helper_Utility::add_site_vars( $vars );
 
 		/**
 		 * Filter the variables before applying changes.
@@ -865,13 +906,12 @@ class CoursePress_Helper_Email {
 			'COURSE_NAME' => $course_name,
 			'COURSE_OVERVIEW' => $course_summary,
 			'COURSE_ADDRESS' => esc_url( $course_address ),
-			'WEBSITE_ADDRESS' => home_url(),
-			'BLOG_NAME' => get_bloginfo( 'name' ),
 			'COMMENT_MESSAGE' => $args['comment'],
 			'COURSE_DISCUSSION_ADDRESS' => $args['discussion_link'],
 			'UNSUBSCRIBE_LINK' => $args['unsubscribe_link'],
 			'COMMENT_AUTHOR' => $args['comment_author'],
 		);
+		$vars = CoursePress_Helper_Utility::add_site_vars( $vars );
 
 		/**
 		 * Filter the variables before applying changes.
@@ -935,8 +975,6 @@ class CoursePress_Helper_Email {
 		$vars = array(
 			'COURSE_NAME' => $course_name,
 			'COURSE_ADDRESS' => esc_url( $course_address ),
-			'WEBSITE_ADDRESS' => home_url(),
-			'BLOG_NAME' => get_bloginfo( 'name' ),
 			'STUDENT_FIRST_NAME' => $args['first_name'],
 			'STUDENT_LAST_NAME' => $args['last_name'],
 			'UNIT_TITLE' => $unit_title,
@@ -944,6 +982,7 @@ class CoursePress_Helper_Email {
 			'UNIT_ADDRESS' => $unit_address,
 			'UNSUBSCRIBE_LINK' => $unsubscribe_link,
 		);
+		$vars = CoursePress_Helper_Utility::add_site_vars( $vars );
 
 		/**
 		 * Filter the variables before applying changes.

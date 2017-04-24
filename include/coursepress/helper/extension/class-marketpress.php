@@ -103,7 +103,17 @@ class CoursePress_Helper_Extension_MarketPress {
 		$show = get_user_option( 'marketpress-run-notice' );
 		if ( 'hide' == $show ) {
 			return;
-		}
+        }
+
+        /**
+         * Do not show message, when user already use WooCommerce.
+         */
+        if ( CoursePress_Helper_Integration_WooCommerce::$is_active ) {
+            $woocommerce_is_enabled = CoursePress_Core::get_setting( 'woocommerce/enabled', false );
+            if ( $woocommerce_is_enabled ) {
+                return;
+            }
+        }
 
 		self::maybe_initialize_values();
 

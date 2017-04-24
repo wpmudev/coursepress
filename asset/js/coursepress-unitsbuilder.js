@@ -24,42 +24,16 @@ var CoursePress = CoursePress || {};
 		$.each( $( '.unit-builder-modules .editor' ), function( index, editor ) {
 			var id = $( editor ).attr( 'id' );
 
-			// Get rid of redundant editors... easier than trying to unload and recreate
-			var search = id.split( '_' );
-			search.pop();
-			search = search.join( '_' );
-			var match = new RegExp( search, 'gi' );
-			$.each( tinyMCEPreInit.mceInit, function( subindex, subeditor ) {
-				var subid = subeditor.selector.replace( '#', '' );
-				if ( match.test( subid ) && subid !== id ) {
-					try {
-
-						delete tinyMCEPreInit.mceInit[ subid ];
-						delete tinyMCEPreInit.qtInit[ subid ];
-						delete tinyMCE.EditorManager.editors[ subid ];
-
-						// Get rid of other redundancy
-						$.each( tinyMCE.EditorManager.editors, function( idx ) {
-							try {
-								var eid = tinyMCE.EditorManager.editors[ idx ].id;
-								if ( subid === eid ) {
-									delete tinyMCE.EditorManager.editors[ idx ];
-								}
-							} catch ( ei ) {
-							}
-						} );
-					} catch ( e ) {
-					}
-				}
-			} );
-
-			var content = $( '#' + id ).val();
-			var name = $( editor ).attr( 'name' );
-			var height = $( editor ).attr( 'data-height' ) ? $( editor ).attr( 'data-height' ) : 400;
-
-			CoursePress.editor.create( editor, id, name, content, false, height );
+			/**
+			 * init only new one
+			 */
+			if ( "undefined" === typeof tinyMCE.editors[id] ) {
+				var content = $( '#' + id ).val();
+				var name = $( editor ).attr( 'name' );
+				var height = $( editor ).attr( 'data-height' ) ? $( editor ).attr( 'data-height' ) : 400;
+				CoursePress.editor.create( editor, id, name, content, false, height );
+			}
 		} );
-
 
 		// Fix Accordion
 		if ( $( '.unit-builder-modules' ).hasClass( 'ui-accordion' ) ) {

@@ -56,53 +56,55 @@ class CoursePress_Helper_Tabs {
 		$content .= '</ul></div>';
 
 		// Render the Content
-		$content .= '<div class="tab-content tab-content-' . $mode . '">';
-		if ( $tabs[ $active ]['is_form'] ) {
-			$content .= '<form method="post">';
+        $content .= '<div class="tab-content tab-content-' . $mode . '">';
+        if ( empty( $active ) ) {
+            $content .= sprintf(
+                '<p>%s</p>',
+                __( 'This tab no longer exists. Please choose another.', 'CP_TD' )
+            );
+        } else {
+            if ( $tabs[ $active ]['is_form'] ) {
+                $content .= '<form method="post">';
 
-			// Add hidden arguments
-			if ( ! empty( $hidden_args ) ) {
-				foreach ( $hidden_args as $arg_key => $arg_value ) {
-					$content .= '<input type="hidden" name="' . $arg_key . '" value="' . $arg_value . '" />';
-				}
-			}
-		}
+                // Add hidden arguments
+                if ( ! empty( $hidden_args ) ) {
+                    foreach ( $hidden_args as $arg_key => $arg_value ) {
+                        $content .= '<input type="hidden" name="' . $arg_key . '" value="' . $arg_value . '" />';
+                    }
+                }
+            }
 
-		// Add top buttons
-		if ( 'both' === $tabs[ $active ]['buttons'] || 'top' === $tabs[ $active ]['buttons'] ) {
-			$content .= '<p class="header-save-button">';
-			$content .= apply_filters( 'coursepress_admin_setting_before_top_save', '', $active, $tabs );
-			$content .= '<input class="button-primary" type="submit" value="' . esc_attr__( 'Save Settings', 'CP_TD' ) . '" name="submit_settings_header"></p>';
-		}
+            // Add top buttons
+            if ( 'both' === $tabs[ $active ]['buttons'] || 'top' === $tabs[ $active ]['buttons'] ) {
+                $content .= '<p class="header-save-button">';
+                $content .= apply_filters( 'coursepress_admin_setting_before_top_save', '', $active, $tabs );
+                $content .= '<input class="button-primary" type="submit" value="' . esc_attr__( 'Save Settings', 'CP_TD' ) . '" name="submit_settings_header"></p>';
+            }
 
-		// Add content header
-		if ( 'horizontal' !== $mode ) {
-			$content .= '<div class="header">
-				<h3>' . esc_html( $tabs[ $active ]['title'] ) . '</h3>
-				<p class="description">' . esc_html( $tabs[ $active ]['description'] ) . '</p>
-			</div>';
-		}
+            // Add content header
+            if ( 'horizontal' !== $mode ) {
+                $content .= '<div class="header">
+                    <h3>' . esc_html( $tabs[ $active ]['title'] ) . '</h3>
+                    <p class="description">' . esc_html( $tabs[ $active ]['description'] ) . '</p>
+                    </div>';
+            }
+            $content .= '<div class="body">' . $tab_content . '</div>';
 
-		// Wrap it all in a form if its a form
-		// if ( $tabs[ $active ]['is_form'] === true ) {
-			// $content .= '<form method="post">' . $tab_content . '</form>';
-		// } else {
-			$content .= '<div class="body">' . $tab_content . '</div>';
-		// }
-		// Add bottom buttons
-		if ( 'both' === $tabs[ $active ]['buttons'] || 'bottom' === $tabs[ $active ]['buttons'] ) {
-			$content .= '<hr /><p class="section-save-button">
-				<input class="button-primary" type="submit" value="' . esc_attr__( 'Save Settings', 'CP_TD' ) . '" name="submit_settings_section">
-			</p>';
-		}
+            // Add bottom buttons
+            if ( 'both' === $tabs[ $active ]['buttons'] || 'bottom' === $tabs[ $active ]['buttons'] ) {
+                $content .= '<hr /><p class="section-save-button">
+                    <input class="button-primary" type="submit" value="' . esc_attr__( 'Save Settings', 'CP_TD' ) . '" name="submit_settings_section">
+                    </p>';
+            }
 
-		// .tab-content
-		$content .= '</div>';
+            // .tab-content
+            $content .= '</div>';
 
-		// </form>
-		if ( $tabs[ $active ]['is_form'] ) {
-			$content .= '</form>';
-		}
+            // </form>
+            if ( $tabs[ $active ]['is_form'] ) {
+                $content .= '</form>';
+            }
+        }
 
 		// Wrap the content in a container
 		$content = '<div class="tab-container ' . $mode . '">' . $content . '</div>';
