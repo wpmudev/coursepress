@@ -223,10 +223,19 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 				$json_data['html'] = self::student_assessment( $student_id, $course_id, $progress, $assess, $display_type );
 			break;
 			case 'table':
-
 				$json_data['html'] = self::get_students_table( $data );
 				$json_data['success'] = $success = true;
-			break;
+				break;
+
+			case 'get_student_modules':
+				$student_id = $data->student_id;
+				$course_id = $data->course_id;
+				$the_unit = $data->unit_id;
+				$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
+				$json_data['html'] = self::student_assessment( $student_id, $course_id, $student_progress, $the_unit, ( $the_unit != 'all' ) );
+				$json_data['success'] = $success = true;
+				$json_data['student_id'] = $student_id;
+				break;
 		}
 
 		if ( $success ) {

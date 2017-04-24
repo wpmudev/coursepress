@@ -502,18 +502,26 @@
 	var toggleStudentUnits = function() {
 		var btn = $(this),
 			data = btn.data(),
-			student_id = data.student,
-			template_script = $( '#student-grade-' + student_id ),
-			studentRow = $( '.cp-content[data-student="' + student_id + '"]' ),
-			isopen = studentRow.is( ':visible' )
+			template_script = $( '#student-grade-' + data.student ),
+			isopen = false,
+			template = wp.template("assessment-modules")
 		;
-
-		if ( template_script.length > 0 ) {
-			var template = template_script.html();
-			template_script.replaceWith( template );
+		if ( 0 == template_script.length ) {
+			var param = {
+				course_id: parseInt( $( '#course-list' ).val() ),
+				student_id: data.student,
+				action: 'get_student_modules'
+			};
+			CoursePress.UnitsPost.save( param );
+			CoursePress.UnitsPost.off( 'coursepress:get_student_modules_success' );
+			CoursePress.UnitsPost.on( 'coursepress:get_student_modules_success', function( data ) {
+				$("#user-" + data.student_id ).after( template( data ) );
+			});
+			template_script = $( '#student-grade-' + data.student );
+			isopen = true;
 		}
-
-		studentRow[ isopen ? 'hide' : 'show' ]();
+		isopen = template_script.is( ':visible' );
+		template_script[ isopen ? 'hide' : 'show' ]();
 		btn[ isopen ? 'removeClass' : 'addClass']('active');
 	};
 

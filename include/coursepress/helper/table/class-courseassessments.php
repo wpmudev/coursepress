@@ -344,6 +344,17 @@ class CoursePress_Helper_Table_CourseAssessments extends CoursePress_Helper_Tabl
 	 * empty function!
 	 */
 	public function extra_tablenav( $which ) {
+		if ( 'bottom' == $which ) {
+?>
+<script type="text/html" id="tmpl-assessment-modules">
+<tr class="cp-responses cp-inline-responses" id="student-grade-{{{data.student_id}}}">
+    <td colspan="7">
+        {{{data.html}}}
+    </td>
+</tr>
+</script>
+<?php
+		}
 	}
 
 	protected function get_bulk_actions() {

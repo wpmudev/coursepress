@@ -13,6 +13,7 @@ CHANGELOG
 * Improved: Students list on course edit screen can by sorted by: username, display name, first name and last name.
 * Improved: Students list on course edit screen is more like users list.
 * Improved: Added certificate filter on students list on course edit screen.
+* Improved: Inrease a course assessments page load time.
 
 = 2.0.7 =
 -------------------------------------------------
