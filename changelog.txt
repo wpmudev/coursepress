@@ -5,24 +5,22 @@ Build Time:  BUILDTIME
 CHANGELOG
 =================================================
 
+= 2.0.8 =
+-------------------------------------------------
+* Improved: HTML login & signup forms.
+
 = 2.0.7 =
 -------------------------------------------------
-* Added: 
-* Added: 
-* Added: 
-* Added: 
-* Improved: HTML login & signup forms.
-* Improved: 
-* Improved: 
-* Improved: 
-* Improved: 
-* Improved: 
-* Fixed: 
-* Fixed: 
-* Fixed: 
-* Fixed: 
-* Fixed: 
 
+= 2.0.6.2 =
+-------------------------------------------------
+Fixed: HTML and entities issue on unit editor.
+Fixed: Preview button.
+
+= 2.0.6.1 =
+-------------------------------------------------
+* Fixed: Remove vulnerability to view any module.
+* Fixed: Prerequisite Courses problem with access to next course.
 
 = 2.0.6 =
 -------------------------------------------------
