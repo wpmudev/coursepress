@@ -49,11 +49,6 @@ class CoursePress_Admin_Controller_Menu {
 
 		// Add endpoints custom URLs in Appearance > Menus > Pages
 		add_action( 'admin_init', array( 'CoursePress_Helper_Utility', 'add_nav_menu_meta_boxes' ) );
-
-		/**
-		 * first time run
-		 */
-		add_action( 'admin_init', array( 'CoursePress_Helper_Utility', 'check_first_time_run' ) );
 	}
 
 	public function get_labels() {

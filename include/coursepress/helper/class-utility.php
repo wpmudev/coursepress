@@ -1459,24 +1459,21 @@ class CoursePress_Helper_Utility {
 	}
 
 	/**
-	 * Check first time run and create a course!
+	 * Converts a hex color into an RGB array.
 	 *
-	 * @since 2.0.6
+	 * @param $hex_color string The color in format #FFFFFF
+	 * @param $default string The value to return if the color to convert turns out to be invalid.
+	 * @return array An array containing RGB values.
 	 */
-	public static function check_first_time_run() {
-		$plugin_version_db = get_option( 'coursepress_version', 0 );
-		if ( 0 == $plugin_version_db ) {
-			$settings = get_option( 'coursepress_settings', null );
-			if ( empty( $settings ) ) {
-				update_option( 'coursepress_settings', array( 'not' => 'empty' ) );
-				CoursePress_Helper_Course_Import::import_sample_course();
-			}
+	public static function convert_hex_color_to_rgb($hex_color, $default)
+	{
+		$color_valid = (boolean) preg_match('/^#[a-f0-9]{6}$/i', $hex_color);
+		if($color_valid)
+		{
+			$values = TCPDF_COLORS::convertHTMLColorToDec($hex_color, TCPDF_COLORS::$spotcolor);
+			return array_values($values);
 		}
-		if ( version_compare( $plugin_version_db, CoursePress::$version, '<' ) ) {
-			$result = add_option( 'coursepress_version', CoursePress::$version, '', 'no' );
-			if ( ! $result ) {
-				update_option( 'coursepress_version', CoursePress::$version );
-			}
-		}
+
+		return $default;
 	}
 }
