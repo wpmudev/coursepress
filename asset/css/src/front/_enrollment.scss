@@ -9,3 +9,19 @@
 		}
 	}
 }
+
+.signup-form .password-strength-meter {
+    float: right;
+
+	&.bad {
+		color: red;
+	}
+
+	&.good {
+		color: orange;
+	}
+
+	&.strong {
+		color: green;
+	}
+}

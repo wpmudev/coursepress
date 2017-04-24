@@ -58,8 +58,8 @@ var CoursePress = CoursePress || {};
 			var height = $( editor ).attr( 'data-height' ) ? $( editor ).attr( 'data-height' ) : 400;
 
 			CoursePress.editor.create( editor, id, name, content, false, height );
-		} );
 
+		} );
 
 		// Fix Accordion
 		if ( $( '.unit-builder-modules' ).hasClass( 'ui-accordion' ) ) {
