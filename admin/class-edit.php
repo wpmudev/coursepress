@@ -791,6 +791,7 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 						$background = self::get_setting( 'basic_certificate/background_image' );
 						$orientation = self::get_setting( 'basic_certificate/orientation', 'L' );
 						$margins  = self::get_setting( 'basic_certificate/margin' );
+						$text_color = CoursePress_Helper_Utility::convert_hex_color_to_rgb( self::get_setting( 'basic_certificate/text_color' ), $text_color );
 						foreach ( $margins as $margin => $value ) {
 							$margins[ $margin ] = $value;
 						}
@@ -812,6 +813,7 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 					$background = self::get_setting( 'basic_certificate/background_image' );
 					$orientation = self::get_setting( 'basic_certificate/orientation', 'L' );
 					$margins  = self::get_setting( 'basic_certificate/margin' );
+					$text_color = CoursePress_Helper_Utility::convert_hex_color_to_rgb( self::get_setting( 'basic_certificate/text_color' ), $text_color );
 					foreach ( $margins as $margin => $value ) {
 						$margins[ $margin ] = $value;
 					}
@@ -941,6 +943,28 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 				return '&ndash;';
 			}
 			return $duration;
+		}
+
+		private static function get_course_setting( $course_id, $key, $default = '' ) {
+
+			$query_param = 'meta_' . $key;
+			$query_param_value = isset( $_GET[ $query_param ] ) ? $_GET[ $query_param ] : null;
+
+			if ( $query_param_value !== null ) {
+				return CoursePress_Helper_Utility::filter_content( $query_param_value );
+			}
+
+			return CoursePress_Data_Course::get_setting( $course_id, $key, $default );
+		}
+
+		private static function get_setting( $key, $default = '' ) {
+
+			$query_param_value = CoursePress_Helper_Utility::get_array_val( $_GET, 'coursepress_settings/' . $key );
+			if ( $query_param_value !== null ) {
+				return CoursePress_Helper_Utility::filter_content( $query_param_value );
+			}
+
+			return CoursePress_Core::get_setting( $key, $default );
 		}
 	}
 endif;
