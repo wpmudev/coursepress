@@ -85,7 +85,7 @@ class CoursePress_Data_Shortcode_Template {
 
 		add_filter( 'term_link', array( __CLASS__, 'term_link' ), 10, 3 );
 
-		add_action('coursepress_after_signup_email', array(__CLASS__, 'display_password_strength_meter'));
+		add_action( 'coursepress_after_signup_email', array( __CLASS__, 'display_password_strength_meter' ) );
 	}
 
 	public static function course_archive( $a ) {
@@ -436,7 +436,7 @@ class CoursePress_Data_Shortcode_Template {
 		$template = '<div class="coursepress-dashboard-wrapper">
 			[course_list instructor="%1$s" dashboard="true"]
 			[course_list facilitator="%1$s" dashboard="true"]
-			[course_list student="%1$s" dashboard="true" current_label="%2$s"]
+			[course_list student="%1$s" dashboard="true" current_label="%2$s" show_labels="true"]
 		</div>';
 
 		$template = sprintf( $template, $user_id, __( 'Enrolled Courses', 'CP_TD' ) );
@@ -1616,10 +1616,9 @@ class CoursePress_Data_Shortcode_Template {
 		return $termlink;
 	}
 
-	public static function display_password_strength_meter()
-	{
-		if(!CoursePress_UserLogin::is_password_strength_meter_enabled())
-		{
+	public static function display_password_strength_meter() {
+
+		if ( ! CoursePress_UserLogin::is_password_strength_meter_enabled() ) {
 			return;
 		}
 

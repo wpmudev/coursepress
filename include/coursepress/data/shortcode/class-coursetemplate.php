@@ -1781,7 +1781,11 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				}
 				$courses = array_filter( $courses );
 
-				if ( ! empty( $courses ) ) {
+				if ( empty( $courses ) ) {
+					if ( $atts['dashboard'] ) {
+						$content .= sprintf( '<p class="message">%s</p>', esc_html__( 'You are not enrolled to any course.', 'CP_TD' ) );
+					}
+				} else {
 					$counter += count( $courses );
 					$content .= CoursePress_Template_Course::course_list_table( $courses );
 				}
