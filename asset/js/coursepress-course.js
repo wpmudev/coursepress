@@ -1914,6 +1914,16 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		if ( ! is_active ) {
 			return false;
 		}
+
+		tinymce.triggerSave();
+		var certificate_settings = $('input, textarea', $('.course-certificate')).serialize(),
+			preview_url_parts = [
+				link.attr('href'),
+				certificate_settings
+			];
+
+		window.open(preview_url_parts.join('&'), '_blank');
+		return false;
 	})
 	.on( 'change', '[name="meta_basic_certificate"]', toggleCertificatePreview )
 	.on( 'change', '[name="meta_structure_show_duration"]', toggleTimePreview )
