@@ -2088,7 +2088,8 @@ class CoursePress_Data_Student {
 			return $response != $old['response'];
 			case 'input-checkbox':
 				$diff = array_diff( $old['response'], $response );
-			return ! empty( $diff );
+				$diff2 = array_diff( $response, $old['response'] );
+			return ! empty( $diff ) || ! empty( $diff2 );
 		}
 		/**
 		 * not handled modules: file, quiz, form and another!

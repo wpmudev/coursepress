@@ -26,6 +26,12 @@ class CoursePress_Helper_Setting_Email {
 					'subject' => __( 'Enrollment Confirmation', 'CP_TD' ),
 					'content' => self::_enrollment_confirmation_email(),
 				),
+				CoursePress_Helper_Email::INSTRUCTOR_ENROLLMENT_NOTIFICATION => array(
+					'from' => get_option( 'blogname' ),
+					'email' => get_option( 'admin_email' ),
+					'subject' => __( 'New Enrollment In Your Course', 'CP_TD' ),
+					'content' => self::_instructor_enrollment_notification_email(),
+				),
 				CoursePress_Helper_Email::COURSE_INVITATION => array(
 					'from' => get_option( 'blogname' ),
 					'email' => get_option( 'admin_email' ),
@@ -127,6 +133,20 @@ class CoursePress_Helper_Setting_Email {
 			),
 			null
 		);
+		$instructor_enrollment_notification = apply_filters( 'coursepress_fields_' . CoursePress_Helper_Email::INSTRUCTOR_ENROLLMENT_NOTIFICATION,
+			array(
+				'STUDENT_FIRST_NAME' => '',
+				'STUDENT_LAST_NAME' => '',
+				'INSTRUCTOR_FIRST_NAME' => '',
+				'INSTRUCTOR_LAST_NAME' => '',
+				'COURSE_TITLE' => '',
+				'COURSE_ADDRESS' => '',
+				'COURSE_ADMIN_ADDRESS' => '',
+				'COURSE_STUDENTS_ADMIN_ADDRESS' => '',
+				'WEBSITE_NAME' => '',
+				'WEBSITE_ADDRESS' => ''
+			)
+		);
 		$course_invitation_fields = apply_filters( 'coursepress_fields_' . CoursePress_Helper_Email::COURSE_INVITATION,
 			array(
 				'STUDENT_FIRST_NAME' => '',
@@ -191,6 +211,7 @@ class CoursePress_Helper_Setting_Email {
 		$basic_certificate_fields = array_keys( $basic_certificate_fields );
 		$registration_fields = array_keys( $registration_fields );
 		$enrollment_confirm = array_keys( $enrollment_confirm );
+		$instructor_enrollment_notification = array_keys( $instructor_enrollment_notification );
 		$course_invitation_fields = array_keys( $course_invitation_fields );
 		$instructor_invitation_fields = array_keys( $instructor_invitation_fields );
 		$course_start_fields = array_keys( $course_start_fields );
@@ -217,6 +238,12 @@ class CoursePress_Helper_Setting_Email {
 					'description' => __( 'Settings for an e-mail student get upon enrollment.', 'CP_TD' ),
 					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'CP_TD' ) . implode( ', ', $enrollment_confirm ),
 					'order' => 2,
+				),
+				CoursePress_Helper_Email::INSTRUCTOR_ENROLLMENT_NOTIFICATION => array(
+					'title' => __( 'Enrollment Notification for Instructor E-mail', 'CP_TD' ),
+					'description' => __( 'Settings for an e-mail instructor gets when a new student enrolls.', 'CP_TD' ),
+					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'CP_TD' ) . implode( ', ', $instructor_enrollment_notification ),
+					'order' => 3,
 				),
 				CoursePress_Helper_Email::COURSE_INVITATION => array(
 					'title' => __( 'Student Invitation to a Course E-mail', 'CP_TD' ),
@@ -316,6 +343,29 @@ The %6$s Team', 'CP_TD' ),
 				'<a href="COURSE_ADDRESS">COURSE_TITLE</a>',
 				'<a href="STUDENT_DASHBOARD">' . __( 'Dashboard', 'CP_TD' ) . '</a>',
 				'<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>',
+				'WEBSITE_ADDRESS'
+			)
+		);
+	}
+
+	private static function _instructor_enrollment_notification_email() {
+		return CoursePress_Core::get_setting(
+			'email/instructor_enrollment_notification/content',
+			sprintf(
+				__( 'Hi %1$s %2$s,
+
+A new student "%3$s %4$s" has enrolled in your course "%5$s".
+
+You can manage all the students enrolled in this course here: %6$s
+
+Best wishes,
+The %7$s Team', 'CP_TD' ),
+				'INSTRUCTOR_FIRST_NAME',
+				'INSTRUCTOR_LAST_NAME',
+				'STUDENT_FIRST_NAME',
+				'STUDENT_LAST_NAME',
+				'<a href="COURSE_ADMIN_ADDRESS">COURSE_TITLE</a>',
+				'<a href="COURSE_STUDENTS_ADMIN_ADDRESS">COURSE_STUDENTS_ADMIN_ADDRESS</a>',
 				'WEBSITE_ADDRESS'
 			)
 		);
