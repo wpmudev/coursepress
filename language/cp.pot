@@ -4,7 +4,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoursePress Pro 2.0.5\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/coursepress\n"
-"POT-Creation-Date: 2017-03-08 18:28:49+00:00\n"
+<<<<<<< HEAD
+"POT-Creation-Date: 2017-03-08 18:30:30+00:00\n"
+=======
+"POT-Creation-Date: 2017-03-08 18:31:36+00:00\n"
+>>>>>>> coursepress/2.0.7-dev
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -353,7 +357,7 @@ msgstr ""
 
 #: admin/class-courses.php:92 admin/class-courses.php:177
 #: admin/class-courses.php:257 include/coursepress/data/class-unit.php:26
-#: include/coursepress/data/shortcode/class-coursetemplate.php:2127
+#: include/coursepress/data/shortcode/class-coursetemplate.php:2135
 #: include/coursepress/data/shortcode/class-template.php:569
 #: include/coursepress/data/shortcode/class-unit.php:536
 #: include/coursepress/helper/class-setting.php:380
@@ -586,8 +590,8 @@ msgstr ""
 
 #: admin/class-edit.php:535
 #: include/coursepress/view/admin/course/class-edit.php:331
-#: include/coursepress/view/admin/setting/class-general.php:387
-#: include/coursepress/view/admin/setting/class-general.php:442
+#: include/coursepress/view/admin/setting/class-general.php:372
+#: include/coursepress/view/admin/setting/class-general.php:427
 #: include/coursepress/widget/class-featuredcourse.php:75
 msgid "Featured Video"
 msgstr ""
@@ -1002,7 +1006,7 @@ msgstr ""
 
 #: admin/class-edit.php:1096
 #: include/coursepress/view/admin/course/class-edit.php:871
-#: include/coursepress/view/admin/setting/class-general.php:545
+#: include/coursepress/view/admin/setting/class-general.php:530
 msgid "Enrollment Restrictions"
 msgstr ""
 
@@ -1104,10 +1108,6 @@ msgstr ""
 msgid "You can download your certificate here."
 msgstr ""
 
-#: admin/class-edit.php:1276
-msgid "Step 7 &ndash; Course Completion"
-msgstr ""
-
 #: admin/class-edit.php:1287
 #: include/coursepress/view/admin/course/class-edit.php:1055
 msgid "Minimum Grade Required"
@@ -1197,7 +1197,7 @@ msgstr ""
 #: admin/controller/class-unit.php:192 admin/controller/class-unit.php:193
 #: include/coursepress/data/shortcode/class-coursetemplate.php:535
 #: include/coursepress/data/shortcode/class-coursetemplate.php:890
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1314
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1316
 #: include/coursepress/view/admin/course/class-edit.php:167
 #: include/coursepress/view/admin/course/class-edit.php:1152
 #: include/coursepress/view/admin/course/class-unitbuilder.php:132
@@ -1558,7 +1558,7 @@ msgstr ""
 #: admin/class-reports.php:18 admin/table/class-reports.php:21
 #: admin/table/class-reports.php:22 admin/view/reports.php:2
 #: include/coursepress/view/admin/assessment/class-report.php:11
-#: include/coursepress/view/admin/setting/class-general.php:560
+#: include/coursepress/view/admin/setting/class-general.php:545
 msgid "Reports"
 msgstr ""
 
@@ -2112,8 +2112,8 @@ msgstr ""
 
 #: admin/table/class-instructors.php:109 admin/table/class-students.php:96
 #: include/coursepress/data/class-course.php:35
-#: include/coursepress/data/shortcode/class-coursetemplate.php:2113
-#: include/coursepress/data/shortcode/class-coursetemplate.php:2123
+#: include/coursepress/data/shortcode/class-coursetemplate.php:2121
+#: include/coursepress/data/shortcode/class-coursetemplate.php:2131
 #: include/coursepress/data/shortcode/class-template.php:386
 #: include/coursepress/helper/class-utility.php:1309
 #: include/coursepress/helper/table/class-instructor.php:91
@@ -2818,7 +2818,7 @@ msgid "You need to complete all the REQUIRED modules before this unit."
 msgstr ""
 
 #: include/coursepress/data/class-course.php:2855
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1237
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1239
 msgid "You need to complete all the REQUIRED modules before this section."
 msgstr ""
 
@@ -2906,7 +2906,7 @@ msgid "You have been removed from \"%s\" discussion."
 msgstr ""
 
 #: include/coursepress/data/class-discussion.php:574
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1461
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1469
 #: include/coursepress/data/shortcode/class-template.php:460
 #: include/coursepress/template/class-unit.php:270
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1389
@@ -2915,7 +2915,7 @@ msgid "&laquo; Previous"
 msgstr ""
 
 #: include/coursepress/data/class-discussion.php:575
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1460
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1468
 #: include/coursepress/data/shortcode/class-template.php:461
 #: include/coursepress/template/class-unit.php:269
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1385
@@ -3392,27 +3392,27 @@ msgstr ""
 msgid "Untitled Page %s"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1092
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1094
 msgid " [DRAFT]"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1102
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1104
 msgid ""
 "This unit is available, but you need to complete all the REQUIRED modules "
 "before this unit."
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1137
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1139
 msgid "Opens"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1138
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1140
 msgid "This unit will be available on the scheduled start date."
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1240
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1246
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1242
 #: include/coursepress/data/shortcode/class-coursetemplate.php:1248
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1250
 #: include/coursepress/helper/ui/class-module.php:375
 #: include/coursepress/helper/ui/class-module.php:392
 #: include/coursepress/helper/ui/class-module.php:409
@@ -3433,113 +3433,117 @@ msgstr ""
 msgid "Untitled"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1313
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1315
 msgid "You need to completed all the REQUIRED modules before this module."
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1324
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1326
 msgid "Mod"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1384
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1385
+msgid "No visible units in the course currently. Please check back later."
+msgstr ""
+
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1392
 msgid "No units in the course currently. Please check back later."
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1403
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1411
 #: include/coursepress/view/admin/setting/class-shortcodes.php:166
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1549
 #: include/coursepress/widget/class-featuredcourse.php:20
 msgid "Featured Course"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1404
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1412
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1553
 msgid "Find out more."
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1513
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1521
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1422
 msgid "Completed courses"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1515
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1523
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1431
 msgid "Current Courses"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1517
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1525
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1439
 msgid "Facilitated Courses"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1519
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1527
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1447
 msgid "Starting soon"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1520
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1528
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1451
 msgid "Incomplete courses"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1521
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1529
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1455
 msgid "The Instructor does not have any courses assigned yet."
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1524
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1532
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1468
 msgid "Manage Courses"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1526
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1534
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1477
 msgid "Past courses"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1529
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1537
 msgid ""
 "You are not enrolled in any courses. <a href=\"%s\">See available "
 "courses.</a>"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1531
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1539
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1500
 msgid "Suggested courses"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1532
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1540
 msgid ""
 "You are not enrolled in any courses.<br />Here are a few you might like, or "
 "<a href=\"%s\">see all available courses.</a>"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1767
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1775
 msgid "Manage Course"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1837
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1845
 msgid "Share"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1920
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1928
 #: include/coursepress/view/admin/course/class-student.php:160
 msgid "Send"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1922
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1930
 msgid "Write a Reply or Comment"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1961
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1969
 msgid "Reply"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1993
+#: include/coursepress/data/shortcode/class-coursetemplate.php:2001
 msgid "-- General --"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:2073
+#: include/coursepress/data/shortcode/class-coursetemplate.php:2081
 msgid "0 course units prepared yet. Please check back later."
 msgstr ""
 
@@ -6524,276 +6528,272 @@ msgstr ""
 msgid "Enrollment Process Page"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:127
-#: include/coursepress/view/admin/setting/class-general.php:141
-#: include/coursepress/view/admin/setting/class-general.php:155
-#: include/coursepress/view/admin/setting/class-general.php:169
-#: include/coursepress/view/admin/setting/class-general.php:183
-msgid ""
-"Select page where you have %s shortcode or any other set of %s. Please note "
-"that slug for the page set above will not be used if \"Use virtual page\" "
-"is not selected."
-msgstr ""
-
-#: include/coursepress/view/admin/setting/class-general.php:127
-#: include/coursepress/view/admin/setting/class-general.php:141
-#: include/coursepress/view/admin/setting/class-general.php:155
-#: include/coursepress/view/admin/setting/class-general.php:169
-#: include/coursepress/view/admin/setting/class-general.php:183
-msgid "shortcodes"
-msgstr ""
-
-#: include/coursepress/view/admin/setting/class-general.php:132
+#: include/coursepress/view/admin/setting/class-general.php:129
 msgid "Login Slug"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:138
+#: include/coursepress/view/admin/setting/class-general.php:135
 msgid "Login Page"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:146
+#: include/coursepress/view/admin/setting/class-general.php:140
 msgid "Signup Slug"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:152
+#: include/coursepress/view/admin/setting/class-general.php:146
 msgid "Signup Page"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:160
+#: include/coursepress/view/admin/setting/class-general.php:151
 msgid "Student Dashboard Slug"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:166
+#: include/coursepress/view/admin/setting/class-general.php:157
 msgid "Student Dashboard Page"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:174
+#: include/coursepress/view/admin/setting/class-general.php:162
 msgid "Student Settings Slug"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:180
+#: include/coursepress/view/admin/setting/class-general.php:168
 msgid "Student Settings Page"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:188
+#: include/coursepress/view/admin/setting/class-general.php:173
 #: include/coursepress/view/admin/setting/class-slugs.php:89
 msgid "Instructor Profile Slug"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:198
+#: include/coursepress/view/admin/setting/class-general.php:183
 msgid "Messaging: Inbox Slug"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:204
+#: include/coursepress/view/admin/setting/class-general.php:189
 msgid "Sent Messages Slug"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:210
+#: include/coursepress/view/admin/setting/class-general.php:195
 msgid "New Messages Slug"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:227
+#: include/coursepress/view/admin/setting/class-general.php:212
 msgid "Theme Menu Items"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:233
+#: include/coursepress/view/admin/setting/class-general.php:218
 msgid "Display Menu Items"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:239
+#: include/coursepress/view/admin/setting/class-general.php:224
 msgid ""
 "<div>Attach default CoursePress menu items ( Courses, Student Dashboard, "
 "Log Out ) to the <strong>Primary Menu</strong>.</div><div>Items can also be "
 "added from Appearance > Menus and the CoursePress panel.</div>"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:264
+#: include/coursepress/view/admin/setting/class-general.php:249
 msgid ""
 "Please add at least one menu and select its theme location in order to show "
 "CoursePress menu items automatically."
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:280
+#: include/coursepress/view/admin/setting/class-general.php:265
 msgid "Login Form"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:286
+#: include/coursepress/view/admin/setting/class-general.php:271
 msgid "Use Custom Login Form"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:292
+#: include/coursepress/view/admin/setting/class-general.php:277
 msgid "Uses a custom Login Form to keep students on the front-end of your site."
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:308
+#: include/coursepress/view/admin/setting/class-general.php:293
 msgid "WordPress Login Redirect"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:314
+#: include/coursepress/view/admin/setting/class-general.php:299
 msgid "Redirect After Login"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:320
+#: include/coursepress/view/admin/setting/class-general.php:305
 msgid "Redirect students to their Dashboard upon login via wp-login form."
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:336
+#: include/coursepress/view/admin/setting/class-general.php:321
 msgid "Privacy"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:342
+#: include/coursepress/view/admin/setting/class-general.php:327
 msgid "Show Instructor Username in URL"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:348
+#: include/coursepress/view/admin/setting/class-general.php:333
 msgid ""
 "If checked, instructors username will be shown in the url. Otherwise, "
 "hashed (MD5) version will be shown."
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:364
+#: include/coursepress/view/admin/setting/class-general.php:349
 msgid "Course Details Page"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:365
+#: include/coursepress/view/admin/setting/class-general.php:350
 msgid "Media to use when viewing course details."
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:356
+#: include/coursepress/view/admin/setting/class-general.php:411
+msgid "Media Type"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:362
+#: include/coursepress/view/admin/setting/class-general.php:417
+msgid "\"Priority\" - Use the media type below, with the other type as a fallback."
 msgstr ""
 
 #: include/coursepress/view/admin/setting/class-general.php:371
 #: include/coursepress/view/admin/setting/class-general.php:426
-msgid "Media Type"
-msgstr ""
-
-#: include/coursepress/view/admin/setting/class-general.php:377
-#: include/coursepress/view/admin/setting/class-general.php:432
-msgid "\"Priority\" - Use the media type below, with the other type as a fallback."
-msgstr ""
-
-#: include/coursepress/view/admin/setting/class-general.php:386
-#: include/coursepress/view/admin/setting/class-general.php:441
 #: include/coursepress/widget/class-featuredcourse.php:74
 msgid "Priority Mode (default)"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:388
-#: include/coursepress/view/admin/setting/class-general.php:443
+#: include/coursepress/view/admin/setting/class-general.php:373
+#: include/coursepress/view/admin/setting/class-general.php:428
 #: include/coursepress/widget/class-featuredcourse.php:76
 msgid "List Image"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:394
-#: include/coursepress/view/admin/setting/class-general.php:449
+#: include/coursepress/view/admin/setting/class-general.php:379
+#: include/coursepress/view/admin/setting/class-general.php:434
 msgid "Priority"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:400
-#: include/coursepress/view/admin/setting/class-general.php:455
+#: include/coursepress/view/admin/setting/class-general.php:385
+#: include/coursepress/view/admin/setting/class-general.php:440
 msgid ""
 "Example: Using \"video\", the featured video will be used if available. The "
 "listing image is a fallback."
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:409
-#: include/coursepress/view/admin/setting/class-general.php:464
+#: include/coursepress/view/admin/setting/class-general.php:394
+#: include/coursepress/view/admin/setting/class-general.php:449
 #: include/coursepress/widget/class-featuredcourse.php:83
 msgid "Featured Video (image fallback)"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:410
-#: include/coursepress/view/admin/setting/class-general.php:465
+#: include/coursepress/view/admin/setting/class-general.php:395
+#: include/coursepress/view/admin/setting/class-general.php:450
 #: include/coursepress/widget/class-featuredcourse.php:84
 msgid "List Image (video fallback)"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:419
+#: include/coursepress/view/admin/setting/class-general.php:404
 msgid "Course Listings"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:420
+#: include/coursepress/view/admin/setting/class-general.php:405
 msgid ""
 "Media to use when viewing course listings (e.g. Courses page or Instructor "
 "page)."
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:475
+#: include/coursepress/view/admin/setting/class-general.php:460
 msgid "Course Images"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:476
+#: include/coursepress/view/admin/setting/class-general.php:461
 msgid "Size for (newly uploaded) course images."
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:482
+#: include/coursepress/view/admin/setting/class-general.php:467
 msgid "Image Width"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:490
+#: include/coursepress/view/admin/setting/class-general.php:475
 msgid "Image Height"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:501
+#: include/coursepress/view/admin/setting/class-general.php:486
 msgid "Course Order"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:502
+#: include/coursepress/view/admin/setting/class-general.php:487
 msgid "Order of courses in admin and on front."
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:508
+#: include/coursepress/view/admin/setting/class-general.php:493
 msgid "Order by"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:515
+#: include/coursepress/view/admin/setting/class-general.php:500
 msgid "Post Date"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:516
+#: include/coursepress/view/admin/setting/class-general.php:501
 msgid "Course start date"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:517
+#: include/coursepress/view/admin/setting/class-general.php:502
 msgid "Course enrollment start date"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:530
+#: include/coursepress/view/admin/setting/class-general.php:515
 msgid "Direction"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:537
+#: include/coursepress/view/admin/setting/class-general.php:522
 msgid "Descending"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:538
+#: include/coursepress/view/admin/setting/class-general.php:523
 msgid "Ascending"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:551
+#: include/coursepress/view/admin/setting/class-general.php:536
 msgid "Select the default limitations on accessing and enrolling in this course."
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:561
+#: include/coursepress/view/admin/setting/class-general.php:546
 msgid "Select font which will be used in the PDF reports."
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:567
+#: include/coursepress/view/admin/setting/class-general.php:552
 msgid "Font"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:595
+#: include/coursepress/view/admin/setting/class-general.php:580
 msgid "schema.org"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:601
+#: include/coursepress/view/admin/setting/class-general.php:586
 msgid "Add microdata syntax"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:615
+#: include/coursepress/view/admin/setting/class-general.php:600
 msgid "Add structure data to courses."
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-general.php:627
-#: include/coursepress/view/admin/setting/class-general.php:633
+#: include/coursepress/view/admin/setting/class-general.php:612
+#: include/coursepress/view/admin/setting/class-general.php:618
 msgid "Social Sharing"
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:699
+msgid "Please <a href=\"%1$s\">add new page</a> with shortcode: %2$s."
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:706
+msgid ""
+"Select page where you have %s shortcode or any other set of %s. Please note "
+"that slug for the page set above will not be used if \"Use virtual page\" "
+"is not selected."
+msgstr ""
+
+#: include/coursepress/view/admin/setting/class-general.php:718
+msgid "shortcodes"
 msgstr ""
 
 #: include/coursepress/view/admin/setting/class-marketpress.php:44
@@ -8654,17 +8654,17 @@ msgctxt "Default title for a duplicated course. Variable is original title."
 msgid "%s Copy"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1132
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1134
 msgctxt "Unit available date with year for future unit."
 msgid "M d, Y"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1132
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1134
 msgctxt "Unit available date without year for future unit."
 msgid "M d"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-coursetemplate.php:1926
+#: include/coursepress/data/shortcode/class-coursetemplate.php:1934
 #: include/coursepress/data/shortcode/class-unit.php:698
 msgctxt "noun"
 msgid "Comment"

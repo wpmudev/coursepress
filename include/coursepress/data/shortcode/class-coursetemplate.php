@@ -155,6 +155,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$is_instructor = false;
 		$is_custom_login = cp_is_true( $general_settings['use_custom_login'] );
 		$course_link = esc_url( trailingslashit( get_permalink( $course_id ) ) . trailingslashit( CoursePress_Core::get_setting( 'slugs/units', 'units' ) ) );
+		$continue_learning_link = null;
 
 		if ( is_user_logged_in() ) {
 			$student_id = get_current_user_id();
@@ -171,7 +172,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 					$is_unit = CoursePress_Data_Unit::is_unit( $last_seen_unit['unit_id'] );
 					if ( $is_unit ) {
-						$course_link = CoursePress_Data_Unit::get_url( $last_seen_unit['unit_id'], $last_seen_unit['page'] );
+						$continue_learning_link = $course_link = CoursePress_Data_Unit::get_url( $last_seen_unit['unit_id'], $last_seen_unit['page'] );
 					}
 				}
 			}
@@ -290,7 +291,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					'label' => ! $is_instructor ? sanitize_text_field( $continue_learning_text ) : sanitize_text_field( $instructor_text ),
 					'attr' => array(
 						'class' => 'apply-button apply-button-enrolled ' . $class,
-						'data-link' => CoursePress_Data_Student::get_last_visited_url( $course_id ),
+						'data-link' => empty( $continue_learning_link )? CoursePress_Data_Student::get_last_visited_url( $course_id ) : $continue_learning_link,
 					),
 					'type' => 'link',
 				),
@@ -984,7 +985,6 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		}
 
 		$content .= sprintf( '<div class="unit-archive-list-wrapper" data-view-mode="%s">', esc_attr( $view_mode ) );
-		$content .= count( $units ) > 0 ? '<ul class="units-archive-list">' : '';
 		$counter = 0;
 
 		$enrolled = false;
@@ -1002,10 +1002,13 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$previous_unit_id = false;
 		$last_module_id = false;
 
+		/**
+		 * units
+		 */
+		$content_units = '';
 		foreach ( $units as $unit ) {
 			$the_unit = $with_modules ? $unit['unit'] : $unit;
 			$unit_id = $the_unit->ID;
-
 			// Hide hidden unit
 			$is_unit_structure_visible = CoursePress_Data_Unit::is_unit_structure_visible( $course_id, $unit_id, $student_id );
 			if ( ! $is_unit_structure_visible ) { continue; }
@@ -1082,7 +1085,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			if ( ! empty( $the_unit->post_content ) ) {
 				$unit_content = sprintf(
 					'<div class="unit-content">%s</div>',
-					wpautop( htmlspecialchars_decode($the_unit->post_content) )
+					wpautop( htmlspecialchars_decode( $the_unit->post_content ) )
 				);
 			}
 
@@ -1367,7 +1370,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				$additional_li_class .= ' unfolded';
 			}
 
-			$content .= '<li class="' . esc_attr( $additional_li_class ) . '"'. $unit_data . '>' .
+			$content_units .= '<li class="' . esc_attr( $additional_li_class ) . '"'. $unit_data . '>' .
 				$unit_image .
 				'<div class="unit-archive-single">' .
 				$unit_progress .
@@ -1375,15 +1378,21 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				$unit_link.
 				$unit_content;
 
-			$content .= $module_table;
-
-			$content .= '</div></li>';
+			$content_units .= $module_table;
+			$content_units .= '</div></li>';
 		}
 
-		$content .= count( $units ) > 0 ? '</ul>' : '';
+		if ( empty( $content_units ) ) {
+			$content .= sprintf(
+				'<h3 class="zero-course-units">%s</h3>',
+				esc_html__( 'No visible units in the course currently. Please check back later.', 'CP_TD' )
+			);
+		} else {
+			$content .= sprintf( '<ul class="units-archive-list">%s</ul>', $content_units );
+		}
 
 		if ( empty( $units ) ) {
-			$content .= '<h3 class="zero-course-units">' . esc_html__( 'No units in the course currently. Please check back later.' ) . '</h3>';
+			$content .= '<h3 class="zero-course-units">' . esc_html__( 'No units in the course currently. Please check back later.', 'CP_TD' ) . '</h3>';
 		}
 		$content .= '</div>';
 
@@ -1525,6 +1534,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					'limit' => - 1,
 					'manage_label' => __( 'Manage Courses', 'CP_TD' ),
 					'order' => 'ASC',
+					'orderby' => 'meta', /// possible values: meta, title
 					'past_label' => __( 'Past courses', 'CP_TD' ),
 					'show_labels' => false,
 					'status' => 'publish',
@@ -1723,6 +1733,18 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					}
 				}
 			break;
+			case 'all':
+				$atts['orderby'] = strtolower( $atts['orderby'] );
+				switch ( $atts['orderby'] ) {
+					case 'title':
+					case 'post_title':
+						$post_args['orderby'] = 'title';
+					break;
+					default:
+						$post_args['orderby'] = 'meta_value_num';
+					break;
+				}
+				break;
 		}
 
 		if ( $test_empty_courses_ids && empty( $include_ids ) ) {
