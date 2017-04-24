@@ -436,13 +436,17 @@ class CoursePress_Module {
 				}
 
 				$json_data = array(
-					'error' => true,
-					'error_message' => self::$error_message,
-					'html' => $html,
-					'is_reload' => false,
+					'success' => false,
+					'data'=> array(
+						'error' => true,
+						'error_message' => self::$error_message,
+						'html' => $html,
+						'is_reload' => false,
+					)
 				);
-
-				wp_send_json_error( $json_data );
+				header('Content-type: text/plain');
+				echo json_encode( $json_data );
+				die();
 			} else {
 				add_action( 'coursepress_before_unit_modules', array( __CLASS__, 'show_error_message' ) );
 			}
@@ -501,8 +505,13 @@ class CoursePress_Module {
 					'type' => $type,
 					'is_reload' => $reload,
 				);
+				$json_data = array( 'success' => true, 'data' => $json_data );
 
-				wp_send_json_success( $json_data );
+				header('Content-type: text/plain');
+				echo json_encode( $json_data );
+				die();
+
+				//wp_send_json_success( $json_data );
 			} else {
 				$next_url = $next['url'];
 				wp_safe_redirect( $next_url ); exit;

@@ -773,23 +773,24 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 			/**
 			 * Use CP defaults?
 			 */
-			$use_cp_default = CoursePress_Core::get_setting( 'basic_certificate/use_cp_default', false );
+			$use_cp_default = self::get_setting( 'basic_certificate/use_cp_default', false );
 			$use_cp_default = cp_is_true( $use_cp_default );
 
 			if ( $course_id > 0 ) {
-				$use_course_settings = CoursePress_Data_Course::get_setting( $course_id, 'basic_certificate', false );
+				$use_course_settings = self::get_course_setting( $course_id, 'basic_certificate', false );
 				$use_course_settings = cp_is_true( $use_course_settings );
 				if ( $use_course_settings ) {
-					$background = CoursePress_Data_Course::get_setting( $course_id, 'certificate_background', '' );
-					$margins = CoursePress_Data_Course::get_setting( $course_id, 'cert_margin', array() );
-					$orientation = CoursePress_Data_Course::get_setting( $course_id, 'page_orientation', 'L' );
-					$html = CoursePress_Data_Course::get_setting( $course_id, 'basic_certificate_layout' );
+					$background = self::get_course_setting( $course_id, 'certificate_background', '' );
+					$margins = self::get_course_setting( $course_id, 'cert_margin', array() );
+					$orientation = self::get_course_setting( $course_id, 'page_orientation', 'L' );
+					$html = self::get_course_setting( $course_id, 'basic_certificate_layout' );
 					$html = apply_filters( 'coursepress_basic_certificate_html', $html, $course_id, get_current_user_id() );
 					$use_cp_default = false;
 				} else {
-					$background = CoursePress_Core::get_setting( 'basic_certificate/background_image' );
-					$orientation = CoursePress_Core::get_setting( 'basic_certificate/orientation', 'L' );
-					$margins  = CoursePress_Core::get_setting( 'basic_certificate/margin' );
+					$background = self::get_setting( 'basic_certificate/background_image' );
+					$orientation = self::get_setting( 'basic_certificate/orientation', 'L' );
+					$margins  = self::get_setting( 'basic_certificate/margin' );
+					$text_color = CoursePress_Helper_Utility::convert_hex_color_to_rgb(self::get_setting( 'basic_certificate/text_color' ), $text_color);
 					foreach ( $margins as $margin => $value ) {
 						$margins[ $margin ] = $value;
 					}
@@ -808,9 +809,10 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 					$vars['FIRST_NAME'] = $userdata->display_name;
 				}
 			} else if ( 0 == $course_id ) {
-				$background = CoursePress_Core::get_setting( 'basic_certificate/background_image' );
-				$orientation = CoursePress_Core::get_setting( 'basic_certificate/orientation', 'L' );
-				$margins  = CoursePress_Core::get_setting( 'basic_certificate/margin' );
+				$background = self::get_setting( 'basic_certificate/background_image' );
+				$orientation = self::get_setting( 'basic_certificate/orientation', 'L' );
+				$margins  = self::get_setting( 'basic_certificate/margin' );
+				$text_color = CoursePress_Helper_Utility::convert_hex_color_to_rgb(self::get_setting( 'basic_certificate/text_color' ), $text_color);
 				foreach ( $margins as $margin => $value ) {
 					$margins[ $margin ] = $value;
 				}
@@ -856,7 +858,7 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 			 * get default content
 			 */
 			if ( empty( $html ) ) {
-				$html = CoursePress_Core::get_setting(
+				$html = self::get_setting(
 					'basic_certificate/content',
 					CoursePress_View_Admin_Setting_BasicCertificate::default_certificate_content()
 				);
@@ -940,6 +942,29 @@ class CoursePress_Admin_Edit extends CoursePress_Utility {
 			return '&ndash;';
 		}
 		return $duration;
+	}
+
+	private static function get_course_setting($course_id, $key, $default = '')
+	{
+		$query_param = 'meta_' . $key;
+		$query_param_value = isset($_GET[ $query_param ]) ? $_GET[ $query_param ] : null;
+
+		if ($query_param_value !== null) {
+			return CoursePress_Helper_Utility::filter_content($query_param_value);
+		}
+
+		return CoursePress_Data_Course::get_setting($course_id, $key, $default);
+	}
+
+	private static function get_setting($key, $default = '')
+	{
+		$query_param_value = CoursePress_Helper_Utility::get_array_val($_GET, 'coursepress_settings/' . $key);
+		if($query_param_value !== null)
+		{
+			return CoursePress_Helper_Utility::filter_content($query_param_value);
+		}
+
+		return CoursePress_Core::get_setting($key, $default);
 	}
 }
 endif;

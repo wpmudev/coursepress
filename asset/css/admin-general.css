@@ -117,6 +117,10 @@ A. Responsive
   min-height: 340px;
   z-index: 10;
 }
+.tab-content .shortcodes-list .cp-shortcode-examples code {
+  display: inline-block;
+  padding: 5px 10px;
+}
 
 .tab-content .header-save-button {
   float: right;
@@ -332,6 +336,17 @@ A. Responsive
 .post-type-course .column-units {
   width: 130px;
 }
+.post-type-course .column-paid {
+  width: 40px;
+  text-align: center;
+}
+.post-type-course .column-paid .free {
+  opacity: .6;
+}
+.post-type-course .column-paid .paid {
+  font-weight: bold;
+  color: red;
+}
 
 .coursepress_student_searchbox {
   float: left;
@@ -408,6 +423,13 @@ A. Responsive
 /**
  * colors
  */
+#course-setup-steps.ui-state-disabled {
+  opacity: 1;
+}
+#course-setup-steps.ui-state-disabled .step-title.ui-state-disabled,
+#course-setup-steps.ui-state-disabled .step-content.ui-state-disabled {
+  opacity: 1;
+}
 #course-setup-steps .wide label {
   display: block;
   padding-bottom: 5px;
@@ -2532,6 +2554,10 @@ body[class*="_page_coursepress_course"] .ui-datepicker .ui_tpicker_timezone sele
 .shortcodes-list .cp-content-box:last-child inside {
   padding-bottom: 0;
 }
+.shortcodes-list .cp-content-box .cp-shortcode-options li {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
 .shortcodes-list .cp-content-box .cp-shortcode-options li span {
   font-family: monospace;
   font-weight: bold;
@@ -2541,4 +2567,10 @@ body[class*="_page_coursepress_course"] .ui-datepicker .ui_tpicker_timezone sele
 }
 .shortcodes-list .cp-content-box .cp-shortcode-subheading.optional {
   opacity: .8;
+}
+.shortcodes-list .cp-content-box p {
+  margin: 0;
+}
+.shortcodes-list .cp-content-box p.description, .shortcodes-list .cp-content-box p.options, .shortcodes-list .cp-content-box p.default {
+  padding-left: 3em;
 }

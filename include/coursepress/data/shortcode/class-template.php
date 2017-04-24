@@ -84,6 +84,8 @@ class CoursePress_Data_Shortcode_Template {
 		);
 
 		add_filter( 'term_link', array( __CLASS__, 'term_link' ), 10, 3 );
+
+		add_action('coursepress_after_signup_email', array(__CLASS__, 'display_password_strength_meter'));
 	}
 
 	public static function course_archive( $a ) {
@@ -641,7 +643,7 @@ class CoursePress_Data_Shortcode_Template {
 					$template .= '<h3>'. $page_info['title'] . '</h3>';
 
 					if ( ! empty( $page_info['description'] ) ) {
-						$template .= $page_info['description'];
+						$template .= wpautop( htmlspecialchars_decode( $page_info['description'] ) );
 					}
 				} else {
 					// Show restriction message
@@ -951,9 +953,8 @@ class CoursePress_Data_Shortcode_Template {
 	 */
 	public static function show_nav_button( $button, $title, $classes, $link_title = '', $next = false ) {
 		$res = '';
-
 		if ( $button['id'] ) {
-			$classes = is_array( $classes ) ? implode( ' ', $classes ) : $classes;
+			$c = is_array( $classes ) ? implode( ' ', $classes ) : $classes;
 			if ( $next ) {
 				if ( 'completion_page' == $button['id'] ) {
 					$title = __( 'Finish', 'CP_TD' );
@@ -961,7 +962,7 @@ class CoursePress_Data_Shortcode_Template {
 				$format = '<button type="submit" name="type-%s" class="button %s" title="%s" data-url="%s">%s</button>';
 				$res = sprintf( $format,
 					$button['type'],
-					esc_attr( $classes ),
+					esc_attr( $c ),
 					esc_attr( $link_title ),
 					esc_url( $button['url'] ),
 					$title
@@ -973,7 +974,7 @@ class CoursePress_Data_Shortcode_Template {
 					esc_attr( $button['type'] ),
 					$title,
 					esc_attr( $button['unit'] ),
-					esc_attr( $classes ),
+					esc_attr( $c ),
 					esc_attr( $link_title ),
 					isset( $button['url'] )? esc_url( $button['url'] ) : '',
 					isset( $button['course_id'] )?  $button['course_id'] : 0
@@ -987,8 +988,18 @@ class CoursePress_Data_Shortcode_Template {
 				esc_attr( $link_title )
 			);
 		}
-
-		return $res;
+		/**
+		 * Allow to change nex/prev buttons content.
+		 *
+		 * @since 2.0.6
+		 *
+		 * @param string $res HTML code of the button.
+		 * @param  array  $button Result of ::get_next_accessible_module().
+		 * @param  string $title Link title.
+		 * @param  array  $classes List of CSS classes of the button.
+		 * @param  string $link_title Tooltip title of the link.
+		 */
+		return apply_filters( 'coursepress_data_shortcode_template_show_nav_button', $res, $button, $title, $classes, $link_title, $next );
 	}
 
 	public static function coursepress_quiz_result( $a ) {
@@ -1603,5 +1614,21 @@ class CoursePress_Data_Shortcode_Template {
 		$to = sprintf( '/%s/%s/', $courses_slug, $course_category_name );
 		$termlink = preg_replace( $re, $to, $termlink );
 		return $termlink;
+	}
+
+	public static function display_password_strength_meter()
+	{
+		if(!CoursePress_UserLogin::is_password_strength_meter_enabled())
+		{
+			return;
+		}
+
+		wp_enqueue_script( 'password-strength-meter' );
+		CoursePress_Core::$is_cp_page = true;
+
+		?>
+		<span class="password-strength-meter"></span>
+		<input type="hidden" name="password_strength_level" value="3" />
+		<?php
 	}
 }
