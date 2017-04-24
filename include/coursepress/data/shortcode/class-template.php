@@ -1628,7 +1628,7 @@ class CoursePress_Data_Shortcode_Template {
 
 		?>
 		<span class="password-strength-meter"></span>
-		<input type="hidden" name="password_strength_level" value="0" />
+		<input type="hidden" name="password_strength_level" value="3" />
 		<?php
 	}
 }
