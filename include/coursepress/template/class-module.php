@@ -438,13 +438,15 @@ class CoursePress_Template_Module {
 		$mandatory = ! empty( $attributes['mandatory'] );
 
 		if ( $show_title ) {
-			$content .= sprintf( '<h4 class="module-title">%s</h4>', $module->post_title );
-		}
-
-		if ( $mandatory ) {
+			$content .= '<h4 class="module-title">';
+			$content .= $module->post_title;
+			if ( $mandatory ) {
+				$content .= sprintf( '<span class="is-mandatory">%s</span>', __( 'Required', 'CP_TD' ) );
+			}
+			$content .= '</h4>';
+		} else if ( $mandatory ) {
 			$content .= sprintf( '<div class="is-mandatory">%s</div>', __( 'Required', 'CP_TD' ) );
 		}
-
 		$format = '<div class="module-header module %1$s module-%2$s %3$s" data-type="%1$s" data-module="%2$s">%4$s</div>';
 		$content = sprintf( $format, $attributes['module_type'], $module->ID, $attributes['mode'], $content );
 
