@@ -12,41 +12,41 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 
 	class CoursePress_Admin_Edit extends CoursePress_Utility {
 		/**
-	 * @var (int) $course_id	Current course ID being edited.
-	 **/
+		 * @var (int) $course_id	Current course ID being edited.
+		 **/
 		static $course_id = 0;
 
 		/**
-	 * @var (array) $settings	Current course settings being edited.
-	 **/
+		 * @var (array) $settings	Current course settings being edited.
+		 **/
 		static $settings = array();
 
 		/**
-	 * @var (int) $setup_marker	The last step current user open.
-	 **/
+		 * @var (int) $setup_marker	The last step current user open.
+		 **/
 		static $setup_marker = 0;
 
 		public static $slug = 'coursepress_course';
 		private static $action = 'new';
 		private static $allowed_actions = array(
-		'new',
-		'edit',
+			'new',
+			'edit',
 		);
 		private static $tabs = array();
 
 		/**
-	 * @var (object) $current_course	WP_Post instance.
-	 **/
+		 * @var (object) $current_course	WP_Post instance.
+		 **/
 		private static $current_course = false;
 
 		/**
-	 * Hold CoursePress_Data_Course instance.
-	 **/
+		 * Hold CoursePress_Data_Course instance.
+		 **/
 		static $data_course;
 
 		/**
-	 * CP course post_type.
-	 **/
+		 * CP course post_type.
+		 **/
 		static $post_type = 'course';
 
 		public static function init_hooks( $post ) {
@@ -59,8 +59,8 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 			}
 
 			/**
-		 * Trigger before rendering CP page.
-		 **/
+			 * Trigger before rendering CP page.
+			 **/
 			do_action( 'coursepress_admin_render_page' );
 
 			self::$current_course = $post;
@@ -101,18 +101,18 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 				$cp_metaboxes = $wp_meta_boxes[ $post_type ];
 
 				/**
-			 * Note: Add third party meta_box ID here to be included in CP edit UI!
-			 **/
+				 * Note: Add third party meta_box ID here to be included in CP edit UI!
+				 **/
 				$allowed = array(
-				'submitdiv',
-				'course_categorydiv',
-				'slugdiv',
-				'wpseo_meta',
+					'submitdiv',
+					'course_categorydiv',
+					'slugdiv',
+					'wpseo_meta',
 				);
 
 				/**
-			 * Filter the allowed meta boxes to be rendered
-			 **/
+				 * Filter the allowed meta boxes to be rendered
+				 **/
 				$allowed = apply_filters( 'coursepress_allowed_meta_boxes', $allowed );
 
 				foreach ( $cp_metaboxes as $group => $groups ) {
@@ -135,17 +135,17 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 		}
 
 		/**
-	 * Disable metabox containers. It looks ugly on units and students tabs.
-	 **/
+		 * Disable metabox containers. It looks ugly on units and students tabs.
+		 **/
 		static function disable_style() {
-			?>
-			<style>
-			#postbox-container-1,
-			#postbox-container-2 {
-			display: none;
-			}
-			</style>
-			<?php
+?>
+            <style>
+            #postbox-container-1,
+            #postbox-container-2 {
+            display: none;
+            }
+            </style>
+<?php
 		}
 
 		static function preview_post_link( $preview_link, $post ) {
@@ -168,11 +168,11 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 			self::$tabs = apply_filters( self::$slug . '_tabs', self::$tabs );
 
 			self::$tabs['setup'] = array(
-			'title' => __( 'Course Setup', 'CP_TD' ),
-			'description' => __( 'Edit your course specific settings below.', 'CP_TD' ),
-			'order' => 10,
-			'buttons' => 'none',
-			'is_form' => false,
+				'title' => __( 'Course Setup', 'CP_TD' ),
+				'description' => __( 'Edit your course specific settings below.', 'CP_TD' ),
+				'order' => 10,
+				'buttons' => 'none',
+				'is_form' => false,
 			);
 			$course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
 
@@ -180,24 +180,24 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 				if ( CoursePress_Data_Capabilities::can_view_course_units( $course_id ) ) {
 					$units = self::$data_course->get_unit_ids( $course_id, array( 'publish', 'draft' ) );
 					self::$tabs['units'] = array(
-					'title' => sprintf( __( 'Units (%s)', 'CP_TD' ), count( $units ) ),
-					'description' => __( 'Edit your course specific settings below.', 'CP_TD' ),
-					'order' => 20,
-					'buttons' => 'none',
-					'is_form' => false,
+						'title' => sprintf( __( 'Units (%s)', 'CP_TD' ), count( $units ) ),
+						'description' => __( 'Edit your course specific settings below.', 'CP_TD' ),
+						'order' => 20,
+						'buttons' => 'none',
+						'is_form' => false,
 					);
 				}
 
 				if ( CoursePress_Data_Capabilities::can_view_course_students( $course_id ) ) {
 					self::$tabs['students'] = array(
-					'title' => sprintf(
-						__( 'Students (%s)', 'CP_TD' ),
-						self::$data_course->count_students( $course_id )
-					),
-					'description' => __( 'Edit your course specific settings below.', 'CP_TD' ),
-					'order' => 30,
-					'buttons' => 'none',
-					'is_form' => false,
+						'title' => sprintf(
+							__( 'Students (%s)', 'CP_TD' ),
+							self::$data_course->count_students( $course_id )
+						),
+						'description' => __( 'Edit your course specific settings below.', 'CP_TD' ),
+						'order' => 30,
+						'buttons' => 'none',
+						'is_form' => false,
 					);
 				}
 			}
@@ -260,15 +260,15 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 			$publish_toggle = '';
 
 			$ui = array(
-			'label' => __( 'Publish Course', 'CP_TD' ),
-			'left' => '<i class="fa fa-ban"></i>',
-			'left_class' => 'red',
-			'right' => '<i class="fa fa-check"></i>',
-			'right_class' => 'green',
-			'state' => 'publish' === $status ? 'on' : 'off',
-			'data' => array(
-				'nonce' => wp_create_nonce( 'publish-course' ),
-			),
+				'label' => __( 'Publish Course', 'CP_TD' ),
+				'left' => '<i class="fa fa-ban"></i>',
+				'left_class' => 'red',
+				'right' => '<i class="fa fa-check"></i>',
+				'right_class' => 'green',
+				'state' => 'publish' === $status ? 'on' : 'off',
+				'data' => array(
+					'nonce' => wp_create_nonce( 'publish-course' ),
+				),
 			);
 			$ui['class'] = 'course-' . $course_id;
 			$publish_toggle = '';
@@ -288,24 +288,24 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 		}
 
 		/**
-	 * Build course step buttons
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param integer $course_id Course ID.
-	 * @param integer $step Step.
-	 * @param array $args Array of buttons to show info, default is true, use
-	 * to disable selected button e.g. 'next' => false
-	 *
-	 * @return string Buttons.
-	 */
+		 * Build course step buttons
+		 *
+		 * @since 2.0.0
+		 *
+		 * @param integer $course_id Course ID.
+		 * @param integer $step Step.
+		 * @param array $args Array of buttons to show info, default is true, use
+		 * to disable selected button e.g. 'next' => false
+		 *
+		 * @return string Buttons.
+		 */
 		static function get_buttons( $course_id, $step, $args = array() ) {
 			$args = wp_parse_args(
 				$args,
 				array(
-				'previous' => true,
-				'next' => true,
-				'update' => true,
+					'previous' => true,
+					'next' => true,
+					'update' => true,
 				)
 			);
 			$content = '';
@@ -334,8 +334,8 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 				);
 			}
 			/**
-		 * update button
-		 */
+			 * update button
+			 */
 			if ( $args['update'] && CoursePress_Data_Capabilities::can_update_course( $course_id ) ) {
 				$content .= sprintf(
 					'<input type="button" class="button step update hidden step-%d" value="%s" />',
@@ -344,8 +344,8 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 				);
 			}
 			/**
-		 * if empty, do not use wrapper!
-		 */
+			 * if empty, do not use wrapper!
+			 */
 			if ( empty( $content ) ) {
 				return $content;
 			}
@@ -353,18 +353,18 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 		}
 
 		/**
-	 * Get Wp Editor.
-	 *
-	 * @since 2.0.0
-	 * @access private
-	 *
-	 * @param string $editor_id WP Editor ID
-	 * @param string $editor_name WP Editor name
-	 * @param string $editor_content Edited content.
-	 * @param array $args WP Editor args, see
-	 * https://codex.wordpress.org/Function_Reference/wp_editor#Parameters
-	 * @return string WP Editor.
-	 */
+		 * Get Wp Editor.
+		 *
+		 * @since 2.0.0
+		 * @access private
+		 *
+		 * @param string $editor_id WP Editor ID
+		 * @param string $editor_name WP Editor name
+		 * @param string $editor_content Edited content.
+		 * @param array $args WP Editor args, see
+		 * https://codex.wordpress.org/Function_Reference/wp_editor#Parameters
+		 * @return string WP Editor.
+		 */
 
 		static function get_wp_editor( $editor_id, $editor_name, $editor_content = '', $args = array() ) {
 			wp_enqueue_script( 'post' );
@@ -374,9 +374,9 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 			global $is_IE;
 
 			if (
-			! wp_is_mobile()
-			&& ! ( $is_IE && preg_match( '/MSIE [5678]/', $_SERVER['HTTP_USER_AGENT'] ) )
-			&& apply_filters( 'wp_editor_expand', true, $post_type )
+				! wp_is_mobile()
+				&& ! ( $is_IE && preg_match( '/MSIE [5678]/', $_SERVER['HTTP_USER_AGENT'] ) )
+				&& apply_filters( 'wp_editor_expand', true, $post_type )
 			) {
 
 				wp_enqueue_script( 'editor-expand' );
@@ -392,18 +392,18 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 			//add_filter( 'teeny_mce_plugins', array( __CLASS__, 'teeny_mce_plugins' ) );
 
 			$defaults = array(
-			'_content_editor_dfw' => $_content_editor_dfw,
-			'drag_drop_upload' => true,
-			'tabfocus_elements' => 'content-html,save-post',
-			'textarea_name' => $editor_name,
-			'editor_class' => 'cp-editor cp-course-overview',
-			'media_buttons' => false,
-			'editor_height' => 300,
-			'tinymce' => array(
-				'resize' => false,
-				'wp_autoresize_on' => $_wp_editor_expand,
-				'add_unload_trigger' => false,
-			),
+				'_content_editor_dfw' => $_content_editor_dfw,
+				'drag_drop_upload' => true,
+				'tabfocus_elements' => 'content-html,save-post',
+				'textarea_name' => $editor_name,
+				'editor_class' => 'cp-editor cp-course-overview',
+				'media_buttons' => false,
+				'editor_height' => 300,
+				'tinymce' => array(
+					'resize' => false,
+					'wp_autoresize_on' => $_wp_editor_expand,
+					'add_unload_trigger' => false,
+				),
 			);
 			$args = wp_parse_args( $args, $defaults );
 			$args = apply_filters( 'coursepress_element_editor_args', $args, $editor_name, $editor_id );
@@ -417,8 +417,8 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 		}
 
 		/**
-	 * Render the different course steps.
-	 **/
+		 * Render the different course steps.
+		 **/
 		static function course_edit_steps( $course ) {
 			// Setup Nonce
 			$setup_nonce = wp_create_nonce( 'setup-course' );
@@ -437,20 +437,20 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 			self::step_7();
 
 			/**
-		 * Hook to course edit
-		 *
-		 * @since 2.0
-		 *
-		 * @param (object) $course			WP_Post Object.
-		 **/
+			 * Hook to course edit
+			 *
+			 * @since 2.0
+			 *
+			 * @param (object) $course			WP_Post Object.
+			 **/
 			do_action( 'coursepress_course_edit_steps', $course );
 
 			echo '</div></div>';
 		}
 
 		/**
-	 * Step 1 - Course Overview
-	 **/
+		 * Step 1 - Course Overview
+		 **/
 		static function step_1() {
 			self::$course_id = $course_id = ! empty( self::$current_course ) ? self::$current_course->ID : 0;
 			self::$settings = $settings = self::$data_course->get_setting( $course_id, true );
@@ -470,8 +470,8 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 		}
 
 		/**
-	 * Step 2 - Course Details
-	 **/
+		 * Step 2 - Course Details
+		 **/
 		static function step_2() {
 			$setup_class = self::$settings['setup_step_2'];
 			$setup_class = self::$setup_marker === 1 ? $setup_class . ' setup_marker' : $setup_class;
@@ -496,8 +496,8 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 		}
 
 		/**
-	 * Step 3 - Instructors and Facilitators
-	 **/
+		 * Step 3 - Instructors and Facilitators
+		 **/
 		static function step_3() {
 			$setup_class = self::$settings['setup_step_3'];
 			$setup_class = 2 == self::$setup_marker ? $setup_class . ' setup_marker' : $setup_class;
@@ -538,8 +538,8 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 		}
 
 		/**
-	 * Step 4 - Course Dates
-	 **/
+		 * Step 4 - Course Dates
+		 **/
 		static function step_4() {
 			$setup_class = self::$settings['setup_step_4'];
 			$setup_class = 3 == self::$setup_marker ? $setup_class . ' setup_marker' : $setup_class;
@@ -557,8 +557,8 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 		}
 
 		/**
-	 * Step 5 - Classes, Discussion and Workbook
-	 **/
+		 * Step 5 - Classes, Discussion and Workbook
+		 **/
 		public static function step_5() {
 			$setup_class = self::$settings['setup_step_5'];
 			$setup_class = 4 == self::$setup_marker ? $setup_class . ' setup_marker' : $setup_class;
@@ -572,8 +572,8 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 		}
 
 		/**
-	 * Step 6 - Enrollment and Course Cost
-	 **/
+		 * Step 6 - Enrollment and Course Cost
+		 **/
 		public static function step_6() {
 			$setup_class = self::$settings['setup_step_6'];
 			$setup_class = 5 == self::$setup_marker ? $setup_class . ' setup_marker' : $setup_class;
@@ -588,17 +588,17 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 
 			$install_url = add_query_arg(
 				array(
-				'post_type' => self::$post_type,
-				'page' => 'coursepress_settings',
-				'tab' => 'extensions',
+					'post_type' => self::$post_type,
+					'page' => 'coursepress_settings',
+					'tab' => 'extensions',
 				),
 				admin_url( 'edit.php' )
 			);
 			$mp_url = $url = add_query_arg(
 				array(
-				'post_type' => self::$post_type,
-				'page' => 'coursepress_settings',
-				'tab' => 'marketpress',
+					'post_type' => self::$post_type,
+					'page' => 'coursepress_settings',
+					'tab' => 'marketpress',
 				),
 				admin_url( 'edit.php' )
 			);
@@ -622,8 +622,8 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 			$install_message = sprintf( $install_message, esc_url_raw( $install_url ) );
 
 			/**
-		 * Hook this filter to get rid of the payment message
-		 */
+			 * Hook this filter to get rid of the payment message
+			 */
 			$payment_message = sprintf(
 				'<div class="payment-message %1$s"><h4>%2$s</h4>%3$s%4$s<p>%5$s: WooCommerce</p></div>',
 				esc_attr( $is_paid_course ? '' : 'hidden' ),
@@ -657,19 +657,19 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 		}
 
 		/**
-	 * Step 7 - Course Completion
-	 **/
+		 * Step 7 - Course Completion
+		 **/
 		public static function step_7() {
 			$setup_class = self::$settings['setup_step_7'];
 			$setup_class = 6 == self::$setup_marker ? $setup_class . ' setup_marker' : $setup_class;
 			$tokens = array(
-			'COURSE_NAME',
-			'COURSE_SUB_TITLE',
-			'COURSE_OVERVIEW',
-			'COURSE_UNIT_LIST',
-			'DOWNLOAD_CERTIFICATE_LINK',
-			'DOWNLOAD_CERTIFICATE_BUTTON',
-			'STUDENT_WORKBOOK',
+				'COURSE_NAME',
+				'COURSE_SUB_TITLE',
+				'COURSE_OVERVIEW',
+				'COURSE_UNIT_LIST',
+				'DOWNLOAD_CERTIFICATE_LINK',
+				'DOWNLOAD_CERTIFICATE_BUTTON',
+				'STUDENT_WORKBOOK',
 			);
 
 			$pre_completion_content = self::$settings['pre_completion_content'];
@@ -696,12 +696,12 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 
 			$certificate_tokens = apply_filters( 'coursepress_basic_certificate_vars',
 				array(
-				'FIRST_NAME' => '',
-				'LAST_NAME' => '',
-				'COURSE_NAME' => '',
-				'COMPLETION_DATE' => '',
-				'CERTIFICATE_NUMBER' => '',
-				'UNIT_LIST' => '',
+					'FIRST_NAME' => '',
+					'LAST_NAME' => '',
+					'COURSE_NAME' => '',
+					'COMPLETION_DATE' => '',
+					'CERTIFICATE_NUMBER' => '',
+					'UNIT_LIST' => '',
 				),
 				null
 			);
@@ -714,28 +714,28 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 				'minimum_grade_required' => self::$settings['minimum_grade_required'],
 				'token_message' => sprintf( __( 'Use these tokens to display actual course details: %s', 'CP_TD' ), implode( ', ', $tokens ) ),
 				'precompletion' => array(
-				'title' => self::$settings['pre_completion_title'],
-				'content' => htmlspecialchars_decode( $pre_completion_content ),
+					'title' => self::$settings['pre_completion_title'],
+					'content' => htmlspecialchars_decode( $pre_completion_content ),
 				),
 				'completion' => array(
-				'title' => self::$settings['course_completion_title'],
-				'content' => htmlspecialchars_decode( $completion_content ),
+					'title' => self::$settings['course_completion_title'],
+					'content' => htmlspecialchars_decode( $completion_content ),
 				),
 				'failed' => array(
-				'title' => self::$settings['course_failed_title'],
-				'content' => htmlspecialchars_decode( $failed_content ),
+					'title' => self::$settings['course_failed_title'],
+					'content' => htmlspecialchars_decode( $failed_content ),
 				),
 				'certificate' => array(
-				'content' => htmlspecialchars_decode( $certificate_content ),
-				'preview_link' => add_query_arg( array(
-					'nonce' => wp_create_nonce( 'cp_certificate_preview' ),
-					'course_id' => self::$course_id,
-				) ),
-				'enabled' => ! empty( self::$settings['basic_certificate'] ),
-				'token_message' => sprintf( __( 'Use these tokens to display actual course details: %s', 'CP_TD' ), implode( ', ', $certificate_tokens ) ),
-				'background' => self::$settings['certificate_background'],
-				'margin' => self::$settings['cert_margin'],
-				'orientation' => self::$settings['page_orientation'],
+					'content' => htmlspecialchars_decode( $certificate_content ),
+					'preview_link' => add_query_arg( array(
+						'nonce' => wp_create_nonce( 'cp_certificate_preview' ),
+						'course_id' => self::$course_id,
+					) ),
+					'enabled' => ! empty( self::$settings['basic_certificate'] ),
+					'token_message' => sprintf( __( 'Use these tokens to display actual course details: %s', 'CP_TD' ), implode( ', ', $certificate_tokens ) ),
+					'background' => self::$settings['certificate_background'],
+					'margin' => self::$settings['cert_margin'],
+					'orientation' => self::$settings['page_orientation'],
 				),
 			) );
 		}
@@ -747,12 +747,12 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 			if ( isset( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], 'cp_certificate_preview' ) ) {
 				$course_id = (int) $_REQUEST['course_id'];
 				/**
-			 * filename
-			 */
+				 * filename
+				 */
 				$filename = 'cert-preview-' . $course_id . '.pdf';
 				/**
-			 * options
-			 */
+				 * options
+				 */
 				$background = '';
 				$orientation = 'P';
 				$html = '';
@@ -760,20 +760,20 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 				$text_color = array();
 				$logo = array();
 				/**
-			 * vars
-			 */
+				 * vars
+				 */
 				$date_format = apply_filters( 'coursepress_basic_certificate_date_format', get_option( 'date_format' ) );
 				$vars = array(
-				'FIRST_NAME' => __( 'Jon', 'CP_TD' ),
-				'LAST_NAME' => __( 'Snow', 'CP_TD' ),
-				'COURSE_NAME' => __( 'Example Course Title', 'CP_TD' ),
-				'COMPLETION_DATE' => date_i18n( $date_format, CoursePress_Data_Course::time_now() ),
-				'CERTIFICATE_NUMBER' => uniqid( rand(), true ),
+					'FIRST_NAME' => __( 'Jon', 'CP_TD' ),
+					'LAST_NAME' => __( 'Snow', 'CP_TD' ),
+					'COURSE_NAME' => __( 'Example Course Title', 'CP_TD' ),
+					'COMPLETION_DATE' => date_i18n( $date_format, CoursePress_Data_Course::time_now() ),
+					'CERTIFICATE_NUMBER' => uniqid( rand(), true ),
 				);
 
 				/**
-			 * Use CP defaults?
-			 */
+				 * Use CP defaults?
+				 */
 				$use_cp_default = CoursePress_Core::get_setting( 'basic_certificate/use_cp_default', false );
 				$use_cp_default = cp_is_true( $use_cp_default );
 
@@ -800,9 +800,9 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 					$vars = array_merge(
 						$vars,
 						array(
-						'FIRST_NAME' => $userdata->first_name,
-						'LAST_NAME' => $userdata->last_name,
-						'COURSE_NAME' => $course->post_title,
+							'FIRST_NAME' => $userdata->first_name,
+							'LAST_NAME' => $userdata->last_name,
+							'COURSE_NAME' => $course->post_title,
 						)
 					);
 					if ( empty( $vars['FIRST_NAME'] ) && empty( $vars['LAST_NAME'] ) ) {
@@ -819,43 +819,43 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 
 				if ( $use_cp_default ) {
 					/**
-				 * Default Background
-				 */
+					 * Default Background
+					 */
 					$background = CoursePress::$path.'/asset/img/certificate/certificate-background-p.png';
 					/**
-				 * default orientation
-				 */
+					 * default orientation
+					 */
 					$orientation = 'P';
 					/**
-				 * CP Logo
-				 */
+					 * CP Logo
+					 */
 					$logo = array(
-					'file' => CoursePress::$path.'/asset/img/certificate/certificate-logo-coursepress.png',
-					'x' => 95,
-					'y' => 15,
-					'w' => 100,
+						'file' => CoursePress::$path.'/asset/img/certificate/certificate-logo-coursepress.png',
+						'x' => 95,
+						'y' => 15,
+						'w' => 100,
 					);
 					/**
-				 * Default margins
-				 */
+					 * Default margins
+					 */
 					$margins = array(
-					'left' => 40,
-					'right' => 40,
-					'top' => 100,
+						'left' => 40,
+						'right' => 40,
+						'top' => 100,
 					);
 					/**
-				 * default color
-				 */
+					 * default color
+					 */
 					$text_color = array( 90, 90, 90 );
 					/**
-				 * get default content
-				 */
+					 * get default content
+					 */
 					$html = CoursePress_View_Admin_Setting_BasicCertificate::default_certificate_content();
 				}
 
 				/**
-			 * get default content
-			 */
+				 * get default content
+				 */
 				if ( empty( $html ) ) {
 					$html = CoursePress_Core::get_setting(
 						'basic_certificate/content',
@@ -866,15 +866,15 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 				$html = CoursePress_Helper_Utility::replace_vars( $html, $vars );
 				// Set PDF args
 				$args = array(
-				'title' => __( 'Course Completion Certificate', 'CP_TD' ),
-				'orientation' => $orientation,
-				'image' => $background,
-				'filename' => $filename,
-				'format' => 'F',
-				'uid' => '12345',
-				'margins' => apply_filters( 'coursepress_basic_certificate_margins', $margins ),
-				'logo' => apply_filters( 'coursepress_basic_certificate_logo', $logo ),
-				'text_color' => apply_filters( 'coursepress_basic_certificate_text_color', $text_color ),
+					'title' => __( 'Course Completion Certificate', 'CP_TD' ),
+					'orientation' => $orientation,
+					'image' => $background,
+					'filename' => $filename,
+					'format' => 'F',
+					'uid' => '12345',
+					'margins' => apply_filters( 'coursepress_basic_certificate_margins', $margins ),
+					'logo' => apply_filters( 'coursepress_basic_certificate_logo', $logo ),
+					'text_color' => apply_filters( 'coursepress_basic_certificate_text_color', $text_color ),
 				);
 				CoursePress_Helper_PDF::make_pdf( $html, $args );
 				// Print preview
@@ -885,11 +885,11 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 		}
 
 		/**
-	 * Message in FREE version, when we have more than 0 (zero) courses and we
-	 * try to add next one. This is advertising to buy PRO version.
-	 *
-	 * @since 2.0.0
-	 */
+		 * Message in FREE version, when we have more than 0 (zero) courses and we
+		 * try to add next one. This is advertising to buy PRO version.
+		 *
+		 * @since 2.0.0
+		 */
 		public static function notice_about_pro_when_try_to_add_new_course() {
 			echo '<p>';
 			_e( 'The free version of CoursePress is limited to one course. To add more courses, upgrade to CoursePress Pro for unlimited courses and more payment gateways.', 'CP_TD' );
@@ -902,10 +902,10 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 		}
 
 		/**
-	 * Remove course add meta boxes.
-	 *
-	 * @since 2.0.0
-	 */
+		 * Remove course add meta boxes.
+		 *
+		 * @since 2.0.0
+		 */
 		public static function remove_meta_boxes() {
 			$screen = get_current_screen();
 			if ( ! is_a( $screen, 'WP_Screen' ) ) {
@@ -926,13 +926,13 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 		}
 
 		/**
-	 * Helper to format time.
-	 *
-	 * @since 2.0.3
-	 *
-	 * @param string $duration current duration.
-	 * @return Formated duration.
-	 */
+		 * Helper to format time.
+		 *
+		 * @since 2.0.3
+		 *
+		 * @param string $duration current duration.
+		 * @return Formated duration.
+		 */
 		static function sanitize_duration_display( $duration ) {
 			if ( preg_match( '/^[0:]+$/', $duration ) ) {
 				$duration = '';
