@@ -4,7 +4,6 @@ Build Time:  BUILDTIME
 
 CHANGELOG
 =================================================
-<<<<<<< HEAD
 
 = 2.0.8 =
 -------------------------------------------------
@@ -46,7 +45,6 @@ CHANGELOG
 * Fixed: Removed PHP warnings when adding units.
 * Fixed: Next nav on IE.
 * Fixed: Unable to progress to next module.
->>>>>>> coursepress/2.0-dev
 
 = 2.0.6.2 =
 -------------------------------------------------
