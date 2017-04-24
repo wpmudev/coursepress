@@ -49,7 +49,6 @@ class CoursePress_Admin_Controller_Menu {
 
 		// Add endpoints custom URLs in Appearance > Menus > Pages
 		add_action( 'admin_init', array( 'CoursePress_Helper_Utility', 'add_nav_menu_meta_boxes' ) );
-
 	}
 
 	public function get_labels() {
@@ -148,7 +147,7 @@ class CoursePress_Admin_Controller_Menu {
 			wp_enqueue_style( 'coursepress-admin-ui', $css_url . 'admin-ui.css', array(), $version );
 			if ( $include_core ) {
 				// Chosen
-				wp_enqueue_style( 'cp_chosen_css', $css_url . 'external/chosen.css' );
+				wp_enqueue_style( 'cp_chosen_css', $css_url . 'external/chosen.min.css' );
 				// Font Awesome.
 				wp_enqueue_style( 'fontawesome', $css_url . 'external/font-awesome.min.css' );
 

@@ -70,8 +70,12 @@ if ( ! class_exists( 'CoursePress_UserLogin' ) ) :
 						self::$form_message = __( 'Passwords don\'t match', 'cp' );
 						$found_errors++;
 					}
-					elseif( strlen( $passwd ) < $min_password_length || ( ! isset( $_POST['confirm_weak_password'] ) && ! preg_match( '#[0-9a-z]+#i', $passwd ) ) ) {
-						self::$form_message = sprintf( __( 'Your password must be at least %d characters long and have at least one letter and one number in it.', 'CP_TD' ), $min_password_length );
+					elseif (!self::password_strong()) {
+						self::$form_message = __('Your password is too weak.', 'CP_TD');
+						$found_errors++;
+					}
+					elseif (!self::password_criteria_met($passwd, $min_password_length)) {
+						self::$form_message = sprintf(__('Your password must be at least %d characters long and have at least one letter and one number in it.', 'CP_TD'), $min_password_length);
 						$found_errors++;
 					}
 					elseif ( isset( $_POST['tos_agree'] ) && ! cp_is_true( $_POST['tos_agree'] ) ) {
@@ -191,6 +195,52 @@ if ( ! class_exists( 'CoursePress_UserLogin' ) ) :
 			$content = preg_replace( '%\\r\\n|\\n%', '', $content );
 
 			return $content;
+		}
+
+		/**
+		 * If the strength meter is enabled, this method checks a hidden field to make sure that the password is strong enough.
+		 *
+		 * If the strength meter is disabled then it simply returns true.
+		 */
+		private static function password_strong()
+		{
+			// If the password strength meter is not even enabled then we can't judge the strength of the password and this method should declare it valid.
+			if(!self::is_password_strength_meter_enabled())
+			{
+				return true;
+			}
+
+			$confirm_weak_password = isset($_POST['confirm_weak_password']) ? (boolean)$_POST['confirm_weak_password'] : false;
+			$password_strength = intval($_POST['password_strength_level']);
+
+			return $confirm_weak_password || $password_strength >= 3;
+		}
+
+		/**
+		 * If the strength meter is disabled then this method makes sure that the password meets the minimum length requirement and has the required characters.
+		 *
+		 * If the strength meter is enabled then it simply returns true.
+		 *
+		 * @param $password string The password to check.
+		 * @param $min_password_length int The minimum password length.
+		 * @return bool Whether the password meets the minimum criteria.
+		 */
+		private static function password_criteria_met($password, $min_password_length)
+		{
+			if(self::is_password_strength_meter_enabled())
+			{
+				return true;
+			}
+
+			$confirm_weak_password = isset($_POST['confirm_weak_password']) ? (boolean)$_POST['confirm_weak_password'] : false;
+			$password_weak = strlen($password) < $min_password_length || !preg_match('#[0-9a-z]+#i', $password);
+
+			return $confirm_weak_password || !$password_weak;
+		}
+
+		public static function is_password_strength_meter_enabled()
+		{
+			return apply_filters('coursepress_signup_display_strength_meter', true);
 		}
 	}
 endif;

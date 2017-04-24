@@ -258,6 +258,7 @@ class CoursePress_Helper_Utility {
 		} else {
 			return $object;
 		}
+		return array();
 	}
 
 	public static function array_to_object( $array ) {
@@ -1425,5 +1426,54 @@ class CoursePress_Helper_Utility {
 			</p>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Site vars.
+	 *
+	 * @since 2.0.7
+	 *
+	 * @param array $vars Array of site vars.
+	 * @return array Array of site vars.
+	 */
+	public static function add_site_vars( $vars = array() ) {
+		/**
+		 * get login url
+		 */
+		$login_url = wp_login_url();
+		if ( CoursePress_Core::get_setting( 'general/use_custom_login', true ) ) {
+			$login_url = CoursePress_Core::get_slug( 'login', true );
+		}
+		$vars['BLOG_ADDRESS'] = site_url();
+		$vars['BLOG_NAME'] = $vars['WEBSITE_NAME'] =  get_bloginfo( 'name' );
+		$vars['LOGIN_ADDRESS'] = $login_url;
+		$vars['WEBSITE_ADDRESS'] = home_url();
+		/**
+		 * Allow to change site vars.
+		 *
+		 * @since 2.0.6
+		 *
+		 * @param array $vars Array of site vars.
+		 */
+		return apply_filters( 'coursepress_site_vars', $vars );
+	}
+
+	/**
+	 * Converts a hex color into an RGB array.
+	 *
+	 * @param $hex_color string The color in format #FFFFFF
+	 * @param $default string The value to return if the color to convert turns out to be invalid.
+	 * @return array An array containing RGB values.
+	 */
+	public static function convert_hex_color_to_rgb($hex_color, $default)
+	{
+		$color_valid = (boolean) preg_match('/^#[a-f0-9]{6}$/i', $hex_color);
+		if($color_valid)
+		{
+			$values = TCPDF_COLORS::convertHTMLColorToDec($hex_color, TCPDF_COLORS::$spotcolor);
+			return array_values($values);
+		}
+
+		return $default;
 	}
 }
