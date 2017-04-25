@@ -1543,6 +1543,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					'suggested_label' => __( 'Suggested courses', 'CP_TD' ),
 					'suggested_msg' => __( 'You are not enrolled in any courses.<br />Here are a few you might like, or <a href="%s">see all available courses.</a>', 'CP_TD' ),
 					'show_withdraw_link' => false,
+					'categories' => '',
 				),
 				$atts,
 				'course_page'
@@ -1652,6 +1653,19 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			'meta_key' => 'cp_course_start_date',
 			'orderby' => 'meta_value_num',
 		);
+
+		/**
+		 * categories
+		 */
+		if ( ! empty( $atts['categories'] ) ) {
+			$post_args['tax_query'] = array(
+				array(
+					'taxonomy' => CoursePress_Data_Course::get_post_category_name(),
+					'field' => 'slug',
+					'terms' => preg_split( '/[, ]+/', $atts['categories'] ),
+				),
+			);
+		}
 
 		$test_empty_courses_ids = false;
 
