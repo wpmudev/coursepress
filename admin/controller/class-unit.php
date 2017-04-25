@@ -248,10 +248,10 @@ class CoursePress_Admin_Controller_Unit {
 					// Temp for reordering
 					$unit->unit_order = isset( $meta['unit_order'] ) ? $meta['unit_order'] : 0;
 					$unit->meta = $meta;
-				//	$unit->post_content = format_for_editor( $unit->post_content );
+					//	$unit->post_content = format_for_editor( $unit->post_content );
 
 					if ( ! empty( $unit->meta['page_description'] ) ) {
-					//	$unit->meta['page_description'] = array_map( 'format_for_editor', $unit->meta['page_description'] );
+						//	$unit->meta['page_description'] = array_map( 'format_for_editor', $unit->meta['page_description'] );
 					}
 
 					// Let's add unit capabilities
@@ -478,6 +478,8 @@ class CoursePress_Admin_Controller_Unit {
 					$unit_id = (int) $_REQUEST['unit_id'];
 					$modules = array();
 
+					$update_student_progress = false;
+
 					foreach ( $data as $module ) {
 						if ( empty( $module ) ) {
 							continue;
@@ -520,6 +522,7 @@ class CoursePress_Admin_Controller_Unit {
 								if ( ! $success ) {
 									update_post_meta( $id, $key, $value );
 								}
+								$update_student_progress = true;
 							}
 
 							do_action( 'coursepress_module_updated', $id );
@@ -543,6 +546,19 @@ class CoursePress_Admin_Controller_Unit {
 						if ( ! in_array( $mod_id, $modules ) ) {
 							wp_delete_post( $mod_id );
 							do_action( 'coursepress_module_deleted', $mod_id );
+						}
+					}
+
+					/**
+					 * update student progress
+					 */
+					if ( $update_student_progress ) {
+						$course_id = $_REQUEST['course_id'];
+						$students = CoursePress_Admin_Assessment::filter_students( $course_id, 'all', 'all' );
+						if ( isset( $students['students'] ) && is_array( $students['students'] ) ) {
+							foreach ( $students['students'] as $student_id ) {
+								$student_progress = CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course_id );
+							}
 						}
 					}
 

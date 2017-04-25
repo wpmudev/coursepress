@@ -379,11 +379,13 @@ class CoursePress_Data_Student {
 	 * @param (int) $unit_id					The unit ID the current module belongs to.
 	 * @param (int) $module_id					The module ID the responses will be recorded to.
 	 * @param (array) $response					An array of previously fetch responses.
-	 * @param (array) $data						Optional. If null, we'll get the course completion data from DB.
+	 * @param (array) $response					An array of previously fetch responses.
+	 * @since 2.0.8 @param boolean $force_re_save Optional. Default false,
+	 * allow to re-save data.
 	 *
 	 * @return (array) $data					Returns an array of course completion data.
 	 **/
-	public static function module_response( $student_id, $course_id, $unit_id, $module_id, $response, &$data = false ) {
+	public static function module_response( $student_id, $course_id, $unit_id, $module_id, $response, &$data = false, $force_re_save = false ) {
 
 		$attributes = CoursePress_Data_Module::attributes( $module_id );
 
@@ -398,10 +400,12 @@ class CoursePress_Data_Student {
 		/**
 		 * Check answer freshness.
 		 */
-		$is_new_answer = self::check_is_new_answer( $student_id, $course_id, $unit_id, $module_id, $response, $data );
+		if ( false === $force_re_save ) {
+			$is_new_answer = self::check_is_new_answer( $student_id, $course_id, $unit_id, $module_id, $response, $data );
 
-		if ( false == $is_new_answer ) {
-			return;
+			if ( false == $is_new_answer ) {
+				return;
+			}
 		}
 
 		$grade = - 1;
@@ -827,7 +831,6 @@ class CoursePress_Data_Student {
 		foreach ( $units as $unit_id => $unit ) {
 			$unit_count += 1;
 			$is_unit_available = CoursePress_Data_Unit::is_unit_available( $course_id, $unit_id, $previous_unit_id, false, $student_id );
-			$force_current_unit_successful_completion = get_post_meta( $unit_id, 'force_current_unit_successful_completion', true );
 			$previous_unit_id = $unit_id;
 
 			$unit_total_modules = 0;
