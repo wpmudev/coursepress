@@ -1418,7 +1418,7 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 			'parameters' => array(
 				'optional' => array(
 					'categories' => array(
-						'content' => __( 'You can add coma separate categories slugs to show courses from selected course categories.', 'CP_TD' ),
+						'content' => __( 'A comma separated category slugs to show courses on specific course categories.', 'CP_TD' ),
 						'default' => 'empty',
 					),
 					'completed_label' => array(
