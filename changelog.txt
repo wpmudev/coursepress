@@ -14,6 +14,7 @@ CHANGELOG
 
 * Fixed: Default unit title height to avoid collapse when empty.
 * Fixed: Instructor profile course lists on multisite.
+* Fixed: Empty dashboard page to non-enrolled user.
 
 = 2.0.7 =
 -------------------------------------------------
