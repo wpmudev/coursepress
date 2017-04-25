@@ -87,7 +87,7 @@ class CoursePress_Pagination {
 	#to change urlFriendly
 
 	function urlFriendly( $value = "%" ) {
-		if ( eregi( '^ *$', $value ) ) {
+		if ( preg_match( '/^ *$/i', $value ) ) {
 			$this->urlF = false;
 
 			return false;
