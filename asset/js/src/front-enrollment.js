@@ -628,7 +628,7 @@
 		.on( 'click', '.cp-custom-login', CoursePress.CustomLoginHook )
 		.on( 'click', '.apply-button.enroll', CoursePress.EnrollStudent )
 		.on( 'submit', '[name="enrollment-process"][data-type="passcode"]', CoursePress.validatePassCode )
-		.on( 'keyup', '.signup-form [name="password"], .signup-form [name="password_confirmation"]', CoursePress.checkWeakPassword )
+		.on( 'keyup', '.signup-form [name="password"], .signup-form [name="password_confirmation"], .student-settings [name="password"], .student-settings [name="password_confirmation"]', CoursePress.checkWeakPassword )
 		.on( 'submit', '.apply-box .enrollment-process', CoursePress.validateEnrollment );
 
 })(jQuery);
