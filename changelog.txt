@@ -7,7 +7,14 @@ CHANGELOG
 
 = 2.0.8 =
 -------------------------------------------------
-* Fixed: Empty dashboard page when you are not enrolled.
+* Added: Categories argument to [course_list] shortcode to filter courses.
+* Added: HTML rel attribute to next and previous buttons.
+
+* Improved: Image display.
+
+* Fixed: Default unit title height to avoid collapse when empty.
+* Fixed: Instructor profile course lists on multisite.
+* Fixed: Empty dashboard page to non-enrolled user.
 
 = 2.0.7 =
 -------------------------------------------------
