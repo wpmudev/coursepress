@@ -556,6 +556,10 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		// BROWSE MEDIA BUTTONS
 		$( '.button.browse-media-field' ).browse_media_field();
 
+		if ( $.fn.wpColorPicker ) {
+			$('.certificate-color-picker').wpColorPicker();
+		}
+
 		// Handle Course Structure Checkboxes
 		$( '.step-content .course-structure input[type="checkbox"]' ).on( 'change', function( e ) {
 			var checkbox = $( e.currentTarget ),

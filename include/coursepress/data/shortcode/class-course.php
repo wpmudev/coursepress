@@ -1391,7 +1391,8 @@ class CoursePress_Data_Shortcode_Course {
 
 		if ( 'thumbnail' == $type ) {
 			$type = 'image';
-			$priority = 'image';
+            $priority = 'image';
+            $width = $height = '';
 		}
 
 		// If no wrapper and we're specifying a width and height, we need one, so will use div.
