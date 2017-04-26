@@ -292,23 +292,16 @@ input.cp-has-error {
   padding: 8px 0;
 }
 .course_list_box_item.has-thumbnail .course-thumbnail {
-  position: relative;
-  padding-right: 2px;
-  top: 0;
-  bottom: 0;
-  display: table-cell;
+  padding-bottom: 10px;
 }
 .course_list_box_item.has-thumbnail .course-thumbnail figure {
+  padding: 0;
   margin: 0;
-  line-height: 0;
 }
 .course_list_box_item.has-thumbnail .course-thumbnail img {
   border: 1px solid rgba(0, 0, 0, 0.04);
   padding: 8px;
-  background-color: #F2F2F2;
-}
-.course_list_box_item.has-thumbnail .course-information {
-  display: table-cell;
+  background-color: #f2f2f2;
 }
 .course_list_box_item .apply-button-details {
   display: none;
