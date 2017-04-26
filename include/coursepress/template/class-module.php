@@ -466,7 +466,12 @@ class CoursePress_Template_Module {
 		return $content;
 	}
 
-	private static function do_caption_media( $data ) {
+	/**
+	 * @param $data
+	 * @param null|WP_Post $module
+	 * @return string
+	 */
+	private static function do_caption_media( $data, $module = null ) {
 		if ( empty( $data['image_url'] ) && empty( $data['video_url'] ) ) {
 			return '';
 		}
@@ -543,23 +548,27 @@ class CoursePress_Template_Module {
 		}
 
 		if ( 'video' === $type ) {
-			$hide_related = isset( $data['hide_related_media'] ) ? cp_is_true( $data['hide_related_media'] ) : false;
-
-			if ( $hide_related ) {
-				add_filter( 'oembed_result', array( 'CoursePress_Helper_Utility', 'remove_related_videos' ), 10, 3 );
-			}
+			$player_width = CoursePress_Helper_Utility::get_array_val($data, 'video_player_width');
+			$player_width = $player_width ? $player_width : '640';
+			$player_height = CoursePress_Helper_Utility::get_array_val($data, 'video_player_height');
+			$player_height = $player_height ? $player_height : '360';
+			$autoplay = CoursePress_Helper_Utility::get_array_val($data, 'video_autoplay') ? 'autoplay' : '';
+			$loop = CoursePress_Helper_Utility::get_array_val($data, 'video_loop') ? 'loop' : '';
+			$controls = CoursePress_Helper_Utility::get_array_val($data, 'video_hide_controls') ? '' : 'controls';
+			$module_video_id = isset($module->ID) ? 'module-video-' . $module->ID : '';
 
 			ob_start();
 			?>
 				<video
-					id="module-video"
+					id="<?php echo $module_video_id; ?>"
 					class="video-js vjs-default-skin"
-					controls
-					autoplay
-					width="640"
-					height="360"
+					width="<?php echo $player_width; ?>"
+					height="<?php echo $player_height; ?>"
 					src="<?php echo $url; ?>"
-					data-setup='<?php echo CoursePress_Helper_Utility::create_video_js_setup_data($url); ?>'>
+					data-setup='<?php echo CoursePress_Helper_Utility::create_video_js_setup_data($url); ?>'
+					<?php echo $controls; ?>
+					<?php echo $autoplay; ?>
+					<?php echo $loop; ?>>
 				</video>
 			<?php
 			$video = ob_get_clean();
@@ -586,7 +595,7 @@ class CoursePress_Template_Module {
 	}
 
 	public static function render_video( $module, $attributes = false ) {
-		$content = self::do_caption_media( $attributes );
+		$content = self::do_caption_media( $attributes, $module );
 
 		return $content;
 	}

@@ -1263,6 +1263,7 @@ var CoursePress = CoursePress || {};
 
 				switch ( item_type ) {
 					case 'text-input':
+					case 'number-input':
 						var meta_value = item[ 'name' ].replace( 'meta_', '' );
 						meta_value = module.get_meta( meta_value );
 						attr = item[ 'name' ] ? ' name="' + item[ 'name' ] + '"' : '';
@@ -1270,12 +1271,13 @@ var CoursePress = CoursePress || {};
 						label = item[ 'label' ] ? item[ 'label' ] : '';
 						var label_tag = item[ 'label_tag' ] ? item[ 'label_tag' ] : '';
 						placeholder = item[ 'placeholder' ] ? item[ 'placeholder' ] : '';
+						var input_type = item_type == 'number-input' ? 'number' : 'text';
 
 						if ( label.length > 1 ) {
 							content += '<' + label_tag + '>' + label + '</' + label_tag + '>';
 						}
 
-						content += '<input type="text"' + attr + ' value="' + meta_value + '" placeholder="' + placeholder + '" />';
+						content += '<input type="' + input_type + '"' + attr + ' value="' + meta_value + '" placeholder="' + placeholder + '" />';
 						break;
 
 					case 'text':

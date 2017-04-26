@@ -538,13 +538,6 @@
 	}
 
 	CoursePress.hookModuleVideos = function() {
-		function change_video_status(player)
-		{
-			if( $(player.el()).closest('.video_player').is('[disabled="disabled"]') )
-			{
-				player.pause();
-			}
-		}
 
 		$('.video-js').each(function(){
 			var video_id = $(this).attr('id');
@@ -552,7 +545,16 @@
 
 			video.on('ready', function(){
 				var player = this,
-					player_element = $(player.el());
+					player_element = $(player.el()),
+					timer_started = false;
+
+				function change_video_status(player)
+				{
+					if( $(player.el()).closest('.video_player').is('[disabled="disabled"]') )
+					{
+						player.pause();
+					}
+				}
 
 				if(player_element.is('[autoplay]'))
 				{
@@ -563,21 +565,33 @@
 				{
 					player.muted(true);
 				}
-			});
 
-			video.on('play', function(){
-				change_video_status(this);
-			});
+				player.on('play', function(){
+					if(!timer_started)
+					{
+						CoursePress.timer(player_element.closest('.cp-module-content'));
+						timer_started = true;
+					}
+					change_video_status(player);
+				});
 
-			video.on('timeupdate', function(){
-				change_video_status(this);
+				player.on('timeupdate', function(){
+					change_video_status(player);
+				});
 			});
 		});
 	};
 
 	$( document )
 		.ready(function(){
-			CoursePress.timer( $('.cp-module-content' ) );
+			$('.cp-module-content').each(function(){
+				var content = $(this);
+				if(content.data('type') !== 'video')
+				{
+					CoursePress.timer(content);
+				}
+			});
+
 			CoursePress.hookModuleVideos();
 		})
 		.on( 'submit', '.cp-form', CoursePress.ModuleSubmit )
