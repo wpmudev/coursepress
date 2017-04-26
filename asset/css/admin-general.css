@@ -1212,11 +1212,11 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 }
 
 .tab-tabs ul li.coursepress-ub-tab span {
-  padding: 7px 24px 7px 7px;
-  font-weight: bold;
   display: block;
+  font-weight: bold;
+  min-height: 1.4em;
+  padding: 7px 24px 7px 7px;
 }
-
 .tab-tabs .button.button-add-new-unit {
   display: block;
   margin: 30px auto 0 auto;
