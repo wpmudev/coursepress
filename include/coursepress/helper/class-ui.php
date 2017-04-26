@@ -840,11 +840,9 @@ class CoursePress_Helper_UI {
 		wp_enqueue_script( 'password-strength-meter' );
 		CoursePress_Core::$is_cp_page = true;
 
-		?>
-		<p class="password-strength-meter-container">
+		?><p class="password-strength-meter-container">
 			<span class="password-strength-meter"></span>
 			<input type="hidden" name="password_strength_level" value="3" />
-		</p>
-		<?php
+		</p><?php
 	}
 }

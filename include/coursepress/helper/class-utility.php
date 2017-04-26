@@ -1501,7 +1501,7 @@ class CoursePress_Helper_Utility {
 
 	public static function is_password_strength_meter_enabled()
 	{
-		return apply_filters('coursepress_signup_display_strength_meter', true);
+		return (boolean) apply_filters('coursepress_display_password_strength_meter', true);
 	}
 
 	public static function get_minimum_password_length()

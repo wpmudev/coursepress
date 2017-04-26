@@ -66,7 +66,7 @@
 			password_strength_input = $('[name="password_strength_level"]', container);
 
 		// If the password strength meter script has not been enqueued then we can't check strength
-		if(typeof wp.passwordStrength.meter === 'undefined')
+		if(typeof wp.passwordStrength.meter === 'undefined' || !_coursepress.password_strength_meter_enabled)
 		{
 			return;
 		}
@@ -270,25 +270,28 @@
 				errors.push( _coursepress.signup_errors['all_fields'] );
 			}
 
-			if( typeof wp.passwordStrength.meter !== "undefined" )
+			var password = $('[name="password"]').val();
+			var password_confirmed = $('[name="password_confirmation"]').val();
+
+			// Passwords must match
+			if ( password !== password_confirmed ) {
+				valid = false;
+				errors.push( _coursepress.signup_errors['mismatch_password'] );
+			}
+
+			if( typeof wp.passwordStrength.meter !== "undefined" && _coursepress.password_strength_meter_enabled )
 			{
 				var confirm_weak = $( '[name="confirm_weak_password"]'),
 					strength = wp.passwordStrength.meter(
-						$('[name="password"]').val(),
+						password,
 						[],
-						$('[name="password_confirmation"]').val()
+						password_confirmed
 					);
 
 				// Can't have a weak password
 				if ( strength <= 2 && !confirm_weak.is( ':checked' ) ) {
 					valid = false;
 					errors.push( _coursepress.signup_errors['weak_password'] );
-				}
-
-				// Passwords must match
-				if ( strength === 5 ) {
-					valid = false;
-					errors.push( _coursepress.signup_errors['mismatch_password'] );
 				}
 			}
 
