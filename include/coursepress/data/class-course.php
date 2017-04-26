@@ -540,6 +540,7 @@ class CoursePress_Data_Course {
 				'right' => 0,
 			),
 			'page_orientation' => 'L',
+			'cert_text_color' => '#5a5a5a'
 		);
 
 		$settings = wp_parse_args( $settings, $defaults );
