@@ -7,6 +7,10 @@ CHANGELOG
 
 = 2.0.8 =
 -------------------------------------------------
+* Added: Text color option for course certificate.
+* Added: Categories argument to [course_list] shortcode to filter courses.
+* Added: HTML rel attribute to next and previous buttons.
+
 * Improved: Add individuall nonce when withdraw a student from a course.
 * Improved: Students list on assessment screen can be sorted by username and display name.
 * Improved: Students list on assessment screen is more like users list.
@@ -15,10 +19,6 @@ CHANGELOG
 * Improved: Added certificate filter on students list on course edit screen.
 * Improved: Inrease a course assessments page load time.
 * Improved: Image display.
-
-* Added: Text color option for course certificate.
-* Added: Categories argument to [course_list] shortcode to filter courses.
-* Added: HTML rel attribute to next and previous buttons.
 
 * Fixed: Default unit title height to avoid collapse when empty.
 * Fixed: Instructor profile course lists on multisite.
