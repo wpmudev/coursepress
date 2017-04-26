@@ -1499,11 +1499,18 @@ class CoursePress_Helper_Utility {
 		}
 	}
 
+	/**
+	 * Checks if password strength meter is enabled.
+	 * @return bool
+	 */
 	public static function is_password_strength_meter_enabled()
 	{
 		return (boolean) apply_filters('coursepress_display_password_strength_meter', true);
 	}
 
+	/**
+	 * Returns the minimum password length to use for validation when the strength meter is disabled.
+	 */
 	public static function get_minimum_password_length()
 	{
 		return apply_filters('coursepress_min_password_length', 6);
