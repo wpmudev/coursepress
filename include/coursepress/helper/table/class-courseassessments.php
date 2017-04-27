@@ -25,6 +25,7 @@ class CoursePress_Helper_Table_CourseAssessments extends CoursePress_Helper_Tabl
 	private $data;
 	private $orderby;
 	private $order;
+	private $results = array();
 
 	/** ************************************************************************
 	 * REQUIRED. Set up a constructor that references the parent constructor. We
@@ -227,83 +228,85 @@ class CoursePress_Helper_Table_CourseAssessments extends CoursePress_Helper_Tabl
 	 **************************************************************************/
 	public function prepare_items() {
 
-		$results = array();
 		if ( ! empty( $this->search ) ) {
 			$this->student_ids = CoursePress_Admin_Assessment::search_students( $this->course_id, $this->search );
-
 			if ( ! empty( $this->student_ids ) ) {
-				$results = CoursePress_Admin_Assessment::filter_students( $this->course_id, $this->the_unit, $this->type, $this->student_ids );
+				$this->results = CoursePress_Admin_Assessment::filter_students( $this->course_id, $this->the_unit, $this->type, $this->student_ids );
 			}
 		} else {
-			$results = CoursePress_Admin_Assessment::filter_students( $this->course_id, $this->the_unit, $this->type );
+			$this->results = CoursePress_Admin_Assessment::filter_students( $this->course_id, $this->the_unit, $this->type );
 		}
 
-		global $wpdb;
-
-		$columns = $this->get_columns();
-		$hidden = $this->get_hidden_columns();
-		$sortable = $this->get_sortable_columns();
-
+		$total_items = 0;
 		$per_page = 20;
-		$current_page = $this->paged;
 
-		$offset = ( $current_page - 1 ) * $per_page;
+		if ( ! empty( $this->results['students'] ) ) {
+			global $wpdb;
 
-		$this->_column_headers = array( $columns, $hidden, $sortable );
+			$columns = $this->get_columns();
+			$hidden = $this->get_hidden_columns();
+			$sortable = $this->get_sortable_columns();
 
-		if ( is_multisite() ) {
-			$course_meta_key = $wpdb->prefix . 'enrolled_course_date_' . $this->course_id;
-		} else {
-			$course_meta_key = 'enrolled_course_date_' . $this->course_id;
-		}
+			$current_page = $this->paged;
 
-		// Could use the Course Model methods here, but lets try stick to one query
-		$query_args = array(
-			'meta_query' => array(
-				array(
-					'key' => $course_meta_key,
-					'compare' => 'EXISTS',
-				),
-			),
-			'number' => $per_page,
-			'offset' => $offset,
-			'include' => array_values( $results['students'] ),
-		);
+			$offset = ( $current_page - 1 ) * $per_page;
 
-		if ( isset( $this->orderby ) ) {
-			$query_args['orderby'] = $this->orderby;
-		}
-		if ( isset( $this->order ) ) {
-			$query_args['order'] = $this->order;
-		}
+			$this->_column_headers = array( $columns, $hidden, $sortable );
 
-		/**
-		 * fil certificates
-		 */
-		$certificates = CoursePress_Data_Certificate::get_certificated_students_by_course_id( $this->course_id );
-
-		/**
-		 * Certificates
-		 */
-		if ( ! empty( $certificates ) ) {
-			switch ( $this->filter_show ) {
-				case 'no':
-					$query_args['exclude'] = $certificates;
-				break;
-				case 'yes':
-					$query_args['include'] = $certificates;
-				break;
+			if ( is_multisite() ) {
+				$course_meta_key = $wpdb->prefix . 'enrolled_course_date_' . $this->course_id;
+			} else {
+				$course_meta_key = 'enrolled_course_date_' . $this->course_id;
 			}
+
+			// Could use the Course Model methods here, but lets try stick to one query
+			$query_args = array(
+				'meta_query' => array(
+					array(
+						'key' => $course_meta_key,
+						'compare' => 'EXISTS',
+					),
+				),
+				'number' => $per_page,
+				'offset' => $offset,
+				'include' => array_values( $this->results['students'] ),
+			);
+
+			if ( isset( $this->orderby ) ) {
+				$query_args['orderby'] = $this->orderby;
+			}
+			if ( isset( $this->order ) ) {
+				$query_args['order'] = $this->order;
+			}
+
+			/**
+			 * fil certificates
+			 */
+			$certificates = CoursePress_Data_Certificate::get_certificated_students_by_course_id( $this->course_id );
+
+			/**
+			 * Certificates
+			 */
+			if ( ! empty( $certificates ) ) {
+				switch ( $this->filter_show ) {
+					case 'no':
+						$query_args['exclude'] = $certificates;
+					break;
+					case 'yes':
+						$query_args['include'] = $certificates;
+					break;
+				}
+			}
+
+			$users = new WP_User_Query( $query_args );
+
+			foreach ( $users->get_results() as $one ) {
+				$one->data->certified = in_array( $one->ID, $certificates )? 'yes' : 'no';
+				$this->items[] = $one;
+			}
+			$total_items = $users->get_total();
 		}
 
-		$users = new WP_User_Query( $query_args );
-
-		foreach ( $users->get_results() as $one ) {
-			$one->data->certified = in_array( $one->ID, $certificates )? 'yes' : 'no';
-			$this->items[] = $one;
-		}
-
-		$total_items = $users->get_total();
 		$this->set_pagination_args(
 			array(
 				'total_items' => $total_items,
@@ -314,13 +317,7 @@ class CoursePress_Helper_Table_CourseAssessments extends CoursePress_Helper_Tabl
 	}
 
 	public function no_items() {
-		$course_id = (int) $_GET['id'];
-
-		if ( CoursePress_Data_Capabilities::can_assign_course_student( $course_id ) || CoursePress_Data_Capabilities::can_invite_students( $course_id ) ) {
-			esc_html_e( 'There are no students enrolled in this course. Add them below.', 'CP_TD' );
-		} else {
-			esc_html_e( 'There are no students enrolled in this course.', 'CP_TD' );
-		}
+		esc_html_e( 'There are no students found..', 'CP_TD' );
 	}
 
 	public function set_type( $type ) {
@@ -344,11 +341,31 @@ class CoursePress_Helper_Table_CourseAssessments extends CoursePress_Helper_Tabl
 	 * empty function!
 	 */
 	public function extra_tablenav( $which ) {
+		if ( 'top' == $which ) {
+			/**
+			 * Grading system
+			 */
+			$grading_system = __( 'total acquired grade % total number of gradable modules', 'CP_TD' );
+			if ( 'all' != $this->the_unit ) {
+				$grading_system = __( 'total acquired assessable grade % total number of assessable modules', 'CP_TD' );
+			}
+			/**
+			 * table
+			 */
+			printf( '<table class="cp-result-details %s">', esc_attr( 0 === $this->_pagination_args['total_items'] ? 'no-items':'' ) );
+			echo '<tr>
+        <td>' . __( 'Students Found:', 'CP_TD' ) . ' ' . $this->_pagination_args['total_items'] . '</td>
+        <td>' . __( 'Modules:', 'CP_TD' ) . ' <span class="cp-total-assessable">' . $this->results['assessable'] . '</span></td>
+        <td>' . __( 'Passing Grade: ', 'CP_TD' ) . ' <span class="cp-pasing-grade">' . $this->results['passing_grade'] . '%</span></td>
+        <td>'. __( 'Grade System: ', 'CP_TD' ) . '<em>'. $grading_system . '</em></td>
+    </tr>
+</table>';
+		}
 		if ( 'bottom' == $which ) {
 ?>
 <script type="text/html" id="tmpl-assessment-modules">
 <tr class="cp-responses cp-inline-responses" id="student-grade-{{{data.student_id}}}">
-    <td colspan="7">
+    <td colspan="7" class="cp-content">
         {{{data.html}}}
     </td>
 </tr>
@@ -364,10 +381,9 @@ class CoursePress_Helper_Table_CourseAssessments extends CoursePress_Helper_Tabl
 
 	public function get_pagenum() {
 		$pagenum = $this->paged;
-
 		if ( isset( $this->_pagination_args['total_pages'] ) && $pagenum > $this->_pagination_args['total_pages'] ) {
-			$pagenum = $this->_pagination_args['total_pages']; }
-
+			$pagenum = $this->_pagination_args['total_pages'];
+		}
 		return max( 1, $pagenum );
 	}
 
@@ -380,13 +396,24 @@ class CoursePress_Helper_Table_CourseAssessments extends CoursePress_Helper_Tabl
 				'post_type' => CoursePress_Data_Course::get_post_type_name(),
 				'page' => 'coursepress_assessments',
 				'course_id' => $this->course_id,
-				'unit' => 'all',
-				'type' => 'all',
+				'unit' => $this->the_unit,
+				'type' => $this->type,
 			),
 			admin_url( 'edit.php' )
 		);
+		/**
+		 * add search param
+		 */
+		if ( isset( $this->search ) && ! empty( $this->search ) ) {
+			$current_url = add_query_arg(
+				array(
+					'search' => $this->search,
+				),
+				$current_url
+			);
+		}
 
-			$current_url = remove_query_arg( 'paged', $current_url );
+		$current_url = remove_query_arg( 'paged', $current_url );
 
 		if ( isset( $this->orderby ) ) {
 			$current_orderby = $this->orderby;

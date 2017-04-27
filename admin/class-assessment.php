@@ -539,7 +539,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 			// Finally, compare to login, nicename
 			$user_args['meta_key'] = $course_meta_key;
 			$user_args['meta_compare'] = 'EXISTS';
-			$user_args['search'] = $search_key . '*';
+			$user_args['search'] = '*'.$search_key . '*';
 			$user_args['search_columns'] = array(
 				'user_login',
 				'user_nicename',
@@ -551,7 +551,6 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 				$results += $query->results;
 			}
 		}
-
 		return $results;
 	}
 
