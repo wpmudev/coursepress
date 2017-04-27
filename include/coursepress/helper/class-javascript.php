@@ -510,6 +510,7 @@ class CoursePress_Helper_JavaScript {
 				'ok' => __( 'OK', 'CP_TD' ),
 				'cancel' => __( 'Cancel', 'CP_TD' ),
 			),
+			'password_strength_meter_enabled' => CoursePress_Helper_Utility::is_password_strength_meter_enabled()
 		);
 
 		/**

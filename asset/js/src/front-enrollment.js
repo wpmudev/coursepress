@@ -66,7 +66,7 @@
 			password_strength_input = $('[name="password_strength_level"]', container);
 
 		// If the password strength meter script has not been enqueued then we can't check strength
-		if(typeof wp.passwordStrength.meter === 'undefined')
+		if(typeof wp.passwordStrength.meter === 'undefined' || !_coursepress.password_strength_meter_enabled)
 		{
 			return;
 		}
@@ -270,25 +270,28 @@
 				errors.push( _coursepress.signup_errors['all_fields'] );
 			}
 
-			if( typeof wp.passwordStrength.meter !== "undefined" )
+			var password = $('[name="password"]').val();
+			var password_confirmed = $('[name="password_confirmation"]').val();
+
+			// Passwords must match
+			if ( password !== password_confirmed ) {
+				valid = false;
+				errors.push( _coursepress.signup_errors['mismatch_password'] );
+			}
+
+			if( typeof wp.passwordStrength.meter !== "undefined" && _coursepress.password_strength_meter_enabled )
 			{
 				var confirm_weak = $( '[name="confirm_weak_password"]'),
 					strength = wp.passwordStrength.meter(
-						$('[name="password"]').val(),
+						password,
 						[],
-						$('[name="password_confirmation"]').val()
+						password_confirmed
 					);
 
 				// Can't have a weak password
 				if ( strength <= 2 && !confirm_weak.is( ':checked' ) ) {
 					valid = false;
 					errors.push( _coursepress.signup_errors['weak_password'] );
-				}
-
-				// Passwords must match
-				if ( strength === 5 ) {
-					valid = false;
-					errors.push( _coursepress.signup_errors['mismatch_password'] );
 				}
 			}
 
@@ -628,7 +631,7 @@
 		.on( 'click', '.cp-custom-login', CoursePress.CustomLoginHook )
 		.on( 'click', '.apply-button.enroll', CoursePress.EnrollStudent )
 		.on( 'submit', '[name="enrollment-process"][data-type="passcode"]', CoursePress.validatePassCode )
-		.on( 'keyup', '.signup-form [name="password"], .signup-form [name="password_confirmation"]', CoursePress.checkWeakPassword )
+		.on( 'keyup', '.signup-form [name="password"], .signup-form [name="password_confirmation"], .student-settings [name="password"], .student-settings [name="password_confirmation"]', CoursePress.checkWeakPassword )
 		.on( 'submit', '.apply-box .enrollment-process', CoursePress.validateEnrollment );
 
 })(jQuery);
