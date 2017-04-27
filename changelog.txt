@@ -10,8 +10,11 @@ CHANGELOG
 * Added: Text color option for course certificate.
 * Added: Categories argument to [course_list] shortcode to filter courses.
 * Added: HTML rel attribute to next and previous buttons.
+* Added: Password strength meter on student profile
+* Added: The ability to disable the strength meter in the enrollment pup-up.
 
 * Improved: Image display.
+* Improved: Removed unused function CoursePress_Data_Course::is_course_preview()
 
 * Fixed: Default unit title height to avoid collapse when empty.
 * Fixed: Instructor profile course lists on multisite.
