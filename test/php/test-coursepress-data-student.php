@@ -220,7 +220,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	 * init_completion_data( $student_id, $course_id )
 	 */
 	public function test_init_completion_data() {
-		$data = array( 'version' => '2.0' );
+		$data = array( 'version' => '2.0.6.2' );
 		/**
 		 * Wrong data
 		 */
@@ -280,7 +280,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 		$data = array( 'foo' => 'bar' );
 		CoursePress_Data_Student::update_completion_data( $this->student->ID, $this->course->ID, $data );
 		$assert = CoursePress_Data_Student::get_completion_data( $this->student->ID, $this->course->ID );
-		$data['version'] = '2.0';
+		$data['version'] = '2.0.6.2';
 		$this->assertEquals( $data, $assert );
 	}
 
