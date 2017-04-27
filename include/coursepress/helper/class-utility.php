@@ -1516,7 +1516,7 @@ class CoursePress_Helper_Utility {
 		return apply_filters('coursepress_min_password_length', 6);
 	}
 
-		public static function is_youtube_url($url)
+	public static function is_youtube_url($url)
 	{
 		$host = parse_url($url, PHP_URL_HOST);
 		return $host && (strpos($host, 'youtube') !== false || strpos($host, 'youtu.be') !== false);
