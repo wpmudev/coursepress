@@ -561,7 +561,7 @@ class CoursePress_Template_Module {
 			?>
 				<video
 					id="<?php echo $module_video_id; ?>"
-					class="video-js vjs-default-skin"
+					class="video-js vjs-default-skin vjs-big-play-centered"
 					width="<?php echo $player_width; ?>"
 					height="<?php echo $player_height; ?>"
 					src="<?php echo $url; ?>"

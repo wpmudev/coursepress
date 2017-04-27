@@ -545,8 +545,7 @@
 
 			video.on('ready', function(){
 				var player = this,
-					player_element = $(player.el()),
-					timer_started = false;
+					player_element = $(player.el());
 
 				function change_video_status(player)
 				{
@@ -566,12 +565,15 @@
 					player.muted(true);
 				}
 
+				player.one('click', function(){
+					player.play();
+				});
+
+				player.one('play', function(){
+					CoursePress.timer(player_element.closest('.cp-module-content'));
+				});
+
 				player.on('play', function(){
-					if(!timer_started)
-					{
-						CoursePress.timer(player_element.closest('.cp-module-content'));
-						timer_started = true;
-					}
 					change_video_status(player);
 				});
 
