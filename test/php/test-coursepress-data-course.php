@@ -67,7 +67,6 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Course', 'count_courses' ) ) );
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Course', 'get_course' ) ) );
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Course', 'get_course_url' ) ) );
-		$this->assertTrue( is_callable( array( 'CoursePress_Data_Course', 'is_course_preview' ) ) );
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Course', 'time_now' ) ) );
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Course', 'strtotime' ) ) );
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Course', 'is_course_available' ) ) );
@@ -1211,25 +1210,6 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 		$this->assertInternalType( 'string', $assert );
 		$re = sprintf( '@%s/$@', $this->course->post_name );
 		$this->assertRegExp( $re, $assert );
-	}
-
-	/**
-	 * is_course_preview( $course_id )
-	 */
-	public function test_is_course_preview() {
-		/**
-		 * Wrong data
-		 */
-		$values = $this->get_wrong_values();
-		foreach ( $values as $value ) {
-			$assert = CoursePress_Data_Course::is_course_preview( $value );
-			$this->assertEmpty( $assert );
-		}
-		/**
-		 * Good data
-		 */
-		$assert = CoursePress_Data_Course::is_course_preview( $this->course->ID );
-		$this->assertEmpty( $assert );
 	}
 
 	/**

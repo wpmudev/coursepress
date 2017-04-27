@@ -2596,11 +2596,6 @@ class CoursePress_Data_Course {
 		return $url;
 	}
 
-	public static function is_course_preview( $course_id ) {
-		$post_status = get_post_status( $course_id );
-		$can_update_course = CoursePress_Data_Capabilities::can_update_course( $course_id );
-	}
-
 	/**
 	 * Get the current time in GMT timezone.
 	 *
