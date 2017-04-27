@@ -258,6 +258,7 @@ class CoursePress_Helper_Utility {
 		} else {
 			return $object;
 		}
+		return array();
 	}
 
 	public static function array_to_object( $array ) {
@@ -1425,5 +1426,93 @@ class CoursePress_Helper_Utility {
 			</p>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Site vars.
+	 *
+	 * @since 2.0.7
+	 *
+	 * @param array $vars Array of site vars.
+	 * @return array Array of site vars.
+	 */
+	public static function add_site_vars( $vars = array() ) {
+		/**
+		 * get login url
+		 */
+		$login_url = wp_login_url();
+		if ( CoursePress_Core::get_setting( 'general/use_custom_login', true ) ) {
+			$login_url = CoursePress_Core::get_slug( 'login', true );
+		}
+		$vars['BLOG_ADDRESS'] = site_url();
+		$vars['BLOG_NAME'] = $vars['WEBSITE_NAME'] =  get_bloginfo( 'name' );
+		$vars['LOGIN_ADDRESS'] = $login_url;
+		$vars['WEBSITE_ADDRESS'] = home_url();
+		/**
+		 * Allow to change site vars.
+		 *
+		 * @since 2.0.6
+		 *
+		 * @param array $vars Array of site vars.
+		 */
+		return apply_filters( 'coursepress_site_vars', $vars );
+	}
+
+	/**
+	 * Converts a hex color into an RGB array.
+	 *
+	 * @param $hex_color string The color in format #FFFFFF
+	 * @param $default string The value to return if the color to convert turns out to be invalid.
+	 * @return array An array containing RGB values.
+	 */
+	public static function convert_hex_color_to_rgb($hex_color, $default)
+	{
+		$color_valid = (boolean) preg_match('/^#[a-f0-9]{6}$/i', $hex_color);
+		if($color_valid)
+		{
+			$values = TCPDF_COLORS::convertHTMLColorToDec($hex_color, TCPDF_COLORS::$spotcolor);
+			return array_values($values);
+		}
+
+		return $default;
+	}
+
+	/**
+	 * If the strength meter is enabled, this method checks a hidden field to make sure that the password is strong enough.
+	 *
+	 * If the strength meter is disabled then this method makes sure that the password meets the minimum length requirement and has the required characters.
+	 */
+	public static function is_password_strong()
+	{
+		$confirm_weak_password = isset($_POST['confirm_weak_password']) ? (boolean)$_POST['confirm_weak_password'] : false;
+		$min_password_length = self::get_minimum_password_length();
+
+		if (self::is_password_strength_meter_enabled()) {
+			$password_strength = isset($_POST['password_strength_level']) ? intval($_POST['password_strength_level']) : 0;
+
+			return $confirm_weak_password || $password_strength >= 3;
+		} else {
+			$password = isset($_POST['password']) ? $_POST['password'] : '';
+			$password_strong = strlen($password) >= $min_password_length && preg_match('#[0-9a-z]+#i', $password);
+
+			return $confirm_weak_password || $password_strong;
+		}
+	}
+
+	/**
+	 * Checks if password strength meter is enabled.
+	 * @return bool
+	 */
+	public static function is_password_strength_meter_enabled()
+	{
+		return (boolean) apply_filters('coursepress_display_password_strength_meter', true);
+	}
+
+	/**
+	 * Returns the minimum password length to use for validation when the strength meter is disabled.
+	 */
+	public static function get_minimum_password_length()
+	{
+		return apply_filters('coursepress_min_password_length', 6);
 	}
 }

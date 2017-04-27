@@ -591,26 +591,39 @@ class CoursePress_Core {
 	 * @since 2.0.0
 	 */
 	public static function redirect_to_guide_page() {
-		// Exit if it is not first time.
-		$is_active = get_option( 'coursepress_activate', false );
-		if ( empty( $is_active ) ) { return; }
+		$maybe_redirect = get_option( 'coursepress_maybe_redirect', false );
 
-		// delete_option (semaphore to show guide page)
-		delete_option( 'coursepress_activate' );
+		if ( false === $maybe_redirect ) return;
 
-		// exit if we have some courses.
-		$count = CoursePress_Data_Course::count_courses();
-		if ( ! empty( $count ) ) { return; }
+		// Remove redirect marker
+		delete_option( 'coursepress_maybe_redirect' );
 
-		wp_safe_redirect(
-			add_query_arg(
-				array(
-					'page' => 'coursepress_settings',
-					'tab' => 'setup',
-				),
-				admin_url( 'admin.php' )
-			)
-		);
-		exit();
+		// Flush rewrite rules
+		// @todo: Wrap this!
+		flush_rewrite_rules();
+
+		try {
+			$post_type = CoursePress_Data_Course::get_post_type_name();
+			$courses = wp_count_posts( $post_type );
+
+			if ( is_object( $courses ) ) {
+				if ( isset( $courses->publish ) && (int) $courses->publish > 0 ) return;
+
+				wp_safe_redirect(
+					add_query_arg(
+						array(
+							'post_type' => $post_type,
+							'page' => 'coursepress_settings',
+							'tab' => 'setup',
+						),
+						admin_url( 'edit.php' )
+					)
+				);
+				exit();
+			}
+
+		} catch( Exception $e ) {
+			// Do nothing
+		}
 	}
 }

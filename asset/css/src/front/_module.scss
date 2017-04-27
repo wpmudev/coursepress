@@ -47,11 +47,15 @@
 		}
 	}
 	.module-header {
+		border: 0;
 		margin: 0 0 25px 0;
+		padding: 0;
+		@include appearance( inherit );
 		.modul-title {
 			margin: 0;
 		}
 		.is-mandatory {
+			font-weight: normal;
 			float: right;
 			font-size: 0.8em;
 			text-transform: uppercase;
@@ -61,6 +65,11 @@
 				display: inline-block;
 				vertical-align: middle;
 				padding: 2px 4px;
+			}
+		}
+		h4 {
+			.is-mandatory {
+				font-size: 0.7em;
 			}
 		}
 	}
@@ -119,8 +128,8 @@
 			input,
 			label {
 				display: inline-block;
-				vertical-align: top;
-				margin-right: 5px;
+				vertical-align: middle;
+				margin: 0 5px 0 0;
 			}
 		}
 		.file {
