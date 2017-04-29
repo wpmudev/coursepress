@@ -12,6 +12,7 @@ CHANGELOG
 * Added: HTML rel attribute to next and previous buttons.
 * Added: Password strength meter on student profile
 * Added: The ability to disable the strength meter in the enrollment pup-up.
+* Added: Option to disable emails individually
 
 * Improved: Image display.
 * Improved: Removed unused function CoursePress_Data_Course::is_course_preview()
