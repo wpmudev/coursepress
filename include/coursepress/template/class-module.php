@@ -562,14 +562,14 @@ class CoursePress_Template_Module {
 		}
 
 		if ( 'video' === $type ) {
-			$player_width = CoursePress_Helper_Utility::get_array_val($data, 'video_player_width');
+			$player_width = CoursePress_Helper_Utility::get_array_val( $data, 'video_player_width' );
 			$player_width = $player_width ? $player_width : '640';
-			$player_height = CoursePress_Helper_Utility::get_array_val($data, 'video_player_height');
+			$player_height = CoursePress_Helper_Utility::get_array_val( $data, 'video_player_height' );
 			$player_height = $player_height ? $player_height : '360';
-			$autoplay = CoursePress_Helper_Utility::get_array_val($data, 'video_autoplay') ? 'autoplay' : '';
-			$loop = CoursePress_Helper_Utility::get_array_val($data, 'video_loop') ? 'loop' : '';
-			$controls = CoursePress_Helper_Utility::get_array_val($data, 'video_hide_controls') ? '' : 'controls';
-			$module_video_id = isset($module->ID) ? 'module-video-' . $module->ID : '';
+			$autoplay = CoursePress_Helper_Utility::get_array_val( $data, 'video_autoplay' ) ? 'autoplay' : '';
+			$loop = CoursePress_Helper_Utility::get_array_val( $data, 'video_loop' ) ? 'loop' : '';
+			$controls = CoursePress_Helper_Utility::get_array_val( $data, 'video_hide_controls' ) ? '' : 'controls';
+			$module_video_id = isset( $module->ID ) ? 'module-video-' . $module->ID : '';
 
 			ob_start();
 			?>
@@ -579,7 +579,7 @@ class CoursePress_Template_Module {
 					width="<?php echo $player_width; ?>"
 					height="<?php echo $player_height; ?>"
 					src="<?php echo $url; ?>"
-					data-setup='<?php echo CoursePress_Helper_Utility::create_video_js_setup_data($url); ?>'
+					data-setup='<?php echo CoursePress_Helper_Utility::create_video_js_setup_data( $url ); ?>'
 					<?php echo $controls; ?>
 					<?php echo $autoplay; ?>
 					<?php echo $loop; ?>>
@@ -709,15 +709,6 @@ class CoursePress_Template_Module {
 		if ( false == $enrolled ) {
 			return '';
 		}
-		/**
-		 * Comment form filter.
-		 *
-		 * @since 2.0.8
-		 */
-		$comment_form = apply_filters( 'coursepress_comment_form', false );
-		if ( false !== $comment_form ) {
-			return $comment_form;
-		}
 
 		ob_start();
 		$form_class = array( 'comment-form', 'cp-comment-form' );
@@ -734,6 +725,13 @@ class CoursePress_Template_Module {
 			'class_submit' => 'submit cp-comment-submit',
 			'comment_field' => '<p class="comment-form-comment"><textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525"></textarea></p>',
 		);
+
+		/**
+		 * Comment form args filter.
+		 *
+		 * @since 2.0.8
+		 */
+		$args = apply_filters( 'coursepress_comment_form_args', false );
 
 		add_filter( 'comment_form_submit_button', array( 'CoursePress_Template_Discussion', 'add_subscribe_button' ) );
 		comment_form( $args, $post_id );
@@ -756,14 +754,22 @@ class CoursePress_Template_Module {
 			)
 		);
 
+		$args = array(
+			'style'	   => 'ol',
+			'short_ping'  => true,
+			'avatar_size' => 42,
+		);
+		/**
+		 * Comment list arguments filter.
+		 *
+		 * @since 2.0.8
+		 */
+		$args = apply_filters( 'coursepress_comment_list_args', $args );
+
 		?>
 		<ol class="comment-list">
 			<?php
-				wp_list_comments( array(
-					'style'       => 'ol',
-					'short_ping'  => true,
-					'avatar_size' => 42,
-				), $comments );
+				wp_list_comments( $args, $comments );
 			?>
 		</ol><!-- .comment-list -->
 
