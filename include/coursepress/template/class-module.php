@@ -398,14 +398,14 @@ class CoursePress_Template_Module {
 				$module_elements .= apply_filters( 'coursepress_course_readonly_message', $module_warning, $module_id, $course_id );
 			}
 
-            /**
-             * custom wrappers
-             */
+			/**
+			 * custom wrappers
+			 */
 			switch ( $module_type ) {
-            case 'discussion':
+				case 'discussion':
 					$module_elements = sprintf( '<div id="comments" class="comments-area"><div class="comments-list-container">%s</div></div>', $module_elements );
 					break;
-            }
+			}
 
 			/**
 			 * Filter the module elements template.
@@ -720,6 +720,16 @@ class CoursePress_Template_Module {
 		if ( false == $enrolled ) {
 			return '';
 		}
+		/**
+		 * Comment form filter.
+		 *
+		 * @since 2.0.8
+		 */
+		$comment_form = apply_filters( 'coursepress_comment_form', false );
+		if ( false !== $comment_form ) {
+			return $comment_form;
+		}
+
 		ob_start();
 		$form_class = array( 'comment-form', 'cp-comment-form' );
 		$comment_order = get_option( 'comment_order' );
