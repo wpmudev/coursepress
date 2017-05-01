@@ -139,12 +139,12 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 		 **/
 		static function disable_style() {
 ?>
-        <style>
-        #postbox-container-1,
-        #postbox-container-2 {
+            <style>
+            #postbox-container-1,
+            #postbox-container-2 {
             display: none;
-        }
-        </style>
+            }
+            </style>
 <?php
 		}
 
@@ -204,7 +204,8 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 
 			// Make sure that we have all the fields we need
 			foreach ( self::$tabs as $key => $tab ) {
-				self::$tabs[ $key ]['url'] = add_query_arg( 'tab', $key, remove_query_arg( 'message' ) );
+				$args_to_remove = array( 'message', 'certified' );
+				self::$tabs[ $key ]['url'] = add_query_arg( 'tab', $key, remove_query_arg( $args_to_remove ) );
 				self::$tabs[ $key ]['buttons'] = isset( $tab['buttons'] ) ? $tab['buttons'] : 'both';
 				self::$tabs[ $key ]['class'] = isset( $tab['class'] ) ? $tab['class'] : '';
 				self::$tabs[ $key ]['is_form'] = isset( $tab['is_form'] ) ? $tab['is_form'] : true;

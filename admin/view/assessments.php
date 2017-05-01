@@ -6,6 +6,9 @@ $courses = array_filter( $courses );
 $selected_course = isset( $_REQUEST['course_id'] ) ? (int) $_REQUEST['course_id'] : 0;
 $active_unit = ! empty( $_REQUEST['unit'] ) ? $_REQUEST['unit'] : 'all';
 $grade_type = ! empty( $_REQUEST['type'] ) ? $_REQUEST['type'] : 'all';
+$orderby = isset( $_REQUEST['orderby'] ) ? $_REQUEST['orderby'] : 'login';
+$order = isset( $_REQUEST['order'] ) ? $_REQUEST['order'] : 'asc';
+$search = isset( $_REQUEST['search'] ) ? $_REQUEST['search'] : '';
 
 if ( 0 == $selected_course && ! empty( $courses ) ) {
 	$selected_course = $courses[0]->ID;
@@ -15,6 +18,8 @@ $nonce = wp_create_nonce( 'cp_get_units' );
 $base_location = remove_query_arg( array( 'unit', 'type', 'paged' ) );
 ?>
 <input type="hidden" id="base_location" value="<?php echo esc_url( $base_location ); ?>" />
+<input type="hidden" id="assessment-orderby" value="<?php echo esc_attr( $orderby ); ?>" />
+<input type="hidden" id="assessment-order" value="<?php echo esc_attr( $order ); ?>" />
 <div class="wrap coursepress_wrapper coursepress-assessment">
 	<h2><?php esc_html_e( 'Assessments', 'CP_TD' ); ?></h2>
 
@@ -55,7 +60,7 @@ $base_location = remove_query_arg( array( 'unit', 'type', 'paged' ) );
 				<div class="cp-box">
 					<form method="get" class="cp-right assessment-search-student-box">
 						<p class="description"><?php esc_html_e( 'Search students by name, username, or email.', 'CP_TD' ); ?></p>
-						<input type="text" id="search_student_box" placeholder="<?php esc_attr_e( 'Enter here...', 'CP_TD' ); ?>" />
+                        <input type="text" id="search_student_box" placeholder="<?php esc_attr_e( 'Enter here...', 'CP_TD' ); ?>" value="<?php echo esc_attr( $search ); ?>"/>
 						<input type="submit" id="search_student_submit" class="button-primary" value="<?php esc_attr_e( 'Search', 'CP_TD' ); ?>" />
 						<input type="button" id="search_reset" class="button disabled" value="<?php esc_attr_e( 'Reset' ); ?>" />
 					</form>

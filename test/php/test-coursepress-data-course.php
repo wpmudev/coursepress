@@ -4,10 +4,6 @@
  */
 class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 
-	public function __construct() {
-		parent::__construct();
-	}
-
 	public function test_exists() {
 		$this->assertTrue( class_exists( 'CoursePress_Data_Course' ) );
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Course', 'get_format' ) ) );
@@ -588,6 +584,7 @@ class CoursePress_Data_Course_Test extends CoursePress_UnitTestCase {
 
 		$assert = CoursePress_Data_Course::get_students( $this->course->ID, -1 );
 		$this->assertInternalType( 'array', $assert );
+		$this->assertCount(1, $assert);
 		$assert = $assert[0];
 		$this->assertInstanceOf( 'WP_User', $assert );
 		$this->assertEquals( $this->student->ID, $assert->ID );

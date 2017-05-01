@@ -226,7 +226,7 @@ class CoursePress_Template_Module {
 		$unit_id = $module->post_parent;
 		$course_id = get_post_field( 'post_parent', $unit_id );
 		$course_status = CoursePress_Data_Course::get_course_status( $course_id );
-		$is_module_answerable = preg_match( '%input-%', $module_type );
+		$is_module_answerable = preg_match( '%input-%', $module_type ) || 'video' === $module_type;
 		$disabled = false;
 		$element_class = array();
 		$student_id = get_current_user_id();
@@ -480,7 +480,12 @@ class CoursePress_Template_Module {
 		return $content;
 	}
 
-	private static function do_caption_media( $data ) {
+	/**
+	 * @param $data
+	 * @param null|WP_Post $module
+	 * @return string
+	 */
+	private static function do_caption_media( $data, $module = null ) {
 		if ( empty( $data['image_url'] ) && empty( $data['video_url'] ) ) {
 			return '';
 		}
@@ -557,46 +562,30 @@ class CoursePress_Template_Module {
 		}
 
 		if ( 'video' === $type ) {
-			$video_extension = pathinfo( $url, PATHINFO_EXTENSION );
-			$hide_related = isset( $data['hide_related_media'] ) ? cp_is_true( $data['hide_related_media'] ) : false;
+			$player_width = CoursePress_Helper_Utility::get_array_val($data, 'video_player_width');
+			$player_width = $player_width ? $player_width : '640';
+			$player_height = CoursePress_Helper_Utility::get_array_val($data, 'video_player_height');
+			$player_height = $player_height ? $player_height : '360';
+			$autoplay = CoursePress_Helper_Utility::get_array_val($data, 'video_autoplay') ? 'autoplay' : '';
+			$loop = CoursePress_Helper_Utility::get_array_val($data, 'video_loop') ? 'loop' : '';
+			$controls = CoursePress_Helper_Utility::get_array_val($data, 'video_hide_controls') ? '' : 'controls';
+			$module_video_id = isset($module->ID) ? 'module-video-' . $module->ID : '';
 
-			if ( $hide_related ) {
-				add_filter( 'oembed_result', array( 'CoursePress_Helper_Utility', 'remove_related_videos' ), 10, 3 );
-			}
-
-			$video = '';
-			if ( ! empty( $video_extension ) ) {// it's file, most likely on the server
-				$attr = array(
-					'src' => $url,
-				);
-				if ( preg_match( '%\?%', $url ) ) {
-					// URL with ? doesn't read on shortcode
-					$param = substr( $url, strrpos( $url, '?' ) + 1 );
-					$url = substr( $url, 0, strrpos( $url, '?' ) );
-					$param = explode( '&', $param );
-					$param = array_filter( $param );
-
-					if ( ! empty( $param ) ) {
-						foreach ( $param as $_param ) {
-							$_param = explode( '=', $_param );
-							if ( count( $_param ) > 1 ) {
-								$attr[ $_param[0] ] = $_param[1];
-							}
-						}
-					}
-					$attr['src'] = $url;
-				}
-
-				$video = wp_video_shortcode( $attr );
-			} else {
-				$embed_args = array();
-				add_filter( 'oembed_result', array( __CLASS__, 'oembed_result_add_autoplay' ), 10, 3 );
-				$video = wp_oembed_get( $url, $embed_args );
-				if ( ! $video ) {
-					$video = apply_filters( 'the_content', '[embed]' . $url . '[/embed]' );
-				}
-				remove_filter( 'oembed_result', array( __CLASS__, 'oembed_result_add_autoplay' ), 10, 3 );
-			}
+			ob_start();
+			?>
+				<video
+					id="<?php echo $module_video_id; ?>"
+					class="video-js vjs-default-skin vjs-big-play-centered"
+					width="<?php echo $player_width; ?>"
+					height="<?php echo $player_height; ?>"
+					src="<?php echo $url; ?>"
+					data-setup='<?php echo CoursePress_Helper_Utility::create_video_js_setup_data($url); ?>'
+					<?php echo $controls; ?>
+					<?php echo $autoplay; ?>
+					<?php echo $loop; ?>>
+				</video>
+			<?php
+			$video = ob_get_clean();
 
 			if ( $show_caption ) {
 				$html .= '<div class="video_holder">';
@@ -620,7 +609,7 @@ class CoursePress_Template_Module {
 	}
 
 	public static function render_video( $module, $attributes = false ) {
-		$content = self::do_caption_media( $attributes );
+		$content = self::do_caption_media( $attributes, $module );
 
 		return $content;
 	}

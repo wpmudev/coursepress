@@ -92,6 +92,7 @@ class CoursePress_Helper_Email {
 		return apply_filters(
 			'coursepress_get_email_fields-' . $email_type,
 			array(
+				'enabled' => self::enabled( $email_type ),
 				'name' => self::from_name( $email_type ),
 				'email' => self::from_email( $email_type ),
 				'subject' => self::subject( $email_type ),
@@ -122,6 +123,12 @@ class CoursePress_Helper_Email {
 			add_filter( 'wp_mail_from_name', array( __CLASS__, 'wp_mail_from_name' ) );
 
 			$email_settings = self::get_email_fields( $type );
+
+			$email_enabled = (boolean) $email_settings['enabled'];
+			if(!$email_enabled)
+			{
+				return false;
+			}
 
 			if ( isset( $email_settings['subject'] ) && ! empty( $email_settings['subject'] ) ) {
 				$args['subject'] = $email_settings['subject'];
@@ -377,6 +384,18 @@ class CoursePress_Helper_Email {
 	 * Fetch email settings from DB.
 	 ***************************************************************************
 	 */
+
+	protected static function enabled( $email_type ) {
+		$fields = CoursePress_Helper_Setting_Email::get_defaults( $email_type );
+
+		if ( ! empty( $fields['enabled'] ) ) {
+			return CoursePress_Core::get_setting(
+				'email/' . $email_type . '/enabled',
+				$fields['enabled']
+			);
+		}
+		return '';
+	}
 
 	protected static function from_name( $email_type ) {
 		$fields = CoursePress_Helper_Setting_Email::get_defaults( $email_type );
