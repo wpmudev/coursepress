@@ -1484,16 +1484,18 @@ ul.notification-archive-list:after {
   display: none;
 }
 
-.signup-form .password-strength-meter {
+.password-strength-meter-container {
   float: right;
+  display: inline-block;
+  margin-bottom: 0;
 }
-.signup-form .password-strength-meter.bad {
+.password-strength-meter-container .password-strength-meter.bad {
   color: red;
 }
-.signup-form .password-strength-meter.good {
+.password-strength-meter-container .password-strength-meter.good {
   color: orange;
 }
-.signup-form .password-strength-meter.strong {
+.password-strength-meter-container .password-strength-meter.strong {
   color: green;
 }
 

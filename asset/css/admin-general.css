@@ -712,13 +712,17 @@ A. Responsive
   width: 100%;
   margin-top: 20px;
 }
-
 .course-structure table th {
   text-align: left;
-}
-
-.course-structure table th {
   margin: 3px 20px 3px 0;
+}
+.course-structure table tr td {
+  border-bottom: 1px solid #dfdfdf;
+  text-align: center;
+  vertical-align: middle;
+}
+.course-structure table tr.page small {
+  opacity: .8;
 }
 
 .course-structure .column-course-structure {
@@ -739,15 +743,6 @@ A. Responsive
 }
 
 .course-structure table thead tr.break th {
-  border-bottom: 1px solid #DFDFDF;
-}
-
-.course-structure table td {
-  text-align: center;
-  vertical-align: middle;
-}
-
-.course-structure table tr td {
   border-bottom: 1px solid #DFDFDF;
 }
 
@@ -1687,8 +1682,7 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 
 .discussion .module-duration,
 .discussion .module-assessable,
-.text .module-duration,
-.video .module-duration {
+.text .module-duration {
   display: none;
 }
 
