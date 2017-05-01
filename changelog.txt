@@ -14,6 +14,13 @@ CHANGELOG
 * Added: The ability to disable the strength meter in the enrollment pup-up.
 * Added: Option to disable emails individually
 
+* Improved: Add individuall nonce when withdraw a student from a course.
+* Improved: Students list on assessment screen can be sorted by username and display name.
+* Improved: Students list on assessment screen is more like users list.
+* Improved: Students list on course edit screen can by sorted by: username, display name, first name and last name.
+* Improved: Students list on course edit screen is more like users list.
+* Improved: Added certificate filter on students list on course edit screen.
+* Improved: Inrease a course assessments page load time.
 * Improved: Image display.
 * Improved: Removed unused function CoursePress_Data_Course::is_course_preview()
 

@@ -37,6 +37,7 @@ input.cp-has-error {
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 5px 12px;
   text-decoration: none;
+  -webkit-text-decoration-style: none;
   text-decoration-style: none;
   border: 1px solid rgba(0, 0, 0, 0.3);
   background-color: #F4F4F4;
@@ -167,6 +168,7 @@ input.cp-has-error {
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 5px 12px;
   text-decoration: none;
+  -webkit-text-decoration-style: none;
   text-decoration-style: none;
   border: 1px solid rgba(0, 0, 0, 0.3);
   background-color: #F4F4F4;
@@ -202,6 +204,7 @@ input.cp-has-error {
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 5px 12px;
   text-decoration: none;
+  -webkit-text-decoration-style: none;
   text-decoration-style: none;
   border: 1px solid rgba(0, 0, 0, 0.3);
   background-color: #F4F4F4;
@@ -352,6 +355,7 @@ input.cp-has-error {
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 5px 12px;
   text-decoration: none;
+  -webkit-text-decoration-style: none;
   text-decoration-style: none;
   border: 1px solid rgba(0, 0, 0, 0.3);
   background-color: #F4F4F4;
@@ -381,6 +385,7 @@ input.cp-has-error {
   position: absolute;
   top: 50%;
   left: 50%;
+  -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
 .course_list_box_item .clickable:hover .course-information *:not([class*="clickable-label"]) {
@@ -1068,6 +1073,7 @@ input.cp-has-error {
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 5px 12px;
   text-decoration: none;
+  -webkit-text-decoration-style: none;
   text-decoration-style: none;
   border: 1px solid rgba(0, 0, 0, 0.3);
   background-color: #F4F4F4;
@@ -1120,6 +1126,7 @@ input.cp-has-error {
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 5px 12px;
   text-decoration: none;
+  -webkit-text-decoration-style: none;
   text-decoration-style: none;
   border: 1px solid rgba(0, 0, 0, 0.3);
   background-color: #F4F4F4;
@@ -1204,6 +1211,7 @@ input.cp-has-error {
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 5px 12px;
   text-decoration: none;
+  -webkit-text-decoration-style: none;
   text-decoration-style: none;
   border: 1px solid rgba(0, 0, 0, 0.3);
   background-color: #F4F4F4;
@@ -1273,6 +1281,7 @@ input.cp-has-error {
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 5px 12px;
   text-decoration: none;
+  -webkit-text-decoration-style: none;
   text-decoration-style: none;
   border: 1px solid rgba(0, 0, 0, 0.3);
   background-color: #F4F4F4;
@@ -1301,6 +1310,7 @@ input.cp-has-error {
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 5px 12px;
   text-decoration: none;
+  -webkit-text-decoration-style: none;
   text-decoration-style: none;
   border: 1px solid rgba(0, 0, 0, 0.3);
   background-color: #F4F4F4;
@@ -1390,6 +1400,7 @@ ul.notification-archive-list:after {
   position: absolute;
   top: 50%;
   left: 50%;
+  -ms-transform: translate(-50%, -50%) scale(1.2, 1);
   transform: translate(-50%, -50%) scale(1.2, 1);
 }
 
