@@ -226,11 +226,11 @@ class CoursePress_Template_Module {
 		$unit_id = $module->post_parent;
 		$course_id = get_post_field( 'post_parent', $unit_id );
 		$course_status = CoursePress_Data_Course::get_course_status( $course_id );
-		$is_module_answerable = preg_match( '%input-%', $module_type );
+		$is_module_answerable = preg_match( '%input-%', $module_type ) || 'video' === $module_type;
 		$disabled = false;
-		$element_class = '';
+		$element_class = array();
 		$student_id = get_current_user_id();
-		$content = '';
+		$content = '<div class="module-container">';
 
 		/**
 		 * Fire before the module template is printed
@@ -250,12 +250,12 @@ class CoursePress_Template_Module {
 		$content .= sprintf( '<input type="hidden" name="course_id" value="%s" />', $course_id );
 		$content .= sprintf( '<input type="hidden" name="unit_id" value="%s" />', $unit_id );
 		$content .= sprintf( '<input type="hidden" name="student_id" value="%s" />', $student_id );
+		$content .= sprintf( '<input type="hidden" name="module_id[]" value="%s" />', $module_id );
 
 		if ( $is_focus ) {
 			$content .= wp_nonce_field( 'coursepress_submit_modules', '_wpnonce', true, false );
 			$content .= sprintf( '<div class="cp-error">%s</div>', apply_filters( 'coursepress_before_unit_modules', '' ) );
 		}
-		$content .= sprintf( '<input type="hidden" name="module_id[]" value="%s" />', $module_id );
 
 		// Module header
 		$content .= self::render_module_head( $module, $attributes );
@@ -366,6 +366,8 @@ class CoursePress_Template_Module {
 					break;
 			}
 
+			$element_class[] = sprintf( 'module-type-%s', $module_type );
+
 			$module_elements = sprintf( '<div id="cp-element-%s" class="%s" data-type="%s" data-required="%s">%s</div>', $module_id, implode( ' ', $element_class ), $module_type, $is_required, $module_elements );
 
 			if ( $is_module_answerable && ! empty( $responses ) ) {
@@ -397,6 +399,15 @@ class CoursePress_Template_Module {
 			}
 
 			/**
+			 * custom wrappers
+			 */
+			switch ( $module_type ) {
+				case 'discussion':
+					$module_elements = sprintf( '<div id="comments" class="comments-area"><div class="comments-list-container">%s</div></div>', $module_elements );
+					break;
+			}
+
+			/**
 			 * Filter the module elements template.
 			 *
 			 * @since 2.0
@@ -418,7 +429,10 @@ class CoursePress_Template_Module {
 				esc_attr( implode( ' ', $module_container_classes ) )
 			);
 		}
-
+		/**
+		 * div.module-container
+		 */
+		$content .= '</div>';
 		return $content;
 	}
 
@@ -466,7 +480,12 @@ class CoursePress_Template_Module {
 		return $content;
 	}
 
-	private static function do_caption_media( $data ) {
+	/**
+	 * @param $data
+	 * @param null|WP_Post $module
+	 * @return string
+	 */
+	private static function do_caption_media( $data, $module = null ) {
 		if ( empty( $data['image_url'] ) && empty( $data['video_url'] ) ) {
 			return '';
 		}
@@ -543,46 +562,30 @@ class CoursePress_Template_Module {
 		}
 
 		if ( 'video' === $type ) {
-			$video_extension = pathinfo( $url, PATHINFO_EXTENSION );
-			$hide_related = isset( $data['hide_related_media'] ) ? cp_is_true( $data['hide_related_media'] ) : false;
+			$player_width = CoursePress_Helper_Utility::get_array_val( $data, 'video_player_width' );
+			$player_width = $player_width ? $player_width : '640';
+			$player_height = CoursePress_Helper_Utility::get_array_val( $data, 'video_player_height' );
+			$player_height = $player_height ? $player_height : '360';
+			$autoplay = CoursePress_Helper_Utility::get_array_val( $data, 'video_autoplay' ) ? 'autoplay' : '';
+			$loop = CoursePress_Helper_Utility::get_array_val( $data, 'video_loop' ) ? 'loop' : '';
+			$controls = CoursePress_Helper_Utility::get_array_val( $data, 'video_hide_controls' ) ? '' : 'controls';
+			$module_video_id = isset( $module->ID ) ? 'module-video-' . $module->ID : '';
 
-			if ( $hide_related ) {
-				add_filter( 'oembed_result', array( 'CoursePress_Helper_Utility', 'remove_related_videos' ), 10, 3 );
-			}
-
-			$video = '';
-			if ( ! empty( $video_extension ) ) {// it's file, most likely on the server
-				$attr = array(
-					'src' => $url,
-				);
-				if ( preg_match( '%\?%', $url ) ) {
-					// URL with ? doesn't read on shortcode
-					$param = substr( $url, strrpos( $url, '?' ) + 1 );
-					$url = substr( $url, 0, strrpos( $url, '?' ) );
-					$param = explode( '&', $param );
-					$param = array_filter( $param );
-
-					if ( ! empty( $param ) ) {
-						foreach ( $param as $_param ) {
-							$_param = explode( '=', $_param );
-							if ( count( $_param ) > 1 ) {
-								$attr[ $_param[0] ] = $_param[1];
-							}
-						}
-					}
-					$attr['src'] = $url;
-				}
-
-				$video = wp_video_shortcode( $attr );
-			} else {
-				$embed_args = array();
-				add_filter( 'oembed_result', array( __CLASS__, 'oembed_result_add_autoplay' ), 10, 3 );
-				$video = wp_oembed_get( $url, $embed_args );
-				if ( ! $video ) {
-					$video = apply_filters( 'the_content', '[embed]' . $url . '[/embed]' );
-				}
-				remove_filter( 'oembed_result', array( __CLASS__, 'oembed_result_add_autoplay' ), 10, 3 );
-			}
+			ob_start();
+			?>
+				<video
+					id="<?php echo $module_video_id; ?>"
+					class="video-js vjs-default-skin vjs-big-play-centered"
+					width="<?php echo $player_width; ?>"
+					height="<?php echo $player_height; ?>"
+					src="<?php echo $url; ?>"
+					data-setup='<?php echo CoursePress_Helper_Utility::create_video_js_setup_data( $url ); ?>'
+					<?php echo $controls; ?>
+					<?php echo $autoplay; ?>
+					<?php echo $loop; ?>>
+				</video>
+			<?php
+			$video = ob_get_clean();
 
 			if ( $show_caption ) {
 				$html .= '<div class="video_holder">';
@@ -606,7 +609,7 @@ class CoursePress_Template_Module {
 	}
 
 	public static function render_video( $module, $attributes = false ) {
-		$content = self::do_caption_media( $attributes );
+		$content = self::do_caption_media( $attributes, $module );
 
 		return $content;
 	}
@@ -706,6 +709,7 @@ class CoursePress_Template_Module {
 		if ( false == $enrolled ) {
 			return '';
 		}
+
 		ob_start();
 		$form_class = array( 'comment-form', 'cp-comment-form' );
 		$comment_order = get_option( 'comment_order' );
@@ -721,6 +725,13 @@ class CoursePress_Template_Module {
 			'class_submit' => 'submit cp-comment-submit',
 			'comment_field' => '<p class="comment-form-comment"><textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525"></textarea></p>',
 		);
+
+		/**
+		 * Comment form args filter.
+		 *
+		 * @since 2.0.8
+		 */
+		$args = apply_filters( 'coursepress_comment_form_args', false );
 
 		add_filter( 'comment_form_submit_button', array( 'CoursePress_Template_Discussion', 'add_subscribe_button' ) );
 		comment_form( $args, $post_id );
@@ -743,14 +754,22 @@ class CoursePress_Template_Module {
 			)
 		);
 
+		$args = array(
+			'style'	   => 'ol',
+			'short_ping'  => true,
+			'avatar_size' => 42,
+		);
+		/**
+		 * Comment list arguments filter.
+		 *
+		 * @since 2.0.8
+		 */
+		$args = apply_filters( 'coursepress_comment_list_args', $args );
+
 		?>
 		<ol class="comment-list">
 			<?php
-				wp_list_comments( array(
-					'style'       => 'ol',
-					'short_ping'  => true,
-					'avatar_size' => 42,
-				), $comments );
+				wp_list_comments( $args, $comments );
 			?>
 		</ol><!-- .comment-list -->
 
@@ -845,11 +864,8 @@ class CoursePress_Template_Module {
 
 			foreach ( $attributes['answers'] as $key => $answer ) {
 				$checked = '' !== $response ? ' ' . checked( 1, '' != $response && (int) $response === $key, false ) : '';
-
 				$format = '<li class="%1$s %2$s"><input type="radio" value="%5$s" name="module[%3$s]" id="module-%3$s-%5$s" %6$s /> <label for="module-%3$s-%5$s">%4$s</label> </li>';
-
 				$content .= sprintf( $format, $oddeven, $alt, $module->ID, $answer, esc_attr( $key ), $disabled_attr . $checked );
-
 				$oddeven = 'odd' === $oddeven ? 'even' : 'odd';
 				$alt = empty( $alt ) ? 'alt' : '';
 			}
@@ -960,7 +976,6 @@ class CoursePress_Template_Module {
 					$format = '<li><input type="%3$s" id="%1$s" name="%4$s" value="%5$s" %6$s/> <label for="%1$s">%2$s</label></li>';
 					$questions .= sprintf( $format, $quiz_id, esc_html( $answer ), $type, $module_name, $ai, $disabled_attr . $checked );
 				}
-
 				$questions .= '</ul>';
 				$questions = sprintf( '<p class="question">%s</p>%s', esc_html( $question['question'] ), $questions );
 				$container_format = '<div class="module-quiz-question question-%s" data-type="%s">%s</div>';

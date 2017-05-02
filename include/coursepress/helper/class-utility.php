@@ -1476,4 +1476,82 @@ class CoursePress_Helper_Utility {
 
 		return $default;
 	}
+
+	/**
+	 * If the strength meter is enabled, this method checks a hidden field to make sure that the password is strong enough.
+	 *
+	 * If the strength meter is disabled then this method makes sure that the password meets the minimum length requirement and has the required characters.
+	 */
+	public static function is_password_strong()
+	{
+		$confirm_weak_password = isset($_POST['confirm_weak_password']) ? (boolean)$_POST['confirm_weak_password'] : false;
+		$min_password_length = self::get_minimum_password_length();
+
+		if (self::is_password_strength_meter_enabled()) {
+			$password_strength = isset($_POST['password_strength_level']) ? intval($_POST['password_strength_level']) : 0;
+
+			return $confirm_weak_password || $password_strength >= 3;
+		} else {
+			$password = isset($_POST['password']) ? $_POST['password'] : '';
+			$password_strong = strlen($password) >= $min_password_length && preg_match('#[0-9a-z]+#i', $password);
+
+			return $confirm_weak_password || $password_strong;
+		}
+	}
+
+	/**
+	 * Checks if password strength meter is enabled.
+	 * @return bool
+	 */
+	public static function is_password_strength_meter_enabled()
+	{
+		return (boolean) apply_filters('coursepress_display_password_strength_meter', true);
+	}
+
+	/**
+	 * Returns the minimum password length to use for validation when the strength meter is disabled.
+	 */
+	public static function get_minimum_password_length()
+	{
+		return apply_filters('coursepress_min_password_length', 6);
+	}
+
+	public static function is_youtube_url($url)
+	{
+		$host = parse_url($url, PHP_URL_HOST);
+		return $host && (strpos($host, 'youtube') !== false || strpos($host, 'youtu.be') !== false);
+	}
+
+	public static function is_vimeo_url($url)
+	{
+		$host = parse_url($url, PHP_URL_HOST);
+		return $host && strpos($host, 'vimeo') !== false;
+	}
+
+	public static function create_video_js_setup_data($url)
+	{
+		$src = null;
+		if(self::is_youtube_url($url))
+		{
+			$src = 'youtube';
+		}
+		else if(self::is_vimeo_url($url))
+		{
+			$src = 'vimeo';
+		}
+
+		$setup_data = array();
+		if($src)
+		{
+			$setup_data['techOrder'] = array($src);
+			$setup_data['sources'] = array(
+				array(
+					'type' => 'video/' . $src,
+					'src' => $url
+				)
+			);
+		}
+
+		return json_encode($setup_data);
+	}
 }
