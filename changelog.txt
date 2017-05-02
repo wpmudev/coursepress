@@ -13,6 +13,8 @@ CHANGELOG
 * Added: Password strength meter on student profile
 * Added: The ability to disable the strength meter in the enrollment pup-up.
 * Added: Option to disable emails individually
+* Added: New filter: coursepress_comment_list_args to filter comments list arguments.
+* Added: New filter: coursepress_comment_form_args to filter new comment form arguments.
 
 * Improved: Add individuall nonce when withdraw a student from a course.
 * Improved: Students list on assessment screen can be sorted by username and display name.
