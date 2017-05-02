@@ -549,47 +549,34 @@ class CoursePress_Admin_Controller_Unit {
 						}
 					}
 
-$unset_keys_array = array( 'answered', 'passed' );
+					$unset_keys_array = array( 'answered', 'passed' );
 					/**
 					 * update student progress
 					 */
 					if ( $update_student_progress ) {
 						$course_id = $_REQUEST['course_id'];
-						$students = CoursePress_Admin_Assessment::filter_students( $course_id, 'all', 'all' );
-						if ( isset( $students['students'] ) && is_array( $students['students'] ) ) {
-                            foreach ( $students['students'] as $student_id ) {
-                                $student_progress = CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course_id );
-                                $student_progress = CoursePress_Helper_Utility::set_array_value( $student_progress, 'completion/'.$unit_id.'/progress', 0 );
-                                foreach( $unset_keys_array as $unset_key ) {
-                                    $student_progress = CoursePress_Helper_Utility::set_array_value( $student_progress, 'completion/'.$unit_id.'/'.$unset_key, array() );
-                                }
-                                l($student_progress['completion'], '111');
-                                /**
-                                 * re-save
-                                 */
-                                if ( isset( $student_progress['units'] ) ) {
-                                    foreach( $student_progress['units'] as $unit_id => $data ) {
-                                        if ( isset( $data['responses'] ) ) {
-                                            $modules = array_keys( $data['responses'] );
-                                            foreach( $modules as $module_id ) {
-                                                $module_response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id );
-
-                                                CoursePress_Data_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $module_response['response'], $student_progress, true );
-                                            }
-                                        }
-                                    }
-                                }
-                                l($student_progress['completion'], 'aaa');
-                                die;
-                                /**
-                                 * save changes
-                                 */
-                                CoursePress_Data_Student::update_completion_data( $student_id, $course_id, $student_progress);
-                                /**
-                                 * recalculate
-                                 */
-                                $student_progress = CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course_id );
-//                                l($student_progress['completion']);
+						$students = CoursePress_Data_Course::get_students( $course_id, 0, 0, 'ids' );
+						if ( is_array( $students ) && ! empty( $students )  ) {
+							foreach ( $students as $student_id ) {
+								$student_progress = CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course_id );
+								$student_progress = CoursePress_Helper_Utility::set_array_value( $student_progress, 'completion/'.$unit_id.'/progress', 0 );
+								foreach ( $unset_keys_array as $unset_key ) {
+									$student_progress = CoursePress_Helper_Utility::set_array_value( $student_progress, 'completion/'.$unit_id.'/'.$unset_key, array() );
+								}
+								/**
+								 * re-save
+								 */
+								if ( isset( $student_progress['units'] ) ) {
+									foreach ( $student_progress['units'] as $unit_id => $data ) {
+										if ( isset( $data['responses'] ) ) {
+											$modules = array_keys( $data['responses'] );
+											foreach ( $modules as $module_id ) {
+												$module_response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id );
+												CoursePress_Data_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $module_response['response'], $student_progress, true );
+											}
+										}
+									}
+								}
 							}
 						}
 					}
