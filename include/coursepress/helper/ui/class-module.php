@@ -575,6 +575,18 @@ class CoursePress_Helper_UI_Module {
 									"name": "meta_video_hide_controls"
 								}
 							]
+						},
+						{
+							"label": "' . __( 'Related Videos', 'CP_TD' ) . '",
+							"description": "' . __( 'Hide related videos for some video services (e.g. YouTube). Services like Vimeo sets this per video.', 'CP_TD' ) . '",
+							"class": "wide",
+                            "items": [
+                                {
+                                    "type": "checkbox",
+                                    "label": "' . __( 'Hide related videos', 'CP_TD' ) . '",
+                                    "name": "meta_hide_related_media"
+                                }
+                            ]
 						}
 					]
 				}
