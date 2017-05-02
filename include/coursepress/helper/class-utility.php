@@ -197,7 +197,7 @@ class CoursePress_Helper_Utility {
 			if ( empty( $key ) ) {
 				$key = count( $a );
 			}
-			unset( $key );
+			unset( $a[ $key ] );
 			return $a;
 		}
 		if ( ! isset( $a[ $key ] ) || ! is_array( $a[ $key ] ) ) {
@@ -1465,7 +1465,7 @@ class CoursePress_Helper_Utility {
 	 * @param $default string The value to return if the color to convert turns out to be invalid.
 	 * @return array An array containing RGB values.
 	 */
-	public static function convert_hex_color_to_rgb($hex_color, $default)
+	public static function convert_hex_color_to_rgb($hex_color, $default = array())
 	{
 		$color_valid = (boolean) preg_match('/^#[a-f0-9]{6}$/i', $hex_color);
 		if($color_valid)
