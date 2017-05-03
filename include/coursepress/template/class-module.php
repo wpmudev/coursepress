@@ -579,7 +579,7 @@ class CoursePress_Template_Module {
 					width="<?php echo $player_width; ?>"
 					height="<?php echo $player_height; ?>"
 					src="<?php echo $url; ?>"
-					data-setup='<?php echo CoursePress_Helper_Utility::create_video_js_setup_data( $url ); ?>'
+					data-setup='<?php echo CoursePress_Helper_Utility::create_video_js_setup_data($url, $data); ?>'
 					<?php echo $controls; ?>
 					<?php echo $autoplay; ?>
 					<?php echo $loop; ?>>

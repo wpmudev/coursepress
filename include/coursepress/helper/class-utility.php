@@ -1528,12 +1528,18 @@ class CoursePress_Helper_Utility {
 		return $host && strpos($host, 'vimeo') !== false;
 	}
 
-	public static function create_video_js_setup_data($url)
+	public static function create_video_js_setup_data($url, $data)
 	{
 		$src = null;
+		$extra_data = array();
 		if(self::is_youtube_url($url))
 		{
 			$src = 'youtube';
+
+			$show_related_media = !cp_is_true(self::get_array_val($data, 'hide_related_media'));
+			$extra_data['youtube'] = array(
+				'rel' => intval($show_related_media)
+			);
 		}
 		else if(self::is_vimeo_url($url))
 		{
@@ -1551,6 +1557,8 @@ class CoursePress_Helper_Utility {
 				)
 			);
 		}
+
+		$setup_data = array_merge($setup_data, $extra_data);
 
 		return json_encode($setup_data);
 	}
