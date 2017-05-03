@@ -479,7 +479,7 @@ class CoursePress_Helper_Table_CourseAssessments extends CoursePress_Helper_Tabl
 	/**
 	 * Display the pagination. ( copy from * /wp-admin/includes/class-wp-list-table.php
 	 *
-	 * @since 3.1.0
+	 * @since 2.0.8
 	 * @access protected
 	 *
 	 * @param string $which
