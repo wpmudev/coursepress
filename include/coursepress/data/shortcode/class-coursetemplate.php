@@ -1816,12 +1816,17 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 		if ( ( $atts['dashboard'] && ! empty( $counter ) ) || ! empty( $atts['show_labels'] ) ) {
 			$label = '';
+			$show_empty = false;
 
 			switch ( $context ) {
 				case 'enrolled':
 				case 'current':
 				case 'all':
 					$label = $atts['current_label'];
+					if ( 0 == $counter ) {
+						$show_empty = true;
+						$content = sprintf( '<p class="message">%s</p>', $atts['student_msg'] );
+					}
 				break;
 
 				case 'future':
@@ -1849,11 +1854,12 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				break;
 			}
 
-			$content = '<div class="dashboard-course-list ' . esc_attr( $context ) . '">' .
-						'<h3 class="section-title">' . esc_html( $label ) . '</h3>' .
-						$content .
-						'</div>';
-
+			if ( $counter || ( 0 === $counter && $show_empty ) ) {
+				$content = '<div class="dashboard-course-list ' . esc_attr( $context ) . '">' .
+					'<h3 class="section-title">' . esc_html( $label ) . '</h3>' .
+					$content .
+					'</div>';
+			}
 		} elseif ( $atts['dashboard'] && 'enrolled' === $context ) {
 
 			$label = $atts['suggested_label'];
