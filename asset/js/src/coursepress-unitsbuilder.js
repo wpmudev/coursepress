@@ -1410,7 +1410,7 @@ var CoursePress = CoursePress || {};
 						label = item[ 'label' ] ? item[ 'label' ] : '';
 						value = module.get_meta( name, '' );
 
-						option_name = name + '_selected[' + module.cid + ']';
+						name = name + '[' + module.cid + ']';
 						content += '<label class="normal"><input type="checkbox" value="1" name="' + name + '" ' + CoursePress.utility.checked( value, 1 ) + ' />' +
 						'<span>' + label + '</span></label>';
 						break;
