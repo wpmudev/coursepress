@@ -385,7 +385,7 @@ class CoursePress_Data_Student {
 	 *
 	 * @return (array) $data					Returns an array of course completion data.
 	 **/
-    public static function module_response( $student_id, $course_id, $unit_id, $module_id, $response, &$data = false, $force_re_save = false ) {
+	public static function module_response( $student_id, $course_id, $unit_id, $module_id, $response, &$data = false, $force_re_save = false ) {
 
 		$attributes = CoursePress_Data_Module::attributes( $module_id );
 
@@ -848,9 +848,7 @@ class CoursePress_Data_Student {
 			$unit_gradable_modules = 0;
 			$unit_passing_grade = 0;
 			$unit_progress_counter = 0;
-            $unit_valid_progress = 0;
-
-
+			$unit_valid_progress = 0;
 
 			if ( false === $is_unit_available && 'closed' != $course_status ) {
 				// Let's not check unavailable unit
@@ -1283,6 +1281,11 @@ class CoursePress_Data_Student {
 							true
 						);
 					} else {
+						$student_progress = CoursePress_Helper_Utility::set_array_value(
+							$student_progress,
+							'completion/failed',
+							false
+						);
 						$is_completed = true;
 					}
 				}
