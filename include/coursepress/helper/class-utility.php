@@ -1547,6 +1547,11 @@ class CoursePress_Helper_Utility {
 		}
 
 		$setup_data = array();
+		$player_width = CoursePress_Helper_Utility::get_array_val( $data, 'video_player_width' );
+		if(!$player_width)
+		{
+			$setup_data['fluid'] = true;
+		}
 		if($src)
 		{
 			$setup_data['techOrder'] = array($src);
