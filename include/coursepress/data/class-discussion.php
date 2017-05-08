@@ -467,7 +467,7 @@ class CoursePress_Data_Discussion {
 		}
 		$default_key = CoursePress_Helper_Discussion::get_default_key();
 		$user_meta_key = CoursePress_Helper_Discussion::get_user_meta_name( $discussion_id );
-		if ( $new_value && $default_key != $new_value ) {
+		if ( $new_value && 'do-not-subscribe' != $new_value ) {
 			update_user_meta( $user_id, $user_meta_key, $new_value );
 		} else {
 			delete_user_meta( $user_id, $user_meta_key );
