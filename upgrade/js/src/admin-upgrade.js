@@ -49,6 +49,70 @@ _.extend( _coursepress_upgrade, {
 		}
 	}),
 
+	checkStudents: Backbone.Model.extend({
+		url: _coursepress_upgrade.ajax_url + '?action=coursepress_upgrade_update',
+		initialize: function (options) {
+			_.extend(this, options);
+			this.on('error', this.server_error, this);
+
+			this.set({
+				_wpnonce: _coursepress_upgrade._wpnonce,
+				type: 'check-students',
+				course_id: -1
+			});
+		},
+		parse: function (response) {
+			_coursepress_upgrade.checkStudentRequests--;
+
+			if (response.success) {
+				_coursepress_upgrade.events.trigger('students_upgraded', response.data.remaining_students, this);
+				if (response.data.remaining_students == 0) {
+					_coursepress_upgrade.events.trigger('all_students_upgraded', this);
+				}
+			}
+			else {
+				_coursepress_upgrade.events.trigger('students_upgrade_failed', this);
+			}
+		},
+		server_error: function () {
+			window.alert(_coursepress_upgrade.server_error);
+		}
+	}),
+
+	studentsView: Backbone.View.extend({
+		className: 'coursepress-update-view',
+		template: '<span class="students-upgrade-message"></span> <span class="students-progress"></span> <span class="course-progress"></span>',
+		initialize: function (options) {
+			_.extend(this, options);
+
+			this.remaining_students = '';
+
+			_coursepress_upgrade.events.on('students_upgraded', _.bind(this.students_upgraded, this));
+			_coursepress_upgrade.events.on('all_students_upgraded', _.bind(this.all_students_upgraded, this));
+			_coursepress_upgrade.events.on('students_upgrade_failed', _.bind(this.students_upgrade_failed, this));
+		},
+		students_upgraded: function (remaining) {
+			this.remaining_students = remaining;
+		},
+		all_students_upgraded: function () {
+			this.$el.find('.students-progress').html('0');
+			this.$el.find('.course-progress').removeClass('error').addClass('success');
+		},
+		students_upgrade_failed: function () {
+			this.$el.find('.course-progress').removeClass('success').addClass('error');
+		},
+		render: function () {
+			this.$el.html(this.template);
+			this.$el.find('.students-upgrade-message').html(_coursepress_upgrade.upgrading_students);
+			this.$el.find('.students-progress').html(this.remaining_students);
+			this.$el.insertBefore(this.submit_button);
+
+			var checkStudents = new _coursepress_upgrade.checkStudents({});
+			_coursepress_upgrade.checkStudentRequests++;
+			checkStudents.save();
+		}
+	}),
+
 	view: Backbone.View.extend({
 		className: 'coursepress-update-view',
 		input: false,
@@ -97,10 +161,11 @@ _.extend( _coursepress_upgrade, {
 	var updateAllCourses = function() {
 		var form = $(this),
 			inputs = $( '[name="course"]', form ),
+			input_being_processed = 0,
 			update_nag = $( '.coursepress-upgrade-nag p' ),
 			user_id = $( '[name="user_id"]', form ).val(),
 			submit_button = form.find( '[type="submit"]' ),
-			updateDone, wrap_title, timer, time, sender;
+			updateDone, wrap_title, timer, time, sender, allStudentsUpgraded, studentUpgradeFailed, studentsView, studentsViewRefreshInterval;
 
 		if ( submit_button.is( ':disabled') ) {
 			return false;
@@ -125,6 +190,39 @@ _.extend( _coursepress_upgrade, {
 		// Reset successful
 		_coursepress_upgrade.totalSuccess = 0;
 
+		_coursepress_upgrade.checkStudentRequests = 0;
+
+		function update_next_course()
+		{
+			var course_id_input = inputs.get(input_being_processed);
+			sender = new _coursepress_upgrade.view({ input: $(course_id_input), user_id: user_id });
+			input_being_processed++;
+		}
+		update_next_course();
+
+		function doFailureActions() {
+			// Update unsuccessful, notify the user
+			update_nag.parent().removeClass('notice-warning').addClass('notice-error');
+			update_nag.html(_coursepress_upgrade.failed);
+		}
+
+		function doSuccessActions() {
+			update_nag.parent().removeClass('notice-warning');
+			update_nag.html(_coursepress_upgrade.success);
+
+			// Redirect user
+			time = 5;
+			timer = setInterval(function () {
+				time -= 1;
+				update_nag.find('.coursepress-counter').html(time);
+
+				if (0 === time) {
+					clearInterval(timer);
+					window.location = _coursepress_upgrade.cp2_url;
+				}
+			}, 1000);
+		}
+
 		// Listen to every update done
 		updateDone = function() {
 			// Check if update is completed
@@ -132,36 +230,39 @@ _.extend( _coursepress_upgrade, {
 				// Check if all are successfully updated
 
 				if ( _coursepress_upgrade.totalCourses === _coursepress_upgrade.totalSuccess ) {
-					update_nag.parent().removeClass( 'notice-warning' );
-					update_nag.html( _coursepress_upgrade.success );
+					// If all the courses have been updated then start updating the students
+					studentsView = new _coursepress_upgrade.studentsView({ submit_button: submit_button.closest('p') });
+					studentsView.render();
 
-					// Redirect user
-					time = 5;
-					timer = setInterval(function(){
-						time -= 1;
-						update_nag.find( '.coursepress-counter' ).html( time );
-
-						if ( 0 === time ) {
-							clearInterval(timer);
-							window.location = _coursepress_upgrade.cp2_url;
-						}
-					}, 1000 );
+					studentsViewRefreshInterval = setInterval(function(){
+						studentsView.render();
+					}, 30000);
 				} else {
-					// Update unsuccessful, notify the user
-					update_nag.parent().removeClass( 'notice-warning' ).addClass( 'notice-error' );
-					update_nag.html( _coursepress_upgrade.failed );
+					doFailureActions();
 				}
 			}
+			else {
+				update_next_course();
+			}
 		};
+
+		allStudentsUpgraded = function() {
+			clearInterval(studentsViewRefreshInterval);
+			// Wait while some ajax requests are still pending.
+			while(_coursepress_upgrade.checkStudentRequests > 0){}
+			doSuccessActions();
+		};
+
+		studentUpgradeFailed = function() {
+			clearInterval(studentsViewRefreshInterval);
+			doFailureActions();
+		};
+
 		// Hook to done event
 		_coursepress_upgrade.events.off( 'coursepress_update_done' );
 		_coursepress_upgrade.events.on( 'coursepress_update_done', updateDone );
-
-		inputs.each( function() {
-			var input = $(this);
-
-			sender = new _coursepress_upgrade.view({ input: input, user_id: user_id });
-		});
+		_coursepress_upgrade.events.on( 'all_students_upgraded', allStudentsUpgraded );
+		_coursepress_upgrade.events.on( 'students_upgrade_failed', studentUpgradeFailed );
 
 		return false;
 	};

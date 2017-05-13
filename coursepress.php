@@ -77,7 +77,10 @@ class CoursePressUpgrade {
 		/**
 		 * Retrieve the current coursepress version use.
 		 **/
-		self::get_coursepress( $coursepress_version );
+		if('1.x' != $coursepress_version)
+		{
+			self::get_coursepress( $coursepress_version );
+		}
 
 		self::$coursepress_version = $coursepress_version;
 
@@ -120,7 +123,7 @@ class CoursePressUpgrade {
 			'post_status' => 'any',
 			'posts_per_page' => 1,
 			'fields' => 'ids',
-			'meta_key' => 'course_settings',
+			'meta_key' => '_cp_updated_to_version_2',
 			'meta_compare' => 'NOT EXISTS',
 			'suppress_filters' => true,
 		);

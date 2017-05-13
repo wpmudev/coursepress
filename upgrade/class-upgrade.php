@@ -55,7 +55,7 @@ class CoursePress_Upgrade {
 		$upgrade_view = add_query_arg( 'page', 'coursepress-upgrade', admin_url() );
 		$upgrade = sprintf( '<a href="%s" class="button-primary">%s</a>', esc_url( $upgrade_view ), __( 'here', 'cp' ) );
 
-		$message = '<p>' . sprintf( __( 'It looks like you had CoursePress 1 installed. In order to upgrade your course data to CoursePress 2, we strongly recommend you to %s your website before upgrading %s.', 'cp' ), $snapshot, $upgrade ) . '</p>';
+		$message = '<p>' . sprintf( __( 'It looks like you had CoursePress 1 installed. In order to upgrade your course data to CoursePress 2, we strongly recommend you to %s your website before upgrading %s. Once the upgrade is complete you will be able to use CoursePress again.', 'cp' ), $snapshot, $upgrade ) . '</p>';
 
 		// Remind the user to backup their system in upgrade page
 		if ( self::is_upgrade_page() ) {
@@ -87,6 +87,7 @@ class CoursePress_Upgrade {
 			'failed' => __( 'Update unsuccessful. Please try again!', 'cp' ),
 			'success' => sprintf( __( 'Hooray! Update completed. Redirecting in %1$s. If you are not redirected in 5 seconds click %2$s.', 'cp' ),  '<span class="coursepress-counter">5</span>', $cp_url ),
 			'cp2_url' => admin_url( 'edit.php?post_type=course' ),
+			'upgrading_students' => __('Please wait while we upgrade and verify the student data. Please be patient as this may take a while.')
 		);
 		wp_localize_script( 'coursepress_admin_upgrade_js', '_coursepress_upgrade', $localize_array );
 	}
@@ -127,6 +128,21 @@ class CoursePress_Upgrade {
 					delete_option( 'cp2_flushed' );
 					$success = true;
 					break;
+
+				case 'check-students':
+					$success = true;
+					$remaining_students = CoursePress_Helper_Upgrade::get_all_remaining_students();
+					if($remaining_students > 0)
+					{
+						CoursePress_Helper_Upgrade::update_course_students_progress();
+					}
+
+					$ok = wp_parse_args(
+						$ok,
+						array(
+							'remaining_students' => CoursePress_Helper_Upgrade::get_all_remaining_students()
+						)
+					);
 			}
 
 			// response
