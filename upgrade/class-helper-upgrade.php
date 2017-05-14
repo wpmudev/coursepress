@@ -2,12 +2,10 @@
 class CoursePress_Helper_Upgrade_1x_Data {
 	private static $settings = array();
 
-	const STUDENTS_PER_REQUEST = 50;
-	const META_KEY_STUDENTS_TO_UPGRADE_COUNT = 'students_to_upgrade_to_2.0';
+	const STUDENTS_PER_REQUEST = 10;
 	const META_KEY_COURSE_UPDATED_TO_VERSION_2 = '_cp_updated_to_version_2';
+	const OPTION_ID_STUDENTS_TO_UPGRADE_COUNT = 'students_to_upgrade_to_2.0';
 	const OPTION_ID_COURSES_WITH_OLD_STUDENTS = 'courses_with_students_to_upgrade_to_2.0';
-	const OPTION_ID_USERS_TO_UPDATE = 'cp2_users_to_update';
-	const OPTION_ID_CRON_SCHEDULED = 'cron_scheduled_for_student_upgrade';
 
 	public static function update_course($course_id ) {
 		$found_error = 0;
@@ -263,14 +261,13 @@ class CoursePress_Helper_Upgrade_1x_Data {
 	}
 
 	public static function update_course_students_progress() {
-		$courses = get_option(self::OPTION_ID_COURSES_WITH_OLD_STUDENTS);
+		$course_id = self::pop_course_from_queue();
 
-		if(!isset($courses[0]))
+		if(!$course_id)
 		{
 			return false;
 		}
 
-		$course_id = $courses[0];
 		$wp_user_search = self::prepare_students_query($course_id);
 		$updated_in_current_request = 0;
 
@@ -445,32 +442,15 @@ class CoursePress_Helper_Upgrade_1x_Data {
 			$updated_in_current_request++;
 		}
 
-		// Save in option users to update
-		$current_list = get_option( self::OPTION_ID_USERS_TO_UPDATE, array() );
-		$current_list = empty( $current_list ) ? array() : $current_list;
-		$current_list[ $course_id ] = isset($current_list[ $course_id ]) ? $current_list[ $course_id ] : array();
-		$current_list[ $course_id ] = array_merge($current_list[ $course_id ], $users_to_update);
-		update_option( self::OPTION_ID_USERS_TO_UPDATE, $current_list );
-
-		self::subtract_students_to_upgrade($updated_in_current_request, $course_id);
+		self::subtract_students_to_upgrade($updated_in_current_request);
 
 		if($wp_user_search->get_total() - $updated_in_current_request <= 0)
 		{
-			$courses = get_option(self::OPTION_ID_COURSES_WITH_OLD_STUDENTS, array());
-			$current_course_index = array_search($course_id, $courses);
-			if(isset($courses[ $current_course_index ]))
-			{
-				unset($courses[ $current_course_index ]);
-			}
-
-			$courses = array_values($courses);
-			update_option(self::OPTION_ID_COURSES_WITH_OLD_STUDENTS, $courses);
+			self::remove_course_from_queue($course_id);
 
 			// The course is fully updated only when all the student data has been updated
 			update_post_meta( $course_id, self::META_KEY_COURSE_UPDATED_TO_VERSION_2, 1 );
 		}
-
-		// TODO: Cleanup here
 
 		return true;
 	}
@@ -512,10 +492,8 @@ class CoursePress_Helper_Upgrade_1x_Data {
 
 		if($count > 0)
 		{
-			self::set_students_to_upgrade($count, $course_id);
-			$courses = get_option(self::OPTION_ID_COURSES_WITH_OLD_STUDENTS, array());
-			$courses[] = $course_id;
-			update_option(self::OPTION_ID_COURSES_WITH_OLD_STUDENTS, $courses);
+			self::add_students_to_upgrade($count);
+			self::push_course_onto_queue($course_id);
 		}
 		else {
 			update_post_meta( $course_id, self::META_KEY_COURSE_UPDATED_TO_VERSION_2, 1 );
@@ -577,45 +555,75 @@ class CoursePress_Helper_Upgrade_1x_Data {
 
 	public static function get_all_remaining_students()
 	{
-		$args = array(
-			'post_type'        => 'course',
-			'post_status'      => 'any',
-			'posts_per_page'   => -1,
-			'fields'           => 'ids',
-			'meta_key'         => self::META_KEY_COURSE_UPDATED_TO_VERSION_2,
-			'meta_compare'     => 'NOT EXISTS',
-			'suppress_filters' => true,
-		);
-		$courses = get_posts($args);
-		$all_remaining_students = 0;
-		foreach ($courses as $course_id) {
-			$all_remaining_students += intval(get_post_meta($course_id, self::META_KEY_STUDENTS_TO_UPGRADE_COUNT, true));
-		}
-
-		return $all_remaining_students;
+		return intval(get_option(self::OPTION_ID_STUDENTS_TO_UPGRADE_COUNT, 0));
 	}
 
-	public static function subtract_students_to_upgrade($count, $course_id)
+	private static function subtract_students_to_upgrade($count)
 	{
-		$students_to_upgrade = intval(get_post_meta($course_id, self::META_KEY_STUDENTS_TO_UPGRADE_COUNT, true));
+		$students_to_upgrade = intval(get_option(self::OPTION_ID_STUDENTS_TO_UPGRADE_COUNT, 0));
 		$new_count = intval($students_to_upgrade - $count);
 		if ($new_count <= 0) {
-			delete_post_meta($course_id, self::META_KEY_STUDENTS_TO_UPGRADE_COUNT);
+			delete_option(self::OPTION_ID_STUDENTS_TO_UPGRADE_COUNT);
 		} else {
-			update_post_meta(
-				$course_id,
-				self::META_KEY_STUDENTS_TO_UPGRADE_COUNT,
-				$students_to_upgrade - $count
+			update_option(
+				self::OPTION_ID_STUDENTS_TO_UPGRADE_COUNT,
+				$new_count
 			);
 		}
 	}
 
-	public static function set_students_to_upgrade($count, $course_id)
+	private static function add_students_to_upgrade($count)
 	{
-		update_post_meta(
-			$course_id,
-			self::META_KEY_STUDENTS_TO_UPGRADE_COUNT,
-			$count
+		$current_count = get_option(self::OPTION_ID_STUDENTS_TO_UPGRADE_COUNT, 0);
+		update_option(
+			self::OPTION_ID_STUDENTS_TO_UPGRADE_COUNT,
+			intval($current_count) + $count
 		);
+	}
+
+	/**
+	 * @param $course_id
+	 */
+	private static function remove_course_from_queue($course_id)
+	{
+		$courses = get_option(self::OPTION_ID_COURSES_WITH_OLD_STUDENTS, array());
+		$current_course_index = array_search($course_id, $courses);
+		if (isset($courses[ $current_course_index ])) {
+			unset($courses[ $current_course_index ]);
+		}
+
+		$courses = array_values($courses);
+
+		if (count($courses) == 0) {
+			delete_option(self::OPTION_ID_COURSES_WITH_OLD_STUDENTS);
+		} else {
+			update_option(self::OPTION_ID_COURSES_WITH_OLD_STUDENTS, $courses);
+		}
+	}
+
+	/**
+	 * @param $course_id
+	 */
+	private static function push_course_onto_queue($course_id)
+	{
+		$courses = get_option(self::OPTION_ID_COURSES_WITH_OLD_STUDENTS, array());
+		$courses[] = $course_id;
+		update_option(self::OPTION_ID_COURSES_WITH_OLD_STUDENTS, $courses);
+	}
+
+	/**
+	 * @return mixed
+	 */
+	private static function pop_course_from_queue()
+	{
+		$courses = get_option(self::OPTION_ID_COURSES_WITH_OLD_STUDENTS, array());
+
+		if(!isset($courses[0]))
+		{
+			return null;
+		}
+
+		$course_id = $courses[0];
+		return $course_id;
 	}
 }

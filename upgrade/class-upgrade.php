@@ -87,7 +87,7 @@ class CoursePress_Upgrade_1x_Data {
 			'failed' => __( 'Update unsuccessful. Please try again!', 'cp' ),
 			'success' => sprintf( __( 'Hooray! Update completed. Redirecting in %1$s. If you are not redirected in 5 seconds click %2$s.', 'cp' ),  '<span class="coursepress-counter">5</span>', $cp_url ),
 			'cp2_url' => admin_url( 'edit.php?post_type=course' ),
-			'upgrading_students' => __('Please wait while we upgrade and verify the student data. Please be patient as this may take a while.')
+			'upgrading_students' => __('Please wait while we upgrade and verify the student data. Students yet to be upgraded:')
 		);
 		wp_localize_script( 'coursepress_admin_upgrade_js', '_coursepress_upgrade', $localize_array );
 	}

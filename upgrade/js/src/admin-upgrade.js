@@ -62,12 +62,12 @@ _.extend( _coursepress_upgrade, {
 			});
 		},
 		parse: function (response) {
-			_coursepress_upgrade.checkStudentRequests--;
-
 			if (response.success) {
-				_coursepress_upgrade.events.trigger('students_upgraded', response.data.remaining_students, this);
-				if (response.data.remaining_students == 0) {
+				if (response.data.remaining_students <= 0) {
 					_coursepress_upgrade.events.trigger('all_students_upgraded', this);
+				}
+				else {
+					_coursepress_upgrade.events.trigger('students_upgraded', response.data.remaining_students, this);
 				}
 			}
 			else {
@@ -93,6 +93,7 @@ _.extend( _coursepress_upgrade, {
 		},
 		students_upgraded: function (remaining) {
 			this.remaining_students = remaining;
+			this.render();
 		},
 		all_students_upgraded: function () {
 			this.$el.find('.students-progress').html('0');
@@ -108,7 +109,6 @@ _.extend( _coursepress_upgrade, {
 			this.$el.insertBefore(this.submit_button);
 
 			var checkStudents = new _coursepress_upgrade.checkStudents({});
-			_coursepress_upgrade.checkStudentRequests++;
 			checkStudents.save();
 		}
 	}),
@@ -190,8 +190,6 @@ _.extend( _coursepress_upgrade, {
 		// Reset successful
 		_coursepress_upgrade.totalSuccess = 0;
 
-		_coursepress_upgrade.checkStudentRequests = 0;
-
 		function update_next_course()
 		{
 			var course_id_input = inputs.get(input_being_processed);
@@ -233,10 +231,6 @@ _.extend( _coursepress_upgrade, {
 					// If all the courses have been updated then start updating the students
 					studentsView = new _coursepress_upgrade.studentsView({ submit_button: submit_button.closest('p') });
 					studentsView.render();
-
-					studentsViewRefreshInterval = setInterval(function(){
-						studentsView.render();
-					}, 30000);
 				} else {
 					doFailureActions();
 				}
@@ -249,7 +243,6 @@ _.extend( _coursepress_upgrade, {
 		allStudentsUpgraded = function() {
 			clearInterval(studentsViewRefreshInterval);
 			// Wait while some ajax requests are still pending.
-			while(_coursepress_upgrade.checkStudentRequests > 0){}
 			doSuccessActions();
 		};
 
