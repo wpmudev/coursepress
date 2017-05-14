@@ -7,7 +7,7 @@
  * @package WordPress
  * @subpackage CoursePress
  */
-class CoursePress_Upgrade {
+class CoursePress_Upgrade_1x_Data {
 	/** @var (string) The upgrade version. **/
 	private static $version = '2.0.0';
 
@@ -107,6 +107,12 @@ class CoursePress_Upgrade {
 			$update_class = dirname( __FILE__ ) . '/class-helper-upgrade.php';
 			require $update_class;
 
+			// Include CoursePress 2.0 in just this ajax call so that some migration functions will work
+			$cp_2_0 = dirname( dirname( __FILE__ ) ) . '/2.0/coursepress.php';
+			require_once $cp_2_0;
+
+			CoursePress_Core::init();
+
 			// variables
 			$type = $request->type;
 			$ok = array( 'success' => true );
@@ -119,7 +125,7 @@ class CoursePress_Upgrade {
 			switch ( $type ) {
 				case 'course':
 					if ( $course_id ) {
-						$success = CoursePress_Helper_Upgrade::update_course( $course_id );
+						$success = CoursePress_Helper_Upgrade_1x_Data::update_course( $course_id );
 					}
 					break;
 
@@ -131,16 +137,16 @@ class CoursePress_Upgrade {
 
 				case 'check-students':
 					$success = true;
-					$remaining_students = CoursePress_Helper_Upgrade::get_all_remaining_students();
+					$remaining_students = CoursePress_Helper_Upgrade_1x_Data::get_all_remaining_students();
 					if($remaining_students > 0)
 					{
-						CoursePress_Helper_Upgrade::update_course_students_progress();
+						CoursePress_Helper_Upgrade_1x_Data::update_course_students_progress();
 					}
 
 					$ok = wp_parse_args(
 						$ok,
 						array(
-							'remaining_students' => CoursePress_Helper_Upgrade::get_all_remaining_students()
+							'remaining_students' => CoursePress_Helper_Upgrade_1x_Data::get_all_remaining_students()
 						)
 					);
 			}

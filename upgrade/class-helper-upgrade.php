@@ -1,5 +1,5 @@
 <?php
-class CoursePress_Helper_Upgrade {
+class CoursePress_Helper_Upgrade_1x_Data {
 	private static $settings = array();
 
 	const STUDENTS_PER_REQUEST = 50;
@@ -439,7 +439,8 @@ class CoursePress_Helper_Upgrade {
 			update_user_option( $user, 'course_' . $course_id . '_progress', $new_progress, $global_setting );
 			$users_to_update[] = $user;
 
-			/* TODO: How will this work in multisite? */
+			CoursePress_Data_Student::get_calculated_completion_data( $user, $course_id );
+
 			update_user_meta( $user, self::get_student_data_version_meta_key($course_id), 1 );
 			$updated_in_current_request++;
 		}
