@@ -2209,21 +2209,34 @@ class CoursePress_Data_Student {
 		}
 		$units = CoursePress_Data_Course::get_units_with_modules( $course_id );
 		$unit = $units[ $unit_id ];
+		$incomplete = 0;
+
 		foreach ( $unit['pages'] as $page_number => $page ) {
 			$modules = $page['modules'];
 			foreach ( $modules as $module_id => $module ) {
+				$attributes = CoursePress_Data_Module::attributes( $module_id );
+				$is_mandatory = ! empty( $attributes['mandatory'] );
+				$is_assessable = ! empty( $attributes['assessable'] );
+
+				// Don't validate none mandatory modules
+				if ( ! preg_match( '%input%', $attributes['module_type'] ) )
+					continue;
+
 				$completed = CoursePress_Data_Student::is_module_completed( $course_id, $unit_id, $module->ID, $student_id );
 				$completed = cp_is_true( $completed );
-				if ( ! $completed ) {
-					return false;
+
+				if ( ! $completed && $is_mandatory ) {
+					$incomplete++;
 				}
 				$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
 				$correct = self::module_answer_is_correct( $module_id, $response );
-				if ( ! $correct ) {
-					return false;
+
+				if ( ! $correct && $is_mandatory && $is_assessable ) {
+					$incomplete++;
 				}
 			}
 		}
-		return true;
+
+		return 0 == $incomplete;
 	}
 }
