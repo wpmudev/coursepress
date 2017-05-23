@@ -23,6 +23,16 @@ class CoursePress_Upgrade_1x_Data {
 
 		// Notify the user the need for Upgrade!
 		add_action( 'admin_notices', array( __CLASS__, 'upgrade_notice' ) );
+
+		add_action('template_redirect', array(__CLASS__, 'show_frontend_message'));
+	}
+
+	public static function show_frontend_message()
+	{
+		self::upgrade_assets();
+		wp_head();
+		self::upgrade_notice('frontend-nag');
+		die();
 	}
 
 	public static function is_upgrade_page() {
@@ -49,20 +59,26 @@ class CoursePress_Upgrade_1x_Data {
 		require_once $upgrade_file;
 	}
 
-	public static function upgrade_notice() {
+	public static function upgrade_notice($classes = '') {
 		$snapshot_pro = '//premium.wpmudev.org/project/snapshot/';
 		$snapshot = sprintf( '<a href="%s" class="button-primary" target="_blank">%s</a>', $snapshot_pro, __( 'backup', 'cp' ) );
 		$upgrade_view = add_query_arg( 'page', 'coursepress-upgrade', admin_url() );
 		$upgrade = sprintf( '<a href="%s" class="button-primary">%s</a>', esc_url( $upgrade_view ), __( 'here', 'cp' ) );
 
-		$message = '<p>' . sprintf( __( 'It looks like you had CoursePress 1 installed. In order to upgrade your course data to CoursePress 2, we strongly recommend you to %s your website before upgrading %s. Once the upgrade is complete you will be able to use CoursePress again.', 'cp' ), $snapshot, $upgrade ) . '</p>';
+		if(current_user_can('install_plugins'))
+		{
+			$message = '<p>' . sprintf( __( 'It looks like you had CoursePress 1 installed. In order to upgrade your course data to CoursePress 2, we strongly recommend you to %s your website before upgrading %s. Once the upgrade is complete you will be able to use CoursePress again.', 'cp' ), $snapshot, $upgrade ) . '</p>';
+		}
+		else {
+			$message = '<p>' . __('The website is undergoing routine maintenance. Please try again later.', 'cp');
+		}
 
 		// Remind the user to backup their system in upgrade page
 		if ( self::is_upgrade_page() ) {
 			$message = '<p>' . __( 'We strongly recommend that you backup your site before you start updating.', 'cp' ) . '</p>';
 		}
 
-		printf( '<div class="notice notice-warning is-dismissible coursepress-upgrade-nag">%s</div>', $message );
+		printf( '<div class="notice notice-warning is-dismissible coursepress-upgrade-nag %s">%s</div>', $classes, $message );
 	}
 
 	public static function upgrade_assets() {
