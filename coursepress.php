@@ -123,13 +123,13 @@ class CoursePressUpgrade {
 			'post_status' => 'any',
 			'posts_per_page' => 1,
 			'fields' => 'ids',
-			'meta_key' => '_cp_updated_to_version_2',
+			'meta_key' => 'course_settings',
 			'meta_compare' => 'NOT EXISTS',
 			'suppress_filters' => true,
 		);
 		$courses = get_posts( $args );
 
-		return count( $courses ) > 0;
+		return count( $courses ) > 0 || intval(get_option('students_to_upgrade_to_2.0', 0)) > 0;
 	}
 
 	private static function get_coursepress( $version ) {
