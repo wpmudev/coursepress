@@ -379,13 +379,11 @@ class CoursePress_Data_Student {
 	 * @param (int) $unit_id					The unit ID the current module belongs to.
 	 * @param (int) $module_id					The module ID the responses will be recorded to.
 	 * @param (array) $response					An array of previously fetch responses.
-	 * @param (array) $response					An array of previously fetch responses.
-	 * @since 2.0.8 @param boolean $force_re_save Optional. Default false,
-	 * allow to re-save data.
+	 * @param (array) $data						Optional. If null, we'll get the course completion data from DB.
 	 *
 	 * @return (array) $data					Returns an array of course completion data.
 	 **/
-    public static function module_response( $student_id, $course_id, $unit_id, $module_id, $response, &$data = false, $force_re_save = false ) {
+	public static function module_response( $student_id, $course_id, $unit_id, $module_id, $response, &$data = false ) {
 
 		$attributes = CoursePress_Data_Module::attributes( $module_id );
 
@@ -400,12 +398,10 @@ class CoursePress_Data_Student {
 		/**
 		 * Check answer freshness.
 		 */
-		if ( false === $force_re_save ) {
-			$is_new_answer = self::check_is_new_answer( $student_id, $course_id, $unit_id, $module_id, $response, $data );
+		$is_new_answer = self::check_is_new_answer( $student_id, $course_id, $unit_id, $module_id, $response, $data );
 
-			if ( false == $is_new_answer ) {
-				return;
-			}
+		if ( false == $is_new_answer ) {
+			return;
 		}
 
 		$grade = - 1;
@@ -831,6 +827,7 @@ class CoursePress_Data_Student {
 		foreach ( $units as $unit_id => $unit ) {
 			$unit_count += 1;
 			$is_unit_available = CoursePress_Data_Unit::is_unit_available( $course_id, $unit_id, $previous_unit_id, false, $student_id );
+			$force_current_unit_successful_completion = get_post_meta( $unit_id, 'force_current_unit_successful_completion', true );
 			$previous_unit_id = $unit_id;
 
 			$unit_total_modules = 0;
@@ -848,9 +845,7 @@ class CoursePress_Data_Student {
 			$unit_gradable_modules = 0;
 			$unit_passing_grade = 0;
 			$unit_progress_counter = 0;
-            $unit_valid_progress = 0;
-
-
+			$unit_valid_progress = 0;
 
 			if ( false === $is_unit_available && 'closed' != $course_status ) {
 				// Let's not check unavailable unit
@@ -859,7 +854,6 @@ class CoursePress_Data_Student {
 
 			if ( ! empty( $unit['pages'] ) ) {
 				foreach ( $unit['pages'] as $page_number => $modules ) {
-
 					$seen_modules = 0;
 					$valid_module_progress = 0;
 					$valid_page_progress = false;
@@ -2215,21 +2209,34 @@ class CoursePress_Data_Student {
 		}
 		$units = CoursePress_Data_Course::get_units_with_modules( $course_id );
 		$unit = $units[ $unit_id ];
+		$incomplete = 0;
+
 		foreach ( $unit['pages'] as $page_number => $page ) {
 			$modules = $page['modules'];
 			foreach ( $modules as $module_id => $module ) {
+				$attributes = CoursePress_Data_Module::attributes( $module_id );
+				$is_mandatory = ! empty( $attributes['mandatory'] );
+				$is_assessable = ! empty( $attributes['assessable'] );
+
+				// Don't validate none mandatory modules
+				if ( ! preg_match( '%input%', $attributes['module_type'] ) )
+					continue;
+
 				$completed = CoursePress_Data_Student::is_module_completed( $course_id, $unit_id, $module->ID, $student_id );
 				$completed = cp_is_true( $completed );
-				if ( ! $completed ) {
-					return false;
+
+				if ( ! $completed && $is_mandatory ) {
+					$incomplete++;
 				}
 				$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
 				$correct = self::module_answer_is_correct( $module_id, $response );
-				if ( ! $correct ) {
-					return false;
+
+				if ( ! $correct && $is_mandatory && $is_assessable ) {
+					$incomplete++;
 				}
 			}
 		}
-		return true;
+
+		return 0 == $incomplete;
 	}
 }
