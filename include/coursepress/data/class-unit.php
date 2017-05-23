@@ -277,8 +277,8 @@ class CoursePress_Data_Unit {
 			 */
 			if ( $is_available && $force_current_unit_successful_completion ) {
 				$is_available = CoursePress_Data_Student::unit_answers_are_correct( $student_id, $course_id, $previous_unit );
-				CoursePress_Helper_Utility::set_array_val( $status, 'passed_required/enabled', true );
-				CoursePress_Helper_Utility::set_array_val( $status, 'passed_required/result', $is_available );
+				CoursePress_Helper_Utility::set_array_value( $status, 'passed_required/enabled', true );
+				CoursePress_Helper_Utility::set_array_value( $status, 'passed_required/result', $is_available );
 			}
 		}
 
