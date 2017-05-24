@@ -13,7 +13,7 @@ class CoursePress_Upgrade_1x_Data {
 
 	public static function init() {
 		// Listen to upgrade call
-		add_action( 'wp_ajax_coursepress_upgrade_update', array( __CLASS__, 'ajax_courses_upgrade' ) );
+		add_action( 'wp_ajax_coursepress_upgrade_from_1x', array( __CLASS__, 'ajax_courses_upgrade' ) );
 
 		// Include our upgrade assets
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'upgrade_assets' ) );

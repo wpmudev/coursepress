@@ -6,7 +6,7 @@ _.extend( _coursepress_upgrade, {
 	events: Backbone.Events,
 
 	upgrade: Backbone.Model.extend({
-		url: _coursepress_upgrade.ajax_url + '?action=coursepress_upgrade_update',
+		url: _coursepress_upgrade.ajax_url + '?action=coursepress_upgrade_from_1x',
 		initialize: function( options ) {
 			_.extend( this, options );
 			this.on( 'error', this.server_error, this );
@@ -50,7 +50,7 @@ _.extend( _coursepress_upgrade, {
 	}),
 
 	checkStudents: Backbone.Model.extend({
-		url: _coursepress_upgrade.ajax_url + '?action=coursepress_upgrade_update',
+		url: _coursepress_upgrade.ajax_url + '?action=coursepress_upgrade_from_1x',
 		initialize: function (options) {
 			_.extend(this, options);
 			this.on('error', this.server_error, this);
@@ -62,6 +62,13 @@ _.extend( _coursepress_upgrade, {
 			});
 		},
 		parse: function (response) {
+			// If response is zero then the ajax method was not found which means that 2.0 has already been loaded successfully
+			if(response == 0)
+			{
+				_coursepress_upgrade.events.trigger('all_students_upgraded', this);
+				return;
+			}
+
 			if (response.success) {
 				if (response.data.remaining_students <= 0) {
 					_coursepress_upgrade.events.trigger('all_students_upgraded', this);
