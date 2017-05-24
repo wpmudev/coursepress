@@ -156,7 +156,7 @@ class CoursePress {
 	 */
 	private static function class_loader( $class ) {
 		$namespaces = array(
-			'CoursePressPro' => array(
+			'CoursePressPro'    => array(
 				'namespace_folder' => 'premium/include', // Base folder for classes.
 				'filename_prefix' => 'class-',           // Prefix filenames.
 			),
@@ -164,11 +164,11 @@ class CoursePress {
 				'namespace_folder' => 'campus/include', // Base folder for classes.
 				'filename_prefix' => 'class-',          // Prefix filenames.
 			),
-			'CoursePress' => array(
+			'CoursePress'       => array(
 				'namespace_folder' => 'include/coursepress', // Base folder for classes.
 				'filename_prefix' => 'class-',               // Prefix filenames.
 			),
-			'TCPDF' => array(
+			'CP_TCPDF'          => array(
 				'namespace_folder' => 'include/tcpdf', // Base folder for classes.
 				'filename_prefix' => false,            // No prefix for filenames.
 			),

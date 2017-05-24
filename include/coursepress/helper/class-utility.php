@@ -1470,7 +1470,7 @@ class CoursePress_Helper_Utility {
 		$color_valid = (boolean) preg_match('/^#[a-f0-9]{6}$/i', $hex_color);
 		if($color_valid)
 		{
-			$values = TCPDF_COLORS::convertHTMLColorToDec($hex_color, TCPDF_COLORS::$spotcolor);
+			$values = CP_TCPDF_COLORS::convertHTMLColorToDec($hex_color, CP_TCPDF_COLORS::$spotcolor);
 			return array_values($values);
 		}
 
