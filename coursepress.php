@@ -77,8 +77,11 @@ class CoursePressUpgrade {
 		/**
 		 * Retrieve the current coursepress version use.
 		 **/
-		if('1.x' != $coursepress_version)
-		{
+		if ( '1.x' == $coursepress_version ) {
+			if ( ! is_admin() ) {
+				self::get_coursepress( '2.0' );
+			}
+		} else {
 			self::get_coursepress( $coursepress_version );
 		}
 

@@ -24,15 +24,44 @@ class CoursePress_Upgrade_1x_Data {
 		// Notify the user the need for Upgrade!
 		add_action( 'admin_notices', array( __CLASS__, 'upgrade_notice' ) );
 
-		add_action('template_redirect', array(__CLASS__, 'show_frontend_message'));
+		//add_action('template_redirect', array(__CLASS__, 'show_frontend_message'));
+		add_action( 'coursepress_virtual_page', array( __CLASS__, 'maintenance_page' ) );
+	}
+
+	public static function maintenance_page( $vp_args ) {
+		global $wp;
+
+		$show = false;
+
+		$other_pages = CoursePress_Core::get_setting( 'slugs' );
+
+		if ( ! empty( $vp_args ) )
+			$show = true;
+		elseif ( ! empty( $wp->query_vars['pagename'] )
+			&& in_array( $wp->query_vars['pagename'], $other_pages ) )
+			$show = true;
+
+		if ( $show ) {
+			self::upgrade_assets();
+			$vp_args = array(
+				'slug'     => get_the_title(),
+				'callback' => array( __CLASS__, 'show_frontend_message' ),
+			);
+		}
+
+		return $vp_args;
 	}
 
 	public static function show_frontend_message()
 	{
+		return self::upgrade_notice('frontend-nag');
+
+		/*
 		self::upgrade_assets();
 		wp_head();
 		self::upgrade_notice('frontend-nag');
 		die();
+		*/
 	}
 
 	public static function is_upgrade_page() {
@@ -70,7 +99,7 @@ class CoursePress_Upgrade_1x_Data {
 			$message = '<p>' . sprintf( __( 'It looks like you had CoursePress 1 installed. In order to upgrade your course data to CoursePress 2, we strongly recommend you to %s your website before upgrading %s. Once the upgrade is complete you will be able to use CoursePress again.', 'cp' ), $snapshot, $upgrade ) . '</p>';
 		}
 		else {
-			$message = '<p>' . __('The website is undergoing routine maintenance. Please try again later.', 'cp');
+			$message = '<p>' . __('This area is undergoing routine maintenance. Please try again later.', 'cp');
 		}
 
 		// Remind the user to backup their system in upgrade page
