@@ -11,6 +11,9 @@ class CoursePress_Upgrade_1x_Data {
 	/** @var (string) The upgrade version. **/
 	private static $version = '2.0.0';
 
+	/**
+	 *
+	 */
 	public static function init() {
 		// Listen to upgrade call
 		add_action( 'wp_ajax_coursepress_upgrade_from_1x', array( __CLASS__, 'ajax_courses_upgrade' ) );
@@ -24,8 +27,9 @@ class CoursePress_Upgrade_1x_Data {
 		// Notify the user the need for Upgrade!
 		add_action( 'admin_notices', array( __CLASS__, 'upgrade_notice' ) );
 
-		//add_action('template_redirect', array(__CLASS__, 'show_frontend_message'));
-		add_action( 'coursepress_virtual_page', array( __CLASS__, 'maintenance_page' ) );
+		if ( '1.x' == CoursePressUpgrade::$coursepress_version ) {
+			add_action( 'coursepress_virtual_page', array( __CLASS__, 'maintenance_page' ) );
+		}
 	}
 
 	public static function maintenance_page( $vp_args ) {
@@ -34,6 +38,8 @@ class CoursePress_Upgrade_1x_Data {
 		$show = false;
 
 		$other_pages = CoursePress_Core::get_setting( 'slugs' );
+
+		//CoursePressUpgrade::maybe_switch_theme();
 
 		if ( ! empty( $vp_args ) )
 			$show = true;

@@ -49,7 +49,7 @@ class CoursePressUpgrade {
 	/** @var (boolean) Whether all courses are upgraded to the new version. **/
 	private static $coursepress_is_upgraded = false;
 
-	private static $coursepress_version;
+	public static $coursepress_version;
 
 	public static function init() {
 		self::$coursepress_is_upgraded = get_option( 'coursepress_20_upgraded', false );
@@ -175,7 +175,7 @@ class CoursePressUpgrade {
 
 	public static function maybe_switch_theme() {
 		$current_theme = wp_get_theme();
-
+error_log($current_theme);
 		if ( 'coursepress' == $current_theme->get_stylesheet() ) {
 			wp_clean_themes_cache( true );
 			switch_theme( $current_theme->get_stylesheet() );
