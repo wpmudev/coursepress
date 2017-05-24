@@ -5,7 +5,7 @@ class CoursePress_Helper_Extension {
 	private static $plugins = array();
 
 	public static function init() {
-		$plugins = array( 'MarketPress', 'TCPDF' );
+		$plugins = array( 'MarketPress', 'CP_TCPDF' );
 		foreach ( $plugins as $plugin ) {
 			if ( method_exists( 'CoursePress_Helper_Extension_' . $plugin, 'init' ) ) {
 				call_user_func( 'CoursePress_Helper_Extension_' . $plugin . '::init' );
