@@ -70,6 +70,12 @@ class CoursePressUpgrade {
 					require $upgrade_class;
 
 					CoursePress_Upgrade_1x_Data::init();
+
+					add_action( 'plugins_loaded', array( __CLASS__, 'coursepress_theme' ) );
+
+					if ( ! is_admin() ) {
+						self::get_coursepress( '2.0' );
+					}
 				}
 			}
 		}
@@ -77,17 +83,10 @@ class CoursePressUpgrade {
 		/**
 		 * Retrieve the current coursepress version use.
 		 **/
-		if ( '2.0' != $coursepress_version ) {
-			add_action( 'plugins_loaded', array( __CLASS__, 'coursepress_theme' ) );
-
-			if ( ! is_admin() ) {
-				self::get_coursepress( '2.0' );
-			}
-		} else {
+		self::$coursepress_version = $coursepress_version;
+		if ( '2.0' == $coursepress_version ) {
 			self::get_coursepress( $coursepress_version );
 		}
-
-		self::$coursepress_version = $coursepress_version;
 
 		/**
 		 * Set activation hook
@@ -226,7 +225,6 @@ class CoursePressUpgrade {
 
 		if ( false == $is_flushed ) {
 			delete_option( 'cp1_flushed' );
-			error_log('FLUSH?');
 			//@todo: wrap this
 			flush_rewrite_rules();
 
