@@ -36,7 +36,7 @@ class CoursePress_Upgrade_1x_Data {
 		global $wp;
 
 		$show = false;
-		$other_pages = CoursePress_Core::get_setting( 'slugs' );
+		$other_pages = (array) CoursePress_Core::get_setting( 'slugs' );
 		$qvars = $wp->query_vars;
 		$name = isset($qvars['name']) ? $qvars['name'] : '';
 
@@ -45,7 +45,7 @@ class CoursePress_Upgrade_1x_Data {
 
 		if ( ! empty( $vp_args ) || isset( $wp->query_vars['coursename'] ) )
 			$show = true;
-		elseif ( $name && in_array( $name, $other_pages ) )
+		elseif ( ! empty( $name ) && in_array( $name, $other_pages ) )
 			$show = true;
 
 		if ( $show ) {
