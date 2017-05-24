@@ -27,9 +27,47 @@ class CoursePress_Upgrade_1x_Data {
 		// Notify the user the need for Upgrade!
 		add_action( 'admin_notices', array( __CLASS__, 'upgrade_notice' ) );
 
-		if ( '2.0' != CoursePressUpgrade::$coursepress_version ) {
+		if ( '2.0' != CoursePressUpgrade::$coursepress_version && ! is_admin() ) {
+			add_filter( 'coursepress_get_setting', array( __CLASS__, 'pre_settings' ), 999, 3 );
 			add_filter( 'coursepress_virtual_page', array( __CLASS__, 'maintenance_page' ), 999 );
 		}
+	}
+
+	public static function pre_settings( $setting, $key, $cp_settings ) {
+		$defaults = array(
+			'general' => array(
+				'show_coursepress_menu' => get_option( 'display_menu_items', 1 ),
+				'use_custom_login' => get_option( 'use_custom_login_form', 1 ),
+			),
+			'slugs' => array(
+				'course' => get_option( 'coursepress_course_slug', 'courses' ),
+				'category' => get_option( 'coursepress_course_category_slug', 'course_category' ),
+				'module' => get_option( 'coursepress_module_slug', 'module' ),
+				'units' => get_option( 'coursepress_units_slug', 'units' ),
+				'notifications' => get_option( 'coursepress_notifications_slug', 'notifications' ),
+				'discussions' => get_option( 'coursepress_discussion_slug', 'discussion' ),
+				'grades' => get_option( 'coursepress_grades_slug', 'grades' ),
+				'workbook' => get_option( 'coursepress_workbook_slug', 'workbook' ),
+				'enrollment' => get_option( 'enrollment_process_slug', 'enrollment_process' ),
+				'student_dashboard' => get_option( 'student_dashboard_slug', 'courses-dashboard' ),
+				'student_settings' => get_option( 'student_settings_slug', 'student-settings' ),
+				'instructor_profile' => get_option( 'instructor_profile_slug', 'instructor' ),
+			),
+			'pages' => array(
+				'enrollment' => get_option( 'coursepress_enrollment_process_page', 0 ),
+				'login' => get_option( 'coursepress_login_page', 0 ),
+				'student_dashboard' => get_option( 'coursepress_signup_page', 0 ),
+				'student_settings' => get_option( 'coursepress_student_settings_page', 0 ),
+			)
+		);
+
+		if ( is_bool($key) ) {
+			$setting = $defaults;
+		} else {
+			$setting = CoursePress_Helper_Utility::get_array_val( $defaults, $key );
+		}
+
+		return $setting;
 	}
 
 	public static function maintenance_page( $vp_args ) {
