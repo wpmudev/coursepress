@@ -45,7 +45,7 @@ class CoursePress_Upgrade_1x_Data {
 
 		if ( ! empty( $vp_args ) || isset( $wp->query_vars['coursename'] ) )
 			$show = true;
-		elseif ( ! empty( $name ) && in_array( $name, $other_pages ) )
+		elseif ( $name && in_array( $name, $other_pages ) )
 			$show = true;
 
 		if ( $show ) {
@@ -197,6 +197,9 @@ class CoursePress_Upgrade_1x_Data {
 					{
 						CoursePress_Helper_Upgrade_1x_Data::update_course_students_progress();
 					}
+
+					// Make sure the last upgrade method is called
+					delete_option( 'cp2_flushed' );
 
 					$ok = wp_parse_args(
 						$ok,
