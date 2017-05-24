@@ -92,6 +92,8 @@ class CoursePress_Upgrade_1x_Data {
 			// Set custom page
 			add_action( 'template_include', array( __CLASS__, 'preload' ) );
 
+
+
 			// Set custom body class
 			add_filter( 'body_class', array( __CLASS__, 'custom_upgrade_class' ) );
 		}
@@ -236,15 +238,17 @@ class CoursePress_Upgrade_1x_Data {
 						CoursePress_Helper_Upgrade_1x_Data::update_course_students_progress();
 					}
 
-					// Make sure the last upgrade method is called
-					delete_option( 'cp2_flushed' );
-
 					$ok = wp_parse_args(
 						$ok,
 						array(
 							'remaining_students' => CoursePress_Helper_Upgrade_1x_Data::get_all_remaining_students()
 						)
 					);
+
+					if ( (int) $ok['remaining_students'] <= 0 ) {
+						update_option( 'coursepress_20_upgraded', true );
+						delete_option( 'cp2_flushed' );
+					}
 			}
 
 			// response

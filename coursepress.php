@@ -184,6 +184,7 @@ class CoursePressUpgrade {
 			wp_clean_themes_cache( true );
 			add_filter( 'stylesheet_directory_uri', array( __CLASS__, 'theme_directory' ) );
 			add_filter( 'theme_root', array( __CLASS__, 'theme_root' ) );
+			add_filter( 'template_directory_uri', array( __CLASS__, 'theme_directory_uri' ) );
 		}
 	}
 
@@ -193,6 +194,10 @@ class CoursePressUpgrade {
 
 	public static function theme_root() {
 		return __DIR__ . '/2.0/themes';
+	}
+
+	public static function theme_directory_uri() {
+		return plugins_url( 'coursepress/2.0/themes/coursepress' );
 	}
 
 	public static function maybe_switch_theme() {
