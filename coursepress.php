@@ -77,8 +77,9 @@ class CoursePressUpgrade {
 		/**
 		 * Retrieve the current coursepress version use.
 		 **/
-		if ( '1.x' == $coursepress_version ) {
-			self::coursepress_theme();
+		if ( '2.0' != $coursepress_version ) {
+			add_action( 'init', array( __CLASS__, 'coursepress_theme' ) );
+			//self::coursepress_theme();
 
 			if ( ! is_admin() ) {
 				self::get_coursepress( '2.0' );
@@ -176,6 +177,7 @@ class CoursePressUpgrade {
 	}
 
 	public static function coursepress_theme() {
+		$current_theme = wp_get_theme();
 		$theme_directories = apply_filters( 'coursepress_theme_directory_array', array(
 				__DIR__ . '/2.0/themes/'
 			)
