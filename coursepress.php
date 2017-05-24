@@ -221,7 +221,7 @@ class CoursePressUpgrade {
 
 		if ( false == $is_flushed ) {
 			delete_option( 'cp1_flushed' );
-
+			error_log('FLUSH?');
 			//@todo: wrap this
 			flush_rewrite_rules();
 
