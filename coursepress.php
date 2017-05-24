@@ -178,14 +178,17 @@ class CoursePressUpgrade {
 
 	public static function coursepress_theme() {
 		$current_theme = wp_get_theme();
-		$theme_directories = apply_filters( 'coursepress_theme_directory_array', array(
-				__DIR__ . '/2.0/themes/'
-			)
-		);
-		foreach ( $theme_directories as $theme_directory ) {
-			register_theme_directory( $theme_directory );
+
+		register_theme_directory( __DIR__ . '/2.0/themes/' );
+
+		if ( 'coursepress' == $current_theme ) {
+			wp_clean_themes_cache( true );
+			add_filter( 'stylesheet_directory_uri', array( __CLASS__, 'theme_directory' ) );
 		}
-		wp_clean_themes_cache( true );
+	}
+
+	public static function theme_directory() {
+		return __DIR__ . '/2.0/themes/coursepress';
 	}
 
 	public static function maybe_switch_theme() {
