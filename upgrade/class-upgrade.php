@@ -27,7 +27,7 @@ class CoursePress_Upgrade_1x_Data {
 		// Notify the user the need for Upgrade!
 		add_action( 'admin_notices', array( __CLASS__, 'upgrade_notice' ) );
 
-		if ( '1.x' == CoursePressUpgrade::$coursepress_version ) {
+		if ( '1.0' != CoursePressUpgrade::$coursepress_version ) {
 			add_action( 'coursepress_virtual_page', array( __CLASS__, 'maintenance_page' ) );
 		}
 	}
@@ -36,19 +36,25 @@ class CoursePress_Upgrade_1x_Data {
 		global $wp;
 
 		$show = false;
-
 		$other_pages = CoursePress_Core::get_setting( 'slugs' );
+		$qvars = $wp->query_vars;
+		$name = isset($qvars['name']) ? $qvars['name'] : '';
 
-		//CoursePressUpgrade::maybe_switch_theme();
+		if ( ! $name && isset($qvars['pagename'] ) )
+			$name = $qvars['pagename'];
 
 		if ( ! empty( $vp_args ) )
 			$show = true;
-		elseif ( ! empty( $wp->query_vars['pagename'] )
-			&& in_array( $wp->query_vars['pagename'], $other_pages ) )
+		elseif ( in_array( $name, $other_pages ) )
 			$show = true;
 
 		if ( $show ) {
 			self::upgrade_assets();
+			// Set custom title
+			add_filter( 'the_title', array( __CLASS__, 'custom_title' ) );
+			// Set custom body class
+			add_filter( 'body_class', array( __CLASS__, 'custom_upgrade_class' ) );
+
 			$vp_args = array(
 				'slug'     => get_the_title(),
 				'callback' => array( __CLASS__, 'show_frontend_message' ),
@@ -68,6 +74,21 @@ class CoursePress_Upgrade_1x_Data {
 		self::upgrade_notice('frontend-nag');
 		die();
 		*/
+	}
+
+	public static function custom_title( $title ) {
+		global $wp_query;
+
+		if ( in_the_loop() )
+			return __( 'Page Not Available', 'cp' );
+
+		return $title;
+	}
+
+	public static function custom_upgrade_class( $class ) {
+		array_push( $class, 'cp-upgrade-body' );
+
+		return $class;
 	}
 
 	public static function is_upgrade_page() {
