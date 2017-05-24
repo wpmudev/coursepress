@@ -67,13 +67,6 @@ class CoursePress_Upgrade_1x_Data {
 	public static function show_frontend_message()
 	{
 		return self::upgrade_notice('frontend-nag');
-
-		/*
-		self::upgrade_assets();
-		wp_head();
-		self::upgrade_notice('frontend-nag');
-		die();
-		*/
 	}
 
 	public static function custom_title( $title ) {
@@ -126,7 +119,7 @@ class CoursePress_Upgrade_1x_Data {
 			$message = '<p>' . sprintf( __( 'It looks like you had CoursePress 1 installed. In order to upgrade your course data to CoursePress 2, we strongly recommend you to %s your website before upgrading %s. Once the upgrade is complete you will be able to use CoursePress again.', 'cp' ), $snapshot, $upgrade ) . '</p>';
 		}
 		else {
-			$message = '<p>' . __('This area is undergoing routine maintenance. Please try again later.', 'cp');
+			$message = '<p>' . __('This page is undergoing routine maintenance. Please try again later.', 'cp');
 		}
 
 		// Remind the user to backup their system in upgrade page
