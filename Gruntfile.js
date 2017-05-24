@@ -601,17 +601,6 @@ module.exports = function(grunt) {
 					'!upgrade/js/src/*',
 					'!upgrade/js/src/**',
 					'!tests',
-					/** 1.x **/
-					'!1.x/.git',
-					'!1.x/.gitattributes',
-					'!1.x/.gitmodules',
-					'!1.x/.gitignore',
-					'!1.x/Gruntfile.js',
-					'!1.x/package.json',
-					'!1.x/README.md',
-					'!1.x/node_modules',
-					'!1.x/node_modules/*',
-					'!1.x/themes/coursepress/.git',
 					/** 2.0 **/
 					'!2.0/.git',
 					'!2.0/.gitattributes',
@@ -765,15 +754,11 @@ module.exports = function(grunt) {
 		grunt.task.run( 'copy:release' );
 
 		if ( 'pro' === target ) {
-			grunt.task.run( 'replace:pro_1' );
 			grunt.task.run( 'replace:pro_2' );
-			grunt.task.run( 'clean:pro_1' );
 			grunt.task.run( 'clean:pro_2' );
 			grunt.task.run( 'compress:release_pro' );
 		} else if ( 'free' === target ) {
-			grunt.task.run( 'replace:free_1' );
 			grunt.task.run( 'replace:free_2' );
-			grunt.task.run( 'clean:free_1' );
 			grunt.task.run( 'clean:free_2' );
 			grunt.task.run( 'compress:release_free' );
 		}
