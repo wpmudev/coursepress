@@ -45,7 +45,7 @@ class CoursePress_Upgrade_1x_Data {
 
 		if ( ! empty( $vp_args ) )
 			$show = true;
-		elseif ( in_array( $name, $other_pages ) )
+		elseif ( ! empty( $name ) && in_array( $name, $other_pages ) )
 			$show = true;
 
 		if ( $show ) {

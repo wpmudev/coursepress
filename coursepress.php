@@ -78,8 +78,7 @@ class CoursePressUpgrade {
 		 * Retrieve the current coursepress version use.
 		 **/
 		if ( '2.0' != $coursepress_version ) {
-			add_action( 'init', array( __CLASS__, 'coursepress_theme' ) );
-			//self::coursepress_theme();
+			add_action( 'plugins_loaded', array( __CLASS__, 'coursepress_theme' ) );
 
 			if ( ! is_admin() ) {
 				self::get_coursepress( '2.0' );
@@ -181,14 +180,19 @@ class CoursePressUpgrade {
 
 		register_theme_directory( __DIR__ . '/2.0/themes/' );
 
-		if ( 'coursepress' == $current_theme ) {
+		if ( 'coursepress' == $current_theme->get_stylesheet() ) {
 			wp_clean_themes_cache( true );
 			add_filter( 'stylesheet_directory_uri', array( __CLASS__, 'theme_directory' ) );
+			add_filter( 'theme_root', array( __CLASS__, 'theme_root' ) );
 		}
 	}
 
 	public static function theme_directory() {
-		return __DIR__ . '/2.0/themes/coursepress';
+		return plugins_url( 'coursepress/2.0/themes/coursepress' );
+	}
+
+	public static function theme_root() {
+		return __DIR__ . '/2.0/themes';
 	}
 
 	public static function maybe_switch_theme() {
