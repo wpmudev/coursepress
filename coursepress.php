@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: CoursePress Base
- * Version:     2.0.7
+ * Version:     3.0
  * Description: CoursePress Pro turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also assess student work, sell your courses and much much more.
  * Author:      WPMU DEV
  * Author URI:  http://premium.wpmudev.org
@@ -43,216 +43,110 @@
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-define( 'COURSEPRESS_UPGRADE', true );
+require_once 'inc/functions.php';
 
-class CoursePressUpgrade {
-	/** @var (boolean) Whether all courses are upgraded to the new version. **/
-	private static $coursepress_is_upgraded = false;
+final class CoursePress {
+	/**
+	 * @var string Current version number.
+	 */
+	var $version = '3.0-beta';
 
-	public static $coursepress_version;
+	/**
+	 * @var string
+	 */
+	var $plugin_url;
 
-	public static function init() {
-		self::$coursepress_is_upgraded = get_option( 'coursepress_20_upgraded', false );
-		$coursepress_version = false === self::$coursepress_is_upgraded ? '1.x' : '2.0';
+	/**
+	 * @var string The absolute path where CP is installed.
+	 */
+	var $plugin_path;
 
-		if ( '1.x' == $coursepress_version ) {
-			// Check for existing courses, maybe a new install?
-			$is_using_old = self::check_old_courses();
+	/**
+	 * @var array List of classes that are loaded both admin and front.
+	 */
+	protected $core_classes = array(
+		'CoursePress_User',
+		'CoursePress_Data_Courses',
+	);
 
-			if ( false == $is_using_old ) {
-				// No need to upgrade, load 2.0
-				$coursepress_version = '2.0';
-			} else {
-				// Include the upgrade class
-				$upgrade_class = dirname( __FILE__ ) . '/upgrade/class-upgrade.php';
+	/**
+	 * @var array List of classes that are loaded in CP admin pages only.
+	 */
+	protected $core_admin_classes = array(
+		'CoursePress_Admin_Page',
+		//'CoursePress_Admin_CourseList',
+		//'CoursePress_Admin_Students',
+	);
 
-				if ( is_readable( $upgrade_class ) ) {
-					require $upgrade_class;
+	/**
+	 * @var array List of classes that are loaded in front front pages only.
+	 */
+	protected $core_front_classes = array(
+	);
 
-					CoursePress_Upgrade_1x_Data::init();
+	public function __construct() {
+		$this->plugin_path = __DIR__;
+		$this->plugin_url = plugins_url( 'coursepress/' );
 
-					add_action( 'plugins_loaded', array( __CLASS__, 'coursepress_theme' ) );
+		// Autload classes on demand
+		spl_autoload_register( array( $this, 'class_loader' ) );
 
-					if ( ! is_admin() ) {
-						self::get_coursepress( '2.0' );
-					}
-				}
-			}
-		}
+		// Register activation hook
+		register_activation_hook( __FILE__, array( $this, 'activate' ) );
 
-		/**
-		 * Retrieve the current coursepress version use.
-		 **/
-		self::$coursepress_version = $coursepress_version;
-		if ( '2.0' == $coursepress_version ) {
-			self::get_coursepress( $coursepress_version );
-		}
+		// Register deactivation hook
+		register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
 
-		/**
-		 * Set activation hook
-		 **/
-		register_activation_hook( __FILE__, array( __CLASS__, 'activate' ) );
-
-		/**
-		 * Set deactivation hook
-		 **/
-		register_deactivation_hook( __FILE__, array( __CLASS__, 'deactivate' ) );
+		// Load core files
+		add_action( 'plugins_loaded', array( $this, 'load_core' ) );
 	}
 
-	/** Use to reset CP into 1.x version */
-	private static function reset() {
-		delete_option( 'cp1_flushed' );
-		delete_option( 'coursepress_20_upgraded' );
-		delete_option( 'cp2_flushed' );
-		delete_option( 'coursepress_settings' );
-		$args = array(
-			'post_type' => 'course',
-			'post_status' => 'any',
-			'fields' => 'ids',
-			'suppress_filters' => true,
-			'posts_per_page' => -1,
-		);
-		$courses = get_posts( $args );
+	function class_loader( $className ) {
+		if ( ! preg_match( '%CoursePress_%', $className ) )
+			return false;
 
-		foreach ( $courses as $course_id ) {
-			delete_post_meta( $course_id, '_cp_updated_to_version_2' );
-			delete_post_meta( $course_id, 'course_settings' );
+		$class = explode( '_', strtolower( str_replace( 'CoursePress_', '', $className ) ) );
+		array_unshift( $class, 'inc');
+		$file = array_pop( $class );
+		array_push( $class, 'class-' . $file );
+
+		$filename = implode( DIRECTORY_SEPARATOR, $class );
+
+		try {
+			coursepress_render( $filename );
+		} catch( Exception $e ) {
+			// @todo: Log error?
 		}
 	}
 
-	/** Check if current courses contains un-upgraded to the current version. **/
-	public static function check_old_courses() {
-		$args = array(
-			'post_type' => 'course',
-			'post_status' => 'any',
-			'posts_per_page' => 1,
-			'fields' => 'ids',
-			'meta_key' => 'course_settings',
-			'meta_compare' => 'NOT EXISTS',
-			'suppress_filters' => true,
-		);
-		$courses = get_posts( $args );
+	function getClass( $className ) {
+		if ( ! isset( $GLOBALS[$className]) )
+			$GLOBALS[$className] = new $className();
 
-		return count( $courses ) > 0 || intval(get_option('students_to_upgrade_to_2.0', 0)) > 0;
+		return $GLOBALS[$className];
 	}
 
-	private static function get_coursepress( $version ) {
-		$dir = dirname( __FILE__ );
-		$version_file = $dir . '/' . $version . '/coursepress.php';
+	function activate() {}
 
-		if ( is_readable( $version_file ) ) {
-			if ( '1.x' == $version ) {
-				// Hooked to 1.x
-				add_action( 'coursepress_before_init_vars', array( __CLASS__, 'before_init_vars' ), 10 );
-				add_action( 'coursepress_init_vars', array( __CLASS__, 'init_vars' ) );
-				// Flush the rewrite rules
-				// @note: While development only: must be removed
-				add_action( 'init', array( __CLASS__, 'cp1_flush_rewrite_rules' ) );
-			} else {
-				// Flush rewrite rules
-				//@note: While devevelopment only, must be removed:
-				add_action( 'init', array( __CLASS__, 'cp2_flush_rewrite_rules' ) );
-			}
+	function deactivate() {}
 
-			include $version_file;
+	function load_core() {
+		array_map( array( $this, 'getClass' ), $this->core_classes );
+
+		if ( is_admin() ) {
+			coursepress_render( 'inc/admin/class-page' );
+			array_map( array( $this, 'getClass' ), $this->core_admin_classes );
+
 		} else {
-			$error = sprintf( __( 'Error loading %s v%s plugin!', 'cp' ), 'CoursePress', $version );
-			throw new Exception( $error );
+			array_map( array( $this, 'getClass' ), $this->core_front_classes );
 		}
-	}
 
-	/**
-	 * Set CP 1.x directory name
-	 **/
-	public static function before_init_vars( $instance ) {
-		$instance->dir_name = 'coursepress/1.x';
-	}
-
-	public static function init_vars( $instance ) {
-		$instance->location = 'plugins';
-		$instance->plugin_dir = WP_PLUGIN_DIR . '/coursepress/1.x/';
-		$instance->plugin_url = WP_PLUGIN_URL . '/coursepress/1.x/';
-	}
-
-	public static function coursepress_theme() {
-		$current_theme = wp_get_theme();
-
-		register_theme_directory( __DIR__ . '/2.0/themes/' );
-
-		if ( 'coursepress' == $current_theme->get_stylesheet() ) {
-			wp_clean_themes_cache( true );
-			add_filter( 'stylesheet_directory_uri', array( __CLASS__, 'theme_directory' ) );
-			add_filter( 'theme_root', array( __CLASS__, 'theme_root' ) );
-			add_filter( 'template_directory_uri', array( __CLASS__, 'theme_directory_uri' ) );
-		}
-	}
-
-	public static function theme_directory() {
-		return plugins_url( 'coursepress/2.0/themes/coursepress' );
-	}
-
-	public static function theme_root() {
-		return __DIR__ . '/2.0/themes';
-	}
-
-	public static function theme_directory_uri() {
-		return plugins_url( 'coursepress/2.0/themes/coursepress' );
-	}
-
-	public static function maybe_switch_theme() {
-		$current_theme = wp_get_theme();
-
-		if ( 'coursepress' == $current_theme->get_stylesheet() ) {
-			wp_clean_themes_cache( true );
-			switch_theme( $current_theme->get_stylesheet() );
-		}
-	}
-
-	public static function cp1_flush_rewrite_rules() {
-		$is_flushed = get_option( 'cp1_flushed', false );
-
-		if ( false == $is_flushed ) {
-			delete_option( 'cp2_flushed' );
-			update_option( 'cp1_flushed', true );
-			cp_flush_rewrite_rules();
-
-			add_action( 'admin_init', array( __CLASS__, 'maybe_switch_theme' ) );
-		}
-	}
-
-	public static function cp2_flush_rewrite_rules() {
-		$is_flushed = get_option( 'cp2_flushed', false );
-
-		if ( false == $is_flushed ) {
-			delete_option( 'cp1_flushed' );
-
-			if ( class_exists( 'CoursePress_Upgrade' ) )
-				CoursePress_Upgrade::init();
-
-			//@todo: wrap this
-			flush_rewrite_rules();
-
-			add_action( 'admin_init', array( __CLASS__, 'maybe_switch_theme' ) );
-			update_option( 'cp2_flushed', true );
-		}
-	}
-
-	/**
-	 * Helper function to set activation hook for verion 2.x
-	 **/
-	static function activate() {
-		if ( method_exists( 'CoursePress', 'register_activation_hook' ) ) {
-			CoursePress::register_activation_hook();
-		}
-	}
-
-	/**
-	 * Helper function to set deactivation hook for version 2.x
-	 **/
-	static function deactivate() {
-		if ( method_exists( 'CoursePress', 'deactivate_coursepress' ) ) {
-			CoursePress::deactivate_coursepress();
-		}
+		/**
+		 * Trigger when all CP classes are loaded.
+		 *
+		 * @since 2.0
+		 */
+		do_action( 'coursepress_initialized' );
 	}
 }
-CoursePressUpgrade::init();
+$CoursePress = new CoursePress();

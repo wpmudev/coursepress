@@ -22,13 +22,13 @@ module.exports = function(grunt) {
 	// -------------------------------------------------------------------------
 	// Configuration.
 	var conf = {
-		// 1.x version
-		version_1: '2.0.3',
-		// Folder that contains the CSS files.
-		js_folder: 'upgrade/js/',
+		// Current version
+		version_1: '3.0-beta',
+		// Folder that contains the JS files.
+		js_folder: 'assets/js/',
 
 		// Folder that contains the CSS files.
-		css_folder: 'upgrade/css/',
+		css_folder: 'assets/css/',
 
 		js_files_concat: {
 			'upgrade/js/admin-upgrade.js':            ['upgrade/js/src/admin-upgrade.js'],
