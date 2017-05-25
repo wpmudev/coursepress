@@ -383,8 +383,8 @@ class CoursePress_Admin_Controller_Unit {
 					foreach ( $data as $unit ) {
 						unset( $unit['post_modified'] );
 						unset( $unit['post_modified_gmt'] );
-						unset( $unit['post_name'] );
 						unset( $unit['guid'] );
+						$unit['post_name'] = '';
 
 						$new_unit = false;
 						$unit_id = isset( $unit['ID'] ) ? (int) $unit['ID'] : 0;
