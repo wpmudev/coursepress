@@ -1138,8 +1138,11 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 						$unit_year = date( 'Y', $unit_availability_date );
 						$format = $year_now !== $unit_year ? _x( 'M d, Y', 'Unit available date with year for future unit.', 'CP_TD' ) : _x( 'M d', 'Unit available date without year for future unit.', 'CP_TD' );
 						// Requires custom hook to attached
-						$when = date( $format, $unit_availability_date );
-						$delay_date = sprintf( '<span class="unit-delay-date">%s %s</span>', __( 'Opens', 'CP_TD' ), $when );
+						$when = date_i18n( $format, $unit_availability_date );
+						$delay_date = sprintf(
+							'<span class="unit-delay-date">%s</span>',
+							sprintf( __( 'Opens %s', 'CP_TD' ), $when )
+						);
 						$unit_status = __( 'This unit will be available on the scheduled start date.', 'CP_TD' );
 						/**
 						 * Filter delay date markup.
