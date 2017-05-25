@@ -63,7 +63,7 @@ _.extend( _coursepress_upgrade, {
 		},
 		parse: function (response) {
 			// If response is zero then the ajax method was not found which means that 2.0 has already been loaded successfully
-			if(response == 0)
+			if(0 === response)
 			{
 				_coursepress_upgrade.events.trigger('all_students_upgraded', this);
 				return;

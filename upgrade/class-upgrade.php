@@ -11,6 +11,9 @@ class CoursePress_Upgrade_1x_Data {
 	/** @var (string) The upgrade version. **/
 	private static $version = '2.0.0';
 
+	/**
+	 *
+	 */
 	public static function init() {
 		// Listen to upgrade call
 		add_action( 'wp_ajax_coursepress_upgrade_from_1x', array( __CLASS__, 'ajax_courses_upgrade' ) );
@@ -24,15 +27,91 @@ class CoursePress_Upgrade_1x_Data {
 		// Notify the user the need for Upgrade!
 		add_action( 'admin_notices', array( __CLASS__, 'upgrade_notice' ) );
 
-		add_action('template_redirect', array(__CLASS__, 'show_frontend_message'));
+		if ( '2.0' != CoursePressUpgrade::$coursepress_version && ! is_admin() ) {
+			add_filter( 'coursepress_get_setting', array( __CLASS__, 'pre_settings' ), 999, 3 );
+			add_filter( 'coursepress_virtual_page', array( __CLASS__, 'maintenance_page' ), 999 );
+		}
 	}
 
-	public static function show_frontend_message()
-	{
-		self::upgrade_assets();
-		wp_head();
-		self::upgrade_notice('frontend-nag');
-		die();
+	public static function pre_settings( $setting, $key, $cp_settings ) {
+		$defaults = array(
+			'general' => array(
+				'show_coursepress_menu' => get_option( 'display_menu_items', 1 ),
+				'use_custom_login' => get_option( 'use_custom_login_form', 1 ),
+			),
+			'slugs' => array(
+				'course' => get_option( 'coursepress_course_slug', 'courses' ),
+				'category' => get_option( 'coursepress_course_category_slug', 'course_category' ),
+				'module' => get_option( 'coursepress_module_slug', 'module' ),
+				'units' => get_option( 'coursepress_units_slug', 'units' ),
+				'notifications' => get_option( 'coursepress_notifications_slug', 'notifications' ),
+				'discussions' => get_option( 'coursepress_discussion_slug', 'discussion' ),
+				'grades' => get_option( 'coursepress_grades_slug', 'grades' ),
+				'workbook' => get_option( 'coursepress_workbook_slug', 'workbook' ),
+				'enrollment' => get_option( 'enrollment_process_slug', 'enrollment_process' ),
+				'student_dashboard' => get_option( 'student_dashboard_slug', 'courses-dashboard' ),
+				'student_settings' => get_option( 'student_settings_slug', 'student-settings' ),
+				'instructor_profile' => get_option( 'instructor_profile_slug', 'instructor' ),
+			),
+			'pages' => array(
+				'enrollment' => get_option( 'coursepress_enrollment_process_page', 0 ),
+				'login' => get_option( 'coursepress_login_page', 0 ),
+				'student_dashboard' => get_option( 'coursepress_signup_page', 0 ),
+				'student_settings' => get_option( 'coursepress_student_settings_page', 0 ),
+			)
+		);
+
+		if ( is_bool($key) ) {
+			$setting = $defaults;
+		} else {
+			$setting = CoursePress_Helper_Utility::get_array_val( $defaults, $key );
+		}
+
+		return $setting;
+	}
+
+	public static function maintenance_page( $vp_args ) {
+		global $wp;
+
+		$show = false;
+		$other_pages = (array) CoursePress_Core::get_setting( 'slugs' );
+		$qvars = $wp->query_vars;
+		$name = isset($qvars['name']) ? $qvars['name'] : '';
+
+		if ( ! $name && isset($qvars['pagename'] ) )
+			$name = $qvars['pagename'];
+
+		if ( ! empty( $vp_args ) || isset( $wp->query_vars['coursename'] ) )
+			$show = true;
+		elseif ( ! empty( $name ) && in_array( $name, $other_pages ) )
+			$show = true;
+
+		if ( $show ) {
+			self::upgrade_assets();
+
+			// Set custom page
+			add_action( 'template_include', array( __CLASS__, 'preload' ) );
+
+
+
+			// Set custom body class
+			add_filter( 'body_class', array( __CLASS__, 'custom_upgrade_class' ) );
+		}
+
+		return $vp_args;
+	}
+
+	public static function preload() {
+
+		$template = __DIR__ . '/page.php';
+
+		return $template;
+	}
+
+	public static function custom_upgrade_class( $class ) {
+		array_push( $class, 'cp-upgrade-body' );
+
+		return $class;
 	}
 
 	public static function is_upgrade_page() {
@@ -70,7 +149,7 @@ class CoursePress_Upgrade_1x_Data {
 			$message = '<p>' . sprintf( __( 'It looks like you had CoursePress 1 installed. In order to upgrade your course data to CoursePress 2, we strongly recommend you to %s your website before upgrading %s. Once the upgrade is complete you will be able to use CoursePress again.', 'cp' ), $snapshot, $upgrade ) . '</p>';
 		}
 		else {
-			$message = '<p>' . __('The website is undergoing routine maintenance. Please try again later.', 'cp');
+			$message = '<p>' . __('This page is undergoing routine maintenance. Please try again later.', 'cp');
 		}
 
 		// Remind the user to backup their system in upgrade page
@@ -165,6 +244,11 @@ class CoursePress_Upgrade_1x_Data {
 							'remaining_students' => CoursePress_Helper_Upgrade_1x_Data::get_all_remaining_students()
 						)
 					);
+
+					if ( (int) $ok['remaining_students'] <= 0 ) {
+						update_option( 'coursepress_20_upgraded', true );
+						delete_option( 'cp2_flushed' );
+					}
 			}
 
 			// response

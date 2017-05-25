@@ -49,7 +49,7 @@ class CoursePressUpgrade {
 	/** @var (boolean) Whether all courses are upgraded to the new version. **/
 	private static $coursepress_is_upgraded = false;
 
-	private static $coursepress_version;
+	public static $coursepress_version;
 
 	public static function init() {
 		self::$coursepress_is_upgraded = get_option( 'coursepress_20_upgraded', false );
@@ -70,6 +70,12 @@ class CoursePressUpgrade {
 					require $upgrade_class;
 
 					CoursePress_Upgrade_1x_Data::init();
+
+					add_action( 'plugins_loaded', array( __CLASS__, 'coursepress_theme' ) );
+
+					if ( ! is_admin() ) {
+						self::get_coursepress( '2.0' );
+					}
 				}
 			}
 		}
@@ -77,12 +83,10 @@ class CoursePressUpgrade {
 		/**
 		 * Retrieve the current coursepress version use.
 		 **/
-		if('1.x' != $coursepress_version)
-		{
+		self::$coursepress_version = $coursepress_version;
+		if ( '2.0' == $coursepress_version ) {
 			self::get_coursepress( $coursepress_version );
 		}
-
-		self::$coursepress_version = $coursepress_version;
 
 		/**
 		 * Set activation hook
@@ -170,6 +174,31 @@ class CoursePressUpgrade {
 		$instance->plugin_url = WP_PLUGIN_URL . '/coursepress/1.x/';
 	}
 
+	public static function coursepress_theme() {
+		$current_theme = wp_get_theme();
+
+		register_theme_directory( __DIR__ . '/2.0/themes/' );
+
+		if ( 'coursepress' == $current_theme->get_stylesheet() ) {
+			wp_clean_themes_cache( true );
+			add_filter( 'stylesheet_directory_uri', array( __CLASS__, 'theme_directory' ) );
+			add_filter( 'theme_root', array( __CLASS__, 'theme_root' ) );
+			add_filter( 'template_directory_uri', array( __CLASS__, 'theme_directory_uri' ) );
+		}
+	}
+
+	public static function theme_directory() {
+		return plugins_url( 'coursepress/2.0/themes/coursepress' );
+	}
+
+	public static function theme_root() {
+		return __DIR__ . '/2.0/themes';
+	}
+
+	public static function theme_directory_uri() {
+		return plugins_url( 'coursepress/2.0/themes/coursepress' );
+	}
+
 	public static function maybe_switch_theme() {
 		$current_theme = wp_get_theme();
 
@@ -196,7 +225,6 @@ class CoursePressUpgrade {
 
 		if ( false == $is_flushed ) {
 			delete_option( 'cp1_flushed' );
-
 			//@todo: wrap this
 			flush_rewrite_rules();
 
