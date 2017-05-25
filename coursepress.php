@@ -225,6 +225,10 @@ class CoursePressUpgrade {
 
 		if ( false == $is_flushed ) {
 			delete_option( 'cp1_flushed' );
+
+			if ( class_exists( 'CoursePress_Upgrade' ) )
+				CoursePress_Upgrade::init();
+
 			//@todo: wrap this
 			flush_rewrite_rules();
 
