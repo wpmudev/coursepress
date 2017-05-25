@@ -7,7 +7,22 @@
   color: #c0d7eb;
   padding: 5px 15px;
   border-left-width: 8px;
+  font-family: 'Open Sans', Georgia, serif;
+  font-weight: 300;
 }
+.coursepress-upgrade-nag.frontend-nag {
+  line-height: 40px;
+  padding: 20px 30px;
+  max-width: 900px;
+  margin: 90px auto;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+.coursepress-upgrade-nag.frontend-nag p {
+  margin: 0;
+  text-align: center;
+}
+
 .coursepress-upgrade-nag p {
   font-size: 18px;
 }
@@ -35,6 +50,9 @@
   padding: 8px 15px;
   background-color: #FFF;
   border: 1px solid #CCC;
+}
+.coursepress-upgrade-view .coursepress-update-view .students-progress {
+  font-weight: bold;
 }
 .coursepress-upgrade-view .coursepress-update-view .course-progress {
   display: block;

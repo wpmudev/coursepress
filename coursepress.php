@@ -69,7 +69,7 @@ class CoursePressUpgrade {
 				if ( is_readable( $upgrade_class ) ) {
 					require $upgrade_class;
 
-					CoursePress_Upgrade::init();
+					CoursePress_Upgrade_1x_Data::init();
 				}
 			}
 		}
@@ -77,7 +77,10 @@ class CoursePressUpgrade {
 		/**
 		 * Retrieve the current coursepress version use.
 		 **/
-		self::get_coursepress( $coursepress_version );
+		if('1.x' != $coursepress_version)
+		{
+			self::get_coursepress( $coursepress_version );
+		}
 
 		self::$coursepress_version = $coursepress_version;
 
@@ -126,7 +129,7 @@ class CoursePressUpgrade {
 		);
 		$courses = get_posts( $args );
 
-		return count( $courses ) > 0;
+		return count( $courses ) > 0 || intval(get_option('students_to_upgrade_to_2.0', 0)) > 0;
 	}
 
 	private static function get_coursepress( $version ) {
@@ -193,27 +196,6 @@ class CoursePressUpgrade {
 
 		if ( false == $is_flushed ) {
 			delete_option( 'cp1_flushed' );
-
-			/** Update 2.0 Settings **/
-			CoursePress_Upgrade::init();
-
-			/** Check users to update **/
-			$users_to_update = get_option( 'cp2_users_to_update', array() );
-
-			// @todo: Find another solution to update student progress!!!
-			if ( ! empty( $users_to_update ) ) {
-				foreach ( $users_to_update as $course_id => $users ) {
-					foreach ( $users as $user_id ) {
-						CoursePress_Data_Student::get_calculated_completion_data( $user_id, $course_id );
-					}
-					unset( $users_to_update[ $course_id ] );
-				}
-				if ( ! empty( $users_to_update ) ) {
-					update_option( 'cp2_users_to_update', $users_to_update );
-				} else {
-					delete_option( 'cp2_users_to_update' );
-				}
-			}
 
 			//@todo: wrap this
 			flush_rewrite_rules();

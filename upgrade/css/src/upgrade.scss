@@ -6,6 +6,21 @@
 	color: rgb(192, 215, 235);
 	padding: 5px 15px;
 	border-left-width: 8px;
+	font-family: 'Open Sans', Georgia, serif;
+	font-weight: 300;
+
+	&.frontend-nag {
+		line-height: 40px;
+		padding: 20px 30px;
+		max-width: 900px;
+		margin: 90px auto;
+		box-shadow: 0 0 10px rgba(0,0,0,0.3);
+
+		p {
+			margin: 0;
+			text-align: center;
+		}
+	}
 
 	p {
 		font-size: 18px;
@@ -35,6 +50,10 @@
 		padding: 8px 15px;
 		background-color: #FFF;
 		border: 1px solid #CCC;
+
+		.students-progress {
+			font-weight: bold;
+		}
 
 		.course-progress {
 			display: block;
