@@ -101,7 +101,7 @@ final class CoursePress {
 		add_action( 'plugins_loaded', array( $this, 'load_core' ) );
 	}
 
-	function class_loader( $className ) {
+	private function class_loader( $className ) {
 		if ( ! preg_match( '%CoursePress_%', $className ) )
 			return false;
 

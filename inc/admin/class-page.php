@@ -9,7 +9,13 @@ class CoursePress_Admin_Page extends CoursePress_User {
 	protected $cap = 'manage_options'; // Default cap to use to all CP pages
 	protected $slug = 'coursepress';
 	protected $is_current_page = false;
+
+	/**
+	 * @var array List of CP screen_id page
+	 */
 	protected $screens = array();
+
+	var $localize_array = array();
 
 	public function __construct() {
 		parent::__construct( true );
@@ -25,34 +31,54 @@ class CoursePress_Admin_Page extends CoursePress_User {
 		add_action( 'admin_menu', array( $this, 'set_admin_menus' ) );
 		// Setup admin assets need for this page
 		add_action( 'admin_enqueue_scripts', array( $this, 'set_admin_assets' ) );
+		// Hook to ajax call
+		add_action( 'wp_ajax_coursepress_request', array( $this, 'process_ajax_request' ) );
 	}
 
 	function is_coursepress_page( $screen_id ) {
 		return in_array( $screen_id, $this->screens );
 	}
 
-	function set_admin_assets() {
-		global $CoursePress;
+	function get_coursepress_screen_id( $screen_id = '' ) {
+		if ( empty( $screen_id ) )
+			$screen_id = get_current_screen()->id;
 
-		$screen_id = get_current_screen()->id;
+		$id = preg_replace( '%toplevel_page_|coursepress-pro_page_|coursepress-base_page_|coursepress_page%', '', $screen_id );
 
-		if ( ! $this->is_coursepress_page( $screen_id ) )
-			return;
+		return $id;
+	}
 
-		$coursepress_pagenow = preg_replace( '%top_level_page|coursepress-pro_page_%', '', $screen_id );
+	/**
+	 * Helper function to add `coursepress` submenu page.
+	 *
+	 * @param string $label
+	 * @param string $cap
+	 * @param string $slug
+	 * @param string $callback
+	 */
+	function add_submenu( $label = '', $cap, $slug, $callback ) {
+		$menu = add_submenu_page( $this->slug, 'CoursePress ' . $label, $label, $cap, $slug, array( $this, $callback ) );
+		$screen_id = $this->get_coursepress_screen_id( $menu );
 
-		// Set css here
-		// Set js here
-		// Set local vars here
+		add_action( "load-{$menu}", array( $this, 'process_' . $screen_id . '_page' ) );
+
+		// Add to the list of valid CP pages
+		array_unshift( $this->screens, $menu );
 	}
 
 	function set_admin_menus() {
+		global $submenu;
+
 		// Main CP Page
-		$label = __( 'CoursePress Pro', 'cp' );
-		$screen_id = add_menu_page( $label, $label, $this->cap, $this->slug, array( $this, 'get_admin_page' ), '', 25 );
+		$label = __( 'CoursePress Base', 'cp' );
+		$screen_id = add_menu_page( $label, $label, $this->cap, $this->slug, array( $this, 'get_courselist_page' ), '', 25 );
 
 		// Add screen ID to the list of valid CP pages
 		array_unshift( $this->screens, $screen_id );
+
+		// Set course edit page
+		$edit_label = __( 'New Course', 'cp' );
+		$this->add_submenu( $edit_label, $this->cap, 'coursepress_course', 'get_course_edit_page' );
 
 		// Set students page
 		$student_label = __( 'Students', 'cp' );
@@ -77,28 +103,138 @@ class CoursePress_Admin_Page extends CoursePress_User {
 		// Set Settings page
 		$settings_label = __( 'Settings', 'cp' );
 		$this->add_submenu( $settings_label, $this->cap, 'coursepress_settings', 'get_settings_page' );
+
+		// Change top menu label
+		$submenu['coursepress'][0][0] = __( 'Courses', 'cp' );
 	}
 
-	function add_submenu( $label = '', $cap, $slug, $callback ) {
-		$menu = add_submenu_page( $this->slug, 'CoursePress ' . $label, $label, $cap, $slug, array( $this, $callback ) );
-		add_action( "load-{$menu}", array( $this, 'process_page' ) );
+	function set_admin_assets() {
+		global $CoursePress;
 
-		// Add to the list of valid CP pages
-		array_unshift( $this->screens, $menu );
+		$screen_id = get_current_screen()->id;
+
+		// If current page is not CP return!
+		if ( ! $this->is_coursepress_page( $screen_id ) )
+			return;
+
+		/**
+		 * The key ID of current CP page loaded.
+		 * Both JS and CSS are autoloaded base on this ID.
+		 *
+		 * Currents keys: {
+		 *  `coursepress` - use in courses list page
+		 *  `coursepress_students`
+		 *  `coursepress_instructors`
+		 *  `coursepress_assessments`
+		 *  `coursepress_forum`
+		 *  `coursepress_notifications`
+		 *  `coursepress_settings`
+		 * }
+		 */
+		$coursepress_pagenow = $this->get_coursepress_screen_id();
+		$plugin_url = $CoursePress->plugin_url;
+error_log($coursepress_pagenow);
+		$this->localize_array = array(
+			'ajaxurl' => admin_url( 'admin-ajax.php' ),
+			'_wpnonce' => wp_create_nonce( 'coursepress_nonce' ),
+			'cookiehash' => COOKIEHASH,
+			'coursepress_page' => add_query_arg( 'page', 'coursepress', admin_url() ),
+		);
+
+		// Set css
+		wp_enqueue_style( $coursepress_pagenow, $plugin_url . 'assets/css/' . $coursepress_pagenow . '.min.css', false, $CoursePress->version );
+		// Set js
+		// General admin js
+		wp_enqueue_script( 'coursepress-admin-general', $plugin_url . 'assets/js/admin-general.min.js', array( 'jquery', 'backbone', 'underscore' ), $CoursePress->version, true );
+		wp_enqueue_script( $coursepress_pagenow, $plugin_url . 'assets/js/' . $coursepress_pagenow . '.min.js', false, $CoursePress->version, true );
+
+		// Set local vars here
+		$localize_array = apply_filters( 'coursepress_admin_localize_array', $this->localize_array );
+		wp_localize_script( 'coursepress-admin-general', 'cpVars', $localize_array );
 	}
 
-	function get_admin_page() {
+	function process_ajax_request() {
+		$input = json_decode( file_get_contents( 'php://input' ) );
+		$error = array( 'code' => 'cannot_process', 'message' => __( 'Something went wrong. Please try again.', 'cp' ) );
+
+		if ( isset( $input->_wpnonce ) && wp_verify_nonce( $input->_wpnonce, 'coursepress_nonce' ) ) {
+			$action = $input->action;
+			$input->success = false;
+			$input->response = array();
+			$input->error = array();
+
+			/**
+			 * Trigger when an ajax request is sent base on the given `action` name.
+			 *
+			 * @since 3.0
+			 * @param object $input
+			 */
+			do_action( 'coursepress_' . $action, $input );
+
+			if ( $input->success )
+				wp_send_json_success( $input->response );
+			else
+				$error = wp_parse_args( $error, $input->error );
+		}
+
+		wp_send_json_error( $error );
+	}
+
+	function get_courselist_page() {
 		$args = array(
-			'page_title' => 'CoursePress',
+			'page_title' => 'CoursePress', // @note: DO NOT TRANSLATE
 		);
 
 		coursepress_render( 'views/admin/main-coursepress-page', $args );
 	}
 
+	function process_coursepress_course_page() {
+		$course_id = filter_input( INPUT_GET, 'cid', FILTER_VALIDATE_INT );
+		$course = new CoursePress_Admin_Course( $course_id );
+		$this->localize_array['course'] = $course;
+	}
+
+	function get_course_edit_page() {
+		$course_id = filter_input( INPUT_GET, 'cid', FILTER_VALIDATE_INT );
+		$menu_list = array(
+			'course-type' => __( 'Type of Course', 'cp' ),
+			'course-settings' => __( 'Course Settings', 'cp' ),
+			'course-units' => __( 'Units', 'cp' ),
+			'course-students' => __( 'Students', 'cp' ),
+		);
+
+		/**
+		 * Allow population of additional menu list.
+		 *
+		 * @since 3.0
+		 * @param array $menu_list
+		 */
+		$menu_list = apply_filters( 'coursepress_course_edit_menus', $menu_list );
+
+		$args = array(
+			'course_id' => $course_id,
+			'page_title' => $course_id > 0 ? get_the_title( $course_id ) : __( 'New Course', 'cp' ),
+			'menu_list' => $menu_list,
+		);
+
+		coursepress_render('views/admin/course-edit', $args );
+	}
+
+	function process_coursepress_students_page() {}
 	function get_students_page() {}
+
+	function process_coursepress_instructors_page() {}
 	function get_instructors_page() {}
+
+	function process_coursepress_forum_page() {}
 	function get_forum_page() {}
+
+	function process_coursepress_assessments_page() {}
 	function get_assessments_page() {}
+
+	function process_coursepress_notifications_page() {}
 	function get_notification_page() {}
+
+	function process_coursepress_settings_page() {}
 	function get_settings_page() {}
 }

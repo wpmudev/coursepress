@@ -27,4 +27,32 @@ class CoursePress_Utility {
 
 		return null;
 	}
+
+	function setAttributes( $attr = array() ) {
+		if ( ! $attr )
+			return '';
+
+		$vars = array();
+
+		foreach ( $attr as $key => $value ) {
+			$vars[] = $key . '="' . $value . '""';
+		}
+
+		return implode( ' ', $vars );
+	}
+	function create_html( $tag, $attributes = array(), $content = '' ) {
+		$html = '<' . $tag;
+
+		if ( ! empty( $attributes ) )
+			$html .= ' ' . $this->setAttributes( $attributes );
+
+		$single_tags = array( 'img', 'input' );
+
+		if ( in_array( $tag, $single_tags ) )
+			$html .= ' />';
+		else
+			$html .= '>' . $content . '</' . $tag . '>';
+
+		return $html;
+	}
 }

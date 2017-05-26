@@ -17,7 +17,7 @@ class CoursePress_Data_Courses extends CoursePress_Utility {
 		register_post_type( $this->post_type, array(
 			'public' => true,
 			'label' => __( 'CoursePress', 'cp' ),
-			'show_ui' => false,
+			//'show_ui' => false,
 			'show_in_nav_menu' => false,
 		) );
 	}

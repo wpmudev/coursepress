@@ -1,6 +1,7 @@
 {
 	"name": "coursepress",
-	"version": "2.0.8-beta",
+	"version": "3.0-beta",
+	"title": "CoursePress",
 	"description": "CoursePress WordPress Plugin",
 	"homepage": "https://premium.wpmudev.org/project/coursepress-pro/",
 	"repository": {
