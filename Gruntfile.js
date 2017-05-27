@@ -29,6 +29,7 @@ module.exports = function(grunt) {
 
 		// Folder that contains the CSS files.
 		css_folder: 'assets/css/',
+        sass_folder: 'assets/sass/',
 
 		js_files_concat: {
 		    'assets/js/admin-general.js': [
@@ -47,6 +48,7 @@ module.exports = function(grunt) {
             'assets/js/coursepress_course.js': [
                 // ADd JS that will be loaded at course edit page
                 // assets/js/src/admin/course-edit/...
+                'assets/js/src/admin/course-edit/course-type.js',
                 'assets/js/src/admin/course-edit/overview.js'
             ],
             'assets/js/coursepress_students.js': [
@@ -299,9 +301,10 @@ module.exports = function(grunt) {
 		watch:  {
 			css: {
 				files: [
-					conf.css_folder + 'src/**/*.scss'
+					conf.sass_folder + '**/*.scss',
+					conf.sass_folder + '**/**/*.scss'
 				],
-				tasks: ['clear', 'sass', 'autoprefixer'],
+				tasks: ['css'],
 				options: {
 					debounceDelay: 500
 				}
@@ -309,7 +312,7 @@ module.exports = function(grunt) {
 
 			js: {
 				files: conf.js_src_files,
-				tasks: ['clear', 'concat'],
+				tasks: ['js'],
 				options: {
 					debounceDelay: 500
 				}

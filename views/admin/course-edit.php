@@ -16,6 +16,7 @@
 
 	<div id="course-edit-template" class="coursepress-page">
 		<div class="step-list course-menu-list">
+            <span class="cp-icon cp-icon-md step-icon-bars"><i class="fa fa-bars"></i></span>
 			<ul class="course-menu">
 				<?php foreach ( $menu_list as $key => $label ) : ?>
 					<li class="step" data-step="<?php echo $key; ?>">
@@ -24,9 +25,9 @@
 				<?php endforeach; ?>
 			</ul>
 		</div>
-		<div class="course-content">
+		<div class="step-contents course-content">
 			<?php  foreach ( $menu_list as $key => $label ) : ?>
-				<div id="<?php echo $key; ?>" class="coursepress-content-tab"></div>
+				<div id="<?php echo $key; ?>" class="content-tab"></div>
 			<?php endforeach; ?>
 
 			<div class="course-footer">

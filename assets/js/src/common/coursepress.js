@@ -1,5 +1,7 @@
 var CoursePress = (function ($, doc, win) {
-    var self = {};
+    var self = {
+        Events: Backbone.Events || {}
+    };
 
     self.Define = function( name, callback ) {
 

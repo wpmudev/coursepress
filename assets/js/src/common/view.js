@@ -1,12 +1,12 @@
 /* global CoursePress */
 
-CoursePress.Define( 'View', function($, doc, win) {
+CoursePress.Define( 'View', function($) {
     _.mixin({
         isTrue: function( value, selected ) {
             if ( _.isArray(selected) )
                 return _.contains(selected, value);
             else if ( _.isObject(selected) )
-                return selected[value] ? true : false;
+                return !!selected[value];
             else
                 return value === selected;
         },
@@ -29,16 +29,18 @@ CoursePress.Define( 'View', function($, doc, win) {
     });
 
     return Backbone.View.extend({
-        template_id: false,
-        model: CoursePress.Request,
+        template_id: '',
+        model: {},
         initialize: function() {
-            Backbone.View.prototype.initialize.apply( this, arguments );
-
+            if ( arguments && arguments[0] ) {
+                this.model = new CoursePress.Request(arguments[0]);
+            }
             this.render();
         },
         render: function() {
             if ( this.template_id ) {
-                this.$el.html( _._getTemplate( this.template_id, this.model.toJSON() ) );
+                var model = !!this.model.get ? this.model : this.model.toJSON();
+                this.$el.html(_._getTemplate( this.template_id, model ));
             }
         }
     });

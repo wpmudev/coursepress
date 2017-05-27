@@ -2,9 +2,9 @@
 
 CoursePress.Define( 'Request', function($, doc, win) {
     return Backbone.Model.extend({
-        url: win.cpVars.ajaxurl + '?action=coursepress_request',
+        url: win._coursepress.ajaxurl + '?action=coursepress_request',
         defaults: {
-            _wpnonce: win.cpVars._wpnonce
+            _wpnonce: win._coursepress._wpnonce
         },
 
         initialize: function() {
