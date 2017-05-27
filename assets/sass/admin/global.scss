@@ -1,7 +1,144 @@
 .coursepress-wrap {
+  font-size: 1.2em;
   @include boxsizing;
 
   * {
     @include boxsizing;
+  }
+
+  .course-title-tag {
+    display: block;
+    font-size: 0.4em;
+    color: #838383;
+  }
+  .wp-heading-inline {
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 1.8em;
+    margin-bottom: 25px;
+  }
+  .label {
+    font-weight: 700;
+    display: block;
+    margin-bottom: 10px;
+  }
+  .description {
+    font-style: normal;
+  }
+  input[type="text"],
+  textarea,
+  select {
+    display: block;
+    width: 100%;
+    line-height: 2;
+    padding: 4px 12px;
+    margin: 0;
+    outline: 0;
+    border: 1px solid $color_1;
+    background-color: $color_2;
+    @include radius(3px);
+    @include boxshadow(none);
+
+    &:focus {
+      border-color: $color_3;
+    }
+  }
+  textarea {
+    resize: none;
+  }
+  [type="text"].cp-input-auto {
+    width: auto;
+    display: inline-block;
+  }
+  .cp-box {
+    margin-bottom: 25px;
+    @include clearfix;
+
+    .label {
+      font-size: 0.856em;
+    }
+  }
+  .cp-toggle-box {
+    margin: 15px 0;
+
+    .description {
+      margin-left: 50px;
+    }
+  }
+  .cp-right {
+    float: right;
+  }
+  .cp-info-box {
+    position: relative;
+    padding: 15px 25px 15px 55px;
+    background-color: rgba(91, 201, 255, 0.27);
+    border: 1px solid $blue_1;
+    @include radius(6px);
+
+    &:before {
+      position: absolute;
+      left: 15px;
+      content: '\f05a';
+      font-family: 'FontAwesome';
+      font-size: 1.4em;
+      color: $blue_2;
+    }
+
+    p {
+      margin: 0;
+    }
+    .cp-info-content {
+      display: none;
+      opacity: 0;
+      @include transition(0.4s);
+
+      &.active {
+        display: block;
+        opacity: 1;
+        @include transition(0.4s);
+      }
+    }
+  }
+  .cp-sep {
+    &:after {
+      content: '';
+      display: block;
+      clear: both;
+      float: left;
+      width: 100%;
+      margin: 25px 0;
+      border: 1px solid $color_1;
+      border-bottom-color: $color_2;
+    }
+  }
+  .cp-flex {
+    display: flex;
+    @include clearfix;
+
+    input,
+    button {
+      margin: 0;
+    }
+    .cp-div-flex {
+      flex: 1;
+    }
+    &.cp-flex-2 {
+      .cp-div-left,
+      .cp-div-right {
+        flex: auto;
+      }
+      .cp-div-left {
+        flex: 100;
+      }
+      .cp-div-right {
+        padding-left: 25px;
+      }
+    }
+  }
+
+  @media screen {
+    @media (min-width: 760px) {
+
+    }
   }
 }

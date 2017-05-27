@@ -1,3 +1,11 @@
+$width: 100%;
+$color_1: #dedede;
+$color_2: #fbfbfb;
+$color_3: #51b9e8;
+$grey_1: #7d7d7d;
+$blue_1: #51b9e8;
+$blue_2: #4f9ac9;
+
 @mixin boxsizing {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -9,4 +17,25 @@
   -ms-transition: $trans;
   -o-transition: $trans;
   transition: $trans;
+}
+@mixin column($col) {
+  width: $width/12*$col;
+}
+@mixin radius($radius) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  border-radius: $radius;
+}
+@mixin boxshadow($shadow) {
+  -webkit-box-shadow: $shadow;
+  -moz-box-shadow: $shadow;
+  box-shadow: $shadow;
+}
+@mixin clearfix {
+  &:before,
+  &:after {
+    content: '';
+    display: block;
+    clear: both;
+  }
 }

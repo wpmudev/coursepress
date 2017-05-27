@@ -1,0 +1,46 @@
+.coursepress-wrap {
+  .cp-add-image-box {
+    display: flex;
+    vertical-align: top;
+    margin: 0;
+
+    input {
+      margin: 0;
+    }
+    .cp-thumbnail {
+      display: block;
+      width: 50px;
+      height: 40px;
+      border: 1px solid $color_1;
+      border-right: 0;
+      background-repeat: no-repeat;
+      background-size: cover;
+      @include radius(3px 0 0 3px);
+    }
+    .cp-div-url {
+      position: relative;
+      width: 100%;
+
+      input {
+        height: 40px;
+        padding-right: 50px;
+        @include radius(0 3px 3px 0);
+      }
+
+      button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 32px;
+        line-height: 32px;
+        margin: 4px;
+        padding: 0 12px;
+        text-transform: none;
+        @include radius(3px);
+      }
+    }
+    .cp-btn-browse {
+      margin: 0 0 0 15px;
+    }
+  }
+}

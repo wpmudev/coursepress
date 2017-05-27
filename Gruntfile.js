@@ -37,8 +37,7 @@ module.exports = function(grunt) {
                 'assets/js/src/common/coursepress.js',
                 'assets/js/src/common/request.js',
                 'assets/js/src/common/view.js',
-                'assets/js/src/admin/general/toggle.js',
-                'assets/js/src/admin/general/steps-modal.js'
+                'assets/js/src/common/add-image.js'
                 // assets/js/src/admin/general/....
             ],
             'assets/js/coursepress_courseslist.js': [
@@ -48,8 +47,11 @@ module.exports = function(grunt) {
             'assets/js/coursepress_course.js': [
                 // ADd JS that will be loaded at course edit page
                 // assets/js/src/admin/course-edit/...
+				'assets/js/src/admin/course-edit/course-model.js',
                 'assets/js/src/admin/course-edit/course-type.js',
-                'assets/js/src/admin/course-edit/overview.js'
+                'assets/js/src/admin/course-edit/course-settings.js',
+                'assets/js/src/admin/course-edit/course-units.js',
+                'assets/js/src/admin/course-edit/course-setup.js'
             ],
             'assets/js/coursepress_students.js': [
                 // Add JS that will be loaded at Students page
@@ -81,13 +83,16 @@ module.exports = function(grunt) {
         js_src_files: [
             'Gruntfile.js',
             'assets/js/src/admin/**/*.js',
-            'assets/js/src/front/**/*.js'
+            'assets/js/src/front/**/*.js',
+            '!assets/js/src/common/heading.js',
+            '!assets/js/src/common/footer.js'
         ],
 
 		// SASS files to process. Resulting CSS files will be minified as well.
 		css_files_compile: {
 			'assets/css/admin-common.css': 'assets/sass/admin-common.scss',
             'assets/css/coursepress.css': 'assets/sass/coursepress.scss',
+			'assets/css/coursepress_course.css': 'assets/sass/coursepress_course.scss',
             'assets/css/coursepress_students.css': 'assets/sass/coursepress_students.scss',
             'assets/css/coursepress_instructors.css': 'assets/sass/coursepress_instructors.scss',
             'assets/css/coursepress_assessments.css': 'assets/sass/coursepress_assessments.scss',
@@ -306,15 +311,14 @@ module.exports = function(grunt) {
 				],
 				tasks: ['css'],
 				options: {
-					debounceDelay: 500
+					debounceDelay: 100
 				}
 			},
-
 			js: {
 				files: conf.js_src_files,
 				tasks: ['js'],
 				options: {
-					debounceDelay: 500
+					debounceDelay: 100
 				}
 			}
 		},

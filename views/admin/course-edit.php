@@ -34,12 +34,12 @@
 				<button type="button" class="cp-btn cp-btn-default step-back">
 					<?php _e( 'Back', 'cp' ); ?>
 				</button>
-				<button type="button" class="cp-btn cp-btn-cancel step-cancel">
-					<?php _e( 'Cancel', 'cp' ); ?>
-				</button>
-				<button type="button" class="cp-btn cp-btn-active step-next">
+				<button type="button" class="cp-btn cp-right cp-btn-active step-next">
 					<?php _e( 'Save and Continue', 'cp' ); ?>
 				</button>
+                <button type="button" class="cp-btn cp-right cp-btn-cancel step-cancel">
+					<?php _e( 'Cancel', 'cp' ); ?>
+                </button>
 			</div>
 		</div>
 	</div>

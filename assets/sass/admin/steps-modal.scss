@@ -27,8 +27,10 @@
       li {
         display: none;
         margin: 0;
-        padding: 8px 5px;
+        padding: 0 5px;
+        line-height: 1.8;
         border-bottom: 1px solid #F2F2F2;
+        @include transition(0.4s);
 
         &.active {
           display: block;
@@ -46,16 +48,19 @@
         cursor: pointer;
         background-color: #ffffff;
         border-bottom: 1px solid #F2F2F2;
+        @include transition(0.4s);
       }
     }
   }
   .step-contents {
+    @include clearfix;
     .content-tab {
       background-color: #FFFFFF;
       margin: 15px 0 25px 0;
       display: none;
       opacity: 0;
       @include transition(0.4s);
+      @include clearfix;
 
       &.tab-active {
         display: block;
@@ -64,10 +69,107 @@
       }
     }
   }
+  .step-heading {
+    font-size: 0.8em;
+    padding: 5px 25px;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    border-bottom: 1px solid $color_1;
+
+    .step-heading-title {
+      margin: 0;
+      line-height: 2;
+    }
+  }
+  .step-content {
+    padding: 0 25px 25px 25px;
+    @include clearfix;
+  }
+  .step-sep {
+    &:after {
+      float: left;
+      width: 100%;
+      margin: 25px 0;
+      border: 1px solid $color_1;
+      border-bottom-color: $color_2;
+    }
+  }
 
   @media screen {
+    @media (min-width: 760px) {
+      .step-list {
+        background-color: transparent;
+
+        .step-icon-bars {
+          display: none;
+        }
+        .course-menu,
+        .course-menu.open {
+          position: relative;
+          margin: 0;
+          padding: 0;
+          background-color: transparent;
+
+          li {
+            display: inline-block;
+            padding: 5px 15px;
+            background-color: transparent;
+            cursor: pointer;
+            @include radius(20px);
+
+            &.active {
+              display: inline-block;
+              background-color: $color_1;
+            }
+          }
+        }
+      }
+      .step-content {
+        .step-label-area {
+          float: left;
+          @include column(3.5);
+          padding-right: 15px;
+        }
+        .step-inner-content {
+          float: left;
+          @include column(8.5);
+          padding-left: 15px;
+        }
+      }
+    }
+
     @media (min-width: 1024px) {
-      
+      .step-list {
+        float: left;
+        @include column(2.7);
+        padding-right: 30px;
+
+        .course-menu {
+          li {
+            display: block;
+
+            &.active {
+              display: block;
+            }
+          }
+        }
+      }
+      .step-contents {
+        float: left;
+        @include column(9.2);
+
+        .content-tab {
+          margin-top: 0;
+          border: 1px solid #dddddd;
+        }
+      }
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .step-list {
+      @include column(2);
+      padding-right: 40px;
     }
   }
 }

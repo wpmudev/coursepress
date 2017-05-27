@@ -158,8 +158,19 @@ class CoursePress_Admin_Page extends CoursePress_User {
 		$this->localize_array = wp_parse_args( $this->localize_array, array(
 			'ajaxurl' => admin_url( 'admin-ajax.php' ),
 			'_wpnonce' => wp_create_nonce( 'coursepress_nonce' ),
-			'cookiehash' => COOKIEHASH,
+			'cookie' => array(
+				'hash' => COOKIEHASH,
+				'path' => COOKIEPATH,
+				'ssl' => is_ssl(),
+			),
 			'coursepress_page' => add_query_arg( 'page', 'coursepress', admin_url() ),
+			// Common use texts
+			'text' => array(
+				'media' => array(
+					'select_image' => __( 'Select Image', 'cp' ),
+					'select_feature_image' => __( 'Select Feature Image', 'cp' ),
+				),
+			),
 		) );
 
 		// General admin js
@@ -213,6 +224,9 @@ class CoursePress_Admin_Page extends CoursePress_User {
 	}
 
 	function get_course_edit_page() {
+		// We need the image editor here, enqueue it!!!
+		wp_enqueue_media();
+
 		$course_id = filter_input( INPUT_GET, 'cid', FILTER_VALIDATE_INT );
 
 		// If it's a new course, create a draft course
@@ -248,7 +262,10 @@ class CoursePress_Admin_Page extends CoursePress_User {
 		coursepress_render('views/admin/course-edit', $args );
 
 		// Load templates
-		coursepress_render('views/tpl/course-type');
+		coursepress_render( 'views/tpl/common' );
+		coursepress_render( 'views/tpl/course-type', array( 'course_id' => $course_id ) );
+		coursepress_render( 'views/tpl/course-settings' );
+		coursepress_render( 'views/tpl/course-units' );
 	}
 
 	function get_students_page() {}

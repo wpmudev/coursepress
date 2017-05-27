@@ -1,0 +1,20 @@
+@import "common/mixin.scss";
+
+.coursepress-wrap {
+
+  #cp-instructors-box,
+  #cp-facilitators-box {
+    display: block;
+    border: 1px solid $color_1;
+    background-color: $color_2;
+    padding: 15px 25px;
+    margin-bottom: 15px;
+    @include radius(3px);
+    @include clearfix;
+
+    p {
+      text-align: center;
+      margin: 60px 0;
+    }
+  }
+}
