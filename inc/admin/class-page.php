@@ -53,7 +53,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Main CP Page
 		$label = __( 'CoursePress Base', 'cp' );
-		$screen_id = add_menu_page( $label, $label, $this->cap, $this->slug, array( $this, 'get_courselist_page' ), '', 25 );
+		$screen_id = add_menu_page( $label, $label, 'coursepress_dashboard_cap', $this->slug, array( $this, 'get_courselist_page' ), '', 25 );
 
 		// Add screen ID to the list of valid CP pages
 		array_unshift( $this->screens, $screen_id );
@@ -225,9 +225,9 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// If it's a new course, create a draft course
 		if ( empty( $course_id ) )
-			$course = new CoursePress_Course( get_default_post_to_edit( 'course', true ) );
+			$course = coursepress_get_course( get_default_post_to_edit( 'course', true ) );
 		else
-			$course = new CoursePress_Course( $course_id );
+			$course = coursepress_get_course( $course_id );
 
 		// Add $course object to localize array for quick editing
 		$this->localize_array['course'] = $course;

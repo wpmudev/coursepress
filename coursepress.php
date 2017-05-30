@@ -43,6 +43,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
+require_once 'inc/utility.php';
 require_once 'inc/functions.php';
 
 if ( is_admin() ) {
@@ -71,7 +72,6 @@ final class CoursePress {
 	protected $core_classes = array(
 		'CoursePress_Data_Core',
 		'CoursePress_Data_Users',
-		'CoursePress_User',
 		'CoursePress_Data_Courses',
 		'CoursePress_Data_Units',
 	);

@@ -27,10 +27,11 @@ class CoursePress_Data_Courses extends CoursePress_Utility {
 	function delete_course() {}
 
 	function get_courses( $args = array() ) {
+		$posts_per_page = coursepress_get_option( 'posts_per_page', 20 );
 		$defaults = array(
 			'post_type' => $this->post_type,
 			'post_status' => 'publish',
-			'posts_per_page' => 20
+			'posts_per_page' => $posts_per_page,
 		);
 		$args = wp_parse_args( $args, $defaults );
 
@@ -39,10 +40,26 @@ class CoursePress_Data_Courses extends CoursePress_Utility {
 		return $courses;
 	}
 
+	/**
+	 * Helper method to add post meta to a course.
+	 *
+	 * @since 3.0
+	 * @param int $course_id
+	 * @param string $meta_key
+	 * @param mixed $meta_value
+	 */
 	function add_course_meta( $course_id, $meta_key, $meta_value ) {
 		add_post_meta( $course_id, $meta_key, $meta_value );
 	}
 
+	/**
+	 * Helper method to remove post meta from a course.
+	 *
+	 * @since 3.0
+	 * @param int $course_id
+	 * @param string $meta_key
+	 * @param mixed $meta_value
+	 */
 	function delete_course_meta( $course_id, $meta_key, $meta_value ) {
 		delete_post_meta( $course_id, $meta_key, $meta_value );
 	}

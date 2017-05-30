@@ -27,7 +27,7 @@ if ( ! function_exists( 'coursepress_is_admin' ) ) :
 
 		return false;
 	}
-	endif;
+endif;
 
 if ( ! function_exists( 'coursepress_get_accessable_courses' ) ) :
 	/**
@@ -44,4 +44,4 @@ if ( ! function_exists( 'coursepress_get_accessable_courses' ) ) :
 
 		return $CoursePress_User->get_accessable_courses( $publish, $ids, $all );
 	}
-	endif;
+endif;
