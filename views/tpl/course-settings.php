@@ -104,4 +104,46 @@
             </div>
         </div>
     </div>
+
+    <div class="step-content cp-sep">
+        <div class="step-label-area">
+            <label class="label"><?php _e( 'Course Completion', 'cp' ); ?></label>
+            <p class="description"></p>
+        </div>
+
+        <div class="step-inner-content">
+            <div class="cp-box">
+                <ul class="cp-input-group">
+                    <li><?php _e( 'Pre', 'cp' ); ?></li>
+                    <li><?php _e( 'Success', 'cp' ); ?></li>
+                    <li><?php _e( 'Failed', 'cp' ); ?></li>
+                </ul>
+            </div>
+
+            <div class="cp-box">
+                <label class="label"><?php _e( 'Page Title', 'cp' ); ?></label>
+                <input type="text" />
+            </div>
+            <div class="cp-box">
+                <label class="label"><?php _e( 'Content', 'cp' ); ?></label>
+                <textarea rows="5"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="step-content">
+        <div class="step-label-area">
+            <label class="label"><?php _e( 'Certificate', 'cp' ); ?></label>
+        </div>
+
+        <div class="step-inner-content">
+            <div class="cp-box cp-toggle-box">
+                <label>
+                    <input type="checkbox" class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
+                    <?php _e( 'Enable custom certificate setup', 'cp' ); ?>
+                </label>
+                <p class="description"><?php _e( 'Creates custom certificate for this course that overrides default certificate settings.', 'cp' ); ?></p>
+            </div>
+        </div>
+    </div>
 </script>

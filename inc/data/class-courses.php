@@ -22,30 +22,28 @@ class CoursePress_Data_Courses extends CoursePress_Utility {
 		) );
 	}
 
-	function save_course() {
-		$course_meta = array();
+	function update_course() {}
 
-		if ( ! empty( $_POST['course_meta'] ) ) {
-			$course_meta = $_POST['course_meta'];
-		}
+	function delete_course() {}
 
-		/**
-		 * Trigger whenever a course is created or updated.
-		 *
-		 * @since 3.0
-		 * @param int $course_id The ID of the course created or updated.
-		 * @param array $meta An array of course meta data.
-		 */
-		do_action( 'coursepress_course_updated', $course_id, $course_meta );
+	function get_courses( $args = array() ) {
+		$defaults = array(
+			'post_type' => $this->post_type,
+			'post_status' => 'publish',
+			'posts_per_page' => 20
+		);
+		$args = wp_parse_args( $args, $defaults );
+
+		$courses = get_posts( $args );
+
+		return $courses;
 	}
 
-	function delete_course( $course_id ) {
-		/**
-		 * Trigger whenever a course is deleted.
-		 *
-		 * @since 3.0
-		 * @param int $course_id The ID deleted course.
-		 */
-		do_action( 'coursepress_deleted_course', $course_id );
+	function add_course_meta( $course_id, $meta_key, $meta_value ) {
+		add_post_meta( $course_id, $meta_key, $meta_value );
+	}
+
+	function delete_course_meta( $course_id, $meta_key, $meta_value ) {
+		delete_post_meta( $course_id, $meta_key, $meta_value );
 	}
 }

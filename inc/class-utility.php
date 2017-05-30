@@ -5,18 +5,7 @@
  * @since 3.0
  * @package CoursePress
  */
-class CoursePress_Utility {
-	protected static $_instance;
-
-	public static function instance() {
-		if ( ! static::$_instance ) {
-			$class = get_called_class();
-			static::$_instance = new self();
-		}
-
-		return static::$_instance;
-	}
-
+abstract class CoursePress_Utility {
 	function __set( $name, $value ) {
 		$this->{$name} = $value;
 	}
@@ -40,6 +29,7 @@ class CoursePress_Utility {
 
 		return implode( ' ', $vars );
 	}
+
 	function create_html( $tag, $attributes = array(), $content = '' ) {
 		$html = '<' . $tag;
 

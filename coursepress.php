@@ -45,6 +45,10 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 require_once 'inc/functions.php';
 
+if ( is_admin() ) {
+	require_once 'inc/admin/admin-functions.php';
+}
+
 final class CoursePress {
 	/**
 	 * @var string Current version number.
@@ -65,8 +69,11 @@ final class CoursePress {
 	 * @var array List of classes that are loaded both admin and front.
 	 */
 	protected $core_classes = array(
+		'CoursePress_Data_Core',
+		'CoursePress_Data_Users',
 		'CoursePress_User',
 		'CoursePress_Data_Courses',
+		'CoursePress_Data_Units',
 	);
 
 	/**
