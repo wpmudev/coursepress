@@ -14,10 +14,18 @@
 
                 EditCourse.on('coursepress:validate-course-settings', this.validate, this);
 
+                this.on( 'view_rendered', this.setUpCategory, this );
+
                 this.render();
             },
             validate: function() {
                 // @todo: do course settings validataion
+            },
+            setUpCategory: function() {
+                var catSelect = this.$('#course-categories');
+                catSelect.select2({
+                    placeholder: catSelect.attr('placeholder')
+                });
             }
         });
     });

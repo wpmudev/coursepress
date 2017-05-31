@@ -70,7 +70,6 @@ final class CoursePress {
 	 * @var array List of classes that are loaded both admin and front.
 	 */
 	protected $core_classes = array(
-		'CoursePress_Data_Core',
 		'CoursePress_Data_Users',
 		'CoursePress_Data_Courses',
 		'CoursePress_Data_Units',
@@ -87,6 +86,7 @@ final class CoursePress {
 	 * @var array List of classes that are loaded in front front pages only.
 	 */
 	protected $core_front_classes = array(
+		'CoursePress_VirtualPage'
 	);
 
 	public function __construct() {
@@ -136,6 +136,8 @@ final class CoursePress {
 	function deactivate() {}
 
 	function load_core() {
+		$this->set_current_user();
+
 		array_map( array( $this, 'getClass' ), $this->core_classes );
 
 		if ( is_admin() ) {
@@ -152,6 +154,12 @@ final class CoursePress {
 		 * @since 2.0
 		 */
 		do_action( 'coursepress_initialized' );
+	}
+
+	function set_current_user() {
+		global $CoursePress_User;
+
+		$CoursePress_User = new CoursePress_User( get_current_user_id() );
 	}
 }
 $CoursePress = new CoursePress();

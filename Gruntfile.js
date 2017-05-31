@@ -37,12 +37,14 @@ module.exports = function(grunt) {
                 'assets/js/src/common/coursepress.js',
                 'assets/js/src/common/request.js',
                 'assets/js/src/common/view.js',
-                'assets/js/src/common/add-image.js'
+                'assets/js/src/common/add-image.js',
+                'assets/js/src/common/dropdown-menu.js'
                 // assets/js/src/admin/general/....
             ],
-            'assets/js/coursepress_courseslist.js': [
+            'assets/js/coursepress.js': [
                 // Add JS that will be loaded at courselist page
-                // assets/js/src/admin/courses/...
+                // assets/js/src/admin/courselist/...
+				'assets/js/src/admin/courselist/courselist.js'
             ],
             'assets/js/coursepress_course.js': [
                 // ADd JS that will be loaded at course edit page

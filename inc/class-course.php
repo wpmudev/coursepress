@@ -16,10 +16,10 @@ class CoursePress_Course extends CoursePress_Utility {
 		}
 
 		// Set course meta
-		$this->set_course_meta();
+		$this->setUpCourseMetas();
 	}
 
-	function set_course_meta() {
+	function setUpCourseMetas() {
 		$settings = $this->get_settings();
 		$date_format = coursepress_get_option( 'date_format' );
 		$timezone = coursepress_get_option( 'timezone_string', 'UTC' );
@@ -166,6 +166,10 @@ class CoursePress_Course extends CoursePress_Utility {
 		return array();
 	}
 
+	function count_instructors() {
+		return count( $this->_get_instructors() );
+	}
+
 	/**
 	 * Get course instructors.
 	 *
@@ -184,6 +188,10 @@ class CoursePress_Course extends CoursePress_Utility {
 			return array_unique( array_filter( $facilitator_ids ) );
 
 		return array();
+	}
+
+	function count_facilitators() {
+		return count( $this->_get_facilitators() );
 	}
 
 	/**
@@ -206,6 +214,10 @@ class CoursePress_Course extends CoursePress_Utility {
 		return array();
 	}
 
+	function count_students() {
+		return count( $this->_get_students() );
+	}
+
 	/**
 	 * Get course students
 	 *
@@ -215,6 +227,11 @@ class CoursePress_Course extends CoursePress_Utility {
 		$student_ids = $this->_get_students();
 
 		return array_map( 'get_userdata', $student_ids );
+	}
+
+	function count_certified_students() {
+		// @todo: count certified students here
+		return 0;
 	}
 
 	function get_units( $status = 'any' ) {

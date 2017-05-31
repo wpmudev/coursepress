@@ -13,8 +13,16 @@
             </div>
 
             <div class="cp-box">
+                <label class="label"><?php _e( 'Course Slug', 'cp' ); ?></label>
+                <input type="text" name="post_name" value="{{post_name}}" />
+                <p class="description"><?php echo coursepress_get_url(); ?><span class="cp-slug">{{post_name}}</span>/</p>
+            </div>
+
+            <div class="cp-box">
                 <label class="label"><?php _e( 'Language', 'cp' ); ?></label>
-                <select></select>
+                <select name="meta_language">
+                    <option value="<?php echo __( 'English', 'cp' ); ?>"><?php echo __( 'English', 'cp' ); ?></option>
+                </select>
             </div>
         </div>
     </div>
@@ -47,24 +55,55 @@
                         </label>
                     </li>
                 </ul>
+            </div>
 
-                <div class="cp-info-box">
-                    <div class="cp-info-content active" id="type-auto-moderated">
-                        <p><?php _e( 'All grading is done manually, any number of students can enroll in this course at any time. Similar to Envato & Treehouse courses. Instructors can participate in discussion.', 'cp' ); ?></p>
-                        <p><?php _e( '(These settings can be changed at any time).', 'cp' ); ?></p>
+            <div class="cp-box cp-course-type active" id="type-auto-moderated">
+                <div class="cp-alert cp-alert-info">
+                    <p><?php _e( 'All grading is done manually, any number of students can enroll in this course at any time. Similar to Envato & Treehouse courses. Instructors can participate in discussion.', 'cp' ); ?></p>
+                    <p><?php _e( '(These settings can be changed at any time).', 'cp' ); ?></p>
+                </div>
+            </div>
+
+            <div class="cp-box cp-course-type inactive" id="type-manual">
+                <div class="cp-box">
+                <label class="label"><?php _e( 'Class Size', 'cp' ); ?></label>
+                <?php _e( 'Number of students', 'cp' ); ?> <input type="number" name="meta_class_size" class="input-inline" value="{{class_size}}" />
+                </div>
+
+                <label class="label"><?php _e( 'Course Availability', 'cp' ); ?></label>
+                <div class="cp-flex">
+                    <div class="cp-div-flex cp-pad-right">
+                        <span class="course-title-tag"><?php _e( 'Start Date', 'cp' ); ?></span>
+                        <input type="text" name="meta_course_start_date" value="{{course_start_date}}" />
                     </div>
-                    <div class="cp-info-content" id="type-manual">
-                        MANUAL
+                    <div class="cp-div-flex cp-pad-left">
+                        <span class="course-title-tag"><?php _e( 'End Date', 'cp' ); ?></span>
+                        <input type="text" name="meta_course_end_date" value="{{course_end_date}}" />
                     </div>
-                    <div class="cp-info-content" id="type-sample_course">
-                        SAMPLE COURSE
+                </div>
+                <br />
+                <label class="label"><?php _e( 'Enrollment Date', 'cp' ); ?></label>
+                <div class="cp-flex">
+                    <div class="cp-div-flex cp-pad-right">
+                        <span class="course-title-tag"><?php _e( 'Start Date', 'cp' ); ?></span>
+                        <input type="text" name="meta_enrollment_start_date" value="{{enrollment_start_date}}" />
                     </div>
+                    <div class="cp-div-flex cp-pad-left">
+                        <span class="course-title-tag"><?php _e( 'End Date', 'cp' ); ?></span>
+                        <input type="text" name="meta_enrollment_end_date" value="{{enrollment_end_date}}" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="cp-box cp-course-type inactive" id="type-sample_course">
+                <div class="cp-alert cp-alert-info">
+                    YEAH YEAH
                 </div>
             </div>
 
             <div class="cp-box cp-toggle-box cp-sep">
                 <label>
-                    <input type="checkbox" class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
+                    <input type="checkbox" name="meta_allow_discussion" {{_.checked(true, allow_discussion)}} class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
                     <?php _e( 'Enable course discussion', 'cp' ); ?>
                 </label>
                 <p class="description"><?php _e( 'Creates discussion area where users can post questions and get help from instructors, facilitators and other students', 'cp' ); ?></p>
@@ -72,7 +111,7 @@
 
             <div class="cp-box cp-toggle-box cp-sep">
                 <label>
-                    <input type="checkbox" class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
+                    <input type="checkbox" name="meta_allow_workbook" {{_.checked(true, allow_workbook)}} class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
                     <?php _e( 'Enable workbook', 'cp' ); ?>
                 </label>
                 <p class="description"><?php _e( 'Users can access their workbook which will show their progress/scores for the course.', 'cp' ); ?></p>
@@ -80,7 +119,7 @@
 
             <div class="cp-box cp-toggle-box">
                 <label>
-                    <input type="checkbox" class="cp-toggle-input" autocomplejte="off" /> <span class="cp-toggle-btn"></span>
+                    <input type="checkbox" name="meta_payment_paid_course" {{_.checked(true, payment_paid_course)}} class="cp-toggle-input" autocomplejte="off" /> <span class="cp-toggle-btn"></span>
                     <?php _e( 'This is a paid course', 'cp' ); ?>
                 </label>
                 <p class="description"><?php _e( 'Will allow you to set-up payment gateway/options.', 'cp' ); ?></p>

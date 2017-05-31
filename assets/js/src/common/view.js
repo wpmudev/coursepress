@@ -49,6 +49,8 @@
                     this.$el.html(_._getTemplate(this.template_id, model));
                 }
 
+                this.trigger( 'view_rendered' );
+
                 /**
                  * Trigger whenever the view template is loaded
                  */

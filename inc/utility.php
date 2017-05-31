@@ -115,3 +115,11 @@ if ( ! function_exists( 'coursepress_get_option' ) ) :
 		return $value;
 	}
 endif;
+
+if ( ! function_exists( 'coursepress_get_url' ) ) :
+	function coursepress_get_url() {
+		$slug = coursepress_get_setting( 'slugs/course', 'courses' );
+
+		return trailingslashit( home_url( '/' . $slug ) );
+	}
+endif;

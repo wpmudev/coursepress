@@ -50,7 +50,9 @@
                 <label class="label"><?php _e( 'Course categories', 'cp' ); ?></label>
                 <div class="cp-flex cp-flex-2">
                     <div class="cp-div-left">
-                        <input type="text" placeholder="<?php _e( 'Pick or create categories', 'cp' ); ?>" />
+                        <select id="course-categories" multiple="multiple" placeholder="<?php _( 'Pick or create category', 'cp' ); ?>">
+                            <option value="yes">No NO</option>
+                        </select>
                     </div>
                     <div class="cp-div-right">
                         <button type="button" class="cp-btn"><?php _e( 'Create Category', 'cp' ); ?></button>

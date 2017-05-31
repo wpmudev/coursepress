@@ -21,7 +21,7 @@ class CoursePress_User extends CoursePress_Utility {
 	 *
 	 * @param bool|int|WP_User $user
 	 */
-	public function __construct( $user = 0 ) {
+	public function __construct( $user = false ) {
 		if ( ! $user instanceof WP_User ) {
 			$user = get_userdata( (int) $user );
 		}
@@ -77,6 +77,7 @@ class CoursePress_User extends CoursePress_Utility {
 
 		$args = array(
 			'post_status' => $publish ? 'publish' : 'any',
+			//'author__in' => array( $this->ID ),
 		);
 
 		if ( $ids )

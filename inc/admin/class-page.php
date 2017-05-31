@@ -54,9 +54,10 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		// Main CP Page
 		$label = __( 'CoursePress Base', 'cp' );
 		$screen_id = add_menu_page( $label, $label, 'coursepress_dashboard_cap', $this->slug, array( $this, 'get_courselist_page' ), '', 25 );
-
 		// Add screen ID to the list of valid CP pages
 		array_unshift( $this->screens, $screen_id );
+		// Add preload callback
+		add_action( 'load-' . $screen_id, array( $this, 'process_courselist_page' ) );
 
 		// Set course edit page
 		$edit_label = __( 'New Course', 'cp' );
@@ -116,6 +117,9 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		 * }
 		 */
 
+		// External CSS
+		$this->enqueue_style( 'coursepress-select2', 'assets/external/css/select2.min.css' );
+
 		// Set stylesheets
 		$this->enqueue_style( 'fontawesome', 'assets/external/css/font-awesome.min.css' );
 		$this->enqueue_style( 'coursepress-admin-common', 'assets/css/admin-common.min.css' );
@@ -123,8 +127,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Set js
 		add_action( 'admin_footer', array( $this, 'set_admin_scripts' ) );
-		// Show custom WPMU footer text
-		add_action( 'in_admin_footer', array( $this, 'wpmu_footer_text' ) );
 	}
 
 	function enqueue_style( $id, $src ) {
@@ -161,6 +163,9 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			),
 		) );
 
+		// External scripts
+		$this->enqueue_script( 'coursepress-select2', 'assets/external/js/select2.min.js' );
+
 		// General admin js
 		wp_enqueue_script( 'coursepress-admin-general', $plugin_url . 'assets/js/admin-general.min.js', array( 'jquery', 'backbone', 'underscore' ), $CoursePress->version, true );
 		$this->enqueue_script( $coursepress_pagenow, 'assets/js/' . $coursepress_pagenow . '.min.js' );
@@ -174,12 +179,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		global $CoursePress;
 
 		wp_enqueue_script( $id, $CoursePress->plugin_url . $src, false, $CoursePress->version, true );
-	}
-
-	function wpmu_footer_text() {
-		$url = sprintf( 'by <a href="%s" target="_blank">WPMU DEV</a>', 'https://premium.wpmudev.org' );
-
-		printf( '<p class="wpmu-footer-text">%s %s %s</p>', __( 'Made with', 'cp' ), '<i class="fa fa-heart"></i>', $url );
 	}
 
 	function process_ajax_request() {
@@ -209,12 +208,47 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		wp_send_json_error( $error );
 	}
 
+	function courselist_columns() {
+		$columns = array(
+			'category' => __( 'Categories', 'cp' ),
+			'units' => __( 'Units', 'cp' ),
+			'students' => __( 'Students', 'cp' ),
+			'start_date' => __( 'Start Date', 'cp' ),
+			'end_date' => __( 'End Date', 'cp' ),
+			'enrollment_start' => __( 'Enrollment Start', 'cp' ),
+			'enrollment_end' => __( 'Enrollment End', 'cp' ),
+			'certified' => __( 'Certified', 'cp' ),
+		);
+
+		return $columns;
+	}
+
+	function hidden_columns() {
+		return array( 'category', 'start_date', 'end_date', 'enrollment_start', 'enrollment_end' );
+	}
+
+	function process_courselist_page() {
+		$screen_id = get_current_screen()->id;
+		add_filter( 'hidden_columns', array( $this, 'hidden_columns' ) );
+		add_filter( 'manage_' . $screen_id . '_columns', array( $this, 'courselist_columns' ) );
+
+		add_screen_option( 'per_page', array( 'default' => 20, 'coursepress_course_per_page' ) );
+	}
+
 	function get_courselist_page() {
+		global $CoursePress_User;
+
+		$screen = get_current_screen();
+
 		$args = array(
-			'page_title' => 'CoursePress', // @note: DO NOT TRANSLATE
+			'columns' => get_column_headers( $screen ),
+			'hidden_columns' => get_hidden_columns( $screen ),
+			'courses' => $CoursePress_User->get_accessable_courses( false ),
+			'course_edit_link' => add_query_arg( 'page', 'coursepress_course', admin_url( 'admin.php' ) ),
 		);
 
 		coursepress_render( 'views/admin/courselist', $args );
+		coursepress_render( 'views/admin/footer-text' );
 	}
 
 	function get_course_edit_page() {
@@ -252,9 +286,11 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'course_id' => $course_id,
 			'page_title' => $course_id > 0 ? get_the_title( $course_id ) : __( 'New Course', 'cp' ),
 			'menu_list' => $menu_list,
+			'categories' => array(),
 		);
 
 		coursepress_render('views/admin/course-edit', $args );
+		coursepress_render( 'views/admin/footer-text' );
 
 		// Load templates
 		coursepress_render( 'views/tpl/common' );

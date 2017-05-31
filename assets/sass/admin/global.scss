@@ -1,15 +1,72 @@
+.wpmu-footer-text {
+  position: relative;
+  display: block;
+  margin: 50px 0;
+  text-align: center;
+  font-size: 15px;
+  color: #a9a9a9;
+  @include clearfix;
+
+  a {
+    text-decoration: none;
+    color: #a9a9a9;
+  }
+}
+.select2-dropdown {
+  border: 1px solid $color_1;
+  padding: 8px 15px;
+}
+.select2-search__field {
+  padding: 8px 15px !important;
+  margin-bottom: 10px;
+  @include radius(4px);
+}
+
 .coursepress-wrap {
-  font-size: 1.2em;
+  font-size: 14.5px;
+
   @include boxsizing;
+  @include clearfix;
 
   * {
     @include boxsizing;
   }
 
+  .select2-container {
+    width: 100%;
+
+    .select2-selection {
+      height: 38px;
+      padding: 5px;
+      background-color: $color_2;
+      border: 1px solid $color_1;
+    }
+    .select2-selection__arrow {
+      height: 38px;
+    }
+  }
+
+  .active {
+    display: block;
+    opacity: 1;
+    @include transition(opacity 0.4s);
+  }
+  .inactive {
+    display: none;
+    opacity: 0;
+    @include transition(opacity 0.4s);
+  }
+  .cp-pad-right {
+    padding-right: 15px;
+  }
+  .cp-pad-left {
+    padding-left: 15px;
+  }
   .course-title-tag {
     display: block;
-    font-size: 0.4em;
+    font-size: 11px;
     color: #838383;
+    text-transform: uppercase;
   }
   .wp-heading-inline {
     text-transform: uppercase;
@@ -26,8 +83,8 @@
     font-style: normal;
   }
   input[type="text"],
-  textarea,
-  select {
+  input[type="number"],
+  textarea {
     display: block;
     width: 100%;
     line-height: 2;
@@ -36,19 +93,32 @@
     outline: 0;
     border: 1px solid $color_1;
     background-color: $color_2;
-    @include radius(3px);
+    @include radius(4px);
     @include boxshadow(none);
 
     &:focus {
       border-color: $color_3;
     }
   }
+  input[type="number"] {
+    display: inline-block;
+    width: 70px;
+    padding-right: 0;
+  }
   textarea {
     resize: none;
+  }
+  select {
+    width: 100%;
   }
   [type="text"].cp-input-auto {
     width: auto;
     display: inline-block;
+  }
+  a:active,
+  a:focus {
+    @include boxshadow(none);
+    outline: 0;
   }
   .cp-box {
     margin-bottom: 25px;
@@ -67,37 +137,6 @@
   }
   .cp-right {
     float: right;
-  }
-  .cp-info-box {
-    position: relative;
-    padding: 15px 25px 15px 55px;
-    background-color: rgba(91, 201, 255, 0.27);
-    border: 1px solid $blue_1;
-    @include radius(6px);
-
-    &:before {
-      position: absolute;
-      left: 15px;
-      content: '\f05a';
-      font-family: 'FontAwesome';
-      font-size: 1.4em;
-      color: $blue_2;
-    }
-
-    p {
-      margin: 0;
-    }
-    .cp-info-content {
-      display: none;
-      opacity: 0;
-      @include transition(0.4s);
-
-      &.active {
-        display: block;
-        opacity: 1;
-        @include transition(0.4s);
-      }
-    }
   }
   .cp-sep {
     &:after {

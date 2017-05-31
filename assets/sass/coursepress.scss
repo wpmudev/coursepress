@@ -1,2 +1,24 @@
 // Use in courselist
 @import 'common/mixin.scss';
+
+.coursepress-wrap {
+  margin-top: 20px;
+  .wp-heading-inline {
+    margin-bottom: -20px;
+  }
+  .coursepress-page {
+    .cp-search-form {
+      float: right;
+      margin: -10px 0 15px 0;
+    }
+    .cp-edit-overview,
+    .cp-edit-units {
+      &:after {
+        content: '|';
+        color: $grey_4;
+        display: inline-block;
+        padding: 0 15px;
+      }
+    }
+  }
+}

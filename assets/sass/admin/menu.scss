@@ -1,0 +1,60 @@
+.coursepress-wrap {
+  .cp-dropdown {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 15px;
+  }
+  .cp-dropdown-btn {
+    @include radius(3px);
+    border: 1px solid $grey_5;
+    background-color: $grey_6;
+    padding: 4px 8px;
+    cursor: pointer;
+
+    &:after {
+      content: '\f107';
+      font-family: FontAwesome;
+      font-size: 14px;
+      display: inline-block;
+      margin-left: 8px;
+    }
+
+    &:hover {
+      background-color: $grey_5;
+      border-color: $grey_4;
+    }
+  }
+
+  .cp-dropdown-menu {
+    position: absolute;
+    background-color: #ffffff;
+    border: 1px solid $grey_5;
+    margin: 3px 0 0 0;
+    padding: 5px 0;
+    z-index: 9;
+    opacity: 0;
+    display: none;
+    @include transition(opacity 0.4s);
+    @include radius(3px);
+
+    li {
+      display: block;
+      padding: 0;
+
+      &:hover {
+        background-color: $grey_6;
+      }
+
+      a {
+        display: block;
+        padding: 4px 12px;
+      }
+    }
+
+    &.open {
+      display: block;
+      opacity: 1;
+      @include transition(opacity 0.4s);
+    }
+  }
+}

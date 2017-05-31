@@ -18,14 +18,20 @@
   }
 
   .cp-btn {
-    line-height: 2;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1.8;
     cursor: pointer;
-    padding: 5px 25px;
-    margin: 0 15px 0 0;
+    padding: 4px 15px;
+    margin: 0 15px;
     text-transform: uppercase;
-    border: 0;
-    background-color: $color_1;
-    @include radius(6px);
+    background-color: #e3e3e3;
+    border: 1px solid #9a9a9a;
+    text-decoration: none;
+    color: #5e5e5e;
+    font-size: 14px;
+    font-weight: 400;
+    @include radius(3px);
 
     &.cp-right {
       margin: 0 0 0 15px;
@@ -40,9 +46,12 @@
       color: #ffffff;
     }
     &.cp-bordered-btn {
+      border-width: 2px;
       background-color: transparent;
-      border: 2px solid $grey_1;
-      padding: 0 15px;
+
+      &:hover {
+        background-color: #ffffff;
+      }
     }
   }
 
