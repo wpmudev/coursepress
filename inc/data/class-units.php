@@ -15,26 +15,10 @@ class CoursePress_Data_Units {
 
 	function register() {
 		register_post_type( $this->post_type, array(
-			'public' => false,
-			'show_ui' => false,
+			'public' => true,
+			//'show_ui' => false,
+			'hierarchical' => true,
+			'label' => 'Units', // debugging only
 		) );
-	}
-
-	function get_course_units( $course_id = 0, $status = 'any' ) {
-
-		if ( (int) $course_id === 0 )
-			return array();
-
-		$args = array(
-			'post_type' => $this->post_type,
-			'post_status' => $status,
-			'post_parent' => $course_id,
-			'order_by' => 'menu_order',
-			'order' => 'ASC',
-		);
-
-		$units = get_posts( $args );
-
-		return $units;
 	}
 }

@@ -15,12 +15,10 @@ if ( ! function_exists( 'coursepress_add_instructor' ) ) :
 	 * @return bool
 	 */
 	function coursepress_add_instructor( $user_id = 0, $course_id = 0 ) {
-		global $CoursePress_Data_Courses;
-
 		if ( empty( $user_id ) || empty( $course_id ) )
 			return false;
 
-		$CoursePress_Data_Courses->add_course_meta( $course_id, 'instructors', $user_id );
+		update_post_meta( $course_id, 'instructor', $user_id, $user_id );
 
 		/**
 		 * Trigger whenever a new instructor is added to a course.
@@ -90,6 +88,16 @@ if ( ! function_exists( 'coursepress_get_instructor_courses' ) ) :
 			$args['fields'] = 'ids';
 
 		return coursepress_get_courses( $args );
+	}
+endif;
+
+if ( ! function_exists( 'coursepress_get_instructor_profile_link' ) ) :
+	function coursepress_get_instructor_profile_link( $instructor_id ) {
+		$instructor = new CoursePress_User( $instructor_id );
+
+		return ! $instructor->__get( 'is_error' ) ?
+			$instructor->get_instructor_profile_link()
+			: '';
 	}
 endif;
 

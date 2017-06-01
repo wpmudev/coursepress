@@ -18,11 +18,11 @@ abstract class CoursePress_Utility {
 	}
 
 	function date_time_now() {
-		$timezone = coursepress_get_option( 'timezone_string', 'UTC' );
+		$time_now = current_time( 'timestamp' );
 		$date_now = date( 'M/d/y', current_time( 'timestamp' ) );
 
 		// Time now is not the current time but rather the timestamp of the starting date today (00:01).
-		$time_now = strtotime( $date_now, $timezone );
+		$time_now = strtotime( $date_now, $time_now );
 
 		return $time_now;
 	}
@@ -34,7 +34,7 @@ abstract class CoursePress_Utility {
 		$vars = array();
 
 		foreach ( $attr as $key => $value ) {
-			$vars[] = $key . '="' . $value . '""';
+			$vars[] = $key . '="' . $value . '"';
 		}
 
 		return implode( ' ', $vars );

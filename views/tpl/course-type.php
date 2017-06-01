@@ -20,9 +20,7 @@
 
             <div class="cp-box">
                 <label class="label"><?php _e( 'Language', 'cp' ); ?></label>
-                <select name="meta_language">
-                    <option value="<?php echo __( 'English', 'cp' ); ?>"><?php echo __( 'English', 'cp' ); ?></option>
-                </select>
+                <input type="text" name="meta_course_language" value="{{course_language}}" />
             </div>
         </div>
     </div>
@@ -64,7 +62,7 @@
                 </div>
             </div>
 
-            <div class="cp-box cp-course-type inactive" id="type-manual">
+            <div class="cp-box cp-sep cp-course-type inactive" id="type-manual">
                 <div class="cp-box">
                 <label class="label"><?php _e( 'Class Size', 'cp' ); ?></label>
                 <?php _e( 'Number of students', 'cp' ); ?> <input type="number" name="meta_class_size" class="input-inline" value="{{class_size}}" />

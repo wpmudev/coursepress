@@ -45,3 +45,28 @@ if ( ! function_exists( 'coursepress_get_accessable_courses' ) ) :
 		return $CoursePress_User->get_accessable_courses( $publish, $ids, $all );
 	}
 endif;
+
+if ( ! function_exists( 'coursepress_get_enrollment_types' ) ) :
+	function coursepress_get_enrollment_types() {
+		return array(
+			'manually' => __( 'Manually added', 'cp' ),
+			'registered' => __( 'Any registered users', 'cp' ),
+			'passcode' => __( 'Any registered users with a pass code', 'cp' ),
+			'prerequisite' => __( 'Registered users who completed the prerequisite course(s).', 'cp' ),
+		);
+	}
+endif;
+
+if ( ! function_exists( 'coursepress_get_categories' ) ) :
+	function coursepress_get_categories() {
+		$terms = get_terms( array( 'taxonomy' => 'course_category', 'hide_empty' => false ) );
+		$cats = array();
+
+		if ( ! empty( $terms ) ) {
+			foreach ( $terms as $term )
+				$cats[ $term->term_id ] = $term->name;
+		}
+
+		return $cats;
+	}
+endif;

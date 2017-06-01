@@ -56,6 +56,15 @@
     opacity: 0;
     @include transition(opacity 0.4s);
   }
+  .cp-count {
+    display: inline-block;
+    padding: 0 6px;
+    @include radius(50%);
+    font-size: 11px;
+    background-color: #ffffff;
+    float: right;
+    margin: 0 0 0 5px;
+  }
   .cp-pad-right {
     padding-right: 15px;
   }

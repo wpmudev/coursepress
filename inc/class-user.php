@@ -34,7 +34,11 @@ class CoursePress_User extends CoursePress_Utility {
 
 		// Inherit WP_User object
 		foreach ( $user as $key => $value ) {
-			$this->__set( $key, $value );
+			if ( 'data' == $key )
+				foreach ( $value as $k => $v )
+					$this->__set( $k, $v );
+			else
+				$this->__set( $key, $value );
 		}
 	}
 
@@ -70,6 +74,41 @@ class CoursePress_User extends CoursePress_Utility {
 		$facilitator = get_user_meta( $this->ID, 'facilitator_' . $course_id, true );
 
 		return $facilitator == $this->ID;
+	}
+
+	function get_instructor_profile_link() {
+	//	if ( false == $this->is_instructor() )
+	//		return null;
+
+		$slug = coursepress_get_setting( 'slugs/instructor_profile', 'instructor' );
+
+		return site_url( '/' ) . trailingslashit( $slug ) . $this->__get( 'display_name' );
+	}
+
+	function get_name() {
+		$names = array(
+			get_user_meta( $this->ID, 'first_name', true ),
+			get_user_meta( $this->ID, 'last_name', true ),
+		);
+
+		$names = array_filter( $names );
+		$display_name = $this->__get( 'display_name' );
+		$name = '';
+
+		if ( ! empty( $names ) )
+			$name .= $this->create_html( 'span', array( 'class' => 'fn name' ), implode( ' ', $names ) );
+
+		$name .= $this->create_html( 'span', array( 'class' => 'fn nickname' ), ' (' . $display_name . ') ' );
+
+		return $name;
+	}
+
+	function get_avatar( $size = 42 ) {
+		$avatar = get_avatar( $size, $this->__get( 'user_email' ) );
+
+		// @todo: add defualt avatar
+
+		return $avatar;
 	}
 
 	function get_accessable_courses( $publish = true, $ids = false, $all = true ) {

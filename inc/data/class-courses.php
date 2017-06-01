@@ -15,7 +15,6 @@ class CoursePress_Data_Courses extends CoursePress_Utility {
 
 	function register() {
 		$course_slug = coursepress_get_setting( 'slugs/course', 'courses' );
-
 		register_post_type( $this->post_type, array(
 			'public' => true,
 			'label' => __( 'CoursePress', 'cp' ),
@@ -29,12 +28,10 @@ class CoursePress_Data_Courses extends CoursePress_Utility {
 			)
 		) );
 
+		$category_slug = coursepress_get_setting( 'slugs/category', 'course_category' );
+
 		register_taxonomy( 'course_category', array( $this->post_type ), array( 'public' => true ) );
 	}
-
-	function update_course() {}
-
-	function delete_course() {}
 
 	function get_courses( $args = array() ) {
 		$posts_per_page = coursepress_get_option( 'posts_per_page', 20 );

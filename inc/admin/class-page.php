@@ -6,18 +6,24 @@
  * @package CoursePress
  */
 class CoursePress_Admin_Page extends CoursePress_Utility {
-	protected $cap = 'manage_options'; // Default cap to use to all CP pages
+	/**
+	 * @var string the main menu slug.
+	 */
 	protected $slug = 'coursepress';
-	protected $is_current_page = false;
 
 	/**
-	 * @var array List of CP screen_id page
+	 * @var array List of CP screen_id
 	 */
 	protected $screens = array();
 
+	/**
+	 * @var array An array of variables use for localization.
+	 */
 	var $localize_array = array();
 
 	public function __construct() {
+		global $wp_filter;
+
 		// Check if user can't access coursepress
 		if ( ! current_user_can( 'coursepress_dashboard_cap' ) ) {
 			$this->is_error = true;
@@ -25,12 +31,10 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			return;
 		}
 
-		// Setup the page
+		// Setup CP pages
 		add_action( 'admin_menu', array( $this, 'set_admin_menus' ) );
-		// Setup admin assets need for this page
+		// Setup admin assets
 		add_action( 'admin_enqueue_scripts', array( $this, 'set_admin_css' ) );
-		// Hook to ajax call
-		add_action( 'wp_ajax_coursepress_request', array( $this, 'process_ajax_request' ) );
 	}
 
 	/**
@@ -167,7 +171,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$this->enqueue_script( 'coursepress-select2', 'assets/external/js/select2.min.js' );
 
 		// General admin js
-		wp_enqueue_script( 'coursepress-admin-general', $plugin_url . 'assets/js/admin-general.min.js', array( 'jquery', 'backbone', 'underscore' ), $CoursePress->version, true );
+		wp_enqueue_script( 'coursepress-admin-general', $plugin_url . 'assets/js/admin-general.min.js', array( 'jquery', 'backbone', 'underscore', 'jquery-ui-autocomplete' ), $CoursePress->version, true );
 		$this->enqueue_script( $coursepress_pagenow, 'assets/js/' . $coursepress_pagenow . '.min.js' );
 
 		// Set local vars
@@ -179,33 +183,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		global $CoursePress;
 
 		wp_enqueue_script( $id, $CoursePress->plugin_url . $src, false, $CoursePress->version, true );
-	}
-
-	function process_ajax_request() {
-		$input = json_decode( file_get_contents( 'php://input' ) );
-		$error = array( 'code' => 'cannot_process', 'message' => __( 'Something went wrong. Please try again.', 'cp' ) );
-
-		if ( isset( $input->_wpnonce ) && wp_verify_nonce( $input->_wpnonce, 'coursepress_nonce' ) ) {
-			$action = $input->action;
-			$input->success = false;
-			$input->response = array();
-			$input->error = array();
-
-			/**
-			 * Trigger when an ajax request is sent base on the given `action` name.
-			 *
-			 * @since 3.0
-			 * @param object $input
-			 */
-			do_action( 'coursepress_' . $action, $input );
-
-			if ( $input->success )
-				wp_send_json_success( $input->response );
-			else
-				$error = wp_parse_args( $error, $input->error );
-		}
-
-		wp_send_json_error( $error );
 	}
 
 	function courselist_columns() {
@@ -263,9 +240,17 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		else
 			$course = coursepress_get_course( $course_id );
 
+		// Set course category
+		$category = array_values( $course->get_category() );
+		$course->__set( 'course_category', $category );
+
 		// Add $course object to localize array for quick editing
-		$this->localize_array['course'] = $course;
-		$this->localize_array['course_units'] = $course->get_units();
+		$local_vars = array(
+			'course' => $course, // Use in most steps
+			//'course_units' => $course->get_units(), // Use in units steps
+			'categories' => coursepress_get_categories(),
+		);
+		$this->localize_array = wp_parse_args( $local_vars, $this->localize_array );
 
 		$menu_list = array(
 			'course-type' => __( 'Type of Course', 'cp' ),
@@ -286,7 +271,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'course_id' => $course_id,
 			'page_title' => $course_id > 0 ? get_the_title( $course_id ) : __( 'New Course', 'cp' ),
 			'menu_list' => $menu_list,
-			'categories' => array(),
 		);
 
 		coursepress_render('views/admin/course-edit', $args );

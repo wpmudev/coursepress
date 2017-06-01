@@ -8,6 +8,7 @@
 class CoursePress_VirtualPage extends CoursePress_Utility {
 	protected $cp_post_types = array( 'course', 'unit', 'module' );
 	protected $post_type;
+	protected $template;
 
 	public function __construct() {
 		// Check for CP pages
@@ -24,14 +25,27 @@ class CoursePress_VirtualPage extends CoursePress_Utility {
 
 			if ( $wp_query->is_single )
 				if ( 'course' == $post_type )
-					$this->setUpCourseOverview();
+					$this->__set( 'template', 'setCourseOverview' );
 				elseif ( 'unit' == $post_type )
 					$this->setUpUnitsOverview();
 				elseif ( 'module' == $post_type )
 					$this->setUpModuleView();
+
+			add_filter( 'the_content', array( $this, 'setUpContent' ) );
 		}
 
 		return $template;
+	}
+
+	function setUpContent( $content ) {
+		if ( is_main_query() ) {
+			$content = call_user_func( array( $this, $this->__get( 'template' ) ) );
+		}
+		return $content;
+	}
+
+	function setCourseOverview() {
+		return coursepress_render( 'views/templates/course-overview', array(), false );
 	}
 
 	function setUpCourseOverview() {}

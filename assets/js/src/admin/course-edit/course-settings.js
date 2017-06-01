@@ -26,6 +26,8 @@
                 catSelect.select2({
                     placeholder: catSelect.attr('placeholder')
                 });
+
+                this.$('[name="meta_enrollment_type"]').select2();
             }
         });
     });

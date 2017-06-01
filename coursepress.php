@@ -45,6 +45,7 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 require_once 'inc/utility.php';
 require_once 'inc/functions.php';
+require_once 'inc/users.php';
 
 if ( is_admin() ) {
 	require_once 'inc/admin/admin-functions.php';
@@ -72,7 +73,7 @@ final class CoursePress {
 	protected $core_classes = array(
 		'CoursePress_Data_Users',
 		'CoursePress_Data_Courses',
-		'CoursePress_Data_Units',
+		'CoursePress_Core',
 	);
 
 	/**
@@ -80,13 +81,15 @@ final class CoursePress {
 	 */
 	protected $core_admin_classes = array(
 		'CoursePress_Admin_Page',
+		'CoursePress_Admin_Ajax',
 	);
 
 	/**
 	 * @var array List of classes that are loaded in front front pages only.
 	 */
 	protected $core_front_classes = array(
-		'CoursePress_VirtualPage'
+		'CoursePress_VirtualPage',
+		'CoursePress_Shortcode',
 	);
 
 	public function __construct() {

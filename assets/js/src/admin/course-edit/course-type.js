@@ -29,7 +29,7 @@
             },
 
             setSelect2: function() {
-                this.$('select').select2();
+                //this.$('select').select2();
             },
 
             updateSlug: function(ev) {
