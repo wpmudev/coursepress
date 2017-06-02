@@ -3,7 +3,7 @@
 (function() {
     'use strict';
 
-    CoursePress.Define( 'DropDownMenu', function() {
+    CoursePress.Define( 'DropDownMenu', function($) {
         var DropDownMenu, findDropDown;
 
         DropDownMenu = CoursePress.View.extend({
@@ -14,8 +14,11 @@
                 this.menuList = this.$('.cp-dropdown-menu');
             },
             toggleMenu: function() {
-                var isOpen = this.menuList.is('.open');
+                var isOpen = this.menuList.is('.open'),
+                    others = $('.cp-dropdown-menu').not(this.menuList);
 
+                // Closed all other dropdowns
+                others.removeClass('open');
                 if ( ! isOpen ) {
                     this.menuList.addClass('open');
                 } else {

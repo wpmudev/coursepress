@@ -1,0 +1,166 @@
+
+.coursepress-wrap {
+  a {
+    text-decoration: none;
+  }
+  .wp-heading-inline {
+    text-transform: uppercase;
+    font-size: 2em;
+    font-weight: 600;
+    color: $dark_1;
+  }
+  .course-tag {
+    font-size: 12px;
+    display: block;
+    font-weight: 700;
+    color: $grey_2;
+  }
+
+  .coursepress-page {
+    margin: 25px 0;
+
+    .cp-menu-items {
+      .course-menu {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .cp-menu-item {
+        display: block;
+        padding: 8px 15px;
+        margin: 0;
+        cursor: pointer;
+        font-size: 15px;
+
+        &.active {
+          background-color: $grey_5;
+          @include transition(background-color 0.4s);
+          @include radius(20px);
+        }
+        &.done {
+          background-color: green;
+        }
+      }
+    }
+
+    .course-content {
+      .course-content-tab {
+        display: none;
+
+        &.tab-active {
+          display: block;
+          background-color: #ffffff;
+          border: 1px solid $grey_5;
+          @include radius(6px);
+        }
+      }
+
+      .cp-box-heading {
+        padding: 8px 25px;
+        text-transform: uppercase;
+        border-bottom: 1px solid $grey_5;
+      }
+      .box-heading-title {
+        margin: 8px 0;
+        color: $dark_2;
+      }
+
+      .cp-box-content {
+        padding: 25px;
+      }
+
+      .box-label-area {
+        .label {
+          font-size: 15px;
+          display: block;
+          color: $dark_1;
+        }
+        .description {
+          font-size: 13.5px;
+          color: $grey_2;
+        }
+      }
+
+      .cp-box {
+        margin-bottom: 25px;
+        @include clearfix;
+
+        .label {
+          font-size: 14px;
+          display: block;
+          color: $dark_1;
+          margin-bottom: 8px;
+        }
+        &.cp-toggle-box {
+          .label {
+            display: inline-block;
+            margin: 0;
+            vertical-align: middle;
+          }
+          .description {
+            margin-left: 55px;
+          }
+        }
+        .widefat {
+          margin-bottom: 8px;
+        }
+      }
+    }
+
+    .course-footer {
+      display: block;
+      margin: 25px 0;
+      text-align: right;
+      @include clearfix;
+
+      .cp-btn {
+        font-size: 15px;
+        padding: 8px 15px;
+        text-transform: uppercase;
+      }
+
+      .step-back {
+        float: left;
+      }
+    }
+  }
+
+  @media screen {
+    @media (min-width: 800px) {
+      .coursepress-page {
+        &.course-steps-page {
+          display: flex;
+        }
+
+        .cp-menu-items {
+          width: 180px;
+        }
+
+        .course-content {
+          width: $width/12*9.5;
+          padding-left: 20px;
+        }
+
+        .cp-box-content {
+          @include clearfix;
+          @include boxsizing;
+          * {
+            @include boxsizing;
+          }
+
+          .box-label-area {
+            float: left;
+            width: $width/12*3.5;
+          }
+
+          .box-inner-content {
+            float: left;
+            width: $width/12*8.5;
+            padding-left: 20px;
+          }
+        }
+      }
+    }
+  }
+}

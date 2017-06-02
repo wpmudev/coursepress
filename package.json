@@ -1,6 +1,6 @@
 {
 	"name": "coursepress",
-	"version": "3.0-beta",
+	"version": "3.0.0",
 	"title": "CoursePress",
 	"description": "CoursePress WordPress Plugin",
 	"homepage": "https://premium.wpmudev.org/project/coursepress-pro/",
@@ -41,6 +41,26 @@
 		"grunt-autoprefixer": "~0.7.2",
 		"grunt-contrib-sass": "~0.8.1",
 		"grunt-contrib-cssmin": "~0.10.0",
-		"grunt-contrib-watch": "~0.6.1"
+		"grunt-contrib-watch": "~0.6.1",
+		"gulp": "^3.9.1",
+		"gulp-autoprefixer": "^2.3.1",
+		"gulp-clean": "^0.3.2",
+		"gulp-concat": "^2.6.1",
+		"gulp-jsvalidate": "^3.0.0",
+		"gulp-notify": "^2.2.0",
+		"gulp-rename": "^1.2.2",
+		"gulp-replace": "^0.5.4",
+		"gulp-sass": "^2.3.2",
+		"gulp-phpunit": "^0.22.2",
+		"gulp-phplint": "^0.3.4",
+		"gulp-sourcemaps": "^1.9.1",
+		"gulp-header": "^1.8.8",
+		"gulp-uglify": "^1.5.4",
+		"gulp-jshint": "^2.0.4",
+		"gulp-phpcs": "^1.4.0",
+		"gulp-watch": "^4.3.11",
+		"gulp-wp-pot": "^2.0.3",
+		"gulp-zip": "^4.0.0",
+		"gulp-potomo": "^1.0.2"
 	}
 }

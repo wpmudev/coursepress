@@ -1,3 +1,6 @@
+/* jshint -W065 */
+/* global jQuery, Backbone */
+
 (function() {
     'use strict';
 
@@ -8,8 +11,9 @@
 
         self.Define = function (name, callback) {
 
-            if (!self[name])
+            if ( !self[name] ) {
                 self[name] = callback.call(null, $, doc, win);
+            }
         };
 
         self.Cookie = function( cookie_name ) {
@@ -26,9 +30,9 @@
                     return cookies[name] ? cookies[name] : null;
                 },
                 set: function( cookie_value, time ) {
-                    var date, expires;
-                    date = new Date();
-                    expires = date.getTime() + parseInt(time);
+                    var d, expires;
+                    d = new Date();
+                    expires = d.getTime() + parseInt(time);
 
                     doc.cookie = name + '=' + cookie_value + ';expires=' + expires + ';path=' + win._coursepress.cookie.path;
                 },
@@ -43,7 +47,7 @@
                     cookie = cookie.split('=');
                     cookies[cookie[0]] = cookie[1];
                 }
-            }
+            };
         };
 
         return self;

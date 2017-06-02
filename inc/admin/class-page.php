@@ -155,7 +155,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'cookie' => array(
 				'hash' => COOKIEHASH,
 				'path' => COOKIEPATH,
-				'ssl' => is_ssl(),
 			),
 			'coursepress_page' => add_query_arg( 'page', 'coursepress', admin_url() ),
 			// Common use texts

@@ -63,7 +63,51 @@ class CoursePress_Course extends CoursePress_Utility {
 	}
 
 	function get_settings() {
+		$course_meta = array(
+			'course_type' => 'auto-moderated',
+			'course_language' => __( 'English', 'cp' ),
+			'allow_discussion' => false,
+			'allow_workbook' => false,
+			'payment_paid_course' => false,
+			'listing_image' => '',
+			'listing_image_thumbnail_id' => 0,
+			'featured_video' => '',
+			'enrollment_type' => 'registered',
+			'enrollment_passcode' => '',
+
+			'course_view' => 'normal',
+			'structure_level' => 'unit',
+			'course_open_ended' => true,
+			'course_start_date' => 0,
+			'course_end_date' => '',
+			'enrollment_open_ended' => false,
+			'enrollment_start_date' => '',
+			'enrollment_end_date' => '',
+			'class_limited' => '',
+			'class_size' => '',
+
+			'pre_completion_title' => __( 'Almost there!', 'CP_TD' ),
+			'pre_completion_content' => '',
+			'minimum_grade_required' => 100,
+			'course_completion_title' => __( 'Congratulations, You Passed!', 'CP_TD' ),
+			'course_completion_content' => '',
+			'course_failed_title' => __( 'Sorry, you did not pass this course!', 'CP_TD' ),
+			'course_failed_content' => '',
+			'basic_certificate_layout' => '',
+			'basic_certificate' => false,
+			'certificate_background' => '',
+			'cert_margin' => array(
+				'top' => 0,
+				'left' => 0,
+				'right' => 0,
+			),
+			'page_orientation' => 'L',
+			'cert_text_color' => '#5a5a5a'
+		);
+
 		$settings = get_post_meta( $this->ID, 'course_settings', true );
+		$settings = wp_parse_args( $settings, $course_meta );
+
 		return $settings;
 	}
 
@@ -305,10 +349,10 @@ class CoursePress_Course extends CoursePress_Utility {
 		return $cats;
 	}
 
-	function get_units( $publish = true ) {
+	private function _get_units( $published = true, $ids = true ) {
 		$args = array(
 			'post_type'      => 'unit',
-			'post_status'    => $publish ? 'publish' : 'any',
+			'post_status'    => $published ? 'publish' : 'any',
 			'post_parent'    => $this->__get( 'ID' ),
 			'posts_per_page' => - 1, // Units are often retrieve all at once
 			'suppress_filters' => true,
@@ -316,8 +360,22 @@ class CoursePress_Course extends CoursePress_Utility {
 			'order' => 'ASC',
 		);
 
-		$units = array();
-		$results = get_posts( $args );
+		if ( $ids )
+			$args['fields'] = 'ids';
+
+		$units = get_posts( $args );
+
+		return $units;
+	}
+
+	function count_units( $published = true ) {
+		$units = $this->_get_units( $published );
+
+		return count( $units );
+	}
+
+	function get_units( $published = true ) {
+		$results = $this->_get_units( $published, false );
 
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $unit ) {

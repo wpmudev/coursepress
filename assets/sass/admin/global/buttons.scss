@@ -1,0 +1,38 @@
+.coursepress-wrap {
+  [type="button"],
+  [type="submit"],
+  .cp-btn {
+    border: 1px solid $grey_4;
+    background-color: $grey_5;
+    cursor: pointer;
+    padding: 8px 15px;
+    font-size: 14px;
+    line-height: 1.5;
+    height: auto;
+    display: inline-block;
+    @include radius(4px);
+  }
+  .cp-btn-xs {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+  .cp-btn-default {
+    background-color: $grey_4;
+    border-color: $grey_2;
+  }
+
+  .cp-btn-active {
+    background-color: $blue_1;
+    border-color: $blue_3;
+    color: #ffffff;
+  }
+  .cp-bordered-btn {
+    border: 2px solid $grey_4;
+    background-color: $grey_6;
+    color: $dark_2;
+
+    &:hover {
+      background-color: $grey_5;
+    }
+  }
+}

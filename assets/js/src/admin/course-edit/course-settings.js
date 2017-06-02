@@ -14,14 +14,18 @@
 
                 EditCourse.on('coursepress:validate-course-settings', this.validate, this);
 
-                this.on( 'view_rendered', this.setUpCategory, this );
+                this.on( 'view_rendered', this.setUpUI, this );
 
                 this.render();
             },
             validate: function() {
                 // @todo: do course settings validataion
             },
-            setUpCategory: function() {
+            setUpUI: function() {
+                // set feature image
+                this.listing_image = new CoursePress.AddImage( this.$('#listing_image') );
+
+                // set category
                 var catSelect = this.$('#course-categories');
                 catSelect.select2({
                     placeholder: catSelect.attr('placeholder')

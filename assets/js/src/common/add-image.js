@@ -1,15 +1,15 @@
-/* global CoursePress */
+/* global CoursePress, _, wp */
 
 (function() {
     'use strict';
 
     CoursePress.Define( 'AddImage', function($, doc, win) {
-       var AddImage, findAddImage, frame, in_frame;
+       var frame, in_frame;
 
        // Determine whether or not the selected is from the frame
        in_frame = false;
 
-       AddImage = CoursePress.View.extend({
+       return CoursePress.View.extend({
            template_id: 'coursepress-add-image-tpl',
            input: false,
            events: {
@@ -24,19 +24,26 @@
            initialize: function(input) {
                this.input = input.hide();
 
-               if ( this.input.data('title') )
+               if ( this.input.data('title') ) {
                    this.data.title = this.input.data('title');
-               if ( this.input.data('size') )
+               }
+               if ( this.input.data('size') ) {
                    this.data.size = this.input.data('size');
+               }
 
                this.thumbnail_id = this.input.attr('thumbnail');
                this.render();
            },
            render: function() {
-               var html, data, thumbnail_id;
+               var html, data, thumbnail_id, value, src;
                thumbnail_id = this.input.data('thumbnail');
+               src = this.input.val();
 
-               data = {name: this.input.attr('name'), thumbnail_id: thumbnail_id};
+               if ( src ) {
+                   value = src.split('/').pop();
+               }
+
+               data = {name: this.input.attr('name'), thumbnail_id: thumbnail_id, value: value};
                html = _._getTemplate(this.template_id, data);
 
                this.setElement(html);
@@ -47,6 +54,10 @@
                this.image_id_input.off('change'); // Disable hooked change event
                this.image_id_input.on('change', this.input.prop('change'));
                this.image_url_input = this.$('.cp-image-url');
+
+               if ( src ) {
+                   this.setThumbnail(src);
+               }
            },
            updateInput: function(ev) {
                var input = $(ev.currentTarget);
@@ -60,8 +71,9 @@
                this.image_id_input.trigger('change');
            },
            selectImage: function() {
-               if ( ! win.wp || ! win.wp.media )
+               if ( ! win.wp || ! win.wp.media ) {
                    return; // @todo: show graceful error
+               }
 
                if ( ! frame ) {
                    var settings = {
@@ -100,6 +112,9 @@
                    url = selected.attributes.sizes.full.url;
                }
 
+               // Set correct url value
+               this.input.val(url);
+
                if ( url ) {
                    url = url.split('/').pop();
                }
@@ -120,17 +135,5 @@
                this.thumbnail_box.css('background-image', '');
            }
        });
-
-        findAddImage = function(view) {
-            var inputs = view.$('.cp-add-image-input');
-
-            if ( inputs.length ) {
-                _.each(inputs, function(input) {
-                    new AddImage($(input));
-                });
-            }
-        };
-
-        CoursePress.Events.on('coursepress:view_rendered', findAddImage);
     });
 })();

@@ -1,4 +1,4 @@
-/* global CoursePress */
+/* global CoursePress, _, Backbone */
 
 (function(){
     'use strict';
@@ -6,12 +6,13 @@
     CoursePress.Define('View', function ($) {
         _.mixin({
             isTrue: function (value, selected) {
-                if (_.isArray(selected))
+                if (_.isArray(selected) ) {
                     return _.contains(selected, value);
-                else if (_.isObject(selected))
+                } else if (_.isObject(selected ) ) {
                     return !!selected[value];
-                else
+                } else {
                     return value === selected;
+                }
             },
             checked: function (value, selected) {
                 return _.isTrue(value, selected) ? 'checked="checked"' : '';
@@ -25,7 +26,11 @@
                         interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
                         escape: /\{\{([^\}]+?)\}\}(?!\})/g
                     },
-                    tpl = _.template($('#' + template_id).html(), null, settings);
+                    tpl = $('#' + template_id);
+
+                if ( tpl.length ) {
+                    tpl = _.template( tpl.html(), null, settings);
+                }
 
                 return tpl(data);
             }
@@ -45,8 +50,8 @@
             },
             render: function () {
                 if ( ! _.isEmpty(this.template_id) ) {
-                    var model = !!this.model.get ? this.model.toJSON() : this.model;
-                    this.$el.html(_._getTemplate(this.template_id, model));
+                    var data = !!this.model.get ? this.model.toJSON() : this.model;
+                    this.$el.html(_._getTemplate(this.template_id, data));
                 }
 
                 this.trigger( 'view_rendered' );
@@ -61,7 +66,7 @@
                 input = $(ev.currentTarget);
                 name = input.attr('name');
 
-                if ( type = input.attr('type') && _.contains(['checkbox', 'radio'], type ) ) {
+                if ( ( type = input.attr('type') ) && _.contains(['checkbox', 'radio'], type ) ) {
                     value = !!input.is(':checked');
                 } else {
                     value = input.val();

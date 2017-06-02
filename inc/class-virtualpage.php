@@ -45,7 +45,14 @@ class CoursePress_VirtualPage extends CoursePress_Utility {
 	}
 
 	function setCourseOverview() {
-		return coursepress_render( 'views/templates/course-overview', array(), false );
+		$template = '[course_instructors label_tag="label"]';
+		$template .= '[course_media]';
+
+		$attr = array( 'class' => 'course-overview' );
+
+		$template = $this->create_html( 'div', $attr, $template );
+
+		return $template;
 	}
 
 	function setUpCourseOverview() {}

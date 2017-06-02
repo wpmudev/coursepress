@@ -1,52 +1,52 @@
 <script type="text/template" id="coursepress-course-type-tpl">
-	<div class="step-heading">
-		<h2 class="step-heading-title"><?php _e( 'Pick name and type of course to create', 'cp' ); ?></h2>
+	<div class="cp-box-heading">
+		<h2 class="box-heading-title"><?php _e( 'Pick name and type of course to create', 'cp' ); ?></h2>
 	</div>
-    <div class="step-content step-sep">
-        <div class="step-label-area">
+    <div class="cp-box-content cp-sep">
+        <div class="box-label-area">
             <label class="label"><?php _e( 'Course name and language', 'cp' ); ?></label>
         </div>
-        <div class="step-inner-content">
+        <div class="box-inner-content">
             <div class="cp-box">
                 <label class="label"><?php _e( 'Course Name', 'cp' ); ?></label>
-                <input type="text" class="input-text" name="post_title" value="{{post_title}}" />
+                <input type="text" class="widefat" name="post_title" value="{{post_title}}" />
             </div>
 
             <div class="cp-box">
                 <label class="label"><?php _e( 'Course Slug', 'cp' ); ?></label>
-                <input type="text" name="post_name" value="{{post_name}}" />
+                <input type="text" class="widefat" name="post_name" value="{{post_name}}" />
                 <p class="description"><?php echo coursepress_get_url(); ?><span class="cp-slug">{{post_name}}</span>/</p>
             </div>
 
             <div class="cp-box">
                 <label class="label"><?php _e( 'Language', 'cp' ); ?></label>
-                <input type="text" name="meta_course_language" value="{{course_language}}" />
+                <input type="text" class="widefat" name="meta_course_language" value="{{course_language}}" />
             </div>
         </div>
     </div>
 
-    <div class="step-content">
-        <div class="step-label-area">
+    <div class="cp-box-content">
+        <div class="box-label-area">
             <label class="label"><?php _e( 'Course type', 'cp' ); ?></label>
             <p class="description"><?php _e( 'Pick a type of course you want to create', 'cp' ); ?></p>
         </div>
-        <div class="step-inner-content">
+        <div class="box-inner-content">
             <div class="cp-box">
                 <label class="label"><?php _e( 'Pick course type or load example course', 'cp' ); ?></label>
-                <ul class="cp-input-group">
-                    <li class="active">
+                <ul class="cp-flex cp-input-group">
+                    <li class="cp-div-flex active">
                         <label>
                             <input type="radio" name="course_type" value="auto-moderated" />
                             <?php _e( 'Auto-moderated', 'cp' ); ?>
                         </label>
                     </li>
-                    <li>
+                    <li class="cp-div-flex">
                         <label>
                             <input type="radio" name="course_type" value="manual" />
                             <?php _e( 'Manual moderation', 'cp' ); ?>
                         </label>
                     </li>
-                    <li>
+                    <li class="cp-div-flex">
                         <label>
                             <input type="radio" name="course_type" value="sample_course" />
                             <?php _e( 'Example course', 'cp' ); ?>
@@ -102,7 +102,7 @@
             <div class="cp-box cp-toggle-box cp-sep">
                 <label>
                     <input type="checkbox" name="meta_allow_discussion" {{_.checked(true, allow_discussion)}} class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
-                    <?php _e( 'Enable course discussion', 'cp' ); ?>
+                    <span class="label"><?php _e( 'Enable course discussion', 'cp' ); ?></span>
                 </label>
                 <p class="description"><?php _e( 'Creates discussion area where users can post questions and get help from instructors, facilitators and other students', 'cp' ); ?></p>
             </div>
@@ -110,7 +110,7 @@
             <div class="cp-box cp-toggle-box cp-sep">
                 <label>
                     <input type="checkbox" name="meta_allow_workbook" {{_.checked(true, allow_workbook)}} class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
-                    <?php _e( 'Enable workbook', 'cp' ); ?>
+                    <span class="label"><?php _e( 'Enable workbook', 'cp' ); ?></span>
                 </label>
                 <p class="description"><?php _e( 'Users can access their workbook which will show their progress/scores for the course.', 'cp' ); ?></p>
             </div>
@@ -118,7 +118,7 @@
             <div class="cp-box cp-toggle-box">
                 <label>
                     <input type="checkbox" name="meta_payment_paid_course" {{_.checked(true, payment_paid_course)}} class="cp-toggle-input" autocomplejte="off" /> <span class="cp-toggle-btn"></span>
-                    <?php _e( 'This is a paid course', 'cp' ); ?>
+                    <span class="label"><?php _e( 'This is a paid course', 'cp' ); ?></span>
                 </label>
                 <p class="description"><?php _e( 'Will allow you to set-up payment gateway/options.', 'cp' ); ?></p>
             </div>

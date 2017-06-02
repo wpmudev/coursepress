@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var $columns
+ * @var $hidden_columns
+ * @var $courses
+ * @var $course_edit_link
+ * @var $course CoursePress_Course
+ */
+?>
 <div class="wrap coursepress-wrap coursepress-courses" id="coursepress-courselist">
     <h1 class="wp-heading-inline">
         <?php _e( 'Courses', 'cp' ); ?>
@@ -5,10 +14,11 @@
     </h1>
 
     <div class="coursepress-page">
-        <form method="post" class="cp-search-form">
+        <form method="post" class="cp-search-form cp-input-clear">
             <input type="text" name="s" placeholder="<?php _e( 'Search', 'cp' ); ?>" />
+            <button type="button" class=""><?php _e( 'Clear', 'cp' ); ?></button>
         </form>
-        <table class="widefat coursepress-table">
+        <table class="coursepress-table">
             <thead>
                 <tr>
                     <th class="column-title"><?php _e( 'Title', 'cp' ); ?></th>
@@ -36,7 +46,9 @@
                                 <?php
                                     switch( $column_id ) :
                                         case 'units' :
-                                            echo $course->count_instructors();
+                                            $count = $course->count_units( false );
+
+                                            printf( _n( __( '%d Unit', 'cp' ), __( '%d Units', 'cp' ), $count ), $count );
                                             break;
                                         case 'students' :
                                             echo $course->count_students();
@@ -72,39 +84,41 @@
                                 ?>
                             </td>
                         <?php endforeach; ?>
-                        <td>
+                        <td class="column-status">
                             <label>
-                                <input type="checkbox" class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+                                <input type="checkbox" class="cp-toggle-input cp-toggle-course-status" value="<?php echo $course->ID; ?>" /> <span class="cp-toggle-btn"></span>
                             </label>
                         </td>
                     </tr>
                     <tr class="<?php echo $odd ? 'odd' : 'even'; ?> column-actions">
                         <td colspan="<?php echo count($columns)+2; ?>" data-id="<?php echo $course->ID; ?>">
-                            <a href="<?php echo $edit_link; ?>" data-step="course-type" class="cp-reset-step cp-edit-overview"><?php _e( 'Course Overview', 'cp' ); ?></a>
-                            <a href="<?php echo $edit_link; ?>" data-step="course-units" class="cp-reset-step cp-edit-units"><?php _e( 'Units', 'cp' ); ?></a>
-                            <a href="<?php echo $edit_link; ?>" data-step="course-settings" class="cp-reset-step cp-edit-settings"><?php _e( 'Display Settings', 'cp' ); ?></a>
+                            <div class="cp-row-actions">
+                                <a href="<?php echo $edit_link; ?>" data-step="course-type" class="cp-reset-step cp-edit-overview"><?php _e( 'Course Overview', 'cp' ); ?></a>
+                                <a href="<?php echo $edit_link; ?>" data-step="course-units" class="cp-reset-step cp-edit-units"><?php _e( 'Units', 'cp' ); ?></a>
+                                <a href="<?php echo $edit_link; ?>" data-step="course-settings" class="cp-reset-step cp-edit-settings"><?php _e( 'Display Settings', 'cp' ); ?></a>
 
-                            <div class="cp-dropdown">
-                                <button type="button" class="cp-dropdown-btn">
-                                    <?php _e( 'More', 'cp' ); ?>
-                                </button>
-                                <ul class="cp-dropdown-menu">
-                                    <li class="menu-item-students">
-                                        <a href="<?php echo $edit_link; ?>" data-step="course-students" class="cp-reset-step"><?php _e( 'Students', 'cp' ); ?></a>
-                                    </li>
-                                    <li class="menu-item-duplicate-course">
-                                        <a href=""><?php _e( 'Duplicate Course', 'cp' ); ?></a>
-                                    </li>
-                                    <li class="menu-item-export">
-                                        <a href="""><?php _e( 'Export', 'cp' ); ?></a>
-                                    </li>
-                                    <li class="menu-item-view-course">
-                                        <a href="" target="_blank"><?php _e( 'View Course', 'cp' ); ?></a>
-                                    </li>
-                                    <li class="menu-item-delete cp-delete">
-                                        <a href=""><?php _e( 'Delete Course', 'cp' ); ?></a>
-                                    </li>
-                                </ul>
+                                <div class="cp-dropdown">
+                                    <button type="button" class="cp-btn cp-btn-xs cp-dropdown-btn">
+                                        <?php _e( 'More', 'cp' ); ?>
+                                    </button>
+                                    <ul class="cp-dropdown-menu">
+                                        <li class="menu-item-students">
+                                            <a href="<?php echo $edit_link; ?>" data-step="course-students" class="cp-reset-step"><?php _e( 'Students', 'cp' ); ?></a>
+                                        </li>
+                                        <li class="menu-item-duplicate-course">
+                                            <a href=""><?php _e( 'Duplicate Course', 'cp' ); ?></a>
+                                        </li>
+                                        <li class="menu-item-export">
+                                            <a href=""><?php _e( 'Export', 'cp' ); ?></a>
+                                        </li>
+                                        <li class="menu-item-view-course">
+                                            <a href="" target="_blank"><?php _e( 'View Course', 'cp' ); ?></a>
+                                        </li>
+                                        <li class="menu-item-delete cp-delete">
+                                            <a href=""><?php _e( 'Delete Course', 'cp' ); ?></a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </td>
                     </tr>

@@ -2,14 +2,19 @@ $width: 100%;
 $color_1: #dedede;
 $color_2: #fbfbfb;
 $color_3: #51b9e8;
+$dark_1: #333333;
+$dark_2: #555555;
 $grey_1: #5e5e5e;
 $grey_2: #757575;
 $grey_3: #808080;
 $grey_4: #a4a4a4;
 $grey_5: #dedede;
 $grey_6: #fbfbfb;
+$grey_7: #fefefe;
 $blue_1: #51b9e8;
 $blue_2: #4f9ac9;
+$blue_3: #497daa;
+$blue_4: #366587;
 
 
 @mixin boxsizing {
@@ -48,4 +53,16 @@ $blue_2: #4f9ac9;
 @mixin bordered {
   border-top: 1px solid #eaeaea;
   border-bottom: 1px solid #fbfbfb;
+}
+@mixin icon($icon) {
+  content: $icon;
+  font-family: 'FontAwesome', sans-serif;
+}
+@mixin hide {
+  opacity: 0;
+  @include transition(opacity 0.4s);
+}
+@mixin show {
+  opacity: 1;
+  @include transition(opactiy 0.4s);
 }

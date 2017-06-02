@@ -1,4 +1,4 @@
-/* global CoursePress */
+/* global CoursePress, _ */
 
 (function(){
     'use strict';
@@ -34,12 +34,14 @@
                 this.render();
             },
             render: function() {
+                var step;
+
                 // Get all steps
-                _.each( this.$('.step-list li'), this.getSteps, this );
+                _.each( this.$('.cp-menu-item'), this.getSteps, this );
 
                 // Get the buttons and HTML containers
                 this.prevButton = this.$('.step-back');
-                this.stepListContainer = this.$('.step-list');
+                this.stepListContainer = this.$('.cp-menu-items .course-menu');
 
                 // Setup steps positions
                 this.firstStep = _.first(this.steps);
@@ -50,23 +52,32 @@
 
                 // Check if the browser remember the last active step and if the course is not new
                 if ( !_.isEmpty(this.model.get('post_title')) ) {
-                    this.currentStep = CoursePress.Cookie('course_setup_step_' + this.model.get('ID')).get();
+                    step = CoursePress.Cookie('course_setup_step_' + this.model.get('ID')).get();
                 }
 
                 // If current step is not set, set the first step as current step
-                if ( ! this.currentStep ) {
-                    this.currentStep = _.first(this.steps);
+                if ( ! step ) {
+                    step = _.first(this.steps);
                 }
-                this.setCurrentStep(this.currentStep);
+
+                this.setCurrentStep(step);
+
+                return this;
             },
             courseTypeView: function() {
-                new CoursePress.CourseType(this.model, this);
+                var courseType = new CoursePress.CourseType(this.model, this);
+
+                return courseType;
             },
             courseSettingsView: function() {
-                new CoursePress.CourseSettings(this.model, this);
+                var courseSettings = new CoursePress.CourseSettings(this.model, this);
+
+                return courseSettings;
             },
             courseUnitsView: function() {
-                new CoursePress.CourseUnits(this.model, this);
+                var courseUnits = new CoursePress.CourseUnits(this.model, this);
+
+                return courseUnits;
             },
             courseStudentsView: function() {},
             getSteps: function(step) {
@@ -76,28 +87,33 @@
                 return this.$('[data-step="' + this.currentStep + '"]');
             },
             setCurrentStep: function(step) {
-                if ( step !== this.firstStep ) {
+                if ( this.currentStep && step !== this.firstStep ) {
                     /**
                      * Trigger to validate current step and determine to whether
                      * or not to load the next step.
                      */
                     this.trigger('coursepress:validate-' + this.currentStep);
 
-                    if (false === this.goToNext) {
+                    if ( false === this.goToNext ) {
                         // One of the validation failed, return!
                         return;
                     }
                 }
 
-                this.currentStep = step;
-
                 /**
-                 * Trigger whenever a step is changed.
+                 * Trigger before a step is changed.
                  *
                  * @param string step - Current selected step
                  * @param object ModlaSteps instance
                  */
-                this.trigger('coursepress:step-changed', this.currentStep, this );
+                this.trigger('coursepress:step-before-change', this.currentStep, this );
+
+                this.currentStep = step;
+
+                /**
+                 * Trigger whenever a step is changed.
+                 */
+                this.trigger( 'coursepress:step-changed', this.currentStep, this );
 
                 /**
                  * Trigger for per step event hook
@@ -119,7 +135,7 @@
                 this.current.addClass('active');
 
                 this.currentTab = this.getCurrentTab();
-                this.currentTab.siblings().removeClass('tab-active');
+                this.currentTab.siblings().removeClass('tab-active').removeClass('done');
                 this.currentTab.addClass('tab-active');
             },
             toggleContent: function(ev) {
@@ -188,6 +204,6 @@
         });
 
         // Init course edit on first load
-        new EditCourse(win._coursepress.course);
+        EditCourse = new EditCourse(win._coursepress.course);
     });
 })();

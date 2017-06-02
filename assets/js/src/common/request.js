@@ -1,6 +1,8 @@
-/* global CoursePress */
+/* global CoursePress, Backbone */
 
 (function() {
+    'use strict';
+
     CoursePress.Define('Request', function ($, doc, win) {
         return Backbone.Model.extend({
             url: win._coursepress.ajaxurl + '?action=coursepress_request',
@@ -14,18 +16,19 @@
                 Backbone.Model.prototype.initialize.apply(this, arguments);
             },
 
-            parse: function (response) {
+            parse: function ( response ) {
                 var action = this.get('action');
 
-                if (response.success)
+                if ( response.success ) {
                     this.trigger('coursepress:success_' + action, response.data);
-                else
+                } else {
                     this.trigger('coursepress:error_' + action, response.data);
+                }
             },
 
             serverError: function () {
                 // @todo: Show friendly error here
             }
-        })
+        });
     });
 })();

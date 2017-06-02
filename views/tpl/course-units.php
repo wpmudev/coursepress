@@ -1,9 +1,9 @@
 <script type="text/template" id="coursepress-course-units-tpl">
-    <div class="step-heading">
-        <h2 class="step-heading-title"><?php _e( 'Units', 'cp' ); ?></h2>
+    <div class="cp-box-heading">
+        <h2 class="box-heading-title"><?php _e( 'Units', 'cp' ); ?></h2>
     </div>
 
-    <div class="step-content units-content">
+    <div class="cp-box-content units-content">
         <table class="widefat cp-units-table">
             <thead>
             <tr>
@@ -18,11 +18,11 @@
     </div>
 </script>
 <script type="text/template" id="coursepress-course-units-with-modules-tpl">
-    <div class="step-heading">
-        <h2 class="step-heading-title"><?php _e( 'Units', 'cp' ); ?></h2>
+    <div class="cp-box-heading">
+        <h2 class="box-heading-title"><?php _e( 'Units', 'cp' ); ?></h2>
     </div>
 
-    <div class="step-content units-content">
+    <div class="cp-box-content units-content">
         <table class="widefat cp-units-table">
             <thead>
             <tr>

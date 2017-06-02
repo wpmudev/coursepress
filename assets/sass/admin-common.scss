@@ -1,9 +1,9 @@
 // Common admin stylesheets
 @import "common/mixin.scss";
-@import "admin/global.scss";
-@import "admin/table.scss";
-@import "admin/buttons.scss";
-@import "admin/menu.scss";
-@import "admin/alert.scss";
-@import "admin/media.scss";
-@import "admin/steps-modal.scss";
+@import "admin/global/wrap.scss";
+@import "admin/global/table.scss";
+@import "admin/global/form-fields.scss";
+@import "admin/global/buttons.scss";
+@import "admin/global/global.scss";
+@import "admin/global/toggle.scss";
+@import "admin/global/alert.scss";

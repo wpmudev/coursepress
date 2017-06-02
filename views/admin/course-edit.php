@@ -8,37 +8,38 @@
 <div class="wrap coursepress-wrap coursepress-edit">
 	<h1 class="wp-heading-inline">
 		<?php if ( ! empty( $course_id ) ) : ?>
-			<span class="course-title-tag"><?php _e( 'Course Name', 'cp' ); ?></span>
+			<span class="course-tag"><?php _e( 'Course Name', 'cp' ); ?></span>
 		<?php endif; ?>
 
 		<?php echo $page_title; ?>
 	</h1>
 
-	<div id="course-edit-template" class="coursepress-page">
-		<div class="step-list course-menu-list">
-            <span class="cp-icon cp-icon-md step-icon-bars"><i class="fa fa-bars"></i></span>
+	<div id="course-edit-template" class="coursepress-page course-steps-page">
+		<div class="cp-menu-items course-menu-list">
 			<ul class="course-menu">
 				<?php foreach ( $menu_list as $key => $label ) : ?>
-					<li class="step" data-step="<?php echo $key; ?>">
+					<li class="cp-menu-item step step-<?php echo $key; ?>" data-step="<?php echo $key; ?>">
 						<span class="menu-label"><?php echo $label; ?></span>
 					</li>
 				<?php endforeach; ?>
 			</ul>
 		</div>
-		<div class="step-contents course-content">
+		<div class="course-content">
 			<?php  foreach ( $menu_list as $key => $label ) : ?>
-				<div id="<?php echo $key; ?>" class="content-tab"></div>
+				<div id="<?php echo $key; ?>" class="course-content-tab"></div>
 			<?php endforeach; ?>
 
 			<div class="course-footer">
 				<button type="button" class="cp-btn cp-btn-default step-back">
 					<?php _e( 'Back', 'cp' ); ?>
 				</button>
-				<button type="button" class="cp-btn cp-right cp-btn-active step-next">
-					<?php _e( 'Save and Continue', 'cp' ); ?>
-				</button>
-                <button type="button" class="cp-btn cp-right cp-btn-cancel step-cancel">
+
+                <button type="button" class="cp-btn cp-btn-cancel step-cancel">
 					<?php _e( 'Cancel', 'cp' ); ?>
+                </button>
+
+                <button type="button" class="cp-btn cp-btn-active step-next">
+					<?php _e( 'Save and Continue', 'cp' ); ?>
                 </button>
 			</div>
 		</div>

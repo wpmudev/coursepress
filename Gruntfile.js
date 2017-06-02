@@ -122,7 +122,7 @@ module.exports = function(grunt) {
 				'node_modules/'
 			],
 			pot_dir: '/language/',  // With trailing slash.
-			textdomain: 'cp',   // Campus uses same textdomain.
+			textdomain: 'cp'   // Campus uses same textdomain.
 		},
 
 		// Build branches.

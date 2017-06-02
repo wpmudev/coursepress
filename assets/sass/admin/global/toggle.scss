@@ -1,0 +1,41 @@
+.coursepress-wrap {
+  .cp-toggle-input {
+    display: none;
+  }
+  .cp-toggle-btn {
+    position: relative;
+    display: inline-block;
+    height: 22px;
+    width: 45px;
+    border: 1px solid $grey_4;
+    background-color: $grey_6;
+    @include radius(20px);
+    @include boxsizing;
+
+    &:after {
+      content: '';
+      position: absolute;
+      display: block;
+      width: 22.5px;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background-color: $grey_5;
+      @include radius(20px);
+      @include transition(left 0.5s);
+    }
+  }
+  .cp-toggle-input:checked + .cp-toggle-btn {
+    &:after {
+      left: 20.5px;
+      background-color: $blue_1;
+      @include transition(0.5s);
+    }
+  }
+  .cp-toggle-box {
+    .cp-toggle-btn {
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+  }
+}

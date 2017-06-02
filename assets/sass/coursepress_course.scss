@@ -17,8 +17,8 @@
       margin: 60px 0;
     }
   }
-  .cp-slug {
-    font-weight: 700;
+  .cp-div-auto {
+    padding-left: 15px;
   }
 
   .units-content {
@@ -67,9 +67,34 @@
       margin: 0;
       padding: 4px 0;
       border: 0;
+      font-size: 13px;
+      display: block;
       @include radius(0);
     }
   }
 
+  .coursepress-page {
+    .cp-menu-items {
+      .cp-menu-item {
+        &.step-course-units {
+          &.active {
+            @include radius(6px);
 
+            .menu-label {
+              display: block;
+              border: 1px solid red;
+              margin-bottom: 8px;
+            }
+
+            button {
+              display: block;
+              margin: 8px 15px 8px 0;
+              color: #ffffff;
+              padding: 4px 20px;
+            }
+          }
+        }
+      }
+    }
+  }
 }

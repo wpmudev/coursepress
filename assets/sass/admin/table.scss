@@ -1,8 +1,8 @@
 .coursepress-wrap {
   .coursepress-table {
     margin-bottom: 25px;
-
     @include radius(4px);
+    @include clearfix;
 
     th, td {
       padding: 15px 10px;

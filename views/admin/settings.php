@@ -34,9 +34,9 @@
 			</ul>
 		</div>
 
-		<div class="step-content course-content">
+		<div class="cp-box-content course-content">
 			<?php foreach ( $admin_menus as $menu_id => $menu ) : ?>
-				<div class="content-tab" id="admin-<?php echo $menu_id; ?>"></div>
+				<div class="course-content-tab" id="admin-<?php echo $menu_id; ?>"></div>
 			<?php endforeach; ?>
 		</div>
 	</div>
