@@ -88,7 +88,7 @@ final class CoursePress {
 	 * @var array List of classes that are loaded in front front pages only.
 	 */
 	protected $core_front_classes = array(
-		'CoursePress_VirtualPage',
+		//'CoursePress_VirtualPage',
 		'CoursePress_Shortcode',
 	);
 

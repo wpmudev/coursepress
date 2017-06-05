@@ -22,7 +22,8 @@
   }
 
   .units-content {
-    margin-top: -25px;
+    margin: -25px -25px 0 -25px;
+
     padding: 0 0 25px 0;
   }
   .cp-units-table {
@@ -31,20 +32,52 @@
 
     th, td {
       border: 0;
+
+      &:first-of-type {
+        padding-left: 25px;
+      }
     }
 
     thead {
       th, td {
         border: 0;
         padding: 8px 15px;
-        background-color: $grey_5;
+        background-color: $grey_6;
+
       }
     }
+    .column-unit {
+      border: 1px solid red;
+      width: 40%;
+    }
+    .column-step {
+      width: 30%;
+      border: 1px solid blue;
+    }
+  }
+  .column-unit {
+    border: 1px solid red;
+    width: 39%;
+  }
+  .column-step {
+    width: 31%;
+    border: 1px solid blue;
+  }
+  .column-preview {
+    text-align: center;
   }
   .unit-table-list {
+    width: 100%;
     border-width: 0 0 0 1px;
     margin: 5px 0 25px;
+    border-left: 1px solid $grey_5;
     @include boxshadow(0);
+
+    td {
+      &:first-of-type {
+        padding-left: 20px;
+      }
+    }
   }
 
   .unit-view {

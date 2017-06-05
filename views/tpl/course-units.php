@@ -26,10 +26,10 @@
         <table class="widefat cp-units-table">
             <thead>
             <tr>
-                <th><?php _e( 'Units & Modules', 'cp' ); ?></th>
-                <th><?php _e( 'Steps', 'cp' ); ?></th>
-                <th><?php _e( 'Free Preview', 'cp' ); ?></th>
-                <th><?php _e( 'Time', 'cp' ); ?></th>
+                <th class="column-unit"><?php _e( 'Units & Modules', 'cp' ); ?></th>
+                <th class="column-step"><?php _e( 'Steps', 'cp' ); ?></th>
+                <th class="column-preview"><?php _e( 'Free Preview', 'cp' ); ?></th>
+                <th class="column-time"><?php _e( 'Time', 'cp' ); ?></th>
             </tr>
             </thead>
         </table>
@@ -59,12 +59,12 @@
         <table class="unit-table-list">
         <# _.each( modules, function( module, module_id ) { #>
             <tr>
-                <td>{{module.title}}</td>
-                <td></td>
-                <td>
+                <td class="column-unit">{{module.title}}</td>
+                <td class="column-step"></td>
+                <td class="column-preview">
                     <input type="checkbox" {{_.checked(true, module.preview)}} />
                 </td>
-                <td>-</td>
+                <td class="column-time">-</td>
             </tr>
             <# })#>
         </table>

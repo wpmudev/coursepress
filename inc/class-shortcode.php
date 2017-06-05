@@ -34,6 +34,7 @@ class CoursePress_Shortcode extends CoursePress_Utility {
 			'course_language',
 			'course_list',
 			'course_list_image',
+			'course_list_box',
 			'course_media',
 			'course_signup',
 			'course_structure',
@@ -94,6 +95,7 @@ class CoursePress_Shortcode extends CoursePress_Utility {
 			'course_id' => get_the_ID(),
 			'class' => '',
 			'title_tag' => 'h3',
+			'clickable' => 'yes',
 		), $atts, 'course_title' );
 
 		$course = $this->get_course_class( $atts['course_id'] );
@@ -106,7 +108,18 @@ class CoursePress_Shortcode extends CoursePress_Utility {
 		if ( ! empty( $atts['class'] ) )
 			$class .= ' ' . $atts['class'];
 
-		return $this->create_html( $atts['title_tag'], array( 'class' => $class ), $course->post_title );
+		if ( 'yes' == $atts['clickable'] ) {
+			$attr = array(
+				'href' => $course->get_permalink(),
+				'rel' => 'bookmark',
+			);
+
+			$template = $this->create_html( 'a', $attr, $course->post_title );
+		} else {
+			$template = $course->post_title;
+		}
+
+		return $this->create_html( $atts['title_tag'], array( 'class' => $class ), $template );
 	}
 
 	function get_course_instructors( $atts ) {
@@ -120,7 +133,7 @@ class CoursePress_Shortcode extends CoursePress_Utility {
 			'label_tag' => 'h3',
 			'link_all' => false,
 			'link_text' => __( 'View Profile', 'cp' ),
-			'list_separator' => '',
+			'list_separator' => ', ',
 			'show_divider' => true,
 			'style' => 'block',
 			'summary_length' => 50,
@@ -141,15 +154,24 @@ class CoursePress_Shortcode extends CoursePress_Utility {
 		$link_all = 'yes' == $atts['link_all'];
 		$templates = '';
 
-		if ( ! empty( $atts['label'] ) || ! empty( $atts['label_plural'] ) )
+		if ( ! empty( $atts['label'] ) )
 			$templates .= $this->create_html(
 				$atts['label_tag'],
-				array(),
+				array( 'class' => 'label' ),
 				_n( $atts['label'], $atts['label_plural'], $count ) . $atts['label_delimiter']
 			);
 
+		$instructors_template = array();
+
 		foreach ( $instructors as $instructor ) {
-			$template = $instructor->get_avatar( $atts['avatar_size'] );
+			/**
+			 * @var $instructor CoursePress_User
+			 */
+			$template = '';
+
+			if ( 'block' == $atts['style'] ) {
+				$template .= $instructor->get_avatar( $atts['avatar_size'] );
+			}
 
 			$link = $instructor->get_instructor_profile_link();
 
@@ -160,8 +182,13 @@ class CoursePress_Shortcode extends CoursePress_Utility {
 				$template .= $instructor->get_name();
 			}
 
-			$templates .= $template;
+			$instructors_template[] = $template;
 		}
+
+		if ( 'flat' == $atts['style'] )
+			$templates .= ' ';
+
+		$templates .= implode( $atts['list_separator'], $instructors_template );
 
 		return $this->create_html( 'div', array( 'class' => implode( ' ', $class ) ), $templates );
 	}
@@ -197,9 +224,160 @@ class CoursePress_Shortcode extends CoursePress_Utility {
 		if ( ! empty( $atts['class'] ) )
 			$class .= ' ' . $atts['class'];
 
-		$template .= $this->create_html( 'div', array( 'class' => $class ), $course->post_content );
+		$template .= $course->post_content;
+
+		$template = $this->create_html( 'div', array( 'class' => $class ), $template );
 
 		return $template;
+	}
+
+	function get_course_start( $atts ) {
+		$atts = shortcode_atts( array(
+			'course_id' => get_the_ID(),
+			'label' => __( 'Start Date', 'cp' ),
+			'label_delimiter' => ':',
+			'label_tag' => 'strong',
+			'date_format' => coursepress_get_option( 'date_format' ),
+			'class' => '',
+		), $atts, 'course_start' );
+
+		$course = $this->get_course_class( $atts['course_id'] );
+
+		if ( $course->__get( 'is_error' ) )
+			return $course->__get( 'error_message' );
+
+		$template = '';
+
+		if ( ! empty( $atts['label'] ) ) {
+			$template .= $this->create_html( $atts['label_tag'], array(), $atts['label'] . $atts['label_delimiter'] );
+		}
+
+		if ( $course->course_open_ended )
+			$template .= __( 'Already started', 'cp' );
+		else
+			$template .= $course->course_start_date;
+
+		$class = 'course-start-date';
+		if ( ! empty( $atts['class'] ) )
+			$class .= ' ' . $atts['class'];
+
+		$template = $this->create_html( 'span', array( 'class' => $class ), $template );
+
+		return $template;
+	}
+
+	function get_course_language( $atts ) {
+		$atts = shortcode_atts( array(
+			'course_id' => get_the_ID(),
+			'label' => __( 'Language', 'cp' ),
+			'label_tag' => 'strong',
+			'label_delimiter' => ':',
+			'class' => '',
+		), $atts, 'course_language' );
+
+		$course = $this->get_course_class( $atts['course_id'] );
+
+		if ( $course->__get( 'is_error' ) )
+			return $course->__get( 'error_message' );
+
+		$template = '';
+
+		if ( ! empty( $atts['label'] ) ) {
+			$template .= $this->create_html( $atts['label_tag'], array(), $atts['label'] . $atts['label_delimiter'] );
+		}
+
+		$template .= $course->__get( 'course_language' );
+
+		$class = 'course-language';
+		if ( ! empty( $atts['class'] ) )
+			$class .= ' ' . $atts['class'];
+
+		$template = $this->create_html( 'span', array( 'class' => $class ), $template );
+
+		return $template;
+	}
+
+	function get_course_cost( $atts ) {
+		$atts = shortcode_atts( array(
+			'course_id' => get_the_ID(),
+			'label' => __( 'Price', 'cp' ),
+			'label_tag' => 'strong',
+			'label_delimiter' => ':',
+			'class' => '',
+			'no_cost_text' => __( 'Free', 'cp' ),
+			'show_icon' => 'yes',
+		), $atts, 'course_cost' );
+
+		$course = $this->get_course_class( $atts['course_id'] );
+
+		if ( $course->__get( 'is_error' ) )
+			return $course->__get( 'error_message' );
+
+		$template = '';
+
+		if ( ! empty( $atts['label'] ) ) {
+			$template .= $this->create_html( $atts['label_tag'], array(), $atts['label'] . $atts['label_delimiter'] );
+		}
+
+		$class = 'course-cost';
+
+		if ( ! empty( $atts['class'] ) )
+			$class .= ' ' . $atts['class'];
+
+		if ( ! $course->__get( 'payment_paid_course' ) ) {
+			$cost = $atts['no_cost_text'];
+		} else {
+			$cost = $course->__get( 'mp_product_price' );
+
+			if ( $course->__get( 'mp_sale_price_enabled') ) {
+				$sale_price = $course->__get( 'mp_product_sale_price' );
+
+				if ( ! empty( $sale_price ) )
+					$cost = $sale_price;
+			}
+		}
+
+		$template .= $this->create_html(
+			'span',
+			array( 'class' => $class ),
+			$cost
+		);
+
+		return $template;
+	}
+
+	function get_course_list_box( $atts ) {
+		$atts = shortcode_atts( array(
+			'course_id' => get_the_ID(),
+			'show_title' => 'yes',
+			'button_label' => __( 'Details', 'cp' ),
+		), $atts, 'course_list_box' );
+
+		$course = $this->get_course_class( $atts['course_id'] );
+
+		if ( $course->__get( 'is_error' ) )
+			return $course->__get( 'error_message' );
+
+
+		$class = 'course_list_box_item';
+		$template = '[course_list_image]';
+
+		if ( ! empty( $atts['class'] ) )
+			$class .= ' ' . $atts['class'];
+
+		if ( 'yes' == $atts['show_title'] ) {
+			$template .= '[course_title]';
+		}
+		$template .= '[course_summary][course_instructors style="flat" label_tag="span"]';
+		$template .= $this->create_html(
+			'div',
+			array( 'class' => 'course-meta' ),
+			'[course_start label=""][course_language label=""][course_cost label=""]'
+		);
+
+		$template = do_shortcode( $template );
+
+		return $this->create_html( 'div', array( 'class' => $class ), $template );
 	}
 
 	function get_course_list_image( $atts ) {
@@ -215,13 +393,18 @@ class CoursePress_Shortcode extends CoursePress_Utility {
 		if ( $course->__get( 'is_error' ) )
 			return $course->__get( 'error_message' );
 
-		if ( ! empty( $course->list_image ) ) {
+		if ( ! empty( $course->listing_image ) ) {
 			$class = 'course-feature-image';
 
 			if ( ! empty( $atts['class'] ) )
 				$class .= ' ' . $atts['class'];
 
-			$attr = array( 'class' => $class, 'src' => esc_url_raw( $course->list_image ) );
+			$attr = array(
+				'class' => $class,
+				'src' => esc_url_raw( $course->listing_image ),
+				'width' => $atts['width'],
+				'height' => $atts['height'],
+			);
 
 			return $this->create_html( 'img', $attr );
 		}
@@ -287,6 +470,159 @@ class CoursePress_Shortcode extends CoursePress_Utility {
 				array( 'class' => $class ),
 				$template
 			);
+
+		return $template;
+	}
+
+	function get_course_structure( $atts ) {
+		/**
+		 * @var $CoursePress_User CoursePress_User
+		 **/
+		global $CoursePress_User;
+
+		$atts = shortcode_atts( array(
+			'course_id' => get_the_ID(),
+			'show_label' => 'yes',
+			'label' => __( 'Course Structure', 'cp' ),
+			'label_delimiter' => ':',
+			'label_tag' => 'h3',
+			'deep' => 'true',
+		), $atts, 'course_structure' );
+
+		$course = $this->get_course_class( $atts['course_id'] );
+
+		if ( $course->__get( 'is_error' ) )
+			return $course->__get( 'error_message' );
+
+		$template = '';
+
+		if ( ! empty( $atts['label'] ) && 'yes' == $atts['show_label'] )
+			$template .= $this->create_html(
+				$atts['label_tag'],
+				array(),
+				$atts['label']
+			);
+
+		$course_id = $course->__get( 'ID' );
+		$has_access = $CoursePress_User->has_access_at( $course_id );
+		$published = $has_access ? false : true;
+		$units = $course->get_units( $published );
+
+		if ( ! empty( $units ) ) {
+			$list = '';
+
+			foreach ( $units as $unit ) {
+				/**
+				 * @var $unit CoursePress_Unit
+				 */
+				$unit_html = '';
+
+				$unit_title = $unit->__get( 'post_title' );
+				$unit_url = esc_url_raw( $unit->get_unit_url() );
+
+				if ( $has_access ) {
+					$attr       = array( 'href' => $unit_url );
+					$unit_title = $this->create_html( 'a', $attr, $unit_title );
+				} else {
+					if ( $unit->__get( 'preview' ) ) {
+						$attr = array( 'href' => add_query_arg( 'preview', true, $unit_url ) );
+						$unit_title = $this->create_html( 'a', $attr, $unit_title );
+					}
+				}
+				$div_attr = array( 'class' => 'unit-title-wrapper' );
+				$unit_html .= $this->create_html( 'div', $div_attr, $unit_title );
+
+				if ( 'true' == $atts['deep'] ) {
+					$module_list = '';
+
+					if ( $course->__get( 'with_modules' ) ) {
+						$modules = $unit->get_modules_with_steps( $published );
+
+						if ( ! empty( $modules ) ) {
+							foreach ( $modules as $module ) {
+								$module_html = '';
+								$module_url = esc_url_raw( $module['url'] );
+
+								if ( ! empty( $module['steps'] ) ) {
+									$steps = '';
+
+									foreach ( $module['steps'] as $step ) {
+										/**
+										 * @var $step CoursePress_Step
+										 */
+										if ( $has_access ) {
+											$attr       = array( 'href' => esc_url_raw( $step->get_permalink() ) );
+											$step_title = $this->create_html( 'a', $attr, $step->__get( 'post_title' ) );
+										} else {
+											$step_title = $step->__get( 'post_title' );
+
+											if ( $step->__get( 'preview' ) ) {
+												$url = esc_url_raw( $step->get_permalink() );
+												$attr = array( 'href' => $url );
+												$step_title = $this->create_html( 'a', $attr, $step_title );
+											}
+										}
+
+										$steps .= $this->create_html( 'li', array(), $step_title );
+									}
+									$attr = array();
+									$module_html .= $this->create_html( 'ol', $attr, $steps );
+								}
+
+								if ( $has_access ) {
+									$attr = array( 'href' => $module_url );
+									$module_title = $this->create_html( 'a', $attr, $module['title'] );
+								} elseif ( $module['preview'] ) {
+									$preview_url = add_query_arg( 'preview', $module_url );
+									$attr = array( 'href' => $preview_url );
+									$module_title = $this->create_html( 'a', $attr, $module['title'] );
+								} else {
+									$module_title = $module['title'];
+								}
+
+								$module_title  = $this->create_html( 'div', array( 'class' => 'module-title-wrapper' ), $module_title );
+
+								$attr = array();
+								$module_list .= $this->create_html( 'li', $attr, $module_title . $module_html );
+							}
+
+							$attr = array();
+							$unit_html .= $this->create_html( 'ol', $attr, $module_list );
+						}
+					} else {
+						$steps = $unit->get_steps( $published );
+						$step_html = '';
+
+						foreach ( $steps as $step ) {
+							/**
+							 * @var $step CoursePress_Step
+							 */
+							$step_title = $step->__get( 'post_title' );
+							$step_url = esc_url_raw( $step->get_permalink() );
+
+							if ( $has_access ) {
+								$attr = array( 'href' => $step_url );
+								$step_title = $this->create_html( 'a', $attr, $step_title );
+							} elseif ( $step->__get( 'preview' ) ) {
+								$attr = array( 'href' => add_query_arg( 'preview', true, $step_url ) );
+								$step_title = $this->create_html( 'a', $attr, $step_title );
+							}
+							$attr = array();
+							$step_html = $this->create_html( 'li', $attr, $step_title );
+						}
+
+						$attr = array();
+						$unit_html .= $this->create_html( 'ol', $attr, $step_html );
+					}
+				}
+
+				$attr = array( 'class' => 'unit' );
+				$list .= $this->create_html( 'li', $attr, $unit_html );
+			}
+
+			$attr = array( 'class' => 'unit-list' );
+			$template .= $this->create_html( 'ul', $attr, $list );
+		}
 
 		return $template;
 	}

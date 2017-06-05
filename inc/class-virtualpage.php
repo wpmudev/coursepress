@@ -10,43 +10,30 @@ class CoursePress_VirtualPage extends CoursePress_Utility {
 	protected $post_type;
 	protected $template;
 
-	public function __construct() {
-		// Check for CP pages
-		add_filter( 'template_include', array( $this, 'is_coursepress_page' ) );
-	}
+	public function __construct( $template_type ) {
+		$this->__set( 'template', $template_type );
 
-	function is_coursepress_page( $template ) {
-		global $wp_query;
-
-		$post_type = $wp_query->get( 'post_type' );
-
-		if ( in_array( $post_type, $this->cp_post_types ) ) {
-			$this->__set( 'post_type', $post_type );
-
-			if ( $wp_query->is_single )
-				if ( 'course' == $post_type )
-					$this->__set( 'template', 'setCourseOverview' );
-				elseif ( 'unit' == $post_type )
-					$this->setUpUnitsOverview();
-				elseif ( 'module' == $post_type )
-					$this->setUpModuleView();
-
-			add_filter( 'the_content', array( $this, 'setUpContent' ) );
-		}
-
-		return $template;
+		add_filter( 'the_content', array( $this, 'setUpContent' ) );
 	}
 
 	function setUpContent( $content ) {
 		if ( is_main_query() ) {
 			$content = call_user_func( array( $this, $this->__get( 'template' ) ) );
 		}
+
 		return $content;
 	}
 
+	function setCourseArchive() {
+		return '[course_list_box show_title="no"]';
+	}
+
 	function setCourseOverview() {
-		$template = '[course_instructors label_tag="label"]';
-		$template .= '[course_media]';
+		$template = '[course_media]';
+		$template .= '[course_instructors label=""]';
+		$description_label = $this->create_html( 'h3', array( 'class' => '' ), __( 'About this course', 'cp' ) );
+		$template .= sprintf( '[course_description label="%s"]', $description_label );
+		$template .= '[course_structure]';
 
 		$attr = array( 'class' => 'course-overview' );
 
@@ -56,6 +43,13 @@ class CoursePress_VirtualPage extends CoursePress_Utility {
 	}
 
 	function setUpCourseOverview() {}
-	function setUpUnitsOverview() {}
+	function setUpUnitsOverview() {
+		return 'HEY';
+	}
+
+	function setUnitView() {
+		return 'UNIT VIEW';
+	}
 	function setUpModuleView() {}
+
 }

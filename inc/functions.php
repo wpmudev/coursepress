@@ -5,28 +5,72 @@
  * @since 3.0
  * @package CoursePress
  */
-if ( ! function_exists( 'coursepress_get_setting' ) ) :
-	/**
-	 * Get coursepress global setting.
-	 *
-	 * @param string $key
-	 * @param mixed $default
-	 * @return mixed
-	 */
-	function coursepress_get_setting( $key, $default = '' ) {
-		$settings = coursepress_get_option( 'coursepress_settings' );
 
-		return coursepress_get_array_val( $settings, $key, $default );
+/**
+ * Get coursepress global setting.
+ *
+ * @param string $key
+ * @param mixed $default
+ * @return mixed
+ */
+function coursepress_get_setting( $key, $default = '' ) {
+	$settings = coursepress_get_option( 'coursepress_settings' );
+
+	return coursepress_get_array_val( $settings, $key, $default );
+}
+
+function coursepress_get_courses( $args = array() ) {
+	global $CoursePress_Data_Courses;
+
+	$posts_per_page = coursepress_get_option( 'posts_per_page', 20 );
+	$args = wp_parse_args( array(
+		'post_type' => $CoursePress_Data_Courses->__get( 'course_post_type' ),
+		'posts_per_page' => $posts_per_page,
+	), $args );
+
+	$results = get_posts( $args );
+	$courses = array();
+
+	if ( ! empty( $results ) ) {
+		foreach ( $results as $result ) {
+			$courses[ $result->ID ] = new CoursePress_Course( $result );
+		}
 	}
-endif;
 
-if ( ! function_exists( 'coursepress_get_courses' ) ) :
-	function coursepress_get_courses( $args = array() ) {
-		global $CoursePress_Data_Courses;
+	return $courses;
+}
 
-		return $CoursePress_Data_Courses->get_courses( $args );
-	}
-endif;
+function coursepress_get_available_courses() {
+	global $CoursePress_Data_Courses;
+	$date_time_now = $CoursePress_Data_Courses->date_time_now();
+	$args = array(
+		'meta_query' => array(
+			'relation' => 'OR',
+			array(
+				'reletion' => 'AND',
+				array(
+					'meta_key' => 'course_start_date',
+					'meta_value' => $date_time_now,
+					'meta_compare' => '<=',
+				),
+				array(
+					'meta_key' => 'course_end_date',
+					'meta_value' => $date_time_now,
+					'meta_compare' => '<=',
+				),
+			),
+			array(
+				'meta_key' => 'course_open_ended',
+				'meta_value' => array( 1, 'on', 'yes' ),
+				'meta_compare' => 'IN',
+			)
+		)
+	);
+
+	$courses = coursepress_get_courses( $args );
+
+	return $courses;
+}
 
 if ( ! function_exists( 'coursepress_get_course' ) ) :
 	/**
@@ -62,6 +106,6 @@ if ( ! function_exists( 'coursepress_get_course_url' ) ) :
 		$main_slug = coursepress_get_setting( 'slugs/course', 'courses' );
 		$slug = get_post_field( 'post_name', $course_id );
 
-		return home_url() . trailingslashit( $main_slug ) . trailingslashit( $slug );
+		return home_url( '/' ) . trailingslashit( $main_slug ) . trailingslashit( $slug );
 	}
 endif;

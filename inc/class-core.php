@@ -7,23 +7,31 @@
  */
 class CoursePress_Core extends CoursePress_Utility {
 	public function __construct() {
-		add_action( 'init', array( $this, 'register_post_types' ) );
+		add_filter( 'query_vars', array( $this, 'add_query_vars' ) );
+		add_filter( 'rewrite_rules_array', array( $this, 'add_rewrite_rules' ) );
 	}
 
-	function register_post_types() {
-		// Unit
-		register_post_type( 'unit', array(
-			'public' => true,
-			//'show_ui' => false,
-			'hierarchical' => true,
-			'label' => 'Units', // debugging only
-		) );
+	function add_query_vars( $vars ) {
+		$vars[] = 'unit';
+		$vars[] = 'unit-archive';
+		$vars[] = 'coursename';
 
-		// Module
-		register_post_type( 'module', array(
-			'public' => true,
-			'hierarchical' => true,
-			'label' => 'Modules', // dbugging only
-		) );
+		return $vars;
+	}
+
+	function add_rewrite_rules( $rules ) {
+		$course_slug = coursepress_get_setting( 'slugs/course', 'courses' );
+		$new_rules = array();
+
+		// Unit
+		$unit_slug = coursepress_get_setting( 'slugs/units', 'units' );
+		$unit = '^' . $course_slug . '/([^/]*)/' . $unit_slug . '/([^/]*)/?';
+		$new_rules[ $unit ] = 'index.php?coursename=$matches[1]&unit=$matches[2]';
+
+		$unit = '^' . $course_slug . '/([^/]*)/' . $unit_slug . '/?';
+		$new_rules[ $unit ] = 'index.php?coursename=$matches[1]&unit-archive=1';
+
+
+		return array_merge( $new_rules, $rules );
 	}
 }

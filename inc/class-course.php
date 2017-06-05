@@ -51,6 +51,10 @@ class CoursePress_Course extends CoursePress_Utility {
 			// Legacy fixes
 			if ( 'enrollment_type' == $key && 'anyone' == $value )
 				$value = 'registered';
+			if ( 'on' == $value || 'yes' == $value )
+				$value = true;
+			if ( 'off' == $value )
+				$value = false;
 
 			$this->__set( $key, $value );
 		}
@@ -105,7 +109,8 @@ class CoursePress_Course extends CoursePress_Utility {
 			'cert_text_color' => '#5a5a5a'
 		);
 
-		$settings = get_post_meta( $this->ID, 'course_settings', true );
+		$id = $this->__get( 'ID' );
+		$settings = get_post_meta( $id, 'course_settings', true );
 		$settings = wp_parse_args( $settings, $course_meta );
 
 		return $settings;
@@ -116,7 +121,7 @@ class CoursePress_Course extends CoursePress_Utility {
 	 *
 	 * @return bool
 	 */
-	function has_course_started() {
+	function is_course_started() {
 		$time_now = $this->date_time_now();
 		$openEnded = $this->__get( 'course_open_ended' );
 		$start_date = $this->__get( 'course_start_date_timestamp' );
@@ -141,8 +146,9 @@ class CoursePress_Course extends CoursePress_Utility {
 
 		if ( empty( $openEnded )
 		     && $end_date > 0
-		     && $end_date < $time_now )
+		     && $end_date < $time_now ) {
 			return true;
+		}
 
 		return false;
 	}
@@ -153,7 +159,7 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return bool
 	 */
 	function is_available() {
-		$is_available = $this->has_course_started();
+		$is_available = $this->is_course_started();
 
 		if ( $is_available ) {
 			// Check if the course hasn't ended yet
@@ -169,7 +175,7 @@ class CoursePress_Course extends CoursePress_Utility {
 	 *
 	 * @return bool
 	 */
-	function has_enrollment_started() {
+	function is_enrollment_started() {
 		$time_now = $this->date_time_now();
 		$enrollment_open = $this->__get( 'enrollment_open_ended' );
 		$start_date = $this->__get( 'enrollment_start_date_timestamp' );
@@ -210,7 +216,7 @@ class CoursePress_Course extends CoursePress_Utility {
 
 		if ( $available ) {
 			// Check if enrollment has started
-			$available = $this->has_enrollment_started();
+			$available = $this->is_enrollment_started();
 
 			// Check if enrollment already ended
 			if ( $available && $this->has_course_ended() )
@@ -221,7 +227,8 @@ class CoursePress_Course extends CoursePress_Utility {
 	}
 
 	private function _get_instructors() {
-		$instructor_ids = get_post_meta( $this->ID, 'instructor' );
+		$id = $this->__get( 'ID' );
+		$instructor_ids = get_post_meta( $id, 'instructor' );
 		$instructor_ids = array_filter( $instructor_ids );
 
 		if ( ! empty( $instructor_ids ) )
@@ -229,11 +236,11 @@ class CoursePress_Course extends CoursePress_Utility {
 
 		// Legacy call
 		// @todo: Delete this meta
-		$instructor_ids = get_post_meta( $this->ID, 'instructors', true );
+		$instructor_ids = get_post_meta( $id, 'instructors', true );
 
 		if ( ! empty( $instructor_ids ) )
 			foreach ( $instructor_ids as $instructor_id )
-				coursepress_add_instructor( $instructor_id, $this->ID );
+				coursepress_add_instructor( $instructor_id, $id );
 
 		return $instructor_ids;
 	}
@@ -264,7 +271,8 @@ class CoursePress_Course extends CoursePress_Utility {
 	}
 
 	private function _get_facilitators() {
-		$facilitator_ids = get_post_meta( $this->ID, 'facilitator' );
+		$id = $this->__get( 'ID' );
+		$facilitator_ids = get_post_meta( $id, 'facilitator' );
 
 		if ( is_array( $facilitator_ids ) && ! empty( $facilitator_ids ) )
 			return array_unique( array_filter( $facilitator_ids ) );
@@ -293,7 +301,8 @@ class CoursePress_Course extends CoursePress_Utility {
 	}
 
 	private function _get_students() {
-		$student_ids = get_post_meta( $this->ID, 'student' );
+		$id = $this->__get( 'ID' );
+		$student_ids = get_post_meta( $id, 'student' );
 
 		if ( is_array( $student_ids ) && ! empty( $student_ids ) )
 			return array_unique( array_filter( $student_ids ) );
@@ -339,7 +348,8 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return array
 	 */
 	function get_category() {
-		$course_category = wp_get_object_terms( $this->ID, 'course_category' );
+		$id = $this->__get( 'ID' );
+		$course_category = wp_get_object_terms( $id, 'course_category' );
 		$cats = array();
 
 		if ( ! empty( $course_category ) )
@@ -347,6 +357,10 @@ class CoursePress_Course extends CoursePress_Utility {
 				$cats[ $term->term_id ] = $term->name;
 
 		return $cats;
+	}
+
+	function get_permalink() {
+		return coursepress_get_course_url( $this->__get('ID' ) );
 	}
 
 	private function _get_units( $published = true, $ids = true ) {
@@ -379,7 +393,7 @@ class CoursePress_Course extends CoursePress_Utility {
 
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $unit ) {
-				$units[] = new CoursePress_Unit( $unit );
+				$units[] = new CoursePress_Unit( $unit, $this );
 			}
 		}
 

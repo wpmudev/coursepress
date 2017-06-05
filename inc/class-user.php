@@ -59,21 +59,35 @@ class CoursePress_User extends CoursePress_Utility {
 	}
 
 	function is_enrolled_at( $course_id ) {
-		$enrolled = get_user_meta( $this->ID, 'student_' . $course_id, true );
+		$id = $this->__get( 'ID' );
+		$enrolled = get_user_meta( $id, 'student_' . $course_id, true );
 
-		return $this->ID == $enrolled;
+		return $id == $enrolled;
 	}
 
 	function is_instructor_at( $course_id ) {
-		$instructor = get_user_meta( $this->ID, 'instructor_' . $course_id, true );
+		$id = $this->__get( 'ID' );
+		$instructor = get_user_meta( $id, 'instructor_' . $course_id, true );
 
-		return $instructor == $this->ID;
+		return $instructor == $id;
 	}
 
 	function is_facilitator_at( $course_id ) {
-		$facilitator = get_user_meta( $this->ID, 'facilitator_' . $course_id, true );
+		$id = $this->__get( 'ID' );
+		$facilitator = get_user_meta( $id, 'facilitator_' . $course_id, true );
 
-		return $facilitator == $this->ID;
+		return $facilitator == $id;
+	}
+
+	function has_access_at( $course_id ) {
+		if ( $this->is_super_admin()
+			|| ( $this->is_instructor() && $this->is_instructor_at( $course_id ) )
+			|| ( $this->is_facilitator() && $this->is_facilitator_at( $course_id ) )
+			|| ( $this->is_student() && $this->is_enrolled_at( $course_id ) ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	function get_instructor_profile_link() {
