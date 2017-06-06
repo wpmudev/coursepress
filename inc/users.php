@@ -5,6 +5,26 @@
  * @since 3.0
  * @package CoursePress
  */
+function coursepress_get_user( $user_id = 0 ) {
+	global $CoursePress_User;
+
+	if ( $user_id instanceof CoursePress_User )
+		return $user_id;
+
+	if ( $CoursePress_User instanceof CoursePress_User
+		&& $user_id == $CoursePress_User->__get( 'ID' ) )
+			return $CoursePress_User;
+
+	$user = new CoursePress_User( $user_id );
+
+	if ( $user->__get( 'is_error' ) )
+		return $user->wp_error();
+
+	// @todo: Save in global variable
+
+	return $user;
+}
+
 if ( ! function_exists( 'coursepress_add_instructor' ) ) :
 	/**
 	 * Add user as instructor to a course.
@@ -116,7 +136,11 @@ if ( ! function_exists( 'coursepress_add_student' ) ) :
 		if ( empty( $user_id ) || empty( $course_id ) )
 			return null;
 
-		$CoursePress_Data_Courses->add_course_meta( $course_id, 'student', $user_id );
+		add_post_meta( $course_id, 'student', $user_id );
+
+		$time = current_time( 'timestamp' );
+		$key = 'enrolled_course_date_' . $course_id;
+		update_user_option( $user_id, $key, $time );
 
 		/**
 		 * Fire whenever a new student is added to a course.

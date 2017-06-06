@@ -15,21 +15,25 @@ class CoursePress_Core extends CoursePress_Utility {
 		$vars[] = 'unit';
 		$vars[] = 'unit-archive';
 		$vars[] = 'coursename';
+		$vars[] = 'module';
+		$vars[] = 'step';
 
 		return $vars;
 	}
 
 	function add_rewrite_rules( $rules ) {
 		$course_slug = coursepress_get_setting( 'slugs/course', 'courses' );
-		$new_rules = array();
-
-		// Unit
 		$unit_slug = coursepress_get_setting( 'slugs/units', 'units' );
-		$unit = '^' . $course_slug . '/([^/]*)/' . $unit_slug . '/([^/]*)/?';
-		$new_rules[ $unit ] = 'index.php?coursename=$matches[1]&unit=$matches[2]';
+		$base = '^' . $course_slug . '/([^/]*)/';
 
-		$unit = '^' . $course_slug . '/([^/]*)/' . $unit_slug . '/?';
-		$new_rules[ $unit ] = 'index.php?coursename=$matches[1]&unit-archive=1';
+		$new_rules = array(
+			// Unit
+			$base . $unit_slug . '/([^/]*)/?$' => 'index.php?coursename=$matches[1]&unit=$matches[2]',
+			$base . $unit_slug . '/([^/]*)/([^/]*)/?$' => 'index.php?coursename=$matches[1]&unit=$matches[2]&module=$matches[3]',
+			$base . $unit_slug . '/([^/]*)/([^/]*)/([^/]*)/?$' => 'index.php?coursename=$matches[1]&unit=$matches[2]&module=$matches[3]&step=$matches[4]',
+			// Units archive
+			$base . $unit_slug . '/?' => 'index.php?coursename=$matches[1]&unit-archive=1',
+		);
 
 
 		return array_merge( $new_rules, $rules );

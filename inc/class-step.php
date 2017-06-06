@@ -29,6 +29,8 @@ class CoursePress_Step extends CoursePress_Utility {
 		$this->__set( 'post_excerpt', $step->post_excerpt );
 		$this->__set( 'post_content', $step->post_content );
 		$this->__set( 'post_name', $step->post_name );
+		$this->__set( 'unit_id', $step->post_parent );
+		$this->__set( 'course_id', get_post_field( 'post_parent', $step->post_parent ) );
 
 		// Setup meta-data
 		$this->setUpStepMeta();
@@ -76,5 +78,79 @@ class CoursePress_Step extends CoursePress_Utility {
 				return $this->unit->get_unit_url() . trailingslashit( $post_name );
 			}
 		}
+	}
+
+	function is_answerable() {
+		$module_type = $this->__get( 'module_type' );
+		$is_answerable = preg_match( '%input-%', $module_type );
+
+		return $is_answerable;
+	}
+
+	function has_seen_by( $user_id ) {
+		$user = coursepress_get_user( $user_id );
+
+		$step_id = $this->__get( 'ID' );
+		$course_id = $this->__get( 'course_id' );
+		$unit_id = $this->__get( 'unit_id' );
+
+		if ( is_wp_error( $user )
+			|| ! $user->is_enrolled_at( $course_id ) )
+				return false;
+
+		$progress = $user->get_completion_data( $course_id );
+
+		return coursepress_get_array_val( $progress, 'completion/' . $unit_id . '/modules_seen/' . $step_id );
+	}
+
+	function is_answered_by( $user_id ) {
+		$user = coursepress_get_user( $user_id );
+	}
+
+	function is_completed_by( $user_id = 0 ) {
+		$user = coursepress_get_user( $user_id );
+
+		$step_id   = $this->__get( 'ID' );
+		$course_id = $this->__get( 'course_id' );
+		$unit_id   = $this->__get( 'unit_id' );
+
+		if ( is_wp_error( $user )
+		     || ! $user->is_enrolled_at( $course_id )
+		) {
+			return false;
+		}
+
+		$step_progress = $user->get_step_progress( $course_id, $unit_id, $step_id );
+
+		return (int) $step_progress >= 100;
+	}
+
+	function is_previous_step_completed_by( $user_id = 0 ) {
+		$user = coursepress_get_user( $user_id );
+		$course_id = $this->__get( 'course_id' );
+
+		if ( is_wp_error( $user )
+			|| ! $user->is_enrolled_at( $course_id ) )
+			return false;
+
+		if ( ( $prev = $this->__get( 'previousStep' ) ) ) {
+			return $prev->has_completed_by( $user_id );
+		}
+
+		return true;
+	}
+
+	function is_accessible_by( $user_id ) {
+		$user = coursepress_get_user( $user_id );
+
+		if ( is_wp_error( $user ) )
+			return false;
+
+
+		$step_id = $this->__get( 'ID' );
+		$is_answerable = $this->is_answerable();
+		$required = $this->__get( 'mandatory' );
+		$assessable = $this->__get( 'assessable' );
+		$user_answer = coursepress_get_step_answer( $step_id );
 	}
 }

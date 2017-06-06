@@ -11,9 +11,31 @@ class CoursePress_VirtualPage extends CoursePress_Utility {
 	protected $template;
 
 	public function __construct( $template_type ) {
-		$this->__set( 'template', $template_type );
+		//add_filter( 'template_include', array( $this, 'get_coursepress_template' ) );
+		add_filter( 'template_include', array( $this, $template_type ) );
 
-		add_filter( 'the_content', array( $this, 'setUpContent' ) );
+		$template_parts = array(
+			'course/title',
+			'course/submenu',
+		);
+
+		foreach ( $template_parts as $part ) {
+			add_action( 'get_template_part_' . $part, array( $this, 'get_course_template_part' ), 10, 2 );
+		}
+	}
+
+	function get_course_template_part( $part ) {
+		coursepress_render( 'views/templates/' . $part );
+	}
+
+	function has_template( $template ) {
+		$template = locate_template( $template );
+
+		if ( $template ) {
+			return $template;
+		}
+
+		return false;
 	}
 
 	function setUpContent( $content ) {
@@ -29,27 +51,42 @@ class CoursePress_VirtualPage extends CoursePress_Utility {
 	}
 
 	function setCourseOverview() {
-		$template = '[course_media]';
-		$template .= '[course_instructors label=""]';
-		$description_label = $this->create_html( 'h3', array( 'class' => '' ), __( 'About this course', 'cp' ) );
-		$template .= sprintf( '[course_description label="%s"]', $description_label );
-		$template .= '[course_structure]';
+		global $CoursePress;
 
-		$attr = array( 'class' => 'course-overview' );
+		$template = $this->has_template( 'single-course.php' );
 
-		$template = $this->create_html( 'div', $attr, $template );
+		if ( ! $template ) {
+			$template = $CoursePress->plugin_path . '/views/templates/single-course.php';
+		}
 
 		return $template;
 	}
 
-	function setUpCourseOverview() {}
 	function setUpUnitsOverview() {
-		return 'HEY';
+		global $CoursePress;
+
+		// Check if the current theme have `archive-units.php`
+		$template = $this->has_template( 'archive-units.php' );
+
+		if ( ! $template ) {
+			$template = $CoursePress->plugin_path . '/views/templates/archive-units.php';
+		}
+
+		return $template;
 	}
 
 	function setUnitView() {
 		return 'UNIT VIEW';
 	}
+
+	function setModuleView() {
+		return 'MODULE VIEW';
+	}
+
+	function setStepView() {
+		return 'STEP VIEW';
+	}
+
 	function setUpModuleView() {}
 
 }

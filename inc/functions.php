@@ -72,27 +72,81 @@ function coursepress_get_available_courses() {
 	return $courses;
 }
 
-if ( ! function_exists( 'coursepress_get_course' ) ) :
-	/**
-	 * Get course data object.
-	 *
-	 * @param int $course_id
-	 *
-	 * @return WP_Error|CoursePress_Course
-	 */
-	function coursepress_get_course( $course_id = 0 ) {
-		global $CoursePress_Course;
+/**
+ * Get course data object.
+ *
+ * @param int $course_id
+ *
+ * @return WP_Error|CoursePress_Course
+ */
+function coursepress_get_course( $course_id = 0 ) {
+	global $CoursePress_Course, $CoursePress_Data_Courses;
 
-		if ( is_null( $course_id ) || empty( $course_id ) )
-			return new WP_Error( 'invalid_course_id', __( 'Invalid course ID!', 'cp' ) );
-
-		if ( $CoursePress_Course instanceof CoursePress_Course
-			&& $course_id == $CoursePress_Course->__get( 'ID' ) )
+	if ( empty( $course_id ) ) {
+		// Assume current course
+		if ( $CoursePress_Course instanceof CoursePress_Course ) {
 			return $CoursePress_Course;
-
-		return new CoursePress_Course( $course_id );
+		} else {
+			// Try current post
+			$course_id = get_the_ID();
+		}
 	}
-endif;
+
+	if ( $CoursePress_Course instanceof CoursePress_Course && $course_id == $CoursePress_Course->__get( 'ID' ) )
+		return $CoursePress_Course;
+
+	if ( isset( $CoursePress_Data_Course->courses[ $course_id ] ) )
+		return $CoursePress_Course->courses[ $course_id ];
+
+	$course = new CoursePress_Course( $course_id );
+
+	if ( ! $course->__get( 'is_error' ) ) {
+		$CoursePress_Data_Courses->courses[ $course_id ] = $course;
+
+		return $course;
+	}
+
+	return $course->wp_error();
+}
+
+function coursepress_get_the_title( $course_id = 0 ) {
+	$course = coursepress_get_course( $course_id );
+
+	if ( ! is_wp_error( $course ) )
+		return $course->__get( 'post_title' );
+
+	return null;
+}
+
+function coursepress_get_course_summary( $course_id = 0 ) {
+	$course = coursepress_get_course( $course_id );
+
+	if ( ! is_wp_error( $course ) )
+		return $course->__get( 'post_excerpt' );
+
+	return null;
+}
+
+function coursepress_get_description( $course_id = 0 ) {
+	$course = coursepress_get_course( $course_id );
+
+	if ( ! is_wp_error( $course ) )
+		return $course->__get( 'post_excerpt' );
+
+	return null;
+}
+
+function coursepress_get_course_structure( $course_id = 0 ) {
+	global $CoursePress_User;
+
+	$course = coursepress_get_course( $course_id );
+
+	if ( ! is_wp_error( $course ) ) {
+		return $course->get_course_structure();
+	}
+
+	return null;
+}
 
 if ( ! function_exists( 'coursepress_get_course_url' ) ) :
 	/**
@@ -109,3 +163,63 @@ if ( ! function_exists( 'coursepress_get_course_url' ) ) :
 		return home_url( '/' ) . trailingslashit( $main_slug ) . trailingslashit( $slug );
 	}
 endif;
+
+function coursepress_get_units_url( $course_id ) {
+	$course_url = coursepress_get_course_url( $course_id );
+	$units_slug = coursepress_get_setting( 'slugs/units', 'units' );
+
+	return $course_url . trailingslashit( $units_slug );
+}
+
+function coursepress_breadcrumb() {
+	global $CoursePress_Course;
+}
+
+/**
+ * Get the course's submenu links.
+ *
+ * @return array of submenu items.
+ */
+function coursepress_get_submenus() {
+	global $CoursePress_Course;
+
+	$course = $CoursePress_Course;
+	$course_id = $course->__get( 'ID' );
+	$course_url = $course->get_permalink();
+
+	$menus = array(
+		'units' => array(
+			'label' => __( 'Units', 'cp' ),
+			'url' => coursepress_get_units_url( $course_id ),
+		),
+	);
+
+	if ( $course->__get( 'allow_discussion' ) ) {
+		$menus['discussions'] = array(
+			'label' => __( 'Forum', 'cp' ),
+			'url' => $course->get_discussion_url(),
+		);
+	}
+
+	if ( $course->__get( 'allow_workbook' ) ) {
+		$menus['workbook'] = array(
+			'label' => __( 'Workbook', 'cp' ),
+			'url' => $course->get_workbook_url(),
+		);
+	}
+
+	if ( $course->__get( 'allow_grades' ) ) {
+		$menus['grades'] = array(
+			'label' => __( 'Grades', 'cp' ),
+			'url' => $course->get_grades_url(),
+		);
+	}
+
+	// Add course details link at the last
+	$menus['course-details'] = array(
+		'label' => __( 'Course Details', 'cp' ),
+		'url' => $course_url,
+	);
+
+	return $menus;
+}
