@@ -5,6 +5,31 @@
  * @since 3.0
  * @package CoursePress
  */
+
+/**
+ * Helper function to get user option.
+ *
+ * @param int $user_id
+ * @param string $key
+ *
+ * @return mixed
+ */
+function coursepress_get_user_option( $user_id, $key ) {
+	global $wpdb;
+
+	// Prefix key if it's multisite
+	if ( is_multisite() )
+		$key = $wpdb->prefix . $key;
+
+	return get_user_option( $key, $user_id );
+}
+
+/**
+ * Get CoursePress user.
+ * @param int $user_id
+ *
+ * @return CoursePress_User|int|WP_Error
+ */
 function coursepress_get_user( $user_id = 0 ) {
 	global $CoursePress_User;
 
@@ -25,91 +50,85 @@ function coursepress_get_user( $user_id = 0 ) {
 	return $user;
 }
 
-if ( ! function_exists( 'coursepress_add_instructor' ) ) :
+/**
+ * Add user as instructor to a course.
+ *
+ * @since 3.0
+ * @param int $user_id
+ * @param int $course_id
+ * @return bool
+ */
+function coursepress_add_instructor( $user_id = 0, $course_id = 0 ) {
+	if ( empty( $user_id ) || empty( $course_id ) )
+		return false;
+
+	update_post_meta( $course_id, 'instructor', $user_id, $user_id );
+
 	/**
-	 * Add user as instructor to a course.
+	 * Trigger whenever a new instructor is added to a course.
 	 *
 	 * @since 3.0
 	 * @param int $user_id
 	 * @param int $course_id
-	 * @return bool
 	 */
-	function coursepress_add_instructor( $user_id = 0, $course_id = 0 ) {
-		if ( empty( $user_id ) || empty( $course_id ) )
-			return false;
+	do_action( 'coursepress_add_instructor', $user_id, $course_id );
 
-		update_post_meta( $course_id, 'instructor', $user_id, $user_id );
+	return true;
+}
 
-		/**
-		 * Trigger whenever a new instructor is added to a course.
-		 *
-		 * @since 3.0
-		 * @param int $user_id
-		 * @param int $course_id
-		 */
-		do_action( 'coursepress_add_instructor', $user_id, $course_id );
+/**
+ * Remove user as instructor from a course.
+ *
+ * @since 3.0
+ * @param int $user_id
+ * @param int $course_id
+ * @return void
+ */
+function coursepress_delete_instructor( $user_id = 0, $course_id = 0 ) {
+	global $CoursePress_Data_Courses;
 
-		return true;
-	}
-endif;
+	if ( empty( $user_id ) || empty( $course_id ) )
+		return false;
 
-if ( ! function_exists( 'coursepress_delete_instructor' ) ) :
+	$CoursePress_Data_Courses->delete_course_meta( $course_id, 'instructors', $user_id );
+
 	/**
-	 * Remove user as instructor from a course.
+	 * Trigger whenever an instructor is removed from the course.
 	 *
 	 * @since 3.0
 	 * @param int $user_id
 	 * @param int $course_id
-	 * @return void
 	 */
-	function coursepress_delete_instructor( $user_id = 0, $course_id = 0 ) {
-		global $CoursePress_Data_Courses;
+	do_action( 'coursepress_delete_instructor', $user_id, $course_id );
+}
 
-		if ( empty( $user_id ) || empty( $course_id ) )
-			return false;
+/**
+ * Get courses where user is an instructor at.
+ *
+ * @param int $instructor_id
+ * @param bool $publish Whether to get only published courses or all status type.
+ * @param bool $ids Whether to return on the IDs or as post object.
+ * @param bool $all Whether to return all courses from DB or not.
+ *
+ * @return null
+ */
+function coursepress_get_instructor_courses( $instructor_id = 0, $publish = true, $ids = true, $all = false ) {
+	if ( empty( $instructor_id ) )
+		return null;
 
-		$CoursePress_Data_Courses->delete_course_meta( $course_id, 'instructors', $user_id );
+	$args = array(
+		'meta_key' => 'instructor',
+		'meta_value' => $instructor_id,
+		'post_status' => $publish ? 'publish' : 'any',
+		'posts_per_page' => $all ? -1 : 20,
+		'suppress_filters' => true,
+	);
 
-		/**
-		 * Trigger whenever an instructor is removed from the course.
-		 *
-		 * @since 3.0
-		 * @param int $user_id
-		 * @param int $course_id
-		 */
-		do_action( 'coursepress_delete_instructor', $user_id, $course_id );
-	}
-endif;
+	if ( $ids )
+		$args['fields'] = 'ids';
 
-if ( ! function_exists( 'coursepress_get_instructor_courses' ) ) :
-	/**
-	 * Get courses where user is an instructor at.
-	 *
-	 * @param int $instructor_id
-	 * @param bool $publish Whether to get only published courses or all status type.
-	 * @param bool $ids Whether to return on the IDs or as post object.
-	 * @param bool $all Whether to return all courses from DB or not.
-	 *
-	 * @return null
-	 */
-	function coursepress_get_instructor_courses( $instructor_id = 0, $publish = true, $ids = true, $all = false ) {
-		if ( empty( $instructor_id ) )
-			return null;
-
-		$args = array(
-			'meta_key' => 'instructor',
-			'meta_value' => $instructor_id,
-			'post_status' => $publish ? 'publish' : 'any',
-			'posts_per_page' => $all ? -1 : 20,
-			'suppress_filters' => true,
-		);
-
-		if ( $ids )
-			$args['fields'] = 'ids';
-
-		return coursepress_get_courses( $args );
-	}
-endif;
+	return coursepress_get_courses( $args );
+}
 
 if ( ! function_exists( 'coursepress_get_instructor_profile_link' ) ) :
 	function coursepress_get_instructor_profile_link( $instructor_id ) {

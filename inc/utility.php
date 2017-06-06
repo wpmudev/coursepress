@@ -73,22 +73,28 @@ function coursepress_get_array_val( $array, $key, $default = '' ) {
  * Helper function to set an array value base on path.
  *
  * @param $array
- * @param $key
+ * @param $path
  * @param $value
  *
  * @return array
  */
-function coursepress_set_array_val( $array, $key, $value ) {
-	$keys = explode( '/', $key );
-	$last_key = array_pop( $keys );
+function coursepress_set_array_val( $array, $path, $value ) {
+	if ( ! is_array( $path ) )
+		$path = explode( '/', $path );
 
-	foreach ( $keys as $k ) {
-		if ( isset( $array[ $k ] ) )
-			$array = $array[ $k ];
+	if ( ! is_array( $array ) )
+		$array = array();
+
+	$key = array_shift( $path );
+
+	if ( count( $path ) > 0 ) {
+		if ( ! isset( $array[ $key ] ) )
+			$array[ $key ] = array();
+
+		$array[ $key ] = coursepress_set_array_val( $array[$key], $path, $value );
+	} else {
+		$array[ $key ] = $value;
 	}
-
-	if ( isset( $array[ $last_key ] ) )
-		$array[ $last_key ] = $value;
 
 	return $array;
 }
@@ -118,4 +124,19 @@ function coursepress_get_url() {
 	$slug = coursepress_get_setting( 'slugs/course', 'courses' );
 
 	return trailingslashit( home_url( '/' . $slug ) );
+}
+
+function coursepress_user_have_comments( $student_id, $post_id ) {
+	$args = array(
+		'post_id' => $post_id,
+		'user_id' => $student_id,
+		'order' => 'ASC',
+		'offset' => 0,
+		'number' => 1, // We only need one to verify if current user posted a comment.
+		'fields' => 'ids',
+		'status' => 'all',
+	);
+	$comments = get_comments( $args );
+
+	return count( $comments ) > 0;
 }
