@@ -5,121 +5,117 @@
  * @since 3.0
  * @package CoursePress
  */
-if ( ! function_exists( 'coursepress_render' ) ) :
-	/**
-	 * Get or print the given filename.
-	 *
-	 * @param string $filename The relative path of the file.
-	 * @param array $args Optional arguments to set as variable
-	 * @param bool $echo Whether to return the result in string or not.
-	 * @return mixed
-	 */
-	function coursepress_render( $filename, $args = array(), $echo = true ) {
-		$path = plugin_dir_path( __DIR__ );
-		$filename = $path . $filename . '.php';
 
-		if ( file_exists( $filename ) && is_readable( $filename ) ) {
-			if ( ! empty( $args ) ) {
-				$args = (array) $args;
+/**
+ * Get or print the given filename.
+ *
+ * @param string $filename The relative path of the file.
+ * @param array $args Optional arguments to set as variable
+ * @param bool $echo Whether to return the result in string or not.
+ * @return mixed
+ */
+function coursepress_render( $filename, $args = array(), $echo = true ) {
+	$path = plugin_dir_path( __DIR__ );
+	$filename = $path . $filename . '.php';
 
-				foreach ( $args as $key => $value ) {
-					$$key = $value;
-				}
+	if ( file_exists( $filename ) && is_readable( $filename ) ) {
+		if ( ! empty( $args ) ) {
+			$args = (array) $args;
+
+			foreach ( $args as $key => $value ) {
+				$$key = $value;
 			}
-
-			if ( $echo )
-				include $filename;
-			else {
-				ob_start();
-
-				include $filename;
-
-				return ob_get_clean();
-			}
-			return true;
 		}
 
-		return false;
-	}
-endif;
+		if ( $echo )
+			include $filename;
+		else {
+			ob_start();
 
-if ( ! function_exists( 'coursepress_get_array_val' ) ) :
-	/**
-	 * Helper function to get the value of an dimensional array base on path.
-	 *
-	 * @param array $array
-	 * @param string $key
-	 * @param mixed $default
-	 *
-	 * @return mixed|null|string
-	 */
-	function coursepress_get_array_val( $array, $key, $default = '' ) {
-		if ( ! is_array( $array ) )
-			return null;
+			include $filename;
 
-		$keys = explode( '/', $key );
-		$last_key = array_pop( $keys );
-
-		foreach ( $keys as $k ) {
-			if ( isset( $array[ $k ] ) )
-				$array = $array[ $k ];
+			return ob_get_clean();
 		}
-
-		if ( isset( $array[ $last_key ] ) )
-			return $array[ $last_key ];
-
-		return $default;
+		return true;
 	}
-endif;
 
-if ( ! function_exists( 'coursepress_set_array_val' ) ) :
-	/**
-	 * Helper function to set an array value base on path.
-	 *
-	 * @param $array
-	 * @param $key
-	 * @param $value
-	 *
-	 * @return array
-	 */
-	function coursepress_set_array_val( $array, $key, $value ) {
-		$keys = explode( '/', $key );
-		$last_key = array_pop( $keys );
+	return false;
+}
 
-		foreach ( $keys as $k ) {
-			if ( isset( $array[ $k ] ) )
-				$array = $array[ $k ];
-		}
+/**
+ * Helper function to get the value of an dimensional array base on path.
+ *
+ * @param array $array
+ * @param string $key
+ * @param mixed $default
+ *
+ * @return mixed|null|string
+ */
+function coursepress_get_array_val( $array, $key, $default = '' ) {
+	if ( ! is_array( $array ) )
+		return null;
 
-		if ( isset( $array[ $last_key ] ) )
-			$array[ $last_key ] = $value;
+	$keys = explode( '/', $key );
+	$last_key = array_pop( $keys );
 
-		return $array;
+	foreach ( $keys as $k ) {
+		if ( isset( $array[ $k ] ) )
+			$array = $array[ $k ];
 	}
-endif;
 
-if ( ! function_exists( 'coursepress_get_option' ) ) :
-	/**
-	 * Helper function to get global option in either single or multi site.
-	 *
-	 * @param string $key
-	 * @param mixed $default
-	 * @return mixed
-	 */
-	function coursepress_get_option( $key, $default = '' ) {
-		if ( is_multisite() )
-			$value = get_site_option( $key, $default );
-		else
-			$value = get_option( $key, $default );
+	if ( isset( $array[ $last_key ] ) )
+		return $array[ $last_key ];
 
-		return $value;
+	return $default;
+}
+
+/**
+ * Helper function to set an array value base on path.
+ *
+ * @param $array
+ * @param $key
+ * @param $value
+ *
+ * @return array
+ */
+function coursepress_set_array_val( $array, $key, $value ) {
+	$keys = explode( '/', $key );
+	$last_key = array_pop( $keys );
+
+	foreach ( $keys as $k ) {
+		if ( isset( $array[ $k ] ) )
+			$array = $array[ $k ];
 	}
-endif;
 
-if ( ! function_exists( 'coursepress_get_url' ) ) :
-	function coursepress_get_url() {
-		$slug = coursepress_get_setting( 'slugs/course', 'courses' );
+	if ( isset( $array[ $last_key ] ) )
+		$array[ $last_key ] = $value;
 
-		return trailingslashit( home_url( '/' . $slug ) );
-	}
-endif;
+	return $array;
+}
+
+/**
+ * Helper function to get global option in either single or multi site.
+ *
+ * @param string $key
+ * @param mixed $default
+ * @return mixed
+ */
+function coursepress_get_option( $key, $default = '' ) {
+	if ( is_multisite() )
+		$value = get_site_option( $key, $default );
+	else
+		$value = get_option( $key, $default );
+
+	return $value;
+}
+
+/**
+ * Get CoursePress courses url.
+ *
+ * @return string
+ */
+function coursepress_get_url() {
+	$slug = coursepress_get_setting( 'slugs/course', 'courses' );
+
+	return trailingslashit( home_url( '/' . $slug ) );
+}

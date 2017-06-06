@@ -89,7 +89,7 @@ class CoursePress_Data_Courses extends CoursePress_Utility {
 	}
 
 	function parse_query( $wp ) {
-		global $CoursePress_Course, $CoursePress_VirtualPage;
+		global $CoursePress_VirtualPage;
 
 		$coursepress_template = false;
 
@@ -101,8 +101,8 @@ class CoursePress_Data_Courses extends CoursePress_Utility {
 		//}
 
 		if ( ! empty( $course_name ) ) {
-			$course_id = $this->get_course_id_by_name( $course_name );
-			$CoursePress_Course = new CoursePress_Course( $course_id );
+			//$course_id = $this->get_course_id_by_name( $course_name );
+			//$CoursePress_Course = coursepress_get_course( $course_id );
 
 			if ( $wp->get( 'unit-archive' ) ) {
 				$this->reset_wp( $wp, $course_name );
@@ -130,6 +130,8 @@ class CoursePress_Data_Courses extends CoursePress_Utility {
 				add_filter( 'posts_orderby', array( $this, 'reorder_courses' ) );
 				//$coursepress_template = 'setCourseArchive';
 			} elseif ( $wp->is_single || $wp->is_singular ) {
+				//$coursename = $wp->get( 'name' );
+				//$course_id = $this->get_course_id_by_name( $coursename );
 				$coursepress_template = 'setCourseOverview';
 			}
 		}

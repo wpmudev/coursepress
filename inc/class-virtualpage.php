@@ -11,7 +11,6 @@ class CoursePress_VirtualPage extends CoursePress_Utility {
 	protected $template;
 
 	public function __construct( $template_type ) {
-		//add_filter( 'template_include', array( $this, 'get_coursepress_template' ) );
 		add_filter( 'template_include', array( $this, $template_type ) );
 
 		$template_parts = array(
@@ -29,7 +28,7 @@ class CoursePress_VirtualPage extends CoursePress_Utility {
 	}
 
 	function has_template( $template ) {
-		$template = locate_template( $template );
+		$template = locate_template( $template, false, false );
 
 		if ( $template ) {
 			return $template;
@@ -51,11 +50,13 @@ class CoursePress_VirtualPage extends CoursePress_Utility {
 	}
 
 	function setCourseOverview() {
-		global $CoursePress;
+		global $CoursePress, $CoursePress_Course, $post;
 
+		$CoursePress_Course = coursepress_get_course( $post->ID );
 		$template = $this->has_template( 'single-course.php' );
 
 		if ( ! $template ) {
+			error_log( 'count' );
 			$template = $CoursePress->plugin_path . '/views/templates/single-course.php';
 		}
 

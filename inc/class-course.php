@@ -612,6 +612,7 @@ class CoursePress_Course extends CoursePress_Utility {
 				$attr = array();
 
 				if ( $is_student ) {
+					error_log( '=>' . $course_id );
 					if ( $user->is_unit_completed( $course_id, $unit_id ) ) {
 						array_push( $class, 'unit-completed' );
 					} else {

@@ -139,8 +139,6 @@ final class CoursePress {
 	function deactivate() {}
 
 	function load_core() {
-		$this->set_current_user();
-
 		array_map( array( $this, 'getClass' ), $this->core_classes );
 
 		if ( is_admin() ) {
@@ -157,6 +155,8 @@ final class CoursePress {
 		 * @since 2.0
 		 */
 		do_action( 'coursepress_initialized' );
+
+		add_action( 'init', array( $this, 'set_current_user' ) );
 	}
 
 	function set_current_user() {

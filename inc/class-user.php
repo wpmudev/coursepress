@@ -70,8 +70,11 @@ class CoursePress_User extends CoursePress_Utility {
 
 		$key = 'enrolled_course_date_' . $course_id;
 
-		$enrolled = get_user_option( $id, $key );
+		$enrolled = get_user_option( $key, $id );
 
+		error_log( $id );
+		error_log( $key );
+error_log( $enrolled );
 		return ! empty( $enrolled );
 	}
 
@@ -126,7 +129,7 @@ class CoursePress_User extends CoursePress_Utility {
 		$id = $this->__get( 'ID' );
 
 		$progress = get_user_option( $key, $id );
-error_log(print_r($progress,true));
+
 		if ( ! $progress )
 			return $defaults;
 

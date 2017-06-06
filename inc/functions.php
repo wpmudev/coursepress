@@ -92,11 +92,12 @@ function coursepress_get_course( $course_id = 0 ) {
 		}
 	}
 
-	if ( $CoursePress_Course instanceof CoursePress_Course && $course_id == $CoursePress_Course->__get( 'ID' ) )
-		return $CoursePress_Course;
+	if ( $CoursePress_Course instanceof CoursePress_Course
+	     && $course_id == $CoursePress_Course->__get( 'ID' ) )
+			return $CoursePress_Course;
 
-	if ( isset( $CoursePress_Data_Course->courses[ $course_id ] ) )
-		return $CoursePress_Course->courses[ $course_id ];
+	if ( isset( $CoursePress_Data_Courses->courses[ $course_id ] ) )
+		return $CoursePress_Data_Courses->courses[ $course_id ];
 
 	$course = new CoursePress_Course( $course_id );
 
@@ -136,9 +137,14 @@ function coursepress_get_description( $course_id = 0 ) {
 	return null;
 }
 
+/**
+ * Get the course structure hierarchy.
+ *
+ * @param int $course_id
+ *
+ * @return null|string
+ */
 function coursepress_get_course_structure( $course_id = 0 ) {
-	global $CoursePress_User;
-
 	$course = coursepress_get_course( $course_id );
 
 	if ( ! is_wp_error( $course ) ) {
@@ -148,21 +154,19 @@ function coursepress_get_course_structure( $course_id = 0 ) {
 	return null;
 }
 
-if ( ! function_exists( 'coursepress_get_course_url' ) ) :
-	/**
-	 * Returns the course's URL structure.
-	 *
-	 * @param $course_id
-	 *
-	 * @return false|string
-	 */
-	function coursepress_get_course_url( $course_id ) {
-		$main_slug = coursepress_get_setting( 'slugs/course', 'courses' );
-		$slug = get_post_field( 'post_name', $course_id );
+/**
+ * Returns the course's URL structure.
+ *
+ * @param $course_id
+ *
+ * @return false|string
+ */
+function coursepress_get_course_url( $course_id ) {
+	$main_slug = coursepress_get_setting( 'slugs/course', 'courses' );
+	$slug = get_post_field( 'post_name', $course_id );
 
-		return home_url( '/' ) . trailingslashit( $main_slug ) . trailingslashit( $slug );
-	}
-endif;
+	return home_url( '/' ) . trailingslashit( $main_slug ) . trailingslashit( $slug );
+}
 
 function coursepress_get_units_url( $course_id ) {
 	$course_url = coursepress_get_course_url( $course_id );
@@ -181,6 +185,9 @@ function coursepress_breadcrumb() {
  * @return array of submenu items.
  */
 function coursepress_get_submenus() {
+	/**
+	 * @var $CoursePress_Course CoursePress_Course
+	 */
 	global $CoursePress_Course;
 
 	$course = $CoursePress_Course;
