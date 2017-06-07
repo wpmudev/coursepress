@@ -108,7 +108,7 @@ class CoursePress_User extends CoursePress_Utility {
 		return false;
 	}
 
-	function get_completion_data( $course_id ) {
+	function _get_completion_data( $course_id ) {
 		global $CoursePress;
 
 		$id = $this->__get( 'ID' );
@@ -140,13 +140,22 @@ class CoursePress_User extends CoursePress_Utility {
 		return $progress;
 	}
 
+	function get_completion_data( $course_id ) {
+		$c = $this->validate_completion_data( $course_id );
+
+		return $c;
+	}
+
 	function validate_completion_data( $course_id ) {
 		if ( ! $this->is_enrolled_at( $course_id ) )
 			return false;
 
+		if ( ( $completion = $this->__get( 'completion_data' ) ) )
+			return $completion;
+
 		$user_id = $this->__get( 'ID' );
 		$course = coursepress_get_course( $course_id );
-		$progress = $this->get_completion_data( $course_id );
+		$progress = $this->_get_completion_data( $course_id );
 		$is_done = coursepress_get_array_val( $progress, 'completion/completed' );
 		$completion = array();
 
@@ -167,152 +176,6 @@ class CoursePress_User extends CoursePress_Utility {
 
 			if ( ! empty( $gradeable ) )
 				$total_gradeable += $gradeable;
-
-			//error_log( print_r( $unit_completion, true ) );
-			/**
-			 * @var $unit CoursePress_Unit
-			 *
-			$unit_id = $unit->__get( 'ID' );
-			$unit_available = $unit->is_available();
-			$unit_accessible = $unit->is_accessible_by( $user_id );
-			$path = 'completion/' . $unit_id;
-			$unit_required_steps = 0;
-			$unit_assessable_steps = 0;
-			$unit_progress = 0;
-			$total_modules = 0;
-
-			if ( $course->__get( 'with_modules' ) ) {
-				$modules = $unit->get_modules_with_steps( true );
-				$completion = coursepress_set_array_val( $completion, $path . '/modules', array() );
-
-				foreach ( $modules as $module_id => $module ) {
-					$completion = coursepress_set_array_val( $completion, $path . '/modules/' . $module_id, array() );
-					$total_steps = 0;
-					$required_steps = 0;
-					$assessable_steps = 0;
-					$answered_steps = 0;
-					$module_progress = 0;
-					$total_modules++;
-					$module_seen = coursepress_get_array_val( $progress, 'units/' . $unit_id . '/visited_pages/' . $module_id );
-
-					if ( $module['steps'] ) {
-						foreach ( $module['steps'] as $step ) {
-							$step_id = $step->__get( 'ID' );
-							$is_answerable = $step->is_answerable();
-							$is_required = $step->__get( 'mandatory' );
-							$is_assessable = $step->__get( 'assessable' );
-							$min_grade_required = (int) $step->__get( 'minimum_grade' );
-							$step_type = $this->__get( 'module_type' );
-
-							$step_seen = coursepress_get_array_val(
-								$progress,
-								$path . '/modules_seen/' . $step_id
-							);
-
-							$total_steps++;
-
-							if ( $is_required ) {
-								$required_steps++;
-							}
-
-							if ( $is_assessable ) {
-								$assessable_steps++;
-							}
-
-							if ( $is_answerable ) {
-								$response = coursepress_get_array_val( $completion, 'units/' . $unit_id . '/responses/' . $step_id );
-
-								if ( is_array( $response ) )
-									$response = array_pop( $response );
-
-								if ( ! empty( $response ) ) {
-									$completion = coursepress_set_array_val(
-										$completion,
-										$path . '/answered/' . $step_id,
-										true
-									);
-									$grades = coursepress_get_array_val(
-										$response,
-										'grades'
-									);
-
-									if ( is_array( $grades ) )
-										$grades = array_pop( $grades );
-
-									$grade = coursepress_get_array_val( $grades, 'grade' );
-									$graded_by = coursepress_get_array_val( $grades, 'graded_by' );
-
-									$completion = coursepress_set_array_val(
-										$completion,
-										$path . '/grade/' . $step_id,
-										$grade
-									);
-
-									$pass = $grade >= $min_grade_required;
-
-									if ( $pass ) {
-										$completion = coursepress_set_array_val(
-											$completion,
-											$path . '/passed/' . $step_id,
-											true
-										);
-										$module_progress += 100;
-									} else {
-										if ( ! $is_required )
-											$module_progress += 100;
-									}
-								} else {
-									if ( ! $is_required && $step_seen )
-										$module_progress += 100;
-								}
-							} else {
-								if ( 'discussion' == $step_type ) {
-									if ( ! $is_required ) {
-										$module_progress += 100;
-									} elseif ( coursepress_user_have_comments( $user_id, $step_id ) ) {
-										$module_progress += 100;
-									}
-								} elseif ( 'video' == $step_type || 'audio' == $step_type ) {
-									if ( ! $is_required ) {
-										$module_progress += 100;
-									}
-								} else {
-									if ( $step_seen ) {
-										$module_progress += 100;
-									}
-								}
-							}
-						}
-					}
-
-					$unit_required_steps += $required_steps;
-					$unit_assessable_steps += $assessable_steps;
-
-					if ( $module_progress > 0 ) {
-						$module_progress = $module_progress / $total_steps;
-					}
-
-					$unit_progress += $module_progress;
-					$completion = coursepress_set_array_val(
-						$completion,
-						$path . '/modules/' . $module_id . '/progress',
-						$module_progress
-					);
-				}
-			}
-
-			if ( $unit_progress > 0 && $total_modules > 0 ) {
-				$unit_progress = $unit_progress / $total_modules;
-			}
-			$completion = coursepress_set_array_val(
-				$completion,
-				$path . '/progress',
-				$unit_progress
-			);
-			//$completion = coursepress_set_array_val( $completion, $path . '/required_steps', $unit_required_steps );
-			//$completion = coursepress_set_array_val( $completion, $path . '/assessable_steps', $unit_assessable_steps );
-			 *
-			 */
 		}
 
 		if ( $unit_grade > 0 && $total_gradeable > 0 )
@@ -320,8 +183,12 @@ class CoursePress_User extends CoursePress_Utility {
 
 		$completion['average'] = $unit_grade;
 
-		//error_log( print_r( $completion, true ) );
+		error_log( print_r( $completion, true ) );
 		//error_log( print_r( $progress, true ) );
+
+		$this->__set( 'completion_data', $completion );
+
+		return $completion;
 	}
 
 	function validate_unit( $unit, $with_modules, $progress ) {
@@ -331,6 +198,7 @@ class CoursePress_User extends CoursePress_Utility {
 		$unit_progress = 0;
 		$unit_grade = 0;
 		$unit_gradable = 0;
+		$unit_pass_grade = 0;
 
 		if ( $with_modules ) {
 			$modules = $unit->get_modules_with_steps();
@@ -398,6 +266,12 @@ class CoursePress_User extends CoursePress_Utility {
 		$completion['average'] = $unit_grade;
 		$completion['gradable'] = $unit_gradable;
 
+		if ( $unit_progress >= 100 ) {
+			if ( 0 == $unit_gradable ) {
+				$completion['completed'] = true;
+			}
+		}
+
 		return $completion;
 	}
 
@@ -437,7 +311,7 @@ class CoursePress_User extends CoursePress_Utility {
 			if ( $is_answerable ) {
 				$response = $this->get_response( $course_id, $unit_id, $step_id, $progress );
 
-				if ( $is_required )
+				if ( $is_required || $is_assessable )
 					$gradable++;
 
 				if ( ! empty( $response ) ) {
@@ -591,10 +465,17 @@ class CoursePress_User extends CoursePress_Utility {
 		return coursepress_get_array_val( $progress, 'completion/' . $unit_id . '/completed' );
 	}
 
-	function is_module_completed( $course_id, $unit_id, $module_id ) {
+	function get_module_progress( $course_id, $unit_id, $module_id ) {
 		$progress = $this->get_completion_data( $course_id );
+		$path = 'completion/' . $unit_id . '/modules/' . $module_id . '/progress';
 
-		//return coursepress_get_array_val( $progress, 'completion/' . $unit_id . '/' . $module_id );
+		return coursepress_get_array_val( $progress, $path );
+	}
+
+	function is_module_completed( $course_id, $unit_id, $module_id ) {
+		$module_progress = $this->get_module_progress( $course_id, $unit_id, $module_id );
+
+		return (int) $module_progress >= 100;
 	}
 
 	function get_step_grade( $course_id, $unit_id, $step_id ) {}

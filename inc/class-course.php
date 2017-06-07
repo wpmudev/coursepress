@@ -470,7 +470,7 @@ class CoursePress_Course extends CoursePress_Utility {
 						if ( $modules ) {
 							$module_structure = '';
 
-							foreach ( $modules as $module ) {
+							foreach ( $modules as $module_id => $module ) {
 								$module_title = $module['title'];
 								$module_url = esc_url_raw( $module['url'] );
 								$module_suffix = '';
@@ -479,8 +479,15 @@ class CoursePress_Course extends CoursePress_Utility {
 								if ( $has_access ) {
 									$module_title = $this->create_html( 'a', array( 'href' => $module_url ), $module_title );
 								} elseif ( $is_student ) {
+									if ( ! $unit->is_module_accessible_by( $user_id, $module ) ) {
+										$module_class[] = 'module-locked';
+									} else {
+										$module_title = $this->create_html( 'a', array( 'href' => $module_url ), $module_title );
+									}
 								} else {
 									if ( $module['preview'] ) {
+										$module_class[] = 'has-preview';
+
 										$attr = array(
 											'href' => add_query_arg( 'preview', true, $module_url ),
 											'class' => 'preview',
@@ -518,24 +525,39 @@ class CoursePress_Course extends CoursePress_Utility {
 							$unit_class[] = 'unit-completed';
 						}
 
+						if ( $unit_progress > 0 )
+							$unit_progress /= 100;
+
 						$attr = array(
 							'class' => 'course-progress-disc unit-progress',
 							'data-value' => $unit_progress,
 							'data-start-angle' => '4.7',
 							'data-size' => 36,
-							//'data-width' => 40,
 							'data-knob-data-height' => 40,
-							//'knob_fg_color' => '#24bde6',
 							'data-empty-fill' => 'rgba(0, 0, 0, 0.2)',
 							'data-fill-color' => '#24bde6',
 							'data-bg-color' => '#e0e6eb',
-							'data-thickness' => '5',
-							'data-format' => 'true',
+							'data-thickness' => '6',
+							'data-format' => true,
 							'data-style' => 'extended',
 							'data-animation-start-value' => '1.0',
+							'data-knob-data-thickness' => 0.18,
+							'data-knob-text-show' => true,
+							'data-knob-text-color' => '#222222',
+							'data-knob-text-align' => 'center',
+							'data-knob-text-denominator' => '4.5',
 						);
-						$unit_progress = $this->create_html( 'span', array(), $unit_progress . '%' );
-						$unit_suffix .= $this->create_html( 'div', $attr, $unit_progress );
+
+						/**
+						 * Fire to allow changes on unit progress wheel attributes
+						 * before printing the unit progress.
+						 *
+						 * @since 2.0
+						 * @param $attr An array of wheel attributes.
+						 */
+						$attr = apply_filters( 'coursepress_unit_progress_wheel_atts', $attr );
+
+						$unit_suffix .= $this->create_html( 'div', $attr );
 					}
 				} elseif ( $unit->__get( 'preview' ) ) {
 					$attr = array(

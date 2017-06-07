@@ -114,20 +114,36 @@ class CoursePress_Unit extends CoursePress_Utility {
 		}
 
 		$course_id = $this->__get( 'post_parent' );
-		$unit_id = $this->__get( 'ID' );
+		$previous_unit_id = $previousUnit->__get( 'ID' );
 		$force_unit_completion = $this->__get( 'force_current_unit_completion' );
 
 		if ( $force_unit_completion
-		     && ! $user->is_unit_completed( $course_id, $unit_id ) )
+		     && ! $user->is_unit_completed( $course_id, $previous_unit_id ) )
 				return false;
 
 		$force_unit_pass = $this->__get( 'force_current_unit_successful_completion' );
 
 		if ( $force_unit_pass
-			&& ! $user->has_pass_course_unit( $course_id, $unit_id ) )
+			&& ! $user->has_pass_course_unit( $course_id, $previous_unit_id ) )
 				return false;
 
 		return $available;
+	}
+
+	function is_module_accessible_by( $user_id, $module ) {
+		$user = coursepress_get_user( $user_id );
+
+		if ( is_wp_error( $user ) )
+			return false;
+
+		if ( ! $module['previous_module'] )
+			return true;
+
+		$previous_module = $module['previous_module'];
+		$course_id = $this->__get( 'post_parent' );
+		$unit_id = $this->__get( 'ID' );
+
+		return $user->is_module_completed( $course_id, $unit_id, $previous_module['id'] );
 	}
 
 	function get_unit_url() {
@@ -157,10 +173,14 @@ class CoursePress_Unit extends CoursePress_Utility {
 			}
 		}
 
+		$previous_module = false;
 		foreach ( $modules as $pos => $module ) {
 			$slug = sanitize_title( $module['title'], '' );
+			$module['id'] = $pos;
 			$module['url'] = $this->get_unit_url() . trailingslashit( $slug );
+			$module['previous_module'] = $previous_module;
 			$modules[ $pos ] = $module;
+			$previous_module = $module;
 		}
 
 		return $modules;

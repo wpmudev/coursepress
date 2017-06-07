@@ -21,12 +21,11 @@
                 });
 
                 this.data = data;
-
-              //  this.$el.on( 'circle-animation-progress', this.animationProgress, this );
+                this.$el.on( 'circle-animation-progress', this.animationProgress );
             },
 
             animationProgress: function( e, v ) {
-                var obj = $( e.currentTarget ).data( 'circle-progress' ),
+                var obj = $(this).data( 'circle-progress' ),
                     ctx = obj.ctx,
                     s = obj.size,
                     sv = (100 * v).toFixed(),
@@ -38,13 +37,15 @@
                 }
                 ctx.save();
 
-                if ( this.data.knobTextShow ) {
-                    ctx.font = s / this.data.knobTextDenominator + 'px sans-serif';
-                    ctx.textAlign = this.data.knobTextAlign;
+
+                if ( obj.knobTextShow ) {
+                    ctx.font = s / obj.knobTextDenominator + 'px sans-serif';
+                    ctx.textAlign = obj.knobTextAlign;
                     ctx.textBaseline = 'middle';
-                    ctx.fillStyle = this.data.knobTextColor;
+                    ctx.fillStyle = obj.knobTextColor;
                     ctx.fillText( sv + '%', s / 2 + s / 80, s / 2 );
                 }
+
                 ctx.restore();
             }
         });
