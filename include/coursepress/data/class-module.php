@@ -127,10 +127,10 @@ class CoursePress_Data_Module {
 			$answers = maybe_unserialize( $meta['answers'][0] );
 			if ( is_array( $answers ) ) {
 				$the_answer = array_keys( $answers, $value );
-				$value = array_shift( $the_answer );
+				//$value = array_shift( $the_answer );
 			}
 			$meta['answers_selected'][0] = $value;
-			update_post_meta( $module_id, 'answers_selected', $value );
+			update_post_meta( $module_id, 'answers_selected', $the_value );
 			//delete_post_meta( $module_id, 'checked_answer' );
 		}
 
