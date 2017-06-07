@@ -146,11 +146,10 @@ class CoursePress_Step extends CoursePress_Utility {
 		if ( is_wp_error( $user ) )
 			return false;
 
+		$previousStep = $this->__get( 'previousStep' );
 
-		$step_id = $this->__get( 'ID' );
-		$is_answerable = $this->is_answerable();
-		$required = $this->__get( 'mandatory' );
-		$assessable = $this->__get( 'assessable' );
-		$user_answer = coursepress_get_step_answer( $step_id );
+		if ( ! $previousStep )
+			return true;
+
 	}
 }

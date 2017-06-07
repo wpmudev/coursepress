@@ -79,17 +79,81 @@ CoursePress_User
 
 **Methods:**
 ###is_super_admin()
+Check if user is an administrator.
+
 ###is_instructor()
+Check if user is an instructor of any course.
+
 ###is_facilitator()
+Check if user is a facilitator of any course.
+
 ###is_student()
+Check if user is a student of any course.
+
 ###is_enrolled_at( int `$course_id` )
+Check if user is enrolled at the given course ID.
+
 ###is_instructor_at( int `$course_id` )
+Check if user is an instructor at the given course ID.
+
 ###is_facilitator_at( int `$course_id` )
+Check if user is a facilitator of the given course ID.
+
 ###get_instructor_profile_link()
+Returns instructor profile link if user is an instructor of any course. Otherwise false.
+
 ###get_name()
 ###get_avatar()
-###get_accessable_courses( string `$course_status`, bool `$ids_only`, bool `$all` )
 
+###get_accessable_courses( `string` $course_status, `bool` $ids_only, `bool` $all )
+Returns the list of courses where user have access at. Each **course** is an instance of **CoursePress_Course** class object.
+
+###has_access_at( `int` $course_id )
+Check if user has administrative, instructor or facilitator access to the given course ID.
+
+###get_response( `int` $course_id, `int` $unit_id, `int` $step_id )
+Returns user response of the given step ID.
+
+###is_course_completed( `int` $course_id )
+Check if user had completed the given course ID.
+The completion status return here only provide status according to user interaction and course requisite. It does not tell if the user have pass nor failed the course.
+
+###get_course_grade( `int` $course_id )
+Returns user's acquired course grade.
+
+###get_course_progress( `int` $course_id )
+Returns user's course progress percentage.
+
+###get_course_completion_status( `int` $course_id )
+Returns user's course completion status. Statuses are `ongoing`|`passed`|`failed`.
+User is automatically mark as failed if the course had already ended.
+
+###get_unit_grade( `int` $course_id, `int` $unit_id )
+Returns users's grade of the given unit ID.
+
+###get_unit_progress( `int` $course_id, `int` $unit_id )
+Returns user's progress of the given unit ID.
+
+###is_unit_seen( `int` $course_id, `int` $unit_id )
+Check if user have already seen the unit.
+
+###is_unit_completed( `int` $course_id, `int` $unit_id )
+Check if user has completed the unit.
+
+###has_course_unit_pass( `int` $course_id, `int` $unit_id )
+Check if user have pass the unit.
+
+###get_module_progress( `int` $course_id, `int` $unit_id, `int` $module_id )
+Returns progress percentage of the given module ID.
+
+###is_module_seen( `int` $course_id, `int` $unit_id, `int` $module_id )
+Check if user has seen the given module ID.
+
+###is_module_completed( `int` $course_id, `int` $unit_id, `int` $module_id )
+Check if user have completed the given module ID.
+
+###get_step_grade( `int` $course_id, `int` $unit_id, `int` $step_id )
+Returns users' grade of the given step ID.
 
 CoursePress_Shortcode
 -

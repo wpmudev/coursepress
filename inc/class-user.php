@@ -42,14 +42,28 @@ class CoursePress_User extends CoursePress_Utility {
 		}
 	}
 
+	/**
+	 * Helper function to return WP_Error.
+	 * @return WP_Error
+	 */
 	function wp_error() {
 		return new WP_Error( 'wrong_param', __( 'Invalid user ID!', 'cp' ) );
 	}
 
+	/**
+	 * Check if user is an administrator.
+	 *
+	 * @return bool
+	 */
 	function is_super_admin() {
 		return isset( $this->roles ) && in_array( 'administrator', $this->roles );
 	}
 
+	/**
+	 * Check if user is an instructor of any course.
+	 *
+	 * @return bool
+	 */
 	function is_instructor() {
 		return isset( $this->roles ) && in_array( 'coursepress_instructor', $this->roles );
 	}
@@ -58,10 +72,22 @@ class CoursePress_User extends CoursePress_Utility {
 		return isset( $this->roles ) && in_array( 'coursepress_facilitator', $this->roles );
 	}
 
+	/**
+	 * Check if user is an student of any course.
+	 *
+	 * @return bool
+	 */
 	function is_student() {
 		return isset( $this->roles) && in_array( 'coursepress_student', $this->roles );
 	}
 
+	/**
+	 * Check if user is enrolled to the given course ID.
+	 *
+	 * @param $course_id
+	 *
+	 * @return bool
+	 */
 	function is_enrolled_at( $course_id ) {
 		$id = $this->__get( 'ID' );
 
@@ -75,6 +101,13 @@ class CoursePress_User extends CoursePress_Utility {
 		return ! empty( $enrolled );
 	}
 
+	/**
+	 * Check if user is an instructor of the given course ID.
+	 *
+	 * @param $course_id
+	 *
+	 * @return bool
+	 */
 	function is_instructor_at( $course_id ) {
 		$id = $this->__get( 'ID' );
 
@@ -86,6 +119,13 @@ class CoursePress_User extends CoursePress_Utility {
 		return $instructor == $id;
 	}
 
+	/**
+	 * Check if user is a facilitator of the given course ID.
+	 *
+	 * @param $course_id
+	 *
+	 * @return bool
+	 */
 	function is_facilitator_at( $course_id ) {
 		$id = $this->__get( 'ID' );
 
@@ -97,6 +137,13 @@ class CoursePress_User extends CoursePress_Utility {
 		return $facilitator == $id;
 	}
 
+	/**
+	 * Check if user has administrator, instructor or facilitator access of the given course ID.
+	 *
+	 * @param $course_id
+	 *
+	 * @return bool
+	 */
 	function has_access_at( $course_id ) {
 		if ( $this->is_super_admin()
 			|| ( $this->is_instructor() && $this->is_instructor_at( $course_id ) )
@@ -183,6 +230,7 @@ class CoursePress_User extends CoursePress_Utility {
 
 		$completion['average'] = $unit_grade;
 
+		$completion = array_filter( $completion );
 		error_log( print_r( $completion, true ) );
 		//error_log( print_r( $progress, true ) );
 
@@ -191,7 +239,7 @@ class CoursePress_User extends CoursePress_Utility {
 		return $completion;
 	}
 
-	function validate_unit( $unit, $with_modules, $progress ) {
+	private function validate_unit( $unit, $with_modules, $progress ) {
 		$completion = array();
 		$unit_id = $unit->__get( 'ID' );
 		$course_id = $unit->__get( 'course_id' );
@@ -199,6 +247,8 @@ class CoursePress_User extends CoursePress_Utility {
 		$unit_grade = 0;
 		$unit_gradable = 0;
 		$unit_pass_grade = 0;
+		$force_completion = $unit->__get( 'force_current_unit_completion' );
+		$force_pass_completion = $unit->__get( 'force_current_unit_successful_completion' );
 
 		if ( $with_modules ) {
 			$modules = $unit->get_modules_with_steps();
@@ -209,9 +259,21 @@ class CoursePress_User extends CoursePress_Utility {
 
 				foreach ( $modules as $module_id => $module ) {
 					$module_completion = array();
+					$module_seen = coursepress_get_array_val(
+						$progress,
+						'units/' . $unit_id . '/visited_pages/' . $module_id
+					);
+
+					if ( $module_seen ) {
+						$completion = coursepress_set_array_val(
+							$completion,
+							'course_module_seen/' . $module_id,
+							$module_id
+						);
+					}
 
 					if ( $module['steps'] ) {
-						$steps_completion = $this->validate_steps( $module['steps'], $course_id, $unit_id, $progress );
+						$steps_completion = $this->validate_steps( $module['steps'], $course_id, $unit_id, $progress, $force_completion, $force_pass_completion );
 						$step_progress = $steps_completion['progress'];
 						$module_progress += $step_progress;
 						$completion = coursepress_set_array_val(
@@ -229,7 +291,7 @@ class CoursePress_User extends CoursePress_Utility {
 						if ( ! empty( $answered ) )
 							$completion = coursepress_set_array_val( $completion, 'answered', $answered );
 
-						$seen = coursepress_get_array_val( $steps_completion, 'seen' );
+						$seen = coursepress_get_array_val( $steps_completion, 'modules_seen' );
 						if ( ! empty( $seen ) )
 							$completion = coursepress_set_array_val( $completion, 'modules_seen', $seen );
 
@@ -241,6 +303,14 @@ class CoursePress_User extends CoursePress_Utility {
 
 						if ( ! empty( $gradable ) )
 							$unit_grade += $gradable;
+
+						$completed_steps = coursepress_get_array_val( $steps_completion, 'completed_steps' );
+						if ( $completed_steps )
+							$completion = coursepress_set_array_val( $completion, 'completed_steps', $completed_steps );
+
+						$steps_grades = coursepress_get_array_val( $steps_completion, 'steps_grades' );
+						if ( $steps_grades )
+							$completion = coursepress_set_array_val( $completion, 'steps_grade', $steps_grades );
 
 					}
 
@@ -275,8 +345,7 @@ class CoursePress_User extends CoursePress_Utility {
 		return $completion;
 	}
 
-	function validate_steps( $steps, $course_id, $unit_id, $progress ) {
-		$completion = array();
+	private function validate_steps( $steps, $course_id, $unit_id, $progress, $force_completion, $force_pass_completion ) {
 		$total_steps = count( $steps );
 		$required_steps = 0;
 		$assessable_steps = 0;
@@ -287,6 +356,8 @@ class CoursePress_User extends CoursePress_Utility {
 		$answered = array();
 		$seen = array();
 		$gradable = 0;
+		$completed = array();
+		$steps_grades = array();
 
 		foreach ( $steps as $step ) {
 			$step_id = $step->__get( 'ID' );
@@ -299,12 +370,12 @@ class CoursePress_User extends CoursePress_Utility {
 				$progress,
 				'completion/' . $unit_id . '/modules_seen/' . $step_id
 			);
+			$valid = false;
 
 			if ( $is_required )
 				$required_steps++;
 			if ( $is_assessable )
 				$assessable_steps++;
-
 			if ( $step_seen )
 				$seen[ $step_id ] = $step_id;
 
@@ -322,35 +393,59 @@ class CoursePress_User extends CoursePress_Utility {
 						$grades = array_pop( $grades );
 
 					$grade = coursepress_get_array_val( $grades, 'grade' );
+
+					$steps_grades[ $step_id ] = $grade;
+
 					$pass = $grade >= $min_grade;
 					$steps_grade += $grade;
 
 					if ( $pass ) {
-						$step_progress += 100;
+						$valid = true;
 						$passed[ $step_id ] = $step_id;
 					} else {
-						if ( ! $is_required ) {
-							$step_progress += 100;
-						}
+						if ( ! $is_required )
+							$valid = true;
 					}
 
 
 				} else {
 					if ( ! $is_required && $step_seen ) {
-						$step_progress += 100;
+						$valid = true;
 					}
 				}
 			} else {
 				if ( 'discussion' == $step_type ) {
-					if ( ! $is_required )
-						$step_progress += 100;
-					elseif ( coursepress_user_have_comments( $user_id, $step_id ) )
-						$step_progress += 100;
+					$has_comments = coursepress_user_have_comments( $user_id, $step_id );
+
+					if ( $has_comments ) {
+						$valid = true;
+					} elseif ( ! $is_required ) {
+						if ( $step_seen )
+							$valid = true;
+						elseif ( ! $force_completion )
+							$valid = true;
+					}
+
 				} elseif ( 'video' == $step_type || 'audio' == $step_type ) {
-					if ( ! $is_required )
-						$step_progress += 100;
-				} elseif ( ! $is_required )
-					$step_progress += 100;
+					if ( ! $is_required ) {
+						if ( $step_seen )
+							$valid = true;
+						elseif ( ! $force_completion )
+							$valid = true;
+					} elseif ( $step_seen )
+						$valid = true;
+
+				} elseif ( ! $is_required ) {
+					if ( $step_seen )
+						$valid = true;
+					elseif ( ! $force_completion )
+						$valid = true;
+				}
+			}
+
+			if ( $valid ) {
+				$step_progress += 100;
+				$completed[ $step_id ] = $step_id;
 			}
 		}
 
@@ -367,11 +462,23 @@ class CoursePress_User extends CoursePress_Utility {
 			'modules_seen' => $seen,
 			'average' => $steps_grade,
 			'gradable' => $gradable,
+			'completed_steps' => $completed,
+			'steps_grades' => $steps_grades,
 		);
 
 		return $completion;
 	}
 
+	/**
+	 * Returns the user response.
+	 *
+	 * @param $course_id
+	 * @param $unit_id
+	 * @param $step_id
+	 * @param bool $progress
+	 *
+	 * @return array|mixed|null|string
+	 */
 	function get_response( $course_id, $unit_id, $step_id, $progress = false ) {
 		if ( ! $progress )
 			$progress = $this->get_completion_data( $course_id );
@@ -388,6 +495,15 @@ class CoursePress_User extends CoursePress_Utility {
 		return $response;
 	}
 
+	/**
+	 * Check if user had completed the given course ID.
+	 * The completion status return here only provide status according to user interaction and
+	 * course requisite. It does not tell if the user have pass nor failed the course.
+	 *
+	 * @param $course_id
+	 *
+	 * @return bool
+	 */
 	function is_course_completed( $course_id ) {
 		$progress = $this->get_completion_data( $course_id );
 
@@ -396,17 +512,39 @@ class CoursePress_User extends CoursePress_Utility {
 		return $course_progress >= 100;
 	}
 
+	/**
+	 * Returns user's overall acquired grade.
+	 *
+	 * @param $course_id
+	 *
+	 * @return mixed|null|string
+	 */
 	function get_course_grade( $course_id ) {
 		$progress = $this->get_completion_data( $course_id );
 		return coursepress_get_array_val( $progress, 'completion/average' );
 	}
 
+	/**
+	 * Returns user's course progress percentage.
+	 *
+	 * @param $course_id
+	 *
+	 * @return mixed|null|string
+	 */
 	function get_course_progress( $course_id ) {
 		$progress = $this->get_completion_data( $course_id );
 
 		return coursepress_get_array_val( $progress, 'completion/progress' );
 	}
 
+	/**
+	 * Returns user's course completion status. Statuses are `ongoing`|`passed`|`failed`.
+	 * User is automatically mark as failed if the course had already ended.
+	 *
+	 * @param $course_id
+	 *
+	 * @return string
+	 */
 	function get_course_completion_status( $course_id ) {
 		$progress = $this->get_completion_data( $course_id );
 		$status = 'ongoing';
@@ -436,24 +574,71 @@ class CoursePress_User extends CoursePress_Utility {
 		return $status;
 	}
 
+	/**
+	 * Returns user's grade of the given unit ID.
+	 *
+	 * @param $course_id
+	 * @param $unit_id
+	 *
+	 * @return mixed|null|string
+	 */
 	function get_unit_grade( $course_id, $unit_id ) {
 		$progress = $this->get_completion_data( $course_id );
 
 		return coursepress_get_array_val( $progress, 'completion/' . $unit_id . '/average' );
 	}
 
+	/**
+	 * Returns users' progress of the given unit ID.
+	 *
+	 * @param $course_id
+	 * @param $unit_id
+	 *
+	 * @return mixed|null|string
+	 */
 	function get_unit_progress( $course_id, $unit_id ) {
 		$progress = $this->get_completion_data( $course_id );
 
 		return coursepress_get_array_val( $progress, 'completion/' . $unit_id . '/progress' );
 	}
 
+	/**
+	 * Check if user have already seen the unit.
+	 *
+	 * @param $course_id
+	 * @param $unit_id
+	 *
+	 * @return bool
+	 */
+	function is_unit_seen( $course_id, $unit_id ) {
+		$progress = $this->get_completion_data( $course_id );
+		$seen = coursepress_get_array_val( $progress, 'units/' . $unit_id );
+
+		return ! empty( $seen );
+	}
+
+	/**
+	 * Check if user has completed the unit.
+	 *
+	 * @param $course_id
+	 * @param $unit_id
+	 *
+	 * @return bool
+	 */
 	function is_unit_completed( $course_id, $unit_id ) {
 		$progress = $this->get_unit_progress( $course_id, $unit_id );
 
 		return (int) $progress >= 100;
 	}
 
+	/**
+	 * Check if user have pass the unit.
+	 *
+	 * @param $course_id
+	 * @param $unit_id
+	 *
+	 * @return bool|mixed|null|string
+	 */
 	function has_pass_course_unit( $course_id, $unit_id ) {
 		$is_completed = $this->is_unit_completed( $course_id, $unit_id );
 
@@ -465,6 +650,15 @@ class CoursePress_User extends CoursePress_Utility {
 		return coursepress_get_array_val( $progress, 'completion/' . $unit_id . '/completed' );
 	}
 
+	/**
+	 * Returns progress percentage of the given module ID.
+	 *
+	 * @param $course_id
+	 * @param $unit_id
+	 * @param $module_id
+	 *
+	 * @return mixed|null|string
+	 */
 	function get_module_progress( $course_id, $unit_id, $module_id ) {
 		$progress = $this->get_completion_data( $course_id );
 		$path = 'completion/' . $unit_id . '/modules/' . $module_id . '/progress';
@@ -472,13 +666,54 @@ class CoursePress_User extends CoursePress_Utility {
 		return coursepress_get_array_val( $progress, $path );
 	}
 
+	/**
+	 * Check if user has seen the given module ID.
+	 *
+	 * @param $course_id
+	 * @param $unit_id
+	 * @param $module_id
+	 *
+	 * @return bool
+	 */
+	function is_module_seen( $course_id, $unit_id, $module_id ) {
+		$progress = $this->get_completion_data( $course_id );
+		$path = 'completion/' . $unit_id . '/course_module_seen/' . $module_id;
+
+		$seen = coursepress_get_array_val( $progress, $path );
+
+		return ! empty( $seen );
+	}
+
+	/**
+	 * Check if user have completed the given module ID.
+	 *
+	 * @param $course_id
+	 * @param $unit_id
+	 * @param $module_id
+	 *
+	 * @return bool
+	 */
 	function is_module_completed( $course_id, $unit_id, $module_id ) {
 		$module_progress = $this->get_module_progress( $course_id, $unit_id, $module_id );
 
 		return (int) $module_progress >= 100;
 	}
 
-	function get_step_grade( $course_id, $unit_id, $step_id ) {}
+	/**
+	 * Returns user's grade of the given step ID.
+	 *
+	 * @param $course_id
+	 * @param $unit_id
+	 * @param $step_id
+	 *
+	 * @returns int|null
+	 */
+	function get_step_grade( $course_id, $unit_id, $step_id ) {
+		$progress = $this->get_completion_data( $course_id );
+		$path = 'completion/' . $unit_id . '/steps_grade/' . $step_id;
+
+		return coursepress_get_array_val( $progress, $path );
+	}
 
 	function get_step_progress( $course_id, $unit_id, $step_id ) {
 		$progress = $this->get_completion_data( $course_id );
@@ -493,6 +728,24 @@ class CoursePress_User extends CoursePress_Utility {
 		$slug = coursepress_get_setting( 'slugs/instructor_profile', 'instructor' );
 
 		return site_url( '/' ) . trailingslashit( $slug ) . $this->__get( 'display_name' );
+	}
+
+	function is_step_seen( $course_id, $unit_id, $step_id ) {
+		$progress = $this->get_completion_data( $course_id );
+		$path = 'completion/' . $unit_id . '/modules_seen/' . $step_id;
+
+		$seen = coursepress_get_array_val( $progress, $path );
+
+		return ! empty( $seen );
+	}
+
+	function is_step_completed( $course_id, $unit_id, $step_id ) {
+		$progress = $this->get_completion_data( $course_id );
+		$path = 'completion/' . $unit_id . '/completed_steps/' . $step_id;
+
+		$completed = coursepress_get_array_val( $progress, $path );
+
+		return ! empty( $completed );
 	}
 
 	function get_name() {
