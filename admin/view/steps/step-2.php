@@ -8,7 +8,7 @@
 	<div class="status <?php echo $setup_class; ?>"></div>
 </div>
 
-<div class="step-content step-2">
+<div class="cp-box-content step-2">
 	<input type="hidden" name="meta_setup_step_2" value="saved" />
 	<?php
 	echo CoursePress_Helper_UI::browse_media_field(

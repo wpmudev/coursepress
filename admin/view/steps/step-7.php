@@ -3,7 +3,7 @@
 	<div class="status <?php echo $setup_class; ?>"></div>
 </div>
 
-<div class="step-content step-7">
+<div class="cp-box-content step-7">
 	<input type="hidden" name="meta_setup_step_7" value="saved" />
 
 	<div class="wide minimum-grade">
