@@ -7,7 +7,7 @@
  */
 get_header(); ?>
 
-	<div class="wrap">
+	<div class="wrap coursepress-wrap">
 		<main role="main" class="site-main">
 			<div class="container">
 				<section class="course-info">

@@ -46,6 +46,8 @@ class CoursePress_Unit extends CoursePress_Utility {
 			'unit_delay_days',
 			'force_current_unit_completion',
 			'force_current_unit_successful_completion',
+			'visible',
+			'preview',
 		);
 
 		$date_format = coursepress_get_option( 'date_format' );
@@ -108,7 +110,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 		$previousUnit = $this->__get( 'previousUnit' );
 
 		if ( ! $previousUnit ) {
-			// @todo: Get previous unit
+			return $available;
 		}
 
 		$course_id = $this->__get( 'post_parent' );
@@ -125,7 +127,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 			&& ! $user->has_pass_course_unit( $course_id, $unit_id ) )
 				return false;
 
-		return true;
+		return $available;
 	}
 
 	function get_unit_url() {

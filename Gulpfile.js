@@ -82,6 +82,12 @@
             'coursepress_settings.js': [
                 // Add JS that will be loaded at Settings page
                 // assets/js/src/admin/settings/....
+            ],
+            'coursepress-front.js': [
+                'assets/js/src/common/coursepress.js',
+                'assets/js/src/common/request.js',
+                'assets/js/src/common/view.js',
+                'assets/js/src/front/course-overview.js'
             ]
         };
 

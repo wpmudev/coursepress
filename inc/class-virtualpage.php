@@ -10,8 +10,12 @@ class CoursePress_VirtualPage extends CoursePress_Utility {
 	protected $post_type;
 	protected $template;
 
+	protected $pagenow;
+
 	public function __construct( $template_type ) {
 		add_filter( 'template_include', array( $this, $template_type ) );
+		add_filter( 'body_class', array( $this, 'body_class' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'load_stylesheets' ) );
 
 		$template_parts = array(
 			'course/title',
@@ -21,6 +25,36 @@ class CoursePress_VirtualPage extends CoursePress_Utility {
 		foreach ( $template_parts as $part ) {
 			add_action( 'get_template_part_' . $part, array( $this, 'get_course_template_part' ), 10, 2 );
 		}
+	}
+
+	function body_class( $class ) {
+		array_push( $class, 'coursepress' );
+
+		return $class;
+	}
+
+	function load_stylesheets() {
+		global $CoursePress;
+
+		$version = $CoursePress->version;
+		$plugin_url = $CoursePress->plugin_url;
+		$pagenow = $this->__get( 'pagenow' );
+
+		$deps = array( 'jquery', 'backbone', 'underscore' );
+
+		wp_enqueue_style( 'coursepress', $plugin_url . 'assets/css/front.min.css', array( 'dashicons' ), $version );
+
+		// Load script at the footer
+		if ( 'course-overview' == $pagenow ) {
+			wp_enqueue_script( 'circle-progress', $plugin_url . 'assets/external/js/circle-progress.min.js', false, false, true );
+		}
+
+		wp_enqueue_script( 'coursepress', $plugin_url . 'assets/js/coursepress-front.min.js', $deps, $version, true );
+
+		$local_vars = array(
+			'_wpnonce' => wp_create_nonce( 'coursepress-nonce' ),
+		);
+		wp_localize_script( 'coursepress', '_coursepress', $local_vars );
 	}
 
 	function get_course_template_part( $part ) {
@@ -52,11 +86,11 @@ class CoursePress_VirtualPage extends CoursePress_Utility {
 	function setCourseOverview() {
 		global $CoursePress, $CoursePress_Course, $post;
 
+		$this->__set( 'pagenow', 'course-overview' );
 		$CoursePress_Course = coursepress_get_course( $post->ID );
 		$template = $this->has_template( 'single-course.php' );
 
 		if ( ! $template ) {
-			error_log( 'count' );
 			$template = $CoursePress->plugin_path . '/views/templates/single-course.php';
 		}
 

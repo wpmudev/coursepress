@@ -320,7 +320,7 @@ class CoursePress_User extends CoursePress_Utility {
 
 		$completion['average'] = $unit_grade;
 
-		error_log( print_r( $completion, true ) );
+		//error_log( print_r( $completion, true ) );
 		//error_log( print_r( $progress, true ) );
 	}
 
@@ -588,7 +588,7 @@ class CoursePress_User extends CoursePress_Utility {
 
 		$progress = $this->get_completion_data( $course_id );
 
-		return coursepress_get_array_val( $progress, 'completion/completed' );
+		return coursepress_get_array_val( $progress, 'completion/' . $unit_id . '/completed' );
 	}
 
 	function is_module_completed( $course_id, $unit_id, $module_id ) {

@@ -113,6 +113,7 @@ class CoursePress_Course extends CoursePress_Utility {
 		$settings = get_post_meta( $id, 'course_settings', true );
 		$settings = wp_parse_args( $settings, $course_meta );
 
+		//error_log(print_r($settings,true));
 		return $settings;
 	}
 
@@ -460,22 +461,41 @@ class CoursePress_Course extends CoursePress_Utility {
 				$unit_suffix = '';
 				$unit_class = array( 'unit' );
 				$unit_structure = '';
+				$unit_duration = '';
 
 				if ( ! $unit_locked ) {
-					if ( $unit->__get( 'with_modules' ) ) {
+					if ( $this->__get( 'with_modules' ) ) {
 						$modules = $unit->get_modules_with_steps( $published );
 
 						if ( $modules ) {
+							$module_structure = '';
+
 							foreach ( $modules as $module ) {
 								$module_title = $module['title'];
 								$module_url = esc_url_raw( $module['url'] );
+								$module_suffix = '';
+								$module_class = array( 'module' );
 
 								if ( $has_access ) {
 									$module_title = $this->create_html( 'a', array( 'href' => $module_url ), $module_title );
 								} elseif ( $is_student ) {
-
+								} else {
+									if ( $module['preview'] ) {
+										$attr = array(
+											'href' => add_query_arg( 'preview', true, $module_url ),
+											'class' => 'preview',
+										);
+										$module_suffix .= $this->create_html( 'a', $attr, __( 'Preview' ) );
+									}
 								}
+
+								$module_title = $this->create_html( 'div', array( 'class' => 'module-title' ), $module_title . $module_suffix );
+
+								$attr = array( 'class' => implode( ' ', $module_class ) );
+								$module_structure .= $this->create_html( 'li', $attr, $module_title );
 							}
+
+							$unit_structure .= $this->create_html( 'ol', array( 'class' => 'tree module-tree' ), $module_structure );
 						}
 					}
 				}
@@ -490,6 +510,7 @@ class CoursePress_Course extends CoursePress_Utility {
 					} elseif ( ! $is_unit_accessible ) {
 						$unit_class[] = 'unit-locked';
 					} else {
+						$unit_class[] = 'has-progress';
 						$unit_progress = $user->get_unit_progress( $course_id, $unit_id );
 						$unit_title = $this->create_html( 'a', array( 'href' => $unit_url ), $unit_title );
 
@@ -497,13 +518,36 @@ class CoursePress_Course extends CoursePress_Utility {
 							$unit_class[] = 'unit-completed';
 						}
 
-						$attr = array( 'class' => 'unit-progress', 'data-progress' => $unit_progress );
-						$unit_suffix .= $this->create_html( 'span', $attr, $unit_progress );
+						$attr = array(
+							'class' => 'course-progress-disc unit-progress',
+							'data-value' => $unit_progress,
+							'data-start-angle' => '4.7',
+							'data-size' => 36,
+							//'data-width' => 40,
+							'data-knob-data-height' => 40,
+							//'knob_fg_color' => '#24bde6',
+							'data-empty-fill' => 'rgba(0, 0, 0, 0.2)',
+							'data-fill-color' => '#24bde6',
+							'data-bg-color' => '#e0e6eb',
+							'data-thickness' => '5',
+							'data-format' => 'true',
+							'data-style' => 'extended',
+							'data-animation-start-value' => '1.0',
+						);
+						$unit_progress = $this->create_html( 'span', array(), $unit_progress . '%' );
+						$unit_suffix .= $this->create_html( 'div', $attr, $unit_progress );
 					}
 				} elseif ( $unit->__get( 'preview' ) ) {
-					$unit_class[] = 'preview';
-					$attr = array( 'href' => add_query_arg( 'preview', true, $unit_url ) );
-					$unit_title = $this->create_html( 'a', $attr, $unit_title );
+					$attr = array(
+						'href' => add_query_arg( 'preview', true, $unit_url ),
+						'class' => 'preview',
+						'target' => '_blank',
+					);
+					$unit_suffix .= $this->create_html( 'a', $attr, __( 'Preview', 'cp' ) );
+				}
+
+				if ( ! empty( $unit_duration ) && ( ! $has_access || ! $is_student ) ) {
+					$unit_suffix = $this->create_html( 'span', array( 'class' => 'timer' ), $unit_duration ) . $unit_suffix;
 				}
 
 				$unit_title = $this->create_html( 'div', array( 'class' => 'unit-title' ), $unit_title . $unit_suffix );

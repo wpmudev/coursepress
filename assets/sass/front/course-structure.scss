@@ -1,0 +1,114 @@
+.coursepress {
+  .course-structure {
+    font-size: 100%;
+
+    .tree {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .unit {
+      .preview {
+        border: 1.5px solid $grey_3;
+        background-color: #ffffff;
+        float: right;
+        font-size: 11px;
+        display: inline-block;
+        padding: 4px 12px;
+        @include radius(3px);
+        text-transform: uppercase;
+        opacity: 0.3;
+        @include transition(opacity 0.4s);
+      }
+      .timer {
+        float: right;
+        font-size: 10px;
+        line-height: 14px;
+        display: inline-block;
+        vertical-align: middle;
+        padding: 5px;
+
+        &:before {
+          content: '\f469';
+          font-family: 'Dashicons';
+          display: inline-block;
+          vertical-align: middle;
+          font-size: 14px;
+          margin: 0 5px;
+        }
+      }
+
+      .unit-title {
+        display: block;
+        background-color: $grey_6;
+        margin-bottom: 3px;
+        padding: 5px 5px 5px 15px;
+        color: $grey_1;
+
+        a {
+          color: $grey_1;
+        }
+
+        &:hover {
+          .preview {
+            opacity: 1;
+            @include transition(opacity 0.4s);
+          }
+        }
+      }
+    }
+
+    .module {
+      .module-title {
+        font-size: 96%;
+        display: block;
+        padding: 5px 5px 5px 30px;
+
+        &:hover {
+          .preview {
+            opacity: 1;
+            @include transition(opacity 0.4s);
+          }
+        }
+      }
+    }
+
+    .unit-locked {
+      position: relative;
+      padding-right: 20px;
+
+      &:after {
+        content: '\f160';
+        font-family: 'Dashicons';
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 0 4px;
+        line-height: 2;
+      }
+    }
+
+    .has-progress {
+      position: relative;
+
+      .unit-progress {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 36px;
+        width: 36px;
+
+        span {
+          position: absolute;
+          font-size: 9px;
+          text-align: center;
+          height: 36px;
+          width: 36px;
+          line-height: 34px;
+          left: 0;
+        }
+      }
+    }
+  }
+}
