@@ -51,7 +51,6 @@ module.exports = function(grunt) {
 				'(^.php)',      // Ignore non-php files.
 				'tests/', // Upgrade tests
 				'node_modules/',
-				'1.x/', // Old CP version
 				'2.0/test/',      // Unit testing.
 				'2.0/.sass-cache/',
 				'2.0/node_modules/.*',
@@ -60,7 +59,9 @@ module.exports = function(grunt) {
 				'2.0/include/tcpdf/.*', // External module.
 				'2.0/themes/.*',    // External module.,
 				'2.0/campus/*',
-				'2.0/premium/'
+				'2.0/premium/',
+                '.idea/',
+                '.sass-cache/'
 			],
 			pot_dir: '/language/',  // With trailing slash.
 			textdomain_pro: 'cp',   // Campus uses same textdomain.

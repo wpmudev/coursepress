@@ -151,10 +151,13 @@ class CoursePress_Helper_Upgrade_1x_Data {
 			'enroll_type' => 'enrollment_type',
 			'paid_course' => 'payment_paid_course',
 			/** Marketpress **/
+			'sku' => 'mp_sku',
 			'mp_sku' => 'mp_sku',
 			'mp_auto_sku' => 'mp_auto_sku',
 			'mp_price' => 'mp_product_price',
+			'mp_product_price' => 'mp_product_price',
 			'mp_sale_price' => 'mp_product_sale_price',
+			'mp_product_sale_price' => 'mp_product_sale_price',
 			'mp_is_sale' => 'mp_sale_price_enabled',
 			'mp_product_id' => 'mp_product_id',
 		);
@@ -330,6 +333,7 @@ class CoursePress_Helper_Upgrade_1x_Data {
 						case 'checkbox_input_module':
 							$student_answer = get_post_meta( $response->ID, 'student_checked_answers', true );
 							$answers = get_post_meta( $module_id, 'answers', true );
+							$answers_selected = array();
 							if ( $answers ) {
 								$fix_response = array();
 								$index = 0;
