@@ -31,23 +31,75 @@ function coursepress_get_user_option( $user_id, $key ) {
  * @return CoursePress_User|int|WP_Error
  */
 function coursepress_get_user( $user_id = 0 ) {
-	global $CoursePress_User;
+	global $CoursePress_User, $CoursePress_Core;
 
-	if ( $user_id instanceof CoursePress_User )
-		return $user_id;
+	if ( empty( $user_id ) ) {
+		// Assume current user
+		$user_id = get_current_user_id();
+	}
 
-	if ( $CoursePress_User instanceof CoursePress_User
+	if ( $CoursePress_User instanceof  CoursePress_User
 		&& $user_id == $CoursePress_User->__get( 'ID' ) )
 			return $CoursePress_User;
 
+	if ( isset( $CoursePress_Core->users[ $user_id ] ) )
+		return $CoursePress_Core->users[ $user_id ];
+
 	$user = new CoursePress_User( $user_id );
 
-	if ( $user->__get( 'is_error' ) )
+	if ( is_wp_error( $user ) )
 		return $user->wp_error();
 
-	// @todo: Save in global variable
+	$CoursePress_Core->users[ $user_id ] = $user;
 
 	return $user;
+}
+
+function coursepress_get_instructor( $instructor_id = 0 ) {
+	global $CoursePress_Core;
+
+	if ( empty( $instructor_id ) )
+		return false;
+
+	if ( isset( $CoursePress_Core->instructors[ $instructor_id ] ) )
+		return $CoursePress_Core->instructors[ $instructor_id ];
+
+	$instructor = new CoursePress_Instructor( $instructor_id );
+
+	if ( is_wp_error( $instructor ) )
+		return $instructor->wp_error();
+
+	$CoursePress_Core->instructors[ $instructor_id ] = $instructor;
+
+	return $instructor;
+}
+
+/**
+ * Get coursepress student.
+ *
+ * @param int $student_id
+ *
+ * @return bool|CoursePress_Student|WP_Error
+ */
+function coursepress_get_student( $student_id = 0 ) {
+	global $CoursePress_Core, $CoursePress_User;
+
+	if ( empty( $student_id ) ) {
+		// Assume current user
+		$student_id = get_current_user_id();
+	}
+
+	if ( isset( $CoursePress_Core->students[ $student_id ] ) )
+		return $CoursePress_Core->students[ $student_id ];
+
+	$student = new CoursePress_Student( $student_id );
+
+	if ( is_wp_error( $student ) )
+		return $student->wp_error();
+
+	$CoursePress_Core->students[ $student_id ] = $student;
+
+	return $student;
 }
 
 /**

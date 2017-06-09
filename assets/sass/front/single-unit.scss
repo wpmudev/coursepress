@@ -1,0 +1,24 @@
+.course-content-template {
+  display: block;
+  margin: 25px 0;
+  @include clearfix;
+
+  .course-structure-nav {
+    display: none;
+  }
+
+  @media screen {
+    @media (min-width: 800px) {
+      display: flex;
+
+      .course-structure-nav {
+        display: block;
+        width: 25%;
+      }
+      .course-content {
+        width: 100%;
+        padding-left: 25px;
+      }
+    }
+  }
+}

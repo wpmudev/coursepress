@@ -72,7 +72,7 @@ final class CoursePress {
 	 */
 	protected $core_classes = array(
 		'CoursePress_Data_Users',
-		'CoursePress_Data_Courses',
+		//'CoursePress_Data_Courses',
 		'CoursePress_Core',
 	);
 

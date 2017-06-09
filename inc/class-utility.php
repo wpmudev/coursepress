@@ -34,7 +34,7 @@ abstract class CoursePress_Utility {
 		$vars = array();
 
 		foreach ( $attr as $key => $value ) {
-			$vars[] = $key . '="' . $value . '"';
+			$vars[] = $key . '="' . esc_attr( $value ) . '"';
 		}
 
 		return implode( ' ', $vars );

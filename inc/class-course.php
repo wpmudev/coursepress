@@ -113,8 +113,123 @@ class CoursePress_Course extends CoursePress_Utility {
 		$settings = get_post_meta( $id, 'course_settings', true );
 		$settings = wp_parse_args( $settings, $course_meta );
 
-		//error_log(print_r($settings,true));
 		return $settings;
+	}
+
+	function get_the_title() {
+		return $this->__get( 'post_title' );
+	}
+
+	/**
+	 * Returns course summary.
+	 *
+	 * @param int $length
+	 *
+	 * @return bool|null|string
+	 */
+	function get_summary( $length = 140 ) {
+		$summary = $this->__get( 'post_excerpt' );
+		$length++;
+
+		if ( mb_strlen( $summary ) > $length ) {
+			$sub = mb_substr( $summary, 0, $length - 5 );
+			$words = explode( ' ', $sub );
+			$cut = ( mb_strlen( $words[ count( $words ) - 1 ] ) );
+
+			if ( $cut < 0 )
+				return mb_substr( $sub, 0, $cut );
+			else
+				return $sub;
+		}
+
+		return $summary;
+	}
+
+	/**
+	 * Get the course feature image.
+	 *
+	 * @param int $width
+	 * @param int $height
+	 *
+	 * @return null|string
+	 */
+	function get_feature_image( $width = 235, $height = 235 ) {
+		$id = $this->__get( 'ID' );
+
+		if ( ! $width )
+			$width = coursepress_get_setting( 'course/image_width', 235 );
+		if ( ! $height )
+			$height = coursepress_get_setting( 'course/image_height', 235 );
+
+		$listing_image = $this->__get( 'listing_image' );
+
+		// Try post-thumbnail
+		if ( ! $listing_image ) {
+			if ( has_post_thumbnail( $id ) )
+				$listing_image = get_the_post_thumbnail( $id, array( $width, $height ), array( 'class' => 'course-feature-image' ) );
+		} else {
+			$listing_image = $this->create_html(
+				'img',
+				array(
+					'src' => esc_url( $listing_image ),
+					'class' => 'course-listing-image',
+					'width' => $width,
+					'height' => $height,
+				)
+			);
+		}
+
+		return $listing_image;
+	}
+
+	function get_feature_video() {}
+
+	function get_course_start_date() {
+		$open_ended = $this->__get( 'course_open_ended' );
+
+		if ( $open_ended )
+			return __( 'Available', 'cp' );
+		else
+			return $this->__get( 'course_start_date' );
+	}
+
+	function get_course_end_date() {
+		return $this->__get( 'course_end_date' );
+	}
+
+	function get_enrollment_start_date() {
+		return $this->__get( 'enrollment_start_date' );
+	}
+
+	function get_enrollment_end_date() {
+		return $this->__get( 'enrollment_end_date' );
+	}
+
+	function get_course_language() {
+		return $this->__get( 'course_language' );
+	}
+
+	function get_course_cost() {
+		$price = __( 'FREE', 'cp' );
+
+		if ( $this->__get( 'payment_paid_course' ) ) {
+			$price = $this->__get( 'mp_product_price' );
+			$is_on_sale = $this->__get( 'mp_sale_price_enabled' );
+
+			if ( $is_on_sale ) {
+				$sale_price = $this->__get( 'mp_product_sale_price' );
+
+				$price = $sale_price . $this->create_html( 'em', array( 'class' => 'orig-price' ), $price );
+			}
+
+			// @todo: hook the price filter here
+		}
+
+		return $price;
+	}
+
+	function is_with_modules() {
+		return $this->__get( 'with_modules' );
 	}
 
 	/**
@@ -266,9 +381,28 @@ class CoursePress_Course extends CoursePress_Utility {
 
 		if ( ! empty( $instructor_ids ) )
 			foreach ( $instructor_ids as $instructor_id )
-				$instructors[ $instructor_id ] = new CoursePress_User( $instructor_id );
+				$instructors[ $instructor_id ] = new CoursePress_Instructor( $instructor_id );
 
 		return $instructors;
+	}
+
+	function get_instructors_link() {
+		$instructors = $this->get_instructors();
+		$links = array();
+
+		if ( ! empty( $instructors ) ) {
+			foreach ( $instructors as $instructor ) {
+				$links[] = $this->create_html(
+					'a',
+					array(
+						'href' => esc_url( $instructor->get_instructor_profile_link() ),
+					),
+					$instructor->get_name()
+				);
+			}
+		}
+
+		return $links;
 	}
 
 	private function _get_facilitators() {
@@ -392,7 +526,8 @@ class CoursePress_Course extends CoursePress_Utility {
 			'post_parent'    => $this->__get( 'ID' ),
 			'posts_per_page' => - 1, // Units are often retrieve all at once
 			'suppress_filters' => true,
-			'orderby' => 'menu_order',
+			'meta_key' => 'unit_order',
+			'orderby' => 'meta_value_num',
 			'order' => 'ASC',
 		);
 
@@ -429,211 +564,24 @@ class CoursePress_Course extends CoursePress_Utility {
 	}
 
 	function get_course_structure() {
-		global $CoursePress_User;
-
 		/**
-		 * @var $CoursePress_User CoursePress_User
+		 * @var $user CoursePress_Student
 		 */
 
 		$course_id = $this->__get( 'ID' );
-		$user = $CoursePress_User;
-		$user_id = $user->__get( 'ID' );
+		$user = coursepress_get_student( get_current_user_id() );
 		$has_access = $user->has_access_at( $course_id );
-		$is_student = $user->is_enrolled_at( $course_id );
-		$published = ! $has_access;
 		$structure = '';
-
-		$user->validate_completion_data( $course_id );
-
-		$units = $this->get_units( $published );
+		$units = $this->get_units( ! $has_access );
 
 		if ( $units ) {
 			foreach ( $units as $unit ) {
-				/**
-				 * @var $unit CoursePress_Unit
-				 */
-				$unit_id = $unit->__get( 'ID' );
-				$unit_title = $unit->__get( 'post_title' );
-				$unit_url = esc_url_raw( $unit->get_unit_url() );
-				$is_unit_available = $unit->is_available();
-				$is_unit_accessible = $unit->is_accessible_by( $user_id );
-				$unit_locked = $is_student && ( ! $is_unit_available || ! $is_unit_accessible );
-				$unit_suffix = '';
-				$unit_class = array( 'unit' );
-				$unit_structure = '';
-				$unit_duration = '';
-
-				if ( ! $unit_locked ) {
-					if ( $this->__get( 'with_modules' ) ) {
-						$modules = $unit->get_modules_with_steps( $published );
-
-						if ( $modules ) {
-							$module_structure = '';
-							$module_locked = false;
-
-							foreach ( $modules as $module_id => $module ) {
-								$module_title = $module['title'];
-								$module_url = esc_url_raw( $module['url'] );
-								$module_suffix = '';
-								$steps_structure = '';
-								$module_class = array( 'module' );
-
-								if ( $has_access ) {
-									$module_title = $this->create_html( 'a', array( 'href' => $module_url ), $module_title );
-								} elseif ( $is_student ) {
-									if ( ! $unit->is_module_accessible_by( $user_id, $module ) ) {
-										$module_class[] = 'module-locked';
-										$module_locked = true;
-									} else {
-										if ( $user->is_module_completed( $course_id, $unit_id, $module_id ) ) {
-											$module_class[] = 'module-seen module-completed';
-											$module_title = $this->create_html( 'a', array( 'href' => $module_url ), $module_title );
-										} elseif ( $user->is_module_seen( $course_id, $unit_id, $module_id ) ) {
-											$module_class[] = 'module-seen';
-										}
-									}
-								} else {
-									if ( $module['preview'] ) {
-										$module_class[] = 'has-preview';
-
-										$attr = array(
-											'href' => add_query_arg( 'preview', true, $module_url ),
-											'class' => 'preview',
-										);
-										$module_suffix .= $this->create_html( 'a', $attr, __( 'Preview' ) );
-									}
-								}
-
-								$module_title = $this->create_html( 'div', array( 'class' => 'module-title' ), $module_title . $module_suffix );
-
-								if ( ! $module_locked
-								     && ! empty( $module['steps'] ) ) {
-									$steps_structure .= $this->get_steps_structure( $module['steps'], $unit, $user, $has_access, $is_student );
-								}
-
-								$attr = array( 'class' => implode( ' ', $module_class ) );
-								$module_structure .= $this->create_html( 'li', $attr, $module_title  . $steps_structure );
-							}
-
-							$unit_structure .= $this->create_html( 'ol', array( 'class' => 'tree module-tree' ), $module_structure );
-						}
-					}
-				}
-
-				if ( $has_access ) {
-					$unit_title = $this->create_html( 'a', array( 'href' => $unit_url ), $unit_title );
-				} elseif ( $is_student ) {
-					if ( ! $is_unit_available ) {
-						$unit_class[] = 'unit-locked';
-						$label = sprintf( __( 'Opens %s', 'cp' ), $unit->__get( 'unit_availability_date' ) );
-						$unit_suffix .= $this->create_html( 'span', array( 'class' => 'unit-date' ), $label );
-					} elseif ( ! $is_unit_accessible ) {
-						$unit_class[] = 'unit-locked';
-					} else {
-						$unit_class[] = 'has-progress';
-						$unit_progress = $user->get_unit_progress( $course_id, $unit_id );
-						$unit_title = $this->create_html( 'a', array( 'href' => $unit_url ), $unit_title );
-
-						if ( $user->is_unit_completed( $course_id, $unit_id ) ) {
-							$unit_class[] = 'unit-seen unit-completed';
-						} elseif ( $user->is_unit_seen( $course_id, $unit_id ) ) {
-							$unit_class[] = 'unit-seen';
-						}
-
-						if ( $unit_progress > 0 )
-							$unit_progress /= 100;
-
-						$attr = array(
-							'class' => 'course-progress-disc unit-progress',
-							'data-value' => $unit_progress,
-							'data-start-angle' => '4.7',
-							'data-size' => 36,
-							'data-knob-data-height' => 40,
-							'data-empty-fill' => 'rgba(0, 0, 0, 0.2)',
-							'data-fill-color' => '#24bde6',
-							'data-bg-color' => '#e0e6eb',
-							'data-thickness' => '6',
-							'data-format' => true,
-							'data-style' => 'extended',
-							'data-animation-start-value' => '1.0',
-							'data-knob-data-thickness' => 0.18,
-							'data-knob-text-show' => true,
-							'data-knob-text-color' => '#222222',
-							'data-knob-text-align' => 'center',
-							'data-knob-text-denominator' => '4.5',
-						);
-
-						/**
-						 * Fire to allow changes on unit progress wheel attributes
-						 * before printing the unit progress.
-						 *
-						 * @since 2.0
-						 * @param $attr An array of wheel attributes.
-						 */
-						$attr = apply_filters( 'coursepress_unit_progress_wheel_atts', $attr );
-
-						$unit_suffix .= $this->create_html( 'div', $attr );
-					}
-				} elseif ( $unit->__get( 'preview' ) ) {
-					$attr = array(
-						'href' => add_query_arg( 'preview', true, $unit_url ),
-						'class' => 'preview',
-						'target' => '_blank',
-					);
-					$unit_suffix .= $this->create_html( 'a', $attr, __( 'Preview', 'cp' ) );
-				}
-
-				if ( ! empty( $unit_duration ) && ( ! $has_access || ! $is_student ) ) {
-					$unit_suffix = $this->create_html( 'span', array( 'class' => 'timer' ), $unit_duration ) . $unit_suffix;
-				}
-
-				$unit_title = $this->create_html( 'div', array( 'class' => 'unit-title' ), $unit_title . $unit_suffix );
-
-				$attr = array( 'class' => implode( ' ', $unit_class ) );
-				$structure .= $this->create_html( 'li', $attr, $unit_title . $unit_structure );
+				$unit_structure = $unit->get_unit_structure( false );
+				$structure .= $this->create_html( 'li', false, $unit_structure );
 			}
-
-			$attr = array( 'class' => 'tree course-structure' );
-			$structure = $this->create_html( 'ul', $attr, $structure );
+			$structure = $this->create_html( 'ul', array( 'class' => 'tree unit-tree' ), $structure );
 		}
 
 		return $structure;
-	}
-
-	private function get_steps_structure( $steps, $unit, $user, $has_access, $is_student ) {
-		$steps_structure = '';
-		$user_id = $user->__get( 'ID' );
-		$course_id = $this->__get( 'ID' );
-		$unit_id = $unit->__get( 'ID' );
-
-		foreach ( $steps as $step ) {
-			$step_id = $step->__get( 'ID' );
-			$step_title = $step->__get( 'post_title' );
-			$step_url = esc_url( $step->get_permalink() );
-			$step_suffix = '';
-			$step_class = array( 'course-step' );
-
-			if ( $has_access ) {
-				$attr = array( 'href' => $step_url );
-				$step_title = $this->create_html( 'a', $attr, $step_title );
-			} elseif ( $is_student ) {
-				if ( ! $step->is_accessible_by( $user_id ) ) {
-					$step_class[] = 'step-locked';
-				} elseif ( $user->is_step_completed( $course_id, $unit_id, $step_id ) ) {
-					$step_class[] = 'step-seen step-completed';
-				} elseif ( $user->is_step_seen ( $course_id, $unit_id, $step_id ) ) {
-					$step_class[] = 'step-seen';
-				}
-			}
-			$attr = array( 'class' => implode( ' ', $step_class ) );
-			$steps_structure .= $this->create_html( 'li', $attr, $step_title . $step_suffix );
-		}
-
-		if ( ! empty( $steps_structure ) ) {
-			$attr = array( 'class' => 'tree step-tree' );
-			$steps_structure = $this->create_html( 'ol', $attr, $steps_structure );
-		}
-
-		return $steps_structure;
 	}
 }

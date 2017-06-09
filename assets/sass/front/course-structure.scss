@@ -1,91 +1,60 @@
-.coursepress {
-  .course-structure {
-    font-size: 100%;
+.course-structure {
+  display: block;
+  margin: 25px 0;
+  @include clearfix;
 
-    .tree {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
+  .tree {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
 
-    .unit {
-      .preview {
-        border: 1.5px solid $grey_3;
-        background-color: #ffffff;
-        float: right;
-        font-size: 11px;
-        display: inline-block;
-        padding: 4px 12px;
-        @include radius(3px);
-        text-transform: uppercase;
-        opacity: 0.3;
+  .unit-tree {
+    .preview {
+      border: 1.5px solid $grey_3;
+      background-color: #ffffff;
+      float: right;
+      font-size: 11px;
+      display: inline-block;
+      padding: 4px 12px;
+      @include radius(3px);
+      text-transform: uppercase;
+      opacity: 0.3;
+      @include transition(opacity 0.4s);
+
+      &:hover {
+        opacity: 1;
         @include transition(opacity 0.4s);
       }
-      .timer {
-        float: right;
-        font-size: 10px;
-        line-height: 14px;
+    }
+
+    .timer {
+      float: right;
+      font-size: 10px;
+      line-height: 14px;
+      display: inline-block;
+      vertical-align: middle;
+      padding: 5px;
+
+      &:before {
+        content: '\f469';
+        font-family: 'Dashicons';
         display: inline-block;
         vertical-align: middle;
-        padding: 5px;
-
-        &:before {
-          content: '\f469';
-          font-family: 'Dashicons';
-          display: inline-block;
-          vertical-align: middle;
-          font-size: 14px;
-          margin: 0 5px;
-        }
+        font-size: 14px;
+        margin: 0 5px;
       }
+    }
 
-      .unit-title {
-        display: block;
-        background-color: $grey_6;
-        margin-bottom: 3px;
-        padding: 5px 5px 5px 15px;
+    .unit-title {
+      display: block;
+      background-color: $grey_6;
+      margin-bottom: 3px;
+      padding: 5px 0 5px 15px;
+      color: $grey_1;
+
+      a {
         color: $grey_1;
-
-        a {
-          color: $grey_1;
-        }
-
-        &:hover {
-          .preview {
-            opacity: 1;
-            @include transition(opacity 0.4s);
-          }
-        }
-      }
-    }
-
-    .module {
-      .module-title {
-        font-size: 96%;
-        display: block;
-        padding: 5px 5px 5px 30px;
-
-        &:hover {
-          .preview {
-            opacity: 1;
-            @include transition(opacity 0.4s);
-          }
-        }
-      }
-    }
-
-    .unit-locked {
-      position: relative;
-      padding-right: 20px;
-
-      &:after {
-        content: '\f160';
-        font-family: 'Dashicons';
-        position: absolute;
-        top: 0;
-        right: 0;
-        padding: 0 4px;
-        line-height: 2;
       }
     }
 
@@ -110,13 +79,47 @@
         }
       }
     }
+  }
 
-    .step-tree {
-      .course-step {
-        display: block;
-        font-size: 94%;
-        padding: 6px 0 4px 50px;
+  .module-tree {
+    .module-title {
+      font-size: 96%;
+      display: block;
+      padding: 5px 0 5px 30px;
+
+      &:hover {
+        .preview {
+          opacity: 1;
+          @include transition(opacity 0.4s);
+        }
       }
+    }
+  }
+
+  .step-tree {
+    .course-step {
+      display: block;
+      font-size: 94%;
+      padding: 6px 0 4px 50px;
+    }
+  }
+
+  &.course-structure-nav {
+    margin: 0;
+
+    .module-tree {
+      border: 1px solid $grey_5;
+    }
+
+    .module-title {
+      padding: 5px 12px;
+      font-size: 14px;
+      background-color: $grey_5;
+    }
+
+    .course-step {
+      padding: 5px 12px;
+      background-color: $grey_6;
     }
   }
 }

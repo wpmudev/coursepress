@@ -1,0 +1,30 @@
+.instructor-info {
+  display: block;
+  text-align: center;
+  @include clearfix;
+
+  .instructor-avatar {
+    img {
+      @include radius(50%);
+    }
+  }
+  .instructor-description {
+    margin: 25px 0;
+  }
+
+  @media screen {
+    @media (min-width: 768px) {
+      text-align: left;
+
+      .instructor-bio {
+        display: flex;
+      }
+      .instructor-avatar {
+        padding-right: 25px;
+      }
+      .instructor-description {
+        margin-top: 0;
+      }
+    }
+  }
+}

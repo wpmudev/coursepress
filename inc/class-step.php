@@ -11,7 +11,7 @@ class CoursePress_Step extends CoursePress_Utility {
 	 */
 	protected $unit;
 
-	public function __construct( $step, $unit ) {
+	public function __construct( $step, $unit = false ) {
 		if ( ! $step instanceof WP_Post )
 			$step = get_post( $step );
 
@@ -36,7 +36,7 @@ class CoursePress_Step extends CoursePress_Utility {
 		$this->setUpStepMeta();
 	}
 
-	function setUpStepMeta() {
+	protected function get_keys() {
 		$keys = array(
 			'module_order',
 			'show_title',
@@ -50,6 +50,11 @@ class CoursePress_Step extends CoursePress_Utility {
 			'module_page',
 		);
 
+		return $keys;
+	}
+
+	function setUpStepMeta() {
+		$keys = $this->get_keys();
 		$id = $this->__get( 'ID' );
 
 		foreach ( $keys as $key ) {
@@ -64,6 +69,10 @@ class CoursePress_Step extends CoursePress_Utility {
 		$this->__set( 'preview', true );
 	}
 
+	function get_the_title() {
+		return $this->__get( 'post_title' );
+	}
+
 	function get_permalink() {
 		$module_number = $this->__get( 'module_page' );
 		$post_name = $this->__get( 'post_name' );
@@ -71,7 +80,6 @@ class CoursePress_Step extends CoursePress_Utility {
 		if ( (int) $module_number > 0 ) {
 			$modules = $this->unit->get_modules();
 			$module = $modules[ $module_number ];
-
 			return $module['url'] . trailingslashit( $post_name );
 		} else {
 			if ( $this->unit ) {
@@ -140,7 +148,7 @@ class CoursePress_Step extends CoursePress_Utility {
 		return true;
 	}
 
-	function is_accessible_by( $user_id ) {
+	function is_accessible_by( $user_id = 0 ) {
 		$user = coursepress_get_user( $user_id );
 
 		if ( is_wp_error( $user ) )
@@ -151,5 +159,70 @@ class CoursePress_Step extends CoursePress_Utility {
 		if ( ! $previousStep )
 			return true;
 
+		return true;
+	}
+
+	function is_show_title() {
+		return $this->__get( 'show_title' );
+	}
+
+	function is_required() {
+		return $this->__get( 'mandatory' );
+	}
+
+	function is_assessable() {
+		return $this->__get( 'assessable' );
+	}
+
+	function get_unit() {
+		$unit = $this->__get( 'unit' );
+
+		if ( ! $unit ) {
+			$unit_id = $this->__get( 'post_parent' );
+			$unit = coursepress_get_unit( $unit_id );
+		}
+
+		return $unit;
+	}
+
+	/** Must be overriden in a sub class */
+	function get_question() {}
+
+	/** Must be overriden in a sub class */
+	function get_answer_template() {}
+
+	function template( $user_id = 0 ) {
+		$template = '';
+		$user = coursepress_get_user( $user_id );
+
+		if ( $this->is_show_title() ) {
+			$attr = array( 'class' => 'module-step-title' );
+			$template .= $this->create_html( 'h4', $attr, $this->get_the_title() );
+		}
+
+		if ( $this->is_required() ) {
+			$required = $this->create_html( 'span', false, __( '* Required', 'cp' ) );
+			$template .= $this->create_html( 'div', array( 'class' => 'required' ), $required );
+		}
+
+		$attr = array( 'class' => 'course-module-step-description' );
+		$description = apply_filters( 'the_content', $this->__get( 'post_content' ) );
+		$template .= $this->create_html( 'div', $attr, $description );
+
+		$question = $this->get_question();
+
+		if ( ! empty( $question ) ) {
+			$attr = array( 'class' => 'course-module-step-question' );
+			$template .= $this->create_html( 'div', $attr, $question );
+		}
+
+		$answer_template = $this->get_answer_template();
+
+		if ( ! empty( $answer_template ) ) {
+			$attr = array( 'class' => 'course-module-answer' );
+			$template .= $this->create_html( 'div', $attr, $answer_template );
+		}
+
+		return $this->create_html( 'div', array( 'class' => 'course-module-step-template' ), $template );
 	}
 }

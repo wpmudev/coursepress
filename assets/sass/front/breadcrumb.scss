@@ -1,0 +1,22 @@
+.course-breadcrumb {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: inline-block;
+    font-size: 13px;
+
+    &:before {
+      content: '\f139';
+      font-family: 'Dashicons';
+      display: inline-block;
+      vertical-align: middle;
+      font-size: 16px;
+    }
+
+    &:first-of-type:before {
+      content: '\f102';
+    }
+  }
+}
