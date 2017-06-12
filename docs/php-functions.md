@@ -1,5 +1,5 @@
 # PHP Functions and Definitions
-`inc/functions/utility.php`
+inc/functions/utility.php
 -
 
 ####coursepress_is_admin()
