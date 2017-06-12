@@ -30,9 +30,9 @@ final class CoursePress_Core extends CoursePress_Utility {
 		register_post_type( $this->course_post_type, array(
 			'public' => true,
 			'label' => __( 'All Courses', 'cp' ),
-			'show_ui' => false,
+			'show_ui' => true,
 			'show_in_nav_menu' => false,
-			'has_archive' => true,
+			'has_archive' => false, // Set this to false to avoid over caps
 			'can_export' => false, // CP have it's own export mechanism
 			'delete_with_user' => false,
 			'rewrite' => array(
@@ -99,6 +99,7 @@ final class CoursePress_Core extends CoursePress_Utility {
 		$base = '^' . $course_slug . '/([^/]*)/';
 
 		$new_rules = array(
+			'^' . $course_slug . '/?' => 'index.php?coursepress=archive',
 			// Unit
 			$base . $unit_slug . '/([^/]*)/?$' => 'index.php?coursename=$matches[1]&unit=$matches[2]&coursepress=unit',
 			$base . $unit_slug . '/([^/]*)/([^/]*)/?$' => 'index.php?coursename=$matches[1]&unit=$matches[2]&module=$matches[3]&coursepress=module',

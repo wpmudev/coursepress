@@ -123,7 +123,7 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 		add_action( 'coursepress_remove_facilitator', array( $this, 'delete_facilitator_meta' ), 10, 2 );
 
 		// Map courspress caps
-		add_filter( 'user_has_cap', array( $this, 'map_coursepress_user_cap' ), 99, 4 );
+		//add_filter( 'user_has_cap', array( $this, 'map_coursepress_user_cap' ), 99, 4 );
 	}
 
 	function add_instructor_meta( $user_id, $course_id ) {

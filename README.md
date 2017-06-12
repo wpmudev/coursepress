@@ -75,7 +75,8 @@ CUSTOMIZING COURSEPRESS
 -
 
 #### FRONT END TEMPLATES
-CoursePress 3.0 is now totally customizable by users. It works similarly to how **WooCommerce** templating style.
+CoursePress 3.0 is now totally customizable by users.
+It works similarly to how **WooCommerce** templating style.
 Our virtual pages reside at `templates/` folder. User can copy and paste this folder into their theme or child theme and extend the templates however they choose.
 
 > All templates that lives in this folder must be templates that users are allowed to customized. No built-in templates!

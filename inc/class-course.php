@@ -31,7 +31,7 @@ class CoursePress_Course extends CoursePress_Utility {
 		) );
 
 		// Set course meta
-		$this->setUpCourseMetas();
+		//$this->setUpCourseMetas();
 	}
 
 	function wp_error() {
@@ -472,7 +472,7 @@ class CoursePress_Course extends CoursePress_Utility {
 
 		if ( ! empty( $instructor_ids ) )
 			foreach ( $instructor_ids as $instructor_id )
-				$instructors[ $instructor_id ] = new CoursePress_Instructor( $instructor_id );
+				$instructors[ $instructor_id ] = coursepress_get_user( $instructor_id );
 
 		return $instructors;
 	}

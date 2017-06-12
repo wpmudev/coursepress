@@ -66,13 +66,22 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 			$cp['course'] = false;
 			$cp['type'] = $type;
 			$wp->is_home = false;
-			$wp->is_singular = $wp->is_single = true;
+
+			if ( 'archive' == $type ) {
+				$wp->is_archive = true;
+				//$wp->set( 'post_type', 'course' );
+			} else {
+				$wp->is_singular = $wp->is_single = true;
+			}
 
 		} elseif ( $core->course_post_type == $post_type && $wp->is_main_query() ) {
 			if ( $wp->is_single || $wp->is_singular ) {
 				$cp['type'] = 'single-course';
 				$cp['course'] = $wp->get( 'name' );
 			} else {
+				$wp->set( 'post_type', 'course' );
+				$wp->set( 'is_archive', 1 );
+				//print_r( $wp );
 				$cp['type'] = 'archive-course';
 
 				// Set archive settings

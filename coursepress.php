@@ -68,7 +68,6 @@ final class CoursePress {
 	 */
 	protected $core_classes = array(
 		'CoursePress_Data_Users',
-		//'CoursePress_Data_Courses',
 		'CoursePress_Core',
 	);
 
@@ -85,7 +84,6 @@ final class CoursePress {
 	 */
 	protected $core_front_classes = array(
 		'CoursePress_FrontPage',
-		//'CoursePress_VirtualPage',
 		'CoursePress_Shortcode',
 	);
 
@@ -121,7 +119,7 @@ final class CoursePress {
 		 * Note*: WHILE DEVELOPMENT ONLY, REMOVE AFTERWARDS!
 		********************************************************/
 		// Run legacy
-		//$legacy_key = 'coursepress_legacy_beta_c6';
+		$legacy_key = 'coursepress_legacy_beta_c6';
 		//add_action( $legacy_key, array( 'CoursePress_Legacy', 'instance' ) );
 
 		//if ( ! wp_get_schedule( $legacy_key ) )

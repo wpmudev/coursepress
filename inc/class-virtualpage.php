@@ -15,6 +15,7 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 	 * @var array
 	 */
 	protected $templates = array(
+		'archive' => 'archive-course.php',
 		'unit-archive' => 'archive-unit.php',
 		'workbook' => 'page-course-workbook.php',
 		'notifications' => 'page-course-notifications.php',
@@ -42,6 +43,7 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 
 		// Setup CP template
 		add_filter( 'template_include', array( $this, 'load_coursepress_page' ) );
+
 		// Set dummy post object on selected template
 		add_filter( 'posts_results', array( $this, 'set_post_object' ), 10, 2 );
 	}
