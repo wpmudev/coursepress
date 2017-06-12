@@ -2,6 +2,18 @@
 
 DEVELOPMENT GUIDE
 -
+## Working with the branches
+
+### Cloning
+
+CoursePress uses submodules, so use the `--recursive` flag if you clone from command line:
+
+```
+#!bash
+$ git clone git@bitbucket.org:incsub/coursepress.git --recursive
+```
+
+If you already have a cloned repo, you will need to *init* the submodule.
 
 ## Folder Structure
 
@@ -17,7 +29,7 @@ All development source files are located at **coursepress/assets/js/src/**
 * ***assets/js/src/admin/students*** - Contains JS files used in **Students** page (`courseperess_students.js`)
 * ***assets/js/src/admin/notifications*** - Contains JS files used in **Notifications** page (`coursepress_notifications.js`)
 * ***assets/js/src/admin/settings*** - Contains JS files used in **Settings** page (`coursepress_settings.js`)
-* ***assets/js/src/front*** - Contains JS files used in front pages.
+* ***assets/js/src/front*** - Contains JS files use in front pages.
 
 ### CSS Files
 CSS are auto-generated using either **GULP** or **GRUNT** development tools.
