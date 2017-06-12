@@ -6,21 +6,35 @@
  * @package CoursePress
  */
 final class CoursePress_VirtualPage extends CoursePress_Utility {
+	/**
+	 * @var array
+	 */
 	protected $breadcrumb = array();
 
+	/**
+	 * @var array
+	 */
 	protected $templates = array(
 		'unit-archive' => 'archive-unit.php',
-		'workbook' => 'course-workbook.php',
-		'notifications' => 'course-notifications.php',
-		'forum' => 'course-forum.php',
-		'grades' => 'course-grades.php',
+		'workbook' => 'page-course-workbook.php',
+		'notifications' => 'page-course-notifications.php',
+		'forum' => 'page-course-discussion.php',
+		'grades' => 'page-course-grades.php',
 		'instructor' => 'course-instructor.php',
 		'single-course' => 'single-course.php',
+		'archive-course' => 'archive-course.php',
+		'student-dashboard' => 'page-student-dashboard.php',
+		'student-settings' => 'page-student-settings.php',
 		'unit' => 'single-unit.php',
 		'module' => 'single-unit.php',
 		'step' => 'single-unit.php',
 	);
 
+	/**
+	 * CoursePress_VirtualPage constructor.
+	 *
+	 * @param $array
+	 */
 	public function __construct( $array ) {
 		if ( is_array( $array ) )
 			foreach ( $array as $key => $value )
@@ -28,63 +42,8 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 
 		// Setup CP template
 		add_filter( 'template_include', array( $this, 'load_coursepress_page' ) );
-		// Set CP body class
-		add_filter( 'body_class', array( $this, 'set_body_class' ) );
-		// Set assets
-		add_action( 'wp_enqueue_scripts', array( $this, 'set_assets' ) );
-
-		$template_parts = array(
-			'course/instructor-bio',
-			'course/content',
-			'course/submenu',
-		);
-
-		foreach ( $template_parts as $part ) {
-			$template = locate_template( 'template-parts/' . $part . '.php', false, false );
-
-			if ( ! $template ) {
-				add_action( 'get_template_part_template-parts/' . $part, array( $this, 'get_template_part' ) );
-			}
-		}
-	}
-
-	function get_template_part( $part ) {
-		coursepress_render( 'views/' . $part );
-	}
-
-	function set_body_class( $class ) {
-		array_push( $class, 'coursepress' );
-
-		return $class;
-	}
-
-	function set_assets() {
-		global $CoursePress;
-
-		$version = $CoursePress->version;
-		$plugin_url = $CoursePress->plugin_url;
-		$css_deps = array( 'dashicons' );
-		$deps = array( 'jquery', 'backbone', 'underscore' );
-		$page_now = $this->__get( 'type' );
-
-		wp_enqueue_style( 'coursepress-video-css', $plugin_url . 'assets/external/css/video-js.min.css' );
-		wp_enqueue_style( 'coursepress', $plugin_url . 'assets/css/front.min.css', $css_deps, $version );
-
-		// Load scripts
-		if ( 'single-course' == $page_now ) {
-			wp_enqueue_script( 'circle-progress', $plugin_url . 'assets/external/js/circle-progress.min.js', false, false, true );
-		}
-
-		wp_enqueue_script( 'coursepress-video-js', $plugin_url . 'assets/external/js/video.min.js', false, false, true );
-		wp_enqueue_script( 'coursepress-video-youtube', $plugin_url . 'assets/external/js/video-youtube.min.js', false, false, true );
-		wp_enqueue_script( 'coursepress-video-vimeo', $plugin_url . 'assets/external/js/video-vimeo.js', false, false, true );
-
-		wp_enqueue_script( 'coursepress', $plugin_url . 'assets/js/coursepress-front.min.js', $deps, $version, true );
-
-		$local_vars = array(
-			'_wpnonce' => wp_create_nonce( 'coursepress-nonce' ),
-		);
-		wp_localize_script( 'coursepress', '_coursepress', $local_vars );
+		// Set dummy post object on selected template
+		add_filter( 'posts_results', array( $this, 'set_post_object' ), 10, 2 );
 	}
 
 	/**
@@ -126,11 +85,20 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 		global $CoursePress, $CoursePress_Instructor, $wp_query, $CoursePress_Course, $CoursePress_Unit,
 			$_course_module_id, $_course_module, $_course_step;
 
-		if ( ! empty( $this->__get( 'course' ) ) )
-			$CoursePress_Course = coursepress_get_course( get_the_ID() );
+		$course = false;
+
+		if ( ! empty( $this->__get( 'course' )
+		              || 'single-course' == $type ) ) {
+			//$course_id = $this->get_post_id_by_slug( $this->__get( 'course' ) );
+			$CoursePress_Course = $course = coursepress_get_course();
 
 
-		$template = $CoursePress->plugin_path . '/views/template-parts/';
+			//echo get_the_ID();
+			//$CoursePress_Course = coursepress_get_course( get_the_ID() );
+
+		}
+
+		$template = $CoursePress->plugin_path . '/templates/';
 		$template .= $this->templates[ $type ];
 
 		if ( 'instructor' == $type ) {
@@ -161,6 +129,8 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 						$_course_module = $module;
 						$this->add_breadcrumb( $module['title'], $module['url'] );
 					}
+				} else {
+					$_course_module = $CoursePress_Unit->get_module_by_id( 1 );
 				}
 
 				$step = $this->__get( 'step' );
@@ -186,6 +156,7 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 		$type = $this->__get( 'type' );
 		$template = $this->has_template( $type );
 
+
 		if ( ! $template ) {
 			// If the theme did not override the template, load CP template
 			$page_template = $this->get_template( $type );
@@ -194,5 +165,42 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 		}
 
 		return $page_template;
+	}
+
+	private function the_post( $post, $args = array() ) {
+
+		foreach ( $args as $key => $value )
+			$post->{$key} = $value;
+
+		$post->comment_status = 'closed';
+		$post->post_status = 'publish';
+
+		return $post;
+	}
+
+	function set_post_object( $posts, $wp ) {
+		if ( ! $wp->is_main_query() )
+			return $posts;
+
+		$type = $this->__get( 'type' );
+		$post = array_shift( $posts );
+
+		if ( 'student-dashboard' == $type ) {
+			$post = $this->the_post( $post, array(
+				'post_title' => __( 'My Courses', 'cp' ),
+				'post_type' => 'page',
+			) );
+
+		} elseif ( 'student-settings' == $type ) {
+			$post = $this->the_post( $post, array(
+				'post_title' => __( 'My Settings', 'cp' ),
+				'post_type' => 'page',
+			) );
+
+		}
+
+		array_unshift( $posts, $post );
+
+		return $posts;
 	}
 }

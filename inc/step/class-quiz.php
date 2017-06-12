@@ -13,12 +13,17 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 		$keys = array_merge( $keys, array(
 			'questions',
 			'answers',
+			'answers_selected', // Legacy for `input-checkbox`
 		));
 
 		return $keys;
 	}
 
-	function get_question_multiple( $index, $question ) {
+	protected function get_questions_data() {
+		return $this->__get( 'questions' );
+	}
+
+	protected function get_question_multiple( $index, $question ) {
 		$template = '';
 		$unit = $this->get_unit();
 		$course_id = $unit->__get( 'course_id' );
@@ -31,7 +36,6 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 			foreach ( $answers as $pos => $answer ) {
 				$name = sprintf( 'module[%d][%d][%d][%d][%d]', $course_id, $unit_id, $step_id, $index, $pos );
 				$attr = array(
-					'name' => '',
 					'type' => 'checkbox',
 					'value' => $pos,
 					'name' => $name,
@@ -48,7 +52,7 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 		return $template;
 	}
 
-	function get_question_single( $index, $question ) {
+	protected function get_question_single( $index, $question ) {
 		$template = '';
 		$unit = $this->get_unit();
 		$course_id = $unit->__get( 'course_id' );
@@ -61,7 +65,6 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 			foreach ( $answers as $pos => $answer ) {
 				$name = sprintf( 'module[%d][%d][%d][%d]', $course_id, $unit_id, $step_id, $index );
 				$attr = array(
-					'name' => '',
 					'type' => 'radio',
 					'value' => $pos,
 					'name' => $name,
@@ -78,16 +81,46 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 		return $template;
 	}
 
+	protected function get_question_select( $index, $question ) {
+		$template = '';
+		$unit = $this->get_unit();
+		$course_id = $unit->__get( 'course_id' );
+		$unit_id = $unit->__get( 'ID' );
+		$step_id = $this->__get( 'ID' );
+
+		if ( ! empty( $question['options'] ) ) {
+			$answers = $question['options']['answers'];
+
+			foreach ( $answers as $pos => $answer ) {
+				$attr = array(
+					'value' => $pos,
+				);
+
+				$template .= $this->create_html( 'option', $attr, $answer );
+			}
+
+			$name = sprintf( 'module[%d][%d][%d][%d]', $course_id, $unit_id, $step_id, $index );
+			$attr = array(
+				'name' => $name
+			);
+
+			$template = $this->create_html( 'select', $attr, $template );
+		}
+
+		return $template;
+	}
+
 	function get_question() {
 		$template = '';
 
-		$questions = $this->__get( 'questions' );
+		$questions = $this->get_questions_data();
 
 		if ( ! empty( $questions ) ) {
 			foreach ( $questions as $index => $question ) {
 				$method = 'get_question_' . $question['type'];
 
-				$template .= $this->create_html( 'p', array( 'class' => 'question' ), $question['question'] );
+				if ( ! empty( $question['question'] ) )
+					$template .= $this->create_html( 'p', array( 'class' => 'question' ), $question['question'] );
 
 				$template .= call_user_func( array( $this, $method ), $index, $question );
 			}

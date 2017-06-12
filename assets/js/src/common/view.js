@@ -60,6 +60,8 @@
                  * Trigger whenever the view template is loaded
                  */
                 CoursePress.Events.trigger('coursepress:view_rendered', this);
+
+                return this;
             },
             updateModel: function(ev) {
                 var input, name, type, value;

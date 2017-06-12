@@ -5,7 +5,7 @@
  * @since 3.0
  * @package CoursePress
  */
-class CoursePress_Data_Users extends CoursePress_Utility {
+final class CoursePress_Data_Users extends CoursePress_Utility {
 	protected $capabilities_map = false;
 
 	protected $capabilities = array(
@@ -106,17 +106,23 @@ class CoursePress_Data_Users extends CoursePress_Utility {
 	public function __construct() {
 		// Hook into `coursepress_add_instructor`
 		add_action( 'coursepress_add_instructor', array( $this, 'add_instructor_meta' ), 10, 2 );
+
 		// Hook into `coursepress_delete_instructor`
 		add_action( 'coursepress_delete_instructor', array( $this, 'remove_instructor_meta' ), 10, 2 );
+
 		// Hook into `coursepress_add_student`
 		add_action( 'coursepress_add_student', array( $this, 'add_student_meta' ), 10, 2 );
+
 		// Hook into `coursepress_delete_student`
 		add_action( 'coursepress_delete_student', array( $this, 'delete_student_meta' ), 10, 2 );
+
 		// Hook into `coursepress_add_facilitator`
 		add_action( 'coursepress_add_facilitator', array( $this, 'add_facilitator_meta' ), 10, 2 );
+
 		// Hook into `coursepress_remove_facilitator`
 		add_action( 'coursepress_remove_facilitator', array( $this, 'delete_facilitator_meta' ), 10, 2 );
 
+		// Map courspress caps
 		add_filter( 'user_has_cap', array( $this, 'map_coursepress_user_cap' ), 99, 4 );
 	}
 
@@ -142,7 +148,7 @@ class CoursePress_Data_Users extends CoursePress_Utility {
 	}
 
 	function remove_instructor_role( $user_id ) {
-		$course_ids = coursepress_get_instructor_courses( $user_id, false, true, true );
+		$course_ids = coursepress_get_user_instructed_courses( $user_id, false, true, true );
 
 		if ( count( $course_ids ) <= 0 ) {
 			$user = get_userdata( $user_id );
@@ -158,6 +164,7 @@ class CoursePress_Data_Users extends CoursePress_Utility {
 	}
 
 	function add_student_role( $user_id ) {
+		error_log( 'add_student_role' );
 		if ( ! user_can( $user_id, 'coursepress_student' ) ) {
 			$user = get_userdata( $user_id );
 			$user->add_role( 'coursepress_student' );
@@ -183,6 +190,7 @@ class CoursePress_Data_Users extends CoursePress_Utility {
 	function add_facilitator_meta( $user_id, $course_id ) {
 		// Maybe add facilitator role?
 		$this->add_facilitator_role( $user_id );
+
 		// Set user facilitator meta
 		add_user_meta( $user_id, 'facilitator_' . $course_id, $user_id );
 	}
@@ -197,6 +205,7 @@ class CoursePress_Data_Users extends CoursePress_Utility {
 	function delete_facilitator_meta( $user_id, $course_id ) {
 		// Maybe delete facilitator role?
 		$this->delete_facilitator_role( $user_id );
+
 		// Delete user facilitator meta
 		delete_user_meta( $user_id, 'facilitator_' . $course_id, $user_id );
 	}

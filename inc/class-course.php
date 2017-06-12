@@ -21,9 +21,14 @@ class CoursePress_Course extends CoursePress_Utility {
 			return $this->wp_error();
 		}
 
-		foreach ( $course as $key => $value ) {
-			$this->__set( $key, $value );
-		}
+		$this->setUp( array(
+			'ID' => $course->ID,
+			'post_title' => $course->post_title,
+			'post_except' => $course->post_excerpt,
+			'post_content' => $course->post_content,
+			'post_status' => $course->post_status,
+			'post_name' => $course->post_name,
+		) );
 
 		// Set course meta
 		$this->setUpCourseMetas();
@@ -116,6 +121,11 @@ class CoursePress_Course extends CoursePress_Utility {
 		return $settings;
 	}
 
+	/**
+	 * Returns course title.
+	 *
+	 * @return string
+	 */
 	function get_the_title() {
 		return $this->__get( 'post_title' );
 	}
@@ -145,6 +155,10 @@ class CoursePress_Course extends CoursePress_Utility {
 		return $summary;
 	}
 
+	function get_feature_image_url() {
+		return $this->__get( 'listing_image' );
+	}
+
 	/**
 	 * Get the course feature image.
 	 *
@@ -161,7 +175,7 @@ class CoursePress_Course extends CoursePress_Utility {
 		if ( ! $height )
 			$height = coursepress_get_setting( 'course/image_height', 235 );
 
-		$listing_image = $this->__get( 'listing_image' );
+		$listing_image = $this->get_feature_image_url();
 
 		// Try post-thumbnail
 		if ( ! $listing_image ) {
@@ -182,13 +196,63 @@ class CoursePress_Course extends CoursePress_Utility {
 		return $listing_image;
 	}
 
-	function get_feature_video() {}
+	function get_feature_video_url() {
+		return $this->__get( 'featured_video' );
+	}
+
+	function get_feature_video( $width = 235, $height = 235 ) {
+		$feature_video = $this->get_feature_video_url();
+
+		if ( ! $width )
+			$width = coursepress_get_setting( 'course/image_width', 235 );
+		if ( ! $height )
+			$height = coursepress_get_setting( 'course/image_height', 235 );
+
+		if ( ! empty( $feature_video ) ) {
+			$attr = array(
+				'src' => esc_url_raw( $feature_video ),
+				'class' => 'course-feature-video',
+				'width' => $width,
+				'height' => $height,
+			);
+
+			return $this->create_html( 'video', $attr );
+		}
+
+		return null;
+	}
+
+	function get_media( $width = 235, $height = 235 ) {
+		$media_type = coursepress_get_setting( 'course/details_media_type', 'image' );
+		$image = $this->get_feature_image( $width, $height );
+		$video = $this->get_feature_video( $width, $height );
+
+
+		if ( 'image' == $media_type )
+			if ( ! empty( $image ) )
+				return $image;
+			else
+				return $video;
+		else
+			if ( ! empty( $video ) )
+				return $video;
+			else
+				return $image;
+	}
+
+	function get_description() {
+		$description = $this->__get( 'post_content' );
+
+		// @todo: Fix HTML formatting issue here
+
+		return $description;
+	}
 
 	function get_course_start_date() {
 		$open_ended = $this->__get( 'course_open_ended' );
 
 		if ( $open_ended )
-			return __( 'Available', 'cp' );
+			return __( 'Anytime', 'cp' );
 		else
 			return $this->__get( 'course_start_date' );
 	}
@@ -197,12 +261,35 @@ class CoursePress_Course extends CoursePress_Utility {
 		return $this->__get( 'course_end_date' );
 	}
 
+	function get_course_dates( $separator = ' - ' ) {
+		$open_ended = $this->__get( 'course_open_ended' );
+
+		if ( $open_ended )
+			return __( 'Anytime', 'cp' );
+
+		return implode( $separator, array( $this->get_course_start_date(), $this->get_course_start_date() ) );
+	}
+
 	function get_enrollment_start_date() {
+		$open_ended = $this->__get( 'enrollment_open_ended' );
+
+		if ( $open_ended )
+			return __( 'Anytime', 'cp' );
+
 		return $this->__get( 'enrollment_start_date' );
 	}
 
 	function get_enrollment_end_date() {
 		return $this->__get( 'enrollment_end_date' );
+	}
+
+	function get_enrollment_dates( $separator = ' - ' ) {
+		$open_ended = $this->__get( 'enrollment_open_ended' );
+
+		if ( $open_ended )
+			return __( 'Anytime', 'cp' );
+
+		return implode( $separator, array( $this->get_enrollment_start_date(), $this->get_enrollment_end_date() ) );
 	}
 
 	function get_course_language() {
@@ -226,6 +313,10 @@ class CoursePress_Course extends CoursePress_Utility {
 		}
 
 		return $price;
+	}
+
+	function get_view_mode() {
+		return $this->__get( 'course_view' );
 	}
 
 	function is_with_modules() {
@@ -356,7 +447,7 @@ class CoursePress_Course extends CoursePress_Utility {
 
 		if ( ! empty( $instructor_ids ) )
 			foreach ( $instructor_ids as $instructor_id )
-				coursepress_add_instructor( $instructor_id, $id );
+				coursepress_add_course_instructor( $instructor_id, $id );
 
 		return $instructor_ids;
 	}
@@ -495,7 +586,9 @@ class CoursePress_Course extends CoursePress_Utility {
 	}
 
 	function get_permalink() {
-		return coursepress_get_course_url( $this->__get('ID' ) );
+		$course_name = $this->__get( 'post_name' );
+
+		return coursepress_get_main_courses_url() . trailingslashit( $course_name );
 	}
 
 	function get_discussion_url() {
@@ -563,20 +656,20 @@ class CoursePress_Course extends CoursePress_Utility {
 		return $units;
 	}
 
-	function get_course_structure() {
+	function get_course_structure( $show_details = false ) {
 		/**
 		 * @var $user CoursePress_Student
 		 */
 
 		$course_id = $this->__get( 'ID' );
-		$user = coursepress_get_student( get_current_user_id() );
+		$user = coursepress_get_user();
 		$has_access = $user->has_access_at( $course_id );
 		$structure = '';
 		$units = $this->get_units( ! $has_access );
 
 		if ( $units ) {
 			foreach ( $units as $unit ) {
-				$unit_structure = $unit->get_unit_structure( false );
+				$unit_structure = $unit->get_unit_structure( false, $show_details );
 				$structure .= $this->create_html( 'li', false, $unit_structure );
 			}
 			$structure = $this->create_html( 'ul', array( 'class' => 'tree unit-tree' ), $structure );

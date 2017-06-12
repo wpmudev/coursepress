@@ -1,7 +1,9 @@
 .course-breadcrumb {
-  margin: 0;
+  display: block;
+  margin: 25px 0;
   padding: 0;
   list-style: none;
+  @include clearfix;
 
   li {
     display: inline-block;

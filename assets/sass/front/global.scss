@@ -1,6 +1,27 @@
-.coursepress {
+.coursepress-wrap {
+  display: block;
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  @include clearfix;
+  font-size: 100%;
+
   .container {
-    max-width: 1200px;
+    max-width: 1024px;
     margin: 0 auto;
+    padding: 0 25px;
+
+    .page-title {
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin: 0 0 15px 0;
+      padding: 0;
+    }
+  }
+
+  .course-unit-progress {
+    text-align: center;
+    border: 1px solid red;
   }
 }

@@ -43,12 +43,8 @@
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-require_once 'inc/utility.php';
-require_once 'inc/functions.php';
-require_once 'inc/users.php';
-
 if ( is_admin() ) {
-	require_once 'inc/admin/admin-functions.php';
+	//require_once 'inc/admin/admin-functions.php';
 }
 
 final class CoursePress {
@@ -88,13 +84,25 @@ final class CoursePress {
 	 * @var array List of classes that are loaded in front front pages only.
 	 */
 	protected $core_front_classes = array(
+		'CoursePress_FrontPage',
 		//'CoursePress_VirtualPage',
 		'CoursePress_Shortcode',
 	);
 
 	public function __construct() {
-		$this->plugin_path = __DIR__;
+		$this->plugin_path = __DIR__ . DIRECTORY_SEPARATOR;
 		$this->plugin_url = plugins_url( 'coursepress/' );
+
+		// Load functions files
+		try {
+			require_once $this->plugin_path . 'inc/functions/utility.php';
+			require_once $this->plugin_path . 'inc/functions/user.php';
+			require_once $this->plugin_path . 'inc/functions/course.php';
+			require_once $this->plugin_path . 'inc/functions/unit.php';
+		} catch ( Exception $e ) {
+			// @todo: Throw error
+			return;
+		}
 
 		// Autload classes on demand
 		spl_autoload_register( array( $this, 'class_loader' ) );
@@ -107,6 +115,18 @@ final class CoursePress {
 
 		// Load core files
 		add_action( 'plugins_loaded', array( $this, 'load_core' ) );
+
+		/********************************************************
+		 * LEGACY CALL
+		 * Note*: WHILE DEVELOPMENT ONLY, REMOVE AFTERWARDS!
+		********************************************************/
+		// Run legacy
+		//$legacy_key = 'coursepress_legacy_beta_c6';
+		//add_action( $legacy_key, array( 'CoursePress_Legacy', 'instance' ) );
+
+		//if ( ! wp_get_schedule( $legacy_key ) )
+		//	wp_schedule_single_event( time() + 60, $legacy_key );
+		/*********************************************************/
 	}
 
 	private function class_loader( $className ) {
@@ -139,6 +159,7 @@ final class CoursePress {
 	function deactivate() {}
 
 	function load_core() {
+		// Load core classses
 		array_map( array( $this, 'getClass' ), $this->core_classes );
 
 		if ( is_admin() ) {
@@ -165,4 +186,5 @@ final class CoursePress {
 		$CoursePress_User = new CoursePress_User( get_current_user_id() );
 	}
 }
+
 $CoursePress = new CoursePress();

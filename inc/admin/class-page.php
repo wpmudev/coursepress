@@ -22,8 +22,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	var $localize_array = array();
 
 	public function __construct() {
-		global $wp_filter;
-
 		// Check if user can't access coursepress
 		if ( ! current_user_can( 'coursepress_dashboard_cap' ) ) {
 			$this->is_error = true;
@@ -33,25 +31,16 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Setup CP pages
 		add_action( 'admin_menu', array( $this, 'set_admin_menus' ) );
+
 		// Setup admin assets
 		add_action( 'admin_enqueue_scripts', array( $this, 'set_admin_css' ) );
 	}
 
 	/**
-	 * Helper function to add `coursepress` submenu.
+	 * Iterate CP admin pages.
 	 *
-	 * @param string $label
-	 * @param string $cap
-	 * @param string $slug
-	 * @param string $callback
+	 * @access private
 	 */
-	function add_submenu( $label = '', $cap, $slug, $callback ) {
-		$menu = add_submenu_page( $this->slug, 'CoursePress ' . $label, $label, $cap, $slug, array( $this, $callback ) );
-
-		// Add to the list of valid CP pages
-		array_unshift( $this->screens, $menu );
-	}
-
 	function set_admin_menus() {
 		global $submenu;
 
@@ -99,6 +88,26 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$submenu['coursepress'][0][0] = __( 'Courses', 'cp' );
 	}
 
+	/**
+	 * Helper method to add `coursepress` submenu.
+	 *
+	 * @param string $label
+	 * @param string $cap
+	 * @param string $slug
+	 * @param string $callback
+	 */
+	function add_submenu( $label = '', $cap, $slug, $callback ) {
+		$menu = add_submenu_page( $this->slug, 'CoursePress ' . $label, $label, $cap, $slug, array( $this, $callback ) );
+
+		// Add to the list of valid CP pages
+		array_unshift( $this->screens, $menu );
+	}
+
+	/**
+	 * Helper method to set needed JS and CSS stylesheets needed.
+	 *
+	 * @access private
+	 */
 	function set_admin_css() {
 		$coursepress_pagenow = coursepress_is_admin();
 
@@ -129,11 +138,14 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$this->enqueue_style( 'coursepress-admin-common', 'assets/css/admin-common.min.css' );
 		$this->enqueue_style( $coursepress_pagenow, 'assets/css/' . $coursepress_pagenow . '.min.css' );
 
-		// Set js
+		/**
+		 * We'll set JS files at the bottom of the page so that we could add
+		 * localize script as page running.
+		 */
 		add_action( 'admin_footer', array( $this, 'set_admin_scripts' ) );
 	}
 
-	function enqueue_style( $id, $src ) {
+	private function enqueue_style( $id, $src ) {
 		global $CoursePress;
 
 		wp_enqueue_style( $id, $CoursePress->plugin_url . $src, false, $CoursePress->version );
@@ -284,7 +296,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 	function get_students_page() {
 		$args = array(
-			'courses' => coursepress_get_accessable_courses( true, false, true ),
+			'courses' => coursepress_get_accessible_courses( true ),
 		);
 		coursepress_render( 'views/admin/students', $args );
 	}
@@ -310,6 +322,19 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	}
 
 	function get_settings_page() {
+		// Add global setting to localize array
+		$this->localize_array['settings'] = coursepress_get_setting( true );
+
 		coursepress_render( 'views/admin/settings' );
+
+		// Add TPL
+		coursepress_render( 'views/tpl/settings-general' );
+		coursepress_render( 'views/tpl/settings-slugs' );
+		coursepress_render( 'views/tpl/settings-emails' );
+		coursepress_render( 'views/tpl/settings-capabilities' );
+		coursepress_render( 'views/tpl/settings-certificate' );
+		coursepress_render( 'views/tpl/settings-shortcodes' );
+		coursepress_render( 'views/tpl/settings-extensions' );
+		coursepress_render( 'views/tpl/settings-import-export' );
 	}
 }

@@ -22,8 +22,6 @@ final class CoursePress_Core extends CoursePress_Utility {
 		add_filter( 'query_vars', array( $this, 'add_query_vars' ) );
 		// Add CP rewrite rules
 		add_filter( 'rewrite_rules_array', array( $this, 'add_rewrite_rules' ) );
-		// Handle CP pages
-		add_action( 'parse_query', array( $this, 'parse_query' ) );
 	}
 
 	function register_post_types() {
@@ -31,7 +29,7 @@ final class CoursePress_Core extends CoursePress_Utility {
 		$course_slug = coursepress_get_setting( 'slugs/course', 'courses' );
 		register_post_type( $this->course_post_type, array(
 			'public' => true,
-			'label' => __( 'CoursePress', 'cp' ),
+			'label' => __( 'All Courses', 'cp' ),
 			'show_ui' => false,
 			'show_in_nav_menu' => false,
 			'has_archive' => true,
@@ -61,6 +59,7 @@ final class CoursePress_Core extends CoursePress_Utility {
 			'label' => 'Units', // debugging only,
 			'query_var' => false,
 			'publicly_queryable' => false,
+			'supports' => array( 'thumbnail' ),
 		) );
 
 		// Module
@@ -81,6 +80,7 @@ final class CoursePress_Core extends CoursePress_Utility {
 		$vars[] = 'module';
 		$vars[] = 'step';
 		$vars[] = 'instructor';
+		$vars[] = 'topic';
 
 		return $vars;
 	}
@@ -91,8 +91,11 @@ final class CoursePress_Core extends CoursePress_Utility {
 		$workbook_slug = coursepress_get_setting( 'slugs/workbook', 'workbook' );
 		$notification_slug = coursepress_get_setting( 'slugs/notifications', 'notifications' );
 		$discussion_slug = coursepress_get_setting( 'slugs/discussions', 'discussions' );
+		$new_discussion_slug = coursepress_get_setting( 'slugs/discussions_new', 'new-discussion' );
 		$grade_slug = coursepress_get_setting( 'slugs/grades', 'grades' );
 		$instructor_slug = coursepress_get_setting( 'slugs/instructor_profile', 'instructor' );
+		$student_dashboard = coursepress_get_setting( 'slugs/student_dashboard', 'courses-dashboard' );
+		$student_settings = coursepress_get_setting( 'slugs/student_settings', 'student-settings' );
 		$base = '^' . $course_slug . '/([^/]*)/';
 
 		$new_rules = array(
@@ -106,65 +109,20 @@ final class CoursePress_Core extends CoursePress_Utility {
 			$base . $workbook_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=workbook',
 			// Notifications
 			$base . $notification_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=notifications',
-			// Forum|Discussions
+			// New forum/discussion
+			$base . $discussion_slug . '/' . $new_discussion_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=forum&topic=new',
+           //Forum|Discussions
 			$base . $discussion_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=forum',
 			// Grades
 			$base . $grade_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=grades',
 			// Course Instructor Profile
 			'^' . $instructor_slug . '/([^/]*)/?' => 'index.php?coursepress=instructor&instructor=$matches[1]',
+			// Student Dashboard
+			'^' . $student_dashboard . '/?' => 'index.php?coursepress=student-dashboard',
+			// Student Settings
+			'^' . $student_settings . '/?' => 'index.php?coursepress=student-settings',
 		);
 
-
 		return array_merge( $new_rules, $rules );
-	}
-
-	private function reset_wp( $wp, $course_name ) {
-		$wp->is_home = false;
-		$wp->is_singular = $wp->is_single = true;
-		$wp->query_vars = wp_parse_args( array(
-			'page' => '',
-			'course' => $course_name,
-			'post_type' => 'course',
-			'name' => $course_name,
-		), $wp->query_vars );
-	}
-
-	function parse_query( $wp ) {
-		global $CoursePress_VirtualPage;
-
-		$post_type = $wp->get( 'post_type' );
-		$course_name = $wp->get( 'coursename' );
-		$type = $wp->get( 'coursepress' );
-		$cp = array();
-
-		if ( ! empty( $course_name ) ) {
-			$cp['course'] = $course_name;
-			$cp['type']   = $type;
-
-			if ( in_array( $type, array( 'unit', 'module', 'step' ) ) ) {
-				$cp['unit'] = $wp->get( 'unit' );
-
-				if ( ( $module = $wp->get( 'module' ) ) )
-					$cp['module'] = $module;
-				if ( ( $step = $wp->get( 'step' ) ) )
-					$cp['step'] = $step;
-			}
-
-			$this->reset_wp( $wp, $course_name );
-		} elseif ( ! empty( $type ) ) {
-			// Use for CP specific pages
-			$cp['course'] = false;
-			$cp['type'] = $type;
-			$this->reset_wp( $wp, false );
-		} elseif ( $this->course_post_type == $post_type && $wp->is_main_query() ) {
-			$course_name = $wp->get( 'name' );
-			$cp['course'] = $course_name;
-			$cp['type'] = 'single-course';
-			$this->reset_wp( $wp, $course_name );
-		}
-
-		if ( ! empty( $cp ) ) {
-			$CoursePress_VirtualPage = new CoursePress_VirtualPage( $cp );
-		}
 	}
 }

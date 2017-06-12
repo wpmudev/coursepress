@@ -6,5 +6,10 @@
  * @package CoursePress
  */
 class CoursePress_Step_Zip extends CoursePress_Step {
-	protected $type = 'zip';
+	protected $type = 'zipped';
+
+	function get_question() {
+		// @todo: Do
+		return 'ZIPPED OBJECT HERE';
+	}
 }

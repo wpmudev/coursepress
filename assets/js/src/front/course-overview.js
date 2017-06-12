@@ -37,7 +37,6 @@
                 }
                 ctx.save();
 
-
                 if ( obj.knobTextShow ) {
                     ctx.font = s / obj.knobTextDenominator + 'px sans-serif';
                     ctx.textAlign = obj.knobTextAlign;

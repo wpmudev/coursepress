@@ -17,6 +17,13 @@ abstract class CoursePress_Utility {
 		return null;
 	}
 
+	function setUp( $args ) {
+		if ( ! empty( $args ) ) {
+			foreach ( $args as $key => $value )
+				$this->__set( $key, $value );
+		}
+	}
+
 	function date_time_now() {
 		$time_now = current_time( 'timestamp' );
 		$date_now = date( 'M/d/y', current_time( 'timestamp' ) );

@@ -200,5 +200,17 @@ class CoursePress_Admin_Ajax {
 		return array( 'success' => true, 'course' => $course );
 	}
 
-	function delete_course( $request ) {}
+	function delete_course( $request ) {
+		// @todo: Do
+	}
+
+	/**
+	 * Update global settings.
+	 *
+	 * @param $request
+	 */
+	function update_settings( $request ) {
+		// @todo: Do
+		error_log( 'Settings updated!' );
+	}
 }
