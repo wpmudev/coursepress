@@ -14,6 +14,11 @@ $ git clone git@bitbucket.org:incsub/coursepress.git --recursive
 ```
 
 If you already have a cloned repo, you will need to *init* the submodule.
+```
+#!bash
+$ git submodule init --
+$ git submodule update
+```
 
 ## Folder Structure
 
