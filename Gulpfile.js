@@ -133,6 +133,8 @@
         gulp.src(php_files).pipe(phpcs(options)).pipe(phpcs.reporter('log'));
     });
 
+    gulp.task( 'php', ['phplint', 'phpcs', 'phpunit']);
+
     gulp.task('jsvalidate', function () {
         var jsvalidate = require('gulp-jsvalidate');
 
