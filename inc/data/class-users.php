@@ -123,7 +123,10 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 		add_action( 'coursepress_remove_facilitator', array( $this, 'delete_facilitator_meta' ), 10, 2 );
 
 		// Map courspress caps
-		//add_filter( 'user_has_cap', array( $this, 'map_coursepress_user_cap' ), 99, 4 );
+		add_filter( 'user_has_cap', array( $this, 'map_coursepress_user_cap' ), 99, 4 );
+
+		// Delete student data whenever a user is deleted
+		add_action( 'delete_user', array( $this, 'delete_student_data' ) );
 	}
 
 	function add_instructor_meta( $user_id, $course_id ) {
@@ -261,5 +264,21 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 		}
 
 		return $caps;
+	}
+
+	function delete_student_id( $user_id ) {
+		$user = coursepress_get_user( $user_id );
+
+		if ( is_wp_error( $user ) )
+			return null;
+
+		// Find courses where user are enrolled at
+		$course_ids = $user->get_enrolled_courses_ids();
+
+		if ( is_array( $course_ids ) && ! empty( $course_ids ) ) {
+			foreach ( $course_ids as $course_id ) {
+				coursepress_delete_student( $user_id, $course_id );
+			}
+		}
 	}
 }

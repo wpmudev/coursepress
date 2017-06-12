@@ -119,20 +119,21 @@ final class CoursePress {
 		 * Note*: WHILE DEVELOPMENT ONLY, REMOVE AFTERWARDS!
 		********************************************************/
 		// Run legacy
-		$legacy_key = 'coursepress_legacy_beta_c6';
+		//$legacy_key = 'coursepress_legacy_beta_c6';
 		//add_action( $legacy_key, array( 'CoursePress_Legacy', 'instance' ) );
 
 		//if ( ! wp_get_schedule( $legacy_key ) )
-		//	wp_schedule_single_event( time() + 60, $legacy_key );
+		//wp_schedule_single_event( time(), $legacy_key );
 		/*********************************************************/
 	}
 
-	private function class_loader( $className ) {
-		if ( ! preg_match( '%CoursePress_%', $className ) )
+	private function class_loader( $class_name ) {
+		if ( ! preg_match( '%CoursePress_%', $class_name ) ) {
 			return false;
+		}
 
-		$class = explode( '_', strtolower( str_replace( 'CoursePress_', '', $className ) ) );
-		array_unshift( $class, 'inc');
+		$class = explode( '_', strtolower( str_replace( 'CoursePress_', '', $class_name ) ) );
+		array_unshift( $class, 'inc' );
 		$file = array_pop( $class );
 		array_push( $class, 'class-' . $file );
 
@@ -140,32 +141,41 @@ final class CoursePress {
 
 		try {
 			coursepress_render( $filename );
-		} catch( Exception $e ) {
+		} catch ( Exception $e ) {
 			// @todo: Log error?
 		}
 	}
 
-	function getClass( $className ) {
-		if ( ! isset( $GLOBALS[$className]) )
-			$GLOBALS[$className] = new $className();
+	function get_class( $class_name ) {
+		if ( ! isset( $GLOBALS[ $class_name ] ) ) {
+			$GLOBALS[ $class_name ] = new $class_name();
+		}
 
-		return $GLOBALS[$className];
+		return $GLOBALS[ $class_name ];
 	}
 
-	function activate() {}
+	function activate() {
+		$install = $this->plugin_path . '/inc/admin/class-install.php';
+
+		if ( file_exists( $install ) && is_readable( $install ) ) {
+			require_once $install;
+
+			new CoursePress_Install();
+		}
+	}
 
 	function deactivate() {}
 
 	function load_core() {
 		// Load core classses
-		array_map( array( $this, 'getClass' ), $this->core_classes );
+		array_map( array( $this, 'get_class' ), $this->core_classes );
 
 		if ( is_admin() ) {
 			coursepress_render( 'inc/admin/class-page' );
-			array_map( array( $this, 'getClass' ), $this->core_admin_classes );
+			array_map( array( $this, 'get_class' ), $this->core_admin_classes );
 
 		} else {
-			array_map( array( $this, 'getClass' ), $this->core_front_classes );
+			array_map( array( $this, 'get_class' ), $this->core_front_classes );
 		}
 
 		/**

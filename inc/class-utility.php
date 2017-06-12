@@ -19,8 +19,9 @@ abstract class CoursePress_Utility {
 
 	function setUp( $args ) {
 		if ( ! empty( $args ) ) {
-			foreach ( $args as $key => $value )
+			foreach ( $args as $key => $value ) {
 				$this->__set( $key, $value );
+			}
 		}
 	}
 

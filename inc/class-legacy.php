@@ -66,17 +66,15 @@ class CoursePress_Legacy {
 
 		if ( ! empty( $user_ids ) ) {
 			foreach ( $user_ids as $user_id ) {
-				// Marked user as student of the course
-				add_post_meta( $course_id, 'student', $user_id );
+				$user = coursepress_get_user( $user_id );
+				coursepress_add_student( $user_id, $course_id );
 
-				/**
-				 * Fired whenever a new student is added to a course.
-				 *
-				 * @since 3.0
-				 * @param int $user_id
-				 * @param int $course_id
-				 */
-				do_action( 'coursepress_add_student', $user_id, $course_id );
+				// Get completion data
+				$progress = get_user_option( 'course_' . $course_id . '_progress', $user_id );
+
+				if ( $progress ) {
+					$user->add_student_progress( $course_id, $progress );
+				}
 			}
 		}
 	}

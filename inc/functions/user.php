@@ -199,17 +199,19 @@ function coursepress_add_student( $user_id = 0, $course_id = 0 ) {
 	if ( is_wp_error( $course ) )
 		return false;
 
-	//if ( $user->is_enrolled_at( $course_id ) )
-	//	return true; // User is already enrolled, bail!
+	if ( $user->is_enrolled_at( $course_id ) )
+		return true; // User is already enrolled, bail!
+
+	$user->add_course_student( $course_id );
 
 	// Marked user as student of the course
-	add_post_meta( $course_id, 'student', $user_id );
+	//add_post_meta( $course_id, 'student', $user_id );
 
-	$time = current_time( 'timestamp' );
-	$is_multisite = is_multisite();
+	//$time = current_time( 'timestamp' );
+	//$is_multisite = is_multisite();
 
-	update_user_option( $user_id, 'enrolled_course_date_' . $course_id, $time, $is_multisite );
-	update_user_option( $user_id, 'enrolled_course_class_' . $course_id, $course_id, $is_multisite );
+	//update_user_option( $user_id, 'enrolled_course_date_' . $course_id, $time, $is_multisite );
+	//update_user_option( $user_id, 'enrolled_course_class_' . $course_id, $course_id, $is_multisite );
 
 	/**
 	 * Fired whenever a new student is added to a course.
@@ -248,12 +250,13 @@ function coursepress_delete_student( $user_id = 0, $course_id = 0 ) {
 	if ( ! $user->is_enrolled_at( $course_id ) )
 		return null; // User is not enrolled? bail!
 
+	$user->remove_course_student( $course_id );
 	// Add user as student to the course
-	delete_post_meta( $course_id, 'student', $user_id );
+	//delete_post_meta( $course_id, 'student', $user_id );
 
 	// Now delete user options
-	delete_user_option( $user_id, 'enrolled_course_date_' . $course_id, is_multisite() );
-	delete_user_option( $user_id, 'enrolled_course_class_' . $course_id, is_multisite() );
+	//delete_user_option( $user_id, 'enrolled_course_date_' . $course_id, is_multisite() );
+	//delete_user_option( $user_id, 'enrolled_course_class_' . $course_id, is_multisite() );
 
 	/**
 	 * Fired whenever an student is removed from a course.
@@ -416,4 +419,47 @@ function coursepress_get_accessible_courses( $returnAll = true ) {
 		return null;
 
 	return $user->get_accessible_courses( false, $returnAll );
+}
+
+/**
+ * Get student's course completion result data.
+ *
+ * @param int $user_id
+ * @param int $course_id
+ *
+ * @return array|CoursePress_Course|CoursePress_User|int|WP_Error
+ */
+function coursepress_get_user_course_completion_data( $user_id = 0, $course_id = 0 ) {
+	$user = coursepress_get_user( $user_id );
+
+	if ( is_wp_error( $user ) )
+		return $user; // Let's return the error
+
+	$course = coursepress_get_course( $course_id );
+
+	if ( is_wp_error( $course ) )
+		return $course;
+
+	$status = $user->get_course_completion_status( $course_id );
+	$results = array( 'status' => $status );
+
+	if ( 'pass' == $status ) {
+		$results['title'] = $course->__get( 'course_completion_title' );
+		$results['content'] = $course->__get( 'course_completion_content' );
+	} elseif ( 'failed' == $status ) {
+		$results['title'] = $course->__get( 'course_failed_title' );
+		$results['content'] = $course->__get( 'course_failed_content' );
+	} elseif ( 'completed'  == $status ) {
+		$results['title'] = $course->__get( 'pre_completion_title' );
+		$results['content'] = $course->__get( 'pre_completion_content' );
+	} elseif ( 'incomplete' == $status ) {
+		$results['title'] = __( 'Oooops! Course incomplete!', 'cp' );
+		$results['content'] = __( 'Looks like you failed to complete this course at the given period.', 'cp' );
+	} else {
+		// The course is still on going
+		$results['title'] = __( 'Course is still on going!', 'cp' );
+		$results['content'] = __( 'You haven\'t completed this course.', 'cp' );
+	}
+
+	return $results;
 }

@@ -6,12 +6,17 @@
  * @package CoursePress
  */
 class CoursePress_Course extends CoursePress_Utility {
+	protected $progress_table;
+	protected $student_table;
+
 	/**
 	 * CoursePress_Course constructor.
 	 *
 	 * @param int|WP_Post $course
 	 */
 	public function __construct( $course ) {
+		global $wpdb;
+
 		if ( ! $course instanceof WP_Post ) {
 			$course = get_post( (int) $course );
 		}
@@ -21,17 +26,20 @@ class CoursePress_Course extends CoursePress_Utility {
 			return $this->wp_error();
 		}
 
+		$this->progress_table = $wpdb->prefix . 'coursepress_student_progress';
+		$this->student_table = $wpdb->prefix . 'coursepress_students';
+
 		$this->setUp( array(
 			'ID' => $course->ID,
 			'post_title' => $course->post_title,
-			'post_except' => $course->post_excerpt,
+			'post_excerpt' => $course->post_excerpt,
 			'post_content' => $course->post_content,
 			'post_status' => $course->post_status,
 			'post_name' => $course->post_name,
 		) );
 
 		// Set course meta
-		//$this->setUpCourseMetas();
+		$this->setUpCourseMetas();
 	}
 
 	function wp_error() {
@@ -142,6 +150,7 @@ class CoursePress_Course extends CoursePress_Utility {
 		$length++;
 
 		if ( mb_strlen( $summary ) > $length ) {
+			$summary = wp_strip_all_tags( $summary );
 			$sub = mb_substr( $summary, 0, $length - 5 );
 			$words = explode( ' ', $sub );
 			$cut = ( mb_strlen( $words[ count( $words ) - 1 ] ) );
@@ -436,7 +445,9 @@ class CoursePress_Course extends CoursePress_Utility {
 	private function _get_instructors() {
 		$id = $this->__get( 'ID' );
 		$instructor_ids = get_post_meta( $id, 'instructor' );
-		$instructor_ids = array_filter( $instructor_ids );
+
+		if ( is_array( $instructor_ids ) )
+			$instructor_ids = array_filter( $instructor_ids );
 
 		if ( ! empty( $instructor_ids ) )
 			return $instructor_ids;
@@ -526,14 +537,21 @@ class CoursePress_Course extends CoursePress_Utility {
 		return array_map( 'get_userdata', $facilitator_ids );
 	}
 
-	private function _get_students() {
+	private function _get_students( $ids_only = false ) {
+		global $wpdb;
+
 		$id = $this->__get( 'ID' );
-		$student_ids = get_post_meta( $id, 'student' );
 
-		if ( is_array( $student_ids ) && ! empty( $student_ids ) )
-			return array_unique( array_filter( $student_ids ) );
+		$sql = $wpdb->prepare( "SELECT `student_id` FROM `$this->student_table` WHERE `course_id`=%d", $id );
+		$results = $wpdb->get_results( $sql, OBJECT );
+		$student_ids = array();
 
-		return array();
+		if ( $results ) {
+			foreach ( $results as $result )
+				$student_ids[] = $result->student_id;
+		}
+
+		return $student_ids;
 	}
 
 	/**

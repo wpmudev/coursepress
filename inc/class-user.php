@@ -16,12 +16,17 @@ class CoursePress_User extends CoursePress_Utility {
 	 */
 	protected $user_caps = array();
 
+	protected $progress_table;
+	protected $student_table;
+
 	/**
 	 * CoursePress_User constructor.
 	 *
 	 * @param bool|int|WP_User $user
 	 */
 	public function __construct( $user = false ) {
+		global $wpdb;
+
 		if ( ! $user instanceof WP_User ) {
 			$user = get_userdata( (int) $user );
 		}
@@ -31,6 +36,9 @@ class CoursePress_User extends CoursePress_Utility {
 
 			return;
 		}
+
+		$this->progress_table = $wpdb->prefix . 'coursepress_student_progress';
+		$this->student_table = $wpdb->prefix . 'coursepress_students';
 
 		// Inherit WP_User object
 		foreach ( $user as $key => $value ) {
@@ -84,26 +92,6 @@ class CoursePress_User extends CoursePress_Utility {
 	 */
 	function is_student() {
 		return isset( $this->roles) && in_array( 'coursepress_student', $this->roles );
-	}
-
-	/**
-	 * Check if user is enrolled to the given course ID.
-	 *
-	 * @param $course_id
-	 *
-	 * @return bool
-	 */
-	function is_enrolled_at( $course_id ) {
-		$id = $this->__get( 'ID' );
-
-		if ( ! $id )
-			return false;
-
-		$key = 'enrolled_course_date_' . $course_id;
-
-		$enrolled = coursepress_get_user_option( $id, $key );
-
-		return ! empty( $enrolled );
 	}
 
 	/**
@@ -229,6 +217,139 @@ class CoursePress_User extends CoursePress_Utility {
 	/************************************************
 	 * USER AS STUDENT
 	 ***********************************************/
+
+	private function get_student_id( $course_id ) {
+		global $wpdb;
+
+		$id = $this->__get( 'ID' );
+
+		if ( ! $id )
+			return false;
+
+		$sql = $wpdb->prepare( "SELECT ID FROM `$this->student_table` WHERE `ID`=%d AND `course_id`=%d", $id, $course_id );
+		$student_id = $wpdb->get_var( $sql );
+
+		return $student_id;
+	}
+
+	private function get_progress_id( $student_id ) {
+		global $wpdb;
+
+		$sql = $wpdb->prepare( "SELECT ID FROM `$this->progress_table` WHERE `student_id`=%d", $student_id );
+		$progress_id = $wpdb->get_var( $sql );
+
+		return (int) $progress_id > 0;
+	}
+
+	function get_enrolled_courses_ids() {
+		global $wpdb;
+
+		$id = $this->__get( 'ID' );
+
+		if ( ! $id )
+			return null;
+
+		$sql = $wpdb->prepare( "SELECT ID FROM `$this->>student_table` WHERE `student_id`=%d", $id );
+		$results = $wpdb->get_results( $sql, OBJECT );
+		$course_ids = array();
+
+
+		if ( $results )
+			foreach ( $results as $result )
+				$course_ids[] = $result->ID;
+
+		return $course_ids;
+	}
+
+	/**
+	 * Check if user is enrolled to the given course ID.
+	 *
+	 * @param $course_id
+	 *
+	 * @return bool
+	 */
+	function is_enrolled_at( $course_id ) {
+		global $wpdb;
+
+		$id = $this->__get( 'ID' );
+
+		if ( ! $id )
+			return false;
+
+		$student_id = $this->get_student_id( $course_id );
+
+		return (int) $student_id > 0;
+	}
+
+	function add_course_student( $course_id ) {
+		global $wpdb;
+
+		if (  $this->is_enrolled_at( $course_id ) )
+			return true;
+
+		$id = $this->__get( 'ID' );
+
+		$array = array(
+			'course_id' => $course_id,
+			'student_id' => $id,
+		);
+
+		$wpdb->insert( $this->student_table, $array );
+
+		return true;
+	}
+
+	function remove_course_student( $course_id ) {
+		global $wpdb;
+
+		$id = $this->__get( 'ID' );
+
+		if ( ! $id )
+			return false;
+
+		$student_id = $this->get_student_id( $course_id );
+
+		if ( (int) $student_id > 0 ) {
+			// Delete as student
+			$wpdb->delete( $this->student_table, array( 'ID' => $student_id ), array( '%d' ) );
+			// Delete student progress
+			$progress_id = $this->get_progress_id( $student_id );
+
+			if ( $progress_id > 0 )
+				$wpdb->delete( $this->progress_table, array( 'ID' => $progress_id ), array( '%d' ) );
+		}
+	}
+
+	function add_student_progress( $course_id = 0, $progress = array() ) {
+		global $wpdb;
+
+		if ( empty( $course_id ) || empty( $progress ) )
+			return false;
+
+		$student_id = $this->get_student_id( $course_id );
+
+		if ( (int) $student_id > 0 ) {
+			$progress = maybe_serialize( $progress );
+
+			$param = array(
+				'course_id' => $course_id,
+				'student_id' => $student_id,
+				'progress' => $progress,
+			);
+
+			$progress_id = $this->get_progress_id( $student_id );
+
+			if ( ! $progress_id ) {
+				$wpdb->insert( $this->progress_table, $param, array( '%d', '%d', '%s' ) );
+			} else {
+				$wpdb->update( $this->progress_table, $param, array( 'ID' => $student_id ) );
+			}
+
+			return true;
+		}
+
+		return false;
+	}
 
 	/**
 	 * Returns an array courses where user is enrolled at.
@@ -674,7 +795,7 @@ class CoursePress_User extends CoursePress_Utility {
 			$failed = coursepress_get_array_val( $progress, 'completion/failed' );
 
 			if ( $completed )
-				$status = 'passed';
+				$status = 'pass';
 			elseif ( $failed )
 				$status = 'failed';
 		}
@@ -683,8 +804,7 @@ class CoursePress_User extends CoursePress_Utility {
 			$course = coursepress_get_course( $course_id );
 
 			if ( $course->has_course_ended() ) {
-				// Marked the student failed if the course has already ended
-				$status = 'failed';
+				$status = 'incomplete';
 			}
 		}
 

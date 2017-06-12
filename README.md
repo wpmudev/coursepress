@@ -37,7 +37,8 @@ All development source files are located at **coursepress/assets/js/src/**
 * ***assets/js/src/front*** - Contains JS files use in front pages.
 
 ### CSS Files
-CSS are auto-generated using either **GULP** or **GRUNT** development tools.
+CSS are auto-generated using either **GULP** or **GRUNT** development tools. All stylesheets
+resides at **assets/sass** folder.
 
 ### Development Tools
 **Validates JS files and regenerates production JS**
@@ -71,18 +72,22 @@ $ grunt php
 
 > All templates, php or backbone templating must reside inside **views/** folder.
 
+### PR Submission
+> All codes must be validated in JS, CSS, and PHP validation.
+
+> No generated production files. These includes JS, CSS and language pot.
+
 CUSTOMIZING COURSEPRESS
 -
 
 #### FRONT END TEMPLATES
 CoursePress 3.0 is now totally customizable by users.
-It works similarly to how **WooCommerce** templating style.
-Our virtual pages reside at `templates/` folder. User can copy and paste this folder into their theme or child theme and extend the templates however they choose.
+It works similarly as to how **WooCommerce** templating is.
+Our virtual pages resides at `templates/` folder. User can copy and paste this folder into their theme or child theme and extend the templates however they choose.
 
 > All templates that lives in this folder must be templates that users are allowed to customized. No built-in templates!
 
 #### PHP Functions
-Useful functions
 
 #### PHP Classes
 

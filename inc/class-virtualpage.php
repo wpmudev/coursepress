@@ -29,6 +29,7 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 		'unit' => 'single-unit.php',
 		'module' => 'single-unit.php',
 		'step' => 'single-unit.php',
+		'completion-status' => 'page-course-completion.php',
 	);
 
 	/**

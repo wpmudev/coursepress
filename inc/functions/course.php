@@ -119,8 +119,8 @@ function coursepress_get_course_title( $course_id = 0 ) {
 function coursepress_get_course_summary( $course_id = 0, $length = 140 ) {
 	$course = coursepress_get_course( $course_id );
 
-	if ( ! is_wp_error( $course ) )
-		return $course->__get( 'post_excerpt' );
+	if ( is_wp_error( $course ) )
+		return null;
 
 	return $course->get_summary( $length );
 }

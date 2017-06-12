@@ -121,12 +121,12 @@ module.exports = function(grunt) {
 		// PHP files to validate.
 		php_files: [
 			'coursepress.php',
-			'inc/*.php',
-            'inc/**/*.php',
-            'views/*.php',
-            'views/**/*.php',
-            'tests/php/*.php',
-            'tests/php/**/*.php'
+			//'inc/*.php',
+            //'inc/**/*.php',
+            //'views/*.php',
+            //'views/**/*.php',
+            //'tests/php/*.php',
+            //'tests/php/**/*.php'
 		],
 
 		// Regex patterns to exclude from transation.
@@ -423,7 +423,7 @@ module.exports = function(grunt) {
 			sniff: {
 				src: conf.php_files,
 				options: {
-					bin: '../../../../vendor/bin/phpcbf',
+					bin: '../../../../../phpcs/scripts/phpcs',
 					standard: 'WordPress-Core',
 					verbose: true
 				}
@@ -433,7 +433,7 @@ module.exports = function(grunt) {
 		phpcbf: {
 			options: {
 				noPatch: true,
-				bin: '../../../../vendor/bin/phpcbf',
+				bin: '../../../../../phpcs/scripts/phpcs',
 				standard: 'WordPress-Core'
 			},
 			main: conf.php_files

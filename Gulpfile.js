@@ -126,14 +126,15 @@
         var phpcs = require('gulp-phpcs'),
             options = {
                 // Change this to your actual phpcs location
-                bin: '../../../../vendor/bin/phpcs',
-                standard: 'WordPress-Core'
+                bin: '../../../../../phpcs/scripts/phpcs',
+                standard: 'WordPress-Core',
+                showSniffCode: true
             };
 
         gulp.src(php_files).pipe(phpcs(options)).pipe(phpcs.reporter('log'));
     });
 
-    gulp.task( 'php', ['phplint', 'phpcs', 'phpunit']);
+    gulp.task( 'php', ['phplint', 'phpcs']);
 
     gulp.task('jsvalidate', function () {
         var jsvalidate = require('gulp-jsvalidate');
