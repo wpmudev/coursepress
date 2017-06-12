@@ -8,8 +8,8 @@ DEVELOPMENT GUIDE
 ### JS Files
 All development source files are located at **coursepress/assets/js/src/**
 
-1. `assets/js/src/common` - Contains common reusable JS files generated unto `admin-general.js` and prepended unto `front.js`.
-2. `assets/js/src/admin/courselist` - Contains JS files used in the main courses (`coursepress.js`)
+* ***assets/js/src/common*** - Contains common reusable JS files generated unto `admin-general.js` and prepended unto `front.js`.
+* ***assets/js/src/admin/courselist*** - Contains JS files used in the main courses (`coursepress.js`)
 3. `assets/js/src/admin/course-edit` - Contains JS files used in **New Course** or **Edit Course** (`coursepress_course.js`)
 * `assets/js/src/admin/assessments` - Contains JS files used in **Assessments** page (`coursepress_assessments.js`)
 * `assets/js/src/admin/forum` - Contains JS files used in **Forum** page (`coursepress_forum.js`)
