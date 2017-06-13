@@ -69,6 +69,7 @@ final class CoursePress {
 	protected $core_classes = array(
 		'CoursePress_Data_Users',
 		'CoursePress_Core',
+		'CoursePress_Extension',
 	);
 
 	/**
