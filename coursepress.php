@@ -160,15 +160,6 @@ final class CoursePress {
 
 	function activate() {
 		new CoursePress_Admin_Install( $this );
-		/*
-		$install = $this->plugin_path . '/inc/admin/class-install.php';
-
-		if ( file_exists( $install ) && is_readable( $install ) ) {
-			require_once $install;
-
-			new CoursePress_Install( $this );
-		}
-		*/
 	}
 
 	function deactivate() {}

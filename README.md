@@ -88,7 +88,10 @@ Our virtual pages resides at `templates/` folder. User can copy and paste this f
 > All templates that lives in this folder must be templates that users are allowed to customized. No built-in templates!
 
 #### PHP Functions
+Visit **/docs/php-functions.md**
 
 #### PHP Classes
+Visite **/docs/class.md**
 
-#### Actions and Filter Hooks
+#### Action and Filter Hooks
+-
