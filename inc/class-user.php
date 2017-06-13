@@ -226,7 +226,7 @@ class CoursePress_User extends CoursePress_Utility {
 		if ( ! $id )
 			return false;
 
-		$sql = $wpdb->prepare( "SELECT ID FROM `$this->student_table` WHERE `ID`=%d AND `course_id`=%d", $id, $course_id );
+		$sql = $wpdb->prepare( "SELECT ID FROM `$this->student_table` WHERE `student_id`=%d AND `course_id`=%d", $id, $course_id );
 		$student_id = $wpdb->get_var( $sql );
 
 		return $student_id;
@@ -296,7 +296,7 @@ class CoursePress_User extends CoursePress_Utility {
 
 		$wpdb->insert( $this->student_table, $array );
 
-		return true;
+		return $wpdb->insert_id;
 	}
 
 	function remove_course_student( $course_id ) {
@@ -339,16 +339,44 @@ class CoursePress_User extends CoursePress_Utility {
 
 			$progress_id = $this->get_progress_id( $student_id );
 
-			if ( ! $progress_id ) {
-				$wpdb->insert( $this->progress_table, $param, array( '%d', '%d', '%s' ) );
+			if ( false === $progress_id ) {
+				$wpdb->insert( $this->progress_table, $param );
 			} else {
-				$wpdb->update( $this->progress_table, $param, array( 'ID' => $student_id ) );
+				$wpdb->update( $this->progress_table, $param, array( 'ID' => $progress_id ) );
 			}
 
 			return true;
 		}
 
 		return false;
+	}
+
+	function get_course_progress_data( $course_id ) {
+		global $wpdb;
+
+		$id = $this->__get( 'ID' );
+
+		if ( ! $id )
+			return null;
+
+		if ( ! $this->is_enrolled_at( $course_id ) )
+			return null;
+
+		$student_id = $this->get_student_id( $course_id );
+		$progress_id = $this->get_progress_id( $student_id );
+
+		if ( (int) $progress_id > 0 ) {
+			$sql = $wpdb->prepare( "SELECT `progress` FROM `{$this->progress_table}` WHERE `ID`=%d", $progress_id );
+			$progress = $wpdb->get_var( $sql );
+
+			if ( ! empty( $progress ) ) {
+				$progress = maybe_unserialize( $progress );
+
+				return $progress;
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -374,25 +402,14 @@ class CoursePress_User extends CoursePress_Utility {
 		return coursepress_get_courses( $args );
 	}
 
-	function _get_completion_data( $course_id ) {
+	function get_completion_data( $course_id ) {
 		global $CoursePress;
 
 		$id = $this->__get( 'ID' );
 		$defaults = array( 'version' => $CoursePress->version );
-		$progress = false;
+		$progress = $this->get_course_progress_data( $course_id );
 
-		if ( $this->is_enrolled_at( $course_id ) ) {
-
-			$key = 'course_' . $course_id . '_progress';
-
-			$progress = $this->__get( $key );
-
-			if ( ! $progress ) {
-				$progress = get_user_option( $key, $id );
-			}
-		}
-
-		if ( ! $progress ) {
+		if ( empty( $progress ) ) {
 			$progress = $defaults;
 		}
 
@@ -404,12 +421,6 @@ class CoursePress_User extends CoursePress_Utility {
 		$progress = apply_filters( 'coursepress_get_student_progress', $progress, $id, $course_id );
 
 		return $progress;
-	}
-
-	function get_completion_data( $course_id ) {
-		$c = $this->validate_completion_data( $course_id );
-
-		return $c;
 	}
 
 	function validate_completion_data( $course_id ) {
@@ -425,7 +436,7 @@ class CoursePress_User extends CoursePress_Utility {
 		$is_done = coursepress_get_array_val( $progress, 'completion/completed' );
 		$completion = array();
 
-		$units = $course->get_units( true ); // Only validated published units
+		$units = $course->get_units( true ); // Only validate published units
 		$with_modules = $course->__get( 'with_modules' );
 		$unit_grade = 0;
 		$total_gradable = 0;

@@ -40,29 +40,32 @@ class CoursePress_Legacy {
 		}
 	}
 
-	function find_course_instructor( $course_id ) {
-		$user_ids = get_users( array(
-			'meta_key' => 'course_' . $course_id,
-			'meta_value' => $course_id,
-			'fields' => 'ids',
-		) );
+	function get_user_ids( $meta_key ) {
+		global $wpdb;
 
-		if ( ! empty( $user_ids ) ) {
-			foreach ( $user_ids as $user_id ) {
-				coursepress_add_course_facilitator( $user_id, $course_id );
+		$sql = $wpdb->prepare( "SELECT `user_id` FROM {$wpdb->usermeta} WHERE `meta_key`=%s", $meta_key );
+		$results = $wpdb->get_results( $sql, OBJECT );
+
+		return $results;
+	}
+
+	function find_course_instructor( $course_id ) {
+		$results = $this->get_user_ids( 'course_' . $course_id );
+		if ( ! empty( $results ) ) {
+			foreach ( $results as $result ) {
+				$user_id = $result->user_id;
+				coursepress_add_course_instructor( $user_id, $course_id );
 			}
 		}
 	}
 
 	function find_course_students( $course_id ) {
-		global $wpdb;
+		$results = $this->get_user_ids( 'enrolled_course_date_' . $course_id );
 
-		$sql = $wpdb->prepare( "SELECT `user_id` FROM {$wpdb->user_meta} WHERE `meta_key`=%s", 'enrolled_course_date_' . $course_id );
-		$user_ids = $wpdb->get_results( $sql, OBJECT );
-
-		if ( ! empty( $user_ids ) ) {
+		if ( ! empty( $results ) ) {
 			// Add user as student
-			foreach ( $user_ids as $user_id ) {
+			foreach ( $results as $result ) {
+				$user_id = $result->user_id;
 				$user = coursepress_get_user( $user_id );
 
 				if ( $user->is_enrolled_at( $course_id ) ) {
@@ -80,29 +83,5 @@ class CoursePress_Legacy {
 				}
 			}
 		}
-
-		/*
-		$user_ids = get_users( array(
-			'meta_key' => 'enrolled_course_date_' . $course_id,
-			'fields' => 'ids',
-		) );
-
-		//error_log( 'students:' );
-		//error_log( print_r( $user_ids, true ) );
-
-		if ( ! empty( $user_ids ) ) {
-			foreach ( $user_ids as $user_id ) {
-				$user = coursepress_get_user( $user_id );
-				coursepress_add_student( $user_id, $course_id );
-
-				// Get completion data
-				$progress = get_user_option( 'course_' . $course_id . '_progress', $user_id );
-
-				if ( $progress ) {
-					$user->add_student_progress( $course_id, $progress );
-				}
-			}
-		}
-		*/
 	}
 }

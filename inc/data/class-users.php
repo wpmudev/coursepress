@@ -167,7 +167,6 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 	}
 
 	function add_student_role( $user_id ) {
-		error_log( 'add_student_role' );
 		if ( ! user_can( $user_id, 'coursepress_student' ) ) {
 			$user = get_userdata( $user_id );
 			$user->add_role( 'coursepress_student' );

@@ -6,7 +6,7 @@
  * @since 3.0
  * @package CoursePress
  */
-class CoursePress_Install {
+class CoursePress_Admin_Install {
 	protected $cp;
 
 	public function __construct( CoursePress $cp ) {
@@ -45,12 +45,25 @@ class CoursePress_Install {
 	}
 
 	function run_legacy() {
-		$legacy_file = $cp->plugin_path . '/inc/class-legacy.php';
+		global $CoursePress;
+
+		if ( ! $CoursePress instanceof CoursePress )
+			$CoursePress = $this->cp;
+
+		// Run the core
+		$this->cp->load_core();
+		$this->cp->get_class( 'CoursePress_Legacy' );
+
+		/*
+		$core_file = $this->cp->plugin_path . '/inc/class-core.php';
+
+		$legacy_file = $this->cp->plugin_path . '/inc/class-legacy.php';
 
 		if ( file_exists( $legacy_file ) && is_readable( $legacy_file ) ) {
 			require_once $legacy_file;
 
 			new CoursePress_Legacy();
 		}
+		*/
 	}
 }
