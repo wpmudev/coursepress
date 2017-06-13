@@ -55,9 +55,35 @@ class CoursePress_Legacy {
 	}
 
 	function find_course_students( $course_id ) {
+		global $wpdb;
+
+		$sql = $wpdb->prepare( "SELECT `user_id` FROM {$wpdb->user_meta} WHERE `meta_key`=%s", 'enrolled_course_date_' . $course_id );
+		$user_ids = $wpdb->get_results( $sql, OBJECT );
+
+		if ( ! empty( $user_ids ) ) {
+			// Add user as student
+			foreach ( $user_ids as $user_id ) {
+				$user = coursepress_get_user( $user_id );
+
+				if ( $user->is_enrolled_at( $course_id ) ) {
+					// Don't add if already added
+					continue;
+				}
+
+				coursepress_add_student( $user_id, $course_id );
+
+				// Get completion data
+				$progress = get_user_option( 'course_' . $course_id . '_progress', $user_id );
+
+				if ( $progress ) {
+					$user->add_student_progress( $course_id, $progress );
+				}
+			}
+		}
+
+		/*
 		$user_ids = get_users( array(
 			'meta_key' => 'enrolled_course_date_' . $course_id,
-			//'meta_value' => $course_id,
 			'fields' => 'ids',
 		) );
 
@@ -77,5 +103,6 @@ class CoursePress_Legacy {
 				}
 			}
 		}
+		*/
 	}
 }

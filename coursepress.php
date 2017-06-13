@@ -160,7 +160,7 @@ final class CoursePress {
 		if ( file_exists( $install ) && is_readable( $install ) ) {
 			require_once $install;
 
-			new CoursePress_Install();
+			new CoursePress_Install( $this );
 		}
 	}
 

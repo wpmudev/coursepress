@@ -7,9 +7,16 @@
  * @package CoursePress
  */
 class CoursePress_Install {
-	public function __construct() {
+	protected $cp;
+
+	public function __construct( CoursePress $cp ) {
+		$this->cp = $cp;
+
 		$this->create_student_table();
 		$this->create_student_progress_table();
+
+		// Run legacy
+		$this->run_legacy();
 	}
 
 	function create_student_table() {
@@ -35,5 +42,15 @@ class CoursePress_Install {
 			progress LONGTEXT
 		)";
 		$wpdb->query( $sql );
+	}
+
+	function run_legacy() {
+		$legacy_file = $cp->plugin_path . '/inc/class-legacy.php';
+
+		if ( file_exists( $legacy_file ) && is_readable( $legacy_file ) ) {
+			require_once $legacy_file;
+
+			new CoursePress_Legacy();
+		}
 	}
 }
