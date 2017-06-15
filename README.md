@@ -1,3 +1,7 @@
+**CoursePress 3.0 Readme:**
+
+https://bitbucket.org/incsub/coursepress/src/64245c9f90e905025addeb31d1514d1c72f377e7/?at=development
+
 **CoursePress 2.0 Readme:**
 
 https://bitbucket.org/incsub/coursepress/src/493fe75d6a198f29439848aa837d32cbd3905b18?at=coursepress/2.0-dev
