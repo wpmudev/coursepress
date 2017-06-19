@@ -16,14 +16,21 @@ foreach ( $options as $option ) {
 <div class="cp-box-content">
     <div class="box-label-area">
         <h2 class="label"><?php echo $option['title']; ?></h2>
+<?php
+if ( isset( $option['description'] ) ) {
+	printf( '<p class="description">%s</p>', $option['description'] );
+}
+?>
     </div>
     <div class="box-inner-content">
 <?php
 foreach ( $option['fields'] as $key => $data ) {
 ?>
 	<div class="option option-<?php esc_attr_e( $key ); ?>">
-		<h3><?php echo $data['label']; ?></h3>
 <?php
+if ( isset( $data['label'] ) ) {
+	printf( '<h3>%s</h3>', $data['label'] );
+}
 	$data['name'] = $key;
 	lib3()->html->element( $data );
 ?>
