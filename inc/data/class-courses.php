@@ -55,4 +55,28 @@ final class CoursePress_Data_Courses extends CoursePress_Utility {
 		$enrollment_types = apply_filters( 'coursepress_course_enrollment_types', $enrollment_types, $course_id );
 		return $enrollment_types;
 	}
+
+	/**
+	 * get courses list
+	 *
+	 * @since 3.0.0
+	 */
+	public function get_list() {
+		global $CoursePress_Core;
+		$args = array(
+			'post_type' => $CoursePress_Core->course_post_type,
+			'post_status' => array( 'publish', 'draft', 'private' ),
+			'posts_per_page' => -1,
+			'suppress_filters' => true,
+		);
+		$list = array();
+		$courses = new WP_Query( $args );
+		if ( $courses->have_posts() ) {
+			while ( $courses->have_posts() ) {
+				$courses->the_post();
+				$list[ get_the_ID() ] = get_the_title();
+			}
+		}
+		return $list;
+	}
 }
