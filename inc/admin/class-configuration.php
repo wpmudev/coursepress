@@ -27,12 +27,12 @@ class CoursePress_Admin_Configuration {
 			'title' => __( 'Certificate options', 'CoursePress' ),
 			'fields' => array(
 				'coursepress_settings[basic_certificate][enabled]' => array(
-					'type' => 'checkbox',
+					'type' => 'radio_slider',
 					'title' => __( 'Enable basic certificate', 'CoursePress' ),
 					'value' => coursepress_get_setting( 'basic_certificate/enabled', true ),
 				),
 				'coursepress_settings[basic_certificate][use_cp_default]' => array(
-					'type' => 'checkbox',
+					'type' => 'radio_slider',
 					'title' => __( 'Use custom CoursePress certificate', 'CoursePress' ),
 					'value' => ! coursepress_get_setting( 'basic_certificate/use_cp_default', false ),
 				),
@@ -88,10 +88,10 @@ class CoursePress_Admin_Configuration {
 			),
 		);
 		/**
-		 *
+		 * Page orientation
 		 */
 		$config['page_orientation'] = array(
-			'title' => __( '', 'CoursePress' ),
+			'title' => __( 'Page orientation', 'CoursePress' ),
 			'fields' => array(
 				'coursepress_settings[basic_certificate][orientation]' => array(
 					'type' => 'radio',
@@ -100,6 +100,30 @@ class CoursePress_Admin_Configuration {
 						'L' => __( 'Landscape', 'CoursePress' ),
 						'P' => __( 'Portrait', 'CoursePress' ),
 					),
+				),
+			),
+		);
+		/**
+		 * Text Color
+		 */
+		$config['text_color'] = array(
+			'title' => __( 'Text Color', 'CoursePress' ),
+			'fields' => array(
+				'coursepress_settings[basic_certificate][text_color]' => array(
+					'type' => 'wp_color_picker',
+					'value' => coursepress_get_setting( 'basic_certificate/text_color', '#000' ),
+				),
+			),
+		);
+		/**
+		 * Preview
+		 */
+		$config['preview'] = array(
+			'title' => __( 'Preview', 'CoursePress' ),
+			'fields' => array(
+				'coursepress_settings[basic_certificate][preview]' => array(
+					'type' => 'button',
+					'value' => __( 'Preview Certificate', 'CoursePress' ),
 				),
 			),
 		);
