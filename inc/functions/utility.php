@@ -349,3 +349,20 @@ function coursepress_create_html( $tag, $attributes = array(), $content = '' ) {
 
 	return $CoursePress_Core->create_html( $tag, $attributes, $content );
 }
+
+/**
+ * Generate alert message.
+ *
+ * @param string $content Message content.
+ * @param string $type    Alert type.
+ *
+ * @return string
+ */
+function coursepress_alert_message( $content = '', $type = 'info' ) {
+
+	$html = '<div class="cp-alert cp-alert-' . $type . '">';
+	$html .= $content;
+	$html .= '</div>';
+
+	return $html;
+}
