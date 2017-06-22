@@ -12,6 +12,7 @@ class CoursePress_Admin_Configuration {
 		add_filter( 'coursepress_settings-certificate', array( $this, 'certificate' ) );
 		add_filter( 'coursepress_settings-general', array( $this, 'general' ) );
 		add_filter( 'coursepress_settings-import-export', array( $this, 'import_export' ) );
+		add_filter( 'coursepress_settings-slugs', array( $this, 'slugs' ) );
 	}
 
 	/**
@@ -438,13 +439,97 @@ class CoursePress_Admin_Configuration {
 		return $config;
 	}
 
+
 	/**
-	 * Contol export configuration pages
+	 * Contol slugs configuration pages
 	 *
 	 *
 	 * @since 3.0
-	 */
-	public function export( $config ) {
+		 */
+	public function slugs( $config ) {
+		/**
+			 * Course details page
+		 */
+		$config['course-details-page'] = array(
+			'title' => __( 'Course details page', 'CoursePress' ),
+			'description' => __( 'Specify Media to use when viewing course details.', 'CoursePress' ),
+			'fields' => array(
+				'coursepress_settings[slugs][Course]' => array(
+					'type' => 'text',
+					'label' => __( 'Courses', 'CoursePress' ),
+					'value' => coursepress_get_setting( 'slugs/course', 'courses' ),
+					'class' => 'large-text',
+					'desc' => sprintf(
+						__( 'Your course URL will look like: %s/%s', 'CoursePress' ),
+						home_url(),
+						coursepress_get_setting( 'slugs/course', 'courses' )
+					),
+				),
+				'coursepress_settings[slugs][]' => array(
+					'type' => 'text',
+					'label' => __( '', 'CoursePress' ),
+					'value' => coursepress_get_setting( 'slugs/', '' ),
+					'class' => 'large-text',
+					'desc' => sprintf(
+						__( '', 'CoursePress' ),
+						coursepress_get_setting()
+					),
+				),
+				'coursepress_settings[slugs][]' => array(
+					'type' => 'text',
+					'label' => __( '', 'CoursePress' ),
+					'value' => coursepress_get_setting( 'slugs/', '' ),
+					'class' => 'large-text',
+					'desc' => sprintf(
+						__( '', 'CoursePress' ),
+						coursepress_get_setting()
+					),
+				),
+				'coursepress_settings[slugs][]' => array(
+					'type' => 'text',
+					'label' => __( '', 'CoursePress' ),
+					'value' => coursepress_get_setting( 'slugs/', '' ),
+					'class' => 'large-text',
+					'desc' => sprintf(
+						__( '', 'CoursePress' ),
+						coursepress_get_setting()
+					),
+				),
+				'coursepress_settings[slugs][]' => array(
+					'type' => 'text',
+					'label' => __( '', 'CoursePress' ),
+					'value' => coursepress_get_setting( 'slugs/', '' ),
+					'class' => 'large-text',
+					'desc' => sprintf(
+						__( '', 'CoursePress' ),
+						coursepress_get_setting()
+					),
+				),
+				'coursepress_settings[slugs][]' => array(
+					'type' => 'text',
+					'label' => __( '', 'CoursePress' ),
+					'value' => coursepress_get_setting( 'slugs/', '' ),
+					'class' => 'large-text',
+					'desc' => sprintf(
+						__( '', 'CoursePress' ),
+						coursepress_get_setting()
+					),
+				),
+				'coursepress_settings[slugs][]' => array(
+					'type' => 'text',
+					'label' => __( '', 'CoursePress' ),
+					'value' => coursepress_get_setting( 'slugs/', '' ),
+					'class' => 'large-text',
+					'desc' => sprintf(
+						__( '', 'CoursePress' ),
+						coursepress_get_setting()
+					),
+				),
+			),
+		);
+		/**
+		 * return configuration
+		 */
 		return $config;
 	}
 
