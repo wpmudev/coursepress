@@ -869,8 +869,8 @@ class CoursePress_Data_Student {
 					if ( ! empty( $modules['modules'] ) ) {
 						foreach ( $modules['modules'] as $module_id => $module ) {
 							$attributes = CoursePress_Data_Module::attributes( $module_id );
-							$is_mandatory = cp_is_true( $attributes['mandatory'] );
-							$is_assessable = cp_is_true( $attributes['assessable'] );
+							$is_mandatory = ! empty( $attributes['mandatory'] ); //cp_is_true( $attributes['mandatory'] );
+							$is_assessable = ! empty( $attributes['assessable'] ); // cp_is_true( $attributes['assessable'] );
 							$module_type = $attributes['module_type'];
 							$is_answerable = preg_match( '%input-%', $attributes['module_type'] );
 							$require_instructor_assessment = ! empty( $attributes['instructor_assessable'] ) && cp_is_true( $attributes['instructor_assessable'] );
@@ -1324,6 +1324,7 @@ class CoursePress_Data_Student {
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
+
 		$completed = '';
 		/**
 		 * Sanitize $unit_id
@@ -1376,11 +1377,16 @@ class CoursePress_Data_Student {
 		 * Sanitize $unit_id
 		 */
 		if ( ! empty( $unit_id ) && is_numeric( $unit_id ) ) {
-			$mandatory = CoursePress_Helper_Utility::get_array_val(
+		    $all_mandatory = CoursePress_Helper_Utility::get_array_val(
+		        $data,
+                'completion/' . $unit_id . '/all_mandatory'
+            );
+			$completed = CoursePress_Helper_Utility::get_array_val(
 				$data,
-				'completion/' . $unit_id . '/all_mandatory'
+				'completion/' . $unit_id . '/completed_mandatory'
 			);
-			return cp_is_true( $mandatory );
+
+			return (int) $all_mandatory == (int) $completed;
 		}
 		return false;
 	}
@@ -2231,8 +2237,10 @@ class CoursePress_Data_Student {
 				$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
 				$correct = self::module_answer_is_correct( $module_id, $response );
 
-				if ( ! $correct && $is_mandatory && $is_assessable ) {
-					$incomplete++;
+				if ( ! empty( $response ) && ! $correct && $is_mandatory && $is_assessable ) {
+				    if ( ! in_array( $attributes['module_type'], array( 'input-text', 'input-textarea', 'input-upload', 'input-form' ) ) ) {
+                        $incomplete++;
+                    }
 				}
 			}
 		}

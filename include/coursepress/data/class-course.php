@@ -910,6 +910,7 @@ class CoursePress_Data_Course {
 					);
 
 					$modules = self::get_unit_modules( $unit->ID, $status, false, false, array( 'page' => $page_number ) );
+
 					uasort( $modules, array( __CLASS__, 'uasort_modules' ) );
 
 					$items = CoursePress_Helper_Utility::set_array_value(

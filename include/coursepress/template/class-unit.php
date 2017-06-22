@@ -41,7 +41,6 @@ class CoursePress_Template_Unit {
 		if ( empty( $student_id ) ) {
 			$student_id = get_current_user_id();
 		}
-        error_log($page);
 
 		$is_instructor = false;
 		$student_progress = 0;
