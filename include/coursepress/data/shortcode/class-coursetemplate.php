@@ -1127,8 +1127,10 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				 * return date with known format
 				 */
 				$unit_availability_date = CoursePress_Data_Unit::get_unit_availability_date( $unit_id, $course_id, 'c' );
+                $_unit_date = CoursePress_Data_Course::strtotime( $unit_availability_date );
+				$now = CoursePress_Data_Course::time_now();
 
-				if ( ! empty( $unit_availability_date ) && 'expired' != $unit_availability_date ) {
+				if ( ! empty( $unit_availability_date ) && $_unit_date > $now && 'expired' != $unit_availability_date ) {
 					$status_type = get_post_meta( $unit_id, 'unit_availability', true );
 					if ( 'instant' == $status_type ) {
 						$unit_status = esc_attr__( 'You need to complete the REQUIRED unit before this unit.', 'CP_TD' );
@@ -1139,6 +1141,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 						$format = $year_now !== $unit_year ? _x( 'M d, Y', 'Unit available date with year for future unit.', 'CP_TD' ) : _x( 'M d', 'Unit available date without year for future unit.', 'CP_TD' );
 						// Requires custom hook to attached
 						$when = date_i18n( $format, $unit_availability_date );
+
 						$delay_date = sprintf(
 							'<span class="unit-delay-date">%s</span>',
 							sprintf( __( 'Opens %s', 'CP_TD' ), $when )
