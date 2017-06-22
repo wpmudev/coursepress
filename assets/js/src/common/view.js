@@ -65,6 +65,7 @@
             },
             updateModel: function(ev) {
                 var input, name, type, value;
+
                 input = $(ev.currentTarget);
                 name = input.attr('name');
 
@@ -73,7 +74,6 @@
                 } else {
                     value = input.val();
                 }
-                input.css('background-color', 'red');
 
                 if ( !!this.model.get ) {
                     this.model.set(name, value);

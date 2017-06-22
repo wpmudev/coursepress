@@ -156,11 +156,11 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		$coursepress_pagenow = coursepress_is_admin();
 
-		if ( ! $coursepress_pagenow )
-			return; // Do not continue
+		if ( ! $coursepress_pagenow ) {
+            return; // Do not continue
+        }
 
 		$plugin_url = $CoursePress->plugin_url;
-
 		$this->localize_array = wp_parse_args( $this->localize_array, array(
 			'ajaxurl' => admin_url( 'admin-ajax.php' ),
 			'_wpnonce' => wp_create_nonce( 'coursepress_nonce' ),
@@ -171,6 +171,9 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'coursepress_page' => add_query_arg( 'page', 'coursepress', admin_url() ),
 			// Common use texts
 			'text' => array(
+			    'ok' => __( 'Ok', 'cp' ),
+				'cancel' => __( 'Cancel', 'cp' ),
+				'error' => __( 'Error', 'cp' ),
 				'media' => array(
 					'select_image' => __( 'Select Image', 'cp' ),
 					'select_feature_image' => __( 'Select Feature Image', 'cp' ),
@@ -324,17 +327,35 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	function get_settings_page() {
 		// Add global setting to localize array
 		$this->localize_array['settings'] = coursepress_get_setting( true );
+		$this->localize_array['messages'] = array(
+		    'no_mp_woo' => sprintf( __( '%s and %s cannot be activated simultaneously!', 'cp' ), 'MarketPress', 'WooCommerce' ),
+        );
+
+        /**
+         * Fire to get all available extensions.
+         *
+         * @since 3.0
+         * @param array $extensions
+         */
+        $extensions = apply_filters( 'coursepress_extensions', array() );
+
+        if ( ! $extensions ) {
+            $extensions = array();
+        }
+        $this->localize_array['extensions'] = $extensions;
 
 		coursepress_render( 'views/admin/settings' );
 
 		// Add TPL
+        coursepress_render( 'views/tpl/common' );
 		coursepress_render( 'views/tpl/settings-general' );
 		coursepress_render( 'views/tpl/settings-slugs' );
 		coursepress_render( 'views/tpl/settings-emails' );
 		coursepress_render( 'views/tpl/settings-capabilities' );
 		coursepress_render( 'views/tpl/settings-certificate' );
 		coursepress_render( 'views/tpl/settings-shortcodes' );
-		coursepress_render( 'views/tpl/settings-extensions' );
+		coursepress_render( 'views/tpl/settings-extensions', array( 'extensions' => $extensions ) );
+		coursepress_render( 'views/extensions/marketpress' );
 		coursepress_render( 'views/tpl/settings-import-export' );
 	}
 }

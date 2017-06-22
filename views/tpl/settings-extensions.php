@@ -13,30 +13,25 @@
                 </tr>
             </thead>
             <tbody>
-            <?php
-            /**
-             * Fire to get all available extensions.
-             *
-             * @since 3.0
-             * @param array $extensions
-             */
-            $extensions = apply_filters( 'coursepress_extensions', array() );
 
-            if ( ! empty( $extensions ) ) :
-                foreach ( $extensions as $id => $extension ) : ?>
+            <?php foreach ( $extensions as $id => $extension ) : ?>
 
             <tr>
                 <td><?php echo $extension['name']; ?></td>
                 <td><?php echo $extension['source_info']; ?></td>
                 <td>
                     <label>
-                        <input type="checkbox" name="extension[<?php echo $id; ?>]" class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
+                        <input type="checkbox" name="extension" value="<?php echo $id; ?>" {{_.checked('<?php echo $id; ?>', extensions )}} class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
                     </label>
                 </td>
             </tr>
 
-            <?php endforeach; endif; ?>
+            <?php endforeach; ?>
             </tbody>
         </table>
     </div>
+
+    <?php foreach ( $extensions as $id => $extension ) : ?>
+    <div id="extension-<?php echo $id; ?>" class="cp-box-content"></div>
+    <?php endforeach; ?>
 </script>

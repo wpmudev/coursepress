@@ -82,7 +82,7 @@
             },
 
             getExtensionsView: function() {
-                this.settings.extensions = new CoursePress.ExtensionsSettings( this.model.get('extensions'));
+                this.settings.extensions = new CoursePress.ExtensionsSettings( this.model.get('extensions'), this );
             },
 
             getImportExportView: function() {
@@ -90,11 +90,15 @@
             },
 
             saveSetting: function() {
-                var settingModel = this.settings[ this.currentPage ];
-                this.model.set( this.currentPage, settingModel.model );
+                var settingModel = this.settings[ this.currentPage ],
+                    model = settingModel.getModel();
 
-                this.model.set( 'action', 'update_settings' );
-                this.model.save();
+                if ( model ) {
+                    this.model.set(this.currentPage, model);
+
+                    this.model.set('action', 'update_settings');
+                    this.model.save();
+                }
             }
         });
 
