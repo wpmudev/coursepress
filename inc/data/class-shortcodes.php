@@ -29,16 +29,14 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 	/**
 	 * Get shortcode sub types array.
 	 *
-	 * @param string $type Shortcode type.
-	 *
 	 * @since 3.0.0
 	 *
 	 * @return array
 	 */
-	public function get_shortcode_sub_types( $type = '' ) {
+	public function get_shortcode_sub_types() {
 
-		$data = array(
-			'course'      => array(
+		$sub_types = array(
+			'course' => array(
 				'course_details'      => __( 'Course Details', 'cp' ),
 				'course_title'        => __( 'Course Title', 'cp' ),
 				'course_summary'      => __( 'Course Summary', 'cp' ),
@@ -76,13 +74,12 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 			),
 		);
 
-		if ( ! empty( $type ) ) {
-			$sub_types = isset( $data[ $type ] ) ? $data[ $type ] : array();
-		} else {
-			$sub_types = $data;
-		}
-
-		return apply_filters( 'coursepress_shortcodes_sub_types', $sub_types, $type );
+		/**
+		 * Filter to alter shortcodes sub types array.
+		 *
+		 * @param array $data Sub types.
+		 */
+		return apply_filters( 'coursepress_shortcodes_sub_types', $sub_types );
 	}
 
 	/**
@@ -1289,6 +1286,11 @@ final class CoursePress_Data_Shortcodes extends CoursePress_Utility {
 			),
 		);
 
+		/**
+		 * Filter to alter shortcode details array.
+		 *
+		 * @param array $details Shortcode details.
+		 */
 		return apply_filters( 'coursepress_shortcodes_details', $details );
 	}
 
