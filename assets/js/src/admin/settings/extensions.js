@@ -87,7 +87,7 @@
                 // MP and woo should not be activated at the same time
                 if ( _.contains( extensions, 'marketpress') &&
                     _.contains( extensions, 'woocommerce' ) ) {
-                    var popup = new CoursePress.PopUp({
+                    this.popup = new CoursePress.PopUp({
                         type: 'error',
                         message: win._coursepress.messages.no_mp_woo
                     });

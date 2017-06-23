@@ -53,4 +53,39 @@
       background-color: #f3f3f3;
     }
   }
+
+  #coursepress-setting-general {
+    .cp-box-content.cp-sep:last-of-type {
+      &:after {
+        border: 0;
+      }
+    }
+  }
+
+  @media screen {
+    @media (min-width: 768px) {
+      .option-image_width,
+      .option-image_height {
+        display: inline-block;
+        width: 50%;
+      }
+      .option-image_width {
+        margin-right: -15px;
+      }
+      .wpmui-number {
+        width: 100px;
+        @include boxsizing;
+      }
+    }
+
+    @media (min-width: 1128px) {
+      .option-image_width,
+      .option-image_height {
+        width: 35%;
+      }
+      .wpmui-number {
+        width: 80%;
+      }
+    }
+  }
 }

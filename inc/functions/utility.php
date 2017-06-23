@@ -38,12 +38,34 @@ function coursepress_is_admin() {
  * @return array
  */
 function coursepress_get_enrollment_types() {
-    return array(
+    $enrollment_types = array(
         'manually' => __( 'Manually added', 'cp' ),
         'registered' => __( 'Any registered users', 'cp' ),
         'passcode' => __( 'Any registered users with a pass code', 'cp' ),
         'prerequisite' => __( 'Registered users who completed the prerequisite course(s).', 'cp' ),
     );
+
+    /**
+     * Fire to allow additional enrollment types.
+     *
+     * @since 2.0
+     */
+    $enrollment_types = apply_filters( 'coursepress_course_enrollment_types', $enrollment_types );
+
+    return $enrollment_types;
+}
+
+function coursepress_get_default_enrollment_type() {
+    $default = 'registered';
+
+    /**
+     * Fire to allow default enrollment type to change.
+     *
+     * @since 2.0
+     */
+    $default = apply_filters( 'coursepress_course_enrollment_type_default', $default );
+
+    return $default;
 }
 
 /**
@@ -76,7 +98,8 @@ function coursepress_get_setting( $key = true, $default = '' ) {
 
     $caps = coursepress_get_array_val( $CoursePress_Data_Users->__get( 'capabilities' ), 'instructor' );
 
-    // @todo: Get 2.x default settings
+    $settings = coursepress_get_option( 'coursepress_settings', array() );
+
     $defaults = array(
         'general' => array(),
         'slugs' => array(),
@@ -89,7 +112,22 @@ function coursepress_get_setting( $key = true, $default = '' ) {
         'extensions' => array(),
     );
 
-    $settings = coursepress_get_option( 'coursepress_settings', array() );
+    if ( ! empty( $settings ) ) {
+        // Legacy settings
+        $defaults['general']['image_width'] = coursepress_get_array_val( $settings, 'course/image_width' );
+        $defaults['general']['image_height'] = coursepress_get_array_val( $settings, 'course/image_height' );
+        $defaults['general']['details_media_type'] = coursepress_get_array_val( $settings, 'course/details_media_type' );
+        $defaults['general']['details_media_priority'] = coursepress_get_array_val( $settings, 'course/details_media_priority' );
+        $defaults['general']['listing_media_type'] = coursepress_get_array_val( $settings, 'course/listing_media_type' );
+        $defaults['general']['listing_media_priority'] = coursepress_get_array_val( $settings, 'course/listing_media_priority' );
+        $defaults['general']['order_by'] = coursepress_get_array_val( $settings, 'course/order_by' );
+        $defaults['general']['order_by_direction'] = coursepress_get_array_val( $settings, 'course/order_by_direction' );
+        $defaults['general']['instructor_show_username'] = coursepress_get_array_val( $settings, 'instructor/show_username' );
+        $defaults['general']['enrollment_type_default'] = coursepress_get_array_val( $settings, 'course/enrollment_type_default' );
+        $defaults['general']['reports_font'] = coursepress_get_array_val( $settings, 'reports/font' );
+    }
+
+
     $settings = wp_parse_args( $settings, $defaults );
 
     if ( is_bool( $key ) && TRUE === $key ) {

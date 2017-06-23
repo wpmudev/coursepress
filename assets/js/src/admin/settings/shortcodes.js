@@ -9,7 +9,7 @@
             el: $('#coursepress-setting-shortcodes'),
             events: {
                 'click .cp-select-list.cp-type li': 'typeSelect',
-                'click .cp-select-list.cp-sub-type li': 'subTypeSelect',
+                'click .cp-select-list.cp-sub-type li': 'subTypeSelect'
             },
 
             typeSelect: function(ev) {

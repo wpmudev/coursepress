@@ -1,0 +1,52 @@
+.coursepress-wrap {
+  .wpmui-field-description {
+    font-size: 13.5px;
+    color: $grey_2;
+  }
+  .wpmui-checkbox-wrapper {
+    .wpmui-field-checkbox {
+      visibility: hidden;
+      position: absolute;
+    }
+    .wpmui-checkbox-caption {
+      font-size: 14px;
+      display: block;
+      color: $dark_1;
+
+      .cp-toggle-btn {
+        vertical-align: top;
+        margin: 3px 10px 0 -25px;
+      }
+    }
+    .wpmui-field-description {
+      margin-top: -10px !important;
+    }
+    .wpmui-field-checkbox:checked + .wpmui-checkbox-caption {
+      .cp-toggle-btn {
+        &:after {
+          left: 20.5px;
+          background-color: $blue_1;
+          @include transition(0.5s);
+        }
+      }
+    }
+  }
+
+  .wpmui-field-select {
+    width: 100%;
+  }
+  .wpmui-select-wrapper {
+    .wpmui-field-label {
+      padding-bottom: 8px;
+    }
+  }
+
+  @media screen {
+    @media (min-width: 800px) {
+      .wpmui-field-description {
+        padding: 0 0 0 55px;
+        margin-top: -10px !important;
+      }
+    }
+  }
+}

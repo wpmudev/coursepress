@@ -27,36 +27,6 @@ final class CoursePress_Data_Courses extends CoursePress_Utility {
 	}
 
 	/**
-	 * return array of allowed enrollment restrictions.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param integer $course_id Course ID
-	 *
-	 * @return string
-	 */
-	public function get_enrollment_types_array( $course_id = 0 ) {
-		$enrollment_types = array(
-			'manually' => __( 'Manually added only', 'CP_TD' ),
-		);
-		if ( coursepress_users_can_register() ) {
-			$enrollment_types = array_merge( $enrollment_types, array(
-				'anyone' => __( 'Any registered users', 'CP_TD' ),
-				'passcode' => __( 'Any registered users with a pass code', 'CP_TD' ),
-				'prerequisite' => __( 'Registered users who completed the prerequisite course(s)', 'CP_TD' ),
-			) );
-		} else {
-			$enrollment_types = array_merge( $enrollment_types, array(
-				'registered' => __( 'Any registered users', 'CP_TD' ),
-				'passcode' => __( 'Any registered users with a pass code', 'CP_TD' ),
-				'prerequisite' => __( 'Registered users who completed the prerequisite course(s)', 'CP_TD' ),
-			) );
-		}
-		$enrollment_types = apply_filters( 'coursepress_course_enrollment_types', $enrollment_types, $course_id );
-		return $enrollment_types;
-	}
-
-	/**
 	 * get courses list
 	 *
 	 * @since 3.0.0
