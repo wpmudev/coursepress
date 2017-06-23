@@ -2,6 +2,13 @@
 ***inc/functions/utility.php***
 -
 
+####coursepress_alert_message( `string` $content, `string` $type )
+Create alert messages.
+
+**Parameters:**
+* $content - Content for alert message.
+* $type - Alert type. Default: `info`
+
 ####coursepress_is_admin()
 Check if the current page is one of CP admin pages.
 

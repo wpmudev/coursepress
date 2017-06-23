@@ -377,3 +377,22 @@ function coursepress_users_can_register() {
 	}
 	return $_allow_register;
 }
+
+/**
+ * Generate alert message.
+ *
+ * @param string $content Message content.
+ * @param string $type    Alert type.
+ *
+ * @since 3.0.0
+ *
+ * @return string
+ */
+function coursepress_alert_message( $content = '', $type = 'info' ) {
+
+	$html = '<div class="cp-alert cp-alert-' . $type . '">';
+	$html .= $content;
+	$html .= '</div>';
+
+	return $html;
+}
