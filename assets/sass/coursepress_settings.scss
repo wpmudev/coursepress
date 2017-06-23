@@ -1,2 +1,56 @@
 // Use in Settings page
 @import "common/mixin.scss";
+@import "admin/table.scss";
+
+.coursepress-wrap {
+
+  .cp-code-box {
+    font-family: $code_font;
+    display: block;
+    border: 1px solid $color_1;
+    background-color: $color_2;
+    padding: 0 10px;
+    @include radius(3px);
+    @include clearfix;
+    width: $width;
+
+    p {
+      line-height: 1.5;
+    }
+  }
+  .cp-select-list {
+    height: 250px;
+    max-width: 98%;
+    overflow: auto;
+    border: 1px solid $grey_4;
+    padding-top: 10px;
+    li {
+      margin: 0;
+      border-right: none;
+      padding: 8px 15px;
+      text-align: left;
+      &.active {
+        border-top: 1px solid $grey_4;
+        border-bottom: 1px solid $grey_4;
+        @include radius(0);
+      }
+    }
+  }
+  .cp-usage-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 600;
+    height: 6px;
+    margin: 10px 0 2px 0;
+  }
+  .cp-attr-sub-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #888888;
+  }
+  .cp-box-content {
+    &.cp-shortcode-list {
+      background-color: #f3f3f3;
+    }
+  }
+}
