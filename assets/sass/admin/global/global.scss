@@ -65,4 +65,15 @@
       border-bottom: 1px solid $grey_6;
     }
   }
+  .cp-code {
+    font-family: $code_font;
+    background-color: $grey_5;
+    font-size: 13px;
+    padding: 6px;
+    display: inline-block;
+    @include radius(3px);
+  }
+  p.cp-code {
+    width: $width;
+  }
 }
