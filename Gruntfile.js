@@ -29,110 +29,110 @@ module.exports = function(grunt) {
 
 		// Folder that contains the CSS files.
 		css_folder: 'assets/css/',
-        sass_folder: 'assets/sass/',
+		sass_folder: 'assets/sass/',
 
 		js_files_concat: {
-            'admin-general.js': [
-                // Add JS that will be loaded to all CP pages
-                'assets/js/src/common/coursepress.js',
-                'assets/js/src/common/request.js',
-                'assets/js/src/common/view.js',
-                'assets/js/src/common/add-image.js',
-                'assets/js/src/common/dropdown-menu.js'
-                // assets/js/src/admin/general/....
-            ],
-            'coursepress.js': [
-                // Add JS that will be loaded at courselist page
-                // assets/js/src/admin/courselist/...
-                'assets/js/src/admin/courselist/courselist.js'
-            ],
-            'coursepress_course.js': [
-                // ADd JS that will be loaded at course edit page
-                // assets/js/src/admin/course-edit/...
-                'assets/js/src/admin/course-edit/course-model.js',
-                'assets/js/src/admin/course-edit/course-type.js',
-                'assets/js/src/admin/course-edit/course-settings.js',
-                'assets/js/src/admin/course-edit/course-units.js',
-                'assets/js/src/admin/course-edit/course-setup.js'
-            ],
-            'coursepress_students.js': [
-                // Add JS that will be loaded at Students page
-                // assets/js/src/admin/students/...
-            ],
-            'coursepress_instructors.js': [
-                // Add JS that will be loaded at Instructors page
-                // assets/js/src/admin/instructors
-            ],
-            'coursepress_assessments.js': [
-                // Add JS that will be loaded at Assessments page
-                // assets/js/src/admin/assessments/...
-            ],
-            'coursepress_forum.js': [
-                // Add JS that will be loaded at Forum page
-                // assets/js/src/admin/forum/...
-            ],
-            'coursepress_notifications.js': [
-                // Add JS that will be loaded at Notifications page
-                // assets/js/src/admin/notifications/...
-            ],
-            'coursepress_settings.js': [
-                // Add JS that will be loaded at Settings page
-                // assets/js/src/admin/settings/....
-                'assets/js/src/admin/settings/general.js',
-                'assets/js/src/admin/settings/slugs.js',
-                'assets/js/src/admin/settings/emails.js',
-                'assets/js/src/admin/settings/capabilities.js',
-                'assets/js/src/admin/settings/certificate.js',
-                'assets/js/src/admin/settings/shortcodes.js',
-                'assets/js/src/admin/settings/extensions.js',
-                'assets/js/src/admin/settings/import-export.js',
-                'assets/js/src/admin/settings/settings.js'
-            ],
-            'coursepress-front.js': [
-                'assets/js/src/common/coursepress.js',
-                'assets/js/src/common/request.js',
-                'assets/js/src/common/view.js',
-                'assets/js/src/front/course-overview.js'
-            ]
+			'assets/js/admin-general.js': [
+				// Add JS that will be loaded to all CP pages
+				'assets/js/src/common/coursepress.js',
+				'assets/js/src/common/request.js',
+				'assets/js/src/common/view.js',
+				'assets/js/src/common/add-image.js',
+				'assets/js/src/common/dropdown-menu.js'
+				// assets/js/src/admin/general/....
+			],
+			'assets/js/coursepress.js': [
+				// Add JS that will be loaded at courselist page
+				// assets/js/src/admin/courselist/...
+				'assets/js/src/admin/courselist/courselist.js'
+			],
+			'assets/js/coursepress_course.js': [
+				// ADd JS that will be loaded at course edit page
+				// assets/js/src/admin/course-edit/...
+				'assets/js/src/admin/course-edit/course-model.js',
+				'assets/js/src/admin/course-edit/course-type.js',
+				'assets/js/src/admin/course-edit/course-settings.js',
+				'assets/js/src/admin/course-edit/course-units.js',
+				'assets/js/src/admin/course-edit/course-setup.js'
+			],
+			'assets/js/coursepress_students.js': [
+				// Add JS that will be loaded at Students page
+				// assets/js/src/admin/students/...
+			],
+			'assets/js/coursepress_instructors.js': [
+				// Add JS that will be loaded at Instructors page
+				// assets/js/src/admin/instructors
+			],
+			'assets/js/coursepress_assessments.js': [
+				// Add JS that will be loaded at Assessments page
+				// assets/js/src/admin/assessments/...
+			],
+			'assets/js/coursepress_forum.js': [
+				// Add JS that will be loaded at Forum page
+				// assets/js/src/admin/forum/...
+			],
+			'assets/js/coursepress_notifications.js': [
+				// Add JS that will be loaded at Notifications page
+				// assets/js/src/admin/notifications/...
+			],
+			'assets/js/coursepress_settings.js': [
+				// Add JS that will be loaded at Settings page
+				// assets/js/src/admin/settings/....
+				'assets/js/src/admin/settings/general.js',
+				'assets/js/src/admin/settings/slugs.js',
+				'assets/js/src/admin/settings/emails.js',
+				'assets/js/src/admin/settings/capabilities.js',
+				'assets/js/src/admin/settings/certificate.js',
+				'assets/js/src/admin/settings/shortcodes.js',
+				'assets/js/src/admin/settings/extensions.js',
+				'assets/js/src/admin/settings/import-export.js',
+				'assets/js/src/admin/settings/settings.js'
+			],
+			'assets/js/coursepress-front.js': [
+				'assets/js/src/common/coursepress.js',
+				'assets/js/src/common/request.js',
+				'assets/js/src/common/view.js',
+				'assets/js/src/front/course-overview.js'
+			]
 		},
 
-        // List of JS files to validate
-        js_src_files: [
-            'Gruntfile.js',
-            'assets/js/src/admin/**/*.js',
-            'assets/js/src/front/**/*.js',
-            '!assets/js/src/common/heading.js',
-            '!assets/js/src/common/footer.js'
-        ],
+		// List of JS files to validate
+		js_src_files: [
+			'Gruntfile.js',
+			'assets/js/src/admin/**/*.js',
+			'assets/js/src/front/**/*.js',
+			'!assets/js/src/common/heading.js',
+			'!assets/js/src/common/footer.js'
+		],
 
 		// SASS files to process. Resulting CSS files will be minified as well.
 		css_files_compile: {
 			'assets/css/admin-common.css': 'assets/sass/admin-common.scss',
-            'assets/css/coursepress.css': 'assets/sass/coursepress.scss',
+			'assets/css/coursepress.css': 'assets/sass/coursepress.scss',
 			'assets/css/coursepress_course.css': 'assets/sass/coursepress_course.scss',
-            'assets/css/coursepress_students.css': 'assets/sass/coursepress_students.scss',
-            'assets/css/coursepress_instructors.css': 'assets/sass/coursepress_instructors.scss',
-            'assets/css/coursepress_assessments.css': 'assets/sass/coursepress_assessments.scss',
-            'assets/css/coursepress_forum.css': 'assets/sass/coursepress_forum.scss',
-            'assets/css/coursepress_notifications.css': 'assets/sass/coursepress_notifications.scss',
-            'assets/css/coursepress_settings.css': 'assets/sass/coursepress_settings.scss'
+			'assets/css/coursepress_students.css': 'assets/sass/coursepress_students.scss',
+			'assets/css/coursepress_instructors.css': 'assets/sass/coursepress_instructors.scss',
+			'assets/css/coursepress_assessments.css': 'assets/sass/coursepress_assessments.scss',
+			'assets/css/coursepress_forum.css': 'assets/sass/coursepress_forum.scss',
+			'assets/css/coursepress_notifications.css': 'assets/sass/coursepress_notifications.scss',
+			'assets/css/coursepress_settings.css': 'assets/sass/coursepress_settings.scss'
 		},
 
 		// PHP files to validate.
 		php_files: [
 			'coursepress.php',
 			//'inc/*.php',
-            //'inc/**/*.php',
-            //'views/*.php',
-            //'views/**/*.php',
-            //'tests/php/*.php',
-            //'tests/php/**/*.php'
+			//'inc/**/*.php',
+			//'views/*.php',
+			//'views/**/*.php',
+			//'tests/php/*.php',
+			//'tests/php/**/*.php'
 		],
 
 		// Regex patterns to exclude from transation.
 		translation: {
 			ignore_files: [
-				'(^.php)',      // Ignore non-php files.
+				'(^.php)',	  // Ignore non-php files.
 				'tests/', // Upgrade tests
 				'node_modules/'
 			],
@@ -142,7 +142,7 @@ module.exports = function(grunt) {
 
 		// Build branches.
 		plugin_branches: {
-            exclude_pro: [
+			exclude_pro: [
 				'../release/readme.txt'
 			],
 			exclude_free: [
@@ -177,12 +177,12 @@ module.exports = function(grunt) {
 				expand: true,
 				src: [
 					'../release/*.php',
-                    '../release/inc/*.php',
-                    '../release/inc/**/*.php',
-                    '../release/views/*.php',
-                    '../release/views/**/*.php',
-                    '../release/assets/css/*.css',
-                    '../release/assets/js/*.js',
+					'../release/inc/*.php',
+					'../release/inc/**/*.php',
+					'../release/views/*.php',
+					'../release/views/**/*.php',
+					'../release/assets/css/*.css',
+					'../release/assets/js/*.js',
 					'!../release/themes/*'
 				]
 			}
@@ -243,7 +243,7 @@ module.exports = function(grunt) {
 			},
 			scripts: {
 				files: conf.js_files_concat
-			}
+			},
 		},
 
 		// JS: Compile/minify js files.
@@ -370,10 +370,10 @@ module.exports = function(grunt) {
 			}
 		},
 		wpmu_pot2mo: {
-		    files: {
-		        src: 'language/*.pot',
-		        expand: true
-		    }
+			files: {
+				src: 'language/*.pot',
+				expand: true
+			}
 		},
 
 		// COMPRESS: Create a zip-archive of the plugin (for distribution).
@@ -506,19 +506,19 @@ module.exports = function(grunt) {
 					'!node_modules/*',
 					'!node_modules/**',
 					'!bitbucket-pipelines.yml',
-                    '!.idea', // PHPStorm settings
+					'!.idea', // PHPStorm settings
 					'!.git',
 					'!Gruntfile.js',
 					'!package.json',
 					'!tests/*',
 					'!tests/**',
-                    '!assets/js/src',
-                    '!assets/js/src/*',
-                    '!assets/js/src/**',
-                    '!assets/sass',
-                    '!assets/sass/*',
-                    '!assets/sass/**',
-                    'themes/coursepress/.git'
+					'!assets/js/src',
+					'!assets/js/src/*',
+					'!assets/js/src/**',
+					'!assets/sass',
+					'!assets/sass/*',
+					'!assets/sass/**',
+					'themes/coursepress/.git'
 				],
 				dest: '../release',
 				noEmpty: true
@@ -537,13 +537,13 @@ module.exports = function(grunt) {
 					'!package.json',
 					'!tests/*',
 					'!tests/**',
-                    '!assets/js/src',
-                    '!assets/js/src/*',
-                    '!assets/js/src/**',
-                    '!assets/sass',
-                    '!assets/sass/*',
-                    '!assets/sass/**',
-                    'themes/coursepress/.git'
+					'!assets/js/src',
+					'!assets/js/src/*',
+					'!assets/js/src/**',
+					'!assets/sass',
+					'!assets/sass/*',
+					'!assets/sass/**',
+					'themes/coursepress/.git'
 				],
 				dest: '../release',
 				noEmpty: true
@@ -588,7 +588,7 @@ module.exports = function(grunt) {
 
 		  var dest = file.dest;
 		  if (dest.indexOf('.pot') > -1) {
-		      dest = dest.replace('.pot', '.mo');
+				dest = dest.replace('.pot', '.mo');
 		  }
 		  grunt.file.write(dest);
 
