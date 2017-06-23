@@ -1,6 +1,6 @@
 <?php
 /**
- * Contol configuration pages
+ * Control configuration pages
  *
  *
  * @since 3.0
@@ -9,11 +9,135 @@
 class CoursePress_Admin_Configuration {
 
 	public function __construct() {
-
+		add_filter( 'coursepress_settings-certificate', array( $this, 'certificate' ) );
 		add_filter( 'coursepress_settings-general', array( $this, 'general' ) );
 		add_filter( 'coursepress_settings-capabilities', array( $this, 'capabilities' ) );
 	}
 
+	/**
+	 * Contol certificate configuration pages
+	 *
+	 *
+	 * @since 3.0
+	 */
+	public function certificate( $config ) {
+		/**
+		 * Certificate Options
+		 */
+		$config['certificate-options'] = array(
+			'title' => __( 'Certificate options', 'CoursePress' ),
+			'fields' => array(
+				'coursepress_settings[basic_certificate][enabled]' => array(
+					'type' => 'radio_slider',
+					'title' => __( 'Enable basic certificate', 'CoursePress' ),
+					'value' => coursepress_get_setting( 'basic_certificate/enabled', true ),
+				),
+				'coursepress_settings[basic_certificate][use_cp_default]' => array(
+					'type' => 'radio_slider',
+					'title' => __( 'Use custom CoursePress certificate', 'CoursePress' ),
+					'value' => ! coursepress_get_setting( 'basic_certificate/use_cp_default', false ),
+				),
+			),
+		);
+		/**
+		 * Custom Certificate
+		 * /
+		$config['custom-certificate'] = array(
+			'title' => __( 'Custom Certificate', 'CoursePress' ),
+			'fields' => array(
+				'coursepress_settings[basic_certificate][content]' => array(
+					'type' => 'wp_editor',
+					'id' => 'coursepress_settings_basic_certificate_content',
+					'value' => coursepress_get_setting( 'basic_certificate/content', $this->default_certificate_content() ),
+				),
+			),
+		);
+		/**
+		 * Background Image
+		 */
+		$config['background_image'] = array(
+			'title' => __( 'Background Image', 'CoursePress' ),
+			'fields' => array(
+				'coursepress_settings[basic_certificate][background_image]' => array(
+					'type' => 'image',
+					'value' => coursepress_get_setting( 'basic_certificate/background_image' ),
+				),
+			),
+		);
+		/**
+		 *
+		 */
+		$config['content_margin'] = array(
+			'title' => __( 'Content Margin', 'CoursePress' ),
+			'description' => __( '', 'CoursePress' ),
+			'fields' => array(
+				'coursepress_settings[basic_certificate][margin][top]' => array(
+					'type' => 'number',
+					'title' => __( 'Top', 'CoursePress' ),
+					'value' => coursepress_get_setting( 'basic_certificate/margin/top' ),
+				),
+				'coursepress_settings[basic_certificate][margin][left]' => array(
+					'type' => 'number',
+					'title' => __( 'Left', 'CoursePress' ),
+					'value' => coursepress_get_setting( 'basic_certificate/margin/left' ),
+				),
+				'coursepress_settings[basic_certificate][margin][right]' => array(
+					'type' => 'number',
+					'title' => __( 'Right', 'CoursePress' ),
+					'value' => coursepress_get_setting( 'basic_certificate/margin/right' ),
+				),
+			),
+		);
+		/**
+		 * Page orientation
+		 */
+		$config['page_orientation'] = array(
+			'title' => __( 'Page orientation', 'CoursePress' ),
+			'fields' => array(
+				'coursepress_settings[basic_certificate][orientation]' => array(
+					'type' => 'radio',
+					'value' => coursepress_get_setting( 'basic_certificate/orientation', 'L' ),
+					'field_options' => array(
+						'L' => __( 'Landscape', 'CoursePress' ),
+						'P' => __( 'Portrait', 'CoursePress' ),
+					),
+				),
+			),
+		);
+		/**
+		 * Text Color
+		 */
+		$config['text_color'] = array(
+			'title' => __( 'Text Color', 'CoursePress' ),
+			'fields' => array(
+				'coursepress_settings[basic_certificate][text_color]' => array(
+					'type' => 'wp_color_picker',
+					'value' => coursepress_get_setting( 'basic_certificate/text_color', '#000' ),
+				),
+			),
+		);
+		/**
+		 * Preview
+		 */
+		$config['preview'] = array(
+			'title' => __( 'Preview', 'CoursePress' ),
+			'fields' => array(
+				'coursepress_settings[basic_certificate][preview]' => array(
+					'type' => 'button',
+					'value' => __( 'Preview Certificate', 'CoursePress' ),
+				),
+			),
+		);
+
+		return $config;
+	}
+
+	/**
+	 * Contol general configuration pages
+	 *
+	 *
+	 * @since 3.0
+	 */
 	public function general( $config ) {
 		/**
 		 * Course details page
@@ -231,6 +355,31 @@ class CoursePress_Admin_Configuration {
 		);
 		return $config;
 	}
+
+	private function default_certificate_content()
+    {
+        $msg = __(
+            '<h2>%1$s %2$s</h2>
+			has successfully completed the course
+
+			<h3>%3$s</h3>
+
+			<h4>Date: %4$s</h4>
+			<small>Certificate no.: %5$s</small>', 'CoursePress'
+        );
+
+        $default_certification_content = sprintf(
+            $msg,
+            'FIRST_NAME',
+            'LAST_NAME',
+            'COURSE_NAME',
+            'COMPLETION_DATE',
+            'CERTIFICATE_NUMBER',
+            'UNIT_LIST'
+        );
+
+        return $default_certification_content;
+    }
 
 	/**
 	 * Capabilities settings page.
