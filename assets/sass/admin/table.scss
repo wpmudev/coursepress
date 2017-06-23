@@ -82,4 +82,14 @@
       }
     }
   }
+  .cp-shortcode-table {
+    width: $width;
+    th, td {
+      padding: 5px 0px;
+      vertical-align: text-top;
+      &:first-of-type {
+        width: 30%;
+      }
+    }
+  }
 }
