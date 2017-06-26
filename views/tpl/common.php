@@ -11,3 +11,8 @@
         <button type="button" class="cp-btn cp-btn-default cp-btn-browse"><?php _e( 'Browse', 'cp' ); ?></button>
     </div>
 </script>
+<script type="text/template" id="coursepress-tokens">
+    <div class="cp-alert cp-alert-info">
+        <p><?php _e( 'These codes will be replaced with actual data:', 'cp' ); ?></p>
+    </div>
+</script>

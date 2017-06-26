@@ -106,7 +106,7 @@
         </div>
     </div>
 
-    <div class="cp-box-content cp-sep">
+    <div class="cp-box-content">
         <div class="box-label-area">
             <label class="label"><?php _e( 'Instructors & Facilitators', 'cp' ); ?></label>
             <p class="description"><?php _e( 'Instructors put a course together, whereas facilitators help answer student questions after the course has been launed. Instructor information is displayed on the front-end of the site, whereas a facilitator\'s is not.', 'cp' ); ?></p>
@@ -127,48 +127,6 @@
                     <p class="description"><?php _e( 'This course currently have no facilitators', 'cp' ); ?></p>
                 </div>
                 <button type="button" class="cp-btn cp-bordered-btn cp-btn-xs cp-right"><?php _e( 'Add Facilitators', 'cp' ); ?></button>
-            </div>
-        </div>
-    </div>
-
-    <div class="cp-box-content cp-sep">
-        <div class="box-label-area">
-            <label class="label"><?php _e( 'Course Completion', 'cp' ); ?></label>
-            <p class="description"></p>
-        </div>
-
-        <div class="box-inner-content">
-            <div class="cp-box">
-                <ul class="cp-flex cp-input-group">
-                    <li class="cp-div-flex"><?php _e( 'Pre', 'cp' ); ?></li>
-                    <li class="cp-div-flex"><?php _e( 'Success', 'cp' ); ?></li>
-                    <li class="cp-div-flex"><?php _e( 'Failed', 'cp' ); ?></li>
-                </ul>
-            </div>
-
-            <div class="cp-box">
-                <label class="label" for="pre-completion-title"><?php _e( 'Page Title', 'cp' ); ?></label>
-                <input type="text" id="pre-completion-title" class="widefat" name="meta_pre_completion_title" value="{{pre_completion_title}}" />
-            </div>
-            <div class="cp-box">
-                <label class="label" for="pre-completion-content"><?php _e( 'Content', 'cp' ); ?></label>
-                <textarea id="pre-completion-content" class="widefat" name="meta_pre_completion_content" rows="5">{{pre_completion_content}}</textarea>
-            </div>
-        </div>
-    </div>
-
-    <div class="cp-box-content">
-        <div class="box-label-area">
-            <label class="label"><?php _e( 'Certificate', 'cp' ); ?></label>
-        </div>
-
-        <div class="box-inner-content">
-            <div class="cp-box cp-toggle-box">
-                <label>
-                    <input type="checkbox" class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
-                    <span class="label"><?php _e( 'Enable custom certificate setup', 'cp' ); ?></span>
-                </label>
-                <p class="description"><?php _e( 'Creates custom certificate for this course that overrides default certificate settings.', 'cp' ); ?></p>
             </div>
         </div>
     </div>
