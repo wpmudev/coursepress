@@ -49,8 +49,23 @@
     color: #888888;
   }
   .cp-box-content {
+      .box-label-area,
+      .box-inner-content {
+          border-top: 1px solid $grey_5;
+      }
     &.cp-shortcode-list {
       background-color: #f3f3f3;
+    }
+    .box-inner-content {
+        .half {
+            width: 48%;
+            float: left;
+            margin-right: 2%;
+            &.half-last {
+                margin-right: 0;
+                margin-left: 2%;
+            }
+        }
     }
   }
 
@@ -136,3 +151,4 @@
     }
   }
 }
+
