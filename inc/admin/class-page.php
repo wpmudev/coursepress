@@ -254,7 +254,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$args = array(
 			'columns' => get_column_headers( $screen ),
 			'hidden_columns' => get_hidden_columns( $screen ),
-			'courses' => $CoursePress_User->get_accessible_courses( false ),
+			'courses' => $CoursePress_User->get_accessible_courses( false, false ),
 			'course_edit_link' => add_query_arg( 'page', 'coursepress_course', admin_url( 'admin.php' ) ),
 		);
 
