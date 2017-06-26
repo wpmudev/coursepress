@@ -45,14 +45,15 @@
     }
 
     .course-content {
+      border: 1px solid $grey_5;
+      background-color: #ffffff;
+      @include radius(6px);
+
       .course-content-tab {
         display: none;
 
         &.tab-active {
           display: block;
-          background-color: #ffffff;
-          border: 1px solid $grey_5;
-          @include radius(6px);
         }
       }
 
@@ -110,8 +111,10 @@
 
     .course-footer {
       display: block;
-      margin: 25px 0;
+      margin: 25px 0 0 0;
       text-align: right;
+      border-top: 1px solid $grey_5;
+      padding: 25px;
       @include clearfix;
 
       .cp-btn {
@@ -122,6 +125,21 @@
 
       .step-back {
         float: left;
+      }
+
+      .cp-btn-active {
+        .fa {
+          display: none;
+        }
+      }
+
+      .cp-progress {
+        .fa {
+          display: inline-block;
+          font-size: 20px;
+          margin-right: 8px;
+          @include transition(0.4s);
+        }
       }
     }
   }
@@ -135,11 +153,11 @@
 
         .cp-menu-items {
           width: 180px;
+          margin-right: 20px;
         }
 
         .course-content {
           width: $width/12*9.5;
-          padding-left: 20px;
         }
 
         .cp-box-content {

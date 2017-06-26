@@ -6,26 +6,6 @@
  * @package CoursePress
  */
 final class CoursePress_Data_Courses extends CoursePress_Utility {
-
-	public function __construct() {
-	}
-
-	/**
-	 * Get enrollment type default.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param $integer $course_id Course ID
-	 */
-	public function get_enrollment_type_default( $course_id = 0 ) {
-		$default = 'registered';
-		if ( coursepress_users_can_register() ) {
-			$default = 'anyone';
-		}
-		$default = coursepress_get_setting( 'course/enrollment_type_default', $default );
-		return apply_filters( 'coursepress_course_enrollment_type_default', $default, $course_id );
-	}
-
 	/**
 	 * get courses list
 	 *

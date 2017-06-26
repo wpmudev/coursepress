@@ -28,15 +28,16 @@
 	<?php $i = 0; ?>
 	<?php foreach ( $options as $option ) : ?>
 		<div class="cp-box-content cp-caps-fields <?php echo $i > 0 ? 'inactive' : ''; ?>" id="<?php echo $option['id']; ?>">
-			<div class="box-label-area">
-				<h2 class="label"><?php echo $option['title']; ?></h2>
-				<?php if ( isset( $option['description'] ) ) : ?>
-					<?php printf( '<p class="description">%s</p>', $option['description'] ); ?>
-				<?php endif; ?>
-			</div>
-			<div class="box-inner-content"><div class="cps-flex">
+            <div class="cp-box cp-sep">
+                <h2 class="label"><?php echo $option['title']; ?></h2>
+                <?php if ( isset( $option['description'] ) ) : ?>
+                    <?php printf( '<p class="description">%s</p>', $option['description'] ); ?>
+                <?php endif; ?>
+            </div>
+
+			<div class="box-inner-content">
 				<?php foreach ( $option['fields'] as $key => $data ) : ?>
-					<div class="option option-<?php esc_attr_e( $key ); ?>">
+					<div class="flex-half option option-<?php esc_attr_e( $key ); ?>">
 						<?php if ( isset( $data['label'] ) ) : ?>
 							<?php printf( '<h3>%s</h3>', $data['label'] ); ?>
 						<?php endif; ?>
@@ -44,7 +45,7 @@
 						<?php lib3()->html->element( $data ); ?>
 					</div>
 				<?php endforeach; ?>
-			</div></div>
+			</div>
 		</div>
 		<?php $i++; ?>
 	<?php endforeach; ?>

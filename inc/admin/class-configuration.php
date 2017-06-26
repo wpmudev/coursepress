@@ -487,55 +487,53 @@ class CoursePress_Admin_Configuration {
 	 */
 	public function capabilities( $config ) {
 
+        $toggle_input = coursepress_create_html( 'span', array( 'class' => 'cp-toggle-btn' ) );
+
 		// General capabilities.
 		$config['capabilities/general'] = array(
 			'title' => __( 'General', 'cp' ),
 			'id' => 'cp-cap-general',
+			'description' => __( 'Instructor of my courses can:', 'cp' ),
 			'fields' => array(
-				'coursepress_settings[capabilities][general][plugin_menu]' => array(
-					'type' => 'radio_slider',
-					'title' => __( 'Access to plugin menu', 'cp' ),
-					'value' => coursepress_get_setting( 'capabilities/general/plugin_menu', true ),
+				'coursepress_dashboard_cap' => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Access the main CoursePress menu', 'cp' ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_dashboard_cap', true ),
 				),
-				'coursepress_settings[capabilities][general][course_menu]' => array(
-					'type' => 'radio_slider',
-					'title' => __( 'Access to the Courses menu item', 'cp' ),
-					'value' => coursepress_get_setting( 'capabilities/general/course_menu', true ),
+				'coursepress_courses_cap' => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Access to Courses submenu', 'cp' ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_courses_cap', true ),
 				),
-				'coursepress_settings[capabilities][general][instructors_menu]' => array(
-					'type' => 'radio_slider',
-					'title' => __( 'Access to the Intructors menu item', 'cp' ),
-					'value' => coursepress_get_setting( 'capabilities/general/instructors_menu', true ),
+				'coursepress_instructors_cap' => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Access to the Intructors page', 'cp' ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_instructors_cap', true ),
 				),
-				'coursepress_settings[capabilities][general][students_menu]' => array(
-					'type' => 'radio_slider',
-					'title' => __( 'Access to the Students menu item', 'cp' ),
-					'value' => coursepress_get_setting( 'capabilities/general/students_menu', true ),
+				'coursepress_students_dap' => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Access to the Students page', 'cp' ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_students_cap', true ),
 				),
-				'coursepress_settings[capabilities][general][assesment]' => array(
-					'type' => 'radio_slider',
-					'title' => __( 'Assessment', 'cp' ),
-					'value' => coursepress_get_setting( 'capabilities/general/assesment', true ),
+				'coursepress_assessments_cap' => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Access to the Assessments page', 'cp' ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_assessments_cap', true ),
 				),
-				'coursepress_settings[capabilities][general][reports]' => array(
-					'type' => 'radio_slider',
-					'title' => __( 'Reports', 'cp' ),
-					'value' => coursepress_get_setting( 'capabilities/general/reports', true ),
+				'coursepress_notifications_cap' => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Access to the Notifications page', 'cp' ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_notifications_cap', true ),
 				),
-				'coursepress_settings[capabilities][general][notifications]' => array(
-					'type' => 'radio_slider',
-					'title' => __( 'Notifications', 'cp' ),
-					'value' => coursepress_get_setting( 'capabilities/general/notifications', true ),
+				'coursepress_discussions_cap' => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Access to the Discussions page', 'cp' ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_discussions_cap', true ),
 				),
-				'coursepress_settings[capabilities][general][discussions]' => array(
-					'type' => 'radio_slider',
-					'title' => __( 'Discussions', 'cp' ),
-					'value' => coursepress_get_setting( 'capabilities/general/discussions', true ),
-				),
-				'coursepress_settings[capabilities][general][settings_menu]' => array(
-					'type' => 'radio_slider',
-					'title' => __( 'Access to the Settings menu item', 'cp' ),
-					'value' => coursepress_get_setting( 'capabilities/general/settings_menu', true ),
+				'coursepress_settings_cap' => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Access to the Settings page', 'cp' ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_settings_cap', true ),
 				),
 			),
 		);
@@ -545,30 +543,35 @@ class CoursePress_Admin_Configuration {
 			'title' => __( 'Courses', 'cp' ),
 			'id' => 'cp-cap-courses',
 			'fields' => array(
-				'coursepress_settings[capabilities][courses][create]' => array(
-					'type' => 'radio_slider',
-					'title' => __( 'Create new courses', 'cp' ),
-					'value' => coursepress_get_setting( 'capabilities/courses/create', true ),
+				'coursepress_edit_course' => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Edit courses', 'cp' ),
+					'desc' => __( 'Allow instructor to create, edit and delete own courses.', 'cp' ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_create_course', true ),
 				),
-				'coursepress_settings[capabilities][courses][update_assigned_courses]' => array(
-					'type' => 'radio_slider',
-					'title' => __( 'Update any assigned course', 'cp' ),
-					'value' => coursepress_get_setting( 'capabilities/courses/update_assigned_courses', true ),
+				'coursepress_update_assigned_courses' => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Update assigned courses', 'cp' ),
+					'desc' => __( 'Allow user to edit courses where user is an instructor at.', 'cp' ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_update_assigned_courses', true ),
 				),
-				'coursepress_settings[capabilities][courses][update_instructor_courses]' => array(
-					'type' => 'radio_slider',
-					'title' => __( 'Update courses made by the instructor only', 'cp' ),
-					'value' => coursepress_get_setting( 'capabilities/courses/update_instructor_courses', true ),
+				'coursepress_update_course_cap' => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Update any course', 'cp' ),
+					'desc' => __( 'Allow instructor to update any course.', 'cp' ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_update_course_cap', true ),
 				),
-				'coursepress_settings[capabilities][courses][delete_assigned_courses]' => array(
-					'type' => 'radio_slider',
-					'title' => __( 'Delete any assigned course', 'cp' ),
-					'value' => coursepress_get_setting( 'capabilities/courses/update_assigned_courses', true ),
-				),
-				'coursepress_settings[capabilities][courses][delete_instructor_courses]' => array(
-					'type' => 'radio_slider',
-					'title' => __( 'Delete courses made by the instructor only', 'cp' ),
-					'value' => coursepress_get_setting( 'capabilities/courses/delete_instructor_courses', true ),
+                'coursepress_delete_my_course_cap' => array(
+                    'type' => 'checkbox',
+                    'title' => $toggle_input . __( 'Delete own courses', 'cp' ),
+                    'desc' => __( 'Allow user to delete courses where user is the author.', 'cp' ),
+                    'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_delete_my_course_cap', true ),
+                ),
+				'coursepress_delete_assigned_course' => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Delete assigned courses', 'cp' ),
+					'desc' => __( 'Allow user to delete courses where user is an instructor at.', 'cp' ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_delete_assigned_course', true ),
 				),
 				'coursepress_settings[capabilities][courses][assigned_courses_status]' => array(
 					'type' => 'radio_slider',

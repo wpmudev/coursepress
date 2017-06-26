@@ -61,6 +61,45 @@
       }
     }
   }
+  #coursepress-setting-capabilities {
+    .cp-caps-fields {
+      position: relative;
+      border: {
+        style: solid;
+        width: 1px 0 0 0;
+        color: $grey_5;
+      }
+      margin-bottom: 25px;
+
+      .cp-sep {
+        &:before {
+          content: '';
+          position: absolute;
+          top: -15px;
+          left: 50px;
+          border: {
+            style: solid;
+            width: 0 1px 1px 0;
+            color: $grey_5;
+          }
+          width: 30px;
+          height: 30px;
+          background-color: #f3f3f3;
+          -webkit-transform: rotate(45deg);
+          -moz-transform: rotate(45deg);
+          -ms-transform: rotate(45deg);
+          -o-transform: rotate(45deg);
+          transform: rotate(45deg);
+        }
+      }
+    }
+    .box-inner-content {
+      display: block;
+      width: 100%;
+      padding-left: 0;
+      @include clearfix;
+    }
+  }
 
   @media screen {
     @media (min-width: 768px) {
@@ -85,6 +124,14 @@
       }
       .wpmui-number {
         width: 80%;
+      }
+
+      #coursepress-setting-capabilities {
+        .flex-half {
+          width: 50%;
+          float: left;
+          @include boxsizing;
+        }
       }
     }
   }

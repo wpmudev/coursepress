@@ -208,6 +208,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
      * Update global settings.
      *
      * @param $request
+     * @return array
      */
     function update_settings( $request ) {
         if ( $request ) {
@@ -216,6 +217,8 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
         }
 
         coursepress_update_setting( true, $request );
+
+        return array( 'success' => true );
     }
 
     function activate_marketpress() {

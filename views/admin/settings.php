@@ -44,6 +44,7 @@
                 </button>
 
                 <button type="button" class="cp-btn cp-btn-active save-coursepress-setting">
+                    <i class="fa fa-circle-o-notch fa-spin"></i>
 					<?php _e( 'Save Settings', 'cp' ); ?>
                 </button>
             </div>

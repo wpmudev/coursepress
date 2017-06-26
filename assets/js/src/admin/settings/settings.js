@@ -89,16 +89,26 @@
                 this.settings['import-export'] = new CoursePress.ImportExportSettings();
             },
 
-            saveSetting: function() {
+            saveSetting: function(ev) {
                 var settingModel = this.settings[ this.currentPage ],
+                    button = this.$(ev.currentTarget),
                     model = settingModel.getModel();
 
                 if ( model ) {
+                    button.addClass('cp-progress');
                     this.model.set(this.currentPage, model);
-
                     this.model.set('action', 'update_settings');
+                    this.model.off( 'coursepress:success_update_settings' );
+                    this.model.on( 'coursepress:success_update_settings', this.after_update, this );
+                    this.model.off( 'coursepress:error_update_settings' );
+                    this.model.on( 'coursepress:error_update_settings', this.after_update, this );
                     this.model.save();
                 }
+            },
+
+            after_update: function() {
+                var button = this.$('.save-coursepress-setting');
+                button.removeClass('cp-progress');
             }
         });
 
