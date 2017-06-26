@@ -57,17 +57,40 @@
       }
 
       .cp-box-heading {
-        padding: 8px 25px;
-        text-transform: uppercase;
-        border-bottom: 1px solid $grey_5;
-      }
-      .box-heading-title {
-        margin: 8px 0;
-        color: $dark_2;
+          .cp-info {
+              background-color: $blue_5;
+              font-size: 1.1em;
+              @include radius(5px);
+              line-height: 2em;
+              padding: 20px 30px;
+              .dashicons {
+                  color: $blue_6;
+                  font-size: 2em;
+                  padding-right: .4em;
+              }
+          }
+          .box-heading-title {
+              border-bottom: 1px solid $grey_5;
+              color: $dark_2;
+              margin: 8px 0;
+              padding: 8px 25px;
+              text-transform: uppercase;
+          }
+          p {
+              font-size: 1.2em;
+              margin: 2em 25px;
+          }
       }
 
       .cp-box-content {
-        padding: 25px;
+          padding: 25px;
+          padding-bottom: 0;
+          .box-inner-content {
+              padding-top: 1em;
+          }
+          &:last-child {
+              padding-bottom: 25px;;
+          }
       }
 
       .box-label-area {
@@ -158,6 +181,24 @@
             float: left;
             width: $width/12*8.5;
             padding-left: 20px;
+            &.box-inner-full {
+                float: none;
+                width: 100%;
+                padding-left: 0;
+                .option {
+                    border-top: 1px solid $grey_5;
+                    padding: 20px 0;
+                    h3 {
+                        float: left;
+                        width: $width/12*3.5;
+                    }
+                    .wpmui-wrapper {
+                        float: left;
+                        width: $width/12*8.5;
+                        padding-left: 20px;
+                    }
+                }
+            }
           }
         }
       }

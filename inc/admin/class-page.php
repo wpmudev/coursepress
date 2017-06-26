@@ -269,10 +269,12 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$course_id = filter_input( INPUT_GET, 'cid', FILTER_VALIDATE_INT );
 
 		// If it's a new course, create a draft course
-		if ( empty( $course_id ) )
-			$course = coursepress_get_course( get_default_post_to_edit( 'course', true ) );
-		else
-			$course = coursepress_get_course( $course_id );
+		if ( empty( $course_id ) ) {
+            $course = coursepress_get_course(get_default_post_to_edit('course', true));
+            $course->post_title = '';
+        } else {
+            $course = coursepress_get_course($course_id);
+        }
 
 		// Set course category
 		$category = array_values( $course->get_category() );
@@ -289,6 +291,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$menu_list = array(
 			'course-type' => __( 'Type of Course', 'cp' ),
 			'course-settings' => __( 'Course Settings', 'cp' ),
+			'course-completion' => __( 'Course Completion', 'cp' ),
 			'course-units' => __( 'Units', 'cp' ),
 			'course-students' => __( 'Students', 'cp' ),
 		);
@@ -314,6 +317,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		coursepress_render( 'views/tpl/common' );
 		coursepress_render( 'views/tpl/course-type', array( 'course_id' => $course_id ) );
 		coursepress_render( 'views/tpl/course-settings' );
+		coursepress_render( 'views/tpl/course-completion' );
 		coursepress_render( 'views/tpl/course-units' );
 	}
 

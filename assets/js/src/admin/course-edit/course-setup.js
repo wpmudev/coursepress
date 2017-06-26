@@ -25,6 +25,8 @@
                 this.once( 'coursepress:load-step-course-type', this.courseTypeView, this);
                 // Load course settings view
                 this.once('coursepress:load-step-course-settings', this.courseSettingsView, this);
+                // Load course completion view
+                this.once( 'coursepress:load-step-course-completion', this.courseCompletionView, this );
                 // Load course units view
                 this.once('coursepress:load-step-course-units', this.courseUnitsView, this);
                 // Load course students view
@@ -73,6 +75,11 @@
                 var courseSettings = new CoursePress.CourseSettings(this.model, this);
 
                 return courseSettings;
+            },
+            courseCompletionView: function() {
+                var courseCompletion = new CoursePress.CourseCompletion(this.model, this);
+
+                return courseCompletion;
             },
             courseUnitsView: function() {
                 var courseUnits = new CoursePress.CourseUnits(this.model, this);
