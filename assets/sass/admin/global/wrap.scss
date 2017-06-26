@@ -66,18 +66,19 @@
               .dashicons {
                   color: $blue_6;
                   font-size: 2em;
-                  padding-right: 1em;
+                  padding-right: .4em;
               }
           }
           .box-heading-title {
-              padding: 8px 25px;
               border-bottom: 1px solid $grey_5;
               color: $dark_2;
               margin: 8px 0;
+              padding: 8px 25px;
               text-transform: uppercase;
           }
           p {
-              margin: 8px 25px;
+              font-size: 1.2em;
+              margin: 2em 25px;
           }
       }
 
