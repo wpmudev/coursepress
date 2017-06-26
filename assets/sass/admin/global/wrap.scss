@@ -185,19 +185,6 @@
                 float: none;
                 width: 100%;
                 padding-left: 0;
-                .option {
-                    border-top: 1px solid $grey_5;
-                    padding: 20px 0;
-                    h3 {
-                        float: left;
-                        width: $width/12*3.5;
-                    }
-                    .wpmui-wrapper {
-                        float: left;
-                        width: $width/12*8.5;
-                        padding-left: 20px;
-                    }
-                }
             }
           }
         }

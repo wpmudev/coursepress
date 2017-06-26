@@ -105,6 +105,16 @@
                     }
                 }
             }
+            button {
+                &.wpmui-field-input {
+                    background-color: $grey_3;
+                    color: $white;
+                    text-transform: uppercase;
+                    &.cp-dashicons {
+                        line-height: 26px;
+                    }
+                }
+            }
         }
         .flex {
             display: flex;
@@ -117,6 +127,18 @@
             }
         }
     }
+    &.cp-box-custom-certificate {
+        .box-label-area,
+        .box-inner-content {
+            float: none;
+            width: 100%;
+        }
+        .box-inner-content {
+            padding-left: 0;
+            border-top: 0;
+        }
+    }
   }
+
 }
 }

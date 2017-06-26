@@ -132,6 +132,7 @@ class CoursePress_Admin_Configuration {
 				'coursepress_settings[basic_certificate][preview]' => array(
 					'type' => 'button',
 					'value' => '<span class="dashicons dashicons-visibility"></span>'.__( 'Preview Certificate', 'CoursePress' ),
+					'class' => 'cp-dashicons alignright',
 				),
 			),
 		 );
