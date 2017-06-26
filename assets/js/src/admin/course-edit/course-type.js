@@ -9,6 +9,7 @@
             el: $('.coursepress-page #course-type'),
             courseEditor: false,
             events: {
+                'keyup [name="post_title"]': 'updatePostName',
                 'keyup [name="post_name"]': 'updateSlug',
                 'change [name="course_type"]': 'changeCourseType'
             },
@@ -32,6 +33,17 @@
                 //this.$('select').select2();
             },
 
+            updatePostName: function( ev ) {
+                var sender = $(ev.currentTarget),
+                    slugDiv = this.$('[name="post_name"]'),
+                    title = sender.val();
+
+                if ( title ) {
+                    title = title.toLowerCase().replace( / /g, '-' );
+                }
+                slugDiv.val(title);
+                slugDiv.trigger('keyup');
+            },
             updateSlug: function(ev) {
                 var sender = $(ev.target),
                     slugDiv = this.$('.cp-slug');

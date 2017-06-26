@@ -247,7 +247,11 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// If it's a new course, create a draft course
 		if ( empty( $course_id ) ) {
-			$course = coursepress_get_course( get_default_post_to_edit( 'course', true ) ); } else { 			$course = coursepress_get_course( $course_id ); }
+			$course = coursepress_get_course( get_default_post_to_edit( 'course', true ) );
+			$course->post_title = '';
+		} else {
+			$course = coursepress_get_course( $course_id );
+		}
 
 		// Set course category
 		$category = array_values( $course->get_category() );
