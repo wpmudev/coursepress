@@ -266,6 +266,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$menu_list = array(
 			'course-type' => __( 'Type of Course', 'cp' ),
 			'course-settings' => __( 'Course Settings', 'cp' ),
+			'course-completion' => __( 'Course Completion', 'cp' ),
 			'course-units' => __( 'Units', 'cp' ),
 			'course-students' => __( 'Students', 'cp' ),
 		);
@@ -291,6 +292,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		coursepress_render( 'views/tpl/common' );
 		coursepress_render( 'views/tpl/course-type', array( 'course_id' => $course_id ) );
 		coursepress_render( 'views/tpl/course-settings' );
+		coursepress_render( 'views/tpl/course-completion' );
 		coursepress_render( 'views/tpl/course-units' );
 	}
 
