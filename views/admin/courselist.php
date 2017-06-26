@@ -23,7 +23,7 @@
                 <tr>
                     <th class="column-title"><?php _e( 'Title', 'cp' ); ?></th>
                     <?php foreach ( $columns as $column_id => $column_label ) : ?>
-                        <th class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>">
+                        <th class="manage-column column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" id="<?php echo $column_id; ?>">
                             <?php echo $column_label; ?>
                         </th>
                     <?php endforeach; ?>
