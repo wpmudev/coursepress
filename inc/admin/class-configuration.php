@@ -72,25 +72,28 @@ class CoursePress_Admin_Configuration {
 		 *
 		 */
 		 $config['content_margin'] = array(
-			'title' => __( 'Content Margin', 'CoursePress' ),
-			'description' => __( '', 'CoursePress' ),
-			'fields' => array(
-				'coursepress_settings[basic_certificate][margin][top]' => array(
-					'type' => 'number',
-					'title' => __( 'Top', 'CoursePress' ),
-					'value' => coursepress_get_setting( 'basic_certificate/margin/top' ),
-				),
-				'coursepress_settings[basic_certificate][margin][left]' => array(
-					'type' => 'number',
-					'title' => __( 'Left', 'CoursePress' ),
-					'value' => coursepress_get_setting( 'basic_certificate/margin/left' ),
-				),
-				'coursepress_settings[basic_certificate][margin][right]' => array(
-					'type' => 'number',
-					'title' => __( 'Right', 'CoursePress' ),
-					'value' => coursepress_get_setting( 'basic_certificate/margin/right' ),
-				),
-			),
+			 'title' => __( 'Content Margin', 'CoursePress' ),
+			 'description' => __( '', 'CoursePress' ),
+			 'fields' => array(
+				 'coursepress_settings[basic_certificate][margin][top]' => array(
+					 'type' => 'number',
+					 'label' => __( 'Top', 'CoursePress' ),
+					 'value' => coursepress_get_setting( 'basic_certificate/margin/top' ),
+					 'flex' => true,
+				 ),
+				 'coursepress_settings[basic_certificate][margin][left]' => array(
+					 'type' => 'number',
+					 'label' => __( 'Left', 'CoursePress' ),
+					 'value' => coursepress_get_setting( 'basic_certificate/margin/left' ),
+					 'flex' => true,
+				 ),
+				 'coursepress_settings[basic_certificate][margin][right]' => array(
+					 'type' => 'number',
+					 'label' => __( 'Right', 'CoursePress' ),
+					 'value' => coursepress_get_setting( 'basic_certificate/margin/right' ),
+					 'flex' => true,
+				 ),
+			 ),
 		 );
 		 /**
 		 * Page orientation
@@ -128,7 +131,7 @@ class CoursePress_Admin_Configuration {
 			'fields' => array(
 				'coursepress_settings[basic_certificate][preview]' => array(
 					'type' => 'button',
-					'value' => __( 'Preview Certificate', 'CoursePress' ),
+					'value' => '<span class="dashicons dashicons-visibility"></span>'.__( 'Preview Certificate', 'CoursePress' ),
 				),
 			),
 		 );
@@ -210,19 +213,21 @@ class CoursePress_Admin_Configuration {
 		'fields' => array(
 			'coursepress_settings[course][image_width]' => array(
 				'type' => 'number',
-				'label' => __( 'Image Width', 'CoursePress' ),
+				'label' => __( 'Width', 'CoursePress' ),
 				'value' => coursepress_get_setting( 'course/image_width', '235' ),
 				'config' => array(
 					'min' => 0,
 				),
+				'flex' => true,
 			),
 			'coursepress_settings[course][image_height]' => array(
 				'type' => 'number',
-				'label' => __( 'Image Height', 'CoursePress' ),
+				'label' => __( 'Height', 'CoursePress' ),
 				'value' => coursepress_get_setting( 'course/image_height', '225' ),
 				'config' => array(
 					'min' => 0,
 				),
+				'flex' => true,
 			),
 		),
 		);
@@ -243,6 +248,7 @@ class CoursePress_Admin_Configuration {
 					'start_date' => __( 'Course start date', 'CP_TD' ),
 					'enrollment_start_date' => __( 'Course enrollment start date', 'CP_TD' ),
 				),
+				'wrapper_class' => 'half',
 			),
 			'coursepress_settings[course][direction]' => array(
 				'type' => 'select',
@@ -252,6 +258,7 @@ class CoursePress_Admin_Configuration {
 					'DESC' => __( 'Descending', 'CoursePress' ),
 					'ASC' => __( 'Ascending', 'CoursePress' ),
 				),
+				'wrapper_class' => 'half',
 			),
 		),
 		);
@@ -262,7 +269,7 @@ class CoursePress_Admin_Configuration {
 		'title' => __( 'Theme Menu Items', 'CoursePress' ),
 		'fields' => array(
 			'coursepress_settings[course][show_coursepress_menu]' => array(
-				'type' => 'checkbox',
+				'type' => 'radio_slider',
 				'title' => __( 'Show menu items', 'CoursePress' ),
 				'value' => coursepress_get_setting( 'general/show_coursepress_menu', 1 ),
 				'desc' => __( 'Attach default CoursePress menu items ( Courses, Student Dashboard, Log Out ) to the <strong>Primary Menu</strong>.<br />Items can also be added from Appearance &gt; Menus and the CoursePress panel.', 'CoursePress' ),
@@ -276,7 +283,7 @@ class CoursePress_Admin_Configuration {
 		'title' => __( 'Login form', 'CoursePress' ),
 		'fields' => array(
 			'coursepress_settings[general][use_custom_login]' => array(
-				'type' => 'checkbox',
+				'type' => 'radio_slider',
 				'title' => __( 'Use Custom Login Form', 'CoursePress' ),
 				'value' => coursepress_get_setting( 'general/use_custom_login', 1 ),
 				'desc' => __( 'Uses a custom Login Form to keep students on the front-end of your site.', 'CoursePress' ),
@@ -290,7 +297,7 @@ class CoursePress_Admin_Configuration {
 		'title' => __( 'Privacy', 'CoursePress' ),
 		'fields' => array(
 			'coursepress_settings[instructor][show_username]' => array(
-				'type' => 'checkbox',
+				'type' => 'radio_slider',
 				'title' => __( 'Show instructor username in URL', 'CoursePress' ),
 				'value' => coursepress_get_setting( 'instructor/show_username', 1 ),
 				'desc' => __( 'If checked, instructors username will be shown in the url. Otherwise, hashed (MD5) version will be shown.', 'CoursePress' ),
@@ -304,7 +311,7 @@ class CoursePress_Admin_Configuration {
 		'title' => __( 'schema.org', 'CoursePress' ),
 		'fields' => array(
 			'coursepress_settings[general][add_structure_data]' => array(
-				'type' => 'checkbox',
+				'type' => 'radio_slider',
 				'desc' => __( 'Add structure data to courses.', 'CoursePress' ),
 				'title' => __( 'Add microdata syntax', 'CoursePress' ),
 				'value' => coursepress_get_setting( 'general/add_structure_data', 1 ),
@@ -318,7 +325,7 @@ class CoursePress_Admin_Configuration {
 		'title' => __( 'WP Login Redirect', 'CoursePress' ),
 		'fields' => array(
 			'coursepress_settings[general][redirect_after_login]' => array(
-				'type' => 'checkbox',
+				'type' => 'radio_slider',
 				'desc' => __( 'Redirect students to their Dashboard upon login via wp-login form.', 'CoursePress' ),
 				'title' => __( 'Redirect After Login', 'CoursePress' ),
 				'value' => coursepress_get_setting( 'general/redirect_after_login', 1 ),
@@ -336,7 +343,7 @@ class CoursePress_Admin_Configuration {
 		'fields' => array(
 			'coursepress_settings[course][enrollment_type_default]' => array(
 				'type' => 'select',
-				'title' => __( 'Who can enroll', 'CoursePress' ),
+				'label' => __( 'Who can enroll', 'CoursePress' ),
 				'value' => coursepress_get_setting( 'course/enrollment_type_default', $enrollment_type_default ),
 				'field_options' => $courses->get_enrollment_types_array(),
 			),
@@ -351,7 +358,7 @@ class CoursePress_Admin_Configuration {
 		'fields' => array(
 			'coursepress_settings[reports][font]' => array(
 				'type' => 'select',
-				'title' => __( 'Use this font', 'CoursePress' ),
+				'label' => __( 'Use this font', 'CoursePress' ),
 				'value' => coursepress_get_setting( 'reports/font', 'helvetica' ),
 				'field_options' => array(),
 			),
@@ -1066,48 +1073,6 @@ class CoursePress_Admin_Configuration {
 		);
 
 		return apply_filters( 'coursepress_capabilities', $config );
-	}
-
-	/**
-	 * Print options page, based on option name.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param string $option_name Option name.
-	 */
-	public function print_options( $option_name ) {
-		$options = apply_filters( $option_name, array() );
-		foreach ( $options as $option_key => $option ) {
-			$classes = 'box-inner-content';
-			printf( '<div class="cp-box-content cp-box-%s">', esc_attr( $option_key ) );
-			if ( ! empty( $option['title'] ) || ! empty( $option['description'] ) ) {
-				echo '<div class="box-label-area">';
-				if ( ! empty( $option['title'] ) ) {
-					printf(
-						'<h2 class="label">%s</h2>',
-						$option['title']
-					);
-				}
-				if ( isset( $option['description'] ) ) {
-					printf( '<p class="description">%s</p>', $option['description'] );
-				}
-				echo '</div>';
-			} else {
-				$classes .= ' box-inner-full';
-			}
-			printf( '<div class="%s">', esc_attr( $classes ) );
-			foreach ( $option['fields'] as $key => $data ) {
-				printf( '<div class="option option-%s">', esc_attr( sanitize_title( $key ) ) );
-				if ( isset( $data['label'] ) ) {
-					printf( '<h3>%s</h3>', $data['label'] );
-				}
-				$data['name'] = $key;
-				lib3()->html->element( $data );
-				echo '</div>';
-			}
-			echo '</div>';
-			echo '</div>';
-		}
 	}
 
 	private function get_pages() {
