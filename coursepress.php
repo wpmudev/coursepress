@@ -100,6 +100,7 @@ final class CoursePress {
 			require_once $this->plugin_path . 'inc/functions/user.php';
 			require_once $this->plugin_path . 'inc/functions/course.php';
 			require_once $this->plugin_path . 'inc/functions/unit.php';
+			require_once $this->plugin_path . 'inc/functions/admin.php';
 		} catch ( Exception $e ) {
 			// @todo: Throw error
 			return;

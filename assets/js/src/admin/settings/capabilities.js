@@ -8,6 +8,7 @@
             template_id: 'coursepress-capabilities-setting-tpl',
             el: $('#coursepress-setting-capabilities'),
             events: {
+
                 'click .cp-select-list.cp-capabilities li': 'showHideCaps',
                 'change [name]': 'updateModel'
             },
