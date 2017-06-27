@@ -71,6 +71,11 @@ function coursepress_get_courses( $args = array() ) {
 		$args['paged'] = isset( $_REQUEST['paged'] ) ? absint( $_REQUEST['paged'] ) : 1;
 	}
 
+	// If search query found.
+	if ( isset( $_GET[ 's' ] ) ) {
+		$args['s'] = $_GET[ 's' ];
+	}
+
 	$args = wp_parse_args( array(
 		'post_type' => $CoursePress_Core->__get( 'course_post_type' ),
 		'suppress_filters' => true,

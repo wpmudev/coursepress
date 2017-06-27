@@ -12,7 +12,8 @@
                 'click .cp-reset-step': 'resetEditStep',
                 'change .cp-toggle-course-status': 'toggleCourseStatus',
                 'click .menu-item-duplicate-course': 'duplicateCourse',
-                'click .menu-item-delete': 'deleteCourse'
+                'click .menu-item-delete': 'deleteCourse',
+                'click #cp-search-clear': 'clearSearch'
             },
 
             /**
@@ -35,6 +36,13 @@
 
             deleteCourse: function() {
                 // @todo: delete course
+            },
+
+            /**
+             * Clear search form.
+             */
+            clearSearch: function() {
+                this.$(':input','.cp-search-form').not(':button, :hidden').val('');
             }
         });
 
