@@ -383,7 +383,7 @@ class CoursePress_Data_Student {
 	 *
 	 * @return (array) $data					Returns an array of course completion data.
 	 **/
-	public static function module_response( $student_id, $course_id, $unit_id, $module_id, $response, &$data = false ) {
+	public static function module_response( $student_id, $course_id, $unit_id, $module_id, $response, &$data = false, $refresh = false ) {
 
 		$attributes = CoursePress_Data_Module::attributes( $module_id );
 
@@ -395,15 +395,17 @@ class CoursePress_Data_Student {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
 
-		/**
-		 * Check answer freshness.
-		 */
-		$is_new_answer = self::check_is_new_answer( $student_id, $course_id, $unit_id, $module_id, $response, $data );
+		if ( ! $refresh ) {
+            /**
+             * Check answer freshness.
+             */
+            $is_new_answer = self::check_is_new_answer($student_id, $course_id, $unit_id, $module_id, $response, $data);
 
-		if ( false == $is_new_answer ) {
-			return;
-		}
+            if (false == $is_new_answer) {
+                return;
+            }
 
+        }
 		$grade = - 1;
 
 		// Auto-grade the easy ones
