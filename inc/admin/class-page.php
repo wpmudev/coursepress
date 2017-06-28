@@ -331,6 +331,9 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	}
 
 	function get_settings_page() {
+	    // Include color picker
+        wp_enqueue_script( 'iris' );
+
 		$this->lib3();
 		// Add global setting to localize array
 		$this->localize_array['settings'] = coursepress_get_setting( true );

@@ -89,8 +89,8 @@
                     'type' => 'radio',
                     'value' => coursepress_get_setting( 'basic_certificate/orientation', 'L' ),
                     'field_options' => array(
-                        'L' => __( 'Landscape', 'CoursePress' ),
-                        'P' => __( 'Portrait', 'CoursePress' ),
+                        'L' => $toggle_input . __( 'Landscape', 'CoursePress' ),
+                        'P' => $toggle_input . __( 'Portrait', 'CoursePress' ),
                     ),
                 ),
             ),
@@ -101,8 +101,8 @@
         $config['text_color'] = array(
             'title' => __( 'Text Color', 'CoursePress' ),
             'fields' => array(
-                'coursepress_settings[basic_certificate][text_color]' => array(
-                    'type' => 'wp_color_picker',
+                'text_color' => array(
+                    'type' => 'text',
                     'value' => coursepress_get_setting( 'basic_certificate/text_color', '#000' ),
                 ),
             ),

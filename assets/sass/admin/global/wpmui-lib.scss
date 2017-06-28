@@ -3,12 +3,17 @@
     font-size: 13.5px;
     color: $grey_2;
   }
-  .wpmui-checkbox-wrapper {
+  .wpmui-checkbox-wrapper,
+  .wpmui-radio-wrapper {
     .wpmui-field-checkbox {
       visibility: hidden;
       position: absolute;
     }
-    .wpmui-checkbox-caption {
+    .wpmui-radio {
+      display: none !important;
+    }
+    .wpmui-checkbox-caption,
+    .wpmui-radio-caption {
       font-size: 14px;
       display: block;
       color: $dark_1;
@@ -18,10 +23,17 @@
         margin: 3px 10px 0 -25px;
       }
     }
+    .wpmui-radio-caption {
+      vertical-align: middle;
+      .cp-toggle-btn {
+        margin-top: 0;
+      }
+    }
     .wpmui-field-description {
       margin-top: -10px !important;
     }
-    .wpmui-field-checkbox:checked + .wpmui-checkbox-caption {
+    .wpmui-field-checkbox:checked + .wpmui-checkbox-caption,
+    .wpmui-radio:checked + .wpmui-radio-caption {
       .cp-toggle-btn {
         &:after {
           left: 20.5px;
@@ -30,6 +42,9 @@
         }
       }
     }
+  }
+  .wpmui-radio-input-wrapper {
+    padding-left: 25px;
   }
 
   .wpmui-field-select {
@@ -42,6 +57,12 @@
   }
 
   @media screen {
+    @media (min-width: 768px) {
+      .wpmui-radio-input-wrapper {
+        float: left;
+        margin-right: 25px;
+      }
+    }
     @media (min-width: 800px) {
       .wpmui-field-description {
         padding: 0 0 0 55px;
