@@ -393,6 +393,7 @@ class CoursePress_Data_Certificate {
 		$post = get_posts( $post_params );
 		$is_override = CoursePress_Data_Course::get_setting( $course_id, 'basic_certificate' );
 		$is_override = cp_is_true( $is_override );
+
 		if ( count( $post ) > 0 || $is_override ) {
 			$post = $post[0];
 			// We'll replace the existing content to a new one to apply settings changes when applicable.
@@ -403,7 +404,7 @@ class CoursePress_Data_Certificate {
 			$margins = (array) CoursePress_Helper_Utility::get_array_val( $settings, 'margin' );
 			$filename = self::get_pdf_file_name( $course_id, $student_id, 'no-base-dir' );
 			$logo = array();
-			$text_color = array();
+			$text_color = $text_color = CoursePress_Helper_Utility::convert_hex_color_to_rgb( CoursePress_Core::get_setting( 'basic_certificate/text_color' ), array() );
 			/**
 			 * Is certificate overrided?
 			 */
@@ -411,6 +412,7 @@ class CoursePress_Data_Certificate {
 				$margins = CoursePress_Data_Course::get_setting( $course_id, 'cert_margin', array() );
 				$orientation = CoursePress_Data_Course::get_setting( $course_id, 'page_orientation', 'L' );
 				$background = CoursePress_Data_Course::get_setting( $course_id, 'certificate_background', '' );
+                $text_color = CoursePress_Helper_Utility::convert_hex_color_to_rgb(CoursePress_Data_Course::get_setting($course_id, 'cert_text_color'), $text_color);
 			} else {
 				/**
 				 * Use CP defaults?
@@ -449,6 +451,8 @@ class CoursePress_Data_Certificate {
 					$text_color = array( 90, 90, 90 );
 				}
 			}
+
+
 			// Set the content
 			$certificate = stripslashes( $certificate );
 			$html = '<div class="basic_certificate">'. $certificate . '</div>';

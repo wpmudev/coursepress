@@ -556,6 +556,7 @@ class CoursePress_Admin_Controller_Unit {
 					if ( $update_student_progress ) {
 						$course_id = $_REQUEST['course_id'];
 						$students = CoursePress_Data_Course::get_students( $course_id, 0, 0, 'ids' );
+
 						if ( is_array( $students ) && ! empty( $students )  ) {
 							foreach ( $students as $student_id ) {
 								$student_progress = CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course_id );
@@ -577,6 +578,8 @@ class CoursePress_Admin_Controller_Unit {
 										}
 									}
 								}
+
+								CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course_id );
 							}
 						}
 					}

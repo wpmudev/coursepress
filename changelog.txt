@@ -33,6 +33,7 @@ CHANGELOG
 * Fixed: Empty dashboard page to non-enrolled user.
 * Fixed: A minor microdata issue on the course details page.
 * Fixed: In unit-builder, the checkbox options were not getting saved properly in some scenarios.
+* Fixed: Multiple answers grade calculation.
 
 = 2.0.7 =
 -------------------------------------------------

@@ -70,7 +70,8 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 				$with_comments = ! empty( $_REQUEST['comments'] ) && $with_students;
 
 				if ( ! empty( $courses ) ) {
-					$courses = json_encode( json_decode( $courses ) );
+				    $courses = ! is_array( $courses ) || ! is_object( $courses ) ? json_decode( $courses ) : $courses;
+					$courses = json_encode( $courses );
 					self::course_importer( $courses, $_REQUEST['import_id'], $is_replace, $with_students, $with_comments );
 				} else {
 					self::clear_courses();
