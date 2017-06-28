@@ -1544,7 +1544,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					'past_label' => __( 'Past courses', 'CP_TD' ),
 					'show_labels' => false,
 					'status' => 'publish',
-					'student_msg' => __( 'You are not enrolled in any courses. <a href="%s">See available courses.</a>', 'CP_TD' ),
+					'student_msg' => sprintf( __( 'You are not enrolled in any courses. <a href="%s">See available courses.</a>', 'CP_TD' ), CoursePress_Core::get_slug( 'course/', true ) ),
 					'student' => '', // If both student and instructor is specified only student will be used
 					'suggested_label' => __( 'Suggested courses', 'CP_TD' ),
 					'suggested_msg' => __( 'You are not enrolled in any courses.<br />Here are a few you might like, or <a href="%s">see all available courses.</a>', 'CP_TD' ),
