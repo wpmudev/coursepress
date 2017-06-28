@@ -112,11 +112,14 @@ class CoursePress_Data_Module {
 
 		// Get correct new type
 		if ( 'text_input_module' == $module_type ) {
-			if ( isset( $meta['checked_length'] ) && 'multi' == $meta['checked_length'] ) {
-				$module_type = $legacy['textarea_input_module'];
-			} else {
-				$module_type = $legacy[ $module_type ];
-			}
+            if ( ! empty( $meta['checked_length'] ) ) {
+                $checked_length = maybe_unserialize( $meta['checked_length'][0] );
+                if ( 'multi' == $checked_length ) {
+                    $module_type = $legacy['textarea_input_module'];
+                } else {
+                    $module_type = $legacy[ $module_type ];
+                }
+            }
 		} else {
 			$module_type = $legacy[ $module_type ];
 		}
