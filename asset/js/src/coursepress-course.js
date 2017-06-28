@@ -185,6 +185,13 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 			basic_certificate_layout = tinyMCE && tinyMCE.get( 'basic-certificate-layout' ) ? tinyMCE.get( 'basic-certificate-layout' ).getContent() : $( '[name="meta_basic_certificate_layout"]' ).val();
 			$( '[name="meta_basic_certificate_layout"]' ).val( basic_certificate_layout );
 			meta_items = $( '.cp-box-content.step-7 [name^="meta_"]' ).serializeArray();
+
+			var basic_cert = $('[name="meta_basic_certificate"]').is(':checked');
+
+			if ( ! basic_cert ) {
+				meta_items.push({name: 'meta_basic_certificate', value:false});
+			}
+
 			meta_items = CoursePress.Course.fix_step_checkboxes( meta_items, step, '0' );
 			CoursePress.Course.add_array_to_data( data, meta_items );
 		}
