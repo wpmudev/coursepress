@@ -538,7 +538,8 @@ class CoursePress_Data_Module {
 	*/
 	public static function get_form_results( $student_id, $course_id, $unit_id, $module_id, $response = false, $data = false ) {
 		$attributes = self::attributes( $module_id );
-		$is_mandatory = (bool) $attributes['mandatory'];
+		$is_mandatory = ! empty( $attributes['mandatory'] );
+		$is_assessable = ! empty( $attributes['assessable']);
 
 		if ( false === $data ) {
 			$data = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
@@ -553,10 +554,14 @@ class CoursePress_Data_Module {
 			return false;
 		}
 
+        $grades = CoursePress_Data_Student::get_grade($student_id, $course_id, $unit_id, $module_id);
 		$minimum_grade = (int) $attributes['minimum_grade'];
 
 		$total_questions = count( $attributes['questions'] );
 		$gross_correct = 0;
+		$grade = CoursePress_Helper_Utility::get_array_val( $grades, 'grade', 0 );
+
+		/*
 
 		if ( $is_mandatory ) {
 			foreach ( $attributes['questions'] as $key => $question ) {
@@ -584,6 +589,7 @@ class CoursePress_Data_Module {
 		} else {
 			$grade = 100;
 		}
+		*/
 
 		$passed = $grade >= $minimum_grade;
 		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
@@ -606,6 +612,23 @@ class CoursePress_Data_Module {
 			'hide' => $passed,
 			'text' => $remaining_message,
 		);
+
+        if ( $is_assessable ) {
+            $graded_by = CoursePress_Helper_Utility::get_array_val( $grades, 'graded_by' );
+
+            if ( 'auto' == $graded_by ) {
+                return array(
+                    'pending' => true,
+                    'grade' => 0,
+                    'correct' => 0,
+                    'wrong' => 0,
+                    'total_questions' => (int) $total_questions,
+                    'passed' => false,
+                    'attributes' => $attributes,
+                    'message' => __( 'Your submission is awaiting instructor assessment.', 'cp' ),
+                );
+            }
+        }
 
 		return array(
 			'grade' => (int) $grade,
