@@ -32,6 +32,9 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		// Setup CP pages
 		add_action( 'admin_menu', array( $this, 'set_admin_menus' ) );
 
+		// Set screen option values.
+		add_filter( 'set-screen-option', array( $this, 'set_courselist_options' ), 10, 3 );
+
 		// Setup admin assets
 		add_action( 'admin_enqueue_scripts', array( $this, 'set_admin_css' ) );
 	}
@@ -211,16 +214,48 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		return $columns;
 	}
 
+	/**
+	 * Columns to be hidden by default.
+	 *
+	 * @return array
+	 */
 	function hidden_columns() {
+
 		return array( 'category', 'start_date', 'end_date', 'enrollment_start', 'enrollment_end' );
 	}
 
+	/**
+	 * Custom screen options for course listing page.
+	 */
 	function process_courselist_page() {
+
 		$screen_id = get_current_screen()->id;
-		add_filter( 'hidden_columns', array( $this, 'hidden_columns' ) );
+
+		add_filter( 'default_hidden_columns', array( $this, 'hidden_columns' ) );
 		add_filter( 'manage_' . $screen_id . '_columns', array( $this, 'courselist_columns' ) );
 
-		add_screen_option( 'per_page', array( 'default' => 20, 'coursepress_course_per_page' ) );
+		// Courses per page.
+		add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_course_per_page' ) );
+	}
+
+	/**
+	 * Set/save custom screen options value.
+	 *
+	 * @param bool|int $status
+	 * @param string   $option
+	 * @param int      $value
+	 *
+	 * @return mixed
+	 */
+	function set_courselist_options( $status, $option, $value ) {
+
+		// Return value for our custom option.
+		// For other options, return default.
+		if ( 'coursepress_course_per_page' === $option ) {
+			return $value;
+		}
+
+		return $status;
 	}
 
 	function get_courselist_page() {
@@ -231,7 +266,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$args = array(
 			'columns' => get_column_headers( $screen ),
 			'hidden_columns' => get_hidden_columns( $screen ),
-			'courses' => $CoursePress_User->get_accessible_courses( false ),
+			'courses' => $CoursePress_User->get_accessible_courses( false, false ),
 			'course_edit_link' => add_query_arg( 'page', 'coursepress_course', admin_url( 'admin.php' ) ),
 		);
 
