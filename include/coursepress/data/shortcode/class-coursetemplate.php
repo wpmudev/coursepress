@@ -1831,7 +1831,13 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					$label = $atts['current_label'];
 					if ( 0 == $counter ) {
 						$show_empty = true;
-						$content = sprintf( '<p class="message">%s</p>', $atts['student_msg'] );
+						$content = sprintf(
+							'<p class="message">%s</p>',
+							sprintf(
+								$atts['student_msg'],
+								esc_attr( '/'.CoursePress_Core::get_setting( 'slugs/course', 'courses' ) )
+							)
+						);
 					}
 				break;
 

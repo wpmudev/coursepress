@@ -1498,7 +1498,12 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 						'content' => __( 'Messge displayed when student is not enroled to any course.', 'CP_TD' ),
 						'default' => sprintf(
 							__( 'You are not enrolled in any courses. %s', 'CP_TD' ),
-							htmlentities( __( '<a href="%s">See available courses.</a>', 'CP_TD' ) )
+							htmlentities(
+								sprintf(
+									__( '<a href="%s">See available courses.</a>', 'CP_TD' ),
+									esc_attr( '/'.CoursePress_Core::get_setting( 'slugs/course', 'courses' ) )
+								)
+							)
 						),
 					),
 					'student' => array(
