@@ -242,15 +242,17 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	function get_course_edit_page() {
 		// We need the image editor here, enqueue it!!!
 		wp_enqueue_media();
+		// Include datepicker
+        wp_enqueue_script( 'jquery-ui-datepicker' );
 
 		$course_id = filter_input( INPUT_GET, 'cid', FILTER_VALIDATE_INT );
 
 		// If it's a new course, create a draft course
 		if ( empty( $course_id ) ) {
-            $course = coursepress_get_course(get_default_post_to_edit('course', true));
+            $course = coursepress_get_course( get_default_post_to_edit('course', true ) );
             $course->post_title = '';
         } else {
-            $course = coursepress_get_course($course_id);
+            $course = coursepress_get_course( $course_id );
         }
 
 		// Set course category
