@@ -7,6 +7,7 @@
         var CoursesList;
 
         CoursesList = CoursePress.View.extend({
+            currentPage: 'courselist',
             el: $('#coursepress-courselist'),
             events: {
                 'click .cp-reset-step': 'resetEditStep',
@@ -14,6 +15,12 @@
                 'click .menu-item-duplicate-course': 'duplicateCourse',
                 'click .menu-item-delete': 'deleteCourse',
                 'click #cp-search-clear': 'clearSearch'
+            },
+
+            initialize: function() {
+                this.request = new CoursePress.Request();
+                // On status toggle fail.
+                this.request.on( 'coursepress:error_course_status_toggle', this.revertStatusToggle, this );
             },
 
             /**
@@ -31,16 +38,22 @@
              */
             toggleCourseStatus: function(ev) {
                 var target = $(ev.target),
-                    request = new CoursePress.Request(),
-                    status = 'draft';
-                if ( target.prop('checked') ) {
-                    status = 'publish';
-                }
-                request.set( {
+                    status = target.prop('checked') ? 'publish' : 'draft';
+                this.request.set( {
                     'action' : 'course_status_toggle',
                     'course_id' : target.val(),
                     'status' : status,
-                } ).save();
+                } );
+                this.request.selector = target;
+                this.request.save();
+            },
+
+            /**
+             * Revert toggled status.
+             */
+            revertStatusToggle: function() {
+                var checked = this.request.selector.prop('checked');
+                this.request.selector.prop('checked', !checked);
             },
 
             duplicateCourse: function() {

@@ -217,22 +217,23 @@ class CoursePress_Admin_Ajax {
 	/**
 	 * Toggle course status.
 	 *
-	 * @param $request
+	 * @param $request Request data.
 	 */
 	function course_status_toggle( $request ) {
 
 		$toggled = false;
 
-		wp_send_json_success($request);
-
+		// If course id and status is not empty, attempt to change status.
 		if ( ! empty( $request->course_id ) && ! empty( $request->status ) ) {
 			$toggled = coursepress_change_course_status( $request->course_id, $request->status );
 		}
 
+		// If status changed, return success response, else fail.
 		if ( $toggled ) {
-			wp_send_json_success();
+			$success = array( 'message' => __( 'Course status updated successfully.', 'cp' ) );
+			wp_send_json_success( $success );
 		} else {
-			$error = array( 'error_code' => 'cannot_change_status', 'message' => __( 'Could not change course status.', 'cp' ) );
+			$error = array( 'error_code' => 'cannot_change_status', 'message' => __( 'Could not update course status.', 'cp' ) );
 			wp_send_json_error( $error );
 		}
 	}

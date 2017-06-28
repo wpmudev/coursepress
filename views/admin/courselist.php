@@ -90,7 +90,8 @@
                             <?php endforeach; ?>
                             <td class="column-status">
                                 <label>
-                                    <input type="checkbox" class="cp-toggle-input cp-toggle-course-status" value="<?php echo $course->ID; ?>" /> <span class="cp-toggle-btn"></span>
+                                    <?php $active =  ( isset( $course->post_status ) && $course->post_status === 'publish' ); ?>
+                                    <input type="checkbox" class="cp-toggle-input cp-toggle-course-status" value="<?php echo $course->ID; ?>" <?php checked( $active, true ); ?> /> <span class="cp-toggle-btn"></span>
                                 </label>
                             </td>
                         </tr>
