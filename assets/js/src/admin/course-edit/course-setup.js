@@ -19,6 +19,7 @@
                 'click .step-icon-bars': 'toggleStepList'
             },
             initialize: function(model) {
+                model = this.filter_model(model);
                 this.model = new CoursePress.CourseModel(model);
 
                 // Load course-type view
@@ -34,6 +35,21 @@
 
                 // Load templates
                 this.render();
+            },
+            filter_model: function (model) {
+                var dates = ['course_start_date', 'course_end_date', 'enrollment_start_date', 'enrollment_end_date'];
+
+                _.each( dates, function( d ) {
+                    if ( ! model[d] ) {
+                        model[d] = '';
+                    }
+                });
+
+                if ( ! model.class_size ) {
+                    model.class_size = 0;
+                }
+
+                return model;
             },
             render: function() {
                 var step;

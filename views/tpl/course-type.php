@@ -20,7 +20,7 @@
 
             <div class="cp-box">
                 <label class="label"><?php _e( 'Language', 'cp' ); ?></label>
-                <input type="text" class="widefat" name="meta_course_language" value="{{course_language}}" />
+                <input type="text" class="widefat" name="course_language" value="{{course_language}}" />
             </div>
         </div>
     </div>
@@ -36,19 +36,19 @@
                 <ul class="cp-flex cp-input-group">
                     <li class="cp-div-flex active">
                         <label>
-                            <input type="radio" name="course_type" value="auto-moderated" />
+                            <input type="radio" name="meta_course_type" value="auto-moderated" {{_.checked('auto-modated', course_type)}} />
                             <?php _e( 'Auto-moderated', 'cp' ); ?>
                         </label>
                     </li>
                     <li class="cp-div-flex">
                         <label>
-                            <input type="radio" name="course_type" value="manual" />
+                            <input type="radio" name="meta_course_type" value="manual" {{_.checked('manual', course_type)}} />
                             <?php _e( 'Manual moderation', 'cp' ); ?>
                         </label>
                     </li>
                     <li class="cp-div-flex">
                         <label>
-                            <input type="radio" name="course_type" value="sample_course" />
+                            <input type="radio" name="meta_course_type" value="sample" value="sample_course" {{_.checked('sample', course_type)}} />
                             <?php _e( 'Example course', 'cp' ); ?>
                         </label>
                     </li>
@@ -64,8 +64,8 @@
 
             <div class="cp-box cp-sep cp-course-type inactive" id="type-manual">
                 <div class="cp-box">
-                <label class="label"><?php _e( 'Class Size', 'cp' ); ?></label>
-                <?php _e( 'Number of students', 'cp' ); ?> <input type="number" name="meta_class_size" class="input-inline" value="{{class_size}}" />
+                    <label class="label"><?php _e( 'Class Size', 'cp' ); ?></label>
+                    <?php _e( 'Number of students', 'cp' ); ?> <input type="number" name="meta_class_size" class="input-inline" value="{{class_size}}" />
                 </div>
 
                 <label class="label"><?php _e( 'Course Availability', 'cp' ); ?></label>
@@ -93,7 +93,7 @@
                 </div>
             </div>
 
-            <div class="cp-box cp-course-type inactive" id="type-sample_course">
+            <div class="cp-box cp-course-type inactive" id="type-sample">
                 <div class="cp-alert cp-alert-info">
                     YEAH YEAH
                 </div>

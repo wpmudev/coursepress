@@ -101,9 +101,9 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 */
 	function add_submenu( $label = '', $cap, $slug, $callback ) {
 		$menu = add_submenu_page( $this->slug, 'CoursePress ' . $label, $label, $cap, $slug, array( $this, $callback ) );
-
 		// Add to the list of valid CP pages
 		array_unshift( $this->screens, $menu );
+		return $menu;
 	}
 
 	/**
@@ -114,9 +114,9 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	function set_admin_css() {
 		$coursepress_pagenow = coursepress_is_admin();
 
-		if ( ! $coursepress_pagenow )
+		if ( ! $coursepress_pagenow ) {
 			return; // Do not continue
-
+		}
 		/**
 		 * The key ID of current CP page loaded.
 		 * Both JS and CSS are autoloaded base on this ID.
@@ -159,9 +159,9 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		$coursepress_pagenow = coursepress_is_admin();
 
-		if ( ! $coursepress_pagenow )
+		if ( ! $coursepress_pagenow ) {
 			return; // Do not continue
-
+		}
 		$plugin_url = $CoursePress->plugin_url;
 
 		$this->localize_array = wp_parse_args( $this->localize_array, array(
@@ -265,15 +265,17 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	function get_course_edit_page() {
 		// We need the image editor here, enqueue it!!!
 		wp_enqueue_media();
+		// Include datepicker
+        wp_enqueue_script( 'jquery-ui-datepicker' );
 
 		$course_id = filter_input( INPUT_GET, 'cid', FILTER_VALIDATE_INT );
 
 		// If it's a new course, create a draft course
 		if ( empty( $course_id ) ) {
-            $course = coursepress_get_course(get_default_post_to_edit('course', true));
+            $course = coursepress_get_course( get_default_post_to_edit('course', true ) );
             $course->post_title = '';
         } else {
-            $course = coursepress_get_course($course_id);
+            $course = coursepress_get_course( $course_id );
         }
 
 		// Set course category
@@ -310,7 +312,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'menu_list' => $menu_list,
 		);
 
-		coursepress_render('views/admin/course-edit', $args );
+		coursepress_render( 'views/admin/course-edit', $args );
 		coursepress_render( 'views/admin/footer-text' );
 
 		// Load templates
@@ -349,6 +351,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	}
 
 	function get_settings_page() {
+		$this->lib3();
 		// Add global setting to localize array
 		$this->localize_array['settings'] = coursepress_get_setting( true );
 
@@ -363,5 +366,13 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		coursepress_render( 'views/tpl/settings-shortcodes' );
 		coursepress_render( 'views/tpl/settings-extensions' );
 		coursepress_render( 'views/tpl/settings-import-export' );
+	}
+
+	public function lib3() {
+		global $CoursePress;
+		$file = $CoursePress->plugin_path.'inc/external/wpmu-lib/core.php';
+		include_once $file;
+		lib3()->ui->add( 'core' );
+		lib3()->ui->add( 'html' );
 	}
 }
