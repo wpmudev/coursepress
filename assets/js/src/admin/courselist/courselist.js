@@ -12,7 +12,8 @@
                 'click .cp-reset-step': 'resetEditStep',
                 'change .cp-toggle-course-status': 'toggleCourseStatus',
                 'click .menu-item-duplicate-course': 'duplicateCourse',
-                'click .menu-item-delete': 'deleteCourse'
+                'click .menu-item-delete': 'deleteCourse',
+                'click #cp-search-clear': 'clearSearch'
             },
 
             /**
@@ -35,6 +36,15 @@
 
             deleteCourse: function() {
                 // @todo: delete course
+            },
+
+            /**
+             * Clear search form and submit.
+             */
+            clearSearch: function() {
+                // Removing name will exclude this field from form values.
+                this.$('input[name="s"]','#cp-search-form').removeAttr('name');
+                this.$('#cp-search-form').submit();
             }
         });
 
