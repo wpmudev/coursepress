@@ -25,8 +25,21 @@
                 CoursePress.Cookie('course_setup_step_' + course_id ).set( step, 86400 * 7);
             },
 
-            toggleCourseStatus: function() {
-                // @todo: switch status via JS
+            /**
+             * Toggle course status.
+             */
+            toggleCourseStatus: function(ev) {
+                var target = $(ev.target),
+                    request = new CoursePress.Request(),
+                    status = 'draft';
+                if ( target.prop('checked') ) {
+                    status = 'publish';
+                }
+                request.set( {
+                    'action' : 'course_status_toggle',
+                    'course_id' : target.val(),
+                    'status' : status,
+                } ).save();
             },
 
             duplicateCourse: function() {
