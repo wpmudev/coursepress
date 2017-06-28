@@ -410,16 +410,20 @@ class CoursePress_Data_Student {
 		switch ( $attributes['module_type'] ) {
 			case 'input-checkbox':
 				$selected = $attributes['answers_selected'];
+				$answers = $attributes['answers'];
 				$total = count( $selected );
-				$ratio = $total > 0 ? 100 / $total : 0;
+				$total_answers = count( $answers );
+				$ratio = $total_answers > 0 ? 100 / $total_answers : 0;
+				$correct_ratio = $total > 0 ? 100 / $total : 0;
 				$correct = 0;
+				$wrong = 0;
 
 				if ( is_array( $response ) ) {
 					foreach ( $response as $answer ) {
 						if ( in_array( $answer, $selected ) ) {
 							$correct++;
 						} else {
-						    $correct = $correct - 1;
+						    $wrong++;
                         }
 					}
 				}
@@ -429,7 +433,11 @@ class CoursePress_Data_Student {
 				$grade = 0;
 
 				if ( $correct > 0 && $total > 0 ) {
-					$grade = (int) $correct * $ratio;
+					$grade = (int) $correct * $correct_ratio;
+
+					if ( $wrong > 0 ) {
+					    $grade -= $ratio * $wrong;
+                    }
 				}
 
 				break;
