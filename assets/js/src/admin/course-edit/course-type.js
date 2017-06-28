@@ -1,4 +1,4 @@
-/* global CoursePress */
+/* global CoursePress, _ */
 
 (function(){
     'use strict';
@@ -11,7 +11,7 @@
             events: {
                 'keyup [name="post_title"]': 'updatePostName',
                 'keyup [name="post_name"]': 'updateSlug',
-                'change [name="course_type"]': 'changeCourseType'
+                'change [name="meta_course_type"]': 'changeCourseType'
             },
             initialize: function(model, EditCourse) {
                 // Let's inherit the model object from EditCourse
@@ -21,16 +21,42 @@
                 this.courseEditor = EditCourse;
                 EditCourse.on('coursepress:validate-course-type', this.validate, this);
 
-                this.on( 'view_rendered', this.setSelect2, this );
+                this.on( 'view_rendered', this.setUI, this );
 
                 this.render();
             },
             validate: function() {
-                //@todo: validate course type
+                var proceed = true;
+
+                if ( _.isEmpty( this.model.post_title ) ) {
+                    proceed = false;
+                }
+
+                if ( _.isTrue( this.model.payment_paid_course) ) {
+                    // @todo: Validate MP and Woo
+                }
+                if ( 'manual' === this.model.course_type ) {
+                    // Check course dates
+                    if ( _.isEmpty( this.model.course_start_date ) &&
+                        _.isEmpeyt( this.model.course_end_date ) &&
+                        _.isEmpty( this.model.enrollment_start_date ) &&
+                        _.isEmpty( this.model.enrollment_end_date ) ) {
+                        proceed = false;
+                    }
+                }
+
+                if ( ! _.isTrue(proceed ) ) {
+                    this.courseEditor.goToNext = false;
+                }
             },
 
-            setSelect2: function() {
-                //this.$('select').select2();
+            setUI: function() {
+                var options = {
+                    dateFormat: 'MM dd, yy'
+                    },
+                    names = '[name="meta_course_start_date"],[name="meta_course_end_date"],[name="meta_enrollment_start_date"],[name="enrollment_end_date"]';
+
+                this.$( names ).datepicker( options );
             },
 
             updatePostName: function( ev ) {

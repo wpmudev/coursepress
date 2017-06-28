@@ -1,9 +1,14 @@
 $width: 100%;
+
+$white: #fff;
+
 $color_1: #dedede;
 $color_2: #fbfbfb;
 $color_3: #51b9e8;
+
 $dark_1: #333333;
 $dark_2: #555555;
+
 $grey_1: #5e5e5e;
 $grey_2: #757575;
 $grey_3: #808080;
@@ -11,12 +16,16 @@ $grey_4: #a4a4a4;
 $grey_5: #dedede;
 $grey_6: #fbfbfb;
 $grey_7: #fefefe;
+$grey_8: #fafafa;
+
 $blue_1: #51b9e8;
 $blue_2: #4f9ac9;
 $blue_3: #497daa;
 $blue_4: #366587;
 $blue_5: #e1f6ff;
 $blue_6: #17a8e3;
+$red: #ff0000;
+
 $code_font: Consolas, Monaco, monospace;
 
 @mixin boxsizing {

@@ -1,0 +1,13 @@
+.cp-error {
+  margin: 0;
+  color: $red;
+
+  &:before {
+    content: '\f534';
+    font-family: Dashicons;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 1.8em;
+    margin-right: 6px;
+  }
+}
