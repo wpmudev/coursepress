@@ -58,11 +58,26 @@ function coursepress_get_courses( $args = array() ) {
 	/** @var $CoursePress_Core CoursePress_Core */
 	global $CoursePress_Core;
 
-	$posts_per_page = coursepress_get_option( 'posts_per_page', 20 );
+	// If courses per page is not set.
+	if ( ! isset( $args['posts_per_page'] ) ) {
+		// Set the courses per page from screen options.
+		$posts_per_page = get_user_meta( get_current_user_id(), 'coursepress_course_per_page', true );
+		// If screen option is not sert, default posts per page.
+		if ( empty( $posts_per_page ) ) {
+			$posts_per_page = coursepress_get_option( 'posts_per_page', 20 );
+		}
+		$args['posts_per_page'] = $posts_per_page;
+		// Set the current page (get_query_var() won't work).
+		$args['paged'] = isset( $_REQUEST['paged'] ) ? absint( $_REQUEST['paged'] ) : 1;
+	}
+
+	// If search query found.
+	if ( isset( $_GET[ 's' ] ) ) {
+		$args['s'] = $_GET[ 's' ];
+	}
 
 	$args = wp_parse_args( array(
 		'post_type' => $CoursePress_Core->__get( 'course_post_type' ),
-		'posts_per_page' => $posts_per_page,
 		'suppress_filters' => true,
 		'fields' => 'ids',
 	), $args );
