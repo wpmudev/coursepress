@@ -10,7 +10,7 @@
 						'slugs' => __( 'URL Slugs', 'cp' ),
 						'emails' => __( 'Emails', 'cp' ),
 						'capabilities' => __( 'Capabilities', 'cp' ),
-						'certificate' => __( 'Certificate', 'cp' ),
+						'basic_certificate' => __( 'Certificate', 'cp' ),
 						'shortcodes' => __( 'Shortcodes', 'cp' ),
 						'extensions' => __( 'Extensions', 'cp' ),
 						'import-export' => __( 'Import/Export', 'cp' ),

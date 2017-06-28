@@ -2,150 +2,223 @@
 @import "common/mixin.scss";
 @import "admin/table.scss";
 
-.coursepress-wrap {
+#wpwrap {
 
-  .cp-code-box {
-    font-family: $code_font;
-    display: block;
-    border: 1px solid $color_1;
-    background-color: $color_2;
-    padding: 0 10px;
-    @include radius(3px);
-    @include clearfix;
-    width: $width;
+  .coursepress-wrap {
 
-    p {
-      line-height: 1.5;
-    }
-  }
-  .cp-select-list {
-    height: 250px;
-    max-width: 98%;
-    overflow: auto;
-    border: 1px solid $grey_4;
-    padding-top: 10px;
-    li {
-      margin: 0;
-      border-right: none;
-      padding: 8px 15px;
-      text-align: left;
-      &.active {
-        border-top: 1px solid $grey_4;
-        border-bottom: 1px solid $grey_4;
-        @include radius(0);
+    .cp-code-box {
+      font-family: $code_font;
+      display: block;
+      border: 1px solid $color_1;
+      background-color: $color_2;
+      padding: 0 10px;
+      @include radius(3px);
+      @include clearfix;
+      width: $width;
+
+      p {
+        line-height: 1.5;
       }
     }
-  }
-  .cp-usage-label {
-    font-size: 11px;
-    text-transform: uppercase;
-    font-weight: 600;
-    height: 6px;
-    margin: 10px 0 2px 0;
-  }
-  .cp-attr-sub-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: #888888;
-  }
-  .cp-box-content {
+    .cp-select-list {
+      height: 250px;
+      max-width: 98%;
+      overflow: auto;
+      border: 1px solid $grey_4;
+      padding-top: 10px;
+      li {
+        margin: 0;
+        border-right: none;
+        padding: 8px 15px;
+        text-align: left;
+        &.active {
+          border-top: 1px solid $grey_4;
+          border-bottom: 1px solid $grey_4;
+          @include radius(0);
+        }
+      }
+    }
+    .cp-usage-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 600;
+      height: 6px;
+      margin: 10px 0 2px 0;
+    }
+    .cp-attr-sub-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: $grey_3;
+    }
+    .cp-box-content {
       .box-label-area,
       .box-inner-content {
-          border-top: 1px solid $grey_5;
+        border-top: 1px solid $grey_5;
       }
-    &.cp-shortcode-list {
-      background-color: #f3f3f3;
-    }
-    .box-inner-content {
-        .half {
+      &:first-of-type {
+        .box-label-area,
+        .box-inner-content {
+          border-top: 0;
+        }
+      }
+      &.cp-shortcode-list {
+        background-color: $grey_6;
+      }
+      .box-inner-content {
+        .option {
+          min-height: 2em;
+          margin-bottom: 15px;
+          h3 {
+            color: $grey_3;
+            font-size: .9em;
+            margin: 0;
+          }
+          &.half {
             width: 48%;
             float: left;
             margin-right: 2%;
-            &.half-last {
-                margin-right: 0;
-                margin-left: 2%;
+            &:last-child {
+              margin-right: 0;
+              margin-left: 2%;
             }
-        }
-    }
-  }
-
-  #coursepress-setting-general {
-    .cp-box-content.cp-sep:last-of-type {
-      &:after {
-        border: 0;
-      }
-    }
-  }
-  #coursepress-setting-capabilities {
-    .cp-caps-fields {
-      position: relative;
-      border: {
-        style: solid;
-        width: 1px 0 0 0;
-        color: $grey_5;
-      }
-      margin-bottom: 25px;
-
-      .cp-sep {
-        &:before {
-          content: '';
-          position: absolute;
-          top: -15px;
-          left: 50px;
-          border: {
-            style: solid;
-            width: 0 1px 1px 0;
-            color: $grey_5;
           }
-          width: 30px;
-          height: 30px;
-          background-color: #f3f3f3;
-          -webkit-transform: rotate(45deg);
-          -moz-transform: rotate(45deg);
-          -ms-transform: rotate(45deg);
-          -o-transform: rotate(45deg);
-          transform: rotate(45deg);
+          &.option-radio_slider {
+            position: relative;
+            margin-left: 50px;
+            .wpmui-radio-slider-wrapper {
+              .wpmui-radio-slider {
+                position: absolute;
+                left: -50px;
+                top: 0;
+                border: 1px solid $grey_4;
+                &.on {
+                  background: $grey_8;
+                  .wpmui-toggle {
+                    background: $blue_6;
+                  }
+                }
+              }
+              .wpmui-toggle {
+                background: $grey_3;
+                width: 18px;
+                height: 18px;
+                margin: -1px 0;
+              }
+            }
+          }
+          button {
+            &.wpmui-field-input {
+              background-color: $grey_3;
+              color: $white;
+              text-transform: uppercase;
+              &.cp-dashicons {
+                line-height: 26px;
+              }
+            }
+          }
+        }
+        .flex {
+          display: flex;
+          padding-bottom: 10px;
+          .option {
+            padding-left: 10px;
+            &:first-child {
+              padding-left: 0;
+            }
+          }
+        }
+      }
+      &.cp-box-custom-certificate {
+        .box-label-area,
+        .box-inner-content {
+          float: none;
+          width: 100%;
+        }
+        .box-inner-content {
+          padding-left: 0;
+          border-top: 0;
         }
       }
     }
-    .box-inner-content {
-      display: block;
-      width: 100%;
-      padding-left: 0;
-      @include clearfix;
-    }
-  }
 
-  @media screen {
-    @media (min-width: 768px) {
-      .option-image_width,
-      .option-image_height {
-        display: inline-block;
-        width: 50%;
-      }
-      .option-image_width {
-        margin-right: -15px;
-      }
-      .wpmui-number {
-        width: 100px;
-        @include boxsizing;
+    #coursepress-setting-general {
+      .cp-box-content.cp-sep:last-of-type {
+        &:after {
+          border: 0;
+        }
       }
     }
+    #coursepress-setting-capabilities {
+      .cp-caps-fields {
+        position: relative;
+        border: {
+          style: solid;
+          width: 1px 0 0 0;
+          color: $grey_5;
+        }
+        margin-bottom: 25px;
 
-    @media (min-width: 1128px) {
-      .option-image_width,
-      .option-image_height {
-        width: 35%;
+        .cp-sep {
+          &:before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 50px;
+            border: {
+              style: solid;
+              width: 0 1px 1px 0;
+              color: $grey_5;
+            }
+            width: 30px;
+            height: 30px;
+            background-color: #f3f3f3;
+            -webkit-transform: rotate(45deg);
+            -moz-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            -o-transform: rotate(45deg);
+            transform: rotate(45deg);
+          }
+        }
       }
-      .wpmui-number {
-        width: 80%;
+      .box-inner-content {
+        display: block;
+        width: 100%;
+        padding-left: 0;
+        @include clearfix;
       }
+    }
 
-      #coursepress-setting-capabilities {
-        .flex-half {
+    @media screen {
+      @media (min-width: 768px) {
+        .option-image_width,
+        .option-image_height {
+          display: inline-block;
           width: 50%;
-          float: left;
+        }
+        .option-image_width {
+          margin-right: -15px;
+        }
+        .wpmui-number {
+          width: 100px;
           @include boxsizing;
+        }
+      }
+
+      @media (min-width: 1128px) {
+        .option-image_width,
+        .option-image_height {
+          width: 35%;
+        }
+        .wpmui-number {
+          width: 80%;
+        }
+
+        #coursepress-setting-capabilities {
+          .flex-half {
+            width: 50%;
+            float: left;
+            @include boxsizing;
+          }
         }
       }
     }

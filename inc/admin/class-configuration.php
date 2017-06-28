@@ -11,7 +11,7 @@ class CoursePress_Admin_Configuration {
 	private $pages = null;
 
 	public function __construct() {
-		add_filter( 'coursepress_settings-certificate', array( $this, 'certificate' ) );
+		//add_filter( 'coursepress_settings-certificate', array( $this, 'certificate' ) );
 		add_filter( 'coursepress_settings-general', array( $this, 'general' ) );
 		add_filter( 'coursepress_settings-import-export', array( $this, 'import_export' ) );
 		add_filter( 'coursepress_settings-slugs', array( $this, 'slugs' ) );
@@ -25,6 +25,7 @@ class CoursePress_Admin_Configuration {
 	 * @since 3.0
 	 */
 	public function certificate( $config ) {
+        $toggle_input = coursepress_create_html( 'span', array( 'class' => 'cp-toggle-btn' ) );
 		/**
 		 * Certificate Options
 		 */
@@ -32,13 +33,13 @@ class CoursePress_Admin_Configuration {
 			'title' => __( 'Certificate options', 'CoursePress' ),
 			'fields' => array(
 				'coursepress_settings[basic_certificate][enabled]' => array(
-					'type' => 'radio_slider',
-					'title' => __( 'Enable basic certificate', 'CoursePress' ),
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Enable basic certificate', 'CoursePress' ),
 					'value' => coursepress_get_setting( 'basic_certificate/enabled', true ),
 				),
 				'coursepress_settings[basic_certificate][use_cp_default]' => array(
-					'type' => 'radio_slider',
-					'title' => __( 'Use custom CoursePress certificate', 'CoursePress' ),
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Use custom CoursePress certificate', 'CoursePress' ),
 					'value' => ! coursepress_get_setting( 'basic_certificate/use_cp_default', false ),
 				),
 			),
@@ -72,25 +73,28 @@ class CoursePress_Admin_Configuration {
 		 *
 		 */
 		 $config['content_margin'] = array(
-			'title' => __( 'Content Margin', 'CoursePress' ),
-			'description' => __( '', 'CoursePress' ),
-			'fields' => array(
-				'coursepress_settings[basic_certificate][margin][top]' => array(
-					'type' => 'number',
-					'title' => __( 'Top', 'CoursePress' ),
-					'value' => coursepress_get_setting( 'basic_certificate/margin/top' ),
-				),
-				'coursepress_settings[basic_certificate][margin][left]' => array(
-					'type' => 'number',
-					'title' => __( 'Left', 'CoursePress' ),
-					'value' => coursepress_get_setting( 'basic_certificate/margin/left' ),
-				),
-				'coursepress_settings[basic_certificate][margin][right]' => array(
-					'type' => 'number',
-					'title' => __( 'Right', 'CoursePress' ),
-					'value' => coursepress_get_setting( 'basic_certificate/margin/right' ),
-				),
-			),
+			 'title' => __( 'Content Margin', 'CoursePress' ),
+			 'description' => __( '', 'CoursePress' ),
+			 'fields' => array(
+				 'coursepress_settings[basic_certificate][margin][top]' => array(
+					 'type' => 'number',
+					 'label' => __( 'Top', 'CoursePress' ),
+					 'value' => coursepress_get_setting( 'basic_certificate/margin/top' ),
+					 'flex' => true,
+				 ),
+				 'coursepress_settings[basic_certificate][margin][left]' => array(
+					 'type' => 'number',
+					 'label' => __( 'Left', 'CoursePress' ),
+					 'value' => coursepress_get_setting( 'basic_certificate/margin/left' ),
+					 'flex' => true,
+				 ),
+				 'coursepress_settings[basic_certificate][margin][right]' => array(
+					 'type' => 'number',
+					 'label' => __( 'Right', 'CoursePress' ),
+					 'value' => coursepress_get_setting( 'basic_certificate/margin/right' ),
+					 'flex' => true,
+				 ),
+			 ),
 		 );
 		 /**
 		 * Page orientation
@@ -128,7 +132,8 @@ class CoursePress_Admin_Configuration {
 			'fields' => array(
 				'coursepress_settings[basic_certificate][preview]' => array(
 					'type' => 'button',
-					'value' => __( 'Preview Certificate', 'CoursePress' ),
+					'value' => '<span class="dashicons dashicons-visibility"></span>'.__( 'Preview Certificate', 'CoursePress' ),
+					'class' => 'cp-dashicons alignright',
 				),
 			),
 		 );
@@ -264,6 +269,7 @@ class CoursePress_Admin_Configuration {
                     'desc' => __( 'Attach default CoursePress menu items ( Courses, Student Dashboard, Log Out ) to the <strong>Primary Menu</strong>.<br />Items can also be added from Appearance &gt; Menus and the CoursePress panel.', 'CoursePress' ),
                 ),
             ),
+
 		);
 		/**
 		 * Login Form
@@ -1067,48 +1073,6 @@ class CoursePress_Admin_Configuration {
 		);
 
 		return apply_filters( 'coursepress_capabilities', $config );
-	}
-
-	/**
-	 * Print options page, based on option name.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param string $option_name Option name.
-	 */
-	public function print_options( $option_name ) {
-		$options = apply_filters( $option_name, array() );
-		foreach ( $options as $option_key => $option ) {
-			$classes = 'box-inner-content';
-			printf( '<div class="cp-box-content cp-box-%s">', esc_attr( $option_key ) );
-			if ( ! empty( $option['title'] ) || ! empty( $option['description'] ) ) {
-				echo '<div class="box-label-area">';
-				if ( ! empty( $option['title'] ) ) {
-					printf(
-						'<h2 class="label">%s</h2>',
-						$option['title']
-					);
-				}
-				if ( isset( $option['description'] ) ) {
-					printf( '<p class="description">%s</p>', $option['description'] );
-				}
-				echo '</div>';
-			} else {
-				$classes .= ' box-inner-full';
-			}
-			printf( '<div class="%s">', esc_attr( $classes ) );
-			foreach ( $option['fields'] as $key => $data ) {
-				printf( '<div class="option option-%s">', esc_attr( sanitize_title( $key ) ) );
-				if ( isset( $data['label'] ) ) {
-					printf( '<h3>%s</h3>', $data['label'] );
-				}
-				$data['name'] = $key;
-				lib3()->html->element( $data );
-				echo '</div>';
-			}
-			echo '</div>';
-			echo '</div>';
-		}
 	}
 
 	private function get_pages() {

@@ -20,7 +20,7 @@
                 this.once( 'coursepress:admin_setting_slugs', this.getSlugsSettingView, this );
                 this.once( 'coursepress:admin_setting_emails', this.getEmailSettingView, this );
                 this.once( 'coursepress:admin_setting_capabilities', this.getCapabilitiesView, this );
-                this.once( 'coursepress:admin_setting_certificate', this.getCertificateView, this );
+                this.once( 'coursepress:admin_setting_basic_certificate', this.getCertificateView, this );
                 this.once( 'coursepress:admin_setting_shortcodes', this.getShortCodesView, this );
                 this.once( 'coursepress:admin_setting_extensions', this.getExtensionsView, this );
                 this.once( 'coursepress:admin_setting_import-export', this.getImportExportView, this );
@@ -74,7 +74,7 @@
             },
 
             getCertificateView: function() {
-                this.settings.certificate = new CoursePress.CertificateSettings( this.model.get('certificate') );
+                this.settings.certificate = new CoursePress.CertificateSettings( this.model.get('basic_certificate') );
             },
 
             getShortCodesView: function() {

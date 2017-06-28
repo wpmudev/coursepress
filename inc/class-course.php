@@ -53,7 +53,7 @@ class CoursePress_Course extends CoursePress_Utility {
 		$date_keys = array( 'course_start_date', 'course_end_date', 'enrollment_start_date', 'enrollment_end_date' );
 
 		foreach ( $settings as $key => $value ) {
-			if ( in_array( $key, $date_keys ) && ! empty( $value ) ) {
+			if ( in_array( $key, $date_keys ) ) {
 				$timestamp = strtotime( $value, $time_now );
 				$value = date_i18n( $date_format, $timestamp );
 
