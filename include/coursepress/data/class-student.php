@@ -412,13 +412,15 @@ class CoursePress_Data_Student {
 				$selected = $attributes['answers_selected'];
 				$total = count( $selected );
 				$ratio = $total > 0 ? 100 / $total : 0;
-
 				$correct = 0;
+
 				if ( is_array( $response ) ) {
 					foreach ( $response as $answer ) {
 						if ( in_array( $answer, $selected ) ) {
 							$correct++;
-						}
+						} else {
+						    $correct = $correct - 1;
+                        }
 					}
 				}
 				if ( 0 > $correct ) {
