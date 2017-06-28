@@ -7,7 +7,6 @@
         var CoursesList;
 
         CoursesList = CoursePress.View.extend({
-            currentPage: 'courselist',
             el: $('#coursepress-courselist'),
             events: {
                 'click .cp-reset-step': 'resetEditStep',
@@ -37,14 +36,13 @@
              * Toggle course status.
              */
             toggleCourseStatus: function(ev) {
-                var target = $(ev.target),
-                    status = target.prop('checked') ? 'publish' : 'draft';
+                this.request.selector = $(ev.target);
+                var status = this.request.selector.prop('checked') ? 'publish' : 'draft';
                 this.request.set( {
                     'action' : 'course_status_toggle',
-                    'course_id' : target.val(),
+                    'course_id' : this.request.selector.val(),
                     'status' : status,
                 } );
-                this.request.selector = target;
                 this.request.save();
             },
 
