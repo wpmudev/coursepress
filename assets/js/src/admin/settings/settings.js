@@ -74,7 +74,7 @@
             },
 
             getCertificateView: function() {
-                this.settings.certificate = new CoursePress.CertificateSettings( this.model.get('basic_certificate') );
+                this.settings.basic_certificate = new CoursePress.CertificateSettings( this.model.get('basic_certificate') );
             },
 
             getShortCodesView: function() {

@@ -216,6 +216,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
             $request = array_map( array( $this, 'to_array' ), $request );
         }
 
+        error_log(print_r($request,true));
         coursepress_update_setting( true, $request );
 
         return array( 'success' => true );
@@ -229,5 +230,56 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
         } elseif ( ! $CoursePress_Extension->is_plugin_active( 'marketpress/marketpress.php' ) ) {
             // Activate plugin
         }
+    }
+
+    // Generate CERTIFICATE preview
+    function preview_certificate( $request ) {
+        global $CoursePress;
+
+        $course_id = '';
+
+        if ( isset( $request->course_id ) ) {
+            $course_id = $request->course_id;
+        }
+
+        $pdf = $CoursePress->get_class( 'CoursePress_PDF' );
+        $filename = 'cert-preview-' . $course_id . '.pdf';
+        $content = $request->content;
+        $background = $request->background_image;
+        $margins = get_object_vars( $request->margin );
+        $text_color = $request->cert_text_color;
+        $orientation = isset( $request->page_orientation ) ? $request->page_orientation : $request->orientation;
+        $date_format = apply_filters( 'coursepress_basic_certificate_date_format', get_option( 'date_format' ) );
+
+        $content = apply_filters( 'coursepress_basic_certificate_html', $content, $course_id, get_current_user_id() );
+
+        $vars = array(
+            'FIRST_NAME' => __( 'Jon', 'CP_TD' ),
+            'LAST_NAME' => __( 'Snow', 'CP_TD' ),
+            'COURSE_NAME' => __( 'Example Course Title', 'CP_TD' ),
+            'COMPLETION_DATE' => date_i18n( $date_format, $this->date_time_now() ),
+            'CERTIFICATE_NUMBER' => uniqid( rand(), true ),
+        );
+        $content = $this->replace_vars( $content, $vars );
+
+        // Set PDF args
+        $args = array(
+            'title' => __( 'Course Completion Certificate', 'CP_TD' ),
+            'orientation' => $orientation,
+            'image' => $background,
+            'filename' => $filename,
+            'format' => 'F',
+            'uid' => '12345',
+            'margins' => apply_filters( 'coursepress_basic_certificate_margins', $margins ),
+            'logo' => apply_filters( 'coursepress_basic_certificate_logo', '' ),
+            'text_color' => apply_filters( 'coursepress_basic_certificate_text_color', $text_color ),
+        );
+
+        $pdf->make_pdf( $content, $args );
+
+        return array(
+            'success' => true,
+            'pdf' => $pdf->cache_url() . $filename,
+        );
     }
 }

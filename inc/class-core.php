@@ -71,6 +71,13 @@ final class CoursePress_Core extends CoursePress_Utility {
 			'query_var' => false,
 			'publicly_queryable'=> false,
 		) );
+
+		// Certificate
+        register_post_type( 'cp_certificate', array(
+            'public' => false,
+            'show_ui' => false,
+            'can_export' => false,
+        ) );
 	}
 
 	function add_query_vars( $vars ) {

@@ -53,6 +53,8 @@ final class CoursePress {
 	 */
 	var $version = '3.0-beta';
 
+	var $name = 'CoursePress Pro';
+
 	/**
 	 * @var string
 	 */

@@ -189,7 +189,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// General admin js
 		wp_enqueue_script( 'coursepress-admin-general', $plugin_url . 'assets/js/admin-general.min.js', array( 'jquery', 'backbone', 'underscore', 'jquery-ui-autocomplete' ), $CoursePress->version, true );
-		$this->enqueue_script( $coursepress_pagenow, 'assets/js/' . $coursepress_pagenow . '.min.js' );
+		$this->enqueue_script( $coursepress_pagenow, 'assets/js/' . $coursepress_pagenow . '.js' ); // Change to .min
 
 		// Set local vars
 		$localize_array = apply_filters( 'coursepress_admin_localize_array', $this->localize_array );

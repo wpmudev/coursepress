@@ -494,3 +494,55 @@ function coursepress_alert_message( $content = '', $type = 'info' ) {
 
 	return $html;
 }
+
+function coursepress_convert_hex_color_to_rgb($hex_color, $default)
+{
+    $color_valid = (boolean) preg_match('/^#[a-f0-9]{6}$/i', $hex_color);
+    if($color_valid)
+    {
+        $values = CP_TCPDF_COLORS::convertHTMLColorToDec($hex_color, CP_TCPDF_COLORS::$spotcolor);
+        return array_values($values);
+    }
+
+    return $default;
+}
+
+function coursepress_download_file( $requested_file ) {
+    global $CoursePress;
+
+    ob_start();
+
+    $requested_file_obj = wp_check_filetype( $requested_file );
+    $filename = basename( $requested_file );
+
+    /**
+     * Filter used to alter header params. E.g. removing 'timeout'.
+     */
+    $force_download_parameters = apply_filters(
+        'coursepress_force_download_parameters',
+        array(
+            'timeout' => 60,
+            'user-agent' => $CoursePress->name . ' / ' . $CoursePress->version . ';',
+        )
+    );
+
+    $body = wp_remote_retrieve_body( wp_remote_get( $requested_file ), $force_download_parameters );
+    if ( empty( $body ) && preg_match( '/^https/', $requested_file ) ) {
+        $requested_file = preg_replace( '/^https/', 'http', $requested_file );
+        $body = wp_remote_retrieve_body( wp_remote_get( $requested_file ), $force_download_parameters );
+    }
+    if ( ! empty( $body ) ) {
+        header( 'Pragma: public' );
+        header( 'Expires: 0' );
+        header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
+        header( 'Cache-Control: private', false );
+        header( 'Content-Type: ' . $requested_file_obj['type'] );
+        header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+        header( 'Content-Transfer-Encoding: binary' );
+        header( 'Connection: close' );
+        echo $body;
+    } else {
+        _e( 'Something went wrong.', 'CP_TD' );
+    }
+    exit();
+}

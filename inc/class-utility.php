@@ -83,4 +83,24 @@ abstract class CoursePress_Utility {
      */
     function is_pro() {
     }
+
+    /**
+     * Replaces the defined placeholders in the content with specified values.
+     *
+     * @since  2.0.0
+     * @param  string $content The full content, with placeholders.
+     * @param  array  $vars List of placeholder => value.
+     * @return string The content but with all placeholders replaced.
+     */
+    function replace_vars( $content, $vars ) {
+        $keys = array();
+        $values = array();
+
+        foreach ( $vars as $key => $value ) {
+            $keys[] = $key;
+            $values[] = $value;
+        }
+
+        return str_replace( $keys, $values, $content );
+    }
 }
