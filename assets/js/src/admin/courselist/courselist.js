@@ -39,10 +39,12 @@
             },
 
             /**
-             * Clear search form.
+             * Clear search form and submit.
              */
             clearSearch: function() {
-                this.$(':input','.cp-search-form').not(':button, :hidden').val('');
+                // Removing name will exclude this field from form values.
+                this.$('input[name="s"]','#cp-search-form').removeAttr('name');
+                this.$('#cp-search-form').submit();
             }
         });
 

@@ -214,15 +214,27 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		return $columns;
 	}
 
+	/**
+	 * Columns to be hidden by default.
+	 *
+	 * @return array
+	 */
 	function hidden_columns() {
+
 		return array( 'category', 'start_date', 'end_date', 'enrollment_start', 'enrollment_end' );
 	}
 
+	/**
+	 * Custom screen options for course listing page.
+	 */
 	function process_courselist_page() {
+
 		$screen_id = get_current_screen()->id;
+
 		add_filter( 'default_hidden_columns', array( $this, 'hidden_columns' ) );
 		add_filter( 'manage_' . $screen_id . '_columns', array( $this, 'courselist_columns' ) );
 
+		// Courses per page.
 		add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_course_per_page' ) );
 	}
 
