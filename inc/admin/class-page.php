@@ -279,7 +279,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	/**
 	 * Set pagination for courses listing page.
 	 *
-	 * We are using WP_Listing_Table class to set
+	 * We are using WP_Listing_Table class to set pagination.
 	 *
 	 * @param int $count Total courses.
 	 *
@@ -290,29 +290,16 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		// Get no. of courses per page.
 		$per_page = get_user_meta( get_current_user_id(), 'coursepress_course_per_page', true );
 		$per_page = empty( $per_page ) ? coursepress_get_option( 'posts_per_page', 20 )  : $per_page;
-		// Get current page number.
-		$paged = isset( $_GET[ 'paged' ] ) ? $_GET[ 'paged' ] : 1;
-		// Total page numbers.
-		$total = ceil( $count / absint( $per_page ) );
 
-		// Pagination options.
-		$options = array(
-			'base' => add_query_arg( 'paged', '%#%' ),
-			'prev_text' => '&laquo;',
-			'next_text' => '&raquo;',
-			'total' => $total,
-			'current' => $paged,
-			'mid_size' => 1,
+		// Using WP_List table for pagination.
+		$listing = new WP_List_Table();
+		$args = array(
+			'total_items' => $count,
+			'per_page' => $per_page,
 		);
+		$listing->set_pagination_args( $args );
 
-		/**
-		 * Filter to modify pagination options.
-		 *
-		 * @param array $options Pagination options.
-		 */
-		$options = apply_filters( 'coursepress_courses_pagination_options', $options );
-
-		return paginate_links( $options );
+		return $listing;
 	}
 
 	function get_course_edit_page() {
