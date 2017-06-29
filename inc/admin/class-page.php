@@ -138,7 +138,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Set stylesheets
 		$this->enqueue_style( 'fontawesome', 'assets/external/css/font-awesome.min.css' );
-		$this->enqueue_style( 'fontawesome', 'assets/external/css/font-awesome.min.css' );
 		$this->enqueue_style( 'coursepress-admin-common', 'assets/css/admin-common.min.css' );
 		$this->enqueue_style( $coursepress_pagenow, 'assets/css/' . $coursepress_pagenow . '.min.css' );
 
