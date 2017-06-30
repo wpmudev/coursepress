@@ -8,8 +8,7 @@
  * @package CoursePress
  */
 class CoursePress_Admin_Actions {
-
-
+	
 	public function __construct() {
 
 		// Hook to `admin_init` action hook to process action requests.
