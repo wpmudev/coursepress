@@ -11,11 +11,12 @@ class CoursePress_Admin_Configuration {
 	private $pages = null;
 
 	public function __construct() {
+		add_filter( 'coursepress_settings-capabilities', array( $this, 'capabilities' ) );
 		add_filter( 'coursepress_settings-certificate', array( $this, 'certificate' ) );
+		add_filter( 'coursepress_settings-emails', array( $this, 'emails' ) );
 		add_filter( 'coursepress_settings-general', array( $this, 'general' ) );
 		add_filter( 'coursepress_settings-import-export', array( $this, 'import_export' ) );
 		add_filter( 'coursepress_settings-slugs', array( $this, 'slugs' ) );
-		add_filter( 'coursepress_settings-capabilities', array( $this, 'capabilities' ) );
 	}
 
 	/**
@@ -1074,6 +1075,33 @@ class CoursePress_Admin_Configuration {
 		);
 
 		return apply_filters( 'coursepress_capabilities', $config );
+	}
+
+	/**
+	 * Contol emails configuration pages
+	 *
+	 *
+	 * @since 3.0
+		 */
+	public function emails( $config ) {
+		/**
+		 * sort
+		 */
+		uasort( $config, array( $this, 'sort_by_title' ) );
+		/**
+		 * return configuration
+		 */
+		return $config;
+	}
+
+	private function sort_by_title( $a, $b ) {
+		if ( ! isset( $a['title'] ) || ! isset( $b['title'] ) ) {
+			return 0;
+		}
+		if ( $a['title'] == $b['title'] ) {
+			return 0;
+		}
+		return ($a['title'] < $b['title']) ? -1 : 1;
 	}
 
 	private function get_pages() {
