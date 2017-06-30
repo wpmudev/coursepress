@@ -9,7 +9,9 @@ $options = apply_filters( $option_name, array() );
 /**
  * print options list
  */
-echo '<div class="cp-box-content cp-box-index"><ul>';
+echo '<div class="cp-box-content cp-box-index">';
+printf( '<h3>%s</h3>', __( 'Pick email to customize', 'CoursePress' ) );
+echo '<ul>';
 foreach ( $options as $option_key => $option ) {
 	if ( ! empty( $option['title'] ) ) {
 		printf(
@@ -25,7 +27,7 @@ echo '</ul></div>';
  */
 foreach ( $options as $option_key => $option ) {
 	$classes = 'box-inner-content';
-	printf( '<div class="cp-box-content cp-box-%s hidden">', esc_attr( $option_key ) );
+	printf( '<div class="cp-box-content cp-box-emails cp-box-%s hidden">', esc_attr( $option_key ) );
 	if ( ! empty( $option['title'] ) || ! empty( $option['description'] ) ) {
 		echo '<div class="box-label-area">';
 		if ( ! empty( $option['title'] ) ) {

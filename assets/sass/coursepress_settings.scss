@@ -139,7 +139,49 @@
             border-top: 0;
         }
     }
-  }
+    &.cp-box-emails {
+        .flex {
+            .option {
+                flex-grow: 1;
+            }
+        }
+    }
+    span {
+        &.cp-info {
+            display: block;
+            margin: 10px 0;
+        }
+    }
+    &.cp-box-index {
+        padding: 10px;
+        background-color: $grey_6;
+        ul {
+            border: 1px solid $grey_3;
+            @include radius(5px);
+            a {
+                display: block;
+                padding: 5px 10px;
+                color: $black;
+                &.selected {
+                    background-color: $grey_5;
+                    font-weight: 600;
+                }
+            }
+        }
+    }
+}
+.cp-info {
+    background-color: $blue_5;
+    font-size: 1.1em;
+    @include radius(5px);
+    line-height: 2em;
+    padding: 20px 30px;
+    .dashicons {
+        color: $blue_6;
+        font-size: 2em;
+        padding-right: .4em;
+    }
+}
 
 }
 }

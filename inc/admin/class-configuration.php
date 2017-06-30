@@ -1084,6 +1084,51 @@ class CoursePress_Admin_Configuration {
 	 * @since 3.0
 		 */
 	public function emails( $config ) {
+
+		$emails = new CoursePress_Email();
+		$defaults = $emails->get_defaults();
+		$sections = $emails->get_settings_sections();
+
+		foreach ( $defaults as $key => $data ) {
+			$config[ 'email_'.$key ] = array(
+				'title' => $sections[ $key ]['title'],
+				'description' => $sections[ $key ]['description'],
+				'fields' => array(
+					'from' => array(
+						'type' => 'text',
+						'title' => __( 'From name', 'CoursePress' ),
+						'value' => coursepress_get_setting( 'email/'.$key.'/from', $data['from'] ),
+						'flex' => true,
+						'class' => 'large-text',
+					),
+					'email' => array(
+						'type' => 'text',
+						'title' => __( 'From email', 'CoursePress' ),
+						'value' => coursepress_get_setting( 'email/'.$key.'/email', $data['email'] ),
+						'flex' => true,
+						'class' => 'large-text',
+					),
+					'subject' => array(
+						'type' => 'text',
+						'title' => __( 'Subject', 'CoursePress' ),
+						'value' => coursepress_get_setting( 'email/'.$key.'/subject', $data['subject'] ),
+						'class' => 'large-text',
+					),
+					'help' => array(
+						'title' => __( 'Email body', 'CoursePress' ),
+						'type' => 'html_text',
+						'class' => 'cp-info',
+						'value' => '<span class="dashicons dashicons-info"></span> '.$sections[ $key ]['content_help_text'],
+					),
+					'content' => array(
+						'type' => 'wp_editor',
+						'id' => 'coursepress_settings_email_'.$key.'_content',
+						'value' => coursepress_get_setting( 'email/'.$key.'/content', $data['content'] ),
+					),
+				),
+			);
+		}
+
 		/**
 		 * sort
 		 */

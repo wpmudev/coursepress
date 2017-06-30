@@ -22,8 +22,8 @@ class CoursePress_Email extends CoursePress_Utility {
 					'enabled' => '1',
 					'from' => get_option( 'blogname' ),
 					'email' => get_option( 'admin_email' ),
-					'subject' => CoursePress_View_Admin_Setting_BasicCertificate::default_email_subject(),
-					'content' => CoursePress_View_Admin_Setting_BasicCertificate::default_email_content(),
+					'subject' => sprintf( __( '[%s] Congratulations. You passed your course.', 'CoursePress' ), get_option( 'blogname' ) ),
+					'content' => $this->_basic_certificate_email(),
 					'auto_email' => true,
 				),
 				'registration' => array(
@@ -170,7 +170,7 @@ class CoursePress_Email extends CoursePress_Utility {
 				'WEBSITE_ADDRESS' => '',
 			)
 		);
-		$course_invitation_fields = apply_filters( 'coursepress_fields_' . CoursePress_Helper_Email::COURSE_INVITATION,
+		$course_invitation_fields = apply_filters( 'coursepress_fields_' . 'course_invitation',
 			array(
 				'STUDENT_FIRST_NAME' => '',
 				'STUDENT_LAST_NAME' => '',
@@ -182,7 +182,7 @@ class CoursePress_Email extends CoursePress_Utility {
 			),
 			null
 		);
-		$instructor_invitation_fields = apply_filters( 'coursepress_fields_' . CoursePress_Helper_Email::INSTRUCTOR_INVITATION,
+		$instructor_invitation_fields = apply_filters( 'coursepress_fields_' . 'instructor_invitation',
 			array(
 				'INSTRUCTOR_FIRST_NAME' => '',
 				'INSTRUCTOR_LAST_NAME' => '',
@@ -196,7 +196,7 @@ class CoursePress_Email extends CoursePress_Utility {
 			),
 			null
 		);
-		$course_start_fields = apply_filters( 'coursepress_fields_' . CoursePress_Helper_Email::COURSE_START_NOTIFICATION,
+		$course_start_fields = apply_filters( 'coursepress_fields_' . 'course_start_notification',
 			array(
 				'COURSE_NAME' => '',
 				'COURSE_ADDRESS' => '',
@@ -206,7 +206,7 @@ class CoursePress_Email extends CoursePress_Utility {
 				'UNSUBSCRIBE_LINK' => '',
 			)
 		);
-		$discussion_fields = apply_filters( 'coursepress_fields_' . CoursePress_Helper_Email::DISCUSSION_NOTIFICATION,
+		$discussion_fields = apply_filters( 'coursepress_fields_' . 'discussion_notification',
 			array(
 				'COURSE_NAME' => '',
 				'COURSE_ADDRESS' => '',
@@ -219,7 +219,7 @@ class CoursePress_Email extends CoursePress_Utility {
 				'COMMENT_AUTHOR' => '',
 			)
 		);
-		$units_started = apply_filters( 'coursepress_fields_' . CoursePress_Helper_Email::UNIT_STARTED_NOTIFICATION,
+		$units_started = apply_filters( 'coursepress_fields_' . 'unit_started_notification',
 			array(
 				'COURSE_NAME' => '',
 				'COURSE_ADDRESS' => '',
@@ -593,6 +593,29 @@ The %5$s Team', 'CoursePress' ),
 		);
 	}
 
+	private static function _basic_certificate_email() {
+		$msg = __(
+			'<h2>%1$s %2$s</h2>
+			has successfully completed the course
+
+			<h3>%3$s</h3>
+
+			<h4>Date: %4$s</h4>
+			<small>Certificate no.: %5$s</small>', 'CP_TD'
+		);
+
+		$default_certification_content = sprintf(
+			$msg,
+			'FIRST_NAME',
+			'LAST_NAME',
+			'COURSE_NAME',
+			'COMPLETION_DATE',
+			'CERTIFICATE_NUMBER',
+			'UNIT_LIST'
+		);
+
+		return $default_certification_content;
+	}
 	/**
 	 * Add buttons: fold and unfold.
 	 *

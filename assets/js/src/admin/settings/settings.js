@@ -99,6 +99,9 @@
             },
 
             toggleBox: function(ev) {
+                $('.cp-box-content.cp-box-emails').addClass('hidden');
+                $('.cp-box-content.cp-box-index a').removeClass('selected');
+                $(ev.currentTarget).toggleClass('selected');
                 $('.cp-box-content.cp-box-'+$(ev.currentTarget).data('key')).toggleClass( 'hidden' );
                 return false;
             }
