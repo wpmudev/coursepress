@@ -8,7 +8,7 @@
  * @package CoursePress
  */
 class CoursePress_Admin_Actions {
-	
+
 	public function __construct() {
 
 		// Hook to `admin_init` action hook to process action requests.
@@ -52,7 +52,7 @@ class CoursePress_Admin_Actions {
 
 		if ( isset( $request['course_id'] ) ) {
 			$course = coursepress_get_course( $request['course_id'] );
-			if ( is_wp_error( $course ) ) {
+			if ( ! is_wp_error( $course ) ) {
 				$course->duplicate_course();
 			}
 		}
