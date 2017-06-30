@@ -79,6 +79,7 @@ final class CoursePress {
 		'CoursePress_Admin_Page',
 		'CoursePress_Admin_Ajax',
 		'CoursePress_Admin_Configuration',
+		'CoursePress_Admin_Actions',
 	);
 
 	/**
