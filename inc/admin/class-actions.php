@@ -53,7 +53,9 @@ class CoursePress_Admin_Actions {
 
 		if ( isset( $request['course_id'] ) ) {
 			$course = coursepress_get_course( $request['course_id'] );
-			$course->duplicate_course();
+			if ( is_wp_error( $course ) ) {
+				$course->duplicate_course();
+			}
 		}
 
 		// Redirect back to same page without unwanted parameters.
