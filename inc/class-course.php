@@ -695,4 +695,105 @@ class CoursePress_Course extends CoursePress_Utility {
 
 		return $structure;
 	}
+
+	/**
+	 * Duplicate current course.
+	 *
+	 * This class object is created based on a WP_Post object. So using the current
+	 * course post data, create new post of type "course". If success, then copy the
+	 * course metadata to newly created course post.
+	 * If there are units set, duplicate those units also.
+	 *
+	 * @return bool Success?
+	 */
+	function duplicate_course() {
+
+		// Course ID is set when this class is instantiated.
+		$course_id = $this->__get( 'ID' );
+
+		// If in case course post object is not and ID not found, bail.
+		if ( empty( $course_id ) ) {
+
+			/**
+			 * Perform actions if the duplication was failed.
+			 *
+			 * Note: We don't have course ID here.
+			 *
+			 * @since 3.0
+			 */
+			do_action( 'coursepress_course_duplicate_failed', false );
+
+			return false;
+		}
+
+		/**
+		 * Allow course duplication to be cancelled when filter returns true.
+		 *
+		 * @since 1.2.1
+		 */
+		if ( apply_filters( 'coursepress_course_cancel_duplicate', false, $course_id ) ) {
+
+			/**
+			 * Perform actions if the duplication was cancelled.
+			 *
+			 * @since 1.2.1
+			 */
+			do_action( 'coursepress_course_duplicate_cancelled', $course_id );
+
+			return false;
+		}
+
+		// Copy of current course object.
+		$new_course = $this;
+
+		// Unset old ID, otherwise it will update the existing course.
+		unset( $new_course->ID );
+
+		// Set basic details.
+		$new_course->post_author = get_current_user_id();
+		$new_course->post_status = 'private';
+		$new_course->post_type = 'course';
+		$new_course->post_name = $new_course->post_name . '-copy';
+		$new_course->post_title	= $new_course->post_title . ' (copy)';
+
+		// Attempt to create new post of type "course".
+		$new_course_id = wp_insert_post( $new_course );
+
+		// If duplicate course was created.
+		if ( ! empty( $new_course_id ) ) {
+
+			// Copy the old course metadata to duplicated course.
+			$course_metas = get_post_meta( $course_id );
+			if ( ! empty( $course_metas ) ) {
+				foreach ( $course_metas as $key => $value ) {
+					$value = array_pop( $value );
+					$value = maybe_unserialize( $value );
+					update_post_meta( $new_course_id, $key, $value );
+				}
+			}
+
+			// If units are available for course, duplicate them.
+			$units = $this->get_units();
+			if ( ! empty( $units ) ) {
+				foreach ( $units as $unit ) {
+					$unit = new CoursePress_Unit( $unit->ID );
+					$unit->duplicate_unit( $new_course_id );
+				}
+			}
+
+			/**
+			 * Perform actions if the duplication was successful.
+			 *
+			 * @since 3.0
+			 */
+			do_action( 'coursepress_course_duplicated', $new_course_id );
+
+			return true;
+		}
+
+		// This action is documented above.
+		do_action( 'coursepress_course_duplicate_failed', $course_id );
+
+		return false;
+	}
 }

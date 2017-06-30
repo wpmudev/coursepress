@@ -652,4 +652,111 @@ class CoursePress_Unit extends CoursePress_Utility {
 
 		return $steps_structure;
 	}
+
+	/**
+	 * Duplicate current Unit and set given course ID.
+	 *
+	 * This class object is created based on a WP_Post object. So using the current
+	 * course post data, create new post of type "unit". If success, then copy the
+	 * unit metadata to newly created course post.
+	 *
+	 * @param int $course_id Course ID of the unit.
+	 *
+	 * @return bool Success or Fail?
+	 */
+	function duplicate( $course_id = 0 ) {
+
+		// If in case unit post object is not and ID not found, bail.
+		// Unit ID is set when this class is instantiated.
+		if ( empty( $this->ID ) ) {
+
+			/**
+			 * Perform actions if the duplication was failed.
+			 *
+			 * Note: We don't have unit ID here.
+			 *
+			 * @since 3.0
+			 */
+			do_action( 'coursepress_unit_duplicate_failed', false );
+
+			return false;
+		}
+
+		// If course id is empty, current unit's course id will be used.
+		if ( empty( $course_id ) ) {
+			$course_id = $this->course_id;
+		}
+
+		/**
+		 * Allow unit duplication to be cancelled when filter returns true.
+		 *
+		 * @since 1.2.2
+		 */
+		if ( apply_filters( 'coursepress_unit_cancel_duplicate', false, $this->ID ) ) {
+
+			/**
+			 * Perform actions if the duplication was cancelled.
+			 *
+			 * @since 1.2.2
+			 */
+			do_action( 'coursepress_unit_duplicate_cancelled', $this->ID );
+
+			return false;
+		}
+
+		// Copy of current course object.
+		$new_unit = $this;
+
+		// Unset the ID, otherwise it will update the existing unit.
+		unset( $new_unit->ID );
+
+		// Set basic data.
+		$new_unit->post_author = get_current_user_id();
+		$new_unit->post_status = 'private';
+		$new_unit->post_parent = $course_id;
+
+		// Attempt to create new post of type "course".
+		$new_unit_id = wp_insert_post( $new_unit );
+		// If unit creation was success.
+		if ( ! empty( $new_unit_id ) ) {
+
+			// Copy the old course metadata to duplicated course.
+			$unit_metas = get_post_meta( $this->ID );
+			if ( ! empty( $unit_metas ) ) {
+				foreach ( $unit_metas as $key => $value ) {
+					$value = array_pop( $value );
+					$value = maybe_unserialize( $value );
+					update_post_meta( $new_unit_id, $key, $value );
+				}
+			}
+
+			// @todo: Implement unit module duplication.
+
+			// Set the course ID to new course.
+			update_post_meta( $new_unit_id, 'course_id', $course_id );
+
+			/**
+			 * Perform action when the unit is duplicated.
+			 *
+			 * @param int $new_unit_id New unit ID.
+			 * @param int $this->ID Old unit ID.
+			 *
+			 * @since 1.2.2
+			 */
+			do_action( 'coursepress_unit_duplicated', $new_unit_id, $this->ID );
+
+			return true;
+		}
+
+		/**
+		 * Perform actions if the duplication was failed.
+		 *
+		 * @param int $this->ID Old unit ID.
+		 *
+		 * @since 3.0
+		 */
+		do_action( 'coursepress_unit_duplicate_failed', $this->ID );
+
+		return false;
+	}
 }
