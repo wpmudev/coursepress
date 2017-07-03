@@ -42,7 +42,7 @@
             'fields' => array(
                 'content' => array(
                     'type' => 'wp_editor',
-                    'id' => 'coursepress_settings_basic_certificate_content',
+                    'id' => 'content',
                     'value' => $content,
                 ),
             ),

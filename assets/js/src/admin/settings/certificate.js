@@ -1,4 +1,4 @@
-/* global CoursePress, _ */
+/* global CoursePress, _, tinyMCE */
 
 (function() {
     'use strict';
@@ -44,9 +44,11 @@
                 this.render();
             },
             setUpUI: function() {
+                var self = this;
+
                 this.$('.switch-tmce').trigger('click');
                 this.certBG = new CoursePress.AddImage( this.$('#coursepress-cert-bg' ) );
-                this.color = this.$('[name="text_color"]');
+                this.color = this.$('[name="cert_text_color"]');
 
                 this.color.iris({
                     palettes: true,
@@ -56,6 +58,17 @@
 
                 // Toggle certificate settings on first load
                 this.$('[name="enabled"]').trigger('change');
+
+                if ( tinyMCE.get( 'content' ) ) {
+                    this.contentEditor = tinyMCE.get( 'content' );
+                    this.contentEditor.on( 'change', function() {
+                        self.updateCertificateContent();
+                    }, this );
+                }
+            },
+            updateCertificateContent: function() {
+                this.model.content = this.$('[name="content"]').val();
+                window.alert(this.model.content);
             },
             showColorPicker: function() {
                 if ( this.color ) {
