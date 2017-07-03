@@ -4,7 +4,7 @@
     'use strict';
 
     CoursePress.Define( 'CertificateSettings', function( $, doc ) {
-        var iris;
+        var iris, CertificatePreview;
 
         $(doc).on( 'click', function(ev) {
            var sender = $(ev.currentTarget);
@@ -13,6 +13,18 @@
                iris.iris('hide');
                iris = false;
            }
+        });
+
+        CertificatePreview = CoursePress.View.extend({
+            template_id: 'coursepress-cert-preview',
+            className: 'coursepress-popup-preview',
+            events: {
+                'click .cp-btn': 'remove'
+            },
+            render: function() {
+                CoursePress.View.prototype.render.apply( this );
+                this.$el.appendTo( 'body' );
+            }
         });
 
         return CoursePress.View.extend({
@@ -96,7 +108,8 @@
             },
             openPreview: function( data ) {
                 if ( data.pdf ) {
-                    window.location = data.pdf;
+                    this.preview = new CertificatePreview(data);
+                    //window.location = data.pdf;
                 } else {
                     // @todo: show friendly error
                 }

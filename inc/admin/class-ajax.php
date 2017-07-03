@@ -232,7 +232,12 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
         }
     }
 
-    // Generate CERTIFICATE preview
+    /**
+     * Generate certificate for PREVIEW.
+     *
+     * @param $request
+     * @return array
+     */
     function preview_certificate( $request ) {
         global $CoursePress;
 

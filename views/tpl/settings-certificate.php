@@ -215,3 +215,9 @@
         ?>
 	</div>
 </script>
+
+<script type="text/template" id="coursepress-cert-preview">
+    <button type="button" class="cp-btn cp-btn-active"><?php _e( 'Close Preview', 'cp' ); ?></button>
+    <h2><?php _e( 'Course Certificate Preview', 'cp' ); ?></h2>
+    <iframe id="coursepress-cert-frame" src="{{pdf}}"></iframe>
+</script>
