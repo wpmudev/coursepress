@@ -10,10 +10,28 @@ class CoursePress_Certificate extends CoursePress_Utility {
     protected $post_type = 'cp_certificate';
     static $certificate_id = 0;
 
-    public function __construct() {}
-
     function is_enabled() {
         return coursepress_get_setting( 'basic_certificate/enabled', true );
+    }
+
+    function get_tokens() {
+        $tokens = array(
+            'FIRST_NAME' => '',
+            'LAST_NAME' => '',
+            'COURSE_NAME' => '',
+            'COMPLETION_DATE' => '',
+            'CERTIFICATE_NUMBER' => '',
+            'UNIT_LIST' => '',
+        );
+
+        /**
+         * Fire to allow changes on certificate tokens.
+         *
+         * @since 2.0
+         */
+        $tokens = apply_filters( 'coursepress_basic_certificate_vars', $tokens );
+
+        return $tokens;
     }
 
     /**

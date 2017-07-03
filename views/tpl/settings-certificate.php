@@ -31,11 +31,14 @@
          * Custom Certificate
          */
         $content = coursepress_get_setting( 'basic_certificate/content' );
+        $certClass = $CoursePress->get_class( 'CoursePress_Certificate' );
 
         if ( empty( $content ) ) {
-            $certClass = $CoursePress->get_class( 'CoursePress_Certificate' );
             $content = $certClass->default_certificate_content();
         }
+        $tokens = $certClass->get_tokens();
+        $token_info = sprintf( '<p>%s</p>', __( 'These codes will be replaced with actual data:', 'cp' ) );
+        $token_info .= sprintf( '<p><strong>%s</strong></p>', implode( ', ', array_keys( $tokens ) ) );
 
         $config['custom-certificate'] = array(
             'title' => __( 'Custom Certificate', 'CoursePress' ),
@@ -47,6 +50,7 @@
                     'field_options' => array(
                         'media_buttons' => false,
                     ),
+                    'before' => sprintf( '<div class="cp-alert cp-alert-info">%s</div>', $token_info ),
                 ),
             ),
         );
