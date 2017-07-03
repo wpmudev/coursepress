@@ -216,7 +216,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
             $request = array_map( array( $this, 'to_array' ), $request );
         }
 
-        error_log(print_r($request,true));
+        //error_log(print_r($request,true));
         coursepress_update_setting( true, $request );
 
         return array( 'success' => true );
