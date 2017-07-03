@@ -59,6 +59,10 @@
     display: block;
     width: 100%;
   }
+  .option-html_text {
+    display: block;
+    @include clearfix;
+  }
 
   @media screen {
     @media (min-width: 768px) {

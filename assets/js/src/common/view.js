@@ -69,8 +69,9 @@
                 input = $(ev.currentTarget);
                 name = input.attr('name');
 
-                if ( ( type = input.attr('type') ) && _.contains(['checkbox', 'radio'], type ) ) {
-                    value = !!input.is(':checked');
+                if ( ( type = input.attr('type') ) &&
+                    _.contains(['checkbox', 'radio'], type ) ) {
+                    value = input.is(':checked') ? input.val() : false;
                 } else {
                     value = input.val();
                 }
