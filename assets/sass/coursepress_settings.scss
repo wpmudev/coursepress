@@ -40,7 +40,8 @@
       max-width: 98%;
       overflow: auto;
       border: 1px solid $grey_4;
-      padding-top: 10px;
+      padding-top: 15px;
+
       li {
         margin: 0;
         border-right: none;
@@ -50,6 +51,9 @@
           border-top: 1px solid $grey_4;
           border-bottom: 1px solid $grey_4;
           @include radius(0);
+        }
+        &:last-of-type {
+          margin-bottom: 15px;
         }
       }
     }
@@ -154,29 +158,43 @@
       }
     }
     #coursepress-setting-capabilities {
+      .cp-caps-list {
+        background-color: $grey_6;
+        margin: -7px 0 0 0;
+        border: {
+          color: $grey_5;
+          width: 0 0 1px 0;
+          style: solid;
+        }
+        &:after {
+          display: none;
+        }
+      }
       .cp-caps-fields {
         position: relative;
-        border: {
-          style: solid;
-          width: 1px 0 0 0;
-          color: $grey_5;
-        }
+        border: 1px solid transparent;
         margin-bottom: 25px;
+        padding-top: 25px;
+        &:after {
+          border: 0;
+          padding: 0;
+          margin: 0;
+        }
 
         .cp-sep {
           &:before {
             content: '';
             position: absolute;
-            top: -15px;
+            top: -13.5px;
             left: 50px;
             border: {
               style: solid;
               width: 0 1px 1px 0;
               color: $grey_5;
             }
-            width: 30px;
-            height: 30px;
-            background-color: #f3f3f3;
+            width: 25px;
+            height: 25px;
+            background-color: $grey_6;
             -webkit-transform: rotate(45deg);
             -moz-transform: rotate(45deg);
             -ms-transform: rotate(45deg);
