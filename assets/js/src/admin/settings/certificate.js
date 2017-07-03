@@ -31,7 +31,7 @@
             template_id: 'coursepress-certificate-setting-tpl',
             el: $('#coursepress-setting-basic_certificate'),
             events: {
-                'focus [name="text_color"]': 'showColorPicker',
+                'focus [name="cert_text_color"]': 'showColorPicker',
                 'change [name]': 'updateModel',
                 'change [name="use_cp_default"]': 'toggleCertificateSettings',
                 'change [name="enabled"]': 'toggleCertificateSettings',
@@ -53,13 +53,14 @@
                 this.color.iris({
                     palettes: true,
                     hide: true,
-                    width: 220
+                    width: 220,
+                    change: function( ) {
+                        self.model.cert_text_color = self.color.iris('color');
+                    }
                 });
 
-                // Toggle certificate settings on first load
-                this.$('[name="enabled"]').trigger('change');
-
                 if ( tinyMCE.get( 'content' ) ) {
+                    tinyMCE.init('content');
                     this.contentEditor = tinyMCE.get( 'content' );
                     this.contentEditor.on( 'change', function() {
                         self.updateCertificateContent();
@@ -67,8 +68,7 @@
                 }
             },
             updateCertificateContent: function() {
-                this.model.content = this.$('[name="content"]').val();
-                window.alert(this.model.content);
+                this.model.content = this.contentEditor.getContent();
             },
             showColorPicker: function() {
                 if ( this.color ) {
@@ -114,7 +114,7 @@
                 }
             },
             previewCertificate: function() {
-                var model = new CoursePress.Request(this.model);
+                var model = new CoursePress.Request( this.getModel() );
                 model.set( 'action', 'preview_certificate' );
                 model.on( 'coursepress:success_preview_certificate', this.openPreview, this );
                 model.save();

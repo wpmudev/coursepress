@@ -44,6 +44,9 @@
                     'type' => 'wp_editor',
                     'id' => 'content',
                     'value' => $content,
+                    'field_options' => array(
+                        'media_buttons' => false,
+                    ),
                 ),
             ),
         );

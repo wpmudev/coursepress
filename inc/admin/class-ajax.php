@@ -266,6 +266,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
             'CERTIFICATE_NUMBER' => uniqid( rand(), true ),
         );
         $content = $this->replace_vars( $content, $vars );
+        $text_color = $this->convert_hex_color_to_rgb( $text_color, '#000000' );
 
         // Set PDF args
         $args = array(

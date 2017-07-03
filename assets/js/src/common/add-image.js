@@ -70,6 +70,7 @@
                this.image_id_input.trigger('change');
            },
            selectImage: function() {
+
                if ( ! win.wp || ! win.wp.media ) {
                    return; // @todo: show graceful error
                }

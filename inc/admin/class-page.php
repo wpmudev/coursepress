@@ -366,6 +366,9 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	}
 
 	function get_settings_page() {
+	    // Include wp.media
+        wp_enqueue_media();
+
 	    // Include color picker
         wp_enqueue_script( 'iris' );
 
