@@ -1093,24 +1093,25 @@ class CoursePress_Admin_Configuration {
 			$config[ 'email_'.$key ] = array(
 				'title' => $sections[ $key ]['title'],
 				'description' => $sections[ $key ]['description'],
+				'class' => 'box-inner-full',
 				'fields' => array(
 					'from' => array(
 						'type' => 'text',
-						'title' => __( 'From name', 'CoursePress' ),
+						'label' => __( 'From name', 'CoursePress' ),
 						'value' => coursepress_get_setting( 'email/'.$key.'/from', $data['from'] ),
 						'flex' => true,
 						'class' => 'large-text',
 					),
 					'email' => array(
 						'type' => 'text',
-						'title' => __( 'From email', 'CoursePress' ),
+						'label' => __( 'From email', 'CoursePress' ),
 						'value' => coursepress_get_setting( 'email/'.$key.'/email', $data['email'] ),
 						'flex' => true,
 						'class' => 'large-text',
 					),
 					'subject' => array(
 						'type' => 'text',
-						'title' => __( 'Subject', 'CoursePress' ),
+						'label' => __( 'Subject', 'CoursePress' ),
 						'value' => coursepress_get_setting( 'email/'.$key.'/subject', $data['subject'] ),
 						'class' => 'large-text',
 					),

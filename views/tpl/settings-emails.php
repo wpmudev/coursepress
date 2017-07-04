@@ -27,6 +27,7 @@ echo '</ul></div>';
  */
 foreach ( $options as $option_key => $option ) {
 	$classes = 'box-inner-content';
+	$classes .= ' box-inner-full';
 	printf( '<div class="cp-box-content cp-box-emails cp-box-%s hidden">', esc_attr( $option_key ) );
 	if ( ! empty( $option['title'] ) || ! empty( $option['description'] ) ) {
 		echo '<div class="box-label-area">';
@@ -40,8 +41,6 @@ foreach ( $options as $option_key => $option ) {
 			printf( '<p class="description">%s</p>', $option['description'] );
 		}
 		echo '</div>';
-	} else {
-		$classes .= ' box-inner-full';
 	}
 	printf( '<div class="%s">', esc_attr( $classes ) );
 	/**

@@ -241,81 +241,71 @@ class CoursePress_Email extends CoursePress_Utility {
 		$discussion_fields = array_keys( $discussion_fields );
 		$units_started = array_keys( $units_started );
 
+		$_codes_text = __( 'These codes will be replaced with actual data: <b>%s</b>', 'CoursePress' );
+
 		$defaults = apply_filters(
 			'coursepress_default_email_settings_sections',
 			array(
 				'basic_certificate' => array(
 					'title' => __( 'Basic Certificate E-mail', 'CoursePress' ),
 					'description' => __( 'Settings for emails when using basic certificate functionality (when course completed).', 'CoursePress' ),
-					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'CoursePress' ) . implode( ', ', $basic_certificate_fields ),
-					'order' => 7,
+					'content_help_text' => sprintf( $_codes_text, implode( ', ', $basic_certificate_fields ) ),
 				),
 				'registration' => array(
 					'title' => __( 'User Registration E-mail', 'CoursePress' ),
 					'description' => __( 'Settings for an e-mail student get upon account registration.', 'CoursePress' ),
-					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'CoursePress' ) . implode( ', ', $registration_fields ),
-					'order' => 1,
+					'content_help_text' => sprintf( $_codes_text, implode( ', ', $registration_fields ) ),
 				),
 				'enrollment_confirm' => array(
 					'title' => __( 'Course Enrollment Confirmation E-mail', 'CoursePress' ),
 					'description' => __( 'Settings for an e-mail student get upon enrollment.', 'CoursePress' ),
-					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'CoursePress' ) . implode( ', ', $enrollment_confirm ),
-					'order' => 2,
+					'content_help_text' => sprintf( $_codes_text, implode( ', ', $enrollment_confirm ) ),
 				),
 				'instructor_enrollment_notification' => array(
 					'title' => __( 'Enrollment Notification for Instructor E-mail', 'CoursePress' ),
 					'description' => __( 'Settings for an e-mail instructor gets when a new student enrolls.', 'CoursePress' ),
-					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'CoursePress' ) . implode( ', ', $instructor_enrollment_notification ),
-					'order' => 3,
+					'content_help_text' => sprintf( $_codes_text, implode( ', ', $instructor_enrollment_notification ) ),
 				),
 				'course_invitation' => array(
 					'title' => __( 'Student Invitation to a Course E-mail', 'CoursePress' ),
 					'description' => __( 'Settings for an e-mail student get upon receiving an invitation to a course.', 'CoursePress' ),
-					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'CoursePress' ) . implode( ', ', $course_invitation_fields ),
-					'order' => 3,
+					'content_help_text' => sprintf( $_codes_text, implode( ', ', $course_invitation_fields ) ),
 				),
 				'course_invitation_password' => array(
 					'title' => __( 'Student Invitation to a Course E-mail (with passcode)', 'CoursePress' ),
 					'description' => __( 'Settings for an e-mail student get upon receiving an invitation (with passcode) to a course.', 'CoursePress' ),
-					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'CoursePress' ) . implode( ', ', $course_invitation_fields ),
-					'order' => 4,
+					'content_help_text' => sprintf( $_codes_text, implode( ', ', $course_invitation_fields ) ),
 				),
 				'instructor_invitation' => array(
 					'title' => __( 'Instructor Invitation Email', 'CoursePress' ),
 					'description' => __( 'Settings for an e-mail an instructor will get upon receiving an invitation.', 'CoursePress' ),
-					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'CoursePress' ) . implode( ', ', $instructor_invitation_fields ),
-					'order' => 5,
+					'content_help_text' => sprintf( $_codes_text, implode( ', ', $instructor_invitation_fields ) ),
 				),
 				'facilitator_invitation' => array(
 					'title' => __( 'Facilitator Invitation Email', 'CoursePress' ),
 					'description' => __( 'Settings for an e-mail a facilitator will get upon receiving an invitation.', 'CoursePress' ),
-					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'CoursePress' ) . implode( ', ', $instructor_invitation_fields ),
-					'order' => 5,
+					'content_help_text' => sprintf( $_codes_text, implode( ', ', $instructor_invitation_fields ) ),
 				),
 				'new_order' => array(
 					'title' => __( 'New Order E-mail', 'CoursePress' ),
 					'description' => __( 'Settings for an e-mail student get upon placing an order.', 'CoursePress' ),
-					'content_help_text' => __( 'These codes will be replaced with actual data: CUSTOMER_NAME, BLOG_NAME, LOGIN_ADDRESS, COURSES_ADDRESS, WEBSITE_ADDRESS, COURSE_ADDRESS, ORDER_ID, ORDER_STATUS_URL', 'CoursePress' ),
-					'order' => 6,
+					'content_help_text' => sprintf( $_codes_text, 'CUSTOMER_NAME, BLOG_NAME, LOGIN_ADDRESS, COURSES_ADDRESS, WEBSITE_ADDRESS, COURSE_ADDRESS, ORDER_ID, ORDER_STATUS_URL' ),
 				),
 				'course_start_notification' => array(
 					'title' => __( 'Course Notfication E-mail', 'CoursePress' ),
 					'description' => __( 'Settings for an e-mail to send to students when a course started.', 'CoursePress' ),
-					'content_help_text' => __( 'These codes will be relaced with actual data: ', 'CoursePress' ) . implode( ', ', $course_start_fields ),
-					'order' => 7,
+					'content_help_text' => sprintf( $_codes_text, implode( ', ', $course_start_fields ) ),
 				),
 				'discussion_notification' => array(
 					'title' => __( 'Discussion Notfication E-mail', 'CoursePress' ),
 					'description' => __( 'Settings for an e-mail to send to students and instructors.', 'CoursePress' ),
-					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'CoursePress' ) . implode( ', ', $discussion_fields ),
-					'order' => 7,
+					'content_help_text' => sprintf( $_codes_text, implode( ', ', $discussion_fields ) ),
 				),
 				'unit_started_notification' => array(
 					'title' => __( 'Course Unit Started E-mail', 'CoursePress' ),
 					'description' => __( 'Settings for an e-mail to send to students whenever a unit have started.', 'CoursePress' ),
 					'content_help_text' => sprintf( __( '* You may use %s mail token to your subject line. ', 'CoursePress' ), 'UNIT_TITLE' ) .
-						__( 'These codes will be replaced with actual data: ', 'CoursePress' ) . implode( ', ', $units_started ),
-					'order' => 8,
+						sprintf( $_codes_text, implode( ', ', $units_started ) ),
 				),
 			)
 		);

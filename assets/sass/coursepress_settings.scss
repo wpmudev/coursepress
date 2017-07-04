@@ -5,7 +5,7 @@
 #wpwrap {
 
 .coursepress-wrap {
-
+.coursepress-page {
   .cp-code-box {
     font-family: $code_font;
     display: block;
@@ -120,6 +120,7 @@
         .flex {
             display: flex;
             padding-bottom: 10px;
+            padding-right: 7px;
             .option {
                 padding-left: 10px;
                 &:first-child {
@@ -153,35 +154,75 @@
         }
     }
     &.cp-box-index {
-        padding: 10px;
-        background-color: $grey_6;
+        padding: 40px 30px;
+        background-color: $grey_9;
         ul {
-            border: 1px solid $grey_3;
+            background-color: $white;
+            border: 1px solid $grey_10;
             @include radius(5px);
+            padding: 9px 0;
+            margin: 10px 0;
             a {
+                border: 1px solid $white;
+                color: $black;
                 display: block;
                 padding: 5px 10px;
-                color: $black;
                 &.selected {
-                    background-color: $grey_5;
+                    background-color: #f2f2f2;
+                    border-color: $grey_11;
                     font-weight: 600;
+                }
+            }
+        }
+        h3 {
+            margin: 0;
+            font-size: 1em;
+        }
+    }
+    input {
+        background-color: $grey_8;
+        border-color: $grey_5;
+    }
+}
+    .cp-info {
+        background-color: $blue_5;
+        font-size: 1.1em;
+        @include radius(5px);
+        line-height: 2em;
+        padding: 20px 30px;
+        .dashicons {
+            color: $blue_6;
+            font-size: 2em;
+            padding-right: .4em;
+        }
+    }
+
+    #coursepress-setting-emails {
+        .cp-box-emails {
+            h2 {
+                margin-bottom: 0;
+            }
+            .cp-info {
+                padding-left: 4.7em;
+                position: relative;
+                .dashicons {
+                    position: absolute;
+                    left: 1em;
+                }
+                b {
+                    display: block;
+                }
+            }
+            .option-html_text {
+                border-top: 1px solid $grey_5;
+                label {
+                    font-weight: 600;
+                    font-size: 1.1em;
+                    padding: 40px 0;
                 }
             }
         }
     }
 }
-.cp-info {
-    background-color: $blue_5;
-    font-size: 1.1em;
-    @include radius(5px);
-    line-height: 2em;
-    padding: 20px 30px;
-    .dashicons {
-        color: $blue_6;
-        font-size: 2em;
-        padding-right: .4em;
-    }
-}
-
 }
 }
