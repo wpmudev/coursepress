@@ -128,6 +128,46 @@
                 }
             }
         }
+        .option-wp_media {
+            height: 40px;
+            .wp-media-wrapper {
+                border: 1px solid $grey_10;
+                display: inline-flex;
+                @include radius( $default_radius );
+                width: auto;
+                margin-right: 10px;
+                height: 40px;
+                img {
+                    border-right: 1px solid $grey_10;
+                    @include radius(5px 0 0 5px);
+                    margin-right: 10px;
+                    max-height: 38px;
+                }
+                .image-reset {
+                    background-color: $grey_11;
+                    color: $grey_1;
+                    @include radius( $default_radius );
+                    line-height: 36px;
+                    margin: 1px;
+                    padding: 0 15px;
+                }
+                .filename {
+                    color: $grey_4;
+                    line-height: 38px;
+                    margin-right: 9px;
+                }
+                &.hidden {
+                    display: none;
+                }
+            }
+            .button-select-image {
+                background-color: $grey_3;
+                border: 0;
+                color: $white;
+                @include boxshadow(none);
+                line-height: 24px;
+            }
+        }
     }
     &.cp-box-custom-certificate {
         .box-label-area,
@@ -159,7 +199,7 @@
         ul {
             background-color: $white;
             border: 1px solid $grey_10;
-            @include radius(5px);
+            @include radius( $default_radius );
             padding: 9px 0;
             margin: 10px 0;
             a {
@@ -187,7 +227,7 @@
     .cp-info {
         background-color: $blue_5;
         font-size: 1.1em;
-        @include radius(5px);
+        @include radius( $default_radius );
         line-height: 2em;
         padding: 20px 30px;
         .dashicons {

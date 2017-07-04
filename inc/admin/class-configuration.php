@@ -64,7 +64,7 @@ class CoursePress_Admin_Configuration {
 			'title' => __( 'Background Image', 'CoursePress' ),
 			'fields' => array(
 				'coursepress_settings[basic_certificate][background_image]' => array(
-					'type' => 'image',
+					'type' => 'wp_media',
 					'value' => coursepress_get_setting( 'basic_certificate/background_image' ),
 				),
 			),
