@@ -1,3 +1,4 @@
+#wpwrap {
 
 .coursepress-wrap {
   a {
@@ -58,23 +59,11 @@
       }
 
       .cp-box-heading {
-          .cp-info {
-              background-color: $blue_5;
-              font-size: 1.1em;
-              @include radius(5px);
-              line-height: 2em;
-              padding: 20px 30px;
-              .dashicons {
-                  color: $blue_6;
-                  font-size: 2em;
-                  padding-right: .4em;
-              }
-          }
           .box-heading-title {
               border-bottom: 1px solid $grey_5;
               color: $dark_2;
-              margin: 8px 0;
-              padding: 8px 25px;
+              margin: 0;
+              padding: 20px 30px;
               text-transform: uppercase;
           }
           p {
@@ -90,6 +79,9 @@
           }
           &:last-child {
               padding-bottom: 25px;;
+          }
+          h2 {
+              padding: 1em 0;
           }
       }
 
@@ -208,4 +200,18 @@
       }
     }
   }
+
+    #coursepress-setting-emails {
+        border-top: 1px solid $grey_5;
+        .box-label-area,
+        .box-inner-content {
+            border: 0;
+        }
+        .box-label-area {
+            float: none;
+            width: 100%;
+        }
+
+    }
+}
 }

@@ -207,6 +207,19 @@
         /**
          * Reports
          */
+        $pdf = $CoursePress->get_class( 'CoursePress_PDF' );
+        $fonts = array();
+
+        if ( $pdf ) {
+            $fonts = $pdf->fonts();
+        }
+
+        /**
+         * Fire to allow additional font to to be use when generating
+         * user's PDF report.
+         */
+        $fonts = apply_filters( 'coursepress_pdf_fonts', $fonts );
+
         $config['reports/font'] = array(
             'title' => __( 'Reports', 'CoursePress' ),
             'description' => __( 'Select font which will be used in the PDF reports.', 'CoursePress' ),
@@ -214,8 +227,8 @@
                 'reports_font' => array(
                     'type' => 'select',
                     'title' => __( 'Use this font', 'CoursePress' ),
-                    'value' => coursepress_get_setting( 'reports_font', 'helvetica' ),
-                    'field_options' => array(),
+                    'value' => coursepress_get_setting( 'general/reports_font', 'helvetica' ),
+                    'field_options' => $fonts,
                 ),
             ),
         );

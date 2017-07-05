@@ -13,7 +13,8 @@
             currentView: false,
             events: {
                 'click .cp-menu-item': 'setSettingPage',
-                'click .save-coursepress-setting': 'saveSetting'
+                'click .save-coursepress-setting': 'saveSetting',
+                'click .cp-box-content.cp-box-index a': 'toggleBox'
             },
             initialize: function() {
                 this.once( 'coursepress:admin_setting_general', this.getGeneralSettingView, this );
@@ -109,6 +110,16 @@
             after_update: function() {
                 var button = this.$('.save-coursepress-setting');
                 button.removeClass('cp-progress');
+                this.model.set( 'action', 'update_settings' );
+                this.model.save();
+            },
+
+            toggleBox: function(ev) {
+                $('.cp-box-content.cp-box-emails').addClass('hidden');
+                $('.cp-box-content.cp-box-index a').removeClass('selected');
+                $(ev.currentTarget).toggleClass('selected');
+                $('.cp-box-content.cp-box-'+$(ev.currentTarget).data('key')).toggleClass( 'hidden' );
+                return false;
             }
         });
 

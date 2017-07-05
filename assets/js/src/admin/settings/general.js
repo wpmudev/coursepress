@@ -7,14 +7,14 @@
         return CoursePress.View.extend({
             template_id: 'coursepress-general-setting-tpl',
             el: $('#coursepress-setting-general'),
-            render: function() {
-                CoursePress.View.prototype.render.apply( this );
+            initialize: function( model ) {
+                this.model = model;
 
-                this.enableSelect2();
+                this.on( 'view_rendered', this.setUpUI, this );
+                this.render();
             },
-            enableSelect2: function() {
+            setUpUI: function() {
                 this.$('select').select2();
-                this.$('.wpui-checkbox-wrapper')
             },
             getModel: function() {
                 return this.model.toJSON();
