@@ -88,4 +88,18 @@
   .cp-image-url {
     width: 90%;
   }
+
+  @media screen {
+    @media (min-width: 768px) {
+      .cp-columns {
+        padding: 0;
+        display: block;
+        width: 100%;
+
+        column: {
+          count: 2;
+        }
+      }
+    }
+  }
 }

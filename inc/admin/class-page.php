@@ -366,6 +366,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	}
 
 	function get_settings_page() {
+	    global $CoursePress;
+
 	    // Include wp.media
         wp_enqueue_media();
 
@@ -398,7 +400,18 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
         coursepress_render( 'views/tpl/common' );
 		coursepress_render( 'views/tpl/settings-general' );
 		coursepress_render( 'views/tpl/settings-slugs' );
-		coursepress_render( 'views/tpl/settings-emails' );
+
+        $emails = $CoursePress->get_class( 'CoursePress_Email' );
+        $sections = $emails->get_settings_sections();
+        $this->localize_array['settings']['email'] = $emails->get_defaults();
+        $this->localize_array['email_sections'] = $sections;
+
+        $email_vars = array(
+            'sections' => $sections,
+            'config' => array(),
+        );
+
+		coursepress_render( 'views/tpl/settings-emails', $email_vars );
 		coursepress_render( 'views/tpl/settings-capabilities' );
 		coursepress_render( 'views/tpl/settings-certificate' );
 		coursepress_render( 'views/tpl/settings-shortcodes' );

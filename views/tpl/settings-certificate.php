@@ -45,7 +45,7 @@
             'fields' => array(
                 'content' => array(
                     'type' => 'wp_editor',
-                    'id' => 'content',
+                    'id' => 'content-certificate',
                     'value' => $content,
                     'field_options' => array(
                         'media_buttons' => false,
@@ -135,7 +135,7 @@
                     'type' => 'button',
                     'value' => coursepress_create_html( 'span', array( 'class' => 'dashicons dashicons-visibility' ), '' )
                         . __( 'Preview Certificate', 'cp' ),
-                    'class' => 'cp-dashicons alignright',
+                    'class' => 'cp-btn cp-btn-default cp-dashicons alignright',
                 ),
             ),
         );

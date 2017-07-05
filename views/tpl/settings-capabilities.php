@@ -3,10 +3,9 @@
 		<h2 class="box-heading-title"><?php _e( 'Instructor Capabilities', 'cp' ); ?></h2>
 	</div>
 
-	<div class="cp-box-content cp-caps-list">
-		<div class="box-label-area">
-			<h2 class="label"><?php _e( 'Browse capabilities', 'cp' ); ?></h2>
-		</div>
+	<div class="cp-box-content cp-caps-list cp-odd">
+        <h3 class="label"><?php _e( 'Browse capabilities', 'cp' ); ?></h3>
+
 		<div class="cp-box">
 			<div class="cp-flex">
 				<div class="cp-div-flex cp-pad-right">
@@ -336,15 +335,15 @@
 	foreach ( $options as $option ) : ?>
 		<div class="cp-box-content cp-caps-fields <?php echo $i > 0 ? 'inactive' : ''; ?>" id="<?php echo $option['id']; ?>">
             <div class="cp-box cp-sep">
-                <h2 class="label"><?php echo $option['title']; ?></h2>
+                <h2 class="cp-box-header"><?php echo $option['title']; ?></h2>
                 <?php if ( isset( $option['description'] ) ) : ?>
                     <?php printf( '<p class="description">%s</p>', $option['description'] ); ?>
                 <?php endif; ?>
             </div>
 
-			<div class="box-inner-content">
+			<div class="cp-columns">
 				<?php foreach ( $option['fields'] as $key => $data ) : ?>
-					<div class="flex-half option option-<?php esc_attr_e( $key ); ?>">
+					<div class="option option-<?php esc_attr_e( $key ); ?>">
 						<?php if ( isset( $data['label'] ) ) : ?>
 							<?php printf( '<h3>%s</h3>', $data['label'] ); ?>
 						<?php endif; ?>

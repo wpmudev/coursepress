@@ -1,0 +1,38 @@
+#coursepress-setting-email {
+  .box-inner-content {
+    @include clearfix;
+    border: 1px solid red;
+  }
+  .option {
+    margin-bottom: 15px;
+  }
+  .wp-editor-wrap {
+    margin-top: 15px;
+  }
+  .cp-box-content {
+    &:after {
+      border: 0;
+    }
+  }
+  .option-subject {
+    &:after {
+      content: '';
+      display: block;
+      @include clearfix;
+      padding-top: 25px;
+      margin-bottom: 15px;
+      border-bottom: 1px solid $color_1;
+    }
+  }
+
+  @media screen {
+    @media (min-width: 768px) {
+      .option-from,
+      .option-email {
+        float: left;
+        width: 50%;
+        padding-right: 15px;
+      }
+    }
+  }
+}

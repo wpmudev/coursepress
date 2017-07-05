@@ -17,6 +17,7 @@
       font-size: 14px;
       display: block;
       color: $dark_1;
+      padding: 0;
 
       .cp-toggle-btn {
         vertical-align: top;
@@ -25,6 +26,7 @@
     }
     .wpmui-radio-caption {
       vertical-align: middle;
+
       .cp-toggle-btn {
         margin-top: 0;
       }

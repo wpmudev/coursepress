@@ -14,13 +14,12 @@
             events: {
                 'click .cp-menu-item': 'setSettingPage',
                 'click .save-coursepress-setting': 'saveSetting',
-                'click .cp-box-content.cp-box-index a': 'toggleBox',
                 'click .step-cancel': 'goToGeneral'
             },
             initialize: function() {
                 this.once( 'coursepress:admin_setting_general', this.getGeneralSettingView, this );
                 this.once( 'coursepress:admin_setting_slugs', this.getSlugsSettingView, this );
-                this.once( 'coursepress:admin_setting_emails', this.getEmailSettingView, this );
+                this.once( 'coursepress:admin_setting_email', this.getEmailSettingView, this );
                 this.once( 'coursepress:admin_setting_capabilities', this.getCapabilitiesView, this );
                 this.once( 'coursepress:admin_setting_basic_certificate', this.getCertificateView, this );
                 this.once( 'coursepress:admin_setting_shortcodes', this.getShortCodesView, this );
@@ -76,7 +75,7 @@
             },
 
             getEmailSettingView: function() {
-                this.settings.emails = new CoursePress.EmailSettings( this.model.get( 'emails' ) );
+                this.settings.email = new CoursePress.EmailSettings( this.model.get( 'email' ) );
             },
 
             getCapabilitiesView: function() {
@@ -125,14 +124,6 @@
                 button.removeClass('cp-progress');
                 this.model.set( 'action', 'update_settings' );
                 this.model.save();
-            },
-
-            toggleBox: function(ev) {
-                $('.cp-box-content.cp-box-emails').addClass('hidden');
-                $('.cp-box-content.cp-box-index a').removeClass('selected');
-                $(ev.currentTarget).toggleClass('selected');
-                $('.cp-box-content.cp-box-'+$(ev.currentTarget).data('key')).toggleClass( 'hidden' );
-                return false;
             }
         });
 

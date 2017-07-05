@@ -11,95 +11,98 @@ class CoursePress_Email extends CoursePress_Utility {
 	 * CoursePress_Email constructor.
 	 */
 	public function __construct() {
-	}
+
+    }
 
 	public function get_defaults( $context = false ) {
-		add_filter( 'coursepress_admin_setting_before_top_save', array( $this, 'add_buttons' ), 10, 2 );
+        $blog_name = coursepress_get_option( 'blogname' );
+        $blog_email = coursepress_get_option( 'admin_email' );
+
 		$defaults = apply_filters(
 			'coursepress_default_email_settings',
 			array(
 				'basic_certificate' => array(
 					'enabled' => '1',
-					'from' => get_option( 'blogname' ),
-					'email' => get_option( 'admin_email' ),
+					'from' => $blog_name,
+					'email' => $blog_email,
 					'subject' => sprintf( __( '[%s] Congratulations. You passed your course.', 'CoursePress' ), get_option( 'blogname' ) ),
 					'content' => $this->_basic_certificate_email(),
 					'auto_email' => true,
 				),
 				'registration' => array(
 					'enabled' => '1',
-					'from' => get_option( 'blogname' ),
-					'email' => get_option( 'admin_email' ),
+					'from' => $blog_name,
+					'email' => $blog_email,
 					'subject' => __( 'Registration Status', 'CoursePress' ),
 					'content' => $this->_registration_email(),
 				),
 				'enrollment_confirm' => array(
 					'enabled' => '1',
-					'from' => get_option( 'blogname' ),
-					'email' => get_option( 'admin_email' ),
+					'from' => $blog_name,
+					'email' => $blog_email,
 					'subject' => __( 'Enrollment Confirmation', 'CoursePress' ),
 					'content' => $this->_enrollment_confirmation_email(),
 				),
 				'instructor_enrollment_notification' => array(
 					'enabled' => '1',
-					'from' => get_option( 'blogname' ),
-					'email' => get_option( 'admin_email' ),
+					'from' => $blog_name,
+					'email' => $blog_email,
 					'subject' => __( 'New Enrollment In Your Course', 'CoursePress' ),
 					'content' => $this->_instructor_enrollment_notification_email(),
 				),
 				'course_invitation' => array(
 					'enabled' => '1',
-					'from' => get_option( 'blogname' ),
-					'email' => get_option( 'admin_email' ),
+					'from' => $blog_name,
+					'email' => $blog_email,
 					'subject' => __( 'Invitation to a Course', 'CoursePress' ),
 					'content' => $this->_course_invitation_email(),
 				),
 				'course_invitation_password' => array(
 					'enabled' => '1',
-					'from' => get_option( 'blogname' ),
-					'email' => get_option( 'admin_email' ),
+					'from' => $blog_name,
+					'email' => $blog_email,
 					'subject' => __( 'Invitation to a Course ( Psss...for selected ones only )', 'CoursePress' ),
 					'content' => $this->_course_invitation_passcode_email(),
 				),
 				'instructor_invitation' => array(
 					'enabled' => '1',
-					'from' => get_option( 'blogname' ),
-					'email' => get_option( 'admin_email' ),
+					'from' => $blog_name,
+					'email' => $blog_email,
 					'subject' => sprintf( __( 'Invitation to be an instructor at %s', 'CoursePress' ), get_option( 'blogname' ) ),
 					'content' => $this->_instructor_invitation_email(),
 				),
 				'facilitator_invitation' => array(
 					'enabled' => '1',
-					'from' => get_option( 'blogname' ),
-					'email' => get_option( 'admin_email' ),
+					'from' => $blog_name,
+					'email' => $blog_email,
 					'subject' => sprintf( __( 'Invitation to be a facilitator at %s', 'CoursePress' ), get_option( 'blogname' ) ),
 					'content' => $this->_facilitator_invitation_email(),
 				),
 				'new_order' => array(
 					'enabled' => '1',
-					'from' => get_option( 'blogname' ),
-					'email' => get_option( 'admin_email' ),
+					'from' => $blog_name,
+					'email' => $blog_email,
 					'subject' => __( 'Order Confirmation', 'CoursePress' ),
 					'content' => $this->_new_order_email(),
 				),
 				'course_start_notification' => array(
 					'enabled' => '1',
-					'from' => get_option( 'blogname' ),
-					'email' => get_option( 'admin_email' ),
+					'from' => $blog_name,
+					'email' => $blog_email,
 					'subject' => __( 'Course Start Notfication', 'CoursePress' ),
 					'content' => $this->course_start_defaults(),
 				),
 				'discussion_notification' => array(
 					'enabled' => '1',
-					'from' => get_option( 'blogname' ),
-					'email' => get_option( 'admin_email' ),
+					'from' => $blog_name,
+					'email' => $blog_email,
 					'subject' => __( 'Discussion Notfication', 'CoursePress' ),
 					'content' => $this->discussion_defaults(),
 				),
 				'unit_started_notification' => array(
 					'enabled' => '1',
-					'from' => get_option( 'blogname' ),
-					'email' => get_option( 'admin_email' ),
+					'from' => $blog_name,
+					'email' => $blog_email,
 					'subject' => __( '[UNIT_TITLE] is now available', 'CoursePress' ),
 					'content' => $this->unit_started_defaults(),
 				),
@@ -241,7 +244,7 @@ class CoursePress_Email extends CoursePress_Utility {
 		$discussion_fields = array_keys( $discussion_fields );
 		$units_started = array_keys( $units_started );
 
-		$_codes_text = __( 'These codes will be replaced with actual data: <b>%s</b>', 'CoursePress' );
+		$_codes_text = sprintf( '<p>%1$s</p> <p>%2$s</p>', __( 'These codes will be replaced with actual data:', 'cp' ), '<b>%s</b>' );
 
 		$defaults = apply_filters(
 			'coursepress_default_email_settings_sections',
@@ -605,30 +608,5 @@ The %5$s Team', 'CoursePress' ),
 		);
 
 		return $default_certification_content;
-	}
-	/**
-	 * Add buttons: fold and unfold.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param string $content Current content to filter.
-	 * @param string $active Current tab key.
-	 * @return string Content after filter.
-	 */
-	public function add_buttons( $content, $active ) {
-		if ( 'email' != $active ) {
-			return $content;
-		}
-		$content .= sprintf(
-			'<input type="button" class="button %s disabled" value="%s" /> ',
-			'hndle-items-fold',
-			esc_attr__( 'Fold all', 'CoursePress' )
-		);
-		$content .= sprintf(
-			'<input type="button" class="button %s" value="%s" /> ',
-			'hndle-items-unfold',
-			esc_attr__( 'Unfold all', 'CoursePress' )
-		);
-		return $content;
 	}
 }

@@ -8,7 +8,7 @@
 					$admin_menus = array(
 						'general' => __( 'General', 'cp' ),
 						'slugs' => __( 'URL Slugs', 'cp' ),
-						'emails' => __( 'Emails', 'cp' ),
+						'email' => __( 'Emails', 'cp' ),
 						'capabilities' => __( 'Capabilities', 'cp' ),
 						'basic_certificate' => __( 'Certificate', 'cp' ),
 						'shortcodes' => __( 'Shortcodes', 'cp' ),

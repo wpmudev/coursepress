@@ -1,0 +1,25 @@
+#coursepress-setting-basic_certificate {
+  .cp-content {
+    .cp-box-custom-certificate {
+      .box-label-area,
+      .box-inner-content {
+        display: block;
+        float: none;
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+        margin: 0;
+      }
+    }
+  }
+
+  @media screen {
+    @media (min-width: 768px) {
+      .option-number {
+        display: block;
+        float: left;
+        width: $width/12 * 4;
+      }
+    }
+  }
+}

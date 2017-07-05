@@ -18,7 +18,7 @@ class CoursePress_Admin_Configuration {
 		//add_filter( 'coursepress_settings-slugs', array( $this, 'slugs' ) );
 		//add_filter( 'coursepress_settings-capabilities', array( $this, 'capabilities' ) );
 
-		add_filter( 'coursepress_settings-emails', array( $this, 'emails' ) );
+		//add_filter( 'coursepress_settings-emails', array( $this, 'emails' ) );
 	}
 
 	/**

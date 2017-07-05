@@ -1,8 +1,5 @@
 .coursepress-wrap,
 .coursepress-popup-preview {
-  [type="button"],
-  [type="submit"],
-  button,
   .cp-btn {
     border: 0;
     background-color: $grey_5;
@@ -33,8 +30,9 @@
     padding: 4px 8px;
   }
   .cp-btn-default {
-    background-color: $grey_4;
-    border-color: $grey_2;
+    color: #fff !important;
+    text-transform: uppercase;
+    @include boxshadow(inset 0 0 12px 20px #a4a4a4);
   }
 
   .cp-btn-active {

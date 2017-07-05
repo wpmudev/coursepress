@@ -59,13 +59,15 @@
                     }
                 });
 
-                if ( tinyMCE.get( 'content' ) ) {
+
+                if ( tinyMCE.get( 'content-certificate' ) ) {
                     tinyMCE.init('content');
                     this.contentEditor = tinyMCE.get( 'content' );
                     this.contentEditor.on( 'change', function() {
                         self.updateCertificateContent();
                     }, this );
                 }
+
             },
             updateCertificateContent: function() {
                 this.model.content = this.contentEditor.getContent();

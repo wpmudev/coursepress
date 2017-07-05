@@ -1,11 +1,8 @@
 .coursepress-wrap {
   #wp-content-editor-tools {
     background-color: transparent;
-
-    .wp-editor-tabs {
-      button {
-        @include radius(0);
-      }
-    }
+  }
+  .wp-switch-editor {
+    height: auto;
   }
 }

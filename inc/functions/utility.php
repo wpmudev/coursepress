@@ -94,10 +94,9 @@ function coursepress_get_categories() {
  * @return mixed
  */
 function coursepress_get_setting( $key = true, $default = '' ) {
-    global $CoursePress_Data_Users;
+    global $CoursePress, $CoursePress_Data_Users;
 
     $caps = coursepress_get_array_val( $CoursePress_Data_Users->__get( 'capabilities' ), 'instructor' );
-
     $settings = coursepress_get_option( 'coursepress_settings', array() );
 
     $defaults = array(
@@ -108,7 +107,7 @@ function coursepress_get_setting( $key = true, $default = '' ) {
             'instructor' => $caps,
             'facilitator'=> $caps,
         ),
-        'certificate' => array(),
+        'basic_certificate' => array(),
         'extensions' => array(),
     );
 
@@ -127,6 +126,12 @@ function coursepress_get_setting( $key = true, $default = '' ) {
         $defaults['general']['reports_font'] = coursepress_get_array_val( $settings, 'reports/font' );
     }
 
+    /**
+     * Fire to allow setting the default settings.
+     *
+     * @since 3.0
+     */
+    $defaults = apply_filters( 'coursepress_default_settings', $defaults );
 
     $settings = wp_parse_args( $settings, $defaults );
 
