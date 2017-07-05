@@ -2,8 +2,9 @@
 .coursepress-popup-preview {
   [type="button"],
   [type="submit"],
+  button,
   .cp-btn {
-    border: 1px solid $grey_4;
+    border: 0;
     background-color: $grey_5;
     cursor: pointer;
     padding: 8px 15px;
@@ -11,8 +12,22 @@
     line-height: 1.5;
     height: auto;
     display: inline-block;
-    @include radius(4px);
+    @include radius(3px);
+    @include boxshadow(inset 0 0 12px 20px $grey_5);
+    @include transition(0.4s);
+
+    &:hover {
+      @include boxshadow(inset 0 0 12px 20px #a4a4a4);
+      @include transition(0.4s);
+    }
+    &[disabled="disabled"] {
+      opacity: 0.7;
+      &:hover {
+        @include boxshadow(inset 0 0 12px 20px $grey_5);
+      }
+    }
   }
+
   .cp-btn-xs {
     font-size: 12px;
     padding: 4px 8px;
@@ -26,6 +41,11 @@
     background-color: $blue_1;
     border-color: $blue_3;
     color: #ffffff;
+    @include boxshadow(inset 0 0 12px 20px $blue_6);
+
+    &:hover {
+      @include boxshadow(inset 0 0 12px 20px #4f9ac9);
+    }
   }
   .cp-bordered-btn {
     border: 2px solid $grey_4;

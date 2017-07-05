@@ -1,0 +1,22 @@
+#coursepress-setting-slugs {
+  .wpmui-wrapper .description {
+    display: block;
+    margin-top: 10px;
+  }
+
+  @media screen {
+    @media (min-width: 768px) {
+      .option-login,
+      .option-pages-login,
+      .option-student_dashboard,
+      .option-pages-student_dashboard,
+      .option-student_settings,
+      .option-pages-student_settings {
+        float: left;
+        width: 50%;
+        box-sizing: border-box;
+        padding-right: 15px;
+      }
+    }
+  }
+}

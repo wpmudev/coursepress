@@ -14,7 +14,8 @@
             events: {
                 'click .cp-menu-item': 'setSettingPage',
                 'click .save-coursepress-setting': 'saveSetting',
-                'click .cp-box-content.cp-box-index a': 'toggleBox'
+                'click .cp-box-content.cp-box-index a': 'toggleBox',
+                'click .step-cancel': 'goToGeneral'
             },
             initialize: function() {
                 this.once( 'coursepress:admin_setting_general', this.getGeneralSettingView, this );
@@ -31,6 +32,7 @@
 
             render: function() {
                 this.settingPages = this.$('.cp-menu-item');
+                this.cancelButton = this.$('.step-cancel');
                 this.on( 'coursepress:admin_setting', this.setCurrentPage, this );
                 this.setPage( this.currentPage );
             },
@@ -43,6 +45,13 @@
                 this.currentMenu.siblings().removeClass('active');
                 this.currentView.addClass( 'tab-active' );
                 this.currentView.siblings().removeClass('tab-active');
+
+                if ( 'general' === this.currentPage ) {
+                    // Disable cancel button
+                    this.cancelButton.attr('disabled', 'disabled');
+                } else {
+                    this.cancelButton.removeAttr('disabled');
+                }
             },
             setPage: function( setting ) {
                 this.currentPage = setting;
@@ -105,6 +114,10 @@
                     this.model.on( 'coursepress:error_update_settings', this.after_update, this );
                     this.model.save();
                 }
+            },
+            goToGeneral: function() {
+                this.$( '.cp-menu-item.setting-general' ).trigger( 'click' );
+                $(win).scrollTop(0);
             },
 
             after_update: function() {
