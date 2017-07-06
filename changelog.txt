@@ -5,6 +5,8 @@ Build Time:  BUILDTIME
 CHANGELOG
 =================================================
 
+* Fixed: Problem with proper display of a course structure.
+
 = 2.1 =
 -------------------------------------------------
 * Added: Text color option for course certificate.
