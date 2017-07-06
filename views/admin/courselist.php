@@ -21,6 +21,11 @@
             <input type="text" name="s" placeholder="<?php _e( 'Search', 'cp' ); ?>" value="<?php echo $search; ?>" />
             <button type="button" id="cp-search-clear" class=""><?php _e( 'Clear', 'cp' ); ?></button>
         </form>
+        <?php if ( ! empty( $pagination ) ) : ?>
+            <div class="tablenav-pages cp-admin-pagination">
+                <?php echo $pagination; ?>
+            </div>
+        <?php endif; ?>
         <table class="coursepress-table">
             <thead>
                 <tr>
@@ -142,5 +147,10 @@
                 <?php endif; ?>
             </tbody>
         </table>
+        <?php if ( ! empty( $pagination ) ) : ?>
+            <div class="tablenav-pages cp-admin-pagination">
+                <?php echo $pagination; ?>
+            </div>
+        <?php endif; ?>
     </div>
 </div>

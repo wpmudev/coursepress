@@ -181,12 +181,13 @@ class CoursePress_User extends CoursePress_Utility {
 	/**
 	 * Get the list of courses where user is either an instructor or facilitator.
 	 *
-	 * @param bool $publish
-	 * @param bool $returnAll
+	 * @param bool $publish   Only published courses?
+	 * @param bool $returnAll Should return all items?
+	 * @param int  $count     Count of total courses (pass by ref.).
 	 *
 	 * @return array
 	 */
-	function get_accessible_courses( $publish = true, $returnAll = true ) {
+	function get_accessible_courses( $publish = true, $returnAll = true, &$count = 0 ) {
 		$courses = array();
 
 		$args = array( 'post_status' => $publish ? 'publish' : 'any' );
@@ -195,7 +196,7 @@ class CoursePress_User extends CoursePress_Utility {
 			$args['posts_per_page'] = -1;
 
 		if ( $this->is_super_admin() )
-			$courses = coursepress_get_courses( $args );
+			$courses = coursepress_get_courses( $args, $count );
 		elseif ( $this->is_instructor() || $this->is_facilitator() ) {
 			$args['meta_query'] = array(
 				'relation' => 'OR',
@@ -208,7 +209,7 @@ class CoursePress_User extends CoursePress_Utility {
 					'meta_value' => $this->ID,
 				),
 			);
-			$courses = coursepress_get_courses( $args );
+			$courses = coursepress_get_courses( $args, $count );
 		}
 
 		return $courses;
