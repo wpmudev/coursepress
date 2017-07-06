@@ -35,7 +35,6 @@
                 // set category
                 var catSelect = this.$('#course-categories');
                 catSelect.select2({
-                    placeholder: catSelect.attr('placeholder'),
                     tags: true,
                 });
 
