@@ -37,11 +37,7 @@
            render: function() {
                var html, data, thumbnail_id, value, src;
                thumbnail_id = this.input.data('thumbnail');
-               src = this.input.val();
-
-               if ( src ) {
-                   value = src.split('/').pop();
-               }
+               value = src = this.input.val();
 
                data = {name: this.input.attr('name'), thumbnail_id: thumbnail_id, value: value};
                html = _._getTemplate(this.template_id, data);
@@ -55,6 +51,9 @@
                this.image_id_input.on('change', this.input.prop('change'));
                this.image_url_input = this.$('.cp-image-url');
 
+               if ( thumbnail_id ) {
+                   this.image_id_input.val(thumbnail_id);
+               }
                if ( src ) {
                    this.setThumbnail(src);
                }
@@ -71,6 +70,7 @@
                this.image_id_input.trigger('change');
            },
            selectImage: function() {
+
                if ( ! win.wp || ! win.wp.media ) {
                    return; // @todo: show graceful error
                }
@@ -97,7 +97,6 @@
                selected = frame.state().get('selection').first();
                id = selected.get('id');
 
-               url = '';
                in_frame = true;
 
                if ( !!selected.attributes.sizes.thumbnail ) {
@@ -105,22 +104,16 @@
                    this.setThumbnail(thumbnail);
                }
 
-               if ( !! selected.attributes.sizes[this.data.size] ) {
-                   url = selected.attributes.sizes[this.data.size].url;
-               } else {
-                   // Default to full image size
-                   url = selected.attributes.sizes.full.url;
-               }
+               url = selected.attributes.url;
 
                // Set correct url value
                this.input.val(url);
 
-               if ( url ) {
-                   url = url.split('/').pop();
-               }
-
                this.image_url_input.val(url);
+               this.image_url_input.trigger('change');
                this.image_id_input.val(id);
+               this.image_id_input.trigger('change');
+               this.input.trigger('change');
 
                // Restore before closing wpmedia
                in_frame = false;

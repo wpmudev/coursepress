@@ -6,6 +6,5 @@
  * @package CoursePress
  */
 class CoursePress_Extension_MarketPress {
-	public function __construct() {
-	}
+	public function __construct() {}
 }

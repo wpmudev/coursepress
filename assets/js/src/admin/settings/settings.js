@@ -14,14 +14,14 @@
             events: {
                 'click .cp-menu-item': 'setSettingPage',
                 'click .save-coursepress-setting': 'saveSetting',
-                'click .cp-box-content.cp-box-index a': 'toggleBox'
+                'click .step-cancel': 'goToGeneral'
             },
             initialize: function() {
                 this.once( 'coursepress:admin_setting_general', this.getGeneralSettingView, this );
                 this.once( 'coursepress:admin_setting_slugs', this.getSlugsSettingView, this );
-                this.once( 'coursepress:admin_setting_emails', this.getEmailSettingView, this );
+                this.once( 'coursepress:admin_setting_email', this.getEmailSettingView, this );
                 this.once( 'coursepress:admin_setting_capabilities', this.getCapabilitiesView, this );
-                this.once( 'coursepress:admin_setting_certificate', this.getCertificateView, this );
+                this.once( 'coursepress:admin_setting_basic_certificate', this.getCertificateView, this );
                 this.once( 'coursepress:admin_setting_shortcodes', this.getShortCodesView, this );
                 this.once( 'coursepress:admin_setting_extensions', this.getExtensionsView, this );
                 this.once( 'coursepress:admin_setting_import-export', this.getImportExportView, this );
@@ -31,6 +31,8 @@
 
             render: function() {
                 this.settingPages = this.$('.cp-menu-item');
+                this.cancelButton = this.$('.step-cancel');
+                this.saveButton = this.$('.save-coursepress-setting' );
                 this.on( 'coursepress:admin_setting', this.setCurrentPage, this );
                 this.setPage( this.currentPage );
             },
@@ -43,6 +45,21 @@
                 this.currentMenu.siblings().removeClass('active');
                 this.currentView.addClass( 'tab-active' );
                 this.currentView.siblings().removeClass('tab-active');
+
+                if ( 'general' === this.currentPage ) {
+                    // Disable cancel button
+                    this.cancelButton.attr('disabled', 'disabled');
+                } else {
+                    this.cancelButton.removeAttr('disabled');
+                }
+
+                if ( 'import-export' === this.currentPage ) {
+                    this.cancelButton.hide();
+                    this.saveButton.hide();
+                } else {
+                    this.cancelButton.show();
+                    this.saveButton.show();
+                }
             },
             setPage: function( setting ) {
                 this.currentPage = setting;
@@ -67,7 +84,7 @@
             },
 
             getEmailSettingView: function() {
-                this.settings.emails = new CoursePress.EmailSettings( this.model.get( 'emails' ) );
+                this.settings.email = new CoursePress.EmailSettings( this.model.get( 'email' ) );
             },
 
             getCapabilitiesView: function() {
@@ -75,7 +92,7 @@
             },
 
             getCertificateView: function() {
-                this.settings.certificate = new CoursePress.CertificateSettings( this.model.get('certificate') );
+                this.settings.basic_certificate = new CoursePress.CertificateSettings( this.model.get('basic_certificate') );
             },
 
             getShortCodesView: function() {
@@ -83,27 +100,39 @@
             },
 
             getExtensionsView: function() {
-                this.settings.extensions = new CoursePress.ExtensionsSettings( this.model.get('extensions'));
+                this.settings.extensions = new CoursePress.ExtensionsSettings( this.model.get('extensions'), this );
             },
 
             getImportExportView: function() {
                 this.settings['import-export'] = new CoursePress.ImportExportSettings();
             },
 
-            saveSetting: function() {
-                var settingModel = this.settings[ this.currentPage ];
-                this.model.set( this.currentPage, settingModel.model );
+            saveSetting: function(ev) {
+                var settingModel = this.settings[ this.currentPage ],
+                    button = this.$(ev.currentTarget),
+                    model = settingModel.getModel();
 
-                this.model.set( 'action', 'update_settings' );
-                this.model.save();
+                if ( model ) {
+                    button.addClass('cp-progress');
+                    this.model.set(this.currentPage, model);
+                    this.model.set('action', 'update_settings');
+                    this.model.off( 'coursepress:success_update_settings' );
+                    this.model.on( 'coursepress:success_update_settings', this.after_update, this );
+                    this.model.off( 'coursepress:error_update_settings' );
+                    this.model.on( 'coursepress:error_update_settings', this.after_update, this );
+                    this.model.save();
+                }
+            },
+            goToGeneral: function() {
+                this.$( '.cp-menu-item.setting-general' ).trigger( 'click' );
+                $(win).scrollTop(0);
             },
 
-            toggleBox: function(ev) {
-                $('.cp-box-content.cp-box-emails').addClass('hidden');
-                $('.cp-box-content.cp-box-index a').removeClass('selected');
-                $(ev.currentTarget).toggleClass('selected');
-                $('.cp-box-content.cp-box-'+$(ev.currentTarget).data('key')).toggleClass( 'hidden' );
-                return false;
+            after_update: function() {
+                var button = this.$('.save-coursepress-setting');
+                button.removeClass('cp-progress');
+                this.model.set( 'action', 'update_settings' );
+                this.model.save();
             }
         });
 

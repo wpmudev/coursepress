@@ -83,3 +83,8 @@ $code_font: Consolas, Monaco, monospace;
   opacity: 1;
   @include transition(opactiy 0.4s);
 }
+@mixin columns($columns) {
+  -webkit-columns: $columns;
+  -moz-columns: $columns;
+  columns: $columns;
+}

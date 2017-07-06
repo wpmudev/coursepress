@@ -1,0 +1,13 @@
+#coursepress-setting-shortcodes {
+  .cp-box-content {
+    &:after {
+      border: 0;
+    }
+  }
+  .cp-pad-right,
+  .cp-pad-left {
+    ul {
+      height: 220px;
+    }
+  }
+}

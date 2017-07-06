@@ -1,0 +1,103 @@
+.coursepress-wrap {
+  .cp-box-content {
+    &:after {
+      content: '';
+      display: block;
+      @include clearfix;
+      padding-top: 25px;
+      margin-bottom: 15px;
+      border-bottom: 1px solid $color_1;
+    }
+    &:last-of-type {
+      &:after {
+        padding: 0;
+        margin: 0;
+        border: 0;
+      }
+    }
+  }
+  .option {
+    margin-bottom: 15px;
+    display: block;
+  }
+  .cp-select-list {
+    padding-top: 10px;
+    background-color: #ffffff;
+    max-height: 240px;
+    overflow: auto;
+
+    li {
+      display: block;
+      text-align: left;
+      padding: 5px 15px;
+      @include radius(0);
+
+      &:first-of-type {
+        @include radius(0);
+      }
+      &:last-of-type {
+        margin-bottom: 10px;
+      }
+    }
+  }
+
+  .cp-odd {
+    position: relative;
+    display: block;
+    background-color: $grey_8;
+    padding: 15px 25px 25px 25px;
+    border: {
+      style: solid;
+      width: 1px 0;
+      color: $grey_5;
+    }
+
+    &:before {
+      content: '';
+      position: absolute;
+      bottom: -12.5px;
+      left: 50px;
+      border: {
+        style: solid;
+        width: 0 1px 1px 0;
+        color: $grey_5;
+      }
+      width: 25px;
+      height: 25px;
+      padding: 0;
+      background-color: $grey_8;
+      -webkit-transform: rotate(45deg);
+      -moz-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+      -o-transform: rotate(45deg);
+      transform: rotate(45deg);
+    }
+    &:after {
+      border: 0;
+
+      margin: 0;
+    }
+  }
+
+  .cp-box-header {
+    padding-top: 20px;
+  }
+}
+
+.coursepress-settings {
+
+  @media screen {
+    @media (min-width: 768px) {
+      .cp-box-course-images {
+        .box-inner-content {
+          display: flex;
+
+          .cp-box {
+            width: 100%;
+            max-width: 220px;
+          }
+        }
+      }
+    }
+  }
+}

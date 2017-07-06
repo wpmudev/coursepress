@@ -18,8 +18,9 @@ function coursepress_get_user_option( $user_id, $key ) {
 	global $wpdb;
 
 	// Prefix key if it's multisite
-	if ( is_multisite() )
-		$key = $wpdb->prefix . $key;
+	if ( is_multisite() ) {
+        $key = $wpdb->prefix . $key;
+    }
 
 	return get_user_option( $key, $user_id );
 }

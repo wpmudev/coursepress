@@ -53,17 +53,5 @@ class CoursePress_Admin_Install {
 		// Run the core
 		$this->cp->load_core();
 		$this->cp->get_class( 'CoursePress_Legacy' );
-
-		/*
-		$core_file = $this->cp->plugin_path . '/inc/class-core.php';
-
-		$legacy_file = $this->cp->plugin_path . '/inc/class-legacy.php';
-
-		if ( file_exists( $legacy_file ) && is_readable( $legacy_file ) ) {
-			require_once $legacy_file;
-
-			new CoursePress_Legacy();
-		}
-		*/
 	}
 }

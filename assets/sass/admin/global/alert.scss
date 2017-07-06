@@ -1,6 +1,7 @@
 .coursepress-wrap {
   .cp-alert {
     position: relative;
+    display: block;
     padding: 15px 25px 15px 55px;
     border: 1px solid $grey_5;
     background-color: $grey_6;
@@ -23,6 +24,16 @@
     &:before {
       content: '\f05a';
       color: $blue_2;
+    }
+  }
+
+  .cp-alert-error {
+    background-color: #ffe6e6;
+    border-color: #ffcccc;
+
+    &:before {
+      content: '\f06a';
+      color: red;
     }
   }
 }

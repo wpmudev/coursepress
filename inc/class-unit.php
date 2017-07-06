@@ -81,8 +81,9 @@ class CoursePress_Unit extends CoursePress_Utility {
 	 * @return CoursePress_Course|null|WP_Error
 	 */
 	function get_course() {
-		if ( $this->__get( 'course' ) )
-			return $this->__get( 'course' );
+		if ( $this->__get( 'course' ) ) {
+            return $this->__get('course');
+        }
 
 		$course_id = $this->__get( 'course_id' );
 		$course = coursepress_get_course( $course_id );
@@ -299,8 +300,9 @@ class CoursePress_Unit extends CoursePress_Utility {
 	 * @return array|mixed
 	 */
 	function get_modules_with_steps( $published = true ) {
-		if ( $this->__get( 'unit_modules_with_steps' ) )
-			return $this->__get( 'unit_modules_with_steps' );
+		if ( $this->__get( 'unit_modules_with_steps' ) ) {
+            return $this->__get('unit_modules_with_steps');
+        }
 
 		$modules = $this->get_modules();
 
