@@ -495,3 +495,61 @@ function coursepress_get_next_course_cycle_link( $label = '' ) {
 		$label
 	);
 }
+
+/**
+ * Change course status.
+ *
+ * @param int $course_id Course ID.
+ * @param string $status New status (publish or draft).
+ *
+ * @return bool
+ */
+function coursepress_change_course_status( $course_id, $status ) {
+
+	// Allowed statuses to change.
+	$allowed_statuses = array( 'publish', 'draft' );
+
+	// @todo: Implement capability check.
+	$capable = true;
+
+	if ( empty( $course_id ) || ! in_array( $status, $allowed_statuses ) || ! $capable ) {
+
+		/**
+		 * Perform actions when course status not changed.
+		 *
+		 * @param int $course_id Course ID.
+		 * @param int $status Status.
+		 *
+		 * @since 1.2.1
+		 */
+		do_action( 'coursepress_course_status_change_fail', $course_id, $status );
+
+		return false;
+	}
+
+	$post = array(
+		'ID' => absint( $course_id ),
+		'post_status' => $status,
+	);
+
+	// Update the course post status.
+	if ( is_wp_error( wp_update_post( $post ) ) ) {
+
+		// This action hook is documented above.
+		do_action( 'coursepress_course_status_change_fail', $course_id, $status );
+
+		return false;
+	}
+
+	/**
+	 * Perform actions when course status is changed.
+	 *
+	 * var $course_id The course id.
+	 * var $status The new status.
+	 *
+	 * @since 1.2.1
+	 */
+	do_action( 'coursepress_course_status_changed', $course_id, $status );
+
+	return true;
+}

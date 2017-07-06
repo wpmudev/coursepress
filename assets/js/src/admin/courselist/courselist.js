@@ -16,6 +16,12 @@
                 'click #cp-search-clear': 'clearSearch'
             },
 
+            initialize: function() {
+                this.request = new CoursePress.Request();
+                // On status toggle fail.
+                this.request.on( 'coursepress:error_course_status_toggle', this.revertStatusToggle, this );
+            },
+
             /**
              * Resets browser saved step and load course setup.
              */
@@ -26,8 +32,26 @@
                 CoursePress.Cookie('course_setup_step_' + course_id ).set( step, 86400 * 7);
             },
 
-            toggleCourseStatus: function() {
-                // @todo: switch status via JS
+            /**
+             * Toggle course status.
+             */
+            toggleCourseStatus: function(ev) {
+                this.request.selector = $(ev.target);
+                var status = this.request.selector.prop('checked') ? 'publish' : 'draft';
+                this.request.set( {
+                    'action' : 'course_status_toggle',
+                    'course_id' : this.request.selector.val(),
+                    'status' : status,
+                } );
+                this.request.save();
+            },
+
+            /**
+             * Revert toggled status.
+             */
+            revertStatusToggle: function() {
+                var checked = this.request.selector.prop('checked');
+                this.request.selector.prop('checked', !checked);
             },
 
             duplicateCourse: function() {
