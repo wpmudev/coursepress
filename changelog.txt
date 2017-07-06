@@ -5,6 +5,8 @@ Build Time:  BUILDTIME
 CHANGELOG
 =================================================
 
+* Fixed: Instructor can't reply to comments on course unit.
+
 = 2.1 =
 -------------------------------------------------
 * Added: Text color option for course certificate.
