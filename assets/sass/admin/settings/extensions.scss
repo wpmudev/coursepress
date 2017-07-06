@@ -1,0 +1,37 @@
+#coursepress-setting-extensions {
+  .coursepress-extension-table {
+    margin: 15px 0;
+    width: 100%;
+
+    th, td {
+      padding: 8px 15px;
+      text-align: left;
+      border: 0;
+
+      &:first-of-type {
+        @include radius(4px 0 0 4px);
+      }
+      &:last-of-type {
+        @include radius(0 4px 4px 0);
+      }
+    }
+
+    thead th {
+      background-color: $grey_5;
+    }
+
+    tbody {
+      tr:nth-child(2n) {
+        background-color: $grey_6;
+      }
+    }
+  }
+
+  .cp-box-content {
+    &:after {
+      border: 0;
+      margin: 0;
+      padding: 0;
+    }
+  }
+}

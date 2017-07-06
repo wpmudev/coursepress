@@ -417,6 +417,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		coursepress_render( 'views/tpl/settings-shortcodes' );
 		coursepress_render( 'views/tpl/settings-extensions', array( 'extensions' => $extensions ) );
 		coursepress_render( 'views/extensions/marketpress' );
+		coursepress_render( 'views/extensions/woocommerce' );
 		coursepress_render( 'views/tpl/settings-import-export' );
 	}
 

@@ -1,6 +1,8 @@
 #coursepress-setting-basic_certificate {
   .cp-content {
     .cp-box-custom-certificate {
+      border-top: 1px solid $grey_8;
+
       .box-label-area,
       .box-inner-content {
         display: block;
@@ -10,6 +12,26 @@
         padding: 0;
         margin: 0;
       }
+
+      &:after {
+        border: 0;
+        margin: 0;
+        padding: 0;
+      }
+      &:before {
+        content: '';
+        display: block;
+        @include clearfix;
+        padding-top: 25px;
+        margin-bottom: 15px;
+        border-bottom: 1px solid $color_1;
+      }
+    }
+  }
+  .cp-box-certificate-options {
+    &:after {
+      padding: 0;
+      border: 0;
     }
   }
 

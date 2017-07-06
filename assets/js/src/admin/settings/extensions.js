@@ -9,8 +9,8 @@
         Extension = CoursePress.View.extend({
             type: false,
             initialize: function(model, options) {
-                this.model = model;
                 _.extend( this, options );
+                this.model[this.type] = ! _.isObject( model ) ? {} : model;
                 this.render();
             },
             render: function() {
@@ -20,8 +20,23 @@
 
                 return this;
             },
-            updateModel: function() {
+            updateModel: function( ev ) {
+                var input, name, type, value;
 
+                input = $(ev.currentTarget);
+                name = input.attr('name');
+
+                if ( ( type = input.attr('type') ) &&
+                    _.contains(['checkbox', 'radio'], type ) ) {
+                    value = input.is(':checked') ? input.val() : false;
+                } else {
+                    value = input.val();
+                }
+
+                this.model[this.type][name] = value;
+                var c = this.controller.setting.model.get(this.type);
+                window.console.log(c);
+                this.controller.setting.model.set( this.type, this.model[this.type] );
             }
         });
 
@@ -48,7 +63,21 @@
             updateModel: function(ev) {
                 var target = this.$(ev.currentTarget),
                     value = target.val(),
-                    is_checked = target.is(':checked');
+                    is_checked = target.is(':checked'),
+                    extensions = this.model.extensions;
+
+                if ( is_checked ) {
+                    if ( 'woocommerce' === value && _.contains( extensions, 'marketpress') ||
+                        'marketpress' === value && _.contains( extensions, 'woocommerce' ) ) {
+                        this.popup = new CoursePress.PopUp({
+                            type: 'error',
+                            message: win._coursepress.messages.no_mp_woo
+                        });
+
+                        target.prop( 'checked', false );
+                        return false;
+                    }
+                }
 
                 this.model.extensions = _.without( this.model.extensions, value );
 
@@ -68,7 +97,7 @@
                     }
 
                     // Initialize extension settings
-                    this.extensions[value] = new Extension({}, {
+                    this.extensions[value] = new Extension( this.setting.model.get(value), {
                         template_id: 'coursepress-' + value + '-tpl',
                         type: value,
                         controller: this

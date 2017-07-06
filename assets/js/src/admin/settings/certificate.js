@@ -46,7 +46,7 @@
             setUpUI: function() {
                 var self = this;
 
-                this.$('.switch-tmce').trigger('click');
+                this.$('select').select2();
                 this.certBG = new CoursePress.AddImage( this.$('#coursepress-cert-bg' ) );
                 this.color = this.$('[name="cert_text_color"]');
 
@@ -59,15 +59,21 @@
                     }
                 });
 
+                this.$('#content_certificate').val( this.model.content );
+                this.$('.switch-tmce').trigger('click');
 
-                if ( tinyMCE.get( 'content-certificate' ) ) {
-                    tinyMCE.init('content');
-                    this.contentEditor = tinyMCE.get( 'content' );
+                if ( tinyMCE.get( 'content_certificate' ) ) {
+                    this.contentEditor = tinyMCE.get( 'content_certificate' );
                     this.contentEditor.on( 'change', function() {
                         self.updateCertificateContent();
                     }, this );
                 }
 
+                this.certBox = this.$('.box-cert-settings' );
+
+                if ( ! _.isTrue( this.model.enabled ) || _.isTrue( this.model.use_cp_default ) ) {
+                    this.certBox.hide();
+                }
             },
             updateCertificateContent: function() {
                 this.model.content = this.contentEditor.getContent();
@@ -109,8 +115,8 @@
                     sender = $(ev.currentTarget),
                     is_checked = sender.is(':checked');
 
-                if ( 'cp_use_default' === sender.attr('name') ) {
-                    boxes[is_checked ? 'slideUp' : 'slideDown']();
+                if ( 'use_cp_default' === sender.attr('name') ) {
+                    boxes[ is_checked ? 'slideUp' : 'slideDown']();
                 } else {
                     boxes[ is_checked ? 'slideDown' : 'slideUp']();
                 }
@@ -124,7 +130,6 @@
             openPreview: function( data ) {
                 if ( data.pdf ) {
                     this.preview = new CertificatePreview(data);
-                    //window.location = data.pdf;
                 } else {
                     // @todo: show friendly error
                 }

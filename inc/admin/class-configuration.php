@@ -14,7 +14,7 @@ class CoursePress_Admin_Configuration {
 
 		//add_filter( 'coursepress_settings-certificate', array( $this, 'certificate' ) );
 		//add_filter( 'coursepress_settings-general', array( $this, 'general' ) );
-		add_filter( 'coursepress_settings-import-export', array( $this, 'import_export' ) );
+		//add_filter( 'coursepress_settings-import-export', array( $this, 'import_export' ) );
 		//add_filter( 'coursepress_settings-slugs', array( $this, 'slugs' ) );
 		//add_filter( 'coursepress_settings-capabilities', array( $this, 'capabilities' ) );
 

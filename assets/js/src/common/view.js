@@ -11,6 +11,9 @@
                 } else if (_.isObject(selected ) ) {
                     return !!selected[value];
                 } else {
+                    if ( _.isBoolean( value ) ) {
+                        selected = parseInt(selected, 10) > 0 ? true : false;
+                    }
                     return value === selected;
                 }
             },

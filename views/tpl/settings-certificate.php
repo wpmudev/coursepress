@@ -5,7 +5,7 @@
 
 	<div class="cp-content">
         <?php
-        global $CoursePress;
+        global $CoursePress, $editor_styles;
 
         $config = array();
         $toggle_input = coursepress_create_html( 'span', array( 'class' => 'cp-toggle-btn' ) );
@@ -23,7 +23,7 @@
                 'use_cp_default' => array(
                     'type' => 'checkbox',
                     'title' => $toggle_input . __( 'Use custom CoursePress certificate', 'CoursePress' ),
-                    'value' => ! coursepress_get_setting( 'basic_certificate/use_cp_default', false ),
+                    'value' => coursepress_get_setting( 'basic_certificate/use_cp_default', false ),
                 ),
             ),
         );
@@ -45,10 +45,10 @@
             'fields' => array(
                 'content' => array(
                     'type' => 'wp_editor',
-                    'id' => 'content-certificate',
+                    'id' => 'content_certificate',
                     'value' => $content,
                     'field_options' => array(
-                        'media_buttons' => false,
+                        'editor_height' => 300,
                     ),
                     'before' => sprintf( '<div class="cp-alert cp-alert-info">%s</div>', $token_info ),
                 ),
@@ -104,7 +104,7 @@
             'title' => __( 'Page orientation', 'CoursePress' ),
             'fields' => array(
                 'orientation' => array(
-                    'type' => 'radio',
+                    'type' => 'select',
                     'value' => coursepress_get_setting( 'basic_certificate/orientation', 'L' ),
                     'field_options' => array(
                         'L' => $toggle_input . __( 'Landscape', 'CoursePress' ),
@@ -207,7 +207,9 @@
                     printf( '<h3>%s</h3>', $data['label'] );
                 }
                 $data['name'] = $key;
+
                 lib3()->html->element( $data );
+
                 echo '</div>';
             }
             /**
@@ -220,6 +222,7 @@
             echo '</div>';
         }
         ?>
+        <link type="text/css" rel="stylesheet" media="all" href="<?php echo includes_url( '/css/editor.css' ); ?>" />
 	</div>
 </script>
 

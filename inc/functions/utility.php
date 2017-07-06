@@ -107,8 +107,24 @@ function coursepress_get_setting( $key = true, $default = '' ) {
             'instructor' => $caps,
             'facilitator'=> $caps,
         ),
-        'basic_certificate' => array(),
+        'basic_certificate' => array(
+            'enabled' => true,
+            'use_cp_default' => false,
+            'content' => '',
+        ),
         'extensions' => array(),
+        'marketpress' => array(
+            'enabled' => true,
+            'redirect' => true,
+            'unpaid' => 'change_status',
+            'delete' => 'change_status',
+        ),
+        'woocommerce' => array(
+            'enabled' => true,
+            'redirect' => true,
+            'unpaid' => 'change_status',
+            'delete' => 'change_status',
+        ),
     );
 
     if ( ! empty( $settings ) ) {

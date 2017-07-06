@@ -4,7 +4,7 @@
 	</div>
 
     <div class="cp-box-content">
-        <table class="coursepress-table">
+        <table class="coursepress-extension-table">
             <thead>
                 <tr>
                     <th><?php _e( 'Extension', 'cp' ); ?></th>

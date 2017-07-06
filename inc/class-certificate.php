@@ -10,6 +10,28 @@ class CoursePress_Certificate extends CoursePress_Utility {
     protected $post_type = 'cp_certificate';
     static $certificate_id = 0;
 
+    public function __construct() {
+        // Set default certificate content
+        add_filter( 'coursepress_default_settings', array( $this, 'default_certificate_settings' ) );
+    }
+
+    function default_certificate_settings( $settings ) {
+        $settings['basic_certificate'] = array(
+            'enabled' => true,
+            'use_cp_default' => false,
+            'content' => $this->default_certificate_content(),
+            'margin' => array(
+                'top' => 0,
+                'left' => 0,
+                'right' => 0,
+            ),
+            'background_image' => '',
+            'orientation' => 'L',
+        );
+
+        return $settings;
+    }
+
     function is_enabled() {
         return coursepress_get_setting( 'basic_certificate/enabled', true );
     }
