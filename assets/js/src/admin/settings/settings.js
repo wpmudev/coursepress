@@ -32,6 +32,7 @@
             render: function() {
                 this.settingPages = this.$('.cp-menu-item');
                 this.cancelButton = this.$('.step-cancel');
+                this.saveButton = this.$('.save-coursepress-setting' );
                 this.on( 'coursepress:admin_setting', this.setCurrentPage, this );
                 this.setPage( this.currentPage );
             },
@@ -50,6 +51,14 @@
                     this.cancelButton.attr('disabled', 'disabled');
                 } else {
                     this.cancelButton.removeAttr('disabled');
+                }
+
+                if ( 'import-export' === this.currentPage ) {
+                    this.cancelButton.hide();
+                    this.saveButton.hide();
+                } else {
+                    this.cancelButton.show();
+                    this.saveButton.show();
                 }
             },
             setPage: function( setting ) {

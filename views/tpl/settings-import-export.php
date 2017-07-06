@@ -11,29 +11,29 @@
         'title' => __( 'Import', 'CoursePress' ),
         'description' => __( 'Upload your exported courses to import here.', 'CoursePress' ),
         'fields' => array(
-            'import' => array(
-                'type' => 'file',
-            ),
-            'coursepress[replace]' => array(
+            //'import' => array(
+            //    'type' => 'file',
+            //),
+            'replace' => array(
                 'type' => 'checkbox',
-                'title' => __( 'Replace course if exists', 'CoursePress' ),
+                'title' => $toggle_input . __( 'Replace course if exists', 'CoursePress' ),
                 'desc' => __( 'Courses with the same title will be automatically replaced by the new one.', 'CoursePress' ),
             ),
-            'coursepress[students]' => array(
+            'students' => array(
                 'type' => 'checkbox',
-                'title' => __( 'Include course students', 'CoursePress' ),
+                'title' => $toggle_input . __( 'Include course students', 'CoursePress' ),
                 'desc' => __( 'Students listing must also included in your export for this to work.', 'CoursePress' ),
             ),
-            'coursepress[comments]' => array(
+            'comments' => array(
                 'type' => 'checkbox',
-                'title' => __( 'Include course thread/comments', 'CoursePress' ),
+                'title' => $toggle_input . __( 'Include course thread/comments', 'CoursePress' ),
                 'desc' => __( 'Comments listing must also included in your export for this to work.', 'CoursePress' ),
                 'disabled' => true,
             ),
             '' => array(
-                'type' => 'button',
+                'type' => 'submit',
                 'value' => __( 'Upload file and import', 'CoursePress' ),
-                'class' => 'button-primary disabled',
+                'class' => 'cp-btn cp-btn-active',
             ),
         ),
     );
@@ -46,15 +46,15 @@
         'fields' => array(
             'coursepress[all]' => array(
                 'type' => 'checkbox',
-                'title' => __( 'All Courses', 'CoursePress' ),
+                'title' => $toggle_input . __( 'All Courses', 'CoursePress' ),
             ),
         ),
     );
     /**
      * Courses list
      */
-    $course = new CoursePress_Data_Courses();
-    $list = $course->get_list();
+    $list = coursepress_get_courses( array( 'posts_per_page' => -1 ) );
+
     foreach ( $list as $course_id => $course_title ) {
         $config['export']['fields'][ 'coursepress[courses]['.$course_id.']' ] = array(
             'type' => 'checkbox',
@@ -64,19 +64,19 @@
     $config['export']['fields'] += array(
         'coursepress[export][students]' => array(
             'type' => 'checkbox',
-            'title' => __( 'Include course students', 'CoursePress' ),
+            'title' => $toggle_input . __( 'Include course students', 'CoursePress' ),
             'desc' => __( 'Will include course students and their course submission progress.', 'CoursePress' ),
         ),
         'coursepress[export][comments]' => array(
             'type' => 'checkbox',
-            'title' => __( 'Include course thread/comments', 'CoursePress' ),
+            'title' => $toggle_input . __( 'Include course thread/comments', 'CoursePress' ),
             'desc' => __( 'Will include course students and their course submission progress.', 'CoursePress' ),
             'disabled' => true,
         ),
         'coursepress[export][button]' => array(
-            'type' => 'button',
+            'type' => 'submit',
             'value' => __( 'Export Courses', 'CoursePress' ),
-            'class' => 'button-primary disabled',
+            'class' => 'cp-btn cp-btn-active',
         ),
     );
 
@@ -88,7 +88,8 @@
      */
     $option_name = sprintf( 'coursepress_%s', basename( __FILE__, '.php' ) );
     $options = apply_filters( $option_name, $config );
-    foreach ( $options as $option ) {
+
+    foreach ( $options as $option_key => $option ) {
     ?>
     <div class="cp-box-content">
         <div class="box-label-area">
@@ -100,6 +101,13 @@
     ?>
         </div>
         <div class="box-inner-content">
+            <form method="post" id="form-<?php echo $option_key; ?>" class="coursepress-form" enctype="multipart/form-data">
+                <?php if ( 'import' == $option_key ) : ?>
+                    <input type="file" name="file" />
+                    <div class="cp-alert cp-alert-error"></div>
+                <?php elseif ( 'export' == $option_key ) : ?>
+
+                <?php endif; ?>
     <?php
     foreach ( $option['fields'] as $key => $data ) {
     ?>
@@ -115,6 +123,7 @@
     <?php
     }
     ?>
+            </form>
     </div>
     <?php
     }

@@ -181,6 +181,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 					'select_image' => __( 'Select Image', 'cp' ),
 					'select_feature_image' => __( 'Select Feature Image', 'cp' ),
 				),
+                'server_error' => __( 'An unexpected error occur while processing. Please try again.', 'cp' ),
+                'invalid_file_type' => __( 'Invalid file type!', 'cp' ),
 			),
 		) );
 

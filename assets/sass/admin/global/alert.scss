@@ -26,4 +26,14 @@
       color: $blue_2;
     }
   }
+
+  .cp-alert-error {
+    background-color: #ffe6e6;
+    border-color: #ffcccc;
+
+    &:before {
+      content: '\f06a';
+      color: red;
+    }
+  }
 }

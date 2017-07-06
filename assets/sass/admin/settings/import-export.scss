@@ -1,0 +1,18 @@
+#coursepress-setting-import-export {
+  .coursepress-form {
+    margin: 15px 0;
+  }
+
+  .cp-alert-error {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    min-height: 30px;
+    display: none;
+    margin-bottom: 15px;
+  }
+
+  [name="file"] {
+    display: block;
+    margin-bottom: 15px;
+  }
+}
