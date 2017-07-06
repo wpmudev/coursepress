@@ -21,6 +21,11 @@
             <input type="text" name="s" placeholder="<?php _e( 'Search', 'cp' ); ?>" value="<?php echo $search; ?>" />
             <button type="button" id="cp-search-clear" class=""><?php _e( 'Clear', 'cp' ); ?></button>
         </form>
+        <?php if ( ! empty( $pagination ) ) : ?>
+            <div class="tablenav cp-admin-pagination">
+                <?php $pagination->pagination( 'top' ); ?>
+            </div>
+        <?php endif; ?>
         <table class="coursepress-table">
             <thead>
                 <tr>
@@ -90,7 +95,8 @@
                             <?php endforeach; ?>
                             <td class="column-status">
                                 <label>
-                                    <input type="checkbox" class="cp-toggle-input cp-toggle-course-status" value="<?php echo $course->ID; ?>" /> <span class="cp-toggle-btn"></span>
+                                    <?php $active =  ( isset( $course->post_status ) && $course->post_status === 'publish' ); ?>
+                                    <input type="checkbox" class="cp-toggle-input cp-toggle-course-status" value="<?php echo $course->ID; ?>" <?php checked( $active, true ); ?> /> <span class="cp-toggle-btn"></span>
                                 </label>
                             </td>
                         </tr>
@@ -141,5 +147,10 @@
                 <?php endif; ?>
             </tbody>
         </table>
+        <?php if ( ! empty( $pagination ) ) : ?>
+            <div class="tablenav cp-admin-pagination">
+                <?php $pagination->pagination( 'bottom' ); ?>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
