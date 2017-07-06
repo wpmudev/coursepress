@@ -53,6 +53,8 @@ final class CoursePress {
 	 */
 	var $version = '3.0-beta';
 
+	var $name = 'CoursePress Pro';
+
 	/**
 	 * @var string
 	 */
@@ -78,7 +80,6 @@ final class CoursePress {
 	protected $core_admin_classes = array(
 		'CoursePress_Admin_Page',
 		'CoursePress_Admin_Ajax',
-		'CoursePress_Admin_Configuration',
 		'CoursePress_Admin_Actions',
 	);
 

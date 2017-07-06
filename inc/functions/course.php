@@ -506,6 +506,20 @@ function coursepress_get_next_course_cycle_link( $label = '' ) {
 	);
 }
 
+function coursepress_course_update_setting( $course_id, $settings = array() ) {
+    $course = coursepress_get_course( $course_id );
+
+    if ( is_wp_error( $course ) || empty( $settings ) ) {
+        return false;
+    }
+
+    $settings = wp_parse_args( $settings, $course->get_settings() );
+
+    update_post_meta( $course_id, 'course_settings', $settings );
+
+    return true;
+}
+
 /**
  * Change course status.
  *

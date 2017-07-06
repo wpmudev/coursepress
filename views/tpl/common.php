@@ -11,8 +11,15 @@
         <button type="button" class="cp-btn cp-btn-default cp-btn-browse"><?php _e( 'Browse', 'cp' ); ?></button>
     </div>
 </script>
-<script type="text/template" id="coursepress-tokens">
-    <div class="cp-alert cp-alert-info">
-        <p><?php _e( 'These codes will be replaced with actual data:', 'cp' ); ?></p>
+
+<script type="text/template" id="coursepress-popup-tpl">
+    <div class="coursepress-popup-body popup-{{type}}">
+        <div class="coursepress-popup-heading">
+            <h3>{{window._coursepress.text[type]}}</h3>
+        </div>
+        <div class="coursepress-popup-content">{{message}}</div>
+        <div class="coursepress-popup-footer">
+            <button type="button" class="button-primary btn-ok">{{window._coursepress.text.ok}}</button>
+        </div>
     </div>
 </script>

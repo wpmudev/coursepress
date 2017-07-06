@@ -3,10 +3,8 @@
 		<h2 class="box-heading-title"><?php _e( 'Shortcodes', 'cp' ); ?></h2>
 	</div>
 
-	<div class="cp-box-content cp-shortcode-list">
-		<div class="box-label-area">
-			<h2 class="label"><?php _e( 'Browse shortcodes', 'cp' ); ?></h2>
-		</div>
+	<div class="cp-box-content cp-shortcode-list cp-odd">
+        <h3><?php _e( 'Browse shortcodes', 'cp' ); ?></h3>
 		<div class="cp-box">
 			<div class="cp-flex">
 				<div class="cp-div-flex cp-pad-right">
@@ -37,7 +35,6 @@
 							<?php $i++; ?>
 						<?php endforeach; ?>
 					<?php endif; ?>
-
 				</div>
 			</div>
 		</div>
@@ -47,9 +44,7 @@
 	<?php $i = 0; ?>
 	<?php foreach ( $details as $id => $values ) : ?>
 		<div class="cp-box-content cp-shortcode-details <?php echo $i !== 0 ? 'inactive' : ''; ?>" id="<?php echo $id; ?>">
-			<div class="box-label-area">
-				<h2 class="label"><?php echo $values['title']; ?></h2>
-			</div>
+            <h3 class="cp-box-header"><?php echo $values['title']; ?></h3>
 			<div class="cp-box cp-sep">
 				<p class="description"><?php echo $values['description']; ?></p>
 				<p class="cp-usage-label"><?php _e( 'USAGE EXAMPLE', 'cp' ); ?>:</p>
@@ -86,7 +81,7 @@
 				</div>
 				<?php endif; ?>
 				<?php if ( ! empty( $values['optional_attr'] ) ) : ?>
-					<div class="cp-box cp-sep">
+					<div class="cp-box">
 						<h3 class="label"><?php _e( 'Optional Attributes', 'cp' ); ?>:</h3>
 						<table class="cp-shortcode-table">
 							<tbody>

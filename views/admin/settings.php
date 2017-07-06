@@ -8,9 +8,9 @@
 					$admin_menus = array(
 						'general' => __( 'General', 'cp' ),
 						'slugs' => __( 'URL Slugs', 'cp' ),
-						'emails' => __( 'Emails', 'cp' ),
+						'email' => __( 'Emails', 'cp' ),
 						'capabilities' => __( 'Capabilities', 'cp' ),
-						'certificate' => __( 'Certificate', 'cp' ),
+						'basic_certificate' => __( 'Certificate', 'cp' ),
 						'shortcodes' => __( 'Shortcodes', 'cp' ),
 						'extensions' => __( 'Extensions', 'cp' ),
 						'import-export' => __( 'Import/Export', 'cp' ),
@@ -44,6 +44,7 @@
                 </button>
 
                 <button type="button" class="cp-btn cp-btn-active save-coursepress-setting">
+                    <i class="fa fa-circle-o-notch fa-spin"></i>
 					<?php _e( 'Save Settings', 'cp' ); ?>
                 </button>
             </div>

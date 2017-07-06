@@ -42,7 +42,9 @@
                 'assets/js/src/common/request.js',
                 'assets/js/src/common/view.js',
                 'assets/js/src/common/add-image.js',
-                'assets/js/src/common/dropdown-menu.js'
+                'assets/js/src/common/dropdown-menu.js',
+                'assets/js/src/common/popup.js',
+                'assets/js/src/common/upload.js'
                 // assets/js/src/admin/general/....
             ],
             'coursepress.js': [

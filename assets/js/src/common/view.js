@@ -11,6 +11,9 @@
                 } else if (_.isObject(selected ) ) {
                     return !!selected[value];
                 } else {
+                    if ( _.isBoolean( value ) ) {
+                        selected = parseInt(selected, 10) > 0 ? true : false;
+                    }
                     return value === selected;
                 }
             },
@@ -65,15 +68,16 @@
             },
             updateModel: function(ev) {
                 var input, name, type, value;
+
                 input = $(ev.currentTarget);
                 name = input.attr('name');
 
-                if ( ( type = input.attr('type') ) && _.contains(['checkbox', 'radio'], type ) ) {
-                    value = !!input.is(':checked');
+                if ( ( type = input.attr('type') ) &&
+                    _.contains(['checkbox', 'radio'], type ) ) {
+                    value = input.is(':checked') ? input.val() : false;
                 } else {
                     value = input.val();
                 }
-                input.css('background-color', 'red');
 
                 if ( !!this.model.get ) {
                     this.model.set(name, value);

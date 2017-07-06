@@ -83,6 +83,8 @@
       text-align: center;
       margin: 0;
       border-right: 1px solid $grey_4;
+      cursor: pointer;
+      @include transition(background-color 0.4s);
 
       &:first-of-type {
         @include radius(6px 0 0 6px);
