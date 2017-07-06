@@ -13,6 +13,8 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
         add_action( 'wp_ajax_coursepress_request', array( $this, 'process_ajax_request' ) );
         // Hook to get course units for editing
         add_action( 'wp_ajax_coursepress_get_course_units', array( $this, 'get_course_units' ) );
+        // Hook to handle file uploads
+        add_action( 'wp_ajax_coursepress_upload', array( $this, 'upload_file' ) );
     }
 
     /**
@@ -51,8 +53,9 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
         $wpnonce = filter_input( INPUT_GET, '_wpnonce' );
         $error = array( 'error_code' => 'cannot_get_units', 'message' => __( 'Something went wrong. Please try again.', 'cp' ) );
 
-        if ( ! wp_verify_nonce( $wpnonce, 'coursepress_nonce' ) )
-            wp_send_json_error( $error );
+        if ( ! wp_verify_nonce( $wpnonce, 'coursepress_nonce' ) ) {
+            wp_send_json_error($error);
+        }
 
         $course = new CoursePress_Course( $course_id );
         $units = $course->get_units( false );
@@ -287,5 +290,61 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
             'success' => true,
             'pdf' => $pdf->cache_url() . $filename,
         );
+    }
+
+    function upload_file() {
+        $request = $_POST;
+
+        if ( ! empty( $_FILES ) && ! empty( $request['_wpnonce'] )
+            && wp_verify_nonce( $request['_wpnonce'], 'coursepress_nonce' ) ) {
+            $type = $request['type'];
+
+            if ( method_exists( $this, $type ) ) {
+                call_user_func( array( $this, $type ), $_FILES, $request );
+            }
+        }
+        wp_send_json_error(true);
+    }
+
+    function import_file() {
+        $import = wp_import_handle_upload();
+
+        if ( ! empty( $import['id'] ) ) {
+            $import_id = $import['id'];
+
+            $filename = $import['file'];
+            $courses = file_get_contents( $filename );
+            $data = array();
+
+            if ( preg_match( '%.json%', $filename ) ) {
+                // Import file is json format!
+                // Let's save imported file
+                $option_id = 'coursepress_import_' . $import_id;
+                $courses = json_decode( $courses );
+                $courses = get_object_vars( $courses );
+                coursepress_update_option( $option_id, $courses );
+
+                $data['import_id'] = $option_id;
+                $data['total_courses'] = count( $courses );
+
+                wp_send_json_success( $data );
+            }
+        }
+
+        wp_send_json_error();
+    }
+
+    function import_course( $request ) {
+
+        $import_id = $request->import_id;
+        $total_course = $request->total_courses;
+
+        // Let's import the course one at a time to avoid over caps
+        $courses = coursepress_get_option( $import_id );
+        $courses = maybe_unserialize( $courses );
+        $the_course = array_shift( $courses );
+
+        $importClass = new CoursePress_Import( $the_course, $request );
+
     }
 }

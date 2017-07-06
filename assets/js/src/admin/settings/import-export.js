@@ -4,31 +4,75 @@
     'use strict';
 
     CoursePress.Define( 'ImportExportSettings', function( $, doc, win ) {
+        var CourseImport, CourseExport;
+
+        CourseImport = CoursePress.View.extend({
+            events: {
+                'submit': 'uploadFile',
+                'change [name="import"]': 'validateFile',
+                'change [name]': 'updateModel'
+            },
+            initialize: function() {
+                this.uploadModel = new CoursePress.Upload();
+                this.model = new CoursePress.Request();
+                this.render();
+            },
+            render: function() {
+                this.errorContainer = this.$('.cp-alert-error');
+            },
+            uploadFile: function() {
+                var valid = this.validateFile(), timer;
+
+                if ( valid ) {
+                    this.uploadModel.set( 'type', 'import_file' );
+                    this.uploadModel.off( 'coursepress:success_import_file' );
+                    this.uploadModel.on( 'coursepress:success_import_file', this.uploadCourse, this );
+                    this.uploadModel.upload();
+                }
+
+                return false;
+            },
+
+            uploadCourse: function( data ) {
+                this.model.set( 'action', 'import_course' );
+                this.model.set( data );
+                this.model.off( 'coursepress:success_import_course' );
+                this.model.on( 'coursepress:successs_import_course', this.maybeContinue, this );
+                this.model.save();
+            },
+
+            maybeContinue: function( data ) {
+
+            },
+
+            validateFile: function() {
+                var file = this.$('[name="import"]'),
+                    value = file.val(),
+                    file_type = value.substring( value.lastIndexOf('.') +1 );
+
+                if ( 'json' !== file_type ) {
+                    this.errorContainer.html( win._coursepress.text.invalid_file_type ).show();
+                    this.$el.addClass('active');
+                    return false;
+                } else {
+                    this.errorContainer.hide();
+                    this.$el.removeClass('active');
+                    return true;
+                }
+            }
+        });
+
         return CoursePress.View.extend({
             template_id: 'coursepress-import-export-setting-tpl',
             el: $('#coursepress-setting-import-export'),
-            events: {
-                'submit form': 'uploadFile',
-                'change [name="file"]': 'validateUploadFile'
+            initialize: function() {
+                this.on( 'view_rendered', this.setUpForms, this );
+                this.render();
             },
-
-            uploadFile: function() {
-            },
-
-            validateUploadFile: function( ev ) {
-                var file = this.$( ev.currentTarget ),
-                    value = file.val(),
-                    file_type = value.substring( value.lastIndexOf('.')+1 ),
-                    form = file.parent('form'),
-                    errorContainer = form.find( '.cp-alert-error' );
-
-                if ( 'json' !== file_type ) {
-                    errorContainer.html( win._coursepress.text.invalid_file_type ).show();
-                    form.addClass('active');
-                } else {
-                    errorContainer.hide();
-                    form.removeClass('active');
-                }
+            setUpForms: function() {
+                this.importForm = CourseImport.extend({el: this.$('#form-import') });
+                this.importForm = new this.importForm();
+                //this.exportForm = this.$('#form-export');
             }
         });
     });

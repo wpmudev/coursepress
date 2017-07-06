@@ -376,6 +376,9 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	    // Include color picker
         wp_enqueue_script( 'iris' );
 
+        // Include jquery-iframe
+        wp_enqueue_script( 'jquery-iframe', $CoursePress->plugin_url . '/assets/external/js/jquery.iframe-transport.js' );
+
 		$this->lib3();
 		// Add global setting to localize array
 		$this->localize_array['settings'] = coursepress_get_setting( true );

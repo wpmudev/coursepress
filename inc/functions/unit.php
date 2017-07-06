@@ -92,3 +92,56 @@ function coursepress_get_unit_structure( $course_id = 0, $unit_id = 0, $items_on
 
 	return $unit->get_unit_structure( $items_only, $show_details );
 }
+
+function coursepress_delete_unit( $unit_id = 0 ) {
+    $unit = coursepress_get_unit( $unit_id );
+
+    if ( is_wp_error( $unit ) ) {
+        return false;
+    }
+
+    $course = $unit->get_course();
+
+    // Remove the unit from course structures
+    $course_structures = array(
+        'structure_visible_units',
+        'structure_preview_units',
+        'structure_visible_pages',
+        'structure_preview_pages',
+        'structure_visible_module',
+        'structure_preview_module',
+    );
+
+    foreach ( $course_structures as $structure ) {
+        $structures = $course->__get( $structure );
+
+        if ( ! empty( $structures ) ) {
+            foreach ( $structures as $key => $value ) {
+                if ( preg_match( '%' . $unit_id . '%', $key ) ) {
+                    unset( $structures[ $key ] );
+                }
+            }
+        }
+    }
+
+    // Remove unit steps
+    $steps = $unit->get_steps( false );
+
+    if ( ! empty( $steps ) ) {
+        foreach ( array_values( $steps ) as $step_id ) {
+            wp_delete_post( $step_id, true );
+        }
+    }
+
+    // Finally, delete the unit
+    wp_delete_post( $unit_id, true );
+
+    /**
+     * Fired after a unit is deleted from DB
+     *
+     * @since 3.0
+     */
+    do_action( 'coursepress_course_deleted_unit', $unit_id );
+
+    return true;
+}
