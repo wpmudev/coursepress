@@ -139,8 +139,10 @@
   }
 
   .cp-admin-pagination {
-    clear: both;
-    float: right;
-    padding-bottom: 20px;
+    input[type="text"] {
+      border: 1px solid #ddd;
+      padding: 2px;
+      font-size: inherit;
+    }
   }
 }

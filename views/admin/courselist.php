@@ -22,8 +22,8 @@
             <button type="button" id="cp-search-clear" class=""><?php _e( 'Clear', 'cp' ); ?></button>
         </form>
         <?php if ( ! empty( $pagination ) ) : ?>
-            <div class="tablenav-pages cp-admin-pagination">
-                <?php echo $pagination; ?>
+            <div class="tablenav cp-admin-pagination">
+                <?php $pagination->pagination( 'top' ); ?>
             </div>
         <?php endif; ?>
         <table class="coursepress-table">
@@ -148,8 +148,8 @@
             </tbody>
         </table>
         <?php if ( ! empty( $pagination ) ) : ?>
-            <div class="tablenav-pages cp-admin-pagination">
-                <?php echo $pagination; ?>
+            <div class="tablenav cp-admin-pagination">
+                <?php $pagination->pagination( 'bottom' ); ?>
             </div>
         <?php endif; ?>
     </div>
