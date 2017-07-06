@@ -495,3 +495,28 @@ function coursepress_get_next_course_cycle_link( $label = '' ) {
 		$label
 	);
 }
+
+/**
+ * Create new course category from text.
+ *
+ * @param string $name New category name.
+ *
+ * @return bool|WP_Term
+ */
+function coursepress_create_course_category( $name = '' ) {
+
+	if ( empty( $name ) ) {
+		return false;
+	}
+
+	// @todo: Implement capability check.
+
+	$result = wp_insert_term( $name, 'course_category' );
+
+	// If term was created, return the term id.
+	if ( ! is_wp_error( $result ) && ! empty( $result['term_id'] ) ) {
+		return get_term( $result['term_id'], 'course_category' );
+	}
+
+	return false;
+}

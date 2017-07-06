@@ -17,7 +17,7 @@
 
             <div class="cp-box">
                 <label class="label" for="course-excerpt"><?php _e( 'Course short description', 'cp' ); ?></label>
-                <textarea name="post_excerpt" class="widefat" id="course-excerpt" rows="5">{{post_excerpt}}</textarea>
+                <?php wp_editor( $post_excerpt, 'course-excerpt', array( 'textarea_name' => 'post_excerpt', 'media_buttons' => false, 'textarea_rows' => 5, 'teeny' => true ) ); ?>
             </div>
         </div>
     </div>
@@ -31,7 +31,7 @@
         <div class="box-inner-content">
             <div class="cp-box">
                 <label class="label" for="course-description"><?php _e( 'Course full description', 'cp' ); ?></label>
-                <textarea name="post_content" class="widefat" id="course-description" rows="10">{{post_content}}</textarea>
+                <?php wp_editor( $post_content, 'course-description', array( 'textarea_name' => 'post_content', 'textarea_rows' => 10 ) ); ?>
             </div>
 
             <div class="cp-box">
@@ -49,15 +49,17 @@
             <div class="cp-box">
                 <label class="label" for="course-categories"><?php _e( 'Course categories', 'cp' ); ?></label>
                 <div class="cp-flex">
-                    <div class="cp-div-flex-2">
+                    <div class="cp-div-flex-2 cp-categories-selector">
                         <select id="course-categories" multiple="multiple" data-placeholder="<?php _e( 'Pick existing categories or add new one', 'cp' ); ?>" name="course_category">
                             <?php foreach ( coursepress_get_categories() as $category ) : ?>
                                 <option value="<?php echo $category; ?>" {{_.selected('<?php echo $category; ?>', course_category)}}><?php echo $category; ?></option>
                             <?php endforeach; ?>
                         </select>
+                        <input type="hidden" id="course-categories-search" value="">
                     </div>
+                    <div id="jj"></div>
                     <div class="cp-div-flex">
-                        <button type="button" class="cp-btn"><?php _e( 'Create Category', 'cp' ); ?></button>
+                        <button type="button" class="cp-btn" id="cp-create-cat"><?php _e( 'Create Category', 'cp' ); ?></button>
                     </div>
                 </div>
             </div>

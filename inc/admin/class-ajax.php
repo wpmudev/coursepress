@@ -213,4 +213,30 @@ class CoursePress_Admin_Ajax {
 		// @todo: Do
 		error_log( 'Settings updated!' );
 	}
+
+	/**
+	 * Create new course category from text.
+	 *
+	 * @param object $request Request data.
+	 */
+	function create_course_category( $request ) {
+
+		// Do not continue if empty.
+		if ( empty( $request->name ) ) {
+			wp_send_json_error( array( 'message' => __( 'Could not create new category.', 'cp' ) ) );
+		}
+
+		// Check if term already exist. We may have created it through select2 and removed.
+		$term = get_term_by( 'name', $request->name, 'course_category' );
+		// If term not exist, create new one.
+		if ( ! $term ) {
+			$term = coursepress_create_course_category( $request->name );
+		}
+		// If category created/exist, send the category name as response.
+		if ( $term ) {
+			wp_send_json_success( $term->name );
+		}
+
+		wp_send_json_error( array( 'message' => __( 'Could not create new category.', 'cp' ) ) );
+	}
 }

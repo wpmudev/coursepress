@@ -324,13 +324,19 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'menu_list' => $menu_list,
 		);
 
+		// Data for course settings form.
+		$settings_data = array(
+			'post_content' => $course->post_content,
+			'post_excerpt' => htmlspecialchars_decode( $course->post_excerpt ),
+		);
+
 		coursepress_render( 'views/admin/course-edit', $args );
 		coursepress_render( 'views/admin/footer-text' );
 
 		// Load templates
 		coursepress_render( 'views/tpl/common' );
 		coursepress_render( 'views/tpl/course-type', array( 'course_id' => $course_id ) );
-		coursepress_render( 'views/tpl/course-settings' );
+		coursepress_render( 'views/tpl/course-settings', $settings_data );
 		coursepress_render( 'views/tpl/course-completion' );
 		coursepress_render( 'views/tpl/course-units' );
 	}
