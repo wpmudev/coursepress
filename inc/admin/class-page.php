@@ -266,17 +266,45 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	function get_courselist_page() {
 		global $CoursePress_User;
 
+		$count = 0;
 		$screen = get_current_screen();
 
 		$args = array(
 			'columns' => get_column_headers( $screen ),
 			'hidden_columns' => get_hidden_columns( $screen ),
-			'courses' => $CoursePress_User->get_accessible_courses( false, false ),
+			'courses' => $CoursePress_User->get_accessible_courses( false, false, $count ),
+			'pagination' => $this->set_courses_pagination( $count ),
 			'course_edit_link' => add_query_arg( 'page', 'coursepress_course', admin_url( 'admin.php' ) ),
 		);
 
 		coursepress_render( 'views/admin/courselist', $args );
 		coursepress_render( 'views/admin/footer-text' );
+	}
+
+	/**
+	 * Set pagination for courses listing page.
+	 *
+	 * We are using WP_Listing_Table class to set pagination.
+     *
+	 * @param int $count Total courses.
+	 *
+	 * @return object
+	 */
+	function set_courses_pagination( $count ) {
+
+		// Get no. of courses per page.
+		$per_page = get_user_meta( get_current_user_id(), 'coursepress_course_per_page', true );
+		$per_page = empty( $per_page ) ? coursepress_get_option( 'posts_per_page', 20 )  : $per_page;
+
+		// Using WP_List table for pagination.
+		$listing = new WP_List_Table();
+		$args = array(
+			'total_items' => $count,
+			'per_page' => $per_page,
+		);
+		$listing->set_pagination_args( $args );
+
+		return $listing;
 	}
 
 	function get_course_edit_page() {

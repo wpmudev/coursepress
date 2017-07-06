@@ -50,11 +50,16 @@ function coursepress_get_course( $course_id = 0 ) {
 /**
  * Returns list courses.
  *
- * @param array $args
+ * @param array $args  Arguments to pass to WP_Query.
+ * @param int   $count This is not the count of resulted courses. This is the count
+ *                     of total available courses without applying pagination limit.
+ *                     This parameter does not expect incoming value. Total count will
+ *                     be passed as reference, since this functions return value is an
+ *                     array of course post objects.
  *
  * @return array Returns an array of courses where each course is an instance of CoursePress_Course object.
  */
-function coursepress_get_courses( $args = array() ) {
+function coursepress_get_courses( $args = array(), &$count = 0 ) {
 	/** @var $CoursePress_Core CoursePress_Core */
 	global $CoursePress_Core;
 
@@ -95,7 +100,12 @@ function coursepress_get_courses( $args = array() ) {
 	 */
 	$args = apply_filters( 'coursepress_pre_get_courses', $args );
 
-	$results = get_posts( $args );
+	// Note: We need to use WP_Query to get total count.
+	$query = new WP_Query();
+	$results = $query->query( $args );
+	// Update the total courses count (ignoring items per page).
+	$count = $query->found_posts;
+
 	$courses = array();
 
 	if ( ! empty( $results ) ) {
@@ -508,4 +518,62 @@ function coursepress_course_update_setting( $course_id, $settings = array() ) {
     update_post_meta( $course_id, 'course_settings', $settings );
 
     return true;
+}
+
+/**
+ * Change course status.
+ *
+ * @param int $course_id Course ID.
+ * @param string $status New status (publish or draft).
+ *
+ * @return bool
+ */
+function coursepress_change_course_status( $course_id, $status ) {
+
+	// Allowed statuses to change.
+	$allowed_statuses = array( 'publish', 'draft' );
+
+	// @todo: Implement capability check.
+	$capable = true;
+
+	if ( empty( $course_id ) || ! in_array( $status, $allowed_statuses ) || ! $capable ) {
+
+		/**
+		 * Perform actions when course status not changed.
+		 *
+		 * @param int $course_id Course ID.
+		 * @param int $status Status.
+		 *
+		 * @since 1.2.1
+		 */
+		do_action( 'coursepress_course_status_change_fail', $course_id, $status );
+
+		return false;
+	}
+
+	$post = array(
+		'ID' => absint( $course_id ),
+		'post_status' => $status,
+	);
+
+	// Update the course post status.
+	if ( is_wp_error( wp_update_post( $post ) ) ) {
+
+		// This action hook is documented above.
+		do_action( 'coursepress_course_status_change_fail', $course_id, $status );
+
+		return false;
+	}
+
+	/**
+	 * Perform actions when course status is changed.
+	 *
+	 * var $course_id The course id.
+	 * var $status The new status.
+	 *
+	 * @since 1.2.1
+	 */
+	do_action( 'coursepress_course_status_changed', $course_id, $status );
+
+	return true;
 }

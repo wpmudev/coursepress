@@ -137,4 +137,12 @@
       }
     }
   }
+
+  .cp-admin-pagination {
+    input[type="text"] {
+      border: 1px solid #ddd;
+      padding: 2px;
+      font-size: inherit;
+    }
+  }
 }

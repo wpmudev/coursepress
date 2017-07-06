@@ -21,6 +21,11 @@
             <input type="text" name="s" placeholder="<?php _e( 'Search', 'cp' ); ?>" value="<?php echo $search; ?>" />
             <button type="button" id="cp-search-clear" class=""><?php _e( 'Clear', 'cp' ); ?></button>
         </form>
+        <?php if ( ! empty( $pagination ) ) : ?>
+            <div class="tablenav cp-admin-pagination">
+                <?php $pagination->pagination( 'top' ); ?>
+            </div>
+        <?php endif; ?>
         <table class="coursepress-table">
             <thead>
                 <tr>
@@ -90,7 +95,8 @@
                             <?php endforeach; ?>
                             <td class="column-status">
                                 <label>
-                                    <input type="checkbox" class="cp-toggle-input cp-toggle-course-status" value="<?php echo $course->ID; ?>" /> <span class="cp-toggle-btn"></span>
+                                    <?php $active =  ( isset( $course->post_status ) && $course->post_status === 'publish' ); ?>
+                                    <input type="checkbox" class="cp-toggle-input cp-toggle-course-status" value="<?php echo $course->ID; ?>" <?php checked( $active, true ); ?> /> <span class="cp-toggle-btn"></span>
                                 </label>
                             </td>
                         </tr>
@@ -110,7 +116,7 @@
                                                 <a href="<?php echo $edit_link; ?>" data-step="course-students" class="cp-reset-step"><?php _e( 'Students', 'cp' ); ?></a>
                                             </li>
                                             <li class="menu-item-duplicate-course">
-                                                <a href=""><?php _e( 'Duplicate Course', 'cp' ); ?></a>
+                                                <a href="<?php echo add_query_arg( array( 'course_id' => $course->ID, '_wpnonce' => wp_create_nonce( 'duplicate_course' ), 'cp_action' => 'duplicate_course' ) ); ?>"><?php _e( 'Duplicate Course', 'cp' ); ?></a>
                                             </li>
                                             <li class="menu-item-export">
                                                 <a href=""><?php _e( 'Export', 'cp' ); ?></a>
@@ -141,5 +147,10 @@
                 <?php endif; ?>
             </tbody>
         </table>
+        <?php if ( ! empty( $pagination ) ) : ?>
+            <div class="tablenav cp-admin-pagination">
+                <?php $pagination->pagination( 'bottom' ); ?>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
