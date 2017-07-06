@@ -4,6 +4,40 @@ Build Time:  BUILDTIME
 
 CHANGELOG
 =================================================
+
+= 2.1 =
+-------------------------------------------------
+* Added: Text color option for course certificate.
+* Added: Categories argument to [course_list] shortcode to filter courses.
+* Added: HTML rel attribute to next and previous buttons.
+* Added: Password strength meter on student profile
+* Added: The ability to disable the strength meter in the enrollment pup-up.
+* Added: Option to disable emails individually
+* Added: New filter: coursepress_comment_list_args to filter comments list arguments.
+* Added: New filter: coursepress_comment_form_args to filter new comment form arguments.
+* Added: Unit slug will be updated when you change unit title.
+* Improved: Add individual nonce when withdraw a student from a course.
+* Improved: Students list on assessment screen can be sorted by username and display name.
+* Improved: Students list on assessment screen is more like users list.
+* Improved: Students list on course edit screen can by sorted by: username, display name, first name and last name.
+* Improved: Students list on course edit screen is more like users list.
+* Improved: Added certificate filter on students list on course edit screen.
+* Improved: Increase a course assessments page load time.
+* Improved: Image display.
+* Improved: Removed unused function CoursePress_Data_Course::is_course_preview()
+* Improved: Better section title display - added information about no title.
+* Improved: Automatic migration from users upgrading from version 1.x
+* Improved: Smaller download size.
+* Improved: Form module UI for better display.
+
+* Fixed: Default unit title height to avoid collapse when empty.
+* Fixed: Instructor profile course lists on multisite.
+* Fixed: Empty dashboard page to non-enrolled user.
+* Fixed: A minor microdata issue on the course details page.
+* Fixed: In unit-builder, the checkbox options were not getting saved properly in some scenarios.
+* Fixed: Multiple answers grade calculation.
+* Fixed: Form grade calculation.
+
 = 2.0.7 =
 -------------------------------------------------
 * Added: New "Paid" column on course list table.

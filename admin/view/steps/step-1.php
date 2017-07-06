@@ -8,7 +8,7 @@
 	<div class="status <?php echo $setup_class; ?>"></div>
 </div>
 
-<div class="step-content step-1">
+<div class="cp-box-content step-content step-1">
 	<input type="hidden" name="meta_setup_step_1" value="saved" />
 	<input type="hidden" name="course_id" value="<?php echo $course_id; ?>" />
 

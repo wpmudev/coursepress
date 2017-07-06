@@ -14,7 +14,7 @@ class CoursePress_Helper_Extension_TCPDF {
 
 		$plugins[] = array(
 			'name' => 'TCPDF Library',
-			'slug' => 'tcpdf',
+			'slug' => 'CP_TCPDF',
 			'base_path' => self::$base_path['free'],
 			'source' => 'downloads.wordpress.org/plugin/tcpdf.zip',
 			'source_message' => __( 'Complete TCPDF Library with additional fonts (WordPress.org)', 'CP_TD' ),

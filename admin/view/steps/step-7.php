@@ -3,7 +3,7 @@
 	<div class="status <?php echo $setup_class; ?>"></div>
 </div>
 
-<div class="step-content step-7">
+<div class="cp-box-content step-content step-7">
 	<input type="hidden" name="meta_setup_step_7" value="saved" />
 
 	<div class="wide minimum-grade">
@@ -112,6 +112,23 @@
 							<input type="radio" name="meta_page_orientation" value="P" <?php checked( 'P', $certificate['orientation'] ); ?>/> <?php _e( 'Portrait', 'CP_TD' ); ?>
 						</label>
 					</td>
+				</tr>
+				<tr>
+					<td><label><?php _e( 'Text Color', 'CP_TD' ); ?></label></td>
+					<td>
+						<label for="meta_cert_text_color">
+						</label>
+						<input
+							type="text"
+							name="meta_cert_text_color"
+							id="meta_cert_text_color"
+							class="certificate-color-picker"
+							value="<?php echo esc_attr($certificate['text_color']); ?>"/>
+					</td>
+					<?php
+						wp_enqueue_script( 'wp-color-picker' );
+						wp_enqueue_style( 'wp-color-picker' );
+					?>
 				</tr>
 			</table>
 		</div>

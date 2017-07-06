@@ -1417,6 +1417,10 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 			'content' => __( 'Displays a listing of courses. Can be for all courses or restricted by instructors or students (only one or the other, if both specified only students will be used).', 'CP_TD' ),
 			'parameters' => array(
 				'optional' => array(
+					'categories' => array(
+						'content' => __( 'A comma separated category slugs to show courses on specific course categories.', 'CP_TD' ),
+						'default' => 'empty',
+					),
 					'completed_label' => array(
 						'content' => __( 'Label for completed courses list..', 'CP_TD' ),
 						'default' => __( 'Completed courses', 'CP_TD' ),
@@ -1494,7 +1498,12 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 						'content' => __( 'Messge displayed when student is not enroled to any course.', 'CP_TD' ),
 						'default' => sprintf(
 							__( 'You are not enrolled in any courses. %s', 'CP_TD' ),
-							htmlentities( __( '<a href="%s">See available courses.</a>', 'CP_TD' ) )
+							htmlentities(
+								sprintf(
+									__( '<a href="%s">See available courses.</a>', 'CP_TD' ),
+									esc_attr( '/'.CoursePress_Core::get_setting( 'slugs/course', 'courses' ) )
+								)
+							)
 						),
 					),
 					'student' => array(

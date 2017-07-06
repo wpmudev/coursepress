@@ -540,6 +540,7 @@ class CoursePress_Data_Course {
 				'right' => 0,
 			),
 			'page_orientation' => 'L',
+			'cert_text_color' => '#5a5a5a'
 		);
 
 		$settings = wp_parse_args( $settings, $defaults );
@@ -909,6 +910,7 @@ class CoursePress_Data_Course {
 					);
 
 					$modules = self::get_unit_modules( $unit->ID, $status, false, false, array( 'page' => $page_number ) );
+
 					uasort( $modules, array( __CLASS__, 'uasort_modules' ) );
 
 					$items = CoursePress_Helper_Utility::set_array_value(
@@ -2593,11 +2595,6 @@ class CoursePress_Data_Course {
 			$url = $course_url;
 		}
 		return $url;
-	}
-
-	public static function is_course_preview( $course_id ) {
-		$post_status = get_post_status( $course_id );
-		$can_update_course = CoursePress_Data_Capabilities::can_update_course( $course_id );
 	}
 
 	/**

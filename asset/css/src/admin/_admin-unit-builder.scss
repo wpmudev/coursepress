@@ -61,21 +61,26 @@
   border: 1px solid #bb7615;
 }
 
-.tab-tabs ul li.coursepress-ub-tab span {
-  padding: 7px 24px 7px 7px;
-  font-weight: bold;
-  display:block;
-}
 
 .tab-tabs {
-
-  .button.button-add-new-unit {
-    display: block;
-    margin: 30px auto 0 auto;
-    text-align: center;
-    width: 170px;
-  }
-
+	ul {
+		li{
+			&.coursepress-ub-tab {
+				span {
+					display:block;
+					font-weight: bold;
+					min-height: 1.4em;
+					padding: 7px 24px 7px 7px;
+				}
+			}
+		}
+	}
+	.button.button-add-new-unit {
+		display: block;
+		margin: 30px auto 0 auto;
+		text-align: center;
+		width: 170px;
+	}
 }
 
 .tab-content {
@@ -682,8 +687,7 @@
 }
 .discussion .module-duration,
 .discussion .module-assessable,
-.text .module-duration,
-.video .module-duration {
+.text .module-duration {
   display: none;
 }
 

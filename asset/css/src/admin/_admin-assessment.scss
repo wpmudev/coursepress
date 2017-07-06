@@ -631,23 +631,6 @@
   text-decoration: none;
 }
 .cp-actions {
-  .cp-edit-grade,
-  a {
-  margin-right: 10px;
-  color: rgb(0, 115, 170);
-  position: relative;
-  padding: 5px;
-  text-align: center;
-  cursor: pointer;
-  &.active {
-    border: 1px #DDD solid;
-    background-color: #FFF;
-    padding: 10px;
-    display: inline-block;
-    margin-bottom: -10px;
-    border-width: 1px 1px 0 1px;
-    }
-  }
   .cp-min-tooltip {
     margin: 0 0 5px 0;
     &:after {
@@ -726,3 +709,35 @@
     color: rgb(0, 142, 194);
   }
 }
+
+.cp-assessment-page {
+	.users {
+		.column-certificates,
+		.column-modules,
+		.column-view_all {
+			vertical-align: middle;
+		}
+		.column-modules {
+			.cp-edit-grade,
+			a {
+				color: #0073aa;
+				position: relative;
+				padding: 5px;
+				text-align: center;
+				cursor: pointer;
+				&.active {
+					border: 1px #DDD solid;
+					background-color: #FFF;
+					padding: 10px;
+					display: inline-block;
+					margin-bottom: -10px;
+					border-width: 1px 1px 0 1px;
+				}
+			}
+		}
+		.cp-responses {
+			background-color: #fff;
+		}
+	}
+}
+

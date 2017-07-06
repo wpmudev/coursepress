@@ -8,7 +8,7 @@
 	<div class="status <?php echo $setup_class; ?>"></div>
 </div>
 
-<div class="step-content step-2">
+<div class="cp-box-content step-content step-2">
 	<input type="hidden" name="meta_setup_step_2" value="saved" />
 	<?php
 	echo CoursePress_Helper_UI::browse_media_field(
@@ -79,7 +79,7 @@
 					<tr>
 						<th class="column-course-structure">
 							<?php _e( 'Course Structure', 'CP_TD' ); ?>
-							<small><?php _e( 'Units and Pages with Modules selected will automatically be visible (only selected Modules accessible).', 'CP_TD' ); ?></small>
+							<small><?php _e( 'Units and Sections with Modules selected will automatically be visible (only selected Modules accessible).', 'CP_TD' ); ?></small>
 						</th>
 						<th class="column-show"><?php _e( 'Show', 'CP_TD' ); ?></th>
 						<th class="column-free-preview"><?php _e( 'Free Preview', 'CP_TD' ); ?></th>
@@ -116,9 +116,10 @@
 						</tr>
 
 						<?php if ( ! empty( $unit['pages'] ) ) :
+							$no_section_title = sprintf( '<small>[%s]</small>', esc_html__( 'this section has no title', 'CP_TD' ) );
 							foreach ( $unit['pages'] as $page_number => $page ) :
 								$count++;
-								$page_title = ! empty( $page['title'] ) ? $page['title'] : sprintf( __( 'Page %s', 'CP_TD' ), $key );
+								$page_title = ! empty( $page['title'] ) ? $page['title'] : sprintf( __( 'Section: %d %s', 'CP_TD' ), $page_number, $no_section_title );
 
 								$page_key = $unit_id . '_' . (int) $key;
 								$alt = $count % 2 ? 'even' : 'odd';

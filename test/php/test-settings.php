@@ -10,7 +10,7 @@
  */
 class CoursePress_Settings_Test extends CoursePress_UnitTestCase {
 
-	public function __construct() {
+	public function setUp() {
 		/** Initialise the hooks we need for the tests */
 		$this->add_test_hooks();
 	}
