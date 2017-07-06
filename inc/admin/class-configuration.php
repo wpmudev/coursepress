@@ -11,11 +11,12 @@ class CoursePress_Admin_Configuration {
 	private $pages = null;
 
 	public function __construct() {
+		add_filter( 'coursepress_settings-capabilities', array( $this, 'capabilities' ) );
 		add_filter( 'coursepress_settings-certificate', array( $this, 'certificate' ) );
+		add_filter( 'coursepress_settings-emails', array( $this, 'emails' ) );
 		add_filter( 'coursepress_settings-general', array( $this, 'general' ) );
 		add_filter( 'coursepress_settings-import-export', array( $this, 'import_export' ) );
 		add_filter( 'coursepress_settings-slugs', array( $this, 'slugs' ) );
-		add_filter( 'coursepress_settings-capabilities', array( $this, 'capabilities' ) );
 	}
 
 	/**
@@ -63,7 +64,7 @@ class CoursePress_Admin_Configuration {
 			'title' => __( 'Background Image', 'CoursePress' ),
 			'fields' => array(
 				'coursepress_settings[basic_certificate][background_image]' => array(
-					'type' => 'image',
+					'type' => 'wp_media',
 					'value' => coursepress_get_setting( 'basic_certificate/background_image' ),
 				),
 			),
@@ -1074,6 +1075,79 @@ class CoursePress_Admin_Configuration {
 		);
 
 		return apply_filters( 'coursepress_capabilities', $config );
+	}
+
+	/**
+	 * Contol emails configuration pages
+	 *
+	 *
+	 * @since 3.0
+		 */
+	public function emails( $config ) {
+
+		$emails = new CoursePress_Email();
+		$defaults = $emails->get_defaults();
+		$sections = $emails->get_settings_sections();
+
+		foreach ( $defaults as $key => $data ) {
+			$config[ 'email_'.$key ] = array(
+				'title' => $sections[ $key ]['title'],
+				'description' => $sections[ $key ]['description'],
+				'class' => 'box-inner-full',
+				'fields' => array(
+					'from' => array(
+						'type' => 'text',
+						'label' => __( 'From name', 'CoursePress' ),
+						'value' => coursepress_get_setting( 'email/'.$key.'/from', $data['from'] ),
+						'flex' => true,
+						'class' => 'large-text',
+					),
+					'email' => array(
+						'type' => 'text',
+						'label' => __( 'From email', 'CoursePress' ),
+						'value' => coursepress_get_setting( 'email/'.$key.'/email', $data['email'] ),
+						'flex' => true,
+						'class' => 'large-text',
+					),
+					'subject' => array(
+						'type' => 'text',
+						'label' => __( 'Subject', 'CoursePress' ),
+						'value' => coursepress_get_setting( 'email/'.$key.'/subject', $data['subject'] ),
+						'class' => 'large-text',
+					),
+					'help' => array(
+						'title' => __( 'Email body', 'CoursePress' ),
+						'type' => 'html_text',
+						'class' => 'cp-info',
+						'value' => '<span class="dashicons dashicons-info"></span> '.$sections[ $key ]['content_help_text'],
+					),
+					'content' => array(
+						'type' => 'wp_editor',
+						'id' => 'coursepress_settings_email_'.$key.'_content',
+						'value' => coursepress_get_setting( 'email/'.$key.'/content', $data['content'] ),
+					),
+				),
+			);
+		}
+
+		/**
+		 * sort
+		 */
+		uasort( $config, array( $this, 'sort_by_title' ) );
+		/**
+		 * return configuration
+		 */
+		return $config;
+	}
+
+	private function sort_by_title( $a, $b ) {
+		if ( ! isset( $a['title'] ) || ! isset( $b['title'] ) ) {
+			return 0;
+		}
+		if ( $a['title'] == $b['title'] ) {
+			return 0;
+		}
+		return ($a['title'] < $b['title']) ? -1 : 1;
 	}
 
 	private function get_pages() {

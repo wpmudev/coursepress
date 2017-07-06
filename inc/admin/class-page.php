@@ -280,7 +280,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 * Set pagination for courses listing page.
 	 *
 	 * We are using WP_Listing_Table class to set pagination.
-	 *
+     *
 	 * @param int $count Total courses.
 	 *
 	 * @return object
