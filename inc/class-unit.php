@@ -664,7 +664,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 	 *
 	 * @return bool Success or Fail?
 	 */
-	function duplicate( $course_id = 0 ) {
+	function duplicate_unit( $course_id = 0 ) {
 
 		// If in case unit post object is not and ID not found, bail.
 		// Unit ID is set when this class is instantiated.
@@ -730,7 +730,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 				}
 			}
 
-			// @todo: Implement unit module duplication.
+			// @todo: Implement module duplication.
 
 			// Set the course ID to new course.
 			update_post_meta( $new_unit_id, 'course_id', $course_id );
