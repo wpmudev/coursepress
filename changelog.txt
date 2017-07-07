@@ -5,7 +5,7 @@ Build Time:  BUILDTIME
 CHANGELOG
 =================================================
 = 2.1.0.1 =
-* Fixed: Lower version PHP compat.
+* Fixed: Lower PHP version compat.
 
 = 2.1 =
 -------------------------------------------------
