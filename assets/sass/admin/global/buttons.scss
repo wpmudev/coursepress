@@ -49,6 +49,7 @@
     border: 2px solid $grey_4;
     background-color: $grey_6;
     color: $dark_2;
+    @include boxshadow(none);
 
     &:hover {
       background-color: $grey_5;

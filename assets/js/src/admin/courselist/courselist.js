@@ -41,7 +41,7 @@
                 this.request.set( {
                     'action' : 'course_status_toggle',
                     'course_id' : this.request.selector.val(),
-                    'status' : status,
+                    'status' : status
                 } );
                 this.request.save();
             },
