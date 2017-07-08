@@ -4,7 +4,12 @@ Build Time:  BUILDTIME
 
 CHANGELOG
 =================================================
+= 2.1.1 =
+-------------------------------------------------
+* Fixed: Compatibility with older PHP versions.
+
 = 2.1.0.1 =
+-------------------------------------------------
 * Fixed: Compatibility with older PHP versions.
 
 = 2.1 =
