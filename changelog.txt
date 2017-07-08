@@ -5,6 +5,8 @@ Build Time:  BUILDTIME
 CHANGELOG
 =================================================
 
+* Fixed: Instructors capabilities problem on multisite installation.
+
 = 2.1 =
 -------------------------------------------------
 * Added: Text color option for course certificate.
