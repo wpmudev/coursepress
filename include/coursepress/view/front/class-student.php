@@ -3,7 +3,7 @@
 class CoursePress_View_Front_Student {
 
 	public static function init() {
-		add_action('coursepress_after_settings_username', array(CoursePress_Helper_UI::class, 'password_strength_meter'));
+		add_action('coursepress_after_settings_username', array( 'CoursePress_Helper_UI', 'password_strength_meter'));
 	}
 
 	public static function render_enrollment_process_page() {
