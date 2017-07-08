@@ -4,7 +4,7 @@
     </div>
 
     <div class="cp-box-content units-content">
-        <table class="widefat cp-units-table">
+        <table class="cp-units-table">
             <thead>
             <tr>
                 <th><?php _e( 'Units & Steps', 'cp' ); ?></th>
@@ -23,7 +23,7 @@
     </div>
 
     <div class="cp-box-content units-content">
-        <table class="widefat cp-units-table">
+        <table class="cp-units-table">
             <thead>
             <tr>
                 <th class="column-unit"><?php _e( 'Units & Modules', 'cp' ); ?></th>
@@ -62,7 +62,10 @@
                 <td class="column-unit">{{module.title}}</td>
                 <td class="column-step"></td>
                 <td class="column-preview">
-                    <input type="checkbox" {{_.checked(true, module.preview)}} />
+                    <label class="cp-checkbox">
+                        <input type="checkbox" class="cp-checkbox-input" {{_.checked(true, module.preview)}} />
+                        <span class="cp-checkbox-icon"></span>
+                    </label>
                 </td>
                 <td class="column-time">-</td>
             </tr>

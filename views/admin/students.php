@@ -4,10 +4,7 @@
  */
 ?>
 <div class="wrap coursepress-wrap coursepress-students">
-	<h1 class="wp-heading-inline">
-        <span class="course-title-tag">CoursePress</span>
-        <?php _e( 'Students', 'cp' ); ?>
-    </h1>
+	<h1 class="wp-heading-inline"><?php _e( 'Students', 'cp' ); ?></h1>
 
     <div class="coursepress-page">
         <div class="cp-flex">

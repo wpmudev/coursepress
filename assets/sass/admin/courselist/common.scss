@@ -1,0 +1,189 @@
+#coursepress-courselist {
+  .coursepress-table {
+    tbody {
+      tr.odd {
+        th, td {
+          background-color: $grey_6;
+        }
+      }
+      tr.even {
+        th, td {
+          background-color: #ffffff;
+        }
+      }
+      tr.column-actions {
+        td:first-of-type {
+          position: relative;
+          &:before {
+            content: '';
+            display: table-cell;
+            height: 20px;
+            width: 25px;
+            position: absolute;
+            left: 0;
+            top: -12px;
+            background-color: inherit
+          }
+        }
+        td:last-of-type {
+          position: relative;
+          &:after {
+            content: '';
+            display: table-cell;
+            height: 20px;
+            width: 25px;
+            position: absolute;
+            right: 0;
+            top: -12px;
+            background-color: inherit
+          }
+        }
+      }
+    }
+    th, td,
+    .hidden {
+      display: none;
+    }
+    .column-title {
+      display: table-cell;
+    }
+    .column-units,
+    .column-students,
+    .column-certified,
+    .column-actions {
+      text-align: center;
+    }
+
+    .cp-row-actions {
+      color: $grey_5;
+
+      a {
+        display: inline-block;
+        font-size: 95%;
+        margin: 0 15px;
+
+        &:first-of-type {
+          margin-left: 0;
+        }
+      }
+      .cp-dropdown {
+        display: inline-block;
+        vertical-align: middle;
+
+        .cp-dropdown-btn {
+          position: relative;
+          background-color: transparent;
+          border: {
+            style: solid;
+            width: 1px 1px;
+          }
+          @include radius(3px);
+          cursor: pointer;
+
+          &:after {
+            @include icon('\f107');
+            margin-left: 5px;
+          }
+        }
+        .cp-dropdown-menu {
+          position: absolute;
+          display: none;
+          top: 18px;
+          padding: 5px 0;
+          width: 160px;
+          z-index: 9;
+          background-color: #ffffff;
+          border: 1px solid $grey_5;
+          margin-top: 22px;
+          @include hide;
+          @include radius(4px);
+
+          li {
+            display: block;
+            padding: 4px 10px;
+            margin: 0;
+
+            &:hover {
+              background-color: $grey_6;
+            }
+            a {
+              display: block;
+              margin: 0;
+            }
+            &.cp-delete {
+              a {
+                color: $red;
+              }
+              &:hover {
+                background-color: rgba(255, 0, 0, 0.04);
+              }
+            }
+          }
+        }
+        &.open {
+          .cp-dropdown-btn {
+            background-color: $grey_5;
+            border-color: $grey_4;
+          }
+          .cp-dropdown-menu {
+            display: block;
+            @include show;
+          }
+        }
+      }
+    }
+  }
+
+  .cp-bordered-btn {
+    margin-left: 15px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    vertical-align: top;
+  }
+
+  .cp-search-form {
+    .cp-btn-active {
+      padding-top: 6px;
+      padding-bottom: 6px;
+      display: none;
+    }
+  }
+
+  .subsubsub {
+    li {
+      padding-right: 5px;
+
+      a {
+        display: block;
+      }
+
+      &.active {
+        a {
+          color: $black;
+        }
+      }
+    }
+  }
+
+  @media screen {
+    @media (min-width: 768px) {
+      .cp-search-form {
+        float: right;
+        margin-bottom: 15px;
+        .cp-btn-active {
+          display: inline-block;
+        }
+      }
+    }
+    @media (min-width: 1024px) {
+      .coursepress-table {
+        th, td {
+          display: table-cell;
+        }
+        .hidden {
+          display: none;
+        }
+      }
+    }
+  }
+}

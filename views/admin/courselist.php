@@ -14,19 +14,22 @@
     </h1>
 
     <div class="coursepress-page">
-        <?php $page = isset( $_GET[ 'page' ] ) ? esc_attr( $_GET[ 'page' ] ) : 'coursepress'; ?>
-        <?php $search = isset( $_GET[ 's' ] ) ? $_GET[ 's' ] : ''; ?>
-        <form method="get" class="cp-search-form cp-input-clear" id="cp-search-form">
-            <input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>" />
-            <input type="text" name="s" placeholder="<?php _e( 'Search', 'cp' ); ?>" value="<?php echo $search; ?>" />
-            <button type="button" id="cp-search-clear" class=""><?php _e( 'Clear', 'cp' ); ?></button>
-        </form>
-        <?php if ( ! empty( $pagination ) ) : ?>
-            <div class="tablenav cp-admin-pagination">
-                <?php $pagination->pagination( 'top' ); ?>
+        <form method="get" class="cp-search-form" id="cp-search-form">
+            <div class="cp-input-clear">
+                <input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>" />
+                <input type="text" name="s" placeholder="<?php _e( 'Type here...', 'cp' ); ?>" value="<?php echo $search; ?>" />
+                <button type="button" id="cp-search-clear" class="cp-btn-clear"><?php _e( 'Clear', 'cp' ); ?></button>
             </div>
+            <button type="submit" class="cp-btn cp-btn-active"><?php _e( 'Search', 'cp' ); ?></button>
+        </form>
+
+        <?php if ( count( $statuses ) > 0 ) : ?>
+            <ul class="subsubsub">
+                <?php echo implode( '<li>|</li>', $statuses ); ?>
+            </ul>
         <?php endif; ?>
-        <table class="coursepress-table">
+
+        <table class="coursepress-table" cellspacing="0">
             <thead>
                 <tr>
                     <th class="column-title"><?php _e( 'Title', 'cp' ); ?></th>
@@ -85,7 +88,7 @@
                                                  *
                                                  * @since 3.0
                                                  * @param string $column_id
-                                                 * @param CoursePress_Course object
+                                                 * @param CoursePress_Course object $course
                                                  */
                                                 do_action( 'coursepress_courselist_column', $column_id, $course );
                                                 break;
@@ -103,12 +106,12 @@
                         <tr class="<?php echo $odd ? 'odd' : 'even'; ?> column-actions">
                             <td colspan="<?php echo count($columns)+2; ?>" data-id="<?php echo $course->ID; ?>">
                                 <div class="cp-row-actions">
-                                    <a href="<?php echo $edit_link; ?>" data-step="course-type" class="cp-reset-step cp-edit-overview"><?php _e( 'Course Overview', 'cp' ); ?></a>
-                                    <a href="<?php echo $edit_link; ?>" data-step="course-units" class="cp-reset-step cp-edit-units"><?php _e( 'Units', 'cp' ); ?></a>
+                                    <a href="<?php echo $edit_link; ?>" data-step="course-type" class="cp-reset-step cp-edit-overview"><?php _e( 'Course Overview', 'cp' ); ?></a> |
+                                    <a href="<?php echo $edit_link; ?>" data-step="course-units" class="cp-reset-step cp-edit-units"><?php _e( 'Units', 'cp' ); ?></a> |
                                     <a href="<?php echo $edit_link; ?>" data-step="course-settings" class="cp-reset-step cp-edit-settings"><?php _e( 'Display Settings', 'cp' ); ?></a>
 
                                     <div class="cp-dropdown">
-                                        <button type="button" class="cp-btn cp-btn-xs cp-dropdown-btn">
+                                        <button type="button" class="cp-btn-xs cp-dropdown-btn">
                                             <?php _e( 'More', 'cp' ); ?>
                                         </button>
                                         <ul class="cp-dropdown-menu">

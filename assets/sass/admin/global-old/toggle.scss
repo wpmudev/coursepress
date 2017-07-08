@@ -7,10 +7,8 @@
     display: inline-block;
     height: 22px;
     width: 45px;
-    font-size: 1px;
-    line-height: 1px;
     border: 2px solid $grey_5;
-    background-color: #ffffff;
+    background-color: $grey_6;
     @include radius(20px);
     @include boxsizing;
 
@@ -21,16 +19,15 @@
       width: 22.5px;
       top: 0;
       left: 0;
-      height: 83%;
+      height: 100%;
       background-color: $grey_5;
-      border: 2px solid #ffffff;
       @include radius(20px);
       @include transition(left 0.5s);
     }
   }
   .cp-toggle-input:checked + .cp-toggle-btn {
     &:after {
-      left: 16.5px;
+      left: 20.5px;
       background-color: $blue_1;
       @include transition(0.5s);
     }
@@ -39,31 +36,6 @@
     .cp-toggle-btn {
       vertical-align: middle;
       margin-right: 5px;
-    }
-    .label {
-      display: inline-block;
-    }
-    .description {
-      margin-left: 30px;
-    }
-  }
-  .cp-box-content {
-    .cp-box.cp-toggle-box {
-      .label {
-        display: inline-block;
-      }
-    }
-  }
-
-  @media screen {
-    @media (min-width: 1024px) {
-      .cp-box-content {
-        .cp-box.cp-toggle-box {
-          .description {
-            margin-left: 55px;
-          }
-        }
-      }
     }
   }
 }

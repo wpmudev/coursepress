@@ -2,9 +2,9 @@
 	<div class="cp-box-heading">
 		<h2 class="box-heading-title"><?php _e( 'Pick name and type of course to create', 'cp' ); ?></h2>
 	</div>
-    <div class="cp-box-content cp-sep">
+    <div class="cp-box-content">
         <div class="box-label-area">
-            <label class="label"><?php _e( 'Course name and language', 'cp' ); ?></label>
+            <h3 class="label"><?php _e( 'Course name and language', 'cp' ); ?></h3>
         </div>
         <div class="box-inner-content">
             <div class="cp-box">
@@ -27,7 +27,7 @@
 
     <div class="cp-box-content">
         <div class="box-label-area">
-            <label class="label"><?php _e( 'Course type', 'cp' ); ?></label>
+            <h3 class="label"><?php _e( 'Course type', 'cp' ); ?></h3>
             <p class="description"><?php _e( 'Pick a type of course you want to create', 'cp' ); ?></p>
         </div>
         <div class="box-inner-content">
@@ -65,7 +65,7 @@
             <div class="cp-box cp-sep cp-course-type inactive" id="type-manual">
                 <div class="cp-box">
                     <label class="label"><?php _e( 'Class Size', 'cp' ); ?></label>
-                    <?php _e( 'Number of students', 'cp' ); ?> <input type="number" name="meta_class_size" class="input-inline" value="{{class_size}}" />
+                    <p><?php _e( 'Number of students', 'cp' ); ?> <input type="number" name="meta_class_size" class="input-inline" value="{{class_size}}" /></p>
                 </div>
 
                 <label class="label"><?php _e( 'Course Availability', 'cp' ); ?></label>
@@ -94,9 +94,7 @@
             </div>
 
             <div class="cp-box cp-course-type inactive" id="type-sample">
-                <div class="cp-alert cp-alert-info">
-                    YEAH YEAH
-                </div>
+
             </div>
 
             <div class="cp-box cp-toggle-box cp-sep">

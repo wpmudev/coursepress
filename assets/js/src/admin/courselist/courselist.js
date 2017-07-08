@@ -13,7 +13,8 @@
                 'change .cp-toggle-course-status': 'toggleCourseStatus',
                 'click .menu-item-duplicate-course': 'duplicateCourse',
                 'click .menu-item-delete': 'deleteCourse',
-                'click #cp-search-clear': 'clearSearch'
+                'click #cp-search-clear': 'clearSearch',
+                'click .cp-dropdown-btn': 'toggleSubMenu'
             },
 
             initialize: function() {
@@ -69,6 +70,17 @@
                 // Removing name will exclude this field from form values.
                 this.$('input[name="s"]','#cp-search-form').removeAttr('name');
                 this.$('#cp-search-form').submit();
+            },
+
+            toggleSubMenu: function( ev ) {
+                var dropdown = this.$( ev.currentTarget ).parent(),
+                    is_open = dropdown.is( '.open' );
+
+                if ( is_open ) {
+                    dropdown.removeClass('open');
+                } else {
+                    dropdown.addClass('open');
+                }
             }
         });
 

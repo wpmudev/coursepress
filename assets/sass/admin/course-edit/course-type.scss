@@ -1,0 +1,16 @@
+#course-edit-template {
+  .cp-course-type {
+    &.inactive {
+      display: none;
+    }
+  }
+
+  #type-manual {
+    p {
+      margin-left: 25px;
+    }
+    .cp-flex {
+      padding-left: 25px;
+    }
+  }
+}
