@@ -391,7 +391,36 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		coursepress_render( 'views/tpl/common' );
 		coursepress_render( 'views/tpl/course-type', array( 'course_id' => $course_id ) );
 		coursepress_render( 'views/tpl/course-settings' );
-		coursepress_render( 'views/tpl/course-completion' );
+
+        $tokens = array(
+            'COURSE_NAME',
+            'COURSE_SUB_TITLE',
+            'COURSE_OVERVIEW',
+            'COURSE_UNIT_LIST',
+            'DOWNLOAD_CERTIFICATE_LINK',
+            'DOWNLOAD_CERTIFICATE_BUTTON',
+            'STUDENT_WORKBOOK',
+        );
+        $_codes_text = sprintf( '<p>%1$s</p> <p>%2$s</p>', __( 'These codes will be replaced with actual data:', 'cp' ), '<b>%s</b>' );
+        $_codes_text = sprintf( $_codes_text, implode(', ', $tokens ) );
+        $completion_pages = array(
+            'tokens' => $_codes_text,
+            'pre_completion' => array(
+                'title' => __( 'Pre Completion Page', 'cp' ),
+                'description' => __( 'The page content to appear after an student completed the course and is awaiting instructor\'s final grade.', 'cp' ),
+            ),
+            'course_completion' => array(
+                'title' => __( 'Successful Completion Page', 'cp' ),
+                'description' => __( 'The content to use when an student successfully completed the course.', 'cp' ),
+            ),
+            'course_failed' => array(
+                'title' => __( 'Failure Notice', 'cp' ),
+                'description' => __( 'The content to use when an student failed to pass the course.', 'cp' ),
+            ),
+        );
+        $this->localize_array['completion_pages'] = $completion_pages;
+
+		coursepress_render( 'views/tpl/course-completion', array( 'completion_pages' => $completion_pages ) );
 		coursepress_render( 'views/tpl/course-units' );
 	}
 

@@ -204,7 +204,7 @@
                     esc_attr( $class )
                 );
                 if ( isset( $data['label'] ) ) {
-                    printf( '<h3>%s</h3>', $data['label'] );
+                    printf( '<h3 class="label">%s</h3>', $data['label'] );
                 }
                 $data['name'] = $key;
 
