@@ -81,7 +81,17 @@ class CoursePress_Course extends CoursePress_Utility {
 	}
 
 	function get_settings() {
-		$course_meta = array(
+        $pre_completion_content = sprintf( '<h3>%s</h3>', __( 'Congratulations! You have completed COURSE_NAME!', 'cp' ) );
+        $pre_completion_content .= sprintf( '<p>%s</p>', __( 'Your course instructor will now review your work and get back to you with your final grade before issuing you a certificate of completion.', 'cp' ) );
+        $completion_content = sprintf( '<h3>%s</h3><p>%s</p><p>DOWNLOAD_CERTIFICATE_BUTTON</p>',
+            __( 'Congratulations! You have successfully completed and passed COURSE_NAME!', 'CP_TD' ),
+            __( 'You can download your certificate here.', 'CP_TD' )
+        );
+        $failed_content = sprintf( '<p>%s</p><p>%s</p>',
+            __( 'Unfortunately, you didn\'t pass COURSE_NAME.', 'CP_TD' ),
+            __( 'Better luck next time!', 'CP_TD' )
+        );
+        $course_meta = array(
 			'course_type' => 'auto-moderated',
 			'course_language' => __( 'English', 'cp' ),
 			'allow_discussion' => false,
@@ -105,12 +115,12 @@ class CoursePress_Course extends CoursePress_Utility {
 			'class_size' => '',
 
 			'pre_completion_title' => __( 'Almost there!', 'CP_TD' ),
-			'pre_completion_content' => '',
+			'pre_completion_content' => $pre_completion_content,
 			'minimum_grade_required' => 100,
 			'course_completion_title' => __( 'Congratulations, You Passed!', 'CP_TD' ),
-			'course_completion_content' => '',
+			'course_completion_content' => $completion_content,
 			'course_failed_title' => __( 'Sorry, you did not pass this course!', 'CP_TD' ),
-			'course_failed_content' => '',
+			'course_failed_content' => $failed_content,
 			'basic_certificate_layout' => '',
 			'basic_certificate' => false,
 			'certificate_background' => '',
