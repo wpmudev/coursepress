@@ -1,0 +1,15 @@
+.wpmu-footer-text {
+  text-align: center;
+  @include clearfix;
+  margin: 50px 0 25px 0;
+  color: $grey_4;
+
+  a {
+    text-decoration: none;
+    color: $grey_4;
+
+    &:hover {
+      color: $blue_4;
+    }
+  }
+}

@@ -190,7 +190,13 @@ class CoursePress_User extends CoursePress_Utility {
 	function get_accessible_courses( $publish = true, $returnAll = true, &$count = 0 ) {
 		$courses = array();
 
-		$args = array( 'post_status' => $publish ? 'publish' : 'any' );
+		$args = array();
+
+		if ( is_bool( $publish ) ) {
+		    $args['post_status'] = $publish ? true : false;
+        } else {
+		    $args['post_status'] = $publish;
+        }
 
 		if ( $returnAll )
 			$args['posts_per_page'] = -1;

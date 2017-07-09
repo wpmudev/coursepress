@@ -1,0 +1,41 @@
+.coursepress-wrap {
+  .cp-alert {
+    position: relative;
+    display: block;
+    padding: 15px 25px 15px 55px;
+    border: 1px solid $grey_5;
+    background-color: $grey_6;
+    margin: 15px 0;
+    @include radius(4px);
+    @include clearfix;
+
+    &:before {
+      position: absolute;
+      left: 15px;
+      content: '';
+      font-family: 'FontAwesome', sans-serif;
+      font-size: 1.4em;
+    }
+
+    p { margin: 0; }
+  }
+  .cp-alert-info {
+    background-color: rgba(91, 201, 255, 0.27);
+    border: 1px solid $blue_1;
+
+    &:before {
+      content: '\f05a';
+      color: $blue_2;
+    }
+  }
+
+  .cp-alert-error {
+    background-color: #ffe6e6;
+    border-color: #ffcccc;
+
+    &:before {
+      content: '\f06a';
+      color: red;
+    }
+  }
+}

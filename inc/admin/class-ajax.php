@@ -97,6 +97,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
             }
         }
 
+        if ( 'auto-draft' == $course_object['post_status'] ) {
+            $course_object['post_status'] = 'draft';
+        }
+
         $course_id = wp_update_post( $course_object );
 
         if ( is_wp_error( $course_id ) ) {
@@ -166,7 +170,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
             // If the value is an object, make it an array
             if ( is_object( $meta_value ) )
-                $value = get_object_vars( $value );
+                $value = get_object_vars( $meta_value );
 
             // We store date_types in microseconds format
             if ( in_array( $meta_key, $date_types ) ) {
@@ -180,8 +184,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
         }
 
         // Set post thumbnail ID if not empty
-        if ( ! empty( $course_meta['listing_image_thumbnail_id'] ) )
-            set_post_thumbnail( $course_id, $course_meta['listing_image_thumbnail_id'] );
+        if ( ! empty( $course_meta['meta_listing_image_thumbnail_id'] ) ) {
+            set_post_thumbnail($course_id, $course_meta['meta_listing_image_thumbnail_id']);
+        }
+        error_log(print_r($course_meta,true));
 
         // Check course category
         if ( isset( $request->course_category ) ) {

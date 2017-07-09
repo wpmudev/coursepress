@@ -117,6 +117,32 @@ function coursepress_get_courses( $args = array(), &$count = 0 ) {
 	return $courses;
 }
 
+function coursepress_get_course_statuses() {
+    global $wpdb;
+
+    $query = "SELECT `post_status` FROM `{$wpdb->posts}` WHERE `post_type`='course' AND `post_status` IN ('publish', 'draft')";
+    $results = $wpdb->get_results( $query, 'OBJECT' );
+    $status = array(
+        'all' => 0,
+        'publish' => 0,
+        'draft' => 0,
+    );
+
+    if ( count( $results ) > 0 ) {
+        foreach ( $results as $result ) {
+            $status['all'] += 1;
+
+            if ( 'publish' == $result->post_status ) {
+                $status['publish'] += 1;
+            } else {
+                $status['draft'] += 1;
+            }
+        }
+    }
+
+    return $status;
+}
+
 /**
  * Get the course title.
  *

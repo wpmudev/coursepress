@@ -2,9 +2,9 @@
 	<div class="cp-box-heading">
 		<h2 class="box-heading-title"><?php _e( 'Pick name and type of course to create', 'cp' ); ?></h2>
 	</div>
-    <div class="cp-box-content cp-sep">
+    <div class="cp-box-content">
         <div class="box-label-area">
-            <label class="label"><?php _e( 'Course name and language', 'cp' ); ?></label>
+            <h3 class="label"><?php _e( 'Course name and language', 'cp' ); ?></h3>
         </div>
         <div class="box-inner-content">
             <div class="cp-box">
@@ -27,26 +27,26 @@
 
     <div class="cp-box-content">
         <div class="box-label-area">
-            <label class="label"><?php _e( 'Course type', 'cp' ); ?></label>
+            <h3 class="label"><?php _e( 'Course type', 'cp' ); ?></h3>
             <p class="description"><?php _e( 'Pick a type of course you want to create', 'cp' ); ?></p>
         </div>
         <div class="box-inner-content">
             <div class="cp-box">
                 <label class="label"><?php _e( 'Pick course type or load example course', 'cp' ); ?></label>
                 <ul class="cp-flex cp-input-group">
-                    <li class="cp-div-flex active">
+                    <li class="cp-div-flex {{'auto-moderated'===course_type?'active':''}}">
                         <label>
                             <input type="radio" name="meta_course_type" value="auto-moderated" {{_.checked('auto-modated', course_type)}} />
                             <?php _e( 'Auto-moderated', 'cp' ); ?>
                         </label>
                     </li>
-                    <li class="cp-div-flex">
+                    <li class="cp-div-flex {{'manual'===course_type?'active':''}}">
                         <label>
                             <input type="radio" name="meta_course_type" value="manual" {{_.checked('manual', course_type)}} />
                             <?php _e( 'Manual moderation', 'cp' ); ?>
                         </label>
                     </li>
-                    <li class="cp-div-flex">
+                    <li class="cp-div-flex {{'sample_course'===course_type?'active':''}}">
                         <label>
                             <input type="radio" name="meta_course_type" value="sample" value="sample_course" {{_.checked('sample', course_type)}} />
                             <?php _e( 'Example course', 'cp' ); ?>
@@ -55,17 +55,17 @@
                 </ul>
             </div>
 
-            <div class="cp-box cp-course-type active" id="type-auto-moderated">
+            <div class="cp-box cp-course-type {{'auto-moderated'===course_type?'active':'inactive'}}" id="type-auto-moderated">
                 <div class="cp-alert cp-alert-info">
                     <p><?php _e( 'All grading is done manually, any number of students can enroll in this course at any time. Similar to Envato & Treehouse courses. Instructors can participate in discussion.', 'cp' ); ?></p>
                     <p><?php _e( '(These settings can be changed at any time).', 'cp' ); ?></p>
                 </div>
             </div>
 
-            <div class="cp-box cp-sep cp-course-type inactive" id="type-manual">
+            <div class="cp-box cp-sep cp-course-type {{'manual'===course_type?'active':'inactive'}}" id="type-manual">
                 <div class="cp-box">
                     <label class="label"><?php _e( 'Class Size', 'cp' ); ?></label>
-                    <?php _e( 'Number of students', 'cp' ); ?> <input type="number" name="meta_class_size" class="input-inline" value="{{class_size}}" />
+                    <p><?php _e( 'Number of students', 'cp' ); ?> <input type="number" name="meta_class_size" class="input-inline" value="{{class_size}}" /></p>
                 </div>
 
                 <label class="label"><?php _e( 'Course Availability', 'cp' ); ?></label>
@@ -93,10 +93,8 @@
                 </div>
             </div>
 
-            <div class="cp-box cp-course-type inactive" id="type-sample">
-                <div class="cp-alert cp-alert-info">
-                    YEAH YEAH
-                </div>
+            <div class="cp-box cp-course-type {{'sample_course'===course_type?'active':'inactive'}}" id="type-sample">
+
             </div>
 
             <div class="cp-box cp-toggle-box cp-sep">

@@ -1,38 +1,23 @@
-.wpmu-footer-text {
-  text-align: center;
-  @include clearfix;
-  margin: 50px 0 25px 0;
-  color: $grey_4;
+.coursepress-wrap {
+  font-size: 110%;
 
   a {
     text-decoration: none;
-    color: $grey_4;
-
-    &:hover {
-      color: $blue_4;
-    }
   }
-}
-
-.coursepress-wrap {
-  .cp-delete,
-  .cp-delete a {
-    color: red;
+  .wp-heading-inline {
+    text-transform: uppercase;
+    font-size: 1.6em;
+    font-weight: 600;
+    color: $dark_1;
   }
-  a {
-    color: $blue_3;
-    @include transition(color 0.4s);
-
-    &:hover {
-      color: $blue_4;
-      @include transition(color 0.4s);
-    }
+  .course-tag {
+    font-size: 11px;
+    display: block;
+    font-weight: 700;
+    color: $grey_2;
   }
-  .cp-right {
-    float: right;
-  }
-  .description {
-    font-style: normal;
+  .inactive {
+    display: none;
   }
 
   .cp-flex {
@@ -50,62 +35,6 @@
     }
     .cp-pad-left {
       padding-left: 15px;
-    }
-  }
-  .inactive {
-    display: none;
-    @include hide;
-  }
-  .active {
-    display: block;
-    @include show;
-  }
-  .cp-sep {
-    padding-bottom: 0;
-
-    &:after {
-      content: '';
-      display: block;
-      margin: 20px 0 10px 0;
-      border-top: 1px solid $grey_5;
-      border-bottom: 1px solid $grey_6;
-    }
-  }
-  .cp-code {
-    font-family: $code_font;
-    background-color: $grey_5;
-    font-size: 13px;
-    padding: 6px;
-    display: inline-block;
-    @include radius(3px);
-  }
-  p.cp-code {
-    width: $width;
-  }
-  .iris-picker {
-    height: 200px !important;
-  }
-  .iris-picker-inner {
-    width: 95%;
-  }
-  .iris-slider-offset {
-    height: 70%;
-  }
-  .cp-image-url {
-    width: 90%;
-  }
-
-  @media screen {
-    @media (min-width: 768px) {
-      .cp-columns {
-        padding: 0;
-        display: block;
-        width: 100%;
-
-        column: {
-          count: 2;
-        }
-      }
     }
   }
 }

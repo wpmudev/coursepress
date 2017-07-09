@@ -5,22 +5,15 @@
 
 	<div class="cp-box-content cp-caps-list cp-odd">
         <h3 class="label"><?php _e( 'Browse capabilities', 'cp' ); ?></h3>
-
-		<div class="cp-box">
-			<div class="cp-flex">
-				<div class="cp-div-flex cp-pad-right">
-					<ul class="cp-input-group cp-select-list cp-capabilities">
-						<li data-id="cp-cap-general" class="active"><?php _e( 'General', 'cp' ); ?></li>
-						<li data-id="cp-cap-courses"><?php _e( 'Courses', 'cp' ); ?></li>
-						<li data-id="cp-cap-units"><?php _e( 'Units', 'cp' ); ?></li>
-						<li data-id="cp-cap-instructors"><?php _e( 'Instructors', 'cp' ); ?></li>
-						<li data-id="cp-cap-students"><?php _e( 'Students', 'cp' ); ?></li>
-						<li data-id="cp-cap-notifications"><?php _e( 'Notifications', 'cp' ); ?></li>
-						<li data-id="cp-cap-discussions"><?php _e( 'Discussions', 'cp' ); ?></li>
-					</ul>
-				</div>
-			</div>
-		</div>
+        <ul class="cp-input-group cp-select-list cp-capabilities">
+            <li data-id="cp-cap-general" class="active"><?php _e( 'General', 'cp' ); ?></li>
+            <li data-id="cp-cap-courses"><?php _e( 'Courses', 'cp' ); ?></li>
+            <li data-id="cp-cap-units"><?php _e( 'Units', 'cp' ); ?></li>
+            <li data-id="cp-cap-instructors"><?php _e( 'Instructors', 'cp' ); ?></li>
+            <li data-id="cp-cap-students"><?php _e( 'Students', 'cp' ); ?></li>
+            <li data-id="cp-cap-notifications"><?php _e( 'Notifications', 'cp' ); ?></li>
+            <li data-id="cp-cap-discussions"><?php _e( 'Discussions', 'cp' ); ?></li>
+        </ul>
 	</div>
 
 	<?php

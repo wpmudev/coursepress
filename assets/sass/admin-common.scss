@@ -1,13 +1,14 @@
 // Common admin stylesheets
 @import "common/mixin.scss";
-@import "admin/global/wrap.scss";
-@import "admin/global/table.scss";
-@import "admin/global/form-fields.scss";
-@import "admin/global/buttons.scss";
-@import "admin/global/global.scss";
-@import "admin/global/toggle.scss";
-@import "admin/global/alert.scss";
-@import "admin/global/popup.scss";
-@import "admin/global/wpmui-lib.scss";
+@import "admin/global/wpmu-footer";
+@import "admin/global/global";
+@import "admin/global/table";
+@import "admin/global/buttons";
+@import "admin/global/input";
+@import "admin/global/toggle";
+@import "admin/global/alert";
 @import "admin/global/error";
+@import "admin/global/wpmui-lib";
 @import "admin/global/editor";
+@import "admin/global/wrap";
+@import "admin/global/popup";

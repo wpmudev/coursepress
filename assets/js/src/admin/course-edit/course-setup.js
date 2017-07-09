@@ -10,7 +10,7 @@
             steps: [],
             currentStep: false,
             goNextStep: false,
-            el: $('#course-edit-template'),
+            el: $( '#course-edit-template' ),
             events: {
                 'click .step': 'toggleContent',
                 'click .step-back': 'getPreviousStep',
@@ -36,7 +36,7 @@
                 // Load templates
                 this.render();
             },
-            filter_model: function (model) {
+            filter_model: function ( model ) {
                 var dates = ['course_start_date', 'course_end_date', 'enrollment_start_date', 'enrollment_end_date'];
 
                 _.each( dates, function( d ) {
@@ -130,7 +130,6 @@
                  * @param object ModlaSteps instance
                  */
                 this.trigger('coursepress:step-before-change', this.currentStep, this );
-
                 this.currentStep = step;
 
                 /**
@@ -223,6 +222,15 @@
 
             toggleStepList: function() {
                 this.stepListContainer.toggleClass('open', '');
+            },
+            updateCourse: function() {
+                this.model.set( 'action', 'update_course' );
+                this.model.off( 'coursepress:success_update_course' );
+                this.model.on( 'coursepress:success_update_course', this.courseUpdated, this );
+                this.model.save();
+            },
+            courseUpdated: function() {
+                //window.alert(data);
             }
         });
 

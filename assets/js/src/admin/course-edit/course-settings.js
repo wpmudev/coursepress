@@ -15,11 +15,31 @@
                 EditCourse.on('coursepress:validate-course-settings', this.validate, this);
 
                 this.on( 'view_rendered', this.setUpUI, this );
-
                 this.render();
             },
             validate: function() {
-                // @todo: do course settings validataion
+                var summary, content, proceed;
+
+                proceed = true;
+                summary = this.$('[name="post_excerpt"]');
+                content = this.$('[name="post_content"]');
+                this.courseEditor.goToNext = true;
+
+                if ( ! this.model.get('post_excerpt') ) {
+                    summary.parent().addClass('cp-error');
+                    proceed = false;
+                }
+                if ( ! this.model.get('post_content') ) {
+                    content.parent().addClass('cp-error');
+                    proceed = false;
+                }
+
+                if ( false === proceed ) {
+                    this.courseEditor.goToNext = false;
+                    return false;
+                }
+
+                this.courseEditor.updateCourse();
             },
             setUpUI: function() {
                 // set feature image

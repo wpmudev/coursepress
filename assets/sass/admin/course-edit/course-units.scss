@@ -1,0 +1,124 @@
+.coursepress-wrap {
+  #course-units {
+    .units-content {
+      padding: 0;
+      margin: 0 -25px;
+    }
+    .cp-units-table {
+      width: 100%;
+      background-color: $grey_6;
+      padding: 0 25px;
+      border-bottom: 1px solid $grey_5;
+      th {
+        text-align: left;
+        padding: 8px 0;
+
+        &.column-preview {
+          text-align: center;
+        }
+      }
+    }
+  }
+  .column-unit {
+    width: 60%;
+  }
+  .column-step {
+    width: 20%;
+  }
+  .column-preview {
+    text-align: center;
+  }
+
+  #units-container {
+    .unit-view {
+      padding: 15px 25px;
+      border-bottom: 1px solid $grey_5;
+
+      &:nth-child(2n) {
+        background-color: $grey_6;
+      }
+    }
+    .cp-unit-heading {
+      label {
+        margin-right: 15px;
+        &:before {
+          content: '\f0d7';
+          font-family: 'FontAwesome';
+          padding: 0 5px;
+          margin-left: -8px;
+          margin-right: 5px;
+        }
+      }
+      button {
+        opacity: 0;
+        @include transition(0.4s);
+      }
+    }
+    .unit-table-list {
+      width: 100%;
+      border-left: 2px solid $grey_5;
+      padding-left: 10px;
+      td {
+        padding: 5px 0;
+      }
+    }
+    .unit-view:hover {
+      .cp-unit-heading {
+        button {
+          opacity: 1;
+          @include transition(0.4s);
+        }
+      }
+    }
+  }
+
+  .units-list {
+    margin: 0 0 15px 0;
+    padding: 0;
+
+    .unit-item {
+      margin: 0;
+      padding: 4px 0;
+      font-size: 94%;
+
+      .cp-count {
+        float: right;
+        font-size: 11px;
+        padding: 0 6px;
+        background-color: $grey_6;
+        margin: 0 5px 5px 5px;
+        @include radius(50%);
+      }
+
+      &:hover {
+        color: $black;
+      }
+    }
+  }
+
+  .course-menu {
+    .step-course-units {
+      .unit-list-menu {
+        display: none;
+      }
+      &.active {
+        @include radius(6px);
+
+        .menu-label {
+          display: block;
+          margin: 5px 0;
+        }
+
+        .cp-btn {
+          padding: 5px 15px;
+          margin-bottom: 5px;
+        }
+
+        .unit-list-menu {
+          display: block;
+        }
+      }
+    }
+  }
+
+}
