@@ -90,6 +90,32 @@
     padding: 15px 25px;
     text-align: right;
     border-top: 1px solid $grey_5;
+    @include clearfix;
+
+    .cp-btn {
+      font-size: 15px;
+      padding: 8px 15px;
+      text-transform: uppercase;
+    }
+
+    .step-back {
+      float: left;
+    }
+
+    .cp-btn-active {
+      .fa {
+        display: none;
+      }
+    }
+
+    .cp-progress {
+      .fa {
+        display: inline-block;
+        font-size: 20px;
+        margin-right: 8px;
+        @include transition(0.4s);
+      }
+    }
   }
   .cp-pad-left {
     padding-left: 25px;

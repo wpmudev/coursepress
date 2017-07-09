@@ -32,7 +32,7 @@
         ?>
 
         <div class="cp-box-content cp-odd">
-            <h3><?php _e( 'Pick email to customize', 'cp' ); ?></h3>
+            <h3 class="label"><?php _e( 'Pick email to customize', 'cp' ); ?></h3>
             <ul class="cp-input-group cp-select-list">
                 <?php foreach ( $sections as $section_id => $section ) : ?>
                     <?php if ( ! $first ) : $first = $section; endif; ?>

@@ -16,6 +16,9 @@
     font-weight: 700;
     color: $grey_2;
   }
+  .inactive {
+    display: none;
+  }
 
   .cp-flex {
     display: flex;
@@ -33,5 +36,35 @@
     .cp-pad-left {
       padding-left: 15px;
     }
+  }
+}
+
+/** CERTIFICATE PREVIEW **/
+.coursepress-popup-preview {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: $grey_4;
+  z-index: 9999999999999999;
+
+  #coursepress-cert-frame {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 90%;
+    border: 1px solid $grey_3;
+  }
+  button {
+    float: right;
+    margin: 5px 15px;
+  }
+  h2 {
+    margin: 0;
+    color: #ffffff;
+    padding-left: 25px;
+    line-height: 2.4;
+    font-weight: 400;
   }
 }

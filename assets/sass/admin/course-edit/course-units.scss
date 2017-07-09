@@ -71,4 +71,54 @@
       }
     }
   }
+
+  .units-list {
+    margin: 0 0 15px 0;
+    padding: 0;
+
+    .unit-item {
+      margin: 0;
+      padding: 4px 0;
+      font-size: 94%;
+
+      .cp-count {
+        float: right;
+        font-size: 11px;
+        padding: 0 6px;
+        background-color: $grey_6;
+        margin: 0 5px 5px 5px;
+        @include radius(50%);
+      }
+
+      &:hover {
+        color: $black;
+      }
+    }
+  }
+
+  .course-menu {
+    .step-course-units {
+      .unit-list-menu {
+        display: none;
+      }
+      &.active {
+        @include radius(6px);
+
+        .menu-label {
+          display: block;
+          margin: 5px 0;
+        }
+
+        .cp-btn {
+          padding: 5px 15px;
+          margin-bottom: 5px;
+        }
+
+        .unit-list-menu {
+          display: block;
+        }
+      }
+    }
+  }
+
 }

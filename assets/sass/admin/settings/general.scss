@@ -1,19 +1,7 @@
 .coursepress-wrap {
-  .cp-box-content {
-    &:after {
-      content: '';
-      display: block;
-      @include clearfix;
-      padding-top: 25px;
-      margin-bottom: 15px;
-      border-bottom: 1px solid $color_1;
-    }
+  .cp-content-box {
     &:last-of-type {
-      &:after {
-        padding: 0;
-        margin: 0;
-        border: 0;
-      }
+      border: 0;
     }
   }
   .option {
@@ -45,12 +33,13 @@
     position: relative;
     display: block;
     background-color: $grey_8;
-    padding: 15px 25px 25px 25px;
+    padding: 15px 25px 0 25px;
     border: {
       style: solid;
       width: 1px 0;
       color: $grey_5;
     }
+    margin: 0 -25px;
 
     &:before {
       content: '';
@@ -81,6 +70,13 @@
 
   .cp-box-header {
     padding-top: 20px;
+  }
+
+  .cp-input-group {
+    margin-bottom: 25px;
+    li {
+      cursor: pointer;
+    }
   }
 }
 

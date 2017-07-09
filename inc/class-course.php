@@ -70,6 +70,7 @@ class CoursePress_Course extends CoursePress_Utility {
 				$value = false;
 
 			$this->__set( $key, $value );
+			$this->__set( 'meta_' . $key, $value );
 		}
 
 		// Legacy: fix course_type meta

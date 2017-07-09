@@ -11,7 +11,9 @@
             events: {
                 'keyup [name="post_title"]': 'updatePostName',
                 'keyup [name="post_name"]': 'updateSlug',
-                'change [name="meta_course_type"]': 'changeCourseType'
+                'change [name="meta_course_type"]': 'changeCourseType',
+                'change [name]': 'updateModel',
+                'focus [name]': 'removeErrorMarker'
             },
             initialize: function(model, EditCourse) {
                 // Let's inherit the model object from EditCourse
@@ -26,10 +28,16 @@
                 this.render();
             },
             validate: function() {
-                var proceed = true;
+                var proceed, post_title;
 
-                if ( _.isEmpty( this.model.post_title ) ) {
+                proceed = true;
+                post_title = this.$('[name="post_title"]');
+                post_title.parent().removeClass('cp-error');
+                this.courseEditor.goToNext = true;
+
+                if ( ! this.model.get( 'post_title' ) ) {
                     proceed = false;
+                    post_title.parent().addClass('cp-error');
                 }
 
                 if ( _.isTrue( this.model.payment_paid_course) ) {
@@ -45,9 +53,14 @@
                     }
                 }
 
-                if ( ! _.isTrue(proceed ) ) {
+                if ( ! proceed ) {
                     this.courseEditor.goToNext = false;
+
+                    return false;
                 }
+
+                // Save the course
+                this.courseEditor.updateCourse();
             },
 
             setUI: function() {
@@ -75,6 +88,7 @@
                     slugDiv = this.$('.cp-slug');
 
                 slugDiv.html(sender.val());
+                sender.trigger( 'change' );
             },
             changeCourseType: function(ev) {
                 var sender = $(ev.currentTarget),

@@ -43,7 +43,8 @@
             template_id: '',
             model: {},
             events: {
-                'change [name]': 'updateModel'
+                'change [name]': 'updateModel',
+                'focus [name]': 'removeErrorMarker'
             },
             initialize: function () {
                 if (arguments && arguments[0]) {
@@ -83,6 +84,14 @@
                     this.model.set(name, value);
                 } else {
                     this.model[name] = value;
+                }
+            },
+            removeErrorMarker: function( ev ) {
+                var sender = this.$(ev.currentTarget),
+                    error = sender.parents('.cp-error');
+
+                if ( error.length ) {
+                    error.removeClass('cp-error');
                 }
             }
         });

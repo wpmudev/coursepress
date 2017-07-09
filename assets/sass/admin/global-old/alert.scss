@@ -5,7 +5,9 @@
     padding: 15px 25px 15px 55px;
     border: 1px solid $grey_5;
     background-color: $grey_6;
+    margin: 15px 0;
     @include radius(4px);
+    @include clearfix;
 
     &:before {
       position: absolute;
