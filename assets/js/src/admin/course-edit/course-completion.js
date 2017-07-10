@@ -7,12 +7,13 @@
         var iris, CertificatePreview;
 
         $(doc).on( 'click', function(ev) {
-            var sender = $(ev.currentTarget);
+            var sender = $(ev.target);
 
-            if ( iris && ( ! sender.is(iris) || ! sender.is('.iris-picker') ) ) {
+            if ( iris && ( ! sender.is('.iris-input') || ! sender.is('.iris-picker') ) ) {
                 iris.iris('hide');
                 iris = false;
             }
+            ev.stopImmediatePropagation();
         });
 
         CertificatePreview = CoursePress.View.extend({
@@ -33,12 +34,13 @@
             courseEditor: false,
             current: 'pre_completion',
             events: {
+                'focus [name="meta_cert_text_color"]': 'showColorPicker',
                 'change [name="meta_basic_certificate"]': 'toggleSetting',
                 'change [name]': 'updateModel',
                 'click .cp-select-list li': 'switchCompletionPage',
                 'focus [name]': 'removeErrorMarker',
-                'click .cp-preview-cert': 'previewCertificate',
-                'focus [name="meta_cert_text_color"]': 'showColorPicker'
+                'click .cp-preview-cert': 'previewCertificate'
+
             },
             initialize: function(model, EditCourse) {
                 this.model = model;
@@ -66,8 +68,7 @@
 
                 this.the_title = this.$('#page-completion-title');
                 this.the_content = this.$('#page-completion-content');
-
-                iris = this.color = this.$('[name="meta_cert_text_color"]');
+                this.color = this.$('[name="meta_cert_text_color"]');
 
                 this.color.iris({
                     palettes: true,
@@ -104,7 +105,7 @@
                 }, 300 );
             },
             showColorPicker: function() {
-                if ( this.color ) {
+                if ( !iris && this.color ) {
                     this.color.iris('show');
                     iris = this.color;
                 }

@@ -260,7 +260,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
             $background = $request->meta_certificate_background;
             $margins = isset( $request->meta_cert_margin ) ? get_object_vars( $request->meta_cert_margin ) : array();
             $orientation = $request->meta_page_orientation;
-            $text_color = '';
+            $text_color = $request->meta_cert_text_color;
         } else {
             $content = $request->content;
             $background = $request->background_image;

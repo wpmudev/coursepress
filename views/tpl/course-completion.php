@@ -99,7 +99,7 @@
                 <h3 class="label"><?php _e( 'Text Color', 'cp' ); ?></h3>
             </div>
             <div class="box-inner-content">
-                <input type="text" name="meta_cert_text_color" class="iris-picker" value="{{cert_text_color}}" />
+                <span><input type="text" name="meta_cert_text_color" class="iris-input" value="{{cert_text_color}}" /></span>
             </div>
         </div>
         <div class="cp-box-content cp-cert-preview">

@@ -42,7 +42,6 @@
             },
 
             maybeContinue: function() {
-
             },
 
             validateFile: function() {
