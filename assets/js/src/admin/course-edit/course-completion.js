@@ -4,6 +4,20 @@
     'use strict';
 
     CoursePress.Define( 'CourseCompletion', function( $, doc, win ) {
+        var CertificatePreview;
+
+        CertificatePreview = CoursePress.View.extend({
+            template_id: 'coursepress-cert-preview',
+            className: 'coursepress-popup-preview',
+            events: {
+                'click .cp-btn': 'remove'
+            },
+            render: function() {
+                CoursePress.View.prototype.render.apply( this );
+                this.$el.appendTo( 'body' );
+            }
+        });
+
         return CoursePress.View.extend({
             template_id: 'coursepress-course-completion-tpl',
             el: $('#course-completion'),
@@ -13,7 +27,8 @@
                 'change [name="meta_basic_certificate"]': 'toggleSetting',
                 'change [name]': 'updateModel',
                 'click .cp-select-list li': 'switchCompletionPage',
-                'focus [name]': 'removeErrorMarker'
+                'focus [name]': 'removeErrorMarker',
+                'click .cp-preview-cert': 'previewCertificate'
             },
             initialize: function(model, EditCourse) {
                 this.model = model;
@@ -130,6 +145,19 @@
                     this.model.set( first, model );
                 } else {
                     this.model.set( first, value );
+                }
+            },
+            previewCertificate: function() {
+                var model = new CoursePress.Request( this.model.toJSON() );
+                model.set( 'action', 'preview_certificate' );
+                model.on( 'coursepress:success_preview_certificate', this.openPreview, this );
+                model.save();
+            },
+            openPreview: function( data ) {
+                if ( data.pdf ) {
+                    this.preview = new CertificatePreview(data);
+                } else {
+                    // @todo: show friendly error
                 }
             }
         });

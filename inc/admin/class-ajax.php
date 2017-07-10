@@ -252,20 +252,24 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
         global $CoursePress;
 
         $course_id = '';
+        $pdf = $CoursePress->get_class( 'CoursePress_PDF' );
 
-        if ( isset( $request->course_id ) ) {
+        if ( isset( $request->ID ) ) {
             $course_id = $request->course_id;
+            $content = $request->meta_basic_certificate_layout;
+            $background = $request->meta_certificate_background;
+            $margins = get_object_vars( $request->meta_cert_margin );
+            $orientation = $request->meta_page_orientation;
+        } else {
+            $content = $request->content;
+            $background = $request->background_image;
+            $margins = get_object_vars( $request->margin );
+            $text_color = $request->cert_text_color;
+            $orientation = $request->orientation;
         }
 
-        $pdf = $CoursePress->get_class( 'CoursePress_PDF' );
         $filename = 'cert-preview-' . $course_id . '.pdf';
-        $content = $request->content;
-        $background = $request->background_image;
-        $margins = get_object_vars( $request->margin );
-        $text_color = $request->cert_text_color;
-        $orientation = isset( $request->page_orientation ) ? $request->page_orientation : $request->orientation;
         $date_format = apply_filters( 'coursepress_basic_certificate_date_format', get_option( 'date_format' ) );
-
         $content = apply_filters( 'coursepress_basic_certificate_html', $content, $course_id, get_current_user_id() );
 
         $vars = array(

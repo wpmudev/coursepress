@@ -85,7 +85,7 @@
         </div>
         <div class="cp-box-content">
             <div class="box-label-area">
-                <label class="label"><?php _e( 'Page Orientation', 'cp' ); ?></label>
+                <h3 class="label"><?php _e( 'Page Orientation', 'cp' ); ?></h3>
             </div>
             <div class="box-inner-content">
                 <select class="widefat" name="meta_page_orientation">
@@ -94,8 +94,17 @@
                 </select>
             </div>
         </div>
-        <div class="cp-box-content">
-            <button type="button" class="cp-btn cp-btn-default cp-right"><?php _e( 'Preview Certificate', 'cp' ); ?></button>
+        <div class="cp-box-content cp-cert-preview">
+            <button type="button" class="cp-btn cp-btn-default cp-preview-cert">
+                <span class="dashicons dashicons-visibility"></span>
+                <?php _e( 'Preview Certificate', 'cp' ); ?>
+            </button>
         </div>
     </div>
+</script>
+
+<script type="text/template" id="coursepress-cert-preview">
+    <button type="button" class="cp-btn cp-btn-active"><?php _e( 'Close Preview', 'cp' ); ?></button>
+    <h2><?php _e( 'Course Certificate Preview', 'cp' ); ?></h2>
+    <iframe id="coursepress-cert-frame" src="{{pdf}}"></iframe>
 </script>
