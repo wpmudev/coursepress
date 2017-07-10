@@ -3,7 +3,7 @@
 (function(){
     'use strict';
 
-    CoursePress.Define('View', function ($) {
+    CoursePress.Define('View', function ( $, doc, win ) {
         _.mixin({
             isTrue: function (value, selected) {
                 if (_.isArray(selected) ) {
@@ -92,6 +92,34 @@
 
                 if ( error.length ) {
                     error.removeClass('cp-error');
+                }
+            },
+            setEditor: function( editor_id ) {
+                var self = this;
+
+                if ( win.tinyMCE && win.tinyMCE.get( editor_id ) ) {
+                    this._setEditor( editor_id );
+                } else {
+                    this.$('#wp-' + editor_id + '-wrap .switch-tmce' ).one( 'click', function() {
+                        _.delay(function() {
+                            self._setEditor(editor_id);
+                        }, 100 );
+                    });
+                }
+            },
+            _setEditor: function( editor_id ) {
+                var content, textarea, self;
+
+                self = this;
+
+                if ( win.tinyMCE && win.tinyMCE.get( editor_id ) ) {
+                    var editor = win.tinyMCE.get( editor_id );
+                    editor.on( 'change', function() {
+                        content = editor.getContent();
+                        textarea = self.$('#' + editor_id );
+                        textarea.val( content );
+                        textarea.trigger('change');
+                    });
                 }
             }
         });
