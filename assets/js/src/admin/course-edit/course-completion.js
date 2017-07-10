@@ -32,12 +32,27 @@
                 container[ is_checked ? 'slideDown' : 'slideUp' ]();
             },
             setUpUI: function() {
+                var self = this;
+
                 this.background = new CoursePress.AddImage( this.$('[name="meta_certificate_background"]') );
                 this.$('select').select2();
                 this.$('.switch-tmce').trigger('click');
 
                 this.the_title = this.$('#page-completion-title');
                 this.the_content = this.$('#page-completion-content');
+
+                _.delay(function() {
+                    if (win.tinyMCE && win.tinyMCE.get('page-completion-content')) {
+                        var editor = win.tinyMCE.get('page-completion-content');
+                        editor.on('change', function () {
+                            var content = editor.getContent(),
+                                textarea = self.$('#page-completion-content');
+                            
+                            textarea.val(content);
+                            self.model.set(self.current + '_content', content);
+                        });
+                    }
+                }, 300 );
             },
             switchCompletionPage: function( ev ) {
                 var sender, page, title, description, the_page;
@@ -46,9 +61,9 @@
                 page = sender.data('page');
                 title = this.$('#completion-title');
                 description = this.$('#completion-description');
-
                 sender.siblings().removeClass('active');
                 sender.addClass('active');
+                this.current = page;
 
                 if ( ( the_page = win._coursepress.completion_pages[page] ) ) {
                     title.html( the_page.title );
@@ -56,6 +71,11 @@
 
                     this.the_title.val( this.model.get( page + '_title' ) );
                     this.the_content.val( this.model.get( page + '_content' ) );
+
+                    if ( win.tinyMCE && win.tinyMCE.get( 'page-completion-content') ) {
+                        var editor = win.tinyMCE.get( 'page-completion-content' );
+                        editor.setContent( this.model.get( page + '_content' ) );
+                    }
                 }
             },
             validate: function() {
