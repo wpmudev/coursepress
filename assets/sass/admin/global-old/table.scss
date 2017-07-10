@@ -1,0 +1,59 @@
+.coursepress-table {
+  width: 100%;
+  background-color: #ffffff;
+  margin: 15px 0 25px 0;
+  padding: 0;
+  border-collapse: collapse;
+  @include radius(6px);
+  @include boxshadow(0 0 0.5px 0.5px $grey_5);
+
+  tr {
+    td, th {
+      border-bottom: 0.8px solid $grey_5;
+    }
+  }
+  th, td {
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 400;
+    font-size: 13.5px;
+    display: none;
+
+    &:first-of-type {
+      padding-left: 25px;
+      display: table-cell;
+    }
+    &:last-of-type {
+      padding-right: 25px;
+    }
+  }
+  thead {
+    th {
+      padding-top: 15px;
+      padding-bottom: 12px;
+
+      text-align: left;
+      font-size: 15px;
+    }
+  }
+  tbody {
+    tr:nth-child(2n+1) {
+      background-color: $grey_6;
+    }
+    tr:last-of-type {
+
+    }
+  }
+
+  @media screen {
+    @media (min-width: 800px) {
+      th, td {
+        display: table-cell;
+
+        &.hidden {
+          display: none;
+        }
+      }
+    }
+  }
+}

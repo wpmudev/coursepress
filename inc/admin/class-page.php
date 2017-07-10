@@ -268,13 +268,41 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		$count = 0;
 		$screen = get_current_screen();
+        $course_status = coursepress_get_course_statuses();
+        $page = isset( $_GET[ 'page' ] ) ? esc_attr( $_GET[ 'page' ] ) : 'coursepress';
+        $search = isset( $_GET[ 's' ] ) ? $_GET[ 's' ] : '';
+        $statuses = array();
+        $get_status = isset( $_REQUEST['status'] ) ? $_REQUEST['status'] : 'any';
+
+        if ( ! empty( $course_status ) ) {
+            $format = '<li class="%1$s"><a href="%2$s">%3$s <span class="count">(%4$s)</span></a></li>';
+
+            $url = remove_query_arg( 'status' );
+
+            foreach ( $course_status as $status => $count ) {
+                if ( 'all' == $status ) {
+                    $statuses[] = sprintf( $format, 'any' == $get_status ? 'active': '', esc_url( $url ), __( 'All', 'cp' ), $count );
+                } elseif ( $count > 0 ) {
+                    if ( 'publish' == $status ) {
+                        $url = add_query_arg( 'status', 'publish', $url );
+                        $statuses[] = sprintf( $format, 'publish' == $get_status ? 'active' : '', esc_url( $url ), __( 'Publish', 'cp' ), $count );
+                    } else {
+                        $url = add_query_arg( 'status', 'draft', $url );
+                        $statuses[] = sprintf( $format, 'draft' == $get_status ? 'active' : '', $url, __( 'Draft', 'cp' ), $count );
+                    }
+                }
+            }
+        }
 
 		$args = array(
 			'columns' => get_column_headers( $screen ),
 			'hidden_columns' => get_hidden_columns( $screen ),
-			'courses' => $CoursePress_User->get_accessible_courses( false, false, $count ),
+			'courses' => $CoursePress_User->get_accessible_courses( $get_status, false, $count ),
 			'pagination' => $this->set_courses_pagination( $count ),
 			'course_edit_link' => add_query_arg( 'page', 'coursepress_course', admin_url( 'admin.php' ) ),
+            'page' => $page,
+            'statuses' => $statuses,
+            'search' => $search,
 		);
 
 		coursepress_render( 'views/admin/courselist', $args );
@@ -330,7 +358,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		// Add $course object to localize array for quick editing
 		$local_vars = array(
 			'course' => $course, // Use in most steps
-			//'course_units' => $course->get_units(), // Use in units steps
 			'categories' => coursepress_get_categories(),
 		);
 		$this->localize_array = wp_parse_args( $local_vars, $this->localize_array );
@@ -338,8 +365,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$menu_list = array(
 			'course-type' => __( 'Type of Course', 'cp' ),
 			'course-settings' => __( 'Course Settings', 'cp' ),
-			'course-completion' => __( 'Course Completion', 'cp' ),
 			'course-units' => __( 'Units', 'cp' ),
+            'course-completion' => __( 'Course Completion', 'cp' ),
 			'course-students' => __( 'Students', 'cp' ),
 		);
 
@@ -371,6 +398,36 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		coursepress_render( 'views/tpl/course-type', array( 'course_id' => $course_id ) );
 		coursepress_render( 'views/tpl/course-settings', $settings_data );
 		coursepress_render( 'views/tpl/course-completion' );
+
+        $tokens = array(
+            'COURSE_NAME',
+            'COURSE_SUB_TITLE',
+            'COURSE_OVERVIEW',
+            'COURSE_UNIT_LIST',
+            'DOWNLOAD_CERTIFICATE_LINK',
+            'DOWNLOAD_CERTIFICATE_BUTTON',
+            'STUDENT_WORKBOOK',
+        );
+        $_codes_text = sprintf( '<p>%1$s</p> <p>%2$s</p>', __( 'These codes will be replaced with actual data:', 'cp' ), '<b>%s</b>' );
+        $_codes_text = sprintf( $_codes_text, implode(', ', $tokens ) );
+        $completion_pages = array(
+            'tokens' => $_codes_text,
+            'pre_completion' => array(
+                'title' => __( 'Pre Completion Page', 'cp' ),
+                'description' => __( 'The page content to appear after an student completed the course and is awaiting instructor\'s final grade.', 'cp' ),
+            ),
+            'course_completion' => array(
+                'title' => __( 'Successful Completion Page', 'cp' ),
+                'description' => __( 'The content to use when an student successfully completed the course.', 'cp' ),
+            ),
+            'course_failed' => array(
+                'title' => __( 'Failure Notice', 'cp' ),
+                'description' => __( 'The content to use when an student failed to pass the course.', 'cp' ),
+            ),
+        );
+        $this->localize_array['completion_pages'] = $completion_pages;
+
+		coursepress_render( 'views/tpl/course-completion', array( 'completion_pages' => $completion_pages ) );
 		coursepress_render( 'views/tpl/course-units' );
 	}
 

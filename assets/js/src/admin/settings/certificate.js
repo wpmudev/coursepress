@@ -71,7 +71,7 @@
 
                 this.certBox = this.$('.box-cert-settings' );
 
-                if ( ! _.isTrue( this.model.enabled ) || _.isTrue( this.model.use_cp_default ) ) {
+                if ( ! this.model.enabled || this.model.use_cp_default ) {
                     this.certBox.hide();
                 }
             },

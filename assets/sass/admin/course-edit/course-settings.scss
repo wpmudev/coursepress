@@ -1,0 +1,40 @@
+#course-edit-template {
+  .cp-course-video {
+    .cp-div-flex {
+      padding-right: 15px;
+    }
+  }
+  .cp-course-categories {
+    .cp-div-flex-2 {
+      padding-right: 0;
+    }
+    .cp-div-flex {
+      text-align: right;
+    }
+  }
+  #cp-instructors-box,
+  #cp-facilitators-box {
+    position: relative;
+    min-height: 130px;
+    border: 2px solid $grey_5;
+    background-color: $grey_6;
+    @include radius(6px);
+    margin-bottom: 5px;
+    text-align: center;
+
+    .description {
+      position: absolute;
+      top: 40%;
+      width: 100%;
+    }
+  }
+  .cp-users-box {
+    @include clearfix;
+    margin-bottom: 25px;
+
+    .cp-bordered-btn {
+      float: right;
+      text-transform: uppercase;
+    }
+  }
+}

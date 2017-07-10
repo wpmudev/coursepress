@@ -40,7 +40,8 @@
         });
 
         UnitList = CoursePress.View.extend({
-            template_id: 'coursepress-unit-list-tpl'
+            template_id: 'coursepress-unit-list-tpl',
+            className: 'unit-list-menu'
         });
 
 

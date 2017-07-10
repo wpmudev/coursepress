@@ -167,7 +167,7 @@
                 echo '<div class="box-label-area">';
                 if ( ! empty( $option['title'] ) ) {
                     printf(
-                        '<h2 class="label">%s</h2>',
+                        '<h3 class="label">%s</h3>',
                         $option['title']
                     );
                 }
@@ -204,7 +204,7 @@
                     esc_attr( $class )
                 );
                 if ( isset( $data['label'] ) ) {
-                    printf( '<h3>%s</h3>', $data['label'] );
+                    printf( '<h3 class="label">%s</h3>', $data['label'] );
                 }
                 $data['name'] = $key;
 

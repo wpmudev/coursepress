@@ -17,7 +17,7 @@
                 this.$('select').select2();
             },
             getModel: function() {
-                return this.model.toJSON();
+                return this.model;
             }
         });
     });

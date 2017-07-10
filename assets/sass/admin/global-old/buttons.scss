@@ -47,7 +47,7 @@
   }
   .cp-bordered-btn {
     border: 2px solid $grey_4;
-    background-color: transparent;
+    background-color: $grey_6;
     color: $dark_2;
     @include boxshadow(none);
 

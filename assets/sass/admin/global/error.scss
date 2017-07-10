@@ -1,13 +1,23 @@
-.cp-error {
-  margin: 0;
-  color: $red;
+.coursepress-wrap {
+  .cp-box {
+    &.cp-error {
+      position: relative;
 
-  &:before {
-    content: '\f534';
-    font-family: Dashicons;
-    display: inline-block;
-    vertical-align: middle;
-    font-size: 1.8em;
-    margin-right: 6px;
+      &:after {
+        content: '\f06a';
+        font-family: 'FontAwesome';
+        position: absolute;
+        bottom: 10px;
+        left: 5px;
+        color: red;
+      }
+
+      input,
+      textarea,
+      select {
+        border-color: red;
+        background-color: rgba(255, 0, 0, 0.02);
+      }
+    }
   }
 }

@@ -5,7 +5,7 @@
 
     <div class="cp-box-content step-sep">
         <div class="box-label-area">
-            <label class="label"><?php _e( 'Course listing info', 'cp' ); ?></label>
+            <h3 class="label"><?php _e( 'Course listing info', 'cp' ); ?></h3>
             <p class="description"><?php _e( 'This is the information that will be displayed for this course on the Courses listing page.', 'cp' ); ?></p>
         </div>
 
@@ -24,7 +24,7 @@
 
     <div class="cp-box-content cp-sep">
         <div class="box-label-area">
-            <label class="label"><?php _e( 'Course details', 'cp' ); ?></label>
+            <h3 class="label"><?php _e( 'Course details', 'cp' ); ?></h3>
             <p class="description"><?php _e( 'This is the information that will be displayed on the main page of the course.', 'cp' ); ?></p>
         </div>
 
@@ -34,7 +34,7 @@
                 <?php wp_editor( $post_content, 'course-description', array( 'textarea_name' => 'post_content', 'textarea_rows' => 10 ) ); ?>
             </div>
 
-            <div class="cp-box">
+            <div class="cp-box cp-course-video">
                 <label class="label"><?php _e( 'Course overview video', 'cp' ); ?></label>
                 <div class="cp-flex">
                     <div class="cp-div-flex">
@@ -46,8 +46,8 @@
                 </div>
             </div>
 
-            <div class="cp-box">
-                <label class="label" for="course-categories"><?php _e( 'Course categories', 'cp' ); ?></label>
+            <div class="cp-box cp-course-categories">
+                <h3 class="label" for="course-categories"><?php _e( 'Course categories', 'cp' ); ?></h3>
                 <div class="cp-flex">
                     <div class="cp-div-flex-2 cp-categories-selector">
                         <select id="course-categories" multiple="multiple" data-placeholder="<?php _e( 'Pick existing categories or add new one', 'cp' ); ?>" name="course_category">
@@ -68,7 +68,7 @@
 
     <div class="cp-box-content cp-sep">
         <div class="box-label-area">
-            <label class="label"><?php _e( 'Course settings', 'cp' ); ?></label>
+            <h3 class="label"><?php _e( 'Course settings', 'cp' ); ?></h3>
             <p class="description"><?php _e( 'Set-up Enrollment and Pass Grade settings for this course.', 'cp' ); ?></p>
         </div>
 
@@ -92,7 +92,7 @@
 
     <div class="cp-box-content cp-sep">
         <div class="box-label-area">
-            <label class="label"><?php _e( 'Course modules', 'cp' ); ?></label>
+            <h3 class="label"><?php _e( 'Course modules', 'cp' ); ?></h3>
             <p class="description"><?php _e( 'Modules allow to you to group steps, they may be helpful for more complex course structures.', 'cp' ); ?></p>
         </div>
 
@@ -110,11 +110,11 @@
 
     <div class="cp-box-content">
         <div class="box-label-area">
-            <label class="label"><?php _e( 'Instructors & Facilitators', 'cp' ); ?></label>
+            <h3 class="label"><?php _e( 'Instructors & Facilitators', 'cp' ); ?></h3>
             <p class="description"><?php _e( 'Instructors put a course together, whereas facilitators help answer student questions after the course has been launed. Instructor information is displayed on the front-end of the site, whereas a facilitator\'s is not.', 'cp' ); ?></p>
         </div>
 
-        <div class="box-inner-content">
+        <div class="box-inner-content cp-users-box">
             <div class="cp-box">
                 <label class="label"><i class="fa fa-users"></i> <?php _e( 'Instructors', 'cp' ); ?></label>
                 <div id="cp-instructors-box">
