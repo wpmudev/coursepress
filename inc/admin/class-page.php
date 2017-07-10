@@ -336,6 +336,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	}
 
 	function get_course_edit_page() {
+	    global $CoursePress;
+
 		// We need the image editor here, enqueue it!!!
 		wp_enqueue_media();
 		// Include datepicker
@@ -392,6 +394,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		coursepress_render( 'views/tpl/course-type', array( 'course_id' => $course_id ) );
 		coursepress_render( 'views/tpl/course-settings' );
 
+        $certClass = $CoursePress->get_class( 'CoursePress_Certificate' );
         $tokens = array(
             'COURSE_NAME',
             'COURSE_SUB_TITLE',
@@ -401,10 +404,11 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
             'DOWNLOAD_CERTIFICATE_BUTTON',
             'STUDENT_WORKBOOK',
         );
-        $_codes_text = sprintf( '<p>%1$s</p> <p>%2$s</p>', __( 'These codes will be replaced with actual data:', 'cp' ), '<b>%s</b>' );
-        $_codes_text = sprintf( $_codes_text, implode(', ', $tokens ) );
+        $format = sprintf( '<p>%1$s</p> <p>%2$s</p>', __( 'These codes will be replaced with actual data:', 'cp' ), '<b>%s</b>' );
+        $page_tokens = sprintf( $format, implode(', ', $tokens ) );
+        $cert_tokens = sprintf( $format, implode( ', ', array_keys( $certClass->get_tokens() ) ) );
         $completion_pages = array(
-            'tokens' => $_codes_text,
+            'tokens' => $page_tokens,
             'pre_completion' => array(
                 'title' => __( 'Pre Completion Page', 'cp' ),
                 'description' => __( 'The page content to appear after an student completed the course and is awaiting instructor\'s final grade.', 'cp' ),
@@ -417,6 +421,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
                 'title' => __( 'Failure Notice', 'cp' ),
                 'description' => __( 'The content to use when an student failed to pass the course.', 'cp' ),
             ),
+            'cert_tokens' => $cert_tokens,
         );
         $this->localize_array['completion_pages'] = $completion_pages;
 

@@ -49,7 +49,10 @@
     <div id="custom-certificate-setting" class="{{!basic_certificate?'hidden':''}}">
         <div class="cp-box-content">
             <h3 class="label"><?php _e( 'Certificate Content', 'cp' ); ?></h3>
-            <?php coursepress_teeny_editor( '{{basic_certificate_layout}}', 'basic-certificate-layout', array( 'name' => 'meta_basic_certificate_layout' ) ); ?>
+            <div class="cp-alert cp-alert-info">
+                <?php echo $completion_pages['cert_tokens']; ?>
+            </div>
+            <?php coursepress_teeny_editor( '{{basic_certificate_layout}}', 'meta_basic_certificate_layout' ); ?>
         </div>
         <div class="cp-box-content">
             <div class="box-label-area">
@@ -67,15 +70,15 @@
                 <div class="cp-flex">
                     <div class="cp-pad-right">
                         <h3 class="label"><?php _e( 'Top', 'cp' ); ?></h3>
-                        <input type="number" name="meta_margin.top" value="{{cert_margin.top}}" />
+                        <input type="number" name="meta_cert_margin.top" value="{{cert_margin.top}}" />
                     </div>
                     <div class="cp-pad-right">
                         <h3 class="label"><?php _e( 'Left', 'cp' ); ?></h3>
-                        <input type="number" name="meta_margin.left" value="{{cert_margin.left}}" />
+                        <input type="number" name="meta_cert_margin.left" value="{{cert_margin.left}}" />
                     </div>
                     <div class="cp-pad-right">
                         <h3 class="label"><?php _e( 'Right', 'cp' ); ?></h3>
-                        <input type="number" name="meta_margin.right" value="{{cert_margin.right}}" />
+                        <input type="number" name="meta_cert_margin.right" value="{{cert_margin.right}}" />
                     </div>
                 </div>
             </div>
@@ -86,8 +89,8 @@
             </div>
             <div class="box-inner-content">
                 <select class="widefat" name="meta_page_orientation">
-                    <option value="landscape" {{_.selected('L', page_orientation)}}><?php _e( 'Landscape', 'cp' ); ?></option>
-                    <option value="portrait" {{_.selected('P', page_orientation)}}><?php _e( 'Portrait', 'cp' ); ?></option>
+                    <option value="L" {{_.selected('L', page_orientation)}}><?php _e( 'Landscape', 'cp' ); ?></option>
+                    <option value="P" {{_.selected('P', page_orientation)}}><?php _e( 'Portrait', 'cp' ); ?></option>
                 </select>
             </div>
         </div>

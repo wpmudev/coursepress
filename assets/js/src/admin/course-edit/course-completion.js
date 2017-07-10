@@ -32,8 +32,9 @@
                 container[ is_checked ? 'slideDown' : 'slideUp' ]();
             },
             setUpUI: function() {
-                var self = this;
+                var self, content, textarea;
 
+                self = this;
                 this.background = new CoursePress.AddImage( this.$('[name="meta_certificate_background"]') );
                 this.$('select').select2();
                 this.$('.switch-tmce').trigger('click');
@@ -41,17 +42,29 @@
                 this.the_title = this.$('#page-completion-title');
                 this.the_content = this.$('#page-completion-content');
 
-                _.delay(function() {
-                    if (win.tinyMCE && win.tinyMCE.get('page-completion-content')) {
-                        var editor = win.tinyMCE.get('page-completion-content');
+                function setEditor() {
+                    if ( win.tinyMCE.get( 'page-completion-content' ) ) {
+                        var editor = win.tinyMCE.get( 'page-completion-content' );
                         editor.on('change', function () {
-                            var content = editor.getContent(),
-                                textarea = self.$('#page-completion-content');
-                            
+                            content = editor.getContent();
+                            textarea = self.$( '#page-completion-content' );
+
                             textarea.val(content);
                             self.model.set(self.current + '_content', content);
                         });
                     }
+                }
+
+                _.delay(function() {
+                    if ( win.tinyMCE && win.tinyMCE.get( 'page-completion-content' ) ) {
+                        setEditor();
+                    } else {
+                        self.$('#wp-page-completion-content-wrap .switch-tmce' ).one( 'click', function() {
+                            _.delay(setEditor, 200);
+                        });
+                    }
+
+                    self.setEditor('meta_basic_certificate_layout');
                 }, 300 );
             },
             switchCompletionPage: function( ev ) {
