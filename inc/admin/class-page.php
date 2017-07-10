@@ -428,7 +428,22 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
         $this->localize_array['completion_pages'] = $completion_pages;
 
 		coursepress_render( 'views/tpl/course-completion', array( 'completion_pages' => $completion_pages ) );
-		coursepress_render( 'views/tpl/course-units' );
+
+        $steps = array(
+            'text' => __( 'Text', 'cp' ),
+            'image' => __( 'Image', 'cp' ),
+            'video' => __( 'Video', 'cp' ),
+            'audio' => __( 'Audio', 'cp' ),
+            //'download' => __( 'Download', 'cp' ),
+            'zipped' => __( 'Zip', 'cp' ),
+            'input-upload' => __( 'File Upload', 'cp' ),
+            'input-quiz' => __( 'Quiz', 'cp' ),
+            'input-written' => __( 'Written', 'cp' ),
+            'discussion' => __( 'Discussion', 'cp' ),
+        );
+
+		coursepress_render( 'views/tpl/course-units', array( 'steps' => $steps ) );
+		coursepress_render( 'views/tpl/steps-template' );
 	}
 
 	function get_students_page() {

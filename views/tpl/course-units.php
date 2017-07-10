@@ -1,4 +1,114 @@
 <script type="text/template" id="coursepress-course-units-tpl">
+    <div id="units-container"></div>
+    <div id="unit-details-container"></div>
+    <div id="unit-steps-container"></div>
+</script>
+<script type="text/template" id="coursepress-unit-details">
+    <div class="cp-box-heading">
+        <h2 class="box-heading-title">
+            <?php _e( 'Unit Details', 'cp' ); ?>
+            <a href="" class="cp-btn cp-btn-xs cp-bordered-btn cp-unit-preview"><?php _e( 'Preview', 'cp' ); ?></a>
+        </h2>
+    </div>
+    <div class="cp-odd">
+        <div class="cp-box-content">
+            <div class="box-label-area">
+                <h3 class="label"><?php _e( 'Unit Information', 'cp' ); ?></h3>
+                <p class="description"><?php _e( 'Specify some details about this unit. Unit title fields is compulsory.', 'cp' ); ?></p>
+            </div>
+            <div class="box-inner-content">
+                <div class="cp-box">
+                    <label class="label"><?php _e( 'Unit Title', 'cp' ); ?></label>
+                    <input type="text" name="post_title" class="widefat" />
+                </div>
+                <div class="cp-box cp-toggle-box">
+                    <label>
+                        <input type="checkbox" name="meta_use_feature_image" value="1" class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+                        <span class="label"><?php _e( 'Use feature image', 'cp' ); ?></span>
+                    </label>
+                </div>
+                <div class="cp-box cp-unit-feature-image hidden">
+                    <input type="text" class="cp-add-image-input" id="unit-feature-image" name="meta_unit_feature_image" value="" data-thumbnail="20" data-size="medium" data-title="<?php _e( 'Select Feature Image', 'cp' ); ?>" />
+                </div>
+
+                <div class="cp-box cp-toggle-box">
+                    <label>
+                        <input type="checkbox" name="meta_use_description" value="1" class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+                        <span class="label"><?php _e( 'Use description', 'cp' ); ?></span>
+                    </label>
+                </div>
+
+                <div class="cp-box cp-unit-description hidden">
+                    <?php coursepress_teeny_editor( '', 'post_content' ); ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="cp-box-content">
+            <div class="box-label-area">
+                <h3 class="label"><?php _e( 'Unit Availability', 'cp' ); ?></h3>
+            </div>
+            <div class="box-inner-content">
+                <div class="cp-box">
+                    <select name="meta_unit_availability">
+                        <option value="instant"><?php _e( 'Instantly available', 'cp' ); ?></option>
+                        <option value="on_date"><?php _e( 'Available on', 'cp' ); ?></option>
+                        <option value="after_delay"><?php _e( 'Available after', 'cp' ); ?></option>
+                    </select>
+                </div>
+                <div class="cp-box cp-on_date inactive">
+                    <label class="label"><?php _e( 'Unit availability date', 'cp' ); ?></label>
+                    <input type="text" name="meta_unit_availability_date" />
+                </div>
+                <div class="cp-box cp-after_delay inactive">
+                    <label class="label"><?php _e( 'No. of days', 'cp' ); ?></label>
+                    <input type="text" name="meta_unit_delay_days" />
+                    <p class="description"><?php _e( 'Unit will be available on X days after the course is becomes available.', 'cp' ); ?></p>
+                </div>
+            </div>
+        </div>
+        <div class="cp-box-content">
+            <div class="box-label-area">
+                <h3 class="label"><?php _e( 'Progress to next unit', 'cp' ); ?></h3>
+            </div>
+            <div class="box-inner-content">
+                <div class="cp-box cp-toggle-box">
+                    <label>
+                        <input type="checkbox" name="meta_force_current_unit_completion" value="1" class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+                        <span class="label"><?php _e( 'Force unit completion', 'cp' ); ?></span>
+                    </label>
+                    <p class="description"><?php _e( 'User needs to answer all required assessments and view all steps in order to access the next unit', 'cp' ); ?></p>
+                </div>
+                <div class="cp-box cp-toggle-box">
+                    <label>
+                        <input type="checkbox" name="meta_force_current_unit_successful_completion" value="1" class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+                        <span class="label"><?php _e( 'Force unit successful completion', 'cp' ); ?></span>
+                    </label>
+                    <p class="description"><?php _e( 'User needs to pass all required assessable steps in order to access the next unit.', 'cp' ); ?></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <link type="text/css" rel="stylesheet" media="all" href="<?php echo includes_url( '/css/editor.css' ); ?>" />
+</script>
+<script type="text/template" id="coursepress-unit-steps-tpl">
+    <h3><?php _e( 'Steps', 'cp' ); ?></h3>
+    <p class="description"><?php _e( 'Click steps below to add them to this unit', 'cp' ); ?></p>
+    <div class="unit-steps-area">
+        <div class="unit-steps-tools">
+            <ul>
+            <?php foreach ( $steps as $step => $label ) : ?>
+                <li class="unit-step unit-step-<?php echo $step; ?>" data-step="<?php echo $step; ?>">
+                    <span><?php echo $label; ?></span>
+                </li>
+            <?php endforeach; ?>
+            </ul>
+        </div>
+        <div class="unit-steps">
+        </div>
+    </div>
+</script>
+<script type="text/template" id="coursepress-units-tpl">
     <div class="cp-box-heading">
         <h2 class="box-heading-title"><?php _e( 'Units', 'cp' ); ?></h2>
     </div>

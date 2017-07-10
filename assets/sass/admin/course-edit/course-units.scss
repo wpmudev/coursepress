@@ -121,4 +121,204 @@
     }
   }
 
+  .cp-unit-preview {
+    float: right;
+    margin: 0;
+  }
+  #unit-details-container {
+    .cp-odd {
+      &:before {
+        display: none;
+      }
+    }
+  }
+  .unit-steps-area {
+    background-color: $grey_6;
+    border: 1px solid $grey_5;
+    min-height: 120px;
+    margin-bottom: 25px;
+    @include radius(4px);
+  }
+
+  .unit-steps-tools {
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      @include clearfix;
+
+      li {
+        float: left;
+        display: inline-block;
+        margin: 0;
+        padding: 8px 5px;
+        background-color: #ffffff;
+        border: {
+          style: solid;
+          color: $grey_5;
+          width: 0 0 1px 1px;
+        }
+        width: 90px;
+        font-size: 96%;
+        text-align: center;
+        cursor: pointer;
+        @include transition(0.4s);
+
+        &:last-of-type {
+          border-right-width: 1px;
+        }
+        &:first-of-type {
+          border-left-width: 0;
+          @include radius(4px 0 0 0);
+        }
+
+        &:hover {
+          @include boxshadow(inset 0 0 25px 1px $grey_5);
+          @include transition(0.4s);
+        }
+        &:before {
+          content: '';
+          display: block;
+          font-family: 'FontAwesome';
+          font-size: 120%;
+          color: $grey_3;
+        }
+
+        &.unit-step-text:before {
+          content: '\f15c';
+        }
+        &.unit-step-image:before {
+          content: '\f03e';
+        }
+        &.unit-step-video:before {
+          content: '\f16a';
+        }
+        &.unit-step-discussion:before {
+          content: '\f0e5';
+          color: $blue_1;
+        }
+        &.unit-step-download:before {
+          content: '\f0ed';
+        }
+        &.unit-step-audio:before {
+          content: '\f0a1';
+        }
+        &.unit-step-input-upload:before {
+          content: '\f093';
+          color: $blue_1;
+        }
+        &.unit-step-input-quiz:before {
+          content: '\f19d';
+          color: $blue_1;
+        }
+        &.unit-step-input-written:before {
+          content: '\f039';
+          color: $blue_1;
+        }
+        &.unit-step-zipped:before {
+          content: '\f019';
+          color: $blue_1;
+        }
+      }
+    }
+  }
+
+  .unit-step-module {
+    display: block;
+    border: 1px solid $grey_5;
+    margin: 7.5px 15px;
+    background-color: #ffffff;
+    @include clearfix;
+    @include radius(3px);
+
+    &:first-of-type {
+      margin-top: 15px;
+    }
+    &:last-of-type {
+      margin-bottom: 15px;
+    }
+
+    .cp-step-header {
+      position: relative;
+      padding: 5px 0;
+      background-color: #ffffff;
+      @include radius(4px);
+
+      &:before {
+        content: '\f00a';
+        font-family: 'FontAwesome';
+        display: inline-block;
+        padding: 0 12px;
+        color: $grey_4;
+      }
+      .step-type {
+        display: inline-block;
+        margin-right: 15px;
+        text-transform: capitalize;
+      }
+      [type="text"] {
+        padding: 5px 5px;
+        width: 50%;
+        background-color: #ffffff;
+      }
+
+      .step-toggle-button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        border: 0;
+        height: 100%;
+        width: 40px;
+        background-color: #ffffff;
+        cursor: pointer;
+        @include radius(0 4px 4px 0);
+
+        &:before {
+          content: '\f067';
+          font-family: 'FontAwesome';
+          color: $grey_3;
+        }
+      }
+    }
+
+    .cp-step-content {
+      padding: 25px;
+      display: none;
+    }
+
+    .cp-step-footer {
+      padding: 15px 15px;
+      border-top: 1px solid $grey_5;
+      display: none;
+    }
+    .cp-preview {
+      float: right;
+    }
+
+    &.open {
+      .cp-step-header {
+        border-bottom: 1px solid $grey_5;
+        @include boxshadow(inset 0 0 20px 2px $grey_5);
+        @include radius(3px 0 3px 0);
+
+        .step-toggle-button {
+          height: 101%;
+          border: {
+            style: solid;
+            color: $grey_5;
+            width: 0 0 0 1px;
+          }
+          &:before {
+            content: '\f068';
+          }
+        }
+      }
+      .cp-step-content {
+        display: block;
+      }
+      .cp-step-footer {
+        display: block;
+      }
+    }
+  }
 }
