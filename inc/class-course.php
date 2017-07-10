@@ -62,36 +62,37 @@ class CoursePress_Course extends CoursePress_Utility {
 			}
 
 			// Legacy fixes
-			if ( 'enrollment_type' == $key && 'anyone' == $value )
-				$value = 'registered';
-			if ( 'on' == $value || 'yes' == $value )
-				$value = true;
-			if ( 'off' == $value || '' == $value )
-				$value = false;
+			if ( 'enrollment_type' == $key && 'anyone' == $value ) {
+				$value = 'registered'; }
+			if ( 'on' == $value || 'yes' == $value ) {
+				$value = true; }
+			if ( 'off' == $value || '' == $value ) {
+				$value = false; }
 
 			$this->__set( $key, $value );
 			$this->__set( 'meta_' . $key, $value );
 		}
 
 		// Legacy: fix course_type meta
-		if ( ! $this->__get( 'with_modules' ) )
-			$this->__set( 'with_modules', true );
-		if ( ! $this->__get( 'course_type' ) )
-			$this->__set( 'course_type', 'auto-moderated' );
+		if ( ! $this->__get( 'with_modules' ) ) {
+			$this->__set( 'with_modules', true ); }
+		if ( ! $this->__get( 'course_type' ) ) {
+			$this->__set( 'course_type', 'auto-moderated' ); }
 	}
 
 	function get_settings() {
-        $pre_completion_content = sprintf( '<h3>%s</h3>', __( 'Congratulations! You have completed COURSE_NAME!', 'cp' ) );
-        $pre_completion_content .= sprintf( '<p>%s</p>', __( 'Your course instructor will now review your work and get back to you with your final grade before issuing you a certificate of completion.', 'cp' ) );
-        $completion_content = sprintf( '<h3>%s</h3><p>%s</p><p>DOWNLOAD_CERTIFICATE_BUTTON</p>',
-            __( 'Congratulations! You have successfully completed and passed COURSE_NAME!', 'CP_TD' ),
-            __( 'You can download your certificate here.', 'CP_TD' )
-        );
-        $failed_content = sprintf( '<p>%s</p><p>%s</p>',
-            __( 'Unfortunately, you didn\'t pass COURSE_NAME.', 'CP_TD' ),
-            __( 'Better luck next time!', 'CP_TD' )
-        );
-        $course_meta = array(
+		$pre_completion_content = sprintf( '<h3>%s</h3>', __( 'Congratulations! You have completed COURSE_NAME!', 'cp' ) );
+		$pre_completion_content .= sprintf( '<p>%s</p>', __( 'Your course instructor will now review your work and get back to you with your final grade before issuing you a certificate of completion.', 'cp' ) );
+		$completion_content = sprintf( '<h3>%s</h3><p>%s</p><p>DOWNLOAD_CERTIFICATE_BUTTON</p>',
+			__( 'Congratulations! You have successfully completed and passed COURSE_NAME!', 'CP_TD' ),
+			__( 'You can download your certificate here.', 'CP_TD' )
+		);
+		$failed_content = sprintf( '<p>%s</p><p>%s</p>',
+			__( 'Unfortunately, you didn\'t pass COURSE_NAME.', 'CP_TD' ),
+			__( 'Better luck next time!', 'CP_TD' )
+		);
+		$id = $this->__get( 'ID' );
+		$course_meta = array(
 			'course_type' => 'auto-moderated',
 			'course_language' => __( 'English', 'cp' ),
 			'allow_discussion' => false,
@@ -130,12 +131,28 @@ class CoursePress_Course extends CoursePress_Utility {
 				'right' => 0,
 			),
 			'page_orientation' => 'L',
-			'cert_text_color' => '#5a5a5a'
+			'cert_text_color' => '#5a5a5a',
+
+			/**
+			 * MarketPress defaults
+			 */
+			'mp_auto_sku' => true,
+			'mp_product_price' => '',
+			'mp_product_sale_price' => '',
+			'mp_sale_price_enabled' => false,
+			'mp_sku_placeholder' => sprintf( __( 'e.g. %s-%06d', 'cp' ), 'CP', $id ),
+			'mp_sku' => '',
 		);
 
-		$id = $this->__get( 'ID' );
 		$settings = get_post_meta( $id, 'course_settings', true );
 		$settings = wp_parse_args( $settings, $course_meta );
+
+		/**
+		 * MarketPress plugin status
+		 */
+		$MarketPress = new CoursePress_Extension_MarketPress();
+		$settings['mp_is_instaled'] = $MarketPress->installed();
+		$settings['mp_is_activated'] = $MarketPress->activated();
 
 		return $settings;
 	}
@@ -166,10 +183,8 @@ class CoursePress_Course extends CoursePress_Utility {
 			$words = explode( ' ', $sub );
 			$cut = ( mb_strlen( $words[ count( $words ) - 1 ] ) );
 
-			if ( $cut < 0 )
-				return mb_substr( $sub, 0, $cut );
-			else
-				return $sub;
+			if ( $cut < 0 ) {
+				return mb_substr( $sub, 0, $cut ); } else { 				return $sub; }
 		}
 
 		return $summary;
@@ -190,17 +205,17 @@ class CoursePress_Course extends CoursePress_Utility {
 	function get_feature_image( $width = 235, $height = 235 ) {
 		$id = $this->__get( 'ID' );
 
-		if ( ! $width )
-			$width = coursepress_get_setting( 'course/image_width', 235 );
-		if ( ! $height )
-			$height = coursepress_get_setting( 'course/image_height', 235 );
+		if ( ! $width ) {
+			$width = coursepress_get_setting( 'course/image_width', 235 ); }
+		if ( ! $height ) {
+			$height = coursepress_get_setting( 'course/image_height', 235 ); }
 
 		$listing_image = $this->get_feature_image_url();
 
 		// Try post-thumbnail
 		if ( ! $listing_image ) {
-			if ( has_post_thumbnail( $id ) )
-				$listing_image = get_the_post_thumbnail( $id, array( $width, $height ), array( 'class' => 'course-feature-image' ) );
+			if ( has_post_thumbnail( $id ) ) {
+				$listing_image = get_the_post_thumbnail( $id, array( $width, $height ), array( 'class' => 'course-feature-image' ) ); }
 		} else {
 			$listing_image = $this->create_html(
 				'img',
@@ -223,10 +238,10 @@ class CoursePress_Course extends CoursePress_Utility {
 	function get_feature_video( $width = 235, $height = 235 ) {
 		$feature_video = $this->get_feature_video_url();
 
-		if ( ! $width )
-			$width = coursepress_get_setting( 'course/image_width', 235 );
-		if ( ! $height )
-			$height = coursepress_get_setting( 'course/image_height', 235 );
+		if ( ! $width ) {
+			$width = coursepress_get_setting( 'course/image_width', 235 ); }
+		if ( ! $height ) {
+			$height = coursepress_get_setting( 'course/image_height', 235 ); }
 
 		if ( ! empty( $feature_video ) ) {
 			$attr = array(
@@ -247,17 +262,11 @@ class CoursePress_Course extends CoursePress_Utility {
 		$image = $this->get_feature_image( $width, $height );
 		$video = $this->get_feature_video( $width, $height );
 
-
-		if ( 'image' == $media_type )
-			if ( ! empty( $image ) )
-				return $image;
-			else
-				return $video;
-		else
-			if ( ! empty( $video ) )
-				return $video;
-			else
-				return $image;
+		if ( 'image' == $media_type ) {
+			if ( ! empty( $image ) ) {
+				return $image; }
+		} else { 				return $video; } else if ( ! empty( $video ) ) {
+				return $video; } else { 				return $image; }
 	}
 
 	function get_description() {
@@ -271,10 +280,8 @@ class CoursePress_Course extends CoursePress_Utility {
 	function get_course_start_date() {
 		$open_ended = $this->__get( 'course_open_ended' );
 
-		if ( $open_ended )
-			return __( 'Anytime', 'cp' );
-		else
-			return $this->__get( 'course_start_date' );
+		if ( $open_ended ) {
+			return __( 'Anytime', 'cp' ); } else { 			return $this->__get( 'course_start_date' ); }
 	}
 
 	function get_course_end_date() {
@@ -284,8 +291,8 @@ class CoursePress_Course extends CoursePress_Utility {
 	function get_course_dates( $separator = ' - ' ) {
 		$open_ended = $this->__get( 'course_open_ended' );
 
-		if ( $open_ended )
-			return __( 'Anytime', 'cp' );
+		if ( $open_ended ) {
+			return __( 'Anytime', 'cp' ); }
 
 		return implode( $separator, array( $this->get_course_start_date(), $this->get_course_start_date() ) );
 	}
@@ -293,8 +300,8 @@ class CoursePress_Course extends CoursePress_Utility {
 	function get_enrollment_start_date() {
 		$open_ended = $this->__get( 'enrollment_open_ended' );
 
-		if ( $open_ended )
-			return __( 'Anytime', 'cp' );
+		if ( $open_ended ) {
+			return __( 'Anytime', 'cp' ); }
 
 		return $this->__get( 'enrollment_start_date' );
 	}
@@ -306,8 +313,8 @@ class CoursePress_Course extends CoursePress_Utility {
 	function get_enrollment_dates( $separator = ' - ' ) {
 		$open_ended = $this->__get( 'enrollment_open_ended' );
 
-		if ( $open_ended )
-			return __( 'Anytime', 'cp' );
+		if ( $open_ended ) {
+			return __( 'Anytime', 'cp' ); }
 
 		return implode( $separator, array( $this->get_enrollment_start_date(), $this->get_enrollment_end_date() ) );
 	}
@@ -355,8 +362,8 @@ class CoursePress_Course extends CoursePress_Utility {
 
 		if ( empty( $openEnded )
 		     && $start_date > 0
-		     && $start_date > $time_now )
-			return false;
+		     && $start_date > $time_now ) {
+			return false; }
 
 		return true;
 	}
@@ -390,8 +397,8 @@ class CoursePress_Course extends CoursePress_Utility {
 
 		if ( $is_available ) {
 			// Check if the course hasn't ended yet
-			if ( $this->has_course_ended() )
-				$is_available = false;
+			if ( $this->has_course_ended() ) {
+				$is_available = false; }
 		}
 
 		return $is_available;
@@ -409,8 +416,8 @@ class CoursePress_Course extends CoursePress_Utility {
 
 		if ( empty( $enrollment_open )
 		     && $start_date > 0
-		     && $start_date > $time_now )
-			return false;
+		     && $start_date > $time_now ) {
+			return false; }
 
 		return true;
 	}
@@ -427,8 +434,8 @@ class CoursePress_Course extends CoursePress_Utility {
 
 		if ( empty( $enrollment_open )
 		     && $end_date > 0
-		     && $end_date < $time_now )
-			return true;
+		     && $end_date < $time_now ) {
+			return true; }
 
 		return false;
 	}
@@ -446,8 +453,8 @@ class CoursePress_Course extends CoursePress_Utility {
 			$available = $this->is_enrollment_started();
 
 			// Check if enrollment already ended
-			if ( $available && $this->has_course_ended() )
-				$available = false;
+			if ( $available && $this->has_course_ended() ) {
+				$available = false; }
 		}
 
 		return $available;
@@ -457,19 +464,20 @@ class CoursePress_Course extends CoursePress_Utility {
 		$id = $this->__get( 'ID' );
 		$instructor_ids = get_post_meta( $id, 'instructor' );
 
-		if ( is_array( $instructor_ids ) )
-			$instructor_ids = array_filter( $instructor_ids );
+		if ( is_array( $instructor_ids ) ) {
+			$instructor_ids = array_filter( $instructor_ids ); }
 
-		if ( ! empty( $instructor_ids ) )
-			return $instructor_ids;
+		if ( ! empty( $instructor_ids ) ) {
+			return $instructor_ids; }
 
 		// Legacy call
 		// @todo: Delete this meta
 		$instructor_ids = get_post_meta( $id, 'instructors', true );
 
-		if ( ! empty( $instructor_ids ) )
-			foreach ( $instructor_ids as $instructor_id )
-				coursepress_add_course_instructor( $instructor_id, $id );
+		if ( ! empty( $instructor_ids ) ) {
+			foreach ( $instructor_ids as $instructor_id ) {
+				coursepress_add_course_instructor( $instructor_id, $id ); }
+		}
 
 		return $instructor_ids;
 	}
@@ -492,9 +500,10 @@ class CoursePress_Course extends CoursePress_Utility {
 		$instructors = array();
 		$instructor_ids = $this->_get_instructors();
 
-		if ( ! empty( $instructor_ids ) )
-			foreach ( $instructor_ids as $instructor_id )
-				$instructors[ $instructor_id ] = coursepress_get_user( $instructor_id );
+		if ( ! empty( $instructor_ids ) ) {
+			foreach ( $instructor_ids as $instructor_id ) {
+				$instructors[ $instructor_id ] = coursepress_get_user( $instructor_id ); }
+		}
 
 		return $instructors;
 	}
@@ -522,8 +531,8 @@ class CoursePress_Course extends CoursePress_Utility {
 		$id = $this->__get( 'ID' );
 		$facilitator_ids = get_post_meta( $id, 'facilitator' );
 
-		if ( is_array( $facilitator_ids ) && ! empty( $facilitator_ids ) )
-			return array_unique( array_filter( $facilitator_ids ) );
+		if ( is_array( $facilitator_ids ) && ! empty( $facilitator_ids ) ) {
+			return array_unique( array_filter( $facilitator_ids ) ); }
 
 		return array();
 	}
@@ -558,8 +567,8 @@ class CoursePress_Course extends CoursePress_Utility {
 		$student_ids = array();
 
 		if ( $results ) {
-			foreach ( $results as $result )
-				$student_ids[] = $result->student_id;
+			foreach ( $results as $result ) {
+				$student_ids[] = $result->student_id; }
 		}
 
 		return $student_ids;
@@ -607,9 +616,10 @@ class CoursePress_Course extends CoursePress_Utility {
 		$course_category = wp_get_object_terms( $id, 'course_category' );
 		$cats = array();
 
-		if ( ! empty( $course_category ) )
-			foreach ( $course_category as $term )
-				$cats[ $term->term_id ] = $term->name;
+		if ( ! empty( $course_category ) ) {
+			foreach ( $course_category as $term ) {
+				$cats[ $term->term_id ] = $term->name; }
+		}
 
 		return $cats;
 	}
@@ -653,8 +663,8 @@ class CoursePress_Course extends CoursePress_Utility {
 			'order' => 'ASC',
 		);
 
-		if ( $ids )
-			$args['fields'] = 'ids';
+		if ( $ids ) {
+			$args['fields'] = 'ids'; }
 
 		$units = get_posts( $args );
 

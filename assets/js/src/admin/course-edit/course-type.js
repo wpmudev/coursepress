@@ -1,4 +1,4 @@
-/* global CoursePress, _ */
+/* global CoursePress, _, _coursepress */
 
 (function(){
     'use strict';
@@ -12,6 +12,7 @@
                 'keyup [name="post_title"]': 'updatePostName',
                 'keyup [name="post_name"]': 'updateSlug',
                 'change [name="meta_course_type"]': 'changeCourseType',
+                'change [name="meta_payment_paid_course"]': 'changeCoursePaid',
                 'change [name]': 'updateModel',
                 'focus [name]': 'removeErrorMarker'
             },
@@ -99,6 +100,18 @@
                 sender.parents('li').addClass('active');
                 div.siblings('.cp-course-type').removeClass('active').addClass('inactive');
                 div.addClass('active').removeClass('inactive');
+            },
+            changeCoursePaid: function(ev) {
+                var paid = ev.currentTarget.checked;
+                if ( paid ) {
+                    if ( _coursepress.mp_is_on ) {
+                        $('.cp-box-marketpress').removeClass( 'hidden' );
+                    } else {
+                        $('.cp-box-off').removeClass('hidden');
+                    }
+                } else {
+                    $('.cp-box-marketpress').addClass( 'hidden' );
+                }
             }
         });
     });
