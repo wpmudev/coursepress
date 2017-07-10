@@ -21,7 +21,7 @@
                 this.errorContainer = this.$('.cp-alert-error');
             },
             uploadFile: function() {
-                var valid = this.validateFile() ;
+                var valid = this.validateFile();
 
                 if ( valid ) {
                     this.uploadModel.set( 'type', 'import_file' );
@@ -41,8 +41,7 @@
                 this.model.save();
             },
 
-            maybeContinue: function( ) {
-
+            maybeContinue: function() {
             },
 
             validateFile: function() {
