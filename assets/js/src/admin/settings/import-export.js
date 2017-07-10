@@ -4,7 +4,7 @@
     'use strict';
 
     CoursePress.Define( 'ImportExportSettings', function( $, doc, win ) {
-        var CourseImport, CourseExport;
+        var CourseImport;
 
         CourseImport = CoursePress.View.extend({
             events: {
@@ -21,7 +21,7 @@
                 this.errorContainer = this.$('.cp-alert-error');
             },
             uploadFile: function() {
-                var valid = this.validateFile(), timer;
+                var valid = this.validateFile();
 
                 if ( valid ) {
                     this.uploadModel.set( 'type', 'import_file' );
@@ -41,7 +41,7 @@
                 this.model.save();
             },
 
-            maybeContinue: function( data ) {
+            maybeContinue: function() {
 
             },
 
