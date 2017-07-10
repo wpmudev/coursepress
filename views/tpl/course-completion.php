@@ -94,6 +94,14 @@
                 </select>
             </div>
         </div>
+        <div class="cp-box-content">
+            <div class="box-label-area">
+                <h3 class="label"><?php _e( 'Text Color', 'cp' ); ?></h3>
+            </div>
+            <div class="box-inner-content">
+                <input type="text" name="meta_cert_text_color" class="iris-picker" value="{{cert_text_color}}" />
+            </div>
+        </div>
         <div class="cp-box-content cp-cert-preview">
             <button type="button" class="cp-btn cp-btn-default cp-preview-cert">
                 <span class="dashicons dashicons-visibility"></span>

@@ -255,11 +255,12 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
         $pdf = $CoursePress->get_class( 'CoursePress_PDF' );
 
         if ( isset( $request->ID ) ) {
-            $course_id = $request->course_id;
+                $course_id = $request->ID;
             $content = $request->meta_basic_certificate_layout;
             $background = $request->meta_certificate_background;
-            $margins = get_object_vars( $request->meta_cert_margin );
+            $margins = isset( $request->meta_cert_margin ) ? get_object_vars( $request->meta_cert_margin ) : array();
             $orientation = $request->meta_page_orientation;
+            $text_color = '';
         } else {
             $content = $request->content;
             $background = $request->background_image;

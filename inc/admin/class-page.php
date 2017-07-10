@@ -342,6 +342,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		wp_enqueue_media();
 		// Include datepicker
         wp_enqueue_script( 'jquery-ui-datepicker' );
+        // Include color picker
+        wp_enqueue_script( 'iris' );
 
 		$course_id = filter_input( INPUT_GET, 'cid', FILTER_VALIDATE_INT );
 

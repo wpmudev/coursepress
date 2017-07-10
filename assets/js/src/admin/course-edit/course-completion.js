@@ -4,7 +4,16 @@
     'use strict';
 
     CoursePress.Define( 'CourseCompletion', function( $, doc, win ) {
-        var CertificatePreview;
+        var iris, CertificatePreview;
+
+        $(doc).on( 'click', function(ev) {
+            var sender = $(ev.currentTarget);
+
+            if ( iris && ( ! sender.is(iris) || ! sender.is('.iris-picker') ) ) {
+                iris.iris('hide');
+                iris = false;
+            }
+        });
 
         CertificatePreview = CoursePress.View.extend({
             template_id: 'coursepress-cert-preview',
@@ -28,7 +37,8 @@
                 'change [name]': 'updateModel',
                 'click .cp-select-list li': 'switchCompletionPage',
                 'focus [name]': 'removeErrorMarker',
-                'click .cp-preview-cert': 'previewCertificate'
+                'click .cp-preview-cert': 'previewCertificate',
+                'focus [name="meta_cert_text_color"]': 'showColorPicker'
             },
             initialize: function(model, EditCourse) {
                 this.model = model;
@@ -57,6 +67,17 @@
                 this.the_title = this.$('#page-completion-title');
                 this.the_content = this.$('#page-completion-content');
 
+                iris = this.color = this.$('[name="meta_cert_text_color"]');
+
+                this.color.iris({
+                    palettes: true,
+                    hide: true,
+                    width: 220,
+                    change: function( ) {
+                        self.model.set( 'meta_cert_text_color', self.color.iris('color') );
+                    }
+                });
+
                 function setEditor() {
                     if ( win.tinyMCE.get( 'page-completion-content' ) ) {
                         var editor = win.tinyMCE.get( 'page-completion-content' );
@@ -81,6 +102,12 @@
 
                     self.setEditor('meta_basic_certificate_layout');
                 }, 300 );
+            },
+            showColorPicker: function() {
+                if ( this.color ) {
+                    this.color.iris('show');
+                    iris = this.color;
+                }
             },
             switchCompletionPage: function( ev ) {
                 var sender, page, title, description, the_page;
