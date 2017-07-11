@@ -1,0 +1,26 @@
+.cp-search-form {
+    .cp-btn {
+        padding-bottom: 6px;
+        padding-top: 6px;
+    }
+}
+@media screen {
+    @media (min-width: 768px) {
+        .cp-search-form {
+            margin-bottom: 15px;
+            .cp-btn-active {
+                display: inline-block;
+            }
+        }
+    }
+    @media (min-width: 1024px) {
+        .coursepress-table {
+            th, td {
+                display: table-cell;
+            }
+            .hidden {
+                display: none;
+            }
+        }
+    }
+}

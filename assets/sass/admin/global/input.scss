@@ -9,6 +9,7 @@
     border: 1px solid $grey_5;
     @include boxshadow(none);
     @include radius(5px);
+    height: auto;
 
     &:hover,
     &:focus {
