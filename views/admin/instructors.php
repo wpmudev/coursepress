@@ -16,10 +16,16 @@
                     <label class="label"><?php _e( 'Filter by course', 'cp' ); ?></label>
                     <select name="course_id">
                         <option value=""><?php _e( 'Any course', 'cp' ); ?></option>
-    <?php
-	foreach ( $courses as $course_id => $course ) {
-		printf( '<option value="%d">%s</option>', esc_attr( $course_id ), esc_html( $course->post_title ) );
-	}
+<?php
+$current = isset( $_REQUEST['course_id'] )? $_REQUEST['course_id']:0;
+foreach ( $courses as $course_id => $course ) {
+	printf(
+		'<option value="%d" %s>%s</option>',
+		esc_attr( $course_id ),
+		selected( $current, $course_id ),
+		esc_html( $course->post_title )
+	);
+}
 	?>
                     </select>
                 </div>
@@ -52,7 +58,6 @@ $i = 0;
 if ( ! empty( $instructors ) ) {
 	$date_format = get_option( 'date_format' );
 	foreach ( $instructors as $instructor ) {
-		l( $instructor );
 			$i++;
 			$edit_link = add_query_arg( 'cid', $instructor->ID, $instructor_edit_link );
 ?>

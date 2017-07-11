@@ -10,9 +10,6 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 	private $items;
 
 	public function __construct() {
-		$this->menu_title = __( 'Instructors', 'cp' );
-		$this->label = __( 'Instructors', 'cp' );
-
 		parent::__construct();
 	}
 
@@ -36,14 +33,12 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 			'page' => $this->slug,
 			'search' => $search,
 			'instructor_edit_link' => '',
-
 		);
 		coursepress_render( 'views/admin/instructors', $args );
 	}
 
 	public function get_list() {
 		$instructors = array();
-
 		$paged = $this->get_pagenum();
 		/**
 		 * Search
@@ -76,6 +71,9 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 			// Show only students of current course
 			$course_id = (int) $_GET['course_id'];
 			$instructor_ids = $this->get_instructors_by_course_id( $course_id );
+			if ( empty( $instructor_ids ) ) {
+				return;
+			}
 			$args['include'] = $instructor_ids;
 		}
 
@@ -104,13 +102,6 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 		foreach ( array_keys( $this->items ) as $instructor_id ) {
 			$this->items[ $instructor_id ]->count_courses = $this->count_courses( $instructor_id, true );
 		}
-
-		/*
-		$this->set_pagination_args( array(
-			'total_items' => $wp_user_search->get_total(),
-			'per_page' => $users_per_page,
-        ) );
-         */
 
 		return $this->items;
 	}
@@ -160,21 +151,30 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 	 *
 	 * @since  2.0.0
 	 */
-	public static function filter_course_meta_array( $meta_key ) {
+	public function filter_course_meta_array( $meta_key ) {
 		global $wpdb;
-
 		$regex = array();
 		$regex[] = 'course_\d+';
 		$regex[] = $wpdb->prefix . 'course_\d+';
 		if ( is_multisite() && defined( 'BLOG_ID_CURRENT_SITE' ) && BLOG_ID_CURRENT_SITE == get_current_blog_id() ) {
 			$regex[] = $wpdb->base_prefix . 'course_\d+';
 		}
-
 		$pattern = sprintf( '/^(%s)$/', implode( '|', $regex ) );
-
 		if ( preg_match( $pattern, $meta_key ) ) {
 			return $meta_key;
 		}
 		return false;
+	}
+
+	/**
+	 * Get instructors by course ID
+	 */
+	public function get_instructors_by_course_id( $course_id ) {
+		$args = array(
+			'meta_key' => 'course_'.$course_id,
+			'fields' => 'ID',
+		);
+		$user_query = new WP_User_Query( $args );
+		return $user_query->results;
 	}
 }
