@@ -404,4 +404,61 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 		wp_send_json_error( array( 'message' => __( 'Could not create new category.', 'cp' ) ) );
 	}
+
+	/**
+	 * Send email invitations to the users.
+	 *
+	 * @param object $request Request data.
+	 */
+	function send_email_invite( $request ) {
+
+		// Do not continue if empty.
+		if ( empty( $request->email ) || empty( $request->type ) ) {
+			wp_send_json_error( array( 'message' => __( 'Could not send email invitation.', 'cp' ) ) );
+		}
+
+		// Send email invitation.
+		$send = send_email_invite();
+
+		// If sent, send success response back.
+		if ( $send ) {
+			wp_send_json_success();
+		}
+
+		wp_send_json_error( array( 'message' => __( 'Could not send email invitation.', 'cp' ) ) );
+	}
+
+	/**
+	 * Assign instructor/facilitator to a course.
+	 *
+	 * @param object $request Request data.
+	 */
+	function assign_to_course( $request ) {
+
+		// Do not continue if required values are empty.
+		if ( empty( $request->course_id ) || empty( $request->user ) || empty( $request->type ) ) {
+			wp_send_json_error( array( 'message' => __( 'Could not assign selected user.', 'cp' ) ) );
+		}
+
+		switch ( $request->type ) {
+			case 'instructor':
+				$success = coursepress_add_course_instructor( $request->user, $request->course_id );
+				break;
+
+			case 'facilitator':
+				$success = coursepress_add_course_facilitator( $request->user, $request->course_id );
+				break;
+
+			default:
+				$success = false;
+				break;
+		}
+
+		// If sent, send success response back.
+		if ( $success ) {
+			wp_send_json_success();
+		}
+
+		wp_send_json_error( array( 'message' => __( 'Could not assign selected user.', 'cp' ) ) );
+	}
 }

@@ -396,8 +396,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		// Load templates
 		coursepress_render( 'views/tpl/common' );
 		coursepress_render( 'views/tpl/course-type', array( 'course_id' => $course_id ) );
-		coursepress_render( 'views/tpl/course-settings', $settings_data );
 		coursepress_render( 'views/tpl/course-completion' );
+		coursepress_render( 'views/tpl/course-settings', $settings_data );
 
         $tokens = array(
             'COURSE_NAME',
