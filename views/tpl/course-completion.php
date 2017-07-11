@@ -49,7 +49,10 @@
     <div id="custom-certificate-setting" class="{{!basic_certificate?'hidden':''}}">
         <div class="cp-box-content">
             <h3 class="label"><?php _e( 'Certificate Content', 'cp' ); ?></h3>
-            <?php coursepress_teeny_editor( '{{basic_certificate_layout}}', 'basic-certificate-layout', array( 'name' => 'meta_basic_certificate_layout' ) ); ?>
+            <div class="cp-alert cp-alert-info">
+                <?php echo $completion_pages['cert_tokens']; ?>
+            </div>
+            <?php coursepress_teeny_editor( '{{basic_certificate_layout}}', 'meta_basic_certificate_layout' ); ?>
         </div>
         <div class="cp-box-content">
             <div class="box-label-area">
@@ -67,32 +70,49 @@
                 <div class="cp-flex">
                     <div class="cp-pad-right">
                         <h3 class="label"><?php _e( 'Top', 'cp' ); ?></h3>
-                        <input type="number" name="meta_margin.top" value="{{cert_margin.top}}" />
+                        <input type="number" name="meta_cert_margin.top" value="{{cert_margin.top}}" />
                     </div>
                     <div class="cp-pad-right">
                         <h3 class="label"><?php _e( 'Left', 'cp' ); ?></h3>
-                        <input type="number" name="meta_margin.left" value="{{cert_margin.left}}" />
+                        <input type="number" name="meta_cert_margin.left" value="{{cert_margin.left}}" />
                     </div>
                     <div class="cp-pad-right">
                         <h3 class="label"><?php _e( 'Right', 'cp' ); ?></h3>
-                        <input type="number" name="meta_margin.right" value="{{cert_margin.right}}" />
+                        <input type="number" name="meta_cert_margin.right" value="{{cert_margin.right}}" />
                     </div>
                 </div>
             </div>
         </div>
         <div class="cp-box-content">
             <div class="box-label-area">
-                <label class="label"><?php _e( 'Page Orientation', 'cp' ); ?></label>
+                <h3 class="label"><?php _e( 'Page Orientation', 'cp' ); ?></h3>
             </div>
             <div class="box-inner-content">
                 <select class="widefat" name="meta_page_orientation">
-                    <option value="landscape" {{_.selected('L', page_orientation)}}><?php _e( 'Landscape', 'cp' ); ?></option>
-                    <option value="portrait" {{_.selected('P', page_orientation)}}><?php _e( 'Portrait', 'cp' ); ?></option>
+                    <option value="L" {{_.selected('L', page_orientation)}}><?php _e( 'Landscape', 'cp' ); ?></option>
+                    <option value="P" {{_.selected('P', page_orientation)}}><?php _e( 'Portrait', 'cp' ); ?></option>
                 </select>
             </div>
         </div>
         <div class="cp-box-content">
-            <button type="button" class="cp-btn cp-btn-default cp-right"><?php _e( 'Preview Certificate', 'cp' ); ?></button>
+            <div class="box-label-area">
+                <h3 class="label"><?php _e( 'Text Color', 'cp' ); ?></h3>
+            </div>
+            <div class="box-inner-content">
+                <span><input type="text" name="meta_cert_text_color" class="iris-input" value="{{cert_text_color}}" /></span>
+            </div>
+        </div>
+        <div class="cp-box-content cp-cert-preview">
+            <button type="button" class="cp-btn cp-btn-default cp-preview-cert">
+                <span class="dashicons dashicons-visibility"></span>
+                <?php _e( 'Preview Certificate', 'cp' ); ?>
+            </button>
         </div>
     </div>
+</script>
+
+<script type="text/template" id="coursepress-cert-preview">
+    <button type="button" class="cp-btn cp-btn-active"><?php _e( 'Close Preview', 'cp' ); ?></button>
+    <h2><?php _e( 'Course Certificate Preview', 'cp' ); ?></h2>
+    <iframe id="coursepress-cert-frame" src="{{pdf}}"></iframe>
 </script>
