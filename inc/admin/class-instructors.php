@@ -35,6 +35,7 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 			'instructor_edit_link' => '',
 		);
 		coursepress_render( 'views/admin/instructors', $args );
+		coursepress_render( 'views/admin/footer-text' );
 	}
 
 	public function get_list() {
