@@ -55,7 +55,6 @@ if ( ! empty( $forums ) ) {
 	$date_format = get_option( 'date_format' );
 	foreach ( $forums as $forum ) {
 			$i++;
-			$edit_link = add_query_arg( 'cid', $forum->ID, $forum_edit_link );
 ?>
                         <tr class="<?php echo $i % 2? 'odd' : 'even'; ?>">
 
