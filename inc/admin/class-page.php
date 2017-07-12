@@ -72,7 +72,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$this->add_submenu( $assessment_label, 'coursepress_assessment_cap', 'coursepress_assessments', 'get_assessments_page' );
 
 		// Set Forum page
-		$forum_label = __( 'Forum', 'cp' );
+		$forum_label = __( 'Forums', 'cp' );
 		$this->add_submenu( $forum_label, 'coursepress_discussions_cap', 'coursepress_forum', 'get_forum_page' );
 
 		// Set Comments page
