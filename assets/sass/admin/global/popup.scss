@@ -28,4 +28,44 @@
     text-align: center;
     padding: 15px 25px;
   }
+  .coursepress-modal-heading {
+    border-bottom: 1px solid $grey_5;
+  }
+  .coursepress-modal-body {
+    border-radius: $default_radius;
+    width: 45%;
+  }
+}
+.coursepress-modal {
+  @extend .coursepress-popup;
+  background-color: rgba(221, 221, 221, 0.72);
+
+  .coursepress-popup-body {
+    border-radius: $default_radius;
+    width: 45%;
+
+    .coursepress-popup-heading {
+      border-bottom: 1px solid $grey_5;
+
+      .coursepress-popup-title {
+        width: 95%;
+        display: inline-block;
+      }
+
+      .cp-modal-close {
+        float: right;
+        cursor: pointer;
+        &:after {
+          @include icon('\f00d');
+          margin-left: 5px;
+        }
+      }
+    }
+
+    .coursepress-popup-footer {
+      border-top: 1px solid #DDDDDD;
+      text-align: right;
+      padding: 27px 25px;
+    }
+  }
 }

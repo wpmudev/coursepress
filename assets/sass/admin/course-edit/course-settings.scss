@@ -27,6 +27,25 @@
       top: 40%;
       width: 100%;
     }
+
+    ul.cp-instructors-list {
+      margin: 5px 3px;
+
+      li {
+        float: left;
+        width: auto;
+        padding: 5px 8px;
+        margin: 0 2px;
+        border-radius: 6px;
+        background: $grey_4;
+        color: $white;
+        &:after {
+          @include icon('\f00d');
+          margin-left: 5px;
+          cursor: pointer;
+        }
+      }
+    }
   }
   .cp-users-box {
     @include clearfix;
@@ -36,5 +55,35 @@
       float: right;
       text-transform: uppercase;
     }
+  }
+
+}
+.coursepress-modal {
+  font-size: 100%;
+
+  .cp-content-nopad {
+    padding: 0;
+  }
+
+  .cp-div-grey {
+    background-color: $grey_12;
+  }
+
+  .cp-div-flex {
+    padding: 20px 33px 50px;
+  }
+
+  [type="text"],
+  select {
+    margin: 6px 0px;
+    display: block;
+    background-color: $grey_9;
+    line-height: 1.5;
+    width: 100%;
+  }
+
+  .label {
+    display: block;
+    margin-bottom: 5px;
   }
 }

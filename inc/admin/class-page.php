@@ -390,6 +390,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Data for course settings form.
 		$settings_data = array(
+			'course_id' => $course_id,
 			'post_content' => $course->post_content,
 			'post_excerpt' => htmlspecialchars_decode( $course->post_excerpt ),
 		);

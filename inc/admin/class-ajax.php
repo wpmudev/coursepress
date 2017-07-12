@@ -418,16 +418,13 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	function send_email_invite( $request ) {
 
 		// Do not continue if empty.
-		if ( empty( $request->email ) || empty( $request->type ) ) {
+		if ( empty( $request->email ) || empty( $request->type ) || empty( $request->course_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Could not send email invitation.', 'cp' ) ) );
 		}
 
 		// Send email invitation.
-		$send = send_email_invite();
-
-		// If sent, send success response back.
-		if ( $send ) {
-			wp_send_json_success();
+		if ( coursepress_send_email_invite( $request->email, $request->course_id, $request->type ) ) {
+			wp_send_json_success( array( 'message' => __( 'Invitation email has been sent.', 'cp' ) ) );
 		}
 
 		wp_send_json_error( array( 'message' => __( 'Could not send email invitation.', 'cp' ) ) );

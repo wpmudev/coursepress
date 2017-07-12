@@ -464,3 +464,60 @@ function coursepress_get_user_course_completion_data( $user_id = 0, $course_id =
 
 	return $results;
 }
+
+/**
+ * Get instructors list excluding current instructors.
+ *
+ * @param int $course_id Course ID.
+ * @param array $args
+ *
+ * @return array
+ */
+function coursepress_get_available_instructors( $course_id, $args = array() ) {
+
+	$args = array(
+		'meta_query'=> array(
+			array(
+				'relation' => 'OR',
+				array(
+					'key' => 'instructor_' . $course_id,
+					'compare' => "NOT EXISTS",
+				),
+			)
+		),
+		'fields' => array('ID', 'user_login'),
+	);
+
+	return get_users( $args );
+}
+
+/**
+ * Get users list excluding current instructors/facilitators.
+ *
+ * @param int $course_id Course ID.
+ * @param string $type instructor/facilitator
+ *
+ * @return array
+ */
+function coursepress_get_available_users( $course_id, $type = 'instructor' ) {
+
+	// Do not continue if required values are empty.
+	if ( empty( $course_id ) || ! in_array( $type, array( 'instructor', 'facilitator' ) ) ) {
+		return array();
+	}
+
+	$args = array(
+		'meta_query'=> array(
+			array(
+				'relation' => 'OR',
+				array(
+					'key' => $type . '_' . $course_id,
+					'compare' => "NOT EXISTS",
+				),
+			)
+		),
+		'fields' => array('ID', 'user_login'),
+	);
+
+	return get_users( $args );
+}
