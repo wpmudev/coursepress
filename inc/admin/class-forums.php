@@ -59,6 +59,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 			'posts_per_page' => $per_page,
 			'paged' => $current_page,
 			's' => $s,
+			'post_status' => 'any',
 		);
 		/**
 		 * Course ID
@@ -74,8 +75,13 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 			);
 		}
 		$wp_query = new WP_Query( $post_args );
-		$this->items = $wp_query->posts;
-
+		$this->items = array();
+		foreach ( $wp_query->posts as $one ) {
+			$one->course_id = get_post_meta( $one->ID, 'course_id', true );
+			$one->unit_id = get_post_meta( $one->ID, 'unit_id', true );
+			$one->comments_number = get_comments_number( $one->ID );
+			$this->items[] = $one;
+		}
 		return $this->items;
 	}
 }

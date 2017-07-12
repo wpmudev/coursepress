@@ -37,7 +37,13 @@ foreach ( $courses as $course_id => $course ) {
                 <tr>
                     <?php foreach ( $columns as $column_id => $column_label ) { ?>
                         <th class="manage-column column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" id="<?php echo $column_id; ?>">
-                            <?php echo $column_label; ?>
+<?php
+if ( 'comments' == $column_id ) {
+	echo '<i class="fa fa-comments" aria-hidden="true"></i>';
+} else {
+	echo $column_label;
+}
+?>
                         </th>
                     <?php } ?>
                 </tr>
@@ -48,10 +54,6 @@ $i = 0;
 if ( ! empty( $forums ) ) {
 	$date_format = get_option( 'date_format' );
 	foreach ( $forums as $forum ) {
-
-
-		l( $forum );
-
 			$i++;
 			$edit_link = add_query_arg( 'cid', $forum->ID, $forum_edit_link );
 ?>
@@ -60,12 +62,26 @@ if ( ! empty( $forums ) ) {
                             <?php foreach ( array_keys( $columns ) as $column_id ) { ?>
                                 <td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>">
 <?php
-switch ( $column_id ) :
+switch ( $column_id ) {
 	case 'topic' :
 		echo $forum->post_title;
 	break;
-	case 'id' :
-		echo $forum->ID;
+	case 'course' :
+		if ( isset( $courses[ $forum->course_id ] ) ) {
+			echo $courses[ $forum->course_id ]->post_title;
+		}
+	break;
+	case 'comments':
+		echo $forum->comments_number;
+	break;
+	case 'status':
+		echo '<label>';
+		$active = isset( $forum->post_status ) && 'publish' === $forum->post_status;
+		printf(
+			'<input type="checkbox" class="cp-toggle-input cp-toggle-forum-status" value="%d" %s /> <span class="cp-toggle-btn"></span>',
+			esc_attr( $forum->ID ),
+			checked( $active, true, false )
+		);
 	break;
 
 	default :
@@ -77,9 +93,9 @@ switch ( $column_id ) :
 				 * @param string $column_id
 				 * @param CoursePress_Course object $forum
 				 */
-		do_action( 'coursepress_courselist_column', $column_id, $forum );
+		do_action( 'coursepress_forums_column', $column_id, $forum );
 	break;
-endswitch;
+}
 ?>
                                 </td>
                             <?php } ?>
