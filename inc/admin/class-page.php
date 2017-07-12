@@ -444,7 +444,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	}
 
 	function get_forum_page() {
-		coursepress_render( 'views/admin/forum' );
+		$forums = new CoursePress_Admin_Forums();
+		$forums->get_page();
 	}
 
 	function get_comments_page() {

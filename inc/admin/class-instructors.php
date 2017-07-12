@@ -23,7 +23,7 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 		return $columns;
 	}
 
-	public function get_instructors_page() {
+	public function get_page() {
 		$search = isset( $_GET['s'] ) ? $_GET['s'] : '';
 		$args = array(
 			'columns' => $this->columns(),
@@ -39,7 +39,6 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 	}
 
 	public function get_list() {
-		$instructors = array();
 		$paged = $this->get_pagenum();
 		/**
 		 * Search
@@ -50,7 +49,6 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 		 */
 		$per_page = $this->get_per_page();
 		$users_per_page = $per_page = $this->get_items_per_page( 'coursepress_instructors_per_page', $per_page );
-
 		/**
 		 * pagination
 		 */
