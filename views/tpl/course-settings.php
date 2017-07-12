@@ -36,14 +36,7 @@
 
             <div class="cp-box cp-course-video">
                 <label class="label"><?php _e( 'Course overview video', 'cp' ); ?></label>
-                <div class="cp-flex">
-                    <div class="cp-div-flex">
-                        <input type="text" class="widefat cp-add-video" name="featured_video" placeholder="<?php _e( 'Paste URL or browse uploaded files', 'cp' ); ?>" data-id="0" data-title="<?php _e( 'Select Feature Image', 'cp' ); ?>" />
-                    </div>
-                    <div class="cp-div-auto">
-                        <button type="button" class="cp-btn cp-btn-default"><?php _e( 'Browse', 'cp' ); ?></button>
-                    </div>
-                </div>
+                <input type="text" class="widefat cp-add-video" id="listing_video" name="featured_video" value=""  data-title="<?php _e( 'Select Feature Video', 'cp' ); ?>" />
             </div>
 
             <div class="cp-box cp-course-categories">
@@ -118,10 +111,17 @@
             <div class="cp-box">
                 <label class="label"><i class="fa fa-users"></i> <?php _e( 'Instructors', 'cp' ); ?></label>
                 <div id="cp-instructors-box">
-                    <ul class="cp-instructors-list">
-                        <li>Sijo Joseph</li>
-                        <li>Blessen Thomas</li>
+                    <?php $instructors = coursepress_get_course_instructors( $course_id ); ?>
+                    <ul id="cp-list-instructor" class="cp-tagged-list cp-tagged-list-removable" data-user-type="instructor">
+                        <?php if ( ! empty( $instructors ) ) : ?>
+                            <?php foreach ( $instructors as $instructor ) : ?>
+                                <li data-user-id="<?php echo $instructor->ID; ?>"><?php echo $instructor->get_name(); ?></li>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </ul>
+                    <?php if ( empty( $instructors ) ) : ?>
+                        <p class="description" id="cp-no-instructor"><?php _e( 'This course currently have no instructors', 'cp' ); ?></p>
+                    <?php endif; ?>
                 </div>
                 <button type="button" class="cp-btn cp-bordered-btn cp-btn-xs cp-right" id="cp-instructor-selector"><?php _e( 'Add Instructor', 'cp' ); ?></button>
             </div>
@@ -129,7 +129,17 @@
             <div class="cp-box">
                 <label class="label"><i class="fa fa-users"></i> <?php _e( 'Facilitators', 'cp' ); ?></label>
                 <div id="cp-facilitators-box">
-                    <p class="description"><?php _e( 'This course currently have no facilitators', 'cp' ); ?></p>
+                    <ul id="cp-list-facilitator" class="cp-tagged-list cp-tagged-list-removable" data-user-type="facilitator">
+                        <?php $facilitators = coursepress_get_course_facilitators( $course_id ); ?>
+                        <?php if ( ! empty( $facilitators ) ) : ?>
+                            <?php foreach ( $facilitators as $facilitator ) : ?>
+                                <li data-user-id="<?php echo $facilitator->ID; ?>"><?php echo empty( $facilitator->display_name ) ? $facilitator->user_login : $facilitator->display_name; ?></li>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </ul>
+                    <?php if ( empty( $facilitators ) ) : ?>
+                        <p class="description" id="cp-no-facilitator"><?php _e( 'This course currently have no facilitators', 'cp' ); ?></p>
+                    <?php endif; ?>
                 </div>
                 <button type="button" class="cp-btn cp-bordered-btn cp-btn-xs cp-right" id="cp-facilitator-selector"><?php _e( 'Add Facilitators', 'cp' ); ?></button>
             </div>
@@ -157,12 +167,7 @@
                 <div class="cp-div-flex cp-pad-left">
                     <label class="label"><?php _e( 'Assign instructor from existing users', 'cp' ); ?></label>
                     <select id="cp-course-instructor">
-                        <?php $instructors = coursepress_get_available_users($course_id, 'instructor'); ?>
-                        <?php if ( ! empty( $instructors ) ) : ?>
-                            <?php foreach ( $instructors as $instructor ) : ?>
-                                <option value="<?php echo $instructor->ID; ?>"><?php echo $instructor->user_login; ?></option>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
+                        <option value=""><?php _e( 'Search users', 'cp' ); ?></option>
                     </select>
                     <button type="button" class="cp-btn cp-assign-user"><?php _e( 'Assign', 'cp' ); ?></button>
                     <p class="cp-assign-response-instructor inactive">ss</p>
@@ -180,25 +185,21 @@
         <div class="coursepress-popup-heading">
             <h3><?php _e( 'ADD FACILITATOR', 'cp' ); ?></h3>
         </div>
-        <div class="coursepress-popup-content">
-            <div class="cp-box-content">
-                <div class="cp-flex">
-                    <div class="cp-div-flex cp-pad-right">
-                        <label class="label"><?php _e( 'Invite by email', 'cp' ); ?></label>
-                        <input type="text" name="" class="cp-input-auto" value="" />
-                        <button type="button" class="cp-btn cp-btn-cancel step-cancel"><?php _e( 'SEND INVITE', 'cp' ); ?></button>
-                        <p class="cp-invitation-response inactive"></p>
-                    </div>
+        <div class="coursepress-popup-content cp-content-nopad">
+            <div class="cp-flex">
+                <div class="cp-div-flex cp-pad-right cp-div-grey">
+                    <label class="label"><?php _e( 'Invite by email', 'cp' ); ?></label>
+                    <input type="text" id="cp-invite-email-facilitator" />
+                    <button type="button" class="cp-btn cp-send-invite"><?php _e( 'Send Invite', 'cp' ); ?></button>
+                    <p class="cp-invitation-response-facilitator inactive">ss</p>
                 </div>
-            </div>
-            <div class="cp-box-content">
-                <div class="cp-flex">
-                    <div class="cp-div-flex cp-pad-left">
-                        <label class="label"><?php _e( 'Invite by email', 'cp' ); ?></label>
-                        <input type="text" name="" class="cp-input-auto" value="" />
-                        <button type="button" class="cp-btn cp-btn-cancel step-cancel"><?php _e( 'SEND INVITE', 'cp' ); ?></button>
-                        <p class="cp-invitation-response inactive"></p>
-                    </div>
+                <div class="cp-div-flex cp-pad-left">
+                    <label class="label"><?php _e( 'Assign facilitator from existing users', 'cp' ); ?></label>
+                    <select id="cp-course-facilitator">
+                        <option value=""><?php _e( 'Search users', 'cp' ); ?></option>
+                    </select>
+                    <button type="button" class="cp-btn cp-assign-user"><?php _e( 'Assign', 'cp' ); ?></button>
+                    <p class="cp-assign-response-facilitator inactive">ss</p>
                 </div>
             </div>
         </div>

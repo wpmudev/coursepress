@@ -628,3 +628,52 @@ function coursepress_create_course_category( $name = '' ) {
 
 	return false;
 }
+
+/**
+ * Get instructors list of the course.
+ *
+ * @param int $course_id Course ID.
+ *
+ * @return array
+ */
+function coursepress_get_course_instructors( $course_id ) {
+
+	$course = coursepress_get_course( $course_id );
+
+	if ( is_wp_error( $course ) ) {
+		return array();
+	}
+
+	$instructors = $course->get_instructors();
+
+	if ( ! empty( $instructors ) ) {
+		return $instructors;
+	}
+
+	return array();
+}
+
+/**
+ * Get facilitators list of the course.
+ *
+ * @param int $course_id Course ID.
+ * @param array $args
+ *
+ * @return array
+ */
+function coursepress_get_course_facilitators( $course_id ) {
+
+	$course = coursepress_get_course( $course_id );
+
+	if ( is_wp_error( $course ) ) {
+		return array();
+	}
+
+	$facilitators = $course->get_facilitators();
+
+	if ( ! empty( $facilitators ) ) {
+		return $facilitators;
+	}
+
+	return array();
+}

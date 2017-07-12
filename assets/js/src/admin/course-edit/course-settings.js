@@ -13,6 +13,7 @@
                 'keyup .cp-categories-selector .select2-search__field': 'updateSearchValue',
                 'click #cp-instructor-selector': 'instructorSelection',
                 'click #cp-facilitator-selector': 'facilitatorSelection',
+                'click ul.cp-tagged-list-removable li': 'removeUser',
             },
             initialize: function(model, EditCourse) {
                 this.model = model;
@@ -25,6 +26,7 @@
                 this.on( 'view_rendered', this.setUpUI, this );
 
                 this.request.on( 'coursepress:success_create_course_category', this.updateCatSelection, this );
+                this.request.on( 'coursepress:success_remove_from_course', this.removeUserTag, this );
 
                 this.render();
             },
@@ -55,6 +57,7 @@
             setUpUI: function() {
                 // set feature image
                 this.listing_image = new CoursePress.AddImage( this.$('#listing_image') );
+                this.listing_video = new CoursePress.AddVideo( this.$('#listing_video') );
 
                 // set category
                 var catSelect = this.$('#course-categories');
@@ -110,8 +113,7 @@
 
                 // Call instructor popup.
                 new CoursePress.CourseModal({
-                    request: this.request,
-                    course_id: this.course_id,
+                    course: this,
                     template_id: 'coursepress-course-instructor-selection-tpl',
 	                type: 'instructor'
                 });
@@ -124,17 +126,46 @@
 
                 // Call facilitator popup.
                 new CoursePress.CourseModal({
-                    request: this.request,
-                    course_id: this.course_id,
+                    course: this,
                     template_id: 'coursepress-course-facilitator-selection-tpl',
 	                type: 'facilitator'
                 });
             },
+
+            /**
+             * Remove facilitator/instructor from course.
+             */
+            removeUser: function (ev) {
+
+                var target = $(ev.currentTarget);
+                var type = target.parent().data('user-type');
+                var user_id = target.data('user-id');
+                if ( '' !== user_id ) {
+                    this.request.set( {
+                        'action': 'remove_from_course',
+                        'type': type,
+                        'course_id': this.course_id,
+                        'user': user_id
+                    } );
+                    this.request.target = target;
+                    this.request.save();
+                }
+            },
+
+            /**
+             * Remove user tag if removed from course.
+             */
+            removeUserTag: function () {
+
+                if ( typeof this.request.target !== 'undefined' ) {
+                    this.request.target.remove();
+                }
+            }
         });
     });
 
     // Instructor and Facilitator selection popup.
-    CoursePress.Define( 'CourseModal', function() {
+    CoursePress.Define( 'CourseModal', function($, doc, win) {
 
         return CoursePress.View.extend({
             template_id: false,
@@ -148,8 +179,8 @@
             initialize: function( options ) {
 
 	            // Set required variables.
-                this.request = options.request;
-                this.course_id = options.course_id;
+                this.course = options.course;
+                this.request = new CoursePress.Request();
 	            this.template_id = options.template_id;
 	            this.type = options.type;
                 this.inv_resp = '.cp-invitation-response-' + options.type;
@@ -171,7 +202,49 @@
 	         * Setup UI elements.
 	         */
             setUpUI: function () {
-                this.$('#cp-course-instructor').select2();
+                // Setup ajax select2.
+                this.setupAjaxSelect2(this.$('#cp-course-instructor'), 'instructor');
+                this.setupAjaxSelect2(this.$('#cp-course-facilitator'), 'facilitator');
+            },
+
+            /**
+             * Setup select2 using ajax search.
+             *
+             * We are using ajax, so we can exclude the assigned users live.
+             *
+             * @param selector Dropdown selector.
+             * @param type Type of user.
+             */
+            setupAjaxSelect2: function ( selector, type ) {
+
+                // Current course id.
+                var course_id = this.course.course_id;
+                selector.select2({
+                    minimumInputLength: 3,
+                    width: '100%',
+                    ajax: {
+                        url: win._coursepress.ajaxurl,
+                            dataType: 'json',
+                            delay: 500,
+                            data: function (params) {
+                            return {
+                                search: params.term,
+                                _wpnonce: win._coursepress._wpnonce,
+                                action: 'coursepress_get_users',
+                                type: type,
+                                course_id: course_id,
+                            };
+                        },
+                        processResults: function (data) {
+                            return {
+                                results: $.map(data, function(obj) {
+                                    return { id: obj.ID, text: obj.user_login };
+                                })
+                            };
+                        },
+                        cache: true
+                    },
+                });
             },
 
 	        // On render.
@@ -192,7 +265,7 @@
                         'action': 'send_email_invite',
                         'type': this.type,
                         'email': email,
-                        'course_id': this.course_id
+                        'course_id': this.course.course_id
                     } );
                     this.request.save();
                 }
@@ -231,7 +304,7 @@
                     this.request.set( {
                         'action': 'assign_to_course',
                         'type': this.type,
-                        'course_id': this.course_id,
+                        'course_id': this.course.course_id,
                         'user': user_id
                     } );
                     this.request.save();
@@ -245,6 +318,13 @@
              */
             assignSuccess: function ( data ) {
 
+                // If user assigned, add them to the tags.
+                if ( typeof data.name !== 'undefined' && typeof data.id !== 'undefined' ) {
+                    this.course.$('ul#cp-list-' + this.type).append('<li data-user-id="' + data.id + '">' + data.name + '</li>');
+                }
+                if ( this.course.$('#cp-no-' + this.type).length ) {
+                    this.course.$('#cp-no-' + this.type).remove();
+                }
                 this.$('#cp-course-' + this.type).val('');
                 this.showResponse(data, this.assgn_resp);
             },

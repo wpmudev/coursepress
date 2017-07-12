@@ -180,6 +180,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 				'media' => array(
 					'select_image' => __( 'Select Image', 'cp' ),
 					'select_feature_image' => __( 'Select Feature Image', 'cp' ),
+					'select_video' => __( 'Select Video', 'cp' ),
 				),
                 'server_error' => __( 'An unexpected error occur while processing. Please try again.', 'cp' ),
                 'invalid_file_type' => __( 'Invalid file type!', 'cp' ),

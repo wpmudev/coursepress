@@ -16,6 +16,8 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
         add_action( 'wp_ajax_coursepress_get_course_units', array( $this, 'get_course_units' ) );
         // Hook to handle file uploads
         add_action( 'wp_ajax_coursepress_upload', array( $this, 'upload_file' ) );
+	    // Hook to search for select2 data.
+	    add_action( 'wp_ajax_coursepress_get_users', array( $this, 'get_course_users' ) );
     }
 
     /**
@@ -458,9 +460,80 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 		// If sent, send success response back.
 		if ( $success ) {
-			wp_send_json_success();
+			$user = $name = coursepress_get_user( $request->user );
+			$name = $user->get_name();
+			wp_send_json_success(
+				array(
+					'message' => sprintf( __( 'Selected user is assigned as %s.', 'cp' ), $request->type ),
+					'name' => $name,
+					'id' => $request->user
+				)
+			);
 		}
 
 		wp_send_json_error( array( 'message' => __( 'Could not assign selected user.', 'cp' ) ) );
+	}
+
+	/**
+	 * Remove instructor/facilitator from a course.
+	 *
+	 * @param object $request Request data.
+	 */
+	function remove_from_course( $request ) {
+
+		// Do not continue if required values are empty.
+		if ( empty( $request->course_id ) || empty( $request->user ) || empty( $request->type ) ) {
+			wp_send_json_error( array( 'message' => __( 'Could not remove the user.', 'cp' ) ) );
+		}
+
+		switch ( $request->type ) {
+			case 'instructor':
+				$success = coursepress_delete_course_instructor( $request->user, $request->course_id );
+				break;
+
+			case 'facilitator':
+				$success = coursepress_remove_course_facilitator( $request->user, $request->course_id );
+				break;
+
+			default:
+				$success = false;
+				break;
+		}
+
+		// If sent, send success response back.
+		if ( $success ) {
+			wp_send_json_success(
+				array(
+					'message' => __( 'Selected user is removed from the course.', 'cp' ),
+					'id' => $request->user
+				)
+			);
+		}
+
+		wp_send_json_error( array( 'message' => __( 'Could not remove the user.', 'cp' ) ) );
+	}
+
+	/**
+	 * Get users to assign as instructors and facilitators.
+	 *
+	 * @param object $request Request data.
+	 */
+	function get_course_users() {
+
+		$users = array();
+		// Request data.
+		$request = $_REQUEST;
+
+		// Do some security checks.
+		if ( isset( $request['_wpnonce'] ) && wp_verify_nonce( $request['_wpnonce'], 'coursepress_nonce' ) ) {
+
+			$search = empty( $request['search'] ) ? '' : $request['search'];
+			// Do not continue if required values are empty.
+			if ( ! empty( $request['course_id'] ) && ! empty( $request['type'] ) ) {
+				$users = coursepress_get_available_users( $request['course_id'], $request['type'], $search );
+			}
+		}
+
+		wp_send_json( $users );
 	}
 }

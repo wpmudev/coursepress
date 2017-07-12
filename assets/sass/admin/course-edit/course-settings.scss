@@ -28,7 +28,7 @@
       width: 100%;
     }
 
-    ul.cp-instructors-list {
+    ul.cp-tagged-list {
       margin: 5px 3px;
 
       li {
@@ -85,5 +85,9 @@
   .label {
     display: block;
     margin-bottom: 5px;
+  }
+
+  .select2-container {
+    margin: 5px 0;
   }
 }
