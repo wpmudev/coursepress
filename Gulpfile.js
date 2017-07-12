@@ -59,7 +59,12 @@
                 'assets/js/src/admin/course-edit/course-type.js',
                 'assets/js/src/admin/course-edit/course-settings.js',
                 'assets/js/src/admin/course-edit/course-completion.js',
+                'assets/js/src/admin/course-edit/step-text.js',
+                'assets/js/src/admin/course-edit/step-image.js',
+                'assets/js/src/admin/course-edit/step-video.js',
                 'assets/js/src/admin/course-edit/step.js',
+                'assets/js/src/admin/course-edit/unit-modules.js',
+                'assets/js/src/admin/course-edit/unit-details.js',
                 'assets/js/src/admin/course-edit/course-units.js',
                 'assets/js/src/admin/course-edit/course-setup.js'
             ],

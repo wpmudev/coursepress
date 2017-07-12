@@ -444,6 +444,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		coursepress_render( 'views/tpl/course-units', array( 'steps' => $steps ) );
 		coursepress_render( 'views/tpl/steps-template' );
+		coursepress_render( 'views/tpl/common' );
 	}
 
 	function get_students_page() {

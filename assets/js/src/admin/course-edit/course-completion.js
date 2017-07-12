@@ -13,7 +13,6 @@
                 iris.iris('hide');
                 iris = false;
             }
-            ev.stopImmediatePropagation();
         });
 
         CertificatePreview = CoursePress.View.extend({

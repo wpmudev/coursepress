@@ -1,0 +1,77 @@
+/* global CoursePress */
+
+(function() {
+    'use strict';
+
+    CoursePress.Define( 'UnitModules', function() {
+        var ModuleSteps;
+
+        ModuleSteps = CoursePress.View.extend({
+            template_id: 'coursepress-unit-module-steps-tpl',
+            unitModel: false,
+            stepsView: false,
+            steps: [],
+            events: {
+                'click .unit-step': 'addNewStep'
+            },
+            initialize: function( model, unitModel ) {
+                this.model = model;
+                this.steps = model.steps;
+                this.unitModel = unitModel;
+                this.on( 'view_rendered', this.setSteps, this );
+                this.render();
+            },
+            setSteps: function() {
+                this.stepContainer = this.$('.unit-steps');
+            },
+            addNewStep: function( ev ) {
+                var sender, type, step, menu_order, data;
+
+                menu_order = this.steps.length + 1;
+                sender = this.$(ev.currentTarget);
+                type = sender.data( 'step' );
+                data = {type: type, menu_order: menu_order};
+                step = new CoursePress.Step(data);
+                step.$el.appendTo( this.stepContainer );
+                this.steps.push(step);
+            }
+        });
+
+        return CoursePress.View.extend({
+            template_id: 'coursepress-unit-modules-tpl',
+            current: 1,
+            modules: false,
+            moduleView: false,
+            events: {
+                'click .module-item': 'setActiveModule'
+            },
+            initialize: function( model ) {
+                this.model = model;
+                this.modules = model.get('modules');
+                this.on( 'view_rendered', this.setSteps, this );
+                this.render();
+            },
+            setSteps: function() {
+                this.stepsContainer = this.$('#cp-module-steps');
+
+                // Set the first module
+                this.$('[data-order="1"]').trigger('click');
+            },
+            setActiveModule: function( ev ) {
+                var sender, item, model;
+
+                sender = this.$(ev.currentTarget);
+                item = sender.data('order');
+
+                this.current = parseInt(item);
+                sender.siblings().removeClass('active');
+                sender.addClass('active');
+
+                this.stepsContainer.html('');
+                model = this.modules[this.current];
+                this.moduleView = new ModuleSteps(model, this.model);
+                this.moduleView.$el.appendTo( this.stepsContainer );
+            }
+        });
+    });
+})();

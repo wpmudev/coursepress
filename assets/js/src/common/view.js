@@ -11,7 +11,7 @@
                 } else if (_.isObject(selected ) ) {
                     return !!selected[value];
                 } else {
-                    if ( _.isBoolean( value ) ) {
+                    if ( _.isBoolean( value ) && ! _.isBoolean(selected) ) {
                         selected = parseInt(selected, 10) > 0 ? true : false;
                     }
                     return value === selected;
@@ -93,6 +93,72 @@
                 if ( error.length ) {
                     error.removeClass('cp-error');
                 }
+            },
+            visualEditor: function( options ) {
+                var id, container, tpl, tpl_id, settings, mceinit, qtinit, editor,
+                    content;
+
+                id = options.id;
+                container = options.container;
+                content = options.content;
+
+                if ( win.tinyMCEPreInit ) {
+                    mceinit = win.tinyMCEPreInit.mceInit['coursepress_editor'];
+                    qtinit = win.tinyMCEPreInit.qtInit['coursepress_editor'];
+                }
+
+                tpl_id = 'coursepress-visual-editor';
+
+                tpl = $('#' + tpl_id).html();
+                tpl = tpl.replace( /coursepress_editor/g, id );
+                settings = {
+                    evaluate: /<#([\s\S]+?)#>/g,
+                    interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
+                    escape: /\{\{([^\}]+?)\}\}(?!\})/g
+                };
+                tpl = _.template( tpl, null, settings );
+               // data = !!model.get ? model.toJSON() : model;
+                //tpl = tpl( data );
+                container.html( tpl );
+
+                if ( win.tinymce.get(id) ) {
+                    editor = win.tinymce.get(id);
+                    editor.destroy();
+                }
+
+                mceinit.selector = '#' + id;
+                qtinit.id = id;
+                win.tinyMCEPreInit.mceInit[id] = mceinit;
+                win.tinyMCEPreInit.qtInit[id] = qtinit;
+
+                _.delay(function() {
+                    win.tinymce.init(mceinit);
+                    win.quicktags(qtinit);
+
+                    editor = win.tinymce.get(id);
+                    if ( editor ) {
+                        if ( content ) {
+                            editor.setContent(content);
+                        }
+
+                        // Add on change callback
+                        editor.on('change', function () {
+                            content = editor.getContent();
+
+                            if (options.callback) {
+                                options.callback.call(null, content);
+                            }
+                        });
+                    }
+                    container.find( 'textarea#' + id ).val(content).on( 'change', function() {
+                        content = $(this).val();
+                        if ( options.callback ) {
+                            options.callback.call(null, content);
+                        }
+                    });
+
+                }, 100 );
+
             },
             setEditor: function( editor_id ) {
                 var self = this;

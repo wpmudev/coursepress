@@ -74,10 +74,12 @@ class CoursePress_Course extends CoursePress_Utility {
 		}
 
 		// Legacy: fix course_type meta
-		if ( ! $this->__get( 'with_modules' ) )
-			$this->__set( 'with_modules', true );
-		if ( ! $this->__get( 'course_type' ) )
-			$this->__set( 'course_type', 'auto-moderated' );
+		if ( ! isset( $settings['with_modules'] ) ) {
+            $this->__set('with_modules', true);
+        }
+		if ( ! $this->__get( 'course_type' ) ) {
+            $this->__set('course_type', 'auto-moderated');
+        }
 	}
 
 	function get_settings() {
@@ -130,7 +132,8 @@ class CoursePress_Course extends CoursePress_Utility {
 				'right' => 0,
 			),
 			'page_orientation' => 'L',
-			'cert_text_color' => '#5a5a5a'
+			'cert_text_color' => '#5a5a5a',
+            'with_modules' => true,
 		);
 
 		$id = $this->__get( 'ID' );

@@ -3,15 +3,20 @@
 (function() {
     'use strict';
 
-    CoursePress.Define( 'Step', function( $, doc, win ) {
+    CoursePress.Define( 'Step', function() {
         var Module;
 
         Module = CoursePress.Request.extend({
             defaults: {
                 type: 'text',
-                post_title: '',
+                post_title: 'Untitled',
                 post_content: '',
-                meta_show_title: true
+                show_title: 1,
+                meta_show_title: 1,
+                menu_order: 1,
+                meta_menu_order: 1,
+                mandatory: false,
+                meta_mandatory: false
             }
         });
 
@@ -29,26 +34,11 @@
                this.render();
            },
            setStep: function() {
-               var tpl, self;
+               var step;
 
-               self = this;
-               tpl = _._getTemplate( 'coursepress-step-' + this.type, this.model.toJSON() );
-               this.$('.cp-step-content').html( tpl );
-
-               if ( this.$('.wp-editor-wrap' ).length ) {
-                   var textareas = this.$('.wp-editor-wrap textarea');
-
-                   _.each( textareas, function( textarea ) {
-                       textarea = $(textarea);
-
-                       var name = textarea.attr('name');
-
-                       if ( win.tinyMCEPreInit ) {
-                           var editor = win.tinyMCEPreInit.mceInit[name];
-                           win.tinymce.init(editor);
-                       }
-                   }, this );
-               }
+               step = 'Step_' + this.type.toUpperCase();
+               step = new CoursePress[step]( this.model );
+               step.$el.appendTo( this.$('.cp-step-content' ) );
            },
            toggleContents: function() {
                if ( this.$el.is('.open' ) ) {

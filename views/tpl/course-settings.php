@@ -97,7 +97,7 @@
         <div class="box-inner-content">
             <div class="cp-box cp-toggle-box">
                 <label>
-                    <input type="checkbox" name="meta_with_modules" value="1" class="cp-toggle-input" autocomplejte="off" /> <span class="cp-toggle-btn"></span>
+                    <input type="checkbox" name="meta_with_modules" value="1" class="cp-toggle-input" autocomplete="off" {{_.checked(true, with_modules)}} /> <span class="cp-toggle-btn"></span>
 		            <span class="label"><?php _e( 'Enable modules for this course', 'cp' ); ?></span>
                 </label>
                 <p class="description"><?php _e( 'The setting can be changed after the course has been set-up.', 'cp' ); ?></p>

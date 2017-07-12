@@ -37,27 +37,48 @@ class CoursePress_Unit extends CoursePress_Utility {
 		return new WP_Error( 'wrong_param', __( 'Unable to initialized CoursePress_Unit!', 'cp' ) );
 	}
 
+	function get_settings() {
+        $defaults = array(
+            'unit_availability' => 'instant',
+            'unit_date_availability' => '',
+            'unit_delay_days' => '',
+            'force_current_unit_completion' => false,
+            'force_current_unit_successful_completion' => false,
+            'visible',
+            'preview',
+            'unit_feature_image' => '',
+            'use_feature_image' => '',
+            'use_description' => false
+        );
+    }
+
 	function setupMeta() {
 		$id = $this->__get( 'ID' );
-
-		$keys = array(
-			'unit_availability',
-			'unit_date_availability',
-			'unit_delay_days',
-			'force_current_unit_completion',
-			'force_current_unit_successful_completion',
-			'visible',
-			'preview',
-			'unit_feature_image',
-		);
+        $defaults = array(
+            'unit_availability' => 'instant',
+            'unit_date_availability' => '',
+            'unit_delay_days' => 0,
+            'force_current_unit_completion' => false,
+            'force_current_unit_successful_completion' => false,
+            //'visible',
+           // 'preview',
+            'unit_feature_image' => '',
+            'use_feature_image' => '',
+            'use_description' => false
+        );
 
 		$date_format = coursepress_get_option( 'date_format' );
 		$time_now = current_time( 'timestamp' );
 
-		foreach ( $keys as $key ) {
+		foreach ( $defaults as $key => $default_value ) {
 			$value = get_post_meta( $id, $key, true );
+			$value = maybe_unserialize( $value );
 
-			if ( 'unit_date_availability' == $key ) {
+			if ( ! $value ) {
+			    $value = $default_value;
+            }
+
+			if ( 'unit_date_availability' == $key && ! is_array( $value ) ) {
 				$timestamp = strtotime( $value, $time_now );
 				$value = date_i18n( $date_format, $timestamp );
 				$this->__set( 'unit_availability_date_timestamp', $timestamp );
@@ -68,10 +89,11 @@ class CoursePress_Unit extends CoursePress_Utility {
 				$value = true;
 
 			$this->__set( $key, $value );
+			$this->__set( 'meta_' . $key, $value );
 		}
 
-		$this->__set( 'use_description', true );
-		$this->__set( 'use_feature_image', true );
+		//$this->__set( 'use_description', true );
+		//$this->__set( 'use_feature_image', true );
 		$this->__set( 'preview', true );
 	}
 

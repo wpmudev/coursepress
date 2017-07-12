@@ -187,6 +187,12 @@
       margin: 0;
     }
   }
+  .cp-box-grey {
+    margin: 15px 0;
+    padding: 15px;
+    background-color: $grey_6;
+    @include radius(4px);
+  }
 
   @media screen {
     @media (min-width: 768px) {

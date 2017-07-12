@@ -108,54 +108,8 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
             return array();
         }
 
-        $course_meta = array(
-            'course_type' => 'auto-moderated',
-            'course_language' => __( 'English', 'cp' ),
-            'allow_discussion' => false,
-            'allow_workbook' => false,
-            'payment_paid_course' => false,
-            'listing_image' => '',
-            'listing_image_thumbnail_id' => 0,
-            'featured_video' => '',
-            'enrollment_type' => 'registered',
-            'enrollment_passcode' => '',
-
-            'course_view' => 'normal',
-            'structure_level' => 'unit',
-            'structure_show_empty_units' => false,
-            'structure_visible_units' => array(),
-            'structure_preview_units' => array(),
-            'structure_visible_pages' => array(),
-            'structure_preview_pages' => array(),
-            'structure_visible_modules' => array(),
-            'structure_preview_modules' => array(),
-            'course_open_ended' => true,
-            'course_start_date' => 0,
-            'course_end_date' => '',
-            'enrollment_open_ended' => false,
-            'enrollment_start_date' => '',
-            'enrollment_end_date' => '',
-            'class_limited' => '',
-            'class_size' => '',
-
-            'pre_completion_title' => __( 'Almost there!', 'CP_TD' ),
-            'pre_completion_content' => '',
-            'minimum_grade_required' => 100,
-            'course_completion_title' => __( 'Congratulations, You Passed!', 'CP_TD' ),
-            'course_completion_content' => '',
-            'course_failed_title' => __( 'Sorry, you did not pass this course!', 'CP_TD' ),
-            'course_failed_content' => '',
-            'basic_certificate_layout' => '',
-            'basic_certificate' => false,
-            'certificate_background' => '',
-            'cert_margin' => array(
-                'top' => 0,
-                'left' => 0,
-                'right' => 0,
-            ),
-            'page_orientation' => 'L',
-            'cert_text_color' => '#5a5a5a'
-        );
+        $course = coursepress_get_course( $course_id );
+        $course_meta = $course->get_settings();
 
         // Now fill the course meta
         $date_types = array( 'course_start_date', 'course_end_date', 'enrollment_start_date', 'enrollment_end_date' );
@@ -165,12 +119,14 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
             // The request meta_key is prefix by `meta_`, let find them
             $_meta_key = 'meta_' . $meta_key;
 
-            if ( isset( $request->{$_meta_key} ) )
+            if ( isset( $request->{$_meta_key} ) ) {
                 $meta_value = $request->{$_meta_key};
+            }
 
             // If the value is an object, make it an array
-            if ( is_object( $meta_value ) )
-                $value = get_object_vars( $meta_value );
+            if ( is_object( $meta_value ) ) {
+                $value = get_object_vars($meta_value);
+            }
 
             // We store date_types in microseconds format
             if ( in_array( $meta_key, $date_types ) ) {

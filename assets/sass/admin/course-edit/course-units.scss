@@ -48,6 +48,9 @@
           margin-left: -8px;
           margin-right: 5px;
         }
+        &.close:before {
+          content: '\f0da';
+        }
       }
       button {
         opacity: 0;
@@ -91,6 +94,9 @@
       }
 
       &:hover {
+        color: $black;
+      }
+      &.active {
         color: $black;
       }
     }
@@ -308,6 +314,8 @@
             color: $grey_5;
             width: 0 0 0 1px;
           }
+          @include radius(0 4px 0 0);
+
           &:before {
             content: '\f068';
           }
@@ -318,6 +326,15 @@
       }
       .cp-step-footer {
         display: block;
+      }
+    }
+
+    .cp-box {
+      margin-bottom: 25px;
+    }
+    .cp-flex {
+      .cp-box {
+        width: 50%;
       }
     }
   }

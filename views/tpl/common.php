@@ -23,3 +23,7 @@
         </div>
     </div>
 </script>
+
+<script type="text/template" id="coursepress-visual-editor">
+    <?php coursepress_visual_editor( '', 'coursepress_editor' ); ?>
+</script>
