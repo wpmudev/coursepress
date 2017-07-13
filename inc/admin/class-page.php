@@ -449,7 +449,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	}
 
 	function get_comments_page() {
-		coursepress_render( 'views/admin/comments' );
+		$comments = new CoursePress_Admin_Comments();
+		$comments->get_page();
 	}
 
 	function get_assessments_page() {

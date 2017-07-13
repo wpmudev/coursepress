@@ -3,12 +3,14 @@
  * @var $columns
  * @var $hidden_columns
  * @var $courses
- * @var $course_edit_link
- * @var $course CoursePress_Course
+ * @var $edit_link
  */
 ?>
 <div class="wrap coursepress-wrap coursepress-forums" id="coursepress-forums">
-	<h1 class="wp-heading-inline"><?php _e( 'Forums', 'cp' ); ?></h1>
+    <h1 class="wp-heading-inline">
+        <?php _e( 'Forums', 'cp' ); ?>
+        <a href="<?php echo $edit_link; ?>" class="cp-btn cp-bordered-btn"><?php _e( 'Create New', 'cp' ); ?></a>
+    </h1>
     <div class="coursepress-page">
         <form method="get" class="cp-search-form" id="cp-search-form">
             <div class="cp-flex">
@@ -30,7 +32,7 @@ foreach ( $courses as $course_id => $course ) {
                     </select>
                 </div>
             </div>
-            <input type="hidden" name="page" value="coursepress_forum" />
+            <input type="hidden" name="page" value="<?php esc_attr_e( $page ); ?>" />
         </form>
 
         <table class="coursepress-table" cellspacing="0">
