@@ -6,7 +6,7 @@
  * @package CoursePress
  */
 class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
-	protected $slug = 'coursepress_forums';
+	protected $slug = 'coursepress_forum';
 	private $items;
 	private $post_type = 'discussions';
 
@@ -33,7 +33,12 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 			'forums' => $this->get_list(),
 			'page' => $this->slug,
 			'search' => $search,
-			'instructor_edit_link' => '',
+			'edit_link' => add_query_arg(
+				array(
+					'page' => $this->slug,
+				),
+				admin_url( 'admin.php' )
+			),
 		);
 		coursepress_render( 'views/admin/forums', $args );
 		coursepress_render( 'views/admin/footer-text' );
