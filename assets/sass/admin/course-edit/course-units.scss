@@ -138,6 +138,16 @@
       }
     }
   }
+  .cp-odd {
+    &.with-modules {
+      &:before {
+        display: none;
+      }
+    }
+  }
+  .cp-module-steps {
+    margin-top: 25px;
+  }
   .unit-steps-area {
     background-color: $grey_6;
     border: 1px solid $grey_5;

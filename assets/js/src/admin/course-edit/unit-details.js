@@ -16,6 +16,7 @@
             },
             initialize: function( model, controller ) {
                 this.model = model;
+                this.model.set( 'with_modules', controller.editCourse.model.get('with_modules') );
                 this.controller = controller;
                 this.on( 'view_rendered', this.setUpUI, this );
                 this.render();

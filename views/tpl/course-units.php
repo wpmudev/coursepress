@@ -5,7 +5,7 @@
             <a href="" class="cp-btn cp-btn-xs cp-bordered-btn cp-unit-preview"><?php _e( 'Preview', 'cp' ); ?></a>
         </h2>
     </div>
-    <div class="cp-odd">
+    <div class="cp-odd {{with_modules?'with-modules': ''}}">
         <div class="cp-box-content">
             <div class="box-label-area">
                 <h3 class="label"><?php _e( 'Unit Information', 'cp' ); ?></h3>
@@ -109,9 +109,9 @@
 </script>
 
 <script type="text/template" id="coursepress-unit-module-steps-tpl">
-    <div class="cp-box-content">
+    <div class="cp-box-content cp-module-steps">
         <div class="cp-box">
-            <h3 class="label"><?php _e( 'Module Name', 'cp' ); ?></h3>
+            <label class="label"><?php _e( 'Module Name', 'cp' ); ?></label>
             <input type="text" name="title" class="widefat" value="{{title}}" />
         </div>
         <div id="module-steps-container">

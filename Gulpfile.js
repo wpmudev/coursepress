@@ -62,6 +62,7 @@
                 'assets/js/src/admin/course-edit/step-text.js',
                 'assets/js/src/admin/course-edit/step-image.js',
                 'assets/js/src/admin/course-edit/step-video.js',
+                'assets/js/src/admin/course-edit/step-audio.js',
                 'assets/js/src/admin/course-edit/step.js',
                 'assets/js/src/admin/course-edit/unit-modules.js',
                 'assets/js/src/admin/course-edit/unit-details.js',
