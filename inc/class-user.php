@@ -256,7 +256,7 @@ class CoursePress_User extends CoursePress_Utility {
 		if ( ! $id )
 			return null;
 
-		$sql = $wpdb->prepare( "SELECT ID FROM `$this->>student_table` WHERE `student_id`=%d", $id );
+		$sql = $wpdb->prepare( "SELECT ID FROM `$this->student_table` WHERE `student_id`=%d", $id );
 		$results = $wpdb->get_results( $sql, OBJECT );
 		$course_ids = array();
 

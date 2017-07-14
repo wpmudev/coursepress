@@ -61,7 +61,10 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Set students page
 		$student_label = __( 'Students', 'cp' );
-		$this->add_submenu( $student_label, 'coursepress_students_cap', 'coursepress_students', 'get_students_page' );
+		$student_screen_id = $this->add_submenu( $student_label, 'coursepress_students_cap', 'coursepress_students', 'get_students_page' );
+		array_unshift( $this->screens, $student_screen_id );
+		// Add preload callback
+		add_action( 'load-' . $student_screen_id, array( $this, 'process_studentlist_page' ) );
 
 		// Set instructor page
 		$instructor_label = __( 'Instructors', 'cp' );
@@ -243,6 +246,11 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_course_per_page' ) );
 	}
 
+	function process_studentlist_page() {
+
+		(new CoursePress_Admin_Students())->screen_options();
+	}
+
 	/**
 	 * Set/save custom screen options value.
 	 *
@@ -254,9 +262,10 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 */
 	function set_courselist_options( $status, $option, $value ) {
 
+		$options = array( 'coursepress_course_per_page', 'coursepress_students_per_page' );
 		// Return value for our custom option.
 		// For other options, return default.
-		if ( 'coursepress_course_per_page' === $option ) {
+		if ( in_array( $option, $options ) ) {
 			return $value;
 		}
 
@@ -432,10 +441,9 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	}
 
 	function get_students_page() {
-		$args = array(
-			'courses' => coursepress_get_accessible_courses( true ),
-		);
-		coursepress_render( 'views/admin/students', $args );
+
+		$students = new CoursePress_Admin_Students();
+		$students->get_page();
 	}
 
 	function get_instructors_page() {

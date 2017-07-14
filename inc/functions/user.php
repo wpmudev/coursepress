@@ -464,3 +464,56 @@ function coursepress_get_user_course_completion_data( $user_id = 0, $course_id =
 
 	return $results;
 }
+
+/**
+ * Returns list courses.
+ *
+ * @param array $args  Arguments to pass to WP_User_Query.
+ * @param int   $count This is not the count of resulted students. This is the count
+ *                     of total available students without applying pagination limit.
+ *                     This parameter does not expect incoming value. Total count will
+ *                     be passed as reference, as this function's return value is an
+ *                     array of user objects.
+ *
+ * @return array Returns an array of students where each student is an instance of CoursePress_User object.
+ */
+function coursepress_get_students( $args = array(), &$count = 0 ) {
+
+	// Handle the search if search query found.
+	if ( isset( $_GET[ 's' ] ) ) {
+		$args['search'] = '*' . $_GET['s'] . '*';
+	}
+
+	// Get only the student roles.
+	//$args['role'] = 'coursepress_student';
+
+	$args = wp_parse_args( array(
+		'suppress_filters' => true,
+		'fields' => 'ids',
+	), $args );
+
+	/**
+	 * Filter students WP_User_Query arguments.
+	 *
+	 * @since 3.0
+	 * @param array $args
+	 */
+	$args = apply_filters( 'coursepress_pre_get_students', $args );
+
+	$query = new WP_User_Query( $args );
+	$results = $query->results;
+
+	// Update the total students count (ignoring items per page).
+	$count = $query->total_users;
+
+	$students = array();
+
+	// If result found, get the CoursePress_User objects.
+	if ( ! empty( $results ) ) {
+		foreach ( $results as $result ) {
+			$students[ $result ] = coursepress_get_user( $result );
+		}
+	}
+
+	return $students;
+}
