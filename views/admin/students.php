@@ -7,29 +7,34 @@
  * @var $course CoursePress_Student
  */
 ?>
-<div class="wrap coursepress-wrap coursepress-students" id="coursepress-studentlist">
+<div class="wrap coursepress-wrap coursepress-students" id="coursepress-students">
     <h1 class="wp-heading-inline"><?php _e( 'Students', 'cp' ); ?></h1>
 
     <div class="coursepress-page">
-        <div class="cp-flex">
-            <div class="cp-div">
-                <label class="label"><?php _e( 'Filter by course', 'cp' ); ?></label>
-                <select>
-                    <option value=""><?php _e( 'Any course', 'cp' ); ?></option>
-                </select>
-            </div>
-
-            <div class="cp-div">
-                <label class="label"></label>
-            </div>
-        </div>
         <form method="get" class="cp-search-form" id="cp-search-form">
-            <div class="cp-input-clear">
-                <input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>" />
-                <input type="text" name="s" placeholder="<?php _e( 'Enter search query here...', 'cp' ); ?>" value="<?php echo $search; ?>" />
-                <button type="button" id="cp-search-clear" class="cp-btn-clear"><?php _e( 'Clear', 'cp' ); ?></button>
+            <div class="cp-flex">
+                <div class="cp-div">
+                    <label class="label"><?php _e( 'Filter by course', 'cp' ); ?></label>
+                    <select name="course_id">
+                        <option value=""><?php _e( 'Any course', 'cp' ); ?></option>
+                        <?php if ( ! empty( $courses ) ) : ?>
+                            <?php foreach ( $courses as $course ) : ?>
+                                <?php $selected_course = empty( $_GET['course_id'] ) ? 0 : $_GET['course_id']; ?>
+                                <option value="<?php echo $course->ID; ?>" <?php selected( $course->ID, $selected_course ); ?>><?php echo $course->post_title; ?></option>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </select>
+                </div>
+                <div class="cp-div">
+                    <label class="label"><?php _e( 'Filter by course', 'cp' ); ?></label>
+                    <div class="cp-input-clear">
+                        <input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>" />
+                        <input type="text" name="s" placeholder="<?php _e( 'Enter search query here...', 'cp' ); ?>" value="<?php echo $search; ?>" />
+                        <button type="button" id="cp-search-clear" class="cp-btn-clear"><?php _e( 'Clear', 'cp' ); ?></button>
+                    </div>
+                    <button type="submit" class="cp-btn cp-btn-active"><?php _e( 'Search', 'cp' ); ?></button>
+                </div>
             </div>
-            <button type="submit" class="cp-btn cp-btn-active"><?php _e( 'Search', 'cp' ); ?></button>
         </form>
 
         <table class="coursepress-table" cellspacing="0">
@@ -46,21 +51,33 @@
             <?php $odd = true; ?>
             <?php if ( ! empty( $students ) ) : ?>
                 <?php foreach ( $students as $student ) : ?>
-                    <?php $view_link = add_query_arg( 'cid', $student->ID ); ?>
+                    <?php $view_link = add_query_arg( 'student_id', $student->ID ); ?>
                     <tr class="<?php echo $odd ? 'odd' : 'even'; ?>">
 
                         <?php foreach ( array_keys( $columns ) as $column_id ) : ?>
                             <td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>">
                                 <?php
                                 switch( $column_id ) :
-                                    case 'id' :
-                                        echo $student->ID;
-                                        break;
+                                    // @todo Add profile link if required.
                                     case 'student' :
+                                        echo '<div class="cp-flex">';
+                                        echo '<span class="gravatar">';
+                                        echo get_avatar( $student->ID, 30 );
+                                        echo '</span>';
+                                        echo ' ';
+                                        echo '<span class="user_login">';
+                                        echo $student->user_login;
+                                        echo '</span>';
+                                        echo ' ';
+                                        echo '<span class="display_name">(';
                                         echo $student->get_name();
+                                        echo ')</span>';
+                                        echo '</div>';
                                         break;
                                     case 'last_active' :
-                                        echo 'Today';
+                                        // Last activity time.
+                                        $last_active = $student->get_last_activity_time();
+                                        echo $last_active ? date_i18n( get_option( 'date_format' ), $last_active ) : '--';
                                         break;
                                     case 'number_of_courses' :
                                         echo count( $student->get_enrolled_courses_ids() );
@@ -89,9 +106,9 @@
             <?php endif; ?>
             </tbody>
         </table>
-        <?php if ( ! empty( $pagination ) ) : ?>
+        <?php if ( ! empty( $list_table ) ) : ?>
             <div class="tablenav cp-admin-pagination">
-                <?php $pagination->pagination( 'bottom' ); ?>
+                <?php $list_table->pagination( 'bottom' ); ?>
             </div>
         <?php endif; ?>
     </div>

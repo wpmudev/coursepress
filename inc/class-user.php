@@ -1048,4 +1048,27 @@ class CoursePress_User extends CoursePress_Utility {
 
 		return $courses;
 	}
+
+	/**
+	 * Get last activity of the user.
+	 *
+	 * @return string|bool
+	 */
+	function get_last_activity_time() {
+
+		$id = $this->__get( 'ID' );
+
+		// False if id not set.
+		if ( empty( $id ) ) {
+			return false;
+		}
+
+		// Get last activity time of the user.
+		$last_seen = get_user_meta( $id, 'coursepress_latest_activity_time', true );
+		if ( ! empty( $last_seen ) ) {
+			return $last_seen;
+		}
+
+		return false;
+	}
 }

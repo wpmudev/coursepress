@@ -480,7 +480,7 @@ function coursepress_get_user_course_completion_data( $user_id = 0, $course_id =
 function coursepress_get_students( $args = array(), &$count = 0 ) {
 
 	// Handle the search if search query found.
-	if ( isset( $_GET[ 's' ] ) ) {
+	if ( ! empty( $_GET[ 's' ] ) ) {
 		$args['search'] = '*' . $_GET['s'] . '*';
 	}
 

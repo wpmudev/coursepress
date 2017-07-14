@@ -78,7 +78,7 @@ function coursepress_get_courses( $args = array(), &$count = 0 ) {
 
 	// If search query found.
 	if ( isset( $_GET[ 's' ] ) ) {
-		$args['s'] = $_GET[ 's' ];
+		//$args['s'] = $_GET[ 's' ];
 	}
 
 	$args = wp_parse_args( array(

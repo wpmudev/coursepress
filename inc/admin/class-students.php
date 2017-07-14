@@ -8,9 +8,27 @@
 class CoursePress_Admin_Students extends CoursePress_Admin_Page {
 
 	/**
+	 * Students custom table name.
+	 *
+	 * @var string
+	 */
+	protected $students_table;
+
+	/**
+	 * Students page slug.
+	 *
+	 * @var string
+	 */
+	protected $slug = 'coursepress_students';
+
+	/**
 	 * CoursePress_Admin_Students constructor.
 	 */
 	public function __construct() {
+
+		global $wpdb;
+
+		$this->students_table = $wpdb->prefix . 'coursepress_students';
 
 		// Initialize parent class.
 		parent::__construct();
@@ -30,16 +48,16 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Page {
 		$screen = get_current_screen();
 
 		// Set query parameters back.
-		$page = isset( $_GET[ 'page' ] ) ? esc_attr( $_GET[ 'page' ] ) : 'coursepress';
 		$search = isset( $_GET[ 's' ] ) ? $_GET[ 's' ] : '';
 
 		// Data for template.
 		$args = array(
 			'columns' => get_column_headers( $screen ),
 			'students' => $this->get_students( $count ),
-			'pagination' => $this->set_pagination( $count ),
+			'courses' => coursepress_get_accessible_courses(),
+			'list_table' => $this->set_pagination( $count ),
 			'hidden_columns' => get_hidden_columns( $screen ),
-			'page' => $page,
+			'page' => $this->slug,
 			'search' => $search,
 		);
 
@@ -60,9 +78,16 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Page {
 		// Query arguments for WP_User_Query.
 		$args = array();
 
-		// Filter by course ID.
+		// Filter by course ID, if set.
 		if ( ! empty( $_GET['course_id'] ) ) {
-
+			// Get student ids by course id.
+			$student_ids = $this->get_students_by_course_id( $_GET['course_id'] );
+			// Include only these courses in result.
+			if ( ! empty( $student_ids ) ) {
+				$args['include'] = $student_ids;
+			} else {
+				return array();
+			}
 		}
 
 		// Add multisite support.
@@ -75,6 +100,30 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Page {
 		$args['paged'] = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
 
 		return coursepress_get_students( $args, $count );
+	}
+
+	/**
+	 * Get students ids by course id.
+	 *
+	 * @param int $course_id Course ID.
+	 *
+	 * @return array|null|object
+	 */
+	function get_students_by_course_id( $course_id ) {
+
+		global $wpdb;
+
+		if ( empty( $course_id ) ) {
+			return array();
+		}
+
+		// Make sure it is int.
+		$course_id = absint( $course_id );
+
+		// Get the student IDs for the course.
+		$sql = $wpdb->prepare( "SELECT ID FROM `$this->students_table` WHERE `course_id`=%d GROUP BY student_id", $course_id );
+
+		return $wpdb->get_col( $sql );
 	}
 
 	/**
@@ -104,7 +153,6 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Page {
 	function get_columns() {
 
 		$columns = array(
-			'id' => __( 'ID', 'cp' ),
 			'student' => __( 'Student', 'cp' ),
 			'last_active' => __( 'Last active', 'cp' ),
 			'number_of_courses' => __( 'Number of courses', 'cp' ),
@@ -128,15 +176,13 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Page {
 	 */
 	function hidden_columns() {
 
-		$hidden_columns = array( 'id' );
-
 		/**
 		 * Trigger to modify hidden columns.
 		 *
 		 * @since 3.0
 		 * @param array $hidden_columns.
 		 */
-		return apply_filters( 'coursepress_studentlist_hidden_columns', $hidden_columns );
+		return apply_filters( 'coursepress_studentlist_hidden_columns', array() );
 	}
 
 	/**
