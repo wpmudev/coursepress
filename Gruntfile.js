@@ -60,6 +60,7 @@ module.exports = function(grunt) {
 			'assets/js/coursepress_students.js': [
 				// Add JS that will be loaded at Students page
 				// assets/js/src/admin/students/...
+				'assets/js/src/admin/students/studentlist.js'
 			],
 			'assets/js/coursepress_instructors.js': [
 				// Add JS that will be loaded at Instructors page
