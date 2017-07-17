@@ -122,4 +122,27 @@ abstract class CoursePress_Utility {
 
         return $default;
     }
+
+	/**
+	 * Get the items per page option value.
+	 *
+	 * @param string $option Screen option name.
+	 *
+	 * @return int
+	 */
+    function items_per_page( $option = '' ) {
+
+	    $per_page = 0;
+
+	    if ( ! empty( $option ) ) {
+		    $per_page = get_user_meta( get_current_user_id(), $option, true );
+	    }
+
+	    // If screen option is not set or empty, default posts per page.
+	    if ( empty( $per_page ) ) {
+		    $per_page = coursepress_get_option( 'posts_per_page', 20 );
+	    }
+
+	    return $per_page;
+    }
 }
