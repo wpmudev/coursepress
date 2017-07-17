@@ -455,7 +455,9 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	}
 
 	function get_notification_page() {
-		coursepress_render( 'views/admin/notifications' );
+
+		$students = new CoursePress_Admin_Notifications();
+		$students->get_page();
 	}
 
 	function get_settings_page() {
