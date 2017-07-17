@@ -27,7 +27,7 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 		return $columns;
 	}
 
-	public function get_instructors_page() {
+	public function get_page() {
 		$search = isset( $_GET['s'] ) ? $_GET['s'] : '';
 		$instructors = $this->get_list();
 		$args = array(
@@ -123,7 +123,6 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 			),
 			admin_url( 'admin.php' )
 		);
-		l( $url );
 
 		foreach ( array_keys( $this->items ) as $instructor_id ) {
 			$this->items[ $instructor_id ]->count_courses = $this->count_courses( $instructor_id, true );
