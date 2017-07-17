@@ -6,13 +6,15 @@
  * @package CoursePress
  */
 class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
-	protected $slug = 'coursepress_instructors';
 	private $items;
 	private $count = 0;
 	private $pagination;
+	private $parent_slug;
 
 	public function __construct() {
 		parent::__construct();
+		$this->parent_slug = $this->slug;
+		$this->slug = 'coursepress_instructors';
 	}
 
 	function columns() {
@@ -101,9 +103,7 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 
 		// Query the user IDs for this page
 		$wp_user_search = new WP_User_Query( $args );
-
 		$this->count = $wp_user_search->total_users;
-
 		$this->items = $wp_user_search->get_results();
 
 		/**
@@ -117,8 +117,17 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 		$listing->set_pagination_args( $args );
 		$this->pagination = $listing;
 
+		$url = add_query_arg(
+			array(
+				'page' => $this->parent_slug,
+			),
+			admin_url( 'admin.php' )
+		);
+		l( $url );
+
 		foreach ( array_keys( $this->items ) as $instructor_id ) {
 			$this->items[ $instructor_id ]->count_courses = $this->count_courses( $instructor_id, true );
+			$this->items[ $instructor_id ]->courses_link = add_query_arg( 'instructor_id', $instructor_id, $url );
 		}
 
 		return $this->items;
