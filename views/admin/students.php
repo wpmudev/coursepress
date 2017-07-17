@@ -51,7 +51,6 @@
             <?php $odd = true; ?>
             <?php if ( ! empty( $students ) ) : ?>
                 <?php foreach ( $students as $student ) : ?>
-                    <?php $view_link = add_query_arg( 'student_id', $student->ID ); ?>
                     <tr class="<?php echo $odd ? 'odd' : 'even'; ?>">
 
                         <?php foreach ( array_keys( $columns ) as $column_id ) : ?>
