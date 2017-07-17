@@ -260,13 +260,11 @@ class CoursePress_Course extends CoursePress_Utility {
 	function get_media( $width = 235, $height = 235 ) {
 		$media_type = coursepress_get_setting( 'course/details_media_type', 'image' );
 		$image = $this->get_feature_image( $width, $height );
+		if ( 'image' == $media_type && ! empty( $image ) ) {
+			return $image;
+		}
 		$video = $this->get_feature_video( $width, $height );
-
-		if ( 'image' == $media_type ) {
-			if ( ! empty( $image ) ) {
-				return $image; }
-		} else { 				return $video; } else if ( ! empty( $video ) ) {
-				return $video; } else { 				return $image; }
+		return empty( $video )? $image : $video;
 	}
 
 	function get_description() {
