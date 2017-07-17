@@ -89,7 +89,11 @@ switch ( $column_id ) :
 		echo date_i18n( $date_format, strtotime( $instructor->user_registered ) );
 	break;
 	case 'courses':
-		echo intval( $instructor->count_courses );
+		printf(
+			'<a href="%s">%d</a>',
+			esc_url( $instructor->courses_link ),
+			esc_html( $instructor->count_courses )
+		);
 	break;
 
 	default :

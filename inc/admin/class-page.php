@@ -440,7 +440,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 	public function get_instructors_page() {
 		$instructors = new CoursePress_Admin_Instructors();
-		$instructors->get_instructors_page();
+		$instructors->get_page();
 	}
 
 	function get_forum_page() {

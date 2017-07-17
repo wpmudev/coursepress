@@ -6,11 +6,15 @@
  * @package CoursePress
  */
 class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
-	protected $slug = 'coursepress_instructors';
 	private $items;
+	private $count = 0;
+	private $pagination;
+	private $parent_slug;
 
 	public function __construct() {
 		parent::__construct();
+		$this->parent_slug = $this->slug;
+		$this->slug = 'coursepress_instructors';
 	}
 
 	function columns() {
@@ -25,21 +29,22 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 
 	public function get_page() {
 		$search = isset( $_GET['s'] ) ? $_GET['s'] : '';
+		$instructors = $this->get_list();
 		$args = array(
 			'columns' => $this->columns(),
 			'courses' => coursepress_get_accessible_courses( false ),
 			'hidden_columns' => array(),
-			'instructors' => $this->get_list(),
+			'instructors' => $instructors,
 			'page' => $this->slug,
 			'search' => $search,
 			'instructor_edit_link' => '',
+			'pagination' => $this->pagination,
 		);
 		coursepress_render( 'views/admin/instructors', $args );
 		coursepress_render( 'views/admin/footer-text' );
 	}
 
 	public function get_list() {
-		$paged = $this->get_pagenum();
 		/**
 		 * Search
 		 */
@@ -48,18 +53,20 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 		 * Per Page
 		 */
 		$per_page = $this->get_per_page();
-		$users_per_page = $per_page = $this->get_items_per_page( 'coursepress_instructors_per_page', $per_page );
+		$per_page = $this->get_items_per_page( 'coursepress_instructors_per_page', $per_page );
+
 		/**
 		 * pagination
 		 */
 		$current_page = $this->get_pagenum();
+
 		$offset = ( $current_page - 1 ) * $per_page;
 		/**
 		 * Query args
 		 */
 		$args = array(
-			'number' => $users_per_page,
-			'offset' => ( $paged - 1 ) * $users_per_page,
+			'number' => $per_page,
+			'offset' => ( $current_page - 1 ) * $per_page,
 			'meta_key' => 'role_ins',
 			'meta_value' => 'instructor',
 			'fields' => 'all_with_meta',
@@ -95,11 +102,30 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 
 		// Query the user IDs for this page
 		$wp_user_search = new WP_User_Query( $args );
-
+		$this->count = $wp_user_search->total_users;
 		$this->items = $wp_user_search->get_results();
+
+		/**
+		* pagination
+		*/
+		$listing = new WP_List_Table();
+		$args = array(
+			'total_items' => $wp_user_search->total_users,
+			'per_page' => $per_page,
+		);
+		$listing->set_pagination_args( $args );
+		$this->pagination = $listing;
+
+		$url = add_query_arg(
+			array(
+				'page' => $this->parent_slug,
+			),
+			admin_url( 'admin.php' )
+		);
 
 		foreach ( array_keys( $this->items ) as $instructor_id ) {
 			$this->items[ $instructor_id ]->count_courses = $this->count_courses( $instructor_id, true );
+			$this->items[ $instructor_id ]->courses_link = add_query_arg( 'instructor_id', $instructor_id, $url );
 		}
 
 		return $this->items;
