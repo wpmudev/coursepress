@@ -172,7 +172,7 @@
         border: {
           style: solid;
           color: $grey_5;
-          width: 0 0 1px 1px;
+          width: 0 1px 1px 0;
         }
         width: 90px;
         font-size: 96%;
@@ -283,8 +283,8 @@
         top: 0;
         right: 0;
         border: 0;
-        height: 100%;
         width: 40px;
+        height: 100%;
         background-color: #ffffff;
         cursor: pointer;
         @include radius(0 4px 4px 0);
@@ -295,13 +295,89 @@
           color: $grey_3;
         }
       }
+      .step-config {
+        position: absolute;
+        right: 45px;
+        top: 0;
+        height: 100%;
+
+        button {
+          background: transparent;
+          border: 0;
+          height: 45px;
+
+          &:before {
+            content: '\f013';
+            font-family: 'FontAwesome';
+            color: $grey_3;
+          }
+          &:hover:before {
+            color: $blue_1;
+          }
+        }
+
+        .cp-dropdown-menu {
+          position: absolute;
+          z-index: 9;
+          width: 180px;
+          left: -90px;
+          background-color: #fff;
+          border: 1px solid $grey_5;
+          display: none;
+
+          &:before {
+            content: '';
+            position: absolute;
+            top: -12.5px;
+            left: 50%;
+            border: {
+              style: solid;
+              width: 1px 0 0 1px;
+              color: $grey_5;
+            }
+            width: 25px;
+            height: 25px;
+            padding: 0;
+            background-color: #ffffff;
+            -webkit-transform: rotate(45deg);
+            -moz-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            -o-transform: rotate(45deg);
+            transform: rotate(45deg);
+          }
+
+          ul {
+            margin: 5px;
+            padding: 0;
+
+            li {
+              cursor: pointer;
+              display: block;
+              padding: 4px 15px;
+              margin: 0;
+              font-size: 12px;
+
+              &:hover {
+                background-color: $grey_6;
+              }
+            }
+          }
+        }
+        &.open {
+          .cp-dropdown-menu {
+            display: block;
+          }
+          button:before {
+            color: $blue_1;
+          }
+        }
+      }
     }
 
     .cp-step-content {
       padding: 25px;
       display: none;
     }
-
     .cp-step-footer {
       padding: 15px 15px;
       border-top: 1px solid $grey_5;
@@ -318,7 +394,7 @@
         @include radius(3px 0 3px 0);
 
         .step-toggle-button {
-          height: 101%;
+          height: 102%;
           border: {
             style: solid;
             color: $grey_5;
@@ -347,5 +423,119 @@
         width: 50%;
       }
     }
+  }
+  .cp-questions-container {
+    margin: 25px 0;
+    background-color: $grey_6;
+    border: 1px solid $grey_5;
+    min-height: 120px;
+    padding: 15px;
+
+    .description {
+      margin: 45px 0;
+      text-align: center;
+    }
+  }
+  .cp-question-box {
+    display: block;
+    background-color: #ffffff;
+    border: 1px solid $grey_5;
+    margin: 15px 0;
+    @include radius(4px);
+
+    .cp-question-header {
+      position: relative;
+      padding: 5px 0;
+
+      &:before {
+        content: '\f00a';
+        font-family: 'FontAwesome';
+        display: inline-block;
+        padding: 0 12px;
+        color: $grey_4;
+      }
+      .q-type {
+        display: inline-block;
+        width: 120px;
+      }
+      input {
+        width: 60%;
+      }
+    }
+
+    .cp-question-content {
+      display: none;
+      border: {
+        style: solid;
+        color: $grey_5;
+        width: 1px 0 0 0;
+      }
+      padding: 15px;
+
+      .description {
+        margin: 0;
+        text-align: left;
+      }
+      .cp-box {
+        margin: 15px 0;
+      }
+      .cp-answer-box {
+        display: flex;
+
+        input {
+          width: 100%;
+          margin-right: 10px;
+        }
+        .cp-checkbox {
+          margin: 8px 10px 0 0;
+        }
+        .cp-checkbox-icon:before {
+          margin-left: 2px;
+        }
+      }
+    }
+    .question-toggle-button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      border: 0;
+      height: 100%;
+      width: 40px;
+      background-color: #ffffff;
+      cursor: pointer;
+      @include radius(0 4px 4px 0);
+
+      &:before {
+        content: '\f067';
+        font-family: 'FontAwesome';
+        color: $grey_3;
+      }
+    }
+    &.open {
+      .cp-question-content {
+        display: block;
+      }
+      .question-toggle-button {
+        height: 102%;
+        border: {
+          style: solid;
+          color: $grey_5;
+          width: 0 0 0 1px;
+        }
+        @include radius(0 4px 0 0);
+
+        &:before {
+          content: '\f068';
+        }
+      }
+    }
+  }
+
+  .ui-sortable-placeholder {
+    display: block;
+    border: 1px solid $grey_5;
+    background-color: $grey_6;
+    min-height: 40px;
+    visibility: visible !important;
   }
 }

@@ -44,7 +44,8 @@
                 'assets/js/src/common/add-image.js',
                 'assets/js/src/common/dropdown-menu.js',
                 'assets/js/src/common/popup.js',
-                'assets/js/src/common/upload.js'
+                'assets/js/src/common/upload.js',
+                'assets/js/src/common/add-media.js'
                 // assets/js/src/admin/general/....
             ],
             'coursepress.js': [
@@ -63,6 +64,13 @@
                 'assets/js/src/admin/course-edit/step-image.js',
                 'assets/js/src/admin/course-edit/step-video.js',
                 'assets/js/src/admin/course-edit/step-audio.js',
+                'assets/js/src/admin/course-edit/step-file-upload.js',
+                'assets/js/src/admin/course-edit/step-quiz.js',
+                'assets/js/src/admin/course-edit/step-zip.js',
+                'assets/js/src/admin/course-edit/step-written.js',
+                'assets/js/src/admin/course-edit/step-discussion.js',
+                'assets/js/src/admin/course-edit/step-download.js',
+                'assets/js/src/admin/course-edit/unit-steps.js',
                 'assets/js/src/admin/course-edit/step.js',
                 'assets/js/src/admin/course-edit/unit-modules.js',
                 'assets/js/src/admin/course-edit/unit-details.js',
@@ -237,6 +245,13 @@
     gulp.task('watch', ['css', 'js'], function () {
         gulp.watch(['assets/js/src/*.js', 'assets/js/src/**/*.js', 'assets/js/src/**/**/*.js'], ['js']);
         gulp.watch(['assets/sass/*.scss', 'assets/sass/**/*.scss', 'assets/sass/**/**/*.scss'], ['css']);
+    });
+
+    gulp.task( 'clearcache', function() {
+        var cache = require( 'gulp-cache' );
+
+        gulp.src( ['assets/js/*.js', 'assets/sass/*.scss'] )
+            .pipe(cache.clear());
     });
 
     gulp.task('makepot', function () {

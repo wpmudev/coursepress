@@ -1,14 +1,19 @@
+.coursepress #wpwrap {
+  max-width: 1428px;
+}
 .coursepress-wrap {
   font-size: 110%;
+  color: $black;
 
   a {
     text-decoration: none;
   }
   .wp-heading-inline {
     text-transform: uppercase;
-    font-size: 1.6em;
-    font-weight: 600;
     color: $dark_1;
+    font-weight: 700;
+    font-size: 2.2em;
+    margin-top: 15px;
   }
   .course-tag {
     font-size: 11px;
@@ -35,6 +40,14 @@
     }
     .cp-pad-left {
       padding-left: 15px;
+    }
+  }
+  .cp-flex-2 {
+    display: flex;
+
+    [type="text"] {
+      width: 100%;
+      margin-right: 10px;
     }
   }
 

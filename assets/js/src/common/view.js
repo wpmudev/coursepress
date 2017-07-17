@@ -96,9 +96,11 @@
             },
             visualEditor: function( options ) {
                 var id, container, tpl, tpl_id, settings, mceinit, qtinit, editor,
-                    content;
+                    content, date, is_mce;
 
-                id = options.id;
+                date = new Date();
+
+                id = 'post_editor_' + date.getTime();
                 container = options.container;
                 content = options.content;
 
@@ -117,9 +119,9 @@
                     escape: /\{\{([^\}]+?)\}\}(?!\})/g
                 };
                 tpl = _.template( tpl, null, settings );
-               // data = !!model.get ? model.toJSON() : model;
-                //tpl = tpl( data );
                 container.html( tpl );
+                container.find('textarea#' + id).val(content);
+                is_mce = container.find('.wp-editor-wrap').is('.tmce-active');
 
                 if ( win.tinymce.get(id) ) {
                     editor = win.tinymce.get(id);
@@ -132,15 +134,17 @@
                 win.tinyMCEPreInit.qtInit[id] = qtinit;
 
                 _.delay(function() {
-                    win.tinymce.init(mceinit);
-                    win.quicktags(qtinit);
+                    if ( is_mce ) {
+                        win.tinymce.init(mceinit);
+                        editor = win.tinymce.get(id);
+                        container.find('.switch-html').one( 'click', function() {
+                            win.quicktags(qtinit);
+                        });
+                    } else {
+                        win.quicktags(qtinit);
+                    }
 
-                    editor = win.tinymce.get(id);
                     if ( editor ) {
-                        if ( content ) {
-                            editor.setContent(content);
-                        }
-
                         // Add on change callback
                         editor.on('change', function () {
                             content = editor.getContent();
@@ -159,34 +163,6 @@
 
                 }, 100 );
 
-            },
-            setEditor: function( editor_id ) {
-                var self = this;
-
-                if ( win.tinyMCE && win.tinyMCE.get( editor_id ) ) {
-                    this._setEditor( editor_id );
-                } else {
-                    this.$('#wp-' + editor_id + '-wrap .switch-tmce' ).one( 'click', function() {
-                        _.delay(function() {
-                            self._setEditor(editor_id);
-                        }, 100 );
-                    });
-                }
-            },
-            _setEditor: function( editor_id ) {
-                var content, textarea, self;
-
-                self = this;
-
-                if ( win.tinyMCE && win.tinyMCE.get( editor_id ) ) {
-                    var editor = win.tinyMCE.get( editor_id );
-                    editor.on( 'change', function() {
-                        content = editor.getContent();
-                        textarea = self.$('#' + editor_id );
-                        textarea.val( content );
-                        textarea.trigger('change');
-                    });
-                }
             }
         });
     });

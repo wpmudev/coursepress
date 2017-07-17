@@ -37,6 +37,9 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Setup admin assets
 		add_action( 'admin_enqueue_scripts', array( $this, 'set_admin_css' ) );
+
+		// Marked coursepress page
+        add_filter( 'admin_body_class', array( $this, 'add_coursepress_class' ) );
 	}
 
 	/**
@@ -190,7 +193,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$this->enqueue_script( 'coursepress-select2', 'assets/external/js/select2.min.js' );
 
 		// General admin js
-		wp_enqueue_script( 'coursepress-admin-general', $plugin_url . 'assets/js/admin-general.min.js', array( 'jquery', 'backbone', 'underscore', 'jquery-ui-autocomplete' ), $CoursePress->version, true );
+		wp_enqueue_script( 'coursepress-admin-general', $plugin_url . 'assets/js/admin-general.js', array( 'jquery', 'backbone', 'underscore', 'jquery-ui-autocomplete' ), $CoursePress->version, true );
 		$this->enqueue_script( $coursepress_pagenow, 'assets/js/' . $coursepress_pagenow . '.js' ); // Change to .min
 
 		// Set local vars
@@ -203,6 +206,14 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		wp_enqueue_script( $id, $CoursePress->plugin_url . $src, false, $CoursePress->version, true );
 	}
+
+	function add_coursepress_class( $class ) {
+	    if ( coursepress_is_admin() ) {
+	        $class .= ' coursepress';
+        }
+
+        return $class;
+    }
 
 	function courselist_columns() {
 		$columns = array(
@@ -344,6 +355,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
         wp_enqueue_script( 'jquery-ui-datepicker' );
         // Include color picker
         wp_enqueue_script( 'iris' );
+        // Sorter
+        wp_enqueue_script( 'jquery-ui-sortable' );
 
 		$course_id = filter_input( INPUT_GET, 'cid', FILTER_VALIDATE_INT );
 
@@ -434,16 +447,29 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
             'image' => __( 'Image', 'cp' ),
             'video' => __( 'Video', 'cp' ),
             'audio' => __( 'Audio', 'cp' ),
-            //'download' => __( 'Download', 'cp' ),
+            'download' => __( 'Download', 'cp' ),
             'zipped' => __( 'Zip', 'cp' ),
             'input-upload' => __( 'File Upload', 'cp' ),
             'input-quiz' => __( 'Quiz', 'cp' ),
             'input-written' => __( 'Written', 'cp' ),
             'discussion' => __( 'Discussion', 'cp' ),
         );
+        $this->localize_array['steps'] = $steps;
+        $file_types = array(
+            'image' => __( 'Image', 'cp' ),
+            'pdf' => __( 'PDF', 'cp' ),
+            'zip' => __( 'Zip', 'cp' ),
+            'txt' => __( 'Text', 'cp' ),
+        );
+        $question_types = array(
+            'checkbox' => __( 'Multiple Choice', 'cp' ),
+            'radio' => __( 'Single Choice', 'cp' ),
+            'select' => __( 'Selectable', 'cp' ),
+        );
+        $this->localize_array['questions'] = $question_types;
 
 		coursepress_render( 'views/tpl/course-units', array( 'steps' => $steps ) );
-		coursepress_render( 'views/tpl/steps-template' );
+		coursepress_render( 'views/tpl/steps-template', array( 'file_types' => $file_types, 'questions' => $question_types ) );
 		coursepress_render( 'views/tpl/common' );
 	}
 

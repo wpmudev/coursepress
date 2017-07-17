@@ -48,6 +48,8 @@ class CoursePress_Step extends CoursePress_Utility {
 			'duration',
 			'module_type',
 			'module_page',
+            'show_content',
+            'allowed_file_types'
 		);
 
 		return $keys;
@@ -64,6 +66,7 @@ class CoursePress_Step extends CoursePress_Utility {
 				$value = true;
 
 			$this->__set( $key, $value );
+			$this->__set( 'meta_' . $key, $value );
 		}
 
 		$this->__set( 'preview', true );

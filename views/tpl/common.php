@@ -27,3 +27,10 @@
 <script type="text/template" id="coursepress-visual-editor">
     <?php coursepress_visual_editor( '', 'coursepress_editor' ); ?>
 </script>
+
+<script type="text/template" id="coursepress-add-media-tpl">
+    <div class="cp-flex-2">
+        <input type="text" placeholder="{{placeholder}}" class="cp-add-media-input" />
+        <button type="button" class="cp-btn cp-btn-default cp-browse-btn"><?php _e( 'Browse', 'cp' ); ?></button>
+    </div>
+</script>

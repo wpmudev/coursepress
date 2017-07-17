@@ -236,5 +236,6 @@
 
         // Init course edit on first load
         EditCourse = new EditCourse(win._coursepress.course);
+        win.Course = EditCourse;
     });
 })();

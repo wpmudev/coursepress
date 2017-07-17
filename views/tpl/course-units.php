@@ -112,7 +112,7 @@
     <div class="cp-box-content cp-module-steps">
         <div class="cp-box">
             <label class="label"><?php _e( 'Module Name', 'cp' ); ?></label>
-            <input type="text" name="title" class="widefat" value="{{title}}" />
+            <input type="text" name="title" class="widefat module-title" value="{{title}}" />
         </div>
         <div id="module-steps-container">
             <h3><?php _e( 'Steps', 'cp' ); ?></h3>
@@ -180,12 +180,12 @@
     <ul class="units-list">
         <# _.each( units, function( data, id ) { #>
             <li class="unit-item" data-unit="{{id}}">
-                <span class="cp-count">{{data.count}}</span>
+                <span class="cp-count" data-count="{{data.count}}">{{data.count}}</span>
                 <span class="unit-title">{{data.title}}</span>
             </li>
             <# })#>
     </ul>
-    <button type="button" class="cp-btn cp-btn-default cp-btn-xs"><?php _e( 'Add Unit', 'cp' ); ?></button>
+    <button type="button" class="cp-btn cp-btn-default cp-btn-xs new-unit"><?php _e( 'Add Unit', 'cp' ); ?></button>
 </script>
 
 <script type="text/template" id="coursepress-unit-tpl">

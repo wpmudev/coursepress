@@ -12,7 +12,8 @@
             stepsView: false,
             steps: [],
             events: {
-                'click .unit-step': 'addNewStep'
+                'click .unit-step': 'addNewStep',
+                'keyup .module-title': 'updateModuleTitle'
             },
             initialize: function( model, unitModel ) {
                 this.model = model;
@@ -29,11 +30,15 @@
 
                 menu_order = this.steps.length + 1;
                 sender = this.$(ev.currentTarget);
-                type = sender.data( 'step' );
+                type = sender.data('step');
                 data = {type: type, menu_order: menu_order};
-                step = new CoursePress.Step(data);
-                step.$el.appendTo( this.stepContainer );
-                this.steps.push(step);
+                step = new CoursePress.Step(data, this);
+                step.$el.appendTo(this.stepContainer);
+            },
+            updateModuleTitle: function(ev) {
+                var sender = this.$(ev.currentTarget),
+                    title = sender.val();
+                this.trigger('coursepress:update_module_title', title, this);
             }
         });
 
@@ -42,12 +47,14 @@
             current: 1,
             modules: false,
             moduleView: false,
+            active: false,
             events: {
                 'click .module-item': 'setActiveModule'
             },
-            initialize: function( model ) {
+            initialize: function( model, unitModel ) {
                 this.model = model;
                 this.modules = model.get('modules');
+                this.unitModel = unitModel;
                 this.on( 'view_rendered', this.setSteps, this );
                 this.render();
             },
@@ -60,7 +67,7 @@
             setActiveModule: function( ev ) {
                 var sender, item, model;
 
-                sender = this.$(ev.currentTarget);
+                this.active = sender = this.$(ev.currentTarget);
                 item = sender.data('order');
 
                 this.current = parseInt(item);
@@ -69,8 +76,13 @@
 
                 this.stepsContainer.html('');
                 model = this.modules[this.current];
-                this.moduleView = new ModuleSteps(model, this.model);
+                this.moduleView = new ModuleSteps(model, this.unitModel);
                 this.moduleView.$el.appendTo( this.stepsContainer );
+                this.moduleView.off( 'coursepress:update_module_title' );
+                this.moduleView.on( 'coursepress:update_module_title', this.updateActiveTitle, this );
+            },
+            updateActiveTitle: function( title ) {
+                this.active.find('span').html(title);
             }
         });
     });

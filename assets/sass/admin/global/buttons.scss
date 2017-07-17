@@ -62,4 +62,18 @@
       @include boxshadow(none);
     }
   }
+  .cp-btn-trash {
+    border: 0;
+    background-color: transparent;
+    @include boxshadow(none);
+    color: $red;
+
+    &:before {
+      content: '\f014';
+      font-family: 'FontAwesome';
+    }
+    &:hover {
+      @include boxshadow(inset 0 0 12px 20px rgba(255, 0, 0, 0.1));
+    }
+  }
 }

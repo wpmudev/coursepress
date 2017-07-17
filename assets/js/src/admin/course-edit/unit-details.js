@@ -3,7 +3,7 @@
 (function() {
     'use strict';
 
-    CoursePress.Define( 'UnitDetails', function() {
+    CoursePress.Define( 'UnitDetails', function($, doc, win) {
         return CoursePress.View.extend({
             template_id: 'coursepress-unit-details',
             controller: false,
@@ -25,12 +25,11 @@
                 var self, with_modules;
 
                 self = this;
-                with_modules = this.controller.editCourse.model.get('with_modules');
+                with_modules = win.Course.model.get('with_modules');
                 this.feature_image = new CoursePress.AddImage( this.$('#unit-feature-image') );
                 this.$('select').select2();
 
                 this.visualEditor({
-                    id: 'post_content',
                     content: this.model.get('post_content'),
                     container: this.$('.cp-unit-description'),
                     callback: function( content ) {
@@ -41,8 +40,11 @@
                 this.container = this.$('#unit-steps-container');
 
                 if ( with_modules ) {
-                    this.modules = new CoursePress.UnitModules(this.model);
+                    this.modules = new CoursePress.UnitModules(this.model, this);
                     this.modules.$el.appendTo(this.container);
+                } else {
+                    this.steps = new CoursePress.Unit_Steps( this.model, this );
+                    this.steps.$el.appendTo(this.container);
                 }
             },
             toggleFeatureImage: function(ev) {

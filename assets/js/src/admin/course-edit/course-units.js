@@ -4,7 +4,7 @@
     'use strict';
 
     CoursePress.Define( 'CourseUnits', function( $, doc, win ) {
-        var UnitCollection, UnitList, UnitView;
+        var UnitCollection, UnitList, UnitView, UnitModel;
 
         UnitCollection = Backbone.Collection.extend({
             url: win._coursepress.ajaxurl + '?action=coursepress_get_course_units&_wpnonce=' + win._coursepress._wpnonce,
@@ -18,6 +18,29 @@
             },
             serverError: function() {
                 // @todo: show server error
+            }
+        });
+
+        UnitModel = CoursePress.Request.extend({
+            defaults: {
+                ID: 0,
+                post_title: 'Untitled',
+                post_content: '',
+                modules: {
+                    1: {
+                        id: 1,
+                        title: 'Untitled',
+                        steps: {},
+                        slug: ''
+                    }
+                },
+                meta_use_feature_image: false,
+                meta_unit_feature_image: '',
+                meta_use_description: false,
+                meta_unit_availability: 'instant',
+                meta_unit_availability_date: '',
+                meta_force_current_unit_completion: false,
+                meta_force_current_unit_successful_completion: false
             }
         });
 
@@ -92,6 +115,10 @@
             courseModel: false,
             units: {},
             view: 'unit-list',
+            events: {
+                'click .new-unit': 'addNewUnit',
+                'change [name]': 'updateModel'
+            },
             initialize: function( courseModel, EditCourse ) {
                 this.with_modules = EditCourse.model.get('with_modules');
                 this.courseId = courseModel.get('ID');
@@ -100,33 +127,38 @@
                 this.unitCollection = new UnitCollection(this.courseId);
                 this.unitCollection.on( 'update', this.setUnitList, this );
                 this.editCourse.on( 'coursepress:load-step-course-units', this.resetView, this );
-                this.on( 'view_rendered', this.setUnitListView, this );
                 this.render();
             },
-            setUnitList: function( collection ) {
-                var unitsData, with_modules;
+            setUnitList: function(collection) {
+                var unitsData, with_modules, found;
 
                 unitsData = {};
+                found = 0;
                 with_modules = this.editCourse.model.get('with_modules');
 
                 _.each( collection.models, function( model ) {
                     var id, count;
 
-                    id = model.get('ID');
+                    id = model.cid;
                     count = with_modules ? model.get('modules') : model.get('steps');
                     count = _.keys(count);
                     unitsData[id] = {
-                        title: model.get( 'post_title' ),
+                        title: model.get('post_title'),
                         count: count.length,
                         model: model
                     };
                     this.units[id] = model.toJSON();
+                    found++;
 
                 }, this );
 
-                this.unitList = new UnitList({units: unitsData, controller: this});
-                this.unitList.$el.appendTo( this.editCourse.current );
+                if ( found > 0 ) {
+                    this.unitList = new UnitList({units: unitsData, controller: this});
+                    this.unitList.$el.appendTo(this.editCourse.current);
+                }
+
                 this.setUnitListView();
+                this.on( 'view_rendered', this.setUnitListView, this );
             },
             resetView: function() {
                 this.model = this.editCourse.model.toJSON();
@@ -136,16 +168,37 @@
             setUnitListView: function() {
                 var count, unitView;
 
-                if ( 'unit-list' === this.view ) {
-                    count = _.keys(this.units);
+                count = _.keys(this.units);
 
-                    if ( count.length ) {
-                        _.each(this.units, function (unit) {
-                            unitView = new UnitView(unit, this);
-                            unitView.$el.appendTo(this.$('#units-container'));
-                        }, this);
-                    }
+                this.model = this.editCourse.model.toJSON();
+                if ( count.length && 'unit-list' === this.view ) {
+                    _.each(this.units, function (unit) {
+                        unitView = new UnitView(unit, this);
+                        unitView.$el.appendTo(this.$('#units-container'));
+                    }, this);
+                } else {
+                    this.addNewUnit();
                 }
+            },
+            addNewUnit: function() {
+                var unit, unitData;
+
+                unit = new UnitModel({});
+                unitData = {};
+                unitData[unit.cid] = {
+                    title: 'Untitled',
+                    model: unit,
+                    count: 0
+                };
+
+                if ( ! this.unitList ) {
+                    this.unitList = new UnitList({units: unitData, controller: this});
+                    this.unitList.$el.appendTo(this.editCourse.current);
+                }
+
+                _.delay(function() {
+                    $('.unit-item').last().trigger('click');
+                }, 100 );
             }
         });
     });

@@ -1,7 +1,18 @@
 <script type="text/template" id="coursepress-step-tpl">
     <div class="cp-step-header">
-        <span class="step-type">{{type}}</span>
+        <span class="step-type">{{window._coursepress.steps[type]}}</span>
         <input type="text" name="post_title" value="{{post_title}}" />
+        <div class="step-config">
+            <button type="button"></button>
+            <div class="cp-dropdown-menu">
+                <ul>
+                    <li class="menu-item-duplicate"><?php _e( 'Duplicate step', 'cp' ); ?></li>
+                    <li class="menu-item-move"><?php _e( 'Move to different Module', 'cp' ); ?></li>
+                    <li class="menu-item-delete"><?php _e( 'Delete step', 'cp' ); ?></li>
+                </ul>
+            </div>
+        </div>
+
         <button type="button" class="step-toggle-button"></button>
     </div>
     <div class="cp-step-content"></div>
@@ -117,4 +128,273 @@
         <label class="label"><?php _e( 'Audio Source', 'cp' ); ?></label>
         <input type="text" name="meta_audio_url" class="widefat" />
     </div>
+</script>
+
+<script type="text/template" id="coursepress-step-file-upload">
+    <div class="cp-flex">
+        <div class="cp-box cp-toggle-box">
+            <label>
+                <input type="checkbox" name="meta_mandatory" value="1" class="cp-toggle-input" {{_.checked(true, meta_mandatory)}} /> <span class="cp-toggle-btn"></span>
+                <span class="label"><?php _e( 'Required', 'cp' ); ?></span>
+            </label>
+        </div>
+        <div class="cp-box cp-toggle-box">
+            <label>
+                <input type="checkbox" name="meta_assessable" value="1" class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+                <span class="label"><?php _e( 'Assessable', 'cp' ); ?></span>
+            </label>
+        </div>
+    </div>
+    <div class="cp-box cp-toggle-box">
+        <label>
+            <input type="checkbox" name="meta_assessable" value="1" class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+            <span class="label"><?php _e( 'Allow retries', 'cp' ); ?></span>
+        </label>
+    </div>
+    <div class="cp-flex">
+        <div class="cp-box">
+            <div class="cp-box-grey">
+                <label class="label"><?php _e( 'Number of allowed retries', 'cp' ); ?></label>
+                <input type="text" name="meta_retry_attempts" />
+            </div>
+        </div>
+        <div class="cp-box">
+            <div class="cp-box-grey">
+                <label class="label"><?php _e( 'Minimum Grade', 'cp' ); ?></label>
+                <input type="text" name="meta_retry_attempts" />
+            </div>
+        </div>
+    </div>
+
+    <div class="cp-box">
+        <label class="label"><?php _e( 'Upload file format', 'cp' ); ?></label>
+        <div class="cp-flex">
+            <?php foreach ( $file_types as $type => $label ) : ?>
+            <div class="cp-box cp-toggle-box">
+                <label>
+                    <input type="checkbox" name="meta_allowed_file_types" value="<?php echo $type; ?>" {{_.checked('<?php echo $type; ?>', meta_allowed_file_types)}} class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+                    <span class="label"><?php echo $label ?></span>
+                </label>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <div class="cp-box cp-toggle-box">
+        <label>
+            <input type="checkbox" name="meta_show_content" value="1" class="cp-toggle-input" {{_.checked(true, meta_show_content)}} /> <span class="cp-toggle-btn"></span>
+            <span class="label"><?php _e( 'Show content', 'cp' ); ?></span>
+        </label>
+    </div>
+    <div class="cp-box cp-step-description {{!!meta_show_content?'':'inactive'}}"></div>
+</script>
+
+<script type="text/template" id="coursepress-step-quiz">
+    <div class="cp-content-box">
+        <div class="cp-flex">
+            <div class="cp-box cp-toggle-box">
+                <label>
+                    <input type="checkbox" name="meta_mandatory" value="1" class="cp-toggle-input" {{_.checked(true, meta_mandatory)}} /> <span class="cp-toggle-btn"></span>
+                    <span class="label"><?php _e( 'Required', 'cp' ); ?></span>
+                </label>
+            </div>
+            <div class="cp-box cp-toggle-box">
+                <label>
+                    <input type="checkbox" name="meta_assessable" value="1" class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+                    <span class="label"><?php _e( 'Assessable', 'cp' ); ?></span>
+                </label>
+            </div>
+        </div>
+        <div class="cp-flex">
+            <div class="cp-box">
+                <div class="cp-box-grey">
+                    <label class="label"><?php _e( 'Number of allowed retries', 'cp' ); ?></label>
+                    <input type="text" name="meta_retry_attempts" />
+                </div>
+            </div>
+            <div class="cp-box">
+                <div class="cp-box-grey">
+                    <label class="label"><?php _e( 'Minimum Grade', 'cp' ); ?></label>
+                    <input type="text" name="meta_retry_attempts" />
+                </div>
+            </div>
+        </div>
+        <div class="cp-box cp-toggle-box">
+            <label>
+                <input type="checkbox" name="meta_show_content" value="1" class="cp-toggle-input" {{_.checked(true, meta_show_content)}} /> <span class="cp-toggle-btn"></span>
+                <span class="label"><?php _e( 'Show content', 'cp' ); ?></span>
+            </label>
+        </div>
+        <div class="cp-box cp-step-description {{!!meta_show_content?'':'inactive'}}"></div>
+    </div>
+    <div class="cp-content-box">
+        <h3><?php _e( 'Quiz questions', 'cp' ); ?></h3>
+        <p class="description"><?php _e( 'Add all the questions for your quiz below. You can have as few or as many questions as you want.', 'cp' ); ?></p>
+        <select class="cp-question-type">
+            <option value=""><?php _e( 'Add question', 'cp' ); ?></option>
+            <?php foreach ( $questions as $type => $label ) : ?>
+            <option value="<?php echo $type; ?>"><?php echo $label; ?></option>
+            <?php endforeach; ?>
+        </select>
+
+        <div class="cp-questions-container">
+            <p class="description no-content-info"><?php _e( 'There are currently no questions in this quiz.', 'cp' ); ?></p>
+        </div>
+    </div>
+</script>
+<script type="text/template" id="coursepress-question-tpl">
+    <div class="cp-question-header">
+        <span class="q-type">{{window._coursepress.questions[type]}}</span>
+        <input type="text" value="{{title}}" />
+        <button type="button" class="question-toggle-button"></button>
+    </div>
+    <div class="cp-question-content">
+        <p class="description"><?php _e( 'Add the question and multiple possible answers below, tick checkbox next to correct answers.', 'cp' ); ?></p>
+
+        <div class="cp-box">
+            <label class="label"><?php _e( 'Question text', 'cp' ); ?></label>
+            <textarea class="widefat"></textarea>
+            <div class="question-answers"></div>
+            <button type="button" class="cp-btn cp-btn-xs cp-btn-active"><?php _e( 'Add Answer', 'cp' ); ?></button>
+        </div>
+    </div>
+</script>
+<script type="text/template" id="coursepress-question-answer">
+    <label class="cp-checkbox">
+        <input type="checkbox" class="cp-checkbox-input" value="1" />
+        <span class="cp-checkbox-icon"></span>
+    </label>
+    <input type="text" value="{{question}}" />
+    <span class="cp-btn cp-btn-trash"></span>
+</script>
+
+<script type="text/template" id="coursepress-step-zipped">
+    <div class="cp-box">
+        <label class="label"><?php _e( 'Zipped website source', 'cp' ); ?></label>
+        <input type="text" name="meta_zip_url" class="cp-add-media" data-type="" data-title="<?php _e( 'Browse source', 'cp' ); ?>" data-placeholder="<?php _e( 'Browse for a zip file', 'cp' ); ?>" />
+    </div>
+    <div class="cp-flex">
+        <div class="cp-box">
+            <label class="label"><?php _e( 'Zip website link text', 'cp' ); ?></label>
+            <input type="text" name="meta_link_text" value="{{meta_link_text}}" />
+        </div>
+        <div class="cp-box">
+            <label class="label"><?php _e( 'Primary file', 'cp' ); ?></label>
+            <input type="text" name="meta_primary_file" value="{{meta_primary_file}}" placeholder="<?php _e( 'e.g. index.html', 'cp' ); ?>" />
+        </div>
+    </div>
+    <div class="cp-box cp-toggle-box">
+        <label>
+            <input type="checkbox" name="meta_show_content" value="1" class="cp-toggle-input" {{_.checked(true, meta_show_content)}} /> <span class="cp-toggle-btn"></span>
+            <span class="label"><?php _e( 'Show content', 'cp' ); ?></span>
+        </label>
+    </div>
+    <div class="cp-box cp-step-description {{!!meta_show_content?'':'inactive'}}">THE CONTENT HERE</div>
+</script>
+
+<script type="text/template" id="coursepress-step-written">
+    <div class="cp-content-box">
+        <div class="cp-flex">
+            <div class="cp-box cp-toggle-box">
+                <label>
+                    <input type="checkbox" name="meta_mandatory" value="1" class="cp-toggle-input" {{_.checked(true, meta_mandatory)}} /> <span class="cp-toggle-btn"></span>
+                    <span class="label"><?php _e( 'Required', 'cp' ); ?></span>
+                </label>
+            </div>
+            <div class="cp-box cp-toggle-box">
+                <label>
+                    <input type="checkbox" name="meta_assessable" value="1" class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+                    <span class="label"><?php _e( 'Assessable', 'cp' ); ?></span>
+                </label>
+            </div>
+        </div>
+        <div class="cp-flex">
+            <div class="cp-box">
+                <div class="cp-box-grey">
+                    <label class="label"><?php _e( 'Number of allowed retries', 'cp' ); ?></label>
+                    <input type="text" name="meta_retry_attempts" />
+                </div>
+            </div>
+            <div class="cp-box">
+                <div class="cp-box-grey">
+                    <label class="label"><?php _e( 'Minimum Grade', 'cp' ); ?></label>
+                    <input type="text" name="meta_retry_attempts" />
+                </div>
+            </div>
+        </div>
+        <div class="cp-box cp-toggle-box">
+            <label>
+                <input type="checkbox" name="meta_show_content" value="1" class="cp-toggle-input" {{_.checked(true, meta_show_content)}} /> <span class="cp-toggle-btn"></span>
+                <span class="label"><?php _e( 'Show content', 'cp' ); ?></span>
+            </label>
+        </div>
+        <div class="cp-box cp-step-description {{!!meta_show_content?'':'inactive'}}"></div>
+    </div>
+    <div class="cp-content-box">
+        <h3><?php _e( 'Written questions', 'cp' ); ?></h3>
+        <p class="description"><?php _e( 'Add all the questions for your quiz below. You can have as few or as many questions as you want.', 'cp' ); ?></p>
+        <button type="button" class="cp-btn cp-btn-xs cp-btn-active add-question"><?php _e( 'Add Question', 'cp' ); ?></button>
+
+        <div class="cp-questions-container">
+            <p class="description no-content-info"><?php _e( 'There are currently no questions in this quiz.', 'cp' ); ?></p>
+        </div>
+    </div>
+</script>
+
+<script type="text/template" id="coursepress-written-tpl">
+    <div class="cp-question-header">
+        <span class="q-type"><?php _e( 'Written', 'cp' ); ?></span>
+        <input type="text" value="{{title}}" />
+        <button type="button" class="question-toggle-button"></button>
+    </div>
+    <div class="cp-question-content">
+        <p class="description"><?php _e( 'Add the question and multiple possible answers below, tick checkbox next to correct answers.', 'cp' ); ?></p>
+
+        <div class="cp-box">
+            <label class="label"><?php _e( 'Question text', 'cp' ); ?></label>
+            <textarea class="widefat"></textarea>
+        </div>
+        <div class="cp-box">
+            <label class="label"><?php _e( 'Answer area placeholder text', 'cp' ); ?></label>
+            <input type="text" name="meta_placeholder_text" class="widefat" value="{{meta_placeholder_text}}" placeholder="<?php _e( 'Describe how question should be answer', 'cp' ); ?>" />
+        </div>
+        <div class="cp-box">
+            <label class="label"><?php _e( 'Answer word limit', 'cp' ); ?></label>
+            <input type="text" name="meta_word_limit" value="{{meta_word_limit}}" />
+            <p class="description"><?php _e( 'Set 0 for no word limit answer', 'cp' ); ?></p>
+        </div>
+    </div>
+</script>
+
+<script type="text/template" id="coursepress-step-discussion">
+    <div class="cp-box cp-toggle-box">
+        <label>
+            <input type="checkbox" name="meta_mandatory" value="1" class="cp-toggle-input" {{_.checked(true, meta_mandatory)}} /> <span class="cp-toggle-btn"></span>
+            <span class="label"><?php _e( 'Required', 'cp' ); ?></span>
+        </label>
+    </div>
+    <div class="cp-box cp-toggle-box">
+        <label>
+            <input type="checkbox" name="meta_show_content" value="1" class="cp-toggle-input" {{_.checked(true, meta_show_content)}} /> <span class="cp-toggle-btn"></span>
+            <span class="label"><?php _e( 'Show content', 'cp' ); ?></span>
+        </label>
+    </div>
+    <div class="cp-box cp-step-description {{!!meta_show_content?'':'inactive'}}">THE CONTENT HERE</div>
+</script>
+
+<script type="text/template" id="coursepress-step-download">
+    <div class="cp-box">
+        <label class="label"><?php _e( 'Download file path', 'cp' ); ?></label>
+        <input type="text" name="meta_file_url" value="{{meta_file_url}}" class="cp-add-media" data-type="" data-title="<?php _e( 'Browse source', 'cp' ); ?>" data-placeholder="<?php _e( 'Add file URL or browse for file or download', 'cp' ); ?>" />
+    </div>
+    <div class="cp-box">
+        <label class="label"><?php _e( 'Download link text', 'cp' ); ?></label>
+        <input type="text" name="meta_link_text" class="widefat" value="{{meta_link_text}}" data-placeholder="<?php _e( 'Type link text here', 'cp' ); ?>" />
+    </div>
+    <div class="cp-box cp-toggle-box">
+        <label>
+            <input type="checkbox" name="meta_show_content" value="1" class="cp-toggle-input" {{_.checked(true, meta_show_content)}} /> <span class="cp-toggle-btn"></span>
+            <span class="label"><?php _e( 'Show content', 'cp' ); ?></span>
+        </label>
+    </div>
+    <div class="cp-box cp-step-description {{!!meta_show_content?'':'inactive'}}">THE CONTENT HERE</div>
 </script>

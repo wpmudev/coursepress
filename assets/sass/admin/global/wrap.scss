@@ -27,7 +27,6 @@
   .course-content {
     background-color: #ffffff;
     border: 1px solid $grey_5;
-    color: $dark_2;
     @include radius(6px);
   }
   .cp-box-heading {
@@ -37,7 +36,9 @@
     text-transform: uppercase;
   }
   .box-heading-title {
-    color: $dark_2;
+    font-weight: 700;
+    font-size: 1.2em;
+    margin: 15px 0;
   }
   .course-content-tab {
     padding: 0 25px;
@@ -197,6 +198,7 @@
     margin: 15px 0;
     padding: 15px;
     background-color: $grey_6;
+    display: inline-block;
     @include radius(4px);
   }
 
