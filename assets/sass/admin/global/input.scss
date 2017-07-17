@@ -1,4 +1,5 @@
-.coursepress-wrap {
+.coursepress-wrap,
+.coursepress-modal {
   [type="text"],
   [type="number"],
   [type="email"],
@@ -107,7 +108,8 @@
     }
   }
 
-  .cp-add-image-box {
+  .cp-add-image-box,
+  .cp-add-video-box {
     display: flex;
     .cp-thumbnail {
       width: 50px;
@@ -139,8 +141,15 @@
       margin-left: 10px;
     }
     .cp-input-clear,
-    .cp-image-url {
+    .cp-image-url,
+    .cp-video-url {
       border: 0;
+    }
+  }
+
+  .cp-add-video-box {
+    .cp-div-url {
+      @include radius(4px);
     }
   }
 

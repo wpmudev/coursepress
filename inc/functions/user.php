@@ -319,16 +319,12 @@ function coursepress_add_course_facilitator( $user_id = 0, $course_id = 0 ) {
 	if ( is_wp_error( $course ) )
 		return false;
 
-	// Check if user is a facilitator
-	if ( ! $user->is_facilitator() )
-		return false;
+	// Check if user is already a facilitator of the course
+	if ( $user->is_facilitator_at( $course_id ) )
+		return true;
 
-	// Check if user is facilitator of the course
-	if ( ! $user->is_facilitator_at( $course_id ) )
-		return false;
-
-	// Delete marker
-	delete_user_meta( $user_id, 'facilitator', $user_id );
+	// Include user as facilitator to the course
+	update_post_meta( $course_id, 'facilitator', $user_id, $user_id );
 
 	/**
 	 * Fire whenever a new facilitator is added to a course.
@@ -364,7 +360,7 @@ function coursepress_remove_course_facilitator( $user_id = 0, $course_id = 0 ) {
 	if ( is_wp_error( $course ) )
 		return false;
 
-	if ( $user->is_facilitator_at( $course_id ) )
+	if ( ! $user->is_facilitator_at( $course_id ) )
 		return false; // Not a facilitator? bail!
 
 	// Remove marker
@@ -378,6 +374,8 @@ function coursepress_remove_course_facilitator( $user_id = 0, $course_id = 0 ) {
 	 * @param int $coures_id
 	 */
 	do_action( 'coursepress_remove_facilitator', $user_id, $course_id );
+
+	return true;
 }
 
 /**
@@ -463,6 +461,42 @@ function coursepress_get_user_course_completion_data( $user_id = 0, $course_id =
 	}
 
 	return $results;
+}
+
+/**
+ * Get users list excluding current instructors/facilitators.
+ *
+ * @param int $course_id Course ID.
+ * @param string $type instructor/facilitator
+ * @param string $search Search term.
+ *
+ * @return array
+ */
+function coursepress_get_available_users( $course_id, $type = 'instructor', $search = '' ) {
+
+	// Do not continue if required values are empty.
+	if ( empty( $course_id ) || ! in_array( $type, array( 'instructor', 'facilitator' ) ) ) {
+		return array();
+	}
+
+	$args = array(
+		// Do not include already assigned users.
+		'meta_query'     => array(
+			array(
+				'relation' => 'AND',
+				array(
+					'key'     => $type . '_' . $course_id,
+					'compare' => "NOT EXISTS",
+				)
+			)
+		),
+		// Search user fields.
+		'search'         => '*' . $search . '*',
+		'search_columns' => array( 'user_login', 'user_nicename', 'user_email' ),
+		'fields'         => array( 'ID', 'user_login' ),
+	);
+
+	return get_users( $args );
 }
 
 /**

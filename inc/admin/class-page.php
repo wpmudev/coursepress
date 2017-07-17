@@ -183,6 +183,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 				'media' => array(
 					'select_image' => __( 'Select Image', 'cp' ),
 					'select_feature_image' => __( 'Select Feature Image', 'cp' ),
+					'select_video' => __( 'Select Video', 'cp' ),
 				),
                 'server_error' => __( 'An unexpected error occur while processing. Please try again.', 'cp' ),
                 'invalid_file_type' => __( 'Invalid file type!', 'cp' ),
@@ -397,13 +398,21 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'menu_list' => $menu_list,
 		);
 
+		// Data for course settings form.
+		$settings_data = array(
+			'course_id' => $course_id,
+			'post_content' => $course->post_content,
+			'post_excerpt' => htmlspecialchars_decode( $course->post_excerpt ),
+		);
+
 		coursepress_render( 'views/admin/course-edit', $args );
 		coursepress_render( 'views/admin/footer-text' );
 
 		// Load templates
 		coursepress_render( 'views/tpl/common' );
 		coursepress_render( 'views/tpl/course-type', array( 'course_id' => $course_id ) );
-		coursepress_render( 'views/tpl/course-settings' );
+		coursepress_render( 'views/tpl/course-completion' );
+		coursepress_render( 'views/tpl/course-settings', $settings_data );
 
         $certClass = $CoursePress->get_class( 'CoursePress_Certificate' );
         $tokens = array(
