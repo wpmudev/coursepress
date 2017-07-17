@@ -551,18 +551,20 @@ class CoursePress_Course extends CoursePress_Utility {
 		return array_map( 'get_userdata', $facilitator_ids );
 	}
 
-	private function _get_students( $ids_only = false ) {
+	private function _get_students() {
 		global $wpdb;
 
 		$id = $this->__get( 'ID' );
 
-		$sql = $wpdb->prepare( "SELECT `student_id` FROM `$this->student_table` WHERE `course_id`=%d", $id );
+		$sql = "SELECT `student_id` FROM `$this->student_table` WHERE `course_id`=%d";
+		$sql = $wpdb->prepare( $sql, $id );
 		$results = $wpdb->get_results( $sql, OBJECT );
 		$student_ids = array();
 
 		if ( $results ) {
-			foreach ( $results as $result )
+			foreach ( $results as $result ) {
 				$student_ids[] = $result->student_id;
+			}
 		}
 
 		return $student_ids;

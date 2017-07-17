@@ -31,7 +31,7 @@
                 // Load course units view
                 this.once('coursepress:load-step-course-units', this.courseUnitsView, this);
                 // Load course students view
-                this.once('coursepress:load-step-course-students', this.courseStudents, this);
+                this.once('coursepress:load-step-course-students', this.courseStudentsView, this);
 
                 // Load templates
                 this.render();
@@ -102,7 +102,9 @@
 
                 return courseUnits;
             },
-            courseStudentsView: function() {},
+            courseStudentsView: function() {
+                this.students = new CoursePress.Course_Students( this.model, this );
+            },
             getSteps: function(step) {
                 this.steps.push($(step).data('step'));
             },

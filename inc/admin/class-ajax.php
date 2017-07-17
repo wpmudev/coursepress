@@ -16,6 +16,8 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
         add_action( 'wp_ajax_coursepress_get_course_units', array( $this, 'get_course_units' ) );
         // Hook to handle file uploads
         add_action( 'wp_ajax_coursepress_upload', array( $this, 'upload_file' ) );
+	    // Hook to search for select2 data.
+	    add_action( 'wp_ajax_coursepress_get_users', array( $this, 'get_course_users' ) );
     }
 
     /**
@@ -338,5 +340,156 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			$error = array( 'error_code' => 'cannot_change_status', 'message' => __( 'Could not update course status.', 'cp' ) );
 			wp_send_json_error( $error );
 		}
+	}
+
+	/**
+	 * Create new course category from text.
+	 *
+	 * @param object $request Request data.
+	 */
+	function create_course_category( $request ) {
+
+		// Do not continue if empty.
+		if ( empty( $request->name ) ) {
+			wp_send_json_error( array( 'message' => __( 'Could not create new category.', 'cp' ) ) );
+		}
+
+		// Check if term already exist. We may have created it through select2 and removed.
+		$term = get_term_by( 'name', $request->name, 'course_category' );
+		// If term not exist, create new one.
+		if ( ! $term ) {
+			$term = coursepress_create_course_category( $request->name );
+		}
+		// If category created/exist, send the category name as response.
+		if ( $term ) {
+			wp_send_json_success( $term->name );
+		}
+
+		wp_send_json_error( array( 'message' => __( 'Could not create new category.', 'cp' ) ) );
+	}
+
+	/**
+	 * Send email invitations to the users.
+	 *
+	 * @param object $request Request data.
+	 */
+	function send_email_invite( $request ) {
+
+		// Do not continue if empty.
+		if ( empty( $request->email ) || empty( $request->type ) || empty( $request->course_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Could not send email invitation.', 'cp' ) ) );
+		}
+
+		// Send email invitation.
+		if ( coursepress_send_email_invite( $request->email, $request->course_id, $request->type ) ) {
+			wp_send_json_success( array( 'message' => __( 'Invitation email has been sent.', 'cp' ) ) );
+		}
+
+		wp_send_json_error( array( 'message' => __( 'Could not send email invitation.', 'cp' ) ) );
+	}
+
+	/**
+	 * Assign instructor/facilitator to a course.
+	 *
+	 * @param object $request Request data.
+	 */
+	function assign_to_course( $request ) {
+
+		// Do not continue if required values are empty.
+		if ( empty( $request->course_id ) || empty( $request->user ) || empty( $request->type ) ) {
+			wp_send_json_error( array( 'message' => __( 'Could not assign selected user.', 'cp' ) ) );
+		}
+
+		switch ( $request->type ) {
+			case 'instructor':
+				$success = coursepress_add_course_instructor( $request->user, $request->course_id );
+				break;
+
+			case 'facilitator':
+				$success = coursepress_add_course_facilitator( $request->user, $request->course_id );
+				break;
+
+			default:
+				$success = false;
+				break;
+		}
+
+		// If sent, send success response back.
+		if ( $success ) {
+			$user = $name = coursepress_get_user( $request->user );
+			$name = $user->get_name();
+			wp_send_json_success(
+				array(
+					'message' => sprintf( __( 'Selected user is assigned as %s.', 'cp' ), $request->type ),
+					'name' => $name,
+					'id' => $request->user
+				)
+			);
+		}
+
+		wp_send_json_error( array( 'message' => __( 'Could not assign selected user.', 'cp' ) ) );
+	}
+
+	/**
+	 * Remove instructor/facilitator from a course.
+	 *
+	 * @param object $request Request data.
+	 */
+	function remove_from_course( $request ) {
+
+		// Do not continue if required values are empty.
+		if ( empty( $request->course_id ) || empty( $request->user ) || empty( $request->type ) ) {
+			wp_send_json_error( array( 'message' => __( 'Could not remove the user.', 'cp' ) ) );
+		}
+
+		switch ( $request->type ) {
+			case 'instructor':
+				$success = coursepress_delete_course_instructor( $request->user, $request->course_id );
+				break;
+
+			case 'facilitator':
+				$success = coursepress_remove_course_facilitator( $request->user, $request->course_id );
+				break;
+
+			default:
+				$success = false;
+				break;
+		}
+
+		// If sent, send success response back.
+		if ( $success ) {
+			wp_send_json_success(
+				array(
+					'message' => __( 'Selected user is removed from the course.', 'cp' ),
+					'id' => $request->user
+				)
+			);
+		}
+
+		wp_send_json_error( array( 'message' => __( 'Could not remove the user.', 'cp' ) ) );
+	}
+
+	/**
+	 * Get users to assign as instructors and facilitators.
+	 *
+	 * @param object $request Request data.
+	 */
+	function get_course_users() {
+
+		$users = array();
+		// Request data.
+		$request = $_REQUEST;
+
+		// Do some security checks.
+		if ( isset( $request['_wpnonce'] ) && wp_verify_nonce( $request['_wpnonce'], 'coursepress_nonce' ) ) {
+
+			$search = empty( $request['search'] ) ? '' : $request['search'];
+			// Do not continue if required values are empty.
+			if ( ! empty( $request['course_id'] ) && ! empty( $request['type'] ) ) {
+				$users = coursepress_get_available_users( $request['course_id'], $request['type'], $search );
+			}
+		}
+
+		wp_send_json( $users );
 	}
 }

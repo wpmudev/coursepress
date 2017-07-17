@@ -319,16 +319,12 @@ function coursepress_add_course_facilitator( $user_id = 0, $course_id = 0 ) {
 	if ( is_wp_error( $course ) )
 		return false;
 
-	// Check if user is a facilitator
-	if ( ! $user->is_facilitator() )
-		return false;
+	// Check if user is already a facilitator of the course
+	if ( $user->is_facilitator_at( $course_id ) )
+		return true;
 
-	// Check if user is facilitator of the course
-	if ( ! $user->is_facilitator_at( $course_id ) )
-		return false;
-
-	// Delete marker
-	delete_user_meta( $user_id, 'facilitator', $user_id );
+	// Include user as facilitator to the course
+	update_post_meta( $course_id, 'facilitator', $user_id, $user_id );
 
 	/**
 	 * Fire whenever a new facilitator is added to a course.
@@ -364,7 +360,7 @@ function coursepress_remove_course_facilitator( $user_id = 0, $course_id = 0 ) {
 	if ( is_wp_error( $course ) )
 		return false;
 
-	if ( $user->is_facilitator_at( $course_id ) )
+	if ( ! $user->is_facilitator_at( $course_id ) )
 		return false; // Not a facilitator? bail!
 
 	// Remove marker
@@ -378,6 +374,8 @@ function coursepress_remove_course_facilitator( $user_id = 0, $course_id = 0 ) {
 	 * @param int $coures_id
 	 */
 	do_action( 'coursepress_remove_facilitator', $user_id, $course_id );
+
+	return true;
 }
 
 /**
@@ -463,4 +461,93 @@ function coursepress_get_user_course_completion_data( $user_id = 0, $course_id =
 	}
 
 	return $results;
+}
+
+/**
+ * Get users list excluding current instructors/facilitators.
+ *
+ * @param int $course_id Course ID.
+ * @param string $type instructor/facilitator
+ * @param string $search Search term.
+ *
+ * @return array
+ */
+function coursepress_get_available_users( $course_id, $type = 'instructor', $search = '' ) {
+
+	// Do not continue if required values are empty.
+	if ( empty( $course_id ) || ! in_array( $type, array( 'instructor', 'facilitator' ) ) ) {
+		return array();
+	}
+
+	$args = array(
+		// Do not include already assigned users.
+		'meta_query'     => array(
+			array(
+				'relation' => 'AND',
+				array(
+					'key'     => $type . '_' . $course_id,
+					'compare' => "NOT EXISTS",
+				)
+			)
+		),
+		// Search user fields.
+		'search'         => '*' . $search . '*',
+		'search_columns' => array( 'user_login', 'user_nicename', 'user_email' ),
+		'fields'         => array( 'ID', 'user_login' ),
+	);
+
+	return get_users( $args );
+}
+
+/**
+ * Returns list courses.
+ *
+ * @param array $args  Arguments to pass to WP_User_Query.
+ * @param int   $count This is not the count of resulted students. This is the count
+ *                     of total available students without applying pagination limit.
+ *                     This parameter does not expect incoming value. Total count will
+ *                     be passed as reference, as this function's return value is an
+ *                     array of user objects.
+ *
+ * @return array Returns an array of students where each student is an instance of CoursePress_User object.
+ */
+function coursepress_get_students( $args = array(), &$count = 0 ) {
+
+	// Handle the search if search query found.
+	if ( ! empty( $_GET[ 's' ] ) ) {
+		$args['search'] = '*' . $_GET['s'] . '*';
+	}
+
+	// Get only the student roles.
+	//$args['role'] = 'coursepress_student';
+
+	$args = wp_parse_args( array(
+		'suppress_filters' => true,
+		'fields' => 'ids',
+	), $args );
+
+	/**
+	 * Filter students WP_User_Query arguments.
+	 *
+	 * @since 3.0
+	 * @param array $args
+	 */
+	$args = apply_filters( 'coursepress_pre_get_students', $args );
+
+	$query = new WP_User_Query( $args );
+	$results = $query->results;
+
+	// Update the total students count (ignoring items per page).
+	$count = $query->total_users;
+
+	$students = array();
+
+	// If result found, get the CoursePress_User objects.
+	if ( ! empty( $results ) ) {
+		foreach ( $results as $result ) {
+			$students[ $result ] = coursepress_get_user( $result );
+		}
+	}
+
+	return $students;
 }

@@ -3,18 +3,31 @@
 (function() {
     'use strict';
 
-    CoursePress.Define( 'CourseSettings', function($) {
+    CoursePress.Define( 'CourseSettings', function( $, doc, win ) {
         return CoursePress.View.extend({
             el: $('#course-settings'),
             template_id: 'coursepress-course-settings-tpl',
             courseEditor: false,
+            events: {
+                'click #cp-create-cat': 'createCategory',
+                'keyup .cp-categories-selector .select2-search__field': 'updateSearchValue',
+                'click #cp-instructor-selector': 'instructorSelection',
+                'click #cp-facilitator-selector': 'facilitatorSelection',
+                'click ul.cp-tagged-list-removable li': 'removeUser'
+            },
             initialize: function(model, EditCourse) {
                 this.model = model;
+                this.request = new CoursePress.Request();
                 this.courseEditor = EditCourse;
+                this.course_id = win._coursepress.course.ID;
 
                 EditCourse.on('coursepress:validate-course-settings', this.validate, this);
 
                 this.on( 'view_rendered', this.setUpUI, this );
+
+                this.request.on( 'coursepress:success_create_course_category', this.updateCatSelection, this );
+                this.request.on( 'coursepress:success_remove_from_course', this.removeUserTag, this );
+
                 this.render();
             },
             validate: function() {
@@ -44,14 +57,109 @@
             setUpUI: function() {
                 // set feature image
                 this.listing_image = new CoursePress.AddImage( this.$('#listing_image') );
+                this.listing_video = new CoursePress.AddVideo( this.$('#listing_video') );
 
                 // set category
                 var catSelect = this.$('#course-categories');
                 catSelect.select2({
-                    placeholder: catSelect.attr('placeholder')
+                    tags: true
                 });
 
                 this.$('[name="meta_enrollment_type"]').select2();
+            },
+
+            /**
+             * Create new course category.
+             *
+             * @param ev Current selector.
+             */
+            createCategory: function () {
+                var name = this.$('#course-categories-search').val();
+                if ('' !== name) {
+                    this.request.set( {
+                        'action': 'create_course_category',
+                        'name': name
+                    } );
+                    this.request.save();
+                }
+            },
+
+            /**
+             * Update category selector.
+             *
+             * @param response Ajax response data.
+             */
+            updateCatSelection: function (response) {
+                var selected = this.$('#course-categories').val();
+                selected = null === selected ? [] : selected;
+                selected.push(response);
+                this.$('#course-categories').val(selected).trigger('change');
+            },
+
+            /**
+             * Update hidden field value for search.
+             *
+             * @param ev
+             */
+            updateSearchValue: function (ev) {
+                var target = $(ev.currentTarget);
+                this.$('#course-categories-search').val(target.val());
+            },
+
+            /**
+             * Instructor selection.
+             */
+            instructorSelection: function () {
+
+                // Call instructor popup.
+                new CoursePress.CourseModal({
+                    course: this,
+                    template_id: 'coursepress-course-instructor-selection-tpl',
+	                type: 'instructor'
+                });
+            },
+
+            /**
+             * Facilitator selection.
+             */
+            facilitatorSelection: function () {
+
+                // Call facilitator popup.
+                new CoursePress.CourseModal({
+                    course: this,
+                    template_id: 'coursepress-course-facilitator-selection-tpl',
+	                type: 'facilitator'
+                });
+            },
+
+            /**
+             * Remove facilitator/instructor from course.
+             */
+            removeUser: function (ev) {
+
+                var target = $(ev.currentTarget);
+                var type = target.parent().data('user-type');
+                var user_id = target.data('user-id');
+                if ( '' !== user_id ) {
+                    this.request.set( {
+                        'action': 'remove_from_course',
+                        'type': type,
+                        'course_id': this.course_id,
+                        'user': user_id
+                    } );
+                    this.request.target = target;
+                    this.request.save();
+                }
+            },
+
+            /**
+             * Remove user tag if removed from course.
+             */
+            removeUserTag: function () {
+
+                if ( typeof this.request.target !== 'undefined' ) {
+                    this.request.target.remove();
+                }
             }
         });
     });

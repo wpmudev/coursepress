@@ -32,26 +32,24 @@ module.exports = function(grunt) {
 		sass_folder: 'assets/sass/',
 
 		js_files_concat: {
-            'assets/js/admin-general.js': [
-                // Add JS that will be loaded to all CP pages
-                'assets/js/src/common/coursepress.js',
-                'assets/js/src/common/request.js',
-                'assets/js/src/common/view.js',
-                'assets/js/src/common/add-image.js',
-                'assets/js/src/common/dropdown-menu.js',
-                'assets/js/src/common/popup.js',
-                'assets/js/src/common/upload.js',
-                'assets/js/src/common/add-media.js'
-                // assets/js/src/admin/general/....
-            ],
-            'assets/js/coursepress.js': [
-                // Add JS that will be loaded at courselist page
-                // assets/js/src/admin/courselist/...
-                'assets/js/src/admin/courselist/courselist.js'
-            ],
-            'assets/js/coursepress_course.js': [
-                // ADd JS that will be loaded at course edit page
-                // assets/js/src/admin/course-edit/...
+			'assets/js/admin-general.js': [
+				// Add JS that will be loaded to all CP pages
+				'assets/js/src/common/coursepress.js',
+				'assets/js/src/common/request.js',
+				'assets/js/src/common/view.js',
+				'assets/js/src/common/add-image.js',
+				'assets/js/src/common/add-video.js',
+				'assets/js/src/common/dropdown-menu.js'
+				// assets/js/src/admin/general/....
+			],
+			'assets/js/coursepress.js': [
+				// Add JS that will be loaded at courselist page
+				// assets/js/src/admin/courselist/...
+				'assets/js/src/admin/courselist/courselist.js'
+			],
+			'assets/js/coursepress_course.js': [
+				// ADd JS that will be loaded at course edit page
+				// assets/js/src/admin/course-edit/...
                 'assets/js/src/admin/course-edit/course-model.js',
                 'assets/js/src/admin/course-edit/course-type.js',
                 'assets/js/src/admin/course-edit/course-settings.js',
@@ -68,46 +66,47 @@ module.exports = function(grunt) {
                 'assets/js/src/admin/course-edit/unit-details.js',
                 'assets/js/src/admin/course-edit/course-units.js',
                 'assets/js/src/admin/course-edit/course-setup.js'
-            ],
-            'assets/js/coursepress_students.js': [
-                // Add JS that will be loaded at Students page
-                // assets/js/src/admin/students/...
-            ],
-            'assets/js/coursepress_instructors.js': [
-                // Add JS that will be loaded at Instructors page
-                // assets/js/src/admin/instructors
-            ],
-            'assets/js/coursepress_assessments.js': [
-                // Add JS that will be loaded at Assessments page
-                // assets/js/src/admin/assessments/...
-            ],
-            'assets/js/coursepress_forum.js': [
-                // Add JS that will be loaded at Forum page
-                // assets/js/src/admin/forum/...
-            ],
-            'assets/js/coursepress_notifications.js': [
-                // Add JS that will be loaded at Notifications page
-                // assets/js/src/admin/notifications/...
-            ],
-            'assets/js/coursepress_settings.js': [
-                // Add JS that will be loaded at Settings page
-                // assets/js/src/admin/settings/....
-                'assets/js/src/admin/settings/general.js',
-                'assets/js/src/admin/settings/slugs.js',
-                'assets/js/src/admin/settings/emails.js',
-                'assets/js/src/admin/settings/capabilities.js',
-                'assets/js/src/admin/settings/certificate.js',
-                'assets/js/src/admin/settings/shortcodes.js',
-                'assets/js/src/admin/settings/extensions.js',
-                'assets/js/src/admin/settings/import-export.js',
-                'assets/js/src/admin/settings/settings.js'
-            ],
-            'assets/js/coursepress-front.js': [
-                'assets/js/src/common/coursepress.js',
-                'assets/js/src/common/request.js',
-                'assets/js/src/common/view.js',
-                'assets/js/src/front/course-overview.js'
-            ]
+			],
+			'assets/js/coursepress_students.js': [
+				// Add JS that will be loaded at Students page
+				// assets/js/src/admin/students/...
+				'assets/js/src/admin/students/studentlist.js'
+			],
+			'assets/js/coursepress_instructors.js': [
+				// Add JS that will be loaded at Instructors page
+				// assets/js/src/admin/instructors
+			],
+			'assets/js/coursepress_assessments.js': [
+				// Add JS that will be loaded at Assessments page
+				// assets/js/src/admin/assessments/...
+			],
+			'assets/js/coursepress_forum.js': [
+				// Add JS that will be loaded at Forum page
+				// assets/js/src/admin/forum/...
+			],
+			'assets/js/coursepress_notifications.js': [
+				// Add JS that will be loaded at Notifications page
+				// assets/js/src/admin/notifications/...
+			],
+			'assets/js/coursepress_settings.js': [
+				// Add JS that will be loaded at Settings page
+				// assets/js/src/admin/settings/....
+				'assets/js/src/admin/settings/general.js',
+				'assets/js/src/admin/settings/slugs.js',
+				'assets/js/src/admin/settings/emails.js',
+				'assets/js/src/admin/settings/capabilities.js',
+				'assets/js/src/admin/settings/certificate.js',
+				'assets/js/src/admin/settings/shortcodes.js',
+				'assets/js/src/admin/settings/extensions.js',
+				'assets/js/src/admin/settings/import-export.js',
+				'assets/js/src/admin/settings/settings.js'
+			],
+			'assets/js/coursepress-front.js': [
+				'assets/js/src/common/coursepress.js',
+				'assets/js/src/common/request.js',
+				'assets/js/src/common/view.js',
+				'assets/js/src/front/course-overview.js'
+			]
 		},
 
 		// List of JS files to validate

@@ -42,6 +42,7 @@
                 'assets/js/src/common/request.js',
                 'assets/js/src/common/view.js',
                 'assets/js/src/common/add-image.js',
+                'assets/js/src/common/add-video.js',
                 'assets/js/src/common/dropdown-menu.js',
                 'assets/js/src/common/popup.js',
                 'assets/js/src/common/upload.js',
@@ -59,6 +60,7 @@
                 'assets/js/src/admin/course-edit/course-model.js',
                 'assets/js/src/admin/course-edit/course-type.js',
                 'assets/js/src/admin/course-edit/course-settings.js',
+                'assets/js/src/admin/course-edit/course-settings-modal.js',
                 'assets/js/src/admin/course-edit/course-completion.js',
                 'assets/js/src/admin/course-edit/step-text.js',
                 'assets/js/src/admin/course-edit/step-image.js',
@@ -75,11 +77,13 @@
                 'assets/js/src/admin/course-edit/unit-modules.js',
                 'assets/js/src/admin/course-edit/unit-details.js',
                 'assets/js/src/admin/course-edit/course-units.js',
+                'assets/js/src/admin/course-edit/course-students.js',
                 'assets/js/src/admin/course-edit/course-setup.js'
             ],
             'coursepress_students.js': [
                 // Add JS that will be loaded at Students page
                 // assets/js/src/admin/students/...
+                'assets/js/src/admin/students/studentlist.js'
             ],
             'coursepress_instructors.js': [
                 // Add JS that will be loaded at Instructors page
