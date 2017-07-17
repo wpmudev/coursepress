@@ -124,7 +124,7 @@ abstract class CoursePress_Utility {
     }
 
 	protected function get_pagenum() {
-		return 1;
+		return isset( $_REQUEST['paged'] )? intval( $_REQUEST['paged'] ) : 1;
 	}
 
 	protected function get_per_page() {
