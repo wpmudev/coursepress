@@ -59,6 +59,7 @@
                 'assets/js/src/admin/course-edit/course-model.js',
                 'assets/js/src/admin/course-edit/course-type.js',
                 'assets/js/src/admin/course-edit/course-settings.js',
+                'assets/js/src/admin/course-edit/course-settings-modal.js',
                 'assets/js/src/admin/course-edit/course-completion.js',
                 'assets/js/src/admin/course-edit/course-units.js',
                 'assets/js/src/admin/course-edit/course-setup.js'
