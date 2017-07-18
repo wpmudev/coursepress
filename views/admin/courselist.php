@@ -149,6 +149,7 @@
                     </tr>
                 <?php endif; ?>
             </tbody>
+            <tfoot><td>&nbsp;</td></tfoot>
         </table>
         <?php if ( ! empty( $pagination ) ) : ?>
             <div class="tablenav cp-admin-pagination">

@@ -363,6 +363,9 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		wp_enqueue_media();
 		// Include datepicker
         wp_enqueue_script( 'jquery-ui-datepicker' );
+        // Datepicker UI
+		$this->enqueue_style( 'datepicker-ui', 'assets/external/css/jquery-ui.min.css' );
+
         // Include color picker
         wp_enqueue_script( 'iris' );
         // Sorter
@@ -489,7 +492,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		coursepress_render( 'views/tpl/course-units', array( 'steps' => $steps ) );
 		coursepress_render( 'views/tpl/steps-template', array( 'file_types' => $file_types, 'questions' => $question_types ) );
 		coursepress_render( 'views/tpl/common' );
-		coursepress_render( 'views/tpl/course-students' );
+		coursepress_render( 'views/tpl/course-students', array( 'students' => $course->get_students( false ) ) );
 	}
 
 	function get_students_page() {

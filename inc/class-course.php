@@ -551,13 +551,20 @@ class CoursePress_Course extends CoursePress_Utility {
 		return array_map( 'get_userdata', $facilitator_ids );
 	}
 
-	private function _get_students() {
+	private function _get_students( $all = true, $paged = 1 ) {
 		global $wpdb;
 
 		$id = $this->__get( 'ID' );
+		$offset = ( $paged - 1 ) * 20;
+		$limit = 20;
 
 		$sql = "SELECT `student_id` FROM `$this->student_table` WHERE `course_id`=%d";
-		$sql = $wpdb->prepare( $sql, $id );
+
+		if ( ! $all ) {
+			$sql .= " LIMIT %d, %d";
+		}
+		$sql = $wpdb->prepare( $sql, $id, $offset, $limit );
+
 		$results = $wpdb->get_results( $sql, OBJECT );
 		$student_ids = array();
 
@@ -584,9 +591,9 @@ class CoursePress_Course extends CoursePress_Utility {
 	 *
 	 * @return array of CoursePress_User object
 	 */
-	function get_students() {
+	function get_students( $all = true, $paged = 1 ) {
 		$students = array();
-		$student_ids = $this->_get_students();
+		$student_ids = $this->_get_students( $all, $paged );
 
 		if ( ! empty( $student_ids ) ) {
 			foreach ( $student_ids as $student_id ) {

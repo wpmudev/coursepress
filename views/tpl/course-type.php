@@ -72,11 +72,13 @@
                 <div class="cp-flex">
                     <div class="cp-div-flex cp-pad-right">
                         <span class="course-title-tag"><?php _e( 'Start Date', 'cp' ); ?></span>
-                        <input type="text" name="meta_course_start_date" value="{{course_start_date}}" />
+                        <input type="text" name="meta_course_start_date" class="datepicker" value="{{course_start_date}}" />
+                        <i class="fa fa-calendar"></i>
                     </div>
                     <div class="cp-div-flex cp-pad-left">
                         <span class="course-title-tag"><?php _e( 'End Date', 'cp' ); ?></span>
-                        <input type="text" name="meta_course_end_date" value="{{course_end_date}}" />
+                        <input type="text" name="meta_course_end_date" class="datepicker" value="{{course_end_date}}" />
+                        <i class="fa fa-calendar"></i>
                     </div>
                 </div>
                 <br />
@@ -84,17 +86,20 @@
                 <div class="cp-flex">
                     <div class="cp-div-flex cp-pad-right">
                         <span class="course-title-tag"><?php _e( 'Start Date', 'cp' ); ?></span>
-                        <input type="text" name="meta_enrollment_start_date" value="{{enrollment_start_date}}" />
+                        <input type="text" name="meta_enrollment_start_date" class="datepicker" value="{{enrollment_start_date}}" />
+                        <i class="fa fa-calendar"></i>
                     </div>
                     <div class="cp-div-flex cp-pad-left">
                         <span class="course-title-tag"><?php _e( 'End Date', 'cp' ); ?></span>
-                        <input type="text" name="meta_enrollment_end_date" value="{{enrollment_end_date}}" />
+                        <input type="text" name="meta_enrollment_end_date" class="datepicker" value="{{enrollment_end_date}}" />
+                        <i class="fa fa-calendar"></i>
                     </div>
                 </div>
             </div>
 
             <div class="cp-box cp-course-type {{'sample_course'===course_type?'active':'inactive'}}" id="type-sample">
-
+                <input type="file" name="import_file" />
+                <p class="description"><?php _e( 'Select and upload sample course and start editing.', 'cp' ); ?></p>
             </div>
 
             <div class="cp-box cp-toggle-box cp-sep">

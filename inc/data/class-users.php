@@ -245,7 +245,7 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 			$this->__set( 'facilitator_caps', $cp_caps );
 		}
 
-		return $this->__get( 'faclitator_caps' );
+		return $this->__get( 'facilitator_caps' );
 	}
 
 	function map_coursepress_user_cap( $caps, $cap, $args, $user ) {

@@ -64,12 +64,7 @@
             },
 
             setUI: function() {
-                var options = {
-                    dateFormat: 'MM dd, yy'
-                    },
-                    names = '[name="meta_course_start_date"],[name="meta_course_end_date"],[name="meta_enrollment_start_date"],[name="enrollment_end_date"]';
-
-                this.$( names ).datepicker( options );
+                this.$('.datepicker').datepicker({dateFormat: 'MM dd, yy' });
             },
 
             updatePostName: function( ev ) {
