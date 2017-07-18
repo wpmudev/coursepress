@@ -178,6 +178,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 				'path' => COOKIEPATH,
 			),
 			'coursepress_page' => add_query_arg( 'page', 'coursepress', admin_url() ),
+			'pagenow' => add_query_arg( 'page', $coursepress_pagenow, admin_url( 'admin.php' ) ),
 			// Common use texts
 			'text' => array(
 			    'ok' => __( 'Ok', 'cp' ),
@@ -426,7 +427,19 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Load templates
 		coursepress_render( 'views/tpl/common' );
-		coursepress_render( 'views/tpl/course-type', array( 'course_id' => $course_id ) );
+
+		$sample_courses = array(
+			'introduction-to-upfront' => array(
+				'title' => __( 'Introduction to Upfront', 'cp' ),
+				'file' => 'wpmudev-thewordpressexperts.coursepress.2017-07-03.introduction-to-upfront-4.json'
+			),
+			'wordpress-multisite-masterclass' => array(
+				'title' => __( 'WordPress Multisite Master Class', 'cp' ),
+				'file' => 'wpmudev-thewordpressexperts.coursepress.2017-07-03.wordpress-multisite-masterclass-2.json'
+			),
+		);
+
+		coursepress_render( 'views/tpl/course-type', array( 'course_id' => $course_id, 'sample_courses' => $sample_courses ) );
 		coursepress_render( 'views/tpl/course-completion' );
 		coursepress_render( 'views/tpl/course-settings', $settings_data );
 

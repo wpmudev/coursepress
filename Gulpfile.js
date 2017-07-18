@@ -58,6 +58,7 @@
                 // ADd JS that will be loaded at course edit page
                 // assets/js/src/admin/course-edit/...
                 'assets/js/src/admin/course-edit/course-model.js',
+                'assets/js/src/admin/course-edit/sample-course.js',
                 'assets/js/src/admin/course-edit/course-type.js',
                 'assets/js/src/admin/course-edit/course-settings.js',
                 'assets/js/src/admin/course-edit/course-settings-modal.js',
@@ -249,6 +250,7 @@
     gulp.task('watch', ['css', 'js'], function () {
         gulp.watch(['assets/js/src/*.js', 'assets/js/src/**/*.js', 'assets/js/src/**/**/*.js'], ['js']);
         gulp.watch(['assets/sass/*.scss', 'assets/sass/**/*.scss', 'assets/sass/**/**/*.scss'], ['css']);
+        gulp.watch(['assets/js/src/*.js', 'assets/sass/*.scss'], ['clearcache']);
     });
 
     gulp.task( 'clearcache', function() {

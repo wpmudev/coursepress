@@ -145,7 +145,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
         if ( ! empty( $course_meta['meta_listing_image_thumbnail_id'] ) ) {
             set_post_thumbnail($course_id, $course_meta['meta_listing_image_thumbnail_id']);
         }
-        error_log(print_r($course_meta,true));
+        //error_log(print_r($course_meta,true));
 
         // Check course category
         if ( isset( $request->course_category ) ) {
@@ -315,7 +315,9 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
         $the_course = array_shift( $courses );
 
         $importClass = new CoursePress_Import( $the_course, $request );
-
+        $course = $importClass->get_course();
+error_log(print_r($course,true));
+        wp_send_json_success( array( 'course' => $course ) );
     }
 
 	/**
@@ -491,5 +493,31 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		}
 
 		wp_send_json( $users );
+	}
+
+	function import_sample_course( $request ) {
+		global $CoursePress;
+
+		$file = $request->meta_sample_course;
+		$option_id = 'sample_' . $file;
+		$data = array();
+		$data['import_id'] = $option_id;
+
+		// Let's check if the sample had previously use
+		$courses = coursepress_get_option( $option_id );
+
+		if ( empty( $courses ) ) {
+			$filename = $CoursePress->plugin_path . 'assets/external/sample-courses/' . $file;
+			$courses = file_get_contents( $filename );
+			$courses = json_decode( $courses );
+			$courses = get_object_vars( $courses );
+			coursepress_update_option( $option_id, $courses );
+		}
+
+		if ( $courses ) {
+			wp_send_json_success( $data );
+		}
+
+		wp_send_json_error(true);
 	}
 }

@@ -97,9 +97,9 @@
                 </div>
             </div>
 
-            <div class="cp-box cp-course-type {{'sample_course'===course_type?'active':'inactive'}}" id="type-sample">
-                <input type="file" name="import_file" />
-                <p class="description"><?php _e( 'Select and upload sample course and start editing.', 'cp' ); ?></p>
+            <div class="cp-box cp-sep cp-course-type {{'sample_course'===course_type?'active':'inactive'}}" id="type-sample">
+                <p class="description"><?php _e( 'Choose a sample course to use and edit it\'s units, modules and steps.', 'cp' ); ?></p>
+                <button type="button" class="cp-btn cp-btn-active sample-course-btn"><?php _e( 'Select Sample Course', 'cp' ); ?></button>
             </div>
 
             <div class="cp-box cp-toggle-box cp-sep">
@@ -137,4 +137,32 @@
      */
     do_action( 'coursepress_course_setup-course-type', $course_id );
     ?>
+</script>
+
+<script type="text/template" id="coursepress-sample-course-tpl">
+    <div class="coursepress-popup-body">
+        <div class="coursepress-popup-heading">
+            <div class="coursepress-popup-title">
+                <h3><?php _e( 'Choose Sample Course', 'cp' ); ?></h3>
+            </div>
+            <span class="cp-modal-close cp-close"></span>
+        </div>
+        <div class="coursepress-popup-content">
+            <ul>
+		        <?php foreach ( $sample_courses as $id => $sample ) : ?>
+                    <li>
+                        <div class="cp-toggle-box">
+                            <label>
+                                <input type="radio" name="meta_sample_course" value="<?php echo $sample['file']; ?>" class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
+                                <span class="label"><?php echo $sample['title']; ?></span>
+                            </label>
+                        </div>
+                    </li>
+		        <?php endforeach; ?>
+            </ul>
+        </div>
+        <div class="coursepress-popup-footer">
+            <button type="button" class="cp-btn cp-btn-active"><?php _e( 'Use Selected', 'cp' ); ?></button>
+        </div>
+    </div>
 </script>
