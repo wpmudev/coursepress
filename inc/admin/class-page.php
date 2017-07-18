@@ -376,7 +376,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// If it's a new course, create a draft course
 		if ( empty( $course_id ) ) {
-            $course = coursepress_get_course( get_default_post_to_edit('course', true ) );
+            $course = coursepress_get_course( get_default_post_to_edit( 'course', true ) );
             $course->post_title = '';
         } else {
             $course = coursepress_get_course( $course_id );
@@ -390,6 +390,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$local_vars = array(
 			'course' => $course, // Use in most steps
 			'categories' => coursepress_get_categories(),
+			'settings' => coursepress_get_setting(),
 		);
 		$this->localize_array = wp_parse_args( $local_vars, $this->localize_array );
 
@@ -422,6 +423,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'post_excerpt' => htmlspecialchars_decode( $course->post_excerpt ),
 		);
 
+		coursepress_render( 'views/tpl/common' );
 		coursepress_render( 'views/admin/course-edit', $args );
 		coursepress_render( 'views/admin/footer-text' );
 
@@ -504,7 +506,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		coursepress_render( 'views/tpl/course-units', array( 'steps' => $steps ) );
 		coursepress_render( 'views/tpl/steps-template', array( 'file_types' => $file_types, 'questions' => $question_types ) );
-		coursepress_render( 'views/tpl/common' );
 		coursepress_render( 'views/tpl/course-students', array( 'students' => $course->get_students( false ) ) );
 	}
 

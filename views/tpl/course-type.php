@@ -112,7 +112,7 @@
 
             <div class="cp-box cp-toggle-box cp-sep">
                 <label>
-                    <input type="checkbox" name="meta_allow_workbook" {{_.checked(true, allow_workbook)}} class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
+                    <input type="checkbox" name="meta_allow_workbook" {{_.checked(true, meta_allow_workbook)}} class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
                     <span class="label"><?php _e( 'Enable workbook', 'cp' ); ?></span>
                 </label>
                 <p class="description"><?php _e( 'Users can access their workbook which will show their progress/scores for the course.', 'cp' ); ?></p>
@@ -120,10 +120,52 @@
 
             <div class="cp-box cp-toggle-box">
                 <label>
-                    <input type="checkbox" name="meta_payment_paid_course" {{_.checked(true, payment_paid_course)}} class="cp-toggle-input" autocomplejte="off" /> <span class="cp-toggle-btn"></span>
+                    <input type="checkbox" name="meta_payment_paid_course" {{_.checked( true, meta_payment_paid_course)}} class="cp-toggle-input" autocomplejte="off" /> <span class="cp-toggle-btn"></span>
                     <span class="label"><?php _e( 'This is a paid course', 'cp' ); ?></span>
                 </label>
                 <p class="description"><?php _e( 'Will allow you to set-up payment gateway/options.', 'cp' ); ?></p>
+            </div>
+
+            <div class="cp-box cp-box-off{{  true === meta_payment_paid_course? '':' hidden' }}">
+                <div class="payment-message">
+                    <h3><?php _e( 'Sell your courses online with MarketPress.', 'cp' ); ?></h3>
+                    <p><?php _e( 'To start selling your course, please install and activate MarketPress or contact your administrator to enable MarketPress for your site.', 'cp' ); ?></p>
+                    <p><?php _e( 'Other supported plugins: WooCommerce', 'cp' ); ?></p>
+                </div>
+            </div>
+
+            <div class="cp-box cp-box-marketpress{{  true === meta_payment_paid_course? '':' hidden' }}">
+                <h3><?php _e( 'MarketPress Product Settings', 'cp' ); ?></h3>
+                <p class="description"><?php _e( 'Your course will be a new product in MarketPress. Enter your course\'s payment settings below.', 'cp' ); ?></p>
+            </div>
+
+            <div class="cp-box cp-box-marketpress{{  true === meta_payment_paid_course? '':' hidden' }}">
+                <label class="label"> <?php esc_html_e( 'Full Price', 'cp' ); ?></label>
+                <input type="text" name="meta_mp_product_price" value="{{meta_mp_product_price}}" />
+            </div>
+
+            <div class="cp-box cp-box-marketpress{{  true === meta_payment_paid_course? '':' hidden' }}">
+                <label class="label"><?php esc_html_e( 'Sale Price', 'cp' ); ?></label>
+                <input type="text" name="meta_mp_product_sale_price" value="{{meta_mp_product_sale_price}}" />
+            </div>
+
+            <div class="cp-box cp-toggle-box cp-box-marketpress{{  true === meta_payment_paid_course? '':' hidden' }}">
+                <label>
+                    <input type="checkbox" name="meta_mp_sale_price_enabled" {{_.checked(true, meta_mp_sale_price_enabled)}} class="cp-toggle-input" autocomplejte="off" /> <span class="cp-toggle-btn"></span>
+                    <span class="label"><?php esc_html_e( 'Enable Sale Price', 'cp' ); ?></span>
+                </label>
+            </div>
+
+            <div class="cp-box cp-box-marketpress{{  true === meta_payment_paid_course? '':' hidden' }}">
+                <label class="label"><?php esc_html_e( 'Course SKU:', 'cp' ); ?></label>
+                <input type="text" name="meta_mp_sku" placeholder="{{mp_sku_placeholder}}" value="{{meta_mp_sku}}" />
+            </div>
+
+            <div class="cp-box cp-toggle-box cp-box-marketpress{{  true === meta_payment_paid_course? '':' hidden' }}">
+                <label>
+                    <input type="checkbox" name="meta_mp_sale_price_enabled" {{_.checked(true, meta_mp_auto_sku)}} class="cp-toggle-input" autocomplejte="off" /> <span class="cp-toggle-btn"></span>
+                    <span class="label"><?php esc_html_e( 'Automatically generate Stock Keeping Units (SKUs)', 'cp' ); ?></span>
+                </label>
             </div>
         </div>
     </div>

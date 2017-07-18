@@ -123,9 +123,10 @@
                 container.find('textarea#' + id).val(content);
                 is_mce = container.find('.wp-editor-wrap').is('.tmce-active');
 
-                if ( win.tinymce.get(id) ) {
+                if ( win.tinymce && win.tinymce.get(id) ) {
                     editor = win.tinymce.get(id);
                     editor.destroy();
+                    window.alert(id);
                 }
 
                 mceinit.selector = '#' + id;
@@ -161,8 +162,7 @@
                         }
                     });
 
-                }, 100 );
-
+                }, 200 );
             }
         });
     });

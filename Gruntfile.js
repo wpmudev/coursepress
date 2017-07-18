@@ -51,8 +51,10 @@ module.exports = function(grunt) {
 				// ADd JS that will be loaded at course edit page
 				// assets/js/src/admin/course-edit/...
                 'assets/js/src/admin/course-edit/course-model.js',
+                'assets/js/src/admin/course-edit/sample-course.js',
                 'assets/js/src/admin/course-edit/course-type.js',
                 'assets/js/src/admin/course-edit/course-settings.js',
+                'assets/js/src/admin/course-edit/course-settings-modal.js',
                 'assets/js/src/admin/course-edit/course-completion.js',
                 'assets/js/src/admin/course-edit/step-text.js',
                 'assets/js/src/admin/course-edit/step-image.js',
@@ -61,10 +63,15 @@ module.exports = function(grunt) {
                 'assets/js/src/admin/course-edit/step-file-upload.js',
                 'assets/js/src/admin/course-edit/step-quiz.js',
                 'assets/js/src/admin/course-edit/step-zip.js',
+                'assets/js/src/admin/course-edit/step-written.js',
+                'assets/js/src/admin/course-edit/step-discussion.js',
+                'assets/js/src/admin/course-edit/step-download.js',
+                'assets/js/src/admin/course-edit/unit-steps.js',
                 'assets/js/src/admin/course-edit/step.js',
                 'assets/js/src/admin/course-edit/unit-modules.js',
                 'assets/js/src/admin/course-edit/unit-details.js',
                 'assets/js/src/admin/course-edit/course-units.js',
+                'assets/js/src/admin/course-edit/course-students.js',
                 'assets/js/src/admin/course-edit/course-setup.js'
 			],
 			'assets/js/coursepress_students.js': [

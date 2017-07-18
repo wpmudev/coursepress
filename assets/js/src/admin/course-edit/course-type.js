@@ -1,9 +1,9 @@
-/* global CoursePress, _ */
+/* global CoursePress, _, _coursepress */
 
 (function(){
     'use strict';
 
-    CoursePress.Define('CourseType', function($) {
+    CoursePress.Define('CourseType', function( $, doc, win ) {
         return CoursePress.View.extend({
             template_id: 'coursepress-course-type-tpl',
             el: $('.coursepress-page #course-type'),
@@ -12,6 +12,7 @@
                 'keyup [name="post_title"]': 'updatePostName',
                 'keyup [name="post_name"]': 'updateSlug',
                 'change [name="meta_course_type"]': 'changeCourseType',
+                'change [name="meta_payment_paid_course"]': 'changeCoursePaid',
                 'change [name]': 'updateModel',
                 'focus [name]': 'removeErrorMarker',
                 'click .sample-course-btn': 'selectSampleCourse'
@@ -104,6 +105,21 @@
 
             selectSampleCourse: function() {
                 this.sample = new CoursePress.SampleCourse({}, this);
+            },
+
+            changeCoursePaid: function(ev) {
+                var paid = this.$(ev.currentTarget).is(':checked'),
+                    settings = win._coursepress.settings;
+
+                if ( paid ) {
+                    if ( settings.marketpress && settings.marketpress.enabled ) {
+                        $('.cp-box-marketpress').removeClass('hidden');
+                    } else {
+                        $('.cp-box-off').removeClass('hidden');
+                    }
+                } else {
+                    $('.cp-box-marketpress').addClass('hidden');
+                }
             }
         });
     });

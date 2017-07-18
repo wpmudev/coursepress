@@ -55,6 +55,10 @@
                 this.courseEditor.updateCourse();
             },
             setUpUI: function() {
+                var self;
+
+                self = this;
+
                 // set feature image
                 this.listing_image = new CoursePress.AddImage( this.$('#listing_image') );
                 this.listing_video = new CoursePress.AddVideo( this.$('#listing_video') );
@@ -66,6 +70,28 @@
                 });
 
                 this.$('[name="meta_enrollment_type"]').select2();
+
+                _.delay(function() {
+                    self.visualEditor({
+                        content: self.model.get( 'post_excerpt' ),
+                        container: self.$('.cp-course-overview'),
+                        callback: function( content ) {
+                            self.model.set( 'post_excerpt', content );
+                        }
+                    });
+
+                }, 100 );
+
+
+                _.delay(function() {
+                    self.visualEditor({
+                        content: self.model.get('post_content'),
+                        container: self.$('.cp-course-description'),
+                        callback: function( content ) {
+                            self.model.set( 'post_content', content );
+                        }
+                    });
+                }, 500 );
             },
 
             /**

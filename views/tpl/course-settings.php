@@ -17,7 +17,7 @@
 
             <div class="cp-box">
                 <label class="label" for="course-excerpt"><?php _e( 'Course short description', 'cp' ); ?></label>
-                <?php coursepress_teeny_editor( $post_excerpt, 'course-excerpt', array( 'textarea_name' => 'post_excerpt', 'textarea_rows' => 5 ) ); ?>
+                <div class="cp-course-overview"></div>
             </div>
         </div>
     </div>
@@ -31,7 +31,7 @@
         <div class="box-inner-content">
             <div class="cp-box">
                 <label class="label" for="course-description"><?php _e( 'Course full description', 'cp' ); ?></label>
-                <?php coursepress_visual_editor( $post_content, 'course-description', array( 'textarea_name' => 'post_content', 'textarea_rows' => 10 ) ); ?>
+                <div class="cp-course-description"></div>
             </div>
 
             <div class="cp-box cp-course-video">

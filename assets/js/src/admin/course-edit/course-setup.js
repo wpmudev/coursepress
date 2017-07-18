@@ -11,6 +11,7 @@
             currentStep: false,
             goNextStep: false,
             el: $( '#course-edit-template' ),
+            unitsview: false,
             events: {
                 'click .step': 'toggleContent',
                 'click .step-back': 'getPreviousStep',
@@ -98,9 +99,7 @@
                 return courseCompletion;
             },
             courseUnitsView: function() {
-                var courseUnits = new CoursePress.CourseUnits(this.model, this);
-
-                return courseUnits;
+                this.unitsview = new CoursePress.CourseUnits(this.model, this);
             },
             courseStudentsView: function() {
                 this.students = new CoursePress.Course_Students( this.model, this );

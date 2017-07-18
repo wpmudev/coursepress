@@ -120,7 +120,7 @@
                 'change [name]': 'updateModel'
             },
             initialize: function( courseModel, EditCourse ) {
-                this.with_modules = EditCourse.model.get('with_modules');
+                this.with_modules = EditCourse.model.get('meta_with_modules');
                 this.courseId = courseModel.get('ID');
                 this.model = courseModel;
                 this.editCourse = EditCourse;
@@ -134,7 +134,7 @@
 
                 unitsData = {};
                 found = 0;
-                with_modules = this.editCourse.model.get('with_modules');
+                with_modules = this.editCourse.model.get('meta_with_modules');
 
                 _.each( collection.models, function( model ) {
                     var id, count;
