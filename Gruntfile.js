@@ -74,7 +74,8 @@ module.exports = function(grunt) {
 			'assets/js/coursepress_forum.js': [
 				// Add JS that will be loaded at Forum page
 				// assets/js/src/admin/forum/...
-				'assets/js/src/common/cp-search-form.js'
+				'assets/js/src/common/cp-search-form.js',
+				'assets/js/src/admin/forum/edit.js'
 			],
 			'assets/js/coursepress_notifications.js': [
 				// Add JS that will be loaded at Notifications page

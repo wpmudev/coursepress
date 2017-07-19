@@ -68,6 +68,15 @@ if ( ! empty( $forums ) ) {
 switch ( $column_id ) {
 	case 'topic' :
 		echo $forum->post_title;
+		echo '<div class="row-actions">';
+		printf(
+			'<span class="edit"><a href="%s" aria-label="%s “%s”">Edit</a>',
+			$forum->edit_link,
+			esc_attr__( 'Edit', 'cp' ),
+			esc_attr( $forum->post_title ),
+			esc_html__( 'Edit', 'cp' )
+		);
+		echo '</div>';
 	break;
 	case 'course' :
 		if ( isset( $courses[ $forum->course_id ] ) ) {
