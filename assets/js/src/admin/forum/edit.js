@@ -22,7 +22,18 @@
                 '_wpnonce': $('#coursepress-notifications .option-unit_id select').data('nonce')
             };
             jQuery.get(ajaxurl, data, function(response) {
-                console.log('Got this from the server: ' + response);
+                var units = $('[name=unit_id]');
+                var options = '<option value="'+units.data('all-value')+'">'+units.data('all-label')+'</option>';
+                var v = parseInt( units.data('value') );
+                units.empty();
+                $.each( response.data, function( key, value ) {
+                    options += '<option value="'+value.ID+'" data-key="'+key+'"';
+                    if ( v === parseInt( value.ID ) ) {
+                        options += ' selected="selected"';
+                    }
+                    options += '>'+value.post_title+'</option>';
+                });
+                units.html(options);
             });
             return course.post_title || course.text;
         }
