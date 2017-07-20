@@ -1,4 +1,9 @@
 <?php
+/**
+ * plugin name: cp
+ */
+
+
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 // Launch CoursePress.
