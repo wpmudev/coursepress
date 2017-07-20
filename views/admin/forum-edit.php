@@ -14,10 +14,14 @@
 				'post_title' => array(
 					'type' => 'text',
 					'value' => $post_title,
+					'class' => 'large-text',
 				),
 				'post_content' => array(
 					'type' => 'wp_editor',
 					'value' => $post_content,
+					'options' => array(
+						'quicktags' => false,
+					),
 				),
 			),
 		);
