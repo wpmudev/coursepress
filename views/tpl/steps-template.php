@@ -1,6 +1,6 @@
 <script type="text/template" id="coursepress-step-tpl">
     <div class="cp-step-header">
-        <span class="step-type">{{window._coursepress.steps[type]}}</span>
+        <span class="step-type">{{window._coursepress.steps[module_type]}}</span>
         <input type="text" name="post_title" value="{{post_title}}" />
         <div class="step-config">
             <button type="button"></button>
@@ -30,22 +30,22 @@
 <script type="text/template" id="coursepress-step-image">
     <div class="cp-box">
         <label class="label"><?php _e( 'Image Source', 'cp' ); ?></label>
-        <input type="text" name="meta_image_url" class="cp-add-image-input" id="meta_image_url_{{menu_order}}" />
+        <input type="text" name="meta_image_url" class="cp-add-image-input" value="{{meta_image_url}}" id="meta_image_url_{{menu_order}}" />
     </div>
     <div class="cp-box cp-toggle-box">
         <label>
-            <input type="checkbox" name="meta_show_media_caption" value="1" class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+            <input type="checkbox" name="meta_show_media_caption" value="1" class="cp-toggle-input" {{_.checked(1, meta_show_media_caption)}} /> <span class="cp-toggle-btn"></span>
             <span class="label"><?php _e( 'Show image caption', 'cp' ); ?></span>
         </label>
     </div>
     <div class="cp-box image-custom-caption inactive">
         <div class="cp-toggle-box">
             <label>
-                <input type="checkbox" name="meta_caption_field" value="media" class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+                <input type="checkbox" name="meta_caption_field" value="media" {{_.checked('media', meta_caption_field)}} class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
                 <span class="label"><?php _e( 'Show media caption', 'cp' ); ?></span>
             </label>
         </div>
-        <input type="text" class="widefat" name="meta_caption_custom_text" disabled="disabled" placeholder="<?php _e( 'Type custom caption here', 'cp' ); ?>" />
+        <input type="text" class="widefat" name="meta_caption_custom_text" value="{{meta_caption_custom_text}}" disabled="disabled" placeholder="<?php _e( 'Type custom caption here', 'cp' ); ?>" />
     </div>
 </script>
 
@@ -199,7 +199,7 @@
             </div>
             <div class="cp-box cp-toggle-box">
                 <label>
-                    <input type="checkbox" name="meta_assessable" value="1" class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+                    <input type="checkbox" name="meta_assessable" value="1" class="cp-toggle-input" {{_.checked(true, meta_assessable)}} /> <span class="cp-toggle-btn"></span>
                     <span class="label"><?php _e( 'Assessable', 'cp' ); ?></span>
                 </label>
             </div>
@@ -208,7 +208,7 @@
             <div class="cp-box">
                 <div class="cp-box-grey">
                     <label class="label"><?php _e( 'Number of allowed retries', 'cp' ); ?></label>
-                    <input type="text" name="meta_retry_attempts" />
+                    <input type="text" name="meta_retry_attempts" value="{{meta_retry_attempts}}" />
                 </div>
             </div>
             <div class="cp-box">
@@ -241,6 +241,7 @@
         </div>
     </div>
 </script>
+
 <script type="text/template" id="coursepress-question-tpl">
     <div class="cp-question-header">
         <span class="q-type">{{window._coursepress.questions[type]}}</span>
@@ -252,18 +253,19 @@
 
         <div class="cp-box">
             <label class="label"><?php _e( 'Question text', 'cp' ); ?></label>
-            <textarea class="widefat"></textarea>
+            <textarea class="widefat" name="meta_question">{{question}}</textarea>
             <div class="question-answers"></div>
             <button type="button" class="cp-btn cp-btn-xs cp-btn-active"><?php _e( 'Add Answer', 'cp' ); ?></button>
         </div>
     </div>
 </script>
+
 <script type="text/template" id="coursepress-question-answer">
     <label class="cp-checkbox">
-        <input type="checkbox" class="cp-checkbox-input" value="1" />
+        <input type="{{'multiple'===type?'checkbox':'radio'}}" name="meta_checked[{{cid}}]" autocomplete="off" class="cp-checkbox-input" value="1" {{_.checked(true, checked)}} />
         <span class="cp-checkbox-icon"></span>
     </label>
-    <input type="text" value="{{question}}" />
+    <input type="text" value="{{answer}}" />
     <span class="cp-btn cp-btn-trash"></span>
 </script>
 

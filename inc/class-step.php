@@ -44,6 +44,7 @@ class CoursePress_Step extends CoursePress_Utility {
 			'assessable',
 			'use_timer',
 			'allow_retries',
+			'retry_attempts',
 			'minimum_grade',
 			'duration',
 			'module_type',
@@ -62,8 +63,14 @@ class CoursePress_Step extends CoursePress_Utility {
 		foreach ( $keys as $key ) {
 			$value = get_post_meta( $id, $key, true );
 
-			if ( 'on' == $value )
+			if ( 'on' == $value ) {
 				$value = true;
+			}
+			if ( 'module_type' == $key ) {
+				if ( 'input-checkbox' == $value ) {
+					$value = 'input-quiz';
+				}
+			}
 
 			$this->__set( $key, $value );
 			$this->__set( 'meta_' . $key, $value );

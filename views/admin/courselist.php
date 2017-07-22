@@ -127,8 +127,8 @@
                                             <li class="menu-item-view-course">
                                                 <a href="<?php echo esc_url( $course->get_permalink() ); ?>" target="_blank"><?php _e( 'View Course', 'cp' ); ?></a>
                                             </li>
-                                            <li class="menu-item-delete cp-delete">
-                                                <a href=""><?php _e( 'Delete Course', 'cp' ); ?></a>
+                                            <li class="menu-item-delete cp-delete" data-course="<?php echo $course->ID; ?>">
+                                                <a href="#"><?php _e( 'Delete Course', 'cp' ); ?></a>
                                             </li>
                                         </ul>
                                     </div>

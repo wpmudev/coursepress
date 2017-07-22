@@ -35,18 +35,21 @@
                'click .menu-item-delete': 'removeStep',
                'click .menu-item-duplicate': 'duplicateStep'
            },
+
            initialize: function(model, stepController) {
                this.model = new Module(model);
-               this.type = this.model.get('type');
+               this.type = this.model.get('module_type');
                this.stepController = stepController;
                this.on( 'view_rendered', this.setStep, this );
                this.render();
            },
+
            setStep: function() {
                var step, self, has_modules, move_item;
 
                self = this;
                step = 'Step_' + this.type.toUpperCase();
+               //window.console.log(step);
                step = new CoursePress[step]( this.model, this );
                step.$el.appendTo(this.$('.cp-step-content'));
 
@@ -66,7 +69,10 @@
                } else {
                    move_item.hide();
                }
+
+               CoursePress.Events.trigger( 'coursepress:step_rendered', this );
            },
+
            toggleContents: function() {
                if ( this.$el.is('.open') ) {
                    this.$el.removeClass('open');
@@ -74,7 +80,9 @@
                    this.$el.addClass('open');
                }
            },
+
            reOrderSequence: function() {},
+
            toggleDropdown: function(ev) {
                var sender = this.$(ev.currentTarget),
                    div = sender.parent(),
@@ -86,9 +94,11 @@
                    div.addClass('open');
                }
            },
+
            removeStep: function() {
                this.remove();
            },
+
            duplicateStep: function() {
                var step = new CoursePress.Step( this.model.toJSON(), this.stepController );
                step.$el.appendTo($('.unit-steps'));

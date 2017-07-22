@@ -75,6 +75,7 @@
                 'assets/js/src/admin/course-edit/step-download.js',
                 'assets/js/src/admin/course-edit/unit-steps.js',
                 'assets/js/src/admin/course-edit/step.js',
+                'assets/js/src/admin/course-edit/unit-help.js',
                 'assets/js/src/admin/course-edit/unit-modules.js',
                 'assets/js/src/admin/course-edit/unit-details.js',
                 'assets/js/src/admin/course-edit/course-units.js',
@@ -250,6 +251,10 @@
     gulp.task('watch', ['css', 'js'], function () {
         gulp.watch(['assets/js/src/*.js', 'assets/js/src/**/*.js', 'assets/js/src/**/**/*.js'], ['js']);
         gulp.watch(['assets/sass/*.scss', 'assets/sass/**/*.scss', 'assets/sass/**/**/*.scss'], ['css']);
+        gulp.watch(['assets/js/src/*.js', 'assets/sass/*.scss'], ['clearcache']);
+    });
+    gulp.task( 'watch-js', ['js'], function() {
+        gulp.watch(['assets/js/src/*.js', 'assets/js/src/**/*.js', 'assets/js/src/**/**/*.js'], ['js']);
         gulp.watch(['assets/js/src/*.js', 'assets/sass/*.scss'], ['clearcache']);
     });
 

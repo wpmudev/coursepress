@@ -31,7 +31,8 @@
         </div>
         <div class="coursepress-popup-content">{{message}}</div>
         <div class="coursepress-popup-footer">
-            <button type="button" class="button-primary btn-ok">{{window._coursepress.text.ok}}</button>
+            <button type="button" class="cp-btn cp-btn-default cp-btn-cancel"><?php _e( 'Cancel', 'cp' ); ?></button>
+            <button type="button" class="cp-btn cp-btn-active btn-ok">{{window._coursepress.text.ok}}</button>
         </div>
     </div>
 </script>

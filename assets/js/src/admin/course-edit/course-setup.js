@@ -17,7 +17,8 @@
                 'click .step-back': 'getPreviousStep',
                 'click .step-next': 'getNextStep',
                 'click .step-cancel': 'returnToMainPage',
-                'click .step-icon-bars': 'toggleStepList'
+                'click .step-icon-bars': 'toggleStepList',
+                'change [name]': 'updateModel'
             },
             initialize: function(model) {
                 model = this.filter_model(model);
@@ -30,7 +31,7 @@
                 // Load course completion view
                 this.once( 'coursepress:load-step-course-completion', this.courseCompletionView, this );
                 // Load course units view
-                this.once('coursepress:load-step-course-units', this.courseUnitsView, this);
+                this.on('coursepress:load-step-course-units', this.courseUnitsView, this);
                 // Load course students view
                 this.once('coursepress:load-step-course-students', this.courseStudentsView, this);
 
@@ -99,7 +100,11 @@
                 return courseCompletion;
             },
             courseUnitsView: function() {
-                this.unitsview = new CoursePress.CourseUnits(this.model, this);
+                if ( ! this.unitsview ) {
+                    this.unitsview = new CoursePress.CourseUnits(this.model, this);
+                } else {
+                    this.unitsview.setUnitViewList();
+                }
             },
             courseStudentsView: function() {
                 this.students = new CoursePress.Course_Students( this.model, this );
@@ -230,8 +235,11 @@
                 this.model.on( 'coursepress:success_update_course', this.courseUpdated, this );
                 this.model.save();
             },
-            courseUpdated: function() {
-                //window.alert(data);
+            courseUpdated: function( data ) {
+                if ( data.ID && win.history.pushState ) {
+                    var url = win._coursepress.pagenow + '&cid=' + data.ID;
+                    win.history.pushState( {}, null, url );
+                }
             }
         });
 

@@ -179,11 +179,13 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			),
 			'coursepress_page' => add_query_arg( 'page', 'coursepress', admin_url() ),
 			'pagenow' => add_query_arg( 'page', $coursepress_pagenow, admin_url( 'admin.php' ) ),
+			'plugin_url' => $CoursePress->plugin_url,
 			// Common use texts
 			'text' => array(
 			    'ok' => __( 'Ok', 'cp' ),
 				'cancel' => __( 'Cancel', 'cp' ),
 				'error' => __( 'Error', 'cp' ),
+				'warning' => __( 'Warning', 'cp' ),
 				'media' => array(
 					'select_image' => __( 'Select Image', 'cp' ),
 					'select_feature_image' => __( 'Select Feature Image', 'cp' ),
@@ -191,6 +193,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 				),
                 'server_error' => __( 'An unexpected error occur while processing. Please try again.', 'cp' ),
                 'invalid_file_type' => __( 'Invalid file type!', 'cp' ),
+				'delete_course' => __( 'Deleting this course will also delete all units, modules, steps and any other data associated to this course. Are you sure you want to continue?', 'cp' ),
 			),
 		) );
 
@@ -329,6 +332,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		coursepress_render( 'views/admin/courselist', $args );
 		coursepress_render( 'views/admin/footer-text' );
+		coursepress_render( 'views/tpl/common' );
 	}
 
 	/**
@@ -442,7 +446,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		);
 
 		coursepress_render( 'views/tpl/course-type', array( 'course_id' => $course_id, 'sample_courses' => $sample_courses ) );
-		coursepress_render( 'views/tpl/course-completion' );
 		coursepress_render( 'views/tpl/course-settings', $settings_data );
 
         $certClass = $CoursePress->get_class( 'CoursePress_Certificate' );
@@ -498,8 +501,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
             'txt' => __( 'Text', 'cp' ),
         );
         $question_types = array(
-            'checkbox' => __( 'Multiple Choice', 'cp' ),
-            'radio' => __( 'Single Choice', 'cp' ),
+            'multiple' => __( 'Multiple Choice', 'cp' ),
+            'single' => __( 'Single Choice', 'cp' ),
             'select' => __( 'Selectable', 'cp' ),
         );
         $this->localize_array['questions'] = $question_types;

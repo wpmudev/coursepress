@@ -101,6 +101,17 @@
       }
     }
   }
+  .step-course-units {
+    &.active {
+      .menu-label {
+        &:after {
+          content: '\f068';
+          font-family: 'FontAwesome';
+          float: right;
+        }
+      }
+    }
+  }
 
   .course-menu {
     .step-course-units {
@@ -124,6 +135,53 @@
           display: block;
         }
       }
+    }
+  }
+  .step-icon {
+    display: inline-block;
+    cursor: pointer;
+    margin-right: 5px;
+
+    &:after {
+      content: '';
+      font-family: 'FontAwesome';
+      color: $grey_4;
+    }
+
+    &.step-input-quiz:after {
+      content: '\f15c';
+    }
+    &.step-image:after {
+      content: '\f03e';
+    }
+    &.step-video:after {
+      content: '\f16a';
+    }
+    &.step-discussion:after {
+      content: '\f0e5';
+      color: $blue_1;
+    }
+    &.step-download:after {
+      content: '\f0ed';
+    }
+    &.step-audio:after {
+      content: '\f0a1';
+    }
+    &.step-input-upload:after {
+      content: '\f093';
+      color: $blue_1;
+    }
+    &.step-input-quiz:after {
+      content: '\f19d';
+      color: $blue_1;
+    }
+    &.step-input-written:before {
+      content: '\f039';
+      color: $blue_1;
+    }
+    &.step-zipped:before {
+      content: '\f019';
+      color: $blue_1;
     }
   }
 
@@ -537,5 +595,112 @@
     background-color: $grey_6;
     min-height: 40px;
     visibility: visible !important;
+  }
+}
+
+.unit-help {
+  background-color: rgba(0, 0, 0, 0.4);
+
+  .coursepress-popup-body {
+    .coursepress-popup-content {
+      padding: 0;
+      line-height: 0;
+
+      img {
+        max-width: 100%;
+      }
+    }
+    .coursepress-popup-footer {
+      p {
+        text-align: left;
+        margin: 0;
+      }
+    }
+  }
+  .cp-box {
+    width: 50%;
+  }
+  .cp-box-2 {
+    padding: 15px;
+
+    p {
+      margin: 20% 0;
+    }
+  }
+  &.unit-help2 {
+    .coursepress-popup-body {
+      position: absolute;
+      margin: 0;
+      bottom: 25px;
+      left: 30%;
+    }
+  }
+
+  &.unit-help3,
+  &.unit-help4,
+  &.unit-help5,
+  &.unit-help6 {
+    .coursepress-popup-body {
+      background-color: #F2FBFF;
+      max-width: 450px;
+
+      .cp-close {
+        position: relative;
+        z-index: 2;
+        text-transform: uppercase;
+        margin-top: -20px;
+        color: #17A8E3;
+        cursor: pointer;
+
+        &:after {
+          display: none;
+        }
+      }
+    }
+    .coursepress-popup-content {
+      padding: 15px 25px;
+      text-align: center;
+      font-size: 0.9em;
+    }
+  }
+  &.unit-help3 .coursepress-popup-body {
+    margin-left: 0;
+    &:before {
+      content: '';
+      position: absolute;
+      background: url(../images/help-1.png) no-repeat;
+      background-size: contain;
+      width: 300px;
+      height: 170px;
+      margin-left: -270px;
+      margin-top: 35px;
+    }
+  }
+  &.unit-help4 .coursepress-popup-body {
+    margin-top: 350px;
+
+    &:before {
+      content: '';
+      position: absolute;
+      background: url(../images/help-2.png) no-repeat;
+      background-size: contain;
+      width: 800px;
+      height: 370px;
+      margin-top: -230px;
+      margin-left: -180px;
+    }
+  }
+  &.unit-help5 .coursepress-popup-body {
+    margin-top: 250px;
+    &:before {
+      content: '';
+      position: absolute;
+      background: url(../images/help-3.png) no-repeat;
+      background-size: contain;
+      width: 800px;
+      height: 370px;
+      margin-left: -180px;
+      bottom: 20px;
+    }
   }
 }

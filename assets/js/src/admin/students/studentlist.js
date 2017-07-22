@@ -9,7 +9,7 @@
         StudentList = CoursePress.View.extend({
             el: $('#coursepress-students'),
             events: {
-                'click #cp-search-clear': 'clearSearch',
+                'click #cp-search-clear': 'clearSearch'
             },
 
             /**

@@ -13,12 +13,14 @@
             events: {
                 'click .cp-btn-trash': 'removeAnswer'
             },
+
             initialize: function( model, question ) {
                 this.model = model;
-                window.console.log(model);
+                //window.console.log(model);
                 this.question = question;
                 this.render();
             },
+
             removeAnswer: function() {
                 this.remove();
             }
@@ -26,13 +28,8 @@
 
         Model = CoursePress.Request.extend({
             defaults: {
-                type: 'checkbox',
                 title: 'Untitled',
-                questions: [
-                    'Question 1',
-                    'Question 2',
-                    'Question 3'
-                ]
+                questions: []
             }
         });
 
@@ -44,23 +41,39 @@
                 'click .question-toggle-button': 'toggleQuestion'
             },
             quizView: false,
+
             initialize: function( model, quizView ) {
                 this.model = new Model(model);
+                //window.console.log(model);
                 this.quizView = quizView;
                 this.on( 'view_rendered', this.setUI, this );
                 this.render();
             },
+
             setUI: function() {
-                var questions;
+                var options, q, type;
 
-                questions = this.model.get('questions');
+                options = this.model.get('options');
+                type = this.model.get('type');
 
-                _.each( questions, function( question ) {
-                    question = {question: question};
-                    var q = new Answer(question, this);
-                    q.$el.appendTo( this.$('.question-answers') );
-                }, this );
+                if ( options.answers ) {
+                    _.each( options.answers, function( answer, index ) {
+                        var checked;
+                        checked = options.checked && !!options.checked[index];
+
+                        q = {
+                            type: this.model.get('type'),
+                            answer: answer,
+                            index: index,
+                            checked: checked,
+                            cid: this.model.cid
+                        };
+                        q = new Answer(q);
+                        q.$el.appendTo(this.$('.question-answers'));
+                    }, this );
+                }
             },
+
             addAnswer: function() {
                 var answer, options;
 
@@ -71,6 +84,7 @@
                 answer = new Answer(options, this );
                 answer.$el.appendTo(this.$('.question-answers'));
             },
+
             toggleQuestion: function() {
                 var is_open = this.$el.is('.open');
 
@@ -89,13 +103,15 @@
                'change [name]': 'updateModel',
                'change [name="meta_show_content"]': 'toggleContent'
            },
+
            initialize: function( model ) {
                this.model = model;
                this.on( 'view_rendered', this.setUI, this );
                this.render();
            },
+
            setUI: function() {
-               var self = this;
+               var self = this, questions;
 
                this.description = this.$('.cp-step-description');
                this.visualEditor({
@@ -107,9 +123,18 @@
                });
 
                this.$('select').select2();
+
+               questions = this.model.get('questions');
+
+               if ( questions ) {
+                   _.each( questions, function( question ) {
+                       this._addQuestion(question);
+                   }, this );
+               }
            },
+
            addQuestion: function(ev) {
-               var sender, type, question, questions;
+               var sender, type, question, questions, data;
 
                sender = this.$(ev.currentTarget);
                type = sender.val();
@@ -123,13 +148,30 @@
                    return;
                }
 
+               data = {type: type};
+               question = this._addQuestion(data);
+               questions.push(question);
+               /*
+
                question = new Question({type: type}, this);
                question.$el.appendTo(this.$('.cp-questions-container'));
                questions.push(question);
+               */
                this.$('.no-content-info').hide();
 
                this.$('.cp-questions-container').sortable();
            },
+
+           _addQuestion: function( model ) {
+               var question;
+
+
+               question = new Question(model, this);
+               question.$el.appendTo(this.$('.cp-questions-container'));
+
+               return question;
+           },
+
            toggleContent: function(ev) {
                var sender = this.$(ev.currentTarget),
                    is_checked = sender.is(':checked'),

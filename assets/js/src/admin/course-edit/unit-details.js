@@ -14,6 +14,7 @@
                 'keyup [name="post_title"]': 'updateUnitTitle',
                 'change [name]': 'updateModel'
             },
+
             initialize: function( model, controller ) {
                 this.model = model;
                 this.model.set( 'with_modules', controller.editCourse.model.get('with_modules') );
@@ -21,6 +22,7 @@
                 this.on( 'view_rendered', this.setUpUI, this );
                 this.render();
             },
+
             setUpUI: function() {
                 var self, with_modules;
 
@@ -47,6 +49,7 @@
                     this.steps.$el.appendTo(this.container);
                 }
             },
+
             toggleFeatureImage: function(ev) {
                 var sender = this.$(ev.currentTarget),
                     is_checked = sender.is(':checked'),
@@ -54,6 +57,7 @@
 
                 feature[ is_checked ? 'slideDown' : 'slideUp']();
             },
+
             toggleDescription: function( ev ) {
                 var sender = this.$(ev.currentTarget),
                     is_checked = sender.is(':checked'),
@@ -61,6 +65,7 @@
 
                 desc[ is_checked ? 'slideDown' : 'slideUp']();
             },
+
             toggleAvailability: function( ev ) {
                 var sender = this.$(ev.currentTarget),
                     value = sender.val(),
@@ -72,6 +77,7 @@
                     this.$('.cp-' + value).slideDown();
                 }
             },
+
             updateUnitTitle: function( ev ) {
                 var sender = this.$(ev.currentTarget),
                     value = sender.val();

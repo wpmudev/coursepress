@@ -1,4 +1,4 @@
-/* global CoursePress, _, _coursepress */
+/* global CoursePress, _ */
 
 (function(){
     'use strict';

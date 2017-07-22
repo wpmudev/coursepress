@@ -165,11 +165,18 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
         $course = get_post( $course_id );
 
-        return array( 'success' => true, 'course' => $course );
+        return array( 'success' => true, 'ID' => $course_id, 'course' => $course );
     }
 
     function delete_course( $request ) {
-        // @todo: Do
+    	$course_id = (int) $request->course_id;
+
+    	if ( $course_id ) {
+    		coursepress_delete_course( $course_id );
+
+    		wp_send_json_success(true);
+	    }
+	    wp_send_json_error(true);
     }
 
     /**
@@ -316,7 +323,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
         $importClass = new CoursePress_Import( $the_course, $request );
         $course = $importClass->get_course();
-error_log(print_r($course,true));
+
         wp_send_json_success( array( 'course' => $course ) );
     }
 

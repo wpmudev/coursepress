@@ -18,7 +18,7 @@
                 }
             },
             checked: function (value, selected) {
-                return _.isTrue(value, selected) ? 'checked="checked"' : '';
+                return _.isTrue(value, selected) ? 'checked=checked' : '';
             },
             selected: function (value, selected) {
                 return _.isTrue(value, selected) ? 'selected="selected"' : '';
@@ -46,6 +46,7 @@
                 'change [name]': 'updateModel',
                 'focus [name]': 'removeErrorMarker'
             },
+            time: 10,
             initialize: function () {
                 if (arguments && arguments[0]) {
                     this.model = new CoursePress.Request(arguments[0]);
@@ -95,57 +96,59 @@
                 }
             },
             visualEditor: function( options ) {
-                var id, container, tpl, tpl_id, settings, mceinit, qtinit, editor,
-                    content, date, is_mce;
-
-                date = new Date();
-
-                id = 'post_editor_' + date.getTime();
-                container = options.container;
-                content = options.content;
-
-                if ( win.tinyMCEPreInit ) {
-                    mceinit = win.tinyMCEPreInit.mceInit['coursepress_editor'];
-                    qtinit = win.tinyMCEPreInit.qtInit['coursepress_editor'];
-                }
-
-                tpl_id = 'coursepress-visual-editor';
-
-                tpl = $('#' + tpl_id).html();
-                tpl = tpl.replace( /coursepress_editor/g, id );
-                settings = {
-                    evaluate: /<#([\s\S]+?)#>/g,
-                    interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
-                    escape: /\{\{([^\}]+?)\}\}(?!\})/g
-                };
-                tpl = _.template( tpl, null, settings );
-                container.html( tpl );
-                container.find('textarea#' + id).val(content);
-                is_mce = container.find('.wp-editor-wrap').is('.tmce-active');
-
-                if ( win.tinymce && win.tinymce.get(id) ) {
-                    editor = win.tinymce.get(id);
-                    editor.destroy();
-                    window.alert(id);
-                }
-
-                mceinit.selector = '#' + id;
-                qtinit.id = id;
-                win.tinyMCEPreInit.mceInit[id] = mceinit;
-                win.tinyMCEPreInit.qtInit[id] = qtinit;
+                this.time += 200;
 
                 _.delay(function() {
-                    if ( is_mce ) {
+
+                    var id, container, tpl, tpl_id, settings, mceinit, qtinit, editor,
+                        content, date, is_mce;
+
+                    date = new Date();
+
+                    id = 'post_editor_' + date.getTime();
+                    container = options.container;
+                    content = options.content;
+
+                    if (win.tinyMCEPreInit) {
+                        mceinit = win.tinyMCEPreInit.mceInit['coursepress_editor'];
+                        qtinit = win.tinyMCEPreInit.qtInit['coursepress_editor'];
+                    }
+
+                    tpl_id = 'coursepress-visual-editor';
+
+                    tpl = $('#' + tpl_id).html();
+                    tpl = tpl.replace(/coursepress_editor/g, id);
+                    settings = {
+                        evaluate: /<#([\s\S]+?)#>/g,
+                        interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
+                        escape: /\{\{([^\}]+?)\}\}(?!\})/g
+                    };
+                    tpl = _.template(tpl, null, settings);
+                    container.html(tpl);
+                    container.find('textarea#' + id).val(content);
+                    is_mce = container.find('.wp-editor-wrap').is('.tmce-active');
+
+                    if (win.tinymce && win.tinymce.get(id)) {
+                        editor = win.tinymce.get(id);
+                        editor.destroy();
+                    }
+
+                    mceinit.selector = '#' + id;
+                    qtinit.id = id;
+                    win.tinyMCEPreInit.mceInit[id] = mceinit;
+                    win.tinyMCEPreInit.qtInit[id] = qtinit;
+
+                    if (is_mce) {
                         win.tinymce.init(mceinit);
                         editor = win.tinymce.get(id);
-                        container.find('.switch-html').one( 'click', function() {
+                        container.find('.switch-html').one('click', function () {
                             win.quicktags(qtinit);
                         });
                     } else {
                         win.quicktags(qtinit);
                     }
 
-                    if ( editor ) {
+                    if (editor) {
                         // Add on change callback
                         editor.on('change', function () {
                             content = editor.getContent();
@@ -155,14 +158,14 @@
                             }
                         });
                     }
-                    container.find( 'textarea#' + id ).val(content).on( 'change', function() {
+                    container.find('textarea#' + id).val(content).on('change', function () {
                         content = $(this).val();
-                        if ( options.callback ) {
+                        if (options.callback) {
                             options.callback.call(null, content);
                         }
                     });
 
-                }, 200 );
+                }, this.time );
             }
         });
     });

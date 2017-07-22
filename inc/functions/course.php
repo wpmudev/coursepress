@@ -677,3 +677,51 @@ function coursepress_get_course_facilitators( $course_id ) {
 
 	return array();
 }
+
+function coursepress_delete_course( $course_id ) {
+	$course = coursepress_get_course( $course_id );
+
+	if ( is_wp_error( $course ) ) {
+		return $course;
+	}
+
+	$units = $course->get_units(false);
+
+	if ( $units ) {
+		foreach ( $units as $unit ) {
+			$unit_id = $unit->__get( 'ID' );
+
+			// Delete all steps
+			$steps = $unit->get_steps(false);
+
+			foreach ( $steps as $step ) {
+				$step_id = $step->__get( 'ID' );
+
+				if ( $step_id > 0 ) {
+					wp_delete_post( $step_id, true );
+				}
+			}
+
+			wp_delete_post( $unit_id );
+		}
+	}
+
+	// Remove students of this course
+	$students = $course->get_students();
+
+	if ( $students ) {
+		foreach ( $students as $student ) {
+
+		}
+	}
+
+	// Now delete the course
+	wp_delete_post( $course_id );
+
+	/**
+	 * Fired whenever a course is deleted.
+	 */
+	do_action( 'coursepress_course_deleted', $course_id );
+
+	return true;
+}

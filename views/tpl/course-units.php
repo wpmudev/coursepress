@@ -101,7 +101,7 @@
                     <li class="module-item" data-order="{{pos}}">
                         <span>{{module.title}}</span>
                     </li>
-                    <# }) #>
+                <# }) #>
             </ul>
         </div>
     </div>
@@ -177,38 +177,158 @@
 </script>
 
 <script type="text/template" id="coursepress-unit-list-tpl">
-    <ul class="units-list">
-        <# _.each( units, function( data, id ) { #>
-            <li class="unit-item" data-unit="{{id}}">
-                <span class="cp-count" data-count="{{data.count}}">{{data.count}}</span>
-                <span class="unit-title">{{data.title}}</span>
-            </li>
-            <# })#>
-    </ul>
+    <ul class="units-list"></ul>
     <button type="button" class="cp-btn cp-btn-default cp-btn-xs new-unit"><?php _e( 'Add Unit', 'cp' ); ?></button>
+</script>
+
+<script type="text/template" id="coursepress-unit-item-tpl">
+    <span class="cp-count" data-count="{{count}}">{{count}}</span>
+    <span class="unit-title">{{post_title}}</span>
 </script>
 
 <script type="text/template" id="coursepress-unit-tpl">
     <div class="cp-unit-heading">
         <label>{{post_title}}</label>
         <button type="button" class="cp-btn cp-bordered-btn cp-btn-xs"><?php _e( 'Preview', 'cp' ); ?></button>
-        <button type="button" class="cp-btn cp-bordered-btn cp-btn-xs" data-unit="{{ID}}"><?php _e( 'Edit Unit', 'cp' ); ?></button>
+        <button type="button" class="cp-btn cp-bordered-btn cp-btn-xs edit-unit" data-unit="{{cid}}"><?php _e( 'Edit Unit', 'cp' ); ?></button>
     </div>
     <div class="cp-unit-content cp-unit-steps">
         <table class="unit-table-list">
-        <# _.each( modules, function( module, module_id ) { #>
-            <tr>
-                <td class="column-unit">{{module.title}}</td>
-                <td class="column-step"></td>
-                <td class="column-preview">
-                    <label class="cp-checkbox">
-                        <input type="checkbox" class="cp-checkbox-input" {{_.checked(true, module.preview)}} />
-                        <span class="cp-checkbox-icon"></span>
-                    </label>
-                </td>
-                <td class="column-time">-</td>
-            </tr>
-            <# })#>
+            <# if ( modules ) { #>
+                <# _.each( modules, function( module, module_id ) { #>
+                    <tr>
+                        <td class="column-unit" data-module="{{module_id}}" data-unit="{{cid}}">{{module.title}}</td>
+                        <td class="column-step" data-module="{{module_id}}" data-unit="{{cid}}">
+                            <# if ( module.steps ) { #>
+                                <# _.each( module.steps, function( step ) { #>
+                                    <span class="step-icon step-{{step.module_type}}"></span>
+                                    <#})#>
+                                        <#}#>
+                        </td>
+                        <td class="column-preview">
+                            <label class="cp-checkbox">
+                                <input type="checkbox" class="cp-checkbox-input" {{_.checked(true, module.preview)}} />
+                                <span class="cp-checkbox-icon"></span>
+                            </label>
+                        </td>
+                        <td class="column-time">-</td>
+                    </tr>
+                    <# })#>
+            <# } else { #>
+                <# _.each( steps, function( step ) { #>
+                    <tr>
+                        <td class="column-unit">{{step.post_title}}</td>
+                        <td class="column-step">
+                            <span class="step-icon step-{{step.module_type}}"></span>
+                        </td>
+                        <td class="column-preview">
+                            <label class="cp-checkbox">
+                                <input type="checkbox" class="cp-checkbox-input" {{_.checked(true, step.preview)}} />
+                                <span class="cp-checkbox-icon"></span>
+                            </label>
+                        </td>
+                        <td class="column-time">-</td>
+                    </tr>
+                    <# }) #>
+            <# } #>
         </table>
     </div>
 </script>
+
+<script type="text/template" id="coursepress-unit-help-1-tpl">
+    <div class="coursepress-popup-body">
+        <div class="coursepress-popup-heading">
+            <div class="coursepress-popup-title">
+                <h3><?php _e( 'Modules or no modules, that is the question', 'cp' ); ?></h3>
+            </div>
+            <span class="cp-modal-close cp-close"></span>
+        </div>
+        <div class="coursepress-popup-content">
+            <img src="{{window._coursepress.plugin_url}}/assets/images/unit-help.png" />
+        </div>
+        <div class="coursepress-popup-footer">
+            <p><?php printf( __( 'Image on the left is a course structure for a course with modules. You can see various steps group e.g. %1$sMaking groceries list%2$s module consists of 2 steps. Courses with modules allow you to add more than 1 step to the screen so both steps inside %1$sMaking groceries list%2$s will be shown on the same screen.', 'cp' ), '<strong>', '</strong>' ); ?></p>
+        </div>
+    </div>
+</script>
+
+<script type="text/template" id="coursepress-unit-help-2-tpl">
+    <div class="coursepress-popup-body">
+        <div class="coursepress-popup-heading">
+            <div class="coursepress-popup-title">
+                <h3><?php _e( 'Woo, time to add some content', 'cp' ); ?></h3>
+            </div>
+            <span class="cp-modal-close cp-close"></span>
+        </div>
+        <div class="coursepress-popup-content">
+            <div class="cp-flex">
+                <div class="cp-box">
+                    <img src="{{window._coursepress.plugin_url}}/assets/images/unit-help-2.png" />
+                </div>
+                <div class="cp-box cp-box-2">
+                    <p><?php _e( 'Typically, courses consist of Units and Steps, where each step is a shown individuality to visitor. To show more than one step on screen they must be placed inside a module.', 'cp' ); ?></p>
+                </div>
+            </div>
+        </div>
+        <div class="coursepress-popup-footer">
+			<button type="button" class="cp-btn cp-btn-active cp-btn-got-it-1"><?php _e( 'Got it.', 'cp' ); ?></button>
+        </div>
+    </div>
+</script>
+<script type="text/template" id="coursepress-unit-help-3-tpl">
+    <div class="coursepress-popup-body">
+        <div class="coursepress-popup-heading">
+            <div class="coursepress-popup-title">
+                <h3><?php _e( 'Create your first content', 'cp' ); ?></h3>
+            </div>
+            <span class="cp-modal-close cp-close"><?php _e( 'Skip Help', 'cp' ); ?></span>
+        </div>
+        <div class="coursepress-popup-content">
+            <p><?php printf( __( 'Welcome! This wizard will help you set up your course content. First up, let\'s create your first unit! Go ahead and click %1$sAdd Unit%2$s to get started.', 'cp' ), '<strong>', '</strong>' ); ?></p>
+        </div>
+    </div>
+</script>
+
+<script type="text/template" id="coursepress-unit-help-4-tpl">
+    <div class="coursepress-popup-body">
+        <div class="coursepress-popup-heading">
+            <div class="coursepress-popup-title">
+                <h3><?php _e( 'Type unit title', 'cp' ); ?></h3>
+            </div>
+            <span class="cp-modal-close cp-close"><?php _e( 'Skip Help', 'cp' ); ?></span>
+        </div>
+        <div class="coursepress-popup-content">
+            <p><?php _e( 'Great start, you have now created your first unit. Give it a name above and hit return.', 'cp' ); ?></p>
+        </div>
+    </div>
+</script>
+
+<script type="text/template" id="coursepress-unit-help-5-tpl">
+    <div class="coursepress-popup-body">
+        <div class="coursepress-popup-heading">
+            <div class="coursepress-popup-title">
+                <h3><?php _e( 'Add step to unit', 'cp' ); ?></h3>
+            </div>
+            <span class="cp-modal-close cp-close"><?php _e( 'Skip Help', 'cp' ); ?></span>
+        </div>
+        <div class="coursepress-popup-content">
+            <p><?php _e( 'Doing great, lets set up the first step in your unit. You can have as few or as many steps as you like, and you can change their order later on.', 'cp' ); ?></p>
+        </div>
+    </div>
+</script>
+
+<script type="text/template" id="coursepress-unit-help-6-tpl">
+    <div class="coursepress-popup-body">
+        <div class="coursepress-popup-heading">
+            <div class="coursepress-popup-title">
+                <h3><?php _e( 'Fantastic', 'cp' ); ?></h3>
+            </div>
+            <span class="cp-modal-close cp-close"><?php _e( 'Skip Help', 'cp' ); ?></span>
+        </div>
+        <div class="coursepress-popup-content">
+            <p><?php _e( 'You now know everything you need to create a course and it\'s contents. If you ever want to go over this tutorial again, you can do so by clicking \'Help\' in the top-right corner. Have fun creating courses!', 'cp' ); ?></p>
+            <button type="button" class="cp-btn cp-btn-active cp-btn-got-it-2"><?php _e( 'Got it', 'cp' ); ?></button>
+        </div>
+    </div>
+</script>
+

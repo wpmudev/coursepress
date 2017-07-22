@@ -13,8 +13,11 @@
                 'keyup .cp-categories-selector .select2-search__field': 'updateSearchValue',
                 'click #cp-instructor-selector': 'instructorSelection',
                 'click #cp-facilitator-selector': 'facilitatorSelection',
-                'click ul.cp-tagged-list-removable li': 'removeUser'
+                'click ul.cp-tagged-list-removable li': 'removeUser',
+                'change [name]': 'updateModel',
+                'focus [name]': 'removeErrorMarker'
             },
+
             initialize: function(model, EditCourse) {
                 this.model = model;
                 this.request = new CoursePress.Request();
@@ -30,6 +33,7 @@
 
                 this.render();
             },
+
             validate: function() {
                 var summary, content, proceed;
 
@@ -54,6 +58,7 @@
 
                 this.courseEditor.updateCourse();
             },
+
             setUpUI: function() {
                 var self;
 
@@ -186,6 +191,10 @@
                 if ( typeof this.request.target !== 'undefined' ) {
                     this.request.target.remove();
                 }
+            },
+
+            updateModel: function(ev) {
+                this.courseEditor.updateModel(ev);
             }
         });
     });

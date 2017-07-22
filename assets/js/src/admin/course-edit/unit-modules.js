@@ -19,20 +19,31 @@
                 this.model = model;
                 this.steps = model.steps;
                 this.unitModel = unitModel;
-                this.on( 'view_rendered', this.setSteps, this );
+                this.on( 'view_rendered', this.setUI, this );
                 this.render();
             },
-            setSteps: function() {
+            setUI: function() {
                 this.stepContainer = this.$('.unit-steps');
+
+                if ( this.steps ) {
+                    _.each( this.steps, function( step ) {
+                        this.setStep(step);
+                    }, this );
+                }
             },
             addNewStep: function( ev ) {
-                var sender, type, step, menu_order, data;
+                var sender, type, menu_order, data;
 
                 menu_order = this.steps.length + 1;
                 sender = this.$(ev.currentTarget);
                 type = sender.data('step');
-                data = {type: type, menu_order: menu_order};
-                step = new CoursePress.Step(data, this);
+                data = {module_type: type, menu_order: menu_order};
+                this.setStep(data);
+            },
+            setStep: function( model ) {
+                var step;
+
+                step = new CoursePress.Step(model, this);
                 step.$el.appendTo(this.stepContainer);
             },
             updateModuleTitle: function(ev) {
@@ -55,10 +66,10 @@
                 this.model = model;
                 this.modules = model.get('modules');
                 this.unitModel = unitModel;
-                this.on( 'view_rendered', this.setSteps, this );
+                this.on( 'view_rendered', this.setUI, this );
                 this.render();
             },
-            setSteps: function() {
+            setUI: function() {
                 this.stepsContainer = this.$('#cp-module-steps');
 
                 // Set the first module
