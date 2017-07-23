@@ -21,6 +21,7 @@ class CoursePress_Step_Video extends CoursePress_Step {
 			'video_loop',
 			'video_hide_controls',
 			'hide_related_media',
+			'show_media_caption',
 		));
 
 		return $keys;

@@ -94,14 +94,39 @@ function coursepress_get_categories() {
  * @return mixed
  */
 function coursepress_get_setting( $key = true, $default = '' ) {
-    global $CoursePress, $CoursePress_Data_Users;
+    global $CoursePress_Data_Users;
 
     $caps = coursepress_get_array_val( $CoursePress_Data_Users->__get( 'capabilities' ), 'instructor' );
     $settings = coursepress_get_option( 'coursepress_settings', array() );
 
     $defaults = array(
-        'general' => array(),
-        'slugs' => array(),
+        'general' => array(
+        	'details_media_type' => 'default',
+	        'details_media_priority' => 'default',
+	        'listing_media_type' => 'default',
+	        'listing_media_priority' => 'default',
+	        'image_width' => 235,
+	        'image_height' => 235,
+        ),
+        'slugs' => array(
+        	'course' => 'courses',
+	        'course_category' => 'course_category',
+	        'units' => 'units',
+	        'notifications' => 'notifications',
+	        'discussions' => 'discussion',
+	        'discussions_new' => 'add_new_discussion',
+	        'grades' => 'grades',
+	        'workbook' => 'workbook',
+	        'login' => 'student-login',
+	        'signup' => 'courses-signup',
+	        'student_dashboard' => 'courses-dashboard',
+	        'student_settings' => 'student-settings',
+	        'instructor_profile' => 'instructor',
+	        'pages' => array(
+	        	'student_dashboard' => 0,
+		        'student_settings' => 0,
+	        )
+        ),
         'emails' => array(),
         'capabilities' => array(
             'instructor' => $caps,
@@ -148,8 +173,8 @@ function coursepress_get_setting( $key = true, $default = '' ) {
      * @since 3.0
      */
     $defaults = apply_filters( 'coursepress_default_settings', $defaults );
-
-    $settings = wp_parse_args( $settings, $defaults );
+	$settings['general'] = wp_parse_args( $settings['general'], $defaults['general'] );
+	$settings['slugs'] = wp_parse_args( $settings['slugs'], $defaults['slugs'] );
 
     if ( is_bool( $key ) && TRUE === $key ) {
         return $settings;

@@ -23,6 +23,9 @@
             selected: function (value, selected) {
                 return _.isTrue(value, selected) ? 'selected="selected"' : '';
             },
+            disabled: function( value, selected ) {
+                return _.isTrue( value, selected ) ? 'disabled=disabled': '';
+            },
             _getTemplate: function (template_id, data) {
                 var settings = {
                         evaluate: /<#([\s\S]+?)#>/g,

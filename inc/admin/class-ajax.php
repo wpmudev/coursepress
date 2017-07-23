@@ -194,6 +194,8 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
         //error_log(print_r($request,true));
         coursepress_update_setting( true, $request );
 
+        flush_rewrite_rules();
+
         return array( 'success' => true );
     }
 

@@ -88,6 +88,7 @@ final class CoursePress {
 	protected $core_front_classes = array(
 		'CoursePress_FrontPage',
 		'CoursePress_Shortcode',
+		'CoursePress_Menu',
 	);
 
 	public function __construct() {

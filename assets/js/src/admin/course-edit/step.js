@@ -49,7 +49,11 @@
 
                self = this;
                step = 'Step_' + this.type.toUpperCase();
-               //window.console.log(step);
+
+               if ( ! CoursePress[step] ) {
+                   return;
+               }
+
                step = new CoursePress[step]( this.model, this );
                step.$el.appendTo(this.$('.cp-step-content'));
 

@@ -34,18 +34,18 @@
     </div>
     <div class="cp-box cp-toggle-box">
         <label>
-            <input type="checkbox" name="meta_show_media_caption" value="1" class="cp-toggle-input" {{_.checked(1, meta_show_media_caption)}} /> <span class="cp-toggle-btn"></span>
+            <input type="checkbox" name="meta_show_media_caption" value="1" class="cp-toggle-input" {{_.checked(true, meta_show_media_caption)}} /> <span class="cp-toggle-btn"></span>
             <span class="label"><?php _e( 'Show image caption', 'cp' ); ?></span>
         </label>
     </div>
-    <div class="cp-box image-custom-caption inactive">
+    <div class="cp-box image-custom-caption {{meta_show_media_caption?'':'inactive'}}">
         <div class="cp-toggle-box">
             <label>
                 <input type="checkbox" name="meta_caption_field" value="media" {{_.checked('media', meta_caption_field)}} class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
                 <span class="label"><?php _e( 'Show media caption', 'cp' ); ?></span>
             </label>
         </div>
-        <input type="text" class="widefat" name="meta_caption_custom_text" value="{{meta_caption_custom_text}}" disabled="disabled" placeholder="<?php _e( 'Type custom caption here', 'cp' ); ?>" />
+        <input type="text" class="widefat" name="meta_caption_custom_text" value="{{meta_caption_custom_text}}" {{_.disabled(false, meta_show_media_caption)}} placeholder="<?php _e( 'Type custom caption here', 'cp' ); ?>" />
     </div>
 </script>
 
@@ -53,53 +53,53 @@
     <div class="cp-flex">
         <div class="cp-box cp-toggle-box">
             <label>
-                <input type="checkbox" name="meta_mandatory" value="1" class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+                <input type="checkbox" name="meta_mandatory" value="1" class="cp-toggle-input" {{_.checked(true, meta_mandatory)}} /> <span class="cp-toggle-btn"></span>
                 <span class="label"><?php _e( 'Required', 'cp' ); ?></span>
             </label>
         </div>
         <div class="cp-box cp-toggle-box">
             <label>
-                <input type="checkbox" name="meta_allow_retries" value="1" class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+                <input type="checkbox" name="meta_allow_retries" value="1" class="cp-toggle-input" {{_.checked(true, meta_allow_retries)}} /> <span class="cp-toggle-btn"></span>
                 <span class="label"><?php _e( 'Allow retries', 'cp' ); ?></span>
             </label>
             <div class="cp-box-grey">
                 <label class="label"><?php _e( 'Number of allowed retries', 'cp' ); ?></label>
-                <input type="text" name="meta_retry_attempts" />
+                <input type="text" name="meta_retry_attempts" value="{{meta_retry_attempts}}" />
             </div>
         </div>
     </div>
     <div class="cp-box">
         <label class="label"><?php _e( 'Video Source', 'cp' ); ?></label>
-        <input type="text" name="meta_video_url" class="widefat" />
+        <input type="text" class="widefat cp-add-video" name="meta_video_url" value="{{meta_video_url}}"  data-title="<?php _e( 'Select Video Source', 'cp' ); ?>" />
     </div>
 
     <div class="cp-box cp-toggle-box">
         <label>
-            <input type="checkbox" name="meta_video_loop" value="1" class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+            <input type="checkbox" name="meta_video_loop" value="1" class="cp-toggle-input" {{_.checked(true, meta_video_loop)}} /> <span class="cp-toggle-btn"></span>
             <span class="label"><?php _e( 'Restart the video when it ends', 'cp' ); ?></span>
         </label>
     </div>
     <div class="cp-box cp-toggle-box">
         <label>
-            <input type="checkbox" name="meta_video_autoplay" value="1" class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+            <input type="checkbox" name="meta_video_autoplay" value="1" class="cp-toggle-input" {{_.checked(true, meta_video_autoplay)}} /> <span class="cp-toggle-btn"></span>
             <span class="label"><?php _e( 'Auto play video on page load', 'cp' ); ?></span>
         </label>
     </div>
     <div class="cp-box cp-toggle-box">
         <label>
-            <input type="checkbox" name="meta_video_hide_controls" value="1" class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+            <input type="checkbox" name="meta_video_hide_controls" value="1" class="cp-toggle-input" {{_.checked(true, meta_video_hide_controls)}} /> <span class="cp-toggle-btn"></span>
             <span class="label"><?php _e( 'Hide video control buttons', 'cp' ); ?></span>
         </label>
     </div>
     <div class="cp-box cp-toggle-box">
         <label>
-            <input type="checkbox" name="meta_show_media_caption" value="1" class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+            <input type="checkbox" name="meta_show_media_caption" value="1" class="cp-toggle-input" {{_.checked(true, meta_show_media_caption)}} /> <span class="cp-toggle-btn"></span>
             <span class="label"><?php _e( 'Show video caption', 'cp' ); ?></span>
         </label>
     </div>
     <div class="cp-box cp-toggle-box">
         <label>
-            <input type="checkbox" name="meta_hide_related_media" value="1" class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+            <input type="checkbox" name="meta_hide_related_media" value="1" class="cp-toggle-input" {{_.checked(true, meta_hide_related_media)}} /> <span class="cp-toggle-btn"></span>
             <span class="label"><?php _e( 'Hide related videos', 'cp' ); ?></span>
         </label>
     </div>
@@ -109,24 +109,24 @@
     <div class="cp-flex">
         <div class="cp-box cp-toggle-box">
             <label>
-                <input type="checkbox" name="meta_mandatory" value="1" class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+                <input type="checkbox" name="meta_mandatory" value="1" class="cp-toggle-input" {{_.checked(true, meta_mandatory)}} /> <span class="cp-toggle-btn"></span>
                 <span class="label"><?php _e( 'Required', 'cp' ); ?></span>
             </label>
         </div>
         <div class="cp-box cp-toggle-box">
             <label>
-                <input type="checkbox" name="meta_allow_retries" value="1" class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+                <input type="checkbox" name="meta_allow_retries" value="1" class="cp-toggle-input" {{_.checked(meta_allow_retries)}} /> <span class="cp-toggle-btn"></span>
                 <span class="label"><?php _e( 'Allow retries', 'cp' ); ?></span>
             </label>
             <div class="cp-box-grey">
                 <label class="label"><?php _e( 'Number of allowed retries', 'cp' ); ?></label>
-                <input type="text" name="meta_retry_attempts" />
+                <input type="text" name="meta_retry_attempts" value="{{meta_retry_attempts}}" />
             </div>
         </div>
     </div>
     <div class="cp-box">
         <label class="label"><?php _e( 'Audio Source', 'cp' ); ?></label>
-        <input type="text" name="meta_audio_url" class="widefat" />
+        <input type="text" name="meta_audio_url" class="widefat"  value="{{meta_audio_url}}" />
     </div>
 </script>
 
@@ -140,14 +140,14 @@
         </div>
         <div class="cp-box cp-toggle-box">
             <label>
-                <input type="checkbox" name="meta_assessable" value="1" class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+                <input type="checkbox" name="meta_assessable" value="1" class="cp-toggle-input" {{_.checked(true, meta_assessable)}} /> <span class="cp-toggle-btn"></span>
                 <span class="label"><?php _e( 'Assessable', 'cp' ); ?></span>
             </label>
         </div>
     </div>
     <div class="cp-box cp-toggle-box">
         <label>
-            <input type="checkbox" name="meta_assessable" value="1" class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+            <input type="checkbox" name="meta_assessable" value="1" class="cp-toggle-input" {{_.checked(true, meta_allow_retries)}} /> <span class="cp-toggle-btn"></span>
             <span class="label"><?php _e( 'Allow retries', 'cp' ); ?></span>
         </label>
     </div>
@@ -155,13 +155,13 @@
         <div class="cp-box">
             <div class="cp-box-grey">
                 <label class="label"><?php _e( 'Number of allowed retries', 'cp' ); ?></label>
-                <input type="text" name="meta_retry_attempts" />
+                <input type="text" name="meta_retry_attempts" value="{{meta_retry_attempts}}" />
             </div>
         </div>
         <div class="cp-box">
             <div class="cp-box-grey">
                 <label class="label"><?php _e( 'Minimum Grade', 'cp' ); ?></label>
-                <input type="text" name="meta_retry_attempts" />
+                <input type="text" name="meta_minimum_grade" value="{{meta_minimum_grade}}" />
             </div>
         </div>
     </div>
@@ -353,15 +353,15 @@
 
         <div class="cp-box">
             <label class="label"><?php _e( 'Question text', 'cp' ); ?></label>
-            <textarea class="widefat"></textarea>
+            <textarea class="widefat" name="question">{{question}}</textarea>
         </div>
         <div class="cp-box">
             <label class="label"><?php _e( 'Answer area placeholder text', 'cp' ); ?></label>
-            <input type="text" name="meta_placeholder_text" class="widefat" value="{{meta_placeholder_text}}" placeholder="<?php _e( 'Describe how question should be answer', 'cp' ); ?>" />
+            <input type="text" name="meta_placeholder_text" class="widefat" value="{{placeholder_text}}" placeholder="<?php _e( 'Describe how question should be answer', 'cp' ); ?>" />
         </div>
         <div class="cp-box">
             <label class="label"><?php _e( 'Answer word limit', 'cp' ); ?></label>
-            <input type="text" name="meta_word_limit" value="{{meta_word_limit}}" />
+            <input type="text" name="meta_word_limit" value="{{word_limit}}" />
             <p class="description"><?php _e( 'Set 0 for no word limit answer', 'cp' ); ?></p>
         </div>
     </div>

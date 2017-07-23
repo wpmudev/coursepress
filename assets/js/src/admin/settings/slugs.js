@@ -7,8 +7,11 @@
         return CoursePress.View.extend({
             template_id: 'coursepress-slugs-setting-tpl',
             el: $('#coursepress-setting-slugs'),
+            events: {
+                'change [name]': 'updateModel'
+            },
             initialize: function( model, settingView ) {
-                this.model = model;
+                this.model = ! model ? {} : model;
                 this.settingView = settingView;
 
                 this.on( 'view_rendered', this.setUpUI, this );
@@ -46,6 +49,8 @@
                 }
             },
             getModel: function() {
+                window.console.log('slugs');
+                window.console.log(this.model);
                 return this.model;
             }
         });

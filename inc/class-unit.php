@@ -433,8 +433,8 @@ class CoursePress_Unit extends CoursePress_Utility {
 			'input-radio' => 'CoursePress_Step_Radio', // Legacy class
 			'radio_input_module' => 'CoursePress_Step_Radio', // Legacy type
 			'input-select' => 'CoursePress_Step_Select', // Legacy class
-			'input-textarea' => 'CoursePress_Step_Written',
-			'input-text' => 'CoursePress_Step_Written',
+			'input-textarea' => 'CoursePress_Step_InputText',
+			'input-text' => 'CoursePress_Step_InputText',
 			'text_input_module' => 'CoursePress_Step_Written', // Legacy type
 			'input-form' => 'CoursePress_Step_Form', // Legacy class
 		);

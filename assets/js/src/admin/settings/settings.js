@@ -14,8 +14,10 @@
             events: {
                 'click .cp-menu-item': 'setSettingPage',
                 'click .save-coursepress-setting': 'saveSetting',
-                'click .step-cancel': 'goToGeneral'
+                'click .step-cancel': 'goToGeneral',
+                'change [name]': 'updateModel'
             },
+
             initialize: function() {
                 this.once( 'coursepress:admin_setting_general', this.getGeneralSettingView, this );
                 this.once( 'coursepress:admin_setting_slugs', this.getSlugsSettingView, this );
@@ -61,6 +63,7 @@
                     this.saveButton.show();
                 }
             },
+
             setPage: function( setting ) {
                 this.currentPage = setting;
 
@@ -123,6 +126,7 @@
                     this.model.save();
                 }
             },
+
             goToGeneral: function() {
                 this.$( '.cp-menu-item.setting-general' ).trigger( 'click' );
                 $(win).scrollTop(0);
@@ -131,8 +135,6 @@
             after_update: function() {
                 var button = this.$('.save-coursepress-setting');
                 button.removeClass('cp-progress');
-                this.model.set( 'action', 'update_settings' );
-                this.model.save();
             }
         });
 

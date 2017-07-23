@@ -13,7 +13,7 @@
                var self = this;
 
                this.visualEditor({
-                   content: '',
+                   content: this.model.get('post_content'),
                    container: this.$el,
                    callback: function( content ) {
                        self.model.set( 'post_content', content );

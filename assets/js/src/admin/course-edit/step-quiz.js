@@ -16,7 +16,6 @@
 
             initialize: function( model, question ) {
                 this.model = model;
-                //window.console.log(model);
                 this.question = question;
                 this.render();
             },
@@ -44,7 +43,6 @@
 
             initialize: function( model, quizView ) {
                 this.model = new Model(model);
-                //window.console.log(model);
                 this.quizView = quizView;
                 this.on( 'view_rendered', this.setUI, this );
                 this.render();
@@ -130,6 +128,8 @@
                    _.each( questions, function( question ) {
                        this._addQuestion(question);
                    }, this );
+                   this.$('.no-content-info').hide();
+                   this.$('.cp-questions-container').sortable();
                }
            },
 
@@ -138,7 +138,7 @@
 
                sender = this.$(ev.currentTarget);
                type = sender.val();
-               questions = this.model.get( 'questions' );
+               questions = this.model.get('questions');
 
                if ( ! questions ) {
                    questions = [];
@@ -151,20 +151,13 @@
                data = {type: type};
                question = this._addQuestion(data);
                questions.push(question);
-               /*
 
-               question = new Question({type: type}, this);
-               question.$el.appendTo(this.$('.cp-questions-container'));
-               questions.push(question);
-               */
                this.$('.no-content-info').hide();
-
                this.$('.cp-questions-container').sortable();
            },
 
            _addQuestion: function( model ) {
                var question;
-
 
                question = new Question(model, this);
                question.$el.appendTo(this.$('.cp-questions-container'));

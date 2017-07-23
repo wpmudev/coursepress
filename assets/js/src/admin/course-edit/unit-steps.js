@@ -3,7 +3,7 @@
 (function() {
     'use strict';
 
-    CoursePress.Define( 'Unit_Steps', function() {
+    CoursePress.Define( 'Unit_Steps', function($) {
         return CoursePress.View.extend({
             template_id: 'coursepress-unit-steps-tpl',
             unitModel: false,
@@ -20,18 +20,29 @@
             },
 
             setUI: function() {
-                var steps;
+                var steps, step_view, unit_steps;
 
                 this.stepContainer = this.$('.unit-steps');
 
                 steps = this.model.get('steps');
 
                 if ( steps ) {
+
                     CoursePress.Events.on( 'coursepress:step_rendered', this.toggleStep, this );
 
                     _.each(steps, function (step) {
-                        this.setStep(step);
+                        step_view = this.setStep(step);
                     }, this);
+
+                    _.delay(function() {
+                        unit_steps = $('.unit-steps');
+                        unit_steps.sortable({
+                            axis: 'y',
+                            step: function() {
+                                step_view.reOrderSequence();
+                            }
+                        });
+                    }, 200 );
                 }
             },
 

@@ -13,6 +13,7 @@ class CoursePress_Step_Radio extends CoursePress_Step_Quiz {
 		$questions = $this->get_questions_data();
 		$this->__set( 'questions', $questions );
 		$this->__set( 'meta_questions', $questions );
+		$this->__set( 'module_type', 'input-quiz' );
 	}
 
 	protected function get_questions_data() {
