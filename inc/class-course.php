@@ -134,7 +134,7 @@ class CoursePress_Course extends CoursePress_Utility {
 			'cert_text_color' => '#5a5a5a',
 
 			/**
-			 * MarketPress defaults
+			 * paid course defaults
 			 */
 			'mp_auto_sku' => true,
 			'mp_product_price' => '',
