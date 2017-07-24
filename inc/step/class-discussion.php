@@ -38,8 +38,6 @@ class CoursePress_Step_Discussion extends CoursePress_Step {
 	}
 
 	protected function get_comment_form() {
-		$unit = $this->get_unit();
-		$course_id = $unit->__get( 'course_id' );
 		$form_class = array( 'comment-form', 'cp-comment-form' );
 		$comment_order = get_option( 'comment_order' );
 		$form_class[] = 'comment-form-' . $comment_order;
@@ -55,19 +53,29 @@ class CoursePress_Step_Discussion extends CoursePress_Step {
 			)
 		);
 
+		$redirect_to = coursepress_create_html(
+			'input',
+			array(
+				'type' => 'hidden',
+				'name' => 'redirect_to',
+				'value' => remove_query_arg( 'dummy' ),
+			)
+		);
+
 		$args = array(
 			'class_form' => implode( ' ', $form_class ),
-			'title_reply' => __( 'Post Here', 'CP_TD' ),
-			'label_submit' => __( 'Post', 'CP_TD' ),
+			'title_reply' => __( 'Post Here', 'cp' ),
+			'label_submit' => __( 'Post', 'cp' ),
 			'must_log_in' => '',
 			'logged_in_as' => '',
-			'action' => '',
+			//'action' => '',
 			'class_submit' => 'submit cp-comment-submit',
-			'comment_field' => $this->create_html( 'p', array( 'class' => 'comment-form-comment' ), $comment_field ),
+			'comment_field' => $this->create_html( 'p', array( 'class' => 'comment-form-comment' ), $comment_field )
+				. $redirect_to
 		);
 
 		ob_start();
-		comment_form( $args, $course_id );
+		comment_form( $args, $this->__get( 'ID' ) );
 		$comment_form = ob_get_clean();
 
 		return $comment_form;
@@ -84,8 +92,9 @@ class CoursePress_Step_Discussion extends CoursePress_Step {
 
 		$comments = $this->get_comments();
 
-		if ( ! empty( $comments ) )
+		if ( ! empty( $comments ) ) {
 			$template .= $this->create_html( 'div', array(), $comments );
+		}
 
 		$template .= $this->get_comment_form();
 

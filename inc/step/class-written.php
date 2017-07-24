@@ -27,37 +27,31 @@ class CoursePress_Step_Written extends CoursePress_Step {
 		$course_id = $unit->__get( 'course_id' );
 		$unit_id = $unit->__get( 'ID' );
 		$step_id = $this->__get( 'ID' );
-		$options = $this->__get( 'options' );
-		$type = $this->__get( 'module_type' );
+		$questions = $this->__get( 'questions' );
 
-		// Legacy call
-		$legacy_types = array( 'input-textarea', 'input-text', 'text_input_module' );
+		if ( ! empty( $questions ) ) {
+			foreach ( $questions as $index => $question ) {
+				$template = '';
 
-		if ( in_array( $type, $legacy_types ) ) {
-			$options[] = array(
-				'question' => '',
-				'placeholder_text' => $this->__get( 'placeholder_text' ),
-				'word_limit' => 0,
-			);
-		}
+				if ( ! empty( $question['question'] ) ) {
+					$txt_question = wpautop( $question['question'] );
+					$template .= $this->create_html( 'div', array( 'class' => 'question' ), $txt_question );
+				}
 
-		foreach ( $options as $index => $option ) {
-			$template = '';
-
-			if ( ! empty( $option['question'] ) ) {
-				$question = apply_filters( 'the_content', $option['question'] );
-				$template .= $this->create_html( 'div', array( 'class' => 'question' ), $question );
+				$name = sprintf( 'module[%d][%d][%d][%d]', $course_id, $unit_id, $step_id, $index );
+				$attr = array(
+					'name' => $name,
+					'class' => 'course-step-written',
+					'data-limit' => (int) $question['word_limit'],
+					'placeholder' => esc_attr( $question['placeholder_text'] ),
+				);
+				if ( $this->is_preview() ) {
+					$attr['readonly'] = 'readonly';
+					$attr['disabled'] = 'disabled';
+				}
+				$template .= $this->create_html( 'textarea', $attr );
+				$templates .= $this->create_html( 'div', array(), $template );
 			}
-			$name = sprintf( 'module[%d][%d][%d][%d]', $course_id, $unit_id, $step_id, $index );
-			$attr = array(
-				'name' => $name,
-				'class' => 'course-step-written',
-				'data-limit' => (int) $option['word_limit'],
-				'placeholder' => $option['placeholder_text'],
-			);
-
-			$template .= $this->create_html( 'textarea', $attr );
-			$templates .= $this->create_html( 'div', array(), $template );
 		}
 
 		return $templates;

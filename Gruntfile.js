@@ -127,6 +127,7 @@ module.exports = function(grunt) {
 
 		// SASS files to process. Resulting CSS files will be minified as well.
 		css_files_compile: {
+			'assets/css/front.css': 'assets/sass/front.scss',
 			'assets/css/admin-common.css': 'assets/sass/admin-common.scss',
 			'assets/css/coursepress.css': 'assets/sass/coursepress.scss',
 			'assets/css/coursepress_course.css': 'assets/sass/coursepress_course.scss',

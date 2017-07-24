@@ -19,7 +19,25 @@ class CoursePress_Step_FileUpload extends CoursePress_Step {
 	}
 
 	function get_question() {
-		// @todo: Do
-		return 'FILE UPLOAD HERE';
+		$unit = $this->get_unit();
+		$course_id = $unit->__get( 'course_id' );
+		$unit_id = $unit->__get( 'ID' );
+		$step_id = $this->__get( 'ID' );
+		$types = $this->__get( 'allowed_file_types' );
+		$name = sprintf( 'module[%d][%d][%d][%d]', $course_id, $unit_id, $step_id );
+
+		$attr = array(
+			'type' => 'file',
+			'name' => $name,
+			'data-types' => implode(',', $types ),
+		);
+		if ( $this->is_preview() ) {
+			$attr['readonly'] = 'readonly';
+			$attr['disabled'] = 'disabled';
+		}
+
+		$input = coursepress_create_html( 'input', $attr );
+
+		return $input;
 	}
 }

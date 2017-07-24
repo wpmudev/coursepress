@@ -11,7 +11,7 @@ $student = coursepress_get_user();
 $unit_progress = $student->get_unit_progress( $course->ID, $unit->ID );
 get_header(); ?>
 
-    <div class="coursepress-wrap">
+    <div class="coursepress-wrap course-unit">
         <div class="container">
             <div class="content-area">
                 <header class="page-header">
@@ -23,10 +23,12 @@ get_header(); ?>
                         echo coursepress_progress_wheel( array(
                                 'class' => 'per-unit-progress',
                                 'data-value' => $unit_progress,
-                                'data-size' => 72,
+                                'data-size' => 62,
                             ) );
                         ?>
                     </div>
+
+	                <?php coursepress_breadcrumb(); ?>
                 </header>
 
                 <div class="course-content-template">
@@ -47,8 +49,6 @@ get_header(); ?>
                         </div>
                     </div>
                 </div>
-
-	            <?php coursepress_breadcrumb(); ?>
             </div>
         </div>
     </div>

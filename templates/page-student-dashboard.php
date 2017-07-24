@@ -5,7 +5,7 @@
  * @since 3.0
  * @package CoursePress
  */
-$user = coursepress_get_user();
+
 
 get_header(); ?>
 
@@ -13,10 +13,17 @@ get_header(); ?>
 		<div class="container">
 			<div class="content-area">
 				<header class="page-header">
-					<h1 class="page-title"><?php _e( 'My Courses', 'cp' ); ?></h1>
+					<h1 class="page-title"><?php _e( 'Courses', 'cp' ); ?></h1>
 				</header>
 
-                <!-- @todo: Put student's courses here -->
+                <?php
+                    // My courses template
+                    coursepress_get_template( 'content', 'my-courses' );
+                    // Instructed courses
+                    coursepress_get_template( 'content', 'instructed-courses' );
+                    // Facilitated courses
+                    coursepress_get_template( 'content', 'facilitated-courses' );
+                ?>
 			</div>
 		</div>
 	</div>

@@ -104,7 +104,7 @@
 
             <div class="cp-box cp-toggle-box cp-sep">
                 <label>
-                    <input type="checkbox" name="meta_allow_discussion" {{_.checked(true, allow_discussion)}} class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
+                    <input type="checkbox" name="meta_allow_discussion" value="1" {{_.checked(true, meta_allow_discussion)}} class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
                     <span class="label"><?php _e( 'Enable course discussion', 'cp' ); ?></span>
                 </label>
                 <p class="description"><?php _e( 'Creates discussion area where users can post questions and get help from instructors, facilitators and other students', 'cp' ); ?></p>
@@ -112,7 +112,7 @@
 
             <div class="cp-box cp-toggle-box cp-sep">
                 <label>
-                    <input type="checkbox" name="meta_allow_workbook" {{_.checked(true, meta_allow_workbook)}} class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
+                    <input type="checkbox" name="meta_allow_workbook" value="1" {{_.checked(true, meta_allow_workbook)}} class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
                     <span class="label"><?php _e( 'Enable workbook', 'cp' ); ?></span>
                 </label>
                 <p class="description"><?php _e( 'Users can access their workbook which will show their progress/scores for the course.', 'cp' ); ?></p>
@@ -120,7 +120,7 @@
 
             <div class="cp-box cp-toggle-box">
                 <label>
-                    <input type="checkbox" name="meta_payment_paid_course" {{_.checked( true, meta_payment_paid_course)}} class="cp-toggle-input" autocomplejte="off" /> <span class="cp-toggle-btn"></span>
+                    <input type="checkbox" name="meta_payment_paid_course" value="1" {{_.checked( true, meta_payment_paid_course)}} class="cp-toggle-input" autocomplejte="off" /> <span class="cp-toggle-btn"></span>
                     <span class="label"><?php _e( 'This is a paid course', 'cp' ); ?></span>
                 </label>
                 <p class="description"><?php _e( 'Will allow you to set-up payment gateway/options.', 'cp' ); ?></p>

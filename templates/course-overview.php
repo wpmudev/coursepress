@@ -25,6 +25,10 @@
 				<span class="meta-title"><?php _e( 'Enrollment', 'cp' ); ?>: </span>
 				<span class="course-meta-enrollment-dates"><?php echo coursepress_get_course_enrollment_dates(); ?></span>
 			</p>
+
+            <p class="course-button">
+                <?php coursepress_get_course_enrollment_button(); ?>
+            </p>
 		</div>
 	</div>
 

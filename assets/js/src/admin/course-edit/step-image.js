@@ -28,12 +28,12 @@
             toggleCustomCaption: function( ev ) {
                 var sender = this.$(ev.currentTarget),
                     is_checked = sender.is(':checked'),
-                    input = this.$('[name="meta_caption_custom_text"]' );
+                    input = this.$('[name="meta_caption_custom_text"]');
 
-                if ( is_checked ) {
+                if ( is_checked && 'custom' === sender.val() ) {
                     input.removeAttr('disabled').focus();
                 } else {
-                    input.attr( 'disabled', 'disabled' );
+                    input.attr('disabled', 'disabled');
                 }
             }
         });

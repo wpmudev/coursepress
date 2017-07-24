@@ -15,7 +15,8 @@
                 'click #cp-facilitator-selector': 'facilitatorSelection',
                 'click ul.cp-tagged-list-removable li': 'removeUser',
                 'change [name]': 'updateModel',
-                'focus [name]': 'removeErrorMarker'
+                'focus [name]': 'removeErrorMarker',
+                'change [name="meta_enrollment_type"]': 'toggleBoxes'
             },
 
             initialize: function(model, EditCourse) {
@@ -74,7 +75,7 @@
                     tags: true
                 });
 
-                this.$('[name="meta_enrollment_type"]').select2();
+                this.$('select').select2();
 
                 _.delay(function() {
                     self.visualEditor({
@@ -195,6 +196,22 @@
 
             updateModel: function(ev) {
                 this.courseEditor.updateModel(ev);
+            },
+
+            toggleBoxes: function( ev ) {
+                var sender, type, boxes;
+
+                sender = this.$(ev.currentTarget);
+                type = sender.val();
+                boxes = this.$('.cp-boxes');
+
+                boxes.slideUp();
+
+                if ( 'passcode' === type ) {
+                    this.$('.cp-passcode-box').slideDown();
+                } else if ( 'prerequisite' === type ) {
+                    this.$('.cp-requisite-box' ).slideDown();
+                }
             }
         });
     });

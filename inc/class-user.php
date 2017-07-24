@@ -230,8 +230,9 @@ class CoursePress_User extends CoursePress_Utility {
 
 		$id = $this->__get( 'ID' );
 
-		if ( ! $id )
+		if ( ! $id ) {
 			return false;
+		}
 
 		$sql = $wpdb->prepare( "SELECT ID FROM `$this->student_table` WHERE `student_id`=%d AND `course_id`=%d", $id, $course_id );
 		$student_id = $wpdb->get_var( $sql );
@@ -248,22 +249,32 @@ class CoursePress_User extends CoursePress_Utility {
 		return (int) $progress_id > 0;
 	}
 
-	function get_enrolled_courses_ids() {
+	function get_enrolled_courses_ids( $per_page = 0, $paged = 1 ) {
 		global $wpdb;
 
 		$id = $this->__get( 'ID' );
+		$offset = ($per_page * $paged );
+		$limit = $per_page * $paged;
 
-		if ( ! $id )
+		if ( ! $id ) {
 			return null;
+		}
 
-		$sql = $wpdb->prepare( "SELECT ID FROM `$this->student_table` WHERE `student_id`=%d", $id );
+		$sql = "SELECT `course_id` FROM `$this->student_table` WHERE `student_id`=%d";
+
+		if ( $per_page > 0 ) {
+			$sql .= " LIMIT %d, %d";
+		}
+
+		$sql = $wpdb->prepare( $sql, $id, $offset, $limit );
 		$results = $wpdb->get_results( $sql, OBJECT );
 		$course_ids = array();
 
-
-		if ( $results )
-			foreach ( $results as $result )
-				$course_ids[] = $result->ID;
+		if ( $results ) {
+			foreach ( $results as $result ) {
+				$course_ids[] = $result->course_id;
+			}
+		}
 
 		return $course_ids;
 	}
@@ -280,8 +291,9 @@ class CoursePress_User extends CoursePress_Utility {
 
 		$id = $this->__get( 'ID' );
 
-		if ( ! $id )
+		if ( ! $id ) {
 			return false;
+		}
 
 		$student_id = $this->get_student_id( $course_id );
 
@@ -291,8 +303,9 @@ class CoursePress_User extends CoursePress_Utility {
 	function add_course_student( $course_id ) {
 		global $wpdb;
 
-		if (  $this->is_enrolled_at( $course_id ) )
+		if (  $this->is_enrolled_at( $course_id ) ) {
 			return true;
+		}
 
 		$id = $this->__get( 'ID' );
 
@@ -395,15 +408,18 @@ class CoursePress_User extends CoursePress_Utility {
 	 * @return array An array of CoursePress_Course object.
 	 */
 	function get_user_enrolled_at( $published = true, $returnAll = true ) {
-		$user_id = $this->__get( 'ID' );
-
 		$posts_per_page = coursepress_get_option( 'posts_per_page', 20 );
+		$course_ids = $this->get_enrolled_courses_ids();
+
+		if ( empty( $course_ids ) ) {
+			return $course_ids;
+		}
+
 		$args = array(
-			'meta_key' => 'student',
-			'meta_value' => $user_id,
 			'post_status' => $published ? 'publish' : 'any',
 			'posts_per_page' => $returnAll ? -1 : $posts_per_page,
 			'suppress_filters' => true,
+			'post__in' => $course_ids,
 		);
 
 		return coursepress_get_courses( $args );
@@ -761,9 +777,7 @@ class CoursePress_User extends CoursePress_Utility {
 	 * @return bool
 	 */
 	function is_course_completed( $course_id ) {
-		$progress = $this->get_completion_data( $course_id );
-
-		$course_progress = coursepress_get_array_val( $progress, 'completion/progress' );
+		$course_progress = $this->get_course_progress( $course_id );
 
 		return $course_progress >= 100;
 	}
@@ -790,7 +804,7 @@ class CoursePress_User extends CoursePress_Utility {
 	function get_course_progress( $course_id ) {
 		$progress = $this->get_completion_data( $course_id );
 
-		return coursepress_get_array_val( $progress, 'completion/progress' );
+		return (int) coursepress_get_array_val( $progress, 'completion/progress' );
 	}
 
 	/**
@@ -812,10 +826,11 @@ class CoursePress_User extends CoursePress_Utility {
 			$completed = coursepress_get_array_val( $progress, 'completion/completed' );
 			$failed = coursepress_get_array_val( $progress, 'completion/failed' );
 
-			if ( $completed )
+			if ( $completed ) {
 				$status = 'pass';
-			elseif ( $failed )
+			} elseif ( $failed ) {
 				$status = 'failed';
+			}
 		}
 
 		if ( 'ongoing' == $status ) {
@@ -994,6 +1009,21 @@ class CoursePress_User extends CoursePress_Utility {
 		return ! empty( $completed );
 	}
 
+	function get_step_status( $course_id, $unit_id, $step_id ) {
+		$is_completed = $this->is_step_completed( $course_id, $unit_id, $step_id );
+
+		if ( $is_completed ) {
+			return 'completed';
+		} else {
+			$stepClass = coursepress_get_course_step( $step_id );
+			$progress = $this->get_step_progress( $course_id, $unit_id, $step_id );
+
+			if ( (int) $progress > 0 ) {
+
+			}
+		}
+	}
+
 	/*******************************************
 	 * USER AS INSTRUCTOR
 	 ******************************************/
@@ -1011,10 +1041,12 @@ class CoursePress_User extends CoursePress_Utility {
 			'post_status' => $published ? 'publish' : 'any',
 			'meta_key' => 'instructor',
 			'meta_value' => $this->__get( 'ID' ),
+			'meta_compare' => 'IN',
 		);
 
-		if ( $returnAll )
-			$args['posts_per_page'] = -1;
+		if ( $returnAll ) {
+			$args['posts_per_page'] = - 1;
+		}
 
 		$courses = coursepress_get_courses( $args );
 
@@ -1022,8 +1054,9 @@ class CoursePress_User extends CoursePress_Utility {
 	}
 
 	function get_instructor_profile_link() {
-		if ( false == $this->is_instructor() )
+		if ( false == $this->is_instructor() ) {
 			return null;
+		}
 
 		$slug = coursepress_get_setting( 'slugs/instructor_profile', 'instructor' );
 
@@ -1041,8 +1074,9 @@ class CoursePress_User extends CoursePress_Utility {
 			'meta_value' => $this->__get( 'ID' ),
 		);
 
-		if ( $returnAll )
-			$args['posts_per_page'] = -1;
+		if ( $returnAll ) {
+			$args['posts_per_page'] = - 1;
+		}
 
 		$courses = coursepress_get_courses( $args );
 

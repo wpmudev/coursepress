@@ -77,14 +77,16 @@ function coursepress_add_course_instructor( $user_id = 0, $course_id = 0 ) {
 
 	$course = coursepress_get_course( $course_id );
 
-	if ( is_wp_error( $course ) )
+	if ( is_wp_error( $course ) ) {
 		return false;
+	}
 
-	if ( $user->is_instructor_at( $course_id ) )
+	if ( $user->is_instructor_at( $course_id ) ) {
 		return true; // User is already an instructor of the course
+	}
 
 	// Include user as instructor to the course
-	update_post_meta( $course_id, 'instructor', $user_id, $user_id );
+	add_post_meta( $course_id, 'instructor', $user_id );
 
 	// Marked user as instructor
 	update_user_option( $user_id, 'course_' . $course_id, $course_id, is_multisite() );
@@ -156,8 +158,9 @@ function coursepress_get_user_instructed_courses( $user_id = 0, $published = tru
 	if ( is_wp_error( $user ) )
 		return null;
 
-	if ( $user->is_instructor() )
+	if ( $user->is_instructor() ) {
 		return null; // User is not an instructor, bail!
+	}
 
 	return $user->get_instructed_courses( $published, $returnAll );
 }
@@ -192,27 +195,21 @@ function coursepress_add_student( $user_id = 0, $course_id = 0 ) {
 
 	$user = coursepress_get_user( $user_id );
 
-	if ( is_wp_error( $user ) )
+	if ( is_wp_error( $user ) ) {
 		return false;
+	}
 
 	$course = coursepress_get_course( $course_id );
 
-	if ( is_wp_error( $course ) )
+	if ( is_wp_error( $course ) ) {
 		return false;
+	}
 
-	if ( $user->is_enrolled_at( $course_id ) )
+	if ( $user->is_enrolled_at( $course_id ) ) {
 		return true; // User is already enrolled, bail!
+	}
 
 	$user->add_course_student( $course_id );
-
-	// Marked user as student of the course
-	//add_post_meta( $course_id, 'student', $user_id );
-
-	//$time = current_time( 'timestamp' );
-	//$is_multisite = is_multisite();
-
-	//update_user_option( $user_id, 'enrolled_course_date_' . $course_id, $time, $is_multisite );
-	//update_user_option( $user_id, 'enrolled_course_class_' . $course_id, $course_id, $is_multisite );
 
 	/**
 	 * Fired whenever a new student is added to a course.
@@ -550,4 +547,64 @@ function coursepress_get_students( $args = array(), &$count = 0 ) {
 	}
 
 	return $students;
+}
+
+function coursepress_get_student_workbook_data( $user_id = 0, $course_id = 0 ) {
+	$user = coursepress_get_user( $user_id );
+	$course = coursepress_get_course( $course_id );
+
+	if ( is_wp_error( $course ) ) {
+		return false;
+	}
+
+	$data = array();
+	$course_id = $course->__get( 'ID' );
+	$with_modules = $course->is_with_modules();
+	$units = $course->get_units();
+
+	if ( $units ) {
+		foreach ( $units as $unit ) {
+			$unit_id = $unit->__get( 'ID' );
+
+			$data[ $unit_id ] = array(
+				'progress' => (int) $user->get_unit_progress( $course_id ),
+				'title' => $unit->__get( 'post_title' ),
+				'type' => 'unit',
+			);
+
+			if ( $with_modules ) {
+				$modules = $unit->get_modules_with_steps();
+
+				if ( $modules ) {
+					foreach ( $modules as $module ) {
+						$cid = $unit_id . $module['id'];
+
+						$data[ $cid ] = array(
+							'progress' => '',
+							'title' => $module['title'],
+							'type' => 'module',
+						);
+
+						if ( $module['steps'] ) {
+							foreach ( $module['steps'] as $step ) {
+								$step_id = $step->__get( 'ID' );
+								$step_status = $user->get_step_status( $course_id, $unit_id, $step_id );
+								$is_completed = $user->is_step_completed( $course_id, $unit_id, $step_id );
+								$grade = $user->get_step_grade( $course_id, $unit_id, $step_id );
+
+								$data[$step_id] = array(
+									'progress' => (int) $user->get_step_progress( $course_id, $unit_id, $step_id ),
+									'title' => $step->__get( 'post_title' ),
+									'type' => 'step',
+									'grade' => $is_completed ? $grade : $step_status,
+								);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return $data;
 }

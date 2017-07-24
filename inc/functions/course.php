@@ -251,15 +251,128 @@ function coursepress_get_course_enrollment_dates( $course_id = 0, $separator = '
  *
  * @return string
  */
-function coursepress_get_course_enrollment_button( $course_id = 0 ) {
+function coursepress_get_course_enrollment_button( $course_id = 0, $args = array() ) {
 	$course = coursepress_get_course( $course_id );
 
-	if ( is_wp_error( $course ) )
+	if ( is_wp_error( $course ) ) {
 		return null;
+	}
 
-	// @todo: Do
+	$defaults = array(
+		'access_text' => __( 'Start Learning', 'cp' ),
+		'class' => '',
+		'continue_learning_text' => __( 'Continue Learning', 'cp' ),
+		'course_expired_text' => __( 'Not available', 'cp' ),
+		'course_full_text' => __( 'Course Full', 'cp' ),
+		'course_not_started' => __( 'Not yet available', 'cp' ),
+		'details_text' => __( 'Details', 'CP_TD' ),
+		'enrollment_closed_text' => __( 'Enrollments Closed', 'CP_TD' ),
+		'enrollment_finished_text' => __( 'Enrollments Finished', 'CP_TD' ),
+		'enroll_text' => __( 'Enroll Now!', 'CP_TD' ),
+		'instructor_text' => __( 'Access Course', 'CP_TD' ),
+		'list_page' => false,
+		'not_started_text' => __( 'Not Available', 'CP_TD' ),
+		'passcode_text' => __( 'Passcode Required', 'CP_TD' ),
+		'prerequisite_text' => __( 'Pre-requisite Required', 'CP_TD' ),
+		'signup_text' => __( 'Enroll Now!', 'CP_TD' ),
+	);
 
-	return '';
+	$args = wp_parse_args( $args, $defaults );
+	$course_id = $course->__get( 'ID' );
+	$user = coursepress_get_user();
+	$link = '';
+	$link_text = '';
+
+	if ( $user->is_enrolled_at( $course_id ) ) {
+		$link = $course->get_units_url();
+		$link_text = $args['access_text'];
+	} else {
+		if ( $course->user_can_enroll() ) {
+			$enrollment_type = $course->__get( 'enrollment_type' );
+
+			$link_text = $args['enroll_text'];
+			$link_args = array(
+				'course_id' => $course_id,
+				'action'    => 'coursepress_enroll',
+				'_wpnonce' => wp_create_nonce( 'coursepress_nonce' ),
+			);
+			$link = add_query_arg( $link_args, admin_url( 'admin-ajax.php' ) );
+
+			if ( ! is_user_logged_in() ) {
+				// Redirect to login page??
+				$use_custom_login = coursepress_get_setting( 'general/use_custom_login' );
+
+				if ( $use_custom_login ) {
+					$login_page = coursepress_get_setting( 'slugs/pages/login', 0 );
+
+					if ( $login_page ) {
+						$link = get_permalink( $login_page );
+					} else {
+						$slug = coursepress_get_setting( 'slugs/login', 'student-login' );
+						$link = site_url( '/' ) . trailingslashit( $slug );
+					}
+				} else {
+					$link = wp_login_url( $link );
+				}
+			} else {
+				if ( 'prerequisite' == $enrollment_type ) {
+					$courses = $course->__get( 'enrollment_prerequisite' );
+					$messages = array();
+
+					if ( is_array( $courses ) ) {
+						foreach ( $courses as $_course_id ) {
+							$_course = coursepress_get_course( $_course_id );
+							$_course_link = coursepress_create_html(
+								'a',
+								array(
+									'href' => $_course->get_permalink(),
+									'target' => '_blank',
+									'rel' => 'bookmark'
+								),
+								$_course->post_title
+							);
+
+							if ( ! $user->is_course_completed( $_course_id ) ) {
+								$messages[] = coursepress_create_html(
+									'p',
+									array(),
+									sprintf( __( 'You need to complete %s to take this course.', 'cp' ), $_course_link )
+								);
+							}
+						}
+					}
+				} elseif ( 'passcode' == $enrollment_type ) {
+					$link = '';
+					$link_text = '';
+					$args = array(
+						'course_id' => $course_id,
+						'cookie_name' => 'cp_incorrect_passcode_' . COOKIEHASH
+					);
+
+					coursepress_render( 'views/front/passcode-form', $args );
+				}
+
+				if ( ! empty( $messages ) ) {
+					echo implode( ' ', $messages );
+					$link = '';
+					$link_text = '';
+				}
+			}
+		}
+	}
+
+	$attr = array(
+		'class' => 'course-enroll-button ' . $args['class'],
+	);
+
+	if ( ! empty( $link ) ) {
+		$attr['href'] = $link;
+		$attr['_wpnonce'] = wp_create_nonce( 'coursepress_nonce' );
+
+		echo coursepress_create_html( 'a', $attr, $link_text );
+	} else {
+		echo coursepress_create_html( 'span', $attr, $link_text );
+	}
 }
 
 /**
@@ -376,6 +489,13 @@ function coursepress_get_course_submenu() {
 		'url' => esc_url_raw( $course->get_permalink() ),
 	);
 
+	/**
+	 * Fired to allow adding course menu.
+	 *
+	 * @since 3.0
+	 */
+	$menus = apply_filters( 'coursepress_course_submenu', $menus, $course );
+
 	return $menus;
 }
 
@@ -407,7 +527,7 @@ function coursepress_get_current_course_cycle() {
 	 * @var array $_course_module An array of current module data.
 	 * @var object $_course_step
 	 */
-	global $CoursePress_VirtualPage, $_course_module, $_course_step;
+	global $CoursePress_VirtualPage, $_course_module, $_course_step, $_coursepress_previous;
 
 	$course = coursepress_get_course();
 
@@ -416,17 +536,21 @@ function coursepress_get_current_course_cycle() {
 
 	$unit = coursepress_get_unit();
 
-	if ( is_wp_error( $unit ) )
+	if ( is_wp_error( $unit ) ) {
 		return null;
+	}
 
-	if ( ! $CoursePress_VirtualPage instanceof CoursePress_VirtualPage )
+	if ( ! $CoursePress_VirtualPage instanceof CoursePress_VirtualPage ) {
 		return null;
+	}
 
 	$vp = $CoursePress_VirtualPage;
 	$vp_type = $vp->__get( 'type' );
+	$_coursepress_previous = $course->get_units_url();
 
-	if ( ! in_array( $vp_type, array( 'unit', 'module', 'step' ) ) )
+	if ( ! in_array( $vp_type, array( 'unit', 'module', 'step' ) ) ) {
 		return null;
+	}
 
 	$view_mode = $course->get_view_mode();
 
@@ -445,21 +569,134 @@ function coursepress_get_current_course_cycle() {
 				array(),
 				$_course_module['title']
 			);
+
 			$template .= $vp->create_html(
 				'div',
 				array( 'class' => 'module-description' ),
 				apply_filters( 'the_content', $_course_module['description'] )
 			);
-		} elseif ( 'step' == $vp_type ) {
+		} elseif ( 'step' == $vp_type && $_course_step ) {
 			$template = $_course_step->template();
 		}
 	} else {
 		if ( 'unit' == $vp_type ) {
-
+		} elseif ( 'module' == $vp_type ) {
 		}
 	}
 
 	return $template;
+}
+
+function coursepress_get_link_cycle( $type = 'next' ) {
+	global $CoursePress_VirtualPage, $_course_module, $_course_step;
+
+	$course = coursepress_get_course();
+
+	if ( is_wp_error( $course ) ) {
+		return false;
+	}
+
+	$unit = coursepress_get_unit();
+
+	if ( is_wp_error( $unit ) ) {
+		return false;
+	}
+
+	$user = coursepress_get_user();
+
+	$vp = $CoursePress_VirtualPage;
+	$vp_type = $vp->__get( 'type' );
+	$with_modules = $course->is_with_modules();
+	$previous = $course->get_units_url();
+	$next = '';
+	$has_access = $user->has_access_at( $course->__get( 'ID' ) );
+
+	if ( $with_modules ) {
+		if ( 'unit' == $vp_type ) {
+			if ( 'previous' == $type ) {
+				$previousUnit = $unit->get_previous_unit();
+
+				if ( $previousUnit ) {
+					$previous = $previousUnit->get_unit_url();
+				}
+			}
+		} elseif ( 'module' == $vp_type ) {
+			$module_id = $_course_module['id'];
+
+			if ( 'previous' == $type ) {
+				$prevModule = $unit->get_previous_module( $module_id );
+
+				if ( $prevModule ) {
+					$prevSteps = $unit->get_steps( !$has_access, true, (int) $prevModule['id'] );
+
+					if ( $prevSteps ) {
+						$prevStep = array_pop( $prevSteps );
+						$previous = $prevStep->get_permalink();
+					} else {
+						$previous = $prevModule['url'];
+					}
+				} else {
+					// Try previous unit
+					$prevUnit = $unit->get_previous_unit();
+
+					if ( $prevUnit ) {
+						$previous = $prevUnit->get_unit_url();
+					}
+				}
+			} else {
+				$nextSteps = $unit->get_steps( ! $has_access, true, $module_id );
+
+				if ( $nextSteps ) {
+					$nextStep = array_shift( $nextSteps );
+					$next = $nextStep->get_permalink();
+				} else {
+					// Try next module
+					$nextModule = $unit->get_next_module( $module_id );
+
+					if ( $nextModule ) {
+						$next = $nextModule['url'];
+					}
+				}
+			}
+		} else {
+			if ( 'previous' == $type ) {
+				$prevStep = $_course_step->get_previous_step();
+
+				if ( $prevStep ) {
+					$previous = $prevStep->get_permalink();
+				} else {
+					$previous = $_course_module['url'];
+				}
+			} else {
+				$nextStep = $_course_step->get_next_step();
+
+				if ( $nextStep ) {
+					$next = $nextStep->get_permalink();
+				} else {
+					$nextModule = $unit->get_next_module( $_course_module['id'] );
+
+					if ( $nextModule ) {
+						$next = $nextModule['url'];
+					} else {
+						// Try next unit
+						$nextUnit = $unit->get_next_unit();
+
+						if ( $nextUnit ) {
+							$next = $nextUnit->get_unit_url();
+						} else {
+							$next = $course->get_permalink() . trailingslashit( 'completion/validate' );
+						}
+					}
+				}
+			}
+		}
+	}
+
+	if ( 'previous' == $type ) {
+		return $previous;
+	} else {
+		return $next;
+	}
 }
 
 /**
@@ -472,25 +709,25 @@ function coursepress_get_current_course_cycle() {
 function coursepress_get_previous_course_cycle_link( $label = '' ) {
 	global $CoursePress_VirtualPage;
 
-	if ( ! $CoursePress_VirtualPage instanceof CoursePress_VirtualPage )
+	if ( ! $CoursePress_VirtualPage instanceof CoursePress_VirtualPage ) {
 		return null;
+	}
 
 	$course = coursepress_get_course();
 
-	if ( is_wp_error( $course ) )
+	if ( is_wp_error( $course ) ) {
 		return null;
-
-	if ( empty( $label ) )
+	}
+	if ( empty( $label ) ) {
 		$label = __( 'Previous', 'cp' );
+	}
 
-	$vp = $CoursePress_VirtualPage;
+	$link = coursepress_get_link_cycle( 'previous' );
 
-	// @todo: Add previous link here
-
-	return $vp->create_html(
+	return coursepress_create_html(
 		'a',
 		array(
-			'href' => '',
+			'href' => esc_url( $link ),
 			'class' => 'button previous-button coursepress-previous-cycle',
 		),
 		$label
@@ -507,25 +744,26 @@ function coursepress_get_previous_course_cycle_link( $label = '' ) {
 function coursepress_get_next_course_cycle_link( $label = '' ) {
 	global $CoursePress_VirtualPage;
 
-	if ( ! $CoursePress_VirtualPage instanceof CoursePress_VirtualPage )
+	if ( ! $CoursePress_VirtualPage instanceof CoursePress_VirtualPage ) {
 		return null;
+	}
 
 	$course = coursepress_get_course();
 
-	if ( is_wp_error( $course ) )
+	if ( is_wp_error( $course ) ) {
 		return null;
+	}
 
-	if ( empty( $label ) )
+	if ( empty( $label ) ) {
 		$label = __( 'Next', 'cp' );
+	}
 
-	$vp = $CoursePress_VirtualPage;
+	$link = coursepress_get_link_cycle( 'next' );
 
-	// @todo: Add next link here
-
-	return $vp->create_html(
+	return coursepress_create_html(
 		'a',
 		array(
-			'href' => '',
+			'href' => esc_url( $link ),
 			'class' => 'button next-button coursepress-next-cycle',
 		),
 		$label
@@ -710,9 +948,7 @@ function coursepress_delete_course( $course_id ) {
 	$students = $course->get_students();
 
 	if ( $students ) {
-		foreach ( $students as $student ) {
-
-		}
+		foreach ( $students as $student ) {}
 	}
 
 	// Now delete the course
@@ -724,4 +960,37 @@ function coursepress_delete_course( $course_id ) {
 	do_action( 'coursepress_course_deleted', $course_id );
 
 	return true;
+}
+
+function coursepress_get_course_step( $step_id = 0 ) {
+	$step_type = get_post_meta( $step_id, 'module_type', true );
+
+	$class = array(
+		'text' => 'CoursePress_Step_Text',
+		'text_module' => 'CoursePress_Step_Text', // Legacy type
+		'image' => 'CoursePress_Step_Image',
+		'video' => 'CoursePress_Step_Video',
+		'discussion' => 'CoursePress_Step_Discussion',
+		'download' => 'CoursePress_Step_FileDownload',
+		'zipped' => 'CoursePress_Step_Zip',
+		'input-upload' => 'CoursePress_Step_FileUpload',
+		'input-quiz' => 'CoursePress_Step_Quiz',
+		'input-checkbox' => 'CoursePress_Step_Checkbox', // Legacy class
+		'input-radio' => 'CoursePress_Step_Radio', // Legacy class
+		'radio_input_module' => 'CoursePress_Step_Radio', // Legacy type
+		'input-select' => 'CoursePress_Step_Select', // Legacy class
+		'input-textarea' => 'CoursePress_Step_InputText',
+		'input-text' => 'CoursePress_Step_InputText',
+		'text_input_module' => 'CoursePress_Step_Written', // Legacy type
+		'input-form' => 'CoursePress_Step_Form', // Legacy class
+	);
+
+	if ( isset( $class[ $step_type ] ) ) {
+		$stepClass = $class[ $step_type ];
+		$stepClass = new $stepClass( $step_id );
+
+		return $stepClass;
+	}
+
+	return false;
 }

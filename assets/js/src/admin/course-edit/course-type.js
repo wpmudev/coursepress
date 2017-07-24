@@ -72,6 +72,10 @@
                 this.$('.datepicker').datepicker({dateFormat: 'MM dd, yy' });
             },
 
+            updateModel: function( ev ) {
+                this.courseEditor.updateModel(ev);
+            },
+
             updatePostName: function( ev ) {
                 var sender = $(ev.currentTarget),
                     slugDiv = this.$('[name="post_name"]'),

@@ -138,6 +138,7 @@
             assignUser: function () {
 
                 var user_id = this.$('#cp-course-' + this.type).val();
+
                 if ( '' !== user_id ) {
                     this.request.set( {
                         'action': 'assign_to_course',

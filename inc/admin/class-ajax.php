@@ -18,6 +18,12 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
         add_action( 'wp_ajax_coursepress_upload', array( $this, 'upload_file' ) );
 	    // Hook to search for select2 data.
 	    add_action( 'wp_ajax_coursepress_get_users', array( $this, 'get_course_users' ) );
+	    // Hook to enrollment request
+	    add_action( 'wp_ajax_coursepress_enroll', array( $this, 'enroll' ) );
+	    add_action( 'wp_ajax_course_enroll_passcode', array( $this, 'enroll_with_passcode' ) );
+
+	    // Hook to unenroll request
+	    add_action( 'wp_ajax_coursepress_unenroll', array( $this, 'withdraw_student' ) );
     }
 
     /**
@@ -528,5 +534,75 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		}
 
 		wp_send_json_error(true);
+	}
+
+	function enroll() {
+		$course_id = filter_input( INPUT_GET, 'course_id', FILTER_VALIDATE_INT );
+		$wpnonce = filter_input( INPUT_GET, '_wpnonce' );
+
+		if ( ! $course_id || ! wp_verify_nonce( $wpnonce, 'coursepress_nonce' ) ) {
+			wp_send_json_error(true);
+		}
+
+		if ( coursepress_add_student( get_current_user_id(), $course_id ) ) {
+			$course = coursepress_get_course( $course_id );
+			$redirect = $course->get_units_url();
+
+			wp_safe_redirect( $redirect );
+			exit;
+		}
+
+		wp_send_json_error(true);
+	}
+
+	function enroll_with_passcode() {
+		$course_id = filter_input( INPUT_POST, 'course_id', FILTER_VALIDATE_INT );
+		$wpnonce = filter_input( INPUT_POST, '_wpnonce' );
+		$passcode = filter_input( INPUT_POST, 'course_passcode' );
+
+		if ( ! $course_id || ! wp_verify_nonce( $wpnonce, 'coursepress_nonce' ) ) {
+			wp_send_json_error();
+		}
+
+		$course = coursepress_get_course( $course_id );
+
+		if ( ! is_wp_error( $course ) ) {
+			$course_passcode = $course->__get( 'enrollment_passcode' );
+
+			if ( $course_passcode == trim( $passcode ) && coursepress_add_student( get_current_user_id(), $course_id ) ) {
+				$redirect = $course->get_units_url();
+
+				wp_safe_redirect( $redirect );
+				exit;
+			} else {
+				coursepress_set_cookie( 'cp_incorrect_passcode', true, time() + HOUR_IN_SECONDS );
+				$redirect = $course->get_permalink();
+
+				wp_safe_redirect( $redirect );
+				exit;
+			}
+		}
+
+		wp_send_json_error(true);
+	}
+
+	function withdraw_student() {
+		$course_id = filter_input( INPUT_GET, 'course_id', FILTER_VALIDATE_INT );
+		$wpnonce = filter_input( INPUT_GET, '_wpnonce' );
+		$redirect = filter_input( INPUT_GET, 'redirect' );
+
+		if ( ! $course_id || ! wp_verify_nonce( $wpnonce, 'coursepress_nonce' ) ) {
+			wp_send_json_error(true);
+		}
+
+		coursepress_delete_student( get_current_user_id(), $course_id );
+
+		if ( ! $redirect ) {
+			// Return to course overview
+			$redirect = coursepress_get_course_permalink( $course_id );
+		}
+
+		wp_safe_redirect( $redirect );
+		exit;
 	}
 }

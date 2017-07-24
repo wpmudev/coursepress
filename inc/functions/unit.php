@@ -18,13 +18,15 @@ function coursepress_get_unit( $unit_id = 0 ) {
 
 	if ( empty( $unit_id ) ) {
 		// Assume current unit
-		if ( $CoursePress_Unit instanceof CoursePress_Unit )
+		if ( $CoursePress_Unit instanceof CoursePress_Unit ) {
 			return $CoursePress_Unit;
+		}
 	} else {
 		$unit = new CoursePress_Unit( $unit_id );
 
-		if ( is_wp_error( $unit ) )
+		if ( is_wp_error( $unit ) ) {
 			return null;
+		}
 
 		return $unit;
 	}
@@ -82,13 +84,15 @@ function coursepress_get_unit_structure( $course_id = 0, $unit_id = 0, $items_on
 
 	$unit = coursepress_get_unit( $unit_id );
 
-	if ( is_wp_error( $unit ) )
+	if ( is_wp_error( $unit ) ) {
 		return null;
+	}
 
 	$student = coursepress_get_user();
 
-	if ( is_wp_error( $student ) )
+	if ( is_wp_error( $student ) ) {
 		return null;
+	}
 
 	return $unit->get_unit_structure( $items_only, $show_details );
 }

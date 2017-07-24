@@ -22,6 +22,8 @@ final class CoursePress_Core extends CoursePress_Utility {
 		add_filter( 'query_vars', array( $this, 'add_query_vars' ) );
 		// Add CP rewrite rules
 		add_filter( 'rewrite_rules_array', array( $this, 'add_rewrite_rules' ) );
+		// Listen to comment submission
+		add_filter( 'comments_open', array( $this, 'comments_open' ), 10, 2 );
 	}
 
 	function register_post_types() {
@@ -37,7 +39,8 @@ final class CoursePress_Core extends CoursePress_Utility {
 			'delete_with_user' => false,
 			'rewrite' => array(
 				'slug' => $course_slug,
-			)
+			),
+			'support' => array( 'comments' ),
 		) );
 
 		$category_slug = coursepress_get_setting( 'slugs/category', 'course_category' );
@@ -59,7 +62,7 @@ final class CoursePress_Core extends CoursePress_Utility {
 			'label' => 'Units', // debugging only,
 			'query_var' => false,
 			'publicly_queryable' => false,
-			'supports' => array( 'thumbnail' ),
+			'supports' => array( 'thumbnail', 'comments' ),
 		) );
 
 		// Module
@@ -70,6 +73,7 @@ final class CoursePress_Core extends CoursePress_Utility {
 			'label' => 'Modules', // dbugging only
 			'query_var' => false,
 			'publicly_queryable'=> false,
+			'support' => array( 'comments' ),
 		) );
 
 		// Certificate
@@ -110,6 +114,7 @@ final class CoursePress_Core extends CoursePress_Utility {
 			$base . 'completion/almost-there/?' => 'index.php?coursename=$matches[1]&coursepress=completion-status',
 			$base . 'completion/success/?' => 'index.php?coursename=$matches[1]&coursepress=completion-status',
 			$base . 'completion/failed/?' => 'index.php?coursename=$matches[1]&coursepress=completion-status',
+			$base . 'completion/validate/?' => 'index.php?coursename=$matches[1]&coursepress=completion',
 			// Unit
 			$base . $unit_slug . '/([^/]*)/?$' => 'index.php?coursename=$matches[1]&unit=$matches[2]&coursepress=unit',
 			$base . $unit_slug . '/([^/]*)/([^/]*)/?$' => 'index.php?coursename=$matches[1]&unit=$matches[2]&module=$matches[3]&coursepress=module',
@@ -135,5 +140,16 @@ final class CoursePress_Core extends CoursePress_Utility {
 		);
 
 		return array_merge( $new_rules, $rules );
+	}
+
+	function comments_open( $is_open, $object_id ) {
+		$post_type = get_post_type( $object_id );
+		$post_types = array( 'course', 'unit', 'module' );
+
+		if ( in_array( $post_type, $post_types ) ) {
+			return true;
+		}
+
+		return $is_open;
 	}
 }

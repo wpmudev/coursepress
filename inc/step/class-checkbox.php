@@ -12,7 +12,6 @@ class CoursePress_Step_Checkbox extends CoursePress_Step_Quiz {
 		parent::setUpStepMeta();
 
 		$questions = $this->get_questions_data();
-		error_log(print_r($questions,true));
 		$this->__set( 'questions', $questions );
 		$this->__set( 'meta_questions', $questions );
 		$this->__set( 'module_type', 'input-quiz' );

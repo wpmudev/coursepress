@@ -40,6 +40,10 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 					'value' => $pos,
 					'name' => $name,
 				);
+				if ( $this->is_preview() ) {
+					$attr['readonly'] = 'readonly';
+					$attr['disabled'] = 'disabled';
+				}
 
 				$input = $this->create_html( 'input', $attr );
 				$label = $this->create_html( 'label', array(), $input . $answer );
@@ -50,6 +54,10 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 		}
 
 		return $template;
+	}
+
+	protected function get_question_radio( $index, $question ) {
+		return $this->get_question_single( $index, $question );
 	}
 
 	protected function get_question_single( $index, $question ) {
@@ -69,6 +77,10 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 					'value' => $pos,
 					'name' => $name,
 				);
+				if ( $this->is_preview() ) {
+					$attr['readonly'] = 'readonly';
+					$attr['disabled'] = 'disabled';
+				}
 
 				$input = $this->create_html( 'input', $attr );
 				$label = $this->create_html( 'label', array(), $input . $answer );
@@ -103,6 +115,11 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 			$attr = array(
 				'name' => $name
 			);
+
+			if ( $this->is_preview() ) {
+				$attr['readonly'] = 'readonly';
+				$attr['disabled'] = 'disabled';
+			}
 
 			$template = $this->create_html( 'select', $attr, $template );
 		}

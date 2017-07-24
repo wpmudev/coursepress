@@ -85,12 +85,19 @@ class CoursePress_Step extends CoursePress_Utility {
 
 	function get_permalink() {
 		$module_number = $this->__get( 'module_page' );
+		if ( ! $module_number ) {
+			$module_number = 1;
+		}
 		$post_name = $this->__get( 'post_name' );
 
 		if ( (int) $module_number > 0 ) {
 			$modules = $this->unit->get_modules();
-			$module = $modules[ $module_number ];
-			return $module['url'] . trailingslashit( $post_name );
+
+			if ( ! empty( $modules ) && $modules[ $module_number] ) {
+				$module = $modules[ $module_number ];
+
+				return $module['url'] . trailingslashit( $post_name );
+			}
 		} else {
 			if ( $this->unit ) {
 				return $this->unit->get_unit_url() . trailingslashit( $post_name );
@@ -195,6 +202,65 @@ class CoursePress_Step extends CoursePress_Utility {
 		return $unit;
 	}
 
+	function get_previous_step() {
+		$user = coursepress_get_user();
+		$unit = $this->get_unit();
+		$course = $unit->get_course();
+		$with_modules = $course->is_with_modules();
+		$has_access = $user->has_access_at( $course->__get( 'ID' ) );
+		$module_page = $this->__get( 'module_page' );
+		$steps = $unit->get_steps( ! $has_access, $with_modules, $module_page );
+		$prev = false;
+
+		if ( $steps ) {
+			$previous = array();
+
+			foreach ( $steps as $step ) {
+				$previous[] = $step;
+
+				if ( $step->__get('ID') == $this->__get( 'ID' ) ) {
+					break;
+				}
+			}
+			array_pop( $previous );
+			$prev = array_pop( $previous );
+		}
+
+		return $prev;
+	}
+
+	function is_preview() {
+		return ! empty( $_REQUEST['preview'] );
+	}
+
+	function get_next_step() {
+		$user = coursepress_get_user();
+		$unit = $this->get_unit();
+		$course = $unit->get_course();
+		$with_modules = $course->is_with_modules();
+		$has_access = $user->has_access_at( $course->__get( 'ID' ) );
+		$module_page = $this->__get( 'module_page' );
+		$steps = $unit->get_steps( ! $has_access, $with_modules, $module_page );
+		$next = false;
+
+		if ( $steps ) {
+			$found = false;
+
+			foreach ( $steps as $step ) {
+				if ( $found ) {
+					$next = $step;
+					break;
+				}
+
+				if ( $step->__get('ID') == $this->__get( 'ID' ) ) {
+					$found = true;
+				}
+			}
+		}
+
+		return $next;
+	}
+
 	/** Must be overriden in a sub class */
 	function get_question() {}
 
@@ -204,6 +270,14 @@ class CoursePress_Step extends CoursePress_Utility {
 	function template( $user_id = 0 ) {
 		$template = '';
 		$user = coursepress_get_user( $user_id );
+		$course = coursepress_get_course();
+		$course_id = $course->__get( 'ID' );
+
+		if ( ! $user->is_enrolled_at( $course_id ) && ! $this->is_preview() ) {
+			$template .= coursepress_create_html( 'p', array(), __( 'You are not enrolled to this course!', 'cp' ) );
+
+			return $template;
+		}
 
 		if ( $this->is_show_title() ) {
 			$attr = array( 'class' => 'module-step-title' );
@@ -233,6 +307,6 @@ class CoursePress_Step extends CoursePress_Utility {
 			$template .= $this->create_html( 'div', $attr, $answer_template );
 		}
 
-		return $this->create_html( 'div', array( 'class' => 'course-module-step-template' ), $template );
+		return $this->create_html( 'div', array( 'class' => 'course-module-step-template step-template-' . $this->__get( 'module_type' ) ), $template );
 	}
 }

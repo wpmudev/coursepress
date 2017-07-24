@@ -74,9 +74,11 @@ class CoursePress_Course extends CoursePress_Utility {
 			$this->__set( 'meta_' . $key, $value );
 		}
 
+		$this->__set( 'course_view', 'focus' );
+
 		// Legacy: fix course_type meta
 		if ( ! isset( $settings['with_modules'] ) ) {
-            $this->__set('with_modules', true);
+            $this->__set('with_modules', true );
         }
 		if ( ! $this->__get( 'course_type' ) ) {
             $this->__set('course_type', 'auto-moderated');
@@ -106,8 +108,9 @@ class CoursePress_Course extends CoursePress_Utility {
 			'featured_video' => '',
 			'enrollment_type' => 'registered',
 			'enrollment_passcode' => '',
+			'enrollment_prerequisite' => array(),
 
-			'course_view' => 'normal',
+			'course_view' => 'focus',
 			'structure_level' => 'unit',
 			'course_open_ended' => true,
 			'course_start_date' => 0,
@@ -282,7 +285,10 @@ class CoursePress_Course extends CoursePress_Utility {
 		$open_ended = $this->__get( 'course_open_ended' );
 
 		if ( $open_ended ) {
-			return __( 'Anytime', 'cp' ); } else { 			return $this->__get( 'course_start_date' ); }
+			return __( 'Anytime', 'cp' );
+		} else {
+			return $this->__get( 'course_start_date' );
+		}
 	}
 
 	function get_course_end_date() {
@@ -293,7 +299,8 @@ class CoursePress_Course extends CoursePress_Utility {
 		$open_ended = $this->__get( 'course_open_ended' );
 
 		if ( $open_ended ) {
-			return __( 'Anytime', 'cp' ); }
+			return __( 'Anytime', 'cp' );
+		}
 
 		return implode( $separator, array( $this->get_course_start_date(), $this->get_course_start_date() ) );
 	}
@@ -302,7 +309,8 @@ class CoursePress_Course extends CoursePress_Utility {
 		$open_ended = $this->__get( 'enrollment_open_ended' );
 
 		if ( $open_ended ) {
-			return __( 'Anytime', 'cp' ); }
+			return __( 'Anytime', 'cp' );
+		}
 
 		return $this->__get( 'enrollment_start_date' );
 	}
@@ -315,7 +323,8 @@ class CoursePress_Course extends CoursePress_Utility {
 		$open_ended = $this->__get( 'enrollment_open_ended' );
 
 		if ( $open_ended ) {
-			return __( 'Anytime', 'cp' ); }
+			return __( 'Anytime', 'cp' );
+		}
 
 		return implode( $separator, array( $this->get_enrollment_start_date(), $this->get_enrollment_end_date() ) );
 	}
@@ -394,12 +403,20 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return bool
 	 */
 	function is_available() {
+		$course_type = $this->__get( 'course_type' );
+
+		if ( 'auto-moderated' == $course_type ) {
+			// Auto-moderated courses are always available
+			return true;
+		}
+
 		$is_available = $this->is_course_started();
 
 		if ( $is_available ) {
 			// Check if the course hasn't ended yet
 			if ( $this->has_course_ended() ) {
-				$is_available = false; }
+				$is_available = false;
+			}
 		}
 
 		return $is_available;
@@ -418,7 +435,8 @@ class CoursePress_Course extends CoursePress_Utility {
 		if ( empty( $enrollment_open )
 		     && $start_date > 0
 		     && $start_date > $time_now ) {
-			return false; }
+			return false;
+		}
 
 		return true;
 	}
@@ -466,10 +484,12 @@ class CoursePress_Course extends CoursePress_Utility {
 		$instructor_ids = get_post_meta( $id, 'instructor' );
 
 		if ( is_array( $instructor_ids ) ) {
-			$instructor_ids = array_filter( $instructor_ids ); }
+			$instructor_ids = array_filter( $instructor_ids );
+		}
 
 		if ( ! empty( $instructor_ids ) ) {
-			return $instructor_ids; }
+			return $instructor_ids;
+		}
 
 		// Legacy call
 		// @todo: Delete this meta
@@ -477,7 +497,8 @@ class CoursePress_Course extends CoursePress_Utility {
 
 		if ( ! empty( $instructor_ids ) ) {
 			foreach ( $instructor_ids as $instructor_id ) {
-				coursepress_add_course_instructor( $instructor_id, $id ); }
+				coursepress_add_course_instructor( $instructor_id, $id );
+			}
 		}
 
 		return $instructor_ids;
@@ -503,7 +524,8 @@ class CoursePress_Course extends CoursePress_Utility {
 
 		if ( ! empty( $instructor_ids ) ) {
 			foreach ( $instructor_ids as $instructor_id ) {
-				$instructors[ $instructor_id ] = coursepress_get_user( $instructor_id ); }
+				$instructors[ $instructor_id ] = coursepress_get_user( $instructor_id );
+			}
 		}
 
 		return $instructors;
@@ -640,6 +662,13 @@ class CoursePress_Course extends CoursePress_Utility {
 		return coursepress_get_main_courses_url() . trailingslashit( $course_name );
 	}
 
+	function get_units_url() {
+		$course_url = $this->get_permalink();
+		$slug = coursepress_get_setting( 'slugs/units', 'units' );
+
+		return $course_url . trailingslashit( $slug );
+	}
+
 	function get_discussion_url() {
 		$course_url = $this->get_permalink();
 		$discussion_slug = coursepress_get_setting( 'slugs/discussions', 'discussions' );
@@ -654,11 +683,35 @@ class CoursePress_Course extends CoursePress_Utility {
 		return $course_url . trailingslashit( $grades_slug );
 	}
 
+	function get_unenroll_url( $redirect = '' ) {
+		$url = array(
+			'course_id' => $this->__get( 'ID' ),
+			'action' => 'coursepress_unenroll',
+			'_wpnonce' => wp_create_nonce( 'coursepress_nonce' ),
+		);
+
+		if ( ! empty( $redirect ) ) {
+			$url['redirect'] = $redirect;
+		}
+		$url = add_query_arg( $url, admin_url( 'admin-ajax.php' ) );
+
+		return $url;
+	}
+
 	function get_workbook_url() {
 		$course_url = $this->get_permalink();
 		$workbook_slug = coursepress_get_setting( 'slugs/workbook', 'workbook' );
 
 		return $course_url . trailingslashit( $workbook_slug );
+	}
+
+	function get_edit_url() {
+		$url = add_query_arg( array(
+			'page' => 'coursepress_course',
+			'cid' => $this->__get( 'ID' ),
+		), admin_url( 'admin.php' ) );
+
+		return $url;
 	}
 
 	private function _get_units( $published = true, $ids = true ) {
@@ -688,6 +741,10 @@ class CoursePress_Course extends CoursePress_Utility {
 	}
 
 	function get_units( $published = true ) {
+		if ( $this->__get( 'current_units' ) ) {
+			return $this->__get( 'current_units' );
+		}
+
 		$units = array();
 		$results = $this->_get_units( $published, false );
 
@@ -701,6 +758,8 @@ class CoursePress_Course extends CoursePress_Utility {
 				$units[] = $unitClass;
 			}
 		}
+
+		$this->__set( 'current_units', $units );
 
 		return $units;
 	}
@@ -726,6 +785,7 @@ class CoursePress_Course extends CoursePress_Utility {
 
 		return $structure;
 	}
+
 
 	/**
 	 * Duplicate current course.
@@ -826,5 +886,17 @@ class CoursePress_Course extends CoursePress_Utility {
 		do_action( 'coursepress_course_duplicate_failed', $course_id );
 
 		return false;
+	}
+
+	function get_status() {
+		$status = $this->is_available() ? 'active' : '';
+
+		if ( $this->has_course_ended() ) {
+			$status = 'ended';
+		} elseif ( ! $this->is_course_started() ) {
+			$status = 'future';
+		}
+
+		return $status;
 	}
 }

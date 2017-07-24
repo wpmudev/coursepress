@@ -425,6 +425,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'course_id' => $course_id,
 			'post_content' => $course->post_content,
 			'post_excerpt' => htmlspecialchars_decode( $course->post_excerpt ),
+			'courses' => coursepress_get_courses( array( 'post_status' => 'publish', 'posts_per_page' => -1 ) ),
 		);
 
 		coursepress_render( 'views/tpl/common' );

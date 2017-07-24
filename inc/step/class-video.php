@@ -39,6 +39,10 @@ class CoursePress_Step_Video extends CoursePress_Step {
 
 	function create_video_js_setup_data() {
 		$url = $this->__get( 'video_url' );
+
+		//$url = 'http://local.wordpress.dev/wp-content/uploads/2017/07/Recording-3.mp4';
+		//$url = 'https://www.youtube.com/watch?v=FxYw0XPEoKE';
+		//$url = 'https://vimeo.com/6370469';
 		$src = false;
 		$extra_data = array();
 
@@ -54,15 +58,16 @@ class CoursePress_Step_Video extends CoursePress_Step {
 		$setup_data = array();
 		$player_width = $this->__get( 'video_player_width' );
 
-		if( !$player_width )
+		if( ! $player_width ) {
 			$setup_data['fluid'] = true;
+		}
 
 		if( $src ) {
 			$setup_data['techOrder'] = array($src);
 			$setup_data['sources'] = array(
 				array(
 					'type' => 'video/' . $src,
-					'src' => $url
+					'src' => $url,
 				)
 			);
 		}
@@ -83,6 +88,16 @@ class CoursePress_Step_Video extends CoursePress_Step {
 			'src' => $src,
 			'data-setup' => $this->create_video_js_setup_data()
 		);
+		$auto_play = $this->__get( 'video_autoplay' );
+		$loop = $this->__get( 'video_loop' );
+
+		if ( $auto_play ) {
+			$attr['autoplay'] = 'true';
+		}
+		if ( $loop ) {
+			$attr['loop'] = 'true';
+		}
+
 		$attr = array_filter( $attr );
 
 		$html = $this->create_html( 'video', $attr );

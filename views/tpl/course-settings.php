@@ -74,6 +74,25 @@
                     <?php endforeach; ?>
                 </select>
             </div>
+            <div class="cp-box cp-boxes cp-passcode-box {{'passcode'!== meta_enrollment_type? 'inactive':''}}">
+                <label class="label"><?php _e( 'Passcode', 'cp' ); ?></label>
+                <input type="text" name="meta_enrollment_passcode" value="{{meta_enrollment_passcode}}" />
+                <p class="description"><?php _e( 'Enter the passcode required to access the course.', 'cp' ); ?></p>
+            </div>
+            <div class="cp-box cp-boxes cp-requisite-box">
+                <label class="label"><?php _e( 'Select required course', 'cp' ); ?></label>
+                <div class="cp-courses-box">
+                    <?php if ( ! empty( $courses ) ) : ?>
+                    <select name="meta_enrollment_prerequisite" multiple="multiple">
+                        <?php foreach ( $courses as $course ) : ?>
+                            <option value="<?php echo $course->ID; ?>" {{_.selected('<?php echo $course->ID; ?>', meta_enrollment_prerequisite)}}><?php echo $course->post_title; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <?php else : ?>
+                        <p class="description"><?php _e( 'No courses available!', 'cp' ); ?></p>
+                    <?php endif; ?>
+                </div>
+            </div>
 
             <div class="cp-box">
                 <label class="label"><?php _e( 'Minimum passing grade', 'cp' ); ?></label>

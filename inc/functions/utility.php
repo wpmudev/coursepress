@@ -125,6 +125,7 @@ function coursepress_get_setting( $key = true, $default = '' ) {
 	        'pages' => array(
 	        	'student_dashboard' => 0,
 		        'student_settings' => 0,
+		        'login' => 0,
 	        )
         ),
         'emails' => array(),
@@ -640,4 +641,17 @@ function coursepress_log_last_activity( $activity = 'unknown', $user_id = 0 ) {
 
 	update_user_meta( $user_id, 'coursepress_latest_activity_time', time() );
 	update_user_meta( $user_id, 'coursepress_latest_activity', $activity );
+}
+
+function coursepress_set_cookie( $key, $value, $time ) {
+	$key = $key . '_' . COOKIEHASH;
+	setcookie( $key, $value, $time, COOKIEPATH, COOKIE_DOMAIN );
+}
+
+function coursepress_delete_cookie( $key ) {
+	$key = $key . '_' . COOKIEHASH;
+
+	ob_start();
+	$content = ob_get_clean();
+	setcookie( $key, false, -1, COOKIEPATH, COOKIE_DOMAIN );
 }
