@@ -84,7 +84,10 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Set Notification page
 		$notification_label = __( 'Notifications', 'cp' );
-		$this->add_submenu( $notification_label, 'coursepress_notifications_cap', 'coursepress_notifications', 'get_notification_page' );
+		$notifications_screen_id = $this->add_submenu( $notification_label, 'coursepress_notifications_cap', 'coursepress_notifications', 'get_notification_page' );
+		array_unshift( $this->screens, $notifications_screen_id );
+		// Add preload callback
+		add_action( 'load-' . $notifications_screen_id, array( $this, 'process_notifications_list_page' ) );
 
 		// Set Settings page
 		$settings_label = __( 'Settings', 'cp' );
@@ -187,6 +190,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 				),
                 'server_error' => __( 'An unexpected error occur while processing. Please try again.', 'cp' ),
                 'invalid_file_type' => __( 'Invalid file type!', 'cp' ),
+			    'all_students' => __( 'Students from All Courses', 'cp' ),
 			),
 		) );
 
@@ -247,9 +251,20 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_course_per_page' ) );
 	}
 
+	/**
+	 * Set custom screen options for the students listing page.
+	 */
 	function process_studentlist_page() {
 
 		(new CoursePress_Admin_Students())->screen_options();
+	}
+
+	/**
+	 * Set custom screen options for the listing page.
+	 */
+	function process_notifications_list_page() {
+
+		(new CoursePress_Admin_Notifications())->screen_options();
 	}
 
 	/**
@@ -263,7 +278,12 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 */
 	function set_courselist_options( $status, $option, $value ) {
 
-		$options = array( 'coursepress_course_per_page', 'coursepress_students_per_page' );
+		$options = array(
+			'coursepress_course_per_page',
+			'coursepress_students_per_page',
+			'coursepress_notifications_per_page'
+		);
+
 		// Return value for our custom option.
 		// For other options, return default.
 		if ( in_array( $option, $options ) ) {

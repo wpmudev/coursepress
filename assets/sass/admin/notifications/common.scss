@@ -1,0 +1,85 @@
+#coursepress-notifications {
+  .coursepress-page {
+
+    .notifications-content {
+      margin: 20px 0;
+      * {
+        @include boxsizing;
+      }
+
+      .cp-box {
+        margin-bottom: 25px;
+
+        .cp-div {
+          width: 50%;
+        }
+      }
+
+      .cp-input-clear {
+        width: 45%;
+        margin-right: 10px;
+      }
+
+      .clear-bottom {
+        margin: 20px;
+      }
+
+      .cp-div {
+        margin-left: 20px !important;
+
+        label {
+          color: gray;
+          font-size: .8em;
+          font-weight: 600;
+          display: block;
+        }
+      }
+
+      .cp-tagged-list {
+        background: gray;
+        padding: 8px 5px;
+        @include radius(4px);
+
+        li {
+          display: inline-block;
+          background: #f1f1f1;
+          padding: 4px 10px;
+          @include radius(3px);
+          margin: 2px;
+          &:after {
+            @include icon('\f00d');
+            margin-left: 5px;
+            cursor: pointer;
+          }
+        }
+      }
+
+      .notifications-content-tab {
+        width: 70%;
+        float: left;
+
+        &.cp-full-width {
+          width: 100%;
+        }
+      }
+    }
+
+    .cp-notification-menu {
+      float: none;
+      li {
+        margin: 0 20px 0 0;
+        display: inline-block;
+        font-size: 16px;
+        text-transform: uppercase;
+        color: gray;
+        cursor: pointer;
+
+        &.active {
+          color: $black;
+          border-bottom: 2px solid black;
+          padding-bottom: 3px;
+        }
+      }
+    }
+  }
+}

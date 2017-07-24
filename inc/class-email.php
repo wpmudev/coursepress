@@ -609,4 +609,50 @@ The %5$s Team', 'CoursePress' ),
 
 		return $default_certification_content;
 	}
+
+	/**
+	 * Send email from notification form.
+	 *
+	 * @param array $students Student User IDs.
+	 * @param string $title Email title.
+	 * @param string $content Email content.
+	 *
+	 * @return bool
+	 */
+	public function notification_email( $students, $title, $content ) {
+
+		if ( empty( $students ) ) {
+			return false;
+		}
+
+		// Set html email.
+		$headers = array('Content-Type: text/html; charset=UTF-8');
+
+		// Send separate email for each students.
+		foreach ( $students as $student ) {
+
+			$student = coursepress_get_user( $student );
+			if ( is_wp_error( $student ) ) {
+				continue;
+			}
+
+			// @todo Add more tokens.
+			$tokens = array(
+				'STUDENT_FIRST_NAME' => $student->first_name,
+				'STUDENT_LAST_NAME' => $student->last_name,
+				'STUDENT_USERNAME' => $student->user_login,
+				'BLOG_NAME' => get_bloginfo( 'name' ),
+				'LOGIN_ADDRESS' => wp_login_url(),
+				'WEBSITE_ADDRESS' => site_url(),
+			);
+
+			// Replacing tokens by actual content.
+			$content = str_replace( array_keys( $tokens ), array_values( $tokens ), $content );
+
+			wp_mail( $student->user_email, $title, $content, $headers );
+		}
+
+		return true;
+
+	}
 }

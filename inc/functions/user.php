@@ -472,16 +472,13 @@ function coursepress_get_user_course_completion_data( $user_id = 0, $course_id =
  *
  * @return array
  */
-function coursepress_get_available_users( $course_id, $type = 'instructor', $search = '' ) {
+function coursepress_get_available_users( $course_id = 0, $type = '', $search = '' ) {
 
-	// Do not continue if required values are empty.
-	if ( empty( $course_id ) || ! in_array( $type, array( 'instructor', 'facilitator' ) ) ) {
-		return array();
-	}
+	$args = array();
 
-	$args = array(
-		// Do not include already assigned users.
-		'meta_query'     => array(
+	// Do not include already assigned users.
+	if ( ! empty( $course_id ) && ! empty( $type ) && in_array( $type, array( 'instructor', 'facilitator' ) ) ) {
+		$args['meta_query'] = array(
 			array(
 				'relation' => 'AND',
 				array(
@@ -489,12 +486,15 @@ function coursepress_get_available_users( $course_id, $type = 'instructor', $sea
 					'compare' => "NOT EXISTS",
 				)
 			)
-		),
-		// Search user fields.
-		'search'         => '*' . $search . '*',
-		'search_columns' => array( 'user_login', 'user_nicename', 'user_email' ),
-		'fields'         => array( 'ID', 'user_login' ),
-	);
+		);
+	}
+
+	// Search user fields.
+	if ( ! empty( $search ) ) {
+		$args['search'] = '*' . $search . '*';
+		$args['search_columns'] = array( 'user_login', 'user_nicename', 'user_email' );
+		$args['fields'] = array( 'ID', 'user_login' );
+	}
 
 	return get_users( $args );
 }
@@ -519,7 +519,7 @@ function coursepress_get_students( $args = array(), &$count = 0 ) {
 	}
 
 	// Get only the student roles.
-	//$args['role'] = 'coursepress_student';
+	$args['role'] = 'coursepress_student';
 
 	$args = wp_parse_args( array(
 		'suppress_filters' => true,
@@ -546,6 +546,89 @@ function coursepress_get_students( $args = array(), &$count = 0 ) {
 	if ( ! empty( $results ) ) {
 		foreach ( $results as $result ) {
 			$students[ $result ] = coursepress_get_user( $result );
+		}
+	}
+
+	return $students;
+}
+
+/**
+ * Get list of students user object by course ID.
+ *
+ * @param int $course_id Course ID
+ *
+ * @return array
+ */
+function coursepress_get_students_by_course_id( $course_id ) {
+
+	global $wpdb;
+
+	$students = array();
+
+	if ( empty( $course_id ) ) {
+		return $students;
+	}
+
+	// Make sure it is int.
+	$course_id = absint( $course_id );
+
+	$students_table = $wpdb->prefix . 'coursepress_students';
+
+	// Get the student IDs for the course.
+	$sql = $wpdb->prepare( "SELECT student_id FROM `$students_table` WHERE `course_id`=%d GROUP BY student_id", $course_id );
+
+	$ids = $wpdb->get_col( $sql );
+
+	// If students ids found, get user objects.
+	if ( ! empty( $ids ) ) {
+		foreach ( $ids as $id ) {
+			$user = coursepress_get_user( $id );
+			if ( ! is_wp_error( $user ) ) {
+				$students[ $id ] = $user;
+			}
+		}
+	}
+
+	return $students;
+}
+
+/**
+ * Get list of students filtered by completed unit.
+ *
+ * @param int $course_id Course ID
+ * @param int $unit_id Unit ID
+ *
+ * @return array
+ */
+function coursepress_get_students_by_completed_unit( $course_id, $unit_id ) {
+
+	// Get only the student roles.
+	$args = array(
+		'suppress_filters' => true,
+		'fields' => 'ids',
+		'role' => 'coursepress_student',
+	);
+
+	/**
+	 * Filter students WP_User_Query arguments.
+	 *
+	 * @since 3.0
+	 * @param array $args
+	 */
+	$args = apply_filters( 'coursepress_pre_get_students_by_completed_unit', $args );
+
+	$query = new WP_User_Query( $args );
+	$results = $query->results;
+
+	$students = array();
+
+	// If result found, get the CoursePress_User objects.
+	if ( ! empty( $results ) ) {
+		foreach ( $results as $result ) {
+			$user = coursepress_get_user( $result );
+			if ( $user->is_unit_completed( $course_id, $unit_id) ) {
+				$students[ $result ] = $user;
+			}
 		}
 	}
 

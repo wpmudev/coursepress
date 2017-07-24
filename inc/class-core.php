@@ -78,6 +78,17 @@ final class CoursePress_Core extends CoursePress_Utility {
             'show_ui' => false,
             'can_export' => false,
         ) );
+
+		// Notifications.
+		register_post_type( 'cp_notification', array(
+			'public' => true,
+			'show_ui' => false,
+			'can_export' => false,
+			'show_in_nav_menu' => false,
+			'has_archive' => true,
+			'query_var' => false,
+			'publicly_queryable'=> false,
+		) );
 	}
 
 	function add_query_vars( $vars ) {
@@ -88,6 +99,7 @@ final class CoursePress_Core extends CoursePress_Utility {
 		$vars[] = 'step';
 		$vars[] = 'instructor';
 		$vars[] = 'topic';
+		$vars[] = 'notification';
 
 		return $vars;
 	}

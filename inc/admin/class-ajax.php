@@ -536,4 +536,84 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 		wp_send_json( $users );
 	}
+
+	/**
+	 * Get the list of units and students based on selected course.
+	 *
+	 * @param object $request
+	 */
+	function get_notification_units_students( $request ) {
+
+		$result = array();
+
+		if ( empty( $request->course_id ) ) {
+			wp_send_json_success( $result );
+		}
+
+		// Get students based on the course id.
+		$students = coursepress_get_students_by_course_id( $request->course_id );
+		if ( ! empty( $students ) ) {
+			foreach ( $students as $id => $student ) {
+				$result['students'][] = array(
+					'id' => $id,
+					'text' => $student->get_name(),
+				);
+			}
+		}
+
+		$units = coursepress_get_course_units( $request->course_id );
+		if ( ! empty( $units ) ) {
+			foreach ( $units as $id => $unit ) {
+				$result['units'][] = array(
+					'id' => $id,
+					'text' => $units->get_the_title(),
+				);
+			}
+		}
+
+		wp_send_json_success( $result );
+	}
+
+	/**
+	 * Get the list of units and students based on selected course.
+	 *
+	 * @param object $request
+	 */
+	function get_notification_students( $request ) {
+
+
+		$result = array();
+
+		if ( empty( $request->course_id ) || empty( $request->unit_id ) ) {
+			wp_send_json_success( $result );
+		}
+
+		$students = coursepress_get_students_by_completed_unit( $request->course_id, $request->unit_id );
+		if ( ! empty( $students ) ) {
+			foreach ( $students as $id => $student ) {
+				$result['students'][] = array(
+					'id' => $id,
+					'text' => $student->get_name(),
+				);
+			}
+		}
+
+		wp_send_json_success( $result );
+	}
+
+	function send_notification_email( $request ) {
+
+		global $CoursePress;
+
+		if ( empty( $request->content ) || empty( $request->title ) || empty( $request->students ) ) {
+			wp_send_json_error();
+		}
+
+		$email = $CoursePress->get_class( 'CoursePress_Email' );
+		if ( true ) {
+			wp_send_json_success( $email->notification_email( $request->students, $request->title, $request->content ) );
+		}
+
+		wp_send_json_error();
+	}
 }
