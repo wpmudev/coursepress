@@ -195,8 +195,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		if ( ! empty( $course_meta['meta_listing_image_thumbnail_id'] ) ) {
 			set_post_thumbnail( $course_id, $course_meta['meta_listing_image_thumbnail_id'] );
 		}
-		error_log( print_r( $course_meta,true ) );
-
 		// Check course category
 		if ( isset( $request->course_category ) ) {
 			$category = is_object( $request->course_category ) ? get_object_vars( $request->course_category ) : $request->course_category;
