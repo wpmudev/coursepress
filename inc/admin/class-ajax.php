@@ -24,6 +24,12 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 	    // Hook to unenroll request
 	    add_action( 'wp_ajax_coursepress_unenroll', array( $this, 'withdraw_student' ) );
+	    // Register user
+	    add_action( 'wp_ajax_nopriv_coursepress_register', array( $this, 'register_user'  ) );
+	    // Update profile
+	    add_action( 'wp_ajax_coursepress_update_profile', array( $this, 'update_profile' ) );
+	    // Submit module
+	    add_action( 'wp_ajax_coursepress_submit', array( $this, 'validate_submission' ) );
     }
 
     /**
@@ -148,10 +154,9 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
         }
 
         // Set post thumbnail ID if not empty
-        if ( ! empty( $course_meta['meta_listing_image_thumbnail_id'] ) ) {
-            set_post_thumbnail($course_id, $course_meta['meta_listing_image_thumbnail_id']);
+        if ( ! empty( $course_meta['listing_image_thumbnail_id'] ) ) {
+            set_post_thumbnail($course_id, $course_meta['listing_image_thumbnail_id']);
         }
-        //error_log(print_r($course_meta,true));
 
         // Check course category
         if ( isset( $request->course_category ) ) {
@@ -159,17 +164,11 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
             wp_set_object_terms( $course_id, $category, 'course_category', false );
         }
 
-        update_post_meta( $course_id, 'course_settings', $course_meta );
+        $course = coursepress_get_course( $course_id );
+        $course->update_setting( true, $course_meta );
 
-        /**
-         * Fire whenever a course is created or updated.
-         *
-         * @param int $course_id
-         * @param array $course_meta
-         */
-        do_action( 'coursepress_course_updated', $course_id, $course_meta );
-
-        $course = get_post( $course_id );
+        // Retrieve the course object back
+        $course = coursepress_get_course( $course_id );
 
         return array( 'success' => true, 'ID' => $course_id, 'course' => $course );
     }
@@ -197,7 +196,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
             $request = array_map( array( $this, 'to_array' ), $request );
         }
 
-        //error_log(print_r($request,true));
         coursepress_update_setting( true, $request );
 
         flush_rewrite_rules();
@@ -603,6 +601,89 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		}
 
 		wp_safe_redirect( $redirect );
+		exit;
+	}
+
+	function register_user() {
+
+	}
+
+	function update_profile() {
+		$request = $_POST;
+		$wpnonce = $request['_wpnonce'];
+
+		if ( ! $wpnonce || ! wp_verify_nonce( $wpnonce, 'coursepress_nonce' ) ) {
+			wp_send_json_error(true);
+		}
+
+		$user = get_userdata( get_current_user_id() );
+		$redirect = coursepress_get_student_settings_url();
+
+		if ( ! empty( $request['password'] ) ) {
+			$password = sanitize_text_field( $request['password'] );
+			$confirm = sanitize_text_field( $request['password_confirmation'] );
+
+			if ( $password !== $confirm ) {
+				coursepress_set_cookie( 'cp_mismatch_password', true, time() + 120 );
+
+				wp_safe_redirect( $redirect );
+				exit;
+			} else {
+				$user->user_pass = $password;
+			}
+		}
+
+		if ( ! empty( $request['first_name'] ) ) {
+			$user->first_name = sanitize_text_field( $request['first_name'] );
+		}
+		if ( ! empty( $request['last_name'] ) ) {
+			$user->last_name = sanitize_text_field( $request['last_name'] );
+		}
+		if ( ! empty( $request['email'] ) ) {
+			$user->user_email = sanitize_email( $request['email'] );
+		}
+
+		wp_update_user( $user );
+
+		coursepress_set_cookie( 'cp_profile_updated', true, time() + 120  );
+
+		wp_safe_redirect( $redirect );
+		exit;
+	}
+
+	function validate_submission() {
+		$course_id = filter_input( INPUT_POST, 'course_id', FILTER_VALIDATE_INT );
+		$unit_id = filter_input( INPUT_POST, 'unit_id', FILTER_VALIDATE_INT );
+		$module_id = filter_input( INPUT_POST, 'module_id', FILTER_VALIDATE_INT );
+		$step_id = filter_input( INPUT_POST, 'step_id', FILTER_VALIDATE_INT );
+		$type = filter_input( INPUT_POST, 'type' );
+		$user_id = get_current_user_id();
+		$referer = filter_input( INPUT_POST, 'referer_url' );
+		$redirect_url = filter_input( INPUT_POST, 'redirect_url' );
+		$response = isset( $_POST['module'] ) ? $_POST['module'] : array();
+
+		$user = coursepress_get_user( $user_id );
+
+		if ( ! $user->is_enrolled_at( $course_id ) ) {
+			// If user is not enrolled, don't validate
+			wp_safe_redirect( $referer );
+			exit;
+		}
+
+		$progress = $user->get_completion_data( $course_id );
+
+		if ( (int) $step_id > 0 ) {
+			$step = coursepress_get_course_step( $step_id );
+
+			if ( ! empty( $response ) || 'fileupload' === $step->type || 'discussion' === $step->type ) {
+				$progress = $step->validate_response( $response );
+			}
+		}
+		$progress = $user->validate_completion_data( $course_id, $progress );
+		$user->add_student_progress( $course_id, $progress );
+
+		wp_safe_redirect( $redirect_url );
+
 		exit;
 	}
 }

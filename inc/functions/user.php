@@ -428,13 +428,15 @@ function coursepress_get_accessible_courses( $returnAll = true ) {
 function coursepress_get_user_course_completion_data( $user_id = 0, $course_id = 0 ) {
 	$user = coursepress_get_user( $user_id );
 
-	if ( is_wp_error( $user ) )
+	if ( is_wp_error( $user ) ) {
 		return $user; // Let's return the error
+	}
 
 	$course = coursepress_get_course( $course_id );
 
-	if ( is_wp_error( $course ) )
+	if ( is_wp_error( $course ) ) {
 		return $course;
+	}
 
 	$status = $user->get_course_completion_status( $course_id );
 	$results = array( 'status' => $status );
@@ -567,7 +569,7 @@ function coursepress_get_student_workbook_data( $user_id = 0, $course_id = 0 ) {
 			$unit_id = $unit->__get( 'ID' );
 
 			$data[ $unit_id ] = array(
-				'progress' => (int) $user->get_unit_progress( $course_id ),
+				'progress' => (int) $user->get_unit_progress( $course_id, $unit_id ),
 				'title' => $unit->__get( 'post_title' ),
 				'type' => 'unit',
 			);
@@ -580,7 +582,7 @@ function coursepress_get_student_workbook_data( $user_id = 0, $course_id = 0 ) {
 						$cid = $unit_id . $module['id'];
 
 						$data[ $cid ] = array(
-							'progress' => '',
+							'progress' => (int) $user->get_module_progress( $course_id, $unit_id, $module['id'] ),
 							'title' => $module['title'],
 							'type' => 'module',
 						);
@@ -592,11 +594,15 @@ function coursepress_get_student_workbook_data( $user_id = 0, $course_id = 0 ) {
 								$is_completed = $user->is_step_completed( $course_id, $unit_id, $step_id );
 								$grade = $user->get_step_grade( $course_id, $unit_id, $step_id );
 
+								if ( 'pending' === $grade ) {
+									$grade = __( 'Pending', 'cp' );
+								}
+
 								$data[$step_id] = array(
 									'progress' => (int) $user->get_step_progress( $course_id, $unit_id, $step_id ),
 									'title' => $step->__get( 'post_title' ),
 									'type' => 'step',
-									'grade' => $is_completed ? $grade : $step_status,
+									'grade' => $grade,//$is_completed ? $grade : $step_status,
 								);
 							}
 						}
@@ -607,4 +613,19 @@ function coursepress_get_student_workbook_data( $user_id = 0, $course_id = 0 ) {
 	}
 
 	return $data;
+}
+
+function coursepress_wp_login_form() {
+	$redirect_after_login = coursepress_get_setting( 'general/redirect_after_login' );
+	$redirect = '';
+
+	if ( $redirect_after_login ) {
+		$redirect = coursepress_get_dashboard_url();
+	}
+
+	$args = array(
+		'redirect' => $redirect,
+	);
+
+	wp_login_form( $args );
 }

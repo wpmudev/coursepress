@@ -36,7 +36,7 @@
 
             <div class="cp-box cp-course-video">
                 <label class="label"><?php _e( 'Course overview video', 'cp' ); ?></label>
-                <input type="text" class="widefat cp-add-video" id="listing_video" name="featured_video" value=""  data-title="<?php _e( 'Select Feature Video', 'cp' ); ?>" />
+                <input type="text" class="widefat cp-add-video" id="listing_video" name="meta_featured_video" value="{{meta_featured_video}}"  data-title="<?php _e( 'Select Feature Video', 'cp' ); ?>" />
             </div>
 
             <div class="cp-box cp-course-categories">
@@ -79,7 +79,7 @@
                 <input type="text" name="meta_enrollment_passcode" value="{{meta_enrollment_passcode}}" />
                 <p class="description"><?php _e( 'Enter the passcode required to access the course.', 'cp' ); ?></p>
             </div>
-            <div class="cp-box cp-boxes cp-requisite-box">
+            <div class="cp-box cp-boxes cp-requisite-box {{'prerequisite'!== meta_enrollment_type? 'inactive':''}}">
                 <label class="label"><?php _e( 'Select required course', 'cp' ); ?></label>
                 <div class="cp-courses-box">
                     <?php if ( ! empty( $courses ) ) : ?>

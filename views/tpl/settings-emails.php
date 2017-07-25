@@ -44,6 +44,13 @@
         <div class="cp-box-content cp-email-fields-content">
             <h3 id="course-email-heading" class="cp-box-header"><?php echo $first['title']; ?></h3>
             <p id="course-email-desc"><?php echo $first['description']; ?></p>
+
+            <div class="cp-box cp-toggle-box">
+                <label>
+                    <input type="checkbox" name="enabled" value="1" class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
+                    <span class="label"><?php _e( 'Enable', 'cp' ); ?></span>
+                </label>
+            </div>
         </div>
         <div class="cp-box-content">
             <?php
@@ -66,7 +73,7 @@
                     <?php echo $first['content_help_text']; ?>
                 </div>
 
-                <?php coursepress_visual_editor( '', 'content', array( 'textarea_name' => 'content' ) ); ?>
+                <div class="coursepress-email-content"></div>
             </div>
         </div>
 	</div>

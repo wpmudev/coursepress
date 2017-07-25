@@ -74,19 +74,11 @@ class CoursePress_Menu extends CoursePress_Utility {
 
 		// If current user is logged in, set dashboard
 		if ( is_user_logged_in() ) {
-			$page_dashboard = coursepress_get_setting( 'slugs/pages/student_dashboard', false );
 			$dashboard_menu = $this->get_menu_object();
 			$dashboard_menu->title = __( 'Dashboard', 'cp' );
 			$dashboard_menu->ID = 'cp-dashboard';
 			$dashboard_menu->db_id = 9998;
-
-			if ( ! $page_dashboard ) {
-				$dashboard = coursepress_get_setting( 'slugs/student_dashboard', 'courses-dashboard' );
-				$dashboard_url = site_url( '/' ) . trailingslashit( $dashboard );
-				$dashboard_menu->url = $dashboard_url;
-			} else {
-				$dashboard_menu->url = get_permalink( $page_dashboard );
-			}
+			$dashboard_menu->url = coursepress_get_dashboard_url();
 
 			array_push( $menu_items, $dashboard_menu );
 
@@ -98,19 +90,31 @@ class CoursePress_Menu extends CoursePress_Utility {
 
 			array_push( $menu_items, $my_dashboard );
 
-			$student_page = coursepress_get_setting( 'slugs/pages/student_settings', false );
 			$student_menu = $this->get_menu_object();
-			$student_menu->title = __( 'My Settings', 'cp' );
+			$student_menu->title = __( 'My Profile', 'cp' );
 			$student_menu->ID = 'cp-settings';
 			$student_menu->menu_item_parent = 9998;
+			$student_menu->url = coursepress_get_student_settings_url();
 
-			if ( ! $student_page ) {
-				$student_settings = coursepress_get_setting( 'slugs/student_settings', 'student-settings' );
-				$student_menu->url = site_url( '/' ) . trailingslashit( $student_settings, 0);
-			} else {
-				$student_menu->url = get_permalink( $student_page );
-			}
 			array_push( $menu_items, $student_menu );
+
+			// Logout
+			$logout_menu = $this->get_menu_object();
+			$logout_menu->title = __( 'Logout', 'cp' );
+			$logout_menu->url = wp_logout_url( $menu->url );
+			array_push( $menu_items, $logout_menu );
+		} else {
+			// Add login menu
+			$login_menu = $this->get_menu_object();
+			$login_menu->title = __( 'Log In', 'cp' );
+			$login_menu->url = wp_login_url( $menu->url );
+
+			$use_custom_login = coursepress_get_setting( 'general/use_custom_login' );
+
+			if ( $use_custom_login ) {
+				$login_menu->url = coursepress_get_student_login_url();
+			}
+			array_push( $menu_items, $login_menu );
 		}
 
 		return $menu_items;

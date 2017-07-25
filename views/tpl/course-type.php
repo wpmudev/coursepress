@@ -151,7 +151,7 @@
 
             <div class="cp-box cp-toggle-box cp-box-marketpress{{  true === meta_payment_paid_course? '':' hidden' }}">
                 <label>
-                    <input type="checkbox" name="meta_mp_sale_price_enabled" {{_.checked(true, meta_mp_sale_price_enabled)}} class="cp-toggle-input" autocomplejte="off" /> <span class="cp-toggle-btn"></span>
+                    <input type="checkbox" name="meta_mp_sale_price_enabled" value="1" {{_.checked(true, meta_mp_sale_price_enabled)}} class="cp-toggle-input" autocomplejte="off" /> <span class="cp-toggle-btn"></span>
                     <span class="label"><?php esc_html_e( 'Enable Sale Price', 'cp' ); ?></span>
                 </label>
             </div>
@@ -163,7 +163,7 @@
 
             <div class="cp-box cp-toggle-box cp-box-marketpress{{  true === meta_payment_paid_course? '':' hidden' }}">
                 <label>
-                    <input type="checkbox" name="meta_mp_sale_price_enabled" {{_.checked(true, meta_mp_auto_sku)}} class="cp-toggle-input" autocomplejte="off" /> <span class="cp-toggle-btn"></span>
+                    <input type="checkbox" name="meta_mp_sale_price_enabled" value="1" {{_.checked(true, meta_mp_auto_sku)}} class="cp-toggle-input" autocomplejte="off" /> <span class="cp-toggle-btn"></span>
                     <span class="label"><?php esc_html_e( 'Automatically generate Stock Keeping Units (SKUs)', 'cp' ); ?></span>
                 </label>
             </div>

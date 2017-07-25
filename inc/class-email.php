@@ -7,12 +7,13 @@
  */
 class CoursePress_Email extends CoursePress_Utility {
 
-	/**
-	 * CoursePress_Email constructor.
-	 */
-	public function __construct() {
+	function get_email_data( $context = false ) {
+		$defaults = $this->get_defaults( $context );
+		$key = ! $context ? 'email' : 'email/' . $context;
+		$data = coursepress_get_setting( $key, $defaults );
 
-    }
+		return $data;
+	}
 
 	public function get_defaults( $context = false ) {
         $blog_name = coursepress_get_option( 'blogname' );

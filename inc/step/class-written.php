@@ -21,6 +21,31 @@ class CoursePress_Step_Written extends CoursePress_Step {
 		$this->__set( 'module_type', 'input-written' );
 	}
 
+	function validate_response( $response = array() ) {
+		if ( ! empty( $response ) ) {
+			$is_assessable = $this->__get( 'assessable' );
+			$min_grade = $this->__get( 'minimum_grade' );
+
+			$user    = coursepress_get_user();
+			$data    = array(
+				'response' => $response,
+				'grade'    => 0,
+			);
+			if ( ! $is_assessable ) {
+				$data['grade'] = $min_grade;
+			} else {
+				$data['assessable'] = true;
+			}
+			$step_id = $this->__get( 'ID' );
+
+			foreach ( $response as $course_id => $response2 ) {
+				foreach ( $response2 as $unit_id => $response3 ) {
+					$user->record_response( $course_id, $unit_id, $step_id, $data );
+				}
+			}
+		}
+	}
+
 	function get_question() {
 		$templates = '';
 		$unit = $this->get_unit();

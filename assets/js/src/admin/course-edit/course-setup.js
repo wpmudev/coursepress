@@ -230,16 +230,37 @@
                 this.stepListContainer.toggleClass('open', '');
             },
             updateCourse: function() {
+                var button = this.$('.step-next');
+                button.addClass('cp-progress');
                 this.model.set( 'action', 'update_course' );
+                this.model.off( 'coursepress:error_update_course' );
+                this.model.on( 'coursepress:error_update_course', this.after_update, this );
                 this.model.off( 'coursepress:success_update_course' );
                 this.model.on( 'coursepress:success_update_course', this.courseUpdated, this );
                 this.model.save();
+            },
+            after_update: function() {
+                var button = this.$('.step-next');
+                button.removeClass('cp-progress');
             },
             courseUpdated: function( data ) {
                 if ( data.ID && win.history.pushState ) {
                     var url = win._coursepress.pagenow + '&cid=' + data.ID;
                     win.history.pushState( {}, null, url );
+
+                    // Update course model
+                    this.model.set( data.course );
+
+                    /**
+                     * Trigger whenever a course is updated
+                     */
+                    this.trigger( 'coursepress:course_updated', data.ID, data.course );
                 }
+                this.after_update();
+
+                this.off('coursepress:validate-' + this.currentStep);
+                this.goToNext = true;
+                this.getNextStep();
             }
         });
 

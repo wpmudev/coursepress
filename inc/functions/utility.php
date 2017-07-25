@@ -655,3 +655,74 @@ function coursepress_delete_cookie( $key ) {
 	$content = ob_get_clean();
 	setcookie( $key, false, -1, COOKIEPATH, COOKIE_DOMAIN );
 }
+
+function coursepress_get_cookie( $key ) {
+	$key = $key . '_' . COOKIEHASH;
+
+	if ( isset( $_COOKIE[ $key ] ) ) {
+		return $_COOKIE[$key];
+	}
+
+	return false;
+}
+
+function coursepress_get_dashboard_url() {
+	$page_dashboard = coursepress_get_setting( 'slugs/pages/student_dashboard', false );
+
+	if ( ! $page_dashboard ) {
+		$dashboard = coursepress_get_setting( 'slugs/student_dashboard', 'courses-dashboard' );
+		$dashboard_url = site_url( '/' ) . trailingslashit( $dashboard );
+	} else {
+		$dashboard_url = get_permalink( $page_dashboard );
+	}
+
+	return $dashboard_url;
+}
+
+function coursepress_get_student_login_url() {
+	$login_page = coursepress_get_setting( 'slugs/pages/login' );
+
+	if ( (int) $login_page > 0 ) {
+		$login_url = get_permalink( (int) $login_page );
+	} else {
+		$login_slug = coursepress_get_setting( 'slugs/login', 'student-login' );
+		$login_url = site_url( '/' ) . trailingslashit( $login_slug );
+	}
+
+	return $login_url;
+}
+
+function coursepress_get_student_settings_url() {
+	$student_page = coursepress_get_setting( 'slugs/pages/student_settings', false );
+	if ( ! $student_page ) {
+		$student_settings = coursepress_get_setting( 'slugs/student_settings', 'student-settings' );
+		$student_url = site_url( '/' ) . trailingslashit( $student_settings, 0);
+	} else {
+		$student_url = get_permalink( $student_page );
+	}
+
+	return $student_url;
+}
+
+function coursepress_replace_vars( $content, $vars ) {
+	$login_url = wp_login_url();
+
+	if ( coursepress_get_setting( 'general/use_custom_login', true ) ) {
+		$login_url = coursepress_get_login_url();
+	}
+	$vars['COURSES_ADDRESS'] = coursepress_get_main_courses_url();
+	$vars['BLOG_ADDRESS'] = site_url();
+	$vars['BLOG_NAME'] = $vars['WEBSITE_NAME'] =  get_bloginfo( 'name' );
+	$vars['LOGIN_ADDRESS'] = $login_url;
+	$vars['WEBSITE_ADDRESS'] = home_url();
+
+	$keys   = array();
+	$values = array();
+
+	foreach ( $vars as $key => $value ) {
+		$keys[]   = $key;
+		$values[] = $value;
+	}
+
+	return str_replace( $keys, $values, $content );
+}

@@ -93,15 +93,15 @@ abstract class CoursePress_Utility {
      * @return string The content but with all placeholders replaced.
      */
     function replace_vars( $content, $vars ) {
-        $keys = array();
-        $values = array();
+	    $keys   = array();
+	    $values = array();
 
-        foreach ( $vars as $key => $value ) {
-            $keys[] = $key;
-            $values[] = $value;
-        }
+	    foreach ( $vars as $key => $value ) {
+		    $keys[]   = $key;
+		    $values[] = $value;
+	    }
 
-        return str_replace( $keys, $values, $content );
+	    return str_replace( $keys, $values, $content );
     }
 
     /**
@@ -145,4 +145,51 @@ abstract class CoursePress_Utility {
 
 	    return $per_page;
     }
+
+	function is_youtube_url( $url ) {
+		$host = parse_url( $url, PHP_URL_HOST );
+		return $host && (strpos($host, 'youtube') !== false || strpos($host, 'youtu.be') !== false);
+	}
+
+	function is_vimeo_url( $url ) {
+		$host = parse_url( $url, PHP_URL_HOST );
+		return $host && strpos($host, 'vimeo') !== false;
+	}
+
+	function create_video_js_setup_data( $url, $hide_related_media = true, $width = 0 ) {
+		//$url = 'http://local.wordpress.dev/wp-content/uploads/2017/07/Recording-3.mp4';
+		//$url = 'https://www.youtube.com/watch?v=FxYw0XPEoKE';
+		//$url = 'https://vimeo.com/6370469';
+		$src = false;
+		$extra_data = array();
+
+		if( $this->is_youtube_url( $url ) ) {
+			$src = 'youtube';
+			$show_related_media = ! $hide_related_media;
+			$extra_data['youtube'] = array( 'rel' => intval( $show_related_media ) );
+		} elseif( $this->is_vimeo_url( $url ) ) {
+			$src = 'vimeo';
+		}
+
+		$setup_data = array();
+		$player_width = $width;
+
+		if( ! $player_width ) {
+			$setup_data['fluid'] = true;
+		}
+
+		if( $src ) {
+			$setup_data['techOrder'] = array($src);
+			$setup_data['sources'] = array(
+				array(
+					'type' => 'video/' . $src,
+					'src' => $url,
+				)
+			);
+		}
+
+		$setup_data = array_merge( $setup_data, $extra_data );
+
+		return json_encode($setup_data);
+	}
 }

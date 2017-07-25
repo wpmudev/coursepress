@@ -37,15 +37,11 @@
                 post_title = this.$('[name="post_title"]');
                 post_title.parent().removeClass('cp-error');
 
-                this.courseEditor.goToNext = true;
+                this.courseEditor.goToNext = false;
 
                 if ( ! this.model.get( 'post_title' ) ) {
                     proceed = false;
                     post_title.parent().addClass('cp-error');
-                }
-
-                if ( _.isTrue( this.model.payment_paid_course) ) {
-                    // @todo: Validate MP and Woo
                 }
 
                 if ( 'manual' === this.model.course_type ) {
@@ -59,17 +55,26 @@
                 }
 
                 if ( ! proceed ) {
-                    this.courseEditor.goToNext = false;
-
                     return false;
                 }
 
                 // Save the course
+                this.courseEditor.off( 'coursepress:course_updated' );
+                this.courseEditor.on( 'coursepress:course_updated', this.updateUI, this );
                 this.courseEditor.updateCourse();
+            },
+
+            updateUI: function( course_id, course ) {
+                this.$('[name="meta_mp_sku"]').val(course.mp_sku);
             },
 
             setUI: function() {
                 this.$('.datepicker').datepicker({dateFormat: 'MM dd, yy' });
+
+                if ( this.model.get( 'payment_paid_course') ) {
+
+                    this.$('[name="meta_payment_paid_course"]').trigger( 'change' );
+                }
             },
 
             updateModel: function( ev ) {

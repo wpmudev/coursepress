@@ -39,6 +39,18 @@
                 }
 
                 return tpl(data);
+            },
+            focus: function( selector ) {
+                var el = $( selector ), top;
+
+                if ( 0 < el.length ) {
+                    top = el.offset().top;
+                    top -= 100;
+
+                    $(window).scrollTop( top );
+                }
+
+                return false;
             }
         });
 
@@ -163,6 +175,7 @@
                     }
                     container.find('textarea#' + id).val(content).on('change', function () {
                         content = $(this).val();
+
                         if (options.callback) {
                             options.callback.call(null, content);
                         }

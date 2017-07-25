@@ -45,4 +45,90 @@
       padding: 0;
     }
   }
+
+  .user-answers {
+    p {
+      margin: 0;
+      font-weight: 200;
+    }
+  }
+  .question {
+    margin-bottom: 15px;
+    font-weight: 400;
+  }
+  .chosen-answer {
+    &:before {
+      content: '';
+      display: inline-block;
+      font-family: 'FontAwesome';
+      margin-right: 8px;
+    }
+    &.correct:before {
+      content: '\f00c';
+      color: green;
+    }
+    &.wrong:before {
+      content: '\f00d';
+      color: red;
+    }
+  }
+
+  &.module-step-seen {
+    .step-status {
+      float: right;
+      padding: 5px 15px;
+      text-transform: uppercase;
+      font-size: 12px;
+      @include radius(20px);
+
+      &.step-status-pending {
+        background-color: $grey_6;
+      }
+      &.step-status-pass {
+        background-color: rgba(0, 255, 0, 0.2);
+      }
+      &.step-status-failed {
+        background-color: rgba(255, 0, 0, 0.2);
+      }
+    }
+
+    .cp-button-retry {
+      @include reset();
+      float: right;
+      padding: 5px 15px;
+      background-color: $grey_5;
+      margin: 0 15px;
+      text-transform: uppercase;
+      font-size: 13px;
+      @include radius(5px);
+    }
+
+    .course-module-step-question {
+      display: none;
+    }
+  }
+}
+
+.course-step-nav {
+  display: block;
+  margin: 15px 0;
+  text-align: right;
+
+  .coursepress-next-cycle,
+  .coursepress-previous-cycle {
+    @include reset();
+    display: inline-block;
+    text-transform: uppercase;
+    padding: 8px 15px;
+    background-color: $blue_1;
+    color: #ffffff;
+
+    &:hover {
+      background-color: $blue_2;
+    }
+  }
+
+  .coursepress-previous-cycle {
+    float: left;
+  }
 }

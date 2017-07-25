@@ -135,7 +135,7 @@
                 var with_modules;
                 this.model = model;
                 with_modules = win.Course.model.get('with_modules');
-//window.alert(with_modules);
+
                 if ( ! with_modules || ! model.get('modules') ) {
                     model.set('modules', false);
                 }

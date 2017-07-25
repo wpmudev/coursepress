@@ -17,13 +17,13 @@ if ( ! empty( $workbook_data ) ) : ?>
 					echo $data['grade'];
 				endif; ?>
 			</td>
-			<td><?php
-				if ( 'module' != $data['type'] ) :
+			<td align="right"><?php
+				//if ( 'module' != $data['type'] ) :
 					if ( 'unit' == $data['type'] ) :
 						_e( 'Progress: ', 'cp' );
 					endif;
 					echo $data['progress'] . '%';
-				endif;
+				//endif;
 			?></td>
 		</tr>
 	<?php endforeach; ?>

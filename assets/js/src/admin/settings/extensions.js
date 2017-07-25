@@ -48,6 +48,7 @@
             extensions: {},
             setting: false,
             initialize: function( extensions, settingObject ) {
+                window.console.log(extensions);
                 this.model = {extensions: extensions};
                 this.setting = settingObject;
 

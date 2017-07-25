@@ -9,6 +9,8 @@ $course = coursepress_get_course();
 $unit = coursepress_get_unit();
 $student = coursepress_get_user();
 $unit_progress = $student->get_unit_progress( $course->ID, $unit->ID );
+$coursep = $student->get_completion_data( $course->ID );
+//error_log( print_r( $coursep, true ) );
 get_header(); ?>
 
     <div class="coursepress-wrap course-unit">
@@ -37,16 +39,6 @@ get_header(); ?>
                     </div>
                     <div class="course-content">
 			            <?php echo coursepress_get_current_course_cycle(); ?>
-
-                        <div class="course-step-nav">
-                            <div class="course-previous-item">
-                                <?php echo coursepress_get_previous_course_cycle_link(); ?>
-                            </div>
-
-                            <div class="course-next-item">
-                                <?php echo coursepress_get_next_course_cycle_link(); ?>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

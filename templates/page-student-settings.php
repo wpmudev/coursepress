@@ -14,6 +14,8 @@ get_header(); ?>
                     <h1 class="page-title"><?php _e( 'My Profile', 'cp' ); ?></h1>
                 </header>
             </div>
+
+            <?php coursepress_get_template( 'registration', 'form' ); ?>
         </div>
     </div>
 <?php get_footer();

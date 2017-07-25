@@ -580,7 +580,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
         $emails = $CoursePress->get_class( 'CoursePress_Email' );
         $sections = $emails->get_settings_sections();
-        $this->localize_array['settings']['email'] = $emails->get_defaults();
+        $this->localize_array['settings']['email'] = $emails->get_email_data();
         $this->localize_array['email_sections'] = $sections;
 
         $email_vars = array(

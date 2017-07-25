@@ -39,6 +39,7 @@
                 </button>
 
                 <button type="button" class="cp-btn cp-btn-active step-next">
+                    <i class="fa fa-circle-o-notch fa-spin"></i>
 					<?php _e( 'Save and Continue', 'cp' ); ?>
                 </button>
 			</div>

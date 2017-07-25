@@ -27,67 +27,24 @@ class CoursePress_Step_Video extends CoursePress_Step {
 		return $keys;
 	}
 
-	function is_youtube_url( $url ) {
-		$host = parse_url( $url, PHP_URL_HOST );
-		return $host && (strpos($host, 'youtube') !== false || strpos($host, 'youtu.be') !== false);
-	}
-
-	function is_vimeo_url( $url ) {
-		$host = parse_url( $url, PHP_URL_HOST );
-		return $host && strpos($host, 'vimeo') !== false;
-	}
-
-	function create_video_js_setup_data() {
-		$url = $this->__get( 'video_url' );
-
-		//$url = 'http://local.wordpress.dev/wp-content/uploads/2017/07/Recording-3.mp4';
-		//$url = 'https://www.youtube.com/watch?v=FxYw0XPEoKE';
-		//$url = 'https://vimeo.com/6370469';
-		$src = false;
-		$extra_data = array();
-
-		if( $this->is_youtube_url( $url ) ) {
-			$src = 'youtube';
-
-			$show_related_media = ! $this->__get( 'hide_related_media' );
-			$extra_data['youtube'] = array( 'rel' => intval( $show_related_media ) );
-		} elseif( $this->is_vimeo_url( $url ) ) {
-			$src = 'vimeo';
-		}
-
-		$setup_data = array();
-		$player_width = $this->__get( 'video_player_width' );
-
-		if( ! $player_width ) {
-			$setup_data['fluid'] = true;
-		}
-
-		if( $src ) {
-			$setup_data['techOrder'] = array($src);
-			$setup_data['sources'] = array(
-				array(
-					'type' => 'video/' . $src,
-					'src' => $url,
-				)
-			);
-		}
-
-		$setup_data = array_merge( $setup_data, $extra_data );
-
-		return json_encode($setup_data);
-	}
-
 	function get_question() {
 		$src = esc_url_raw( $this->__get( 'video_url' ) );
+		$hide_related_video = $this->__get( 'hide_related_video' );
+		$width = $this->__get( 'video_player_width' );
 
 		$attr = array(
 			'id' => $this->__get( 'ID' ),
 			'class' => 'video-js vjs-default-skin vjs-big-play-centered',
-			'width' => $this->__get( 'video_player_width' ),
+			'width' => $width,
 			'height' => $this->__get( 'video_player_height' ),
 			'src' => $src,
-			'data-setup' => $this->create_video_js_setup_data()
+			'data-setup' => $this->create_video_js_setup_data( $src, $hide_related_video, $width )
 		);
+
+		if ( ! $this->__get( 'video_hide_controls' ) ) {
+			$attr['controls'] = true;
+		}
+
 		$auto_play = $this->__get( 'video_autoplay' );
 		$loop = $this->__get( 'video_loop' );
 

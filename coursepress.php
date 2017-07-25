@@ -72,6 +72,7 @@ final class CoursePress {
 		'CoursePress_Data_Users',
 		'CoursePress_Core',
 		'CoursePress_Extension',
+		'CoursePress_Cron_Discussion'
 	);
 
 	/**

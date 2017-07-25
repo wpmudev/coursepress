@@ -62,11 +62,15 @@ class CoursePress_Course extends CoursePress_Utility {
 			}
 
 			// Legacy fixes
-			if ( 'enrollment_type' == $key && 'anyone' == $value ) {
-				$value = 'registered'; }
-			if ( 'on' == $value || 'yes' == $value ) {
-				$value = true; }
-			if ( 'off' == $value ) {
+			if ( 'enrollment_type' === $key && 'anyone' === $value ) {
+				$value = 'registered';
+			}
+			if ( 'on' === $value || 'yes' === $value ) {
+				$value = true;
+			}
+
+			if ( 'off' === $value ) {
+				echo $value;
 				$value = false;
 			}
 
@@ -86,6 +90,8 @@ class CoursePress_Course extends CoursePress_Utility {
 	}
 
 	function get_settings() {
+		global $CoursePress;
+
 		$pre_completion_content = sprintf( '<h3>%s</h3>', __( 'Congratulations! You have completed COURSE_NAME!', 'cp' ) );
 		$pre_completion_content .= sprintf( '<p>%s</p>', __( 'Your course instructor will now review your work and get back to you with your final grade before issuing you a certificate of completion.', 'cp' ) );
 		$completion_content = sprintf( '<h3>%s</h3><p>%s</p><p>DOWNLOAD_CERTIFICATE_BUTTON</p>',
@@ -112,7 +118,7 @@ class CoursePress_Course extends CoursePress_Utility {
 
 			'course_view' => 'focus',
 			'structure_level' => 'unit',
-			'course_open_ended' => true,
+			//'course_open_ended' => true,
 			'course_start_date' => 0,
 			'course_end_date' => '',
 			'enrollment_open_ended' => false,
@@ -156,11 +162,44 @@ class CoursePress_Course extends CoursePress_Utility {
 		/**
 		 * MarketPress plugin status
 		 */
-		$MarketPress = new CoursePress_Extension_MarketPress();
+		$MarketPress = $CoursePress->get_class( 'CoursePress_Extension_MarketPress' );
 		$settings['mp_is_instaled'] = $MarketPress->installed();
 		$settings['mp_is_activated'] = $MarketPress->activated();
 
 		return $settings;
+	}
+
+	function update_setting( $key, $value = array() ) {
+		$course_id = $this->__get( 'ID' );
+		$settings = $this->get_settings();
+
+		if ( true === $key ) {
+			$settings = $value;
+		} else {
+			$settings[ $key ] = $value;
+		}
+
+		update_post_meta( $course_id, 'course_settings', $settings );
+
+		// We need date types in most queries, store them as seperate meta key
+
+		if ( true === $key ) {
+			foreach ( $settings as $key => $value ) {
+				update_post_meta( $course_id, $key, $value );
+			}
+		} else {
+			update_post_meta( $course_id, $key, $value );
+		}
+
+		/**
+		 * Fire whenever a course is created or updated.
+		 *
+		 * @param int $course_id
+		 * @param array $course_meta
+		 */
+		do_action( 'coursepress_course_updated', $course_id, $settings );
+
+		return true;
 	}
 
 	/**
@@ -245,16 +284,20 @@ class CoursePress_Course extends CoursePress_Utility {
 		$feature_video = $this->get_feature_video_url();
 
 		if ( ! $width ) {
-			$width = coursepress_get_setting( 'course/image_width', 235 ); }
+			$width = coursepress_get_setting( 'course/image_width', 235 );
+		}
 		if ( ! $height ) {
-			$height = coursepress_get_setting( 'course/image_height', 235 ); }
+			$height = coursepress_get_setting( 'course/image_height', 235 );
+		}
 
 		if ( ! empty( $feature_video ) ) {
 			$attr = array(
 				'src' => esc_url_raw( $feature_video ),
-				'class' => 'course-feature-video',
+				'class' => 'video-js vjs-default-skin vjs-big-play-centered course-feature-video',
 				'width' => $width,
 				'height' => $height,
+				'controls' => true,
+				'data-setup' => $this->create_video_js_setup_data( $feature_video )
 			);
 
 			return $this->create_html( 'video', $attr );
@@ -266,7 +309,8 @@ class CoursePress_Course extends CoursePress_Utility {
 	function get_media( $width = 235, $height = 235 ) {
 		$media_type = coursepress_get_setting( 'course/details_media_type', 'image' );
 		$image = $this->get_feature_image( $width, $height );
-		if ( 'image' == $media_type && ! empty( $image ) ) {
+
+		if ( ( 'image' == $media_type || 'default' == $media_type ) && ! empty( $image ) ) {
 			return $image;
 		}
 		$video = $this->get_feature_video( $width, $height );
@@ -282,13 +326,7 @@ class CoursePress_Course extends CoursePress_Utility {
 	}
 
 	function get_course_start_date() {
-		$open_ended = $this->__get( 'course_open_ended' );
-
-		if ( $open_ended ) {
-			return __( 'Anytime', 'cp' );
-		} else {
-			return $this->__get( 'course_start_date' );
-		}
+		return $this->__get( 'course_start_date' );
 	}
 
 	function get_course_end_date() {
@@ -296,10 +334,15 @@ class CoursePress_Course extends CoursePress_Utility {
 	}
 
 	function get_course_dates( $separator = ' - ' ) {
-		$open_ended = $this->__get( 'course_open_ended' );
+		$course_type = $this->__get( 'course_type' );
+		$open = 'auto-moderated' == $course_type;
 
-		if ( $open_ended ) {
-			return __( 'Anytime', 'cp' );
+		if ( ! $open ) {
+			//$open = $this->__get( 'course_open_ended' );
+		}
+
+		if ( $open ) {
+			return __( 'Open Ended', 'cp' );
 		}
 
 		return implode( $separator, array( $this->get_course_start_date(), $this->get_course_start_date() ) );
@@ -334,30 +377,34 @@ class CoursePress_Course extends CoursePress_Utility {
 	}
 
 	function get_course_cost() {
-		$price = __( 'FREE', 'cp' );
+		$price_html = __( 'FREE', 'cp' );
 
 		if ( $this->__get( 'payment_paid_course' ) ) {
 			$price = $this->__get( 'mp_product_price' );
-			$is_on_sale = $this->__get( 'mp_sale_price_enabled' );
 
-			if ( $is_on_sale ) {
-				$sale_price = $this->__get( 'mp_product_sale_price' );
-
-				$price = $sale_price . $this->create_html( 'em', array( 'class' => 'orig-price' ), $price );
-			}
-
-			// @todo: hook the price filter here
+			/**
+			 * Trigger to allow changes on course cost
+			 */
+			$price_html = apply_filters( 'coursepress_course_cost', $price_html, $price, $this );
 		}
 
-		return $price;
+		return $price_html;
 	}
 
 	function get_view_mode() {
 		return $this->__get( 'course_view' );
 	}
 
+	function get_product_id() {
+		return $this->__get( 'mp_product_id' );
+	}
+
 	function is_with_modules() {
 		return $this->__get( 'with_modules' );
+	}
+
+	function is_paid_course() {
+		return $this->__get( 'payment_paid_course' );
 	}
 
 	/**
@@ -693,6 +740,7 @@ class CoursePress_Course extends CoursePress_Utility {
 		if ( ! empty( $redirect ) ) {
 			$url['redirect'] = $redirect;
 		}
+
 		$url = add_query_arg( $url, admin_url( 'admin-ajax.php' ) );
 
 		return $url;

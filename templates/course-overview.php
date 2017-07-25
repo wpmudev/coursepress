@@ -5,12 +5,13 @@
  * @since 3.0
  * @package CoursePress
  */
+$course = coursepress_get_course();
 ?>
 <article id="post-<?php the_ID(); ?>" <?php post_class( 'course-overview' ); ?>>
-	<header class="entry-header">
-		<span class="page-title-tag"><?php _e( 'Course', 'cp' ); ?></span>
-		<?php the_title( '<h1 class="entry-title course-title">', '</h1>' ); ?>
-	</header>
+    <header class="page-header">
+        <h1 class="page-title"><?php _e( 'Course', 'cp' ); ?></h1>
+        <h2 class="entry-title"><?php echo coursepress_get_course_title(); ?></h2>
+    </header>
 
 	<div class="course-details">
 		<div class="course-media">
@@ -25,6 +26,14 @@
 				<span class="meta-title"><?php _e( 'Enrollment', 'cp' ); ?>: </span>
 				<span class="course-meta-enrollment-dates"><?php echo coursepress_get_course_enrollment_dates(); ?></span>
 			</p>
+            <p class="course-meta">
+                <span class="meta-title"><?php _e( 'Language', 'cp' ); ?>:</span>
+                <span class="course-meta course-meta-language"><?php echo $course->get_course_language(); ?></span>
+            </p>
+            <p class="course-meta">
+                <span class="meta-title"><?php _e( 'Price', 'cp' ); ?>:</span>
+                <span class="course-meta course-meta-price"><?php echo $course->get_course_cost(); ?></span>
+            </p>
 
             <p class="course-button">
                 <?php coursepress_get_course_enrollment_button(); ?>

@@ -107,6 +107,7 @@ final class CoursePress_Core extends CoursePress_Utility {
 		$instructor_slug = coursepress_get_setting( 'slugs/instructor_profile', 'instructor' );
 		$student_dashboard = coursepress_get_setting( 'slugs/student_dashboard', 'courses-dashboard' );
 		$student_settings = coursepress_get_setting( 'slugs/student_settings', 'student-settings' );
+		$student_login = coursepress_get_setting( 'slugs/login', 'student-login' );
 		$base = '^' . $course_slug . '/([^/]*)/';
 
 		$new_rules = array(
@@ -137,6 +138,8 @@ final class CoursePress_Core extends CoursePress_Utility {
 			'^' . $student_dashboard . '/?' => 'index.php?coursepress=student-dashboard',
 			// Student Settings
 			'^' . $student_settings . '/?' => 'index.php?coursepress=student-settings',
+			// Student Login
+			'^' . $student_login . '/?' => 'index.php?coursepress=student-login',
 		);
 
 		return array_merge( $new_rules, $rules );

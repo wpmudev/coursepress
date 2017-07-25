@@ -120,7 +120,9 @@
                 'assets/js/src/common/coursepress.js',
                 'assets/js/src/common/request.js',
                 'assets/js/src/common/view.js',
-                'assets/js/src/front/course-overview.js'
+                'assets/js/src/front/course-overview.js',
+                'assets/js/src/front/comment-reply.js',
+                'assets/js/src/front/steps.js'
             ]
         };
 

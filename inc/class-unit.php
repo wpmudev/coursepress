@@ -272,6 +272,10 @@ class CoursePress_Unit extends CoursePress_Utility {
 		return null;
 	}
 
+	function get_permalink() {
+		return $this->get_unit_url();
+	}
+
 	function get_previous_unit() {
 		$previous = $this->__get( 'previousUnit' );
 
@@ -500,6 +504,10 @@ class CoursePress_Unit extends CoursePress_Utility {
 				$stepClass = $this->get_step_by_id( $result->ID );
 
 				if ( $stepClass ) {
+					if ( 'input-form' === $stepClass->__get( 'module_type' ) ) {
+						// @todo: Handle form module?
+						continue;
+					}
 					$stepClass->__set( 'previousStep', $previousStep );
 					$previousStep = $stepClass;
 					$steps[ $result->ID ] = $stepClass;
