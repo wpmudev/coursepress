@@ -372,8 +372,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			$course = coursepress_get_course( $course_id );
 		}
 
-		l( $course );
-
 		// Set course category
 		$category = array_values( $course->get_category() );
 		$course->__set( 'course_category', $category );
