@@ -72,7 +72,10 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Set assessment page
 		$assessment_label = __( 'Assessments', 'cp' );
-		$this->add_submenu( $assessment_label, 'coursepress_assessment_cap', 'coursepress_assessments', 'get_assessments_page' );
+		$assesment_screen_id = $this->add_submenu( $assessment_label, 'coursepress_assessment_cap', 'coursepress_assessments', 'get_assessments_page' );
+		array_unshift( $this->screens, $assesment_screen_id );
+		// Add preload callback
+		add_action( 'load-' . $assesment_screen_id, array( $this, 'process_assesments_page' ) );
 
 		// Set Forum page
 		$forum_label = __( 'Forum', 'cp' );
@@ -250,6 +253,14 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	function process_studentlist_page() {
 
 		(new CoursePress_Admin_Students())->screen_options();
+	}
+
+	/**
+	 * Process assesment listing page screen.
+	 */
+	function process_assesments_page() {
+
+		(new CoursePress_Admin_Assesments())->screen_options();
 	}
 
 	/**
@@ -467,8 +478,12 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		coursepress_render( 'views/admin/comments' );
 	}
 
+	/**
+	 * Assesments listing page cotent.
+	 */
 	function get_assessments_page() {
-		coursepress_render( 'views/admin/assessments' );
+
+		(new CoursePress_Admin_Assesments())->get_page();
 	}
 
 	function get_notification_page() {
