@@ -619,8 +619,33 @@ The %5$s Team', 'CoursePress' ),
 	 *
 	 * @return bool
 	 */
-	public function notification_email( $students, $title, $content ) {
+	public function notification_alert_email( $students, $title, $content ) {
 
+		// Make sure students are there.
+		if ( empty( $students ) ) {
+			return false;
+		}
+
+		// If all students option selected, get all students.
+		if ( in_array( 0, $students ) ) {
+			$students = coursepress_get_students_ids();
+		}
+
+		return $this->_send_students_notification_email( $students, $title, $content );
+	}
+
+	/**
+	 * Send email notification to students.
+	 *
+	 * @param array $students Student User IDs.
+	 * @param string $title Email title.
+	 * @param string $content Email content.
+	 *
+	 * @return bool
+	 */
+	private function _send_students_notification_email( $students, $title, $content ) {
+
+		// Make sure students are there.
 		if ( empty( $students ) ) {
 			return false;
 		}

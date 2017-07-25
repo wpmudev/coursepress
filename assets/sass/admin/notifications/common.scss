@@ -24,14 +24,31 @@
         margin: 20px;
       }
 
+      .cp-box-content {
+        border: 0;
+      }
+
+      .course-footer {
+        border: 0;
+        padding: 15px;
+
+        .cp-btn-active {
+          min-width: 16%;
+        }
+      }
+
       .cp-div {
         margin-left: 20px !important;
 
-        label {
-          color: gray;
-          font-size: .8em;
+        .label {
+          font-size: 14px;
           font-weight: 600;
           display: block;
+        }
+
+        .label-small {
+          color: gray;
+          font-size: .8em;
         }
       }
 

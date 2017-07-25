@@ -553,43 +553,29 @@ function coursepress_get_students( $args = array(), &$count = 0 ) {
 }
 
 /**
- * Get list of students user object by course ID.
+ * Get list of students user IDs.
  *
  * @param int $course_id Course ID
  *
  * @return array
  */
-function coursepress_get_students_by_course_id( $course_id ) {
+function coursepress_get_students_ids( $course_id = 0 ) {
 
 	global $wpdb;
 
-	$students = array();
-
-	if ( empty( $course_id ) ) {
-		return $students;
-	}
-
-	// Make sure it is int.
-	$course_id = absint( $course_id );
-
 	$students_table = $wpdb->prefix . 'coursepress_students';
 
-	// Get the student IDs for the course.
-	$sql = $wpdb->prepare( "SELECT student_id FROM `$students_table` WHERE `course_id`=%d GROUP BY student_id", $course_id );
-
-	$ids = $wpdb->get_col( $sql );
-
-	// If students ids found, get user objects.
-	if ( ! empty( $ids ) ) {
-		foreach ( $ids as $id ) {
-			$user = coursepress_get_user( $id );
-			if ( ! is_wp_error( $user ) ) {
-				$students[ $id ] = $user;
-			}
-		}
+	if ( ! empty( $course_id ) ) {
+		// Make sure it is int.
+		$course_id = absint( $course_id );
+		// Get students of specific course.
+		$sql = $wpdb->prepare( "SELECT student_id FROM `$students_table` WHERE `course_id`=%d GROUP BY student_id", $course_id );
+	} else {
+		// Get all students.
+		$sql = "SELECT student_id FROM `$students_table` GROUP BY student_id";
 	}
 
-	return $students;
+	return $wpdb->get_col( $sql );
 }
 
 /**

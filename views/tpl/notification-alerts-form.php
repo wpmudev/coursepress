@@ -3,7 +3,8 @@
 	<div class="cp-flex cp-box">
 
 		<div class="cp-div">
-			<label class="label"><?php _e( 'Pick course', 'cp' ); ?></label>
+			<h3 class="label"><?php _e( 'Select a course to display an alert on', 'cp' ); ?></h3>
+			<label class="label label-small"><?php _e( 'Pick course', 'cp' ); ?></label>
 			<select name="course" id="cp-alert-course">
 				<option value="0"><?php _e( 'All Courses', 'cp' ); ?></option>
 				<?php if ( ! empty( $courses ) ) : ?>
@@ -11,15 +12,6 @@
 						<option value="<?php echo $course->ID; ?>"><?php echo $course->post_title; ?></option>
 					<?php endforeach; ?>
 				<?php endif; ?>
-			</select>
-		</div>
-
-		<div class="cp-div">
-			<label class="label"><?php _e( 'Select condition', 'cp' ); ?></label>
-			<select name="unit" data-placeholder="<?php _e( 'Select alert condition', 'cp' ); ?>" id="cp-alert-condition">
-				<option value="all"><?php _e( 'All students', 'cp' ); ?></option>
-				<option value="pass"><?php _e( 'All students who pass this course', 'cp' ); ?></option>
-				<option value="fail"><?php _e( 'All students who failed this course', 'cp' ); ?></option>
 			</select>
 		</div>
 	</div>
@@ -47,6 +39,7 @@
 	</div>
 
 	<div class="course-footer">
+		<button type="button" class="cp-btn cp-btn-cancel cp-alert-cancel"><?php _e( 'Cancel', 'cp' ); ?></button>
 		<button type="button" class="cp-btn cp-btn-active cp-alert-submit"><i class="fa fa-circle-o-notch fa-spin"></i><?php _e( 'Publish', 'cp' ); ?></button>
 	</div>
 	

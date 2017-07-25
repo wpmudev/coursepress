@@ -9,6 +9,7 @@
 			el: $('#notification-alerts_form'),
 			events: {
 				'click .cp-alert-submit': 'createAlert',
+				'click .cp-alert-cancel': 'clearForm',
 			},
 
 			// Initialize.
@@ -33,14 +34,17 @@
 			},
 
 			// Create new course alert.
-			createAlert: function () {
+			createAlert: function ( ev ) {
 
+				this.$(ev.currentTarget).addClass('cp-progress');
 				// Editor content.
-				var content = win.tinymce.editors.alert_content.getContent();
-				var title = this.$('#alert-title').val();
-				if ( '' !== content && '' !== title ) {
+				var content = win.tinymce.editors.alert_content.getContent(),
+					title = this.$('#alert-title').val(),
+					course_id = this.$('#cp-alert-course').val();
+				if ( '' !== content && '' !== title && '' !== course_id ) {
 					this.request.set( {
 						'action': 'create_course_alert',
+						'course_id': course_id,
 						'title': title,
 						'content': content,
 					} );
@@ -48,14 +52,24 @@
 				}
 			},
 
-			// Show success notification after creating new alert.
+			// After creating new alert.
 			showSuccess: function () {
-
+				// Hide progress icon.
+				this.$('.cp-alert-submit').removeClass('cp-progress');
+				this.clearForm();
 			},
 
-			// Show error message when new alert failed.
+			// After new alert failed.
 			showError: function () {
+				// Hide progress icon.
+				this.$('.cp-alert-submit').removeClass('cp-progress');
+			},
 
+			// Clear field values.
+			clearForm: function () {
+
+				win.tinymce.editors.alert_content.setContent('');
+				this.$('#alert-title').val('');
 			}
 		});
 	});

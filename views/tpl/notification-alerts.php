@@ -25,10 +25,11 @@
                             switch( $column_id ) :
                                 case 'title' :
                                     echo $notification->post_title;
+                                    break;
                                 case 'course' :
-                                    // Set the course meta for the notification.
-                                    $course = get_post_meta( $notification->ID, 'notification_course', true );
-                                    echo empty( $course ) ? __( 'All Courses', 'cp' ) : $course;
+                                    // Get course name.
+                                    $course_id = get_post_meta( $notification->ID, 'alert_course', true );
+                                    echo empty( $course_id ) ? __( 'All Courses', 'cp' ) : get_the_title( $course_id );
                                     break;
                                 default :
                                     /**
@@ -47,7 +48,7 @@
                     <td class="column-status">
                         <label>
                             <?php $active =  ( isset( $notification->post_status ) && $notification->post_status === 'publish' ); ?>
-                            <input type="checkbox" class="cp-toggle-input cp-toggle-notification-status" value="<?php echo $notification->ID; ?>" <?php checked( $active, true ); ?> /> <span class="cp-toggle-btn"></span>
+                            <input type="checkbox" class="cp-toggle-input cp-toggle-alert-status" value="<?php echo $notification->ID; ?>" <?php checked( $active, true ); ?> /> <span class="cp-toggle-btn"></span>
                         </label>
                     </td>
                 </tr>

@@ -33,7 +33,7 @@
 			setUpUI: function() {
 				// Setup course select.
 				this.$('#cp-course').select2({
-					width: '100%',
+					width: '100%'
 				});
 				// Setup units and students select.
 				this.$('#cp-unit, #cp-student').select2({
@@ -47,7 +47,7 @@
 
 				// Get the updated list of units.
 				var course_id = $( ev.currentTarget ).val();
-				if ( '0' !== course_id ) {
+				if ( '' !== course_id ) {
 					this.request.set( {
 						'action': 'get_notification_units_students',
 						'course_id': course_id,
@@ -73,11 +73,9 @@
 			updateUnitsStudents: function ( response ) {
 
 				// Update units value.
-				if ( ! _.isEmpty( response.units ) ) {
-					this.$('#cp-unit').empty().select2({
-						data: response.units
-					});
-				}
+				this.$('#cp-unit').empty().select2({
+					data: _.isEmpty( response.units ) ? [] : response.units
+				});
 
 				// Update students options.
 				this.updateStudents( response );
@@ -86,11 +84,9 @@
 			// Update students options.
 			updateStudents: function ( response ) {
 
-				if ( ! _.isEmpty( response.students ) ) {
-					this.$('#cp-student').empty().select2({
-						data: response.students
-					});
-				}
+				this.$('#cp-student').empty().select2({
+					data: _.isEmpty( response.students ) ? [] : response.students
+				});
 			},
 
 			// Select student for notifications.
@@ -120,12 +116,13 @@
 			},
 
 			// Send email notification.
-			sendEmail: function () {
+			sendEmail: function ( ev ) {
 
-				var content = win.tinymce.editors.notification_content.getContent();
-				var title = this.$('#notification-title').val();
-				var students = [];
-				var selector = this.$('#cp-notifications-students li');
+				this.$(ev.currentTarget).addClass('cp-progress');
+				var content = win.tinymce.editors.notification_content.getContent(),
+					title = this.$('#notification-title').val(),
+					students = [],
+					selector = this.$('#cp-notifications-students li');
 				if ( selector.length !== 0 ) {
 					selector.each(function () {
 						if ( typeof $( this ).data('user-id') !== 'undefined' ) {
@@ -141,8 +138,16 @@
 						'title': title,
 						'content': content,
 					} );
+					this.request.on( 'coursepress:success_send_notification_email', this.afterEmail, this );
+					this.request.on( 'coursepress:error_send_notification_email', this.afterEmail, this );
 					this.request.save();
 				}
+			},
+
+			// After email notification.
+			afterEmail: function () {
+				// Hide progress icon.
+				this.$('.cp-send-email').removeClass('cp-progress');
 			}
 
 		});

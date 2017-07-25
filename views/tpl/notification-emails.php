@@ -3,7 +3,7 @@
 	<div class="cp-flex cp-box">
 
 		<div class="cp-div">
-			<label class="label"><?php _e( 'Students from', 'cp' ); ?></label>
+			<h3 class="label label-small"><?php _e( 'Students from', 'cp' ); ?></h3>
 			<select name="course" id="cp-course">
 				<option value="0"><?php _e( 'All Courses', 'cp' ); ?></option>
 				<?php if ( ! empty( $courses ) ) : ?>
@@ -15,13 +15,13 @@
 		</div>
 
 		<div class="cp-div">
-			<label class="label"><?php _e( 'Completed unit', 'cp' ); ?></label>
+			<h3 class="label label-small"><?php _e( 'Completed unit', 'cp' ); ?></h3>
 			<select name="unit" data-placeholder="<?php _e( 'Select course to see unit', 'cp' ); ?>" id="cp-unit"></select>
 		</div>
 	</div>
 
 	<div class="cp-div cp-sep">
-		<label class="label"><?php _e( 'Manually add students', 'cp' ); ?></label>
+		<h3 class="label label-small"><?php _e( 'Manually add students', 'cp' ); ?></h3>
 		<div class="cp-input-clear">
 			<select name="student" data-placeholder="<?php _e( 'Begin typing student name', 'cp' ); ?>" id="cp-student"></select>
 		</div>
@@ -31,7 +31,7 @@
 	<div class="clear-bottom"></div>
 
 	<div class="cp-div cp-sep">
-		<label class="label"><?php _e( 'Student selection', 'cp' ); ?></label>
+		<h3 class="label"><?php _e( 'Student selection', 'cp' ); ?></h3>
 		<ul id="cp-notifications-students" class="cp-tagged-list">
 			<li data-user-id="0"><?php _e( 'Students from All Courses', 'cp' ); ?></li>
 		</ul>
