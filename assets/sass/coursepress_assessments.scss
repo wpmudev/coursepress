@@ -1,2 +1,152 @@
 // Use in Assessments page
 @import "common/mixin.scss";
+@import "common/cp-search-form";
+#coursepress-assessments {
+  .coursepress-page {
+    .cp-flex {
+      margin-bottom: 12px;
+      .cp-div {
+        margin-left: 20px;
+        min-width: 17%;
+        &:first-child {
+          margin-left: 0;
+        }
+        &.cp-input-group-div {
+          min-width: 30%;
+        }
+        .cp-btn {
+          margin-left: 10px;
+        }
+      }
+      label {
+        color: $grey_3;
+        font-size: .8em;
+        font-weight: 600;
+        display: block;
+      }
+    }
+    ul.cp-assessments-overview {
+      display: flex;
+      padding: 13px 17px 8px 14px;
+      background-color: $grey_10;
+      border-radius: 5px;
+      .cp-assessments-strong {
+        font-weight: 600;
+      }
+      li {
+        padding-right: 5%;
+      }
+    }
+    .coursepress-table {
+      .cp-assessments-table-container {
+        margin-top: 30px;
+        .cp-assesments-questions-expanded {
+          width: 100%;
+          background-color: #f1f1f1;
+          float: left;
+          tr {
+            td, th {
+              background-color: #f1f1f1;
+            }
+          }
+        }
+      }
+      .column-student {
+        .cp-flex {
+          align-items: center;
+          .gravatar {
+            padding-right: 15px;
+            img {
+              @include radius(50%);
+            }
+          }
+          .user_login {
+            font-weight: 600;
+            padding-right: 5px;
+          }
+        }
+      }
+      .cp-tr-expanded {
+        background-color: $grey_12;
+      }
+      .cp-collapse-btn {
+        padding: 5px 8px;
+        margin-right: 2px;
+        background-color: $grey_4;
+        color: $color_2;
+        @include radius(4px);
+        transition: color 0.4s;
+        cursor: pointer;
+        border: 1px solid transparent;
+        font-size: 85%;
+        &:before {
+          @include icon('\f00d');
+          margin: 5px;
+        }
+      }
+      .cp-units-icon {
+        &:after {
+          @include icon('\f19d');
+          margin-left: 5px;
+          color: #2b6fb6;
+          padding-right: 15px;
+        }
+      }
+      .cp-tick-icon {
+        padding: 0 15px;
+        &:before {
+          @include icon('\f00c');
+          margin-left: 5px;
+          color: #6bbb1a;
+          padding-right: 5px;
+        }
+      }
+      .cp-cross-icon {
+        padding: 0 15px;
+        &:before {
+          @include icon('\f00d');
+          margin-left: 5px;
+          color: #aa0000;
+          padding-right: 5px;
+        }
+      }
+      .cp-plus-icon {
+        padding: 0 15px;
+        &:after {
+          @include icon('\f067');
+          margin-left: 5px;
+          cursor: pointer;
+        }
+      }
+      .cp-minus-icon {
+        padding: 0 15px;
+        &:after {
+          @include icon('\f068');
+          margin-left: 5px;
+          cursor: pointer;
+        }
+      }
+      ul.cp-assessments-units-expanded {
+        li {
+          width: $width;
+          float: left;
+          padding: 10px 0;
+          background: $white;
+          border-radius: 4px;
+          &.cp-expanded {
+            padding-bottom: 1px;
+          }
+        }
+        .pull-left {
+          padding-left: 10px;
+        }
+      }
+      .column-modules_progress,
+      .column-reports {
+        a {
+          padding: 8px;
+        }
+      }
+    }
+  }
+}

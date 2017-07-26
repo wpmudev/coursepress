@@ -551,3 +551,29 @@ function coursepress_get_students( $args = array(), &$count = 0 ) {
 
 	return $students;
 }
+
+/**
+ * Get list of students user IDs.
+ *
+ * @param int $course_id Course ID
+ *
+ * @return array
+ */
+function coursepress_get_students_ids( $course_id = 0 ) {
+
+	global $wpdb;
+
+	$students_table = $wpdb->prefix . 'coursepress_students';
+
+	if ( ! empty( $course_id ) ) {
+		// Make sure it is int.
+		$course_id = absint( $course_id );
+		// Get students of specific course.
+		$sql = $wpdb->prepare( "SELECT student_id FROM `$students_table` WHERE `course_id`=%d GROUP BY student_id", $course_id );
+	} else {
+		// Get all students.
+		$sql = "SELECT student_id FROM `$students_table` GROUP BY student_id";
+	}
+
+	return $wpdb->get_col( $sql );
+}

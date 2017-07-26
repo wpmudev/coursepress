@@ -274,7 +274,11 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 */
 	function set_courselist_options( $status, $option, $value ) {
 
-		$options = array( 'coursepress_course_per_page', 'coursepress_students_per_page' );
+		$options = array(
+			'coursepress_course_per_page',
+			'coursepress_students_per_page',
+			'coursepress_assesments_per_page'
+		);
 		// Return value for our custom option.
 		// For other options, return default.
 		if ( in_array( $option, $options ) ) {
