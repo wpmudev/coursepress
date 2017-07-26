@@ -63,13 +63,14 @@ class CoursePress_Admin_Comments extends CoursePress_Admin_Page {
 		$this->list->prepare_items();
 		$args = array(
 			'columns' => $this->columns(),
+			'course_edit_link' => add_query_arg( 'page', 'coursepress_course', admin_url( 'admin.php' ) ),
+			'courses' => coursepress_get_accessible_courses(),
 			'hidden_columns' => $this->hidden_columns(),
 			'items' => $this->list->items,
-			'pagination' => $this->set_courses_pagination( $count ),
-			'course_edit_link' => add_query_arg( 'page', 'coursepress_course', admin_url( 'admin.php' ) ),
 			'page' => $page,
-			'statuses' => $statuses,
+			'pagination' => $this->set_courses_pagination( $count ),
 			'search' => $search,
+			'statuses' => $statuses,
 		);
 
 		//l($args);

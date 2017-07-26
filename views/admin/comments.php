@@ -2,19 +2,27 @@
 	<h1 class="wp-heading-inline"><?php _e( 'Comments', 'cp' ); ?></h1>
     <div class="coursepress-page">
         <form method="get" class="cp-search-form" id="cp-search-form">
-            <div class="cp-input-clear">
-                <input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>" />
-                <input type="text" name="s" placeholder="<?php _e( 'Type here...', 'cp' ); ?>" value="<?php echo $search; ?>" />
-                <button type="button" id="cp-search-clear" class="cp-btn-clear"><?php _e( 'Clear', 'cp' ); ?></button>
+            <div class="cp-flex">
+                <div class="cp-div">
+                    <label class="label"><?php _e( 'Filter by course', 'cp' ); ?></label>
+                    <select name="course_id" id="select_course_id">
+                        <option value=""><?php _e( 'Any course', 'cp' ); ?></option>
+<?php
+$current = isset( $_REQUEST['course_id'] )? $_REQUEST['course_id']:0;
+foreach ( $courses as $course_id => $course ) {
+	printf(
+		'<option value="%d" %s>%s</option>',
+		esc_attr( $course_id ),
+		selected( $current, $course_id ),
+		esc_html( $course->post_title )
+	);
+}
+	?>
+                    </select>
+                </div>
             </div>
-            <button type="submit" class="cp-btn cp-btn-active"><?php _e( 'Search', 'cp' ); ?></button>
+            <input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>" />
         </form>
-
-        <?php if ( count( $statuses ) > 0 ) : ?>
-            <ul class="subsubsub">
-                <?php echo implode( '<li>|</li>', $statuses ); ?>
-            </ul>
-        <?php endif; ?>
 
         <table class="coursepress-table wp-list-table widefat fixed striped comments">
             <thead>

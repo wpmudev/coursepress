@@ -20,7 +20,7 @@ class CoursePress_Admin_Table_Comments extends WP_Comments_List_Table {
 		parent::__construct();
 		if ( ! empty( $_REQUEST['course_id'] ) ) {
 			$course_id = (int) $_REQUEST['course_id'];
-			if ( CoursePress_Data_Course::is_course( $course_id ) ) {
+			if ( coursepress_is_course( $course_id ) ) {
 				$this->course_id = $course_id;
 			}
 		}
@@ -38,7 +38,8 @@ class CoursePress_Admin_Table_Comments extends WP_Comments_List_Table {
 
 		$comment_status = isset( $_REQUEST['comment_status'] ) ? $_REQUEST['comment_status'] : 'all';
 		if ( ! in_array( $comment_status, array( 'all', 'moderated', 'approved', 'spam', 'trash' ) ) ) {
-			$comment_status = 'all'; }
+			$comment_status = 'all';
+		}
 
 		$comment_type = ! empty( $_REQUEST['comment_type'] ) ? $_REQUEST['comment_type'] : '';
 		$search = ( isset( $_REQUEST['s'] ) ) ? $_REQUEST['s'] : '';

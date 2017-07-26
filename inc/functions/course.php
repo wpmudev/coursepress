@@ -698,12 +698,40 @@ function coursepress_get_all_modules_ids_by_type( $type, $course_id = null ) {
 		'meta_value' => $type,
 	);
 	if ( ! empty( $course_id ) ) {
-		$units = coursepress_get_units( $course_id, array( 'any' ), true );
+		$units = coursepress_get_units( $course_id );
 		if ( empty( $units ) ) {
 			return array();
 		}
 		$args['post_parent__in'] = $units;
 	}
-	$modules = new WP_Query( $args );
-	return $modules->posts;
+	$items = new WP_Query( $args );
+	return $items->posts;
 }
+
+/**
+ * Get units from course
+ */
+function coursepress_get_units( $course_id ) {
+	global $CoursePress_Core;
+	$args = array(
+		'post_type' => $CoursePress_Core->__get( 'unit_post_type' ),
+		'post_parent' => $course_id,
+		'nopaging' => true,
+		'fields' => 'ids',
+	);
+	$items = new WP_Query( $args );
+	return $items->posts;
+}
+
+/**
+ * Check is course post type.
+ *
+ * @param int|WP_Post Post object or post ID.
+ * @return bool
+ */
+function coursepress_is_course( $course ) {
+	global $CoursePress_Core;
+	$post_type = get_post_type( $course );
+	return $CoursePress_Core->course_post_type == $post_type;
+}
+
