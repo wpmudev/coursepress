@@ -735,3 +735,33 @@ function coursepress_is_course( $course ) {
 	return $CoursePress_Core->course_post_type == $post_type;
 }
 
+function coursepress_discussion_module_link( $location, $comment ) {
+	global $CoursePress_Core;
+	/**
+	 * Check WP_Comment class
+	 */
+	if ( ! is_a( $comment, 'WP_Comment' ) ) {
+		return $location;
+	}
+	/**
+	 * Check post type
+	 */
+	$unit_post_type = $CoursePress_Core->__get( 'step_post_type' );
+	$post_type = get_post_type( $comment->comment_post_ID );
+	if ( $unit_post_type !== $post_type ) {
+		return $location;
+	}
+	/**
+	 * Check module type
+	 */
+	$module_type = get_post_meta( $comment->comment_post_ID, 'module_type', true );
+	if ( 'discussion' !== $module_type ) {
+		return $location;
+	}
+	$unit_id = get_post_field( 'post_parent', $comment->comment_post_ID );
+	$course_id = get_post_field( 'post_parent', $unit_id );
+	$course_link = get_permalink( $course_id );
+	$unit_slug = coursepress_get_setting( 'slugs/course', 'unit' );
+	$location = esc_url_raw( $course_link . $unit_slug . get_post_field( 'post_name', $course_id ) . '#module-' . $comment->comment_post_ID );
+	return $location;
+}

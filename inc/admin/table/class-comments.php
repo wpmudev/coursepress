@@ -135,6 +135,7 @@ class CoursePress_Admin_Table_Comments extends WP_Comments_List_Table {
 				$item->time = date_i18n( $timeformatstring, $unixtimestamp );
 				$item->edit_comment_link = get_edit_comment_link( $item->comment_ID );
 				$item->status_nonce = wp_create_nonce( 'coursepress_comment_status_'.$item->comment_ID );
+				$item->in_response_to_link = coursepress_discussion_module_link( '', $item );
 			}
 		}
 		$total_comments = get_comments( array_merge( $args, array(

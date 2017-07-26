@@ -79,7 +79,7 @@ foreach ( $courses as $course_id => $course ) {
 										case 'in_response_to':
 											printf(
 												'<a href="%s">%s</a>',
-												esc_url( $item->parent['link'] ),
+												esc_url( $item->in_response_to_link ),
 												esc_html( $item->parent['title'] )
 											);
 										break;
