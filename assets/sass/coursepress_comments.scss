@@ -1,18 +1,68 @@
 // Use in comments pages
 @import "common/mixin.scss";
 .coursepress-table {
+    tbody {
+        .column-comment,
+        .column-in_response_to
+        .column-added {
+            color: $grey_3;
+        }
+    }
     .column-added {
+        width: 10%;
         strong {
             display: block;
         }
     }
     .column-author {
+        width: 15%;
+        position: relative;
         span {
+            font-weight: 600;
             line-height: 32px;
         }
         img {
             @include radius(50%);
         }
+        .actions {
+            position: absolute;
+            left: 66px;
+            bottom: 4px;
+            a {
+                background-color: $white;
+                border: 1px solid $blue_1;
+                color: $blue_6;
+                padding: 2px 5px;
+                @include radius(5px);
+            }
+        }
+        &:hover {
+            .actions {
+                display: block;
+            }
+        }
     }
-
+    tr {
+        &.approved {
+            .status {
+                border-color: $yellow_2;
+                color: $yellow_1;
+            }
+        }
+        &.unapproved {
+            td {
+                &.column-author {
+                    border-left: solid 4px $red;
+                    padding-left: 21px;
+                }
+                .actions {
+                    left: 62px;
+                }
+            }
+            .status {
+                border-color: $green_2;
+                color: $green_1;
+            }
+        }
+    }
 }

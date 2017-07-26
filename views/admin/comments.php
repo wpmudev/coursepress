@@ -1,4 +1,4 @@
-<div class="wrap coursepress-wrap">
+<div class="wrap coursepress-wrap" id="coursepress-comments-list">
 	<h1 class="wp-heading-inline"><?php _e( 'Comments', 'cp' ); ?></h1>
     <div class="coursepress-page">
         <form method="get" class="cp-search-form" id="cp-search-form">
@@ -16,7 +16,7 @@
             </ul>
         <?php endif; ?>
 
-        <table class="coursepress-table" cellspacing="0">
+        <table class="coursepress-table wp-list-table widefat fixed striped comments">
             <thead>
                 <tr>
                     <?php foreach ( $columns as $column_id => $column_label ) { ?>
@@ -31,8 +31,13 @@
 				$odd = 0;
 				if ( ! empty( $items ) ) {
 					foreach ( $items as $item ) {
+						$clasess = array(
+							1 == $item->comment_approved? 'approved':'unapproved',
+							++$odd % 2 ? 'odd' : 'even',
+							'comment-'.$item->comment_ID,
+						);
 						?>
-                        <tr class="<?php echo ++$odd % 2 ? 'odd' : 'even'; ?>">
+                        <tr class="<?php echo esc_attr( implode( ' ', $clasess ) ); ?>">
                             <?php foreach ( array_keys( $columns ) as $column_id ) { ?>
                                 <td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>">
                                     <?php
@@ -41,8 +46,22 @@
 											printf(
 												'%s <span>%s</span>',
 												$item->user['avatar'],
-												$item->user['userdata']->user_nicename
+												$item->user['display_name']
 											);
+											echo '<div class="actions hidden">';
+											printf(
+												'<a href="#" data-id="%d" data-nonce="%s" class="status">%s</a>',
+												esc_attr( $item->comment_ID ),
+												esc_attr( $item->status_nonce ),
+												1 == $item->comment_approved? esc_attr__( 'Unapprove', 'cp' ):esc_attr__( 'Approve', 'cp' )
+											);
+											echo ' ';
+											printf(
+												'<a href="%s" class="edit">%s</a>',
+												esc_url( $item->edit_comment_link ),
+												esc_attr__( 'Edit', 'cp' )
+											);
+											echo '</div>';
 										break;
 
 										case 'comment':
