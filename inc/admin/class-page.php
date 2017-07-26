@@ -185,8 +185,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 					'select_feature_image' => __( 'Select Feature Image', 'cp' ),
 					'select_video' => __( 'Select Video', 'cp' ),
 				),
-                'server_error' => __( 'An unexpected error occur while processing. Please try again.', 'cp' ),
-                'invalid_file_type' => __( 'Invalid file type!', 'cp' ),
+				'server_error' => __( 'An unexpected error occur while processing. Please try again.', 'cp' ),
+				'invalid_file_type' => __( 'Invalid file type!', 'cp' ),
 			),
 		) );
 
@@ -263,7 +263,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 */
 	function set_courselist_options( $status, $option, $value ) {
 
-		$options = array( 'coursepress_course_per_page', 'coursepress_students_per_page' );
+		$options = array( 'coursepress_course_per_page', 'coursepress_students_per_page', 'coursepress_comments_per_page' );
 		// Return value for our custom option.
 		// For other options, return default.
 		if ( in_array( $option, $options ) ) {
@@ -278,31 +278,31 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		$count = 0;
 		$screen = get_current_screen();
-        $course_status = coursepress_get_course_statuses();
-        $page = isset( $_GET[ 'page' ] ) ? esc_attr( $_GET[ 'page' ] ) : 'coursepress';
-        $search = isset( $_GET[ 's' ] ) ? $_GET[ 's' ] : '';
-        $statuses = array();
-        $get_status = isset( $_REQUEST['status'] ) ? $_REQUEST['status'] : 'any';
+		$course_status = coursepress_get_course_statuses();
+		$page = isset( $_GET['page'] ) ? esc_attr( $_GET['page'] ) : 'coursepress';
+		$search = isset( $_GET['s'] ) ? $_GET['s'] : '';
+		$statuses = array();
+		$get_status = isset( $_REQUEST['status'] ) ? $_REQUEST['status'] : 'any';
 
-        if ( ! empty( $course_status ) ) {
-            $format = '<li class="%1$s"><a href="%2$s">%3$s <span class="count">(%4$s)</span></a></li>';
+		if ( ! empty( $course_status ) ) {
+			$format = '<li class="%1$s"><a href="%2$s">%3$s <span class="count">(%4$s)</span></a></li>';
 
-            $url = remove_query_arg( 'status' );
+			$url = remove_query_arg( 'status' );
 
-            foreach ( $course_status as $status => $count ) {
-                if ( 'all' == $status ) {
-                    $statuses[] = sprintf( $format, 'any' == $get_status ? 'active': '', esc_url( $url ), __( 'All', 'cp' ), $count );
-                } elseif ( $count > 0 ) {
-                    if ( 'publish' == $status ) {
-                        $url = add_query_arg( 'status', 'publish', $url );
-                        $statuses[] = sprintf( $format, 'publish' == $get_status ? 'active' : '', esc_url( $url ), __( 'Publish', 'cp' ), $count );
-                    } else {
-                        $url = add_query_arg( 'status', 'draft', $url );
-                        $statuses[] = sprintf( $format, 'draft' == $get_status ? 'active' : '', $url, __( 'Draft', 'cp' ), $count );
-                    }
-                }
-            }
-        }
+			foreach ( $course_status as $status => $count ) {
+				if ( 'all' == $status ) {
+					$statuses[] = sprintf( $format, 'any' == $get_status ? 'active': '', esc_url( $url ), __( 'All', 'cp' ), $count );
+				} elseif ( $count > 0 ) {
+					if ( 'publish' == $status ) {
+						$url = add_query_arg( 'status', 'publish', $url );
+						$statuses[] = sprintf( $format, 'publish' == $get_status ? 'active' : '', esc_url( $url ), __( 'Publish', 'cp' ), $count );
+					} else {
+						$url = add_query_arg( 'status', 'draft', $url );
+						$statuses[] = sprintf( $format, 'draft' == $get_status ? 'active' : '', $url, __( 'Draft', 'cp' ), $count );
+					}
+				}
+			}
+		}
 
 		$args = array(
 			'columns' => get_column_headers( $screen ),
@@ -310,9 +310,9 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'courses' => $CoursePress_User->get_accessible_courses( $get_status, false, $count ),
 			'pagination' => $this->set_courses_pagination( $count ),
 			'course_edit_link' => add_query_arg( 'page', 'coursepress_course', admin_url( 'admin.php' ) ),
-            'page' => $page,
-            'statuses' => $statuses,
-            'search' => $search,
+			'page' => $page,
+			'statuses' => $statuses,
+			'search' => $search,
 		);
 
 		coursepress_render( 'views/admin/courselist', $args );
@@ -323,7 +323,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 * Set pagination for courses listing page.
 	 *
 	 * We are using WP_Listing_Table class to set pagination.
-     *
+	 *
 	 * @param int $count Total courses.
 	 *
 	 * @return object
@@ -351,19 +351,19 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		// We need the image editor here, enqueue it!!!
 		wp_enqueue_media();
 		// Include datepicker
-        wp_enqueue_script( 'jquery-ui-datepicker' );
-        // Include color picker
-        wp_enqueue_script( 'iris' );
+		wp_enqueue_script( 'jquery-ui-datepicker' );
+		// Include color picker
+		wp_enqueue_script( 'iris' );
 
 		$course_id = filter_input( INPUT_GET, 'cid', FILTER_VALIDATE_INT );
 
 		// If it's a new course, create a draft course
 		if ( empty( $course_id ) ) {
-            $course = coursepress_get_course( get_default_post_to_edit('course', true ) );
-            $course->post_title = '';
-        } else {
-            $course = coursepress_get_course( $course_id );
-        }
+			$course = coursepress_get_course( get_default_post_to_edit( 'course', true ) );
+			$course->post_title = '';
+		} else {
+			$course = coursepress_get_course( $course_id );
+		}
 
 		// Set course category
 		$category = array_values( $course->get_category() );
@@ -380,7 +380,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'course-type' => __( 'Type of Course', 'cp' ),
 			'course-settings' => __( 'Course Settings', 'cp' ),
 			'course-units' => __( 'Units', 'cp' ),
-            'course-completion' => __( 'Course Completion', 'cp' ),
+			'course-completion' => __( 'Course Completion', 'cp' ),
 			'course-students' => __( 'Students', 'cp' ),
 		);
 
@@ -414,43 +414,42 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		coursepress_render( 'views/tpl/course-completion' );
 		coursepress_render( 'views/tpl/course-settings', $settings_data );
 
-        $certClass = $CoursePress->get_class( 'CoursePress_Certificate' );
-        $tokens = array(
-            'COURSE_NAME',
-            'COURSE_SUB_TITLE',
-            'COURSE_OVERVIEW',
-            'COURSE_UNIT_LIST',
-            'DOWNLOAD_CERTIFICATE_LINK',
-            'DOWNLOAD_CERTIFICATE_BUTTON',
-            'STUDENT_WORKBOOK',
-        );
-        $format = sprintf( '<p>%1$s</p> <p>%2$s</p>', __( 'These codes will be replaced with actual data:', 'cp' ), '<b>%s</b>' );
-        $page_tokens = sprintf( $format, implode(', ', $tokens ) );
-        $cert_tokens = sprintf( $format, implode( ', ', array_keys( $certClass->get_tokens() ) ) );
-        $completion_pages = array(
-            'tokens' => $page_tokens,
-            'pre_completion' => array(
-                'title' => __( 'Pre Completion Page', 'cp' ),
-                'description' => __( 'The page content to appear after an student completed the course and is awaiting instructor\'s final grade.', 'cp' ),
-            ),
-            'course_completion' => array(
-                'title' => __( 'Successful Completion Page', 'cp' ),
-                'description' => __( 'The content to use when an student successfully completed the course.', 'cp' ),
-            ),
-            'course_failed' => array(
-                'title' => __( 'Failure Notice', 'cp' ),
-                'description' => __( 'The content to use when an student failed to pass the course.', 'cp' ),
-            ),
-            'cert_tokens' => $cert_tokens,
-        );
-        $this->localize_array['completion_pages'] = $completion_pages;
+		$certClass = $CoursePress->get_class( 'CoursePress_Certificate' );
+		$tokens = array(
+			'COURSE_NAME',
+			'COURSE_SUB_TITLE',
+			'COURSE_OVERVIEW',
+			'COURSE_UNIT_LIST',
+			'DOWNLOAD_CERTIFICATE_LINK',
+			'DOWNLOAD_CERTIFICATE_BUTTON',
+			'STUDENT_WORKBOOK',
+		);
+		$format = sprintf( '<p>%1$s</p> <p>%2$s</p>', __( 'These codes will be replaced with actual data:', 'cp' ), '<b>%s</b>' );
+		$page_tokens = sprintf( $format, implode( ', ', $tokens ) );
+		$cert_tokens = sprintf( $format, implode( ', ', array_keys( $certClass->get_tokens() ) ) );
+		$completion_pages = array(
+			'tokens' => $page_tokens,
+			'pre_completion' => array(
+				'title' => __( 'Pre Completion Page', 'cp' ),
+				'description' => __( 'The page content to appear after an student completed the course and is awaiting instructor\'s final grade.', 'cp' ),
+			),
+			'course_completion' => array(
+				'title' => __( 'Successful Completion Page', 'cp' ),
+				'description' => __( 'The content to use when an student successfully completed the course.', 'cp' ),
+			),
+			'course_failed' => array(
+				'title' => __( 'Failure Notice', 'cp' ),
+				'description' => __( 'The content to use when an student failed to pass the course.', 'cp' ),
+			),
+			'cert_tokens' => $cert_tokens,
+		);
+		$this->localize_array['completion_pages'] = $completion_pages;
 
 		coursepress_render( 'views/tpl/course-completion', array( 'completion_pages' => $completion_pages ) );
 		coursepress_render( 'views/tpl/course-units' );
 	}
 
 	function get_students_page() {
-
 		$students = new CoursePress_Admin_Students();
 		$students->get_page();
 	}
@@ -464,7 +463,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	}
 
 	function get_comments_page() {
-		coursepress_render( 'views/admin/comments' );
+		$students = new CoursePress_Admin_Comments();
+		$students->get_page();
 	}
 
 	function get_assessments_page() {
@@ -479,50 +479,50 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	    global $CoursePress;
 
 	    // Include wp.media
-        wp_enqueue_media();
+		wp_enqueue_media();
 
 	    // Include color picker
-        wp_enqueue_script( 'iris' );
+		wp_enqueue_script( 'iris' );
 
-        // Include jquery-iframe
-        wp_enqueue_script( 'jquery-iframe', $CoursePress->plugin_url . '/assets/external/js/jquery.iframe-transport.js' );
+		// Include jquery-iframe
+		wp_enqueue_script( 'jquery-iframe', $CoursePress->plugin_url . '/assets/external/js/jquery.iframe-transport.js' );
 
 		$this->lib3();
 		// Add global setting to localize array
 		$this->localize_array['settings'] = coursepress_get_setting( true );
 		$this->localize_array['messages'] = array(
 		    'no_mp_woo' => sprintf( __( '%s and %s cannot be activated simultaneously!', 'cp' ), 'MarketPress', 'WooCommerce' ),
-        );
+		);
 
-        /**
-         * Fire to get all available extensions.
-         *
-         * @since 3.0
-         * @param array $extensions
-         */
-        $extensions = apply_filters( 'coursepress_extensions', array() );
+		/**
+		 * Fire to get all available extensions.
+		 *
+		 * @since 3.0
+		 * @param array $extensions
+		 */
+		$extensions = apply_filters( 'coursepress_extensions', array() );
 
-        if ( ! $extensions ) {
-            $extensions = array();
-        }
-        $this->localize_array['extensions'] = $extensions;
+		if ( ! $extensions ) {
+			$extensions = array();
+		}
+		$this->localize_array['extensions'] = $extensions;
 
 		coursepress_render( 'views/admin/settings' );
 
 		// Add TPL
-        coursepress_render( 'views/tpl/common' );
+		coursepress_render( 'views/tpl/common' );
 		coursepress_render( 'views/tpl/settings-general' );
 		coursepress_render( 'views/tpl/settings-slugs' );
 
-        $emails = $CoursePress->get_class( 'CoursePress_Email' );
-        $sections = $emails->get_settings_sections();
-        $this->localize_array['settings']['email'] = $emails->get_defaults();
-        $this->localize_array['email_sections'] = $sections;
+		$emails = $CoursePress->get_class( 'CoursePress_Email' );
+		$sections = $emails->get_settings_sections();
+		$this->localize_array['settings']['email'] = $emails->get_defaults();
+		$this->localize_array['email_sections'] = $sections;
 
-        $email_vars = array(
-            'sections' => $sections,
-            'config' => array(),
-        );
+		$email_vars = array(
+			'sections' => $sections,
+			'config' => array(),
+		);
 
 		coursepress_render( 'views/tpl/settings-emails', $email_vars );
 		coursepress_render( 'views/tpl/settings-capabilities' );

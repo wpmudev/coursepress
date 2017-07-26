@@ -1,0 +1,18 @@
+// Use in comments pages
+@import "common/mixin.scss";
+.coursepress-table {
+    .column-added {
+        strong {
+            display: block;
+        }
+    }
+    .column-author {
+        span {
+            line-height: 32px;
+        }
+        img {
+            @include radius(50%);
+        }
+    }
+
+}
