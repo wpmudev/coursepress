@@ -1,4 +1,4 @@
-/* global CoursePress, console */
+/* global CoursePress */
 
 (function(){
     'use strict';
@@ -20,22 +20,21 @@
              */
             toggleCommentStatus: function(ev) {
                 var request = new CoursePress.Request();
-                request.selector = $(ev.target);
-                var status = request.selector.data('status') ? 0:1;
+                var selector = $(ev.target);
                 request.set( {
                     'action' : 'comment_status_toggle',
-                    'id' : request.selector.data('id'),
-                    'nonce' : request.selector.data('nonce'),
-                    'status' : status
+                    'id' : selector.data('id'),
+                    'nonce' : selector.data('nonce'),
                 } );
                 request.on( 'coursepress:success_comment_status_toggle', this.setStatusToggle, this );
-                request.on( 'coursepress:error_comment_status_toggle', this.setStatusToggle, this );
                 request.save();
                 return false;
 
             },
             setStatusToggle: function(data) {
-                console.log(data);
+                var target = $('.comment-'+data.id);
+                target.removeClass( 'approved unapproved', this.el ).addClass( data.status );
+                $('a.status', target).html( data.button_text );
             }
         });
 
