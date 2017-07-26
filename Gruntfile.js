@@ -118,7 +118,8 @@ module.exports = function(grunt) {
 			'assets/css/coursepress_assessments.css': 'assets/sass/coursepress_assessments.scss',
 			'assets/css/coursepress_forum.css': 'assets/sass/coursepress_forum.scss',
 			'assets/css/coursepress_notifications.css': 'assets/sass/coursepress_notifications.scss',
-			'assets/css/coursepress_settings.css': 'assets/sass/coursepress_settings.scss'
+			'assets/css/coursepress_settings.css': 'assets/sass/coursepress_settings.scss',
+			'assets/css/coursepress_comments.css': 'assets/sass/coursepress_comments.scss'
 		},
 
 		// PHP files to validate.
