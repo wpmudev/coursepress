@@ -36,12 +36,10 @@ foreach ( $courses as $course_id => $course ) {
             </thead>
             <tbody>
                 <?php
-				$odd = 0;
 				if ( ! empty( $items ) ) {
 					foreach ( $items as $item ) {
 						$clasess = array(
 							1 == $item->comment_approved? 'approved':'unapproved',
-							++$odd % 2 ? 'odd' : 'even',
 							'comment-'.$item->comment_ID,
 						);
 						?>
@@ -112,7 +110,7 @@ foreach ( $courses as $course_id => $course ) {
 					}
 				} else {
 ?>
-                    <tr class="odd">
+                    <tr>
                         <td>
                             <?php _e( 'No comments found.', 'cp' ); ?>
                         </td>
