@@ -672,7 +672,7 @@ The %5$s Team', 'CoursePress' ),
 			);
 
 			// Replacing tokens by actual content.
-			$content = str_replace( array_keys( $tokens ), array_values( $tokens ), $content );
+			$content = $this->replace_vars( $content, $tokens );
 
 			wp_mail( $student->user_email, $title, $content, $headers );
 		}
