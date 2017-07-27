@@ -41,11 +41,12 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 		$course_id = empty( $_GET[ 'course_id' ] ) ? 0 : $_GET[ 'course_id' ];
 		$unit_id = empty( $_GET[ 'unit_id' ] ) ? 0 : $_GET[ 'unit_id' ];
 		$graded = empty( $_GET['graded_ungraded'] ) ? 'all' : $_GET['graded_ungraded'];
+		$graded = in_array( $graded, array( 'graded','ungraded' ) ) ? $graded : 'all';
 
 		// Data for template.
 		$args = array(
 			'columns' => get_column_headers( $screen ),
-			'assessments' => $this->get_assesments( $course_id, $unit_id, $count ),
+			'assessments' => $this->get_assesments( $course_id, $unit_id, $graded, $count ),
 			'courses' => coursepress_get_accessible_courses(),
 			'units' => coursepress_get_course_units( $course_id ),
 			'list_table' => $this->set_pagination( $count ),
@@ -67,11 +68,12 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 	 *
 	 * @param int $course_id Course ID.
 	 * @param int $unit_id Unit id.
+	 * @param int $graded Graded or ungraded.
 	 * @param int $count Total count of the students (pass by ref.).
 	 *
 	 * @return array
 	 */
-	function get_assesments( $course_id, $unit_id, &$count = 0 ) {
+	function get_assesments( $course_id, $unit_id, $graded = 'all', &$count = 0 ) {
 
 		// We need course id.
 		if ( empty( $course_id ) ) {
@@ -80,7 +82,7 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 
 		$assessments = new CoursePress_Data_Assessments( $course_id );
 
-		return $assessments->get_assessments( $unit_id, $count );
+		return $assessments->get_assessments( $unit_id, $graded, $count );
 	}
 
 	/**

@@ -120,8 +120,8 @@
 										echo $last_active ? date_i18n( get_option( 'date_format' ), $last_active ) : '--';
 										break;
 									case 'grade' :
-										$grade = $student->get_course_grade( $course_id );
-										echo empty( $grade ) ? __( '0%', 'cp' ) : $grade;
+										$grade = $student->grade;
+										echo ( empty( $grade ) ? 0 : $grade ) . '%';
 										break;
 									case 'modules_progress' :
 										echo '<div class="cp-assessment-progress-hidden">';

@@ -39,14 +39,18 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 	 * Get assessments data for a course.
 	 *
 	 * @param int $unit_id Unit ID.
+	 * @param string $graded Graded or ungraded.
 	 * @param int $count Count of assessments.
 	 *
 	 * @return array
 	 */
-	function get_assessments( $unit_id, &$count = 0 ) {
+	function get_assessments( $unit_id, $graded = 'all', &$count = 0 ) {
 
+		$course_settings = $this->course->get_settings();
+		// Minimum grade required.
+		$minimum_grade = isset( $course_settings['minimum_grade_required'] ) ? $course_settings['minimum_grade_required'] : 100;
 		$assessments = array(
-			'pass_grade' => $this->course->get_settings()['minimum_grade_required'],
+			'pass_grade' => $minimum_grade,
 			'modules_count' => 0,
 			'students_count' => 0,
 			'grade_system' => ( empty( $unit_id ) || $unit_id == 'all' )
@@ -93,11 +97,24 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 				}
 			}
 
+			$grade = $student->get_course_grade( $course_id );
+			//Filter based on the graded param.
+			if ( $graded == 'graded' && $grade < $minimum_grade ) {
+				$count -= 1;
+				continue;
+			} elseif ( $graded == 'ungraded' && $grade >= $minimum_grade ) {
+				$count -= 1;
+				continue;
+			}
+
 			// Set the user object to main array.
 			$assessments['students'][ $student_id ] = $student;
 
 			// Set unit data under user.
 			$assessments['students'][ $student_id ]->units = $units;
+
+			// Student grade for the course.
+			$assessments['students'][ $student_id ]->grade = $grade;
 
 			// Loop through each units.
 			foreach ( $units as $unit_id => $unit ) {
