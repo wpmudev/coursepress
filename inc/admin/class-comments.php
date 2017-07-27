@@ -53,7 +53,6 @@ class CoursePress_Admin_Comments extends CoursePress_Admin_Page {
 	function get_page() {
 		global $CoursePress_User;
 
-		$count = 0;
 		$screen = get_current_screen();
 		$page = isset( $_GET['page'] ) ? esc_attr( $_GET['page'] ) : 'coursepress';
 		$search = isset( $_GET['s'] ) ? $_GET['s'] : '';
@@ -61,6 +60,8 @@ class CoursePress_Admin_Comments extends CoursePress_Admin_Page {
 		$get_status = isset( $_REQUEST['status'] ) ? $_REQUEST['status'] : 'any';
 
 		$this->list->prepare_items();
+		$count = $this->list->get_count();
+
 		$args = array(
 			'columns' => $this->columns(),
 			'course_edit_link' => add_query_arg( 'page', 'coursepress_course', admin_url( 'admin.php' ) ),
@@ -72,9 +73,6 @@ class CoursePress_Admin_Comments extends CoursePress_Admin_Page {
 			'search' => $search,
 			'statuses' => $statuses,
 		);
-
-		//l($args);
-
 		coursepress_render( 'views/admin/comments', $args );
 		coursepress_render( 'views/admin/footer-text' );
 	}

@@ -15,6 +15,7 @@ class CoursePress_Admin_Table_Comments extends WP_Comments_List_Table {
 
 	private $users = array();
 	private $modules = array();
+	private $count = 0;
 
 	public function __construct() {
 		parent::__construct();
@@ -76,17 +77,29 @@ class CoursePress_Admin_Table_Comments extends WP_Comments_List_Table {
 		);
 
 		$args = array(
-			'status' => isset( $status_map[ $comment_status ] ) ? $status_map[ $comment_status ] : $comment_status,
-			'search' => $search,
-			'user_id' => $user_id,
+			'fields' => 'ids',
 			'offset' => $start,
-			'number' => $number,
-			'type' => $comment_type,
-			'orderby' => $orderby,
-			'order' => $order,
 			'post__in' => $discussions,
+			'search' => $search,
+			'status' => isset( $status_map[ $comment_status ] ) ? $status_map[ $comment_status ] : $comment_status,
+			'type' => $comment_type,
+			'user_id' => $user_id,
 		);
+		/**
+		 * only count
+		 */
 		$_comments = get_comments( $args );
+		$this->count = count( $_comments );
+
+		/**
+		 * get comments
+		 */
+		unset( $args['fields'] );
+		$args['number'] = $number;
+		$args['orderby'] = $order;
+		$args['order'] = $orderby;
+		$_comments = get_comments( $args );
+
 		if ( is_array( $_comments ) ) {
 			update_comment_cache( $_comments );
 			$this->items = array_slice( $_comments, 0, $comments_per_page );
@@ -162,5 +175,9 @@ class CoursePress_Admin_Table_Comments extends WP_Comments_List_Table {
 		}
 		$per_page = $this->get_items_per_page( 'coursepress_comments_per_page', $per_page );
 		return $per_page;
+	}
+
+	public function get_count() {
+		return $this->count;
 	}
 }
