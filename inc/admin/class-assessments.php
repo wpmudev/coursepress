@@ -5,7 +5,7 @@
  * @since 2.0
  * @package CoursePress
  */
-class CoursePress_Admin_Assesments extends CoursePress_Admin_Page {
+class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 
 	/**
 	 * Assesments page slug.
@@ -38,78 +38,49 @@ class CoursePress_Admin_Assesments extends CoursePress_Admin_Page {
 
 		// Set query parameters back.
 		$search = isset( $_GET[ 's' ] ) ? $_GET[ 's' ] : '';
+		$course_id = empty( $_GET[ 'course_id' ] ) ? 0 : $_GET[ 'course_id' ];
+		$unit_id = empty( $_GET[ 'unit_id' ] ) ? 0 : $_GET[ 'unit_id' ];
+		$graded = empty( $_GET['graded_ungraded'] ) ? 'all' : $_GET['graded_ungraded'];
 
 		// Data for template.
 		$args = array(
 			'columns' => get_column_headers( $screen ),
-			'assessments' => $this->get_assesments( $count ),
+			'assessments' => $this->get_assesments( $course_id, $unit_id, $count ),
 			'courses' => coursepress_get_accessible_courses(),
+			'units' => coursepress_get_course_units( $course_id ),
 			'list_table' => $this->set_pagination( $count ),
 			'hidden_columns' => get_hidden_columns( $screen ),
 			'page' => $this->slug,
+			'course_id' => absint( $course_id ),
+			'unit_id' => absint( $unit_id ),
+			'graded' => $graded,
 			'search' => $search,
 		);
 
 		// Render templates.
-		coursepress_render( 'views/admin/assessments', $args );;
+		coursepress_render( 'views/admin/assessments', $args );
 		coursepress_render( 'views/admin/footer-text' );
 	}
 
 	/**
-	 * Get the list of users with students role.
-	 *
-	 * @param int $count Total count of the students (pass by ref.).
-	 *
-	 * @return array CoursePress_User objects.
-	 */
-	function get_assesments( &$count = 0 ) {
-
-		//echo '<pre>'; print_r((new CoursePress_Assessment(1298))->get_assessments()); echo '</pre>'; exit;
-		// Query arguments for WP_User_Query.
-		$args = array();
-
-		if ( empty( $_GET['course_id'] ) ) {
-			return array();
-		}
-
-		$student_ids = $this->get_students_by_course_id( $_GET['course_id'] );
-		echo '<pre>'; print_r($student_ids); echo '</pre>'; exit;
-
-		if ( empty( $student_ids ) ) {
-			return array();
-		}
-
-		// Set the parameters for pagination.
-		//$args['number'] = $this->items_per_page( 'coursepress_assesments_per_page' );
-		//$args['paged'] = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
-
-		$assessments = new CoursePress_Assessments( $_GET['course_id'], $student_ids );
-
-		return $assessments->get_assessments();
-	}
-
-	/**
-	 * Get students ids by course id.
+	 * Get assessments data.
 	 *
 	 * @param int $course_id Course ID.
+	 * @param int $unit_id Unit id.
+	 * @param int $count Total count of the students (pass by ref.).
 	 *
-	 * @return array|null|object
+	 * @return array
 	 */
-	function get_students_by_course_id( $course_id ) {
+	function get_assesments( $course_id, $unit_id, &$count = 0 ) {
 
-		global $wpdb;
-
+		// We need course id.
 		if ( empty( $course_id ) ) {
 			return array();
 		}
 
-		// Make sure it is int.
-		$course_id = absint( $course_id );
+		$assessments = new CoursePress_Data_Assessments( $course_id );
 
-		// Get the student IDs for the course.
-		$sql = $wpdb->prepare( "SELECT ID FROM `$this->students_table` WHERE `course_id`=%d GROUP BY student_id", $course_id );
-
-		return $wpdb->get_col( $sql );
+		return $assessments->get_assessments( $unit_id, $count );
 	}
 
 	/**

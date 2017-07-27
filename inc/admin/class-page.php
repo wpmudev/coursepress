@@ -260,7 +260,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 */
 	function process_assesments_page() {
 
-		(new CoursePress_Admin_Assesments())->screen_options();
+		(new CoursePress_Admin_Assessments())->screen_options();
 	}
 
 	/**
@@ -487,7 +487,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 */
 	function get_assessments_page() {
 
-		(new CoursePress_Admin_Assesments())->get_page();
+		(new CoursePress_Admin_Assessments())->get_page();
 	}
 
 	function get_notification_page() {

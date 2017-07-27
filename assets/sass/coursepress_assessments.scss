@@ -133,8 +133,9 @@
           padding: 10px 0;
           background: $white;
           border-radius: 4px;
+          border: 1px solid $grey_5;
           &.cp-expanded {
-            padding-bottom: 1px;
+            padding-bottom: 0;
           }
         }
         .pull-left {
@@ -145,6 +146,18 @@
       .column-reports {
         a {
           padding: 8px;
+        }
+      }
+    }
+  }
+  @media screen {
+    @media (min-width: 1024px) {
+      .coursepress-table {
+        th, td {
+          display: table-cell;
+        }
+        .hidden {
+          display: none;
         }
       }
     }

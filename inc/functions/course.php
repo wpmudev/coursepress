@@ -677,3 +677,25 @@ function coursepress_get_course_facilitators( $course_id ) {
 
 	return array();
 }
+
+/**
+ * Get units of a course.
+ *
+ * @param int $course_id Course ID.
+ *
+ * @return array
+ */
+function coursepress_get_course_units( $course_id ) {
+
+	if ( empty( $course_id ) ) {
+		return array();
+	}
+
+	$course = coursepress_get_course( $course_id );
+
+	if ( is_wp_error( $course ) ) {
+		return array();
+	}
+
+	return $course->get_units();
+}

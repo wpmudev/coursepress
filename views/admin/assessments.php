@@ -7,11 +7,11 @@
 
 				<div class="cp-div">
 					<label class="label"><?php _e( 'Select course', 'cp' ); ?></label>
-					<select name="course_id">
+					<select name="course_id" data-placeholder="<?php _e( 'Select a course', 'cp' ); ?>">
+						<option></option>
 						<?php if ( ! empty( $courses ) ) : ?>
 							<?php foreach ( $courses as $course ) : ?>
-								<?php $selected_course = empty( $_GET['course_id'] ) ? 0 : $_GET['course_id']; ?>
-								<option value="<?php echo $course->ID; ?>" <?php selected( $course->ID, $selected_course ); ?>><?php echo $course->post_title; ?></option>
+								<option value="<?php echo $course->ID; ?>" <?php selected( $course->ID, $course_id ); ?>><?php echo $course->post_title; ?></option>
 							<?php endforeach; ?>
 						<?php endif; ?>
 					</select>
@@ -23,8 +23,7 @@
 						<option value=""><?php _e( 'Show all assessable students', 'cp' ); ?></option>
 						<?php if ( ! empty( $units ) ) : ?>
 							<?php foreach ( $units as $unit ) : ?>
-								<?php $selected_unit = empty( $_GET['unit'] ) ? 0 : $_GET['unit']; ?>
-								<option value="<?php echo $unit->ID; ?>" <?php selected( $unit->ID, $selected_unit ); ?>><?php echo $unit->post_title; ?></option>
+								<option value="<?php echo $unit->ID; ?>" <?php selected( $unit->ID, $unit_id ); ?>><?php echo $unit->post_title; ?></option>
 							<?php endforeach; ?>
 						<?php endif; ?>
 					</select>
@@ -32,21 +31,21 @@
 
 				<div class="cp-div cp-input-group-div">
 					<ul class="cp-flex cp-input-group">
-						<li class="cp-div-flex active">
+						<li class="cp-div-flex <?php echo ! in_array( $graded, array( 'graded', 'ungraded' ) ) ? 'active' : ''; ?>">
 							<label>
-								<input type="radio" name="graded_ungraded" value="all" />
+								<input type="radio" name="graded_ungraded" value="all" <?php checked( ! in_array( $graded, array( 'graded', 'ungraded' ) ) ); ?> />
 								<?php _e( 'All Students', 'cp' ); ?>
 							</label>
 						</li>
-						<li class="cp-div-flex">
+						<li class="cp-div-flex <?php echo $graded == 'graded' ? 'active' : ''; ?>">
 							<label>
-								<input type="radio" name="graded_ungraded" value="graded" />
+								<input type="radio" name="graded_ungraded" value="graded" <?php checked( $graded, 'graded' ); ?> />
 								<?php _e( 'Graded Students', 'cp' ); ?>
 							</label>
 						</li>
-						<li class="cp-div-flex">
+						<li class="cp-div-flex <?php echo $graded == 'ungraded' ? 'active' : ''; ?>">
 							<label>
-								<input type="radio" name="graded_ungraded" value="ungraded" />
+								<input type="radio" name="graded_ungraded" value="ungraded" <?php checked( $graded, 'ungraded' ); ?> />
 								<?php _e( 'Ungraded Students', 'cp' ); ?>
 							</label>
 						</li>
@@ -70,12 +69,14 @@
 			</div>
 		</form>
 
-		<ul class="cp-assessments-overview">
-			<li><?php _e( 'Showing students'); ?>: <span class="cp-assessments-strong">3</span></li>
-			<li><?php _e( 'Modules'); ?>: <span class="cp-assessments-strong">4</span></li>
-			<li><?php _e( 'Pass grade'); ?>: <span class="cp-assessments-strong"><?php _e( '85%', 'cp' ); ?></span></li>
-			<li><?php _e( 'Grade system'); ?>: <span class="cp-assessments-strong"><?php _e( 'total acquired grade % total number of gradable modules', 'cp' ); ?></span></li>
-		</ul>
+		<?php if ( isset( $assessments['pass_grade'] ) ) : ?>
+			<ul class="cp-assessments-overview">
+				<li><?php _e( 'Showing students'); ?>: <span class="cp-assessments-strong"><?php echo $assessments['students_count']; ?></span></li>
+				<li><?php _e( 'Modules'); ?>: <span class="cp-assessments-strong"><?php echo $assessments['modules_count']; ?></span></li>
+				<li><?php _e( 'Pass grade'); ?>: <span class="cp-assessments-strong"><?php echo $assessments['pass_grade']; ?>%</span></li>
+				<li><?php _e( 'Grade system'); ?>: <span class="cp-assessments-strong"><?php echo $assessments['grade_system']; ?></span></li>
+			</ul>
+		<?php endif; ?>
 
 		<table class="coursepress-table" id="cp-assessments-table" cellspacing="0">
 			<thead>
@@ -89,9 +90,9 @@
 			</thead>
 			<tbody>
 			<?php $odd = true; ?>
-			<?php if ( ! empty( $assessments ) ) : ?>
-				<?php foreach ( $assessments as $assessment ) : ?>
-					<tr class="<?php echo $odd ? 'odd' : 'even cp-graded'; ?>">
+			<?php if ( ! empty( $assessments['students'] ) ) : ?>
+				<?php foreach ( $assessments['students'] as $student ) : ?>
+					<tr class="<?php echo $odd ? 'odd' : 'even cp-assessment-main'; ?>">
 
 						<?php foreach ( array_keys( $columns ) as $column_id ) : ?>
 							<td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>">
@@ -101,25 +102,26 @@
 									case 'student' :
 										echo '<div class="cp-flex">';
 										echo '<span class="gravatar">';
-										echo get_avatar( $assessment->ID, 30 );
+										echo get_avatar( $student->ID, 30 );
 										echo '</span>';
 										echo ' ';
 										echo '<span class="user_login">';
-										echo $assessment->user_login;
+										echo $student->user_login;
 										echo '</span>';
 										echo ' ';
 										echo '<span class="display_name">(';
-										echo $assessment->get_name();
+										echo $student->get_name();
 										echo ')</span>';
 										echo '</div>';
 										break;
 									case 'last_active' :
 										// Last activity time.
-										$last_active = $assessment->get_last_activity_time();
+										$last_active = $student->get_last_activity_time();
 										echo $last_active ? date_i18n( get_option( 'date_format' ), $last_active ) : '--';
 										break;
 									case 'grade' :
-										echo print_r($assessment->get_completion_data(1298));
+										$grade = $student->get_course_grade( $course_id );
+										echo empty( $grade ) ? __( '0%', 'cp' ) : $grade;
 										break;
 									case 'modules_progress' :
 										echo '<div class="cp-assessment-progress-hidden">';
@@ -144,44 +146,57 @@
 										 * @param string $column_id
 										 * @param CoursePress_Student object $student
 										 */
-										do_action( 'coursepress_studentlist_column', $column_id, $assessment );
+										do_action( 'coursepress_studentlist_column', $column_id, $student );
 										break;
 								endswitch;
 								?>
 							</td>
 						<?php endforeach; ?>
 					</tr>
+					<?php if ( ! empty( $student->units ) ) : ?>
 					<tr class="cp-assessments-details inactive">
 						<td colspan="5" class="cp-tr-expanded">
 							<ul class="cp-assessments-units-expanded">
-								<li><span class="pull-left"><span class="cp-units-icon"></span>Terminal, Node, NPM, what's all this?</span>
-									<span class="pull-right"><span class="cp-tick-icon">90%</span><span class="cp-plus-icon"></span></span></li>
-								<li><span class="pull-left"><span class="cp-units-icon"></span>Installing Node and NPM</span>
-									<span class="pull-right"><span class="cp-cross-icon">80%</span><span class="cp-plus-icon"></span></span></li>
-								<li><span class="pull-left"><span class="cp-units-icon"></span>Terminal, Node, NPM, what's all this?</span>
-									<span class="pull-right"><span class="cp-tick-icon">10%</span><span class="cp-plus-icon"></span></span>
-									<div class="cp-assessments-table-container inactive">
-										<table class="cp-assesments-questions-expanded">
-											<tr>
-												<th class="cp-assessments-strong">Question</th>
-												<th class="cp-assessments-strong">Student answer</th>
-												<th class="cp-assessments-strong">Correct answer</th>
-											</tr>
-											<tr>
-												<td>What command do you need to run to create package.json</td>
-												<td>How do you install Grunt CLI globally</td>
-												<td>Multiple answer questions</td>
-											</tr>
-										</table>
-									</div>
-								</li>
+								<?php foreach ( $student->units as $unit_id => $unit ) : ?>
+									<li>
+										<span class="pull-left"><span class="cp-units-icon"></span><?php echo $unit->get_the_title(); ?></span>
+										<span class="pull-right"><span class="cp-tick-icon"><?php echo $student->get_unit_grade( $course_id, $unit_id ); ?>%</span>
+											<span class="<?php $student->has_pass_course_unit( $course_id, $unit_id ) ? 'cp-plus-icon' : 'cp-minus-icon'; ?>"></span>
+										</span>
+										<?php if ( ! empty( $unit['modules'] ) ) : ?>
+											<div class="cp-assessments-table-container inactive">
+												<table class="cp-assesments-questions-expanded">
+													<tr>
+														<th class="cp-assessments-strong"><?php _e( 'Question', 'cp' ); ?></th>
+														<th class="cp-assessments-strong"><?php _e( 'Student answer', 'cp' ); ?></th>
+														<th class="cp-assessments-strong"><?php _e( 'Correct answer', 'cp' ); ?></th>
+													</tr>
+													<?php foreach ( $unit['modules'] as $module_id => $module ) : ?>
+														<?php if ( ! $student->is_module_completed( $course_id, $unit_id, $module_id ) ) : continue; endif; ?>
+														<?php if ( ! empty( $module['steps'] ) ) : ?>
+															<?php foreach ( $module['steps'] as $step_id => $step ) : ?>
+																<?php if ( ! $step->is_accessible_by( $student->ID ) ) : continue; endif; ?>
+																<tr>
+																	<td><?php echo $step->get_the_title(); ?></td>
+																	<td><?php echo $student->get_response( $course_id, $unit_id, $step_id, true ); ?></td>
+																	<td></td>
+																</tr>
+															<?php endforeach; ?>
+														<?php endif; ?>
+													<?php endforeach; ?>
+												</table>
+											</div>
+										<?php endif; ?>
+									</li>
+								<?php endforeach; ?>
 							</ul>
 						</td>
 					</tr>
+					<?php endif; ?>
 					<?php $odd = $odd ? false : true; ?>
 				<?php endforeach; ?>
 			<?php else : ?>
-				<tr class="odd">
+				<tr class="odd empty-assessments">
 					<td><?php _e( 'No assessments found.', 'cp' ); ?></td>
 				</tr>
 			<?php endif; ?>
