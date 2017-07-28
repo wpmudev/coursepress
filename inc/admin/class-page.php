@@ -126,9 +126,13 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	function set_admin_css() {
 		$coursepress_pagenow = coursepress_is_admin();
 
+		// Global, all pages use stylesheet
+		$this->enqueue_style( 'coursepress-admin-global', 'assets/css/admin-global.min.css' );
+
 		if ( ! $coursepress_pagenow ) {
 			return; // Do not continue
 		}
+
 		/**
 		 * The key ID of current CP page loaded.
 		 * Both JS and CSS are autoloaded base on this ID.
@@ -212,7 +216,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// General admin js
 		wp_enqueue_script( 'coursepress-admin-general', $plugin_url . 'assets/js/admin-general.js', array( 'jquery', 'backbone', 'underscore', 'jquery-ui-autocomplete' ), $CoursePress->version, true );
-		$this->enqueue_script( $coursepress_pagenow, 'assets/js/' . $coursepress_pagenow . '.js' ); // Change to .min
+		$this->enqueue_script( $coursepress_pagenow, 'assets/js/' . $coursepress_pagenow . '.min.js' ); // Change to .min
 
 		// Set local vars
 		$localize_array = apply_filters( 'coursepress_admin_localize_array', $this->localize_array );
