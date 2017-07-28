@@ -45,7 +45,6 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 	}
 
 	public function get_list() {
-		$instructors = array();
 		/**
 		 * Search
 		 */
