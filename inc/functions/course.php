@@ -603,3 +603,77 @@ function coursepress_change_course_status( $course_id, $status ) {
 
 	return true;
 }
+
+/**
+ * Create new course category from text.
+ *
+ * @param string $name New category name.
+ *
+ * @return bool|WP_Term
+ */
+function coursepress_create_course_category( $name = '' ) {
+
+	if ( empty( $name ) ) {
+		return false;
+	}
+
+	// @todo: Implement capability check.
+
+	$result = wp_insert_term( $name, 'course_category' );
+
+	// If term was created, return the term.
+	if ( ! is_wp_error( $result ) && ! empty( $result['term_id'] ) ) {
+		return get_term( $result['term_id'], 'course_category' );
+	}
+
+	return false;
+}
+
+/**
+ * Get instructors list of the course.
+ *
+ * @param int $course_id Course ID.
+ *
+ * @return array
+ */
+function coursepress_get_course_instructors( $course_id ) {
+
+	$course = coursepress_get_course( $course_id );
+
+	if ( is_wp_error( $course ) ) {
+		return array();
+	}
+
+	$instructors = $course->get_instructors();
+
+	if ( ! empty( $instructors ) ) {
+		return $instructors;
+	}
+
+	return array();
+}
+
+/**
+ * Get facilitators list of the course.
+ *
+ * @param int $course_id Course ID.
+ * @param array $args
+ *
+ * @return array
+ */
+function coursepress_get_course_facilitators( $course_id ) {
+
+	$course = coursepress_get_course( $course_id );
+
+	if ( is_wp_error( $course ) ) {
+		return array();
+	}
+
+	$facilitators = $course->get_facilitators();
+
+	if ( ! empty( $facilitators ) ) {
+		return $facilitators;
+	}
+
+	return array();
+}

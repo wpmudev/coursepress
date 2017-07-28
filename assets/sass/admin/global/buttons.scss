@@ -1,5 +1,6 @@
 .coursepress-wrap,
-.coursepress-popup-preview {
+.coursepress-popup-preview,
+.coursepress-modal {
   .cp-btn {
     border: 0;
     background-color: $grey_5;
@@ -61,5 +62,12 @@
     &:hover {
       @include boxshadow(none);
     }
+  }
+}
+
+.coursepress-modal {
+  .cp-btn {
+    min-width: 110px;
+    text-transform: uppercase;
   }
 }
