@@ -270,7 +270,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 */
 	function set_courselist_options( $status, $option, $value ) {
 
-		$options = array( 'coursepress_course_per_page', 'coursepress_students_per_page' );
+		$options = array( 'coursepress_course_per_page', 'coursepress_students_per_page', 'coursepress_comments_per_page' );
 		// Return value for our custom option.
 		// For other options, return default.
 		if ( in_array( $option, $options ) ) {
@@ -456,7 +456,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	}
 
 	function get_students_page() {
-
 		$students = new CoursePress_Admin_Students();
 		$students->get_page();
 	}
@@ -473,7 +472,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	}
 
 	function get_comments_page() {
-		coursepress_render( 'views/admin/comments' );
+		$students = new CoursePress_Admin_Comments();
+		$students->get_page();
 	}
 
 	function get_assessments_page() {
@@ -502,7 +502,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$this->localize_array['messages'] = array(
 		    'no_mp_woo' => sprintf( __( '%s and %s cannot be activated simultaneously!', 'cp' ), 'MarketPress', 'WooCommerce' ),
 		);
-
 
 		$this->localize_array['extensions'] = $this->get_extensions();
 

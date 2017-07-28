@@ -41,7 +41,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				$response = call_user_func( array( $this, $action ), $request );
 
 				if ( ! empty( $response['success'] ) ) {
-					wp_send_json_success( $response ); } else { 					$error = wp_parse_args( $response, $error ); }
+					wp_send_json_success( $response );
+				} else {
+					$error = wp_parse_args( $response, $error );
+				}
 			}
 		}
 
@@ -109,11 +112,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			// Bail early if an error occur
 			return array();
 		}
-
-		/**
-		 * load extensions!
-		 */
-		$extensions = apply_filters( 'coursepress_extensions', array() );
 
 		$course_meta = array(
 			'course_type' => 'auto-moderated',
@@ -197,6 +195,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		if ( ! empty( $course_meta['meta_listing_image_thumbnail_id'] ) ) {
 			set_post_thumbnail( $course_id, $course_meta['meta_listing_image_thumbnail_id'] );
 		}
+
 		// Check course category
 		if ( isset( $request->course_category ) ) {
 			$category = is_object( $request->course_category ) ? get_object_vars( $request->course_category ) : $request->course_category;
@@ -540,6 +539,46 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		}
 
 		wp_send_json( $users );
+	}
+
+
+	private function comment_status_toggle( $request ) {
+		if ( ! isset( $request->id ) || ! isset( $request->nonce ) ) {
+			return;
+		}
+		$nonce_action = 'coursepress_comment_status_'.$request->id;
+		if ( ! wp_verify_nonce( $request->nonce, $nonce_action ) ) {
+			return;
+		}
+		$comment = get_comment( $request->id );
+		if ( ! is_a( $comment, 'WP_Comment' ) ) {
+			return;
+		}
+		$status = wp_get_comment_status( $request->id );
+		$commentarr = array();
+		$commentarr['comment_ID'] = $request->id;
+		switch ( $status ) {
+			case 'unapproved':
+				$commentarr['comment_approved'] = 1;
+			break;
+			case 'approved':
+				$commentarr['comment_approved'] = 0;
+			break;
+		}
+		if ( ! isset( $commentarr['comment_approved'] ) ) {
+			return;
+		}
+		$result = wp_update_comment( $commentarr );
+		if ( $result ) {
+			$status = wp_get_comment_status( $request->id );
+			$response = array(
+				'id' => $request->id,
+				'status' => $status,
+				'success' => true,
+				'button_text' => esc_html( $status? __( 'Approve', 'cp' ):__( 'Unapprove', 'cp' ) ),
+			);
+			return $response;
+		}
     }
 
 
