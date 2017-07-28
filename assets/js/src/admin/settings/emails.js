@@ -1,4 +1,4 @@
-/* global CoursePress, _, tinyMCE */
+/* global CoursePress, _ */
 
 (function() {
     'use strict';
@@ -28,8 +28,6 @@
                 this.render();
             },
             setUpUI: function() {
-                var self = this;
-
                 // Select the first item as active
                 this.$('.cp-input-group li').first().trigger( 'click' );
             },

@@ -21,12 +21,15 @@ class CoursePress_Step extends CoursePress_Utility {
 			return;
 		}
 
+		/*
+
 		if ( $unit instanceof CoursePress_Unit ) {
 			$this->__set( 'unit', $unit );
 		} else {
 			$unit = coursepress_get_unit( $step->post_parent );
 			$this->__set( 'unit', $unit );
 		}
+		*/
 
 		$this->__set( 'ID', $step->ID );
 		$this->__set( 'post_title', $step->post_title );
@@ -81,6 +84,38 @@ class CoursePress_Step extends CoursePress_Utility {
 		}
 
 		$this->__set( 'preview', true );
+	}
+
+	function get_settings() {
+		$keys = $this->get_keys();
+		$settings = array();
+
+		foreach ( $keys as $key ) {
+			$value = $this->__get( $key );
+			$settings[ $key ] = $value;
+		}
+
+		return $settings;
+	}
+
+	function update_settings( $key, $value ) {
+		$step_id = $this->__get( 'ID' );
+		$settings = $this->get_settings();
+
+		if ( true === $key ) {
+			$settings = $value;
+
+			foreach ( $settings as $key => $value ) {
+				update_post_meta( $step_id, $key, $value );
+				$this->__set( $key, $value );
+			}
+		} else {
+			$settings[ $key ] = $value;
+			update_post_meta( $step_id, $key, $value );
+			$this->__set( $key, $value );
+		}
+
+		return $settings;
 	}
 
 	function get_the_title() {

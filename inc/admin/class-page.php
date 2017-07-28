@@ -182,6 +182,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'plugin_url' => $CoursePress->plugin_url,
 			// Common use texts
 			'text' => array(
+				'untitled' => __( 'Untitled', 'cp' ),
 			    'ok' => __( 'Ok', 'cp' ),
 				'cancel' => __( 'Cancel', 'cp' ),
 				'error' => __( 'Error', 'cp' ),
@@ -194,6 +195,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
                 'server_error' => __( 'An unexpected error occur while processing. Please try again.', 'cp' ),
                 'invalid_file_type' => __( 'Invalid file type!', 'cp' ),
 				'delete_course' => __( 'Deleting this course will also delete all units, modules, steps and any other data associated to this course. Are you sure you want to continue?', 'cp' ),
+				'noname_module' => __( 'You have unnamed module(s)!', 'cp' ),
+				'nosteps' => __( 'You need to create at least a single step!', 'cp' ),
 			),
 		) );
 

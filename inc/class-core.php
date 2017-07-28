@@ -63,6 +63,8 @@ final class CoursePress_Core extends CoursePress_Utility {
 			'query_var' => false,
 			'publicly_queryable' => false,
 			'supports' => array( 'thumbnail', 'comments' ),
+			//'show_ui' => true,
+			'hierarchical' => true,
 		) );
 
 		// Module
@@ -74,6 +76,7 @@ final class CoursePress_Core extends CoursePress_Utility {
 			'query_var' => false,
 			'publicly_queryable'=> false,
 			'support' => array( 'comments' ),
+			'hierarchical' => true,
 		) );
 
 		// Certificate

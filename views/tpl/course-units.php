@@ -14,7 +14,7 @@
             <div class="box-inner-content">
                 <div class="cp-box">
                     <label class="label"><?php _e( 'Unit Title', 'cp' ); ?></label>
-                    <input type="text" name="post_title" class="widefat" value="{{post_title}}" />
+                    <input type="text" name="post_title" class="widefat unit-title-input" value="{{post_title}}" />
                 </div>
                 <div class="cp-box cp-toggle-box">
                     <label>
@@ -91,21 +91,30 @@
         <h3><?php _e( 'Modules', 'cp' ); ?></h3>
     </div>
     <div class="cp-odd">
-        <button type="button" class="cp-btn cp-btn-active">
+        <button type="button" class="cp-btn cp-btn-xs cp-btn-active add-module">
             <?php _e( 'Add Module', 'cp' ); ?>
         </button>
 
-        <div>
-            <ul class="cp-input-group cp-select-list">
-                <# _.each( modules, function( module, pos ) { #>
-                    <li class="module-item" data-order="{{pos}}">
-                        <span>{{module.title}}</span>
-                    </li>
-                <# }) #>
-            </ul>
-        </div>
+        <div id="unit-module-list"></div>
     </div>
     <div class="cp-content-box" id="cp-module-steps"></div>
+</script>
+
+<script type="text/template" id="coursepress-unit-module-list-tpl">
+    <ul class="cp-input-group cp-select-list">
+        <# _.each( modules, function( module, pos ) { #>
+            <li class="icon-move module-item" data-order="{{pos}}">
+                <span>{{module.title}}</span>
+                <div class="step-icon-container"></div>
+            </li>
+            <# }) #>
+    </ul>
+</script>
+
+<script type="text/template" id="coursepress-step-icons">
+    <# _.each( icons, function( icon ) { #>
+        <span class="step-icon step-{{icon}}"></span>
+        <# }) #>
 </script>
 
 <script type="text/template" id="coursepress-unit-module-steps-tpl">

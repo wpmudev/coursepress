@@ -137,6 +137,9 @@
       }
     }
   }
+  .step-icon-container {
+    display: inline-block;
+  }
   .step-icon {
     display: inline-block;
     cursor: pointer;
@@ -318,13 +321,6 @@
       background-color: #ffffff;
       @include radius(4px);
 
-      &:before {
-        content: '\f00a';
-        font-family: 'FontAwesome';
-        display: inline-block;
-        padding: 0 12px;
-        color: $grey_4;
-      }
       .step-type {
         display: inline-block;
         margin-right: 15px;
@@ -595,6 +591,15 @@
     background-color: $grey_6;
     min-height: 40px;
     visibility: visible !important;
+  }
+
+  .add-module {
+    @include radius(20px);
+
+    &:before {
+      @include icon('\f121');
+      marign-right: 5px;
+    }
   }
 }
 

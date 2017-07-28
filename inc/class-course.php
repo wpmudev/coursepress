@@ -767,15 +767,15 @@ class CoursePress_Course extends CoursePress_Utility {
 			'post_type'      => 'unit',
 			'post_status'    => $published ? 'publish' : 'any',
 			'post_parent'    => $this->__get( 'ID' ),
-			'posts_per_page' => - 1, // Units are often retrieve all at once
+			'posts_per_page' => -1, // Units are often retrieve all at once
 			'suppress_filters' => true,
-			'meta_key' => 'unit_order',
-			'orderby' => 'meta_value_num',
+			'orderby' => 'menu_order',
 			'order' => 'ASC',
 		);
 
 		if ( $ids ) {
-			$args['fields'] = 'ids'; }
+			$args['fields'] = 'ids';
+		}
 
 		$units = get_posts( $args );
 

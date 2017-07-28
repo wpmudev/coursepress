@@ -45,6 +45,7 @@
                 this.model = model;
                 this.courseEditor = EditCourse;
                 EditCourse.on('coursepress:validate-course-completion', this.validate, this);
+                EditCourse.on('coursepress:before-next-step-course-type', this.updateCourseModel, this);
 
                 this.on( 'view_rendered', this.setUpUI, this );
 
@@ -63,7 +64,6 @@
                 self = this;
                 this.background = new CoursePress.AddImage( this.$('[name="meta_certificate_background"]') );
                 this.$('select').select2();
-                //this.$('.switch-tmce').trigger('click');
 
                 this.the_title = this.$('#page-completion-title');
                 this.the_content = this.$('#page-completion-content');
@@ -79,34 +79,6 @@
                 });
 
                 this.$('.cp-select-list li').first().trigger( 'click' );
-
-                /*
-
-                function setEditor() {
-                    if ( win.tinyMCE.get( 'page-completion-content' ) ) {
-                        var editor = win.tinyMCE.get( 'page-completion-content' );
-                        editor.on('change', function () {
-                            content = editor.getContent();
-                            textarea = self.$( '#page-completion-content' );
-
-                            textarea.val(content);
-                            self.model.set(self.current + '_content', content);
-                        });
-                    }
-                }
-
-                _.delay(function() {
-                    if ( win.tinyMCE && win.tinyMCE.get( 'page-completion-content' ) ) {
-                        setEditor();
-                    } else {
-                        self.$('#wp-page-completion-content-wrap .switch-tmce' ).one( 'click', function() {
-                            _.delay(setEditor, 200);
-                        });
-                    }
-
-                    self.setEditor('meta_basic_certificate_layout');
-                }, 300 );
-                */
             },
             showColorPicker: function() {
                 if ( !iris && this.color ) {
@@ -154,7 +126,8 @@
                     this.courseEditor.goToNext = false;
                     return false;
                 }
-
+            },
+            updateCourseModel: function() {
                 this.courseEditor.updateCourse();
             },
             updateModel: function( ev ) {

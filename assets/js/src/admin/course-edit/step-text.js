@@ -5,8 +5,10 @@
 
     CoursePress.Define( 'Step_TEXT', function() {
        return CoursePress.View.extend({
-           initialize: function( model ) {
+           stepView: false,
+           initialize: function( model, stepView ) {
                this.model = model;
+               this.stepView = stepView;
                this.render();
            },
            render: function() {
@@ -17,6 +19,8 @@
                    container: this.$el,
                    callback: function( content ) {
                        self.model.set( 'post_content', content );
+                       self.stepView.model.set('post_content', content);
+                       self.stepView.trigger('coursepress:model_updated', self.stepView.model, self.stepView);
                    }
                });
            }

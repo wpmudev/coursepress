@@ -79,11 +79,25 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
             foreach ( $units as $pos => $unit ) {
                 if ( ! empty( $course->with_modules ) ) {
                     $modules = $unit->get_modules_with_steps( false );
+
+                    if ( empty( $modules ) ) {
+                    	$modules[1] = array(
+                    		'id' => 1,
+                    		'title' => __( 'Untitled', 'cp' ),
+		                    'steps' => array()
+	                    );
+                    }
+
                     $unit->__set( 'modules', $modules );
                 } else {
                     $steps = $unit->get_steps( false );
                     $unit->__set( 'steps', $steps );
                 }
+
+                if ( isset( $unit->previousUnit ) ) {
+                	unset( $unit->previousUnit );
+                }
+
                 $units[ $pos ] = $unit;
             }
         }
@@ -171,6 +185,110 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
         $course = coursepress_get_course( $course_id );
 
         return array( 'success' => true, 'ID' => $course_id, 'course' => $course );
+    }
+
+    function update_units( $request ) {
+    	if ( $request->units ) {
+    		$course_id = (int) $request->course_id;
+    		$units = $request->units;
+    		$menu_order = 0;
+    		$unit_ids = array();
+
+    		foreach ( $units as $cid => $unit ) {
+    			$unit->menu_order = $menu_order;
+
+    			// Get post object
+			    $unit_array = array(
+			    	'ID' => $unit->ID,
+				    'post_title' => $unit->post_title,
+				    'post_content' => $unit->post_content,
+				    'menu_order' => $menu_order,
+				    'post_parent' => $course_id,
+				    'post_status' => 'pending',
+				    'post_type' => 'unit',
+			    );
+
+			    $metas = array();
+
+			    foreach ( $unit as $key => $value ) {
+			    	if ( preg_match( '%meta_%', $key ) ) {
+					    $_key           = str_replace( 'meta_', '', $key );
+					    $metas[ $_key ] = $value;
+				    }
+			    }
+
+			    $unit_id = coursepress_create_unit( $unit_array, $metas );
+			    $unit_object = coursepress_get_unit( $unit_id );
+
+			    if ( ! empty( $unit->modules ) ) {
+				    $module_array = array();
+
+				    foreach ( $unit->modules as $module_id => $module ) {
+					    $module_array[ $module_id ] = array(
+						    'title' => sanitize_text_field( $module->title ),
+						    'preview' => isset( $module->preview ) ? $module->preview : true, // Default is true,
+						    'description' => isset( $module->description ) ? $module->description : '',
+					    );
+
+					    if ( ! empty( $module->steps ) ) {
+
+					    	foreach ( $module->steps as $step_cid => $step ) {
+					    		if ( ! empty( $step->deleted ) && $step->deleted ) {
+					    			// This step was deleted, let's delete the data
+								    if ( isset( $step->ID ) && ! empty( $step->ID ) ) {
+								    	coursepress_delete_step( $step->ID );
+								    }
+								    unset( $module->steps->{$step_cid} );
+								    continue;
+							    }
+
+					    		$step_array = array(
+					    			'ID' => isset( $step->ID ) ? (int) $step->ID : 0,
+					    			'post_type' => 'module',
+								    'post_title' => $step->post_title,
+								    'post_content' => $step->post_content,
+								    'post_status' => 'publish',
+								    'post_parent' => $unit_id,
+								    'menu_order' => isset( $step->menu_order ) ? (int) $step->menu_order : 0,
+							    );
+
+					    		$step_metas = array();
+
+					    		foreach ( $step as $step_key => $step_value ) {
+					    			if ( preg_match( '%meta_%', $step_key ) ) {
+					    				$_step_key = str_replace( 'meta_', '', $step_key );
+
+					    				if ( is_object( $step_value ) ) {
+					    					$step_value = $this->to_array( $step_value );
+									    }
+
+					    				$step_metas[ $_step_key ] = $step_value;
+								    }
+							    }
+
+							    $stepId = coursepress_create_step( $step_array, $step_metas );
+					    		$step_object = coursepress_get_course_step( $stepId );
+					    		$module->steps->{$step_cid} = $step_object;
+						    }
+
+						    $unit->modules->{$module_id} = $module;
+					    }
+				    }
+
+				    $unit_object->update_settings( 'course_modules', $module_array );
+			    }
+
+			    // Set back new vars
+			    $unit->ID = $unit_id;
+			    $unit->menu_order = $menu_order;
+			    $units->{$cid} = $unit;
+
+    			$menu_order++;
+		    }
+
+		    wp_send_json_success(array( 'success' => true, 'units' => $units));
+	    }
+	    wp_send_json_error(true);
     }
 
     function delete_course( $request ) {

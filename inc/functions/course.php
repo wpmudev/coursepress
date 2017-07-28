@@ -1185,13 +1185,14 @@ function coursepress_delete_course( $course_id ) {
 }
 
 function coursepress_get_course_step( $step_id = 0 ) {
-	$step_type = get_post_meta( $step_id, 'module_type', true );
+	$step_type = get_post_meta( (int) $step_id, 'module_type', true );
 
 	$class = array(
 		'text' => 'CoursePress_Step_Text',
 		'text_module' => 'CoursePress_Step_Text', // Legacy type
 		'image' => 'CoursePress_Step_Image',
 		'video' => 'CoursePress_Step_Video',
+		'audio' => 'CoursePress_Step_Audio',
 		'discussion' => 'CoursePress_Step_Discussion',
 		'download' => 'CoursePress_Step_FileDownload',
 		'zipped' => 'CoursePress_Step_Zip',

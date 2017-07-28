@@ -26,6 +26,7 @@
                 this.course_id = win._coursepress.course.ID;
 
                 EditCourse.on('coursepress:validate-course-settings', this.validate, this);
+                EditCourse.on( 'coursepress:before-next-step-course-settings', this.updateCourseModel, this );
 
                 this.on( 'view_rendered', this.setUpUI, this );
 
@@ -56,7 +57,9 @@
                     this.courseEditor.goToNext = false;
                     return false;
                 }
+            },
 
+            updateCourseModel: function() {
                 this.courseEditor.updateCourse();
             },
 

@@ -1,5 +1,5 @@
 <script type="text/template" id="coursepress-step-tpl">
-    <div class="cp-step-header">
+    <div class="icon-move cp-step-header">
         <span class="step-type">{{window._coursepress.steps[module_type]}}</span>
         <input type="text" name="post_title" value="{{post_title}}" />
         <div class="step-config">
@@ -25,6 +25,7 @@
             <a href="" class="cp-btn cp-btn-xs cp-bordered-btn cp-preview"><?php _e( 'Preview', 'cp' ); ?></a>
         </div>
     </div>
+    <input type="hidden" data-cid="{{cid}}" name="menu_order" value="{{menu_order}}" />
 </script>
 
 <script type="text/template" id="coursepress-step-image">
@@ -51,34 +52,22 @@
                 <span class="label"><?php _e( 'Use custom caption', 'cp' ); ?></span>
             </label>
         </div>
-        <input type="text" class="widefat" name="meta_caption_custom_text" value="{{meta_caption_custom_text}}" {{_.disabled(false, meta_show_media_caption)}} placeholder="<?php _e( 'Type custom caption here', 'cp' ); ?>" />
+        <input type="text" class="widefat" name="meta_caption_custom_text" value="{{meta_caption_custom_text}}" {{_.disabled(false, 'custom' === meta_caption_field && meta_show_media_caption)}} placeholder="<?php _e( 'Type custom caption here', 'cp' ); ?>" />
     </div>
 </script>
 
 <script type="text/template" id="coursepress-step-video">
-    <div class="cp-flex">
-        <div class="cp-box cp-toggle-box">
-            <label>
-                <input type="checkbox" name="meta_mandatory" value="1" class="cp-toggle-input" {{_.checked(true, meta_mandatory)}} /> <span class="cp-toggle-btn"></span>
-                <span class="label"><?php _e( 'Required', 'cp' ); ?></span>
-            </label>
-        </div>
-        <div class="cp-box cp-toggle-box">
-            <label>
-                <input type="checkbox" name="meta_allow_retries" value="1" class="cp-toggle-input" {{_.checked(true, meta_allow_retries)}} /> <span class="cp-toggle-btn"></span>
-                <span class="label"><?php _e( 'Allow retries', 'cp' ); ?></span>
-            </label>
-            <div class="cp-box-grey">
-                <label class="label"><?php _e( 'Number of allowed retries', 'cp' ); ?></label>
-                <input type="text" name="meta_retry_attempts" value="{{meta_retry_attempts}}" />
-            </div>
-        </div>
-    </div>
     <div class="cp-box">
         <label class="label"><?php _e( 'Video Source', 'cp' ); ?></label>
         <input type="text" class="widefat cp-add-video" name="meta_video_url" value="{{meta_video_url}}"  data-title="<?php _e( 'Select Video Source', 'cp' ); ?>" />
     </div>
 
+    <div class="cp-box cp-toggle-box">
+        <label>
+            <input type="checkbox" name="meta_mandatory" value="1" class="cp-toggle-input" {{_.checked(true, meta_mandatory)}} /> <span class="cp-toggle-btn"></span>
+            <span class="label"><?php _e( 'Required', 'cp' ); ?></span>
+        </label>
+    </div>
     <div class="cp-box cp-toggle-box">
         <label>
             <input type="checkbox" name="meta_video_loop" value="1" class="cp-toggle-input" {{_.checked(true, meta_video_loop)}} /> <span class="cp-toggle-btn"></span>
@@ -109,9 +98,25 @@
             <span class="label"><?php _e( 'Hide related videos', 'cp' ); ?></span>
         </label>
     </div>
+    <div class="cp-box">
+        <div class="cp-toggle-box">
+            <label>
+                <input type="checkbox" name="meta_allow_retries" value="1" class="cp-toggle-input" {{_.checked(true, meta_allow_retries)}} /> <span class="cp-toggle-btn"></span>
+                <span class="label"><?php _e( 'Allow retries', 'cp' ); ?></span>
+            </label>
+        </div>
+        <div class="cp-box-grey {{meta_allow_retries?'':'inactive'}}">
+            <label class="label"><?php _e( 'Number of allowed retries', 'cp' ); ?></label>
+            <input type="text" name="meta_retry_attempts" value="{{meta_retry_attempts}}" />
+        </div>
+    </div>
 </script>
 
 <script type="text/template" id="coursepress-step-audio">
+    <div class="cp-box">
+        <label class="label"><?php _e( 'Audio Source', 'cp' ); ?></label>
+        <input type="text" name="meta_audio_url" class="widefat cp-add-media-input cp-add-audio"  value="{{meta_audio_url}}" data-type="audio" data-placeholder="<?php _e( 'Add audio URL or browse audio', 'cp' ); ?>" data-title="<?php _e( 'Select Audio Source', 'cp' ); ?>" />
+    </div>
     <div class="cp-flex">
         <div class="cp-box cp-toggle-box">
             <label>
@@ -130,10 +135,7 @@
             </div>
         </div>
     </div>
-    <div class="cp-box">
-        <label class="label"><?php _e( 'Audio Source', 'cp' ); ?></label>
-        <input type="text" name="meta_audio_url" class="widefat"  value="{{meta_audio_url}}" />
-    </div>
+
 </script>
 
 <script type="text/template" id="coursepress-step-file-upload">
@@ -151,12 +153,14 @@
             </label>
         </div>
     </div>
+
     <div class="cp-box cp-toggle-box">
         <label>
             <input type="checkbox" name="meta_assessable" value="1" class="cp-toggle-input" {{_.checked(true, meta_allow_retries)}} /> <span class="cp-toggle-btn"></span>
             <span class="label"><?php _e( 'Allow retries', 'cp' ); ?></span>
         </label>
     </div>
+
     <div class="cp-flex">
         <div class="cp-box">
             <div class="cp-box-grey">
@@ -185,6 +189,7 @@
             <?php endforeach; ?>
         </div>
     </div>
+
     <div class="cp-box cp-toggle-box">
         <label>
             <input type="checkbox" name="meta_show_content" value="1" class="cp-toggle-input" {{_.checked(true, meta_show_content)}} /> <span class="cp-toggle-btn"></span>
@@ -203,6 +208,7 @@
                     <span class="label"><?php _e( 'Required', 'cp' ); ?></span>
                 </label>
             </div>
+
             <div class="cp-box cp-toggle-box">
                 <label>
                     <input type="checkbox" name="meta_assessable" value="1" class="cp-toggle-input" {{_.checked(true, meta_assessable)}} /> <span class="cp-toggle-btn"></span>
@@ -210,6 +216,7 @@
                 </label>
             </div>
         </div>
+
         <div class="cp-flex">
             <div class="cp-box">
                 <div class="cp-box-grey">
@@ -217,6 +224,7 @@
                     <input type="text" name="meta_retry_attempts" value="{{meta_retry_attempts}}" />
                 </div>
             </div>
+
             <div class="cp-box">
                 <div class="cp-box-grey">
                     <label class="label"><?php _e( 'Minimum Grade', 'cp' ); ?></label>
@@ -224,6 +232,7 @@
                 </div>
             </div>
         </div>
+
         <div class="cp-box cp-toggle-box">
             <label>
                 <input type="checkbox" name="meta_show_content" value="1" class="cp-toggle-input" {{_.checked(true, meta_show_content)}} /> <span class="cp-toggle-btn"></span>
@@ -232,6 +241,7 @@
         </div>
         <div class="cp-box cp-step-description {{!!meta_show_content?'':'inactive'}}"></div>
     </div>
+
     <div class="cp-content-box">
         <h3><?php _e( 'Quiz questions', 'cp' ); ?></h3>
         <p class="description"><?php _e( 'Add all the questions for your quiz below. You can have as few or as many questions as you want.', 'cp' ); ?></p>

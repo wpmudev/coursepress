@@ -22,7 +22,7 @@
             },
             initialize: function(model) {
                 model = this.filter_model(model);
-                this.model = new CoursePress.CourseModel(model);
+                this.model = new CoursePress.Request(model);//new CoursePress.CourseModel(model);
 
                 // Load course-type view
                 this.once( 'coursepress:load-step-course-type', this.courseTypeView, this);
@@ -100,11 +100,7 @@
                 return courseCompletion;
             },
             courseUnitsView: function() {
-                if ( ! this.unitsview ) {
-                    this.unitsview = new CoursePress.CourseUnits(this.model, this);
-                } else {
-                    this.unitsview.setUnitViewList();
-                }
+                this.unitsview = new CoursePress.CourseUnits(this.model, this);
             },
             courseStudentsView: function() {
                 this.students = new CoursePress.Course_Students( this.model, this );
@@ -128,7 +124,9 @@
                         return;
                     }
                 }
-
+                this.loadCurrentStep(step);
+            },
+            loadCurrentStep: function(step) {
                 /**
                  * Trigger before a step is changed.
                  *
@@ -136,6 +134,7 @@
                  * @param object ModlaSteps instance
                  */
                 this.trigger('coursepress:step-before-change', this.currentStep, this );
+
                 this.currentStep = step;
 
                 /**
@@ -185,7 +184,7 @@
                     this.setCurrentStep(this.steps[stepIndex]);
                 }
             },
-            getNextStep: function() {
+            _getNextStep: function() {
                 var stepIndex, maxStep;
 
                 stepIndex = _.indexOf(this.steps, this.currentStep);
@@ -194,8 +193,32 @@
                 if ( stepIndex < maxStep ) {
                     stepIndex += 1;
 
-                    // Try to load next step
-                    this.setCurrentStep(this.steps[stepIndex]);
+                    return this.steps[stepIndex];
+                }
+
+                return false;
+            },
+            getNextStep: function() {
+                var nextStep;
+
+                nextStep = this._getNextStep();
+
+                if ( nextStep ) {
+                    /**
+                     * Trigger to validate current step and determine to whether
+                     * or not to load the next step.
+                     */
+                    this.trigger('coursepress:validate-' + this.currentStep);
+
+                    if ( false === this.goToNext ) {
+                        // One of the validation failed, return!
+                        return;
+                    }
+
+                    /**
+                     * Trigger before the next step is activated
+                     */
+                    this.trigger( 'coursepress:before-next-step-' + this.currentStep, this );
 
                     if ( false === this.goToNext ) {
                         // Return if next step is not loaded
@@ -208,7 +231,7 @@
                      * @param string step
                      * @param object StepsModal instance
                      */
-                    this.trigger('coursepress:next-step-activated', this.steps[stepIndex], this);
+                    this.trigger('coursepress:next-step-activated', nextStep, this);
 
                     if ( this.currentStep === this.lastStep ) {
                         /**
@@ -244,6 +267,8 @@
                 button.removeClass('cp-progress');
             },
             courseUpdated: function( data ) {
+                var nextStep;
+
                 if ( data.ID && win.history.pushState ) {
                     var url = win._coursepress.pagenow + '&cid=' + data.ID;
                     win.history.pushState( {}, null, url );
@@ -258,9 +283,8 @@
                 }
                 this.after_update();
 
-                this.off('coursepress:validate-' + this.currentStep);
-                this.goToNext = true;
-                this.getNextStep();
+                nextStep = this._getNextStep();
+                this.loadCurrentStep(nextStep);
             }
         });
 

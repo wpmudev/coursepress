@@ -15,7 +15,8 @@
            events: {
                'change .cp-image-url': 'updateInput',
                'click .cp-btn-browse': 'selectImage',
-               'click .cp-btn-clear': 'clearSelection'
+               'click .cp-btn-clear': 'clearSelection',
+               'focus .cp-image-url': 'removeErrorMarker'
            },
            data: {
                size: 'thumbnail',

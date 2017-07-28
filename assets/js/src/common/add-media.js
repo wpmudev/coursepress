@@ -13,6 +13,7 @@
             events: {
                 'click .cp-browse-btn': 'toggleFrame'
             },
+
             initialize: function(element) {
                 this.element = element;
                 this.data = element.data();
@@ -22,11 +23,13 @@
                 this.on( 'view_rendered', this.setUI, this );
                 this.render();
             },
+
             setUI: function() {
                 this.element.hide();
                 this.$el.insertAfter( this.element );
                 this.input = this.$('.cp-add-media-input');
             },
+
             toggleFrame: function() {
                 if ( ! win.wp || ! win.wp.media ) {
                     return; // @todo: show graceful error
@@ -36,16 +39,16 @@
                     var settings = {
                         frame: 'select',
                         title: this.data.title,
-                        library: [this.data.type]
+                        library: {type: [this.data.type]}
                     };
 
                     frame = new wp.media(settings);
-
-                   // frame.on('open', this.openMediaFrame, this);
                     frame.on('select', this.setSelected, this);
                 }
+
                 frame.open();
             },
+
             setSelected: function() {
                 var selected, id;
 

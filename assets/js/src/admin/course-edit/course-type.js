@@ -1,4 +1,4 @@
-/* global CoursePress, _ */
+/* global CoursePress */
 
 (function(){
     'use strict';
@@ -25,6 +25,7 @@
                 // Validate course type data
                 this.courseEditor = EditCourse;
                 EditCourse.on('coursepress:validate-course-type', this.validate, this);
+                EditCourse.on('coursepress:before-next-step-course-type', this.updateCourseModel, this);
 
                 this.on( 'view_rendered', this.setUI, this );
                 this.render();
@@ -54,10 +55,10 @@
                     }
                 }
 
-                if ( ! proceed ) {
-                    return false;
-                }
+                this.courseEditor.goToNext = proceed;
+            },
 
+            updateCourseModel: function() {
                 // Save the course
                 this.courseEditor.off( 'coursepress:course_updated' );
                 this.courseEditor.on( 'coursepress:course_updated', this.updateUI, this );

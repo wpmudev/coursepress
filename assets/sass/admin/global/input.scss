@@ -81,7 +81,7 @@
   .cp-input-group {
     border: 1px solid $grey_5;
     background-color: $grey_6;
-    @include radius(12px);
+    @include radius(6px);
 
     input {
       display: none;

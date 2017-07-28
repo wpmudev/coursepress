@@ -101,6 +101,13 @@
                 } else {
                     this.model[name] = value;
                 }
+
+                /**
+                 * Trigger whenever the model is updated
+                 */
+                this.trigger( 'coursepress:model_updated', this.model, this );
+
+                ev.stopImmediatePropagation();
             },
             removeErrorMarker: function( ev ) {
                 var sender = this.$(ev.currentTarget),
@@ -111,6 +118,8 @@
                 }
             },
             visualEditor: function( options ) {
+               // var self = this;
+
                 this.time += 200;
 
                 _.delay(function() {
@@ -143,25 +152,32 @@
                     container.find('textarea#' + id).val(content);
                     is_mce = container.find('.wp-editor-wrap').is('.tmce-active');
 
-                    if (win.tinymce && win.tinymce.get(id)) {
-                        editor = win.tinymce.get(id);
-                        editor.destroy();
-                    }
+                    /*
+                    function destroyEditor(id) {
+                        if (win.tinymce && win.tinymce.get(id)) {
+                            editor = win.tinymce.get(id);
+                            editor.destroy();
+                        }
+                    }*/
+                    //destroyEditor(id);
 
                     mceinit.selector = '#' + id;
                     qtinit.id = id;
                     win.tinyMCEPreInit.mceInit[id] = mceinit;
                     win.tinyMCEPreInit.qtInit[id] = qtinit;
 
-                    if (is_mce) {
-                        win.tinymce.init(mceinit);
-                        editor = win.tinymce.get(id);
-                        container.find('.switch-html').one('click', function () {
-                            win.quicktags(qtinit);
-                        });
-                    } else {
-                        win.quicktags(qtinit);
-                    }
+                    win.tinymce.init(mceinit);
+                    win.quicktags(qtinit);
+
+                    editor = win.tinymce.get(id);
+
+                    _.delay(function() {
+                        if (is_mce) {
+                            container.find('.switch-tmce').trigger('click');
+                        } else {
+                            container.find('.switch-html').trigger('click');
+                        }
+                    }, 100 );
 
                     if (editor) {
                         // Add on change callback

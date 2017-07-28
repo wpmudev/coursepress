@@ -4,7 +4,7 @@
     'use strict';
 
     CoursePress.Define( 'CourseUnits', function( $, doc, win ) {
-        var UnitCollection, UnitModel, Units, UnitList, UnitItem, UnitView;
+        var UnitCollection, UnitModel, Units, UnitList, UnitItem, UnitView, defaults;
 
         UnitCollection = Backbone.Collection.extend({
             url: win._coursepress.ajaxurl + '?action=coursepress_get_course_units&_wpnonce=' + win._coursepress._wpnonce,
@@ -22,20 +22,19 @@
             }
         });
 
-        UnitModel = CoursePress.Request.extend({
-            defaults: {
-                ID: 0,
+        defaults = {
+            ID: 0,
                 post_title: 'Untitled',
                 post_content: '',
                 modules: {
-                    1: {
-                        id: 1,
+                1: {
+                    id: 1,
                         title: 'Untitled',
                         steps: {},
-                        slug: ''
-                    }
-                },
-                meta_use_feature_image: false,
+                    slug: ''
+                }
+            },
+            meta_use_feature_image: false,
                 meta_unit_feature_image: '',
                 meta_use_description: false,
                 meta_unit_availability: 'instant',
@@ -44,37 +43,37 @@
                 meta_force_current_unit_successful_completion: false,
                 count: 0,
                 steps: false
-            }
-        });
+        };
+
+        UnitModel = new CoursePress.Request();
 
         UnitItem = CoursePress.View.extend({
             template_id: 'coursepress-unit-item-tpl',
             className: 'unit-item',
             tagName: 'li',
             unitview: false,
+            listView: false,
             events: {
                 'click': 'setUnitDetails'
             },
 
-            initialize: function( model, listView ) {
-                this.model = new UnitModel(model);
+            initialize: function(model, listView) {
                 this.listView = listView;
-
-                CoursePress.Events.on( 'coursepress:change_unit_title', this.updateTitle, this );
                 this.render();
+            },
+
+            render: function() {
+                this.attributes = {};
+                CoursePress.View.prototype.render.apply(this);
             },
 
             setUnitDetails: function() {
                 this.listView.unitView.$el.html('');
-                this.unitview = new CoursePress.UnitDetails(this.model, this.listView.unitView);
+                this.unitview = new CoursePress.UnitDetails({model: this.model}, this.listView.unitView);
                 this.unitview.$el.appendTo(this.listView.unitView.$el);
 
                 this.$el.addClass('active');
                 this.$el.siblings().removeClass('active');
-            },
-
-            updateTitle: function( title ) {
-                this.$el.find('.unit-title').html(title);
             }
         });
 
@@ -82,6 +81,7 @@
             template_id: 'coursepress-unit-list-tpl',
             className: 'unit-list-menu',
             units: {},
+            unitModels: {},
             events: {
                 'click .new-unit': 'newUnit'
             },
@@ -104,18 +104,42 @@
                 id = unitModel.cid;
                 unitModel.set( 'count', count.length);
                 unitModel.set( 'cid', id );
-                unit = new UnitItem(unitModel.toJSON(), this);
+                unit = new UnitItem({model: unitModel}, this);
                 unit.$el.appendTo(this.listContainer);
                 this.units[id] = unit;
+                this.unitModels[id] = unitModel;
             },
-            updateTitle: function( title, unit_id ) {
-                var item = this.$('[data-unit="' + unit_id + '"] .unit-title');
-                item.html(title);
+            updateTitle: function( title, cid ) {
+                var unit;
+
+                if ( this.units[cid] ) {
+                    unit = this.units[cid];
+                    unit.$('.unit-title').html(title);
+                }
             },
             newUnit: function() {
-                var unit = new UnitItem({}, this);
-                unit.$el.appendTo(this.listContainer);
-                unit.$el.trigger('click');
+                var model, newModel, cid;
+
+                model = new Backbone.Model(defaults);
+                newModel = Units.add(model.toJSON());
+                cid = newModel.cid;
+                this.units[cid].$el.trigger('click');
+            },
+            getUnitModel: function(cid) {
+                return this.unitModels[cid];
+            },
+            updateUnits: function() {
+                UnitModel.set('action', 'update_units');
+                UnitModel.set( 'course_id', this.courseModel.model.get('ID'));
+                UnitModel.set( 'units', this.unitModels);
+                UnitModel.off( 'coursepress:success_update_units' );
+                UnitModel.on( 'coursepress:success_update_units', this.updateUnitModels, this );
+                UnitModel.save();
+            },
+            updateUnitModels: function( data ) {
+                if ( data.units ) {
+                    this.unitModels = _.extend( this.unitModels, data.units );
+                }
             }
         });
 
@@ -207,6 +231,7 @@
                 this.courseId = courseModel.get('ID');
                 this.model = courseModel;
                 this.editCourse = EditCourse;
+                this.editCourse.on( 'coursepress:validate-course-units', this.validateUnits, this );
 
                 if ( ! Units ) {
                     Units = new UnitCollection(this.courseId);
@@ -217,6 +242,17 @@
                     Units.on( 'add', this.setList, this );
                 }
                 this.render();
+            },
+
+            validateUnits: function() {
+                this.proceed = true;
+
+                this.trigger( 'coursepress:validate-unit', this );
+
+                this.unitList.updateUnits();
+
+                // Always set to false
+                this.editCourse.goToNext = false;
             },
 
             setUI: function() {
