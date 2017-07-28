@@ -64,7 +64,14 @@
     }
   }
 }
-
+.wp-heading-inline {
+    .cp-bordered-btn {
+        margin-left: 15px;
+        padding-top: 6px;
+        padding-bottom: 6px;
+        vertical-align: top;
+    }
+}
 .coursepress-modal {
   .cp-btn {
     min-width: 110px;

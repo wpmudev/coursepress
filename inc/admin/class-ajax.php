@@ -18,6 +18,8 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		add_action( 'wp_ajax_coursepress_upload', array( $this, 'upload_file' ) );
 	    // Hook to search for select2 data.
 	    add_action( 'wp_ajax_coursepress_get_users', array( $this, 'get_course_users' ) );
+		// Search course
+		add_action( 'wp_ajax_coursepress_courses_search', array( $this, 'search_course' ) );
 	}
 
 	/**
@@ -363,8 +365,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$the_course = array_shift( $courses );
 
 		$importClass = new CoursePress_Import( $the_course, $request );
-
-	}
+    }
 
 	/**
 	 * Toggle course status.
@@ -539,5 +540,26 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		}
 
 		wp_send_json( $users );
-	}
+    }
+
+
+    public function search_course() {
+        $data = array(
+            'items' => array(),
+            'total_count' => 0,
+        );
+        $args = array(
+            'post_type' => 'course',
+            's' => $_REQUEST['q'],
+        );
+        $posts = new WP_Query( $args );
+        $data['total_count'] = $posts->post_count;
+        $posts = $posts->posts;
+        foreach( $posts as $post ) {
+            $one['id'] = $post->ID;
+            $one['post_title'] = $post->post_title;
+            $data['items'][] = $one;
+        }
+        wp_send_json( $data );
+    }
 }
