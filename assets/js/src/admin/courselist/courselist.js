@@ -52,9 +52,15 @@
             /**
              * Revert toggled status.
              */
-            revertStatusToggle: function() {
-                var checked = this.request.selector.prop('checked');
+            revertStatusToggle: function(data) {
+                var checked, popup;
+
+                checked = this.request.selector.prop('checked');
                 this.request.selector.prop('checked', !checked);
+                popup = new CoursePress.PopUp({
+                    type: 'error',
+                    message: data.message
+                });
             },
 
             duplicateCourse: function() {

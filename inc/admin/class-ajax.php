@@ -397,7 +397,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 * @param $request Request data.
 	 */
 	function course_status_toggle( $request ) {
-
 		$toggled = false;
 
 		// If course id and status is not empty, attempt to change status.

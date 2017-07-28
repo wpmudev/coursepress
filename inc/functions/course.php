@@ -1017,7 +1017,7 @@ function coursepress_course_update_setting( $course_id, $settings = array() ) {
 function coursepress_change_course_status( $course_id, $status ) {
 
 	// Allowed statuses to change.
-	$allowed_statuses = array( 'publish', 'draft' );
+	$allowed_statuses = array( 'publish', 'draft', 'pending' );
 
 	// @todo: Implement capability check.
 	$capable = true;
