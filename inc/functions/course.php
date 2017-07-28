@@ -26,15 +26,15 @@ function coursepress_get_course( $course_id = 0 ) {
 		}
 	}
 
-	if ( $course_id instanceof WP_Post )
-		$course_id = $course_id->ID;
+	if ( $course_id instanceof WP_Post ) {
+		$course_id = $course_id->ID; }
 
 	if ( $CoursePress_Course instanceof CoursePress_Course
-	     && $course_id == $CoursePress_Course->__get( 'ID' ) )
-		return $CoursePress_Course;
+	     && $course_id == $CoursePress_Course->__get( 'ID' ) ) {
+		return $CoursePress_Course; }
 
-	if ( isset( $CoursePress_Core->courses[ $course_id ] ) )
-		return $CoursePress_Core->courses[ $course_id ];
+	if ( isset( $CoursePress_Core->courses[ $course_id ] ) ) {
+		return $CoursePress_Core->courses[ $course_id ]; }
 
 	$course = new CoursePress_Course( $course_id );
 
@@ -77,8 +77,8 @@ function coursepress_get_courses( $args = array(), &$count = 0 ) {
 	}
 
 	// If search query found.
-	if ( isset( $_GET[ 's' ] ) ) {
-		$args['s'] = $_GET[ 's' ];
+	if ( isset( $_GET['s'] ) ) {
+		$args['s'] = $_GET['s'];
 	}
 
 	$args = wp_parse_args( array(
@@ -118,29 +118,29 @@ function coursepress_get_courses( $args = array(), &$count = 0 ) {
 }
 
 function coursepress_get_course_statuses() {
-    global $wpdb;
+	global $wpdb;
 
-    $query = "SELECT `post_status` FROM `{$wpdb->posts}` WHERE `post_type`='course' AND `post_status` IN ('publish', 'draft')";
-    $results = $wpdb->get_results( $query, 'OBJECT' );
-    $status = array(
-        'all' => 0,
-        'publish' => 0,
-        'draft' => 0,
-    );
+	$query = "SELECT `post_status` FROM `{$wpdb->posts}` WHERE `post_type`='course' AND `post_status` IN ('publish', 'draft')";
+	$results = $wpdb->get_results( $query, 'OBJECT' );
+	$status = array(
+		'all' => 0,
+		'publish' => 0,
+		'draft' => 0,
+	);
 
-    if ( count( $results ) > 0 ) {
-        foreach ( $results as $result ) {
-            $status['all'] += 1;
+	if ( count( $results ) > 0 ) {
+		foreach ( $results as $result ) {
+			$status['all'] += 1;
 
-            if ( 'publish' == $result->post_status ) {
-                $status['publish'] += 1;
-            } else {
-                $status['draft'] += 1;
-            }
-        }
-    }
+			if ( 'publish' == $result->post_status ) {
+				$status['publish'] += 1;
+			} else {
+				$status['draft'] += 1;
+			}
+		}
+	}
 
-    return $status;
+	return $status;
 }
 
 /**
@@ -153,8 +153,8 @@ function coursepress_get_course_statuses() {
 function coursepress_get_course_title( $course_id = 0 ) {
 	$course = coursepress_get_course( $course_id );
 
-	if ( ! is_wp_error( $course ) )
-		return $course->__get( 'post_title' );
+	if ( ! is_wp_error( $course ) ) {
+		return $course->__get( 'post_title' ); }
 
 	return null;
 }
@@ -170,8 +170,8 @@ function coursepress_get_course_title( $course_id = 0 ) {
 function coursepress_get_course_summary( $course_id = 0, $length = 140 ) {
 	$course = coursepress_get_course( $course_id );
 
-	if ( is_wp_error( $course ) )
-		return null;
+	if ( is_wp_error( $course ) ) {
+		return null; }
 
 	return $course->get_summary( $length );
 }
@@ -186,8 +186,8 @@ function coursepress_get_course_summary( $course_id = 0, $length = 140 ) {
 function coursepress_get_course_description( $course_id = 0 ) {
 	$course = coursepress_get_course( $course_id );
 
-	if ( is_wp_error( $course ) )
-		return null;
+	if ( is_wp_error( $course ) ) {
+		return null; }
 
 	return $course->get_description();
 }
@@ -204,8 +204,8 @@ function coursepress_get_course_description( $course_id = 0 ) {
 function coursepress_get_course_media( $course_id = 0, $width = 235, $height = 235 ) {
 	$course = coursepress_get_course( $course_id );
 
-	if ( ! is_wp_error( $course ) )
-		return $course->get_media( $width, $height );
+	if ( ! is_wp_error( $course ) ) {
+		return $course->get_media( $width, $height ); }
 
 	return null;
 }
@@ -221,8 +221,8 @@ function coursepress_get_course_media( $course_id = 0, $width = 235, $height = 2
 function coursepress_get_course_availability_dates( $course_id = 0, $separator = ' - ' ) {
 	$course = coursepress_get_course( $course_id );
 
-	if ( is_wp_error( $course ) )
-		return null;
+	if ( is_wp_error( $course ) ) {
+		return null; }
 
 	return $course->get_course_dates( $separator );
 }
@@ -238,8 +238,8 @@ function coursepress_get_course_availability_dates( $course_id = 0, $separator =
 function coursepress_get_course_enrollment_dates( $course_id = 0, $separator = ' - ' ) {
 	$course = coursepress_get_course( $course_id );
 
-	if ( is_wp_error( $course ) )
-		return null;
+	if ( is_wp_error( $course ) ) {
+		return null; }
 
 	return $course->get_enrollment_dates( $separator );
 }
@@ -254,8 +254,8 @@ function coursepress_get_course_enrollment_dates( $course_id = 0, $separator = '
 function coursepress_get_course_enrollment_button( $course_id = 0 ) {
 	$course = coursepress_get_course( $course_id );
 
-	if ( is_wp_error( $course ) )
-		return null;
+	if ( is_wp_error( $course ) ) {
+		return null; }
 
 	// @todo: Do
 
@@ -273,13 +273,13 @@ function coursepress_get_course_enrollment_button( $course_id = 0 ) {
 function course_get_course_instructor_links( $course_id = 0, $sepatator = ' ' ) {
 	$course = coursepress_get_course( $course_id );
 
-	if ( is_wp_error( $course ) )
-		return null;
+	if ( is_wp_error( $course ) ) {
+		return null; }
 
 	$instructors = $course->get_instructors_link();
 
-	if ( ! empty( $instructors ) )
-		return implode( $sepatator, $instructors );
+	if ( ! empty( $instructors ) ) {
+		return implode( $sepatator, $instructors ); }
 
 	return null;
 }
@@ -323,8 +323,8 @@ function coursepress_get_main_courses_url() {
 function coursepress_get_course_permalink( $course_id = 0 ) {
 	$course = coursepress_get_course( $course_id );
 
-	if ( is_wp_error( $course ) )
-		return null;
+	if ( is_wp_error( $course ) ) {
+		return null; }
 
 	return $course->get_permalink();
 }
@@ -337,8 +337,8 @@ function coursepress_get_course_permalink( $course_id = 0 ) {
 function coursepress_get_course_submenu() {
 	$course = coursepress_get_course(); // Submenu only works on CoursePress pages
 
-	if ( is_wp_error( $course ) )
-		return null;
+	if ( is_wp_error( $course ) ) {
+		return null; }
 
 	$course_id = $course->__get( 'ID' );
 
@@ -389,8 +389,8 @@ function coursepress_get_course_submenu() {
 function coursepress_get_course_units_archive_url( $course_id = 0 ) {
 	$course_url = coursepress_get_course_permalink( $course_id );
 
-	if ( ! $course_url )
-		return null;
+	if ( ! $course_url ) {
+		return null; }
 
 	$units_slug = coursepress_get_setting( 'slugs/units', 'units' );
 
@@ -411,22 +411,22 @@ function coursepress_get_current_course_cycle() {
 
 	$course = coursepress_get_course();
 
-	if ( is_wp_error( $course ) )
-		return null;
+	if ( is_wp_error( $course ) ) {
+		return null; }
 
 	$unit = coursepress_get_unit();
 
-	if ( is_wp_error( $unit ) )
-		return null;
+	if ( is_wp_error( $unit ) ) {
+		return null; }
 
-	if ( ! $CoursePress_VirtualPage instanceof CoursePress_VirtualPage )
-		return null;
+	if ( ! $CoursePress_VirtualPage instanceof CoursePress_VirtualPage ) {
+		return null; }
 
 	$vp = $CoursePress_VirtualPage;
 	$vp_type = $vp->__get( 'type' );
 
-	if ( ! in_array( $vp_type, array( 'unit', 'module', 'step' ) ) )
-		return null;
+	if ( ! in_array( $vp_type, array( 'unit', 'module', 'step' ) ) ) {
+		return null; }
 
 	$view_mode = $course->get_view_mode();
 
@@ -472,16 +472,16 @@ function coursepress_get_current_course_cycle() {
 function coursepress_get_previous_course_cycle_link( $label = '' ) {
 	global $CoursePress_VirtualPage;
 
-	if ( ! $CoursePress_VirtualPage instanceof CoursePress_VirtualPage )
-		return null;
+	if ( ! $CoursePress_VirtualPage instanceof CoursePress_VirtualPage ) {
+		return null; }
 
 	$course = coursepress_get_course();
 
-	if ( is_wp_error( $course ) )
-		return null;
+	if ( is_wp_error( $course ) ) {
+		return null; }
 
-	if ( empty( $label ) )
-		$label = __( 'Previous', 'cp' );
+	if ( empty( $label ) ) {
+		$label = __( 'Previous', 'cp' ); }
 
 	$vp = $CoursePress_VirtualPage;
 
@@ -507,16 +507,16 @@ function coursepress_get_previous_course_cycle_link( $label = '' ) {
 function coursepress_get_next_course_cycle_link( $label = '' ) {
 	global $CoursePress_VirtualPage;
 
-	if ( ! $CoursePress_VirtualPage instanceof CoursePress_VirtualPage )
-		return null;
+	if ( ! $CoursePress_VirtualPage instanceof CoursePress_VirtualPage ) {
+		return null; }
 
 	$course = coursepress_get_course();
 
-	if ( is_wp_error( $course ) )
-		return null;
+	if ( is_wp_error( $course ) ) {
+		return null; }
 
-	if ( empty( $label ) )
-		$label = __( 'Next', 'cp' );
+	if ( empty( $label ) ) {
+		$label = __( 'Next', 'cp' ); }
 
 	$vp = $CoursePress_VirtualPage;
 
@@ -533,17 +533,17 @@ function coursepress_get_next_course_cycle_link( $label = '' ) {
 }
 
 function coursepress_course_update_setting( $course_id, $settings = array() ) {
-    $course = coursepress_get_course( $course_id );
+	$course = coursepress_get_course( $course_id );
 
-    if ( is_wp_error( $course ) || empty( $settings ) ) {
-        return false;
-    }
+	if ( is_wp_error( $course ) || empty( $settings ) ) {
+		return false;
+	}
 
-    $settings = wp_parse_args( $settings, $course->get_settings() );
+	$settings = wp_parse_args( $settings, $course->get_settings() );
 
-    update_post_meta( $course_id, 'course_settings', $settings );
+	update_post_meta( $course_id, 'course_settings', $settings );
 
-    return true;
+	return true;
 }
 
 /**
@@ -679,10 +679,16 @@ function coursepress_get_course_facilitators( $course_id ) {
 }
 
 /**
+<<<<<<< HEAD
  * Get units of the course.
  *
  * @param int $course_id Course ID.
  * @param array $args
+=======
+ * Get units of a course.
+ *
+ * @param int $course_id Course ID.
+>>>>>>> development
  *
  * @return array
  */
@@ -841,4 +847,93 @@ function coursepress_create_course_alert( $course_id, $title, $content ) {
 	do_action( 'coursepress_alert_create_success', $alert_id, $course_id, $title, $content );
 
 	return $alert_id;
+}
+
+/**
+ * Get modules by type
+ *
+ * @since 2.0.0
+ *
+ * @param string $type module type
+ * @param integer $course_id course ID.
+ * @return array Array of modules ids.
+ */
+function coursepress_get_all_modules_ids_by_type( $type, $course_id = null ) {
+	global $CoursePress_Core;
+	$args = array(
+		'post_type' => $CoursePress_Core->__get( 'step_post_type' ),
+		'fields' => 'ids',
+		'suppress_filters' => true,
+		'nopaging' => true,
+		'meta_key' => 'module_type',
+		'meta_value' => $type,
+	);
+	if ( ! empty( $course_id ) ) {
+		$units = coursepress_get_units( $course_id );
+		if ( empty( $units ) ) {
+			return array();
+		}
+		$args['post_parent__in'] = $units;
+	}
+	$items = new WP_Query( $args );
+	return $items->posts;
+}
+
+/**
+ * Get units from course
+ */
+function coursepress_get_units( $course_id ) {
+	global $CoursePress_Core;
+	$args = array(
+		'post_type' => $CoursePress_Core->__get( 'unit_post_type' ),
+		'post_parent' => $course_id,
+		'nopaging' => true,
+		'fields' => 'ids',
+	);
+	$items = new WP_Query( $args );
+	return $items->posts;
+}
+
+/**
+ * Check is course post type.
+ *
+ * @param int|WP_Post Post object or post ID.
+ * @return bool
+ */
+function coursepress_is_course( $course ) {
+	global $CoursePress_Core;
+	$post_type = get_post_type( $course );
+	return $CoursePress_Core->course_post_type == $post_type;
+}
+
+function coursepress_discussion_module_link( $location, $comment ) {
+	global $CoursePress_Core;
+	/**
+	 * Check WP_Comment class
+	 */
+	if ( ! is_a( $comment, 'WP_Comment' ) ) {
+		return $location;
+	}
+	/**
+	 * Check post type
+	 */
+	$unit_post_type = $CoursePress_Core->__get( 'step_post_type' );
+	$post_type = get_post_type( $comment->comment_post_ID );
+	if ( $unit_post_type !== $post_type ) {
+		return $location;
+	}
+	/**
+	 * Check module type
+	 */
+	$module_type = get_post_meta( $comment->comment_post_ID, 'module_type', true );
+	if ( 'discussion' !== $module_type ) {
+		return $location;
+	}
+	$unit_id = get_post_field( 'post_parent', $comment->comment_post_ID );
+	$course_id = get_post_field( 'post_parent', $unit_id );
+	$course_link = get_permalink( $course_id );
+	$unit_slug = coursepress_get_setting( 'slugs/course', 'unit' );
+	$location = esc_url_raw( $course_link . $unit_slug . get_post_field( 'post_name', $course_id ) . '#module-' . $comment->comment_post_ID );
+
+	return $location;
 }

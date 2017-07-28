@@ -76,6 +76,7 @@
             'coursepress_assessments.js': [
                 // Add JS that will be loaded at Assessments page
                 // assets/js/src/admin/assessments/...
+                'assets/js/src/admin/assessments/assessments.js'
             ],
             'coursepress_forum.js': [
                 // Add JS that will be loaded at Forum page
