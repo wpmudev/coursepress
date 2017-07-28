@@ -455,8 +455,9 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$students->get_page();
 	}
 
-	function get_instructors_page() {
-		coursepress_render( 'views/admin/instructors' );
+	public function get_instructors_page() {
+		$instructors = new CoursePress_Admin_Instructors();
+		$instructors->get_page();
 	}
 
 	function get_forum_page() {

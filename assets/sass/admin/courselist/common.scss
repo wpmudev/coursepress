@@ -1,16 +1,6 @@
 #coursepress-courselist {
   .coursepress-table {
     tbody {
-      tr.odd {
-        th, td {
-          background-color: $grey_6;
-        }
-      }
-      tr.even {
-        th, td {
-          background-color: #ffffff;
-        }
-      }
       tr.column-actions {
         td:first-of-type {
           position: relative;

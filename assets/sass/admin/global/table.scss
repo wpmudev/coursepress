@@ -1,44 +1,54 @@
 .coursepress-wrap .coursepress-table {
-  width: 100%;
-  margin: 15px 0;
-  background-color: #ffffff;
+    width: 100%;
+    margin: 15px 0;
+    background-color: #ffffff;
 
-  @include radius(6px);
+    @include radius(6px);
 
-  tr {
-    th {
-      font-weight: 600;
+    tr {
+        th {
+            font-weight: 600;
+        }
+        th, td {
+            border: 0;
+            text-align: left;
+            padding: 12px 15px;
+            border: {
+                style: solid;
+                width: 0 0 0.8px 0;
+                color: $grey_5;
+            }
+
+            &:first-of-type {
+                padding-left: 25px;
+            }
+            &:last-of-type {
+                padding-right: 25px;
+            }
+        }
+
+        &:nth-child(2n) {
+            th, td {
+                background-color: $grey_6;
+            }
+        }
+        &.odd {
+            th, td {
+                background-color: $grey_6;
+            }
+        }
+        &.even {
+            th, td {
+                background-color: $white;
+            }
+        }
     }
-    th, td {
-      border: 0;
-      text-align: left;
-      padding: 12px 15px;
-      border: {
-        style: solid;
-        width: 0 0 0.8px 0;
-        color: $grey_5;
-      }
 
-      &:first-of-type {
-        padding-left: 25px;
-      }
-      &:last-of-type {
-        padding-right: 25px;
-      }
+    thead {
+        th, td {
+            text-align: left;
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
     }
-
-    &:nth-child(2n) {
-      th, td {
-        background-color: $grey_6;
-      }
-    }
-  }
-
-  thead {
-    th, td {
-      text-align: left;
-      padding-top: 15px;
-      padding-bottom: 15px;
-    }
-  }
 }
