@@ -82,18 +82,31 @@ module.exports = function(grunt) {
 			'assets/js/coursepress_instructors.js': [
 				// Add JS that will be loaded at Instructors page
 				// assets/js/src/admin/instructors
+				'assets/js/src/common/cp-search-form.js'
 			],
 			'assets/js/coursepress_assessments.js': [
 				// Add JS that will be loaded at Assessments page
 				// assets/js/src/admin/assessments/...
+				'assets/js/src/admin/assesments/assesments.js'
 			],
 			'assets/js/coursepress_forum.js': [
 				// Add JS that will be loaded at Forum page
 				// assets/js/src/admin/forum/...
+				'assets/js/src/common/cp-search-form.js',
+				'assets/js/src/admin/forum/edit.js'
+			],
+			'assets/js/coursepress_comments.js': [
+				// Add JS that will be loaded at comments page
+				// assets/js/src/admin/comments/...
+				'assets/js/src/admin/comments/general.js'
 			],
 			'assets/js/coursepress_notifications.js': [
 				// Add JS that will be loaded at Notifications page
 				// assets/js/src/admin/notifications/...
+				'assets/js/src/admin/notifications/notification-emails.js',
+				'assets/js/src/admin/notifications/notification-alerts.js',
+				'assets/js/src/admin/notifications/notification-alerts-form.js',
+				'assets/js/src/admin/notifications/notification.js',
 			],
 			'assets/js/coursepress_settings.js': [
 				// Add JS that will be loaded at Settings page
@@ -138,7 +151,8 @@ module.exports = function(grunt) {
 			'assets/css/coursepress_assessments.css': 'assets/sass/coursepress_assessments.scss',
 			'assets/css/coursepress_forum.css': 'assets/sass/coursepress_forum.scss',
 			'assets/css/coursepress_notifications.css': 'assets/sass/coursepress_notifications.scss',
-			'assets/css/coursepress_settings.css': 'assets/sass/coursepress_settings.scss'
+			'assets/css/coursepress_settings.css': 'assets/sass/coursepress_settings.scss',
+			'assets/css/coursepress_comments.css': 'assets/sass/coursepress_comments.scss'
 		},
 
 		// PHP files to validate.

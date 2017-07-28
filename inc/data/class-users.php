@@ -251,15 +251,15 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 	function map_coursepress_user_cap( $caps, $cap, $args, $user ) {
 		// Set all CP caps for administrator
 		if ( in_array( 'administrator', $user->roles ) ) {
-			$caps = $caps + $this->get_all_caps();
+			$caps = wp_parse_args( $this->get_all_caps(), $caps );
 		}
 		// Set instructor caps
 		if ( in_array( 'coursepress_instructor', $user->roles ) ) {
-			$caps = $caps + $this->get_instructor_caps();
+			$caps = wp_parse_args( $this->get_instructor_caps(), $caps );
 		}
 		// Set facilitator caps
 		if ( in_array( 'coursepress_facilitator', $user->roles ) ) {
-			$caps = $caps + $this->get_facilitator_caps();
+			$caps = wp_parse_args( $this->get_facilitator_caps(), $caps );
 		}
 
 		return $caps;

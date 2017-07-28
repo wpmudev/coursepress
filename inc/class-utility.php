@@ -123,6 +123,22 @@ abstract class CoursePress_Utility {
         return $default;
     }
 
+	protected function get_pagenum() {
+		return isset( $_REQUEST['paged'] )? intval( $_REQUEST['paged'] ) : 1;
+	}
+
+	protected function get_per_page() {
+		return 20;
+	}
+
+	protected function get_items_per_page( $type, $per_page ) {
+		return $per_page;
+	}
+
+	public function meta_key( $key ) {
+		return $key['meta_key'];
+	}
+
 	/**
 	 * Get the items per page option value.
 	 *

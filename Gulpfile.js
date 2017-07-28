@@ -46,7 +46,8 @@
                 'assets/js/src/common/dropdown-menu.js',
                 'assets/js/src/common/popup.js',
                 'assets/js/src/common/upload.js',
-                'assets/js/src/common/add-media.js'
+                'assets/js/src/common/add-media.js',
+                'assets/js/src/cp-search-form.js'
                 // assets/js/src/admin/general/....
             ],
             'coursepress.js': [
@@ -94,6 +95,7 @@
             'coursepress_assessments.js': [
                 // Add JS that will be loaded at Assessments page
                 // assets/js/src/admin/assessments/...
+                'assets/js/src/admin/assessments/assessments.js'
             ],
             'coursepress_forum.js': [
                 // Add JS that will be loaded at Forum page
@@ -102,6 +104,10 @@
             'coursepress_notifications.js': [
                 // Add JS that will be loaded at Notifications page
                 // assets/js/src/admin/notifications/...
+                'assets/js/src/admin/notifications/notification-emails.js',
+                'assets/js/src/admin/notifications/notification-alerts.js',
+                'assets/js/src/admin/notifications/notification-alerts-form.js',
+                'assets/js/src/admin/notifications/notification.js',
             ],
             'coursepress_settings.js': [
                 // Add JS that will be loaded at Settings page
