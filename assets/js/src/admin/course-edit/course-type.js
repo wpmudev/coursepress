@@ -103,14 +103,22 @@
             },
             changeCoursePaid: function(ev) {
                 var paid = ev.currentTarget.checked;
+                var marketpress = _coursepress.extensions.marketpress.is_active;
+                var woocommerce = _coursepress.extensions.woocommerce.is_active;
+
                 if ( paid ) {
-                    if ( _coursepress.mp_is_on ) {
-                        $('.cp-box-marketpress').removeClass( 'hidden' );
+                    if ( marketpress || woocommerce ) {
+                        if ( marketpress ) {
+                            $('.cp-box-marketpress').removeClass('hidden');
+                        } else if ( woocommerce ) {
+                            $('.cp-box-woocommerce').removeClass('hidden');
+                        }
                     } else {
-                        $('.cp-box-off').removeClass('hidden');
+                        $('.cp-box-marketpress').removeClass( 'hidden' );
                     }
                 } else {
                     $('.cp-box-marketpress').addClass( 'hidden' );
+                    $('.cp-box-woocommerce').addClass( 'hidden' );
                 }
             }
         });
