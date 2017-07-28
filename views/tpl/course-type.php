@@ -164,6 +164,46 @@
             </div>
         </div>
     </div>
+    <div class="cp-box-content cp-box-woocommerce {{  true == payment_paid_course? '':' hidden' }}">
+        <div class="box-label-area">
+            <h3 class="label"><?php _e( 'WooCommerce Product Settings', 'cp' ); ?></h3>
+            <p class="description"><?php _e( 'Your course will be a new product in WooCommerce. Enter your course\'s payment settings.', 'cp' ); ?></p>
+        </div>
+        <div class="box-inner-content">
+            <div class="cp-box cp-box-woocommerce">
+                <div class="cp-box">
+                    <label class="label required"><?php esc_html_e( 'Full Price', 'cp' ); ?></label>
+                    <input type="text" name="meta_mp_product_price" value="{{mp_product_price}}" />
+                </div>
+
+                <div class="cp-box">
+                    <label class="label"><?php esc_html_e( 'Sale Price', 'cp' ); ?></label>
+                    <input type="text" name="meta_mp_product_sale_price" value="{{mp_product_sale_price}}" >
+                </div>
+
+                <div class="cp-box cp-toggle-box">
+                    <label>
+                        <input type="checkbox" name="meta_mp_sale_price_enabled"{{_.checked( true, mp_sale_price_enabled)}} class="cp-toggle-input" autocomplejte="off" /> <span class="cp-toggle-btn"></span>
+                        <span><?php esc_html_e( 'Enable Sale Price', 'cp' ); ?></span>
+                    </label>
+                </div>
+
+                <div class="cp-box">
+                    <label class="label"><?php esc_html_e( 'Course SKU:', 'cp' ); ?></label>
+                    <input type="text" name="meta_mp_sku" placeholder="<?php esc_attr_e( 'e.g. CP-0001', 'cp' ); ?>" value="{{mp_sku}}" />
+                </div>
+
+                <div class="cp-box cp-toggle-box">
+                    <label>
+                        <input type="checkbox" name="meta_mp_auto_sku"value=""{{_.checked( true, mp_auto_sku)}} class="cp-toggle-input" autocomplejte="off" /> <span class="cp-toggle-btn"></span>
+                        <span>Automatically generate Stock Keeping Units (SKUs)</span>
+                    </label>
+                </div>
+
+            </div>
+        </div>
+    
+        </div>
 
     <?php
 	/**

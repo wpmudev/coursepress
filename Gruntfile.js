@@ -65,6 +65,7 @@ module.exports = function(grunt) {
 			'assets/js/coursepress_instructors.js': [
 				// Add JS that will be loaded at Instructors page
 				// assets/js/src/admin/instructors
+				'assets/js/src/common/cp-search-form.js'
 			],
 			'assets/js/coursepress_assessments.js': [
 				// Add JS that will be loaded at Assessments page
@@ -74,6 +75,13 @@ module.exports = function(grunt) {
 			'assets/js/coursepress_forum.js': [
 				// Add JS that will be loaded at Forum page
 				// assets/js/src/admin/forum/...
+				'assets/js/src/common/cp-search-form.js',
+				'assets/js/src/admin/forum/edit.js'
+			],
+			'assets/js/coursepress_comments.js': [
+				// Add JS that will be loaded at comments page
+				// assets/js/src/admin/comments/...
+				'assets/js/src/admin/comments/general.js'
 			],
 			'assets/js/coursepress_notifications.js': [
 				// Add JS that will be loaded at Notifications page
