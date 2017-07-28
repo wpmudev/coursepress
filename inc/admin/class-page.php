@@ -87,7 +87,10 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Set Notification page
 		$notification_label = __( 'Notifications', 'cp' );
-		$this->add_submenu( $notification_label, 'coursepress_notifications_cap', 'coursepress_notifications', 'get_notification_page' );
+		$notifications_screen_id = $this->add_submenu( $notification_label, 'coursepress_notifications_cap', 'coursepress_notifications', 'get_notification_page' );
+		array_unshift( $this->screens, $notifications_screen_id );
+		// Add preload callback
+		add_action( 'load-' . $notifications_screen_id, array( $this, 'process_notifications_list_page' ) );
 
 		// Set Settings page
 		$settings_label = __( 'Settings', 'cp' );
@@ -188,6 +191,9 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 					'select_feature_image' => __( 'Select Feature Image', 'cp' ),
 					'select_video' => __( 'Select Video', 'cp' ),
 				),
+                'server_error' => __( 'An unexpected error occur while processing. Please try again.', 'cp' ),
+                'invalid_file_type' => __( 'Invalid file type!', 'cp' ),
+			    'all_students' => __( 'Students from All Courses', 'cp' ),
 				'server_error' => __( 'An unexpected error occur while processing. Please try again.', 'cp' ),
 				'invalid_file_type' => __( 'Invalid file type!', 'cp' ),
 			),
@@ -257,17 +263,43 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_course_per_page' ) );
 	}
 
+	/**
+	 * Set custom screen options for the students listing page.
+	 */
 	function process_studentlist_page() {
+		global $CoursePress;
 
-		(new CoursePress_Admin_Students())->screen_options();
+		$students = $CoursePress->get_class( 'CoursePress_Admin_Students' );
+
+		if ( $students ) {
+			return $students->screen_options();
+		}
+	}
+
+	/**
+	 * Set custom screen options for the listing page.
+	 */
+	function process_notifications_list_page() {
+		global $CoursePress;
+
+		$notifications = $CoursePress->get_class( 'CoursePress_Admin_Notifications' );
+
+		if ( $notifications ) {
+			return $notifications->screen_options();
+		}
 	}
 
 	/**
 	 * Process assesment listing page screen.
 	 */
 	function process_assesments_page() {
+		global $CoursePress;
 
-		(new CoursePress_Admin_Assessments())->screen_options();
+		$assessments = $CoursePress->get_class( 'CoursePress_Admin_Assessments' );
+
+		if ( $assessments ) {
+			return $assessments->screen_options();
+		}
 	}
 
 	/**
@@ -495,12 +527,23 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 * Assesments listing page cotent.
 	 */
 	function get_assessments_page() {
+		global $CoursePress;
 
-		(new CoursePress_Admin_Assessments())->get_page();
+		$assessments = $CoursePress->get_class( 'CoursePress_Admin_Assessments' );
+
+		if ( $assessments ) {
+			return $assessments->get_page();
+		}
 	}
 
 	function get_notification_page() {
-		coursepress_render( 'views/admin/notifications' );
+		global $CoursePress;
+
+		$students = $CoursePress->get_class( 'CoursePress_Admin_Notifications' );
+
+		if ( $students ) {
+			$students->get_page();
+		}
 	}
 
 	function get_settings_page() {

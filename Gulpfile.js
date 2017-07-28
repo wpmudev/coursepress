@@ -85,6 +85,10 @@
             'coursepress_notifications.js': [
                 // Add JS that will be loaded at Notifications page
                 // assets/js/src/admin/notifications/...
+                'assets/js/src/admin/notifications/notification-emails.js',
+                'assets/js/src/admin/notifications/notification-alerts.js',
+                'assets/js/src/admin/notifications/notification-alerts-form.js',
+                'assets/js/src/admin/notifications/notification.js',
             ],
             'coursepress_settings.js': [
                 // Add JS that will be loaded at Settings page

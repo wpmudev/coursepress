@@ -679,17 +679,20 @@ function coursepress_get_course_facilitators( $course_id ) {
 }
 
 /**
+<<<<<<< HEAD
+ * Get units of the course.
+ *
+ * @param int $course_id Course ID.
+ * @param array $args
+=======
  * Get units of a course.
  *
  * @param int $course_id Course ID.
+>>>>>>> development
  *
  * @return array
  */
 function coursepress_get_course_units( $course_id ) {
-
-	if ( empty( $course_id ) ) {
-		return array();
-	}
 
 	$course = coursepress_get_course( $course_id );
 
@@ -697,7 +700,153 @@ function coursepress_get_course_units( $course_id ) {
 		return array();
 	}
 
-	return $course->get_units();
+	$units = $course->get_units();
+
+	if ( ! empty( $units ) ) {
+		return $units;
+	}
+
+	return array();
+}
+
+/**
+ * Change alert status to publish/draft.
+ *
+ * @param int $alert_id Alert ID.
+ * @param string $status New status (publish or draft).
+ *
+ * @return bool
+ */
+function coursepress_change_course_alert_status( $alert_id, $status ) {
+
+	// Allowed statuses to change.
+	$allowed_statuses = array( 'publish', 'draft' );
+
+	$capable = false;
+	// Get author of the current alert.
+	$author = get_post_field ('post_author', $alert_id );
+	// If current user is capable of updating any notification statuses.
+	if ( current_user_can( 'coursepress_change_notification_status_cap' ) ) {
+		$capable = true;
+	} elseif ( $author == get_current_user_id() && current_user_can( 'coursepress_change_my_notification_status_cap' ) ) {
+		$capable = true;
+	}
+
+	if ( empty( $alert_id ) || ! in_array( $status, $allowed_statuses ) || ! $capable ) {
+
+		/**
+		 * Perform actions when alert status not changed.
+		 *
+		 * @param int $alert_id Alert ID.
+		 * @param int $status Status.
+		 *
+		 * @since 3.0.0
+		 */
+		do_action( 'coursepress_alert_status_change_fail', $alert_id, $status );
+
+		return false;
+	}
+
+	$post = array(
+		'ID' => absint( $alert_id ),
+		'post_status' => $status,
+	);
+
+	// Update the alert post status.
+	if ( is_wp_error( wp_update_post( $post ) ) ) {
+
+		// This action hook is documented above.
+		do_action( 'coursepress_alert_status_change_fail', $alert_id, $status );
+
+		return false;
+	}
+
+	/**
+	 * Perform actions when alert status is changed.
+	 *
+	 * var $alert_id The alert id.
+	 * var $status The new status.
+	 *
+	 * @since 3.0.0
+	 */
+	do_action( 'coursepress_alert_status_changed', $alert_id, $status );
+
+	return true;
+}
+
+/**
+ * Create new course alert.
+ *
+ * @param int $course_id Course ID.
+ * @param string $title Alert title.
+ * @param string $content Alert content.
+ *
+ * @return int New alert id.
+ */
+function coursepress_create_course_alert( $course_id, $title, $content ) {
+
+	$capable = false;
+	// Get the course.
+	$course = coursepress_get_course( $course_id );
+	$user = coursepress_get_user( get_current_user_id() );
+	// If current user is capable of updating any notification statuses.
+	if ( is_wp_error( $course ) ) {
+		$capable = false;
+	} elseif ( $user->has_access_at( $course_id ) && current_user_can( 'coursepress_create_my_assigned_notification_cap' ) ) {
+		$capable = true;
+	} elseif ( $course->post_author == get_current_user_id() && current_user_can( 'coursepress_create_my_notification_cap' ) ) {
+		$capable = true;
+	}
+
+	if ( ! $capable ) {
+
+		/**
+		 * Perform actions when alert could not be created.
+		 *
+		 * @param int $course_id Course ID.
+		 * @param string $title Alert title.
+		 * @param string $content Alert content.
+		 *
+		 * @since 3.0.0
+		 */
+		do_action( 'coursepress_alert_create_fail', $course_id, $title, $content );
+
+		return false;
+	}
+
+	$post = array(
+		'post_title' => sanitize_text_field( $title ),
+		'post_content' => $content,
+		'post_status' => 'publish',
+		'post_type' => 'cp_notification',
+	);
+
+	$alert_id = wp_insert_post( $post );
+	// If post creation failed.
+	if ( is_wp_error( $alert_id ) ) {
+
+		// This action hook is documented above.
+		do_action( 'coursepress_alert_create_fail', $course_id, $title, $content );
+
+		return false;
+	}
+
+	// Set alert course id.
+	add_post_meta( $alert_id, 'alert_course', $course_id );
+
+	/**
+	 * Perform actions when alert creation was successful.
+	 *
+	 * @param int $alert_id Alert ID.
+	 * @param int $course_id Course ID.
+	 * @param string $title Alert title.
+	 * @param string $content Alert content.
+	 *
+	 * @since 3.0.0
+	 */
+	do_action( 'coursepress_alert_create_success', $alert_id, $course_id, $title, $content );
+
+	return $alert_id;
 }
 
 /**

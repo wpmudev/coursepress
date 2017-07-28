@@ -541,6 +541,148 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		wp_send_json( $users );
 	}
 
+	/**
+	 * Get the list of units and students based on selected course.
+	 *
+	 * @param object $request
+	 */
+	function get_notification_units_students( $request ) {
+
+		$result = array();
+
+		if ( ! isset( $request->course_id ) ) {
+			wp_send_json_success( $result );
+		}
+
+		// Get students based on the course id.
+		$student_ids = coursepress_get_students_ids( $request->course_id );
+		if ( ! empty( $student_ids ) ) {
+			foreach ( $student_ids as $id => $student_id ) {
+				$student = coursepress_get_user( $student_id );
+				if ( ! is_wp_error( $student ) ) {
+					$result['students'][] = array(
+						'id' => $student_id,
+						'text' => $student->get_name(),
+					);
+				}
+			}
+		}
+
+		if ( ! empty( $request->course_id ) ) {
+			// Get units based on the course id.
+			$units = coursepress_get_course_units( $request->course_id );
+			if ( ! empty( $units ) ) {
+				foreach ( $units as $id => $unit ) {
+					$result['units'][] = array(
+						'id'   => $id,
+						'text' => $units->get_the_title(),
+					);
+				}
+			}
+		}
+
+		wp_send_json_success( $result );
+	}
+
+	/**
+	 * Get the list of units and students based on selected course.
+	 *
+	 * @param object $request
+	 */
+	function get_notification_students( $request ) {
+
+
+		$result = array();
+
+		// Make sure required values are set.
+		if ( empty( $request->course_id ) || empty( $request->unit_id ) ) {
+			wp_send_json_error( $result );
+		}
+
+		// Get students based on the completed units.
+		$students = coursepress_get_students_by_completed_unit( $request->course_id, $request->unit_id );
+		if ( ! empty( $students ) ) {
+			foreach ( $students as $id => $student ) {
+				$result['students'][] = array(
+					'id' => $id,
+					'text' => $student->get_name(),
+				);
+			}
+		}
+
+		wp_send_json_success( $result );
+	}
+
+	/**
+	 * Send notification emails to students.
+	 *
+	 * @param $request Request data.
+	 */
+	function send_notification_email( $request ) {
+
+		global $CoursePress;
+
+		// Check if required values are set.
+		if ( empty( $request->content ) || empty( $request->title ) || empty( $request->students ) ) {
+			wp_send_json_error();
+		}
+
+		$email = $CoursePress->get_class( 'CoursePress_Email' );
+		// Send email notifications.
+		if ( $email->notification_alert_email( $request->students, $request->title, $request->content ) ) {
+			wp_send_json_success( array( 'message' => __( 'Notification emails sent successfully.', 'cp' ) ) );
+		}
+
+		wp_send_json_error(  array( 'message' => __( 'Could not send email notifications.', 'cp' ) )  );
+	}
+
+	/**
+	 * Toggle alert status.
+	 *
+	 * @param $request Request data.
+	 */
+	function alert_status_toggle( $request ) {
+
+		$toggled = false;
+
+		// If alert id and status is not empty, attempt to change status.
+		if ( ! empty( $request->alert_id ) && ! empty( $request->status ) ) {
+			$toggled = coursepress_change_course_alert_status( $request->alert_id, $request->status );
+		}
+
+		// If status changed, return success response, else fail.
+		if ( $toggled ) {
+			$success = array( 'message' => __( 'Alert status updated successfully.', 'cp' ) );
+			wp_send_json_success( $success );
+		} else {
+			$error = array( 'error_code' => 'cannot_change_status', 'message' => __( 'Could not update alert status.', 'cp' ) );
+			wp_send_json_error( $error );
+		}
+	}
+
+	/**
+	 * Create new course alert.
+	 *
+	 * @param $request Request data.
+	 */
+	function create_course_alert( $request ) {
+
+		$created = false;
+
+		// If required values are set, create new alert.
+		if ( ! empty( $request->course_id ) && ! empty( $request->title ) && ! empty( $request->content ) ) {
+			$created = coursepress_create_course_alert( $request->course_id, $request->title, $request->content );
+		}
+
+		// If alert created return success response, else fail.
+		if ( $created ) {
+			$success = array( 'message' => __( 'New course alert created successfully.', 'cp' ) );
+			wp_send_json_success( $success );
+		} else {
+			$error = array( 'message' => __( 'Could not create new course alert.', 'cp' ) );
+			wp_send_json_error( $error );
+		}
+	}
 
 	private function comment_status_toggle( $request ) {
 		if ( ! isset( $request->id ) || ! isset( $request->nonce ) ) {
