@@ -103,8 +103,16 @@
              * Clear search form and submit.
              */
             clearSearch: function() {
+                var s_input;
+
+                s_input = this.$('input[name="s"]', '#cp-search-form');
+
+                if ( ! s_input.val() ) {
+                    return false;
+                }
+
                 // Removing name will exclude this field from form values.
-                this.$('input[name="s"]','#cp-search-form').removeAttr('name');
+                s_input.removeAttr('name');
                 this.$('#cp-search-form').submit();
             },
 
