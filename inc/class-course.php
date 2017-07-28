@@ -39,7 +39,7 @@ class CoursePress_Course extends CoursePress_Utility {
 		) );
 
 		// Set course meta
-		$this->setUpCourseMetas();
+        $this->setUpCourseMetas();
 	}
 
 	function wp_error() {
@@ -134,7 +134,7 @@ class CoursePress_Course extends CoursePress_Utility {
 			'cert_text_color' => '#5a5a5a',
 
 			/**
-			 * MarketPress defaults
+			 * paid course defaults
 			 */
 			'mp_auto_sku' => true,
 			'mp_product_price' => '',
@@ -814,5 +814,6 @@ class CoursePress_Course extends CoursePress_Utility {
 		do_action( 'coursepress_course_duplicate_failed', $course_id );
 
 		return false;
-	}
+    }
+
 }

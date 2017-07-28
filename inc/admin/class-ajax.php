@@ -18,6 +18,8 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		add_action( 'wp_ajax_coursepress_upload', array( $this, 'upload_file' ) );
 	    // Hook to search for select2 data.
 	    add_action( 'wp_ajax_coursepress_get_users', array( $this, 'get_course_users' ) );
+		// Search course
+		add_action( 'wp_ajax_coursepress_courses_search', array( $this, 'search_course' ) );
 	}
 
 	/**
@@ -158,7 +160,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			),
 			'page_orientation' => 'L',
 			'cert_text_color' => '#5a5a5a',
+			'payment_paid_course' => false,
 		);
+
+		$course_meta = apply_filters( 'coursepress_default_course_meta', $course_meta );
 
 		// Now fill the course meta
 		$date_types = array( 'course_start_date', 'course_end_date', 'enrollment_start_date', 'enrollment_end_date' );
@@ -190,7 +195,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		if ( ! empty( $course_meta['meta_listing_image_thumbnail_id'] ) ) {
 			set_post_thumbnail( $course_id, $course_meta['meta_listing_image_thumbnail_id'] );
 		}
-		error_log( print_r( $course_meta,true ) );
 
 		// Check course category
 		if ( isset( $request->course_category ) ) {
@@ -360,8 +364,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$the_course = array_shift( $courses );
 
 		$importClass = new CoursePress_Import( $the_course, $request );
-
-	}
+    }
 
 	/**
 	 * Toggle course status.
@@ -576,5 +579,26 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			);
 			return $response;
 		}
-	}
+    }
+
+
+    public function search_course() {
+        $data = array(
+            'items' => array(),
+            'total_count' => 0,
+        );
+        $args = array(
+            'post_type' => 'course',
+            's' => $_REQUEST['q'],
+        );
+        $posts = new WP_Query( $args );
+        $data['total_count'] = $posts->post_count;
+        $posts = $posts->posts;
+        foreach( $posts as $post ) {
+            $one['id'] = $post->ID;
+            $one['post_title'] = $post->post_title;
+            $data['items'][] = $one;
+        }
+        wp_send_json( $data );
+    }
 }

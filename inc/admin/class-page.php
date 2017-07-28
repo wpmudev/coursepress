@@ -75,7 +75,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$this->add_submenu( $assessment_label, 'coursepress_assessment_cap', 'coursepress_assessments', 'get_assessments_page' );
 
 		// Set Forum page
-		$forum_label = __( 'Forum', 'cp' );
+		$forum_label = __( 'Forums', 'cp' );
 		$this->add_submenu( $forum_label, 'coursepress_discussions_cap', 'coursepress_forum', 'get_forum_page' );
 
 		// Set Comments page
@@ -199,6 +199,13 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Set local vars
 		$localize_array = apply_filters( 'coursepress_admin_localize_array', $this->localize_array );
+
+		/**
+		 * get extensions
+		 */
+
+		$localize_array['extensions'] = $this->get_extensions();
+
 		wp_localize_script( 'coursepress-admin-general', '_coursepress', $localize_array );
 	}
 
@@ -411,7 +418,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		// Load templates
 		coursepress_render( 'views/tpl/common' );
 		coursepress_render( 'views/tpl/course-type', array( 'course_id' => $course_id ) );
-		coursepress_render( 'views/tpl/course-completion' );
 		coursepress_render( 'views/tpl/course-settings', $settings_data );
 
 		$certClass = $CoursePress->get_class( 'CoursePress_Certificate' );
@@ -454,12 +460,15 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$students->get_page();
 	}
 
-	function get_instructors_page() {
-		coursepress_render( 'views/admin/instructors' );
+	public function get_instructors_page() {
+		$instructors = new CoursePress_Admin_Instructors();
+		$instructors->get_page();
 	}
 
 	function get_forum_page() {
-		coursepress_render( 'views/admin/forum' );
+		$this->lib3();
+		$forums = new CoursePress_Admin_Forums();
+		$forums->get_page();
 	}
 
 	function get_comments_page() {
@@ -494,18 +503,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		    'no_mp_woo' => sprintf( __( '%s and %s cannot be activated simultaneously!', 'cp' ), 'MarketPress', 'WooCommerce' ),
 		);
 
-		/**
-		 * Fire to get all available extensions.
-		 *
-		 * @since 3.0
-		 * @param array $extensions
-		 */
-		$extensions = apply_filters( 'coursepress_extensions', array() );
-
-		if ( ! $extensions ) {
-			$extensions = array();
-		}
-		$this->localize_array['extensions'] = $extensions;
+		$this->localize_array['extensions'] = $this->get_extensions();
 
 		coursepress_render( 'views/admin/settings' );
 
@@ -540,5 +538,22 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		include_once $file;
 		lib3()->ui->add( 'core' );
 		lib3()->ui->add( 'html' );
+	}
+
+	/**
+	 * get extensions
+	 */
+	private function get_extensions() {
+		/**
+		 * Fire to get all available extensions.
+		 *
+		 * @since 3.0
+		 * @param array $extensions
+		 */
+		$extensions = apply_filters( 'coursepress_extensions', array() );
+		if ( ! $extensions ) {
+			return array();
+		}
+		return $extensions;
 	}
 }
