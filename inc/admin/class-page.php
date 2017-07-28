@@ -72,7 +72,10 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Set assessment page
 		$assessment_label = __( 'Assessments', 'cp' );
-		$this->add_submenu( $assessment_label, 'coursepress_assessment_cap', 'coursepress_assessments', 'get_assessments_page' );
+		$assesment_screen_id = $this->add_submenu( $assessment_label, 'coursepress_assessment_cap', 'coursepress_assessments', 'get_assessments_page' );
+		array_unshift( $this->screens, $assesment_screen_id );
+		// Add preload callback
+		add_action( 'load-' . $assesment_screen_id, array( $this, 'process_assesments_page' ) );
 
 		// Set Forum page
 		$forum_label = __( 'Forums', 'cp' );
@@ -260,6 +263,14 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	}
 
 	/**
+	 * Process assesment listing page screen.
+	 */
+	function process_assesments_page() {
+
+		(new CoursePress_Admin_Assessments())->screen_options();
+	}
+
+	/**
 	 * Set/save custom screen options value.
 	 *
 	 * @param bool|int $status
@@ -269,8 +280,12 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 * @return mixed
 	 */
 	function set_courselist_options( $status, $option, $value ) {
+		$options = array(
+			'coursepress_course_per_page',
+			'coursepress_students_per_page',
+			'coursepress_assesments_per_page'
+		);
 
-		$options = array( 'coursepress_course_per_page', 'coursepress_students_per_page', 'coursepress_comments_per_page' );
 		// Return value for our custom option.
 		// For other options, return default.
 		if ( in_array( $option, $options ) ) {
@@ -476,8 +491,12 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$students->get_page();
 	}
 
+	/**
+	 * Assesments listing page cotent.
+	 */
 	function get_assessments_page() {
-		coursepress_render( 'views/admin/assessments' );
+
+		(new CoursePress_Admin_Assessments())->get_page();
 	}
 
 	function get_notification_page() {
@@ -503,7 +522,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		    'no_mp_woo' => sprintf( __( '%s and %s cannot be activated simultaneously!', 'cp' ), 'MarketPress', 'WooCommerce' ),
 		);
 
-		$this->localize_array['extensions'] = $this->get_extensions();
+		$extensions = $this->get_extensions();
+		$this->localize_array['extensions'] = $extensions;
 
 		coursepress_render( 'views/admin/settings' );
 

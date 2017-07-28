@@ -679,6 +679,28 @@ function coursepress_get_course_facilitators( $course_id ) {
 }
 
 /**
+ * Get units of a course.
+ *
+ * @param int $course_id Course ID.
+ *
+ * @return array
+ */
+function coursepress_get_course_units( $course_id ) {
+
+	if ( empty( $course_id ) ) {
+		return array();
+	}
+
+	$course = coursepress_get_course( $course_id );
+
+	if ( is_wp_error( $course ) ) {
+		return array();
+	}
+
+	return $course->get_units();
+}
+
+/**
  * Get modules by type
  *
  * @since 2.0.0
@@ -763,5 +785,6 @@ function coursepress_discussion_module_link( $location, $comment ) {
 	$course_link = get_permalink( $course_id );
 	$unit_slug = coursepress_get_setting( 'slugs/course', 'unit' );
 	$location = esc_url_raw( $course_link . $unit_slug . get_post_field( 'post_name', $course_id ) . '#module-' . $comment->comment_post_ID );
+
 	return $location;
 }
