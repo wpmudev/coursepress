@@ -112,6 +112,22 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			}
 		}
 
+		if ( (int) $course_object['ID'] > 0 ) {
+			$course_id = wp_update_post( $course_object );
+		} else {
+			$course_id = wp_insert_post( $course_object );
+		}
+
+		$course_meta = array();
+
+		foreach ( $request as $key => $value ) {
+			$_key = str_replace( 'meta_', '', $key );
+
+			if ( preg_match( '%meta_%', $key ) ) {
+
+				$course_meta[ $_key ] = $value;
+			}
+		}
 
         // Set post thumbnail ID if not empty
         if ( ! empty( $course_meta['listing_image_thumbnail_id'] ) ) {

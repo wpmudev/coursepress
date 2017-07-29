@@ -12,10 +12,13 @@
             goNextStep: false,
             el: $( '#course-edit-template' ),
             unitsview: false,
+            savemode: 'continue',
+            senderButton: false,
             events: {
                 'click .step': 'toggleContent',
                 'click .step-back': 'getPreviousStep',
                 'click .step-next': 'getNextStep',
+                'click .step-save': 'saveCourse',
                 'click .step-cancel': 'returnToMainPage',
                 'click .step-icon-bars': 'toggleStepList',
                 'change [name]': 'updateModel'
@@ -34,6 +37,10 @@
                 this.on('coursepress:load-step-course-units', this.courseUnitsView, this);
                 // Load course students view
                 this.once('coursepress:load-step-course-students', this.courseStudentsView, this);
+                // Update UI whenever the course is updated
+                this.model.on( 'coursepress:success_update_course', this.courseUpdated, this );
+                // Let the user know an error occur while updating
+                this.model.on( 'coursepress:error_update_course', this.courseUpdateError, this );
 
                 // Load templates
                 this.render();
@@ -198,9 +205,14 @@
 
                 return false;
             },
-            getNextStep: function() {
+            saveCourse: function(ev) {
+              this.getNextStep(ev);
+            },
+            getNextStep: function(ev) {
                 var nextStep;
 
+                this.senderButton = this.$(ev.currentTarget);
+                this.savemode = this.senderButton.is('.step-save') ? 'save' : 'continue';
                 nextStep = this._getNextStep();
 
                 if ( nextStep ) {
@@ -253,38 +265,62 @@
                 this.stepListContainer.toggleClass('open', '');
             },
             updateCourse: function() {
-                var button = this.$('.step-next');
-                button.addClass('cp-progress');
+                this.senderButton.addClass('cp-progress');
                 this.model.set( 'action', 'update_course' );
-                this.model.off( 'coursepress:error_update_course' );
-                this.model.on( 'coursepress:error_update_course', this.after_update, this );
-                this.model.off( 'coursepress:success_update_course' );
-                this.model.on( 'coursepress:success_update_course', this.courseUpdated, this );
                 this.model.save();
             },
             after_update: function() {
-                var button = this.$('.step-next');
-                button.removeClass('cp-progress');
+                this.senderButton.removeClass('cp-progress');
+            },
+            courseUpdateError: function() {
+                var popup;
+
+                this.after_update();
+
+                popup = new CoursePress.PopUp({
+                    type: 'error',
+                    message: win._coursepress.text.server_error
+                });
             },
             courseUpdated: function( data ) {
                 var nextStep;
 
-                if ( data.ID && win.history.pushState ) {
-                    var url = win._coursepress.pagenow + '&cid=' + data.ID;
-                    win.history.pushState( {}, null, url );
+                if ( data.course ) {
+                    if ( data.ID && win.history.pushState ) {
+                        var url = win._coursepress.pagenow + '&cid=' + data.ID;
+                        win.history.pushState( {}, null, url );
 
-                    // Update course model
-                    this.model.set( data.course );
+                        // Update course model
+                        this.model.set( data.course );
 
-                    /**
-                     * Trigger whenever a course is updated
-                     */
-                    this.trigger( 'coursepress:course_updated', data.ID, data.course );
+                        /**
+                         * Trigger whenever a course is updated
+                         */
+                        this.trigger( 'coursepress:course_updated', data.ID, data.course );
+                    }
+
+                    _.each( data.course, function( val, key ) {
+                        var input;
+
+                        this.model.set( key, val );
+                        input = this.$('[name="' + key + '"]');
+
+                        if ( input.length &&
+                            ! input.is('[type="checkbox"]') ||
+                            ! input.is('[type="radio"]') ||
+                            ! input.is('select') ) {
+                            input.val(val);
+                        }
+                    }, this );
                 }
+
+
                 this.after_update();
 
-                nextStep = this._getNextStep();
-                this.loadCurrentStep(nextStep);
+                if ( 'continue' === this.savemode ) {
+                    nextStep = this._getNextStep();
+                    this.loadCurrentStep(nextStep);
+                }
             }
         });
 

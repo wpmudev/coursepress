@@ -59,14 +59,7 @@
             },
 
             updateCourseModel: function() {
-                // Save the course
-                this.courseEditor.off( 'coursepress:course_updated' );
-                this.courseEditor.on( 'coursepress:course_updated', this.updateUI, this );
                 this.courseEditor.updateCourse();
-            },
-
-            updateUI: function( course_id, course ) {
-                this.$('[name="meta_mp_sku"]').val(course.mp_sku);
             },
 
             setUI: function() {
@@ -118,27 +111,22 @@
             },
 
             changeCoursePaid: function(ev) {
-                var paid, marketpress, woocommerce, settings;
+                var paid, settings;
 
-                paid = this.$(ev.currentTarget);
+                paid = this.$(ev.currentTarget).is(':checked');
                 settings = win._coursepress.settings;
-                marketpress = _coursepress.extensions.marketpress.is_active;
-                woocommerce = _coursepress.extensions.woocommerce.is_active;
+
+                $('.cp-box-marketpress, .cp-box-woocommerce').addClass( 'hidden' );
 
                 if ( paid ) {
-                    if ( marketpress || woocommerce ) {
-                        if ( marketpress ) {
-                            $('.cp-box-marketpress').removeClass('hidden');
-                        } else if ( woocommerce ) {
-                            $('.cp-box-woocommerce').removeClass('hidden');
-                        }
-                    } else {
-                        $('.cp-box-marketpress').removeClass( 'hidden' );
+                    if ( _.contains(settings.extensions, 'marketpress' ) &&
+                        settings.marketpress && settings.marketpress.enabled ) {
+                        $('.cp-box-marketpress').removeClass('hidden');
                     }
-                } else {
-                    $('.cp-box-marketpress').addClass( 'hidden' );
-                    $('.cp-box-woocommerce').addClass( 'hidden' );
-
+                    if( _.contains( settings.extensions, 'woocommerce') &&
+                        settings.woocommerce && settings.woocommerce.enabled ) {
+                        $('.cp-box-woocommerce').removeClass('hidden');
+                    }
                 }
             }
         });

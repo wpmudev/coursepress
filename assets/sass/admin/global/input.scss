@@ -97,11 +97,11 @@
       margin: 0;
 
       &:first-of-type {
-        @include radius(12px 0 0 12px);
+        @include radius(6px 0 0 6px);
       }
       &:last-of-type {
         border: 0;
-        @include radius(0 12px 12px 0);
+        @include radius(0 6px 6px 0);
       }
 
       &.active {
