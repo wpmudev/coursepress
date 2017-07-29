@@ -79,6 +79,9 @@
                 });
 
                 this.$('select').select2();
+                this.$('select').on( 'change', function(ev) {
+                    self.updateModel(ev);
+                });
 
                 _.delay(function() {
                     self.visualEditor({

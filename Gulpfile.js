@@ -79,7 +79,10 @@
                 'assets/js/src/admin/course-edit/unit-help.js',
                 'assets/js/src/admin/course-edit/unit-modules.js',
                 'assets/js/src/admin/course-edit/unit-details.js',
-                'assets/js/src/admin/course-edit/course-units.js',
+                'assets/js/src/admin/course-edit/unit-list.js',
+                'assets/js/src/admin/course-edit/unit-collection.js',
+                'assets/js/src/admin/course-edit/units-with-module-list.js',
+                //'assets/js/src/admin/course-edit/course-units.js',
                 'assets/js/src/admin/course-edit/course-students.js',
                 'assets/js/src/admin/course-edit/course-setup.js'
             ],

@@ -93,6 +93,8 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	}
 
 	function update_course( $request ) {
+		global $CoursePress_Core;
+
 		$course_object = array(
 			'post_type' => 'course',
 			'post_status' => 'pending',
@@ -110,6 +112,9 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			if ( isset( $request->{$key} ) ) {
 				$course_object[ $key ] = $request->{$key};
 			}
+		}
+		if ( 'auto-draft' == $course_object['post_status'] ) {
+			$course_object['post_status'] = 'draft';
 		}
 
 		if ( (int) $course_object['ID'] > 0 ) {
@@ -129,16 +134,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			}
 		}
 
-        // Set post thumbnail ID if not empty
-        if ( ! empty( $course_meta['listing_image_thumbnail_id'] ) ) {
-            set_post_thumbnail($course_id, $course_meta['listing_image_thumbnail_id']);
-        }
-
-		if ( 'auto-draft' == $course_object['post_status'] ) {
-			$course_object['post_status'] = 'draft';
-		}
-
-		$course_id = wp_update_post( $course_object );
         $course = coursepress_get_course( $course_id );
         $course->update_setting( true, $course_meta );
 

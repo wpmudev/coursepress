@@ -126,7 +126,7 @@
 
 
                move_item = this.$('.menu-item-move');
-               has_modules = this.stepController.unitModel.controller.editCourse.model.get('with_modules');
+               has_modules = this.stepController.unitModel.editCourseView.model.get('meta_with_modules');
 
                if ( has_modules ) {
                    move_item.show();

@@ -14,6 +14,7 @@ final class CoursePress_Core extends CoursePress_Utility {
 	protected $course_post_type = 'course';
 	protected $unit_post_type = 'unit';
 	protected $step_post_type = 'module';
+	protected $category_type = 'course_category';
 
 	public function __construct() {
 		// Register CP post types
@@ -45,7 +46,7 @@ final class CoursePress_Core extends CoursePress_Utility {
 
 		$category_slug = coursepress_get_setting( 'slugs/category', 'course_category' );
 
-		register_taxonomy( 'course_category',
+		register_taxonomy( $this->category_type,
 			array( $this->course_post_type ),
 			array(
 				'public' => true,

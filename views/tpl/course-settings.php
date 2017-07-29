@@ -42,8 +42,8 @@
             <div class="cp-box cp-course-categories">
                 <h3 class="label" for="course-categories"><?php _e( 'Course categories', 'cp' ); ?></h3>
                 <div class="cp-flex">
-                    <div class="cp-div-flex-2 cp-categories-selector">
-                        <select id="course-categories" multiple="multiple" data-placeholder="<?php _e( 'Pick existing categories or add new one', 'cp' ); ?>" name="course_category">
+                    <div class="cp-categories-selector">
+                        <select id="course-categories" multiple="multiple" data-placeholder="<?php _e( 'Pick existing categories or add new one', 'cp' ); ?>" name="meta_course_category">
                             <?php foreach ( coursepress_get_categories() as $category ) : ?>
                                 <option value="<?php echo $category; ?>" {{_.selected('<?php echo $category; ?>', course_category)}}><?php echo $category; ?></option>
                             <?php endforeach; ?>

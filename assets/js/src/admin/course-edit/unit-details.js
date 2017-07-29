@@ -7,6 +7,7 @@
         return CoursePress.View.extend({
             template_id: 'coursepress-unit-details',
             controller: false,
+            with_modules: false,
             events: {
                 'change [name="meta_use_feature_image"]': 'toggleFeatureImage',
                 'change [name="meta_use_description"]': 'toggleDescription',
@@ -17,8 +18,21 @@
             },
 
             initialize: function( model, controller ) {
-                this.model.set( 'with_modules', controller.editCourse.model.get('with_modules') );
                 this.controller = controller;
+                this.editCourseView = controller.editCourseView;
+                this.with_modules = this.editCourseView.model.get('meta_with_modules');
+                this.model.set( 'with_modules', this.with_modules );
+
+                this.on( 'view_rendered', this.setUpUI, this );
+                this.render();
+            },
+
+            initialize333: function( model, controller ) {
+                this.controller = controller;
+                this.editCourseView = controller.editCourseView;
+                this.with_modules = this.editCourseView.model.get('meta_with_modules');
+                this.model.set( 'with_modules', this.with_modules );
+
                 this.controller.on( 'coursepress:validate-unit', this.validateUnit, this );
                 this.on( 'coursepress:model_updated', this.updateUnitCollection );
                 this.on( 'view_rendered', this.setUpUI, this );
@@ -26,7 +40,7 @@
             },
 
             validateUnit: function(unitView) {
-                var proceed, title, use_feature_img, with_modules, modules,
+                var proceed, title, use_feature_img, modules,
                     errors = {}, error_count, popup, steps, steps_count;
 
                 if ( ! unitView.proceed ) {
@@ -36,7 +50,6 @@
                 proceed = true;
                 title = this.model.get('post_title');
                 use_feature_img = this.model.get('meta_use_feature_image');
-                with_modules = this.controller.editCourse.model.get('with_modules');
 
                 if ( ! title || 'Untitled' === title ) {
                     this.$('[name="post_title"]').parent().addClass('cp-error');
@@ -48,7 +61,7 @@
                     proceed = false;
                 }
 
-                if ( with_modules ) {
+                if ( this.with_modules ) {
                     modules = this.model.get('modules');
 
                     if ( modules ) {
@@ -88,10 +101,9 @@
             },
 
             setUpUI: function() {
-                var self, with_modules;
+                var self;
 
                 self = this;
-                with_modules = win.Course.model.get('with_modules');
                 this.feature_image = new CoursePress.AddImage( this.$('#unit-feature-image') );
                 this.$('select').select2();
 
@@ -105,12 +117,12 @@
 
                 this.container = this.$('#unit-steps-container');
 
-                if ( with_modules ) {
+                if ( this.with_modules ) {
                     this.modules = new CoursePress.UnitModules(this.model, this);
                     this.modules.$el.appendTo(this.container);
                 } else {
-                    this.steps = new CoursePress.Unit_Steps( this.model, this );
-                    this.steps.$el.appendTo(this.container);
+                    //this.steps = new CoursePress.Unit_Steps( this.model, this );
+                    //this.steps.$el.appendTo(this.container);
                 }
             },
 

@@ -31,7 +31,7 @@
   .select2-selection--single,
   .select2-selection--multiple {
     padding: 5px 15px;
-    height: 40px;
+    min-height: 40px;
     border-color: $grey_5;
   }
   .select2-selection--multiple {
@@ -41,6 +41,19 @@
       border-color: $grey_5;
       background-color: $grey_5;
       cursor: pointer;
+
+      span {
+        float: right;
+        border-radius: 50%;
+        padding: 0 5px;
+        margin-left: 8px;
+      }
+    }
+  }
+  .select2-container--below {
+    .select2-search--inline {
+      border: 1px solid $grey_5;
+      background-color: #ffffff;
     }
   }
   .select2-container {

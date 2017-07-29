@@ -223,22 +223,6 @@
                         <td class="column-time">-</td>
                     </tr>
                     <# })#>
-            <# } else { #>
-                <# _.each( steps, function( step ) { #>
-                    <tr>
-                        <td class="column-unit">{{step.post_title}}</td>
-                        <td class="column-step">
-                            <span class="step-icon step-{{step.module_type}}"></span>
-                        </td>
-                        <td class="column-preview">
-                            <label class="cp-checkbox">
-                                <input type="checkbox" class="cp-checkbox-input" {{_.checked(true, step.preview)}} />
-                                <span class="cp-checkbox-icon"></span>
-                            </label>
-                        </td>
-                        <td class="column-time">-</td>
-                    </tr>
-                    <# }) #>
             <# } #>
         </table>
     </div>

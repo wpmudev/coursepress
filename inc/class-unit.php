@@ -455,7 +455,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 			$module['id'] = $pos;
 			$module['slug'] = $slug;
 			$module['url'] = $this->get_unit_url() . trailingslashit( $slug );
-			$module['previous_module'] = $previous_module;
+			//$module['previous_module'] = $previous_module;
 			$modules[ $pos ] = $module;
 			$previous_module = $module;
 		}
@@ -527,8 +527,6 @@ class CoursePress_Unit extends CoursePress_Utility {
 		$steps = array();
 
 		if ( ! empty( $results ) ) {
-			$previousStep = false;
-
 			foreach ( $results as $result ) {
 				$stepClass = coursepress_get_course_step( $result->ID );
 
@@ -537,9 +535,6 @@ class CoursePress_Unit extends CoursePress_Utility {
 						// @todo: Handle form module?
 						continue;
 					}
-
-					$stepClass->__set( 'previousStep', $previousStep );
-					$previousStep = $stepClass;
 					$steps[ $result->ID ] = $stepClass;
 				}
 			}

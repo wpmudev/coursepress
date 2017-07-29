@@ -79,7 +79,6 @@
                 this.menu_order += 1;
                 model.menu_order = this.menu_order;
                 step = new CoursePress.Step(model, this);
-                step.off( 'coursepress:model_updated' );
                 step.on( 'coursepress:model_updated', this.updateModuleSteps, this );
                 step.trigger( 'coursepress:model_updated', step.model, step );
                 step.on( 'coursepress:step_reordered', this.reorderSteps, this );
@@ -168,6 +167,9 @@
                 this.stepsContainer = this.$('#cp-module-steps');
 
                 this.setModuleList();
+
+                // Set the first module as active
+                this.$('[data-order]').first().trigger('click');
             },
 
             addModule: function() {
@@ -191,7 +193,6 @@
                 this.moduleListContainer.html('');
                 this.moduleList = new ModuleList(this.modules);
                 this.moduleList.$el.appendTo(this.moduleListContainer);
-                this.$('[data-order]').last().trigger('click');
             },
 
             setActiveModule: function( ev ) {
@@ -211,7 +212,6 @@
                 this.stepsContainer.html('');
                 this.moduleView = new ModuleSteps(model, this.unitModel, this );
                 this.moduleView.$el.appendTo( this.stepsContainer );
-                this.moduleView.off( 'coursepress:update_module_title' );
                 this.moduleView.on( 'coursepress:update_module_title', this.updateActiveTitle, this );
             },
 

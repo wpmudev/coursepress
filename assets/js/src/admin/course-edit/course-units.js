@@ -8,9 +8,11 @@
 
         UnitCollection = Backbone.Collection.extend({
             url: win._coursepress.ajaxurl + '?action=coursepress_get_course_units&_wpnonce=' + win._coursepress._wpnonce,
+
             initialize: function( courseId ) {
                 this.url += '&course_id=' + courseId;
                 this.on( 'error', this.serverError, this );
+
                 this.fetch();
             },
             parse: function( response ) {
@@ -158,7 +160,7 @@
             initialize: function( model, unitsView ) {
                 var with_modules;
                 this.model = model;
-                with_modules = win.Course.model.get('with_modules');
+                with_modules = unitsView.editCourse.model.get('meta_with_modules');
 
                 if ( ! with_modules || ! model.get('modules') ) {
                     model.set('modules', false);
@@ -231,17 +233,22 @@
                 this.courseId = courseModel.get('ID');
                 this.model = courseModel;
                 this.editCourse = EditCourse;
+                this.editCourse.on( 'coursepress:step-before-change', this.removeHooks, this );
                 this.editCourse.on( 'coursepress:validate-course-units', this.validateUnits, this );
 
                 if ( ! Units ) {
                     Units = new UnitCollection(this.courseId);
                     Units.on( 'add', this.setList, this );
                     Units.on( 'coursepress:unit_collection_loaded', this.maybeSetUnit, this );
-                    this.setUI();
                 } else {
                     Units.on( 'add', this.setList, this );
                 }
+                this.on( 'view_rendered', this.setUI, this );
                 this.render();
+            },
+
+            removeHooks: function() {
+                this.editCourse.off( 'coursepress:validate-course-units' );
             },
 
             validateUnits: function() {

@@ -23,6 +23,7 @@
                 'click .step-icon-bars': 'toggleStepList',
                 'change [name]': 'updateModel'
             },
+
             initialize: function(model) {
                 model = this.filter_model(model);
                 this.model = new CoursePress.Request(model);//new CoursePress.CourseModel(model);
@@ -45,6 +46,7 @@
                 // Load templates
                 this.render();
             },
+
             filter_model: function ( model ) {
                 var dates = ['course_start_date', 'course_end_date', 'enrollment_start_date', 'enrollment_end_date'];
 
@@ -60,6 +62,7 @@
 
                 return model;
             },
+
             render: function() {
                 var step;
 
@@ -91,33 +94,61 @@
 
                 return this;
             },
+
             courseTypeView: function() {
                 var courseType = new CoursePress.CourseType(this.model, this);
 
                 return courseType;
             },
+
             courseSettingsView: function() {
                 var courseSettings = new CoursePress.CourseSettings(this.model, this);
 
                 return courseSettings;
             },
+
             courseCompletionView: function() {
                 var courseCompletion = new CoursePress.CourseCompletion(this.model, this);
 
                 return courseCompletion;
             },
+
             courseUnitsView: function() {
-                this.unitsview = new CoursePress.CourseUnits(this.model, this);
+                var with_modules, course_id;
+
+                with_modules = this.model.get('meta_with_modules');
+                this.unitsContainer = $('#course-units');
+                course_id = this.model.get('ID');
+
+                if ( this.unitsview ) {
+                    this.unitsview.remove();
+                    this.unitList.remove();
+                }
+                if ( ! this.unitCollection ) {
+                    this.unitCollection = new CoursePress.UnitCollection(course_id);
+                }
+                this.unitList = new CoursePress.UnitList({}, this);
+                this.unitCollection.on( 'add', this.unitList.addUnit, this.unitList );
+
+                if ( with_modules ) {
+                    this.unitsview = new CoursePress.UnitsWithModuleList(this.model, this);
+                }
+
+                this.unitsview.$el.appendTo(this.unitsContainer);
             },
+
             courseStudentsView: function() {
                 this.students = new CoursePress.Course_Students( this.model, this );
             },
+
             getSteps: function(step) {
                 this.steps.push($(step).data('step'));
             },
+
             getCurrentStep: function() {
                 return this.$('[data-step="' + this.currentStep + '"]');
             },
+
             setCurrentStep: function(step) {
                 if ( this.currentStep && step !== this.firstStep ) {
                     /**
@@ -133,6 +164,7 @@
                 }
                 this.loadCurrentStep(step);
             },
+
             loadCurrentStep: function(step) {
                 /**
                  * Trigger before a step is changed.
@@ -157,9 +189,11 @@
                 // Let the browser remember this step for a year!
                 CoursePress.Cookie('course_setup_step_' + this.model.get('ID')).set(this.currentStep, 86400 * 7);
             },
+
             getCurrentTab: function() {
                 return this.$('#' + this.currentStep);
             },
+
             stepChanged: function() {
                 // Toggle button
                 this.prevButton[ this.currentStep === this.firstStep ? 'hide' : 'show']();
@@ -172,6 +206,7 @@
                 this.currentTab.siblings().removeClass('tab-active').removeClass('done');
                 this.currentTab.addClass('tab-active');
             },
+
             toggleContent: function(ev) {
                 var sender = $(ev.currentTarget),
                     step = sender.data('step');
@@ -183,6 +218,7 @@
                 this.setCurrentStep(step);
                 this.toggleStepList();
             },
+
             getPreviousStep: function() {
                 var stepIndex = _.indexOf(this.steps, this.currentStep);
 
@@ -191,6 +227,7 @@
                     this.setCurrentStep(this.steps[stepIndex]);
                 }
             },
+
             _getNextStep: function() {
                 var stepIndex, maxStep;
 
@@ -205,9 +242,11 @@
 
                 return false;
             },
+
             saveCourse: function(ev) {
               this.getNextStep(ev);
             },
+
             getNextStep: function(ev) {
                 var nextStep;
 

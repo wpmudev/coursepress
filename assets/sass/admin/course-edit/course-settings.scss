@@ -5,11 +5,26 @@
     }
   }
   .cp-course-categories {
+    .cp-categories-selector {
+      width: 100%;
+      padding-right: 15px;
+      select {
+        display: block;
+        width: 100%;
+      }
+    }
+    .cp-categories-button {
+      width: 25%;
+      text-align: right;
+    }
     .cp-div-flex-2 {
       padding-right: 0;
     }
     .cp-div-flex {
       text-align: right;
+    }
+    #cp-create-cat {
+      display: inline-block;
     }
   }
   #cp-instructors-box,

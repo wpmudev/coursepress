@@ -170,6 +170,8 @@ class CoursePress_Course extends CoursePress_Utility {
 	}
 
 	function update_setting( $key, $value = array() ) {
+		global $CoursePress_Core;
+
 		$course_id = $this->__get( 'ID' );
 		$settings = $this->get_settings();
 
@@ -189,6 +191,17 @@ class CoursePress_Course extends CoursePress_Utility {
 			}
 		} else {
 			update_post_meta( $course_id, $key, $value );
+		}
+
+		// Set post thumbnail ID if not empty
+		if ( ! empty( $settings['listing_image_thumbnail_id'] ) ) {
+			set_post_thumbnail($course_id, $settings['listing_image_thumbnail_id']);
+		}
+
+		if ( ! empty( $settings['course_category'] ) ) {
+			$categories = $settings['course_category'];
+			$category_type = $CoursePress_Core->__get( 'category_type' );
+			wp_set_object_terms( $course_id, $categories, $category_type );
 		}
 
 		/**
