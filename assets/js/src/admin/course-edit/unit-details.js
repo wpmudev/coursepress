@@ -161,7 +161,7 @@
                 CoursePress.Events.trigger( 'coursepress:change_unit_title', value, this.model.cid );
             },
 
-            updateUnitCollection: function( unitModel ) {
+            updateUnitCollection: function() {
             }
         });
     });

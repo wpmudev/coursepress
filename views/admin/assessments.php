@@ -197,7 +197,7 @@
 				<?php endforeach; ?>
 			<?php else : ?>
 				<tr class="odd empty-assessments">
-					<td><?php _e( 'No assessments found.', 'cp' ); ?></td>
+					<td><?php _e( 'No assessable students found.', 'cp' ); ?></td>
 				</tr>
 			<?php endif; ?>
 			</tbody>

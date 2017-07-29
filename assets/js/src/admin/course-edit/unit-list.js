@@ -119,7 +119,7 @@
             getUnitModel: function(cid) {
                 return this.unitModels[cid];
             },
-            updateUnits: function() {
+            updateUnits: function( UnitModel ) {
                 UnitModel.set('action', 'update_units');
                 UnitModel.set( 'course_id', this.courseModel.model.get('ID'));
                 UnitModel.set( 'units', this.unitModels);

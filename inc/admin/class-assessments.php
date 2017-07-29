@@ -15,15 +15,6 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 	protected $slug = 'coursepress_assessments';
 
 	/**
-	 * CoursePress_Admin_Assesments constructor.
-	 */
-	public function __construct() {
-
-		// Initialize parent class.
-		parent::__construct();
-	}
-
-	/**
 	 * Get students listing page content and set pagination.
 	 *
 	 * @uses get_current_screen().
@@ -81,7 +72,7 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 		}
 
 		$assessments = new CoursePress_Data_Assessments( $course_id );
-
+error_log(print_r($assessments,true));
 		return $assessments->get_assessments( $unit_id, $graded, $count );
 	}
 

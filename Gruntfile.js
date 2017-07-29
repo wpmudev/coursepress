@@ -82,7 +82,8 @@ module.exports = function(grunt) {
 			'assets/js/coursepress_instructors.js': [
 				// Add JS that will be loaded at Instructors page
 				// assets/js/src/admin/instructors
-				'assets/js/src/common/cp-search-form.js'
+				'assets/js/src/common/cp-search-form.js',
+				'assets/js/src/admin/instructors/instructors.js'
 			],
 			'assets/js/coursepress_assessments.js': [
 				// Add JS that will be loaded at Assessments page
