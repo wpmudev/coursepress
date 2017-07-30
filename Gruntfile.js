@@ -68,8 +68,12 @@ module.exports = function(grunt) {
                 'assets/js/src/admin/course-edit/step-download.js',
                 'assets/js/src/admin/course-edit/unit-steps.js',
                 'assets/js/src/admin/course-edit/step.js',
+                'assets/js/src/admin/course-edit/unit-help.js',
                 'assets/js/src/admin/course-edit/unit-modules.js',
                 'assets/js/src/admin/course-edit/unit-details.js',
+                'assets/js/src/admin/course-edit/unit-list.js',
+                'assets/js/src/admin/course-edit/unit-collection.js',
+                'assets/js/src/admin/course-edit/units-with-module-list.js',
                 'assets/js/src/admin/course-edit/course-units.js',
                 'assets/js/src/admin/course-edit/course-students.js',
                 'assets/js/src/admin/course-edit/course-setup.js'
@@ -107,7 +111,7 @@ module.exports = function(grunt) {
 				'assets/js/src/admin/notifications/notification-emails.js',
 				'assets/js/src/admin/notifications/notification-alerts.js',
 				'assets/js/src/admin/notifications/notification-alerts-form.js',
-				'assets/js/src/admin/notifications/notification.js',
+				'assets/js/src/admin/notifications/notification.js'
 			],
 			'assets/js/coursepress_settings.js': [
 				// Add JS that will be loaded at Settings page
