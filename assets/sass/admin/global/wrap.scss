@@ -28,7 +28,6 @@
   .course-content {
     background-color: #ffffff;
     border: 1px solid $grey_5;
-    color: $dark_2;
     @include radius(6px);
   }
   .cp-box-heading {
@@ -38,7 +37,9 @@
     text-transform: uppercase;
   }
   .box-heading-title {
-    color: $dark_2;
+    font-weight: 700;
+    font-size: 1.2em;
+    margin: 15px 0;
   }
   .course-content-tab {
     padding: 0 25px;
@@ -84,6 +85,12 @@
       .description {
         margin: 5px 0;
         display: block;
+      }
+    }
+    .cp-toggle-box {
+      margin-bottom: 15px;
+      .label {
+        display: inline-block;
       }
     }
   }
@@ -139,6 +146,7 @@
       display: block;
       text-align: left;
       padding: 5px 15px;
+      cursor: pointer;
       @include radius(0);
 
       &:first-of-type {
@@ -146,6 +154,9 @@
       }
       &:last-of-type {
         margin-bottom: 10px;
+      }
+      &.active {
+        @include radius(0);
       }
     }
   }
@@ -186,6 +197,16 @@
       border: 0;
 
       margin: 0;
+    }
+  }
+  .cp-box-grey {
+    margin: 15px 0;
+    padding: 15px;
+    background-color: $grey_6;
+    display: inline-block;
+    @include radius(4px);
+    &.inactive {
+      display: none;
     }
   }
 

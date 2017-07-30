@@ -12,9 +12,8 @@
             events: {
                 'click .cp-close': 'remove',
                 'click .cp-send-invite': 'sendInvite',
-                'click .cp-assign-user': 'assignUser',
+                'click .cp-assign-user': 'assignUser'
             },
-
             initialize: function( options ) {
 
 	            // Set required variables.
@@ -71,7 +70,7 @@
                                 _wpnonce: win._coursepress._wpnonce,
                                 action: 'coursepress_get_users',
                                 type: type,
-                                course_id: course_id,
+                                course_id: course_id
                             };
                         },
                         processResults: function (data) {
@@ -82,7 +81,7 @@
                             };
                         },
                         cache: true
-                    },
+                    }
                 });
             },
 
@@ -139,6 +138,7 @@
             assignUser: function () {
 
                 var user_id = this.$('#cp-course-' + this.type).val();
+
                 if ( '' !== user_id ) {
                     this.request.set( {
                         'action': 'assign_to_course',
@@ -193,7 +193,7 @@
                 window.setTimeout(function() {
                     selector.html('').addClass('inactive');
                 }, 2500);
-            },
+            }
         });
     });
 })();

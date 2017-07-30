@@ -11,16 +11,21 @@ class CoursePress_Unit extends CoursePress_Utility {
 	 */
 	protected $course;
 
+	var $previous_link = '';
+	var $next_link = '';
+
 	public function __construct( $unit, $course = false ) {
 		if ( ! $unit instanceof WP_Post ) {
 			$unit = get_post( $unit );
 		}
 
-		if ( ! $unit instanceof WP_Post )
+		if ( ! $unit instanceof WP_Post ) {
 			return $this->wp_error();
+		}
 
-		if ( $course instanceof CoursePress_Course )
-			$this->__set( 'course', $course );
+		//if ( $course instanceof CoursePress_Course ) {
+		//	$this->__set( 'course', $course );
+		//}
 
 		$this->__set( 'ID', $unit->ID );
 		$this->__set( 'post_title', $unit->post_title );
@@ -39,25 +44,31 @@ class CoursePress_Unit extends CoursePress_Utility {
 
 	function setupMeta() {
 		$id = $this->__get( 'ID' );
-
-		$keys = array(
-			'unit_availability',
-			'unit_date_availability',
-			'unit_delay_days',
-			'force_current_unit_completion',
-			'force_current_unit_successful_completion',
-			'visible',
-			'preview',
-			'unit_feature_image',
-		);
+        $defaults = array(
+	        'unit_availability' => 'instant',
+	        'unit_date_availability' => '',
+	        'unit_delay_days' => 0,
+	        'force_current_unit_completion' => false,
+	        'force_current_unit_successful_completion' => false,
+	        'visible' => true,
+	        'preview' => true,
+	        'unit_feature_image' => '',
+	        'use_feature_image' => '',
+	        'use_description' => false
+        );
 
 		$date_format = coursepress_get_option( 'date_format' );
 		$time_now = current_time( 'timestamp' );
 
-		foreach ( $keys as $key ) {
+		foreach ( $defaults as $key => $default_value ) {
 			$value = get_post_meta( $id, $key, true );
+			$value = maybe_unserialize( $value );
 
-			if ( 'unit_date_availability' == $key ) {
+			if ( ! $value ) {
+			    $value = $default_value;
+            }
+
+			if ( 'unit_date_availability' == $key && ! is_array( $value ) ) {
 				$timestamp = strtotime( $value, $time_now );
 				$value = date_i18n( $date_format, $timestamp );
 				$this->__set( 'unit_availability_date_timestamp', $timestamp );
@@ -68,11 +79,53 @@ class CoursePress_Unit extends CoursePress_Utility {
 				$value = true;
 
 			$this->__set( $key, $value );
+			$this->__set( 'meta_' . $key, $value );
 		}
 
-		$this->__set( 'use_description', true );
-		$this->__set( 'use_feature_image', true );
 		$this->__set( 'preview', true );
+	}
+
+	function get_settings() {
+		$defaults = array(
+			'unit_availability' => 'instant',
+			'unit_date_availability' => '',
+			'unit_delay_days' => 0,
+			'force_current_unit_completion' => false,
+			'force_current_unit_successful_completion' => false,
+			'visible' => true,
+			'preview' => true,
+			'unit_feature_image' => '',
+			'use_feature_image' => '',
+			'use_description' => false
+		);
+
+		$settings = array();
+
+		foreach ( $defaults as $key => $value ) {
+			$value = $this->__get( $key );
+			$settings[ $key ] = $value;
+		}
+
+		return $settings;
+	}
+
+	function update_settings( $key, $value ) {
+		$settings = $this->get_settings();
+
+		if ( true === $key ) {
+			$settings = $value;
+		} else {
+			$settings[ $key ] = $value;
+		}
+
+		$unit_id = $this->__get( 'ID' );
+
+		foreach ( $settings as $key => $value ) {
+			update_post_meta( $unit_id, $key, $value );
+			$this->__set( $key, $value );
+		}
+
+		return $settings;
 	}
 
 	/**
@@ -249,12 +302,132 @@ class CoursePress_Unit extends CoursePress_Utility {
 		return null;
 	}
 
+	function get_permalink() {
+		return $this->get_unit_url();
+	}
+
+	function get_previous_unit() {
+		$previous = $this->__get( 'previousUnit' );
+
+		if ( ! $previous ) {
+			$course = $this->get_course();
+			$units = $course->get_units();
+
+			if ( $units ) {
+				$prevs = array();
+
+				foreach ( $units as $unit ) {
+					$prevs[] = $unit;
+
+					if ( $this->__get( 'ID' ) == $unit->__get( 'ID' ) ) {
+						break;
+					}
+				}
+				array_pop( $prevs );
+				$previous = array_pop( $prevs );
+			}
+		} else {
+			return $previous;
+		}
+
+		if ( $previous && $previous->__get( 'ID' ) != $this->__get( 'ID' ) ) {
+			$this->__set( 'previousUnit', $previous );
+			return $previous;
+		}
+
+		return false;
+	}
+
+	function get_next_unit() {
+		$next = $this->__get( 'nextUnit' );
+
+		if ( ! $next ) {
+			$course = $this->get_course();
+			$units = $course->get_units();
+			$found = false;
+
+			if ( $units ) {
+				foreach ( $units as $unit ) {
+					if ( $found ) {
+						$next = $unit;
+						break;
+					}
+
+					if ( $this->__get( 'ID' ) == $unit->__get( 'ID' ) ) {
+						$found = true;
+					}
+				}
+			}
+		} else {
+			return $next;
+		}
+
+		if ( $next && $next->__get( 'ID' ) != $this->__get( 'ID' ) ) {
+			$this->__set( 'nextUnit', $next );
+
+			return $next;
+		}
+
+		return false;
+	}
+
+	function get_previous_module( $module_id ) {
+		$modules = $this->get_modules();
+		$prevs = array();
+		$prev = false;
+
+		if ( $modules ) {
+			foreach ( $modules as $module ) {
+				$prevs[] = $module;
+
+				if ( $module['id'] == $module_id ) {
+					break;
+				}
+			}
+			array_pop( $prevs );
+			$prev = array_pop( $prevs );
+		}
+
+		if ( $prev && $prev['id'] != $module_id ) {
+			return $prev;
+		}
+		return false;
+	}
+
+	function get_next_module( $module_id ) {
+		$modules = $this->get_modules();
+		$next = false;
+
+		if ( $modules ) {
+			$found = false;
+
+			foreach ( $modules as $module ) {
+
+				if ( $found ) {
+					$next = $module;
+					break;
+				}
+
+				if ( $module['id'] == $module_id ) {
+					$found = true;
+				}
+			}
+		}
+
+		if ( $next && $next['id'] != $module_id ) {
+			return $next;
+		}
+
+		return false;
+	}
+
 	function get_modules() {
-		if ( $this->__get( 'unit_modules_list' ) )
+		if ( $this->__get( 'unit_modules_list' ) ) {
 			return $this->__get( 'unit_modules_list' );
+		}
 
 		$id = $this->__get( 'ID' );
-		$modules = get_post_meta( $id, 'course_modules' );
+		$modules = get_post_meta( $id, 'course_modules', true );
 
 		if ( empty( $modules ) ) {
 			$modules = array();
@@ -282,7 +455,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 			$module['id'] = $pos;
 			$module['slug'] = $slug;
 			$module['url'] = $this->get_unit_url() . trailingslashit( $slug );
-			$module['previous_module'] = $previous_module;
+			//$module['previous_module'] = $previous_module;
 			$modules[ $pos ] = $module;
 			$previous_module = $module;
 		}
@@ -331,8 +504,9 @@ class CoursePress_Unit extends CoursePress_Utility {
 		$key = implode( '-', array( $published, $with_module, $module_id ) );
 		$key = 'unit_steps_list' . $key;
 
-		if ( $this->__get( $key ) )
+		if ( $this->__get( $key ) ) {
 			return $this->__get( $key );
+		}
 
 		$args = array(
 			'post_type' => $CoursePress_Core->step_post_type,
@@ -340,28 +514,27 @@ class CoursePress_Unit extends CoursePress_Utility {
 			'posts_per_page' => -1,
 			'post_parent' => $this->__get( 'ID' ),
 			'suppress_filter' => true,
-			'orderby' => 'meta_value_num',
+			'orderby' => 'menu_order',
 			'order' => 'ASC',
-			'meta_key' => 'module_order',
 		);
 
 		if ( $with_module ) {
 			$args['meta_key'] = 'module_page';
-			$args['meta_value'] = $module_id;
+			$args['meta_value_num'] = intval($module_id);
 		}
 
 		$results = get_posts( $args );
 		$steps = array();
 
 		if ( ! empty( $results ) ) {
-
-			$previousStep = false;
 			foreach ( $results as $result ) {
-				$stepClass = $this->get_step_by_id( $result->ID );
+				$stepClass = coursepress_get_course_step( $result->ID );
 
-				if ( $stepClass ) {
-					$stepClass->__set( 'previousStep', $previousStep );
-					$previousStep = $stepClass;
+				if ( ! is_wp_error( $stepClass ) && is_object( $stepClass ) ) {
+					if ( 'input-form' === $stepClass->__get( 'module_type' ) ) {
+						// @todo: Handle form module?
+						continue;
+					}
 					$steps[ $result->ID ] = $stepClass;
 				}
 			}
@@ -377,8 +550,9 @@ class CoursePress_Unit extends CoursePress_Utility {
 
 		if ( $modules ) {
 			foreach ( $modules as $module ) {
-				if ( ! empty( $module['slug'] ) && $slug == $module['slug'] )
+				if ( ! empty( $module['slug'] ) && $slug == $module['slug'] ) {
 					return $module;
+				}
 			}
 		}
 
@@ -388,44 +562,21 @@ class CoursePress_Unit extends CoursePress_Utility {
 	function get_module_by_id( $module_id ) {
 		$modules = $this->get_modules();
 
-		if ( isset( $modules[ $module_id ] ) )
+		if ( isset( $modules[ $module_id ] ) ) {
 			return $modules[ $module_id ];
+		}
 
 		return null;
 	}
 
 	function get_step_by_id( $step_id ) {
-		$step_type = get_post_meta( $step_id, 'module_type', true );
+		$step_class = coursepress_get_course_step( $step_id );
 
-		$class = array(
-			'text' => 'CoursePress_Step_Text',
-			'text_module' => 'CoursePress_Step_Text', // Legacy type
-			'image' => 'CoursePress_Step_Image',
-			'video' => 'CoursePress_Step_Video',
-			'discussion' => 'CoursePress_Step_Discussion',
-			'download' => 'CoursePress_Step_FileDownload',
-			'zipped' => 'CoursePress_Step_Zip',
-			'input-upload' => 'CoursePress_Step_FileUpload',
-			'input-quiz' => 'CoursePress_Step_Quiz',
-			'input-checkbox' => 'CoursePress_Step_Checkbox', // Legacy class
-			'input-radio' => 'CoursePress_Step_Radio', // Legacy class
-			'radio_input_module' => 'CoursePress_Step_Radio', // Legacy type
-			'input-select' => 'CoursePress_Step_Select', // Legacy class
-			'input-textarea' => 'CoursePress_Step_Written',
-			'input-text' => 'CoursePress_Step_Written',
-			'text_input_module' => 'CoursePress_Step_Written', // Legacy type
-			'input-form' => 'CoursePress_Step_Form', // Legacy class
-		);
-
-		if ( isset( $class[ $step_type ] ) ) {
-			$stepClass = $class[ $step_type ];
-			$stepClass = new $stepClass( $step_id );
-			$stepClass->__set( 'unit', $this );
-
-			return $stepClass;
+		if ( $step_class ) {
+			$step_class->__set( 'unit', $this );
 		}
 
-		return null;
+		return $step_class;
 	}
 
 	function get_unit_structure( $items_only = true, $show_details = false ) {
@@ -518,7 +669,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 
 		$attr = array( 'class' => implode( ' ', $unit_class ) );
 
-		//if ( ! $unit_locked ) {
+		if ( ! $unit_locked ) {
 			if ( $with_modules ) {
 				$modules = $this->get_modules_with_steps( ! $has_access );
 
@@ -534,12 +685,13 @@ class CoursePress_Unit extends CoursePress_Utility {
 				$steps = $this->get_steps( ! $has_access );
 				$unit_structure .= $this->get_steps_structure( $steps );
 			}
-		//}
+		}
 
-		if ( $items_only )
+		if ( $items_only ) {
 			$unit_structure = $this->create_html( 'div', $attr, $unit_structure );
-		else
+		} else {
 			$unit_structure = $this->create_html( 'div', $attr, $unit_title . $unit_structure );
+		}
 
 		return $unit_structure;
 	}
@@ -589,17 +741,17 @@ class CoursePress_Unit extends CoursePress_Utility {
 
 		$module_title = $this->create_html( 'div', array( 'class' => 'module-title' ), $module_title . $module_suffix );
 
-		//if ( ! $module_locked
-		//     && ! empty( $module['steps'] ) ) {
+		if ( ! $module_locked && ! empty( $module['steps'] ) ) {
 			$module_structure .= $this->get_steps_structure( $module['steps'] );
-		//}
+		}
 
 		$attr = array( 'class' => implode( ' ', $module_class ) );
 
-		if ( $items_only )
+		if ( $items_only ) {
 			$module_structure = $this->create_html( 'div', $attr, $module_structure );
-		else
+		} else {
 			$module_structure = $this->create_html( 'div', $attr, $module_title . $module_structure );
+		}
 
 		return $module_structure;
 	}
@@ -621,8 +773,9 @@ class CoursePress_Unit extends CoursePress_Utility {
 			$step_suffix = '';
 			$step_class = array( 'course-step' );
 
-			if ( ! $step->is_show_title() )
+			if ( ! $step->is_show_title() ) {
 				continue;
+			}
 
 			if ( $has_access ) {
 				$attr = array( 'href' => $step_url );

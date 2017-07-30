@@ -122,7 +122,7 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 		// Hook into `coursepress_remove_facilitator`
 		add_action( 'coursepress_remove_facilitator', array( $this, 'delete_facilitator_meta' ), 10, 2 );
 
-		// Map courspress caps
+		// Map coursepress caps
 		add_filter( 'user_has_cap', array( $this, 'map_coursepress_user_cap' ), 99, 4 );
 
 		// Delete student data whenever a user is deleted
@@ -245,7 +245,7 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 			$this->__set( 'facilitator_caps', $cp_caps );
 		}
 
-		return $this->__get( 'faclitator_caps' );
+		return $this->__get( 'facilitator_caps' );
 	}
 
 	function map_coursepress_user_cap( $caps, $cap, $args, $user ) {

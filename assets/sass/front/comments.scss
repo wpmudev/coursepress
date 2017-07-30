@@ -1,0 +1,18 @@
+.coursepress-comments {
+  .comment-list {
+    img {
+      position: relative;
+      margin: 0;
+      left: 0;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    li li {
+      margin-left: 15px;
+      left: 0;
+    }
+  }
+  .comment-notification {
+    float: left;
+  }
+}

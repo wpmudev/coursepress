@@ -30,6 +30,8 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 		'module' => 'single-unit.php',
 		'step' => 'single-unit.php',
 		'completion-status' => 'page-course-completion.php',
+		'student-login' => 'page-student-login-form.php',
+		'step-comment' => 'content-discussion.php',
 	);
 
 	/**
@@ -59,17 +61,18 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 		if ( ! empty( $this->templates[ $type ] ) ) {
 			$template = locate_template( $this->templates[ $type ], false, false );
 
-			if ( $template )
+			if ( $template ) {
 				return $template;
+			}
 		}
 
 		return false;
 	}
 
-	private function get_post_id_by_slug( $slug ) {
+	private function get_post_id_by_slug( $slug, $post_type ) {
 		global $wpdb;
 
-		$sql = $wpdb->prepare( "SELECT ID FROM `{$wpdb->posts}` WHERE `post_name`=%s", $slug );
+		$sql = $wpdb->prepare( "SELECT ID FROM `{$wpdb->posts}` WHERE `post_name`=%s AND `post_type`=%s", $slug, $post_type );
 
 		$post_id = $wpdb->get_var( $sql );
 
@@ -86,22 +89,15 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 
 	private function get_template( $type ) {
 		global $CoursePress, $CoursePress_Instructor, $wp_query, $CoursePress_Course, $CoursePress_Unit,
-			$_course_module_id, $_course_module, $_course_step;
+			$_course_module_id, $_course_module, $_course_step, $_coursepress_type_now;
 
 		$course = false;
 
-		if ( ! empty( $this->__get( 'course' )
-		              || 'single-course' == $type ) ) {
-			//$course_id = $this->get_post_id_by_slug( $this->__get( 'course' ) );
+		if ( ! empty( $this->__get( 'course' ) || 'single-course' == $type ) ) {
 			$CoursePress_Course = $course = coursepress_get_course();
-
-
-			//echo get_the_ID();
-			//$CoursePress_Course = coursepress_get_course( get_the_ID() );
-
 		}
 
-		$template = $CoursePress->plugin_path . '/templates/';
+		$template = $CoursePress->plugin_path . 'templates/';
 		$template .= $this->templates[ $type ];
 
 		if ( 'instructor' == $type ) {
@@ -111,23 +107,26 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 			if ( $user ) {
 				$CoursePress_Instructor = new CoursePress_Instructor( $user );
 			}
-		} elseif ( in_array( $type, array( 'unit', 'module', 'step' ) ) ) {
+		} elseif ( in_array( $type, array( 'unit', 'module', 'step', 'step-comment' ) ) ) {
 			$this->add_breadcrumb( $CoursePress_Course->get_the_title(), $CoursePress_Course->get_permalink() );
+			$this->add_breadcrumb( __( 'Units', 'cp' ), $CoursePress_Course->get_units_url() );
 
 			$unit = $this->__get( 'unit' );
-			$unit_id = $this->get_post_id_by_slug( $unit );
+			$unit_id = $this->get_post_id_by_slug( $unit, 'unit' );
 
 			if ( $unit_id > 0 ) {
 				$CoursePress_Unit = new CoursePress_Unit( $unit_id );
 				$this->add_breadcrumb( $CoursePress_Unit->get_the_title(), $CoursePress_Unit->get_unit_url() );
 				$_course_module_id = 1; // always start module with 1
+				$_coursepress_type_now = 'unit';
 
 				$module = $this->__get( 'module' );
 
 				if ( ! empty( $module ) ) {
-					$module = $CoursePress_Unit->get_module_by_slug( $module );
+					$module = $CoursePress_Unit->get_module_by_slug( $module, 'module' );
 
 					if ( ! empty( $module ) ) {
+						$_coursepress_type_now = 'module';
 						$_course_module_id = $module['id'];
 						$_course_module = $module;
 						$this->add_breadcrumb( $module['title'], $module['url'] );
@@ -139,9 +138,10 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 				$step = $this->__get( 'step' );
 
 				if ( ! empty( $step ) ) {
-					$step_id = $this->get_post_id_by_slug( $step );
+					$step_id = $this->get_post_id_by_slug( $step, 'module' );
 
 					if ( $step_id > 0 ) {
+						$_coursepress_type_now = 'step';
 						$_course_step = $stepClass = $CoursePress_Unit->get_step_by_id( $step_id );
 
 						if ( ! is_wp_error( $stepClass ) ) {
@@ -149,6 +149,20 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 						}
 					}
 				}
+			}
+		} elseif ( 'completion' == $type ) {
+			// Validate here
+			$user = coursepress_get_user();
+			$completion_url = $user->get_course_completion_url( $CoursePress_Course->ID );
+
+			wp_redirect( $completion_url );
+			exit;
+		} elseif ( 'unit-archive' == $type ) {
+			// Check if user is logged in
+			if ( ! is_user_logged_in() ) {
+				// Redirect back to course overview
+				wp_safe_redirect( $CoursePress_Course->get_permalink() );
+				exit;
 			}
 		}
 
@@ -158,7 +172,6 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 	function load_coursepress_page() {
 		$type = $this->__get( 'type' );
 		$template = $this->has_template( $type );
-
 
 		if ( ! $template ) {
 			// If the theme did not override the template, load CP template
@@ -172,8 +185,9 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 
 	private function the_post( $post, $args = array() ) {
 
-		foreach ( $args as $key => $value )
+		foreach ( $args as $key => $value ) {
 			$post->{$key} = $value;
+		}
 
 		$post->comment_status = 'closed';
 		$post->post_status = 'publish';
@@ -196,10 +210,15 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 
 		} elseif ( 'student-settings' == $type ) {
 			$post = $this->the_post( $post, array(
-				'post_title' => __( 'My Settings', 'cp' ),
+				'post_title' => __( 'My Profile', 'cp' ),
 				'post_type' => 'page',
 			) );
 
+		} elseif ( 'student-login' == $type ) {
+			$post = $this->the_post( $post, array(
+				'post_title' => __( 'Student Login', 'cp' ),
+				'post_type' => 'page',
+			) );
 		}
 
 		array_unshift( $posts, $post );

@@ -14,7 +14,11 @@
                 'click #cp-instructor-selector': 'instructorSelection',
                 'click #cp-facilitator-selector': 'facilitatorSelection',
                 'click ul.cp-tagged-list-removable li': 'removeUser',
+                'change [name]': 'updateModel',
+                'focus [name]': 'removeErrorMarker',
+                'change [name="meta_enrollment_type"]': 'toggleBoxes'
             },
+
             initialize: function(model, EditCourse) {
                 this.model = model;
                 this.request = new CoursePress.Request();
@@ -22,6 +26,7 @@
                 this.course_id = win._coursepress.course.ID;
 
                 EditCourse.on('coursepress:validate-course-settings', this.validate, this);
+                EditCourse.on( 'coursepress:before-next-step-course-settings', this.updateCourseModel, this );
 
                 this.on( 'view_rendered', this.setUpUI, this );
 
@@ -30,6 +35,7 @@
 
                 this.render();
             },
+
             validate: function() {
                 var summary, content, proceed;
 
@@ -51,10 +57,17 @@
                     this.courseEditor.goToNext = false;
                     return false;
                 }
+            },
 
+            updateCourseModel: function() {
                 this.courseEditor.updateCourse();
             },
+
             setUpUI: function() {
+                var self;
+
+                self = this;
+
                 // set feature image
                 this.listing_image = new CoursePress.AddImage( this.$('#listing_image') );
                 this.listing_video = new CoursePress.AddVideo( this.$('#listing_video') );
@@ -62,10 +75,35 @@
                 // set category
                 var catSelect = this.$('#course-categories');
                 catSelect.select2({
-                    tags: true,
+                    tags: true
                 });
 
-                this.$('[name="meta_enrollment_type"]').select2();
+                this.$('select').select2();
+                this.$('select').on( 'change', function(ev) {
+                    self.updateModel(ev);
+                });
+
+                _.delay(function() {
+                    self.visualEditor({
+                        content: self.model.get( 'post_excerpt' ),
+                        container: self.$('.cp-course-overview'),
+                        callback: function( content ) {
+                            self.model.set( 'post_excerpt', content );
+                        }
+                    });
+
+                }, 100 );
+
+
+                _.delay(function() {
+                    self.visualEditor({
+                        content: self.model.get('post_content'),
+                        container: self.$('.cp-course-description'),
+                        callback: function( content ) {
+                            self.model.set( 'post_content', content );
+                        }
+                    });
+                }, 500 );
             },
 
             /**
@@ -159,6 +197,26 @@
 
                 if ( typeof this.request.target !== 'undefined' ) {
                     this.request.target.remove();
+                }
+            },
+
+            updateModel: function(ev) {
+                this.courseEditor.updateModel(ev);
+            },
+
+            toggleBoxes: function( ev ) {
+                var sender, type, boxes;
+
+                sender = this.$(ev.currentTarget);
+                type = sender.val();
+                boxes = this.$('.cp-boxes');
+
+                boxes.slideUp();
+
+                if ( 'passcode' === type ) {
+                    this.$('.cp-passcode-box').slideDown();
+                } else if ( 'prerequisite' === type ) {
+                    this.$('.cp-requisite-box' ).slideDown();
                 }
             }
         });

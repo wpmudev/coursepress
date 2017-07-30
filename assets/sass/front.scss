@@ -1,6 +1,8 @@
 @import "common/mixin.scss";
 @import "front/global.scss";
 
+@import "front/dropdown";
+@import "front/comments";
 @import "front/breadcrumb.scss";
 @import "front/course-structure.scss";
 @import "front/instructor-bio.scss";
@@ -10,3 +12,4 @@
 @import "front/submenu.scss";
 @import "front/course-overview.scss";
 @import "front/single-course.scss";
+@import "front/workbook";

@@ -27,7 +27,7 @@
             <div class="cp-alert cp-alert-info">
                 <?php echo $completion_pages['tokens']; ?>
             </div>
-            <?php coursepress_visual_editor( '{{pre_completion_content}}', 'page-completion-content', array( 'media_buttons' => false, 'name' => 'pre_completion_content' ) ); ?>
+            <div class="cp-completion-content"></div>
         </div>
     </div>
 

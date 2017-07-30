@@ -18,13 +18,15 @@ function coursepress_get_unit( $unit_id = 0 ) {
 
 	if ( empty( $unit_id ) ) {
 		// Assume current unit
-		if ( $CoursePress_Unit instanceof CoursePress_Unit )
+		if ( $CoursePress_Unit instanceof CoursePress_Unit ) {
 			return $CoursePress_Unit;
+		}
 	} else {
 		$unit = new CoursePress_Unit( $unit_id );
 
-		if ( is_wp_error( $unit ) )
+		if ( is_wp_error( $unit ) ) {
 			return null;
+		}
 
 		return $unit;
 	}
@@ -82,13 +84,15 @@ function coursepress_get_unit_structure( $course_id = 0, $unit_id = 0, $items_on
 
 	$unit = coursepress_get_unit( $unit_id );
 
-	if ( is_wp_error( $unit ) )
+	if ( is_wp_error( $unit ) ) {
 		return null;
+	}
 
 	$student = coursepress_get_user();
 
-	if ( is_wp_error( $student ) )
+	if ( is_wp_error( $student ) ) {
 		return null;
+	}
 
 	return $unit->get_unit_structure( $items_only, $show_details );
 }
@@ -144,4 +148,63 @@ function coursepress_delete_unit( $unit_id = 0 ) {
     do_action( 'coursepress_course_deleted_unit', $unit_id );
 
     return true;
+}
+
+function coursepress_create_unit( $unit, $unit_meta = array() ) {
+	if ( empty( $unit['ID'] ) ) {
+		$unit_id = wp_insert_post( $unit );
+	} else {
+		$unit_id = wp_update_post( $unit );
+	}
+
+	$unit_object = coursepress_get_unit( $unit_id );
+	$unit_object->update_settings( true, $unit_meta );
+
+	/**
+	 * Fired whenever a new unit is created or updated.
+	 *
+	 * @param (int) $unit_id
+	 * @param (array) $unit_meta
+	 */
+	do_action( 'coursepress_unit_created', $unit_id, $unit_meta );
+
+	return $unit_id;
+}
+
+function coursepress_create_step( $step_array, $step_meta = array() ) {
+	if ( empty( $step_array['ID'] ) ) {
+		$step_id = wp_insert_post( $step_array );
+	} else {
+		$step_id = wp_update_post( $step_array );
+	}
+
+	$step = coursepress_get_course_step( $step_id );
+error_log(print_r($step,true));
+error_log(print_r($step_meta,true));
+	if ( is_wp_error( $step ) || ! $step ) {
+		return false;
+	}
+
+	$step->update_settings( true, $step_meta );
+
+	/**
+	 * Fired whenever a step is created
+	 *
+	 * @param (int) $step_id
+	 * @param (int) $step_meta
+	 */
+	do_action( 'coursepress_step_created', $step_id, $step_meta );
+
+	return $step_id;
+}
+
+function coursepress_delete_step( $step_id = 0 ) {
+	if ( $step_id > 0 ) {
+		wp_delete_post( $step_id, true );
+
+		/**
+		 * Fired whenever a step is deleted
+		 */
+		do_action( 'coursepress_step_deleted', $step_id );
+	}
 }

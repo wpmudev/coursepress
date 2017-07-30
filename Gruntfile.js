@@ -50,12 +50,29 @@ module.exports = function(grunt) {
 			'assets/js/coursepress_course.js': [
 				// ADd JS that will be loaded at course edit page
 				// assets/js/src/admin/course-edit/...
-				'assets/js/src/admin/course-edit/course-model.js',
-				'assets/js/src/admin/course-edit/course-type.js',
-				'assets/js/src/admin/course-edit/course-settings.js',
-				'assets/js/src/admin/course-edit/course-settings-modal.js',
-				'assets/js/src/admin/course-edit/course-units.js',
-				'assets/js/src/admin/course-edit/course-setup.js'
+                'assets/js/src/admin/course-edit/course-model.js',
+                'assets/js/src/admin/course-edit/sample-course.js',
+                'assets/js/src/admin/course-edit/course-type.js',
+                'assets/js/src/admin/course-edit/course-settings.js',
+                'assets/js/src/admin/course-edit/course-settings-modal.js',
+                'assets/js/src/admin/course-edit/course-completion.js',
+                'assets/js/src/admin/course-edit/step-text.js',
+                'assets/js/src/admin/course-edit/step-image.js',
+                'assets/js/src/admin/course-edit/step-video.js',
+                'assets/js/src/admin/course-edit/step-audio.js',
+                'assets/js/src/admin/course-edit/step-file-upload.js',
+                'assets/js/src/admin/course-edit/step-quiz.js',
+                'assets/js/src/admin/course-edit/step-zip.js',
+                'assets/js/src/admin/course-edit/step-written.js',
+                'assets/js/src/admin/course-edit/step-discussion.js',
+                'assets/js/src/admin/course-edit/step-download.js',
+                'assets/js/src/admin/course-edit/unit-steps.js',
+                'assets/js/src/admin/course-edit/step.js',
+                'assets/js/src/admin/course-edit/unit-modules.js',
+                'assets/js/src/admin/course-edit/unit-details.js',
+                'assets/js/src/admin/course-edit/course-units.js',
+                'assets/js/src/admin/course-edit/course-students.js',
+                'assets/js/src/admin/course-edit/course-setup.js'
 			],
 			'assets/js/coursepress_students.js': [
 				// Add JS that will be loaded at Students page
@@ -65,7 +82,8 @@ module.exports = function(grunt) {
 			'assets/js/coursepress_instructors.js': [
 				// Add JS that will be loaded at Instructors page
 				// assets/js/src/admin/instructors
-				'assets/js/src/common/cp-search-form.js'
+				'assets/js/src/common/cp-search-form.js',
+				'assets/js/src/admin/instructors/instructors.js'
 			],
 			'assets/js/coursepress_assessments.js': [
 				// Add JS that will be loaded at Assessments page
@@ -105,10 +123,12 @@ module.exports = function(grunt) {
 				'assets/js/src/admin/settings/settings.js'
 			],
 			'assets/js/coursepress-front.js': [
-				'assets/js/src/common/coursepress.js',
-				'assets/js/src/common/request.js',
-				'assets/js/src/common/view.js',
-				'assets/js/src/front/course-overview.js'
+                'assets/js/src/common/coursepress.js',
+                'assets/js/src/common/request.js',
+                'assets/js/src/common/view.js',
+                'assets/js/src/front/course-overview.js',
+                'assets/js/src/front/comment-reply.js',
+                'assets/js/src/front/steps.js'
 			]
 		},
 
@@ -123,6 +143,8 @@ module.exports = function(grunt) {
 
 		// SASS files to process. Resulting CSS files will be minified as well.
 		css_files_compile: {
+			'assets/css/admin-global.css': 'assets/sass/admin-global.scss',
+			'assets/css/front.css': 'assets/sass/front.scss',
 			'assets/css/admin-common.css': 'assets/sass/admin-common.scss',
 			'assets/css/coursepress.css': 'assets/sass/coursepress.scss',
 			'assets/css/coursepress_course.css': 'assets/sass/coursepress_course.scss',

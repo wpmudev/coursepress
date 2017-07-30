@@ -1,4 +1,4 @@
-/* global CoursePress, _, tinyMCE */
+/* global CoursePress, _ */
 
 (function() {
     'use strict';
@@ -24,24 +24,10 @@
             },
             initialize: function( model ) {
                 this.rootModel = model;
-
                 this.on( 'view_rendered', this.setUpUI, this );
                 this.render();
             },
             setUpUI: function() {
-                var self = this;
-
-                //this.$( '.switch-tmce' ).trigger( 'click' );
-
-                if ( tinyMCE.get( 'content' ) ) {
-                    this.editor = tinyMCE.get( 'content' );
-                    this.editor.on( 'change', function() {
-                        var content = self.editor.getContent();
-                        self.model.content = content;
-                        self.$('#content').val( content );
-                    });
-                }
-
                 // Select the first item as active
                 this.$('.cp-input-group li').first().trigger( 'click' );
             },
@@ -59,9 +45,18 @@
                 target.addClass('active');
             },
             setValues: function( model ) {
-                var names = this.$( '[name]' );
+                var names, self;
 
-                this.$( '.switch-html' ).trigger( 'click' );
+                names = this.$( '[name]' );
+                self = this;
+
+                this.visualEditor({
+                    content: this.rootModel[this.current].content,
+                    container: this.$('.coursepress-email-content').empty(),
+                    callback: function( content ) {
+                        self.rootModel[self.current].content = content;
+                    }
+                });
 
                 _.each( names, function( n ) {
                     var field = $(n),
@@ -72,13 +67,12 @@
                     }
                 }, this );
 
-                this.$( '.switch-tmce' ).trigger( 'click' );
-
                 if ( win._coursepress.email_sections[ this.current ] ) {
                     var section = win._coursepress.email_sections[ this.current ];
                     this.$( '#course-email-heading' ).html( section.title );
                     this.$( '#course-email-desc' ).html( section.description );
                     this.$( '.cp-alert-info' ).html( section.content_help_text );
+                    this.$( '[name="enabled"]' ).prop( 'checked', !!this.rootModel[this.current].enabled );
                 }
             },
             getModel: function() {
@@ -94,7 +88,6 @@
                 }
 
                 this.model[ name ] = value;
-
                 this.rootModel[ this.current ] = this.model;
             }
         });

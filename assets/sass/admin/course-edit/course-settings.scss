@@ -5,11 +5,26 @@
     }
   }
   .cp-course-categories {
+    .cp-categories-selector {
+      width: 100%;
+      padding-right: 15px;
+      select {
+        display: block;
+        width: 100%;
+      }
+    }
+    .cp-categories-button {
+      width: 25%;
+      text-align: right;
+    }
     .cp-div-flex-2 {
       padding-right: 0;
     }
     .cp-div-flex {
       text-align: right;
+    }
+    #cp-create-cat {
+      display: inline-block;
     }
   }
   #cp-instructors-box,
@@ -57,37 +72,4 @@
     }
   }
 
-}
-.coursepress-modal {
-  font-size: 100%;
-
-  .cp-content-nopad {
-    padding: 0;
-  }
-
-  .cp-div-grey {
-    background-color: $grey_12;
-  }
-
-  .cp-div-flex {
-    padding: 20px 33px 50px;
-  }
-
-  [type="text"],
-  select {
-    margin: 6px 0px;
-    display: block;
-    background-color: $grey_9;
-    line-height: 1.5;
-    width: 100%;
-  }
-
-  .label {
-    display: block;
-    margin-bottom: 5px;
-  }
-
-  .select2-container {
-    margin: 5px 0;
-  }
 }

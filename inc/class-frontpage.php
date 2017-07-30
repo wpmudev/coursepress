@@ -18,6 +18,24 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 
 		// Set coursepress class
 		add_filter( 'body_class', array( $this, 'set_body_class' ) );
+
+		// Listen to zipped object file request
+		add_action( 'init', array( $this, 'maybe_load_zip' ) );
+
+		add_action( 'after_setup_theme', array( $this, 'remove_cookies' ) );
+	}
+
+	function remove_cookies() {
+		$cookies = array(
+			'cp_incorrect_passcode',
+			'cp_mismatch_password',
+			'cp_profile_updated',
+			'cp_step_error'
+		);
+
+		foreach ( $cookies as $cookie ) {
+			coursepress_delete_cookie( $cookie );
+		}
 	}
 
 	private function reset_wp( $wp, $course_name ) {
@@ -49,7 +67,7 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 			$cp['course'] = $course_name;
 			$cp['type']   = $type;
 
-			if ( in_array( $type, array( 'unit', 'module', 'step' ) ) ) {
+			if ( in_array( $type, array( 'unit', 'module', 'step', 'step-comment' ) ) ) {
 				$cp['unit'] = $wp->get( 'unit' );
 
 				if ( ( $module = $wp->get( 'module' ) ) )
@@ -111,11 +129,12 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 			|| in_array( $page_now, array( 'unit', 'module', 'step' ) ) ) {
 			$this->set_external_css( 'coursepress-video-css', 'video-js.min.css' );
 
-			$this->set_external_js( 'circle-progress', 'circle-progress.min.js' );
 			$this->set_external_js( 'coursepress-video', 'video.min.js' );
 			$this->set_external_js( 'coursepress-video-youtube', 'video-youtube.min.js' );
 			$this->set_external_js( 'coursepress-video-vimeo', 'video-vimeo.min.js' );
 		}
+		$this->set_external_js( 'circle-progress', 'circle-progress.min.js' );
+		$this->set_external_css( 'fontawesome', 'font-awesome.min.css' );
 
 		// Global CSS
 		$this->set_css( 'coursepress-css', 'front.min.css', $css_deps );
@@ -178,5 +197,16 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 		}
 
 		return $class;
+	}
+
+	function maybe_load_zip() {
+		if ( ! empty( $_REQUEST['oacpf'] ) ) {
+			$module_id = $_REQUEST['oacpf'];
+
+			if ( (int) $module_id > 0 ) {
+				$doc = new CoursePress_Zipped( $module_id );
+				exit;
+			}
+		}
 	}
 }

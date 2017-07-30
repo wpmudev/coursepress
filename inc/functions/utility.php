@@ -94,14 +94,40 @@ function coursepress_get_categories() {
  * @return mixed
  */
 function coursepress_get_setting( $key = true, $default = '' ) {
-    global $CoursePress, $CoursePress_Data_Users;
+    global $CoursePress_Data_Users;
 
     $caps = coursepress_get_array_val( $CoursePress_Data_Users->__get( 'capabilities' ), 'instructor' );
     $settings = coursepress_get_option( 'coursepress_settings', array() );
 
     $defaults = array(
-        'general' => array(),
-        'slugs' => array(),
+        'general' => array(
+        	'details_media_type' => 'default',
+	        'details_media_priority' => 'default',
+	        'listing_media_type' => 'default',
+	        'listing_media_priority' => 'default',
+	        'image_width' => 235,
+	        'image_height' => 235,
+        ),
+        'slugs' => array(
+        	'course' => 'courses',
+	        'course_category' => 'course_category',
+	        'units' => 'units',
+	        'notifications' => 'notifications',
+	        'discussions' => 'discussion',
+	        'discussions_new' => 'add_new_discussion',
+	        'grades' => 'grades',
+	        'workbook' => 'workbook',
+	        'login' => 'student-login',
+	        'signup' => 'courses-signup',
+	        'student_dashboard' => 'courses-dashboard',
+	        'student_settings' => 'student-settings',
+	        'instructor_profile' => 'instructor',
+	        'pages' => array(
+	        	'student_dashboard' => 0,
+		        'student_settings' => 0,
+		        'login' => 0,
+	        )
+        ),
         'emails' => array(),
         'capabilities' => array(
             'instructor' => $caps,
@@ -148,8 +174,8 @@ function coursepress_get_setting( $key = true, $default = '' ) {
      * @since 3.0
      */
     $defaults = apply_filters( 'coursepress_default_settings', $defaults );
-
-    $settings = wp_parse_args( $settings, $defaults );
+	$settings['general'] = wp_parse_args( $settings['general'], $defaults['general'] );
+	$settings['slugs'] = wp_parse_args( $settings['slugs'], $defaults['slugs'] );
 
     if ( is_bool( $key ) && TRUE === $key ) {
         return $settings;
@@ -615,4 +641,88 @@ function coursepress_log_last_activity( $activity = 'unknown', $user_id = 0 ) {
 
 	update_user_meta( $user_id, 'coursepress_latest_activity_time', time() );
 	update_user_meta( $user_id, 'coursepress_latest_activity', $activity );
+}
+
+function coursepress_set_cookie( $key, $value, $time ) {
+	$key = $key . '_' . COOKIEHASH;
+	setcookie( $key, $value, $time, COOKIEPATH, COOKIE_DOMAIN );
+}
+
+function coursepress_delete_cookie( $key ) {
+	$key = $key . '_' . COOKIEHASH;
+
+	ob_start();
+	$content = ob_get_clean();
+	setcookie( $key, false, -1, COOKIEPATH, COOKIE_DOMAIN );
+}
+
+function coursepress_get_cookie( $key ) {
+	$key = $key . '_' . COOKIEHASH;
+
+	if ( isset( $_COOKIE[ $key ] ) ) {
+		return $_COOKIE[$key];
+	}
+
+	return false;
+}
+
+function coursepress_get_dashboard_url() {
+	$page_dashboard = coursepress_get_setting( 'slugs/pages/student_dashboard', false );
+
+	if ( ! $page_dashboard ) {
+		$dashboard = coursepress_get_setting( 'slugs/student_dashboard', 'courses-dashboard' );
+		$dashboard_url = site_url( '/' ) . trailingslashit( $dashboard );
+	} else {
+		$dashboard_url = get_permalink( $page_dashboard );
+	}
+
+	return $dashboard_url;
+}
+
+function coursepress_get_student_login_url() {
+	$login_page = coursepress_get_setting( 'slugs/pages/login' );
+
+	if ( (int) $login_page > 0 ) {
+		$login_url = get_permalink( (int) $login_page );
+	} else {
+		$login_slug = coursepress_get_setting( 'slugs/login', 'student-login' );
+		$login_url = site_url( '/' ) . trailingslashit( $login_slug );
+	}
+
+	return $login_url;
+}
+
+function coursepress_get_student_settings_url() {
+	$student_page = coursepress_get_setting( 'slugs/pages/student_settings', false );
+	if ( ! $student_page ) {
+		$student_settings = coursepress_get_setting( 'slugs/student_settings', 'student-settings' );
+		$student_url = site_url( '/' ) . trailingslashit( $student_settings, 0);
+	} else {
+		$student_url = get_permalink( $student_page );
+	}
+
+	return $student_url;
+}
+
+function coursepress_replace_vars( $content, $vars ) {
+	$login_url = wp_login_url();
+
+	if ( coursepress_get_setting( 'general/use_custom_login', true ) ) {
+		$login_url = coursepress_get_login_url();
+	}
+	$vars['COURSES_ADDRESS'] = coursepress_get_main_courses_url();
+	$vars['BLOG_ADDRESS'] = site_url();
+	$vars['BLOG_NAME'] = $vars['WEBSITE_NAME'] =  get_bloginfo( 'name' );
+	$vars['LOGIN_ADDRESS'] = $login_url;
+	$vars['WEBSITE_ADDRESS'] = home_url();
+
+	$keys   = array();
+	$values = array();
+
+	foreach ( $vars as $key => $value ) {
+		$keys[]   = $key;
+		$values[] = $value;
+	}
+
+	return str_replace( $keys, $values, $content );
 }

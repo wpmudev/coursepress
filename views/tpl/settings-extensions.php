@@ -21,7 +21,7 @@
                 <td><?php echo $extension['source_info']; ?></td>
                 <td>
                     <label>
-                        <input type="checkbox" name="extension" value="<?php echo $id; ?>" {{_.checked('<?php echo $id; ?>', extensions )}} class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
+                        <input type="checkbox" name="extensions" value="<?php echo $id; ?>" {{_.checked('<?php echo $id; ?>', extensions )}} class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
                     </label>
                 </td>
             </tr>

@@ -7,4 +7,16 @@
       float: left;
     }
   }
+  .icon-move {
+    &:before {
+      @include icon('\f00a');
+      padding: 0 10px 0 8px;
+      color: $grey_4;
+    }
+  }
+  .cp-select-list {
+    .icon-move {
+      padding-left: 0;
+    }
+  }
 }

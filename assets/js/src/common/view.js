@@ -11,17 +11,20 @@
                 } else if (_.isObject(selected ) ) {
                     return !!selected[value];
                 } else {
-                    if ( _.isBoolean( value ) ) {
+                    if ( _.isBoolean( value ) && ! _.isBoolean(selected) ) {
                         selected = parseInt(selected, 10) > 0 ? true : false;
                     }
                     return value === selected;
                 }
             },
             checked: function (value, selected) {
-                return _.isTrue(value, selected) ? 'checked="checked"' : '';
+                return _.isTrue(value, selected) ? 'checked=checked' : '';
             },
             selected: function (value, selected) {
                 return _.isTrue(value, selected) ? 'selected="selected"' : '';
+            },
+            disabled: function( value, selected ) {
+                return _.isTrue( value, selected ) ? 'disabled=disabled': '';
             },
             _getTemplate: function (template_id, data) {
                 var settings = {
@@ -36,6 +39,18 @@
                 }
 
                 return tpl(data);
+            },
+            focus: function( selector ) {
+                var el = $( selector ), top;
+
+                if ( 0 < el.length ) {
+                    top = el.offset().top;
+                    top -= 100;
+
+                    $(window).scrollTop( top );
+                }
+
+                return false;
             }
         });
 
@@ -46,6 +61,7 @@
                 'change [name]': 'updateModel',
                 'focus [name]': 'removeErrorMarker'
             },
+            time: 10,
             initialize: function () {
                 if (arguments && arguments[0]) {
                     this.model = new CoursePress.Request(arguments[0]);
@@ -85,6 +101,13 @@
                 } else {
                     this.model[name] = value;
                 }
+
+                /**
+                 * Trigger whenever the model is updated
+                 */
+                this.trigger( 'coursepress:model_updated', this.model, this );
+
+                ev.stopImmediatePropagation();
             },
             removeErrorMarker: function( ev ) {
                 var sender = this.$(ev.currentTarget),
@@ -94,33 +117,87 @@
                     error.removeClass('cp-error');
                 }
             },
-            setEditor: function( editor_id ) {
-                var self = this;
+            visualEditor: function( options ) {
+               // var self = this;
 
-                if ( win.tinyMCE && win.tinyMCE.get( editor_id ) ) {
-                    this._setEditor( editor_id );
-                } else {
-                    this.$('#wp-' + editor_id + '-wrap .switch-tmce' ).one( 'click', function() {
-                        _.delay(function() {
-                            self._setEditor(editor_id);
-                        }, 100 );
+                this.time += 200;
+
+                _.delay(function() {
+
+                    var id, container, tpl, tpl_id, settings, mceinit, qtinit, editor,
+                        content, date, is_mce;
+
+                    date = new Date();
+
+                    id = 'post_editor_' + date.getTime();
+                    container = options.container;
+                    content = options.content;
+
+                    if (win.tinyMCEPreInit) {
+                        mceinit = win.tinyMCEPreInit.mceInit['coursepress_editor'];
+                        qtinit = win.tinyMCEPreInit.qtInit['coursepress_editor'];
+                    }
+
+                    tpl_id = 'coursepress-visual-editor';
+
+                    tpl = $('#' + tpl_id).html();
+                    tpl = tpl.replace(/coursepress_editor/g, id);
+                    settings = {
+                        evaluate: /<#([\s\S]+?)#>/g,
+                        interpolate: /\{\{\{([\s\S]+?)\}\}\}/g,
+                        escape: /\{\{([^\}]+?)\}\}(?!\})/g
+                    };
+                    tpl = _.template(tpl, null, settings);
+                    container.html(tpl);
+                    container.find('textarea#' + id).val(content);
+                    is_mce = container.find('.wp-editor-wrap').is('.tmce-active');
+
+                    /*
+                    function destroyEditor(id) {
+                        if (win.tinymce && win.tinymce.get(id)) {
+                            editor = win.tinymce.get(id);
+                            editor.destroy();
+                        }
+                    }*/
+                    //destroyEditor(id);
+
+                    mceinit.selector = '#' + id;
+                    qtinit.id = id;
+                    win.tinyMCEPreInit.mceInit[id] = mceinit;
+                    win.tinyMCEPreInit.qtInit[id] = qtinit;
+
+                    win.tinymce.init(mceinit);
+                    win.quicktags(qtinit);
+
+                    editor = win.tinymce.get(id);
+
+                    _.delay(function() {
+                        if (is_mce) {
+                            container.find('.switch-tmce').trigger('click');
+                        } else {
+                            container.find('.switch-html').trigger('click');
+                        }
+                    }, 100 );
+
+                    if (editor) {
+                        // Add on change callback
+                        editor.on('change', function () {
+                            content = editor.getContent();
+
+                            if (options.callback) {
+                                options.callback.call(null, content);
+                            }
+                        });
+                    }
+                    container.find('textarea#' + id).val(content).on('change', function () {
+                        content = $(this).val();
+
+                        if (options.callback) {
+                            options.callback.call(null, content);
+                        }
                     });
-                }
-            },
-            _setEditor: function( editor_id ) {
-                var content, textarea, self;
 
-                self = this;
-
-                if ( win.tinyMCE && win.tinyMCE.get( editor_id ) ) {
-                    var editor = win.tinyMCE.get( editor_id );
-                    editor.on( 'change', function() {
-                        content = editor.getContent();
-                        textarea = self.$('#' + editor_id );
-                        textarea.val( content );
-                        textarea.trigger('change');
-                    });
-                }
+                }, this.time );
             }
         });
     });

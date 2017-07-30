@@ -45,7 +45,9 @@
                 'assets/js/src/common/add-video.js',
                 'assets/js/src/common/dropdown-menu.js',
                 'assets/js/src/common/popup.js',
-                'assets/js/src/common/upload.js'
+                'assets/js/src/common/upload.js',
+                'assets/js/src/common/add-media.js',
+                'assets/js/src/cp-search-form.js'
                 // assets/js/src/admin/general/....
             ],
             'coursepress.js': [
@@ -57,11 +59,31 @@
                 // ADd JS that will be loaded at course edit page
                 // assets/js/src/admin/course-edit/...
                 'assets/js/src/admin/course-edit/course-model.js',
+                'assets/js/src/admin/course-edit/sample-course.js',
                 'assets/js/src/admin/course-edit/course-type.js',
                 'assets/js/src/admin/course-edit/course-settings.js',
                 'assets/js/src/admin/course-edit/course-settings-modal.js',
                 'assets/js/src/admin/course-edit/course-completion.js',
+                'assets/js/src/admin/course-edit/step-text.js',
+                'assets/js/src/admin/course-edit/step-image.js',
+                'assets/js/src/admin/course-edit/step-video.js',
+                'assets/js/src/admin/course-edit/step-audio.js',
+                'assets/js/src/admin/course-edit/step-file-upload.js',
+                'assets/js/src/admin/course-edit/step-quiz.js',
+                'assets/js/src/admin/course-edit/step-zip.js',
+                'assets/js/src/admin/course-edit/step-written.js',
+                'assets/js/src/admin/course-edit/step-discussion.js',
+                'assets/js/src/admin/course-edit/step-download.js',
+                'assets/js/src/admin/course-edit/unit-steps.js',
+                'assets/js/src/admin/course-edit/step.js',
+                'assets/js/src/admin/course-edit/unit-help.js',
+                'assets/js/src/admin/course-edit/unit-modules.js',
+                'assets/js/src/admin/course-edit/unit-details.js',
+                'assets/js/src/admin/course-edit/unit-list.js',
+                'assets/js/src/admin/course-edit/unit-collection.js',
+                'assets/js/src/admin/course-edit/units-with-module-list.js',
                 'assets/js/src/admin/course-edit/course-units.js',
+                'assets/js/src/admin/course-edit/course-students.js',
                 'assets/js/src/admin/course-edit/course-setup.js'
             ],
             'coursepress_students.js': [
@@ -72,6 +94,8 @@
             'coursepress_instructors.js': [
                 // Add JS that will be loaded at Instructors page
                 // assets/js/src/admin/instructors
+                'assets/js/src/common/cp-search-form.js',
+                'assets/js/src/admin/instructors/instructors.js'
             ],
             'coursepress_assessments.js': [
                 // Add JS that will be loaded at Assessments page
@@ -107,7 +131,9 @@
                 'assets/js/src/common/coursepress.js',
                 'assets/js/src/common/request.js',
                 'assets/js/src/common/view.js',
-                'assets/js/src/front/course-overview.js'
+                'assets/js/src/front/course-overview.js',
+                'assets/js/src/front/comment-reply.js',
+                'assets/js/src/front/steps.js'
             ]
         };
 
@@ -238,6 +264,18 @@
     gulp.task('watch', ['css', 'js'], function () {
         gulp.watch(['assets/js/src/*.js', 'assets/js/src/**/*.js', 'assets/js/src/**/**/*.js'], ['js']);
         gulp.watch(['assets/sass/*.scss', 'assets/sass/**/*.scss', 'assets/sass/**/**/*.scss'], ['css']);
+        gulp.watch(['assets/js/src/*.js', 'assets/sass/*.scss'], ['clearcache']);
+    });
+    gulp.task( 'watch-js', ['js'], function() {
+        gulp.watch(['assets/js/src/*.js', 'assets/js/src/**/*.js', 'assets/js/src/**/**/*.js'], ['js']);
+        gulp.watch(['assets/js/src/*.js', 'assets/sass/*.scss'], ['clearcache']);
+    });
+
+    gulp.task( 'clearcache', function() {
+        var cache = require( 'gulp-cache' );
+
+        gulp.src( ['assets/js/*.js', 'assets/sass/*.scss'] )
+            .pipe(cache.clear());
     });
 
     gulp.task('makepot', function () {

@@ -72,6 +72,7 @@ final class CoursePress {
 		'CoursePress_Data_Users',
 		'CoursePress_Core',
 		'CoursePress_Extension',
+		'CoursePress_Cron_Discussion'
 	);
 
 	/**
@@ -80,7 +81,6 @@ final class CoursePress {
 	protected $core_admin_classes = array(
 		'CoursePress_Admin_Page',
 		'CoursePress_Admin_Ajax',
-		'CoursePress_Admin_Actions',
 	);
 
 	/**
@@ -89,6 +89,7 @@ final class CoursePress {
 	protected $core_front_classes = array(
 		'CoursePress_FrontPage',
 		'CoursePress_Shortcode',
+		'CoursePress_Menu',
 	);
 
 	public function __construct() {

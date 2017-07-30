@@ -1,4 +1,7 @@
 // Common admin stylesheets
+// Google font
+@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700|Roboto:300,400,500,700&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin-ext,vietnamese');
+
 @import "common/mixin.scss";
 @import "admin/global/wpmu-footer";
 @import "admin/global/global";

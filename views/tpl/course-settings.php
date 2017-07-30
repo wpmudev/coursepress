@@ -17,7 +17,7 @@
 
             <div class="cp-box">
                 <label class="label" for="course-excerpt"><?php _e( 'Course short description', 'cp' ); ?></label>
-                <?php coursepress_teeny_editor( $post_excerpt, 'course-excerpt', array( 'textarea_name' => 'post_excerpt', 'textarea_rows' => 5 ) ); ?>
+                <div class="cp-course-overview"></div>
             </div>
         </div>
     </div>
@@ -31,19 +31,19 @@
         <div class="box-inner-content">
             <div class="cp-box">
                 <label class="label" for="course-description"><?php _e( 'Course full description', 'cp' ); ?></label>
-                <?php coursepress_visual_editor( $post_content, 'course-description', array( 'textarea_name' => 'post_content', 'textarea_rows' => 10 ) ); ?>
+                <div class="cp-course-description"></div>
             </div>
 
             <div class="cp-box cp-course-video">
                 <label class="label"><?php _e( 'Course overview video', 'cp' ); ?></label>
-                <input type="text" class="widefat cp-add-video" id="listing_video" name="featured_video" value=""  data-title="<?php _e( 'Select Feature Video', 'cp' ); ?>" />
+                <input type="text" class="widefat cp-add-video" id="listing_video" name="meta_featured_video" value="{{meta_featured_video}}"  data-title="<?php _e( 'Select Feature Video', 'cp' ); ?>" />
             </div>
 
             <div class="cp-box cp-course-categories">
                 <h3 class="label" for="course-categories"><?php _e( 'Course categories', 'cp' ); ?></h3>
                 <div class="cp-flex">
-                    <div class="cp-div-flex-2 cp-categories-selector">
-                        <select id="course-categories" multiple="multiple" data-placeholder="<?php _e( 'Pick existing categories or add new one', 'cp' ); ?>" name="course_category">
+                    <div class="cp-categories-selector">
+                        <select id="course-categories" multiple="multiple" data-placeholder="<?php _e( 'Pick existing categories or add new one', 'cp' ); ?>" name="meta_course_category">
                             <?php foreach ( coursepress_get_categories() as $category ) : ?>
                                 <option value="<?php echo $category; ?>" {{_.selected('<?php echo $category; ?>', course_category)}}><?php echo $category; ?></option>
                             <?php endforeach; ?>
@@ -74,6 +74,25 @@
                     <?php endforeach; ?>
                 </select>
             </div>
+            <div class="cp-box cp-boxes cp-passcode-box {{'passcode'!== meta_enrollment_type? 'inactive':''}}">
+                <label class="label"><?php _e( 'Passcode', 'cp' ); ?></label>
+                <input type="text" name="meta_enrollment_passcode" value="{{meta_enrollment_passcode}}" />
+                <p class="description"><?php _e( 'Enter the passcode required to access the course.', 'cp' ); ?></p>
+            </div>
+            <div class="cp-box cp-boxes cp-requisite-box {{'prerequisite'!== meta_enrollment_type? 'inactive':''}}">
+                <label class="label"><?php _e( 'Select required course', 'cp' ); ?></label>
+                <div class="cp-courses-box">
+                    <?php if ( ! empty( $courses ) ) : ?>
+                    <select name="meta_enrollment_prerequisite" multiple="multiple">
+                        <?php foreach ( $courses as $course ) : ?>
+                            <option value="<?php echo $course->ID; ?>" {{_.selected('<?php echo $course->ID; ?>', meta_enrollment_prerequisite)}}><?php echo $course->post_title; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <?php else : ?>
+                        <p class="description"><?php _e( 'No courses available!', 'cp' ); ?></p>
+                    <?php endif; ?>
+                </div>
+            </div>
 
             <div class="cp-box">
                 <label class="label"><?php _e( 'Minimum passing grade', 'cp' ); ?></label>
@@ -92,7 +111,7 @@
         <div class="box-inner-content">
             <div class="cp-box cp-toggle-box">
                 <label>
-                    <input type="checkbox" name="meta_with_modules" value="1" class="cp-toggle-input" autocomplejte="off" /> <span class="cp-toggle-btn"></span>
+                    <input type="checkbox" name="meta_with_modules" value="1" class="cp-toggle-input" autocomplete="off" {{_.checked(true, with_modules)}} /> <span class="cp-toggle-btn"></span>
 		            <span class="label"><?php _e( 'Enable modules for this course', 'cp' ); ?></span>
                 </label>
                 <p class="description"><?php _e( 'The setting can be changed after the course has been set-up.', 'cp' ); ?></p>

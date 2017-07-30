@@ -9,7 +9,7 @@
         CommentsList = CoursePress.View.extend({
             el: $('#coursepress-comments-list'),
             events: {
-                'click .column-author a.status': 'toggleCommentStatus',
+                'click .column-author a.status': 'toggleCommentStatus'
             },
 
             initialize: function() {
@@ -24,7 +24,7 @@
                 request.set( {
                     'action' : 'comment_status_toggle',
                     'id' : selector.data('id'),
-                    'nonce' : selector.data('nonce'),
+                    'nonce' : selector.data('nonce')
                 } );
                 request.on( 'coursepress:success_comment_status_toggle', this.setStatusToggle, this );
                 request.save();

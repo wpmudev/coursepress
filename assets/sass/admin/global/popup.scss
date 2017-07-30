@@ -6,13 +6,6 @@
   height: 100%;
   background-color: rgba(255, 255, 255, 0.5);
 
-  .coursepress-popup-body {
-    border: 1px solid $grey_5;
-    width: 300px;
-    margin: 125px auto;
-    background-color: #ffffff;
-    @include radius(4px);
-  }
   .coursepress-popup-heading {
     padding: 15px 25px;
     border-bottom: 1px solid $grey_6;
@@ -21,6 +14,44 @@
       margin: 0;
     }
   }
+  .coursepress-popup-body {
+    border: 1px solid $grey_5;
+    width: 40%;
+    margin: 125px auto;
+    background-color: #ffffff;
+    @include radius(4px);
+
+    &.popup-error {
+      border-color: rgba(255, 0, 0, 0.1);
+
+      .coursepress-popup-heading {
+        color: red;
+        border-bottom: 1px solid rgba(255, 0, 0, 0.1);
+
+        h3 {
+          color: red;
+        }
+        &:before {
+          @include icon('\f071');
+          display: inline-block;
+          float: left;
+          margin-right: 8px;
+          font-size: 1.4em;
+        }
+      }
+      .coursepress-popup-heading,
+      .coursepress-popup-content,
+      .coursepress-popup-footer {
+        background-color: rgba(255, 0, 0, 0.02);
+      }
+      .coursepress-popup-footer {
+        .cp-btn-cancel {
+          display: none;
+        }
+      }
+    }
+  }
+
   .coursepress-popup-content {
     padding: 15px 25px;
   }
@@ -33,9 +64,10 @@
   }
   .coursepress-modal-body {
     border-radius: $default_radius;
-    width: 45%;
+    width: 40%;
   }
 }
+
 .coursepress-modal {
   @extend .coursepress-popup;
   background-color: rgba(221, 221, 221, 0.72);
@@ -46,10 +78,12 @@
 
     .coursepress-popup-heading {
       border-bottom: 1px solid $grey_5;
+      font-size: 0.9em;
 
       .coursepress-popup-title {
         width: 95%;
         display: inline-block;
+        font-size: 0.9em;
       }
 
       .cp-modal-close {
@@ -66,6 +100,47 @@
       border-top: 1px solid #DDDDDD;
       text-align: right;
       padding: 27px 25px;
+      font-size: 1.1em;
+      p {
+        font-size: 1.1em;
+      }
     }
+  }
+}
+
+.coursepress-modal {
+  font-size: 100%;
+
+  .cp-content-nopad {
+    padding: 0;
+  }
+
+  .cp-div-grey {
+    background-color: $grey_12;
+  }
+
+  .cp-div-flex {
+    padding: 20px 33px 50px;
+  }
+
+  [type="text"],
+  select {
+    margin: 6px 0px;
+    display: block;
+    background-color: $grey_9;
+    line-height: 1.5;
+    width: 100%;
+  }
+
+  .label {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .select2-container {
+    margin: 5px 0;
+  }
+  .coursepress-popup-heading {
+    text-transform: uppercase;
   }
 }

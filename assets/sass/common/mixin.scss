@@ -85,6 +85,7 @@ $code_font: Consolas, Monaco, monospace;
 @mixin icon($icon) {
   content: $icon;
   font-family: 'FontAwesome', sans-serif;
+  display: inline-block;
 }
 @mixin hide {
   opacity: 0;
@@ -99,3 +100,28 @@ $code_font: Consolas, Monaco, monospace;
   -moz-columns: $columns;
   columns: $columns;
 }
+@mixin reset() {
+  position: static;
+  line-height: 1.2;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  display: inline;
+  top: auto;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  list-style: none;
+  background-color: transparent;
+  color: #333333;
+  font: {
+    size: 100%;
+    family: 'Helvetica Neue Light', sans-serif;
+    style: normal;
+    weight: 200;
+  }
+  @include boxshadow(none);
+  @include radius(0);
+}
+

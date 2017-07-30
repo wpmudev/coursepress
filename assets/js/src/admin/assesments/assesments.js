@@ -12,7 +12,7 @@
                 'change [name="graded_ungraded"]': 'submitForm',
                 'change [name="course_id"], [name="student_progress"]': 'submitForm',
                 'click .cp-plus-icon, .cp-minus-icon': 'unitsExpandHide',
-                'click .cp-expand-collapse': 'studentExpandHide',
+                'click .cp-expand-collapse': 'studentExpandHide'
             },
 
             // Initialize.

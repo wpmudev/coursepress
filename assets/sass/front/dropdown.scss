@@ -1,0 +1,52 @@
+.coursepress-wrap {
+  .coursepress-dropdown {
+    display: inline-block;
+    [type="checkbox"] {
+      display: none;
+    }
+    label {
+      display: block;
+      cursor: pointer;
+      padding: 5px 10px;
+      border: 1px solid $grey_7;
+      background-color: $grey_6;
+      margin: 0;
+
+      &:focus,
+      &:active,
+      &:hover {
+        background-color: $grey_5;
+      }
+    }
+
+    ul {
+      position: absolute;
+      margin: 0;
+      list-style: none;
+      z-index: -1;
+      opacity: 0;
+      background-color: $grey_5;
+      padding: 5px;
+      border: 1px solid $grey_6;
+
+      li {
+        display: block;
+        font-size: 95%;
+        padding: 4px 15px;
+        border-bottom: 1px solid $grey_7;
+
+        &:last-of-type {
+          border: 0;
+        }
+
+        a {
+          font-size: 95%;
+        }
+      }
+    }
+    :checked + ul {
+      opacity: 1;
+      z-index: 9;
+    }
+  }
+}

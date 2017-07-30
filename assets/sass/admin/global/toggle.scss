@@ -3,13 +3,14 @@
     display: none;
   }
   .cp-toggle-btn {
+    @include reset;
     position: relative;
     display: inline-block;
-    height: 22px;
+    height: 21px;
     width: 45px;
     font-size: 1px;
     line-height: 1px;
-    border: 2px solid $grey_5;
+    border: 1px solid $grey_5;
     background-color: #ffffff;
     @include radius(20px);
     @include boxsizing;
@@ -18,19 +19,19 @@
       content: '';
       position: absolute;
       display: block;
-      width: 22.5px;
-      top: 0;
-      left: 0;
-      height: 83%;
+      width: 20px;
+      top: -1px;
+      left: -1px;
+      height: 21px;
       background-color: $grey_5;
-      border: 2px solid #ffffff;
+      border: 0;
       @include radius(20px);
       @include transition(left 0.5s);
     }
   }
   .cp-toggle-input:checked + .cp-toggle-btn {
     &:after {
-      left: 16.5px;
+      left: 23px;
       background-color: $blue_1;
       @include transition(0.5s);
     }

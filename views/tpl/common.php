@@ -31,7 +31,19 @@
         </div>
         <div class="coursepress-popup-content">{{message}}</div>
         <div class="coursepress-popup-footer">
-            <button type="button" class="button-primary btn-ok">{{window._coursepress.text.ok}}</button>
+            <button type="button" class="cp-btn cp-btn-default cp-btn-cancel"><?php _e( 'Cancel', 'cp' ); ?></button>
+            <button type="button" class="cp-btn cp-btn-active btn-ok">{{window._coursepress.text.ok}}</button>
         </div>
+    </div>
+</script>
+
+<script type="text/template" id="coursepress-visual-editor">
+    <?php coursepress_visual_editor( '', 'coursepress_editor' ); ?>
+</script>
+
+<script type="text/template" id="coursepress-add-media-tpl">
+    <div class="cp-flex-2">
+        <input type="text" placeholder="{{placeholder}}" class="cp-add-media-input" />
+        <button type="button" class="cp-btn cp-btn-default cp-browse-btn"><?php _e( 'Browse', 'cp' ); ?></button>
     </div>
 </script>

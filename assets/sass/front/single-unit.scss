@@ -1,3 +1,15 @@
+.course-unit {
+  .page-header {
+    position: relative;
+    margin: 0;
+  }
+  .course-unit-progress {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}
+
 .course-content-template {
   display: block;
   margin: 25px 0;

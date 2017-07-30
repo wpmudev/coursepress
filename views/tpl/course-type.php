@@ -36,19 +36,19 @@
                 <ul class="cp-flex cp-input-group">
                     <li class="cp-div-flex {{'auto-moderated'===course_type?'active':''}}">
                         <label>
-                            <input type="radio" name="meta_course_type" value="auto-moderated" {{_.checked('auto-modated', course_type)}} />
+                            <input type="radio" name="meta_course_type" value="auto-moderated" {{_.checked('auto-moderated', meta_course_type)}} />
                             <?php _e( 'Auto-moderated', 'cp' ); ?>
                         </label>
                     </li>
                     <li class="cp-div-flex {{'manual'===course_type?'active':''}}">
                         <label>
-                            <input type="radio" name="meta_course_type" value="manual" {{_.checked('manual', course_type)}} />
+                            <input type="radio" name="meta_course_type" value="manual" {{_.checked('manual', meta_course_type)}} />
                             <?php _e( 'Manual moderation', 'cp' ); ?>
                         </label>
                     </li>
-                    <li class="cp-div-flex {{'sample_course'===course_type?'active':''}}">
+                    <li class="cp-div-flex {{'sample'===course_type?'active':''}}">
                         <label>
-                            <input type="radio" name="meta_course_type" value="sample" value="sample_course" {{_.checked('sample', course_type)}} />
+                            <input type="radio" name="meta_course_type" value="sample" value="sample_course" {{_.checked('sample', meta_course_type)}} />
                             <?php _e( 'Example course', 'cp' ); ?>
                         </label>
                     </li>
@@ -72,11 +72,13 @@
                 <div class="cp-flex">
                     <div class="cp-div-flex cp-pad-right">
                         <span class="course-title-tag"><?php _e( 'Start Date', 'cp' ); ?></span>
-                        <input type="text" name="meta_course_start_date" value="{{course_start_date}}" />
+                        <input type="text" name="meta_course_start_date" class="datepicker" value="{{course_start_date}}" />
+                        <i class="fa fa-calendar"></i>
                     </div>
                     <div class="cp-div-flex cp-pad-left">
                         <span class="course-title-tag"><?php _e( 'End Date', 'cp' ); ?></span>
-                        <input type="text" name="meta_course_end_date" value="{{course_end_date}}" />
+                        <input type="text" name="meta_course_end_date" class="datepicker" value="{{course_end_date}}" />
+                        <i class="fa fa-calendar"></i>
                     </div>
                 </div>
                 <br />
@@ -84,22 +86,25 @@
                 <div class="cp-flex">
                     <div class="cp-div-flex cp-pad-right">
                         <span class="course-title-tag"><?php _e( 'Start Date', 'cp' ); ?></span>
-                        <input type="text" name="meta_enrollment_start_date" value="{{enrollment_start_date}}" />
+                        <input type="text" name="meta_enrollment_start_date" class="datepicker" value="{{enrollment_start_date}}" />
+                        <i class="fa fa-calendar"></i>
                     </div>
                     <div class="cp-div-flex cp-pad-left">
                         <span class="course-title-tag"><?php _e( 'End Date', 'cp' ); ?></span>
-                        <input type="text" name="meta_enrollment_end_date" value="{{enrollment_end_date}}" />
+                        <input type="text" name="meta_enrollment_end_date" class="datepicker" value="{{enrollment_end_date}}" />
+                        <i class="fa fa-calendar"></i>
                     </div>
                 </div>
             </div>
 
-            <div class="cp-box cp-course-type {{'sample_course'===course_type?'active':'inactive'}}" id="type-sample">
-
+            <div class="cp-box cp-sep cp-course-type {{'sample_course'===course_type?'active':'inactive'}}" id="type-sample">
+                <p class="description"><?php _e( 'Choose a sample course to use and edit it\'s units, modules and steps.', 'cp' ); ?></p>
+                <button type="button" class="cp-btn cp-btn-active sample-course-btn"><?php _e( 'Select Sample Course', 'cp' ); ?></button>
             </div>
 
             <div class="cp-box cp-toggle-box cp-sep">
                 <label>
-                    <input type="checkbox" name="meta_allow_discussion" {{_.checked(true, allow_discussion)}} class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
+                    <input type="checkbox" name="meta_allow_discussion" value="1" {{_.checked(true, meta_allow_discussion)}} class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
                     <span class="label"><?php _e( 'Enable course discussion', 'cp' ); ?></span>
                 </label>
                 <p class="description"><?php _e( 'Creates discussion area where users can post questions and get help from instructors, facilitators and other students', 'cp' ); ?></p>
@@ -107,7 +112,7 @@
 
             <div class="cp-box cp-toggle-box cp-sep">
                 <label>
-                    <input type="checkbox" name="meta_allow_workbook" {{_.checked(true, allow_workbook)}} class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
+                    <input type="checkbox" name="meta_allow_workbook" value="1" {{_.checked(true, meta_allow_workbook)}} class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
                     <span class="label"><?php _e( 'Enable workbook', 'cp' ); ?></span>
                 </label>
                 <p class="description"><?php _e( 'Users can access their workbook which will show their progress/scores for the course.', 'cp' ); ?></p>
@@ -115,50 +120,54 @@
 
             <div class="cp-box cp-toggle-box">
                 <label>
-                    <input type="checkbox" name="meta_payment_paid_course" {{_.checked( true, payment_paid_course)}} class="cp-toggle-input" autocomplejte="off" /> <span class="cp-toggle-btn"></span>
+                    <input type="checkbox" name="meta_payment_paid_course" value="1" {{_.checked( true, meta_payment_paid_course)}} class="cp-toggle-input" autocomplejte="off" /> <span class="cp-toggle-btn"></span>
                     <span class="label"><?php _e( 'This is a paid course', 'cp' ); ?></span>
                 </label>
                 <p class="description"><?php _e( 'Will allow you to set-up payment gateway/options.', 'cp' ); ?></p>
             </div>
 
-            <div class="cp-box cp-box-off{{  true == payment_paid_course? '':' hidden' }}">
+            <div class="cp-box cp-box-off{{  true === meta_payment_paid_course? '':' hidden' }}">
                 <div class="payment-message">
                     <h3><?php _e( 'Sell your courses online with MarketPress.', 'cp' ); ?></h3>
                     <p><?php _e( 'To start selling your course, please install and activate MarketPress or contact your administrator to enable MarketPress for your site.', 'cp' ); ?></p>
                     <p><?php _e( 'Other supported plugins: WooCommerce', 'cp' ); ?></p>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div class="cp-box cp-box-marketpress{{  true == payment_paid_course? '':' hidden' }}">
-                <h3><?php _e( 'MarketPress Product Settings', 'cp' ); ?></h3>
-                <p class="description"><?php _e( 'Your course will be a new product in MarketPress. Enter your course\'s payment settings below.', 'cp' ); ?></p>
-            </div>
+    <div class="cp-box-content cp-box-marketpress{{  true === meta_payment_paid_course? '':' hidden' }}">
+        <div class="box-label-area">
+            <h3 class="label"><?php _e( 'MarketPress Product Settings', 'cp' ); ?></h3>
+            <p class="description"><?php _e( 'Your course will be a new product in MarketPress. Enter your course\'s payment settings below.', 'cp' ); ?></p>
+        </div>
 
-            <div class="cp-box cp-box-marketpress{{  true == payment_paid_course? '':' hidden' }}">
+        <div class="box-inner-content">
+            <div class="cp-box">
                 <label class="label"> <?php esc_html_e( 'Full Price', 'cp' ); ?></label>
-                <input type="text" name="meta_mp_product_price" value="{{mp_product_price}}" />
+                <input type="text" name="meta_mp_product_price" value="{{meta_mp_product_price}}" />
             </div>
 
-            <div class="cp-box cp-box-marketpress{{  true == payment_paid_course? '':' hidden' }}">
+            <div class="cp-box">
                 <label class="label"><?php esc_html_e( 'Sale Price', 'cp' ); ?></label>
-                <input type="text" name="meta_mp_product_sale_price" value="{{mp_product_sale_price}}" />
+                <input type="text" name="meta_mp_product_sale_price" value="{{meta_mp_product_sale_price}}" />
             </div>
 
-            <div class="cp-box cp-box-marketpress{{  true == payment_paid_course? '':' hidden' }}">
+            <div class="cp-box cp-toggle-box">
                 <label>
-                    <input type="checkbox" name="meta_mp_sale_price_enabled" {{_.checked(true, mp_sale_price_enabled)}} class="cp-toggle-input" autocomplejte="off" /> <span class="cp-toggle-btn"></span>
+                    <input type="checkbox" name="meta_mp_sale_price_enabled" value="1" {{_.checked(true, meta_mp_sale_price_enabled)}} class="cp-toggle-input" autocomplejte="off" /> <span class="cp-toggle-btn"></span>
                     <span class="label"><?php esc_html_e( 'Enable Sale Price', 'cp' ); ?></span>
                 </label>
             </div>
 
-            <div class="cp-box cp-box-marketpress{{  true == payment_paid_course? '':' hidden' }}">
+            <div class="cp-box">
                 <label class="label"><?php esc_html_e( 'Course SKU:', 'cp' ); ?></label>
-                <input type="text" name="meta_mp_sku" placeholder="{{mp_sku_placeholder}}" value="{{mp_sku}}" />
+                <input type="text" name="meta_mp_sku" placeholder="{{mp_sku_placeholder}}" value="{{meta_mp_sku}}" />
             </div>
 
-            <div class="cp-box cp-box-marketpress{{  true == payment_paid_course? '':' hidden' }}">
+            <div class="cp-box cp-toggle-box">
                 <label>
-                    <input type="checkbox" name="meta_mp_sale_price_enabled" {{_.checked(true, mp_auto_sku)}} class="cp-toggle-input" autocomplejte="off" /> <span class="cp-toggle-btn"></span>
+                    <input type="checkbox" name="meta_mp_sale_price_enabled" value="1" {{_.checked(true, meta_mp_auto_sku)}} class="cp-toggle-input" autocomplejte="off" /> <span class="cp-toggle-btn"></span>
                     <span class="label"><?php esc_html_e( 'Automatically generate Stock Keeping Units (SKUs)', 'cp' ); ?></span>
                 </label>
             </div>
@@ -206,12 +215,40 @@
         </div>
 
     <?php
-	/**
-	 * Trigger when all course type fields are printed.
-	 *
-	 * @since 3.0
-	 * @param int $course_id Current course ID created or edited.
-	 */
-	do_action( 'coursepress_course_setup-course-type', $course_id );
-	?>
+    /**
+     * Trigger when all course type fields are printed.
+     *
+     * @since 3.0
+     * @param int $course_id Current course ID created or edited.
+     */
+    do_action( 'coursepress_course_setup-course-type', $course_id );
+    ?>
+</script>
+
+<script type="text/template" id="coursepress-sample-course-tpl">
+    <div class="coursepress-popup-body">
+        <div class="coursepress-popup-heading">
+            <div class="coursepress-popup-title">
+                <h3><?php _e( 'Choose Sample Course', 'cp' ); ?></h3>
+            </div>
+            <span class="cp-modal-close cp-close"></span>
+        </div>
+        <div class="coursepress-popup-content">
+            <ul>
+		        <?php foreach ( $sample_courses as $id => $sample ) : ?>
+                    <li>
+                        <div class="cp-toggle-box">
+                            <label>
+                                <input type="radio" name="meta_sample_course" value="<?php echo $sample['file']; ?>" class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
+                                <span class="label"><?php echo $sample['title']; ?></span>
+                            </label>
+                        </div>
+                    </li>
+		        <?php endforeach; ?>
+            </ul>
+        </div>
+        <div class="coursepress-popup-footer">
+            <button type="button" class="cp-btn cp-btn-active"><?php _e( 'Use Selected', 'cp' ); ?></button>
+        </div>
+    </div>
 </script>

@@ -15,7 +15,7 @@ class CoursePress_Import extends CoursePress_Utility
     var $unit_keys = array();
 
     public function __construct( $course_object, $options ) {
-        error_log(print_r($course_object,true));
+        //error_log(print_r($course_object,true));
         $this->setUp( $course_object );
 
         if ( ! empty( $options ) ) {
@@ -115,6 +115,10 @@ class CoursePress_Import extends CoursePress_Utility
         if ( ! empty( $this->units ) ) {
             foreach ( $this->units as $unit ) {
                 $the_unit = get_object_vars( $unit->unit );
+
+                if ( ! isset( $the_unit->ID ) ) {
+                	continue;
+                }
 
                 // Remove ID
                 $old_unit_id = $the_unit->ID;
@@ -233,5 +237,12 @@ class CoursePress_Import extends CoursePress_Utility
 
             }
         }
+    }
+
+    function get_course() {
+    	$course_id = array_pop( $this->courses );
+    	$course = coursepress_get_course( $course_id );
+
+    	return $course;
     }
 }

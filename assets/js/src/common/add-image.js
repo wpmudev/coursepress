@@ -15,7 +15,8 @@
            events: {
                'change .cp-image-url': 'updateInput',
                'click .cp-btn-browse': 'selectImage',
-               'click .cp-btn-clear': 'clearSelection'
+               'click .cp-btn-clear': 'clearSelection',
+               'focus .cp-image-url': 'removeErrorMarker'
            },
            data: {
                size: 'thumbnail',
@@ -36,8 +37,13 @@
            },
            render: function() {
                var html, data, thumbnail_id, value, src;
+
                thumbnail_id = this.input.data('thumbnail');
                value = src = this.input.val();
+
+               if ( ! value ) {
+                   value = '';
+               }
 
                data = {name: this.input.attr('name'), thumbnail_id: thumbnail_id, value: value};
                html = _._getTemplate(this.template_id, data);

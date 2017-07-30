@@ -6,9 +6,27 @@
  * @package CoursePress
  */
 class CoursePress_Extension {
-	public function __construct() {
-		add_filter( 'coursepress_extensions', array( $this, 'set_extensions' ) );
-	}
+    public function __construct() {
+    	// Set extensions
+        add_filter( 'coursepress_extensions', array( $this, 'set_extensions' ) );
+
+        // Check for active extensions
+	    $this->active_extensions();
+    }
+
+    function active_extensions() {
+    	global $CoursePress;
+
+    	$extensions = coursepress_get_setting( 'extensions' );
+
+    	if ( ! empty( $extensions ) ) {
+    		foreach ( $extensions as $extension ) {
+    			if ( 'marketpress' == $extension ) {
+    				$mpClass = $CoursePress->get_class( 'CoursePress_Extension_MarketPress' );
+			    }
+		    }
+	    }
+    }
 
 	function is_plugin_installed( $plugin_name ) {
 	}

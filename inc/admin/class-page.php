@@ -37,6 +37,9 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Setup admin assets
 		add_action( 'admin_enqueue_scripts', array( $this, 'set_admin_css' ) );
+
+		// Marked coursepress page
+        add_filter( 'admin_body_class', array( $this, 'add_coursepress_class' ) );
 	}
 
 	/**
@@ -123,9 +126,13 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	function set_admin_css() {
 		$coursepress_pagenow = coursepress_is_admin();
 
+		// Global, all pages use stylesheet
+		$this->enqueue_style( 'coursepress-admin-global', 'assets/css/admin-global.min.css' );
+
 		if ( ! $coursepress_pagenow ) {
 			return; // Do not continue
 		}
+
 		/**
 		 * The key ID of current CP page loaded.
 		 * Both JS and CSS are autoloaded base on this ID.
@@ -181,11 +188,15 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 				'path' => COOKIEPATH,
 			),
 			'coursepress_page' => add_query_arg( 'page', 'coursepress', admin_url() ),
+			'pagenow' => add_query_arg( 'page', $coursepress_pagenow, admin_url( 'admin.php' ) ),
+			'plugin_url' => $CoursePress->plugin_url,
 			// Common use texts
 			'text' => array(
+				'untitled' => __( 'Untitled', 'cp' ),
 			    'ok' => __( 'Ok', 'cp' ),
 				'cancel' => __( 'Cancel', 'cp' ),
 				'error' => __( 'Error', 'cp' ),
+				'warning' => __( 'Warning', 'cp' ),
 				'media' => array(
 					'select_image' => __( 'Select Image', 'cp' ),
 					'select_feature_image' => __( 'Select Feature Image', 'cp' ),
@@ -193,9 +204,17 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 				),
                 'server_error' => __( 'An unexpected error occur while processing. Please try again.', 'cp' ),
                 'invalid_file_type' => __( 'Invalid file type!', 'cp' ),
+				'delete_course' => __( 'Deleting this course will also delete all units, modules, steps and any other data associated to this course. Are you sure you want to continue?', 'cp' ),
+				'noname_module' => __( 'You have unnamed module(s)!', 'cp' ),
+				'nosteps' => __( 'You need to create at least a single step!', 'cp' ),
 			    'all_students' => __( 'Students from All Courses', 'cp' ),
-				'server_error' => __( 'An unexpected error occur while processing. Please try again.', 'cp' ),
-				'invalid_file_type' => __( 'Invalid file type!', 'cp' ),
+				'unit' => array(
+					'no_title' => __( 'One of the active unit has no title!', 'cp' ),
+					'no_feature_image' => __( 'One of the active unit has feature image enabled but no image set!', 'cp'),
+					'no_content' => __( 'One of the active unit enabled the use of unit description but no description set!', 'cp'),
+					'no_modules' => __( 'One of the active unit has no modules!', 'cp'),
+					'no_steps' => __( 'One of the active unit contains no steps!', 'cp')
+				)
 			),
 		) );
 
@@ -203,8 +222,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$this->enqueue_script( 'coursepress-select2', 'assets/external/js/select2.min.js' );
 
 		// General admin js
-		wp_enqueue_script( 'coursepress-admin-general', $plugin_url . 'assets/js/admin-general.min.js', array( 'jquery', 'backbone', 'underscore', 'jquery-ui-autocomplete' ), $CoursePress->version, true );
-		$this->enqueue_script( $coursepress_pagenow, 'assets/js/' . $coursepress_pagenow . '.js' ); // Change to .min
+		wp_enqueue_script( 'coursepress-admin-general', $plugin_url . 'assets/js/admin-general.js', array( 'jquery', 'backbone', 'underscore', 'jquery-ui-autocomplete' ), $CoursePress->version, true );
+		$this->enqueue_script( $coursepress_pagenow, 'assets/js/' . $coursepress_pagenow . '.min.js' ); // Change to .min
 
 		// Set local vars
 		$localize_array = apply_filters( 'coursepress_admin_localize_array', $this->localize_array );
@@ -223,6 +242,14 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		wp_enqueue_script( $id, $CoursePress->plugin_url . $src, false, $CoursePress->version, true );
 	}
+
+	function add_coursepress_class( $class ) {
+	    if ( coursepress_is_admin() ) {
+	        $class .= ' coursepress';
+        }
+
+        return $class;
+    }
 
 	function courselist_columns() {
 		$columns = array(
@@ -371,6 +398,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		coursepress_render( 'views/admin/courselist', $args );
 		coursepress_render( 'views/admin/footer-text' );
+		coursepress_render( 'views/tpl/common' );
 	}
 
 	/**
@@ -405,9 +433,15 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		// We need the image editor here, enqueue it!!!
 		wp_enqueue_media();
 		// Include datepicker
-		wp_enqueue_script( 'jquery-ui-datepicker' );
-		// Include color picker
-		wp_enqueue_script( 'iris' );
+
+        wp_enqueue_script( 'jquery-ui-datepicker' );
+        // Datepicker UI
+		$this->enqueue_style( 'datepicker-ui', 'assets/external/css/jquery-ui.min.css' );
+
+        // Include color picker
+        wp_enqueue_script( 'iris' );
+        // Sorter
+        wp_enqueue_script( 'jquery-ui-sortable' );
 
 		$course_id = filter_input( INPUT_GET, 'cid', FILTER_VALIDATE_INT );
 
@@ -427,6 +461,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$local_vars = array(
 			'course' => $course, // Use in most steps
 			'categories' => coursepress_get_categories(),
+			'settings' => coursepress_get_setting(),
 		);
 		$this->localize_array = wp_parse_args( $local_vars, $this->localize_array );
 
@@ -457,14 +492,28 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'course_id' => $course_id,
 			'post_content' => $course->post_content,
 			'post_excerpt' => htmlspecialchars_decode( $course->post_excerpt ),
+			'courses' => coursepress_get_courses( array( 'post_status' => 'publish', 'posts_per_page' => -1 ) ),
 		);
 
+		coursepress_render( 'views/tpl/common' );
 		coursepress_render( 'views/admin/course-edit', $args );
 		coursepress_render( 'views/admin/footer-text' );
 
 		// Load templates
 		coursepress_render( 'views/tpl/common' );
-		coursepress_render( 'views/tpl/course-type', array( 'course_id' => $course_id ) );
+
+		$sample_courses = array(
+			'introduction-to-upfront' => array(
+				'title' => __( 'Introduction to Upfront', 'cp' ),
+				'file' => 'wpmudev-thewordpressexperts.coursepress.2017-07-03.introduction-to-upfront-4.json'
+			),
+			'wordpress-multisite-masterclass' => array(
+				'title' => __( 'WordPress Multisite Master Class', 'cp' ),
+				'file' => 'wpmudev-thewordpressexperts.coursepress.2017-07-03.wordpress-multisite-masterclass-2.json'
+			),
+		);
+
+		coursepress_render( 'views/tpl/course-type', array( 'course_id' => $course_id, 'sample_courses' => $sample_courses ) );
 		coursepress_render( 'views/tpl/course-settings', $settings_data );
 
 		$certClass = $CoursePress->get_class( 'CoursePress_Certificate' );
@@ -499,7 +548,36 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$this->localize_array['completion_pages'] = $completion_pages;
 
 		coursepress_render( 'views/tpl/course-completion', array( 'completion_pages' => $completion_pages ) );
-		coursepress_render( 'views/tpl/course-units' );
+
+        $steps = array(
+            'text' => __( 'Text', 'cp' ),
+            'image' => __( 'Image', 'cp' ),
+            'video' => __( 'Video', 'cp' ),
+            'audio' => __( 'Audio', 'cp' ),
+            'download' => __( 'Download', 'cp' ),
+            'zipped' => __( 'Zip', 'cp' ),
+            'input-upload' => __( 'File Upload', 'cp' ),
+            'input-quiz' => __( 'Quiz', 'cp' ),
+            'input-written' => __( 'Written', 'cp' ),
+            'discussion' => __( 'Discussion', 'cp' ),
+        );
+        $this->localize_array['steps'] = $steps;
+        $file_types = array(
+            'image' => __( 'Image', 'cp' ),
+            'pdf' => __( 'PDF', 'cp' ),
+            'zip' => __( 'Zip', 'cp' ),
+            'txt' => __( 'Text', 'cp' ),
+        );
+        $question_types = array(
+            'multiple' => __( 'Multiple Choice', 'cp' ),
+            'single' => __( 'Single Choice', 'cp' ),
+            'select' => __( 'Selectable', 'cp' ),
+        );
+        $this->localize_array['questions'] = $question_types;
+
+		coursepress_render( 'views/tpl/course-units', array( 'steps' => $steps ) );
+		coursepress_render( 'views/tpl/steps-template', array( 'file_types' => $file_types, 'questions' => $question_types ) );
+		coursepress_render( 'views/tpl/course-students', array( 'students' => $course->get_students( false ) ) );
 	}
 
 	function get_students_page() {

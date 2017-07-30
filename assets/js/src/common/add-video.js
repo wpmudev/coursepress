@@ -62,7 +62,7 @@
                        title: this.data.title,
                        library: {
                            type: [ 'video' ]
-                       },
+                       }
                    };
 
                    frame = new wp.media(settings);
