@@ -168,13 +168,26 @@
         <table class="cp-units-table">
             <thead>
             <tr>
-                <th class="column-unit">
-                    <# if ( !!meta_with_modules ) { #>
-                        <?php _e( 'Units & Modules', 'cp' ); ?>
-                        <# } else { #>
-                            <?php _e( 'Units & Steps', 'cp' ); ?>
-                            <# } #>
-                </th>
+                <th class="column-unit"><?php _e( 'Units & Modules', 'cp' ); ?></th>
+                <th class="column-step"><?php _e( 'Steps', 'cp' ); ?></th>
+                <th class="column-preview"><?php _e( 'Free Preview', 'cp' ); ?></th>
+                <th class="column-time"><?php _e( 'Time', 'cp' ); ?></th>
+            </tr>
+            </thead>
+        </table>
+        <div id="units-container"></div>
+    </div>
+</script>
+<script type="text/template" id="coursepress-unit-list-steps-tpl">
+    <div class="cp-box-heading">
+        <h2 class="box-heading-title"><?php _e( 'Units', 'cp' ); ?></h2>
+    </div>
+
+    <div class="cp-box-content units-content">
+        <table class="cp-units-table">
+            <thead>
+            <tr>
+                <th class="column-unit"><?php _e( 'Units & Modules', 'cp' ); ?></th>
                 <th class="column-step"><?php _e( 'Steps', 'cp' ); ?></th>
                 <th class="column-preview"><?php _e( 'Free Preview', 'cp' ); ?></th>
                 <th class="column-time"><?php _e( 'Time', 'cp' ); ?></th>
@@ -223,6 +236,21 @@
                         <td class="column-time">-</td>
                     </tr>
                     <# })#>
+            <# } else { #>
+                <# _.each( steps, function( step ) { #>
+                    <tr>
+                        <td class="column-unit">{{step.post_title}}</td>
+                        <td class="column-step">
+                        </td>
+                        <td class="column-preview">
+                            <label class="cp-checkbox">
+                                <input type="checkbox" class="cp-checkbox-input" {{_.checked(true, step.meta_preview)}} />
+                                <span class="cp-checkbox-icon"></span>
+                            </label>
+                        </td>
+                        <td class="column-time">-</td>
+                    </tr>
+                <# }) #>
             <# } #>
         </table>
     </div>

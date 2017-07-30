@@ -20,7 +20,9 @@
             allow_retries: false,
             meta_allow_retries: false,
             retry_attempts: 0,
-            meta_retry_attempts: 0
+            meta_retry_attempts: 0,
+            minimum_grade: 100,
+            meta_minimum_grade: 100
         };
 
         default_vars = {
@@ -73,6 +75,24 @@
                 meta_loop: false,
                 autoplay: false,
                 meta_autoplay: false
+            }, defaults ),
+            download: _.extend({
+                file_url: '',
+                meta_file_url: '',
+                link_text: '',
+                meta_link_text: ''
+            }, defaults ),
+            zipped: _.extend({
+                zip_url: '',
+                meta_zip_url: '',
+                primary_file: '',
+                meta_primary_file: ''
+            }, defaults ),
+            'input-quiz': _.extend({
+                questions: []
+            }, defaults ),
+            'input-written': _.extend({
+                questions: []
             }, defaults )
         };
 

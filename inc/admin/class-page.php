@@ -208,6 +208,13 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 				'noname_module' => __( 'You have unnamed module(s)!', 'cp' ),
 				'nosteps' => __( 'You need to create at least a single step!', 'cp' ),
 			    'all_students' => __( 'Students from All Courses', 'cp' ),
+				'unit' => array(
+					'no_title' => __( 'One of the active unit has no title!', 'cp' ),
+					'no_feature_image' => __( 'One of the active unit has feature image enabled but no image set!', 'cp'),
+					'no_content' => __( 'One of the active unit enabled the use of unit description but no description set!', 'cp'),
+					'no_modules' => __( 'One of the active unit has no modules!', 'cp'),
+					'no_steps' => __( 'One of the active unit contains no steps!', 'cp')
+				)
 			),
 		) );
 

@@ -15,7 +15,7 @@
 
         <button type="button" class="step-toggle-button"></button>
     </div>
-    <div class="cp-step-content"></div>
+    <div class="cp-step-content cp-step-{{module_type}}"></div>
     <div class="cp-step-footer">
         <div class="cp-toggle-box">
             <label>
@@ -126,7 +126,21 @@
         </div>
         <div class="cp-box cp-toggle-box">
             <label>
-                <input type="checkbox" name="meta_allow_retries" value="1" class="cp-toggle-input" {{_.checked(meta_allow_retries)}} /> <span class="cp-toggle-btn"></span>
+                <input type="checkbox" name="meta_loop" value="1" class="cp-toggle-input" {{_.checked(true, meta_loop)}} /> <span class="cp-toggle-btn"></span>
+                <span class="label"><?php _e( 'Loop', 'cp' ); ?></span>
+            </label>
+        </div>
+    </div>
+    <div class="cp-flex">
+        <div class="cp-box cp-toggle-box">
+            <label>
+                <input type="checkbox" name="meta_autoplay" value="1" class="cp-toggle-input" {{_.checked(true, meta_autoplay)}} /> <span class="cp-toggle-btn"></span>
+                <span class="label"><?php _e( 'Autoplay', 'cp' ); ?></span>
+            </label>
+        </div>
+        <div class="cp-box cp-toggle-box">
+            <label>
+                <input type="checkbox" name="meta_allow_retries" value="1" class="cp-toggle-input" {{_.checked(true, meta_allow_retries)}} /> <span class="cp-toggle-btn"></span>
                 <span class="label"><?php _e( 'Allow retries', 'cp' ); ?></span>
             </label>
             <div class="cp-box-grey">
@@ -177,7 +191,7 @@
     </div>
 
     <div class="cp-box">
-        <label class="label"><?php _e( 'Upload file format', 'cp' ); ?></label>
+        <label class="label"><?php _e( 'Allowed file format', 'cp' ); ?></label>
         <div class="cp-flex">
             <?php foreach ( $file_types as $type => $label ) : ?>
             <div class="cp-box cp-toggle-box">

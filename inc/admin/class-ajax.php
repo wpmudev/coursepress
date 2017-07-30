@@ -149,7 +149,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
     		$units = $request->units;
     		$menu_order = 0;
     		$unit_ids = array();
-
+error_log(print_r($units,true));
     		foreach ( $units as $cid => $unit ) {
     			$unit->menu_order = $menu_order;
 
@@ -232,6 +232,48 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				    }
 
 				    $unit_object->update_settings( 'course_modules', $module_array );
+			    } else {
+			    	if ( ! empty( $unit->steps ) ) {
+			    		foreach ( $unit->steps as $step_cid => $step ) {
+						    if ( ! empty( $step->deleted ) && $step->deleted ) {
+							    // This step was deleted, let's delete the data
+							    if ( isset( $step->ID ) && ! empty( $step->ID ) ) {
+								    coursepress_delete_step( $step->ID );
+							    }
+							    unset( $unit->steps->{$step_cid} );
+							    continue;
+						    }
+
+						    $step_array = array(
+							    'ID' => isset( $step->ID ) ? (int) $step->ID : 0,
+							    'post_type' => 'module',
+							    'post_title' => $step->post_title,
+							    'post_content' => $step->post_content,
+							    'post_status' => 'publish',
+							    'post_parent' => $unit_id,
+							    'menu_order' => isset( $step->menu_order ) ? (int) $step->menu_order : 0,
+						    );
+
+						    $step_metas = array();
+
+						    foreach ( $step as $step_key => $step_value ) {
+							    if ( preg_match( '%meta_%', $step_key ) ) {
+								    $_step_key = str_replace( 'meta_', '', $step_key );
+
+								    if ( is_object( $step_value ) ) {
+									    $step_value = $this->to_array( $step_value );
+								    }
+
+								    $step_metas[ $_step_key ] = $step_value;
+							    }
+						    }
+
+						    $stepId = coursepress_create_step( $step_array, $step_metas );
+						    $step_object = coursepress_get_course_step( $stepId );
+						    $unit->steps->{$step_cid} = $step_object;
+						    error_log(print_r($step_object,true));
+					    }
+				    }
 			    }
 
 			    // Set back new vars

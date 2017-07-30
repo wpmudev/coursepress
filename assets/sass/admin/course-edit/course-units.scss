@@ -601,6 +601,24 @@
       marign-right: 5px;
     }
   }
+
+  .cp-step-zipped {
+    [name="meta_link_text"],
+    [name="meta_primary_file"] {
+      width: 100%;
+    }
+  }
+
+  @media screen {
+    @media (min-width: 1024px) {
+      .cp-step-zipped {
+        [name="meta_link_text"],
+        [name="meta_primary_file"] {
+          width: 94%;
+        }
+      }
+    }
+  }
 }
 
 .unit-help {

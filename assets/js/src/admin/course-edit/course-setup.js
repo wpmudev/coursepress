@@ -26,7 +26,7 @@
 
             initialize: function(model) {
                 model = this.filter_model(model);
-                this.model = new CoursePress.Request(model);//new CoursePress.CourseModel(model);
+                this.model = new CoursePress.Request(model);
 
                 // Load course-type view
                 this.once( 'coursepress:load-step-course-type', this.courseTypeView, this);
@@ -132,6 +132,8 @@
 
                 if ( with_modules ) {
                     this.unitsview = new CoursePress.UnitsWithModuleList(this.model, this);
+                } else {
+                    this.unitsview = new CoursePress.UnitSteps(this.model, this);
                 }
 
                 this.unitsview.$el.appendTo(this.unitsContainer);

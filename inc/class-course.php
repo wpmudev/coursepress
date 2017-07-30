@@ -814,8 +814,8 @@ class CoursePress_Course extends CoursePress_Utility {
 
 			foreach ( $results as $unit ) {
 				$unitClass = new CoursePress_Unit( $unit, $this );
-				$unitClass->__set( 'previousUnit', $previousUnit );
-				$previousUnit = $unitClass;
+				//$unitClass->__set( 'previousUnit', $previousUnit );
+				//$previousUnit = $unitClass;
 				$units[] = $unitClass;
 			}
 		}

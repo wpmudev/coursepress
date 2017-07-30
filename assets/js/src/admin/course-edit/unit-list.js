@@ -4,7 +4,7 @@
     'use strict';
 
     CoursePress.Define( 'UnitList', function() {
-        var UnitItem, defaults;
+        var UnitItem, defaults, UnitModel;
 
         defaults = {
             ID: 0,
@@ -35,6 +35,7 @@
             tagName: 'li',
             unitview: false,
             listView: false,
+            unitDetails: false,
             events: {
                 'click': 'setUnitDetails'
             },
@@ -52,13 +53,15 @@
 
             setUnitDetails: function() {
                 this.editCourseView.unitsview.remove();
-                this.editCourseView.unitsview = new CoursePress.UnitDetails({model: this.model}, this.listView);
+                this.unitDetails = this.editCourseView.unitsview = new CoursePress.UnitDetails({model: this.model}, this.listView);
                 this.editCourseView.unitsview.$el.appendTo(this.editCourseView.unitsContainer);
 
                 this.$el.addClass('active');
                 this.$el.siblings().removeClass('active');
             }
         });
+
+        UnitModel = new CoursePress.Request();
 
         return CoursePress.View.extend({
             template_id: 'coursepress-unit-list-tpl',
@@ -72,6 +75,7 @@
             initialize: function( model, editCourseView ) {
                 this.editCourseView = editCourseView;
                 this.with_modules = editCourseView.model.get('meta_with_modules');
+                CoursePress.Events.on( 'coursepress:change_unit_title', this.updateTitle, this );
                 this.on( 'view_rendered', this.setUI, this );
                 this.render();
             },
@@ -79,7 +83,7 @@
                 this.unitView = unitView;
                 this.courseModel = unitView.editCourse;
                 this.on( 'view_rendered', this.setUI, this );
-                CoursePress.Events.on( 'coursepress:change_unit_title', this.updateTitle, this );
+
                 this.render();
             },
             setUI: function() {
@@ -119,18 +123,24 @@
             getUnitModel: function(cid) {
                 return this.unitModels[cid];
             },
-            updateUnits: function( UnitModel ) {
+            updateUnits: function() {
+                this.editCourseView.senderButton.addClass('cp-progress');
                 UnitModel.set('action', 'update_units');
-                UnitModel.set( 'course_id', this.courseModel.model.get('ID'));
+                UnitModel.set( 'course_id', this.editCourseView.model.get('ID'));
                 UnitModel.set( 'units', this.unitModels);
                 UnitModel.off( 'coursepress:success_update_units' );
                 UnitModel.on( 'coursepress:success_update_units', this.updateUnitModels, this );
+                UnitModel.on( 'coursepress:error_update_units', this.updateError, this );
                 UnitModel.save();
             },
             updateUnitModels: function( data ) {
                 if ( data.units ) {
-                    this.unitModels = _.extend( this.unitModels, data.units );
+                    //this.unitModels = _.extend( this.unitModels, data.units );
                 }
+                this.editCourseView.after_update();
+            },
+            updateError: function() {
+
             }
         });
     });

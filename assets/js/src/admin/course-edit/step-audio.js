@@ -12,7 +12,7 @@
             initialize: function( model, stepView ) {
                 this.model = model;
                 this.stepView = stepView;
-
+window.console.log(model);
                 this.on( 'view_rendered', this.setUI, this );
                 this.render();
             },

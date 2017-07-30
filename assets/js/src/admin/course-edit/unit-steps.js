@@ -8,6 +8,7 @@
             template_id: 'coursepress-unit-steps-tpl',
             unitModel: false,
             steps: [],
+            menu_order: 0,
             events: {
                 'click .unit-step': 'addNewStep',
             },
@@ -50,7 +51,7 @@
                 stepModel.toggleContents();
             },
 
-            addNewStep: function( ev ) {
+            addNewStep: function(ev) {
                 var sender, type, menu_order, data;
 
                 menu_order = this.steps.length + 1;
@@ -60,9 +61,11 @@
                 this.setStep(data);
             },
 
-            setStep: function( model ) {
+            setStep: function(model) {
                 var step;
 
+                this.menu_order += 1;
+                model.menu_order = this.menu_order;
                 step = new CoursePress.Step(model, this);
                 step.$el.appendTo(this.stepContainer);
             }

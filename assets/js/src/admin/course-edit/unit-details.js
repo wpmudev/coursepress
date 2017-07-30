@@ -22,6 +22,7 @@
                 this.editCourseView = controller.editCourseView;
                 this.with_modules = this.editCourseView.model.get('meta_with_modules');
                 this.model.set( 'with_modules', this.with_modules );
+                this.on( 'coursepress:model_updated', this.updateUnitCollection );
 
                 this.on( 'view_rendered', this.setUpUI, this );
                 this.render();
@@ -39,13 +40,9 @@
                 this.render();
             },
 
-            validateUnit: function(unitView) {
+            validateUnit: function() {
                 var proceed, title, use_feature_img, modules,
                     errors = {}, error_count, popup, steps, steps_count;
-
-                if ( ! unitView.proceed ) {
-                    return;
-                }
 
                 proceed = true;
                 title = this.model.get('post_title');
@@ -97,7 +94,7 @@
                     });
                 }
 
-                unitView.proceed = proceed;
+                return proceed;
             },
 
             setUpUI: function() {
@@ -121,8 +118,8 @@
                     this.modules = new CoursePress.UnitModules(this.model, this);
                     this.modules.$el.appendTo(this.container);
                 } else {
-                    //this.steps = new CoursePress.Unit_Steps( this.model, this );
-                    //this.steps.$el.appendTo(this.container);
+                    this.steps = new CoursePress.Unit_Steps( this.model, this );
+                    this.steps.$el.appendTo(this.container);
                 }
             },
 
@@ -161,7 +158,14 @@
                 CoursePress.Events.trigger( 'coursepress:change_unit_title', value, this.model.cid );
             },
 
-            updateUnitCollection: function() {
+            updateModel: function() {
+                var cid;
+
+                CoursePress.View.prototype.updateModel.apply( this, arguments );
+
+                // Set the model back to the collection
+                cid = this.model.cid;
+                this.editCourse.unitList.unitModels[cid] = this.model;
             }
         });
     });
