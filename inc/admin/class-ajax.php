@@ -149,7 +149,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
     		$units = $request->units;
     		$menu_order = 0;
     		$unit_ids = array();
-error_log(print_r($units,true));
+
     		foreach ( $units as $cid => $unit ) {
     			$unit->menu_order = $menu_order;
 
@@ -241,6 +241,7 @@ error_log(print_r($units,true));
 								    coursepress_delete_step( $step->ID );
 							    }
 							    unset( $unit->steps->{$step_cid} );
+
 							    continue;
 						    }
 
@@ -271,6 +272,7 @@ error_log(print_r($units,true));
 						    $stepId = coursepress_create_step( $step_array, $step_metas );
 						    $step_object = coursepress_get_course_step( $stepId );
 						    $unit->steps->{$step_cid} = $step_object;
+
 						    error_log(print_r($step_object,true));
 					    }
 				    }

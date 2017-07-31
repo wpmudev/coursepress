@@ -14,6 +14,7 @@ class CoursePress_Step_Audio extends CoursePress_Step {
 			'audio_url',
 			'loop',
 			'autoplay',
+			'audio_url_thumbnail_id'
 		));
 
 		return $keys;

@@ -28,6 +28,7 @@
                 this.element.hide();
                 this.$el.insertAfter( this.element );
                 this.input = this.$('.cp-add-media-input');
+                this.input.val(this.element.val());
             },
 
             toggleFrame: function() {

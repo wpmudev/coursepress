@@ -6,11 +6,14 @@
     CoursePress.Define( 'Step_INPUT-UPLOAD', function() {
        return CoursePress.View.extend({
            template_id: 'coursepress-step-file-upload',
+           stepView: false,
            events: {
-               'change [name="meta_show_content"]': 'toggleContent'
+               'change [name="meta_show_content"]': 'toggleContent',
+               'change [name]': 'updateModel'
            },
-           initialize: function( model ) {
+           initialize: function( model, stepView ) {
                this.model = model;
+               this.stepView = stepView;
                this.on( 'view_rendered', this.setUI, this );
                this.render();
            },
@@ -31,6 +34,10 @@
                    is_checked = sender.is(':checked');
 
                this.description[is_checked ? 'slideDown' : 'slideUp']();
+           },
+
+           updateModel: function(ev) {
+               this.stepView.updateModel(ev);
            }
        });
     });

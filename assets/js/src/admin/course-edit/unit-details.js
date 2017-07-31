@@ -158,14 +158,13 @@
                 CoursePress.Events.trigger( 'coursepress:change_unit_title', value, this.model.cid );
             },
 
-            updateModel: function() {
+            updateUnitCollection: function() {
                 var cid;
-
-                CoursePress.View.prototype.updateModel.apply( this, arguments );
 
                 // Set the model back to the collection
                 cid = this.model.cid;
                 this.editCourse.unitList.unitModels[cid] = this.model;
+                this.editCourse.unitList.updateUnitCollection();
             }
         });
     });

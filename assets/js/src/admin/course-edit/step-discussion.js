@@ -7,15 +7,12 @@
         return CoursePress.View.extend({
             template_id: 'coursepress-step-discussion',
             events: {
-                'change [name="meta_show_content"]': 'toggleContent'
+                'change [name="meta_show_content"]': 'toggleContent',
+                'chanage [name]': 'updateModel'
             },
-            initialize: function( model ) {
-                model = _.extend({
-                    meta_mandatory: false,
-                    meta_show_content: false,
-                    post_content: ''
-                }, model );
-                this.model = new CoursePress.Request(model);
+            initialize: function( model, stepView ) {
+                this.model = model;
+                this.stepView = stepView;
                 this.on( 'view_rendered', this.setUI, this );
                 this.render();
             },
@@ -41,6 +38,9 @@
                 } else {
                     content.slideUp();
                 }
+            },
+            updateModel: function(ev) {
+                this.stepView.updateModel(ev);
             }
         });
     });

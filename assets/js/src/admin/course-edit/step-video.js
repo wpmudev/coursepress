@@ -9,7 +9,8 @@
            video_source: false,
            stepView: false,
            events: {
-               'change [name="meta_allow_retries"]': 'toggleGreyBox'
+               'change [name="meta_allow_retries"]': 'toggleGreyBox',
+               'change [name]': 'updateModel'
            },
            initialize: function( model, stepView ) {
                this.model = model;
@@ -22,6 +23,9 @@
            },
            toggleGreyBox: function(ev) {
                this.stepView.toggleGreyBox(ev);
+           },
+           updateModel: function(ev) {
+               this.stepView.updateModel(ev);
            }
        });
     });

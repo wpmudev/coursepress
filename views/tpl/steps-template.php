@@ -31,7 +31,7 @@
 <script type="text/template" id="coursepress-step-image">
     <div class="cp-box">
         <label class="label"><?php _e( 'Image Source', 'cp' ); ?></label>
-        <input type="text" name="meta_image_url" class="cp-add-image-input" value="{{meta_image_url}}" id="meta_image_url_{{menu_order}}" />
+        <input type="text" name="meta_image_url" data-thumbnail="{{meta_image_url_thumbnail_id}}" class="cp-add-image-input" value="{{meta_image_url}}" id="meta_image_url_{{menu_order}}" />
     </div>
     <div class="cp-box cp-toggle-box">
         <label>
@@ -115,7 +115,7 @@
 <script type="text/template" id="coursepress-step-audio">
     <div class="cp-box">
         <label class="label"><?php _e( 'Audio Source', 'cp' ); ?></label>
-        <input type="text" name="meta_audio_url" class="widefat cp-add-media-input cp-add-audio"  value="{{meta_audio_url}}" data-type="audio" data-placeholder="<?php _e( 'Add audio URL or browse audio', 'cp' ); ?>" data-title="<?php _e( 'Select Audio Source', 'cp' ); ?>" />
+        <input type="text" name="meta_audio_url" class="widefat cp-add-media-input cp-add-audio" data-thumbnail-id="{{meta_audio_url_thumbnail_id}}"  value="{{meta_audio_url}}" data-type="audio" data-placeholder="<?php _e( 'Add audio URL or browse audio', 'cp' ); ?>" data-title="<?php _e( 'Select Audio Source', 'cp' ); ?>" />
     </div>
     <div class="cp-flex">
         <div class="cp-box cp-toggle-box">

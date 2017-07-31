@@ -178,14 +178,9 @@ function coursepress_create_step( $step_array, $step_meta = array() ) {
 		$step_id = wp_update_post( $step_array );
 	}
 
-	$step = coursepress_get_course_step( $step_id );
-error_log(print_r($step,true));
-error_log(print_r($step_meta,true));
-	if ( is_wp_error( $step ) || ! $step ) {
-		return false;
+	foreach ( $step_meta as $key => $value ) {
+		update_post_meta( $step_id, $key, $value );
 	}
-
-	$step->update_settings( true, $step_meta );
 
 	/**
 	 * Fired whenever a step is created

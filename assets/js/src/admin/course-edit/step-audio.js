@@ -7,12 +7,12 @@
         return CoursePress.View.extend({
             template_id: 'coursepress-step-audio',
             events: {
-                'change [name="meta_allow_retries"]': 'toggleGreyBox'
+                'change [name="meta_allow_retries"]': 'toggleGreyBox',
+                'change [name]': 'updateModel'
             },
             initialize: function( model, stepView ) {
                 this.model = model;
                 this.stepView = stepView;
-window.console.log(model);
                 this.on( 'view_rendered', this.setUI, this );
                 this.render();
             },
@@ -23,6 +23,10 @@ window.console.log(model);
 
             toggleGreyBox: function(ev) {
                 this.stepView.toggleGreyBox(ev);
+            },
+
+            updateModel: function(ev) {
+                this.stepView.updateModel(ev);
             }
         });
     });

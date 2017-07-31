@@ -6,12 +6,15 @@
     CoursePress.Define( 'Step_IMAGE', function() {
         return CoursePress.View.extend({
             template_id: 'coursepress-step-image',
+            stepModel: false,
             events: {
                 'change [name="meta_show_media_caption"]': 'toggleMediaCaption',
-                'change [name="meta_caption_field"]': 'toggleCustomCaption'
+                'change [name="meta_caption_field"]': 'toggleCustomCaption',
+                'change [name]': 'updateModel'
             },
-            initialize: function( model ) {
+            initialize: function( model, stepModel ) {
                 this.model = model;
+                this.stepModel = stepModel;
                 this.on( 'view_rendered', this.setUI, this );
                 this.render();
             },
@@ -35,6 +38,9 @@
                 } else {
                     input.attr('disabled', 'disabled');
                 }
+            },
+            updateModel: function(ev) {
+                this.stepModel.updateModel(ev);
             }
         });
     });

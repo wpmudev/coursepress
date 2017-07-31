@@ -79,13 +79,7 @@
                 this.on( 'view_rendered', this.setUI, this );
                 this.render();
             },
-            initialize333: function( model, unitView ) {
-                this.unitView = unitView;
-                this.courseModel = unitView.editCourse;
-                this.on( 'view_rendered', this.setUI, this );
 
-                this.render();
-            },
             setUI: function() {
                 // Add unit list menu
                 this.$el.appendTo( this.editCourseView.current );
@@ -135,9 +129,12 @@
             },
             updateUnitModels: function( data ) {
                 if ( data.units ) {
-                    //this.unitModels = _.extend( this.unitModels, data.units );
+                    this.unitModels = _.extend( this.unitModels, data.units );
                 }
                 this.editCourseView.after_update();
+            },
+            updateCollection: function() {
+                this.editCourseView.unitCollection.add(this.unitModels);
             },
             updateError: function() {
 

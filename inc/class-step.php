@@ -37,6 +37,7 @@ class CoursePress_Step extends CoursePress_Utility {
 		$this->__set( 'post_content', $step->post_content );
 		$this->__set( 'post_name', $step->post_name );
 		$this->__set( 'unit_id', $step->post_parent );
+		$this->__set( 'post_parent', $step->post_parent );
 		$this->__set( 'course_id', get_post_field( 'post_parent', $step->post_parent ) );
 
 		// Setup meta-data
@@ -122,17 +123,27 @@ class CoursePress_Step extends CoursePress_Utility {
 		return $this->__get( 'post_title' );
 	}
 
+	function get_unit() {
+		$unit_id = $this->__get( 'post_parent' );
+
+		return coursepress_get_unit( $unit_id );
+	}
+
 	function get_permalink() {
 		$module_number = $this->__get( 'module_page' );
+
 		if ( ! $module_number ) {
 			$module_number = 1;
 		}
 		$post_name = $this->__get( 'post_name' );
+		$unit = $this->get_unit();
+		$course = $unit->get_course();
 
-		if ( (int) $module_number > 0 ) {
+		if ( $course->is_with_modules() && (int) $module_number > 0 ) {
+
 			$modules = $this->unit->get_modules();
 
-			if ( ! empty( $modules ) && $modules[ $module_number] ) {
+			if ( ! empty( $modules ) && $modules[$module_number] ) {
 				$module = $modules[ $module_number ];
 
 				return $module['url'] . trailingslashit( $post_name );
@@ -211,17 +222,6 @@ class CoursePress_Step extends CoursePress_Utility {
 
 	function is_assessable() {
 		return $this->__get( 'assessable' );
-	}
-
-	function get_unit() {
-		$unit = $this->__get( 'unit' );
-
-		if ( ! $unit ) {
-			$unit_id = $this->__get( 'post_parent' );
-			$unit = coursepress_get_unit( $unit_id );
-		}
-
-		return $unit;
 	}
 
 	function get_course() {

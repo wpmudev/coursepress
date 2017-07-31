@@ -31,6 +31,8 @@
                 meta_module_type: 'text'
             }, defaults),
             image: _.extend({}, defaults, {
+                module_type: 'image',
+                meta_module_type: 'image',
                 image_url: '',
                 meta_image_url: '',
                 caption_field: 'media',
@@ -43,14 +45,18 @@
                 meta_show_media_caption: false,
             }),
             'input-upload': _.extend({
+                module_type: 'input-upload',
+                meta_module_type: 'input-upload',
                 allowed_file_types: ['image', 'pdf', 'zip'],
                 meta_allowed_file_types: ['image', 'pdf', 'zip']
             }, defaults ),
-            discussion: _.extend({}, defaults, {
-                show_content: 1,
-                meta_show_content: 1
-            }),
+            discussion: _.extend({
+                module_type: 'discussion',
+                meta_module_type: 'discussion'
+            }, defaults ),
             video: _.extend({
+                module_type: 'video',
+                meta_module_type: 'video',
                 video_url: '',
                 meta_video_url: '',
                 show_media_caption: false,
@@ -69,8 +75,12 @@
                 meta_hide_related_media: 1
             }, defaults ),
             audio: _.extend({
+                module_type: 'audio',
+                meta_module_type: 'audio',
                 audio_url: '',
                 meta_audio_url: '',
+                audio_url_thumbnail_id: 0,
+                meta_audio_url_thumbnail_id: 0,
                 loop: false,
                 meta_loop: false,
                 autoplay: false,
