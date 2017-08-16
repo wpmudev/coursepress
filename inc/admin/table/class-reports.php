@@ -54,40 +54,32 @@ class CoursePress_Admin_Table_Reports extends WP_List_Table {
 
 		$current_page = $this->get_pagenum();
 		$offset = ( $current_page - 1 ) * $per_page;
-		$s = isset( $_POST['s'] )? mb_strtolower( trim( $_POST['s'] ) ):false;
 
-		if ( is_multisite() ) {
-			$course_meta_key = $wpdb->prefix . 'enrolled_course_date_' . $this->course_id;
-		} else {
-			$course_meta_key = 'enrolled_course_date_' . $this->course_id;
-		}
-
-		$args = array(
-			'meta_query' => array(
-				array(
-					'key' => $course_meta_key,
-					'compare' => 'EXISTS',
-				),
-			),
-			'number' => $per_page,
-			'offset' => $offset,
-			'search' => $s,
-		);
-
-		$users = new WP_User_Query( $args );
+		$users = coursepress_get_students_ids( $this->course_id, $offset, $per_page );
 		$this->items = array();
-
-		$results = $users->get_results();
-
 		/**
 		 */
-		foreach ( $results as $item ) {
-			$user = coursepress_get_user( $item->ID );
+		foreach ( $users as $id ) {
+			$args = array(
+				'student_id' => $ID,
+				'course_id' => $this->course_id,
+			);
+			$download_url = wp_nonce_url( add_query_arg( $args ), 'coursepress_download_report' );
+			$args['mode'] = 'html';
+			$preview_url = wp_nonce_url( add_query_arg( $args ), 'coursepress_preview_report' );
+			$user = coursepress_get_user( $id );
 			$user->progress = $user->get_completion_data( $this->course_id );
+			$user->responses = coursepress_count_course_responses( $user, $this->course_id, $user->progress );
+			$user->urls = array(
+				'download_url' => $download_url,
+				'preview_url' => $preview_url,
+			);
 			$this->items[] = $user;
 		}
 
-		$total_items = $users->get_total();
+		$total_items = coursepress_get_students_ids( $this->course_id, 0, 0 );
+		$total_items = count( $total_items );
+
 		$this->set_pagination_args(
 			array(
 				'total_items' => $total_items,
@@ -151,47 +143,6 @@ class CoursePress_Admin_Table_Reports extends WP_List_Table {
 		if ( 'name' !== $column_name ) {
 			return '';
 		}
-	}
-
-	public function column_report( $item ) {
-		if ( true === $this->is_cache_path_writable ) {
-			$download_url = add_query_arg(
-				array(
-					'student_id' => $item->ID,
-					'course_id' => $this->course_id,
-					'_wpnonce' => wp_create_nonce( 'coursepress_download_report' ),
-				)
-			);
-			return sprintf(
-				'<a href="%s" data-student="%d" data-course="%d"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>&nbsp;</a>',
-				esc_url( $download_url ),
-				esc_attr( $item->ID ),
-				esc_attr( $this->course_id )
-			);
-		}
-		return sprintf( '<span title="%s" data-click="false"></span>', esc_attr__( 'We can not generata PDF. Cache directory is not writable.', 'CP_TD' ) );
-	}
-
-	/**
-	 * Preview Report in HTML
-	 *
-	 * @since 2.0.5
-	 */
-	public function column_html( $item ) {
-		$download_url = add_query_arg(
-			array(
-				'student_id' => $item->ID,
-				'course_id' => $this->course_id,
-				'mode' => 'html',
-				'_wpnonce' => wp_create_nonce( 'coursepress_download_report' ),
-			)
-		);
-		return sprintf(
-			'<a href="%s" data-student="%d" data-course="%d"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;</a>',
-			esc_url( $download_url ),
-			esc_attr( $item->ID ),
-			esc_attr( $this->course_id )
-		);
 	}
 
 	public function extra_tablenav( $which ) {

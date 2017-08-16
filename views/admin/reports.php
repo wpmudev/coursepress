@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var $columns
+ * @var $hidden_columns
+ * @var $courses
+ * @var $course CoursePress_Course
+ */
+?>
 <div class="wrap coursepress-wrap" id="coursepress-reports-list">
 	<h1 class="wp-heading-inline"><?php _e( 'Reports', 'cp' ); ?></h1>
     <div class="coursepress-page">
@@ -26,7 +34,7 @@ foreach ( $courses as $course_id => $course ) {
             <input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>" />
         </form>
 
-        <table class="coursepress-table wp-list-table widefat fixed striped reports">
+        <table class="coursepress-table">
             <thead>
                 <tr>
                     <?php foreach ( $columns as $column_id => $column_label ) { ?>
@@ -49,26 +57,51 @@ if ( ! empty( $items ) ) {
                                 <td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>">
                                     <?php
 									switch ( $column_id ) {
+										case 'ID':
+											echo $item->ID;
+										break;
+
 										case 'student':
-											printf(
-												'%s <span>%s</span>',
-												get_avatar( $item->ID, 32 ),
-												$item->display_name
-											);
+											echo '<div class="cp-flex">';
+											echo '<span class="gravatar">';
+											echo get_avatar( $item->email, 30 );
+											echo '</span>';
+											echo ' ';
+											echo '<span class="user_login">';
+											echo $item->user_login;
+											echo '</span>';
+											echo ' ';
+											echo '<span class="display_name">(';
+											echo $item->display_name;
+											echo ')</span>';
+											echo '</div>';
+										break;
+
+										case 'responses':
+											echo $item->responses;
+										break;
+
+										case 'average':
+											if ( isset( $item->progress['completion']['progress'] ) ) {
+												echo $item->progress['completion']['progress'];
+											} else {
+												echo 0;
+											}
+											echo '%';
 										break;
 
 
 										default :
 											echo $column_id;
-												/**
-												 * Trigger to allow custom column value
-												 *
-												 * @since 3.0
-												 * @param string $column_id
-												 * @param CoursePress_Course object $item
-												 */
-												do_action( 'coursespress_reportslist_column', $column_id, $item );
-												break;
+											/**
+			 * Trigger to allow custom column value
+			 *
+			 * @since 3.0
+			 * @param string $column_id
+			 * @param CoursePress_Course object $item
+			 */
+											do_action( 'coursespress_reportslist_column', $column_id, $item );
+										break;
 									}
 									?>
                                 </td>
