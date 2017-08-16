@@ -26,6 +26,15 @@
                 .column-average,
                 .column-responses {
                     text-align: right;
+                    width: 5em;
+                }
+            }
+            .column-download,
+            .column-view {
+                width: 5em;
+                text-align: center;
+                .fa {
+                    font-size: 2em;
                 }
             }
             .column-student {

@@ -49,235 +49,65 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 		add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'coursepress_reports_per_page' ) );
 	}
 
-	function get_page() {
+	public function get_page() {
+		$course_id = filter_input( INPUT_GET, 'course_id', FILTER_VALIDATE_INT );
+		$mode = filter_input( INPUT_GET, 'mode' );
+		$nonce = filter_input( INPUT_GET, '_wpnonce' );
+		if ( $course_id && 'html' == $mode && wp_verify_nonce( $nonce, 'coursepress_preview_report' ) ) {
+			$this->course_id = $course_id;
+			$this->get_page_preview();
+		} else {
+			$this->get_page_list();
+		}
+		coursepress_render( 'views/admin/footer-text' );
+	}
+
+	private function get_page_list() {
 		global $CoursePress_User;
-
-		$screen = get_current_screen();
-		$page = isset( $_GET['page'] ) ? esc_attr( $_GET['page'] ) : 'coursepress';
-		$search = isset( $_GET['s'] ) ? $_GET['s'] : '';
-
 		$this->list->prepare_items();
 		$count = $this->list->get_count();
-
 		$args = array(
 			'columns' => $this->columns(),
-			'course_edit_link' => add_query_arg( 'page', 'coursepress_course', admin_url( 'admin.php' ) ),
 			'courses' => coursepress_get_accessible_courses(),
 			'hidden_columns' => $this->hidden_columns(),
 			'items' => $this->list->items,
-			'page' => $page,
+			'page' => $this->slug,
 			'pagination' => $this->set_courses_pagination( $count ),
 		);
 		coursepress_render( 'views/admin/reports', $args );
-		coursepress_render( 'views/admin/footer-text' );
 	}
 
-	/**
-	 * Set pagination for courses listing page.
-	 *
-	 * We are using WP_Listing_Table class to set pagination.
-	 *
-	 * @param int $count Total courses.
-	 *
-	 * @return object
-	 */
-	function set_pagination( $count ) {
-		// Get no. of courses per page.
-		$per_page = get_user_meta( get_current_user_id(), 'coursepress_course_per_page', true );
-		$per_page = empty( $per_page ) ? coursepress_get_option( 'posts_per_page', 20 )  : $per_page;
-
-		// Using WP_List table for pagination.
-		$listing = new WP_List_Table();
+	private function get_page_preview() {
+		$student_id = filter_input( INPUT_GET, 'student_id', FILTER_VALIDATE_INT );
+		$course = coursepress_get_course( $this->course_id );
 		$args = array(
-			'total_items' => $count,
-			'per_page' => $per_page,
+			'page' => $this->slug,
+			'colors' => $this->get_colors(),
+			'course' => $course,
+			'units' => $course->get_units( false ),
+			'student' => coursepress_get_user( $student_id ),
 		);
-		$listing->set_pagination_args( $args );
-
-		return $listing;
+		coursepress_render( 'views/admin/report-preview', $args );
 	}
 
-	function get_edit_page() {
-	    global $CoursePress;
-
-		// We need the image editor here, enqueue it!!!
-		wp_enqueue_media();
-		// Include datepicker
-		wp_enqueue_script( 'jquery-ui-datepicker' );
-		// Include color picker
-		wp_enqueue_script( 'iris' );
-
-		$course_id = filter_input( INPUT_GET, 'cid', FILTER_VALIDATE_INT );
-
-		// If it's a new course, create a draft course
-		if ( empty( $course_id ) ) {
-			$course = coursepress_get_course( get_default_post_to_edit( 'course', true ) );
-			$course->post_title = '';
-		} else {
-			$course = coursepress_get_course( $course_id );
-		}
-
-		// Set course category
-		$category = array_values( $course->get_category() );
-		$course->__set( 'course_category', $category );
-
-		$this->localize_array = wp_parse_args( $local_vars, $this->localize_array );
-
-		$menu_list = array(
-			'course-type' => __( 'Type of Course', 'cp' ),
-			'course-settings' => __( 'Course Settings', 'cp' ),
-			'course-units' => __( 'Units', 'cp' ),
-			'course-completion' => __( 'Course Completion', 'cp' ),
-			'course-students' => __( 'Students', 'cp' ),
+	private function get_colors() {
+		$colors = apply_filters(
+			'coursepress_report_colors',
+			array(
+				'title_bg' => '#0091cd',
+				'title' => '#ffffff',
+				'unit_bg' => '#f5f5f5',
+				'unit' => '#000000',
+				'no_items' => '#858585',
+				'item_bg' => '#ffffff',
+				'item' => '#000000',
+				'item_line' => '#f5f5f5',
+				'footer_bg' => '#0091cd',
+				'footer' => '#ffffff',
+				'row_even_bg' => '#fdfdf0',
+				'row_odd_bg' => '#fff',
+			)
 		);
-
-		/**
-		 * Allow population of additional menu list.
-		 *
-		 * @since 3.0
-		 * @param array $menu_list
-		 */
-		$menu_list = apply_filters( 'coursepress_course_edit_menus', $menu_list );
-
-		$args = array(
-			'course_id' => $course_id,
-			'page_title' => $course_id > 0 ? get_the_title( $course_id ) : __( 'New Course', 'cp' ),
-			'menu_list' => $menu_list,
-		);
-
-		// Data for course settings form.
-		$settings_data = array(
-			'course_id' => $course_id,
-			'post_content' => $course->post_content,
-			'post_excerpt' => htmlspecialchars_decode( $course->post_excerpt ),
-		);
-
-		coursepress_render( 'views/admin/course-edit', $args );
-		coursepress_render( 'views/admin/footer-text' );
-
-		// Load templates
-		coursepress_render( 'views/tpl/common' );
-		coursepress_render( 'views/tpl/course-type', array( 'course_id' => $course_id ) );
-		coursepress_render( 'views/tpl/course-completion' );
-		coursepress_render( 'views/tpl/course-settings', $settings_data );
-
-		$certClass = $CoursePress->get_class( 'CoursePress_Certificate' );
-		$tokens = array(
-			'COURSE_NAME',
-			'COURSE_SUB_TITLE',
-			'COURSE_OVERVIEW',
-			'COURSE_UNIT_LIST',
-			'DOWNLOAD_CERTIFICATE_LINK',
-			'DOWNLOAD_CERTIFICATE_BUTTON',
-			'STUDENT_WORKBOOK',
-		);
-		$format = sprintf( '<p>%1$s</p> <p>%2$s</p>', __( 'These codes will be replaced with actual data:', 'cp' ), '<b>%s</b>' );
-		$page_tokens = sprintf( $format, implode( ', ', $tokens ) );
-		$cert_tokens = sprintf( $format, implode( ', ', array_keys( $certClass->get_tokens() ) ) );
-		$completion_pages = array(
-			'tokens' => $page_tokens,
-			'pre_completion' => array(
-				'title' => __( 'Pre Completion Page', 'cp' ),
-				'description' => __( 'The page content to appear after an student completed the course and is awaiting instructor\'s final grade.', 'cp' ),
-			),
-			'course_completion' => array(
-				'title' => __( 'Successful Completion Page', 'cp' ),
-				'description' => __( 'The content to use when an student successfully completed the course.', 'cp' ),
-			),
-			'course_failed' => array(
-				'title' => __( 'Failure Notice', 'cp' ),
-				'description' => __( 'The content to use when an student failed to pass the course.', 'cp' ),
-			),
-			'cert_tokens' => $cert_tokens,
-		);
-		$this->localize_array['completion_pages'] = $completion_pages;
-
-		coursepress_render( 'views/tpl/course-completion', array( 'completion_pages' => $completion_pages ) );
-		coursepress_render( 'views/tpl/course-units' );
-	}
-
-	function get_students_page() {
-		$students = new CoursePress_Admin_Students();
-		$students->get_page();
-	}
-
-	function get_instructors_page() {
-		coursepress_render( 'views/admin/instructors' );
-	}
-
-	function get_forum_page() {
-		coursepress_render( 'views/admin/forum' );
-	}
-
-	function get_reports_page() {
-		$students = new CoursePress_Admin_Reports();
-		$students->get_page();
-	}
-
-	function get_assessments_page() {
-		coursepress_render( 'views/admin/assessments' );
-	}
-
-	function get_notification_page() {
-		coursepress_render( 'views/admin/notifications' );
-	}
-
-	function get_settings_page() {
-	    global $CoursePress;
-
-	    // Include wp.media
-		wp_enqueue_media();
-
-	    // Include color picker
-		wp_enqueue_script( 'iris' );
-
-		// Include jquery-iframe
-		wp_enqueue_script( 'jquery-iframe', $CoursePress->plugin_url . '/assets/external/js/jquery.iframe-transport.js' );
-
-		$this->lib3();
-		// Add global setting to localize array
-		$this->localize_array['settings'] = coursepress_get_setting( true );
-		$this->localize_array['messages'] = array(
-		    'no_mp_woo' => sprintf( __( '%s and %s cannot be activated simultaneously!', 'cp' ), 'MarketPress', 'WooCommerce' ),
-		);
-
-		/**
-		 * Fire to get all available extensions.
-		 *
-		 * @since 3.0
-		 * @param array $extensions
-		 */
-		$extensions = apply_filters( 'coursepress_extensions', array() );
-
-		if ( ! $extensions ) {
-			$extensions = array();
-		}
-		$this->localize_array['extensions'] = $extensions;
-
-		coursepress_render( 'views/admin/settings' );
-
-		// Add TPL
-		coursepress_render( 'views/tpl/common' );
-		coursepress_render( 'views/tpl/settings-general' );
-		coursepress_render( 'views/tpl/settings-slugs' );
-
-		$emails = $CoursePress->get_class( 'CoursePress_Email' );
-		$sections = $emails->get_settings_sections();
-		$this->localize_array['settings']['email'] = $emails->get_defaults();
-		$this->localize_array['email_sections'] = $sections;
-
-		$email_vars = array(
-			'sections' => $sections,
-			'config' => array(),
-		);
-
-		coursepress_render( 'views/tpl/settings-emails', $email_vars );
-		coursepress_render( 'views/tpl/settings-capabilities' );
-		coursepress_render( 'views/tpl/settings-certificate' );
-		coursepress_render( 'views/tpl/settings-shortcodes' );
-		coursepress_render( 'views/tpl/settings-extensions', array( 'extensions' => $extensions ) );
-		coursepress_render( 'views/extensions/marketpress' );
-		coursepress_render( 'views/extensions/woocommerce' );
-		coursepress_render( 'views/tpl/settings-import-export' );
+		return $colors;
 	}
 }

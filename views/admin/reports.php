@@ -88,8 +88,23 @@ if ( ! empty( $items ) ) {
 												echo 0;
 											}
 											echo '%';
-										break;
+											break;
 
+										case 'download':
+											printf(
+												'<a href="%s" data-student="%d" data-course="%d"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>&nbsp;</a>',
+												esc_url( $item->download_url ),
+												esc_attr( $item->ID ),
+												esc_attr( $course_id )
+											);
+											break;
+
+										case 'view':
+											printf(
+												'<a href="%s"><i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;</a>',
+												esc_url( $item->preview_url )
+											);
+											break;
 
 										default :
 											echo $column_id;

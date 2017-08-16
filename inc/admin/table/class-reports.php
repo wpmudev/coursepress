@@ -60,20 +60,30 @@ class CoursePress_Admin_Table_Reports extends WP_List_Table {
 		/**
 		 */
 		foreach ( $users as $id ) {
+			$user = coursepress_get_user( $id );
+			/**
+			 * progress
+			 */
+			$user->progress = $user->get_completion_data( $this->course_id );
+			/**
+			 * responses
+			 */
+			$user->responses = coursepress_count_course_responses( $user, $this->course_id, $user->progress );
+			/**
+			 * download url
+			 */
 			$args = array(
-				'student_id' => $ID,
+				'student_id' => $id,
 				'course_id' => $this->course_id,
 			);
-			$download_url = wp_nonce_url( add_query_arg( $args ), 'coursepress_download_report' );
+			$user->download_url = wp_nonce_url( add_query_arg( $args ), 'coursepress_download_report' );
+			/**
+			 * preview
+			 */
 			$args['mode'] = 'html';
-			$preview_url = wp_nonce_url( add_query_arg( $args ), 'coursepress_preview_report' );
-			$user = coursepress_get_user( $id );
-			$user->progress = $user->get_completion_data( $this->course_id );
-			$user->responses = coursepress_count_course_responses( $user, $this->course_id, $user->progress );
-			$user->urls = array(
-				'download_url' => $download_url,
-				'preview_url' => $preview_url,
-			);
+			$user->preview_url = wp_nonce_url( add_query_arg( $args ), 'coursepress_preview_report' );
+			/**
+			 */
 			$this->items[] = $user;
 		}
 
@@ -87,86 +97,5 @@ class CoursePress_Admin_Table_Reports extends WP_List_Table {
 				'course_id' => $this->course_id,
 			)
 		);
-	}
-
-	public function no_items() {
-		_e( 'No students found.', 'CP_TD' );
-	}
-
-	public function get_bulk_actions() {
-		$actions = array(
-			'download' => __( 'Download', 'CP_TD' ),
-			'download_summary' => __( 'Download Summary', 'CP_TD' ),
-			'show' => __( 'Show', 'CP_TD' ),
-			'show_summary' => __( 'Show Summary', 'CP_TD' ),
-		);
-
-		return $actions;
-	}
-
-	public function column_cb( $item ) {
-		return sprintf(
-			'<input type="checkbox" name="students[]" value="%s" />', $item->ID
-		);
-	}
-
-	public function column_ID( $item ) {
-		return $item->ID;
-	}
-
-	public function column_name( $item ) {
-		$avatar = get_avatar( $item->user_email, 28 );
-		$name = CoursePress_Helper_Utility::get_user_name( $item->ID, true );
-
-		return $avatar . $name;
-	}
-
-	private function get_responses( $item ) {
-
-		CoursePress_Data_Student::get_calculated_completion_data( $item->ID, $this->course_id );
-		$this->last_student_progress = CoursePress_Data_Student::get_completion_data( $item->ID, $this->course_id );
-		$responses = (int) CoursePress_Data_Student::count_course_responses( $item->ID, $this->course_id, $this->last_student_progress );
-
-		return $responses;
-	}
-
-	public function column_average( $item ) {
-		$average = CoursePress_Helper_Utility::get_array_val(
-			$this->last_student_progress,
-			'completion/average'
-		);
-
-		return (float) $average . '%';
-	}
-
-	protected function handle_row_actions( $item, $column_name, $primary ) {
-		if ( 'name' !== $column_name ) {
-			return '';
-		}
-	}
-
-	public function extra_tablenav( $which ) {
-		if ( 'top' !== $which ) {
-			return;
-		}
-
-		$options = array();
-		$options['value'] = $this->course_id;
-		$options['class'] = 'medium dropdown';
-		$options['placeholder'] = __( 'Select course', 'CP_TD' );
-		$courses = CoursePress_Helper_UI::get_course_dropdown( 'course_id', 'course_id', $this->courses, $options );
-		?>
-		<div class="alignleft course-filter">
-			<?php echo $courses; ?>
-			<input type="submit" class="button action" name="action" value="<?php esc_attr_e( 'Filter', 'CP_TD' ); ?>" />
-		</div>
-		<?php
-		$this->search_box( __( 'Search', 'CP_TD' ), 'search_students' );
-	}
-
-	public function pagination( $which ) {
-		if ( 'top' !== $which ) {
-			return parent::pagination( $which );
-		}
 	}
 }
