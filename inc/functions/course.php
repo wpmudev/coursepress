@@ -746,6 +746,7 @@ function coursepress_has_access( $course_id, $unit_id = 0, $module_id = 0, $step
 	$has_access = true;
 	$prevUnit = $unit->get_previous_unit();
 	$message = '';
+	$user_id = $user->ID;
 
 	if ( $prevUnit ) {
 		$has_access = $user->is_unit_completed( $course_id, $unit_id );
@@ -796,6 +797,27 @@ function coursepress_has_access( $course_id, $unit_id = 0, $module_id = 0, $step
 					}
 				}
 			}
+		} else {
+			$steps = $unit->get_steps();
+
+			if ( $steps && (int) $step_id > 0 ) {
+				foreach ( $steps as $step ) {
+					$_step_id = $step->__get( 'ID' );
+
+					$is_step_completed = $user->is_step_completed( $course_id, $unit_id, $_step_id );
+
+					if ( ! $is_step_completed && $step_id != $_step_id ) {
+						$has_access = false;
+						$message = __( 'You need to complete all previous steps before this step!', 'cp' );
+						break;
+					}
+
+					if ( $step_id === $_step_id ) {
+						break;
+					}
+				}
+			}
+
 		}
 	}
 
@@ -909,6 +931,31 @@ function coursepress_get_link_cycle( $type = 'next' ) {
 							$next = $course->get_permalink() . trailingslashit( 'completion/validate' );
 						}
 					}
+				}
+			}
+		}
+	} else {
+		if ( 'previous' == $type ) {
+			$prevStep = $_course_step->get_previous_step();
+
+			if ( $prevStep ) {
+				$previous = $prevStep->get_permalink();
+			} else {
+				$previous = $_course_module['url'];
+			}
+		} else {
+			$nextStep = $_course_step->get_next_step();
+
+			if ( $nextStep ) {
+				$next = $nextStep->get_permalink();
+			} else {
+				// Try next unit
+				$nextUnit = $unit->get_next_unit();
+
+				if ( $nextUnit ) {
+					$next = $nextUnit->get_unit_url();
+				} else {
+					$next = $course->get_permalink() . trailingslashit( 'completion/validate' );
 				}
 			}
 		}
@@ -1501,4 +1548,101 @@ function coursepress_discussion_module_link( $location, $comment ) {
 	$location = esc_url_raw( $course_link . $unit_slug . get_post_field( 'post_name', $course_id ) . '#module-' . $comment->comment_post_ID );
 
 	return $location;
+}
+
+function coursepress_invite_student( $course_id = 0, $student_data = array() ) {
+	global $CoursePress;
+
+	$course = coursepress_get_course( $course_id );
+
+	if ( is_wp_error( $course ) ) {
+		return false;
+	}
+
+	$email_type = 'course_invitation';
+
+	if ( 'passcode' == $course->__get( 'enrollment_type' ) ) {
+		$email_type = 'course_invitation_password';
+	}
+
+	$emailClass = $CoursePress->get_class( 'CoursePress_Email' );
+	$email_data = $emailClass->get_email_data( $email_type );
+
+	if ( empty( $email_data['enabled'] ) ) {
+		return false;
+	}
+
+	$tokens = array(
+		'COURSE_NAME' => $course->__get( 'post_title' ),
+		'COURSE_EXCERPT' => $course->__get( 'post_excerpt' ),
+		'COURSE_ADDRESS' => $course->get_permalink(),
+		'WEBSITE_ADDRESS' => site_url( '/' ),
+		'PASSCODE' => $course->__get( 'enrollment_passcode' ),
+		'FIRST_NAME' => $student_data['first_name'],
+		'LAST_NAME' => $student_data['last_name'],
+	);
+	$message = $course->replace_vars( $email_data['content'], $tokens );
+	$email = sanitize_email( $student_data['email'] );
+
+	$args = array(
+		'message' => $message,
+		'to' => $email,
+	);
+	$email_data = wp_parse_args( $email_data, $args );
+	$emailClass->sendEmail( $email_type, $email_data );
+
+	$student_data['date'] = $course->date( current_time( 'mysql' ) );
+	$invited_students = $course->__get( 'invited_students' );
+
+	if ( ! $invited_students ) {
+		$invited_students = array();
+	}
+
+	$invited_students[ $email ] = $student_data;
+	$course->update_setting( 'invited_students', $invited_students );
+
+	return $student_data;
+}
+
+function coursepress_search_students( $args = array() ) {
+
+	$is_search = ! empty( $args['search'] );
+	$course_id = ! empty( $args['course_id'] ) ? (int) $args['course_id'] : 0;
+	$found = array();
+
+	if ( ! empty( $args['paged'] ) ) {
+		$pagenum = (int) $args['paged'];
+	}
+
+	if ( $is_search ) {
+		$search = $args['search'];
+		$search_query = array(
+			'search' => $search,
+			'search_columns' => array(
+				'ID',
+				'user_login',
+				'user_nicename',
+				'user_email',
+			),
+		);
+		$user_query = new WP_User_Query( $search_query );
+
+		if ( ! empty( $user_query->results ) ) {
+			foreach ( $user_query->results as $user ) {
+				if ( in_array( 'coursepress_student', $user->roles ) ) {
+					$cp_user = coursepress_get_user( $user->ID );
+
+					if ( $course_id > 0 ) {
+						if ( $cp_user->is_enrolled_at( $course_id ) ) {
+							$found[] = $cp_user;
+						}
+					} else {
+						$found[] = $cp_user;
+					}
+				}
+			}
+		}
+	}
+
+	return $found;
 }

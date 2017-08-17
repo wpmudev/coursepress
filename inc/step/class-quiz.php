@@ -20,7 +20,13 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 	}
 
 	protected function get_questions_data() {
-		return $this->__get( 'questions' );
+		$questions = $this->__get( 'questions' );
+
+		if ( is_array( $questions ) ) {
+			$questions = $this->to_array( $questions );
+		}
+
+		return $questions;
 	}
 
 	function get_answer_template( $user_id = 0 ) {
@@ -287,6 +293,7 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 		$questions = $this->get_questions_data();
 
 		if ( ! empty( $questions ) ) {
+
 			foreach ( $questions as $index => $question ) {
 				$method = 'get_question_' . $question['type'];
 

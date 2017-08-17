@@ -19,39 +19,44 @@
             unitModel: false,
             stepsView: false,
             moduleView: false,
-            steps: [],
+            steps: {},
+            stepsModel: {},
             menu_order: 0,
             views: {},
 
             events: {
                 'click .unit-step': 'addNewStep',
-                'keyup .module-title': 'updateModuleTitle'
+                'keyup .module-title': 'updateModuleTitle',
+                'change [name="show_description"]': 'toggleDescription'
             },
 
-            initialize: function( model, unitModel, moduleView ) {
-                var keys;
-
+            initialize: function( model, unitModulesModel ) {
+                this.steps = {};
+                this.stepsModel = {};
                 this.model = model;
-                keys = _.keys( model.steps );
-
-                if ( ! keys.length ) {
-                    this.steps = {};
-                } else {
-                    this.steps = model.steps;
-                }
-
-                this.unitModel = unitModel;
-                this.moduleView = moduleView;
+                this.unitModel = unitModulesModel.unitModel;
+                this.moduleView = unitModulesModel;
                 this.on( 'view_rendered', this.setUI, this );
 
                 this.render();
             },
 
             setUI: function() {
-                this.stepContainer = this.$('.unit-steps');
+                var self;
 
-                if ( this.steps ) {
-                    _.each( this.steps, function( step ) {
+                this.stepContainer = this.$('.unit-steps');
+                self = this;
+
+                this.visualEditor({
+                    content: this.model.description,
+                    container: this.$('.cp-module-description'),
+                    callback: function(content) {
+                        self.model.description = content;
+                    }
+                });
+
+                if ( this.model.steps ) {
+                    _.each( this.model.steps, function( step ) {
                         step = this.setStep(step);
                         step.toggleContents();
                     }, this );
@@ -68,20 +73,20 @@
                     meta_module_type: type
                 };
                 step = this.setStep(data);
-                this.updateModuleSteps(step.model);
             },
 
             setStep: function( model ) {
-                var step;
+                var step, cid;
 
                 this.menu_order += 1;
                 model.menu_order = this.menu_order;
-                step = new CoursePress.Step(model, this);
-                step.on( 'coursepress:model_updated', this.updateModuleSteps, this );
-                step.trigger( 'coursepress:model_updated', step.model, step );
-                step.on( 'coursepress:step_reordered', this.reorderSteps, this );
+                step = new CoursePress.Step({model: model}, this);
                 step.$el.appendTo(this.stepContainer);
-                this.views[step.cid] = step;
+
+                cid = model.cid ? model.cid : step.model.cid;
+                this.steps[cid] = step;
+                this.stepsModel[cid] = step.model;
+                this.updateModuleSteps(step.model);
 
                 return step;
             },
@@ -99,18 +104,19 @@
                 var stepId;
 
                 stepId = stepModel.cid;
-                stepModel.set('module_page', this.model.id);
-                stepModel.set('meta_module_page', this.model.id);
-                this.steps[stepId] = stepModel.toJSON();
-                this.model.steps = this.steps;
-                this.moduleView.updateModuleModel();
+                stepModel.meta_module_page = stepModel.module_page = this.model.id;
+                this.steps[stepId].model = stepModel;
+                this.stepsModel[stepId] = stepModel;
+                this.model.steps = this.stepsModel;
+                this.moduleView.modules[this.moduleView.current] = this.model;
             },
 
             reorderSteps: function() {
-                var steps, menu_order, newSteps;
+                var steps, menu_order, newSteps, modelSteps;
 
                 steps = this.stepContainer.find('[name="menu_order"]');
                 newSteps = {};
+                modelSteps = {};
                 menu_order = 0;
 
                 _.each( steps, function( step ) {
@@ -120,16 +126,18 @@
 
                     var cid = step.data('cid');
                     newSteps[cid] = this.steps[cid];
+                    modelSteps[cid] = this.stepsModel[cid];
                 }, this );
 
-                this.model.steps = this.steps;
-                this.moduleView.updateModuleModel();
+                this.stepsModel = modelSteps;
+                this.model.steps = modelSteps;
+                this.moduleView.modules[this.moduleView.current].steps = this.steps;
             },
 
             setStepIcons: function() {
                 var icons = {};
 
-                this.stepIconContainer = this.$('.step-icon-container').empty();
+                this.$('.step-icon-container').empty();
 
                 _.each( this.steps, function(step) {
                     var type = step.module_type;
@@ -138,6 +146,17 @@
                         icons[type] = type;
                     }
                 });
+            },
+
+            toggleDescription: function(ev) {
+                var sender, checked, content;
+
+                sender = this.$(ev.currentTarget);
+                checked = sender.is(':checked');
+                content = this.$('.cp-module-description');
+
+                content[ checked ? 'slideDown' : 'slideUp']();
+                this.model.show_description = checked ? true : false;
             }
         });
 
@@ -149,12 +168,13 @@
             active: false,
             events: {
                 'click .module-item': 'setActiveModule',
-                'click .add-module': 'addModule'
+                'click .add-module': 'addModule',
+                'change [name]': 'updateModel',
+                'click .cp-delete-module': 'deleteModule'
             },
 
             initialize: function( model, unitModel ) {
-                this.model = model;
-                this.modules = model.get('modules');
+                this.modules = this.model.get('modules');
                 this.unitModel = unitModel;
                 this.on( 'view_rendered', this.setUI, this );
                 this.render();
@@ -171,26 +191,39 @@
             },
 
             addModule: function() {
-                var model, keys, length;
+                var model, length, modules;
 
-                keys = _.keys(this.modules);
-                length = keys.length + 1;
+                modules = _.toArray(this.modules);
+                length = modules.length;
+
                 model = {
                     id: length,
                     title: win._coursepress.text.untitled,
+                    show_description: true,
+                    description: '',
                     steps: {}
                 };
+
                 this.modules[length] = model;
                 this.model.set('modules', this.modules);
                 this.current = length;
                 this._setActiveModule(model);
                 this.setModuleList();
+                // Set the first module as active
+                this.$('[data-order]').last().trigger('click');
             },
 
             setModuleList: function() {
+                var self = this;
+
                 this.moduleListContainer.html('');
                 this.moduleList = new ModuleList(this.modules);
                 this.moduleList.$el.appendTo(this.moduleListContainer);
+                this.moduleListContainer.find('.cp-select-list').sortable({
+                    stop: function() {
+                        self.reOrderModules();
+                    }
+                });
             },
 
             setActiveModule: function( ev ) {
@@ -207,10 +240,17 @@
             },
 
             _setActiveModule: function( model ) {
-                this.stepsContainer.html('');
-                this.moduleView = new ModuleSteps(model, this.unitModel, this );
+                if ( this.moduleView ) {
+                    this.moduleView.remove();
+                }
+                model = _.extend({
+                    show_description: true,
+                    description: ''
+                }, model );
+
+                this.moduleView = new ModuleSteps(model, this);
                 this.moduleView.$el.appendTo( this.stepsContainer );
-                this.moduleView.on( 'coursepress:update_module_title', this.updateActiveTitle, this );
+                this.moduleView.on('coursepress:update_module_title', this.updateActiveTitle, this);
             },
 
             updateActiveTitle: function( title ) {
@@ -219,8 +259,55 @@
             },
 
             updateModuleModel: function() {
+                if ( ! this.moduleView ) {
+                    return;
+                }
                 this.modules[this.current] = this.moduleView.model;
                 this.unitModel.model.set('modules', this.modules);
+            },
+
+            updateModel: function(ev) {
+                ev.stopImmediatePropagation();
+            },
+
+            reOrderModules: function() {
+                var x, modules;
+
+                x = 0;
+                modules = [];
+
+                _.each( this.moduleListContainer.find('.cp-select-list li'), function(module) {
+                    var order, _module;
+
+                    module = $(module);
+                    order = module.data('order');
+                    x += 1;
+                    _module = this.modules[order];
+
+                    if ( _module.steps ) {
+                        _.each( _module.steps, function(step, pos){
+                            step.meta_module_page = step.module_page = x;
+                            _module.steps[pos] = step;
+                        }, this );
+                    }
+                    modules[x] = _module;
+                    module.attr('data-order', x);
+                    module.data('order', x);
+                }, this );
+
+                this.modules = modules;
+                this.unitModel.model.set('modules', this.modules);
+            },
+
+            deleteModule: function() {
+                if ( this.moduleView ) {
+                    this.modules[this.current].deleted = true;
+                    this.moduleView.remove();
+
+                    this.setModuleList();
+                    this.reOrderModules();
+                    this.$('[data-order]').last().trigger('click');
+                }
             }
         });
     });

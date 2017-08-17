@@ -16,3 +16,47 @@
     width: 70%;
   }
 }
+
+#student-invites {
+  .cp-box {
+    margin-bottom: 15px;
+
+    .label {
+      margin-bottom: 5px;
+      display: block;
+    }
+  }
+  .send-invite {
+    .fa {
+      display: none;
+    }
+    &.active {
+      .fa {
+        display: inline-block;
+      }
+    }
+  }
+}
+
+#invited-students {
+  .invitee-active td {
+    background-color: rgba(0, 255, 0, 0.02);
+  }
+}
+
+.cp-invitee-container {
+  display: block;
+  margin: 25px 0;
+}
+
+@media screen {
+  @media (min-width: 1024px) {
+    #student-invites {
+      width: 40%;
+      padding-right: 25px;
+    }
+    #invited-students {
+      width: 60%;
+    }
+  }
+}

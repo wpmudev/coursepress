@@ -11,7 +11,6 @@
                 'change [name]': 'updateModel'
             },
             initialize: function( model, stepView ) {
-                this.model = model;
                 this.stepView = stepView;
                 this.on( 'view_rendered', this.setUI, this );
                 this.render();
