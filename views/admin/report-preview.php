@@ -31,9 +31,6 @@ echo '</h3>';
         <table class="coursepress-table">
 <?php
 foreach ( $units as $unit ) {
-
-
-
 ?>
                     <tbody>
                     <tr style="font-weight:bold; font-size: 4mm; background-color: <?php esc_attr_e( $colors['unit_bg'] ); ?> '; color: <?php esc_attr_e( $colors['unit'] ); ?>">
@@ -41,23 +38,22 @@ foreach ( $units as $unit ) {
                         </tr>
 <?php
 	$assessable_modules = 0;
-foreach ( $unit->unit_modules_with_steps as $id => $module_with_steps ) {
-	foreach ( $module_with_steps['steps'] as $module_id => $module ) {
-		if ( 1 != $module->assessable ) {
-			continue;
-		}
+foreach ( $unit->steps as $module_id => $module ) {
+	if ( 1 != $module->assessable ) {
+		continue;
+	}
 		$assessable_modules++;
 		$date_display = __( 'Not yet submitted', 'cp' );
-		if ( isset( $student->progress['units'][ $module->unit_id ]['responses'][ $module_id ]['date'] ) ) {
-			$date_display = $student->progress['units'][ $module->unit_id ]['responses'][ $module_id ]['date'];
-		}
+	if ( isset( $student->progress['units'][ $module->unit_id ]['responses'][ $module_id ]['date'] ) ) {
+		$date_display = $student->progress['units'][ $module->unit_id ]['responses'][ $module_id ]['date'];
+	}
 		$module_progress = '--';
-		if ( isset( $student->progress['completion'][ $module->unit_id ]['steps'][ $module_id ]['progress'] ) ) {
-			$module_progress = sprintf(
-				'%d%%',
-				$student->progress['completion'][ $module->unit_id ]['steps'][ $module_id ]['progress']
-			);
-		}
+	if ( isset( $student->progress['completion'][ $module->unit_id ]['steps'][ $module_id ]['progress'] ) ) {
+		$module_progress = sprintf(
+			'%d%%',
+			$student->progress['completion'][ $module->unit_id ]['steps'][ $module_id ]['progress']
+		);
+	}
 ?>
 <tr style="font-size: 4mm; background-color: <?php esc_attr_e( $colors['item_bg'] ); ?>; color: <?php esc_attr_e( $colors['item'] ); ?>">
 <td style="border-bottom: 0.5mm solid <?php esc_attr_e( $colors['item_line'] ); ?>"><?php esc_html_e( $module->post_title ); ?></td>
@@ -65,7 +61,6 @@ foreach ( $unit->unit_modules_with_steps as $id => $module_with_steps ) {
 <td style="border-bottom: 0.5mm solid <?php esc_attr_e( $colors['item_line'] ); ?>"><?php esc_html_e( $module_progress ); ?></td>
 </tr>
 <?php
-	}
 }
 if ( empty( $assessable_modules ) ) {
 ?>

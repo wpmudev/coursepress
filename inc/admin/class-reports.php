@@ -102,6 +102,7 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 		foreach ( $units as $unit ) {
 			$unit->get_unit_structure();
 			$unit->settings = $unit->get_settings();
+			$unit->steps = $unit->get_steps();
 			$u[] = $unit;
 		}
 		/**
