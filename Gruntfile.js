@@ -34,13 +34,16 @@ module.exports = function(grunt) {
 		js_files_concat: {
 			'assets/js/admin-general.js': [
 				// Add JS that will be loaded to all CP pages
-				'assets/js/src/common/coursepress.js',
-				'assets/js/src/common/request.js',
-				'assets/js/src/common/view.js',
-				'assets/js/src/common/add-image.js',
-				'assets/js/src/common/add-video.js',
-				'assets/js/src/common/add-media.js',
-				'assets/js/src/common/dropdown-menu.js'
+                'assets/js/src/common/coursepress.js',
+                'assets/js/src/common/request.js',
+                'assets/js/src/common/view.js',
+                'assets/js/src/common/add-image.js',
+                'assets/js/src/common/add-video.js',
+                'assets/js/src/common/dropdown-menu.js',
+                'assets/js/src/common/popup.js',
+                'assets/js/src/common/upload.js',
+                'assets/js/src/common/add-media.js',
+                'assets/js/src/cp-search-form.js'
 				// assets/js/src/admin/general/....
 			],
 			'assets/js/coursepress.js': [
