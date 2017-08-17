@@ -681,4 +681,129 @@ The %5$s Team', 'CoursePress' ),
 		return true;
 
 	}
+
+	/**
+	 * Send an email.
+	 *
+	 * @param string $context
+	 *               if specifying the 'subject' and 'message'.
+	 * @param array  $args Variables and email content.
+	 *               email .. recipient.
+	 *               message .. optional if specifying type.
+	 *               subject .. optional if specifying type.
+	 *               first_name
+	 *               last_name
+	 *               fields .. content variables, array of key-value pairs.
+	 * @return bool True if email was accepted by wp_mail.
+	 **/
+	function sendEmail( $context, $args ) {
+		// Prepare email content.
+		$email = array(
+			'to' => apply_filters(
+				'coursepress_email_to_address',
+				sanitize_email( $args['to'] ),
+				$args
+			),
+			'subject' => apply_filters(
+				'coursepress_email_subject',
+				sanitize_text_field( $args['subject'] ) ,
+				$args
+			),
+			'message' => apply_filters(
+				'coursepress_email_message',
+				$args['message'],
+				$args
+			),
+			'headers' => apply_filters(
+				'coursepress_email_headers',
+				array(
+					'Content-Type' => 'text/html',
+				)
+			),
+			'attachments' => apply_filters(
+				'coursepress_email_attachments',
+				isset( $args['attachments'] ) ? $args['attachments'] : array()
+			),
+		);
+
+		$email = apply_filters(
+			'coursepress_email_fields',
+			$email,
+			$args,
+			$context
+		);
+		$email = apply_filters(
+			'coursepress_email_fields-' . $context,
+			$email,
+			$args
+		);
+
+		// Good one to hook if you want to hook WP specific filters (e.g. changing from address)
+		do_action( 'coursepress_email_pre_send', $args, $context );
+		do_action( 'coursepress_email_pre_send-' . $context, $args );
+
+		if ( apply_filters( 'coursepress_email_strip_slashed', true, $args, $context ) ) {
+			$email['subject'] = stripslashes( $email['subject'] );
+			$email['message'] = stripslashes( nl2br( $email['message'] ) );
+		}
+
+		$header_string = '';
+
+		if ( isset( $args['bcc'] ) ) {
+			if ( is_array( $args['bcc'] ) ) {
+				$bcc = implode( ',', $args['bcc'] );
+			} else {
+				$bcc = $args['bcc'];
+			}
+			if ( ! empty( $bcc ) ) {
+				$header_string .= 'Bcc: ' . $bcc . ';';
+			}
+		}
+
+		foreach ( $email['headers'] as $key => $value ) {
+			$header_string .= $key . ': ' . $value . "\r\n";
+		}
+
+		$email['headers'] = $header_string;
+
+		/**
+		 * Action offers other plugins to implement custom email sending code,
+		 * for example to use a custom built HTML template or similar.
+		 *
+		 * @var bool  $result Output parameter, this should be set to true/false
+		 *            if the email was processed by the custom action handler.
+		 * @var array $email The email options for wp_mail.
+		 * @var array $args Email parameters passed to the CoursePress function.
+		 */
+		$result = apply_filters(
+			'coursepress_send_email',
+			null,
+			$email,
+			$args,
+			$context
+		);
+
+		// If custom send-option failed or was not used then send via wp_mail.
+		if ( is_null( $result ) || ! $result ) {
+
+			try {
+				$result = wp_mail(
+					$email['to'],
+					$email['subject'],
+					$email['message'],
+					$email['headers'],
+					$email['attachments']
+				);
+			} catch (phpmailerException $e) {
+				// print_r($e->getMessage()); // for debugging purposes
+				$result = false;
+			}
+
+		}
+
+		do_action( 'coursepress_email_sent', $args, $context, $result );
+		do_action( 'coursepress_email_sent-' . $context, $args, $result );
+
+		return $result;
+	}
 }

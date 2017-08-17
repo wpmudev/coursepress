@@ -87,18 +87,26 @@
                 meta_autoplay: false
             }, defaults ),
             download: _.extend({
+                module_type: 'download',
+                meta_module_type: 'download',
                 file_url: '',
                 meta_file_url: '',
                 link_text: '',
                 meta_link_text: ''
             }, defaults ),
             zipped: _.extend({
+                module_type: 'zipped',
+                meta_module_type: 'zipped',
                 zip_url: '',
                 meta_zip_url: '',
                 primary_file: '',
-                meta_primary_file: ''
+                meta_primary_file: '',
+                link_text: '',
+                meta_link_text: ''
             }, defaults ),
             'input-quiz': _.extend({
+                module_type: 'input-quiz',
+                meta_module_type: 'input-quiz',
                 questions: []
             }, defaults ),
             'input-written': _.extend({
@@ -123,9 +131,24 @@
            },
 
            initialize: function(model, stepController) {
+               this.model = _.extend( {}, default_vars[this.model.module_type], this.model );
+               this.type = this.model.module_type;
+
+               if ( ! this.model.cid ) {
+                   this.model.cid = this.cid;
+               }
+
+               //this.model = new Module(this.model);
+
+               /*
+
+               if ( model.get ) {
+                   model = model.toJSON();
+               }
                model = _.extend({cid: this.cid}, default_vars[model.module_type], model);
                this.model = new Module(model);
                this.type = this.model.get('module_type');
+               */
                this.stepController = stepController;
                this.on( 'view_rendered', this.setStep, this );
                this.render();
@@ -141,7 +164,7 @@
                    return;
                }
 
-               step = new CoursePress[step]( this.model, this );
+               step = new CoursePress[step]({model: this.model}, this );
                step.$el.appendTo(this.$('.cp-step-content'));
 
                _.delay(function() {

@@ -35,6 +35,31 @@ abstract class CoursePress_Utility {
         return $time_now;
     }
 
+    function strtotime( $date_string ) {
+	    $timestamp = 0;
+	    if ( is_numeric( $date_string ) ) {
+		    // Apparently we got a timestamp already. Simply return it.
+		    $timestamp = (int) $date_string;
+	    } elseif ( is_string( $date_string ) && ! empty( $date_string ) ) {
+		    /*
+			 * Convert the date-string into a timestamp; PHP assumes that the
+			 * date string is in servers default timezone.
+			 * We assume that date string is in "yyyy-mm-dd" format, not a
+			 * relative date and also without timezone suffix.
+			 */
+		    $timestamp = strtotime( $date_string . ' UTC' );
+	    }
+
+	    return (int) $timestamp;
+    }
+
+    function date( $date_string ) {
+    	$date_string = $this->strtotime( $date_string );
+    	$date_format = coursepress_get_option( 'date_format' );
+
+		return date_i18n( $date_format, $date_string );
+    }
+
     function setAttributes( $attr = array() ) {
         if ( ! $attr )
             return '';
@@ -161,6 +186,21 @@ abstract class CoursePress_Utility {
 
 	    return $per_page;
     }
+
+	function set_pagination( $count = 0, $option_name = '' ) {
+
+		// Using WP_List table for pagination.
+		$listing = new WP_List_Table();
+
+		$args = array(
+			'total_items' => $count,
+			'per_page' => $this->items_per_page( $option_name ),
+		);
+
+		$listing->set_pagination_args( $args );
+
+		return $listing;
+	}
 
 	function is_youtube_url( $url ) {
 		$host = parse_url( $url, PHP_URL_HOST );

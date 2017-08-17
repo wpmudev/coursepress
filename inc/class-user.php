@@ -493,7 +493,6 @@ class CoursePress_User extends CoursePress_Utility {
 			$progress = $this->get_completion_data( $course_id );
 		}
 
-		$user_id = $this->__get( 'ID' );
 		$course = coursepress_get_course( $course_id );
 
 		$is_done = coursepress_get_array_val( $progress, 'completion/completed' );
@@ -504,16 +503,14 @@ class CoursePress_User extends CoursePress_Utility {
 		}
 
 		$units = $course->get_units( true ); // Only validate published units
-		$with_modules = $course->__get( 'with_modules' );
-		$unit_grade = 0;
-		$total_gradable = 0;
-		$total_unit = count( $units );
+		$with_modules = $course->is_with_modules();
 		$course_progress = 0;
 
 		foreach ( $units as $unit ) {
 			$unit_id = $unit->__get( 'ID' );
 			$progress = $this->validate_unit( $unit, $with_modules, $progress );
 			$unit_progress = coursepress_get_array_val( $progress, 'completion/' . $unit_id . '/progress' );
+
 			$course_progress += (int) $unit_progress;
 		}
 
@@ -537,6 +534,9 @@ class CoursePress_User extends CoursePress_Utility {
 					}
 				}
 			}
+		} else {
+			$steps = $unit->get_steps();
+			$count = count( $steps );
 		}
 
 		if ( $count > 0 ) {
@@ -622,6 +622,32 @@ class CoursePress_User extends CoursePress_Utility {
 
 					//$unit_progress += $module_progress;
 					$unit_completion = coursepress_set_array_val( $unit_completion, 'modules/' . $module['id'] . '/progress', $module_progress );
+				}
+			}
+		} else {
+			$steps = $unit->get_steps();
+
+			if ( $steps ) {
+				$steps_completion = $this->validate_steps( $steps, $course_id, $unit_id, $progress, $force_completion, $force_pass_completion, $progress );
+
+				if ( ! empty( $steps_completion['passed'] ) ) {
+					$prev_passed = coursepress_get_array_val( $unit_completion, 'passed' );
+
+					if ( ! $prev_passed ) {
+						$prev_passed = array();
+					}
+					$passed = array_merge( $prev_passed, $steps_completion['passed'] );
+					$unit_completion = coursepress_set_array_val( $unit_completion, 'passed', $passed );
+				}
+
+				if ( ! empty( $steps_completion['progress'] ) ) {
+					$unit_progress += $steps_completion['progress'];
+				}
+
+				if ( ! empty( $steps_completion['steps'] ) ) {
+					foreach ( $steps_completion['steps'] as $step_id => $_step ) {
+						$unit_completion = coursepress_set_array_val( $unit_completion, 'steps/' . $step_id, $_step );
+					}
 				}
 			}
 		}
@@ -733,24 +759,28 @@ class CoursePress_User extends CoursePress_Utility {
 				if ( 'discussion' == $step_type ) {
 					$has_comments = coursepress_user_have_comments( $user_id, $step_id );
 
-					if ( $has_comments ) {
+					if ( $is_required ) {
+						if ( $has_comments ) {
+							$step_progress += $step_progress_ratio;
+							$item_progress += $item_ratio;
+							$module_progress += $m_ratio;
+						}
+					} else {
 						$step_progress += $step_progress_ratio;
 						$item_progress += $item_ratio;
 						$module_progress += $m_ratio;
-					} elseif ( ! $is_required ) {
-						$module_progress += $m_ratio;
-						$item_progress += $item_ratio;
-						$step_progress += $step_progress_ratio;
 					}
 
 				} elseif ( 'video' == $step_type || 'audio' == $step_type ) {
 					if ( ! $is_required ) {
-						if ( $step_seen )
-							$valid = true;
-						elseif ( ! $force_completion )
-							$valid = true;
-					} elseif ( $step_seen )
-						$valid = true;
+						if ( $step_seen ) {
+							$step_progress += $step_progress_ratio;
+							$item_progress += $item_ratio;
+							$module_progress += $m_ratio;
+						}
+					} elseif ( $step_seen ) {
+
+					}
 
 				} elseif ( ! $is_required ) {
 					if ( $step_seen )

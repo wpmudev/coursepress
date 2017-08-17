@@ -6,16 +6,13 @@
     CoursePress.Define( 'Step_DOWNLOAD', function() {
         return CoursePress.View.extend({
             template_id: 'coursepress-step-download',
+            stepView: false,
             events: {
-                'change [name="meta_show_content"]': 'toggleContent'
+                'change [name="meta_show_content"]': 'toggleContent',
+                'change [name]': 'updateModel'
             },
-            initialize: function( model ) {
-                model = _.extend({
-                    meta_file_url: '',
-                    meta_link_text: '',
-                    meta_show_content: false
-                }, model );
-                this.model = new CoursePress.Request(model);
+            initialize: function( model, stepView ) {
+                this.stepView = stepView;
                 this.on( 'view_rendered', this.setUI, this );
                 this.render();
             },
@@ -25,7 +22,7 @@
                 this.description = this.$('.cp-step-description');
                 this.visualEditor({
                     container: this.description,
-                    content: this.model.get( 'post_content' ),
+                    content: this.model.post_content,
                     callback: function( content ) {
                         self.model.set( 'post_content', content );
                     }
@@ -42,6 +39,9 @@
                 } else {
                     content.slideUp();
                 }
+            },
+            updateModel: function(ev) {
+                this.stepView.updateModel(ev);
             }
         });
     });

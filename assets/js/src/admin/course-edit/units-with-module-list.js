@@ -14,12 +14,14 @@
             with_modules: false,
             events: {
                 'click .cp-unit-heading label': 'toggleListing',
-                'click [data-unit]': 'editUnit',
-                'click [data-module]': 'editModule'
+                'click .edit-unit': 'editUnit',
+                'click [data-module]': 'editModule',
+                'click .delete-unit': 'deleteUnit'
             },
 
             initialize: function( model, unitsView ) {
                 var with_modules;
+
                 this.model = model;
                 with_modules = unitsView.editCourse.model.get('meta_with_modules');
 
@@ -83,6 +85,16 @@
                 if ( unit.unitview && unit.unitview.modules ) {
                     unit.unitview.modules.$('.module-item[data-order="' + module_id + '"]').trigger('click');
                 }
+            },
+
+            deleteUnit: function(ev) {
+                var sender, cid, unit;
+
+                sender = this.$(ev.currentTarget);
+                cid = sender.data('unit');
+
+                this.unitsView.editCourse.unitList.deleteUnit(cid);
+                this.remove();
             }
         });
 
@@ -96,18 +108,21 @@
                 this.with_modules = editCourseView.model.get('meta_with_modules');
                 this.model = model;
                 this.editCourse = editCourseView;
-                this.editCourse.unitCollection.on( 'add', this.setUnitItem, this );
-                this.editCourse.on( 'coursepress:validate-course-units', this.validateUnits, this );
-                this.on( 'view_rendered', this.setUI, this );
+                this.editCourse.unitCollection.on('add', this.setUnitItem, this);
+                this.editCourse.on('coursepress:validate-course-units', this.validateUnits, this);
+                this.editCourse.unitCollection.on( 'coursepress:unit_collection_loaded', this.maybeSetUnit, this );
+                this.on('view_rendered', this.setUI, this);
                 this.render();
             },
 
-            validateUnits: function() {
+            validateUnits: function(ev) {
                 var units, error, error_msg, popup;
 
                 units = this.editCourse.unitList.units;
                 error = 0;
                 error_msg = {};
+
+                /*
 
                 _.each( units, function( unit ) {
                     var cid, model, modules, steps;
@@ -135,7 +150,7 @@
                             modules = model.get('modules');
 
                             if ( ! modules || _.keys(modules).length ) {
-                                error_msg.no_modules = win._courespress.text.unit.no_modules;
+                                error_msg.no_modules = win._coursepress.text.unit.no_modules;
                             }
                         } else if ( ! this.with_modules ) {
                             steps = model.get('steps');
@@ -147,6 +162,8 @@
                     }
                 }, this );
 
+                */
+
                 if ( ! error ) {
                     this.editCourse.unitList.updateUnits();
                 } else {
@@ -156,6 +173,14 @@
                             message: error_msg.join('<br/>')
                         });
                     }
+                }
+
+                ev.stopImmediatePropagation();
+            },
+
+            maybeSetUnit: function(data) {
+                if ( ! data || ! data.length ) {
+                    this.editCourse.unitList.$('.new-unit').trigger('click');
                 }
             },
 
@@ -175,6 +200,10 @@
 
             setUnitItem: function(unitModel){
                 var id, unitItem;
+
+                if ( unitModel.get('deleted') ) {
+                    return;
+                }
 
                 id = unitModel.cid;
                 unitItem = new UnitView(unitModel, this);

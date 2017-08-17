@@ -15,7 +15,7 @@
             savemode: 'continue',
             senderButton: false,
             events: {
-                'click .step': 'toggleContent',
+                'click .step .menu-label': 'toggleContent',
                 'click .step-back': 'getPreviousStep',
                 'click .step-next': 'getNextStep',
                 'click .step-save': 'saveCourse',
@@ -175,7 +175,6 @@
                  * @param object ModlaSteps instance
                  */
                 this.trigger('coursepress:step-before-change', this.currentStep, this );
-
                 this.currentStep = step;
 
                 /**
@@ -210,7 +209,7 @@
             },
 
             toggleContent: function(ev) {
-                var sender = $(ev.currentTarget),
+                var sender = $(ev.currentTarget).parent(),
                     step = sender.data('step');
 
                 if ( step === this.currentStep ) {
@@ -306,6 +305,11 @@
                 this.stepListContainer.toggleClass('open', '');
             },
             updateCourse: function() {
+                window.alert(this.currentStep);
+                if ( 'course-units' === this.currentStep ) {
+                    return;
+                }
+
                 this.senderButton.addClass('cp-progress');
                 this.model.set( 'action', 'update_course' );
                 this.model.save();

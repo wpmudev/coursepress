@@ -152,15 +152,6 @@
                     container.find('textarea#' + id).val(content);
                     is_mce = container.find('.wp-editor-wrap').is('.tmce-active');
 
-                    /*
-                    function destroyEditor(id) {
-                        if (win.tinymce && win.tinymce.get(id)) {
-                            editor = win.tinymce.get(id);
-                            editor.destroy();
-                        }
-                    }*/
-                    //destroyEditor(id);
-
                     mceinit.selector = '#' + id;
                     qtinit.id = id;
                     win.tinyMCEPreInit.mceInit[id] = mceinit;
@@ -168,7 +159,6 @@
 
                     win.tinymce.init(mceinit);
                     win.quicktags(qtinit);
-
                     editor = win.tinymce.get(id);
 
                     _.delay(function() {

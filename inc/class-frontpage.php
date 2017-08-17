@@ -70,10 +70,12 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 			if ( in_array( $type, array( 'unit', 'module', 'step', 'step-comment' ) ) ) {
 				$cp['unit'] = $wp->get( 'unit' );
 
-				if ( ( $module = $wp->get( 'module' ) ) )
+				if ( ( $module = $wp->get( 'module' ) ) ) {
 					$cp['module'] = $module;
-				if ( ( $step = $wp->get( 'step' ) ) )
+				}
+				if ( ( $step = $wp->get( 'step' ) ) ) {
 					$cp['step'] = $step;
+				}
 			} elseif ( 'forum' == $type ) {
 				$cp['topic'] = $wp->get( 'topic' );
 			}
