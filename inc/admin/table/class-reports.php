@@ -70,17 +70,13 @@ class CoursePress_Admin_Table_Reports extends WP_List_Table {
 			 */
 			$user->responses = coursepress_count_course_responses( $user, $this->course_id, $user->progress );
 			/**
-			 * download url
+			 * preview
 			 */
 			$args = array(
 				'student_id' => $id,
 				'course_id' => $this->course_id,
+				'mode' => 'html',
 			);
-			$user->download_url = wp_nonce_url( add_query_arg( $args ), 'coursepress_download_report' );
-			/**
-			 * preview
-			 */
-			$args['mode'] = 'html';
 			$user->preview_url = wp_nonce_url( add_query_arg( $args ), 'coursepress_preview_report' );
 			/**
 			 */

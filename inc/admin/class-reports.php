@@ -10,10 +10,10 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 	 * @var string the main menu slug.
 	 */
 	protected $slug = 'coursepress_reports';
+	private $course_id;
+	private $student_id;
 
 	public function __construct() {
-		$this->list = new CoursePress_Admin_Table_Reports();
-		add_filter( 'set-screen-option', array( $this, 'set_options' ), 10, 3 );
 	}
 
 	function columns() {
@@ -51,10 +51,12 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 
 	public function get_page() {
 		$course_id = filter_input( INPUT_GET, 'course_id', FILTER_VALIDATE_INT );
+		$this->course_id = $course_id;
 		$mode = filter_input( INPUT_GET, 'mode' );
 		$nonce = filter_input( INPUT_GET, '_wpnonce' );
 		if ( $course_id && 'html' == $mode && wp_verify_nonce( $nonce, 'coursepress_preview_report' ) ) {
-			$this->course_id = $course_id;
+			$student_id = filter_input( INPUT_GET, 'student_id', FILTER_VALIDATE_INT );
+			$this->student_id = $student_id;
 			$this->get_page_preview();
 		} else {
 			$this->get_page_list();
@@ -64,30 +66,58 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 
 	private function get_page_list() {
 		global $CoursePress_User;
+		$this->list = new CoursePress_Admin_Table_Reports();
+		add_filter( 'set-screen-option', array( $this, 'set_options' ), 10, 3 );
 		$this->list->prepare_items();
 		$count = $this->list->get_count();
+		$courses = coursepress_get_accessible_courses();
+
+		if ( empty( $_REQUEST['course_id'] ) && ! empty( $courses ) ) {
+			$tmp = array_keys( $courses );
+			$this->course_id = array_shift( $tmp );
+		} else {
+			$this->course_id = (int) $_REQUEST['course_id'];
+		}
+
 		$args = array(
 			'columns' => $this->columns(),
-			'courses' => coursepress_get_accessible_courses(),
+			'courses' => $courses,
 			'hidden_columns' => $this->hidden_columns(),
 			'items' => $this->list->items,
 			'page' => $this->slug,
 			'pagination' => $this->set_courses_pagination( $count ),
+			'download_nonce' => wp_create_nonce( 'coursepress_download_report' ),
+			'current' => $this->course_id,
 		);
 		coursepress_render( 'views/admin/reports', $args );
 	}
 
-	private function get_page_preview() {
-		$student_id = filter_input( INPUT_GET, 'student_id', FILTER_VALIDATE_INT );
+	private function get_page_preview( $echo = true ) {
 		$course = coursepress_get_course( $this->course_id );
+		/**
+		 * Units
+		 */
+		$units = $course->get_units( false );
+		$u = array();
+		foreach ( $units as $unit ) {
+			$unit->get_unit_structure();
+			$unit->settings = $unit->get_settings();
+			$u[] = $unit;
+		}
+		/**
+		 * Student
+		 */
+		$student = coursepress_get_user( $this->student_id );
+		$student->progress = $student->get_completion_data( $this->course_id );
+
 		$args = array(
 			'page' => $this->slug,
 			'colors' => $this->get_colors(),
 			'course' => $course,
-			'units' => $course->get_units( false ),
-			'student' => coursepress_get_user( $student_id ),
+			'units' => $u,
+			'student' => $student,
 		);
-		coursepress_render( 'views/admin/report-preview', $args );
+		return coursepress_render( 'views/admin/report-preview', $args, $echo );
 	}
 
 	private function get_colors() {
@@ -109,5 +139,25 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 			)
 		);
 		return $colors;
+	}
+
+	public function get_pdf_content( $request ) {
+		$this->course_id = $request->course_id;
+		$this->student_id = $request->student_id;
+		$filename = sprintf( 'coursepress_reports_%d_%d.pdf', $this->course_id, $this->student_id );
+		// Set PDF args
+		$pdf_args = array(
+			'title' => __( 'CoursePress Reports', 'CP_TD' ),
+			'orientation' => 'P',
+			'filename' => $filename,
+			'format' => 'F',
+			'uid' => crc32( rand() ),
+		);
+		$args = array(
+			'content' => $this->get_page_preview( false ),
+			'filename' => $filename,
+			'args' => $pdf_args,
+		);
+		return $args;
 	}
 }

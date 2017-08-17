@@ -6,7 +6,7 @@
  * @var $course CoursePress_Course
  */
 ?>
-<div class="wrap coursepress-wrap" id="coursepress-reports-list">
+<div class="wrap coursepress-wrap" id="coursepress-reports-list" data-download_nonce="<?php esc_attr_e( $download_nonce ); ?>">
 	<h1 class="wp-heading-inline"><?php _e( 'Reports', 'cp' ); ?></h1>
     <div class="coursepress-page">
         <form method="get" class="cp-search-form" id="cp-search-form">
@@ -15,11 +15,7 @@
                     <label class="label"><?php _e( 'Filter by course', 'cp' ); ?></label>
                     <select name="course_id" id="select_course_id">
 <?php
-$current = isset( $_REQUEST['course_id'] )? $_REQUEST['course_id']:0;
 foreach ( $courses as $course_id => $course ) {
-	if ( 0 == $current ) {
-		$current = $course_id;
-	}
 	printf(
 		'<option value="%d" %s>%s</option>',
 		esc_attr( $course_id ),
@@ -64,7 +60,7 @@ if ( ! empty( $items ) ) {
 										case 'student':
 											echo '<div class="cp-flex">';
 											echo '<span class="gravatar">';
-											echo get_avatar( $item->email, 30 );
+											echo $item->get_avatar( 30 );
 											echo '</span>';
 											echo ' ';
 											echo '<span class="user_login">';
@@ -92,10 +88,9 @@ if ( ! empty( $items ) ) {
 
 										case 'download':
 											printf(
-												'<a href="%s" data-student="%d" data-course="%d"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>&nbsp;</a>',
-												esc_url( $item->download_url ),
+												'<a href="#" data-student="%d" data-course="%d"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>&nbsp;</a>',
 												esc_attr( $item->ID ),
-												esc_attr( $course_id )
+												esc_attr( $current )
 											);
 											break;
 
