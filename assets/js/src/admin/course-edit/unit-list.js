@@ -147,7 +147,9 @@
                     }
                 }, this );
 
-                this.editCourseView.senderButton.addClass('cp-progress');
+                if ( this.editCourseView.senderButton ) {
+                    this.editCourseView.senderButton.addClass('cp-progress');
+                }
                 UnitModel.set('action', 'update_units');
                 UnitModel.set( 'course_id', this.editCourseView.model.get('ID'));
                 UnitModel.set( 'units', units);

@@ -25,7 +25,7 @@
                 this.remove();
             },
 
-            updateModel: function(ev) {
+            updateModel: function() {
                 //this.question.updateModel(ev);
             }
         });
@@ -108,7 +108,7 @@
             },
 
             updateModel: function() {
-                var cid, title, question, options, answers, the_answers, checked, the_checked, questions, index;
+                var cid, title, question, options, answers, the_answers, checked, the_checked;
 
                 title = this.$('[name="title"]').val();
                 this.model.set('title', title);
@@ -170,8 +170,9 @@
            },
 
            setUI: function() {
-               var self = this, questions;
+               var self;
 
+               self = this;
                this.description = this.$('.cp-step-description');
 
                this.visualEditor({
@@ -179,13 +180,10 @@
                    content: this.model.post_content,
                    callback: function( content ) {
                        self.model.post_content = content;
-                       //self.model.set( 'post_content', content );
                    }
                });
 
                this.$('select').select2();
-
-              // questions = this.model.get('questions');
 
                if ( this.model.questions ) {
                    _.each( this.model.questions, function( question ) {

@@ -42,7 +42,7 @@
             },
 
             setUI: function() {
-                var steps, self;
+                var self;
 
                 this.stepContainer = this.$('.unit-steps');
                 self = this;

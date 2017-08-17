@@ -107,7 +107,7 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 
 		$template = $CoursePress->plugin_path . 'templates/';
 		$template .= $this->templates[ $type ];
-		$with_modules = $CoursePress_Course->is_with_modules();
+		$with_modules = $CoursePress_Course instanceof CoursePress_Course ? $CoursePress_Course->is_with_modules() : false;
 
 		if ( 'instructor' == $type ) {
 			$instructor = $wp_query->get( 'instructor' );

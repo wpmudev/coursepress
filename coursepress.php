@@ -120,6 +120,15 @@ final class CoursePress {
 		// Load core files
 		add_action( 'plugins_loaded', array( $this, 'load_core' ) );
 
+		// We speak languages!
+		load_plugin_textdomain(
+			'cp', // Text domain.
+			false, // Deprecated. Set to false.
+			$this->plugin_path. '/language'
+		);
+		// Register CP theme directory
+		$this->register_cp_theme();
+
 		/********************************************************
 		 * LEGACY CALL
 		 * Note*: WHILE DEVELOPMENT ONLY, REMOVE AFTERWARDS!
@@ -196,6 +205,16 @@ final class CoursePress {
 		global $CoursePress_User;
 
 		$CoursePress_User = new CoursePress_User( get_current_user_id() );
+	}
+
+	function register_cp_theme() {
+		$theme_directories = apply_filters( 'coursepress_theme_directory_array', array(
+				$this->plugin_path . 'themes/'
+			)
+		);
+		foreach ( $theme_directories as $theme_directory ) {
+			register_theme_directory( $theme_directory );
+		}
 	}
 }
 

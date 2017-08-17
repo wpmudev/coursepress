@@ -315,7 +315,9 @@
                 this.model.save();
             },
             after_update: function() {
-                this.senderButton.removeClass('cp-progress');
+                if ( this.senderButton ) {
+                    this.senderButton.removeClass('cp-progress');
+                }
             },
             courseUpdateError: function() {
                 var popup;

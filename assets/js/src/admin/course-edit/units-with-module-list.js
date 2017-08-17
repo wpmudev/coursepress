@@ -3,7 +3,7 @@
 (function() {
     'use strict';
 
-    CoursePress.Define( 'UnitsWithModuleList', function( $, doc, win ) {
+    CoursePress.Define( 'UnitsWithModuleList', function() {
         var UnitView;
 
         UnitView = CoursePress.View.extend({
@@ -88,7 +88,7 @@
             },
 
             deleteUnit: function(ev) {
-                var sender, cid, unit;
+                var sender, cid;
 
                 sender = this.$(ev.currentTarget);
                 cid = sender.data('unit');
