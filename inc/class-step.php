@@ -5,7 +5,7 @@
  * @since 3.0
  * @package CoursePress
  */
-class CoursePress_Step extends CoursePress_Utility {
+class CoursePress_Step extends CoursePress_Unit {
 	/**
 	 * @var CoursePress_Unit The unit where the step belongs to.
 	 */
@@ -133,6 +133,7 @@ class CoursePress_Step extends CoursePress_Utility {
 		$unit = $this->get_unit();
 		$course = $unit->get_course();
 		$with_modules = $course->is_with_modules();
+
 
 		if ( $with_modules && (int) $module_number > 0 ) {
 			$modules = $unit->get_modules();

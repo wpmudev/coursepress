@@ -240,7 +240,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 		return $available;
 	}
 
-	function is_accessible_by( $user_id = 0 ) {
+	public function is_accessible_by( $user_id = 0 ) {
 		$user = coursepress_get_user( $user_id );
 		$available = $this->is_available();
 
@@ -271,7 +271,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 	}
 
 	function is_module_accessible_by( $user_id, $module ) {
-		$user = coursepress_get_student( $user_id );
+		$user = coursepress_get_user( $user_id );
 
 		if ( is_wp_error( $user ) )
 			return false;
@@ -784,7 +784,6 @@ class CoursePress_Unit extends CoursePress_Utility {
 				$step_title = $this->create_html( 'a', $attr, $step_title );
 			} elseif ( $is_student ) {
 				$step_title = $this->create_html( 'a', array( 'href' => $step_url ), $step_title );
-
 				if ( ! $step->is_accessible_by( $user_id ) ) {
 					$step_class[] = 'step-locked';
 					$step_title = $step->__get( 'post_title' );
