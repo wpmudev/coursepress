@@ -2,7 +2,7 @@
     <div class="cp-box-heading">
         <h2 class="box-heading-title">
             <?php _e( 'Unit Details', 'cp' ); ?>
-            <a href="" class="cp-btn cp-btn-xs cp-bordered-btn cp-unit-preview"><?php _e( 'Preview', 'cp' ); ?></a>
+            <a href="<?php echo esc_url( $course->get_permalink() ); ?>" target="_blank" class="cp-btn cp-btn-xs cp-bordered-btn cp-unit-preview"><?php _e( 'Preview', 'cp' ); ?></a>
         </h2>
     </div>
     <div class="cp-odd {{with_modules?'with-modules': ''}}">
@@ -230,7 +230,7 @@
 <script type="text/template" id="coursepress-unit-tpl">
     <div class="cp-unit-heading">
         <label>{{post_title}}</label>
-        <button type="button" class="cp-btn cp-bordered-btn cp-btn-xs"><?php _e( 'Preview', 'cp' ); ?></button>
+        <button type="button" class="cp-btn cp-bordered-btn cp-btn-xs preview-unit" data-url="{{unit_permalink}}"><?php _e( 'Preview', 'cp' ); ?></button>
         <button type="button" class="cp-btn cp-bordered-btn cp-btn-xs edit-unit" data-unit="{{cid}}"><?php _e( 'Edit Unit', 'cp' ); ?></button>
         <button type="button" class="cp-btn cp-bordered-btn cp-btn-xs delete-unit" data-unit="{{cid}}"><?php _e( 'Delete', 'cp' ); ?></button>
     </div>

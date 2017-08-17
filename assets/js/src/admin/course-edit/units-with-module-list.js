@@ -14,6 +14,7 @@
             with_modules: false,
             events: {
                 'click .cp-unit-heading label': 'toggleListing',
+                'click .preview-unit': 'previewUnit',
                 'click .edit-unit': 'editUnit',
                 'click [data-module]': 'editModule',
                 'click .delete-unit': 'deleteUnit'
@@ -60,6 +61,15 @@
                 sender = this.$(ev.currentTarget);
                 cid = sender.data('unit');
                 this._editUnit(cid);
+            },
+
+            // Unit preview button.
+            previewUnit: function (ev) {
+                var target = this.$(ev.currentTarget),
+                    link = target.data('url');
+                if (typeof link !== 'undefined') {
+                    window.open(link, '_blank');
+                }
             },
 
             _editUnit: function( cid ) {
@@ -115,7 +125,7 @@
                 this.render();
             },
 
-            validateUnits: function(ev) {
+            validateUnits: function() {
                 var units, error, error_msg, popup;
 
                 units = this.editCourse.unitList.units;
@@ -175,7 +185,7 @@
                     }
                 }
 
-                ev.stopImmediatePropagation();
+                //ev.stopImmediatePropagation();
             },
 
             maybeSetUnit: function(data) {

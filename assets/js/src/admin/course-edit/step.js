@@ -138,7 +138,7 @@
                    this.model.cid = this.cid;
                }
 
-               //this.model = new Module(this.model);
+               this.model = new Module(this.model);
 
                /*
 
