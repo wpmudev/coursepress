@@ -102,6 +102,10 @@
     }
   }
   .step-course-units {
+    .menu-label {
+      display: block;
+      clear: both;
+    }
     &.active {
       .menu-label {
         &:after {
@@ -190,7 +194,11 @@
 
   .cp-unit-preview {
     float: right;
-    margin: 0;
+    margin: -5px 0 0 0;
+  }
+  .cp-unit-status {
+    float: right;
+    margin-left: 10px;
   }
   #unit-details-container {
     .cp-odd {
@@ -208,6 +216,23 @@
   }
   .cp-module-steps {
     margin-top: 25px;
+  }
+  .module-item {
+    padding-left: 0;
+    .module-title {
+      width: 40%;
+    }
+  }
+  .cp-delete-module {
+    float: right;
+    background-color: $red_1;
+    color: $red;
+    @include boxshadow(none);
+
+    &:hover {
+      @include boxshadow(none);
+      background-color: $red_2;
+    }
   }
   .unit-steps-area {
     background-color: $grey_6;
@@ -297,6 +322,16 @@
           color: $blue_1;
         }
       }
+    }
+  }
+  .delete-unit {
+    background-color: $red_1;
+    border-color: $red_2;
+
+    &:hover {
+      color: $red;
+      background-color: $red_2;
+      @include boxshadow(none);
     }
   }
 

@@ -12,6 +12,12 @@
                 <p class="description"><?php _e( 'Specify some details about this unit. Unit title fields is compulsory.', 'cp' ); ?></p>
             </div>
             <div class="box-inner-content">
+                <div class="cp-toggle-box cp-unit-status">
+                    <label>
+                        <input type="checkbox" name="post_status" value="publish" class="cp-toggle-input" {{_.checked('publish', post_status)}} /> <span class="cp-toggle-btn"></span>
+                        <span class="label"><?php _e( 'Publish', 'cp' ); ?></span>
+                    </label>
+                </div>
                 <div class="cp-box">
                     <label class="label"><?php _e( 'Unit Title', 'cp' ); ?></label>
                     <input type="text" name="post_title" class="widefat unit-title-input" value="{{post_title}}" />
@@ -103,11 +109,16 @@
 <script type="text/template" id="coursepress-unit-module-list-tpl">
     <ul class="cp-input-group cp-select-list">
         <# _.each( modules, function( module, pos ) { #>
-            <li class="icon-move module-item" data-order="{{pos}}">
-                <span>{{module.title}}</span>
-                <div class="step-icon-container"></div>
+            <# if ( ! module.deleted ) { #>
+            <li class="module-item" data-order="{{pos}}">
+                <div class="icon-move cp-flex">
+                    <div class="module-title">{{module.title}}</div>
+                    <div class="module-description">{{module.mini_desc}}</div>
+                    <div class="step-icon-container"></div>
+                </div>
             </li>
-            <# }) #>
+            <# }#>
+        <# }) #>
     </ul>
 </script>
 
@@ -123,6 +134,14 @@
             <label class="label"><?php _e( 'Module Name', 'cp' ); ?></label>
             <input type="text" name="title" class="widefat module-title" value="{{title}}" />
         </div>
+        <button type="button" class="cp-btn cp-btn-xs cp-delete-module"><?php _e( 'Delete', 'cp' ); ?></button>
+        <div class="cp-box cp-toggle-box">
+            <label>
+                <input type="checkbox" name="show_description" value="1" class="cp-toggle-input" {{_.checked(true, show_description)}} /> <span class="cp-toggle-btn"></span>
+                <span class="label"><?php _e( 'Show description', 'cp' ); ?></span>
+            </label>
+        </div>
+        <div class="cp-module-description {{show_description?'':'inactive'}}"></div>
         <div id="module-steps-container">
             <h3><?php _e( 'Steps', 'cp' ); ?></h3>
             <p class="description"><?php _e( 'Click steps below to add them to this unit', 'cp' ); ?></p>
@@ -187,7 +206,7 @@
         <table class="cp-units-table">
             <thead>
             <tr>
-                <th class="column-unit"><?php _e( 'Units & Modules', 'cp' ); ?></th>
+                <th class="column-unit"><?php _e( 'Units & Steps', 'cp' ); ?></th>
                 <th class="column-step"><?php _e( 'Steps', 'cp' ); ?></th>
                 <th class="column-preview"><?php _e( 'Free Preview', 'cp' ); ?></th>
                 <th class="column-time"><?php _e( 'Time', 'cp' ); ?></th>
@@ -213,6 +232,7 @@
         <label>{{post_title}}</label>
         <button type="button" class="cp-btn cp-bordered-btn cp-btn-xs"><?php _e( 'Preview', 'cp' ); ?></button>
         <button type="button" class="cp-btn cp-bordered-btn cp-btn-xs edit-unit" data-unit="{{cid}}"><?php _e( 'Edit Unit', 'cp' ); ?></button>
+        <button type="button" class="cp-btn cp-bordered-btn cp-btn-xs delete-unit" data-unit="{{cid}}"><?php _e( 'Delete', 'cp' ); ?></button>
     </div>
     <div class="cp-unit-content cp-unit-steps">
         <table class="unit-table-list">

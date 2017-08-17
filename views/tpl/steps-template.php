@@ -242,19 +242,19 @@
             <div class="cp-box">
                 <div class="cp-box-grey">
                     <label class="label"><?php _e( 'Minimum Grade', 'cp' ); ?></label>
-                    <input type="text" name="meta_retry_attempts" />
+                    <input type="text" name="meta_minimum_grade" value="{{meta_minimum_grade}}" />
                 </div>
             </div>
         </div>
-
-        <div class="cp-box cp-toggle-box">
-            <label>
-                <input type="checkbox" name="meta_show_content" value="1" class="cp-toggle-input" {{_.checked(true, meta_show_content)}} /> <span class="cp-toggle-btn"></span>
-                <span class="label"><?php _e( 'Show content', 'cp' ); ?></span>
-            </label>
-        </div>
-        <div class="cp-box cp-step-description {{!!meta_show_content?'':'inactive'}}"></div>
     </div>
+
+    <div class="cp-box cp-toggle-box">
+        <label>
+            <input type="checkbox" name="meta_show_content" value="1" class="cp-toggle-input" {{_.checked(true, meta_show_content)}} /> <span class="cp-toggle-btn"></span>
+            <span class="label"><?php _e( 'Show content', 'cp' ); ?></span>
+        </label>
+    </div>
+    <div class="cp-box cp-step-description {{!!meta_show_content?'':'inactive'}}"></div>
 
     <div class="cp-content-box">
         <h3><?php _e( 'Quiz questions', 'cp' ); ?></h3>
@@ -275,7 +275,7 @@
 <script type="text/template" id="coursepress-question-tpl">
     <div class="cp-question-header">
         <span class="q-type">{{window._coursepress.questions[type]}}</span>
-        <input type="text" value="{{title}}" />
+        <input type="text" name="title" value="{{title}}" />
         <button type="button" class="question-toggle-button"></button>
     </div>
     <div class="cp-question-content">
@@ -283,7 +283,7 @@
 
         <div class="cp-box">
             <label class="label"><?php _e( 'Question text', 'cp' ); ?></label>
-            <textarea class="widefat" name="meta_question">{{question}}</textarea>
+            <textarea class="widefat" name="question">{{question}}</textarea>
             <div class="question-answers"></div>
             <button type="button" class="cp-btn cp-btn-xs cp-btn-active"><?php _e( 'Add Answer', 'cp' ); ?></button>
         </div>
@@ -292,10 +292,10 @@
 
 <script type="text/template" id="coursepress-question-answer">
     <label class="cp-checkbox">
-        <input type="{{'multiple'===type?'checkbox':'radio'}}" name="meta_checked[{{cid}}]" autocomplete="off" class="cp-checkbox-input" value="1" {{_.checked(true, checked)}} />
+        <input type="{{'multiple'===type?'checkbox':'radio'}}" name="checked" autocomplete="off" class="cp-checkbox-input" value="1" {{_.checked(true, checked)}} />
         <span class="cp-checkbox-icon"></span>
     </label>
-    <input type="text" value="{{answer}}" />
+    <input type="text" name="answers" value="{{answer}}" />
     <span class="cp-btn cp-btn-trash"></span>
 </script>
 

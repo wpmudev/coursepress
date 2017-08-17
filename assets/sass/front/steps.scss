@@ -41,8 +41,26 @@
     }
   }
   &.step-template-video {
+    position: relative;
+    display: block;
+    clear: both;
+    min-height: 330px;
+
     .video-js {
+      background-color: transparent;
+    }
+    .vjs-vimeo {
+      position: relative;
       padding: 0;
+      margin-bottom: 60.7%;
+      .vjs-big-play-button {
+        margin-top: 56.7%;
+      }
+    }
+    video {
+      display: block;
+      height: 280px;
+      width: 100%;
     }
   }
 

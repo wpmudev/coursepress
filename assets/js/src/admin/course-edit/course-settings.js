@@ -64,7 +64,7 @@
             },
 
             setUpUI: function() {
-                var self;
+                var self, enrollment_type;
 
                 self = this;
 
@@ -78,9 +78,11 @@
                     tags: true
                 });
 
-                this.$('select').select2();
-                this.$('select').on( 'change', function(ev) {
+                enrollment_type = this.$('[name="meta_enrollment_type"]');
+                enrollment_type.select2();
+                enrollment_type.on( 'change', function(ev) {
                     self.updateModel(ev);
+                    self.toggleBoxes(ev);
                 });
 
                 _.delay(function() {

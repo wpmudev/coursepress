@@ -21,7 +21,23 @@ class CoursePress_Step_Audio extends CoursePress_Step {
 	}
 
 	function get_question() {
-		// @todo: Do
-		return 'AUDIO MODULE HERE';
+		$src = $this->__get( 'audio_url' );
+		$loop = $this->__get( 'loop' );
+		$autoplay = $this->__get( 'autoplay' );
+
+		$attr = array(
+			'src' => esc_url_raw( $src ),
+		);
+
+		if ( $loop ) {
+			$attr['loop'] = true;
+		}
+		if ( $autoplay ) {
+			$attr['autoplay'] = true;
+		}
+
+		$audio = wp_audio_shortcode( $attr );
+
+		return $this->create_html( 'div', array( 'class' => 'audio-player' ), $audio );
 	}
 }
