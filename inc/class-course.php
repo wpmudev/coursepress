@@ -70,7 +70,6 @@ class CoursePress_Course extends CoursePress_Utility {
 			}
 
 			if ( 'off' === $value ) {
-				echo $value;
 				$value = false;
 			}
 
