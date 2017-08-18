@@ -40,7 +40,7 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 			'assessments' => $this->get_assesments( $course_id, $unit_id, $graded, $count ),
 			'courses' => coursepress_get_accessible_courses(),
 			'units' => coursepress_get_course_units( $course_id ),
-			'list_table' => $this->set_pagination( $count ),
+			'list_table' => $this->set_pagination( $count, 'coursepress_assesments_per_page' ),
 			'hidden_columns' => get_hidden_columns( $screen ),
 			'page' => $this->slug,
 			'course_id' => absint( $course_id ),
@@ -72,7 +72,7 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 		}
 
 		$assessments = new CoursePress_Data_Assessments( $course_id );
-error_log(print_r($assessments,true));
+
 		return $assessments->get_assessments( $unit_id, $graded, $count );
 	}
 
@@ -133,29 +133,5 @@ error_log(print_r($assessments,true));
 		 * @param array $hidden_columns.
 		 */
 		return apply_filters( 'coursepress_assesments_hidden_columns', array() );
-	}
-
-	/**
-	 * Set pagination for assesments listing page.
-	 *
-	 * We are using WP_Listing_Table class to set pagination.
-	 *
-	 * @param int $count Total assesments.
-	 *
-	 * @return object
-	 */
-	function set_pagination( $count = 0 ) {
-
-		// Using WP_List table for pagination.
-		$listing = new WP_List_Table();
-
-		$args = array(
-			'total_items' => $count,
-			'per_page' => $this->items_per_page( 'coursepress_assesments_per_page' ),
-		);
-
-		$listing->set_pagination_args( $args );
-
-		return $listing;
 	}
 }

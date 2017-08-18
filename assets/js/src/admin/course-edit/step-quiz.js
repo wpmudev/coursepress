@@ -3,7 +3,7 @@
 (function() {
     'use strict';
 
-    CoursePress.Define( 'Step_INPUT-QUIZ', function() {
+    CoursePress.Define( 'Step_INPUT-QUIZ', function($, doc, win) {
         var Question, Model, Answer;
 
         Answer = CoursePress.View.extend({
@@ -11,7 +11,8 @@
             className: 'cp-box cp-answer-box',
             question: false,
             events: {
-                'click .cp-btn-trash': 'removeAnswer'
+                'click .cp-btn-trash': 'removeAnswer',
+                'change [name]': 'updateModel'
             },
 
             initialize: function( model, question ) {
@@ -22,13 +23,25 @@
 
             removeAnswer: function() {
                 this.remove();
+            },
+
+            updateModel: function() {
+                //this.question.updateModel(ev);
             }
         });
 
         Model = CoursePress.Request.extend({
             defaults: {
                 title: 'Untitled',
-                questions: []
+                question: '',
+                options: {
+                    answers: [
+                        win._coursepress.text.step.answer_a,
+                        win._coursepress.text.step.answer_b,
+                        win._coursepress.text.step.answer_c
+                    ],
+                    checked: []
+                }
             }
         });
 
@@ -37,7 +50,8 @@
             className: 'cp-question-box',
             events: {
                 'click .cp-btn-active': 'addAnswer',
-                'click .question-toggle-button': 'toggleQuestion'
+                'click .question-toggle-button': 'toggleQuestion',
+                'change [name]': 'updateModel'
             },
             quizView: false,
 
@@ -66,7 +80,7 @@
                             checked: checked,
                             cid: this.model.cid
                         };
-                        q = new Answer(q);
+                        q = new Answer(q, this);
                         q.$el.appendTo(this.$('.question-answers'));
                     }, this );
                 }
@@ -91,41 +105,88 @@
                 } else {
                     this.$el.addClass('open');
                 }
+            },
+
+            updateModel: function() {
+                var cid, title, question, options, answers, the_answers, checked, the_checked;
+
+                title = this.$('[name="title"]').val();
+                this.model.set('title', title);
+
+                question = this.$('[name="question"]').val();
+                this.model.set('question', question);
+
+                options = this.model.get('options');
+
+                if ( ! options ) {
+                    options = {};
+                }
+
+                answers = this.$('[name="answers"]');
+                the_answers = [];
+
+                _.each(answers, function(answer) {
+                    answer = $(answer);
+                    the_answers.push(answer.val());
+                }, this );
+
+                checked = this.$('[name="checked"]');
+                the_checked = [];
+
+                _.each(checked, function(check) {
+                    check = $(check);
+
+                    if ( check.is(':checked') ) {
+                        the_checked.push(1);
+                    } else {
+                        the_checked.push(false);
+                    }
+                }, this );
+
+                options.answers = the_answers;
+                options.checked = the_checked;
+
+                this.model.set('options', options);
+
+                cid = this.cid;
+                this.quizView.questionsModel[cid] = this.model;
+                this.quizView.updateQuestions();
             }
         });
 
        return CoursePress.View.extend({
            template_id: 'coursepress-step-quiz',
+           questions: {},
+           questionsModel: {},
            events: {
                'change .cp-question-type': 'addQuestion',
-               'change [name]': 'updateModel',
                'change [name="meta_show_content"]': 'toggleContent'
            },
 
-           initialize: function( model ) {
-               this.model = model;
+           initialize: function( model, stepView ) {
+               this.stepView = stepView;
                this.on( 'view_rendered', this.setUI, this );
                this.render();
            },
 
            setUI: function() {
-               var self = this, questions;
+               var self;
 
+               self = this;
                this.description = this.$('.cp-step-description');
+
                this.visualEditor({
                    container: this.description,
-                   content: this.model.get( 'post_content' ),
+                   content: this.model.post_content,
                    callback: function( content ) {
-                       self.model.set( 'post_content', content );
+                       self.model.post_content = content;
                    }
                });
 
                this.$('select').select2();
 
-               questions = this.model.get('questions');
-
-               if ( questions ) {
-                   _.each( questions, function( question ) {
+               if ( this.model.questions ) {
+                   _.each( this.model.questions, function( question ) {
                        this._addQuestion(question);
                    }, this );
                    this.$('.no-content-info').hide();
@@ -134,35 +195,38 @@
            },
 
            addQuestion: function(ev) {
-               var sender, type, question, questions, data;
+               var sender, type, data;
 
                sender = this.$(ev.currentTarget);
                type = sender.val();
-               questions = this.model.get('questions');
-
-               if ( ! questions ) {
-                   questions = [];
-               }
 
                if ( ! type ) {
                    return;
                }
 
                data = {type: type};
-               question = this._addQuestion(data);
-               questions.push(question);
+               this._addQuestion(data);
 
                this.$('.no-content-info').hide();
                this.$('.cp-questions-container').sortable();
            },
 
            _addQuestion: function( model ) {
-               var question;
+               var question, questions, cid;
 
+               questions = this.model.questions;
+
+               if ( ! questions ) {
+                   questions = [];
+               }
+               model.index = this.questions.length;
                question = new Question(model, this);
                question.$el.appendTo(this.$('.cp-questions-container'));
 
-               return question;
+               cid = question.cid;
+               this.questions[cid] = question;
+               this.questionsModel[cid] = question.model;
+               this.model.questions = this.questionsModel;
            },
 
            toggleContent: function(ev) {
@@ -175,6 +239,24 @@
                } else {
                    content.slideUp();
                }
+           },
+
+           updateModel: function(ev) {
+               this.stepView.updateModel(ev);
+           },
+
+           updateQuestions: function() {
+               this.model.meta_questions = this.model.questions = this.questionsModel;
+               this.stepView.set('questions', this.model.questions);
+               this.stepView.set('meta_questions', this.model.meta_questions);
+               this.stepView.trigger('coursepress:model_updated', this.stepView.model, this.stepView );
+               /*
+               this.model.set('questions', this.questionsModel);
+               this.model.set('meta_questions', this.questionsModel);
+               this.stepView.model.set('questions', this.model.get('questions'));
+               this.stepView.model.set('meta_questions', this.model.get('questions'));
+               this.stepView.trigger('coursepress:model_updated', this.stepView.model, this.stepView );
+               */
            }
        });
     });

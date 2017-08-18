@@ -21,22 +21,14 @@
                 this.controller = controller;
                 this.editCourseView = controller.editCourseView;
                 this.with_modules = this.editCourseView.model.get('meta_with_modules');
-                this.model.set( 'with_modules', this.with_modules );
-                this.on( 'coursepress:model_updated', this.updateUnitCollection );
 
-                this.on( 'view_rendered', this.setUpUI, this );
-                this.render();
-            },
+                if ( ! this.model.get('post_status') ) {
+                    this.model.set('post_status', 'pending');
+                }
 
-            initialize333: function( model, controller ) {
-                this.controller = controller;
-                this.editCourseView = controller.editCourseView;
-                this.with_modules = this.editCourseView.model.get('meta_with_modules');
-                this.model.set( 'with_modules', this.with_modules );
-
-                this.controller.on( 'coursepress:validate-unit', this.validateUnit, this );
-                this.on( 'coursepress:model_updated', this.updateUnitCollection );
-                this.on( 'view_rendered', this.setUpUI, this );
+                this.model.set('with_modules', this.with_modules);
+                this.on('coursepress:model_updated', this.updateUnitCollection, this);
+                this.on('view_rendered', this.setUpUI, this);
                 this.render();
             },
 
@@ -115,10 +107,10 @@
                 this.container = this.$('#unit-steps-container');
 
                 if ( this.with_modules ) {
-                    this.modules = new CoursePress.UnitModules(this.model, this);
+                    this.modules = new CoursePress.UnitModules({model:this.model}, this);
                     this.modules.$el.appendTo(this.container);
                 } else {
-                    this.steps = new CoursePress.Unit_Steps( this.model, this );
+                    this.steps = new CoursePress.Unit_Steps({model: this.model}, this );
                     this.steps.$el.appendTo(this.container);
                 }
             },

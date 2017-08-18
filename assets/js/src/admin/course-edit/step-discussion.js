@@ -11,7 +11,6 @@
                 'chanage [name]': 'updateModel'
             },
             initialize: function( model, stepView ) {
-                this.model = model;
                 this.stepView = stepView;
                 this.on( 'view_rendered', this.setUI, this );
                 this.render();
@@ -22,9 +21,10 @@
                 this.description = this.$('.cp-step-description');
                 this.visualEditor({
                     container: this.description,
-                    content: this.model.get( 'post_content' ),
+                    content: this.model.post_content,
                     callback: function( content ) {
-                        self.model.set( 'post_content', content );
+                        self.model.post_content = content;
+                        //self.model.set( 'post_content', content );
                     }
                 });
             },

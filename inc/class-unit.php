@@ -32,6 +32,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 		$this->__set( 'post_content', $unit->post_content );
 		$this->__set( 'post_name', $unit->post_name );
 		$this->__set( 'post_parent', $unit->post_parent );
+		$this->__set( 'post_status', $unit->post_status );
 		$this->__set( 'course_id', $unit->post_parent );
 
 		// Setup meta-data
@@ -134,11 +135,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 	 * @return CoursePress_Course|null|WP_Error
 	 */
 	function get_course() {
-		if ( $this->__get( 'course' ) ) {
-            return $this->__get('course');
-        }
-
-		$course_id = $this->__get( 'course_id' );
+		$course_id = $this->__get( 'post_parent' );
 		$course = coursepress_get_course( $course_id );
 
 		$this->__set( 'course', $course );
@@ -243,7 +240,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 		return $available;
 	}
 
-	function is_accessible_by( $user_id = 0 ) {
+	public function is_accessible_by( $user_id = 0 ) {
 		$user = coursepress_get_user( $user_id );
 		$available = $this->is_available();
 
@@ -274,7 +271,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 	}
 
 	function is_module_accessible_by( $user_id, $module ) {
-		$user = coursepress_get_student( $user_id );
+		$user = coursepress_get_user( $user_id );
 
 		if ( is_wp_error( $user ) )
 			return false;
@@ -308,6 +305,10 @@ class CoursePress_Unit extends CoursePress_Utility {
 
 	function get_previous_unit() {
 		$previous = $this->__get( 'previousUnit' );
+
+		if ( $previous ) {
+			return $previous;
+		}
 
 		if ( ! $previous ) {
 			$course = $this->get_course();
@@ -441,6 +442,8 @@ class CoursePress_Unit extends CoursePress_Utility {
 
 					$modules[ $page_number ] = array(
 						'title' => $page_title,
+						'show_description' => true,
+						'description' => $page_descriptions[$page_id],
 						'preview' => true,
 						'description' => coursepress_get_array_val( $page_descriptions, $page_id ),
 					);
@@ -449,15 +452,12 @@ class CoursePress_Unit extends CoursePress_Utility {
 			// @todo: Save then delete
 		}
 
-		$previous_module = false;
 		foreach ( $modules as $pos => $module ) {
 			$slug = sanitize_title( $module['title'], '' );
 			$module['id'] = $pos;
 			$module['slug'] = $slug;
 			$module['url'] = $this->get_unit_url() . trailingslashit( $slug );
-			//$module['previous_module'] = $previous_module;
 			$modules[ $pos ] = $module;
-			$previous_module = $module;
 		}
 
 		$this->__set( 'unit_modules_list', $modules );
@@ -473,9 +473,9 @@ class CoursePress_Unit extends CoursePress_Utility {
 	 * @return array|mixed
 	 */
 	function get_modules_with_steps( $published = true ) {
-		if ( $this->__get( 'unit_modules_with_steps' ) ) {
-            return $this->__get('unit_modules_with_steps');
-        }
+		//if ( $this->__get( 'unit_modules_with_steps' ) ) {
+         //   return $this->__get('unit_modules_with_steps');
+        //}
 
 		$modules = $this->get_modules();
 
@@ -484,7 +484,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 			$modules[ $pos ] = $module;
 		}
 
-		$this->__set( 'unit_modules_with_steps', $modules );
+		//$this->__set( 'unit_modules_with_steps', $modules );
 
 		return $modules;
 	}
@@ -520,7 +520,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 
 		if ( $with_module ) {
 			$args['meta_key'] = 'module_page';
-			$args['meta_value_num'] = intval($module_id);
+			$args['meta_value'] = intval($module_id);
 		}
 
 		$results = get_posts( $args );
@@ -540,7 +540,9 @@ class CoursePress_Unit extends CoursePress_Utility {
 			}
 		}
 
-		$this->__set( $key, $steps );
+		if ( ! is_admin() ) {
+			$this->__set( $key, $steps );
+		}
 
 		return $steps;
 	}
@@ -782,7 +784,6 @@ class CoursePress_Unit extends CoursePress_Utility {
 				$step_title = $this->create_html( 'a', $attr, $step_title );
 			} elseif ( $is_student ) {
 				$step_title = $this->create_html( 'a', array( 'href' => $step_url ), $step_title );
-
 				if ( ! $step->is_accessible_by( $user_id ) ) {
 					$step_class[] = 'step-locked';
 					$step_title = $step->__get( 'post_title' );

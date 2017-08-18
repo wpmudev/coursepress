@@ -5,7 +5,7 @@
  * @since 3.0
  * @package CoursePress
  */
-class CoursePress_Step extends CoursePress_Utility {
+class CoursePress_Step extends CoursePress_Unit {
 	/**
 	 * @var CoursePress_Unit The unit where the step belongs to.
 	 */
@@ -20,16 +20,6 @@ class CoursePress_Step extends CoursePress_Utility {
 
 			return;
 		}
-
-		/*
-
-		if ( $unit instanceof CoursePress_Unit ) {
-			$this->__set( 'unit', $unit );
-		} else {
-			$unit = coursepress_get_unit( $step->post_parent );
-			$this->__set( 'unit', $unit );
-		}
-		*/
 
 		$this->__set( 'ID', $step->ID );
 		$this->__set( 'post_title', $step->post_title );
@@ -70,6 +60,10 @@ class CoursePress_Step extends CoursePress_Utility {
 
 		foreach ( $keys as $key ) {
 			$value = get_post_meta( $id, $key, true );
+
+			if ( is_array( $value ) ) {
+				$value = $this->to_array( $value );
+			}
 
 			if ( 'on' == $value ) {
 				$value = true;
@@ -138,10 +132,11 @@ class CoursePress_Step extends CoursePress_Utility {
 		$post_name = $this->__get( 'post_name' );
 		$unit = $this->get_unit();
 		$course = $unit->get_course();
+		$with_modules = $course->is_with_modules();
 
-		if ( $course->is_with_modules() && (int) $module_number > 0 ) {
 
-			$modules = $this->unit->get_modules();
+		if ( $with_modules && (int) $module_number > 0 ) {
+			$modules = $unit->get_modules();
 
 			if ( ! empty( $modules ) && $modules[$module_number] ) {
 				$module = $modules[ $module_number ];
@@ -149,8 +144,8 @@ class CoursePress_Step extends CoursePress_Utility {
 				return $module['url'] . trailingslashit( $post_name );
 			}
 		} else {
-			if ( $this->unit ) {
-				return $this->unit->get_unit_url() . trailingslashit( $post_name );
+			if ( $unit ) {
+				return $unit->get_permalink() . trailingslashit( $post_name );
 			}
 		}
 	}
@@ -259,7 +254,9 @@ class CoursePress_Step extends CoursePress_Utility {
 					break;
 				}
 			}
+
 			array_pop( $previous );
+
 			$prev = array_pop( $previous );
 		}
 

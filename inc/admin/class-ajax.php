@@ -80,6 +80,30 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			foreach ( $units as $pos => $unit ) {
 				if ( ! empty( $course->with_modules ) ) {
 					$modules = $unit->get_modules_with_steps( false );
+
+					if ( $modules ) {
+						foreach ( $modules as $mpos => $module ) {
+							$mini_desc = '';
+
+							if ( ! empty( $module['description'] ) ) {
+								$mini_desc = wp_strip_all_tags( $module['description']);
+								$mini_desc = substr($mini_desc, 0, 50 );
+							}
+							$modules[$mpos]['mini_desc'] = $mini_desc;
+						}
+					} else {
+						// Set empty module
+						$modules = array(
+							1 => array(
+								'id' => 1,
+								'title' => __( 'Untitled', 'cp' ),
+								'description' => '',
+								'show_description' => true,
+								'steps' => array()
+							)
+						);
+					}
+
 					$unit->__set( 'modules', $modules );
 				} else {
 					$steps = $unit->get_steps( false );
@@ -89,7 +113,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			}
 		}
 
-		wp_send_json_success( $units );
+		wp_send_json_success($units);
 	}
 
 	function update_course( $request ) {
@@ -153,6 +177,17 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
     		foreach ( $units as $cid => $unit ) {
     			$unit->menu_order = $menu_order;
 
+    			if ( ! empty( $unit->deleted ) ) {
+    				// Delete unit here
+				    if ( ! empty( $unit->ID ) ) {
+				    	coursepress_delete_unit( $unit->ID );
+				    }
+				    // Don't return the unit object
+				    unset( $units->{$cid} );
+
+				    continue;
+			    }
+
     			// Get post object
 			    $unit_array = array(
 			    	'ID' => $unit->ID,
@@ -163,6 +198,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				    'post_status' => 'pending',
 				    'post_type' => 'unit',
 			    );
+
+			    if ( ! empty( $unit->post_status ) ) {
+			    	$unit_array['post_status'] = 'publish';
+			    }
 
 			    $metas = array();
 
@@ -180,15 +219,30 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				    $module_array = array();
 
 				    foreach ( $unit->modules as $module_id => $module ) {
+				    	$module_deleted = false;
+
+				    	if ( isset($module->deleted) ) {
+				    		$module_deleted = true;
+				    	    unset( $unit->modules->{$module_id} );
+					    }
 					    $module_array[ $module_id ] = array(
 						    'title' => sanitize_text_field( $module->title ),
 						    'preview' => isset( $module->preview ) ? $module->preview : true, // Default is true,
+						    'show_description' => isset( $module->show_description ) && $module->show_description ? true : false,
 						    'description' => isset( $module->description ) ? $module->description : '',
 					    );
+
+				    	if ( $module_deleted ) {
+				    		unset( $module_array[ $module_id ] );
+					    }
 
 					    if ( ! empty( $module->steps ) ) {
 
 					    	foreach ( $module->steps as $step_cid => $step ) {
+					    		if ( $module_deleted ) {
+					    			$step->deleted = true;
+							    }
+
 					    		if ( ! empty( $step->deleted ) && $step->deleted ) {
 					    			// This step was deleted, let's delete the data
 								    if ( isset( $step->ID ) && ! empty( $step->ID ) ) {
@@ -258,13 +312,15 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 						    $step_metas = array();
 
 						    foreach ( $step as $step_key => $step_value ) {
+						    	if ( 'meta_questions' == $step_key || 'questions' == $step_key ) {
+						    		continue;
+							    }
 							    if ( preg_match( '%meta_%', $step_key ) ) {
 								    $_step_key = str_replace( 'meta_', '', $step_key );
 
 								    if ( is_object( $step_value ) ) {
 									    $step_value = $this->to_array( $step_value );
 								    }
-
 								    $step_metas[ $_step_key ] = $step_value;
 							    }
 						    }
@@ -272,8 +328,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 						    $stepId = coursepress_create_step( $step_array, $step_metas );
 						    $step_object = coursepress_get_course_step( $stepId );
 						    $unit->steps->{$step_cid} = $step_object;
-
-						    error_log(print_r($step_object,true));
 					    }
 				    }
 			    }
@@ -700,12 +754,22 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$course_id = filter_input( INPUT_GET, 'course_id', FILTER_VALIDATE_INT );
 		$wpnonce = filter_input( INPUT_GET, '_wpnonce' );
 		$redirect = filter_input( INPUT_GET, 'redirect' );
+		$student_id = filter_input( INPUT_GET, 'student_id', FILTER_VALIDATE_INT );
+		$referer = filter_input( INPUT_GET, 'referer' );
+
+		if ( ! $student_id ) {
+			$student_id = get_current_user_id();
+		}
+
+		if ( 'course-edit' == $referer ) {
+			$redirect = add_query_arg( array( 'page' => 'coursepress_course', 'cid' => $course_id ), admin_url( 'admin-ajax.php' ) );
+		}
 
 		if ( ! $course_id || ! wp_verify_nonce( $wpnonce, 'coursepress_nonce' ) ) {
 			wp_send_json_error(true);
 		}
 
-		coursepress_delete_student( get_current_user_id(), $course_id );
+		coursepress_delete_student( $student_id, $course_id );
 
 		if ( ! $redirect ) {
 			// Return to course overview
@@ -716,9 +780,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		exit;
 	}
 
-	function register_user() {
-
-	}
+	function register_user() {}
 
 	function update_profile() {
 		$request = $_POST;
@@ -791,9 +853,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				$progress = $step->validate_response( $response );
 			}
 		}
-		$progress = $user->validate_completion_data( $course_id, $progress );
-		$user->add_student_progress( $course_id, $progress );
 
+		$progress = $user->validate_completion_data( $course_id, $progress );
+		//error_log(print_r($progress,true));
+		$user->add_student_progress( $course_id, $progress );
 		wp_safe_redirect( $redirect_url );
 
 		exit;
@@ -848,8 +911,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 * @param object $request
 	 */
 	function get_notification_students( $request ) {
-
-
 		$result = array();
 
 		// Make sure required values are set.
@@ -877,15 +938,14 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 * @param $request Request data.
 	 */
 	function send_notification_email( $request ) {
-
 		global $CoursePress;
 
 		// Check if required values are set.
 		if ( empty( $request->content ) || empty( $request->title ) || empty( $request->students ) ) {
 			wp_send_json_error();
 		}
-
 		$email = $CoursePress->get_class( 'CoursePress_Email' );
+
 		// Send email notifications.
 		if ( $email->notification_alert_email( $request->students, $request->title, $request->content ) ) {
 			wp_send_json_success( array( 'message' => __( 'Notification emails sent successfully.', 'cp' ) ) );
@@ -900,7 +960,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 * @param $request Request data.
 	 */
 	function alert_status_toggle( $request ) {
-
 		$toggled = false;
 
 		// If alert id and status is not empty, attempt to change status.
@@ -993,11 +1052,29 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
         $posts = new WP_Query( $args );
         $data['total_count'] = $posts->post_count;
         $posts = $posts->posts;
+
         foreach( $posts as $post ) {
             $one['id'] = $post->ID;
             $one['post_title'] = $post->post_title;
             $data['items'][] = $one;
         }
         wp_send_json( $data );
+    }
+
+    function send_student_invite( $request ) {
+	    $course_id = $request->course_id;
+	    $args = array(
+	    	'first_name' => $request->first_name,
+		    'last_name' => $request->last_name,
+		    'email' => $request->email,
+	    );
+
+	    $send = coursepress_invite_student( $course_id, $args );
+
+	    if ( $send ) {
+	    	wp_send_json_success( $send );
+	    }
+
+	    wp_send_json_error(true);
     }
 }

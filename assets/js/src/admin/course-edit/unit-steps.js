@@ -10,14 +10,12 @@
             steps: {},
             menu_order: 0,
             events: {
-                'click .unit-step': 'addNewStep',
+                'click .unit-step': 'addNewStep'
             },
 
             initialize: function( model, unitModel ) {
-                this.model = model;
+                this.steps = {};
                 this.unitModel = unitModel;
-                //this.steps = this.model.get('steps');
-                //this.unitModel.on( 'coursepress:validate-unit', this.updateSteps, this );
                 this.on( 'view_rendered', this.setUI, this );
                 this.render();
             },
@@ -27,11 +25,9 @@
 
                 this.stepContainer = this.$('.unit-steps');
 
-                steps = this.model.get('steps');
+                steps =  this.model.get('steps');
 
                 if ( steps ) {
-                    //CoursePress.Events.on( 'coursepress:step_rendered', this.toggleStep, this );
-
                     _.each(steps, function (step) {
                         step_view = this.setStep(step);
                         step_view.toggleContents();
@@ -68,7 +64,7 @@
 
                 this.menu_order += 1;
                 model.menu_order = this.menu_order;
-                step = new CoursePress.Step(model, this);
+                step = new CoursePress.Step({model: model}, this);
                 step.$el.appendTo(this.stepContainer);
 
                 cid = step.model.cid;
@@ -79,6 +75,7 @@
 
                 return step;
             },
+
             updateStepsCollection: function(stepModel) {
                 var cid;
 
@@ -88,7 +85,7 @@
             },
 
             updateSteps: function() {
-                //window.alert('updated?');
+                //window.console.log(this.unitModel.model);
                 this.unitModel.model.set('steps', this.steps);
             }
         });

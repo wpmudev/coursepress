@@ -11,6 +11,8 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 	 */
 	protected $breadcrumb = array();
 
+	var $type = '';
+
 	/**
 	 * @var array
 	 */
@@ -69,10 +71,16 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 		return false;
 	}
 
-	private function get_post_id_by_slug( $slug, $post_type ) {
+	private function get_post_id_by_slug( $slug, $post_type, $post_parent = 0 ) {
 		global $wpdb;
 
-		$sql = $wpdb->prepare( "SELECT ID FROM `{$wpdb->posts}` WHERE `post_name`=%s AND `post_type`=%s", $slug, $post_type );
+		$sql = "SELECT ID FROM `{$wpdb->posts}` WHERE `post_name`=%s AND `post_type`=%s";
+
+		if ( (int) $post_parent > 0 ) {
+			$sql .= " AND `post_parent`=%d";
+		}
+
+		$sql = $wpdb->prepare( $sql, $slug, $post_type, $post_parent );
 
 		$post_id = $wpdb->get_var( $sql );
 
@@ -99,6 +107,7 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 
 		$template = $CoursePress->plugin_path . 'templates/';
 		$template .= $this->templates[ $type ];
+		$with_modules = $CoursePress_Course instanceof CoursePress_Course ? $CoursePress_Course->is_with_modules() : false;
 
 		if ( 'instructor' == $type ) {
 			$instructor = $wp_query->get( 'instructor' );
@@ -112,7 +121,7 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 			$this->add_breadcrumb( __( 'Units', 'cp' ), $CoursePress_Course->get_units_url() );
 
 			$unit = $this->__get( 'unit' );
-			$unit_id = $this->get_post_id_by_slug( $unit, 'unit' );
+			$unit_id = $this->get_post_id_by_slug( $unit, 'unit', $CoursePress_Course->ID );
 
 			if ( $unit_id > 0 ) {
 				$CoursePress_Unit = new CoursePress_Unit( $unit_id );
@@ -135,10 +144,16 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 					$_course_module = $CoursePress_Unit->get_module_by_id( 1 );
 				}
 
-				$step = $this->__get( 'step' );
+				if ( $with_modules ) {
+					$step = $this->__get( 'step' );
+				} else {
+					$this->__set( 'type', 'step' );
+					$_coursepress_type_now = 'step';
+					$step = $this->__get( 'module' );
+				}
 
 				if ( ! empty( $step ) ) {
-					$step_id = $this->get_post_id_by_slug( $step, 'module' );
+					$step_id = $this->get_post_id_by_slug( $step, 'module', $unit_id );
 
 					if ( $step_id > 0 ) {
 						$_coursepress_type_now = 'step';

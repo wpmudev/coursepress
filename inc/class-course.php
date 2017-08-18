@@ -48,6 +48,7 @@ class CoursePress_Course extends CoursePress_Utility {
 	}
 
 	function setUpCourseMetas() {
+		$course_id = $this->__get( 'ID' );
 		$settings = $this->get_settings();
 		$date_format = coursepress_get_option( 'date_format' );
 		$time_now = current_time( 'timestamp' );
@@ -71,7 +72,6 @@ class CoursePress_Course extends CoursePress_Utility {
 			}
 
 			if ( 'off' === $value ) {
-				echo $value;
 				$value = false;
 			}
 
@@ -82,12 +82,12 @@ class CoursePress_Course extends CoursePress_Utility {
 		$this->__set( 'course_view', 'focus' );
 
 		// Legacy: fix course_type meta
-		if ( ! isset( $settings['with_modules'] ) ) {
-            $this->__set('with_modules', true );
-        }
-		if ( ! $this->__get( 'course_type' ) ) {
-            $this->__set('course_type', 'auto-moderated');
-        }
+		$cpv = get_post_meta( $course_id, 'cp_cpv', true );
+
+		if ( ! $cpv ) {
+			$this->__set( 'with_modules', true );
+			$this->__set( 'course_type', 'auto-moderated' );
+		}
 	}
 
 	function get_settings() {
@@ -155,6 +155,7 @@ class CoursePress_Course extends CoursePress_Utility {
 			'mp_sale_price_enabled' => false,
 			'mp_sku_placeholder' => sprintf( __( 'e.g. %s-%06d', 'cp' ), 'CP', $id ),
 			'mp_sku' => '',
+			'cpv' => 3,
 		);
 
 		$settings = get_post_meta( $id, 'course_settings', true );
@@ -178,8 +179,14 @@ class CoursePress_Course extends CoursePress_Utility {
 
 		if ( true === $key ) {
 			$settings = $value;
+
+			foreach ( $settings as $key => $value ) {
+				update_post_meta( $course_id, 'cp_' . $key, $value );
+			}
 		} else {
 			$settings[ $key ] = $value;
+
+			update_post_meta( $course_id, 'cp_' . $key, $value );
 		}
 
 		update_post_meta( $course_id, 'course_settings', $settings );
@@ -694,6 +701,24 @@ class CoursePress_Course extends CoursePress_Utility {
 		return $students;
 	}
 
+	function get_invited_students() {
+		$invitee = $this->__get( 'invited_students' );
+
+		if ( ! empty( $invitee ) ) {
+			foreach ( $invitee as $pos => $invite ) {
+				if ( empty( $invite['date'] ) ) {
+					// Legacy:: Previous invitation has no date
+					$invite['date'] = '-';
+				} else {
+					$invite['date'] = $this->date( $invite['date'] );
+				}
+				$invitee[ $pos ] = $invite;
+			}
+		}
+
+		return $invitee;
+	}
+
 	function count_certified_students() {
 		// @todo: count certified students here
 		return 0;
@@ -811,12 +836,8 @@ class CoursePress_Course extends CoursePress_Utility {
 		$results = $this->_get_units( $published, false );
 
 		if ( ! empty( $results ) ) {
-			$previousUnit = false;
-
 			foreach ( $results as $unit ) {
 				$unitClass = new CoursePress_Unit( $unit, $this );
-				//$unitClass->__set( 'previousUnit', $previousUnit );
-				//$previousUnit = $unitClass;
 				$units[] = $unitClass;
 			}
 		}

@@ -214,6 +214,11 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 					'no_content' => __( 'One of the active unit enabled the use of unit description but no description set!', 'cp'),
 					'no_modules' => __( 'One of the active unit has no modules!', 'cp'),
 					'no_steps' => __( 'One of the active unit contains no steps!', 'cp')
+				),
+				'step' => array(
+					'answer_a' => __( 'Answer A', 'cp' ),
+					'answer_b' => __( 'Answer B', 'cp' ),
+					'answer_c' => __( 'Answer C', 'cp' )
 				)
 			),
 		) );
@@ -577,7 +582,25 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		coursepress_render( 'views/tpl/course-units', array( 'steps' => $steps ) );
 		coursepress_render( 'views/tpl/steps-template', array( 'file_types' => $file_types, 'questions' => $question_types ) );
-		coursepress_render( 'views/tpl/course-students', array( 'students' => $course->get_students( false ) ) );
+
+		$paged = $this->get_pagenum();
+		$total_students = $course->count_students();
+		$invited_students = $course->get_invited_students();
+		$args = array(
+			'total_students' => $total_students,
+			'students' => $course->get_students(false, $paged ),
+			'withdraw_link' => add_query_arg( array(
+				'action' => 'coursepress_unenroll',
+				'course_id' => $course_id,
+				'_wpnonce' => wp_create_nonce( 'coursepress_nonce' ),
+				'referer' => 'course-edit',
+			), admin_url( 'admin-ajax.php' ) ),
+			'redirect' => remove_query_arg( 'dummy' ),
+			'pagination' => $this->set_pagination( $total_students, 'coursepress_students' ),
+			'invited_students' => $invited_students,
+		);
+		$this->localize_array['invited_students'] = $invited_students;
+		coursepress_render( 'views/tpl/course-students', $args );
 	}
 
 	function get_students_page() {
