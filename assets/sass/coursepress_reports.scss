@@ -35,11 +35,13 @@
         .coursepress-table {
             margin-bottom: 2em;
             tbody {
+                .column-answered,
                 .column-average,
                 .column-id,
                 .column-responses {
                     text-align: right;
                 }
+                .column-answered,
                 .column-average,
                 .column-responses {
                     width: 5em;
@@ -60,6 +62,13 @@
             .check-column {
                 width: 2.2em;
                 padding: 11px 0 0 3px;
+            }
+            &.coursepress-table-summary {
+                .column-answered,
+                .column-average,
+                .column-responses {
+                    width: 20%;
+                }
             }
         }
     }

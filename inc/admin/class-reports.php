@@ -155,6 +155,39 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 			}
 			$students[] = $student;
 			$student->progress = $student->get_completion_data( $this->course_id );
+
+			/**
+			 * count
+			 */
+			$course_assessable_modules = 0;
+			$course_answered = 0;
+			$course_total = 0;
+			foreach ( $u as $unit ) {
+				$assessable_modules = 0;
+				$answered = 0;
+				$total = 0;
+
+				foreach ( $unit->steps as $step ) {
+					if ( ! $step->assessable ) {
+						continue;
+					}
+					$assessable_modules++;
+					$grade = $student->get_step_grade( $this->course_id, $unit->ID, $step->ID );
+					$total += false !== $grade && isset( $grade ) ? (int) $grade : 0;
+					$response = $student->get_response( $this->course_id, $unit->ID, $step->ID, $student->progress );
+					$answered += false !== $response && isset( $response['date'] ) ? 1 : 0;
+				}
+				$course_assessable_modules += $assessable_modules;
+				$course_answered += $answered;
+				$course_total += $total;
+			}
+
+				$student->course_assessable_modules = $course_assessable_modules;
+				$student->course_answered = $course_answered;
+				$student->course_total = $course_total;
+				$student->average = $course_answered > 0 ? (int) ( $course_total / $course_answered ) : 0;
+				$student->course_average = $assessable_modules > 0 ? (int) ( $course_total / $course_assessable_modules ) : 0;
+
 			$args = array(
 				'page' => $this->slug,
 				'colors' => $this->get_colors(),

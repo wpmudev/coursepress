@@ -66,15 +66,11 @@ if ( empty( $assessable_modules ) ) {
 </tbody>
 <?php
 }
-/*
 ?>
             <tfoot>
                 <tr>
-                    <td colspan="2" style="font-size: 4mm; background-color:<?php esc_attr_e( $colors['footer_bg'] );?>;color:<?php esc_attr_e( $colors['footer'] );?>;"><?php printf( __( 'Average response grade: %d%%', 'cp' ), $student->average_display ); ?></td>
-                    <td style="text-align:right; font-size: 4mm; background-color:<?php esc_attr_e( $colors['footer_bg'] ); ?>;color:<?php esc_attr_e( $colors['footer'] ); ?>;"><?php printf( __( 'Total Average: %d%%', 'cp' ), $student->progress['completion']['progress'] ); ?></td>
+                    <td colspan="2" style="font-size: 4mm; background-color:<?php esc_attr_e( $colors['footer_bg'] );?>;color:<?php esc_attr_e( $colors['footer'] );?>;"><?php printf( __( 'Average response grade: %d%%', 'cp' ), $student->average ); ?></td>
+                    <td style="text-align:right; font-size: 4mm; background-color:<?php esc_attr_e( $colors['footer_bg'] ); ?>;color:<?php esc_attr_e( $colors['footer'] ); ?>;"><?php printf( __( 'Total Average: %d%%', 'cp' ), $student->course_average ); ?></td>
                 </tr>
             </tfoot>
-<?php
- */
-?>
-            </table>
+</table>
