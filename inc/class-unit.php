@@ -771,7 +771,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 		foreach ( $steps as $step ) {
 			$step_id = $step->__get( 'ID' );
 			$step_title = $step->__get( 'post_title' );
-			$step_url = esc_url( $step->get_lpermalink() );
+			$step_url = esc_url( $step->get_permalink() );
 			$step_suffix = '';
 			$step_class = array( 'course-step' );
 
