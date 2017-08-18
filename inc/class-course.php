@@ -705,13 +705,13 @@ class CoursePress_Course extends CoursePress_Utility {
 
 		if ( ! empty( $invitee ) ) {
 			foreach ( $invitee as $pos => $invite ) {
-				if ( empty( $invite['date'] ) ) {
+				if ( empty( $invite->date ) ) {
 					// Legacy:: Previous invitation has no date
-					$invite['date'] = '-';
+					$invite->date = '-';
 				} else {
-					$invite['date'] = $this->date( $invite['date'] );
+					$invite->date = $this->date( $invite->date );
 				}
-				$invitee[ $pos ] = $invite;
+				$invitee->{$pos} = $invite;
 			}
 		}
 
