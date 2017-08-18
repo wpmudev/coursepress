@@ -73,7 +73,6 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 			} else if ( isset( $_GET['students'] ) && isset( $_GET['action'] ) ) {
 				$this->students = array_filter( explode( ',', $_GET['students'] ), 'intval' );
 				switch ( $_GET['action'] ) {
-
 					case 'show':
 						$this->get_page_preview();
 					break;
@@ -167,7 +166,7 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 		}
 		$args['content'] = $content;
 		$args['students'] = $students;
-		$content .= coursepress_render( 'views/admin/reports/preview-'.$sufix, $args, $echo );
+		$content = coursepress_render( 'views/admin/reports/preview-'.$sufix, $args, $echo );
 		if ( ! $echo ) {
 			return $content;
 		}
@@ -196,21 +195,41 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 
 	public function get_pdf_content( $request ) {
 		$this->course_id = $request->course_id;
-		$this->student_id = $request->student_id;
-		$filename = sprintf( 'coursepress_reports_%d_%d.pdf', $this->course_id, $this->student_id );
-		// Set PDF args
-		$pdf_args = array(
-			'title' => __( 'CoursePress Reports', 'CP_TD' ),
-			'orientation' => 'P',
-			'filename' => $filename,
-			'format' => 'F',
-			'uid' => crc32( rand() ),
-		);
+		$filename = sprintf( 'coursepress_reports_%s.pdf', md5( serialize( $request ) ) );
 		$args = array(
-			'content' => $this->get_page_preview( false ),
+			'pdf_content' => '',
+			/**
+			 * file name
+			 */
 			'filename' => $filename,
-			'args' => $pdf_args,
+			/**
+			 * PDF
+			 */
+			'args' => array(
+				'title' => __( 'CoursePress Reports', 'CP_TD' ),
+				'orientation' => 'P',
+				'filename' => $filename,
+				'format' => 'F',
+				'uid' => crc32( rand() ),
+			),
 		);
+
+		$witch = isset( $request->which )? $request->which:'default';
+		switch ( $witch ) {
+			case 'download':
+				$this->students = array_filter( explode( ',', $request->students ), 'intval' );
+				$args['pdf_content'] = $this->get_page_preview( false );
+			break;
+
+			case 'download_summary':
+				$this->students = array_filter( explode( ',', $request->students ), 'intval' );
+				$args['pdf_content'] = $this->get_page_preview( false, 'summary' );
+			break;
+
+			default:
+				$this->students = array( $request->student_id );
+				$args['pdf_content'] = $this->get_page_preview( false );
+		}
 		return $args;
 	}
 
