@@ -6,13 +6,6 @@
  * @var $course CoursePress_Course
  */
 ?>
-<div class="wrap coursepress-wrap" id="coursepress-reports-list">
-<h1 class="wp-heading-inline"><?php
-_e( 'Report: ', 'cp' );
-echo ' ';
-echo $course->post_title;
-?></h1>
-    <div class="coursepress-page coursepress-page-report">
 <?php
 echo '<h3 class="cp-flex">';
 echo '<span class="gravatar">';
@@ -85,5 +78,3 @@ if ( empty( $assessable_modules ) ) {
  */
 ?>
             </table>
-    </div>
-</div>

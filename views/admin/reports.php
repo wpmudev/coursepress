@@ -10,7 +10,29 @@
 	<h1 class="wp-heading-inline"><?php _e( 'Reports', 'cp' ); ?></h1>
     <div class="coursepress-page">
         <form method="get" class="cp-search-form" id="cp-search-form">
+            <input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>" />
             <div class="cp-flex">
+<?php if ( 0 < count( $items ) ) { ?>
+                <div class="cp-div" id="bulk-actions">
+                    <label class="label"><?php _e( 'Bulk Actions', 'cp' ); ?></label>
+                <label for="bulk-action-selector-top" class="screen-reader-text"><?php esc_html_e( 'Select bulk action', 'cp' ); ?></label>
+<div class="cp-input-clear">
+<select id="bulk-action-selector-top">
+    <option value="-1"><?php esc_attr_e( 'Bulk Actions', 'cp' ); ?></option>
+<?php
+foreach ( $bulk_actions as $value => $label ) {
+	printf(
+		'<option value="%s">%s</option>',
+		esc_attr( $value ),
+		esc_html( $label )
+	);
+}
+?>
+</select>
+</div>
+                    <input type="button" class="cp-btn cp-btn-active" value="<?php esc_attr_e( 'Apply', 'cp' ); ?>"/>
+                </div>
+<?php } ?>
                 <div class="cp-div">
                     <label class="label"><?php _e( 'Filter by course', 'cp' ); ?></label>
                     <select name="course_id" id="select_course_id">
@@ -26,15 +48,18 @@ foreach ( $courses as $course_id => $course ) {
 	?>
                     </select>
                 </div>
-            </div>
-            <input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>" />
-        </form>
+			</div>
 
+        </form>
+<?php
+if ( ! empty( $items ) ) {
+?>
         <table class="coursepress-table">
             <thead>
                 <tr>
+                <td id="cb" class="manage-column column-cb check-column"><label class="screen-reader-text" for="cb-select-all-1"><?php esc_html_e( 'Select All', 'cp' ); ?></label><input id="cb-select-all-1" type="checkbox"></td>
                     <?php foreach ( $columns as $column_id => $column_label ) { ?>
-                        <th class="manage-column column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" id="<?php echo $column_id; ?>">
+                        <th class="manage-column column-<?php echo esc_attr( strtolower( $column_id ) ); echo esc_attr( in_array( $column_id, $hidden_columns ) ? ' hidden': '' ); ?>" id="<?php echo esc_attr( $column_id ); ?>">
                             <?php echo $column_label; ?>
                         </th>
                     <?php } ?>
@@ -42,15 +67,18 @@ foreach ( $courses as $course_id => $course ) {
             </thead>
             <tbody>
 <?php
-if ( ! empty( $items ) ) {
-	foreach ( $items as $item ) {
-		$clasess = array(
-		'report-'.$item->ID,
-		);
-		?>
-		<tr class="<?php echo esc_attr( implode( ' ', $clasess ) ); ?>">
+foreach ( $items as $item ) {
+	$clasess = array(
+	'report-'.strtolower( $item->ID ),
+	);
+	?>
+	<tr class="<?php echo esc_attr( implode( ' ', $clasess ) ); ?>">
+		<th scope="row" class="check-column"><input type="checkbox" name="students[]" value="<?php esc_attr_e( $item->ID ); ?>"></th>
 <?php foreach ( array_keys( $columns ) as $column_id ) { ?>
-                                <td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>">
+                                <td class="column-<?php
+								echo esc_attr( strtolower( $column_id ) );
+								echo esc_attr( in_array( $column_id, $hidden_columns ) ? ' hidden': '' );
+?>">
                                     <?php
 									switch ( $column_id ) {
 										case 'ID':
@@ -118,17 +146,17 @@ if ( ! empty( $items ) ) {
                             <?php } ?>
                         </tr>
                     <?php
-	}
-} else {
+}
 ?>
-	<tr>
-		<td>
-			<?php _e( 'No reports found.', 'cp' ); ?>
-		</td>
-	</tr>
-<?php } ?>
             </tbody>
         </table>
+<?php
+} else {
+?>
+<div class="cp-alert cp-alert-info">
+	<p><?php esc_html_e( 'No reports found.', 'cp' ); ?></p>
+</div>
+<?php } ?>
         <?php if ( ! empty( $pagination ) ) : ?>
             <div class="tablenav cp-admin-pagination">
                 <?php $pagination->pagination( 'bottom' ); ?>

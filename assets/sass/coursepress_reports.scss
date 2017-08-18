@@ -33,11 +33,19 @@
             }
         }
         .coursepress-table {
+            margin-bottom: 2em;
             tbody {
                 .column-average,
+                .column-id,
                 .column-responses {
                     text-align: right;
+                }
+                .column-average,
+                .column-responses {
                     width: 5em;
+                }
+                .column-id {
+                    width: 3em;
                 }
             }
             .column-download,
@@ -47,6 +55,11 @@
                 .fa {
                     font-size: 2em;
                 }
+            }
+            .column-id,
+            .check-column {
+                width: 2.2em;
+                padding: 11px 0 0 3px;
             }
         }
     }

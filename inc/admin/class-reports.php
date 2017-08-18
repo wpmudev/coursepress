@@ -11,9 +11,10 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 	 */
 	protected $slug = 'coursepress_reports';
 	private $course_id;
-	private $student_id;
+	private $students;
 
 	public function __construct() {
+		add_filter( 'coursepress_admin_localize_array', array( $this, 'add_i18n_messages' ) );
 	}
 
 	function columns() {
@@ -27,6 +28,16 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 		);
 
 		return $columns;
+	}
+
+	public function get_bulk_actions() {
+		$actions = array(
+			'download' => __( 'Download', 'cp' ),
+			'download_summary' => __( 'Download Summary', 'cp' ),
+			'show' => __( 'Show', 'cp' ),
+			'show_summary' => __( 'Show Summary', 'cp' ),
+		);
+		return $actions;
 	}
 
 	/**
@@ -54,10 +65,29 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 		$this->course_id = $course_id;
 		$mode = filter_input( INPUT_GET, 'mode' );
 		$nonce = filter_input( INPUT_GET, '_wpnonce' );
-		if ( $course_id && 'html' == $mode && wp_verify_nonce( $nonce, 'coursepress_preview_report' ) ) {
-			$student_id = filter_input( INPUT_GET, 'student_id', FILTER_VALIDATE_INT );
-			$this->student_id = $student_id;
-			$this->get_page_preview();
+		if ( $course_id && 'html' == $mode ) {
+			if ( wp_verify_nonce( $nonce, 'coursepress_preview_report' ) ) {
+				$student_id = filter_input( INPUT_GET, 'student_id', FILTER_VALIDATE_INT );
+				$this->students = array( $student_id );
+				$this->get_page_preview();
+			} else if ( isset( $_GET['students'] ) && isset( $_GET['action'] ) ) {
+				$this->students = array_filter( explode( ',', $_GET['students'] ), 'intval' );
+				switch ( $_GET['action'] ) {
+
+					case 'show':
+						$this->get_page_preview();
+					break;
+
+					case 'show_summary':
+						$this->get_page_preview( true, 'summary' );
+					break;
+
+					default:
+						coursepress_render( 'views/admin/error-wrong', array( 'title' => __( 'Reports' ) ) );
+				}
+			} else {
+				coursepress_render( 'views/admin/error-wrong', array( 'title' => __( 'Reports' ) ) );
+			}
 		} else {
 			$this->get_page_list();
 		}
@@ -88,11 +118,13 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 			'pagination' => $this->set_courses_pagination( $count ),
 			'download_nonce' => wp_create_nonce( 'coursepress_download_report' ),
 			'current' => $this->course_id,
+			'bulk_actions' => $this->get_bulk_actions(),
 		);
 		coursepress_render( 'views/admin/reports', $args );
 	}
 
-	private function get_page_preview( $echo = true ) {
+	private function get_page_preview( $echo = true, $mode = 'full' ) {
+		$sufix = 'summary' == $mode? 'summary':'full';
 		$course = coursepress_get_course( $this->course_id );
 		/**
 		 * Units
@@ -105,20 +137,40 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 			$unit->steps = $unit->get_steps();
 			$u[] = $unit;
 		}
+		$content = '';
+		$students = array();
 		/**
-		 * Student
+		 * Students
 		 */
-		$student = coursepress_get_user( $this->student_id );
-		$student->progress = $student->get_completion_data( $this->course_id );
-
-		$args = array(
-			'page' => $this->slug,
-			'colors' => $this->get_colors(),
-			'course' => $course,
-			'units' => $u,
-			'student' => $student,
-		);
-		return coursepress_render( 'views/admin/report-preview', $args, $echo );
+		foreach ( $this->students as $student_id ) {
+			$student = coursepress_get_user( $student_id );
+			if ( $student->is_error ) {
+				$args = array(
+					'page' => $this->slug,
+					'colors' => $this->get_colors(),
+					'course' => $course,
+					'units' => $u,
+				);
+				$content = coursepress_render( 'views/admin/error-wrong', array(), false );
+				continue;
+			}
+			$students[] = $student;
+			$student->progress = $student->get_completion_data( $this->course_id );
+			$args = array(
+				'page' => $this->slug,
+				'colors' => $this->get_colors(),
+				'course' => $course,
+				'units' => $u,
+				'student' => $student,
+			);
+			$content .= coursepress_render( 'views/admin/reports/single-'.$sufix, $args, false );
+		}
+		$args['content'] = $content;
+		$args['students'] = $students;
+		$content .= coursepress_render( 'views/admin/reports/preview-'.$sufix, $args, $echo );
+		if ( ! $echo ) {
+			return $content;
+		}
 	}
 
 	private function get_colors() {
@@ -160,5 +212,14 @@ class CoursePress_Admin_Reports extends CoursePress_Admin_Page {
 			'args' => $pdf_args,
 		);
 		return $args;
+	}
+
+
+	public function add_i18n_messages( $data ) {
+		$data['text']['reports'] = array(
+			'no_items' => __( 'Select students to generate the report!', 'cp' ),
+			'no_action' => __( 'Select action to generate the report!', 'cp' ),
+		);
+		return $data;
 	}
 }
