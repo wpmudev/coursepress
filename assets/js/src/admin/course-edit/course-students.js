@@ -1,4 +1,4 @@
-/* global CoursePress */
+/* global CoursePress, console */
 
 (function() {
     'use strict';
@@ -73,6 +73,10 @@
             courseView: false,
             el: $('#course-students'),
 
+			events: {
+				'click .cp-btn-withdraw-student': 'withdrawStudent',
+			},
+
             initialize: function( model, courseView ) {
                 this.model = model;
                 this.courseView = courseView;
@@ -116,7 +120,20 @@
                 list.find('.no-invites').hide();
 
                 return invited;
+            },
+
+            withdrawStudent: function() {
+                console.log('aaa');
+                return false;
+                /*
+                    this.model.set( 'action', 'send_student_invite' );
+                    this.model.set('course_id', this.course_id);
+                    this.model.off( 'coursepress:success_send_student_invite' );
+                    this.model.on( 'coursepress:success_send_student_invite', this.invitationSent, this );
+                    this.model.save();
+                    */
             }
+
         });
     });
 })();

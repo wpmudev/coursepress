@@ -25,7 +25,7 @@
                     </td>
                     <td></td>
                     <td>
-                        <a href="<?php echo esc_url_raw( add_query_arg( 'student_id', $student->ID ) ); ?>" class="cp-btn cp-btn-xs cp-btn-active"><?php _e( 'Withdraw', 'cp' ); ?></a>
+                        <a href="<?php echo esc_url_raw( add_query_arg( 'student_id', $student->ID, $withdraw_link ) ); ?>" class="cp-btn cp-btn-xs cp-btn-active cp-btn-withdraw-student"><?php _e( 'Withdraw', 'cp' ); ?></a>
                     </td>
                 </tr>
                 <?php endforeach; ?>
