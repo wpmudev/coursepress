@@ -20,7 +20,7 @@
                 'value' => '',
                 'flex' => true,
                 'class' => 'large-text',
-                'placeholder' => 'e.g. jhon@example.net',
+                'placeholder' => 'e.g. john@example.net',
             ),
             'subject' => array(
                 'type' => 'text',

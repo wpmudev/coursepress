@@ -58,7 +58,7 @@
             </div>
             <div class="cp-box">
                 <label class="label"><?php _e( 'Email', 'cp' ); ?></label>
-                <input type="text" name="email" class="widefat" placeholder="jhonsmith@example.net" />
+                <input type="text" name="email" class="widefat" placeholder="johnsmith@example.net" />
             </div>
             <button type="button" class="cp-btn cp-btn-active send-invite">
                 <i class="fa fa-circle-o-notch fa-spin"></i>
