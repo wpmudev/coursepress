@@ -17,16 +17,10 @@
                 <?php foreach ( $students as $student ) : ?>
                 <tr>
                     <td>
-                        <div class="cp-flex">
-                            <span class="gravatar">
-                                <?php echo get_avatar( $student->ID, 30 ); ?>
-                            </span>
-                            <span class="user_login">
-                                <?php echo $student->user_login; ?>
-                            </span>
-                            <span class="display_name">
-                                <?php echo $student->get_name(); ?>
-                            </span>
+                        <div class="cp-flex cp-user">
+                            <span class="gravatar"> <?php echo $student->get_avatar( 30 ); ?></span>
+                            <span class="user_login"><?php echo $student->user_login; ?></span>
+                            <span class="display_name">(<?php echo $student->get_name(); ?>)</span>
                         </div>
                     </td>
                     <td></td>

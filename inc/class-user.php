@@ -171,8 +171,7 @@ class CoursePress_User extends CoursePress_Utility {
 	}
 
 	function get_avatar( $size = 42 ) {
-		$avatar = get_avatar( $size, $this->__get( 'user_email' ) );
-
+		$avatar = get_avatar( $this->__get( 'user_email' ), $size );
 		return $avatar;
 	}
 

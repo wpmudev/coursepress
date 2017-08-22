@@ -71,7 +71,7 @@ switch ( $column_id ) :
 		echo $instructor->ID;
 	break;
 	case 'instructor':
-		echo '<div class="cp-flex">';
+		echo '<div class="cp-flex cp-user">';
 		echo '<span class="gravatar">';
 		echo get_avatar( $instructor->email, 30 );
 		echo '</span>';

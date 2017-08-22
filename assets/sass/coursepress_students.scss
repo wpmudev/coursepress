@@ -20,22 +20,5 @@
         display: block;
       }
     }
-    .coursepress-table {
-      .column-student {
-        .cp-flex {
-          align-items: center;
-          .gravatar {
-            padding-right: 15px;
-            img {
-              @include radius(50%);
-            }
-          }
-          .user_login {
-            font-weight: 600;
-            padding-right: 5px;
-          }
-        }
-      }
-    }
   }
 }
