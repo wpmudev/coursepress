@@ -29,9 +29,12 @@
                     </td>
                 </tr>
                 <?php endforeach; ?>
-            <?php else: ?>
+            <?php else : ?>
                 <tr>
-                    <td colspan="3"><?php _e( 'There are no enrolled students to this course.', 'cp' ); ?></td>
+                    <td colspan="3" class="noitems">
+                        <p><?php _e( 'There are currently no students enrolled to this course.', 'cp' ); ?></p>
+                        <p><?php _e( 'You can invite students below or wait for them to enroll once the course is active.', 'cp' ); ?></p>
+                    </td>
                 </tr>
             <?php endif; ?>
         </tbody>
@@ -42,22 +45,32 @@
 
     <div class="cp-flex cp-invitee-container">
         <div class="cp-content-box" id="student-invites">
-            <div class="cp-box">
-                <label class="label"><?php _e( 'First Name', 'cp' ); ?></label>
-                <input type="text" name="first_name" class="widefat" placeholder="John" />
-            </div>
-            <div class="cp-box">
-                <label class="label"><?php _e( 'Last Name', 'cp' ); ?></label>
-                <input type="text" name="last_name" class="widefat" placeholder="Smith" />
-            </div>
-            <div class="cp-box">
-                <label class="label"><?php _e( 'Email', 'cp' ); ?></label>
-                <input type="text" name="email" class="widefat" placeholder="johnsmith@example.net" />
-            </div>
-            <button type="button" class="cp-btn cp-btn-active send-invite">
-                <i class="fa fa-circle-o-notch fa-spin"></i>
-                <?php _e( 'Send Invite', 'cp' ); ?>
-            </button>
+            <table class="coursepress-table">
+                <thead>
+                    <tr>
+                        <th><?php _e( 'Invite Student ', 'cp' ); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="cp-box">
+                                <label class="label"><?php _e( 'First Name', 'cp' ); ?></label>
+                                <input type="text" name="first_name" class="widefat" placeholder="John" />
+                            </div>
+                            <div class="cp-box">
+                                <label class="label"><?php _e( 'Last Name', 'cp' ); ?></label>
+                                <input type="text" name="last_name" class="widefat" placeholder="Smith" />
+                            </div>
+                            <div class="cp-box">
+                                <label class="label"><?php _e( 'Email', 'cp' ); ?></label>
+                                <input type="text" name="email" class="widefat" placeholder="johnsmith@example.net" />
+                            </div>
+                            <button type="button" class="cp-btn cp-btn-active send-invite"><i class="fa fa-circle-o-notch fa-spin"></i><?php _e( 'Send Invite', 'cp' ); ?></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="cp-content-box" id="invited-students">
