@@ -13,7 +13,58 @@ class CoursePress_Extension_WooCommerce {
 		add_action( 'before_delete_post', array( $this, 'update_product_when_deleting_course' ) );
 		add_action( 'before_delete_post', array( $this, 'update_course_when_deleting_product' ) );
 
+		/**
+		 * This filter allow to set that the user bought the course.
+		 *
+		 * @since 2.0.0
+		 *
+		 * @param boolean $is_user_purchased_course user purchase course?
+		 * @param WP_Post $course current course to check
+		 * @param integer $user_id user to check
+		 */
+		add_filter( 'coursepress_is_user_purchased_course', array( $this, 'is_user_purchased_course' ), 10, 3
+		);
+
 		add_shortcode( 'mp_product_price', array( $this, 'product_price' ) );
+		add_shortcode( 'mp_buy_button', array( $this, 'add_to_cart_template' ) );
+
+		/**
+		 * replace product link to course link
+		 */
+		/* This filter is documented in WordPress file: /wp-includes/link-template.php */
+		add_filter( 'post_type_link', array( $this, 'change_product_link_to_course_link' ), 10, 2 );
+
+		/**
+		 * redirect product to course
+		 */
+		/* This action is documented in WordPress file: /wp-includes/template-loader.php */
+		add_action( 'template_redirect', array( $this, 'redirect_to_product' ) );
+
+		/**
+ * WooCommerce filters
+ */
+		add_action( 'woocommerce_process_product_meta_simple', array( $this, 'woo_save_post' ), 999 );
+		add_action( 'woocommerce_order_details_after_order_table', array( $this, 'show_course_message_woocommerce_order_details_after_order_table' ), 10, 2 );
+		add_filter( 'woocommerce_cart_item_name', array( $this, 'change_cp_item_name' ), 10, 3 );
+		add_filter( 'woocommerce_order_item_name', array( $this, 'change_cp_order_item_name' ), 10, 2 );
+		add_action( 'woocommerce_order_status_changed', array( $this, 'change_order_status' ), 10, 3 );
+		/**
+		 * Change product status if course is not available.
+		 */
+		add_action( 'woocommerce_before_main_content', array( $this, 'woocommerce_before_main_content' ) );
+		/**
+		 * WooCommerce change order status
+		 */
+		add_action( 'woocommerce_order_status_changed', array( $this, 'woocommerce_order_status_changed' ), 21, 3 );
+		/**
+		 * check cart before allow to proceder. Courses can not be buy by guests.
+		 */
+		add_filter( 'pre_option_woocommerce_enable_guest_checkout', array( $this, 'check_cart_and_user_login' ) );
+
+		/**
+		 * WooCommerce payment complete -> CoursePress enroll student.
+		 */
+		add_action( 'woocommerce_payment_complete', array( $this, 'payment_complete_enroll_student' ) );
 	}
 
 	public function add_course_default_fields( $course_meta ) {
@@ -35,9 +86,15 @@ class CoursePress_Extension_WooCommerce {
 			$course_meta['mp_sku'] = sprintf( 'CP-%d', $course_id );
 			update_post_meta( $course_id, 'course_settings', $course_meta );
 		}
-		$course = get_post( $course_id );
+		$course = coursepress_get_course( $course_id );
 		if ( $course_meta['payment_paid_course'] ) {
 			$product_id = $this->update_product( $course, $course_meta );
+			$course->update_setting( 'mp_product_id', $product_id );
+			update_post_meta( $course_id, 'mp_product_id', $product_id );
+			/**
+			 * set post parent for product
+			 */
+			wp_update_post( array( 'ID' => $product_id, 'post_parent' => $course_id ) );
 		} else {
 			$product_id = $this->get_product_id( $course_id );
 			$action = coursepress_get_setting( 'woocommerce/unpaid', 'change_status' );
@@ -103,12 +160,9 @@ class CoursePress_Extension_WooCommerce {
 		return 0;
 	}
 
-	public function product_price( $atts ) {
-
-		l( $atts );
-
-		return 'foo';
-
+	public function product_price( $atts, $content ) {
+		global $post;
+		return $this->get_course_cost_html( $content, $post->ID );
 	}
 
 	/**
@@ -171,5 +225,413 @@ class CoursePress_Extension_WooCommerce {
 		}
 		coursepress_course_update_setting( $course_id, 'mp_product_id', 0 );
 		coursepress_course_update_setting( $course_id, 'payment_paid_course', 'off' );
+	}
+
+	/**
+	 * Get course price, using WooCommerce object
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $content current cost
+	 * @param integer $course_id course to check
+	 *
+	 * @return string html with product price
+	 */
+	public function get_course_cost_html( $content, $course_id ) {
+		$product_id = $this->get_product_id( $course_id );
+		$product = new WC_Product( $product_id );
+		/**
+		 * no or invalid product? any doubts?
+		 */
+		if ( ! $product->is_purchasable() || ! $product->is_in_stock() ) {
+			return $content;
+		}
+		return $product->get_price_html();
+	}
+
+	/**
+	 * Allow to add step template.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param arrat $atts Configuration array.
+	 */
+	public function add_to_cart_template( $atts ) {
+		$product_id = 0;
+		if ( isset( $atts['product_id'] ) ) {
+			$product_id = $atts['product_id'];
+		}
+		if ( empty( $product_id ) ) {
+			return;
+		}
+		$cart_data = WC()->cart->get_cart();
+		foreach ( $cart_data as $cart_item_key => $values ) {
+			$_product = $values['data'];
+			if ( $product_id == $_product->id ) {
+				$content = __( 'This course is already in the cart.', 'cp' );
+				global $woocommerce;
+				$content .= sprintf(
+					' <a href="%s" class="single_show_cart_button button">%s</a>',
+					esc_url( $woocommerce->cart->get_cart_url() ),
+					esc_html__( 'Show cart', 'cp' )
+				);
+				return wpautop( $content );
+			}
+		}
+		$product = new WC_Product( $product_id );
+		/**
+		 * no or invalid product? any doubts?
+		 */
+		if ( ! $product->is_purchasable() || ! $product->is_in_stock() ) {
+			return $content;
+		}
+		$args = array(
+			'product_id' => $product->id,
+			'wc_cart_url' => wc_get_cart_url(),
+			'wc_button' => $product->single_add_to_cart_text(),
+		);
+		return coursepress_render( 'views/extensions/woocommerce/front/button', $args, false );
+	}
+
+	/**
+	 * Allow to check that the user bought the course.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param boolean $is_user_purchased_course user purchase course?
+	 * @param WP_Post $course current course to check
+	 * @param integer i$user_id user to check
+	 *
+	 * @return boolean
+	 */
+	public function is_user_purchased_course( $is_user_purchased_course, $course, $user_id ) {
+		$course_id = is_object( $course )? $course->ID : $course;
+		$key = sprintf( 'course_%d_woo_payment_status', $course_id );
+		return 'wc-completed' == get_user_meta( $user_id, $key, true );
+	}
+
+	public function woo_save_post() {
+		global $post;
+		if ( 'product' === $post->post_type ) {
+			return;
+		}
+		if ( isset( $_POST['parent_course'] ) && ! empty( $_POST['parent_course'] ) ) {
+			wp_update_post( array( 'ID' => $post->ID, 'post_parent' => (int) $_POST['parent_course'] ) );
+		}
+		/**
+		 * Set or update thumbnail.
+		 */
+		$this->update_product_thumbnail( $product->ID );
+	}
+
+	/**
+	 * Set or update thumbnail.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $product_id Product ID.
+	 */
+	public function update_product_thumbnail( $product_id ) {
+		$thumbnail_id = get_post_thumbnail_id( $product_id );
+		if ( ! empty( $thumbnail_id ) ) {
+			return;
+		}
+		/**
+		 * Check is set course?
+		 */
+		$course_id = wp_get_post_parent_id( $product_id );
+		if ( empty( $course_id ) ) {
+			return;
+		}
+		/**
+		 * Is the course really a course?
+		 */
+		$is_course = coursepress_is_course( $course_id );
+		if ( ! $is_course ) {
+			return;
+		}
+		/**
+		 *  Only works if the course actually has a thumbnail.
+		 */
+		$thumbnail_url = get_post_meta( $course_id, 'cp_listing_image', true );
+		if ( empty( $thumbnail_url ) ) {
+			return;
+		}
+		/**
+		 * Get thumbnail id from thumbnail_url, if it is custom image, do not
+		 * set thumbnail for product.
+		 */
+		global $wpdb;
+		$thumbnail_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE guid='%s';", $thumbnail_url ) );
+		if ( empty( $thumbnail_id ) ) {
+			return;
+		}
+		/**
+		 * Finally ... set product thumbnail.
+		 */
+		set_post_thumbnail( $product_id, $thumbnail_id );
+	}
+
+	public function show_course_message_woocommerce_order_details_after_order_table( $order ) {
+		$order_details		 = new WC_Order( $order->id );
+		$order_items		 = $order_details->get_items();
+		$purchased_course	 = false;
+		foreach ( $order_items as $order_item ) {
+			$course_id = wp_get_post_parent_id( $order_item['product_id'] );
+			if ( $course_id && get_post_type( $course_id ) == 'course' ) {
+				$purchased_course = true;
+			}
+		}
+		if ( ! $purchased_course ) {
+			return;
+		}
+		$args = array(
+			'show_dashboard_link' => is_user_logged_in() && 'wc-completed' == $order->post_status,
+			'dashboard_link' => coursepress_get_setting( 'slugs/student_dashboard', 'courses-dashboard' ),
+		);
+		coursepress_render( 'views/extensions/woocommerce/front/message_after_order', $args );
+	}
+
+	public function change_cp_item_name( $title, $cart_item, $cart_item_key ) {
+		$course_id = wp_get_post_parent_id( $cart_item['product_id'] );
+		if ( $course_id && get_post_type( $course_id ) == 'course' ) {
+			return get_the_title( $course_id );
+		}
+		return $title;
+	}
+
+	public function change_cp_order_item_name( $name, $item ) {
+		$product_id = $item->get_product_id();
+		$course_id = wp_get_post_parent_id( $product_id );
+		if ( $course_id && get_post_type( $course_id ) == 'course' ) {
+			return get_the_title( $course_id );
+		}
+		return $name;
+	}
+
+	public function change_order_status( $order_id, $old_status, $new_status ) {
+		$this->remove_filter_coursepress_enroll_student();
+		$order = new WC_order( $order_id );
+		$items = $order->get_items();
+		$user_id = get_post_meta( $order_id, '_customer_user', true );
+		foreach ( $items as $item ) {
+			$course_id = wp_get_post_parent_id( $item['product_id'] );
+			if ( empty( $course_id ) ) {
+				continue;
+			}
+			$key = sprintf( 'course_%d_woo_payment_status', $course_id );
+			update_user_meta( $user_id, $key, $new_status );
+			/**
+			 * Enroll student to course.
+			 */
+			if ( 'completed' === $new_status ) {
+				coursepress_add_student( $user_id, $course_id );
+			}
+		}
+	}
+
+	/**
+	 * Remove filter which preventing student to enroll course without paing.
+	 *
+	 * @since 2.0.7
+	 */
+	private function remove_filter_coursepress_enroll_student() {
+		/**
+		 * remove filter to allow enroll
+		 */
+		remove_filter(
+			'coursepress_enroll_student',
+			array( $this, 'allow_student_to_enroll' ),
+			10, 3
+		);
+	}
+
+	/**
+	 * Change product status to "outofstock" if the course is not
+	 * available.
+	 *
+	 * @since 2.0.0
+	 */
+	public function woocommerce_before_main_content() {
+		/**
+		 * Changed to check only for logged users, becouse some courses
+		 * are always not available for not logged users.
+		 *
+		 * @since 2.0.6
+		 */
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
+		while ( have_posts() ) {
+			the_post();
+			$product_id = get_the_ID();
+			$product_status = get_post_meta( $product_id, '_stock_status', true );
+			if ( 'instock' != $product_status ) {
+				continue;
+			}
+			$course_id = get_post_meta( $product_id, 'cp_course_id', true );
+			if ( empty( $course_id ) ) {
+				continue;
+			}
+			$course_status = CoursePress_Data_Course::is_course_available( $course_id );
+			if ( $course_status ) {
+				continue;
+			}
+			update_post_meta( get_the_ID(), '_stock_status', 'outofstock' );
+		}
+		wp_reset_query();
+	}
+
+	/**
+	 * Change student enrollment status in course, depend on order status.
+	 *
+	 * @since 2.0.4
+	 *
+	 * @param integer $order_id WooCommerce order ID.
+	 * @param string $old_status Old status of this order.
+	 * @param string $new_status New status of this order.
+	 */
+	public function woocommerce_order_status_changed( $order_id, $old_status, $new_status ) {
+		if ( 'completed' == $new_status ) {
+			return;
+		}
+		$order = new WC_order( $order_id );
+		$items = $order->get_items();
+		$student_id = get_post_meta( $order_id, '_customer_user', true );
+		foreach ( $items as $item ) {
+			$course_id = wp_get_post_parent_id( $item['product_id'] );
+			if ( empty( $course_id ) ) {
+				continue;
+			}
+			/**
+			 * withdraw student from course
+			 */
+			coursepress_delete_student( $student_id, $course_id );
+			/**
+		 * change student meta key
+		 */
+			$key = sprintf( 'course_%d_woo_payment_status', $course_id );
+			update_user_meta( $student_id, $key, $new_status );
+		}
+	}
+
+	/**
+	 * Disable WooCommerce "enable_guest_checkout" option.
+	 *
+	 * Disable WooCommerce "enable_guest_checkout" option when in the cart is
+	 * some course, to avoid guest checkout of a course.
+	 *
+	 * @since 2.0.6
+	 *
+	 * @param mixed $enable_guest_checkout
+	 */
+	public function check_cart_and_user_login( $enable_guest_checkout ) {
+		if ( is_user_logged_in() ) {
+			return $enable_guest_checkout;
+		}
+		if ( 'no' == $enable_guest_checkout ) {
+			return $enable_guest_checkout;
+		}
+		$cart_data = WC()->cart->get_cart();
+		foreach ( $cart_data as $cart_item_key => $values ) {
+			$_product = $values['data'];
+			if ( coursepress_is_course( $_product->post->post_parent ) ) {
+				return 'no';
+			}
+		}
+		return $enable_guest_checkout;
+	}
+
+	/**
+	 * Change student enrollment status in course, after payment complete.
+	 *
+	 * @since 2.0.7
+	 *
+	 * @param integer $order_id WooCommerce order ID.
+	 */
+	public function payment_complete_enroll_student( $order_id ) {
+		$this->remove_filter_coursepress_enroll_student();
+		$order = new WC_order( $order_id );
+		$items = $order->get_items();
+		$user_id = get_post_meta( $order_id, '_customer_user', true );
+		foreach ( $items as $item ) {
+			$course_id = wp_get_post_parent_id( $item['product_id'] );
+			if ( empty( $course_id ) ) {
+				contenue;
+			}
+			coursepress_add_student( $user_id, $course_id );
+		}
+	}
+
+	/**
+	 * Allow to replace link to product.
+	 *
+	 * This function is used in 'post_link' filter to change product link to
+	 * reduce number of redirects.
+	 *
+	 * @since: 2.0.0
+	 *
+	 * @param string $url Current post url.
+	 * @param WP_Post $post Curent post object.
+	 * @return string link.
+	 */
+	public function change_product_link_to_course_link( $url, $post ) {
+		/**
+		/* If its not a product, exit
+		 */
+		if ( 'product' != $post->post_type ) {
+			return $url;
+		}
+		/**
+		 * only when redirect option is on.
+		 */
+		$use_redirect = coursepress_get_setting( 'woocommerce/redirect', false );
+		if ( ! $use_redirect ) {
+			return $url;
+		}
+		$course_id = wp_get_post_parent_id( $post );
+		if ( $course_id ) {
+			return get_permalink( $course_id );
+		}
+		return $url;
+	}
+
+	/**
+	 * rediret product from product to course
+	 *
+	 * @since 2.0.0
+	 *
+	 * @global WP_Post $post current post
+	 * @global WP_Query $wp_query
+	 */
+	public function redirect_to_product() {
+		global $post, $wp_query;
+		/**
+		/* If its not a product, exit
+		 */
+		if ( 'product' != $post->post_type ) {
+			return;
+		}
+		/**
+		 * only single!
+		 */
+		if ( ! $wp_query->is_singular ) {
+			return;
+		}
+		/**
+		 * only when redirect option is on.
+		 */
+		$use_redirect = coursepress_get_setting( 'woocommerce/redirect', false );
+		if ( ! $use_redirect ) {
+			return;
+		}
+		/**
+		 * redirect if course exists
+		 */
+		$course_id = wp_get_post_parent_id( $post->ID );
+		if ( $course_id ) {
+			wp_safe_redirect( get_permalink( $course_id ) );
+			exit;
+		}
 	}
 }
