@@ -23,8 +23,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	    add_action( 'wp_ajax_coursepress_enroll', array( $this, 'enroll' ) );
 	    add_action( 'wp_ajax_course_enroll_passcode', array( $this, 'enroll_with_passcode' ) );
 
-	    // Hook to unenroll request
-	    add_action( 'wp_ajax_coursepress_unenroll', array( $this, 'withdraw_student' ) );
 	    // Register user
 	    add_action( 'wp_ajax_nopriv_coursepress_register', array( $this, 'register_user'  ) );
 	    // Update profile
@@ -750,34 +748,20 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		wp_send_json_error(true);
 	}
 
-	function withdraw_student() {
-		$course_id = filter_input( INPUT_GET, 'course_id', FILTER_VALIDATE_INT );
-		$wpnonce = filter_input( INPUT_GET, '_wpnonce' );
-		$redirect = filter_input( INPUT_GET, 'redirect' );
-		$student_id = filter_input( INPUT_GET, 'student_id', FILTER_VALIDATE_INT );
-		$referer = filter_input( INPUT_GET, 'referer' );
-
-		if ( ! $student_id ) {
-			$student_id = get_current_user_id();
-		}
-
-		if ( 'course-edit' == $referer ) {
-			$redirect = add_query_arg( array( 'page' => 'coursepress_course', 'cid' => $course_id ), admin_url( 'admin-ajax.php' ) );
-		}
-
-		if ( ! $course_id || ! wp_verify_nonce( $wpnonce, 'coursepress_nonce' ) ) {
+	/**
+	 * Withdraw student rfom a course.
+	 */
+	public function withdraw_student() {
+		$request = json_decode( file_get_contents( 'php://input' ) );
+		$course_id = intval( isset( $request->course_id )? $request->course_id:0);
+		$student_id = intval( isset( $request->student_id )? $request->student_id:0);
+		$wpnonce = isset( $request->_wpnonce )? $request->_wpnonce:'';
+		if ( 0 === $student_id || 0 === $course_id || ! wp_verify_nonce( $wpnonce, 'coursepress_nonce' ) ) {
 			wp_send_json_error(true);
 		}
-
 		coursepress_delete_student( $student_id, $course_id );
-
-		if ( ! $redirect ) {
-			// Return to course overview
-			$redirect = coursepress_get_course_permalink( $course_id );
-		}
-
-		wp_safe_redirect( $redirect );
-		exit;
+		$result = array( 'student_id' => $student_id, );
+		wp_send_json_success( $result );
 	}
 
 	function register_user() {}

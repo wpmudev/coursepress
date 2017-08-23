@@ -1,4 +1,4 @@
-/* global CoursePress, console */
+/* global CoursePress, _coursepress */
 
 (function() {
     'use strict';
@@ -47,7 +47,7 @@
                 if ( ! error ) {
                     this.$('.send-invite').addClass('active');
                     this.model.set( 'action', 'send_student_invite' );
-                    this.model.set('course_id', this.course_id);
+                    this.model.set( 'course_id', this.course_id );
                     this.model.off( 'coursepress:success_send_student_invite' );
                     this.model.on( 'coursepress:success_send_student_invite', this.invitationSent, this );
                     this.model.save();
@@ -73,9 +73,9 @@
             courseView: false,
             el: $('#course-students'),
 
-			events: {
-				'click .cp-btn-withdraw-student': 'withdrawStudent',
-			},
+            events: {
+                'click .cp-btn-withdraw-student': 'withdrawStudent',
+            },
 
             initialize: function( model, courseView ) {
                 this.model = model;
@@ -122,16 +122,25 @@
                 return invited;
             },
 
-            withdrawStudent: function() {
-                console.log('aaa');
+            withdrawStudent: function( ev ) {
+                var target = $( ev.currentTarget );
+                if ( window.confirm( _coursepress.text.confirm.student.withdraw ) ) {
+                    var model = new CoursePress.Request();
+                    model.set( 'action', 'withdraw_student' );
+                    model.set('course_id', this.model.get('ID' ) );
+                    model.set('student_id', target.data('id' ) );
+                    model.on( 'coursepress:success_withdraw_student', this.withdrawStudentSuccess, this );
+                    model.save();
+                }
                 return false;
-                /*
-                    this.model.set( 'action', 'send_student_invite' );
-                    this.model.set('course_id', this.course_id);
-                    this.model.off( 'coursepress:success_send_student_invite' );
-                    this.model.on( 'coursepress:success_send_student_invite', this.invitationSent, this );
-                    this.model.save();
-                    */
+            },
+
+            withdrawStudentSuccess: function( data ) {
+                $('#student-'+data.student_id).detach();
+                if ( 2> $('#coursepress-table-students tr').length ) {
+                    $('#coursepress-table-students tr.noitems').show();
+                    $('.tablenav.cp-admin-pagination').hide();
+                }
             }
 
         });
