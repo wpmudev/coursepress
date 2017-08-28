@@ -7,7 +7,11 @@ CHANGELOG
 = 2.1.1 =
 -------------------------------------------------
 * Fixed: Compatibility with older PHP versions.
+
+= 2.1.0.2 =
+-------------------------------------------------
 * Added: A filter 'coursepress_update_student_progress' to allow turn off student progress update during modules update.
+* Fixed: Problem with upgrade from 1.x to 2.0.
 
 = 2.1.0.1 =
 -------------------------------------------------
