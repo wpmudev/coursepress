@@ -974,14 +974,16 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			$unit_status[] = 'draft';
 		}
 
+		$units_with_modules = CoursePress_Data_Course::get_units_with_modules( $course_id, $unit_status );
+		$units_with_modules = CoursePress_Helper_Utility::sort_on_key( $units_with_modules, 'order' );
+
 		if ( ! $with_modules ) {
 			$units = CoursePress_Data_Course::get_units(
 				CoursePress_Helper_Utility::the_course( true ),
 				$unit_status
 			);
 		} else {
-			$units = CoursePress_Data_Course::get_units_with_modules( $course_id, $unit_status );
-			$units = CoursePress_Helper_Utility::sort_on_key( $units, 'order' );
+			$units = $units_with_modules;
 		}
 
 		$content .= sprintf( '<div class="unit-archive-list-wrapper" data-view-mode="%s">', esc_attr( $view_mode ) );
@@ -1001,6 +1003,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$clickable = true;
 		$previous_unit_id = false;
 		$last_module_id = false;
+		$current_last_module_id = false;
 
 		/**
 		 * units
@@ -1009,6 +1012,18 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		foreach ( $units as $unit ) {
 			$the_unit = $with_modules ? $unit['unit'] : $unit;
 			$unit_id = $the_unit->ID;
+
+			if ( !empty( $current_last_module_id ) ) {
+				$last_module_id = $current_last_module_id;
+			}
+			if ( !empty( $units_with_modules[ $unit_id ]['pages'] ) && is_array( $units_with_modules[ $unit_id ]['pages'] ) ) {
+				$last_page = end( $units_with_modules[ $unit_id ]['pages'] );
+				if ( !empty( $last_page['modules'] ) && is_array( $last_page['modules'] ) ) {
+					end( $last_page['modules'] );
+					$current_last_module_id	= key( $last_page['modules'] );
+				}
+			}
+			
 			// Hide hidden unit
 			$is_unit_structure_visible = CoursePress_Data_Unit::is_unit_structure_visible( $course_id, $unit_id, $student_id );
 			if ( ! $is_unit_structure_visible ) { continue; }
