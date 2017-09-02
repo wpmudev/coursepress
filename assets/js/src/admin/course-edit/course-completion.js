@@ -45,7 +45,7 @@
                 this.model = model;
                 this.courseEditor = EditCourse;
                 EditCourse.on('coursepress:validate-course-completion', this.validate, this);
-                EditCourse.on('coursepress:before-next-step-course-type', this.updateCourseModel, this);
+                EditCourse.on('coursepress:before-next-step-course-completion', this.updateCourseModel, this);
 
                 this.on( 'view_rendered', this.setUpUI, this );
 
