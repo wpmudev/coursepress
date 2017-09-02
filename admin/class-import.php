@@ -264,7 +264,7 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 					if ( ! isset( $unit->unit_id ) ) {
 						$the_unit = $unit->unit;
 						$the_unit->post_parent = $new_course_id;
-						$new_unit_id = self::_insert_post( $the_unit, CoursePress_Data_Unit::get_post_type_name() );
+						$new_unit_id = self::_insert_post( $the_unit, CoursePress_Data_Unit::get_post_type_name(), $replace );
 						$course->units->$unit_id->unit_id = $new_unit_id;
 					} else {
 						$new_unit_id = $unit->unit_id;
@@ -307,7 +307,7 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 									if ( ! isset( $module->_module_id ) ) {
 										$module_data = $module;
 										$module_data->post_parent = $new_unit_id;
-										$new_module_id = self::_insert_post( $module_data, CoursePress_Data_Module::get_post_type_name() );
+										$new_module_id = self::_insert_post( $module_data, CoursePress_Data_Module::get_post_type_name(), $replace );
 										$module->_module_id = $new_module_id;
 										$page->modules->$module_id = $module;
 									} else {
