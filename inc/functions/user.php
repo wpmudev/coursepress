@@ -706,3 +706,29 @@ function coursepress_get_students_by_completed_unit( $course_id, $unit_id ) {
 
 	return $students;
 }
+
+/**
+ * Count responses
+ */
+function coursepress_count_course_responses( $user, $course_id, $data = false ) {
+    if ( !is_a( $user, 'CoursePress_User') ) {
+        $user = coursepress_get_user( $user );
+    }
+    if ( false === $data ) {
+        $data = $user->get_completion_data( $course_id );
+    }
+    $units = isset( $data['units'] ) ? $data['units'] : array();
+    $response_count = 0;
+    foreach ( $units as $key => $unit ) {
+        $modules = coursepress_get_array_val(
+            $data,
+            'units/' . $key . '/responses'
+        );
+
+        if ( ! empty( $modules ) ) {
+            $response_count += count( $modules );
+        }
+    }
+    return $response_count;
+}
+

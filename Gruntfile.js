@@ -117,6 +117,12 @@ module.exports = function(grunt) {
 				'assets/js/src/admin/notifications/notification-alerts-form.js',
 				'assets/js/src/admin/notifications/notification.js'
 			],
+			'assets/js/coursepress_reports.js': [
+				// Add JS that will be loaded at reports page
+				// assets/js/src/admin/reports/...
+				'assets/js/src/common/cp-search-form.js',
+				'assets/js/src/admin/reports/reports.js'
+			],
 			'assets/js/coursepress_settings.js': [
 				// Add JS that will be loaded at Settings page
 				// assets/js/src/admin/settings/....
@@ -162,7 +168,8 @@ module.exports = function(grunt) {
 			'assets/css/coursepress_forum.css': 'assets/sass/coursepress_forum.scss',
 			'assets/css/coursepress_notifications.css': 'assets/sass/coursepress_notifications.scss',
 			'assets/css/coursepress_settings.css': 'assets/sass/coursepress_settings.scss',
-			'assets/css/coursepress_comments.css': 'assets/sass/coursepress_comments.scss'
+			'assets/css/coursepress_comments.css': 'assets/sass/coursepress_comments.scss',
+			'assets/css/coursepress_reports.css': 'assets/sass/coursepress_reports.scss'
 		},
 
 		// PHP files to validate.
