@@ -39,7 +39,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		add_action( 'admin_enqueue_scripts', array( $this, 'set_admin_css' ) );
 
 		// Marked coursepress page
-        add_filter( 'admin_body_class', array( $this, 'add_coursepress_class' ) );
+		add_filter( 'admin_body_class', array( $this, 'add_coursepress_class' ) );
 	}
 
 	/**
@@ -193,7 +193,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			// Common use texts
 			'text' => array(
 				'untitled' => __( 'Untitled', 'cp' ),
-			    'ok' => __( 'Ok', 'cp' ),
+				'ok' => __( 'Ok', 'cp' ),
 				'cancel' => __( 'Cancel', 'cp' ),
 				'error' => __( 'Error', 'cp' ),
 				'warning' => __( 'Warning', 'cp' ),
@@ -208,17 +208,18 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 				'noname_module' => __( 'You have unnamed module(s)!', 'cp' ),
 				'nosteps' => __( 'You need to create at least a single step!', 'cp' ),
 				'all_students' => __( 'Students from All Courses', 'cp' ),
+				'student_search' => __( 'Enter username, first name and last name, or email', 'cp' ),
 				'unit' => array(
 					'no_title' => __( 'One of the active unit has no title!', 'cp' ),
-					'no_feature_image' => __( 'One of the active unit has feature image enabled but no image set!', 'cp'),
-					'no_content' => __( 'One of the active unit enabled the use of unit description but no description set!', 'cp'),
-					'no_modules' => __( 'One of the active unit has no modules!', 'cp'),
-					'no_steps' => __( 'One of the active unit contains no steps!', 'cp')
+					'no_feature_image' => __( 'One of the active unit has feature image enabled but no image set!', 'cp' ),
+					'no_content' => __( 'One of the active unit enabled the use of unit description but no description set!', 'cp' ),
+					'no_modules' => __( 'One of the active unit has no modules!', 'cp' ),
+					'no_steps' => __( 'One of the active unit contains no steps!', 'cp' ),
 				),
 				'step' => array(
 					'answer_a' => __( 'Answer A', 'cp' ),
 					'answer_b' => __( 'Answer B', 'cp' ),
-					'answer_c' => __( 'Answer C', 'cp' )
+					'answer_c' => __( 'Answer C', 'cp' ),
 				),
 				'confirm' => array(
 					'student' => array(
@@ -256,10 +257,10 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	function add_coursepress_class( $class ) {
 	    if ( coursepress_is_admin() ) {
 	        $class .= ' coursepress';
-        }
+		}
 
-        return $class;
-    }
+		return $class;
+	}
 
 	function courselist_columns() {
 		$columns = array(
@@ -352,7 +353,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$options = array(
 			'coursepress_course_per_page',
 			'coursepress_students_per_page',
-			'coursepress_assesments_per_page'
+			'coursepress_assesments_per_page',
 		);
 
 		// Return value for our custom option.
@@ -444,14 +445,14 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		wp_enqueue_media();
 		// Include datepicker
 
-        wp_enqueue_script( 'jquery-ui-datepicker' );
-        // Datepicker UI
+		wp_enqueue_script( 'jquery-ui-datepicker' );
+		// Datepicker UI
 		$this->enqueue_style( 'datepicker-ui', 'assets/external/css/jquery-ui.min.css' );
 
-        // Include color picker
-        wp_enqueue_script( 'iris' );
-        // Sorter
-        wp_enqueue_script( 'jquery-ui-sortable' );
+		// Include color picker
+		wp_enqueue_script( 'iris' );
+		// Sorter
+		wp_enqueue_script( 'jquery-ui-sortable' );
 
 		$course_id = filter_input( INPUT_GET, 'cid', FILTER_VALIDATE_INT );
 
@@ -515,11 +516,11 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$sample_courses = array(
 			'introduction-to-upfront' => array(
 				'title' => __( 'Introduction to Upfront', 'cp' ),
-				'file' => 'wpmudev-thewordpressexperts.coursepress.2017-07-03.introduction-to-upfront-4.json'
+				'file' => 'wpmudev-thewordpressexperts.coursepress.2017-07-03.introduction-to-upfront-4.json',
 			),
 			'wordpress-multisite-masterclass' => array(
 				'title' => __( 'WordPress Multisite Master Class', 'cp' ),
-				'file' => 'wpmudev-thewordpressexperts.coursepress.2017-07-03.wordpress-multisite-masterclass-2.json'
+				'file' => 'wpmudev-thewordpressexperts.coursepress.2017-07-03.wordpress-multisite-masterclass-2.json',
 			),
 		);
 
@@ -559,31 +560,31 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		coursepress_render( 'views/tpl/course-completion', array( 'completion_pages' => $completion_pages ) );
 
-        $steps = array(
-            'text' => __( 'Text', 'cp' ),
-            'image' => __( 'Image', 'cp' ),
-            'video' => __( 'Video', 'cp' ),
-            'audio' => __( 'Audio', 'cp' ),
-            'download' => __( 'Download', 'cp' ),
-            'zipped' => __( 'Zip', 'cp' ),
-            'input-upload' => __( 'File Upload', 'cp' ),
-            'input-quiz' => __( 'Quiz', 'cp' ),
-            'input-written' => __( 'Written', 'cp' ),
-            'discussion' => __( 'Discussion', 'cp' ),
-        );
-        $this->localize_array['steps'] = $steps;
-        $file_types = array(
-            'image' => __( 'Image', 'cp' ),
-            'pdf' => __( 'PDF', 'cp' ),
-            'zip' => __( 'Zip', 'cp' ),
-            'txt' => __( 'Text', 'cp' ),
-        );
-        $question_types = array(
-            'multiple' => __( 'Multiple Choice', 'cp' ),
-            'single' => __( 'Single Choice', 'cp' ),
-            'select' => __( 'Selectable', 'cp' ),
-        );
-        $this->localize_array['questions'] = $question_types;
+		$steps = array(
+			'text' => __( 'Text', 'cp' ),
+			'image' => __( 'Image', 'cp' ),
+			'video' => __( 'Video', 'cp' ),
+			'audio' => __( 'Audio', 'cp' ),
+			'download' => __( 'Download', 'cp' ),
+			'zipped' => __( 'Zip', 'cp' ),
+			'input-upload' => __( 'File Upload', 'cp' ),
+			'input-quiz' => __( 'Quiz', 'cp' ),
+			'input-written' => __( 'Written', 'cp' ),
+			'discussion' => __( 'Discussion', 'cp' ),
+		);
+		$this->localize_array['steps'] = $steps;
+		$file_types = array(
+			'image' => __( 'Image', 'cp' ),
+			'pdf' => __( 'PDF', 'cp' ),
+			'zip' => __( 'Zip', 'cp' ),
+			'txt' => __( 'Text', 'cp' ),
+		);
+		$question_types = array(
+			'multiple' => __( 'Multiple Choice', 'cp' ),
+			'single' => __( 'Single Choice', 'cp' ),
+			'select' => __( 'Selectable', 'cp' ),
+		);
+		$this->localize_array['questions'] = $question_types;
 
 		coursepress_render( 'views/tpl/course-units', array( 'steps' => $steps ) );
 		coursepress_render( 'views/tpl/steps-template', array( 'file_types' => $file_types, 'questions' => $question_types ) );
@@ -593,7 +594,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$invited_students = $course->get_invited_students();
 		$args = array(
 			'total_students' => $total_students,
-			'students' => $course->get_students(false, $paged ),
+			'students' => $course->get_students( false, $paged ),
 			'redirect' => remove_query_arg( 'dummy' ),
 			'pagination' => $this->set_pagination( $total_students, 'coursepress_students' ),
 			'invited_students' => $invited_students,

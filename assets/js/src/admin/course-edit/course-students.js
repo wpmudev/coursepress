@@ -4,7 +4,7 @@
     'use strict';
 
     CoursePress.Define( 'Course_Students', function($, doc, win) {
-        var Students, Invite, InviteItem;
+        var Students, Invite, InviteItem, AddItem;
 
         Students = new CoursePress.Request();
         InviteItem = CoursePress.View.extend({
@@ -75,6 +75,7 @@
 
             events: {
                 'click .cp-btn-withdraw-student': 'withdrawStudent',
+                'click #add-student-button': 'addStudent',
             },
 
             initialize: function( model, courseView ) {
@@ -108,6 +109,7 @@
                         this.addInvitee(student);
                     }, this );
                 }
+                this.setupAjaxSelect2();
             },
 
             addInvitee: function( data ) {
@@ -137,10 +139,68 @@
 
             withdrawStudentSuccess: function( data ) {
                 $('#student-'+data.student_id).detach();
-                if ( 2> $('#coursepress-table-students tr').length ) {
+                if ( 2 > $('#coursepress-table-students tr').length ) {
                     $('#coursepress-table-students tr.noitems').show();
                     $('.tablenav.cp-admin-pagination').hide();
                 }
+            },
+
+            /**
+             * Setup select2 using ajax search.
+             *
+             * We are using ajax, so we can exclude the assigned users live.
+             */
+            setupAjaxSelect2: function () {
+                var selector = $('#add-student-select');
+                // Current course id.
+                selector.select2({
+                    minimumInputLength: 1,
+                    placeholder: win._coursepress.text.student_search,
+                    ajax: {
+                        url: win._coursepress.ajaxurl,
+                            dataType: 'json',
+                            delay: 500,
+                            data: function (params) {
+                            return {
+                                search: params.term,
+                                _wpnonce: win._coursepress._wpnonce,
+                                action: 'coursepress_search_students',
+                                course_id: win._coursepress.course.ID
+                            };
+                        },
+                        processResults: function (data) {
+                            return {
+                                results: $.map(data.data, function(obj) {
+                                    return { id: obj.ID, text: obj.display_name };
+                                 })
+                            };
+                        },
+                        cache: true
+                    },
+                });
+            },
+
+            addStudent: function() {
+                var model = new CoursePress.Request();
+                model.set('action', 'add_student_to_course');
+                model.set('course_id', win._coursepress.course.ID);
+                model.set('student_id', $('#add-student-select').val());
+                model.set( '_wpnonce',  win._coursepress._wpnonce );
+                model.on( 'coursepress:success_add_student_to_course', this.addStudentSuccess, this );
+                model.save();
+            },
+
+            addStudentSuccess: function( data ) {
+                var added, list;
+                list = this.$('#coursepress-table-students');
+                AddItem = CoursePress.View.extend({
+                    template_id: 'coursepress-course-add-student',
+                    tagName: 'tr',
+                    id: 'student-' + data.ID
+                });
+                added = new AddItem(data);
+                added.$el.prependTo(list);
+                $('#coursepress-table-students tr.noitems').hide();
             }
 
         });
