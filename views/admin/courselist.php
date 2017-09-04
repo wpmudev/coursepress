@@ -122,7 +122,7 @@
                                                 <a href="<?php echo add_query_arg( array( 'course_id' => $course->ID, '_wpnonce' => wp_create_nonce( 'duplicate_course' ), 'cp_action' => 'duplicate_course' ) ); ?>"><?php _e( 'Duplicate Course', 'cp' ); ?></a>
                                             </li>
                                             <li class="menu-item-export">
-                                                <a href=""><?php _e( 'Export', 'cp' ); ?></a>
+                                                <a href="<?php echo add_query_arg( array( 'course_id' => $course->ID, '_wpnonce' => wp_create_nonce( 'export_course' ), 'cp_action' => 'export_course' ) ); ?>"><?php _e( 'Export', 'cp' ); ?></a>
                                             </li>
                                             <li class="menu-item-view-course">
                                                 <a href="<?php echo esc_url( $course->get_permalink() ); ?>" target="_blank"><?php _e( 'View Course', 'cp' ); ?></a>
