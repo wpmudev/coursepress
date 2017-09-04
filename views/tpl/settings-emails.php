@@ -12,7 +12,7 @@
                 'value' => '',
                 'flex' => true,
                 'class' => 'large-text',
-                'placeholder' => 'e.g. Jhon Smith',
+                'placeholder' => 'e.g. John Smith',
             ),
             'email' => array(
                 'type' => 'text',
@@ -20,7 +20,7 @@
                 'value' => '',
                 'flex' => true,
                 'class' => 'large-text',
-                'placeholder' => 'e.g. jhon@example.net',
+                'placeholder' => 'e.g. john@example.net',
             ),
             'subject' => array(
                 'type' => 'text',
