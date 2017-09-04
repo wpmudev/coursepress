@@ -88,6 +88,11 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$comment_label = __( 'Comments', 'cp' );
 		$this->add_submenu( $comment_label, 'coursepress_comments_cap', 'coursepress_comments', 'get_comments_page' );
 
+		// Set reports page
+		$label = __( 'Reports', 'cp' );
+		$screen_id = $this->add_submenu( $label, 'coursepress_settings_cap', 'coursepress_reports', 'get_report_page' );
+		array_unshift( $this->screens, $screen_id );
+
 		// Set Notification page
 		$notification_label = __( 'Notifications', 'cp' );
 		$notifications_screen_id = $this->add_submenu( $notification_label, 'coursepress_notifications_cap', 'coursepress_notifications', 'get_notification_page' );
@@ -644,6 +649,14 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		if ( $students ) {
 			$students->get_page();
+		}
+	}
+
+	function get_report_page() {
+		global $CoursePress;
+		$instance = $CoursePress->get_class( 'CoursePress_Admin_Reports' );
+		if ( $instance ) {
+			$instance->get_page();
 		}
 	}
 

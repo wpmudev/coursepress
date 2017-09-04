@@ -29,7 +29,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	    // Update profile
 	    add_action( 'wp_ajax_coursepress_update_profile', array( $this, 'update_profile' ) );
 	    // Submit module
-	    add_action( 'wp_ajax_coursepress_submit', array( $this, 'validate_submission' ) );
+		add_action( 'wp_ajax_coursepress_submit', array( $this, 'validate_submission' ) );
 	}
 
 	/**
@@ -42,18 +42,16 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$error = array( 'code' => 'cannot_process', 'message' => __( 'Something went wrong. Please try again.', 'cp' ) );
 		if ( isset( $request->_wpnonce ) && wp_verify_nonce( $request->_wpnonce, 'coursepress_nonce' ) ) {
 			$action = $request->action;
-
 			// Remove commonly used params
 			unset( $request->action, $request->_wpnonce );
-
 			if ( method_exists( $this, $action ) ) {
 				$response = call_user_func( array( $this, $action ), $request );
-
 				if ( ! empty( $response['success'] ) ) {
-					wp_send_json_success( $response ); } else { 					$error = wp_parse_args( $response, $error ); }
+					wp_send_json_success( $response );
+				} else {
+					$error = wp_parse_args( $response, $error ); }
 			}
 		}
-
 		wp_send_json_error( $error );
 	}
 
@@ -173,8 +171,9 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			foreach ( $units as $cid => $unit ) {
 				$unit->menu_order = $menu_order;
 
-				if ( ! empty( $unit->deleted ) ) {
-					// Delete unit here
+				// Get post object
+    			if ( ! empty( $unit->deleted ) ) {
+    				// Delete unit here
 				    if ( ! empty( $unit->ID ) ) {
 				    	coursepress_delete_unit( $unit->ID );
 				    }
@@ -750,11 +749,21 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 * Withdraw student rfom a course.
 	 */
 	public function withdraw_student() {
-		$request = json_decode( file_get_contents( 'php://input' ) );
-		$course_id = intval( isset( $request->course_id )? $request->course_id:0 );
-		$student_id = intval( isset( $request->student_id )? $request->student_id:0 );
-		$wpnonce = isset( $request->_wpnonce )? $request->_wpnonce:'';
-		if ( 0 === $student_id || 0 === $course_id || ! wp_verify_nonce( $wpnonce, 'coursepress_nonce' ) ) {
+		$course_id = filter_input( INPUT_GET, 'course_id', FILTER_VALIDATE_INT );
+		$wpnonce = filter_input( INPUT_GET, '_wpnonce' );
+		$redirect = filter_input( INPUT_GET, 'redirect' );
+		$student_id = filter_input( INPUT_GET, 'student_id', FILTER_VALIDATE_INT );
+		$referer = filter_input( INPUT_GET, 'referer' );
+
+		if ( ! $student_id ) {
+			$student_id = get_current_user_id();
+		}
+
+		if ( 'course-edit' == $referer ) {
+			$redirect = add_query_arg( array( 'page' => 'coursepress_course', 'cid' => $course_id ), admin_url( 'admin-ajax.php' ) );
+		}
+
+		if ( ! $course_id || ! wp_verify_nonce( $wpnonce, 'coursepress_nonce' ) ) {
 			wp_send_json_error( true );
 		}
 		coursepress_delete_student( $student_id, $course_id );
@@ -1034,7 +1043,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$posts = new WP_Query( $args );
 		$data['total_count'] = $posts->post_count;
 		$posts = $posts->posts;
-
 		foreach ( $posts as $post ) {
 			$one['id'] = $post->ID;
 			$one['post_title'] = $post->post_title;
@@ -1043,7 +1051,24 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		wp_send_json( $data );
 	}
 
-	function send_student_invite( $request ) {
+	public function get_report_pdf( $request ) {
+		global $CoursePress;
+		$data = $CoursePress->get_class( 'CoursePress_Admin_Reports' );
+		$content = $data->get_pdf_content( $request );
+		if ( empty( $content ) ) {
+			wp_send_json_error();
+		}
+		$pdf = $CoursePress->get_class( 'CoursePress_PDF' );
+
+		$pdf->make_pdf( $content['content'], $content['args'] );
+
+		$data = array(
+			'pdf' => $pdf->cache_url() . $content['filename'],
+		);
+		wp_send_json_success( $data );
+    }
+
+    function send_student_invite( $request ) {
 	    $course_id = $request->course_id;
 	    $args = array(
 	    	'first_name' => $request->first_name,

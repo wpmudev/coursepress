@@ -164,10 +164,10 @@ class CoursePress_User extends CoursePress_Utility {
 		$names = array_filter( $names );
 		$display_name = $this->__get( 'display_name' );
 
-		if ( empty( $names ) )
+		if ( empty( $names ) ) {
 			return $display_name;
-		else
-			return implode( ' ', $names );
+        }
+		return implode( ' ', $names );
 	}
 
 	function get_avatar( $size = 42 ) {
@@ -178,7 +178,6 @@ class CoursePress_User extends CoursePress_Utility {
 	function get_description() {
 		$id = $this->__get( 'ID' );
 		$description = get_user_meta( $id, 'description', true );
-
 		return $description;
 	}
 
