@@ -5,27 +5,34 @@
   }
 }
 #course-students {
-  background-color: transparent;
-  padding: 0;
+    background-color: transparent;
+    padding: 0;
 
-  .coursepress-table {
-    margin-top: 0;
-  }
+    .coursepress-table {
+        margin-top: 0;
+        tfoot {
+            .add-student {
+                button {
+                    white-space: nowrap;
+                }
+            }
+        }
+    }
 
-  .column-student {
-    width: 70%;
-  }
-  .noitems {
-      td {
-          text-align: center;
-          padding: 4em 0;
-          color: $grey_1;
-          p {
-              font-size: 1.2em;
-              margin: 5px 0;
-          }
-      }
-  }
+    .column-student {
+        width: 70%;
+    }
+    .noitems {
+        td {
+            text-align: center;
+            padding: 4em 0;
+            color: $grey_1;
+            p {
+                font-size: 1.2em;
+                margin: 5px 0;
+            }
+        }
+    }
 }
 
 #student-invites {

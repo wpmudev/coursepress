@@ -18,6 +18,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		add_action( 'wp_ajax_coursepress_upload', array( $this, 'upload_file' ) );
 	    // Hook to search for select2 data.
 	    add_action( 'wp_ajax_coursepress_get_users', array( $this, 'get_course_users' ) );
+		add_action( 'wp_ajax_coursepress_search_students', array( $this, 'search_students' ) );
 
 	    // Hook to enrollment request
 	    add_action( 'wp_ajax_coursepress_enroll', array( $this, 'enroll' ) );
@@ -29,7 +30,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	    add_action( 'wp_ajax_coursepress_update_profile', array( $this, 'update_profile' ) );
 	    // Submit module
 		add_action( 'wp_ajax_coursepress_submit', array( $this, 'validate_submission' ) );
-
 	}
 
 	/**
@@ -40,21 +40,18 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	function process_ajax_request() {
 		$request = json_decode( file_get_contents( 'php://input' ) );
 		$error = array( 'code' => 'cannot_process', 'message' => __( 'Something went wrong. Please try again.', 'cp' ) );
-
 		if ( isset( $request->_wpnonce ) && wp_verify_nonce( $request->_wpnonce, 'coursepress_nonce' ) ) {
 			$action = $request->action;
-
 			// Remove commonly used params
 			unset( $request->action, $request->_wpnonce );
-
 			if ( method_exists( $this, $action ) ) {
 				$response = call_user_func( array( $this, $action ), $request );
-
 				if ( ! empty( $response['success'] ) ) {
-					wp_send_json_success( $response ); } else { 					$error = wp_parse_args( $response, $error ); }
+					wp_send_json_success( $response );
+				} else {
+					$error = wp_parse_args( $response, $error ); }
 			}
 		}
-
 		wp_send_json_error( $error );
 	}
 
@@ -770,7 +767,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			wp_send_json_error( true );
 		}
 		coursepress_delete_student( $student_id, $course_id );
-		$result = array( 'student_id' => $student_id, );
+		$result = array( 'student_id' => $student_id );
 		wp_send_json_success( $result );
 	}
 
@@ -1065,7 +1062,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			wp_send_json_error();
 		}
 		$pdf = $CoursePress->get_class( 'CoursePress_PDF' );
-		$pdf->make_pdf( $content['pdf_content'], $content['args'] );
+		$pdf->make_pdf( $content['content'], $content['args'] );
 		$data = array(
 			'pdf' => $pdf->cache_url() . $content['filename'],
 		);
@@ -1087,5 +1084,60 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	    }
 
 	    wp_send_json_error( true );
+	}
+
+	public function search_students( $request ) {
+		$users = array();
+		// Request data.
+		$request = $_REQUEST;
+		// Do some security checks.
+		if ( ! isset( $request['_wpnonce'] ) || ! wp_verify_nonce( $request['_wpnonce'], 'coursepress_nonce' ) ) {
+			wp_send_json_error( $users );
+		}
+		if ( ! isset( $request['search'] ) || empty( $request['search'] ) ) {
+			wp_send_json_error( $users );
+		}
+		// Do not continue if required values are empty.
+		if ( ! empty( $request['course_id'] ) ) {
+			$args = array(
+				'search' => sprintf( '*%s*', $request['search'] ),
+			);
+			$exclude_users = coursepress_get_students_ids( $request['course_id'] );
+			if ( ! empty( $exclude_users ) ) {
+				$args['exclude'] = $exclude_users;
+			}
+			$u = get_users( $args );
+			if ( ! empty( $u ) ) {
+				foreach ( $u as $user ) {
+					$user = array(
+						'ID' => $user->ID,
+						'display_name' => $user->data->display_name,
+						'gravatar' => get_avatar( $user, 30 ),
+						'user_email' => $user->data->user_email,
+						'user_nicename' => $user->data->user_nicename,
+						'user_login' => $user->data->user_login,
+					);
+					$users[] = $user;
+				}
+			}
+		}
+		wp_send_json_success( $users );
+	}
+
+	public function add_student_to_course( $request ) {
+		if ( isset( $request->student_id ) && isset( $request->course_id ) ) {
+			coursepress_add_student( $request->student_id, $request->course_id );
+			$user = coursepress_get_user( $request->student_id );
+			$data = array(
+				'ID' => $user->ID,
+				'display_name' => $user->display_name,
+				'gravatar_url' => get_avatar_url( $user->ID, array( 'size' => 30 ) ),
+				'user_email' => $user->user_email,
+				'user_nicename' => $user->user_nicename,
+				'user_login' => $user->user_login,
+			);
+			wp_send_json_success( $data );
+		}
+		wp_send_json_error( array( 'message' => __( 'Could not assign add student.', 'cp' ) ) );
 	}
 }

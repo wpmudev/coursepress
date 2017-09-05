@@ -30,13 +30,23 @@
                 </tr>
                 <?php } ?>
             <?php } ?>
-                <tr class="noitems <?php echo count( $students )>0? 'hidden':''; ?>">
+                <tr class="noitems <?php echo count( $students ) > 0? 'hidden':''; ?>">
                     <td colspan="3">
                         <p><?php _e( 'There are currently no students enrolled to this course.', 'cp' ); ?></p>
                         <p><?php _e( 'You can invite students below or wait for them to enroll once the course is active.', 'cp' ); ?></p>
                     </td>
                 </tr>
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" class="add-student">
+                    <div class="cp-flex">
+                        <select id="add-student-select"></select>
+                        <button id="add-student-button" class="cp-btn cp-btn-xs"><?php esc_html_e( 'Add Student', 'cp' ); ?></button>
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
     </table>
     <div class="tablenav cp-admin-pagination">
 	    <?php $pagination->pagination( 'bottom' ); ?>
@@ -96,4 +106,16 @@
 <script type="text/template" id="coursepress-invited-student">
     <td>{{first_name}} {{last_name}}</td>
     <td>{{date}}</td>
+</script>
+
+<script type="text/template" id="coursepress-course-add-student">
+    <td>
+        <div class="cp-flex cp-user">
+            <span class="gravatar"><img alt="" src="{{gravatar_url}}" class="avatar avatar-30 photo" height="30" width="30"></span>
+            <span class="user_login">{{user_login}}</span>
+            <span class="display_name">({{display_name}})</span>
+        </div>
+    </td>
+    <td></td>
+    <td><a href="#" data-id="{{ID}}" class="cp-btn cp-btn-xs cp-btn-active cp-btn-withdraw-student"><?php esc_html_e( 'Withdraw', 'cp' ); ?></a></td>
 </script>

@@ -198,7 +198,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			// Common use texts
 			'text' => array(
 				'untitled' => __( 'Untitled', 'cp' ),
-			    'ok' => __( 'Ok', 'cp' ),
+				'ok' => __( 'Ok', 'cp' ),
 				'cancel' => __( 'Cancel', 'cp' ),
 				'error' => __( 'Error', 'cp' ),
 				'warning' => __( 'Warning', 'cp' ),
@@ -213,6 +213,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 				'noname_module' => __( 'You have unnamed module(s)!', 'cp' ),
 				'nosteps' => __( 'You need to create at least a single step!', 'cp' ),
 				'all_students' => __( 'Students from All Courses', 'cp' ),
+				'student_search' => __( 'Enter username, first name and last name, or email', 'cp' ),
 				'unit' => array(
 					'no_title' => __( 'One of the active unit has no title!', 'cp' ),
 					'no_feature_image' => __( 'One of the active unit has feature image enabled but no image set!', 'cp' ),
@@ -223,7 +224,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 				'step' => array(
 					'answer_a' => __( 'Answer A', 'cp' ),
 					'answer_b' => __( 'Answer B', 'cp' ),
-					'answer_c' => __( 'Answer C', 'cp' )
+					'answer_c' => __( 'Answer C', 'cp' ),
 				),
 				'confirm' => array(
 					'student' => array(
@@ -598,7 +599,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$invited_students = $course->get_invited_students();
 		$args = array(
 			'total_students' => $total_students,
-			'students' => $course->get_students(false, $paged ),
+			'students' => $course->get_students( false, $paged ),
 			'redirect' => remove_query_arg( 'dummy' ),
 			'pagination' => $this->set_pagination( $total_students, 'coursepress_students' ),
 			'invited_students' => $invited_students,
