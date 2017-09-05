@@ -40,7 +40,7 @@ class CoursePress_Course extends CoursePress_Utility {
 		) );
 
 		// Set course meta
-        $this->setUpCourseMetas();
+		$this->setUpCourseMetas();
 	}
 
 	function wp_error() {
@@ -145,7 +145,7 @@ class CoursePress_Course extends CoursePress_Utility {
 			),
 			'page_orientation' => 'L',
 			'cert_text_color' => '#5a5a5a',
-            'with_modules' => true,
+			'with_modules' => true,
 			/**
 			 * paid course defaults
 			 */
@@ -203,7 +203,7 @@ class CoursePress_Course extends CoursePress_Utility {
 
 		// Set post thumbnail ID if not empty
 		if ( ! empty( $settings['listing_image_thumbnail_id'] ) ) {
-			set_post_thumbnail($course_id, $settings['listing_image_thumbnail_id']);
+			set_post_thumbnail( $course_id, $settings['listing_image_thumbnail_id'] );
 		}
 
 		if ( ! empty( $settings['course_category'] ) ) {
@@ -318,7 +318,7 @@ class CoursePress_Course extends CoursePress_Utility {
 				'width' => $width,
 				'height' => $height,
 				'controls' => true,
-				'data-setup' => $this->create_video_js_setup_data( $feature_video )
+				'data-setup' => $this->create_video_js_setup_data( $feature_video ),
 			);
 
 			return $this->create_html( 'video', $attr );
@@ -655,10 +655,13 @@ class CoursePress_Course extends CoursePress_Utility {
 		$offset = ( $paged - 1 ) * 20;
 		$limit = 20;
 
-		$sql = "SELECT `student_id` FROM `$this->student_table` WHERE `course_id`=%d";
+		$sql = "SELECT S.`student_id` FROM `$this->student_table` AS S ";
+		$sql .= "LEFT JOIN `$wpdb->users` AS U on S.`student_id` = U.`ID` ";
+		$sql .= 'WHERE S.`course_id` = %d ';
+		$sql .= 'ORDER BY U.`user_login` ';
 
 		if ( ! $all ) {
-			$sql .= " LIMIT %d, %d";
+			$sql .= ' LIMIT %d, %d';
 		}
 		$sql = $wpdb->prepare( $sql, $id, $offset, $limit );
 
