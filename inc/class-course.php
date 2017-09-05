@@ -36,6 +36,7 @@ class CoursePress_Course extends CoursePress_Utility {
 			'post_content' => $course->post_content,
 			'post_status' => $course->post_status,
 			'post_name' => $course->post_name,
+			'post_author' => $course->post_author,
 		) );
 
 		// Set course meta
@@ -1018,5 +1019,28 @@ class CoursePress_Course extends CoursePress_Utility {
 		}
 
 		return $status;
+	}
+
+	/**
+	 * Get couse author user object.
+	 *
+	 * @return mixed CoursePress_User object or false.
+	 */
+	function get_author() {
+
+		$author = false;
+
+		// Get current course author id.
+		$author_id = $this->__get( 'post_author' );
+		if ( $author_id ) {
+			// Get the coursepress user object.
+			$author = coursepress_get_user( $author_id );
+			// If not a valid user.
+			if ( is_wp_error( $author ) ) {
+				return false;
+			}
+		}
+
+		return $author;
 	}
 }

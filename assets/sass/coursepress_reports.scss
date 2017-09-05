@@ -1,0 +1,53 @@
+// Use in comments pages
+@import "common/mixin.scss";
+@import "common/cp-search-form";
+
+#coursepress-reports-list {
+    .coursepress-page {
+        .cp-flex {
+            .cp-div {
+                margin-left: 20px;
+                &:first-child {
+                    margin-left: 0;
+                }
+                .cp-btn {
+                    margin-left: 10px;
+                }
+            }
+            label {
+                color: $grey_3;
+                font-size: .8em;
+                font-weight: 600;
+                display: block;
+            }
+            align-items: center;
+            .gravatar {
+                padding-right: 15px;
+                img {
+                    @include radius(50%);
+                }
+            }
+            .user_login {
+                font-weight: 600;
+                padding-right: 5px;
+            }
+        }
+        .coursepress-table {
+            tbody {
+                .column-average,
+                .column-responses {
+                    text-align: right;
+                    width: 5em;
+                }
+            }
+            .column-download,
+            .column-view {
+                width: 5em;
+                text-align: center;
+                .fa {
+                    font-size: 2em;
+                }
+            }
+        }
+    }
+}
