@@ -212,7 +212,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 				'delete_course' => __( 'Deleting this course will also delete all units, modules, steps and any other data associated to this course. Are you sure you want to continue?', 'cp' ),
 				'noname_module' => __( 'You have unnamed module(s)!', 'cp' ),
 				'nosteps' => __( 'You need to create at least a single step!', 'cp' ),
-			    'all_students' => __( 'Students from All Courses', 'cp' ),
+				'all_students' => __( 'Students from All Courses', 'cp' ),
 				'unit' => array(
 					'no_title' => __( 'One of the active unit has no title!', 'cp' ),
 					'no_feature_image' => __( 'One of the active unit has feature image enabled but no image set!', 'cp' ),
@@ -223,8 +223,13 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 				'step' => array(
 					'answer_a' => __( 'Answer A', 'cp' ),
 					'answer_b' => __( 'Answer B', 'cp' ),
-					'answer_c' => __( 'Answer C', 'cp' ),
-				)
+					'answer_c' => __( 'Answer C', 'cp' )
+				),
+				'confirm' => array(
+					'student' => array(
+						'withdraw' => __( 'Please confirm that you want to remove the student from this course.', 'cp' ),
+					),
+				),
 			),
 		) );
 
@@ -594,12 +599,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$args = array(
 			'total_students' => $total_students,
 			'students' => $course->get_students(false, $paged ),
-			'withdraw_link' => add_query_arg( array(
-				'action' => 'coursepress_unenroll',
-				'course_id' => $course_id,
-				'_wpnonce' => wp_create_nonce( 'coursepress_nonce' ),
-				'referer' => 'course-edit',
-			), admin_url( 'admin-ajax.php' ) ),
 			'redirect' => remove_query_arg( 'dummy' ),
 			'pagination' => $this->set_pagination( $total_students, 'coursepress_students' ),
 			'invited_students' => $invited_students,

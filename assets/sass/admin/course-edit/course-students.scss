@@ -15,6 +15,17 @@
   .column-student {
     width: 70%;
   }
+  .noitems {
+      td {
+          text-align: center;
+          padding: 4em 0;
+          color: $grey_1;
+          p {
+              font-size: 1.2em;
+              margin: 5px 0;
+          }
+      }
+  }
 }
 
 #student-invites {

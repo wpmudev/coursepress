@@ -46,14 +46,18 @@ foreach ( $courses as $course_id => $course ) {
                         <tr class="<?php echo esc_attr( implode( ' ', $clasess ) ); ?>">
                             <?php foreach ( array_keys( $columns ) as $column_id ) { ?>
                                 <td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>">
-                                    <?php
-									switch ( $column_id ) {
-										case 'author':
-											printf(
-												'%s <span>%s</span>',
-												$item->user['avatar'],
-												$item->user['display_name']
-											);
+<?php
+                        switch ( $column_id ) {
+                        case 'author':
+                            echo '<div class="cp-flex cp-user">';
+                            echo '<span class="gravatar">';
+                            echo $item->user['avatar'];
+                            echo '</span>';
+                            echo ' ';
+                            echo '<span class="display_name">';
+                            echo $item->user['display_name'];
+                            echo '</span>';
+                            echo '</div>';
 											echo '<div class="actions hidden">';
 											printf(
 												'<a href="#" data-id="%d" data-nonce="%s" class="status">%s</a>',

@@ -59,7 +59,7 @@
                                 switch( $column_id ) :
                                     // @todo Add profile link if required.
                                     case 'student' :
-                                        echo '<div class="cp-flex">';
+                                        echo '<div class="cp-flex cp-user">';
                                         echo '<span class="gravatar">';
                                         echo get_avatar( $student->ID, 30 );
                                         echo '</span>';
