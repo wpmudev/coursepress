@@ -85,6 +85,8 @@ function coursepress_get_courses( $args = array(), &$count = 0 ) {
 		'post_type' => $CoursePress_Core->__get( 'course_post_type' ),
 		'suppress_filters' => true,
 		'fields' => 'ids',
+		'orderby' => 'post_title',
+		'order' => 'ASC',
 	), $args );
 
 	//$order_by = coursepress_get_setting( 'course/order_by', 'post_date' );
