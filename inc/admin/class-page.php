@@ -411,11 +411,26 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'page' => $page,
 			'statuses' => $statuses,
 			'search' => $search,
+			'bulk_actions' => $this->get_bulk_actions(),
 		);
 
 		coursepress_render( 'views/admin/courselist', $args );
 		coursepress_render( 'views/admin/footer-text' );
 		coursepress_render( 'views/tpl/common' );
+	}
+
+	/**
+	 * Get bulk actions for courses list
+	 *
+	 * @since 3.0
+	 *
+	 * @return array $actions Bulk actions for courses.
+	 */
+	public function get_bulk_actions() {
+		$actions = array(
+			'trash' => __( 'Move to Trash', 'cp' ),
+		);
+		return $actions;
 	}
 
 	/**
