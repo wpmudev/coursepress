@@ -305,7 +305,6 @@
                 this.stepListContainer.toggleClass('open', '');
             },
             updateCourse: function() {
-                window.alert(this.currentStep);
                 if ( 'course-units' === this.currentStep ) {
                     return;
                 }
