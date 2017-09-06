@@ -40,6 +40,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// Marked coursepress page
 		add_filter( 'admin_body_class', array( $this, 'add_coursepress_class' ) );
+
 	}
 
 	/**

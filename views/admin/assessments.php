@@ -11,7 +11,10 @@
 						<option></option>
 						<?php if ( ! empty( $courses ) ) : ?>
 							<?php foreach ( $courses as $course ) : ?>
-								<option value="<?php echo $course->ID; ?>" <?php selected( $course->ID, $course_id ); ?>><?php echo $course->post_title; ?></option>
+                            <option value="<?php echo $course->ID; ?>" <?php selected( $course->ID, $course_id ); ?>><?php
+							echo $course->post_title;
+							echo $course->get_numeric_identifier_to_course_name( $course->ID );
+?></option>
 							<?php endforeach; ?>
 						<?php endif; ?>
 					</select>
@@ -71,10 +74,10 @@
 
 		<?php if ( isset( $assessments['pass_grade'] ) ) : ?>
 			<ul class="cp-assessments-overview">
-				<li><?php _e( 'Showing students'); ?>: <span class="cp-assessments-strong"><?php echo $assessments['students_count']; ?></span></li>
-				<li><?php _e( 'Modules'); ?>: <span class="cp-assessments-strong"><?php echo $assessments['modules_count']; ?></span></li>
-				<li><?php _e( 'Pass grade'); ?>: <span class="cp-assessments-strong"><?php echo $assessments['pass_grade']; ?>%</span></li>
-				<li><?php _e( 'Grade system'); ?>: <span class="cp-assessments-strong"><?php echo $assessments['grade_system']; ?></span></li>
+				<li><?php _e( 'Showing students' ); ?>: <span class="cp-assessments-strong"><?php echo $assessments['students_count']; ?></span></li>
+				<li><?php _e( 'Modules' ); ?>: <span class="cp-assessments-strong"><?php echo $assessments['modules_count']; ?></span></li>
+				<li><?php _e( 'Pass grade' ); ?>: <span class="cp-assessments-strong"><?php echo $assessments['pass_grade']; ?>%</span></li>
+				<li><?php _e( 'Grade system' ); ?>: <span class="cp-assessments-strong"><?php echo $assessments['grade_system']; ?></span></li>
 			</ul>
 		<?php endif; ?>
 
@@ -97,7 +100,7 @@
 						<?php foreach ( array_keys( $columns ) as $column_id ) : ?>
 							<td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>">
 								<?php
-								switch( $column_id ) :
+								switch ( $column_id ) :
 									// @todo Add profile link if required.
 									case 'student' :
 										echo '<div class="cp-flex">';
