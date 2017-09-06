@@ -26,7 +26,7 @@ foreach ( $courses as $course_id => $course ) {
 		'<option value="%d" %s>%s</option>',
 		esc_attr( $course_id ),
 		selected( $current, $course_id ),
-		esc_html( $course->post_title )
+		esc_html( $course->post_title . $course->get_numeric_identifier_to_course_name( $course->ID ) )
 	);
 }
 	?>

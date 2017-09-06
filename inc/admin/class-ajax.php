@@ -154,6 +154,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 		$course = coursepress_get_course( $course_id );
 		$course->update_setting( true, $course_meta );
+		$course->save_course_number( $course_id, $course_object['post_title'] );
 
 		// Retrieve the course object back
 		$course = coursepress_get_course( $course_id );

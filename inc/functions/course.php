@@ -332,7 +332,7 @@ function coursepress_get_course_enrollment_button( $course_id = 0, $args = array
 								array(
 									'href' => $_course->get_permalink(),
 									'target' => '_blank',
-									'rel' => 'bookmark'
+									'rel' => 'bookmark',
 								),
 								$_course->post_title
 							);
@@ -351,7 +351,7 @@ function coursepress_get_course_enrollment_button( $course_id = 0, $args = array
 					$link_text = '';
 					$args = array(
 						'course_id' => $course_id,
-						'cookie_name' => 'cp_incorrect_passcode_' . COOKIEHASH
+						'cookie_name' => 'cp_incorrect_passcode_' . COOKIEHASH,
 					);
 
 					coursepress_render( 'views/front/passcode-form', $args );
@@ -570,7 +570,7 @@ function coursepress_get_current_course_cycle() {
 	$form_attr = array(
 		'method' => 'post',
 		'action' => admin_url( 'admin-ajax.php?action=coursepress_submit' ),
-		'class' => 'coursepress-course coursepress-course-form'
+		'class' => 'coursepress-course coursepress-course-form',
 	);
 	$template = coursepress_create_html(
 		'input',
@@ -819,7 +819,6 @@ function coursepress_has_access( $course_id, $unit_id = 0, $module_id = 0, $step
 					}
 				}
 			}
-
 		}
 	}
 
@@ -873,7 +872,7 @@ function coursepress_get_link_cycle( $type = 'next' ) {
 				$prevModule = $unit->get_previous_module( $module_id );
 
 				if ( $prevModule ) {
-					$prevSteps = $unit->get_steps( !$has_access, true, (int) $prevModule['id'] );
+					$prevSteps = $unit->get_steps( ! $has_access, true, (int) $prevModule['id'] );
 
 					if ( $prevSteps ) {
 						$prevStep = array_pop( $prevSteps );
@@ -1223,6 +1222,11 @@ function coursepress_delete_course( $course_id ) {
 		}
 	}
 
+	/**
+	 * Update course numbers
+	 */
+	$course->save_course_number( $course_id, $course->post_title, array( $course_id ) );
+
 	// Now delete the course
 	wp_delete_post( $course_id );
 
@@ -1271,7 +1275,7 @@ function coursepress_change_course_alert_status( $alert_id, $status ) {
 
 	$capable = false;
 	// Get author of the current alert.
-	$author = get_post_field ('post_author', $alert_id );
+	$author = get_post_field( 'post_author', $alert_id );
 	// If current user is capable of updating any notification statuses.
 	if ( current_user_can( 'coursepress_change_notification_status_cap' ) ) {
 		$capable = true;

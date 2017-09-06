@@ -20,7 +20,10 @@
                         <?php if ( ! empty( $courses ) ) : ?>
                             <?php foreach ( $courses as $course ) : ?>
                                 <?php $selected_course = empty( $_GET['course_id'] ) ? 0 : $_GET['course_id']; ?>
-                                <option value="<?php echo $course->ID; ?>" <?php selected( $course->ID, $selected_course ); ?>><?php echo $course->post_title; ?></option>
+                                <option value="<?php echo $course->ID; ?>" <?php selected( $course->ID, $selected_course ); ?>><?php
+								echo $course->post_title;
+								echo $course->get_numeric_identifier_to_course_name( $course->ID );
+?></option>
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </select>
@@ -56,43 +59,43 @@
                         <?php foreach ( array_keys( $columns ) as $column_id ) : ?>
                             <td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>">
                                 <?php
-                                switch( $column_id ) :
-                                    // @todo Add profile link if required.
-                                    case 'student' :
-                                        echo '<div class="cp-flex cp-user">';
-                                        echo '<span class="gravatar">';
-                                        echo get_avatar( $student->ID, 30 );
-                                        echo '</span>';
-                                        echo ' ';
-                                        echo '<span class="user_login">';
-                                        echo $student->user_login;
-                                        echo '</span>';
-                                        echo ' ';
-                                        echo '<span class="display_name">(';
-                                        echo $student->get_name();
-                                        echo ')</span>';
-                                        echo '</div>';
-                                        break;
-                                    case 'last_active' :
-                                        // Last activity time.
-                                        $last_active = $student->get_last_activity_time();
-                                        echo $last_active ? date_i18n( get_option( 'date_format' ), $last_active ) : '--';
-                                        break;
-                                    case 'number_of_courses' :
-                                        echo count( $student->get_enrolled_courses_ids() );
-                                        break;
-                                    default :
-                                        /**
-                                         * Trigger to allow custom column value
-                                         *
-                                         * @since 3.0
-                                         * @param string $column_id
-                                         * @param CoursePress_Student object $student
-                                         */
-                                        do_action( 'coursepress_studentlist_column', $column_id, $student );
-                                        break;
-                                endswitch;
-                                ?>
+								switch ( $column_id ) :
+									// @todo Add profile link if required.
+									case 'student' :
+										echo '<div class="cp-flex cp-user">';
+										echo '<span class="gravatar">';
+										echo get_avatar( $student->ID, 30 );
+										echo '</span>';
+										echo ' ';
+										echo '<span class="user_login">';
+										echo $student->user_login;
+										echo '</span>';
+										echo ' ';
+										echo '<span class="display_name">(';
+										echo $student->get_name();
+										echo ')</span>';
+										echo '</div>';
+										break;
+									case 'last_active' :
+										// Last activity time.
+										$last_active = $student->get_last_activity_time();
+										echo $last_active ? date_i18n( get_option( 'date_format' ), $last_active ) : '--';
+										break;
+									case 'number_of_courses' :
+										echo count( $student->get_enrolled_courses_ids() );
+										break;
+									default :
+										/**
+										 * Trigger to allow custom column value
+										 *
+										 * @since 3.0
+										 * @param string $column_id
+										 * @param CoursePress_Student object $student
+										 */
+										do_action( 'coursepress_studentlist_column', $column_id, $student );
+										break;
+								endswitch;
+								?>
                             </td>
                         <?php endforeach; ?>
                     </tr>

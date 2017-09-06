@@ -10,6 +10,11 @@ class CoursePress_Course extends CoursePress_Utility {
 	protected $student_table;
 
 	/**
+	 * Course Number
+	 */
+	protected $count_title_name = 'course_number_by_title';
+
+	/**
 	 * CoursePress_Course constructor.
 	 *
 	 * @param int|WP_Post $course
@@ -1007,5 +1012,66 @@ class CoursePress_Course extends CoursePress_Utility {
 		}
 
 		return $author;
+	}
+
+	/**
+	 * Add custom filed with counter for posts with indetical title
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $post_id Post ID
+	 * @param string $post_title Post title.
+	 * @param array $excludes Array of excluded Post IDs
+	 */
+	public function save_course_number( $post_id, $post_title, $excludes = array() ) {
+		global $CoursePress_Core;
+		if ( ! coursepress_is_course( $post_id ) ) {
+			return;
+		}
+		global $wpdb;
+		$course_post_type = $CoursePress_Core->course_post_type;
+		$sql = $wpdb->prepare(
+			"select ID from {$wpdb->posts} where post_title = ( select a.post_title from {$wpdb->posts} a where id = %d ) and post_type = %s and post_status in ( 'publish', 'draft', 'pending', 'future' ) order by id asc",
+			$post_id,
+			$course_post_type
+		);
+		$posts = $wpdb->get_results( $sql );
+		$limit = 2 + count( $excludes );
+		if ( count( $posts ) < $limit ) {
+			delete_post_meta( $post_id, $this->count_title_name );
+			return;
+		}
+		$count = 1;
+		foreach ( $posts as $post ) {
+			if ( ! empty( $excludes ) && in_array( $post->ID, $excludes ) ) {
+				continue;
+			}
+			/**
+			 * we need it only once
+			 */
+			if ( ! add_post_meta( $post->ID, $this->count_title_name, $count, true ) ) {
+				update_post_meta( $post->ID, $this->count_title_name, $count );
+			}
+			$count++;
+		}
+	}
+
+	/**
+	 * Function called by filter "the_title" to add number.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $post_title Post title.
+	 * @param integer $post_id Post ID.
+	 * @return string Post title.
+	 */
+	public function get_numeric_identifier_to_course_name( $post_id = 0, $before = ' (', $after = ')' ) {
+		if ( ! empty( $post_id ) ) {
+			$number = get_post_meta( $post_id, $this->count_title_name, true );
+			if ( ! empty( $number ) ) {
+				return $before.$number.$after;
+			}
+		}
+		return '';
 	}
 }
