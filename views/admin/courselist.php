@@ -48,7 +48,7 @@ foreach ( $bulk_actions as $value => $label ) {
 ?>
 </select>
 </div>
-<input type="button" class="cp-btn cp-btn-active" value="<?php esc_attr_e( 'Apply', 'cp' ); ?>" data-course="<?php esc_attr_e( $current ); ?>" />
+<input type="button" class="cp-btn cp-btn-active" value="<?php esc_attr_e( 'Apply', 'cp' ); ?>" />
                 </div>
             </div>
         </form>

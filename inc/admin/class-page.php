@@ -428,7 +428,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 */
 	public function get_bulk_actions() {
 		$actions = array(
-			'trash' => __( 'Move to Trash', 'cp' ),
+			'publish' => __( 'Publish', 'cp' ),
+			'draft' => __( 'Draft', 'cp' ),
 		);
 		return $actions;
 	}
