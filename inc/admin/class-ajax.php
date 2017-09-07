@@ -1145,4 +1145,14 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		}
 		wp_send_json_error( array( 'message' => __( 'Could not assign add student.', 'cp' ) ) );
 	}
+
+	public function courses_bulk_action( $request ) {
+		if ( isset( $request->courses ) && is_array( $request->courses ) && isset( $request->which ) ) {
+			foreach ( $request->courses as $course_id ) {
+				coursepress_change_course_status( $course_id, $request->which );
+			}
+			wp_send_json_success();
+		}
+		wp_send_json_error( array( 'message' => __( 'Could not apply courses action.', 'cp' ) ) );
+	}
 }

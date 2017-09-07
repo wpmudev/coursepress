@@ -14,15 +14,20 @@
                 'click .menu-item-duplicate-course': 'duplicateCourse',
                 'click .menu-item-delete': 'deleteCourse',
                 'click #cp-search-clear': 'clearSearch',
-                'click .cp-dropdown-btn': 'toggleSubMenu'
+                'click .cp-dropdown-btn': 'toggleSubMenu',
+                'click #bulk-actions .cp-btn': 'bulkActions'
             },
 
-            initialize: function() {
+            initialize: function( model ) {
+                this.model = model;
                 this.request = new CoursePress.Request();
                 // On status toggle fail.
                 this.request.on( 'coursepress:error_course_status_toggle', this.revertStatusToggle, this );
                 // On delete course
                 this.request.on( 'coursepress:success_delete_course', this.reloadCourseList, this );
+            },
+            getModel: function() {
+                return this.model;
             },
 
             /**
@@ -125,7 +130,29 @@
                 } else {
                     dropdown.addClass('open');
                 }
+            },
+
+            bulkActions: function( ev ) {
+                var action = this.$( 'select', this.$( ev.currentTarget ).parent() ).val();
+                if ( '-1' === action ) {
+                    return;
+                }
+                var ids = [];
+                this.$('.check-column input[type=checkbox]:checked').each( function() {
+                    var value = parseInt( $(this).val() );
+                    if ( 0 < value ) {
+                        ids .push( value );
+                    }
+                });
+                var model = new CoursePress.Request( this.getModel() );
+                model.set( 'action', 'courses_bulk_action' );
+                model.set( 'which', action );
+                model.set( 'courses', ids );
+                model.on( 'coursepress:success_courses_bulk_action', location.reload() );
+                model.save();
+                return;
             }
+
         });
 
         CoursesList = new CoursesList();

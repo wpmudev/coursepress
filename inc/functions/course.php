@@ -1063,12 +1063,18 @@ function coursepress_course_update_setting( $course_id, $settings = array() ) {
  * @return bool
  */
 function coursepress_change_course_status( $course_id, $status ) {
-
 	// Allowed statuses to change.
 	$allowed_statuses = array( 'publish', 'draft', 'pending' );
 
 	// @todo: Implement capability check.
 	$capable = true;
+
+	/**
+	 * check is course
+	 */
+	if ( ! coursepress_is_course( $course_id ) ) {
+		$capable = false;
+	}
 
 	if ( empty( $course_id ) || ! in_array( $status, $allowed_statuses ) || ! $capable ) {
 
@@ -1652,3 +1658,4 @@ function coursepress_search_students( $args = array() ) {
 
 	return $found;
 }
+
