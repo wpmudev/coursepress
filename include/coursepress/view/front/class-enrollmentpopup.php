@@ -424,7 +424,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 				}
 				$json_data['nonce'] = $nonce;
 
-				$username = sanitize_text_field( $data->data->username );
+				$username = sanitize_user( $data->data->username );
 				$first_name = sanitize_text_field( $data->data->first_name );
 				$last_name = sanitize_text_field( $data->data->last_name );
 				$email = sanitize_email( $data->data->email );
