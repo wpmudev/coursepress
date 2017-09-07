@@ -813,7 +813,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 	 * Duplicate current Unit and set given course ID.
 	 *
 	 * This class object is created based on a WP_Post object. So using the current
-	 * course post data, create new post of type "unit". If success, then copy the
+	 * unit post data, create new post of type "unit". If success, then copy the
 	 * unit metadata to newly created course post.
 	 *
 	 * @param int $course_id Course ID of the unit.
@@ -861,18 +861,24 @@ class CoursePress_Unit extends CoursePress_Utility {
 		}
 
 		// Copy of current course object.
-		$new_unit = $this;
+		$new_unit = clone $this;
 
 		// Unset the ID, otherwise it will update the existing unit.
 		unset( $new_unit->ID );
 
 		// Set basic data.
 		$new_unit->post_author = get_current_user_id();
-		$new_unit->post_status = 'private';
+		$new_unit->post_status = 'publish';
 		$new_unit->post_parent = $course_id;
+		$new_unit->post_type = 'unit';
+		$new_unit->comment_count = 0;
 
 		// Attempt to create new post of type "course".
 		$new_unit_id = wp_insert_post( $new_unit );
+
+		// Set the course ID to new course.
+		update_post_meta( $new_unit_id, 'course_id', $course_id );
+
 		// If unit creation was success.
 		if ( ! empty( $new_unit_id ) ) {
 
@@ -886,10 +892,41 @@ class CoursePress_Unit extends CoursePress_Utility {
 				}
 			}
 
-			// @todo: Implement module duplication.
+			// Get modules with steps.
+			$modules_steps = $this->get_modules_with_steps();
 
-			// Set the course ID to new course.
-			update_post_meta( $new_unit_id, 'course_id', $course_id );
+			if ( ! empty( $modules_steps ) ) {
+				$module_array = array();
+
+				foreach ( $modules_steps as $module_id => $module ) {
+
+					// Set module data to attache to the unit.
+					$module_array[ $module_id ] = array(
+						'id' => isset( $module['id'] ) ? $module['id'] : 0,
+						'title' => sanitize_text_field( $module['title'] ),
+						'preview' => isset( $module['preview'] ) ? $module['preview'] : true,
+						'show_description' => isset( $module['show_description'] ) ? true : false,
+						'description' => isset( $module['description'] ) ? $module['description'] : '',
+					);
+
+					if ( ! empty( $module['steps'] ) ) {
+
+						foreach ( $module['steps'] as $step_cid => $step ) {
+							// Get the existing step object.
+							$step = coursepress_get_course_step( $step_cid );
+							// Duplicate steps.
+							if ( ! is_wp_error( $step ) ) {
+								$step->duplicate_step( $new_unit_id );
+							}
+						}
+					}
+				}
+
+				// Get new unit object.
+				$new_unit = coursepress_get_unit( $new_unit_id );
+				// Assign modules data to unit.
+				$new_unit->update_settings( 'course_modules', $module_array );
+			}
 
 			/**
 			 * Perform action when the unit is duplicated.

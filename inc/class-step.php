@@ -396,4 +396,92 @@ class CoursePress_Step extends CoursePress_Unit {
 
 		return $this->create_html( 'div', array( 'class' => $class ), $template );
 	}
+
+	/**
+	 * Duplicate current step/module and set given unit ID.
+	 *
+	 * This class object is created based on a WP_Post object. So using the current
+	 * step post data, create new post of type "module". If success, then copy the
+	 * unit metadata to newly created course post.
+	 *
+	 * @param int $unit_id Unit ID of the module.
+	 *
+	 * @return bool Success or Fail?
+	 */
+	function duplicate_step( $unit_id = 0 ) {
+
+		// If in case unit post object is not and ID not found, bail.
+		// Step ID is set when this class is instantiated.
+		if ( empty( $this->ID ) ) {
+
+			/**
+			 * Perform actions if the duplication was failed.
+			 *
+			 * Note: We don't have step/module ID here.
+			 *
+			 * @since 3.0
+			 */
+			do_action( 'coursepress_module_duplicate_failed', false );
+
+			return false;
+		}
+
+		// If unit id is empty, current step's unit id will be used.
+		if ( empty( $unit_id ) ) {
+			$unit_id = $this->unit_id;
+		}
+
+		/**
+		 * Allow module duplication to be cancelled when filter returns true.
+		 *
+		 * @since 3.0
+		 */
+		if ( apply_filters( 'coursepress_module_cancel_duplicate', false, $this->ID ) ) {
+
+			/**
+			 * Perform actions if the duplication was cancelled.
+			 *
+			 * @since 3.0
+			 */
+			do_action( 'coursepress_module_duplicate_cancelled', $this->ID );
+
+			return false;
+		}
+
+		// Make a copy of step object.
+		$new_step = clone $this;
+
+		// Unset the step ID.
+		unset( $new_step->ID );
+
+		// Set parent to our unit.
+		$new_step->post_parent = $unit_id;
+		// Set post type as module.
+		$new_step->post_type = 'module';
+
+		// Insert new step for the unit.
+		$new_step_id = wp_insert_post( $new_step );
+
+		// Copy the old module metadata to duplicated step.
+		$step_metas = get_post_meta( $this->ID );
+		if ( ! empty( $step_metas ) && $new_step_id ) {
+			foreach ( $step_metas as $key => $value ) {
+				$value = array_pop( $value );
+				$value = maybe_unserialize( $value );
+				update_post_meta( $new_step_id, $key, $value );
+			}
+		}
+
+		/**
+		 * Perform action when the module is duplicated.
+		 *
+		 * @param int $new_step_id New step ID.
+		 * @param int $this->ID Old step ID.
+		 *
+		 * @since 3.0
+		 */
+		do_action( 'coursepress_module_duplicated', $new_step_id, $this->ID );
+
+		return true;
+	}
 }
