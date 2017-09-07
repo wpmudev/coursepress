@@ -62,20 +62,33 @@ class CoursePress_Admin_Actions {
 	}
 
 	/**
+	 * Delete given course.
+	 *
+	 * @param array $request Request data.
+	 */
+	function delete_course( $request ) {
+
+		if ( isset( $request['course_id'] ) ) {
+			$course = coursepress_get_course( $request['course_id'] );
+			if ( ! is_wp_error( $course ) ) {
+				$course->delete_course();
+			}
+		}
+		// Redirect back to same page without unwanted parameters.
+		wp_redirect( remove_query_arg( array( 'cp_nonce', 'course_id', 'cp_action' ) ) );
+	}
+
+	/**
 	 * Export given course to JSON.
 	 *
 	 * @param array $request Request data.
 	 */
 	function export_course( $request ) {
-
 		// If course id found, export.
 		if ( isset( $request['course_id'] ) ) {
 			// Set the export data using course id.
 			$export = new CoursePress_Export( $request['course_id'] );
 			$export->export();
 		}
-
-		// Redirect back to same page without unwanted parameters.
-		wp_redirect( remove_query_arg( array( 'cp_nonce', 'course_id', 'cp_action' ) ) );
 	}
 }

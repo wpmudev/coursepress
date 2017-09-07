@@ -103,6 +103,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 					$steps = $unit->get_steps( false );
 					$unit->__set( 'steps', $steps );
 				}
+
+				// Set permalink to the unit.
+				$unit->unit_permalink = $unit->get_permalink();
+
 				$units[ $pos ] = $unit;
 			}
 		}

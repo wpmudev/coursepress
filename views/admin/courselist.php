@@ -131,7 +131,7 @@
                                                 <a href="<?php echo esc_url( $course->get_permalink() ); ?>" target="_blank"><?php _e( 'View Course', 'cp' ); ?></a>
                                             </li>
                                             <li class="menu-item-delete cp-delete" data-course="<?php echo $course->ID; ?>">
-                                                <a href="#"><?php _e( 'Delete Course', 'cp' ); ?></a>
+                                                <a href="<?php echo add_query_arg( array( 'course_id' => $course->ID, '_wpnonce' => wp_create_nonce( 'delete_course' ), 'cp_action' => 'delete_course' ) ); ?>"><?php _e( 'Delete Course', 'cp' ); ?></a>
                                             </li>
                                         </ul>
                                     </div>

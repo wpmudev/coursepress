@@ -162,10 +162,19 @@
             },
 
             updateUnitModels: function( data ) {
+                var nextStep;
+
                 if ( data.units ) {
                     this.unitModels = _.extend( this.unitModels, data.units );
                 }
+
                 this.editCourseView.after_update();
+
+                // Go to next step.
+                if ( 'continue' === this.editCourseView.savemode ) {
+                    nextStep = this.editCourseView._getNextStep();
+                    this.editCourseView.loadCurrentStep( nextStep );
+                }
             },
 
             updateCollection: function() {
