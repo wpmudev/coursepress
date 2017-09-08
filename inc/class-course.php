@@ -955,10 +955,10 @@ class CoursePress_Course extends CoursePress_Utility {
 			}
 
 			// If units are available for course, duplicate them.
-			$units = $this->get_units();
+			$units = coursepress_get_units( $course_id );
 			if ( ! empty( $units ) ) {
 				foreach ( $units as $unit ) {
-					$unit = new CoursePress_Unit( $unit->ID );
+					$unit = new CoursePress_Unit( $unit );
 					$unit->duplicate_unit( $new_course_id );
 				}
 			}
