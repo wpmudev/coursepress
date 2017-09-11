@@ -252,13 +252,11 @@ class CoursePress_Data_Instructor {
 	 */
 	public static function remove_instructor_status( $user ) {
 		$user_id = self::_get_id( $user );
-		$global_option = ! is_multisite();
-		delete_user_option( $user_id, 'role_ins', 'instructor', $global_option );
-
+		$role_name = CoursePress_Data_Capabilities::get_role_instructor_name();
+		delete_user_option( $user_id, $role_name, 'instructor' );
 		// Legacy
-		delete_user_meta( $user_id, 'role_ins', 'instructor' );
+		delete_user_meta( $user_id, $role_name, 'instructor' );
 		self::unassign_from_all_courses( $user_id );
-
 		CoursePress_Data_Capabilities::drop_instructor_capabilities( $user_id );
 	}
 	// */
@@ -341,17 +339,17 @@ class CoursePress_Data_Instructor {
 
 		if ( ! $count || $refresh ) {
 			global $wpdb;
-
-			$meta_keys = $wpdb->get_results(
-				$wpdb->prepare( "
+			/**
+			 * multisite
+			 */
+			$prefix = is_multisite()? $wpdb->prefix:'';
+			$query = $wpdb->prepare( "
 					SELECT `meta_key`
 					FROM $wpdb->usermeta
-					WHERE `meta_key` LIKE 'course_%%' AND `user_id`=%d",
-					$instructor_id
-				),
-				ARRAY_A
+					WHERE `meta_key` LIKE '{$prefix}course_%%' AND `user_id`=%d",
+				$instructor_id
 			);
-
+			$meta_keys = $wpdb->get_results( $query, ARRAY_A );
 			if ( $meta_keys ) {
 				$meta_keys = array_map(
 					array( __CLASS__, 'meta_key' ),

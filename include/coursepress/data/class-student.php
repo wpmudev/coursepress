@@ -1289,6 +1289,11 @@ class CoursePress_Data_Student {
 							true
 						);
 					} else {
+						$student_progress = CoursePress_Helper_Utility::set_array_value(
+							$student_progress,
+							'completion/failed',
+							false
+						);
 						$is_completed = true;
 					}
 				}

@@ -66,7 +66,7 @@
 	echo apply_filters( 'coursepress_course_setup_step_4', '', $course_id );
 
 	// Print buttons
-	echo static::get_buttons( $course_id, 4 );
+	echo CoursePress_View_Admin_Course_Edit::get_buttons( $course_id, 4 );
 	?>
 	<br />
 </div>

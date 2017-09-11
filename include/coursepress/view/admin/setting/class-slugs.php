@@ -41,7 +41,7 @@ class CoursePress_View_Admin_Setting_Slugs extends CoursePress_View_Admin_Settin
 		$content .= self::row(
 			__( 'Courses Slug', 'CP_TD' ),
 			esc_html( $home_url ) . '&nbsp;<input type="text" name="coursepress_settings[slugs][course]" id="course_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/course', 'courses' ) ).'" />&nbsp;/',
-			esc_html( 'Your course URL will look like: ', 'CP_TD' ) . esc_html( $home_url ) . esc_html( CoursePress_Core::get_setting( 'slugs/course', 'courses' ) ) . esc_html( '/my-course/', 'CP_TD' )
+			esc_html__( 'Your course URL will look like: ', 'CP_TD' ) . esc_html( $home_url ) . esc_html( CoursePress_Core::get_setting( 'slugs/course', 'courses' ) ) . esc_html__( '/my-course/', 'CP_TD' )
 		);
 
 		$content .= self::row(
