@@ -9,6 +9,7 @@ CHANGELOG
 -------------------------------------------------
 * Fixed: Assessments feedback sending problem.
 * Fixed: Compatibility with older PHP versions.
+* Fixed: Instructor can't reply to comments on course unit.
 * Fixed: Problem to go next unit when all answers are required but current unit do not have any assessable modules.
 * Updated: Vimeo javascript for version 3.0.0.
 
