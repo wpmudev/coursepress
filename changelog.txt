@@ -17,6 +17,8 @@ CHANGELOG
 -------------------------------------------------
 * Fixed: Compatibility with older PHP versions.
 
+* Fixed: Video module problem with Vimeo movies.
+
 = 2.1 =
 -------------------------------------------------
 * Added: Text color option for course certificate.

@@ -963,6 +963,9 @@ input.cp-has-error {
 .cp .module-elements .comment-list li li {
   margin-left: 25px;
 }
+.cp .module-elements.module-type-video .video_player {
+  overflow: hidden;
+}
 .cp .cp-try-again {
   margin-top: 15px;
 }
