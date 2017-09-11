@@ -16,6 +16,10 @@ var CoursePress = CoursePress || {};
 	CoursePress.Helpers.Module.quiz = CoursePress.Helpers.Module.quiz || {};
 	CoursePress.Helpers.Module.form = CoursePress.Helpers.Module.form || {};
 
+    CoursePress.Helpers.Module.refresh_tinymce = function () {
+
+    };
+
 	CoursePress.Helpers.Module.refresh_ui = function() {
 
 		// Bring on the Visual Editor
@@ -72,7 +76,21 @@ var CoursePress = CoursePress || {};
 				} );
 
 				$( this ).accordion( 'refresh' );
-			}
+
+				// Fix for TinyMCE breaking after sorting the unit module.
+                var editor_tabs = this.getElementsByClassName('wp-editor-tabs');
+                $.each( editor_tabs, function( index, editor_tab ){
+                    while (editor_tab.hasChildNodes()) {
+                        editor_tab.removeChild(editor_tab.lastChild);
+                    }
+                });
+                var editors = document.querySelectorAll('textarea[id^="post_content_"]');
+                $.each( editors, function( index, editor ) {
+                    tinymce.execCommand("mceRemoveEditor", true, editor.id);
+                    tinymce.execCommand("mceAddEditor", true, editor.id);
+                })
+
+            }
 		} );
 
 		// Sortable Tabs
