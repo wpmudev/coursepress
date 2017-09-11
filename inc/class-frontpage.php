@@ -133,7 +133,7 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 
 			$this->set_external_js( 'coursepress-video', 'video.min.js' );
 			$this->set_external_js( 'coursepress-video-youtube', 'video-youtube.min.js' );
-			$this->set_external_js( 'coursepress-videojs-vimeo', 'videojs-vimeo.min.js' );
+			$this->set_external_js( 'coursepress-videojs-vimeo', 'videojs-vimeo.min.js', '3.0.0' );
 		}
 		$this->set_external_js( 'circle-progress', 'circle-progress.min.js' );
 		$this->set_external_css( 'fontawesome', 'font-awesome.min.css' );
@@ -165,13 +165,16 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 	/**
 	 * Function to enqueue an external script.
 	 *
-	 * @param String $id  Id for the file.
-	 * @param String $src Name of the external js file.
+	 * @param string      $id  Id for the file.
+	 * @param string      $src Name of the external js file.
+	 * @param bool|string $version Version of the file. Default to CoursePress version.
 	 */
-	private function set_external_js( $id, $src ) {
+	private function set_external_js( $id, $src, $version = false ) {
 		global $CoursePress;
 
-		$version = $CoursePress->version;
+		if ( ! $version ) {
+			$version = $CoursePress->version;
+		}
 		$plugin_url = $CoursePress->plugin_url;
 		wp_enqueue_script( $id, $plugin_url . 'assets/external/js/' . $src, false, $version, true ); // Load the footer.
 	}
