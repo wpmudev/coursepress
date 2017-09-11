@@ -512,7 +512,7 @@ $(document)
 		total_limit = hours + minutes + seconds;
 
 		info = container.find( '.quiz_timer_info' );
-		inputs = container.find( '.module-elements input, .module_elements select, .module-elements textarea' );
+		inputs = container.find( '.module-elements input, .module_elements select, .module-elements textarea, .module-elements .video_player' );
 		inputs.removeAttr('disabled');
 
 		expired = function() {
@@ -1013,9 +1013,64 @@ $(document)
 		form.submit();
 	}
 
+	CoursePress.hookModuleVideos = function() {
+
+		$('.video-js').each(function(){
+			var video_id = $(this).attr('id');
+			var video = videojs(video_id);
+
+			video.on('ready', function(){
+				var player = this,
+					player_element = $(player.el());
+
+				function change_video_status(player)
+				{
+					if( $(player.el()).closest('.video_player').is('[disabled="disabled"]') )
+					{
+						player.pause();
+					}
+				}
+
+				if(player_element.is('[autoplay]'))
+				{
+					player.play();
+				}
+
+				if(player_element.is('[muted]'))
+				{
+					player.muted(true);
+				}
+
+				player.one('click', function(){
+					player.play();
+				});
+
+				player.one('play', function(){
+					CoursePress.timer(player_element.closest('.cp-module-content'));
+				});
+
+				player.on('play', function(){
+					change_video_status(player);
+				});
+
+				player.on('timeupdate', function(){
+					change_video_status(player);
+				});
+			});
+		});
+	};
+
 	$( document )
 		.ready(function(){
-			CoursePress.timer( $('.cp-module-content' ) );
+			$('.cp-module-content').each(function(){
+				var content = $(this);
+				if(content.data('type') !== 'video')
+				{
+					CoursePress.timer(content);
+				}
+			});
+
+			CoursePress.hookModuleVideos();
 		})
 		.on( 'submit', '.cp-form', CoursePress.ModuleSubmit )
 		.on( 'click', '.focus-nav-prev, .focus-nav-next', CoursePress.LoadFocusModule )
@@ -1097,7 +1152,7 @@ $(document)
 			password_strength_input = $('[name="password_strength_level"]', container);
 
 		// If the password strength meter script has not been enqueued then we can't check strength
-		if(typeof wp.passwordStrength.meter === 'undefined')
+		if(typeof wp.passwordStrength.meter === 'undefined' || !_coursepress.password_strength_meter_enabled)
 		{
 			return;
 		}
@@ -1301,25 +1356,28 @@ $(document)
 				errors.push( _coursepress.signup_errors['all_fields'] );
 			}
 
-			if( typeof wp.passwordStrength.meter !== "undefined" )
+			var password = $('[name="password"]').val();
+			var password_confirmed = $('[name="password_confirmation"]').val();
+
+			// Passwords must match
+			if ( password !== password_confirmed ) {
+				valid = false;
+				errors.push( _coursepress.signup_errors['mismatch_password'] );
+			}
+
+			if( typeof wp.passwordStrength.meter !== "undefined" && _coursepress.password_strength_meter_enabled )
 			{
 				var confirm_weak = $( '[name="confirm_weak_password"]'),
 					strength = wp.passwordStrength.meter(
-						$('[name="password"]').val(),
+						password,
 						[],
-						$('[name="password_confirmation"]').val()
+						password_confirmed
 					);
 
 				// Can't have a weak password
 				if ( strength <= 2 && !confirm_weak.is( ':checked' ) ) {
 					valid = false;
 					errors.push( _coursepress.signup_errors['weak_password'] );
-				}
-
-				// Passwords must match
-				if ( strength === 5 ) {
-					valid = false;
-					errors.push( _coursepress.signup_errors['mismatch_password'] );
 				}
 			}
 
@@ -1659,7 +1717,7 @@ $(document)
 		.on( 'click', '.cp-custom-login', CoursePress.CustomLoginHook )
 		.on( 'click', '.apply-button.enroll', CoursePress.EnrollStudent )
 		.on( 'submit', '[name="enrollment-process"][data-type="passcode"]', CoursePress.validatePassCode )
-		.on( 'keyup', '.signup-form [name="password"], .signup-form [name="password_confirmation"]', CoursePress.checkWeakPassword )
+		.on( 'keyup', '.signup-form [name="password"], .signup-form [name="password_confirmation"], .student-settings [name="password"], .student-settings [name="password_confirmation"]', CoursePress.checkWeakPassword )
 		.on( 'submit', '.apply-box .enrollment-process', CoursePress.validateEnrollment );
 
 })(jQuery);
