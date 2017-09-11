@@ -15,6 +15,7 @@ CHANGELOG
 * Fixed: Instructors capabilities problem on multisite installation.
 * Fixed: Instructor can't reply to comments on course unit.
 * Fixed: Problem to go next unit when all answers are required but current unit do not have any assessable modules.
+* Fixed: Show and Free Preview options in Course Structure settings.
 * Updated: Vimeo javascript for version 3.0.0.
 
 = 2.1.0.2 =
