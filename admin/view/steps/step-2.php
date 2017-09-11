@@ -121,10 +121,10 @@
 								$count++;
 								$page_title = ! empty( $page['title'] ) ? $page['title'] : sprintf( __( 'Section: %d %s', 'CP_TD' ), $page_number, $no_section_title );
 
-								$page_key = $unit_id . '_' . (int) $key;
+								$page_key = $unit_id . '_' . (int) $page_number;
 								$alt = $count % 2 ? 'even' : 'odd';
-								$tr_class = 'page page-' . $key . ' treegrid-' . $count . ' treegrid-parent-' . $unit_parent . ' ' . $draft_class . ' ' . $alt;
-								$duration = ! empty( $estimations['pages'][ $key ]['estimation'] ) ? $estimations['pages'][ $key ]['estimation'] : '';
+								$tr_class = 'page page-' . $page_number . ' treegrid-' . $count . ' treegrid-parent-' . $unit_parent . ' ' . $draft_class . ' ' . $alt;
+								$duration = ! empty( $estimations['pages'][ $page_number ]['estimation'] ) ? $estimations['pages'][ $page_number ]['estimation'] : '';
 								$duration = static::sanitize_duration_display( $duration );
 								$page_parent = $count;
 								$modules = CoursePress_Helper_Utility::sort_on_object_key( $page['modules'], 'module_order' );
