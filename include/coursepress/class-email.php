@@ -31,6 +31,7 @@ class CoursePress_Email {
 		$email_fields = wp_parse_args(
 			$this->default_email_fields(),
 			array(
+				'enabled' => 1,
 				'from' => get_option( 'blogname' ),
 				'email' => get_option( 'admin_email' ),
 				'subject' => __( 'Subject line here...', 'CP_TD' ),
