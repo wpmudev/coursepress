@@ -20,6 +20,7 @@ CHANGELOG
 * Fixed: Problems with PHP 5.2.x.
 * Fixed: Missing translation in steps 6 & 7.
 * Fixed: Units inside the course are available agains the settings options.
+* Fixed: Visual editor is blank and missing data after module reorder.
 * Updated: Vimeo javascript for version 3.0.0.
 
 = 2.1.0.2 =
