@@ -4,9 +4,13 @@ Build Time:  BUILDTIME
 
 CHANGELOG
 =================================================
+
 = 2.1.1 =
 -------------------------------------------------
+* Fixed: Assessments feedback sending problem.
 * Fixed: Compatibility with older PHP versions.
+* Fixed: Problem to go next unit when all answers are required but current unit do not have any assessable modules.
+* Updated: Vimeo javascript for version 3.0.0.
 
 = 2.1.0.2 =
 -------------------------------------------------
@@ -16,9 +20,7 @@ CHANGELOG
 = 2.1.0.1 =
 -------------------------------------------------
 * Fixed: Compatibility with older PHP versions.
-
 * Fixed: Video module problem with Vimeo movies.
-
 * Fixed: Problem with proper display of a course structure.
 
 = 2.1 =
