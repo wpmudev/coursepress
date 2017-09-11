@@ -26,7 +26,7 @@
 
 	<div class="wide">
 		<label for="courseDescription" class="required"><?php _e( 'Full Description', 'CP_TD' ); ?></label><br />
-		<?php echo CoursePress_Helper_Editor::get_wp_editor( 'courseDescription', 'course_description', $editor_content, array( 'media_buttons' => true ) ); ?>
+		<?php echo CoursePress_Admin_Edit::get_wp_editor( 'courseDescription', 'course_description', $editor_content, array( 'media_buttons' => true ) ); ?>
 	</div>
 
 	<div class="wide">
@@ -41,7 +41,7 @@
 			<?php _e( 'Focus: Focus on one item at a time', 'CP_TD' ); ?>
 		</label>
 		<label class="checkbox">
-			<input type="checkbox" name="meta_focus_hide_section" value="unit" <?php checked(true, $focus_hide_section); ?>>
+			<input type="checkbox" name="meta_focus_hide_section" value="unit" <?php checked( true, $focus_hide_section ); ?>>
 			<?php _e( 'Don\'t render section titles in focus mode.', 'CP_TD' ); ?>
 		</label>
 		<label class="checkbox">
@@ -69,7 +69,7 @@
 				<span><?php _e( 'Display Time Estimates for Units and Lessons', 'CP_TD' ); ?></span>
 			</label>
 			<label class="checkbox">
-				<input type="checkbox" name="meta_structure_show_empty_units" <?php checked(true, !empty( $structure_show_empty_units ) ); ?> />
+				<input type="checkbox" name="meta_structure_show_empty_units" <?php checked( true, ! empty( $structure_show_empty_units ) ); ?> />
 				<span><?php _e( 'Show units without modules', 'cp' ); ?></span>
 				<p class="description"><?php _e( 'By default unit without modules is not displayed, even if it is selected below.', 'CP_TD' ); ?></p>
 			</label>
@@ -110,8 +110,8 @@
 					?>
 						<tr class="<?php echo $tr_class; ?>" data-unitid="<?php echo $unit_id; ?>">
 							<td><?php echo $status . $the_unit->post_title; ?></td>
-							<td><input type="checkbox" name="meta_structure_visible_units[<?php echo $unit_id; ?>]" value="1" <?php checked( true, isset( $visible_units[ $unit_id ] ) ); ?>/></td>
-							<td><input type="checkbox" name="meta_structure_preview_units[<?php echo $unit_id; ?>]" value="1" <?php checked( true, isset( $preview_units[ $unit_id ] ) ); ?>/></td>
+							<td><input type="checkbox" name="meta_structure_visible_units[<?php echo $unit_id; ?>]" value="1" <?php checked( true, isset( $visible_units[ $unit_id ] ) && $visible_units[ $unit_id ] ); ?>/></td>
+							<td><input type="checkbox" name="meta_structure_preview_units[<?php echo $unit_id; ?>]" value="1" <?php checked( true, isset( $preview_units[ $unit_id ] ) && $preview_units[ $unit_id ] ); ?>/></td>
 							<td class="column-time <?php echo $duration_class; ?>"><?php CoursePress_Admin_Edit::sanitize_duration_display( $estimations['unit']['estimation'] ); ?></td>
 						</tr>
 
@@ -121,10 +121,10 @@
 								$count++;
 								$page_title = ! empty( $page['title'] ) ? $page['title'] : sprintf( __( 'Section: %d %s', 'CP_TD' ), $page_number, $no_section_title );
 
-								$page_key = $unit_id . '_' . (int) $key;
+								$page_key = $unit_id . '_' . (int) $page_number;
 								$alt = $count % 2 ? 'even' : 'odd';
-								$tr_class = 'page page-' . $key . ' treegrid-' . $count . ' treegrid-parent-' . $unit_parent . ' ' . $draft_class . ' ' . $alt;
-								$duration = ! empty( $estimations['pages'][ $key ]['estimation'] ) ? $estimations['pages'][ $key ]['estimation'] : '';
+								$tr_class = 'page page-' . $page_number . ' treegrid-' . $count . ' treegrid-parent-' . $unit_parent . ' ' . $draft_class . ' ' . $alt;
+								$duration = ! empty( $estimations['pages'][ $page_number ]['estimation'] ) ? $estimations['pages'][ $page_number ]['estimation'] : '';
 								$duration = CoursePress_Admin_Edit::sanitize_duration_display( $duration );
 								$page_parent = $count;
 								$modules = CoursePress_Helper_Utility::sort_on_object_key( $page['modules'], 'module_order' );
@@ -132,8 +132,8 @@
 
 								<tr class="<?php echo $tr_class; ?>" data-unitid="<?php echo $unit_id; ?>" data-pagenumber="<?php echo $page_number; ?>">
 									<td><?php echo $page_title; ?></td>
-									<td><input type="checkbox" name="meta_structure_visible_pages[<?php echo $page_key; ?>]" value="1" <?php checked( true, isset( $visible_pages[ $page_key ] ) ); ?>/></td>
-									<td><input type="checkbox" name="meta_structure_preview_pages[<?php echo $page_key; ?>]" value="1" <?php checked( true, isset( $preview_pages[ $page_key ] ) ); ?>/></td>
+									<td><input type="checkbox" name="meta_structure_visible_pages[<?php echo $page_key; ?>]" value="1" <?php checked( true, isset( $visible_pages[ $page_key ] ) && $visible_pages[ $page_key ] ); ?>/></td>
+									<td><input type="checkbox" name="meta_structure_preview_pages[<?php echo $page_key; ?>]" value="1" <?php checked( true, isset( $preview_pages[ $page_key ] ) && $preview_pages[ $page_key ] ); ?>/></td>
 									<td class="column-time <?php echo $duration_class; ?>"><?php echo $duration; ?></td>
 								</tr>
 
@@ -150,8 +150,8 @@
 
 										<tr class="<?php echo $tr_class; ?>" data-unitid="<?php echo $unit_id; ?>" data-pagenumber="<?php echo $page_number;?>">
 											<td><?php echo $module_title; ?></td>
-											<td><input type="checkbox" name="meta_structure_visible_modules[<?php echo $mod_key; ?>]" value="1" <?php checked( true, isset( $visible_modules[ $mod_key ] ) ); ?> /></td>
-											<td><input type="checkbox" name="meta_structure_preview_modules[<?php echo $mod_key; ?>]" value="1" <?php checked( true, isset( $preview_modules[ $mod_key ] ) ); ?> /></td>
+											<td><input type="checkbox" name="meta_structure_visible_modules[<?php echo $mod_key; ?>]" value="1" <?php checked( true, isset( $visible_modules[ $mod_key ] ) && $visible_modules[ $mod_key ] ); ?> /></td>
+											<td><input type="checkbox" name="meta_structure_preview_modules[<?php echo $mod_key; ?>]" value="1" <?php checked( true, isset( $preview_modules[ $mod_key ] ) && $preview_modules[ $mod_key ] ); ?> /></td>
 											<td class="column-time <?php echo $duration_class; ?>"><?php echo CoursePress_Admin_Edit::sanitize_duration_display( $duration ); ?></td>
 										</tr>
 									<?php endforeach; ?>
@@ -180,6 +180,6 @@
 	echo apply_filters( 'coursepress_course_setup_step_2', '', $course_id );
 
 	// Buttons
-	echo CoursePress_View_Admin_Course_Edit::get_buttons( $course_id, 2 );
+	echo CoursePress_Admin_Edit::get_buttons( $course_id, 2 );
 	?>
 </div>
