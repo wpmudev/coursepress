@@ -5,7 +5,24 @@ Build Time:  BUILDTIME
 CHANGELOG
 =================================================
 
+= 2.1.1 =
+-------------------------------------------------
+* Fixed: Assessments feedback sending problem.
+* Fixed: Compatibility with older PHP versions.
 * Fixed: Instructor can't reply to comments on course unit.
+* Fixed: Problem to go next unit when all answers are required but current unit do not have any assessable modules.
+* Updated: Vimeo javascript for version 3.0.0.
+
+= 2.1.0.2 =
+-------------------------------------------------
+* Added: A filter 'coursepress_update_student_progress' to allow turn off student progress update during modules update.
+* Fixed: Problem with upgrade from 1.x to 2.0.
+
+= 2.1.0.1 =
+-------------------------------------------------
+* Fixed: Compatibility with older PHP versions.
+* Fixed: Video module problem with Vimeo movies.
+* Fixed: Problem with proper display of a course structure.
 
 = 2.1 =
 -------------------------------------------------

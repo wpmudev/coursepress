@@ -553,6 +553,7 @@ class CoursePress_Admin_Controller_Unit {
 					/**
 					 * update student progress
 					 */
+					$update_student_progress = apply_filters( 'coursepress_update_student_progress', $update_student_progress );
 					if ( $update_student_progress ) {
 						$course_id = $_REQUEST['course_id'];
 						$students = CoursePress_Data_Course::get_students( $course_id, 0, 0, 'ids' );

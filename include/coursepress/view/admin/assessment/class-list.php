@@ -264,7 +264,7 @@ class CoursePress_View_Admin_Assessment_List {
 		$content = '';
 
 		if ( empty( $total ) ) {
-			return sprintf( '<br><br><p class="description">%s</p>', __( 'There are no students found..', 'CP_TD' ) );
+			return sprintf( '<br><br><p class="description">%s</p>', __( 'There are no students found.', 'CP_TD' ) );
 		}
 
 		$table = '

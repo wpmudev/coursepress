@@ -186,6 +186,11 @@
 				}
 			}
 		}
+		&.module-type-video {
+			.video_player {
+				overflow: hidden;
+			}
+		}
 	}
 	.cp-try-again {
 		margin-top: 15px;
