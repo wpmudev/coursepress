@@ -8,6 +8,8 @@ CHANGELOG
 = 2.1.1 =
 -------------------------------------------------
 * Improved: HTML login & signup forms.
+* Improved: Username sanitization.
+* Improved: Better display responsive video.
 * Fixed: Assessments feedback sending problem.
 * Fixed: Compatibility with older PHP versions.
 * Fixed: Instructors capabilities problem on multisite installation.
