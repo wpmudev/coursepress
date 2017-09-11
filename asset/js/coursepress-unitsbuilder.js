@@ -18,10 +18,6 @@ var CoursePress = CoursePress || {};
 	CoursePress.Helpers.Module.quiz = CoursePress.Helpers.Module.quiz || {};
 	CoursePress.Helpers.Module.form = CoursePress.Helpers.Module.form || {};
 
-    CoursePress.Helpers.Module.refresh_tinymce = function () {
-
-    };
-
 	CoursePress.Helpers.Module.refresh_ui = function() {
 
 		// Bring on the Visual Editor
