@@ -12,13 +12,14 @@ CHANGELOG
 * Improved: Better display responsive video.
 * Fixed: Assessments feedback sending problem.
 * Fixed: Compatibility with older PHP versions.
+* Fixed: CoursePress shortcode links are not working.
 * Fixed: Instructors capabilities problem on multisite installation.
 * Fixed: Instructor can't reply to comments on course unit.
-* Fixed: Problem to go next unit when all answers are required but current unit do not have any assessable modules.
-* Fixed: Show and Free Preview options in Course Structure settings.
+* Fixed: Missing translation in steps 6 & 7.
 * Fixed: Problems with missing passcode after login.
 * Fixed: Problems with PHP 5.2.x.
-* Fixed: Missing translation in steps 6 & 7.
+* Fixed: Problem to go next unit when all answers are required but current unit do not have any assessable modules.
+* Fixed: Show and Free Preview options in Course Structure settings.
 * Fixed: Units inside the course are available agains the settings options.
 * Fixed: Visual editor is blank and missing data after module reorder.
 * Updated: Vimeo javascript for version 3.0.0.
