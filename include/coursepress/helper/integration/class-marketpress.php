@@ -462,7 +462,7 @@ class CoursePress_Helper_Integration_MarketPress {
 		// Create Auto SKU
 		if ( ! empty( $settings['mp_auto_sku'] ) || empty( $settings['mp_sku'] ) ) {
 			$sku_prefix = apply_filters( 'coursepress_course_sku_prefix', 'CP-' );
-			$product_meta['sku'] = $sku_prefix . str_pad( $course_id, 5, '0', STR_PAD_LEFT );
+			$product_meta['mp_sku'] = $product_meta['sku'] = $sku_prefix . str_pad( $course_id, 5, '0', STR_PAD_LEFT );
 		}
 
 		foreach ( $product_meta as $key => $value ) {

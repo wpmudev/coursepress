@@ -383,8 +383,8 @@ class CoursePress_Admin_Controller_Unit {
 					foreach ( $data as $unit ) {
 						unset( $unit['post_modified'] );
 						unset( $unit['post_modified_gmt'] );
-						unset( $unit['post_name'] );
 						unset( $unit['guid'] );
+						$unit['post_name'] = '';
 
 						$new_unit = false;
 						$unit_id = isset( $unit['ID'] ) ? (int) $unit['ID'] : 0;
@@ -553,9 +553,11 @@ class CoursePress_Admin_Controller_Unit {
 					/**
 					 * update student progress
 					 */
+					$update_student_progress = apply_filters( 'coursepress_update_student_progress', $update_student_progress );
 					if ( $update_student_progress ) {
 						$course_id = $_REQUEST['course_id'];
 						$students = CoursePress_Data_Course::get_students( $course_id, 0, 0, 'ids' );
+
 						if ( is_array( $students ) && ! empty( $students )  ) {
 							foreach ( $students as $student_id ) {
 								$student_progress = CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course_id );
@@ -577,6 +579,8 @@ class CoursePress_Admin_Controller_Unit {
 										}
 									}
 								}
+
+								CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course_id );
 							}
 						}
 					}

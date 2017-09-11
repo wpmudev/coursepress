@@ -1127,8 +1127,10 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				 * return date with known format
 				 */
 				$unit_availability_date = CoursePress_Data_Unit::get_unit_availability_date( $unit_id, $course_id, 'c' );
+                $_unit_date = CoursePress_Data_Course::strtotime( $unit_availability_date );
+				$now = CoursePress_Data_Course::time_now();
 
-				if ( ! empty( $unit_availability_date ) && 'expired' != $unit_availability_date ) {
+				if ( ! empty( $unit_availability_date ) && $_unit_date > $now && 'expired' != $unit_availability_date ) {
 					$status_type = get_post_meta( $unit_id, 'unit_availability', true );
 					if ( 'instant' == $status_type ) {
 						$unit_status = esc_attr__( 'You need to complete the REQUIRED unit before this unit.', 'CP_TD' );
@@ -1138,8 +1140,12 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 						$unit_year = date( 'Y', $unit_availability_date );
 						$format = $year_now !== $unit_year ? _x( 'M d, Y', 'Unit available date with year for future unit.', 'CP_TD' ) : _x( 'M d', 'Unit available date without year for future unit.', 'CP_TD' );
 						// Requires custom hook to attached
-						$when = date( $format, $unit_availability_date );
-						$delay_date = sprintf( '<span class="unit-delay-date">%s %s</span>', __( 'Opens', 'CP_TD' ), $when );
+						$when = date_i18n( $format, $unit_availability_date );
+
+						$delay_date = sprintf(
+							'<span class="unit-delay-date">%s</span>',
+							sprintf( __( 'Opens %s', 'CP_TD' ), $when )
+						);
 						$unit_status = __( 'This unit will be available on the scheduled start date.', 'CP_TD' );
 						/**
 						 * Filter delay date markup.
@@ -1538,7 +1544,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					'past_label' => __( 'Past courses', 'CP_TD' ),
 					'show_labels' => false,
 					'status' => 'publish',
-					'student_msg' => __( 'You are not enrolled in any courses. <a href="%s">See available courses.</a>', 'CP_TD' ),
+					'student_msg' => sprintf( __( 'You are not enrolled in any courses. <a href="%s">See available courses.</a>', 'CP_TD' ), CoursePress_Core::get_slug( 'course/', true ) ),
 					'student' => '', // If both student and instructor is specified only student will be used
 					'suggested_label' => __( 'Suggested courses', 'CP_TD' ),
 					'suggested_msg' => __( 'You are not enrolled in any courses.<br />Here are a few you might like, or <a href="%s">see all available courses.</a>', 'CP_TD' ),
@@ -1825,7 +1831,13 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					$label = $atts['current_label'];
 					if ( 0 == $counter ) {
 						$show_empty = true;
-						$content = sprintf( '<p class="message">%s</p>', $atts['student_msg'] );
+						$content = sprintf(
+							'<p class="message">%s</p>',
+							sprintf(
+								$atts['student_msg'],
+								esc_attr( '/'.CoursePress_Core::get_setting( 'slugs/course', 'courses' ) )
+							)
+						);
 					}
 				break;
 

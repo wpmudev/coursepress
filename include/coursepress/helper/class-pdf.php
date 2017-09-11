@@ -29,7 +29,7 @@
  *
  * @return object
  */
-class CoursePress_Helper_PDF extends TCPDF {
+class CoursePress_Helper_PDF extends CP_TCPDF {
 
 	private $footer_text = '';
 
@@ -175,7 +175,7 @@ class CoursePress_Helper_PDF extends TCPDF {
 	protected function getFontsList() {
 
 		$fonts = CoursePress_Helper_PDF::fonts();
-		$font_path = apply_filters( 'coursepress_pdf_font_path', TCPDF_FONTS::_getfontpath() );
+		$font_path = apply_filters( 'coursepress_pdf_font_path', CP_TCPDF_FONTS::_getfontpath() );
 
 		foreach ( $fonts as $font => $font_name ) {
 			array_push( $this->fontlist, strtolower( trailingslashit( $font_path ) . $font ) );
@@ -184,7 +184,7 @@ class CoursePress_Helper_PDF extends TCPDF {
 	}
 
 	public static function get_format_in_mm( $format ) {
-		$dimension = TCPDF_STATIC::getPageSizeFromFormat( $format );
+		$dimension = CP_TCPDF_STATIC::getPageSizeFromFormat( $format );
 		$dimension[0] = round( $dimension[0] / 72 * 25.5 );
 		$dimension[1] = round( $dimension[1] / 72 * 25.5 );
 

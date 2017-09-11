@@ -8,7 +8,7 @@
 	<div class="status <?php echo $setup_class; ?>"></div>
 </div>
 
-<div class="step-content step-3">
+<div class="cp-box-content step-content step-3">
 	<input type="hidden" name="meta_setup_step_3" value="saved" />
 
 	<?php if ( $can_assign_instructor ) : ?>

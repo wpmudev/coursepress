@@ -197,7 +197,7 @@ class CoursePress_Helper_Utility {
 			if ( empty( $key ) ) {
 				$key = count( $a );
 			}
-			unset( $key );
+			unset( $a[ $key ] );
 			return $a;
 		}
 		if ( ! isset( $a[ $key ] ) || ! is_array( $a[ $key ] ) ) {
@@ -1465,12 +1465,12 @@ class CoursePress_Helper_Utility {
 	 * @param $default string The value to return if the color to convert turns out to be invalid.
 	 * @return array An array containing RGB values.
 	 */
-	public static function convert_hex_color_to_rgb($hex_color, $default)
+	public static function convert_hex_color_to_rgb($hex_color, $default = array())
 	{
 		$color_valid = (boolean) preg_match('/^#[a-f0-9]{6}$/i', $hex_color);
 		if($color_valid)
 		{
-			$values = TCPDF_COLORS::convertHTMLColorToDec($hex_color, TCPDF_COLORS::$spotcolor);
+			$values = CP_TCPDF_COLORS::convertHTMLColorToDec($hex_color, CP_TCPDF_COLORS::$spotcolor);
 			return array_values($values);
 		}
 
@@ -1547,6 +1547,11 @@ class CoursePress_Helper_Utility {
 		}
 
 		$setup_data = array();
+		$player_width = CoursePress_Helper_Utility::get_array_val( $data, 'video_player_width' );
+		if(!$player_width)
+		{
+			$setup_data['fluid'] = true;
+		}
 		if($src)
 		{
 			$setup_data['techOrder'] = array($src);
