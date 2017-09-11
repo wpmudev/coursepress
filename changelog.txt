@@ -19,6 +19,8 @@ CHANGELOG
 
 * Fixed: Video module problem with Vimeo movies.
 
+* Fixed: Problem with proper display of a course structure.
+
 = 2.1 =
 -------------------------------------------------
 * Added: Text color option for course certificate.
