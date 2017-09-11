@@ -45,6 +45,7 @@ class CoursePress_View_Admin_Setting_Email {
 
 		$content .= '<div class="cp-content">';
 		foreach ( $email_sections as $key => $section ) {
+			$email_enabled = (boolean) CoursePress_Core::get_setting('email/' . $key . '/enabled', $default_settings[ $key ]['enabled']);
 			$content .= '<div class="email-template cp-content-box collapsed">';
 			$content .= '<h3 class="hndle">' . esc_html( $section['title'] ) . '</h3>';
 			$content .= '<div class="inside">';
@@ -54,6 +55,16 @@ class CoursePress_View_Admin_Setting_Email {
 			$content .= '
 					<table class="form-table compressed email-fields">
 						<tbody id="items">';
+
+			$content .= '
+							<tr>
+								<th>' . esc_html__( 'Enabled', 'CP_TD' ) . '</th>
+								<td>
+									<input type="hidden" name="coursepress_settings[email][' . $key . '][enabled]" value="0" />
+									<input type="checkbox" class="widefat" name="coursepress_settings[email][' . $key . '][enabled]" value="1" ' . checked($email_enabled, true, false) . ' />
+								</td>
+							</tr>
+			';
 
 			$content .= '
 							<tr>
@@ -105,7 +116,7 @@ class CoursePress_View_Admin_Setting_Email {
 		/**
 		 * Add this hook for now until layout is fixed.
 		 **/
-		$content .= apply_filters( 'coursepress_email_settings_sections', $email_sections );
+//		$content .= apply_filters( 'coursepress_email_settings_sections', $email_sections );
 		$content .= '</div>';
 
 		return $content;

@@ -383,7 +383,7 @@ class CoursePress_Data_Student {
 	 *
 	 * @return (array) $data					Returns an array of course completion data.
 	 **/
-	public static function module_response( $student_id, $course_id, $unit_id, $module_id, $response, &$data = false ) {
+	public static function module_response( $student_id, $course_id, $unit_id, $module_id, $response, &$data = false, $refresh = false ) {
 
 		$attributes = CoursePress_Data_Module::attributes( $module_id );
 
@@ -395,30 +395,38 @@ class CoursePress_Data_Student {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
 
-		/**
-		 * Check answer freshness.
-		 */
-		$is_new_answer = self::check_is_new_answer( $student_id, $course_id, $unit_id, $module_id, $response, $data );
+		if ( ! $refresh ) {
+            /**
+             * Check answer freshness.
+             */
+            $is_new_answer = self::check_is_new_answer($student_id, $course_id, $unit_id, $module_id, $response, $data);
 
-		if ( false == $is_new_answer ) {
-			return;
-		}
+            if (false == $is_new_answer) {
+                return;
+            }
 
+        }
 		$grade = - 1;
 
 		// Auto-grade the easy ones
 		switch ( $attributes['module_type'] ) {
 			case 'input-checkbox':
 				$selected = $attributes['answers_selected'];
+				$answers = $attributes['answers'];
 				$total = count( $selected );
-				$ratio = $total > 0 ? 100 / $total : 0;
-
+				$total_answers = count( $answers );
+				$ratio = $total_answers > 0 ? 100 / $total_answers : 0;
+				$correct_ratio = $total > 0 ? 100 / $total : 0;
 				$correct = 0;
+				$wrong = 0;
+
 				if ( is_array( $response ) ) {
 					foreach ( $response as $answer ) {
 						if ( in_array( $answer, $selected ) ) {
 							$correct++;
-						}
+						} else {
+						    $wrong++;
+                        }
 					}
 				}
 				if ( 0 > $correct ) {
@@ -427,7 +435,11 @@ class CoursePress_Data_Student {
 				$grade = 0;
 
 				if ( $correct > 0 && $total > 0 ) {
-					$grade = (int) $correct * $ratio;
+					$grade = (int) $correct * $correct_ratio;
+
+					if ( $wrong > 0 ) {
+					    $grade -= $ratio * $wrong;
+                    }
 				}
 
 				break;
@@ -869,8 +881,8 @@ class CoursePress_Data_Student {
 					if ( ! empty( $modules['modules'] ) ) {
 						foreach ( $modules['modules'] as $module_id => $module ) {
 							$attributes = CoursePress_Data_Module::attributes( $module_id );
-							$is_mandatory = cp_is_true( $attributes['mandatory'] );
-							$is_assessable = cp_is_true( $attributes['assessable'] );
+							$is_mandatory = ! empty( $attributes['mandatory'] ); //cp_is_true( $attributes['mandatory'] );
+							$is_assessable = ! empty( $attributes['assessable'] ); // cp_is_true( $attributes['assessable'] );
 							$module_type = $attributes['module_type'];
 							$is_answerable = preg_match( '%input-%', $attributes['module_type'] );
 							$require_instructor_assessment = ! empty( $attributes['instructor_assessable'] ) && cp_is_true( $attributes['instructor_assessable'] );
@@ -1324,6 +1336,7 @@ class CoursePress_Data_Student {
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
 		}
+
 		$completed = '';
 		/**
 		 * Sanitize $unit_id
@@ -1376,11 +1389,16 @@ class CoursePress_Data_Student {
 		 * Sanitize $unit_id
 		 */
 		if ( ! empty( $unit_id ) && is_numeric( $unit_id ) ) {
-			$mandatory = CoursePress_Helper_Utility::get_array_val(
+		    $all_mandatory = CoursePress_Helper_Utility::get_array_val(
+		        $data,
+                'completion/' . $unit_id . '/all_mandatory'
+            );
+			$completed = CoursePress_Helper_Utility::get_array_val(
 				$data,
-				'completion/' . $unit_id . '/all_mandatory'
+				'completion/' . $unit_id . '/completed_mandatory'
 			);
-			return cp_is_true( $mandatory );
+
+			return (int) $all_mandatory == (int) $completed;
 		}
 		return false;
 	}
@@ -2209,21 +2227,36 @@ class CoursePress_Data_Student {
 		}
 		$units = CoursePress_Data_Course::get_units_with_modules( $course_id );
 		$unit = $units[ $unit_id ];
+		$incomplete = 0;
+
 		foreach ( $unit['pages'] as $page_number => $page ) {
 			$modules = $page['modules'];
 			foreach ( $modules as $module_id => $module ) {
+				$attributes = CoursePress_Data_Module::attributes( $module_id );
+				$is_mandatory = ! empty( $attributes['mandatory'] );
+				$is_assessable = ! empty( $attributes['assessable'] );
+
+				// Don't validate none mandatory modules
+				if ( ! preg_match( '%input%', $attributes['module_type'] ) )
+					continue;
+
 				$completed = CoursePress_Data_Student::is_module_completed( $course_id, $unit_id, $module->ID, $student_id );
 				$completed = cp_is_true( $completed );
-				if ( ! $completed ) {
-					return false;
+
+				if ( ! $completed && $is_mandatory ) {
+					$incomplete++;
 				}
 				$response = CoursePress_Data_Student::get_response( $student_id, $course_id, $unit_id, $module_id, false, $student_progress );
 				$correct = self::module_answer_is_correct( $module_id, $response );
-				if ( ! $correct ) {
-					return false;
+
+				if ( ! empty( $response ) && ! $correct && $is_mandatory && $is_assessable ) {
+				    if ( ! in_array( $attributes['module_type'], array( 'input-text', 'input-textarea', 'input-upload', 'input-form' ) ) ) {
+                        $incomplete++;
+                    }
 				}
 			}
 		}
-		return true;
+
+		return 0 == $incomplete;
 	}
 }

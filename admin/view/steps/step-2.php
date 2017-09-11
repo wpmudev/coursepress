@@ -8,7 +8,7 @@
 	<div class="status <?php echo $setup_class; ?>"></div>
 </div>
 
-<div class="step-content step-2">
+<div class="cp-box-content step-content step-2">
 	<input type="hidden" name="meta_setup_step_2" value="saved" />
 	<?php
 	echo CoursePress_Helper_UI::browse_media_field(
@@ -41,7 +41,7 @@
 			<?php _e( 'Focus: Focus on one item at a time', 'CP_TD' ); ?>
 		</label>
 		<label class="checkbox">
-			<input type="checkbox" name="meta_focus_hide_section" value="unit" <?php checked(true, $focus_hide_section); ?>>
+			<input type="checkbox" name="meta_focus_hide_section" value="unit" <?php checked( true, $focus_hide_section ); ?>>
 			<?php _e( 'Don\'t render section titles in focus mode.', 'CP_TD' ); ?>
 		</label>
 		<label class="checkbox">
@@ -69,7 +69,7 @@
 				<span><?php _e( 'Display Time Estimates for Units and Lessons', 'CP_TD' ); ?></span>
 			</label>
 			<label class="checkbox">
-				<input type="checkbox" name="meta_structure_show_empty_units" <?php checked(true, !empty( $structure_show_empty_units ) ); ?> />
+				<input type="checkbox" name="meta_structure_show_empty_units" <?php checked( true, ! empty( $structure_show_empty_units ) ); ?> />
 				<span><?php _e( 'Show units without modules', 'cp' ); ?></span>
 				<p class="description"><?php _e( 'By default unit without modules is not displayed, even if it is selected below.', 'CP_TD' ); ?></p>
 			</label>
@@ -79,7 +79,7 @@
 					<tr>
 						<th class="column-course-structure">
 							<?php _e( 'Course Structure', 'CP_TD' ); ?>
-							<small><?php _e( 'Units and Pages with Modules selected will automatically be visible (only selected Modules accessible).', 'CP_TD' ); ?></small>
+							<small><?php _e( 'Units and Sections with Modules selected will automatically be visible (only selected Modules accessible).', 'CP_TD' ); ?></small>
 						</th>
 						<th class="column-show"><?php _e( 'Show', 'CP_TD' ); ?></th>
 						<th class="column-free-preview"><?php _e( 'Free Preview', 'CP_TD' ); ?></th>
@@ -110,15 +110,16 @@
 					?>
 						<tr class="<?php echo $tr_class; ?>" data-unitid="<?php echo $unit_id; ?>">
 							<td><?php echo $status . $the_unit->post_title; ?></td>
-							<td><input type="checkbox" name="meta_structure_visible_units[<?php echo $unit_id; ?>]" value="1" <?php checked( true, isset( $visible_units[ $unit_id ] ) ); ?>/></td>
-							<td><input type="checkbox" name="meta_structure_preview_units[<?php echo $unit_id; ?>]" value="1" <?php checked( true, isset( $preview_units[ $unit_id ] ) ); ?>/></td>
+							<td><input type="checkbox" name="meta_structure_visible_units[<?php echo $unit_id; ?>]" value="1" <?php checked( true, isset( $visible_units[ $unit_id ] ) && $visible_units[ $unit_id ] ); ?>/></td>
+							<td><input type="checkbox" name="meta_structure_preview_units[<?php echo $unit_id; ?>]" value="1" <?php checked( true, isset( $preview_units[ $unit_id ] ) && $preview_units[ $unit_id ] ); ?>/></td>
 							<td class="column-time <?php echo $duration_class; ?>"><?php static::sanitize_duration_display( $estimations['unit']['estimation'] ); ?></td>
 						</tr>
 
 						<?php if ( ! empty( $unit['pages'] ) ) :
+							$no_section_title = sprintf( '<small>[%s]</small>', esc_html__( 'this section has no title', 'CP_TD' ) );
 							foreach ( $unit['pages'] as $page_number => $page ) :
 								$count++;
-								$page_title = ! empty( $page['title'] ) ? $page['title'] : sprintf( __( 'Page %s', 'CP_TD' ), $key );
+								$page_title = ! empty( $page['title'] ) ? $page['title'] : sprintf( __( 'Section: %d %s', 'CP_TD' ), $page_number, $no_section_title );
 
 								$page_key = $unit_id . '_' . (int) $key;
 								$alt = $count % 2 ? 'even' : 'odd';
@@ -131,8 +132,8 @@
 
 								<tr class="<?php echo $tr_class; ?>" data-unitid="<?php echo $unit_id; ?>" data-pagenumber="<?php echo $page_number; ?>">
 									<td><?php echo $page_title; ?></td>
-									<td><input type="checkbox" name="meta_structure_visible_pages[<?php echo $page_key; ?>]" value="1" <?php checked( true, isset( $visible_pages[ $page_key ] ) ); ?>/></td>
-									<td><input type="checkbox" name="meta_structure_preview_pages[<?php echo $page_key; ?>]" value="1" <?php checked( true, isset( $preview_pages[ $page_key ] ) ); ?>/></td>
+									<td><input type="checkbox" name="meta_structure_visible_pages[<?php echo $page_key; ?>]" value="1" <?php checked( true, isset( $visible_pages[ $page_key ] ) && $visible_pages[ $page_key ] ); ?>/></td>
+									<td><input type="checkbox" name="meta_structure_preview_pages[<?php echo $page_key; ?>]" value="1" <?php checked( true, isset( $preview_pages[ $page_key ] ) && $preview_pages[ $page_key ] ); ?>/></td>
 									<td class="column-time <?php echo $duration_class; ?>"><?php echo $duration; ?></td>
 								</tr>
 
@@ -149,8 +150,8 @@
 
 										<tr class="<?php echo $tr_class; ?>" data-unitid="<?php echo $unit_id; ?>" data-pagenumber="<?php echo $page_number;?>">
 											<td><?php echo $module_title; ?></td>
-											<td><input type="checkbox" name="meta_structure_visible_modules[<?php echo $mod_key; ?>]" value="1" <?php checked( true, isset( $visible_modules[ $mod_key ] ) ); ?> /></td>
-											<td><input type="checkbox" name="meta_structure_preview_modules[<?php echo $mod_key; ?>]" value="1" <?php checked( true, isset( $preview_modules[ $mod_key ] ) ); ?> /></td>
+											<td><input type="checkbox" name="meta_structure_visible_modules[<?php echo $mod_key; ?>]" value="1" <?php checked( true, isset( $visible_modules[ $mod_key ] ) && $visible_modules[ $mod_key ] ); ?> /></td>
+											<td><input type="checkbox" name="meta_structure_preview_modules[<?php echo $mod_key; ?>]" value="1" <?php checked( true, isset( $preview_modules[ $mod_key ] ) && $preview_modules[ $mod_key ] ); ?> /></td>
 											<td class="column-time <?php echo $duration_class; ?>"><?php echo static::sanitize_duration_display( $duration ); ?></td>
 										</tr>
 									<?php endforeach; ?>

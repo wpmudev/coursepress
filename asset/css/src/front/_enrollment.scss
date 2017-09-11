@@ -10,18 +10,22 @@
 	}
 }
 
-.signup-form .password-strength-meter {
+.password-strength-meter-container {
     float: right;
+	display: inline-block;
+	margin-bottom: 0;
 
-	&.bad {
-		color: red;
-	}
+	.password-strength-meter {
+		&.bad {
+			color: red;
+		}
 
-	&.good {
-		color: orange;
-	}
+		&.good {
+			color: orange;
+		}
 
-	&.strong {
-		color: green;
+		&.strong {
+			color: green;
+		}
 	}
 }

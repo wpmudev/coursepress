@@ -3,6 +3,7 @@
 class CoursePress_View_Front_Student {
 
 	public static function init() {
+		add_action('coursepress_after_settings_username', array( 'CoursePress_Helper_UI', 'password_strength_meter'));
 	}
 
 	public static function render_enrollment_process_page() {
@@ -214,6 +215,18 @@ class CoursePress_View_Front_Student {
 						$form_message_class = 'red';
 						$form_errors ++;
 					}
+
+					if (!CoursePress_Helper_Utility::is_password_strong()) {
+						if(CoursePress_Helper_Utility::is_password_strength_meter_enabled())
+						{
+							$form_message = __('Your password is too weak.', 'CP_TD');
+						}
+						else {
+							$form_message = sprintf(__('Your password must be at least %d characters long and have at least one letter and one number in it.', 'CP_TD'), CoursePress_Helper_Utility::get_minimum_password_length());
+						}
+						$form_message_class = 'red';
+						$form_errors++;
+					}
 				}
 
 				$student_data['user_email'] = $_POST['email'];
@@ -254,6 +267,8 @@ class CoursePress_View_Front_Student {
 	<p><label><?php _e( 'Password', 'CP_TD' ); ?>: <input type="password" name="password" value="" placeholder="<?php _e( "Won't change if empty.", 'CP_TD' ); ?>"/> </label></p><?php do_action( 'coursepress_after_settings_passwordon' ); ?>
 
 	<p><label><?php _e( 'Confirm Password', 'CP_TD' ); ?>: <input type="password" name="password_confirmation" value=""/> </label></p><?php do_action( 'coursepress_after_settings_pasword' ); ?>
+
+	<p class="weak-password-confirm"><label><input type="checkbox" name="confirm_weak_password" value="1" /><?php _e( 'Confirm use of weak password', 'CP_TD' ); ?></label></p><?php do_action( 'coursepress_after_settings_confirm_weak_password' ); ?>
 
 <input type="submit" name="student-settings-submit" class="apply-button-enrolled" value="<?php _e( 'Save Changes', 'CP_TD' ); ?>"/>
 	</form><?php

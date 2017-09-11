@@ -5,7 +5,7 @@ class CoursePress_Helper_Extension {
 	private static $plugins = array();
 
 	public static function init() {
-		$plugins = array( 'MarketPress', 'TCPDF' );
+		$plugins = array( 'MarketPress', 'CP_TCPDF' );
 		foreach ( $plugins as $plugin ) {
 			if ( method_exists( 'CoursePress_Helper_Extension_' . $plugin, 'init' ) ) {
 				call_user_func( 'CoursePress_Helper_Extension_' . $plugin . '::init' );
@@ -83,19 +83,23 @@ class CoursePress_Helper_Extension {
 				// http://network1.dev/wp-admin/network/update.php?action=install-plugin&plugin=jetpack&_wpnonce=3cee8117d8
 				if ( current_user_can( 'install_plugins' ) ) {
 
-					$action = '<form method="post">
-						<input type="hidden" name="page" value="' . $_GET['page'] . '">
-						<input type="hidden" name="tab" value="' . $_GET['tab'] . '">
-						<input type="hidden" name="action" value="' . 'install-plugin' . '">
-						<input type="hidden" name="plugin" value="' . $plugin['slug'] . '">
-						<input type="hidden" name="plugin_name" value="' . $plugin['name'] . '">
-						<input type="hidden" name="plugin_source" value="' . $plugin['source'] . '">
-						<input type="hidden" name="external" value="' . $plugin['external'] . '">
-						<input type="hidden" name="protocol" value="' . $plugin['protocol'] . '">
-						<input type="hidden" name="_wp_nonce" value="' . wp_create_nonce( 'install-plugin' ) . '">
-						<input type="submit" class="button" value="' . esc_attr__( 'Install', 'CP_TD' ) . '" />
-					</form>
-					';
+					if ( empty( $plugin['is_link'] ) ) {
+						$action = '<form method="post">
+							<input type="hidden" name="page" value="' . $_GET['page'] . '">
+							<input type="hidden" name="tab" value="' . $_GET['tab'] . '">
+							<input type="hidden" name="action" value="' . 'install-plugin' . '">
+							<input type="hidden" name="plugin" value="' . $plugin['slug'] . '">
+							<input type="hidden" name="plugin_name" value="' . $plugin['name'] . '">
+							<input type="hidden" name="plugin_source" value="' . $plugin['source'] . '">
+							<input type="hidden" name="external" value="' . $plugin['external'] . '">
+							<input type="hidden" name="protocol" value="' . $plugin['protocol'] . '">
+							<input type="hidden" name="_wp_nonce" value="' . wp_create_nonce( 'install-plugin' ) . '">
+							<input type="submit" class="button" value="' . esc_attr__( 'Install', 'CP_TD' ) . '" />
+						</form>
+						';
+					} else {
+						$action = sprintf( '<a href="%1$s" class="button">%2$s</a>', esc_url_raw( $plugin['source'] ), __( 'Install', 'CP_TD') );
+					}
 				}
 			}
 

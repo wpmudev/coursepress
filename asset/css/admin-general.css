@@ -324,9 +324,34 @@ A. Responsive
 }
 
 .post-type-course .column-certificates,
-.post-type-course .column-students {
+.post-type-course .column-grade,
+.post-type-course .column-modules,
+.post-type-course .column-students,
+.post-type-course .column-view_all {
   width: 100px;
-  text-align: center !important;
+  text-align: center;
+}
+.post-type-course table.users .column-certificates {
+  width: 7em;
+  vertical-align: middle;
+}
+.post-type-course table.users .column-certificates .cp-certified {
+  font-size: 1em;
+  margin: 0;
+}
+.post-type-course table.users .column-username .row-actions .id span {
+  color: #000;
+}
+.post-type-course table.users .column-grade,
+.post-type-course table.users .column-modules,
+.post-type-course table.users .column-view_all {
+  width: 5em;
+}
+.post-type-course table.users .column-last_active {
+  width: 8em;
+}
+.post-type-course table.users td.column-grade {
+  text-align: right;
 }
 .post-type-course .column-taxonomy-course_category,
 .post-type-course .column-date_start,
@@ -687,13 +712,17 @@ A. Responsive
   width: 100%;
   margin-top: 20px;
 }
-
 .course-structure table th {
   text-align: left;
-}
-
-.course-structure table th {
   margin: 3px 20px 3px 0;
+}
+.course-structure table tr td {
+  border-bottom: 1px solid #dfdfdf;
+  text-align: center;
+  vertical-align: middle;
+}
+.course-structure table tr.page small {
+  opacity: .8;
 }
 
 .course-structure .column-course-structure {
@@ -714,15 +743,6 @@ A. Responsive
 }
 
 .course-structure table thead tr.break th {
-  border-bottom: 1px solid #DFDFDF;
-}
-
-.course-structure table td {
-  text-align: center;
-  vertical-align: middle;
-}
-
-.course-structure table tr td {
   border-bottom: 1px solid #DFDFDF;
 }
 
@@ -994,6 +1014,7 @@ input.button.button-primary.instructor-assign {
 
 #course-setup-steps .step-content .ui-spinner a.ui-spinner-button {
   color: #555;
+  -ms-transform: scale(1.5, 0.94);
   transform: scale(1.5, 0.94);
   background: none repeat scroll 0 0 #f1f1f1;
 }
@@ -1053,6 +1074,7 @@ input.button.button-primary.instructor-assign {
 }
 
 [name="publish-course-toggle"] {
+  -ms-transform: scale(1.1);
   transform: scale(1.1);
   position: relative;
   left: -1em;
@@ -1244,8 +1266,6 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   text-align: center;
   width: auto;
   min-width: 120px;
-  -moz-border-radius: 0;
-  -webkit-border-radius: 0;
   border-radius: 0;
 }
 .tab-content .unit-builder-content .unit-buttons .button.unit-save-button {
@@ -1449,8 +1469,6 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   margin: 10px 0 0 0;
   padding: 5px 20px;
   overflow: hidden;
-  -moz-border-radius: 0;
-  -webkit-border-radius: 0;
   border-radius: 0;
   border: none;
   position: relative;
@@ -1664,8 +1682,7 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 
 .discussion .module-duration,
 .discussion .module-assessable,
-.text .module-duration,
-.video .module-duration {
+.text .module-duration {
   display: none;
 }
 
@@ -1839,40 +1856,28 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 }
 .coursepress_settings_wrapper.assessment table tbody:last-child tr:first-child td:first-child,
 .coursepress_settings_wrapper.assessment table thead + tbody tr:first-child td:first-child {
-  -webkit-border-top-left-radius: 5px;
-  -moz-border-radius-topleft: 5px;
   border-top-left-radius: 5px;
 }
 .coursepress_settings_wrapper.assessment table tbody:last-child tr:first-child td:last-child,
 .coursepress_settings_wrapper.assessment table thead + tbody tr:first-child td:last-child {
-  -webkit-border-top-right-radius: 5px;
-  -moz-border-radius-topright: 5px;
   border-top-right-radius: 5px;
 }
 .coursepress_settings_wrapper.assessment table tbody:last-of-type tr:last-child td {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 .coursepress_settings_wrapper.assessment table tbody:last-of-type tr:last-child td:first-child {
-  -webkit-border-bottom-left-radius: 5px;
-  -moz-border-radius-bottomleft: 5px;
   border-bottom-left-radius: 5px;
 }
 .coursepress_settings_wrapper.assessment table tbody:last-of-type tr:last-child td:last-child {
-  -webkit-border-bottom-right-radius: 5px;
-  -moz-border-radius-bottomright: 5px;
   border-bottom-right-radius: 5px;
 }
 .coursepress_settings_wrapper.assessment table tbody:last-of-type tr.treegrid-collapsed td {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 .coursepress_settings_wrapper.assessment table tbody:last-of-type tr.treegrid-collapsed td:first-child {
-  -webkit-border-bottom-left-radius: 5px;
-  -moz-border-radius-bottomleft: 5px;
   border-bottom-left-radius: 5px;
 }
 .coursepress_settings_wrapper.assessment table tbody:last-of-type tr.treegrid-collapsed td:last-child {
-  -webkit-border-bottom-right-radius: 5px;
-  -moz-border-radius-bottomright: 5px;
   border-bottom-right-radius: 5px;
 }
 .coursepress_settings_wrapper.assessment table tbody.odd td {
@@ -1918,8 +1923,6 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   margin-right: 5px;
   width: 2em;
   text-align: center;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
   border-radius: 5px;
   border: 1px solid rgba(0, 0, 0, 0.2);
   padding: 3px;
@@ -1944,8 +1947,6 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   margin-right: 50px;
 }
 .coursepress_settings_wrapper.assessment .module-answer-wrapper .activity-wrapper {
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
   border-radius: 5px;
   border: 1px solid rgba(0, 0, 0, 0.2);
   padding: 3px 10px 20px 10px;
@@ -1996,8 +1997,6 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 .coursepress_settings_wrapper.assessment .expand-all-students > a {
   background: none repeat scroll 0 0 #f9f9f9;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
   border-radius: 5px;
   padding: 5px;
 }
@@ -2309,24 +2308,6 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   text-decoration: none;
 }
 
-.cp-actions .cp-edit-grade,
-.cp-actions a {
-  margin-right: 10px;
-  color: #0073aa;
-  position: relative;
-  padding: 5px;
-  text-align: center;
-  cursor: pointer;
-}
-.cp-actions .cp-edit-grade.active,
-.cp-actions a.active {
-  border: 1px #DDD solid;
-  background-color: #FFF;
-  padding: 10px;
-  display: inline-block;
-  margin-bottom: -10px;
-  border-width: 1px 1px 0 1px;
-}
 .cp-actions .cp-min-tooltip {
   margin: 0 0 5px 0;
 }
@@ -2405,6 +2386,32 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 }
 .cp-loader-info .fa {
   color: #008ec2;
+}
+
+.cp-assessment-page .users .column-certificates,
+.cp-assessment-page .users .column-modules,
+.cp-assessment-page .users .column-view_all {
+  vertical-align: middle;
+}
+.cp-assessment-page .users .column-modules .cp-edit-grade,
+.cp-assessment-page .users .column-modules a {
+  color: #0073aa;
+  position: relative;
+  padding: 5px;
+  text-align: center;
+  cursor: pointer;
+}
+.cp-assessment-page .users .column-modules .cp-edit-grade.active,
+.cp-assessment-page .users .column-modules a.active {
+  border: 1px #DDD solid;
+  background-color: #FFF;
+  padding: 10px;
+  display: inline-block;
+  margin-bottom: -10px;
+  border-width: 1px 1px 0 1px;
+}
+.cp-assessment-page .users .cp-responses {
+  background-color: #fff;
 }
 
 /*--------------------------------------------------------------

@@ -8,6 +8,7 @@ class CoursePress_Helper_Setting_Email {
 			'coursepress_default_email_settings',
 			array(
 				CoursePress_Helper_Email::BASIC_CERTIFICATE => array(
+					'enabled' => '1',
 					'from' => get_option( 'blogname' ),
 					'email' => get_option( 'admin_email' ),
 					'subject' => CoursePress_View_Admin_Setting_BasicCertificate::default_email_subject(),
@@ -15,70 +16,88 @@ class CoursePress_Helper_Setting_Email {
 					'auto_email' => true,
 				),
 				CoursePress_Helper_Email::REGISTRATION => array(
+					'enabled' => '1',
 					'from' => get_option( 'blogname' ),
 					'email' => get_option( 'admin_email' ),
 					'subject' => __( 'Registration Status', 'CP_TD' ),
 					'content' => self::_registration_email(),
 				),
 				CoursePress_Helper_Email::ENROLLMENT_CONFIRM => array(
+					'enabled' => '1',
 					'from' => get_option( 'blogname' ),
 					'email' => get_option( 'admin_email' ),
 					'subject' => __( 'Enrollment Confirmation', 'CP_TD' ),
 					'content' => self::_enrollment_confirmation_email(),
 				),
 				CoursePress_Helper_Email::INSTRUCTOR_ENROLLMENT_NOTIFICATION => array(
+					'enabled' => '1',
 					'from' => get_option( 'blogname' ),
 					'email' => get_option( 'admin_email' ),
 					'subject' => __( 'New Enrollment In Your Course', 'CP_TD' ),
 					'content' => self::_instructor_enrollment_notification_email(),
 				),
 				CoursePress_Helper_Email::COURSE_INVITATION => array(
+					'enabled' => '1',
 					'from' => get_option( 'blogname' ),
 					'email' => get_option( 'admin_email' ),
 					'subject' => __( 'Invitation to a Course', 'CP_TD' ),
 					'content' => self::_course_invitation_email(),
 				),
 				CoursePress_Helper_Email::COURSE_INVITATION_PASSWORD => array(
+					'enabled' => '1',
 					'from' => get_option( 'blogname' ),
 					'email' => get_option( 'admin_email' ),
 					'subject' => __( 'Invitation to a Course ( Psss...for selected ones only )', 'CP_TD' ),
 					'content' => self::_course_invitation_passcode_email(),
 				),
 				CoursePress_Helper_Email::INSTRUCTOR_INVITATION => array(
+					'enabled' => '1',
 					'from' => get_option( 'blogname' ),
 					'email' => get_option( 'admin_email' ),
 					'subject' => sprintf( __( 'Invitation to be an instructor at %s', 'CP_TD' ), get_option( 'blogname' ) ),
 					'content' => self::_instructor_invitation_email(),
 				),
 				CoursePress_Helper_Email::FACILITATOR_INVITATION => array(
+					'enabled' => '1',
 					'from' => get_option( 'blogname' ),
 					'email' => get_option( 'admin_email' ),
 					'subject' => sprintf( __( 'Invitation to be a facilitator at %s', 'CP_TD' ), get_option( 'blogname' ) ),
 					'content' => self::_facilitator_invitation_email(),
 				),
 				CoursePress_Helper_Email::NEW_ORDER => array(
+					'enabled' => '1',
 					'from' => get_option( 'blogname' ),
 					'email' => get_option( 'admin_email' ),
 					'subject' => __( 'Order Confirmation', 'CP_TD' ),
 					'content' => self::_new_order_email(),
 				),
 				CoursePress_Helper_Email::COURSE_START_NOTIFICATION => array(
+					'enabled' => '1',
 					'from' => get_option( 'blogname' ),
 					'email' => get_option( 'admin_email' ),
 					'subject' => __( 'Course Start Notfication', 'CP_TD' ),
 					'content' => self::course_start_defaults(),
 				),
 				CoursePress_Helper_Email::DISCUSSION_NOTIFICATION => array(
+					'enabled' => '1',
 					'from' => get_option( 'blogname' ),
 					'email' => get_option( 'admin_email' ),
 					'subject' => __( 'Discussion Notfication', 'CP_TD' ),
 					'content' => self::discussion_defaults(),
 				),
 				CoursePress_Helper_Email::UNIT_STARTED_NOTIFICATION => array(
+					'enabled' => '1',
 					'from' => get_option( 'blogname' ),
 					'email' => get_option( 'admin_email' ),
 					'subject' => __( '[UNIT_TITLE] is now available', 'CP_TD' ),
 					'content' => self::unit_started_defaults(),
+				),
+				CoursePress_Helper_Email::INSTRUCTOR_MODULE_FEEDBACK_NOTIFICATION => array(
+					'enabled' => '1',
+					'from' => get_option( 'blogname' ),
+					'email' => get_option( 'admin_email' ),
+					'subject' => __( 'New Feedback', 'CP_TD' ),
+					'content' => self::instructor_feedback_module_defaults(),
 				),
 			)
 		);
@@ -208,6 +227,20 @@ class CoursePress_Helper_Setting_Email {
 				'UNSUBSCRIBE_LINK' => '',
 			)
 		);
+		$instructor_module_feedback = apply_filters( 'coursepress_fields_' . CoursePress_Helper_Email::INSTRUCTOR_MODULE_FEEDBACK_NOTIFICATION,
+			array(
+				'COURSE_NAME' => '',
+				'COURSE_ADDRESS' => '',
+				'CURRENT_UNIT' => '',
+				'CURRENT_MODULE' => '',
+				'STUDENT_FIRST_NAME' => '',
+				'STUDENT_LAST_NAME' => '',
+				'INSTRUCTOR_FIRST_NAME' => '',
+				'INSTRUCTOR_LAST_NAME' => '',
+				'INSTRUCTOR_FEEDBACK' => '',
+				'COURSE_GRADE' => '',
+			)
+		);
 		$basic_certificate_fields = array_keys( $basic_certificate_fields );
 		$registration_fields = array_keys( $registration_fields );
 		$enrollment_confirm = array_keys( $enrollment_confirm );
@@ -217,6 +250,7 @@ class CoursePress_Helper_Setting_Email {
 		$course_start_fields = array_keys( $course_start_fields );
 		$discussion_fields = array_keys( $discussion_fields );
 		$units_started = array_keys( $units_started );
+		$instructor_module_feedback = array_keys( $instructor_module_feedback );
 
 		$defaults = apply_filters(
 			'coursepress_default_email_settings_sections',
@@ -293,6 +327,12 @@ class CoursePress_Helper_Setting_Email {
 					'content_help_text' => sprintf( __( '* You may use %s mail token to your subject line. ', 'CP_TD' ), 'UNIT_TITLE' ) .
 						__( 'These codes will be replaced with actual data: ', 'CP_TD' ) . implode( ', ', $units_started ),
 					'order' => 8,
+				),
+				CoursePress_Helper_Email::INSTRUCTOR_MODULE_FEEDBACK_NOTIFICATION => array(
+					'title' => __( 'Instructor Feedback', 'CP_TD' ),
+					'description' => __( 'Template for sending instructor feedback to students.', 'CP_TD' ),
+					'content_help_text' => sprintf( __( 'These codes will be replaced with actual data: ', 'CP_TD' ) . implode( ', ', $instructor_module_feedback ) ),
+					'order' => 9,
 				),
 			)
 		);
@@ -565,6 +605,32 @@ The %5$s Team', 'CP_TD' ),
 				'UNIT_TITLE',
 				'COURSE_NAME',
 				'UNIT_ADDRESS',
+				'WEBSITE_ADDRESS'
+			)
+		);
+	}
+
+	public static function instructor_feedback_module_defaults() {
+		return CoursePress_Core::get_setting(
+			'email/instructor_feedback_module/content',
+			sprintf( __(
+				'Hi %1$s %2$s,
+
+A new feedback is given by your instructor at %3$s in %4$s at %5$s
+
+%6$s says
+%7$s
+
+Best wishes,
+The %8$s Team', 'CP_TD' ),
+				'STUDENT_FIRST_NAME',
+				'STUDENT_LAST_NAME',
+				'COURSE_NAME',
+				'CURRENT_UNIT',
+				'CURRENT_MODULE',
+				'INSTRUCTOR_FIRST_NAME',
+				'INSTRUCTOR_LAST_NAME',
+				'INSTRUCTOR_FEEDBACK',
 				'WEBSITE_ADDRESS'
 			)
 		);

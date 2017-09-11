@@ -85,7 +85,7 @@ class CoursePress_Data_Shortcode_Template {
 
 		add_filter( 'term_link', array( __CLASS__, 'term_link' ), 10, 3 );
 
-		add_action( 'coursepress_after_signup_email', array( __CLASS__, 'display_password_strength_meter' ) );
+		add_action('coursepress_after_signup_email', array( 'CoursePress_Helper_UI', 'password_strength_meter'));
 	}
 
 	public static function course_archive( $a ) {
@@ -1640,20 +1640,5 @@ class CoursePress_Data_Shortcode_Template {
 		$to = sprintf( '/%s/%s/', $courses_slug, $course_category_name );
 		$termlink = preg_replace( $re, $to, $termlink );
 		return $termlink;
-	}
-
-	public static function display_password_strength_meter() {
-
-		if ( ! CoursePress_UserLogin::is_password_strength_meter_enabled() ) {
-			return;
-		}
-
-		wp_enqueue_script( 'password-strength-meter' );
-		CoursePress_Core::$is_cp_page = true;
-
-		?>
-		<span class="password-strength-meter"></span>
-		<input type="hidden" name="password_strength_level" value="3" />
-		<?php
 	}
 }

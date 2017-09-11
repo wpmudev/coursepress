@@ -6,12 +6,10 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 	var $parent_slug = 'coursepress';
 	var $slug = 'coursepress_assessments';
 	var $with_editor = true;
-	static $feedback_email = false;
 	protected $cap = 'coursepress_assessment_cap';
 
 	public function __construct() {
 		parent::__construct();
-		self::$feedback_email = new CoursePress_Admin_FeedbackEmail();
 	}
 
 	public function get_labels() {
@@ -146,9 +144,22 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 							false,
 							$student_progress
 						);
+						$student = get_userdata( $student_id );
+						$email_args = array(
+							'email'                 => $student->user_email,
+							'student_id'            => $student_id,
+							'course_id'             => $course_id,
+							'unit_id'               => $unit_id,
+							'module_id'             => $module_id,
+							'instructor_feedback'   => $feedback_text,
+						);
 
-						// New feedback, send email
-						self::$feedback_email->send_feedback( $course_id, $unit_id, $module_id, $student_id, $feedback_text );
+
+						// New feedback, send email.
+						$sent = CoursePress_Helper_Email::send_email(
+							CoursePress_Helper_Email::INSTRUCTOR_MODULE_FEEDBACK_NOTIFICATION,
+							$email_args
+						);
 					}
 				}
 
@@ -223,15 +234,19 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 				$json_data['html'] = self::student_assessment( $student_id, $course_id, $progress, $assess, $display_type );
 			break;
 			case 'table':
-				$course_id = $data->course_id;
-				$unit_id = $data->unit_id;
-				$type = $data->student_type;
-				$paged = $data->paged;
-				$search = $data->search;
-
-				$json_data['html'] = self::get_students_table( $course_id, $unit_id, $type, $paged, $search );
+				$json_data['html'] = self::get_students_table( $data );
 				$json_data['success'] = $success = true;
-			break;
+				break;
+
+			case 'get_student_modules':
+				$student_id = $data->student_id;
+				$course_id = $data->course_id;
+				$the_unit = $data->unit_id;
+				$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
+				$json_data['html'] = self::student_assessment( $student_id, $course_id, $student_progress, $the_unit, ( $the_unit != 'all' ) );
+				$json_data['success'] = $success = true;
+				$json_data['student_id'] = $student_id;
+				break;
 		}
 
 		if ( $success ) {
@@ -535,7 +550,7 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 			// Finally, compare to login, nicename
 			$user_args['meta_key'] = $course_meta_key;
 			$user_args['meta_compare'] = 'EXISTS';
-			$user_args['search'] = $search_key . '*';
+			$user_args['search'] = '*'.$search_key . '*';
 			$user_args['search_columns'] = array(
 				'user_login',
 				'user_nicename',
@@ -547,167 +562,36 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 				$results += $query->results;
 			}
 		}
-
 		return $results;
 	}
 
 	/**
 	 * Prints student table
 	 **/
-	public static function get_students_table( $course_id, $the_unit = 'all', $type = 'all', $paged = 1, $search = false ) {
-		$per_page = 20;
-		$offset = ($paged - 1) * $per_page;
+	public static function get_students_table( $data ) {
+		$course_id = $data->course_id;
+		$type = $data->student_type;
+		$search = $data->search;
 
 		$student_ids = array();
 		$results = array( 'students' => array() );
 
 		if ( ! empty( $search ) ) {
 			$student_ids = self::search_students( $course_id, $search );
-
-			if ( ! empty( $student_ids ) ) {
-				$results = self::filter_students( $course_id, $the_unit, $type, $student_ids );
-			}
-		} else {
-			$results = self::filter_students( $course_id, $the_unit, $type );
 		}
 
-		$students = $results['students'];
-		$total = count( $students );
+		$list = new CoursePress_Helper_Table_CourseAssessments();
+		$list->set_data( $data );
+		$list->set_student_ids( $student_ids );
+		$list->set_type( $type );
 
-		$students = array_slice( $students, $offset, $per_page );
-		$date_format = get_option( 'date_format' );
+		$list->prepare_items();
 		$content = '';
+		ob_start();
+		$list->display();
+		$content .= ob_get_clean();
 
-		if ( empty( $total ) ) {
-			return sprintf( '<br><br><p class="description">%s</p>', __( 'There are no students found..', 'CP_TD' ) );
-		}
-
-		$grading_system = __( 'total acquired grade % total number of gradable modules', 'CP_TD' );
-
-		if ( 'all' != $the_unit ) {
-			$grading_system = __( 'total acquired assessable grade % total number of assessable modules', 'CP_TD' );
-		}
-
-		$grading_system = '<em>' . $grading_system . '</em>';
-		$table = '
-            <table class="cp-result-details">
-            <tr>
-                <td>' . __( 'Students Found:', 'CP_TD' ) . ' ' . $total . '</td>
-                <td>' . __( 'Modules:', 'CP_TD' ) . ' <span class="cp-total-assessable">' . $results['assessable'] . '</span></td>
-                <td>' . __( 'Passing Grade: ', 'CP_TD' ) . ' <span class="cp-pasing-grade">' . $results['passing_grade'] . '%</span></td>
-                <td>'. __( 'Grade System: ', 'CP_TD' ) . $grading_system . '</td>
-            </tr>
-            </table>
-        ';
-
-		$table .= '<table class="wp-list-table widefat fixed striped cp-table">
-            <thead>
-            <th>' . esc_html__( 'Student', 'CP_TD' ) . '</th>
-            <th>' . esc_html__( 'Last Active', 'CP_TD' ) . '</th>
-            <th class="unit-grade">' . esc_html__( 'Grade', 'CP_TD' ) . '</th>
-            <th width="5%">' . esc_html__( 'Modules', 'CP_TD' ) . '</th>
-            <th width="5%">' . esc_html__( 'View All', 'CP_TD' ) . '</th>
-            </thead>
-            <tbody>
-';
-
-		$students = array_map( 'get_userdata', $students );
-
-		foreach ( $students as $student ) {
-			$student_id = $student->ID;
-			$avatar = get_avatar( $student->user_email, 32 );
-			$view_link = add_query_arg(
-				array(
-					'page' => 'coursepress_assessments',
-					'student_id' => $student_id,
-					'course_id' => $course_id,
-				),
-				remove_query_arg( 'view_answer', admin_url( 'admin.php' ) )
-			);
-			$view_link .= '&view_answer&display=all_answered';
-			$student_label = CoursePress_Helper_Utility::get_user_name( $student_id, true );
-			$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
-			$last_active = '';
-			$is_completed = CoursePress_Helper_Utility::get_array_val(
-				$student_progress,
-				'completion/completed'
-			);
-			$is_completed = cp_is_true( $is_completed );
-			// Hide certified if it is not completed
-			$certified = $is_completed ? '' : 'style="display:none;"';
-
-			if ( ! empty( $student_progress['units'] ) ) {
-				$units = (array) $student_progress['units'];
-
-				foreach ( $units as $unit_id => $unit ) {
-					if ( ! empty( $units[ $unit_id ]['responses'] ) ) {
-						$responses = $units[ $unit_id ]['responses'];
-
-						foreach ( $responses as $module_id => $response ) {
-							$last = array_pop( $response );
-
-							if ( ! empty( $last['date'] ) ) {
-								$date = CoursePress_Data_Course::strtotime( $last['date'] );
-								$last_active = max( (int) $last_active, $date );
-							}
-						}
-					}
-				}
-
-				if ( $last_active > 0 ) {
-					$last_active = date_i18n( $date_format, $last_active );
-				}
-			}
-			$course_grade = CoursePress_Data_Student::average_course_responses( $student_id, $course_id );
-
-			$table .= '<tr class="student-row student-row-' . $student_id . '" data-student="'. $student_id . '">
-                <td>' . $avatar . $student_label . '</td>
-                <td class="unit-last-active">' . $last_active . '</td>
-                <td data-student="' . $student_id . '">
-                <span class="final-grade">'. (int) $course_grade . '%</span>
-                <span class="cp-certified" ' . $certified . '>'. esc_html__( 'Certified', 'CP_TD' ) . '</span>
-                </td>
-                <td class="cp-actions">
-                <span class="cp-edit-grade" data-student="' . $student_id . '">
-                <i class="dashicons dashicons-list-view"></i>
-                </span>
-                </td><td class="cp-actions">
-                <a href="' . esc_url( $view_link ) . '" target="_blank" class="cp-popup">
-                <span class="dashicons dashicons-external"></span>
-                </a>
-                </td>
-                </tr>
-                <tr class="cp-content" data-student="' . $student_id . '" style="display: none;">
-                <td class="cp-responses cp-inline-responses" colspan="5">
-                <script type="text/template" id="student-grade-' . $student_id . '">
-' . CoursePress_Admin_Assessment::student_assessment( $student_id, $course_id, $student_progress, $the_unit, ( $the_unit != 'all' ) ) . '
-                            </script>
-                        </td>
-                    </tr>';
-		}
-
-		$table .= '</tbody></table>';
-
-		$table .= '<br><br><div class="no-student-info" style="display: none;">
-            <p class="description">' . esc_html__( '0 students found under this unit', 'CP_TD' ) . '</p>
-        </div>
-        <div class="no-assessable-info" style="display: none;">
-            <p class="description">' . esc_html__( 'There are no assessable students found!', 'CP_TD' ) . '</p>
-        </div>';
-
-		$url = add_query_arg(
-			array(
-				'course_id' => $course_id,
-				'unit_id' => $unit_id,
-				'type' => $type,
-			)
-		);
-
-		if ( $total > $per_page ) {
-			$table .= CoursePress_Helper_UI::admin_paginate( $paged, $total, $per_page, $url, __( 'student', 'CP_TD' ) );
-		}
-
-		return $table;
+		return $content;
 	}
 
 	public static function student_assessment( $student_id, $course_id, $student_progress = false, $activeUnit = 'all', $assess = false, $display = false ) {

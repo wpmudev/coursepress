@@ -280,7 +280,8 @@ class CoursePress_Admin_Controller_Course {
 				break;
 
 			case 'withdraw_student':
-				if ( wp_verify_nonce( $data->data->nonce, 'withdraw-single-student' ) ) {
+				$nonce = sprintf( 'withdraw-single-student-%d', $data->data->student_id );
+				if ( wp_verify_nonce( $data->data->nonce, $nonce ) ) {
 					CoursePress_Data_Course::withdraw_student( $data->data->student_id, $data->data->course_id );
 					$json_data['student_id'] = $data->data->student_id;
 					$json_data['course_id'] = $data->data->course_id;
