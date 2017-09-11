@@ -17,6 +17,7 @@ CHANGELOG
 * Fixed: Problem to go next unit when all answers are required but current unit do not have any assessable modules.
 * Fixed: Show and Free Preview options in Course Structure settings.
 * Fixed: Problems with PHP 5.2.x
+* Fixed: Missing translation in steps 6 & 7.
 * Updated: Vimeo javascript for version 3.0.0.
 
 = 2.1.0.2 =
