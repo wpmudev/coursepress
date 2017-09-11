@@ -698,11 +698,27 @@ class CoursePress_Template_Module {
 	}
 
 	private static function comment_form( $post_id ) {
+		if ( !is_user_logged_in() ) {
+			return '';
+		}
 		$enrolled = false;
-		if ( is_user_logged_in() ) {
-			$student_id = get_current_user_id();
-			$course_id = CoursePress_Data_Module::get_course_id_by_module( $post_id );
-			$enrolled = CoursePress_Data_Course::student_enrolled( $student_id, $course_id );
+		$student_id = get_current_user_id();
+		$course_id = CoursePress_Data_Module::get_course_id_by_module( $post_id );
+		$enrolled = CoursePress_Data_Course::student_enrolled( $student_id, $course_id );
+		/**
+		 * Instructor as enrolled user.
+		 */
+		if ( false == $enrolled ) {
+			$instructors = array_filter( CoursePress_Data_Course::get_instructors( $course_id ) );
+			if ( in_array( $student_id, $instructors ) ) {
+				$enrolled = true;
+			}
+		}
+		/**
+		 * Author as enrolled user.
+		 */
+		if ( false == $enrolled ) {
+			$enrolled = CoursePress_Data_Capabilities::can_update_course( $course_id );
 		}
 		if ( false == $enrolled ) {
 			return '';
