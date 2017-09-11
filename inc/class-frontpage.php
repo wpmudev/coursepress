@@ -172,7 +172,7 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 	private function set_external_js( $id, $src, $version = false ) {
 		global $CoursePress;
 
-		if ( ! $version ) {
+		if ( false === $version ) {
 			$version = $CoursePress->version;
 		}
 		$plugin_url = $CoursePress->plugin_url;
