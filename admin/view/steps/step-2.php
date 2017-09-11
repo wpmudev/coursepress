@@ -26,7 +26,7 @@
 
 	<div class="wide">
 		<label for="courseDescription" class="required"><?php _e( 'Full Description', 'CP_TD' ); ?></label><br />
-		<?php echo static::get_wp_editor( 'courseDescription', 'course_description', $editor_content, array( 'media_buttons' => true ) ); ?>
+		<?php echo CoursePress_Admin_Edit::get_wp_editor( 'courseDescription', 'course_description', $editor_content, array( 'media_buttons' => true ) ); ?>
 	</div>
 
 	<div class="wide">
@@ -90,12 +90,12 @@
 				<tbody>
 					<?php
 					$count = 0;
-					$visible_units = static::$settings['structure_visible_units'];
-					$preview_units = static::$settings['structure_preview_units'];
-					$visible_pages = static::$settings['structure_visible_pages'];
-					$preview_pages = static::$settings['structure_preview_pages'];
-					$visible_modules = static::$settings['structure_visible_modules'];
-					$preview_modules = static::$settings['structure_preview_modules'];
+					$visible_units = CoursePress_Admin_Edit::$settings['structure_visible_units'];
+					$preview_units = CoursePress_Admin_Edit::$settings['structure_preview_units'];
+					$visible_pages = CoursePress_Admin_Edit::$settings['structure_visible_pages'];
+					$preview_pages = CoursePress_Admin_Edit::$settings['structure_preview_pages'];
+					$visible_modules = CoursePress_Admin_Edit::$settings['structure_visible_modules'];
+					$preview_modules = CoursePress_Admin_Edit::$settings['structure_preview_modules'];
 
 					foreach ( $units as $unit ) :
 						$count++;
@@ -112,7 +112,7 @@
 							<td><?php echo $status . $the_unit->post_title; ?></td>
 							<td><input type="checkbox" name="meta_structure_visible_units[<?php echo $unit_id; ?>]" value="1" <?php checked( true, isset( $visible_units[ $unit_id ] ) && $visible_units[ $unit_id ] ); ?>/></td>
 							<td><input type="checkbox" name="meta_structure_preview_units[<?php echo $unit_id; ?>]" value="1" <?php checked( true, isset( $preview_units[ $unit_id ] ) && $preview_units[ $unit_id ] ); ?>/></td>
-							<td class="column-time <?php echo $duration_class; ?>"><?php static::sanitize_duration_display( $estimations['unit']['estimation'] ); ?></td>
+							<td class="column-time <?php echo $duration_class; ?>"><?php CoursePress_Admin_Edit::sanitize_duration_display( $estimations['unit']['estimation'] ); ?></td>
 						</tr>
 
 						<?php if ( ! empty( $unit['pages'] ) ) :
@@ -125,7 +125,7 @@
 								$alt = $count % 2 ? 'even' : 'odd';
 								$tr_class = 'page page-' . $page_number . ' treegrid-' . $count . ' treegrid-parent-' . $unit_parent . ' ' . $draft_class . ' ' . $alt;
 								$duration = ! empty( $estimations['pages'][ $page_number ]['estimation'] ) ? $estimations['pages'][ $page_number ]['estimation'] : '';
-								$duration = static::sanitize_duration_display( $duration );
+								$duration = CoursePress_Admin_Edit::sanitize_duration_display( $duration );
 								$page_parent = $count;
 								$modules = CoursePress_Helper_Utility::sort_on_object_key( $page['modules'], 'module_order' );
 							?>
@@ -152,7 +152,7 @@
 											<td><?php echo $module_title; ?></td>
 											<td><input type="checkbox" name="meta_structure_visible_modules[<?php echo $mod_key; ?>]" value="1" <?php checked( true, isset( $visible_modules[ $mod_key ] ) && $visible_modules[ $mod_key ] ); ?> /></td>
 											<td><input type="checkbox" name="meta_structure_preview_modules[<?php echo $mod_key; ?>]" value="1" <?php checked( true, isset( $preview_modules[ $mod_key ] ) && $preview_modules[ $mod_key ] ); ?> /></td>
-											<td class="column-time <?php echo $duration_class; ?>"><?php echo static::sanitize_duration_display( $duration ); ?></td>
+											<td class="column-time <?php echo $duration_class; ?>"><?php echo CoursePress_Admin_Edit::sanitize_duration_display( $duration ); ?></td>
 										</tr>
 									<?php endforeach; ?>
 								<?php endif; ?>
@@ -180,6 +180,6 @@
 	echo apply_filters( 'coursepress_course_setup_step_2', '', $course_id );
 
 	// Buttons
-	echo static::get_buttons( $course_id, 2 );
+	echo CoursePress_Admin_Edit::get_buttons( $course_id, 2 );
 	?>
 </div>

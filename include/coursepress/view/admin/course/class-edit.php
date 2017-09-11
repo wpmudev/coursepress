@@ -1767,7 +1767,7 @@ class CoursePress_View_Admin_Course_Edit {
 	 *
 	 * @return string Buttons.
 	 */
-	private static function get_buttons( $course_id, $step, $args = array() ) {
+	public static function get_buttons( $course_id, $step, $args = array() ) {
 		$args = wp_parse_args(
 			$args,
 			array(
