@@ -67,7 +67,7 @@ class CoursePress_View_Admin_Setting_General {
 								<th scope="row">' . esc_html__( 'Courses Slug', 'CP_TD' ) . '</th>
 								<td>' . esc_html( trailingslashit( home_url() ) ) . '
 									&nbsp;<input type="text" name="coursepress_settings[slugs][course]" id="course_slug" value="' . esc_attr( CoursePress_Core::get_setting( 'slugs/course', 'courses' ) ) . '" />&nbsp;/
-									<p class="description">' . esc_html( 'Your course URL will look like: ', 'CP_TD' ) . esc_html( trailingslashit( home_url() ) ) . esc_html( CoursePress_Core::get_setting( 'slugs/course', 'courses' ) ) . esc_html( '/my-course/', 'CP_TD' ) . '</p>
+									<p class="description">' . esc_html__( 'Your course URL will look like: ', 'CP_TD' ) . esc_html( trailingslashit( home_url() ) ) . esc_html( CoursePress_Core::get_setting( 'slugs/course', 'courses' ) ) . esc_html__( '/my-course/', 'CP_TD' ) . '</p>
 								</td>
 							</tr>
 							<tr valign="top" class="break">

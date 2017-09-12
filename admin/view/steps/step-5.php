@@ -63,6 +63,6 @@
 
 	/**
 	 * Print button **/
-	echo static::get_buttons( $course_id, 5 );
+	echo CoursePress_View_Admin_Course_Edit::get_buttons( $course_id, 5 );
 	?>
 </div>

@@ -461,8 +461,8 @@ CoursePress.removeErrorHint = function() {
 	 */
 	CoursePress.procederDataLink = function( e ) {
 		var target = e.currentTarget;
-		if ( $( target ).attr( 'data-link' ) ) {
-			window.location.href = $( target ).attr( 'data-link' );
+		if ( $( target ).data( 'link' ) ) {
+			window.location.href = $( target ).data( 'link' );
 		}
 	}
 
@@ -470,6 +470,6 @@ CoursePress.removeErrorHint = function() {
 $(document)
 	.ready( CoursePress.unitProgressInit ) // Call unit progress init
 	.on( 'focus', '.cp-mask .has-error, .cp .has-error', CoursePress.removeErrorHint )
-	.on( "click", ".single_show_cart_button", CoursePress.procederDataLink );
+	.on( "click", ".single_show_cart_button, .featured-course-link button", CoursePress.procederDataLink );
 
 })(jQuery);
