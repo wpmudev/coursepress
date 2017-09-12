@@ -534,7 +534,7 @@ class CoursePress_Helper_JavaScript {
 			'coursepress-videojs-vimeo-js',
 			$script,
 			array('jquery', 'coursepress-video-js'),
-			CoursePress::$version
+			'3.0.0'
 		);
 
 		$video_js = CoursePress::$url . 'asset/css/external/video-js.min.css';
