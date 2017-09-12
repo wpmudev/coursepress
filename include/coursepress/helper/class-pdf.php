@@ -47,7 +47,10 @@ class CoursePress_Helper_PDF extends CP_TCPDF {
 	);
 
 	public function Footer() {
-		$the_font = apply_filters( 'coursepress_pdf_font', CoursePress_Core::get_setting( 'reports/font', 'helvetica' ) );
+
+		$selected_font = CoursePress_Core::get_setting( 'reports/font', 'helvetica' );
+
+		$the_font = apply_filters( 'coursepress_pdf_font', $selected_font );
 
 		// Position at 15 mm from bottom
 		$this->SetY( -15 );
@@ -225,7 +228,9 @@ class CoursePress_Helper_PDF extends CP_TCPDF {
 			$args['title'] = __( 'CoursePress Report', 'CP_TD' );
 		}
 
-		$the_font = apply_filters( 'coursepress_pdf_font', CoursePress_Core::get_setting( 'reports/font', 'helvetica' ) );
+		$selected_font = CoursePress_Core::get_setting( 'reports/font', 'helvetica' );
+
+		$the_font = apply_filters( 'coursepress_pdf_font', $selected_font );
 
 		// If filtering, please make sure both path and url refer to the same location
 		$cache_path = self::cache_path();
