@@ -596,6 +596,10 @@ $(document)
 		if ( $.fn.mediaelementplayer ) {
 			var media = $( 'audio,video', container );
 
+			if(videojs.getPlayers()) {
+				var player = videojs(media[0].id);
+			}
+
 			if ( media.length > 0 ) {
 				media.mediaelementplayer();
 			}
