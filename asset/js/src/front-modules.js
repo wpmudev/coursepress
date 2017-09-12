@@ -120,6 +120,10 @@
 		if ( $.fn.mediaelementplayer ) {
 			var media = $( 'audio,video', container );
 
+            if(videojs.getPlayers()) {
+            	let player = videojs(media[0].id);
+            }
+
 			if ( media.length > 0 ) {
 				media.mediaelementplayer();
 			}
