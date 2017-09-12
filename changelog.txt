@@ -23,6 +23,7 @@ CHANGELOG
 * Fixed: Unable to send feedback about assessments.
 * Fixed: Units inside the course are available agains the settings options.
 * Fixed: Visual editor is blank and missing data after module reorder.
+* Fixed: Problem with non assessable modules and grade unit.
 * Updated: Vimeo javascript for version 3.0.0.
 
 = 2.1.0.2 =
