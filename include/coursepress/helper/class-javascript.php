@@ -529,9 +529,9 @@ class CoursePress_Helper_JavaScript {
 			CoursePress::$version
 		);
 
-		$script = CoursePress::$url . 'asset/js/external/video-vimeo.min.js';
+		$script = CoursePress::$url . 'asset/js/external/videojs-vimeo.min.js';
 		wp_enqueue_script(
-			'coursepress-video-vimeo-js',
+			'coursepress-videojs-vimeo-js',
 			$script,
 			array('jquery', 'coursepress-video-js'),
 			CoursePress::$version
