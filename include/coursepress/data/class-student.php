@@ -935,9 +935,7 @@ class CoursePress_Data_Student {
 							}
 
 							if ( $is_answerable && 'discussion' != $module_type ) {
-								if ( $is_assessable ) {
-									$unit_gradable_modules += 1;
-								}
+								$unit_gradable_modules += 1;
 								$gradable = true;
 								$unit_passing_grade += $minimum_grade;
 							}
@@ -1387,6 +1385,9 @@ class CoursePress_Data_Student {
 		);
 	}
 
+	/**
+	 * Check unit for mantadory.
+	 */
 	public static function is_mandatory_done( $student_id, $course_id, $unit_id, &$data = false ) {
 		if ( false === $data ) {
 			$data = self::get_completion_data( $student_id, $course_id );
@@ -1395,16 +1396,24 @@ class CoursePress_Data_Student {
 		 * Sanitize $unit_id
 		 */
 		if ( ! empty( $unit_id ) && is_numeric( $unit_id ) ) {
-		    $all_mandatory = CoursePress_Helper_Utility::get_array_val(
-		        $data,
+			/**
+			 * boolean value!
+			 */
+			$all_mandatory = CoursePress_Helper_Utility::get_array_val(
+				$data,
 				'completion/' . $unit_id . '/all_mandatory'
 			);
-			$completed = CoursePress_Helper_Utility::get_array_val(
-				$data,
-				'completion/' . $unit_id . '/completed_mandatory'
-			);
-
-			return (int) $all_mandatory == (int) $completed;
+			if ( $all_mandatory ) {
+				$required_steps = CoursePress_Helper_Utility::get_array_val(
+					$data,
+					'completion/' . $unit_id . '/required_steps'
+				);
+				$completed = CoursePress_Helper_Utility::get_array_val(
+					$data,
+					'completion/' . $unit_id . '/completed_mandatory'
+				);
+				return (int) $completed == (int) $required_steps;
+			}
 		}
 		return false;
 	}
