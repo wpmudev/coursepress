@@ -56,6 +56,7 @@ module.exports = function(grunt) {
 			'{css}coursepress_front.css': '{css}src/coursepress_front.scss',
 			'{css}bbm.modal.css':         '{css}src/bbm.modal.scss',
 			'{css}editor.css':            '{css}src/editor.scss',
+			'{css}editor-rtl.css':        '{css}src/editor.scss',
 			'{css}admin-ui.css':          '{css}src/admin/admin-ui.scss',
 			'{css}front.css':             '{css}src/front.scss',
 			'{css}admin-menu.css':		   '{css}src/admin-menu.scss'
