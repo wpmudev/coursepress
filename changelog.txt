@@ -7,6 +7,7 @@ CHANGELOG
 
 = 2.1.1 =
 -------------------------------------------------
+* Improved: Added `editor-rtl.css` file.
 * Improved: Better display responsive video.
 * Improved: HTML login & signup forms.
 * Improved: Username sanitization.
@@ -22,8 +23,11 @@ CHANGELOG
 * Fixed: Problem to go next unit when all answers are required but current unit do not have any assessable modules.
 * Fixed: Problem with go  to next module.
 * Fixed: Problem with non assessable modules and grade unit.
+* Fixed: Problem with yimer on quiz module after we use "Try Again" button.
+* Fixed: Sections on units page overview are not linked and not visible.
 * Fixed: Show and Free Preview options in Course Structure settings.
 * Fixed: Small issues with PHP 7.1.1
+* Fixed: The title of "Course Structure" widget should not be visible, when it is not checked.
 * Fixed: Unable to send feedback about assessments.
 * Fixed: Units inside the course are available agains the settings options.
 * Fixed: Visual editor is blank and missing data after module reorder.
