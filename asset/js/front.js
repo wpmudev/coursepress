@@ -789,6 +789,7 @@ $(document)
 
 		responseDiv.hide();
 		elementsDiv.show();
+		CoursePress.timer( parentDiv );
 
 		return false;
 	};
