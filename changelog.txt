@@ -4,13 +4,45 @@ Build Time:  2016-04-07T13:37:59.644Z
 
 CHANGELOG
 =================================================
+
 = 2.1.1 =
------------------------------------------------
+-------------------------------------------------
+* Improved: Added `editor-rtl.css` file.
+* Improved: Better display responsive video.
+* Improved: HTML login & signup forms.
+* Improved: Username sanitization.
+* Fixed: Assessments feedback sending problem.
 * Fixed: Compatibility with older PHP versions.
+* Fixed: CoursePress shortcode links are not working.
+* Fixed: Even the Discussion module is not "Required", you can't go to next section.
+* Fixed: Instructors capabilities problem on multisite installation.
+* Fixed: Instructor can't reply to comments on course unit.
+* Fixed: Missing translation in steps 6 & 7.
+* Fixed: Problems with missing passcode after login.
+* Fixed: Problems with PHP 5.2.x.
+* Fixed: Problem to go next unit when all answers are required but current unit do not have any assessable modules.
+* Fixed: Problem with go  to next module.
+* Fixed: Problem with non assessable modules and grade unit.
+* Fixed: Problem with yimer on quiz module after we use "Try Again" button.
+* Fixed: Sections on units page overview are not linked and not visible.
+* Fixed: Show and Free Preview options in Course Structure settings.
+* Fixed: Small issues with PHP 7.1.1
+* Fixed: The title of "Course Structure" widget should not be visible, when it is not checked.
+* Fixed: Unable to send feedback about assessments.
+* Fixed: Units inside the course are available agains the settings options.
+* Fixed: Visual editor is blank and missing data after module reorder.
+* Updated: Vimeo javascript for version 3.0.0.
+
+= 2.1.0.2 =
+-------------------------------------------------
+* Added: A filter 'coursepress_update_student_progress' to allow turn off student progress update during modules update.
+* Fixed: Problem with upgrade from 1.x to 2.0.
 
 = 2.1.0.1 =
------------------------------------------------
+-------------------------------------------------
 * Fixed: Compatibility with older PHP versions.
+* Fixed: Video module problem with Vimeo movies.
+* Fixed: Problem with proper display of a course structure.
 
 = 2.1 =
 -------------------------------------------------
