@@ -410,6 +410,13 @@ class CoursePress_Data_Shortcode_Student {
 						$content .= sprintf( '<td class="column-answer">%s</td>', $response_display );
 						$content .= sprintf( '<td class="td-right">%s</td>', $grade_display );
 						$content .= '</tr>';
+
+						if ( '' !== $feedback_display ) {
+							$content .= '<tr>';
+							$content .= '<td class="column-title">Feedback:</td>';
+							$content .= sprintf( '<td colspan="2">%s</td>', $feedback_display );
+							$content .= '</tr>';
+						}
 					}
 				}
 			}
