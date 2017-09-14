@@ -1241,9 +1241,9 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					$module_table .= '<li>';
 
 					if ( $heading_visible ) {
-						$section_class = 'section-title';
+						$section_class   = 'section-title';
 						$is_section_seen = CoursePress_Data_Student::is_section_seen( $course_id, $unit_id, $page_number );
-						$section_data = '';
+						$section_data    = '';
 
 						if ( $is_section_seen ) {
 							$section_class .= ' section-seen';
@@ -1260,26 +1260,24 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 						if ( ! $clickable ) {
 							$section_class = 'section-title section-locked';
-							$section_data = sprintf( ' data-title="%s"', esc_attr__( 'You need to complete all the REQUIRED modules before this section.', 'CP_TD' ) );
+							$section_data  = sprintf( ' data-title="%s"', esc_attr__( 'You need to complete all the REQUIRED modules before this section.', 'CP_TD' ) );
 						}
-						if ( 'normal' == $view_mode ) {
-							$module_table .= '<div class="'. $section_class . '" data-id="' . $page_number . '"'. $section_data .'>' . ( ! empty( $page['title'] ) ? esc_html( $page['title'] ) : esc_html__( 'Untitled', 'CP_TD' ) ) . '</div>';
+
+						$section_link = sprintf( '%spage/%s', $unit_url, $page_number );
+						$module_table .= '<div class="' . $section_class . '" data-id="' . $page_number . '"' . $section_data . '>';
+
+						if ( $clickable || $can_update_course ) {
+							$module_table .= '<a href="' . $section_link . '">' . ( ! empty( $page['title'] ) ? esc_html( $page['title'] ) : esc_html__( 'Untitled', 'CP_TD' ) ) . '</a>';
 						} else {
-							$section_link = sprintf( '%spage/%s', $unit_url, $page_number );
-							$module_table .= '<div class="'. $section_class . '" data-id="' . $page_number . '"'. $section_data . '>';
-
-							if ( $clickable || $can_update_course ) {
-								$module_table .= '<a href="' . $section_link . '">' . ( ! empty( $page['title'] ) ? esc_html( $page['title'] ) : esc_html__( 'Untitled', 'CP_TD' ) ) . '</a>';
-							} else {
-								$module_table .= sprintf( '<span>%s</span>', ! empty( $page['title'] ) ? esc_html( $page['title'] ) : esc_html__( 'Untitled', 'CP_TD' ) );
-							}
-
-							$module_table .= '</div>';
+							$module_table .= sprintf( '<span>%s</span>', ! empty( $page['title'] ) ? esc_html( $page['title'] ) : esc_html__( 'Untitled', 'CP_TD' ) );
 						}
+
+						$module_table .= '</div>';
+
 						// Set featured image
 						if ( ! empty( $page['feature_image'] ) ) {
 							$page_featured_image = sprintf( '<img src="%s" alt="%s" />', esc_url( $page['feature_image'] ), esc_attr( basename( $page['feature_image'] ) ) );
-							$module_table .= '<div class="section-thumbnail">' . $page_featured_image . '</div>';
+							$module_table        .= '<div class="section-thumbnail">' . $page_featured_image . '</div>';
 						}
 					}
 
