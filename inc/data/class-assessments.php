@@ -128,13 +128,15 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 
 				// If modules not found, skip.
 				if ( ! empty( $modules_steps ) ) {
-					$assessments['students'][ $student_id ]['units'][ $unit_id ]['modules'] = $modules_steps;
+					$assessments['students'][ $student_id ]->units[ $unit_id ]->modules = $modules_steps;
 				}
 			}
 
 			$modules_counted = true;
 		}
+
 		$assessments['students_count'] = $count;
+
 		return $assessments;
 	}
 

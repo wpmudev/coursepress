@@ -163,10 +163,12 @@
 								<?php foreach ( $student->units as $unit_id => $unit ) : ?>
 									<li>
 										<span class="pull-left"><span class="cp-units-icon"></span><?php echo $unit->get_the_title(); ?></span>
-										<span class="pull-right"><span class="cp-tick-icon"><?php echo $student->get_unit_grade( $course_id, $unit_id ); ?>%</span>
-											<span class="<?php $student->has_pass_course_unit( $course_id, $unit_id ) ? 'cp-plus-icon' : 'cp-minus-icon'; ?>"></span>
+										<span class="pull-right">
+											<?php $unit_grade = $student->get_unit_grade( $course_id, $unit->ID ); ?>
+											<span class="<?php echo $student->has_pass_course_unit( $course_id, $unit->ID ) ? 'cp-tick-icon' : 'cp-cross-icon'; ?>"><?php echo empty( $unit_grade ) ? 0 : $unit_grade; ?>%</span>
+											<span class="cp-plus-icon"></span>
 										</span>
-										<?php if ( ! empty( $unit['modules'] ) ) : ?>
+										<?php if ( ! empty( $unit->modules ) ) : ?>
 											<div class="cp-assessments-table-container inactive">
 												<table class="cp-assesments-questions-expanded">
 													<tr>
@@ -174,14 +176,14 @@
 														<th class="cp-assessments-strong"><?php _e( 'Student answer', 'cp' ); ?></th>
 														<th class="cp-assessments-strong"><?php _e( 'Correct answer', 'cp' ); ?></th>
 													</tr>
-													<?php foreach ( $unit['modules'] as $module_id => $module ) : ?>
-														<?php if ( ! $student->is_module_completed( $course_id, $unit_id, $module_id ) ) : continue; endif; ?>
+													<?php foreach ( $unit->modules as $module_id => $module ) : ?>
+														<?php if ( ! $student->is_module_completed( $course_id, $unit->ID, $module['id'] ) ) : continue; endif; ?>
 														<?php if ( ! empty( $module['steps'] ) ) : ?>
 															<?php foreach ( $module['steps'] as $step_id => $step ) : ?>
-																<?php if ( ! $step->is_accessible_by( $student->ID ) ) : continue; endif; ?>
+																<?php if ( ! $step->has_seen_by( $student->ID ) ) : continue; endif; ?>
 																<tr>
 																	<td><?php echo $step->get_the_title(); ?></td>
-																	<td><?php echo $student->get_response( $course_id, $unit_id, $step_id, true ); ?></td>
+																	<td><?php echo $student->get_response( $course_id, $unit->ID, $step_id, true ); ?></td>
 																	<td></td>
 																</tr>
 															<?php endforeach; ?>
