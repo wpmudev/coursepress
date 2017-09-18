@@ -87,6 +87,7 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 			if ( ! $student->is_course_completed( $this->course->ID ) ) {
 				// We need to exclude this user from count.
 				$count = $count -= 1;
+				unset( $assessments['students'][ $student_id ] );
 				continue;
 			}
 
@@ -96,6 +97,7 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 				if ( ! $unit->is_accessible_by( $student_id ) ) {
 					// We need to exclude this user from count.
 					$count -= 1;
+					unset( $assessments['students'][ $student_id ] );
 					continue;
 				}
 			}
@@ -104,9 +106,11 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 			//Filter based on the graded param.
 			if ( $graded == 'graded' && $grade < $minimum_grade ) {
 				$count -= 1;
+				unset( $assessments['students'][ $student_id ] );
 				continue;
 			} elseif ( $graded == 'ungraded' && $grade >= $minimum_grade ) {
 				$count -= 1;
+				unset( $assessments['students'][ $student_id ] );
 				continue;
 			}
 
