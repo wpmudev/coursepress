@@ -28,11 +28,11 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 		$screen = get_current_screen();
 
 		// Set query parameters back.
-		$search = isset( $_GET[ 's' ] ) ? $_GET[ 's' ] : '';
-		$course_id = empty( $_GET[ 'course_id' ] ) ? 0 : $_GET[ 'course_id' ];
-		$unit_id = empty( $_GET[ 'unit_id' ] ) ? 0 : $_GET[ 'unit_id' ];
+		$search = isset( $_GET['s'] ) ? $_GET['s'] : '';
+		$course_id = empty( $_GET['course_id'] ) ? 0 : $_GET['course_id'];
+		$unit_id = empty( $_GET['unit_id'] ) ? 0 : $_GET['unit_id'];
 		$graded = empty( $_GET['graded_ungraded'] ) ? 'all' : $_GET['graded_ungraded'];
-		$graded = in_array( $graded, array( 'graded','ungraded' ) ) ? $graded : 'all';
+		$graded = in_array( $graded, array( 'graded', 'ungraded' ) ) ? $graded : 'all';
 
 		// Data for template.
 		$args = array(

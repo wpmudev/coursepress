@@ -21,8 +21,8 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 		// Get the course object.
 		$this->course = coursepress_get_course( $course_id );
 
-		if ( ! $this->course instanceof CoursePress_Course )
-			return $this->wp_error();
+		if ( ! $this->course instanceof CoursePress_Course ) {
+			return $this->wp_error(); }
 	}
 
 	/**
@@ -71,7 +71,7 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 		$units = $this->_get_units( $unit_id );
 
 		// If no students found, return early.
-		if ( empty( $students ) || ! empty( $units ) ) {
+		if ( empty( $students ) || empty( $units ) ) {
 			return array();
 		}
 
@@ -79,6 +79,9 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 		$modules_counted = false;
 		// Prepare assessment data for each students.
 		foreach ( $students as $student_id => $student ) {
+
+			// Set the user object to main array.
+			$assessments['students'][ $student_id ] = $student;
 
 			// Do not continue if user not completed the course.
 			if ( ! $student->is_course_completed( $this->course->ID ) ) {
@@ -107,9 +110,6 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 				continue;
 			}
 
-			// Set the user object to main array.
-			$assessments['students'][ $student_id ] = $student;
-
 			// Set unit data under user.
 			$assessments['students'][ $student_id ]->units = $units;
 
@@ -128,15 +128,13 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 
 				// If modules not found, skip.
 				if ( ! empty( $modules_steps ) ) {
-					$assessments['students'][ $student_id ]['units'][$unit_id]['modules'] = $modules_steps;
+					$assessments['students'][ $student_id ]['units'][ $unit_id ]['modules'] = $modules_steps;
 				}
 			}
 
 			$modules_counted = true;
 		}
-
 		$assessments['students_count'] = $count;
-
 		return $assessments;
 	}
 
