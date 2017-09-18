@@ -180,7 +180,7 @@
 														<?php if ( ! $student->is_module_completed( $course_id, $unit->ID, $module['id'] ) ) : continue; endif; ?>
 														<?php if ( ! empty( $module['steps'] ) ) : ?>
 															<?php foreach ( $module['steps'] as $step_id => $step ) : ?>
-																<?php if ( ! $step->has_seen_by( $student->ID ) ) : continue; endif; ?>
+																<?php if ( ! $step->has_seen_by( $student->ID ) || ! $step->is_answerable() ) : continue; endif; ?>
 																<tr>
 																	<td><?php echo $step->get_the_title(); ?></td>
 																	<td><?php echo $student->get_response( $course_id, $unit->ID, $step_id, true ); ?></td>
