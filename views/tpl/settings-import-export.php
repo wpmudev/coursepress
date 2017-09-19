@@ -47,6 +47,9 @@
 			'coursepress[all]' => array(
 				'type' => 'checkbox',
 				'title' => $toggle_input . __( 'All Courses', 'CoursePress' ),
+				'data' => array(
+					'course-id' => 'all',
+				),
 			),
 		),
 	);
@@ -61,6 +64,10 @@
 		$config['export']['fields'][ 'coursepress[courses]['.$course_id.']' ] = array(
 			'type' => 'checkbox',
 			'title' => $toggle_input . ( empty( $course_title )? __( '-[This course has no title]-', 'CoursePress' ):$course_title ),
+			'data' => array(
+				'course-id' => $course_id,
+			),
+			'class' => 'course',
 		);
 	}
 	$config['export']['fields'] += array(

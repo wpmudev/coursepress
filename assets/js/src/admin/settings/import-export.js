@@ -1,4 +1,4 @@
-/* global CoursePress */
+/* global CoursePress, _coursepress */
 
 (function() {
     'use strict';
@@ -68,6 +68,7 @@
             events: {
                 'click #coursepress-export-button': 'exportCourses',
                 'change input[name="coursepress[all]"]': 'switchAll',
+                'change label.course input[type=checkbox]': 'maybeTurnOffAll',
             },
 
             initialize: function() {
@@ -79,25 +80,39 @@
                 this.importForm = CourseImport.extend({el: this.$('#form-import') });
                 this.importForm = new this.importForm();
                 this.exportForm = this.$('#form-export');
+                this.courses = this.$( 'label.course input[type=checkbox]', this.exportForm );
+                this.allCourses = this.$( 'input[name="coursepress[all]"]', this.exportForm );
             },
 
             switchAll: function( ev ) {
-                var all = $(ev.currentTarget);
-                if ( all.is(':checked') ) {
-                } else {
+                this.courses.each(function() {
+                    this.checked = $(ev.currentTarget).is(':checked');
+                });
+            },
+
+            maybeTurnOffAll: function( ev ) {
+                if ( ! $(ev.currentTarget).is(':checked') ) {
+                    this.allCourses.each( function() {
+                        this.checked = false;
+                    });
                 }
             },
 
             exportCourses: function() {
                 var model = new CoursePress.Request();
-                var checked = this.$(':checked', this.exportForm );
+                var checked = this.$( 'label.course input[type=checkbox]:checked', this.exportForm );
+                var values = [];
 
                 if ( 0 === checked.length ) {
+                    window.alert( _coursepress.text.export.no_items );
+                    return false;
                 }
-
-window.console.log( checked );
+                checked.each( function() {
+                    values.push( $(this).data('course-id') );
+                });
 
                 model.set( 'action', 'export_course' );
+                model.set( 'course', values );
                 model.save();
                 return false;
             }
