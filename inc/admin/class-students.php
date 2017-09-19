@@ -55,7 +55,7 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Page {
 			'columns' => get_column_headers( $screen ),
 			'students' => $this->get_students( $count ),
 			'courses' => coursepress_get_accessible_courses(),
-			'list_table' => $this->set_pagination( $count ),
+			'list_table' => $this->set_pagination( $count, 'coursepress_students_per_page' ),
 			'hidden_columns' => get_hidden_columns( $screen ),
 			'page' => $this->slug,
 			'search' => $search,
@@ -183,29 +183,5 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Page {
 		 * @param array $hidden_columns.
 		 */
 		return apply_filters( 'coursepress_studentlist_hidden_columns', array() );
-	}
-
-	/**
-	 * Set pagination for students listing page.
-	 *
-	 * We are using WP_Listing_Table class to set pagination.
-	 *
-	 * @param int $count Total students.
-	 *
-	 * @return object
-	 */
-	function set_pagination( $count = 0 ) {
-
-		// Using WP_List table for pagination.
-		$listing = new WP_List_Table();
-
-		$args = array(
-			'total_items' => $count,
-			'per_page' => $this->items_per_page( 'coursepress_students_per_page' ),
-		);
-
-		$listing->set_pagination_args( $args );
-
-		return $listing;
 	}
 }
