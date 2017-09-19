@@ -767,7 +767,6 @@ class CoursePress_Template_Module {
 			$mandatory = cp_is_true( $attributes['mandatory'] );
 		}
 		if ( false === $mandatory ) {
-			l( $comment_form );
 			$pattern = '/(<textarea[^>]+>)/';
 			preg_match( $pattern, $comment_form, $matches );
 			if ( 2 == sizeof( $matches ) ) {
