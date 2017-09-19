@@ -107,7 +107,7 @@
                 stepModel.meta_module_page = stepModel.module_page = this.model.id;
                 this.steps[stepId].model = stepModel;
                 this.stepsModel[stepId] = stepModel;
-                //this.model.steps = this.stepsModel;
+                this.model.steps = this.stepsModel;
                 this.moduleView.modules[this.moduleView.current] = this.model;
             },
 
