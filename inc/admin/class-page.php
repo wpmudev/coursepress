@@ -412,6 +412,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'statuses' => $statuses,
 			'search' => $search,
 			'bulk_actions' => $this->get_bulk_actions(),
+			'placeholder_text' => '',
 		);
 
 		coursepress_render( 'views/admin/courselist', $args );
