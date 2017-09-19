@@ -64,14 +64,42 @@
         return CoursePress.View.extend({
             template_id: 'coursepress-import-export-setting-tpl',
             el: $('#coursepress-setting-import-export'),
+
+            events: {
+                'click #coursepress-export-button': 'exportCourses',
+                'change input[name="coursepress[all]"]': 'switchAll',
+            },
+
             initialize: function() {
                 this.on( 'view_rendered', this.setUpForms, this );
                 this.render();
             },
+
             setUpForms: function() {
                 this.importForm = CourseImport.extend({el: this.$('#form-import') });
                 this.importForm = new this.importForm();
-                //this.exportForm = this.$('#form-export');
+                this.exportForm = this.$('#form-export');
+            },
+
+            switchAll: function( ev ) {
+                var all = $(ev.currentTarget);
+                if ( all.is(':checked') ) {
+                } else {
+                }
+            },
+
+            exportCourses: function() {
+                var model = new CoursePress.Request();
+                var checked = this.$(':checked', this.exportForm );
+
+                if ( 0 === checked.length ) {
+                }
+
+window.console.log( checked );
+
+                model.set( 'action', 'export_course' );
+                model.save();
+                return false;
             }
         });
     });

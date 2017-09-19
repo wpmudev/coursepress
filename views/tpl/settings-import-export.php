@@ -80,6 +80,7 @@
 			'disabled' => true,
 		),
 		'coursepress[export][button]' => array(
+			'id' => 'coursepress-export-button',
 			'type' => 'submit',
 			'value' => __( 'Export Courses', 'CoursePress' ),
 			'class' => 'cp-btn cp-btn-active',
