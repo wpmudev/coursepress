@@ -104,7 +104,8 @@
                 var stepId;
 
                 stepId = stepModel.cid;
-                stepModel.meta_module_page = stepModel.module_page = this.model.id;
+                stepModel.module_page = this.model.id;
+                stepModel.set('meta_module_page', this.model.id);
                 this.steps[stepId].model = stepModel;
                 this.stepsModel[stepId] = stepModel;
                 this.model.steps = this.stepsModel;
