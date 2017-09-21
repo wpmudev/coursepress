@@ -13,6 +13,8 @@
                 'keyup [name="post_name"]': 'updateSlug',
                 'change [name="meta_course_type"]': 'changeCourseType',
                 'change [name="meta_payment_paid_course"]': 'changeCoursePaid',
+                'change [name=meta_course_open_ended]': 'toggleCourseAvailability',
+                'change [name=meta_enrollment_open_ended]': 'toggleCourseEnrollmentDates',
                 'change [name]': 'updateModel',
                 'focus [name]': 'removeErrorMarker',
                 'click .sample-course-btn': 'selectSampleCourse'
@@ -128,7 +130,30 @@
                         $('.cp-box-woocommerce').removeClass('hidden');
                     }
                 }
+            },
+
+            toggleCourseAvailability: function( ev ) {
+                var status = this.$(ev.currentTarget).is(':checked');
+                var target = $('[name=meta_course_end_date]');
+                if ( status ) {
+                    target.attr( 'disabled', 'disabled' );
+                } else {
+                    target.removeAttr( 'disabled', 'disabled' );
+                }
+
+            },
+
+            toggleCourseEnrollmentDates: function( ev ) {
+                var status = this.$(ev.currentTarget).is(':checked');
+                var target = $('[name=meta_enrollment_start_date], [name=meta_enrollment_end_date]');
+                if ( status ) {
+                    target.attr( 'disabled', 'disabled' );
+                } else {
+                    target.removeAttr( 'disabled', 'disabled' );
+                }
             }
+
+
         });
     });
 })();
