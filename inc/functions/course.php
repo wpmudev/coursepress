@@ -222,10 +222,9 @@ function coursepress_get_course_media( $course_id = 0, $width = 235, $height = 2
  */
 function coursepress_get_course_availability_dates( $course_id = 0, $separator = ' - ' ) {
 	$course = coursepress_get_course( $course_id );
-
 	if ( is_wp_error( $course ) ) {
-		return null; }
-
+		return null;
+	}
 	return $course->get_course_dates( $separator );
 }
 
@@ -239,10 +238,9 @@ function coursepress_get_course_availability_dates( $course_id = 0, $separator =
  */
 function coursepress_get_course_enrollment_dates( $course_id = 0, $separator = ' - ' ) {
 	$course = coursepress_get_course( $course_id );
-
 	if ( is_wp_error( $course ) ) {
-		return null; }
-
+		return null;
+	}
 	return $course->get_enrollment_dates( $separator );
 }
 

@@ -7,7 +7,13 @@
  */
 class CoursePress_Extension_WooCommerce {
 
+	private $active = false;
+
 	public function __construct() {
+		$this->active = class_exists( 'WooCommerce' );
+		if ( ! $this->active ) {
+			return;
+		}
 		add_action( 'coursepress_course_updated', array( $this, 'course_update' ), 10, 2 );
 		add_filter( 'coursepress_default_course_meta', array( $this, 'add_course_default_fields' ) );
 		add_action( 'before_delete_post', array( $this, 'update_product_when_deleting_course' ) );
@@ -81,6 +87,9 @@ class CoursePress_Extension_WooCommerce {
 
 
 	public function course_update( $course_id, $course_meta ) {
+		if ( ! $this->active ) {
+			return;
+		}
 		remove_action( 'coursepress_course_updated', array( $this, 'course_update' ), 10, 2 );
 		if ( isset( $course_meta['mp_sale_price_enabled'] ) && 'on' == $course_meta['mp_sale_price_enabled'] ) {
 			$course_meta['mp_sku'] = sprintf( 'CP-%d', $course_id );
@@ -152,6 +161,9 @@ class CoursePress_Extension_WooCommerce {
 	}
 
 	public function get_product_id( $course_id ) {
+		if ( ! $this->active ) {
+			return 0;
+		}
 		$product_id = get_post_meta( $course_id, 'mp_product_id', true );
 		$product = get_post( $product_id );
 		if ( is_a( $product, 'WP_Post' ) && 'product' == $product->post_type ) {
@@ -161,6 +173,9 @@ class CoursePress_Extension_WooCommerce {
 	}
 
 	public function product_price( $atts, $content ) {
+		if ( ! $this->active ) {
+			return '';
+		}
 		global $post;
 		return $this->get_course_cost_html( $content, $post->ID );
 	}
@@ -174,6 +189,9 @@ class CoursePress_Extension_WooCommerce {
 	 *
 	 */
 	public function update_product_when_deleting_course( $course_id ) {
+		if ( ! $this->active ) {
+			return;
+		}
 		global $CoursePress_Core;
 		/**
 		 * check post type
@@ -209,6 +227,9 @@ class CoursePress_Extension_WooCommerce {
 	 *
 	 */
 	public static function update_course_when_deleting_product( $product_id ) {
+		if ( ! $this->active ) {
+			return;
+		}
 		/**
 		 * check post type
 		 */
@@ -238,6 +259,9 @@ class CoursePress_Extension_WooCommerce {
 	 * @return string html with product price
 	 */
 	public function get_course_cost_html( $content, $course_id ) {
+		if ( ! $this->active ) {
+			return '';
+		}
 		$product_id = $this->get_product_id( $course_id );
 		$product = new WC_Product( $product_id );
 		/**
@@ -257,6 +281,9 @@ class CoursePress_Extension_WooCommerce {
 	 * @param arrat $atts Configuration array.
 	 */
 	public function add_to_cart_template( $atts ) {
+		if ( ! $this->active ) {
+			return '';
+		}
 		$product_id = 0;
 		if ( isset( $atts['product_id'] ) ) {
 			$product_id = $atts['product_id'];
@@ -305,12 +332,18 @@ class CoursePress_Extension_WooCommerce {
 	 * @return boolean
 	 */
 	public function is_user_purchased_course( $is_user_purchased_course, $course, $user_id ) {
+		if ( ! $this->active ) {
+			return false;
+		}
 		$course_id = is_object( $course )? $course->ID : $course;
 		$key = sprintf( 'course_%d_woo_payment_status', $course_id );
 		return 'wc-completed' == get_user_meta( $user_id, $key, true );
 	}
 
 	public function woo_save_post() {
+		if ( ! $this->active ) {
+			return;
+		}
 		global $post;
 		if ( 'product' === $post->post_type ) {
 			return;
@@ -332,6 +365,9 @@ class CoursePress_Extension_WooCommerce {
 	 * @param integer $product_id Product ID.
 	 */
 	public function update_product_thumbnail( $product_id ) {
+		if ( ! $this->active ) {
+			return;
+		}
 		$thumbnail_id = get_post_thumbnail_id( $product_id );
 		if ( ! empty( $thumbnail_id ) ) {
 			return;
@@ -373,6 +409,9 @@ class CoursePress_Extension_WooCommerce {
 	}
 
 	public function show_course_message_woocommerce_order_details_after_order_table( $order ) {
+		if ( ! $this->active ) {
+			return;
+		}
 		$order_details		 = new WC_Order( $order->id );
 		$order_items		 = $order_details->get_items();
 		$purchased_course	 = false;
@@ -393,6 +432,9 @@ class CoursePress_Extension_WooCommerce {
 	}
 
 	public function change_cp_item_name( $title, $cart_item, $cart_item_key ) {
+		if ( ! $this->active ) {
+			return $title;
+		}
 		$course_id = wp_get_post_parent_id( $cart_item['product_id'] );
 		if ( $course_id && get_post_type( $course_id ) == 'course' ) {
 			return get_the_title( $course_id );
@@ -401,6 +443,9 @@ class CoursePress_Extension_WooCommerce {
 	}
 
 	public function change_cp_order_item_name( $name, $item ) {
+		if ( ! $this->active ) {
+			return $name;
+		}
 		$product_id = $item->get_product_id();
 		$course_id = wp_get_post_parent_id( $product_id );
 		if ( $course_id && get_post_type( $course_id ) == 'course' ) {
@@ -410,6 +455,9 @@ class CoursePress_Extension_WooCommerce {
 	}
 
 	public function change_order_status( $order_id, $old_status, $new_status ) {
+		if ( ! $this->active ) {
+			return;
+		}
 		$this->remove_filter_coursepress_enroll_student();
 		$order = new WC_order( $order_id );
 		$items = $order->get_items();
