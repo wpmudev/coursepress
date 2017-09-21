@@ -136,11 +136,6 @@
 										echo '<button class="cp-expand-collapse cp-collapse-btn">Collapse</button>';
 										echo '</div>';
 										break;
-									case 'reports' :
-										echo '<a href="#">' . __( 'Download', 'cp' ) . '</a>';
-										echo '|';
-										echo '<a href="#">' . __( 'View', 'cp' ) . '</a>';
-										break;
 									default :
 										/**
 										 * Trigger to allow custom column value

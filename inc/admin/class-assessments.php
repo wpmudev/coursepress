@@ -105,7 +105,6 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 			'last_active' => __( 'Last active', 'cp' ),
 			'grade' => __( 'Grade', 'cp' ),
 			'modules_progress' => __( 'Modules progress', 'cp' ),
-			'reports' => __( 'Reports', 'cp' ),
 		);
 
 		/**
