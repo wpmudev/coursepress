@@ -302,7 +302,7 @@
 <script type="text/template" id="coursepress-step-zipped">
     <div class="cp-box">
         <label class="label"><?php _e( 'Zipped website source', 'cp' ); ?></label>
-        <input type="text" name="meta_zip_url" class="cp-add-media" data-type="" data-title="<?php _e( 'Browse source', 'cp' ); ?>" data-placeholder="<?php _e( 'Browse for a zip file', 'cp' ); ?>" />
+        <input type="text" name="meta_zip_url" value="{{meta_zip_url}}" class="cp-add-media" data-type="" data-title="<?php _e( 'Browse source', 'cp' ); ?>" data-placeholder="<?php _e( 'Browse for a zip file', 'cp' ); ?>" />
     </div>
     <div class="cp-flex">
         <div class="cp-box">
@@ -334,7 +334,7 @@
             </div>
             <div class="cp-box cp-toggle-box">
                 <label>
-                    <input type="checkbox" name="meta_assessable" value="1" class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+                    <input type="checkbox" name="meta_assessable" value="1" class="cp-toggle-input" {{_.checked(true, meta_assessable)}} /> <span class="cp-toggle-btn"></span>
                     <span class="label"><?php _e( 'Assessable', 'cp' ); ?></span>
                 </label>
             </div>
@@ -343,13 +343,13 @@
             <div class="cp-box">
                 <div class="cp-box-grey">
                     <label class="label"><?php _e( 'Number of allowed retries', 'cp' ); ?></label>
-                    <input type="text" name="meta_retry_attempts" />
+                    <input type="text" name="meta_retry_attempts" value="{{meta_retry_attempts}}" />
                 </div>
             </div>
             <div class="cp-box">
                 <div class="cp-box-grey">
                     <label class="label"><?php _e( 'Minimum Grade', 'cp' ); ?></label>
-                    <input type="text" name="meta_retry_attempts" />
+                    <input type="text" name="meta_minimum_grade" value="{{meta_minimum_grade}}" />
                 </div>
             </div>
         </div>
