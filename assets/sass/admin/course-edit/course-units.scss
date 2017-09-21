@@ -182,11 +182,11 @@
       content: '\f19d';
       color: $blue_1;
     }
-    &.step-input-written:before {
+    &.step-input-written:after {
       content: '\f039';
       color: $blue_1;
     }
-    &.step-zipped:before {
+    &.step-zipped:after {
       content: '\f019';
       color: $blue_1;
     }
