@@ -92,6 +92,31 @@
 					?></td>
 				</tr>
 				<tr>
+					<td style="width:20%;"><label><?php _e( 'Logo', 'CP_TD' ); ?></label></td>
+					<td><?php
+						echo CoursePress_Helper_UI::browse_media_field(
+							'meta_logo',
+							'meta_logo',
+							array(
+								'placeholder' => __( 'Choose logo image', 'CP_TD' ),
+								'type' => 'image',
+								'value' => $certificate['logo'],
+							)
+						);
+						?></td>
+				</tr>
+				<tr>
+					<td><label><?php _e( 'Logo Position', 'CP_TD' ); ?></label></td>
+					<td>
+						<?php _e( 'X', 'CP_TD' ); ?>:
+						<input type="number" class="small-text" name="meta_logo_position[x]" value="<?php echo esc_attr( $certificate['logo_position']['x'] ); ?>" />
+						<?php _e( 'Y', 'CP_TD' ); ?>:
+						<input type="number" class="small-text" name="meta_logo_position[y]" value="<?php echo esc_attr( $certificate['logo_position']['y'] ); ?>" />
+						<?php _e( 'Width', 'CP_TD' ); ?>:
+						<input type="number" class="small-text" name="meta_logo_position[width]" value="<?php echo esc_attr( $certificate['logo_position']['width'] ); ?>" />
+					</td>
+				</tr>
+				<tr>
 					<td><label><?php _e( 'Content Margin', 'CP_TD' ); ?></label></td>
 					<td>
 						<?php _e( 'Top', 'CP_TD' ); ?>:

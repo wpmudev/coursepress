@@ -535,10 +535,16 @@ class CoursePress_Data_Course {
 			'basic_certificate_layout' => CoursePress_View_Admin_Setting_BasicCertificate::default_certificate_content(),
 			'basic_certificate' => false,
 			'certificate_background' => '',
+			'certificate_logo' => '',
 			'cert_margin' => array(
 				'top' => 0,
 				'left' => 0,
 				'right' => 0,
+			),
+			'logo_position' => array(
+				'x' => 0,
+				'y' => 0,
+				'width' => 100,
 			),
 			'page_orientation' => 'L',
 			'cert_text_color' => '#5a5a5a',
