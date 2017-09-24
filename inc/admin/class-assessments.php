@@ -15,7 +15,7 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 	protected $slug = 'coursepress_assessments';
 
 	/**
-	 * Get students listing page content and set pagination.
+	 * Get assessments listing page content and set pagination.
 	 *
 	 * @uses get_current_screen().
 	 * @uses get_hidden_columns().
@@ -55,6 +55,40 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 	}
 
 	/**
+	 * Get students listing page content and set pagination.
+	 *
+	 * @uses get_current_screen().
+	 * @uses get_hidden_columns().
+	 * @uses get_column_headers().
+	 * @uses coursepress_render().
+	 */
+	function get_details_page() {
+
+		$count = 0;
+
+		$course_id = empty( $_GET['course_id'] ) ? 0 : $_GET['course_id'];
+		$student_id = empty( $_GET['student_id'] ) ? 0 : $_GET['student_id'];
+		$unit_id = empty( $_GET['unit_id'] ) ? 0 : $_GET['unit_id'];
+		$display = empty( $_GET['graded_ungraded'] ) ? 'all' : $_GET['graded_ungraded'];
+		$display = in_array( $display, array( 'graded', 'ungraded' ) ) ? $display : 'all';
+
+		// Data for template.
+		$args = array(
+			'assessments' => $this->get_assessment_details( $student_id, $course_id, $unit_id = 0, $progress = 'all' ),
+			'courses' => coursepress_get_accessible_courses(),
+			'page' => $this->slug,
+			'page' => $this->slug,
+			'course_id' => absint( $course_id ),
+			'unit_id' => absint( $unit_id ),
+			'graded' => $graded,
+		);
+
+		// Render templates.
+		coursepress_render( 'views/admin/assessments', $args );
+		coursepress_render( 'views/admin/footer-text' );
+	}
+
+	/**
 	 * Get assessments data.
 	 *
 	 * @param int $course_id Course ID.
@@ -74,6 +108,28 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 		$assessments = new CoursePress_Data_Assessments( $course_id );
 
 		return $assessments->get_assessments( $unit_id, $graded, $count );
+	}
+
+	/**
+	 * Get details of an assessment for detailed view.
+	 *
+	 * @param int $student_id Student ID.
+	 * @param int $course_id Course ID.
+	 * @param inti $unit_id Unit ID.
+	 * @param string $progress Units.
+	 *
+	 * @return array
+	 */
+	function get_assessment_details( $student_id, $course_id, $unit_id = 0, $progress = 'all'  ) {
+
+		// We need course id and student id.
+		if ( empty( $course_id ) || empty( $student_id ) ) {
+			return array();
+		}
+
+		$assessments = new CoursePress_Data_Assessments( $course_id );
+
+		return $assessments->get_assessment_details( $student_id, $unit_id, $progress );
 	}
 
 	/**

@@ -487,6 +487,11 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			$course = coursepress_get_course( $course_id );
 		}
 
+		/*$units = $course->get_units();
+		echo '<pre>';
+		print_r($units[0]->get_modules_with_steps());
+		exit;*/
+
 		// Set course category
 		$category = array_values( $course->get_category() );
 		$course->__set( 'course_category', $category );
@@ -656,7 +661,12 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$assessments = $CoursePress->get_class( 'CoursePress_Admin_Assessments' );
 
 		if ( $assessments ) {
-			return $assessments->get_page();
+			// If it is details page
+			if ( isset( $_GET['tab'] ) && 'details' === $_GET['tab'] ) {
+				return $assessments->get_details_page();
+			} else {
+				return $assessments->get_page();
+			}
 		}
 	}
 
