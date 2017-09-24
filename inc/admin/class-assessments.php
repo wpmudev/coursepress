@@ -55,7 +55,7 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 	}
 
 	/**
-	 * Get students listing page content and set pagination.
+	 * Get assessment details page content and set pagination.
 	 *
 	 * @uses get_current_screen().
 	 * @uses get_hidden_columns().
@@ -64,27 +64,24 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 	 */
 	function get_details_page() {
 
-		$count = 0;
-
 		$course_id = empty( $_GET['course_id'] ) ? 0 : $_GET['course_id'];
 		$student_id = empty( $_GET['student_id'] ) ? 0 : $_GET['student_id'];
 		$unit_id = empty( $_GET['unit_id'] ) ? 0 : $_GET['unit_id'];
-		$display = empty( $_GET['graded_ungraded'] ) ? 'all' : $_GET['graded_ungraded'];
+		$display = empty( $_GET['display'] ) ? 'all' : $_GET['display'];
 		$display = in_array( $display, array( 'graded', 'ungraded' ) ) ? $display : 'all';
 
 		// Data for template.
 		$args = array(
-			'assessments' => $this->get_assessment_details( $student_id, $course_id, $unit_id = 0, $progress = 'all' ),
+			'assessments' => $this->get_assessment_details( $student_id, $course_id, $unit_id = 0, $display = 'all' ),
 			'courses' => coursepress_get_accessible_courses(),
-			'page' => $this->slug,
 			'page' => $this->slug,
 			'course_id' => absint( $course_id ),
 			'unit_id' => absint( $unit_id ),
-			'graded' => $graded,
+			'display' => $display,
 		);
 
 		// Render templates.
-		coursepress_render( 'views/admin/assessments', $args );
+		coursepress_render( 'views/admin/assessments_details', $args );
 		coursepress_render( 'views/admin/footer-text' );
 	}
 
@@ -93,7 +90,7 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 	 *
 	 * @param int $course_id Course ID.
 	 * @param int $unit_id Unit id.
-	 * @param int $graded Graded or ungraded.
+	 * @param string $graded Graded or ungraded.
 	 * @param int $count Total count of the students (pass by ref.).
 	 *
 	 * @return array
