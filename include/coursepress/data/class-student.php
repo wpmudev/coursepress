@@ -1494,7 +1494,7 @@ class CoursePress_Data_Student {
 
 		$email_args = array();
 		$email_args['email'] = $student_data->user_email;
-		$email_args['first_name'] = empty( $student_data->first_name ) && empty( $student_data->last_name ) ? $student_data->user_login : $student_data->first_name;
+		$email_args['first_name'] = empty( $student_data->first_name ) && empty( $student_data->last_name ) ? $student_data->display_name : $student_data->first_name;
 		$email_args['last_name'] = $student_data->last_name;
 		$email_args['fields'] = array();
 		$email_args['fields']['student_id'] = $student_id;
