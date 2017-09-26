@@ -1126,9 +1126,9 @@ class CoursePress_Helper_Email {
 
 		// Email Content.
 		$vars = array(
-			'INSTRUCTOR_FIRST_NAME' => $instructor->first_name,
+			'INSTRUCTOR_FIRST_NAME' => empty( $instructor->first_name ) && empty( $instructor->last_name ) ? $instructor->user_login : $instructor->first_name,
 			'INSTRUCTOR_LAST_NAME' => $instructor->last_name,
-			'STUDENT_FIRST_NAME' => $student->first_name,
+			'STUDENT_FIRST_NAME' => empty( $student->first_name ) && empty( $student->last_name ) ? $student->user_login : $student->first_name,
 			'STUDENT_LAST_NAME' => $student->last_name,
 			'COURSE_NAME' => $course_name,
 			'COURSE_ADDRESS' => esc_url( $course_address ),

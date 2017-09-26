@@ -1709,7 +1709,7 @@ class CoursePress_View_Admin_Course_Edit {
 					 * send mail to each student
 					 */
 					foreach ( $students as $student ) {
-						$vars['STUDENT_FIRST_NAME'] = $student->first_name;
+						$vars['STUDENT_FIRST_NAME'] = empty( $student->first_name ) && empty( $student->last_name ) ? $student->user_login : $student->first_name;
 						$vars['STUDENT_LAST_NAME'] = $student->last_name;
 						$vars['STUDENT_LOGIN'] = $student->data->user_login;
 						$body = CoursePress_Helper_Utility::replace_vars( $data->data->body, $vars );
@@ -1903,7 +1903,7 @@ class CoursePress_View_Admin_Course_Edit {
 			$mail_args = array(
 				'email' => $userdata->user_email,
 				'course_id' => $course_id,
-				'first_name' => $userdata->first_name,
+				'first_name' => empty( $userdata->first_name ) && empty( $userdata->last_name ) ? $userdata->user_login : $userdata->first_name,
 				'last_name' => $userdata->last_name,
 				'completion_date' => 'NOW!',
 				'certificate_id' => '12345',

@@ -3712,7 +3712,7 @@ class CoursePress_Data_Course {
 		$email_args = array();
 		$email_args['course_id'] = $course_id;
 		$email_args['email'] = sanitize_email( $student->user_email );
-		$email_args['first_name'] = $student->user_firstname;
+		$email_args['first_name'] = empty( $student->user_firstname ) && empty( $student->user_lastname ) ? $student->user_login : $student->user_firstname;
 		$email_args['last_name'] = $student->user_lastname;
 
 		if ( is_email( $email_args['email'] ) && $notify_student ) {
@@ -3749,10 +3749,10 @@ class CoursePress_Data_Course {
 			$email_args = array();
 			$email_args['course_id'] = $course_id;
 			$email_args['email'] = sanitize_email( $instructor->user_email );
-			$email_args['instructor_first_name'] = $instructor->user_firstname;
+			$email_args['instructor_first_name'] = empty( $instructor->user_firstname ) && empty( $instructor->user_lastname ) ? $instructor->user_login : $instructor->user_firstname;
 			$email_args['instructor_last_name'] = $instructor->user_lastname;
 			$email_args['student_last_name'] = $student->user_lastname;
-			$email_args['student_first_name'] = $student->user_firstname;
+			$email_args['student_first_name'] = empty( $student->user_firstname ) && empty( $student->user_lastname ) ? $student->user_login : $student->user_firstname;
 
 			if ( is_email( $email_args['email'] ) && $notify_instructors ) {
 				CoursePress_Helper_Email::send_email(
