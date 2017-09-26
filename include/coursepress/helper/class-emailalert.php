@@ -494,6 +494,7 @@ class CoursePress_Helper_EmailAlert {
 		);
 
 		if ( is_multisite() ) {
+			global $wpdb;
 			$keys['enrolled'] = $wpdb->prefix . $keys['enrolled'];
 			$keys['notified'] = $wpdb->prefix . $keys['notified'];
 		}
