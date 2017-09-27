@@ -46,8 +46,16 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 				$course = get_post( $course_id );
 
 				$courses[ $course_id ]['course'] = $course;
-				$courses[ $course_id ]['author'] = get_userdata( $course->post_author )->data;
 				$courses[ $course_id ]['meta'] = self::unique_meta( get_post_meta( $course_id ) );
+				$courses[ $course_id ]['author'] = array();
+
+				/**
+				 * Check that user still exists
+				 */
+				$user = get_userdata( $course->post_author );
+				if ( is_a( $user, 'WP_User' ) ) {
+					$courses[ $course_id ]['author'] = $user->data;
+				}
 
 				// Export instructors
 				$course_instructors = array();
@@ -57,6 +65,12 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 				if ( ! empty( $instructors ) ) {
 					foreach ( $instructors as $instructor_id ) {
 						$instructor = get_userdata( $instructor_id );
+						/**
+						 * Check that user still exists
+						 */
+						if ( ! is_a( $instructor, 'WP_User' ) ) {
+							continue;
+						}
 						$course_instructors[ $instructor_id ] = $instructor->data;
 					}
 				}

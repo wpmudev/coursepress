@@ -31,6 +31,7 @@ CHANGELOG
 * Fixed: Unable to send feedback about assessments.
 * Fixed: Units inside the course are available agains the settings options.
 * Fixed: Visual editor is blank and missing data after module reorder.
+* Fixed: PHP warnings during export, when we try to fetch deleted user data.
 * Updated: Vimeo javascript for version 3.0.0.
 
 = 2.1.0.2 =
