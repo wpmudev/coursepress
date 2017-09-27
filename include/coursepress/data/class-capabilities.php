@@ -1485,7 +1485,7 @@ class CoursePress_Data_Capabilities {
 
 		$user_obj = new WP_User( $user_id );
 
-		$role_name = self::get_role_instructor_name();
+		$role_name = self::get_role_instructor_name( false );
 		update_user_option( $user_id, $role_name, 'instructor' );
 
 		// do not use reset_user_capabilities()
@@ -1883,15 +1883,17 @@ class CoursePress_Data_Capabilities {
 	 * site.
 	 *
 	 * @since 2.1.0
+	 * @since 2.1.1 Added the `add_prefix` argument.
 	 *
+	 * @param boolean $add_prefix Add site name prefix.
 	 * @return string $role_name Role name, depended on site.
 	 */
-	public static function get_role_instructor_name() {
+	public static function get_role_instructor_name( $add_prefix = true ) {
 		$role_name = 'role_ins';
 		/**
 		 * add multisite prefix
 		 */
-		if ( is_multisite() ) {
+		if ( $add_prefix && is_multisite() ) {
 			global $wpdb;
 			$role_name = $wpdb->prefix.$role_name;
 		}
