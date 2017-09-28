@@ -98,11 +98,15 @@
 
 	            // Email to send the invitation.
                 var email = this.$('#cp-invite-email-' + this.type).val();
+                var first_name = this.$('#cp-invite-first-name-' + this.type).val();
+                var last_name = this.$('#cp-invite-last-name-' + this.type).val();
                 if ( '' !== email ) {
                     this.request.set( {
                         'action': 'send_email_invite',
                         'type': this.type,
                         'email': email,
+                        'first_name': first_name,
+                        'last_name': last_name,
                         'course_id': this.course.course_id
                     } );
                     this.request.save();

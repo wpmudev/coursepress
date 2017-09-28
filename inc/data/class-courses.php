@@ -29,4 +29,43 @@ final class CoursePress_Data_Courses extends CoursePress_Utility {
 		}
 		return $list;
 	}
+
+	/**
+	 * Get course invitations by course ID.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $course_id Course ID.
+	 * @param string $type Invitation type.
+	 *
+	 * @return array Array of invitations.
+	 */
+	public static function get_invitations_by_course_id( $course_id, $type = 'instructor' ) {
+
+		return get_post_meta( $course_id, $type. '_invites', true );
+	}
+
+	/**
+	 * Generate invitation code and hash.
+	 *
+	 * @param string $email Email ID.
+	 *
+	 * @return array
+	 */
+	public static function create_invite_code_hash( $email ) {
+
+		// Generate invite code.
+		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		$invite_code = '';
+		for ( $i = 0; $i < 20; $i ++ ) {
+			$invite_code .= $characters[ rand( 0, strlen( $characters ) - 1 ) ];
+		}
+
+		$data = array(
+			'code' => $invite_code,
+			'hash' => sha1( sanitize_email( $email ) . $invite_code ),
+		);
+
+		return $data;
+	}
 }
