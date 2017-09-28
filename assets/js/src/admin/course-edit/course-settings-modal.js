@@ -100,7 +100,7 @@
                 var email = this.$('#cp-invite-email-' + this.type).val();
                 var first_name = this.$('#cp-invite-first-name-' + this.type).val();
                 var last_name = this.$('#cp-invite-last-name-' + this.type).val();
-                if ( '' !== email ) {
+                if ( '' !== email && '' !== first_name ) {
                     this.request.set( {
                         'action': 'send_email_invite',
                         'type': this.type,
