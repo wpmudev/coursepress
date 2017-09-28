@@ -321,7 +321,7 @@ class CoursePress_Data_Certificate {
 		$params['student_id'] = $student_id;
 		$params['course_id'] = $course_id;
 		$params['email'] = sanitize_email( $student->user_email );
-		$params['first_name'] = $student->first_name;
+		$params['first_name'] = empty( $student->first_name ) && empty( $student->last_name ) ? $student->display_name : $student->first_name;
 		$params['last_name'] = $student->last_name;
 		$params['completion_date'] = $completion_date;
 		$params['certificate_id'] = $certificate_id;

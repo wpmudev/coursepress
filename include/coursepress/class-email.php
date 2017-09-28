@@ -221,7 +221,7 @@ class CoursePress_Email {
 		if ( ! empty( $user_id ) ) {
 			$user = get_userdata( $user_id );
 
-			$vars['FIRST_NAME'] = $vars['STUDENT_FIRST_NAME'] = $user->first_name;
+			$vars['FIRST_NAME'] = $vars['STUDENT_FIRST_NAME'] = empty( $user->first_name ) && empty( $user->last_name ) ? $user->display_name : $user->first_name;
 			$vars['LAST_NAME'] = $vars['STUDENT_LAST_NAME'] = $user->last_name;
 			$vars['EMAIL'] = $user->user_email;
 		}

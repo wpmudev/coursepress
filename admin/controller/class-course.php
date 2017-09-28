@@ -533,7 +533,7 @@ class CoursePress_Admin_Controller_Course {
 					 * send mail to each student
 					 */
 					foreach ( $students as $student ) {
-						$vars['STUDENT_FIRST_NAME'] = $student->first_name;
+						$vars['STUDENT_FIRST_NAME'] = empty( $student->first_name ) && empty( $student->last_name ) ? $student->display_name : $student->first_name;
 						$vars['STUDENT_LAST_NAME'] = $student->last_name;
 						$vars['STUDENT_LOGIN'] = $student->data->user_login;
 						$body = CoursePress_Helper_Utility::replace_vars( $data->data->body, $vars );

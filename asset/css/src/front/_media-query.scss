@@ -16,6 +16,10 @@
 					max-height: initial;
 				}
 			}
+			&.cp-mask {
+				position: fixed;
+				padding: 5em;
+			}
 		}
 	}
 }
