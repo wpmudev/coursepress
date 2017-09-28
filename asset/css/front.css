@@ -1505,6 +1505,10 @@ ul.notification-archive-list:after {
   body .enrolment-container-div .bbm-wrapper .bbm-modal {
     max-height: initial;
   }
+  body .enrolment-container-div.cp-mask {
+    position: fixed;
+    padding: 5em;
+  }
 }
 @media screen and (min-height: 801px) {
   .cp-mask {
