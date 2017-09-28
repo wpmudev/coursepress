@@ -708,7 +708,7 @@ function coursepress_replace_vars( $content, $vars ) {
 	$login_url = wp_login_url();
 
 	if ( coursepress_get_setting( 'general/use_custom_login', true ) ) {
-		$login_url = coursepress_get_login_url();
+		$login_url = coursepress_get_student_login_url();
 	}
 	$vars['COURSES_ADDRESS'] = coursepress_get_main_courses_url();
 	$vars['BLOG_ADDRESS'] = site_url();

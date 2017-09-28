@@ -120,6 +120,8 @@
              */
             inviteSuccess: function ( data ) {
 
+                this.$('#cp-invite-first-name-' + this.type).val('');
+                this.$('#cp-invite-last-name-' + this.type).val('');
                 this.$('#cp-invite-email-' + this.type).val('');
                 // Show response message.
                 this.showResponse(data, this.inv_resp);
