@@ -134,7 +134,7 @@
 
             toggleCourseAvailability: function( ev ) {
                 var status = this.$(ev.currentTarget).is(':checked');
-                var target = $('[name=meta_course_end_date]');
+                var target = this.$('[name=meta_course_end_date]');
                 if ( status ) {
                     target.attr( 'disabled', 'disabled' );
                 } else {
@@ -145,7 +145,7 @@
 
             toggleCourseEnrollmentDates: function( ev ) {
                 var status = this.$(ev.currentTarget).is(':checked');
-                var target = $('[name=meta_enrollment_start_date], [name=meta_enrollment_end_date]');
+                var target = this.$('[name=meta_enrollment_start_date], [name=meta_enrollment_end_date]');
                 if ( status ) {
                     target.attr( 'disabled', 'disabled' );
                 } else {
