@@ -747,4 +747,17 @@ class CoursePress_Data_Instructor {
 		$user_id = get_current_user_id();
 		return sprintf( '%s_%s_%d_%d', __CLASS__, $action, $user_id, $instructor_id );
 	}
+
+	/**
+	 * Check is user instructor?
+	 *
+	 * @since 2.1.1
+	 *
+	 * @param integer instructor_id The user ID to check
+	 * @param integer course_id The course ID.
+	 */
+	public static function is_course_instructor( $instructor_id, $course_id ) {
+		$instructors = CoursePress_Data_Course::get_setting( $course_id, 'instructors', array() );
+		return in_array( $instructor_id, $instructors );
+	}
 }

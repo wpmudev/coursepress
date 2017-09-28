@@ -499,6 +499,17 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			$button = $button_pre . $button . $button_post;
 		}
 
+		/**
+		 * remove enrol button for instructors
+		 */
+		if ( is_user_logged_in() ) {
+			$user_id = get_current_user_id();
+			$is_course_instructor = CoursePress_Data_Instructor::is_course_instructor( $user_id, $course_id );
+			if ( $is_course_instructor ) {
+				return '';
+			}
+		}
+
 		// Wrap button in form if needed.
 		if ( $is_form ) {
 			$button = '<form name="enrollment-process" method="post" data-type="'. $button_option . '" action="' . $button_url . '">' . $button;
@@ -1013,17 +1024,17 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			$the_unit = $with_modules ? $unit['unit'] : $unit;
 			$unit_id = $the_unit->ID;
 
-			if ( !empty( $current_last_module_id ) ) {
+			if ( ! empty( $current_last_module_id ) ) {
 				$last_module_id = $current_last_module_id;
 			}
-			if ( !empty( $units_with_modules[ $unit_id ]['pages'] ) && is_array( $units_with_modules[ $unit_id ]['pages'] ) ) {
+			if ( ! empty( $units_with_modules[ $unit_id ]['pages'] ) && is_array( $units_with_modules[ $unit_id ]['pages'] ) ) {
 				$last_page = end( $units_with_modules[ $unit_id ]['pages'] );
-				if ( !empty( $last_page['modules'] ) && is_array( $last_page['modules'] ) ) {
+				if ( ! empty( $last_page['modules'] ) && is_array( $last_page['modules'] ) ) {
 					end( $last_page['modules'] );
 					$current_last_module_id	= key( $last_page['modules'] );
 				}
 			}
-			
+
 			// Hide hidden unit
 			$is_unit_structure_visible = CoursePress_Data_Unit::is_unit_structure_visible( $course_id, $unit_id, $student_id );
 			if ( ! $is_unit_structure_visible ) { continue; }
@@ -1142,7 +1153,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				 * return date with known format
 				 */
 				$unit_availability_date = CoursePress_Data_Unit::get_unit_availability_date( $unit_id, $course_id, 'c' );
-                $_unit_date = CoursePress_Data_Course::strtotime( $unit_availability_date );
+				$_unit_date = CoursePress_Data_Course::strtotime( $unit_availability_date );
 				$now = CoursePress_Data_Course::time_now();
 
 				if ( ! empty( $unit_availability_date ) && $_unit_date > $now && 'expired' != $unit_availability_date ) {
