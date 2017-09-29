@@ -6,7 +6,7 @@ Description: CoursePress Base turns WordPress into a powerful online learning pl
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org
 Developers: Marko Miljus ( https://twitter.com/markomiljus ), Rheinard Korf ( https://twitter.com/rheinardkorf )
-Version: 1.3.4.2
+Version: 1.3.4.4
 TextDomain: coursepress_base_td
 Domain Path: /languages/
 WDP ID: 913071
@@ -67,7 +67,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 		 * @since 1.0.0
 		 * @var string
 		 */
-		public $version = '1.3.4.2';
+		public $version = '1.3.4.4';
 
 		/**
 		 * Plugin friendly name.
@@ -5075,7 +5075,7 @@ if ( ! class_exists( 'CoursePress' ) ) {
 				wp_enqueue_script( 'cp-tooltips', $this->plugin_url . 'js/tooltips.js', array( 'jquery' ), $this->version );
 				wp_enqueue_script( 'cp-settings', $this->plugin_url . 'js/settings.js', array(
 					'jquery',
-					'jquery-ui',
+					'jquery-ui-core',
 					'jquery-ui-spinner'
 				), $this->version );
 				wp_enqueue_script( 'cp-chosen-config', $this->plugin_url . 'js/chosen-config.js', array( 'cp-settings' ), $this->version, true );

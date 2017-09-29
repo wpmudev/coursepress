@@ -535,7 +535,7 @@ if ( !class_exists('WPMUDEV_Dashboard_Notice3') ) {
 						$object = new stdClass;
 						$object->url = $plugin['url'];
 						$object->slug = "wpmudev_install-$id";
-						$object->upgrade_notice = $plugin['changelog'];
+						$object->upgrade_notice = isset( $plugin['changelog'] )? $plugin['changelog']:null;
 						$object->new_version = $plugin['new_version'];
 						$object->package = '';
 							

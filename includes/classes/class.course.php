@@ -328,7 +328,7 @@ if ( ! class_exists( 'Course' ) ) {
 								);
 							}
 							$post->meta                 = $meta;
-							$post->menu_order           = $meta['unit_order'][0];
+							$post->menu_order           = isset( $meta['unit_order'] )? $meta['unit_order'][0] : 0;
 							$units[ $post->ID ]['post'] = $post;
 
 							break;
