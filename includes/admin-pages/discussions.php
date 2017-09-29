@@ -25,9 +25,9 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 					case 'delete':
 						if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_discussion_cap' ) || ( current_user_can( 'coursepress_delete_my_discussion_cap' ) && $discussion_object->post_author == get_current_user_id() ) ) {
 							$discussion->delete_discussion();
-							$message = __( 'Selected discussions have been deleted successfully.', 'coursepress_base_td' );
+							$message = __( 'Selected discussions have been deleted successfully.', 'coursepress' );
 						} else {
-							$message = __( "You don't have right permissions to delete the discussion.", 'coursepress_base_td' );
+							$message = __( "You don't have right permissions to delete the discussion.", 'coursepress' );
 						}
 						break;
 				}
@@ -71,27 +71,27 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 	if ( isset( $_GET['action'] ) && $_GET['action'] == 'delete' && isset( $_GET['discussion_id'] ) && is_numeric( $_GET['discussion_id'] ) ) {
 
 		if ( ! isset( $_GET['cp_nonce'] ) || ! wp_verify_nonce( $_GET['cp_nonce'], 'delete_discussion_' . $_GET['discussion_id'] ) ) {
-			die( __( 'Cheating huh?', 'coursepress_base_td' ) );
+			die( __( 'Cheating huh?', 'coursepress' ) );
 		}
 
 		$discussion_object = $discussion->get_discussion();
 		if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_discussion_cap' ) || ( current_user_can( 'coursepress_delete_my_discussion_cap' ) && $discussion_object->post_author == get_current_user_id() ) ) {
 			$discussion->delete_discussion( $force_delete = true );
-			$message = __( 'Selected discussion has been deleted successfully.', 'coursepress_base_td' );
+			$message = __( 'Selected discussion has been deleted successfully.', 'coursepress' );
 		} else {
-			$message = __( "You don't have right permissions to delete the discussion.", 'coursepress_base_td' );
+			$message = __( "You don't have right permissions to delete the discussion.", 'coursepress' );
 		}
 	}
 	?>
 	<div class="wrap nosubsub cp-wrap">
 		<div class="icon32" id="icon-themes"><br></div>
-		<h2><?php _e( 'Discussions', 'coursepress_base_td' ); ?><?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_create_discussion_cap' ) || current_user_can( 'coursepress_create_my_discussion_cap' ) || current_user_can( 'coursepress_create_my_assigned_discussion_cap' ) ) { ?>
-				<a class="add-new-h2" href="<?php echo admin_url( 'admin.php?page=discussions&action=add_new' ); ?>"><?php _e( 'Add New', 'coursepress_base_td' ); ?></a><?php } ?>
+		<h2><?php _e( 'Discussions', 'coursepress' ); ?><?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_create_discussion_cap' ) || current_user_can( 'coursepress_create_my_discussion_cap' ) || current_user_can( 'coursepress_create_my_assigned_discussion_cap' ) ) { ?>
+				<a class="add-new-h2" href="<?php echo admin_url( 'admin.php?page=discussions&action=add_new' ); ?>"><?php _e( 'Add New', 'coursepress' ); ?></a><?php } ?>
 		</h2>
 
 		<?php
-		$ms['da'] = __( 'New Discussion added successfully!', 'coursepress_base_td' );
-		$ms['du'] = __( 'Discussion updated successfully.', 'coursepress_base_td' );
+		$ms['da'] = __( 'New Discussion added successfully!', 'coursepress' );
+		$ms['du'] = __( 'Discussion updated successfully.', 'coursepress' );
 
 		if ( isset( $_GET['ms'] ) ) {
 			$message = $ms[ $_GET['ms'] ];
@@ -111,9 +111,9 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 				<form method="get" action="<?php echo esc_attr( admin_url( 'admin.php?page=' . $page ) ); ?>" class="search-form">
 					<p class="search-box">
 						<input type='hidden' name='page' value='<?php echo esc_attr( $page ); ?>'/>
-						<label class="screen-reader-text"><?php _e( 'Search Discussions', 'coursepress_base_td' ); ?>:</label>
+						<label class="screen-reader-text"><?php _e( 'Search Discussions', 'coursepress' ); ?>:</label>
 						<input type="text" value="<?php echo esc_attr( $s ); ?>" name="s">
-						<input type="submit" class="button" value="<?php _e( 'Search Discussions', 'coursepress_base_td' ); ?>">
+						<input type="submit" class="button" value="<?php _e( 'Search Discussions', 'coursepress' ); ?>">
 					</p>
 				</form>
 			</div>
@@ -124,10 +124,10 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 				<?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_discussion_cap' ) ) { ?>
 					<div class="alignleft actions">
 						<select name="action">
-							<option selected="selected" value=""><?php _e( 'Bulk Actions', 'coursepress_base_td' ); ?></option>
-							<option value="delete"><?php _e( 'Delete', 'coursepress_base_td' ); ?></option>
+							<option selected="selected" value=""><?php _e( 'Bulk Actions', 'coursepress' ); ?></option>
+							<option value="delete"><?php _e( 'Delete', 'coursepress' ); ?></option>
 						</select>
-						<input type="submit" class="button-secondary action" id="doaction" name="doaction" value="<?php _e( 'Apply', 'coursepress_base_td' ); ?>"/>
+						<input type="submit" class="button-secondary action" id="doaction" name="doaction" value="<?php _e( 'Apply', 'coursepress' ); ?>"/>
 					</div>
 				<?php } ?>
 
@@ -142,8 +142,8 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 		wp_nonce_field( 'bulk-discussions' );
 
 		$columns = array(
-			"discussion_title" => __( 'Discussion', 'coursepress_base_td' ),
-			"course"           => __( 'Course', 'coursepress_base_td' ),
+			"discussion_title" => __( 'Discussion', 'coursepress' ),
+			"course"           => __( 'Course', 'coursepress' ),
 		);
 
 
@@ -155,7 +155,7 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 		);
 
 		if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_discussion_cap' ) || ( current_user_can( 'coursepress_delete_my_discussion_cap' ) ) ) {
-			$columns["remove"] = __( 'Remove', 'coursepress_base_td' );
+			$columns["remove"] = __( 'Remove', 'coursepress' );
 			$col_sizes[]       = '7';
 		}
 		?>
@@ -196,10 +196,10 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 
 						<div class="course_excerpt"><?php echo cp_get_the_course_excerpt( $discussion_object->ID ); ?></div>
 						<div class="row-actions">
-							<span class="edit_discussion"><a href="<?php echo admin_url( 'admin.php?page=discussions&action=edit&discussion_id=' . $discussion_object->ID ); ?>"><?php _e( 'Edit', 'coursepress_base_td' ); ?></a> | </span>
+							<span class="edit_discussion"><a href="<?php echo admin_url( 'admin.php?page=discussions&action=edit&discussion_id=' . $discussion_object->ID ); ?>"><?php _e( 'Edit', 'coursepress' ); ?></a> | </span>
 
 							<?php if ( current_user_can( 'manage_options' ) || current_user_can( 'coursepress_delete_discussion_cap' ) || ( current_user_can( 'coursepress_delete_my_discussion_cap' ) && $discussion_object->post_author == get_current_user_id() ) ) { ?>
-								<span class="course_remove"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=discussions&action=delete&discussion_id=' . $discussion_object->ID ), 'delete_discussion_' . $discussion_object->ID, 'cp_nonce' ); ?>" onClick="return removeDiscussion();"><?php _e( 'Delete', 'coursepress_base_td' ); ?></a></span>
+								<span class="course_remove"><a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=discussions&action=delete&discussion_id=' . $discussion_object->ID ), 'delete_discussion_' . $discussion_object->ID, 'cp_nonce' ); ?>" onClick="return removeDiscussion();"><?php _e( 'Delete', 'coursepress' ); ?></a></span>
 							<?php } ?>
 						</div>
 					</td>
@@ -208,7 +208,7 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 						$course      = new Course( $discussion_object->course_id );
 						$course_name = $course->details->post_title;
 					} else {
-						$course_name = __( 'All Courses', 'coursepress_base_td' );
+						$course_name = __( 'All Courses', 'coursepress' );
 					}
 					?>
 					<td <?php echo $style; ?>> <?php echo $course_name; ?> </td>
@@ -232,7 +232,7 @@ if ( ( isset( $_GET['action'] ) && $_GET['action'] == 'add_new' && isset( $_GET[
 				?>
 				<tr>
 					<td colspan="6">
-						<div class="zero-courses"><?php _e( 'No discussions found.', 'coursepress_base_td' ) ?></div>
+						<div class="zero-courses"><?php _e( 'No discussions found.', 'coursepress' ) ?></div>
 					</td>
 				</tr>
 			<?php

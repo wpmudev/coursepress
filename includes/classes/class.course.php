@@ -106,7 +106,7 @@ if ( ! class_exists( 'Course' ) ) {
 		function init_course( &$course ) {
 			if ( ! empty( $course ) ) {
 				if ( ! isset( $course->post_title ) || $course->post_title == '' ) {
-					$course->post_title = __( 'Untitled', 'coursepress_base_td' );
+					$course->post_title = __( 'Untitled', 'coursepress' );
 				}
 				if ( $course->post_status == 'private' || $course->post_status == 'draft' ) {
 					$course->post_status = 'unpublished';
@@ -186,7 +186,7 @@ if ( ! class_exists( 'Course' ) ) {
 										<a href="<?php echo Unit::get_permalink( $unit_id ); ?>?try"
 										   class="preview_option"><?php
 											if ( $try_title == '' ) {
-												_e( 'Try Now', 'coursepress_base_td' );
+												_e( 'Try Now', 'coursepress' );
 											} else {
 												echo $try_title;
 											};
@@ -209,7 +209,7 @@ if ( ! class_exists( 'Course' ) ) {
 
 											<label for="page_<?php echo $unit_id . '_' . $i; ?>">
 												<div class="tree-page-left">
-													<?php echo( isset( $page_title ) && $page_title !== '' ? $page_title : __( 'Untitled Page', 'coursepress_base_td' ) ); ?>
+													<?php echo( isset( $page_title ) && $page_title !== '' ? $page_title : __( 'Untitled Page', 'coursepress' ) ); ?>
 												</div>
 												<div class="tree-page-right">
 													<?php if ( $this->details->course_structure_time_display == 'on' ) { ?>
@@ -221,7 +221,7 @@ if ( ! class_exists( 'Course' ) ) {
 														<a href="<?php echo Unit::get_permalink( $unit_id ); ?>page/<?php echo $i; ?>?try"
 														   class="preview_option"><?php
 															if ( $try_title == '' ) {
-																_e( 'Try Now', 'coursepress_base_td' );
+																_e( 'Try Now', 'coursepress' );
 															} else {
 																echo $try_title;
 															};
@@ -627,7 +627,7 @@ if ( ! class_exists( 'Course' ) ) {
 
 			$post_status = empty( $this->data['status'] ) ? 'publish' : $this->data['status'];
 
-			if ( $_POST['course_name'] != '' && $_POST['course_name'] != __( 'Untitled', 'coursepress_base_td' ) ) {
+			if ( $_POST['course_name'] != '' && $_POST['course_name'] != __( 'Untitled', 'coursepress' ) ) {
 				if ( ! empty( $course->post_status ) && $course->post_status != 'publish' ) {
 					$post_status = 'private';
 				}

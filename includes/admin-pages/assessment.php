@@ -11,7 +11,7 @@ if ( is_multisite() ) {
 
 if ( isset( $_GET['delete_response'] ) && ( current_user_can( 'coursepress_delete_student_response_cap' ) || current_user_can( 'manage_options' ) ) ) {
 	if ( ! isset( $_GET['cp_delete_response_nonce'] ) || ! wp_verify_nonce( $_GET['cp_delete_response_nonce'], 'delete_response' ) ) {
-		die( __( 'You do not have required persmissions for this action.', 'coursepress_base_td' ) );
+		die( __( 'You do not have required persmissions for this action.', 'coursepress' ) );
 	} else {
 		Unit_Module::delete_module_response( (int) $_GET['response_id'] );
 		wp_redirect( admin_url( 'admin.php?page=assessment&course_id=' . (int) $_GET['course_id'] . '&unit_id=' . (int) $_GET['unit_id'] . '&assessment_page=' . (int) $_GET['assessment_page'] ) );
@@ -22,13 +22,13 @@ if ( isset( $_GET['delete_response'] ) && ( current_user_can( 'coursepress_delet
 
 	<div class="wrap nosubsub cp-wrap">
 <?php if ( $user_id !== '' && $course_id !== '' ) { ?>
-	<?php _e( 'Go to:', 'coursepress_base_td' ); ?>
-	<a href="<?php echo admin_url( 'admin.php?action=workbook&student_id=' . $user_id . '&page=students&course_id=' . $course_id ); ?>" class="back_link"><?php _e( 'Student Workbook', 'coursepress_base_td' ); ?></a> |
+	<?php _e( 'Go to:', 'coursepress' ); ?>
+	<a href="<?php echo admin_url( 'admin.php?action=workbook&student_id=' . $user_id . '&page=students&course_id=' . $course_id ); ?>" class="back_link"><?php _e( 'Student Workbook', 'coursepress' ); ?></a> |
 
-	<a href="<?php echo admin_url( 'admin.php?page=assessment&course_id=' . $course_id ); ?>" class="back_link"><?php _e( 'All Course Assessments', 'coursepress_base_td' ); ?></a>
+	<a href="<?php echo admin_url( 'admin.php?page=assessment&course_id=' . $course_id ); ?>" class="back_link"><?php _e( 'All Course Assessments', 'coursepress' ); ?></a>
 <?php } ?>
 	<div class="icon32 icon32-posts-page" id="icon-edit-pages"><br></div>
-	<h2><?php _e( 'Assessment', 'coursepress_base_td' ); ?></h2>
+	<h2><?php _e( 'Assessment', 'coursepress' ); ?></h2>
 
 <?php
 if ( isset( $_GET['page_num'] ) ) {
@@ -46,7 +46,7 @@ if ( isset( $_GET['response_id'] ) ) {
 	$can_access = CoursePress_Capabilities::is_course_instructor( $course_id ) || is_super_admin();
 
 	if ( !$can_access ) {
-		echo '<p>' . esc_html__( 'You do not have permission to assess this student.', 'coursepress_base_td' ) . '</p>';
+		echo '<p>' . esc_html__( 'You do not have permission to assess this student.', 'coursepress' ) . '</p>';
 		wp_die();
 	}
 
@@ -80,7 +80,7 @@ if ( isset( $_GET['response_id'] ) ) {
 
 						<?php if ( isset( $unit_module->post_content ) && ! empty( $unit_module->post_content ) ) { ?>
 							<div class="module_response_description">
-								<label><?php _e( 'Description', 'coursepress_base_td' ); ?>
+								<label><?php _e( 'Description', 'coursepress' ); ?>
 									<?php if ( current_user_can( 'coursepress_delete_student_response_cap' ) || current_user_can( 'manage_options' ) ) { ?>
 										<a href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=assessment&course_id=' . (int) $_GET['course_id'] . '&unit_id=' . (int) $_GET['unit_id'] . '&user_id=' . (int) $_GET['user_id'] . '&module_id=' . (int) $_GET['module_id'] . '&response_id=' . (int) $_GET['response_id'] . '&assessment_page=' . (int) $_GET['assessment_page'] . '&delete_response' ), 'delete_response', 'cp_delete_response_nonce' ); ?>" onclick="return removeStudentResponse();">
 											<i class="fa fa-times-circle cp-move-icon remove-response-btn"></i>
@@ -114,24 +114,24 @@ if ( isset( $_GET['response_id'] ) ) {
 							$grade_time      = date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $grade_data['time'] );
 
 							if ( ! empty( $grade ) ) {
-								_e( 'Grade by ', 'coursepress_base_td' );
+								_e( 'Grade by ', 'coursepress' );
 								?>
 								<a href="<?php echo admin_url( 'admin.php?page=instructors&action=view&instructor_id=' . $instructor_id ); ?>"><?php echo esc_html( $instructor_name->display_name ); ?></a>
 								<?php
-								_e( ' on ' . $grade_time, 'coursepress_base_td' );
+								_e( ' on ' . $grade_time, 'coursepress' );
 							}
 							?>
 
 						</div>
 
-						<?php submit_button( __( 'Save Changes', 'coursepress_base_td' ), 'primary', 'save-response-changes' ); ?>
+						<?php submit_button( __( 'Save Changes', 'coursepress' ), 'primary', 'save-response-changes' ); ?>
 
 						<?php
 						$assessable = get_post_meta( $module_id, 'gradable_answer', true );
 						if ( $assessable == 'yes' ) {
 							?>
 							<select name="response_grade" id="response_grade">
-								<option value=""><?php _e( 'Choose Grade', 'coursepress_base_td' ); ?></option>
+								<option value=""><?php _e( 'Choose Grade', 'coursepress' ); ?></option>
 								<?php
 								for ( $i = 0; $i <= 100; $i ++ ) {
 									?>
@@ -215,7 +215,7 @@ if ( isset( $_GET['response_id'] ) ) {
 
 					if ( $courses_with_students == 0 ) {
 						?>
-						<option value=""><?php _e( '0 courses with enrolled students.', 'coursepress_base_td' ); ?></option>
+						<option value=""><?php _e( '0 courses with enrolled students.', 'coursepress' ); ?></option>
 					<?php
 					}
 					?>
@@ -245,8 +245,8 @@ if ( isset( $_GET['response_id'] ) ) {
 						}
 						?>
 						<!--<select name="classes" id="dynamic_classes" name="dynamic_classes">
-																													<option value="all" <?php // selected( $classes, 'all', true );        ?>><?php // _e( 'All Classes', 'coursepress_base_td' );        ?></option>
-																													<option value="" <?php // selected( $classes, '', true );        ?>><?php // _e( 'Default', 'coursepress_base_td' );        ?></option>
+																													<option value="all" <?php // selected( $classes, 'all', true );        ?>><?php // _e( 'All Classes', 'coursepress' );        ?></option>
+																													<option value="" <?php // selected( $classes, '', true );        ?>><?php // _e( 'Default', 'coursepress' );        ?></option>
 							<?php
 						//$course_classes = get_post_meta( $current_course_id, 'course_classes', true );
 						//foreach ( $course_classes as $course_class ) {
@@ -257,7 +257,7 @@ if ( isset( $_GET['response_id'] ) ) {
 						?>
 																												</select>-->
 
-						<label class="ungraded"><?php _e( 'Ungraded Elements Only', 'coursepress_base_td' ); ?>
+						<label class="ungraded"><?php _e( 'Ungraded Elements Only', 'coursepress' ); ?>
 							<?php
 							if ( isset( $_GET['ungraded'] ) && $_GET['ungraded'] == 'yes' ) {
 								$ungraded_filter = 'yes';
@@ -342,13 +342,13 @@ if ( isset( $_GET['response_id'] ) ) {
 							<h2><?php echo $current_unit->post_title; ?></h2>
 							<?php
 							$columns = array(
-								"name"            => __( 'Student', 'coursepress_base_td' ),
-								"module"          => __( 'Element', 'coursepress_base_td' ),
-								"title"           => __( 'Title', 'coursepress_base_td' ),
-								"submission_date" => __( 'Submitted', 'coursepress_base_td' ),
-								"response"        => __( 'Response', 'coursepress_base_td' ),
-								"grade"           => __( 'Grade', 'coursepress_base_td' ),
-								"comment"         => __( 'Comment', 'coursepress_base_td' ),
+								"name"            => __( 'Student', 'coursepress' ),
+								"module"          => __( 'Element', 'coursepress' ),
+								"title"           => __( 'Title', 'coursepress' ),
+								"submission_date" => __( 'Submitted', 'coursepress' ),
+								"response"        => __( 'Response', 'coursepress' ),
+								"grade"           => __( 'Grade', 'coursepress' ),
+								"comment"         => __( 'Comment', 'coursepress' ),
 							);
 
 
@@ -455,20 +455,20 @@ if ( isset( $_GET['response_id'] ) ) {
 														<td class="column-title <?php echo $style . ' ' . $visibility_class; ?>">
 															<?php echo $mod->post_title; ?>
 															<div class="extra-information visible-extra-small">
-																<?php _e( 'Submitted:', 'coursepress_base_td' ); ?>
-																<br/> <?php echo( count( $response ) >= 1 ? $response->post_date : __( 'Not submitted', 'coursepress_base_td' ) ); ?>
+																<?php _e( 'Submitted:', 'coursepress' ); ?>
+																<br/> <?php echo( count( $response ) >= 1 ? $response->post_date : __( 'Not submitted', 'coursepress' ) ); ?>
 															</div>
 														</td>
 
 														<td class="column-submission-date <?php echo $style . ' ' . $visibility_class; ?>">
-															<?php echo( count( $response ) >= 1 ? $response->post_date : __( 'Not submitted yet', 'coursepress_base_td' ) ); ?>
+															<?php echo( count( $response ) >= 1 ? $response->post_date : __( 'Not submitted yet', 'coursepress' ) ); ?>
 														</td>
 
 														<td class="column-response <?php echo $style . ' ' . $visibility_class; ?>">
 															<?php
 															if ( count( $response ) >= 1 ) {
 																?>
-																<a class="assessment-view-response-link" href="<?php echo admin_url( 'admin.php?page=assessment&course_id=' . $current_course_id . '&unit_id=' . $current_unit->ID . '&user_id=' . $user_object->ID . '&module_id=' . $mod->ID . '&response_id=' . $response->ID . '&assessment_page=' . $assessment_page ); ?>"><?php _e( 'View', 'coursepress_base_td' ); ?></a>
+																<a class="assessment-view-response-link" href="<?php echo admin_url( 'admin.php?page=assessment&course_id=' . $current_course_id . '&unit_id=' . $current_unit->ID . '&user_id=' . $user_object->ID . '&module_id=' . $mod->ID . '&response_id=' . $response->ID . '&assessment_page=' . $assessment_page ); ?>"><?php _e( 'View', 'coursepress' ); ?></a>
 															<?php
 															} else {
 																echo '-';
@@ -489,23 +489,23 @@ if ( isset( $_GET['response_id'] ) ) {
 																	if ( isset( $grade_data ) ) {
 																		?>
 																		<a class="response_grade" alt="<?php
-																		_e( 'Grade by ', 'coursepress_base_td' );
+																		_e( 'Grade by ', 'coursepress' );
 																		echo $instructor_name->display_name;
-																		_e( ' on ' . $grade_time, 'coursepress_base_td' );
+																		_e( ' on ' . $grade_time, 'coursepress' );
 																		?>" title="<?php
-																		_e( 'Grade by ', 'coursepress_base_td' );
+																		_e( 'Grade by ', 'coursepress' );
 																		echo $instructor_name->display_name;
-																		_e( ' on ' . $grade_time, 'coursepress_base_td' );
+																		_e( ' on ' . $grade_time, 'coursepress' );
 																		?>"><?php echo $grade; ?>%</a>
 																	<?php
 																	} else {
-																		_e( 'Pending grade', 'coursepress_base_td' );
+																		_e( 'Pending grade', 'coursepress' );
 																	}
 																} else {
 																	echo '-';
 																}
 															} else {
-																_e( 'Non-assessable', 'coursepress_base_td' );
+																_e( 'Non-assessable', 'coursepress' );
 															}
 															?>
 														</td>
@@ -537,7 +537,7 @@ if ( isset( $_GET['response_id'] ) ) {
 								if ( ! isset( $input_modules_count ) || isset( $input_modules_count ) && $input_modules_count == 0 ) {
 									?>
 									<tr>
-										<td colspan="7"><?php _e( '0 input elements in the selected unit.', 'coursepress_base_td' ); ?></td>
+										<td colspan="7"><?php _e( '0 input elements in the selected unit.', 'coursepress' ); ?></td>
 									</tr>
 								<?php
 								}
@@ -561,7 +561,7 @@ if ( isset( $_GET['response_id'] ) ) {
 		<?php
 		} else {
 			?>
-			<p><?php _e( '0 Units within the selected course.', 'coursepress_base_td' ); ?></p>
+			<p><?php _e( '0 Units within the selected course.', 'coursepress' ); ?></p>
 		<?php
 		}
 	}//Course exists

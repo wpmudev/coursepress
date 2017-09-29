@@ -14,11 +14,11 @@ $coursepress->check_access( $course_id );
 echo do_shortcode( '[course_unit_archive_submenu]' );
 ?>
 
-	<h2><?php _e( 'Discussions', 'coursepress_base_td' ); ?></h2>
+	<h2><?php _e( 'Discussions', 'coursepress' ); ?></h2>
 
 	<div class="discussion-controls">
 		<?php $url = get_permalink( $course_id ) . trailingslashit( $coursepress->get_discussion_slug() ) . trailingslashit( $coursepress->get_discussion_slug_new() ); ?>
-		<button data-link="<?php echo esc_url( $url ); ?>"><?php _e( 'Ask a Question', 'coursepress_base_td' ); ?></button>
+		<button data-link="<?php echo esc_url( $url ); ?>"><?php _e( 'Ask a Question', 'coursepress' ); ?></button>
 	</div>
 
 	<ul class="discussion-archive-list">
@@ -42,7 +42,7 @@ echo do_shortcode( '[course_unit_archive_submenu]' );
 							echo 'discussion-comments-circle';
 						}
 						?>">
-							<span class="comments-count"><?php echo get_comments_number(); ?> <?php _e( 'Comments', 'coursepress_base_td' ); ?></span>
+							<span class="comments-count"><?php echo get_comments_number(); ?> <?php _e( 'Comments', 'coursepress' ); ?></span>
 						</div>
 					</div>
 					<div class="discussion-archive-single">
@@ -58,7 +58,7 @@ echo do_shortcode( '[course_unit_archive_submenu]' );
 							?>
 							<span><?php echo get_the_date(); ?></span> | <span><?php the_author(); ?></span> |
 							<span><?php echo $discussion_unit; ?></span>
-							<span><?php echo get_comments_number(); ?> <?php _e( 'Comments', 'coursepress_base_td' ); ?></span>
+							<span><?php echo get_comments_number(); ?> <?php _e( 'Comments', 'coursepress' ); ?></span>
 						</div>
 						<div class="clearfix"></div>
 					</div>

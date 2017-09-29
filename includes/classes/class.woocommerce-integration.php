@@ -33,7 +33,7 @@ if ( !class_exists( 'CP_WooCommerce_Integration' ) ) {
 			}
 
 			function add_post_parent_metaboxe() {
-				add_meta_box( 'cp_woo_post_parent', __( 'Parent Course', 'coursepress_base_td' ), array( &$this, 'cp_woo_post_parent' ), 'product', 'side', 'default' );
+				add_meta_box( 'cp_woo_post_parent', __( 'Parent Course', 'coursepress' ), array( &$this, 'cp_woo_post_parent' ), 'product', 'side', 'default' );
 			}
 
 			function woo_save_post() {
@@ -71,13 +71,13 @@ if ( !class_exists( 'CP_WooCommerce_Integration' ) ) {
 
 				if ( $purchased_course ) {
 					?>
-					<h2 class="cp_woo_header"><?php _e( 'Course', 'coursepress_base_td' ); ?></h2>
-					<p class="cp_woo_thanks"><?php _e( 'Thank you for signing up for the course. We hope you enjoy your experience.', 'coursepress_base_td' ); ?></p>
+					<h2 class="cp_woo_header"><?php _e( 'Course', 'coursepress' ); ?></h2>
+					<p class="cp_woo_thanks"><?php _e( 'Thank you for signing up for the course. We hope you enjoy your experience.', 'coursepress' ); ?></p>
 					<?php
 					if ( is_user_logged_in() && $order->post_status == 'wc-completed' ) {
 						?>
 						<p class="cp_woo_dashboard_link">
-							<?php printf( __( 'You can find the course in your <a href="%s">Dashboard</a>', 'coursepress_base_td' ), $coursepress->get_student_dashboard_slug( true ) ) ?>
+							<?php printf( __( 'You can find the course in your <a href="%s">Dashboard</a>', 'coursepress' ), $coursepress->get_student_dashboard_slug( true ) ) ?>
 						</p>
 						<hr />
 						<?php
@@ -108,13 +108,13 @@ if ( !class_exists( 'CP_WooCommerce_Integration' ) ) {
 			function add_woocommerce_general_option() {
 				?>
 				<div class="postbox">
-					<h3 class="hndle" style='cursor:auto;'><span><?php _e( 'WooCommerce Integration', 'coursepress_base_td' ); ?></span></h3>
+					<h3 class="hndle" style='cursor:auto;'><span><?php _e( 'WooCommerce Integration', 'coursepress' ); ?></span></h3>
 
 					<div class="inside">
 						<table class="form-table">
 							<tbody>
 								<tr valign="top">
-									<th scope="row"><?php _e( 'Use WooCommerce to sell courses', 'coursepress_base_td' ); ?></th>
+									<th scope="row"><?php _e( 'Use WooCommerce to sell courses', 'coursepress' ); ?></th>
 									<td>
 										<a class="help-icon" href="javascript:;"></a>
 
@@ -122,7 +122,7 @@ if ( !class_exists( 'CP_WooCommerce_Integration' ) ) {
 											<div class="tooltip-before"></div>
 											<div class="tooltip-button">&times;</div>
 											<div class="tooltip-content">
-												<?php _e( 'If checked, WooCommerce will be use instead of the MarketPress for selling courses', 'coursepress_base_td' ) ?>
+												<?php _e( 'If checked, WooCommerce will be use instead of the MarketPress for selling courses', 'coursepress' ) ?>
 											</div>
 										</div>
 										<input type='checkbox' name='option_use_woo' <?php echo( ( get_option( 'use_woo', 0 ) ) ? 'checked' : '' ); ?> />
@@ -130,7 +130,7 @@ if ( !class_exists( 'CP_WooCommerce_Integration' ) ) {
 								</tr>
 
 								<tr valign="top">
-									<th scope="row"><?php _e( 'Redirect WooCommerce product post to a parent course post', 'coursepress_base_td' ); ?></th>
+									<th scope="row"><?php _e( 'Redirect WooCommerce product post to a parent course post', 'coursepress' ); ?></th>
 									<td>
 										<a class="help-icon" href="javascript:;"></a>
 
@@ -138,7 +138,7 @@ if ( !class_exists( 'CP_WooCommerce_Integration' ) ) {
 											<div class="tooltip-before"></div>
 											<div class="tooltip-button">&times;</div>
 											<div class="tooltip-content">
-												<?php _e( 'If checked, visitors who try to access WooCommerce single post will be automatically redirected to a parent course single post.', 'coursepress_base_td' ) ?>
+												<?php _e( 'If checked, visitors who try to access WooCommerce single post will be automatically redirected to a parent course single post.', 'coursepress' ) ?>
 											</div>
 										</div>
 										<input type='checkbox' name='option_redirect_woo_to_course' <?php echo( ( get_option( 'redirect_woo_to_course', 0 ) ) ? 'checked' : '' ); ?> />

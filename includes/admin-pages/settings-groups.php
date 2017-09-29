@@ -18,15 +18,15 @@ if ( isset( $_POST['item_title'] ) ) {
 		wp_nonce_field( 'update-coursepress-options' );
 		?>
 		<div class="postbox">
-			<h3 class="hndle" style='cursor:auto;'><span><?php _e( 'Groups', 'coursepress_base_td' ); ?></span></h3>
+			<h3 class="hndle" style='cursor:auto;'><span><?php _e( 'Groups', 'coursepress' ); ?></span></h3>
 
 			<div class="inside">
-				<p class='description'><?php _e( 'Manage default course Groups', 'coursepress_base_td' ); ?></p>
+				<p class='description'><?php _e( 'Manage default course Groups', 'coursepress' ); ?></p>
 				<table class="form-table">
 					<tbody id="items">
 					<tr>
-						<th><strong><?php _e( 'Group Name', 'coursepress_base_td' ); ?></strong></th>
-						<th><a href="javascript:new_link();"><?php _e( 'Add New', 'coursepress_base_td' ); ?></a></th>
+						<th><strong><?php _e( 'Group Name', 'coursepress' ); ?></strong></th>
+						<th><a href="javascript:new_link();"><?php _e( 'Add New', 'coursepress' ); ?></a></th>
 					</tr>
 
 					<?php
@@ -42,7 +42,7 @@ if ( isset( $_POST['item_title'] ) ) {
 								</td>
 								<td width="10%"><?php //if ( $i != 1 ) {
 									?>
-									<a href="javascript:removeElement( 'items','r<?php echo $i; ?>' );"><?php _e( 'Remove', 'coursepress_base_td' ); ?></a>
+									<a href="javascript:removeElement( 'items','r<?php echo $i; ?>' );"><?php _e( 'Remove', 'coursepress' ); ?></a>
 									<?php
 									//}
 									?></td>
@@ -68,7 +68,7 @@ if ( isset( $_POST['item_title'] ) ) {
 		<!--/postbox-->
 
 		<p class="save-shanges">
-			<?php submit_button( __( 'Save Changes', 'coursepress_base_td' ) ); ?>
+			<?php submit_button( __( 'Save Changes', 'coursepress' ) ); ?>
 		</p>
 
 	</form>
