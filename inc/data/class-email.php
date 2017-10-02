@@ -228,6 +228,8 @@ class CoursePress_Data_Email {
 			}
 		}
 
+		// @Todo Uncomment below check after implementing unsubscribe
+		$send = true;
 		/**
 		 * Check whether an email should be send or not.
 		 *
@@ -235,7 +237,7 @@ class CoursePress_Data_Email {
 		 *
 		 * @param (bool) $send
 		 **/
-		$send = CoursePress_Data_Unsubscribe::is_send( $type, $args );
+		//$send = CoursePress_Data_Unsubscribe::is_send( $type, $args );
 
 		if ( $send ) {
 			return self::process_and_send( $type, $args );
@@ -334,7 +336,7 @@ class CoursePress_Data_Email {
 			$header_string .= $key . ': ' . $value . "\r\n";
 		}
 
-		$email['message'] = CoursePress_Helper_Utility::filter_content( $email['message'] );
+		$email['message'] = CoursePress_Utility::filter_content( $email['message'] );
 		$email['headers'] = $header_string;
 
 		/**

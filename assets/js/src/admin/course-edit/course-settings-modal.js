@@ -98,11 +98,15 @@
 
 	            // Email to send the invitation.
                 var email = this.$('#cp-invite-email-' + this.type).val();
-                if ( '' !== email ) {
+                var first_name = this.$('#cp-invite-first-name-' + this.type).val();
+                var last_name = this.$('#cp-invite-last-name-' + this.type).val();
+                if ( '' !== email && '' !== first_name ) {
                     this.request.set( {
                         'action': 'send_email_invite',
                         'type': this.type,
                         'email': email,
+                        'first_name': first_name,
+                        'last_name': last_name,
                         'course_id': this.course.course_id
                     } );
                     this.request.save();
@@ -116,6 +120,8 @@
              */
             inviteSuccess: function ( data ) {
 
+                this.$('#cp-invite-first-name-' + this.type).val('');
+                this.$('#cp-invite-last-name-' + this.type).val('');
                 this.$('#cp-invite-email-' + this.type).val('');
                 // Show response message.
                 this.showResponse(data, this.inv_resp);
