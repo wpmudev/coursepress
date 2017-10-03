@@ -1,6 +1,13 @@
-<div class="course-comments">
-	<div class="comment-list">
-		<?php coursepress_wp_list_comments(); ?>
-	</div>
-	<?php comment_form( coursepress_get_comment_args() ); ?>
-</div>
+<?php
+/**
+ * @var int $user_id
+ * @var int $course_id
+ */
+$data = coursepress_get_notifications( $course_id, $user_id );
+
+if ( empty( $data ) ) {
+
+} else {
+
+}
+

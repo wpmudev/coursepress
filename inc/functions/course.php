@@ -1656,4 +1656,116 @@ function coursepress_search_students( $args = array() ) {
 
 	return $found;
 }
+/**
+ * Get notifications.
+ */
+function coursepress_get_notifications( $user_id, $course_id ) {
+	/**
+	 * Base query
+	 */
+	$args = array(
+		'post_type' => self::get_post_type_name(),
+		'meta_query' => array(
+			'relation' => 'OR',
+			array(
+				'key' => 'course_id',
+				'value' => 'all',
+			),
+			/**
+			 * Receivers are not set.
+			 */
+			array(
+				array(
+					'key' => 'course_id',
+					'value' => $course_id,
+				),
+				array(
+					'key' => 'receivers',
+					'compare' => 'NOT EXISTS',
+				),
+			),
+			/**
+			 * Enrolled to this course!
+			 */
+			array(
+				array(
+					'key' => 'course_id',
+					'value' => $course_id,
+				),
+				array(
+					'key' => 'receivers',
+					'value' => 'enrolled',
+				),
+			),
+		),
+		'post_per_page' => 20,
+	);
+	/**
+	 * Get student progress
+	 */
+	$student_id = get_current_user_id();
+	$student_progress = CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course_id );
+	/**
+	 * Course is completed
+	 */
+	$is_done = CoursePress_Helper_Utility::get_array_val( $student_progress, 'completion/completed' );
+	if ( $is_done ) {
+		$args['meta_query'][] = array(
+			array(
+				'key' => 'course_id',
+				'value' => $course_id,
+			),
+			array(
+				'key' => 'receivers',
+				'value' => 'passed',
+			),
+		);
+	}
+	/**
+	 * Course is failed
+	 */
+	$is_failed = CoursePress_Helper_Utility::get_array_val( $student_progress, 'completion/failed' );
+	if ( $is_failed ) {
+		$args['meta_query'][] = array(
+			array(
+				'key' => 'course_id',
+				'value' => $course_id,
+			),
+			array(
+				'key' => 'receivers',
+				'value' => 'failed',
+			),
+		);
+	}
+	/**
+	 * Completed Units
+	 */
+	$units = CoursePress_Data_Course::get_units( $course_id, $status = array( 'publish' ), true );
+	foreach ( $units as $unit_id ) {
+		$unit_completed = CoursePress_Helper_Utility::get_array_val(
+			$student_progress,
+			'completion/' . $unit_id . '/completed'
+		);
+		if ( ! $unit_completed ) {
+			continue;
+		}
+		$args['meta_query'][] = array(
+			array(
+				'key' => 'course_id',
+				'value' => $course_id,
+			),
+			array(
+				'key' => 'receivers',
+				'value' => sprintf( 'unit-%d', $unit_id ),
+			),
+		);
+	}
+	/**
+	 * Finally get posts.
+	 */
+	return get_posts( $args );
+}
+
+
+
 
