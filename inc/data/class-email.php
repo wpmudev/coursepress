@@ -248,9 +248,13 @@ class CoursePress_Data_Email {
 	 * Send a CoursePress email template to a single user.
 	 *
 	 * @since  1.0.0
-	 * @param  array $args Email args.
+	 *
+	 * @param string $type Email type.
+	 * @param array $args Email args.
+	 *
 	 * @return bool True if the email was processed correctly.
-	 */
+	 * @throws Exception
+	 **/
 	protected static function process_and_send( $type, $args ) {
 		// Legacy support for args['email']. Remove this in future!
 		if ( ! empty( $args['email'] ) && empty( $args['to'] ) ) {
@@ -334,7 +338,7 @@ class CoursePress_Data_Email {
 			$header_string .= $key . ': ' . $value . "\r\n";
 		}
 
-		$email['message'] = CoursePress_Helper_Utility::filter_content( $email['message'] );
+		$email['message'] = CoursePress_Utility::filter_content( $email['message'] );
 		$email['headers'] = $header_string;
 
 		/**
