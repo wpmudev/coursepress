@@ -1,0 +1,238 @@
+<?php
+/**
+ * Unsubscribe emails feature.
+ *
+ * @since 2.0
+ **/
+class CoursePress_Data_Unsubscribe {
+
+	/**
+	 * Initialize the class.
+	 *
+	 * Adding unsubscribe popup content.
+	 */
+	public static function init() {
+
+		add_action( 'wp_footer', array( __CLASS__, 'show_popup_unsubscribe_message' ) );
+	}
+
+	/**
+	 * Get the list of email types to allow unsubscribe.
+	 *
+	 * @since 2.0
+	 *
+	 * @return array
+	 */
+	public static function unsubscribable() {
+
+		return array(
+			CoursePress_Data_Email::UNIT_STARTED_NOTIFICATION,
+			CoursePress_Data_Email::COURSE_START_NOTIFICATION,
+		);
+	}
+
+	/**
+	 * Check if the user already unsubscribed.
+	 *
+	 * @param int $user_id User ID.
+	 *
+	 * @return bool
+	 */
+	public static function is_unsubscriber( $user_id ) {
+
+		// Get user profile data.
+		$user = get_userdata( $user_id );
+
+		if ( is_object( $user ) && ! empty( $user->ID ) ) {
+			// Check if unsubscribe meta exists.
+			$is_unsubscriber = get_user_meta( $user->ID, 'cp_unsubscriber', true );
+
+			return coursepress_is_true( $is_unsubscriber );
+		}
+
+		return false;
+	}
+
+	/**
+	 * Hook to handle unsubscribed emails before sending emails.
+	 *
+	 * @param string $message Email body.
+	 *
+	 * @return mixed
+	 */
+	public static function hook_unsubscribe_link( $message ) {
+
+		$user_id = get_current_user_id();
+
+		// Get slug for the courses listing page.
+		$courses_link = coursepress_get_setting( 'slugs/course', 'courses' );
+
+		// Include unsubscribe link
+		$unsubscribe_link = add_query_arg( array( 'uid' => $user_id, 'unsubscriber' => 1 ), $courses_link );
+
+		// Replace variables with actual values.
+		$message = coursepress_replace_vars( $message, array( 'UNSUBSCRIBE_LINK' => $unsubscribe_link ) );
+
+		// Remove the filter
+		remove_filter( 'coursepress_email_message', array( __CLASS__, 'hook_unsubscribe_link' ) );
+
+		return $message;
+	}
+
+	/**
+	 * Check if an email should be send to designated user.
+	 *
+	 * @param string $email_type Email type.
+	 * @param array $email_fields Array of fields.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool
+	 **/
+	public static function can_send( $email_type, $email_fields ) {
+
+		$mail_to = '';
+		$send = true;
+
+		// Set email address.
+		if ( ! empty( $email_fields['to'] ) ) {
+			$mail_to = $email_fields['to'];
+		} elseif ( ! empty( $email_fields['email'] ) ) {
+			$mail_to = $email_fields['email'];
+		}
+
+		// Continue only if email is available.
+		if ( ! empty( $mail_to ) ) {
+
+			// Get the user account using email.
+			$user = get_user_by( 'email', $mail_to );
+			// Check if the user is already unsubscribed.
+			$is_unsubscriber = is_object( $user ) ? self::is_unsubscriber( $user->ID ) : false;
+			// Check if current email type can be unsubscribed.
+			$can_unsubscribe = in_array( $email_type, self::unsubscribable() );
+
+			// Check if we can send the email alert.
+			if ( $can_unsubscribe && $is_unsubscriber ) {
+				$send = false;
+			} elseif ( $can_unsubscribe ) {
+				// If not, remove the unsubscribe link.
+				add_filter( 'coursepress_email_message', array( __CLASS__, 'hook_unsubscribe_link' ), 10, 2 );
+			}
+		}
+
+		return $send;
+	}
+
+	/**
+	 * Get the user ID of unsubscriber from url.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return mixed
+	 **/
+	public static function get_unsubscriber_id() {
+
+		if ( isset( $_GET['uid'] ) && isset( $_GET['unsubscriber'] ) ) {
+			// User ID from link.
+			$user_id = (int) $_GET['uid'];
+			// Load user data.
+			$user = get_userdata( $user_id );
+			// Check if it is a valid user.
+			if ( is_object( $user ) && ! empty( $user->ID ) ) {
+				return $user_id;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Message to show after successful removal from subscribers list.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return mixed|string|void
+	 */
+	public static function unsubscribe_message() {
+
+		$msg = sprintf( '<h3 class="bbm-modal__title cp-unsubscribe-message">%s</h3>', __( 'Unsubscribe Successful!', 'CP_TD' ) );
+		$msg .= sprintf( '<div class="bbm-modal__section"><p>%s</p></div>', __( 'You have been removed from our subscribers list.', 'CP_TD' ) );
+		$msg .= sprintf( '<div class="bbm-modal__bottombar"><a class="cancel-link">%s</a></div>', __( 'Done', 'CP_TD' ) );
+
+		/**
+		 * Filter the unsubscribe message.
+		 *
+		 * @since 2.0
+		 **/
+		return apply_filters( 'coursepress_unsubscribe_message', $msg );
+	}
+
+	/**
+	 * Process the unsubscription and update the meta.
+	 *
+	 * Update the user meta `cp_unsubscriber` to mark as unsubscriber.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param int $unsubscribe_id User ID.
+	 */
+	public static function unsubscribe( $unsubscribe_id ) {
+
+		// We have an ID, unsubscribe from the list.
+		if ( (int) $unsubscribe_id > 0 ) {
+
+			/**
+			 * Fires before the user marked as unsubscriber.
+			 *
+			 * @since 2.0
+			 *
+			 * @param (int) $unsubscribe_id User ID.
+			 **/
+			do_action( 'coursepress_remove_subscriber', $unsubscribe_id );
+
+			// Marked the user as unsubscriber.
+			update_user_meta( $unsubscribe_id, 'cp_unsubscriber', true );
+
+			/**
+			 * Fires after the user marked as unsubscriber.
+			 *
+			 * @since 2.0
+			 *
+			 * @param (int) $unsubscribe_id User ID.
+			 **/
+			do_action( 'coursepress_removed_subscriber', $unsubscribe_id );
+		}
+	}
+
+	/**
+	 * Show unsubscribe popup message to user.
+	 *
+	 * @since 2.0
+	 *
+	 * @return void
+	 */
+	public static function show_popup_unsubscribe_message() {
+
+		// Get the valid user id.
+		$unsubscribe_id = self::get_unsubscriber_id();
+
+		// Continue only is not already unsubscribed.
+		if ( (int) $unsubscribe_id > 0 && ! self::is_unsubscriber( $unsubscribe_id ) ) {
+
+			// Process the unsubscribe action.
+			self::unsubscribe( $unsubscribe_id );
+
+			// Get the unsubscribe message.
+			$content = self::unsubscribe_message();
+
+			?>
+			<script type="text/template" id="modal-template">
+				<div class="enrollment-modal-container"></div>
+			</script>
+			<script type="text/template" id="cp-unsubscribe-message" data-type="modal-step" data-modal-action="unsubscribe">
+				<?php echo $content; ?>
+			</script>
+			<?php
+		}
+	}
+}

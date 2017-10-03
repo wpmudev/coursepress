@@ -730,3 +730,42 @@ function coursepress_replace_vars( $content, $vars ) {
 
 	return str_replace( $keys, $values, $content );
 }
+
+/**
+ * Evaluate if the specified value translates to boolean TRUE.
+ *
+ * True:
+ * - Boolean true
+ * - Number other than 0
+ * - Strings 'yes', 'on', 'true'
+ *
+ * @param  mixed $value Value to evaluate.
+ *
+ * @since  2.0.0
+ *
+ * @return bool
+ */
+function coursepress_is_true( $value ) {
+
+	if ( ! $value ) {
+		// Handles: null, 0, '0', false, ''.
+		return false;
+	} elseif ( true === $value ) {
+		// Bool directly.
+		return true;
+	} elseif ( ! is_scalar( $value ) ) {
+		// Arrays, objects, etc. always evaluate to false.
+		return false;
+	} elseif ( is_numeric( $value ) ) {
+		// A number other than 0 is true.
+		return true;
+	}
+
+	// Other strings for boolean.
+	$value = strtolower( (string) $value );
+	if ( 'on' == $value || 'yes' == $value || 'true' == $value ) {
+		return true;
+	}
+
+	return false;
+}
