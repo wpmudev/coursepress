@@ -30,11 +30,17 @@ $course = coursepress_get_course();
                 <span class="meta-title"><?php _e( 'Language', 'cp' ); ?>:</span>
                 <span class="course-meta course-meta-language"><?php echo $course->get_course_language(); ?></span>
             </p>
+<?php
+$price = $course->get_course_cost();
+if ( ! empty( $price ) ) {
+?>
             <p class="course-meta">
                 <span class="meta-title"><?php _e( 'Price', 'cp' ); ?>:</span>
-                <span class="course-meta course-meta-price"><?php echo $course->get_course_cost(); ?></span>
+                <span class="course-meta course-meta-price"><?php echo $price; ?></span>
             </p>
-
+<?php
+}
+?>
             <p class="course-button">
                 <?php coursepress_get_course_enrollment_button(); ?>
             </p>
