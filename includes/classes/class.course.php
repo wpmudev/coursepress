@@ -258,6 +258,7 @@ if ( ! class_exists( 'Course' ) ) {
 		}
 
 		public static function get_units_with_modules( $course_id, $force = false ) {
+			global $wpdb;
 
 			$status = array( 'publish', 'draft' );
 
@@ -279,7 +280,7 @@ if ( ! class_exists( 'Course' ) ) {
 
 				$sql = 'AND ( ';
 				foreach ( $status as $filter ) {
-					$sql .= '%1$s.post_status = \'' . $filter . '\' OR ';
+					$sql .= $wpdb->posts.'.post_status = \'' . $filter . '\' OR ';
 				}
 				$sql = preg_replace( '/(OR.)$/', '', $sql );
 				$sql .= ' )';
@@ -385,8 +386,8 @@ if ( ! class_exists( 'Course' ) ) {
 		public static function filter_unit_module_where( $sql ) {
 			global $wpdb;
 
-			$sql = 'AND ( %1$s.post_type = \'module\' AND %1$s.post_parent IN (SELECT ID FROM %1$s AS wpp WHERE wpp.post_type = \'unit\' AND wpp.post_parent = %2$d) OR (%1$s.post_type = \'unit\' AND %1$s.post_parent = %2$d ) ) ' . self::$where_post_status;
-			$sql = $wpdb->prepare( $sql, $wpdb->posts, self::$last_course_id );
+			$sql = 'AND ( '.$wpdb->posts.'.post_type = \'module\' AND '.$wpdb->posts.'.post_parent IN (SELECT ID FROM '.$wpdb->posts.' AS wpp WHERE wpp.post_type = \'unit\' AND wpp.post_parent = %d) OR ('.$wpdb->posts.'.post_type = \'unit\' AND '.$wpdb->posts.'.post_parent = %d ) ) ' . self::$where_post_status;
+			$sql = $wpdb->prepare( $sql, self::$last_course_id, self::$last_course_id );
 
 			return $sql;
 		}
