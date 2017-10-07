@@ -69,37 +69,12 @@ class CoursePress_Admin_Comments extends CoursePress_Admin_Page {
 			'hidden_columns' => $this->hidden_columns(),
 			'items' => $this->list->items,
 			'page' => $page,
-			'pagination' => $this->set_courses_pagination( $count ),
+			'pagination' => $this->set_pagination( $count, 'coursepress_course_per_page' ),
 			'search' => $search,
 			'statuses' => $statuses,
 		);
 		coursepress_render( 'views/admin/comments', $args );
 		coursepress_render( 'views/admin/footer-text' );
-	}
-
-	/**
-	 * Set pagination for courses listing page.
-	 *
-	 * We are using WP_Listing_Table class to set pagination.
-	 *
-	 * @param int $count Total courses.
-	 *
-	 * @return object
-	 */
-	function set_pagination( $count ) {
-		// Get no. of courses per page.
-		$per_page = get_user_meta( get_current_user_id(), 'coursepress_course_per_page', true );
-		$per_page = empty( $per_page ) ? coursepress_get_option( 'posts_per_page', 20 )  : $per_page;
-
-		// Using WP_List table for pagination.
-		$listing = new WP_List_Table();
-		$args = array(
-			'total_items' => $count,
-			'per_page' => $per_page,
-		);
-		$listing->set_pagination_args( $args );
-
-		return $listing;
 	}
 
 	function get_edit_page() {

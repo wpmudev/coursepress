@@ -103,7 +103,9 @@
                 <?php endforeach; ?>
             <?php else : ?>
                 <tr class="odd">
-                    <td><?php _e( 'No students found.', 'cp' ); ?></td>
+                    <td colspan="<?php echo count( $columns ); ?>">
+                        <?php _e( 'No students found.', 'cp' ); ?>
+                    </td>
                 </tr>
             <?php endif; ?>
             </tbody>
