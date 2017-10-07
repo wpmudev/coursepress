@@ -13,7 +13,7 @@ class CoursePress_Data_Unsubscribe {
 	 */
 	public static function init() {
 
-		add_action( 'wp_footer', array( __CLASS__, 'show_popup_unsubscribe_message' ) );
+		add_filter( 'the_content', array( __CLASS__, 'show_unsubscribe_message' ) );
 	}
 
 	/**
@@ -211,26 +211,35 @@ class CoursePress_Data_Unsubscribe {
 	 *
 	 * @return void
 	 */
-	public static function show_popup_unsubscribe_message() {
+	public static function show_unsubscribe_message() {
 
 		// Get the valid user id.
-		$unsubscribe_id = self::get_unsubscriber_id();
+		$subscriber_id = self::get_unsubscriber_id();
+
+		// @todo Add popup content only to required pages.
 
 		// Continue only is not already unsubscribed.
-		if ( (int) $unsubscribe_id > 0 && ! self::is_unsubscriber( $unsubscribe_id ) ) {
+		if ( (int) $subscriber_id > 0 ) {
+
+			// Do not show if already unsubscribed.
+			if ( self::is_unsubscriber( $subscriber_id ) ) {
+				return;
+			}
 
 			// Process the unsubscribe action.
-			self::unsubscribe( $unsubscribe_id );
+			//self::unsubscribe( $unsubscribe_id );
 
 			// Get the unsubscribe message.
 			$content = self::unsubscribe_message();
 
 			?>
-			<script type="text/template" id="modal-template">
-				<div class="enrollment-modal-container"></div>
-			</script>
-			<script type="text/template" id="cp-unsubscribe-message" data-type="modal-step" data-modal-action="unsubscribe">
-				<?php echo $content; ?>
+			<script type="text/template" id="cp-unsubscribe-message">
+				<div class="coursepress-popup-body">
+					<?php echo $content; ?>
+					<div class="coursepress-popup-footer">
+						<button type="button" class="cp-btn cp-btn-active step-next cp-close"><?php _e( 'DONE', 'cp' ); ?></button>
+					</div>
+				</div>
 			</script>
 			<?php
 		}
