@@ -50,7 +50,6 @@
                         </select>
                         <input type="hidden" id="course-categories-search" value="">
                     </div>
-                    <div id="jj"></div>
                     <div class="cp-div-flex">
                         <button type="button" class="cp-btn" id="cp-create-cat"><?php _e( 'Create Category', 'cp' ); ?></button>
                     </div>
