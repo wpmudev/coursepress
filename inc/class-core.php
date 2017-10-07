@@ -19,6 +19,10 @@ final class CoursePress_Core extends CoursePress_Utility {
 	public function __construct() {
 		// Register CP post types
 		add_action( 'init', array( $this, 'register_post_types' ) );
+
+		// Initialize unsubscribe
+		add_action( 'init', array( $this, 'init_unsubscribe' ) );
+
 		// Register CP query vars
 		add_filter( 'query_vars', array( $this, 'add_query_vars' ) );
 		// Add CP rewrite rules
@@ -97,6 +101,16 @@ final class CoursePress_Core extends CoursePress_Utility {
 			'query_var' => false,
 			'publicly_queryable'=> false,
 		) );
+	}
+
+	/**
+	 * Initialize unsubscribe action.
+	 *
+	 * @return void
+	 */
+	function init_unsubscribe() {
+
+		CoursePress_Data_Unsubscribe::init();
 	}
 
 	function add_query_vars( $vars ) {
