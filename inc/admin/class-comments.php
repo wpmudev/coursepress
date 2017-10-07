@@ -69,7 +69,7 @@ class CoursePress_Admin_Comments extends CoursePress_Admin_Page {
 			'hidden_columns' => $this->hidden_columns(),
 			'items' => $this->list->items,
 			'page' => $page,
-			'pagination' => $this->set_pagination( $count, 'coursepress_course_per_page' ),
+			'pagination' => $this->set_pagination( $count, 'coursepress_comments_per_page' ),
 			'search' => $search,
 			'statuses' => $statuses,
 		);
