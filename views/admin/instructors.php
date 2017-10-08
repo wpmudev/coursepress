@@ -149,7 +149,7 @@ endswitch;
 } else {
 ?>
                     <tr class="odd">
-                        <td>
+                        <td colspan="<?php echo count( $columns ); ?>">
                             <?php _e( 'No instructors found.', 'cp' ); ?>
                         </td>
                     </tr>

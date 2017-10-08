@@ -168,20 +168,24 @@ function coursepress_get_setting( $key = true, $default = '' ) {
         $defaults['general']['reports_font'] = coursepress_get_array_val( $settings, 'reports/font' );
     }
 
-    /**
-     * Fire to allow setting the default settings.
-     *
-     * @since 3.0
-     */
-    $defaults = apply_filters( 'coursepress_default_settings', $defaults );
-	$settings['general'] = wp_parse_args( $settings['general'], $defaults['general'] );
-	$settings['slugs'] = wp_parse_args( $settings['slugs'], $defaults['slugs'] );
+	/**
+	 * Fire to allow setting the default settings.
+	 *
+	 * @since 3.0
+	 */
+	$defaults = apply_filters( 'coursepress_default_settings', $defaults );
 
-    if ( is_bool( $key ) && TRUE === $key ) {
-        return $settings;
-    }
+	$general = isset( $settings['general'] )? $settings['general']:array();
+	$settings['general'] = wp_parse_args( $general, $defaults['general'] );
 
-    return coursepress_get_array_val( $settings, $key, $default );
+	$slugs = isset( $settings['slugs'] )? $settings['slugs']:array();
+	$settings['slugs'] = wp_parse_args( $slugs, $defaults['slugs'] );
+
+	if ( is_bool( $key ) && TRUE === $key ) {
+		return $settings;
+	}
+
+	return coursepress_get_array_val( $settings, $key, $default );
 }
 
 /**
@@ -708,7 +712,7 @@ function coursepress_replace_vars( $content, $vars ) {
 	$login_url = wp_login_url();
 
 	if ( coursepress_get_setting( 'general/use_custom_login', true ) ) {
-		$login_url = coursepress_get_login_url();
+		$login_url = coursepress_get_student_login_url();
 	}
 	$vars['COURSES_ADDRESS'] = coursepress_get_main_courses_url();
 	$vars['BLOG_ADDRESS'] = site_url();
