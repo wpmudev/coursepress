@@ -8,7 +8,7 @@
 
         var EmailUnsubscribeModal = CoursePress.View.extend( {
             template_id: 'cp-unsubscribe-message',
-            className: 'coursepress-modal',
+            className: 'coursepress-modal-front',
             initialize: function () {
 
                 if ( $( '#cp-unsubscribe-message' ).length > 0 ) {

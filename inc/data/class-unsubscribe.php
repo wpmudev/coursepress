@@ -155,9 +155,8 @@ class CoursePress_Data_Unsubscribe {
 	 */
 	public static function unsubscribe_message() {
 
-		$msg = sprintf( '<h3 class="bbm-modal__title cp-unsubscribe-message">%s</h3>', __( 'Unsubscribe Successful!', 'CP_TD' ) );
-		$msg .= sprintf( '<div class="bbm-modal__section"><p>%s</p></div>', __( 'You have been removed from our subscribers list.', 'CP_TD' ) );
-		$msg .= sprintf( '<div class="bbm-modal__bottombar"><a class="cancel-link">%s</a></div>', __( 'Done', 'CP_TD' ) );
+		$msg = sprintf( '<h3 class="cp-unsubscribe-message">%s</h3>', __( 'Unsubscribe Successful!', 'CP_TD' ) );
+		$msg .= sprintf( '<p>%s</p>', __( 'You have been removed from our subscribers list.', 'CP_TD' ) );
 
 		/**
 		 * Filter the unsubscribe message.
@@ -234,7 +233,7 @@ class CoursePress_Data_Unsubscribe {
 
 			?>
 			<script type="text/template" id="cp-unsubscribe-message">
-				<div class="coursepress-popup-body">
+				<div class="coursepress-popup-body-front">
 					<?php echo $content; ?>
 					<div class="coursepress-popup-footer">
 						<button type="button" class="cp-btn cp-btn-active step-next cp-close"><?php _e( 'DONE', 'cp' ); ?></button>
