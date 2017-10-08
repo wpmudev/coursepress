@@ -155,7 +155,7 @@ class CoursePress_Data_Unsubscribe {
 	 */
 	public static function unsubscribe_message() {
 
-		$msg = sprintf( '<h3 class="cp-unsubscribe-message">%s</h3>', __( 'Unsubscribe Successful!', 'CP_TD' ) );
+		$msg = sprintf( '<h3 class="cp-unsubscribe-message-head">%s</h3>', __( 'Unsubscribe Successful!', 'CP_TD' ) );
 		$msg .= sprintf( '<p>%s</p>', __( 'You have been removed from our subscribers list.', 'CP_TD' ) );
 
 		/**
@@ -215,8 +215,6 @@ class CoursePress_Data_Unsubscribe {
 		// Get the valid user id.
 		$subscriber_id = self::get_unsubscriber_id();
 
-		// @todo Add popup content only to required pages.
-
 		// Continue only is not already unsubscribed.
 		if ( (int) $subscriber_id > 0 ) {
 
@@ -226,7 +224,7 @@ class CoursePress_Data_Unsubscribe {
 			}
 
 			// Process the unsubscribe action.
-			//self::unsubscribe( $unsubscribe_id );
+			self::unsubscribe( $subscriber_id );
 
 			// Get the unsubscribe message.
 			$content = self::unsubscribe_message();
@@ -235,8 +233,8 @@ class CoursePress_Data_Unsubscribe {
 			<script type="text/template" id="cp-unsubscribe-message">
 				<div class="coursepress-popup-body-front">
 					<?php echo $content; ?>
-					<div class="coursepress-popup-footer">
-						<button type="button" class="cp-btn cp-btn-active step-next cp-close"><?php _e( 'DONE', 'cp' ); ?></button>
+					<div class="coursepress-popup-footer-front">
+						<button type="button" class="cp-btn cp-btn-active step-next cp-close"><?php _e( 'OK', 'cp' ); ?></button>
 					</div>
 				</div>
 			</script>

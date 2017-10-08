@@ -9,6 +9,9 @@
         var EmailUnsubscribeModal = CoursePress.View.extend( {
             template_id: 'cp-unsubscribe-message',
             className: 'coursepress-modal-front',
+            events: {
+                'click .cp-close': 'remove',
+            },
             initialize: function () {
 
                 if ( $( '#cp-unsubscribe-message' ).length > 0 ) {
@@ -20,7 +23,6 @@
             render: function() {
                 CoursePress.View.prototype.render.apply( this );
                 this.$el.appendTo( 'body' );
-                window.console.log('ssss');
             },
         } );
 
