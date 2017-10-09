@@ -13,7 +13,7 @@ class CoursePress_Data_Unsubscribe {
 	 */
 	public function init() {
 
-		add_filter( 'the_content', array( $this, 'show_unsubscribe_message' ) );
+		add_filter( 'wp_footer', array( $this, 'show_unsubscribe_message' ) );
 	}
 
 	/**
@@ -224,7 +224,7 @@ class CoursePress_Data_Unsubscribe {
 			}
 
 			// Process the unsubscribe action.
-			$this->unsubscribe( $subscriber_id );
+			//$this->unsubscribe( $subscriber_id );
 
 			// Get the unsubscribe message.
 			$content = $this->unsubscribe_message();
