@@ -13,7 +13,7 @@ class CoursePress_Data_Unsubscribe {
 	 */
 	public function init() {
 
-		add_filter( 'wp_footer', array( $this, 'show_unsubscribe_message' ) );
+		add_action( 'wp_footer', array( $this, 'show_unsubscribe_message' ) );
 	}
 
 	/**
