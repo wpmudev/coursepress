@@ -248,4 +248,44 @@ abstract class CoursePress_Utility {
 
 		return json_encode($setup_data);
 	}
+
+	/**
+	 * Filter HTML string and remove forbidden tags and attributes.
+	 * This function uses the wp_kses() function to sanitize the content.
+	 *
+	 * @param  string $content Raw HTML code.
+	 * @param  bool   $no_html Return sanitized HTML (false) or plain text (true)?
+	 *
+	 * @since  2.0.0
+	 *
+	 * @return string Sanitized content.
+	 */
+	public static function filter_content( $content, $no_html = false ) {
+
+		$kses_rules = apply_filters( 'coursepress_allowed_post_tags', wp_kses_allowed_html( 'post' ) );
+
+		if ( $no_html ) {
+			if ( is_array( $content ) ) {
+				foreach ( $content as $content_key => $content_value ) {
+					$content[ $content_key ] = wp_filter_nohtml_kses( $content_value );
+				}
+			} else {
+				$content = wp_filter_nohtml_kses( $content );
+			}
+		} else {
+			if ( current_user_can( 'unfiltered_html' ) ) {
+				$content = $content;
+			} else {
+				if ( is_array( $content ) ) {
+					foreach ( $content as $content_key => $content_value ) {
+						$content[ $content_key ] = wp_kses( $content_value,  $kses_rules );
+					}
+				} else {
+					$content = wp_kses( $content, $kses_rules );
+				}
+			}
+		}
+
+		return $content;
+	}
 }
