@@ -224,7 +224,7 @@ class CoursePress_Data_Unsubscribe {
 			}
 
 			// Process the unsubscribe action.
-			//$this->unsubscribe( $subscriber_id );
+			$this->unsubscribe( $subscriber_id );
 
 			// Get the unsubscribe message.
 			$content = $this->unsubscribe_message();
