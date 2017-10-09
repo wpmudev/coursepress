@@ -11,9 +11,9 @@ class CoursePress_Data_Unsubscribe {
 	 *
 	 * Adding unsubscribe popup content.
 	 */
-	public static function init() {
+	public function init() {
 
-		add_filter( 'the_content', array( __CLASS__, 'show_unsubscribe_message' ) );
+		add_filter( 'the_content', array( $this, 'show_unsubscribe_message' ) );
 	}
 
 	/**
@@ -23,7 +23,7 @@ class CoursePress_Data_Unsubscribe {
 	 *
 	 * @return array
 	 */
-	public static function unsubscribable() {
+	private function unsubscribable() {
 
 		return array(
 			CoursePress_Data_Email::UNIT_STARTED_NOTIFICATION,
@@ -38,7 +38,7 @@ class CoursePress_Data_Unsubscribe {
 	 *
 	 * @return bool
 	 */
-	public static function is_unsubscriber( $user_id ) {
+	public function is_unsubscriber( $user_id ) {
 
 		// Get user profile data.
 		$user = get_userdata( $user_id );
@@ -60,7 +60,7 @@ class CoursePress_Data_Unsubscribe {
 	 *
 	 * @return mixed
 	 */
-	public static function hook_unsubscribe_link( $message ) {
+	public function hook_unsubscribe_link( $message ) {
 
 		$user_id = get_current_user_id();
 
@@ -74,7 +74,7 @@ class CoursePress_Data_Unsubscribe {
 		$message = coursepress_replace_vars( $message, array( 'UNSUBSCRIBE_LINK' => $unsubscribe_link ) );
 
 		// Remove the filter
-		remove_filter( 'coursepress_email_message', array( __CLASS__, 'hook_unsubscribe_link' ) );
+		remove_filter( 'coursepress_email_message', array( $this, 'hook_unsubscribe_link' ) );
 
 		return $message;
 	}
@@ -89,7 +89,7 @@ class CoursePress_Data_Unsubscribe {
 	 *
 	 * @return bool
 	 **/
-	public static function can_send( $email_type, $email_fields ) {
+	public function can_send( $email_type, $email_fields ) {
 
 		$mail_to = '';
 		$send = true;
@@ -107,16 +107,16 @@ class CoursePress_Data_Unsubscribe {
 			// Get the user account using email.
 			$user = get_user_by( 'email', $mail_to );
 			// Check if the user is already unsubscribed.
-			$is_unsubscriber = is_object( $user ) ? self::is_unsubscriber( $user->ID ) : false;
+			$is_unsubscriber = is_object( $user ) ? $this->is_unsubscriber( $user->ID ) : false;
 			// Check if current email type can be unsubscribed.
-			$can_unsubscribe = in_array( $email_type, self::unsubscribable() );
+			$can_unsubscribe = in_array( $email_type, $this->unsubscribable() );
 
 			// Check if we can send the email alert.
 			if ( $can_unsubscribe && $is_unsubscriber ) {
 				$send = false;
 			} elseif ( $can_unsubscribe ) {
 				// If not, remove the unsubscribe link.
-				add_filter( 'coursepress_email_message', array( __CLASS__, 'hook_unsubscribe_link' ), 10, 2 );
+				add_filter( 'coursepress_email_message', array( $this, 'hook_unsubscribe_link' ), 10, 2 );
 			}
 		}
 
@@ -130,7 +130,7 @@ class CoursePress_Data_Unsubscribe {
 	 *
 	 * @return mixed
 	 **/
-	public static function get_unsubscriber_id() {
+	private function get_unsubscriber_id() {
 
 		if ( isset( $_GET['uid'] ) && isset( $_GET['unsubscriber'] ) ) {
 			// User ID from link.
@@ -153,7 +153,7 @@ class CoursePress_Data_Unsubscribe {
 	 *
 	 * @return mixed|string|void
 	 */
-	public static function unsubscribe_message() {
+	private function unsubscribe_message() {
 
 		$msg = sprintf( '<h3 class="cp-unsubscribe-message-head">%s</h3>', __( 'Unsubscribe Successful!', 'CP_TD' ) );
 		$msg .= sprintf( '<p>%s</p>', __( 'You have been removed from our subscribers list.', 'CP_TD' ) );
@@ -175,7 +175,7 @@ class CoursePress_Data_Unsubscribe {
 	 *
 	 * @param int $unsubscribe_id User ID.
 	 */
-	public static function unsubscribe( $unsubscribe_id ) {
+	public function unsubscribe( $unsubscribe_id ) {
 
 		// We have an ID, unsubscribe from the list.
 		if ( (int) $unsubscribe_id > 0 ) {
@@ -210,24 +210,24 @@ class CoursePress_Data_Unsubscribe {
 	 *
 	 * @return void
 	 */
-	public static function show_unsubscribe_message() {
+	public function show_unsubscribe_message() {
 
 		// Get the valid user id.
-		$subscriber_id = self::get_unsubscriber_id();
+		$subscriber_id = $this->get_unsubscriber_id();
 
 		// Continue only is not already unsubscribed.
 		if ( (int) $subscriber_id > 0 ) {
 
 			// Do not show if already unsubscribed.
-			if ( self::is_unsubscriber( $subscriber_id ) ) {
+			if ( $this->is_unsubscriber( $subscriber_id ) ) {
 				return;
 			}
 
 			// Process the unsubscribe action.
-			self::unsubscribe( $subscriber_id );
+			//$this->unsubscribe( $subscriber_id );
 
 			// Get the unsubscribe message.
-			$content = self::unsubscribe_message();
+			$content = $this->unsubscribe_message();
 
 			?>
 			<script type="text/template" id="cp-unsubscribe-message">

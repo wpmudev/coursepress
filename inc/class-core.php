@@ -110,7 +110,7 @@ final class CoursePress_Core extends CoursePress_Utility {
 	 */
 	function init_unsubscribe() {
 
-		CoursePress_Data_Unsubscribe::init();
+		( new CoursePress_Data_Unsubscribe() )->init();
 	}
 
 	function add_query_vars( $vars ) {
