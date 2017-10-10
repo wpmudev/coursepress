@@ -1223,6 +1223,8 @@ function coursepress_delete_course( $course_id ) {
 
 	if ( $students ) {
 		foreach ( $students as $student ) {
+			// Remove user from deleted course
+			$student->remove_course_student( $course_id );
 		}
 	}
 
