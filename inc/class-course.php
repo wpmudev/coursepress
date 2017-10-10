@@ -974,44 +974,6 @@ class CoursePress_Course extends CoursePress_Utility {
 		return false;
 	}
 
-	/**
-	 * Delete current course.
-	 *
-	 * @return bool Success?
-	 */
-	function delete_course() {
-
-		// Course ID is set when this class is instantiated.
-		$course_id = $this->__get( 'ID' );
-
-		// If in case course post object is not and ID not found, bail.
-		if ( empty( $course_id ) ) {
-
-			/**
-			 * Perform actions if the deletion was failed.
-			 *
-			 * Note: We don't have course ID here.
-			 *
-			 * @since 3.0
-			 */
-			do_action( 'coursepress_course_delete_failed', false );
-
-			return false;
-		}
-
-		// If units are available for course, delete them.
-		$units = $this->get_units();
-		if ( ! empty( $units ) ) {
-			foreach ( $units as $unit ) {
-				$unit = new CoursePress_Unit( $unit->ID );
-				$unit->delete_unit();
-			}
-		}
-
-		// Delete the course post.
-		wp_delete_post( $course_id, true );
-	}
-
 	function get_status() {
 		$status = $this->is_available() ? 'active' : '';
 
