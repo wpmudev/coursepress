@@ -265,16 +265,16 @@ function coursepress_get_course_enrollment_button( $course_id = 0, $args = array
 		'course_expired_text' => __( 'Not available', 'cp' ),
 		'course_full_text' => __( 'Course Full', 'cp' ),
 		'course_not_started' => __( 'Not yet available', 'cp' ),
-		'details_text' => __( 'Details', 'CP_TD' ),
-		'enrollment_closed_text' => __( 'Enrollments Closed', 'CP_TD' ),
-		'enrollment_finished_text' => __( 'Enrollments Finished', 'CP_TD' ),
-		'enroll_text' => __( 'Enroll Now!', 'CP_TD' ),
-		'instructor_text' => __( 'Access Course', 'CP_TD' ),
+		'details_text' => __( 'Details', 'cp' ),
+		'enrollment_closed_text' => __( 'Enrollments Closed', 'cp' ),
+		'enrollment_finished_text' => __( 'Enrollments Finished', 'cp' ),
+		'enroll_text' => __( 'Enroll Now!', 'cp' ),
+		'instructor_text' => __( 'Access Course', 'cp' ),
 		'list_page' => false,
-		'not_started_text' => __( 'Not Available', 'CP_TD' ),
-		'passcode_text' => __( 'Passcode Required', 'CP_TD' ),
-		'prerequisite_text' => __( 'Pre-requisite Required', 'CP_TD' ),
-		'signup_text' => __( 'Enroll Now!', 'CP_TD' ),
+		'not_started_text' => __( 'Not Available', 'cp' ),
+		'passcode_text' => __( 'Passcode Required', 'cp' ),
+		'prerequisite_text' => __( 'Pre-requisite Required', 'cp' ),
+		'signup_text' => __( 'Enroll Now!', 'cp' ),
 	);
 
 	$args = wp_parse_args( $args, $defaults );
@@ -1657,113 +1657,34 @@ function coursepress_search_students( $args = array() ) {
 	return $found;
 }
 /**
- * Get notifications.
+ * Get discussions.
  */
-function coursepress_get_notifications( $user_id, $course_id ) {
-	/**
-	 * Base query
-	 */
-	$args = array(
-		'post_type' => self::get_post_type_name(),
-		'meta_query' => array(
-			'relation' => 'OR',
-			array(
-				'key' => 'course_id',
-				'value' => 'all',
-			),
-			/**
-			 * Receivers are not set.
-			 */
-			array(
+function coursepress_get_disscusions( $course_id ) {
+		$args = array(
+			'post_type' => 'discussions',
+			'meta_query' => array(
 				array(
 					'key' => 'course_id',
 					'value' => $course_id,
-				),
-				array(
-					'key' => 'receivers',
-					'compare' => 'NOT EXISTS',
+					'compare' => 'IN',
 				),
 			),
-			/**
-			 * Enrolled to this course!
-			 */
-			array(
-				array(
-					'key' => 'course_id',
-					'value' => $course_id,
-				),
-				array(
-					'key' => 'receivers',
-					'value' => 'enrolled',
-				),
-			),
-		),
-		'post_per_page' => 20,
-	);
-	/**
-	 * Get student progress
-	 */
-	$student_id = get_current_user_id();
-	$student_progress = CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course_id );
-	/**
-	 * Course is completed
-	 */
-	$is_done = CoursePress_Helper_Utility::get_array_val( $student_progress, 'completion/completed' );
-	if ( $is_done ) {
-		$args['meta_query'][] = array(
-			array(
-				'key' => 'course_id',
-				'value' => $course_id,
-			),
-			array(
-				'key' => 'receivers',
-				'value' => 'passed',
-			),
+			'post_per_page' => 20,
 		);
-	}
-	/**
-	 * Course is failed
-	 */
-	$is_failed = CoursePress_Helper_Utility::get_array_val( $student_progress, 'completion/failed' );
-	if ( $is_failed ) {
-		$args['meta_query'][] = array(
-			array(
-				'key' => 'course_id',
-				'value' => $course_id,
-			),
-			array(
-				'key' => 'receivers',
-				'value' => 'failed',
-			),
-		);
-	}
-	/**
-	 * Completed Units
-	 */
-	$units = CoursePress_Data_Course::get_units( $course_id, $status = array( 'publish' ), true );
-	foreach ( $units as $unit_id ) {
-		$unit_completed = CoursePress_Helper_Utility::get_array_val(
-			$student_progress,
-			'completion/' . $unit_id . '/completed'
-		);
-		if ( ! $unit_completed ) {
-			continue;
+		$data = array();
+		$posts = get_posts( $args );
+		foreach ( $posts as $post ) {
+			$post->course_id = (int) get_post_meta( $post->ID, 'course_id', true );
+			$post->course_title = ! empty( $course_id ) ? get_the_title( $course_id ) : __( 'All courses', 'cp' );
+			$post->course_id = ! empty( $course_id ) ? $course_id : 'all';
+
+			$post->unit_id = (int) get_post_meta( $post->ID, 'unit_id', true );
+			$post->unit_title = ! empty( $post->unit_id ) ? get_the_title( $post->unit_id ) : __( 'All units', 'cp' );
+			$post->unit_id = ! empty( $post->unit_id ) ? $post->unit_id : 'course';
+			$post->unit_id = 'all' === $post->course_id ? 'course' : $post->unit_id;
+			$data[] = $post;
 		}
-		$args['meta_query'][] = array(
-			array(
-				'key' => 'course_id',
-				'value' => $course_id,
-			),
-			array(
-				'key' => 'receivers',
-				'value' => sprintf( 'unit-%d', $unit_id ),
-			),
-		);
-	}
-	/**
-	 * Finally get posts.
-	 */
-	return get_posts( $args );
+		return $data;
 }
 
 

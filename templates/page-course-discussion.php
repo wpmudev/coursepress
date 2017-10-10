@@ -27,7 +27,7 @@ get_header(); ?>
 				coursepress_get_template( 'course', 'submenu' );
 				?>
 
-                <?php coursepress_render( 'templates/content-discussion', array( 'user_id' => 0, 'course_id' => 0 ) ); ?>
+                <?php coursepress_render( 'templates/content-discussion', array( 'user_id' => 0, 'course_id' => $course->ID ) ); ?>
 			</div>
 		</div>
 	</div>
