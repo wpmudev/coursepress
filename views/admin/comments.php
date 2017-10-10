@@ -115,7 +115,7 @@ switch ( $column_id ) {
 				} else {
 ?>
                     <tr>
-                        <td>
+                        <td colspan="<?php echo count( $columns ); ?>">
                             <?php _e( 'No comments found.', 'cp' ); ?>
                         </td>
                     </tr>
