@@ -14,15 +14,15 @@
   line-height: 40px;
   padding: 20px 30px;
   max-width: 900px;
-  margin: 90px auto;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  margin: 20px auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  border-left: 8px solid #ffb900;
 }
-
 .coursepress-upgrade-nag.frontend-nag p {
   margin: 0;
   text-align: center;
+  color: #c0d7eb;
 }
-
 .coursepress-upgrade-nag p {
   font-size: 18px;
 }
@@ -81,4 +81,8 @@
 .coursepress-upgrade-view .coursepress-update-view .course-progress.error:before {
   content: '\f335';
   color: red;
+}
+
+.cp-upgrade-body .entry-meta {
+  display: none;
 }
