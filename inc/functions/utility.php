@@ -213,39 +213,35 @@ function coursepress_update_setting( $key = true, $value ) {
 /**
  * Get or print the given filename.
  *
- * @param string $filename The relative path of the file.
+ * @param string $file The relative path of the file.
  * @param array $args Optional arguments to set as variable
  * @param bool $echo Whether to return the result in string or not.
  * @return mixed
  */
-function coursepress_render( $filename, $args = array(), $echo = true ) {
-    global $CoursePress;
-
-    $path = $CoursePress->plugin_path;
-    $filename = $path . $filename . '.php';
-
-    if ( file_exists( $filename ) && is_readable( $filename ) ) {
-        if ( ! empty( $args ) ) {
-            $args = (array) $args;
-
-            foreach ( $args as $key => $value ) {
-                $$key = $value;
-            }
-        }
-
+function coursepress_render( $file, $args = array(), $echo = true ) {
+	global $CoursePress;
+	$path = $CoursePress->plugin_path;
+	$filename = $path . $file . '.php';
+	if ( file_exists( $filename ) && is_readable( $filename ) ) {
+		if ( ! empty( $args ) ) {
+			$args = (array) $args;
+			foreach ( $args as $key => $value ) {
+				$$key = $value;
+			}
+		}
 		if ( $echo ) {
 			include $filename;
-        } else {
+		} else {
 			ob_start();
-
-            include $filename;
-
-            return ob_get_clean();
-        }
-        return true;
-    }
-
-    return false;
+			include $filename;
+			return ob_get_clean();
+		}
+		return true;
+	}
+	if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+		error_log( sprintf( 'CoursePress, missing temlate: %s', $file ) );
+	}
+	return false;
 }
 
 /**
