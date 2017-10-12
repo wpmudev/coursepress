@@ -100,6 +100,13 @@
 						<?php foreach ( array_keys( $columns ) as $column_id ) : ?>
 							<td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>">
 								<?php
+								$details_args = array(
+									'tab' => 'details',
+									'student_id' => $student->ID,
+								);
+								// Remove unwanted items from details link.
+								$details_link = remove_query_arg( array( 's', 'student_progress', 'graded_ungraded' ) );
+								$details_link = add_query_arg( $details_args, $details_link );
 								switch ( $column_id ) :
 									// @todo Add profile link if required.
 									case 'student' :
@@ -130,7 +137,7 @@
 										echo '<div class="cp-assessment-progress-hidden">';
 										echo '<a href="javascript:void(0);" class="cp-expand-collapse">' . __( 'Expand', 'cp' ) . '</a>';
 										echo '|';
-										echo '<a href="#">' . __( 'Open in new tab', 'cp' ) . '</a>';
+										echo '<a href="' . $details_link . '">' . __( 'Open in new tab', 'cp' ) . '</a>';
 										echo '</div>';
 										echo '<div class="cp-assessment-progress-expand inactive">';
 										echo '<button class="cp-expand-collapse cp-collapse-btn">Collapse</button>';
