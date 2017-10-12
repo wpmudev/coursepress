@@ -142,11 +142,15 @@ final class CoursePress_Core extends CoursePress_Utility {
 			// Workbook
 			$base . $workbook_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=workbook',
 			// Notifications
-			$base . $notification_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=notifications',
-			// New forum/discussion
-			$base . $discussion_slug . '/' . $new_discussion_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=forum&topic=new',
-		   //Forum|Discussions
-			$base . $discussion_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=forum',
+            $base . $notification_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=notifications',
+
+            /**
+             * Forum | Discussions
+             */
+			$base . $discussion_slug . '/?$' => 'index.php?coursename=$matches[1]&coursepress=forum',
+            $base . $discussion_slug . '/' . $new_discussion_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=forum&topic=new',
+            $base . $discussion_slug . '/([^/]*)/?' => 'index.php?coursename=$matches[1]&coursepress=forum&topic=$matches[2]',
+
 			// Grades
 			$base . $grade_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=grades',
 			// Course Instructor Profile

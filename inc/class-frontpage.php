@@ -62,7 +62,6 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 		$course_name = $wp->get( 'coursename' );
 		$type = $wp->get( 'coursepress' );
 		$cp = array();
-
 		if ( ! empty( $course_name ) ) {
 			$cp['course'] = $course_name;
 			$cp['type']   = $type;
@@ -78,6 +77,7 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 				}
 			} elseif ( 'forum' == $type ) {
 				$cp['topic'] = $wp->get( 'topic' );
+				new CoursePress_Data_Forum();
 			}
 
 			$this->reset_wp( $wp, $course_name );
