@@ -1,6 +1,8 @@
 <?php
 class CoursePress_Data_Forum {
 
+	private $post_type = 'discussions';
+
 	public function __construct() {
 		add_action( 'pre_get_posts', array( $this, 'maybe_add_topic' ) );
 	}
@@ -22,10 +24,10 @@ class CoursePress_Data_Forum {
 			return;
 		}
 		$args = array(
-			'post_type' => 'discussions',
+			'post_type' => $this->post_type,
 			'post_author' => get_current_user_id(),
 			'post_content' => coursepress_filter_content( $_POST['content'] ),
-			'post_status'=> 'publish',
+			'post_status' => 'publish',
 			'post_title' => coursepress_filter_content( $_POST['title'] ),
 			'meta_input' => array(
 				'course_id' => $_POST['course_id'],
@@ -38,4 +40,10 @@ class CoursePress_Data_Forum {
 		wp_insert_post( $args );
 	}
 
+	public function get_by_topic_name( $topic ) {
+		if ( empty( $topic ) ) {
+			return array();
+		}
+		return get_page_by_title( $topic, OBJECT, $this->post_type );
+	}
 }

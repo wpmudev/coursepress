@@ -28,10 +28,9 @@ get_header(); ?>
 
 $allowed = $course->__get( 'allow_discussion' );
 if ( false == $allowed ) {
-    coursepress_render( 'templates/content-discussion-off' );
+	coursepress_render( 'templates/content-discussion-off' );
 } else {
-    coursepress_render( 'templates/content-discussion-single', array( 'user_id' => 0, 'course' => $course ) );
-    coursepress_render( 'templates/content-discussion-form', array( 'user_id' => 0, 'course' => $course ) );
+	coursepress_render( 'templates/content-discussion-single', array( 'user_id' => 0, 'course' => $course ) );
 }
 ?>
 			</div>

@@ -29,12 +29,12 @@ function coursepress_get_course( $course_id = 0 ) {
 	if ( $course_id instanceof WP_Post ) {
 		$course_id = $course_id->ID; }
 
-    if (
-        $CoursePress_Course instanceof CoursePress_Course
-        && $course_id == $CoursePress_Course->__get( 'ID' )
-    ) {
-        return $CoursePress_Course;
-    }
+	if (
+		$CoursePress_Course instanceof CoursePress_Course
+		&& $course_id == $CoursePress_Course->__get( 'ID' )
+	) {
+		return $CoursePress_Course;
+	}
 
 	if ( isset( $CoursePress_Core->courses[ $course_id ] ) ) {
 		return $CoursePress_Core->courses[ $course_id ]; }
@@ -470,7 +470,7 @@ function coursepress_get_course_submenu() {
 			'label' => __( 'Units', 'cp' ),
 			'url' => coursepress_get_course_units_archive_url( $course_id ),
 		),
-    );
+	);
 
 	if ( $course->__get( 'allow_discussion' ) ) {
 		$menus['discussions'] = array(
@@ -1663,37 +1663,44 @@ function coursepress_search_students( $args = array() ) {
  * Get discussions.
  */
 function coursepress_get_disscusions( $course ) {
-		$args = array(
-			'post_type' => 'discussions',
-			'meta_query' => array(
-				array(
-					'key' => 'course_id',
-					'value' => $course->ID,
-					'compare' => 'IN',
-				),
+	$args = array(
+		'post_type' => 'discussions',
+		'meta_query' => array(
+			array(
+				'key' => 'course_id',
+				'value' => $course->ID,
+				'compare' => 'IN',
 			),
-			'post_per_page' => 20,
-        );
-        $url = $course->get_discussion_url();
-		$data = array();
-		$posts = get_posts( $args );
-		foreach ( $posts as $post ) {
-			$post->course_id = (int) get_post_meta( $post->ID, 'course_id', true );
-			$post->course_title = ! empty( $course->ID ) ? get_the_title( $course->ID ) : __( 'All courses', 'cp' );
-			$post->course_id = ! empty( $course->ID ) ? $course->ID : 'all';
+		),
+		'post_per_page' => 20,
+	);
+	$url = $course->get_discussion_url();
+	$data = array();
+	$posts = get_posts( $args );
+	foreach ( $posts as $post ) {
+		$post->course_id = (int) get_post_meta( $post->ID, 'course_id', true );
+		$post->course_title = ! empty( $course->ID ) ? get_the_title( $course->ID ) : __( 'All courses', 'cp' );
+		$post->course_id = ! empty( $course->ID ) ? $course->ID : 'all';
 
-			$post->unit_id = (int) get_post_meta( $post->ID, 'unit_id', true );
-			$post->unit_title = ! empty( $post->unit_id ) ? get_the_title( $post->unit_id ) : __( 'All units', 'cp' );
-			$post->unit_id = ! empty( $post->unit_id ) ? $post->unit_id : 'course';
-            $post->unit_id = 'all' === $post->course_id ? 'course' : $post->unit_id;
+		$post->unit_id = (int) get_post_meta( $post->ID, 'unit_id', true );
+		$post->unit_title = ! empty( $post->unit_id ) ? get_the_title( $post->unit_id ) : __( 'All units', 'cp' );
+		$post->unit_id = ! empty( $post->unit_id ) ? $post->unit_id : 'course';
+		$post->unit_id = 'all' === $post->course_id ? 'course' : $post->unit_id;
 
-            $post->url = $url.$post->post_name;
+		$post->url = $url.$post->post_name;
 
-			$data[] = $post;
-		}
-		return $data;
+		$data[] = $post;
+	}
+	return $data;
 }
 
-
-
+/**
+ * Get single discussion
+ */
+function coursepress_get_discussion( $course ) {
+	global $wp;
+	$topic = get_query_var( 'topic' );
+	$forum = new CoursePress_Data_Forum();
+	return $forum->get_by_topic_name( $topic );
+}
 
