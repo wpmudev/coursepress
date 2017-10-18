@@ -736,7 +736,7 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 					'background' => self::$settings['certificate_background'],
 					'logo' => self::$settings['certificate_logo'],
 					'logo_position' => self::$settings['logo_position'],
-					'margin' => self::$settings['cert_margin'],
+					'margin' => (array)self::$settings['cert_margin'],
 					'orientation' => self::$settings['page_orientation'],
 					'text_color' => self::$settings['cert_text_color'],
 				),
