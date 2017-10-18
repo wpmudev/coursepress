@@ -1697,10 +1697,11 @@ function coursepress_get_disscusions( $course ) {
 /**
  * Get single discussion
  */
-function coursepress_get_discussion( $course ) {
-	global $wp;
+function coursepress_get_discussion() {
 	$topic = get_query_var( 'topic' );
-	$forum = new CoursePress_Data_Forum();
-	return $forum->get_by_topic_name( $topic );
+	if ( empty( $topic ) ) {
+		return array();
+	}
+	return get_page_by_title( $topic, OBJECT, 'discussions' );
 }
 

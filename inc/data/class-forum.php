@@ -5,6 +5,9 @@ class CoursePress_Data_Forum {
 
 	public function __construct() {
 		add_action( 'pre_get_posts', array( $this, 'maybe_add_topic' ) );
+		add_action( 'wp_insert_comment', array( $this, 'insert_comment' ), 10, 2 );
+		add_filter( 'comment_post_redirect', array( $this, 'redirect_back' ), 10, 2 );
+		add_action( 'comment_form', array( $this, 'add_topic_field' ) );
 	}
 
 	public function maybe_add_topic( $wp ) {
@@ -40,10 +43,50 @@ class CoursePress_Data_Forum {
 		wp_insert_post( $args );
 	}
 
-	public function get_by_topic_name( $topic ) {
-		if ( empty( $topic ) ) {
-			return array();
+	public function insert_comment( $id, $comment ) {
+		$is_course = coursepress_is_course( $comment->comment_post_ID );
+		if ( ! $is_course ) {
+			return;
 		}
-		return get_page_by_title( $topic, OBJECT, $this->post_type );
+		wp_set_comment_status( $id, 'approve' );
+		$metas = array( 'topic_id', 'course_id' );
+		foreach ( $metas as $meta ) {
+			if ( isset( $_REQUEST[ $meta ] ) ) {
+				$value = intval( $_REQUEST[ $meta ] );
+				if ( $value ) {
+					add_comment_meta( $id, $meta, $value, true );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Redirect back to discussion or discussion module page.
+	 *
+	 * @since 2.0
+	 **/
+	public function redirect_back( $location, $comment ) {
+		$post_id = $comment->comment_post_ID;
+		$is_course = coursepress_is_course( $post_id );
+		if ( ! $is_course ) {
+			return $location;
+		}
+		$course = coursepress_get_course( $post_id );
+		$topic_id = get_comment_meta( $comment->comment_ID, 'topic_id', true );
+		$topic = get_post( $topic_id );
+		return $course->get_discussion_url(). trailingslashit( $topic->post_name );
+	}
+
+	public function add_topic_field( $post_id ) {
+		$is_course = coursepress_is_course( $post_id );
+		if ( ! $is_course ) {
+			return $location;
+		}
+		$topic = get_query_var( 'topic' );
+		$discussion = coursepress_get_discussion();
+		printf(
+			'<input type="hidden" name="topic_id" value="%d" />',
+			esc_attr( $discussion->ID )
+		);
 	}
 }
