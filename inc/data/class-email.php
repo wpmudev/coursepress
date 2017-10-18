@@ -228,8 +228,6 @@ class CoursePress_Data_Email {
 			}
 		}
 
-		// @Todo Uncomment below check after implementing unsubscribe
-		$send = true;
 		/**
 		 * Check whether an email should be send or not.
 		 *
@@ -237,9 +235,7 @@ class CoursePress_Data_Email {
 		 *
 		 * @param (bool) $send
 		 **/
-		//$send = CoursePress_Data_Unsubscribe::is_send( $type, $args );
-
-		if ( $send ) {
+		if ( ( new CoursePress_Data_Unsubscribe() )->can_send( $type, $args ) ) {
 			return self::process_and_send( $type, $args );
 		}
 
@@ -250,9 +246,13 @@ class CoursePress_Data_Email {
 	 * Send a CoursePress email template to a single user.
 	 *
 	 * @since  1.0.0
-	 * @param  array $args Email args.
+	 *
+	 * @param string $type Email type.
+	 * @param array $args Email args.
+	 *
 	 * @return bool True if the email was processed correctly.
-	 */
+	 * @throws Exception
+	 **/
 	protected static function process_and_send( $type, $args ) {
 		// Legacy support for args['email']. Remove this in future!
 		if ( ! empty( $args['email'] ) && empty( $args['to'] ) ) {
