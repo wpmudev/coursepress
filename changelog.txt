@@ -5,6 +5,8 @@ Build Time:  BUILDTIME
 CHANGELOG
 =================================================
 
+* Improved: show instructor feedback on student workbook frontend.
+
 = 2.1.1 =
 -------------------------------------------------
 * Improved: Added `editor-rtl.css` file.
