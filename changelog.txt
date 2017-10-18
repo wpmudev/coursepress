@@ -7,7 +7,8 @@ CHANGELOG
 
 = 2.1.2 =
 -------------------------------------------------
-* Improved: show instructor feedback on student workbook frontend.
+* Improved: Show instructor feedback on student workbook frontend.
+* Improved: Add ability to define certificate logo.
 * Fixed: Prevent access modules when previous required modules haven't been completed.
 * Fixed: Problem with TinyMCE.
 
