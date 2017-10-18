@@ -734,7 +734,7 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 					'enabled' => ! empty( self::$settings['basic_certificate'] ),
 					'token_message' => sprintf( __( 'Use these tokens to display actual course details: %s', 'CP_TD' ), implode( ', ', $certificate_tokens ) ),
 					'background' => self::$settings['certificate_background'],
-					'margin' => (array)self::$settings['cert_margin'],
+					'margin' => self::$settings['cert_margin'],
 					'orientation' => self::$settings['page_orientation'],
 					'text_color' => self::$settings['cert_text_color'],
 				),
