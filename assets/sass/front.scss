@@ -1,16 +1,17 @@
 @import "common/mixin.scss";
 @import "front/global.scss";
 
-@import "front/dropdown";
-@import "front/comments";
 @import "front/breadcrumb.scss";
-@import "front/course-structure.scss";
-@import "front/instructor-bio.scss";
+@import "front/comments";
 @import "front/course-item-box.scss";
+@import "front/course-overview.scss";
+@import "front/course-structure.scss";
+@import "front/course-discussions.scss";
+@import "front/dropdown";
+@import "front/instructor-bio.scss";
+@import "front/single-course.scss";
 @import "front/single-unit.scss";
 @import "front/steps.scss";
 @import "front/submenu.scss";
-@import "front/course-overview.scss";
-@import "front/single-course.scss";
 @import "front/workbook";
 @import "front/email-unsubscribe";
