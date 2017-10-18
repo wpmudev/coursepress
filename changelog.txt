@@ -6,6 +6,7 @@ CHANGELOG
 =================================================
 
 * Improved: show instructor feedback on student workbook frontend.
+* Fixed: Problem with TinyMCE.
 
 = 2.1.1 =
 -------------------------------------------------
