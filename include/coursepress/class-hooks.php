@@ -28,6 +28,9 @@ class CoursePress_Hooks {
 		add_filter( 'post_updated_messages', array( 'CoursePress_Admin_Edit', 'updated_messages' ) );
 		add_action( 'dbx_post_advanced', array( 'CoursePress_Admin_Edit', 'init_hooks' ) );
 
+		// Enable TinyMCE for course pages.
+		add_filter( 'user_can_richedit', array( 'CoursePress_Admin_Edit', 'enable_tinymce' ) );
+
 		// Per course certificate preview
 		add_action( 'init', array( 'CoursePress_Admin_Edit', 'certificate_preview' ) );
 

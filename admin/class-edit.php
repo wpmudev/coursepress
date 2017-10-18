@@ -968,5 +968,20 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 
 			return CoursePress_Core::get_setting( $key, $default );
 		}
+
+
+		/**
+		 * Enables TinyMCE for course pages.
+		 */
+		static function enable_tinymce() {
+			global $wp_rich_edit;
+			if ( ! $wp_rich_edit ) {
+				$screen = get_current_screen();
+				if ( in_array( $screen->id, array( 'course' ), true ) ) {
+					return true;
+				}
+			}
+			return $wp_rich_edit;
+		}
 	}
 endif;
