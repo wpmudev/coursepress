@@ -20,6 +20,10 @@ final class CoursePress_Core extends CoursePress_Utility {
 	public function __construct() {
 		// Register CP post types
 		add_action( 'init', array( $this, 'register_post_types' ) );
+
+		// Initialize unsubscribe
+		add_action( 'init', array( $this, 'init_unsubscribe' ) );
+
 		// Register CP query vars
 		add_filter( 'query_vars', array( $this, 'add_query_vars' ) );
 		// Add CP rewrite rules
@@ -100,6 +104,16 @@ final class CoursePress_Core extends CoursePress_Utility {
 		) );
 	}
 
+	/**
+	 * Initialize unsubscribe action.
+	 *
+	 * @return void
+	 */
+	function init_unsubscribe() {
+
+		( new CoursePress_Data_Unsubscribe() )->init();
+	}
+
 	function add_query_vars( $vars ) {
 		$vars[] = 'coursepress';
 		$vars[] = 'unit';
@@ -142,14 +156,14 @@ final class CoursePress_Core extends CoursePress_Utility {
 			// Workbook
 			$base . $workbook_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=workbook',
 			// Notifications
-            $base . $notification_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=notifications',
+			$base . $notification_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=notifications',
 
-            /**
-             * Forum | Discussions
-             */
+			/**
+			 * Forum | Discussions
+			 */
 			$base . $discussion_slug . '/?$' => 'index.php?coursename=$matches[1]&coursepress=forum',
-            $base . $discussion_slug . '/' . $new_discussion_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=forum&topic=new',
-            $base . $discussion_slug . '/([^/]*)/?' => 'index.php?coursename=$matches[1]&coursepress=forum&topic=$matches[2]',
+			$base . $discussion_slug . '/' . $new_discussion_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=forum&topic=new',
+			$base . $discussion_slug . '/([^/]*)/?' => 'index.php?coursename=$matches[1]&coursepress=forum&topic=$matches[2]',
 
 			// Grades
 			$base . $grade_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=grades',
