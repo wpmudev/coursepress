@@ -5,7 +5,10 @@ Build Time:  BUILDTIME
 CHANGELOG
 =================================================
 
+= 2.1.2 =
+-------------------------------------------------
 * Improved: show instructor feedback on student workbook frontend.
+* Fixed: Prevent access modules when previous required modules haven't been completed.
 * Fixed: Problem with TinyMCE.
 
 = 2.1.1 =
