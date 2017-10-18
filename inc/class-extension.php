@@ -17,6 +17,9 @@ class CoursePress_Extension {
 	function active_extensions() {
 		global $CoursePress;
 		$extensions = coursepress_get_setting( 'extensions' );
+		$active = array(
+			'commerce' => false,
+		);
 		if ( ! empty( $extensions ) ) {
 			foreach ( $extensions as $extension ) {
 				switch ( $extension ) {
@@ -26,9 +29,22 @@ class CoursePress_Extension {
 					case 'woocommerce':
 						$CoursePress->get_class( 'CoursePress_Extension_WooCommerce' );
 					break;
-			    }
-		    }
-	    }
+				}
+				/**
+				 * set extension type to active
+				 */
+				if ( isset( $extension['type'] ) ) {
+					$active[ $extension['type'] ] = true;
+				}
+			}
+		}
+		/**
+		 * load some code for missing extensions - like fix missing shortcodes
+		 * for commerce.
+		 */
+		if ( false === $active['commerce'] ) {
+			$CoursePress->get_class( 'CoursePress_Extension_Commerce' );
+		}
 	}
 
 	function is_plugin_installed( $plugin_name ) {
@@ -48,6 +64,7 @@ class CoursePress_Extension {
 			'name' => 'MarketPress',
 			'source_info' => sprintf( __( 'Bundled with %s', 'cp' ), 'CoursePress' ),
 			'file' => 'marketpress/marketpress.php',
+			'type' => 'commerce',
 		);
 		$extensions['marketpress'] = $marketpress;
 
@@ -55,6 +72,7 @@ class CoursePress_Extension {
 			'name' => 'WooCommerce',
 			'source_info' => sprintf( __( 'Requires %s plugin.', 'cp' ), 'WooCommerce' ),
 			'file' => 'woocommerce/woocommerce.php',
+			'type' => 'commerce',
 		);
 		$extensions['woocommerce'] = $woo;
 		/**

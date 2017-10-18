@@ -124,8 +124,7 @@ class CoursePress_Data_Email {
 			$email_settings = self::get_email_fields( $type );
 
 			$email_enabled = (boolean) $email_settings['enabled'];
-			if(!$email_enabled)
-			{
+			if ( ! $email_enabled ) {
 				return false;
 			}
 
@@ -235,9 +234,7 @@ class CoursePress_Data_Email {
 		 *
 		 * @param (bool) $send
 		 **/
-		$send = CoursePress_Data_Unsubscribe::is_send( $type, $args );
-
-		if ( $send ) {
+		if ( ( new CoursePress_Data_Unsubscribe() )->can_send( $type, $args ) ) {
 			return self::process_and_send( $type, $args );
 		}
 
@@ -248,9 +245,13 @@ class CoursePress_Data_Email {
 	 * Send a CoursePress email template to a single user.
 	 *
 	 * @since  1.0.0
-	 * @param  array $args Email args.
+	 *
+	 * @param string $type Email type.
+	 * @param array $args Email args.
+	 *
 	 * @return bool True if the email was processed correctly.
-	 */
+	 * @throws Exception
+	 **/
 	protected static function process_and_send( $type, $args ) {
 		// Legacy support for args['email']. Remove this in future!
 		if ( ! empty( $args['email'] ) && empty( $args['to'] ) ) {
@@ -334,7 +335,7 @@ class CoursePress_Data_Email {
 			$header_string .= $key . ': ' . $value . "\r\n";
 		}
 
-		$email['message'] = CoursePress_Helper_Utility::filter_content( $email['message'] );
+		$email['message'] = CoursePress_Utility::filter_content( $email['message'] );
 		$email['headers'] = $header_string;
 
 		/**
@@ -493,7 +494,6 @@ class CoursePress_Data_Email {
 			'UNIT_LIST' => $args['unit_list'],
 		);
 
-
 		/**
 		 * Filter the variables before applying changes.
 		 *
@@ -588,25 +588,25 @@ class CoursePress_Data_Email {
 	 * @return string Finished email content.
 	 */
 	protected static function instructor_enrollment_notification_message( $args, $content ) {
-		$course_id = (int)$args['course_id'];
-		$post = get_post($course_id);
+		$course_id = (int) $args['course_id'];
+		$post = get_post( $course_id );
 		$course_name = $post->post_title;
-		$post_type_object = get_post_type_object($post->post_type);
-		$edit_link = admin_url(sprintf($post_type_object->_edit_link . '&action=edit', $post->ID));
-		$edit_students = add_query_arg('tab', 'students', $edit_link);
+		$post_type_object = get_post_type_object( $post->post_type );
+		$edit_link = admin_url( sprintf( $post_type_object->_edit_link . '&action=edit', $post->ID ) );
+		$edit_students = add_query_arg( 'tab', 'students', $edit_link );
 
 		// Email Content.
 		$vars = array(
-			'STUDENT_FIRST_NAME'            => sanitize_text_field($args['student_first_name']),
-			'STUDENT_LAST_NAME'             => sanitize_text_field($args['student_last_name']),
-			'INSTRUCTOR_FIRST_NAME'         => sanitize_text_field($args['instructor_first_name']),
-			'INSTRUCTOR_LAST_NAME'          => sanitize_text_field($args['instructor_last_name']),
+			'STUDENT_FIRST_NAME'            => sanitize_text_field( $args['student_first_name'] ),
+			'STUDENT_LAST_NAME'             => sanitize_text_field( $args['student_last_name'] ),
+			'INSTRUCTOR_FIRST_NAME'         => sanitize_text_field( $args['instructor_first_name'] ),
+			'INSTRUCTOR_LAST_NAME'          => sanitize_text_field( $args['instructor_last_name'] ),
 			'COURSE_TITLE'                  => $course_name,
-			'COURSE_ADDRESS'                => get_permalink($course_id),
+			'COURSE_ADDRESS'                => get_permalink( $course_id ),
 			'COURSE_ADMIN_ADDRESS'          => $edit_link,
-			'COURSE_STUDENTS_ADMIN_ADDRESS' => esc_url_raw($edit_students),
+			'COURSE_STUDENTS_ADMIN_ADDRESS' => esc_url_raw( $edit_students ),
 			'WEBSITE_NAME'                  => get_bloginfo(),
-			'WEBSITE_ADDRESS'               => home_url()
+			'WEBSITE_ADDRESS'               => home_url(),
 		);
 
 		/**
@@ -615,9 +615,9 @@ class CoursePress_Data_Email {
 		 * @param array $vars
 		 * @param (int) $course_id
 		 **/
-		$vars = apply_filters('coursepress_fields_' . self::INSTRUCTOR_ENROLLMENT_NOTIFICATION, $vars, $course_id);
+		$vars = apply_filters( 'coursepress_fields_' . self::INSTRUCTOR_ENROLLMENT_NOTIFICATION, $vars, $course_id );
 
-		return coursepress_replace_vars($content, $vars);
+		return coursepress_replace_vars( $content, $vars );
 	}
 
 	/**
@@ -985,7 +985,6 @@ class CoursePress_Data_Email {
 			'UNIT_ADDRESS' => $unit_address,
 			'UNSUBSCRIBE_LINK' => $unsubscribe_link,
 		);
-
 
 		/**
 		 * Filter the variables before applying changes.

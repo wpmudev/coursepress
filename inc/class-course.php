@@ -124,7 +124,7 @@ class CoursePress_Course extends CoursePress_Utility {
 
 			'course_view' => 'focus',
 			'structure_level' => 'unit',
-			//'course_open_ended' => true,
+			'course_open_ended' => true,
 			'course_start_date' => 0,
 			'course_end_date' => '',
 			'enrollment_open_ended' => false,
@@ -362,25 +362,20 @@ class CoursePress_Course extends CoursePress_Utility {
 	function get_course_dates( $separator = ' - ' ) {
 		$course_type = $this->__get( 'course_type' );
 		$open = 'auto-moderated' == $course_type;
-
 		if ( ! $open ) {
-			//$open = $this->__get( 'course_open_ended' );
+			$open = $this->__get( 'course_open_ended' );
 		}
-
 		if ( $open ) {
 			return __( 'Open Ended', 'cp' );
 		}
-
 		return implode( $separator, array( $this->get_course_start_date(), $this->get_course_start_date() ) );
 	}
 
 	function get_enrollment_start_date() {
 		$open_ended = $this->__get( 'enrollment_open_ended' );
-
 		if ( $open_ended ) {
 			return __( 'Anytime', 'cp' );
 		}
-
 		return $this->__get( 'enrollment_start_date' );
 	}
 
@@ -768,6 +763,12 @@ class CoursePress_Course extends CoursePress_Utility {
 		$discussion_slug = coursepress_get_setting( 'slugs/discussions', 'discussions' );
 
 		return $course_url . trailingslashit( $discussion_slug );
+	}
+
+	function get_discussion_new_url() {
+		$url = $this->get_discussion_url();
+        $slug = coursepress_get_setting( 'slugs/discussions_new', 'add_new_discussion' );
+		return $url . trailingslashit( $slug );
 	}
 
 	function get_grades_url() {

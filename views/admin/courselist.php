@@ -179,7 +179,8 @@ foreach ( $bulk_actions as $value => $label ) {
 					endforeach;
 				else : ?>
                     <tr class="odd">
-                        <td>
+                        <?php $colspan = count( $columns ) + 3; ?>
+                        <td colspan="<?php echo $colspan; ?>">
                             <?php _e( 'No courses found.', 'cp' ); ?>
                         </td>
                     </tr>

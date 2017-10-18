@@ -14,45 +14,71 @@ function coursepress_teeny_editor( $content, $id, $settings = array() ) {
 }
 
 /**
- * Send email invitation to the user.
+ * Send email invitation to the instructor/facilitator.
  *
- * @param string $email Email address.
- * @param string $course_id Course ID.
+ * @param array $args Data.
  * @param string $type Type of user.
  *
  * @return bool Email sent?
  */
-function coursepress_send_email_invite( $email, $course_id, $type = 'instructor' ) {
+function coursepress_send_email_invite( $args, $type = 'instructor' ) {
 
-	// Do not continue if required values are empty.
-	if ( empty( $course_id ) || ! is_email ( $email ) ) {
+	// Sanitize email address.
+	$email = sanitize_email( $args['email'] );
+	$course_id = intval( $args['course_id'] );
+
+	// Create new invite code and hash.
+	$invite_data = CoursePress_Data_Courses::create_invite_code_hash( $email );
+	$args['invite_code'] = $invite_data['code'];
+	$args['invite_hash'] = $invite_data['hash'];
+
+	// Get existing invites for the instructors.
+	$invites = CoursePress_Data_Courses::get_invitations_by_course_id( $course_id, $type );
+	$invite_exists = false;
+
+	// Check to see if this invite is already there.
+	if ( $invites ) {
+		foreach ( $invites as $invite => $data ) {
+			$invite_exists = array_search( $email, $data );
+			if ( $invite_exists ) {
+				// Update code and hash for re-send.
+				$args['invite_code'] = $data['code'];
+				$args['invite_hash'] = $data['hash'];
+			}
+		}
+	}
+
+	// Fire off the email based on type.
+	if ( $type === 'instructor' ) {
+		$sent = CoursePress_Data_Email::send_email( CoursePress_Data_Email::INSTRUCTOR_INVITATION, $args );
+	} elseif ( $type === 'facilitator'  ) {
+		$sent = CoursePress_Data_Email::send_email( CoursePress_Data_Email::FACILITATOR_INVITATION, $args );
+	} else {
 		return false;
 	}
 
-	// Do not continue if the course does not exist.
-	if ( empty( $course = coursepress_get_course( $course_id ) ) ) {
-		return false;
+	// Update post meta only if new invite and email sent.
+	if ( $sent && ! $invite_exists ) {
+		// Add the new invite
+		$invite = array(
+			'first_name' => $args['first_name'],
+			'last_name' => $args['last_name'],
+			'email' => $email,
+			'code' => $args['invite_code'],
+			'hash' => $args['invite_hash'],
+		);
+
+		$invites[ $args['invite_code'] ] = $invite;
+
+		// Set meta name.
+		$meta_name = $type === 'instructor' ? 'instructor_invites' : 'facilitator_invites';
+		// Update meta with invite data.
+		update_post_meta(
+			$course_id,
+			$meta_name,
+			$invites
+		);
 	}
 
-	// Get the title of the course.
-	$title = empty( $course->post_title ) ? ' a course' : $course->post_title;
-
-	switch ( $type ) {
-		case 'instructor':
-			$subject = __( 'Invitation as an instructor', 'cp' );
-			$message = sprintf( __( 'You have been invited as an instructor to %s. Please get in touch.', 'cp' ), $title );
-			break;
-
-		case 'facilitator':
-			$subject = __( 'Invitation as a facilitator', 'cp' );
-			$message = sprintf( __( 'You have been invited as a facilitator to %s. Please get in touch.', 'cp' ), $title );
-			break;
-	}
-
-	// If required params are set, send email.
-	if ( ! empty( $subject ) && $message ) {
-		return wp_mail( $email, $subject, $message );
-	}
-
-	return false;
+	return $sent;
 }

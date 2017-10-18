@@ -68,31 +68,51 @@
                     <p><?php _e( 'Number of students', 'cp' ); ?> <input type="number" name="meta_class_size" class="input-inline" value="{{class_size}}" /></p>
                 </div>
 
-                <label class="label"><?php _e( 'Course Availability', 'cp' ); ?></label>
-                <div class="cp-flex">
-                    <div class="cp-div-flex cp-pad-right">
-                        <span class="course-title-tag"><?php _e( 'Start Date', 'cp' ); ?></span>
-                        <input type="text" name="meta_course_start_date" class="datepicker" value="{{course_start_date}}" />
-                        <i class="fa fa-calendar"></i>
+				<div class="cp-box">
+                    <label class="label"><?php _e( 'Course Availability', 'cp' ); ?></label>
+                    <div class="cp-toggle-box">
+                        <label>
+                            <input type="checkbox" name="meta_course_open_ended" {{_.checked(true, meta_course_open_ended)}} class="cp-toggle-input" autocomplete="off" value="1" />
+                            <span class="cp-toggle-btn"></span>
+                            <span class="label"><?php esc_html_e( 'This course has no end date', 'cp' ); ?></span>
+                        </label>
+                        <p class="description"><?php _e( 'These are the dates that the course will be available to students.', 'cp' ); ?></p>
                     </div>
-                    <div class="cp-div-flex cp-pad-left">
-                        <span class="course-title-tag"><?php _e( 'End Date', 'cp' ); ?></span>
-                        <input type="text" name="meta_course_end_date" class="datepicker" value="{{course_end_date}}" />
-                        <i class="fa fa-calendar"></i>
+                    <div class="cp-flex">
+                        <div class="cp-div-flex cp-pad-right">
+                            <span class="course-title-tag"><?php _e( 'Start Date', 'cp' ); ?></span>
+                            <input type="text" name="meta_course_start_date" class="datepicker" value="{{course_start_date}}" />
+                            <i class="fa fa-calendar"></i>
+                        </div>
+                        <div class="cp-div-flex cp-pad-left">
+                            <span class="course-title-tag"><?php _e( 'End Date', 'cp' ); ?></span>
+                            <input type="text" name="meta_course_end_date" class="datepicker" {{ true === meta_course_open_ended? 'disabled="disabled"':'' }} value="{{course_end_date}}" />
+                            <i class="fa fa-calendar"></i>
+                        </div>
                     </div>
                 </div>
-                <br />
-                <label class="label"><?php _e( 'Enrollment Date', 'cp' ); ?></label>
-                <div class="cp-flex">
-                    <div class="cp-div-flex cp-pad-right">
-                        <span class="course-title-tag"><?php _e( 'Start Date', 'cp' ); ?></span>
-                        <input type="text" name="meta_enrollment_start_date" class="datepicker" value="{{enrollment_start_date}}" />
-                        <i class="fa fa-calendar"></i>
+
+				<div class="cp-box">
+                    <label class="label"><?php _e( 'Enrollment Date', 'cp' ); ?></label>
+                    <div class="cp-toggle-box">
+                        <label>
+                            <input type="checkbox" name="meta_enrollment_open_ended" {{_.checked(true, meta_enrollment_open_ended)}} class="cp-toggle-input" autocomplete="off" />
+                            <span class="cp-toggle-btn"></span>
+                            <span class="label"><?php esc_html_e( 'Students can enroll at any time', 'cp' ); ?></span>
+                        </label>
+                        <p class="description"><?php esc_html_e( 'These are the dates that students will be able to enroll in a course.', 'cp' ); ?></p>
                     </div>
-                    <div class="cp-div-flex cp-pad-left">
-                        <span class="course-title-tag"><?php _e( 'End Date', 'cp' ); ?></span>
-                        <input type="text" name="meta_enrollment_end_date" class="datepicker" value="{{enrollment_end_date}}" />
-                        <i class="fa fa-calendar"></i>
+                    <div class="cp-flex">
+                        <div class="cp-div-flex cp-pad-right">
+                            <span class="course-title-tag"><?php _e( 'Start Date', 'cp' ); ?></span>
+                            <input type="text" name="meta_enrollment_start_date" class="datepicker" value="{{enrollment_start_date}}" {{ true === meta_enrollment_open_ended? 'disabled="disabled"':'' }} />
+                            <i class="fa fa-calendar"></i>
+                        </div>
+                        <div class="cp-div-flex cp-pad-left">
+                            <span class="course-title-tag"><?php _e( 'End Date', 'cp' ); ?></span>
+                            <input type="text" name="meta_enrollment_end_date" class="datepicker" value="{{enrollment_end_date}}" {{ true === meta_enrollment_open_ended? 'disabled="disabled"':'' }} />
+                            <i class="fa fa-calendar"></i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -215,14 +235,14 @@
         </div>
 
     <?php
-    /**
-     * Trigger when all course type fields are printed.
-     *
-     * @since 3.0
-     * @param int $course_id Current course ID created or edited.
-     */
-    do_action( 'coursepress_course_setup-course-type', $course_id );
-    ?>
+	/**
+	 * Trigger when all course type fields are printed.
+	 *
+	 * @since 3.0
+	 * @param int $course_id Current course ID created or edited.
+	 */
+	do_action( 'coursepress_course_setup-course-type', $course_id );
+	?>
 </script>
 
 <script type="text/template" id="coursepress-sample-course-tpl">
