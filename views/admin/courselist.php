@@ -166,7 +166,7 @@ foreach ( $bulk_actions as $value => $label ) {
                                                 <a href="<?php echo esc_url( $course->get_permalink() ); ?>" target="_blank"><?php _e( 'View Course', 'cp' ); ?></a>
                                             </li>
                                             <li class="menu-item-delete cp-delete" data-course="<?php echo $course->ID; ?>">
-                                                <a href="javascript:void(0);"><?php _e( 'Delete Course', 'cp' ); ?></a>
+                                                <a href="#"><?php _e( 'Delete Course', 'cp' ); ?></a>
                                             </li>
                                         </ul>
                                     </div>
