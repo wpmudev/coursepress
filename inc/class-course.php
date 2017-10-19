@@ -114,6 +114,7 @@ class CoursePress_Course extends CoursePress_Utility {
 			'course_language' => __( 'English', 'cp' ),
 			'allow_discussion' => false,
 			'allow_workbook' => false,
+			'allow_grades' => false,
 			'payment_paid_course' => false,
 			'listing_image' => '',
 			'listing_image_thumbnail_id' => 0,
