@@ -28,7 +28,7 @@
             meta_force_current_unit_successful_completion: false,
             count: 0,
             steps: false,
-	        unit_permalink: ''
+            unit_permalink: ''
         };
 
         UnitItem = CoursePress.View.extend({
