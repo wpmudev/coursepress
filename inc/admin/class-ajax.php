@@ -1081,21 +1081,21 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		wp_send_json_success( $data );
 	}
 
-	function send_student_invite( $request ) {
-	    $course_id = $request->course_id;
-	    $args = array(
-	    	'first_name' => $request->first_name,
-		    'last_name' => $request->last_name,
-		    'email' => $request->email,
-	    );
-
-	    $send = coursepress_invite_student( $course_id, $args );
-
-	    if ( $send ) {
-	    	wp_send_json_success( $send );
-	    }
-
-	    wp_send_json_error( true );
+	/**
+	 * Send student course invitation.
+	 */
+	public function send_student_invite( $request ) {
+		$course_id = $request->course_id;
+		$args = array(
+			'first_name' => $request->first_name,
+			'last_name' => $request->last_name,
+			'email' => $request->email,
+		);
+		$send = coursepress_invite_student( $course_id, $args );
+		if ( $send ) {
+			wp_send_json_success( $send );
+		}
+		wp_send_json_error( true );
 	}
 
 	public function search_students( $request ) {
