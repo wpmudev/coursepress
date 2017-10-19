@@ -222,6 +222,9 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 					'no_modules' => __( 'One of the active unit has no modules!', 'cp' ),
 					'no_steps' => __( 'One of the active unit contains no steps!', 'cp' ),
 				),
+				'export' => array(
+					'no_items' => __( 'Please select at least one course to export.', 'cp' ),
+				),
 				'step' => array(
 					'answer_a' => __( 'Answer A', 'cp' ),
 					'answer_b' => __( 'Answer B', 'cp' ),
@@ -248,9 +251,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		/**
 		 * get extensions
 		 */
-
 		$localize_array['extensions'] = $this->get_extensions();
-
 		wp_localize_script( 'coursepress-admin-general', '_coursepress', $localize_array );
 	}
 

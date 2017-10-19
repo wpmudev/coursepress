@@ -1,4 +1,4 @@
-/* global CoursePress */
+/* global CoursePress, _coursepress */
 
 (function() {
     'use strict';
@@ -64,14 +64,48 @@
         return CoursePress.View.extend({
             template_id: 'coursepress-import-export-setting-tpl',
             el: $('#coursepress-setting-import-export'),
+
+            events: {
+                'click #coursepress-export-button': 'exportCourses',
+                'change input[name="coursepress[all]"]': 'switchAll',
+                'change label.course input[type=checkbox]': 'maybeTurnOffAll',
+            },
+
             initialize: function() {
                 this.on( 'view_rendered', this.setUpForms, this );
                 this.render();
             },
+
             setUpForms: function() {
                 this.importForm = CourseImport.extend({el: this.$('#form-import') });
                 this.importForm = new this.importForm();
-                //this.exportForm = this.$('#form-export');
+                this.exportForm = this.$('#form-export');
+                this.courses = this.$( 'label.course input[type=checkbox]', this.exportForm );
+                this.allCourses = this.$( 'input[name="coursepress[all]"]', this.exportForm );
+            },
+
+            switchAll: function( ev ) {
+                this.courses.each(function() {
+                    this.checked = $(ev.currentTarget).is(':checked');
+                });
+            },
+
+            maybeTurnOffAll: function( ev ) {
+                if ( ! $(ev.currentTarget).is(':checked') ) {
+                    this.allCourses.each( function() {
+                        this.checked = false;
+                    });
+                }
+            },
+
+            exportCourses: function() {
+                var checked = this.$( 'label.course input[type=checkbox]:checked', this.exportForm );
+                if ( 0 === checked.length ) {
+                    window.alert( _coursepress.text.export.no_items );
+                    return false;
+                }
+                this.exportForm.submit();
+                return false;
             }
         });
     });

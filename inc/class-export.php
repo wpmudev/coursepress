@@ -19,12 +19,7 @@ class CoursePress_Export extends CoursePress_Utility {
 	 *
 	 * @param int $course_id Course id.
 	 */
-	public function __construct( $course_id ) {
-
-		// Prepare data to export.
-		if ( ! $this->prepare_data( $course_id ) ) {
-			return new WP_Error( 'wrong_param', __( 'Unable to initialize CoursePress_Export!', 'cp' ) );
-		}
+	public function __construct() {
 	}
 
 	/**
@@ -34,7 +29,7 @@ class CoursePress_Export extends CoursePress_Utility {
 	 *
 	 * @return bool
 	 */
-	function prepare_data( $course_id ) {
+	private function prepare_data( $course_id ) {
 
 		// WP_Post object for course.
 		$post = get_post( $course_id );
@@ -172,18 +167,20 @@ class CoursePress_Export extends CoursePress_Utility {
 	 *
 	 * @return string File name.
 	 */
-	function get_file_name() {
+	private function get_file_name() {
 
 		// Get site name.
 		$site_name = sanitize_key( get_bloginfo( 'name' ) );
 		$site_name = empty( $site_name ) ? '' : $site_name . '.';
 
-		// Course slug.
-		$course_name = empty( $this->data['course'] ) ? '' : '.'. $this->data['course']->post_name;
-
 		// Create export file name.
-		$filename = $site_name . 'coursepress.' . time() . $course_name . '.json';
+		$filename = $site_name . 'coursepress.' . time() . '.json';
 
+		// Course slug.
+		if ( isset( $this->data['course'] ) ) {
+			$course_name = empty( $this->data['course'] ) ? '' : '.'. $this->data['course']->post_name;
+			$filename = $site_name . 'coursepress.' . time() . $course_name . '.json';
+		}
 		return $filename;
 	}
 
@@ -195,8 +192,7 @@ class CoursePress_Export extends CoursePress_Utility {
 	 *
 	 * @return void
 	 */
-	function export() {
-
+	private function export() {
 		// If valid data found, export it.
 		if ( ! empty( $this->data ) ) {
 			// Get the file name.
@@ -205,10 +201,30 @@ class CoursePress_Export extends CoursePress_Utility {
 			header( 'Content-Description: File Transfer' );
 			header( 'Content-Disposition: attachment; filename=' . $file_name );
 			header( 'Content-Type: text/json; charset=' . get_option( 'blog_charset' ), true );
-
 			$option = defined( 'JSON_PRETTY_PRINT' )? JSON_PRETTY_PRINT : null;
 			echo json_encode( $this->data, $option );
 			exit;
 		}
+	}
+
+	/**
+	 * Export single course
+	 */
+	public function export_course( $course_id ) {
+		$courses = array( $course_id );
+		$this->export_courses( $courses );
+	}
+
+	/**
+	 * Export Courses
+	 */
+	public function export_courses( $courses ) {
+		$data = array();
+		foreach ( $courses as $course_id ) {
+			$this->prepare_data( $course_id );
+			$data[ $course_id ] = $this->data;
+		}
+		$this->data = $data;
+		$this->export();
 	}
 }

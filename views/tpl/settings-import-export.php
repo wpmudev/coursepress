@@ -44,9 +44,20 @@
 		'title' => __( 'Export', 'CoursePress' ),
 		'description' => __( 'Select courses to export to another site.', 'CoursePress' ),
 		'fields' => array(
+			'_wpnonce' => array(
+				'type' => 'hidden',
+				'value' => wp_create_nonce( 'export_courses' ),
+			),
+			'cp_action' => array(
+				'type' => 'hidden',
+				'value' => 'export_courses',
+			),
 			'coursepress[all]' => array(
 				'type' => 'checkbox',
 				'title' => $toggle_input . __( 'All Courses', 'CoursePress' ),
+				'data' => array(
+					'course-id' => 'all',
+				),
 			),
 		),
 	);
@@ -61,6 +72,10 @@
 		$config['export']['fields'][ 'coursepress[courses]['.$course_id.']' ] = array(
 			'type' => 'checkbox',
 			'title' => $toggle_input . ( empty( $course_title )? __( '-[This course has no title]-', 'CoursePress' ):$course_title ),
+			'data' => array(
+				'course-id' => $course_id,
+			),
+			'class' => 'course',
 		);
 	}
 	$config['export']['fields'] += array(
@@ -80,6 +95,7 @@
 			'disabled' => true,
 		),
 		'coursepress[export][button]' => array(
+			'id' => 'coursepress-export-button',
 			'type' => 'submit',
 			'value' => __( 'Export Courses', 'CoursePress' ),
 			'class' => 'cp-btn cp-btn-active',
