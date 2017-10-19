@@ -240,6 +240,7 @@ class CoursePressUpgradeTest extends WP_UnitTestCase {
 		// Discussion
 		update_post_meta( $c1, 'allow_course_discussion', 'on' );
 		update_post_meta( $c1, 'allow_workbook_page', 'on' );
+		update_post_meta( $c1, 'allow_grades', 'on' );
 		update_post_meta( $c1, 'enroll_type', 'registered' );
 
 		// Units
@@ -318,6 +319,7 @@ class CoursePressUpgradeTest extends WP_UnitTestCase {
 		$this->assertEquals( $end, $course_setting['enrollment_end_date'] );
 		$this->assertEquals( 1, $course_setting['allow_discussion'] );
 		$this->assertEquals( 1, $course_setting['allow_workbook'] );
+		$this->assertEquals( 1, $course_setting['allow_grades'] );
 		$this->assertEquals( 'registered', $course_setting['enrollment_type'] );
 
 		// Instructors
