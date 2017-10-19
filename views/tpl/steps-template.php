@@ -387,7 +387,7 @@
         </div>
         <div class="cp-box">
             <label class="label"><?php _e( 'Answer area placeholder text', 'cp' ); ?></label>
-            <input type="text" name="meta_placeholder_text" class="widefat" value="{{meta_placeholder_text}}" placeholder="<?php _e( 'Describe how question should be answer', 'cp' ); ?>" />
+            <input type="text" name="meta_placeholder_text" class="widefat" value="{{placeholder_text}}" placeholder="<?php _e( 'Describe how question should be answer', 'cp' ); ?>" />
         </div>
         <div class="cp-box">
             <label class="label"><?php _e( 'Answer word limit', 'cp' ); ?></label>
