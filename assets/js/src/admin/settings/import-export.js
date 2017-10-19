@@ -99,7 +99,7 @@
             },
 
             exportCourses: function() {
-                var model = new CoursePress.Request();
+//                var model = new CoursePress.Request();
                 var checked = this.$( 'label.course input[type=checkbox]:checked', this.exportForm );
                 var values = [];
 
@@ -111,9 +111,24 @@
                     values.push( $(this).data('course-id') );
                 });
 
+                this.exportForm.submit();
+
+/*
+                var data = {
+                    action: 'coursepress_export_course',
+                    courses: values,
+                    _wpnonce: win._coursepress._wpnonce,
+                };
+                $.post( win._coursepress.ajaxurl, data );
+
                 model.set( 'action', 'export_course' );
                 model.set( 'course', values );
-                model.save();
+                model.fetch({
+                    type: 'POST',
+                    action: 'export_course',
+                    courses: values
+                });
+                */
                 return false;
             }
         });

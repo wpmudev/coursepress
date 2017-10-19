@@ -44,6 +44,14 @@
 		'title' => __( 'Export', 'CoursePress' ),
 		'description' => __( 'Select courses to export to another site.', 'CoursePress' ),
 		'fields' => array(
+			'_wpnonce' => array(
+				'type' => 'hidden',
+				'value' => wp_create_nonce( 'export_courses' ),
+			),
+			'cp_action' => array(
+				'type' => 'hidden',
+				'value' => 'export_courses',
+			),
 			'coursepress[all]' => array(
 				'type' => 'checkbox',
 				'title' => $toggle_input . __( 'All Courses', 'CoursePress' ),
