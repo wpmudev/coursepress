@@ -391,7 +391,7 @@
         </div>
         <div class="cp-box">
             <label class="label"><?php _e( 'Answer word limit', 'cp' ); ?></label>
-            <input type="text" name="meta_word_limit" value="{{meta_word_limit}}" />
+            <input type="text" name="meta_word_limit" value="{{word_limit}}" />
             <p class="description"><?php _e( 'Set 0 for no word limit answer', 'cp' ); ?></p>
         </div>
     </div>
