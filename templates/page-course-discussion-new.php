@@ -30,11 +30,7 @@ $allowed = $course->__get( 'allow_discussion' );
 if ( false == $allowed ) {
     coursepress_render( 'templates/content-discussion-off' );
 } else {
-    $url = $course->get_discussion_new_url();
-?>
-<div class="discussion-new"><a href="<?php echo esc_url( $url ); ?>" class="button"><?php esc_html_e( 'Start a new discussion', 'cp' ); ?></a></div>
-<?php
-    coursepress_render( 'templates/content-discussion', array( 'user_id' => 0, 'course' => $course ) );
+    coursepress_render( 'templates/content-discussion-form', array( 'course' => $course, 'id' => 0, 'section' => 0) );
 }
 ?>
 			</div>

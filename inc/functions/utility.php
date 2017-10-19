@@ -213,39 +213,35 @@ function coursepress_update_setting( $key = true, $value ) {
 /**
  * Get or print the given filename.
  *
- * @param string $filename The relative path of the file.
+ * @param string $file The relative path of the file.
  * @param array $args Optional arguments to set as variable
  * @param bool $echo Whether to return the result in string or not.
  * @return mixed
  */
-function coursepress_render( $filename, $args = array(), $echo = true ) {
-    global $CoursePress;
-
-    $path = $CoursePress->plugin_path;
-    $filename = $path . $filename . '.php';
-
-    if ( file_exists( $filename ) && is_readable( $filename ) ) {
-        if ( ! empty( $args ) ) {
-            $args = (array) $args;
-
-            foreach ( $args as $key => $value ) {
-                $$key = $value;
-            }
-        }
-
+function coursepress_render( $file, $args = array(), $echo = true ) {
+	global $CoursePress;
+	$path = $CoursePress->plugin_path;
+	$filename = $path . $file . '.php';
+	if ( file_exists( $filename ) && is_readable( $filename ) ) {
+		if ( ! empty( $args ) ) {
+			$args = (array) $args;
+			foreach ( $args as $key => $value ) {
+				$$key = $value;
+			}
+		}
 		if ( $echo ) {
 			include $filename;
-        } else {
+		} else {
 			ob_start();
-
-            include $filename;
-
-            return ob_get_clean();
-        }
-        return true;
-    }
-
-    return false;
+			include $filename;
+			return ob_get_clean();
+		}
+		return true;
+	}
+	if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+		error_log( sprintf( 'CoursePress, missing temlate: %s', $file ) );
+	}
+	return false;
 }
 
 /**
@@ -729,4 +725,102 @@ function coursepress_replace_vars( $content, $vars ) {
 	}
 
 	return str_replace( $keys, $values, $content );
+}
+
+function coursepress_html_select( $data, $echo = false ) {
+	$content = sprintf(
+		'<select name="%s" id="%s">',
+		isset( $data['name'] )? $data['name']:'',
+		isset( $data['id'] )? $data['id']:''
+	);
+	if ( isset( $data['options'] ) && is_array( $data['options'] ) ) {
+		foreach( $data['options'] as $one ) {
+			$content .= sprintf(
+				'<option value="%s" %s>%s</option>',
+				isset( $one['value'] )? esc_attr( $one['value'] ) : '',
+				isset( $data['value'] )? selected( $one['value'], $data['value'] ) : '',
+				isset( $one['label'] )? esc_html( $one['label'] ) : ''
+			);
+		}
+	} else {
+		return;
+	}
+	$content .= '</select>';
+	if ( !$echo ) {
+		return $content;
+	}
+	echo $content;
+}
+
+/**
+ * Filter HTML string and remove forbidden tags and attributes.
+ * This function uses the wp_kses() function to sanitize the content.
+ *
+ * @since  2.0.0
+ * @param  string $content Raw HTML code.
+ * @param  bool   $no_html Return sanitized HTML (false) or plain text (true)?
+ * @return string Sanitized content.
+ */
+function coursepress_filter_content( $content, $no_html = false ) {
+	if ( $no_html ) {
+		if ( is_array( $content ) ) {
+			foreach ( $content as $content_key => $content_value ) {
+				$content[ $content_key ] = wp_filter_nohtml_kses( $content_value );
+			}
+		} else {
+			$content = wp_filter_nohtml_kses( $content );
+		}
+		return $content;
+	}
+	if ( current_user_can( 'unfiltered_html' ) ) {
+		return $content;
+	}
+	$kses_rules = apply_filters(
+		'coursepress_allowed_post_tags',
+		wp_kses_allowed_html( 'post' )
+	);
+	if ( is_array( $content ) ) {
+		foreach ( $content as $content_key => $content_value ) {
+			$content[ $content_key ] = wp_kses( $content_value,  $kses_rules );
+		}
+	} else {
+		$content = wp_kses( $content, $kses_rules );
+	}
+    return $content;
+}
+
+/**
+ * Evaluate if the specified value translates to boolean TRUE.
+ *
+ * True:
+ * - Boolean true
+ * - Number other than 0
+ * - Strings 'yes', 'on', 'true'
+ *
+ * @param  mixed $value Value to evaluate.
+ *
+ * @since  2.0.0
+ *
+ * @return bool
+ */
+function coursepress_is_true( $value ) {
+	if ( ! $value ) {
+		// Handles: null, 0, '0', false, ''.
+		return false;
+	} elseif ( true === $value ) {
+		// Bool directly.
+		return true;
+	} elseif ( ! is_scalar( $value ) ) {
+		// Arrays, objects, etc. always evaluate to false.
+		return false;
+	} elseif ( is_numeric( $value ) ) {
+		// A number other than 0 is true.
+		return true;
+	}
+	// Other strings for boolean.
+	$value = strtolower( (string) $value );
+	if ( 'on' == $value || 'yes' == $value || 'true' == $value ) {
+		return true;
+	}
+	return false;
 }

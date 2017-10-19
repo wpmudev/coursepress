@@ -765,6 +765,12 @@ class CoursePress_Course extends CoursePress_Utility {
 		return $course_url . trailingslashit( $discussion_slug );
 	}
 
+	function get_discussion_new_url() {
+		$url = $this->get_discussion_url();
+        $slug = coursepress_get_setting( 'slugs/discussions_new', 'add_new_discussion' );
+		return $url . trailingslashit( $slug );
+	}
+
 	function get_grades_url() {
 		$course_url = $this->get_permalink();
 		$grades_slug = coursepress_get_setting( 'slugs/grades', 'grades' );

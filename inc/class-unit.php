@@ -276,8 +276,9 @@ class CoursePress_Unit extends CoursePress_Utility {
 		if ( is_wp_error( $user ) )
 			return false;
 
-		if ( ! $module['previous_module'] )
+		if ( !isset( $module['previous_module'] ) || ! $module['previous_module'] ) {
 			return true;
+		}
 
 		$previous_module = $module['previous_module'];
 		$course_id = $this->__get( 'post_parent' );

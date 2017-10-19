@@ -185,8 +185,8 @@
 
                this.$('select').select2();
 
-               if ( this.model.questions ) {
-                   _.each( this.model.questions, function( question ) {
+               if ( this.model.get('questions') ) {
+                   _.each( this.model.get('questions'), function( question ) {
                        this._addQuestion(question);
                    }, this );
                    this.$('.no-content-info').hide();
@@ -247,16 +247,15 @@
 
            updateQuestions: function() {
                this.model.meta_questions = this.model.questions = this.questionsModel;
-               this.stepView.set('questions', this.model.questions);
-               this.stepView.set('meta_questions', this.model.meta_questions);
-               this.stepView.trigger('coursepress:model_updated', this.stepView.model, this.stepView );
-               /*
+               //this.stepView.set('questions', this.model.questions);
+               //this.stepView.set('meta_questions', this.model.meta_questions);
+               //this.stepView.trigger('coursepress:model_updated', this.stepView.model, this.stepView );
                this.model.set('questions', this.questionsModel);
                this.model.set('meta_questions', this.questionsModel);
                this.stepView.model.set('questions', this.model.get('questions'));
                this.stepView.model.set('meta_questions', this.model.get('questions'));
                this.stepView.trigger('coursepress:model_updated', this.stepView.model, this.stepView );
-               */
+
            }
        });
     });
