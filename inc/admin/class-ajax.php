@@ -16,20 +16,24 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		add_action( 'wp_ajax_coursepress_get_course_units', array( $this, 'get_course_units' ) );
 		// Hook to handle file uploads
 		add_action( 'wp_ajax_coursepress_upload', array( $this, 'upload_file' ) );
-	    // Hook to search for select2 data.
-	    add_action( 'wp_ajax_coursepress_get_users', array( $this, 'get_course_users' ) );
+		// Hook to search for select2 data.
+		add_action( 'wp_ajax_coursepress_get_users', array( $this, 'get_course_users' ) );
 		add_action( 'wp_ajax_coursepress_search_students', array( $this, 'search_students' ) );
 
-	    // Hook to enrollment request
-	    add_action( 'wp_ajax_coursepress_enroll', array( $this, 'enroll' ) );
-	    add_action( 'wp_ajax_course_enroll_passcode', array( $this, 'enroll_with_passcode' ) );
+		// Hook to enrollment request
+		add_action( 'wp_ajax_coursepress_enroll', array( $this, 'enroll' ) );
+		add_action( 'wp_ajax_course_enroll_passcode', array( $this, 'enroll_with_passcode' ) );
 
-	    // Register user
-	    add_action( 'wp_ajax_nopriv_coursepress_register', array( $this, 'register_user' ) );
-	    // Update profile
-	    add_action( 'wp_ajax_coursepress_update_profile', array( $this, 'update_profile' ) );
-	    // Submit module
+		// Register user
+		add_action( 'wp_ajax_nopriv_coursepress_register', array( $this, 'register_user' ) );
+		// Update profile
+		add_action( 'wp_ajax_coursepress_update_profile', array( $this, 'update_profile' ) );
+		// Submit module
 		add_action( 'wp_ajax_coursepress_submit', array( $this, 'validate_submission' ) );
+		/**
+		 * Search course
+		 */
+		add_action( 'wp_ajax_coursepress_courses_search', array( $this, 'search_course' ) );
 	}
 
 	/**
@@ -1043,7 +1047,17 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		}
 	}
 
+	/**
+	 * Search course
+	 */
 	public function search_course() {
+		if (
+			! isset( $_REQUEST['_wpnonce'] )
+			|| ! isset( $_REQUEST['q'] )
+			|| ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress-course-search-nonce' )
+		) {
+			wp_send_json_error();
+		}
 		$data = array(
 			'items' => array(),
 			'total_count' => 0,
