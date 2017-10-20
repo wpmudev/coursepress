@@ -235,6 +235,12 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 						'withdraw' => __( 'Please confirm that you want to remove the student from this course.', 'cp' ),
 					),
 				),
+				'course' => array(
+					'students' => array(
+						'no_items' => __( 'Please select at lease one student to withdraw.', 'cp' ),
+						'confirm' => __( 'Are you sure to withdraw students?', 'cp' ),
+					),
+				),
 			),
 		) );
 

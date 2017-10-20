@@ -1162,4 +1162,21 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		}
 		wp_send_json_error( array( 'message' => __( 'Could not apply courses action.', 'cp' ) ) );
 	}
+
+	/**
+	 * Withdraw students from course!
+	 */
+	public function withdraw_students( $request ) {
+		if (
+			! isset( $request->students )
+			|| ! isset( $request->course_id )
+			|| ! is_array( $request->students )
+		) {
+			return;
+		}
+		foreach ( $request->students as $student_id ) {
+			coursepress_delete_student( $student_id, $request->course_id );
+		}
+		return array( 'success' => true );
+	}
 }
