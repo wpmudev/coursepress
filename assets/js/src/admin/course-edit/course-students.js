@@ -77,6 +77,7 @@
                 'click .cp-btn-withdraw-student': 'withdrawStudent',
                 'click #add-student-button': 'addStudent',
                 'change thead [type=checkbox]': 'toggleCheckboxes',
+                'click .bulkactions [type=submit]': 'bulkActionWithdrawStudents',
             },
 
             initialize: function( model, courseView ) {
@@ -214,6 +215,46 @@
                         $(this).removeAttr( 'checked' );
                     }
                 });
+            },
+
+            bulkActionWithdrawStudents: function( ev ) {
+                var target = $( ev.currentTarget ).closest('.tablenav');
+                var students = $('#course-students tbody [type=checkbox]:checked');
+                var text = _coursepress.text.course.students.confirm + '\n';
+                var ids = [];
+                var model = new CoursePress.Request();
+                if ( 'delete' !== $('[name=action]', target).val() ) {
+                    return;
+                }
+                if ( 0 === students.length ) {
+                    window.alert( _coursepress.text.course.students.no_items );
+                    return;
+                }
+                students.each( function() {
+                    text += '\n';
+                    text += $('.user_login', $(this).closest('tr')).html();
+                    text += ' ';
+                    text += $('.display_name', $(this).closest('tr')).html();
+                    ids.push( $(this).val() );
+                });
+                if ( ! window.confirm( text ) ) {
+                    return;
+                }
+                model.set('action', 'withdraw_students');
+                model.set('course_id', win._coursepress.course.ID);
+                model.set('students', ids);
+                model.set( '_wpnonce',  win._coursepress._wpnonce );
+                model.on( 'coursepress:success_withdraw_students', this.bulkActionWithdrawStudentsSuccess, this );
+                model.on( 'coursepress:error_withdraw_students', this.bulkActionWithdrawStudentsError, this );
+                model.save();
+            },
+
+            bulkActionWithdrawStudentsSuccess: function() {
+                window.location.reload();
+            },
+
+            bulkActionWithdrawStudentsError: function( data ) {
+                window.alert( data.message );
             }
         });
     });
