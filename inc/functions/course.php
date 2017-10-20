@@ -459,53 +459,86 @@ function coursepress_get_course_permalink( $course_id = 0 ) {
  */
 function coursepress_get_course_submenu() {
 	$course = coursepress_get_course(); // Submenu only works on CoursePress pages
-
 	if ( is_wp_error( $course ) || ! is_user_logged_in() ) {
 		return null;
 	}
-
+	/**
+	 * set current-menu-item
+	 */
+	$current = get_query_var( 'coursepress' );
+	/**
+	 * course ID
+	 */
 	$course_id = $course->__get( 'ID' );
+	/**
+	 * Units
+	 */
 	$menus = array(
 		'units' => array(
 			'label' => __( 'Units', 'cp' ),
 			'url' => coursepress_get_course_units_archive_url( $course_id ),
 		),
 	);
-
+	if ( 'unit-archive' == $current ) {
+		$menus['units']['classes'] = array( 'current-menu-item' );
+	}
+	/**
+	 * forum
+	 */
 	if ( $course->__get( 'allow_discussion' ) ) {
 		$menus['discussions'] = array(
 			'label' => __( 'Forum', 'cp' ),
 			'url' => esc_url_raw( $course->get_discussion_url() ),
 		);
+		if ( 'forum' == $current ) {
+			$menus['discussions']['classes'] = array( 'current-menu-item' );
+		}
 	}
-
+	/**
+	 * workbook
+	 */
 	if ( $course->__get( 'allow_workbook' ) ) {
 		$menus['workbook'] = array(
 			'label' => __( 'Workbook', 'cp' ),
 			'url' => esc_url_raw( $course->get_workbook_url() ),
 		);
+		if ( 'workbook' == $current ) {
+			$menus['workbook']['classes'] = array( 'current-menu-item' );
+		}
 	}
-
+	/**
+	 * grades
+	 */
 	if ( $course->__get( 'allow_grades' ) ) {
 		$menus['grades'] = array(
 			'label' => __( 'Grades', 'cp' ),
 			'url' => esc_url_raw( $course->get_grades_url() ),
 		);
+		if ( 'grades' == $current ) {
+			$menus['grades']['classes'] = array( 'current-menu-item' );
+		}
 	}
-
 	// Add course details link at the last
 	$menus['course-details'] = array(
 		'label' => __( 'Course Details', 'cp' ),
 		'url' => esc_url_raw( $course->get_permalink() ),
 	);
-
+	/**
+	 * fill class if empty
+	 */
+	foreach ( $menus as $menu_id => $menu ) {
+		if ( ! isset( $menu['classes'] ) ) {
+			$menus[ $menu_id ]['classes'] = array();
+		}
+		$menus[ $menu_id ]['classes'][] = 'menu-item';
+		$menus[ $menu_id ]['classes'][] = sprintf( 'menu-item-%s', esc_attr( $menu_id ) );
+	}
 	/**
 	 * Fired to allow adding course menu.
 	 *
 	 * @since 3.0
 	 */
 	$menus = apply_filters( 'coursepress_course_submenu', $menus, $course );
-
 	return $menus;
 }
 
