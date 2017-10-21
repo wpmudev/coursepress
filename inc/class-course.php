@@ -724,8 +724,7 @@ class CoursePress_Course extends CoursePress_Utility {
 	}
 
 	function count_certified_students() {
-		// @todo: count certified students here
-		return 0;
+		return count($this->get_certified_students());
 	}
 
 	/**
