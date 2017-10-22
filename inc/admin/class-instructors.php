@@ -67,8 +67,7 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 		$args = array(
 			'number' => $per_page,
 			'offset' => ( $current_page - 1 ) * $per_page,
-			'meta_key' => 'role_ins',
-			'meta_value' => 'instructor',
+			'role' => 'coursepress_instructor',
 			'fields' => 'all_with_meta',
 			'search' => $usersearch,
 		);
@@ -76,11 +75,8 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 		if ( ! empty( $_GET['course_id'] ) ) {
 			// Show only students of current course
 			$course_id = (int) $_GET['course_id'];
-			$instructor_ids = $this->get_instructors_by_course_id( $course_id );
-			if ( empty( $instructor_ids ) ) {
-				return;
-			}
-			$args['include'] = $instructor_ids;
+			$args['meta_key'] = 'instructor_' . $course_id;
+			$args['meta_value'] = '1';
 		}
 
 		if ( '' !== $args['search'] ) {
