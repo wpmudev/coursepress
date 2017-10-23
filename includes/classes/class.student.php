@@ -250,6 +250,16 @@ if ( !class_exists( 'Student' ) ) {
 			}
 
 			/**
+			 * Add user to blog for multisite
+			 */
+			if ( is_multisite() ) {
+				$current_blog = get_current_blog_id();
+				if ( ! is_user_member_of_blog( $this->ID, $blog_id ) ) {
+					add_user_to_blog( $blog_id, $this->ID, 'None' );
+				}
+			}
+
+			/**
 			 * Setup actions for when a student enrolls.
 			 * Can be used to create notifications or tracking student actions.
 			 */
