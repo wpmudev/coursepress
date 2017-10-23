@@ -255,7 +255,19 @@ if ( !class_exists( 'Student' ) ) {
 			if ( is_multisite() ) {
 				$blog_id = get_current_blog_id();
 				if ( ! is_user_member_of_blog( $this->ID, $blog_id ) ) {
-					$role_name = apply_filters( 'coursepress_add_user_to_blog_role', 'subscriber' );
+					/**
+					 * Filter allow to change role.
+					 *
+					 * Filter allow to change role, when we added a logged
+					 * user to course, we must to add this user to blog.
+					 *
+					 * @since x.x.x
+					 *
+					 * @param string Role name, default 'subscriber'.
+					 * @param integer $this->ID User ID.
+					 * @param integer $blog_id Site ID.
+					 */
+					$role_name = apply_filters( 'coursepress_add_user_to_blog_role', 'subscriber', $this->ID, $blog_id );
 					add_user_to_blog( $blog_id, $this->ID, $role_name );
 				}
 			}
