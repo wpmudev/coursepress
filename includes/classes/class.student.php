@@ -253,7 +253,7 @@ if ( !class_exists( 'Student' ) ) {
 			 * Add user to blog for multisite
 			 */
 			if ( is_multisite() ) {
-				$current_blog = get_current_blog_id();
+				$blog_id = get_current_blog_id();
 				if ( ! is_user_member_of_blog( $this->ID, $blog_id ) ) {
 					$role_name = apply_filters( 'coursepress_add_user_to_blog_role', 'subscriber' );
 					add_user_to_blog( $blog_id, $this->ID, $role_name );
