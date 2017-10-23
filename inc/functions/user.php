@@ -42,7 +42,7 @@ function coursepress_get_user( $user_id = 0 ) {
 
 	if ( $CoursePress_User instanceof  CoursePress_User
 		&& $user_id == $CoursePress_User->__get( 'ID' ) ) {
-			return $CoursePress_User; }
+		return $CoursePress_User; }
 
 	if ( isset( $CoursePress_Core->users[ $user_id ] ) ) {
 		return $CoursePress_Core->users[ $user_id ]; }
@@ -89,7 +89,9 @@ function coursepress_add_course_instructor( $user_id = 0, $course_id = 0 ) {
 	add_post_meta( $course_id, 'instructor', $user_id );
 
 	// Marked user as instructor
-	update_user_option( $user_id, 'course_' . $course_id, $course_id, is_multisite() );
+	update_user_option( $user_id, 'course_' . $course_id, $course_id, !is_multisite() );
+
+	update_user_option( $user_id, 'role_ins', 'instructor', !is_multisite() );
 
 	/**
 	 * Trigger whenever a new instructor is added to a course.
@@ -129,7 +131,9 @@ function coursepress_delete_course_instructor( $user_id = 0, $course_id = 0 ) {
 	delete_post_meta( $course_id, 'instructor', $user_id );
 
 	// Remove user marker
-	delete_user_option( $user_id, 'course_' . $course_id, is_multisite() );
+	delete_user_option( $user_id, 'course_' . $course_id, !is_multisite() );
+
+	delete_user_option( $user_id, 'role_ins', !is_multisite() );
 
 	/**
 	 * Trigger whenever an instructor is removed from the course.
