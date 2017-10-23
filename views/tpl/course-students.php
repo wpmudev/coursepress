@@ -36,7 +36,18 @@
                             <span class="display_name">(<?php echo $student->get_name(); ?>)</span>
                         </div>
                     </td>
-                    <td></td>
+                    <td class="cp-student-certified">
+		                <?php
+			                /**
+			                 * @var array $certified_students
+			                 */
+			                $student_certified = in_array($student->ID, $certified_students);
+			                printf(
+				                '<span class="dashicons dashicons-%s"></span>',
+				                $student_certified ? 'yes' : 'no'
+			                );
+		                ?>
+                    </td>
                     <td>
                         <a href="#" data-id="<?php echo esc_attr( $student->ID ); ?>" class="cp-btn cp-btn-xs cp-btn-active cp-btn-withdraw-student"><?php _e( 'Withdraw', 'cp' ); ?></a>
                     </td>
@@ -129,6 +140,8 @@
             <span class="display_name">({{display_name}})</span>
         </div>
     </td>
-    <td></td>
+    <td>
+        <span class="dashicons dashicons-no"></span>
+    </td>
     <td><a href="#" data-id="{{ID}}" class="cp-btn cp-btn-xs cp-btn-active cp-btn-withdraw-student"><?php esc_html_e( 'Withdraw', 'cp' ); ?></a></td>
 </script>

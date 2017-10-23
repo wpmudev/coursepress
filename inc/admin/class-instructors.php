@@ -28,7 +28,7 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 	}
 
 	public function get_page() {
-		$search = isset( $_GET['s'] ) ? $_GET['s'] : '';
+		$search = isset( $_GET['instructor_search'] ) ? $_GET['instructor_search'] : '';
 		$instructors = $this->get_list();
 		$args = array(
 			'columns' => $this->columns(),
@@ -48,7 +48,7 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 		/**
 		 * Search
 		 */
-		$usersearch = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : '';
+		$usersearch = isset( $_REQUEST['instructor_search'] ) ? wp_unslash( trim( $_REQUEST['instructor_search'] ) ) : '';
 		/**
 		 * Per Page
 		 */

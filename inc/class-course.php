@@ -724,8 +724,7 @@ class CoursePress_Course extends CoursePress_Utility {
 	}
 
 	function count_certified_students() {
-		// @todo: count certified students here
-		return 0;
+		return count($this->get_certified_students());
 	}
 
 	/**
@@ -1075,5 +1074,17 @@ class CoursePress_Course extends CoursePress_Utility {
 			}
 		}
 		return '';
+	}
+
+	/**
+	 * Returns IDs of certified users.
+	 *
+	 * @return array IDs of all the users that are certified for this course.
+	 */
+	public function get_certified_students()
+	{
+		global $wpdb;
+		$sql = $wpdb->prepare("select post_author from {$wpdb->posts} where post_type = %s and post_parent = %d", 'cp_certificate', $this->ID);
+		return $wpdb->get_col($sql);
 	}
 }

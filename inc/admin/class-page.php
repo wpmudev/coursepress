@@ -628,6 +628,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'redirect' => remove_query_arg( 'dummy' ),
 			'pagination' => $this->set_pagination( $total_students, 'coursepress_students' ),
 			'invited_students' => $invited_students,
+			'certified_students' => $course->get_certified_students()
 		);
 		$this->localize_array['invited_students'] = $invited_students;
 		coursepress_render( 'views/tpl/course-students', $args );
