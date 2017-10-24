@@ -57,6 +57,10 @@ function coursepress_get_user( $user_id = 0 ) {
 	return $user;
 }
 
+function coursepress_user_meta_prefix_required() {
+	return is_multisite() && !is_main_site();
+}
+
 /**
  * Add user as instructor to a course.
  *
@@ -88,10 +92,12 @@ function coursepress_add_course_instructor( $user_id = 0, $course_id = 0 ) {
 	// Include user as instructor to the course
 	add_post_meta( $course_id, 'instructor', $user_id );
 
-	// Marked user as instructor
-	update_user_option( $user_id, 'course_' . $course_id, $course_id, !is_multisite() );
+	$add_site_prefix = coursepress_user_meta_prefix_required();
 
-	update_user_option( $user_id, 'role_ins', 'instructor', !is_multisite() );
+	// Marked user as instructor
+	update_user_option( $user_id, 'course_' . $course_id, $course_id, !$add_site_prefix );
+
+	update_user_option( $user_id, 'role_ins', 'instructor', !$add_site_prefix );
 
 	/**
 	 * Trigger whenever a new instructor is added to a course.

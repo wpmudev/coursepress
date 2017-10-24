@@ -48,7 +48,7 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 	{
 		global $wpdb;
 
-		return is_multisite() && defined( 'BLOG_ID_CURRENT_SITE' ) && BLOG_ID_CURRENT_SITE == get_current_blog_id()
+		return coursepress_user_meta_prefix_required()
 			? sprintf('%s%s', $wpdb->prefix, $meta_key)
 			: $meta_key;
 	}
