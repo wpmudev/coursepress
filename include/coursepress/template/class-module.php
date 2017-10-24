@@ -279,8 +279,12 @@ class CoursePress_Template_Module {
 				if ( ! empty( $responses ) ) {
 					$element_class[] = 'hide';
 				}
-				$hidden_value = empty( $responses ) ? 0 : 1;
-				$content .= sprintf( '<input type="hidden" id="cp-is-hidden-module" name="is_module_hidden[]" value="%d" />', $hidden_value );
+
+				// Set value to 1 only if not attempted this module.
+				$is_module_hidden = empty( $responses ) ? 0 : 1;
+				// Add a hidden field to track if student really submitted the form.
+				$content .= sprintf( '<input type="hidden" class="cp-is-hidden-module" name="is_module_hidden[%s]" value="%s" />', $module_id, $is_module_hidden );
+
 				$response_count = ! empty( $responses ) ? count( $responses ) : 0;
 
 				// Get recorded time lapsed
