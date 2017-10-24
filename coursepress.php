@@ -1,4 +1,7 @@
 <?php
+/**
+ * Plugin name: CoursePress Pro
+ */
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 

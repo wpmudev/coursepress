@@ -279,6 +279,8 @@ class CoursePress_Template_Module {
 				if ( ! empty( $responses ) ) {
 					$element_class[] = 'hide';
 				}
+				$hidden_value = empty( $responses ) ? 0 : 1;
+				$content .= sprintf( '<input type="hidden" id="cp-is-hidden-module" name="is_module_hidden[]" value="%d" />', $hidden_value );
 				$response_count = ! empty( $responses ) ? count( $responses ) : 0;
 
 				// Get recorded time lapsed
