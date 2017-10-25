@@ -44,6 +44,15 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 		coursepress_render( 'views/admin/footer-text' );
 	}
 
+	private function get_meta_key_prefix($meta_key)
+	{
+		global $wpdb;
+
+		return coursepress_user_meta_prefix_required()
+			? sprintf('%s%s', $wpdb->prefix, $meta_key)
+			: $meta_key;
+	}
+
 	public function get_list() {
 		/**
 		 * Search
@@ -67,8 +76,12 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 		$args = array(
 			'number' => $per_page,
 			'offset' => ( $current_page - 1 ) * $per_page,
-			'meta_key' => 'role_ins',
-			'meta_value' => 'instructor',
+			'meta_query' => array(
+				array(
+					'key'   => $this->get_meta_key_prefix('role_ins'),
+					'value' => 'instructor'
+				)
+			),
 			'fields' => 'all_with_meta',
 			'search' => $usersearch,
 		);
@@ -76,11 +89,10 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 		if ( ! empty( $_GET['course_id'] ) ) {
 			// Show only students of current course
 			$course_id = (int) $_GET['course_id'];
-			$instructor_ids = $this->get_instructors_by_course_id( $course_id );
-			if ( empty( $instructor_ids ) ) {
-				return;
-			}
-			$args['include'] = $instructor_ids;
+			$args['meta_query'][] = array(
+				'key'   => $this->get_meta_key_prefix('course_' . $course_id),
+				'value' => $course_id
+			);
 		}
 
 		if ( '' !== $args['search'] ) {
@@ -91,23 +103,14 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 			$args['blog_id'] = $this->site_id;
 		}
 
-		/**
-		 * Fix multisite meta_key name
-		 */
-		if ( is_multisite() ) {
-			global $wpdb;
-			$args['blog_id'] = get_current_blog_id();
-			$args['meta_key'] = sprintf( '%s%s', $wpdb->prefix, $args['meta_key'] );
-		}
-
 		// Query the user IDs for this page
 		$wp_user_search = new WP_User_Query( $args );
 		$this->count = $wp_user_search->total_users;
 		$this->items = $wp_user_search->get_results();
 
 		/**
-		* pagination
-		*/
+		 * pagination
+		 */
 		$listing = new WP_List_Table();
 		$args = array(
 			'total_items' => $wp_user_search->total_users,
@@ -135,12 +138,13 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 		$count = get_user_meta( $instructor_id, 'cp_instructor_course_count', true );
 		if ( ! $count || $refresh ) {
 			global $wpdb;
+			$meta_key_keyword = $this->get_meta_key_prefix('course_%%');
 
 			$meta_keys = $wpdb->get_results(
 				$wpdb->prepare( "
-					SELECT `meta_key`
-					FROM $wpdb->usermeta
-					WHERE `meta_key` LIKE 'course_%%' AND `user_id`=%d",
+				SELECT `meta_key`
+				FROM $wpdb->usermeta
+				WHERE `meta_key` LIKE '$meta_key_keyword' AND `user_id`=%d",
 					$instructor_id
 				),
 				ARRAY_A
