@@ -16,20 +16,24 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		add_action( 'wp_ajax_coursepress_get_course_units', array( $this, 'get_course_units' ) );
 		// Hook to handle file uploads
 		add_action( 'wp_ajax_coursepress_upload', array( $this, 'upload_file' ) );
-	    // Hook to search for select2 data.
-	    add_action( 'wp_ajax_coursepress_get_users', array( $this, 'get_course_users' ) );
+		// Hook to search for select2 data.
+		add_action( 'wp_ajax_coursepress_get_users', array( $this, 'get_course_users' ) );
 		add_action( 'wp_ajax_coursepress_search_students', array( $this, 'search_students' ) );
 
-	    // Hook to enrollment request
-	    add_action( 'wp_ajax_coursepress_enroll', array( $this, 'enroll' ) );
-	    add_action( 'wp_ajax_course_enroll_passcode', array( $this, 'enroll_with_passcode' ) );
+		// Hook to enrollment request
+		add_action( 'wp_ajax_coursepress_enroll', array( $this, 'enroll' ) );
+		add_action( 'wp_ajax_course_enroll_passcode', array( $this, 'enroll_with_passcode' ) );
 
-	    // Register user
-	    add_action( 'wp_ajax_nopriv_coursepress_register', array( $this, 'register_user' ) );
-	    // Update profile
-	    add_action( 'wp_ajax_coursepress_update_profile', array( $this, 'update_profile' ) );
-	    // Submit module
+		// Register user
+		add_action( 'wp_ajax_nopriv_coursepress_register', array( $this, 'register_user' ) );
+		// Update profile
+		add_action( 'wp_ajax_coursepress_update_profile', array( $this, 'update_profile' ) );
+		// Submit module
 		add_action( 'wp_ajax_coursepress_submit', array( $this, 'validate_submission' ) );
+		/**
+		 * Search course
+		 */
+		add_action( 'wp_ajax_coursepress_courses_search', array( $this, 'search_course' ) );
 	}
 
 	/**
@@ -1043,7 +1047,17 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		}
 	}
 
+	/**
+	 * Search course
+	 */
 	public function search_course() {
+		if (
+			! isset( $_REQUEST['_wpnonce'] )
+			|| ! isset( $_REQUEST['q'] )
+			|| ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'coursepress-course-search-nonce' )
+		) {
+			wp_send_json_error();
+		}
 		$data = array(
 			'items' => array(),
 			'total_count' => 0,
@@ -1081,21 +1095,21 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		wp_send_json_success( $data );
 	}
 
-	function send_student_invite( $request ) {
-	    $course_id = $request->course_id;
-	    $args = array(
-	    	'first_name' => $request->first_name,
-		    'last_name' => $request->last_name,
-		    'email' => $request->email,
-	    );
-
-	    $send = coursepress_invite_student( $course_id, $args );
-
-	    if ( $send ) {
-	    	wp_send_json_success( $send );
-	    }
-
-	    wp_send_json_error( true );
+	/**
+	 * Send student course invitation.
+	 */
+	public function send_student_invite( $request ) {
+		$course_id = $request->course_id;
+		$args = array(
+			'first_name' => $request->first_name,
+			'last_name' => $request->last_name,
+			'email' => $request->email,
+		);
+		$send = coursepress_invite_student( $course_id, $args );
+		if ( $send ) {
+			wp_send_json_success( $send );
+		}
+		wp_send_json_error( true );
 	}
 
 	public function search_students( $request ) {
@@ -1161,5 +1175,22 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			wp_send_json_success();
 		}
 		wp_send_json_error( array( 'message' => __( 'Could not apply courses action.', 'cp' ) ) );
+	}
+
+	/**
+	 * Withdraw students from course!
+	 */
+	public function withdraw_students( $request ) {
+		if (
+			! isset( $request->students )
+			|| ! isset( $request->course_id )
+			|| ! is_array( $request->students )
+		) {
+			return;
+		}
+		foreach ( $request->students as $student_id ) {
+			coursepress_delete_student( $student_id, $request->course_id );
+		}
+		return array( 'success' => true );
 	}
 }

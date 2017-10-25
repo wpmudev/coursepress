@@ -1,17 +1,18 @@
 .course-submenu-container {
-  display: block;
-  margin: 0 0 25px 0;
-  border-bottom: 1px solid $grey_4;
-  @include clearfix;
-
-  .course-submenu {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-
-    .menu-item {
-      display: inline-block;
-      padding: 5px 12px;
+    display: block;
+    margin: 0 0 25px 0;
+    border-bottom: 1px solid $grey_4;
+    @include clearfix;
+    .course-submenu {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        .menu-item {
+            display: inline-block;
+            padding: 5px 12px;
+        }
+        .current-menu-item {
+            background-color: $grey_5;
+        }
     }
-  }
 }

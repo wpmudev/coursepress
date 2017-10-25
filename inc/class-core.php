@@ -15,10 +15,15 @@ final class CoursePress_Core extends CoursePress_Utility {
 	protected $unit_post_type = 'unit';
 	protected $step_post_type = 'module';
 	protected $category_type = 'course_category';
+	protected $notification_post_type = 'cp_notification';
 
 	public function __construct() {
 		// Register CP post types
 		add_action( 'init', array( $this, 'register_post_types' ) );
+
+		// Initialize unsubscribe
+		add_action( 'init', array( $this, 'init_unsubscribe' ) );
+
 		// Register CP query vars
 		add_filter( 'query_vars', array( $this, 'add_query_vars' ) );
 		// Add CP rewrite rules
@@ -52,7 +57,7 @@ final class CoursePress_Core extends CoursePress_Utility {
 				'public' => true,
 				'rewrite' => array(
 					'slug' => $category_slug,
-				)
+				),
 			)
 		);
 
@@ -75,28 +80,38 @@ final class CoursePress_Core extends CoursePress_Utility {
 			'can_export' => false,
 			'label' => 'Modules', // dbugging only
 			'query_var' => false,
-			'publicly_queryable'=> false,
+			'publicly_queryable' => false,
 			'support' => array( 'comments' ),
 			'hierarchical' => true,
 		) );
 
 		// Certificate
-        register_post_type( 'cp_certificate', array(
-            'public' => false,
-            'show_ui' => false,
-            'can_export' => false,
-        ) );
+		register_post_type( 'cp_certificate', array(
+			'public' => false,
+			'show_ui' => false,
+			'can_export' => false,
+		) );
 
 		// Notifications.
-		register_post_type( 'cp_notification', array(
+		register_post_type( $this->notification_post_type, array(
 			'public' => true,
 			'show_ui' => false,
 			'can_export' => false,
 			'show_in_nav_menu' => false,
 			'has_archive' => true,
 			'query_var' => false,
-			'publicly_queryable'=> false,
+			'publicly_queryable' => false,
 		) );
+	}
+
+	/**
+	 * Initialize unsubscribe action.
+	 *
+	 * @return void
+	 */
+	function init_unsubscribe() {
+
+		( new CoursePress_Data_Unsubscribe() )->init();
 	}
 
 	function add_query_vars( $vars ) {
@@ -142,10 +157,14 @@ final class CoursePress_Core extends CoursePress_Utility {
 			$base . $workbook_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=workbook',
 			// Notifications
 			$base . $notification_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=notifications',
-			// New forum/discussion
+
+			/**
+			 * Forum | Discussions
+			 */
+			$base . $discussion_slug . '/?$' => 'index.php?coursename=$matches[1]&coursepress=forum',
 			$base . $discussion_slug . '/' . $new_discussion_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=forum&topic=new',
-           //Forum|Discussions
-			$base . $discussion_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=forum',
+			$base . $discussion_slug . '/([^/]*)/?' => 'index.php?coursename=$matches[1]&coursepress=forum&topic=$matches[2]',
+
 			// Grades
 			$base . $grade_slug . '/?' => 'index.php?coursename=$matches[1]&coursepress=grades',
 			// Course Instructor Profile

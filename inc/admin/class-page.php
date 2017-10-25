@@ -222,6 +222,9 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 					'no_modules' => __( 'One of the active unit has no modules!', 'cp' ),
 					'no_steps' => __( 'One of the active unit contains no steps!', 'cp' ),
 				),
+				'export' => array(
+					'no_items' => __( 'Please select at least one course to export.', 'cp' ),
+				),
 				'step' => array(
 					'answer_a' => __( 'Answer A', 'cp' ),
 					'answer_b' => __( 'Answer B', 'cp' ),
@@ -230,6 +233,12 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 				'confirm' => array(
 					'student' => array(
 						'withdraw' => __( 'Please confirm that you want to remove the student from this course.', 'cp' ),
+					),
+				),
+				'course' => array(
+					'students' => array(
+						'no_items' => __( 'Please select at lease one student to withdraw.', 'cp' ),
+						'confirm' => __( 'Are you sure to withdraw students?', 'cp' ),
 					),
 				),
 			),
@@ -248,9 +257,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		/**
 		 * get extensions
 		 */
-
 		$localize_array['extensions'] = $this->get_extensions();
-
 		wp_localize_script( 'coursepress-admin-general', '_coursepress', $localize_array );
 	}
 
@@ -626,6 +633,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'redirect' => remove_query_arg( 'dummy' ),
 			'pagination' => $this->set_pagination( $total_students, 'coursepress_students' ),
 			'invited_students' => $invited_students,
+			'certified_students' => $course->get_certified_students()
 		);
 		$this->localize_array['invited_students'] = $invited_students;
 		coursepress_render( 'views/tpl/course-students', $args );

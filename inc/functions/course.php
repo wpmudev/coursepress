@@ -29,9 +29,12 @@ function coursepress_get_course( $course_id = 0 ) {
 	if ( $course_id instanceof WP_Post ) {
 		$course_id = $course_id->ID; }
 
-	if ( $CoursePress_Course instanceof CoursePress_Course
-	     && $course_id == $CoursePress_Course->__get( 'ID' ) ) {
-		return $CoursePress_Course; }
+	if (
+		$CoursePress_Course instanceof CoursePress_Course
+		&& $course_id == $CoursePress_Course->__get( 'ID' )
+	) {
+		return $CoursePress_Course;
+	}
 
 	if ( isset( $CoursePress_Core->courses[ $course_id ] ) ) {
 		return $CoursePress_Core->courses[ $course_id ]; }
@@ -265,16 +268,16 @@ function coursepress_get_course_enrollment_button( $course_id = 0, $args = array
 		'course_expired_text' => __( 'Not available', 'cp' ),
 		'course_full_text' => __( 'Course Full', 'cp' ),
 		'course_not_started' => __( 'Not yet available', 'cp' ),
-		'details_text' => __( 'Details', 'CP_TD' ),
-		'enrollment_closed_text' => __( 'Enrollments Closed', 'CP_TD' ),
-		'enrollment_finished_text' => __( 'Enrollments Finished', 'CP_TD' ),
-		'enroll_text' => __( 'Enroll Now!', 'CP_TD' ),
-		'instructor_text' => __( 'Access Course', 'CP_TD' ),
+		'details_text' => __( 'Details', 'cp' ),
+		'enrollment_closed_text' => __( 'Enrollments Closed', 'cp' ),
+		'enrollment_finished_text' => __( 'Enrollments Finished', 'cp' ),
+		'enroll_text' => __( 'Enroll Now!', 'cp' ),
+		'instructor_text' => __( 'Access Course', 'cp' ),
 		'list_page' => false,
-		'not_started_text' => __( 'Not Available', 'CP_TD' ),
-		'passcode_text' => __( 'Passcode Required', 'CP_TD' ),
-		'prerequisite_text' => __( 'Pre-requisite Required', 'CP_TD' ),
-		'signup_text' => __( 'Enroll Now!', 'CP_TD' ),
+		'not_started_text' => __( 'Not Available', 'cp' ),
+		'passcode_text' => __( 'Passcode Required', 'cp' ),
+		'prerequisite_text' => __( 'Pre-requisite Required', 'cp' ),
+		'signup_text' => __( 'Enroll Now!', 'cp' ),
 	);
 
 	$args = wp_parse_args( $args, $defaults );
@@ -456,53 +459,86 @@ function coursepress_get_course_permalink( $course_id = 0 ) {
  */
 function coursepress_get_course_submenu() {
 	$course = coursepress_get_course(); // Submenu only works on CoursePress pages
-
 	if ( is_wp_error( $course ) || ! is_user_logged_in() ) {
 		return null;
 	}
-
+	/**
+	 * set current-menu-item
+	 */
+	$current = get_query_var( 'coursepress' );
+	/**
+	 * course ID
+	 */
 	$course_id = $course->__get( 'ID' );
+	/**
+	 * Units
+	 */
 	$menus = array(
 		'units' => array(
 			'label' => __( 'Units', 'cp' ),
 			'url' => coursepress_get_course_units_archive_url( $course_id ),
 		),
 	);
-
+	if ( 'unit-archive' == $current ) {
+		$menus['units']['classes'] = array( 'current-menu-item' );
+	}
+	/**
+	 * forum
+	 */
 	if ( $course->__get( 'allow_discussion' ) ) {
 		$menus['discussions'] = array(
 			'label' => __( 'Forum', 'cp' ),
 			'url' => esc_url_raw( $course->get_discussion_url() ),
 		);
+		if ( 'forum' == $current ) {
+			$menus['discussions']['classes'] = array( 'current-menu-item' );
+		}
 	}
-
+	/**
+	 * workbook
+	 */
 	if ( $course->__get( 'allow_workbook' ) ) {
 		$menus['workbook'] = array(
 			'label' => __( 'Workbook', 'cp' ),
 			'url' => esc_url_raw( $course->get_workbook_url() ),
 		);
+		if ( 'workbook' == $current ) {
+			$menus['workbook']['classes'] = array( 'current-menu-item' );
+		}
 	}
-
+	/**
+	 * grades
+	 */
 	if ( $course->__get( 'allow_grades' ) ) {
 		$menus['grades'] = array(
 			'label' => __( 'Grades', 'cp' ),
 			'url' => esc_url_raw( $course->get_grades_url() ),
 		);
+		if ( 'grades' == $current ) {
+			$menus['grades']['classes'] = array( 'current-menu-item' );
+		}
 	}
-
 	// Add course details link at the last
 	$menus['course-details'] = array(
 		'label' => __( 'Course Details', 'cp' ),
 		'url' => esc_url_raw( $course->get_permalink() ),
 	);
-
+	/**
+	 * fill class if empty
+	 */
+	foreach ( $menus as $menu_id => $menu ) {
+		if ( ! isset( $menu['classes'] ) ) {
+			$menus[ $menu_id ]['classes'] = array();
+		}
+		$menus[ $menu_id ]['classes'][] = 'menu-item';
+		$menus[ $menu_id ]['classes'][] = sprintf( 'menu-item-%s', esc_attr( $menu_id ) );
+	}
 	/**
 	 * Fired to allow adding course menu.
 	 *
 	 * @since 3.0
 	 */
 	$menus = apply_filters( 'coursepress_course_submenu', $menus, $course );
-
 	return $menus;
 }
 
@@ -1223,6 +1259,8 @@ function coursepress_delete_course( $course_id ) {
 
 	if ( $students ) {
 		foreach ( $students as $student ) {
+			// Remove user from deleted course
+			$student->remove_course_student( $course_id );
 		}
 	}
 
@@ -1655,5 +1693,50 @@ function coursepress_search_students( $args = array() ) {
 	}
 
 	return $found;
+}
+/**
+ * Get discussions.
+ */
+function coursepress_get_disscusions( $course ) {
+	$args = array(
+		'post_type' => 'discussions',
+		'meta_query' => array(
+			array(
+				'key' => 'course_id',
+				'value' => $course->ID,
+				'compare' => 'IN',
+			),
+		),
+		'post_per_page' => 20,
+	);
+	$url = $course->get_discussion_url();
+	$data = array();
+	$posts = get_posts( $args );
+	foreach ( $posts as $post ) {
+		$post->course_id = (int) get_post_meta( $post->ID, 'course_id', true );
+		$post->course_title = ! empty( $course->ID ) ? get_the_title( $course->ID ) : __( 'All courses', 'cp' );
+		$post->course_id = ! empty( $course->ID ) ? $course->ID : 'all';
+
+		$post->unit_id = (int) get_post_meta( $post->ID, 'unit_id', true );
+		$post->unit_title = ! empty( $post->unit_id ) ? get_the_title( $post->unit_id ) : __( 'All units', 'cp' );
+		$post->unit_id = ! empty( $post->unit_id ) ? $post->unit_id : 'course';
+		$post->unit_id = 'all' === $post->course_id ? 'course' : $post->unit_id;
+
+		$post->url = $url.$post->post_name;
+
+		$data[] = $post;
+	}
+	return $data;
+}
+
+/**
+ * Get single discussion
+ */
+function coursepress_get_discussion() {
+	$topic = get_query_var( 'topic' );
+	if ( empty( $topic ) ) {
+		return array();
+	}
+	return get_page_by_title( $topic, OBJECT, 'discussions' );
 }
 
