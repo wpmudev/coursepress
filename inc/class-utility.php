@@ -187,7 +187,7 @@ abstract class CoursePress_Utility {
 	    return $per_page;
     }
 
-	function set_pagination( $count = 0, $option_name = '' ) {
+	function set_pagination( $count = 0, $option_name = '', $total_pages = 1 ) {
 
 		// Using WP_List table for pagination.
 		$listing = new WP_List_Table();
@@ -195,6 +195,7 @@ abstract class CoursePress_Utility {
 		$args = array(
 			'total_items' => $count,
 			'per_page' => $this->items_per_page( $option_name ),
+			'total_pages' => $total_pages
 		);
 
 		$listing->set_pagination_args( $args );

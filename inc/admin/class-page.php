@@ -622,11 +622,12 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$paged = $this->get_pagenum();
 		$total_students = $course->count_students();
 		$invited_students = $course->get_invited_students();
+		$per_page = 20;
 		$args = array(
 			'total_students' => $total_students,
 			'students' => $course->get_students( false, $paged ),
 			'redirect' => remove_query_arg( 'dummy' ),
-			'pagination' => $this->set_pagination( $total_students, 'coursepress_students' ),
+			'pagination' => $this->set_pagination( $total_students, 'coursepress_students', $total_students / $per_page ),
 			'invited_students' => $invited_students,
 			'certified_students' => $course->get_certified_students()
 		);
