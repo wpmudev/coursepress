@@ -279,6 +279,12 @@ class CoursePress_Template_Module {
 				if ( ! empty( $responses ) ) {
 					$element_class[] = 'hide';
 				}
+
+				// Set value to 1 only if not attempted this module.
+				$is_module_hidden = empty( $responses ) ? 0 : 1;
+				// Add a hidden field to track if student really submitted the form.
+				$content .= sprintf( '<input type="hidden" class="cp-is-hidden-module" name="is_module_hidden[%s]" value="%s" />', $module_id, $is_module_hidden );
+
 				$response_count = ! empty( $responses ) ? count( $responses ) : 0;
 
 				// Get recorded time lapsed
@@ -302,7 +308,8 @@ class CoursePress_Template_Module {
 				} elseif ( ! empty( $attributes['retry_attempts'] ) && 0 < $response_count ) {
 					$attempts = (int) $attributes['retry_attempts'];
 
-					if ( $response_count >= $attempts ) {
+					// Retries + 1 normal attempt.
+					if ( $response_count > $attempts ) {
 						$disabled = true;
 						$retry = '';
 					} else {
