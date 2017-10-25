@@ -1,15 +1,15 @@
 <?php
 /**
  * Plugin Name: CoursePress Base
- * Version:     2.1.1.1
+ * Version:     2.1.2
  * Description: CoursePress Pro turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also assess student work, sell your courses and much much more.
  * Author:      WPMU DEV
  * Author URI:  http://premium.wpmudev.org
  * Plugin URI:  http://premium.wpmudev.org/project/coursepress/
  * License:     GPL2
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * TextDomain:  cp
- * Domain Path: /language/
+ * Text Domain: cp
+ * Domain Path: /languages
  * Build Time:  2016-04-07T13:37:59.644Z
  * WDP ID:      913071
  *
@@ -101,6 +101,11 @@ class CoursePressUpgrade {
 		 * Set deactivation hook
 		 **/
 		register_deactivation_hook( __FILE__, array( __CLASS__, 'deactivate' ) );
+
+		/**
+		 * load translations
+		 */
+		add_action('plugins_loaded', array( __CLASS__, 'load_l10n' ) );
 	}
 
 	/** Use to reset CP into 1.x version */
@@ -270,6 +275,16 @@ class CoursePressUpgrade {
 		if ( method_exists( 'CoursePress', 'deactivate_coursepress' ) ) {
 			CoursePress::deactivate_coursepress();
 		}
+	}
+
+	/**
+	 * load translations
+	 *
+	 * @since 2.1.2
+	 */
+	static function load_l10n() {
+		$plugin_rel_path = basename( dirname( __FILE__ ) ) . '/languages';
+		load_plugin_textdomain( 'cp', false, $plugin_rel_path );
 	}
 }
 CoursePressUpgrade::init();

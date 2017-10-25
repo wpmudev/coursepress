@@ -63,7 +63,7 @@ module.exports = function(grunt) {
                 '.idea/',
                 '.sass-cache/'
 			],
-			pot_dir: '/language/',  // With trailing slash.
+			pot_dir: '/languages/',  // With trailing slash.
 			textdomain_pro: 'cp',   // Campus uses same textdomain.
 			textdomain_free: 'coursepress',
 		},
@@ -372,10 +372,10 @@ module.exports = function(grunt) {
 			}
 		},
 		wpmu_pot2mo: {
-		    files: {
-		        src: 'language/*.pot',
-		        expand: true
-		    }
+			files: {
+				src: 'languages/*.pot',
+				expand: true
+			}
 		},
 
 		// COMPRESS: Create a zip-archive of the plugin (for distribution).
