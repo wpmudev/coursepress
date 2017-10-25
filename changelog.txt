@@ -5,9 +5,17 @@ Build Time:  2016-04-07T13:37:59.644Z
 CHANGELOG
 =================================================
 
-= 2.1.1.1 =
+= 2.1.2 =
 -------------------------------------------------
+* Improved: Added logo to certificate.
+* Improved: Feedback display on student workbook.
+* Fixed: Bullet points was not showing using CoursePress Theme.
+* Fixed: Expanded unit list view mode not working for students.
 * Fixed: Missing upgrade scripts.
+* Fixed: Moudle access with url.
+* Fixed: Problem loading translations.
+* Fixed: Try Again button is not showing while Retry is set to 1.
+* Fixed: Visual editor load problem when user disable in the profile.
 
 = 2.1.1 =
 -------------------------------------------------
