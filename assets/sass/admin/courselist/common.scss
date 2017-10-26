@@ -135,22 +135,6 @@
     }
   }
 
-  .subsubsub {
-    li {
-      padding-right: 5px;
-
-      a {
-        display: block;
-      }
-
-      &.active {
-        a {
-          color: $black;
-        }
-      }
-    }
-  }
-
   @media screen {
     @media (min-width: 768px) {
       .cp-search-form {
