@@ -1193,4 +1193,34 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		}
 		return array( 'success' => true );
 	}
+
+	/**
+	 * Trash course
+	 */
+	public function trash_course( $request ) {
+		if ( ! isset( $request->course_id ) ) {
+			return;
+		}
+		$is_course = coursepress_is_course( $request->course_id );
+		if ( ! $is_course ) {
+			return;
+		}
+		wp_trash_post( $request->course_id );
+		return array( 'success' => true );
+	}
+
+	/**
+	 * Restore course
+	 */
+	public function restore_course( $request ) {
+		if ( ! isset( $request->course_id ) ) {
+			return;
+		}
+		$is_course = coursepress_is_course( $request->course_id );
+		if ( ! $is_course ) {
+			return;
+		}
+		wp_untrash_post( $request->course_id );
+		return array( 'success' => true );
+	}
 }
