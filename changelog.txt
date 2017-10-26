@@ -12,10 +12,10 @@ CHANGELOG
 * Fixed: Bullet points was not showing using CoursePress Theme.
 * Fixed: Expanded unit list view mode not working for students.
 * Fixed: Missing upgrade scripts.
-* Fixed: Moudle access with url.
+* Fixed: Module access with URL.
 * Fixed: Problem loading translations.
 * Fixed: Try Again button is not showing while Retry is set to 1.
-* Fixed: Visual editor load problem when user disable in the profile.
+* Fixed: Visual editor load problem when a user disables in the profile.
 
 = 2.1.1 =
 -------------------------------------------------
