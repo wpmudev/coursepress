@@ -45,7 +45,7 @@
              */
             toggleCourseStatus: function(ev) {
                 this.request.selector = $(ev.target);
-                var status = this.request.selector.prop('checked') ? 'publish' : 'pending';
+                var status = this.request.selector.prop('checked') ? 'publish' : 'draft';
                 this.request.set( {
                     'action' : 'course_status_toggle',
                     'course_id' : this.request.selector.val(),
