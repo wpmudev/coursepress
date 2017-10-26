@@ -12,7 +12,9 @@
                 'click .cp-reset-step': 'resetEditStep',
                 'change .cp-toggle-course-status': 'toggleCourseStatus',
                 'click .menu-item-duplicate-course': 'duplicateCourse',
-                'click .menu-item-delete': 'deleteCourse',
+                'click .cp-row-actions .cp-delete': 'deleteCourse',
+                'click .cp-row-actions .cp-restore': 'restoreCourse',
+                'click .cp-row-actions .cp-trash': 'trashCourse',
                 'click #cp-search-clear': 'clearSearch',
                 'click .cp-dropdown-btn': 'toggleSubMenu',
                 'click #bulk-actions .cp-btn': 'bulkActions'
@@ -23,7 +25,9 @@
                 this.request = new CoursePress.Request();
                 // On status toggle fail.
                 this.request.on( 'coursepress:error_course_status_toggle', this.revertStatusToggle, this );
-                // On delete course
+                // On trash or delete or restore course
+                this.request.on( 'coursepress:success_trash_course', this.reloadCourseList, this );
+                this.request.on( 'coursepress:success_restore_course', this.reloadCourseList, this );
                 this.request.on( 'coursepress:success_delete_course', this.reloadCourseList, this );
             },
             getModel: function() {
@@ -45,7 +49,7 @@
              */
             toggleCourseStatus: function(ev) {
                 this.request.selector = $(ev.target);
-                var status = this.request.selector.prop('checked') ? 'publish' : 'pending';
+                var status = this.request.selector.prop('checked') ? 'publish' : 'draft';
                 this.request.set( {
                     'action' : 'course_status_toggle',
                     'course_id' : this.request.selector.val(),
@@ -72,11 +76,35 @@
                 // @todo: duplicate course here
             },
 
+            trashCourse: function(ev) {
+                this.course_id = this.$(ev.currentTarget).closest('td').data('id');
+                if ( this.course_id ) {
+                    this.request.set({
+                        action: 'trash_course',
+                        course_id: this.course_id
+                    });
+                    this.request.save();
+                }
+                return false;
+            },
+
+            restoreCourse: function(ev) {
+                this.course_id = this.$(ev.currentTarget).closest('td').data('id');
+                if ( this.course_id ) {
+                    this.request.set({
+                        action: 'restore_course',
+                        course_id: this.course_id
+                    });
+                    this.request.save();
+                }
+                return false;
+            },
+
             deleteCourse: function(ev) {
                 var confirm, sender, dropdown;
 
                 sender = this.$(ev.currentTarget);
-                this.course_id = sender.data('course');
+                this.course_id = sender.closest('td').data('id');
                 dropdown = sender.parents('.cp-dropdown');
 
                 confirm = new CoursePress.PopUp({
@@ -84,9 +112,7 @@
                     message: win._coursepress.text.delete_course
                 });
                 confirm.on( 'coursepress:popup_ok', this.deleteCurrentCourse, this );
-
                 dropdown.removeClass('open');
-
                 return false;
             },
 
