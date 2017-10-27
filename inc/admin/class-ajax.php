@@ -1228,4 +1228,29 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		wp_untrash_post( $request->course_id );
 		return array( 'success' => true );
 	}
+
+	/**
+	 * Duplicate single course and units.
+	 *
+	 * @param object $request Request.
+	 */
+	public function duplicate_course( $request ) {
+
+		// We need course id.
+		if ( ! isset( $request->course_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Oops! Could not duplicate the course.', 'cp' ) ) );;
+		}
+
+		// Continue only if valid course.
+		$course = coursepress_get_course( $request->course_id );
+		if ( ! is_wp_error( $course ) ) {
+			if ( $course->duplicate_course() ) {
+				// Send success response back.
+				wp_send_json_success();
+			}
+		}
+
+		// Send error if failed.
+		wp_send_json_error( array( 'message' => __( 'Oops! Could not duplicate the course.', 'cp' ) ) );
+	}
 }

@@ -179,8 +179,8 @@ foreach ( $bulk_actions as $value => $label ) {
                                             <li class="menu-item-students">
                                                 <a href="<?php echo $edit_link; ?>" data-step="course-students" class="cp-reset-step"><?php _e( 'Students', 'cp' ); ?></a>
                                             </li>
-                                            <li class="menu-item-duplicate-course">
-                                                <a href="<?php echo add_query_arg( array( 'course_id' => $course->ID, '_wpnonce' => wp_create_nonce( 'duplicate_course' ), 'cp_action' => 'duplicate_course' ) ); ?>"><?php _e( 'Duplicate', 'cp' ); ?></a>
+                                            <li class="menu-item-duplicate-course cp-duplicate">
+                                                <a href="#"><?php _e( 'Duplicate', 'cp' ); ?></a>
                                             </li>
                                             <li class="menu-item-export">
                                                 <a href="<?php echo add_query_arg( array( 'course_id' => $course->ID, '_wpnonce' => wp_create_nonce( 'export_course' ), 'cp_action' => 'export_course' ) ); ?>"><?php _e( 'Export', 'cp' ); ?></a>
