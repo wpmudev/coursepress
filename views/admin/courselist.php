@@ -209,16 +209,11 @@ foreach ( $bulk_actions as $value => $label ) {
                         <?php $colspan = count( $columns ) + 3; ?>
                         <td colspan="<?php echo $colspan; ?>">
 <?php
-
-
-l( $course_post_type_object );
-
 if ( 'trash' == $current_status ) {
 	echo $course_post_type_object->labels->not_found_in_trash;
 } else {
 	echo $course_post_type_object->labels->not_found;
 }
-
 ?>
                         </td>
                     </tr>
