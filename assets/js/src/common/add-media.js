@@ -1,4 +1,4 @@
-/* global CoursePress */
+/* global CoursePress, wp */
 
 (function() {
     'use strict';
