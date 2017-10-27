@@ -9,7 +9,7 @@
  * License:     GPL2
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * TextDomain:  cp
- * Domain Path: /language/
+ * Domain Path: /languages
  * Build Time:  2016-04-07T13:37:59.644Z
  * WDP ID:      913071
  *
@@ -124,12 +124,6 @@ final class CoursePress {
 		// Load core files
 		add_action( 'plugins_loaded', array( $this, 'load_core' ) );
 
-		// We speak languages!
-		load_plugin_textdomain(
-			'cp', // Text domain.
-			false, // Deprecated. Set to false.
-			$this->plugin_path. '/language'
-		);
 		// Register CP theme directory
 		$this->register_cp_theme();
 
@@ -203,6 +197,13 @@ final class CoursePress {
 		do_action( 'coursepress_initialized' );
 
 		add_action( 'init', array( $this, 'set_current_user' ) );
+
+		// We speak languages!
+		load_plugin_textdomain(
+			'cp', // Text domain.
+			false, // Deprecated. Set to false.
+			$this->plugin_path. '/languages'
+		);
 	}
 
 	function set_current_user() {
