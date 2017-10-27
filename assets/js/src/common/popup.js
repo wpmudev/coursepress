@@ -8,7 +8,7 @@
             className: 'coursepress-popup',
             events: {
                 'click .btn-ok': 'Ok',
-                'click .cp-btn-cancel': 'remove'
+                'click .cp-btn-cancel': 'Cancel'
             },
             render: function() {
                 if ( typeof this.model.attributes.type !== 'undefined' && 'info' === this.model.attributes.type ) {
@@ -19,9 +19,16 @@
             },
             Ok: function() {
                 /**
-                 * Trigger whenever OK button is click
+                 * Trigger whenever OK button is clicked.
                  */
                 this.trigger( 'coursepress:popup_ok', this );
+                this.remove();
+            },
+            Cancel: function() {
+                /**
+                 * Trigger whenever Cancel button is clicked.
+                 */
+                this.trigger( 'coursepress:popup_cancel', this );
                 this.remove();
             }
         });

@@ -11,7 +11,6 @@
             events: {
                 'click .cp-reset-step': 'resetEditStep',
                 'change .cp-toggle-course-status': 'toggleCourseStatus',
-                'click .menu-item-duplicate-course': 'duplicateCourse',
                 'click .cp-row-actions .cp-delete': 'deleteCourse',
                 'click .cp-row-actions .cp-restore': 'restoreCourse',
                 'click .cp-row-actions .cp-trash': 'trashCourse',
@@ -70,10 +69,6 @@
                     type: 'error',
                     message: data.message
                 });
-            },
-
-            duplicateCourse: function() {
-                // @todo: duplicate course here
             },
 
             trashCourse: function(ev) {
