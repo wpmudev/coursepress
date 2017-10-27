@@ -64,14 +64,9 @@
              * Revert toggled status.
              */
             revertStatusToggle: function(data) {
-                var checked, popup;
-
-                checked = this.request.selector.prop('checked');
+                var checked = this.request.selector.prop('checked');
                 this.request.selector.prop('checked', !checked);
-                popup = new CoursePress.PopUp({
-                    type: 'error',
-                    message: data.message
-                });
+                this.showError(data);
             },
 
             /**
@@ -170,6 +165,8 @@
 
             /**
              * Error popup for ajax actions.
+             *
+             * @param Response data.
              *
              * @note Response should have message.
              */
