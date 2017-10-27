@@ -132,6 +132,7 @@ function coursepress_get_course_statuses() {
 		'draft' => 0,
 		'pending' => 0,
 		'trash' => 0,
+		'private' => 0,
 	);
 	foreach ( $statuses as $status => $value ) {
 		if ( isset( $count->$status ) ) {

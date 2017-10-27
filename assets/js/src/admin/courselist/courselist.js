@@ -97,11 +97,9 @@
 
             deleteCourse: function(ev) {
                 var confirm, sender, dropdown;
-
                 sender = this.$(ev.currentTarget);
                 this.course_id = sender.closest('td').data('id');
                 dropdown = sender.parents('.cp-dropdown');
-
                 confirm = new CoursePress.PopUp({
                     type: 'warning',
                     message: win._coursepress.text.delete_course
@@ -113,6 +111,10 @@
 
             deleteCurrentCourse: function() {
                 if ( this.course_id ) {
+                    new CoursePress.PopUp({
+                        type: 'info',
+                        message: win._coursepress.text.deleting_course
+                    });
                     this.request.set({
                         action: 'delete_course',
                         course_id: this.course_id
@@ -165,13 +167,35 @@
                         ids .push( value );
                     }
                 });
-                var model = new CoursePress.Request( this.getModel() );
-                model.set( 'action', 'courses_bulk_action' );
-                model.set( 'which', action );
-                model.set( 'courses', ids );
-                model.on( 'coursepress:success_courses_bulk_action', location.reload() );
-                model.save();
+                this.model = new CoursePress.Request( this.getModel() );
+                this.action = action;
+                this.ids = ids;
+                if ( 'delete' === action ) {
+                    var confirm = new CoursePress.PopUp({
+                        type: 'warning',
+                        message: win._coursepress.text.delete_courses
+                    });
+                    confirm.on( 'coursepress:popup_ok', this.bulkActionsSave, this );
+                } else {
+                    this.bulkActionsSave( this );
+                }
                 return;
+            },
+
+            bulkActionsSave: function( ) {
+                if ( this.model && this.ids && this.action ) {
+                    if ( 'delete' === this.action ) {
+                        new CoursePress.PopUp({
+                            type: 'info',
+                            message: win._coursepress.text.deleting_courses
+                        });
+                    }
+                    this.model.set( 'action', 'courses_bulk_action' );
+                    this.model.set( 'which', this.action );
+                    this.model.set( 'courses', this.ids );
+                    this.model.on( 'coursepress:success_courses_bulk_action', location.reload() );
+                    this.model.save();
+                }
             }
 
         });

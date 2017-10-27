@@ -349,15 +349,20 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	    wp_send_json_error( true );
 	}
 
+	/**
+	 * Delete single course.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param $request
+	 */
 	function delete_course( $request ) {
 		$course_id = (int) $request->course_id;
-
 		if ( $course_id ) {
 			coursepress_delete_course( $course_id );
-
 			wp_send_json_success( true );
-	    }
-	    wp_send_json_error( true );
+		}
+		wp_send_json_error( true );
 	}
 
 	/**

@@ -2,7 +2,6 @@
 
 (function() {
     'use strict';
-
     CoursePress.Define( 'PopUp', function() {
         return CoursePress.View.extend({
             template_id: 'coursepress-popup-tpl',
@@ -12,8 +11,10 @@
                 'click .cp-btn-cancel': 'Cancel'
             },
             render: function() {
+                if ( typeof this.model.attributes.type !== 'undefined' && 'info' === this.model.attributes.type ) {
+                    this.template_id = 'coursepress-popup-info-tpl';
+                }
                 CoursePress.View.prototype.render.apply( this );
-
                 this.$el.appendTo( 'body' );
             },
             Ok: function() {
