@@ -9,7 +9,7 @@
             className: 'coursepress-popup',
             events: {
                 'click .btn-ok': 'Ok',
-                'click .cp-btn-cancel': 'remove'
+                'click .cp-btn-cancel': 'Cancel'
             },
             render: function() {
                 CoursePress.View.prototype.render.apply( this );
@@ -18,9 +18,16 @@
             },
             Ok: function() {
                 /**
-                 * Trigger whenever OK button is click
+                 * Trigger whenever OK button is clicked.
                  */
                 this.trigger( 'coursepress:popup_ok', this );
+                this.remove();
+            },
+            Cancel: function() {
+                /**
+                 * Trigger whenever Cancel button is clicked.
+                 */
+                this.trigger( 'coursepress:popup_cancel', this );
                 this.remove();
             }
         });
