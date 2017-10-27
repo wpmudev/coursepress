@@ -190,7 +190,7 @@ module.exports = function(grunt) {
 				'node_modules/',
 				'docs/'
 			],
-			pot_dir: '/language/',  // With trailing slash.
+			pot_dir: '/languages/',  // With trailing slash.
 			textdomain: 'cp'   // Campus uses same textdomain.
 		},
 
@@ -435,7 +435,7 @@ module.exports = function(grunt) {
 		},
 		wpmu_pot2mo: {
 			files: {
-				src: 'language/*.pot',
+				src: 'languages/*.pot',
 				expand: true
 			}
 		},
