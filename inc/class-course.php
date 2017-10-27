@@ -724,7 +724,7 @@ class CoursePress_Course extends CoursePress_Utility {
 	}
 
 	function count_certified_students() {
-		return count($this->get_certified_students());
+		return count( $this->get_certified_students() );
 	}
 
 	/**
@@ -767,7 +767,7 @@ class CoursePress_Course extends CoursePress_Utility {
 
 	function get_discussion_new_url() {
 		$url = $this->get_discussion_url();
-        $slug = coursepress_get_setting( 'slugs/discussions_new', 'add_new_discussion' );
+		$slug = coursepress_get_setting( 'slugs/discussions_new', 'add_new_discussion' );
 		return $url . trailingslashit( $slug );
 	}
 
@@ -934,7 +934,7 @@ class CoursePress_Course extends CoursePress_Utility {
 
 		// Set basic details.
 		$new_course->post_author = get_current_user_id();
-		$new_course->post_status = 'private';
+		$new_course->post_status = 'draft';
 		$new_course->post_type = 'course';
 		$new_course->post_name = $new_course->post_name . '-copy';
 		$new_course->post_title	= $new_course->post_title . ' (copy)';
@@ -1081,10 +1081,10 @@ class CoursePress_Course extends CoursePress_Utility {
 	 *
 	 * @return array IDs of all the users that are certified for this course.
 	 */
-	public function get_certified_students()
-	{
+	public function get_certified_students() {
+
 		global $wpdb;
-		$sql = $wpdb->prepare("select post_author from {$wpdb->posts} where post_type = %s and post_parent = %d", 'cp_certificate', $this->ID);
-		return $wpdb->get_col($sql);
+		$sql = $wpdb->prepare( "select post_author from {$wpdb->posts} where post_type = %s and post_parent = %d", 'cp_certificate', $this->ID );
+		return $wpdb->get_col( $sql );
 	}
 }
