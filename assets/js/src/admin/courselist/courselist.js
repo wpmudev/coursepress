@@ -11,7 +11,7 @@
             events: {
                 'click .cp-reset-step': 'resetEditStep',
                 'change .cp-toggle-course-status': 'toggleCourseStatus',
-                'click .menu-item-duplicate-course': 'duplicateCourse',
+                'click .cp-row-actions .cp-duplicate': 'duplicateCourse',
                 'click .cp-row-actions .cp-delete': 'deleteCourse',
                 'click .cp-row-actions .cp-restore': 'restoreCourse',
                 'click .cp-row-actions .cp-trash': 'trashCourse',
@@ -23,12 +23,14 @@
             initialize: function( model ) {
                 this.model = model;
                 this.request = new CoursePress.Request();
-                // On status toggle fail.
+                // On status toggle or duplicate fail.
                 this.request.on( 'coursepress:error_course_status_toggle', this.revertStatusToggle, this );
-                // On trash or delete or restore course
+                this.request.on( 'coursepress:error_duplicate_course', this.showError, this );
+                // On trash, delete, restore or duplicate course.
                 this.request.on( 'coursepress:success_trash_course', this.reloadCourseList, this );
                 this.request.on( 'coursepress:success_restore_course', this.reloadCourseList, this );
                 this.request.on( 'coursepress:success_delete_course', this.reloadCourseList, this );
+                this.request.on( 'coursepress:success_duplicate_course', this.reloadCourseList, this );
             },
             getModel: function() {
                 return this.model;
@@ -72,8 +74,20 @@
                 });
             },
 
-            duplicateCourse: function() {
-                // @todo: duplicate course here
+            duplicateCourse: function(ev) {
+                var confirm, sender, dropdown;
+
+                sender = this.$(ev.currentTarget);
+                this.course_id = sender.closest('td').data('id');
+                dropdown = sender.parents('.cp-dropdown');
+
+                confirm = new CoursePress.PopUp({
+                    type: 'warning',
+                    message: win._coursepress.text.delete_course
+                });
+                confirm.on( 'coursepress:popup_ok', this.duplicateCurrentCourse, this );
+                dropdown.removeClass('open');
+                return false;
             },
 
             trashCourse: function(ev) {
@@ -126,8 +140,33 @@
                 }
             },
 
+            /**
+             * Duplicate the course through ajax.
+             */
+            duplicateCurrentCourse: function() {
+                if ( this.course_id ) {
+                    this.request.set({
+                        action: 'duplicate_course',
+                        course_id: this.course_id
+                    });
+                    this.request.save();
+                }
+            },
+
             reloadCourseList: function() {
                 win.location = win.self.location;
+            },
+
+            /**
+             * Error popup for ajax actions.
+             *
+             * @note Response should have message.
+             */
+            showError: function(data) {
+                new CoursePress.PopUp({
+                    type: 'error',
+                    message: data.message
+                });
             },
 
             /**
