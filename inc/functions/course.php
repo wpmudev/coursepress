@@ -123,29 +123,27 @@ function coursepress_get_courses( $args = array(), &$count = 0 ) {
 }
 
 function coursepress_get_course_statuses() {
-	global $wpdb;
-
-	$query = "SELECT `post_status` FROM `{$wpdb->posts}` WHERE `post_type`='course' AND `post_status` IN ('publish', 'draft')";
-	$results = $wpdb->get_results( $query, 'OBJECT' );
-	$status = array(
+	global $wpdb, $CoursePress_Core;
+	$post_type = $CoursePress_Core->__get( 'course_post_type' );
+	$count = wp_count_posts( $post_type );
+	$statuses = array(
 		'all' => 0,
 		'publish' => 0,
 		'draft' => 0,
+		'pending' => 0,
+		'trash' => 0,
+		'private' => 0,
 	);
-
-	if ( count( $results ) > 0 ) {
-		foreach ( $results as $result ) {
-			$status['all'] += 1;
-
-			if ( 'publish' == $result->post_status ) {
-				$status['publish'] += 1;
-			} else {
-				$status['draft'] += 1;
+	foreach ( $statuses as $status => $value ) {
+		if ( isset( $count->$status ) ) {
+			$statuses[ $status ] = $count->$status;
+			if ( 'trash' == $status ) {
+				continue;
 			}
+			$statuses['all'] += $count->$status;
 		}
 	}
-
-	return $status;
+	return $statuses;
 }
 
 /**
@@ -1097,8 +1095,14 @@ function coursepress_course_update_setting( $course_id, $settings = array() ) {
  * @return bool
  */
 function coursepress_change_course_status( $course_id, $status ) {
+
+	/**
+	 * sanitize course id
+	 */
+	$course_id = absint( $course_id );
+
 	// Allowed statuses to change.
-	$allowed_statuses = array( 'publish', 'draft', 'pending' );
+	$allowed_statuses = array( 'publish', 'draft', 'pending', 'trash', 'restore', 'delete' );
 
 	// @todo: Implement capability check.
 	$capable = true;
@@ -1111,7 +1115,6 @@ function coursepress_change_course_status( $course_id, $status ) {
 	}
 
 	if ( empty( $course_id ) || ! in_array( $status, $allowed_statuses ) || ! $capable ) {
-
 		/**
 		 * Perform actions when course status not changed.
 		 *
@@ -1125,18 +1128,31 @@ function coursepress_change_course_status( $course_id, $status ) {
 		return false;
 	}
 
-	$post = array(
-		'ID' => absint( $course_id ),
-		'post_status' => $status,
-	);
+	switch ( $status ) {
 
-	// Update the course post status.
-	if ( is_wp_error( wp_update_post( $post ) ) ) {
+		case 'trash':
+			wp_trash_post( $course_id );
+		break;
 
-		// This action hook is documented above.
-		do_action( 'coursepress_course_status_change_fail', $course_id, $status );
+		case 'restore':
+			wp_untrash_post( $course_id );
+		break;
 
-		return false;
+		case 'delete':
+			coursepress_delete_course( $course_id );
+		break;
+
+		default:
+			$post = array(
+			'ID' => $course_id,
+			'post_status' => $status,
+			);
+			// Update the course post status.
+			if ( is_wp_error( wp_update_post( $post ) ) ) {
+				// This action hook is documented above.
+				do_action( 'coursepress_course_status_change_fail', $course_id, $status );
+				return false;
+			}
 	}
 
 	/**
@@ -1261,6 +1277,15 @@ function coursepress_delete_course( $course_id ) {
 		foreach ( $students as $student ) {
 			// Remove user from deleted course
 			$student->remove_course_student( $course_id );
+		}
+	}
+
+	// Delete course instructors
+	$instructors = $course->get_instructors();
+
+	if ($instructors) {
+		foreach ($instructors as $instructor) {
+			coursepress_delete_course_instructor($instructor->ID, $course_id);
 		}
 	}
 

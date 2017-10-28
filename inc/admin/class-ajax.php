@@ -349,15 +349,20 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	    wp_send_json_error( true );
 	}
 
+	/**
+	 * Delete single course.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param $request
+	 */
 	function delete_course( $request ) {
 		$course_id = (int) $request->course_id;
-
 		if ( $course_id ) {
 			coursepress_delete_course( $course_id );
-
 			wp_send_json_success( true );
-	    }
-	    wp_send_json_error( true );
+		}
+		wp_send_json_error( true );
 	}
 
 	/**
@@ -1192,5 +1197,60 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			coursepress_delete_student( $student_id, $request->course_id );
 		}
 		return array( 'success' => true );
+	}
+
+	/**
+	 * Trash course
+	 */
+	public function trash_course( $request ) {
+		if ( ! isset( $request->course_id ) ) {
+			return;
+		}
+		$is_course = coursepress_is_course( $request->course_id );
+		if ( ! $is_course ) {
+			return;
+		}
+		wp_trash_post( $request->course_id );
+		return array( 'success' => true );
+	}
+
+	/**
+	 * Restore course
+	 */
+	public function restore_course( $request ) {
+		if ( ! isset( $request->course_id ) ) {
+			return;
+		}
+		$is_course = coursepress_is_course( $request->course_id );
+		if ( ! $is_course ) {
+			return;
+		}
+		wp_untrash_post( $request->course_id );
+		return array( 'success' => true );
+	}
+
+	/**
+	 * Duplicate single course and units.
+	 *
+	 * @param object $request Request.
+	 */
+	public function duplicate_course( $request ) {
+
+		// We need course id.
+		if ( ! isset( $request->course_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Oops! Could not duplicate the course.', 'cp' ) ) );;
+		}
+
+		// Continue only if valid course.
+		$course = coursepress_get_course( $request->course_id );
+		if ( ! is_wp_error( $course ) ) {
+			if ( $course->duplicate_course() ) {
+				// Send success response back.
+				wp_send_json_success();
+			}
+		}
+
+		// Send error if failed.
+		wp_send_json_error( array( 'message' => __( 'Oops! Could not duplicate the course.', 'cp' ) ) );
 	}
 }

@@ -27,7 +27,7 @@ class CoursePress_Course extends CoursePress_Utility {
 		}
 
 		if ( ! $course instanceof WP_Post
-		     || $course->post_type != 'course' ) {
+			|| $course->post_type != 'course' ) {
 			return $this->wp_error();
 		}
 
@@ -440,8 +440,8 @@ class CoursePress_Course extends CoursePress_Utility {
 		$start_date = $this->__get( 'course_start_date_timestamp' );
 
 		if ( empty( $openEnded )
-		     && $start_date > 0
-		     && $start_date > $time_now ) {
+			&& $start_date > 0
+			&& $start_date > $time_now ) {
 			return false; }
 
 		return true;
@@ -458,8 +458,8 @@ class CoursePress_Course extends CoursePress_Utility {
 		$end_date = $this->__get( 'course_end_date_timestamp' );
 
 		if ( empty( $openEnded )
-		     && $end_date > 0
-		     && $end_date < $time_now ) {
+			&& $end_date > 0
+			&& $end_date < $time_now ) {
 			return true;
 		}
 
@@ -502,8 +502,8 @@ class CoursePress_Course extends CoursePress_Utility {
 		$start_date = $this->__get( 'enrollment_start_date_timestamp' );
 
 		if ( empty( $enrollment_open )
-		     && $start_date > 0
-		     && $start_date > $time_now ) {
+			&& $start_date > 0
+			&& $start_date > $time_now ) {
 			return false;
 		}
 
@@ -521,8 +521,8 @@ class CoursePress_Course extends CoursePress_Utility {
 		$end_date = $this->__get( 'enrollment_end_date_timestamp' );
 
 		if ( empty( $enrollment_open )
-		     && $end_date > 0
-		     && $end_date < $time_now ) {
+			&& $end_date > 0
+			&& $end_date < $time_now ) {
 			return true; }
 
 		return false;
@@ -836,7 +836,7 @@ class CoursePress_Course extends CoursePress_Utility {
 
 	function get_discussion_new_url() {
 		$url = $this->get_discussion_url();
-        $slug = coursepress_get_setting( 'slugs/discussions_new', 'add_new_discussion' );
+		$slug = coursepress_get_setting( 'slugs/discussions_new', 'add_new_discussion' );
 		return $url . trailingslashit( $slug );
 	}
 
@@ -1003,7 +1003,7 @@ class CoursePress_Course extends CoursePress_Utility {
 
 		// Set basic details.
 		$new_course->post_author = get_current_user_id();
-		$new_course->post_status = 'private';
+		$new_course->post_status = 'draft';
 		$new_course->post_type = 'course';
 		$new_course->post_name = $new_course->post_name . '-copy';
 		$new_course->post_title	= $new_course->post_title . ' (copy)';
