@@ -620,19 +620,58 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		coursepress_render( 'views/tpl/steps-template', array( 'file_types' => $file_types, 'questions' => $question_types ) );
 
 		$paged = $this->get_pagenum();
-		$total_students = $course->count_students();
+		$all_student_count = $course->count_students();
+		$certified_student_ids = $course->get_certified_student_ids();
 		$invited_students = $course->get_invited_students();
-		$per_page = 20;
+		$show_certified_students = isset($_REQUEST['certified']) ? $_REQUEST['certified'] : 'all';
+		$per_page = 1;
+		$student_query_args = array(
+			'number' => $per_page,
+			'offset' => $per_page * ($paged - 1),
+			'paged'  => $paged
+		);
+		if ($show_certified_students == 'yes') {
+			$students = $course->get_certified_students($student_query_args);
+			$total_students = count($certified_student_ids);
+		} else if ($show_certified_students == 'no') {
+			$students = $course->get_non_certified_students($student_query_args);
+			$total_students = $all_student_count - count($certified_student_ids);
+		} else {
+			$students = $course->get_students($student_query_args);
+			$total_students = $all_student_count;
+		}
+
 		$args = array(
-			'total_students' => $total_students,
-			'students' => $course->get_students( false, $paged ),
-			'redirect' => remove_query_arg( 'dummy' ),
-			'pagination' => $this->set_pagination( $total_students, 'coursepress_students', $total_students / $per_page ),
-			'invited_students' => $invited_students,
-			'certified_students' => $course->get_certified_students()
+			'total_students'     => $total_students,
+			'students'           => $students,
+			'redirect'           => remove_query_arg('dummy'),
+			'pagination'         => $this->set_pagination($total_students, 'coursepress_students', ceil($total_students / $per_page)),
+			'invited_students'   => $invited_students,
+			'certified_students' => $certified_student_ids,
+			'statuses'           => $this->get_course_certification_links()
 		);
 		$this->localize_array['invited_students'] = $invited_students;
-		coursepress_render( 'views/tpl/course-students', $args );
+		coursepress_render('views/tpl/course-students', $args);
+	}
+
+	private function get_course_certification_links()
+	{
+		$format = '<li><a class="%1$s" href="%2$s">%3$s</a></li>';
+		$url = remove_query_arg(array('certified', 'paged'));
+		$certification_statuses = array(
+			'all' => esc_html__('All', 'cp'),
+			'yes' => esc_html__('Certified', 'cp'),
+			'no'  => esc_html__('Not Certified', 'cp')
+		);
+		$links = array();
+		$selected = isset($_REQUEST['certified']) ? $_REQUEST['certified'] : 'all';
+
+		foreach ($certification_statuses as $status_id => $status_text) {
+			$status_url = add_query_arg('certified', $status_id, $url);
+			$links[] = sprintf($format, $status_id == $selected ? 'current' : '', $status_url, $status_text);
+		}
+
+		return $links;
 	}
 
 	function get_students_page() {

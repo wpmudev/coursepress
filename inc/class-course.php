@@ -649,60 +649,133 @@ class CoursePress_Course extends CoursePress_Utility {
 		return array_map( 'get_userdata', $facilitator_ids );
 	}
 
-	private function _get_students( $all = true, $paged = 1 ) {
+	/**
+	 * Returns IDs of all the students enrolled in the course
+	 * @return int[] IDs of enrolled students
+	 */
+	function get_student_ids()
+	{
 		global $wpdb;
-
-		$id = $this->__get( 'ID' );
-		$offset = ( $paged - 1 ) * 20;
-		$limit = 20;
-
-		$sql = "SELECT S.`student_id` FROM `$this->student_table` AS S ";
-		$sql .= "LEFT JOIN `$wpdb->users` AS U on S.`student_id` = U.`ID` ";
-		$sql .= 'WHERE S.`course_id` = %d ';
-		$sql .= 'ORDER BY U.`user_login` ';
-
-		if ( ! $all ) {
-			$sql .= ' LIMIT %d, %d';
-		}
-		$sql = $wpdb->prepare( $sql, $id, $offset, $limit );
-
-		$results = $wpdb->get_results( $sql, OBJECT );
-		$student_ids = array();
-
-		if ( $results ) {
-			foreach ( $results as $result ) {
-				$student_ids[] = $result->student_id;
-			}
-		}
-
-		return $student_ids;
+		$sql = "SELECT student_id FROM {$this->student_table} WHERE course_id = %d";
+		$course_id = $this->__get('ID');
+		return $wpdb->get_col(
+			$wpdb->prepare($sql, $course_id)
+		);
 	}
 
 	/**
-	 * Count total number of students in a course.
+	 * Returns IDs of certified users.
+	 *
+	 * @return array IDs of all the users that are certified for this course.
+	 */
+	function get_certified_student_ids()
+	{
+		global $wpdb;
+		$sql = $wpdb->prepare("select post_author from {$wpdb->posts} where post_type = %s and post_parent = %d", 'cp_certificate', $this->ID);
+		return $wpdb->get_col($sql);
+	}
+
+	/**
+	 * Count total number of students in the course.
 	 *
 	 * @return int
 	 */
-	function count_students() {
-		return count( $this->_get_students() );
+	function count_students()
+	{
+		return count($this->get_student_ids());
+	}
+
+	/**
+	 * Count the total number of certified students in the course.
+	 *
+	 * @return int
+	 */
+	function count_certified_students()
+	{
+		return count($this->get_certified_student_ids());
 	}
 
 	/**
 	 * Get course students
 	 *
-	 * @return array of CoursePress_User object
+	 * @return CoursePress_User[] array of CoursePress_User object
 	 */
-	function get_students( $all = true, $paged = 1 ) {
-		$students = array();
-		$student_ids = $this->_get_students( $all, $paged );
+	function get_students($query_args)
+	{
+		$query = $this->build_students_query($query_args);
+		return $this->build_cp_user_objects($query->get_results());
+	}
 
-		if ( ! empty( $student_ids ) ) {
-			foreach ( $student_ids as $student_id ) {
-				$students[ $student_id ] = new CoursePress_User( $student_id );
+	/**
+	 * Get certified course students
+	 *
+	 * @return CoursePress_User[] array of CoursePress_User object
+	 */
+	function get_certified_students($query_args)
+	{
+		$query = $this->build_certified_students_query($query_args);
+		return $this->build_cp_user_objects($query->get_results());
+	}
+
+	/**
+	 * Get non certified course students
+	 *
+	 * @return CoursePress_User[] array of CoursePress_User object
+	 */
+	function get_non_certified_students($query_args)
+	{
+		$query = $this->build_non_certified_students_query($query_args);
+		return $this->build_cp_user_objects($query->get_results());
+	}
+
+	/**
+	 * @return WP_User_Query
+	 */
+	private function build_students_query($query_args)
+	{
+		$query_args = wp_parse_args($query_args, array(
+			'orderby' => 'user_login',
+			'fields'  => 'ID',
+			'include' => $this->get_student_ids()
+		));
+
+		return new WP_User_Query($query_args);
+	}
+
+	/**
+	 * @return WP_User_Query
+	 */
+	private function build_certified_students_query($query_args)
+	{
+		$query_args['include'] = $this->get_certified_student_ids();
+
+		return $this->build_students_query($query_args);
+	}
+
+	/**
+	 * @return WP_User_Query
+	 */
+	private function build_non_certified_students_query($query_args)
+	{
+		$query_args['include'] = array_diff(
+			$this->get_student_ids(),
+			$this->get_certified_student_ids()
+		);
+
+		return $this->build_students_query($query_args);
+	}
+
+	private function build_cp_user_objects($student_ids)
+	{
+		$student_objects = array();
+
+		if (!empty($student_ids)) {
+			foreach ($student_ids as $student_id) {
+				$student_objects[$student_id] = new CoursePress_User($student_id);
 			}
 		}
 
-		return $students;
+		return $student_objects;
 	}
 
 	function get_invited_students() {
@@ -721,10 +794,6 @@ class CoursePress_Course extends CoursePress_Utility {
 		}
 
 		return $invitee;
-	}
-
-	function count_certified_students() {
-		return count($this->get_certified_students());
 	}
 
 	/**
@@ -856,9 +925,10 @@ class CoursePress_Course extends CoursePress_Utility {
 		return $units;
 	}
 
+
 	function get_course_structure( $show_details = false ) {
 		/**
-		 * @var $user CoursePress_Student
+		 * @var $user CoursePress_User
 		 */
 
 		$course_id = $this->__get( 'ID' );
@@ -877,7 +947,6 @@ class CoursePress_Course extends CoursePress_Utility {
 
 		return $structure;
 	}
-
 
 	/**
 	 * Duplicate current course.
@@ -1074,17 +1143,5 @@ class CoursePress_Course extends CoursePress_Utility {
 			}
 		}
 		return '';
-	}
-
-	/**
-	 * Returns IDs of certified users.
-	 *
-	 * @return array IDs of all the users that are certified for this course.
-	 */
-	public function get_certified_students()
-	{
-		global $wpdb;
-		$sql = $wpdb->prepare("select post_author from {$wpdb->posts} where post_type = %s and post_parent = %d", 'cp_certificate', $this->ID);
-		return $wpdb->get_col($sql);
 	}
 }
