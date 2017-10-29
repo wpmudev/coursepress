@@ -1315,7 +1315,6 @@ var CoursePress = CoursePress || {};
 
 		function on_preview_button_click()
 		{
-			console.log('previewing cert');
 			var link = $(this),
 				form = link.closest('form');
 
