@@ -785,13 +785,15 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 					$use_course_settings = cp_is_true( $use_course_settings );
 					if ( $use_course_settings ) {
 						$background = self::get_course_setting( $course_id, 'certificate_background', '' );
-						$logo_positions = self::get_course_setting( $course_id, 'logo_position', array() );
-						$logo  = array(
-							'file' => self::get_course_setting( $course_id, 'certificate_logo' ),
-							'x'    => $logo_positions['x'],
-							'y'    => $logo_positions['y'],
-							'w'    => $logo_positions['width'],
-						);
+						if ( ! empty( self::get_course_setting( $course_id,'certificate_logo' ) ) ) {
+							$logo_positions = self::get_course_setting( $course_id, 'logo_position', array() );
+							$logo  = array(
+								'file' => self::get_course_setting( $course_id, 'certificate_logo' ),
+								'x'    => $logo_positions['x'],
+								'y'    => $logo_positions['y'],
+								'w'    => $logo_positions['width'],
+							);
+						}
 						$margins = self::get_course_setting( $course_id, 'cert_margin', array() );
 						$orientation = self::get_course_setting( $course_id, 'page_orientation', 'L' );
 						$text_color = CoursePress_Helper_Utility::convert_hex_color_to_rgb(self::get_course_setting($course_id, 'cert_text_color'), $text_color);
