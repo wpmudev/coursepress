@@ -212,10 +212,12 @@ class CoursePress_Course extends CoursePress_Utility {
 			set_post_thumbnail( $course_id, $settings['listing_image_thumbnail_id'] );
 		}
 
+		$category_type = $CoursePress_Core->__get( 'category_type' );
 		if ( ! empty( $settings['course_category'] ) ) {
-			$categories = $settings['course_category'];
-			$category_type = $CoursePress_Core->__get( 'category_type' );
-			wp_set_object_terms( $course_id, $categories, $category_type );
+			wp_set_object_terms( $course_id, $settings['course_category'], $category_type );
+		}
+		else {
+			wp_set_object_terms( $course_id, array(), $category_type );
 		}
 
 		/**
