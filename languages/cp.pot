@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoursePress Base 2.1.2\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/coursepress\n"
-"POT-Creation-Date: 2017-10-25 16:42:58+00:00\n"
+"POT-Creation-Date: 2017-10-30 16:31:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -612,23 +612,23 @@ msgstr ""
 msgid "Example Course Title"
 msgstr ""
 
-#: 2.0/admin/class-edit.php:905
+#: 2.0/admin/class-edit.php:907
 #: 2.0/include/coursepress/view/admin/course/class-edit.php:1874
 msgid "Course Completion Certificate"
 msgstr ""
 
-#: 2.0/admin/class-edit.php:931
+#: 2.0/admin/class-edit.php:933
 msgid ""
 "The free version of CoursePress is limited to one course. To add more "
 "courses, upgrade to CoursePress Pro for unlimited courses and more payment "
 "gateways."
 msgstr ""
 
-#: 2.0/admin/class-edit.php:935
+#: 2.0/admin/class-edit.php:937
 msgid "https://premium.wpmudev.org/project/coursepress-pro/"
 msgstr ""
 
-#: 2.0/admin/class-edit.php:936
+#: 2.0/admin/class-edit.php:938
 msgid "Try CoursePress Pro for Free"
 msgstr ""
 
@@ -2669,11 +2669,11 @@ msgstr ""
 msgid "No Certificates found in Trash"
 msgstr ""
 
-#: 2.0/include/coursepress/data/class-certificate.php:487
+#: 2.0/include/coursepress/data/class-certificate.php:489
 msgid "Certificate of Completion"
 msgstr ""
 
-#: 2.0/include/coursepress/data/class-certificate.php:621
+#: 2.0/include/coursepress/data/class-certificate.php:623
 msgid "Download your certificate"
 msgstr ""
 
