@@ -800,12 +800,13 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 						$use_cp_default = false;
 					} else {
 						$background = self::get_setting( 'basic_certificate/background_image' );
-						if ( ! empty( self::get_setting( 'basic_certificate/logo_image' ) ) ) {
+						$certificate_logo = self::get_setting( 'basic_certificate/logo_image' );
+						if ( ! empty( $certificate_logo  ) ) {
 							$x     = self::get_setting( 'basic_certificate/logo/x', 95 );
 							$y     = self::get_setting( 'basic_certificate/logo/y', 15 );
 							$width = self::get_setting( 'basic_certificate/logo/width', 100 );
 							$logo  = array(
-								'file' => self::get_setting( 'basic_certificate/logo_image' ),
+								'file' => $certificate_logo,
 								'x'    => $x,
 								'y'    => $y,
 								'w'    => $width,
@@ -833,12 +834,13 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 					}
 				} else if ( 0 == $course_id ) {
 					$background = self::get_setting( 'basic_certificate/background_image' );
-					if ( ! empty( self::get_setting( 'basic_certificate/logo_image' ) ) ) {
+					$certificate_logo = self::get_setting( 'basic_certificate/logo_image' );
+					if ( ! empty( $certificate_logo ) ) {
 						$x     = self::get_setting( 'basic_certificate/logo/x', 95 );
 						$y     = self::get_setting( 'basic_certificate/logo/y', 15 );
 						$width = self::get_setting( 'basic_certificate/logo/width', 100 );
 						$logo  = array(
-							'file' => self::get_setting( 'basic_certificate/logo_image' ),
+							'file' => $certificate_logo,
 							'x'    => $x,
 							'y'    => $y,
 							'w'    => $width,
