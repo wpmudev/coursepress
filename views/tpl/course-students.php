@@ -4,6 +4,9 @@
  */
 ?>
 <script type="text/template" id="coursepress-students-tpl">
+    <ul class="subsubsub">
+        <?php echo implode( '<li>|</li>', $statuses ); ?>
+    </ul>
     <div class="tablenav top">
         <div class="alignleft actions bulkactions cp-flex">
         <label for="bulk-action-selector-top" class="screen-reader-text"><?php esc_html_e( 'Select bulk action', 'cp' ); ?></label>

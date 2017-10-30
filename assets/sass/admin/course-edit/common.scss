@@ -20,3 +20,11 @@
     }
   }
 }
+
+.cp-admin-pagination {
+  .tablenav-pages-navspan,
+  .prev-page,
+  .next-page {
+    box-sizing: content-box;
+  }
+}
