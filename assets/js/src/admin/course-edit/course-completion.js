@@ -63,6 +63,7 @@
 
                 self = this;
                 this.background = new CoursePress.AddImage( this.$('[name="meta_certificate_background"]') );
+	            this.logo = new CoursePress.AddImage( this.$('[name="meta_certificate_logo"]') );
                 this.$('select').select2();
 
                 this.the_title = this.$('#page-completion-title');

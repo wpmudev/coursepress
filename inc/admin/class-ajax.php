@@ -411,12 +411,16 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			$margins = isset( $request->meta_cert_margin ) ? get_object_vars( $request->meta_cert_margin ) : array();
 			$orientation = $request->meta_page_orientation;
 			$text_color = $request->meta_cert_text_color;
+			$logo = $request->meta_certificate_logo;
+			$logo_positions = isset( $request->meta_certificate_logo_position ) ? get_object_vars( $request->meta_certificate_logo_position ) : array();
 		} else {
 			$content = $request->content;
 			$background = $request->background_image;
 			$margins = get_object_vars( $request->margin );
 			$text_color = $request->cert_text_color;
 			$orientation = $request->orientation;
+			$logo = $request->certificate_logo;
+			$logo_positions = get_object_vars( $request->certificate_logo_position );
 		}
 
 		$filename = 'cert-preview-' . $course_id . '.pdf';

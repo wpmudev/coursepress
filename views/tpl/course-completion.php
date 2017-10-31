@@ -85,6 +85,35 @@
         </div>
         <div class="cp-box-content">
             <div class="box-label-area">
+                <h3 class="label"><?php _e( 'Logo', 'cp' ); ?></h3>
+            </div>
+            <div class="box-inner-content">
+                <input type="text" class="cp-add-image-input" name="meta_certificate_logo" value="{{certificate_logo}}" data-thumbnail="20" data-size="medium" data-title="<?php _e( 'Logo', 'cp' ); ?>" />
+            </div>
+        </div>
+        <div class="cp-box-content">
+            <div class="box-label-area">
+                <h3 class="label"><?php _e( 'Logo Position', 'cp' ); ?></h3>
+            </div>
+            <div class="box-inner-content">
+                <div class="cp-flex">
+                    <div class="cp-pad-right">
+                        <h3 class="label"><?php _e( 'X', 'cp' ); ?></h3>
+                        <input type="number" name="meta_certificate_logo_position.x" value="{{certificate_logo_position.x}}" />
+                    </div>
+                    <div class="cp-pad-right">
+                        <h3 class="label"><?php _e( 'Y', 'cp' ); ?></h3>
+                        <input type="number" name="meta_certificate_logo_position.y" value="{{certificate_logo_position.y}}" />
+                    </div>
+                    <div class="cp-pad-right">
+                        <h3 class="label"><?php _e( 'Width', 'cp' ); ?></h3>
+                        <input type="number" name="meta_certificate_logo_position.width" value="{{certificate_logo_position.width}}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cp-box-content">
+            <div class="box-label-area">
                 <h3 class="label"><?php _e( 'Page Orientation', 'cp' ); ?></h3>
             </div>
             <div class="box-inner-content">
