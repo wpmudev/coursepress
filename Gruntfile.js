@@ -148,8 +148,7 @@ module.exports = function(grunt) {
 		// List of JS files to validate
 		js_src_files: [
 			'Gruntfile.js',
-			'assets/js/src/admin/**/*.js',
-			'assets/js/src/front/**/*.js',
+			'assets/js/src/**/*.js',
 			'!assets/js/src/common/heading.js',
 			'!assets/js/src/common/footer.js'
 		],
