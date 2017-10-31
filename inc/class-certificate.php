@@ -390,8 +390,14 @@ class CoursePress_Certificate extends CoursePress_Utility {
                 $margins = $course->__get( 'cert_margin', array() );
                 $orientation = $course->__get( 'page_orientation' );
                 $background = $course->__get( 'certificate_background' );
+	            $logo_image = $course->__get( 'certificate_logo' );
+	            $logo_position = $course->__get( 'certificate_logo_position' );
                 $text_color = $course->__get( 'cert_text_color' );
                 $text_color = coursepress_convert_hex_color_to_rgb( $text_color, array() );
+	            $logo = array_merge(
+		            array('file' => $logo_image),
+		            $logo_position
+	            );
 
             } else {
                 /**

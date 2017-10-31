@@ -107,7 +107,7 @@
                     </div>
                     <div class="cp-pad-right">
                         <h3 class="label"><?php _e( 'Width', 'cp' ); ?></h3>
-                        <input type="number" name="meta_certificate_logo_position.width" value="{{certificate_logo_position.width}}" />
+                        <input type="number" name="meta_certificate_logo_position.w" value="{{certificate_logo_position.w}}" />
                     </div>
                 </div>
             </div>

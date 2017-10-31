@@ -158,7 +158,7 @@ class CoursePress_Course extends CoursePress_Utility {
 			'certificate_logo_position' => array(
 				'x' => 0,
 				'y' => 0,
-				'width' => 0,
+				'w' => 0,
 			),
 			'page_orientation' => 'L',
 			'cert_text_color' => '#5a5a5a',
