@@ -736,7 +736,7 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 					'background' => self::$settings['certificate_background'],
 					'logo' => self::$settings['certificate_logo'],
 					'logo_position' => self::$settings['logo_position'],
-					'margin' => (array)self::$settings['cert_margin'],
+					'margin' => (array) self::$settings['cert_margin'],
 					'orientation' => self::$settings['page_orientation'],
 					'text_color' => self::$settings['cert_text_color'],
 				),
@@ -785,10 +785,11 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 					$use_course_settings = cp_is_true( $use_course_settings );
 					if ( $use_course_settings ) {
 						$background = self::get_course_setting( $course_id, 'certificate_background', '' );
-						if ( ! empty( self::get_course_setting( $course_id,'certificate_logo' ) ) ) {
+						$certificate_logo = self::get_course_setting( $course_id, 'certificate_logo' );
+						if ( ! empty( $certificate_logo ) ) {
 							$logo_positions = self::get_course_setting( $course_id, 'logo_position', array() );
 							$logo  = array(
-								'file' => self::get_course_setting( $course_id, 'certificate_logo' ),
+								'file' => $certificate_logo,
 								'x'    => $logo_positions['x'],
 								'y'    => $logo_positions['y'],
 								'w'    => $logo_positions['width'],
@@ -796,14 +797,14 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 						}
 						$margins = self::get_course_setting( $course_id, 'cert_margin', array() );
 						$orientation = self::get_course_setting( $course_id, 'page_orientation', 'L' );
-						$text_color = CoursePress_Helper_Utility::convert_hex_color_to_rgb(self::get_course_setting($course_id, 'cert_text_color'), $text_color);
+						$text_color = CoursePress_Helper_Utility::convert_hex_color_to_rgb( self::get_course_setting( $course_id, 'cert_text_color' ), $text_color );
 						$html = self::get_course_setting( $course_id, 'basic_certificate_layout' );
 						$html = apply_filters( 'coursepress_basic_certificate_html', $html, $course_id, get_current_user_id() );
 						$use_cp_default = false;
 					} else {
 						$background = self::get_setting( 'basic_certificate/background_image' );
 						$certificate_logo = self::get_setting( 'basic_certificate/logo_image' );
-						if ( ! empty( $certificate_logo  ) ) {
+						if ( ! empty( $certificate_logo ) ) {
 							$x     = self::get_setting( 'basic_certificate/logo/x', 95 );
 							$y     = self::get_setting( 'basic_certificate/logo/y', 15 );
 							$width = self::get_setting( 'basic_certificate/logo/width', 100 );
