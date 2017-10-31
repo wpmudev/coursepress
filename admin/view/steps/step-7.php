@@ -95,8 +95,8 @@
 					<td style="width:20%;"><label><?php _e( 'Logo', 'CP_TD' ); ?></label></td>
 					<td><?php
 						echo CoursePress_Helper_UI::browse_media_field(
-							'meta_logo',
-							'meta_logo',
+							'meta_certificate_logo',
+							'meta_certificate_logo',
 							array(
 								'placeholder' => __( 'Choose logo image', 'CP_TD' ),
 								'type' => 'image',
