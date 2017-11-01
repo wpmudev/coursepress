@@ -3,9 +3,6 @@
 
     .notifications-content {
       margin: 20px 0;
-      * {
-        @include boxsizing;
-      }
 
       .cp-box {
         margin-bottom: 25px;
