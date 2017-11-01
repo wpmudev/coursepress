@@ -62,7 +62,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		add_action( 'admin_menu', array( $this, 'set_admin_menus' ) );
 
 		// Set screen option values.
-		add_filter( 'set-screen-option', array( $this, 'set_screen_options' ), 10, 3 );
+		add_filter( 'set-screen-option', array( $this, 'set_courselist_options' ), 10, 3 );
 
 		// Setup admin assets
 		add_action( 'admin_enqueue_scripts', array( $this, 'set_admin_css' ) );
@@ -277,6 +277,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 					),
 				),
 			),
+			'is_paginated' => isset( $_GET['paged'] ) ? 1 : 0,
 		) );
 
 		// External scripts
@@ -395,12 +396,11 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 *
 	 * @return mixed
 	 */
-	function set_screen_options( $status, $option, $value ) {
+	function set_courselist_options( $status, $option, $value ) {
 		$options = array(
 			'coursepress_course_per_page',
 			'coursepress_students_per_page',
 			'coursepress_assesments_per_page',
-			'coursepress_notifications_per_page',
 		);
 
 		// Return value for our custom option.
@@ -763,6 +763,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 	function get_notification_page() {
 		global $CoursePress;
+
+		$this->localize_array['joel'] = array('dddd' => 'ddd');
 
 		$students = $CoursePress->get_class( 'CoursePress_Admin_Notifications' );
 
