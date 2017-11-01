@@ -5,10 +5,6 @@
  */
 $data = coursepress_get_student_workbook_data( $user_id, $course_id );
 
-
-d($data);
-
-
 if ( ! empty( $data ) ) : ?>
 
 <table class="coursepress-table table-workbook">
@@ -23,8 +19,8 @@ if ( ! empty( $data ) ) : ?>
 			</td>
 			<td align="right"><?php
 				//if ( 'module' != $data['type'] ) :
-					if ( 'unit' == $data['type'] ) :
-						_e( 'Progress: ', 'cp' );
+			if ( 'unit' == $data['type'] ) :
+				_e( 'Progress: ', 'cp' );
 					endif;
 					echo $data['progress'] . '%';
 				//endif;
