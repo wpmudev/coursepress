@@ -764,8 +764,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	function get_notification_page() {
 		global $CoursePress;
 
-		$this->localize_array['joel'] = array('dddd' => 'ddd');
-
 		$students = $CoursePress->get_class( 'CoursePress_Admin_Notifications' );
 
 		if ( $students ) {
