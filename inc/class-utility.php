@@ -187,7 +187,16 @@ abstract class CoursePress_Utility {
 	    return $per_page;
     }
 
-	function set_pagination( $count = 0, $option_name = '', $total_pages = 1 ) {
+	/**
+	 * Set pagination based on the arguments.
+	 *
+	 * @param int $count Total items.
+	 * @param string $option_name Items per page option name.
+	 * @param int $total_pages Total number of pages to show. Ignore for all pages.
+	 *
+	 * @return WP_List_Table
+	 */
+	function set_pagination( $count = 0, $option_name = '', $total_pages = 0 ) {
 
 		// Using WP_List table for pagination.
 		$listing = new WP_List_Table();
@@ -195,8 +204,12 @@ abstract class CoursePress_Utility {
 		$args = array(
 			'total_items' => $count,
 			'per_page' => $this->items_per_page( $option_name ),
-			'total_pages' => $total_pages
 		);
+
+		// Consider total pages argument only if not empty.
+		if ( ! empty( $total_pages ) ) {
+			$args['total_pages'] = (int) $total_pages;
+		}
 
 		$listing->set_pagination_args( $args );
 
