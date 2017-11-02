@@ -133,7 +133,7 @@ class CoursePress_Data_Module {
 				//$value = array_shift( $the_answer );
 			}
 			$meta['answers_selected'][0] = $value;
-			update_post_meta( $module_id, 'answers_selected', $the_value );
+			update_post_meta( $module_id, 'answers_selected', $value );
 			//delete_post_meta( $module_id, 'checked_answer' );
 		}
 
