@@ -66,9 +66,8 @@ class CoursePress_Course extends CoursePress_Utility {
 		foreach ( $settings as $key => $value ) {
 			if ( in_array( $key, $date_keys ) ) {
 				$timestamp = strtotime( $value, $time_now );
-				$v = date_i18n( $date_format, $timestamp );
+				$value = date_i18n( $date_format, $timestamp );
 				// Add timestamp info
-				$this->__set( $key, $v );
 				$this->__set( $key . '_timestamp', $timestamp );
 			}
 			// Legacy fixes
