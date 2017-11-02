@@ -277,6 +277,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 					),
 				),
 			),
+			'is_paginated' => isset( $_GET['paged'] ) ? 1 : 0,
 		) );
 
 		// External scripts
