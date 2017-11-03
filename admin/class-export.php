@@ -166,6 +166,15 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 			header( 'Content-Disposition: attachment; filename=' . $wp_filename );
 			header( 'Content-Type: text/json; charset=' . get_option( 'blog_charset' ), true );
 
+			/**
+			 * Check PHP version, for PHP < 3 do not add options
+			 */
+			$version = phpversion();
+			$compare = version_compare( $version, '5.3', '<' );
+			if ( $compare ) {
+				echo json_encode( $courses );
+				exit;
+			}
 			$option = defined( 'JSON_PRETTY_PRINT' )? JSON_PRETTY_PRINT : null;
 			echo json_encode( $courses, $option );
 			exit;

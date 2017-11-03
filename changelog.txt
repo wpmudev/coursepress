@@ -11,6 +11,7 @@ CHANGELOG
 * Improved: Add ability to define certificate logo.
 * Fixed: Prevent access modules when previous required modules haven't been completed.
 * Fixed: Problem with TinyMCE.
+* Fixed export problem on PHP 5.2, json_encode() have only one parameter.
 * CoursePress Theme: Improved bbPress compatibility.
 * CoursePress Theme: Fixed expanded unit list view mode.
 * CoursePress Theme: Fixed display of HTML Bullet points.
