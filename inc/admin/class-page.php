@@ -677,7 +677,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$certified_student_ids = $course->get_certified_student_ids();
 		$invited_students = $course->get_invited_students();
 		$show_certified_students = isset($_REQUEST['certified']) ? $_REQUEST['certified'] : 'all';
-		$per_page = 1;
+		$per_page = get_option( 'posts_per_page', 20 );
 		$student_query_args = array(
 			'number' => $per_page,
 			'offset' => $per_page * ($paged - 1),
