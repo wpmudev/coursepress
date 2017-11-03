@@ -70,6 +70,10 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		// Marked coursepress page
 		add_filter( 'admin_body_class', array( $this, 'add_coursepress_class' ) );
 
+		/**
+		 * allow to upload zip files
+		 */
+		add_filter( 'upload_mimes', array( $this, 'allow_to_upload_zip_files' ) );
 	}
 
 	/**
@@ -676,52 +680,52 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$all_student_count = $course->count_students();
 		$certified_student_ids = $course->get_certified_student_ids();
 		$invited_students = $course->get_invited_students();
-		$show_certified_students = isset($_REQUEST['certified']) ? $_REQUEST['certified'] : 'all';
+		$show_certified_students = isset( $_REQUEST['certified'] ) ? $_REQUEST['certified'] : 'all';
 		$per_page = get_option( 'posts_per_page', 20 );
 		$student_query_args = array(
 			'number' => $per_page,
 			'offset' => $per_page * ($paged - 1),
-			'paged'  => $paged
+			'paged'  => $paged,
 		);
-		if ($show_certified_students == 'yes') {
-			$students = $course->get_certified_students($student_query_args);
-			$total_students = count($certified_student_ids);
-		} else if ($show_certified_students == 'no') {
-			$students = $course->get_non_certified_students($student_query_args);
-			$total_students = $all_student_count - count($certified_student_ids);
+		if ( $show_certified_students == 'yes' ) {
+			$students = $course->get_certified_students( $student_query_args );
+			$total_students = count( $certified_student_ids );
+		} else if ( $show_certified_students == 'no' ) {
+			$students = $course->get_non_certified_students( $student_query_args );
+			$total_students = $all_student_count - count( $certified_student_ids );
 		} else {
-			$students = $course->get_students($student_query_args);
+			$students = $course->get_students( $student_query_args );
 			$total_students = $all_student_count;
 		}
 
 		$args = array(
 			'total_students'     => $total_students,
 			'students'           => $students,
-			'redirect'           => remove_query_arg('dummy'),
-			'pagination'         => $this->set_pagination($total_students, 'coursepress_students', ceil($total_students / $per_page)),
+			'redirect'           => remove_query_arg( 'dummy' ),
+			'pagination'         => $this->set_pagination( $total_students, 'coursepress_students', ceil( $total_students / $per_page ) ),
 			'invited_students'   => $invited_students,
 			'certified_students' => $certified_student_ids,
-			'statuses'           => $this->get_course_certification_links()
+			'statuses'           => $this->get_course_certification_links(),
 		);
 		$this->localize_array['invited_students'] = $invited_students;
-		coursepress_render('views/tpl/course-students', $args);
+		coursepress_render( 'views/tpl/course-students', $args );
 	}
 
-	private function get_course_certification_links()
-	{
+	private function get_course_certification_links() {
+
 		$format = '<li><a class="%1$s" href="%2$s">%3$s</a></li>';
-		$url = remove_query_arg(array('certified', 'paged'));
+		$url = remove_query_arg( array( 'certified', 'paged' ) );
 		$certification_statuses = array(
-			'all' => esc_html__('All', 'cp'),
-			'yes' => esc_html__('Certified', 'cp'),
-			'no'  => esc_html__('Not Certified', 'cp')
+			'all' => esc_html__( 'All', 'cp' ),
+			'yes' => esc_html__( 'Certified', 'cp' ),
+			'no'  => esc_html__( 'Not Certified', 'cp' ),
 		);
 		$links = array();
-		$selected = isset($_REQUEST['certified']) ? $_REQUEST['certified'] : 'all';
+		$selected = isset( $_REQUEST['certified'] ) ? $_REQUEST['certified'] : 'all';
 
-		foreach ($certification_statuses as $status_id => $status_text) {
-			$status_url = add_query_arg('certified', $status_id, $url);
-			$links[] = sprintf($format, $status_id == $selected ? 'current' : '', $status_url, $status_text);
+		foreach ( $certification_statuses as $status_id => $status_text ) {
+			$status_url = add_query_arg( 'certified', $status_id, $url );
+			$links[] = sprintf( $format, $status_id == $selected ? 'current' : '', $status_url, $status_text );
 		}
 
 		return $links;
@@ -878,5 +882,15 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			$this->current_status = $status;
 		}
 		return $this->current_status;
+	}
+
+	/**
+	 * Allow to upload zip files
+	 *
+	 * @since 3.0.0
+	 */
+	public function allow_to_upload_zip_files( $mimes = array() ) {
+		$mimes['zip'] = 'application/zip';
+		return $mimes;
 	}
 }
