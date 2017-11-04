@@ -30,9 +30,15 @@ class CoursePress_Export extends CoursePress_Utility {
 	 * @return bool
 	 */
 	private function prepare_data( $course_id ) {
+		global $CoursePress;
 
 		// WP_Post object for course.
 		$post = get_post( $course_id );
+		/**
+		 * Add CoursePress Version
+		 */
+		$post->coursepress_version = $CoursePress->version;
+
 		// Get course from course id.
 		$course = coursepress_get_course( $post );
 
@@ -168,13 +174,22 @@ class CoursePress_Export extends CoursePress_Utility {
 	 * @return string File name.
 	 */
 	private function get_file_name() {
+		global $CoursePress;
 
 		// Get site name.
 		$site_name = sanitize_key( get_bloginfo( 'name' ) );
 		$site_name = empty( $site_name ) ? '' : $site_name . '.';
 
+		// WP_Post object for course.
+		$post = get_post( $course_id );
+
 		// Create export file name.
-		$filename = $site_name . 'coursepress.' . time() . '.json';
+		$filename = sprintf(
+			'%scoursepress.%s.%d.json',
+			$site_name,
+			$CoursePress->version,
+			time()
+		);
 
 		// Course slug.
 		if ( isset( $this->data['course'] ) ) {
@@ -201,6 +216,15 @@ class CoursePress_Export extends CoursePress_Utility {
 			header( 'Content-Description: File Transfer' );
 			header( 'Content-Disposition: attachment; filename=' . $file_name );
 			header( 'Content-Type: text/json; charset=' . get_option( 'blog_charset' ), true );
+			/**
+			 * Check PHP version, for PHP < 3 do not add options
+			 */
+			$version = phpversion();
+			$compare = version_compare( $version, '5.3', '<' );
+			if ( $compare ) {
+				echo json_encode( $this->data );
+				exit;
+			}
 			$option = defined( 'JSON_PRETTY_PRINT' )? JSON_PRETTY_PRINT : null;
 			echo json_encode( $this->data, $option );
 			exit;

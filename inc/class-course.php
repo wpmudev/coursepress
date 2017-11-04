@@ -60,19 +60,16 @@ class CoursePress_Course extends CoursePress_Utility {
 	public function setUpCourseMetas() {
 		$course_id = $this->__get( 'ID' );
 		$settings = $this->get_settings();
-		$date_format = coursepress_get_option( 'date_format' );
+		$date_format = get_option( 'date_format', 'F j, Y' );
 		$time_now = current_time( 'timestamp' );
 		$date_keys = array( 'course_start_date', 'course_end_date', 'enrollment_start_date', 'enrollment_end_date' );
-
 		foreach ( $settings as $key => $value ) {
 			if ( in_array( $key, $date_keys ) ) {
 				$timestamp = strtotime( $value, $time_now );
 				$value = date_i18n( $date_format, $timestamp );
-
 				// Add timestamp info
 				$this->__set( $key . '_timestamp', $timestamp );
 			}
-
 			// Legacy fixes
 			if ( 'enrollment_type' === $key && 'anyone' === $value ) {
 				$value = 'registered';
@@ -80,11 +77,9 @@ class CoursePress_Course extends CoursePress_Utility {
 			if ( 'on' === $value || 'yes' === $value ) {
 				$value = true;
 			}
-
 			if ( 'off' === $value ) {
 				$value = false;
 			}
-
 			$this->__set( $key, $value );
 			$this->__set( 'meta_' . $key, $value );
 		}

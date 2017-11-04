@@ -52,7 +52,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Page {
 		$alert_args = array(
 			'columns' => get_column_headers( $screen ),
 			'notifications' => $this->get_notifications( $count ),
-			'list_table' => $this->set_pagination( $count ),
+			'list_table' => $this->set_pagination( $count, 'coursepress_notifications_per_page' ),
 			'hidden_columns' => get_hidden_columns( $screen ),
 			'page' => $this->slug,
 		);
@@ -177,37 +177,17 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Page {
 	}
 
 	/**
-	 * Set pagination for notifications listing page.
+	 * Get accessible course for the user.
 	 *
-	 * We are using WP_Listing_Table class to set pagination.
-	 *
-	 * @param int $count Total notifications.
-	 *
-	 * @return object
+	 * @return array
 	 */
-	function set_pagination( $count = 0 ) {
-
-		// Using WP_List table for pagination.
-		$listing = new WP_List_Table();
-
-		$args = array(
-			'total_items' => $count,
-			'per_page' => $this->items_per_page( 'coursepress_notifications_per_page' ),
-		);
-
-		$listing->set_pagination_args( $args );
-
-		return $listing;
-	}
-
 	private function get_courses() {
 
 		$user = coursepress_get_user();
 
-		if ( is_wp_error( $user ) )
+		if ( is_wp_error( $user ) ) {
 			return array();
-
-		//echo '<pre>'; print_r($user); exit;
+		}
 
 		return $user->get_accessible_courses( 'publish' );
 	}

@@ -1283,9 +1283,9 @@ function coursepress_delete_course( $course_id ) {
 	// Delete course instructors
 	$instructors = $course->get_instructors();
 
-	if ($instructors) {
-		foreach ($instructors as $instructor) {
-			coursepress_delete_course_instructor($instructor->ID, $course_id);
+	if ( $instructors ) {
+		foreach ( $instructors as $instructor ) {
+			coursepress_delete_course_instructor( $instructor->ID, $course_id );
 		}
 	}
 
