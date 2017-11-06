@@ -468,7 +468,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		wp_send_json_error( true );
 	}
 
-	function import_file() {
+	function import_file( $files, $request ) {
 		$import = wp_import_handle_upload();
 
 		if ( ! empty( $import['id'] ) ) {
@@ -485,10 +485,11 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				$courses = json_decode( $courses );
 				$courses = get_object_vars( $courses );
 				coursepress_update_option( $option_id, $courses );
-
 				$data['import_id'] = $option_id;
 				$data['total_courses'] = count( $courses );
-
+				foreach ( $courses as $course ) {
+					$importClass = new CoursePress_Import( $course, $request );
+				}
 				wp_send_json_success( $data );
 			}
 		}

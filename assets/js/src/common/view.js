@@ -87,6 +87,11 @@
                 var input, name, type, value;
 
                 input = $(ev.currentTarget);
+
+                if ( input.parent().hasClass( 'cp-ignore-update-model' ) ) {
+                    return false;
+                }
+
                 name = input.attr('name');
 
                 if ( ( type = input.attr('type') ) &&

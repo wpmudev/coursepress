@@ -23,6 +23,11 @@ class CoursePress_Course extends CoursePress_Utility {
 		global $wpdb;
 
 		if ( ! $course instanceof WP_Post ) {
+			if ( is_object( $course ) ) {
+				if ( isset( $course->ID ) ) {
+					$course = $course->ID;
+				}
+			}
 			$course = get_post( (int) $course );
 		}
 
@@ -738,7 +743,7 @@ class CoursePress_Course extends CoursePress_Utility {
 		$query_args = wp_parse_args($query_args, array(
 			'orderby' => 'user_login',
 			'fields'  => 'ID',
-			'include' => empty($student_ids) ? PHP_INT_MAX : $student_ids
+			'include' => empty( $student_ids ) ? PHP_INT_MAX : $student_ids,
 		));
 
 		return new WP_User_Query( $query_args );
@@ -751,7 +756,7 @@ class CoursePress_Course extends CoursePress_Utility {
 
 		$include = $this->get_certified_student_ids();
 
-		$query_args['include'] = empty($include) ? PHP_INT_MAX : $include;
+		$query_args['include'] = empty( $include ) ? PHP_INT_MAX : $include;
 
 		return $this->build_students_query( $query_args );
 	}
@@ -766,7 +771,7 @@ class CoursePress_Course extends CoursePress_Utility {
 			$this->get_certified_student_ids()
 		);
 
-		$query_args['include'] = empty($include) ? PHP_INT_MAX : $include;
+		$query_args['include'] = empty( $include ) ? PHP_INT_MAX : $include;
 
 		return $this->build_students_query( $query_args );
 	}
