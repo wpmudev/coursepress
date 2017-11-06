@@ -679,7 +679,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$paged = $this->get_pagenum();
 		$all_student_count = $course->count_students();
 		$certified_student_ids = $course->get_certified_student_ids();
-		$certified_student_count = count($certified_student_ids);
+		$certified_student_count = count( $certified_student_ids );
 		$invited_students = $course->get_invited_students();
 		$show_certified_students = isset( $_REQUEST['certified'] ) ? $_REQUEST['certified'] : 'all';
 		$per_page = get_option( 'posts_per_page', 20 );
@@ -706,20 +706,22 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'pagination'         => $this->set_pagination( $total_students, 'coursepress_students', ceil( $total_students / $per_page ) ),
 			'invited_students'   => $invited_students,
 			'certified_students' => $certified_student_ids,
-			'statuses'           => $this->get_course_certification_links($all_student_count, $certified_student_count),
+			'statuses'           => $this->get_course_certification_links( $all_student_count, $certified_student_count ),
+			'show'               => $show_certified_students,
+			'all_student_count'  => $all_student_count,
 		);
 		$this->localize_array['invited_students'] = $invited_students;
 		coursepress_render( 'views/tpl/course-students', $args );
 	}
 
-	private function get_course_certification_links($all_student_count, $certified_student_count) {
+	private function get_course_certification_links( $all_student_count, $certified_student_count ) {
 
 		$format = '<li><a class="%1$s" href="%2$s">%3$s</a></li>';
-		$url = remove_query_arg(array('certified', 'paged'));
+		$url = remove_query_arg( array( 'certified', 'paged' ) );
 		$certification_statuses = array(
-			'all' => sprintf(esc_html__('All (%s)', 'cp'), $all_student_count),
-			'yes' => sprintf(esc_html__('Certified (%s)', 'cp'), $certified_student_count),
-			'no'  => sprintf(esc_html__('Not Certified (%s)', 'cp'), $all_student_count - $certified_student_count),
+			'all' => sprintf( esc_html__( 'All (%s)', 'cp' ), $all_student_count ),
+			'yes' => sprintf( esc_html__( 'Certified (%s)', 'cp' ), $certified_student_count ),
+			'no'  => sprintf( esc_html__( 'Not Certified (%s)', 'cp' ), $all_student_count - $certified_student_count ),
 		);
 		$links = array();
 		$selected = isset( $_REQUEST['certified'] ) ? $_REQUEST['certified'] : 'all';
