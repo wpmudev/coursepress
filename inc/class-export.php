@@ -175,14 +175,9 @@ class CoursePress_Export extends CoursePress_Utility {
 	 */
 	private function get_file_name() {
 		global $CoursePress;
-
 		// Get site name.
 		$site_name = sanitize_key( get_bloginfo( 'name' ) );
 		$site_name = empty( $site_name ) ? '' : $site_name . '.';
-
-		// WP_Post object for course.
-		$post = get_post( $course_id );
-
 		// Create export file name.
 		$filename = sprintf(
 			'%scoursepress.%s.%d.json',
@@ -190,7 +185,6 @@ class CoursePress_Export extends CoursePress_Utility {
 			$CoursePress->version,
 			time()
 		);
-
 		// Course slug.
 		if ( isset( $this->data['course'] ) ) {
 			$course_name = empty( $this->data['course'] ) ? '' : '.'. $this->data['course']->post_name;
