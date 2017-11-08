@@ -25,9 +25,13 @@ class CoursePress_Extension_MarketPress {
 	);
 
 	/**
-	 * CoursePress_Extension_MarketPress constructor.
+	 * Initialize the class.
+	 *
+	 * Register all action and filter hooks if plugin is active.
+	 *
+	 * @return void
 	 */
-	public function __construct() {
+	public function init() {
 
 		// No need if plugin not enabled.
 		if ( ! $this->is_enabled() ) {
@@ -498,18 +502,14 @@ class CoursePress_Extension_MarketPress {
 			return;
 		}
 
-		/**
-		 * Only when redirect option is on.
-		 */
+		// Only when redirect option is on.
 		$use_redirect = coursepress_get_setting( 'marketpress/redirect', false );
 
 		if ( ! $use_redirect ) {
 			return;
 		}
 
-		/**
-		 * Redirect if course exists.
-		 */
+		// Redirect if course exists.
 		$course_id = $this->get_course_id_by_product( $post );
 		$course = coursepress_get_course( $course_id );
 
