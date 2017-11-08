@@ -82,9 +82,7 @@
                     return; // @todo: show graceful error
                 }
 
-                var frameTitle = this.input.data('title')
-                    ? this.input.data('title')
-                    : '';
+                var frameTitle = this.input.data('title') ? this.input.data('title') : '';
 
                 if (!this.frame) {
                     var settings = {
@@ -105,7 +103,7 @@
             setSelectedImage: function() {
                 var selected, thumbnail, id, url;
 
-                selected = frame.state().get('selection').first();
+                selected = this.frame.state().get('selection').first();
                 id = selected.get('id');
 
                 in_frame = true;

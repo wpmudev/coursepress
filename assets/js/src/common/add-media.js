@@ -35,9 +35,7 @@
                     return; // @todo: show graceful error
                 }
 
-	            var frameTitle = this.input.data('title')
-	                ? this.input.data('title')
-		            : '';
+	            var frameTitle = this.input.data('title') ? this.input.data('title') : '';
 
 	            if ( ! this.frame ) {
                     var settings = {
