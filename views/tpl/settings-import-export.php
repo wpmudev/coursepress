@@ -18,17 +18,20 @@
 				'type' => 'checkbox',
 				'title' => $toggle_input . __( 'Replace course if exists', 'CoursePress' ),
 				'desc' => __( 'Courses with the same title will be automatically replaced by the new one.', 'CoursePress' ),
+				'class' => 'cp-ignore-update-model',
 			),
 			'with_students' => array(
 				'type' => 'checkbox',
 				'title' => $toggle_input . __( 'Include course students', 'CoursePress' ),
 				'desc' => __( 'Students listing must also included in your export for this to work.', 'CoursePress' ),
+				'class' => 'cp-ignore-update-model',
 			),
 			'with_comments' => array(
 				'type' => 'checkbox',
 				'title' => $toggle_input . __( 'Include course thread/comments', 'CoursePress' ),
 				'desc' => __( 'Comments listing must also included in your export for this to work.', 'CoursePress' ),
 				'disabled' => true,
+				'class' => 'cp-ignore-update-model',
 			),
 			'' => array(
 				'type' => 'submit',

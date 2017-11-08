@@ -50,15 +50,15 @@ class CoursePress_Export extends CoursePress_Utility {
 		// Set the couse data.
 		$this->data['course'] = $post;
 		// Course author user.
-		$this->data['author'] = $course->get_author();
+		$this->data['author'] = $this->sanitize_export_user( $course->get_author() );
 		// Get course categories.
 		$this->data['categories'] = $course->get_category();
 		// Course meta data.
 		$this->data['meta'] = $this->_get_course_meta( $course_id );
 		// Course instructors.
-		$this->data['instructors'] = $course->get_instructors();
+		$this->data['instructors'] = $this->sanitize_export_users( $course->get_instructors() );
 		// Course facilitators.
-		$this->data['facilitators'] = $course->get_facilitators();
+		$this->data['facilitators'] = $this->sanitize_export_users( $course->get_facilitators() );
 
 		// Course all units.
 		$units = $course->get_units( false );
@@ -79,7 +79,7 @@ class CoursePress_Export extends CoursePress_Utility {
 			// Set students list for the course.
 			$students = $course->get_students();
 			if ( ! empty( $students ) ) {
-				$this->data['students'] = $students;
+				$this->data['students'] = $this->sanitize_export_users( $students );
 			}
 		}
 	}
@@ -175,14 +175,9 @@ class CoursePress_Export extends CoursePress_Utility {
 	 */
 	private function get_file_name() {
 		global $CoursePress;
-
 		// Get site name.
 		$site_name = sanitize_key( get_bloginfo( 'name' ) );
 		$site_name = empty( $site_name ) ? '' : $site_name . '.';
-
-		// WP_Post object for course.
-		$post = get_post( $course_id );
-
 		// Create export file name.
 		$filename = sprintf(
 			'%scoursepress.%s.%d.json',
@@ -190,7 +185,6 @@ class CoursePress_Export extends CoursePress_Utility {
 			$CoursePress->version,
 			time()
 		);
-
 		// Course slug.
 		if ( isset( $this->data['course'] ) ) {
 			$course_name = empty( $this->data['course'] ) ? '' : '.'. $this->data['course']->post_name;
@@ -250,5 +244,51 @@ class CoursePress_Export extends CoursePress_Utility {
 		}
 		$this->data = $data;
 		$this->export();
+	}
+
+	/**
+	 * sanitize single user for export
+	 *
+	 * Function removed all not user related data like `user_pass`,
+	 * `capabilities`.
+	 *
+	 * @param mixted $user User objecit, CoursePress User Oject or array
+	 */
+	private function sanitize_export_user( $user ) {
+		$keys_to_remove = array(
+			'allcaps',
+			'cap_key',
+			'caps',
+			'deleted',
+			'filter',
+			'roles',
+			'spam',
+			'user_activation_key',
+			'user_pass',
+			'user_registered',
+			'user_status',
+		);
+		foreach ( $keys_to_remove as $key ) {
+			if ( is_object( $user ) ) {
+				if ( isset( $user->$key ) ) {
+					unset( $user->$key );
+				}
+			} elseif ( is_array( $user ) ) {
+				if ( isset( $user[ $key ] ) ) {
+					unset( $user[ $key ] );
+				}
+			}
+		}
+		return $user;
+	}
+
+	/**
+	 * Wraper for sanitize_export_user() function to handle array of users.
+	 */
+	private function sanitize_export_users( $users ) {
+		foreach ( $users as $id => $user ) {
+			$users[ $id ] = $this->sanitize_export_user( $user );
+		}
+		return $users;
 	}
 }
