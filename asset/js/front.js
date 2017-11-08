@@ -1,4 +1,4 @@
-/*! CoursePress - v2.1.1
+/*! CoursePress - v2.1.2
  * https://premium.wpmudev.org/project/coursepress-pro/
  * Copyright (c) 2017; * Licensed GPLv2+ */
 var CoursePress = {};
@@ -784,11 +784,13 @@ $(document)
 		var button = $(this),
 			parentDiv = button.closest( '.cp-module-content' ),
 			elementsDiv = $( '.module-elements', parentDiv ),
-			responseDiv = $( '.module-response', parentDiv )
+			responseDiv = $( '.module-response', parentDiv ),
+			moduleHidden = $( '.cp-is-hidden-module', parentDiv )
 		;
 
 		responseDiv.hide();
 		elementsDiv.show();
+		moduleHidden.val(0);
 		CoursePress.timer( parentDiv );
 
 		return false;
