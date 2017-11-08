@@ -37,7 +37,8 @@ function coursepress_get_course( $course_id = 0 ) {
 	}
 
 	if ( isset( $CoursePress_Core->courses[ $course_id ] ) ) {
-		return $CoursePress_Core->courses[ $course_id ]; }
+		return $CoursePress_Core->courses[ $course_id ];
+	}
 
 	$course = new CoursePress_Course( $course_id );
 

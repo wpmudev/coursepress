@@ -543,6 +543,18 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		$course_id = filter_input( INPUT_GET, 'cid', FILTER_VALIDATE_INT );
 
+		/**
+		 * check is course
+		 */
+		$is_course = coursepress_is_course( $course_id );
+		if ( false === $is_course ) {
+			$args = array(
+				'title' => __( 'Course does not exist', 'cp' ),
+			);
+			coursepress_render( 'views/admin/error-wrong', $args );
+			return;
+		}
+
 		// If it's a new course, create a draft course
 		if ( empty( $course_id ) ) {
 			$course = coursepress_get_course( get_default_post_to_edit( 'course', true ) );
