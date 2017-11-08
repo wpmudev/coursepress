@@ -21,7 +21,6 @@ class CoursePress_Course extends CoursePress_Utility {
 	 */
 	public function __construct( $course ) {
 		global $wpdb;
-
 		if ( ! $course instanceof WP_Post ) {
 			if ( is_object( $course ) ) {
 				if ( isset( $course->ID ) ) {
@@ -30,15 +29,12 @@ class CoursePress_Course extends CoursePress_Utility {
 			}
 			$course = get_post( (int) $course );
 		}
-
 		if ( ! $course instanceof WP_Post
 			|| $course->post_type != 'course' ) {
 			return $this->wp_error();
 		}
-
 		$this->progress_table = $wpdb->prefix . 'coursepress_student_progress';
 		$this->student_table = $wpdb->prefix . 'coursepress_students';
-
 		$this->setUp( array(
 			'ID' => $course->ID,
 			'post_title' => $course->post_title,
@@ -48,10 +44,8 @@ class CoursePress_Course extends CoursePress_Utility {
 			'post_name' => $course->post_name,
 			'post_author' => $course->post_author,
 		) );
-
 		// Set course meta
 		$this->setUpCourseMetas();
-
 		/**
 		 * action before_delete_post
 		 */
@@ -88,12 +82,9 @@ class CoursePress_Course extends CoursePress_Utility {
 			$this->__set( $key, $value );
 			$this->__set( 'meta_' . $key, $value );
 		}
-
 		$this->__set( 'course_view', 'focus' );
-
 		// Legacy: fix course_type meta
 		$cpv = get_post_meta( $course_id, 'cp_cpv', true );
-
 		if ( ! $cpv ) {
 			$this->__set( 'with_modules', true );
 			$this->__set( 'course_type', 'auto-moderated' );
@@ -102,7 +93,6 @@ class CoursePress_Course extends CoursePress_Utility {
 
 	public function get_settings() {
 		global $CoursePress;
-
 		$pre_completion_content = sprintf( '<h3>%s</h3>', __( 'Congratulations! You have completed COURSE_NAME!', 'cp' ) );
 		$pre_completion_content .= sprintf( '<p>%s</p>', __( 'Your course instructor will now review your work and get back to you with your final grade before issuing you a certificate of completion.', 'cp' ) );
 		$completion_content = sprintf( '<h3>%s</h3><p>%s</p><p>DOWNLOAD_CERTIFICATE_BUTTON</p>',
@@ -127,7 +117,6 @@ class CoursePress_Course extends CoursePress_Utility {
 			'enrollment_type' => 'registered',
 			'enrollment_passcode' => '',
 			'enrollment_prerequisite' => array(),
-
 			'course_view' => 'focus',
 			'structure_level' => 'unit',
 			'course_open_ended' => true,
@@ -138,7 +127,6 @@ class CoursePress_Course extends CoursePress_Utility {
 			'enrollment_end_date' => '',
 			'class_limited' => '',
 			'class_size' => '',
-
 			'pre_completion_title' => __( 'Almost there!', 'CP_TD' ),
 			'pre_completion_content' => $pre_completion_content,
 			'minimum_grade_required' => 100,
@@ -168,42 +156,32 @@ class CoursePress_Course extends CoursePress_Utility {
 			'mp_sku' => '',
 			'cpv' => 3,
 		);
-
 		$settings = get_post_meta( $id, 'course_settings', true );
 		$settings = wp_parse_args( $settings, $course_meta );
-
 		/**
 		 * MarketPress plugin status
 		 */
 		$MarketPress = $CoursePress->get_class( 'CoursePress_Extension_MarketPress' );
 		$settings['mp_is_instaled'] = $MarketPress->installed();
 		$settings['mp_is_activated'] = $MarketPress->activated();
-
 		return $settings;
 	}
 
 	public function update_setting( $key, $value = array() ) {
 		global $CoursePress_Core;
-
 		$course_id = $this->__get( 'ID' );
 		$settings = $this->get_settings();
-
 		if ( true === $key ) {
 			$settings = $value;
-
 			foreach ( $settings as $key => $value ) {
 				update_post_meta( $course_id, 'cp_' . $key, $value );
 			}
 		} else {
 			$settings[ $key ] = $value;
-
 			update_post_meta( $course_id, 'cp_' . $key, $value );
 		}
-
 		update_post_meta( $course_id, 'course_settings', $settings );
-
 		// We need date types in most queries, store them as seperate meta key
-
 		if ( true === $key ) {
 			foreach ( $settings as $key => $value ) {
 				update_post_meta( $course_id, $key, $value );
@@ -211,19 +189,16 @@ class CoursePress_Course extends CoursePress_Utility {
 		} else {
 			update_post_meta( $course_id, $key, $value );
 		}
-
 		// Set post thumbnail ID if not empty
 		if ( ! empty( $settings['listing_image_thumbnail_id'] ) ) {
 			set_post_thumbnail( $course_id, $settings['listing_image_thumbnail_id'] );
 		}
-
 		$category_type = $CoursePress_Core->__get( 'category_type' );
 		if ( ! empty( $settings['course_category'] ) ) {
 			wp_set_object_terms( $course_id, $settings['course_category'], $category_type );
 		} else {
 			wp_set_object_terms( $course_id, array(), $category_type );
 		}
-
 		/**
 		 * Fire whenever a course is created or updated.
 		 *
@@ -231,7 +206,6 @@ class CoursePress_Course extends CoursePress_Utility {
 		 * @param array $course_meta
 		 */
 		do_action( 'coursepress_course_updated', $course_id, $settings );
-
 		return true;
 	}
 
@@ -254,17 +228,17 @@ class CoursePress_Course extends CoursePress_Utility {
 	public function get_summary( $length = 140 ) {
 		$summary = $this->__get( 'post_excerpt' );
 		$length++;
-
 		if ( mb_strlen( $summary ) > $length ) {
 			$summary = wp_strip_all_tags( $summary );
 			$sub = mb_substr( $summary, 0, $length - 5 );
 			$words = explode( ' ', $sub );
 			$cut = ( mb_strlen( $words[ count( $words ) - 1 ] ) );
-
 			if ( $cut < 0 ) {
-				return mb_substr( $sub, 0, $cut ); } else { 				return $sub; }
+				return mb_substr( $sub, 0, $cut );
+			} else {
+				return $sub;
+			}
 		}
-
 		return $summary;
 	}
 
@@ -282,14 +256,11 @@ class CoursePress_Course extends CoursePress_Utility {
 	 */
 	public function get_feature_image( $width = 235, $height = 235 ) {
 		$id = $this->__get( 'ID' );
-
 		if ( ! $width ) {
 			$width = coursepress_get_setting( 'course/image_width', 235 ); }
 		if ( ! $height ) {
 			$height = coursepress_get_setting( 'course/image_height', 235 ); }
-
 		$listing_image = $this->get_feature_image_url();
-
 		// Try post-thumbnail
 		if ( ! $listing_image ) {
 			if ( has_post_thumbnail( $id ) ) {
@@ -305,7 +276,6 @@ class CoursePress_Course extends CoursePress_Utility {
 				)
 			);
 		}
-
 		return $listing_image;
 	}
 
@@ -315,14 +285,12 @@ class CoursePress_Course extends CoursePress_Utility {
 
 	public function get_feature_video( $width = 235, $height = 235 ) {
 		$feature_video = $this->get_feature_video_url();
-
 		if ( ! $width ) {
 			$width = coursepress_get_setting( 'course/image_width', 235 );
 		}
 		if ( ! $height ) {
 			$height = coursepress_get_setting( 'course/image_height', 235 );
 		}
-
 		if ( ! empty( $feature_video ) ) {
 			$attr = array(
 				'src' => esc_url_raw( $feature_video ),
@@ -332,17 +300,14 @@ class CoursePress_Course extends CoursePress_Utility {
 				'controls' => true,
 				'data-setup' => $this->create_video_js_setup_data( $feature_video ),
 			);
-
 			return $this->create_html( 'video', $attr );
 		}
-
 		return null;
 	}
 
 	public function get_media( $width = 235, $height = 235 ) {
 		$media_type = coursepress_get_setting( 'course/details_media_type', 'image' );
 		$image = $this->get_feature_image( $width, $height );
-
 		if ( ( 'image' == $media_type || 'default' == $media_type ) && ! empty( $image ) ) {
 			return $image;
 		}
@@ -352,9 +317,7 @@ class CoursePress_Course extends CoursePress_Utility {
 
 	public function get_description() {
 		$description = $this->__get( 'post_content' );
-
 		// @todo: Fix HTML formatting issue here
-
 		return $description;
 	}
 
@@ -594,16 +557,22 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return array An array of WP_User object on success.
 	 */
 	public function get_instructors() {
-		$instructors = array();
-		$instructor_ids = $this->_get_instructors();
+		$ids = $this->_get_instructors();
+		return $this->_users( $ids );
+	}
 
-		if ( ! empty( $instructor_ids ) ) {
-			foreach ( $instructor_ids as $instructor_id ) {
-				$instructors[ $instructor_id ] = coursepress_get_user( $instructor_id );
-			}
+	/**
+	 * get users data
+	 */
+	private function _users( $ids ) {
+		$users = array();
+		if ( empty( $ids ) ) {
+			return $users;
 		}
-
-		return $instructors;
+		foreach ( $ids as $id ) {
+			$users[ $id ] = coursepress_get_user( $id );
+		}
+		return $users;
 	}
 
 	public function get_instructors_link() {
@@ -650,9 +619,8 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return array of WP_User object
 	 */
 	public function get_facilitators() {
-		$facilitator_ids = $this->_get_facilitators();
-
-		return array_map( 'get_userdata', $facilitator_ids );
+		$ids = $this->_get_facilitators();
+		return $this->_users( $ids );
 	}
 
 	/**
@@ -687,7 +655,6 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return int
 	 */
 	public function count_students() {
-
 		return count( $this->get_student_ids() );
 	}
 
@@ -697,7 +664,6 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return int
 	 */
 	public function count_certified_students() {
-
 		return count( $this->get_certified_student_ids() );
 	}
 
@@ -707,7 +673,6 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return CoursePress_User[] array of CoursePress_User object
 	 */
 	public function get_students( $query_args = array() ) {
-
 		$query = $this->build_students_query( $query_args );
 		return $this->build_cp_user_objects( $query->get_results() );
 	}
@@ -718,7 +683,6 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return CoursePress_User[] array of CoursePress_User object
 	 */
 	public function get_certified_students( $query_args ) {
-
 		$query = $this->build_certified_students_query( $query_args );
 		return $this->build_cp_user_objects( $query->get_results() );
 	}
@@ -729,7 +693,6 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return CoursePress_User[] array of CoursePress_User object
 	 */
 	public function get_non_certified_students( $query_args ) {
-
 		$query = $this->build_non_certified_students_query( $query_args );
 		return $this->build_cp_user_objects( $query->get_results() );
 	}
@@ -738,14 +701,12 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return WP_User_Query
 	 */
 	private function build_students_query( $query_args ) {
-
 		$student_ids = $this->get_student_ids();
 		$query_args = wp_parse_args($query_args, array(
 			'orderby' => 'user_login',
 			'fields'  => 'ID',
 			'include' => empty( $student_ids ) ? PHP_INT_MAX : $student_ids,
 		));
-
 		return new WP_User_Query( $query_args );
 	}
 
@@ -753,11 +714,8 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return WP_User_Query
 	 */
 	private function build_certified_students_query( $query_args ) {
-
 		$include = $this->get_certified_student_ids();
-
 		$query_args['include'] = empty( $include ) ? PHP_INT_MAX : $include;
-
 		return $this->build_students_query( $query_args );
 	}
 
@@ -765,33 +723,26 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return WP_User_Query
 	 */
 	private function build_non_certified_students_query( $query_args ) {
-
 		$include = array_diff(
 			$this->get_student_ids(),
 			$this->get_certified_student_ids()
 		);
-
 		$query_args['include'] = empty( $include ) ? PHP_INT_MAX : $include;
-
 		return $this->build_students_query( $query_args );
 	}
 
 	private function build_cp_user_objects( $student_ids ) {
-
 		$student_objects = array();
-
 		if ( ! empty( $student_ids ) ) {
 			foreach ( $student_ids as $student_id ) {
 				$student_objects[ $student_id ] = new CoursePress_User( $student_id );
 			}
 		}
-
 		return $student_objects;
 	}
 
 	public function get_invited_students() {
 		$invitee = $this->__get( 'invited_students' );
-
 		if ( ! empty( $invitee ) ) {
 			foreach ( $invitee as $pos => $invite ) {
 				if ( empty( $invite->date ) ) {
@@ -803,7 +754,6 @@ class CoursePress_Course extends CoursePress_Utility {
 				$invitee->{$pos} = $invite;
 			}
 		}
-
 		return $invitee;
 	}
 
@@ -816,32 +766,27 @@ class CoursePress_Course extends CoursePress_Utility {
 		$id = $this->__get( 'ID' );
 		$course_category = wp_get_object_terms( $id, 'course_category' );
 		$cats = array();
-
 		if ( ! empty( $course_category ) ) {
 			foreach ( $course_category as $term ) {
 				$cats[ $term->term_id ] = $term->name; }
 		}
-
 		return $cats;
 	}
 
 	public function get_permalink() {
 		$course_name = $this->__get( 'post_name' );
-
 		return coursepress_get_main_courses_url() . trailingslashit( $course_name );
 	}
 
 	public function get_units_url() {
 		$course_url = $this->get_permalink();
 		$slug = coursepress_get_setting( 'slugs/units', 'units' );
-
 		return $course_url . trailingslashit( $slug );
 	}
 
 	public function get_discussion_url() {
 		$course_url = $this->get_permalink();
 		$discussion_slug = coursepress_get_setting( 'slugs/discussions', 'discussions' );
-
 		return $course_url . trailingslashit( $discussion_slug );
 	}
 
@@ -854,7 +799,6 @@ class CoursePress_Course extends CoursePress_Utility {
 	public function get_grades_url() {
 		$course_url = $this->get_permalink();
 		$grades_slug = coursepress_get_setting( 'slugs/grades', 'grades' );
-
 		return $course_url . trailingslashit( $grades_slug );
 	}
 
@@ -864,20 +808,16 @@ class CoursePress_Course extends CoursePress_Utility {
 			'action' => 'coursepress_unenroll',
 			'_wpnonce' => wp_create_nonce( 'coursepress_nonce' ),
 		);
-
 		if ( ! empty( $redirect ) ) {
 			$url['redirect'] = $redirect;
 		}
-
 		$url = add_query_arg( $url, admin_url( 'admin-ajax.php' ) );
-
 		return $url;
 	}
 
 	public function get_workbook_url() {
 		$course_url = $this->get_permalink();
 		$workbook_slug = coursepress_get_setting( 'slugs/workbook', 'workbook' );
-
 		return $course_url . trailingslashit( $workbook_slug );
 	}
 
@@ -886,7 +826,6 @@ class CoursePress_Course extends CoursePress_Utility {
 			'page' => 'coursepress_course',
 			'cid' => $this->__get( 'ID' ),
 		), admin_url( 'admin.php' ) );
-
 		return $url;
 	}
 
@@ -900,19 +839,15 @@ class CoursePress_Course extends CoursePress_Utility {
 			'orderby' => 'menu_order',
 			'order' => 'ASC',
 		);
-
 		if ( $ids ) {
 			$args['fields'] = 'ids';
 		}
-
 		$units = get_posts( $args );
-
 		return $units;
 	}
 
 	public function count_units( $published = true ) {
 		$units = $this->_get_units( $published );
-
 		return count( $units );
 	}
 
@@ -920,34 +855,27 @@ class CoursePress_Course extends CoursePress_Utility {
 		if ( $this->__get( 'current_units' ) ) {
 			return $this->__get( 'current_units' );
 		}
-
 		$units = array();
 		$results = $this->_get_units( $published, false );
-
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $unit ) {
 				$unitClass = new CoursePress_Unit( $unit, $this );
 				$units[] = $unitClass;
 			}
 		}
-
 		$this->__set( 'current_units', $units );
-
 		return $units;
 	}
-
 
 	public function get_course_structure( $show_details = false ) {
 		/**
 		 * @var $user CoursePress_User
 		 */
-
 		$course_id = $this->__get( 'ID' );
 		$user = coursepress_get_user();
 		$has_access = $user->has_access_at( $course_id );
 		$structure = '';
 		$units = $this->get_units( ! $has_access );
-
 		if ( $units ) {
 			foreach ( $units as $unit ) {
 				$unit_structure = $unit->get_unit_structure( false, $show_details );
@@ -955,7 +883,6 @@ class CoursePress_Course extends CoursePress_Utility {
 			}
 			$structure = $this->create_html( 'ul', array( 'class' => 'tree unit-tree' ), $structure );
 		}
-
 		return $structure;
 	}
 
@@ -970,13 +897,10 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return bool Success?
 	 */
 	public function duplicate_course() {
-
 		// Course ID is set when this class is instantiated.
 		$course_id = $this->__get( 'ID' );
-
 		// If in case course post object is not and ID not found, bail.
 		if ( empty( $course_id ) ) {
-
 			/**
 			 * Perform actions if the duplication was failed.
 			 *
@@ -985,46 +909,36 @@ class CoursePress_Course extends CoursePress_Utility {
 			 * @since 3.0
 			 */
 			do_action( 'coursepress_course_duplicate_failed', false );
-
 			return false;
 		}
-
 		/**
 		 * Allow course duplication to be cancelled when filter returns true.
 		 *
 		 * @since 1.2.1
 		 */
 		if ( apply_filters( 'coursepress_course_cancel_duplicate', false, $course_id ) ) {
-
 			/**
 			 * Perform actions if the duplication was cancelled.
 			 *
 			 * @since 1.2.1
 			 */
 			do_action( 'coursepress_course_duplicate_cancelled', $course_id );
-
 			return false;
 		}
-
 		// Copy of current course object.
 		$new_course = $this;
-
 		// Unset old ID, otherwise it will update the existing course.
 		unset( $new_course->ID );
-
 		// Set basic details.
 		$new_course->post_author = get_current_user_id();
 		$new_course->post_status = 'draft';
 		$new_course->post_type = 'course';
 		$new_course->post_name = $new_course->post_name . '-copy';
 		$new_course->post_title	= $new_course->post_title . ' (copy)';
-
 		// Attempt to create new post of type "course".
 		$new_course_id = wp_insert_post( $new_course );
-
 		// If duplicate course was created.
 		if ( ! empty( $new_course_id ) ) {
-
 			// Copy the old course metadata to duplicated course.
 			$course_metas = get_post_meta( $course_id );
 			if ( ! empty( $course_metas ) ) {
@@ -1034,7 +948,6 @@ class CoursePress_Course extends CoursePress_Utility {
 					update_post_meta( $new_course_id, $key, $value );
 				}
 			}
-
 			// If units are available for course, duplicate them.
 			$units = coursepress_get_units( $course_id );
 			if ( ! empty( $units ) ) {
@@ -1043,37 +956,30 @@ class CoursePress_Course extends CoursePress_Utility {
 					$unit->duplicate_unit( $new_course_id );
 				}
 			}
-
 			/**
 			 * save course number
 			 */
 			$this->save_course_number( $new_course_id, $new_course->post_title );
-
 			/**
 			 * Perform actions if the duplication was successful.
 			 *
 			 * @since 3.0
 			 */
 			do_action( 'coursepress_course_duplicated', $new_course_id );
-
 			return true;
 		}
-
 		// This action is documented above.
 		do_action( 'coursepress_course_duplicate_failed', $course_id );
-
 		return false;
 	}
 
 	public function get_status() {
 		$status = $this->is_available() ? 'active' : '';
-
 		if ( $this->has_course_ended() ) {
 			$status = 'ended';
 		} elseif ( ! $this->is_course_started() ) {
 			$status = 'future';
 		}
-
 		return $status;
 	}
 
@@ -1083,9 +989,7 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return mixed CoursePress_User object or false.
 	 */
 	public function get_author() {
-
 		$author = false;
-
 		// Get current course author id.
 		$author_id = $this->__get( 'post_author' );
 		if ( $author_id ) {
@@ -1096,7 +1000,6 @@ class CoursePress_Course extends CoursePress_Utility {
 				return false;
 			}
 		}
-
 		return $author;
 	}
 
