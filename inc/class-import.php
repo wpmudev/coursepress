@@ -46,32 +46,59 @@ class CoursePress_Import extends CoursePress_Utility
 		$this->import_course_students();
 	}
 
-	function maybe_add_user( $user_data ) {
-		$add = true;
-
+	/**
+	 * Try to add user if check fails.
+	 */
+	private function maybe_add_user( $user_data, $role = null ) {
+		$user = $blog_id = null;
 		if ( ! empty( $user_data->user_email ) && email_exists( $user_data->user_email ) ) {
-			$add = false;
 			$user = get_user_by( 'email', $user_data->user_email );
 		}
 		if ( ! empty( $user_data->user_login ) && username_exists( $user_data->user_login ) ) {
-			$add = false;
 			$user = get_user_by( 'login', $user_data->user_login );
 		}
-
-		if ( $add || empty( $user ) ) {
-			/**
-			 * generate password
-			 */
-			// User doesn't exist, insert
-			unset( $user_data->ID );
-			$user_id = wp_insert_user( $user_data );
-			if ( ! is_wp_error( $user_id ) ) {
-				return $user_id;
+		/**
+		 * blog ID & role
+		 */
+		if ( is_multisite() ) {
+			$blog_id = get_current_blog_id();
+			switch ( $role ) {
+				case 'instructor':
+					$role = 'coursepress_instructor';
+				break;
+				case 'facilitator':
+					$role = 'coursepress_facilitator';
+				break;
+				case 'student':
+					$role = 'coursepress_student';
+				break;
 			}
-		} else {
+		}
+		/**
+		 * user exist
+		 */
+		if ( ! empty( $user ) ) {
+			if ( is_multisite() ) {
+				add_user_to_blog( $blog_id, $user->ID, $role );
+			}
 			return $user->ID;
 		}
-
+		/**
+		 *  User doesn't exist, insert
+		 * generate password
+		 */
+		$user_data->user_pass = wp_generate_password();
+		unset( $user_data->ID );
+		$user_id = wp_insert_user( $user_data );
+		if ( ! is_wp_error( $user_id ) ) {
+			if ( is_multisite() ) {
+				add_user_to_blog( $blog_id, $user_id, $role );
+			}
+			return $user_id;
+		}
+		/**
+		 * no user!
+		 */
 		return 0;
 	}
 
@@ -162,9 +189,8 @@ class CoursePress_Import extends CoursePress_Utility
 	private function import_course_meta() {
 		$meta = $this->to_array( $this->meta );
 		$settings = $meta['course_settings'];
-
 		if ( ! empty( $settings ) ) {
-			$settings = $settings[0];
+			$settings = maybe_unserialize( array_shift( $settings ) );
 			unset( $meta['course_settings'] );
 		}
 		$course_structures = array(
@@ -192,8 +218,7 @@ class CoursePress_Import extends CoursePress_Utility
 	function import_course_instructors() {
 		if ( ! empty( $this->instructors ) ) {
 			foreach ( $this->instructors as $instructor ) {
-				$instructor_id = $this->maybe_add_user( $instructor );
-
+				$instructor_id = $this->maybe_add_user( $instructor, 'instructor' );
 				foreach ( $this->courses as $course_id ) {
 					coursepress_add_course_instructor( $instructor_id, $course_id );
 				}
@@ -204,7 +229,7 @@ class CoursePress_Import extends CoursePress_Utility
 	function import_course_facilitators() {
 		if ( ! empty( $this->facilitators ) ) {
 			foreach ( $this->facilitators as $facilitator ) {
-				$facilitator_id = $this->maybe_add_user( $facilitator );
+				$facilitator_id = $this->maybe_add_user( $facilitator, 'facilitator' );
 				foreach ( $this->courses as $course_id ) {
 					coursepress_add_course_facilitator( $facilitator_id, $course_id );
 				}
@@ -215,7 +240,7 @@ class CoursePress_Import extends CoursePress_Utility
 	/**
 	 * Helper function to insert post_meta
 	 *
-	 * @param (array|object) $metas			The metadata to insert.
+	 * @param (array|object) $metas The metadata to insert.
 	 * @return void
 	 **/
 	function insert_meta( $post_id, $metas = array() ) {
@@ -236,19 +261,24 @@ class CoursePress_Import extends CoursePress_Utility
 		}
 	}
 
-	function import_course_students() {
-		if ( $this->with_students && ! empty( $this->students ) ) {
-			foreach ( $this->students as $student ) {
-				$student_id = $this->maybe_add_user( $student );
-				$progress = array();
-
-				if ( ! empty( $student->progress ) ) {
-					$progress = $this->to_array( $student->progress );
-				}
-
-				foreach ( $this->courses as $course_id ) {
-					coursepress_add_student( $course_id, $student_id );
-				}
+	/**
+	 * import students
+	 */
+	private function import_course_students() {
+		if ( ! $this->with_students ) {
+			return;
+		}
+		if ( empty( $this->students ) ) {
+			return;
+		}
+		foreach ( $this->students as $student ) {
+			$student_id = $this->maybe_add_user( $student, 'student' );
+			$progress = array();
+			if ( ! empty( $student->progress ) ) {
+				$progress = $this->to_array( $student->progress );
+			}
+			foreach ( $this->courses as $course_id ) {
+				coursepress_add_student( $student_id, $course_id );
 			}
 		}
 	}
@@ -256,7 +286,6 @@ class CoursePress_Import extends CoursePress_Utility
 	function get_course() {
 		$course_id = array_pop( $this->courses );
 		$course = coursepress_get_course( $course_id );
-
 		return $course;
 	}
 }
