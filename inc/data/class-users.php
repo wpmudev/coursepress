@@ -99,8 +99,7 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 			//'publish_posts' => 0,
 			//'edit_comments' => 1,
 		),
-		'facilitator' => array(
-		)
+		'facilitator' => array(),
 	);
 
 	public function __construct() {
@@ -169,7 +168,9 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 	function add_student_role( $user_id ) {
 		if ( ! user_can( $user_id, 'coursepress_student' ) ) {
 			$user = get_userdata( $user_id );
-			$user->add_role( 'coursepress_student' );
+			if ( $user ) {
+				$user->add_role( 'coursepress_student' );
+			}
 		}
 	}
 
@@ -268,8 +269,8 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 	function delete_student_id( $user_id ) {
 		$user = coursepress_get_user( $user_id );
 
-		if ( is_wp_error( $user ) )
-			return null;
+		if ( is_wp_error( $user ) ) {
+			return null; }
 
 		// Find courses where user are enrolled at
 		$course_ids = $user->get_enrolled_courses_ids();

@@ -22,6 +22,11 @@ class CoursePress_Course extends CoursePress_Utility {
 	public function __construct( $course ) {
 		global $wpdb;
 		if ( ! $course instanceof WP_Post ) {
+			if ( is_object( $course ) ) {
+				if ( isset( $course->ID ) ) {
+					$course = $course->ID;
+				}
+			}
 			$course = get_post( (int) $course );
 		}
 		if ( ! $course instanceof WP_Post
