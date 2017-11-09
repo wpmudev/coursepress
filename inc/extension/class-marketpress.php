@@ -107,6 +107,8 @@ class CoursePress_Extension_MarketPress {
 	/**
 	 * Is plugin installed?
 	 *
+	 * Check if MarketPress plugin is installed in normal way or via mu-plugins.
+	 *
 	 * @return bool
 	 */
 	public function installed() {
@@ -120,6 +122,8 @@ class CoursePress_Extension_MarketPress {
 	 * Is plugin active?
 	 *
 	 * Check if current plugin is active, not just installed.
+	 * is_plugin_active() Will not check mu-plugins. So use `Marketpress`
+	 * class to check if MarketPress is active.
 	 *
 	 * @return bool
 	 */
@@ -127,12 +131,7 @@ class CoursePress_Extension_MarketPress {
 
 		$scope = $this->installed_scope();
 
-		// Need for plugins_api.
-		if ( ! function_exists( 'is_plugin_active' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/plugin.php';
-		}
-
-		return empty( $scope ) ? false : is_plugin_active( $this->base_path[ $scope ] );
+		return empty( $scope ) ? false : class_exists( 'Marketpress' );
 	}
 
 	/**
@@ -454,7 +453,9 @@ class CoursePress_Extension_MarketPress {
 	}
 
 	/**
-	 * @param $order
+	 * Enroll upon course purchase.
+	 *
+	 * @param object $order Order class.
 	 */
 	public function course_paid_3pt0( $order ) {
 
@@ -545,7 +546,7 @@ class CoursePress_Extension_MarketPress {
 	/**
 	 * Update product status.
 	 *
-	 * @param int $course_id
+	 * @param int $course_id Course ID.
 	 * @param string $status Status.
 	 */
 	function change_product_status( $course_id, $status ) {

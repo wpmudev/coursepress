@@ -77,7 +77,6 @@ class CoursePress_Extension {
 			'file' => 'marketpress/marketpress.php',
 			'link' => 'https://premium.wpmudev.org/project/e-commerce/',
 			'type' => 'commerce',
-			'class' => $CoursePress->get_class( 'CoursePress_Extension_MarketPress' ),
 		);
 
 		$extensions['woocommerce'] = array(
@@ -86,21 +85,26 @@ class CoursePress_Extension {
 			'file' => 'woocommerce/woocommerce.php',
 			'link' => '',
 			'type' => 'commerce',
-			'class' => $CoursePress->get_class( 'CoursePress_Extension_WooCommerce' ),
 		);
 
 		// Check status.
 		foreach ( $extensions as $key => $data ) {
+			// Set default values.
 			$extensions[ $key ]['is_active'] = $extensions[ $key ]['is_installed'] = false;
-			if ( method_exists( $data['class'], 'installed' ) ) {
-				$extensions[ $key ]['is_installed'] = $data['class']->installed();
+			$class_name = $CoursePress->get_class( 'CoursePress_Extension_'.$data['name'] );
+
+			// Check if extension is installed.
+			if ( method_exists( $class_name, 'installed' ) ) {
+				$extensions[ $key ]['is_installed'] = $class_name->installed();
 			}
-			if ( method_exists( $data['class'], 'activated' ) ) {
-				$extensions[ $key ]['is_active'] = $data['class']->activated();
+			// Check if extension is active.
+			if ( method_exists( $class_name, 'activated' ) ) {
+				$extensions[ $key ]['is_active'] = $class_name->activated();
 			}
-			if ( $extensions[ $key ]['is_active'] ) {
-				$class_name = 'CoursePress_Extension_'.$data['name'];
-				new $class_name;
+
+			// Initialize the extension class, if active.
+			if ( $extensions[ $key ]['is_active'] && method_exists( $class_name, 'init' ) ) {
+				$class_name->init();
 			}
 		}
 

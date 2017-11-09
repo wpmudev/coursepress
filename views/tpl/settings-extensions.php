@@ -15,26 +15,29 @@
             <tbody>
 
             <?php foreach ( $extensions as $id => $extension ) : ?>
-                <?php if ( $extension['is_active'] ) : ?>
-                    <tr>
-                        <td><?php echo $extension['name']; ?></td>
-                        <td><?php echo $extension['source_info']; ?></td>
-                        <td>
+                <tr>
+                    <td><?php echo $extension['name']; ?></td>
+                    <td><?php echo $extension['source_info']; ?></td>
+                    <td>
+	                    <?php if ( $extension['is_active'] ) : ?>
                             <label>
                                 <input type="checkbox" name="extensions" value="<?php echo $id; ?>" {{_.checked('<?php echo $id; ?>', extensions )}} class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
                             </label>
-                        </td>
-                    </tr>
-                <?php elseif ( $id === 'marketpress' && ! $extension['is_installed'] ) : ?>
-                    <tr>
-                        <td><?php echo $extension['name']; ?></td>
-                        <td><?php echo $extension['source_info']; ?></td>
-                        <td>
+	                    <?php elseif ( $extension['is_installed'] && $id === 'marketpress' ) : ?>
+                            <a href="<?php echo $extension['link']; ?>" class="cp-btn cp-bordered-btn"><?php _e( 'Activate', 'cp' ); ?></a>
+	                    <?php elseif ( ! $extension['is_installed'] && $id === 'marketpress' ) : ?>
                             <a href="<?php echo $extension['link']; ?>" class="cp-btn cp-bordered-btn"><?php _e( 'Install', 'cp' ); ?></a>
-                        </td>
-                    </tr>
-                <?php endif; ?>
-
+	                    <?php elseif ( $extension['is_installed'] ) : ?>
+                            <label>
+	                            <?php _e( 'Not active', 'cp' ); ?>
+                            </label>
+                        <?php else : ?>
+                            <label>
+                                <?php _e( 'Not installed', 'cp' ); ?>
+                            </label>
+                        <?php endif; ?>
+                    </td>
+                </tr>
             <?php endforeach; ?>
             </tbody>
         </table>

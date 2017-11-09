@@ -7,8 +7,6 @@
  */
 class CoursePress_Extension_WooCommerce {
 
-	private $active = false;
-
 	/**
 	 * Base path for the Woocommerce plugin.
 	 *
@@ -25,10 +23,11 @@ class CoursePress_Extension_WooCommerce {
 	 */
 	public function init() {
 
-		$this->active = class_exists( 'WooCommerce' );
-		if ( ! $this->active ) {
+		// Do not continue if Woocommerce is not enabled.
+		if ( ! $this->is_enabled() ) {
 			return;
 		}
+
 		add_action( 'coursepress_course_updated', array( $this, 'course_update' ), 10, 2 );
 		add_filter( 'coursepress_default_course_meta', array( $this, 'add_course_default_fields' ) );
 		add_action( 'before_delete_post', array( $this, 'update_product_when_deleting_course' ) );
@@ -43,8 +42,7 @@ class CoursePress_Extension_WooCommerce {
 		 * @param WP_Post $course current course to check
 		 * @param integer $user_id user to check
 		 */
-		add_filter( 'coursepress_is_user_purchased_course', array( $this, 'is_user_purchased_course' ), 10, 3
-		);
+		add_filter( 'coursepress_is_user_purchased_course', array( $this, 'is_user_purchased_course' ), 10, 3 );
 
 		add_shortcode( 'mp_product_price', array( $this, 'product_price' ) );
 		add_shortcode( 'mp_buy_button', array( $this, 'add_to_cart_template' ) );
@@ -88,6 +86,29 @@ class CoursePress_Extension_WooCommerce {
 		add_action( 'woocommerce_payment_complete', array( $this, 'payment_complete_enroll_student' ) );
 	}
 
+	/**
+	 * Check if current plugin is enabled.
+	 *
+	 * @return bool
+	 */
+	function is_enabled() {
+
+		// Check if extension is enabled in settings.
+		$settings = coursepress_get_setting( 'woocommerce' );
+		if ( ! empty( $settings ) && ! empty( $settings['enabled'] ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Is plugin installed?
+	 *
+	 * Check if Woocommerce plugin is installed in normal way or via mu-plugins.
+	 *
+	 * @return bool
+	 */
 	public function installed() {
 
 		$plugin_dir = WP_PLUGIN_DIR . '/' . $this->base_path;
@@ -98,14 +119,18 @@ class CoursePress_Extension_WooCommerce {
 
 	}
 
+	/**
+	 * Is plugin active?
+	 *
+	 * Check if current plugin is active, not just installed.
+	 * is_plugin_active() Will not check mu-plugins. So use `WooCommerce`
+	 * class to check if WooCommerce is active.
+	 *
+	 * @return bool
+	 */
 	public function activated() {
 
-		// Need for plugins_api.
-		if ( ! function_exists( 'is_plugin_active' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/plugin.php';
-		}
-
-		return is_plugin_active( $this->base_path );
+		return class_exists( 'WooCommerce' );
 
 	}
 
