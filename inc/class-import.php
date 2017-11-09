@@ -58,30 +58,10 @@ class CoursePress_Import extends CoursePress_Utility
 			$user = get_user_by( 'login', $user_data->user_login );
 		}
 		/**
-		 * blog ID & role
-		 */
-		if ( is_multisite() ) {
-			$blog_id = get_current_blog_id();
-			switch ( $role ) {
-				case 'instructor':
-					$role = 'coursepress_instructor';
-				break;
-				case 'facilitator':
-					$role = 'coursepress_facilitator';
-				break;
-				case 'student':
-					$role = 'coursepress_student';
-				break;
-			}
-		}
-		/**
 		 * user exist
 		 */
 		if ( ! empty( $user ) ) {
-			if ( is_multisite() ) {
-				add_user_to_blog( $blog_id, $user->ID, $role );
-			}
-			return $user->ID;
+			coursepress_add_user_to_blog( $user->ID, $role );
 		}
 		/**
 		 *  User doesn't exist, insert
@@ -91,9 +71,7 @@ class CoursePress_Import extends CoursePress_Utility
 		unset( $user_data->ID );
 		$user_id = wp_insert_user( $user_data );
 		if ( ! is_wp_error( $user_id ) ) {
-			if ( is_multisite() ) {
-				add_user_to_blog( $blog_id, $user_id, $role );
-			}
+			coursepress_add_user_to_blog( $user_id, $role );
 			return $user_id;
 		}
 		/**
