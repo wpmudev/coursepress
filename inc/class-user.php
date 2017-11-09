@@ -33,7 +33,6 @@ class CoursePress_User extends CoursePress_Utility {
 
 		if ( empty( $user ) || ! $user instanceof  WP_User ) {
 			$this->is_error = true;
-
 			return;
 		}
 
@@ -53,6 +52,11 @@ class CoursePress_User extends CoursePress_Utility {
 
 		$this->__set( 'first_name', get_user_meta( $user->ID, 'first_name', true ) );
 		$this->__set( 'last_name', get_user_meta( $user->ID, 'last_name', true ) );
+		/**
+		 * clear student data after delete student
+		 */
+		add_action( 'deleted_user', array( $this, 'clear_student_data' ) );
+		add_action( 'remove_user_from_blog', array( $this, 'clear_student_data' ) );
 	}
 
 	/**
@@ -69,6 +73,12 @@ class CoursePress_User extends CoursePress_Utility {
 	 * @return bool
 	 */
 	function is_super_admin() {
+		/**
+		 * super admin with no role!
+		 */
+		if ( is_multisite() && is_super_admin( $this->ID ) ) {
+			return true;
+		}
 		return isset( $this->roles ) && in_array( 'administrator', $this->roles );
 	}
 
@@ -96,7 +106,7 @@ class CoursePress_User extends CoursePress_Utility {
 	 * @return bool
 	 */
 	function is_student() {
-		return isset( $this->roles) && in_array( 'coursepress_student', $this->roles );
+		return isset( $this->roles ) && in_array( 'coursepress_student', $this->roles );
 	}
 
 	/**
@@ -109,8 +119,9 @@ class CoursePress_User extends CoursePress_Utility {
 	function is_instructor_at( $course_id ) {
 		$id = $this->__get( 'ID' );
 
-		if ( ! $id )
+		if ( ! $id ) {
 			return false;
+		}
 
 		$instructor = get_user_meta( $id, 'instructor_' . $course_id, true );
 
@@ -127,8 +138,9 @@ class CoursePress_User extends CoursePress_Utility {
 	function is_facilitator_at( $course_id ) {
 		$id = $this->__get( 'ID' );
 
-		if ( ! $id )
+		if ( ! $id ) {
 			return false;
+		}
 
 		$facilitator = get_user_meta( $id, 'facilitator_' . $course_id, true );
 
@@ -166,7 +178,7 @@ class CoursePress_User extends CoursePress_Utility {
 
 		if ( empty( $names ) ) {
 			return $display_name;
-        }
+		}
 		return implode( ' ', $names );
 	}
 
@@ -197,16 +209,16 @@ class CoursePress_User extends CoursePress_Utility {
 
 		if ( is_bool( $publish ) ) {
 		    $args['post_status'] = $publish ? true : false;
-        } else {
+		} else {
 		    $args['post_status'] = $publish;
-        }
+		}
 
-		if ( $returnAll )
+		if ( $returnAll ) {
 			$args['posts_per_page'] = -1;
-
-		if ( $this->is_super_admin() )
+		}
+		if ( $this->is_super_admin() ) {
 			$courses = coursepress_get_courses( $args, $count );
-		elseif ( $this->is_instructor() || $this->is_facilitator() ) {
+		} elseif ( $this->is_instructor() || $this->is_facilitator() ) {
 			$args['meta_query'] = array(
 				'relation' => 'OR',
 				array(
@@ -221,7 +233,7 @@ class CoursePress_User extends CoursePress_Utility {
 			$courses = coursepress_get_courses( $args, $count );
 		}
 
-		return $courses;
+			return $courses;
 	}
 
 	/************************************************
@@ -266,7 +278,7 @@ class CoursePress_User extends CoursePress_Utility {
 		$sql = "SELECT `course_id` FROM `$this->student_table` WHERE `student_id`=%d";
 
 		if ( $per_page > 0 ) {
-			$sql .= " LIMIT %d, %d";
+			$sql .= ' LIMIT %d, %d';
 		}
 
 		$sql = $wpdb->prepare( $sql, $id, $offset, $limit );
@@ -303,22 +315,23 @@ class CoursePress_User extends CoursePress_Utility {
 		return (int) $student_id > 0;
 	}
 
-	function add_course_student( $course_id ) {
+	/**
+	 * Add student to course
+	 */
+	public function add_course_student( $course_id ) {
 		global $wpdb;
-
 		if (  $this->is_enrolled_at( $course_id ) ) {
 			return true;
 		}
-
 		$id = $this->__get( 'ID' );
-
+		if ( empty( $id ) ) {
+			return;
+		}
 		$array = array(
 			'course_id' => $course_id,
 			'student_id' => $id,
 		);
-
 		$wpdb->insert( $this->student_table, $array );
-
 		return $wpdb->insert_id;
 	}
 
@@ -327,8 +340,9 @@ class CoursePress_User extends CoursePress_Utility {
 
 		$id = $this->__get( 'ID' );
 
-		if ( ! $id )
+		if ( ! $id ) {
 			return false;
+		}
 
 		$student_id = $this->get_student_id( $course_id );
 
@@ -338,8 +352,9 @@ class CoursePress_User extends CoursePress_Utility {
 			// Delete student progress
 			$progress_id = $this->get_progress_id( $student_id );
 
-			if ( $progress_id > 0 )
+			if ( $progress_id > 0 ) {
 				$wpdb->delete( $this->progress_table, array( 'ID' => $progress_id ), array( '%d' ) );
+			}
 		}
 	}
 
@@ -768,7 +783,6 @@ class CoursePress_User extends CoursePress_Utility {
 						$item_progress += $item_ratio;
 						$module_progress += $m_ratio;
 					}
-
 				} elseif ( 'video' == $step_type || 'audio' == $step_type ) {
 					if ( ! $is_required ) {
 						if ( $step_seen ) {
@@ -779,12 +793,12 @@ class CoursePress_User extends CoursePress_Utility {
 					} elseif ( $step_seen ) {
 
 					}
-
 				} elseif ( ! $is_required ) {
-					if ( $step_seen )
+					if ( $step_seen ) {
 						$valid = true;
-					elseif ( ! $force_completion )
+					} elseif ( ! $force_completion ) {
 						$valid = true;
+					}
 				}
 			}
 
@@ -878,7 +892,6 @@ class CoursePress_User extends CoursePress_Utility {
 		}
 
 		$progress = $this->get_completion_data( $course_id );
-
 
 		return (int) coursepress_get_array_val( $progress, 'completion/progress' );
 	}
@@ -1003,8 +1016,9 @@ class CoursePress_User extends CoursePress_Utility {
 	function has_pass_course_unit( $course_id, $unit_id ) {
 		$is_completed = $this->is_unit_completed( $course_id, $unit_id );
 
-		if ( ! $is_completed )
+		if ( ! $is_completed ) {
 			return false;
+		}
 
 		$progress = $this->get_completion_data( $course_id );
 
@@ -1249,5 +1263,15 @@ class CoursePress_User extends CoursePress_Utility {
 		}
 
 		return false;
+	}
+
+	/**
+	 * clear student data after delete
+	 */
+	public function clear_student_data( $student_id ) {
+		global $wpdb;
+		$args = array( 'student_id' => $student_id );
+		$wpdb->delete( $this->progress_table, $args );
+		$wpdb->delete( $this->student_table, $args );
 	}
 }
