@@ -23,14 +23,10 @@
                             <label>
                                 <input type="checkbox" name="extensions" value="<?php echo $id; ?>" {{_.checked('<?php echo $id; ?>', extensions )}} class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
                             </label>
-	                    <?php elseif ( $extension['is_installed'] && $id === 'marketpress' ) : ?>
-                            <a href="<?php echo $extension['link']; ?>" class="cp-btn cp-bordered-btn"><?php _e( 'Activate', 'cp' ); ?></a>
+	                    <?php elseif ( $extension['is_installed'] ) : ?>
+                            <a href="<?php echo admin_url( 'plugins.php' ); ?>" class="cp-btn cp-bordered-btn"><?php _e( 'Activate', 'cp' ); ?></a>
 	                    <?php elseif ( ! $extension['is_installed'] && $id === 'marketpress' ) : ?>
                             <a href="<?php echo $extension['link']; ?>" class="cp-btn cp-bordered-btn"><?php _e( 'Install', 'cp' ); ?></a>
-	                    <?php elseif ( $extension['is_installed'] ) : ?>
-                            <label>
-	                            <?php _e( 'Not active', 'cp' ); ?>
-                            </label>
                         <?php else : ?>
                             <label>
                                 <?php _e( 'Not installed', 'cp' ); ?>
