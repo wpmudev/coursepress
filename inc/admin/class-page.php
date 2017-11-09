@@ -546,13 +546,15 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		/**
 		 * check is course
 		 */
-		$is_course = coursepress_is_course( $course_id );
-		if ( false === $is_course ) {
-			$args = array(
-				'title' => __( 'Course does not exist', 'cp' ),
-			);
-			coursepress_render( 'views/admin/error-wrong', $args );
-			return;
+		if ( ! empty( $course_id ) ) {
+			$is_course = coursepress_is_course( $course_id );
+			if ( false === $is_course ) {
+				$args = array(
+					'title' => __( 'Course does not exist', 'cp' ),
+				);
+				coursepress_render( 'views/admin/error-wrong', $args );
+				return;
+			}
 		}
 
 		// If it's a new course, create a draft course
