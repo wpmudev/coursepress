@@ -410,13 +410,13 @@ class CoursePress_PDF extends CoursePress_External_TCPDF_TCPDF
          * Logo
          */
         if ( isset( $args['logo'] ) && ! empty( $args['logo'] ) && is_array( $args['logo'] ) ) {
-                $pdf->Image(
+            $pdf->Image(
                 $args['logo']['file'],
-                    $args['logo']['x'],
-                    $args['logo']['y'],
-                    $args['logo']['w']
-                );
-            }
+                $args['logo']['x'],
+                $args['logo']['y'],
+                $args['logo']['w']
+            );
+        }
 
         // output the HTML content
         $pdf->writeHTML( $html, true, false, true, false, '' );
