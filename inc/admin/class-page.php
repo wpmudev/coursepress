@@ -431,7 +431,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		 * Build statuses array
 		 */
 		if ( ! empty( $course_status ) ) {
-			$url = add_query_arg( 'page', $this->slug, admin_url() );
+			$url = add_query_arg( 'page', $this->slug, admin_url( 'admin.php' ) );
 			foreach ( $course_status as $status => $count ) {
 				$classes = array( $status );
 				if ( 'all' == $status ) {
