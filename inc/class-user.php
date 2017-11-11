@@ -33,7 +33,6 @@ class CoursePress_User extends CoursePress_Utility {
 
 		if ( empty( $user ) || ! $user instanceof  WP_User ) {
 			$this->is_error = true;
-
 			return;
 		}
 
@@ -74,6 +73,12 @@ class CoursePress_User extends CoursePress_Utility {
 	 * @return bool
 	 */
 	function is_super_admin() {
+		/**
+		 * super admin with no role!
+		 */
+		if ( is_multisite() && is_super_admin( $this->ID ) ) {
+			return true;
+		}
 		return isset( $this->roles ) && in_array( 'administrator', $this->roles );
 	}
 
@@ -211,7 +216,6 @@ class CoursePress_User extends CoursePress_Utility {
 		if ( $returnAll ) {
 			$args['posts_per_page'] = -1;
 		}
-
 		if ( $this->is_super_admin() ) {
 			$courses = coursepress_get_courses( $args, $count );
 		} elseif ( $this->is_instructor() || $this->is_facilitator() ) {
