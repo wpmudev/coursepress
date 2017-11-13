@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/coursepress\n"
-"POT-Creation-Date: 2017-09-28 11:23:56+00:00\n"
+"POT-Creation-Date: 2017-11-13 06:36:24+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -66,8 +66,8 @@ msgstr ""
 
 #: admin/class-assessment.php:45 admin/class-assessment.php:768
 #: admin/class-notifications.php:399 admin/controller/class-menu.php:435
-#: include/coursepress/data/shortcode/class-student.php:500
-#: include/coursepress/data/shortcode/class-student.php:522
+#: include/coursepress/data/shortcode/class-student.php:507
+#: include/coursepress/data/shortcode/class-student.php:529
 #: include/coursepress/helper/class-javascript.php:254
 #: include/coursepress/helper/class-javascript.php:500
 #: include/coursepress/template/class-communication.php:248
@@ -150,7 +150,7 @@ msgstr ""
 #: admin/class-assessment.php:764 include/coursepress/data/class-module.php:671
 #: include/coursepress/data/shortcode/class-student.php:113
 #: include/coursepress/helper/table/class-courseassessments.php:123
-#: include/coursepress/template/class-module.php:1126
+#: include/coursepress/template/class-module.php:1133
 #: include/coursepress/view/admin/assessment/assessment-page.php:53
 #: include/coursepress/view/admin/assessment/class-list.php:284
 #: include/coursepress/view/admin/student/class-workbook.php:151
@@ -178,7 +178,7 @@ msgstr ""
 
 #: admin/class-assessment.php:801
 #: include/coursepress/template/class-module-old.php:971
-#: include/coursepress/template/class-module.php:970
+#: include/coursepress/template/class-module.php:977
 msgid "Upload File"
 msgstr ""
 
@@ -591,35 +591,35 @@ msgstr ""
 msgid "Use these tokens to display actual course details: %s"
 msgstr ""
 
-#: admin/class-edit.php:768
+#: admin/class-edit.php:770
 msgid "Jon"
 msgstr ""
 
-#: admin/class-edit.php:769
+#: admin/class-edit.php:771
 msgid "Snow"
 msgstr ""
 
-#: admin/class-edit.php:770
+#: admin/class-edit.php:772
 msgid "Example Course Title"
 msgstr ""
 
-#: admin/class-edit.php:873
+#: admin/class-edit.php:910
 #: include/coursepress/view/admin/course/class-edit.php:1874
 msgid "Course Completion Certificate"
 msgstr ""
 
-#: admin/class-edit.php:899
+#: admin/class-edit.php:936
 msgid ""
 "The free version of CoursePress is limited to one course. To add more "
 "courses, upgrade to CoursePress Pro for unlimited courses and more payment "
 "gateways."
 msgstr ""
 
-#: admin/class-edit.php:903
+#: admin/class-edit.php:940
 msgid "https://premium.wpmudev.org/project/coursepress-pro/"
 msgstr ""
 
-#: admin/class-edit.php:904
+#: admin/class-edit.php:941
 msgid "Try CoursePress Pro for Free"
 msgstr ""
 
@@ -1107,7 +1107,8 @@ msgstr ""
 #: include/coursepress/view/admin/course/class-edit.php:240
 #: include/coursepress/view/admin/course/class-unitbuilder.php:94
 #: include/coursepress/view/admin/course/class-unitbuilder.php:179
-#: include/coursepress/view/admin/setting/class-basiccertificate.php:182
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:186
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:211
 msgid "Add Image URL or Browse for Image"
 msgstr ""
 
@@ -1202,7 +1203,7 @@ msgstr ""
 #: include/coursepress/view/admin/course/class-unitbuilder.php:132
 #: include/coursepress/view/admin/course/class-unitbuilder.php:196
 #: include/coursepress/view/admin/course/class-unitbuilder.php:197
-#: include/coursepress/view/admin/setting/class-basiccertificate.php:91
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:95
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1625
 msgid "Preview"
 msgstr ""
@@ -2302,7 +2303,7 @@ msgstr ""
 
 #: admin/view/steps/step-7.php:81
 #: include/coursepress/view/admin/course/class-edit.php:1164
-#: include/coursepress/view/admin/setting/class-basiccertificate.php:174
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:178
 msgid "Background Image"
 msgstr ""
 
@@ -2312,48 +2313,77 @@ msgid "Choose background image"
 msgstr ""
 
 #: admin/view/steps/step-7.php:95
-#: include/coursepress/view/admin/setting/class-basiccertificate.php:200
-msgid "Content Margin"
-msgstr ""
-
-#: admin/view/steps/step-7.php:97
-#: include/coursepress/view/admin/course/class-edit.php:1182
 #: include/coursepress/view/admin/setting/class-basiccertificate.php:203
-msgid "Top"
-msgstr ""
-
-#: admin/view/steps/step-7.php:99
-#: include/coursepress/view/admin/course/class-edit.php:1184
-#: include/coursepress/view/admin/setting/class-basiccertificate.php:209
-msgid "Left"
+msgid "Logo"
 msgstr ""
 
 #: admin/view/steps/step-7.php:101
-#: include/coursepress/view/admin/course/class-edit.php:1185
-#: include/coursepress/view/admin/setting/class-basiccertificate.php:215
-msgid "Right"
-msgstr ""
-
-#: admin/view/steps/step-7.php:106
-#: include/coursepress/view/admin/course/class-edit.php:1187
-#: include/coursepress/view/admin/setting/class-basiccertificate.php:225
-msgid "Page Orientation"
+msgid "Choose logo image"
 msgstr ""
 
 #: admin/view/steps/step-7.php:109
-#: include/coursepress/view/admin/course/class-edit.php:1188
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:229
+msgid "Logo Position"
+msgstr ""
+
+#: admin/view/steps/step-7.php:111
 #: include/coursepress/view/admin/setting/class-basiccertificate.php:232
+msgid "X"
+msgstr ""
+
+#: admin/view/steps/step-7.php:113
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:238
+msgid "Y"
+msgstr ""
+
+#: admin/view/steps/step-7.php:115
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:244
+msgid "Width"
+msgstr ""
+
+#: admin/view/steps/step-7.php:120
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:254
+msgid "Content Margin"
+msgstr ""
+
+#: admin/view/steps/step-7.php:122
+#: include/coursepress/view/admin/course/class-edit.php:1182
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:257
+msgid "Top"
+msgstr ""
+
+#: admin/view/steps/step-7.php:124
+#: include/coursepress/view/admin/course/class-edit.php:1184
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:263
+msgid "Left"
+msgstr ""
+
+#: admin/view/steps/step-7.php:126
+#: include/coursepress/view/admin/course/class-edit.php:1185
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:269
+msgid "Right"
+msgstr ""
+
+#: admin/view/steps/step-7.php:131
+#: include/coursepress/view/admin/course/class-edit.php:1187
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:279
+msgid "Page Orientation"
+msgstr ""
+
+#: admin/view/steps/step-7.php:134
+#: include/coursepress/view/admin/course/class-edit.php:1188
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:286
 msgid "Landscape"
 msgstr ""
 
-#: admin/view/steps/step-7.php:112
+#: admin/view/steps/step-7.php:137
 #: include/coursepress/view/admin/course/class-edit.php:1189
-#: include/coursepress/view/admin/setting/class-basiccertificate.php:235
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:289
 msgid "Portrait"
 msgstr ""
 
-#: admin/view/steps/step-7.php:117
-#: include/coursepress/view/admin/setting/class-basiccertificate.php:243
+#: admin/view/steps/step-7.php:142
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:297
 msgid "Text Color"
 msgstr ""
 
@@ -2480,7 +2510,7 @@ msgstr ""
 #: include/coursepress/template/class-module-old.php:929
 #: include/coursepress/template/class-module-old.php:1021
 #: include/coursepress/template/class-module-old.php:1127
-#: include/coursepress/template/class-module.php:389
+#: include/coursepress/template/class-module.php:396
 #: include/coursepress/view/front/class-course.php:1429
 msgid "This course is completed, you can not submit answers anymore."
 msgstr ""
@@ -2499,7 +2529,7 @@ msgid "You need to complete the required modules!"
 msgstr ""
 
 #: include/coursepress/class-module.php:84
-#: include/coursepress/class-module.php:363
+#: include/coursepress/class-module.php:367
 msgid "You did not pass the required minimum grade!"
 msgstr ""
 
@@ -2509,7 +2539,7 @@ msgstr ""
 
 #: include/coursepress/class-module.php:265
 #: include/coursepress/class-module.php:311
-#: include/coursepress/class-module.php:391
+#: include/coursepress/class-module.php:395
 msgid "You need to complete the required module!"
 msgstr ""
 
@@ -2518,7 +2548,7 @@ msgstr ""
 msgid "Your participation to the discussion is required!"
 msgstr ""
 
-#: include/coursepress/class-module.php:362
+#: include/coursepress/class-module.php:366
 msgid "You did not complete the form!"
 msgstr ""
 
@@ -2607,11 +2637,11 @@ msgstr ""
 msgid "No Certificates found in Trash"
 msgstr ""
 
-#: include/coursepress/data/class-certificate.php:469
+#: include/coursepress/data/class-certificate.php:489
 msgid "Certificate of Completion"
 msgstr ""
 
-#: include/coursepress/data/class-certificate.php:603
+#: include/coursepress/data/class-certificate.php:623
 msgid "Download your certificate"
 msgstr ""
 
@@ -2731,28 +2761,28 @@ msgid "English"
 msgstr ""
 
 #: include/coursepress/data/class-course.php:528
-#: include/coursepress/data/class-course.php:3595
+#: include/coursepress/data/class-course.php:3601
 msgid "Almost there!"
 msgstr ""
 
 #: include/coursepress/data/class-course.php:531
-#: include/coursepress/data/class-course.php:3601
+#: include/coursepress/data/class-course.php:3607
 msgid "Congratulations, You Passed!"
 msgstr ""
 
 #: include/coursepress/data/class-course.php:533
-#: include/coursepress/data/class-course.php:3607
+#: include/coursepress/data/class-course.php:3613
 msgid "Sorry, you did not pass this course!"
 msgstr ""
 
-#: include/coursepress/data/class-course.php:2335
+#: include/coursepress/data/class-course.php:2341
 #: include/coursepress/view/admin/course/class-student.php:229
 msgid "%s Day"
 msgid_plural "%s Days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: include/coursepress/data/class-course.php:2335
+#: include/coursepress/data/class-course.php:2341
 #: include/coursepress/data/shortcode/class-course.php:643
 #: include/coursepress/data/shortcode/class-course.php:815
 #: include/coursepress/view/admin/course/class-student.php:219
@@ -2761,69 +2791,70 @@ msgstr[1] ""
 msgid "Open-ended"
 msgstr ""
 
-#: include/coursepress/data/class-course.php:2771
+#: include/coursepress/data/class-course.php:2777
 msgid "This course will open on %s"
 msgstr ""
 
-#: include/coursepress/data/class-course.php:2782
+#: include/coursepress/data/class-course.php:2788
 msgid "This course is already closed."
 msgstr ""
 
-#: include/coursepress/data/class-course.php:2840
+#: include/coursepress/data/class-course.php:2846
 #: include/coursepress/helper/class-message.php:200
 msgid "This unit will be available on %s"
 msgstr ""
 
-#: include/coursepress/data/class-course.php:2865
+#: include/coursepress/data/class-course.php:2871
 #: include/coursepress/data/shortcode/class-unit.php:226
 #: include/coursepress/data/shortcode/class-unit.php:229
+#: include/coursepress/template/class-unit.php:464
 msgid "You need to complete all the REQUIRED modules before this unit."
 msgstr ""
 
-#: include/coursepress/data/class-course.php:2895
+#: include/coursepress/data/class-course.php:2901
 #: include/coursepress/data/shortcode/class-coursetemplate.php:1274
 msgid "You need to complete all the REQUIRED modules before this section."
 msgstr ""
 
-#: include/coursepress/data/class-course.php:2924
-#: include/coursepress/data/class-course.php:2947
+#: include/coursepress/data/class-course.php:2930
+#: include/coursepress/data/class-course.php:2953
 msgid "You need to complete all the REQUIRED modules before this module."
 msgstr ""
 
-#: include/coursepress/data/class-course.php:3544
+#: include/coursepress/data/class-course.php:3550
 msgid "Manually added only"
 msgstr ""
 
-#: include/coursepress/data/class-course.php:3548
 #: include/coursepress/data/class-course.php:3554
+#: include/coursepress/data/class-course.php:3560
 msgid "Any registered users"
 msgstr ""
 
-#: include/coursepress/data/class-course.php:3549
 #: include/coursepress/data/class-course.php:3555
+#: include/coursepress/data/class-course.php:3561
 msgid "Any registered users with a pass code"
 msgstr ""
 
-#: include/coursepress/data/class-course.php:3550
 #: include/coursepress/data/class-course.php:3556
+#: include/coursepress/data/class-course.php:3562
 msgid "Registered users who completed the prerequisite course(s)"
 msgstr ""
 
-#: include/coursepress/data/class-course.php:3596
+#: include/coursepress/data/class-course.php:3602
 msgid "You have completed the course!"
 msgstr ""
 
-#: include/coursepress/data/class-course.php:3597
+#: include/coursepress/data/class-course.php:3603
 msgid ""
 "Your submitted business plan will be reviewed, and you'll hear back from me "
 "on whether you pass or fail."
 msgstr ""
 
-#: include/coursepress/data/class-course.php:3602
+#: include/coursepress/data/class-course.php:3608
 msgid "Woohoo! You've passed COURSE_NAME!"
 msgstr ""
 
-#: include/coursepress/data/class-course.php:3608
+#: include/coursepress/data/class-course.php:3614
 msgid "I'm sorry to say you didn't pass COURSE_NAME. Better luck next time!"
 msgstr ""
 
@@ -2871,7 +2902,7 @@ msgstr ""
 #: include/coursepress/data/class-discussion.php:573
 #: include/coursepress/data/shortcode/class-coursetemplate.php:1502
 #: include/coursepress/data/shortcode/class-template.php:462
-#: include/coursepress/template/class-unit.php:270
+#: include/coursepress/template/class-unit.php:278
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1389
 #: include/coursepress/widget/class-calendar.php:77
 msgid "&laquo; Previous"
@@ -2880,7 +2911,7 @@ msgstr ""
 #: include/coursepress/data/class-discussion.php:574
 #: include/coursepress/data/shortcode/class-coursetemplate.php:1501
 #: include/coursepress/data/shortcode/class-template.php:463
-#: include/coursepress/template/class-unit.php:269
+#: include/coursepress/template/class-unit.php:277
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1385
 #: include/coursepress/widget/class-calendar.php:80
 msgid "Next &raquo;"
@@ -3002,29 +3033,29 @@ msgid "Quiz not passed."
 msgstr ""
 
 #: include/coursepress/data/class-module.php:659
-#: include/coursepress/template/class-module.php:1116
+#: include/coursepress/template/class-module.php:1123
 msgid "You have successfully passed the quiz. Here are your results."
 msgstr ""
 
 #: include/coursepress/data/class-module.php:659
-#: include/coursepress/template/class-module.php:1116
+#: include/coursepress/template/class-module.php:1123
 msgid "You did not pass the quiz this time. Here are your results."
 msgstr ""
 
 #: include/coursepress/data/class-module.php:668
-#: include/coursepress/template/class-module.php:1123
+#: include/coursepress/template/class-module.php:1130
 msgid "Total Questions"
 msgstr ""
 
 #: include/coursepress/data/class-module.php:669
 #: include/coursepress/data/shortcode/class-student.php:123
-#: include/coursepress/template/class-module.php:1124
+#: include/coursepress/template/class-module.php:1131
 msgid "Correct"
 msgstr ""
 
 #: include/coursepress/data/class-module.php:670
 #: include/coursepress/data/shortcode/class-student.php:124
-#: include/coursepress/template/class-module.php:1125
+#: include/coursepress/template/class-module.php:1132
 msgid "Incorrect"
 msgstr ""
 
@@ -3292,7 +3323,7 @@ msgid "Estimated Duration:&nbsp;"
 msgstr ""
 
 #: include/coursepress/data/shortcode/class-coursetemplate.php:82
-#: include/coursepress/data/shortcode/class-student.php:538
+#: include/coursepress/data/shortcode/class-student.php:545
 #: include/coursepress/view/admin/setting/class-shortcodes.php:1262
 msgid "Start Learning"
 msgstr ""
@@ -3527,7 +3558,7 @@ msgid "View Full Profile"
 msgstr ""
 
 #: include/coursepress/data/shortcode/class-student.php:101
-#: include/coursepress/data/shortcode/class-student.php:813
+#: include/coursepress/data/shortcode/class-student.php:820
 msgid "Workbook is not available for this course."
 msgstr ""
 
@@ -3572,64 +3603,64 @@ msgid "Course completion: "
 msgstr ""
 
 #: include/coursepress/data/shortcode/class-student.php:208
-#: include/coursepress/data/shortcode/class-student.php:847
+#: include/coursepress/data/shortcode/class-student.php:854
 msgid "Progress"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-student.php:417
-#: include/coursepress/data/shortcode/class-student.php:1007
+#: include/coursepress/data/shortcode/class-student.php:424
+#: include/coursepress/data/shortcode/class-student.php:1014
 msgid "No gradable modules under this unit."
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-student.php:487
+#: include/coursepress/data/shortcode/class-student.php:494
 msgid "Create new account"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-student.php:498
+#: include/coursepress/data/shortcode/class-student.php:505
 msgid "Create an account"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-student.php:511
+#: include/coursepress/data/shortcode/class-student.php:518
 #: include/coursepress/view/registration-form.php:106
 msgid "Login to your account"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-student.php:521
+#: include/coursepress/data/shortcode/class-student.php:528
 msgid "Log in"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-student.php:531
+#: include/coursepress/data/shortcode/class-student.php:538
 msgid "Successfully enrolled."
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-student.php:536
+#: include/coursepress/data/shortcode/class-student.php:543
 msgid "Congratulations! You have successfully enrolled. Click below to get started."
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-student.php:548
+#: include/coursepress/data/shortcode/class-student.php:555
 #: include/coursepress/view/front/class-enrollmentpopup.php:547
 msgid "Could not enroll at this time."
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-student.php:552
+#: include/coursepress/data/shortcode/class-student.php:559
 msgid "A passcode is required to enroll. Click below to back to course."
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-student.php:554
+#: include/coursepress/data/shortcode/class-student.php:561
 msgid "Go back to course!"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-student.php:647
+#: include/coursepress/data/shortcode/class-student.php:654
 #: include/coursepress/data/shortcode/class-unit.php:197
 msgid "%d of %d required elements completed."
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-student.php:696
+#: include/coursepress/data/shortcode/class-student.php:703
 #: include/coursepress/data/shortcode/class-unit.php:57
 msgid "Percent of the unit completion"
 msgstr ""
 
-#: include/coursepress/data/shortcode/class-student.php:1009
+#: include/coursepress/data/shortcode/class-student.php:1016
 msgid "%d of %d elements completed."
 msgstr ""
 
@@ -4397,12 +4428,14 @@ msgstr ""
 #: include/coursepress/helper/ui/class-module.php:621
 #: include/coursepress/helper/ui/class-module.php:671
 #: include/coursepress/helper/ui/class-module.php:717
-#: include/coursepress/view/admin/setting/class-basiccertificate.php:185
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:189
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:214
 msgid "Browse"
 msgstr ""
 
 #: include/coursepress/helper/class-ui.php:46
-#: include/coursepress/view/admin/setting/class-basiccertificate.php:189
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:193
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:218
 msgid "Extension of the file is not valid. Please use one of the following: %s"
 msgstr ""
 
@@ -4861,7 +4894,7 @@ msgstr ""
 #: include/coursepress/helper/setting/class-email.php:321
 #: include/coursepress/helper/setting/class-email.php:328
 #: include/coursepress/helper/setting/class-email.php:334
-#: include/coursepress/view/admin/setting/class-basiccertificate.php:143
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:147
 msgid "These codes will be replaced with actual data: "
 msgstr ""
 
@@ -5382,8 +5415,8 @@ msgstr ""
 
 #: include/coursepress/helper/ui/class-module.php:341
 #: include/coursepress/template/class-module-old.php:91
-#: include/coursepress/template/class-module.php:456
-#: include/coursepress/template/class-module.php:460
+#: include/coursepress/template/class-module.php:463
+#: include/coursepress/template/class-module.php:467
 #: include/coursepress/view/admin/assessment/class-list.php:678
 msgid "Required"
 msgstr ""
@@ -5780,7 +5813,7 @@ msgid "Submit File"
 msgstr ""
 
 #: include/coursepress/template/class-module-old.php:971
-#: include/coursepress/template/class-module.php:970
+#: include/coursepress/template/class-module.php:977
 msgid "Change File"
 msgstr ""
 
@@ -5796,39 +5829,39 @@ msgstr ""
 msgid "Non Gradable"
 msgstr ""
 
-#: include/coursepress/template/class-module.php:290
+#: include/coursepress/template/class-module.php:296
 msgid "Try Again"
 msgstr ""
 
-#: include/coursepress/template/class-module.php:294
+#: include/coursepress/template/class-module.php:300
 msgid "Upload a different file"
 msgstr ""
 
-#: include/coursepress/template/class-module.php:311
+#: include/coursepress/template/class-module.php:318
 msgid "Number of failed attempts: %d"
 msgstr ""
 
-#: include/coursepress/template/class-module.php:345
+#: include/coursepress/template/class-module.php:352
 msgid "Session Expired"
 msgstr ""
 
-#: include/coursepress/template/class-module.php:689
+#: include/coursepress/template/class-module.php:696
 msgid "Primary File not set, please come back later."
 msgstr ""
 
-#: include/coursepress/template/class-module.php:737
+#: include/coursepress/template/class-module.php:744
 msgid "Post Here"
 msgstr ""
 
-#: include/coursepress/template/class-module.php:738
+#: include/coursepress/template/class-module.php:745
 msgid "Post"
 msgstr ""
 
-#: include/coursepress/template/class-module.php:977
+#: include/coursepress/template/class-module.php:984
 msgid "Accepted File Format: "
 msgstr ""
 
-#: include/coursepress/template/class-module.php:979
+#: include/coursepress/template/class-module.php:986
 msgid "Max File Size:"
 msgstr ""
 
@@ -5897,7 +5930,7 @@ msgstr ""
 msgid "Previous Unit"
 msgstr ""
 
-#: include/coursepress/template/class-unit.php:403
+#: include/coursepress/template/class-unit.php:411
 msgid "Save Progress &amp; Exit"
 msgstr ""
 
@@ -6282,27 +6315,27 @@ msgstr ""
 msgid "Setup the settings for the certificates issued upon course completion."
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-basiccertificate.php:75
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:79
 msgid "Certificate Options"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-basiccertificate.php:104
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:108
 msgid "Enable Basic Certificate"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-basiccertificate.php:114
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:118
 msgid "Use default CoursePress  Certificate"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-basiccertificate.php:124
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:128
 msgid "Certificate Layout"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-basiccertificate.php:127
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:131
 msgid "Use the editor below to create the layout of your certificate."
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-basiccertificate.php:270
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:324
 msgid ""
 "<h2>%1$s %2$s</h2>\n"
 "\t\t\thas successfully completed the course\n"
@@ -6313,11 +6346,11 @@ msgid ""
 "\t\t\t<small>Certificate no.: %5$s</small>"
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-basiccertificate.php:295
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:349
 msgid "[%s] Congratulations. You passed your course."
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-basiccertificate.php:301
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:355
 msgid ""
 "Hi %1$s,\n"
 "\n"
@@ -6326,7 +6359,7 @@ msgid ""
 "\t\t\tPlease find attached your certificate of completion."
 msgstr ""
 
-#: include/coursepress/view/admin/setting/class-basiccertificate.php:313
+#: include/coursepress/view/admin/setting/class-basiccertificate.php:367
 msgid ""
 "Hi %1$s,\n"
 "\n"
@@ -8764,7 +8797,7 @@ msgctxt "plugin name"
 msgid "CoursePress Pro"
 msgstr ""
 
-#: include/coursepress/data/class-course.php:2400
+#: include/coursepress/data/class-course.php:2406
 msgctxt "Default title for a duplicated course. Variable is original title."
 msgid "%s Copy"
 msgstr ""
