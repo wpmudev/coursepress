@@ -6,66 +6,76 @@
  * @package CoursePress
  */
 class CoursePress_Extension_MarketPress {
+
+	/**
+	 * CPT name of the plugin.
+	 *
+	 * @var string
+	 */
 	private static $product_ctp = 'product';
 
+	/**
+	 * Base paths for plugin pro and free versions.
+	 *
+	 * @var array
+	 */
 	private $base_path = array(
 		'pro' => 'marketpress/marketpress.php',
 		'free' => 'wordpress-ecommerce/marketpress.php',
 	);
 
-	public function __construct() {
+	/**
+	 * Initialize the class.
+	 *
+	 * Register all action and filter hooks if plugin is active.
+	 *
+	 * @return void
+	 */
+	public function init() {
+
+		// No need if plugin not enabled.
 		if ( ! $this->is_enabled() ) {
 			return;
 		}
 
-		// Add or update product
+		// Add or update product.
 		add_action( 'coursepress_course_updated', array( $this, 'maybe_create_product' ), 10, 3 );
-		// Hook to course price
+
+		// Hook to course price.
 		add_filter( 'coursepress_course_cost', array( $this, 'course_cost' ), 10, 3 );
 
 		// If for whatever reason the course gets updated in MarketPress,
 		// reflect those changes in the course.
+		add_action( 'post_updated', array( $this, 'update_course_from_product' ), 10, 3 );
 
-		add_action(
-			'post_updated',
-			array( $this, 'update_course_from_product' ),
-			10, 3
-		);
+		add_filter( 'coursepress_enroll_button', array( $this, 'enroll_button' ), 10, 4 );
 
-		add_filter(
-			'coursepress_enroll_button',
-			array( $this, 'enroll_button' ),
-			10, 4
-		);
+		// Enroll upon pay.
+		// Reference to order ID, will need to get the actual product using the MarketPress Order class.
+		add_action( 'mp_order_order_paid', array( $this, 'course_paid_3pt0' ) );
 
-		/**
-		 * Enroll upon pay
-		 *
-		 * Reference to order ID, will need to get the actual product using the MarketPress Order class
-		 */
-		add_action(
-			'mp_order_order_paid',
-			array( $this, 'course_paid_3pt0' )
-		);
-
-		// Update course after a product is updated
+		// Update course after a product is updated.
 		add_action( 'coursepress_update_from_course', array( $this, 'update_course_data_from_product' ) );
 
-		/* This action is documented in WordPress file: /wp-includes/template-loader.php */
-		add_action(
-			'template_redirect',
-			array( $this, 'redirect_to_product' )
-		);
+		// This action is documented in WordPress file: /wp-includes/template-loader.php
+		add_action( 'template_redirect', array( $this, 'redirect_to_product' ) );
 
-		// Set an action when a course is deleted
+		// Set an action when a course is deleted.
 		add_action( 'coursepress_course_deleted', array( $this, 'maybe_delete_product' ), 10, 2 );
-		// Trigger an action when a course status is changed
+
+		// Trigger an action when a course status is changed.
 		add_action( 'coursepress_course_status_changed', array( $this, 'change_product_status' ), 10, 2 );
 	}
 
+	/**
+	 * Check if current plugin is enabled.
+	 *
+	 * @return bool
+	 */
 	function is_enabled() {
-		$settings = coursepress_get_setting( 'marketpress' );
 
+		// Check if extension is enabled in settings.
+		$settings = coursepress_get_setting( 'marketpress' );
 		if ( ! empty( $settings ) && ! empty( $settings['enabled'] ) ) {
 			return true;
 		}
@@ -73,43 +83,91 @@ class CoursePress_Extension_MarketPress {
 		return false;
 	}
 
+	/**
+	 * Installed scope of the plugin.
+	 *
+	 * Pro or Free version is installed?
+	 *
+	 * @return int|string
+	 */
 	public function installed_scope() {
+
 		$scope = '';
+
 		foreach ( $this->base_path as $key => $path ) {
 			$plugin_dir = WP_PLUGIN_DIR . '/' . $path;
 			$plugin_mu_dir = WP_CONTENT_DIR . '/mu-plugins/' . $path;
 			$location = file_exists( $plugin_dir ) ? trailingslashit( WP_PLUGIN_DIR ) : ( file_exists( $plugin_mu_dir ) ?  WP_CONTENT_DIR . '/mu-plugins/' : '' ) ;
-			$scope = ! empty( $location ) ? $key : $scope;
+			$scope = empty( $location ) ? $scope : $key;
 		}
+
 		return $scope;
 	}
 
+	/**
+	 * Is plugin installed?
+	 *
+	 * Check if MarketPress plugin is installed in normal way or via mu-plugins.
+	 *
+	 * @return bool
+	 */
 	public function installed() {
+
 		$scope = $this->installed_scope();
+
 		return ! empty( $scope );
 	}
 
+	/**
+	 * Is plugin active?
+	 *
+	 * Check if current plugin is active, not just installed.
+	 * is_plugin_active() Will not check mu-plugins. So use `Marketpress`
+	 * class to check if MarketPress is active.
+	 *
+	 * @return bool
+	 */
 	public function activated() {
+
 		$scope = $this->installed_scope();
-		require_once ABSPATH . 'wp-admin/includes/plugin.php'; // Need for plugins_api.
-		return ! empty( $scope ) ? is_plugin_active( $this->base_path[ $scope ] ) : false;
+
+		return empty( $scope ) ? false : class_exists( 'Marketpress' );
 	}
 
+	/**
+	 * Get the course price html.
+	 *
+	 * If a paid course, return the product shortcode.
+	 *
+	 * @param string $price_html Price html.
+	 * @param float $price Course price.
+	 * @param object $course CoursePress_Course object.
+	 *
+	 * @return string
+	 */
 	function course_cost( $price_html, $price, $course ) {
+
 		$is_paid_course = $course->is_paid_course();
 
+		// If paid course, get the product shortcode.
 		if ( $is_paid_course ) {
 			$product_id = $course->get_product_id();
 
-			return do_shortcode(
-				'[mp_product_price product_id="' . $product_id . '" label=""]'
-			);
+			return do_shortcode( '[mp_product_price product_id="' . $product_id . '" label=""]' );
 		}
 
 		return $price_html;
 	}
 
+	/**
+	 * Create product from course.
+	 *
+	 * @param int $course_id Course ID.
+	 *
+	 * @return int|WP_Error
+	 */
 	function create_product_from_course( $course_id ) {
+
 		$course = get_post( $course_id );
 		$course->ID = 0;
 		$course->post_type = self::$product_ctp;
@@ -120,7 +178,16 @@ class CoursePress_Extension_MarketPress {
 		return $product_id;
 	}
 
+	/**
+	 * Update product data from course.
+	 *
+	 * @param int $product_id Product ID.
+	 * @param int $course_id Course ID.
+	 *
+	 * @return int|WP_Error
+	 */
 	function update_product_from_course( $product_id, $course_id ) {
+
 		$product = get_post( $product_id );
 		$course = get_post( $course_id );
 
@@ -137,15 +204,33 @@ class CoursePress_Extension_MarketPress {
 		return $product_id;
 	}
 
+	/**
+	 * Check if product exists.
+	 *
+	 * @param int $product_id Product ID.
+	 *
+	 * @return array|null|WP_Post
+	 */
 	function product_exist( $product_id ) {
+
 		$product = get_post( $product_id );
 
 		return $product;
 	}
 
+	/**
+	 * Update product meta data from course data.
+	 *
+	 * @param int $product_id Product ID.
+	 * @param array $settings Product settings.
+	 * @param int $course_id Course ID.
+	 *
+	 * @return array
+	 */
 	function update_product_meta_from_course( $product_id, $settings, $course_id ) {
+
 		// Update featured image
-		if ( ! empty( $settings['listing_image_thumbnail_id'])) {
+		if ( ! empty( $settings['listing_image_thumbnail_id'] ) ) {
 			set_post_thumbnail($product_id, $settings['listing_image_thumbnail_id']);
 		}
 
@@ -170,6 +255,7 @@ class CoursePress_Extension_MarketPress {
 			$product_meta['mp_sku'] = $product_meta['sku'] = $sku_prefix . str_pad( $course_id, 5, '0', STR_PAD_LEFT );
 		}
 
+		// Update all metas.
 		foreach ( $product_meta as $key => $value ) {
 			update_post_meta( $product_id, $key, $value );
 		}
@@ -177,11 +263,19 @@ class CoursePress_Extension_MarketPress {
 		return $product_meta;
 	}
 
+	/**
+	 * Create product if Ok.
+	 *
+	 * @param int $course_id Course ID.
+	 * @param array $course_meta Course meta.
+	 */
 	function maybe_create_product( $course_id, $course_meta ) {
+
 		$course = coursepress_get_course( $course_id );
 		$product_id = $course->get_product_id();
 
 		if ( $course->is_paid_course() ) {
+
 			// Check product was not deleted
 			if ( ! $this->product_exist( $product_id ) ) {
 				$product_id = false;
@@ -193,10 +287,10 @@ class CoursePress_Extension_MarketPress {
 				$product_id = $this->update_product_from_course( $product_id, $course_id );
 			}
 
-			// Update product meta
+			// Update product meta.
 			$product_meta = $this->update_product_meta_from_course( $product_id, $course_meta, $course_id );
 
-			// Avoid over loop !
+			// Avoid over loop!
 			remove_action( 'coursepress_course_updated', array( $this, 'maybe_create_product' ), 10, 3 );
 
 			$course->update_setting( 'mp_product_id', $product_id );
@@ -221,15 +315,26 @@ class CoursePress_Extension_MarketPress {
 	 * @return integer Course ID.
 	 */
 	public function get_course_id_by_product( $product ) {
+
 		$product_id = is_object( $product ) ? $product->ID : $product;
 
 		if ( empty( $product_id ) ) {
 			return 0;
 		}
+
 		return intval( get_post_meta( $product_id, 'mp_course_id', true ) );
 	}
 
+	/**
+	 * Update course from product.
+	 *
+	 * @param int $product_id
+	 * @param object $post WP_Post object.
+	 *
+	 * @return void
+	 */
 	function update_course_from_product( $product_id, $post ) {
+
 		// If its not a product, exit
 		if ( self::$product_ctp != $post->post_type ) {
 			return;
@@ -277,7 +382,13 @@ class CoursePress_Extension_MarketPress {
 		wp_schedule_single_event( time() + 5, 'coursepress_update_from_course', array( 'course' => $course_object ) );
 	}
 
+	/**
+	 * Update course data from course object.
+	 *
+	 * @param object $course CoursePress_Course object.
+	 */
 	function update_course_data_from_product( $course ) {
+
 		wp_update_post( $course );
 	}
 
@@ -294,29 +405,24 @@ class CoursePress_Extension_MarketPress {
 	 * @return string button string
 	 */
 	public function enroll_button( $content, $course_id, $user_id, $button_option ) {
+
 		$course = coursepress_get_course( $course_id );
 
-		/**
-		 * do not chane for free courses
-		 */
+		// Do not chane for free courses.
 		if ( ! $course->is_paid_course() ) {
 			return $content;
 		}
 
-		/**
-		 * change button only when when really need to do it
-		 */
+		// Change button only when when really need to do it.
 		if ( 'enroll' != $button_option ) {
 			return $content;
 		}
 
-		/**
-		 * if already purchased, then return too
-		 *
-		if ( self::is_user_purchased_course( false, $course_id, $user_id ) ) {
-			return $content;
-		}
-		 * */
+		// If already purchased, then return too
+		//if ( self::is_user_purchased_course( false, $course_id, $user_id ) ) {
+		//	return $content;
+		//}
+
 		$user = coursepress_get_user( $user_id );
 
 		if ( ! $user->is_enrolled_at( $course_id ) ) {
@@ -338,6 +444,7 @@ class CoursePress_Extension_MarketPress {
 	 * @return string html with "add to cart" button
 	 */
 	private function _get_add_to_cart_button_by_course_id( $course_id ) {
+
 		$course = coursepress_get_course( $course_id );
 		$product_id = $course->get_product_id();
 		$shortcode = sprintf( '[mp_buy_button product_id="%s"]', $product_id );
@@ -345,7 +452,13 @@ class CoursePress_Extension_MarketPress {
 		return do_shortcode( $shortcode );
 	}
 
+	/**
+	 * Enroll upon course purchase.
+	 *
+	 * @param object $order Order class.
+	 */
 	public function course_paid_3pt0( $order ) {
+
 		$cart = $order->get_meta( 'mp_cart_info' );
 
 		if ( $cart ) {
@@ -353,7 +466,7 @@ class CoursePress_Extension_MarketPress {
 			if ( $items ) {
 				foreach ( $items as $product_id => $info ) {
 					$course_id = (int) get_post_meta( $product_id, 'mp_course_id', true );
-					$user_id   = $order->post_author;
+					$user_id = $order->post_author;
 					$course = coursepress_get_course( $course_id );
 
 					if ( ! is_wp_error( $course ) ) {
@@ -369,14 +482,17 @@ class CoursePress_Extension_MarketPress {
 	}
 
 	/**
-	 * rediret product from product to course
+	 * Redirect product from product to course.
 	 *
 	 * @since 2.0.0
 	 *
 	 * @global WP_Post $post current post
 	 * @global WP_Query $wp_query
+	 *
+	 * @return void
 	 */
 	public function redirect_to_product() {
+
 		global $post, $wp_query;
 
 		if ( self::$product_ctp != $post->post_type ) {
@@ -387,30 +503,32 @@ class CoursePress_Extension_MarketPress {
 			return;
 		}
 
-		/**
-		 * only when redirect option is on.
-		 */
+		// Only when redirect option is on.
 		$use_redirect = coursepress_get_setting( 'marketpress/redirect', false );
 
 		if ( ! $use_redirect ) {
 			return;
 		}
 
-		/**
-		 * redirect if course exists
-		 */
+		// Redirect if course exists.
 		$course_id = $this->get_course_id_by_product( $post );
 		$course = coursepress_get_course( $course_id );
 
 		if ( ! is_wp_error( $course ) ) {
 			$redirect = $course->get_permalink();
-
 			wp_safe_redirect( $redirect );
 			exit;
 		}
 	}
 
+	/**
+	 * Delete product if Ok to delete.
+	 *
+	 * @param int $course_id Course ID.
+	 * @param object $course CoursePress_Course.
+	 */
 	function maybe_delete_product( $course_id, $course ) {
+
 		$product_id = $course->get_product_id();
 		$delete_action = coursepress_get_setting( 'marketpress/delete' );
 
@@ -420,17 +538,19 @@ class CoursePress_Extension_MarketPress {
 			remove_action( 'coursepress_course_updated', array( $this, 'maybe_create_product' ), 10, 3 );
 			$course->update_setting( 'mp_product_id', false );
 		} elseif ( 'change_status' == $delete_action ) {
-			wp_update_post(
-				array(
-					'ID' => $product_id,
-					'post_status' => 'draft',
-				)
-			);
+			wp_update_post( array( 'ID' => $product_id, 'post_status' => 'draft', ) );
 			update_post_meta( $product_id, '_stock_status', 'outofstock' );
 		}
 	}
 
+	/**
+	 * Update product status.
+	 *
+	 * @param int $course_id Course ID.
+	 * @param string $status Status.
+	 */
 	function change_product_status( $course_id, $status ) {
+
 		$course = coursepress_get_course( $course_id );
 		$product_id = $course->get_product_id();
 
@@ -440,25 +560,29 @@ class CoursePress_Extension_MarketPress {
 				'post_status' => $status,
 			)
 		);
+
 		update_post_meta( $product_id, '_stock_status', 'outofstock' );
 	}
 
+	/**
+	 * Change product status if course removed.
+	 *
+	 * @param int $product_id Product ID.
+	 * @param int $course_id Course ID.
+	 * @param object $course CoursePress_Course
+	 */
 	function maybe_change_product( $product_id, $course_id, $course ) {
+
 		$delete_action = coursepress_get_setting( 'marketpress/unpaid' );
 
 		if ( 'delete' == $delete_action ) {
 			wp_delete_post( $product_id );
-			// Avoid over loop !
+			// Avoid over loop!
 			remove_action( 'coursepress_course_updated', array( $this, 'maybe_create_product' ), 10, 3 );
 			$course->update_setting( 'mp_product_id', false );
 
 		} elseif ( 'change_status' == $delete_action ) {
-			wp_update_post(
-				array(
-					'ID' => $product_id,
-					'post_status' => 'draft',
-				)
-			);
+			wp_update_post( array( 'ID' => $product_id, 'post_status' => 'draft', ) );
 			update_post_meta( $product_id, '_stock_status', 'outofstock' );
 		}
 	}
