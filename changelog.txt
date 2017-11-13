@@ -7,13 +7,18 @@ CHANGELOG
 
 = 2.1.2 =
 -------------------------------------------------
-* Improved: Added logo to certificate.
-* Improved: Feedback display on student workbook.
-* Fixed: Bullet points was not showing using CoursePress Theme.
+* Improved: Add ability to define certificate logo.
+* Improved: Show instructor feedback on student workbook frontend.
+* CoursePress Theme: Fixed display of HTML Bullet points.
+* CoursePress Theme: Fixed expanded unit list view mode.
+* CoursePress Theme: Improved bbPress compatibility.
 * Fixed: Expanded unit list view mode not working for students.
+* Fixed: Export problem on PHP 5.2, json_encode() have only one parameter.
 * Fixed: Missing upgrade scripts.
 * Fixed: Module access with URL.
+* Fixed: Prevent access modules when previously required modules haven't been completed.
 * Fixed: Problem loading translations.
+* Fixed: Problem with TinyMCE.
 * Fixed: Try Again button is not showing while Retry is set to 1.
 * Fixed: Visual editor load problem when a user disables in the profile.
 
