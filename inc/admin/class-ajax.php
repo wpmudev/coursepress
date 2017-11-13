@@ -779,24 +779,9 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	/**
 	 * Withdraw student rfom a course.
 	 */
-	public function withdraw_student() {
-		$course_id = filter_input( INPUT_GET, 'course_id', FILTER_VALIDATE_INT );
-		$wpnonce = filter_input( INPUT_GET, '_wpnonce' );
-		$redirect = filter_input( INPUT_GET, 'redirect' );
-		$student_id = filter_input( INPUT_GET, 'student_id', FILTER_VALIDATE_INT );
-		$referer = filter_input( INPUT_GET, 'referer' );
-
-		if ( ! $student_id ) {
-			$student_id = get_current_user_id();
-		}
-
-		if ( 'course-edit' == $referer ) {
-			$redirect = add_query_arg( array( 'page' => 'coursepress_course', 'cid' => $course_id ), admin_url( 'admin-ajax.php' ) );
-		}
-
-		if ( ! $course_id || ! wp_verify_nonce( $wpnonce, 'coursepress_nonce' ) ) {
-			wp_send_json_error( true );
-		}
+	private function withdraw_student( $request ) {
+		$course_id = filter_var( $request->course_id, FILTER_VALIDATE_INT );
+		$student_id = filter_var( $request->student_id, FILTER_VALIDATE_INT );
 		coursepress_delete_student( $student_id, $course_id );
 		$result = array( 'student_id' => $student_id );
 		wp_send_json_success( $result );
