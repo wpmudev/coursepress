@@ -94,7 +94,7 @@
                    this.video_url_input.trigger( 'change' );
                    this.input.trigger( 'change' );
                } else {
-                   window.console.log(selected);
+                   // TODO
                }
 
                // Restore before closing wpmedia

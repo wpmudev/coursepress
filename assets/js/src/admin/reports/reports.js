@@ -1,4 +1,4 @@
-/* global CoursePress, _coursepress, console */
+/* global CoursePress, _coursepress */
 (function() {
     'use strict';
     /**
@@ -32,9 +32,11 @@
                 model.save();
                 return false;
             },
-            redirect: function( data ) {
-                console.log(data);
-//                window.location.href = data.pdf;
+            redirect: function() {
+                // TODO
+                // redirect: function( data ) {
+                // TODO
+                // window.location.href = data.pdf;
             },
             /**
              * Bulk actions
