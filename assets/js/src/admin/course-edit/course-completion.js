@@ -104,7 +104,8 @@
                     description.html( the_page.description );
 
                     this.the_title.val( this.model.get( page + '_title' ) );
-                    //this.the_content.val( this.model.get( page + '_content' ) );
+                    this.the_title.attr( 'name', 'meta_' + page + '_title' );
+                    this.the_content.val( this.model.get( page + '_content' ) );
 
                     this.visualEditor({
                         content: this.model.get( page + '_content' ),
