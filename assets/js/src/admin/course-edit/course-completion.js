@@ -97,8 +97,9 @@
                 sender.addClass('active');
                 self = this;
                 this.current = page;
+                the_page = win._coursepress.completion_pages[page];
 
-                if ( ( the_page = win._coursepress.completion_pages[page] ) ) {
+                if ( the_page ) {
                     title.html( the_page.title );
                     description.html( the_page.description );
 
@@ -109,7 +110,7 @@
                         content: this.model.get( page + '_content' ),
                         container: this.$('.cp-completion-content'),
                         callback: function( content ) {
-                            self.model.set( page + '_content', content );
+                            self.model.set( 'meta_' + page + '_content', content );
                         }
                     });
                 }

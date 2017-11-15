@@ -20,7 +20,7 @@
     <div class="cp-box-content">
         <div class="cp-box">
             <label class="label" for="page-completion-title"><?php _e( 'Page Title', 'cp' ); ?></label>
-            <input type="text" id="page-completion-title" name="page-completion-title" class="widefat" value="{{pre_completion_title}}" />
+            <input type="text" id="page-completion-title" name="meta_pre_completion_title" class="widefat" value="{{meta_pre_completion_title}}" />
         </div>
         <div class="cp-box">
             <label class="label" for="page-completion-content"><?php _e( 'Content', 'cp' ); ?></label>
