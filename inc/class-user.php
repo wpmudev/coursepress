@@ -52,6 +52,7 @@ class CoursePress_User extends CoursePress_Utility {
 
 		$this->__set( 'first_name', get_user_meta( $user->ID, 'first_name', true ) );
 		$this->__set( 'last_name', get_user_meta( $user->ID, 'last_name', true ) );
+		$this->__set( 'description', get_user_meta( $user->ID, 'description', true ) );
 		/**
 		 * clear student data after delete student
 		 */

@@ -128,9 +128,8 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 			case 'instructor':
 				$instructor = $wp_query->get( 'instructor' );
 				$user = get_user_by( 'login', $instructor );
-
 				if ( $user ) {
-					$CoursePress_Instructor = new CoursePress_Instructor( $user );
+					$CoursePress_Instructor = new CoursePress_User( $user );
 				}
 			break;
 
