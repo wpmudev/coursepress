@@ -280,9 +280,11 @@ class CoursePress_User extends CoursePress_Utility {
 
 		if ( $per_page > 0 ) {
 			$sql .= ' LIMIT %d, %d';
+			$sql = $wpdb->prepare( $sql, $id, $offset, $limit );
+		} else {
+			$sql = $wpdb->prepare( $sql, $id );
 		}
 
-		$sql = $wpdb->prepare( $sql, $id, $offset, $limit );
 		$results = $wpdb->get_results( $sql, OBJECT );
 		$course_ids = array();
 
