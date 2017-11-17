@@ -7,7 +7,7 @@ CHANGELOG
 
 = 2.1.3 =
 -------------------------------------------------
-* Fixed: Unit rich editor do not work after WordPress update to 4.9
+* Fixed: Unit and Pages TinyMCE editor does not work after WordPress update to 4.9.
 
 = 2.1.2 =
 -------------------------------------------------
