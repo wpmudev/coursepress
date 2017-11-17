@@ -167,7 +167,7 @@ class CoursePress_Admin_Controller_Unit {
 					<p class="description">' . esc_html__( 'The label will be displayed on the Course Overview and Unit page', 'CP_TD' ) . '</p>
 					<input type="text" value="<%= page_label_text %>" name="page_title" class="wide" />
 					<label class="page-description">' . esc_html__( 'Section Description', 'CP_TD' ) . '</label>
-					<textarea name="page_description" id="page_description_1_1"><%- page_description %></textarea>
+					<textarea name="page_description" class="page-wp-editor" id="page_description_<%- page_id %>"><%- page_description %></textarea>
 					' . CoursePress_Helper_UI::browse_media_field(
 				'page_feature_image',
 				'page_feature_image',

@@ -322,19 +322,13 @@ var CoursePress = CoursePress || {};
 					'<span class="label">' + question_type + ':</span>' +
 				'</label>';
 			content += '<textarea></textarea>';
-
 			content += question_content;
-
 			content += '</div>';
-
 			$(container).append( content );
 			CoursePress.Helpers.Module.form.update_meta( mod_el );
 			CoursePress.Helpers.Module.form.bind_buttons();
-
 		} );
-
 		CoursePress.Helpers.Module.form.bind_buttons();		
-
 		// Enable/disable duration or minimum grade
 		$( '.module-use-timer input, .module-assessable input' ).on( 'change', function() {
 			var input = $( this ),
@@ -342,30 +336,22 @@ var CoursePress = CoursePress || {};
 				target = $( input.data( 'target' ), input.parents( '.module-header' ).first() ),
 				inputs = target.find( 'input' )
 			;
-
 			inputs.attr( 'readonly', ! is_checked );
 		}).change();
 	};
 
 	CoursePress.Helpers.Module.quiz.render_component = function( module ) {
-
 		var quiz = module.get_meta('questions');
 		if ( undefined === quiz || quiz.length <= 0 ) {
 			return '';
 		}
-
 		var content = '';
-
 		$.each( quiz, function( index, item ) {
-
 			content += '<div class="quiz-question question-' + ( index + 1 ) + '" data-id="' + (index + 1) + '" data-type="' + item.type + '" style="position: relative; border: 1px solid rgba(0,0,0,0.2); margin-top: 10px; padding: 5px;">';
 			content += '<div class="quiz-question-remove" style="position: absolute; top:5px; right:5px; font-weight: bolder; font-size: 1.2em; cursor: pointer;">X</div>';
-
 			var question_type = '';
 			var question_content = '<div class="question-answer">';
-
 			switch( item.type ) {
-
 				case 'single':
 					//question_type = 'Single Choice';
 					//
@@ -379,20 +365,15 @@ var CoursePress = CoursePress || {};
 					//question_content += '</div>';
 					//question_content += '<a class="add-item">' + _coursepress.unit_builder_add_answer_label + '</a>';
 					question_type = _coursepress.unit_builder.question_type.single;
-
 					question_content += '<div class="answer-group">';
-
 					item.options.answers = item.options.answers || [];
 					$.each( item.options.answers, function( a_index, a_item ) {
 						var checked = item.options.checked[a_index] ? 'checked=checked' : '';
 						question_content += '<div class="answer"><input type="radio" name="question' + ( index + 1 ) + '" value="" ' + checked + ' />';
 						question_content += '<input class="component-radio-answer wide" type="text" value="' + a_item + '" name="" /><span class="remove-quiz-item"><i class="fa fa-trash-o"></i></span></div>';
 					} );
-
 					question_content += '</div>';
 					question_content += '<a class="add-quiz-item">' + _coursepress.unit_builder_add_answer_label + '</a>';
-
-
 					break;
 				case 'multiple':
 					question_type = _coursepress.unit_builder.question_type.multiple;
@@ -833,9 +814,9 @@ var CoursePress = CoursePress || {};
 		CoursePress.Helpers.Module.form.bind_textboxes();
 	};	
 
-    /**
-     * Delete page/section.
-     */
+	/**
+	 * Delete page/section.
+	 */
 	CoursePress.Helpers.Module.delete_page = function( e, unit_id, page ) {
 		var nonce = $( '#unit-builder' ).attr( 'data-nonce' );
 		CoursePress.UnitBuilder.module_collection.url = _coursepress._ajax_url + '?action=unit_builder&task=modules_update_delete_section&course_id=' + _coursepress.course_id + '&unit_id=' + CoursePress.UnitBuilder.activeUnitID + '&page=' + CoursePress.UnitBuilder.activePage + '&wp_nonce=' + nonce + '&page='+page;
@@ -846,11 +827,10 @@ var CoursePress = CoursePress || {};
 			'error': function() {
 			}
 		} );
-    }
+	}
 
 	CoursePress.Helpers.Module.save_unit = function( e, custom_event ) {
 		$( '.unit-buttons .unit-save-button' ).prepend( '<i class="fa fa-spinner fa-spin save-progress"></i> ' );
-
 		var nonce = $( '#unit-builder' ).attr( 'data-nonce' );
 		var form = $( "#unit-builder" ).closest( "form" );
 		var requireds = $( ".component-checkbox-answer, .component-radio-answer, .component-select-answer", form );
@@ -876,7 +856,6 @@ var CoursePress = CoursePress || {};
 				return false;
 			}
 		}
-
 		// Save modules first... just in case the unit is deleted to avoid orphans
 		CoursePress.UnitBuilder.module_collection.url = _coursepress._ajax_url + '?action=unit_builder&task=modules_update&course_id=' + _coursepress.course_id + '&unit_id=' + CoursePress.UnitBuilder.activeUnitID + '&page=' + CoursePress.UnitBuilder.activePage + '&wp_nonce=' + nonce + '&x=1';
 		Backbone.sync( 'update', CoursePress.UnitBuilder.module_collection, {
@@ -884,7 +863,6 @@ var CoursePress = CoursePress || {};
 				$( '#unit-builder' ).attr( 'data-nonce', response[ 'nonce' ] );
 			},
 			'error': function() {
-
 			}
 		} );
 
@@ -1619,16 +1597,13 @@ var CoursePress = CoursePress || {};
 		},
 		set_page_title: function( index, title ) {
 			var meta = this.get( 'meta' ) || {};
-
 			meta[ 'page_title' ] = meta[ 'page_title' ] || {};
 			meta[ 'page_title' ][ 'page_' + index ] = title;
 			this.set( 'meta', meta );
-
 			this.trigger( 'change', this );
 		},
 		set_page_description: function( index, description ) {
 			var meta = this.get( 'meta' ) || {};
-
 			description = _.escape(description);
 			meta[ 'page_description' ] = meta[ 'page_description' ] || {};
 			meta[ 'page_description' ][ 'page_' + index ] = description;
@@ -1637,7 +1612,6 @@ var CoursePress = CoursePress || {};
 		},
 		set_page_image: function( index, image ) {
 			var meta = this.get( 'meta' ) || {};
-
 			meta[ 'page_feature_image' ] = meta[ 'page_feature_image' ] || {};
 			meta[ 'page_feature_image' ][ 'page_' + index ] = image;
 			this.set( 'meta', meta );
@@ -2580,30 +2554,21 @@ var CoursePress = CoursePress || {};
 			$.each( boxes, function( i, item ) {
 				el_val.push( $( item ).val() );
 			} );
-
 			// Change meta now
 			module.set_meta( 'meta_answers', el_val );
 		},
 		updateSectionEditor: function() {
-
 			// Bring on the Visual Editor
-			$.each( $( '#page_description_1_1' ), function( index, editor ) {
+			$.each( $( '.page-wp-editor' ), function( index, editor ) {
 				var id = $( editor ).attr( 'id' );
-
 				// Get rid of redundant editor
-				delete tinyMCEPreInit.mceInit[ id ];
-				delete tinyMCEPreInit.qtInit[ id ];
-				delete tinyMCE.EditorManager.editors[ id ];
-
+				tinyMCE.EditorManager.execCommand( 'mceRemoveEditor', true, id );
 				var content = $( '#' + id ).val();
 				var name = $( editor ).attr( 'name' );
 				var height = $( editor ).attr( 'data-height' ) ? $( editor ).attr( 'data-height' ) : 200;
-
 				CoursePress.editor.create( editor, id, name, content, false, height );
 			} );
-
 		}
-
 	} );
 
 	// Unit Body Pager View
@@ -2622,30 +2587,27 @@ var CoursePress = CoursePress || {};
 		},
 		events: {
 			'change .page-info-holder input': 'fieldChanged',
-			'keyup .unit-detail #page_description_1_1': 'editorChanged',
+			'keyup .unit-detail .page-wp-editor': 'editorChanged',
 		},
 		render: function( options ) {
 			var template = _.template( $( '#unit-builder-pager-info-template' ).html() );
+			options.page_id = Math.floor( Math.random() * 1e10 );
 			this.$el.html( template( options ) );
-
 			return this;
 		},
 		editorChanged: function( e ) {
-
 			var page = this.parentView.parentView.activePage;
-
 			var the_id = e.id;
+			var re = /^page_description_\d+$/;
 			if ( undefined === the_id ) {
 				the_id = $( e.currentTarget ).attr('id');
 			}
-
-			if ( undefined !== the_id && 'page_description_1_1' === the_id ) {
+			if ( undefined !== the_id && re.test( the_id ) ) {
 				var el = $( '#' + the_id );
 				var el_val = CoursePress.editor.content( the_id );
 				var parent = $( $( el ).parents( '.unit-builder-content' )[ 0 ] ).find( '.unit-detail' )[0];
 				var unit = this.parentView.parentView.unit_collection._byId[ $( parent ).attr( 'data-cid' ) ];
 				unit.set_page_description( page, el_val );
-				//unit.set_meta( '', el_val );
 			}
 		}
 	} );
