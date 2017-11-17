@@ -5,6 +5,10 @@ Build Time:  2016-04-07T13:37:59.644Z
 CHANGELOG
 =================================================
 
+= 2.1.3 =
+-------------------------------------------------
+* Fixed: Unit rich editor do not work after WordPress update to 4.9
+
 = 2.1.2 =
 -------------------------------------------------
 * Improved: Add ability to define certificate logo.
