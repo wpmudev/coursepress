@@ -82,7 +82,7 @@ class CoursePress_Admin_Controller_Unit {
 					<input id="unit_name" class="wide" type="text" value="<%= unit_title %>" name="post_title" spellcheck="true">
 					<div class="unit-additional-info">
 					<label class="unit-description">' . __( 'Unit Description', 'CP_TD' ) . '</label>
-					<textarea name="unit_description" class="widefat" id="unit_description_1_1"><%- unit_content %></textarea>
+					<textarea name="unit_description" class="widefat unit-wp-editor" id="unit_description_<%- unit_id %>"><%- unit_content %></textarea>
 					' . CoursePress_Helper_UI::browse_media_field(
 				'unit_feature_image',
 				'unit_feature_image',

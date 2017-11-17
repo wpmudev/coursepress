@@ -2183,7 +2183,7 @@ var CoursePress = CoursePress || {};
 		events: {
 			'change .unit-detail input': 'fieldChanged',
 			'keyup .unit-detail input[name=post_title]': 'updateTabTitle',
-			'keyup .unit-detail #unit_description_1_1': 'editorChanged',
+			'keyup .unit-detail .wp-unit-editor': 'editorChanged',
 			'change #unit-live-toggle': 'toggleUnitState',
 			'change #unit-live-toggle-2': 'toggleUnitState',
 			'change #unit_feature_image': 'unitFeatureImageChange',
@@ -2209,11 +2209,11 @@ var CoursePress = CoursePress || {};
 		},
 		editorChanged: function( e ) {
 			var the_id = e.id;
+            var re = /^unit_description_\d+$/;
 			if ( undefined === the_id ) {
 				the_id = $( e.currentTarget ).attr('id');
 			}
-
-			if ( undefined !== the_id && 'unit_description_1_1' === the_id ) {
+			if ( undefined !== the_id && re.test( the_id  ) ) {
 				var el = $( '#' + the_id );
 				var el_val = CoursePress.editor.content( the_id );
 
@@ -2271,9 +2271,8 @@ var CoursePress = CoursePress || {};
 		},
 		updateUnitHeader: function() {
 			// Bring on the Visual Editor
-			$.each( $( '#unit_description_1_1' ), function( index, editor ) {
+			$.each( $( '.unit-wp-editor' ), function( index, editor ) {
 				var id = $( editor ).attr( 'id' );
-
 				// Get rid of redundant editor
 				delete tinyMCEPreInit.mceInit[ id ];
 				delete tinyMCEPreInit.qtInit[ id ];
