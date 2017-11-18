@@ -52,7 +52,7 @@
             <div class="cp-alert cp-alert-info">
                 <?php echo $completion_pages['cert_tokens']; ?>
             </div>
-            <?php coursepress_teeny_editor( '{{basic_certificate_layout}}', 'meta_basic_certificate_layout' ); ?>
+            <div class="cp-certificate-layout"></div>
         </div>
         <div class="cp-box-content">
             <div class="box-label-area">
