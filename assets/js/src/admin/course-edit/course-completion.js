@@ -116,6 +116,14 @@
                         }
                     });
                 }
+
+	            this.visualEditor({
+		            content: this.model.get('basic_certificate_layout'),
+		            container: this.$('.cp-certificate-layout'),
+		            callback: function (content) {
+			            self.model.set('meta_basic_certificate_layout', content);
+		            }
+	            });
             },
             validate: function() {
                 var proceed = true;
