@@ -42,7 +42,7 @@ class CoursePress_Admin_Configuration {
 				),
 				'coursepress_settings[basic_certificate][use_cp_default]' => array(
 					'type' => 'checkbox',
-					'title' => $toggle_input . __( 'Use custom CoursePress certificate', 'CoursePress' ),
+					'title' => $toggle_input . __( 'Use default CoursePress certificate', 'CoursePress' ),
 					'value' => ! coursepress_get_setting( 'basic_certificate/use_cp_default', false ),
 				),
 			),
