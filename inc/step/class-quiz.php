@@ -15,21 +15,18 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 			'answers',
 			'answers_selected', // Legacy for `input-checkbox`
 		));
-
 		return $keys;
 	}
 
 	protected function get_questions_data() {
 		$questions = $this->__get( 'questions' );
-
 		if ( is_array( $questions ) ) {
 			$questions = $this->to_array( $questions );
 		}
-
 		return $questions;
 	}
 
-	function get_answer_template( $user_id = 0 ) {
+	public function get_answer_template( $user_id = 0 ) {
 		$template = parent::get_answer_template( $user_id );
 		$questions = $this->__get( 'questions' );
 
@@ -98,7 +95,7 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 		return $template;
 	}
 
-	function validate_response( $response = array() ) {
+	public function validate_response( $response = array() ) {
 		if ( ! empty( $response ) ) {
 			$user = coursepress_get_user();
 			$data = array(
@@ -120,26 +117,34 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 					$data['response'] = $response3;
 
 					foreach ( $questions as $pos => $question ) {
-						if ( isset( $response3[ $pos ] ) ) {
-							$user_response = $response3[ $pos ];
-							$answers = $question['options']['answers'];
-							$checked = $question['options']['checked'];
-							$count += count( $answers );
-							$checked_count += count( array_filter( $checked ) );
+						$user_response = null;
+						switch ( $question['type'] ) {
+							case 'single':
+								$user_response = array_shift( $response3 );
+							break;
+							default:
+								if ( isset( $response3[ $pos ] ) ) {
+									$user_response = $response3[ $pos ];
+								}
+							break;
+						}
+						$answers = $question['options']['answers'];
+						$checked = $question['options']['checked'];
+						$count += count( $answers );
+						$checked_count += count( array_filter( $checked ) );
 
-							if ( $answers ) {
-								foreach ( $answers as $answer_pos => $answer ) {
-									if ( 'select' === $question['type'] ) {
-										if ( $checked[ $user_response ] && $user_response == $answer_pos ) {
-											$correct++;
-										}
-									} else {
-										if ( isset( $user_response[ $answer_pos ] ) ) {
-											if ( $checked[ $answer_pos ] ) {
-												$correct ++;
-											} else {
-												$wrong ++;
-											}
+						if ( $answers ) {
+							foreach ( $answers as $answer_pos => $answer ) {
+								if ( 'select' === $question['type'] ) {
+									if ( $checked[ $user_response ] && $user_response == $answer_pos ) {
+										$correct++;
+									}
+								} else {
+									if ( isset( $user_response[ $answer_pos ] ) ) {
+										if ( $checked[ $answer_pos ] ) {
+											$correct ++;
+										} else {
+											$wrong ++;
 										}
 									}
 								}
@@ -159,9 +164,7 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 						//grade -= $wrong;
 					}
 
-					error_log($grade);
-
-					$data['grade'] = max(0, $grade);
+					$data['grade'] = max( 0, $grade );
 					$total_grade += $grade;
 					$user->record_response( $course_id, $unit_id, $step_id, $data );
 				}
@@ -212,7 +215,6 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 
 			$template = $this->create_html( 'ul', array( 'class' => 'quiz-multiple' ), $template );
 		}
-
 		return $template;
 	}
 
@@ -226,12 +228,18 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 		$course_id = $unit->__get( 'course_id' );
 		$unit_id = $unit->__get( 'ID' );
 		$step_id = $this->__get( 'ID' );
-
 		if ( ! empty( $question['options'] ) ) {
 			$answers = $question['options']['answers'];
-
 			foreach ( $answers as $pos => $answer ) {
-				$name = sprintf( 'module[%d][%d][%d][%d][%d]', $course_id, $unit_id, $step_id, $index, $pos );
+				$name = '';
+				switch ( $question['type'] ) {
+					case 'single':
+						$name = sprintf( 'module[%d][%d][%d][%d]', $course_id, $unit_id, $step_id, $index );
+					break;
+					default:
+						$name = sprintf( 'module[%d][%d][%d][%d][%d]', $course_id, $unit_id, $step_id, $index, $pos );
+					break;
+				}
 				$attr = array(
 					'type' => 'radio',
 					'value' => $pos,
@@ -241,15 +249,12 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 					$attr['readonly'] = 'readonly';
 					$attr['disabled'] = 'disabled';
 				}
-
 				$input = $this->create_html( 'input', $attr );
 				$label = $this->create_html( 'label', array(), $input . $answer );
 				$template .= $this->create_html( 'li', array(), $label );
 			}
-
 			$template = $this->create_html( 'ul', array( 'class' => 'quiz-single' ), $template );
 		}
-
 		return $template;
 	}
 
@@ -273,7 +278,7 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 
 			$name = sprintf( 'module[%d][%d][%d][%d]', $course_id, $unit_id, $step_id, $index );
 			$attr = array(
-				'name' => $name
+				'name' => $name,
 			);
 
 			if ( $this->is_preview() ) {
@@ -287,23 +292,18 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 		return $template;
 	}
 
-	function get_question() {
+	public function get_question() {
 		$template = '';
-
 		$questions = $this->get_questions_data();
-
 		if ( ! empty( $questions ) ) {
-
 			foreach ( $questions as $index => $question ) {
 				$method = 'get_question_' . $question['type'];
-
-				if ( ! empty( $question['question'] ) )
+				if ( ! empty( $question['question'] ) ) {
 					$template .= $this->create_html( 'p', array( 'class' => 'question' ), $question['question'] );
-
+				}
 				$template .= call_user_func( array( $this, $method ), $index, $question );
 			}
 		}
-
 		return $template;
 	}
 }
