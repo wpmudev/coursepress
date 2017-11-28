@@ -150,35 +150,66 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Page {
 		return apply_filters( 'coursepress_studentlist_hidden_columns', array() );
 	}
 
-	private function get_list_view() {
+	private function get_list_view()
+	{
 		$count = 0;
 		$screen = get_current_screen();
 		// Set query parameters back.
-		$search = isset( $_GET['s'] ) ? $_GET['s'] : '';
+		$search = isset($_GET['s']) ? $_GET['s'] : '';
 		// Data for template.
 		$args = array(
-			'columns'        => get_column_headers( $screen ),
-			'students'       => $this->get_students( $count ),
+			'columns'        => get_column_headers($screen),
+			'students'       => $this->get_students($count),
 			'courses'        => coursepress_get_accessible_courses(),
-			'list_table'     => $this->set_pagination( $count, 'coursepress_students_per_page' ),
-			'hidden_columns' => get_hidden_columns( $screen ),
+			'list_table'     => $this->set_pagination($count, 'coursepress_students_per_page'),
+			'hidden_columns' => get_hidden_columns($screen),
 			'page'           => $this->slug,
 			'search'         => $search,
 		);
 		// Render templates.
-		coursepress_render( 'views/admin/students', $args );
+		coursepress_render('views/admin/students', $args);
 	}
 
-	private function get_profile_view() {
-		$student_id = isset( $_GET['student_id'] ) ? $_GET['student_id'] : 0;
-		$student = new CoursePress_User( $student_id );
-		if ( $student->is_error() && $student->is_student() ) {
+	private function get_profile_view()
+	{
+		$student_id = isset($_GET['student_id']) ? $_GET['student_id'] : 0;
+		$student = new CoursePress_User($student_id);
+		if ($student->is_error() && $student->is_student()) {
 			return;
 		}
+
+		$total_courses = count($student->get_enrolled_courses_ids());
+		$per_page = $this->get_courses_per_page();
+		$paged = isset($_REQUEST['paged']) ? intval($_REQUEST['paged']) : 1;
+		$enrolled_course_ids = $student->get_enrolled_courses_ids($per_page, $paged);
+
 		$args = array(
 			'student_id' => $student_id,
 			'student'    => $student,
+			'courses'    => $enrolled_course_ids,
+			'pagination' => $this->get_pagination_list_table($total_courses)
 		);
-		coursepress_render( 'views/admin/student-profile', $args );
+		coursepress_render('views/admin/student-profile', $args);
+	}
+
+	private function get_pagination_list_table($count)
+	{
+		// Using WP_List table for pagination.
+		$listing = new WP_List_Table();
+		$args = array(
+			'total_items' => $count,
+			'per_page'    => $this->get_courses_per_page(),
+		);
+		$listing->set_pagination_args($args);
+
+		return $listing;
+	}
+
+	private function get_courses_per_page()
+	{
+		// Get no. of courses per page.
+		$per_page = get_user_meta(get_current_user_id(), 'coursepress_course_per_page', true);
+		$per_page = empty($per_page) ? coursepress_get_option('posts_per_page', 20) : $per_page;
+		return $per_page;
 	}
 }
