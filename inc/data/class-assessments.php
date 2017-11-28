@@ -153,7 +153,7 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 	 *
 	 * @return arary
 	 */
-	public function get_assessment_details( $student_id, $unit_id = 0, $progress = 'all' ) {
+	public function get_assessment_details( $student_id, $progress = 'all' ) {
 
 		$course_settings = $this->course->get_settings();
 
@@ -174,7 +174,7 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 		$student = coursepress_get_user( $student_id );
 
 		// Get units for the course.
-		$units = $this->_get_units( $unit_id );
+		$units = $this->_get_units();
 
 		// If no students found, return early.
 		if ( empty( $student ) ) {
@@ -201,7 +201,7 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 		$grade = $student->get_course_grade( $course_id );
 
 		// Set unit data under user.
-		$assessment['units']->units = $units;
+		$assessment['units'] = $units;
 
 		// Student grade for the course.
 		$assessment['grade'] = $grade;
