@@ -96,6 +96,9 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 	}
 
 	public function validate_response( $response = array() ) {
+
+		l( $_POST );
+
 		if ( ! empty( $response ) ) {
 			$user = coursepress_get_user();
 			$data = array(
@@ -116,6 +119,8 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 					$wrong = 0;
 					$data['response'] = $response3;
 
+					l( $response3 );
+
 					foreach ( $questions as $pos => $question ) {
 						$user_response = null;
 						switch ( $question['type'] ) {
@@ -128,6 +133,9 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 								}
 							break;
 						}
+
+						l( $user_response );
+
 						$answers = $question['options']['answers'];
 						$checked = $question['options']['checked'];
 						$count += count( $answers );
@@ -223,6 +231,9 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 	}
 
 	protected function get_question_single( $index, $question ) {
+
+		l( $index );
+
 		$template = '';
 		$unit = $this->get_unit();
 		$course_id = $unit->__get( 'course_id' );
@@ -234,10 +245,10 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 				$name = '';
 				switch ( $question['type'] ) {
 					case 'single':
-						$name = sprintf( 'module[%d][%d][%d][%d]', $course_id, $unit_id, $step_id, $index );
+						$name = sprintf( 'module[%d][%d][%d][%s]', $course_id, $unit_id, $step_id, $index );
 					break;
 					default:
-						$name = sprintf( 'module[%d][%d][%d][%d][%d]', $course_id, $unit_id, $step_id, $index, $pos );
+						$name = sprintf( 'module[%d][%d][%d][%s][%d]', $course_id, $unit_id, $step_id, $index, $pos );
 					break;
 				}
 				$attr = array(
