@@ -158,11 +158,13 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 		}
 	}
 
-	function add_student_meta( $user_id, $course_id ) {
+	function add_student_meta($user_id, $course_id)
+	{
 		// Maybe add student role?
-		$this->add_student_role( $user_id );
+		$this->add_student_role($user_id);
 		// Add user student meta
-		add_user_meta( $user_id, 'student_' . $course_id, $user_id );
+		add_user_meta($user_id, 'student_' . $course_id, $user_id);
+		add_user_meta($user_id, 'enrolled_course_date_' . $course_id, current_time('mysql'));
 	}
 
 	function add_student_role( $user_id ) {

@@ -18,6 +18,15 @@ class CoursePress_User extends CoursePress_Utility {
 
 	protected $progress_table;
 	protected $student_table;
+	private $is_error = false;
+
+	/**
+	 * @return bool
+	 */
+	public function is_error()
+	{
+		return $this->is_error;
+	}
 
 	/**
 	 * CoursePress_User constructor.
@@ -862,6 +871,25 @@ class CoursePress_User extends CoursePress_Utility {
 		$course_progress = $this->get_course_progress( $course_id );
 
 		return $course_progress >= 100;
+	}
+
+	function get_date_enrolled($course_id)
+	{
+		$date_format = get_option('date_format');
+		$time_format = get_option('time_format');
+
+		$date_enrolled = get_user_meta($this->__get('ID'), 'enrolled_course_date_' . $course_id);
+		if (is_array($date_enrolled)) {
+			$date_enrolled = array_pop($date_enrolled);
+		}
+
+		if (empty($date_enrolled)) {
+			return esc_html__('Unknown enrolled date.', 'CP_TD');
+		}
+
+		$date_enrolled = date_i18n($date_format . ' ' . $time_format, strtotime($date_enrolled));
+
+		return $date_enrolled;
 	}
 
 	/**

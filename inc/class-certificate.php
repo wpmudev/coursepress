@@ -327,10 +327,10 @@ class CoursePress_Certificate extends CoursePress_Utility {
          */
         $dir = substr($filename, 0, 2);
         $subdirectory = sprintf('%s/', $dir);
-        $pdf->check_dir($subdirectory);
+        $this->check_dir($subdirectory);
         $dir = substr($filename, 2, 2);
         $subdirectory .= sprintf('%s/', $dir);
-        $pdf->check_dir($subdirectory);
+	    $this->check_dir($subdirectory);
         $filename = substr($filename, 4);
         /**
          * add basedir or not?
@@ -343,6 +343,12 @@ class CoursePress_Certificate extends CoursePress_Utility {
 
         return $pdf_file;
     }
+
+	function get_pdf_file_url($course_id, $student_id)
+	{
+		$pdf_file = $this->get_pdf_file_name($course_id, $student_id);
+		return str_replace(WP_CONTENT_DIR, WP_CONTENT_URL, $pdf_file);
+	}
 
     /**
      * @param $course_id

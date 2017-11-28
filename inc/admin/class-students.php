@@ -42,28 +42,15 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Page {
 	 * @uses get_column_headers().
 	 * @uses coursepress_render().
 	 */
-	function get_page() {
+	function get_page()
+	{
+		$view = isset($_GET['view']) ? $_GET['view'] : 'list';
 
-		$count = 0;
-		$screen = get_current_screen();
-
-		// Set query parameters back.
-		$search = isset( $_GET['s'] ) ? $_GET['s'] : '';
-
-		// Data for template.
-		$args = array(
-			'columns' => get_column_headers( $screen ),
-			'students' => $this->get_students( $count ),
-			'courses' => coursepress_get_accessible_courses(),
-			'list_table' => $this->set_pagination( $count, 'coursepress_students_per_page' ),
-			'hidden_columns' => get_hidden_columns( $screen ),
-			'page' => $this->slug,
-			'search' => $search,
-		);
-
-		// Render templates.
-		coursepress_render( 'views/admin/students', $args );
-		coursepress_render( 'views/admin/footer-text' );
+		if ($view == 'profile') {
+			$this->get_profile_view();
+		} else {
+			$this->get_list_view();
+		}
 	}
 
 	/**
@@ -183,5 +170,43 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Page {
 		 * @param array $hidden_columns.
 		 */
 		return apply_filters( 'coursepress_studentlist_hidden_columns', array() );
+	}
+
+	private function get_list_view()
+	{
+		$count = 0;
+		$screen = get_current_screen();
+
+		// Set query parameters back.
+		$search = isset($_GET['s']) ? $_GET['s'] : '';
+
+		// Data for template.
+		$args = array(
+			'columns'        => get_column_headers($screen),
+			'students'       => $this->get_students($count),
+			'courses'        => coursepress_get_accessible_courses(),
+			'list_table'     => $this->set_pagination($count, 'coursepress_students_per_page'),
+			'hidden_columns' => get_hidden_columns($screen),
+			'page'           => $this->slug,
+			'search'         => $search,
+		);
+
+		// Render templates.
+		coursepress_render('views/admin/students', $args);
+	}
+
+	private function get_profile_view()
+	{
+		$student_id = isset($_GET['student_id']) ? $_GET['student_id'] : 0;
+		$student = new CoursePress_User($student_id);
+		if ($student->is_error() && $student->is_student()) {
+			return;
+		}
+
+		$args = array(
+			'student_id' => $student_id,
+			'student'    => $student
+		);
+		coursepress_render('views/admin/student-profile', $args);
 	}
 }
