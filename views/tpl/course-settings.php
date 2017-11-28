@@ -41,7 +41,7 @@
 
             <div class="cp-box cp-course-categories">
                 <h3 class="label" for="course-categories"><?php _e( 'Course categories', 'cp' ); ?></h3>
-                <div class="cp-flex">
+                <div>
                     <div class="cp-categories-selector">
                         <select id="course-categories" multiple="multiple" data-placeholder="<?php _e( 'Pick existing categories or add new one', 'cp' ); ?>" name="meta_course_category">
                             <?php foreach ( coursepress_get_categories() as $category ) : ?>
@@ -50,9 +50,7 @@
                         </select>
                         <input type="hidden" id="course-categories-search" value="">
                     </div>
-                    <div class="cp-div-flex">
-                        <button type="button" class="cp-btn" id="cp-create-cat"><?php _e( 'Create Category', 'cp' ); ?></button>
-                    </div>
+                    <p class="description"><?php _e( 'To add new category, name it and use enter key.', 'cp' ); ?></p>
                 </div>
             </div>
         </div>

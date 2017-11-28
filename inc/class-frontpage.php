@@ -23,6 +23,10 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 		add_action( 'init', array( $this, 'maybe_load_zip' ) );
 
 		add_action( 'after_setup_theme', array( $this, 'remove_cookies' ) );
+		/**
+		 * add forum class
+		 */
+		new CoursePress_Data_Forum();
 	}
 
 	function remove_cookies() {
@@ -30,7 +34,7 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 			'cp_incorrect_passcode',
 			'cp_mismatch_password',
 			'cp_profile_updated',
-			'cp_step_error'
+			'cp_step_error',
 		);
 
 		foreach ( $cookies as $cookie ) {
@@ -62,7 +66,6 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 		$course_name = $wp->get( 'coursename' );
 		$type = $wp->get( 'coursepress' );
 		$cp = array();
-
 		if ( ! empty( $course_name ) ) {
 			$cp['course'] = $course_name;
 			$cp['type']   = $type;
@@ -79,7 +82,6 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 			} elseif ( 'forum' == $type ) {
 				$cp['topic'] = $wp->get( 'topic' );
 			}
-
 			$this->reset_wp( $wp, $course_name );
 		} elseif ( ! empty( $type ) ) {
 			// Use for CP specific pages
@@ -95,12 +97,7 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 			} else {
 				$wp->set( 'post_type', 'course' );
 				$wp->set( 'is_archive', 1 );
-				//print_r( $wp );
 				$cp['type'] = 'archive-course';
-
-				// Set archive settings
-				// @todo: Set coures order by
-				// @todo: Hide ended courses setting
 			}
 		}
 
@@ -125,7 +122,6 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 		$css_deps = array( 'dashicons' );
 		$deps = array( 'jquery', 'backbone', 'underscore' );
 		$page_now = $this->__get( 'page_now' );
-
 
 		if ( 'single-course' == $page_now
 			|| in_array( $page_now, array( 'unit', 'module', 'step' ) ) ) {
@@ -195,7 +191,7 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 		wp_enqueue_style( $id, $plugin_url . 'assets/css/' . $src, $deps, $version );
 	}
 
-	private function set_js ( $id, $src, $deps = false ) {
+	private function set_js( $id, $src, $deps = false ) {
 		global $CoursePress;
 
 		$plugin_url = $CoursePress->plugin_url;

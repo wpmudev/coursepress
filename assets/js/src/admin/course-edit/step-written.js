@@ -3,7 +3,7 @@
 (function() {
     'use strict';
 
-    CoursePress.Define( 'Step_INPUT-WRITTEN', function() {
+    CoursePress.Define( 'Step_INPUT-WRITTEN', function( $, doc, win ) {
         var Question;
 
         Question = CoursePress.View.extend({
@@ -45,7 +45,6 @@
                 });
 
                 questions = this.model.get('questions');
-//window.console.log(questions);
                 if ( questions ) {
                     _.each( questions, function( question ) {
                         this._addQuestion(question);
@@ -65,10 +64,10 @@
                 }
                 data = {
                     type: 'written',
-                    title: 'Untitled',
+                    title: win._coursepress.text.untitled,
                     question: '',
-                    meta_placeholder_text: '',
-                    meta_word_limit: 0
+                    placeholder_text: '',
+                    word_limit: 0
                 };
 
                 question = this._addQuestion(data);

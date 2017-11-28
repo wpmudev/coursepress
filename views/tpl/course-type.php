@@ -138,6 +138,14 @@
                 <p class="description"><?php _e( 'Users can access their workbook which will show their progress/scores for the course.', 'cp' ); ?></p>
             </div>
 
+            <div class="cp-box cp-toggle-box cp-sep">
+                <label>
+                    <input type="checkbox" name="meta_allow_grades" value="1" {{_.checked(true, meta_allow_grades)}} class="cp-toggle-input" autocomplete="off" /> <span class="cp-toggle-btn"></span>
+                    <span class="label"><?php _e( 'Show student grades', 'cp' ); ?></span>
+                </label>
+                <p class="description"><?php _e( 'If enabled, students can see their grades.', 'cp' ); ?></p>
+            </div>
+
             <div class="cp-box cp-toggle-box">
                 <label>
                     <input type="checkbox" name="meta_payment_paid_course" value="1" {{_.checked( true, meta_payment_paid_course)}} class="cp-toggle-input" autocomplejte="off" /> <span class="cp-toggle-btn"></span>

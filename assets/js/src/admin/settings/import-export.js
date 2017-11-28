@@ -1,4 +1,4 @@
-/* global CoursePress */
+/* global CoursePress, _coursepress */
 
 (function() {
     'use strict';
@@ -20,16 +20,19 @@
             render: function() {
                 this.errorContainer = this.$('.cp-alert-error');
             },
-            uploadFile: function() {
+            uploadFile: function( ev ) {
                 var valid = this.validateFile();
-
+                var options = $('[type=checkbox]', $(ev.currentTarget).closest( 'form' ) );
+                var uploadModel = this.uploadModel;
                 if ( valid ) {
-                    this.uploadModel.set( 'type', 'import_file' );
-                    this.uploadModel.off( 'coursepress:success_import_file' );
-                    this.uploadModel.on( 'coursepress:success_import_file', this.uploadCourse, this );
-                    this.uploadModel.upload();
+                    options.each( function() {
+                        uploadModel.set( $(this).attr('name'), $(this).is( ':checked' ) );
+                    });
+                    uploadModel.set( 'type', 'import_file' );
+                    uploadModel.off( 'coursepress:success_import_file' );
+                    uploadModel.on( 'coursepress:success_import_file', this.uploadCourse, this );
+                    uploadModel.upload();
                 }
-
                 return false;
             },
 
@@ -64,14 +67,48 @@
         return CoursePress.View.extend({
             template_id: 'coursepress-import-export-setting-tpl',
             el: $('#coursepress-setting-import-export'),
+
+            events: {
+                'click #coursepress-export-button': 'exportCourses',
+                'change input[name="coursepress[all]"]': 'switchAll',
+                'change label.course input[type=checkbox]': 'maybeTurnOffAll',
+            },
+
             initialize: function() {
                 this.on( 'view_rendered', this.setUpForms, this );
                 this.render();
             },
+
             setUpForms: function() {
                 this.importForm = CourseImport.extend({el: this.$('#form-import') });
                 this.importForm = new this.importForm();
-                //this.exportForm = this.$('#form-export');
+                this.exportForm = this.$('#form-export');
+                this.courses = this.$( 'label.course input[type=checkbox]', this.exportForm );
+                this.allCourses = this.$( 'input[name="coursepress[all]"]', this.exportForm );
+            },
+
+            switchAll: function( ev ) {
+                this.courses.each(function() {
+                    this.checked = $(ev.currentTarget).is(':checked');
+                });
+            },
+
+            maybeTurnOffAll: function( ev ) {
+                if ( ! $(ev.currentTarget).is(':checked') ) {
+                    this.allCourses.each( function() {
+                        this.checked = false;
+                    });
+                }
+            },
+
+            exportCourses: function() {
+                var checked = this.$( 'label.course input[type=checkbox]:checked', this.exportForm );
+                if ( 0 === checked.length ) {
+                    window.alert( _coursepress.text.export.no_items );
+                    return false;
+                }
+                this.exportForm.submit();
+                return false;
             }
         });
     });

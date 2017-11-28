@@ -22,8 +22,6 @@ module.exports = function(grunt) {
 	// -------------------------------------------------------------------------
 	// Configuration.
 	var conf = {
-		// Current version
-		version_1: '3.0-beta',
 		// Folder that contains the JS files.
 		js_folder: 'assets/js/',
 
@@ -142,15 +140,15 @@ module.exports = function(grunt) {
                 'assets/js/src/common/view.js',
                 'assets/js/src/front/course-overview.js',
                 'assets/js/src/front/comment-reply.js',
-                'assets/js/src/front/steps.js'
+                'assets/js/src/front/steps.js',
+				'assets/js/src/front/email-unsubscribe.js',
 			]
 		},
 
 		// List of JS files to validate
 		js_src_files: [
 			'Gruntfile.js',
-			'assets/js/src/admin/**/*.js',
-			'assets/js/src/front/**/*.js',
+			'assets/js/src/**/*.js',
 			'!assets/js/src/common/heading.js',
 			'!assets/js/src/common/footer.js'
 		],
@@ -188,20 +186,28 @@ module.exports = function(grunt) {
 			ignore_files: [
 				'(^.php)',	  // Ignore non-php files.
 				'tests/', // Upgrade tests
-				'node_modules/'
+				'node_modules/',
+				'docs/'
 			],
-			pot_dir: '/language/',  // With trailing slash.
+			pot_dir: '/languages/',  // With trailing slash.
 			textdomain: 'cp'   // Campus uses same textdomain.
 		},
 
 		// Build branches.
 		plugin_branches: {
 			exclude_pro: [
+				'../release/docs',
+				'../release/readme.MD',
+				'../release/README.md',
+				'../release/Gulpfile.js',
 				'../release/readme.txt'
 			],
 			exclude_free: [
+				'../release/docs',
 				'../release/test',
 				'../release/campus',
+				'../release/README.md',
+				'../release/Gulpfile.js',
 				'../release/changelog.txt',
 				'../release/premium/'
 			],
@@ -216,14 +222,17 @@ module.exports = function(grunt) {
 		plugin_patterns: {
 			pro: [
 				{ match: /CoursePress Base/g, replace: 'CoursePress Pro' },
+				{ match: /PLUGIN_VERSION/g, replace: '<%= pkg.version %>' },
 				{ match: /BUILDTIME/g, replace: buildtime }
 			],
 			free: [
 				{ match: /CoursePress Base|CoursePress Pro/g, replace: 'CoursePress' },
+				{ match: /PLUGIN_VERSION/g, replace: '<%= pkg.version %>' },
 				{ match: /BUILDTIME/g, replace: buildtime }
 			],
 			campus: [
 				{ match: /CoursePress Base/g, replace: 'CoursePress Campus' },
+				{ match: /PLUGIN_VERSION/g, replace: '<%= pkg.version %>' },
 				{ match: /BUILDTIME/g, replace: buildtime }
 			],
 			// Files to apply above patterns to (not only php files).
@@ -402,7 +411,7 @@ module.exports = function(grunt) {
 					domainPath: conf.translation.pot_dir,
 					exclude: conf.translation.ignore_files,
 					mainFile: conf.plugin_file,
-					potFilename: conf.translation.textdomain_pro + '.pot',
+					potFilename: conf.translation.textdomain + '.pot',
 					potHeaders: {
 						'poedit': true, // Includes common Poedit headers.
 						'language-team': 'WPMU Dev <support@wpmudev.org>',
@@ -425,7 +434,7 @@ module.exports = function(grunt) {
 		},
 		wpmu_pot2mo: {
 			files: {
-				src: 'language/*.pot',
+				src: 'languages/*.pot',
 				expand: true
 			}
 		},
@@ -603,8 +612,8 @@ module.exports = function(grunt) {
 				noEmpty: true
 			},
 			translation: {
-				src: conf.translation.pot_dir + conf.translation.textdomain_pro + '.pot',
-				dest: conf.translation.pot_dir + conf.translation.textdomain_free + '.pot',
+				src: conf.translation.pot_dir + conf.translation.textdomain + '.pot',
+				dest: conf.translation.pot_dir + conf.translation.textdomain + '.pot',
 				nonull: true
 			}
 		}
@@ -630,6 +639,7 @@ module.exports = function(grunt) {
 	// Define default tasks.
 	grunt.registerTask( 'js', ['jsvalidate', 'jshint', 'concat', 'uglify'] );
 	grunt.registerTask( 'css', ['sass', 'autoprefixer', 'cssmin'] );
+	grunt.registerTask( 'assets', ['js', 'css'] );
 
 	grunt.registerTask( 'test', ['phpunit'] );
 	grunt.registerTask( 'php', ['phplint', 'phpcs:sniff'] );

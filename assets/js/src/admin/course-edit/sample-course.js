@@ -56,7 +56,6 @@
             },
 
             setImportedCourse: function( data ) {
-                window.console.log(data);
                 if ( data.course ) {
                     var url = win._coursepress.pagenow + '&cid=' + data.course.ID;
                     win.location = url;

@@ -7,7 +7,6 @@
 #course-students {
     background-color: transparent;
     padding: 0;
-
     .coursepress-table {
         margin-top: 0;
         tfoot {
@@ -18,7 +17,6 @@
             }
         }
     }
-
     .column-student {
         width: 70%;
     }
@@ -32,6 +30,9 @@
                 margin: 5px 0;
             }
         }
+    }
+    .bulkactions {
+        padding-bottom: 10px;
     }
 }
 

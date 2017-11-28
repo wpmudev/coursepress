@@ -276,8 +276,9 @@ class CoursePress_Unit extends CoursePress_Utility {
 		if ( is_wp_error( $user ) )
 			return false;
 
-		if ( ! $module['previous_module'] )
+		if ( !isset( $module['previous_module'] ) || ! $module['previous_module'] ) {
 			return true;
+		}
 
 		$previous_module = $module['previous_module'];
 		$course_id = $this->__get( 'post_parent' );
@@ -951,71 +952,5 @@ class CoursePress_Unit extends CoursePress_Utility {
 		do_action( 'coursepress_unit_duplicate_failed', $this->ID );
 
 		return false;
-	}
-
-	/**
-	 * Duplicate current Unit and set given course ID.
-	 *
-	 * This class object is created based on a WP_Post object. So using the current
-	 * course post data, create new post of type "unit". If success, then copy the
-	 * unit metadata to newly created course post.
-	 *
-	 * @param int $course_id Course ID of the unit.
-	 *
-	 * @return bool Success or Fail?
-	 */
-	function delete_unit() {
-
-		// If in case unit post object is not and ID not found, bail.
-		// Unit ID is set when this class is instantiated.
-		if ( empty( $this->ID ) ) {
-
-			/**
-			 * Perform actions if the deletion was failed.
-			 *
-			 * Note: We don't have unit ID here.
-			 *
-			 * @since 3.0
-			 */
-			do_action( 'coursepress_unit_delete_failed', false );
-
-			return false;
-		}
-
-		/**
-		 * Allow unit deletion to be cancelled when filter returns true.
-		 *
-		 * @since 3.0
-		 */
-		if ( apply_filters( 'coursepress_unit_cancel_delete', false, $this->ID ) ) {
-
-			/**
-			 * Perform actions if the duplication was cancelled.
-			 *
-			 * @since 3.0
-			 */
-			do_action( 'coursepress_unit_delete_cancelled', $this->ID );
-
-			return false;
-		}
-
-		// Get all the modules and steps.
-		$modules_steps = $this->get_modules_with_steps();
-		if ( ! empty( $modules_steps ) ) {
-			// Delete all modules.
-			foreach ( $modules_steps as $module_id => $module ) {
-				if ( ! empty( $module['steps'] ) ) {
-					// Delete all steps.
-					foreach ( $module['steps'] as $step_id => $step ) {
-						wp_delete_post( $step_id, true );
-					}
-				}
-				// Delete the module.
-				wp_delete_post( $module_id, true );
-			}
-		}
-
-		// Finally delete the unit.
-		wp_delete_post( $this->ID, true );
 	}
 }

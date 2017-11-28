@@ -1,0 +1,24 @@
+.coursepress-modal-front {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(221,221,221,.72);
+  width: 100%;
+  height: 100%;
+
+  .coursepress-popup-body-front {
+    background-color: #fff;
+    width: 45%;
+    margin: 125px auto;
+    padding: 15px 25px;
+    border-radius: 5px;
+
+    .coursepress-popup-footer-front {
+      text-align: right;
+    }
+
+    .cp-unsubscribe-message-head {
+      margin-bottom: 15px;
+    }
+  }
+}
