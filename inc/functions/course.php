@@ -469,21 +469,15 @@ function coursepress_get_course_submenu() {
 	 * course ID
 	 */
 	$course_id = $course->__get( 'ID' );
-
 	$menus = array();
-
 	$user = coursepress_get_user();
-
-	l( $user );
 	$is_enrolled = $user->is_enrolled_at( $course_id );
-
 	if ( ! $is_enrolled ) {
 		$is_super = $user->is_super_admin();
 		if ( ! $is_super ) {
 			return $menus;
 		}
 	}
-
 	/**
 	 * Units
 	 */
