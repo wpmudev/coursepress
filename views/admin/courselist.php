@@ -5,12 +5,14 @@
  * @var $courses
  * @var $course_edit_link
  * @var $course CoursePress_Course
+ * @var $bulk_actions Courses bulk actions
+ * @var $statuses Courses statuses
  */
 ?>
 <div class="wrap coursepress-wrap coursepress-courses" id="coursepress-courselist">
     <h1 class="wp-heading-inline">
         <?php _e( 'Courses', 'cp' ); ?>
-        <a href="<?php echo $course_edit_link; ?>" class="cp-btn cp-bordered-btn"><?php _e( 'New Course', 'cp' ); ?></a>
+        <a href="<?php echo $course_edit_link; ?>" class="cp-btn cp-bordered-btn"><?php echo $course_post_type_object->labels->add_new_item; ?></a>
     </h1>
 
     <div class="coursepress-page">
@@ -22,13 +24,29 @@
             </div>
             <button type="submit" class="cp-btn cp-btn-active"><?php _e( 'Search', 'cp' ); ?></button>
         </form>
-
-        <?php if ( count( $statuses ) > 0 ) : ?>
-            <ul class="subsubsub">
-                <?php echo implode( '<li>|</li>', $statuses ); ?>
-            </ul>
-        <?php endif; ?>
-<?php if ( 0 < count( $courses ) ) { ?>
+<?php
+$count = count( $statuses );
+if ( $count > 0 ) {
+	printf( '<h2 class="screen-reader-text">%s</h2>', $course_post_type_object->labels->filter_items_list );
+	echo '<ul class="subsubsub">';
+	$first = true;
+	foreach ( $statuses as $status ) {
+		printf( '<li class="%s">', esc_attr( implode( $status['classes'], ' ' ) ) );
+		printf(
+			'<a href="%s"%s>%s <span class="count">(%s)</span></a>',
+			esc_attr( $status['url'] ),
+			$status['current']? ' class="current"':'',
+			esc_html( $status['label'] ),
+			esc_html( $status['count'] )
+		);
+		if ( $count-- > 1 ) {
+			echo ' |';
+		}
+		echo '</li>';
+	}
+	echo '</ul>';
+}
+if ( 0 < count( $courses ) ) { ?>
         <form method="get" class="cp-bulk-actions-form" id="cp-bulk-actions-form">
             <input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>" />
             <div class="cp-flex">
@@ -54,7 +72,7 @@ foreach ( $bulk_actions as $value => $label ) {
         </form>
 <?php } ?>
 
-        <table class="coursepress-table" cellspacing="0">
+        <table class="coursepress-table">
             <thead>
                 <tr>
                 <td id="cb" class="manage-column column-cb check-column"><label class="screen-reader-text" for="cb-select-all-1"><?php esc_html_e( 'Select All', 'cp' ); ?></label><input id="cb-select-all-1" type="checkbox"></td>
@@ -64,7 +82,9 @@ foreach ( $bulk_actions as $value => $label ) {
                             <?php echo $column_label; ?>
                         </th>
                     <?php endforeach; ?>
+<?php if ( 'trash' != $current_status ) { ?>
                     <th class="column-status"><?php _e( 'Active?', 'cp' ); ?></th>
+<?php } ?>
                 </tr>
             </thead>
             <tbody>
@@ -133,22 +153,25 @@ foreach ( $bulk_actions as $value => $label ) {
 									?>
                                 </td>
                             <?php endforeach; ?>
+<?php if ( 'trash' != $current_status ) { ?>
                             <td class="column-status">
                                 <label>
                                     <?php $active = ( isset( $course->post_status ) && $course->post_status === 'publish' ); ?>
                                     <input type="checkbox" class="cp-toggle-input cp-toggle-course-status" value="<?php echo $course->ID; ?>" <?php checked( $active, true ); ?> /> <span class="cp-toggle-btn"></span>
                                 </label>
                             </td>
+<?php } ?>
                         </tr>
                         <tr class="<?php echo $odd ? 'odd' : 'even'; ?> column-actions">
                             <td scope="row" class="check-column"></td>
-                            <td colspan="<?php echo count( $columns ) + 2; ?>" data-id="<?php echo $course->ID; ?>">
+                            <td colspan="<?php echo count( $columns ) + 2; ?>" data-id="<?php echo esc_attr( $course->ID ); ?>">
                                 <div class="cp-row-actions">
-                                    <a href="<?php echo $edit_link; ?>" data-step="course-type" class="cp-reset-step cp-edit-overview"><?php _e( 'Course Overview', 'cp' ); ?></a> |
+<?php if ( 'trash' != $current_status ) { ?>
+                                    <a href="<?php echo $edit_link; ?>" data-step="course-type" class="cp-reset-step cp-edit-overview"><?php _e( 'Overview', 'cp' ); ?></a> |
                                     <a href="<?php echo $edit_link; ?>" data-step="course-units" class="cp-reset-step cp-edit-units"><?php _e( 'Units', 'cp' ); ?></a> |
                                     <a href="<?php echo $edit_link; ?>" data-step="course-settings" class="cp-reset-step cp-edit-settings"><?php _e( 'Display Settings', 'cp' ); ?></a>
 
-                                    <div class="cp-dropdown">
+                                    <div class="cp-dropdown hide-if-no-js">
                                         <button type="button" class="cp-btn-xs cp-dropdown-btn">
                                             <?php _e( 'More', 'cp' ); ?>
                                         </button>
@@ -156,20 +179,24 @@ foreach ( $bulk_actions as $value => $label ) {
                                             <li class="menu-item-students">
                                                 <a href="<?php echo $edit_link; ?>" data-step="course-students" class="cp-reset-step"><?php _e( 'Students', 'cp' ); ?></a>
                                             </li>
-                                            <li class="menu-item-duplicate-course">
-                                                <a href="<?php echo add_query_arg( array( 'course_id' => $course->ID, '_wpnonce' => wp_create_nonce( 'duplicate_course' ), 'cp_action' => 'duplicate_course' ) ); ?>"><?php _e( 'Duplicate Course', 'cp' ); ?></a>
+                                            <li class="menu-item-duplicate-course cp-duplicate">
+                                                <a href="#"><?php _e( 'Duplicate', 'cp' ); ?></a>
                                             </li>
                                             <li class="menu-item-export">
                                                 <a href="<?php echo add_query_arg( array( 'course_id' => $course->ID, '_wpnonce' => wp_create_nonce( 'export_course' ), 'cp_action' => 'export_course' ) ); ?>"><?php _e( 'Export', 'cp' ); ?></a>
                                             </li>
                                             <li class="menu-item-view-course">
-                                                <a href="<?php echo esc_url( $course->get_permalink() ); ?>" target="_blank"><?php _e( 'View Course', 'cp' ); ?></a>
+                                                <a href="<?php echo esc_url( $course->get_permalink() ); ?>" target="_blank"><?php _e( 'View', 'cp' ); ?></a>
                                             </li>
-                                            <li class="menu-item-delete cp-delete" data-course="<?php echo $course->ID; ?>">
-                                                <a href="#"><?php _e( 'Delete Course', 'cp' ); ?></a>
+                                            <li class="menu-item-trash cp-trash" data-course="<?php echo $course->ID; ?>">
+                                                <a href="#"><?php _e( 'Trash', 'cp' ); ?></a>
                                             </li>
                                         </ul>
                                     </div>
+<?php } else { ?>
+<span class="inline hide-if-no-js cp-restore"><a href="#"><?php _e( 'Restore', 'cp' ); ?></a> |</span>
+<span class="inline hide-if-no-js cp-delete"><a href="#"><?php _e( 'Delete Permanently', 'cp' ); ?></a></span>
+<?php } ?>
                                 </div>
                             </td>
                         </tr>
@@ -181,7 +208,13 @@ foreach ( $bulk_actions as $value => $label ) {
                     <tr class="odd">
                         <?php $colspan = count( $columns ) + 3; ?>
                         <td colspan="<?php echo $colspan; ?>">
-                            <?php _e( 'No courses found.', 'cp' ); ?>
+<?php
+if ( 'trash' == $current_status ) {
+	echo $course_post_type_object->labels->not_found_in_trash;
+} else {
+	echo $course_post_type_object->labels->not_found;
+}
+?>
                         </td>
                     </tr>
                 <?php endif; ?>

@@ -38,8 +38,7 @@
                 'click [name="preview_certificate"]': 'previewCertificate'
             },
             initialize: function( model ) {
-                this.model = model;
-
+                this.model = ! model ? {} : model;
                 this.on( 'view_rendered', this.setUpUI, this );
                 this.render();
             },
@@ -110,16 +109,11 @@
             getModel: function() {
                 return this.model;
             },
-            toggleCertificateSettings: function(ev) {
-                var boxes = this.$('.box-cert-settings'),
-                    sender = $(ev.currentTarget),
-                    is_checked = sender.is(':checked');
-
-                if ( 'use_cp_default' === sender.attr('name') ) {
-                    boxes[ is_checked ? 'slideUp' : 'slideDown']();
-                } else {
-                    boxes[ is_checked ? 'slideDown' : 'slideUp']();
-                }
+            toggleCertificateSettings: function() {
+                var boxes = this.$('.box-cert-settings');
+                var enable = this.$('input[name=enabled]', this.$('.cp-box-certificate-options' )).is(':checked');
+                var use_cp_default = this.$('input[name=use_cp_default]', this.$('.cp-box-certificate-options' )).is(':checked');
+                boxes[ ( enable && ! use_cp_default ) ? 'slideDown' : 'slideUp' ]();
             },
             previewCertificate: function() {
                 var model = new CoursePress.Request( this.getModel() );

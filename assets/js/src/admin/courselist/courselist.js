@@ -11,8 +11,10 @@
             events: {
                 'click .cp-reset-step': 'resetEditStep',
                 'change .cp-toggle-course-status': 'toggleCourseStatus',
-                'click .menu-item-duplicate-course': 'duplicateCourse',
-                'click .menu-item-delete': 'deleteCourse',
+                'click .cp-row-actions .cp-duplicate': 'duplicateCourse',
+                'click .cp-row-actions .cp-delete': 'deleteCourse',
+                'click .cp-row-actions .cp-restore': 'restoreCourse',
+                'click .cp-row-actions .cp-trash': 'trashCourse',
                 'click #cp-search-clear': 'clearSearch',
                 'click .cp-dropdown-btn': 'toggleSubMenu',
                 'click #bulk-actions .cp-btn': 'bulkActions'
@@ -21,10 +23,14 @@
             initialize: function( model ) {
                 this.model = model;
                 this.request = new CoursePress.Request();
-                // On status toggle fail.
+                // On status toggle or duplicate fail.
                 this.request.on( 'coursepress:error_course_status_toggle', this.revertStatusToggle, this );
-                // On delete course
+                this.request.on( 'coursepress:error_duplicate_course', this.showError, this );
+                // On trash, delete, restore or duplicate course.
+                this.request.on( 'coursepress:success_trash_course', this.reloadCourseList, this );
+                this.request.on( 'coursepress:success_restore_course', this.reloadCourseList, this );
                 this.request.on( 'coursepress:success_delete_course', this.reloadCourseList, this );
+                this.request.on( 'coursepress:success_duplicate_course', this.reloadCourseList, this );
             },
             getModel: function() {
                 return this.model;
@@ -45,7 +51,7 @@
              */
             toggleCourseStatus: function(ev) {
                 this.request.selector = $(ev.target);
-                var status = this.request.selector.prop('checked') ? 'publish' : 'pending';
+                var status = this.request.selector.prop('checked') ? 'publish' : 'draft';
                 this.request.set( {
                     'action' : 'course_status_toggle',
                     'course_id' : this.request.selector.val(),
@@ -58,40 +64,77 @@
              * Revert toggled status.
              */
             revertStatusToggle: function(data) {
-                var checked, popup;
-
-                checked = this.request.selector.prop('checked');
+                var checked = this.request.selector.prop('checked');
                 this.request.selector.prop('checked', !checked);
-                popup = new CoursePress.PopUp({
-                    type: 'error',
-                    message: data.message
-                });
+                this.showError(data);
             },
 
-            duplicateCourse: function() {
-                // @todo: duplicate course here
+            /**
+             * Duplicate a course after confirmation.
+             *
+             * @param ev
+             * @returns {boolean}
+             */
+            duplicateCourse: function(ev) {
+                var confirm, sender, dropdown;
+
+                sender = this.$(ev.currentTarget);
+                this.course_id = sender.closest('td').data('id');
+                dropdown = sender.parents('.cp-dropdown');
+
+                confirm = new CoursePress.PopUp({
+                    type: 'warning',
+                    message: win._coursepress.text.duplicate_confirm
+                });
+                confirm.on( 'coursepress:popup_ok', this.duplicateCurrentCourse, this );
+                dropdown.removeClass('open');
+                return false;
+            },
+
+            trashCourse: function(ev) {
+                this.course_id = this.$(ev.currentTarget).closest('td').data('id');
+                if ( this.course_id ) {
+                    this.request.set({
+                        action: 'trash_course',
+                        course_id: this.course_id
+                    });
+                    this.request.save();
+                }
+                return false;
+            },
+
+            restoreCourse: function(ev) {
+                this.course_id = this.$(ev.currentTarget).closest('td').data('id');
+                if ( this.course_id ) {
+                    this.request.set({
+                        action: 'restore_course',
+                        course_id: this.course_id
+                    });
+                    this.request.save();
+                }
+                return false;
             },
 
             deleteCourse: function(ev) {
                 var confirm, sender, dropdown;
-
                 sender = this.$(ev.currentTarget);
-                this.course_id = sender.data('course');
+                this.course_id = sender.closest('td').data('id');
                 dropdown = sender.parents('.cp-dropdown');
-
                 confirm = new CoursePress.PopUp({
                     type: 'warning',
                     message: win._coursepress.text.delete_course
                 });
                 confirm.on( 'coursepress:popup_ok', this.deleteCurrentCourse, this );
-
                 dropdown.removeClass('open');
-
                 return false;
             },
 
             deleteCurrentCourse: function() {
                 if ( this.course_id ) {
+                    new CoursePress.PopUp({
+                        type: 'info',
+                        message: win._coursepress.text.deleting_course
+                    });
                     this.request.set({
                         action: 'delete_course',
                         course_id: this.course_id
@@ -100,8 +143,38 @@
                 }
             },
 
+            /**
+             * Duplicate the course through ajax.
+             */
+            duplicateCurrentCourse: function() {
+                if ( this.course_id ) {
+                    this.request.set({
+                        action: 'duplicate_course',
+                        course_id: this.course_id
+                    });
+                    this.request.save();
+                }
+            },
+
+            /**
+             * Reload the course list page.
+             */
             reloadCourseList: function() {
                 win.location = win.self.location;
+            },
+
+            /**
+             * Error popup for ajax actions.
+             *
+             * @param Response data.
+             *
+             * @note Response should have message.
+             */
+            showError: function(data) {
+                new CoursePress.PopUp({
+                    type: 'error',
+                    message: data.message
+                });
             },
 
             /**
@@ -144,13 +217,35 @@
                         ids .push( value );
                     }
                 });
-                var model = new CoursePress.Request( this.getModel() );
-                model.set( 'action', 'courses_bulk_action' );
-                model.set( 'which', action );
-                model.set( 'courses', ids );
-                model.on( 'coursepress:success_courses_bulk_action', location.reload() );
-                model.save();
+                this.model = new CoursePress.Request( this.getModel() );
+                this.action = action;
+                this.ids = ids;
+                if ( 'delete' === action ) {
+                    var confirm = new CoursePress.PopUp({
+                        type: 'warning',
+                        message: win._coursepress.text.delete_courses
+                    });
+                    confirm.on( 'coursepress:popup_ok', this.bulkActionsSave, this );
+                } else {
+                    this.bulkActionsSave( this );
+                }
                 return;
+            },
+
+            bulkActionsSave: function( ) {
+                if ( this.model && this.ids && this.action ) {
+                    if ( 'delete' === this.action ) {
+                        new CoursePress.PopUp({
+                            type: 'info',
+                            message: win._coursepress.text.deleting_courses
+                        });
+                    }
+                    this.model.set( 'action', 'courses_bulk_action' );
+                    this.model.set( 'which', this.action );
+                    this.model.set( 'courses', this.ids );
+                    this.model.on( 'coursepress:success_courses_bulk_action', location.reload() );
+                    this.model.save();
+                }
             }
 
         });

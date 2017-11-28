@@ -17,6 +17,7 @@
 					'class' => 'large-text',
 				),
 				'post_content' => array(
+					'id' => 'forum_post_content',
 					'type' => 'wp_editor',
 					'value' => $post_content,
 					'options' => array(

@@ -39,24 +39,6 @@ class CoursePress_Admin_Actions {
 	}
 
 	/**
-	 * Duplicate given course.
-	 *
-	 * @param array $request Request data.
-	 */
-	function duplicate_course( $request ) {
-
-		if ( isset( $request['course_id'] ) ) {
-			$course = coursepress_get_course( $request['course_id'] );
-			if ( ! is_wp_error( $course ) ) {
-				$course->duplicate_course();
-			}
-		}
-
-		// Redirect back to same page without unwanted parameters.
-		wp_redirect( remove_query_arg( array( '_wpnonce', 'course_id', 'cp_action' ) ) );
-	}
-
-	/**
 	 * Export given course to JSON.
 	 *
 	 * @param array $request Request data.

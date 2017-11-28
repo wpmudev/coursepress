@@ -9,7 +9,7 @@
  * License:     GPL2
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * TextDomain:  cp
- * Domain Path: /language/
+ * Domain Path: /languages
  * Build Time:  2016-04-07T13:37:59.644Z
  * WDP ID:      913071
  *
@@ -75,7 +75,7 @@ final class CoursePress {
 		'CoursePress_Data_Users',
 		'CoursePress_Core',
 		'CoursePress_Extension',
-		'CoursePress_Cron_Discussion'
+		'CoursePress_Cron_Discussion',
 	);
 
 	/**
@@ -124,12 +124,6 @@ final class CoursePress {
 		// Load core files
 		add_action( 'plugins_loaded', array( $this, 'load_core' ) );
 
-		// We speak languages!
-		load_plugin_textdomain(
-			'cp', // Text domain.
-			false, // Deprecated. Set to false.
-			$this->plugin_path. '/language'
-		);
 		// Register CP theme directory
 		$this->register_cp_theme();
 
@@ -144,6 +138,19 @@ final class CoursePress {
 		//if ( ! wp_get_schedule( $legacy_key ) )
 		//wp_schedule_single_event( time(), $legacy_key );
 		/*********************************************************/
+		/**
+		 * Install on multisite too.
+		 */
+		if ( is_multisite() && ! is_main_site() ) {
+			if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+				require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+			}
+			$plugin_file = basename( dirname( __FILE__ ) ).'/'.basename( __FILE__ );
+			if ( is_plugin_active_for_network( $plugin_file ) ) {
+				$install = new CoursePress_Admin_Install( $this );
+				$install->install_tables();
+			}
+		}
 	}
 
 	private function class_loader( $class_name ) {
@@ -173,15 +180,16 @@ final class CoursePress {
 		if ( ! isset( $GLOBALS[ $class_name ] ) ) {
 			$GLOBALS[ $class_name ] = new $class_name();
 		}
-
 		return $GLOBALS[ $class_name ];
 	}
 
-	function activate() {
-		new CoursePress_Admin_Install( $this );
+	public function activate() {
+		$install = new CoursePress_Admin_Install( $this );
+		$install->install();
 	}
 
-	function deactivate() {}
+	public function deactivate() {
+	}
 
 	function load_core() {
 		// Load core classses
@@ -203,11 +211,17 @@ final class CoursePress {
 		do_action( 'coursepress_initialized' );
 
 		add_action( 'init', array( $this, 'set_current_user' ) );
+
+		// We speak languages!
+		load_plugin_textdomain(
+			'cp', // Text domain.
+			false, // Deprecated. Set to false.
+			$this->plugin_path. '/languages'
+		);
 	}
 
 	function set_current_user() {
 		global $CoursePress_User;
-
 		$CoursePress_User = new CoursePress_User( get_current_user_id() );
 	}
 

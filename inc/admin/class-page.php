@@ -21,6 +21,13 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 */
 	var $localize_array = array();
 
+	/**
+	 * Statuses
+	 */
+	private $available_statuses = array();
+	private $available_actions = array();
+	private $current_status = null;
+
 	public function __construct() {
 		// Check if user can't access coursepress
 		if ( ! current_user_can( 'coursepress_dashboard_cap' ) ) {
@@ -28,6 +35,28 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 			return;
 		}
+
+		/**
+		 * set available actions
+		 */
+		$this->available_actions = array(
+			'delete'  => __( 'Delete Permanently', 'cp' ),
+			'draft'   => __( 'Draft', 'cp' ),
+			'publish' => __( 'Publish', 'cp' ),
+			'restore' => __( 'Restore', 'cp' ),
+			'trash'   => __( 'Move to Trash', 'cp' ),
+		);
+
+		/**
+		 * set available statuses
+		 */
+		$this->available_statuses = array(
+			'draft'   => __( 'Draft', 'cp' ),
+			'publish' => __( 'Publish', 'cp' ),
+			'pending' => __( 'Pending', 'cp' ),
+			'private' => __( 'Private', 'cp' ),
+			'trash'   => __( 'Trash', 'cp' ),
+		);
 
 		// Setup CP pages
 		add_action( 'admin_menu', array( $this, 'set_admin_menus' ) );
@@ -41,6 +70,10 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		// Marked coursepress page
 		add_filter( 'admin_body_class', array( $this, 'add_coursepress_class' ) );
 
+		/**
+		 * allow to upload zip files
+		 */
+		add_filter( 'upload_mimes', array( $this, 'allow_to_upload_zip_files' ) );
 	}
 
 	/**
@@ -200,9 +233,11 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'text' => array(
 				'untitled' => __( 'Untitled', 'cp' ),
 				'ok' => __( 'Ok', 'cp' ),
+				'close' => __( 'Close', 'cp' ),
 				'cancel' => __( 'Cancel', 'cp' ),
 				'error' => __( 'Error', 'cp' ),
 				'warning' => __( 'Warning', 'cp' ),
+				'info' => __( 'Info', 'cp' ),
 				'media' => array(
 					'select_image' => __( 'Select Image', 'cp' ),
 					'select_feature_image' => __( 'Select Feature Image', 'cp' ),
@@ -211,6 +246,10 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 				'server_error' => __( 'An unexpected error occur while processing. Please try again.', 'cp' ),
 				'invalid_file_type' => __( 'Invalid file type!', 'cp' ),
 				'delete_course' => __( 'Deleting this course will also delete all units, modules, steps and any other data associated to this course. Are you sure you want to continue?', 'cp' ),
+				'delete_courses' => __( 'Deleting selected courses will also delete all units, modules, steps and any other data associated to those courses. Are you sure you want to continue?', 'cp' ),
+				'deleting_course' => __( 'Deleting course... please wait', 'cp' ),
+				'deleting_courses' => __( 'Deleting courses... please wait', 'cp' ),
+				'duplicate_confirm' => __( 'Are you sure you want to create a duplicate copy of this course?', 'cp' ),
 				'noname_module' => __( 'You have unnamed module(s)!', 'cp' ),
 				'nosteps' => __( 'You need to create at least a single step!', 'cp' ),
 				'all_students' => __( 'Students from All Courses', 'cp' ),
@@ -242,6 +281,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 					),
 				),
 			),
+			'is_paginated' => isset( $_GET['paged'] ) ? 1 : 0,
 		) );
 
 		// External scripts
@@ -286,7 +326,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'enrollment_end' => __( 'Enrollment End', 'cp' ),
 			'certified' => __( 'Certified', 'cp' ),
 		);
-
 		return $columns;
 	}
 
@@ -296,7 +335,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 * @return array
 	 */
 	function hidden_columns() {
-
 		return array( 'category', 'start_date', 'end_date', 'enrollment_start', 'enrollment_end' );
 	}
 
@@ -379,7 +417,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	}
 
 	function get_courselist_page() {
-		global $CoursePress_User;
+		global $CoursePress_User, $CoursePress_Core;
 
 		$count = 0;
 		$screen = get_current_screen();
@@ -387,28 +425,38 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$page = isset( $_GET['page'] ) ? esc_attr( $_GET['page'] ) : 'coursepress';
 		$search = isset( $_GET['s'] ) ? $_GET['s'] : '';
 		$statuses = array();
-		$get_status = isset( $_REQUEST['status'] ) ? $_REQUEST['status'] : 'any';
+		$get_status = $this->get_status();
 
+		/**
+		 * Build statuses array
+		 */
 		if ( ! empty( $course_status ) ) {
-			$format = '<li class="%1$s"><a href="%2$s">%3$s <span class="count">(%4$s)</span></a></li>';
-
-			$url = remove_query_arg( 'status' );
-
+			$url = add_query_arg( 'page', $this->slug, admin_url( 'admin.php' ) );
 			foreach ( $course_status as $status => $count ) {
+				$classes = array( $status );
 				if ( 'all' == $status ) {
-					$statuses[] = sprintf( $format, 'any' == $get_status ? 'active': '', esc_url( $url ), __( 'All', 'cp' ), $count );
+					$statuses[] = array(
+						'status' => 'all',
+						'label' => __( 'All', 'cp' ),
+						'count' => $count,
+						'url' => $url,
+						'classes' => $classes,
+						'current' => 'any' == $get_status,
+					);
 				} elseif ( $count > 0 ) {
-					if ( 'publish' == $status ) {
-						$url = add_query_arg( 'status', 'publish', $url );
-						$statuses[] = sprintf( $format, 'publish' == $get_status ? 'active' : '', esc_url( $url ), __( 'Publish', 'cp' ), $count );
-					} else {
-						$url = add_query_arg( 'status', 'draft', $url );
-						$statuses[] = sprintf( $format, 'draft' == $get_status ? 'active' : '', $url, __( 'Draft', 'cp' ), $count );
-					}
+					$url = add_query_arg( 'status', $status, $url );
+					$statuses[] = array(
+						'status' => $status,
+						'label' => $this->available_statuses[ $status ],
+						'count' => $count,
+						'url' => $url,
+						'classes' => $classes,
+						'current' => $status == $get_status,
+					);
 				}
 			}
 		}
-
+		$post_type = $CoursePress_Core->__get( 'course_post_type' );
 		$args = array(
 			'columns' => get_column_headers( $screen ),
 			'hidden_columns' => get_hidden_columns( $screen ),
@@ -420,6 +468,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'search' => $search,
 			'bulk_actions' => $this->get_bulk_actions(),
 			'placeholder_text' => '',
+			'current_status' => $this->get_status(),
+			'course_post_type_object' => get_post_type_object( $post_type ),
 		);
 
 		coursepress_render( 'views/admin/courselist', $args );
@@ -435,11 +485,18 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 * @return array $actions Bulk actions for courses.
 	 */
 	public function get_bulk_actions() {
-		$actions = array(
-			'publish' => __( 'Publish', 'cp' ),
-			'draft' => __( 'Draft', 'cp' ),
-		);
-		return $actions;
+		$actions = array( 'publish', 'draft' );
+		$status = $this->get_status();
+		if ( 'trash' == $status ) {
+			$actions = array( 'restore', 'delete' );
+		} else {
+			$actions[] = 'trash';
+		}
+		$a = array();
+		foreach ( $actions as $action ) {
+			$a[ $action ] = $this->available_actions[ $action ];
+		}
+		return $a;
 	}
 
 	/**
@@ -451,7 +508,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 *
 	 * @return object
 	 */
-	function set_courses_pagination( $count ) {
+	public function set_courses_pagination( $count ) {
 
 		// Get no. of courses per page.
 		$per_page = get_user_meta( get_current_user_id(), 'coursepress_course_per_page', true );
@@ -468,8 +525,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		return $listing;
 	}
 
-	function get_course_edit_page() {
-	    global $CoursePress;
+	public function get_course_edit_page() {
+		global $CoursePress;
 
 		// We need the image editor here, enqueue it!!!
 		wp_enqueue_media();
@@ -485,6 +542,20 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		wp_enqueue_script( 'jquery-ui-sortable' );
 
 		$course_id = filter_input( INPUT_GET, 'cid', FILTER_VALIDATE_INT );
+
+		/**
+		 * check is course
+		 */
+		if ( ! empty( $course_id ) ) {
+			$is_course = coursepress_is_course( $course_id );
+			if ( false === $is_course ) {
+				$args = array(
+					'title' => __( 'Course does not exist', 'cp' ),
+				);
+				coursepress_render( 'views/admin/error-wrong', $args );
+				return;
+			}
+		}
 
 		// If it's a new course, create a draft course
 		if ( empty( $course_id ) ) {
@@ -625,18 +696,61 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		coursepress_render( 'views/tpl/steps-template', array( 'file_types' => $file_types, 'questions' => $question_types ) );
 
 		$paged = $this->get_pagenum();
-		$total_students = $course->count_students();
+		$all_student_count = $course->count_students();
+		$certified_student_ids = $course->get_certified_student_ids();
+		$certified_student_count = count( $certified_student_ids );
 		$invited_students = $course->get_invited_students();
+		$show_certified_students = isset( $_REQUEST['certified'] ) ? $_REQUEST['certified'] : 'all';
+		$per_page = get_option( 'posts_per_page', 20 );
+		$student_query_args = array(
+			'number' => $per_page,
+			'offset' => $per_page * ($paged - 1),
+			'paged'  => $paged,
+		);
+		if ( $show_certified_students == 'yes' ) {
+			$students = $course->get_certified_students( $student_query_args );
+			$total_students = $certified_student_count;
+		} else if ( $show_certified_students == 'no' ) {
+			$students = $course->get_non_certified_students( $student_query_args );
+			$total_students = $all_student_count - $certified_student_count;
+		} else {
+			$students = $course->get_students( $student_query_args );
+			$total_students = $all_student_count;
+		}
+
 		$args = array(
-			'total_students' => $total_students,
-			'students' => $course->get_students( false, $paged ),
-			'redirect' => remove_query_arg( 'dummy' ),
-			'pagination' => $this->set_pagination( $total_students, 'coursepress_students' ),
-			'invited_students' => $invited_students,
-			'certified_students' => $course->get_certified_students()
+			'total_students'     => $total_students,
+			'students'           => $students,
+			'redirect'           => remove_query_arg( 'dummy' ),
+			'pagination'         => $this->set_pagination( $total_students, 'coursepress_students', ceil( $total_students / $per_page ) ),
+			'invited_students'   => $invited_students,
+			'certified_students' => $certified_student_ids,
+			'statuses'           => $this->get_course_certification_links( $all_student_count, $certified_student_count ),
+			'show'               => $show_certified_students,
+			'all_student_count'  => $all_student_count,
 		);
 		$this->localize_array['invited_students'] = $invited_students;
 		coursepress_render( 'views/tpl/course-students', $args );
+	}
+
+	private function get_course_certification_links( $all_student_count, $certified_student_count ) {
+
+		$format = '<li><a class="%1$s" href="%2$s">%3$s</a></li>';
+		$url = remove_query_arg( array( 'certified', 'paged' ) );
+		$certification_statuses = array(
+			'all' => sprintf( esc_html__( 'All (%s)', 'cp' ), $all_student_count ),
+			'yes' => sprintf( esc_html__( 'Certified (%s)', 'cp' ), $certified_student_count ),
+			'no'  => sprintf( esc_html__( 'Not Certified (%s)', 'cp' ), $all_student_count - $certified_student_count ),
+		);
+		$links = array();
+		$selected = isset( $_REQUEST['certified'] ) ? $_REQUEST['certified'] : 'all';
+
+		foreach ( $certification_statuses as $status_id => $status_text ) {
+			$status_url = add_query_arg( 'certified', $status_id, $url );
+			$links[] = sprintf( $format, $status_id == $selected ? 'current' : '', $status_url, $status_text );
+		}
+
+		return $links;
 	}
 
 	function get_students_page() {
@@ -697,12 +811,12 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	}
 
 	function get_settings_page() {
-	    global $CoursePress;
+		global $CoursePress;
 
-	    // Include wp.media
+		// Include wp.media
 		wp_enqueue_media();
 
-	    // Include color picker
+		// Include color picker
 		wp_enqueue_script( 'iris' );
 
 		// Include jquery-iframe
@@ -712,7 +826,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		// Add global setting to localize array
 		$this->localize_array['settings'] = coursepress_get_setting( true );
 		$this->localize_array['messages'] = array(
-		    'no_mp_woo' => sprintf( __( '%s and %s cannot be activated simultaneously!', 'cp' ), 'MarketPress', 'WooCommerce' ),
+			'no_mp_woo' => sprintf( __( '%s and %s cannot be activated simultaneously!', 'cp' ), 'MarketPress', 'WooCommerce' ),
 		);
 
 		$extensions = $this->get_extensions();
@@ -768,5 +882,42 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			return array();
 		}
 		return $extensions;
+	}
+
+	/**
+	 * Check current status and sanitise it
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return current status of courses
+	 */
+	private function get_status() {
+		if ( null != $this->current_status ) {
+			return $this->current_status;
+		}
+		$this->current_status = $status = 'any';
+		if ( isset( $_REQUEST['status'] ) ) {
+			$status = $_REQUEST['status'];
+		}
+		$allowed_statuses = array(
+			'any',
+			'publish',
+			'draft',
+			'trash',
+		);
+		if ( in_array( $status, $allowed_statuses ) ) {
+			$this->current_status = $status;
+		}
+		return $this->current_status;
+	}
+
+	/**
+	 * Allow to upload zip files
+	 *
+	 * @since 3.0.0
+	 */
+	public function allow_to_upload_zip_files( $mimes = array() ) {
+		$mimes['zip'] = 'application/zip';
+		return $mimes;
 	}
 }

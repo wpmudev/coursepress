@@ -148,8 +148,7 @@ module.exports = function(grunt) {
 		// List of JS files to validate
 		js_src_files: [
 			'Gruntfile.js',
-			'assets/js/src/admin/**/*.js',
-			'assets/js/src/front/**/*.js',
+			'assets/js/src/**/*.js',
 			'!assets/js/src/common/heading.js',
 			'!assets/js/src/common/footer.js'
 		],
@@ -190,7 +189,7 @@ module.exports = function(grunt) {
 				'node_modules/',
 				'docs/'
 			],
-			pot_dir: '/language/',  // With trailing slash.
+			pot_dir: '/languages/',  // With trailing slash.
 			textdomain: 'cp'   // Campus uses same textdomain.
 		},
 
@@ -435,7 +434,7 @@ module.exports = function(grunt) {
 		},
 		wpmu_pot2mo: {
 			files: {
-				src: 'language/*.pot',
+				src: 'languages/*.pot',
 				expand: true
 			}
 		},
@@ -640,6 +639,7 @@ module.exports = function(grunt) {
 	// Define default tasks.
 	grunt.registerTask( 'js', ['jsvalidate', 'jshint', 'concat', 'uglify'] );
 	grunt.registerTask( 'css', ['sass', 'autoprefixer', 'cssmin'] );
+	grunt.registerTask( 'assets', ['js', 'css'] );
 
 	grunt.registerTask( 'test', ['phpunit'] );
 	grunt.registerTask( 'php', ['phplint', 'phpcs:sniff'] );
