@@ -250,7 +250,7 @@ class CoursePress_User extends CoursePress_Utility {
 	public function get_enrolled_courses_ids( $per_page = 0, $paged = 1 ) {
 		global $wpdb;
 		$id = $this->__get( 'ID' );
-		$offset = ($per_page * $paged );
+		$offset = $per_page * ($paged - 1);
 		$limit = $per_page * $paged;
 		if ( ! $id ) {
 			return null;

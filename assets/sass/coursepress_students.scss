@@ -53,11 +53,11 @@
       }
 
       li {
-        padding: 15px;
+        padding: 10px 15px;
         margin: 0;
 
         &:nth-child(2n) {
-          background: rgba(0, 0, 0, 0.08);
+          background: rgba(0, 0, 0, 0.03);
         }
 
         &:last-child {
