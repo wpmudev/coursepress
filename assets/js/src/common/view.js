@@ -184,13 +184,13 @@
                             }
                         });
 
-						editor.on('focus', function () {
-							content = editor.getContent();
+                        editor.on('focus', function () {
+                            content = editor.getContent();
 
-							if (options.onFocusCallback) {
-								options.onFocusCallback.call(null, content);
-							}
-						});
+                            if (options.onFocusCallback) {
+                                options.onFocusCallback.call(null, content);
+                            }
+                        });
                     }
                     container.find('textarea#' + id).val(content).on('change', function () {
                         content = $(this).val();
