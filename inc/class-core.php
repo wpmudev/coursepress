@@ -46,7 +46,8 @@ final class CoursePress_Core extends CoursePress_Utility {
 				'can_export' => false, // CP have it's own export mechanism
 				'delete_with_user' => false,
 				'rewrite' => array(
-					'slug' => $course_slug,
+					'slug' => 'courses',
+					'with_front' => false,
 				),
 				'support' => array( 'comments' ),
 				'labels' => array(
@@ -76,6 +77,7 @@ final class CoursePress_Core extends CoursePress_Utility {
 				'public' => true,
 				'rewrite' => array(
 					'slug' => $category_slug,
+					'with_front' => false,
 				),
 			)
 		);
