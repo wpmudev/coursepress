@@ -40,8 +40,11 @@
                 var summary, content, proceed;
 
                 proceed = true;
-                summary = this.$('[name="post_excerpt"]');
-                content = this.$('[name="post_content"]');
+                //summary = this.$('[name="post_excerpt"]');
+				//content = this.$('[name="post_content"]');
+				//Cant use the editor name in this case, so we have to use the parent class
+				summary = this.$('.cp-course-overview');
+                content = this.$('.cp-course-description');
                 this.courseEditor.goToNext = true;
 
                 if ( ! this.model.get('post_excerpt') ) {
