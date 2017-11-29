@@ -50,6 +50,10 @@ class CoursePress_Course extends CoursePress_Utility {
 		 * action before_delete_post
 		 */
 		add_action( 'before_delete_post', array( $this, 'delete_course_number' ) );
+		/**
+		 * filter placeholders
+		 */
+		add_filter( 'coursepress_replace_placeholders', array( $this, 'replace_placeholders' ), 10, 3 );
 	}
 
 	public function wp_error() {
@@ -1093,5 +1097,15 @@ class CoursePress_Course extends CoursePress_Utility {
 		}
 		$post_title = get_the_title( $post_id );
 		$this->save_course_number( $post_id, $post_title, array( $post_id ) );
+	}
+
+
+	public function replace_placeholders( $content, $post_id, $user_id = 0 ) {
+		if ( ! coursepress_is_course( $post_id ) ) {
+			return $content;
+		}
+		$content = preg_replace( '/COURSE_NAME/', $this->post_title, $content );
+		return $content;
+
 	}
 }

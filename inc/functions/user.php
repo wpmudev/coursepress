@@ -461,7 +461,22 @@ function coursepress_get_user_course_completion_data( $user_id = 0, $course_id =
 		$results['title'] = __( 'Course is still on going!', 'cp' );
 		$results['content'] = __( 'You haven\'t completed this course.', 'cp' );
 	}
-
+	/**
+	 * If content EXISTS filter it
+	 */
+	if ( isset( $results['content'] ) ) {
+		/**
+		 * Filter allow to replace placeholders.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param string $results['content'] Content of the message, it can contain placeholders.
+		 * @param integer $course_id Course ID.
+		 * @param integer $user_id User ID.
+		 *
+		 */
+		$results['content'] = apply_filters( 'coursepress_replace_placeholders', $results['content'], $course_id, $user_id );
+	}
 	return $results;
 }
 
@@ -788,10 +803,10 @@ function coursepress_add_user_to_blog( $user_id, $role = 'student', $blog_id = 0
 	}
 	if ( empty( $blog_id ) ) {
 		return;
-    }
-    if ( is_user_member_of_blog( $user_id, $blog_id ) ) {
-        return;
-    }
+	}
+	if ( is_user_member_of_blog( $user_id, $blog_id ) ) {
+		return;
+	}
 	switch ( $role ) {
 		case 'instructor':
 			$role = 'coursepress_instructor';
