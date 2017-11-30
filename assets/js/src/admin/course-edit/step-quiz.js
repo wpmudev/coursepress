@@ -130,7 +130,7 @@
                     the_answers.push(answer.val());
                 }, this );
 
-                checked = this.$('[name="checked"]');
+                checked = this.$('input.coursepress-question-answer-checked');
                 the_checked = [];
 
                 _.each(checked, function(check) {
