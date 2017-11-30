@@ -1105,7 +1105,43 @@ class CoursePress_Course extends CoursePress_Utility {
 			return $content;
 		}
 		$content = preg_replace( '/COURSE_NAME/', $this->post_title, $content );
+		$content = preg_replace( '/COURSE_OVERVIEW/', $this->post_excerpt, $content );
+		/**
+		 * COURSE_UNIT_LIST
+		 */
+		$value = '';
+		$units = $this->get_units();
+		foreach ( $units as $unit ) {
+			$value .= sprintf( '<li>%s</li>', $unit->post_title );
+		}
+		if ( ! empty( $value ) ) {
+			$value = sprintf( '<ul>%s</ul>', $value );
+		}
+		$content = preg_replace( '/COURSE_UNIT_LIST/', $value, $content );
+		/**
+		 * certificate
+		 */
+		$certificate = new CoursePress_Certificate();
+		$value = $certificate->get_pdf_file_url( $post_id, $user_id );
+		$content = preg_replace( '/DOWNLOAD_CERTIFICATE_LINK/', $value, $content );
+		$value = sprintf( '<a href="%s">%s</a>', esc_url( $value ), esc_html__( 'Download Certificate', 'cp' ) );
+		$content = preg_replace( '/DOWNLOAD_CERTIFICATE_BUTTON/', $value, $content );
+		/**
+		 * Workbook
+		 */
+		$workbook = coursepress_get_student_workbook_data( $user_id, $post_id );
+		$value = '';
+		if ( ! empty( $workbook ) ) {
+			foreach ( $workbook as $item ) {
+				$value .= sprintf( '<li>%s - %d%%</li>',  $item['title'], $item['progress'] );
+			}
+		}
+		if ( empty( $value ) ) {
+			$value = __( 'Workbook is not available for this course.', 'cp' );
+		} else {
+			$value = sprintf( '<ul>%s</ul>', $value );
+		}
+		$content = preg_replace( '/STUDENT_WORKBOOK/', $value, $content );
 		return $content;
-
 	}
 }
