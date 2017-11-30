@@ -183,6 +183,14 @@
                                 options.callback.call(null, content);
                             }
                         });
+
+                        editor.on('focus', function () {
+                            content = editor.getContent();
+
+                            if (options.onFocusCallback) {
+                                options.onFocusCallback.call(null, content);
+                            }
+                        });
                     }
                     container.find('textarea#' + id).val(content).on('change', function () {
                         content = $(this).val();
