@@ -159,9 +159,9 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 						//grade -= $wrong;
 					}
 
-					error_log($grade);
+					error_log( $grade );
 
-					$data['grade'] = max(0, $grade);
+					$data['grade'] = max( 0, $grade );
 					$total_grade += $grade;
 					$user->record_response( $course_id, $unit_id, $step_id, $data );
 				}
@@ -194,7 +194,7 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 			$answers = $question['options']['answers'];
 
 			foreach ( $answers as $pos => $answer ) {
-				$name = sprintf( 'module[%d][%d][%d][%d][%d]', $course_id, $unit_id, $step_id, $index, $pos );
+				$name = sprintf( 'module[%d][%d][%d][%s][%d]', $course_id, $unit_id, $step_id, $index, $pos );
 				$attr = array(
 					'type' => 'checkbox',
 					'value' => 1,
@@ -231,7 +231,7 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 			$answers = $question['options']['answers'];
 
 			foreach ( $answers as $pos => $answer ) {
-				$name = sprintf( 'module[%d][%d][%d][%d][%d]', $course_id, $unit_id, $step_id, $index, $pos );
+				$name = sprintf( 'module[%d][%d][%d][%s][%d]', $course_id, $unit_id, $step_id, $index, $pos );
 				$attr = array(
 					'type' => 'radio',
 					'value' => $pos,
@@ -271,9 +271,9 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 				$template .= $this->create_html( 'option', $attr, $answer );
 			}
 
-			$name = sprintf( 'module[%d][%d][%d][%d]', $course_id, $unit_id, $step_id, $index );
+			$name = sprintf( 'module[%d][%d][%d][%s]', $course_id, $unit_id, $step_id, $index );
 			$attr = array(
-				'name' => $name
+				'name' => $name,
 			);
 
 			if ( $this->is_preview() ) {
@@ -297,8 +297,8 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 			foreach ( $questions as $index => $question ) {
 				$method = 'get_question_' . $question['type'];
 
-				if ( ! empty( $question['question'] ) )
-					$template .= $this->create_html( 'p', array( 'class' => 'question' ), $question['question'] );
+				if ( ! empty( $question['question'] ) ) {
+					$template .= $this->create_html( 'p', array( 'class' => 'question' ), $question['question'] ); }
 
 				$template .= call_user_func( array( $this, $method ), $index, $question );
 			}
