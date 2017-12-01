@@ -161,6 +161,7 @@
            questions: {},
            questionsModel: {},
            events: {
+                'click .cp-question-header .cp-btn-trash': 'deleteQuestion',
                'change .cp-question-type': 'addQuestion',
                'change [name="meta_show_content"]': 'toggleContent'
            },
@@ -195,6 +196,20 @@
                    this.$('.cp-questions-container').sortable();
                }
            },
+
+           deleteQuestion: function() {
+               var questions;
+               questions = this.model.questions;
+               if ( ! questions ) {
+                   return;
+               }
+
+window.console.log( questions);
+
+//               this.$(ev.currentTarget).closest( '.cp-question-box' ).detach();
+//               this.updateModel();
+           },
+
 
            addQuestion: function(ev) {
                var sender, type, data;

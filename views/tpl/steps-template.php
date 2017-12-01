@@ -285,6 +285,7 @@
     <div class="cp-question-header">
         <span class="q-type">{{window._coursepress.questions[type]}}</span>
         <input type="text" name="title" value="{{title}}" />
+        <span class="cp-btn cp-btn-trash"></span>
         <button type="button" class="question-toggle-button"></button>
     </div>
     <div class="cp-question-content">
