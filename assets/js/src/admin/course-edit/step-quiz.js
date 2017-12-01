@@ -88,11 +88,13 @@
 
             addAnswer: function() {
                 var answer, options;
-
                 options = {
-                    question: ''
+                    question: '',
+                    type: this.model.get('type'),
+                    cid: this.model.cid,
+                    checked: null,
+                    answer: '',
                 };
-
                 answer = new Answer(options, this );
                 answer.$el.appendTo(this.$('.question-answers'));
             },
@@ -130,7 +132,7 @@
                     the_answers.push(answer.val());
                 }, this );
 
-                checked = this.$('[name="checked"]');
+                checked = this.$('input.coursepress-question-answer-checked');
                 the_checked = [];
 
                 _.each(checked, function(check) {
