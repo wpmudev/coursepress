@@ -52,6 +52,7 @@
                     container: this.$('.cp-module-description'),
                     callback: function(content) {
                         self.model.description = content;
+	                    self.trigger('coursepress:update_module_description', content, this);
                     }
                 });
 
@@ -252,12 +253,17 @@
                 this.moduleView = new ModuleSteps(model, this);
                 this.moduleView.$el.appendTo( this.stepsContainer );
                 this.moduleView.on('coursepress:update_module_title', this.updateActiveTitle, this);
+	            this.moduleView.on('coursepress:update_module_description', this.updateActiveDescription, this);
             },
 
             updateActiveTitle: function( title ) {
-                this.active.find('span').html(title);
+                this.active.find('.module-title').html(title);
                 this.updateModuleModel();
             },
+
+	        updateActiveDescription: function ( description ) {
+		        this.active.find('.module-description').html( description );
+	        },
 
             updateModuleModel: function() {
                 if ( ! this.moduleView ) {
