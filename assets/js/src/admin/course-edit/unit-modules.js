@@ -86,7 +86,7 @@
 
                 cid = model.cid ? model.cid : step.model.cid;
                 this.steps[cid] = step;
-                this.stepsModel[cid] = step.model;
+	            this.stepsModel[cid] = model;
                 this.updateModuleSteps(step.model);
 
                 return step;
@@ -102,13 +102,8 @@
             },
 
             updateModuleSteps: function( stepModel ) {
-                var stepId;
-
-                stepId = stepModel.cid;
                 stepModel.module_page = this.model.id;
                 stepModel.set('meta_module_page', this.model.id);
-                this.steps[stepId].model = stepModel;
-                this.stepsModel[stepId] = stepModel;
                 this.model.steps = this.stepsModel;
                 this.moduleView.modules[this.moduleView.current] = this.model;
             },
