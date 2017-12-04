@@ -188,22 +188,23 @@
             },
 
             addModule: function() {
-                var model, length, modules;
+                var model, length, modules, new_index;
 
                 modules = _.toArray(this.modules);
                 length = modules.length;
+                new_index = length + 1;
 
                 model = {
-                    id: length,
+                    id: new_index,
                     title: win._coursepress.text.untitled,
                     show_description: true,
                     description: '',
                     steps: {}
                 };
 
-                this.modules[length] = model;
+                this.modules[new_index] = model;
                 this.model.set('modules', this.modules);
-                this.current = length;
+                this.current = new_index;
                 this._setActiveModule(model);
                 this.setModuleList();
                 // Set the first module as active
