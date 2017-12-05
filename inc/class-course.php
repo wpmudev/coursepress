@@ -50,6 +50,10 @@ class CoursePress_Course extends CoursePress_Utility {
 		 * action before_delete_post
 		 */
 		add_action( 'before_delete_post', array( $this, 'delete_course_number' ) );
+		/**
+		 * filter placeholders
+		 */
+		add_filter( 'coursepress_replace_placeholders', array( $this, 'replace_placeholders' ), 10, 3 );
 	}
 
 	public function wp_error() {
@@ -1093,5 +1097,51 @@ class CoursePress_Course extends CoursePress_Utility {
 		}
 		$post_title = get_the_title( $post_id );
 		$this->save_course_number( $post_id, $post_title, array( $post_id ) );
+	}
+
+
+	public function replace_placeholders( $content, $post_id, $user_id = 0 ) {
+		if ( ! coursepress_is_course( $post_id ) ) {
+			return $content;
+		}
+		$content = preg_replace( '/COURSE_NAME/', $this->post_title, $content );
+		$content = preg_replace( '/COURSE_OVERVIEW/', $this->post_excerpt, $content );
+		/**
+		 * COURSE_UNIT_LIST
+		 */
+		$value = '';
+		$units = $this->get_units();
+		foreach ( $units as $unit ) {
+			$value .= sprintf( '<li>%s</li>', $unit->post_title );
+		}
+		if ( ! empty( $value ) ) {
+			$value = sprintf( '<ul>%s</ul>', $value );
+		}
+		$content = preg_replace( '/COURSE_UNIT_LIST/', $value, $content );
+		/**
+		 * certificate
+		 */
+		$certificate = new CoursePress_Certificate();
+		$value = $certificate->get_pdf_file_url( $post_id, $user_id );
+		$content = preg_replace( '/DOWNLOAD_CERTIFICATE_LINK/', $value, $content );
+		$value = sprintf( '<a href="%s">%s</a>', esc_url( $value ), esc_html__( 'Download Certificate', 'cp' ) );
+		$content = preg_replace( '/DOWNLOAD_CERTIFICATE_BUTTON/', $value, $content );
+		/**
+		 * Workbook
+		 */
+		$workbook = coursepress_get_student_workbook_data( $user_id, $post_id );
+		$value = '';
+		if ( ! empty( $workbook ) ) {
+			foreach ( $workbook as $item ) {
+				$value .= sprintf( '<li>%s - %d%%</li>',  $item['title'], $item['progress'] );
+			}
+		}
+		if ( empty( $value ) ) {
+			$value = __( 'Workbook is not available for this course.', 'cp' );
+		} else {
+			$value = sprintf( '<ul>%s</ul>', $value );
+		}
+		$content = preg_replace( '/STUDENT_WORKBOOK/', $value, $content );
+		return $content;
 	}
 }

@@ -273,6 +273,9 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 					'student' => array(
 						'withdraw' => __( 'Please confirm that you want to remove the student from this course.', 'cp' ),
 					),
+					'steps' => array(
+						'question_delete' => __( 'Are you sure to delete this question?', 'cp' ),
+					),
 				),
 				'course' => array(
 					'students' => array(
@@ -636,7 +639,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$certClass = $CoursePress->get_class( 'CoursePress_Certificate' );
 		$tokens = array(
 			'COURSE_NAME',
-			'COURSE_SUB_TITLE',
 			'COURSE_OVERVIEW',
 			'COURSE_UNIT_LIST',
 			'DOWNLOAD_CERTIFICATE_LINK',

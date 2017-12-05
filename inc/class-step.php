@@ -12,8 +12,8 @@ class CoursePress_Step extends CoursePress_Unit {
 	protected $unit;
 
 	public function __construct( $step, $unit = false ) {
-		if ( ! $step instanceof WP_Post )
-			$step = get_post( $step );
+		if ( ! $step instanceof WP_Post ) {
+			$step = get_post( $step ); }
 
 		if ( ! $step instanceof  WP_Post ) {
 			$this->is_error = true;
@@ -32,6 +32,7 @@ class CoursePress_Step extends CoursePress_Unit {
 
 		// Setup meta-data
 		$this->setUpStepMeta();
+
 	}
 
 	protected function get_keys() {
@@ -47,8 +48,8 @@ class CoursePress_Step extends CoursePress_Unit {
 			'duration',
 			'module_type',
 			'module_page',
-            'show_content',
-            'allowed_file_types'
+			'show_content',
+			'allowed_file_types',
 		);
 
 		return $keys;
@@ -134,11 +135,10 @@ class CoursePress_Step extends CoursePress_Unit {
 		$course = $unit->get_course();
 		$with_modules = $course->is_with_modules();
 
-
 		if ( $with_modules && (int) $module_number > 0 ) {
 			$modules = $unit->get_modules();
 
-			if ( ! empty( $modules ) && $modules[$module_number] ) {
+			if ( ! empty( $modules ) && $modules[ $module_number ] ) {
 				$module = $modules[ $module_number ];
 
 				return $module['url'] . trailingslashit( $post_name );
@@ -197,8 +197,8 @@ class CoursePress_Step extends CoursePress_Unit {
 		$course_id = $this->__get( 'course_id' );
 
 		if ( is_wp_error( $user )
-			|| ! $user->is_enrolled_at( $course_id ) )
-			return false;
+			|| ! $user->is_enrolled_at( $course_id ) ) {
+			return false; }
 
 		if ( ( $prev = $this->__get( 'previousStep' ) ) ) {
 			return $prev->has_completed_by( $user_id );
@@ -250,7 +250,7 @@ class CoursePress_Step extends CoursePress_Unit {
 			foreach ( $steps as $step ) {
 				$previous[] = $step;
 
-				if ( $step->__get('ID') == $this->__get( 'ID' ) ) {
+				if ( $step->__get( 'ID' ) == $this->__get( 'ID' ) ) {
 					break;
 				}
 			}
@@ -286,7 +286,7 @@ class CoursePress_Step extends CoursePress_Unit {
 					break;
 				}
 
-				if ( $step->__get('ID') == $this->__get( 'ID' ) ) {
+				if ( $step->__get( 'ID' ) == $this->__get( 'ID' ) ) {
 					$found = true;
 				}
 			}
@@ -328,7 +328,7 @@ class CoursePress_Step extends CoursePress_Unit {
 					'button',
 					array(
 						'type' => 'button',
-						'class' => 'button cp-button cp-button-retry'
+						'class' => 'button cp-button cp-button-retry',
 					),
 					__( 'Retry', 'cp' )
 				);

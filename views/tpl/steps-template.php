@@ -285,6 +285,7 @@
     <div class="cp-question-header">
         <span class="q-type">{{window._coursepress.questions[type]}}</span>
         <input type="text" name="title" value="{{title}}" />
+        <span class="cp-btn cp-btn-trash"></span>
         <button type="button" class="question-toggle-button"></button>
     </div>
     <div class="cp-question-content">
@@ -301,7 +302,7 @@
 
 <script type="text/template" id="coursepress-question-answer">
     <label class="cp-checkbox">
-        <input type="{{'multiple'===type?'checkbox':'radio'}}" name="checked" autocomplete="off" class="cp-checkbox-input" value="1" {{_.checked(true, checked)}} />
+        <input type="{{'multiple'===type?'checkbox':'radio'}}" name="checked[{{cid}}]" autocomplete="off" class="cp-checkbox-input coursepress-question-answer-checked" value="1" {{_.checked(true, checked)}} />
         <span class="cp-checkbox-icon"></span>
     </label>
     <input type="text" name="answers" value="{{answer}}" />

@@ -149,7 +149,6 @@ class CoursePress_Admin_Comments extends CoursePress_Admin_Page {
 		$certClass = $CoursePress->get_class( 'CoursePress_Certificate' );
 		$tokens = array(
 			'COURSE_NAME',
-			'COURSE_SUB_TITLE',
 			'COURSE_OVERVIEW',
 			'COURSE_UNIT_LIST',
 			'DOWNLOAD_CERTIFICATE_LINK',
