@@ -57,7 +57,7 @@
                 </div>
                 <div class="cp-box cp-on_date {{'on_date' === meta_unit_availability?'':'inactive'}}">
                     <label class="label"><?php _e( 'Unit availability date', 'cp' ); ?></label>
-                    <input type="text" name="meta_unit_availability_date" />
+                    <input type="text" name="meta_unit_availability_date" class="datepicker" />
                 </div>
                 <div class="cp-box cp-after_delay {{'after_delay' === meta_unit_availability?'':'inactive'}}">
                     <label class="label"><?php _e( 'Number of days', 'cp' ); ?></label>
