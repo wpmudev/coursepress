@@ -186,7 +186,7 @@
 																<tr>
 																	<td><?php echo $step->get_the_title(); ?></td>
 																	<td><?php echo $student->get_response( $course_id, $unit->ID, $step_id, true ); ?></td>
-																	<td></td>
+																	<td><?php echo $step->get_answer_template( $student->ID ); ?></td>
 																</tr>
 															<?php endforeach; ?>
 														<?php endif; ?>

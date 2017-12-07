@@ -131,6 +131,14 @@
           cursor: pointer;
         }
       }
+      .cp-no-answer {
+        padding: 0 15px;
+        margin-left: 5px;
+        color: red;
+      }
+      .cp-question-title td {
+        background: #e5e5e5 !important;
+      }
       ul.cp-assessments-units-expanded {
         li {
           width: $width;
@@ -145,6 +153,20 @@
         }
         .pull-left {
           padding-left: 10px;
+        }
+      }
+      .cp-assessments-details-full {
+        ul.cp-assessments-units-expanded {
+          li {
+            padding-bottom: 2px;
+          }
+        }
+        ul.cp-assessments-answers {
+          li {
+            padding: 0;
+            border: 0;
+            background: none;
+          }
         }
       }
       .column-modules_progress,

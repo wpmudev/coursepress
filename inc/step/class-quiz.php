@@ -88,6 +88,72 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 		return $template;
 	}
 
+	public function get_student_answer( $user_id = 0 ) {
+
+		$template = parent::get_answer_template( $user_id );
+
+		$questions = $this->__get( 'questions' );
+
+		if ( $questions ) {
+			$list = '';
+			$response = $this->get_user_response( $user_id );
+			echo '<pre>'; print_r($response); exit;
+			foreach ( $questions as $pos => $question ) {
+				$q = $this->create_html( 'p', array( 'class' => 'question' ), $question['question'] );
+				$a = '';
+				if ( isset( $response[ $pos ] ) ) {
+					$user_response = $response[ $pos ];
+					$answers = $question['options']['answers'];
+					$checked = $question['options']['checked'];
+					if ( $answers ) {
+						foreach ( $answers as $answer_pos => $answer ) {
+							if ( 'select' === $question['type'] ) {
+								if ( $answer_pos == $user_response ) {
+									if ( $checked[ $user_response ] ) {
+										$a .= $this->create_html(
+											'p',
+											array( 'class' => 'chosen-answer correct' ),
+											$answer
+										);
+									} else {
+										$a .= $this->create_html(
+											'p',
+											array( 'class' => 'chosen-answer wrong' ),
+											$answer
+										);
+									}
+								}
+							} else {
+								if ( isset( $user_response[ $answer_pos ] ) ) {
+									if ( $checked[ $answer_pos ] ) {
+										$a .= $this->create_html(
+											'p',
+											array( 'class' => 'chosen-answer correct' ),
+											$answer
+										);
+									} else {
+										$a .= $this->create_html(
+											'p',
+											array( 'class' => 'chosen-answer wrong' ),
+											$answer
+										);
+									}
+								}
+							}
+						}
+					}
+				}
+				$list .= $this->create_html(
+					'li',
+					array( 'class' => 'question' ),
+					$q . $a
+				);
+			}
+			$template .= $this->create_html( 'ul', array( 'class' => 'cp-answers user-answers' ), $list );
+		}
+		return $template;
+	}
+
 	public function validate_response( $response = array() ) {
 		if ( ! empty( $response ) ) {
 			$user = coursepress_get_user();
