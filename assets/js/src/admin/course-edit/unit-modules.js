@@ -86,7 +86,7 @@
 
                 cid = model.cid ? model.cid : step.model.cid;
                 this.steps[cid] = step;
-	            this.stepsModel[cid] = model;
+	            this.stepsModel[cid] = step.model;
                 this.updateModuleSteps(step.model);
 
                 return step;
