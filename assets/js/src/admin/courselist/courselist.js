@@ -31,6 +31,7 @@
                 this.request.on( 'coursepress:success_restore_course', this.reloadCourseList, this );
                 this.request.on( 'coursepress:success_delete_course', this.reloadCourseList, this );
                 this.request.on( 'coursepress:success_duplicate_course', this.reloadCourseList, this );
+                this.request.on( 'coursepress:success_courses_bulk_action', this.reloadCourseList, this );
             },
             getModel: function() {
                 return this.model;
@@ -217,7 +218,6 @@
                         ids .push( value );
                     }
                 });
-                this.model = new CoursePress.Request( this.getModel() );
                 this.action = action;
                 this.ids = ids;
                 if ( 'delete' === action ) {
@@ -233,18 +233,17 @@
             },
 
             bulkActionsSave: function( ) {
-                if ( this.model && this.ids && this.action ) {
+                if ( this.ids && this.action ) {
                     if ( 'delete' === this.action ) {
                         new CoursePress.PopUp({
                             type: 'info',
                             message: win._coursepress.text.deleting_courses
                         });
                     }
-                    this.model.set( 'action', 'courses_bulk_action' );
-                    this.model.set( 'which', this.action );
-                    this.model.set( 'courses', this.ids );
-                    this.model.on( 'coursepress:success_courses_bulk_action', location.reload() );
-                    this.model.save();
+                    this.request.set( 'action', 'courses_bulk_action' );
+                    this.request.set( 'which', this.action );
+                    this.request.set( 'courses', this.ids );
+                    this.request.save();
                 }
             }
 
