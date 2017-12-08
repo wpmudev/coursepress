@@ -29,8 +29,7 @@
 				</div>
 			</div>
 		</form>
-
-		<?php echo '<pre>'; print_r($assessments); exit;?>
+		
 		<table class="coursepress-table" id="cp-assessments-table" cellspacing="0">
 			<thead>
 				<tr>
