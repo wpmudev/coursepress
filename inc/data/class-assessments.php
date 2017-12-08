@@ -22,7 +22,8 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 		$this->course = coursepress_get_course( $course_id );
 
 		if ( ! $this->course instanceof CoursePress_Course ) {
-			return $this->wp_error(); }
+			return $this->wp_error();
+		}
 	}
 
 	/**
@@ -153,7 +154,7 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 	 *
 	 * @return arary
 	 */
-	public function get_assessment_details( $student_id, $progress = 'all' ) {
+	public function get_assessment_details( $student_id, $display = 'all' ) {
 
 		$course_settings = $this->course->get_settings();
 
@@ -170,6 +171,8 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 		}
 
 		$course_id = $this->course->ID;
+
+		$assessment['course'] = $this->course;
 
 		$student = coursepress_get_user( $student_id );
 
@@ -208,9 +211,16 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 
 		// Loop through each units.
 		foreach ( $units as $unit_id => $unit ) {
-
 			// Get the modules for the unit.
 			$modules_steps = $unit->get_modules_with_steps();
+			foreach ( $modules_steps as $mkey => $module ) {
+				foreach ( $module['steps'] as $step_id => $step ) {
+					// If step is not answerable or assessable, unset.
+					if ( ! $step->is_answerable() || ( ! $step->is_assessable() && 'all_assessable' == $display ) ) {
+						unset( $modules_steps[ $mkey ]['steps'][ $step_id ] );
+					}
+				}
+			}
 
 			// If modules not found, skip.
 			if ( ! empty( $modules_steps ) ) {
