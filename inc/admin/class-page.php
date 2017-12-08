@@ -568,11 +568,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			$course = coursepress_get_course( $course_id );
 		}
 
-		/*$units = $course->get_units();
-		echo '<pre>';
-		print_r($units[0]->get_modules_with_steps());
-		exit;*/
-
 		// Set course category
 		$category = array_values( $course->get_category() );
 		$course->__set( 'course_category', $category );
