@@ -64,7 +64,6 @@
 
             setUI: function() {
                 var options, q, type;
-
                 options = this.model.get('options');
                 type = this.model.get('type');
 
@@ -72,9 +71,8 @@
                     _.each( options.answers, function( answer, index ) {
                         var checked;
                         checked = options.checked && !!options.checked[index];
-
                         q = {
-                            type: this.model.get('type'),
+                            type: type,
                             answer: answer,
                             index: index,
                             checked: checked,
@@ -88,11 +86,13 @@
 
             addAnswer: function() {
                 var answer, options;
-
                 options = {
-                    question: ''
+                    question: '',
+                    type: this.model.get('type'),
+                    cid: this.model.cid,
+                    checked: null,
+                    answer: '',
                 };
-
                 answer = new Answer(options, this );
                 answer.$el.appendTo(this.$('.question-answers'));
             },
@@ -130,7 +130,7 @@
                     the_answers.push(answer.val());
                 }, this );
 
-                checked = this.$('[name="checked"]');
+                checked = this.$('input.coursepress-question-answer-checked');
                 the_checked = [];
 
                 _.each(checked, function(check) {
@@ -159,6 +159,7 @@
            questions: {},
            questionsModel: {},
            events: {
+                'click .cp-question-header .cp-btn-trash': 'deleteQuestion',
                'change .cp-question-type': 'addQuestion',
                'change [name="meta_show_content"]': 'toggleContent'
            },
@@ -186,12 +187,33 @@
                this.$('select').select2();
 
                if ( this.model.get('questions') ) {
-                   _.each( this.model.get('questions'), function( question ) {
+                   _.each( this.model.get('questions'), function( question, index ) {
+                       question.id = index;
                        this._addQuestion(question);
                    }, this );
                    this.$('.no-content-info').hide();
                    this.$('.cp-questions-container').sortable();
                }
+           },
+
+           deleteQuestion: function( ev ) {
+               var target;
+               var confirm = new CoursePress.PopUp({
+                   type: 'warning',
+                   message: win._coursepress.text.confirm.steps.question_delete
+               });
+               target = this.$(ev.currentTarget).closest( '.cp-question-box' );
+               this.target = target;
+               this.cid = target.attr('id');
+               confirm.on( 'coursepress:popup_ok', this._deleteQuestion, this );
+           },
+
+           _deleteQuestion: function() {
+               delete this.questionsModel[this.cid];
+               this.updateQuestions();
+               this.target.detach();
+               delete this.cid;
+               delete this.target;
            },
 
            addQuestion: function(ev) {
@@ -220,6 +242,7 @@
                    questions = [];
                }
                model.index = this.questions.length;
+
                question = new Question(model, this);
                question.$el.appendTo(this.$('.cp-questions-container'));
 

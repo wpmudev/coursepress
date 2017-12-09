@@ -63,6 +63,7 @@
 
                 self = this;
                 this.background = new CoursePress.AddImage( this.$('[name="meta_certificate_background"]') );
+	            this.logo = new CoursePress.AddImage( this.$('[name="meta_certificate_logo"]') );
                 this.$('select').select2();
 
                 this.the_title = this.$('#page-completion-title');
@@ -97,22 +98,32 @@
                 sender.addClass('active');
                 self = this;
                 this.current = page;
+                the_page = win._coursepress.completion_pages[page];
 
-                if ( ( the_page = win._coursepress.completion_pages[page] ) ) {
+                if ( the_page ) {
                     title.html( the_page.title );
                     description.html( the_page.description );
 
                     this.the_title.val( this.model.get( page + '_title' ) );
-                    //this.the_content.val( this.model.get( page + '_content' ) );
+                    this.the_title.attr( 'name', 'meta_' + page + '_title' );
+                    this.the_content.val( this.model.get( page + '_content' ) );
 
                     this.visualEditor({
                         content: this.model.get( page + '_content' ),
                         container: this.$('.cp-completion-content'),
                         callback: function( content ) {
-                            self.model.set( page + '_content', content );
+                            self.model.set( 'meta_' + page + '_content', content );
                         }
                     });
                 }
+
+	            this.visualEditor({
+		            content: this.model.get('basic_certificate_layout'),
+		            container: this.$('.cp-certificate-layout'),
+		            callback: function (content) {
+			            self.model.set('meta_basic_certificate_layout', content);
+		            }
+	            });
             },
             validate: function() {
                 var proceed = true;

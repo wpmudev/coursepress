@@ -99,156 +99,143 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 			//'publish_posts' => 0,
 			//'edit_comments' => 1,
 		),
-		'facilitator' => array(
-		)
+		'facilitator' => array(),
 	);
 
 	public function __construct() {
 		// Hook into `coursepress_add_instructor`
 		add_action( 'coursepress_add_instructor', array( $this, 'add_instructor_meta' ), 10, 2 );
-
 		// Hook into `coursepress_delete_instructor`
 		add_action( 'coursepress_delete_instructor', array( $this, 'remove_instructor_meta' ), 10, 2 );
-
 		// Hook into `coursepress_add_student`
 		add_action( 'coursepress_add_student', array( $this, 'add_student_meta' ), 10, 2 );
-
 		// Hook into `coursepress_delete_student`
 		add_action( 'coursepress_delete_student', array( $this, 'delete_student_meta' ), 10, 2 );
-
 		// Hook into `coursepress_add_facilitator`
 		add_action( 'coursepress_add_facilitator', array( $this, 'add_facilitator_meta' ), 10, 2 );
-
 		// Hook into `coursepress_remove_facilitator`
 		add_action( 'coursepress_remove_facilitator', array( $this, 'delete_facilitator_meta' ), 10, 2 );
-
 		// Map coursepress caps
 		add_filter( 'user_has_cap', array( $this, 'map_coursepress_user_cap' ), 99, 4 );
-
 		// Delete student data whenever a user is deleted
 		add_action( 'delete_user', array( $this, 'delete_student_data' ) );
 	}
 
-	function add_instructor_meta( $user_id, $course_id ) {
+	public function add_instructor_meta( $user_id, $course_id ) {
 		// Maybe add instructor role?
 		$this->add_instructor_role( $user_id );
 		// Set instructor user meta
 		add_user_meta( $user_id, 'instructor_' . $course_id, $user_id );
 	}
 
-	function add_instructor_role( $user_id ) {
+	public function add_instructor_role( $user_id ) {
 		if ( ! user_can( $user_id, 'coursepress_instructor' ) ) {
 			$user = get_userdata( $user_id );
 			$user->add_role( 'coursepress_instructor' );
 		}
 	}
 
-	function remove_instructor_meta( $user_id, $course_id ) {
+	public function remove_instructor_meta( $user_id, $course_id ) {
 		// Maybe remove instructor role?
 		$this->remove_instructor_role( $user_id );
 		// Remove user meta as instructor
 		delete_user_meta( $user_id, 'instructor_' . $course_id, $user_id );
 	}
 
-	function remove_instructor_role( $user_id ) {
+	public function remove_instructor_role( $user_id ) {
 		$course_ids = coursepress_get_user_instructed_courses( $user_id, false, true, true );
-
 		if ( count( $course_ids ) <= 0 ) {
 			$user = get_userdata( $user_id );
 			$user->remove_role( 'coursepress_instructor' );
 		}
 	}
 
-	function add_student_meta( $user_id, $course_id ) {
+	public function add_student_meta( $user_id, $course_id ) {
 		// Maybe add student role?
 		$this->add_student_role( $user_id );
 		// Add user student meta
 		add_user_meta( $user_id, 'student_' . $course_id, $user_id );
+		add_user_meta( $user_id, 'enrolled_course_date_' . $course_id, current_time( 'mysql' ) );
 	}
 
-	function add_student_role( $user_id ) {
+	public function add_student_role( $user_id ) {
 		if ( ! user_can( $user_id, 'coursepress_student' ) ) {
 			$user = get_userdata( $user_id );
-			$user->add_role( 'coursepress_student' );
+			if ( $user ) {
+				$user->add_role( 'coursepress_student' );
+			}
 		}
 	}
 
-	function delete_student_meta( $user_id, $course_id ) {
+	public function delete_student_meta( $user_id, $course_id ) {
 		// Maybe delte student role?
 		$this->delete_student_role( $user_id );
 		// Delete user student meta
 		delete_user_meta( $user_id, 'student_' . $course_id, $user_id );
 	}
 
-	function delete_student_role( $user_id ) {
+	public function delete_student_role( $user_id ) {
 		$enrolled_courses_ids = coursepress_get_enrolled_courses( $user_id, false, true, true );
-
 		if ( count( $enrolled_courses_ids ) <= 0 ) {
 			$user = get_userdata( $user_id );
 			$user->remove_role( 'coursepress_student' );
 		}
 	}
 
-	function add_facilitator_meta( $user_id, $course_id ) {
+	public function add_facilitator_meta( $user_id, $course_id ) {
 		// Maybe add facilitator role?
 		$this->add_facilitator_role( $user_id );
-
 		// Set user facilitator meta
 		add_user_meta( $user_id, 'facilitator_' . $course_id, $user_id );
 	}
 
-	function add_facilitator_role( $user_id ) {
+	public function add_facilitator_role( $user_id ) {
 		if ( ! user_can( $user_id, 'coursepress_facilitator' ) ) {
 			$user = get_userdata( $user_id );
 			$user->add_role( 'coursepress_facilitator' );
 		}
 	}
 
-	function delete_facilitator_meta( $user_id, $course_id ) {
+	public function delete_facilitator_meta( $user_id, $course_id ) {
 		// Maybe delete facilitator role?
 		$this->delete_facilitator_role( $user_id );
-
 		// Delete user facilitator meta
 		delete_user_meta( $user_id, 'facilitator_' . $course_id, $user_id );
 	}
 
-	function delete_facilitator_role( $user_id ) {
+	public function delete_facilitator_role( $user_id ) {
 		$facilitated_courses = coursepress_get_user_facilitated_courses( $user_id, false, true, true );
-
 		if ( count( $facilitated_courses ) <= 0 ) {
 			$user = get_userdata( $user_id );
 			$user->remove_role( 'coursepress_facilitator' );
 		}
 	}
 
-	function get_all_caps() {
+	public function get_all_caps() {
 		if ( ! $this->__get( 'allcaps' ) ) {
 			$allcaps = array_map( '__return_true', $this->capabilities['instructor'] );
 			$this->__set( 'allcaps', $allcaps );
 		}
-
 		return $this->__get( 'allcaps' );
 	}
 
-	function get_instructor_caps() {
+	public function get_instructor_caps() {
 		if ( ! $this->__get( 'instructor_caps' ) ) {
 			$cp_caps = coursepress_get_setting( 'capabilities/instructor', $this->capabilities['instructor'] );
 			$this->__set( 'instructor_caps', $cp_caps );
 		}
-
 		return $this->__get( 'instructor_caps' );
 	}
 
-	function get_facilitator_caps() {
+	public function get_facilitator_caps() {
 		if ( ! $this->__get( 'facilitator_caps' ) ) {
 			$cp_caps = coursepress_get_setting( 'capabilities/facilitator', $this->capabilities['facilitator'] );
 			$this->__set( 'facilitator_caps', $cp_caps );
 		}
-
 		return $this->__get( 'facilitator_caps' );
 	}
 
-	function map_coursepress_user_cap( $caps, $cap, $args, $user ) {
+	public function map_coursepress_user_cap( $caps, $cap, $args, $user ) {
 		// Set all CP caps for administrator
 		if ( in_array( 'administrator', $user->roles ) ) {
 			$caps = wp_parse_args( $this->get_all_caps(), $caps );
@@ -261,19 +248,15 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 		if ( in_array( 'coursepress_facilitator', $user->roles ) ) {
 			$caps = wp_parse_args( $this->get_facilitator_caps(), $caps );
 		}
-
 		return $caps;
 	}
 
-	function delete_student_id( $user_id ) {
+	public function delete_student_id( $user_id ) {
 		$user = coursepress_get_user( $user_id );
-
-		if ( is_wp_error( $user ) )
-			return null;
-
+		if ( is_wp_error( $user ) ) {
+			return null; }
 		// Find courses where user are enrolled at
 		$course_ids = $user->get_enrolled_courses_ids();
-
 		if ( is_array( $course_ids ) && ! empty( $course_ids ) ) {
 			foreach ( $course_ids as $course_id ) {
 				coursepress_delete_student( $user_id, $course_id );

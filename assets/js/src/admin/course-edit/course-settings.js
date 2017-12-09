@@ -40,8 +40,8 @@
                 var summary, content, proceed;
 
                 proceed = true;
-                summary = this.$('[name="post_excerpt"]');
-                content = this.$('[name="post_content"]');
+                summary = this.$('.cp-course-overview');
+                content = this.$('.cp-course-description');
                 this.courseEditor.goToNext = true;
 
                 if ( ! this.model.get('post_excerpt') ) {
@@ -91,6 +91,10 @@
                         container: self.$('.cp-course-overview'),
                         callback: function( content ) {
                             self.model.set( 'post_excerpt', content );
+                        },
+                        onFocusCallback: function () {
+                            var summary = self.$('.cp-course-overview');
+                            summary.parent().removeClass('cp-error');
                         }
                     });
 
@@ -103,6 +107,10 @@
                         container: self.$('.cp-course-description'),
                         callback: function( content ) {
                             self.model.set( 'post_content', content );
+                        },
+                        onFocusCallback: function () {
+                            var description = self.$('.cp-course-description');
+                            description.parent().removeClass('cp-error');
                         }
                     });
                 }, 500 );

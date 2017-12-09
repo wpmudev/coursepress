@@ -37,7 +37,8 @@ function coursepress_get_course( $course_id = 0 ) {
 	}
 
 	if ( isset( $CoursePress_Core->courses[ $course_id ] ) ) {
-		return $CoursePress_Core->courses[ $course_id ]; }
+		return $CoursePress_Core->courses[ $course_id ];
+	}
 
 	$course = new CoursePress_Course( $course_id );
 
@@ -468,6 +469,15 @@ function coursepress_get_course_submenu() {
 	 * course ID
 	 */
 	$course_id = $course->__get( 'ID' );
+	$menus = array();
+	$user = coursepress_get_user();
+	$is_enrolled = $user->is_enrolled_at( $course_id );
+	if ( ! $is_enrolled ) {
+		$is_super = $user->is_super_admin();
+		if ( ! $is_super ) {
+			return $menus;
+		}
+	}
 	/**
 	 * Units
 	 */
@@ -1283,9 +1293,9 @@ function coursepress_delete_course( $course_id ) {
 	// Delete course instructors
 	$instructors = $course->get_instructors();
 
-	if ($instructors) {
-		foreach ($instructors as $instructor) {
-			coursepress_delete_course_instructor($instructor->ID, $course_id);
+	if ( $instructors ) {
+		foreach ( $instructors as $instructor ) {
+			coursepress_delete_course_instructor( $instructor->ID, $course_id );
 		}
 	}
 

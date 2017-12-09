@@ -49,8 +49,6 @@
                 }
             },
             getModel: function() {
-                window.console.log('slugs');
-                window.console.log(this.model);
                 return this.model;
             }
         });

@@ -7,13 +7,27 @@
  */
 class CoursePress_Extension_WooCommerce {
 
-	private $active = false;
+	/**
+	 * Base path for the Woocommerce plugin.
+	 *
+	 * @var array
+	 */
+	private $base_path = 'woocommerce/woocommerce.php';
 
-	public function __construct() {
-		$this->active = class_exists( 'WooCommerce' );
-		if ( ! $this->active ) {
+	/**
+	 * Initialize the class.
+	 *
+	 * Register all action and filter hooks if plugin is active.
+	 *
+	 * @return void
+	 */
+	public function init() {
+
+		// Do not continue if Woocommerce is not enabled.
+		if ( ! $this->is_enabled() ) {
 			return;
 		}
+
 		add_action( 'coursepress_course_updated', array( $this, 'course_update' ), 10, 2 );
 		add_filter( 'coursepress_default_course_meta', array( $this, 'add_course_default_fields' ) );
 		add_action( 'before_delete_post', array( $this, 'update_product_when_deleting_course' ) );
@@ -28,8 +42,7 @@ class CoursePress_Extension_WooCommerce {
 		 * @param WP_Post $course current course to check
 		 * @param integer $user_id user to check
 		 */
-		add_filter( 'coursepress_is_user_purchased_course', array( $this, 'is_user_purchased_course' ), 10, 3
-		);
+		add_filter( 'coursepress_is_user_purchased_course', array( $this, 'is_user_purchased_course' ), 10, 3 );
 
 		add_shortcode( 'mp_product_price', array( $this, 'product_price' ) );
 		add_shortcode( 'mp_buy_button', array( $this, 'add_to_cart_template' ) );
@@ -47,8 +60,8 @@ class CoursePress_Extension_WooCommerce {
 		add_action( 'template_redirect', array( $this, 'redirect_to_product' ) );
 
 		/**
- * WooCommerce filters
- */
+		 * WooCommerce filters
+		 */
 		add_action( 'woocommerce_process_product_meta_simple', array( $this, 'woo_save_post' ), 999 );
 		add_action( 'woocommerce_order_details_after_order_table', array( $this, 'show_course_message_woocommerce_order_details_after_order_table' ), 10, 2 );
 		add_filter( 'woocommerce_cart_item_name', array( $this, 'change_cp_item_name' ), 10, 3 );
@@ -71,6 +84,54 @@ class CoursePress_Extension_WooCommerce {
 		 * WooCommerce payment complete -> CoursePress enroll student.
 		 */
 		add_action( 'woocommerce_payment_complete', array( $this, 'payment_complete_enroll_student' ) );
+	}
+
+	/**
+	 * Check if current plugin is enabled.
+	 *
+	 * @return bool
+	 */
+	function is_enabled() {
+
+		// Check if extension is enabled in settings.
+		$settings = coursepress_get_setting( 'woocommerce' );
+		if ( ! empty( $settings ) && ! empty( $settings['enabled'] ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Is plugin installed?
+	 *
+	 * Check if Woocommerce plugin is installed in normal way or via mu-plugins.
+	 *
+	 * @return bool
+	 */
+	public function installed() {
+
+		$plugin_dir = WP_PLUGIN_DIR . '/' . $this->base_path;
+		$plugin_mu_dir = WP_CONTENT_DIR . '/mu-plugins/' . $this->base_path;
+		$location = file_exists( $plugin_dir ) ? trailingslashit( WP_PLUGIN_DIR ) : ( file_exists( $plugin_mu_dir ) ?  WP_CONTENT_DIR . '/mu-plugins/' : '' ) ;
+
+		return empty( $location ) ? false : true;
+
+	}
+
+	/**
+	 * Is plugin active?
+	 *
+	 * Check if current plugin is active, not just installed.
+	 * is_plugin_active() Will not check mu-plugins. So use `WooCommerce`
+	 * class to check if WooCommerce is active.
+	 *
+	 * @return bool
+	 */
+	public function activated() {
+
+		return class_exists( 'WooCommerce' );
+
 	}
 
 	public function add_course_default_fields( $course_meta ) {
@@ -226,7 +287,7 @@ class CoursePress_Extension_WooCommerce {
 	 * @param integer $product_id product to check
 	 *
 	 */
-	public static function update_course_when_deleting_product( $product_id ) {
+	public function update_course_when_deleting_product( $product_id ) {
 		if ( ! $this->active ) {
 			return;
 		}
@@ -278,7 +339,9 @@ class CoursePress_Extension_WooCommerce {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param arrat $atts Configuration array.
+	 * @param array $atts Configuration array.
+	 *
+	 * @return mixed
 	 */
 	public function add_to_cart_template( $atts ) {
 		if ( ! $this->active ) {
@@ -310,10 +373,10 @@ class CoursePress_Extension_WooCommerce {
 		 * no or invalid product? any doubts?
 		 */
 		if ( ! $product->is_purchasable() || ! $product->is_in_stock() ) {
-			return $content;
+			return '';
 		}
 		$args = array(
-			'product_id' => $product->id,
+			'product_id' => $product_id,
 			'wc_cart_url' => wc_get_cart_url(),
 			'wc_button' => $product->single_add_to_cart_text(),
 		);
@@ -354,7 +417,7 @@ class CoursePress_Extension_WooCommerce {
 		/**
 		 * Set or update thumbnail.
 		 */
-		$this->update_product_thumbnail( $product->ID );
+		$this->update_product_thumbnail( $post->ID );
 	}
 
 	/**
@@ -572,6 +635,8 @@ class CoursePress_Extension_WooCommerce {
 	 * @since 2.0.6
 	 *
 	 * @param mixed $enable_guest_checkout
+	 *
+	 * @return mixed
 	 */
 	public function check_cart_and_user_login( $enable_guest_checkout ) {
 		if ( is_user_logged_in() ) {
@@ -605,7 +670,7 @@ class CoursePress_Extension_WooCommerce {
 		foreach ( $items as $item ) {
 			$course_id = wp_get_post_parent_id( $item['product_id'] );
 			if ( empty( $course_id ) ) {
-				contenue;
+				continue;
 			}
 			coursepress_add_student( $user_id, $course_id );
 		}

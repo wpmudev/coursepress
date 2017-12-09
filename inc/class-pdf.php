@@ -220,6 +220,13 @@ class CoursePress_PDF extends CoursePress_External_TCPDF_TCPDF
         return $is_writable;
     }
 
+    private function get_image_contents($url)
+    {
+        $image_path = str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $url);
+        $image_contents = file_get_contents($image_path);
+        return $image_contents ? '@' . $image_contents : false;
+    }
+
     /**
      * Make the actual PDF
      *
@@ -352,11 +359,15 @@ class CoursePress_PDF extends CoursePress_External_TCPDF_TCPDF
             $html = $args['style'] . $html;
         }
 
-        if ( isset( $args['image'] ) && ! empty( $args['image'] ) ) {
-            $pdf->SetMargins( 0, 0, 0 );
-            $pdf->SetAutoPageBreak( false, 0 );
-            $pdf->Image( $args['image'], 0, 0, 0, 0, '', '', '', true, 300, '', false, false, 0, false, false, true );
-            $pdf->setPageMark();
+        if (isset($args['image']) && !empty($args['image'])) {
+            $image_contents = $this->get_image_contents($args['image']);
+
+            if ($image_contents) {
+                $pdf->SetMargins(0, 0, 0);
+                $pdf->SetAutoPageBreak(false, 0);
+                $pdf->Image($image_contents, 0, 0, 0, 0, '', '', '', true, 300, '', false, false, 0, false, false, true);
+                $pdf->setPageMark();
+            }
         }
 
         // set auto page breaks
@@ -398,14 +409,23 @@ class CoursePress_PDF extends CoursePress_External_TCPDF_TCPDF
         /**
          * Logo
          */
-        if ( isset( $args['logo'] ) && ! empty( $args['logo'] ) && is_array( $args['logo'] ) ) {
-            $pdf->Image(
-                $args['logo']['file'],
-                $args['logo']['x'],
-                $args['logo']['y'],
-                $args['logo']['w']
-            );
-        }
+	    if (!empty($args['logo']['file'])) {
+		    $logo_image_contents = $this->get_image_contents($args['logo']['file']);
+		    $args['logo'] = wp_parse_args($args['logo'], array(
+			    'x' => 0,
+			    'y' => 0,
+			    'w' => 0
+		    ));
+
+		    if ($logo_image_contents) {
+			    $pdf->Image(
+				    $logo_image_contents,
+				    $args['logo']['x'],
+				    $args['logo']['y'],
+				    $args['logo']['w']
+			    );
+		    }
+	    }
 
         // output the HTML content
         $pdf->writeHTML( $html, true, false, true, false, '' );

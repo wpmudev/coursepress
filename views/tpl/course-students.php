@@ -4,6 +4,9 @@
  */
 ?>
 <script type="text/template" id="coursepress-students-tpl">
+	<div class="cp-box-heading">
+		<h2 class="box-heading-title"><?php _e( 'Course Students', 'cp' ); ?></h2>
+	</div>
     <ul class="subsubsub">
         <?php echo implode( '<li>|</li>', $statuses ); ?>
     </ul>
@@ -31,7 +34,7 @@
             <?php if ( count( $students ) > 0 ) { ?>
                 <?php foreach ( $students as $student ) { ?>
                 <tr id="student-<?php echo esc_attr( $student->ID ); ?>">
-                    <td><input type="checkbox" name="bulk-actions[]" value="<?php esc_attr_e( $student->ID ); ?>" /></td>
+                    <td class="check-column"><input type="checkbox" name="bulk-actions[]" value="<?php esc_attr_e( $student->ID ); ?>" /></td>
                     <td>
                         <div class="cp-flex cp-user">
                             <span class="gravatar"> <?php echo $student->get_avatar( 30 ); ?></span>
@@ -44,7 +47,7 @@
 			                /**
 			                 * @var array $certified_students
 			                 */
-			                $student_certified = in_array($student->ID, $certified_students);
+			                $student_certified = in_array( $student->ID, $certified_students );
 			                printf(
 				                '<span class="dashicons dashicons-%s"></span>',
 				                $student_certified ? 'yes' : 'no'
@@ -58,15 +61,35 @@
                 <?php } ?>
             <?php } ?>
                 <tr class="noitems <?php echo count( $students ) > 0? 'hidden':''; ?>">
-                    <td colspan="3">
+                    <td colspan="4">
+<?php if ( 1 > $all_student_count ) { ?>
                         <p><?php _e( 'There are currently no students enrolled to this course.', 'cp' ); ?></p>
                         <p><?php _e( 'You can invite students below or wait for them to enroll once the course is active.', 'cp' ); ?></p>
+<?php } else {
+	switch ( $show ) {
+		case 'yes':
+		?>
+                        <p><?php _e( 'No student has completed this course yet.', 'cp' ); ?></p>
+	<?php
+	break;
+		case 'no':
+		?>
+                        <p><?php _e( 'All enrolled students have completed this course.', 'cp' ); ?></p>
+	<?php
+	break;
+		default:
+		?>
+                        <p><?php _e( 'Something went wrong.', 'cp' ); ?></p>
+	<?php
+	break;
+	}
+} ?>
                     </td>
                 </tr>
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="3" class="add-student">
+                <td colspan="4" class="add-student">
                     <div class="cp-flex">
                         <select id="add-student-select"></select>
                         <button id="add-student-button" class="cp-btn cp-btn-xs"><?php esc_html_e( 'Add Student', 'cp' ); ?></button>
@@ -136,6 +159,7 @@
 </script>
 
 <script type="text/template" id="coursepress-course-add-student">
+    <td class="check-column"><input type="checkbox" name="bulk-actions[]" value="{{ID}}" /></td>
     <td>
         <div class="cp-flex cp-user">
             <span class="gravatar"><img alt="" src="{{gravatar_url}}" class="avatar avatar-30 photo" height="30" width="30"></span>

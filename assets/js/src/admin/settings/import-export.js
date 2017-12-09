@@ -20,16 +20,19 @@
             render: function() {
                 this.errorContainer = this.$('.cp-alert-error');
             },
-            uploadFile: function() {
+            uploadFile: function( ev ) {
                 var valid = this.validateFile();
-
+                var options = $('[type=checkbox]', $(ev.currentTarget).closest( 'form' ) );
+                var uploadModel = this.uploadModel;
                 if ( valid ) {
-                    this.uploadModel.set( 'type', 'import_file' );
-                    this.uploadModel.off( 'coursepress:success_import_file' );
-                    this.uploadModel.on( 'coursepress:success_import_file', this.uploadCourse, this );
-                    this.uploadModel.upload();
+                    options.each( function() {
+                        uploadModel.set( $(this).attr('name'), $(this).is( ':checked' ) );
+                    });
+                    uploadModel.set( 'type', 'import_file' );
+                    uploadModel.off( 'coursepress:success_import_file' );
+                    uploadModel.on( 'coursepress:success_import_file', this.uploadCourse, this );
+                    uploadModel.upload();
                 }
-
                 return false;
             },
 

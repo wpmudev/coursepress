@@ -229,9 +229,18 @@
                     <span class="label"><?php _e( 'Assessable', 'cp' ); ?></span>
                 </label>
             </div>
+
+            <div class="cp-box cp-toggle-box">
+                <label>
+                    <input type="checkbox" name="meta_allow_retries" value="1" class="cp-toggle-input" {{_.checked(true, meta_allow_retries)}} /> <span class="cp-toggle-btn"></span>
+                    <span class="label"><?php _e( 'Allow retries', 'cp' ); ?></span>
+                </label>
+            </div>
         </div>
 
         <div class="cp-flex">
+
+
             <div class="cp-box">
                 <div class="cp-box-grey">
                     <label class="label"><?php _e( 'Number of allowed retries', 'cp' ); ?></label>
@@ -276,6 +285,7 @@
     <div class="cp-question-header">
         <span class="q-type">{{window._coursepress.questions[type]}}</span>
         <input type="text" name="title" value="{{title}}" />
+        <span class="cp-btn cp-btn-trash"></span>
         <button type="button" class="question-toggle-button"></button>
     </div>
     <div class="cp-question-content">
@@ -292,7 +302,7 @@
 
 <script type="text/template" id="coursepress-question-answer">
     <label class="cp-checkbox">
-        <input type="{{'multiple'===type?'checkbox':'radio'}}" name="checked" autocomplete="off" class="cp-checkbox-input" value="1" {{_.checked(true, checked)}} />
+        <input type="{{'multiple'===type?'checkbox':'radio'}}" name="checked[{{cid}}]" autocomplete="off" class="cp-checkbox-input coursepress-question-answer-checked" value="1" {{_.checked(true, checked)}} />
         <span class="cp-checkbox-icon"></span>
     </label>
     <input type="text" name="answers" value="{{answer}}" />

@@ -4,9 +4,8 @@
     'use strict';
 
     CoursePress.Define( 'AddMedia', function( $, doc, win ) {
-        var frame;
-
         return CoursePress.View.extend({
+            frame: null,
             template_id: 'coursepress-add-media-tpl',
             className: 'cp-add-media-box',
             type: 'video',
@@ -36,24 +35,26 @@
                     return; // @todo: show graceful error
                 }
 
-                if ( ! frame ) {
+	            var frameTitle = this.input.data('title') ? this.input.data('title') : '';
+
+	            if ( ! this.frame ) {
                     var settings = {
                         frame: 'select',
-                        title: this.data.title,
+                        title: frameTitle,
                         library: {type: [this.data.type]}
                     };
 
-                    frame = new wp.media(settings);
-                    frame.on('select', this.setSelected, this);
+                    this.frame = new wp.media(settings);
+                    this.frame.on('select', this.setSelected, this);
                 }
 
-                frame.open();
+                this.frame.open();
             },
 
             setSelected: function() {
                 var selected, id;
 
-                selected = frame.state().get('selection').first();
+                selected = this.frame.state().get('selection').first();
                 id = selected.get('id');
 
                 this.input.val( selected.attributes.url );

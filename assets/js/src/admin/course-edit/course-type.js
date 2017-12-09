@@ -84,6 +84,10 @@
 
                 if ( title ) {
                     title = title.toLowerCase().replace( / /g, '-' );
+                    title = title.toLowerCase().replace( /[^a-z09\-]/g, '-' );
+                    title = title.toLowerCase().replace( /\-+/g, '-' );
+                    title = title.toLowerCase().replace( /^\-+/g, '' );
+                    title = title.toLowerCase().replace( /\-+$/g, '' );
                 }
                 slugDiv.val(title);
                 slugDiv.trigger('keyup');

@@ -131,14 +131,22 @@
            },
 
            initialize: function(model, stepController) {
-               this.model = _.extend( {}, default_vars[this.model.module_type], this.model );
-               this.type = this.model.module_type;
 
-               if ( ! this.model.cid ) {
-                   this.model.cid = this.cid;
+               if (
+                   !(this.model instanceof Module)
+               ) {
+                   this.model = _.extend({}, default_vars[this.model.module_type], this.model);
+                   this.type = this.model.module_type;
+
+                   if (!this.model.cid) {
+                       this.model.cid = this.cid;
+                   }
+
+                   this.model = new Module(this.model);
                }
-
-               this.model = new Module(this.model);
+               else {
+                   this.model = new Module(this.model.toJSON());
+               }
 
                /*
 

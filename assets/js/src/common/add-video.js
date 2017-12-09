@@ -4,7 +4,7 @@
     'use strict';
 
     CoursePress.Define( 'AddVideo', function($, doc, win) {
-       var frame, in_frame;
+       var in_frame;
 
        // Determine whether or not the selected is from the frame
        in_frame = false;
@@ -56,27 +56,29 @@
                    return; // @todo: show graceful error
                }
 
-               if ( ! frame ) {
+	           var frameTitle = this.input.data('title') ? this.input.data('title') : '';
+
+               if ( ! this.frame ) {
                    var settings = {
                        frame: 'select',
-                       title: this.data.title,
+                       title: frameTitle,
                        library: {
                            type: [ 'video' ]
                        }
                    };
 
-                   frame = new wp.media(settings);
+                   this.frame = new wp.media(settings);
 
-                   frame.on('open', this.openMediaFrame, this);
-                   frame.on('select', this.setSelectedVideo, this);
+                   this.frame.on('open', this.openMediaFrame, this);
+                   this.frame.on('select', this.setSelectedVideo, this);
                }
-               frame.open();
+               this.frame.open();
            },
            openMediaFrame: function() {},
            setSelectedVideo: function() {
                var selected, id, url;
 
-               selected = frame.state().get('selection').first();
+               selected = this.frame.state().get('selection').first();
                id = selected.get('id');
 
                in_frame = true;
@@ -92,7 +94,7 @@
                    this.video_url_input.trigger( 'change' );
                    this.input.trigger( 'change' );
                } else {
-                   window.console.log(selected);
+                   // TODO
                }
 
                // Restore before closing wpmedia

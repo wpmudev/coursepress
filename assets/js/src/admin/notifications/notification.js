@@ -6,7 +6,7 @@
 	/**
 	 * Notifications pages including sub pages.
 	 */
-	CoursePress.Define( 'Notification', function( $ ) {
+	CoursePress.Define( 'Notification', function( $, doc, win ) {
 		var Notification;
 
 		Notification = CoursePress.View.extend( {
@@ -28,6 +28,10 @@
 
 			// On rendering page.
 			render: function() {
+				// If pagination args available, show alerts page.
+				if ( win._coursepress.is_paginated > 0 ) {
+					this.currentPage = this.currentTab = 'alerts';
+				}
 				this.on( 'coursepress:notification', this.setCurrentPage, this );
 				this.setPage( this.currentPage, this.currentTab );
 			},

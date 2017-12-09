@@ -8,10 +8,8 @@
  * @var $post CoursePress_Course
  */
 global $post;
-
 $course = coursepress_get_course( $post );
 ?>
-
 <article id="post-<?php the_ID(); ?>" <?php post_class( 'course-item-box' ); ?>>
 	<div class="course-feature-image-container">
 		<?php echo $course->get_feature_image( 270 ); ?>
@@ -23,14 +21,12 @@ $course = coursepress_get_course( $post );
 		<div class="entry-content course-description">
 			<?php echo coursepress_get_course_summary( false, 180 ); ?>
 		</div>
-
 		<?php if ( ( $instructors = $course->get_instructors_link() ) ) : ?>
 			<div class="course-instructors">
-				<strong><?php echo _n( 'Instructor', 'Instructors', count( $instructors ), 'cp' ); ?>: </strong>
+				<strong><?php echo _nx( 'Instructor:', 'Instructors:', count( $instructors ), 'Before instructors list on course details page.', 'cp' ); ?></strong>
 				<?php echo implode( ', ', $instructors ); ?>
 			</div>
 		<?php endif; ?>
-
 		<div class="course-metas">
 			<span class="course-meta course-meta-start-date"><?php echo $course->get_course_start_date(); ?></span>
 			<span class="course-meta course-meta-language"><?php echo $course->get_course_language(); ?></span>

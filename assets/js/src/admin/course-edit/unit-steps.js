@@ -85,7 +85,6 @@
             },
 
             updateSteps: function() {
-                //window.console.log(this.unitModel.model);
                 this.unitModel.model.set('steps', this.steps);
             }
         });

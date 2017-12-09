@@ -33,7 +33,6 @@
             },
 
             getModel: function() {
-                window.console.log(this.model);
                 return this.model;
             },
 

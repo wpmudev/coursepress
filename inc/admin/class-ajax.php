@@ -411,14 +411,22 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			$margins = isset( $request->meta_cert_margin ) ? get_object_vars( $request->meta_cert_margin ) : array();
 			$orientation = $request->meta_page_orientation;
 			$text_color = $request->meta_cert_text_color;
+			$logo_image = $request->meta_certificate_logo;
+			$logo_positions = isset( $request->meta_certificate_logo_position ) ? get_object_vars( $request->meta_certificate_logo_position ) : array();
 		} else {
 			$content = $request->content;
 			$background = $request->background_image;
 			$margins = get_object_vars( $request->margin );
 			$text_color = $request->cert_text_color;
 			$orientation = $request->orientation;
+			$logo_image = $request->certificate_logo;
+			$logo_positions = get_object_vars( $request->certificate_logo_position );
 		}
 
+		$logo = array_merge(
+			array('file' => $logo_image),
+			$logo_positions
+		);
 		$filename = 'cert-preview-' . $course_id . '.pdf';
 		$date_format = apply_filters( 'coursepress_basic_certificate_date_format', get_option( 'date_format' ) );
 		$content = apply_filters( 'coursepress_basic_certificate_html', $content, $course_id, get_current_user_id() );
@@ -442,7 +450,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			'format' => 'F',
 			'uid' => '12345',
 			'margins' => apply_filters( 'coursepress_basic_certificate_margins', $margins ),
-			'logo' => apply_filters( 'coursepress_basic_certificate_logo', '' ),
+			'logo' => apply_filters( 'coursepress_basic_certificate_logo', $logo ),
 			'text_color' => apply_filters( 'coursepress_basic_certificate_text_color', $text_color ),
 		);
 
@@ -468,31 +476,41 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		wp_send_json_error( true );
 	}
 
-	function import_file() {
+	function import_file( $files, $request ) {
 		$import = wp_import_handle_upload();
-
 		if ( ! empty( $import['id'] ) ) {
 			$import_id = $import['id'];
-
 			$filename = $import['file'];
 			$courses = file_get_contents( $filename );
 			$data = array();
 
+			/**
+			 * sanitize option
+			 */
+			$options = array(
+				'replace' => false,
+				'with_students' => false,
+				'with_comments' => false,
+			);
+			foreach ( $options as $key => $value ) {
+				$options[ $key ] = isset( $request[ $key ] ) && is_string( $request[ $key ] ) && ( '1' == $request[ $key ] || 'true' == $request[ $key ] );
+			}
+			/**
+			 *  Import file is json format!
+			 */
 			if ( preg_match( '%.json%', $filename ) ) {
-				// Import file is json format!
-				// Let's save imported file
-				$option_id = 'coursepress_import_' . $import_id;
 				$courses = json_decode( $courses );
 				$courses = get_object_vars( $courses );
-				coursepress_update_option( $option_id, $courses );
-
-				$data['import_id'] = $option_id;
+				$data['import_id'] = $import_id;
 				$data['total_courses'] = count( $courses );
-
+				foreach ( $courses as $course ) {
+					$importClass = new CoursePress_Import( $course, $options );
+				}
+				wp_delete_attachment( $import_id );
 				wp_send_json_success( $data );
 			}
+			wp_delete_attachment( $import_id );
 		}
-
 		wp_send_json_error();
 	}
 
@@ -769,24 +787,9 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	/**
 	 * Withdraw student rfom a course.
 	 */
-	public function withdraw_student() {
-		$course_id = filter_input( INPUT_GET, 'course_id', FILTER_VALIDATE_INT );
-		$wpnonce = filter_input( INPUT_GET, '_wpnonce' );
-		$redirect = filter_input( INPUT_GET, 'redirect' );
-		$student_id = filter_input( INPUT_GET, 'student_id', FILTER_VALIDATE_INT );
-		$referer = filter_input( INPUT_GET, 'referer' );
-
-		if ( ! $student_id ) {
-			$student_id = get_current_user_id();
-		}
-
-		if ( 'course-edit' == $referer ) {
-			$redirect = add_query_arg( array( 'page' => 'coursepress_course', 'cid' => $course_id ), admin_url( 'admin-ajax.php' ) );
-		}
-
-		if ( ! $course_id || ! wp_verify_nonce( $wpnonce, 'coursepress_nonce' ) ) {
-			wp_send_json_error( true );
-		}
+	private function withdraw_student( $request ) {
+		$course_id = filter_var( $request->course_id, FILTER_VALIDATE_INT );
+		$student_id = filter_var( $request->student_id, FILTER_VALIDATE_INT );
 		coursepress_delete_student( $student_id, $course_id );
 		$result = array( 'student_id' => $student_id );
 		wp_send_json_success( $result );

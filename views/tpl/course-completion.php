@@ -20,7 +20,7 @@
     <div class="cp-box-content">
         <div class="cp-box">
             <label class="label" for="page-completion-title"><?php _e( 'Page Title', 'cp' ); ?></label>
-            <input type="text" id="page-completion-title" name="page-completion-title" class="widefat" value="{{pre_completion_title}}" />
+            <input type="text" id="page-completion-title" name="meta_pre_completion_title" class="widefat" value="{{pre_completion_title}}" />
         </div>
         <div class="cp-box">
             <label class="label" for="page-completion-content"><?php _e( 'Content', 'cp' ); ?></label>
@@ -52,7 +52,7 @@
             <div class="cp-alert cp-alert-info">
                 <?php echo $completion_pages['cert_tokens']; ?>
             </div>
-            <?php coursepress_teeny_editor( '{{basic_certificate_layout}}', 'meta_basic_certificate_layout' ); ?>
+            <div class="cp-certificate-layout"></div>
         </div>
         <div class="cp-box-content">
             <div class="box-label-area">
@@ -79,6 +79,35 @@
                     <div class="cp-pad-right">
                         <h3 class="label"><?php _e( 'Right', 'cp' ); ?></h3>
                         <input type="number" name="meta_cert_margin.right" value="{{cert_margin.right}}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cp-box-content">
+            <div class="box-label-area">
+                <h3 class="label"><?php _e( 'Logo', 'cp' ); ?></h3>
+            </div>
+            <div class="box-inner-content">
+                <input type="text" class="cp-add-image-input" name="meta_certificate_logo" value="{{certificate_logo}}" data-thumbnail="20" data-size="medium" data-title="<?php _e( 'Logo', 'cp' ); ?>" />
+            </div>
+        </div>
+        <div class="cp-box-content">
+            <div class="box-label-area">
+                <h3 class="label"><?php _e( 'Logo Position', 'cp' ); ?></h3>
+            </div>
+            <div class="box-inner-content">
+                <div class="cp-flex">
+                    <div class="cp-pad-right">
+                        <h3 class="label"><?php _e( 'X', 'cp' ); ?></h3>
+                        <input type="number" name="meta_certificate_logo_position.x" value="{{certificate_logo_position.x}}" />
+                    </div>
+                    <div class="cp-pad-right">
+                        <h3 class="label"><?php _e( 'Y', 'cp' ); ?></h3>
+                        <input type="number" name="meta_certificate_logo_position.y" value="{{certificate_logo_position.y}}" />
+                    </div>
+                    <div class="cp-pad-right">
+                        <h3 class="label"><?php _e( 'Width', 'cp' ); ?></h3>
+                        <input type="number" name="meta_certificate_logo_position.w" value="{{certificate_logo_position.w}}" />
                     </div>
                 </div>
             </div>

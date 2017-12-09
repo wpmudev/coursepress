@@ -34,8 +34,7 @@
                 }
 
                 this.model[this.type][name] = value;
-                var c = this.controller.setting.model.get(this.type);
-                window.console.log(c);
+                // var c = this.controller.setting.model.get(this.type);
                 this.controller.setting.model.set( this.type, this.model[this.type] );
             }
         });
@@ -48,7 +47,6 @@
             extensions: {},
             setting: false,
             initialize: function( extensions, settingObject ) {
-                window.console.log(extensions);
                 this.model = {extensions: extensions};
                 this.setting = settingObject;
 

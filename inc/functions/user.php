@@ -58,7 +58,7 @@ function coursepress_get_user( $user_id = 0 ) {
 }
 
 function coursepress_user_meta_prefix_required() {
-	return is_multisite() && !is_main_site();
+	return is_multisite() && ! is_main_site();
 }
 
 /**
@@ -73,32 +73,27 @@ function coursepress_add_course_instructor( $user_id = 0, $course_id = 0 ) {
 	// Do not allow empty params!!!
 	if ( empty( $user_id ) || empty( $course_id ) ) {
 		return false; }
-
 	$user = coursepress_get_user( $user_id );
-
 	if ( is_wp_error( $user ) ) {
-		return false; }
-
+		return false;
+	}
 	$course = coursepress_get_course( $course_id );
-
 	if ( is_wp_error( $course ) ) {
 		return false;
 	}
-
 	if ( $user->is_instructor_at( $course_id ) ) {
 		return true; // User is already an instructor of the course
 	}
-
 	// Include user as instructor to the course
 	add_post_meta( $course_id, 'instructor', $user_id );
-
-	$add_site_prefix = coursepress_user_meta_prefix_required();
-
+	/**
+	 * Add user to MU
+	 */
+	coursepress_add_user_to_blog( $user_id, 'instructor' );
 	// Marked user as instructor
-	update_user_option( $user_id, 'course_' . $course_id, $course_id, !$add_site_prefix );
-
-	update_user_option( $user_id, 'role_ins', 'instructor', !$add_site_prefix );
-
+	$add_site_prefix = coursepress_user_meta_prefix_required();
+	update_user_option( $user_id, 'course_' . $course_id, $course_id, ! $add_site_prefix );
+	update_user_option( $user_id, 'role_ins', 'instructor', ! $add_site_prefix );
 	/**
 	 * Trigger whenever a new instructor is added to a course.
 	 *
@@ -107,7 +102,6 @@ function coursepress_add_course_instructor( $user_id = 0, $course_id = 0 ) {
 	 * @param int $course_id
 	 */
 	do_action( 'coursepress_add_instructor', $user_id, $course_id );
-
 	return true;
 }
 
@@ -137,9 +131,9 @@ function coursepress_delete_course_instructor( $user_id = 0, $course_id = 0 ) {
 	delete_post_meta( $course_id, 'instructor', $user_id );
 
 	// Remove user marker
-	delete_user_option( $user_id, 'course_' . $course_id, !is_multisite() );
+	delete_user_option( $user_id, 'course_' . $course_id, ! is_multisite() );
 
-	delete_user_option( $user_id, 'role_ins', !is_multisite() );
+	delete_user_option( $user_id, 'role_ins', ! is_multisite() );
 
 	/**
 	 * Trigger whenever an instructor is removed from the course.
@@ -313,25 +307,26 @@ function coursepress_get_enrolled_courses( $user_id = 0, $published = true, $ret
  */
 function coursepress_add_course_facilitator( $user_id = 0, $course_id = 0 ) {
 	if ( empty( $user_id ) || empty( $course_id ) ) {
-		return false; }
-
+		return false;
+	}
 	$user = coursepress_get_user( $user_id );
-
 	if ( is_wp_error( $user ) ) {
-		return false; }
-
+		return false;
+	}
 	$course = coursepress_get_course( $course_id );
-
 	if ( is_wp_error( $course ) ) {
-		return false; }
-
+		return false;
+	}
 	// Check if user is already a facilitator of the course
 	if ( $user->is_facilitator_at( $course_id ) ) {
-		return true; }
-
+		return true;
+	}
 	// Include user as facilitator to the course
 	update_post_meta( $course_id, 'facilitator', $user_id, $user_id );
-
+	/**
+	 * Add user to MU
+	 */
+	coursepress_add_user_to_blog( $user_id, 'facilitator' );
 	/**
 	 * Fire whenever a new facilitator is added to a course.
 	 *
@@ -340,7 +335,6 @@ function coursepress_add_course_facilitator( $user_id = 0, $course_id = 0 ) {
 	 * @param int $course_id
 	 */
 	do_action( 'coursepress_add_facilitator', $user_id, $course_id );
-
 	return true;
 }
 
@@ -467,7 +461,22 @@ function coursepress_get_user_course_completion_data( $user_id = 0, $course_id =
 		$results['title'] = __( 'Course is still on going!', 'cp' );
 		$results['content'] = __( 'You haven\'t completed this course.', 'cp' );
 	}
-
+	/**
+	 * If content EXISTS filter it
+	 */
+	if ( isset( $results['content'] ) ) {
+		/**
+		 * Filter allow to replace placeholders.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param string $results['content'] Content of the message, it can contain placeholders.
+		 * @param integer $course_id Course ID.
+		 * @param integer $user_id User ID.
+		 *
+		 */
+		$results['content'] = apply_filters( 'coursepress_replace_placeholders', $results['content'], $course_id, $user_id );
+	}
 	return $results;
 }
 
@@ -780,5 +789,35 @@ function coursepress_get_user_name( $user_id, $last_first = false, $show_usernam
 	}
 
 	return $result;
+}
+
+/**
+ * Add user to blog in multiSite installations.
+ */
+function coursepress_add_user_to_blog( $user_id, $role = 'student', $blog_id = 0 ) {
+	if ( ! is_multisite() ) {
+		return;
+	}
+	if ( 0 === $blog_id ) {
+		$blog_id = get_current_blog_id();
+	}
+	if ( empty( $blog_id ) ) {
+		return;
+	}
+	if ( is_user_member_of_blog( $user_id, $blog_id ) ) {
+		return;
+	}
+	switch ( $role ) {
+		case 'instructor':
+			$role = 'coursepress_instructor';
+		break;
+		case 'facilitator':
+			$role = 'coursepress_facilitator';
+		break;
+		case 'student':
+			$role = 'coursepress_student';
+		break;
+	}
+	add_user_to_blog( $blog_id, $user_id, array( $role, 'subscriber' ) );
 }
 

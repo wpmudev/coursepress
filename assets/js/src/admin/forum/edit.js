@@ -1,8 +1,7 @@
-/* global ajaxurl, console */
+/* global ajaxurl */
 (function( $ ) {
 	$( document ).ready( function() {
         function coursepressFormatCourse (course) {
-            console.log('a',course);
             if (course.loading) {
                 return course.text;
             }
