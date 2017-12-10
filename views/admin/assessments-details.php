@@ -29,7 +29,7 @@
 				</div>
 			</div>
 		</form>
-		
+
 		<table class="coursepress-table" id="cp-assessments-table" cellspacing="0">
 			<thead>
 				<tr>
@@ -54,7 +54,7 @@
 			</thead>
 			<tbody>
 			<?php if ( ! empty( $assessments['units'] ) ) : ?>
-				<tr class="cp-assessments-details cp-assessments-details-full">
+				<tr class="cp-assessments-details">
 					<td colspan="3" class="cp-tr-expanded">
 						<ul class="cp-assessments-units-expanded">
 							<?php foreach ( $assessments['units'] as $unit ) : ?>

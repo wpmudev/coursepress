@@ -171,27 +171,87 @@
 											<span class="cp-plus-icon"></span>
 										</span>
 										<?php if ( ! empty( $unit->modules ) ) : ?>
-											<div class="cp-assessments-table-container inactive">
-												<table class="cp-assesments-questions-expanded">
-													<tr>
-														<th class="cp-assessments-strong"><?php _e( 'Question', 'cp' ); ?></th>
-														<th class="cp-assessments-strong"><?php _e( 'Student answer', 'cp' ); ?></th>
-														<th class="cp-assessments-strong"><?php _e( 'Correct answer', 'cp' ); ?></th>
-													</tr>
-													<?php foreach ( $unit->modules as $module_id => $module ) : ?>
-														<?php if ( ! $student->is_module_completed( $course_id, $unit->ID, $module['id'] ) ) : continue; endif; ?>
-														<?php if ( ! empty( $module['steps'] ) ) : ?>
-															<?php foreach ( $module['steps'] as $step_id => $step ) : ?>
-																<?php if ( ! $step->has_seen_by( $student->ID ) || ! $step->is_answerable() ) : continue; endif; ?>
+											<div class="cp-assesments-module-expanded">
+												<?php foreach ( $unit->modules as $module_id => $module ) : ?>
+													<div class="cp-assessments-table-container inactive">
+														<table class="cp-assesments-questions-expanded">
+															<?php $step_count = 0; ?>
+															<?php if ( ! empty( $module['steps'] ) ) : ?>
+																<?php foreach ( $module['steps'] as $step_id => $step ) : ?>
+																	<?php if ( ! $step->is_answerable() ) : continue; endif; ?>
+																		<?php if ( $step_count == 0 ) : ?>
+																			<tr>
+																				<th colspan="3"><?php echo $module['title']; ?></th>
+																			</tr>
+																		<?php endif; ?>
+																		<tr class="cp-question-title">
+																			<th colspan="3">
+																				<span class="cp-title"><?= $step->get_the_title() ?></span>
+																				<span class="pull-right cp-title">
+																					<?= round( $student->get_step_grade( $course_id, $unit->ID, $step_id ) ) ?>%
+																					<?php $step_status = $student->get_step_grade_status( $course_id, $unit->ID, $step_id ); ?>
+																					<span class="<?= $step_status == 'pass' ? 'cp-green' : 'cp-red' ?>"><?= $step_status ? strtoupper( $step_status ) : __( 'FAILED', 'cp' ) ?></span>
+																				</span>
+																			</th>
+
+																		</tr>
+																		<tr>
+																			<th class="cp-assessments-strong"><?php _e( 'Question', 'cp' ); ?></th>
+																			<th class="cp-assessments-strong"><?php _e( 'Student answer', 'cp' ); ?></th>
+																			<th class="cp-assessments-strong"><?php _e( 'Correct answer', 'cp' ); ?></th>
+																		</tr>
+																		<?php foreach ( $step->questions as $qkey => $question ) : ?>
+																			<tr>
+																				<td><?php echo $question['title']; ?></td>
+																				<td>
+																					<?php $response = $step->get_user_response( $student->ID ); ?>
+																					<?php if ( isset( $response[ $qkey ] ) ) : ?>
+																						<ul class="cp-assessments-answers">
+																							<?php if ( in_array( $question['type'], array( 'single', 'select' ) ) ) : ?>
+																								<li>
+																									<?php $ans_span_class = empty( $question['options']['checked'][$response[ $qkey ]] ) ? '' : 'cp-right-answer'; ?>
+																									<span class="<?= $ans_span_class ?>"><?= $question['options']['answers'][ $response[ $qkey ] ] ?></span>
+																								</li>
+																							<?php elseif ( $question['type'] == 'multiple' ) : ?>
+																								<?php foreach ( $response[ $qkey ] as $an_key => $answer ) : ?>
+																									<li>
+																										<?php $ans_span_class = empty( $question['options']['checked'][$an_key] ) ? 'cp-right-answer' : ''; ?>
+																										- <span class="<?= $ans_span_class ?>"><?= $question['options']['answers'][ $an_key ] ?></span>
+																									</li>
+																								<?php endforeach; ?>
+																							<?php endif; ?>
+																						</ul>
+																					<?php else : ?>
+																						<ul class="cp-assessments-answers">
+																							<li><span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span</li>
+																						</ul>
+																					<?php endif; ?>
+																				</td>
+																				<td>
+																					<ul class="cp-assessments-answers">
+																						<?php $list_sep = in_array( $question['type'], array( 'single', 'select' ) ) ? '' : '- '; ?>
+																						<?php foreach ( ( $question['options']['checked'] ) as $checked_key => $checked ) : ?>
+																							<?php if ( ! empty( $checked ) ) : ?>
+																								<li>
+																									<?= $list_sep . $question['options']['answers'][ $checked_key ]; ?>
+																								</li>
+																							<?php endif; ?>
+																						<?php endforeach; ?>
+																					</ul>
+																				</td>
+																			</tr>
+																		<?php endforeach; ?>
+																	<?php $step_count++; ?>
+																<?php endforeach; ?>
+															<?php endif; ?>
+															<?php if ( $step_count < 1 ) : ?>
 																<tr>
-																	<td><?php echo $step->get_the_title(); ?></td>
-																	<td><?php echo $student->get_response( $course_id, $unit->ID, $step_id, true ); ?></td>
-																	<td><?php echo $step->get_answer_template( $student->ID ); ?></td>
+																	<td colspan="3"><?php _e( 'No answerable modules found', 'cp' ); ?></td>
 																</tr>
-															<?php endforeach; ?>
-														<?php endif; ?>
-													<?php endforeach; ?>
-												</table>
+															<?php endif; ?>
+														</table>
+													</div>
+												<?php endforeach; ?>
 											</div>
 										<?php endif; ?>
 									</li>
