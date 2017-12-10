@@ -58,6 +58,9 @@
               background-color: #f1f1f1;
             }
           }
+          tr.cp-question-title th {
+            background: #e5e5e5;
+          }
         }
       }
       .column-student {
@@ -136,9 +139,6 @@
       .cp-no-answer {
         margin-left: 5px;
         color: #ff0000;
-      }
-      .cp-question-title th {
-        background: #e5e5e5 !important;
       }
       .column-student {
         width: 20%;
