@@ -124,9 +124,10 @@
                     this.unitsview.remove();
                     this.unitList.remove();
                 }
-                if ( ! this.unitCollection ) {
-                    this.unitCollection = new CoursePress.UnitCollection(course_id);
-                }
+                this.unitCollection = new CoursePress.UnitCollection({
+	                'course_id': course_id,
+	                'with_modules': with_modules
+                });
                 this.unitList = new CoursePress.UnitList({}, this);
                 this.unitCollection.on( 'add', this.unitList.addUnit, this.unitList );
 

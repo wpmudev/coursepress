@@ -64,6 +64,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 */
 	function get_course_units() {
 		$course_id = filter_input( INPUT_GET, 'course_id', FILTER_VALIDATE_INT );
+		$with_modules = filter_input( INPUT_GET, 'with_modules', FILTER_VALIDATE_INT );
 		$wpnonce = filter_input( INPUT_GET, '_wpnonce' );
 		$error = array( 'error_code' => 'cannot_get_units', 'message' => __( 'Something went wrong. Please try again.', 'cp' ) );
 
@@ -76,7 +77,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 		if ( ! empty( $units ) ) {
 			foreach ( $units as $pos => $unit ) {
-				if ( ! empty( $course->with_modules ) ) {
+				if ( $with_modules ) {
 					$modules = $unit->get_modules_with_steps( false );
 
 					if ( $modules ) {
