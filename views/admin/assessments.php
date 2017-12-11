@@ -137,7 +137,7 @@
 										echo '<div class="cp-assessment-progress-hidden">';
 										echo '<a href="javascript:void(0);" class="cp-expand-collapse">' . __( 'Expand', 'cp' ) . '</a>';
 										echo '|';
-										echo '<a href="' . $details_link . '">' . __( 'Open in new tab', 'cp' ) . '</a>';
+										echo '<a href="' . $details_link . '" target="_blank">' . __( 'Open in new tab', 'cp' ) . '</a>';
 										echo '</div>';
 										echo '<div class="cp-assessment-progress-expand inactive">';
 										echo '<button class="cp-expand-collapse cp-collapse-btn">Collapse</button>';
