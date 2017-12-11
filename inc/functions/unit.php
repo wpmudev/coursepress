@@ -61,8 +61,8 @@ function coursepress_get_unit_title( $unit_id = 0 ) {
 function coursepress_get_unit_description( $unit_id = 0 ) {
 	$unit = coursepress_get_unit( $unit_id );
 
-	if ( is_wp_error( $unit ) )
-		return null;
+	if ( is_wp_error( $unit ) ) {
+		return null; }
 
 	return $unit->get_description();
 }
@@ -80,8 +80,8 @@ function coursepress_get_unit_description( $unit_id = 0 ) {
 function coursepress_get_unit_structure( $course_id = 0, $unit_id = 0, $items_only = true, $show_details = false ) {
 	$course = coursepress_get_course( $course_id );
 
-	if ( is_wp_error( $course ) )
-		return null;
+	if ( is_wp_error( $course ) ) {
+		return null; }
 
 	$unit = coursepress_get_unit( $unit_id );
 
@@ -98,57 +98,56 @@ function coursepress_get_unit_structure( $course_id = 0, $unit_id = 0, $items_on
 	return $unit->get_unit_structure( $items_only, $show_details );
 }
 
+/**
+ * CoursePress delete unit by id
+ *
+ * @since 3.0.0
+ *
+ * @param integer $unit_id Unit ID to delete.
+ */
 function coursepress_delete_unit( $unit_id = 0 ) {
-    $unit = coursepress_get_unit( $unit_id );
+	$unit = coursepress_get_unit( $unit_id );
+	if ( is_wp_error( $unit ) ) {
+		return false;
+	}
+	$course = $unit->get_course();
+	// Remove the unit from course structures
+	$course_structures = array(
+		'structure_visible_units',
+		'structure_preview_units',
+		'structure_visible_pages',
+		'structure_preview_pages',
+		'structure_visible_module',
+		'structure_preview_module',
+	);
+	foreach ( $course_structures as $structure ) {
+		$structures = $course->__get( $structure );
 
-    if ( is_wp_error( $unit ) ) {
-        return false;
-    }
-
-    $course = $unit->get_course();
-
-    // Remove the unit from course structures
-    $course_structures = array(
-        'structure_visible_units',
-        'structure_preview_units',
-        'structure_visible_pages',
-        'structure_preview_pages',
-        'structure_visible_module',
-        'structure_preview_module',
-    );
-
-    foreach ( $course_structures as $structure ) {
-        $structures = $course->__get( $structure );
-
-        if ( ! empty( $structures ) ) {
-            foreach ( $structures as $key => $value ) {
-                if ( preg_match( '%' . $unit_id . '%', $key ) ) {
-                    unset( $structures[ $key ] );
-                }
-            }
-        }
-    }
-
-    // Remove unit steps
-    $steps = $unit->get_steps( false );
-
-    if ( ! empty( $steps ) ) {
-        foreach ( array_values( $steps ) as $step_id ) {
-            wp_delete_post( (int) $step_id, true );
-        }
-    }
-
-    // Finally, delete the unit
-    wp_delete_post( $unit_id, true );
-
-    /**
-     * Fired after a unit is deleted from DB
-     *
-     * @since 3.0
-     */
-    do_action( 'coursepress_course_deleted_unit', $unit_id );
-
-    return true;
+		if ( ! empty( $structures ) ) {
+			foreach ( $structures as $key => $value ) {
+				if ( preg_match( '%' . $unit_id . '%', $key ) ) {
+					unset( $structures[ $key ] );
+				}
+			}
+		}
+	}
+	// Remove unit steps
+	$steps = $unit->get_steps( false );
+	if ( ! empty( $steps ) ) {
+		foreach ( $steps as $step_id => $step ) {
+			l( $step_id );
+			wp_delete_post( (int) $step_id, true );
+		}
+	}
+	// Finally, delete the unit
+	wp_delete_post( $unit_id, true );
+	/**
+	 * Fired after a unit is deleted from DB
+	 *
+	 * @since 3.0
+	 */
+	do_action( 'coursepress_course_deleted_unit', $unit_id );
+	return true;
 }
 
 function coursepress_create_unit( $unit, $unit_meta = array() ) {
