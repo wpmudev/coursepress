@@ -793,8 +793,7 @@ function coursepress_has_access( $course_id, $unit_id = 0, $module_id = 0, $step
 	$user_id = $user->ID;
 
 	if ( $prevUnit ) {
-		$has_access = $user->is_unit_completed( $course_id, $unit_id );
-
+		$has_access = $user->is_unit_completed( $course_id, $prevUnit->ID );
 		if ( ! $has_access ) {
 			$message = __( 'You need to complete the previous unit before this unit!', 'cp' );
 		}
@@ -808,10 +807,20 @@ function coursepress_has_access( $course_id, $unit_id = 0, $module_id = 0, $step
 				if ( $modules ) {
 					foreach ( $modules as $id => $module ) {
 						$module_completed = $user->is_module_completed( $course_id, $unit_id, $id );
-
 						if ( $id !== $module_id && ! $module_completed ) {
-							$has_access = false;
-							$message = __( 'You need to complete the previous module(s) before this module!', 'cp' );
+							$has_access = true;
+							$steps = $module['steps'];
+							if ( $steps ) {
+								foreach ( $steps as $step ) {
+									if ( empty( $step->mandatory ) && empty( $step->assessable ) ) {
+										continue;
+									}
+									$has_access = false;
+								}
+							}
+							if ( ! $has_access ) {
+								$message = __( 'You need to complete the previous module(s) before this module!', 'cp' );
+							}
 						}
 
 						if ( $step_id > 0 && $module['steps'] ) {
