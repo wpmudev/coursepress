@@ -10,7 +10,7 @@
             el: $( '#coursepress-assessments' ),
             events: {
                 'change [name="graded_ungraded"]': 'submitForm',
-                'change [name="course_id"], [name="student_progress"]': 'submitForm',
+                'change [name="course_id"], [name="student_progress"], [name="display"]': 'submitForm',
                 'click .cp-plus-icon, .cp-minus-icon': 'unitsExpandHide',
                 'click .cp-expand-collapse': 'studentExpandHide'
             },
@@ -51,7 +51,7 @@
                     .toggleClass('cp-minus-icon');
 
                 if ( table.length ) {
-                    li.toggleClass('cp-expanded');
+                    li.toggleClass('cp-assessments-units-expanded');
                     table.fadeToggle( 200 );
                 }
             },

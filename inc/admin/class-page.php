@@ -780,7 +780,12 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$assessments = $CoursePress->get_class( 'CoursePress_Admin_Assessments' );
 
 		if ( $assessments ) {
-			return $assessments->get_page();
+			// If it is details page
+			if ( isset( $_GET['tab'] ) && 'details' === $_GET['tab'] ) {
+				return $assessments->get_details_page();
+			} else {
+				return $assessments->get_page();
+			}
 		}
 	}
 

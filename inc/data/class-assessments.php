@@ -22,7 +22,8 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 		$this->course = coursepress_get_course( $course_id );
 
 		if ( ! $this->course instanceof CoursePress_Course ) {
-			return $this->wp_error(); }
+			return $this->wp_error();
+		}
 	}
 
 	/**
@@ -142,6 +143,92 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 		$assessments['students_count'] = $count;
 
 		return $assessments;
+	}
+
+	/**
+	 * Get details of an assessment
+	 *
+	 * @param int $student_id Student ID.
+	 * @param int $unit_id Unit ID.
+	 * @param string $progress Unit progress.
+	 *
+	 * @return arary
+	 */
+	public function get_assessment_details( $student_id, $display = 'all' ) {
+
+		$course_settings = $this->course->get_settings();
+
+		// Minimum grade required.
+		$minimum_grade = isset( $course_settings['minimum_grade_required'] ) ? $course_settings['minimum_grade_required'] : 100;
+		$assessment = array(
+			'pass_grade' => $minimum_grade,
+			'modules_count' => 0,
+		);
+
+		// If course id not found.
+		if ( empty( $this->course->ID ) ) {
+			return array();
+		}
+
+		$course_id = $this->course->ID;
+
+		$assessment['course'] = $this->course;
+
+		$student = coursepress_get_user( $student_id );
+
+		// Get units for the course.
+		$units = $this->_get_units();
+
+		// If no students found, return early.
+		if ( empty( $student ) ) {
+			return array();
+		}
+
+		// Set the user object to main array.
+		$assessment['student'] = $student;
+
+		// Do not continue if user not completed the course.
+		if ( ! $student->is_course_completed( $this->course->ID ) ) {
+			// We need to exclude this user from count.
+			return array();
+		}
+
+		// If filtered by unit and that unit is not accessable to student.
+		if ( ! empty( $unit_id ) && count( $units ) === 1 ) {
+			$unit = reset( $units );
+			if ( ! $unit->is_accessible_by( $student_id ) ) {
+				return array();
+			}
+		}
+
+		$grade = $student->get_course_grade( $course_id );
+
+		// Set unit data under user.
+		$assessment['units'] = $units;
+
+		// Student grade for the course.
+		$assessment['grade'] = $grade;
+
+		// Loop through each units.
+		foreach ( $units as $unit_id => $unit ) {
+			// Get the modules for the unit.
+			$modules_steps = $unit->get_modules_with_steps();
+			foreach ( $modules_steps as $mkey => $module ) {
+				foreach ( $module['steps'] as $step_id => $step ) {
+					// If step is not answerable or assessable, unset.
+					if ( ! $step->is_answerable() || ( ! $step->is_assessable() && 'all_assessable' == $display ) ) {
+						unset( $modules_steps[ $mkey ]['steps'][ $step_id ] );
+					}
+				}
+			}
+
+			// If modules not found, skip.
+			if ( ! empty( $modules_steps ) ) {
+				$assessment['units'][ $unit_id ]->modules = $modules_steps;
+			}
+		}
+
+		return $assessment;
 	}
 
 	/**
