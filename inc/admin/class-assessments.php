@@ -116,7 +116,7 @@ class CoursePress_Admin_Assessments extends CoursePress_Admin_Page {
 	 *
 	 * @return array
 	 */
-	function get_assessment_details( $student_id, $course_id, $progress = 'all'  ) {
+	function get_assessment_details( $student_id, $course_id, $progress = 'all' ) {
 
 		// We need course id and student id.
 		if ( empty( $course_id ) || empty( $student_id ) ) {
