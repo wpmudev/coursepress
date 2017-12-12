@@ -64,6 +64,55 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 		add_filter( 'template_include', array( $this, 'load_coursepress_page' ) );
 		// Set dummy post object on selected template
 		add_filter( 'posts_results', array( $this, 'set_post_object' ), 10, 2 );
+		/**
+		 * check course, unit, module
+		 */
+		add_action( 'wp', array( $this, 'check_exists' ) );
+	}
+
+	/**
+	 * Check is course, unit module and step. If not, try to return 404 error.
+	 *
+	 * @since 3.0.0
+	 */
+	public function check_exists() {
+		$is_404 = false;
+		$type = $this->__get( 'type' );
+		switch ( $type ) {
+			case 'single-course':
+			case 'unit-archive':
+				$course = $this->__get( 'course' );
+				$course_id = $this->get_post_id_by_slug( $course, 'course' );
+				if ( empty( $course_id ) ) {
+					$is_404 = true;
+				}
+			break;
+			case 'unit':
+			case 'module':
+				$course = $this->__get( 'course' );
+				$unit = $this->__get( 'unit' );
+				$course_id = $this->get_post_id_by_slug( $course, 'course' );
+				$unit_id = $this->get_post_id_by_slug( $unit, 'unit', $course_id );
+				if ( empty( $unit_id ) ) {
+					$is_404 = true;
+				} else {
+					$module = $this->__get( 'module' );
+					$CoursePress_Unit = new CoursePress_Unit( $unit_id );
+					$module = $CoursePress_Unit->get_module_by_slug( $module, 'module' );
+					if ( false === $module ) {
+						$is_404 = true;
+					}
+				}
+			break;
+		}
+		/**
+		 * Course, unit, module exists?
+		 */
+		if ( $is_404 ) {
+			global $wp_query;
+			$wp_query->set_404();
+			status_header( 404 );
+		}
 	}
 
 	/**
@@ -106,6 +155,9 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 		$course = false;
 		if ( ! empty( $this->__get( 'course' ) || 'single-course' == $type ) ) {
 			$CoursePress_Course = $course = coursepress_get_course();
+			if ( ! isset( $course->ID ) ) {
+				return false;
+			}
 		}
 		$template = $CoursePress->plugin_path . 'templates/';
 		$template .= $this->templates[ $type ];
@@ -126,7 +178,9 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 				$this->add_breadcrumb( __( 'Units', 'cp' ), $CoursePress_Course->get_units_url() );
 				$unit = $this->__get( 'unit' );
 				$unit_id = $this->get_post_id_by_slug( $unit, 'unit', $CoursePress_Course->ID );
-				if ( $unit_id > 0 ) {
+				if ( empty( $unit_id ) ) {
+					return false;
+				} else {
 					$CoursePress_Unit = new CoursePress_Unit( $unit_id );
 					$this->add_breadcrumb( $CoursePress_Unit->get_the_title(), $CoursePress_Unit->get_unit_url() );
 					$_course_module_id = 1; // always start module with 1
@@ -152,7 +206,9 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 					}
 					if ( ! empty( $step ) ) {
 						$step_id = $this->get_post_id_by_slug( $step, 'module', $unit_id );
-						if ( $step_id > 0 ) {
+						if ( empty( $step_id ) ) {
+							return false;
+						} else {
 							$_coursepress_type_now = 'step';
 							$_course_step = $stepClass = $CoursePress_Unit->get_step_by_id( $step_id );
 							if ( ! is_wp_error( $stepClass ) ) {
@@ -197,14 +253,17 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 		return $template;
 	}
 
-	public function load_coursepress_page() {
+	public function load_coursepress_page( $template ) {
 		$type = $this->__get( 'type' );
-		$template = $this->has_template( $type );
-		if ( ! $template ) {
+		$new_template = $this->has_template( $type );
+		if ( ! $new_template ) {
 			// If the theme did not override the template, load CP template
 			$page_template = $this->get_template( $type );
 		} else {
-			$page_template = $template;
+			$page_template = $new_template;
+		}
+		if ( false === $page_template ) {
+			return $template;
 		}
 		return $page_template;
 	}
