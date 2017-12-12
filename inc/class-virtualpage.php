@@ -95,7 +95,7 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 				$unit_id = $this->get_post_id_by_slug( $unit, 'unit', $course_id );
 				if ( empty( $unit_id ) ) {
 					$is_404 = true;
-				} else {
+				} else if ( 'module' === $type ) {
 					$module = $this->__get( 'module' );
 					$CoursePress_Unit = new CoursePress_Unit( $unit_id );
 					$module = $CoursePress_Unit->get_module_by_slug( $module, 'module' );
