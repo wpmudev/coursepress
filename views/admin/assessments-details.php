@@ -91,7 +91,10 @@
 																	<th class="cp-assessments-strong"><?php _e( 'Question', 'cp' ); ?></th>
 																	<th class="cp-assessments-strong"><?php _e( 'Student answer', 'cp' ); ?></th>
 																</tr>
-																<?php foreach ( $step->questions as $qkey => $question ) : ?>
+<?php
+if ( isset( $step->questions ) && is_array( $step->questions ) ) {
+	foreach ( $step->questions as $qkey => $question ) {
+	?>
 																	<tr>
 																		<td><?php echo $question['title']; ?></td>
 																		<td>
@@ -100,16 +103,16 @@
 																				<ul class="cp-assessments-answers">
 																					<?php if ( in_array( $question['type'], array( 'single', 'select' ) ) ) : ?>
 																						<li>
-																							<?php $ans_span_class = empty( $question['options']['checked'][$response[ $qkey ]] ) ? 'cp-cross-icon' : 'cp-tick-icon'; ?>
+																							<?php $ans_span_class = empty( $question['options']['checked'][ $response[ $qkey ] ] ) ? 'cp-cross-icon' : 'cp-tick-icon'; ?>
 																							<span class="<?= $ans_span_class ?>"><?= $question['options']['answers'][ $response[ $qkey ] ] ?></span>
 																						</li>
 																					<?php elseif ( $question['type'] == 'multiple' ) : ?>
-																						<?php foreach ( $response[ $qkey ] as $an_key => $answer ) : ?>
+																						<?php foreach ( $response[ $qkey ] as $an_key => $answer ) { ?>
 																							<li>
-																								<?php $ans_span_class = empty( $question['options']['checked'][$an_key] ) ? 'cp-cross-icon' : 'cp-tick-icon'; ?>
+																								<?php $ans_span_class = empty( $question['options']['checked'][ $an_key ] ) ? 'cp-cross-icon' : 'cp-tick-icon'; ?>
 																								<span class="<?= $ans_span_class ?>"><?= $question['options']['answers'][ $an_key ] ?></span>
 																							</li>
-																						<?php endforeach; ?>
+																						<?php } ?>
 																					<?php endif; ?>
 																				</ul>
 																			<?php else : ?>
@@ -119,11 +122,14 @@
 																			<?php endif; ?>
 																		</td>
 																	</tr>
-																<?php endforeach; ?>
-																<?php $step_count++; ?>
-															<?php endforeach; ?>
-														<?php endif; ?>
-														<?php if ( $step_count < 1 ) : ?>
+<?php
+	}
+}
+$step_count++;
+
+endforeach;
+endif;
+if ( $step_count < 1 ) : ?>
 															<tr>
 																<td colspan="2"><?php _e( 'No answerable modules found', 'cp' ); ?></td>
 															</tr>

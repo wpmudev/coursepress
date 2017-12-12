@@ -200,7 +200,10 @@
 																			<th class="cp-assessments-strong"><?php _e( 'Student answer', 'cp' ); ?></th>
 																			<th class="cp-assessments-strong"><?php _e( 'Correct answer', 'cp' ); ?></th>
 																		</tr>
-																		<?php foreach ( $step->questions as $qkey => $question ) : ?>
+<?php
+if ( isset( $step->questions ) && is_array( $step->questions ) ) {
+	foreach ( $step->questions as $qkey => $question ) {
+?>
 																			<tr>
 																				<td><?php echo $question['title']; ?></td>
 																				<td>
@@ -209,16 +212,18 @@
 																						<ul class="cp-assessments-answers">
 																							<?php if ( in_array( $question['type'], array( 'single', 'select' ) ) ) : ?>
 																								<li>
-																									<?php $ans_span_class = empty( $question['options']['checked'][$response[ $qkey ]] ) ? '' : 'cp-right-answer'; ?>
+																									<?php $ans_span_class = empty( $question['options']['checked'][ $response[ $qkey ] ] ) ? '' : 'cp-right-answer'; ?>
 																									<span class="<?= $ans_span_class ?>"><?= $question['options']['answers'][ $response[ $qkey ] ] ?></span>
 																								</li>
 																							<?php elseif ( $question['type'] == 'multiple' ) : ?>
-																								<?php foreach ( $response[ $qkey ] as $an_key => $answer ) : ?>
-																									<li>
-																										<?php $ans_span_class = empty( $question['options']['checked'][$an_key] ) ? 'cp-right-answer' : ''; ?>
-																										- <span class="<?= $ans_span_class ?>"><?= $question['options']['answers'][ $an_key ] ?></span>
-																									</li>
-																								<?php endforeach; ?>
+<?php
+foreach ( $response[ $qkey ] as $an_key => $answer ) {
+?>
+																							<li>
+																								<?php $ans_span_class = empty( $question['options']['checked'][ $an_key ] ) ? '':'cp-right-answer'; ?>
+																								- <span class="<?= $ans_span_class ?>"><?= $question['options']['answers'][ $an_key ] ?></span>
+																							</li>
+																						<?php } ?>
 																							<?php endif; ?>
 																						</ul>
 																					<?php else : ?>
@@ -230,17 +235,24 @@
 																				<td>
 																					<ul class="cp-assessments-answers">
 																						<?php $list_sep = in_array( $question['type'], array( 'single', 'select' ) ) ? '' : '- '; ?>
-																						<?php foreach ( ( $question['options']['checked'] ) as $checked_key => $checked ) : ?>
-																							<?php if ( ! empty( $checked ) ) : ?>
-																								<li>
-																									<?= $list_sep . $question['options']['answers'][ $checked_key ]; ?>
-																								</li>
-																							<?php endif; ?>
-																						<?php endforeach; ?>
+<?php
+foreach ( ( $question['options']['checked'] ) as $checked_key => $checked ) {
+	if ( ! empty( $checked ) ) {
+	?>
+																					<li>
+																						<?= $list_sep . $question['options']['answers'][ $checked_key ]; ?>
+																					</li>
+<?php
+	}
+}
+?>
 																					</ul>
 																				</td>
 																			</tr>
-																		<?php endforeach; ?>
+<?php
+	}
+}
+?>
 																	<?php $step_count++; ?>
 																<?php endforeach; ?>
 															<?php endif; ?>
