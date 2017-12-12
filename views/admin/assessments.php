@@ -163,6 +163,7 @@
 						<td colspan="5" class="cp-tr-expanded">
 							<ul class="cp-assessments-units-expanded">
 								<?php foreach ( $student->units as $unit_id => $unit ) : ?>
+									<?php if ( ! $unit->is_answerable ) : continue; endif; ?>
 									<li>
 										<span class="pull-left"><span class="cp-units-icon"></span><?php echo $unit->get_the_title(); ?></span>
 										<span class="pull-right">
@@ -174,15 +175,14 @@
 											<div class="cp-assesments-module-expanded">
 												<?php foreach ( $unit->modules as $module_id => $module ) : ?>
 													<div class="cp-assessments-table-container inactive">
-														<table class="cp-assesments-questions-expanded">
-															<?php $step_count = 0; ?>
-															<?php if ( ! empty( $module['steps'] ) ) : ?>
+														<?php $step_count = 0; ?>
+														<?php if ( ! empty( $module['steps'] ) ) : ?>
+															<table class="cp-assesments-questions-expanded">
 																<?php foreach ( $module['steps'] as $step_id => $step ) : ?>
-																	<?php if ( ! $step->is_answerable() ) : continue; endif; ?>
-																		<?php if ( $step_count == 0 ) : ?>
-																			<tr>
-																				<th colspan="3"><?php echo $module['title']; ?></th>
-																			</tr>
+																	<?php if ( $step_count == 0 ) : ?>
+																		<tr>
+																			<th colspan="3"><?php echo $module['title']; ?></th>
+																		</tr>
 																		<?php endif; ?>
 																		<tr class="cp-question-title">
 																			<th colspan="3">
@@ -193,7 +193,6 @@
 																					<span class="<?= $step_status == 'pass' ? 'cp-green' : 'cp-red' ?>"><?= $step_status ? strtoupper( $step_status ) : __( 'FAILED', 'cp' ) ?></span>
 																				</span>
 																			</th>
-
 																		</tr>
 																		<tr>
 																			<th class="cp-assessments-strong"><?php _e( 'Question', 'cp' ); ?></th>
@@ -215,7 +214,7 @@
 																							<?php elseif ( $question['type'] == 'multiple' ) : ?>
 																								<?php foreach ( $response[ $qkey ] as $an_key => $answer ) : ?>
 																									<li>
-																										<?php $ans_span_class = empty( $question['options']['checked'][$an_key] ) ? 'cp-right-answer' : ''; ?>
+																										<?php $ans_span_class = empty( $question['options']['checked'][$an_key] ) ? '' : 'cp-right-answer'; ?>
 																										- <span class="<?= $ans_span_class ?>"><?= $question['options']['answers'][ $an_key ] ?></span>
 																									</li>
 																								<?php endforeach; ?>
@@ -243,13 +242,8 @@
 																		<?php endforeach; ?>
 																	<?php $step_count++; ?>
 																<?php endforeach; ?>
-															<?php endif; ?>
-															<?php if ( $step_count < 1 ) : ?>
-																<tr>
-																	<td colspan="3"><?php _e( 'No answerable modules found', 'cp' ); ?></td>
-																</tr>
-															<?php endif; ?>
-														</table>
+															</table>
+														<?php endif; ?>
 													</div>
 												<?php endforeach; ?>
 											</div>

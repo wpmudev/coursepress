@@ -58,6 +58,7 @@
 					<td colspan="3" class="cp-tr-expanded">
 						<ul class="cp-assessments-units-expanded">
 							<?php foreach ( $assessments['units'] as $unit ) : ?>
+								<?php if ( ! $unit->is_answerable ) : continue; endif; ?>
 								<li>
 									<span class="pull-left cp-title"><span class="cp-units-icon"></span><?php echo $unit->get_the_title(); ?></span>
 									<span class="pull-right">
@@ -68,9 +69,9 @@
 										<div class="cp-assesments-module-expanded">
 											<?php foreach ( $unit->modules as $module_id => $module ) : ?>
 												<div class="cp-assessments-table-container">
-													<table class="cp-assesments-questions-expanded">
-														<?php $step_count = 0; ?>
-														<?php if ( ! empty( $module['steps'] ) ) : ?>
+													<?php $step_count = 0; ?>
+													<?php if ( ! empty( $module['steps'] ) ) : ?>
+														<table class="cp-assesments-questions-expanded">
 															<?php foreach ( $module['steps'] as $step_id => $step ) : ?>
 																<?php if ( $step_count == 0 ) : ?>
 																	<tr>
@@ -122,13 +123,8 @@
 																<?php endforeach; ?>
 																<?php $step_count++; ?>
 															<?php endforeach; ?>
-														<?php endif; ?>
-														<?php if ( $step_count < 1 ) : ?>
-															<tr>
-																<td colspan="2"><?php _e( 'No answerable modules found', 'cp' ); ?></td>
-															</tr>
-														<?php endif; ?>
-													</table>
+														</table>
+													<?php endif; ?>
 												</div>
 											<?php endforeach; ?>
 										</div>
