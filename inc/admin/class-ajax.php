@@ -424,7 +424,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		}
 
 		$logo = array_merge(
-			array('file' => $logo_image),
+			array( 'file' => $logo_image ),
 			$logo_positions
 		);
 		$filename = 'cert-preview-' . $course_id . '.pdf';
@@ -850,30 +850,23 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$referer = filter_input( INPUT_POST, 'referer_url' );
 		$redirect_url = filter_input( INPUT_POST, 'redirect_url' );
 		$response = isset( $_POST['module'] ) ? $_POST['module'] : array();
-
 		$user = coursepress_get_user( $user_id );
-
 		if ( ! $user->is_enrolled_at( $course_id ) ) {
 			// If user is not enrolled, don't validate
 			wp_safe_redirect( $referer );
 			exit;
 		}
-
 		$progress = $user->get_completion_data( $course_id );
-
 		if ( (int) $step_id > 0 ) {
 			$step = coursepress_get_course_step( $step_id );
-
 			if ( ! empty( $response ) || 'fileupload' === $step->type || 'discussion' === $step->type ) {
 				$progress = $step->validate_response( $response );
 			}
 		}
-
 		$progress = $user->validate_completion_data( $course_id, $progress );
 		//error_log(print_r($progress,true));
 		$user->add_student_progress( $course_id, $progress );
 		wp_safe_redirect( $redirect_url );
-
 		exit;
 	}
 
@@ -883,13 +876,10 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 * @param object $request
 	 */
 	function get_notification_units_students( $request ) {
-
 		$result = array();
-
 		if ( ! isset( $request->course_id ) ) {
 			wp_send_json_success( $result );
 		}
-
 		// Get students based on the course id.
 		$student_ids = coursepress_get_students_ids( $request->course_id );
 		if ( ! empty( $student_ids ) ) {
@@ -903,7 +893,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				}
 			}
 		}
-
 		if ( ! empty( $request->course_id ) ) {
 			// Get units based on the course id.
 			$units = coursepress_get_course_units( $request->course_id );
@@ -916,7 +905,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				}
 			}
 		}
-
 		wp_send_json_success( $result );
 	}
 

@@ -11,10 +11,10 @@
 						<option></option>
 						<?php if ( ! empty( $courses ) ) : ?>
 							<?php foreach ( $courses as $course ) : ?>
-                            <option value="<?php echo $course->ID; ?>" <?php selected( $course->ID, $course_id ); ?>><?php
-							echo $course->post_title;
-							echo $course->get_numeric_identifier_to_course_name( $course->ID );
-?></option>
+								<option value="<?php echo $course->ID; ?>" <?php selected( $course->ID, $course_id ); ?>><?php
+									echo $course->post_title;
+									echo $course->get_numeric_identifier_to_course_name( $course->ID );
+									?></option>
 							<?php endforeach; ?>
 						<?php endif; ?>
 					</select>
@@ -159,30 +159,30 @@
 						<?php endforeach; ?>
 					</tr>
 					<?php if ( ! empty( $student->units ) ) : ?>
-					<tr class="cp-assessments-details inactive">
-						<td colspan="5" class="cp-tr-expanded">
-							<ul class="cp-assessments-units-expanded">
-								<?php foreach ( $student->units as $unit_id => $unit ) : ?>
-									<?php if ( ! $unit->is_answerable ) : continue; endif; ?>
-									<li>
-										<span class="pull-left"><span class="cp-units-icon"></span><?php echo $unit->get_the_title(); ?></span>
-										<span class="pull-right">
+						<tr class="cp-assessments-details inactive">
+							<td colspan="5" class="cp-tr-expanded">
+								<ul class="cp-assessments-units-expanded">
+									<?php foreach ( $student->units as $unit_id => $unit ) : ?>
+										<li>
+											<span class="pull-left"><span class="cp-units-icon"></span><?php echo $unit->get_the_title(); ?></span>
+											<span class="pull-right">
 											<?php $unit_grade = $student->get_unit_grade( $course_id, $unit->ID ); ?>
-											<span class="<?php echo $student->has_pass_course_unit( $course_id, $unit->ID ) ? 'cp-tick-icon' : 'cp-cross-icon'; ?>"><?php echo empty( $unit_grade ) ? 0 : $unit_grade; ?>%</span>
+												<span class="<?php echo $student->has_pass_course_unit( $course_id, $unit->ID ) ? 'cp-tick-icon' : 'cp-cross-icon'; ?>"><?php echo empty( $unit_grade ) ? 0 : $unit_grade; ?>%</span>
 											<span class="cp-plus-icon"></span>
 										</span>
-										<?php if ( ! empty( $unit->modules ) ) : ?>
-											<div class="cp-assesments-module-expanded">
-												<?php foreach ( $unit->modules as $module_id => $module ) : ?>
-													<div class="cp-assessments-table-container inactive">
-														<?php $step_count = 0; ?>
-														<?php if ( ! empty( $module['steps'] ) ) : ?>
+											<?php if ( ! empty( $unit->modules ) ) : ?>
+												<div class="cp-assesments-module-expanded">
+													<?php foreach ( $unit->modules as $module_id => $module ) : ?>
+														<div class="cp-assessments-table-container inactive">
 															<table class="cp-assesments-questions-expanded">
-																<?php foreach ( $module['steps'] as $step_id => $step ) : ?>
-																	<?php if ( $step_count == 0 ) : ?>
-																		<tr>
-																			<th colspan="3"><?php echo $module['title']; ?></th>
-																		</tr>
+																<?php $step_count = 0; ?>
+																<?php if ( ! empty( $module['steps'] ) ) : ?>
+																	<?php foreach ( $module['steps'] as $step_id => $step ) : ?>
+																		<?php if ( ! $step->is_answerable() ) : continue; endif; ?>
+																		<?php if ( $step_count == 0 ) : ?>
+																			<tr>
+																				<th colspan="3"><?php echo $module['title']; ?></th>
+																			</tr>
 																		<?php endif; ?>
 																		<tr class="cp-question-title">
 																			<th colspan="3">
@@ -193,66 +193,84 @@
 																					<span class="<?= $step_status == 'pass' ? 'cp-green' : 'cp-red' ?>"><?= $step_status ? strtoupper( $step_status ) : __( 'FAILED', 'cp' ) ?></span>
 																				</span>
 																			</th>
+
 																		</tr>
 																		<tr>
 																			<th class="cp-assessments-strong"><?php _e( 'Question', 'cp' ); ?></th>
 																			<th class="cp-assessments-strong"><?php _e( 'Student answer', 'cp' ); ?></th>
 																			<th class="cp-assessments-strong"><?php _e( 'Correct answer', 'cp' ); ?></th>
 																		</tr>
-																		<?php foreach ( $step->questions as $qkey => $question ) : ?>
-																			<tr>
-																				<td><?php echo $question['title']; ?></td>
-																				<td>
-																					<?php $response = $step->get_user_response( $student->ID ); ?>
-																					<?php if ( isset( $response[ $qkey ] ) ) : ?>
-																						<ul class="cp-assessments-answers">
-																							<?php if ( in_array( $question['type'], array( 'single', 'select' ) ) ) : ?>
-																								<li>
-																									<?php $ans_span_class = empty( $question['options']['checked'][$response[ $qkey ]] ) ? '' : 'cp-right-answer'; ?>
-																									<span class="<?= $ans_span_class ?>"><?= $question['options']['answers'][ $response[ $qkey ] ] ?></span>
-																								</li>
-																							<?php elseif ( $question['type'] == 'multiple' ) : ?>
-																								<?php foreach ( $response[ $qkey ] as $an_key => $answer ) : ?>
+																		<?php
+																		if ( isset( $step->questions ) && is_array( $step->questions ) ) {
+																			foreach ( $step->questions as $qkey => $question ) {
+																				?>
+																				<tr>
+																					<td><?php echo $question['title']; ?></td>
+																					<td>
+																						<?php $response = $step->get_user_response( $student->ID ); ?>
+																						<?php if ( isset( $response[ $qkey ] ) ) : ?>
+																							<ul class="cp-assessments-answers">
+																								<?php if ( in_array( $question['type'], array( 'single', 'select' ) ) ) : ?>
 																									<li>
-																										<?php $ans_span_class = empty( $question['options']['checked'][$an_key] ) ? '' : 'cp-right-answer'; ?>
-																										- <span class="<?= $ans_span_class ?>"><?= $question['options']['answers'][ $an_key ] ?></span>
+																										<?php $ans_span_class = empty( $question['options']['checked'][ $response[ $qkey ] ] ) ? '' : 'cp-right-answer'; ?>
+																										<span class="<?= $ans_span_class ?>"><?= $question['options']['answers'][ $response[ $qkey ] ] ?></span>
 																									</li>
-																								<?php endforeach; ?>
-																							<?php endif; ?>
-																						</ul>
-																					<?php else : ?>
+																								<?php elseif ( $question['type'] == 'multiple' ) : ?>
+																									<?php
+																									foreach ( $response[ $qkey ] as $an_key => $answer ) {
+																										?>
+																										<li>
+																											<?php $ans_span_class = empty( $question['options']['checked'][ $an_key ] ) ? '':'cp-right-answer'; ?>
+																											- <span class="<?= $ans_span_class ?>"><?= $question['options']['answers'][ $an_key ] ?></span>
+																										</li>
+																									<?php } ?>
+																								<?php endif; ?>
+																							</ul>
+																						<?php else : ?>
+																							<ul class="cp-assessments-answers">
+																								<li><span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span</li>
+																							</ul>
+																						<?php endif; ?>
+																					</td>
+																					<td>
 																						<ul class="cp-assessments-answers">
-																							<li><span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span</li>
+																							<?php $list_sep = in_array( $question['type'], array( 'single', 'select' ) ) ? '' : '- '; ?>
+																							<?php
+																							foreach ( ( $question['options']['checked'] ) as $checked_key => $checked ) {
+																								if ( ! empty( $checked ) ) {
+																									?>
+																									<li>
+																										<?= $list_sep . $question['options']['answers'][ $checked_key ]; ?>
+																									</li>
+																									<?php
+																								}
+																							}
+																							?>
 																						</ul>
-																					<?php endif; ?>
-																				</td>
-																				<td>
-																					<ul class="cp-assessments-answers">
-																						<?php $list_sep = in_array( $question['type'], array( 'single', 'select' ) ) ? '' : '- '; ?>
-																						<?php foreach ( ( $question['options']['checked'] ) as $checked_key => $checked ) : ?>
-																							<?php if ( ! empty( $checked ) ) : ?>
-																								<li>
-																									<?= $list_sep . $question['options']['answers'][ $checked_key ]; ?>
-																								</li>
-																							<?php endif; ?>
-																						<?php endforeach; ?>
-																					</ul>
-																				</td>
-																			</tr>
-																		<?php endforeach; ?>
-																	<?php $step_count++; ?>
-																<?php endforeach; ?>
+																					</td>
+																				</tr>
+																				<?php
+																			}
+																		}
+																		?>
+																		<?php $step_count++; ?>
+																	<?php endforeach; ?>
+																<?php endif; ?>
+																<?php if ( $step_count < 1 ) : ?>
+																	<tr>
+																		<td colspan="3"><?php _e( 'No answerable modules found', 'cp' ); ?></td>
+																	</tr>
+																<?php endif; ?>
 															</table>
-														<?php endif; ?>
-													</div>
-												<?php endforeach; ?>
-											</div>
-										<?php endif; ?>
-									</li>
-								<?php endforeach; ?>
-							</ul>
-						</td>
-					</tr>
+														</div>
+													<?php endforeach; ?>
+												</div>
+											<?php endif; ?>
+										</li>
+									<?php endforeach; ?>
+								</ul>
+							</td>
+						</tr>
 					<?php endif; ?>
 					<?php $odd = $odd ? false : true; ?>
 				<?php endforeach; ?>

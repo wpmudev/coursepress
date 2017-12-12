@@ -26,6 +26,14 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 		return $questions;
 	}
 
+	/**
+	 * Create answers list.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param integer $user_id User ID.
+	 * @return string $template Results.
+	 */
 	public function get_answer_template( $user_id = 0 ) {
 		$template = parent::get_answer_template( $user_id );
 		$questions = $this->__get( 'questions' );
@@ -41,38 +49,30 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 					$checked = $question['options']['checked'];
 					if ( $answers ) {
 						foreach ( $answers as $answer_pos => $answer ) {
-							if ( 'select' === $question['type'] ) {
-								if ( $answer_pos == $user_response ) {
-									if ( $checked[ $user_response ] ) {
-										$a .= $this->create_html(
-											'p',
-											array( 'class' => 'chosen-answer correct' ),
-											$answer
-										);
-									} else {
-										$a .= $this->create_html(
-											'p',
-											array( 'class' => 'chosen-answer wrong' ),
-											$answer
-										);
+							$classes = array(
+								'chosen-answer',
+							);
+							$show = false;
+							switch ( $question['type'] ) {
+								case 'select':
+								case 'single':
+									if ( $answer_pos == $user_response ) {
+										$classes[] = $checked[ $user_response ]? 'correct':'wrong';
+										$show = true;
 									}
-								}
-							} else {
-								if ( isset( $user_response[ $answer_pos ] ) ) {
-									if ( $checked[ $answer_pos ] ) {
-										$a .= $this->create_html(
-											'p',
-											array( 'class' => 'chosen-answer correct' ),
-											$answer
-										);
-									} else {
-										$a .= $this->create_html(
-											'p',
-											array( 'class' => 'chosen-answer wrong' ),
-											$answer
-										);
+								break;
+								default:
+									if ( isset( $user_response[ $answer_pos ] ) ) {
+										$classes[] = $checked[ $answer_pos ]? 'correct':'wrong';
+										$show = true;
 									}
-								}
+							}
+							if ( $show ) {
+								$a .= $this->create_html(
+									'p',
+									array( 'class' => implode( ' ', $classes ) ),
+									$answer
+								);
 							}
 						}
 					}
@@ -88,6 +88,13 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 		return $template;
 	}
 
+	/**
+	 * Validate response
+	 *
+	 * @since 3.0.0
+	 *
+	 * @input array $response Response.
+	 */
 	public function validate_response( $response = array() ) {
 		if ( ! empty( $response ) ) {
 			$user = coursepress_get_user();
@@ -108,35 +115,28 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 					$wrong = 0;
 					$data['response'] = $response3;
 					foreach ( $questions as $pos => $question ) {
-						$user_response = null;
-						switch ( $question['type'] ) {
-							case 'single':
-								$user_response = array_shift( $response3 );
-							break;
-							default:
-								if ( isset( $response3[ $pos ] ) ) {
-									$user_response = $response3[ $pos ];
-								}
-							break;
-						}
+						$user_response = isset( $response3[ $pos ] )? $response3[ $pos ]:null;
 						$answers = $question['options']['answers'];
 						$checked = $question['options']['checked'];
 						$count += count( $answers );
 						$checked_count += count( array_filter( $checked ) );
 						if ( $answers ) {
 							foreach ( $answers as $answer_pos => $answer ) {
-								if ( 'select' === $question['type'] ) {
-									if ( $checked[ $user_response ] && $user_response == $answer_pos ) {
-										$correct++;
-									}
-								} else {
-									if ( isset( $user_response[ $answer_pos ] ) ) {
-										if ( $checked[ $answer_pos ] ) {
-											$correct ++;
-										} else {
-											$wrong ++;
+								switch ( $question['type'] ) {
+									case 'select':
+									case 'single':
+										if ( $checked[ $user_response ] && $user_response == $answer_pos ) {
+											$correct++;
 										}
-									}
+									break;
+									default:
+										if ( isset( $user_response[ $answer_pos ] ) ) {
+											if ( $checked[ $answer_pos ] ) {
+												$correct ++;
+											} else {
+												$wrong ++;
+											}
+										}
 								}
 							}
 						}
@@ -146,12 +146,16 @@ class CoursePress_Step_Quiz extends CoursePress_Step {
 					} else {
 						$ratio = 100 / $checked_count;
 					}
-					$grade = $correct * $ratio;
+					$grade = $correct * round( $ratio, 2 );
 					if ( $correct > 0 && $wrong > 0 ) {
 						//$wrong = $wrong * $ratio;
 						//grade -= $wrong;
 					}
-					$data['grade'] = max( 0, $grade );
+					/**
+					 * normalize grade: 0 <= $grade <= 100
+					 */
+					$grade = min( 100, max( 0, $grade ) );
+					$data['grade'] = $grade;
 					$total_grade += $grade;
 					$user->record_response( $course_id, $unit_id, $step_id, $data );
 				}
