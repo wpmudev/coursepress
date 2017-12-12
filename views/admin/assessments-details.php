@@ -58,6 +58,7 @@
 					<td colspan="3" class="cp-tr-expanded">
 						<ul class="cp-assessments-units-expanded">
 							<?php foreach ( $assessments['units'] as $unit ) : ?>
+								<?php if ( empty( $unit->is_answerable ) ) : continue; endif; ?>
 								<li>
 									<span class="pull-left cp-title"><span class="cp-units-icon"></span><?php echo $unit->get_the_title(); ?></span>
 									<span class="pull-right">
