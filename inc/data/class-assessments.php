@@ -132,7 +132,7 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 				foreach ( $modules_steps as $mkey => $module ) {
 					foreach ( $module['steps'] as $step_id => $step ) {
 						// If step is not answerable or assessable, unset.
-						if ( ! $step->is_answerable() || ( ! $step->is_assessable() && 'all_assessable' == $display ) ) {
+						if ( ! $step->is_answerable() ) {
 							unset( $modules_steps[ $mkey ]['steps'][ $step_id ] );
 						} else {
 							$answerable_modules++;

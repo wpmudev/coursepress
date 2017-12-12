@@ -163,6 +163,7 @@
 							<td colspan="5" class="cp-tr-expanded">
 								<ul class="cp-assessments-units-expanded">
 									<?php foreach ( $student->units as $unit_id => $unit ) : ?>
+										<?php if ( empty( $unit->is_answerable ) ) : continue; endif; ?>
 										<li>
 											<span class="pull-left"><span class="cp-units-icon"></span><?php echo $unit->get_the_title(); ?></span>
 											<span class="pull-right">
