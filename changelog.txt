@@ -5,7 +5,7 @@ Build Time:  BUILDTIME
 CHANGELOG
 =================================================
 
-& Fixed typo in notifications configuration.
+* Fixed typo in notifications configuration.
 
 = 2.1.3 =
 -------------------------------------------------
