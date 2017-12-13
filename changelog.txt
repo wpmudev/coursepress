@@ -4,6 +4,7 @@ Build Time:  BUILDTIME
 
 CHANGELOG
 =================================================
+* Fixed: On a course structure show section without modules if "Show units without modules" is checked.
 
 = 2.1.3 =
 -------------------------------------------------
