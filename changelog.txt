@@ -5,6 +5,10 @@ Build Time:  BUILDTIME
 CHANGELOG
 =================================================
 
+= 2.1.4 =
+-------------------------------------------------
+* Fixed: Typo on MarketPress integration box.
+
 = 2.1.3 =
 -------------------------------------------------
 * Fixed: Unit and Pages TinyMCE editor does not work after WordPress update to 4.9.
