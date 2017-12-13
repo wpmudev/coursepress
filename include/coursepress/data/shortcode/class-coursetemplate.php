@@ -499,6 +499,17 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			$button = $button_pre . $button . $button_post;
 		}
 
+		/**
+		 * remove enrol button for instructors
+		 */
+		if ( is_user_logged_in() ) {
+			$user_id = get_current_user_id();
+			$is_course_instructor = CoursePress_Data_Instructor::is_course_instructor( $user_id, $course_id );
+			if ( $is_course_instructor ) {
+				return '';
+			}
+		}
+
 		// Wrap button in form if needed.
 		if ( $is_form ) {
 			$button = '<form name="enrollment-process" method="post" data-type="'. $button_option . '" action="' . $button_url . '">' . $button;
@@ -974,14 +985,16 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			$unit_status[] = 'draft';
 		}
 
+		$units_with_modules = CoursePress_Data_Course::get_units_with_modules( $course_id, $unit_status );
+		$units_with_modules = CoursePress_Helper_Utility::sort_on_key( $units_with_modules, 'order' );
+
 		if ( ! $with_modules ) {
 			$units = CoursePress_Data_Course::get_units(
 				CoursePress_Helper_Utility::the_course( true ),
 				$unit_status
 			);
 		} else {
-			$units = CoursePress_Data_Course::get_units_with_modules( $course_id, $unit_status );
-			$units = CoursePress_Helper_Utility::sort_on_key( $units, 'order' );
+			$units = $units_with_modules;
 		}
 
 		$content .= sprintf( '<div class="unit-archive-list-wrapper" data-view-mode="%s">', esc_attr( $view_mode ) );
@@ -1001,6 +1014,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		$clickable = true;
 		$previous_unit_id = false;
 		$last_module_id = false;
+		$current_last_module_id = false;
 
 		/**
 		 * units
@@ -1009,6 +1023,18 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 		foreach ( $units as $unit ) {
 			$the_unit = $with_modules ? $unit['unit'] : $unit;
 			$unit_id = $the_unit->ID;
+
+			if ( ! empty( $current_last_module_id ) ) {
+				$last_module_id = $current_last_module_id;
+			}
+			if ( ! empty( $units_with_modules[ $unit_id ]['pages'] ) && is_array( $units_with_modules[ $unit_id ]['pages'] ) ) {
+				$last_page = end( $units_with_modules[ $unit_id ]['pages'] );
+				if ( ! empty( $last_page['modules'] ) && is_array( $last_page['modules'] ) ) {
+					end( $last_page['modules'] );
+					$current_last_module_id	= key( $last_page['modules'] );
+				}
+			}
+
 			// Hide hidden unit
 			$is_unit_structure_visible = CoursePress_Data_Unit::is_unit_structure_visible( $course_id, $unit_id, $student_id );
 			if ( ! $is_unit_structure_visible ) { continue; }
@@ -1127,8 +1153,10 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				 * return date with known format
 				 */
 				$unit_availability_date = CoursePress_Data_Unit::get_unit_availability_date( $unit_id, $course_id, 'c' );
+				$_unit_date = CoursePress_Data_Course::strtotime( $unit_availability_date );
+				$now = CoursePress_Data_Course::time_now();
 
-				if ( ! empty( $unit_availability_date ) && 'expired' != $unit_availability_date ) {
+				if ( ! empty( $unit_availability_date ) && $_unit_date > $now && 'expired' != $unit_availability_date ) {
 					$status_type = get_post_meta( $unit_id, 'unit_availability', true );
 					if ( 'instant' == $status_type ) {
 						$unit_status = esc_attr__( 'You need to complete the REQUIRED unit before this unit.', 'CP_TD' );
@@ -1138,8 +1166,12 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 						$unit_year = date( 'Y', $unit_availability_date );
 						$format = $year_now !== $unit_year ? _x( 'M d, Y', 'Unit available date with year for future unit.', 'CP_TD' ) : _x( 'M d', 'Unit available date without year for future unit.', 'CP_TD' );
 						// Requires custom hook to attached
-						$when = date( $format, $unit_availability_date );
-						$delay_date = sprintf( '<span class="unit-delay-date">%s %s</span>', __( 'Opens', 'CP_TD' ), $when );
+						$when = date_i18n( $format, $unit_availability_date );
+
+						$delay_date = sprintf(
+							'<span class="unit-delay-date">%s</span>',
+							sprintf( __( 'Opens %s', 'CP_TD' ), $when )
+						);
 						$unit_status = __( 'This unit will be available on the scheduled start date.', 'CP_TD' );
 						/**
 						 * Filter delay date markup.
@@ -1220,9 +1252,9 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					$module_table .= '<li>';
 
 					if ( $heading_visible ) {
-						$section_class = 'section-title';
+						$section_class   = 'section-title';
 						$is_section_seen = CoursePress_Data_Student::is_section_seen( $course_id, $unit_id, $page_number );
-						$section_data = '';
+						$section_data    = '';
 
 						if ( $is_section_seen ) {
 							$section_class .= ' section-seen';
@@ -1239,26 +1271,24 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 
 						if ( ! $clickable ) {
 							$section_class = 'section-title section-locked';
-							$section_data = sprintf( ' data-title="%s"', esc_attr__( 'You need to complete all the REQUIRED modules before this section.', 'CP_TD' ) );
+							$section_data  = sprintf( ' data-title="%s"', esc_attr__( 'You need to complete all the REQUIRED modules before this section.', 'CP_TD' ) );
 						}
-						if ( 'normal' == $view_mode ) {
-							$module_table .= '<div class="'. $section_class . '" data-id="' . $page_number . '"'. $section_data .'>' . ( ! empty( $page['title'] ) ? esc_html( $page['title'] ) : esc_html__( 'Untitled', 'CP_TD' ) ) . '</div>';
+
+						$section_link = sprintf( '%spage/%s', $unit_url, $page_number );
+						$module_table .= '<div class="' . $section_class . '" data-id="' . $page_number . '"' . $section_data . '>';
+
+						if ( $clickable || $can_update_course ) {
+							$module_table .= '<a href="' . $section_link . '">' . ( ! empty( $page['title'] ) ? esc_html( $page['title'] ) : esc_html__( 'Untitled', 'CP_TD' ) ) . '</a>';
 						} else {
-							$section_link = sprintf( '%spage/%s', $unit_url, $page_number );
-							$module_table .= '<div class="'. $section_class . '" data-id="' . $page_number . '"'. $section_data . '>';
-
-							if ( $clickable || $can_update_course ) {
-								$module_table .= '<a href="' . $section_link . '">' . ( ! empty( $page['title'] ) ? esc_html( $page['title'] ) : esc_html__( 'Untitled', 'CP_TD' ) ) . '</a>';
-							} else {
-								$module_table .= sprintf( '<span>%s</span>', ! empty( $page['title'] ) ? esc_html( $page['title'] ) : esc_html__( 'Untitled', 'CP_TD' ) );
-							}
-
-							$module_table .= '</div>';
+							$module_table .= sprintf( '<span>%s</span>', ! empty( $page['title'] ) ? esc_html( $page['title'] ) : esc_html__( 'Untitled', 'CP_TD' ) );
 						}
+
+						$module_table .= '</div>';
+
 						// Set featured image
 						if ( ! empty( $page['feature_image'] ) ) {
 							$page_featured_image = sprintf( '<img src="%s" alt="%s" />', esc_url( $page['feature_image'] ), esc_attr( basename( $page['feature_image'] ) ) );
-							$module_table .= '<div class="section-thumbnail">' . $page_featured_image . '</div>';
+							$module_table        .= '<div class="section-thumbnail">' . $page_featured_image . '</div>';
 						}
 					}
 
@@ -1538,7 +1568,7 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					'past_label' => __( 'Past courses', 'CP_TD' ),
 					'show_labels' => false,
 					'status' => 'publish',
-					'student_msg' => __( 'You are not enrolled in any courses. <a href="%s">See available courses.</a>', 'CP_TD' ),
+					'student_msg' => sprintf( __( 'You are not enrolled in any courses. <a href="%s">See available courses.</a>', 'CP_TD' ), CoursePress_Core::get_slug( 'course/', true ) ),
 					'student' => '', // If both student and instructor is specified only student will be used
 					'suggested_label' => __( 'Suggested courses', 'CP_TD' ),
 					'suggested_msg' => __( 'You are not enrolled in any courses.<br />Here are a few you might like, or <a href="%s">see all available courses.</a>', 'CP_TD' ),
@@ -1825,7 +1855,13 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 					$label = $atts['current_label'];
 					if ( 0 == $counter ) {
 						$show_empty = true;
-						$content = sprintf( '<p class="message">%s</p>', $atts['student_msg'] );
+						$content = sprintf(
+							'<p class="message">%s</p>',
+							sprintf(
+								$atts['student_msg'],
+								esc_attr( '/'.CoursePress_Core::get_setting( 'slugs/course', 'courses' ) )
+							)
+						);
 					}
 				break;
 

@@ -143,9 +143,12 @@ class CoursePress_Helper_Utility {
 	 *
 	 * @return array Settings array.
 	 */
-	public static function set_array_value( $a, $path, $value ) {
-		if ( ! is_array( $path ) ) {
-			$path = explode( '/', $path );
+	public static function set_array_value( $a, $path_input, $value ) {
+		$path = array();
+		if ( is_array( $path_input ) ) {
+			$path = $path_input;
+		} else {
+			$path = explode( '/', $path_input );
 		}
 		$key = array_shift( $path );
 		if ( empty( $path ) ) {
@@ -155,7 +158,6 @@ class CoursePress_Helper_Utility {
 			$a[ $key ] = $value;
 			return $a;
 		}
-
 		if ( ! isset( $a[ $key ] ) || ! is_array( $a[ $key ] ) ) {
 			$a[ $key ] = array();
 		}
@@ -164,9 +166,12 @@ class CoursePress_Helper_Utility {
 	}
 
 	// get array value based on path.
-	public static function get_array_val( $a, $path ) {
-		if ( ! is_array( $path ) ) {
-			$path = explode( '/', $path );
+	public static function get_array_val( $a, $path_input ) {
+		$path = array();
+		if ( is_array( $path_input ) ) {
+			$path = $path_input;
+		} else {
+			$path = explode( '/', $path_input );
 		}
 		foreach ( $path as $k ) {
 			if ( isset( $a[ $k ] ) ) {
@@ -188,16 +193,19 @@ class CoursePress_Helper_Utility {
 	 *
 	 * @return array Settings array.
 	 */
-	public static function unset_array_value( $a, $path ) {
-		if ( ! is_array( $path ) ) {
-			$path = explode( '/', $path );
+	public static function unset_array_value( $a, $path_input ) {
+		$path = array();
+		if ( is_array( $path_input ) ) {
+			$path = $path_input;
+		} else {
+			$path = explode( '/', $path_input );
 		}
 		$key = array_shift( $path );
 		if ( empty( $path ) ) {
 			if ( empty( $key ) ) {
 				$key = count( $a );
 			}
-			unset( $key );
+			unset( $a[ $key ] );
 			return $a;
 		}
 		if ( ! isset( $a[ $key ] ) || ! is_array( $a[ $key ] ) ) {
@@ -213,10 +221,13 @@ class CoursePress_Helper_Utility {
 	 * @deprecated 2.0.5 Use set_array_value()
 	 * @see set_array_value()
 	 */
-	public static function set_array_val( &$a, $path, $value ) {
+	public static function set_array_val( &$a, $path_input, $value ) {
 		CoursePress_Helper_Legacy::deprecated_function( __CLASS__.'::'.__FUNCTION__, '2.0.5', 'CoursePress_Helper_Utility::set_array_value()' );
-		if ( ! is_array( $path ) ) {
-			$path = explode( '/', $path );
+		$path = array();
+		if ( is_array( $path_input ) ) {
+			$path = $path_input;
+		} else {
+			$path = explode( '/', $path_input );
 		}
 		$key = array_pop( $path );
 		foreach ( $path as $k ) {
@@ -234,10 +245,13 @@ class CoursePress_Helper_Utility {
 	 * @deprecated 2.0.5 Use unset_array_value()
 	 * @see unset_array_value()
 	 */
-	public static function unset_array_val( &$a, $path ) {
+	public static function unset_array_val( &$a, $path_input ) {
 		CoursePress_Helper_Legacy::deprecated_function( __CLASS__.'::'.__FUNCTION__, '2.0.5', 'CoursePress_Helper_Utility::unset_array_value()' );
-		if ( ! is_array( $path ) ) {
-			$path = explode( '/', $path );
+		$path = array();
+		if ( is_array( $path_input ) ) {
+			$path = $path_input;
+		} else {
+			$path = explode( '/', $path_input );
 		}
 		$key = array_pop( $path );
 		foreach ( $path as $k ) {
@@ -1465,12 +1479,12 @@ class CoursePress_Helper_Utility {
 	 * @param $default string The value to return if the color to convert turns out to be invalid.
 	 * @return array An array containing RGB values.
 	 */
-	public static function convert_hex_color_to_rgb($hex_color, $default)
+	public static function convert_hex_color_to_rgb($hex_color, $default = array())
 	{
 		$color_valid = (boolean) preg_match('/^#[a-f0-9]{6}$/i', $hex_color);
 		if($color_valid)
 		{
-			$values = TCPDF_COLORS::convertHTMLColorToDec($hex_color, TCPDF_COLORS::$spotcolor);
+			$values = CP_TCPDF_COLORS::convertHTMLColorToDec($hex_color, CP_TCPDF_COLORS::$spotcolor);
 			return array_values($values);
 		}
 
@@ -1547,6 +1561,11 @@ class CoursePress_Helper_Utility {
 		}
 
 		$setup_data = array();
+		$player_width = CoursePress_Helper_Utility::get_array_val( $data, 'video_player_width' );
+		if(!$player_width)
+		{
+			$setup_data['fluid'] = true;
+		}
 		if($src)
 		{
 			$setup_data['techOrder'] = array($src);

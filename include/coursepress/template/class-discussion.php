@@ -71,8 +71,10 @@ class CoursePress_Template_Discussion {
 	}
 
 	public static function show_all_comments( $comments_array ) {
-		$comments_array->query_vars['number'] = null;
-
+		/**
+		 * filter to alow set number of comments
+		 */
+		$comments_array->query_vars['number'] = apply_filters( 'coursepress_show_all_comments', null );
 		return $comments_array;
 	}
 

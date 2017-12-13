@@ -124,19 +124,6 @@ input.cp-has-error {
   display: none;
 }
 
-@media screen and (max-height: 479px) {
-  body .enrolment-container-div {
-    padding: 1em;
-  }
-  body .enrolment-container-div .bbm-wrapper {
-    position: static;
-  }
-}
-@media screen and (min-height: 480px) {
-  .cp-mask {
-    position: fixed;
-  }
-}
 .cp-submenu {
   margin: 0 0 25px 0;
   display: block;
@@ -963,6 +950,9 @@ input.cp-has-error {
 .cp .module-elements .comment-list li li {
   margin-left: 25px;
 }
+.cp .module-elements.module-type-video .video_player {
+  overflow: hidden;
+}
 .cp .cp-try-again {
   margin-top: 15px;
 }
@@ -1502,7 +1492,26 @@ ul.notification-archive-list:after {
 /** Media Queries **/
 @media screen and (min-width: 768px) {
   .enrolment-container-div .bbm-modal {
-    max-height: 450px;
     margin: 0 auto;
+  }
+}
+@media screen and (max-height: 800px) {
+  body .enrolment-container-div {
+    padding: 1em;
+  }
+  body .enrolment-container-div .bbm-wrapper {
+    position: static;
+  }
+  body .enrolment-container-div .bbm-wrapper .bbm-modal {
+    max-height: initial;
+  }
+  body .enrolment-container-div.cp-mask {
+    position: fixed;
+    padding: 5em;
+  }
+}
+@media screen and (min-height: 801px) {
+  .cp-mask {
+    position: fixed;
   }
 }

@@ -5,33 +5,98 @@ Build Time:  BUILDTIME
 CHANGELOG
 =================================================
 
-= 2.0.8 =
+= 2.1.3 =
 -------------------------------------------------
-* Added: Text color option for course certificate.
+* Fixed: Unit and Pages TinyMCE editor does not work after WordPress update to 4.9.
+
+= 2.1.2 =
+-------------------------------------------------
+* Improved: Add ability to define certificate logo.
+* Improved: Show instructor feedback on student workbook frontend.
+* CoursePress Theme: Fixed display of HTML Bullet points.
+* CoursePress Theme: Fixed expanded unit list view mode.
+* CoursePress Theme: Improved bbPress compatibility.
+* Fixed: Expanded unit list view mode not working for students.
+* Fixed: Export problem on PHP 5.2, json_encode() have only one parameter.
+* Fixed: Missing upgrade scripts.
+* Fixed: Module access with URL.
+* Fixed: Prevent access modules when previously required modules haven't been completed.
+* Fixed: Problem loading translations.
+* Fixed: Problem with TinyMCE.
+* Fixed: Try Again button is not showing while Retry is set to 1.
+* Fixed: Visual editor load problem when a user disables in the profile.
+
+= 2.1.1 =
+-------------------------------------------------
+* Improved: Added `editor-rtl.css` file.
+* Improved: Better display responsive video.
+* Improved: HTML login & signup forms.
+* Improved: Username sanitization.
+* Fixed: Assessments feedback sending problem.
+* Fixed: Compatibility with older PHP versions.
+* Fixed: CoursePress shortcode links are not working.
+* Fixed: Even the Discussion module is not "Required", you can't go to next section.
+* Fixed: Instructors capabilities problem on multisite installation.
+* Fixed: Instructor can't reply to comments on course unit.
+* Fixed: Missing translation in steps 6 & 7.
+* Fixed: Problems with missing passcode after login.
+* Fixed: Problems with PHP 5.2.x.
+* Fixed: Problem to go next unit when all answers are required but current unit do not have any assessable modules.
+* Fixed: Problem with go  to next module.
+* Fixed: Problem with non assessable modules and grade unit.
+* Fixed: Problem with yimer on quiz module after we use "Try Again" button.
+* Fixed: Sections on units page overview are not linked and not visible.
+* Fixed: Show and Free Preview options in Course Structure settings.
+* Fixed: Small issues with PHP 7.1.1
+* Fixed: The title of "Course Structure" widget should not be visible, when it is not checked.
+* Fixed: Unable to send feedback about assessments.
+* Fixed: Units inside the course are available agains the settings options.
+* Fixed: Visual editor is blank and missing data after module reorder.
+* Fixed: PHP warnings during export, when we try to fetch deleted user data.
+* Updated: Vimeo javascript for version 3.0.0.
+
+= 2.1.0.2 =
+-------------------------------------------------
+* Added: A filter 'coursepress_update_student_progress' to allow turn off student progress update during modules update.
+* Fixed: Problem with upgrade from 1.x to 2.0.
+
+= 2.1.0.1 =
+-------------------------------------------------
+* Fixed: Compatibility with older PHP versions.
+* Fixed: Video module problem with Vimeo movies.
+* Fixed: Problem with proper display of a course structure.
+
+= 2.1 =
+-------------------------------------------------
 * Added: Categories argument to [course_list] shortcode to filter courses.
 * Added: HTML rel attribute to next and previous buttons.
-* Added: Password strength meter on student profile
-* Added: The ability to disable the strength meter in the enrollment pup-up.
-* Added: Option to disable emails individually
-* Added: New filter: coursepress_comment_list_args to filter comments list arguments.
 * Added: New filter: coursepress_comment_form_args to filter new comment form arguments.
-
-* Improved: Add individuall nonce when withdraw a student from a course.
+* Added: New filter: coursepress_comment_list_args to filter comments list arguments.
+* Added: Option to disable emails individually
+* Added: Password strength meter on student profile
+* Added: Text color option for course certificate.
+* Added: The ability to disable the strength meter in the enrollment pup-up.
+* Added: Unit slug will be updated when you change unit title.
+* Improved: Added certificate filter on students list on course edit screen.
+* Improved: Add individual nonce when withdraw a student from a course.
+* Improved: Automatic migration from users upgrading from version 1.x
+* Improved: Better section title display - added information about no title.
+* Improved: Form module UI for better display.
+* Improved: Image display.
+* Improved: Increase a course assessments page load time.
+* Improved: Removed unused function CoursePress_Data_Course::is_course_preview()
+* Improved: Smaller download size.
 * Improved: Students list on assessment screen can be sorted by username and display name.
 * Improved: Students list on assessment screen is more like users list.
 * Improved: Students list on course edit screen can by sorted by: username, display name, first name and last name.
 * Improved: Students list on course edit screen is more like users list.
-* Improved: Added certificate filter on students list on course edit screen.
-* Improved: Inrease a course assessments page load time.
-* Improved: Image display.
-* Improved: Removed unused function CoursePress_Data_Course::is_course_preview()
-* Improved: Better section title display - added information about no title.
-
 * Fixed: Default unit title height to avoid collapse when empty.
 * Fixed: Instructor profile course lists on multisite.
 * Fixed: Empty dashboard page to non-enrolled user.
 * Fixed: A minor microdata issue on the course details page.
 * Fixed: In unit-builder, the checkbox options were not getting saved properly in some scenarios.
+* Fixed: Multiple answers grade calculation.
+* Fixed: Form grade calculation.
 
 = 2.0.7 =
 -------------------------------------------------

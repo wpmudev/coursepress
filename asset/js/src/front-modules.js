@@ -120,6 +120,10 @@
 		if ( $.fn.mediaelementplayer ) {
 			var media = $( 'audio,video', container );
 
+			if(videojs.getPlayers()) {
+				var player = videojs(media[0].id);
+			}
+
 			if ( media.length > 0 ) {
 				media.mediaelementplayer();
 			}
@@ -304,11 +308,14 @@
 		var button = $(this),
 			parentDiv = button.closest( '.cp-module-content' ),
 			elementsDiv = $( '.module-elements', parentDiv ),
-			responseDiv = $( '.module-response', parentDiv )
+			responseDiv = $( '.module-response', parentDiv ),
+			moduleHidden = $( '.cp-is-hidden-module', parentDiv )
 		;
 
 		responseDiv.hide();
 		elementsDiv.show();
+		moduleHidden.val(0);
+		CoursePress.timer( parentDiv );
 
 		return false;
 	};

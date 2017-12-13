@@ -1294,7 +1294,7 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 						'default' => __( 'Access Course', 'CP_TD' ),
 					),
 					'list_page' => array(
-						'content' => __( 'Show button to course details..', 'CP_TD' ),
+						'content' => __( 'Show button to course details.', 'CP_TD' ),
 						'default' => 'false',
 					),
 					'not_started_text' => array(
@@ -1422,7 +1422,7 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 						'default' => 'empty',
 					),
 					'completed_label' => array(
-						'content' => __( 'Label for completed courses list..', 'CP_TD' ),
+						'content' => __( 'Label for completed courses list.', 'CP_TD' ),
 						'default' => __( 'Completed courses', 'CP_TD' ),
 					),
 					'context' => array(
@@ -1498,7 +1498,12 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 						'content' => __( 'Messge displayed when student is not enroled to any course.', 'CP_TD' ),
 						'default' => sprintf(
 							__( 'You are not enrolled in any courses. %s', 'CP_TD' ),
-							htmlentities( __( '<a href="%s">See available courses.</a>', 'CP_TD' ) )
+							htmlentities(
+								sprintf(
+									__( '<a href="%s">See available courses.</a>', 'CP_TD' ),
+									esc_attr( '/'.CoursePress_Core::get_setting( 'slugs/course', 'courses' ) )
+								)
+							)
 						),
 					),
 					'student' => array(

@@ -8,7 +8,7 @@
 	<div class="status <?php echo $setup_class; ?>"></div>
 </div>
 
-<div class="step-content step-5">
+<div class="cp-box-content step-content step-5">
 	<input type="hidden" name="meta_setup_step_5" value="saved" />
 
 	<div class="wide class-size">
@@ -63,6 +63,6 @@
 
 	/**
 	 * Print button **/
-	echo static::get_buttons( $course_id, 5 );
+	echo CoursePress_View_Admin_Course_Edit::get_buttons( $course_id, 5 );
 	?>
 </div>

@@ -189,11 +189,14 @@ class CoursePress_Helper_EmailAlert {
 		// IMPORTANT: Increase counter!
 		self::$processed += 1;
 
+		$first_name = get_user_meta( $student->ID, 'first_name', true );
+		$last_name = get_user_meta( $student->ID, 'last_name', true );
+
 		$variables = array(
 			'course_id' => $course_id,
 			'email' => $student->user_email,
-			'first_name' => get_user_meta( $student->ID, 'first_name', true ),
-			'last_name' => get_user_meta( $student->ID, 'last_name', true ),
+			'first_name' => empty( $first_name ) && empty( $last_name ) ? $student->display_name : $first_name,
+			'last_name' => $last_name,
 			'display_name' => $student->display_name,
 		);
 
@@ -221,11 +224,14 @@ class CoursePress_Helper_EmailAlert {
 		// IMPORTANT: Increase counter!
 		self::$processed += 1;
 
+		$first_name = get_user_meta( $student->ID, 'first_name', true );
+		$last_name = get_user_meta( $student->ID, 'last_name', true );
+
 		$variables = array(
 			'unit_id' => $unit_id,
 			'email' => $student->user_email,
-			'first_name' => get_user_meta( $student->ID, 'first_name', true ),
-			'last_name' => get_user_meta( $student->ID, 'last_name', true ),
+			'first_name' => empty( $first_name ) && empty( $last_name ) ? $student->display_name : $first_name,
+			'last_name' => $last_name,
 			'display_name' => $student->display_name,
 		);
 
@@ -494,6 +500,7 @@ class CoursePress_Helper_EmailAlert {
 		);
 
 		if ( is_multisite() ) {
+			global $wpdb;
 			$keys['enrolled'] = $wpdb->prefix . $keys['enrolled'];
 			$keys['notified'] = $wpdb->prefix . $keys['notified'];
 		}

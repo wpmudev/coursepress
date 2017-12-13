@@ -49,7 +49,7 @@
  * @version 1.1.1
  * @author Nicola Asuni - info@tecnick.com
  */
-class TCPDF_STATIC {
+class CP_TCPDF_STATIC {
 
 	/**
 	 * Current TCPDF version.
@@ -466,7 +466,7 @@ class TCPDF_STATIC {
 
 	/**
 	 * Return the current TCPDF version.
-	 * @return TCPDF version string
+	 * @return CP_TCPDF version string
 	 * @since 5.9.012 (2010-11-10)
 	 * @public static
 	 */
@@ -476,7 +476,7 @@ class TCPDF_STATIC {
 
 	/**
 	 * Return the current TCPDF producer.
-	 * @return TCPDF producer string
+	 * @return CP_TCPDF producer string
 	 * @since 6.0.000 (2013-03-16)
 	 * @public static
 	 */
@@ -801,7 +801,7 @@ class TCPDF_STATIC {
 	 * @public static
 	 */
 	public static function getObjFilename($type='tmp', $file_id='') {
-		return tempnam(K_PATH_CACHE, '__tcpdf_'.$file_id.'_'.$type.'_'.md5(TCPDF_STATIC::getRandomSeed()).'_');
+		return tempnam(K_PATH_CACHE, '__tcpdf_'.$file_id.'_'.$type.'_'.md5(CP_TCPDF_STATIC::getRandomSeed()) . '_');
 	}
 
 	/**
@@ -1467,7 +1467,7 @@ class TCPDF_STATIC {
 			if (is_array($prop['fillColor'])) {
 				$opt['mk']['bg'] = $prop['fillColor'];
 			} else {
-				$opt['mk']['bg'] = TCPDF_COLORS::convertHTMLColorToDec($prop['fillColor'], $spot_colors);
+				$opt['mk']['bg'] = CP_TCPDF_COLORS::convertHTMLColorToDec($prop['fillColor'], $spot_colors);
 			}
 		}
 		// strokeColor: Specifies the stroke color for a field that is used to stroke the rectangle of the field with a line as large as the line width.
@@ -1475,7 +1475,7 @@ class TCPDF_STATIC {
 			if (is_array($prop['strokeColor'])) {
 				$opt['mk']['bc'] = $prop['strokeColor'];
 			} else {
-				$opt['mk']['bc'] = TCPDF_COLORS::convertHTMLColorToDec($prop['strokeColor'], $spot_colors);
+				$opt['mk']['bc'] = CP_TCPDF_COLORS::convertHTMLColorToDec($prop['strokeColor'], $spot_colors);
 			}
 		}
 		// rotation: The rotation of a widget in counterclockwise increments.
@@ -2179,7 +2179,7 @@ class TCPDF_STATIC {
 		// create new language array of patterns
 		$patterns = array();
 		foreach($patterns_array as $val) {
-			if (!TCPDF_STATIC::empty_string($val)) {
+			if (!CP_TCPDF_STATIC::empty_string($val)) {
 				$val = trim($val);
 				$val = str_replace('\'', '\\\'', $val);
 				$key = preg_replace('/[0-9]+/', '', $val);

@@ -323,7 +323,7 @@ class CoursePress_Helper_Table_CourseAssessments extends CoursePress_Helper_Tabl
 	}
 
 	public function no_items() {
-		esc_html_e( 'There are no students found..', 'CP_TD' );
+		esc_html_e( 'There are no students found.', 'CP_TD' );
 	}
 
 	public function set_type( $type ) {

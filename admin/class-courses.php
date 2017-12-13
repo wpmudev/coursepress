@@ -171,6 +171,7 @@ class CoursePress_Admin_Courses {
 			'post_type' => CoursePress_Data_Unit::get_post_type_name(),
 			'post_parent' => $item->ID,
 			'post_status' => array( 'publish', 'private', 'draft' ),
+			'posts_per_page' => -1, // Fixes query default limit of 10.
 		);
 
 		$query = new WP_Query( $post_args );

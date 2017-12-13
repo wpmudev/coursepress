@@ -21,7 +21,6 @@ coursepress-files/pdf-cache/
 /composer.lock
 /composer
 /release
-composer.json
 /asset/css/src/.sass-cache
 /asset/css/src/admin/.sass-cache
 /asset/css/src/front/.sass-cache

@@ -56,7 +56,7 @@ require_once(dirname(__FILE__).'/tcpdf_parser.php');
  * @version 1.0.001
  * @author Nicola Asuni - info@tecnick.com
  */
-class TCPDF_IMPORT extends TCPDF {
+class TCPDF_IMPORT extends CP_TCPDF {
 
 	/**
 	 * Import an existing PDF document

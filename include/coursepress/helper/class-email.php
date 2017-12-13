@@ -75,6 +75,12 @@ class CoursePress_Helper_Email {
 	const UNIT_STARTED_NOTIFICATION = 'unit_started';
 
 	/**
+	 * Email type.
+	 * Used at CoursePress_Helper_EmailAlerts::instructor_module_feedback()
+	 **/
+	const INSTRUCTOR_MODULE_FEEDBACK_NOTIFICATION = 'instructor_module_feedback';
+
+	/**
 	 * Stores the current email-template-type for usage in filter-callbacks.
 	 *
 	 * @var string
@@ -224,6 +230,13 @@ class CoursePress_Helper_Email {
 					$args['subject'] = self::units_started_notification_subject(
 						$args,
 						$args['subject']
+					);
+					break;
+
+				case self::INSTRUCTOR_MODULE_FEEDBACK_NOTIFICATION:
+					$args['message'] = self::instructor_module_feedback_notification_message(
+						$args,
+						$email_settings['content']
 					);
 					break;
 			}
@@ -1067,5 +1080,84 @@ class CoursePress_Helper_Email {
 		$subject = apply_filters( 'coursepress_units_started_notification_subject', $subject, $course_id );
 
 		return $subject;
+	}
+
+	/**
+	 * Prepare the email body for the instructor module feedback email notification.
+	 *
+	 * Expected args:
+	 *  - unit_id
+	 *  - course_id
+	 *  - module_id
+	 *  - student_id
+	 *  - feedback_text
+	 *
+	 * @since  2.1.1 Replacement of class-feedback.php.
+	 * @param  array  $args List of variables.
+	 * @param  string $content Email body template.
+	 * @return string Parsed email body.
+	 */
+	public static function instructor_module_feedback_notification_message( $args, $content ) {
+		$unit_id = (int) $args['unit_id'];
+		$unit = get_post( $unit_id );
+		$course_id = (int) $args['course_id'];
+		$course = get_post( $course_id );
+		$course_name = $course->post_title;
+		$module_id = (int) $args['module_id'];
+		$module = get_post( $module_id );
+		$valid_stati = array( 'draft', 'pending', 'auto-draft' );
+		$student_id = (int) $args['student_id'];
+		$student = get_userdata( $student_id );
+		$instructor_feedback = $args['instructor_feedback'];
+		$instructor = get_userdata( get_current_user_id() );
+
+		// Get course grade.
+		$student_progress = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
+		$course_grade = CoursePress_Helper_Utility::get_array_val(
+			$student_progress,
+			'completion/average'
+		);
+
+		if ( in_array( $course->post_status, $valid_stati ) ) {
+			$course_address = CoursePress_Core::get_slug( 'course/', true ) . $unit->post_name . '/';
+		} else {
+			$course_address = get_permalink( $course_id );
+		}
+
+		// Email Content.
+		$vars = array(
+			'INSTRUCTOR_FIRST_NAME' => empty( $instructor->first_name ) && empty( $instructor->last_name ) ? $instructor->display_name : $instructor->first_name,
+			'INSTRUCTOR_LAST_NAME' => $instructor->last_name,
+			'STUDENT_FIRST_NAME' => empty( $student->first_name ) && empty( $student->last_name ) ? $student->display_name : $student->first_name,
+			'STUDENT_LAST_NAME' => $student->last_name,
+			'COURSE_NAME' => $course_name,
+			'COURSE_ADDRESS' => esc_url( $course_address ),
+			'CURRENT_UNIT' => $unit->post_title,
+			'CURRENT_MODULE' => $module->post_title,
+			'INSTRUCTOR_FEEDBACK' => $instructor_feedback,
+			'COURSE_GRADE' => $course_grade,
+		);
+		$vars = CoursePress_Helper_Utility::add_site_vars( $vars );
+
+		/**
+		 * Filter the variables before applying changes.
+		 *
+		 * @param array $vars
+		 * @param array $course_id
+		 */
+		$vars = apply_filters( 'coursepress_fields_' . self::INSTRUCTOR_MODULE_FEEDBACK_NOTIFICATION, $vars, $course_id );
+
+		$message = CoursePress_Helper_Utility::replace_vars( $content, $vars );
+		/**
+		 * Filter the message before sending.
+		 *
+		 * @since 2.0
+		 *
+		 * @param string $message The message to send.
+		 * @param int    $course_id The course_id the message is associated to.
+		 */
+		$message = apply_filters( 'coursepress_instructor_module_feedback_notification_message', $message, $course_id );
+
+		return $message;
 	}
 }

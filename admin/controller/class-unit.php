@@ -82,7 +82,7 @@ class CoursePress_Admin_Controller_Unit {
 					<input id="unit_name" class="wide" type="text" value="<%= unit_title %>" name="post_title" spellcheck="true">
 					<div class="unit-additional-info">
 					<label class="unit-description">' . __( 'Unit Description', 'CP_TD' ) . '</label>
-					<textarea name="unit_description" class="widefat" id="unit_description_1_1"><%- unit_content %></textarea>
+					<textarea name="unit_description" class="widefat unit-wp-editor" id="unit_description_<%- unit_id %>"><%- unit_content %></textarea>
 					' . CoursePress_Helper_UI::browse_media_field(
 				'unit_feature_image',
 				'unit_feature_image',
@@ -167,7 +167,7 @@ class CoursePress_Admin_Controller_Unit {
 					<p class="description">' . esc_html__( 'The label will be displayed on the Course Overview and Unit page', 'CP_TD' ) . '</p>
 					<input type="text" value="<%= page_label_text %>" name="page_title" class="wide" />
 					<label class="page-description">' . esc_html__( 'Section Description', 'CP_TD' ) . '</label>
-					<textarea name="page_description" id="page_description_1_1"><%- page_description %></textarea>
+					<textarea name="page_description" class="page-wp-editor" id="page_description_<%- page_id %>"><%- page_description %></textarea>
 					' . CoursePress_Helper_UI::browse_media_field(
 				'page_feature_image',
 				'page_feature_image',
@@ -383,8 +383,8 @@ class CoursePress_Admin_Controller_Unit {
 					foreach ( $data as $unit ) {
 						unset( $unit['post_modified'] );
 						unset( $unit['post_modified_gmt'] );
-						unset( $unit['post_name'] );
 						unset( $unit['guid'] );
+						$unit['post_name'] = '';
 
 						$new_unit = false;
 						$unit_id = isset( $unit['ID'] ) ? (int) $unit['ID'] : 0;
@@ -553,9 +553,11 @@ class CoursePress_Admin_Controller_Unit {
 					/**
 					 * update student progress
 					 */
+					$update_student_progress = apply_filters( 'coursepress_update_student_progress', $update_student_progress );
 					if ( $update_student_progress ) {
 						$course_id = $_REQUEST['course_id'];
 						$students = CoursePress_Data_Course::get_students( $course_id, 0, 0, 'ids' );
+
 						if ( is_array( $students ) && ! empty( $students )  ) {
 							foreach ( $students as $student_id ) {
 								$student_progress = CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course_id );
@@ -577,6 +579,8 @@ class CoursePress_Admin_Controller_Unit {
 										}
 									}
 								}
+
+								CoursePress_Data_Student::get_calculated_completion_data( $student_id, $course_id );
 							}
 						}
 					}

@@ -8,7 +8,7 @@
 	<div class="status <?php echo $setup_class; ?>"></div>
 </div>
 
-<div class="step-content step-3">
+<div class="cp-box-content step-content step-3">
 	<input type="hidden" name="meta_setup_step_3" value="saved" />
 
 	<?php if ( $can_assign_instructor ) : ?>
@@ -105,6 +105,6 @@
 	echo apply_filters( 'coursepress_course_setup_step_3', '', $course_id );
 
 	// Print buttons
-	echo static::get_buttons( $course_id, 3 );
+	echo CoursePress_View_Admin_Course_Edit::get_buttons( $course_id, 3 );
 	?>
 </div>

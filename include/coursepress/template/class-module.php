@@ -130,40 +130,36 @@ class CoursePress_Template_Module {
 				break;
 
 			case 'input-form':
-				if ( is_admin() ) {
-					if ( ! empty( $attributes['questions'] ) ) {
-						$questions = $attributes['questions'];
+				if ( ! empty( $attributes['questions'] ) ) {
+					$questions = $attributes['questions'];
 
-						foreach ( $questions as $q_index => $question ) {
-							$student_response = ! empty( $response[ $q_index ] ) ? $response[ $q_index ] : '';
-							$format = '<div class="cp-q"><hr /><p class="description cp-question">%s</p>';
-							$content .= sprintf( $format, esc_html( $question['question'] ) );
-							$content .= '<ul>';
+					foreach ( $questions as $q_index => $question ) {
+						$student_response = ! empty( $response[ $q_index ] ) ? $response[ $q_index ] : '';
+						$format = '<div class="cp-q"><hr /><p class="description cp-question">%s</p>';
+						$content .= sprintf( $format, esc_html( $question['question'] ) );
+						$content .= '<ul>';
 
-							if ( 'selectable' == $question['type'] ) {
-								$options = $question['options']['answers'];
-								$checked = $question['options']['checked'];
+						if ( 'selectable' == $question['type'] ) {
+							$options = $question['options']['answers'];
+							$checked = $question['options']['checked'];
 
-								foreach ( $options as $ai => $answer ) {
-									if ( $student_response == $ai ) {
-										$the_answer = ! empty( $checked[ $ai ] );
+							foreach ( $options as $ai => $answer ) {
+								if ( $student_response == $ai ) {
+									$the_answer = ! empty( $checked[ $ai ] );
 
-										if ( $the_answer === $student_response ) {
-											$student_answer = '<span class="chosen-answer correct"></span>';
-										} else {
-											$student_answer = '<span class="chosen-answer incorrect"></span>';
-										}
-										$content .= sprintf( '<li>%s %s</li>', $student_answer, $answer );
+									if ( $the_answer === $student_response ) {
+										$student_answer = '<span class="chosen-answer correct"></span>';
+									} else {
+										$student_answer = '<span class="chosen-answer incorrect"></span>';
 									}
+									$content .= sprintf( '<li>%s %s</li>', $student_answer, $answer );
 								}
-							} else {
-								$content .= sprintf( '<li>%s</li>', esc_html( $student_response ) );
 							}
-							$content .= '</ul></div>';
+						} else {
+							$content .= sprintf( '<li>%s</li>', esc_html( $student_response ) );
 						}
+						$content .= '</ul></div>';
 					}
-				} else {
-					$content .= self::form_result_content( $student_id, $course_id, $unit_id, $module_id );
 				}
 				break;
 		}
@@ -179,7 +175,7 @@ class CoursePress_Template_Module {
 	public static function get_module_status( $module_id, $student_id ) {
 		$attributes = self::attributes( $module_id );
 		$module_type = $attributes['module_type'];
-		$assessables = array( 'input-text', 'input-textarea', 'input-upload' );
+		$assessables = array( 'input-text', 'input-textarea', 'input-upload', 'input-form' );
 		$response = self::get_response( $module_id, $student_id, true );
 		$grades = (array) CoursePress_Helper_Utility::get_array_val( $response, 'grades' );
 		$grades = array_pop( $grades );
@@ -196,6 +192,8 @@ class CoursePress_Template_Module {
 					$status = __( 'Pending', 'CP_TD' );
 				} elseif ( $pass ) {
 					$status = __( 'Pass', 'CP_TD' );
+				} else {
+				    $status = __( 'Failed', 'CP_TD' );
 				}
 			} else {
 				$status = __( 'Non Gradable', 'CP_TD' );
@@ -281,6 +279,12 @@ class CoursePress_Template_Module {
 				if ( ! empty( $responses ) ) {
 					$element_class[] = 'hide';
 				}
+
+				// Set value to 1 only if not attempted this module.
+				$is_module_hidden = empty( $responses ) ? 0 : 1;
+				// Add a hidden field to track if student really submitted the form.
+				$content .= sprintf( '<input type="hidden" class="cp-is-hidden-module" name="is_module_hidden[%s]" value="%s" />', $module_id, $is_module_hidden );
+
 				$response_count = ! empty( $responses ) ? count( $responses ) : 0;
 
 				// Get recorded time lapsed
@@ -304,7 +308,8 @@ class CoursePress_Template_Module {
 				} elseif ( ! empty( $attributes['retry_attempts'] ) && 0 < $response_count ) {
 					$attempts = (int) $attributes['retry_attempts'];
 
-					if ( $response_count >= $attempts ) {
+					// Retries + 1 normal attempt.
+					if ( $response_count > $attempts ) {
 						$disabled = true;
 						$retry = '';
 					} else {
@@ -579,7 +584,7 @@ class CoursePress_Template_Module {
 					width="<?php echo $player_width; ?>"
 					height="<?php echo $player_height; ?>"
 					src="<?php echo $url; ?>"
-					data-setup='<?php echo CoursePress_Helper_Utility::create_video_js_setup_data($url, $data); ?>'
+					data-setup='<?php echo CoursePress_Helper_Utility::create_video_js_setup_data( $url, $data ); ?>'
 					<?php echo $controls; ?>
 					<?php echo $autoplay; ?>
 					<?php echo $loop; ?>>
@@ -699,18 +704,37 @@ class CoursePress_Template_Module {
 		return '<hr />';
 	}
 
-	private static function comment_form( $post_id ) {
+	private static function comment_form( $post_id, $attributes = false ) {
+		if ( ! is_user_logged_in() ) {
+			return '';
+		}
 		$enrolled = false;
-		if ( is_user_logged_in() ) {
-			$student_id = get_current_user_id();
-			$course_id = CoursePress_Data_Module::get_course_id_by_module( $post_id );
-			$enrolled = CoursePress_Data_Course::student_enrolled( $student_id, $course_id );
+		$student_id = get_current_user_id();
+		$course_id = CoursePress_Data_Module::get_course_id_by_module( $post_id );
+		$enrolled = CoursePress_Data_Course::student_enrolled( $student_id, $course_id );
+		/**
+		 * Instructor as enrolled user.
+		 */
+		if ( false == $enrolled ) {
+			$instructors = array_filter( CoursePress_Data_Course::get_instructors( $course_id ) );
+			if ( in_array( $student_id, $instructors ) ) {
+				$enrolled = true;
+			}
+		}
+		/**
+		 * Author as enrolled user.
+		 */
+		if ( false == $enrolled ) {
+			$enrolled = CoursePress_Data_Capabilities::can_update_course( $course_id );
 		}
 		if ( false == $enrolled ) {
 			return '';
 		}
 
+		$attributes = false === $attributes ? self::attributes( $module->ID ) : $attributes;
+
 		ob_start();
+
 		$form_class = array( 'comment-form', 'cp-comment-form' );
 		$comment_order = get_option( 'comment_order' );
 		$form_class[] = 'comment-form-' . $comment_order;
@@ -741,6 +765,25 @@ class CoursePress_Template_Module {
 			array( '<div', '</div>' ),
 			$comment_form
 		);
+
+		/**
+		 * remove required="required" from textarea
+		 */
+		$mandatory = false;
+		if ( isset( $attributes['mandatory'] ) ) {
+			$mandatory = cp_is_true( $attributes['mandatory'] );
+		}
+		if ( false === $mandatory ) {
+			$pattern = '/(<textarea[^>]+>)/';
+			preg_match( $pattern, $comment_form, $matches );
+			if ( 2 == sizeof( $matches ) ) {
+				$replacement = $matches[1];
+				$replacement = preg_replace( '/ required(="[^"]+")?/', '', $replacement );
+				$replacement = preg_replace( '/ aria-required="true"/', '', $replacement );
+				$comment_form = preg_replace( $pattern, $replacement, $comment_form );
+			}
+		}
+
 		remove_filter( 'comment_form_submit_button', array( 'CoursePress_Template_Discussion', 'add_subscribe_button' ) );
 		return $comment_form;
 	}
@@ -811,7 +854,7 @@ class CoursePress_Template_Module {
 
 		$content = '';
 
-		$content .= self::comment_form( $module->ID );
+		$content .= self::comment_form( $module->ID, $attributes );
 		$content .= self::comment_list( $module->ID );
 
 		// Remove comment filters, etc
@@ -1143,22 +1186,31 @@ class CoursePress_Template_Module {
 		if ( empty( $form_result ) ) {
 			$form_result = CoursePress_Data_Module::get_form_results( $student_id, $course_id, $unit_id, $module_id );
 		}
-		$form_passed = ! empty( $form_result['passed'] );
-		$passed_class = $form_passed ? 'passed' : 'not-passed';
-		$passed_message = ! empty( $form_result['passed'] ) ? __( 'You have successfully passed the form. Here are your results.', 'CP_TD' ) : __( 'You did not pass the form this time. Here are your results.', 'CP_TD' );
-		$template = '<div class="module-form-questions">
-			<div class="coursepress-form-results ' . esc_attr( $passed_class ) . '">
-				<div class="form-message"><p class="result-message">' . $passed_message . '</p></div>
-				<div class="form-results">
-					<table>
-					<tr><th>' . esc_html__( 'Total Questions', 'CP_TD' ) . '</th><td>' . esc_html( $form_result['total_questions'] ) . '</td></tr>
-					<tr><th>' . esc_html__( 'Correct', 'CP_TD' ) . '</th><td>' . esc_html( $form_result['correct'] ) . '</td></tr>
-					<tr><th>' . esc_html__( 'Incorrect', 'CP_TD' ) . '</th><td>' . esc_html( $form_result['wrong'] ) . '</td></tr>
-					<tr><th>' . esc_html__( 'Grade', 'CP_TD' ) . '</th><td>' . esc_html( $form_result['grade'] ) . '%</td></tr>
-					</table>
-				</div>
-			</div>
-		</div>';
+
+		if ( ! empty( $form_result['pending'] ) ) {
+			$template = sprintf( '<div class="module-form-message">%s</div>', $form_result['message'] );
+		} else {
+
+		    /*
+            $form_passed = !empty($form_result['passed']);
+            $passed_class = $form_passed ? 'passed' : 'not-passed';
+            $passed_message = !empty($form_result['passed']) ? __('You have successfully passed the form. Here are your results.', 'CP_TD') : __('You did not pass the form this time. Here are your results.', 'CP_TD');
+            $template = '<div class="module-form-questions">
+                <div class="coursepress-form-results ' . esc_attr($passed_class) . '">
+                    <div class="form-message"><p class="result-message">' . $passed_message . '</p></div>
+                    <div class="form-results">
+                        <table>
+                        <tr><th>' . esc_html__('Total Questions', 'CP_TD') . '</th><td>' . esc_html($form_result['total_questions']) . '</td></tr>
+                        <tr><th>' . esc_html__('Correct', 'CP_TD') . '</th><td>' . esc_html($form_result['correct']) . '</td></tr>
+                        <tr><th>' . esc_html__('Incorrect', 'CP_TD') . '</th><td>' . esc_html($form_result['wrong']) . '</td></tr>
+                        <tr><th>' . esc_html__('Grade', 'CP_TD') . '</th><td>' . esc_html($form_result['grade']) . '%</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>';
+		    */
+		}
+
 		$attributes = array(
 			'course_id' => $course_id,
 			'unit_id' => $unit_id,

@@ -233,8 +233,9 @@ class CoursePress_Data_Unit {
 		 * If there is NO MANDATORY modules, then this parameter can not be
 		 * true!
 		 */
-		if ( $force_current_unit_completion ) {
+		if ( $previous_unit_id && $force_current_unit_completion ) {
 			$number_of_mandatory = self::get_number_of_mandatory( $previous_unit_id );
+
 			if ( 0 == $number_of_mandatory ) {
 				$force_current_unit_completion = false;
 				$force_current_unit_successful_completion = false;
@@ -246,6 +247,7 @@ class CoursePress_Data_Unit {
 			$mandatory_done = CoursePress_Data_Student::is_mandatory_done(
 				$student_id, $course_id, $previous_unit_id, $student_progress
 			);
+
 			$unit_completed = CoursePress_Data_Student::is_unit_complete(
 				$student_id, $course_id, $previous_unit_id, $student_progress
 			);
@@ -277,8 +279,8 @@ class CoursePress_Data_Unit {
 			 */
 			if ( $is_available && $force_current_unit_successful_completion ) {
 				$is_available = CoursePress_Data_Student::unit_answers_are_correct( $student_id, $course_id, $previous_unit );
-				CoursePress_Helper_Utility::set_array_val( $status, 'passed_required/enabled', true );
-				CoursePress_Helper_Utility::set_array_val( $status, 'passed_required/result', $is_available );
+				CoursePress_Helper_Utility::set_array_value( $status, 'passed_required/enabled', true );
+				CoursePress_Helper_Utility::set_array_value( $status, 'passed_required/result', $is_available );
 			}
 		}
 
@@ -302,6 +304,7 @@ class CoursePress_Data_Unit {
 			$unit_id
 		);
 		$status['available'] = $is_available;
+
 		return $status;
 	}
 
@@ -469,9 +472,21 @@ class CoursePress_Data_Unit {
 	 * @return integer Number of required modules.
 	 */
 	public static function get_number_of_mandatory( $unit_id ) {
-		$args = CoursePress_Data_Module::get_args_mandatory_modules( $unit_id );
-		$the_query = new WP_Query( $args );
-		return $the_query->post_count;
+	    $modules = CoursePress_Data_Course::get_unit_modules( $unit_id );
+	    $found = 0;
+
+	    if ( $modules ) {
+	        foreach ( $modules as $module ) {
+	            $module_id = $module->ID;
+	            $attributes = CoursePress_Data_MOdule::attributes( $module_id );
+
+	            if ( ! empty( $attributes['mandatory'] ) ) {
+	                $found++;
+                }
+            }
+        }
+
+		return $found;
 	}
 
 	/**

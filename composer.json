@@ -1,0 +1,8 @@
+{
+    "name": "wpmudev/coursepress",
+    "type": "wordpress-plugin",
+    "require-dev": {
+        "antecedent/patchwork": "^2.0"
+    },
+    "license": "GPL2"
+}

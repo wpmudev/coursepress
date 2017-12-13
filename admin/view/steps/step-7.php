@@ -3,7 +3,7 @@
 	<div class="status <?php echo $setup_class; ?>"></div>
 </div>
 
-<div class="step-content step-7">
+<div class="cp-box-content step-content step-7">
 	<input type="hidden" name="meta_setup_step_7" value="saved" />
 
 	<div class="wide minimum-grade">
@@ -22,7 +22,7 @@
 		<label for="meta_pre_completion_content" class="required"><?php _e( 'Page Content', 'CP_TD' ); ?></label>
 		<?php
 		echo $token_message;
-		echo static::get_wp_editor( 'pre-completion-content', 'meta_pre_completion_content', $precompletion['content'] );
+		echo CoursePress_Helper_Editor::get_wp_editor( 'pre-completion-content', 'meta_pre_completion_content', $precompletion['content'] );
 		?>
 	</div>
 
@@ -36,7 +36,7 @@
 		<label for="meta_course_completion_content" class="required"><?php _e( 'Page Content', 'CP_TD' ); ?></label>
 		<?php
 			echo $token_message;
-			echo static::get_wp_editor( 'course-completion-editor-content', 'meta_course_completion_content', $completion['content'] );
+			echo CoursePress_Helper_Editor::get_wp_editor( 'course-completion-editor-content', 'meta_course_completion_content', $completion['content'] );
 		?>
 	</div>
 
@@ -50,7 +50,7 @@
 		<label for="meta_course_field_content" class="required"><?php _e( 'Page Content', 'CP_TD' ); ?></label>
 		<?php
 			echo $token_message;
-			echo static::get_wp_editor( 'course-failed-content', 'meta_course_failed_content', $failed['content'] );
+			echo CoursePress_Helper_Editor::get_wp_editor( 'course-failed-content', 'meta_course_failed_content', $failed['content'] );
 		?>
 	</div>
 
@@ -74,7 +74,7 @@
 		<div class="options <?php echo $certificate['enabled'] ? '' : 'hidden'; ?>">
 			<label for="meta_basic_certificate_layout"><?php _e( 'Certificate Content', 'CP_TD' ); ?></label>
 			<p class="description" style="float:left;"><?php echo $certificate['token_message']; ?></p>
-			<?php echo static::get_wp_editor( 'basic-certificate-layout', 'meta_basic_certificate_layout', $certificate['content'] ); ?>
+			<?php echo CoursePress_Helper_Editor::get_wp_editor( 'basic-certificate-layout', 'meta_basic_certificate_layout', $certificate['content'] ); ?>
 
 			<table class="wide">
 				<tr>
@@ -90,6 +90,31 @@
 							)
 						);
 					?></td>
+				</tr>
+				<tr>
+					<td style="width:20%;"><label><?php _e( 'Logo', 'CP_TD' ); ?></label></td>
+					<td><?php
+						echo CoursePress_Helper_UI::browse_media_field(
+							'meta_certificate_logo',
+							'meta_certificate_logo',
+							array(
+								'placeholder' => __( 'Choose logo image', 'CP_TD' ),
+								'type' => 'image',
+								'value' => $certificate['logo'],
+							)
+						);
+						?></td>
+				</tr>
+				<tr>
+					<td><label><?php _e( 'Logo Position', 'CP_TD' ); ?></label></td>
+					<td>
+						<?php _e( 'X', 'CP_TD' ); ?>:
+						<input type="number" class="small-text" name="meta_logo_position[x]" value="<?php echo esc_attr( $certificate['logo_position']['x'] ); ?>" />
+						<?php _e( 'Y', 'CP_TD' ); ?>:
+						<input type="number" class="small-text" name="meta_logo_position[y]" value="<?php echo esc_attr( $certificate['logo_position']['y'] ); ?>" />
+						<?php _e( 'Width', 'CP_TD' ); ?>:
+						<input type="number" class="small-text" name="meta_logo_position[width]" value="<?php echo esc_attr( $certificate['logo_position']['width'] ); ?>" />
+					</td>
 				</tr>
 				<tr>
 					<td><label><?php _e( 'Content Margin', 'CP_TD' ); ?></label></td>
@@ -141,6 +166,6 @@
 	echo apply_filters( 'coursepress_course_setup_step_7', '', $course_id );
 
 	// Show button
-	echo static::get_buttons( $course_id, 7, array( 'next' => false ) );
+	echo CoursePress_View_Admin_Course_Edit::get_buttons( $course_id, 7, array( 'next' => false ) );
 	?>
 </div>

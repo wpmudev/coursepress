@@ -1,45 +1,4 @@
 <?php
-/**
- * Plugin Name: CoursePress Pro
- * Version:     2.0.7
- * Description: CoursePress Pro turns WordPress into a powerful online learning platform. Set up online courses by creating learning units with quiz elements, video, audio etc. You can also assess student work, sell your courses and much much more.
- * Author:      WPMU DEV
- * Author URI:  http://premium.wpmudev.org
- * Plugin URI:  http://premium.wpmudev.org/project/coursepress/
- * License:     GPL2
- * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: CP_TD
- * Domain Path: /language/
- * Build Time:  2016-04-07T13:37:59.644Z
- * WDP ID:      913071
- *
- * @package CoursePress
- */
-
-/**
- * Copyright notice.
- *
- * @copyright Incsub (http://incsub.com/)
- *
- * Authors: WPMU DEV
- * Contributors: Rheinard Korf (Incsub), Paul Menard
- *
- * @license https://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2 (GPL-2.0)
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License, version 2, as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
- * MA 02110-1301 USA
- */
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
@@ -56,7 +15,7 @@ class CoursePress {
 	 *
 	 * @var string
 	 */
-	public static $version = '2.0.8';
+	public static $version = '2.1.2';
 
 	/**
 	 * Plugin name, this reflects the Pro/Standard version.
@@ -156,7 +115,7 @@ class CoursePress {
 	 */
 	private static function class_loader( $class ) {
 		$namespaces = array(
-			'CoursePressPro' => array(
+			'CoursePressPro'    => array(
 				'namespace_folder' => 'premium/include', // Base folder for classes.
 				'filename_prefix' => 'class-',           // Prefix filenames.
 			),
@@ -164,11 +123,11 @@ class CoursePress {
 				'namespace_folder' => 'campus/include', // Base folder for classes.
 				'filename_prefix' => 'class-',          // Prefix filenames.
 			),
-			'CoursePress' => array(
+			'CoursePress'       => array(
 				'namespace_folder' => 'include/coursepress', // Base folder for classes.
 				'filename_prefix' => 'class-',               // Prefix filenames.
 			),
-			'TCPDF' => array(
+			'CP_TCPDF'          => array(
 				'namespace_folder' => 'include/tcpdf', // Base folder for classes.
 				'filename_prefix' => false,            // No prefix for filenames.
 			),

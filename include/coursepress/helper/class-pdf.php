@@ -29,7 +29,7 @@
  *
  * @return object
  */
-class CoursePress_Helper_PDF extends TCPDF {
+class CoursePress_Helper_PDF extends CP_TCPDF {
 
 	private $footer_text = '';
 
@@ -47,7 +47,10 @@ class CoursePress_Helper_PDF extends TCPDF {
 	);
 
 	public function Footer() {
-		$the_font = apply_filters( 'coursepress_pdf_font', 'helvetica' );
+
+		$selected_font = CoursePress_Core::get_setting( 'reports/font', 'helvetica' );
+
+		$the_font = apply_filters( 'coursepress_pdf_font', $selected_font );
 
 		// Position at 15 mm from bottom
 		$this->SetY( -15 );
@@ -94,6 +97,10 @@ class CoursePress_Helper_PDF extends TCPDF {
 			'helveticab.php' => '',
 			'helveticabi.php' => '',
 			'helveticai.php' => '',
+			'dejavusans.php' => __( 'DejaVu Sans', 'CP_TD' ),
+			'dejavusansb.php' => '',
+			'dejavusansbi.php' => '',
+			'dejavusansi.php' => '',
 			'symbol.php' => __( 'Symbol', 'CP_TD' ),
 			'times.php' => __( 'Times-Roman', 'CP_TD' ),
 			'timesb.php' => '',
@@ -110,15 +117,11 @@ class CoursePress_Helper_PDF extends TCPDF {
 			$fonts = array_merge( $fonts, array(
 				'aealarabiya.php' => __( 'Al Arabiya', 'CP_TD' ),
 				'aefurat.php' => __( 'Furat', 'CP_TD' ),
-				'dejavusans.php' => __( 'DejaVu Sans', 'CP_TD' ),
-				'dejavusansb.php' => '',
-				'dejavusansbi.php' => '',
 				'dejavusanscondensed.php' => __( 'DejaVu Sans Condensed', 'CP_TD' ),
 				'dejavusanscondensedb.php' => '',
 				'dejavusanscondensedbi.php' => '',
 				'dejavusanscondensedi.php' => '',
 				'dejavusansextralight.php' => __( 'DejaVu Sans ExtraLight', 'CP_TD' ),
-				'dejavusansi.php' => '',
 				'dejavusansmono.php' => __( 'DejaVu Sans Mono', 'CP_TD' ),
 				'dejavusansmonob.php' => '',
 				'dejavusansmonobi.php' => '',
@@ -175,7 +178,7 @@ class CoursePress_Helper_PDF extends TCPDF {
 	protected function getFontsList() {
 
 		$fonts = CoursePress_Helper_PDF::fonts();
-		$font_path = apply_filters( 'coursepress_pdf_font_path', TCPDF_FONTS::_getfontpath() );
+		$font_path = apply_filters( 'coursepress_pdf_font_path', CP_TCPDF_FONTS::_getfontpath() );
 
 		foreach ( $fonts as $font => $font_name ) {
 			array_push( $this->fontlist, strtolower( trailingslashit( $font_path ) . $font ) );
@@ -184,7 +187,7 @@ class CoursePress_Helper_PDF extends TCPDF {
 	}
 
 	public static function get_format_in_mm( $format ) {
-		$dimension = TCPDF_STATIC::getPageSizeFromFormat( $format );
+		$dimension = CP_TCPDF_STATIC::getPageSizeFromFormat( $format );
 		$dimension[0] = round( $dimension[0] / 72 * 25.5 );
 		$dimension[1] = round( $dimension[1] / 72 * 25.5 );
 
@@ -225,7 +228,9 @@ class CoursePress_Helper_PDF extends TCPDF {
 			$args['title'] = __( 'CoursePress Report', 'CP_TD' );
 		}
 
-		$the_font = apply_filters( 'coursepress_pdf_font', 'helvetica' );
+		$selected_font = CoursePress_Core::get_setting( 'reports/font', 'helvetica' );
+
+		$the_font = apply_filters( 'coursepress_pdf_font', $selected_font );
 
 		// If filtering, please make sure both path and url refer to the same location
 		$cache_path = self::cache_path();
@@ -279,7 +284,7 @@ $pdf = new CoursePress_Helper_PDF( $page_orientation, PDF_UNIT, PDF_PAGE_FORMAT,
 
 			// setHeaderData($ln='', $lw=0, $ht='', $hs='', $tc=array(0,0,0), $lc=array(0,0,0)
 			$pdf->SetHeaderData( '', '', $title, $subtitle );
-			$pdf->setHeaderFont( array( PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN ) );
+			$pdf->setHeaderFont( array( $the_font, '', PDF_FONT_SIZE_MAIN ) );
 
 		} else {
 			// remove default header
@@ -291,7 +296,7 @@ $pdf = new CoursePress_Helper_PDF( $page_orientation, PDF_UNIT, PDF_PAGE_FORMAT,
 		if ( isset( $args['footer'] ) ) {
 
 			$pdf->footer_text = $args['footer'];
-			$pdf->setFooterFont( array( PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA ) );
+			$pdf->setFooterFont( array( $the_font, '', PDF_FONT_SIZE_DATA ) );
 		} else {
 			// remove default footer
 			$pdf->setPrintFooter( false );

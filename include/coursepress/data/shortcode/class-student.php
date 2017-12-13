@@ -335,9 +335,9 @@ class CoursePress_Data_Shortcode_Student {
 											$selected = ( isset( $question['options'] ) && isset( $question['options']['answers'] ) && isset( $question['options']['answers'][ $answer ] ) )
 												? $question['options']['answers'][ $answer ]
 												: '';
-											$display .= sprintf( '<p class="answer">%s</p>', $selected );
+											$display .= sprintf( '<p class="answerd">%s</p>', $selected );
 										} else {
-											$display .= sprintf( '<p class="answer">%s</p>', $answer );
+											$display .= sprintf( '<p class="answerd">%s</p>', $answer );
 										}
 									}
 								}
@@ -410,6 +410,13 @@ class CoursePress_Data_Shortcode_Student {
 						$content .= sprintf( '<td class="column-answer">%s</td>', $response_display );
 						$content .= sprintf( '<td class="td-right">%s</td>', $grade_display );
 						$content .= '</tr>';
+
+						if ( '' !== $feedback_display ) {
+							$content .= '<tr>';
+							$content .= '<td class="column-title">Feedback:</td>';
+							$content .= sprintf( '<td colspan="2">%s</td>', $feedback_display );
+							$content .= '</tr>';
+						}
 					}
 				}
 			}

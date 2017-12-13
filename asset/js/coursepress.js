@@ -1,4 +1,4 @@
-/*! CoursePress - v2.0.8
+/*! CoursePress - v2.1.2
  * https://premium.wpmudev.org/project/coursepress-pro/
  * Copyright (c) 2017; * Licensed GPLv2+ */
 /*global tinyMCE*/
@@ -1276,6 +1276,22 @@ var CoursePress = CoursePress || {};
 			return false;
 		}
 
+		function on_logo_click() {
+			var el = jQuery( this ),
+				target_url_field = el.prevAll( '.certificate_logo_url:first' );
+
+			wp.media.string.props = function( props ) {
+				check_extension( props.url, target_url_field );
+			};
+
+			wp.media.editor.send.attachment = function( props, attachment ) {
+				check_extension( attachment.url, target_url_field );
+			};
+
+			wp.media.editor.open( this );
+			return false;
+		}
+
 		function on_enabled_click() {
 			var check_enabled = jQuery( '.certificate_enabled' )
 				form_enabled = jQuery( '.certificate-details, .button-certificate, .use-cp-default' ),
@@ -1323,6 +1339,7 @@ var CoursePress = CoursePress || {};
 			.on( 'click', '.certificate_enabled', on_enabled_click )
 			.on( 'click', '.certificate_default', on_enabled_click )
 			.on( 'click', '.certificate_background_button', on_background_click )
+			.on( 'click', '.certificate_logo_button', on_logo_click )
 			.on( 'click', '.button.button-certificate', on_preview_button_click );
 	})(jQuery);
 

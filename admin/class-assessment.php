@@ -6,12 +6,10 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 	var $parent_slug = 'coursepress';
 	var $slug = 'coursepress_assessments';
 	var $with_editor = true;
-	static $feedback_email = false;
 	protected $cap = 'coursepress_assessment_cap';
 
 	public function __construct() {
 		parent::__construct();
-		self::$feedback_email = new CoursePress_Admin_FeedbackEmail();
 	}
 
 	public function get_labels() {
@@ -146,9 +144,22 @@ class CoursePress_Admin_Assessment extends CoursePress_Admin_Controller_Menu {
 							false,
 							$student_progress
 						);
+						$student = get_userdata( $student_id );
+						$email_args = array(
+							'email'                 => $student->user_email,
+							'student_id'            => $student_id,
+							'course_id'             => $course_id,
+							'unit_id'               => $unit_id,
+							'module_id'             => $module_id,
+							'instructor_feedback'   => $feedback_text,
+						);
 
-						// New feedback, send email
-						self::$feedback_email->send_feedback( $course_id, $unit_id, $module_id, $student_id, $feedback_text );
+
+						// New feedback, send email.
+						$sent = CoursePress_Helper_Email::send_email(
+							CoursePress_Helper_Email::INSTRUCTOR_MODULE_FEEDBACK_NOTIFICATION,
+							$email_args
+						);
 					}
 				}
 

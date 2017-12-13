@@ -57,11 +57,12 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 		/**
 		 * Query args
 		 */
+		$role_name = CoursePress_Data_Capabilities::get_role_instructor_name();
 
 		$args = array(
 			'number' => $users_per_page,
 			'offset' => ( $paged -1 ) * $users_per_page,
-			'meta_key' => 'role_ins',
+			'meta_key' => $role_name,
 			'meta_value' => 'instructor',
 			'fields' => 'all_with_meta',
 			'search' => $usersearch,
@@ -86,9 +87,7 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 		 * Fix multisite meta_key name
 		 */
 		if ( is_multisite() ) {
-			global $wpdb;
 			$args['blog_id'] = get_current_blog_id();
-			$args['meta_key'] = sprintf( '%s%s', $wpdb->prefix, $args['meta_key'] );
 		}
 
 		// Query the user IDs for this page

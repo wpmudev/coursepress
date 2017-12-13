@@ -85,7 +85,7 @@ class CoursePress_Data_Shortcode_Template {
 
 		add_filter( 'term_link', array( __CLASS__, 'term_link' ), 10, 3 );
 
-		add_action('coursepress_after_signup_email', array(CoursePress_Helper_UI::class, 'password_strength_meter'));
+		add_action('coursepress_after_signup_email', array( 'CoursePress_Helper_UI', 'password_strength_meter'));
 	}
 
 	public static function course_archive( $a ) {

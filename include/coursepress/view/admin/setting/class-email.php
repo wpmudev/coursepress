@@ -116,7 +116,7 @@ class CoursePress_View_Admin_Setting_Email {
 		/**
 		 * Add this hook for now until layout is fixed.
 		 **/
-		$content .= apply_filters( 'coursepress_email_settings_sections', $email_sections );
+//		$content .= apply_filters( 'coursepress_email_settings_sections', $email_sections );
 		$content .= '</div>';
 
 		return $content;
