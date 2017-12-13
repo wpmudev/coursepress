@@ -21,36 +21,42 @@ class CoursePress_Helper_Extension_MarketPress {
 	}
 
 	public static function add_to_extensions_list( $plugins ) {
-		/**
-		 * We'll giving out MP to all verions, yay!!!
-		 **/
+		$download_source = 'downloads.wordpress.org/plugin/wordpress-ecommerce.zip';
+		$external_url = 'https://wordpress.org/plugins/wordpress-ecommerce/';
+		$source_message = __( 'WordPress Repository', 'CP_TD' );
+		$is_link = false;
+		$base_path = self::$base_path['free'];
+
+		if ( defined( 'CP_IS_PREMIUM' ) && CP_IS_PREMIUM ) {
+			/**
+			 * Redirect to WPMUDEV Dashboard page
+			 */
+			$source_message = 'WPMU DEV';
+			$external_url = '';
+			$is_link = true;
+			$download_source = 'https://premium.wpmudev.org/project/e-commerce/';
+			$base_path = self::$base_path['pro'];
+
+			if ( is_plugin_active( 'wpmudev-updates/update-notifications.php' ) ) {
+				$download_source = add_query_arg( 'page', 'wpmudev', admin_url( 'admin.php' ) );
+
+				if ( class_exists( 'WPMUDEV_Dashboard' ) && WPMUDEV_Dashboard::$api->has_key() ) {
+					$download_source = add_query_arg( 'page', 'wpmudev-plugins', $download_source );
+				}
+			}
+		}
+
 		$plugins[] = array(
 			'name' => 'MarketPress',
 			'slug' => 'marketpress',
-			'base_path' => self::$base_path['pro'],
-			'source' => CoursePress::$path . 'asset/file/marketpress-pro.zip',
-			'source_message' => __( 'Included in the CoursePress Plugin', 'CP_TD' ),
-			'external_url' => '', /* http://premium.wpmudev.org/project/e-commerce/ */
-			'external' => 'no',
-			'protocol' => '',
+			'base_path' => $base_path,
+			'source' => $download_source,
+			'source_message' => $source_message,
+			'external_url' => $external_url,
+			'external' => 'yes',
+			'protocol' => 'https',
+			'is_link' => $is_link,
 		);
-		/**
-		 * Just hide this for now
-		if ( CP_IS_PREMIUM ) {
-		} else {
-			$plugins[] = array(
-				'name' => 'MarketPress - WordPress eCommerce',
-				'slug' => 'wordpress-ecommerce',
-				'base_path' => self::$base_path['free'],
-				'source' => 'downloads.wordpress.org/plugin/wordpress-ecommerce.zip',
-				'source_message' => __( 'WordPress.org Repository', 'CP_TD' ),
-				'external_url' => '', /* https://wordpress.org/plugins/wordpress-ecommerce/
-				'external' => 'yes',
-				'protocol' => 'https',
-			);
-
-		}
-		*/
 
 		return $plugins;
 	}
@@ -104,7 +110,16 @@ class CoursePress_Helper_Extension_MarketPress {
 		$show = get_user_option( 'marketpress-run-notice' );
 		if ( 'hide' == $show ) {
 			return;
-		}
+        }
+        /**
+         * Do not show message, when user already use WooCommerce.
+         */
+        if ( CoursePress_Helper_Integration_WooCommerce::$is_active ) {
+            $woocommerce_is_enabled = CoursePress_Core::get_setting( 'woocommerce/enabled', false );
+            if ( $woocommerce_is_enabled ) {
+                return;
+            }
+        }
 		$message = '';
 		if ( ! self::installed() ) {
 			$mp_settings_url = add_query_arg( array(

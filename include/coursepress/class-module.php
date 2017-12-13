@@ -321,7 +321,7 @@ class CoursePress_Module {
 								foreach ( $attributes['questions'] as $qi => $question ) {
 									$answers = array_keys( $question['options']['answers'] );
 
-									if ( '' != $response[ $qi ] ) {
+									if ( isset( $response[ $qi ] ) && '' != $response[ $qi ] ) {
 										$qi_response = $response[ $qi ];
 										$values = array();
 
@@ -340,8 +340,12 @@ class CoursePress_Module {
 								}
 							}
 
-							// Attempt to record the submission
-							CoursePress_Data_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $response );
+							// Record submission only if student actually submitted the form.
+							if ( empty( $input['is_module_hidden'][ $module_id ] ) ) {
+								// Attempt to record the submission.
+								CoursePress_Data_Student::module_response( $student_id, $course_id, $unit_id, $module_id, $response );
+							}
+
 
 							// override $is_assessable if module type 'input-form', regardless if enabled in admin dashboard or not
 							// logic from CoursePress_Data_Module::get_form_results() is that Form will have a grade of 100 if not required, otherwise check if empty for all submodules
@@ -436,13 +440,17 @@ class CoursePress_Module {
 				}
 
 				$json_data = array(
-					'error' => true,
-					'error_message' => self::$error_message,
-					'html' => $html,
-					'is_reload' => false,
+					'success' => false,
+					'data'=> array(
+						'error' => true,
+						'error_message' => self::$error_message,
+						'html' => $html,
+						'is_reload' => false,
+					)
 				);
-
-				wp_send_json_error( $json_data );
+				header('Content-type: text/plain');
+				echo json_encode( $json_data );
+				die();
 			} else {
 				add_action( 'coursepress_before_unit_modules', array( __CLASS__, 'show_error_message' ) );
 			}
@@ -501,8 +509,13 @@ class CoursePress_Module {
 					'type' => $type,
 					'is_reload' => $reload,
 				);
+				$json_data = array( 'success' => true, 'data' => $json_data );
 
-				wp_send_json_success( $json_data );
+				header('Content-type: text/plain');
+				echo json_encode( $json_data );
+				die();
+
+				//wp_send_json_success( $json_data );
 			} else {
 				$next_url = $next['url'];
 				wp_safe_redirect( $next_url ); exit;

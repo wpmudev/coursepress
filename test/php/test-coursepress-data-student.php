@@ -6,8 +6,9 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 
 	protected $student_progress;
 
-	public function __construct() {
-		parent::__construct();
+	public function setUp() {
+		parent::setUp();
+
 		$this->student_progress = CoursePress_Data_Student::get_completion_data( $this->student->ID, $this->course->ID );
 	}
 
@@ -219,7 +220,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 	 * init_completion_data( $student_id, $course_id )
 	 */
 	public function test_init_completion_data() {
-		$data = array( 'version' => '2.0' );
+		$data = array( 'version' => CoursePress::$version );
 		/**
 		 * Wrong data
 		 */
@@ -279,7 +280,7 @@ class CoursepressDataStudentTest extends CoursePress_UnitTestCase {
 		$data = array( 'foo' => 'bar' );
 		CoursePress_Data_Student::update_completion_data( $this->student->ID, $this->course->ID, $data );
 		$assert = CoursePress_Data_Student::get_completion_data( $this->student->ID, $this->course->ID );
-		$data['version'] = '2.0';
+		$data['version'] = CoursePress::$version;
 		$this->assertEquals( $data, $assert );
 	}
 

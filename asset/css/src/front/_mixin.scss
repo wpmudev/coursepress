@@ -43,6 +43,12 @@
 	}
 }
 
+@mixin appearance ($value) {
+	-webkit-appearance: $value;
+	-moz-appearance: $value;
+	appearance: $value;
+}
+
 /** Color Scheme **/
 $color1: #999;
 $color2: rgba(255, 0, 0, 0.5);

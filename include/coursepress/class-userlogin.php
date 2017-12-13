@@ -39,7 +39,7 @@ if ( ! class_exists( 'CoursePress_UserLogin' ) ) :
 				 **/
 				do_action( 'coursepress_before_signup_validation' );
 
-				$min_password_length = apply_filters( 'coursepress_min_password_length', 6 );
+				$min_password_length = CoursePress_Helper_Utility::get_minimum_password_length();
 				$username = $_POST['username'];
 				$firstname = $_POST['first_name'];
 				$lastname = $_POST['last_name'];
@@ -70,8 +70,14 @@ if ( ! class_exists( 'CoursePress_UserLogin' ) ) :
 						self::$form_message = __( 'Passwords don\'t match', 'cp' );
 						$found_errors++;
 					}
-					elseif( strlen( $passwd ) < $min_password_length || ( ! isset( $_POST['confirm_weak_password'] ) && ! preg_match( '#[0-9a-z]+#i', $passwd ) ) ) {
-						self::$form_message = sprintf( __( 'Your password must be at least %d characters long and have at least one letter and one number in it.', 'CP_TD' ), $min_password_length );
+					elseif (!CoursePress_Helper_Utility::is_password_strong()) {
+						if(CoursePress_Helper_Utility::is_password_strength_meter_enabled())
+						{
+							self::$form_message = __('Your password is too weak.', 'CP_TD');
+						}
+						else {
+							self::$form_message = sprintf(__('Your password must be at least %d characters long and have at least one letter and one number in it.', 'CP_TD'), $min_password_length);
+						}
 						$found_errors++;
 					}
 					elseif ( isset( $_POST['tos_agree'] ) && ! cp_is_true( $_POST['tos_agree'] ) ) {

@@ -117,6 +117,10 @@ A. Responsive
   min-height: 340px;
   z-index: 10;
 }
+.tab-content .shortcodes-list .cp-shortcode-examples code {
+  display: inline-block;
+  padding: 5px 10px;
+}
 
 .tab-content .header-save-button {
   float: right;
@@ -320,9 +324,34 @@ A. Responsive
 }
 
 .post-type-course .column-certificates,
-.post-type-course .column-students {
+.post-type-course .column-grade,
+.post-type-course .column-modules,
+.post-type-course .column-students,
+.post-type-course .column-view_all {
   width: 100px;
-  text-align: center !important;
+  text-align: center;
+}
+.post-type-course table.users .column-certificates {
+  width: 7em;
+  vertical-align: middle;
+}
+.post-type-course table.users .column-certificates .cp-certified {
+  font-size: 1em;
+  margin: 0;
+}
+.post-type-course table.users .column-username .row-actions .id span {
+  color: #000;
+}
+.post-type-course table.users .column-grade,
+.post-type-course table.users .column-modules,
+.post-type-course table.users .column-view_all {
+  width: 5em;
+}
+.post-type-course table.users .column-last_active {
+  width: 8em;
+}
+.post-type-course table.users td.column-grade {
+  text-align: right;
 }
 .post-type-course .column-taxonomy-course_category,
 .post-type-course .column-date_start,
@@ -331,6 +360,17 @@ A. Responsive
 .post-type-course .column-date_enrollment_end,
 .post-type-course .column-units {
   width: 130px;
+}
+.post-type-course .column-paid {
+  width: 40px;
+  text-align: center;
+}
+.post-type-course .column-paid .free {
+  opacity: .6;
+}
+.post-type-course .column-paid .paid {
+  font-weight: bold;
+  color: red;
 }
 
 .coursepress_student_searchbox {
@@ -408,6 +448,13 @@ A. Responsive
 /**
  * colors
  */
+#course-setup-steps.ui-state-disabled {
+  opacity: 1;
+}
+#course-setup-steps.ui-state-disabled .step-title.ui-state-disabled,
+#course-setup-steps.ui-state-disabled .step-content.ui-state-disabled {
+  opacity: 1;
+}
 #course-setup-steps .wide label {
   display: block;
   padding-bottom: 5px;
@@ -665,13 +712,17 @@ A. Responsive
   width: 100%;
   margin-top: 20px;
 }
-
 .course-structure table th {
   text-align: left;
-}
-
-.course-structure table th {
   margin: 3px 20px 3px 0;
+}
+.course-structure table tr td {
+  border-bottom: 1px solid #dfdfdf;
+  text-align: center;
+  vertical-align: middle;
+}
+.course-structure table tr.page small {
+  opacity: .8;
 }
 
 .course-structure .column-course-structure {
@@ -692,15 +743,6 @@ A. Responsive
 }
 
 .course-structure table thead tr.break th {
-  border-bottom: 1px solid #DFDFDF;
-}
-
-.course-structure table td {
-  text-align: center;
-  vertical-align: middle;
-}
-
-.course-structure table tr td {
   border-bottom: 1px solid #DFDFDF;
 }
 
@@ -1018,7 +1060,7 @@ input.button.button-primary.instructor-assign {
   border-radius: 10px;
   padding: 10px;
   margin-top: 10px;
-  width: 50%;
+  width: auto;
 }
 #course-setup-steps .step-content .payment-message h4 {
   margin-top: 0;
@@ -1165,11 +1207,11 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 }
 
 .tab-tabs ul li.coursepress-ub-tab span {
-  padding: 7px 24px 7px 7px;
-  font-weight: bold;
   display: block;
+  font-weight: bold;
+  min-height: 1.4em;
+  padding: 7px 24px 7px 7px;
 }
-
 .tab-tabs .button.button-add-new-unit {
   display: block;
   margin: 30px auto 0 auto;
@@ -1640,8 +1682,7 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 
 .discussion .module-duration,
 .discussion .module-assessable,
-.text .module-duration,
-.video .module-duration {
+.text .module-duration {
   display: none;
 }
 
@@ -2267,24 +2308,6 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
   text-decoration: none;
 }
 
-.cp-actions .cp-edit-grade,
-.cp-actions a {
-  margin-right: 10px;
-  color: #0073aa;
-  position: relative;
-  padding: 5px;
-  text-align: center;
-  cursor: pointer;
-}
-.cp-actions .cp-edit-grade.active,
-.cp-actions a.active {
-  border: 1px #DDD solid;
-  background-color: #FFF;
-  padding: 10px;
-  display: inline-block;
-  margin-bottom: -10px;
-  border-width: 1px 1px 0 1px;
-}
 .cp-actions .cp-min-tooltip {
   margin: 0 0 5px 0;
 }
@@ -2363,6 +2386,32 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 }
 .cp-loader-info .fa {
   color: #008ec2;
+}
+
+.cp-assessment-page .users .column-certificates,
+.cp-assessment-page .users .column-modules,
+.cp-assessment-page .users .column-view_all {
+  vertical-align: middle;
+}
+.cp-assessment-page .users .column-modules .cp-edit-grade,
+.cp-assessment-page .users .column-modules a {
+  color: #0073aa;
+  position: relative;
+  padding: 5px;
+  text-align: center;
+  cursor: pointer;
+}
+.cp-assessment-page .users .column-modules .cp-edit-grade.active,
+.cp-assessment-page .users .column-modules a.active {
+  border: 1px #DDD solid;
+  background-color: #FFF;
+  padding: 10px;
+  display: inline-block;
+  margin-bottom: -10px;
+  border-width: 1px 1px 0 1px;
+}
+.cp-assessment-page .users .cp-responses {
+  background-color: #fff;
 }
 
 /*--------------------------------------------------------------
@@ -2532,6 +2581,10 @@ body[class*="_page_coursepress_course"] .ui-datepicker .ui_tpicker_timezone sele
 .shortcodes-list .cp-content-box:last-child inside {
   padding-bottom: 0;
 }
+.shortcodes-list .cp-content-box .cp-shortcode-options li {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
 .shortcodes-list .cp-content-box .cp-shortcode-options li span {
   font-family: monospace;
   font-weight: bold;
@@ -2541,4 +2594,10 @@ body[class*="_page_coursepress_course"] .ui-datepicker .ui_tpicker_timezone sele
 }
 .shortcodes-list .cp-content-box .cp-shortcode-subheading.optional {
   opacity: .8;
+}
+.shortcodes-list .cp-content-box p {
+  margin: 0;
+}
+.shortcodes-list .cp-content-box p.description, .shortcodes-list .cp-content-box p.options, .shortcodes-list .cp-content-box p.default {
+  padding-left: 3em;
 }

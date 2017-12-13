@@ -47,11 +47,15 @@
 		}
 	}
 	.module-header {
+		border: 0;
 		margin: 0 0 25px 0;
+		padding: 0;
+		@include appearance( inherit );
 		.modul-title {
 			margin: 0;
 		}
 		.is-mandatory {
+			font-weight: normal;
 			float: right;
 			font-size: 0.8em;
 			text-transform: uppercase;
@@ -61,6 +65,11 @@
 				display: inline-block;
 				vertical-align: middle;
 				padding: 2px 4px;
+			}
+		}
+		h4 {
+			.is-mandatory {
+				font-size: 0.7em;
 			}
 		}
 	}
@@ -104,8 +113,11 @@
 				padding: 4px 12px;
 			}
 		}
-		input[type="checkbox"] {
-			margin-top: .4em;
+		input {
+			&[type="checkbox"],
+			&[type="radio"] {
+				margin-top: .3em;
+			}
 		}
 		input[type="text"],
 		textarea {
@@ -116,8 +128,8 @@
 			input,
 			label {
 				display: inline-block;
-				vertical-align: top;
-				margin-right: 5px;
+				vertical-align: middle;
+				margin: 0 5px 0 0;
 			}
 		}
 		.file {
@@ -174,6 +186,11 @@
 				}
 			}
 		}
+		&.module-type-video {
+			.video_player {
+				overflow: hidden;
+			}
+		}
 	}
 	.cp-try-again {
 		margin-top: 15px;
@@ -222,7 +239,8 @@
 				}
 			}
 		}
-		.quiz-results {
+		.quiz-results,
+		.form-results {
 			table {
 				text-align: left;
 				border: 0;
@@ -230,6 +248,12 @@
 			td, th {
 				padding: 5px 15px;
 				border: 1px solid rgba(0, 0, 0, 0.04);
+			}
+			td {
+				text-align: right;
+			}
+			tr:nth-child(even) {
+				background-color: rgba(0, 0, 0, 0.04);
 			}
 		}
 	}

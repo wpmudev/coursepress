@@ -21,8 +21,7 @@ class CoursePress_Helper_Table_Instructor extends WP_Users_List_Table {
 
 	public static function filter_args( $args ) {
 		$args['meta_value'] = 'instructor';
-		$args['meta_key'] = 'role_ins';
-
+		$args['meta_key'] = CoursePress_Data_Capabilities::get_role_instructor_name();
 		return $args;
 	}
 

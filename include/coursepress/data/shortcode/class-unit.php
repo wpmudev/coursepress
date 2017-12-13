@@ -215,7 +215,7 @@ class CoursePress_Data_Shortcode_Unit {
 
 		$unit_status = CoursePress_Data_Unit::get_unit_availability_status( $course_id, $unit_id, $previous_unit );
 
-		$unit_available = $unit_status['available'];
+		$unit_available = isset( $unit_status['available'] )? $unit_status['available'] : false;
 
 		$content = '<span class="unit-archive-single-module-status">';
 

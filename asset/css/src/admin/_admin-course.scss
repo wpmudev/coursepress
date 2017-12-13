@@ -1,6 +1,15 @@
 @import 'colors';
 
 #course-setup-steps {
+	&.ui-state-disabled {
+		opacity: 1;
+		.step-title,
+		.step-content {
+			&.ui-state-disabled {
+				opacity: 1;
+			}
+		}
+	}
 	.wide {
 		label {
 			display: block;
@@ -269,17 +278,27 @@
 	background-color: #bef;
 }
 
-.course-structure table {
-	width: 100%;
-	margin-top: 20px;
-}
-
-.course-structure table th {
-	text-align: left;
-}
-
-.course-structure table th {
-	margin: 3px 20px 3px 0;
+.course-structure {
+	table {
+		width: 100%;
+		margin-top: 20px;
+		th {
+			text-align: left;
+			margin: 3px 20px 3px 0;
+		}
+		tr {
+			td {
+				border-bottom: 1px solid #dfdfdf;
+				text-align: center;
+				vertical-align: middle;
+			}
+			&.page {
+				small {
+					opacity: .8;
+				}
+			}
+		}
+	}
 }
 
 .course-structure .column-course-structure {
@@ -300,18 +319,6 @@
 }
 
 .course-structure table thead tr.break th {
-	border-bottom: 1px solid #DFDFDF;
-}
-
-.course-structure table tfoot tr.break th {
-}
-
-.course-structure table td {
-	text-align: center;
-	vertical-align: middle;
-}
-
-.course-structure table tr td {
 	border-bottom: 1px solid #DFDFDF;
 }
 
@@ -635,7 +642,7 @@ input.button.button-primary.instructor-assign {
 			border-radius: 10px;
 			padding: 10px;
 			margin-top: 10px;
-			width: 50%;
+			width: auto;
 			h4 {
 				margin-top: 0;
 			}
@@ -700,12 +707,12 @@ body[class*="_page_coursepress_course"] .tab-container.horizontal {
 }
 
 @keyframes progress {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 50px 50px;
-  }
+	0% {
+		background-position: 0 0;
+	}
+	100% {
+		background-position: 50px 50px;
+	}
 }
 .coursepress_settings_wrapper {
 	.column-units {

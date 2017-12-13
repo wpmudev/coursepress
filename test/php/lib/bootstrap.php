@@ -2,6 +2,8 @@
 
 ob_start();
 
+require_once  dirname(dirname(dirname(dirname(__FILE__)))) . '/vendor/antecedent/patchwork/Patchwork.php';
+
 /**
  * Set up environment for my plugin's tests suite.
  */

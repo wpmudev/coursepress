@@ -424,7 +424,7 @@ class CoursePress_View_Front_EnrollmentPopup {
 				}
 				$json_data['nonce'] = $nonce;
 
-				$username = sanitize_text_field( $data->data->username );
+				$username = sanitize_user( $data->data->username );
 				$first_name = sanitize_text_field( $data->data->first_name );
 				$last_name = sanitize_text_field( $data->data->last_name );
 				$email = sanitize_email( $data->data->email );
@@ -441,16 +441,40 @@ class CoursePress_View_Front_EnrollmentPopup {
 					'logged_in' => false,
 				);
 
-				$user_id = username_exists( $username );
-				if ( ! empty( $user_id ) ) {
-					$signup_errors[] = __( 'Username already taken.', 'CP_TD' );
-				}
-				$email_exists = email_exists( $email );
-				if ( $email_exists ) {
-					$signup_errors[] = __( 'E-mail address already used.', 'CP_TD' );
+				$registration_data_are_valid = true;
+
+				/**
+				 * check user name
+				 */
+				if ( empty( $username ) ) {
+					$signup_errors[] = __( 'Username can not be empty.', 'CP_TD' );
+					$registration_data_are_valid = false;
+				} elseif ( ! validate_username( $username ) ) {
+					$signup_errors[] = __( 'Invalid username. Please choose another one.', 'CP_TD' );
+					$registration_data_are_valid = false;
+				} else {
+					$user_id = username_exists( $username );
+					if ( ! empty( $user_id ) ) {
+						$signup_errors[] = __( 'Username already exists. Please choose another one.', 'CP_TD' );
+						$registration_data_are_valid = false;
+					}
 				}
 
-				if ( ! $user_id && ! $email_exists ) {
+				/**
+				 * check email
+				 */
+				if ( ! is_email( $email ) ) {
+					$signup_errors[] = __( 'E-mail address is not valid.', 'CP_TD' );
+					$registration_data_are_valid = false;
+				} else {
+					$email_exists = email_exists( $email );
+					if ( $email_exists ) {
+						$signup_errors[] = __( 'E-mail address already used.', 'CP_TD' );
+						$registration_data_are_valid = false;
+					}
+				}
+
+				if ( $registration_data_are_valid ) {
 					$user_id = wp_create_user( $username, $password, $email );
 
 					if ( ! empty( $user_id ) ) {

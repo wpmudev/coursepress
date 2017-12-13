@@ -36,7 +36,7 @@
 		total_limit = hours + minutes + seconds;
 
 		info = container.find( '.quiz_timer_info' );
-		inputs = container.find( '.module-elements input, .module_elements select, .module-elements textarea' );
+		inputs = container.find( '.module-elements input, .module_elements select, .module-elements textarea, .module-elements .video_player' );
 		inputs.removeAttr('disabled');
 
 		expired = function() {
@@ -119,6 +119,10 @@
 	CoursePress.MediaElements = function( container ) {
 		if ( $.fn.mediaelementplayer ) {
 			var media = $( 'audio,video', container );
+
+			if(videojs.getPlayers()) {
+				var player = videojs(media[0].id);
+			}
 
 			if ( media.length > 0 ) {
 				media.mediaelementplayer();
@@ -304,11 +308,14 @@
 		var button = $(this),
 			parentDiv = button.closest( '.cp-module-content' ),
 			elementsDiv = $( '.module-elements', parentDiv ),
-			responseDiv = $( '.module-response', parentDiv )
+			responseDiv = $( '.module-response', parentDiv ),
+			moduleHidden = $( '.cp-is-hidden-module', parentDiv )
 		;
 
 		responseDiv.hide();
 		elementsDiv.show();
+		moduleHidden.val(0);
+		CoursePress.timer( parentDiv );
 
 		return false;
 	};
@@ -532,13 +539,69 @@
 	 */
 	CoursePress.saveProgressAndExit = function() {
 		var form = $(this).closest('form');
+		$("#respond", form).detach();
 		form.append( '<input type="hidden" name="save_progress_and_exit" value="1" />' );
 		form.submit();
 	}
 
+	CoursePress.hookModuleVideos = function() {
+
+		$('.video-js').each(function(){
+			var video_id = $(this).attr('id');
+			var video = videojs(video_id);
+
+			video.on('ready', function(){
+				var player = this,
+					player_element = $(player.el());
+
+				function change_video_status(player)
+				{
+					if( $(player.el()).closest('.video_player').is('[disabled="disabled"]') )
+					{
+						player.pause();
+					}
+				}
+
+				if(player_element.is('[autoplay]'))
+				{
+					player.play();
+				}
+
+				if(player_element.is('[muted]'))
+				{
+					player.muted(true);
+				}
+
+				player.one('click', function(){
+					player.play();
+				});
+
+				player.one('play', function(){
+					CoursePress.timer(player_element.closest('.cp-module-content'));
+				});
+
+				player.on('play', function(){
+					change_video_status(player);
+				});
+
+				player.on('timeupdate', function(){
+					change_video_status(player);
+				});
+			});
+		});
+	};
+
 	$( document )
 		.ready(function(){
-			CoursePress.timer( $('.cp-module-content' ) );
+			$('.cp-module-content').each(function(){
+				var content = $(this);
+				if(content.data('type') !== 'video')
+				{
+					CoursePress.timer(content);
+				}
+			});
+
+			CoursePress.hookModuleVideos();
 		})
 		.on( 'submit', '.cp-form', CoursePress.ModuleSubmit )
 		.on( 'click', '.focus-nav-prev, .focus-nav-next', CoursePress.LoadFocusModule )

@@ -239,11 +239,11 @@ class CoursePress_Helper_Integration_MarketPress {
 	public static function fix_mp3_on_sale( $on_sale, $product ) {
 		$course_id = self::get_course_id_by_product( $product );
 		if ( ! empty( $course_id ) ) {
-            $old = get_post_meta( $course_id, 'mp_is_sale', true );
-            if ( '' != $old ) {
-                $on_sale = (int)$old;
-            }
-        }
+			$old = get_post_meta( $course_id, 'mp_is_sale', true );
+			if ( '' != $old ) {
+				$on_sale = (int) $old;
+			}
+		}
 		return $on_sale;
 	}
 
@@ -451,7 +451,7 @@ class CoursePress_Helper_Integration_MarketPress {
 			'regular_price' => $settings['mp_product_price'],
 			'has_sale' => 'on' == $settings['mp_sale_price_enabled']? 1 : 0,
 			'sale_price_amount' => $settings['mp_product_sale_price'],
-			'sort_price' => $settings['mp_product_sale_price'],
+			'sort_price' => '' !== $settings['mp_product_sale_price'] ? $settings['mp_product_sale_price'] : $settings['mp_product_price'],
 			'mp_course_id' => $course_id,
 			'mp_price' => $settings['mp_product_price'],
 			'mp_sale_price' => $settings['mp_product_sale_price'],
@@ -462,7 +462,7 @@ class CoursePress_Helper_Integration_MarketPress {
 		// Create Auto SKU
 		if ( ! empty( $settings['mp_auto_sku'] ) || empty( $settings['mp_sku'] ) ) {
 			$sku_prefix = apply_filters( 'coursepress_course_sku_prefix', 'CP-' );
-			$product_meta['sku'] = $sku_prefix . str_pad( $course_id, 5, '0', STR_PAD_LEFT );
+			$product_meta['mp_sku'] = $product_meta['sku'] = $sku_prefix . str_pad( $course_id, 5, '0', STR_PAD_LEFT );
 		}
 
 		foreach ( $product_meta as $key => $value ) {
@@ -940,14 +940,12 @@ class CoursePress_Helper_Integration_MarketPress {
 
 		$vars = array(
 			'CUSTOMER_NAME' => $order->mp_shipping_info['name'],
-			'BLOG_NAME' => get_bloginfo(),
-			'LOGIN_ADDRESS' => cp_student_login_address(),
-			'WEBSITE_ADDRESS' => home_url(),
 			'COURSE_ADDRESS' => get_permalink( $course_id ),
 			'COURSE_TITLE' => $course_name,
 			'ORDER_ID' => $order->ID,
 			'ORDER_STATUS_URL' => $tracking_url,
 		);
+		$vars = CoursePress_Helper_Utility::add_site_vars( $vars );
 
 		$order_message_body = CoursePress_Helper_Utility::replace_vars(
 			self::_get_order_content_email(),

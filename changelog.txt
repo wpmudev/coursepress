@@ -4,30 +4,171 @@ Build Time:  BUILDTIME
 
 CHANGELOG
 =================================================
+* Added filters to get_time_estimation() functions: coursepress_course_get_time_estimation, coursepress_unit_get_time_estimation, coursepress_module_get_time_estimation.
+
+= 2.1.3 =
+-------------------------------------------------
+* Fixed: Unit and Pages TinyMCE editor does not work after WordPress update to 4.9.
+
+= 2.1.2 =
+-------------------------------------------------
+* Improved: Add ability to define certificate logo.
+* Improved: Show instructor feedback on student workbook frontend.
+* CoursePress Theme: Fixed display of HTML Bullet points.
+* CoursePress Theme: Fixed expanded unit list view mode.
+* CoursePress Theme: Improved bbPress compatibility.
+* Fixed: Expanded unit list view mode not working for students.
+* Fixed: Export problem on PHP 5.2, json_encode() have only one parameter.
+* Fixed: Missing upgrade scripts.
+* Fixed: Module access with URL.
+* Fixed: Prevent access modules when previously required modules haven't been completed.
+* Fixed: Problem loading translations.
+* Fixed: Problem with TinyMCE.
+* Fixed: Try Again button is not showing while Retry is set to 1.
+* Fixed: Visual editor load problem when a user disables in the profile.
+
+= 2.1.1 =
+-------------------------------------------------
+* Improved: Added `editor-rtl.css` file.
+* Improved: Better display responsive video.
+* Improved: HTML login & signup forms.
+* Improved: Username sanitization.
+* Fixed: Assessments feedback sending problem.
+* Fixed: Compatibility with older PHP versions.
+* Fixed: CoursePress shortcode links are not working.
+* Fixed: Even the Discussion module is not "Required", you can't go to next section.
+* Fixed: Instructors capabilities problem on multisite installation.
+* Fixed: Instructor can't reply to comments on course unit.
+* Fixed: Missing translation in steps 6 & 7.
+* Fixed: Problems with missing passcode after login.
+* Fixed: Problems with PHP 5.2.x.
+* Fixed: Problem to go next unit when all answers are required but current unit do not have any assessable modules.
+* Fixed: Problem with go  to next module.
+* Fixed: Problem with non assessable modules and grade unit.
+* Fixed: Problem with yimer on quiz module after we use "Try Again" button.
+* Fixed: Sections on units page overview are not linked and not visible.
+* Fixed: Show and Free Preview options in Course Structure settings.
+* Fixed: Small issues with PHP 7.1.1
+* Fixed: The title of "Course Structure" widget should not be visible, when it is not checked.
+* Fixed: Unable to send feedback about assessments.
+* Fixed: Units inside the course are available agains the settings options.
+* Fixed: Visual editor is blank and missing data after module reorder.
+* Fixed: PHP warnings during export, when we try to fetch deleted user data.
+* Updated: Vimeo javascript for version 3.0.0.
+
+= 2.1.0.2 =
+-------------------------------------------------
+* Added: A filter 'coursepress_update_student_progress' to allow turn off student progress update during modules update.
+* Fixed: Problem with upgrade from 1.x to 2.0.
+
+= 2.1.0.1 =
+-------------------------------------------------
+* Fixed: Compatibility with older PHP versions.
+* Fixed: Video module problem with Vimeo movies.
+* Fixed: Problem with proper display of a course structure.
+
+= 2.1 =
+-------------------------------------------------
+* Added: Categories argument to [course_list] shortcode to filter courses.
+* Added: HTML rel attribute to next and previous buttons.
+* Added: New filter: coursepress_comment_form_args to filter new comment form arguments.
+* Added: New filter: coursepress_comment_list_args to filter comments list arguments.
+* Added: Option to disable emails individually
+* Added: Password strength meter on student profile
+* Added: Text color option for course certificate.
+* Added: The ability to disable the strength meter in the enrollment pup-up.
+* Added: Unit slug will be updated when you change unit title.
+* Improved: Added certificate filter on students list on course edit screen.
+* Improved: Add individual nonce when withdraw a student from a course.
+* Improved: Automatic migration from users upgrading from version 1.x
+* Improved: Better section title display - added information about no title.
+* Improved: Form module UI for better display.
+* Improved: Image display.
+* Improved: Increase a course assessments page load time.
+* Improved: Removed unused function CoursePress_Data_Course::is_course_preview()
+* Improved: Smaller download size.
+* Improved: Students list on assessment screen can be sorted by username and display name.
+* Improved: Students list on assessment screen is more like users list.
+* Improved: Students list on course edit screen can by sorted by: username, display name, first name and last name.
+* Improved: Students list on course edit screen is more like users list.
+* Fixed: Default unit title height to avoid collapse when empty.
+* Fixed: Instructor profile course lists on multisite.
+* Fixed: Empty dashboard page to non-enrolled user.
+* Fixed: A minor microdata issue on the course details page.
+* Fixed: In unit-builder, the checkbox options were not getting saved properly in some scenarios.
+* Fixed: Multiple answers grade calculation.
+* Fixed: Form grade calculation.
+
+= 2.0.7 =
+-------------------------------------------------
+* Added: New "Paid" column on course list table.
+* Added: Email validation on CoursePress signup form.
+* Added: A sample course to fresh CoursePress installation.
+* Added: No visible units message info.
+* Added: Ability to sort by title for course_list shortcode.
+* Added: Instructors notification for new enrolled students.
+* Added: Text color option for basic certificate.
+* Added: Preview without saving for basic and course certificates.
+
+* Improved: Description on settings page.
+* Improved: Compatibility with Avada theme.
+* Improved: Disable WooCommerce guest checkout for courses checkout.
+* Improved: Hide Install MarketPress message when WooCommerce Integration is active.
+* Improved: Password strength for custom registration form.
+
+* Updated: External library "select2" to version 4.0.2
+* Updated: External library "jquery-chosen" to version 1.6.2
+* Updated: External library "jquery-circle-progress" to version 1.2.1
+* Updated: External font Awesome to version 4.7.0
+
+* Fixed: Email placeholders.
+* Fixed: "Continue Learning" link for required modules.
+* Fixed: Warning messages on CoursePress configuration page when we use tab, which no longer exits.
+* Fixed: Issue with tinymce edit unit page.
+* Fixed: Dark screen when use "Save Progress & Exit" with discussion module.
+* Fixed: Removed PHP warnings when adding units.
+* Fixed: Next nav on IE.
+* Fixed: Unable to progress to next module.
+
+= 2.0.6.2 =
+-------------------------------------------------
+Fixed: HTML and entities issue on unit editor.
+Fixed: Preview button.
+
+= 2.0.6.1 =
+-------------------------------------------------
+* Fixed: Remove vulnerability to view any module.
+* Fixed: Prerequisite Courses problem with access to next course.
 
 = 2.0.6 =
 -------------------------------------------------
-* Added filters to get_time_estimation() functions: coursepress_course_get_time_estimation, coursepress_unit_get_time_estimation, coursepress_module_get_time_estimation.
+* Added: Redirect to login page for guest users.
+* Added: Number of failed attempts at student assessment.
+* Added: Validation for user related functions to avoid processing when there is no logged user.
+
+* Improved: Change "Duration" to "Time Limit" label.
+* Improved: Unify all TinyMCE editors CP instance.
+* Improved: Process of saving answers.
+* Improved: Required unit message.
+* Improved: Message box for paid course.
+* Improved: Integration with WooCommerce - when student pay with PayPal, a student will be enrolled to the ordered courses.
+
+* Updated: Bundled MarketPress to latest version.
+
 * Fixed: Remove inclusion of CP assets on none CP pages.
-* Fixed a problem with change WooCommerce product status to "Out of stock".
-* Fixed a problem with modules when section is deleted.
-* Fixed untranslated texts.
-* Fixed a problem with sale price in MarketPress.
-* To avoid confusion, we changed label "Duration" to "Time Limit".
-* Fixed a problem with too tall TinyMCE editoor.
-* Unified all TinyMCE editors.
-* Improved process of saving answers.
-* Fixed a bug with missing grade for manualy graded fields when we use "Save & Exit" feature.
-* Improved message about required units.
-* Fixed too many redirects error.
-* Added redirect to login page on student settings page for non-logged users.
-* Fixed issue with not showing HTML tags in Multiple/Single Choice field.
-* Updated included Market Press version 3.2.3
-* Fixed a problem with ignoring "User also needs to pass all required assessments" unit option.
-* Added "Number of failed attempts".
-* Improved message box for MarketPress on paid course.
-* Fixed "Passing Grade" value one assessments page.
-* Added checks for user related functions to avoid processing when there is no logged user.
+* Fixed: WooCommerce "Out of stock" product status.
+* Fixed: Deleting modules when section is deleted.
+* Fixed: Missing untranslated texts.
+* Fixed: Marketpress sale price.
+* Fixed: Editor height.
+* Fixed: Missing grade for manualy graded fields when using "Save & Exit".
+* Fixed: Too many redirects error.
+* Fixed: HTML tags not showing in Multiple/Single Choice field.
+* Fixed: Ignoring "User also needs to pass all required assessments" unit option.
+* Fixed: "Passing Grade" value one assessments page.
+* Fixed: Link to student profile in "Number of Courses" column.
+* Fixed: form imput, there was a problem with correct grade.
+* Fixed: Form input with correct grade.
 
 = 2.0.5 =
 -------------------------------------------------

@@ -222,7 +222,7 @@ class CoursePress_Data_Shortcode_Instructor {
 								$list[] = sprintf(
 									'<a href="%s" %s>%s</a>',
 									esc_url_raw( $profile_href ),
-									esc_attr( $schema ),
+									$schema,
 									$display_name
 								);
 							} else {

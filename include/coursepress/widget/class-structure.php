@@ -87,21 +87,26 @@ class CoursePress_Widget_Structure extends WP_Widget {
 		}
 
 		if ( (int) $course_id > 0 ) {
-			echo $before_widget;
+			$structure_visible = cp_is_true(
+				CoursePress_Data_Course::get_setting( $course_id, 'structure_visible' )
+			);
+			if ( $structure_visible ) {
+				echo $before_widget;
 
-			$title = empty( $instance['title'] ) ? ' ' : apply_filters( 'widget_title', $instance['title'] );
+				$title = empty( $instance['title'] ) ? ' ' : apply_filters( 'widget_title', $instance['title'] );
 
-			if ( ! empty( $title ) ) {
-				echo $before_title . $title . $after_title;
+				if ( ! empty( $title ) ) {
+					echo $before_title . $title . $after_title;
+				}
+
+				echo '<div class="course_structure_widget">';
+
+				echo do_shortcode( '[course_structure course_id="' . $course_id . '" label="" show_title="no" show_divider="no"]' );
+				// Strange bug.
+				echo '</div>&nbsp;';
+
+				echo $after_widget;
 			}
-
-			echo '<div class="course_structure_widget">';
-
-			echo do_shortcode( '[course_structure course_id="' . $course_id . '" label="" show_title="no" show_divider="no"]' );
-			// Strange bug.
-			echo '</div>&nbsp;';
-
-			echo $after_widget;
 		}
 
 	}

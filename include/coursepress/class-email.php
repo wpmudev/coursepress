@@ -31,6 +31,7 @@ class CoursePress_Email {
 		$email_fields = wp_parse_args(
 			$this->default_email_fields(),
 			array(
+				'enabled' => 1,
 				'from' => get_option( 'blogname' ),
 				'email' => get_option( 'admin_email' ),
 				'subject' => __( 'Subject line here...', 'CP_TD' ),
@@ -67,6 +68,7 @@ class CoursePress_Email {
 		$email_fields = wp_parse_args(
 			$this->default_email_fields(),
 			array(
+				'enabled' => 1,
 				'from' => get_option( 'blogname' ),
 				'email' => get_option( 'admin_email' ),
 				'subject' => __( 'Subject line here...', 'CP_TD' ),
@@ -100,8 +102,20 @@ class CoursePress_Email {
 
 		$block = '<tr><th>%s</th><td>%s<input type="text" class="widefat" name="coursepress_settings[email][%s][%s]" value="%s" /></td></tr>';
 
+		// Enabled
+		$fields = '
+			<tr>
+				<th>' . esc_html__( 'Enabled', 'CP_TD' ) . '</th>
+				<td>
+					<input type="hidden" name="coursepress_settings[email][' . $this->email_type . '][enabled]" value="0" />
+					<input type="checkbox" class="widefat" name="coursepress_settings[email][' . $this->email_type . '][enabled]" value="1" '
+				. checked( $email_settings['enabled'], true, false) . ' />
+				</td>
+			</tr>
+		';
+
 		// From Name
-		$fields = sprintf(
+		$fields .= sprintf(
 			$block,
 			__( 'From Name', 'CP_TD' ),
 			isset( $email_settings['from_sub'] ) ? $email_settings['from_sub'] : '', // Allow description
@@ -207,7 +221,7 @@ class CoursePress_Email {
 		if ( ! empty( $user_id ) ) {
 			$user = get_userdata( $user_id );
 
-			$vars['FIRST_NAME'] = $vars['STUDENT_FIRST_NAME'] = $user->first_name;
+			$vars['FIRST_NAME'] = $vars['STUDENT_FIRST_NAME'] = empty( $user->first_name ) && empty( $user->last_name ) ? $user->display_name : $user->first_name;
 			$vars['LAST_NAME'] = $vars['STUDENT_LAST_NAME'] = $user->last_name;
 			$vars['EMAIL'] = $user->user_email;
 		}
@@ -224,11 +238,7 @@ class CoursePress_Email {
 	 **/
 	public function prepare_tokens() {
 		$vars = array_fill_keys( array_values( $this->mail_tokens() ), '' );
-
-		$vars['BLOG_NAME'] = get_bloginfo( 'name' );
-		$vars['WEBSITE_ADDRESS'] = site_url();
-		$vars['BLOG_ADDRESS'] = site_url();
-
+		$vars = CoursePress_Helper_Utility::add_site_vars( $vars );
 		return $vars;
 	}
 

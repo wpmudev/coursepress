@@ -9,3 +9,23 @@
 		}
 	}
 }
+
+.password-strength-meter-container {
+    float: right;
+	display: inline-block;
+	margin-bottom: 0;
+
+	.password-strength-meter {
+		&.bad {
+			color: red;
+		}
+
+		&.good {
+			color: orange;
+		}
+
+		&.strong {
+			color: green;
+		}
+	}
+}

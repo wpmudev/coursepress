@@ -197,7 +197,7 @@ class CoursePress_Template_Unit {
 
 				$page_description = get_post_meta( $unit->ID, 'page_description', true );
 				if ( ! empty( $page_description[ 'page_' . $page ] ) ) {
-					$content .= $page_description[ 'page_' . $page ];
+					$content .= wpautop( htmlspecialchars_decode($page_description[ 'page_' . $page ]));
 				}
 
 				$content .= '</div>';
@@ -219,47 +219,55 @@ class CoursePress_Template_Unit {
 		$module_template .= sprintf( '<input type="hidden" name="student_id" value="%d" />', $current_user_id );
 		$module_template .= sprintf( '<input type="hidden" name="unit_id" value="%d" />', $unit_id );
 
-		foreach ( $modules as $module ) {
-			$preview_modules = array();
-			$can_preview_module = false;
-			$attributes = CoursePress_Data_Module::attributes( $module );
-			$attributes['course_id'] = $course_id;
+		// Check whether the previous pages modules that are required are completed by student.
+		$error = self::previous_pages_required_modules_incomplete( $unit_id, $student_id, $page );
 
-			$method = 'render_' . str_replace( '-', '_', $attributes['module_type'] );
-			$template = 'CoursePress_Template_Module';
+		// Only show error for student.
+		if ( $error && ! ( $is_instructor || $can_update_course ) ) {
+			$module_template .= $error;
+		} else {
+			foreach ( $modules as $module ) {
+				$preview_modules         = array();
+				$can_preview_module      = false;
+				$attributes              = CoursePress_Data_Module::attributes( $module );
+				$attributes['course_id'] = $course_id;
 
-			if ( ! empty( $preview['structure'] ) && ! empty( $preview['structure'][ $unit->ID ] ) && isset( $preview['structure'][ $unit->ID ][ $page ] ) ) {
-				$preview_modules = array_keys( $preview['structure'][ $unit->ID ][ $page ] );
-			}
-			if ( in_array( $module->ID, $preview_modules ) || $can_update_course ) {
-				$can_preview_module = true;
-			} elseif ( isset( $preview['structure'][ $unit->ID ] ) ) {
-				$can_preview_module = ! is_array( $preview['structure'][ $unit->ID ] );
-			} else {
-				$can_preview_module = false;
-			}
+				$method   = 'render_' . str_replace( '-', '_', $attributes['module_type'] );
+				$template = 'CoursePress_Template_Module';
 
-			if ( ! $enrolled && ! $can_preview_module && ! $is_instructor ) {
-				continue;
-			}
+				if ( ! empty( $preview['structure'] ) && ! empty( $preview['structure'][ $unit->ID ] ) && isset( $preview['structure'][ $unit->ID ][ $page ] ) ) {
+					$preview_modules = array_keys( $preview['structure'][ $unit->ID ][ $page ] );
+				}
+				if ( in_array( $module->ID, $preview_modules ) || $can_update_course ) {
+					$can_preview_module = true;
+				} elseif ( isset( $preview['structure'][ $unit->ID ] ) ) {
+					$can_preview_module = ! is_array( $preview['structure'][ $unit->ID ] );
+				} else {
+					$can_preview_module = false;
+				}
 
-			if ( $enrolled || $is_instructor || $can_update_course || 'output' == $attributes['mode'] ) {
-				$module_template .= CoursePress_Template_Module::template( $module->ID );
+				if ( ! $enrolled && ! $can_preview_module && ! $is_instructor ) {
+					continue;
+				}
 
-				// Modules seen here!
-				CoursePress_Data_Student::visited_module(
-					$student_id,
-					$course_id,
-					$unit_id,
-					$module->ID,
-					$student_progress
-				);
+				if ( $enrolled || $is_instructor || $can_update_course || 'output' == $attributes['mode'] ) {
+					$module_template .= CoursePress_Template_Module::template( $module->ID );
+
+					// Modules seen here!
+					CoursePress_Data_Student::visited_module(
+						$student_id,
+						$course_id,
+						$unit_id,
+						$module->ID,
+						$student_progress
+					);
+				}
 			}
 		}
 
 		// Pager.
 		$preview_pages = array();
-		if ( isset( $preview['structure'][ $unit->ID ] ) ) {
+		if ( isset( $preview['structure'][ $unit->ID ] ) && is_array( $preview['structure'][ $unit->ID ] ) ) {
 			$preview_pages = array_keys( $preview['structure'][ $unit->ID ] );
 		}
 
@@ -397,7 +405,7 @@ class CoursePress_Template_Unit {
 		 * Save Progress & Exit link
 		 */
 		$save_progress_link = '';
-		if ( 'normal' == $view_mode && $enrolled && $has_submit_button ) {
+		if ( 'normal' == $view_mode && $enrolled && $has_submit_button && ! $error ) {
 			$save_progress_link = sprintf(
 				'<div class="save-progress-and-exit-container"><a href="#" class="save-progress-and-exit">%s</a></div>',
 				__( 'Save Progress &amp; Exit', 'CP_TD' )
@@ -420,6 +428,51 @@ class CoursePress_Template_Unit {
 		}
 
 		return $content;
+	}
+
+	/**
+	 * Check whether the required modules on the previous pages have been completed by the current student.
+	 *
+	 * @param integer $unit_id Current unit id.
+	 * @param integer $student_id Current student id.
+	 * @param integer $page Current page number.
+	 *
+	 * @return mixed false or error to be shown.
+	 */
+	public static function previous_pages_required_modules_incomplete( $unit_id, $student_id, $page ) {
+
+		$error_message = false;
+		// Return when it reaches the first page.
+		while ( 1 !== $page ) {
+			$previous_page    = $page - 1;
+			$previous_modules = CoursePress_Data_Course::get_unit_modules(
+				$unit_id,
+				array( 'publish' ),
+				false,
+				false,
+				array(
+					'page' => $previous_page,
+				)
+			);
+			$previous_modules = array_map( array( 'CoursePress_Data_Course', 'get_course_id' ), $previous_modules );
+
+			if ( $previous_modules ) {
+				foreach ( $previous_modules as $prev_module_index => $_module_id ) {
+					$is_done = CoursePress_Data_Module::is_module_done_by_student( $_module_id, $student_id );
+
+					if ( ! $is_done ) {
+						$first_line    = __( 'You need to complete all the REQUIRED modules before this unit.', 'CP_TD' );
+						$error_message = CoursePress_Helper_UI::get_message_required_modules( $first_line );
+						continue;
+					}
+				}
+			}
+			if ( $error_message ) {
+				return $error_message;
+			}
+			$page--;
+		}
+		return $error_message;
 	}
 
 	/**

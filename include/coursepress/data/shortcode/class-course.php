@@ -463,12 +463,15 @@ class CoursePress_Data_Shortcode_Course {
 		$title = ! empty( $title ) ? '<h3 class="section-title">' . esc_html( $title ) . '</h3>' : $title;
 		$course = get_post( $course_id );
 
+		$course_title = apply_filters( 'coursepress_schema', $course->post_title, 'title' );
+		$content = '<span style="display:none;">' . $course_title . '</span>';
+
 		/**
 		 * schema.org
 		 */
-		$schema = apply_filters( 'coursepress_schema', '', 'description' );
+		$content_schema = apply_filters( 'coursepress_schema', '', 'description' );
 
-		$content = '<div class="course-description course-description-' . $course_id . ' ' . $class . '"' . $schema . '>';
+		$content .= '<div class="course-description course-description-' . $course_id . ' ' . $class . '"' . $content_schema . '>';
 		$content .= $title;
 		$content .= do_shortcode( $course->post_content );
 		$content .= '</div>';
@@ -504,6 +507,7 @@ class CoursePress_Data_Shortcode_Course {
 		$class = sanitize_html_class( $class );
 
 		$start_date = CoursePress_Data_Course::get_setting( $course_id, 'course_start_date' );
+		$open_ended = CoursePress_Data_Course::get_setting( $course_id, 'course_open_ended' );
 
 		$content = '<div class="course-start-date course-start-date-' . $course_id . ' ' . $class . '">';
 
@@ -511,7 +515,7 @@ class CoursePress_Data_Shortcode_Course {
 			$content .= '<' . esc_html( $label_tag ) . ' class="label">' . esc_html( $label ) . esc_html( $label_delimeter ) . '</' . esc_html( $label_tag ) . '> ';
 		}
 
-		if ( 0 == $start_date ) {
+		if ( $open_ended || empty( $start_date ) ) {
 			$content .= __( 'already started', 'CP_TD' );
 		} else {
 			$content .= str_replace( ' ', '&nbsp;', date_i18n( $date_format, CoursePress_Data_Course::strtotime( $start_date ) ) );
@@ -1391,7 +1395,8 @@ class CoursePress_Data_Shortcode_Course {
 
 		if ( 'thumbnail' == $type ) {
 			$type = 'image';
-			$priority = 'image';
+            $priority = 'image';
+            $width = $height = '';
 		}
 
 		// If no wrapper and we're specifying a width and height, we need one, so will use div.

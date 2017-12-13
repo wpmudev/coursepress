@@ -13,16 +13,12 @@ class CoursePress_View_Admin_Course_Student {
 		$list_course->set_add_new( true );
 		$list_course->prepare_items();
 
-		$content = '<div class="coursepress_course_student_wrapper">';
-
+		$content = '';
 		ob_start();
-		echo '<div class="coursepress_student_searchbox">';
 		$list_course->search_box( __( 'Search', 'CP_TD' ), 'student' );
-		echo '</div>';
+		$list_course->views();
 		$list_course->display();
 		$content .= ob_get_clean();
-
-		$content .= '</div>';
 
 		/**
 		 * Invite Student

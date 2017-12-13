@@ -30,11 +30,11 @@ class CoursePress_Helper_Message {
 	 *
 	 */
 	public static function set_message_key() {
-		if ( !isset( $_REQUEST[ self::$slug ] ) ) {
+		if ( ! isset( $_REQUEST[ self::$slug ] ) ) {
 			return;
 		}
 		$key = $_REQUEST[ self::$slug ];
-		if ( !self::sanitize_key( $key ) ) {
+		if ( ! self::sanitize_key( $key ) ) {
 			return;
 		}
 		self::$message_code = apply_filters( 'coursepress_helper_message_get_message_code', $key );
@@ -94,22 +94,22 @@ class CoursePress_Helper_Message {
 			'course-message',
 			sprintf( 'course-message-%s', self::$message_code ),
 		);
-		switch( self::$message_code ) {
+		switch ( self::$message_code ) {
 
-		case 'no-access':
-			$message = __( 'You need a membership account to access this course.', 'CP_TD' );
-			$classes[] = 'course-message-alert';
+			case 'no-access':
+				$message = __( 'You need a membership account to access this course.', 'CP_TD' );
+				$classes[] = 'course-message-alert';
 			break;
 
-		case 'only-enroled':
-			$message = __( 'Only enrolled students can access this course material.', 'CP_TD' );
+			case 'only-enroled':
+				$message = __( 'Only enrolled students can access this course material.', 'CP_TD' );
 			break;
 
-		case 'unit-not-available':
-			$message = self::_get_not_available_message();
+			case 'unit-not-available':
+				$message = self::_get_not_available_message();
 			break;
 
-		default:
+			default:
 			return '';
 		}
 
@@ -127,6 +127,49 @@ class CoursePress_Helper_Message {
 		$content .= '<a href="#" class="course-message-close i-wpmu-dev-close"></a>';
 		$content .= '</div>';
 		return apply_filters( 'coursepress_helper_message_html', $content, $message, $message_code, $atts );
+	}
+
+	/**
+	 * Return the array with specyfic classes, depend on $message_code
+	 *
+	 * @since 2.0.6
+	 */
+	public static function course_message_classes() {
+		if ( empty( self::$message_code ) ) {
+			return '';
+		}
+
+		$classes = array(
+			sprintf( '%s', self::$message_code ),
+		);
+
+		switch ( self::$message_code ) {
+
+			case 'no-access':
+				$classes = array(
+				'access_classes' => 'no-access',
+				'style_classes' => 'alert',
+				);
+			break;
+
+			case 'only-enroled':
+				$classes = array(
+				'access_classes' => 'only-enroled',
+				'style_classes' => 'alert',
+				);
+			break;
+
+			case 'unit-not-available':
+				$classes = array(
+				'access_classes' => 'unit-not-available',
+				);
+			break;
+
+			default:
+			return '';
+		}
+
+		return apply_filters( 'coursepress_helper_message_classes', $classes, self::$message_code );
 	}
 
 	/**
@@ -163,5 +206,4 @@ class CoursePress_Helper_Message {
 		}
 		return __( 'This unit is not available.', 'CP_TD' );
 	}
-
 }

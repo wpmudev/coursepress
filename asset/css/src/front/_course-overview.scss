@@ -79,14 +79,19 @@
 		float: right;
 		padding-top: 5px;
 	}
-	.unit-page-module-wrapper,
-	.unit-page-title-wrapper,
-	.unit-title-wrapper {
-		width: 100%;
-		overflow: hidden;
-		border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
-		padding: 2px 0;
-		position: relative;
+	.course-structure-block {
+		.unit-page-module-wrapper,
+		.unit-page-title-wrapper,
+		.unit-title-wrapper {
+			@include appearance( inherit );
+			border: 0;
+			border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+			margin: 0;
+			overflow: hidden;
+			padding: 2px 0;
+			position: relative;
+			width: 100%;
+		}
 	}
 	.unit-title-wrapper {
 		border-bottom: 1px solid rgba(0, 0, 0, 0.1);

@@ -116,6 +116,7 @@ class CoursePress_Data_Course {
 				return $register_post_type_array;
 			}
 		}
+
 		return $register_post_type_array;
 	}
 
@@ -481,6 +482,15 @@ class CoursePress_Data_Course {
 		self::update_setting( $course_id, 'instructors', $instructors );
 	}
 
+	/**
+	 * Returns an array of course settings.
+	 *
+	 * @param (int) $course_id		WP_Post object ID to get the settings from.
+	 * @param (mixed) $key			Optional. An specific setting key to retrieve. Set to `true` to get all course settings.
+	 * @param (mixed) $default		Optional. The default value to return if setting is null.
+	 *
+	 * @return (mixed) Returns an array of course settings or the value of an specified setting key.
+	 **/
 	public static function get_setting( $course_id, $key = true, $default = null ) {
 		$settings = get_post_meta( $course_id, 'course_settings', true );
 		$date_format = get_option( 'date_format' );
@@ -491,9 +501,13 @@ class CoursePress_Data_Course {
 			'setup_step_2' => '',
 			'setup_step_3' => '',
 			'setup_step_4' => '',
+			'setup_step_5' => '',
+			'setup_step_6' => '',
+			'setup_step_7' => '',
 			'course_language' => __( 'English', 'CP_TD' ),
 			'course_view' => 'normal',
 			'structure_level' => 'unit',
+			'structure_show_empty_units' => false,
 			'structure_visible_units' => array(),
 			'structure_preview_units' => array(),
 			'structure_visible_pages' => array(),
@@ -506,6 +520,34 @@ class CoursePress_Data_Course {
 			'enrollment_open_ended' => empty( $settings ),
 			'enrollment_start_date' => '',
 			'enrollment_end_date' => '',
+			'class_limited' => '',
+			'class_size' => '',
+			'enrollment_type' => CoursePress_Data_Course::get_enrollment_type_default( $course_id ),
+			'payment_paid_course' => false,
+			'enrollment_passcode' => '',
+			'pre_completion_title' => __( 'Almost there!', 'CP_TD' ),
+			'pre_completion_content' => '',
+			'minimum_grade_required' => 100,
+			'course_completion_title' => __( 'Congratulations, You Passed!', 'CP_TD' ),
+			'course_completion_content' => '',
+			'course_failed_title' => __( 'Sorry, you did not pass this course!', 'CP_TD' ),
+			'course_failed_content' => '',
+			'basic_certificate_layout' => CoursePress_View_Admin_Setting_BasicCertificate::default_certificate_content(),
+			'basic_certificate' => false,
+			'certificate_background' => '',
+			'certificate_logo' => '',
+			'cert_margin' => array(
+				'top' => 0,
+				'left' => 0,
+				'right' => 0,
+			),
+			'logo_position' => array(
+				'x' => 0,
+				'y' => 0,
+				'width' => 100,
+			),
+			'page_orientation' => 'L',
+			'cert_text_color' => '#5a5a5a',
 		);
 
 		$settings = wp_parse_args( $settings, $defaults );
@@ -855,10 +897,12 @@ class CoursePress_Data_Course {
 						$page_title
 					);
 
+					$description = ! empty( $page_description[ $page_id ] ) ? $page_description[ $page_id ] : '';
+
 					$items = CoursePress_Helper_Utility::set_array_value(
 						$items,
 						$page_path . '/' . $page_number . '/description',
-						! empty( $page_description[ $page_id ] ) ? $page_description[ $page_id ] : ''
+						$description
 					);
 					$items = CoursePress_Helper_Utility::set_array_value(
 						$items,
@@ -872,6 +916,7 @@ class CoursePress_Data_Course {
 					);
 
 					$modules = self::get_unit_modules( $unit->ID, $status, false, false, array( 'page' => $page_number ) );
+
 					uasort( $modules, array( __CLASS__, 'uasort_modules' ) );
 
 					$items = CoursePress_Helper_Utility::set_array_value(
@@ -1398,33 +1443,7 @@ class CoursePress_Data_Course {
 		 */
 		add_post_meta( $course_id, 'course_enrolled_student_id', $student_id );
 
-		self::$email_type = CoursePress_Helper_Email::ENROLLMENT_CONFIRM;
-
-		/**
-		 * Allow others to whether or not send the notification email.
-		 *
-		 * @param (bool) $true			Set to false to disable notification.
-		 **/
-		$notify_student = apply_filters( 'coursepress_notify_student', true );
-
-		$email_args = array();
-		$email_args['course_id'] = $course_id;
-		$email_args['email'] = sanitize_email( $student->user_email );
-		$email_args['first_name'] = $student->user_firstname;
-		$email_args['last_name'] = $student->user_lastname;
-
-		if ( is_email( $email_args['email'] ) && $notify_student ) {
-			$sent = CoursePress_Helper_Email::send_email(
-				self::$email_type,
-				$email_args
-			);
-
-			if ( $sent ) {
-				// Could add something on successful email
-			} else {
-				// Could add something if email fails
-			}
-		}
+		self::send_enrollment_emails( $course_id, $student );
 
 		/**
 		 * Setup actions for when a student enrolls.
@@ -2595,11 +2614,6 @@ class CoursePress_Data_Course {
 		return $url;
 	}
 
-	public static function is_course_preview( $course_id ) {
-		$post_status = get_post_status( $course_id );
-		$can_update_course = CoursePress_Data_Capabilities::can_update_course( $course_id );
-	}
-
 	/**
 	 * Get the current time in GMT timezone.
 	 *
@@ -3681,5 +3695,88 @@ class CoursePress_Data_Course {
 		 * return array of courses ids
 		 */
 		return $courses;
+	}
+
+	/**
+	 * Sends out emails after a new enrollment.
+	 *
+	 * @param $course_id int The ID of the course in which a student was enrolled.
+	 * @param $student \WP_User The enrolled student.
+	 */
+	private static function send_enrollment_emails( $course_id, $student ) {
+
+		self::send_enrollment_notification_to_student( $course_id, $student );
+		self::send_enrollment_notification_to_instructors( $course_id, $student );
+	}
+
+	/**
+	 * When a new student enrolls in a course, this method sends an email to that student.
+	 *
+	 * @param $course_id int The ID of the course in which a student was enrolled.
+	 * @param $student \WP_User The enrolled student.
+	 */
+	private static function send_enrollment_notification_to_student( $course_id, $student ) {
+
+		self::$email_type = CoursePress_Helper_Email::ENROLLMENT_CONFIRM;
+
+		/**
+		 * Allow others to whether or not send the notification email.
+		 *
+		 * @param (bool) $true            Set to false to disable notification.
+		 **/
+		$notify_student = apply_filters( 'coursepress_notify_student', true );
+
+		$email_args = array();
+		$email_args['course_id'] = $course_id;
+		$email_args['email'] = sanitize_email( $student->user_email );
+		$email_args['first_name'] = empty( $student->user_firstname ) && empty( $student->user_lastname ) ? $student->display_name : $student->user_firstname;
+		$email_args['last_name'] = $student->user_lastname;
+
+		if ( is_email( $email_args['email'] ) && $notify_student ) {
+			$sent = CoursePress_Helper_Email::send_email(
+				self::$email_type,
+				$email_args
+			);
+
+			if ( $sent ) {
+				// Could add something on successful email
+			} else {
+				// Could add something if email fails
+			}
+		}
+	}
+
+	/**
+	 * When a new student enrolls in a course, this method sends an email to the course instructor.
+	 *
+	 * @param $course_id int The ID of the course in which a student was enrolled.
+	 * @param $student \WP_User The enrolled student.
+	 */
+	private static function send_enrollment_notification_to_instructors( $course_id, $student ) {
+
+		$instructors = self::get_instructors( $course_id, true );
+		foreach ( $instructors as $instructor ) {
+			/**
+			 * Allow other to short-circuit the email notification.
+			 *
+			 * @param (bool) true Set to false to disable notification.
+			 **/
+			$notify_instructors = apply_filters( 'coursepress_notify_instructors', true );
+
+			$email_args = array();
+			$email_args['course_id'] = $course_id;
+			$email_args['email'] = sanitize_email( $instructor->user_email );
+			$email_args['instructor_first_name'] = empty( $instructor->user_firstname ) && empty( $instructor->user_lastname ) ? $instructor->display_name : $instructor->user_firstname;
+			$email_args['instructor_last_name'] = $instructor->user_lastname;
+			$email_args['student_last_name'] = $student->user_lastname;
+			$email_args['student_first_name'] = empty( $student->user_firstname ) && empty( $student->user_lastname ) ? $student->display_name : $student->user_firstname;
+
+			if ( is_email( $email_args['email'] ) && $notify_instructors ) {
+				CoursePress_Helper_Email::send_email(
+					CoursePress_Helper_Email::INSTRUCTOR_ENROLLMENT_NOTIFICATION,
+					$email_args
+				);
+			}
+		}
 	}
 }

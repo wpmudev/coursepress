@@ -1040,7 +1040,7 @@ class CoursePress_View_Admin_Course_Edit {
 		$completion_content = htmlspecialchars_decode( $completion_content );
 
 		$content = '<div class="step-title step-7">'
-			. esc_html( 'Step 7 - Course Completion', 'CP_TD' )
+			. esc_html__( 'Step 7 - Course Completion', 'CP_TD' )
 			. '<div class="status '. $setup_class . '"></div>'
 			. '</div>';
 
@@ -1696,22 +1696,20 @@ class CoursePress_View_Admin_Course_Edit {
 
 					// Email Content.
 					$vars = array(
-						'BLOG_NAME' => get_bloginfo( 'name' ),
 						'COURSE_ADDRESS' => esc_url( $course_address ),
 						'COURSE_EXCERPT' => $course_summary,
 						'COURSE_NAME' => $course_name,
 						'COURSE_OVERVIEW' => $course_summary,
 						'COURSES_ADDRESS' => CoursePress_Core::get_slug( 'course', true ),
-						'LOGIN_ADDRESS' => esc_url( $login_url ),
-						'WEBSITE_ADDRESS' => home_url(),
-						'WEBSITE_NAME' => get_bloginfo( 'name' ),
 					);
+					$vars = CoursePress_Helper_Utility::add_site_vars( $vars );
+
 					$count = 0;
 					/**
 					 * send mail to each student
 					 */
 					foreach ( $students as $student ) {
-						$vars['STUDENT_FIRST_NAME'] = $student->first_name;
+						$vars['STUDENT_FIRST_NAME'] = empty( $student->first_name ) && empty( $student->last_name ) ? $student->display_name : $student->first_name;
 						$vars['STUDENT_LAST_NAME'] = $student->last_name;
 						$vars['STUDENT_LOGIN'] = $student->data->user_login;
 						$body = CoursePress_Helper_Utility::replace_vars( $data->data->body, $vars );
@@ -1769,7 +1767,7 @@ class CoursePress_View_Admin_Course_Edit {
 	 *
 	 * @return string Buttons.
 	 */
-	private static function get_buttons( $course_id, $step, $args = array() ) {
+	public static function get_buttons( $course_id, $step, $args = array() ) {
 		$args = wp_parse_args(
 			$args,
 			array(
@@ -1905,7 +1903,7 @@ class CoursePress_View_Admin_Course_Edit {
 			$mail_args = array(
 				'email' => $userdata->user_email,
 				'course_id' => $course_id,
-				'first_name' => $userdata->first_name,
+				'first_name' => empty( $userdata->first_name ) && empty( $userdata->last_name ) ? $userdata->display_name : $userdata->first_name,
 				'last_name' => $userdata->last_name,
 				'completion_date' => 'NOW!',
 				'certificate_id' => '12345',

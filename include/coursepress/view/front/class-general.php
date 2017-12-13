@@ -44,6 +44,7 @@ class CoursePress_View_Front_General {
 			$courses->menu_item_parent = 0;
 			$courses->ID = 'cp-courses';
 			$courses->db_id = '';
+			$courses->classes = array();
 			$courses->url = CoursePress_Core::get_slug( 'courses', true );
 			if ( $current_url == $courses->url ) {
 				$courses->classes[] = 'current_page_item';
@@ -78,6 +79,7 @@ class CoursePress_View_Front_General {
 				$dashboard_courses->menu_item_parent = - 9998;
 				$dashboard_courses->ID = 'cp-dashboard-courses';
 				$dashboard_courses->db_id = '';
+				$dashboard_courses->classes = array();
 				$dashboard_courses->url = CoursePress_Core::get_slug( 'student_dashboard', true );
 				if ( $current_url == $dashboard_courses->url ) {
 					$dashboard_courses->classes[] = 'current_page_item';
@@ -93,6 +95,7 @@ class CoursePress_View_Front_General {
 				$settings_profile->menu_item_parent = - 9998;
 				$settings_profile->ID = 'cp-dashboard-settings';
 				$settings_profile->db_id = '';
+				$settings_profile->classes = array();
 				$settings_profile->url = CoursePress_Core::get_slug( 'student_settings', true );
 				if ( $current_url == $settings_profile->url ) {
 					$settings_profile->classes[] = 'current_page_item';
@@ -135,6 +138,7 @@ class CoursePress_View_Front_General {
 			$login->ID = 'cp-logout';
 			$login->db_id = '';
 			$login->url = self::get_log_in_out_link();
+			$login->classes = array();
 
 			$sorted_menu_items[] = $login;
 		}

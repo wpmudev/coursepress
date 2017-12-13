@@ -143,9 +143,12 @@ class CoursePress_Helper_Utility {
 	 *
 	 * @return array Settings array.
 	 */
-	public static function set_array_value( $a, $path, $value ) {
-		if ( ! is_array( $path ) ) {
-			$path = explode( '/', $path );
+	public static function set_array_value( $a, $path_input, $value ) {
+		$path = array();
+		if ( is_array( $path_input ) ) {
+			$path = $path_input;
+		} else {
+			$path = explode( '/', $path_input );
 		}
 		$key = array_shift( $path );
 		if ( empty( $path ) ) {
@@ -155,7 +158,6 @@ class CoursePress_Helper_Utility {
 			$a[ $key ] = $value;
 			return $a;
 		}
-
 		if ( ! isset( $a[ $key ] ) || ! is_array( $a[ $key ] ) ) {
 			$a[ $key ] = array();
 		}
@@ -164,9 +166,12 @@ class CoursePress_Helper_Utility {
 	}
 
 	// get array value based on path.
-	public static function get_array_val( $a, $path ) {
-		if ( ! is_array( $path ) ) {
-			$path = explode( '/', $path );
+	public static function get_array_val( $a, $path_input ) {
+		$path = array();
+		if ( is_array( $path_input ) ) {
+			$path = $path_input;
+		} else {
+			$path = explode( '/', $path_input );
 		}
 		foreach ( $path as $k ) {
 			if ( isset( $a[ $k ] ) ) {
@@ -188,16 +193,19 @@ class CoursePress_Helper_Utility {
 	 *
 	 * @return array Settings array.
 	 */
-	public static function unset_array_value( $a, $path ) {
-		if ( ! is_array( $path ) ) {
-			$path = explode( '/', $path );
+	public static function unset_array_value( $a, $path_input ) {
+		$path = array();
+		if ( is_array( $path_input ) ) {
+			$path = $path_input;
+		} else {
+			$path = explode( '/', $path_input );
 		}
 		$key = array_shift( $path );
 		if ( empty( $path ) ) {
 			if ( empty( $key ) ) {
 				$key = count( $a );
 			}
-			unset( $key );
+			unset( $a[ $key ] );
 			return $a;
 		}
 		if ( ! isset( $a[ $key ] ) || ! is_array( $a[ $key ] ) ) {
@@ -213,10 +221,13 @@ class CoursePress_Helper_Utility {
 	 * @deprecated 2.0.5 Use set_array_value()
 	 * @see set_array_value()
 	 */
-	public static function set_array_val( &$a, $path, $value ) {
+	public static function set_array_val( &$a, $path_input, $value ) {
 		CoursePress_Helper_Legacy::deprecated_function( __CLASS__.'::'.__FUNCTION__, '2.0.5', 'CoursePress_Helper_Utility::set_array_value()' );
-		if ( ! is_array( $path ) ) {
-			$path = explode( '/', $path );
+		$path = array();
+		if ( is_array( $path_input ) ) {
+			$path = $path_input;
+		} else {
+			$path = explode( '/', $path_input );
 		}
 		$key = array_pop( $path );
 		foreach ( $path as $k ) {
@@ -234,10 +245,13 @@ class CoursePress_Helper_Utility {
 	 * @deprecated 2.0.5 Use unset_array_value()
 	 * @see unset_array_value()
 	 */
-	public static function unset_array_val( &$a, $path ) {
+	public static function unset_array_val( &$a, $path_input ) {
 		CoursePress_Helper_Legacy::deprecated_function( __CLASS__.'::'.__FUNCTION__, '2.0.5', 'CoursePress_Helper_Utility::unset_array_value()' );
-		if ( ! is_array( $path ) ) {
-			$path = explode( '/', $path );
+		$path = array();
+		if ( is_array( $path_input ) ) {
+			$path = $path_input;
+		} else {
+			$path = explode( '/', $path_input );
 		}
 		$key = array_pop( $path );
 		foreach ( $path as $k ) {
@@ -258,6 +272,7 @@ class CoursePress_Helper_Utility {
 		} else {
 			return $object;
 		}
+		return array();
 	}
 
 	public static function array_to_object( $array ) {
@@ -1425,5 +1440,145 @@ class CoursePress_Helper_Utility {
 			</p>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Site vars.
+	 *
+	 * @since 2.0.7
+	 *
+	 * @param array $vars Array of site vars.
+	 * @return array Array of site vars.
+	 */
+	public static function add_site_vars( $vars = array() ) {
+		/**
+		 * get login url
+		 */
+		$login_url = wp_login_url();
+		if ( CoursePress_Core::get_setting( 'general/use_custom_login', true ) ) {
+			$login_url = CoursePress_Core::get_slug( 'login', true );
+		}
+		$vars['BLOG_ADDRESS'] = site_url();
+		$vars['BLOG_NAME'] = $vars['WEBSITE_NAME'] =  get_bloginfo( 'name' );
+		$vars['LOGIN_ADDRESS'] = $login_url;
+		$vars['WEBSITE_ADDRESS'] = home_url();
+		/**
+		 * Allow to change site vars.
+		 *
+		 * @since 2.0.6
+		 *
+		 * @param array $vars Array of site vars.
+		 */
+		return apply_filters( 'coursepress_site_vars', $vars );
+	}
+
+	/**
+	 * Converts a hex color into an RGB array.
+	 *
+	 * @param $hex_color string The color in format #FFFFFF
+	 * @param $default string The value to return if the color to convert turns out to be invalid.
+	 * @return array An array containing RGB values.
+	 */
+	public static function convert_hex_color_to_rgb($hex_color, $default = array())
+	{
+		$color_valid = (boolean) preg_match('/^#[a-f0-9]{6}$/i', $hex_color);
+		if($color_valid)
+		{
+			$values = CP_TCPDF_COLORS::convertHTMLColorToDec($hex_color, CP_TCPDF_COLORS::$spotcolor);
+			return array_values($values);
+		}
+
+		return $default;
+	}
+
+	/**
+	 * If the strength meter is enabled, this method checks a hidden field to make sure that the password is strong enough.
+	 *
+	 * If the strength meter is disabled then this method makes sure that the password meets the minimum length requirement and has the required characters.
+	 */
+	public static function is_password_strong()
+	{
+		$confirm_weak_password = isset($_POST['confirm_weak_password']) ? (boolean)$_POST['confirm_weak_password'] : false;
+		$min_password_length = self::get_minimum_password_length();
+
+		if (self::is_password_strength_meter_enabled()) {
+			$password_strength = isset($_POST['password_strength_level']) ? intval($_POST['password_strength_level']) : 0;
+
+			return $confirm_weak_password || $password_strength >= 3;
+		} else {
+			$password = isset($_POST['password']) ? $_POST['password'] : '';
+			$password_strong = strlen($password) >= $min_password_length && preg_match('#[0-9a-z]+#i', $password);
+
+			return $confirm_weak_password || $password_strong;
+		}
+	}
+
+	/**
+	 * Checks if password strength meter is enabled.
+	 * @return bool
+	 */
+	public static function is_password_strength_meter_enabled()
+	{
+		return (boolean) apply_filters('coursepress_display_password_strength_meter', true);
+	}
+
+	/**
+	 * Returns the minimum password length to use for validation when the strength meter is disabled.
+	 */
+	public static function get_minimum_password_length()
+	{
+		return apply_filters('coursepress_min_password_length', 6);
+	}
+
+	public static function is_youtube_url($url)
+	{
+		$host = parse_url($url, PHP_URL_HOST);
+		return $host && (strpos($host, 'youtube') !== false || strpos($host, 'youtu.be') !== false);
+	}
+
+	public static function is_vimeo_url($url)
+	{
+		$host = parse_url($url, PHP_URL_HOST);
+		return $host && strpos($host, 'vimeo') !== false;
+	}
+
+	public static function create_video_js_setup_data($url, $data)
+	{
+		$src = null;
+		$extra_data = array();
+		if(self::is_youtube_url($url))
+		{
+			$src = 'youtube';
+
+			$show_related_media = !cp_is_true(self::get_array_val($data, 'hide_related_media'));
+			$extra_data['youtube'] = array(
+				'rel' => intval($show_related_media)
+			);
+		}
+		else if(self::is_vimeo_url($url))
+		{
+			$src = 'vimeo';
+		}
+
+		$setup_data = array();
+		$player_width = CoursePress_Helper_Utility::get_array_val( $data, 'video_player_width' );
+		if(!$player_width)
+		{
+			$setup_data['fluid'] = true;
+		}
+		if($src)
+		{
+			$setup_data['techOrder'] = array($src);
+			$setup_data['sources'] = array(
+				array(
+					'type' => 'video/' . $src,
+					'src' => $url
+				)
+			);
+		}
+
+		$setup_data = array_merge($setup_data, $extra_data);
+
+		return json_encode($setup_data);
 	}
 }

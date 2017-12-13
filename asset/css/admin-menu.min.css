@@ -1,0 +1,5 @@
+/*! CoursePress - v2.1.2
+ * https://premium.wpmudev.org/project/coursepress-pro/
+ * Copyright (c) 2017; * Licensed GPLv2+ */
+
+@font-face{font-family:ico-cp;src:url(../font/cp_icon.eot);src:url(../font/cp_icon.eot?#iefix) format("embedded-opentype"),url(../font/cp_icon.ttf) format("truetype"),url(../font/cp_icon.woff) format("woff"),url(../font/cp_icon.svg#icomoon) format("svg");font-weight:400;font-style:normal}#adminmenu #menu-posts-course div.wp-menu-image:before,#post-body .misc-pub-post-course:before{font-family:ico-cp!important;content:"\e600"}#adminmenu #menu-posts-course div.wp-menu-image img{display:none}

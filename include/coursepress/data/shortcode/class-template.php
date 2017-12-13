@@ -84,6 +84,8 @@ class CoursePress_Data_Shortcode_Template {
 		);
 
 		add_filter( 'term_link', array( __CLASS__, 'term_link' ), 10, 3 );
+
+		add_action('coursepress_after_signup_email', array( 'CoursePress_Helper_UI', 'password_strength_meter'));
 	}
 
 	public static function course_archive( $a ) {
@@ -284,7 +286,7 @@ class CoursePress_Data_Shortcode_Template {
 					[course_start label="" course_id="' . $course_id . '"]
 					[course_language label="" course_id="' . $course_id . '"]
 					[course_cost label="" course_id="' . $course_id . '"]
-                    [course_categories course_id="' . $course_id . '"]
+					[course_categories course_id="' . $course_id . '"]
 '.$withdraw_from_course.'
 				</div>' .
 					$button_text . $clickable_text . '
@@ -308,7 +310,7 @@ class CoursePress_Data_Shortcode_Template {
 			array(
 				'course_id' => CoursePress_Helper_Utility::the_course( true ),
 				'before' => '',
-				'after' => '',
+				'after' => ', ',
 				'icon' => '<span class="dashicons dashicons-category"></span>',
 			),
 			$atts,
@@ -434,7 +436,7 @@ class CoursePress_Data_Shortcode_Template {
 		$template = '<div class="coursepress-dashboard-wrapper">
 			[course_list instructor="%1$s" dashboard="true"]
 			[course_list facilitator="%1$s" dashboard="true"]
-			[course_list student="%1$s" dashboard="true" current_label="%2$s"]
+			[course_list student="%1$s" dashboard="true" current_label="%2$s" show_labels="true"]
 		</div>';
 
 		$template = sprintf( $template, $user_id, __( 'Enrolled Courses', 'CP_TD' ) );
@@ -508,10 +510,12 @@ class CoursePress_Data_Shortcode_Template {
 		$module = '';
 		if ( 'module' === $type ) {
 			$module = get_post( $item_id );
-
 			if ( ! is_object( $module ) ) {
 				$item_id = 0;
 				$type = '404';
+			} else if ( $module->post_parent != $unit_id ) {
+				$item_id = 0;
+				$type = '404_module';
 			}
 		}
 
@@ -639,7 +643,7 @@ class CoursePress_Data_Shortcode_Template {
 					$template .= '<h3>'. $page_info['title'] . '</h3>';
 
 					if ( ! empty( $page_info['description'] ) ) {
-						$template .= $page_info['description'];
+						$template .= wpautop( htmlspecialchars_decode( $page_info['description'] ) );
 					}
 				} else {
 					// Show restriction message
@@ -680,7 +684,10 @@ class CoursePress_Data_Shortcode_Template {
 						$content .= self::show_nav_button(
 							$prev,
 							$pre_text,
-							array( 'focus-nav-prev' )
+							array( 'focus-nav-prev' ),
+							'',
+							false,
+							'prev'
 						);
 
 						// Next Navigation
@@ -688,7 +695,9 @@ class CoursePress_Data_Shortcode_Template {
 							$next,
 							$next_text,
 							array( 'focus-nav-next' ),
-							$next_section_title
+							$next_section_title,
+							false,
+							'next'
 						);
 
 						$content .= '</div>'; // .focus-nav
@@ -814,7 +823,10 @@ class CoursePress_Data_Shortcode_Template {
 					$content .= self::show_nav_button(
 						$prev,
 						$pre_text,
-						array( 'focus-nav-prev' )
+						array( 'focus-nav-prev' ),
+						'',
+						false,
+						'prev'
 					);
 
 					// Next Navigation
@@ -839,7 +851,8 @@ class CoursePress_Data_Shortcode_Template {
 						$text,
 						$next_module_class,
 						$title,
-						true
+						true,
+						'next'
 					);
 
 					$content .= '</div>'; // .focus-nav
@@ -866,12 +879,21 @@ class CoursePress_Data_Shortcode_Template {
 				break;
 
 			case '404':
+			case '404_module':
 
 				$content = do_shortcode( '[coursepress_enrollment_templates]' );
 				$content .= '<div class="focus-wrapper">';
 				$content .= '<div class="focus-main section">';
-
-				$content .= '<div class="no-access-message">' . __( 'This unit does not exist.', 'CP_TD' ) . '</div>';
+				$content .= '<div class="no-access-message"><p>';
+				switch ( $type ) {
+					case '404':
+						$content .= __( 'This unit does not exist.', 'CP_TD' );
+					break;
+					case '404_module':
+						$content .= __( 'This module does not exist.', 'CP_TD' );
+					break;
+				}
+				$content .= '</p></div>';
 				$content .= do_shortcode(
 					sprintf(
 						'[course_join_button course_id="%s" details_text="%s"]',
@@ -932,40 +954,56 @@ class CoursePress_Data_Shortcode_Template {
 	 * Generate HTML code for a navigation button (prev/next)
 	 *
 	 * @since  2.0.0
+	 * @since  2.0.8 Added the 'rel' attribute.
+	 *
 	 * @param  array  $button Result of ::get_next_accessible_module().
 	 * @param  string $title Link title.
 	 * @param  array  $classes List of CSS classes of the button.
 	 * @param  string $link_title Tooltip title of the link.
+	 * @param  string $rel Rel attribute.
 	 * @return string HTML code of the button.
 	 */
-	public static function show_nav_button( $button, $title, $classes, $link_title = '', $next = false ) {
+	public static function show_nav_button( $button, $title, $classes, $link_title = '', $next = false, $rel = '' ) {
 		$res = '';
 
+		/**
+		 * The rel attribute
+		 */
+		$rel_attribute = '';
+		if ( ! empty( $rel ) ) {
+			$allowed = array( 'alternate', 'author', 'bookmark', 'external', 'help', 'license', 'next', 'nofollow', 'noreferrer', 'noopener', 'prev', 'search', 'tag' );
+			if ( in_array( $rel, $allowed ) ) {
+				$rel_attribute = sprintf( ' rel="%s"', esc_attr( $rel ) );
+			}
+		}
+
 		if ( $button['id'] ) {
-			$classes = is_array( $classes ) ? implode( ' ', $classes ) : $classes;
+			$c = is_array( $classes ) ? implode( ' ', $classes ) : $classes;
 			if ( $next ) {
 				if ( 'completion_page' == $button['id'] ) {
 					$title = __( 'Finish', 'CP_TD' );
 				}
-				$format = '<button type="submit" name="type-%s" class="button %s" title="%s" data-url="%s">%s</button>';
+				$format = '<button type="submit" name="type-%s" class="button %s" title="%s" data-url="%s"%s>%s</button>';
 				$res = sprintf( $format,
 					$button['type'],
-					esc_attr( $classes ),
+					esc_attr( $c ),
 					esc_attr( $link_title ),
 					esc_url( $button['url'] ),
+					$rel_attribute,
 					$title
 				);
 			} else {
 				$res = sprintf(
-					'<button type="button" class="button %5$s" data-course="%8$s" data-id="%1$s" data-type="%2$s" data-unit="%4$s" data-title="%6$s" data-url="%7$s">%3$s</button>',
+					'<button type="button" class="button %5$s" data-course="%8$s" data-id="%1$s" data-type="%2$s" data-unit="%4$s" data-title="%6$s" data-url="%7$s"%9$s>%3$s</button>',
 					esc_attr( $button['id'] ),
 					esc_attr( $button['type'] ),
 					$title,
 					esc_attr( $button['unit'] ),
-					esc_attr( $classes ),
+					esc_attr( $c ),
 					esc_attr( $link_title ),
 					isset( $button['url'] )? esc_url( $button['url'] ) : '',
-					isset( $button['course_id'] )?  $button['course_id'] : 0
+					isset( $button['course_id'] )?  $button['course_id'] : 0,
+					$rel_attribute
 				);
 			}
 		} else {
@@ -976,8 +1014,18 @@ class CoursePress_Data_Shortcode_Template {
 				esc_attr( $link_title )
 			);
 		}
-
-		return $res;
+		/**
+		 * Allow to change nex/prev buttons content.
+		 *
+		 * @since 2.0.6
+		 *
+		 * @param string $res HTML code of the button.
+		 * @param  array  $button Result of ::get_next_accessible_module().
+		 * @param  string $title Link title.
+		 * @param  array  $classes List of CSS classes of the button.
+		 * @param  string $link_title Tooltip title of the link.
+		 */
+		return apply_filters( 'coursepress_data_shortcode_template_show_nav_button', $res, $button, $title, $classes, $link_title, $next );
 	}
 
 	public static function coursepress_quiz_result( $a ) {

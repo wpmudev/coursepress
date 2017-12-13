@@ -1415,8 +1415,8 @@ class CoursePress_Data_Capabilities {
 	 */
 	public static function is_instructor( $user_id = 0 ) {
 		$user_id = ! $user_id ? get_current_user_id() : $user_id;
-
-		return ( 'instructor' == get_user_option( 'role_ins', $user_id ) );
+		$role_name = self::get_role_instructor_name();
+		return ( 'instructor' == get_user_option( $role_name, $user_id ) );
 	}
 
 	/**
@@ -1485,9 +1485,8 @@ class CoursePress_Data_Capabilities {
 
 		$user_obj = new WP_User( $user_id );
 
-		// This marks a user as "instructor" for any course.
-		$global_option = ! is_multisite();
-		update_user_option( $user_id, 'role_ins', 'instructor', $global_option );
+		$role_name = self::get_role_instructor_name( false );
+		update_user_option( $user_id, $role_name, 'instructor' );
 
 		// do not use reset_user_capabilities()
 		// very dangerous and needs to be rewritten, destroys WP capabilites which we shouldn't be touching
@@ -1530,8 +1529,9 @@ class CoursePress_Data_Capabilities {
 		$user_obj = new WP_User( $user_id );
 
 		// Remove the "instructor" flag from the user again.
-		$global_option = ! is_multisite();
-		delete_user_option( $user_id, 'role_ins', $global_option );
+
+		$role_name = self::get_role_instructor_name();
+		delete_user_option( $user_id, $role_name );
 
 		// do not use reset_user_capabilities()
 		// very dangerous and needs to be rewritten, destroys WP capabilites which we shouldn't be touching
@@ -1666,7 +1666,13 @@ class CoursePress_Data_Capabilities {
 
 		$global_option = ! is_multisite();
 		update_user_option( $user_id, 'cp_role', 'facilitator', $global_option );
-		add_user_meta( $user_id, 'cp_role', 'facilitator' );
+		/**
+		 * add role, but first check it
+		 */
+		$roles = get_user_meta( $user_id, 'cp_role' );
+		if ( ! in_array( 'facilitator', $roles ) ) {
+			add_user_meta( $user_id, 'cp_role', 'facilitator' );
+		}
 
 		// do not use reset_user_capabilities()
 		// very dangerous and needs to be rewritten, destroys WP capabilites which we shouldn't be touching
@@ -1870,5 +1876,27 @@ class CoursePress_Data_Capabilities {
 			}
 		}
 		return $allcaps;
+	}
+
+	/**
+	 * Return instructor role name, depend on site in multisite or single
+	 * site.
+	 *
+	 * @since 2.1.0
+	 * @since 2.1.1 Added the `add_prefix` argument.
+	 *
+	 * @param boolean $add_prefix Add site name prefix.
+	 * @return string $role_name Role name, depended on site.
+	 */
+	public static function get_role_instructor_name( $add_prefix = true ) {
+		$role_name = 'role_ins';
+		/**
+		 * add multisite prefix
+		 */
+		if ( $add_prefix && is_multisite() ) {
+			global $wpdb;
+			$role_name = $wpdb->prefix.$role_name;
+		}
+		return $role_name;
 	}
 }

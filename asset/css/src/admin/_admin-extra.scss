@@ -150,6 +150,8 @@ body[class*="_page_coursepress_course"],
 		}
 		.cp-shortcode-options {
 			li {
+				border-bottom: 1px solid #ddd;
+				padding: 10px 0;
 				span {
 					font-family: monospace;
 					font-weight: bold;
@@ -160,6 +162,14 @@ body[class*="_page_coursepress_course"],
 			font-weight: bold;
 			&.optional {
 				opacity: .8;
+			}
+		}
+		p {
+			margin: 0;
+			&.description,
+			&.options,
+			&.default {
+				padding-left: 3em;
 			}
 		}
 	}

@@ -131,7 +131,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 
 			data.course_excerpt = tinyMCE && tinyMCE.get( 'courseExcerpt' ) ? tinyMCE.get( 'courseExcerpt' ).getContent() : $( '[name="course_excerpt"]' ).val();
 
-			meta_items = $( '.step-content.step-1 [name^="meta_"]' ).serializeArray();
+			meta_items = $( '.cp-box-content.step-1 [name^="meta_"]' ).serializeArray();
 			meta_items = CoursePress.Course.fix_step_checkboxes( meta_items, step );
 			CoursePress.Course.add_array_to_data( data, meta_items );
 		}
@@ -140,35 +140,35 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		if ( 2 <= step ) {
 			data.course_description = tinyMCE && tinyMCE.get( 'courseDescription' ) ? tinyMCE.get( 'courseDescription' ).getContent() : $( '[name="course_description"]' ).val();
 
-			meta_items = $( '.step-content.step-2 [name^="meta_"]' ).serializeArray();
+			meta_items = $( '.cp-box-content.step-2 [name^="meta_"]' ).serializeArray();
 			meta_items = CoursePress.Course.fix_step_checkboxes( meta_items, step, '0' );
 			CoursePress.Course.add_array_to_data( data, meta_items );
 		}
 
 		// Step 3 Data
 		if ( 3 <= step ) {
-			meta_items = $( '.step-content.step-3 [name^="meta_"]' ).serializeArray();
+			meta_items = $( '.cp-box-content.step-3 [name^="meta_"]' ).serializeArray();
 			meta_items = CoursePress.Course.fix_step_checkboxes( meta_items, step, '0' );
 			CoursePress.Course.add_array_to_data( data, meta_items );
 		}
 
 		// Step 4 Data
 		if ( 4 <= step ) {
-			meta_items = $( '.step-content.step-4 [name^="meta_"]' ).serializeArray();
+			meta_items = $( '.cp-box-content.step-4 [name^="meta_"]' ).serializeArray();
 			meta_items = CoursePress.Course.fix_step_checkboxes( meta_items, step, '0' );
 			CoursePress.Course.add_array_to_data( data, meta_items );
 		}
 
 		// Step 1 Data
 		if ( 5 <= step ) {
-			meta_items = $( '.step-content.step-5 [name^="meta_"]' ).serializeArray();
+			meta_items = $( '.cp-box-content.step-5 [name^="meta_"]' ).serializeArray();
 			meta_items = CoursePress.Course.fix_step_checkboxes( meta_items, step, '0' );
 			CoursePress.Course.add_array_to_data( data, meta_items );
 		}
 
 		// Step 1 Data
 		if ( 6 <= step ) {
-			meta_items = $( '.step-content.step-6 [name^="meta_"]' ).serializeArray();
+			meta_items = $( '.cp-box-content.step-6 [name^="meta_"]' ).serializeArray();
 			meta_items = CoursePress.Course.fix_step_checkboxes( meta_items, step, '0' );
 			CoursePress.Course.add_array_to_data( data, meta_items );
 		}
@@ -184,7 +184,14 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 
 			basic_certificate_layout = tinyMCE && tinyMCE.get( 'basic-certificate-layout' ) ? tinyMCE.get( 'basic-certificate-layout' ).getContent() : $( '[name="meta_basic_certificate_layout"]' ).val();
 			$( '[name="meta_basic_certificate_layout"]' ).val( basic_certificate_layout );
-			meta_items = $( '.step-content.step-7 [name^="meta_"]' ).serializeArray();
+			meta_items = $( '.cp-box-content.step-7 [name^="meta_"]' ).serializeArray();
+
+			var basic_cert = $('[name="meta_basic_certificate"]').is(':checked');
+
+			if ( ! basic_cert ) {
+				meta_items.push({name: 'meta_basic_certificate', value:false});
+			}
+
 			meta_items = CoursePress.Course.fix_step_checkboxes( meta_items, step, '0' );
 			CoursePress.Course.add_array_to_data( data, meta_items );
 		}
@@ -237,15 +244,15 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 	};
 	
 	CoursePress.Course.show_message = function( message, notice_class ) {
-		$( ".step-content .course-step-buttons .notice" ).detach();
-		$( ".step-content.ui-accordion-content-active .course-step-buttons" ).prepend( '<div class="notice notice-' + notice_class + '"><p>'+message+'</p></div>' );
+		$( ".cp-box-content .course-step-buttons .notice" ).detach();
+		$( ".cp-box-content.ui-accordion-content-active .course-step-buttons" ).prepend( '<div class="notice notice-' + notice_class + '"><p>'+message+'</p></div>' );
 		if ( "success" === notice_class ) {
-			setTimeout(function(){ $( ".step-content .course-step-buttons .notice" ).fadeOut(); }, 3000);
+			setTimeout(function(){ $( ".cp-box-content .course-step-buttons .notice" ).fadeOut(); }, 3000);
 		}
 	}
 
 	function course_structure_update () {
-		$.each( $( '.step-content .course-structure tr.unit' ), function( uidx, unit ) {
+		$.each( $( '.cp-box-content .course-structure tr.unit' ), function( uidx, unit ) {
 
 			// Make sure its a tree node
 			var match;
@@ -427,22 +434,22 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 	function bind_buttons() {
 		// Show update button...
 		$( '#course-setup-steps input' ).on( 'keyup change', function() {
-			var step_box = $( this ).parents('.step-content')[0];
+			var step_box = $( this ).parents('.cp-box-content')[0];
 			$( step_box ).find('.button.update.hidden' ).removeClass('hidden');
 		} );
 
 		$( '#course-setup-steps select' ).on( 'change', function() {
-			var step_box = $( this ).parents('.step-content')[0];
+			var step_box = $( this ).parents('.cp-box-content')[0];
 			$( step_box ).find('.button.update.hidden' ).removeClass('hidden');
 		} );
 
 		CoursePress.Events.on('editor:keyup', function( e ) {
-			var step_box = $( e.container ).parents('.step-content')[0];
+			var step_box = $( e.container ).parents('.cp-box-content')[0];
 			$( step_box ).find('.button.update.hidden' ).removeClass('hidden');
 		} );
 
 		// NEXT BUTTON
-		$( '.step-content .button.step.prev, .step-content .button.step.next, .step-content .button.step.update, .step-content .button.step.finish' ).on( 'click', function( e ) {
+		$( '.cp-box-content .button.step.prev, .cp-box-content .button.step.next, .cp-box-content .button.step.update, .cp-box-content .button.step.finish' ).on( 'click', function( e ) {
 
 			var target = jQuery( e.currentTarget );
 			var step;
@@ -561,8 +568,12 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		// BROWSE MEDIA BUTTONS
 		$( '.button.browse-media-field' ).browse_media_field();
 
+		if ( $.fn.wpColorPicker ) {
+			$('.certificate-color-picker').wpColorPicker();
+		}
+
 		// Handle Course Structure Checkboxes
-		$( '.step-content .course-structure input[type="checkbox"]' ).on( 'change', function( e ) {
+		$( '.cp-box-content .course-structure input[type="checkbox"]' ).on( 'change', function( e ) {
 			var checkbox = $( e.currentTarget ),
 				target_name = checkbox.attr( 'name' ),
 				type = null != target_name.match( /visible/ ) ? 'visible' : 'preview',
@@ -744,18 +755,18 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 
 		$( '[name="meta_enrollment_type"]' ).on( 'change', function() {
 			var options = $( this ).val();
-			$( '.step-content.step-6 .enrollment-type-options' ).addClass( 'hidden' );
+			$( '.cp-box-content.step-6 .enrollment-type-options' ).addClass( 'hidden' );
 			$( '.step-content.step-6 .enrollment-type-options.' + options ).removeClass( 'hidden' );
 		} );
 
 		// "This is a paid course" checkbox
 		$( '[name="meta_payment_paid_course"]' ).on( 'change', function() {
 			if ( this.checked ) {
-				$( this ).parents( '.step-content.step-6' ).find( '.payment-message' ).removeClass( 'hidden' );
-				$( this ).parents( '.step-content.step-6' ).find( '.is_paid_toggle' ).removeClass( 'hidden' );
+				$( this ).parents( '.cp-box-content.step-6' ).find( '.payment-message' ).removeClass( 'hidden' );
+				$( this ).parents( '.cp-box-content.step-6' ).find( '.is_paid_toggle' ).removeClass( 'hidden' );
 			} else {
-				$( this ).parents( '.step-content.step-6' ).find( '.payment-message' ).addClass( 'hidden' );
-				$( this ).parents( '.step-content.step-6' ).find( '.is_paid_toggle' ).addClass( 'hidden' );
+				$( this ).parents( '.cp-box-content.step-6' ).find( '.payment-message' ).addClass( 'hidden' );
+				$( this ).parents( '.cp-box-content.step-6' ).find( '.is_paid_toggle' ).addClass( 'hidden' );
 			}
 		} );
 
@@ -1039,7 +1050,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 					if ( window.confirm( message ) ) {
 						$(target).html( '<span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span>' );
 						$(target).parent().addClass('removing-process');
-						step_box = $( target ).parents('.step-content')[0];
+						step_box = $( target ).parents('.cp-box-content')[0];
 						$( step_box ).find('.button.update.hidden' ).removeClass('hidden');
 						CoursePress.Course.set( 'action', 'delete_instructor' );
 						data = {
@@ -1065,7 +1076,7 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 					if ( window.confirm( message ) ) {
 						$(target).html( '<span class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></span>' );
 						$(target).parent().addClass('removing-process');
-						step_box = $( target ).parents('.step-content')[0];
+						step_box = $( target ).parents('.cp-box-content')[0];
 						$( step_box ).find('.button.update.hidden' ).removeClass('hidden');
 						CoursePress.Course.set( 'action', 'delete_instructor_invite' );
 						data = {
@@ -1744,8 +1755,8 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 	// UPDATE COURSE
 	CoursePress.updateCourse = function() {
 		var form = $(this),
-			step = $( '#course-setup-steps .step-content:visible .step.next' )
-			finishbutton = $( '#course-setup-steps .step-content:visible .finish.step-7' )
+			step = $( '#course-setup-steps .cp-box-content:visible .step.next' )
+			finishbutton = $( '#course-setup-steps .cp-box-content:visible .finish.step-7' )
 		;
 
 		if ( 0 === step.length && 0 === finishbutton.length ) {
@@ -1787,6 +1798,11 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 
 			window.location = referer;
 			return false;
+		}
+
+		if ( target.is( '#post-preview' ) ) {
+			var href = target.attr('href');
+			window.open(href);
 		}
 
 		form.unbind('submit').submit();
@@ -1907,6 +1923,16 @@ CoursePress.Events = CoursePress.Events || _.extend( {}, Backbone.Events );
 		if ( ! is_active ) {
 			return false;
 		}
+
+		tinymce.triggerSave();
+		var certificate_settings = $('input, textarea', $('.course-certificate')).serialize(),
+			preview_url_parts = [
+				link.attr('href'),
+				certificate_settings
+			];
+
+		window.open(preview_url_parts.join('&'), '_blank');
+		return false;
 	})
 	.on( 'change', '[name="meta_basic_certificate"]', toggleCertificatePreview )
 	.on( 'change', '[name="meta_structure_show_duration"]', toggleTimePreview )

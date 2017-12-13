@@ -4,10 +4,6 @@
  */
 class CoursePress_Data_Unit_Test extends CoursePress_UnitTestCase {
 
-	public function __construct() {
-		parent::__construct();
-	}
-
 	public function test_exists() {
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Unit', 'init_hooks' ) ) );
 		$this->assertTrue( is_callable( array( 'CoursePress_Data_Unit', 'get_format' ) ) );

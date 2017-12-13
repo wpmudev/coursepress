@@ -86,7 +86,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					<input id="unit_name" class="wide" type="text" value="<%= unit_title %>" name="post_title" spellcheck="true">
 					<div class="unit-additional-info">
 					<label class="unit-description">' . __( 'Unit Description', 'CP_TD' ) . '</label>
-					<textarea name="unit_description" class="widefat" id="unit_description_1_1"><%= unit_content %></textarea>
+					<textarea name="unit_description" class="widefat" id="unit_description_1_1"><%- unit_content %></textarea>
 					' . CoursePress_Helper_UI::browse_media_field(
 				'unit_feature_image',
 				'unit_feature_image',
@@ -171,7 +171,7 @@ class CoursePress_View_Admin_Course_UnitBuilder {
 					<p class="description">' . esc_html__( 'The label will be displayed on the Course Overview and Unit page', 'CP_TD' ) . '</p>
 					<input type="text" value="<%= page_label_text %>" name="page_title" class="wide" />
 					<label class="page-description">' . esc_html__( 'Section Description', 'CP_TD' ) . '</label>
-					<textarea name="page_description" id="page_description_1_1"><%= page_description %></textarea>
+					<textarea name="page_description" id="page_description_1_1"><%- page_description %></textarea>
 					' . CoursePress_Helper_UI::browse_media_field(
 				'page_feature_image',
 				'page_feature_image',

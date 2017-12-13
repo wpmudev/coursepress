@@ -65,6 +65,14 @@
   margin: 0 0 0 190px;
   min-height: 340px;
   z-index: 10;
+	.shortcodes-list {
+		.cp-shortcode-examples {
+			code {
+				display: inline-block;
+				padding: 5px 10px;
+			}
+		}
+	}
 }
 
 .tab-content .header-save-button {

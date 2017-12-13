@@ -316,18 +316,7 @@ class CoursePress_Helper_JavaScript {
 			CoursePress::$version
 		);
 
-		$script = CoursePress::$url . 'asset/js/coursepress-front.js';
-		wp_enqueue_script(
-			'coursepress_front',
-			$script,
-			array(
-				'jquery',
-				'jquery-ui-dialog',
-				'underscore',
-				'backbone',
-			),
-			CoursePress::$version
-		);
+		self::coursepress_front_js();
 
 		$course_id = CoursePress_Helper_Utility::the_course( true );
 
@@ -510,6 +499,7 @@ class CoursePress_Helper_JavaScript {
 				'ok' => __( 'OK', 'CP_TD' ),
 				'cancel' => __( 'Cancel', 'CP_TD' ),
 			),
+			'password_strength_meter_enabled' => CoursePress_Helper_Utility::is_password_strength_meter_enabled()
 		);
 
 		/**
@@ -522,5 +512,58 @@ class CoursePress_Helper_JavaScript {
 		$localize_array = apply_filters( 'coursepress_localize_object', $localize_array );
 
 		wp_localize_script( 'coursepress-front-js', '_coursepress', $localize_array );
+
+		$script = CoursePress::$url . 'asset/js/external/video.min.js';
+		wp_enqueue_script(
+			'coursepress-video-js',
+			$script,
+			array('jquery'),
+			CoursePress::$version
+		);
+
+		$script = CoursePress::$url . 'asset/js/external/video-youtube.min.js';
+		wp_enqueue_script(
+			'coursepress-video-youtube-js',
+			$script,
+			array('jquery', 'coursepress-video-js'),
+			CoursePress::$version
+		);
+
+		$script = CoursePress::$url . 'asset/js/external/videojs-vimeo.min.js';
+		wp_enqueue_script(
+			'coursepress-videojs-vimeo-js',
+			$script,
+			array('jquery', 'coursepress-video-js'),
+			'3.0.0'
+		);
+
+		$video_js = CoursePress::$url . 'asset/css/external/video-js.min.css';
+		wp_enqueue_style(
+			'coursepress-video-js-style',
+			$video_js,
+			array(),
+			CoursePress::$version
+		);
+	}
+
+	/**
+	 * coursepress-front_js
+	 *
+	 * @since 2.0.7
+	 */
+	public function coursepress_front_js() {
+		$script = CoursePress::$url . 'asset/js/coursepress-front.js';
+		wp_enqueue_script(
+			'coursepress_front',
+			$script,
+			array(
+				'jquery',
+				'jquery-ui-dialog',
+				'underscore',
+				'backbone',
+			),
+			CoursePress::$version,
+			true
+		);
 	}
 }

@@ -28,7 +28,7 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 	 **/
 	public function process_form() {
 		if ( $this->is_valid_page() ) {
-			if ( ! isset( $_REQUEST['import_id'] ) ) {
+			if ( empty( $_REQUEST['import_id'] ) ) {
 				$file = $_FILES['import'];
 				$is_replace = false;
 				$with_students = false;
@@ -70,7 +70,10 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 				$with_comments = ! empty( $_REQUEST['comments'] ) && $with_students;
 
 				if ( ! empty( $courses ) ) {
-					$courses = json_encode( json_decode( $courses ) );
+				    if ( is_array( $courses ) ) {
+				        $courses = json_encode( $courses );
+                    }
+					$courses = json_decode( $courses );
 					self::course_importer( $courses, $_REQUEST['import_id'], $is_replace, $with_students, $with_comments );
 				} else {
 					self::clear_courses();
@@ -111,6 +114,10 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 	 * Helper function to check memory limit
 	 **/
 	public static function check_memory() {
+	    if ( is_multisite() ) {
+	        return true;
+        }
+
 		$time_limit = (int) ini_get( 'max_execution_time' );
 		$time_limit = $time_limit * 1000000;
 
@@ -138,7 +145,7 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 	 * @param (bool) $with_comments         Whether to import comments of the course
 	 **/
 	public static function course_importer( $courses, $import_id, $replace, $with_students, $with_comments ) {
-		if ( empty( $courses ) ) {
+		if ( empty( $courses ) || ! is_object( $courses ) ) {
 			return;
 		}
 
@@ -173,7 +180,13 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 
 			// Import course and author
 			if ( is_object( $course->course ) ) {
-				$author_id = self::maybe_add_user( $course->author );
+				/**
+				 * sanitize_course author
+				 */
+				$author_id = get_current_user_id();
+				if ( isset( $course->author ) ) {
+					$author_id = self::maybe_add_user( $course->author );
+				}
 				$course->course->post_author = $author_id;
 				$new_course_id = self::_insert_post( $course->course, CoursePress_Data_Course::get_post_type_name(), $replace );
 				$course->course = $new_course_id;
@@ -251,7 +264,7 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 					if ( ! isset( $unit->unit_id ) ) {
 						$the_unit = $unit->unit;
 						$the_unit->post_parent = $new_course_id;
-						$new_unit_id = self::_insert_post( $the_unit, CoursePress_Data_Unit::get_post_type_name() );
+						$new_unit_id = self::_insert_post( $the_unit, CoursePress_Data_Unit::get_post_type_name(), $replace );
 						$course->units->$unit_id->unit_id = $new_unit_id;
 					} else {
 						$new_unit_id = $unit->unit_id;
@@ -294,7 +307,7 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 									if ( ! isset( $module->_module_id ) ) {
 										$module_data = $module;
 										$module_data->post_parent = $new_unit_id;
-										$new_module_id = self::_insert_post( $module_data, CoursePress_Data_Module::get_post_type_name() );
+										$new_module_id = self::_insert_post( $module_data, CoursePress_Data_Module::get_post_type_name(), $replace );
 										$module->_module_id = $new_module_id;
 										$page->modules->$module_id = $module;
 									} else {
@@ -468,7 +481,8 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 			unset( $course->comments->modules );
 
 			// If it reached this far, remove the course
-			unset( $courses->$course_id );
+
+			unset( $courses->{$course_id} );
 		}
 
 		// Save the remaining courses to db
@@ -539,14 +553,11 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 	 **/
 	public static function insert_meta( $post_id, $metas = array() ) {
 		$metas = CoursePress_Helper_Utility::object_to_array( $metas );
-
 		foreach ( $metas as  $key => $values ) {
 			$values = array_map( 'maybe_unserialize', $values );
-
 			if ( is_array( $values ) ) {
 				foreach ( $values as $value ) {
 					$value = maybe_unserialize( $value );
-
 					add_post_meta( $post_id, $key, $value );
 				}
 			} else {
@@ -573,6 +584,9 @@ class CoursePress_Admin_Import extends CoursePress_Admin_Controller_Menu {
 		}
 
 		if ( $add || empty( $user ) ) {
+			if ( empty( $user_data ) ) {
+				return get_current_user_id();
+			}
 			// User doesn't exist, insert
 			unset( $user_data->ID );
 			$user_id = wp_insert_user( get_object_vars( $user_data ) );

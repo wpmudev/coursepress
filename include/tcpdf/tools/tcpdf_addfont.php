@@ -247,7 +247,7 @@ $errors = false;
 
 foreach ($options['fonts'] as $font) {
 	$fontfile = realpath($font);
-	$fontname = TCPDF_FONTS::addTTFfont($fontfile, $options['type'], $options['enc'], $options['flags'], $options['outpath'], $options['platid'], $options['encid'], $options['addcbbox'], $options['link']);
+	$fontname = CP_TCPDF_FONTS::addTTFfont($fontfile, $options['type'], $options['enc'], $options['flags'], $options['outpath'], $options['platid'], $options['encid'], $options['addcbbox'], $options['link']);
 	if ($fontname === false) {
 		$errors = true;
 		echo "--- ERROR: can't add ".$font."\n";

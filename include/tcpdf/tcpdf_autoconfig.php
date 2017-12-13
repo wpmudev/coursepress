@@ -137,11 +137,11 @@ if (!defined('PDF_PAGE_ORIENTATION')) {
 }
 
 if (!defined('PDF_CREATOR')) {
-	define ('PDF_CREATOR', 'TCPDF');
+	define ('PDF_CREATOR', 'CP_TCPDF' );
 }
 
 if (!defined('PDF_AUTHOR')) {
-	define ('PDF_AUTHOR', 'TCPDF');
+	define ('PDF_AUTHOR', 'CP_TCPDF' );
 }
 
 if (!defined('PDF_HEADER_TITLE')) {

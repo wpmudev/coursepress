@@ -100,23 +100,6 @@ input.cp-has-error {
 	}
 }
 
-@media screen and (max-height: 479px) {
-	body {
-		.enrolment-container-div {
-				padding: 1em;
-			.bbm-wrapper {
-				position: static;
-			}
-		}
-	}
-}
-
-@media screen and (min-height: 480px) {
-	.cp-mask {
-		position: fixed;
-	}
-}
-
 .cp-submenu {
 	margin: 0 0 25px 0;
 	display: block;

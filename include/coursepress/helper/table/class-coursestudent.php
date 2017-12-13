@@ -20,8 +20,8 @@
  * Since I will be keeping this tutorial up-to-date for the foreseeable future,
  * I am going to work with the copy of the class provided in WordPress core.
  */
-if ( ! class_exists( 'WP_List_Table' ) ) {
-	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+if ( ! class_exists( 'WP_Users_List_Table' ) ) {
+	require_once( ABSPATH . 'wp-admin/includes/class-wp-users-list-table.php' );
 }
 
 /************************** CREATE A PACKAGE CLASS *****************************
@@ -38,11 +38,14 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  * Our theme for this list table is going to be movies.
  */
 
-class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
+class CoursePress_Helper_Table_CourseStudent extends WP_Users_List_Table {
 
-	private $course_id = 0;
+	protected $course_id = 0;
 	private $add_new = false;
-	private $students = array();
+	protected $students = array();
+	protected $can_withdraw_students = false;
+	private $filter_show = 'all';
+	private $filter_options = array();
 
 	/** ************************************************************************
 	 * REQUIRED. Set up a constructor that references the parent constructor. We
@@ -55,6 +58,93 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 			'ajax' => false,// should this table support ajax?
 		) );
 
+		/**
+		 * add filters
+		 */
+		add_filter( 'user_row_actions', array( $this, 'student_row_actions' ), 10, 2 );
+		add_filter( 'manage_users_custom_column', array( $this, 'columns' ), 10, 3 );
+		add_filter( 'views_course', array( $this, 'views_array_filter' ) );
+
+		/**
+		 * set course ID
+		 */
+		if ( CoursePress_Data_Course::is_course( $this->course_id ) ) {
+			$this->can_withdraw_students = CoursePress_Data_Capabilities::can_withdraw_students( $this->course_id );
+		}
+
+		/**
+		 * filter options
+		 */
+		$this->filter_options = array(
+			'all' => __( 'All', 'CP_TD' ),
+			'yes' => __( 'Certified', 'CP_TD' ),
+			'no' => __( 'Not certified', 'CP_TD' ),
+		);
+		if ( isset( $_REQUEST['certified'] ) && array_key_exists( $_REQUEST['certified'], $this->filter_options ) ) {
+			$this->filter_show = $_REQUEST['certified'];
+		}
+	}
+
+	/**
+	 * Show quick filter.
+	 *
+	 * @since 2.0.8
+	 */
+	public function views_array_filter( $views ) {
+		global $post;
+		$views = array();
+		$pattern = '<a href="%s" class="%s">%s</a>';
+		$url = add_query_arg(
+			array(
+				'post_type' => $post->post_type,
+				'post' => $post->ID,
+				'action' => 'edit',
+				'tab' => 'students',
+			),
+			admin_url( 'post.php' )
+		);
+		foreach ( $this->filter_options as $key => $label ) {
+			$action_url = add_query_arg( 'certified', $key, $url );
+			$class = $key == $this->filter_show? 'current':'';
+			$views[ $key ] = sprintf(
+				$pattern,
+				esc_url( $action_url ),
+				$class,
+				esc_html( $label )
+			);
+		}
+		return $views;
+	}
+
+	/**
+	 * Get student object by student id.
+	 *
+	 * @since 2.0.8
+	 *
+	 * @param integer $ID Student ID.
+	 * @return null|WP User Student object.
+	 */
+	protected function get_student( $ID ) {
+		foreach ( $this->items as $item ) {
+			if ( $ID == $item->ID ) {
+				return $item;
+			}
+		}
+		return null;
+	}
+
+	public function columns( $content, $column_name, $item_id ) {
+		switch ( $column_name ) {
+			case 'display_name':
+			case 'first_name':
+			case 'last_name':
+			return sprintf(
+				'%s', get_user_option( $column_name, $item_id )
+			);
+			case 'certificates':
+			return $this->column_certificates( $item_id );
+		}
+		return $content;
 	}
 
 	public function set_course( $id ) {
@@ -93,12 +183,11 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 		$course_id = isset( $_GET['id'] ) ? (int) $_GET['id'] : null;
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
-			'ID' => __( 'ID', 'CP_TD' ),
-			'display_name' => __( 'Username', 'CP_TD' ),
+			'username' => __( 'Username', 'CP_TD' ),
+		    'display_name' => __( 'Display Name', 'CP_TD' ),
 			'first_name' => __( 'First Name', 'CP_TD' ),
 			'last_name' => __( 'Last Name', 'CP_TD' ),
 			'certificates' => __( 'Certified', 'CP_TD' ),
-			'actions' => __( 'Withdraw', 'CP_TD' ),
 		);
 
 		if ( ! CoursePress_Data_Capabilities::can_withdraw_students( $course_id ) ) {
@@ -127,7 +216,13 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 	 * @return array An associative array containing all the columns that should be sortable: 'slugs'=>array('data_values',bool)
 	 **************************************************************************/
 	public function get_sortable_columns() {
-		return array( 'title' => array( 'title', false ) );
+		$c = array(
+			'display_name' => array( 'display_name', false ),
+			'first_name' => array( 'first_name', false ),
+			'last_name' => array( 'last_name', false ),
+			'username' => array( 'login', false ),
+		);
+		return $c;
 	}
 
 	/** ************************************************************************
@@ -145,7 +240,7 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 		);
 	}
 
-	public function column_ID( $item ) {
+	public function student_row_actions( $actions, $item ) {
 		$this->students[] = $item->ID;
 		$profile_link = CoursePress_Data_Student::get_admin_profile_url( $item->ID );
 		$workbook_link = add_query_arg(
@@ -165,15 +260,11 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 				admin_url( 'edit.php' )
 			)
 		);
-		$title = sprintf(
-			'<strong><a href="%s">%d</a></strong>',
-			esc_url( $profile_link ),
-			$item->ID
-		);
 
 		$actions = array(
-			'profile' => sprintf( '<a href="%s">%s</a>', $profile_link, __( 'Student Profile', 'CP_TD' ) ),
-			'workbook' => sprintf( '<a href="%s">%s</a>', $workbook_link, __( 'Workbook', 'CP_TD' ) ),
+			'id' => sprintf( '<span>%s</span>', esc_html( sprintf( __( 'ID: %d', 'CP_TD' ), $item->ID ) ) ),
+			'profile' => sprintf( '<a href="%s">%s</a>', $profile_link, esc_html__( 'Student Profile', 'CP_TD' ) ),
+			'workbook' => sprintf( '<a href="%s">%s</a>', $workbook_link, esc_html__( 'Workbook', 'CP_TD' ) ),
 		);
 
 		if ( current_user_can( 'edit_users' ) ) {
@@ -191,37 +282,15 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 			);
 		}
 
-		return $title . $this->row_actions( $actions );
-	}
-
-	public function column_display_name( $item ) {
-		return sprintf(
-			'%s', $item->display_name
-		);
-	}
-
-	public function column_first_name( $item ) {
-		return sprintf(
-			'%s', get_user_option( 'first_name', $item->ID )
-		);
-	}
-
-	public function column_last_name( $item ) {
-		return sprintf(
-			'%s', get_user_option( 'last_name', $item->ID )
-		);
-	}
-
-	public function column_actions( $item ) {
-		$course_id = isset( $_GET['id'] ) ? (int) $_GET['id'] : null;
-		$nonce = wp_create_nonce( 'withdraw-single-student' );
-		$withdraw = sprintf(
-			'<a href="" class="withdraw-student" data-id="%s" data-nonce="%s"><i class="fa fa-times-circle remove-btn"></i></a>', $item->ID, $nonce
-		);
-
-		if ( CoursePress_Data_Capabilities::can_withdraw_students( $course_id ) ) {
-			echo $withdraw;
+		if ( $this->can_withdraw_students ) {
+			$actions['trash'] = sprintf(
+				'<a href="#" class="withdraw-student" data-id="%s" data-nonce="%s">%s</a>',
+				esc_attr( $item->ID ),
+				esc_attr( wp_create_nonce( 'withdraw-single-student-'.$item->ID ) ),
+				esc_html__( 'Withdraw', 'CP_TD' )
+			);
 		}
+		return $actions;
 	}
 
 	/** ************************************************************************
@@ -261,8 +330,12 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 
 		// Could use the Course Model methods here, but lets try stick to one query
 		$query_args = array(
-			'meta_key' => $course_meta_key,
-			'meta_compare' => 'EXISTS',
+			'meta_query' => array(
+				array(
+					'key' => $course_meta_key,
+					'compare' => 'EXISTS',
+				),
+			),
 			'number' => $per_page,
 			'offset' => $offset,
 		);
@@ -272,12 +345,50 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 			$query_args['search'] = '*' . $usersearch . '*';
 		}
 
-		$users = new WP_User_Query( $query_args );
+		if ( isset( $_REQUEST['orderby'] ) ) {
+			$query_args['orderby'] = $_REQUEST['orderby'];
+			switch ( $_REQUEST['orderby'] ) {
+				case 'first_name':
+				case 'last_name':
+					$query_args['meta_query'] = array(
+					'relation' => 'AND',
+					array(
+						'key' => $_REQUEST['orderby'],
+						'compare' => 'EXISTS',
+					),
+					array(
+						'key' => $course_meta_key,
+						'compare' => 'EXISTS',
+					),
+					);
+					$query_args['orderby'] = 'meta_value';
+					break;
+			}
+		}
+		if ( isset( $_REQUEST['order'] ) ) {
+			$query_args['order'] = $_REQUEST['order'];
+		}
 
 		/**
 		 * fil certificates
 		 */
 		$certificates = CoursePress_Data_Certificate::get_certificated_students_by_course_id( $this->course_id );
+
+		/**
+		 * Certificates
+		 */
+		if ( ! empty( $certificates ) ) {
+			switch ( $this->filter_show ) {
+				case 'no':
+					$query_args['exclude'] = $certificates;
+				break;
+				case 'yes':
+					$query_args['include'] = $certificates;
+				break;
+			}
+		}
+
+		$users = new WP_User_Query( $query_args );
 
 		foreach ( $users->get_results() as $one ) {
 			$one->data->certified = in_array( $one->ID, $certificates )? 'yes' : 'no';
@@ -390,11 +501,11 @@ class CoursePress_Helper_Table_CourseStudent extends WP_List_Table {
 	 *
 	 * @since 2.0.0
 	 */
-	public function column_certificates( $item ) {
-		$value = 'no';
+	public function column_certificates( $item_id ) {
+		$item = $this->get_student( $item_id );
 		if ( 'yes' == $item->data->certified ) {
-			$value = 'yes';
+			return sprintf( '<span class="cp-certified">%s</span>', esc_html__( 'Certified', 'CP_TD' ) );
 		}
-		return sprintf( '<span class="dashicons dashicons-%s"></span>', $value );
+		return '<span class="dashicons dashicons-no"></span>';
 	}
 }

@@ -8,7 +8,7 @@
 	<div class="status <?php echo $setup_class; ?>"></div>
 </div>
 
-<div class="step-content step-1">
+<div class="cp-box-content step-content step-1">
 	<input type="hidden" name="meta_setup_step_1" value="saved" />
 	<input type="hidden" name="course_id" value="<?php echo $course_id; ?>" />
 
@@ -25,7 +25,7 @@
 
 	<div class="wide">
 		<label for="courseExcerpt" class="required drop-line"><?php _e( 'Short Overview', 'CP_TD' ); ?></label>
-		<?php echo static::get_wp_editor( 'courseExcerpt', 'course_excerpt', $editor_content, array( 'teeny' => true ) ); ?>
+		<?php echo CoursePress_Helper_Editor::get_wp_editor( 'courseExcerpt', 'course_excerpt', $editor_content, array( 'teeny' => true ) ); ?>
 	</div>
 	<?php
 	/**
@@ -60,6 +60,6 @@
 
 	<?php
 	// Print buttons
-	echo static::get_buttons( $course_id, 1, array( 'previous' => false ) );
+	echo CoursePress_View_Admin_Course_Edit::get_buttons( $course_id, 1, array( 'previous' => false ) );
 	?>
 </div>

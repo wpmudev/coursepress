@@ -843,7 +843,11 @@ class CoursePress_View_Front_Course {
 			if ( isset( $_REQUEST['action'] ) && isset( $_REQUEST['_wpnonce'] ) ) {
 				if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'enroll_student' ) ) {
 					$user_id = get_current_user_id();
-					CoursePress_Data_Course::enroll_student( $user_id, $cp->course_id );
+					$type = CoursePress_Data_Course::get_setting( $cp->course_id, 'enrollment_type' );
+					//Enroll user only if passcode not required for course
+					if ( 'passcode' != $type ) {
+						CoursePress_Data_Course::enroll_student( $user_id, $cp->course_id );
+					}
 				}
 			}
 

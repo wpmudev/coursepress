@@ -9,7 +9,9 @@ class CoursePress_UnitTestCase extends WP_UnitTestCase {
 	protected $modules;
 	protected $student;
 
-	public function __construct() {
+	public function setUp() {
+		parent::setUp();
+
 		$helper = new CoursePress_Tests_Helper();
 		$this->admin = get_user_by( 'login', 'admin' );
 		/**
@@ -28,6 +30,13 @@ class CoursePress_UnitTestCase extends WP_UnitTestCase {
 		 * Set course data
 		 */
 		$this->course = $helper->get_course();
+	}
+
+	public function tearDown()
+	{
+		_delete_all_data();
+
+		parent::tearDown();
 	}
 
 	protected function get_modules() {

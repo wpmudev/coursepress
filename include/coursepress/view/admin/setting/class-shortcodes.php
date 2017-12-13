@@ -1294,7 +1294,7 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 						'default' => __( 'Access Course', 'CP_TD' ),
 					),
 					'list_page' => array(
-						'content' => __( 'Show button to course details..', 'CP_TD' ),
+						'content' => __( 'Show button to course details.', 'CP_TD' ),
 						'default' => 'false',
 					),
 					'not_started_text' => array(
@@ -1417,8 +1417,12 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 			'content' => __( 'Displays a listing of courses. Can be for all courses or restricted by instructors or students (only one or the other, if both specified only students will be used).', 'CP_TD' ),
 			'parameters' => array(
 				'optional' => array(
+					'categories' => array(
+						'content' => __( 'A comma separated category slugs to show courses on specific course categories.', 'CP_TD' ),
+						'default' => 'empty',
+					),
 					'completed_label' => array(
-						'content' => __( 'Label for completed courses list..', 'CP_TD' ),
+						'content' => __( 'Label for completed courses list.', 'CP_TD' ),
 						'default' => __( 'Completed courses', 'CP_TD' ),
 					),
 					'context' => array(
@@ -1439,7 +1443,7 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 						'default' => __( 'Facilitated Courses', 'CP_TD' ),
 					),
 					'facilitator' => array(
-						'content' => __( 'If jest true or "yes" switch content to "facilitator".', 'CP_TD' ),
+						'content' => __( 'If this true or "yes" switch content to "facilitator".', 'CP_TD' ),
 						'default' => 'empty',
 					),
 					'future_label' => array(
@@ -1468,9 +1472,15 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 						'default' => __( 'Manage Courses', 'CP_TD' ),
 					),
 					'order' => array(
-						'content' => __( 'Order the courses by title. "ASC" for ascending order. "DESC" for descending order.', 'CP_TD' ),
+						'content' => __( 'Order the courses. "ASC" for ascending order. "DESC" for descending order.', 'CP_TD' ),
 						'default' => __( 'ASC', 'CP_TD' ),
 						'options' => array( 'ASC', 'DESC' ),
+					),
+					'orderby' => array(
+						'content' => __( 'Orderby the courses by course date or by course title.', 'CP_TD' ),
+						'default' => __( 'meta', 'CP_TD' ),
+                        'options' => array( 'meta', 'title' ),
+                        'description' => __('It works only with default "context".', 'CP_TD' ),
 					),
 					'past_label' => array(
 						'content' => __( 'Label before past courses.', 'CP_TD' ),
@@ -1488,7 +1498,12 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 						'content' => __( 'Messge displayed when student is not enroled to any course.', 'CP_TD' ),
 						'default' => sprintf(
 							__( 'You are not enrolled in any courses. %s', 'CP_TD' ),
-							htmlentities( __( '<a href="%s">See available courses.</a>', 'CP_TD' ) )
+							htmlentities(
+								sprintf(
+									__( '<a href="%s">See available courses.</a>', 'CP_TD' ),
+									esc_attr( '/'.CoursePress_Core::get_setting( 'slugs/course', 'courses' ) )
+								)
+							)
 						),
 					),
 					'student' => array(
@@ -1791,22 +1806,25 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 					$attributes = $data['parameters'][ $kind ];
 					ksort( $attributes );
 					foreach ( $attributes as $attr_name => $attr_data ) {
-						$content .= '<li>';
+                        $content .= sprintf( '<li class="shortcode-%s">', esc_attr( $attr_name ) );
+                        $content .= '<p>';
 						$content .= sprintf( '<span>%s</span>', esc_html( $attr_name ) );
 						if ( isset( $attr_data['content'] ) ) {
 							$content .= ' &ndash; ';
 							$content .= $attr_data['content'];
 						}
 						if ( isset( $attr_data['options'] ) ) {
-							$content .= ' ';
+							$content .= '<p class="options">';
 							$options = '<em>'.implode( '</em>, <em>', $attr_data['options'] ).'</em>';
-							$content .= sprintf( __( 'Options: %s.', 'CP_TD' ), $options );
+                            $content .= sprintf( __( 'Options: %s.', 'CP_TD' ), $options );
+                            $content .= '</p>';
 							if ( isset( $attr_data['options_description'] ) && ! empty( $attr_data['options_description'] ) ) {
 								$content .= sprintf( '<p class="description">%s</p>', esc_html( $attr_data['options_description'] ) );
 							}
-						}
+                        }
+                        $content .= '</p>';
 						if ( isset( $attr_data['default'] ) && ! empty( $attr_data['default'] ) ) {
-							$content .= ' ';
+							$content .= '<p class="default">';
 							switch ( $attr_data['default'] ) {
 								case ':':
 									$content .= __( 'Default is colon (<em>:</em>)', 'CP_TD' );
@@ -1826,9 +1844,13 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 									} else {
 										$content .= sprintf( __( 'Default: "<em>%s</em>"', 'CP_TD' ), htmlentities( $attr_data['default'] ) );
 									}
-							}
+                            }
+                            $content .= '</p>';
+                        }
+                            if ( isset( $attr_data['description'] ) ) {
+                                $content .= sprintf( '<p class="description">%s</p>', $attr_data['description'] );
+                            }
 							$content .= '</li>';
-						}
 					}
 						$content .= '</ul>';
 						$content .= '</div>';
@@ -1839,7 +1861,7 @@ class CoursePress_View_Admin_Setting_Shortcodes {
 			$content .= wpautop( __( 'This shortcode has no parameters.', 'CP_TD' ) );
 		}
 		if ( isset( $data['examples'] ) && is_array( $data['examples'] ) && ! empty( $data['examples'] ) ) {
-			$content .= '<div cp-shortcode-examples">';
+			$content .= '<div class="cp-shortcode-examples">';
 			$content .= sprintf( '<p class="cp-shortcode-subheading">%s</p>', esc_attr__( 'Examples:', 'CP_TD' ) );
 			$content .= '<code>';
 			$content .= join( $data['examples'], '<br />' );

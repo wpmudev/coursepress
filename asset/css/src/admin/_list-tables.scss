@@ -35,11 +35,49 @@
 		width: 90px;
 	}
 }
+
 .post-type-course {
 	.column-certificates,
-	.column-students {
+	.column-grade,
+	.column-modules,
+	.column-students,
+	.column-view_all {
 		width: 100px;
-		text-align: center !important;
+		text-align: center;
+	}
+	table {
+		&.users {
+			.column-certificates {
+				width: 7em;
+				vertical-align: middle;
+				.cp-certified {
+					font-size: 1em;
+					margin: 0;
+				}
+			}
+			.column-username {
+				.row-actions {
+					.id {
+						span {
+							color: #000;
+						}
+					}
+				}
+			}
+			.column-grade,
+			.column-modules,
+			.column-view_all {
+				width: 5em;
+			}
+			.column-last_active {
+				width: 8em;
+			}
+			td {
+				&.column-grade {
+					text-align: right;
+				}
+			}
+		}
 	}
 	.column-taxonomy-course_category,
 	.column-date_start,
@@ -48,6 +86,17 @@
 	.column-date_enrollment_end,
 	.column-units {
 		width: 130px;
+	}
+	.column-paid {
+		width: 40px;
+        text-align: center;
+        .free {
+            opacity: .6;
+        }
+        .paid {
+            font-weight: bold;
+            color: red;
+        }
 	}
 }
 

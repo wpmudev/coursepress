@@ -56,10 +56,15 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 		$is_enabled = cp_is_true( $is_enabled );
 		$use_cp_default = CoursePress_Core::get_setting( 'basic_certificate/use_cp_default', false );
 		$cert_background = CoursePress_Core::get_setting( 'basic_certificate/background_image' );
+		$cert_logo = CoursePress_Core::get_setting( 'basic_certificate/logo_image' );
+		$cert_logo_x = CoursePress_Core::get_setting( 'basic_certificate/logo/x' );
+		$cert_logo_y = CoursePress_Core::get_setting( 'basic_certificate/logo/y' );
+		$cert_logo_width = CoursePress_Core::get_setting( 'basic_certificate/logo/width' );
 		$cert_margin_top = CoursePress_Core::get_setting( 'basic_certificate/margin/top' );
 		$cert_margin_left = CoursePress_Core::get_setting( 'basic_certificate/margin/left' );
 		$cert_margin_right = CoursePress_Core::get_setting( 'basic_certificate/margin/right' );
 		$cert_orientation = CoursePress_Core::get_setting( 'basic_certificate/orientation', 'L' );
+		$text_color = CoursePress_Core::get_setting( 'basic_certificate/text_color' );
 		$allowed_extensions = CoursePress_Helper_Utility::get_image_extensions();
 
 		ob_start();
@@ -195,6 +200,56 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 			</tr>
 
 			<tr>
+				<th><?php esc_html_e( 'Logo', 'CP_TD' ); ?></th>
+				<td>
+				<div class="certificate_logo_image_holder">
+					<input class="image_url certificate_logo_url"
+						type="text"
+						size="36"
+						name="coursepress_settings[basic_certificate][logo_image]"
+						value="<?php echo esc_attr( $cert_logo ); ?>"
+						placeholder="<?php esc_attr_e( 'Add Image URL or Browse for Image', 'CP_TD' ); ?>" />
+					<input class="certificate_logo_button button-secondary"
+						type="button"
+						value="<?php esc_attr_e( 'Browse', 'CP_TD' ); ?>" />
+					<div class="invalid_extension_message">
+						<?php
+						printf(
+							esc_html__( 'Extension of the file is not valid. Please use one of the following: %s', 'CP_TD' ),
+							implode( ', ', $allowed_extensions )
+						);
+						?>
+					</div>
+				</div>
+				</td>
+			</tr>
+
+			<tr>
+				<th>
+					<?php esc_html_e( 'Logo Position', 'CP_TD' ); ?><br />
+				</th>
+				<td>
+					<span><?php esc_html_e( 'X', 'CP_TD' ); ?></span>
+					<input type="number"
+						   class="logo_x small-text"
+						   name="coursepress_settings[basic_certificate][logo][x]"
+						   value="<?php echo esc_attr( $cert_logo_x ); ?>" />
+
+					<span><?php esc_html_e( 'Y', 'CP_TD' ); ?></span>
+					<input type="number"
+						   class="logo_y small-text"
+						   name="coursepress_settings[basic_certificate][logo][y]"
+						   value="<?php echo esc_attr( $cert_logo_y ); ?>" />
+
+					<span><?php esc_html_e( 'Width', 'CP_TD' ); ?></span>
+					<input type="number"
+						   class="logo_width small-text"
+						   name="coursepress_settings[basic_certificate][logo][width]"
+						   value="<?php echo esc_attr( $cert_logo_width ); ?>" />
+				</td>
+			</tr>
+
+			<tr>
 				<th>
 					<?php esc_html_e( 'Content Margin', 'CP_TD' ); ?><br />
 				</th>
@@ -235,6 +290,24 @@ class CoursePress_View_Admin_Setting_BasicCertificate {
 						</option>
 					</select>
 				</td>
+			</tr>
+
+			<tr>
+				<th>
+					<?php esc_html_e( 'Text Color', 'CP_TD' ); ?><br />
+				</th>
+				<td style="padding: 15px 0;">
+					<input
+						type="text"
+						name="coursepress_settings[basic_certificate][text_color]"
+						id="cert_field_text_color"
+						class="certificate-color-picker"
+						value="<?php echo esc_attr($text_color); ?>" />
+				</td>
+				<?php
+					wp_enqueue_script( 'wp-color-picker' );
+					wp_enqueue_style( 'wp-color-picker' );
+				?>
 			</tr>
 
 			</tbody>
