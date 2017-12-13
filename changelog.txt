@@ -5,6 +5,8 @@ Build Time:  BUILDTIME
 CHANGELOG
 =================================================
 
+* Fixed: PHP notices when try to edit not exited unit.
+
 = 2.1.3 =
 -------------------------------------------------
 * Fixed: Unit and Pages TinyMCE editor does not work after WordPress update to 4.9.

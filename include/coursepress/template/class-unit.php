@@ -30,9 +30,16 @@ class CoursePress_Template_Unit {
 
 		if ( empty( $unit_id ) ) {
 			$unit = CoursePress_Helper_Utility::the_post();
-			$unit_id = $unit->ID;
+			if ( is_object( $unit ) ) {
+				$unit_id = $unit->ID;
+			}
 		} else {
 			$unit = get_post( $unit_id );
+		}
+
+		if ( ! is_a( $unit, 'WP_Post' ) ) {
+			$unit = new stdClass();
+			$unit->ID = 0;
 		}
 
 		if ( empty( $page ) ) {
@@ -197,7 +204,7 @@ class CoursePress_Template_Unit {
 
 				$page_description = get_post_meta( $unit->ID, 'page_description', true );
 				if ( ! empty( $page_description[ 'page_' . $page ] ) ) {
-					$content .= wpautop( htmlspecialchars_decode($page_description[ 'page_' . $page ]));
+					$content .= wpautop( htmlspecialchars_decode( $page_description[ 'page_' . $page ] ) );
 				}
 
 				$content .= '</div>';
