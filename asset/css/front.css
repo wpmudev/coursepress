@@ -126,24 +126,27 @@ input.cp-has-error {
 
 .cp-submenu {
   margin: 0 0 25px 0;
-  display: block;
 }
 .cp-submenu .submenu {
-  list-style: outside none none;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  list-style: outside none none;
   margin: 0;
   padding: 0 0 5px 0;
+  width: 100%;
 }
-.cp-submenu .submenu-item {
-  display: table-cell;
+.cp-submenu .submenu .submenu-item {
   margin: 0 5px 0 0;
   padding: 0;
+  display: inline;
 }
-.cp-submenu .submenu-item.submenu-active {
+.cp-submenu .submenu .submenu-item.submenu-active {
   opacity: .6;
 }
-.cp-submenu .submenu-item a {
+.cp-submenu .submenu .submenu-item a {
   padding: 4px 12px;
   text-decoration: none;
   outline: 0;

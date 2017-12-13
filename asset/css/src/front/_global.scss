@@ -102,27 +102,25 @@ input.cp-has-error {
 
 .cp-submenu {
 	margin: 0 0 25px 0;
-	display: block;
-
 	.submenu {
-		list-style: outside none none;
 		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-		overflow: hidden;
+		display: flex;
+		flex-wrap: wrap;
+		list-style: outside none none;
 		margin: 0;
 		padding: 0 0 5px 0;
-	}
-	.submenu-item {
-		display: table-cell;
-		margin: 0 5px 0 0;
-		padding: 0;
-
-		&.submenu-active {
-			opacity: .6;
-		}
-
-		a {
-			padding: 4px 12px;
-			@include reset_a;
+		width: 100%;
+		.submenu-item {
+			margin: 0 5px 0 0;
+			padding: 0;
+			display: inline;
+			&.submenu-active {
+				opacity: .6;
+			}
+			a {
+				padding: 4px 12px;
+				@include reset_a;
+			}
 		}
 	}
 }
