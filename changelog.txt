@@ -10,6 +10,7 @@ CHANGELOG
 * Fixed: Course certificate email settings were hidden for non premium users.
 * Fixed: Typo on MarketPress integration box.
 * Fixed: Typo in notifications configuration.
+* Fixed: Show unit progres on admin panel.
 * Improved: Added filters to get_time_estimation() functions: coursepress_course_get_time_estimation, coursepress_unit_get_time_estimation, coursepress_module_get_time_estimation.
 
 = 2.1.3 =
