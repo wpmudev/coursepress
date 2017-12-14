@@ -70,7 +70,7 @@
 			</label>
 			<label class="checkbox">
 				<input type="checkbox" name="meta_structure_show_empty_units" <?php checked( true, ! empty( $structure_show_empty_units ) ); ?> />
-				<span><?php _e( 'Show units without modules', 'cp' ); ?></span>
+				<span><?php _e( 'Show units without modules', 'CP_TD' ); ?></span>
 				<p class="description"><?php _e( 'By default unit without modules is not displayed, even if it is selected below.', 'CP_TD' ); ?></p>
 			</label>
 
