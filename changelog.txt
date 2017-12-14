@@ -12,6 +12,7 @@ CHANGELOG
 * Fixed: Typo in notifications configuration.
 * Fixed: Show unit progres on admin panel.
 * Fixed: PHP notices when try to edit not exited unit.
+* Fixed: Problem with display course sub-menu on frontend.
 * Improved: Added filters to get_time_estimation() functions: coursepress_course_get_time_estimation, coursepress_unit_get_time_estimation, coursepress_module_get_time_estimation.
 
 = 2.1.3 =
