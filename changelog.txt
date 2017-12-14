@@ -17,6 +17,7 @@ CHANGELOG
 * Fixed: Problem with display course sub-menu on frontend.
 * Fixed: Missing new instructor on instructors list.
 * Improved: Added filters to get_time_estimation() functions: coursepress_course_get_time_estimation, coursepress_unit_get_time_estimation, coursepress_module_get_time_estimation.
+* Improved: Prevent save units before fetching all data.
 
 = 2.1.3 =
 -------------------------------------------------
