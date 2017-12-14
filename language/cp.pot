@@ -1,10 +1,10 @@
-# Copyright (C) 2017 
-# This file is distributed under the same license as the  package.
+# Copyright (C) 2017 WPMU DEV
+# This file is distributed under the GPL2.
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: CoursePress Base PLUGIN_VERSION\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/coursepress\n"
-"POT-Creation-Date: 2017-11-13 06:36:24+00:00\n"
+"POT-Creation-Date: 2017-12-14 07:34:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -542,7 +542,7 @@ msgstr ""
 #: admin/class-edit.php:614
 msgid ""
 "To start selling your course, please <a href=\"%s\">complete setup</a> of "
-"of MarketPress."
+"MarketPress."
 msgstr ""
 
 #: admin/class-edit.php:619
@@ -8745,6 +8745,30 @@ msgstr ""
 msgid "Displays a selected course structure"
 msgstr ""
 
+#. Plugin Name of the plugin/theme
+msgid "CoursePress Base"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://premium.wpmudev.org/project/coursepress/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"CoursePress Pro turns WordPress into a powerful online learning platform. "
+"Set up online courses by creating learning units with quiz elements, video, "
+"audio etc. You can also assess student work, sell your courses and much "
+"much more."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "WPMU DEV"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://premium.wpmudev.org"
+msgstr ""
+
 #: admin/class-courses.php:352
 msgctxt "verb"
 msgid "Trash"
@@ -8792,7 +8816,7 @@ msgctxt "comment status"
 msgid "Spam"
 msgstr ""
 
-#: coursepress.php:64
+#: coursepress.php:80
 msgctxt "plugin name"
 msgid "CoursePress Pro"
 msgstr ""
