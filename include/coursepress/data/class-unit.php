@@ -98,7 +98,15 @@ class CoursePress_Data_Unit {
 		$estimations = CoursePress_Helper_Utility::set_array_value( $estimations, 'unit/components/hours', $time['hours'] );
 		$estimations = CoursePress_Helper_Utility::set_array_value( $estimations, 'unit/components/minutes', $time['minutes'] );
 		$estimations = CoursePress_Helper_Utility::set_array_value( $estimations, 'unit/components/seconds', $time['seconds'] );
-		return $estimations;
+		/**
+		 * Allow to change duration for unit.
+		 *
+		 * @since 2.0.6
+		 *
+		 * @param array $duration Current duration array.
+		 * @param integer $unit_id Unit ID.
+		 */
+		return apply_filters( 'coursepress_unit_get_time_estimation', $estimations, $unit_id );
 	}
 
 	static function by_name( $slug, $id_only, $post_parent = '' ) {

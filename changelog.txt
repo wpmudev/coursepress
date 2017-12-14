@@ -7,8 +7,18 @@ CHANGELOG
 
 = 2.1.4 =
 -------------------------------------------------
+* Fixed: Discussion layout issue.
+* Fixed: Course certificate email settings were hidden for non premium users.
+* Fixed: On a course structure show section without modules if "Show units without modules" is checked.
 * Fixed: Typo on MarketPress integration box.
 * Fixed: There was no ability to remove instructor.
+* Fixed: Typo in notifications configuration.
+* Fixed: Show unit progres on admin panel.
+* Fixed: PHP notices when try to edit not exited unit.
+* Fixed: Problem with display course sub-menu on frontend.
+* Fixed: Missing new instructor on instructors list.
+* Improved: Added filters to get_time_estimation() functions: coursepress_course_get_time_estimation, coursepress_unit_get_time_estimation, coursepress_module_get_time_estimation.
+* Improved: Prevent save units before fetching all data.
 
 = 2.1.3 =
 -------------------------------------------------

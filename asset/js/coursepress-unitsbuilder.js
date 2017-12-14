@@ -1454,8 +1454,11 @@ var CoursePress = CoursePress || {};
 		fetchModules: function( unit_id, page ) {
 
 			this.module_collection.url = _coursepress._ajax_url + '?action=unit_builder&task=modules&course_id=' + _coursepress.course_id + '&unit_id=' + unit_id + '&page=' + page;
-			this.module_collection.fetch();
-
+			this.module_collection.fetch({
+				success: function() {
+					 $('.unit-save-button').removeClass( 'disabled' );
+				}
+			});
 			// Get the number of pages
 			var meta = this.unit_collection._byId[ this.activeUnitRef ].get( 'meta' );
 			this.totalPages = meta[ 'page_title' ] ? meta[ 'page_title' ].length : 1;
@@ -1467,6 +1470,9 @@ var CoursePress = CoursePress || {};
 			return unit_caps[cap];
 		},
 		saveUnit: function( e ) {
+			if ( $(e.target).hasClass('disabled' ) ) {
+				return;
+			}
 			CoursePress.Helpers.Module.save_unit( e );
 		},
 		toggleUnitState: function( e ) {

@@ -391,6 +391,7 @@ class CoursePress_Data_Instructor {
 
 		$global_option = ! is_multisite();
 		update_user_option( $instructor_id, 'course_' . $course_id, $course_id, $global_option );
+		update_user_meta( $instructor_id, 'role_ins', 'instructor' );
 
 		// Update course count
 		self::count_courses( $instructor_id, true );
