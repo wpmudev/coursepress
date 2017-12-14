@@ -123,14 +123,14 @@ class CoursePress_Data_Module {
 
 		// Get correct new type
 		if ( 'text_input_module' == $module_type ) {
-            if ( ! empty( $meta['checked_length'] ) ) {
-                $checked_length = maybe_unserialize( $meta['checked_length'][0] );
-                if ( 'multi' == $checked_length ) {
-                    $module_type = $legacy['textarea_input_module'];
-                } else {
-                    $module_type = $legacy[ $module_type ];
-                }
-            }
+			if ( ! empty( $meta['checked_length'] ) ) {
+				$checked_length = maybe_unserialize( $meta['checked_length'][0] );
+				if ( 'multi' == $checked_length ) {
+					$module_type = $legacy['textarea_input_module'];
+				} else {
+					$module_type = $legacy[ $module_type ];
+				}
+			}
 		} else {
 			$module_type = $legacy[ $module_type ];
 		}
@@ -553,7 +553,7 @@ class CoursePress_Data_Module {
 	public static function get_form_results( $student_id, $course_id, $unit_id, $module_id, $response = false, $data = false ) {
 		$attributes = self::attributes( $module_id );
 		$is_mandatory = ! empty( $attributes['mandatory'] );
-		$is_assessable = ! empty( $attributes['assessable']);
+		$is_assessable = ! empty( $attributes['assessable'] );
 
 		if ( false === $data ) {
 			$data = CoursePress_Data_Student::get_completion_data( $student_id, $course_id );
@@ -568,7 +568,7 @@ class CoursePress_Data_Module {
 			return false;
 		}
 
-        $grades = CoursePress_Data_Student::get_grade($student_id, $course_id, $unit_id, $module_id);
+		$grades = CoursePress_Data_Student::get_grade( $student_id, $course_id, $unit_id, $module_id );
 		$minimum_grade = (int) $attributes['minimum_grade'];
 
 		$total_questions = count( $attributes['questions'] );
@@ -627,22 +627,22 @@ class CoursePress_Data_Module {
 			'text' => $remaining_message,
 		);
 
-        if ( $is_assessable ) {
-            $graded_by = CoursePress_Helper_Utility::get_array_val( $grades, 'graded_by' );
+		if ( $is_assessable ) {
+			$graded_by = CoursePress_Helper_Utility::get_array_val( $grades, 'graded_by' );
 
-            if ( 'auto' == $graded_by ) {
-                return array(
-                    'pending' => true,
-                    'grade' => 0,
-                    'correct' => 0,
-                    'wrong' => 0,
-                    'total_questions' => (int) $total_questions,
-                    'passed' => false,
-                    'attributes' => $attributes,
-                    'message' => __( 'Your submission is awaiting instructor assessment.', 'cp' ),
-                );
-            }
-        }
+			if ( 'auto' == $graded_by ) {
+				return array(
+					'pending' => true,
+					'grade' => 0,
+					'correct' => 0,
+					'wrong' => 0,
+					'total_questions' => (int) $total_questions,
+					'passed' => false,
+					'attributes' => $attributes,
+					'message' => __( 'Your submission is awaiting instructor assessment.', 'CP_TD' ),
+				);
+			}
+		}
 
 		return array(
 			'grade' => (int) $grade,
