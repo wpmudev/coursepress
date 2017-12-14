@@ -163,25 +163,28 @@ class CoursePress_Template_Communication {
 		$content = do_shortcode( '[course_unit_submenu]' );
 
 		$content .= '<div class="course-discussion-wrapper">';
-
 		$content .= '<div class="course-discussion-page course-discussion-content">';
-		$content .= '<h3 class="title course-discussion-title">' . esc_html__( 'Discussion', 'CP_TD' ) . ': ' . esc_html( $title ) . '</h3>';
+		$content .= sprintf(
+			'<h3 class="title course-discussion-title">%s%s%s</h3>',
+			esc_html__( 'Discussion', 'CP_TD' ),
+			esc_html_x( ': ', 'separator between "Discussion" text and title', 'CP_TD' ),
+			esc_html( $title )
+		);
 		$content .= CoursePress_Helper_Utility::filter_content( $post_content );
-
 		if ( get_current_user_id() == (int) $author ) {
 			$edit_discussion_link = CoursePress_Core::get_slug( 'course/', true ) . get_post_field( 'post_name', $course_id ) . '/' . CoursePress_Core::get_slug( 'discussions/' ) . CoursePress_Core::get_slug( 'discussion_new' );
 			$edit_discussion_link .= '?id=' . $discussion->ID;
-			$content .= '<div class="edit-link"><a href="' . esc_url( $edit_discussion_link ) . '">' . esc_html__( 'Edit', 'CP_TD' ) . '</a>';
+			$content .= '<div class="edit-link">';
+			$content .= sprintf( '<a href="%s">%s</a>', esc_url( $edit_discussion_link ), esc_html__( 'Edit', 'CP_TD' ) );
+			$content .= '</div>';
 		}
 		$content .= '</div>';
 
 		if ( ! empty( $discussion ) ) {
 			setup_postdata( $discussion );
-
 			ob_start();
 			comments_template();
 			$content .= ob_get_clean();
-
 			wp_reset_postdata();
 		}
 
