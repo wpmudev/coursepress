@@ -11,6 +11,7 @@ CHANGELOG
 * Fixed: Course certificate email settings were hidden for non premium users.
 * Fixed: On a course structure show section without modules if "Show units without modules" is checked.
 * Fixed: Typo on MarketPress integration box.
+* Fixed: There was no ability to remove instructor.
 * Fixed: Typo in notifications configuration.
 * Fixed: Show unit progres on admin panel.
 * Fixed: PHP notices when try to edit not exited unit.
