@@ -75,14 +75,14 @@ class CoursePress_Helper_Setting_Email {
 					'enabled' => '1',
 					'from' => get_option( 'blogname' ),
 					'email' => get_option( 'admin_email' ),
-					'subject' => __( 'Course Start Notfication', 'CP_TD' ),
+					'subject' => __( 'Course Start Notification', 'CP_TD' ),
 					'content' => self::course_start_defaults(),
 				),
 				CoursePress_Helper_Email::DISCUSSION_NOTIFICATION => array(
 					'enabled' => '1',
 					'from' => get_option( 'blogname' ),
 					'email' => get_option( 'admin_email' ),
-					'subject' => __( 'Discussion Notfication', 'CP_TD' ),
+					'subject' => __( 'Discussion Notification', 'CP_TD' ),
 					'content' => self::discussion_defaults(),
 				),
 				CoursePress_Helper_Email::UNIT_STARTED_NOTIFICATION => array(
@@ -310,13 +310,13 @@ class CoursePress_Helper_Setting_Email {
 					'order' => 6,
 				),
 				CoursePress_Helper_Email::COURSE_START_NOTIFICATION => array(
-					'title' => __( 'Course Notfication E-mail', 'CP_TD' ),
+					'title' => __( 'Course Notification E-mail', 'CP_TD' ),
 					'description' => __( 'Settings for an e-mail to send to students when a course started.', 'CP_TD' ),
 					'content_help_text' => __( 'These codes will be relaced with actual data: ', 'CP_TD' ) . implode( ', ', $course_start_fields ),
 					'order' => 7,
 				),
 				CoursePress_Helper_Email::DISCUSSION_NOTIFICATION => array(
-					'title' => __( 'Discussion Notfication E-mail', 'CP_TD' ),
+					'title' => __( 'Discussion Notification E-mail', 'CP_TD' ),
 					'description' => __( 'Settings for an e-mail to send to students and instructors.', 'CP_TD' ),
 					'content_help_text' => __( 'These codes will be replaced with actual data: ', 'CP_TD' ) . implode( ', ', $discussion_fields ),
 					'order' => 7,
