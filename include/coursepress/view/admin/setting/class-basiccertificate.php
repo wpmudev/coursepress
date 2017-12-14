@@ -11,19 +11,6 @@
 class CoursePress_View_Admin_Setting_BasicCertificate {
 
 	public static function init() {
-		// TODO Find out if Certificates are a premium feature?
-		//      Or only certificate-emails... Or if this condition is wrong...
-		if ( ! CP_IS_PREMIUM ) {
-			add_filter(
-				'coursepress_default_email_settings',
-				array( __CLASS__, 'remove_basic_certificate_email' )
-			);
-			add_filter(
-				'coursepress_default_email_settings_sections',
-				array( __CLASS__, 'remove_basic_certificate_email' )
-			);
-			return;
-		}
 
 		add_filter(
 			'coursepress_settings_tabs',

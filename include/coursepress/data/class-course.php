@@ -1643,9 +1643,20 @@ class CoursePress_Data_Course {
 		$minutes = floor( $total_seconds / 60 );
 		$seconds = $total_seconds % 60;
 
-		$estimation = sprintf( '%02d:%02d:%02d', $hours, $minutes, $seconds );
-
-		return $estimation;
+		$duration = sprintf( '%02d:%02d:%02d', $hours, $minutes, $seconds );
+		/**
+		 * Allow to change duration for module.
+		 *
+		 * @since 2.0.6
+		 *
+		 * @param string $duration Current duration.
+		 * @param integer $course_id course ID.
+		 * @param integer $hours Hours.
+		 * @param integer $minutes minutes.
+		 * @param integer $seconds seconds.
+		 * @param integer $total_seconds total_seconds.
+		 */
+		return apply_filters( 'coursepress_course_get_time_estimation', $duration, $course_id, $hours, $minutes, $seconds, $total_seconds );
 	}
 
 	public static function get_instructors( $course_id, $objects = false ) {
