@@ -611,7 +611,7 @@ if ( ! class_exists( 'CoursePress_Admin_Edit' ) ) :
 				$install_message = __( 'To start selling your course, please <a href="%s">install and activate MarketPress</a>.', 'CP_TD' );
 
 				if ( $installed && $mp_class->activated() ) {
-					$install_message = __( 'To start selling your course, please <a href="%s">complete setup</a> of of MarketPress.', 'CP_TD' );
+					$install_message = __( 'To start selling your course, please <a href="%s">complete setup</a> of MarketPress.', 'CP_TD' );
 					$install_url = $mp_url;
 				}
 
