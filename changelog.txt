@@ -8,6 +8,7 @@ CHANGELOG
 = 2.1.4 =
 -------------------------------------------------
 * Fixed: Course certificate email settings were hidden for non premium users.
+* Fixed: On a course structure show section without modules if "Show units without modules" is checked.
 * Fixed: Typo on MarketPress integration box.
 * Fixed: Typo in notifications configuration.
 * Fixed: Show unit progres on admin panel.
