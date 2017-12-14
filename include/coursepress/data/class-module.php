@@ -81,10 +81,21 @@ class CoursePress_Data_Module {
 			} else {
 				$hours = 0;
 			}
-
-			return sprintf( '%02d:%02d:%02d', $hours, $minutes, $seconds );
+			$duration = sprintf( '%02d:%02d:%02d', $hours, $minutes, $seconds );
+			/**
+			 * Allow to change duration for module.
+			 *
+			 * @since 2.0.6
+			 *
+			 * @param string $duration Current duration.
+			 * @param integer $module_id Module ID.
+			 * @param integer $hours Hours.
+			 * @param integer $minutes minutes.
+			 * @param integer $seconds seconds.
+			 */
+			return apply_filters( 'coursepress_module_get_time_estimation', $duration, $module_id, $hours, $minutes, $seconds );
 		}
-
+		return '';
 	}
 
 	public static function legacy_map() {
