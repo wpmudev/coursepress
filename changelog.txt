@@ -9,6 +9,7 @@ CHANGELOG
 -------------------------------------------------
 * Fixed: Course certificate email settings were hidden for non premium users.
 * Fixed: Typo on MarketPress integration box.
+* Fixed: Typo in notifications configuration.
 
 = 2.1.3 =
 -------------------------------------------------
