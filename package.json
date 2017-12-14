@@ -1,6 +1,6 @@
 {
 	"name": "coursepress",
-	"version": "2.1.3",
+	"version": "2.1.4.beta.1",
 	"description": "CoursePress WordPress Plugin",
 	"homepage": "https://premium.wpmudev.org/project/coursepress-pro/",
 	"repository": {
@@ -10,8 +10,16 @@
 	"author": "WPMUDev",
 	"contributors": [
 		{
-			"name": "Irene Mitchell",
-			"email": "irene@incsub.com"
+			"name": "Joel James",
+			"email": "joel@incsub.com"
+		},
+		{
+			"name": "Paul Kevin",
+			"email": "paultitude@gmail.com"
+		},
+		{
+			"name": "Hassan Akhtar",
+			"email": "admin@wpgurus.net"
 		},
 		{
 			"name": "Marcin Pietrzak",
