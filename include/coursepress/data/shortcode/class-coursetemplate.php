@@ -656,23 +656,17 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			if ( ! $is_unit_visible ) {
 				continue;
 			}
-
 			$the_unit = $unit['unit'];
 			$previous_unit_id = CoursePress_Data_Unit::get_previous_unit_id( $course_id, $the_unit->ID );
-
 			$is_unit_available = $is_course_available ? CoursePress_Data_Unit::is_unit_available( $course_id, $the_unit, $previous_unit_id ) : $is_course_available;
-
 			$unit_link = CoursePress_Core::get_slug( 'courses/', true ) .
 				$course_slug . '/' .
 				CoursePress_Core::get_slug( 'unit/' ) .
 				$unit['unit']->post_name;
-
 			$estimation = CoursePress_Data_Unit::get_time_estimation( $unit_id, $units );
-
 			if ( $last_module_id > 0 && $clickable ) {
 				// Check if the last module is already answered.
 				$is_last_module_done = CoursePress_Data_Module::is_module_done_by_student( $last_module_id, $student_id );
-
 				if ( ! $is_last_module_done ) {
 					$clickable = false;
 				}
@@ -746,6 +740,11 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 			$count = 0;
 			ksort( $unit['pages'] );
 
+			/**
+			 * Show empty units?
+			 */
+			$show_empty_units = cp_is_true( CoursePress_Data_Course::get_setting( $course_id, 'structure_show_empty_units' ) );
+
 			foreach ( $unit['pages'] as $key => $page ) {
 
 				// Hide pages if it is not set as visible
@@ -799,8 +798,8 @@ class CoursePress_Data_Shortcode_CourseTemplate {
 				 * page is visible?
 				 */
 				$heading_visible = isset( $page['visible'] ) && $page['visible'];
-
-				if ( $heading_visible && ! empty( $page['modules'] ) ) {
+				$show_page_tilte = ( $heading_visible && ! empty( $page['modules'] ) ) || $show_empty_units;
+				if ( $show_page_tilte ) {
 					$preview_class = ( $free_show && ! $enrolled && ! empty( $preview['structure'][ $unit_id ] ) && is_array( $preview['structure'][ $unit_id ] ) ) ? $free_class : '';
 					$content .= '<div class="unit-page-title-wrapper ' . esc_attr( $preview_class ) . '">';
 					$content .= '<div class="unit-page-title">' . $page_title . '</div>';
