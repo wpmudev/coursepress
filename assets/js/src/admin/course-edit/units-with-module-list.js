@@ -119,6 +119,7 @@
                 this.model = model;
                 this.editCourse = editCourseView;
                 this.editCourse.unitCollection.on('add', this.setUnitItem, this);
+	            this.editCourse.off('coursepress:validate-course-units');
                 this.editCourse.on('coursepress:validate-course-units', this.validateUnits, this);
                 this.editCourse.unitCollection.on( 'coursepress:unit_collection_loaded', this.maybeSetUnit, this );
                 this.on('view_rendered', this.setUI, this);
