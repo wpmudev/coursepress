@@ -67,7 +67,13 @@ class CoursePress_Helper_Table_CourseAssessments extends CoursePress_Helper_Tabl
 					esc_url( $view_link )
 				);
 			case 'grade':
-				$course_grade = CoursePress_Data_Student::average_course_responses( $item_id, $this->course_id );
+				$course_grade = 'unknown';
+				if ( 'all' == $this->the_unit ) {
+					$course_grade = CoursePress_Data_Student::average_course_responses( $item_id, $this->course_id );
+				} else {
+					$student_progress = CoursePress_Data_Student::get_completion_data( $item_id, $this->course_id );
+					$course_grade = CoursePress_Helper_Utility::get_array_val( $student_progress, 'completion/' . $this->the_unit. '/average' );
+				}
 			return sprintf( '<span class="final-grade">%d%%</span>',  $course_grade );
 			case 'last_active':
 				$student_progress = CoursePress_Data_Student::get_completion_data( $item_id, $this->course_id );
