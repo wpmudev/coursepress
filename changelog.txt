@@ -8,6 +8,7 @@ CHANGELOG
 = 2.1.4 =
 -------------------------------------------------
 * Fixed: Typo on MarketPress integration box.
+* Fixed: There was no ability to remove instructor.
 
 = 2.1.3 =
 -------------------------------------------------
