@@ -284,7 +284,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 							    $stepId = coursepress_create_step( $step_array, $step_metas );
 					    		$step_object = coursepress_get_course_step( $stepId );
-							    $new_steps[$step_cid] = $step_object;
+                                $new_steps[$step_cid] = $step_object;
 						    }
 
 						    $module->steps = $new_steps;

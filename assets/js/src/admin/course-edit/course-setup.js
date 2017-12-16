@@ -126,10 +126,10 @@
                 }
 
                 if(!this.unitCollection || this.courseTypeChanged()) {
-	                this.unitCollection = new CoursePress.UnitCollection({
-		                'course_id': course_id,
-		                'with_modules': with_modules
-	                });
+                    this.unitCollection = new CoursePress.UnitCollection({
+                        'course_id': course_id,
+                        'with_modules': with_modules
+                    });
                 }
                 this.unitList = new CoursePress.UnitList({}, this);
                 this.unitCollection.on( 'add', this.unitList.addUnit, this.unitList );

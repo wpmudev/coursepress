@@ -104,7 +104,7 @@
                 count = _.keys(count);
                 id = this.getNewUnitId(unitModel);
                 unitModel.set( 'count', count.length);
-	            unitModel.cid = id;
+                unitModel.cid = id;
                 unitModel.set( 'cid', id );
                 unit = new UnitItem({model: unitModel}, this);
                 unit.$el.appendTo(this.listContainer);
@@ -112,20 +112,20 @@
                 this.unitModels[id] = unitModel;
             },
 
-	        getNewUnitId: function (unitModel) {
-		        var result = _.find(this.unitModels, function (unit) {
-			        var currentItemId = unit.get === undefined ? unit.ID : unit.get('ID');
-			        var needleId = unitModel.get === undefined ? unitModel.ID : unitModel.get('ID');
+            getNewUnitId: function (unitModel) {
+                var result = _.find(this.unitModels, function (unit) {
+                    var currentItemId = unit.get === undefined ? unit.ID : unit.get('ID');
+                    var needleId = unitModel.get === undefined ? unitModel.ID : unitModel.get('ID');
 
-			        return currentItemId === needleId;
-		        });
+                    return currentItemId === needleId;
+                });
 
-		        if (result === undefined) {
-			        return unitModel.cid;
-		        }
+                if (result === undefined) {
+                    return unitModel.cid;
+                }
 
-		        return result.cid;
-	        },
+                return result.cid;
+            },
 
             updateTitle: function( title, cid ) {
                 var unit;

@@ -8,8 +8,8 @@
             url: win._coursepress.ajaxurl + '?action=coursepress_get_course_units&_wpnonce=' + win._coursepress._wpnonce,
             unitsLoaded: false,
 	        initialize: function( params ) {
-		        var modules = params.with_modules ? '1' : '0';
-		        this.url += '&course_id=' + params.course_id + '&with_modules=' + modules;
+                var modules = params.with_modules ? '1' : '0';
+                this.url += '&course_id=' + params.course_id + '&with_modules=' + modules;
                 this.on( 'error', this.serverError, this );
 
                 this.fetch();
