@@ -81,6 +81,7 @@
 
             initialize: function( model, editCourseView ) {
                 this.editCourseView = editCourseView;
+	            this.editCourseView.setSaveMode('save');
                 this.with_modules = editCourseView.model.get('meta_with_modules');
                 CoursePress.Events.on( 'coursepress:change_unit_title', this.updateTitle, this );
                 this.on( 'view_rendered', this.setUI, this );
@@ -172,7 +173,7 @@
                 this.editCourseView.after_update();
 
                 // Go to next step.
-                if ( 'continue' === this.editCourseView.savemode ) {
+                if ( 'continue' === this.editCourseView.getSaveMode() ) {
                     nextStep = this.editCourseView._getNextStep();
                     this.editCourseView.loadCurrentStep( nextStep );
                 }
