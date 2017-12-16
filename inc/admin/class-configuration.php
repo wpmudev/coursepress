@@ -28,21 +28,21 @@ class CoursePress_Admin_Configuration {
 	 * @since 3.0
 	 */
 	public function certificate( $config ) {
-        $toggle_input = coursepress_create_html( 'span', array( 'class' => 'cp-toggle-btn' ) );
+		$toggle_input = coursepress_create_html( 'span', array( 'class' => 'cp-toggle-btn' ) );
 		/**
 		 * Certificate Options
 		 */
 		$config['certificate-options'] = array(
-			'title' => __( 'Certificate options', 'CoursePress' ),
+			'title' => __( 'Certificate options', 'cp' ),
 			'fields' => array(
 				'coursepress_settings[basic_certificate][enabled]' => array(
 					'type' => 'checkbox',
-					'title' => $toggle_input . __( 'Enable basic certificate', 'CoursePress' ),
+					'title' => $toggle_input . __( 'Enable basic certificate', 'cp' ),
 					'value' => coursepress_get_setting( 'basic_certificate/enabled', true ),
 				),
 				'coursepress_settings[basic_certificate][use_cp_default]' => array(
 					'type' => 'checkbox',
-					'title' => $toggle_input . __( 'Use default CoursePress certificate', 'CoursePress' ),
+					'title' => $toggle_input . __( 'Use default CoursePress certificate', 'cp' ),
 					'value' => ! coursepress_get_setting( 'basic_certificate/use_cp_default', false ),
 				),
 			),
@@ -51,7 +51,7 @@ class CoursePress_Admin_Configuration {
 		 * Custom Certificate
 		 */
 		 $config['custom-certificate'] = array(
-			 'title' => __( 'Custom Certificate', 'CoursePress' ),
+			 'title' => __( 'Custom Certificate', 'cp' ),
 			'fields' => array(
 				'coursepress_settings[basic_certificate][content]' => array(
 					'type' => 'wp_editor',
@@ -64,7 +64,7 @@ class CoursePress_Admin_Configuration {
 		 * Background Image
 		 */
 		 $config['background_image'] = array(
-			'title' => __( 'Background Image', 'CoursePress' ),
+			'title' => __( 'Background Image', 'cp' ),
 			'fields' => array(
 				'coursepress_settings[basic_certificate][background_image]' => array(
 					'type' => 'wp_media',
@@ -76,24 +76,24 @@ class CoursePress_Admin_Configuration {
 		 *
 		 */
 		 $config['content_margin'] = array(
-			 'title' => __( 'Content Margin', 'CoursePress' ),
-			 'description' => __( '', 'CoursePress' ),
+			 'title' => __( 'Content Margin', 'cp' ),
+			 'description' => __( '', 'cp' ),
 			 'fields' => array(
 				 'coursepress_settings[basic_certificate][margin][top]' => array(
 					 'type' => 'number',
-					 'label' => __( 'Top', 'CoursePress' ),
+					 'label' => __( 'Top', 'cp' ),
 					 'value' => coursepress_get_setting( 'basic_certificate/margin/top' ),
 					 'flex' => true,
 				 ),
 				 'coursepress_settings[basic_certificate][margin][left]' => array(
 					 'type' => 'number',
-					 'label' => __( 'Left', 'CoursePress' ),
+					 'label' => __( 'Left', 'cp' ),
 					 'value' => coursepress_get_setting( 'basic_certificate/margin/left' ),
 					 'flex' => true,
 				 ),
 				 'coursepress_settings[basic_certificate][margin][right]' => array(
 					 'type' => 'number',
-					 'label' => __( 'Right', 'CoursePress' ),
+					 'label' => __( 'Right', 'cp' ),
 					 'value' => coursepress_get_setting( 'basic_certificate/margin/right' ),
 					 'flex' => true,
 				 ),
@@ -103,14 +103,14 @@ class CoursePress_Admin_Configuration {
 		 * Page orientation
 		 */
 		 $config['page_orientation'] = array(
-			'title' => __( 'Page orientation', 'CoursePress' ),
+			'title' => __( 'Page orientation', 'cp' ),
 			'fields' => array(
 				'coursepress_settings[basic_certificate][orientation]' => array(
 					'type' => 'radio',
 					'value' => coursepress_get_setting( 'basic_certificate/orientation', 'L' ),
 					'field_options' => array(
-						'L' => __( 'Landscape', 'CoursePress' ),
-						'P' => __( 'Portrait', 'CoursePress' ),
+						'L' => __( 'Landscape', 'cp' ),
+						'P' => __( 'Portrait', 'cp' ),
 					),
 				),
 			),
@@ -119,7 +119,7 @@ class CoursePress_Admin_Configuration {
 		 * Text Color
 		 */
 		 $config['text_color'] = array(
-			'title' => __( 'Text Color', 'CoursePress' ),
+			'title' => __( 'Text Color', 'cp' ),
 			'fields' => array(
 				'coursepress_settings[basic_certificate][text_color]' => array(
 					'type' => 'wp_color_picker',
@@ -131,11 +131,11 @@ class CoursePress_Admin_Configuration {
 		 * Preview
 		 */
 		 $config['preview'] = array(
-			'title' => __( 'Preview', 'CoursePress' ),
+			'title' => __( 'Preview', 'cp' ),
 			'fields' => array(
 				'coursepress_settings[basic_certificate][preview]' => array(
 					'type' => 'button',
-					'value' => '<span class="dashicons dashicons-visibility"></span>'.__( 'Preview Certificate', 'CoursePress' ),
+					'value' => '<span class="dashicons dashicons-visibility"></span>'.__( 'Preview Certificate', 'cp' ),
 					'class' => 'cp-dashicons alignright',
 				),
 			),
@@ -153,216 +153,216 @@ class CoursePress_Admin_Configuration {
 	public function general( $config = array() ) {
 		// Course details page
 		$config['course-details-page'] = array(
-            'title' => __( 'Course details page', 'CoursePress' ),
-            'description' => __( 'Specify Media to use when viewing course details.', 'CoursePress' ),
-            'fields' => array(
-                'details_media_type' => array(
-                    'type' => 'select',
-                    'label' => __( 'Media Type', 'CoursePress' ),
-                    'field_options' => array(
-                        'default' => __( 'Priority Mode (default)', 'CP_TD' ),
-                        'video' => __( 'Featured Video', 'CP_TD' ),
-                        'image' => __( 'List Image', 'CP_TD' ),
-                    ),
-                    'value' => coursepress_get_setting( 'general/details_media_type', 'default' ),
-                ),
-                'details_media_priority' => array(
-                    'type' => 'select',
-                    'label' => __( 'Priority', 'CoursePress' ),
-                    'field_options' => array(
-                        'default' => __( 'Default', 'CP_TD' ),
-                        'video' => __( 'Featured Video (image fallback)', 'CP_TD' ),
-                        'image' => __( 'List Image (video fallback)', 'CP_TD' ),
-                    ),
-                    'value' => coursepress_get_setting( 'general/details_media_priority', 'default' ),
-                ),
-            ),
+			'title' => __( 'Course details page', 'cp' ),
+			'description' => __( 'Specify Media to use when viewing course details.', 'cp' ),
+			'fields' => array(
+				'details_media_type' => array(
+					'type' => 'select',
+					'label' => __( 'Media Type', 'cp' ),
+					'field_options' => array(
+						'default' => __( 'Priority Mode (default)', 'CP_TD' ),
+						'video' => __( 'Featured Video', 'CP_TD' ),
+						'image' => __( 'List Image', 'CP_TD' ),
+					),
+					'value' => coursepress_get_setting( 'general/details_media_type', 'default' ),
+				),
+				'details_media_priority' => array(
+					'type' => 'select',
+					'label' => __( 'Priority', 'cp' ),
+					'field_options' => array(
+						'default' => __( 'Default', 'CP_TD' ),
+						'video' => __( 'Featured Video (image fallback)', 'CP_TD' ),
+						'image' => __( 'List Image (video fallback)', 'CP_TD' ),
+					),
+					'value' => coursepress_get_setting( 'general/details_media_priority', 'default' ),
+				),
+			),
 		);
 
 		// Course listings
 		$config['course-listings'] = array(
-            'title' => __( 'Course Listings', 'CoursePress' ),
-            'description' => __( 'Media to use when viewing course listings (e.g. Courses page or Instructor page).', 'CoursePress' ),
-            'fields' => array(
-                'listing_media_type' => array(
-                    'type' => 'select',
-                    'label' => __( 'Media Type', 'CoursePress' ),
-                    'field_options' => array(
-                        'default' => __( 'Priority Mode (default)', 'CP_TD' ),
-                        'video' => __( 'Featured Video', 'CP_TD' ),
-                        'image' => __( 'List Image', 'CP_TD' ),
-                    ),
-                    'value' => coursepress_get_setting( 'general/listing_media_type', 'default' ),
-                ),
-                'listing_media_priority' => array(
-                    'type' => 'select',
-                    'label' => __( 'Priority', 'CoursePress' ),
-                    'field_options' => array(
-                        'default' => __( 'Default', 'CP_TD' ),
-                        'video' => __( 'Featured Video (image fallback)', 'CP_TD' ),
-                        'image' => __( 'List Image (video fallback)', 'CP_TD' ),
-                    ),
-                    'value' => coursepress_get_setting( 'general/listing_media_priority', 'default' ),
-                ),
-            ),
+			'title' => __( 'Course Listings', 'cp' ),
+			'description' => __( 'Media to use when viewing course listings (e.g. Courses page or Instructor page).', 'cp' ),
+			'fields' => array(
+				'listing_media_type' => array(
+					'type' => 'select',
+					'label' => __( 'Media Type', 'cp' ),
+					'field_options' => array(
+						'default' => __( 'Priority Mode (default)', 'CP_TD' ),
+						'video' => __( 'Featured Video', 'CP_TD' ),
+						'image' => __( 'List Image', 'CP_TD' ),
+					),
+					'value' => coursepress_get_setting( 'general/listing_media_type', 'default' ),
+				),
+				'listing_media_priority' => array(
+					'type' => 'select',
+					'label' => __( 'Priority', 'cp' ),
+					'field_options' => array(
+						'default' => __( 'Default', 'CP_TD' ),
+						'video' => __( 'Featured Video (image fallback)', 'CP_TD' ),
+						'image' => __( 'List Image (video fallback)', 'CP_TD' ),
+					),
+					'value' => coursepress_get_setting( 'general/listing_media_priority', 'default' ),
+				),
+			),
 		);
 
 		// Course images
 		$config['course-images'] = array(
-            'title' => __( 'Course Images', 'CoursePress' ),
-            'description' => __( 'Size for (newly uploaded) course images.', 'CoursePress' ),
-            'fields' => array(
-                'image_width' => array(
-                    'type' => 'number',
-                    'label' => __( 'Image Width', 'CoursePress' ),
-                    'value' => coursepress_get_setting( 'general/image_width', '235' ),
-                    'config' => array(
-                        'min' => 0,
-                    ),
-                ),
-                'image_height' => array(
-                    'type' => 'number',
-                    'label' => __( 'Image Height', 'CoursePress' ),
-                    'value' => coursepress_get_setting( 'general/image_height', '225' ),
-                    'config' => array(
-                        'min' => 0,
-                    ),
-                ),
-            ),
+			'title' => __( 'Course Images', 'cp' ),
+			'description' => __( 'Size for (newly uploaded) course images.', 'cp' ),
+			'fields' => array(
+				'image_width' => array(
+					'type' => 'number',
+					'label' => __( 'Image Width', 'cp' ),
+					'value' => coursepress_get_setting( 'general/image_width', '235' ),
+					'config' => array(
+						'min' => 0,
+					),
+				),
+				'image_height' => array(
+					'type' => 'number',
+					'label' => __( 'Image Height', 'cp' ),
+					'value' => coursepress_get_setting( 'general/image_height', '225' ),
+					'config' => array(
+						'min' => 0,
+					),
+				),
+			),
 		);
 
 		// Course order
 		$config['course-order'] = array(
-            'title' => __( 'Course Order', 'CoursePress' ),
-            'description' => __( 'Order of courses in admin and on front.', 'CoursePress' ),
-            'fields' => array(
-                'order_by' => array(
-                    'type' => 'select',
-                    'desc' => __( '', 'CoursePress' ),
-                    'label' => __( 'Order by', 'CoursePress' ),
-                    'value' => coursepress_get_setting( 'general/order_by', 'course_start_date' ),
-                    'field_options' => array(
-                        'post_date' => __( 'Post Date', 'CP_TD' ),
-                        'start_date' => __( 'Course start date', 'CP_TD' ),
-                        'enrollment_start_date' => __( 'Course enrollment start date', 'CP_TD' ),
-                    ),
-                ),
-                'order_by_direction' => array(
-                    'type' => 'select',
-                    'label' => __( 'Direction', 'CoursePress' ),
-                    'value' => coursepress_get_setting( 'general/order_by_direction', 'DESC' ),
-                    'field_options' => array(
-                        'DESC' => __( 'Descending', 'CoursePress' ),
-                        'ASC' => __( 'Ascending', 'CoursePress' ),
-                    ),
-                ),
-            ),
+			'title' => __( 'Course Order', 'cp' ),
+			'description' => __( 'Order of courses in admin and on front.', 'cp' ),
+			'fields' => array(
+				'order_by' => array(
+					'type' => 'select',
+					'desc' => __( '', 'cp' ),
+					'label' => __( 'Order by', 'cp' ),
+					'value' => coursepress_get_setting( 'general/order_by', 'course_start_date' ),
+					'field_options' => array(
+						'post_date' => __( 'Post Date', 'CP_TD' ),
+						'start_date' => __( 'Course start date', 'CP_TD' ),
+						'enrollment_start_date' => __( 'Course enrollment start date', 'CP_TD' ),
+					),
+				),
+				'order_by_direction' => array(
+					'type' => 'select',
+					'label' => __( 'Direction', 'cp' ),
+					'value' => coursepress_get_setting( 'general/order_by_direction', 'DESC' ),
+					'field_options' => array(
+						'DESC' => __( 'Descending', 'cp' ),
+						'ASC' => __( 'Ascending', 'cp' ),
+					),
+				),
+			),
 		);
 
 		$toggle_input = coursepress_create_html( 'span', array( 'class' => 'cp-toggle-btn' ) );
 
 		// Menu items
 		$config['theme-menu-items'] = array(
-            'title' => __( 'Theme Menu Items', 'CoursePress' ),
-            'fields' => array(
-                'show_coursepress_menu' => array(
-                    'type' => 'checkbox',
-                    'title' => $toggle_input . __( 'Show menu items', 'CoursePress' ),
-                    'value' => coursepress_get_setting( 'general/show_coursepress_menu', 1 ),
-                    'desc' => __( 'Attach default CoursePress menu items ( Courses, Student Dashboard, Log Out ) to the <strong>Primary Menu</strong>.<br />Items can also be added from Appearance &gt; Menus and the CoursePress panel.', 'CoursePress' ),
-                ),
-            ),
+			'title' => __( 'Theme Menu Items', 'cp' ),
+			'fields' => array(
+				'show_coursepress_menu' => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Show menu items', 'cp' ),
+					'value' => coursepress_get_setting( 'general/show_coursepress_menu', 1 ),
+					'desc' => __( 'Attach default CoursePress menu items ( Courses, Student Dashboard, Log Out ) to the <strong>Primary Menu</strong>.<br />Items can also be added from Appearance &gt; Menus and the CoursePress panel.', 'cp' ),
+				),
+			),
 
 		);
 		/**
 		 * Login Form
 		 */
 		$config['general/login-form'] = array(
-            'title' => __( 'Login form', 'CoursePress' ),
-            'fields' => array(
-                'use_custom_login' => array(
-                    'type' => 'checkbox',
-                    'title' => $toggle_input . __( 'Use Custom Login Form', 'CoursePress' ),
-                    'value' => coursepress_get_setting( 'general/use_custom_login', 1 ),
-                    'desc' => __( 'Uses a custom Login Form to keep students on the front-end of your site.', 'CoursePress' ),
-                ),
-            ),
+			'title' => __( 'Login form', 'cp' ),
+			'fields' => array(
+				'use_custom_login' => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Use Custom Login Form', 'cp' ),
+					'value' => coursepress_get_setting( 'general/use_custom_login', 1 ),
+					'desc' => __( 'Uses a custom Login Form to keep students on the front-end of your site.', 'cp' ),
+				),
+			),
 		);
 		/**
 		 * Privacy
 		 */
 		$config['instructor/show_username'] = array(
-            'title' => __( 'Privacy', 'CoursePress' ),
-            'fields' => array(
-                'instructor_show_username' => array(
-                    'type' => 'checkbox',
-                    'title' => $toggle_input . __( 'Show instructor username in URL', 'CoursePress' ),
-                    'value' => coursepress_get_setting( 'instructor_show_username', 1 ),
-                    'desc' => __( 'If checked, instructors username will be shown in the url. Otherwise, hashed (MD5) version will be shown.', 'CoursePress' ),
-                ),
-            ),
+			'title' => __( 'Privacy', 'cp' ),
+			'fields' => array(
+				'instructor_show_username' => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Show instructor username in URL', 'cp' ),
+					'value' => coursepress_get_setting( 'instructor_show_username', 1 ),
+					'desc' => __( 'If checked, instructors username will be shown in the url. Otherwise, hashed (MD5) version will be shown.', 'cp' ),
+				),
+			),
 		);
 		/**
 		 * schema
 		 */
 		$config['general/add_structure_data'] = array(
-            'title' => __( 'schema.org', 'CoursePress' ),
-            'fields' => array(
-                'add_structure_data' => array(
-                    'type' => 'checkbox',
-                    'desc' => __( 'Add structure data to courses.', 'CoursePress' ),
-                    'title' => $toggle_input . __( 'Add microdata syntax', 'CoursePress' ),
-                    'value' => coursepress_get_setting( 'general/add_structure_data', 1 ),
-                ),
-            ),
+			'title' => __( 'schema.org', 'cp' ),
+			'fields' => array(
+				'add_structure_data' => array(
+					'type' => 'checkbox',
+					'desc' => __( 'Add structure data to courses.', 'cp' ),
+					'title' => $toggle_input . __( 'Add microdata syntax', 'cp' ),
+					'value' => coursepress_get_setting( 'general/add_structure_data', 1 ),
+				),
+			),
 		);
 
 		/**
 		 * WordPress Login Redirect
 		 */
 		$config['general/redirect_after_login'] = array(
-            'title' => __( 'WP Login Redirect', 'CoursePress' ),
-            'fields' => array(
-                'redirect_after_login' => array(
-                    'type' => 'checkbox',
-                    'desc' => __( 'Redirect students to their Dashboard upon login via wp-login form.', 'CoursePress' ),
-                    'title' => $toggle_input . __( 'Redirect After Login', 'CoursePress' ),
-                    'value' => coursepress_get_setting( 'general/redirect_after_login', 1 ),
-                ),
-            ),
+			'title' => __( 'WP Login Redirect', 'cp' ),
+			'fields' => array(
+				'redirect_after_login' => array(
+					'type' => 'checkbox',
+					'desc' => __( 'Redirect students to their Dashboard upon login via wp-login form.', 'cp' ),
+					'title' => $toggle_input . __( 'Redirect After Login', 'cp' ),
+					'value' => coursepress_get_setting( 'general/redirect_after_login', 1 ),
+				),
+			),
 		);
 		/**
 		 * Enrollment Restrictions
 		 */
 
-        $default_enrollment_type = coursepress_get_default_enrollment_type();
-        $default_enrollment_type = coursepress_get_setting( 'general/enrollment_type_default', $default_enrollment_type );
+		$default_enrollment_type = coursepress_get_default_enrollment_type();
+		$default_enrollment_type = coursepress_get_setting( 'general/enrollment_type_default', $default_enrollment_type );
 		$config['course/enrollment_type_default'] = array(
-            'title' => __( 'Enrollment restrictions', 'CoursePress' ),
-            'description' => __( 'Select the default limitations on accessing and enrolling in this course.', 'CoursePress' ),
-            'fields' => array(
-                'enrollment_type_default' => array(
-                    'type' => 'select',
-                    'title' => __( 'Who can enroll', 'CoursePress' ),
-                    'value' => coursepress_get_setting( 'general/enrollment_type_default', $default_enrollment_type ),
-                    'field_options' => coursepress_get_enrollment_types(),
-                ),
-            ),
+			'title' => __( 'Enrollment restrictions', 'cp' ),
+			'description' => __( 'Select the default limitations on accessing and enrolling in this course.', 'cp' ),
+			'fields' => array(
+				'enrollment_type_default' => array(
+					'type' => 'select',
+					'title' => __( 'Who can enroll', 'cp' ),
+					'value' => coursepress_get_setting( 'general/enrollment_type_default', $default_enrollment_type ),
+					'field_options' => coursepress_get_enrollment_types(),
+				),
+			),
 		);
 		/**
 		 * Reports
 		 */
 		$config['reports/font'] = array(
-            'title' => __( 'Reports', 'CoursePress' ),
-            'description' => __( 'Select font which will be used in the PDF reports.', 'CoursePress' ),
-            'fields' => array(
-                'reports_font' => array(
-                    'type' => 'select',
-                    'title' => __( 'Use this font', 'CoursePress' ),
-                    'value' => coursepress_get_setting( 'reports_font', 'helvetica' ),
-                    'field_options' => array(),
-                ),
-            ),
+			'title' => __( 'Reports', 'cp' ),
+			'description' => __( 'Select font which will be used in the PDF reports.', 'cp' ),
+			'fields' => array(
+				'reports_font' => array(
+					'type' => 'select',
+					'title' => __( 'Use this font', 'cp' ),
+					'value' => coursepress_get_setting( 'reports_font', 'helvetica' ),
+					'field_options' => array(),
+				),
+			),
 		);
 		return $config;
 	}
@@ -375,31 +375,31 @@ class CoursePress_Admin_Configuration {
 	 */
 	public function import_export( $config ) {
 		$config['import'] = array(
-			'title' => __( 'Import', 'CoursePress' ),
-			'description' => __( 'Upload your exported courses to import here.', 'CoursePress' ),
+			'title' => __( 'Import', 'cp' ),
+			'description' => __( 'Upload your exported courses to import here.', 'cp' ),
 			'fields' => array(
 				'import' => array(
 					'type' => 'file',
 				),
 				'coursepress[replace]' => array(
 					'type' => 'checkbox',
-					'title' => __( 'Replace course if exists', 'CoursePress' ),
-					'desc' => __( 'Courses with the same title will be automatically replaced by the new one.', 'CoursePress' ),
+					'title' => __( 'Replace course if exists', 'cp' ),
+					'desc' => __( 'Courses with the same title will be automatically replaced by the new one.', 'cp' ),
 				),
 				'coursepress[students]' => array(
 					'type' => 'checkbox',
-					'title' => __( 'Include course students', 'CoursePress' ),
-					'desc' => __( 'Students listing must also included in your export for this to work.', 'CoursePress' ),
+					'title' => __( 'Include course students', 'cp' ),
+					'desc' => __( 'Students listing must also included in your export for this to work.', 'cp' ),
 				),
 				'coursepress[comments]' => array(
 					'type' => 'checkbox',
-					'title' => __( 'Include course thread/comments', 'CoursePress' ),
-					'desc' => __( 'Comments listing must also included in your export for this to work.', 'CoursePress' ),
+					'title' => __( 'Include course thread/comments', 'cp' ),
+					'desc' => __( 'Comments listing must also included in your export for this to work.', 'cp' ),
 					'disabled' => true,
 				),
 				'' => array(
 					'type' => 'button',
-					'value' => __( 'Upload file and import', 'CoursePress' ),
+					'value' => __( 'Upload file and import', 'cp' ),
 					'class' => 'button-primary disabled',
 				),
 			),
@@ -408,12 +408,12 @@ class CoursePress_Admin_Configuration {
 		 * export
 		 */
 		$config['export'] = array(
-			'title' => __( 'Export', 'CoursePress' ),
-			'description' => __( 'Select courses to export to another site.', 'CoursePress' ),
+			'title' => __( 'Export', 'cp' ),
+			'description' => __( 'Select courses to export to another site.', 'cp' ),
 			'fields' => array(
 				'coursepress[all]' => array(
 					'type' => 'checkbox',
-					'title' => __( 'All Courses', 'CoursePress' ),
+					'title' => __( 'All Courses', 'cp' ),
 				),
 			),
 		);
@@ -425,24 +425,24 @@ class CoursePress_Admin_Configuration {
 		foreach ( $list as $course_id => $course_title ) {
 			$config['export']['fields'][ 'coursepress[courses]['.$course_id.']' ] = array(
 				'type' => 'checkbox',
-				'title' => empty( $course_title )? __( '-[This course has no title]-', 'CoursePress' ):$course_title,
+				'title' => empty( $course_title )? __( '-[This course has no title]-', 'cp' ):$course_title,
 			);
 		}
 		$config['export']['fields'] += array(
 			'coursepress[export][students]' => array(
 				'type' => 'checkbox',
-				'title' => __( 'Include course students', 'CoursePress' ),
-				'desc' => __( 'Will include course students and their course submission progress.', 'CoursePress' ),
+				'title' => __( 'Include course students', 'cp' ),
+				'desc' => __( 'Will include course students and their course submission progress.', 'cp' ),
 			),
 			'coursepress[export][comments]' => array(
 				'type' => 'checkbox',
-				'title' => __( 'Include course thread/comments', 'CoursePress' ),
-				'desc' => __( 'Will include course students and their course submission progress.', 'CoursePress' ),
+				'title' => __( 'Include course thread/comments', 'cp' ),
+				'desc' => __( 'Will include course students and their course submission progress.', 'cp' ),
 				'disabled' => true,
 			),
 			'coursepress[export][button]' => array(
 				'type' => 'button',
-				'value' => __( 'Export Courses', 'CoursePress' ),
+				'value' => __( 'Export Courses', 'cp' ),
 				'class' => 'button-primary disabled',
 			),
 		);
@@ -470,6 +470,7 @@ class CoursePress_Admin_Configuration {
 			'student_dashboard' => coursepress_get_setting( 'slugs/student_dashboard', 'student_dashboard' ),
 			'student_settings' => coursepress_get_setting( 'slugs/student_settings', 'student_settings' ),
 		);
+		$siteroot = '<b>SITEROOT</b>';
 		/**
 		 * Pages
 		 */
@@ -485,15 +486,15 @@ class CoursePress_Admin_Configuration {
 			 * Course details page
 		 */
 		$config['course'] = array(
-			'title' => __( 'Courses', 'CoursePress' ),
+			'title' => __( 'Courses', 'cp' ),
 			'fields' => array(
 				'coursepress_settings[slugs][course]' => array(
 					'type' => 'text',
 					'value' => $slugs['courses'],
 					'class' => 'large-text',
-					'title' => 'SITEROOT/',
+					'title' => sprintf( '%s/', $siteroot ),
 					'desc' => sprintf(
-						__( 'Your course URL will look like: %s/%s', 'CoursePress' ),
+						__( 'Your course URL will look like: %s/%s', 'cp' ),
 						home_url(),
 						$slugs['courses']
 					),
@@ -501,18 +502,19 @@ class CoursePress_Admin_Configuration {
 			),
 		);
 		$config['course_category'] = array(
-			'title' => __( 'Course category', 'CoursePress' ),
+			'title' => __( 'Course category', 'cp' ),
 			'fields' => array(
 				'coursepress_settings[slugs][category]' => array(
 					'type' => 'text',
 					'value' => $slugs['course_category'],
 					'class' => 'large-text',
 					'title' => sprintf(
-						'SITEROOT/%s/',
+						'%s/%s/',
+						$siteroot,
 						$slugs['courses']
 					),
 					'desc' => sprintf(
-						__( 'Your course category URL will look like: %s/%s/%s', 'CoursePress' ),
+						__( 'Your course category URL will look like: %s/%s/%s', 'cp' ),
 						home_url(),
 						$slugs['courses'],
 						$slugs['course_category']
@@ -521,14 +523,15 @@ class CoursePress_Admin_Configuration {
 			),
 		);
 		$config['units'] = array(
-			'title' => __( 'Units', 'CoursePress' ),
+			'title' => __( 'Units', 'cp' ),
 			'fields' => array(
 				'coursepress_settings[slugs][units]' => array(
 					'type' => 'text',
 					'value' => $slugs['units'],
 					'class' => 'large-text',
 					'title' => sprintf(
-						'SITEROOT/%s/%s/',
+						'%s/%s/%s/',
+						$siteroot,
 						$slugs['courses'],
 						'%posttitle%'
 					),
@@ -536,14 +539,15 @@ class CoursePress_Admin_Configuration {
 			),
 		);
 		$config['notifications'] = array(
-			'title' => __( 'Course notifications', 'CoursePress' ),
+			'title' => __( 'Course notifications', 'cp' ),
 			'fields' => array(
 				'coursepress_settings[slugs][notifications]' => array(
 					'type' => 'text',
 					'value' => $slugs['notifications'],
 					'class' => 'large-text',
 					'title' => sprintf(
-						'SITEROOT/%s/%s/',
+						'%s/%s/%s/',
+						$siteroot,
 						$slugs['courses'],
 						'%posttitle%'
 					),
@@ -551,14 +555,15 @@ class CoursePress_Admin_Configuration {
 			),
 		);
 		$config['discussions'] = array(
-			'title' => __( 'Course discussions', 'CoursePress' ),
+			'title' => __( 'Course discussions', 'cp' ),
 			'fields' => array(
 				'coursepress_settings[slugs][discussions]' => array(
 					'type' => 'text',
 					'value' => $slugs['discussions'],
 					'class' => 'large-text',
 					'title' => sprintf(
-						'SITEROOT/%s/%s/',
+						'%s/%s/%s/',
+						$siteroot,
 						$slugs['courses'],
 						'%posttitle%'
 					),
@@ -566,14 +571,15 @@ class CoursePress_Admin_Configuration {
 			),
 		);
 		$config['discussions_new'] = array(
-			'title' => __( 'Course new discussion', 'CoursePress' ),
+			'title' => __( 'Course new discussion', 'cp' ),
 			'fields' => array(
 				'coursepress_settings[slugs][discussions_new]' => array(
 					'type' => 'text',
 					'value' => $slugs['discussions_new'],
 					'class' => 'large-text',
 					'title' => sprintf(
-						'SITEROOT/%s/%s/%s/',
+						'%s/%s/%s/%s/',
+						$siteroot,
 						$slugs['courses'],
 						'%posttitle%',
 						$slugs['discussions']
@@ -582,14 +588,15 @@ class CoursePress_Admin_Configuration {
 			),
 		);
 		$config['workbook'] = array(
-			'title' => __( 'Course workbook', 'CoursePress' ),
+			'title' => __( 'Course workbook', 'cp' ),
 			'fields' => array(
 				'coursepress_settings[slugs][workbook]' => array(
 					'type' => 'text',
 					'value' => $slugs['workbook'],
 					'class' => 'large-text',
 					'title' => sprintf(
-						'SITEROOT/%s/%s/',
+						'%s/%s/%s/',
+						$siteroot,
 						$slugs['courses'],
 						'%posttitle%'
 					),
@@ -598,14 +605,15 @@ class CoursePress_Admin_Configuration {
 		);
 		/*
         $config['enrollment'] = array(
-            'title' => __( 'Enrollment progress', 'CoursePress' ),
+            'title' => __( 'Enrollment progress', 'cp' ),
             'fields' => array(
                 'coursepress_settings[slugs][enrollment]' => array(
                     'type' => 'text',
                     'value' => $slugs['enrollment'],
                     'class' => 'large-text',
                     'title' => sprintf(
-                        'SITEROOT/%s/%s/',
+                        '%s/%s/%s/',
+                        $siteroot,
                         $slugs['courses'],
                         '%posttitle%'
                     ),
@@ -614,24 +622,24 @@ class CoursePress_Admin_Configuration {
         );
         */
 		$config['instructor_profile'] = array(
-			'title' => __( 'Instructor profile', 'CoursePress' ),
+			'title' => __( 'Instructor profile', 'cp' ),
 			'fields' => array(
 				'coursepress_settings[slugs][instructor_profile]' => array(
 					'type' => 'text',
 					'value' => $slugs['instructor_profile'],
 					'class' => 'large-text',
-					'title' => 'SITEROOT/',
+					'title' => sprintf( '%s/', $siteroot ),
 				),
 			),
 		);
 		$config['login'] = array(
-			'title' => __( 'Login', 'CoursePress' ),
+			'title' => __( 'Login', 'cp' ),
 			'fields' => array(
 				'coursepress_settings[slugs][login]' => array(
 					'type' => 'text',
 					'value' => $slugs['login'],
 					'class' => 'large-text',
-					'title' => 'SITEROOT/',
+					'title' => sprintf( '%s/', $siteroot ),
 					'wrapper_class' => 'half',
 				),
 				'coursepress_settings[pages][login]' => array(
@@ -644,7 +652,7 @@ class CoursePress_Admin_Configuration {
 				'desc' => array(
 					'type' => 'html_text',
 					'value' => sprintf(
-						__( 'Select page where you have %s shortcode or any other set of shortcodes. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'CoursePress' ),
+						__( 'Select page where you have %s shortcode or any other set of shortcodes. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'cp' ),
 						'<b>[cp_pages page="student_login"]</b>'
 					),
 					'class' => 'description',
@@ -652,13 +660,13 @@ class CoursePress_Admin_Configuration {
 			),
 		);
 		$config['dashboard'] = array(
-			'title' => __( 'Student dashboard', 'CoursePress' ),
+			'title' => __( 'Student dashboard', 'cp' ),
 			'fields' => array(
 				'coursepress_settings[slugs][student_dashboard]' => array(
 					'type' => 'text',
 					'value' => $slugs['student_dashboard'],
 					'class' => 'large-text',
-					'title' => 'SITEROOT/',
+					'title' => sprintf( '%s/', $siteroot ),
 					'wrapper_class' => 'half',
 				),
 				'coursepress_settings[pages][student_dashboard]' => array(
@@ -671,7 +679,7 @@ class CoursePress_Admin_Configuration {
 				'desc' => array(
 					'type' => 'html_text',
 					'value' => sprintf(
-						__( 'Select page where you have %s shortcode or any other set of shortcodes. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'CoursePress' ),
+						__( 'Select page where you have %s shortcode or any other set of shortcodes. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'cp' ),
 						'<b>[cp_pages page="student_dashboard"]</b>'
 					),
 					'class' => 'description',
@@ -679,13 +687,13 @@ class CoursePress_Admin_Configuration {
 			),
 		);
 		$config['settings'] = array(
-			'title' => __( 'Student settings', 'CoursePress' ),
+			'title' => __( 'Student settings', 'cp' ),
 			'fields' => array(
 				'coursepress_settings[slugs][student_settings]' => array(
 					'type' => 'text',
 					'value' => $slugs['student_settings'],
 					'class' => 'large-text',
-					'title' => 'SITEROOT/',
+					'title' => sprintf( '%s/', $siteroot ),
 					'wrapper_class' => 'half',
 				),
 				'coursepress_settings[pages][student_settings]' => array(
@@ -698,7 +706,7 @@ class CoursePress_Admin_Configuration {
 				'desc' => array(
 					'type' => 'html_text',
 					'value' => sprintf(
-						__( 'Select page where you have %s shortcode or any other set of shortcodes. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'CoursePress' ),
+						__( 'Select page where you have %s shortcode or any other set of shortcodes. Please note that slug for the page set above will not be used if "Use virtual page" is not selected.', 'cp' ),
 						'<b>[cp_pages page="student_settings"]</b>'
 					),
 					'class' => 'description',
@@ -751,7 +759,7 @@ class CoursePress_Admin_Configuration {
 	 */
 	public function capabilities( $config ) {
 
-        $toggle_input = coursepress_create_html( 'span', array( 'class' => 'cp-toggle-btn' ) );
+		$toggle_input = coursepress_create_html( 'span', array( 'class' => 'cp-toggle-btn' ) );
 
 		// General capabilities.
 		$config['capabilities/general'] = array(
@@ -825,12 +833,12 @@ class CoursePress_Admin_Configuration {
 					'desc' => __( 'Allow instructor to update any course.', 'cp' ),
 					'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_update_course_cap', true ),
 				),
-                'coursepress_delete_my_course_cap' => array(
-                    'type' => 'checkbox',
-                    'title' => $toggle_input . __( 'Delete own courses', 'cp' ),
-                    'desc' => __( 'Allow user to delete courses where user is the author.', 'cp' ),
-                    'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_delete_my_course_cap', true ),
-                ),
+				'coursepress_delete_my_course_cap' => array(
+					'type' => 'checkbox',
+					'title' => $toggle_input . __( 'Delete own courses', 'cp' ),
+					'desc' => __( 'Allow user to delete courses where user is the author.', 'cp' ),
+					'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_delete_my_course_cap', true ),
+				),
 				'coursepress_delete_assigned_course' => array(
 					'type' => 'checkbox',
 					'title' => $toggle_input . __( 'Delete assigned courses', 'cp' ),
@@ -1098,26 +1106,26 @@ class CoursePress_Admin_Configuration {
 				'fields' => array(
 					'from' => array(
 						'type' => 'text',
-						'label' => __( 'From name', 'CoursePress' ),
+						'label' => __( 'From name', 'cp' ),
 						'value' => coursepress_get_setting( 'email/'.$key.'/from', $data['from'] ),
 						'flex' => true,
 						'class' => 'large-text',
 					),
 					'email' => array(
 						'type' => 'text',
-						'label' => __( 'From email', 'CoursePress' ),
+						'label' => __( 'From email', 'cp' ),
 						'value' => coursepress_get_setting( 'email/'.$key.'/email', $data['email'] ),
 						'flex' => true,
 						'class' => 'large-text',
 					),
 					'subject' => array(
 						'type' => 'text',
-						'label' => __( 'Subject', 'CoursePress' ),
+						'label' => __( 'Subject', 'cp' ),
 						'value' => coursepress_get_setting( 'email/'.$key.'/subject', $data['subject'] ),
 						'class' => 'large-text',
 					),
 					'help' => array(
-						'title' => __( 'Email body', 'CoursePress' ),
+						'title' => __( 'Email body', 'cp' ),
 						'type' => 'html_text',
 						'class' => 'cp-info',
 						'value' => '<span class="dashicons dashicons-info"></span> '.$sections[ $key ]['content_help_text'],
@@ -1155,7 +1163,7 @@ class CoursePress_Admin_Configuration {
 		if ( null !== $this->pages ) {
 			return $this->pages;
 		}
-		$this->pages[0] = __( 'use virtual page', 'CoursePress' );
+		$this->pages[0] = __( 'use virtual page', 'cp' );
 		$args = array(
 			'hierarchical' => 0,
 		);
@@ -1165,5 +1173,4 @@ class CoursePress_Admin_Configuration {
 		}
 		return $this->pages;
 	}
-
 }

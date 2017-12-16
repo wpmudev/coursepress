@@ -12,7 +12,7 @@
           margin-left: 0;
         }
         &.cp-input-group-div {
-          min-width: 30%;
+          min-width: 33%;
         }
         .cp-btn {
           margin-left: 10px;
@@ -42,9 +42,13 @@
         padding-right: 5%;
       }
     }
+    .cp-title {
+      font-weight: bolder;
+    }
     .coursepress-table {
       .cp-assessments-table-container {
         margin-top: 30px;
+        font-size: 15px;
         .cp-assesments-questions-expanded {
           width: 100%;
           background-color: #f1f1f1;
@@ -53,6 +57,9 @@
             td, th {
               background-color: #f1f1f1;
             }
+          }
+          tr.cp-question-title th {
+            background: #e5e5e5;
           }
         }
       }
@@ -66,8 +73,10 @@
             }
           }
           .user_login {
-            font-weight: 600;
             padding-right: 5px;
+          }
+          .display_name {
+            font-weight: normal;
           }
         }
       }
@@ -98,7 +107,6 @@
         }
       }
       .cp-tick-icon {
-        padding: 0 15px;
         &:before {
           @include icon('\f00c');
           margin-left: 5px;
@@ -107,7 +115,6 @@
         }
       }
       .cp-cross-icon {
-        padding: 0 15px;
         &:before {
           @include icon('\f00d');
           margin-left: 5px;
@@ -116,7 +123,6 @@
         }
       }
       .cp-plus-icon {
-        padding: 0 15px;
         &:after {
           @include icon('\f067');
           margin-left: 5px;
@@ -124,12 +130,24 @@
         }
       }
       .cp-minus-icon {
-        padding: 0 15px;
         &:after {
           @include icon('\f068');
           margin-left: 5px;
           cursor: pointer;
         }
+      }
+      .cp-no-answer {
+        margin-left: 5px;
+        color: #ff0000;
+      }
+      .column-student {
+        width: 20%;
+      }
+      .column-grade {
+        width: 5%;
+      }
+      h3 {
+        margin: 0;
       }
       ul.cp-assessments-units-expanded {
         li {
@@ -146,6 +164,30 @@
         .pull-left {
           padding-left: 10px;
         }
+        .pull-right {
+          padding-right: 10px;
+        }
+        .cp-green {
+          color: #008000;
+        }
+        .cp-red {
+          color: #FF0000;
+        }
+      }
+      .cp-assessments-details {
+        ul.cp-assessments-answers {
+          li {
+            padding: 0;
+            border: 0;
+            background: none;
+          }
+        }
+      }
+      .cp-right-answer {
+        color: #26b928;
+      }
+      .cp-wrong-answer {
+        color: #ce0000;
       }
       .column-modules_progress,
       .column-reports {
@@ -163,6 +205,9 @@
         }
         .hidden {
           display: none;
+        }
+        th {
+          font-weight: bolder;
         }
       }
     }

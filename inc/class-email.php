@@ -7,18 +7,16 @@
  */
 class CoursePress_Email extends CoursePress_Utility {
 
-	function get_email_data( $context = false ) {
+	public function get_email_data( $context = false ) {
 		$defaults = $this->get_defaults( $context );
 		$key = ! $context ? 'email' : 'email/' . $context;
 		$data = coursepress_get_setting( $key, $defaults );
-
 		return $data;
 	}
 
 	public function get_defaults( $context = false ) {
-        $blog_name = coursepress_get_option( 'blogname' );
-        $blog_email = coursepress_get_option( 'admin_email' );
-
+		$blog_name = coursepress_get_option( 'blogname' );
+		$blog_email = coursepress_get_option( 'admin_email' );
 		$defaults = apply_filters(
 			'coursepress_default_email_settings',
 			array(
@@ -26,7 +24,7 @@ class CoursePress_Email extends CoursePress_Utility {
 					'enabled' => '1',
 					'from' => $blog_name,
 					'email' => $blog_email,
-					'subject' => sprintf( __( '[%s] Congratulations. You passed your course.', 'CoursePress' ), get_option( 'blogname' ) ),
+					'subject' => sprintf( __( '[%s] Congratulations. You passed your course.', 'coursepress' ), get_option( 'blogname' ) ),
 					'content' => $this->_basic_certificate_email(),
 					'auto_email' => true,
 				),
@@ -34,82 +32,81 @@ class CoursePress_Email extends CoursePress_Utility {
 					'enabled' => '1',
 					'from' => $blog_name,
 					'email' => $blog_email,
-					'subject' => __( 'Registration Status', 'CoursePress' ),
+					'subject' => __( 'Registration Status', 'coursepress' ),
 					'content' => $this->_registration_email(),
 				),
 				'enrollment_confirm' => array(
 					'enabled' => '1',
 					'from' => $blog_name,
 					'email' => $blog_email,
-					'subject' => __( 'Enrollment Confirmation', 'CoursePress' ),
+					'subject' => __( 'Enrollment Confirmation', 'coursepress' ),
 					'content' => $this->_enrollment_confirmation_email(),
 				),
 				'instructor_enrollment_notification' => array(
 					'enabled' => '1',
 					'from' => $blog_name,
 					'email' => $blog_email,
-					'subject' => __( 'New Enrollment In Your Course', 'CoursePress' ),
+					'subject' => __( 'New Enrollment In Your Course', 'coursepress' ),
 					'content' => $this->_instructor_enrollment_notification_email(),
 				),
 				'course_invitation' => array(
 					'enabled' => '1',
 					'from' => $blog_name,
 					'email' => $blog_email,
-					'subject' => __( 'Invitation to a Course', 'CoursePress' ),
+					'subject' => __( 'Invitation to a Course', 'coursepress' ),
 					'content' => $this->_course_invitation_email(),
 				),
 				'course_invitation_password' => array(
 					'enabled' => '1',
 					'from' => $blog_name,
 					'email' => $blog_email,
-					'subject' => __( 'Invitation to a Course ( Psss...for selected ones only )', 'CoursePress' ),
+					'subject' => __( 'Invitation to a Course ( Psss...for selected ones only )', 'coursepress' ),
 					'content' => $this->_course_invitation_passcode_email(),
 				),
 				'instructor_invitation' => array(
 					'enabled' => '1',
 					'from' => $blog_name,
 					'email' => $blog_email,
-					'subject' => sprintf( __( 'Invitation to be an instructor at %s', 'CoursePress' ), get_option( 'blogname' ) ),
+					'subject' => sprintf( __( 'Invitation to be an instructor at %s', 'coursepress' ), get_option( 'blogname' ) ),
 					'content' => $this->_instructor_invitation_email(),
 				),
 				'facilitator_invitation' => array(
 					'enabled' => '1',
 					'from' => $blog_name,
 					'email' => $blog_email,
-					'subject' => sprintf( __( 'Invitation to be a facilitator at %s', 'CoursePress' ), get_option( 'blogname' ) ),
+					'subject' => sprintf( __( 'Invitation to be a facilitator at %s', 'coursepress' ), get_option( 'blogname' ) ),
 					'content' => $this->_facilitator_invitation_email(),
 				),
 				'new_order' => array(
 					'enabled' => '1',
 					'from' => $blog_name,
 					'email' => $blog_email,
-					'subject' => __( 'Order Confirmation', 'CoursePress' ),
+					'subject' => __( 'Order Confirmation', 'coursepress' ),
 					'content' => $this->_new_order_email(),
 				),
 				'course_start_notification' => array(
 					'enabled' => '1',
 					'from' => $blog_name,
 					'email' => $blog_email,
-					'subject' => __( 'Course Start Notfication', 'CoursePress' ),
+					'subject' => __( 'Course Start Notification', 'coursepress' ),
 					'content' => $this->course_start_defaults(),
 				),
 				'discussion_notification' => array(
 					'enabled' => '1',
 					'from' => $blog_name,
 					'email' => $blog_email,
-					'subject' => __( 'Discussion Notfication', 'CoursePress' ),
+					'subject' => __( 'Discussion Notification', 'coursepress' ),
 					'content' => $this->discussion_defaults(),
 				),
 				'unit_started_notification' => array(
 					'enabled' => '1',
 					'from' => $blog_name,
 					'email' => $blog_email,
-					'subject' => __( '[UNIT_TITLE] is now available', 'CoursePress' ),
+					'subject' => __( '[UNIT_TITLE] is now available', 'coursepress' ),
 					'content' => $this->unit_started_defaults(),
 				),
 			)
 		);
-
 		if ( $context && isset( $defaults[ $context ] ) ) {
 			return $defaults[ $context ];
 		} else {
@@ -244,76 +241,73 @@ class CoursePress_Email extends CoursePress_Utility {
 		$course_start_fields = array_keys( $course_start_fields );
 		$discussion_fields = array_keys( $discussion_fields );
 		$units_started = array_keys( $units_started );
-
 		$_codes_text = sprintf( '<p>%1$s</p> <p>%2$s</p>', __( 'These codes will be replaced with actual data:', 'cp' ), '<b>%s</b>' );
-
 		$defaults = apply_filters(
 			'coursepress_default_email_settings_sections',
 			array(
 				'basic_certificate' => array(
-					'title' => __( 'Basic Certificate E-mail', 'CoursePress' ),
-					'description' => __( 'Settings for emails when using basic certificate functionality (when course completed).', 'CoursePress' ),
+					'title' => __( 'Basic Certificate E-mail', 'coursepress' ),
+					'description' => __( 'Settings for emails when using basic certificate functionality (when course completed).', 'coursepress' ),
 					'content_help_text' => sprintf( $_codes_text, implode( ', ', $basic_certificate_fields ) ),
 				),
 				'registration' => array(
-					'title' => __( 'User Registration E-mail', 'CoursePress' ),
-					'description' => __( 'Settings for an e-mail student get upon account registration.', 'CoursePress' ),
+					'title' => __( 'User Registration E-mail', 'coursepress' ),
+					'description' => __( 'Settings for an e-mail student get upon account registration.', 'coursepress' ),
 					'content_help_text' => sprintf( $_codes_text, implode( ', ', $registration_fields ) ),
 				),
 				'enrollment_confirm' => array(
-					'title' => __( 'Course Enrollment Confirmation E-mail', 'CoursePress' ),
-					'description' => __( 'Settings for an e-mail student get upon enrollment.', 'CoursePress' ),
+					'title' => __( 'Course Enrollment Confirmation E-mail', 'coursepress' ),
+					'description' => __( 'Settings for an e-mail student get upon enrollment.', 'coursepress' ),
 					'content_help_text' => sprintf( $_codes_text, implode( ', ', $enrollment_confirm ) ),
 				),
 				'instructor_enrollment_notification' => array(
-					'title' => __( 'Enrollment Notification for Instructor E-mail', 'CoursePress' ),
-					'description' => __( 'Settings for an e-mail instructor gets when a new student enrolls.', 'CoursePress' ),
+					'title' => __( 'Enrollment Notification for Instructor E-mail', 'coursepress' ),
+					'description' => __( 'Settings for an e-mail instructor gets when a new student enrolls.', 'coursepress' ),
 					'content_help_text' => sprintf( $_codes_text, implode( ', ', $instructor_enrollment_notification ) ),
 				),
 				'course_invitation' => array(
-					'title' => __( 'Student Invitation to a Course E-mail', 'CoursePress' ),
-					'description' => __( 'Settings for an e-mail student get upon receiving an invitation to a course.', 'CoursePress' ),
+					'title' => __( 'Student Invitation to a Course E-mail', 'coursepress' ),
+					'description' => __( 'Settings for an e-mail student get upon receiving an invitation to a course.', 'coursepress' ),
 					'content_help_text' => sprintf( $_codes_text, implode( ', ', $course_invitation_fields ) ),
 				),
 				'course_invitation_password' => array(
-					'title' => __( 'Student Invitation to a Course E-mail (with passcode)', 'CoursePress' ),
-					'description' => __( 'Settings for an e-mail student get upon receiving an invitation (with passcode) to a course.', 'CoursePress' ),
+					'title' => __( 'Student Invitation to a Course E-mail (with passcode)', 'coursepress' ),
+					'description' => __( 'Settings for an e-mail student get upon receiving an invitation (with passcode) to a course.', 'coursepress' ),
 					'content_help_text' => sprintf( $_codes_text, implode( ', ', $course_invitation_fields ) ),
 				),
 				'instructor_invitation' => array(
-					'title' => __( 'Instructor Invitation Email', 'CoursePress' ),
-					'description' => __( 'Settings for an e-mail an instructor will get upon receiving an invitation.', 'CoursePress' ),
+					'title' => __( 'Instructor Invitation Email', 'coursepress' ),
+					'description' => __( 'Settings for an e-mail an instructor will get upon receiving an invitation.', 'coursepress' ),
 					'content_help_text' => sprintf( $_codes_text, implode( ', ', $instructor_invitation_fields ) ),
 				),
 				'facilitator_invitation' => array(
-					'title' => __( 'Facilitator Invitation Email', 'CoursePress' ),
-					'description' => __( 'Settings for an e-mail a facilitator will get upon receiving an invitation.', 'CoursePress' ),
+					'title' => __( 'Facilitator Invitation Email', 'coursepress' ),
+					'description' => __( 'Settings for an e-mail a facilitator will get upon receiving an invitation.', 'coursepress' ),
 					'content_help_text' => sprintf( $_codes_text, implode( ', ', $instructor_invitation_fields ) ),
 				),
 				'new_order' => array(
-					'title' => __( 'New Order E-mail', 'CoursePress' ),
-					'description' => __( 'Settings for an e-mail student get upon placing an order.', 'CoursePress' ),
+					'title' => __( 'New Order E-mail', 'coursepress' ),
+					'description' => __( 'Settings for an e-mail student get upon placing an order.', 'coursepress' ),
 					'content_help_text' => sprintf( $_codes_text, 'CUSTOMER_NAME, BLOG_NAME, LOGIN_ADDRESS, COURSES_ADDRESS, WEBSITE_ADDRESS, COURSE_ADDRESS, ORDER_ID, ORDER_STATUS_URL' ),
 				),
 				'course_start_notification' => array(
-					'title' => __( 'Course Notfication E-mail', 'CoursePress' ),
-					'description' => __( 'Settings for an e-mail to send to students when a course started.', 'CoursePress' ),
+					'title' => __( 'Course Notification E-mail', 'coursepress' ),
+					'description' => __( 'Settings for an e-mail to send to students when a course started.', 'coursepress' ),
 					'content_help_text' => sprintf( $_codes_text, implode( ', ', $course_start_fields ) ),
 				),
 				'discussion_notification' => array(
-					'title' => __( 'Discussion Notfication E-mail', 'CoursePress' ),
-					'description' => __( 'Settings for an e-mail to send to students and instructors.', 'CoursePress' ),
+					'title' => __( 'Discussion Notification E-mail', 'coursepress' ),
+					'description' => __( 'Settings for an e-mail to send to students and instructors.', 'coursepress' ),
 					'content_help_text' => sprintf( $_codes_text, implode( ', ', $discussion_fields ) ),
 				),
 				'unit_started_notification' => array(
-					'title' => __( 'Course Unit Started E-mail', 'CoursePress' ),
-					'description' => __( 'Settings for an e-mail to send to students whenever a unit have started.', 'CoursePress' ),
-					'content_help_text' => sprintf( __( '* You may use %s mail token to your subject line. ', 'CoursePress' ), 'UNIT_TITLE' ) .
+					'title' => __( 'Course Unit Started E-mail', 'coursepress' ),
+					'description' => __( 'Settings for an e-mail to send to students whenever a unit have started.', 'coursepress' ),
+					'content_help_text' => sprintf( __( '* You may use %s mail token to your subject line. ', 'coursepress' ), 'UNIT_TITLE' ) .
 						sprintf( $_codes_text, implode( ', ', $units_started ) ),
 				),
 			)
 		);
-
 		return $defaults;
 	}
 
@@ -330,7 +324,7 @@ You can access your profile here: %4$s
 And get started exploring our courses here: %5$s
 
 Best wishes,
-The %6$s Team', 'CoursePress' ),
+The %6$s Team', 'coursepress' ),
 				'STUDENT_FIRST_NAME',
 				'STUDENT_LAST_NAME',
 				'BLOG_NAME',
@@ -354,11 +348,11 @@ You can review the courses you’re enrolled in here: %4$s.
 And explore other courses available to you here: %5$s
 
 Best wishes,
-The %6$s Team', 'CoursePress' ),
+The %6$s Team', 'coursepress' ),
 				'STUDENT_FIRST_NAME',
 				'STUDENT_LAST_NAME',
 				'<a href="COURSE_ADDRESS">COURSE_TITLE</a>',
-				'<a href="STUDENT_DASHBOARD">' . __( 'Dashboard', 'CoursePress' ) . '</a>',
+				'<a href="STUDENT_DASHBOARD">' . __( 'Dashboard', 'coursepress' ) . '</a>',
 				'<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>',
 				'WEBSITE_ADDRESS'
 			)
@@ -376,7 +370,7 @@ A new student "%3$s %4$s" has enrolled in your course "%5$s".
 You can manage all the students enrolled in this course here: %6$s
 
 Best wishes,
-The %7$s Team', 'CoursePress' ),
+The %7$s Team', 'coursepress' ),
 				'INSTRUCTOR_FIRST_NAME',
 				'INSTRUCTOR_LAST_NAME',
 				'STUDENT_FIRST_NAME',
@@ -405,7 +399,7 @@ Check out the course page for a detailed overview: %5$s
 If you have any questions feel free to get in touch!
 
 Best wishes,
-The %6$s Team', 'CoursePress' ),
+The %6$s Team', 'coursepress' ),
 				'STUDENT_FIRST_NAME',
 				'STUDENT_LAST_NAME',
 				'COURSE_NAME',
@@ -437,7 +431,7 @@ Check out the course page for a detailed overview: %5$s
 If you have any questions feel free to get in touch!
 
 Best wishes,
-The %6$s Team', 'CoursePress' ),
+The %6$s Team', 'coursepress' ),
 				'STUDENT_FIRST_NAME',
 				'STUDENT_LAST_NAME',
 				'COURSE_NAME',
@@ -466,7 +460,7 @@ If you haven\'t yet got a username you will need to create one.
 %5$s
 
 Best wishes,
-The %5$s Team', 'CoursePress' ),
+The %5$s Team', 'coursepress' ),
 				'INSTRUCTOR_FIRST_NAME',
 				'INSTRUCTOR_LAST_NAME',
 				'COURSE_NAME',
@@ -493,7 +487,7 @@ If you haven\'t yet received a username you will need to create one. You can do 
 %5$s
 
 Best wishes,
-The %5$s Team', 'CoursePress' ),
+The %5$s Team', 'coursepress' ),
 				'INSTRUCTOR_FIRST_NAME',
 				'INSTRUCTOR_LAST_NAME',
 				'COURSE_NAME',
@@ -516,10 +510,10 @@ Please refer to your Order ID (ORDER_ID) whenever contacting us.
 You can track the latest status of your order here: ORDER_STATUS_URL
 
 best wishes,
-%5$s Team', 'CoursePress' ),
+%5$s Team', 'coursepress' ),
 				'CUSTOMER_NAME',
 				'<a href="COURSE_ADDRESS">COURSE_TITLE</a>',
-				'<a href="STUDENT_DASHBOARD">' . __( 'Dashboard', 'CoursePress' ) . '</a>',
+				'<a href="STUDENT_DASHBOARD">' . __( 'Dashboard', 'coursepress' ) . '</a>',
 				'<a href="COURSES_ADDRESS">COURSES_ADDRESS</a>',
 				'BLOG_NAME'
 			)
@@ -539,7 +533,7 @@ You can review course material here::
 %3$s
 
 Best wishes,
-The %4$s Team', 'CoursePress' ),
+The %4$s Team', 'coursepress' ),
 				'FIRST_NAME',
 				'COURSE_NAME',
 				'<a href="COURSE_ADDRESS">COURSE_ADDRESS</a>',
@@ -557,7 +551,7 @@ The %4$s Team', 'CoursePress' ),
 %2$s
 
 Best wishes,
-The %3$s Team', 'CoursePress' ),
+The %3$s Team', 'coursepress' ),
 				'COURSE_NAME',
 				'COMMENT_MESSAGE',
 				'WEBSITE_ADDRESS'
@@ -577,7 +571,7 @@ You can continue your learning by clicking the link below:
 %4$s
 
 Best wishes,
-The %5$s Team', 'CoursePress' ),
+The %5$s Team', 'coursepress' ),
 				'STUDENT_FIRST_NAME',
 				'UNIT_TITLE',
 				'COURSE_NAME',
@@ -597,7 +591,6 @@ The %5$s Team', 'CoursePress' ),
 			<h4>Date: %4$s</h4>
 			<small>Certificate no.: %5$s</small>', 'CP_TD'
 		);
-
 		$default_certification_content = sprintf(
 			$msg,
 			'FIRST_NAME',
@@ -607,7 +600,6 @@ The %5$s Team', 'CoursePress' ),
 			'CERTIFICATE_NUMBER',
 			'UNIT_LIST'
 		);
-
 		return $default_certification_content;
 	}
 
@@ -621,17 +613,14 @@ The %5$s Team', 'CoursePress' ),
 	 * @return bool
 	 */
 	public function notification_alert_email( $students, $title, $content ) {
-
 		// Make sure students are there.
 		if ( empty( $students ) ) {
 			return false;
 		}
-
 		// If all students option selected, get all students.
 		if ( in_array( 0, $students ) ) {
 			$students = coursepress_get_students_ids();
 		}
-
 		return $this->_send_students_notification_email( $students, $title, $content );
 	}
 
@@ -645,23 +634,18 @@ The %5$s Team', 'CoursePress' ),
 	 * @return bool
 	 */
 	private function _send_students_notification_email( $students, $title, $content ) {
-
 		// Make sure students are there.
 		if ( empty( $students ) ) {
 			return false;
 		}
-
 		// Set html email.
-		$headers = array('Content-Type: text/html; charset=UTF-8');
-
+		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
 		// Send separate email for each students.
 		foreach ( $students as $student ) {
-
 			$student = coursepress_get_user( $student );
 			if ( is_wp_error( $student ) ) {
 				continue;
 			}
-
 			// @todo Add more tokens.
 			$tokens = array(
 				'STUDENT_FIRST_NAME' => $student->first_name,
@@ -671,15 +655,11 @@ The %5$s Team', 'CoursePress' ),
 				'LOGIN_ADDRESS' => wp_login_url(),
 				'WEBSITE_ADDRESS' => site_url(),
 			);
-
 			// Replacing tokens by actual content.
 			$content = $this->replace_vars( $content, $tokens );
-
 			wp_mail( $student->user_email, $title, $content, $headers );
 		}
-
 		return true;
-
 	}
 
 	/**
@@ -696,7 +676,7 @@ The %5$s Team', 'CoursePress' ),
 	 *               fields .. content variables, array of key-value pairs.
 	 * @return bool True if email was accepted by wp_mail.
 	 **/
-	function sendEmail( $context, $args ) {
+	public function sendEmail( $context, $args ) {
 		// Prepare email content.
 		$email = array(
 			'to' => apply_filters(
@@ -725,7 +705,6 @@ The %5$s Team', 'CoursePress' ),
 				isset( $args['attachments'] ) ? $args['attachments'] : array()
 			),
 		);
-
 		$email = apply_filters(
 			'coursepress_email_fields',
 			$email,
@@ -737,18 +716,14 @@ The %5$s Team', 'CoursePress' ),
 			$email,
 			$args
 		);
-
 		// Good one to hook if you want to hook WP specific filters (e.g. changing from address)
 		do_action( 'coursepress_email_pre_send', $args, $context );
 		do_action( 'coursepress_email_pre_send-' . $context, $args );
-
 		if ( apply_filters( 'coursepress_email_strip_slashed', true, $args, $context ) ) {
 			$email['subject'] = stripslashes( $email['subject'] );
 			$email['message'] = stripslashes( nl2br( $email['message'] ) );
 		}
-
 		$header_string = '';
-
 		if ( isset( $args['bcc'] ) ) {
 			if ( is_array( $args['bcc'] ) ) {
 				$bcc = implode( ',', $args['bcc'] );
@@ -759,13 +734,10 @@ The %5$s Team', 'CoursePress' ),
 				$header_string .= 'Bcc: ' . $bcc . ';';
 			}
 		}
-
 		foreach ( $email['headers'] as $key => $value ) {
 			$header_string .= $key . ': ' . $value . "\r\n";
 		}
-
 		$email['headers'] = $header_string;
-
 		/**
 		 * Action offers other plugins to implement custom email sending code,
 		 * for example to use a custom built HTML template or similar.
@@ -782,10 +754,8 @@ The %5$s Team', 'CoursePress' ),
 			$args,
 			$context
 		);
-
 		// If custom send-option failed or was not used then send via wp_mail.
 		if ( is_null( $result ) || ! $result ) {
-
 			try {
 				$result = wp_mail(
 					$email['to'],
@@ -798,12 +768,9 @@ The %5$s Team', 'CoursePress' ),
 				// print_r($e->getMessage()); // for debugging purposes
 				$result = false;
 			}
-
 		}
-
 		do_action( 'coursepress_email_sent', $args, $context, $result );
 		do_action( 'coursepress_email_sent-' . $context, $args, $result );
-
 		return $result;
 	}
 }
