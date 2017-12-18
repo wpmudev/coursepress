@@ -171,7 +171,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	}
 
 	function update_units( $request ) {
-		if ( $request->units ) {
+        if ( $request->units ) {
 			$course_id = (int) $request->course_id;
 			$units = $request->units;
 			$menu_order = 0;
@@ -275,11 +275,15 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 					    				if ( is_object( $step_value ) ) {
 					    					$step_value = $this->to_array( $step_value );
 									    }
-
-					    				$step_metas[ $_step_key ] = $step_value;
-								    }
-							    }
-
+                                        $step_metas[ $_step_key ] = $step_value;
+                                    }
+                                }
+					    		foreach ( $step as $step_key => $step_value ) {
+                                    if ( preg_match( '/^meta_((.+)\[view\d+\])$/', $step_key, $matches ) ) {
+                                        unset( $step_metas[$matches[1]] );
+                                        $step_metas[$matches[2]] = $step_value;
+                                    }
+                                }
 							    $stepId = coursepress_create_step( $step_array, $step_metas );
 					    		$step_object = coursepress_get_course_step( $stepId );
 					    		$module->steps->{$step_cid} = $step_object;
