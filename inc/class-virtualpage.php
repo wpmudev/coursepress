@@ -134,10 +134,15 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 	private function get_post_id_by_slug( $slug, $post_type, $post_parent = 0 ) {
 		global $wpdb;
 		$sql = "SELECT ID FROM `{$wpdb->posts}` WHERE `post_name`=%s AND `post_type`=%s";
+		$args = array(
+			$slug,
+			$post_type,
+		);
 		if ( (int) $post_parent > 0 ) {
 			$sql .= ' AND `post_parent`=%d';
+			$args[] = $post_parent;
 		}
-		$sql = $wpdb->prepare( $sql, $slug, $post_type, $post_parent );
+		$sql = $wpdb->prepare( $sql, $args );
 		$post_id = $wpdb->get_var( $sql );
 		return $post_id;
 	}
