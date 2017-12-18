@@ -598,8 +598,8 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$args = array(
 			'email' => $request->email,
 			'course_id' => $request->course_id,
-			'first_name' => empty( $request->first_name ) ? '' : empty( $request->first_name ),
-			'last_name' => empty( $request->last_name ) ? '' : empty( $request->last_name ),
+			'first_name' => empty( $request->first_name ) ? '' : $request->first_name,
+			'last_name' => empty( $request->last_name ) ? '' : $request->last_name,
 		);
 
 		// Send email invitation.
