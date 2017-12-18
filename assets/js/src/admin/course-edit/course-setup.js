@@ -256,11 +256,19 @@
               this.getNextStep(ev);
             },
 
+	        getSaveMode: function () {
+		        return this.savemode;
+	        },
+
+	        setSaveMode: function (saveMode) {
+		        this.savemode = saveMode;
+	        },
+
             getNextStep: function(ev) {
                 var nextStep;
 
                 this.senderButton = this.$(ev.currentTarget);
-                this.savemode = this.senderButton.is('.step-save') ? 'save' : 'continue';
+                this.savemode = this.senderButton.is('.step-next') ? 'continue' : 'save';
                 nextStep = this._getNextStep();
 
                 if ( nextStep ) {
