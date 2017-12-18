@@ -198,10 +198,8 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 		if ( preg_match( $pattern, $meta_key ) ) {
 			// Get course ID.
 			$course_id = str_replace( 'course_', '', $meta_key );
-			// Get post current status.
-			$status = get_post_status( (int) $course_id );
-			// Consider only if not deleted.
-			if ( ! empty( $status ) && ! in_array( $status, array( 'trash', 'inherit' ) ) ) {
+			// Get post current status and see if post really exists.
+			if ( get_post_status( (int) $course_id ) ) {
 				return $course_id;
 			}
 		}
