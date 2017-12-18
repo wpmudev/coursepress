@@ -127,8 +127,14 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 		);
 
 		foreach ( array_keys( $this->items ) as $instructor_id ) {
-			$this->items[ $instructor_id ]->count_courses = $this->count_courses( $instructor_id, true );
-			$this->items[ $instructor_id ]->courses_link = add_query_arg( 'instructor_id', $instructor_id, $url );
+			$count = $this->count_courses( $instructor_id, true );
+			// Only add if instructor count is grater than zero.
+			if ( $count > 0 ) {
+				$this->items[ $instructor_id ]->count_courses = $count;
+				$this->items[ $instructor_id ]->courses_link  = add_query_arg( 'instructor_id', $instructor_id, $url );
+			} else {
+				unset( $this->items[ $instructor_id ] );
+			}
 		}
 
 		return $this->items;
