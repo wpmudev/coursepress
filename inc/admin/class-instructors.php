@@ -190,7 +190,14 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 		}
 		$pattern = sprintf( '/^(%s)$/', implode( '|', $regex ) );
 		if ( preg_match( $pattern, $meta_key ) ) {
-			return $meta_key;
+			// Get course ID.
+			$course_id = str_replace( 'course_', '', $meta_key );
+			// Get post current status.
+			$status = get_post_status( (int) $course_id );
+			// Consider only if not deleted.
+			if ( ! empty( $status ) && ! in_array( $status, array( 'trash', 'inherit' ) ) ) {
+				return $course_id;
+			}
 		}
 		return false;
 	}
