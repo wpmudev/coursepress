@@ -124,8 +124,12 @@
                     this.unitsview.remove();
                     this.unitList.remove();
                 }
-                if ( ! this.unitCollection ) {
-                    this.unitCollection = new CoursePress.UnitCollection(course_id);
+
+                if(!this.unitCollection || this.courseTypeChanged()) {
+                    this.unitCollection = new CoursePress.UnitCollection({
+                        'course_id': course_id,
+                        'with_modules': with_modules
+                    });
                 }
                 this.unitList = new CoursePress.UnitList({}, this);
                 this.unitCollection.on( 'add', this.unitList.addUnit, this.unitList );
@@ -137,6 +141,10 @@
                 }
 
                 this.unitsview.$el.appendTo(this.unitsContainer);
+            },
+
+            courseTypeChanged: function () {
+                return _.contains(_.keys(this.model.changedAttributes()), 'meta_with_modules');
             },
 
             courseStudentsView: function() {
