@@ -1642,7 +1642,14 @@ function coursepress_discussion_module_link( $location, $comment ) {
 	return $location;
 }
 
-function coursepress_invite_student( $course_id = 0, $student_data = array() ) {
+/**
+ * Invite student to a course.
+ *
+ * @param int $course_id Course ID.
+ * @param object $student_data Student Data(first_name, last_name, email).
+ * @return object All invited students
+ */
+function coursepress_invite_student( $course_id, $student_data ) {
 	global $CoursePress;
 
 	$course = coursepress_get_course( $course_id );
@@ -1670,11 +1677,11 @@ function coursepress_invite_student( $course_id = 0, $student_data = array() ) {
 		'COURSE_ADDRESS' => $course->get_permalink(),
 		'WEBSITE_ADDRESS' => site_url( '/' ),
 		'PASSCODE' => $course->__get( 'enrollment_passcode' ),
-		'FIRST_NAME' => $student_data['first_name'],
-		'LAST_NAME' => $student_data['last_name'],
+		'FIRST_NAME' => $student_data->first_name,
+		'LAST_NAME' => $student_data->last_name,
 	);
 	$message = $course->replace_vars( $email_data['content'], $tokens );
-	$email = sanitize_email( $student_data['email'] );
+	$email = sanitize_email( $student_data->email );
 
 	$args = array(
 		'message' => $message,
@@ -1683,14 +1690,14 @@ function coursepress_invite_student( $course_id = 0, $student_data = array() ) {
 	$email_data = wp_parse_args( $email_data, $args );
 	$emailClass->sendEmail( $email_type, $email_data );
 
-	$student_data['date'] = $course->date( current_time( 'mysql' ) );
+	$student_data->date = $course->date( current_time( 'mysql' ) );
 	$invited_students = $course->__get( 'invited_students' );
 
 	if ( ! $invited_students ) {
-		$invited_students = array();
+		$invited_students = new stdClass();
 	}
 
-	$invited_students[ $email ] = $student_data;
+	$invited_students->{$email} = $student_data;
 	$course->update_setting( 'invited_students', $invited_students );
 
 	return $student_data;
