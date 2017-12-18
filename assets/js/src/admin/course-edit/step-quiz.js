@@ -178,9 +178,9 @@
 
                this.visualEditor({
                    container: this.description,
-                   content: this.model.post_content,
+                   content: this.model.get('post_content'),
                    callback: function( content ) {
-                       self.model.post_content = content;
+                       self.model.set('post_content', content);
                    }
                });
 
