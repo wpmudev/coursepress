@@ -224,14 +224,13 @@ class CoursePress_Admin_Table_Instructors extends WP_Users_List_Table {
 	}
 
 	public function column_courses( $user_id ) {
-		$count = CoursePress_Data_Instructor::count_courses( $user_id );
+		$count = CoursePress_Data_Instructor::count_courses( $user_id, true );
 		$courses_link = add_query_arg(
 			array(
 				'view' => 'courses',
 				'instructor_id' => $user_id,
 			)
 		);
-
 		return $count > 0 ? sprintf( '<a href="%s">%s</a>', $courses_link, $count ) : 0;
 	}
 

@@ -19,6 +19,7 @@ CHANGELOG
 * Fixed: Missing new instructor on instructors list.
 * Improved: Added filters to get_time_estimation() functions: coursepress_course_get_time_estimation, coursepress_unit_get_time_estimation, coursepress_module_get_time_estimation.
 * Improved: Prevent save units before fetching all data.
+* Improved: FOrce recalculate number of courses on Instructors Screen.
 
 = 2.1.3 =
 -------------------------------------------------

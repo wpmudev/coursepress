@@ -101,19 +101,14 @@ class CoursePress_Data_Instructor {
 	 */
 	public static function get_assigned_courses_ids( $user, $status = 'all' ) {
 		global $wpdb;
-
 		$assigned_courses = array();
-
 		$courses = self::get_course_meta_keys( self::_get_id( $user ) );
-
 		foreach ( $courses as $course ) {
 			$course_id = $course;
-
 			// Careful that we don't pick up students
 			if ( preg_match( '/_progress$/', $course_id ) ) {
 				continue;
 			}
-
 			// Dealing with multisite nuances
 			if ( is_multisite() ) {
 				// Primary blog?
@@ -123,22 +118,23 @@ class CoursePress_Data_Instructor {
 					$course_id = str_replace( $wpdb->prefix, '', $course_id );
 				}
 			}
-
 			$course_id = (int) str_replace( 'course_', '', $course_id );
 
 			if ( ! empty( $course_id ) ) {
-				if ( 'all' != $status ) {
-					if ( get_post_status( $course_id ) == $status ) {
+				if ( CoursePress_Data_Course::is_course( $course_id ) ) {
+					if ( 'all' != $status ) {
+						if ( get_post_status( $course_id ) == $status ) {
+							$assigned_courses[] = $course_id;
+						}
+					} else {
 						$assigned_courses[] = $course_id;
 					}
 				} else {
-					$assigned_courses[] = $course_id;
+					delete_user_meta( $user, $course );
 				}
 			}
 		}
-
 		$course_ids = array();
-
 		if ( ! empty( $assigned_courses ) ) {
 			// Filter the course IDs, make sure courses exists and are not deleted
 			$args = array(
@@ -151,7 +147,16 @@ class CoursePress_Data_Instructor {
 			);
 			$course_ids = get_posts( $args );
 		}
-
+		/**
+		 * update course counter
+		 */
+		$number_of_courses = count( $course_ids );
+		if ( 0 < $number_of_courses ) {
+			update_user_meta( $user, 'cp_instructor_course_count', $number_of_courses );
+		} else {
+			delete_user_meta( $user, 'cp_instructor_course_count' );
+			delete_user_meta( $user, 'role_ins', 'instructor' );
+		}
 		return $course_ids;
 	}
 
@@ -335,18 +340,15 @@ class CoursePress_Data_Instructor {
 	}
 
 	public static function count_courses( $instructor_id, $refresh = false ) {
-		$count = get_user_meta( $instructor_id, 'cp_instructor_course_count', true );
-
-		if ( ! $count || $refresh ) {
+		$number_of_courses = get_user_meta( $instructor_id, 'cp_instructor_course_count', true );
+		if ( ! $number_of_courses || $refresh ) {
 			global $wpdb;
 			/**
 			 * multisite
 			 */
 			$prefix = is_multisite()? $wpdb->prefix:'';
-			$query = $wpdb->prepare( "
-					SELECT `meta_key`
-					FROM $wpdb->usermeta
-					WHERE `meta_key` LIKE '{$prefix}course_%%' AND `user_id`=%d",
+			$query = $wpdb->prepare(
+				"SELECT `meta_key` FROM $wpdb->usermeta WHERE `meta_key` LIKE '{$prefix}course\_%%' AND `user_id`=%d",
 				$instructor_id
 			);
 			$meta_keys = $wpdb->get_results( $query, ARRAY_A );
@@ -361,14 +363,25 @@ class CoursePress_Data_Instructor {
 					$meta_keys
 				);
 				$course_ids = array_filter( $course_ids );
-				$count = count( $course_ids );
-
-				// Save counted courses.
-				update_user_meta( $instructor_id, 'cp_instructor_course_count', $count );
+				foreach ( $course_ids as $course_id ) {
+					$id = preg_replace( '/[^\d]/', '', $course_id );
+					if ( ! CoursePress_Data_Course::is_course( $id ) ) {
+						if ( ($key = array_search( $course_id, $course_ids )) !== false ) {
+							unset( $course_ids[ $key ] );
+						}
+					}
+				}
+				$number_of_courses = count( $course_ids );
+				update_user_meta( $instructor_id, 'cp_instructor_course_count', $number_of_courses );
+				if ( 1 > $number_of_courses ) {
+					delete_user_meta( $instructor_id, 'role_ins', 'instructor' );
+				}
+			} else {
+				update_user_meta( $instructor_id, 'cp_instructor_course_count', 0 );
+				delete_user_meta( $instructor_id, 'role_ins', 'instructor' );
 			}
 		}
-
-		return $count;
+		return $number_of_courses;
 	}
 
 	public static function meta_key( $key ) {
