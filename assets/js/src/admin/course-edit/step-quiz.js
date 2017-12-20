@@ -167,6 +167,8 @@
            initialize: function( model, stepView ) {
                this.stepView = stepView;
                this.on( 'view_rendered', this.setUI, this );
+               this.questions = {};
+               this.questionsModel = {};
                this.render();
            },
 
