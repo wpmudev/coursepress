@@ -1454,7 +1454,7 @@ var CoursePress = CoursePress || {};
 			this.module_collection.url = _coursepress._ajax_url + '?action=unit_builder&task=modules&course_id=' + _coursepress.course_id + '&unit_id=' + unit_id + '&page=' + page;
 			this.module_collection.fetch({
 				success: function() {
-					 $('.unit-save-button').removeClass( 'disabled' );
+					this.$('.unit-save-button').removeClass( 'disabled' );
 				}
 			});
 			// Get the number of pages
@@ -2276,8 +2276,8 @@ var CoursePress = CoursePress || {};
 				this.$( '.unit-builder-modules' )
 					.replaceWith( this.modulesView.render( this.parentView.module_collection.models ).el );
 
-				this.$( '.unit-builder-footer' )
-					.append( this.footerView.render().el );
+				this.$( '.unit-builder-footer' ).append( this.footerView.render().el );
+				this.$('.unit-save-button').removeClass( 'disabled' );
 
 				CoursePress.Helpers.Module.refresh_ui();
 				this.updateSectionEditor();
