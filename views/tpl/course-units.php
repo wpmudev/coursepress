@@ -243,9 +243,9 @@
                         <td class="column-step" data-module="{{module_id}}" data-unit="{{cid}}">
                             <# if ( module.steps ) { #>
                                 <# _.each( module.steps, function( step ) { #>
-                                    <span class="step-icon step-{{step.module_type}}"></span>
-                                    <#})#>
-                                        <#}#>
+                                    <span class="step-icon step-{{step.module_type || step.get('module_type')}}"></span>
+                                <#})#>
+                            <#}#>
                         </td>
                         <td class="column-preview">
                             <label class="cp-checkbox">
