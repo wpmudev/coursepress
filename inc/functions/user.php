@@ -135,6 +135,12 @@ function coursepress_delete_course_instructor( $user_id = 0, $course_id = 0 ) {
 
 	delete_user_option( $user_id, 'role_ins', ! is_multisite() );
 
+	// Reduce instructor count.
+	$count = get_user_meta( $user_id, 'cp_instructor_course_count', true );
+	if ( ! empty( $count ) ) {
+		update_user_meta( $user_id, 'cp_instructor_course_count', $count - 1 );
+	}
+
 	/**
 	 * Trigger whenever an instructor is removed from the course.
 	 *

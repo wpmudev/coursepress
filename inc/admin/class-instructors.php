@@ -127,8 +127,14 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 		);
 
 		foreach ( array_keys( $this->items ) as $instructor_id ) {
-			$this->items[ $instructor_id ]->count_courses = $this->count_courses( $instructor_id, true );
-			$this->items[ $instructor_id ]->courses_link = add_query_arg( 'instructor_id', $instructor_id, $url );
+			$count = $this->count_courses( $instructor_id, true );
+			// Only add if instructor count is grater than zero.
+			if ( $count > 0 ) {
+				$this->items[ $instructor_id ]->count_courses = $count;
+				$this->items[ $instructor_id ]->courses_link  = add_query_arg( 'instructor_id', $instructor_id, $url );
+			} else {
+				unset( $this->items[ $instructor_id ] );
+			}
 		}
 
 		return $this->items;
@@ -190,7 +196,12 @@ class CoursePress_Admin_Instructors extends CoursePress_Admin_Page {
 		}
 		$pattern = sprintf( '/^(%s)$/', implode( '|', $regex ) );
 		if ( preg_match( $pattern, $meta_key ) ) {
-			return $meta_key;
+			// Get course ID.
+			$course_id = str_replace( 'course_', '', $meta_key );
+			// Get post current status and see if post really exists.
+			if ( get_post_status( (int) $course_id ) ) {
+				return $course_id;
+			}
 		}
 		return false;
 	}
