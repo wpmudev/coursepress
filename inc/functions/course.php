@@ -1684,6 +1684,7 @@ function coursepress_invite_student( $course_id, $student_data ) {
 	$email_data = wp_parse_args( $email_data, $args );
 	$emailClass->sendEmail( $email_type, $email_data );
 	$student_data['date'] = $course->date( current_time( 'mysql' ) );
+	$student_data['timestamp'] = time();
 	$invited_students = $course->__get( 'invited_students' );
 	if ( ! $invited_students ) {
 		$invited_students = new stdClass();
