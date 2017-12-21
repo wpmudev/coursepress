@@ -751,15 +751,24 @@ class CoursePress_Course extends CoursePress_Utility {
 		return $student_objects;
 	}
 
+	/**
+	 * Get invited students.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return object $invitee Invited students.
+	 */
 	public function get_invited_students() {
 		$invitee = $this->__get( 'invited_students' );
 		if ( ! empty( $invitee ) ) {
 			foreach ( $invitee as $pos => $invite ) {
-				if ( empty( $invite->date ) ) {
-					// Legacy:: Previous invitation has no date
-					$invite->date = '-';
+				if ( isset( $invite['timestamp'] ) && ! empty( $invite['timestamp'] ) ) {
+					$invite['date'] = $this->date( $invite['timestamp'] );
+				} elseif ( isset( $invite['timestamp'] ) && ! empty( $invite['timestamp'] ) ) {
+					$invite['date'] = $this->date( $invite['date'] );
 				} else {
-					$invite->date = $this->date( $invite->date );
+					// Legacy:: Previous invitation has no date
+					$invite['date'] = '-';
 				}
 				$invitee->{$pos} = $invite;
 			}

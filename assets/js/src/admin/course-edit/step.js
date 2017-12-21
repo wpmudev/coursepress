@@ -136,7 +136,6 @@
                    !(this.model instanceof Module)
                ) {
                    this.model = _.extend({}, default_vars[this.model.module_type], this.model);
-                   this.type = this.model.module_type;
 
                    if (!this.model.cid) {
                        this.model.cid = this.cid;
@@ -147,6 +146,8 @@
                else {
                    this.model = new Module(this.model.toJSON());
                }
+
+	           this.type = this.model.get('module_type');
 
                /*
 
