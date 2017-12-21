@@ -1651,57 +1651,45 @@ function coursepress_discussion_module_link( $location, $comment ) {
  */
 function coursepress_invite_student( $course_id, $student_data ) {
 	global $CoursePress;
-
 	$course = coursepress_get_course( $course_id );
-
 	if ( is_wp_error( $course ) ) {
 		return false;
 	}
-
 	$email_type = 'course_invitation';
-
 	if ( 'passcode' == $course->__get( 'enrollment_type' ) ) {
 		$email_type = 'course_invitation_password';
 	}
-
 	$emailClass = $CoursePress->get_class( 'CoursePress_Email' );
 	$email_data = $emailClass->get_email_data( $email_type );
-
 	if ( empty( $email_data['enabled'] ) ) {
 		return false;
 	}
-
 	$tokens = array(
 		'COURSE_NAME' => $course->__get( 'post_title' ),
 		'COURSE_EXCERPT' => $course->__get( 'post_excerpt' ),
 		'COURSE_ADDRESS' => $course->get_permalink(),
 		'WEBSITE_ADDRESS' => site_url( '/' ),
 		'PASSCODE' => $course->__get( 'enrollment_passcode' ),
-		'FIRST_NAME' => $student_data->first_name,
-		'LAST_NAME' => $student_data->last_name,
-		'STUDENT_FIRST_NAME' => $student_data->first_name,
-		'STUDENT_LAST_NAME' => $student_data->last_name,
+		'FIRST_NAME' => $student_data['first_name'],
+		'LAST_NAME' => $student_data['last_name'],
+		'STUDENT_FIRST_NAME' => $student_data['first_name'],
+		'STUDENT_LAST_NAME' => $student_data['last_name'],
 	);
 	$message = $course->replace_vars( $email_data['content'], $tokens );
-	$email = sanitize_email( $student_data->email );
-
+	$email = sanitize_email( $student_data['email'] );
 	$args = array(
 		'message' => $message,
 		'to' => $email,
 	);
 	$email_data = wp_parse_args( $email_data, $args );
 	$emailClass->sendEmail( $email_type, $email_data );
-
-	$student_data->date = $course->date( current_time( 'mysql' ) );
+	$student_data['date'] = $course->date( current_time( 'mysql' ) );
 	$invited_students = $course->__get( 'invited_students' );
-
 	if ( ! $invited_students ) {
 		$invited_students = new stdClass();
 	}
-
 	$invited_students->{$email} = $student_data;
 	$course->update_setting( 'invited_students', $invited_students );
-
 	return $student_data;
 }
 

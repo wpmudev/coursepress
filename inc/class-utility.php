@@ -6,18 +6,18 @@
  * @package CoursePress
  */
 abstract class CoursePress_Utility {
-	function __set( $name, $value ) {
+	public function __set( $name, $value ) {
 		$this->{$name} = $value;
 	}
 
-	function __get( $name ) {
+	public function __get( $name ) {
 		if ( isset( $this->{$name} ) ) {
 			return $this->{$name}; }
 
-		return null;
+			return null;
 	}
 
-	function setUp( $args ) {
+	public function setUp( $args ) {
 		if ( ! empty( $args ) ) {
 			foreach ( $args as $key => $value ) {
 				$this->__set( $key, $value );
@@ -25,7 +25,7 @@ abstract class CoursePress_Utility {
 		}
 	}
 
-	function date_time_now() {
+	public function date_time_now() {
 		$time_now = current_time( 'timestamp' );
 		$date_now = date( 'M/d/y', current_time( 'timestamp' ) );
 
@@ -35,32 +35,40 @@ abstract class CoursePress_Utility {
 		return $time_now;
 	}
 
-	function strtotime( $date_string ) {
-	    $timestamp = 0;
-	    if ( is_numeric( $date_string ) ) {
-		    // Apparently we got a timestamp already. Simply return it.
-		    $timestamp = (int) $date_string;
-	    } elseif ( is_string( $date_string ) && ! empty( $date_string ) ) {
-		    /*
-			 * Convert the date-string into a timestamp; PHP assumes that the
-			 * date string is in servers default timezone.
-			 * We assume that date string is in "yyyy-mm-dd" format, not a
-			 * relative date and also without timezone suffix.
-			 */
-		    $timestamp = strtotime( $date_string . ' UTC' );
-	    }
+	public function strtotime( $date_string ) {
+		$timestamp = 0;
+		if ( is_numeric( $date_string ) ) {
+			// Apparently we got a timestamp already. Simply return it.
+			$timestamp = (int) $date_string;
+		} elseif ( is_string( $date_string ) && ! empty( $date_string ) ) {
+			/*
+             * Convert the date-string into a timestamp; PHP assumes that the
+             * date string is in servers default timezone.
+             * We assume that date string is in "yyyy-mm-dd" format, not a
+             * relative date and also without timezone suffix.
+             */
+			$timestamp = strtotime( $date_string . ' UTC' );
+		}
 
-	    return (int) $timestamp;
+		return (int) $timestamp;
 	}
 
-	function date( $date_string ) {
-		$date_string = $this->strtotime( $date_string );
-		$date_format = coursepress_get_option( 'date_format' );
-
-		return date_i18n( $date_format, $date_string );
+	/**
+	 * get date in WP format
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $date_input Input string date.
+	 * @return string $date_output Input date formated by WP format.
+	 */
+	public function date( $date_input ) {
+		$date_string = $this->strtotime( $date_input );
+		$date_format = get_option( 'date_format' );
+		$date_output = date_i18n( $date_format, $date_string );
+		return $date_output;
 	}
 
-	function setAttributes( $attr = array() ) {
+	public function setAttributes( $attr = array() ) {
 		if ( ! $attr ) {
 			return ''; }
 
@@ -73,7 +81,7 @@ abstract class CoursePress_Utility {
 		return implode( ' ', $vars );
 	}
 
-	function create_html( $tag, $attributes = array(), $content = '' ) {
+	public function create_html( $tag, $attributes = array(), $content = '' ) {
 		$html = '<' . $tag;
 		if ( ! empty( $attributes ) ) {
 			$html .= ' ' . $this->setAttributes( $attributes );
@@ -87,7 +95,7 @@ abstract class CoursePress_Utility {
 		return $html;
 	}
 
-	function to_array( $array ) {
+	public function to_array( $array ) {
 		if ( is_object( $array ) ) {
 			$array = get_object_vars( $array );
 		}
@@ -104,7 +112,7 @@ abstract class CoursePress_Utility {
 	/**
 	 * Check if current install is PRO or FREE
 	 */
-	function is_pro() {
+	public function is_pro() {
 	}
 
 	/**
@@ -115,16 +123,16 @@ abstract class CoursePress_Utility {
 	 * @param  array  $vars List of placeholder => value.
 	 * @return string The content but with all placeholders replaced.
 	 */
-	function replace_vars( $content, $vars ) {
-	    $keys   = array();
-	    $values = array();
+	public function replace_vars( $content, $vars ) {
+		$keys   = array();
+		$values = array();
 
-	    foreach ( $vars as $key => $value ) {
-		    $keys[]   = $key;
-		    $values[] = $value;
-	    }
+		foreach ( $vars as $key => $value ) {
+			$keys[]   = $key;
+			$values[] = $value;
+		}
 
-	    return str_replace( $keys, $values, $content );
+		return str_replace( $keys, $values, $content );
 	}
 
 	/**
@@ -168,20 +176,20 @@ abstract class CoursePress_Utility {
 	 *
 	 * @return int
 	 */
-	function items_per_page( $option = '' ) {
+	public function items_per_page( $option = '' ) {
 
-	    $per_page = 0;
+		$per_page = 0;
 
-	    if ( ! empty( $option ) ) {
-		    $per_page = get_user_meta( get_current_user_id(), $option, true );
-	    }
+		if ( ! empty( $option ) ) {
+			$per_page = get_user_meta( get_current_user_id(), $option, true );
+		}
 
-	    // If screen option is not set or empty, default posts per page.
-	    if ( empty( $per_page ) ) {
-		    $per_page = coursepress_get_option( 'posts_per_page', 20 );
-	    }
+		// If screen option is not set or empty, default posts per page.
+		if ( empty( $per_page ) ) {
+			$per_page = coursepress_get_option( 'posts_per_page', 20 );
+		}
 
-	    return $per_page;
+		return $per_page;
 	}
 
 	/**
@@ -193,7 +201,7 @@ abstract class CoursePress_Utility {
 	 *
 	 * @return WP_List_Table
 	 */
-	function set_pagination( $count = 0, $option_name = '', $total_pages = 0 ) {
+	public function set_pagination( $count = 0, $option_name = '', $total_pages = 0 ) {
 
 		// Using WP_List table for pagination.
 		$listing = new WP_List_Table();
@@ -213,17 +221,17 @@ abstract class CoursePress_Utility {
 		return $listing;
 	}
 
-	function is_youtube_url( $url ) {
+	public function is_youtube_url( $url ) {
 		$host = parse_url( $url, PHP_URL_HOST );
 		return $host && (strpos( $host, 'youtube' ) !== false || strpos( $host, 'youtu.be' ) !== false);
 	}
 
-	function is_vimeo_url( $url ) {
+	public function is_vimeo_url( $url ) {
 		$host = parse_url( $url, PHP_URL_HOST );
 		return $host && strpos( $host, 'vimeo' ) !== false;
 	}
 
-	function create_video_js_setup_data( $url, $hide_related_media = true, $width = 0 ) {
+	public function create_video_js_setup_data( $url, $hide_related_media = true, $width = 0 ) {
 		//$url = 'http://local.wordpress.dev/wp-content/uploads/2017/07/Recording-3.mp4';
 		//$url = 'https://www.youtube.com/watch?v=FxYw0XPEoKE';
 		//$url = 'https://vimeo.com/6370469';
