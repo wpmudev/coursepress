@@ -1672,8 +1672,6 @@ function coursepress_invite_student( $course_id, $student_data ) {
 		'PASSCODE' => $course->__get( 'enrollment_passcode' ),
 		'STUDENT_FIRST_NAME' => $student_data['first_name'],
 		'STUDENT_LAST_NAME' => $student_data['last_name'],
-		'FIRST_NAME' => $student_data['first_name'],
-		'LAST_NAME' => $student_data['last_name'],
 	);
 	$message = $course->replace_vars( $email_data['content'], $tokens );
 	$email = sanitize_email( $student_data['email'] );
