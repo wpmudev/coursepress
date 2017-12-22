@@ -1689,7 +1689,14 @@ function coursepress_invite_student( $course_id, $student_data ) {
 	if ( ! $invited_students ) {
 		$invited_students = new stdClass();
 	}
-	$invited_students->{$email} = $student_data;
+	/**
+	 * Convert student data to object
+	 */
+	$object = new stdClass();
+	foreach ( $student_data as $key => $value ) {
+			$object->$key = $value;
+	}
+	$invited_students->{$email} = $object;
 	$course->update_setting( 'invited_students', $invited_students );
 	return $student_data;
 }
