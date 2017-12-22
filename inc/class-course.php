@@ -764,7 +764,7 @@ class CoursePress_Course extends CoursePress_Utility {
 			foreach ( $invitee as $pos => $invite ) {
 				if ( isset( $invite->timestamp ) && ! empty( $invite->timestamp ) ) {
 					$invite->date = $this->date( $invite->timestamp );
-				} elseif ( isset( $invite->timestamp ) && ! empty( $invite->timestamp ) ) {
+				} elseif ( isset( $invite->date ) && ! empty( $invite->date ) ) {
 					$invite->date = $this->date( $invite->date );
 				} else {
 					// Legacy:: Previous invitation has no date
