@@ -236,4 +236,5 @@ final class CoursePress {
 	}
 }
 
+global $CoursePress;
 $CoursePress = new CoursePress();
