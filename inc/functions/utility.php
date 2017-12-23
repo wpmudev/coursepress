@@ -137,6 +137,11 @@ function coursepress_get_setting( $key = true, $default = '' ) {
             'enabled' => true,
             'use_cp_default' => false,
             'content' => '',
+	   'margin' => array(
+		   'top' => 0,
+		   'left' => 0,
+		   'right' => 0,
+	   )
         ),
         'extensions' => array(),
         'marketpress' => array(
@@ -175,11 +180,10 @@ function coursepress_get_setting( $key = true, $default = '' ) {
 	 */
 	$defaults = apply_filters( 'coursepress_default_settings', $defaults );
 
-	$general = isset( $settings['general'] )? $settings['general']:array();
-	$settings['general'] = wp_parse_args( $general, $defaults['general'] );
-
-	$slugs = isset( $settings['slugs'] )? $settings['slugs']:array();
-	$settings['slugs'] = wp_parse_args( $slugs, $defaults['slugs'] );
+	foreach ( $defaults as $k => $_default ) {
+		$custom = isset( $settings[ $k ] ) ? $settings[ $k ] : array();
+		$settings[ $k ] = wp_parse_args( $custom, $_default );
+	}
 
 	if ( is_bool( $key ) && TRUE === $key ) {
 		return $settings;
