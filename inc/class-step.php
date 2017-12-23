@@ -28,6 +28,7 @@ class CoursePress_Step extends CoursePress_Unit {
 		$this->__set( 'post_name', $step->post_name );
 		$this->__set( 'unit_id', $step->post_parent );
 		$this->__set( 'post_parent', $step->post_parent );
+		$this->__set( 'menu_order', $step->menu_order );
 		$this->__set( 'course_id', get_post_field( 'post_parent', $step->post_parent ) );
 
 		// Setup meta-data
