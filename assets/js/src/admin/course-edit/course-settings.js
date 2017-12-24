@@ -211,7 +211,7 @@
             },
 
             updateModel: function(ev) {
-                this.courseEditor.updateModel(ev);
+                this.courseEditor.updateModelValues(ev);
             },
 
             toggleBoxes: function( ev ) {
