@@ -50,6 +50,7 @@ class CoursePress_Step extends CoursePress_Unit {
 			'module_page',
 			'show_content',
 			'allowed_file_types',
+			'preview'
 		);
 
 		return $keys;
@@ -78,8 +79,6 @@ class CoursePress_Step extends CoursePress_Unit {
 			$this->__set( $key, $value );
 			$this->__set( 'meta_' . $key, $value );
 		}
-
-		$this->__set( 'preview', true );
 	}
 
 	function get_settings() {
