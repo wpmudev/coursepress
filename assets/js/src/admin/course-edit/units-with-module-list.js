@@ -191,7 +191,10 @@
 
             maybeSetUnit: function(data) {
                 if ( ! data || ! data.length ) {
-                    this.editCourse.unitList.$('.new-unit').trigger('click');
+                    var self = this;
+                    _.delay(function () {
+                        self.editCourse.unitList.$('.new-unit').trigger('click');
+                    }, 100);
                 }
             },
 
