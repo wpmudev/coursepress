@@ -2,30 +2,33 @@
 .coursepress-popup-preview,
 .coursepress-modal,
 .coursepress-popup {
-  .cp-btn {
-    border: 0;
-    background-color: $grey_5;
-    cursor: pointer;
-    padding: 8px 15px;
-    font-size: 14px;
-    line-height: 1.5;
-    height: auto;
-    display: inline-block;
-    @include radius(3px);
-    @include boxshadow(inset 0 0 12px 20px $grey_5);
-    @include transition(0.4s);
-
-    &:hover {
-      @include boxshadow(inset 0 0 12px 20px #a4a4a4);
-      @include transition(0.4s);
-    }
-    &[disabled="disabled"] {
-      opacity: 0.7;
-      &:hover {
+    .cp-btn {
+        border: 0;
+        background-color: $grey_5;
+        cursor: pointer;
+        padding: 8px 15px;
+        font-size: 14px;
+        line-height: 1.5;
+        height: auto;
+        display: inline-block;
+        @include radius(3px);
         @include boxshadow(inset 0 0 12px 20px $grey_5);
-      }
+        @include transition(0.4s);
+
+        &:hover {
+            @include boxshadow(inset 0 0 12px 20px #a4a4a4);
+            @include transition(0.4s);
+        }
+        &[disabled="disabled"] {
+            background-color: $grey_5;
+            color: $grey_2;
+            cursor: inherit;
+            @include boxshadow(inset 0 0 12px 20px $grey_5);
+            &:hover {
+                @include boxshadow(inset 0 0 12px 20px $grey_5);
+            }
+        }
     }
-  }
 
   .cp-btn-xs {
     font-size: 12px;

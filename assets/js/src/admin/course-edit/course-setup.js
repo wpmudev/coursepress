@@ -223,11 +223,15 @@
 
                 this.current = this.getCurrentStep();
                 this.current.siblings().removeClass('active');
+                this.current.siblings().each( function() {
+                    $('#course-edit-template').removeClass( $(this).data('step') );
+                });
                 this.current.addClass('active');
 
                 this.currentTab = this.getCurrentTab();
                 this.currentTab.siblings().removeClass('tab-active').removeClass('done');
                 this.currentTab.addClass('tab-active');
+                $('#course-edit-template').addClass( this.currentStep );
             },
 
             toggleContent: function(ev) {
