@@ -126,6 +126,20 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 
 				// Get the modules for the unit.
 				$modules_steps = $unit->get_modules_with_steps();
+				$answerable_modules = 0;
+
+				// Remove non answerable items.
+				foreach ( $modules_steps as $mkey => $module ) {
+					foreach ( $module['steps'] as $step_id => $step ) {
+						// If step is not answerable or assessable, unset.
+						if ( ! $step->is_answerable() ) {
+							unset( $modules_steps[ $mkey ]['steps'][ $step_id ] );
+						} else {
+							$answerable_modules++;
+						}
+					}
+				}
+
 				// Update the modules count.
 				if ( ! $modules_counted ) {
 					$assessments['modules_count'] += count( $modules_steps );
@@ -135,6 +149,9 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 				if ( ! empty( $modules_steps ) ) {
 					$assessments['students'][ $student_id ]->units[ $unit_id ]->modules = $modules_steps;
 				}
+
+				// Flag this unit as non answerable if not answerable.
+				$assessments['students'][ $student_id ]->units[ $unit_id ]->is_answerable = $answerable_modules > 0 ? true : false;
 			}
 
 			$modules_counted = true;
@@ -213,11 +230,14 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 		foreach ( $units as $unit_id => $unit ) {
 			// Get the modules for the unit.
 			$modules_steps = $unit->get_modules_with_steps();
+			$answerable_modules = 0;
 			foreach ( $modules_steps as $mkey => $module ) {
 				foreach ( $module['steps'] as $step_id => $step ) {
 					// If step is not answerable or assessable, unset.
 					if ( ! $step->is_answerable() || ( ! $step->is_assessable() && 'all_assessable' == $display ) ) {
 						unset( $modules_steps[ $mkey ]['steps'][ $step_id ] );
+					} else {
+						$answerable_modules++;
 					}
 				}
 			}
@@ -226,6 +246,9 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 			if ( ! empty( $modules_steps ) ) {
 				$assessment['units'][ $unit_id ]->modules = $modules_steps;
 			}
+
+			// Flag this unit as non answerable if not answerable.
+			$assessment['units'][ $unit_id ]->is_answerable = $answerable_modules > 0 ? true : false;
 		}
 
 		return $assessment;
