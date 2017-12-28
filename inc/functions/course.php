@@ -1785,6 +1785,6 @@ function coursepress_get_discussion() {
 	if ( empty( $topic ) ) {
 		return array();
 	}
-	return get_page_by_title( $topic, OBJECT, 'discussions' );
+	return get_page_by_path( $topic, OBJECT, 'discussions' );
 }
 
