@@ -61,13 +61,6 @@
         <label class="label"><?php _e( 'Video Source', 'cp' ); ?></label>
         <input type="text" class="widefat cp-add-video" name="meta_video_url" value="{{meta_video_url}}"  data-title="<?php _e( 'Select Video Source', 'cp' ); ?>" />
     </div>
-
-    <div class="cp-box cp-toggle-box">
-        <label>
-            <input type="checkbox" name="meta_mandatory" value="1" class="cp-toggle-input" {{_.checked(true, meta_mandatory)}} /> <span class="cp-toggle-btn"></span>
-            <span class="label"><?php _e( 'Required', 'cp' ); ?></span>
-        </label>
-    </div>
     <div class="cp-box cp-toggle-box">
         <label>
             <input type="checkbox" name="meta_video_loop" value="1" class="cp-toggle-input" {{_.checked(true, meta_video_loop)}} /> <span class="cp-toggle-btn"></span>
@@ -118,12 +111,6 @@
         <input type="text" name="meta_audio_url" class="widefat cp-add-media-input cp-add-audio" data-thumbnail-id="{{meta_audio_url_thumbnail_id}}"  value="{{meta_audio_url}}" data-type="audio" data-placeholder="<?php _e( 'Add audio URL or browse audio', 'cp' ); ?>" data-title="<?php _e( 'Select Audio Source', 'cp' ); ?>" />
     </div>
     <div class="cp-flex">
-        <div class="cp-box cp-toggle-box">
-            <label>
-                <input type="checkbox" name="meta_mandatory" value="1" class="cp-toggle-input" {{_.checked(true, meta_mandatory)}} /> <span class="cp-toggle-btn"></span>
-                <span class="label"><?php _e( 'Required', 'cp' ); ?></span>
-            </label>
-        </div>
         <div class="cp-box cp-toggle-box">
             <label>
                 <input type="checkbox" name="meta_loop" value="1" class="cp-toggle-input" {{_.checked(true, meta_loop)}} /> <span class="cp-toggle-btn"></span>
