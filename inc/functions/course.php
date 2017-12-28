@@ -10,10 +10,11 @@
  * Get course data object.
  *
  * @param int|WP_Post $course_id
+ * @param boolean $cached Whether or not use cached course object
  *
  * @return WP_Error|CoursePress_Course
  */
-function coursepress_get_course( $course_id = 0 ) {
+function coursepress_get_course( $course_id = 0, $cached = true ) {
 	global $CoursePress_Course, $CoursePress_Core;
 
 	if ( empty( $course_id ) ) {
@@ -36,7 +37,7 @@ function coursepress_get_course( $course_id = 0 ) {
 		return $CoursePress_Course;
 	}
 
-	if ( isset( $CoursePress_Core->courses[ $course_id ] ) ) {
+	if ( $cached && isset( $CoursePress_Core->courses[ $course_id ] ) ) {
 		return $CoursePress_Core->courses[ $course_id ];
 	}
 
