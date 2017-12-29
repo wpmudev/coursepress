@@ -44,7 +44,7 @@
 
 	        sortByMenuOrder: function (steps) {
 		        return _.sortBy(steps, function (step) {
-			        return step.menu_order || step.get('menu_order');
+			        return step.get !== undefined ? step.get('menu_order') : step.menu_order;
 		        });
 	        },
 
