@@ -390,6 +390,7 @@
                             ! input.is('[type="radio"]') ||
                             ! input.is('select') ) {
                             input.val(val);
+	                        input.trigger('keyup');
                         }
                     }, this );
                 }
