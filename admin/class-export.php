@@ -24,7 +24,6 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 			$with_students = ! empty( $req['students'] ) && $req['students'];
 			$with_comments = ! empty( $req['comments'] ) && $req['comments'];
 			$status = array( 'publish', 'draft', 'private' );
-
 			if ( ! empty( $req['all'] ) ) {
 				$course_ids = get_posts(
 					array(
@@ -38,17 +37,28 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 			} else {
 				$course_ids = $req['courses'];
 			}
-
 			$courses = array();
-
 			foreach ( $course_ids as $course_id ) {
 				// Get all course details
 				$course = get_post( $course_id );
-
+				if ( ! is_a( $course, 'WP_Post' ) ) {
+					continue;
+				}
+				/**
+				 * CoursePress Version
+				 */
+				$course->coursepress_version = CoursePress::$version;
+				/**
+				 * Course Categories
+				 */
+				$course->course_categories = array();
+				$course_categories = wp_get_post_terms( $course->ID, 'course_category' );
+				foreach ( $course_categories as $course_category ) {
+					$course->course_categories[ $course_category->slug ] = $course_category->name;
+				}
 				$courses[ $course_id ]['course'] = $course;
 				$courses[ $course_id ]['meta'] = self::unique_meta( get_post_meta( $course_id ) );
 				$courses[ $course_id ]['author'] = array();
-
 				/**
 				 * Check that user still exists
 				 */
@@ -56,12 +66,10 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 				if ( is_a( $user, 'WP_User' ) ) {
 					$courses[ $course_id ]['author'] = $user->data;
 				}
-
 				// Export instructors
 				$course_instructors = array();
 				$instructors = (array) CoursePress_Data_Course::get_setting( $course_id, 'instructors', array() );
 				$instructors = array_filter( $instructors );
-
 				if ( ! empty( $instructors ) ) {
 					foreach ( $instructors as $instructor_id ) {
 						$instructor = get_userdata( $instructor_id );
@@ -75,28 +83,21 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 					}
 				}
 				$courses[ $course_id ]['instructors'] = $course_instructors;
-
 				// Export facilitators
 				$facilitators = CoursePress_Data_Facilitator::get_course_facilitators( $course_id, false );
 				$course_facilitators = array();
-
 				if ( ! empty( $facilitators ) ) {
 					foreach ( $facilitators as $facilitator_id => $facilitator ) {
 						$course_facilitators[ $facilitator_id ] = $facilitator->data;
 					}
 				}
 				$courses[ $course_id ]['facilitators'] = $course_facilitators;
-
-				// @todo: Export categories
 				// @todo: Export discussions/forum
-
 				$units = CoursePress_Data_Course::get_units_with_modules( $course_id, $status );
-
 				foreach ( $units as $unit_id => $unit ) {
 					// Get unit metas
 					$unit_metas = self::unique_meta( get_post_meta( $unit_id ) );
 					$units[ $unit_id ]['meta'] = $unit_metas;
-
 					if ( ! empty( $unit['pages'] ) ) {
 						foreach ( $unit['pages'] as $page_number => $modules ) {
 							if ( ! empty( $modules['modules'] ) ) {
@@ -104,7 +105,6 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 									$module_meta = self::unique_meta( get_post_meta( $module_id ) );
 									$module->meta = $module_meta;
 									$units[ $unit_id ]['pages'][ $page_number ]['modules'][ $module_id ] = $module;
-
 									if ( $with_comments ) {
 										// Get module comments
 										$comments = get_comments( 'post_id=' . $module_id );
@@ -120,24 +120,19 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 						}
 					}
 				}
-
 				$courses[ $course_id ]['units'] = $units;
-
 				if ( $with_students ) {
 					// Include students
 					$course_students = array();
 					$students = CoursePress_Data_Course::get_students( $course_id, -1, 0 );
-
 					foreach ( $students as $student ) {
 						// Get student progress
 						$student_progress = CoursePress_Data_Student::get_completion_data( $student->ID, $course_id );
 						$student->data->progress = $student_progress;
 						$course_students[ $student->ID ] = $student->data;
 					}
-
 					$courses[ $course_id ]['students'] = $course_students;
 				}
-
 				if ( $with_comments ) {
 					// Get course comments
 					$comments = get_comments( 'post_id=' . $course_id );
@@ -147,7 +142,6 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 					}
 				}
 			}
-
 			$sitename = sanitize_key( get_bloginfo( 'name' ) );
 			if ( ! empty( $sitename ) ) {
 				$sitename .= '.';
@@ -161,11 +155,12 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 				}
 			}
 			$wp_filename .= '.json';
-
+			/**
+			 * Print HTTP headers
+			 */
 			header( 'Content-Description: File Transfer' );
 			header( 'Content-Disposition: attachment; filename=' . $wp_filename );
 			header( 'Content-Type: text/json; charset=' . get_option( 'blog_charset' ), true );
-
 			/**
 			 * Check PHP version, for PHP < 3 do not add options
 			 */
@@ -194,19 +189,15 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 			'coursepress_student_enrolled_id',
 			'coursepress_student_enrolled',
 		);
-
 		foreach ( $metas as $key => $value ) {
 			if ( is_array( $value ) ) {
 				$value = array_unique( $value );
 			}
-
 			if ( in_array( $key, $excludes ) ) {
 				unset( $metas[ $key ] );
 				continue;
 			}
-
 			if ( 'course_settings' == $key ) {
-
 				foreach ( $value as $k => $v ) {
 					$v = maybe_unserialize( $v );
 					// Remove instructors
@@ -220,10 +211,8 @@ class CoursePress_Admin_Export extends CoursePress_Admin_Controller_Menu {
 					$value[ $k ] = $v;
 				}
 			}
-
 			$metas[ $key ] = $value;
 		}
-
 		return $metas;
 	}
 }
