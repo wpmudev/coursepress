@@ -200,15 +200,49 @@ class CoursePress_Import extends CoursePress_Utility
 				$the_unit->post_type = $CoursePress_Core->__get( 'unit_post_type' );
 				$unit_id = wp_insert_post( $the_unit );
 				$this->unit_keys[ $old_unit_id ] = $unit_id;
+				/**
+				 * CP 2 import
+				 */
+				if ( isset( $unit->pages ) ) {
+					if ( ! isset( $unit->meta_input ) ) {
+						$unit->meta_input = new stdClass();
+					}
+					if ( ! isset( $unit->meta_input->modules ) ) {
+						$unit->meta_input->modules = array();
+					}
+					$i = 1;
+					$course_modules = array();
+					foreach ( $unit->pages as $page ) {
+						$course_modules[ $i ] = array(
+							'title' => $page->title,
+							'description' => htmlspecialchars_decode( $page->description ),
+							'show_description' => ! empty( $page->description ),
+						);
+						if ( ! isset( $page->modules ) || empty( $page->modules ) ) {
+							continue;
+						}
+						foreach ( $page->modules as $module ) {
+							$module->post_parent = $unit_id;
+							$module->meta_input = new stdClass();
+							foreach ( $module->meta as $key => $value ) {
+								if ( is_array( $value ) && ! empty( $value ) ) {
+									$module->meta_input->$key = array_shift( $value );
+								}
+							}
+							$module->meta_input->course_id = $this->course->ID;
+							$module->meta_input->unit_id = $unit_id;
+							$module->meta_input->module_page = $i;
+
+							$module = $this->maybe_convert_module( $module );
+
+							unset( $module->ID );
+							wp_insert_post( $module );
+						}
+						$i++;
+					}
+					update_post_meta( $unit_id, 'course_modules', $course_modules );
+				}
 			}
-			/**
-			 * CP 2 import
-			 */
-			l( 1 );
-			if ( isset( $unit->pages ) ) {
-				l( $unit->pages );
-			}
-			l( 2 );
 		}
 	}
 
@@ -314,5 +348,48 @@ class CoursePress_Import extends CoursePress_Utility
 		$course_id = array_pop( $this->courses );
 		$course = coursepress_get_course( $course_id );
 		return $course;
+	}
+
+	/**
+	 * Convert legacy modules.
+	 *
+	 * @since 3.0.0
+	 */
+	private function maybe_convert_module( $module ) {
+		switch ( $module->meta_input->module_type ) {
+			case 'input-radio':
+				$module->meta_input->module_type = 'input-quiz';
+				$id = sprintf( 'view%d', $module->ID );
+				$answers = maybe_unserialize( $module->meta_input->answers );
+				$checked = array();
+				$max = count( $answers );
+				for ( $i = 0; $i < $max; $i++ ) {
+					$checked[] = $i === intval( $module->meta_input->answers_selected );
+				}
+				$module->meta_input->questions = array(
+				$id => array(
+					'title' => $module->post_title,
+					'options' => array(
+						'answers' => $answers,
+						'checked' => $checked,
+					),
+					'type' => 'single',
+				),
+				);
+			break;
+			case 'text_module':
+			break;
+			case 'input-checkbox':
+			break;
+			case 'radio_input_module':
+			break;
+			case 'input-select':
+			break;
+			case 'text_input_module':
+			break;
+			case 'input-form':
+			break;
+		}
+		return $module;
 	}
 }
