@@ -181,6 +181,9 @@ class CoursePress_Import extends CoursePress_Utility
 				if ( isset( $unit->unit ) ) {
 					$the_unit = get_object_vars( $unit->unit );
 				}
+				if ( isset( $unit->meta ) ) {
+					$the_unit['meta_input'] = $unit->meta;
+				}
 				if ( is_array( $the_unit ) ) {
 					$the_unit = json_decode( json_encode( $the_unit ) );
 				}
@@ -198,6 +201,14 @@ class CoursePress_Import extends CoursePress_Utility
 				$unit_id = wp_insert_post( $the_unit );
 				$this->unit_keys[ $old_unit_id ] = $unit_id;
 			}
+			/**
+			 * CP 2 import
+			 */
+			l( 1 );
+			if ( isset( $unit->pages ) ) {
+				l( $unit->pages );
+			}
+			l( 2 );
 		}
 	}
 
@@ -229,6 +240,7 @@ class CoursePress_Import extends CoursePress_Utility
 				}
 			}
 		}
+
 		coursepress_course_update_setting( $this->course->ID, $settings );
 		$this->insert_meta( $this->course->ID, $meta );
 	}
