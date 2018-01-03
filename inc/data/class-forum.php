@@ -66,27 +66,30 @@ class CoursePress_Data_Forum {
 	 * @since 2.0
 	 **/
 	public function redirect_back( $location, $comment ) {
-		$post_id = $comment->comment_post_ID;
-		$is_course = coursepress_is_course( $post_id );
-		if ( ! $is_course ) {
+		/**
+		 * Check WP_Comment class
+		 */
+		if ( ! is_a( $comment, 'WP_Comment' ) ) {
 			return $location;
 		}
-		$course = coursepress_get_course( $post_id );
-		$topic_id = get_comment_meta( $comment->comment_ID, 'topic_id', true );
-		$topic = get_post( $topic_id );
-		return $course->get_discussion_url(). trailingslashit( $topic->post_name );
+		$course_id = (int) get_post_meta( $comment->comment_post_ID, 'course_id', true );
+		$course = coursepress_get_course( $course_id );
+		$post_type = get_post_type( $comment->comment_post_ID );
+		if ( $this->post_type === $post_type ) {
+			$post_name = get_post_field( 'post_name', $comment->comment_post_ID );
+			$location = $course->get_discussion_url(). trailingslashit( $post_name ) . '#comment-' . $comment->comment_ID;
+		}
+
+		return $location;
 	}
 
 	public function add_topic_field( $post_id ) {
-		$is_course = coursepress_is_course( $post_id );
-		if ( ! $is_course ) {
-			return $location;
-		}
-		$topic = get_query_var( 'topic' );
 		$discussion = coursepress_get_discussion();
-		printf(
-			'<input type="hidden" name="topic_id" value="%d" />',
-			esc_attr( $discussion->ID )
-		);
+		if ( !empty( $discussion ) ) {
+			printf(
+				'<input type="hidden" name="topic_id" value="%d" />',
+				esc_attr( $discussion->ID )
+			);
+		}
 	}
 }
