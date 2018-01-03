@@ -132,6 +132,9 @@ class CoursePress_Import extends CoursePress_Utility
 		$this->course->ID = wp_insert_post( $the_course );
 		$this->courses[] = $this->course->ID;
 		$this->import_course_categories( $this->course->ID, $the_course );
+
+		l( $this->course->ID, 'course ID' );
+
 	}
 
 	/**
@@ -182,7 +185,7 @@ class CoursePress_Import extends CoursePress_Utility
 					$the_unit = get_object_vars( $unit->unit );
 				}
 				if ( isset( $unit->meta ) ) {
-					$the_unit['meta_input'] = $unit->meta;
+					$the_unit['meta_input'] = $this->convert_meta( $unit->meta );
 				}
 				if ( is_array( $the_unit ) ) {
 					$the_unit = json_decode( json_encode( $the_unit ) );
@@ -200,6 +203,8 @@ class CoursePress_Import extends CoursePress_Utility
 				$the_unit->post_type = $CoursePress_Core->__get( 'unit_post_type' );
 				$unit_id = wp_insert_post( $the_unit );
 				$this->unit_keys[ $old_unit_id ] = $unit_id;
+				l( $unit_id, 'Unit ID' );
+				l( $the_unit->meta_input );
 				/**
 				 * CP 2 import
 				 */
@@ -211,9 +216,9 @@ class CoursePress_Import extends CoursePress_Utility
 						$unit->meta_input->modules = array();
 					}
 					$i = 1;
-					$course_modules = array();
+					$modules = array();
 					foreach ( $unit->pages as $page ) {
-						$course_modules[ $i ] = array(
+						$modules[ $i ] = array(
 							'title' => $page->title,
 							'description' => htmlspecialchars_decode( $page->description ),
 							'show_description' => ! empty( $page->description ),
@@ -223,24 +228,20 @@ class CoursePress_Import extends CoursePress_Utility
 						}
 						foreach ( $page->modules as $module ) {
 							$module->post_parent = $unit_id;
-							$module->meta_input = new stdClass();
-							foreach ( $module->meta as $key => $value ) {
-								if ( is_array( $value ) && ! empty( $value ) ) {
-									$module->meta_input->$key = array_shift( $value );
-								}
-							}
+							$module->meta_input = $this->convert_meta( $module->meta );
 							$module->meta_input->course_id = $this->course->ID;
 							$module->meta_input->unit_id = $unit_id;
 							$module->meta_input->module_page = $i;
-
 							$module = $this->maybe_convert_module( $module );
+
+							//l($module->meta_input);
 
 							unset( $module->ID );
 							wp_insert_post( $module );
 						}
 						$i++;
 					}
-					update_post_meta( $unit_id, 'course_modules', $course_modules );
+					update_post_meta( $unit_id, 'course_modules', $modules );
 				}
 			}
 		}
@@ -274,7 +275,6 @@ class CoursePress_Import extends CoursePress_Utility
 				}
 			}
 		}
-
 		coursepress_course_update_setting( $this->course->ID, $settings );
 		$this->insert_meta( $this->course->ID, $meta );
 	}
@@ -356,8 +356,11 @@ class CoursePress_Import extends CoursePress_Utility
 	 * @since 3.0.0
 	 */
 	private function maybe_convert_module( $module ) {
-		switch ( $module->meta_input->module_type ) {
+		$type = $module->meta_input->module_type;
+		switch ( $type ) {
 			case 'input-radio':
+			case 'input-checkbox':
+			case 'input-select':
 				$module->meta_input->module_type = 'input-quiz';
 				$id = sprintf( 'view%d', $module->ID );
 				$answers = maybe_unserialize( $module->meta_input->answers );
@@ -366,30 +369,48 @@ class CoursePress_Import extends CoursePress_Utility
 				for ( $i = 0; $i < $max; $i++ ) {
 					$checked[] = $i === intval( $module->meta_input->answers_selected );
 				}
+				$step_type = 'unknown';
+				switch ( $type ) {
+					case 'input-radio':
+						$step_type = 'single';
+					break;
+					case 'input-checkbox':
+						$step_type = 'multi';
+					break;
+					case 'input-select':
+						$step_type = 'select';
+					break;
+				}
 				$module->meta_input->questions = array(
 				$id => array(
 					'title' => $module->post_title,
+					'question' => $module->post_content,
 					'options' => array(
 						'answers' => $answers,
 						'checked' => $checked,
 					),
-					'type' => 'single',
+					'type' => $step_type,
 				),
 				);
 			break;
-			case 'text_module':
-			break;
-			case 'input-checkbox':
-			break;
-			case 'radio_input_module':
-			break;
-			case 'input-select':
-			break;
-			case 'text_input_module':
-			break;
-			case 'input-form':
-			break;
+			default:
+				l( $type );
 		}
 		return $module;
+	}
+
+	/**
+	 * Convert imeta to proper construction
+	 *
+	 * @since 3.0.0
+	 */
+	private function convert_meta( $meta ) {
+		$meta_input = new stdClass();
+		foreach ( $meta as $key => $value ) {
+			if ( is_array( $value ) && ! empty( $value ) ) {
+				$meta_input->$key = maybe_unserialize( array_shift( $value ) );
+			}
+		}
+		return $meta_input;
 	}
 }
