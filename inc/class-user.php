@@ -213,12 +213,12 @@ class CoursePress_User extends CoursePress_Utility {
 			$args['meta_query'] = array(
 				'relation' => 'OR',
 				array(
-					'meta_key' => 'instructor',
-					'meta_value' => $this->ID,
+					'key' => 'instructor',
+					'value' => $this->ID,
 				),
 				array(
-					'meta_key' => 'facilitator',
-					'meta_value' => $this->ID,
+					'key' => 'facilitator',
+					'value' => $this->ID,
 				),
 			);
 			$courses = coursepress_get_courses( $args, $count );
