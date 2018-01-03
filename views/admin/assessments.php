@@ -13,8 +13,7 @@
 							<?php foreach ( $courses as $course ) : ?>
                             <option value="<?php echo $course->ID; ?>" <?php selected( $course->ID, $course_id ); ?>><?php
 							echo $course->post_title;
-							echo $course->get_numeric_identifier_to_course_name( $course->ID );
-?></option>
+							echo $course->get_numeric_identifier_to_course_name( $course->ID ); ?></option>
 							<?php endforeach; ?>
 						<?php endif; ?>
 					</select>
@@ -188,11 +187,15 @@
 																	<tr class="cp-question-title">
 																		<th colspan="3">
 																			<span class="cp-title"><?= $step->get_the_title() ?></span>
-																			<span class="pull-right cp-title">
-																				<?= round( $student->get_step_grade( $course_id, $unit->ID, $step_id ) ) ?>%
-																				<?php $step_status = $student->get_step_grade_status( $course_id, $unit->ID, $step_id ); ?>
-																				<span class="<?= $step_status == 'pass' ? 'cp-green' : 'cp-red' ?>"><?= $step_status ? strtoupper( $step_status ) : __( 'FAILED', 'cp' ) ?></span>
-																			</span>
+																			<?php $grade = $student->get_step_grade( $course_id, $unit->ID, $step_id ); ?>
+																			<?php // No need to show grade if not entered by instructor -->
+																			if ( $step->type !== 'fileupload' || ( ! empty( $grade ) && $grade !== 'pending' ) ) : ?>
+																				<span class="pull-right cp-title">
+																					<?= round( $grade ) ?>%
+																					<?php $step_status = $student->get_step_grade_status( $course_id, $unit->ID, $step_id ); ?>
+																					<span class="<?= $step_status == 'pass' ? 'cp-green' : 'cp-red' ?>"><?= $step_status ? strtoupper( $step_status ) : __( 'FAILED', 'cp' ) ?></span>
+																				</span>
+																			<?php endif; ?>
 																		</th>
 																	</tr>
 																	<?php if ( isset( $step->questions ) && is_array( $step->questions ) ) : ?>
