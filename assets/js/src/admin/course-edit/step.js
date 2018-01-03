@@ -215,7 +215,9 @@
            },
 
            duplicateStep: function() {
-               var newModel = _.omit(this.model.toJSON(), ['ID', 'cid']);
+               var newModel = JSON.parse(JSON.stringify(this.model));
+	           newModel = _.omit(newModel, ['ID', 'cid']);
+
 	           this.stepController.setStep(newModel);
 	           this.stepController.reorderSteps();
            },
