@@ -31,22 +31,18 @@ class CoursePress_Export extends CoursePress_Utility {
 	 */
 	private function prepare_data( $course_id ) {
 		global $CoursePress;
-
 		// WP_Post object for course.
 		$post = get_post( $course_id );
 		/**
 		 * Add CoursePress Version
 		 */
 		$post->coursepress_version = $CoursePress->version;
-
 		// Get course from course id.
 		$course = coursepress_get_course( $post );
-
 		// If course do not found, bail out.
 		if ( is_wp_error( $course ) || empty( $course ) ) {
 			return false;
 		}
-
 		// Set the couse data.
 		$this->data['course'] = $post;
 		// Course author user.
@@ -59,7 +55,6 @@ class CoursePress_Export extends CoursePress_Utility {
 		$this->data['instructors'] = $this->sanitize_export_users( $course->get_instructors() );
 		// Course facilitators.
 		$this->data['facilitators'] = $this->sanitize_export_users( $course->get_facilitators() );
-
 		// Course all units.
 		$units = $course->get_units( false );
 		if ( ! empty( $units ) ) {
@@ -68,7 +63,6 @@ class CoursePress_Export extends CoursePress_Utility {
 				$this->_set_unit_data( $unit );
 			}
 		}
-
 		/**
 		 * Filter hook to include/exclude students from export.
 		 *
@@ -92,19 +86,15 @@ class CoursePress_Export extends CoursePress_Utility {
 	 * @return array
 	 */
 	private function _get_course_meta( $course_id ) {
-
 		// If course id not set.
 		if ( empty( $course_id ) ) {
 			return array();
 		}
-
 		// Get course post meta.
 		$meta = get_post_meta( $course_id );
-
 		// Array of meta keys to exclude.
 		// @todo Add excluded meta keys here.
 		$exclude = array();
-
 		if ( ! empty( $exclude ) ) {
 			// Unset excluded meta values.
 			foreach ( $exclude as $key ) {
@@ -113,7 +103,6 @@ class CoursePress_Export extends CoursePress_Utility {
 				}
 			}
 		}
-
 		return $meta;
 	}
 
@@ -125,12 +114,10 @@ class CoursePress_Export extends CoursePress_Utility {
 	 * @return array Unit data.
 	 */
 	private function _set_unit_data( $unit ) {
-
 		// Do not continue if unit exists.
 		if ( empty( $unit->ID ) ) {
 			return array();
 		}
-
 		$unit_id = $unit->ID;
 		// Get unit meta values.
 		$meta = get_post_meta( $unit_id );
@@ -138,15 +125,13 @@ class CoursePress_Export extends CoursePress_Utility {
 			$this->data['units'][ $unit_id ] = $unit;
 			$this->data['units'][ $unit_id ]->meta = $meta;
 		}
-
 		// Get unit modules.
-		$modules = $unit->get_modules();
+		$modules = $unit->get_modules_with_steps( false );
 		foreach ( $modules as $module_id => $module ) {
 			// Get module meta.
 			$module_meta = get_post_meta( $module_id );
 			$module['meta'] = $module_meta;
 			$this->data['units'][ $unit_id ]->modules = array( $module_id => $module );
-
 			/**
 			 * Filter hook to include/exclude comments from export.
 			 *
