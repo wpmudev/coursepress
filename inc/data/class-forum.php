@@ -29,9 +29,9 @@ class CoursePress_Data_Forum {
 		$args = array(
 			'post_type' => $this->post_type,
 			'post_author' => get_current_user_id(),
-			'post_content' => coursepress_filter_content( $_POST['content'] ),
+			'post_content' => CoursePress_Utility::filter_content( $_POST['content'] ),
 			'post_status' => 'publish',
-			'post_title' => coursepress_filter_content( $_POST['title'] ),
+			'post_title' => CoursePress_Utility::filter_content( $_POST['title'] ),
 			'meta_input' => array(
 				'course_id' => $_POST['course_id'],
 				'unit_id' => $_POST['unit_id'],
