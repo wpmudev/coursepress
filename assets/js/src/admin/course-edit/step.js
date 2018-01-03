@@ -132,32 +132,14 @@
 
            initialize: function(model, stepController) {
 
-               if (
-                   !(this.model instanceof Module)
-               ) {
-                   this.model = _.extend({}, default_vars[this.model.module_type], this.model);
-
-                   if (!this.model.cid) {
-                       this.model.cid = this.cid;
-                   }
-
-                   this.model = new Module(this.model);
-               }
-               else {
-                   this.model = new Module(this.model.toJSON());
-               }
-
+	           if (model.get) {
+		           model = model.toJSON();
+	           }
+	           model = _.extend({}, default_vars[model.module_type], model);
+	           this.model = new Module(model);
 	           this.type = this.model.get('module_type');
+	           this.model.set('cid', this.model.cid);
 
-               /*
-
-               if ( model.get ) {
-                   model = model.toJSON();
-               }
-               model = _.extend({cid: this.cid}, default_vars[model.module_type], model);
-               this.model = new Module(model);
-               this.type = this.model.get('module_type');
-               */
                this.stepController = stepController;
                this.on( 'view_rendered', this.setStep, this );
                this.render();
@@ -233,9 +215,11 @@
            },
 
            duplicateStep: function() {
-               var step = new CoursePress.Step( this.model.toJSON(), this.stepController );
-               step.$el.appendTo($('.unit-steps'));
-               this.$('.step-config').removeClass('open');
+               var newModel = JSON.parse(JSON.stringify(this.model));
+	           newModel = _.omit(newModel, ['ID', 'cid']);
+
+	           this.stepController.setStep(newModel);
+	           this.stepController.reorderSteps();
            },
 
            toggleGreyBox: function(ev) {
