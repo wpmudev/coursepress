@@ -28,6 +28,7 @@ class CoursePress_Step extends CoursePress_Unit {
 		$this->__set( 'post_name', $step->post_name );
 		$this->__set( 'unit_id', $step->post_parent );
 		$this->__set( 'post_parent', $step->post_parent );
+		$this->__set( 'menu_order', $step->menu_order );
 		$this->__set( 'course_id', get_post_field( 'post_parent', $step->post_parent ) );
 
 		// Setup meta-data
@@ -50,6 +51,7 @@ class CoursePress_Step extends CoursePress_Unit {
 			'module_page',
 			'show_content',
 			'allowed_file_types',
+			'preview'
 		);
 
 		return $keys;
@@ -78,8 +80,6 @@ class CoursePress_Step extends CoursePress_Unit {
 			$this->__set( $key, $value );
 			$this->__set( 'meta_' . $key, $value );
 		}
-
-		$this->__set( 'preview', true );
 	}
 
 	function get_settings() {

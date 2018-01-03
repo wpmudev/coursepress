@@ -10,10 +10,11 @@
  * Get course data object.
  *
  * @param int|WP_Post $course_id
+ * @param boolean $cached Whether or not use cached course object
  *
  * @return WP_Error|CoursePress_Course
  */
-function coursepress_get_course( $course_id = 0 ) {
+function coursepress_get_course( $course_id = 0, $cached = true ) {
 	global $CoursePress_Course, $CoursePress_Core;
 
 	if ( empty( $course_id ) ) {
@@ -36,7 +37,7 @@ function coursepress_get_course( $course_id = 0 ) {
 		return $CoursePress_Course;
 	}
 
-	if ( isset( $CoursePress_Core->courses[ $course_id ] ) ) {
+	if ( $cached && isset( $CoursePress_Core->courses[ $course_id ] ) ) {
 		return $CoursePress_Core->courses[ $course_id ];
 	}
 
@@ -1670,8 +1671,6 @@ function coursepress_invite_student( $course_id, $student_data ) {
 		'COURSE_ADDRESS' => $course->get_permalink(),
 		'WEBSITE_ADDRESS' => site_url( '/' ),
 		'PASSCODE' => $course->__get( 'enrollment_passcode' ),
-		'FIRST_NAME' => $student_data['first_name'],
-		'LAST_NAME' => $student_data['last_name'],
 		'STUDENT_FIRST_NAME' => $student_data['first_name'],
 		'STUDENT_LAST_NAME' => $student_data['last_name'],
 	);
@@ -1689,7 +1688,14 @@ function coursepress_invite_student( $course_id, $student_data ) {
 	if ( ! $invited_students ) {
 		$invited_students = new stdClass();
 	}
-	$invited_students->{$email} = $student_data;
+	/**
+	 * Convert student data to object
+	 */
+	$object = new stdClass();
+	foreach ( $student_data as $key => $value ) {
+			$object->$key = $value;
+	}
+	$invited_students->{$email} = $object;
 	$course->update_setting( 'invited_students', $invited_students );
 	return $student_data;
 }
@@ -1779,6 +1785,6 @@ function coursepress_get_discussion() {
 	if ( empty( $topic ) ) {
 		return array();
 	}
-	return get_page_by_title( $topic, OBJECT, 'discussions' );
+	return get_page_by_path( $topic, OBJECT, 'discussions' );
 }
 

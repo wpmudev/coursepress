@@ -247,9 +247,9 @@
                                 <#})#>
                             <#}#>
                         </td>
-                        <td class="column-preview">
-                            <label class="cp-checkbox">
-                                <input type="checkbox" class="cp-checkbox-input" {{_.checked(true, module.preview)}} />
+                        <td class="column-preview" data-module="{{module_id}}">
+                            <label class="cp-checkbox cp-ignore-update-model">
+                                <input type="checkbox" name="preview" class="cp-checkbox-input" value="1" {{_.checked(true, module.preview)}} />
                                 <span class="cp-checkbox-icon"></span>
                             </label>
                         </td>
@@ -257,14 +257,14 @@
                     </tr>
                     <# })#>
             <# } else { #>
-                <# _.each( steps, function( step ) { #>
+                <# _.each( steps, function( step, step_id ) { #>
                     <tr>
                         <td class="column-unit">{{step.post_title}}</td>
                         <td class="column-step">
                         </td>
-                        <td class="column-preview">
-                            <label class="cp-checkbox">
-                                <input type="checkbox" class="cp-checkbox-input" {{_.checked(true, step.meta_preview)}} />
+                        <td class="column-preview" data-step="{{step_id}}">
+                            <label class="cp-checkbox cp-ignore-update-model">
+                                <input type="checkbox" name="meta_preview" class="cp-checkbox-input" value="1" {{_.checked(true, step.meta_preview)}} />
                                 <span class="cp-checkbox-icon"></span>
                             </label>
                         </td>

@@ -3,7 +3,7 @@
 (function() {
     'use strict';
 
-    CoursePress.Define( 'UnitsWithModuleList', function() {
+    CoursePress.Define( 'UnitsWithModuleList', function($) {
         var UnitView;
 
         UnitView = CoursePress.View.extend({
@@ -16,15 +16,45 @@
                 'click .cp-unit-heading label': 'toggleListing',
                 'click .preview-unit': 'previewUnit',
                 'click .edit-unit': 'editUnit',
-                'click [data-module]': 'editModule',
-                'click .delete-unit': 'deleteUnit'
+                'click .column-unit': 'editModule',
+                'click .column-step': 'editModule',
+                'click .delete-unit': 'deleteUnit',
+                'change [name]': 'updatePreviewStatus'
+            },
+
+            updatePreviewStatus: function (ev) {
+                var input, name, value, with_modules;
+
+                input = $(ev.currentTarget);
+                name = input.attr('name');
+                with_modules = this.modulesActive();
+                value = input.is(':checked') ? input.val() : false;
+
+                if (with_modules) {
+                    var module_id = input.closest('[data-module]').data('module'),
+                        modules = this.model.get('modules');
+
+                    modules[module_id][name] = value;
+                }
+                else {
+                    var step_id = input.closest('[data-step]').data('step'),
+                        steps = this.model.get('steps');
+
+                    steps[step_id][name] = value;
+                }
+            },
+
+            modulesActive: function () {
+                return this.unitsView.editCourse.model.get('meta_with_modules');
             },
 
             initialize: function( model, unitsView ) {
                 var with_modules;
 
                 this.model = model;
-                with_modules = unitsView.editCourse.model.get('meta_with_modules');
+                this.unitsView = unitsView;
+
+                with_modules = this.modulesActive();
 
                 if ( ! with_modules || ! model.get('modules') ) {
                     model.set('modules', false);
@@ -33,7 +63,6 @@
                     model.set('steps', false);
                 }
 
-                this.unitsView = unitsView;
                 this.render();
             },
 
@@ -191,7 +220,10 @@
 
             maybeSetUnit: function(data) {
                 if ( ! data || ! data.length ) {
-                    this.editCourse.unitList.$('.new-unit').trigger('click');
+                    var self = this;
+                    _.delay(function () {
+                        self.editCourse.unitList.$('.new-unit').trigger('click');
+                    }, 100);
                 }
             },
 

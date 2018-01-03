@@ -20,12 +20,31 @@
                 this.render();
             },
 
+            sortByMenuOrder: function (steps) {
+                return _.sortBy(steps, function (step) {
+                    return step.get !== undefined ? step.get('menu_order') : step.menu_order;
+                });
+            },
+
+	        reorderSteps: function() {
+		        var steps, menu_order;
+
+		        steps = this.stepContainer.find('[name="menu_order"]');
+		        menu_order = 0;
+
+		        _.each( steps, function( step ) {
+			        step = $(step);
+			        menu_order += 1;
+			        step.val(menu_order).trigger('change');
+		        }, this );
+	        },
+
             setUI: function() {
                 var steps, step_view, unit_steps;
 
                 this.stepContainer = this.$('.unit-steps');
 
-                steps =  this.model.get('steps');
+                steps =  this.sortByMenuOrder(this.model.get('steps'));
 
                 if ( steps ) {
                     _.each(steps, function (step) {
@@ -50,20 +69,21 @@
             },
 
             addNewStep: function(ev) {
-                var sender, type, menu_order, data;
+                var sender, type, data;
 
-                menu_order = this.steps.length + 1;
                 sender = this.$(ev.currentTarget);
                 type = sender.data('step');
-                data = {module_type: type, menu_order: menu_order};
+                this.menu_order += 1;
+                data = {
+                    module_type: type,
+                    menu_order: this.menu_order
+                };
                 this.setStep(data);
             },
 
             setStep: function(model) {
                 var step, cid;
 
-                this.menu_order += 1;
-                model.menu_order = this.menu_order;
                 step = new CoursePress.Step({model: model}, this);
                 step.$el.appendTo(this.stepContainer);
 
@@ -72,6 +92,11 @@
                 this.updateSteps();
 
                 step.on( 'coursepress:model_updated', this.updateStepsCollection, this );
+	            step.on( 'coursepress:step_reordered', this.reorderSteps, this );
+
+	            if (step.model.get('menu_order') > this.menu_order) {
+		            this.menu_order = step.model.get('menu_order');
+	            }
 
                 return step;
             },

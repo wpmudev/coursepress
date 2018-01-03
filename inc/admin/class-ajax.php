@@ -30,6 +30,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		add_action( 'wp_ajax_coursepress_update_profile', array( $this, 'update_profile' ) );
 		// Submit module
 		add_action( 'wp_ajax_coursepress_submit', array( $this, 'validate_submission' ) );
+		add_action( 'wp_ajax_nopriv_coursepress_submit', array( $this, 'validate_submission' ) );
 		/**
 		 * Search course
 		 */
@@ -140,6 +141,9 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 				$course_object[ $key ] = $request->{$key};
 			}
 		}
+
+		$course_object['post_name'] = wp_unique_post_slug( $course_object['post_name'], $course_object['ID'], 'publish', 'course', 0 );
+
 		if ( 'auto-draft' == $course_object['post_status'] ) {
 			$course_object['post_status'] = 'draft';
 		}
@@ -166,7 +170,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		$course->save_course_number( $course_id, $course_object['post_title'] );
 
 		// Retrieve the course object back
-		$course = coursepress_get_course( $course_id );
+		$course = coursepress_get_course( $course_id, false );
 
 		return array( 'success' => true, 'ID' => $course_id, 'course' => $course );
 	}

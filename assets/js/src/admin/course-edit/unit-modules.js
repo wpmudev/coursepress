@@ -36,10 +36,17 @@
                 this.model = model;
                 this.unitModel = unitModulesModel.unitModel;
                 this.moduleView = unitModulesModel;
+	            this.model.steps = this.sortByMenuOrder(this.model.steps);
                 this.on( 'view_rendered', this.setUI, this );
 
                 this.render();
             },
+
+	        sortByMenuOrder: function (steps) {
+		        return _.sortBy(steps, function (step) {
+			        return step.get !== undefined ? step.get('menu_order') : step.menu_order;
+		        });
+	        },
 
             setUI: function() {
                 var self;
@@ -69,9 +76,11 @@
 
                 sender = this.$(ev.currentTarget);
                 type = sender.data('step');
+	            this.menu_order += 1;
                 data = {
                     module_type: type,
-                    meta_module_type: type
+                    meta_module_type: type,
+	                menu_order: this.menu_order
                 };
                 step = this.setStep(data);
             },
@@ -79,8 +88,6 @@
             setStep: function( model ) {
                 var step, cid;
 
-                this.menu_order += 1;
-                model.menu_order = this.menu_order;
                 step = new CoursePress.Step({model: model}, this);
                 step.$el.appendTo(this.stepContainer);
 
@@ -88,6 +95,12 @@
                 this.steps[cid] = step;
 	            this.stepsModel[cid] = step.model;
                 this.updateModuleSteps(step.model);
+
+	            step.on('coursepress:step_reordered', this.reorderSteps, this);
+
+	            if (step.model.get('menu_order') > this.menu_order) {
+		            this.menu_order = step.model.get('menu_order');
+	            }
 
                 return step;
             },
@@ -109,26 +122,16 @@
             },
 
             reorderSteps: function() {
-                var steps, menu_order, newSteps, modelSteps;
+                var steps, menu_order;
 
                 steps = this.stepContainer.find('[name="menu_order"]');
-                newSteps = {};
-                modelSteps = {};
                 menu_order = 0;
 
                 _.each( steps, function( step ) {
                     step = $(step);
                     menu_order += 1;
                     step.val(menu_order).trigger('change');
-
-                    var cid = step.data('cid');
-                    newSteps[cid] = this.steps[cid];
-                    modelSteps[cid] = this.stepsModel[cid];
                 }, this );
-
-                this.stepsModel = modelSteps;
-                this.model.steps = modelSteps;
-                this.moduleView.modules[this.moduleView.current].steps = this.steps;
             },
 
             setStepIcons: function() {

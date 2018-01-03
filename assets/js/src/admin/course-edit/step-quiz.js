@@ -33,16 +33,23 @@
         Model = CoursePress.Request.extend({
             defaults: {
                 title: 'Untitled',
-                question: '',
-                options: {
-                    answers: [
-                        win._coursepress.text.step.answer_a,
-                        win._coursepress.text.step.answer_b,
-                        win._coursepress.text.step.answer_c
-                    ],
-                    checked: []
-                }
-            }
+                question: ''
+            },
+
+	        initialize: function () {
+                var options = this.get('options') || {};
+
+                options = _.extend({
+	                answers: [
+		                win._coursepress.text.step.answer_a,
+		                win._coursepress.text.step.answer_b,
+		                win._coursepress.text.step.answer_c
+	                ],
+	                checked: []
+                }, options);
+
+                this.set('options', options);
+	        }
         });
 
         Question = CoursePress.View.extend({
@@ -243,7 +250,7 @@
                if ( ! questions ) {
                    questions = [];
                }
-               model.index = this.questions.length;
+               model.index = _.size(this.questions);
 
                question = new Question(model, this);
                question.$el.appendTo(this.$('.cp-questions-container'));

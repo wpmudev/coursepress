@@ -1,8 +1,8 @@
 .coursepress-wrap {
-  .coursepress-page-transparent {
-    background-color: transparent;
-    border: 0;
-  }
+    .coursepress-page-transparent {
+        background-color: transparent;
+        border: 0;
+    }
 }
 #course-students {
     background-color: transparent;
@@ -37,45 +37,58 @@
 }
 
 #student-invites {
-  .cp-box {
-    margin-bottom: 15px;
+    .cp-box {
+        margin-bottom: 15px;
 
-    .label {
-      margin-bottom: 5px;
-      display: block;
+        .label {
+            margin-bottom: 5px;
+            display: block;
+        }
     }
-  }
-  .send-invite {
-    .fa {
-      display: none;
+    .send-invite {
+        .fa {
+            display: none;
+        }
+        &.active {
+            .fa {
+                display: inline-block;
+            }
+        }
     }
-    &.active {
-      .fa {
-        display: inline-block;
-      }
-    }
-  }
 }
 
 #invited-students {
-  .invitee-active td {
-    background-color: rgba(0, 255, 0, 0.02);
-  }
+    .invitee-active td {
+        background-color: rgba(0, 255, 0, 0.02);
+    }
 }
 
 .cp-invitee-container {
-  display: block;
-  margin: 25px 0;
+    display: block;
+    margin: 25px 0;
+}
+
+#course-edit-template {
+    &.course-students {
+        .course-footer {
+            .cp-btn {
+                &.step-save,
+                &.step-next {
+                    display: none;
+                }
+            }
+        }
+    }
 }
 
 @media screen {
-  @media (min-width: 1024px) {
-    #student-invites {
-      width: 40%;
-      padding-right: 25px;
+    @media (min-width: 1024px) {
+        #student-invites {
+            width: 40%;
+            padding-right: 25px;
+        }
+        #invited-students {
+            width: 60%;
+        }
     }
-    #invited-students {
-      width: 60%;
-    }
-  }
 }

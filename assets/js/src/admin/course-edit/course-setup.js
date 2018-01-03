@@ -14,6 +14,7 @@
             unitsview: false,
             savemode: 'continue',
             senderButton: false,
+            moduleStatusChanged: false,
             events: {
                 'click .step .menu-label': 'toggleContent',
                 'click .step-back': 'getPreviousStep',
@@ -43,9 +44,24 @@
                 // Let the user know an error occur while updating
                 this.model.on( 'coursepress:error_update_course', this.courseUpdateError, this );
 
+	            this.moduleStatusChanged = false;
+
                 // Load templates
                 this.render();
             },
+
+	        updateModelValues: function (ev) {
+		        var input, name;
+
+		        input = $(ev.currentTarget);
+		        name = input.attr('name');
+
+		        if (name === 'meta_with_modules') {
+			        this.moduleStatusChanged = true;
+		        }
+
+		        this.updateModel(ev);
+	        },
 
             filter_model: function ( model ) {
                 var dates = ['course_start_date', 'course_end_date', 'enrollment_start_date', 'enrollment_end_date'];
@@ -125,11 +141,13 @@
                     this.unitList.remove();
                 }
 
-                if(!this.unitCollection || this.courseTypeChanged()) {
+                if(!this.unitCollection || this.moduleStatusChanged) {
                     this.unitCollection = new CoursePress.UnitCollection({
                         'course_id': course_id,
                         'with_modules': with_modules
                     });
+
+	                this.moduleStatusChanged = false;
                 }
                 this.unitList = new CoursePress.UnitList({}, this);
                 this.unitCollection.on( 'add', this.unitList.addUnit, this.unitList );
@@ -141,10 +159,6 @@
                 }
 
                 this.unitsview.$el.appendTo(this.unitsContainer);
-            },
-
-            courseTypeChanged: function () {
-                return _.contains(_.keys(this.model.changedAttributes()), 'meta_with_modules');
             },
 
             courseStudentsView: function() {
@@ -209,11 +223,15 @@
 
                 this.current = this.getCurrentStep();
                 this.current.siblings().removeClass('active');
+                this.current.siblings().each( function() {
+                    $('#course-edit-template').removeClass( $(this).data('step') );
+                });
                 this.current.addClass('active');
 
                 this.currentTab = this.getCurrentTab();
                 this.currentTab.siblings().removeClass('tab-active').removeClass('done');
                 this.currentTab.addClass('tab-active');
+                $('#course-edit-template').addClass( this.currentStep );
             },
 
             toggleContent: function(ev) {
@@ -372,6 +390,7 @@
                             ! input.is('[type="radio"]') ||
                             ! input.is('select') ) {
                             input.val(val);
+	                        input.trigger('keyup');
                         }
                     }, this );
                 }
