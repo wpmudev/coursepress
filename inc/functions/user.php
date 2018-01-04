@@ -130,16 +130,16 @@ function coursepress_delete_course_instructor( $user_id = 0, $course_id = 0 ) {
 	// Remove marker
 	delete_post_meta( $course_id, 'instructor', $user_id );
 
+	$add_site_prefix = coursepress_user_meta_prefix_required();
 	// Remove user marker
-	delete_user_option( $user_id, 'course_' . $course_id, ! is_multisite() );
-
-	delete_user_option( $user_id, 'role_ins', ! is_multisite() );
+	delete_user_option( $user_id, 'course_' . $course_id, ! $add_site_prefix );
 
 	// Reduce instructor count.
 	$count = get_user_meta( $user_id, 'cp_instructor_course_count', true );
 	if ( ! empty( $count ) ) {
 		update_user_meta( $user_id, 'cp_instructor_course_count', $count - 1 );
 	}
+	echo get_user_option( 'course_' . $course_id, $user_id );
 
 	/**
 	 * Trigger whenever an instructor is removed from the course.
@@ -168,7 +168,7 @@ function coursepress_get_user_instructed_courses( $user_id = 0, $published = tru
 	if ( is_wp_error( $user ) ) {
 		return null; }
 
-	if ( $user->is_instructor() ) {
+	if ( ! $user->is_instructor() ) {
 		return null; // User is not an instructor, bail!
 	}
 
