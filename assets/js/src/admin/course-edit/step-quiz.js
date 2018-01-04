@@ -74,6 +74,10 @@
                 options = this.model.get('options');
                 type = this.model.get('type');
 
+	            if (!this.$el.attr('id')) {
+		            this.$el.attr('id', this.cid);
+	            }
+
                 if ( options.answers ) {
                     _.each( options.answers, function( answer, index ) {
                         var checked;
