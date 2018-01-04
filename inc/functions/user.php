@@ -139,7 +139,6 @@ function coursepress_delete_course_instructor( $user_id = 0, $course_id = 0 ) {
 	if ( ! empty( $count ) ) {
 		update_user_meta( $user_id, 'cp_instructor_course_count', $count - 1 );
 	}
-	echo get_user_option( 'course_' . $course_id, $user_id );
 
 	/**
 	 * Trigger whenever an instructor is removed from the course.
