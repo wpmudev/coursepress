@@ -86,6 +86,24 @@ function coursepress_get_courses( $args = array(), &$count = 0 ) {
 		$args['s'] = $_GET['s'];
 	}
 
+	// If instructor id found, filter by instructor.
+	if ( ! empty( $_GET['instructor_id'] ) ) {
+		$instructor_filter = array(
+			'key' => 'instructor',
+			'value' => (int) $_GET['instructor_id'],
+		);
+		// If another meta query exists, add AND relation.
+		if ( isset( $args['meta_query'] ) ) {
+			$args['meta_query'] = array(
+				'relation' => 'AND',
+				$args['meta_query'],
+				$instructor_filter,
+			);
+		} else {
+			$args['meta_query'][] = $instructor_filter;
+		}
+	}
+
 	$args = wp_parse_args( array(
 		'post_type' => $CoursePress_Core->__get( 'course_post_type' ),
 		'suppress_filters' => true,

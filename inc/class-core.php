@@ -14,6 +14,7 @@ final class CoursePress_Core extends CoursePress_Utility {
 	protected $course_post_type = 'course';
 	protected $unit_post_type = 'unit';
 	protected $step_post_type = 'module';
+	protected $discussions_post_type = 'discussions';
 	protected $category_type = 'course_category';
 	protected $notification_post_type = 'cp_notification';
 
@@ -123,6 +124,18 @@ final class CoursePress_Core extends CoursePress_Utility {
 			'query_var' => false,
 			'publicly_queryable' => false,
 		) );
+
+		// Discussions
+		register_post_type( $this->discussions_post_type, array(
+			'public' => false,
+			'show_ui' => false,
+			'can_export' => false,
+			'label' => 'Discussions', // dbugging only
+			'query_var' => false,
+			'publicly_queryable' => false,
+			'support' => array( 'comments' ),
+			'hierarchical' => true,
+		) );
 	}
 
 	/**
@@ -203,7 +216,7 @@ final class CoursePress_Core extends CoursePress_Utility {
 
 	function comments_open( $is_open, $object_id ) {
 		$post_type = get_post_type( $object_id );
-		$post_types = array( 'course', 'unit', 'module' );
+		$post_types = array( 'course', 'unit', 'module', 'discussions' );
 
 		if ( in_array( $post_type, $post_types ) ) {
 			return true;
