@@ -128,25 +128,33 @@
 }
 
 .course-step-nav {
-  display: block;
-  margin: 15px 0;
-  text-align: right;
+    display: block;
+    margin: 15px 0;
+    text-align: right;
 
-  .coursepress-next-cycle,
-  .coursepress-previous-cycle {
-    @include reset();
-    display: inline-block;
-    text-transform: uppercase;
-    padding: 8px 15px;
-    background-color: $blue_1;
-    color: #ffffff;
+    .coursepress-next-cycle,
+    .coursepress-previous-cycle {
+        @include reset();
+        display: inline-block;
+        text-transform: uppercase;
+        padding: 8px 15px;
+        background-color: $blue_1;
+        color: #ffffff;
 
-    &:hover {
-      background-color: $blue_2;
+        &:hover {
+            background-color: $blue_2;
+        }
     }
-  }
 
-  .coursepress-previous-cycle {
-    float: left;
-  }
+    .coursepress-previous-cycle {
+        float: left;
+    }
+}
+
+body {
+    &.cp-preview {
+        .course-step-nav {
+            display: none;
+        }
+    }
 }

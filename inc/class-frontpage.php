@@ -199,12 +199,17 @@ class CoursePress_FrontPage extends CoursePress_Utility {
 		wp_enqueue_script( $id, $plugin_url . 'assets/js/' . $src, $deps, $version, true );
 	}
 
-	function set_body_class( $class ) {
+	public function set_body_class( $classes ) {
 		if ( ( $is_cp = $this->__get( 'page_now' ) ) ) {
-			array_push( $class, 'coursepress', 'coursepress-' . $is_cp );
+			array_push( $classes, 'coursepress', 'coursepress-' . $is_cp );
 		}
-
-		return $class;
+		/**
+		 * add preview class
+		 */
+		if ( isset( $_GET['preview'] ) ) {
+			$classes[] = 'cp-preview';
+		}
+		return $classes;
 	}
 
 	function maybe_load_zip() {
