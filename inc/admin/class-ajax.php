@@ -327,9 +327,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 						    $step_metas = array();
 
 						    foreach ( $step as $step_key => $step_value ) {
-						    	if ( 'meta_questions' == $step_key || 'questions' == $step_key ) {
-						    		continue;
-							    }
 							    if ( preg_match( '%meta_%', $step_key ) ) {
 								    $_step_key = str_replace( 'meta_', '', $step_key );
 

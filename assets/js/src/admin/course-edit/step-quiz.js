@@ -259,6 +259,7 @@
                this.questions[cid] = question;
                this.questionsModel[cid] = question.model;
                this.model.questions = this.questionsModel;
+	           this.updateQuestions();
            },
 
            toggleContent: function(ev) {
