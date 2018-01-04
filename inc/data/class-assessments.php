@@ -136,6 +136,7 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 							unset( $modules_steps[ $mkey ]['steps'][ $step_id ] );
 						} else {
 							$answerable_modules++;
+							$step->grade = $student->get_step_grade( $course_id, $unit->ID, $step_id );
 						}
 					}
 				}
@@ -204,20 +205,6 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 		// Set the user object to main array.
 		$assessment['student'] = $student;
 
-		// Do not continue if user not completed the course.
-		if ( ! $student->is_course_completed( $this->course->ID ) ) {
-			// We need to exclude this user from count.
-			return array();
-		}
-
-		// If filtered by unit and that unit is not accessable to student.
-		if ( ! empty( $unit_id ) && count( $units ) === 1 ) {
-			$unit = reset( $units );
-			if ( ! $unit->is_accessible_by( $student_id ) ) {
-				return array();
-			}
-		}
-
 		$grade = $student->get_course_grade( $course_id );
 
 		// Set unit data under user.
@@ -227,16 +214,26 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 		$assessment['grade'] = $grade;
 
 		// Loop through each units.
-		foreach ( $units as $unit_id => $unit ) {
+		foreach ( $units as $unit_key => $unit ) {
 			// Get the modules for the unit.
 			$modules_steps = $unit->get_modules_with_steps();
-			$answerable_modules = 0;
+			$answerable_modules = $gradable_modules = 0;
 			foreach ( $modules_steps as $mkey => $module ) {
 				foreach ( $module['steps'] as $step_id => $step ) {
 					// If step is not answerable or assessable, unset.
 					if ( ! $step->is_answerable() || ( ! $step->is_assessable() && 'all_assessable' == $display ) ) {
 						unset( $modules_steps[ $mkey ]['steps'][ $step_id ] );
 					} else {
+						// Set grade.
+						$step_grade = $student->get_step_grade( $course_id, $unit->ID, $step_id );
+						if ( $step->type === 'fileupload' && ( empty( $step_grade ) || $step_grade === 'pending' ) ) {
+							$modules_steps[ $mkey ]['steps'][ $step_id ]->is_graded = false;
+							$modules_steps[ $mkey ]['steps'][ $step_id ]->grade = 0;
+						} else {
+							$modules_steps[ $mkey ]['steps'][ $step_id ]->is_graded = true;
+							$modules_steps[ $mkey ]['steps'][ $step_id ]->grade = round( $step_grade );
+							$gradable_modules++;
+						}
 						$answerable_modules++;
 					}
 				}
@@ -244,11 +241,13 @@ class CoursePress_Data_Assessments extends CoursePress_Utility {
 
 			// If modules not found, skip.
 			if ( ! empty( $modules_steps ) ) {
-				$assessment['units'][ $unit_id ]->modules = $modules_steps;
+				$assessment['units'][ $unit_key ]->modules = $modules_steps;
 			}
 
 			// Flag this unit as non answerable if not answerable.
-			$assessment['units'][ $unit_id ]->is_answerable = $answerable_modules > 0 ? true : false;
+			$assessment['units'][ $unit_key ]->is_answerable = $answerable_modules > 0 ? true : false;
+			// Flag this unit if grade can be displayed.
+			$assessment['units'][ $unit_key ]->is_graded = $gradable_modules > 0 ? true : false;
 		}
 
 		return $assessment;

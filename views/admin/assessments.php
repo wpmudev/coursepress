@@ -13,8 +13,7 @@
 							<?php foreach ( $courses as $course ) : ?>
                             <option value="<?php echo $course->ID; ?>" <?php selected( $course->ID, $course_id ); ?>><?php
 							echo $course->post_title;
-							echo $course->get_numeric_identifier_to_course_name( $course->ID );
-?></option>
+							echo $course->get_numeric_identifier_to_course_name( $course->ID ); ?></option>
 							<?php endforeach; ?>
 						<?php endif; ?>
 					</select>
@@ -180,31 +179,32 @@
 															<?php if ( ! empty( $module['steps'] ) ) : ?>
 																<?php foreach ( $module['steps'] as $step_id => $step ) : ?>
 																	<?php if ( ! $step->is_answerable() ) : continue; endif; ?>
-																		<?php if ( $step_count == 0 ) : ?>
-																			<tr>
-																				<th colspan="3"><?php echo $module['title']; ?></th>
-																			</tr>
-																		<?php endif; ?>
-																		<tr class="cp-question-title">
-																			<th colspan="3">
-																				<span class="cp-title"><?= $step->get_the_title() ?></span>
+																	<?php if ( $step_count == 0 ) : ?>
+																		<tr>
+																			<th colspan="3"><?php echo $module['title']; ?></th>
+																		</tr>
+																	<?php endif; ?>
+																	<tr class="cp-question-title">
+																		<th colspan="3">
+																			<span class="cp-title"><?= $step->get_the_title() ?></span>
+																			<?php $grade = $student->get_step_grade( $course_id, $unit->ID, $step_id ); ?>
+																			<?php // No need to show grade if not entered by instructor -->
+																			if ( $step->type !== 'fileupload' || ( ! empty( $grade ) && $grade !== 'pending' ) ) : ?>
 																				<span class="pull-right cp-title">
-																					<?= round( $student->get_step_grade( $course_id, $unit->ID, $step_id ) ) ?>%
+																					<?= round( $grade ) ?>%
 																					<?php $step_status = $student->get_step_grade_status( $course_id, $unit->ID, $step_id ); ?>
 																					<span class="<?= $step_status == 'pass' ? 'cp-green' : 'cp-red' ?>"><?= $step_status ? strtoupper( $step_status ) : __( 'FAILED', 'cp' ) ?></span>
 																				</span>
-																			</th>
-
-																		</tr>
+																			<?php endif; ?>
+																		</th>
+																	</tr>
+																	<?php if ( isset( $step->questions ) && is_array( $step->questions ) ) : ?>
 																		<tr>
 																			<th class="cp-assessments-strong"><?php _e( 'Question', 'cp' ); ?></th>
 																			<th class="cp-assessments-strong"><?php _e( 'Student answer', 'cp' ); ?></th>
 																			<th class="cp-assessments-strong"><?php _e( 'Correct answer', 'cp' ); ?></th>
 																		</tr>
-<?php
-if ( isset( $step->questions ) && is_array( $step->questions ) ) {
-	foreach ( $step->questions as $qkey => $question ) {
-?>
+																		<?php foreach ( $step->questions as $qkey => $question ) : ?>
 																			<tr>
 																				<td><?php echo $question['title']; ?></td>
 																				<td>
@@ -217,14 +217,12 @@ if ( isset( $step->questions ) && is_array( $step->questions ) ) {
 																									<span class="<?= $ans_span_class ?>"><?= $question['options']['answers'][ $response[ $qkey ] ] ?></span>
 																								</li>
 																							<?php elseif ( $question['type'] == 'multiple' ) : ?>
-<?php
-foreach ( $response[ $qkey ] as $an_key => $answer ) {
-?>
-																							<li>
-																								<?php $ans_span_class = empty( $question['options']['checked'][ $an_key ] ) ? '':'cp-right-answer'; ?>
-																								- <span class="<?= $ans_span_class ?>"><?= $question['options']['answers'][ $an_key ] ?></span>
-																							</li>
-																						<?php } ?>
+																								<?php foreach ( $response[ $qkey ] as $an_key => $answer ) : ?>
+																									<li>
+																										<?php $ans_span_class = empty( $question['options']['checked'][ $an_key ] ) ? '':'cp-right-answer'; ?>
+																										- <span class="<?= $ans_span_class ?>"><?= $question['options']['answers'][ $an_key ] ?></span>
+																									</li>
+																								<?php endforeach; ?>
 																							<?php endif; ?>
 																						</ul>
 																					<?php else : ?>
@@ -236,24 +234,26 @@ foreach ( $response[ $qkey ] as $an_key => $answer ) {
 																				<td>
 																					<ul class="cp-assessments-answers">
 																						<?php $list_sep = in_array( $question['type'], array( 'single', 'select' ) ) ? '' : '- '; ?>
-<?php
-foreach ( ( $question['options']['checked'] ) as $checked_key => $checked ) {
-	if ( ! empty( $checked ) ) {
-	?>
-																					<li>
-																						<?= $list_sep . $question['options']['answers'][ $checked_key ]; ?>
-																					</li>
-<?php
-	}
-}
-?>
+																						<?php foreach ( ( $question['options']['checked'] ) as $checked_key => $checked ) : ?>
+																							<?php if ( ! empty( $checked ) ) : ?>
+																								<li>
+																									<?= $list_sep . $question['options']['answers'][ $checked_key ]; ?>
+																								</li>
+																							<?php endif; ?>
+																						<?php endforeach; ?>
 																					</ul>
 																				</td>
 																			</tr>
-<?php
-	}
-}
-?>
+																		<?php endforeach; ?>
+																	<?php else : ?>
+																		<tr>
+																			<td colspan="3">
+																				<ul class="cp-assessments-answers">
+																					<li><span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span</li>
+																				</ul>
+																			</td>
+																		</tr>
+																	<?php endif; ?>
 																	<?php $step_count++; ?>
 																<?php endforeach; ?>
 															<?php endif; ?>

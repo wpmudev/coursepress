@@ -84,7 +84,7 @@
             setStep: function(model) {
                 var step, cid;
 
-                step = new CoursePress.Step({model: model}, this);
+                step = new CoursePress.Step(model, this);
                 step.$el.appendTo(this.stepContainer);
 
                 cid = step.model.cid;

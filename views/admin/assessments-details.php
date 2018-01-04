@@ -61,10 +61,12 @@
 								<?php if ( empty( $unit->is_answerable ) ) : continue; endif; ?>
 								<li>
 									<span class="pull-left cp-title"><span class="cp-units-icon"></span><?php echo $unit->get_the_title(); ?></span>
-									<span class="pull-right">
-										<span class="cp-title"><?= $assessments['student']->get_unit_grade( $course_id, $unit->ID ) ? : 0 ?>%</span>
-										<span class="cp-minus-icon"></span>
-									</span>
+									<?php if ( $unit->is_graded ) : ?>
+										<span class="pull-right">
+											<span class="cp-title"><?= $assessments['student']->get_unit_grade( $course_id, $unit->ID ) ? : 0 ?>%</span>
+											<span class="cp-minus-icon"></span>
+										</span>
+									<?php endif; ?>
 									<?php if ( ! empty( $unit->modules ) ) : ?>
 										<div class="cp-assesments-module-expanded">
 											<?php foreach ( $unit->modules as $module_id => $module ) : ?>
@@ -81,56 +83,62 @@
 																<tr class="cp-question-title">
 																	<th colspan="2">
 																		<span class="cp-title"><?= $step->get_the_title() ?></span>
-																		<span class="pull-right cp-title">
-																			<?= round( $assessments['student']->get_step_grade( $course_id, $unit->ID, $step_id ) ) ?>%
-																			<?php $step_status = $assessments['student']->get_step_grade_status( $course_id, $unit->ID, $step_id ); ?>
-																			<span class="<?= $step_status == 'pass' ? 'cp-green' : 'cp-red' ?>"><?= $step_status ? strtoupper( $step_status ) : __( 'FAILED', 'cp' ) ?></span>
-																		</span>
+																		<?php if ( $step->is_graded ) : ?>
+																			<span class="pull-right cp-title">
+																				<?= $step->grade ?>%
+																				<?php $step_status = $assessments['student']->get_step_grade_status( $course_id, $unit->ID, $step_id ); ?>
+																				<span class="<?= $step_status === 'pass' ? 'cp-green' : 'cp-red' ?>"><?= $step_status ? strtoupper( $step_status ) : __( 'FAILED', 'cp' ) ?></span>
+																			</span>
+																		<?php endif; ?>
 																	</th>
 																</tr>
 																<tr>
 																	<th class="cp-assessments-strong"><?php _e( 'Question', 'cp' ); ?></th>
 																	<th class="cp-assessments-strong"><?php _e( 'Student answer', 'cp' ); ?></th>
 																</tr>
-<?php
-if ( isset( $step->questions ) && is_array( $step->questions ) ) {
-	foreach ( $step->questions as $qkey => $question ) {
-	?>
-																	<tr>
-																		<td><?php echo $question['title']; ?></td>
-																		<td>
-																			<?php $response = $step->get_user_response( $student_id ); ?>
-																			<?php if ( isset( $response[ $qkey ] ) ) : ?>
-																				<ul class="cp-assessments-answers">
-																					<?php if ( in_array( $question['type'], array( 'single', 'select' ) ) ) : ?>
-																						<li>
-																							<?php $ans_span_class = empty( $question['options']['checked'][ $response[ $qkey ] ] ) ? 'cp-cross-icon' : 'cp-tick-icon'; ?>
-																							<span class="<?= $ans_span_class ?>"><?= $question['options']['answers'][ $response[ $qkey ] ] ?></span>
-																						</li>
-																					<?php elseif ( $question['type'] == 'multiple' ) : ?>
-																						<?php foreach ( $response[ $qkey ] as $an_key => $answer ) { ?>
+																<?php if ( isset( $step->questions ) && is_array( $step->questions ) ) : ?>
+																	<?php foreach ( $step->questions as $qkey => $question ) : ?>
+																		<tr>
+																			<td><?php echo $question['title']; ?></td>
+																			<td>
+																				<?php $response = $step->get_user_response( $student_id ); ?>
+																				<?php if ( isset( $response[ $qkey ] ) ) : ?>
+																					<ul class="cp-assessments-answers">
+																						<?php if ( in_array( $question['type'], array( 'single', 'select' ) ) ) : ?>
 																							<li>
-																								<?php $ans_span_class = empty( $question['options']['checked'][ $an_key ] ) ? 'cp-cross-icon' : 'cp-tick-icon'; ?>
-																								<span class="<?= $ans_span_class ?>"><?= $question['options']['answers'][ $an_key ] ?></span>
+																								<?php $ans_span_class = empty( $question['options']['checked'][ $response[ $qkey ] ] ) ? 'cp-cross-icon' : 'cp-tick-icon'; ?>
+																								<span class="<?= $ans_span_class ?>"><?= $question['options']['answers'][ $response[ $qkey ] ] ?></span>
 																							</li>
-																						<?php } ?>
-																					<?php endif; ?>
-																				</ul>
-																			<?php else : ?>
-																				<ul class="cp-assessments-answers">
-																					<li><span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span</li>
-																				</ul>
-																			<?php endif; ?>
-																		</td>
-																	</tr>
-<?php
-	}
-}
-$step_count++;
-
-endforeach;
-endif;
-if ( $step_count < 1 ) : ?>
+																						<?php elseif ( $question['type'] == 'multiple' ) : ?>
+																							<?php foreach ( $response[ $qkey ] as $an_key => $answer ) : ?>
+																								<li>
+																									<?php $ans_span_class = empty( $question['options']['checked'][ $an_key ] ) ? 'cp-cross-icon' : 'cp-tick-icon'; ?>
+																									<span class="<?= $ans_span_class ?>"><?= $question['options']['answers'][ $an_key ] ?></span>
+																								</li>
+																							<?php endforeach; ?>
+																						<?php endif; ?>
+																					</ul>
+																				<?php else : ?>
+																					<ul class="cp-assessments-answers">
+																						<li><span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span</li>
+																					</ul>
+																				<?php endif; ?>
+																			</td>
+																		</tr>
+																	<?php endforeach; ?>
+																<?php else : ?>
+																<tr>
+																	<td colspan="3">
+																		<ul class="cp-assessments-answers">
+																			<li><span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span</li>
+																		</ul>
+																	</td>
+																</tr>
+																<?php endif; ?>
+																<?php $step_count++; ?>
+															<?php endforeach; ?>
+														<?php endif; ?>
+														<?php if ( $step_count < 1 ) : ?>
 															<tr>
 																<td colspan="2"><?php _e( 'No answerable modules found', 'cp' ); ?></td>
 															</tr>
