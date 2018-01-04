@@ -21,7 +21,9 @@ if ( empty( $discussion ) ) {
     </div>
 <?php
 if ( ! empty( $discussion ) ) {
-	setup_postdata( $discussion );
+	global $post;
+	$post = $discussion;
+	setup_postdata( $post );
 	comments_template();
 	wp_reset_postdata();
 }
