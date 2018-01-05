@@ -31,7 +31,7 @@
             // Remove removed student from list.
             invitationRemoved: function( data ) {
                 if ( data.email ) {
-                    var btn =  this.$( 'button, input[type="button"]' );
+                    var btn =  this.$( 'button, input[type="button"], .remove-invite' );
                     // Remove closese tr.
                     btn.closest('tr').detach();
                     // If there are no invites left, show empty message.
