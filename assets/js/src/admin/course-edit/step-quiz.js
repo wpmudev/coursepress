@@ -63,7 +63,7 @@
             quizView: false,
 
             initialize: function( model, quizView ) {
-                this.model = new Model(model);
+                this.model = new Model(!!model.get ? model.toJSON() : model);
                 this.quizView = quizView;
                 this.on( 'view_rendered', this.setUI, this );
                 this.render();
