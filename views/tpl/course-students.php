@@ -137,13 +137,14 @@
                 <thead>
                     <tr>
                         <th><?php esc_html_e( 'Student Name', 'cp' ); ?></th>
+                        <th><?php esc_html_e( 'Email', 'cp' ); ?></th>
                         <th><?php esc_html_e( 'Date', 'cp' ); ?></th>
                     </tr>
                 </thead>
                 <tbody id="invited-list">
                     <?php if ( ! $invited_students ) : ?>
                     <tr class="no-invites">
-                        <td colspan="2"><?php esc_html_e( 'No invited students found...', 'cp' ); ?></td>
+                        <td colspan="3"><?php esc_html_e( 'No invited students found...', 'cp' ); ?></td>
                     </tr>
                     <?php endif; ?>
                 </tbody>
@@ -155,6 +156,7 @@
 
 <script type="text/template" id="coursepress-invited-student">
     <td>{{first_name}} {{last_name}}</td>
+    <td>{{email}}</td>
     <td>{{date}}</td>
 </script>
 
