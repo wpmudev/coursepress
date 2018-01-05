@@ -25,13 +25,22 @@ abstract class CoursePress_Utility {
 		}
 	}
 
-	public function date_time_now() {
+	/**
+	 * Return prepared timestamp, after day starts.
+	 *
+	 * @param string $hour Hour after day start, by default it is 1 secound
+	 *                     (plus local settings of timezone).
+	 *
+	 */
+	public function date_time_now( $hour = '00:00:01' ) {
 		$time_now = current_time( 'timestamp' );
-		$date_now = date( 'M/d/y', current_time( 'timestamp' ) );
-
+		$date_now = date( 'c', current_time( 'timestamp' ) );
+		if ( ! is_string( $hour ) || ! preg_match( '/^\d\d:\d\d:\d\d$/', $hour ) ) {
+			$hour = '00:00:01';
+		}
+		$date_now = preg_replace( '/T\d\d:\d\d:\d\d/', 'T'.$hour, $date_now );
 		// Time now is not the current time but rather the timestamp of the starting date today (00:01).
 		$time_now = strtotime( $date_now, $time_now );
-
 		return $time_now;
 	}
 

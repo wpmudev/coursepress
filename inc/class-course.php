@@ -476,17 +476,20 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return bool
 	 */
 	public function is_enrollment_started() {
-		$time_now = $this->date_time_now();
+		/**
+		 * Check is enrollment always possible
+		 */
 		$enrollment_open = $this->__get( 'enrollment_open_ended' );
+		if ( ! empty( $enrollment_open ) ) {
+			return true;
+		}
+		/**
+		 * check is enrollment open date erlier that Today
+		 */
+		$time_now = $this->date_time_now();
 		$start_date = $this->__get( 'enrollment_start_date_timestamp' );
 
-		if ( empty( $enrollment_open )
-			&& $start_date > 0
-			&& $start_date > $time_now ) {
-			return false;
-		}
-
-		return true;
+		return $start_date < $time_now;
 	}
 
 	/**
@@ -495,16 +498,19 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return bool
 	 */
 	public function has_enrollment_ended() {
-		$time_now = $this->date_time_now();
+		/**
+		 * Check is enrollment always possible
+		 */
 		$enrollment_open = $this->__get( 'enrollment_open_ended' );
+		if ( ! empty( $enrollment_open ) ) {
+			return true;
+			/**
+		 * check is enrollment close date late that Today
+		 */
+		}
+		$time_now = $this->date_time_now( '23:59:59' );
 		$end_date = $this->__get( 'enrollment_end_date_timestamp' );
-
-		if ( empty( $enrollment_open )
-			&& $end_date > 0
-			&& $end_date < $time_now ) {
-			return true; }
-
-		return false;
+		return $end_date > $time_now;
 	}
 
 	/**
@@ -514,16 +520,17 @@ class CoursePress_Course extends CoursePress_Utility {
 	 */
 	public function user_can_enroll() {
 		$available = $this->is_available();
-
 		if ( $available ) {
 			// Check if enrollment has started
 			$available = $this->is_enrollment_started();
-
+			if ( $available ) {
+				$available = $this->has_enrollment_ended();
+			}
 			// Check if enrollment already ended
 			if ( $available && $this->has_course_ended() ) {
-				$available = false; }
+				$available = false;
+			}
 		}
-
 		return $available;
 	}
 
