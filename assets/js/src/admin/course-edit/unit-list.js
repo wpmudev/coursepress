@@ -185,7 +185,9 @@
                 if ( data.units ) {
                     self = this;
                     _.each(data.units, function (unitData, cid) {
-                        self.unitModels[cid] = new Backbone.Model(unitData);
+	                    var model = new Backbone.Model(unitData);
+	                    model.cid = cid;
+	                    self.unitModels[cid] = model;
                     });
                 }
 
