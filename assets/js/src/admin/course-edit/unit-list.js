@@ -180,10 +180,15 @@
             },
 
             updateUnitModels: function( data ) {
-                var nextStep;
+                var nextStep, self;
 
                 if ( data.units ) {
-                    this.unitModels = _.extend( this.unitModels, data.units );
+                    self = this;
+                    _.each(data.units, function (unitData, cid) {
+	                    var model = new Backbone.Model(unitData);
+	                    model.cid = cid;
+	                    self.unitModels[cid] = model;
+                    });
                 }
 
                 this.editCourseView.after_update();
