@@ -9,7 +9,37 @@
         Students = new CoursePress.Request();
         InviteItem = CoursePress.View.extend({
             template_id: 'coursepress-invited-student',
-            tagName: 'tr'
+            tagName: 'tr',
+            events: {
+                'click .remove-invite': 'removeInvitation',
+            },
+
+            // Send ajax to remove invitation.
+            removeInvitation: function( ev ) {
+
+                var target = $( ev.currentTarget ),
+                    email = target.data( 'email' );
+                // Send ajax request.
+                if ( email ) {
+                    this.model.set( 'action', 'remove_student_invite' );
+                    this.model.set( 'course_id', this.course_id );
+                    this.model.on( 'coursepress:success_remove_student_invite', this.invitationRemoved, this );
+                    this.model.save();
+                }
+            },
+
+            // Remove removed student from list.
+            invitationRemoved: function( data ) {
+                if ( data.email ) {
+                    var btn =  this.$( 'button, input[type="button"]' );
+                    // Remove closese tr.
+                    btn.closest('tr').detach();
+                    // If there are no invites left, show empty message.
+                    if ( 2 > $('#invited-list tr').length ) {
+                        $('#invited-list tr.no-invites').show();
+                    }
+                }
+            }
         });
 
         Invite = CoursePress.View.extend({
@@ -119,6 +149,7 @@
 
                 list = this.$('#invited-list');
                 invited = new InviteItem(data);
+                invited.course_id = this.model.get('ID');
                 invited.$el.prependTo(list);
 
                 list.find('.no-invites').hide();

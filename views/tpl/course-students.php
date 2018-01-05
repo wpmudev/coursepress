@@ -139,14 +139,13 @@
                         <th><?php esc_html_e( 'Student Name', 'cp' ); ?></th>
                         <th><?php esc_html_e( 'Email', 'cp' ); ?></th>
                         <th><?php esc_html_e( 'Date', 'cp' ); ?></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody id="invited-list">
-                    <?php if ( ! $invited_students ) : ?>
-                    <tr class="no-invites">
-                        <td colspan="3"><?php esc_html_e( 'No invited students found...', 'cp' ); ?></td>
+                    <tr class="no-invites <?php echo empty( (array) $invited_students ) ? '' : 'inactive'; ?>">
+                        <td colspan="4"><?php esc_html_e( 'No invited students found...', 'cp' ); ?></td>
                     </tr>
-                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
@@ -158,6 +157,9 @@
     <td>{{first_name}} {{last_name}}</td>
     <td>{{email}}</td>
     <td>{{date}}</td>
+    <td>
+        <button data-email="{{email}}" class="cp-btn cp-btn-xs cp-btn-active remove-invite" title="<?php _e( 'Remove invitation', 'cp' ); ?>"><?php _e( 'Remove', 'cp' ); ?></button>
+    </td>
 </script>
 
 <script type="text/template" id="coursepress-course-add-student">

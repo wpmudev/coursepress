@@ -1718,6 +1718,37 @@ function coursepress_invite_student( $course_id, $student_data ) {
 	return $student_data;
 }
 
+/**
+ * Remove invited student from a course.
+ *
+ * @param int $course_id Course ID.
+ * @param string $email Enail address.
+ *
+ * @return bool
+ */
+function coursepress_remove_student_invite( $course_id, $email ) {
+
+	// Get the course object.
+	$course = coursepress_get_course( $course_id );
+	if ( is_wp_error( $course ) ) {
+		return false;
+	}
+
+	// Get list of invited students.
+	$invited_students = $course->__get( 'invited_students' );
+	// Make sure given email is there in invited list.
+	if ( ! empty( $invited_students ) && isset( $invited_students->{$email} ) ) {
+		// Remove given student from list.
+		unset( $invited_students->{$email} );
+		// Update course data.
+		$course->update_setting( 'invited_students', $invited_students );
+
+		return array( 'email' => $email );
+	}
+
+	return false;
+}
+
 function coursepress_search_students( $args = array() ) {
 
 	$is_search = ! empty( $args['search'] );
