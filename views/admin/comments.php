@@ -5,8 +5,9 @@
             <div class="cp-flex">
                 <div class="cp-div">
                     <label class="label"><?php _e( 'Filter by course', 'cp' ); ?></label>
-                    <select name="course_id" id="select_course_id">
-                        <option value=""><?php _e( 'Any course', 'cp' ); ?></option>
+                    <div class="cp-input-clear">
+                        <select name="course_id" id="select_course_id">
+                            <option value=""><?php _e( 'Any course', 'cp' ); ?></option>
 <?php
 $current = isset( $_REQUEST['course_id'] )? $_REQUEST['course_id']:0;
 foreach ( $courses as $course_id => $course ) {
@@ -18,7 +19,9 @@ foreach ( $courses as $course_id => $course ) {
 	);
 }
 	?>
-                    </select>
+                        </select>
+                    </div>
+                    <button type="submit" class="cp-btn cp-btn-active"><?php _e( 'Filter', 'cp' ); ?></button>
                 </div>
             </div>
             <input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>" />

@@ -6,7 +6,7 @@
 			$(this).closest('form').submit();
 		})
 		.on ( 'click', '#cp-search-clear', function() {
-			var s = $('[name=s]', $(this).parent());
+			var s = $(this).siblings('input[type="text"]');
 			if ( '' !== s.val() ) {
 				s.val('');
 				$(this).closest('form').submit();

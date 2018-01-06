@@ -29,7 +29,7 @@
                     </select>
                 </div>
                 <div class="cp-div">
-                    <label class="label"><?php _e( 'Filter by course', 'cp' ); ?></label>
+                    <label class="label"><?php _e( 'Search by course', 'cp' ); ?></label>
                     <div class="cp-input-clear">
                         <input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>" />
                         <input type="text" name="s" placeholder="<?php _e( 'Enter search query here...', 'cp' ); ?>" value="<?php echo $search; ?>" />
