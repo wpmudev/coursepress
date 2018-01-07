@@ -29,6 +29,7 @@ All development source files are located at **coursepress/assets/js/src/**
 * ***assets/js/src/admin/courselist*** - Contains JS files used in the main courses (`coursepress.js`)
 * ***assets/js/src/admin/course-edit*** - Contains JS files used in **New Course** or **Edit Course** (`coursepress_course.js`)
 * ***assets/js/src/admin/assessments*** - Contains JS files used in **Assessments** page (`coursepress_assessments.js`)
+* ***assets/js/src/admin/comments*** - Contains JS files used in **Comments** page (`coursepress_comments.js`)
 * ***assets/js/src/admin/forum*** - Contains JS files used in **Forum** page (`coursepress_forum.js`)
 * ***assets/js/src/admin/instructors*** - Contains JS files used in **Instructors** page (`coursepress_instructors.js`)
 * ***assets/js/src/admin/students*** - Contains JS files used in **Students** page (`courseperess_students.js`)
