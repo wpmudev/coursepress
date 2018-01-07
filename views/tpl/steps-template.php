@@ -288,7 +288,7 @@
 </script>
 
 <script type="text/template" id="coursepress-question-answer">
-    <label class="cp-checkbox">
+    <label class="cp-checkbox cp-ignore-update-model">
         <input type="{{'multiple'===type?'checkbox':'radio'}}" name="checked[{{cid}}]" autocomplete="off" class="cp-checkbox-input coursepress-question-answer-checked" value="1" {{_.checked(true, checked)}} />
         <span class="cp-checkbox-icon"></span>
     </label>
