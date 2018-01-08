@@ -39,7 +39,7 @@ foreach ( $courses as $course_id => $course ) {
             <input type="hidden" name="page" value="<?php esc_attr_e( $page ); ?>" />
         </form>
 
-        <table class="coursepress-table" cellspacing="0">
+        <table class="coursepress-table" id="cp-forums-table" cellspacing="0">
             <thead>
                 <tr>
                     <?php foreach ( $columns as $column_id => $column_label ) { ?>
