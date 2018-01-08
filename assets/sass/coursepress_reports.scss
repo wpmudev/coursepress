@@ -5,21 +5,6 @@
 #coursepress-reports-list {
     .coursepress-page {
         .cp-flex {
-            .cp-div {
-                margin-left: 20px;
-                &:first-child {
-                    margin-left: 0;
-                }
-                .cp-btn {
-                    margin-left: 10px;
-                }
-            }
-            label {
-                color: $grey_3;
-                font-size: .8em;
-                font-weight: 600;
-                display: block;
-            }
             align-items: center;
             .gravatar {
                 padding-right: 15px;

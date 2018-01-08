@@ -1,26 +1,3 @@
 // Use in Instructors page
 @import "common/mixin.scss";
 @import "common/cp-search-form";
-
-#coursepress-instructors {
-    .coursepress-page {
-        .cp-flex {
-            .cp-div {
-                margin-left: 20px;
-                &:first-child {
-                    margin-left: 0;
-                }
-                .cp-btn {
-                    margin-left: 10px;
-                }
-            }
-            label {
-                color: $grey_3;
-                font-size: .8em;
-                font-weight: 600;
-                display: block;
-            }
-        }
-    }
-}
-
