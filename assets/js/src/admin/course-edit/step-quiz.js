@@ -63,7 +63,7 @@
             quizView: false,
 
             initialize: function( model, quizView ) {
-                this.model = new Model(model);
+                this.model = new Model(!!model.get ? model.toJSON() : model);
                 this.quizView = quizView;
                 this.on( 'view_rendered', this.setUI, this );
                 this.render();
@@ -119,13 +119,16 @@
             },
 
             updateModel: function() {
-                var cid, title, question, options, answers, the_answers, checked, the_checked;
+                var cid, title, question, order, options, answers, the_answers, checked, the_checked;
 
                 title = this.$('[name="title"]').val();
                 this.model.set('title', title);
 
                 question = this.$('[name="question"]').val();
                 this.model.set('question', question);
+
+                order = this.$('[name="order"]').val();
+                this.model.set('order', order);
 
                 options = this.model.get('options');
 
@@ -205,8 +208,27 @@
                        this._addQuestion(question);
                    }, this );
                    this.$('.no-content-info').hide();
-                   this.$('.cp-questions-container').sortable();
+                   this.$('.cp-questions-container').sortable({
+                       axis: 'y',
+                       stop: function () {
+                           self.reOrderQuestions();
+                       }
+                   });
                }
+           },
+
+           reOrderQuestions: function () {
+               var orderInputs, newOrder;
+
+               newOrder = 0;
+               orderInputs = this.$el.find('.question-order');
+
+               _.each(orderInputs, function (orderInput) {
+				   var $orderInput = $(orderInput);
+                   $orderInput.val(newOrder);
+                   $orderInput.change();
+                   newOrder++;
+               });
            },
 
            deleteQuestion: function( ev ) {
@@ -239,7 +261,11 @@
                    return;
                }
 
-               data = {type: type};
+			   var size = _.size(this.questions);
+               data = {
+                   type: type,
+                   order: size
+               };
                this._addQuestion(data);
 
                this.$('.no-content-info').hide();
@@ -247,23 +273,39 @@
            },
 
            _addQuestion: function( model ) {
-               var question, questions, cid;
-
-               questions = this.model.questions;
-
-               if ( ! questions ) {
-                   questions = [];
-               }
+               var question, cid;
                model.index = _.size(this.questions);
 
                question = new Question(model, this);
-               question.$el.appendTo(this.$('.cp-questions-container'));
+               this.addQuestionMarkup(question.$el);
 
                cid = question.cid;
                this.questions[cid] = question;
                this.questionsModel[cid] = question.model;
                this.model.questions = this.questionsModel;
 	           this.updateQuestions();
+           },
+
+           addQuestionMarkup: function (newQuestion) {
+               var orderInputs, orderArray = [], newOrder;
+
+               newOrder = newQuestion.find('.question-order').val();
+               orderArray.push(newOrder);
+
+               orderInputs = this.$el.find('.question-order');
+               orderInputs.each(function (index, orderInput) {
+                   orderArray.push(
+                       $(orderInput).val()
+                   );
+               });
+
+               var newQuestionIndex = _.indexOf(_.sortBy(orderArray), newOrder);
+               if (newQuestionIndex === 0) {
+                   newQuestion.prependTo(this.$('.cp-questions-container'));
+               }
+               else {
+                   newQuestion.insertAfter(this.$('.cp-question-box:nth-child(' + newQuestionIndex + ')'));
+               }
            },
 
            toggleContent: function(ev) {

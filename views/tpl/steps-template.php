@@ -283,12 +283,13 @@
             <textarea class="widefat" name="question">{{question}}</textarea>
             <div class="question-answers"></div>
             <button type="button" class="cp-btn cp-btn-xs cp-btn-active"><?php _e( 'Add Answer', 'cp' ); ?></button>
+            <input class="question-order" type="hidden" name="order" value="{{order}}" />
         </div>
     </div>
 </script>
 
 <script type="text/template" id="coursepress-question-answer">
-    <label class="cp-checkbox">
+    <label class="cp-checkbox cp-ignore-update-model">
         <input type="{{'multiple'===type?'checkbox':'radio'}}" name="checked[{{cid}}]" autocomplete="off" class="cp-checkbox-input coursepress-question-answer-checked" value="1" {{_.checked(true, checked)}} />
         <span class="cp-checkbox-icon"></span>
     </label>

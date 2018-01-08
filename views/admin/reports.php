@@ -35,7 +35,8 @@ foreach ( $bulk_actions as $value => $label ) {
 <?php } ?>
                 <div class="cp-div">
                     <label class="label"><?php _e( 'Filter by course', 'cp' ); ?></label>
-                    <select name="course_id" id="select_course_id">
+                    <div class="cp-input-clear">
+                        <select name="course_id" id="select_course_id">
 <?php
 foreach ( $courses as $course_id => $course ) {
 	printf(
@@ -46,9 +47,11 @@ foreach ( $courses as $course_id => $course ) {
 	);
 }
 	?>
-                    </select>
+                        </select>
+                    </div>
+                    <button type="submit" class="cp-btn cp-btn-active"><?php _e( 'Filter', 'cp' ); ?></button>
                 </div>
-			</div>
+            </div>
 
         </form>
 <?php

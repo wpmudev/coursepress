@@ -102,6 +102,11 @@
                 // assets/js/src/admin/assessments/...
                 'assets/js/src/admin/assessments/assessments.js'
             ],
+            'coursepress_comments.js': [
+                // Add JS that will be loaded at Comments page
+                // assets/js/src/admin/comments/...
+                'assets/js/src/admin/comments/general.js'
+            ],
             'coursepress_forum.js': [
                 // Add JS that will be loaded at Forum page
                 // assets/js/src/admin/forum/...

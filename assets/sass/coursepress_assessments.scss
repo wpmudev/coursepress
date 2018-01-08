@@ -6,23 +6,10 @@
     .cp-flex {
       margin-bottom: 12px;
       .cp-div {
-        margin-left: 20px;
         min-width: 17%;
-        &:first-child {
-          margin-left: 0;
-        }
         &.cp-input-group-div {
           min-width: 33%;
         }
-        .cp-btn {
-          margin-left: 10px;
-        }
-      }
-      label {
-        color: $grey_3;
-        font-size: .8em;
-        font-weight: 600;
-        display: block;
       }
     }
     .cp-input-group {

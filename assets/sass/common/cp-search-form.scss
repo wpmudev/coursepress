@@ -3,6 +3,20 @@
         padding-bottom: 6px;
         padding-top: 6px;
     }
+    .cp-flex {
+        .cp-div {
+            margin-left: 20px;
+            &:first-child {
+                margin-left: 0;
+            }
+        }
+        label {
+            color: $grey_3;
+            font-size: .8em;
+            font-weight: 600;
+            display: block;
+        }
+    }
 }
 @media screen {
     @media (min-width: 768px) {

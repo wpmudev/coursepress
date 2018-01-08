@@ -1117,6 +1117,27 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		wp_send_json_error( true );
 	}
 
+	/**
+	 * Remove student course invitation.
+	 *
+	 * @param object $request Request data.
+	 */
+	public function remove_student_invite( $request ) {
+
+		$success = false;
+		// We need course id and valid email.
+		if ( ! empty( $request->course_id && is_email( $request->email ) ) ) {
+			$success = coursepress_remove_student_invite( $request->course_id, $request->email );
+		}
+
+		// Success resoponse with email.
+		if ( $success ) {
+			wp_send_json_success( $success );
+		}
+
+		wp_send_json_error( true );
+	}
+
 	public function search_students( $request ) {
 		$users = array();
 		// Request data.
