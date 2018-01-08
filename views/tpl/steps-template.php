@@ -283,6 +283,7 @@
             <textarea class="widefat" name="question">{{question}}</textarea>
             <div class="question-answers"></div>
             <button type="button" class="cp-btn cp-btn-xs cp-btn-active"><?php _e( 'Add Answer', 'cp' ); ?></button>
+            <input class="question-order" type="hidden" name="order" value="{{order}}" />
         </div>
     </div>
 </script>
