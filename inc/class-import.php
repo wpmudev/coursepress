@@ -185,7 +185,11 @@ class CoursePress_Import extends CoursePress_Utility
 					$the_unit = get_object_vars( $unit->unit );
 				}
 				if ( isset( $unit->meta ) ) {
-					$the_unit['meta_input'] = $this->convert_meta( $unit->meta );
+					if ( is_object( $the_unit ) ) {
+						$the_unit->meta_input = $this->convert_meta( $unit->meta );
+					} else {
+						$the_unit['meta_input'] = $this->convert_meta( $unit->meta );
+					}
 				}
 				if ( is_array( $the_unit ) ) {
 					$the_unit = json_decode( json_encode( $the_unit ) );
@@ -203,8 +207,36 @@ class CoursePress_Import extends CoursePress_Utility
 				$the_unit->post_type = $CoursePress_Core->__get( 'unit_post_type' );
 				$unit_id = wp_insert_post( $the_unit );
 				$this->unit_keys[ $old_unit_id ] = $unit_id;
-				l( $unit_id, 'Unit ID' );
-				l( $the_unit->meta_input );
+				/**
+				 * CP3 Import Modules
+				 */
+				if ( isset( $unit->modules ) ) {
+					foreach ( $unit->modules as $module ) {
+						if ( isset( $module->steps ) ) {
+							foreach ( $module->steps as $step ) {
+								$data = array(
+									'post_type' => $CoursePress_Core->step_post_type,
+									'post_title' => $step->post_title,
+									'post_excerpt' => $step->post_excerpt,
+									'post_content' => $step->post_content,
+									'post_parent' => $unit_id,
+									'menu_order' => $step->menu_order,
+									'meta_input' => array(
+										'course_id' => $course_id,
+										'unit_id' => $unit_id,
+									),
+								);
+								foreach ( $step as $key => $value ) {
+									if ( preg_match( '/^meta_(.+)$/', $key, $matches ) ) {
+										$data['meta_input'][ $matches[1] ] = $value;
+									}
+								}
+								$data['meta_input']['module_order'] = $step->menu_order;
+								wp_insert_post( $data );
+							}
+						}
+					}
+				}
 				/**
 				 * CP 2 import
 				 */
@@ -233,9 +265,6 @@ class CoursePress_Import extends CoursePress_Utility
 							$module->meta_input->unit_id = $unit_id;
 							$module->meta_input->module_page = $i;
 							$module = $this->maybe_convert_module( $module );
-
-							//l($module->meta_input);
-
 							unset( $module->ID );
 							wp_insert_post( $module );
 						}
