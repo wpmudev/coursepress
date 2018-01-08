@@ -11,6 +11,17 @@
         th {
             font-weight: 600;
         }
+        td {
+            .cp-trash,
+            .cp-delete {
+                a {
+                    color: $red;
+                }
+                &:hover {
+                    background-color: rgba(255, 0, 0, 0.04);
+                }
+            }
+        }
         th, td {
             border: 0;
             text-align: left;
