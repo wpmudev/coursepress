@@ -373,7 +373,7 @@ class CoursePress_Import extends CoursePress_Utility
 		}
 	}
 
-	function get_course() {
+	public function get_course() {
 		$course_id = array_pop( $this->courses );
 		$course = coursepress_get_course( $course_id );
 		return $course;

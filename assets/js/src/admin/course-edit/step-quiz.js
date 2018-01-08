@@ -33,7 +33,8 @@
         Model = CoursePress.Request.extend({
             defaults: {
                 title: 'Untitled',
-                question: ''
+                question: '',
+                order: 0
             },
 
 	        initialize: function () {
