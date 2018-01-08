@@ -1125,88 +1125,6 @@ function coursepress_course_update_setting( $course_id, $settings = array() ) {
 }
 
 /**
- * Change course status.
- *
- * @param int $course_id Course ID.
- * @param string $status New status (publish or draft).
- *
- * @return bool
- */
-function coursepress_change_course_status( $course_id, $status ) {
-
-	/**
-	 * sanitize course id
-	 */
-	$course_id = absint( $course_id );
-
-	// Allowed statuses to change.
-	$allowed_statuses = array( 'publish', 'draft', 'pending', 'trash', 'restore', 'delete' );
-
-	// @todo: Implement capability check.
-	$capable = true;
-
-	/**
-	 * check is course
-	 */
-	if ( ! coursepress_is_course( $course_id ) ) {
-		$capable = false;
-	}
-
-	if ( empty( $course_id ) || ! in_array( $status, $allowed_statuses ) || ! $capable ) {
-		/**
-		 * Perform actions when course status not changed.
-		 *
-		 * @param int $course_id Course ID.
-		 * @param int $status Status.
-		 *
-		 * @since 1.2.1
-		 */
-		do_action( 'coursepress_course_status_change_fail', $course_id, $status );
-
-		return false;
-	}
-
-	switch ( $status ) {
-
-		case 'trash':
-			wp_trash_post( $course_id );
-		break;
-
-		case 'restore':
-			wp_untrash_post( $course_id );
-		break;
-
-		case 'delete':
-			coursepress_delete_course( $course_id );
-		break;
-
-		default:
-			$post = array(
-			'ID' => $course_id,
-			'post_status' => $status,
-			);
-			// Update the course post status.
-			if ( is_wp_error( wp_update_post( $post ) ) ) {
-				// This action hook is documented above.
-				do_action( 'coursepress_course_status_change_fail', $course_id, $status );
-				return false;
-			}
-	}
-
-	/**
-	 * Perform actions when course status is changed.
-	 *
-	 * var $course_id The course id.
-	 * var $status The new status.
-	 *
-	 * @since 1.2.1
-	 */
-	do_action( 'coursepress_course_status_changed', $course_id, $status );
-
-	return true;
-}
-
-/**
  * Create new course category from text.
  *
  * @param string $name New category name.
@@ -1366,67 +1284,99 @@ function coursepress_get_course_units( $course_id ) {
 }
 
 /**
- * Change alert status to publish/draft.
+ * Change post status to publish/draft.
  *
- * @param int $alert_id Alert ID.
- * @param string $status New status (publish or draft).
+ * @param int $post_id Post ID.
+ * @param string $status New status (publish/draft/pending/trash/restore/delete).
+ * @param string $type New status (alert/discussion).
  *
  * @return bool
  */
-function coursepress_change_course_alert_status( $alert_id, $status ) {
+function coursepress_change_status( $post_id, $status, $type ) {
+	global $CoursePress_Core;
+
+	/**
+	 * sanitize post id
+	 */
+	$post_id = absint( $post_id );
+	$post_types = array(
+		'course' => $CoursePress_Core->course_post_type,
+		'notification' => $CoursePress_Core->notification_post_type,
+		'discussion' => $CoursePress_Core->discussions_post_type,
+	);
+
+	$post_type = !empty( $post_types[ $type ] ) ? $post_types[ $type ] : '';
 
 	// Allowed statuses to change.
-	$allowed_statuses = array( 'publish', 'draft' );
+	$allowed_statuses = array( 'publish', 'draft', 'pending', 'trash', 'restore', 'delete' );
 
 	$capable = false;
-	// Get author of the current alert.
-	$author = get_post_field( 'post_author', $alert_id );
-	// If current user is capable of updating any notification statuses.
-	if ( current_user_can( 'coursepress_change_notification_status_cap' ) ) {
+	// Get author of the current post.
+	$author = get_post_field( 'post_author', $post_id );
+	$current_post_type = get_post_field( 'post_type', $post_id );
+	if ( $post_type !== $current_post_type ) {
+		$capable = false;
+	} elseif ( $post_type && current_user_can( 'coursepress_change_' . $type . '_status_cap' ) ) {
+		// If current user is capable of updating any notification statuses.
 		$capable = true;
-	} elseif ( $author == get_current_user_id() && current_user_can( 'coursepress_change_my_notification_status_cap' ) ) {
+	} elseif ( $post_type && $author == get_current_user_id() && current_user_can( 'coursepress_change_my_' . $type . '_status_cap' ) ) {
 		$capable = true;
 	}
 
-	if ( empty( $alert_id ) || ! in_array( $status, $allowed_statuses ) || ! $capable ) {
+	if ( empty( $post_id ) || ! in_array( $status, $allowed_statuses ) || ! $capable ) {
 
 		/**
-		 * Perform actions when alert status not changed.
+		 * Perform actions when post status not changed.
 		 *
-		 * @param int $alert_id Alert ID.
+		 * @param int $post_id Post ID.
 		 * @param int $status Status.
 		 *
 		 * @since 3.0.0
 		 */
-		do_action( 'coursepress_alert_status_change_fail', $alert_id, $status );
-
+		do_action( 'coursepress_' . $type . '_status_change_fail', $post_id, $status );
 		return false;
 	}
 
-	$post = array(
-		'ID' => absint( $alert_id ),
-		'post_status' => $status,
-	);
+	switch ( $status ) {
+		case 'trash':
+			wp_trash_post( $post_id );
+		break;
 
-	// Update the alert post status.
-	if ( is_wp_error( wp_update_post( $post ) ) ) {
+		case 'restore':
+			wp_untrash_post( $post_id );
+		break;
 
-		// This action hook is documented above.
-		do_action( 'coursepress_alert_status_change_fail', $alert_id, $status );
+		case 'delete':
+			$delete_function = "coursepress_delete_$type";
+			if ( function_exists( $delete_function ) ) {
+				call_user_func( $delete_function, $post_id );
+			}
+		break;
 
-		return false;
+		default:
+			$post = array(
+				'ID' => $post_id,
+				'post_status' => $status,
+			);
+			// Update the post status.
+			if ( is_wp_error( wp_update_post( $post ) ) ) {
+
+				// This action hook is documented above.
+				do_action( 'coursepress_' . $type . '_status_change_fail', $post_id, $status );
+				return false;
+			}
+		break;
 	}
 
 	/**
-	 * Perform actions when alert status is changed.
+	 * Perform actions when post status is changed.
 	 *
-	 * var $alert_id The alert id.
+	 * var $post_id The post id.
 	 * var $status The new status.
 	 *
 	 * @since 3.0.0
 	 */
-	do_action( 'coursepress_alert_status_changed', $alert_id, $status );
-
+	do_action( 'coursepress_' . $type . '_status_changed', $post_id, $status );
 	return true;
 }
 

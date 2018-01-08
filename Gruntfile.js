@@ -100,7 +100,8 @@ module.exports = function(grunt) {
 				// Add JS that will be loaded at Forum page
 				// assets/js/src/admin/forum/...
 				'assets/js/src/common/cp-search-form.js',
-				'assets/js/src/admin/forum/edit.js'
+				'assets/js/src/admin/forum/edit.js',
+				'assets/js/src/admin/forum/forums.js'
 			],
 			'assets/js/coursepress_comments.js': [
 				// Add JS that will be loaded at comments page
