@@ -545,7 +545,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 		// If course id and status is not empty, attempt to change status.
 		if ( ! empty( $request->course_id ) && ! empty( $request->status ) ) {
-			$toggled = coursepress_change_course_status( $request->course_id, $request->status );
+			$toggled = coursepress_change_status( $request->course_id, $request->status, 'course' );
 		}
 
 		// If status changed, return success response, else fail.
@@ -966,6 +966,29 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	}
 
 	/**
+	 * Toggle discussion status.
+	 *
+	 * @param $request Request data.
+	 */
+	function discussion_status_toggle( $request ) {
+		$toggled = false;
+
+		// If discussion id and status is not empty, attempt to change status.
+		if ( ! empty( $request->discussion_id ) && ! empty( $request->status ) ) {
+			$toggled = coursepress_change_status( $request->discussion_id, $request->status, 'discussion' );
+		}
+
+		// If status changed, return success response, else fail.
+		if ( $toggled ) {
+			$success = array( 'message' => __( 'Discussion status updated successfully.', 'cp' ) );
+			wp_send_json_success( $success );
+		} else {
+			$error = array( 'error_code' => 'cannot_change_status', 'message' => __( 'Could not update discussion status.', 'cp' ) );
+			wp_send_json_error( $error );
+		}
+	}
+
+	/**
 	 * Toggle alert status.
 	 *
 	 * @param $request Request data.
@@ -975,7 +998,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 		// If alert id and status is not empty, attempt to change status.
 		if ( ! empty( $request->alert_id ) && ! empty( $request->status ) ) {
-			$toggled = coursepress_change_course_alert_status( $request->alert_id, $request->status );
+			$toggled = coursepress_change_status( $request->alert_id, $request->status, 'notification' );
 		}
 
 		// If status changed, return success response, else fail.
@@ -1195,7 +1218,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	public function courses_bulk_action( $request ) {
 		if ( isset( $request->courses ) && is_array( $request->courses ) && isset( $request->which ) ) {
 			foreach ( $request->courses as $course_id ) {
-				coursepress_change_course_status( $course_id, $request->which );
+				coursepress_change_status( $course_id, $request->which, 'course' );
 			}
 			wp_send_json_success();
 		}
