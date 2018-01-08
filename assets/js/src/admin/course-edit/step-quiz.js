@@ -270,6 +270,10 @@
 
                this.$('.no-content-info').hide();
                this.$('.cp-questions-container').sortable();
+
+               // Reset the dropdown
+               sender.find('option:first-child').prop('selected', true);
+               sender.trigger('change');
            },
 
            _addQuestion: function( model ) {
