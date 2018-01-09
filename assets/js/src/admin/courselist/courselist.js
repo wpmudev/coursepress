@@ -27,9 +27,7 @@
                 this.request.on( 'coursepress:error_course_status_toggle', this.revertStatusToggle, this );
                 this.request.on( 'coursepress:error_duplicate_course', this.showError, this );
                 // On trash, delete, restore or duplicate course.
-                this.request.on( 'coursepress:success_trash_course', this.reloadCourseList, this );
-                this.request.on( 'coursepress:success_restore_course', this.reloadCourseList, this );
-                this.request.on( 'coursepress:success_delete_course', this.reloadCourseList, this );
+                this.request.on( 'coursepress:success_change_post', this.reloadCourseList, this );
                 this.request.on( 'coursepress:success_duplicate_course', this.reloadCourseList, this );
                 this.request.on( 'coursepress:success_courses_bulk_action', this.reloadCourseList, this );
             },
@@ -96,8 +94,10 @@
                 this.course_id = this.$(ev.currentTarget).closest('td').data('id');
                 if ( this.course_id ) {
                     this.request.set({
-                        action: 'trash_course',
-                        course_id: this.course_id
+                        action: 'change_post',
+                        id: this.course_id,
+                        type: 'course',
+                        cp_action: 'trash',
                     });
                     this.request.save();
                 }
@@ -108,8 +108,10 @@
                 this.course_id = this.$(ev.currentTarget).closest('td').data('id');
                 if ( this.course_id ) {
                     this.request.set({
-                        action: 'restore_course',
-                        course_id: this.course_id
+                        action: 'change_post',
+                        id: this.course_id,
+                        type: 'course',
+                        cp_action: 'restore',
                     });
                     this.request.save();
                 }
@@ -137,8 +139,10 @@
                         message: win._coursepress.text.deleting_course
                     });
                     this.request.set({
-                        action: 'delete_course',
-                        course_id: this.course_id
+                        action: 'change_post',
+                        id: this.course_id,
+                        type: 'course',
+                        cp_action: 'delete',
                     });
                     this.request.save();
                 }

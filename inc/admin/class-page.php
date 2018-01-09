@@ -24,9 +24,8 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	/**
 	 * Statuses
 	 */
-	private $available_statuses = array();
 	private $available_actions = array();
-	private $current_status = null;
+	protected $current_status = null;
 
 	public function __construct() {
 		// Check if user can't access coursepress
@@ -45,17 +44,6 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'publish' => __( 'Publish', 'cp' ),
 			'restore' => __( 'Restore', 'cp' ),
 			'trash'   => __( 'Move to Trash', 'cp' ),
-		);
-
-		/**
-		 * set available statuses
-		 */
-		$this->available_statuses = array(
-			'draft'   => __( 'Draft', 'cp' ),
-			'publish' => __( 'Publish', 'cp' ),
-			'pending' => __( 'Pending', 'cp' ),
-			'private' => __( 'Private', 'cp' ),
-			'trash'   => __( 'Trash', 'cp' ),
 		);
 
 		// Setup CP pages
@@ -424,54 +412,23 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		$count = 0;
 		$screen = get_current_screen();
-		$course_status = coursepress_get_course_statuses();
 		$page = isset( $_GET['page'] ) ? esc_attr( $_GET['page'] ) : 'coursepress';
 		$search = isset( $_GET['s'] ) ? $_GET['s'] : '';
-		$statuses = array();
-		$get_status = $this->get_status();
+		$current_status = $this->get_status();
 
-		/**
-		 * Build statuses array
-		 */
-		if ( ! empty( $course_status ) ) {
-			$url = add_query_arg( 'page', $this->slug, admin_url( 'admin.php' ) );
-			foreach ( $course_status as $status => $count ) {
-				$classes = array( $status );
-				if ( 'all' == $status ) {
-					$statuses[] = array(
-						'status' => 'all',
-						'label' => __( 'All', 'cp' ),
-						'count' => $count,
-						'url' => $url,
-						'classes' => $classes,
-						'current' => 'any' == $get_status,
-					);
-				} elseif ( $count > 0 ) {
-					$url = add_query_arg( 'status', $status, $url );
-					$statuses[] = array(
-						'status' => $status,
-						'label' => $this->available_statuses[ $status ],
-						'count' => $count,
-						'url' => $url,
-						'classes' => $classes,
-						'current' => $status == $get_status,
-					);
-				}
-			}
-		}
 		$post_type = $CoursePress_Core->__get( 'course_post_type' );
 		$args = array(
 			'columns' => get_column_headers( $screen ),
 			'hidden_columns' => get_hidden_columns( $screen ),
-			'courses' => $CoursePress_User->get_accessible_courses( $get_status, false, $count ),
+			'courses' => $CoursePress_User->get_accessible_courses( $current_status, false, $count ),
 			'pagination' => $this->set_courses_pagination( $count ),
 			'course_edit_link' => add_query_arg( 'page', 'coursepress_course', admin_url( 'admin.php' ) ),
 			'page' => $page,
-			'statuses' => $statuses,
+			'statuses' => coursepress_get_post_statuses( 'course', $current_status, $this->slug ),
 			'search' => $search,
 			'bulk_actions' => $this->get_bulk_actions(),
 			'placeholder_text' => '',
-			'current_status' => $this->get_status(),
+			'current_status' => $current_status,
 			'course_post_type_object' => get_post_type_object( $post_type ),
 		);
 
@@ -890,7 +847,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	 *
 	 * @return current status of courses
 	 */
-	private function get_status() {
+	protected function get_status() {
 		if ( null != $this->current_status ) {
 			return $this->current_status;
 		}

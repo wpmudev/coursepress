@@ -142,11 +142,10 @@ function coursepress_get_courses( $args = array(), &$count = 0 ) {
 	return $courses;
 }
 
-function coursepress_get_course_statuses() {
-	global $wpdb, $CoursePress_Core;
-	$post_type = $CoursePress_Core->__get( 'course_post_type' );
+function coursepress_get_post_statuses( $type, $current_status, $slug ) {
+	$post_type = get_cp_type( $type );
 	$count = wp_count_posts( $post_type );
-	$statuses = array(
+	$post_status = array(
 		'all' => 0,
 		'publish' => 0,
 		'draft' => 0,
@@ -154,16 +153,67 @@ function coursepress_get_course_statuses() {
 		'trash' => 0,
 		'private' => 0,
 	);
-	foreach ( $statuses as $status => $value ) {
+	foreach ( $post_status as $status => $value ) {
 		if ( isset( $count->$status ) ) {
-			$statuses[ $status ] = $count->$status;
+			$post_status[ $status ] = $count->$status;
 			if ( 'trash' == $status ) {
 				continue;
 			}
-			$statuses['all'] += $count->$status;
+			$post_status['all'] += $count->$status;
 		}
 	}
+	$statuses = array();
+
+	/**
+	 * Build statuses array
+	 */
+	if ( ! empty( $post_status ) ) {
+		$url = add_query_arg( 'page', $slug, admin_url( 'admin.php' ) );
+		foreach ( $post_status as $status => $count ) {
+			$classes = array( $status );
+			if ( 'all' == $status ) {
+				$statuses[] = array(
+					'status' => 'all',
+					'label' => __( 'All', 'cp' ),
+					'count' => $count,
+					'url' => $url,
+					'classes' => $classes,
+					'current' => 'any' == $current_status,
+				);
+			} elseif ( $count > 0 ) {
+				$url = add_query_arg( 'status', $status, $url );
+				$statuses[] = array(
+					'status' => $status,
+					'label' => coursepress_status_title( $status ),
+					'count' => $count,
+					'url' => $url,
+					'classes' => $classes,
+					'current' => $status == $current_status,
+				);
+			}
+		}
+	}
+
 	return $statuses;
+}
+
+/**
+ * Get title by post_status
+ *
+ * @param string $status
+ * @return string
+ */
+function coursepress_status_title( $status ) {
+	$available_statuses = array(
+		'draft'   => __( 'Draft', 'cp' ),
+		'publish' => __( 'Publish', 'cp' ),
+		'pending' => __( 'Pending', 'cp' ),
+		'private' => __( 'Private', 'cp' ),
+		'trash'   => __( 'Trash', 'cp' ),
+	);
+	$title = !empty( $available_statuses[ $status ] ) ? $available_statuses[ $status ] : '';
+
+	return $title;
 }
 
 /**
@@ -1284,7 +1334,94 @@ function coursepress_get_course_units( $course_id ) {
 }
 
 /**
- * Change post status to publish/draft.
+ * Get line with statuses
+ *
+ * @param array $statuses
+ */
+function cp_subsubsub( $statuses ) {
+	$count = count( $statuses );
+	if ( $count ) {
+		echo '<ul class="subsubsub">';
+		foreach ( $statuses as $status ) {
+			printf( '<li class="%s">', esc_attr( implode( $status['classes'], ' ' ) ) );
+			printf(
+				'<a href="%s"%s>%s <span class="count">(%s)</span></a>',
+				esc_attr( $status['url'] ),
+				$status['current']? ' class="current"':'',
+				esc_html( $status['label'] ),
+				esc_html( $status['count'] )
+			);
+			if ( $count-- > 1 ) {
+				echo ' |';
+			}
+			echo '</li>';
+		}
+		echo '</ul>';
+	}
+}
+
+/**
+ * Get cp post type title
+ *
+ * @return string
+ */
+function get_cp_type_title( $post_type ) {
+	$titles = array(
+		'notification' => __( 'Notification', 'cp' ),
+		'discussions' => __( 'Discussion', 'cp' ),
+	);
+	$title = !empty( $titles[ $post_type ] ) ? $titles[ $post_type ] : '';
+
+	return $title;
+}
+
+/**
+ * Get all cp post types
+ *
+ * @global object $CoursePress_Core
+ * @return array
+ */
+function get_cp_types() {
+	global $CoursePress_Core;
+	$post_types = array(
+		'course' => $CoursePress_Core->course_post_type,
+		'notification' => $CoursePress_Core->notification_post_type,
+		'discussion' => $CoursePress_Core->discussions_post_type,
+	);
+
+	return $post_types;
+}
+
+/**
+ * Get sp post type by name
+ *
+ * @param string $name
+ * @return string|bool
+ */
+function get_cp_type( $name ) {
+	$post_types = get_cp_types();
+	$post_type = $name && !empty( $post_types[ $name ] ) ? $post_types[ $name ] : false;
+
+	return $post_type;
+}
+
+/**
+ * Check post type
+ *
+ * @param int $post_id
+ * @param string $type Post type or cp_type
+ * @return bool
+ */
+function coursepress_is_type( $post_id, $type ) {
+	if ( $post_type = get_cp_type( $type ) ) {
+		$type = $post_type;
+	}
+	$current_post_type = get_post_field( 'post_type', $post_id );
+	return $type === $current_post_type;
+}
+
+/**
+ * Change cp post.
  *
  * @param int $post_id Post ID.
  * @param string $status New status (publish/draft/pending/trash/restore/delete).
@@ -1292,34 +1429,23 @@ function coursepress_get_course_units( $course_id ) {
  *
  * @return bool
  */
-function coursepress_change_status( $post_id, $status, $type ) {
-	global $CoursePress_Core;
-
+function coursepress_change_post( $post_id, $status, $type ) {
 	/**
 	 * sanitize post id
 	 */
 	$post_id = absint( $post_id );
-	$post_types = array(
-		'course' => $CoursePress_Core->course_post_type,
-		'notification' => $CoursePress_Core->notification_post_type,
-		'discussion' => $CoursePress_Core->discussions_post_type,
-	);
-
-	$post_type = !empty( $post_types[ $type ] ) ? $post_types[ $type ] : '';
-
 	// Allowed statuses to change.
 	$allowed_statuses = array( 'publish', 'draft', 'pending', 'trash', 'restore', 'delete' );
-
 	$capable = false;
 	// Get author of the current post.
 	$author = get_post_field( 'post_author', $post_id );
-	$current_post_type = get_post_field( 'post_type', $post_id );
-	if ( $post_type !== $current_post_type ) {
+
+	if ( !coursepress_is_type( $post_id, $type ) ) {
 		$capable = false;
-	} elseif ( $post_type && current_user_can( 'coursepress_change_' . $type . '_status_cap' ) ) {
+	} elseif ( current_user_can( 'coursepress_change_' . $type . '_status_cap' ) ) {
 		// If current user is capable of updating any notification statuses.
 		$capable = true;
-	} elseif ( $post_type && $author == get_current_user_id() && current_user_can( 'coursepress_change_my_' . $type . '_status_cap' ) ) {
+	} elseif ( $author == get_current_user_id() && current_user_can( 'coursepress_change_my_' . $type . '_status_cap' ) ) {
 		$capable = true;
 	}
 
@@ -1350,6 +1476,8 @@ function coursepress_change_status( $post_id, $status, $type ) {
 			$delete_function = "coursepress_delete_$type";
 			if ( function_exists( $delete_function ) ) {
 				call_user_func( $delete_function, $post_id );
+			} else {
+				wp_delete_post( $post_id );
 			}
 		break;
 

@@ -52,6 +52,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 			if ( method_exists( $this, $action ) ) {
 				$response = call_user_func( array( $this, $action ), $request );
 				if ( ! empty( $response['success'] ) ) {
+					unset( $response['success'] );
 					wp_send_json_success( $response );
 				} else {
 					$error = wp_parse_args( $response, $error ); }
@@ -358,19 +359,22 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	}
 
 	/**
-	 * Delete single course.
+	 * Delete/Trash/Restore/Draft/Puplish cp post.
 	 *
 	 * @since 3.0.0
 	 *
 	 * @param $request
 	 */
-	function delete_course( $request ) {
-		$course_id = (int) $request->course_id;
-		if ( $course_id ) {
-			coursepress_delete_course( $course_id );
-			wp_send_json_success( true );
+	function change_post( $request ) {
+		if ( empty( $request->id ) || empty( $request->type ) || empty( $request->cp_action )
+				|| !coursepress_is_type( $request->id, $request->type ) ) {
+			return;
 		}
-		wp_send_json_error( true );
+		$result = coursepress_change_post( $request->id, $request->cp_action, $request->type );
+		if ( $result ) {
+			return array( 'success' => true );
+		}
+		return;
 	}
 
 	/**
@@ -545,7 +549,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 		// If course id and status is not empty, attempt to change status.
 		if ( ! empty( $request->course_id ) && ! empty( $request->status ) ) {
-			$toggled = coursepress_change_status( $request->course_id, $request->status, 'course' );
+			$toggled = coursepress_change_post( $request->course_id, $request->status, 'course' );
 		}
 
 		// If status changed, return success response, else fail.
@@ -975,7 +979,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 		// If discussion id and status is not empty, attempt to change status.
 		if ( ! empty( $request->discussion_id ) && ! empty( $request->status ) ) {
-			$toggled = coursepress_change_status( $request->discussion_id, $request->status, 'discussion' );
+			$toggled = coursepress_change_post( $request->discussion_id, $request->status, 'discussion' );
 		}
 
 		// If status changed, return success response, else fail.
@@ -998,7 +1002,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 		// If alert id and status is not empty, attempt to change status.
 		if ( ! empty( $request->alert_id ) && ! empty( $request->status ) ) {
-			$toggled = coursepress_change_status( $request->alert_id, $request->status, 'notification' );
+			$toggled = coursepress_change_post( $request->alert_id, $request->status, 'notification' );
 		}
 
 		// If status changed, return success response, else fail.
@@ -1218,7 +1222,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	public function courses_bulk_action( $request ) {
 		if ( isset( $request->courses ) && is_array( $request->courses ) && isset( $request->which ) ) {
 			foreach ( $request->courses as $course_id ) {
-				coursepress_change_status( $course_id, $request->which, 'course' );
+				coursepress_change_post( $course_id, $request->which, 'course' );
 			}
 			wp_send_json_success();
 		}
@@ -1239,36 +1243,6 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		foreach ( $request->students as $student_id ) {
 			coursepress_delete_student( $student_id, $request->course_id );
 		}
-		return array( 'success' => true );
-	}
-
-	/**
-	 * Trash course
-	 */
-	public function trash_course( $request ) {
-		if ( ! isset( $request->course_id ) ) {
-			return;
-		}
-		$is_course = coursepress_is_course( $request->course_id );
-		if ( ! $is_course ) {
-			return;
-		}
-		wp_trash_post( $request->course_id );
-		return array( 'success' => true );
-	}
-
-	/**
-	 * Restore course
-	 */
-	public function restore_course( $request ) {
-		if ( ! isset( $request->course_id ) ) {
-			return;
-		}
-		$is_course = coursepress_is_course( $request->course_id );
-		if ( ! $is_course ) {
-			return;
-		}
-		wp_untrash_post( $request->course_id );
 		return array( 'success' => true );
 	}
 
