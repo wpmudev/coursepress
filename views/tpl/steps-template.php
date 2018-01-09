@@ -373,7 +373,8 @@
 <script type="text/template" id="coursepress-written-tpl">
     <div class="cp-question-header">
         <span class="q-type"><?php _e( 'Written', 'cp' ); ?></span>
-        <input type="text" value="{{title}}" />
+        <input type="text" name="title" value="{{title}}" />
+        <span class="cp-btn cp-btn-trash"></span>
         <button type="button" class="question-toggle-button"></button>
     </div>
     <div class="cp-question-content">
@@ -385,13 +386,14 @@
         </div>
         <div class="cp-box">
             <label class="label"><?php _e( 'Answer area placeholder text', 'cp' ); ?></label>
-            <input type="text" name="meta_placeholder_text" class="widefat" value="{{placeholder_text}}" placeholder="<?php _e( 'Describe how question should be answer', 'cp' ); ?>" />
+            <input type="text" name="placeholder_text" class="widefat" value="{{placeholder_text}}" placeholder="<?php _e( 'Describe how question should be answer', 'cp' ); ?>" />
         </div>
         <div class="cp-box">
             <label class="label"><?php _e( 'Answer word limit', 'cp' ); ?></label>
-            <input type="text" name="meta_word_limit" value="{{word_limit}}" />
+            <input type="text" name="word_limit" value="{{word_limit}}" />
             <p class="description"><?php _e( 'Set 0 for no word limit answer', 'cp' ); ?></p>
         </div>
+        <input class="question-order" name="order" type="hidden" value="{{order}}"/>
     </div>
 </script>
 

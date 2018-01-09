@@ -1529,6 +1529,7 @@ function coursepress_get_course_step( $step_id = 0 ) {
 		'input-textarea' => 'CoursePress_Step_InputText',
 		'input-text' => 'CoursePress_Step_InputText',
 		'text_input_module' => 'CoursePress_Step_Written', // Legacy type
+		'input-written' => 'CoursePress_Step_Written',
 		'input-form' => 'CoursePress_Step_Form', // Legacy class
 	);
 
