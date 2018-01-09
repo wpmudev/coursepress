@@ -208,6 +208,11 @@
                 } else {
                     dropdown.addClass('open');
                 }
+                return false;
+            },
+
+            closeSubMenu: function() {
+                $('.cp-dropdown.open').removeClass('open');
             },
 
             bulkActions: function( ev ) {
@@ -254,5 +259,7 @@
         });
 
         CoursesList = new CoursesList();
+
+        $('body').on( 'click', CoursesList.closeSubMenu );
     });
 })();
