@@ -3,6 +3,7 @@
  * @var $columns
  * @var $hidden_columns
  * @var $courses
+ * @var $statuses
  * @var $edit_link
  * @var $course CoursePress_Course
  */
@@ -13,6 +14,7 @@
         <a href="<?php echo $edit_link; ?>" class="cp-btn cp-bordered-btn"><?php _e( 'Create New', 'cp' ); ?></a>
     </h1>
     <div class="coursepress-page">
+        <?php cp_subsubsub( $statuses ); ?>
         <form method="get" class="cp-search-form" id="cp-search-form">
             <div class="cp-flex">
                 <div class="cp-div">
@@ -66,19 +68,26 @@ if ( ! empty( $forums ) ) {
                         <tr class="<?php echo $i % 2? 'odd' : 'even'; ?>">
 
                             <?php foreach ( array_keys( $columns ) as $column_id ) { ?>
-                                <td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>">
+                                <td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" data-id="<?php echo esc_attr( $forum->ID ); ?>">
 <?php
 switch ( $column_id ) {
 	case 'topic' :
 		echo $forum->post_title;
 		echo '<div class="row-actions">';
-		printf(
-			'<span class="edit"><a href="%s" aria-label="%s “%s”">Edit</a>',
-			$forum->edit_link,
-			esc_attr__( 'Edit', 'cp' ),
-			esc_attr( $forum->post_title ),
-			esc_html__( 'Edit', 'cp' )
-		);
+		if ( 'trash' != $current_status ) {
+			printf(
+				'<span class="edit"><a href="%s" aria-label="%s “%s”">Edit</a></span>',
+				$forum->edit_link,
+				esc_attr__( 'Edit', 'cp' ),
+				esc_attr( $forum->post_title ),
+				esc_html__( 'Edit', 'cp' )
+			);
+			echo ' | <span class="inline hide-if-no-js cp-trash"><a href="#">' . __( 'Trash', 'cp' ) . '</a></span>';
+		} else { ?>
+			<span class="inline hide-if-no-js cp-restore"><a href="#"><?php _e( 'Restore', 'cp' ); ?></a> |</span>
+			<span class="inline hide-if-no-js cp-delete"><a href="#"><?php _e( 'Delete Permanently', 'cp' ); ?></a></span>
+<?php }
+
 		echo '</div>';
 	break;
 	case 'course' :

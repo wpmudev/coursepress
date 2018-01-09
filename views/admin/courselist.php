@@ -28,23 +28,8 @@
 $count = count( $statuses );
 if ( $count > 0 ) {
 	printf( '<h2 class="screen-reader-text">%s</h2>', $course_post_type_object->labels->filter_items_list );
-	echo '<ul class="subsubsub">';
 	$first = true;
-	foreach ( $statuses as $status ) {
-		printf( '<li class="%s">', esc_attr( implode( $status['classes'], ' ' ) ) );
-		printf(
-			'<a href="%s"%s>%s <span class="count">(%s)</span></a>',
-			esc_attr( $status['url'] ),
-			$status['current']? ' class="current"':'',
-			esc_html( $status['label'] ),
-			esc_html( $status['count'] )
-		);
-		if ( $count-- > 1 ) {
-			echo ' |';
-		}
-		echo '</li>';
-	}
-	echo '</ul>';
+	cp_subsubsub( $statuses );
 }
 if ( 0 < count( $courses ) ) { ?>
         <form method="get" class="cp-bulk-actions-form" id="cp-bulk-actions-form">

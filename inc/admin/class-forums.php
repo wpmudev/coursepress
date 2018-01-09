@@ -13,25 +13,37 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 
 	public function __construct() {
         parent::__construct();
+		add_filter( 'coursepress_admin_localize_array', array( $this, 'change_localize_array' ) );
 	}
 
-	function columns() {
+	function change_localize_array( $localize_array ) {
+		$localize_array['text']['deleting_post'] = __( 'Deleting forum... please wait', 'cp' );
+		$localize_array['text']['delete_post'] = __( 'Are you sure you want to delete this forum?', 'cp' );
+
+		return $localize_array;
+	}
+
+	function columns( $current_status ) {
 		$columns = array(
 			'topic' => __( 'Topic', 'cp' ),
 			'course' => __( 'Course', 'cp' ),
 			'comments' => __( 'Comments', 'cp' ),
-			'status' => __( 'Status', 'cp' ),
 		);
+
+		if ( 'trash' !== $current_status ) {
+			$columns['status'] = __( 'Status', 'cp' );
+		}
 		return $columns;
 	}
 
 	private function get_page_list() {
 		$search = isset( $_GET['s'] ) ? $_GET['s'] : '';
+		$current_status = $this->get_status();
 		$args = array(
-			'columns' => $this->columns(),
+			'columns' => $this->columns( $current_status ),
 			'courses' => coursepress_get_accessible_courses( false ),
 			'hidden_columns' => array(),
-			'forums' => $this->get_list(),
+			'forums' => $this->get_list( $current_status ),
 			'page' => $this->slug,
 			'search' => $search,
 			'edit_link' => add_query_arg(
@@ -41,8 +53,11 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 				),
 				admin_url( 'admin.php' )
 			),
+			'statuses' => coursepress_get_post_statuses( 'discussion', $current_status, $this->slug ),
+			'current_status' => $current_status,
 		);
 		coursepress_render( 'views/admin/forums', $args );
+		coursepress_render( 'views/tpl/common' );
 	}
 
     private function get_page_edit( $forum_id ) {
@@ -104,7 +119,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 		coursepress_render( 'views/admin/footer-text' );
 	}
 
-	public function get_list() {
+	public function get_list( $current_status ) {
 		/**
 		 * search
 		 */
@@ -124,7 +139,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 			'posts_per_page' => $per_page,
 			'paged' => $current_page,
 			's' => $s,
-			'post_status' => 'any',
+			'post_status' => $current_status,
 		);
 		/**
 		 * Course ID
