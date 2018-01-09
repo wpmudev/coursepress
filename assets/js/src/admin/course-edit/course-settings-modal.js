@@ -54,7 +54,6 @@
              * @param type Type of user.
              */
             setupAjaxSelect2: function ( selector, type ) {
-
                 // Current course id.
                 var course_id = this.course.course_id;
                 selector.select2({
@@ -142,9 +141,7 @@
              * Assign instructor/facilitator to the course.
              */
             assignUser: function () {
-
                 var user_id = this.$('#cp-course-' + this.type).val();
-
                 if ( '' !== user_id ) {
                     this.request.set( {
                         'action': 'assign_to_course',
@@ -162,7 +159,6 @@
              * @param data
              */
             assignSuccess: function ( data ) {
-
                 // If user assigned, add them to the tags.
                 if ( typeof data.name !== 'undefined' && typeof data.id !== 'undefined' ) {
                     this.course.$('ul#cp-list-' + this.type).append('<li data-user-id="' + data.id + '">' + data.name + '</li>');
@@ -172,6 +168,11 @@
                 }
                 this.$('#cp-course-' + this.type).val('');
                 this.showResponse(data, this.assgn_resp);
+                /**
+                 * reset dropdown
+                 */
+                $('#cp-course-instructor').empty();
+                $('#cp-course-facilitator').empty();
             },
 
             /**
