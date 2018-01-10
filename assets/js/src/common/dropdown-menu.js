@@ -13,6 +13,9 @@
             render: function() {
                 this.menuList = this.$('.cp-dropdown-menu');
             },
+            closeMenu: function() {
+                $('.cp-dropdown-menu.open').removeClass('open');
+            },
             toggleMenu: function() {
                 var isOpen = this.menuList.is('.open'),
                     others = $('.cp-dropdown-menu').not(this.menuList);
@@ -40,6 +43,8 @@
         };
 
         CoursePress.Events.on('coursepress:view_rendered', findDropDown);
+
+        $('body').on( 'click', DropDownMenu.closeMenu );
 
         return DropDownMenu;
     });
