@@ -110,7 +110,7 @@
                 questions: []
             }, defaults ),
             'input-written': _.extend({
-                questions: []
+                meta_questions: []
             }, defaults )
         };
 
