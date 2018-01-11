@@ -191,9 +191,9 @@
                     placeholder: win._coursepress.text.student_search,
                     ajax: {
                         url: win._coursepress.ajaxurl,
-                            dataType: 'json',
-                            delay: 500,
-                            data: function (params) {
+                        dataType: 'json',
+                        delay: 500,
+                        data: function (params) {
                             return {
                                 search: params.term,
                                 _wpnonce: win._coursepress._wpnonce,
@@ -205,7 +205,7 @@
                             return {
                                 results: $.map(data.data, function(obj) {
                                     return { id: obj.ID, text: obj.display_name };
-                                 })
+                                })
                             };
                         },
                         cache: true
@@ -220,6 +220,7 @@
                 model.set('student_id', $('#add-student-select').val());
                 model.set( '_wpnonce',  win._coursepress._wpnonce );
                 model.on( 'coursepress:success_add_student_to_course', this.addStudentSuccess, this );
+                model.on( 'coursepress:error_add_student_to_course', this.showError, this );
                 model.save();
             },
 
@@ -234,6 +235,10 @@
                 added = new AddItem(data);
                 added.$el.prependTo(list);
                 $('#coursepress-table-students tr.noitems').hide();
+                /**
+                 * reset dropdown
+                 */
+                $('#add-student-select').empty();
             },
 
             toggleCheckboxes: function( ev ) {
@@ -286,7 +291,21 @@
 
             bulkActionWithdrawStudentsError: function( data ) {
                 window.alert( data.message );
-            }
+            },
+
+            /**
+             * Error popup for ajax actions.
+             *
+             * @param Response data.
+             *
+             * @note Response should have message.
+             */
+            showError: function(data) {
+                new CoursePress.PopUp({
+                    type: 'error',
+                    message: data.message
+                });
+            },
         });
     });
 })();

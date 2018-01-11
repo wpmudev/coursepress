@@ -200,7 +200,8 @@ function coursepress_get_user_instructor_profile_url( $user_id = 0 ) {
  */
 function coursepress_add_student( $user_id = 0, $course_id = 0 ) {
 	if ( empty( $user_id ) || empty( $course_id ) ) {
-		return null; }
+		return null;
+	}
 
 	$user = coursepress_get_user( $user_id );
 
@@ -215,7 +216,7 @@ function coursepress_add_student( $user_id = 0, $course_id = 0 ) {
 	}
 
 	if ( $user->is_enrolled_at( $course_id ) ) {
-		return true; // User is already enrolled, bail!
+		return new WP_Error( 'already_enrolled', __( 'User can not be added. User is already enrolled.', 'cp' ) );
 	}
 
 	$user->add_course_student( $course_id );

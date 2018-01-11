@@ -367,7 +367,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 	 */
 	function change_post( $request ) {
 		if ( empty( $request->id ) || empty( $request->type ) || empty( $request->cp_action )
-				|| !coursepress_is_type( $request->id, $request->type ) ) {
+				|| ! coursepress_is_type( $request->id, $request->type ) ) {
 			return;
 		}
 		$result = coursepress_change_post( $request->id, $request->cp_action, $request->type );
@@ -1205,19 +1205,23 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 	public function add_student_to_course( $request ) {
 		if ( isset( $request->student_id ) && isset( $request->course_id ) ) {
-			coursepress_add_student( $request->student_id, $request->course_id );
-			$user = coursepress_get_user( $request->student_id );
-			$data = array(
-				'ID' => $user->ID,
-				'display_name' => $user->display_name,
-				'gravatar_url' => get_avatar_url( $user->ID, array( 'size' => 30 ) ),
-				'user_email' => $user->user_email,
-				'user_nicename' => $user->user_nicename,
-				'user_login' => $user->user_login,
-			);
-			wp_send_json_success( $data );
+			$result = coursepress_add_student( $request->student_id, $request->course_id );
+			if ( is_wp_error( $result ) ) {
+				wp_send_json_error( array( 'message' => $result->get_error_message() ) );
+			} else {
+				$user = coursepress_get_user( $request->student_id );
+				$data = array(
+					'ID' => $user->ID,
+					'display_name' => $user->display_name,
+					'gravatar_url' => get_avatar_url( $user->ID, array( 'size' => 30 ) ),
+					'user_email' => $user->user_email,
+					'user_nicename' => $user->user_nicename,
+					'user_login' => $user->user_login,
+				);
+				wp_send_json_success( $data );
+			}
 		}
-		wp_send_json_error( array( 'message' => __( 'Could not assign add student.', 'cp' ) ) );
+		wp_send_json_error( array( 'message' => __( 'Something went wrong. Could not add student.', 'cp' ) ) );
 	}
 
 	public function courses_bulk_action( $request ) {
