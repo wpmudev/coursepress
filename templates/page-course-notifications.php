@@ -5,8 +5,8 @@
  * @since 3.0
  * @package CoursePress
  */
-$course = coursepress_get_course();
-$notifications = CoursePress_Data_Notification::get_notifications( array( $course->ID, 'all' ) );
+$course_id = get_the_ID();
+$notifications = CoursePress_Data_Notification::get_notifications( array( $course_id, 'all' ) );
 get_header(); ?>
 
 	<div class="coursepress-wrap">
