@@ -66,7 +66,6 @@
                 });
 
                 questions = this.model.get('meta_questions');
-                this.reorderQuestions(questions);
 
                 if ( questions ) {
                     _.each( questions, function( question, index ) {
@@ -79,7 +78,9 @@
                 }
             },
             
-            reorderQuestions: function(questions) {
+            reorderQuestions: function() {
+                var questions = this.model.get('meta_questions');
+
                 questions.sort(function (q1, q2) {
                     q1 = !!q1.get ? q1.toJSON() : q1;
                     q2 = !!q2.get ? q2.toJSON() : q2;
@@ -152,6 +153,8 @@
                     $orderInput.change();
                     newOrder++;
                 });
+
+                this.reorderQuestions();
             },
 
             toggleContent: function(ev) {
