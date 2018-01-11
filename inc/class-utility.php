@@ -316,4 +316,58 @@ abstract class CoursePress_Utility {
 
 		return $content;
 	}
+
+	/**
+	 * Returns the full name of the specified user.
+	 *
+	 * Depending on param $last_first the result will be either of those
+	 * "First Last (displayname)"
+	 * "Last, First (displayname)"
+	 *
+	 * @since  1.0.0
+	 * @param  int  $user_id The user ID.
+	 * @param  bool $last_first Which format to use. Default: "First Last"
+	 * @param  bool $show_username Append displayname in brackets. Default: yes.
+	 * @return string Full name of the user.
+	 */
+	public static function get_user_name( $user_id, $last_first = false, $show_username = true ) {
+
+		$user_id = (int) $user_id;
+		$display_name = (string) get_user_option( 'display_name', $user_id );
+		$last = (string) get_user_option( 'last_name', $user_id );
+		$first = (string) get_user_option( 'first_name', $user_id );
+		$result = '';
+
+		if ( $last_first ) {
+			if ( $last ) {
+				$result .= $last;
+			}
+			if ( $first && $result ) {
+				$result .= ', ';
+			}
+			if ( $first ) {
+				$result .= $first;
+			}
+		} else {
+			if ( $first ) {
+				$result .= $first;
+			}
+			if ( $last && $result ) {
+				$result .= ' ';
+			}
+			if ( $last ) {
+				$result .= $last;
+			}
+		}
+
+		if ( $display_name ) {
+			if ( $result && $show_username ) {
+				$result .= ' (' . $display_name . ')';
+			} elseif ( ! $result ) {
+				$result = $display_name;
+			}
+		}
+
+		return $result;
+	}
 }
