@@ -559,6 +559,16 @@ function coursepress_get_course_submenu() {
 	if ( 'unit-archive' == $current ) {
 		$menus['units']['classes'] = array( 'current-menu-item' );
 	}
+
+	// Course Notifications.
+	$menus['notifications'] = array(
+		'label' => __( 'Notifications', 'cp' ),
+		'url' => esc_url_raw( $course->get_notifications_url() ),
+	);
+	if ( 'notifications' == $current ) {
+		$menus['notifications']['classes'] = array( 'current-menu-item' );
+	}
+
 	/**
 	 * forum
 	 */

@@ -713,16 +713,21 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 		$format = '<li><a class="%1$s" href="%2$s">%3$s</a></li>';
 		$url = remove_query_arg( array( 'certified', 'paged' ) );
 		$certification_statuses = array(
-			'all' => sprintf( esc_html__( 'All (%s)', 'cp' ), $all_student_count ),
-			'yes' => sprintf( esc_html__( 'Certified (%s)', 'cp' ), $certified_student_count ),
-			'no'  => sprintf( esc_html__( 'Not Certified (%s)', 'cp' ), $all_student_count - $certified_student_count ),
+			'all' => sprintf( esc_html__( 'All (%s)', 'cp' ), sprintf( '<span>%d</span>', $all_student_count ) ),
+			'yes' => sprintf( esc_html__( 'Certified (%s)', 'cp' ), sprintf( '<span>%d</span>', $certified_student_count ) ),
+			'no'  => sprintf( esc_html__( 'Not Certified (%s)', 'cp' ), sprintf( '<span>%d</span>', $all_student_count - $certified_student_count ) ),
 		);
 		$links = array();
 		$selected = isset( $_REQUEST['certified'] ) ? $_REQUEST['certified'] : 'all';
-
 		foreach ( $certification_statuses as $status_id => $status_text ) {
+			$classes = array(
+				sprintf( 'status-%s', $status_id ),
+			);
+			if ( $status_id == $selected ) {
+				$classes[] = 'current';
+			}
 			$status_url = add_query_arg( 'certified', $status_id, $url );
-			$links[] = sprintf( $format, $status_id == $selected ? 'current' : '', $status_url, $status_text );
+			$links[] = sprintf( $format, esc_attr( implode( ' ', $classes ) ), esc_url( $status_url ), $status_text );
 		}
 
 		return $links;

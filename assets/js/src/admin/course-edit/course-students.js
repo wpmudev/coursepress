@@ -2,7 +2,6 @@
 
 (function() {
     'use strict';
-
     CoursePress.Define( 'Course_Students', function($, doc, win) {
         var Students, Invite, InviteItem, AddItem;
 
@@ -171,10 +170,17 @@
             },
 
             withdrawStudentSuccess: function( data ) {
-                $('#student-'+data.student_id).detach();
+                var row = $('#student-'+data.student_id);
+                var cerified = $('.dashicons-yes', row ).length;
+                row.detach();
                 if ( 2 > $('#coursepress-table-students tr').length ) {
                     $('#coursepress-table-students tr.noitems').show();
                     $('.tablenav.cp-admin-pagination').hide();
+                }
+                if ( cerified ) {
+                    this.updateStudentCounters( 'remove-certified' );
+                } else {
+                    this.updateStudentCounters( 'remove' );
                 }
             },
 
@@ -224,6 +230,30 @@
                 model.save();
             },
 
+            updateStudentCounters: function( mode ) {
+                var counter;
+                var parent = $('#course-students .subsubsub' );
+                switch( mode ) {
+                    case 'add':
+                        counter = $('.status-all span', parent );
+                        counter.html( parseInt( counter.html() ) + 1 );
+                        counter = $('.status-no span', parent );
+                        counter.html( parseInt( counter.html() ) + 1 );
+                        break;
+                    case 'remove':
+                    case 'remove-certified':
+                        counter = $('.status-all span', parent );
+                        counter.html( parseInt( counter.html() ) - 1 );
+                        if ( 'remove' === mode ) {
+                            counter = $('.status-no span', parent );
+                        } else {
+                            counter = $('.status-yes span', parent );
+                        }
+                        counter.html( parseInt( counter.html() ) - 1 );
+                        break;
+                }
+            },
+
             addStudentSuccess: function( data ) {
                 var added, list;
                 list = this.$('#coursepress-table-students');
@@ -235,6 +265,10 @@
                 added = new AddItem(data);
                 added.$el.prependTo(list);
                 $('#coursepress-table-students tr.noitems').hide();
+                /**
+                 * update counters
+                 */
+                this.updateStudentCounters( 'add' );
                 /**
                  * reset dropdown
                  */

@@ -1003,7 +1003,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 		// If alert id and status is not empty, attempt to change status.
 		if ( ! empty( $request->alert_id ) && ! empty( $request->status ) ) {
-			$toggled = coursepress_change_post( $request->alert_id, $request->status, 'notification' );
+			$toggled = coursepress_change_post( $request->alert_id, $request->status, 'cp_notification' );
 		}
 
 		// If status changed, return success response, else fail.

@@ -6,7 +6,7 @@
 			<h3 class="label"><?php _e( 'Select a course to display an alert on', 'cp' ); ?></h3>
 			<label class="label label-small"><?php _e( 'Pick course', 'cp' ); ?></label>
 			<select name="course" id="cp-alert-course">
-				<option value="0"><?php _e( 'All Courses', 'cp' ); ?></option>
+				<option value="all"><?php _e( 'All Courses', 'cp' ); ?></option>
 				<?php if ( ! empty( $courses ) ) : ?>
 					<?php foreach ( $courses as $course ) : ?>
 						<option value="<?php echo $course->ID; ?>"><?php echo $course->post_title; ?></option>

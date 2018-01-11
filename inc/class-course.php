@@ -847,6 +847,19 @@ class CoursePress_Course extends CoursePress_Utility {
 		return $course_url . trailingslashit( $workbook_slug );
 	}
 
+	/**
+	 * Get notifications url for the course.
+	 *
+	 * @return string
+	 */
+	public function get_notifications_url() {
+
+		$course_url = $this->get_permalink();
+		$notifications_slug = coursepress_get_setting( 'slugs/notifications', 'notifications' );
+
+		return $course_url . trailingslashit( $notifications_slug );
+	}
+
 	public function get_edit_url() {
 		$url = add_query_arg( array(
 			'page' => 'coursepress_course',
