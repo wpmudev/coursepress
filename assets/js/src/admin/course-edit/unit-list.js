@@ -189,6 +189,8 @@
 	                    model.cid = cid;
 	                    self.unitModels[cid] = model;
                     });
+
+                    this.editCourseView.unitCollection.reset(_.values(this.unitModels));
                 }
 
                 this.editCourseView.after_update();
