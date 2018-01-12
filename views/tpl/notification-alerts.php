@@ -1,6 +1,9 @@
 <script type="text/template" id="coursepress-notification-alerts-tpl">
 
-    <a href="javascript:void(0);" class="cp-btn cp-btn-active cp-notification-menu-item notifications-alerts_form" data-page="alerts_form" data-tab="alerts"><?php _e( 'New Course Alert', 'cp' ); ?></a>
+    <div class="clear">
+        <a href="javascript:void(0);" class="cp-btn cp-btn-active cp-notification-menu-item notifications-alerts_form" data-page="alerts_form" data-tab="alerts"><?php _e( 'New Course Alert', 'cp' ); ?></a>
+    </div>
+    <?php cp_subsubsub( $statuses ); ?>
 
     <table class="coursepress-table" cellspacing="0">
         <thead>
@@ -20,11 +23,26 @@
                 <tr class="<?php echo $odd ? 'odd' : 'even'; ?>">
 
                     <?php foreach ( array_keys( $columns ) as $column_id ) : ?>
-                        <td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>">
+                        <td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" data-id="<?php echo esc_attr( $notification->ID ); ?>">
                             <?php
                             switch( $column_id ) :
                                 case 'title' :
                                     echo $notification->post_title;
+                                    echo '<div class="row-actions">';
+                                    if ( 'trash' != $current_status ) {
+                                        printf(
+                                            '<span class="edit"><a href="#" aria-label="%s “%s”">Edit</a></span>',
+                                            esc_attr__( 'Edit', 'cp' ),
+                                            esc_attr( $notification->post_title ),
+                                            esc_html__( 'Edit', 'cp' )
+                                        );
+                                        echo ' | <span class="inline hide-if-no-js cp-trash"><a href="#">' . __( 'Trash', 'cp' ) . '</a></span>';
+                                    } else { ?>
+                                        <span class="inline hide-if-no-js cp-restore"><a href="#"><?php _e( 'Restore', 'cp' ); ?></a> |</span>
+                                        <span class="inline hide-if-no-js cp-delete"><a href="#"><?php _e( 'Delete Permanently', 'cp' ); ?></a></span>
+                                    <?php }
+                                    echo '</div>';
+
                                     break;
                                 case 'course' :
                                     // Get course name.

@@ -53,7 +53,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 				),
 				admin_url( 'admin.php' )
 			),
-			'statuses' => coursepress_get_post_statuses( 'discussion', $current_status, $this->slug ),
+			'statuses' => coursepress_get_post_statuses( $this->post_type, $current_status, $this->slug ),
 			'current_status' => $current_status,
 		);
 		coursepress_render( 'views/admin/forums', $args );
