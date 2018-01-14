@@ -280,7 +280,7 @@
                 var x, modules;
 
                 x = 0;
-                modules = [];
+                modules = {};
 
                 _.each( this.moduleListContainer.find('.cp-select-list li'), function(module) {
                     var order, _module;
@@ -292,7 +292,8 @@
 
                     if ( _module.steps ) {
                         _.each( _module.steps, function(step, pos){
-                            step.meta_module_page = step.module_page = x;
+                            step.set('meta_module_page', x);
+                            step.set('module_page', x);
                             _module.steps[pos] = step;
                         }, this );
                     }
