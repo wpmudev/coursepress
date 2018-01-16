@@ -3,7 +3,7 @@
 (function() {
     'use strict';
 
-    CoursePress.Define( 'Step_INPUT-UPLOAD', function() {
+    CoursePress.Define( 'Step_INPUT-UPLOAD', function($) {
        return CoursePress.View.extend({
            template_id: 'coursepress-step-file-upload',
            stepView: false,
@@ -36,6 +36,23 @@
            },
 
            updateModel: function(ev) {
+               var input, name, allowed_types_name, allowed_type_inputs, allowed_types;
+
+               allowed_types_name = 'meta_allowed_file_types';
+               input = $(ev.currentTarget);
+               name = input.attr('name');
+
+               if (name === allowed_types_name) {
+                   allowed_types = [];
+                   allowed_type_inputs = this.$('[name="' + allowed_types_name + '"]');
+                   allowed_type_inputs.each(function (index, input) {
+                       if ($(input).is(':checked')) {
+                           allowed_types.push($(input).val());
+                       }
+                   });
+                   this.model.set(allowed_types_name, allowed_types);
+               }
+
                this.stepView.updateModel(ev);
            }
        });
