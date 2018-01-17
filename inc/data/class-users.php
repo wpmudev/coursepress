@@ -63,9 +63,9 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 			'coursepress_withdraw_my_students_cap' => 1,
 			'coursepress_add_move_students_cap' => 0,
 			'coursepress_add_move_my_students_cap' => 1,
-			'coursepress_add_move_my_assigned_students_cap' => 1,
+			'coursepress_add_move_students_cap' => 1,
 			/* Notifications */
-			'coursepress_create_my_assigned_notification_cap' => 1,
+			'coursepress_create_notification_cap' => 1,
 			'coursepress_create_my_notification_cap' => 1,
 			'coursepress_update_notification_cap' => 1,
 			'coursepress_update_my_notification_cap' => 1,
@@ -74,7 +74,7 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 			'coursepress_change_notification_status_cap' => 0,
 			'coursepress_change_my_notification_status_cap' => 1,
 			/* Discussions */
-			'coursepress_create_my_assigned_discussion_cap' => 1,
+			'coursepress_create_discussion_cap' => 1,
 			'coursepress_create_my_discussion_cap' => 1,
 			'coursepress_update_discussion_cap' => 0,
 			'coursepress_update_my_discussion_cap' => 1,

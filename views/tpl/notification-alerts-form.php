@@ -1,6 +1,7 @@
 <script type="text/template" id="coursepress-notification-alerts-form-tpl">
 
 	<div class="cp-flex cp-box">
+		<input type="hidden" name="alert_id" id="alert-id">
 
 		<div class="cp-div">
 			<h3 class="label"><?php _e( 'Select a course to display an alert on', 'cp' ); ?></h3>

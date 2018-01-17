@@ -10,7 +10,6 @@
                     <?php echo $column_label; ?>
                 </th>
             <?php endforeach; ?>
-            <th class="column-status"><?php _e( 'Status', 'cp' ); ?></th>
         </tr>
         </thead>
         <tbody>
@@ -25,11 +24,36 @@
                             switch( $column_id ) :
                                 case 'title' :
                                     echo $notification->post_title;
+                                    echo '<div class="row-actions">';
+                                    if ( 'trash' != $current_status ) {
+                                        printf(
+                                            '<span class="edit"><a href="#" aria-label="%s “%s”" class="cp_edit_alert" data-page="alerts_form" data-tab="alerts" data-id="' . $notification->ID . '">Edit</a></span>',
+                                            esc_attr__( 'Edit', 'cp' ),
+                                            esc_attr( $notification->post_title ),
+                                            esc_html__( 'Edit', 'cp' )
+                                        );
+                                        echo ' | <span class="inline hide-if-no-js cp-trash"><a href="#">' . __( 'Trash', 'cp' ) . '</a></span>';
+                                    } else { ?>
+                                        <span class="inline hide-if-no-js cp-restore"><a href="#"><?php _e( 'Restore', 'cp' ); ?></a> |</span>
+                                        <span class="inline hide-if-no-js cp-delete"><a href="#"><?php _e( 'Delete Permanently', 'cp' ); ?></a></span>
+                                    <?php }
+                                    echo '</div>';
+
                                     break;
                                 case 'course' :
                                     // Get course name.
                                     $course_id = get_post_meta( $notification->ID, 'alert_course', true );
                                     echo empty( $course_id ) ? __( 'All Courses', 'cp' ) : get_the_title( $course_id );
+                                    break;
+                                case 'status':
+                                    echo '<label>';
+                                    $active = isset( $notification->post_status ) && 'publish' === $notification->post_status;
+                                    printf(
+                                        '<input type="checkbox" class="cp-toggle-input cp-toggle-alert-status" value="%d" %s /> <span class="cp-toggle-btn"></span>',
+                                        esc_attr( $notification->ID ),
+                                        checked( $active, true, false )
+                                    );
+                                    echo '</label>';
                                     break;
                                 default :
                                     /**
@@ -45,12 +69,6 @@
                             ?>
                         </td>
                     <?php endforeach; ?>
-                    <td class="column-status">
-                        <label>
-                            <?php $active =  ( isset( $notification->post_status ) && $notification->post_status === 'publish' ); ?>
-                            <input type="checkbox" class="cp-toggle-input cp-toggle-alert-status" value="<?php echo $notification->ID; ?>" <?php checked( $active, true ); ?> /> <span class="cp-toggle-btn"></span>
-                        </label>
-                    </td>
                 </tr>
                 <?php $odd = $odd ? false : true; ?>
             <?php endforeach; ?>
