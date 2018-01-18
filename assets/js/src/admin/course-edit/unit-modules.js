@@ -4,7 +4,7 @@
     'use strict';
 
     CoursePress.Define( 'UnitModules', function( $, doc, win ) {
-        var ModuleList, ModuleSteps;
+        var ModuleList, ModuleSteps, ModulesPopup;
 
         ModuleList = CoursePress.View.extend({
             template_id: 'coursepress-unit-module-list-tpl',
@@ -160,6 +160,25 @@
             }
         });
 
+        ModulesPopup = CoursePress.PopUp.extend({
+            template_id: 'coursepress-move-to-module-popup-tpl',
+            events: {
+                'click .btn-ok': 'Ok',
+                'click .cp-btn-cancel': 'Cancel',
+                'change [name]': 'updateModel'
+            },
+            render: function() {
+                // Call the parent render method
+                CoursePress.PopUp.prototype.render.apply(this, arguments);
+
+                this.$('select').select2({
+                    placeholder: win._coursepress.text.select_module,
+                    minimumResultsForSearch: 10,
+                    width: '50%'
+                });
+            }
+        });
+
         return CoursePress.View.extend({
             template_id: 'coursepress-unit-modules-tpl',
             current: 1,
@@ -170,6 +189,7 @@
                 'click .module-item': 'setActiveModule',
                 'click .add-module': 'addModule',
                 'change [name]': 'updateModel',
+                'click .menu-item-move': 'moveStep',
                 'click .cp-delete-module': 'deleteModule'
             },
 
@@ -225,6 +245,42 @@
                         self.reOrderModules();
                     }
                 });
+            },
+
+            moveStep: function (ev) {
+                var moduleId, stepID, stepElement, step, stepModel, modulesPopup, self = this;
+
+                stepElement = $(ev.currentTarget).closest('.unit-step-module');
+
+                modulesPopup = new ModulesPopup({
+                    modules: _.omit(this.modules, function (module) {
+                        return module.id === self.moduleView.id;
+                    })
+                });
+
+                modulesPopup.on('coursepress:popup_ok', function (popup) {
+                    moduleId = popup.model.get('target_module');
+                    stepID = stepElement.find('[name="menu_order"]').data('cid');
+
+                    if (!moduleId || !stepID) {
+                        return;
+                    }
+
+                    step = _.find(this.moduleView.steps, function (step) {
+                        return step.model.cid === stepID;
+                    });
+                    stepModel = JSON.parse(JSON.stringify(step.model));
+                    stepModel = _.omit(stepModel, ['ID', 'cid']);
+
+                    // Remove the old version of the step
+                    step.removeStep();
+
+                    // Switch to the target module
+                    this.$('.module-item[data-id="' + moduleId + '"]').trigger('click');
+
+                    // Add the step to target module
+                    this.moduleView.setStep(stepModel);
+                }, this);
             },
 
             setActiveModule: function( ev ) {
