@@ -271,6 +271,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 						'confirm' => __( 'Are you sure to withdraw students?', 'cp' ),
 					),
 				),
+				'select_module' => __( 'Select a module', 'cp' )
 			),
 			'is_paginated' => isset( $_GET['paged'] ) ? 1 : 0,
 		) );
