@@ -85,7 +85,9 @@
                 var step, cid;
 
                 step = new CoursePress.Step(model, this);
-                step.$el.appendTo(this.stepContainer);
+	            if (!step.model.get('deleted')) {
+		            step.$el.appendTo(this.stepContainer);
+	            }
 
                 cid = step.model.cid;
                 this.steps[cid] = step.model;
