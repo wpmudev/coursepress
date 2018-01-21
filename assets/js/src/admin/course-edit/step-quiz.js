@@ -23,6 +23,7 @@
 
             removeAnswer: function() {
                 this.remove();
+                this.question.updateModel();
             },
 
             updateModel: function() {
@@ -107,6 +108,8 @@
                 };
                 answer = new Answer(options, this );
                 answer.$el.appendTo(this.$('.question-answers'));
+
+                this.updateModel();
             },
 
             toggleQuestion: function() {
