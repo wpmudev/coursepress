@@ -86,7 +86,7 @@ switch ( $column_id ) {
 		} else { ?>
 			<span class="inline hide-if-no-js cp-restore"><a href="#"><?php _e( 'Restore', 'cp' ); ?></a> |</span>
 			<span class="inline hide-if-no-js cp-delete"><a href="#"><?php _e( 'Delete Permanently', 'cp' ); ?></a></span>
-<?php }
+		<?php }
 
 		echo '</div>';
 	break;
