@@ -234,6 +234,7 @@
 																				<td>
 																					<ul class="cp-assessments-answers">
 																						<?php $list_sep = in_array( $question['type'], array( 'single', 'select' ) ) ? '' : '- '; ?>
+																						<?php if ($question['options']): ?>
 																						<?php foreach ( ( $question['options']['checked'] ) as $checked_key => $checked ) : ?>
 																							<?php if ( ! empty( $checked ) ) : ?>
 																								<li>
@@ -241,6 +242,7 @@
 																								</li>
 																							<?php endif; ?>
 																						<?php endforeach; ?>
+																						<?php endif; ?>
 																					</ul>
 																				</td>
 																			</tr>
