@@ -198,6 +198,10 @@
                     nextStep = this.editCourseView._getNextStep();
                     this.editCourseView.loadCurrentStep( nextStep );
                 }
+
+                if (this.editCourseView.unitsview instanceof CoursePress.UnitDetails) {
+                    this.setUnitDetails(this.editCourseView.unitsview.model.cid);
+                }
             },
 
             updateCollection: function() {
