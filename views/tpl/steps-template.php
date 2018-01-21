@@ -157,7 +157,7 @@
 
     <div class="cp-box cp-toggle-box">
         <label>
-            <input type="checkbox" name="meta_assessable" value="1" class="cp-toggle-input" {{_.checked(true, meta_allow_retries)}} /> <span class="cp-toggle-btn"></span>
+            <input type="checkbox" name="meta_allow_retries" value="1" class="cp-toggle-input" {{_.checked(true, meta_allow_retries)}} /> <span class="cp-toggle-btn"></span>
             <span class="label"><?php _e( 'Allow retries', 'cp' ); ?></span>
         </label>
     </div>
@@ -182,7 +182,7 @@
         <div class="cp-flex">
             <?php foreach ( $file_types as $type => $label ) : ?>
             <div class="cp-box cp-toggle-box">
-                <label>
+                <label class="cp-ignore-update-model">
                     <input type="checkbox" name="meta_allowed_file_types" value="<?php echo $type; ?>" {{_.checked('<?php echo $type; ?>', meta_allowed_file_types)}} class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
                     <span class="label"><?php echo $label ?></span>
                 </label>
