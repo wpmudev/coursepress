@@ -1,3 +1,21 @@
+<?php
+/**
+ * Template arguments
+ * 
+ * @var $columns
+ * @var $assessments
+ * @var $courses
+ * @var $units
+ * @var $list_table WP_List_Table
+ * @var $hidden_columns
+ * @var $page
+ * @var $course_id
+ * @var $unit_id
+ * @var $graded
+ * @var $search
+ */
+?>
+
 <div class="wrap coursepress-wrap coursepress-assessments" id="coursepress-assessments">
 	<h1 class="wp-heading-inline"><?php _e( 'Assessments', 'cp' ); ?></h1>
 
@@ -6,11 +24,16 @@
 			<div class="cp-flex">
 
 				<div class="cp-div">
-					<label class="label"><?php _e( 'Select course', 'cp' ); ?></label>
-					<select name="course_id" data-placeholder="<?php _e( 'Select a course', 'cp' ); ?>">
+					<label for="course_id" class="label"><?php _e( 'Select course', 'cp' ); ?></label>
+					<select id="course_id" name="course_id" data-placeholder="<?php _e( 'Select a course', 'cp' ); ?>">
 						<option></option>
 						<?php if ( ! empty( $courses ) ) : ?>
-							<?php foreach ( $courses as $course ) : ?>
+							<?php foreach ( $courses as $course ) : ?>	
+							<?php
+							/**
+							 * @var $course CoursePress_Course
+							 */
+							?>
                             <option value="<?php echo $course->ID; ?>" <?php selected( $course->ID, $course_id ); ?>><?php
 							echo $course->post_title;
 							echo $course->get_numeric_identifier_to_course_name( $course->ID ); ?></option>
@@ -20,8 +43,8 @@
 				</div>
 
 				<div class="cp-div">
-					<label class="label"><?php _e( 'Student progress', 'cp' ); ?></label>
-					<select name="student_progress">
+					<label for="student_progress" class="label"><?php _e( 'Student progress', 'cp' ); ?></label>
+					<select id="student_progress" name="student_progress">
 						<option value=""><?php _e( 'Show all assessable students', 'cp' ); ?></option>
 						<?php if ( ! empty( $units ) ) : ?>
 							<?php foreach ( $units as $unit ) : ?>
@@ -94,6 +117,11 @@
 			<?php $odd = true; ?>
 			<?php if ( ! empty( $assessments['students'] ) ) : ?>
 				<?php foreach ( $assessments['students'] as $student ) : ?>
+					<?php
+					/**
+					 * @var $student CoursePress_User
+					 */
+					?>
 					<tr class="<?php echo $odd ? 'odd' : 'even cp-assessment-main'; ?>">
 
 						<?php foreach ( array_keys( $columns ) as $column_id ) : ?>
@@ -162,6 +190,11 @@
 						<td colspan="5" class="cp-tr-expanded">
 							<ul class="cp-assessments-units-expanded">
 								<?php foreach ( $student->units as $unit_id => $unit ) : ?>
+									<?php
+									/**
+									 * @var $unit CoursePress_Unit
+									 */
+									?>
 									<?php if ( empty( $unit->is_answerable ) ) : continue; endif; ?>
 									<li>
 										<span class="pull-left"><span class="cp-units-icon"></span><?php echo $unit->get_the_title(); ?></span>
@@ -178,6 +211,11 @@
 															<?php $step_count = 0; ?>
 															<?php if ( ! empty( $module['steps'] ) ) : ?>
 																<?php foreach ( $module['steps'] as $step_id => $step ) : ?>
+																	<?php
+																	/**
+																	 * @var $step CoursePress_Step
+																	 */
+																	?>
 																	<?php if ( ! $step->is_answerable() ) : continue; endif; ?>
 																	<?php if ( $step_count == 0 ) : ?>
 																		<tr>
