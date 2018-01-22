@@ -218,10 +218,10 @@
                 'title' => $toggle_input . __( 'Add students to any course', 'cp' ),
                 'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_add_move_students_cap', true ),
             ),
-            'coursepress_add_move_my_assigned_students_cap' => array(
+            'coursepress_add_move_students_cap' => array(
                 'type' => 'checkbox',
                 'title' => $toggle_input . __( 'Add students to assigned courses', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_add_move_my_assigned_students_cap', true ),
+                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_add_move_students_cap', true ),
             ),
         ),
     );
@@ -236,10 +236,10 @@
                 'title' => $toggle_input. __( 'Create notifications to own courses', 'cp' ),
                 'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_create_my_notification_cap', true ),
             ),
-            'coursepress_create_my_assigned_notification_cap' => array(
+            'coursepress_create_notification_cap' => array(
                 'type' => 'checkbox',
                 'title' => $toggle_input . __( 'Create notifications to assigned courses', 'cp' ),
-                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_create_my_assigned_notification_cap', true ),
+                'value' => coursepress_get_setting( 'capabilities/instructor/coursepress_create_notification_cap', true ),
             ),
             'coursepress_update_my_notification_cap' => array(
                 'type' => 'checkbox',

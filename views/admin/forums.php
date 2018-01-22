@@ -106,6 +106,7 @@ switch ( $column_id ) {
 			esc_attr( $forum->ID ),
 			checked( $active, true, false )
 		);
+		echo '</label>';
 	break;
 
 	default :

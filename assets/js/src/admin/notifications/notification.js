@@ -15,13 +15,17 @@
 			currentTab: 'emails',
 			events: {
 				'click .cp-notification-menu-item': 'setNotificationPage',
+				'click .cp_edit_alert': 'setNotificationPage',
 			},
 
 			// While initializing.
 			initialize: function () {
+                                this.request = new CoursePress.Request();
+
 				this.once( 'coursepress:notification_emails', this.getEmailsView, this );
 				this.once( 'coursepress:notification_alerts', this.getAlertsView, this );
 				this.once( 'coursepress:notification_alerts_form', this.getAlertsFormView, this );
+				this.request.on( 'coursepress:success_get_course_alert', this.setAlertData, this );
 
 				CoursePress.View.prototype.initialize.apply( this, arguments );
 			},
@@ -59,10 +63,34 @@
 			setNotificationPage: function( ev ) {
 				var target = $( ev.currentTarget ),
 					page = target.data('page'),
+                                        alert_id = target.data('id'),
 					tab = target.data('tab');
 
 				this.setPage( page, tab );
+                                //Clear form
+                                $('.cp-alert-cancel').trigger('click');
+                                if ( undefined !== alert_id ) {
+                                    //set existing alert data
+                                    this.request.set( {
+                                        'action': 'get_course_alert',
+                                        'alert_id': alert_id,
+                                    } );
+                                    this.request.save();
+                                }
 			},
+
+                        //set Alert Data
+                        setAlertData: function( data ) {
+                            this.$('#alert-id').val( data.id );
+                            this.$('#alert-title').val( data.title );
+                            this.$('#cp-alert-course').val( data.course_id ).trigger('change');
+
+                            if ( undefined === win.tinymce.editors.alert_content ) {
+                                this.$('#alert_content').val( data.content );
+                            } else {
+                                win.tinymce.editors.alert_content.setContent( data.content );
+                            }
+                        },
 
 			// Email form page.
 			getEmailsView: function() {

@@ -1002,7 +1002,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 		// If alert id and status is not empty, attempt to change status.
 		if ( ! empty( $request->alert_id ) && ! empty( $request->status ) ) {
-			$toggled = coursepress_change_post( $request->alert_id, $request->status, 'cp_notification' );
+			$toggled = coursepress_change_post( $request->alert_id, $request->status, 'notification' );
 		}
 
 		// If status changed, return success response, else fail.
@@ -1015,26 +1015,45 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		}
 	}
 
+	function get_course_alert( $request ) {
+		$data = !empty( $request->alert_id ) ? coursepress_get_notification_alert( $request->alert_id ) : array();
+		if ( $data ) {
+			wp_send_json_success( $data );
+		}
+		wp_send_json_error( true );
+	}
+
 	/**
-	 * Create new course alert.
+	 * Create or Update course alert.
 	 *
 	 * @param $request Request data.
 	 */
-	function create_course_alert( $request ) {
+	function update_course_alert( $request ) {
 
 		$created = false;
 
-		// If required values are set, create new alert.
+		// Check if required values are set.
 		if ( ! empty( $request->course_id ) && ! empty( $request->title ) && ! empty( $request->content ) ) {
-			$created = coursepress_create_course_alert( $request->course_id, $request->title, $request->content );
+			$alert_id = !empty( $request->alert_id ) ? $request->alert_id : '' ;
+			$created = coursepress_update_course_alert( $request->course_id, $request->title, $request->content, $alert_id );
 		}
 
-		// If alert created return success response, else fail.
+		// If alert inserted return success response, else fail.
 		if ( $created ) {
-			$success = array( 'message' => __( 'New course alert created successfully.', 'cp' ) );
+			if ( !empty( $alert_id ) ) {
+				$message = __( 'Course alert updated successfully.', 'cp' );
+			} else {
+				$message = __( 'New course alert created successfully.', 'cp' );
+			}
+			$success = array( 'message' => $message );
 			wp_send_json_success( $success );
 		} else {
-			$error = array( 'message' => __( 'Could not create new course alert.', 'cp' ) );
+			if ( !empty( $alert_id ) ) {
+				$message = __( 'Could not update course alert.', 'cp' );
+			} else {
+				$message = __( 'Could not create new course alert.', 'cp' );
+			}
+			$error = array( 'message' => $message );
 			wp_send_json_error( $error );
 		}
 	}

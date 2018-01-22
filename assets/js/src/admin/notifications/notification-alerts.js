@@ -112,7 +112,7 @@
              * Reload the current page.
              */
             reloadNotifications: function() {
-                win.location = win.self.location;
+                location.reload();
             },
         });
     });

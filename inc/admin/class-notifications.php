@@ -156,12 +156,16 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Page {
 	 *
 	 * @return array
 	 */
-	function get_columns() {
+	function get_columns( $current_status ) {
 
 		$columns = array(
 			'title' => __( 'Notification title', 'cp' ),
 			'course' => __( 'Course', 'cp' ),
 		);
+
+		if ( 'trash' !== $current_status ) {
+			$columns['status'] = __( 'Status', 'cp' );
+		}
 
 		/**
 		 * Trigger to allow custom column values.
