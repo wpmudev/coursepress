@@ -211,7 +211,7 @@
 																			<tr>
 																				<td><?php echo $question['title']; ?></td>
 																				<?php if($question['type'] == 'written'): ?>
-																					<?php $written_answer = $response[ $step->course_id ][ $step->unit_id ][ $step->ID ][0]; ?>
+																					<?php $written_answer = $response[ $step->course_id ][ $step->unit_id ][ $step->ID ][$qkey]; ?>
 																					<td>
 																						<?php if ($written_answer): ?>
 																							<?php echo $written_answer; ?>
