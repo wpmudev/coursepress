@@ -12,6 +12,11 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 	protected $slug = 'coursepress';
 
 	/**
+	 * @var string Course post type.
+	 */
+	private $post_type = 'course';
+
+	/**
 	 * @var array List of CP screen_id
 	 */
 	protected $screens = array();
@@ -271,6 +276,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 						'confirm' => __( 'Are you sure to withdraw students?', 'cp' ),
 					),
 				),
+				'select_module' => __( 'Select a module', 'cp' )
 			),
 			'is_paginated' => isset( $_GET['paged'] ) ? 1 : 0,
 		) );
@@ -424,7 +430,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'pagination' => $this->set_courses_pagination( $count ),
 			'course_edit_link' => add_query_arg( 'page', 'coursepress_course', admin_url( 'admin.php' ) ),
 			'page' => $page,
-			'statuses' => coursepress_get_post_statuses( 'course', $current_status, $this->slug ),
+			'statuses' => coursepress_get_post_statuses( $this->post_type, $current_status, $this->slug ),
 			'search' => $search,
 			'bulk_actions' => $this->get_bulk_actions(),
 			'placeholder_text' => '',
@@ -519,7 +525,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 
 		// If it's a new course, create a draft course
 		if ( empty( $course_id ) ) {
-			$course = coursepress_get_course( get_default_post_to_edit( 'course', true ) );
+			$course = coursepress_get_course( get_default_post_to_edit( $this->post_type, true ) );
 			$course->post_title = '';
 		} else {
 			$course = coursepress_get_course( $course_id );

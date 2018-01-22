@@ -19,7 +19,7 @@
                 this.request = new CoursePress.Request();
                 // On status toggle fail.
                 this.request.on( 'coursepress:error_discussion_status_toggle', this.revertStatusToggle, this );
-                // On trash, delete, restore or duplicate course.
+                // On trash, delete, restore or duplicate forum.
                 this.request.on( 'coursepress:success_change_post', this.reloadForums, this );
 
                 this.render();

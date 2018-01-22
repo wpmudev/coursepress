@@ -189,6 +189,8 @@
 	                    model.cid = cid;
 	                    self.unitModels[cid] = model;
                     });
+
+                    this.editCourseView.unitCollection.reset(_.values(this.unitModels));
                 }
 
                 this.editCourseView.after_update();
@@ -197,6 +199,10 @@
                 if ( 'continue' === this.editCourseView.getSaveMode() ) {
                     nextStep = this.editCourseView._getNextStep();
                     this.editCourseView.loadCurrentStep( nextStep );
+                }
+
+                if (this.editCourseView.unitsview instanceof CoursePress.UnitDetails) {
+                    this.setUnitDetails(this.editCourseView.unitsview.model.cid);
                 }
             },
 

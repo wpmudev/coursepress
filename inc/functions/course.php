@@ -143,7 +143,8 @@ function coursepress_get_courses( $args = array(), &$count = 0 ) {
 }
 
 function coursepress_get_post_statuses( $type, $current_status, $slug ) {
-	$post_type = get_cp_type( $type );
+	$cp_type = get_cp_type( $type );
+	$post_type = !empty( $cp_type ) ? $cp_type : $type;
 	$count = wp_count_posts( $post_type );
 	$post_status = array(
 		'all' => 0,

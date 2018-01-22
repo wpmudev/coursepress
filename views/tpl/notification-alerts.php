@@ -1,6 +1,9 @@
 <script type="text/template" id="coursepress-notification-alerts-tpl">
 
-    <a href="javascript:void(0);" class="cp-btn cp-btn-active cp-notification-menu-item notifications-alerts_form" data-page="alerts_form" data-tab="alerts"><?php _e( 'New Course Alert', 'cp' ); ?></a>
+    <div class="clear">
+        <a href="javascript:void(0);" class="cp-btn cp-btn-active cp-notification-menu-item notifications-alerts_form" data-page="alerts_form" data-tab="alerts"><?php _e( 'New Course Alert', 'cp' ); ?></a>
+    </div>
+    <?php cp_subsubsub( $statuses ); ?>
 
     <table class="coursepress-table" cellspacing="0">
         <thead>
@@ -19,7 +22,7 @@
                 <tr class="<?php echo $odd ? 'odd' : 'even'; ?>">
 
                     <?php foreach ( array_keys( $columns ) as $column_id ) : ?>
-                        <td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>">
+                        <td class="column-<?php echo $column_id; echo in_array( $column_id, $hidden_columns ) ? ' hidden': ''; ?>" data-id="<?php echo esc_attr( $notification->ID ); ?>">
                             <?php
                             switch( $column_id ) :
                                 case 'title' :

@@ -202,13 +202,25 @@
 																		<tr>
 																			<th class="cp-assessments-strong"><?php _e( 'Question', 'cp' ); ?></th>
 																			<th class="cp-assessments-strong"><?php _e( 'Student answer', 'cp' ); ?></th>
-																			<th class="cp-assessments-strong"><?php _e( 'Correct answer', 'cp' ); ?></th>
+																			<?php if($step->type != 'written'): ?>
+																				<th class="cp-assessments-strong"><?php _e( 'Correct answer', 'cp' ); ?></th>
+																			<?php endif; ?>
 																		</tr>
 																		<?php foreach ( $step->questions as $qkey => $question ) : ?>
+																			<?php $response = $step->get_user_response( $student->ID ); ?>
 																			<tr>
 																				<td><?php echo $question['title']; ?></td>
+																				<?php if($question['type'] == 'written'): ?>
+																					<?php $written_answer = $response[ $step->course_id ][ $step->unit_id ][ $step->ID ][$qkey]; ?>
+																					<td>
+																						<?php if ($written_answer): ?>
+																							<?php echo $written_answer; ?>
+																						<?php else: ?>
+																							<span class="cp-no-answer"><?php _e('No answer!'); ?></span>
+																						<?php endif; ?>
+																					</td>
+																				<?php else: ?>
 																				<td>
-																					<?php $response = $step->get_user_response( $student->ID ); ?>
 																					<?php if ( isset( $response[ $qkey ] ) ) : ?>
 																						<ul class="cp-assessments-answers">
 																							<?php if ( in_array( $question['type'], array( 'single', 'select' ) ) ) : ?>
@@ -234,6 +246,7 @@
 																				<td>
 																					<ul class="cp-assessments-answers">
 																						<?php $list_sep = in_array( $question['type'], array( 'single', 'select' ) ) ? '' : '- '; ?>
+																						<?php if ($question['options']): ?>
 																						<?php foreach ( ( $question['options']['checked'] ) as $checked_key => $checked ) : ?>
 																							<?php if ( ! empty( $checked ) ) : ?>
 																								<li>
@@ -241,8 +254,10 @@
 																								</li>
 																							<?php endif; ?>
 																						<?php endforeach; ?>
+																						<?php endif; ?>
 																					</ul>
 																				</td>
+																				<?php endif; ?>
 																			</tr>
 																		<?php endforeach; ?>
 																	<?php else : ?>

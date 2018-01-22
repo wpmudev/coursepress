@@ -107,13 +107,15 @@
                 id = selected.get('id');
 
                 in_frame = true;
+                url = selected.attributes.url;
 
                 if ( !!selected.attributes.sizes.thumbnail ) {
                     thumbnail = selected.attributes.sizes.thumbnail.url;
                     this.setThumbnail(thumbnail);
                 }
-
-                url = selected.attributes.url;
+                else {
+                    this.setThumbnail(url);
+                }
 
                 // Set correct url value
                 this.input.val(url);

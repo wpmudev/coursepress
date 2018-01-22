@@ -23,6 +23,7 @@
 
             removeAnswer: function() {
                 this.remove();
+                this.question.updateModel();
             },
 
             updateModel: function() {
@@ -107,6 +108,8 @@
                 };
                 answer = new Answer(options, this );
                 answer.$el.appendTo(this.$('.question-answers'));
+
+                this.updateModel();
             },
 
             toggleQuestion: function() {
@@ -204,8 +207,7 @@
                this.$('select').select2();
 
                if ( this.model.get('questions') ) {
-                   _.each( this.model.get('questions'), function( question, index ) {
-                       question.id = index;
+                   _.each( this.model.get('questions'), function( question ) {
                        this._addQuestion(question);
                    }, this );
                    this.$('.no-content-info').hide();
@@ -279,7 +281,6 @@
 
            _addQuestion: function( model ) {
                var question, cid;
-               model.index = _.size(this.questions);
 
                question = new Question(model, this);
                this.addQuestionMarkup(question.$el);

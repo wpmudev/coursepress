@@ -27,12 +27,11 @@
 
                 div[ is_checked ? 'slideDown' : 'slideUp' ]();
             },
-            toggleCustomCaption: function( ev ) {
-                var sender = this.$(ev.currentTarget),
-                    is_checked = sender.is(':checked'),
+            toggleCustomCaption: function() {
+                var checked = this.$('[name="meta_caption_field"]:checked'),
                     input = this.$('[name="meta_caption_custom_text"]');
 
-                if ( is_checked && 'custom' === sender.val() ) {
+                if ( 'custom' === checked.val() ) {
                     input.removeAttr('disabled').focus();
                 } else {
                     input.attr('disabled', 'disabled');

@@ -9,7 +9,7 @@
         $(doc).on( 'click', function(ev) {
            var sender = $(ev.currentTarget);
 
-           if ( iris && ( ! sender.is(iris) || ! sender.is('.iris-picker') ) ) {
+           if ( iris && ( ! sender.is(iris) && ! sender.is('.iris-picker') ) ) {
                iris.iris('hide');
                iris = false;
            }

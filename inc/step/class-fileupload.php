@@ -8,16 +8,6 @@
 class CoursePress_Step_FileUpload extends CoursePress_Step {
 	protected $type = 'fileupload';
 
-	function setUpStepMeta() {
-		parent::setUpStepMeta();
-
-		if ( ! $this->__get( 'allowed_file_types' ) ) {
-			$allowed = array( 'zip', 'pdf', 'txt' );
-			$this->__set( 'allowed_file_types', $allowed );
-			$this->__set( 'meta_allowed_file_types', $allowed );
-		}
-	}
-
 	public function allowed_student_mimes() {
 		$mimes = array(
 			'txt' => 'text/plain',
