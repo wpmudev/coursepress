@@ -298,11 +298,22 @@
 																				<?php endif; ?>
 																			</tr>
 																		<?php endforeach; ?>
+																	<?php elseif($step->type === 'fileupload'): ?>
+																		<tr>
+																			<td colspan="3">
+																				<?php $uploaded_files = $step->get_user_response( $student->ID ); ?>
+																				<?php if($uploaded_files && isset($uploaded_files['url'])): ?>
+																					<a href="<?php echo $uploaded_files['url']; ?>"><?php _e('Uploaded File', 'cp'); ?></a>
+																				<?php else: ?>
+																					<span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span>
+																				<?php endif; ?>
+																			</td>
+																		</tr>
 																	<?php else : ?>
 																		<tr>
 																			<td colspan="3">
 																				<ul class="cp-assessments-answers">
-																					<li><span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span</li>
+																					<li><span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span></li>
 																				</ul>
 																			</td>
 																		</tr>
