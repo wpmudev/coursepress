@@ -124,14 +124,13 @@ foreach ( $bulk_actions as $value => $label ) {
 											break;
 										case 'category' :
                                             $categories = $course->get_category();
-                                            if ( ! empty( $categories ) ) :
-                                                $cat_i = 1;
-                                                $cat_count = count( $categories );
-                                                foreach ( $categories as $cat_id => $cat_name ) : ?>
-                                                    <a href="<?php echo add_query_arg( 'course_category', $cat_id ); ?>" class="cp-cats-link"><?php echo $cat_name; ?></a><?php echo $cat_i < $cat_count ? ',' : ''; ?>
-                                                    <?php $cat_i++; ?>
-                                                <?php endforeach;
-                                            endif;
+											if ( ! empty( $categories ) ) :
+												$cat_i = 1; $cat_count = count( $categories );
+												foreach ( $categories as $cat_id => $cat_name ) : ?>
+													<a href="<?php echo add_query_arg( 'course_category', $cat_id ); ?>" class="cp-cats-link"><?php echo $cat_name; ?></a><?php echo $cat_i < $cat_count ? ',' : ''; ?>
+													<?php $cat_i++; ?>
+												<?php endforeach;
+											endif;
 											break;
 										default :
 											/**
