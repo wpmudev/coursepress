@@ -1,21 +1,3 @@
-<?php
-/**
- * Template arguments
- * 
- * @var $columns
- * @var $assessments
- * @var $courses
- * @var $units
- * @var $list_table WP_List_Table
- * @var $hidden_columns
- * @var $page
- * @var $course_id
- * @var $unit_id
- * @var $graded
- * @var $search
- */
-?>
-
 <div class="wrap coursepress-wrap coursepress-assessments" id="coursepress-assessments">
 	<h1 class="wp-heading-inline"><?php _e( 'Assessments', 'cp' ); ?></h1>
 
@@ -29,11 +11,6 @@
 						<option></option>
 						<?php if ( ! empty( $courses ) ) : ?>
 							<?php foreach ( $courses as $course ) : ?>	
-							<?php
-							/**
-							 * @var $course CoursePress_Course
-							 */
-							?>
                             <option value="<?php echo $course->ID; ?>" <?php selected( $course->ID, $course_id ); ?>><?php
 							echo $course->post_title;
 							echo $course->get_numeric_identifier_to_course_name( $course->ID ); ?></option>
@@ -117,11 +94,6 @@
 			<?php $odd = true; ?>
 			<?php if ( ! empty( $assessments['students'] ) ) : ?>
 				<?php foreach ( $assessments['students'] as $student ) : ?>
-					<?php
-					/**
-					 * @var $student CoursePress_User
-					 */
-					?>
 					<tr class="<?php echo $odd ? 'odd' : 'even cp-assessment-main'; ?>">
 
 						<?php foreach ( array_keys( $columns ) as $column_id ) : ?>
@@ -190,11 +162,6 @@
 						<td colspan="5" class="cp-tr-expanded">
 							<ul class="cp-assessments-units-expanded">
 								<?php foreach ( $student->units as $unit_id => $unit ) : ?>
-									<?php
-									/**
-									 * @var $unit CoursePress_Unit
-									 */
-									?>
 									<?php if ( empty( $unit->is_answerable ) ) : continue; endif; ?>
 									<li>
 										<span class="pull-left"><span class="cp-units-icon"></span><?php echo $unit->get_the_title(); ?></span>
@@ -211,11 +178,6 @@
 															<?php $step_count = 0; ?>
 															<?php if ( ! empty( $module['steps'] ) ) : ?>
 																<?php foreach ( $module['steps'] as $step_id => $step ) : ?>
-																	<?php
-																	/**
-																	 * @var $step CoursePress_Step
-																	 */
-																	?>
 																	<?php if ( ! $step->is_answerable() ) : continue; endif; ?>
 																	<?php if ( $step_count == 0 ) : ?>
 																		<tr>
