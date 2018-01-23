@@ -123,7 +123,7 @@ foreach ( $bulk_actions as $value => $label ) {
 											echo $course->enrollment_end_date ? $course->enrollment_end_date : '-';
 											break;
 										case 'category' :
-                                            $categories = $course->get_category();
+											$categories = $course->get_category();
 											if ( ! empty( $categories ) ) :
 												$cat_i = 1; $cat_count = count( $categories );
 												foreach ( $categories as $cat_id => $cat_name ) : ?>
