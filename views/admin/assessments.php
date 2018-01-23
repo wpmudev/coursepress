@@ -214,7 +214,7 @@
 																					<?php $written_answer = $response[ $step->course_id ][ $step->unit_id ][ $step->ID ][$qkey]; ?>
 																					<td>
 																						<?php if ($written_answer): ?>
-																							<?php echo $written_answer; ?>
+																							<?php echo stripslashes($written_answer); ?>
 																						<?php else: ?>
 																							<span class="cp-no-answer"><?php _e('No answer!'); ?></span>
 																						<?php endif; ?>
