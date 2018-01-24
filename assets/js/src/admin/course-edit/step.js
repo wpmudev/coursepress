@@ -110,6 +110,8 @@
                 questions: []
             }, defaults ),
             'input-written': _.extend({
+                module_type: 'input-written',
+                meta_module_type: 'input-written',
                 meta_questions: []
             }, defaults )
         };
