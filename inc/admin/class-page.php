@@ -402,6 +402,7 @@ class CoursePress_Admin_Page extends CoursePress_Utility {
 			'coursepress_course_per_page',
 			'coursepress_students_per_page',
 			'coursepress_assesments_per_page',
+			'coursepress_notifications_per_page',
 		);
 
 		// Return value for our custom option.
