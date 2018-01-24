@@ -6,11 +6,11 @@
 			<div class="cp-flex">
 
 				<div class="cp-div">
-					<label class="label"><?php _e( 'Select course', 'cp' ); ?></label>
-					<select name="course_id" data-placeholder="<?php _e( 'Select a course', 'cp' ); ?>">
+					<label for="course_id" class="label"><?php _e( 'Select course', 'cp' ); ?></label>
+					<select id="course_id" name="course_id" data-placeholder="<?php _e( 'Select a course', 'cp' ); ?>">
 						<option></option>
 						<?php if ( ! empty( $courses ) ) : ?>
-							<?php foreach ( $courses as $course ) : ?>
+							<?php foreach ( $courses as $course ) : ?>	
                             <option value="<?php echo $course->ID; ?>" <?php selected( $course->ID, $course_id ); ?>><?php
 							echo $course->post_title;
 							echo $course->get_numeric_identifier_to_course_name( $course->ID ); ?></option>
@@ -20,8 +20,8 @@
 				</div>
 
 				<div class="cp-div">
-					<label class="label"><?php _e( 'Student progress', 'cp' ); ?></label>
-					<select name="student_progress">
+					<label for="student_progress" class="label"><?php _e( 'Student progress', 'cp' ); ?></label>
+					<select id="student_progress" name="student_progress">
 						<option value=""><?php _e( 'Show all assessable students', 'cp' ); ?></option>
 						<?php if ( ! empty( $units ) ) : ?>
 							<?php foreach ( $units as $unit ) : ?>
@@ -260,11 +260,22 @@
 																				<?php endif; ?>
 																			</tr>
 																		<?php endforeach; ?>
+																	<?php elseif($step->type === 'fileupload'): ?>
+																		<tr>
+																			<td colspan="3">
+																				<?php $uploaded_files = $step->get_user_response( $student->ID ); ?>
+																				<?php if($uploaded_files && isset($uploaded_files['url'])): ?>
+																					<a href="<?php echo $uploaded_files['url']; ?>"><?php _e('Uploaded File', 'cp'); ?></a>
+																				<?php else: ?>
+																					<span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span>
+																				<?php endif; ?>
+																			</td>
+																		</tr>
 																	<?php else : ?>
 																		<tr>
 																			<td colspan="3">
 																				<ul class="cp-assessments-answers">
-																					<li><span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span</li>
+																					<li><span class="cp-no-answer"><?php _e( 'No answer!' ); ?></span></li>
 																				</ul>
 																			</td>
 																		</tr>
