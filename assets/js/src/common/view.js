@@ -70,7 +70,7 @@
             },
             render: function () {
                 if ( ! _.isEmpty(this.template_id) ) {
-                    var data = !!this.model.get ? this.model.toJSON() : this.model;
+                    var data = JSON.parse(JSON.stringify(this.model));
                     this.$el.html(_._getTemplate(this.template_id, data));
                 }
 
