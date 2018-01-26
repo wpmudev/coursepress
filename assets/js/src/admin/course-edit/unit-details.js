@@ -113,8 +113,6 @@
                     this.steps = new CoursePress.Unit_Steps({model: this.model}, this );
                     this.steps.$el.appendTo(this.container);
                 }
-
-                this.$('.datepicker').datepicker({dateFormat: 'MM dd, yy' });
             },
 
             toggleFeatureImage: function(ev) {

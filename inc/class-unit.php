@@ -40,7 +40,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 		$id = $this->__get( 'ID' );
 		$defaults = array(
 	        'unit_availability' => 'instant',
-	        'unit_availability_date' => '',
+	        'unit_date_availability' => '',
 	        'unit_delay_days' => 0,
 	        'force_current_unit_completion' => false,
 	        'force_current_unit_successful_completion' => false,
@@ -58,7 +58,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 			if ( ! $value ) {
 			    $value = $default_value;
 			}
-			if ( 'unit_availability_date' == $key && ! is_array( $value ) ) {
+			if ( 'unit_date_availability' == $key && ! is_array( $value ) ) {
 				$timestamp = strtotime( $value, $time_now );
 				$value = date_i18n( $date_format, $timestamp );
 				$this->__set( 'unit_availability_date_timestamp', $timestamp );
@@ -76,7 +76,7 @@ class CoursePress_Unit extends CoursePress_Utility {
 	public function get_settings() {
 		$defaults = array(
 			'unit_availability' => 'instant',
-			'unit_availability_date' => '',
+			'unit_date_availability' => '',
 			'unit_delay_days' => 0,
 			'force_current_unit_completion' => false,
 			'force_current_unit_successful_completion' => false,
