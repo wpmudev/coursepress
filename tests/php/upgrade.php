@@ -335,7 +335,7 @@ class CoursePressUpgradeTest extends WP_UnitTestCase {
 
 		// Units
 		$this->assertTrue( CoursePress_Data_Unit::is_unit_available( $c1, $unit1, false ) );
-		$this->assertEquals( $start, get_post_meta( $unit1, 'unit_date_availability', true ) );
+		$this->assertEquals( $start, get_post_meta( $unit1, 'unit_availability_date', true ) );
 	}
 
 }
