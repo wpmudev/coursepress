@@ -234,7 +234,8 @@ class CoursePress_Data_Email {
 		 *
 		 * @param (bool) $send
 		 **/
-		if ( ( new CoursePress_Data_Unsubscribe() )->can_send( $type, $args ) ) {
+		$unsubscribe_helper = new CoursePress_Data_Unsubscribe();
+		if ( $unsubscribe_helper->can_send( $type, $args ) ) {
 			return self::process_and_send( $type, $args );
 		}
 
