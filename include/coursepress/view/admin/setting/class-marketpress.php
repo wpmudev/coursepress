@@ -72,7 +72,7 @@ class CoursePress_View_Admin_Setting_MarketPress {
 								value="1" />
 							<?php esc_html_e( 'Use MarketPress to sell courses', 'CP_TD' ); ?>
 						</label>
-						<p class="description"><?php _e( 'If checked, MarketPress will be use for selling courses', 'CP_TD' ) ?></p>
+						<p class="description"><?php _e( 'If checked, MarketPress will be used for selling courses', 'CP_TD' ) ?></p>
 </td>
 					</tr>
 					<tr>

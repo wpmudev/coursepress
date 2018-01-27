@@ -556,7 +556,7 @@ class CoursePress_Data_Shortcode_Student {
 				</h3>
 			</div>
             <div class="bbm-modal__section"><?php
-			printf( '<p>%s</p>', esc_html__( 'A passcode is required to enroll. Click below to back to course.', 'CP_TD' ) );
+			printf( '<p>%s</p>', esc_html__( 'A passcode is required to enroll. Click below to go back to the course.', 'CP_TD' ) );
 ?>
                     <a href="<?php echo get_permalink( CoursePress_Helper_Utility::the_course( true ) ) . CoursePress_Core::get_slug( 'units' ); ?>"><?php _e( 'Go back to course!', 'CP_TD' ); ?></a>
 			</div>

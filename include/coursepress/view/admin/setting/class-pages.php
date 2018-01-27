@@ -69,7 +69,7 @@ class CoursePress_View_Admin_Setting_Pages extends CoursePress_View_Admin_Settin
 		$content .= self::row(
 			__( 'Student Dashboard', 'CP_TD' ),
 			$page_dropdowns['student_dashboard'],
-			__( 'Select page where student can view courses.', 'CP_TD' )
+			__( 'Select a page where students can view courses.', 'CP_TD' )
 		);
 
 		/**
@@ -78,7 +78,7 @@ class CoursePress_View_Admin_Setting_Pages extends CoursePress_View_Admin_Settin
 		$content .= self::row(
 			__( 'Student Settings', 'CP_TD' ),
 			$page_dropdowns['student_settings'],
-			__( 'Select page where student can change accont settings.', 'CP_TD' )
+			__( 'Select a page where students can change their account settings.', 'CP_TD' )
 		);
 
 		/**
@@ -87,7 +87,7 @@ class CoursePress_View_Admin_Setting_Pages extends CoursePress_View_Admin_Settin
 		$content .= self::row(
 			__( 'Login', 'CP_TD' ),
 			$page_dropdowns['login'],
-			__( 'Select page where student can login.', 'CP_TD' )
+			__( 'Select a page where students can login.', 'CP_TD' )
 		);
 
 		/**
@@ -96,7 +96,7 @@ class CoursePress_View_Admin_Setting_Pages extends CoursePress_View_Admin_Settin
 		$content .= self::row(
 			__( 'Signup', 'CP_TD' ),
 			$page_dropdowns['signup'],
-			__( 'Select page where student can create an accont.', 'CP_TD' )
+			__( 'Select a page where students can create an account.', 'CP_TD' )
 		);
 
 		/**
@@ -105,7 +105,7 @@ class CoursePress_View_Admin_Setting_Pages extends CoursePress_View_Admin_Settin
 		$content .= self::row(
 			__( 'Instructor', 'CP_TD' ),
 			$page_dropdowns['instructor'],
-			__( 'Select page where we display instructor profile.', 'CP_TD' )
+			__( 'Select a page where we display the instructor profile.', 'CP_TD' )
 		);
 
 		/**
@@ -114,7 +114,7 @@ class CoursePress_View_Admin_Setting_Pages extends CoursePress_View_Admin_Settin
 		$content .= self::row(
 			__( 'Enrollment Process Page', 'CP_TD' ),
 			$page_dropdowns['enrollment'],
-			sprintf( __( 'Select page where we display enrollment process.', 'CP_TD' ) . '</a>' )
+			sprintf( __( 'Select a page where we display the enrollment process.', 'CP_TD' ) . '</a>' )
 		);
 		$content .= self::table_end();
 		return $content;
