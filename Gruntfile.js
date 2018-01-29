@@ -60,8 +60,8 @@ module.exports = function(grunt) {
 				'2.0/themes/.*',    // External module.,
 				'2.0/campus/*',
 				'2.0/premium/',
-                '.idea/',
-                '.sass-cache/'
+				'.idea/',
+				'.sass-cache/'
 			],
 			pot_dir: '/languages/',  // With trailing slash.
 			textdomain_pro: 'cp',   // Campus uses same textdomain.
@@ -108,6 +108,7 @@ module.exports = function(grunt) {
 			pro_2: [
 				{ match: /CoursePress Base/g, replace: 'CoursePress Pro' },
 				{ match: /BUILDTIME/g, replace: buildtime },
+				{ match: /PLUGIN_VERSION/g, replace: '<%= pkg.version %>' },
 				{ match: /'CP_TD'/g, replace: '\'cp\'' },
 				{ match: /\/\* start:pro \*\//g, replace: '' },
 				{ match: /\/\* end:pro \*\//g, replace: '' },
@@ -131,6 +132,7 @@ module.exports = function(grunt) {
 			free_2: [
 				{ match: /CoursePress Base|CoursePress Pro/g, replace: 'CoursePress' },
 				{ match: /BUILDTIME/g, replace: buildtime },
+				{ match: /PLUGIN_VERSION/g, replace: '<%= pkg.version %>' },
 				{ match: /'CP_TD'/g, replace: '\'cp\'' },
 				{ match: /\/\* start:free \*\//g, replace: '' },
 				{ match: /\/\* end:free \*\//g, replace: '' },
@@ -140,6 +142,7 @@ module.exports = function(grunt) {
 			campus: [
 				{ match: /CoursePress Base/g, replace: 'CoursePress Campus' },
 				{ match: /BUILDTIME/g, replace: buildtime },
+				{ match: /PLUGIN_VERSION/g, replace: '<%= pkg.version %>' },
 				{ match: /'CP_TD'/g, replace: '\'cp\'' },
 				{ match: /\/\* start:campus \*\//g, replace: '' },
 				{ match: /\/\* end:campus \*\//g, replace: '' },
