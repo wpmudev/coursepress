@@ -1,6 +1,6 @@
-/*!  - v2.1.3
+/*!  - v2.1.4
  * https://premium.wpmudev.org/project/coursepress-pro/
- * Copyright (c) 2017; * Licensed GPLv2+ */
+ * Copyright (c) 2018; * Licensed GPLv2+ */
 _.extend( _coursepress_upgrade, {
 	totalCourses: 0,
 	totalSuccess: 0,
