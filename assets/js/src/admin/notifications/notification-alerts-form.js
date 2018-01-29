@@ -42,11 +42,11 @@
 					title = this.$('#alert-title').val(),
 					alert_id = this.$('#alert-id').val(),
 					course_id = this.$('#cp-alert-course').val();
-                                if ( undefined === win.tinymce.editors.alert_content ) {
-                                    content = this.$('#alert_content').val();
-                                } else {
-                                    content = win.tinymce.editors.alert_content.getContent();
-                                }
+				if ( undefined === win.tinymce.editors.alert_content ) {
+					content = this.$('#alert_content').val();
+				} else {
+					content = win.tinymce.editors.alert_content.getContent();
+				}
 				if ( '' !== content && '' !== title && '' !== course_id ) {
 					this.request.set( {
 						'action': 'update_course_alert',
@@ -57,7 +57,8 @@
 					} );
 					this.request.save();
 				}
-                                return false;
+
+				return false;
 			},
 
 			// After creating new alert.
@@ -75,11 +76,11 @@
 
 			// Clear field values.
 			clearForm: function () {
-                                if ( undefined === win.tinymce.editors.alert_content ) {
-                                    this.$('#alert_content').val('');
-                                } else {
-                                    win.tinymce.editors.alert_content.setContent('');
-                                }
+				if ( undefined === win.tinymce.editors.alert_content ) {
+					this.$('#alert_content').val('');
+				} else {
+					win.tinymce.editors.alert_content.setContent('');
+				}
 				this.$('#alert-title').val('');
 				this.$('#alert-id').val('');
 				this.$('#cp-alert-course').val('all');

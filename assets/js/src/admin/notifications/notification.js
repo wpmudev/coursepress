@@ -63,34 +63,34 @@
 			setNotificationPage: function( ev ) {
 				var target = $( ev.currentTarget ),
 					page = target.data('page'),
-                                        alert_id = target.data('id'),
+					alert_id = target.data('id'),
 					tab = target.data('tab');
 
 				this.setPage( page, tab );
-                                //Clear form
-                                $('.cp-alert-cancel').trigger('click');
-                                if ( undefined !== alert_id ) {
-                                    //set existing alert data
-                                    this.request.set( {
-                                        'action': 'get_course_alert',
-                                        'alert_id': alert_id,
-                                    } );
-                                    this.request.save();
-                                }
+				//Clear form
+				$('.cp-alert-cancel').trigger('click');
+				if ( undefined !== alert_id ) {
+					//set existing alert data
+					this.request.set( {
+						'action': 'get_course_alert',
+						'alert_id': alert_id,
+					} );
+					this.request.save();
+				}
 			},
 
-                        //set Alert Data
-                        setAlertData: function( data ) {
-                            this.$('#alert-id').val( data.id );
-                            this.$('#alert-title').val( data.title );
-                            this.$('#cp-alert-course').val( data.course_id ).trigger('change');
+			//set Alert Data
+			setAlertData: function( data ) {
+				this.$('#alert-id').val( data.id );
+				this.$('#alert-title').val( data.title );
+				this.$('#cp-alert-course').val( data.course_id ).trigger('change');
 
-                            if ( undefined === win.tinymce.editors.alert_content ) {
-                                this.$('#alert_content').val( data.content );
-                            } else {
-                                win.tinymce.editors.alert_content.setContent( data.content );
-                            }
-                        },
+				if ( undefined === win.tinymce.editors.alert_content ) {
+					this.$('#alert_content').val( data.content );
+				} else {
+					win.tinymce.editors.alert_content.setContent( data.content );
+				}
+			},
 
 			// Email form page.
 			getEmailsView: function() {
