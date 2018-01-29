@@ -97,7 +97,7 @@ final class CoursePress {
 	);
 
 	public function __construct() {
-		$this->plugin_path = __DIR__ . DIRECTORY_SEPARATOR;
+		$this->plugin_path = dirname(__FILE__) . DIRECTORY_SEPARATOR;
 		$this->plugin_url = plugins_url( 'coursepress/' );
 
 		// Load functions files

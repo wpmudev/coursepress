@@ -158,7 +158,7 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 		global $CoursePress, $CoursePress_Instructor, $wp_query, $CoursePress_Course, $CoursePress_Unit,
 			$_course_module_id, $_course_module, $_course_step, $_coursepress_type_now;
 		$course = false;
-		if ( ! empty( $this->__get( 'course' ) || 'single-course' == $type ) ) {
+		if ( $this->__get( 'course' ) || 'single-course' == $type ) {
 			$CoursePress_Course = $course = coursepress_get_course();
 			if ( ! isset( $course->ID ) ) {
 				return false;
