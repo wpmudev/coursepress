@@ -1,6 +1,6 @@
 /*! CoursePress - v2.1.4
  * https://premium.wpmudev.org/project/coursepress-pro/
- * Copyright (c) 2017; * Licensed GPLv2+ */
+ * Copyright (c) 2018; * Licensed GPLv2+ */
 (function( $ ){
     function update_calendar( date, course_calendar ) {
         var wpajaxurl = window.wpajaxurl ? window.wpajaxurl : '';
