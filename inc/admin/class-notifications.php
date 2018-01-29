@@ -28,6 +28,14 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Page {
 
 		// Initialize parent class.
 		parent::__construct();
+		add_filter( 'coursepress_admin_localize_array', array( $this, 'change_localize_array' ) );
+	}
+
+	function change_localize_array( $localize_array ) {
+		$localize_array['text']['deleting_post'] = __( 'Deleting alert... please wait', 'cp' );
+		$localize_array['text']['delete_post'] = __( 'Are you sure you want to delete this alert?', 'cp' );
+
+		return $localize_array;
 	}
 
 	/**
@@ -48,10 +56,13 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Page {
 			'courses' => $this->get_courses(),
 		);
 
+		$current_status = $this->get_status();
 		// Data for alerts listing.
 		$alert_args = array(
 			'columns' => get_column_headers( $screen ),
-			'notifications' => $this->get_notifications( $count ),
+			'notifications' => $this->get_notifications( $current_status, $count ),
+			'statuses' => coursepress_get_post_statuses( $this->post_type, $current_status, $this->slug ),
+			'current_status' => $current_status,
 			'list_table' => $this->set_pagination( $count, 'coursepress_notifications_per_page' ),
 			'hidden_columns' => get_hidden_columns( $screen ),
 			'page' => $this->slug,
@@ -77,6 +88,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Page {
 
 		// Render templates.
 		coursepress_render( 'views/admin/notifications' );
+		coursepress_render( 'views/tpl/common' );
 		coursepress_render( 'views/tpl/notification-emails', $email_args );
 		coursepress_render( 'views/tpl/notification-alerts', $alert_args );
 		coursepress_render( 'views/tpl/notification-alerts-form', $alert_form_args );
@@ -85,11 +97,12 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Page {
 	/**
 	 * Get the list of notifications.
 	 *
+	 * @param string $current_status Post status
 	 * @param int $count Total count of the notifications (pass by ref.).
 	 *
 	 * @return array Notification objects.
 	 */
-	function get_notifications( &$count = 0 ) {
+	function get_notifications( $current_status, &$count = 0 ) {
 
 		// Set the parameters for pagination.
 		$per_page = $this->items_per_page( 'coursepress_notifications_per_page' );
@@ -99,6 +112,7 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Page {
 			'suppress_filters' => true,
 			'posts_per_page' => $per_page,
 			'paged' => $paged,
+			'post_status' => $current_status,
 		);
 
 		/**
@@ -142,12 +156,16 @@ class CoursePress_Admin_Notifications extends CoursePress_Admin_Page {
 	 *
 	 * @return array
 	 */
-	function get_columns() {
+	function get_columns( $current_status ) {
 
 		$columns = array(
 			'title' => __( 'Notification title', 'cp' ),
 			'course' => __( 'Course', 'cp' ),
 		);
+
+		if ( 'trash' !== $current_status ) {
+			$columns['status'] = __( 'Status', 'cp' );
+		}
 
 		/**
 		 * Trigger to allow custom column values.

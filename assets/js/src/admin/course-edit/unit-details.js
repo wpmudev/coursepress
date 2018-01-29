@@ -113,6 +113,8 @@
                     this.steps = new CoursePress.Unit_Steps({model: this.model}, this );
                     this.steps.$el.appendTo(this.container);
                 }
+
+                this.$('.datepicker').datepicker({dateFormat: 'MM dd, yy' });
             },
 
             toggleFeatureImage: function(ev) {
@@ -150,13 +152,9 @@
                 CoursePress.Events.trigger( 'coursepress:change_unit_title', value, this.model.cid );
             },
 
-            updateUnitCollection: function() {
-                var cid;
-
+            updateUnitCollection: function () {
                 // Set the model back to the collection
-                cid = this.model.cid;
-                this.editCourse.unitList.unitModels[cid] = this.model;
-                this.editCourse.unitList.updateUnitCollection();
+                this.editCourseView.unitList.unitModels[this.model.cid] = this.model;
             }
         });
     });

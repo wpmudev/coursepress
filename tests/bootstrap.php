@@ -1,7 +1,7 @@
 <?php
 ob_start();
 // Set coursepress main location
-define( 'WP_COURSEPRESS_DIR', dirname( __DIR__ ) . '/' );
+define( 'WP_COURSEPRESS_DIR', dirname( dirname(__FILE__) ) . '/' );
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 
 // Setup environment

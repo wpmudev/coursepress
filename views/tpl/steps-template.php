@@ -42,17 +42,17 @@
     <div class="cp-box image-custom-caption {{meta_show_media_caption?'':'inactive'}}">
         <div class="cp-toggle-box">
             <label>
-                <input type="radio" name="meta_caption_field[{{cid}}]" value="media" {{_.checked('media', meta_caption_field)}} class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+                <input type="radio" name="meta_caption_field" value="media" {{_.checked('media', meta_caption_field)}} class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
                 <span class="label"><?php _e( 'Use media caption', 'cp' ); ?></span>
             </label>
         </div>
         <div class="cp-box cp-toggle-box">
             <label>
-                <input type="radio" name="meta_caption_field[{{cid}}]" value="custom" {{_.checked('custom', meta_caption_field)}} class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
+                <input type="radio" name="meta_caption_field" value="custom" {{_.checked('custom', meta_caption_field)}} class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
                 <span class="label"><?php _e( 'Use custom caption', 'cp' ); ?></span>
             </label>
         </div>
-        <input type="text" class="widefat" name="meta_caption_custom_text" value="{{meta_caption_custom_text}}" {{_.disabled(false, 'custom' === meta_caption_field && meta_show_media_caption)}} placeholder="<?php _e( 'Type custom caption here', 'cp' ); ?>" />
+        <input type="text" class="widefat" name="meta_caption_custom_text" value="{{meta_caption_custom_text}}" {{_.disabled(false, 'custom' === meta_caption_field)}} placeholder="<?php _e( 'Type custom caption here', 'cp' ); ?>" />
     </div>
 </script>
 
@@ -157,7 +157,7 @@
 
     <div class="cp-box cp-toggle-box">
         <label>
-            <input type="checkbox" name="meta_assessable" value="1" class="cp-toggle-input" {{_.checked(true, meta_allow_retries)}} /> <span class="cp-toggle-btn"></span>
+            <input type="checkbox" name="meta_allow_retries" value="1" class="cp-toggle-input" {{_.checked(true, meta_allow_retries)}} /> <span class="cp-toggle-btn"></span>
             <span class="label"><?php _e( 'Allow retries', 'cp' ); ?></span>
         </label>
     </div>
@@ -182,7 +182,7 @@
         <div class="cp-flex">
             <?php foreach ( $file_types as $type => $label ) : ?>
             <div class="cp-box cp-toggle-box">
-                <label>
+                <label class="cp-ignore-update-model">
                     <input type="checkbox" name="meta_allowed_file_types" value="<?php echo $type; ?>" {{_.checked('<?php echo $type; ?>', meta_allowed_file_types)}} class="cp-toggle-input" /> <span class="cp-toggle-btn"></span>
                     <span class="label"><?php echo $label ?></span>
                 </label>

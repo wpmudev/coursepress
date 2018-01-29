@@ -57,11 +57,11 @@
                 </div>
                 <div class="cp-box cp-on_date {{'on_date' === meta_unit_availability?'':'inactive'}}">
                     <label class="label"><?php _e( 'Unit availability date', 'cp' ); ?></label>
-                    <input type="text" name="meta_unit_availability_date" class="datepicker" />
+                    <input type="text" name="meta_unit_availability_date" value="{{typeof meta_unit_availability_date !== 'undefined' && meta_unit_availability_date ? meta_unit_availability_date : ''}}" class="datepicker" />
                 </div>
                 <div class="cp-box cp-after_delay {{'after_delay' === meta_unit_availability?'':'inactive'}}">
                     <label class="label"><?php _e( 'Number of days', 'cp' ); ?></label>
-                    <input type="text" name="meta_unit_delay_days" />
+                    <input type="text" name="meta_unit_delay_days" value="{{typeof meta_unit_delay_days !== 'undefined' && meta_unit_delay_days ? meta_unit_delay_days : ''}}" />
                     <p class="description"><?php _e( 'Unit will be available on X days after the course becomes available.', 'cp' ); ?></p>
                 </div>
             </div>
@@ -106,11 +106,40 @@
     <div class="cp-content-box" id="cp-module-steps"></div>
 </script>
 
+<script type="text/template" id="coursepress-move-to-module-popup-tpl">
+    <div class="coursepress-popup-body popup-warning">
+        <div class="coursepress-popup-heading">
+            <h3><?php esc_html_e('Select a Module', 'cp'); ?></h3>
+        </div>
+        <div class="coursepress-popup-content">
+            <# if(_.size(modules)) { #>
+                <?php esc_html_e('Please select the module where you would like this step to be moved.', 'cp'); ?>
+                <p>
+                    <label>
+                        <select name="target_module">
+                            <option></option>
+                            <# _.each( modules, function( module ) { #>
+                                <option value="{{module.id}}">{{ module.title }}</option>
+                            <# }) #>
+                        </select>
+                    </label>
+                </p>
+            <# } else { #>
+                <?php esc_html_e('There are no other modules. Please add a new module and try again.', 'cp'); ?>
+            <# } #>
+        </div>
+        <div class="coursepress-popup-footer">
+            <button type="button" class="cp-btn cp-btn-default cp-btn-cancel"><?php _e('Cancel', 'cp'); ?></button>
+            <button type="button" class="cp-btn cp-btn-active btn-ok">{{window._coursepress.text.ok}}</button>
+        </div>
+    </div>
+</script>
+
 <script type="text/template" id="coursepress-unit-module-list-tpl">
     <ul class="cp-input-group cp-select-list">
         <# _.each( modules, function( module, pos ) { #>
             <# if ( ! module.deleted ) { #>
-            <li class="module-item" data-order="{{pos}}">
+            <li class="module-item" data-order="{{pos}}" data-id="{{module.id}}">
                 <div class="icon-move cp-flex">
                     <div class="module-title"><# if ( '' == module.title ) { #><?php _ex( '[Untitled]', 'module title', 'cp' ); ?><# } else { #>{{module.title}}<# } #></div>
                     <div class="module-description">{{module.mini_desc}}</div>
@@ -243,7 +272,7 @@
                         <td class="column-step" data-module="{{module_id}}" data-unit="{{cid}}">
                             <# if ( module.steps ) { #>
                                 <# _.each( module.steps, function( step ) { #>
-                                    <span class="step-icon step-{{step.module_type || step.get('module_type')}}"></span>
+                                    <span class="step-icon step-{{step.module_type}}"></span>
                                 <#})#>
                             <#}#>
                         </td>

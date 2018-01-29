@@ -43,7 +43,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 			'columns' => $this->columns( $current_status ),
 			'courses' => coursepress_get_accessible_courses( false ),
 			'hidden_columns' => array(),
-			'forums' => $this->get_list( $current_status ),
+			'forums' => $this->get_list( $current_status, $count ),
 			'page' => $this->slug,
 			'search' => $search,
 			'edit_link' => add_query_arg(
@@ -53,8 +53,9 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 				),
 				admin_url( 'admin.php' )
 			),
-			'statuses' => coursepress_get_post_statuses( 'discussion', $current_status, $this->slug ),
+			'statuses' => coursepress_get_post_statuses( $this->post_type, $current_status, $this->slug ),
 			'current_status' => $current_status,
+			'pagination' => $this->set_pagination( $count, 'coursepress_forums_per_page' ),
 		);
 		coursepress_render( 'views/admin/forums', $args );
 		coursepress_render( 'views/tpl/common' );
@@ -119,7 +120,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 		coursepress_render( 'views/admin/footer-text' );
 	}
 
-	public function get_list( $current_status ) {
+	public function get_list( $current_status, &$count = 0 ) {
 		/**
 		 * search
 		 */
@@ -127,17 +128,16 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 		/**
 		 * Per Page
 		 */
-		$per_page = $this->get_per_page();
-		$per_page = $this->get_items_per_page( 'coursepress_forums_per_page', $per_page );
+		$per_page = $this->items_per_page( 'coursepress_forums_per_page' );
 		/**
 		 * Pagination
 		 */
 		$current_page = $this->get_pagenum();
-		$offset = ( $current_page - 1 ) * $per_page;
+		$paged = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
 		$post_args = array(
 			'post_type' => $this->post_type,
 			'posts_per_page' => $per_page,
-			'paged' => $current_page,
+			'paged' => $paged,
 			's' => $s,
 			'post_status' => $current_status,
 		);
@@ -155,6 +155,7 @@ class CoursePress_Admin_Forums extends CoursePress_Admin_Page {
 			);
 		}
 		$wp_query = new WP_Query( $post_args );
+		$count = $wp_query->found_posts;
 		$this->items = array();
 		$base_url = add_query_arg( 'page', $this->slug, admin_url( 'admin.php' ) );
 		foreach ( $wp_query->posts as $one ) {
