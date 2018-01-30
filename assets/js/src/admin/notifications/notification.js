@@ -11,8 +11,8 @@
 
 		Notification = CoursePress.View.extend( {
 			el: $( '#coursepress-notifications' ),
-			currentPage: 'emails',
-			currentTab: 'emails',
+			currentPage: 'alerts_form',
+			currentTab: 'alerts_form',
 			events: {
 				'click .cp-notification-menu-item': 'setNotificationPage',
 				'click .cp_edit_alert': 'setNotificationPage',

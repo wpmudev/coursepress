@@ -1034,8 +1034,9 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 		// Check if required values are set.
 		if ( ! empty( $request->course_id ) && ! empty( $request->title ) && ! empty( $request->content ) ) {
-			$alert_id = !empty( $request->alert_id ) ? $request->alert_id : '' ;
-			$created = coursepress_update_course_alert( $request->course_id, $request->title, $request->content, $alert_id );
+			$alert_id = ! empty( $request->alert_id ) ? $request->alert_id : '' ;
+			$receivers = ! empty( $request->receivers ) ? $request->receivers : '' ;
+			$created = coursepress_update_course_alert( $request->course_id, $request->title, $request->content, $receivers, $alert_id );
 		}
 
 		// If alert inserted return success response, else fail.
@@ -1292,5 +1293,33 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 		// Send error if failed.
 		wp_send_json_error( array( 'message' => __( 'Oops! Could not duplicate the course.', 'cp' ) ) );
+	}
+
+	/**
+	 * Get units for a course.
+	 *
+	 * @param $request Request data.
+	 */
+	public function get_alert_units( $request ) {
+
+		$units = array();
+
+		// If course id and status is not empty, attempt to change status.
+		if ( ! empty( $request->course_id ) ) {
+			$course_units = coursepress_get_units( $request->course_id );
+			foreach ( $course_units as $unit_id ) {
+				$units[] = array(
+					'id' => $unit_id,
+					'name' => get_the_title( $unit_id )
+				);
+			}
+		}
+
+		// If status changed, return success response, else fail.
+		if ( ! empty( $units ) ) {
+			wp_send_json_success( $units );
+		} else {
+			wp_send_json_error();
+		}
 	}
 }

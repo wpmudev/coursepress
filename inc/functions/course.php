@@ -1593,11 +1593,12 @@ function coursepress_get_course_object( $post_id ) {
  * @param int $course_id Course ID.
  * @param string $title Alert title.
  * @param string $content Alert content.
+ * @param string $receivers Receivers.
  * @param string $alert_id Alert ID.
  *
  * @return int alert ID.
  */
-function coursepress_update_course_alert( $course_id, $title, $content, $alert_id ) {
+function coursepress_update_course_alert( $course_id, $title, $content, $receivers = '', $alert_id ) {
 	$action = !empty( $alert_id ) ? 'update' : 'create' ;
 
 	$capable = false;
@@ -1651,6 +1652,10 @@ function coursepress_update_course_alert( $course_id, $title, $content, $alert_i
 
 	// Set alert course id.
 	update_post_meta( $alert_id, 'alert_course', $course_id );
+	// Set alert receivers.
+	if ( ! empty( $receivers ) ) {
+		update_post_meta( $alert_id, 'receivers', $receivers );
+	}
 
 	/**
 	 * Perform actions when alert insertion was successful.
