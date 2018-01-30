@@ -28,12 +28,12 @@ class CoursePress_Data_Forum {
 		}
 		$args = array(
 			'post_type' => $this->post_type,
+			'post_parent' => $_POST['course_id'],
 			'post_author' => get_current_user_id(),
 			'post_content' => CoursePress_Utility::filter_content( $_POST['content'] ),
 			'post_status' => 'publish',
 			'post_title' => CoursePress_Utility::filter_content( $_POST['title'] ),
 			'meta_input' => array(
-				'course_id' => $_POST['course_id'],
 				'unit_id' => $_POST['unit_id'],
 			),
 		);
@@ -44,8 +44,8 @@ class CoursePress_Data_Forum {
 	}
 
 	public function insert_comment( $id, $comment ) {
-		$is_course = coursepress_is_course( $comment->comment_post_ID );
-		if ( ! $is_course ) {
+		$is_discussion = coursepress_is_type( $comment->comment_post_ID, 'discussion' );
+		if ( ! $is_discussion ) {
 			return;
 		}
 		wp_set_comment_status( $id, 'approve' );
@@ -72,7 +72,7 @@ class CoursePress_Data_Forum {
 		if ( ! is_a( $comment, 'WP_Comment' ) ) {
 			return $location;
 		}
-		$course_id = (int) get_post_meta( $comment->comment_post_ID, 'course_id', true );
+		$course_id = get_post_field( 'post_parent', $comment->comment_post_ID );
 		$course = coursepress_get_course( $course_id );
 		$post_type = get_post_type( $comment->comment_post_ID );
 		if ( $this->post_type === $post_type ) {
