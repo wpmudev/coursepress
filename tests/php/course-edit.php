@@ -2,7 +2,7 @@
 /**
  * Test Course Edit
  **/
-$data_dir = dirname( __DIR__ ) . '/data/';
+$data_dir = dirname( dirname(__FILE__) ) . '/data/';
 
 require_once $data_dir . 'course.php';
 

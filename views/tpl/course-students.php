@@ -143,7 +143,7 @@
                     </tr>
                 </thead>
                 <tbody id="invited-list">
-                    <tr class="no-invites <?php echo empty( (array) $invited_students ) ? '' : 'inactive'; ?>">
+                    <tr class="no-invites <?php echo empty( $invited_students ) ? '' : 'inactive'; ?>">
                         <td colspan="4"><?php esc_html_e( 'No invited students found...', 'cp' ); ?></td>
                     </tr>
                 </tbody>

@@ -1172,7 +1172,7 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 
 		$success = false;
 		// We need course id and valid email.
-		if ( ! empty( $request->course_id && is_email( $request->email ) ) ) {
+		if ($request->course_id && is_email($request->email)) {
 			$success = coursepress_remove_student_invite( $request->course_id, $request->email );
 		}
 

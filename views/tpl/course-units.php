@@ -57,11 +57,11 @@
                 </div>
                 <div class="cp-box cp-on_date {{'on_date' === meta_unit_availability?'':'inactive'}}">
                     <label class="label"><?php _e( 'Unit availability date', 'cp' ); ?></label>
-                    <input type="text" name="meta_unit_availability_date" class="datepicker" />
+                    <input type="text" name="meta_unit_availability_date" value="{{typeof meta_unit_availability_date !== 'undefined' && meta_unit_availability_date ? meta_unit_availability_date : ''}}" class="datepicker" />
                 </div>
                 <div class="cp-box cp-after_delay {{'after_delay' === meta_unit_availability?'':'inactive'}}">
                     <label class="label"><?php _e( 'Number of days', 'cp' ); ?></label>
-                    <input type="text" name="meta_unit_delay_days" />
+                    <input type="text" name="meta_unit_delay_days" value="{{typeof meta_unit_delay_days !== 'undefined' && meta_unit_delay_days ? meta_unit_delay_days : ''}}" />
                     <p class="description"><?php _e( 'Unit will be available on X days after the course becomes available.', 'cp' ); ?></p>
                 </div>
             </div>
@@ -272,7 +272,7 @@
                         <td class="column-step" data-module="{{module_id}}" data-unit="{{cid}}">
                             <# if ( module.steps ) { #>
                                 <# _.each( module.steps, function( step ) { #>
-                                    <span class="step-icon step-{{step.module_type || step.get('module_type')}}"></span>
+                                    <span class="step-icon step-{{step.module_type}}"></span>
                                 <#})#>
                             <#}#>
                         </td>

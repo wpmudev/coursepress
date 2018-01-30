@@ -167,18 +167,23 @@
                     this.model.set( first, value );
                 }
             },
-            previewCertificate: function() {
-                var model = new CoursePress.Request( this.model.toJSON() );
-                model.set( 'action', 'preview_certificate' );
-                model.on( 'coursepress:success_preview_certificate', this.openPreview, this );
+            previewCertificate: function (ev) {
+                var previewButton, model;
+
+                previewButton = this.$(ev.currentTarget);
+                previewButton.prop('disabled', true);
+
+                model = new CoursePress.Request(this.model.toJSON());
+                model.set('action', 'preview_certificate');
+                model.on('coursepress:success_preview_certificate', function (data) {
+                    if (data.pdf) {
+                        this.preview = new CertificatePreview(data);
+                    } else {
+                        // @todo: show friendly error
+                    }
+                    previewButton.prop('disabled', false);
+                }, this);
                 model.save();
-            },
-            openPreview: function( data ) {
-                if ( data.pdf ) {
-                    this.preview = new CertificatePreview(data);
-                } else {
-                    // @todo: show friendly error
-                }
             }
         });
     });

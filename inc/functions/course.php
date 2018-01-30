@@ -104,6 +104,17 @@ function coursepress_get_courses( $args = array(), &$count = 0 ) {
 		}
 	}
 
+	// If filtered by category.
+	if ( ! empty( $_GET['course_category'] ) ) {
+		$args['tax_query'] = array(
+			array(
+				'taxonomy' => 'course_category',
+				'field' => 'term_id',
+				'terms' => intval( $_GET['course_category'] ),
+			),
+		);
+	}
+
 	$args = wp_parse_args( array(
 		'post_type' => $CoursePress_Core->__get( 'course_post_type' ),
 		'suppress_filters' => true,
