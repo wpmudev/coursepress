@@ -144,8 +144,8 @@ final class CoursePress_Core extends CoursePress_Utility {
 	 * @return void
 	 */
 	function init_unsubscribe() {
-
-		( new CoursePress_Data_Unsubscribe() )->init();
+		$unsubscribe_helper = new CoursePress_Data_Unsubscribe();
+		$unsubscribe_helper->init();
 	}
 
 	function add_query_vars( $vars ) {

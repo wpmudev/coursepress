@@ -88,7 +88,9 @@
                     var settings = {
                         frame: 'select',
                         title: frameTitle,
-                        library: ['image']
+                        library: {
+                            type: ['image']
+                        }
                     };
 
                     this.frame = new wp.media(settings);
