@@ -1294,32 +1294,4 @@ class CoursePress_Admin_Ajax extends CoursePress_Utility {
 		// Send error if failed.
 		wp_send_json_error( array( 'message' => __( 'Oops! Could not duplicate the course.', 'cp' ) ) );
 	}
-
-	/**
-	 * Get units for a course.
-	 *
-	 * @param $request Request data.
-	 */
-	public function get_alert_units( $request ) {
-
-		$units = array();
-
-		// If course id and status is not empty, attempt to change status.
-		if ( ! empty( $request->course_id ) ) {
-			$course_units = coursepress_get_units( $request->course_id );
-			foreach ( $course_units as $unit_id ) {
-				$units[] = array(
-					'id' => $unit_id,
-					'name' => get_the_title( $unit_id )
-				);
-			}
-		}
-
-		// If status changed, return success response, else fail.
-		if ( ! empty( $units ) ) {
-			wp_send_json_success( $units );
-		} else {
-			wp_send_json_error();
-		}
-	}
 }
