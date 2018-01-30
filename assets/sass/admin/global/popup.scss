@@ -144,3 +144,83 @@
     text-transform: uppercase;
   }
 }
+
+body.cp-help-overlay-body {
+  position: relative;
+  height: auto;
+}
+
+.cp-help-overlay {
+  $radius-size: 11px;
+  $background-color: rgba(0, 0, 0, 0.5);
+  
+  &-top,
+  &-left,
+  &-right,
+  &-bottom {
+    position: absolute;
+    background-color: $background-color;
+    z-index: 999;
+  }
+  &-top,
+  &-bottom {
+    &::before,
+    &::after {
+      content: "";
+      display: block;
+      position: absolute;
+      background-repeat: no-repeat;
+      width: $radius-size;
+      height: $radius-size;
+    }
+  }
+  
+  &-left,
+  &-right {
+    height: 100%;
+    top: 0;
+    bottom: 0;
+  }
+  &-top {
+    top: 0;
+
+    &::before,
+    &::after {
+      bottom: -$radius-size;
+    }
+    
+    &::before {
+      left: 0;
+      background-image: radial-gradient(circle at 100% 100%,rgba(0,0,0,0) $radius-size, $background-color $radius-size - 1);
+    }
+
+    &::after {
+      right: 0;
+      background-image: radial-gradient(circle at 0 100%,rgba(0,0,0,0) $radius-size, $background-color $radius-size - 1);
+    }
+  }
+  &-left {
+    left: 0;
+  }
+  &-right {
+    right: 0;
+  }
+  &-bottom {
+    bottom: 0;
+    
+    &::before,
+    &::after {
+      top: -$radius-size;
+    }
+    
+    &::before {
+      left: 0;
+      background-image: radial-gradient(circle at 100% 0,rgba(0,0,0,0) $radius-size, $background-color $radius-size);
+    }
+
+    &::after {
+      right: 0;
+      background-image: radial-gradient(circle at 0 0,rgba(0,0,0,0) $radius-size, $background-color $radius-size);
+    }
+  }
+}
