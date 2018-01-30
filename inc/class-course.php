@@ -68,6 +68,9 @@ class CoursePress_Course extends CoursePress_Utility {
 		$date_keys = array( 'course_start_date', 'course_end_date', 'enrollment_start_date', 'enrollment_end_date' );
 		foreach ( $settings as $key => $value ) {
 			if ( in_array( $key, $date_keys ) ) {
+				if ( preg_match( '/_end_date/', $key ) ) {
+					$value .= ' 23:59:59';
+				}
 				$timestamp = strtotime( $value, $time_now );
 				$value = date_i18n( $date_format, $timestamp );
 				// Add timestamp info
@@ -365,11 +368,9 @@ class CoursePress_Course extends CoursePress_Utility {
 
 	public function get_enrollment_dates( $separator = ' - ' ) {
 		$open_ended = $this->__get( 'enrollment_open_ended' );
-
 		if ( $open_ended ) {
 			return __( 'Anytime', 'cp' );
 		}
-
 		return implode( $separator, array( $this->get_enrollment_start_date(), $this->get_enrollment_end_date() ) );
 	}
 
@@ -379,16 +380,13 @@ class CoursePress_Course extends CoursePress_Utility {
 
 	public function get_course_cost() {
 		$price_html = __( 'FREE', 'cp' );
-
 		if ( $this->__get( 'payment_paid_course' ) ) {
 			$price = $this->__get( 'mp_product_price' );
-
 			/**
 			 * Trigger to allow changes on course cost
 			 */
 			$price_html = apply_filters( 'coursepress_course_cost', $price_html, $price, $this );
 		}
-
 		return $price_html;
 	}
 
@@ -417,12 +415,11 @@ class CoursePress_Course extends CoursePress_Utility {
 		$time_now = $this->date_time_now();
 		$openEnded = $this->__get( 'course_open_ended' );
 		$start_date = $this->__get( 'course_start_date_timestamp' );
-
 		if ( empty( $openEnded )
 			&& $start_date > 0
 			&& $start_date > $time_now ) {
-			return false; }
-
+			return false;
+		}
 		return true;
 	}
 
@@ -435,13 +432,11 @@ class CoursePress_Course extends CoursePress_Utility {
 		$time_now = $this->date_time_now();
 		$openEnded = $this->__get( 'course_open_ended' );
 		$end_date = $this->__get( 'course_end_date_timestamp' );
-
 		if ( empty( $openEnded )
 			&& $end_date > 0
 			&& $end_date < $time_now ) {
 			return true;
 		}
-
 		return false;
 	}
 
@@ -452,21 +447,17 @@ class CoursePress_Course extends CoursePress_Utility {
 	 */
 	public function is_available() {
 		$course_type = $this->__get( 'course_type' );
-
 		if ( 'auto-moderated' == $course_type ) {
 			// Auto-moderated courses are always available
 			return true;
 		}
-
 		$is_available = $this->is_course_started();
-
 		if ( $is_available ) {
 			// Check if the course hasn't ended yet
 			if ( $this->has_course_ended() ) {
 				$is_available = false;
 			}
 		}
-
 		return $is_available;
 	}
 
@@ -488,7 +479,6 @@ class CoursePress_Course extends CoursePress_Utility {
 		 */
 		$time_now = $this->date_time_now();
 		$start_date = $this->__get( 'enrollment_start_date_timestamp' );
-
 		return $start_date < $time_now;
 	}
 
@@ -504,13 +494,13 @@ class CoursePress_Course extends CoursePress_Utility {
 		$enrollment_open = $this->__get( 'enrollment_open_ended' );
 		if ( ! empty( $enrollment_open ) ) {
 			return true;
-			/**
+		}
+		/**
 		 * check is enrollment close date late that Today
 		 */
-		}
 		$time_now = $this->date_time_now( '23:59:59' );
 		$end_date = $this->__get( 'enrollment_end_date_timestamp' );
-		return $end_date > $time_now;
+		return $end_date >= $time_now;
 	}
 
 	/**
@@ -537,25 +527,20 @@ class CoursePress_Course extends CoursePress_Utility {
 	private function _get_instructors() {
 		$id = $this->__get( 'ID' );
 		$instructor_ids = get_post_meta( $id, 'instructor' );
-
 		if ( is_array( $instructor_ids ) ) {
 			$instructor_ids = array_filter( $instructor_ids );
 		}
-
 		if ( ! empty( $instructor_ids ) ) {
 			return $instructor_ids;
 		}
-
 		// Legacy call
 		// @todo: Delete this meta
 		$instructor_ids = get_post_meta( $id, 'instructors', true );
-
 		if ( ! empty( $instructor_ids ) ) {
 			foreach ( $instructor_ids as $instructor_id ) {
 				coursepress_add_course_instructor( $instructor_id, $id );
 			}
 		}
-
 		return $instructor_ids;
 	}
 
@@ -595,7 +580,6 @@ class CoursePress_Course extends CoursePress_Utility {
 	public function get_instructors_link() {
 		$instructors = $this->get_instructors();
 		$links = array();
-
 		if ( ! empty( $instructors ) ) {
 			foreach ( $instructors as $instructor ) {
 				$links[] = $this->create_html(
@@ -607,17 +591,15 @@ class CoursePress_Course extends CoursePress_Utility {
 				);
 			}
 		}
-
 		return $links;
 	}
 
 	private function _get_facilitators() {
 		$id = $this->__get( 'ID' );
 		$facilitator_ids = get_post_meta( $id, 'facilitator' );
-
 		if ( is_array( $facilitator_ids ) && ! empty( $facilitator_ids ) ) {
-			return array_unique( array_filter( $facilitator_ids ) ); }
-
+			return array_unique( array_filter( $facilitator_ids ) );
+		}
 		return array();
 	}
 
@@ -645,7 +627,6 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return int[] IDs of enrolled students
 	 */
 	public function get_student_ids() {
-
 		global $wpdb;
 		$sql = "SELECT student_id FROM {$this->student_table} WHERE course_id = %d";
 		$course_id = $this->__get( 'ID' );
@@ -660,7 +641,6 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return array IDs of all the users that are certified for this course.
 	 */
 	public function get_certified_student_ids() {
-
 		global $wpdb;
 		$sql = $wpdb->prepare( "select post_author from {$wpdb->posts} where post_type = %s and post_parent = %d", 'cp_certificate', $this->ID );
 		return $wpdb->get_col( $sql );
@@ -853,10 +833,8 @@ class CoursePress_Course extends CoursePress_Utility {
 	 * @return string
 	 */
 	public function get_notifications_url() {
-
 		$course_url = $this->get_permalink();
 		$notifications_slug = coursepress_get_setting( 'slugs/notifications', 'notifications' );
-
 		return $course_url . trailingslashit( $notifications_slug );
 	}
 
@@ -1127,7 +1105,6 @@ class CoursePress_Course extends CoursePress_Utility {
 		$post_title = get_the_title( $post_id );
 		$this->save_course_number( $post_id, $post_title, array( $post_id ) );
 	}
-
 
 	public function replace_placeholders( $content, $post_id, $user_id = 0 ) {
 		if ( ! coursepress_is_course( $post_id ) ) {

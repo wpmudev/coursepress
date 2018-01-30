@@ -155,7 +155,7 @@ function coursepress_get_courses( $args = array(), &$count = 0 ) {
 
 function coursepress_get_post_statuses( $type, $current_status, $slug ) {
 	$cp_type = get_cp_type( $type );
-	$post_type = !empty( $cp_type ) ? $cp_type : $type;
+	$post_type = ! empty( $cp_type ) ? $cp_type : $type;
 	$count = wp_count_posts( $post_type );
 	$post_status = array(
 		'all' => 0,
@@ -223,7 +223,7 @@ function coursepress_status_title( $status ) {
 		'private' => __( 'Private', 'cp' ),
 		'trash'   => __( 'Trash', 'cp' ),
 	);
-	$title = !empty( $available_statuses[ $status ] ) ? $available_statuses[ $status ] : '';
+	$title = ! empty( $available_statuses[ $status ] ) ? $available_statuses[ $status ] : '';
 
 	return $title;
 }
@@ -372,10 +372,10 @@ function coursepress_get_course_enrollment_button( $course_id = 0, $args = array
 		$link_text = $args['access_text'];
 		$button_option = false;
 	} else {
-		if ( $course->user_can_enroll() ) {
+		$user_can_enroll = $course->user_can_enroll();
+		if ( $user_can_enroll ) {
 			$enrollment_type = $course->__get( 'enrollment_type' );
 			$button_option = 'enroll';
-
 			$link_text = $args['enroll_text'];
 			$link_args = array(
 				'course_id' => $course_id,
@@ -446,22 +446,17 @@ function coursepress_get_course_enrollment_button( $course_id = 0, $args = array
 			}
 		}
 	}
-
 	$attr = array(
 		'class' => 'course-enroll-button ' . $args['class'],
 	);
-
 	if ( ! empty( $link ) ) {
 		$attr['href'] = $link;
 		$attr['_wpnonce'] = wp_create_nonce( 'coursepress_nonce' );
-
 		$button = coursepress_create_html( 'a', $attr, $link_text );
 	} else {
 		$button = coursepress_create_html( 'span', $attr, $link_text );
 	}
-
 	$button = apply_filters( 'coursepress_enroll_button', $button, $course_id, $user->ID, $button_option );
-
 	echo $button;
 }
 
@@ -1392,7 +1387,7 @@ function get_cp_type_title( $post_type ) {
 		'notification' => __( 'Notification', 'cp' ),
 		'discussions' => __( 'Discussion', 'cp' ),
 	);
-	$title = !empty( $titles[ $post_type ] ) ? $titles[ $post_type ] : '';
+	$title = ! empty( $titles[ $post_type ] ) ? $titles[ $post_type ] : '';
 
 	return $title;
 }
@@ -1422,7 +1417,7 @@ function get_cp_types() {
  */
 function get_cp_type( $name ) {
 	$post_types = get_cp_types();
-	$post_type = $name && !empty( $post_types[ $name ] ) ? $post_types[ $name ] : false;
+	$post_type = $name && ! empty( $post_types[ $name ] ) ? $post_types[ $name ] : false;
 
 	return $post_type;
 }
@@ -1462,7 +1457,7 @@ function coursepress_change_post( $post_id, $status, $type ) {
 	// Get author of the current post.
 	$author = get_post_field( 'post_author', $post_id );
 
-	if ( !coursepress_is_type( $post_id, $type ) ) {
+	if ( ! coursepress_is_type( $post_id, $type ) ) {
 		$capable = false;
 	} elseif ( current_user_can( 'coursepress_change_' . $type . '_status_cap' ) ) {
 		// If current user is capable of updating any notification statuses.
@@ -1609,7 +1604,7 @@ function coursepress_get_course_object( $post_id ) {
  * @return int alert ID.
  */
 function coursepress_update_course_alert( $course_id, $title, $content, $alert_id ) {
-	$action = !empty( $alert_id ) ? 'update' : 'create' ;
+	$action = ! empty( $alert_id ) ? 'update' : 'create' ;
 
 	$capable = false;
 	// Get the course.
@@ -1646,7 +1641,7 @@ function coursepress_update_course_alert( $course_id, $title, $content, $alert_i
 		'post_status' => 'publish',
 		'post_type' => 'cp_notification',
 	);
-	if ( !empty( $alert_id ) ) {
+	if ( ! empty( $alert_id ) ) {
 		$post['ID'] = $alert_id;
 	}
 
