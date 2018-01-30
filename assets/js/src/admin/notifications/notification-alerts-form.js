@@ -53,9 +53,9 @@
 				// Editor content.
 				var content,
 					title = this.$('#alert-title').val(),
+					course_id = this.$('#cp-alert-course').val(),
 					receivers = this.$('#cp-alert-receivers').val(),
-					alert_id = this.$('#alert-id').val(),
-					course_id = this.$('#cp-alert-course').val();
+					alert_id = this.$('#alert-id').val();
 				if ( undefined === win.tinymce.editors.alert_content ) {
 					content = this.$('#alert_content').val();
 				} else {
