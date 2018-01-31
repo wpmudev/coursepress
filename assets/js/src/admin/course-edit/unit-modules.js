@@ -366,6 +366,15 @@
                     module.data('order', x);
                 }, this );
 
+                // At this point the deleted modules have been removed from the 'modules' array because their markup doesn't exist on the page.
+                // Let's put them back so that modules can be deleted properly server side.
+                _.each(this.modules, function (module) {
+                    if(module.deleted) {
+                        x += 1;
+                        modules[x] = module;
+                    }
+                });
+
                 this.modules = modules;
                 this.unitModel.model.set('modules', this.modules);
             },
