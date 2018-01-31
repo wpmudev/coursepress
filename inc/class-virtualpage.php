@@ -185,43 +185,44 @@ final class CoursePress_VirtualPage extends CoursePress_Utility {
 				$unit_id = $this->get_post_id_by_slug( $unit, 'unit', $CoursePress_Course->ID );
 				if ( empty( $unit_id ) ) {
 					return false;
-				} else {
-					$CoursePress_Unit = new CoursePress_Unit( $unit_id );
-					$this->add_breadcrumb( $CoursePress_Unit->get_the_title(), $CoursePress_Unit->get_unit_url() );
-					$_course_module_id = 1; // always start module with 1
-					$_coursepress_type_now = 'unit';
-					$module = $this->__get( 'module' );
+				}
+				$CoursePress_Unit = new CoursePress_Unit( $unit_id );
+				$this->add_breadcrumb( $CoursePress_Unit->get_the_title(), $CoursePress_Unit->get_unit_url() );
+				$_course_module_id = 1; // always start module with 1
+				$_coursepress_type_now = 'unit';
+				$module = $this->__get( 'module' );
+				if ( ! empty( $module ) ) {
+					$module = $CoursePress_Unit->get_module_by_slug( $module, 'module' );
 					if ( ! empty( $module ) ) {
-						$module = $CoursePress_Unit->get_module_by_slug( $module, 'module' );
-						if ( ! empty( $module ) ) {
-							$_coursepress_type_now = 'module';
-							$_course_module_id = $module['id'];
-							$_course_module = $module;
-							$this->add_breadcrumb( $module['title'], $module['url'] );
-						}
-					} else {
-						$_course_module = $CoursePress_Unit->get_module_by_id( 1 );
+						$_coursepress_type_now = 'module';
+						$_course_module_id = $module['id'];
+						$_course_module = $module;
+						$this->add_breadcrumb( $module['title'], $module['url'] );
 					}
-					if ( $with_modules ) {
-						$step = $this->__get( 'step' );
+				} else {
+					$_course_module = $CoursePress_Unit->get_module_by_id( 1 );
+				}
+				if ( $with_modules ) {
+					$step = $this->__get( 'step' );
+				} else {
+					$this->__set( 'type', 'step' );
+					$_coursepress_type_now = 'step';
+					$step = $this->__get( 'module' );
+				}
+				$step_id = null;
+				if ( ! empty( $step ) ) {
+					$step_id = $this->get_post_id_by_slug( $step, 'module', $unit_id );
+					if ( empty( $step_id ) ) {
+						return false;
 					} else {
-						$this->__set( 'type', 'step' );
 						$_coursepress_type_now = 'step';
-						$step = $this->__get( 'module' );
-					}
-					if ( ! empty( $step ) ) {
-						$step_id = $this->get_post_id_by_slug( $step, 'module', $unit_id );
-						if ( empty( $step_id ) ) {
-							return false;
-						} else {
-							$_coursepress_type_now = 'step';
-							$_course_step = $stepClass = $CoursePress_Unit->get_step_by_id( $step_id );
-							if ( ! is_wp_error( $stepClass ) ) {
-								$this->add_breadcrumb( $stepClass->get_the_title(), $stepClass->get_permalink() );
-							}
+						$_course_step = $stepClass = $CoursePress_Unit->get_step_by_id( $step_id );
+						if ( ! is_wp_error( $stepClass ) ) {
+							$this->add_breadcrumb( $stepClass->get_the_title(), $stepClass->get_permalink() );
 						}
 					}
 				}
+				do_action( 'coursepress_get_template', $_coursepress_type_now, $course->ID, $unit_id, $step_id, $_course_module_id );
 			break;
 			case 'completion':
 				// Validate here
