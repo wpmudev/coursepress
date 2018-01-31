@@ -86,7 +86,7 @@
                         </div>
                         <div class="cp-div-flex cp-pad-left">
                             <span class="course-title-tag"><?php _e( 'End Date', 'cp' ); ?></span>
-                            <input type="text" name="meta_course_end_date" class="datepicker" {{ true === meta_course_open_ended? 'disabled="disabled"':'' }} value="{{course_end_date}}" />
+                            <input type="text" name="meta_course_end_date" class="datepicker" {{ true == meta_course_open_ended ? 'disabled="disabled"':'' }} value="{{course_end_date}}" />
                             <i class="fa fa-calendar"></i>
                         </div>
                     </div>
