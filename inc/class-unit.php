@@ -360,6 +360,12 @@ class CoursePress_Unit extends CoursePress_Utility {
 			if ( ! empty( $pages ) ) {
 				foreach ( $pages as $page_id => $page_title ) {
 					$page_number = str_replace( 'page_', '', $page_id );
+					/**
+					 * Set if not exists!
+					 */
+					if ( ! isset( $page_descriptions[ $page_id ] ) ) {
+						$page_descriptions[ $page_id ] = '';
+					}
 					$modules[ $page_number ] = array(
 						'title' => $page_title,
 						'show_description' => true,
