@@ -358,6 +358,19 @@
         </div>
     </div>
 </script>
+<script type="text/template" id="coursepress-help-overlay-tpl">
+    <div class="coursepress-popup-body">
+        <div class="coursepress-popup-heading">
+            <div class="coursepress-popup-title">
+                <h3>{{popup_title}}</h3>
+            </div>
+            <span class="cp-modal-close cp-close"><?php _e('Skip Help', 'cp'); ?></span>
+        </div>
+        <div class="coursepress-popup-content">
+            <p>{{popup_content}}</p>
+        </div>
+    </div>
+</script>
 
 <script type="text/template" id="coursepress-unit-help-4-tpl">
     <div class="coursepress-popup-body">

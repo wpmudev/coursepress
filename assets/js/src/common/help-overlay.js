@@ -5,6 +5,8 @@
 
 	CoursePress.Define('HelpOverlay', function ($) {
 		return CoursePress.View.extend({
+			template_id: 'coursepress-help-overlay-tpl',
+            className: 'coursepress-modal cp-help-overlay-content',
 			topPane: false,
 			rightPane: false,
 			bottomPane: false,
@@ -13,12 +15,13 @@
 			container: false,
 			options: false,
 
-			initialize: function (targetEl, container, options) {
+			initialize: function (targetEl, model, options) {
 				this.targetEl = targetEl;
-				this.container = container;
+				this.model = model;
 				this.options = _.extend(options || {}, {
-					padding: 20
+					padding: 15
 				});
+				this.container = $('body');
 
 				$(window).off('resize').on('resize', _.bind(this.readjust, this));
 
@@ -33,16 +36,41 @@
 				this.removePanes();
 				this.createPanes();
 				this.setPaneDimensions();
+				this.displayPopup();
 				this.scrollToTargetEl();
+			},
+
+			displayPopup: function () {
+				var insideRightPane, popupBody;
+
+				this.$el.html('');
+				CoursePress.View.prototype.render.apply(this);
+				insideRightPane = this.rightPaneHasRoom();
+				this.$el.appendTo(insideRightPane ? this.rightPane : this.bottomPane);
+
+				popupBody = this.$el.find('.coursepress-popup-body');
+				popupBody.addClass(insideRightPane ? 'position-right' : 'position-bottom');
+				if (insideRightPane) {
+					popupBody.css('margin-top', this.topPane.height());
+				}
+			},
+
+			rightPaneHasRoom: function () {
+				var rightPaneWidth, bottomPaneWidth;
+
+				rightPaneWidth = this.rightPane.width();
+				bottomPaneWidth = this.bottomPane.width();
+
+				return rightPaneWidth > bottomPaneWidth;
 			},
 
 			removePanes: function () {
 				this.container.removeClass('cp-help-overlay-body');
 
-				this.container.find('.cp-help-overlay-top').remove();
-				this.container.find('.cp-help-overlay-right').remove();
-				this.container.find('.cp-help-overlay-bottom').remove();
-				this.container.find('.cp-help-overlay-left').remove();
+				this.topPane.remove();
+				this.rightPane.remove();
+				this.bottomPane.remove();
+				this.leftPane.remove();
 			},
 
 			createPanes: function () {
@@ -59,8 +87,8 @@
 
 				topPaneHeight = this.targetEl.offset().top;
 				leftPaneWidth = this.targetEl.offset().left;
-				targetElWidth = this.targetEl.width();
-				targetElHeight = this.targetEl.height();
+				targetElWidth = this.targetEl.outerWidth();
+				targetElHeight = this.targetEl.outerHeight();
 
 				// Adjust top pane height for admin bar
 				topPaneHeight = topPaneHeight - $('#wpadminbar').height();

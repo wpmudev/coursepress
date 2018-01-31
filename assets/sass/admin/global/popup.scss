@@ -153,14 +153,15 @@ body.cp-help-overlay-body {
 .cp-help-overlay {
   $radius-size: 11px;
   $background-color: rgba(0, 0, 0, 0.5);
-  
+  $z-index: 999;
+
   &-top,
   &-left,
   &-right,
   &-bottom {
     position: absolute;
     background-color: $background-color;
-    z-index: 999;
+    z-index: $z-index;
   }
   &-top,
   &-bottom {
@@ -221,6 +222,38 @@ body.cp-help-overlay-body {
     &::after {
       right: 0;
       background-image: radial-gradient(circle at 0 0,rgba(0,0,0,0) $radius-size, $background-color $radius-size);
+    }
+  }
+
+  &-content {
+    background: transparent;
+    z-index: $z-index + 1;
+    position: relative;
+
+    .coursepress-popup-body {
+      background-color: #F2FBFF;
+      margin: 0;
+    
+      &.position-bottom {
+        margin: 30px auto;
+      }
+      
+      &.position-right {
+        margin-left: 30px;
+      }
+
+      .cp-close {
+        position: relative;
+        z-index: 2;
+        text-transform: uppercase;
+        margin-top: -20px;
+        color: #17A8E3;
+        cursor: pointer;
+
+        &:after {
+          display: none;
+        }
+      }
     }
   }
 }
