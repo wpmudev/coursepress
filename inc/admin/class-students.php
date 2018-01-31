@@ -185,7 +185,7 @@ class CoursePress_Admin_Students extends CoursePress_Admin_Page {
 			'student_id' => $student_id,
 			'student'    => $student,
 			'courses'    => $enrolled_course_ids,
-			'pagination' => $this->get_pagination_list_table( $total_courses )
+			'pagination' => $this->get_pagination_list_table( $total_courses ),
 		);
 		coursepress_render( 'views/admin/student-profile', $args );
 	}

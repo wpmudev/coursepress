@@ -119,6 +119,13 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 		add_filter( 'user_has_cap', array( $this, 'map_coursepress_user_cap' ), 99, 4 );
 		// Delete student data whenever a user is deleted
 		add_action( 'delete_user', array( $this, 'delete_student_data' ) );
+		/**
+		 * log user activity
+		 */
+		add_action( 'wp_login', array( $this, 'log_student_activity_login' ), 10, 2 );
+		add_action( 'coursepress_add_student', array( $this, 'log_student_activity_enroll' ), 10, 2 );
+		add_action( 'coursepress_get_template', array( $this, 'log_student_activity_course' ), 10, 5 );
+		add_action( 'coursepress_record_response', array( $this, 'log_student_activity_answer' ), 10, 2 );
 	}
 
 	public function add_instructor_meta( $user_id, $course_id ) {
@@ -262,5 +269,100 @@ final class CoursePress_Data_Users extends CoursePress_Utility {
 				coursepress_delete_student( $user_id, $course_id );
 			}
 		}
+	}
+
+	/**
+	 * Save last Student Activity,
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param integer $user_id Student ID.
+	 * @param string $kind Activity kind.
+	 * @param integer $extra_id Extra id.
+	 */
+	public static function log_student_activity( $kind = 'login', $user_id = 0, $extra_id = 0 ) {
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		if ( empty( $user_id ) ) {
+			return;
+		}
+		$success = add_user_meta( $user_id, 'latest_activity', time(), true );
+		if ( ! $success ) {
+			update_user_meta( $user_id, 'latest_activity', time() );
+		}
+		$allowed_kinds = array(
+			'course_module_seen',
+			'course_seen',
+			'course_unit_seen',
+			'course_step_seen',
+			'enrolled',
+			'login',
+			'module_answered',
+			'unknown',
+		);
+		if ( ! in_array( $kind, $allowed_kinds ) ) {
+			$kind = 'unknown';
+		}
+		$success = add_user_meta( $user_id, 'latest_activity_kind', $kind, true );
+		if ( ! $success ) {
+			update_user_meta( $user_id, 'latest_activity_kind', $kind );
+		}
+		/**
+		 * Add extra ID
+		 */
+		if ( is_integer( $extra_id ) && 0 < $extra_id ) {
+			$success = add_user_meta( $user_id, 'latest_activity_id', $extra_id, true );
+			if ( ! $success ) {
+				update_user_meta( $user_id, 'latest_activity_id', $extra_id );
+			}
+		}
+	}
+
+	/**
+	 * Save student activity - login
+	 *
+	 * @since 2.0.0
+	 */
+	public function log_student_activity_login( $user_login, $user ) {
+		self::log_student_activity( 'login', $user->ID );
+	}
+
+	/**
+	 * Save student activity - enroll
+	 *
+	 * @since 3.0.0
+	 */
+	public function log_student_activity_enroll( $user_id, $course_id ) {
+		self::log_student_activity( 'enrolled', $user_id, $course_id );
+	}
+
+	/**
+	 * Save student activity - course
+	 *
+	 * @since 3.0.0
+	 */
+	public function log_student_activity_course( $type, $course_id, $unit_id, $step_id, $module_id ) {
+		switch ( $type ) {
+			case 'unit':
+				self::log_student_activity( 'course_unit_seen', null, $unit_id );
+			break;
+			case 'module':
+				self::log_student_activity( 'course_module_seen', null, $module_id );
+			break;
+			case 'step':
+				self::log_student_activity( 'course_step_seen', null, $step_id );
+			break;
+		}
+	}
+
+	/**
+	 * Save student activity - progress
+	 *
+	 * @since 3.0.0
+	 */
+	public function log_student_activity_answer( $step_id ) {
+		$user_id = get_current_user_id();
+		self::log_student_activity( 'module_answered', $user_id, $step_id );
 	}
 }
