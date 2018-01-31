@@ -1605,8 +1605,7 @@ function coursepress_get_course_object( $post_id ) {
  * @return int alert ID.
  */
 function coursepress_update_course_alert( $course_id, $title, $content, $receivers, $alert_id ) {
-
-	$action = !empty( $alert_id ) ? 'update' : 'create' ;
+	$action = ! empty( $alert_id ) ? 'update' : 'create' ;
 
 	$capable = false;
 	// Get the course.
